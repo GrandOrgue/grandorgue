@@ -1,0 +1,38 @@
+
+<HTML>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+ <title>File Menu</title></head>
+
+<BODY TOPMARGIN=4 BGCOLOR=#FFFFFF TEXT=#000000 VLINK=#000000 LINK=#000000 ALINK=#000000>
+<FONT FACE="Arial, Lucida, Helvetica">
+<h1>File Menu</h1><p>The File menu contains commands for dealing with the loading and saving of sample sets.</p><hr />
+<A NAME="Open"><h2>Open</h2>
+<p>Open a sample set stored in a definition file. The location will be remembered for the next open operation. The most recently used sample sets are also remembered and available in the "Open Recent" popup. Loading sample sets takes some time; a progress window will display indicating estimated time remaining and other indicators. If you open a new sample set which shares samples with the previously loaded sample set, those files are cached and will not be reloaded from disk.</p>
+</A><br /><hr />
+<A NAME="Reload"><h2>Reload</h2>
+<p>Reload the currently loaded sample set from disk. This may be used to quickly restore a sample set to its saved status, for example if a settings file has been applied.</p>
+</A><br /><hr />
+<A NAME="Reset"><h2>Reset to Defaults</h2>
+<p>Reset the currently loaded sample set to the settings as originally supplied by the sample set provider. You will be asked to verify that you wish to discard your modifications. Note that these settings are stored at the end of the definition file and could be easily removed with a text editor as well if necessary.</p>
+</A><br /><hr />
+<A NAME="Import"><h2>Import Settings</h2>
+<p>Apply a settings file to the currently loaded sample set. Note that settings may only be applied to a matching sample set, and you will receive a warning if you try to do otherwise. The location will be remembered for the next time, independently of other saved locations.</p>
+</A><br /><hr />
+<A NAME="Export"><h2>Export Settings</h2>
+<p>Save a settings file including the stop and piston MIDI messages; stop engaged states; divisional, general, and program combinations; and the volume.</p>
+</A><br /><hr />
+<A NAME="Update"><h2>Update Cache</h2>
+<p>Save the loaded and processed samples to the hard disk. Doing so decreases loading time at the expense of hard disk space. Selecting this option displays a message indicating how much space is required and confirming that you would like to proceed. If compression is disabled, load speed only increases by 10 to 15%. However, with compression enabled, the load time when using the sample cache may be cut by 40% or more.</p>
+<p>Note that different load settings or tunings each require their own cache file. For example, stereo compressed samples and mono uncompressed samples each need their own cache. It is therefore recommended that you limit your cache updates to one particular load type (preferably stereo compressed, as this is the recommended setting).</p>
+</A><br /><hr />
+<A NAME="Save"><h2>Save</h2>
+<p>Save to the definition file: the stop and piston MIDI messages; stop engaged states; divisional, general, and program combinations; and the volume. Note that this is completely reversible using the <A HREF="#Reset">Reset to Defaults</A> option, and is the recommend method for most users.</p>
+</A><br /><hr />
+<A NAME="Close"><h2>Close</h2>
+<p>Close the currently loaded sample set. If you have made any settings changes, you will be asked if you would like to save them before the sample set closes. Note that this will also unload the sample set and free the RAM it required.</p>
+</A><br /><hr />
+<A NAME="Properties"><h2>Properties</h2>
+<p>This window displays various characteristics of the loaded sample set as provided by the sample set producer. If available, there is also a link to "More Information" which will open additional information in another application.</p>
+</A><br /><hr /><P ALIGN="CENTER"><FONT COLOR=#CCCCCC>&copy; 2006 Kloria Publishing LLC. All rights reserved.</FONT></P>
+</FONT></BODY></HTML>
