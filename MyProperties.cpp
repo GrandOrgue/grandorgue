@@ -1,5 +1,5 @@
 /*
- * OurOrgan - free pipe organ simulator based on MyOrgan
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -141,7 +141,7 @@ MyRegister::MyRegister(wxWindow* parent) : wxDialog(parent, wxID_ANY, (wxString)
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
     sizer->Add(MyPropertiesText(this, 460, _("This program is free. You may use this version as you need. ")), 0, wxBOTTOM, 5);
-    sizer->Add(new wxStaticLink(this, "http://www.OurOrgan.com", "http://www.OurOrgan.com"), 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 15);
+    sizer->Add(new wxStaticLink(this, "http://www.grand-orgue.com", "http://www.grand-orgue.com"), 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 15);
     sizer->Add(MyPropertiesText(this, 460, _("Enjoy.")), 0, wxBOTTOM, 5);
     /*sizer->Add(m_key = new wxTextCtrl(this, ID_LICENSEKEY, wxEmptyString, wxDefaultPosition, wxSize(wxDefaultCoord, 130), wxTE_MULTILINE), 0, wxEXPAND | wxBOTTOM, 5);
     m_key->SetFont(wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT));
