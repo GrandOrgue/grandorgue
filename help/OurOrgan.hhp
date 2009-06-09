@@ -1,16 +1,16 @@
 [OPTIONS]
 Compatibility=1.1
 Full-text search=Yes
-Contents file=MyOrgan.hhc
-Compiled file=MyOrgan.chm
+Contents file=OurOrgan.hhc
+Compiled file=OurOrgan.chm
 Default Window=Help
 Default topic=Welcome.htm
 Charset=iso-8859-1
-Index file=MyOrgan.hhk
-Title=MyOrgan
+Index file=OurOrgan.hhk
+Title=OurOrgan
 
 [WINDOWS]
-Help=,"MyOrgan.hhc","MyOrgan.hhk","Welcome.htm",,,,,,0x2420,,0x380e,,,,,0,,,
+Help=,"OurOrgan.hhc","OurOrgan.hhk","Welcome.htm",,,,,,0x2420,,0x380e,,,,,0,,,
 
 [FILES]
 Welcome.htm
@@ -25,7 +25,7 @@ FAQ.htm
 Support.htm
 
 [ALIAS]
-#include "MyOrgan_alias.h"
+#include "OurOrgan_alias.h"
 
 [MAP]
-#include "MyOrgan_ids.h"
+#include "OurOrgan_ids.h"
