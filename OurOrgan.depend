@@ -4183,3 +4183,151 @@
 1244403594 source:c:\documents and settings\jld\bureau\myorgan may 2009 with asio files\trunk\wxgaugeaudio.cpp
 	"MyOrgan.h"
 
+1244451964 source:j:\ourorgan\trunk\images.cpp
+
+1244451962 source:j:\ourorgan\trunk\mylcd.cpp
+	"MyOrgan.h"
+	"imon/SG_VFD.h"
+
+1244451964 j:\ourorgan\trunk\myorgan.h
+	<wx/wx.h>
+	<wx/ipc.h>
+	<wx/file.h>
+	<wx/intl.h>
+	<wx/image.h>
+	<wx/brush.h>
+	<wx/splash.h>
+	<wx/config.h>
+	<wx/region.h>
+	<wx/tglbtn.h>
+	<wx/numdlg.h>
+	<wx/slider.h>
+	<wx/fs_zip.h>
+	<wx/control.h>
+	<wx/mstream.h>
+	<wx/progdlg.h>
+	<wx/propdlg.h>
+	<wx/docview.h>
+	<wx/cmdproc.h>
+	<wx/hashmap.h>
+	<wx/filesys.h>
+	<wx/mimetype.h>
+	<wx/wfstream.h>
+	<wx/fileconf.h>
+	<wx/filename.h>
+	<wx/listctrl.h>
+	<wx/spinctrl.h>
+	<wx/statline.h>
+	<wx/snglinst.h>
+	<wx/html/helpctrl.h>
+	<wx/msw/private.h>
+	<wx/msw/registry.h>
+	<map>
+	<string>
+	"zlib.h"
+	"RtAudio.h"
+	"RtMidi.h"
+	"wxGaugeAudio.h"
+	"MyMeter.h"
+	"OrganFile.h"
+	"MySound.h"
+	"OrganView.h"
+	"OrganDocument.h"
+	"SettingsDialog.h"
+	"MyProperties.h"
+	"MyLCD.h"
+
+1244451964 j:\ourorgan\trunk\zlib.h
+	"zconf.h"
+
+1244451964 j:\ourorgan\trunk\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1244451962 j:\ourorgan\trunk\rtaudio.h
+	"RtError.h"
+	<string>
+	<vector>
+	<windows.h>
+	<process.h>
+	<pthread.h>
+	<CoreAudio/AudioHardware.h>
+
+1244451962 j:\ourorgan\trunk\rterror.h
+	<string>
+	<iostream>
+	"wx/wx.h"
+
+1244451964 j:\ourorgan\trunk\rtmidi.h
+	"RtError.h"
+	<string>
+	<vector>
+	<queue>
+
+1244451964 j:\ourorgan\trunk\wxgaugeaudio.h
+
+1244451964 j:\ourorgan\trunk\mymeter.h
+
+1244451964 j:\ourorgan\trunk\organfile.h
+
+1244451964 j:\ourorgan\trunk\mysound.h
+
+1244451964 j:\ourorgan\trunk\organview.h
+
+1244451964 j:\ourorgan\trunk\organdocument.h
+
+1244451964 j:\ourorgan\trunk\settingsdialog.h
+
+1244451962 j:\ourorgan\trunk\myproperties.h
+
+1244451964 j:\ourorgan\trunk\mylcd.h
+
+1244451962 j:\ourorgan\trunk\imon\sg_vfd.h
+
+1244451964 source:j:\ourorgan\trunk\mymeter.cpp
+	"MyOrgan.h"
+
+1244539958 source:j:\ourorgan\trunk\myorgan.cpp
+	"MyOrgan.h"
+	"ToolbarImages.h"
+	"KeyConvert.h"
+	<windows.h>
+	<shlobj.h>
+	<malloc.h>
+
+1244451964 j:\ourorgan\trunk\toolbarimages.h
+
+1244451962 j:\ourorgan\trunk\keyconvert.h
+
+1244451964 source:j:\ourorgan\trunk\myorgan.rc
+	"resource.h"
+	"afxres.h"
+
+1244451964 j:\ourorgan\trunk\resource.h
+
+1244451964 source:j:\ourorgan\trunk\myproperties.cpp
+	"MyOrgan.h"
+
+1244451962 source:j:\ourorgan\trunk\mysound.cpp
+	"MyOrgan.h"
+	"MySoundCallbackMIDI.h"
+	"MySoundCallbackAudio.h"
+
+1244451964 j:\ourorgan\trunk\mysoundcallbackmidi.h
+
+1244451964 j:\ourorgan\trunk\mysoundcallbackaudio.h
+	"MMXSound.h"
+
+1244451964 j:\ourorgan\trunk\mmxsound.h
+
+1244451962 source:j:\ourorgan\trunk\organdocument.cpp
+	"MyOrgan.h"
+
+1244451962 source:j:\ourorgan\trunk\organfile.cpp
+	"MyOrgan.h"
+
+1244451962 source:j:\ourorgan\trunk\organview.cpp
+	"MyOrgan.h"
+
