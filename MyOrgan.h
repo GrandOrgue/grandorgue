@@ -1,5 +1,5 @@
 /*
- * OurOrgan - free pipe organ simulator based on MyOrgan
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,7 +19,7 @@
 
 #pragma once
 
-#define APP_NAME "OurOrgan V 0.1"
+#define APP_NAME "GrandOrgue V 0.1"
 #define MAX_POLYPHONY 4096
 #define LOW_MEM_CONDITION 33554432
 		// (32 megabytes)

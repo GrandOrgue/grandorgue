@@ -1,5 +1,5 @@
 /*
- * OurOrgan - free pipe organ simulator based on MyOrgan
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -161,7 +161,7 @@ bool MyApp::OnInit()
     case wxLANGUAGE_GERMAN_LUXEMBOURG:
     case wxLANGUAGE_GERMAN_SWISS:
         m_locale.Init(wxLANGUAGE_GERMAN);
-        m_locale.AddCatalog(wxT("myorgan"));
+        m_locale.AddCatalog(wxT("grandorgue"));
         break;
     default:
         break;
@@ -235,7 +235,7 @@ bool MyApp::OnInit()
 	srand(::wxGetUTCTime());
 
 	m_help = new wxHtmlHelpController(wxHF_CONTENTS | wxHF_INDEX | wxHF_SEARCH | wxHF_ICONS_BOOK | wxHF_FLAT_TOOLBAR);
-        m_help->AddBook(wxFileName(wxT("OurOrgan.htb")));
+        m_help->AddBook(wxFileName(wxT("GrandOrgue.htb")));
 
 #ifdef __WIN32__
 	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
