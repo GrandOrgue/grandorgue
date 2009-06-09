@@ -235,7 +235,7 @@ bool MyApp::OnInit()
 	srand(::wxGetUTCTime());
 
 	m_help = new wxHtmlHelpController(wxHF_CONTENTS | wxHF_INDEX | wxHF_SEARCH | wxHF_ICONS_BOOK | wxHF_FLAT_TOOLBAR);
-        m_help->AddBook(wxFileName(wxT("MyOrgan.htb")));
+        m_help->AddBook(wxFileName(wxT("OurOrgan.htb")));
 
 #ifdef __WIN32__
 	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);

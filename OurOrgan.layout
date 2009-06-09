@@ -1,94 +1,94 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
-	<File name="Images.cpp" open="1" top="0" tabpos="4">
+	<File name="Images.cpp" open="1" top="0" tabpos="3">
 		<Cursor position="5" topLine="6" />
 	</File>
-	<File name="KeyConvert.h" open="1" top="0" tabpos="6">
+	<File name="KeyConvert.h" open="1" top="0" tabpos="5">
 		<Cursor position="2127" topLine="32" />
 	</File>
-	<File name="MIDIEvents.h" open="1" top="0" tabpos="7">
+	<File name="MIDIEvents.h" open="1" top="0" tabpos="6">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="MMXSound.h" open="1" top="0" tabpos="8">
+	<File name="MMXSound.h" open="1" top="0" tabpos="7">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="MyLCD.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="2515" topLine="0" />
+	<File name="MyLCD.cpp" open="1" top="0" tabpos="29">
+		<Cursor position="780" topLine="22" />
 	</File>
-	<File name="MyMeter.cpp" open="1" top="0" tabpos="9">
+	<File name="MyMeter.cpp" open="1" top="0" tabpos="8">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="MyMeter.h" open="1" top="0" tabpos="10">
+	<File name="MyMeter.h" open="1" top="0" tabpos="9">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="MyOrgan.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="879" topLine="0" />
+	<File name="MyOrgan.cpp" open="1" top="0" tabpos="30">
+		<Cursor position="6521" topLine="222" />
 	</File>
-	<File name="MyOrgan.h" open="1" top="1" tabpos="2">
+	<File name="MyOrgan.h" open="1" top="0" tabpos="1">
 		<Cursor position="1441" topLine="35" />
 	</File>
-	<File name="MyOrgan.rc" open="1" top="0" tabpos="29">
+	<File name="MyOrgan.rc" open="1" top="0" tabpos="28">
 		<Cursor position="1778" topLine="60" />
 	</File>
-	<File name="MyProperties.cpp" open="1" top="0" tabpos="5">
+	<File name="MyProperties.cpp" open="1" top="0" tabpos="4">
 		<Cursor position="60" topLine="1" />
 	</File>
-	<File name="MyProperties.h" open="1" top="0" tabpos="11">
+	<File name="MyProperties.h" open="1" top="0" tabpos="10">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="MySound.cpp" open="1" top="0" tabpos="12">
+	<File name="MySound.cpp" open="1" top="0" tabpos="11">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="MySound.h" open="1" top="0" tabpos="13">
+	<File name="MySound.h" open="1" top="0" tabpos="12">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="MySoundCallbackAudio.h" open="1" top="0" tabpos="3">
+	<File name="MySoundCallbackAudio.h" open="1" top="0" tabpos="2">
 		<Cursor position="60" topLine="1" />
 	</File>
-	<File name="MySoundCallbackMIDI.h" open="1" top="0" tabpos="14">
+	<File name="MySoundCallbackMIDI.h" open="1" top="0" tabpos="13">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="OrganDocument.cpp" open="1" top="0" tabpos="15">
+	<File name="OrganDocument.cpp" open="1" top="0" tabpos="14">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="OrganDocument.h" open="1" top="0" tabpos="16">
+	<File name="OrganDocument.h" open="1" top="0" tabpos="15">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="OrganFile.cpp" open="1" top="0" tabpos="17">
+	<File name="OrganFile.cpp" open="1" top="0" tabpos="16">
 		<Cursor position="60" topLine="1" />
 	</File>
-	<File name="OrganFile.h" open="1" top="0" tabpos="18">
+	<File name="OrganFile.h" open="1" top="0" tabpos="17">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="OrganView.cpp" open="1" top="0" tabpos="19">
+	<File name="OrganView.cpp" open="1" top="0" tabpos="18">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="OrganView.h" open="1" top="0" tabpos="20">
+	<File name="OrganView.h" open="1" top="0" tabpos="19">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="RtAudio.cpp" open="1" top="0" tabpos="26">
-		<Cursor position="602" topLine="0" />
+	<File name="RtAudio.cpp" open="1" top="1" tabpos="25">
+		<Cursor position="155332" topLine="4733" />
 	</File>
-	<File name="RtMidi.cpp" open="1" top="0" tabpos="27">
+	<File name="RtMidi.cpp" open="1" top="0" tabpos="26">
 		<Cursor position="431" topLine="0" />
 	</File>
-	<File name="RtMidi.h" open="1" top="0" tabpos="28">
+	<File name="RtMidi.h" open="1" top="0" tabpos="27">
 		<Cursor position="431" topLine="0" />
 	</File>
-	<File name="SettingsDialog.cpp" open="1" top="0" tabpos="21">
-		<Cursor position="60" topLine="1" />
+	<File name="SettingsDialog.cpp" open="1" top="0" tabpos="20">
+		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="SettingsDialog.h" open="1" top="0" tabpos="22">
+	<File name="SettingsDialog.h" open="1" top="0" tabpos="21">
 		<Cursor position="3276" topLine="97" />
 	</File>
-	<File name="ToolbarImages.h" open="1" top="0" tabpos="23">
+	<File name="ToolbarImages.h" open="1" top="0" tabpos="22">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="wxGaugeAudio.cpp" open="1" top="0" tabpos="24">
+	<File name="wxGaugeAudio.cpp" open="1" top="0" tabpos="23">
 		<Cursor position="60" topLine="0" />
 	</File>
-	<File name="wxGaugeAudio.h" open="1" top="0" tabpos="25">
+	<File name="wxGaugeAudio.h" open="1" top="0" tabpos="24">
 		<Cursor position="60" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>
