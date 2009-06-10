@@ -14,7 +14,6 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
-					<Add option="-O" />
 					<Add option="-g" />
 					<Add option="-D__WXDEBUG__" />
 				</Compiler>
@@ -53,12 +52,11 @@
 			<Add alias="All" targets="Debug;Release;" />
 		</VirtualTargets>
 		<Compiler>
-			<Add option="-march=nocona" />
-			<Add option="-O3" />
+			<Add option="-fomit-frame-pointer" />
+			<Add option="-O2" />
 			<Add option="-pipe" />
 			<Add option="-mthreads" />
 			<Add option="-ffast-math" />
-			<Add option="-fomit-frame-pointer" />
 			<Add option="-D__GNUWIN32__" />
 			<Add option="-D__WXMSW__" />
 			<Add option="-D__WINDOWS_ASIO__" />
@@ -81,6 +79,9 @@
 			<Add library="uuid" />
 			<Add directory="$(#wx.lib)\gcc_lib" />
 		</Linker>
+		<Unit filename="GrandOrgue.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Unit filename="Images.cpp" />
 		<Unit filename="KeyConvert.h" />
 		<Unit filename="MIDIEvents.h" />
@@ -91,9 +92,6 @@
 		<Unit filename="MyMeter.h" />
 		<Unit filename="MyOrgan.cpp" />
 		<Unit filename="MyOrgan.h" />
-		<Unit filename="GrandOrgue.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
 		<Unit filename="MyProperties.cpp" />
 		<Unit filename="MyProperties.h" />
 		<Unit filename="MySound.cpp" />

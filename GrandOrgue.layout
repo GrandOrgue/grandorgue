@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
+	<File name="GrandOrgue.rc" open="1" top="1" tabpos="28">
+		<Cursor position="2163" topLine="0" />
+	</File>
 	<File name="Images.cpp" open="1" top="0" tabpos="1">
 		<Cursor position="5" topLine="0" />
 	</File>
@@ -22,8 +25,8 @@
 	<File name="MyMeter.h" open="1" top="0" tabpos="7">
 		<Cursor position="17" topLine="0" />
 	</File>
-	<File name="MyOrgan.cpp" open="1" top="1" tabpos="8">
-		<Cursor position="4516" topLine="148" />
+	<File name="MyOrgan.cpp" open="1" top="0" tabpos="8">
+		<Cursor position="1485" topLine="81" />
 	</File>
 	<File name="MyOrgan.h" open="1" top="0" tabpos="9">
 		<Cursor position="850" topLine="6" />
@@ -63,6 +66,9 @@
 	</File>
 	<File name="OrganView.h" open="1" top="0" tabpos="21">
 		<Cursor position="17" topLine="0" />
+	</File>
+	<File name="RtAudio.cpp" open="1" top="0" tabpos="27">
+		<Cursor position="155332" topLine="4704" />
 	</File>
 	<File name="SettingsDialog.cpp" open="1" top="0" tabpos="22">
 		<Cursor position="17" topLine="0" />
