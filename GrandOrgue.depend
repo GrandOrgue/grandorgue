@@ -4039,3 +4039,147 @@
 
 1244588276 j:\grandorgue\trunk\keyconvert.h
 
+1244588276 source:j:\grandorgue\trunk\grandorgue.rc
+	"resource.h"
+	"afxres.h"
+
+1244582290 j:\grandorgue\trunk\resource.h
+
+1244588276 source:j:\grandorgue\trunk\myproperties.cpp
+	"MyOrgan.h"
+
+1244588276 source:j:\grandorgue\trunk\mysound.cpp
+	"MyOrgan.h"
+	"MySoundCallbackMIDI.h"
+	"MySoundCallbackAudio.h"
+
+1244588276 j:\grandorgue\trunk\mysoundcallbackmidi.h
+
+1244588276 j:\grandorgue\trunk\mysoundcallbackaudio.h
+	"MMXSound.h"
+
+1244588276 j:\grandorgue\trunk\mmxsound.h
+
+1244588276 source:j:\grandorgue\trunk\organdocument.cpp
+	"MyOrgan.h"
+
+1244588276 source:j:\grandorgue\trunk\organfile.cpp
+	"MyOrgan.h"
+
+1244588276 source:j:\grandorgue\trunk\organview.cpp
+	"MyOrgan.h"
+
+1244582290 source:j:\grandorgue\trunk\rtaudio.cpp
+	"RtAudio.h"
+	<unistd.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/soundcard.h>
+	<errno.h>
+	<math.h>
+	<jack/jack.h>
+	<unistd.h>
+	<alsa/asoundlib.h>
+	<unistd.h>
+	<ctype.h>
+	"asio/asiosys.h"
+	"asio/asio.h"
+	"asio/iasiothiscallresolver.h"
+	"asio/asiodrivers.h"
+	<math.h>
+	<dsound.h>
+	<assert.h>
+	"mmsystem.h"
+	"fstream"
+	"tchar.h"
+	<dmedia/audio.h>
+	<unistd.h>
+	<errno.h>
+
+1229186666 j:\grandorgue\trunk\asio\asiosys.h
+
+1229186666 j:\grandorgue\trunk\asio\asio.h
+
+1229186666 j:\grandorgue\trunk\asio\iasiothiscallresolver.h
+	<windows.h>
+	"iasiodrv.h"
+
+1229186666 j:\grandorgue\trunk\asio\iasiodrv.h
+	"asiosys.h"
+	"asio.h"
+
+1229186666 j:\grandorgue\trunk\asio\asiodrivers.h
+	"ginclude.h"
+	"CodeFragments.hpp"
+	<windows.h>
+	"asiolist.h"
+	"asiolist.h"
+
+1229186666 j:\grandorgue\trunk\asio\ginclude.h
+
+1229186666 j:\grandorgue\trunk\asio\asiolist.h
+
+1244582288 j:\grandorgue\trunk\directx\include\dsound.h
+	<objbase.h>
+	<float.h>
+
+1244582290 source:j:\grandorgue\trunk\rtmidi.cpp
+	"RtMidi.h"
+	<sstream>
+	<CoreMIDI/CoreMIDI.h>
+	<CoreAudio/HostTime.h>
+	<pthread.h>
+	<sys/time.h>
+	<alsa/asoundlib.h>
+	<pthread.h>
+	<sys/time.h>
+	<unistd.h>
+	<dmedia/midi.h>
+	<windows.h>
+	<mmsystem.h>
+
+1244588276 source:j:\grandorgue\trunk\settingsdialog.cpp
+	"MyOrgan.h"
+	"MIDIEvents.h"
+
+1244588276 j:\grandorgue\trunk\midievents.h
+
+1229186666 source:j:\grandorgue\trunk\asio\asio.cpp
+	<string.h>
+	"asiosys.h"
+	"asio.h"
+	"asiodrvr.h"
+	"windows.h"
+	"iasiodrv.h"
+	"asiodrivers.h"
+	"asiodrvr.h"
+
+1229186666 j:\grandorgue\trunk\asio\asiodrvr.h
+	"asiosys.h"
+	"asio.h"
+	<windows.h>
+	"combase.h"
+	"iasiodrv.h"
+
+1229186666 source:j:\grandorgue\trunk\asio\asiodrivers.cpp
+	<string.h>
+	"asiodrivers.h"
+	"iasiodrv.h"
+	"asiolist.h"
+
+1229186666 source:j:\grandorgue\trunk\asio\asiolist.cpp
+	<windows.h>
+	"iasiodrv.h"
+	"asiolist.h"
+
+1229186666 source:j:\grandorgue\trunk\asio\iasiothiscallresolver.cpp
+	<new>
+	<assert.h>
+	"iasiothiscallresolver.h"
+
+1244588276 source:j:\grandorgue\trunk\wxgaugeaudio.cpp
+	"MyOrgan.h"
+
