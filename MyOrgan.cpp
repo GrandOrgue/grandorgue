@@ -40,7 +40,7 @@ void _heapwalk_()
 }
 #endif
 
-// Code to add the Splash Screen JPEG from MyOrgan.rc as a memory input stream
+// Code to add the Splash Screen JPEG from GrandOrgue.rc as a memory input stream
 wxMemoryInputStream *GetResourceInputStream(wxString resource_name, wxString resource_type){
         HRSRC hrsrc=FindResource(wxGetInstance(), resource_name, resource_type);
         if(hrsrc==NULL) return NULL;
@@ -223,7 +223,7 @@ bool MyApp::OnInit()
 
 	SetAppName(APP_NAME);
 	SetClassName(APP_NAME);
-	SetVendorName(wxT("Our Organ"));
+	SetVendorName(wxT("GrandOrgue"));
 	pConfig = wxConfigBase::Get();
 	pConfig->SetRecordDefaults();
 
