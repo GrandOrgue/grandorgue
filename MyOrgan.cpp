@@ -1,5 +1,8 @@
 /*
- * GrandOrgue - Copyright (C) 2009 GrandOrgue team - free pipe organ simulator based on MyOrgan Copyright (C) 2006 Kloria Publishing LLC
+ * MyOrgan - Copyright (C) 2006 Kloria Publishing LLC
+ *
+ * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
+ * MyOrgan is a Trademark of Milan Digital Audio LLC
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,9 +21,24 @@
  */
 
 #include "MyOrgan.h"
-#include "ToolbarImages.h"
+// New PNG Icons for the toolbar images added by Graham Goode in Nov 2009
+#include "images/help.h"
+#include "images/open.h"
+#include "images/panic.h"
+#include "images/properties.h"
+#include "images/record.h"
+#include "images/reload.h"
+#include "images/save.h"
+#include "images/settings.h"
+#include "images/set.h"
+#include "images/volume.h"
+#include "images/polyphony.h"
+#include "images/memory.h"
+#include "images/transpose.h"
+#include "images/gauge.h"
+#include "images/splash.h"
+// end
 #include "KeyConvert.h"
-
 #ifdef __WIN32__
 #include <windows.h>
 #include <shlobj.h>
@@ -40,38 +58,10 @@ void _heapwalk_()
 }
 #endif
 
-// Code to add the Splash Screen JPEG from GrandOrgue.rc as a memory input stream
-wxMemoryInputStream *GetResourceInputStream(wxString resource_name, wxString resource_type){
-        HRSRC hrsrc=FindResource(wxGetInstance(), resource_name, resource_type);
-        if(hrsrc==NULL) return NULL;
-
-        HGLOBAL hglobal=LoadResource(wxGetInstance(), hrsrc);
-        if(hglobal==NULL) return NULL;
-
-        void *data=LockResource(hglobal);
-        if(data==NULL) return NULL;
-
-        DWORD datalen=SizeofResource(wxGetInstance(), hrsrc);
-        if(datalen<1) return NULL;
-
-        return new wxMemoryInputStream(data, datalen);
-}
-
-bool HasResource(wxString resource_name, wxString resource_type){
-        HRSRC hrsrc=FindResource(wxGetInstance(), resource_name, resource_type);
-        if(hrsrc==NULL) return false;
-
-        HGLOBAL hglobal=LoadResource(wxGetInstance(), hrsrc);
-        if(hglobal==NULL) return false;
-
-        return true;
-}
-// End
-
 IMPLEMENT_APP(MyApp)
 
-extern const unsigned char* Images_Wood[];
-extern int c_Images_Wood[];
+//extern const unsigned char* ImageLoader_Wood[];
+//extern int c_ImageLoader_Wood[];
 extern MySound* g_sound;
 extern MyOrganFile* organfile;
 
@@ -161,7 +151,7 @@ bool MyApp::OnInit()
     case wxLANGUAGE_GERMAN_LUXEMBOURG:
     case wxLANGUAGE_GERMAN_SWISS:
         m_locale.Init(wxLANGUAGE_GERMAN);
-        m_locale.AddCatalog(wxT("grandorgue"));
+        m_locale.AddCatalog(wxT("GrandOrgue"));
         break;
     default:
         break;
@@ -223,7 +213,7 @@ bool MyApp::OnInit()
 
 	SetAppName(APP_NAME);
 	SetClassName(APP_NAME);
-	SetVendorName(wxT("GrandOrgue"));
+	SetVendorName(wxT("Our Organ"));
 	pConfig = wxConfigBase::Get();
 	pConfig->SetRecordDefaults();
 
@@ -232,10 +222,11 @@ bool MyApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
 	wxImage::AddHandler(new wxJPEGHandler);
 	wxImage::AddHandler(new wxGIFHandler);
+	wxImage::AddHandler(new wxPNGHandler);
 	srand(::wxGetUTCTime());
 
 	m_help = new wxHtmlHelpController(wxHF_CONTENTS | wxHF_INDEX | wxHF_SEARCH | wxHF_ICONS_BOOK | wxHF_FLAT_TOOLBAR);
-        m_help->AddBook(wxFileName(wxT("GrandOrgue.htb")));
+        m_help->AddBook(wxFileName(wxT("MyOrgan.htb")));
 
 #ifdef __WIN32__
 	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
@@ -320,6 +311,12 @@ BEGIN_EVENT_TABLE(MyFrame, wxDocParentFrame)
 	EVT_MENU(ID_AUDIO_SETTINGS, MyFrame::OnAudioSettings)
 	EVT_MENU(wxID_HELP, MyFrame::OnHelp)
 	EVT_MENU(wxID_ABOUT, MyFrame::OnHelpAbout)
+	// New events for Volume, Polyphony, Memory Level, and Transpose
+	EVT_MENU(ID_VOLUME, MyFrame::OnSettingsVolume)
+	EVT_MENU(ID_POLYPHONY, MyFrame::OnSettingsPolyphony)
+	EVT_MENU(ID_MEMORY, MyFrame::OnSettingsMemory)
+	EVT_MENU(ID_TRANSPOSE, MyFrame::OnSettingsTranspose)
+	// End
 	EVT_KEY_DOWN(MyFrame::OnKeyCommand)
 	EVT_KEY_UP(MyFrame::OnKeyCommand)
 
@@ -333,7 +330,7 @@ void MyFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString
 	if (toolbarImage)
 	{
         wxMemoryInputStream mem(toolbarImage, size);
-        wxImage img(mem, wxBITMAP_TYPE_GIF);
+        wxImage img(mem, wxBITMAP_TYPE_PNG);
         GetToolBar()->AddTool(id, item, wxBitmap(img), helpString, kind);
 	}
 }
@@ -352,55 +349,67 @@ MyFrame::MyFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxS
 	m_docManager->FileHistoryLoad(*wxConfigBase::Get());
 
 	wxToolBar* tb = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
-	tb->SetToolBitmapSize(wxSize(16, 20));
+	tb->SetToolBitmapSize(wxSize(16, 16));
 
-	AddTool(file_menu, ID_FILE_OPEN, _("&Open...\tCtrl+O"), _("Open"), GIF_Open, GIF_OPEN_LEN);
+	AddTool(file_menu, ID_FILE_OPEN, _("&Open...\tCtrl+O"), _("Open"), Icon_open, sizeof(Icon_open));
 	file_menu->Append(wxID_ANY, _("Open &Recent"), recent_menu);
 	file_menu->AppendSeparator();
-	AddTool(file_menu, ID_FILE_RELOAD, _("Re&load"), _("Reload"), GIF_Reload, GIF_RELOAD_LEN);
+	AddTool(file_menu, ID_FILE_RELOAD, _("Re&load"), _("Reload"), Icon_reload, sizeof(Icon_reload));
 	AddTool(file_menu, ID_FILE_REVERT, _("Reset to &Defaults"));
 	file_menu->AppendSeparator();
 	AddTool(file_menu, ID_FILE_LOAD, _("&Import Settings..."));
 	AddTool(file_menu, ID_FILE_SAVE, _("&Export Settings..."));
 	AddTool(file_menu, ID_FILE_CACHE, _("&Update Cache..."));
 	file_menu->AppendSeparator();
-	AddTool(file_menu, wxID_SAVE, _("&Save\tCtrl+S"), _("Save"), GIF_Save, GIF_SAVE_LEN);
+	AddTool(file_menu, wxID_SAVE, _("&Save\tCtrl+S"), _("Save"), Icon_save, sizeof(Icon_save));
 	AddTool(file_menu, wxID_CLOSE, _("&Close"));
-	AddTool(file_menu, ID_FILE_PROPERTIES, _("&Properties..."), _("Properties"), GIF_Property, GIF_PROPERTY_LEN);
+	AddTool(file_menu, ID_FILE_PROPERTIES, _("&Properties..."), _("Properties"), Icon_properties, sizeof(Icon_properties));
 	file_menu->AppendSeparator();
 	AddTool(file_menu, wxID_EXIT, _("E&xit"));
 	tb->AddSeparator();
 
 	wxMenu *audio_menu = new wxMenu;
-	AddTool(audio_menu, ID_AUDIO_RECORD, _("&Record...\tCtrl+R"), _("Record"), GIF_Record, GIF_RECORD_LEN, wxITEM_CHECK);
-	AddTool(audio_menu, ID_AUDIO_MEMSET, _("&Memory Set\tShift"), _("Memory Set"), GIF_Set, GIF_SET_LEN, wxITEM_CHECK);
+	AddTool(audio_menu, ID_AUDIO_RECORD, _("&Record...\tCtrl+R"), _("Record"), Icon_record, sizeof(Icon_record), wxITEM_CHECK);
+	AddTool(audio_menu, ID_AUDIO_MEMSET, _("&Memory Set\tShift"), _("Memory Set"), Icon_set, sizeof(Icon_set), wxITEM_CHECK);
 	audio_menu->AppendSeparator();
-	AddTool(audio_menu, ID_AUDIO_PANIC, _("&Panic\tEscape"), _("Panic"), GIF_Panic, GIF_PANIC_LEN);
-	AddTool(audio_menu, ID_AUDIO_SETTINGS, _("&Settings..."), _("Audio Settings"), GIF_Settings, GIF_SETTINGS_LEN);
-	tb->AddSeparator();
+	AddTool(audio_menu, ID_AUDIO_PANIC, _("&Panic\tEscape"), _("Panic"), Icon_panic, sizeof(Icon_panic));
+	AddTool(audio_menu, ID_AUDIO_SETTINGS, _("&Settings..."), _("Audio Settings"), Icon_settings, sizeof(Icon_settings));
+	//tb->AddSeparator();
 
 	wxMenu *help_menu = new wxMenu;
-	AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"), GIF_Help, GIF_HELP_LEN);
+	//AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"), Icon_help, sizeof(Icon_help));
+	AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"));
 	AddTool(help_menu, wxID_ABOUT, _("&About"));
 	tb->AddSeparator();
-
+	// Changed Text to Icons to reduce screen space - Graham Goode Nov 2009
+    wxMenu *settings_menu = new wxMenu;
 	{
-        wxMemoryInputStream mem(GIF_Gauge, GIF_GAUGE_LEN);
+        wxMemoryInputStream mem(Icon_gauge, sizeof(Icon_gauge));
         wxImage img(mem, wxBITMAP_TYPE_GIF);
         m_gauge = wxBitmap(img);
 	}
 	m_gaugedc = new wxMemoryDC();
 	m_gaugedc->SelectObject(m_gauge);
+
 	m_meters[0] = new MyMeter(tb, ID_METER_AUDIO_SPIN, 3);
 	m_meters[1] = new MyMeter(tb, ID_METER_POLY_SPIN,  2);
 	m_meters[2] = new MyMeter(tb, ID_METER_FRAME_SPIN, 1);
 	m_meters[3] = new MyMeter(tb, ID_METER_TRANSPOSE_SPIN, 0);
-	for (int i = 0; i < 4; i++)
-	{
-		tb->AddControl(m_meters[i]);
-		if (i < 3)
-			tb->AddSeparator();
-	}
+
+	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), Icon_volume, sizeof(Icon_volume));
+	tb->AddControl(m_meters[0]);
+	AddTool(settings_menu, ID_POLYPHONY, _("&Polyphony"), _("Polyphony"), Icon_polyphony, sizeof(Icon_polyphony));
+	tb->AddControl(m_meters[1]);
+	AddTool(settings_menu, ID_MEMORY, _("&Memory Level"), _("Memory Level"), Icon_memory, sizeof(Icon_memory));
+	tb->AddControl(m_meters[2]);
+	AddTool(settings_menu, ID_TRANSPOSE, _("&Transpose"), _("Transpose"), Icon_transpose, sizeof(Icon_transpose));
+	tb->AddControl(m_meters[3]);
+	//for (int i = 0; i < 4; i++)
+	//{
+		//tb->AddControl(m_meters[i]);
+		//if (i < 3)
+			//tb->AddSeparator();
+	//}
 
 	wxMenuBar *menu_bar = new wxMenuBar;
 	menu_bar->Append(file_menu, _("&File"));
@@ -696,6 +705,26 @@ void MyFrame::OnHelpRegister(wxCommandEvent& event)
 	}
 }
 
+void MyFrame::OnSettingsVolume(wxCommandEvent& event)
+{
+	//
+}
+
+void MyFrame::OnSettingsPolyphony(wxCommandEvent& event)
+{
+	//
+}
+
+void MyFrame::OnSettingsMemory(wxCommandEvent& event)
+{
+	//
+}
+
+void MyFrame::OnSettingsTranspose(wxCommandEvent& event)
+{
+	//
+}
+
 void MyFrame::OnHelpAbout(wxCommandEvent& event)
 {
 	DoSplash(false);
@@ -703,28 +732,13 @@ void MyFrame::OnHelpAbout(wxCommandEvent& event)
 
 void MyFrame::DoSplash(bool timeout)
 {
-	/*wxMemoryInputStream mem((const char*)Images_Wood[27], c_Images_Wood[27]);
+    wxMemoryInputStream mem(Image_Splash, sizeof(Image_Splash));
 	wxImage img(mem, wxBITMAP_TYPE_JPEG);
 	wxSplashScreenModal* splash = new wxSplashScreenModal(wxBitmap(img), timeout ? wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_TIMEOUT : wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT, 3000, this, wxID_ANY);
 	if (!timeout)
-		splash->ShowModal();*/
-	// *******************************************************************************
-	// New Splash Screen using code from wxWidgets Forum
-    wxMemoryInputStream* stream = GetResourceInputStream(wxT("SplashImage"), wxT("JPG"));
-    if(stream != NULL){
-                wxImage image(*stream);
-                wxBitmap bitmap(image);
-
-                if (bitmap.Ok()){
-
-                        wxSplashScreen *splash = new wxSplashScreen(bitmap, wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
-                                5000, this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                wxBORDER_NONE|wxSTAY_ON_TOP);
-                        wxYield();
-
-                }
-        }
+		splash->ShowModal();
 }
+
 
 void MyFrame::OnKeyCommand(wxKeyEvent& event)
 {

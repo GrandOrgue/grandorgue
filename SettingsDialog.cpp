@@ -1,5 +1,8 @@
 /*
- * GrandOrgue - Copyright (C) 2009 GrandOrgue team - free pipe organ simulator based on MyOrgan Copyright (C) 2006 Kloria Publishing LLC
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
+ *
+ * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
+ * MyOrgan is a Trademark of Milan Digital Audio LLC
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -90,7 +93,13 @@ wxString GetEventChannelString(int what)
 	return retval;
 }
 
-SettingsDialog::SettingsDialog(wxWindow* win) : wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, wxSize(453,450))
+SettingsDialog::SettingsDialog(wxWindow* win) : wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition,
+#ifdef __WXMSW__
+wxSize(453,450)
+#else
+wxSize(603,500)
+#endif
+)
 {
 	wxASSERT(g_sound);
 

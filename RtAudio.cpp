@@ -149,7 +149,7 @@ void RtAudio::initialize( RtAudioApi api )
   // inheritance chain.
 #if defined(__LINUX_JACK__)
   if ( api == LINUX_JACK )
-    rtapi_ = new RtApiJack();
+    rtapi_ = new GrandOrgue1();
 #endif
 #if defined(__LINUX_ALSA__)
   if ( api == LINUX_ALSA )
@@ -185,7 +185,7 @@ void RtAudio::initialize( RtAudioApi api )
   // No specified API ... search for "best" option.
   try {
 #if defined(__LINUX_JACK__)
-    rtapi_ = new RtApiJack();
+    rtapi_ = new GrandOrgue1();
 #elif defined(__WINDOWS_ASIO__)
     rtapi_ = new RtApiAsio();
 #elif defined(__IRIX_AL__)
@@ -2674,7 +2674,7 @@ void RtApiCore :: cancelStreamCallback()
 // applications to an audio device, as well as allowing them to share
 // audio between themselves.
 //
-// The JACK server must be running before RtApiJack can be instantiated.
+// The JACK server must be running before GrandOrgue1 can be instantiated.
 // RtAudio will report just a single "device", which is the JACK audio
 // server.  The JACK server is typically started in a terminal as follows:
 //
@@ -2716,23 +2716,23 @@ static void jackerror (const char *desc)
   jackmsg.append( desc, strlen(desc)+1 );
 }
 
-RtApiJack :: RtApiJack()
+GrandOrgue1 :: GrandOrgue1()
 {
   this->initialize();
 
   if (nDevices_ <= 0) {
-    sprintf(message_, "RtApiJack: no Linux Jack server found or connection error (jack: %s)!",
+    sprintf(message_, "GrandOrgue1: no Linux Jack server found or connection error (jack: %s)!",
             jackmsg.c_str());
     error(RtError::NO_DEVICES_FOUND);
   }
 }
 
-RtApiJack :: ~RtApiJack()
+GrandOrgue1 :: ~GrandOrgue1()
 {
   if ( stream_.mode != UNINITIALIZED ) closeStream();
 }
 
-void RtApiJack :: initialize(void)
+void GrandOrgue1 :: initialize(void)
 {
   nDevices_ = 0;
 
@@ -2743,7 +2743,7 @@ void RtApiJack :: initialize(void)
 
   // Look for jack server and try to become a client.
   jack_client_t *client;
-  if ( (client = jack_client_new( "RtApiJack" )) == 0)
+  if ( (client = jack_client_new( "GrandOrgue1" )) == 0)
     return;
 
   /*
@@ -2779,12 +2779,12 @@ void RtApiJack :: initialize(void)
   jack_client_close(client);
 }
 
-void RtApiJack :: probeDeviceInfo(RtApiDevice *info)
+void GrandOrgue1 :: probeDeviceInfo(RtApiDevice *info)
 {
   // Look for jack server and try to become a client.
   jack_client_t *client;
-  if ( (client = jack_client_new( "RtApiJack_Probe" )) == 0) {
-    sprintf(message_, "RtApiJack: error connecting to Linux Jack server in probeDeviceInfo() (jack: %s)!",
+  if ( (client = jack_client_new( "GrandOrgue1_Probe" )) == 0) {
+    sprintf(message_, "GrandOrgue1: error connecting to Linux Jack server in probeDeviceInfo() (jack: %s)!",
             jackmsg.c_str());
     error(RtError::WARNING);
     return;
@@ -2823,7 +2823,7 @@ void RtApiJack :: probeDeviceInfo(RtApiDevice *info)
 
   if (info->maxOutputChannels == 0 && info->maxInputChannels == 0) {
     jack_client_close(client);
-    sprintf(message_, "RtApiJack: error determining jack input/output channels!");
+    sprintf(message_, "GrandOrgue1: error determining jack input/output channels!");
     error(RtError::DEBUG_WARNING);
     return;
   }
@@ -2849,7 +2849,7 @@ void RtApiJack :: probeDeviceInfo(RtApiDevice *info)
   // Check that we have a supported format
   if (info->nativeFormats == 0) {
     jack_client_close(client);
-    sprintf(message_, "RtApiJack: error determining jack server data format!");
+    sprintf(message_, "GrandOrgue1: error determining jack server data format!");
     error(RtError::DEBUG_WARNING);
     return;
   }
@@ -2861,12 +2861,12 @@ void RtApiJack :: probeDeviceInfo(RtApiDevice *info)
 int jackCallbackHandler(jack_nframes_t nframes, void *infoPointer)
 {
   CallbackInfo *info = (CallbackInfo *) infoPointer;
-  RtApiJack *object = (RtApiJack *) info->object;
+  GrandOrgue1 *object = (GrandOrgue1 *) info->object;
   try {
     object->callbackEvent( (unsigned long) nframes );
   }
   catch (RtError &exception) {
-    fprintf(stderr, "\nRtApiJack: callback handler error (%s)!\n\n", exception.getMessageString());
+    fprintf(stderr, "\nGrandOrgue1: callback handler error (%s)!\n\n", exception.getMessageString());
     return 0;
   }
 
@@ -2878,10 +2878,10 @@ void jackShutdown(void *infoPointer)
   CallbackInfo *info = (CallbackInfo *) infoPointer;
   JackHandle *handle = (JackHandle *) info->apiInfo;
   handle->clientOpen = false;
-  RtApiJack *object = (RtApiJack *) info->object;
+  GrandOrgue1 *object = (GrandOrgue1 *) info->object;
 
   // Check current stream state.  If stopped, then we'll assume this
-  // was called as a result of a call to RtApiJack::stopStream (the
+  // was called as a result of a call to GrandOrgue1::stopStream (the
   // deactivation of a client handle causes this function to be called).
   // If not, we'll assume the Jack server is shutting down or some
   // other problem occurred and we should close the stream.
@@ -2891,27 +2891,27 @@ void jackShutdown(void *infoPointer)
     object->closeStream();
   }
   catch (RtError &exception) {
-    fprintf(stderr, "\nRtApiJack: jackShutdown error (%s)!\n\n", exception.getMessageString());
+    fprintf(stderr, "\nGrandOrgue1: jackShutdown error (%s)!\n\n", exception.getMessageString());
     return;
   }
 
-  fprintf(stderr, "\nRtApiJack: the Jack server is shutting down this client ... stream stopped and closed!!!\n\n");
+  fprintf(stderr, "\nGrandOrgue1: the Jack server is shutting down this client ... stream stopped and closed!!!\n\n");
 }
 
 int jackXrun( void * )
 {
-  fprintf(stderr, "\nRtApiJack: audio overrun/underrun reported!\n");
+  fprintf(stderr, "\nGrandOrgue1: audio overrun/underrun reported!\n");
   return 0;
 }
 
-bool RtApiJack :: probeDeviceOpen(int device, StreamMode mode, int channels,
+bool GrandOrgue1 :: probeDeviceOpen(int device, StreamMode mode, int channels,
                                 int sampleRate, RtAudioFormat format,
                                 int *bufferSize, int numberOfBuffers)
 {
   // Compare the jack server channels to the requested number of channels.
   if ( (mode == OUTPUT && devices_[device].maxOutputChannels < channels ) ||
        (mode == INPUT && devices_[device].maxInputChannels < channels ) ) {
-    sprintf(message_, "RtApiJack: the Jack server does not support requested channels!");
+    sprintf(message_, "GrandOrgue1: the Jack server does not support requested channels!");
     error(RtError::DEBUG_WARNING);
     return FAILURE;
   }
@@ -2922,9 +2922,9 @@ bool RtApiJack :: probeDeviceOpen(int device, StreamMode mode, int channels,
   char label[32];
   jack_client_t *client = 0;
   if ( mode == OUTPUT || (mode == INPUT && stream_.mode != OUTPUT) ) {
-    snprintf(label, 32, "RtApiJack");
+    snprintf(label, 32, "GrandOrgue1");
     if ( (client = jack_client_new( (const char *) label )) == 0) {
-      sprintf(message_, "RtApiJack: cannot connect to Linux Jack server in probeDeviceOpen() (jack: %s)!",
+      sprintf(message_, "GrandOrgue1: cannot connect to Linux Jack server in probeDeviceOpen() (jack: %s)!",
               jackmsg.c_str());
       error(RtError::DEBUG_WARNING);
       return FAILURE;
@@ -2940,7 +2940,7 @@ bool RtApiJack :: probeDeviceOpen(int device, StreamMode mode, int channels,
   jack_rate = (int) jack_get_sample_rate(client);
   if ( sampleRate != jack_rate ) {
     jack_client_close(client);
-    sprintf( message_, "RtApiJack: the requested sample rate (%d) is different than the JACK server rate (%d).",
+    sprintf( message_, "GrandOrgue1: the requested sample rate (%d) is different than the JACK server rate (%d).",
              sampleRate, jack_rate );
     error(RtError::DEBUG_WARNING);
     return FAILURE;
@@ -2980,14 +2980,14 @@ bool RtApiJack :: probeDeviceOpen(int device, StreamMode mode, int channels,
   if ( handle == 0 ) {
     handle = (JackHandle *) calloc(1, sizeof(JackHandle));
     if ( handle == NULL ) {
-      sprintf(message_, "RtApiJack: error allocating JackHandle memory (%s).",
+      sprintf(message_, "GrandOrgue1: error allocating JackHandle memory (%s).",
               devices_[device].name.c_str());
       goto error;
     }
     handle->ports[0] = 0;
     handle->ports[1] = 0;
     if ( pthread_cond_init(&handle->condition, NULL) ) {
-      sprintf(message_, "RtApiJack: error initializing pthread condition variable!");
+      sprintf(message_, "GrandOrgue1: error initializing pthread condition variable!");
       goto error;
     }
     stream_.apiHandle = (void *) handle;
@@ -3008,7 +3008,7 @@ bool RtApiJack :: probeDeviceOpen(int device, StreamMode mode, int channels,
     if (stream_.userBuffer) free(stream_.userBuffer);
     stream_.userBuffer = (char *) calloc(buffer_bytes, 1);
     if (stream_.userBuffer == NULL) {
-      sprintf(message_, "RtApiJack: error allocating user buffer memory (%s).",
+      sprintf(message_, "GrandOrgue1: error allocating user buffer memory (%s).",
               devices_[device].name.c_str());
       goto error;
     }
@@ -3033,7 +3033,7 @@ bool RtApiJack :: probeDeviceOpen(int device, StreamMode mode, int channels,
       if (stream_.deviceBuffer) free(stream_.deviceBuffer);
       stream_.deviceBuffer = (char *) calloc(buffer_bytes, 1);
       if (stream_.deviceBuffer == NULL) {
-        sprintf(message_, "RtApiJack: error allocating device buffer memory (%s).",
+        sprintf(message_, "GrandOrgue1: error allocating device buffer memory (%s).",
                 devices_[device].name.c_str());
         goto error;
       }
@@ -3043,7 +3043,7 @@ bool RtApiJack :: probeDeviceOpen(int device, StreamMode mode, int channels,
   // Allocate memory for the Jack ports (channels) identifiers.
   handle->ports[mode] = (jack_port_t **) malloc (sizeof (jack_port_t *) * channels);
   if ( handle->ports[mode] == NULL )  {
-    sprintf(message_, "RtApiJack: error allocating port handle memory (%s).",
+    sprintf(message_, "GrandOrgue1: error allocating port handle memory (%s).",
             devices_[device].name.c_str());
     goto error;
   }
@@ -3131,13 +3131,13 @@ bool RtApiJack :: probeDeviceOpen(int device, StreamMode mode, int channels,
   return FAILURE;
 }
 
-void RtApiJack :: closeStream()
+void GrandOrgue1 :: closeStream()
 {
   // We don't want an exception to be thrown here because this
   // function is called by our class destructor.  So, do our own
   // stream check.
   if ( stream_.mode == UNINITIALIZED ) {
-    sprintf(message_, "RtApiJack::closeStream(): no open stream to close!");
+    sprintf(message_, "GrandOrgue1::closeStream(): no open stream to close!");
     error(RtError::WARNING);
     return;
   }
@@ -3172,7 +3172,7 @@ void RtApiJack :: closeStream()
 }
 
 
-void RtApiJack :: startStream()
+void GrandOrgue1 :: startStream()
 {
   verifyStream();
   if (stream_.state == STREAM_RUNNING) return;
@@ -3198,7 +3198,7 @@ void RtApiJack :: startStream()
   }
 
   if (jack_activate(handle->client)) {
-    sprintf(message_, "RtApiJack: unable to activate JACK client!");
+    sprintf(message_, "GrandOrgue1: unable to activate JACK client!");
     error(RtError::SYSTEM_ERROR);
   }
 
@@ -3208,7 +3208,7 @@ void RtApiJack :: startStream()
   if ( stream_.mode == OUTPUT || stream_.mode == DUPLEX ) {
     ports = jack_get_ports(handle->client, devices_[stream_.device[0]].name.c_str(), NULL, JackPortIsInput);
     if ( ports == NULL) {
-      sprintf(message_, "RtApiJack: error determining available jack input ports!");
+      sprintf(message_, "GrandOrgue1: error determining available jack input ports!");
       error(RtError::SYSTEM_ERROR);
     }
 
@@ -3221,7 +3221,7 @@ void RtApiJack :: startStream()
         result = jack_connect( handle->client, jack_port_name(handle->ports[0][i]), ports[i] );
       if ( result ) {
         free(ports);
-        sprintf(message_, "RtApiJack: error connecting output ports!");
+        sprintf(message_, "GrandOrgue1: error connecting output ports!");
         error(RtError::SYSTEM_ERROR);
       }
     }
@@ -3231,7 +3231,7 @@ void RtApiJack :: startStream()
   if ( stream_.mode == INPUT || stream_.mode == DUPLEX ) {
     ports = jack_get_ports( handle->client, devices_[stream_.device[1]].name.c_str(), NULL, JackPortIsOutput );
     if ( ports == NULL) {
-      sprintf(message_, "RtApiJack: error determining available jack output ports!");
+      sprintf(message_, "GrandOrgue1: error determining available jack output ports!");
       error(RtError::SYSTEM_ERROR);
     }
 
@@ -3242,7 +3242,7 @@ void RtApiJack :: startStream()
         result = jack_connect( handle->client, ports[i], jack_port_name(handle->ports[1][i]) );
       if ( result ) {
         free(ports);
-        sprintf(message_, "RtApiJack: error connecting input ports!");
+        sprintf(message_, "GrandOrgue1: error connecting input ports!");
         error(RtError::SYSTEM_ERROR);
       }
     }
@@ -3255,7 +3255,7 @@ void RtApiJack :: startStream()
   MUTEX_UNLOCK(&stream_.mutex);
 }
 
-void RtApiJack :: stopStream()
+void GrandOrgue1 :: stopStream()
 {
   verifyStream();
   if (stream_.state == STREAM_STOPPED) return;
@@ -3271,19 +3271,19 @@ void RtApiJack :: stopStream()
   MUTEX_UNLOCK(&stream_.mutex);
 }
 
-void RtApiJack :: abortStream()
+void GrandOrgue1 :: abortStream()
 {
   stopStream();
 }
 
-void RtApiJack :: tickStream()
+void GrandOrgue1 :: tickStream()
 {
   verifyStream();
 
   if (stream_.state == STREAM_STOPPED) return;
 
   if (stream_.callbackInfo.usingCallback) {
-    sprintf(message_, "RtApiJack: tickStream() should not be used when a callback function is set!");
+    sprintf(message_, "GrandOrgue1: tickStream() should not be used when a callback function is set!");
     error(RtError::WARNING);
     return;
   }
@@ -3297,7 +3297,7 @@ void RtApiJack :: tickStream()
   MUTEX_UNLOCK(&stream_.mutex);
 }
 
-void RtApiJack :: callbackEvent( unsigned long nframes )
+void GrandOrgue1 :: callbackEvent( unsigned long nframes )
 {
   verifyStream();
 
@@ -3365,12 +3365,12 @@ void RtApiJack :: callbackEvent( unsigned long nframes )
   MUTEX_UNLOCK(&stream_.mutex);
 }
 
-void RtApiJack :: setStreamCallback(RtAudioCallback callback, void *userData)
+void GrandOrgue1 :: setStreamCallback(RtAudioCallback callback, void *userData)
 {
   verifyStream();
 
   if ( stream_.callbackInfo.usingCallback ) {
-    sprintf(message_, "RtApiJack: A callback is already set for this stream!");
+    sprintf(message_, "GrandOrgue1: A callback is already set for this stream!");
     error(RtError::WARNING);
     return;
   }
@@ -3380,7 +3380,7 @@ void RtApiJack :: setStreamCallback(RtAudioCallback callback, void *userData)
   stream_.callbackInfo.usingCallback = true;
 }
 
-void RtApiJack :: cancelStreamCallback()
+void GrandOrgue1 :: cancelStreamCallback()
 {
   verifyStream();
 

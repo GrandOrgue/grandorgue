@@ -1,5 +1,8 @@
 /*
- * GrandOrgue - Copyright (C) 2009 GrandOrgue team - free pipe organ simulator based on MyOrgan Copyright (C) 2006 Kloria Publishing LLC
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
+ *
+ * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
+ * MyOrgan is a Trademark of Milan Digital Audio LLC
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -30,8 +33,8 @@ extern void MIDIGeneralPush(MyGeneral& general);
 #define DOMAX(a,b) a=((a)>(b)?(a):(b))
 
 extern MyOrganFile* organfile;
-extern const unsigned char* Images_Wood[];
-extern int c_Images_Wood[];
+extern const unsigned char* ImageLoader_Wood[];
+extern int c_ImageLoader_Wood[];
 
 wxPoint g_points[4][17] = {
 	{ wxPoint( 0, 0), wxPoint(13, 0), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0, 1), wxPoint(12, 1), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1, 1), },
@@ -56,7 +59,7 @@ END_EVENT_TABLE()
 void TileWood(wxDC& dc, int which, int sx, int sy, int cx, int cy)
 {
 	int x, y;
-	wxMemoryInputStream mem((const char*)Images_Wood[(which - 1) >> 1], c_Images_Wood[(which - 1) >> 1]);
+	wxMemoryInputStream mem((const char*)ImageLoader_Wood[(which - 1) >> 1], c_ImageLoader_Wood[(which - 1) >> 1]);
 	wxImage img(mem, wxBITMAP_TYPE_JPEG);
     if ((which - 1) & 1)
 		img = img.Rotate90();

@@ -30,15 +30,6 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // remains consistent on all systems.
 101                     ICON                    "icon1.ico"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Splash Image
-//
-
-// Splash Image based on console of the Pibrac Organ
-// With Disclaimer
-SplashImage JPG "OurSplashScreen.jpg"
-
 
 /////////////////////////////////////////////////////////////////////////////
 //

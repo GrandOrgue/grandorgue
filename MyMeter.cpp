@@ -1,5 +1,8 @@
 /*
- * GrandOrgue - Copyright (C) 2009 GrandOrgue team - free pipe organ simulator based on MyOrgan Copyright (C) 2006 Kloria Publishing LLC
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
+ *
+ * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
+ * MyOrgan is a Trademark of Milan Digital Audio LLC
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -35,7 +38,8 @@ END_EVENT_TABLE()
 
 MyMeter::MyMeter(wxWindow* parent, wxWindowID id, int count) : wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
 {
-	static const wxChar* strings[] = {_("Transpose: "),_("Program: "), _("Polyphony: "), _("Volume (%): ")};
+	//static const wxChar* strings[] = {_("T"),_("M"), _("P"), _("V")};
+	static const wxChar* strings[] = {_(""),_(""), _(""), _("")};
 	if (count < 0 || count > 3)
 		count = 0;
 	m_count = count;
@@ -43,16 +47,16 @@ MyMeter::MyMeter(wxWindow* parent, wxWindowID id, int count) : wxControl(parent,
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	topSizer->Add(new wxStaticText(this, wxID_ANY, strings[count]), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 5);
+	topSizer->Add(new wxStaticText(this, wxID_ANY, strings[count]), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 0);
 
 	switch (count)
 	{
         case 0:
-            m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(48, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
+            m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
             break;
 		case 1:
 		case 3:
-		    m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(48, wxDefaultCoord), wxSP_ARROW_KEYS, 1, (count == 2) ? 512 : 100);
+		    m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 1, (count == 2) ? 512 : 100);
             break;
 		case 2:
             m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(56, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 4096);
@@ -85,7 +89,7 @@ MyMeter::MyMeter(wxWindow* parent, wxWindowID id, int count) : wxControl(parent,
             SetValue(1);
             break;
 		case 2:
-            SetValue(wxConfig::Get()->Read("PolyphonyLimit", 1024));
+            SetValue(wxConfig::Get()->Read("PolyphonyLimit", 2048));
             break;
 		case 3:
             SetValue(wxConfig::Get()->Read("Volume", 50));
@@ -117,7 +121,9 @@ void MyMeter::OnVolume(wxCommandEvent& event)
 	{
 		m_spin->SetValue(n);
 		m_spin->SetSelection(-1, -1);
+#ifdef __WXMSW__
 		return;
+#endif
 	}
 	if (g_sound)
 	    g_sound->volume = n;
@@ -136,7 +142,9 @@ void MyMeter::OnPolyphony(wxCommandEvent& event)
 	{
 		m_spin->SetValue(n);
 		m_spin->SetSelection(-1, -1);
+#ifdef __WXMSW__
 		return;
+#endif
 	}
 
 	wxColour colour = m_meters[0]->GetBackgroundColour();
@@ -158,7 +166,9 @@ void MyMeter::OnFrame(wxCommandEvent& event)
 	{
 		m_spin->SetValue(n);
 		m_spin->SetSelection(-1, -1);
+#ifdef __WXMSW__
 		return;
+#endif
 	}
 
 	if (organfile)
@@ -172,7 +182,9 @@ void MyMeter::OnTranspose(wxCommandEvent& event)
 	{
 		m_spin->SetValue(n);
 		m_spin->SetSelection(-1, -1);
+#ifdef __WXMSW__
 		return;
+#endif
 	}
     if (g_sound)
     {

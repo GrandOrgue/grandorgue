@@ -1,5 +1,8 @@
 /*
- * GrandOrgue - Copyright (C) 2009 GrandOrgue team - free pipe organ simulator based on MyOrgan Copyright (C) 2006 Kloria Publishing LLC
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
+ *
+ * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
+ * MyOrgan is a Trademark of Milan Digital Audio LLC
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -108,8 +111,8 @@ MyOrganFile* organfile = 0;
 WX_DECLARE_STRING_HASH_MAP(MyPipe*, MyPipeHash);
 MyPipeHash pipehash;
 
-extern const unsigned char* Images_Wood[];
-extern int c_Images_Wood[];
+extern const unsigned char* ImageLoader_Stops[];
+extern int c_ImageLoader_Stops[];
 
 void* MyObject::operator new (size_t s)
 {
@@ -477,7 +480,7 @@ bool INIReadKey(wxFileConfig* cfg, const char* group, const char* key, void* ret
 {
 	wxString string;
 	wxInt16 integer;
-	static wxInt16 sizes[2][4] = {{783, 1007, 1263, 1583}, {495, 663, 855, 1095}};
+	static wxInt16 sizes[2][4] = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
 
 	try
 	{
@@ -1838,11 +1841,11 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
         INIREAD(CombinationsStoreNonDisplayedDrawstops       ,Boolean ));
         INIREAD(DispScreenSizeHoriz                          ,Size    ),    0);
         INIREAD(DispScreenSizeVert                           ,Size    ),    1);
-        INIREAD(DispDrawstopBackgroundImageNum               ,Integer ),    1,   30);
-        INIREAD(DispConsoleBackgroundImageNum                ,Integer ),    1,   30);
-        INIREAD(DispKeyHorizBackgroundImageNum               ,Integer ),    1,   30);
-        INIREAD(DispKeyVertBackgroundImageNum                ,Integer ),    1,   30);
-        INIREAD(DispDrawstopInsetBackgroundImageNum          ,Integer ),    1,   30);
+        INIREAD(DispDrawstopBackgroundImageNum               ,Integer ),    1,   64);
+        INIREAD(DispConsoleBackgroundImageNum                ,Integer ),    1,   64);
+        INIREAD(DispKeyHorizBackgroundImageNum               ,Integer ),    1,   64);
+        INIREAD(DispKeyVertBackgroundImageNum                ,Integer ),    1,   64);
+        INIREAD(DispDrawstopInsetBackgroundImageNum          ,Integer ),    1,   64);
         INIREAD(DispControlLabelFont                         ,String  ));
         INIREAD(DispShortcutKeyLabelFont                     ,String  ));
         INIREAD(DispShortcutKeyLabelColour                   ,Color   ));
@@ -2474,8 +2477,8 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
 
 	for (i = 0; i < 9; i++)
 	{
-		wxMemoryInputStream mem((const char*)Images_Wood[i + 18], c_Images_Wood[i + 18]);
-		wxImage img(mem, wxBITMAP_TYPE_GIF);
+		wxMemoryInputStream mem((const char*)ImageLoader_Stops[i], c_ImageLoader_Stops[i]);
+		wxImage img(mem, wxBITMAP_TYPE_PNG);
 		m_images[i] = wxBitmap(img);
 	}
 
