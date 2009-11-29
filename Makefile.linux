@@ -16,11 +16,11 @@
 WX_CONFIG := wx-config --debug=no --unicode=no #--version=
 
 # set this to the name of the main executable file
-PROGRAM = MyOrgan
+PROGRAM = GrandOrgue
 
 # if your program has more than one source file, add more .o files to the line
 # below
-OBJECTS = $(PROGRAM).o MyLCD.o Images.o MyMeter.o MyProperties.o MySound.o OrganDocument.o OrganFile.o OrganView.o SettingsDialog.o wxGaugeAudio.o RtMidi.o RtAudio.o
+OBJECTS = MyOrgan.o MyLCD.o Images.o MyMeter.o MyProperties.o MySound.o OrganDocument.o OrganFile.o OrganView.o SettingsDialog.o wxGaugeAudio.o RtMidi.o RtAudio.o
 
 
 # you shouldn't have to edit anything below this line
@@ -29,7 +29,7 @@ CXX = g++-3.4 # $(shell $(WX_CONFIG) --cxx)
 .SUFFIXES:	.o .cpp
 
 .cpp.o :
-	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O2 -fomit-frame-pointer -ffast-math -D__LINUX_JACK__ -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -o $@ $<
+	$(CXX) -c `$(WX_CONFIG) --cxxflags` -O2 -fomit-frame-pointer -ffast-math -D__LINUX_JACK__ -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -o $@ $<
 #	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O3 -funit-at-a-time -ffast-math -fomit-frame-pointer -mmmx -msse -msse2 -msse3  -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -D__WXDEBUG__ -o $@ $<
 
 all:    $(PROGRAM)

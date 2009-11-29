@@ -581,12 +581,12 @@ public:
 
 #if defined(__LINUX_JACK__)
 
-class RtApiJack: public RtApi
+class GrandOrgue1: public RtApi
 {
 public:
 
-  RtApiJack();
-  ~RtApiJack();
+  GrandOrgue1();
+  ~GrandOrgue1();
   void tickStream();
   void closeStream();
   void startStream();

@@ -16,6 +16,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-D__WXDEBUG__" />
+					<Add directory="..\..\wxWidgets-2.8.10" />
 				</Compiler>
 				<Linker>
 					<Add library="libwxmsw28d_html" />
@@ -24,6 +25,7 @@
 					<Add library="libwxbase28d" />
 					<Add library="libwxzlibd" />
 					<Add library="libwxjpegd" />
+					<Add library="libwxpngd" />
 					<Add library="imon\SG_VFD.lib" />
 				</Linker>
 			</Target>
@@ -36,6 +38,7 @@
 				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
 					<Add option="-mtune=pentium3" />
+					<Add directory="..\..\wxWidgets-2.8.10" />
 				</Compiler>
 				<Linker>
 					<Add library="libwxmsw28_html" />
@@ -44,6 +47,7 @@
 					<Add library="libwxbase28" />
 					<Add library="libwxzlib" />
 					<Add library="libwxjpeg" />
+					<Add library="libwxpng" />
 					<Add library="imon\SG_VFD.lib" />
 				</Linker>
 			</Target>
@@ -64,6 +68,7 @@
 			<Add option="-D__WINDOWS_DS__" />
 			<Add directory="$(#wx.include)" />
 			<Add directory="directx\Include" />
+			<Add directory="..\..\wxWidgets-2.8.10" />
 		</Compiler>
 		<Linker>
 			<Add option="-Wl,--large-address-aware" />

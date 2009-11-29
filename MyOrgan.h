@@ -1,5 +1,8 @@
 /*
- * GrandOrgue - Copyright (C) 2009 GrandOrgue team - free pipe organ simulator based on MyOrgan Copyright (C) 2006 Kloria Publishing LLC
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
+ *
+ * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
+ * MyOrgan is a Trademark of Milan Digital Audio LLC
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,7 +22,7 @@
 
 #pragma once
 
-#define APP_NAME "GrandOrgue V 0.1"
+#define APP_NAME "GrandOrgue v0.2.0.1"
 #define MAX_POLYPHONY 4096
 #define LOW_MEM_CONDITION 33554432
 		// (32 megabytes)
@@ -55,8 +58,8 @@
 #include <wx/statline.h>
 #include <wx/snglinst.h>
 #include <wx/html/helpctrl.h>
-#include <wx/msw/private.h>
 #ifdef __WXMSW__
+#include <wx/msw/private.h>
 #include <wx/msw/registry.h>
 #endif
 
@@ -75,7 +78,6 @@
 #include "OrganDocument.h"
 #include "SettingsDialog.h"
 #include "MyProperties.h"
-
 
 #ifdef __VFD__
 #include "MyLCD.h"
@@ -107,6 +109,13 @@ public:
 	void OnHelp(wxCommandEvent& event);
 	void OnHelpRegister(wxCommandEvent& event);
 	void OnHelpAbout(wxCommandEvent& event);
+
+	//Add by Graham Goode Nov 2009
+	void OnSettingsVolume(wxCommandEvent& event);
+	void OnSettingsPolyphony(wxCommandEvent& event);
+	void OnSettingsMemory(wxCommandEvent& event);
+	void OnSettingsTranspose(wxCommandEvent& event);
+	//
 
 	void OnKeyCommand(wxKeyEvent& event);
 
@@ -162,6 +171,13 @@ enum
 	ID_AUDIO_MEMSET,
 	ID_AUDIO_PANIC,
     ID_AUDIO_SETTINGS,
+
+    // Added by Graham Goode Nov 2009
+    ID_VOLUME,
+    ID_POLYPHONY,
+    ID_MEMORY,
+    ID_TRANSPOSE,
+    //
 
 	ID_METER_AUDIO_SPIN,
 	ID_METER_AUDIO_LEFT,

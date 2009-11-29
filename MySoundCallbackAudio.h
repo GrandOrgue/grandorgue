@@ -1,5 +1,8 @@
 /*
- * GrandOrgue - Copyright (C) 2009 GrandOrgue team - free pipe organ simulator based on MyOrgan Copyright (C) 2006 Kloria Publishing LLC
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
+ *
+ * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
+ * MyOrgan is a Trademark of Milan Digital Audio LLC
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -177,7 +180,12 @@ int MySoundCallbackAudio(char* buffer, int bufferSize, void* WXUNUSED(userData))
 					continue;
                 ptr = g_buff[organfile->windchest[j].tremulant[i] + 1] + 2;
                 for (k = 0; k < bufferSize; k++)
+                #ifdef linux
+                    volume_buff[k] *= scalb(ptr[k], -23);
+                #endif
+                #ifdef _WIN32
                     volume_buff[k] *= _scalb(ptr[k], -23);
+                #endif
 			}
 
 			ptr = this_buff;
