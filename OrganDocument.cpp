@@ -20,12 +20,12 @@
  * MA 02111-1307, USA.
  */
 
-#include "MyOrgan.h"
+#include "GrandOrgue.h"
 
 IMPLEMENT_DYNAMIC_CLASS(OrganDocument, wxDocument)
 
-extern MySound* g_sound;
-extern MyOrganFile* organfile;
+extern GOrgueSound* g_sound;
+extern GrandOrgueFile* organfile;
 
 OrganDocument::~OrganDocument(void)
 {
@@ -52,7 +52,7 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	CloseOrgan();
 	bool open_sound = g_sound->OpenSound(false);
 
-	organfile = new MyOrganFile;
+	organfile = new GrandOrgueFile;
 	wxString error = organfile->Load(file, file2);
 	if (!error.IsEmpty())
 	{

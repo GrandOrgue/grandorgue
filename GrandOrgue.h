@@ -1,5 +1,5 @@
 /*
- * GrandOrgue - free pipe organ simulator based on MyOrgan
+ * GrandOrgue - a free pipe organ simulator based on MyOrgan
  *
  * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
  * MyOrgan is a Trademark of Milan Digital Audio LLC
@@ -22,7 +22,7 @@
 
 #pragma once
 
-#define APP_NAME "GrandOrgue v0.2.0.1"
+#define APP_NAME "GrandOrgue v0.2.0.3"
 #define MAX_POLYPHONY 4096
 #define LOW_MEM_CONDITION 33554432
 		// (32 megabytes)
@@ -71,24 +71,24 @@
 #include "RtMidi.h"
 
 #include "wxGaugeAudio.h"
-#include "MyMeter.h"
+#include "GOrgueMeter.h"
 #include "OrganFile.h"
-#include "MySound.h"
+#include "GOrgueSound.h"
 #include "OrganView.h"
 #include "OrganDocument.h"
 #include "SettingsDialog.h"
-#include "MyProperties.h"
+#include "GOrgueProperties.h"
 
 #ifdef __VFD__
-#include "MyLCD.h"
+#include "GOrgueLCD.h"
 #endif
 
-class MyFrame: public wxDocParentFrame
+class GOrgueFrame: public wxDocParentFrame
 {
-	DECLARE_CLASS(MyFrame)
+	DECLARE_CLASS(GOrgueFrame)
 public:
-    MyFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type);
-    ~MyFrame(void);
+    GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type);
+    ~GOrgueFrame(void);
 
 	void OnMeters(wxCommandEvent& event);
 
@@ -110,7 +110,9 @@ public:
 	void OnHelpRegister(wxCommandEvent& event);
 	void OnHelpAbout(wxCommandEvent& event);
 
-	//Add by Graham Goode Nov 2009
+	//Added by Graham Goode Nov 2009
+	// Added to allow for the mouse-over event creating a description of the new icons
+	// that were formerly just text
 	void OnSettingsVolume(wxCommandEvent& event);
 	void OnSettingsPolyphony(wxCommandEvent& event);
 	void OnSettingsMemory(wxCommandEvent& event);
@@ -125,7 +127,7 @@ public:
 
 	void OnUpdateLoaded(wxUpdateUIEvent& event);
 
-	MyMeter* m_meters[4];
+	GOrgueMeter* m_meters[4];
 	wxMemoryDC* m_gaugedc;
 	wxBitmap m_gauge;
 	wxBrush m_pedalBrush;
@@ -137,27 +139,27 @@ protected:
 
 class stServer;
 
-class MyApp : public wxApp
+class GOrgueApp : public wxApp
 {
 public:
-	MyApp();
+	GOrgueApp();
     bool OnInit();
 	int OnExit();
-	MyFrame* frame;
+	GOrgueFrame* frame;
 	wxDocManager* m_docManager;
 	wxString m_path;
 	wxHtmlHelpController* m_help;
 protected:
     wxLocale m_locale;
     stServer* m_server;
-	MySound* soundSystem;
+	GOrgueSound* soundSystem;
 	wxConfigBase* pConfig;
 	wxSingleInstanceChecker* single_instance;
 };
 
 enum
 {
-	ID_MYFIRSTMENU = wxID_HIGHEST,
+	ID_GOrgueFIRSTMENU = wxID_HIGHEST,
 
 	ID_FILE_OPEN,
 	ID_FILE_RELOAD,
@@ -188,7 +190,7 @@ enum
 	ID_METER_TRANSPOSE_SPIN,
 };
 
-DECLARE_APP(MyApp)
+DECLARE_APP(GOrgueApp)
 
 /*
  * wxSplashScreenModal

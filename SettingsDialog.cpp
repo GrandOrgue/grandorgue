@@ -20,14 +20,14 @@
  * MA 02111-1307, USA.
  */
 
-#include "MyOrgan.h"
+#include "GrandOrgue.h"
 
 #include "MIDIEvents.h"
 
 IMPLEMENT_CLASS(SettingsDialog, wxPropertySheetDialog)
 IMPLEMENT_CLASS(MIDIListenDialog, wxDialog)
 
-extern MySound* g_sound;
+extern GOrgueSound* g_sound;
 
 BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHECKLISTBOX(ID_MIDI_DEVICES, SettingsDialog::OnChanged)

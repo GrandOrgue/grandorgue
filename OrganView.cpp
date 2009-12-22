@@ -20,19 +20,19 @@
  * MA 02111-1307, USA.
  */
 
-#include "MyOrgan.h"
+#include "GrandOrgue.h"
 
 IMPLEMENT_DYNAMIC_CLASS(OrganView, wxView)
 
-extern void MIDIStopChange(MyStop& stop, bool on, int manual);
-extern void MIDICouplerChange(MyCoupler& stop, bool on);
-extern void MIDIDivisionalCouplerChange(MyDivisionalCoupler& stop, bool on);
+extern void MIDIStopChange(GOrgueStop& stop, bool on, int manual);
+extern void MIDICouplerChange(GOrgueCoupler& stop, bool on);
+extern void MIDIDivisionalCouplerChange(GOrgueDivisionalCoupler& stop, bool on);
 extern void MIDIDivisionalPush(int manual, int which, int depth = 0);
-extern void MIDIGeneralPush(MyGeneral& general);
+extern void MIDIGeneralPush(GOrgueGeneral& general);
 
 #define DOMAX(a,b) a=((a)>(b)?(a):(b))
 
-extern MyOrganFile* organfile;
+extern GrandOrgueFile* organfile;
 extern const unsigned char* ImageLoader_Wood[];
 extern int c_ImageLoader_Wood[];
 
@@ -385,7 +385,7 @@ void OrganView::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 
 void OrganView::DrawKey(wxDC& dc, int man, int k, bool usepen, wxRegion* region)
 {
-	MyManual* manual = &organfile->manual[man];
+	GOrgueManual* manual = &organfile->manual[man];
 
 	if (!manual->Displayed)
         return;
@@ -529,11 +529,11 @@ void OrganView::OnDrawstop(wxCommandEvent& event)
 	dc.SetDeviceOrigin(m_clientOrigin.x, m_clientOrigin.y);
 
 	if (event.GetEventType() == wxEVT_DRAWSTOP)
-        ((MyDrawstop*)event.GetClientData())->Draw(0, 0, &mdc, &dc);
+        ((GOrgueDrawstop*)event.GetClientData())->Draw(0, 0, &mdc, &dc);
 	else if (event.GetEventType() == wxEVT_PUSHBUTTON)
-        ((MyPushbutton*)event.GetClientData())->Draw(0, 0, &mdc, &dc);
+        ((GOrguePushbutton*)event.GetClientData())->Draw(0, 0, &mdc, &dc);
     else
-        ((MyEnclosure*)event.GetClientData())->Draw(0, 0, &mdc, &dc);
+        ((GOrgueEnclosure*)event.GetClientData())->Draw(0, 0, &mdc, &dc);
 }
 
 void OrganView::OnNoteOnOff(wxCommandEvent& event)
@@ -580,7 +580,7 @@ bool OrganView::OnClose(bool deleteWindow)
 	return true;
 }
 
-inline void HelpDrawStop(MyDrawstop* stop, wxDC* dc, int xx, int yy, bool right)
+inline void HelpDrawStop(GOrgueDrawstop* stop, wxDC* dc, int xx, int yy, bool right)
 {
     if (stop->Draw(xx, yy, dc))
     {
@@ -591,7 +591,7 @@ inline void HelpDrawStop(MyDrawstop* stop, wxDC* dc, int xx, int yy, bool right)
     }
 }
 
-inline void HelpDrawButton(MyPushbutton* button, wxDC* dc, int xx, int yy, bool right)
+inline void HelpDrawButton(GOrguePushbutton* button, wxDC* dc, int xx, int yy, bool right)
 {
     if (button->Draw(xx, yy, dc))
     {

@@ -47,37 +47,37 @@ enum ValueType
   typedef long long wxInt64;
 #endif
 
-class MyPipe;
+class GOrguePipe;
 
-class MyObject
+class GOrgueObject
 {
 public:
 	void* operator new (size_t s);
 	void* operator new[] (size_t s);
-//	virtual ~MyObject(void) { };		We never access MyObject directly, so this shouldn't be necessary.
+//	virtual ~GOrgueObject(void) { };		We never access GOrgueObject directly, so this shouldn't be necessary.
 };
 
-class MySampler
+class GOrgueSampler
 {
 public:
-	MySampler* next;		// must be first!
-	MyPipe* pipe;
+	GOrgueSampler* next;		// must be first!
+	GOrguePipe* pipe;
 	wxByte* ptr;
 	int fade, fadein, fadeout, faderemain, fademax, time, offset, type;
 	int current, stage, overflowing, shift;
 	wxInt64 overflow, f, v;
 };
 
-class MyPipe
+class GOrguePipe
 {
 public:
 	void Set(bool on);
 
 	unsigned _fourcc;
     unsigned _adler32;
-	MyPipe* _this;
+	GOrguePipe* _this;
 	float pitch;
-	MySampler* sampler;
+	GOrgueSampler* sampler;
 	int instances;
 	int WindchestGroup;
 	wxByte* ptr[3];
@@ -92,7 +92,7 @@ public:
 	wxByte data[1];	// expandable
 };
 
-class MyControl : public MyObject
+class GOrgueControl : public GOrgueObject
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
@@ -106,7 +106,7 @@ public:
 	wxString Name;
 };
 
-class MyDrawstop : public MyControl
+class GOrgueDrawstop : public GOrgueControl
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
@@ -115,7 +115,7 @@ public:
 	void Push(void) { Set(DefaultToEngaged ^ true); };
 	void MIDI(void);
 	virtual bool Set(bool on);
-	virtual ~MyDrawstop() { };
+	virtual ~GOrgueDrawstop() { };
 
 	bool DefaultToEngaged : 1;
 	bool DisplayInInvertedState : 1;
@@ -125,7 +125,7 @@ public:
 	wxInt16 StopControlMIDIKeyNumber;
 };
 
-class MyPushbutton : public MyControl
+class GOrguePushbutton : public GOrgueControl
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
@@ -133,7 +133,7 @@ public:
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	virtual void Push(int depth = 0) { };
 	void MIDI(void);
-	virtual ~MyPushbutton() { };
+	virtual ~GOrguePushbutton() { };
 
 	wxInt16 m_ManualNumber;
 	wxInt16 DispButtonRow;
@@ -142,11 +142,11 @@ public:
 	wxInt16 MIDIProgramChangeNumber;
 };
 
-class MyCoupler : public MyDrawstop
+class GOrgueCoupler : public GOrgueDrawstop
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
-    void Save(wxFileConfig& cfg, bool prefix) { MyDrawstop::Save(cfg, prefix, "Coupler"); }
+    void Save(wxFileConfig& cfg, bool prefix) { GOrgueDrawstop::Save(cfg, prefix, "Coupler"); }
 	bool Set(bool on);
 
 	bool UnisonOff : 1;
@@ -159,7 +159,7 @@ public:
 	wxInt16 DestinationKeyshift;
 };
 
-class MyDivisional : public MyPushbutton
+class GOrgueDivisional : public GOrguePushbutton
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
@@ -176,13 +176,13 @@ public:
 	wxByte tremulant[2][2];
 };
 
-class MyStop : public MyDrawstop
+class GOrgueStop : public GOrgueDrawstop
 {
 public:
     void Load(wxFileConfig* cfg, const char* group);
-    void Save(wxFileConfig& cfg, bool prefix) { MyDrawstop::Save(cfg, prefix, "Stop"); }
+    void Save(wxFileConfig& cfg, bool prefix) { GOrgueDrawstop::Save(cfg, prefix, "Stop"); }
 	bool Set(bool on);
-	~MyStop(void);
+	~GOrgueStop(void);
 
 	wxInt16 m_ManualNumber;
 
@@ -197,13 +197,13 @@ public:
 	short* pipe;
 };
 
-class MyManual : public MyObject
+class GOrgueManual : public GOrgueObject
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
-	void Set(int note, bool on, bool pretend = false, int depth = 0, MyCoupler* prev = 0);
+	void Set(int note, bool on, bool pretend = false, int depth = 0, GOrgueCoupler* prev = 0);
 	void MIDI(void);
-	~MyManual(void);
+	~GOrgueManual(void);
 
 	bool Displayed : 1;
 	bool DispKeyColourInverted : 1;
@@ -226,12 +226,12 @@ public:
 
 	wxString Name;
 
-	MyStop* stop;
-	MyCoupler* coupler;
-	MyDivisional* divisional;
+	GOrgueStop* stop;
+	GOrgueCoupler* coupler;
+	GOrgueDivisional* divisional;
 };
 
-class MyEnclosure : public MyObject
+class GOrgueEnclosure : public GOrgueObject
 {
 public:
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
@@ -246,21 +246,21 @@ public:
 	wxString Name;
 };
 
-class MyTremulant : public MyDrawstop
+class GOrgueTremulant : public GOrgueDrawstop
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
-    void Save(wxFileConfig& cfg, bool prefix) { MyDrawstop::Save(cfg, prefix, "Tremulant"); }
+    void Save(wxFileConfig& cfg, bool prefix) { GOrgueDrawstop::Save(cfg, prefix, "Tremulant"); }
 	bool Set(bool on);
 
 	wxInt32 Period;
 	wxInt16 StartRate;
 	wxInt16 StopRate;
 	wxInt16 AmpModDepth;
-	MyPipe* pipe;
+	GOrguePipe* pipe;
 };
 
-class MyWindchest : public MyObject
+class GOrgueWindchest : public GOrgueObject
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
@@ -272,7 +272,7 @@ public:
     wxInt16 tremulant[6];
 };
 
-class MyFrameGeneral : public MyPushbutton
+class GOrgueFrameGeneral : public GOrguePushbutton
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
@@ -290,32 +290,32 @@ public:
 	wxByte divisionalcoupler[1][2];
 };
 
-class MyGeneral : public MyFrameGeneral
+class GOrgueGeneral : public GOrgueFrameGeneral
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
 	void Save(wxFileConfig& cfg, bool prefix)
 	{
-        MyPushbutton::Save(cfg, prefix, "General");
-        MyFrameGeneral::Save(cfg, prefix);
+        GOrguePushbutton::Save(cfg, prefix, "General");
+        GOrgueFrameGeneral::Save(cfg, prefix);
     }
 };
 
-class MyPiston : public MyPushbutton
+class GOrguePiston : public GOrguePushbutton
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
-	void Save(wxFileConfig& cfg, bool prefix) { MyPushbutton::Save(cfg, prefix, "ReversiblePiston"); }
+	void Save(wxFileConfig& cfg, bool prefix) { GOrguePushbutton::Save(cfg, prefix, "ReversiblePiston"); }
 	void Push(int depth = 0);
 
-	MyDrawstop* drawstop;
+	GOrgueDrawstop* drawstop;
 };
 
-class MyDivisionalCoupler : public MyDrawstop
+class GOrgueDivisionalCoupler : public GOrgueDrawstop
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
-    void Save(wxFileConfig& cfg, bool prefix) { MyDrawstop::Save(cfg, prefix, "DivisionalCoupler"); }
+    void Save(wxFileConfig& cfg, bool prefix) { GOrgueDrawstop::Save(cfg, prefix, "DivisionalCoupler"); }
 	bool Set(bool on);
 
 	bool BiDirectionalCoupling : 1;
@@ -323,7 +323,7 @@ public:
 	wxInt16 manual[7];
 };
 
-class MyLabel : public MyObject
+class GOrgueLabel : public GOrgueObject
 {
 public:
 	void Load(wxFileConfig* cfg, const char* group);
@@ -343,13 +343,13 @@ public:
 	wxString Name;
 };
 
-class MyOrganFile : public MyObject
+class GrandOrgueFile : public GOrgueObject
 {
 public:
 	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);
 	void Save(const wxString& file);
 	void Revert(wxFileConfig& cfg);
-	~MyOrganFile(void);
+	~GrandOrgueFile(void);
 
 	void CompressWAV(char*& compress, short* fv, short* ptr, int count, int channels, int stage);
 
@@ -364,7 +364,7 @@ public:
 	wxBitmap m_images[9];
 	wxFileName m_path;
 	int b_squash;
-	MyPipe* m_compress_p;
+	GOrguePipe* m_compress_p;
 	wxFileConfig *m_cfg;
 	wxString m_filename;
 	long m_elapsed;
@@ -443,16 +443,16 @@ public:
 	wxString DispShortcutKeyLabelFont;
 	wxString DispGroupLabelFont;
 
-	MyManual manual[7];
-	MyEnclosure* enclosure;
-	MyTremulant* tremulant;
-	MyWindchest* windchest;
-	MyPiston* piston;
-	MyLabel* label;
-	MyGeneral* general;
-	MyFrameGeneral* framegeneral;
-	MyDivisionalCoupler* divisionalcoupler;
-	MyPipe** pipe;
+	GOrgueManual manual[7];
+	GOrgueEnclosure* enclosure;
+	GOrgueTremulant* tremulant;
+	GOrgueWindchest* windchest;
+	GOrguePiston* piston;
+	GOrgueLabel* label;
+	GOrgueGeneral* general;
+	GOrgueFrameGeneral* framegeneral;
+	GOrgueDivisionalCoupler* divisionalcoupler;
+	GOrguePipe** pipe;
 };
 
 #pragma pack()

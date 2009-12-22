@@ -20,7 +20,7 @@
  * MA 02111-1307, USA.
  */
 
-#include "MyOrgan.h"
+#include "GrandOrgue.h"
 
 BEGIN_EVENT_TABLE(wxGaugeAudio, wxControl)
 	EVT_ERASE_BACKGROUND(wxGaugeAudio::OnErase)
@@ -30,7 +30,7 @@ wxGaugeAudio::wxGaugeAudio(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
 {
 	m_value = 0;
 	m_clip = false;
-    m_frame = (MyFrame*)(GetGrandParent()->GetParent());
+    m_frame = (GOrgueFrame*)(GetGrandParent()->GetParent());
 }
 
 wxGaugeAudio::~wxGaugeAudio(void)

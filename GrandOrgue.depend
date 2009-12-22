@@ -4186,11 +4186,11 @@
 1258106156 source:c:\grandorgue\ourorgan\wxgaugeaudio.cpp
 	"MyOrgan.h"
 
-1258402086 source:c:\grandorgue\grandorgue\grandorgue.rc
+1259528035 source:c:\grandorgue\grandorgue\grandorgue.rc
 	"resource.h"
 	"afxres.h"
 
-1244415626 c:\grandorgue\grandorgue\resource.h
+1260831185 c:\grandorgue\grandorgue\resource.h
 
 1258726433 source:c:\grandorgue\grandorgue\images.cpp
 
@@ -4198,7 +4198,7 @@
 	"MyOrgan.h"
 	"imon/SG_VFD.h"
 
-1259138467 c:\grandorgue\grandorgue\myorgan.h
+1259528067 c:\grandorgue\grandorgue\myorgan.h
 	<wx/wx.h>
 	<wx/ipc.h>
 	<wx/file.h>
@@ -4275,11 +4275,11 @@
 	<vector>
 	<queue>
 
-1258113544 c:\grandorgue\grandorgue\wxgaugeaudio.h
+1261386008 c:\grandorgue\grandorgue\wxgaugeaudio.h
 
 1258113542 c:\grandorgue\grandorgue\mymeter.h
 
-1258113544 c:\grandorgue\grandorgue\organfile.h
+1261386008 c:\grandorgue\grandorgue\organfile.h
 
 1258113542 c:\grandorgue\grandorgue\mysound.h
 
@@ -4327,7 +4327,7 @@
 1258113354 source:c:\grandorgue\grandorgue\myproperties.cpp
 	"MyOrgan.h"
 
-1258113354 source:c:\grandorgue\grandorgue\mysound.cpp
+1259613811 source:c:\grandorgue\grandorgue\mysound.cpp
 	"MyOrgan.h"
 	"MySoundCallbackMIDI.h"
 	"MySoundCallbackAudio.h"
@@ -4337,16 +4337,16 @@
 1258374468 c:\grandorgue\grandorgue\mysoundcallbackaudio.h
 	"MMXSound.h"
 
-1258113542 c:\grandorgue\grandorgue\mmxsound.h
+1261386681 c:\grandorgue\grandorgue\mmxsound.h
 
-1258113354 source:c:\grandorgue\grandorgue\organdocument.cpp
-	"MyOrgan.h"
+1261386008 source:c:\grandorgue\grandorgue\organdocument.cpp
+	"GrandOrgue.h"
 
-1258728110 source:c:\grandorgue\grandorgue\organfile.cpp
-	"MyOrgan.h"
+1261386008 source:c:\grandorgue\grandorgue\organfile.cpp
+	"GrandOrgue.h"
 
-1258723067 source:c:\grandorgue\grandorgue\organview.cpp
-	"MyOrgan.h"
+1261386008 source:c:\grandorgue\grandorgue\organview.cpp
+	"GrandOrgue.h"
 
 1258128460 source:c:\grandorgue\grandorgue\rtaudio.cpp
 	"RtAudio.h"
@@ -4420,11 +4420,11 @@
 	<windows.h>
 	<mmsystem.h>
 
-1258132882 source:c:\grandorgue\grandorgue\settingsdialog.cpp
-	"MyOrgan.h"
+1261386008 source:c:\grandorgue\grandorgue\settingsdialog.cpp
+	"GrandOrgue.h"
 	"MIDIEvents.h"
 
-1258113542 c:\grandorgue\grandorgue\midievents.h
+1260831621 c:\grandorgue\grandorgue\midievents.h
 
 1229190266 source:c:\grandorgue\grandorgue\asio\asio.cpp
 	<string.h>
@@ -4459,8 +4459,8 @@
 	<assert.h>
 	"iasiothiscallresolver.h"
 
-1258113356 source:c:\grandorgue\grandorgue\wxgaugeaudio.cpp
-	"MyOrgan.h"
+1261386008 source:c:\grandorgue\grandorgue\wxgaugeaudio.cpp
+	"GrandOrgue.h"
 
 1258637755 c:\grandorgue\grandorgue\images\help.h
 
@@ -4491,4 +4491,130 @@
 1258638634 c:\grandorgue\grandorgue\images\gauge.h
 
 1258656804 c:\grandorgue\grandorgue\images\splash.h
+
+1260832372 source:c:\grandorgue\grandorgue\golcd.cpp
+	"GrandOrgue.h"
+	"imon/SG_VFD.h"
+
+1261386007 c:\grandorgue\grandorgue\grandorgue.h
+	<wx/wx.h>
+	<wx/ipc.h>
+	<wx/file.h>
+	<wx/intl.h>
+	<wx/image.h>
+	<wx/brush.h>
+	<wx/splash.h>
+	<wx/config.h>
+	<wx/region.h>
+	<wx/tglbtn.h>
+	<wx/numdlg.h>
+	<wx/slider.h>
+	<wx/fs_zip.h>
+	<wx/control.h>
+	<wx/mstream.h>
+	<wx/progdlg.h>
+	<wx/propdlg.h>
+	<wx/docview.h>
+	<wx/cmdproc.h>
+	<wx/hashmap.h>
+	<wx/filesys.h>
+	<wx/mimetype.h>
+	<wx/wfstream.h>
+	<wx/fileconf.h>
+	<wx/filename.h>
+	<wx/listctrl.h>
+	<wx/spinctrl.h>
+	<wx/statline.h>
+	<wx/snglinst.h>
+	<wx/html/helpctrl.h>
+	<wx/msw/private.h>
+	<wx/msw/registry.h>
+	<map>
+	<string>
+	"zlib.h"
+	"RtAudio.h"
+	"RtMidi.h"
+	"wxGaugeAudio.h"
+	"GOrgueMeter.h"
+	"OrganFile.h"
+	"GOrgueSound.h"
+	"OrganView.h"
+	"OrganDocument.h"
+	"SettingsDialog.h"
+	"GOrgueProperties.h"
+	"GOrgueLCD.h"
+
+1260832373 c:\grandorgue\grandorgue\gometer.h
+
+1260832371 c:\grandorgue\grandorgue\gosound.h
+
+1260832373 c:\grandorgue\grandorgue\goproperties.h
+
+1260832372 c:\grandorgue\grandorgue\golcd.h
+
+1260832372 source:c:\grandorgue\grandorgue\gometer.cpp
+	"GrandOrgue.h"
+
+1260832372 source:c:\grandorgue\grandorgue\goproperties.cpp
+	"GrandOrgue.h"
+
+1260832371 source:c:\grandorgue\grandorgue\gosound.cpp
+	"GrandOrgue.h"
+	"GOSoundCallbackMIDI.h"
+	"GOSoundCallbackAudio.h"
+
+1260832372 c:\grandorgue\grandorgue\gosoundcallbackmidi.h
+
+1260832371 c:\grandorgue\grandorgue\gosoundcallbackaudio.h
+	"MMXSound.h"
+
+1261386008 source:c:\grandorgue\grandorgue\grandorgue.cpp
+	"GrandOrgue.h"
+	"images/help.h"
+	"images/open.h"
+	"images/panic.h"
+	"images/properties.h"
+	"images/record.h"
+	"images/reload.h"
+	"images/save.h"
+	"images/settings.h"
+	"images/set.h"
+	"images/volume.h"
+	"images/polyphony.h"
+	"images/memory.h"
+	"images/transpose.h"
+	"images/gauge.h"
+	"images/splash.h"
+	"KeyConvert.h"
+	<windows.h>
+	<shlobj.h>
+	<malloc.h>
+
+1261386007 source:c:\grandorgue\grandorgue\gorguelcd.cpp
+	"GrandOrgue.h"
+	"imon/SG_VFD.h"
+
+1261386007 c:\grandorgue\grandorgue\gorguemeter.h
+
+1261386007 c:\grandorgue\grandorgue\gorguesound.h
+
+1261386007 c:\grandorgue\grandorgue\gorgueproperties.h
+
+1261386007 c:\grandorgue\grandorgue\gorguelcd.h
+
+1261386007 source:c:\grandorgue\grandorgue\gorguemeter.cpp
+	"GrandOrgue.h"
+
+1261386007 source:c:\grandorgue\grandorgue\gorgueproperties.cpp
+	"GrandOrgue.h"
+
+1261386007 source:c:\grandorgue\grandorgue\gorguesound.cpp
+	"GrandOrgue.h"
+	"GOrgueSoundCallbackMIDI.h"
+	"GOrgueSoundCallbackAudio.h"
+
+1261386008 c:\grandorgue\grandorgue\gorguesoundcallbackmidi.h
+
+1261386680 c:\grandorgue\grandorgue\gorguesoundcallbackaudio.h
+	"MMXSound.h"
 

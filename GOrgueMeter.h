@@ -22,11 +22,11 @@
 
 #pragma once
 
-class MyMeter : public wxControl
+class GOrgueMeter : public wxControl
 {
 public:
-	MyMeter(wxWindow* parent, wxWindowID id, int count);
-	~MyMeter(void);
+	GOrgueMeter(wxWindow* parent, wxWindowID id, int count);
+	~GOrgueMeter(void);
 	int GetValue();
 	void SetValue(int n);
 	void SetValue(int which, int n);

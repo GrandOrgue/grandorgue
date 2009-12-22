@@ -34,11 +34,11 @@ END_DECLARE_EVENT_TYPES()
 
 #pragma pack(1)
 
-class MySound
+class GOrgueSound
 {
 public:
-	MySound(void);
-	~MySound(void);
+	GOrgueSound(void);
+	~GOrgueSound(void);
 
 	bool OpenSound(bool wait = true);
 	void CloseSound();
@@ -56,9 +56,9 @@ public:
 
 	wxConfigBase *pConfig;
 
-	MySampler samplers[MAX_POLYPHONY];
-	MySampler* samplers_open[MAX_POLYPHONY];
-	MySampler* windchests[10 + 1 + 16];		// maximum 10 tremulants + 1 detach + 16 windchests
+	GOrgueSampler samplers[MAX_POLYPHONY];
+	GOrgueSampler* samplers_open[MAX_POLYPHONY];
+	GOrgueSampler* windchests[10 + 1 + 16];		// maximum 10 tremulants + 1 detach + 16 windchests
 	RtAudioFormat format;
 	wxWindow* m_parent;
 	int samplers_count;

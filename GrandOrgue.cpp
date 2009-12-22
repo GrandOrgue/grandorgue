@@ -1,5 +1,5 @@
 /*
- * MyOrgan - Copyright (C) 2006 Kloria Publishing LLC
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
  *
  * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
  * MyOrgan is a Trademark of Milan Digital Audio LLC
@@ -20,7 +20,7 @@
  * MA 02111-1307, USA.
  */
 
-#include "MyOrgan.h"
+#include "GrandOrgue.h"
 // New PNG Icons for the toolbar images added by Graham Goode in Nov 2009
 #include "images/help.h"
 #include "images/open.h"
@@ -58,16 +58,16 @@ void _heapwalk_()
 }
 #endif
 
-IMPLEMENT_APP(MyApp)
+IMPLEMENT_APP(GOrgueApp)
 
 //extern const unsigned char* ImageLoader_Wood[];
 //extern int c_ImageLoader_Wood[];
-extern MySound* g_sound;
-extern MyOrganFile* organfile;
+extern GOrgueSound* g_sound;
+extern GrandOrgueFile* organfile;
 
 void AsyncLoadFile(wxString what)
 {
-    MyApp* app = &::wxGetApp();
+    GOrgueApp* app = &::wxGetApp();
     if (!app->frame || !app->m_docManager)
         return;
 
@@ -85,7 +85,7 @@ public:
     ~stConnection() { }
     bool OnExecute(const wxString& topic, wxChar* data, int size, wxIPCFormat format)
     {
-        MyApp* app = &::wxGetApp();
+        GOrgueApp* app = &::wxGetApp();
 
         app->frame->Raise();
         if (data[0])
@@ -100,7 +100,7 @@ class stServer : public wxServer
 public:
     wxConnectionBase* OnAcceptConnection(const wxString& topic)
     {
-        MyApp* app = &::wxGetApp();
+        GOrgueApp* app = &::wxGetApp();
         if (!app->frame || !app->m_docManager)
             return false;
 
@@ -117,28 +117,28 @@ public:
     wxConnectionBase* OnMakeConnection() { return new stConnection; }
 };
 
-class MyDocManager : public wxDocManager
+class GOrgueDocManager : public wxDocManager
 {
 public:
     void OnUpdateFileSave(wxUpdateUIEvent& event);
     DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(MyDocManager, wxDocManager)
-    EVT_UPDATE_UI(wxID_SAVE, MyDocManager::OnUpdateFileSave)
+BEGIN_EVENT_TABLE(GOrgueDocManager, wxDocManager)
+    EVT_UPDATE_UI(wxID_SAVE, GOrgueDocManager::OnUpdateFileSave)
 END_EVENT_TABLE();
 
-void MyDocManager::OnUpdateFileSave(wxUpdateUIEvent& event)
+void GOrgueDocManager::OnUpdateFileSave(wxUpdateUIEvent& event)
 {
     wxDocument *doc = GetCurrentDocument();
     event.Enable( doc );
 }
 
-MyApp::MyApp()
+GOrgueApp::GOrgueApp()
 {
 }
 
-bool MyApp::OnInit()
+bool GOrgueApp::OnInit()
 {
     int lang = m_locale.GetSystemLanguage();
 
@@ -226,7 +226,7 @@ bool MyApp::OnInit()
 	srand(::wxGetUTCTime());
 
 	m_help = new wxHtmlHelpController(wxHF_CONTENTS | wxHF_INDEX | wxHF_SEARCH | wxHF_ICONS_BOOK | wxHF_FLAT_TOOLBAR);
-        m_help->AddBook(wxFileName(wxT("MyOrgan.htb")));
+        m_help->AddBook(wxFileName(wxT("GrandOrgue.htb")));
 
 #ifdef __WIN32__
 	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
@@ -239,12 +239,12 @@ bool MyApp::OnInit()
     m_path="$HOME"; //TODO??
     //wxFont::SetDefaultEncoding(wxFONTENCODING_CP1250);
 #endif
-	m_docManager = new MyDocManager;
+	m_docManager = new GOrgueDocManager;
 	new wxDocTemplate(m_docManager, _("Sample set definition files"), "*.organ", wxEmptyString, "organ", "Organ Doc", "Organ View", CLASSINFO(OrganDocument), CLASSINFO(OrganView));
 	m_docManager->SetMaxDocsOpen(1);
 
-	soundSystem = new MySound;
-	frame = new MyFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, APP_NAME, wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE);
+	soundSystem = new GOrgueSound;
+	frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, APP_NAME, wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE);
 	frame->DoSplash();
 	bool open_sound = soundSystem->OpenSound();
 	::wxSleep(2);
@@ -265,7 +265,7 @@ bool MyApp::OnInit()
         argc = 1;
     }
 #ifdef __VFD__
-    MyLCD_Open();
+    GOrgueLCD_Open();
 #endif
 
     g_sound->UpdateOrganMIDI(); //retrieve MIDI settings for loading organs
@@ -273,10 +273,10 @@ bool MyApp::OnInit()
 	return true;
 }
 
-int MyApp::OnExit()
+int GOrgueApp::OnExit()
 {
 #ifdef __VFD__
-    MyLCD_Close();
+    GOrgueLCD_Close();
 #endif
 	if (soundSystem)
 		delete soundSystem;
@@ -292,39 +292,39 @@ int MyApp::OnExit()
     return wxApp::OnExit();
 }
 
-IMPLEMENT_CLASS(MyFrame, wxDocParentFrame)
-BEGIN_EVENT_TABLE(MyFrame, wxDocParentFrame)
-	EVT_COMMAND(0, wxEVT_METERS, MyFrame::OnMeters)
-	EVT_COMMAND(0, wxEVT_LOADFILE, MyFrame::OnLoadFile)
-    EVT_MENU_OPEN(MyFrame::OnMenuOpen)
-	EVT_MENU(ID_FILE_OPEN, MyFrame::OnOpen)
-	EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9, MyFrame::OnOpen)
-	EVT_MENU(ID_FILE_RELOAD, MyFrame::OnReload)
-	EVT_MENU(ID_FILE_REVERT, MyFrame::OnRevert)
-	EVT_MENU(ID_FILE_PROPERTIES, MyFrame::OnProperties)
-	EVT_MENU(ID_FILE_LOAD, MyFrame::OnLoad)
-	EVT_MENU(ID_FILE_SAVE, MyFrame::OnSave)
-	EVT_MENU(ID_FILE_CACHE, MyFrame::OnCache)
-	EVT_MENU(ID_AUDIO_PANIC, MyFrame::OnAudioPanic)
-	EVT_MENU(ID_AUDIO_RECORD, MyFrame::OnAudioRecord)
-	EVT_MENU(ID_AUDIO_MEMSET, MyFrame::OnAudioMemset)
-	EVT_MENU(ID_AUDIO_SETTINGS, MyFrame::OnAudioSettings)
-	EVT_MENU(wxID_HELP, MyFrame::OnHelp)
-	EVT_MENU(wxID_ABOUT, MyFrame::OnHelpAbout)
+IMPLEMENT_CLASS(GOrgueFrame, wxDocParentFrame)
+BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
+	EVT_COMMAND(0, wxEVT_METERS, GOrgueFrame::OnMeters)
+	EVT_COMMAND(0, wxEVT_LOADFILE, GOrgueFrame::OnLoadFile)
+    EVT_MENU_OPEN(GOrgueFrame::OnMenuOpen)
+	EVT_MENU(ID_FILE_OPEN, GOrgueFrame::OnOpen)
+	EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9, GOrgueFrame::OnOpen)
+	EVT_MENU(ID_FILE_RELOAD, GOrgueFrame::OnReload)
+	EVT_MENU(ID_FILE_REVERT, GOrgueFrame::OnRevert)
+	EVT_MENU(ID_FILE_PROPERTIES, GOrgueFrame::OnProperties)
+	EVT_MENU(ID_FILE_LOAD, GOrgueFrame::OnLoad)
+	EVT_MENU(ID_FILE_SAVE, GOrgueFrame::OnSave)
+	EVT_MENU(ID_FILE_CACHE, GOrgueFrame::OnCache)
+	EVT_MENU(ID_AUDIO_PANIC, GOrgueFrame::OnAudioPanic)
+	EVT_MENU(ID_AUDIO_RECORD, GOrgueFrame::OnAudioRecord)
+	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
+	EVT_MENU(ID_AUDIO_SETTINGS, GOrgueFrame::OnAudioSettings)
+	EVT_MENU(wxID_HELP, GOrgueFrame::OnHelp)
+	EVT_MENU(wxID_ABOUT, GOrgueFrame::OnHelpAbout)
 	// New events for Volume, Polyphony, Memory Level, and Transpose
-	EVT_MENU(ID_VOLUME, MyFrame::OnSettingsVolume)
-	EVT_MENU(ID_POLYPHONY, MyFrame::OnSettingsPolyphony)
-	EVT_MENU(ID_MEMORY, MyFrame::OnSettingsMemory)
-	EVT_MENU(ID_TRANSPOSE, MyFrame::OnSettingsTranspose)
+	EVT_MENU(ID_VOLUME, GOrgueFrame::OnSettingsVolume)
+	EVT_MENU(ID_POLYPHONY, GOrgueFrame::OnSettingsPolyphony)
+	EVT_MENU(ID_MEMORY, GOrgueFrame::OnSettingsMemory)
+	EVT_MENU(ID_TRANSPOSE, GOrgueFrame::OnSettingsTranspose)
 	// End
-	EVT_KEY_DOWN(MyFrame::OnKeyCommand)
-	EVT_KEY_UP(MyFrame::OnKeyCommand)
+	EVT_KEY_DOWN(GOrgueFrame::OnKeyCommand)
+	EVT_KEY_UP(GOrgueFrame::OnKeyCommand)
 
-	EVT_UPDATE_UI(wxID_SAVE, MyFrame::OnUpdateLoaded)
-	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, MyFrame::OnUpdateLoaded)
+	EVT_UPDATE_UI(wxID_SAVE, GOrgueFrame::OnUpdateLoaded)
+	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
 
-void MyFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, unsigned char* toolbarImage, int size, wxItemKind kind)
+void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, unsigned char* toolbarImage, int size, wxItemKind kind)
 {
 	menu->Append(id, item, wxEmptyString, kind);
 	if (toolbarImage)
@@ -335,7 +335,7 @@ void MyFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString
 	}
 }
 
-MyFrame::MyFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type)
+GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type)
     : wxDocParentFrame(manager, frame, id, title, pos, size, type)
 {
 	m_gaugedc = 0;
@@ -391,10 +391,10 @@ MyFrame::MyFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxS
 	m_gaugedc = new wxMemoryDC();
 	m_gaugedc->SelectObject(m_gauge);
 
-	m_meters[0] = new MyMeter(tb, ID_METER_AUDIO_SPIN, 3);
-	m_meters[1] = new MyMeter(tb, ID_METER_POLY_SPIN,  2);
-	m_meters[2] = new MyMeter(tb, ID_METER_FRAME_SPIN, 1);
-	m_meters[3] = new MyMeter(tb, ID_METER_TRANSPOSE_SPIN, 0);
+	m_meters[0] = new GOrgueMeter(tb, ID_METER_AUDIO_SPIN, 3);
+	m_meters[1] = new GOrgueMeter(tb, ID_METER_POLY_SPIN,  2);
+	m_meters[2] = new GOrgueMeter(tb, ID_METER_FRAME_SPIN, 1);
+	m_meters[3] = new GOrgueMeter(tb, ID_METER_TRANSPOSE_SPIN, 0);
 
 	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), Icon_volume, sizeof(Icon_volume));
 	tb->AddControl(m_meters[0]);
@@ -424,7 +424,7 @@ MyFrame::MyFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxS
     m_pedalBrush.SetColour(0xA0, 0x80, 0x40);
 }
 
-MyFrame::~MyFrame()
+GOrgueFrame::~GOrgueFrame()
 {
     if (m_gaugedc)
     {
@@ -433,7 +433,7 @@ MyFrame::~MyFrame()
     }
 }
 
-void MyFrame::OnMeters(wxCommandEvent& event)
+void GOrgueFrame::OnMeters(wxCommandEvent& event)
 {
 	int n = event.GetInt();
 	m_meters[0]->SetValue(0, n);
@@ -441,7 +441,7 @@ void MyFrame::OnMeters(wxCommandEvent& event)
 	m_meters[1]->SetValue(0, n >> 16);
 }
 
-void MyFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
+void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 {
 	if (g_sound)
 	{
@@ -453,7 +453,7 @@ void MyFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 	event.Enable(organfile && m_docManager->GetCurrentDocument() && (event.GetId() == ID_FILE_REVERT ? organfile->b_customized : true));
 }
 
-void MyFrame::OnLoadFile(wxCommandEvent& event)
+void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
     if (!IsEnabled())
         return;
@@ -468,7 +468,7 @@ void MyFrame::OnLoadFile(wxCommandEvent& event)
         organfile->m_opening = prev;
 }
 
-void MyFrame::OnOpen(wxCommandEvent& event)
+void GOrgueFrame::OnOpen(wxCommandEvent& event)
 {
 	if (organfile)
 		organfile->m_opening = true;
@@ -488,7 +488,7 @@ void MyFrame::OnOpen(wxCommandEvent& event)
 		event.Skip();
 }
 
-void MyFrame::OnLoad(wxCommandEvent& event)
+void GOrgueFrame::OnLoad(wxCommandEvent& event)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc || !organfile)
@@ -506,7 +506,7 @@ void MyFrame::OnLoad(wxCommandEvent& event)
     }
 }
 
-void MyFrame::OnSave(wxCommandEvent& event)
+void GOrgueFrame::OnSave(wxCommandEvent& event)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc || !organfile)
@@ -536,7 +536,7 @@ wxString formatSize(wxLongLong& size)
     return wxString::Format("%.2f %s", n, sizes[i]);
 }
 
-void MyFrame::OnCache(wxCommandEvent& event)
+void GOrgueFrame::OnCache(wxCommandEvent& event)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc || !organfile)
@@ -597,11 +597,11 @@ void MyFrame::OnCache(wxCommandEvent& event)
                 break;
             }
 
-            MyPipe* pipe = organfile->pipe[todo[i]];
+            GOrguePipe* pipe = organfile->pipe[todo[i]];
             int size = organfile->pipe_filesizes[todo[i]];
             pipe->_this = pipe;
-            pipe->_adler32 = adler32(0, (Bytef*)&pipe->_this, size - offsetof(MyPipe, _this));
-            pipe->_fourcc = *(unsigned *)"MyOc";
+            pipe->_adler32 = adler32(0, (Bytef*)&pipe->_this, size - offsetof(GOrguePipe, _this));
+            pipe->_fourcc = *(unsigned *)"GOrgueOc";
 
             #ifdef linux
             written = write(ffile, pipe, size);
@@ -622,12 +622,12 @@ void MyFrame::OnCache(wxCommandEvent& event)
     }
 }
 
-void MyFrame::OnReload(wxCommandEvent& event)
+void GOrgueFrame::OnReload(wxCommandEvent& event)
 {
 	ProcessCommand(wxID_FILE1);
 }
 
-void MyFrame::OnRevert(wxCommandEvent& event)
+void GOrgueFrame::OnRevert(wxCommandEvent& event)
 {
     if (organfile && m_docManager->GetCurrentDocument() && ::wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), APP_NAME, wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
     {
@@ -642,20 +642,20 @@ void MyFrame::OnRevert(wxCommandEvent& event)
     }
 }
 
-void MyFrame::OnProperties(wxCommandEvent& event)
+void GOrgueFrame::OnProperties(wxCommandEvent& event)
 {
-	MyProperties dlg(this);
+	GOrgueProperties dlg(this);
 	dlg.ShowModal();
 }
 
-void MyFrame::OnAudioPanic(wxCommandEvent& WXUNUSED(event))
+void GOrgueFrame::OnAudioPanic(wxCommandEvent& WXUNUSED(event))
 {
 	if (!g_sound)
 		return;
 	g_sound->ResetSound();
 }
 
-void MyFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
+void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 {
 	if (!g_sound)
 		return;
@@ -666,14 +666,14 @@ void MyFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 		g_sound->OpenWAV();
 }
 
-void MyFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
+void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 {
 	if (!::wxGetApp().m_docManager->GetCurrentDocument() || !g_sound)
 		return;
 	g_sound->b_memset ^= true;
 }
 
-void MyFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
+void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 {
 ::wxLogDebug("settingsdialog..");
     SettingsDialog dialog(this);
@@ -682,7 +682,7 @@ void MyFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
     g_sound->UpdateOrganMIDI();
 }
 
-void MyFrame::OnHelp(wxCommandEvent& event)
+void GOrgueFrame::OnHelp(wxCommandEvent& event)
 {
 #ifdef DEBUGHEAP
     _heapwalk_();
@@ -691,9 +691,9 @@ void MyFrame::OnHelp(wxCommandEvent& event)
     ::wxGetApp().m_help->Display("User Interface");
 }
 
-void MyFrame::OnHelpRegister(wxCommandEvent& event)
+void GOrgueFrame::OnHelpRegister(wxCommandEvent& event)
 {
-	MyRegister dlg(this);
+	GOrgueRegister dlg(this);
 	if (dlg.ShowModal() == wxID_OK)
 	{
 	    wxString str1 = dlg.m_key->GetValue(), str2;
@@ -705,32 +705,32 @@ void MyFrame::OnHelpRegister(wxCommandEvent& event)
 	}
 }
 
-void MyFrame::OnSettingsVolume(wxCommandEvent& event)
+void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)
 {
 	//
 }
 
-void MyFrame::OnSettingsPolyphony(wxCommandEvent& event)
+void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
 {
 	//
 }
 
-void MyFrame::OnSettingsMemory(wxCommandEvent& event)
+void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
 {
 	//
 }
 
-void MyFrame::OnSettingsTranspose(wxCommandEvent& event)
+void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 {
 	//
 }
 
-void MyFrame::OnHelpAbout(wxCommandEvent& event)
+void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)
 {
 	DoSplash(false);
 }
 
-void MyFrame::DoSplash(bool timeout)
+void GOrgueFrame::DoSplash(bool timeout)
 {
     wxMemoryInputStream mem(Image_Splash, sizeof(Image_Splash));
 	wxImage img(mem, wxBITMAP_TYPE_JPEG);
@@ -740,7 +740,7 @@ void MyFrame::DoSplash(bool timeout)
 }
 
 
-void MyFrame::OnKeyCommand(wxKeyEvent& event)
+void GOrgueFrame::OnKeyCommand(wxKeyEvent& event)
 {
 	if (g_sound && g_sound->b_memset ^ event.ShiftDown())
 	{
@@ -751,7 +751,7 @@ void MyFrame::OnKeyCommand(wxKeyEvent& event)
 	int i, j, k = event.GetKeyCode();
     if (event.GetEventType() == wxEVT_KEY_DOWN && !event.AltDown())
     {
-        MyMeter* meter = ::wxGetApp().frame->m_meters[2];
+        GOrgueMeter* meter = ::wxGetApp().frame->m_meters[2];
         OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
         switch(k)
         {
@@ -803,7 +803,7 @@ void MyFrame::OnKeyCommand(wxKeyEvent& event)
 		event.Skip();
 }
 
-void MyFrame::OnMenuOpen(wxMenuEvent& event)
+void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
 {
     DoMenuUpdates(event.GetMenu());
     event.Skip();

@@ -20,8 +20,7 @@
  * MA 02111-1307, USA.
  */
 
-#include "MyOrgan.h"
-
+#include "GrandOrgue.h"
 #if 0
 void * _cache_p_[1048576];
 size_t _cache_i_ = 0;
@@ -104,31 +103,31 @@ inline void operator delete[](void* what)
 
 extern void _heapwalk_();
 
-extern MySound* g_sound;
+extern GOrgueSound* g_sound;
 extern char* s_MIDIMessages[];
-MyOrganFile* organfile = 0;
+GrandOrgueFile* organfile = 0;
 
-WX_DECLARE_STRING_HASH_MAP(MyPipe*, MyPipeHash);
-MyPipeHash pipehash;
+WX_DECLARE_STRING_HASH_MAP(GOrguePipe*, GOrguePipeHash);
+GOrguePipeHash pipehash;
 
 extern const unsigned char* ImageLoader_Stops[];
 extern int c_ImageLoader_Stops[];
 
-void* MyObject::operator new (size_t s)
+void* GOrgueObject::operator new (size_t s)
 {
 	void* chunk = ::operator new(s);
 	memset(chunk, 0, s);
 	return chunk;
 }
 
-void* MyObject::operator new[] (size_t s)
+void* GOrgueObject::operator new[] (size_t s)
 {
 	void* chunk = ::operator new(s);
 	memset(chunk, 0, s);
 	return chunk;
 }
 
-inline int ra_getindex(MyPipe* pipe, int *f, int *v)
+inline int ra_getindex(GOrguePipe* pipe, int *f, int *v)
 {
 	register int retval = 0;
 	if (v[0] + v[1] + v[2] + v[3] >= 0)
@@ -140,7 +139,7 @@ inline int ra_getindex(MyPipe* pipe, int *f, int *v)
 	return retval;
 }
 
-inline int ra_getindex(MyPipe* pipe, short *f, short *v)
+inline int ra_getindex(GOrguePipe* pipe, short *f, short *v)
 {
 	register int retval = 0;
 	if ((int)v[0] + (int)v[1] + (int)v[2] + (int)v[3] >= 0)
@@ -150,7 +149,7 @@ inline int ra_getindex(MyPipe* pipe, short *f, short *v)
 	return retval;
 }
 
-void MyPipe::Set(bool on)
+void GOrguePipe::Set(bool on)
 {
 	if (on)
 	{
@@ -158,12 +157,12 @@ void MyPipe::Set(bool on)
 		{
 			if (g_sound->samplers_count >= g_sound->polyphony)
 				return;
-			MySampler* sampler = g_sound->samplers_open[g_sound->samplers_count++];
-			memset(sampler, 0, sizeof(MySampler));
+			GOrgueSampler* sampler = g_sound->samplers_open[g_sound->samplers_count++];
+			memset(sampler, 0, sizeof(GOrgueSampler));
 			if (instances < 0)
 				sampler->stage = 2;
 			else if (g_sound->b_random && !g_sound->windchests[WindchestGroup])
-				sampler->offset = rand() & 0x78;	// random 0-15, *2 stereo *4 sizeof(int)
+			sampler->offset = rand() & 0x78;
 			sampler->type = types[0];
 			sampler->fade = sampler->fademax = ra_amp;
 			sampler->current = offset[0];
@@ -189,8 +188,8 @@ void MyPipe::Set(bool on)
 			{
 				if (g_sound->samplers_count < g_sound->polyphony && organfile->windchest[WindchestGroup].m_Volume)
 				{
-					MySampler* sampler = g_sound->samplers_open[g_sound->samplers_count++];
-					memset(sampler, 0, sizeof(MySampler));
+					GOrgueSampler* sampler = g_sound->samplers_open[g_sound->samplers_count++];
+					memset(sampler, 0, sizeof(GOrgueSampler));
 					sampler->current = offset[2];
 					sampler->ptr = ptr[2];
 					sampler->pipe = this;
@@ -265,7 +264,7 @@ inline short SynthTrem(double amp, double angle, double fade)
 	return (short)(fade * amp * sin(angle));
 }
 
-void MyOrganFile::CompressWAV(char*& compress, short* fv, short* ptr, int count, int channels, int stage)
+void GrandOrgueFile::CompressWAV(char*& compress, short* fv, short* ptr, int count, int channels, int stage)
 {
 	int f[4] = {0, 0, 0, 0}, v[4] = {0, 0, 0, 0}, a[4] = {0, 0, 0, 0};
 	int size = 0, index;
@@ -693,7 +692,7 @@ wxInt16 INIReadFontSize(wxFileConfig* cfg, const char* group, const char* key, b
 #define GET_BIT(x,y,z) (x[y >> 3][z] & (0x80 >> (y & 7)) ? true : false)
 #define SET_BIT(x,y,z,b) (b ? x[y >> 3][z] |= (0x80 >> (y & 7)) : x[y >> 3][z] &= (0xFFFFFF7F >> (y & 7)))
 
-void MyManual::Load(wxFileConfig* cfg, const char* group)
+void GOrgueManual::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(Name                                         ,String  ),   32);
 	INIREAD(NumberOfLogicalKeys                          ,Integer ),    1,  192);
@@ -712,7 +711,7 @@ void MyManual::Load(wxFileConfig* cfg, const char* group)
 	int i, j;
 	char buffer[64];
 
-	stop = new MyStop[NumberOfStops];
+	stop = new GOrgueStop[NumberOfStops];
 	for (i = 0; i < NumberOfStops; i++)
 	{
 		sprintf(buffer, "Stop%03d", i + 1);
@@ -721,7 +720,7 @@ void MyManual::Load(wxFileConfig* cfg, const char* group)
 		stop[i].Load(cfg, buffer);
 	}
 
-	coupler = new MyCoupler[NumberOfCouplers];
+	coupler = new GOrgueCoupler[NumberOfCouplers];
 	for (i = 0; i < NumberOfCouplers; i++)
 	{
 		sprintf(buffer, "Coupler%03d", i + 1);
@@ -729,7 +728,7 @@ void MyManual::Load(wxFileConfig* cfg, const char* group)
 		coupler[i].Load(cfg, buffer);
 	}
 
-	divisional = new MyDivisional[NumberOfDivisionals];
+	divisional = new GOrgueDivisional[NumberOfDivisionals];
 	for (i = 0; i < NumberOfDivisionals; i++)
 	{
 		sprintf(buffer, "Divisional%03d", i + 1);
@@ -763,7 +762,7 @@ void MyManual::Load(wxFileConfig* cfg, const char* group)
 	}
 }
 
-void MyManual::Set(int note, bool on, bool pretend, int depth, MyCoupler* prev)
+void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler* prev)
 {
 	int i, j;
 
@@ -848,7 +847,7 @@ void MyManual::Set(int note, bool on, bool pretend, int depth, MyCoupler* prev)
 	}
 }
 
-MyManual::~MyManual(void)
+GOrgueManual::~GOrgueManual(void)
 {
 	if (stop)
 		delete[] stop;
@@ -858,7 +857,7 @@ MyManual::~MyManual(void)
 		delete[] divisional;
 }
 
-void MyWindchest::Load(wxFileConfig* cfg, const char* group)
+void GOrgueWindchest::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(NumberOfEnclosures                           ,Integer ),    0,    6);
 	INIREAD(NumberOfTremulants                           ,Integer ),    0,    6);
@@ -878,7 +877,7 @@ void MyWindchest::Load(wxFileConfig* cfg, const char* group)
 	}
 }
 
-bool MyEnclosure::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
+bool GOrgueEnclosure::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 {
 	if (!dc)
 	{
@@ -905,7 +904,7 @@ bool MyEnclosure::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 	return false;
 }
 
-void MyEnclosure::Load(wxFileConfig* cfg, const char* group)
+void GOrgueEnclosure::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(Name                                         ,String  ),   64);
 	INIREAD(AmpMinimumLevel                              ,Integer ),    0,  100);
@@ -913,7 +912,7 @@ void MyEnclosure::Load(wxFileConfig* cfg, const char* group)
 	Set(127);	// default to full volume until we receive any messages
 }
 
-void MyEnclosure::Set(int n)
+void GOrgueEnclosure::Set(int n)
 {
     if (n < 0)
         n = 0;
@@ -925,7 +924,7 @@ void MyEnclosure::Set(int n)
 	::wxGetApp().frame->AddPendingEvent(event);
 }
 
-void MyLabel::Load(wxFileConfig* cfg, const char* group)
+void GOrgueLabel::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(Name                                         ,String  ),   64);
 	INIREAD(FreeXPlacement                               ,Boolean ));
@@ -955,7 +954,7 @@ void MyLabel::Load(wxFileConfig* cfg, const char* group)
 	INIREAD(DispImageNum                                 ,Integer ),    1,    1);
 }
 
-void MyControl::Load(wxFileConfig* cfg, const char* group)
+void GOrgueControl::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(Name                                         ,String  ),   64);
 	INIREAD(ShortcutKey                                  ,Integer ),    0,  255, false);
@@ -968,7 +967,7 @@ void MyControl::Load(wxFileConfig* cfg, const char* group)
 		ObjectNumber = atoi(group + strlen(group) - 3);
 }
 
-void MyDrawstop::Load(wxFileConfig* cfg, const char* group)
+void GOrgueDrawstop::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(DispDrawstopRow                              ,Integer ),    1, 99 + organfile->DispExtraDrawstopRows);
 	INIREAD(DispDrawstopCol                              ,Integer ),    1, DispDrawstopRow > 99 ? organfile->DispExtraDrawstopCols : organfile->DispDrawstopCols);
@@ -977,10 +976,10 @@ void MyDrawstop::Load(wxFileConfig* cfg, const char* group)
 	INIREAD(DispImageNum                                 ,Integer ),    1,    2);
 	INIREAD(StopControlMIDIKeyNumber                     ,Integer ),    0,  127, false);
 
-	MyControl::Load(cfg, group);
+	GOrgueControl::Load(cfg, group);
 }
 
-bool MyDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
+bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 {
 	int x, y, i;
 	if (!Displayed)
@@ -1032,7 +1031,7 @@ bool MyDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 	return false;
 }
 
-bool MyDrawstop::Set(bool on)
+bool GOrgueDrawstop::Set(bool on)
 {
 	if (DefaultToEngaged == on)
 		return on;
@@ -1051,12 +1050,12 @@ bool MyDrawstop::Set(bool on)
 	    }
 	}
 #ifdef __VFD__
-	MyLCD_WriteLineTwo(Name, 2000);
+	GOrgueLCD_WriteLineTwo(Name, 2000);
 	return !on;
 #endif
 }
 
-void MyManual::MIDI(void)
+void GOrgueManual::MIDI(void)
 {
 	int index = MIDIInputNumber + 7;
 	MIDIListenDialog dlg(::wxGetApp().frame, _(s_MIDIMessages[index]), g_sound->i_midiEvents[index], 1);
@@ -1067,7 +1066,7 @@ void MyManual::MIDI(void)
 	}
 }
 
-void MyEnclosure::MIDI(void)
+void GOrgueEnclosure::MIDI(void)
 {
 	int index = MIDIInputNumber + 1;
 	MIDIListenDialog dlg(::wxGetApp().frame, _(s_MIDIMessages[index]), g_sound->i_midiEvents[index], 0);
@@ -1078,7 +1077,7 @@ void MyEnclosure::MIDI(void)
 	}
 }
 
-void MyDrawstop::MIDI(void)
+void GOrgueDrawstop::MIDI(void)
 {
 	MIDIListenDialog dlg(::wxGetApp().frame, _("Drawstop Trigger"), g_sound->i_midiEvents[14] | StopControlMIDIKeyNumber, 4);
 	if (dlg.ShowModal() == wxID_OK)
@@ -1088,7 +1087,7 @@ void MyDrawstop::MIDI(void)
 	}
 }
 
-void MyPushbutton::MIDI(void)
+void GOrguePushbutton::MIDI(void)
 {
 	int event = 0xC000;
 	if (m_ManualNumber > -1)
@@ -1101,7 +1100,7 @@ void MyPushbutton::MIDI(void)
 	}
 }
 
-void MyPushbutton::Load(wxFileConfig* cfg, const char* group)
+void GOrguePushbutton::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(DispButtonRow                                ,Integer ),    0, 99 + organfile->DispExtraButtonRows);
 	INIREAD(DispButtonCol                                ,Integer ),    1, organfile->DispButtonCols);
@@ -1109,10 +1108,10 @@ void MyPushbutton::Load(wxFileConfig* cfg, const char* group)
 	INIREAD(MIDIProgramChangeNumber                      ,Integer ),    1,  128);
 	DispImageNum--;
 
-	MyControl::Load(cfg, group);
+	GOrgueControl::Load(cfg, group);
 }
 
-bool MyPushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
+bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 {
 	int x, y, i;
 	if (!Displayed)
@@ -1160,7 +1159,7 @@ bool MyPushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 	return false;
 }
 
-void MyStop::Load(wxFileConfig* cfg, const char* group)
+void GOrgueStop::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(AmplitudeLevel                               ,Integer ),    0, 1000);
 	INIREAD(NumberOfLogicalPipes                         ,Integer ),    1,  192);
@@ -1193,36 +1192,36 @@ void MyStop::Load(wxFileConfig* cfg, const char* group)
 
 	m_auto = NumberOfLogicalPipes == 1;
 
-	MyDrawstop::Load(cfg, group);
+	GOrgueDrawstop::Load(cfg, group);
 }
 
-bool MyStop::Set(bool on)
+bool GOrgueStop::Set(bool on)
 {
 	if (DefaultToEngaged == on)
 		return on;
 	DefaultToEngaged = on;
-	MySound::MIDIPretend(true);
+	GOrgueSound::MIDIPretend(true);
 	DefaultToEngaged = !on;
-    MySound::MIDIPretend(false);
+    GOrgueSound::MIDIPretend(false);
 
-	bool retval = MyDrawstop::Set(on);
+	bool retval = GOrgueDrawstop::Set(on);
 
 	if (m_auto)
 	{
-        MyManual* manual = organfile->manual + m_ManualNumber;
+        GOrgueManual* manual = organfile->manual + m_ManualNumber;
 		manual->Set(manual->FirstAccessibleKeyMIDINoteNumber + FirstAccessiblePipeLogicalKeyNumber - 1, on);
 	}
 
 	return retval;
 }
 
-MyStop::~MyStop(void)
+GOrgueStop::~GOrgueStop(void)
 {
 	if (pipe)
 		delete[] pipe;
 }
 
-void MyCoupler::Load(wxFileConfig* cfg, const char* group)
+void GOrgueCoupler::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(UnisonOff                                    ,Boolean ));
 	INIREAD(DestinationManual                            ,Integer ), organfile->FirstManual, organfile->NumberOfManuals, !UnisonOff);
@@ -1233,41 +1232,41 @@ void MyCoupler::Load(wxFileConfig* cfg, const char* group)
 	INIREAD(CoupleToSubsequentUpwardIntramanualCouplers  ,Boolean ), !UnisonOff);
 	INIREAD(CoupleToSubsequentDownwardIntramanualCouplers,Boolean ), !UnisonOff);
 
-	MyDrawstop::Load(cfg, group);
+	GOrgueDrawstop::Load(cfg, group);
 }
 
-bool MyCoupler::Set(bool on)
+bool GOrgueCoupler::Set(bool on)
 {
 	if (DefaultToEngaged == on)
 		return on;
 	DefaultToEngaged = on;
-    MySound::MIDIPretend(true);
+    GOrgueSound::MIDIPretend(true);
 	DefaultToEngaged = !on;
-    MySound::MIDIPretend(false);
-	return MyDrawstop::Set(on);
+    GOrgueSound::MIDIPretend(false);
+	return GOrgueDrawstop::Set(on);
 }
 
-void MyTremulant::Load(wxFileConfig* cfg, const char* group)
+void GOrgueTremulant::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(Period                                       ,Long    ),   32,  441000);
 	INIREAD(StartRate                                    ,Integer ),    1,  100);
 	INIREAD(StopRate                                     ,Integer ),    1,  100);
 	INIREAD(AmpModDepth                                  ,Integer ),    1,  100);
 
-	MyDrawstop::Load(cfg, group);
+	GOrgueDrawstop::Load(cfg, group);
 }
 
-bool MyTremulant::Set(bool on)
+bool GOrgueTremulant::Set(bool on)
 {
 	if (DefaultToEngaged == on)
 		return on;
 
 	pipe->Set(on);
 
-	return MyDrawstop::Set(on);
+	return GOrgueDrawstop::Set(on);
 }
 
-void MyDivisionalCoupler::Load(wxFileConfig* cfg, const char* group)
+void GOrgueDivisionalCoupler::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(BiDirectionalCoupling                       ,Boolean ));
 	INIREAD(NumberOfManuals                             ,Integer ),    1,    6);
@@ -1281,17 +1280,17 @@ void MyDivisionalCoupler::Load(wxFileConfig* cfg, const char* group)
 		manual[i] = INIReadInteger(cfg, group, buffer, organfile->FirstManual, organfile->NumberOfManuals);
 	}
 
-	MyDrawstop::Load(cfg, group);
+	GOrgueDrawstop::Load(cfg, group);
 }
 
-bool MyDivisionalCoupler::Set(bool on)
+bool GOrgueDivisionalCoupler::Set(bool on)
 {
 	if (DefaultToEngaged == on)
 		return on;
-	return MyDrawstop::Set(on);
+	return GOrgueDrawstop::Set(on);
 }
 
-void MyDivisional::Load(wxFileConfig* cfg, const char* group)
+void GOrgueDivisional::Load(wxFileConfig* cfg, const char* group)
 {
 	INIREAD(NumberOfStops                               ,Integer ),    0, organfile->manual[m_ManualNumber].NumberOfStops);
 	INIREAD(NumberOfCouplers                            ,Integer ),    0, organfile->manual[m_ManualNumber].NumberOfCouplers, organfile->DivisionalsStoreIntermanualCouplers || organfile->DivisionalsStoreIntramanualCouplers);
@@ -1340,10 +1339,10 @@ void MyDivisional::Load(wxFileConfig* cfg, const char* group)
 		}
 	}
 
-	MyPushbutton::Load(cfg, group);
+	GOrguePushbutton::Load(cfg, group);
 }
 
-void MyDivisional::Push(int depth)
+void GOrgueDivisional::Push(int depth)
 {
 	int i, k;
 
@@ -1399,7 +1398,7 @@ void MyDivisional::Push(int depth)
                     SET_BIT(tremulant, i, 1, k < 2 ? organfile->tremulant[organfile->manual[m_ManualNumber].tremulant[i] - 1].Set(GET_BIT(tremulant, i, 1)) : GET_BIT(tremulant, i, 1));
             if (k >= 2)
                 break;
-            MySound::MIDIPretend(!k);
+            GOrgueSound::MIDIPretend(!k);
         }
 	}
 
@@ -1411,7 +1410,7 @@ void MyDivisional::Push(int depth)
 
 	for (k = 0; k < organfile->manual[m_ManualNumber].NumberOfDivisionals; k++)
 	{
-	    MyDivisional *divisional = organfile->manual[m_ManualNumber].divisional + k;
+	    GOrgueDivisional *divisional = organfile->manual[m_ManualNumber].divisional + k;
 	    int on = ((divisional == this && used) ? 2 : 0);
 	    if ((divisional->DispImageNum & 2) != on)
 	    {
@@ -1449,7 +1448,7 @@ void MyDivisional::Push(int depth)
 	}
 }
 
-void MyFrameGeneral::Load(wxFileConfig* cfg, const char* group)
+void GOrgueFrameGeneral::Load(wxFileConfig* cfg, const char* group)
 {
 	m_ManualNumber = -1;
 
@@ -1511,7 +1510,7 @@ void MyFrameGeneral::Load(wxFileConfig* cfg, const char* group)
 	}
 }
 
-void MyFrameGeneral::Push(int WXUNUSED(depth))
+void GOrgueFrameGeneral::Push(int WXUNUSED(depth))
 {
 	int i, j, k;
 
@@ -1581,7 +1580,7 @@ void MyFrameGeneral::Push(int WXUNUSED(depth))
                     SET_BIT(divisionalcoupler, i, 1, k < 2 ? organfile->divisionalcoupler[i].Set(GET_BIT(divisionalcoupler, i, 1)) : GET_BIT(divisionalcoupler, i, 1));
             if (k > 1)
                 break;
-            MySound::MIDIPretend(!k);
+            GOrgueSound::MIDIPretend(!k);
         }
 	}
 
@@ -1597,7 +1596,7 @@ void MyFrameGeneral::Push(int WXUNUSED(depth))
 
 	for (k = 0; k < organfile->NumberOfGenerals; k++)
 	{
-	    MyGeneral *general = organfile->general + k;
+	    GOrgueGeneral *general = organfile->general + k;
 	    int on = ((general == this && used) ? 2 : 0);
 	    if ((general->DispImageNum & 2) != on)
 	    {
@@ -1612,7 +1611,7 @@ void MyFrameGeneral::Push(int WXUNUSED(depth))
     {
         for (k = 0; k < organfile->manual[j].NumberOfDivisionals; k++)
         {
-            MyDivisional *divisional = organfile->manual[j].divisional + k;
+            GOrgueDivisional *divisional = organfile->manual[j].divisional + k;
             if (divisional->DispImageNum & 2)
             {
                 divisional->DispImageNum &= 1;
@@ -1624,13 +1623,13 @@ void MyFrameGeneral::Push(int WXUNUSED(depth))
     }
 }
 
-void MyGeneral::Load(wxFileConfig* cfg, const char* group)
+void GOrgueGeneral::Load(wxFileConfig* cfg, const char* group)
 {
-	MyFrameGeneral::Load(cfg, group);
-	MyPushbutton::Load(cfg, group);
+	GOrgueFrameGeneral::Load(cfg, group);
+	GOrguePushbutton::Load(cfg, group);
 }
 
-void MyPiston::Load(wxFileConfig* cfg, const char* group)
+void GOrguePiston::Load(wxFileConfig* cfg, const char* group)
 {
 	int i, j;
 	wxString type = INIReadString(cfg, group, "ObjectType");
@@ -1654,24 +1653,24 @@ void MyPiston::Load(wxFileConfig* cfg, const char* group)
 		drawstop = &organfile->tremulant[j];
 	}
 
-	MyPushbutton::Load(cfg, group);
+	GOrguePushbutton::Load(cfg, group);
 	if (drawstop->DefaultToEngaged ^ drawstop->DisplayInInvertedState)
         DispImageNum ^= 2;
 }
 
-void MyPiston::Push(int WXUNUSED(depth))
+void GOrguePiston::Push(int WXUNUSED(depth))
 {
 	this->drawstop->Push();
 }
 
-class MyThread : public wxThread
+class GOrgueThread : public wxThread
 {
 public:
-    MyThread() : wxThread(wxTHREAD_JOINABLE)
+    GOrgueThread() : wxThread(wxTHREAD_JOINABLE)
     {
     }
 
-    void Go(int file, char* buffer, unsigned length, MyPipe* src)
+    void Go(int file, char* buffer, unsigned length, GOrguePipe* src)
     {
         m_file = file;
         m_buffer = buffer;
@@ -1714,13 +1713,13 @@ public:
     int m_file;
     char* m_buffer;
     unsigned m_length;
-    MyPipe* m_src;
+    GOrguePipe* m_src;
 };
 
-wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
+wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 {
 	wxFileConfig *cfg = 0, *extra_cfg = 0;
-	MyApp* app = &::wxGetApp();
+	GOrgueApp* app = &::wxGetApp();
 
 	wxProgressDialog dlg(_("Loading sample set"), _("Parsing sample set definition file"), 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
 
@@ -1877,49 +1876,49 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
             manual[i].Load(cfg, buffer);
         }
 
-        enclosure = new MyEnclosure[NumberOfEnclosures];
+        enclosure = new GOrgueEnclosure[NumberOfEnclosures];
         for (i = 0; i < NumberOfEnclosures; i++)
         {
             sprintf(buffer, "Enclosure%03d", i + 1);
             enclosure[i].Load(cfg, buffer);
         }
 
-        windchest = new MyWindchest[NumberOfTremulants + 1 + NumberOfWindchestGroups];
+        windchest = new GOrgueWindchest[NumberOfTremulants + 1 + NumberOfWindchestGroups];
         for (i = 0; i < NumberOfWindchestGroups; i++)
         {
             sprintf(buffer, "WindchestGroup%03d", i + 1);
             windchest[NumberOfTremulants + 1 + i].Load(cfg, buffer);
         }
 
-        tremulant = new MyTremulant[NumberOfTremulants];
+        tremulant = new GOrgueTremulant[NumberOfTremulants];
         for (i = 0; i < NumberOfTremulants; i++)
         {
             sprintf(buffer, "Tremulant%03d", i + 1);
             tremulant[i].Load(cfg, buffer);
         }
 
-        piston = new MyPiston[NumberOfReversiblePistons];
+        piston = new GOrguePiston[NumberOfReversiblePistons];
         for (i = 0; i < NumberOfReversiblePistons; i++)
         {
             sprintf(buffer, "ReversiblePiston%03d", i + 1);
             piston[i].Load(cfg, buffer);
         }
 
-        label = new MyLabel[NumberOfLabels];
+        label = new GOrgueLabel[NumberOfLabels];
         for (i = 0; i < NumberOfLabels; i++)
         {
             sprintf(buffer, "Label%03d", i + 1);
             label[i].Load(cfg, buffer);
         }
 
-        general = new MyGeneral[NumberOfGenerals];
+        general = new GOrgueGeneral[NumberOfGenerals];
         for (i = 0; i < NumberOfGenerals; i++)
         {
             sprintf(buffer, "General%03d", i + 1);
             general[i].Load(cfg, buffer);
         }
 
-        framegeneral = new MyFrameGeneral[NumberOfFrameGenerals];
+        framegeneral = new GOrgueFrameGeneral[NumberOfFrameGenerals];
         for (i = 0; i < NumberOfFrameGenerals; i++)
         {
             sprintf(buffer, "General%03d", i + 100);
@@ -1927,7 +1926,7 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
             framegeneral[i].ObjectNumber = i + 100;
         }
 
-        divisionalcoupler = new MyDivisionalCoupler[NumberOfDivisionalCouplers];
+        divisionalcoupler = new GOrgueDivisionalCoupler[NumberOfDivisionalCouplers];
         for (i = 0; i < NumberOfDivisionalCouplers; i++)
         {
             sprintf(buffer, "DivisionalCoupler%03d", i + 1);
@@ -1939,11 +1938,11 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
 	    return error_;
 	}
 #ifdef __VFD__
-    MyLCD_WriteLineOne(ChurchName+" "+OrganBuilder);
-    MyLCD_WriteLineTwo("Loading...");
+    GOrgueLCD_WriteLineOne(ChurchName+" "+OrganBuilder);
+    GOrgueLCD_WriteLineTwo("Loading...");
 #endif
-	pipe = new MyPipe*[NumberOfPipes + NumberOfTremulants];
-	memset(pipe, 0, sizeof(MyPipe*) * (NumberOfPipes + NumberOfTremulants));
+	pipe = new GOrguePipe*[NumberOfPipes + NumberOfTremulants];
+	memset(pipe, 0, sizeof(GOrguePipe*) * (NumberOfPipes + NumberOfTremulants));
 
 	m_path = file;
 	m_path.MakeAbsolute();
@@ -1955,8 +1954,8 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
 	short *s_ptr;
 	unsigned mbuffer_s[2] = {0, 0}, compress_s = 0, prev_length = 0;
 	m_compress_p = 0;
-	MyPipeHash newhash(NumberOfPipes);
-	MyPipeHash::iterator it;
+	GOrguePipeHash newhash(NumberOfPipes);
+	GOrguePipeHash::iterator it;
 	int ffile = -1;
 
 	std::vector<wxString> pipe_keys;
@@ -1972,13 +1971,13 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
         m_path = pipe_files[i];
         m_path.MakeAbsolute();
         key.Printf("  %s-%c%08X", m_path.GetFullPath().c_str(), (g_sound->b_stereo ? 2 : 0) + (b_squash ? '1' : '0'), 0x00000000);
-        key[0] = key[1] = 0;        // for my amusement: used to be the below line :-)
+        key[0] = key[1] = 0;        // for GOrgue amusement: used to be the below line :-)
         // key = "\0\0" + key;
 
         it = newhash.find(key);
         if (it != newhash.end())
         {
-            it->second = (MyPipe*)(((char*)(it->second)) + 1);
+            it->second = (GOrguePipe*)(((char*)(it->second)) + 1);
             key[0] = ((int)(it->second)) & 255;
             key[1] = ((int)(it->second)) >> 8;
         }
@@ -1991,7 +1990,7 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
         it->second = 0;
 	for (it = pipehash.begin(); it != pipehash.end(); it++)
 	{
-		MyPipeHash::iterator it2 = newhash.find(it->first);
+		GOrguePipeHash::iterator it2 = newhash.find(it->first);
 		if (it2 == newhash.end() || it->first[0] || it->first[1])
 			free(it->second);
 		else
@@ -2016,7 +2015,7 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
             // 327: max parameter to progress dialog divided by 100 to calculate percentage
             int n=(((progress + 1) << 15) / (int)(organfile->NumberOfPipes + organfile->NumberOfTremulants + 1))/327;
 #ifdef __VFD__
-            MyLCD_WriteLineTwo(wxString::Format("Loading %d%%", n));
+            GOrgueLCD_WriteLineTwo(wxString::Format("Loading %d%%", n));
 #endif
         }
         else if (i_e != ii && !dlg.Update(((progress + 1) << 15) / (int)(organfile->NumberOfPipes + organfile->NumberOfTremulants + 1), wxString("Tremulant ") << organfile->tremulant[i - ii].ObjectNumber))
@@ -2031,7 +2030,7 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
             pipe[progress] = pipehash[key];
         else
         {
-            MyThread helper;
+            GOrgueThread helper;
             bool b_threading = false;
             try
             {
@@ -2053,7 +2052,7 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
                 unsigned loopend = 0;
                 unsigned release = 0, q, r, length = 0;
                 int channels = 0, peak = 0, amp = 10000, k, jj;
-                MyPipe* repeater = 0;
+                GOrguePipe* repeater = 0;
 
                 if (key.length() >= 2 && (key[0] || key[1]))
                 {
@@ -2066,7 +2065,7 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
                 {
                     if (repeater)
                     {
-                        length = offsetof(MyPipe, data);
+                        length = offsetof(GOrguePipe, data);
                     }
                     else
                     {
@@ -2310,12 +2309,12 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
                     {
                         if (prev_key[1] & 0x80)
                         {
-                            if (prev_length < sizeof(MyPipe) || ((MyPipe*)ptr)->_fourcc != *(unsigned*)"MyOc" || adler32(0, (Bytef*)&((MyPipe*)ptr)->_this, prev_length - offsetof(MyPipe, _this)) != ((MyPipe*)ptr)->_adler32)
+                            if (prev_length < sizeof(GOrguePipe) || ((GOrguePipe*)ptr)->_fourcc != *(unsigned*)"GOrgueOc" || adler32(0, (Bytef*)&((GOrguePipe*)ptr)->_this, prev_length - offsetof(GOrguePipe, _this)) != ((GOrguePipe*)ptr)->_adler32)
                             {
                                 ::wxRemoveFile(prev_key.c_str() + 2);
                                 throw (char*)"<Invalid cache";
                             }
-                            pipe[progress] = (MyPipe*)ptr;
+                            pipe[progress] = (GOrguePipe*)ptr;
                             mbuffer_p[mbuffer_which] = 0;
                             pipe_filesizes.push_back(prev_length);
                             for (k = 0; k < 3; k++)
@@ -2323,7 +2322,7 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
                         }
                         else
                         {
-                            pipe[progress] = (MyPipe*)malloc(prev_length);
+                            pipe[progress] = (GOrguePipe*)malloc(prev_length);
                             if (!pipe[progress])
                                 throw (char*)_("<Out of memory loading");
                             memcpy(pipe[progress], mbuffer_p[mbuffer_which], prev_length);
@@ -2331,7 +2330,7 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
                     }
                     else
                     {
-                        k = offsetof(MyPipe, data) + sizeof(short) * (12 + loopstart + (loopend - loopstart) + (wavesize - release));
+                        k = offsetof(GOrguePipe, data) + sizeof(short) * (12 + loopstart + (loopend - loopstart) + (wavesize - release));
                         if (!m_compress_p)
                             compress = (char*)malloc(compress_s = k);
                         else if (k > (int)compress_s)
@@ -2340,7 +2339,7 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
                             compress = (char*)m_compress_p;
                         if (!compress)
                             throw (char*)_("<Out of memory loading");
-                        m_compress_p = (MyPipe*)compress;
+                        m_compress_p = (GOrguePipe*)compress;
 
                         compress = (char*)m_compress_p->data;
                         *(int*)(ptr + wavestart - 4) = 0;
@@ -2378,7 +2377,7 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
                         }
 
                         k = compress - (char*)m_compress_p;
-                        pipe[progress] = (MyPipe*)malloc(k);
+                        pipe[progress] = (GOrguePipe*)malloc(k);
                         if (!pipe[progress])
                             throw (char*)_("<Out of memory loading");
                         memcpy(pipe[progress], m_compress_p, k);
@@ -2495,19 +2494,19 @@ wxString MyOrganFile::Load(const wxString& file, const wxString& file2)
         m_cfg = 0;
 	}
 #ifdef __VFD__
-    MyLCD_WriteLineTwo("Ready!");
+    GOrgueLCD_WriteLineTwo("Ready!");
 #endif
 	return wxEmptyString;
 }
 
-MyOrganFile::~MyOrganFile(void)
+GrandOrgueFile::~GrandOrgueFile(void)
 {
 	for (int i = 0; i < NumberOfTremulants; i++)
         if (tremulant && tremulant[i].pipe)
             free(tremulant[i].pipe);
 	if (!m_opening)
 	{
-		for (MyPipeHash::iterator it = pipehash.begin(); it != pipehash.end(); it++)
+		for (GOrguePipeHash::iterator it = pipehash.begin(); it != pipehash.end(); it++)
             if (it->second)
                 free(it->second);	// important: these are done with malloc/realloc/free, not new/delete
 		pipehash.clear();
@@ -2566,22 +2565,22 @@ void SaveHelper(wxFileConfig& cfg, bool prefix, wxString group, wxString key, in
     SaveHelper(cfg, prefix, group, key, str);
 }
 
-void MyDrawstop::Save(wxFileConfig& cfg, bool prefix, wxString group)
+void GOrgueDrawstop::Save(wxFileConfig& cfg, bool prefix, wxString group)
 {
     group.Printf("%s%03d", group.c_str(), ObjectNumber);
     SaveHelper(cfg, prefix, group, "DefaultToEngaged", DefaultToEngaged ? "Y" : "N");
     SaveHelper(cfg, prefix, group, "StopControlMIDIKeyNumber", StopControlMIDIKeyNumber);
 }
 
-void MyPushbutton::Save(wxFileConfig& cfg, bool prefix, wxString group)
+void GOrguePushbutton::Save(wxFileConfig& cfg, bool prefix, wxString group)
 {
     group.Printf("%s%03d", group.c_str(), ObjectNumber);
     SaveHelper(cfg, prefix, group, "MIDIProgramChangeNumber", MIDIProgramChangeNumber);
 }
 
-void MyDivisional::Save(wxFileConfig& cfg, bool prefix, wxString group)
+void GOrgueDivisional::Save(wxFileConfig& cfg, bool prefix, wxString group)
 {
-    MyPushbutton::Save(cfg, prefix, group);
+    GOrguePushbutton::Save(cfg, prefix, group);
 
     group.Printf("%s%03d", group.c_str(), ObjectNumber);
     SaveHelper(cfg, prefix, group, "NumberOfStops", NumberOfStops);
@@ -2617,12 +2616,12 @@ void MyDivisional::Save(wxFileConfig& cfg, bool prefix, wxString group)
     }
 }
 
-void MyFrameGeneral::Save(wxFileConfig& cfg, bool prefix, wxString group)
+void GOrgueFrameGeneral::Save(wxFileConfig& cfg, bool prefix, wxString group)
 {
     if (ObjectNumber > 99 && !(NumberOfStops | NumberOfCouplers | NumberOfTremulants | NumberOfDivisionalCouplers))
         return;
 
-    MyPushbutton::Save(cfg, prefix, group);
+    GOrguePushbutton::Save(cfg, prefix, group);
 
     group.Printf("%s%03d", group.c_str(), ObjectNumber);
     SaveHelper(cfg, prefix, group, "NumberOfStops", NumberOfStops);
@@ -2665,7 +2664,7 @@ void MyFrameGeneral::Save(wxFileConfig& cfg, bool prefix, wxString group)
         }
 }
 
-void MyOrganFile::Revert(wxFileConfig& cfg)
+void GrandOrgueFile::Revert(wxFileConfig& cfg)
 {
     if (!b_customized)
         return;
@@ -2683,7 +2682,7 @@ void MyOrganFile::Revert(wxFileConfig& cfg)
         cfg.DeleteGroup(to_drop[i]);
 }
 
-void MyOrganFile::Save(const wxString& file)
+void GrandOrgueFile::Save(const wxString& file)
 {
     wxFileName fn(file);
     bool prefix = true;

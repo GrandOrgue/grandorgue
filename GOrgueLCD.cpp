@@ -1,5 +1,5 @@
 //
-// C++ Implementation: MyLCD
+// C++ Implementation: GOrgueLCD
 //
 // Description:
 //
@@ -12,7 +12,7 @@
 
 #ifdef __VFD__
 
-#include "MyOrgan.h"
+#include "GrandOrgue.h"
 
 #ifdef __WIN32__
 #include "imon/SG_VFD.h"
@@ -35,7 +35,7 @@ static bool opened=false;
 static wxString line1, line2;
 static int driver;
 
-bool MyLCD_Open(const int d)
+bool GOrgueLCD_Open(const int d)
 {
 	driver=d;
 	line1=wxEmptyString;
@@ -62,7 +62,7 @@ bool MyLCD_Open(const int d)
 	return false;
 }
 
-void MyLCD_Close()
+void GOrgueLCD_Close()
 {
     #ifdef __WIN32__
     iMONVFD_UninitPtr();
@@ -76,7 +76,7 @@ void MyLCD_Close()
 	opened=false;
 }
 
-void MyLCD_WriteLineOne(const wxString& str)
+void GOrgueLCD_WriteLineOne(const wxString& str)
 {
 	if (!opened) return;
 	line1=str;
@@ -85,7 +85,7 @@ void MyLCD_WriteLineOne(const wxString& str)
 	#endif
 }
 
-void MyLCD_WriteLineTwo(const wxString& str, long t)
+void GOrgueLCD_WriteLineTwo(const wxString& str, long t)
 {
 	if (!opened) return;
 	#ifdef __WIN32__
@@ -99,14 +99,14 @@ void MyLCD_WriteLineTwo(const wxString& str, long t)
 
 }
 
-void MyLCD_OnTimer()
+void GOrgueLCD_OnTimer()
 {
 	#ifdef __WIN32__
     iMONVFD_SetTextPtr((LPSTR)(LPCTSTR)line1.c_str(), (LPSTR)(LPCTSTR)line2.c_str());
 	#endif
 }
 
-wxString MyLCD_ErrorMsg()
+wxString GOrgueLCD_ErrorMsg()
 {
 	return wxEmptyString;
 }

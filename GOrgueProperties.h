@@ -32,18 +32,18 @@ protected:
     wxString m_url;
 };
 
-class MyProperties : public wxDialog
+class GOrgueProperties : public wxDialog
 {
 public:
-	MyProperties(wxWindow* parent);
-	~MyProperties(void);
+	GOrgueProperties(wxWindow* parent);
+	~GOrgueProperties(void);
 };
 
-class MyRegister : public wxDialog
+class GOrgueRegister : public wxDialog
 {
 public:
-	MyRegister(wxWindow* parent);
-	~MyRegister(void);
+	GOrgueRegister(wxWindow* parent);
+	~GOrgueRegister(void);
 	void OnKey(wxCommandEvent& event);
 	void OnHelp(wxCommandEvent& event);
     wxTextCtrl* m_key;
