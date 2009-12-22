@@ -37,5 +37,5 @@ public:
 protected:
 	int m_value;
 	bool m_clip;
-	class MyFrame* m_frame;
+	class GOrgueFrame* m_frame;
 };

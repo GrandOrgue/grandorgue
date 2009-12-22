@@ -24,8 +24,8 @@
 
 const char* s_MIDIMessages[] =
 {
-	"Previous Program",
-	"Next Program",
+	"Previous Memory",
+	"Next Memory",
 	"Enclosure 1",
 	"Enclosure 2",
 	"Enclosure 3",
@@ -52,8 +52,8 @@ long i_MIDIMessages[] =
 	0x0000,
 	0x0000,
 	0x0000,
-	0x9100,
 	0x9000,
+	0x9100,
 	0x9200,
 	0x9300,
 	0x9500,

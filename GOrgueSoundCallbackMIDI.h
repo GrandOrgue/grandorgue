@@ -22,7 +22,7 @@
 
 #pragma once
 
-void MySound::MIDIPretend(bool on)
+void GOrgueSound::MIDIPretend(bool on)
 {
 	for (int i = organfile->FirstManual; i <= organfile->NumberOfManuals; i++)
 		for (int j = 0; j < organfile->manual[i].NumberOfLogicalKeys; j++)
@@ -52,7 +52,7 @@ void MIDIAllNotesOff()
 		{
 			for (k = 0; k < organfile->manual[i].stop[j].NumberOfLogicalPipes; k++)
 			{
-				register MyPipe* pipe = organfile->pipe[organfile->manual[i].stop[j].pipe[k]];
+				register GOrguePipe* pipe = organfile->pipe[organfile->manual[i].stop[j].pipe[k]];
 				if (pipe->instances > -1)
 					pipe->instances = 0;
 				pipe->sampler = 0;
@@ -63,7 +63,7 @@ void MIDIAllNotesOff()
 	}
 }
 
-void MySoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
+void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
 {
 	register int i, j, k, q, Noteoffset;
 
@@ -79,7 +79,7 @@ void MySoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
                 organfile->manual[k].coupler[j].Set(false);
             for (j = 0; j < organfile->manual[k].NumberOfDivisionals; j++)
             {
-                MyDivisional *divisional = organfile->manual[k].divisional + j;
+                GOrgueDivisional *divisional = organfile->manual[k].divisional + j;
                 if (divisional->DispImageNum & 2)
                 {
                     divisional->DispImageNum &= 1;
@@ -97,7 +97,7 @@ void MySoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
 
         for (k = 0; k < organfile->NumberOfGenerals; k++)
         {
-            MyGeneral *general = organfile->general + k;
+            GOrgueGeneral *general = organfile->general + k;
             if (general->DispImageNum & 2)
             {
                 general->DispImageNum &= 1;
@@ -164,7 +164,7 @@ void MySoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
 	}
 
 	// For the 16 MIDI devices
-	int myevent, offset;
+	int GOrgueevent, offset;
 	for (i = 0; i < 15; i++)
 	{
 		// ??
@@ -174,16 +174,16 @@ void MySoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
 			if (i != 8)
                 i = 14;
 		}
-		myevent = g_sound->i_midiEvents[i];
-		if (i>=8 && i<=13) myevent &= 0xFF00;
+		GOrgueevent = g_sound->i_midiEvents[i];
+		if (i>=8 && i<=13) GOrgueevent &= 0xFF00;
   //      if ((g_sound->i_midiEvents[i] & 0xFF00) == j )
-        if (myevent == j)
+        if (GOrgueevent == j)
 		{
 			if (i < 2)
 			{
 				if (msg.size() > 2 && !msg[2])
 					continue;
-				MyMeter* meter = ::wxGetApp().frame->m_meters[2];
+				GOrgueMeter* meter = ::wxGetApp().frame->m_meters[2];
 				meter->SetValue(meter->GetValue() + (i ? 1 : -1));
 			}
 			else if (i < 8)

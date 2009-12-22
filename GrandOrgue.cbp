@@ -84,6 +84,18 @@
 			<Add library="uuid" />
 			<Add directory="$(#wx.lib)\gcc_lib" />
 		</Linker>
+		<Unit filename="GOLCD.cpp" />
+		<Unit filename="GOLCD.h" />
+		<Unit filename="GOMeter.cpp" />
+		<Unit filename="GOMeter.h" />
+		<Unit filename="GOProperties.cpp" />
+		<Unit filename="GOProperties.h" />
+		<Unit filename="GOSound.cpp" />
+		<Unit filename="GOSound.h" />
+		<Unit filename="GOSoundCallbackAudio.h" />
+		<Unit filename="GOSoundCallbackMIDI.h" />
+		<Unit filename="GrandOrgue.cpp" />
+		<Unit filename="GrandOrgue.h" />
 		<Unit filename="GrandOrgue.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
@@ -91,18 +103,6 @@
 		<Unit filename="KeyConvert.h" />
 		<Unit filename="MIDIEvents.h" />
 		<Unit filename="MMXSound.h" />
-		<Unit filename="MyLCD.cpp" />
-		<Unit filename="MyLCD.h" />
-		<Unit filename="MyMeter.cpp" />
-		<Unit filename="MyMeter.h" />
-		<Unit filename="MyOrgan.cpp" />
-		<Unit filename="MyOrgan.h" />
-		<Unit filename="MyProperties.cpp" />
-		<Unit filename="MyProperties.h" />
-		<Unit filename="MySound.cpp" />
-		<Unit filename="MySound.h" />
-		<Unit filename="MySoundCallbackAudio.h" />
-		<Unit filename="MySoundCallbackMIDI.h" />
 		<Unit filename="OrganDocument.cpp" />
 		<Unit filename="OrganDocument.h" />
 		<Unit filename="OrganFile.cpp" />
@@ -116,7 +116,6 @@
 		<Unit filename="RtMidi.h" />
 		<Unit filename="SettingsDialog.cpp" />
 		<Unit filename="SettingsDialog.h" />
-		<Unit filename="ToolbarImages.h" />
 		<Unit filename="asio\asio.cpp" />
 		<Unit filename="asio\asio.h" />
 		<Unit filename="asio\asiodrivers.cpp" />
@@ -129,6 +128,7 @@
 		<Unit filename="asio\iasiodrv.h" />
 		<Unit filename="asio\iasiothiscallresolver.cpp" />
 		<Unit filename="asio\iasiothiscallresolver.h" />
+		<Unit filename="directx\include\dsound.h" />
 		<Unit filename="resource.h" />
 		<Unit filename="wxGaugeAudio.cpp" />
 		<Unit filename="wxGaugeAudio.h" />

@@ -20,23 +20,23 @@
  * MA 02111-1307, USA.
  */
 
-#include "MyOrgan.h"
+#include "GrandOrgue.h"
 
-extern MySound* g_sound;
-extern MyOrganFile* organfile;
+extern GOrgueSound* g_sound;
+extern GrandOrgueFile* organfile;
 
-BEGIN_EVENT_TABLE(MyMeter, wxControl)
-	EVT_TEXT(ID_METER_AUDIO_SPIN, MyMeter::OnVolume)
-	EVT_TEXT(ID_METER_POLY_SPIN,  MyMeter::OnPolyphony)
-	EVT_TEXT(ID_METER_FRAME_SPIN, MyMeter::OnFrame)
-    EVT_TEXT(ID_METER_TRANSPOSE_SPIN, MyMeter::OnTranspose)
-	EVT_TEXT_ENTER(ID_METER_AUDIO_SPIN, MyMeter::OnEnter)
-	EVT_TEXT_ENTER(ID_METER_POLY_SPIN,  MyMeter::OnEnter)
-	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN,  MyMeter::OnEnter)
-    EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, MyMeter::OnEnter)
+BEGIN_EVENT_TABLE(GOrgueMeter, wxControl)
+	EVT_TEXT(ID_METER_AUDIO_SPIN, GOrgueMeter::OnVolume)
+	EVT_TEXT(ID_METER_POLY_SPIN,  GOrgueMeter::OnPolyphony)
+	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueMeter::OnFrame)
+    EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueMeter::OnTranspose)
+	EVT_TEXT_ENTER(ID_METER_AUDIO_SPIN, GOrgueMeter::OnEnter)
+	EVT_TEXT_ENTER(ID_METER_POLY_SPIN,  GOrgueMeter::OnEnter)
+	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN,  GOrgueMeter::OnEnter)
+    EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueMeter::OnEnter)
 END_EVENT_TABLE()
 
-MyMeter::MyMeter(wxWindow* parent, wxWindowID id, int count) : wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
+GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count) : wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
 {
 	//static const wxChar* strings[] = {_("T"),_("M"), _("P"), _("V")};
 	static const wxChar* strings[] = {_(""),_(""), _(""), _("")};
@@ -97,23 +97,23 @@ MyMeter::MyMeter(wxWindow* parent, wxWindowID id, int count) : wxControl(parent,
 	}
 }
 
-int MyMeter::GetValue()
+int GOrgueMeter::GetValue()
 {
 	return m_spin->GetValue();
 }
 
-void MyMeter::SetValue(int n)
+void GOrgueMeter::SetValue(int n)
 {
 	m_spin->SetValue(n);
 }
 
-void MyMeter::SetValue(int which, int n)
+void GOrgueMeter::SetValue(int which, int n)
 {
 	n &= 255;
 	m_meters[which]->SetValue(n);
 }
 
-void MyMeter::OnVolume(wxCommandEvent& event)
+void GOrgueMeter::OnVolume(wxCommandEvent& event)
 {
 	wxString str;
 	long n = m_spin->GetValue(), v;
@@ -134,7 +134,7 @@ void MyMeter::OnVolume(wxCommandEvent& event)
 	wxConfig::Get()->Write("Volume", n);
 }
 
-void MyMeter::OnPolyphony(wxCommandEvent& event)
+void GOrgueMeter::OnPolyphony(wxCommandEvent& event)
 {
 	wxString str;
 	long n = m_spin->GetValue(), v;
@@ -158,7 +158,7 @@ void MyMeter::OnPolyphony(wxCommandEvent& event)
     }
 }
 
-void MyMeter::OnFrame(wxCommandEvent& event)
+void GOrgueMeter::OnFrame(wxCommandEvent& event)
 {
 	wxString str;
 	long n = m_spin->GetValue(), v;
@@ -175,7 +175,7 @@ void MyMeter::OnFrame(wxCommandEvent& event)
 		organfile->framegeneral[n - 1].Push();
 }
 
-void MyMeter::OnTranspose(wxCommandEvent& event)
+void GOrgueMeter::OnTranspose(wxCommandEvent& event)
 {
 	long n = m_spin->GetValue(), v;
 	if (!event.GetString().ToLong(&v) || n != v)
@@ -192,13 +192,13 @@ void MyMeter::OnTranspose(wxCommandEvent& event)
 		g_sound->ResetSound();
     }
 }
-void MyMeter::OnEnter(wxCommandEvent& event)
+void GOrgueMeter::OnEnter(wxCommandEvent& event)
 {
 	if (event.GetId() == ID_METER_FRAME_SPIN && organfile)
 		organfile->framegeneral[m_spin->GetValue() - 1].Push();
 	::wxGetApp().frame->SetFocus();
 }
 
-MyMeter::~MyMeter(void)
+GOrgueMeter::~GOrgueMeter(void)
 {
 }

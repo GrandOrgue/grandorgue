@@ -20,14 +20,14 @@
  * MA 02111-1307, USA.
  */
 
-#include "MyOrgan.h"
+#include "GrandOrgue.h"
 
 struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
 
-extern MyOrganFile* organfile;
+extern GrandOrgueFile* organfile;
 extern const char* s_MIDIMessages[];
 extern long i_MIDIMessages[];
-MySound* g_sound = 0;
+GOrgueSound* g_sound = 0;
 
 #ifdef _WIN32
  RtAudio::RtAudioApi i_APIs[] = { RtAudio::WINDOWS_DS, RtAudio::WINDOWS_ASIO };
@@ -39,8 +39,8 @@ MySound* g_sound = 0;
   char* s_APIs[] = {"Jack: ", "Alsa: " }; //{ " Jack: ", "Alsa: ", "OSS: " };
 #endif
 
-#include "MySoundCallbackMIDI.h"
-#include "MySoundCallbackAudio.h"
+#include "GOrgueSoundCallbackMIDI.h"
+#include "GOrgueSoundCallbackAudio.h"
 
 DEFINE_EVENT_TYPE(wxEVT_DRAWSTOP)
 DEFINE_EVENT_TYPE(wxEVT_PUSHBUTTON)
@@ -50,7 +50,7 @@ DEFINE_EVENT_TYPE(wxEVT_LISTENING)
 DEFINE_EVENT_TYPE(wxEVT_METERS)
 DEFINE_EVENT_TYPE(wxEVT_LOADFILE)
 
-MySound::MySound(void)
+GOrgueSound::GOrgueSound(void)
 {
 	int i, j, k;
 
@@ -127,7 +127,7 @@ MySound::MySound(void)
 	}
 }
 
-MySound::~MySound(void)
+GOrgueSound::~GOrgueSound(void)
 {
 	CloseSound();
 	try
@@ -162,7 +162,7 @@ MySound::~MySound(void)
 	}
 }
 
-bool MySound::OpenSound(bool wait)
+bool GOrgueSound::OpenSound(bool wait)
 {
 	int i;
 
@@ -175,7 +175,7 @@ bool MySound::OpenSound(bool wait)
 	defaultAudio = pConfig->Read("Devices/DefaultSound", defaultAudio);
 	n_latency = pConfig->Read("Devices/Sound/" + defaultAudio, 12);
 	volume = pConfig->Read("Volume", 50);
-	polyphony = pConfig->Read("PolyphonyLimit", 1024);
+	polyphony = pConfig->Read("PolyphonyLimit", 2048);
 	poly_soft = (polyphony * 3) / 4;
 	b_stereo = pConfig->Read("StereoEnabled", 1);
 	b_limit  = pConfig->Read("ManagePolyphony", 1);
@@ -247,7 +247,7 @@ bool MySound::OpenSound(bool wait)
 			{
 				n_latency = (bufferSize * numberOfBuffers * 10 + 221) / 441;
 				pConfig->Write("Devices/Sound/" + defaultAudio, n_latency);
-				audioDevice->setStreamCallback(&MySoundCallbackAudio, 0);
+				audioDevice->setStreamCallback(&GOrgueSoundCallbackAudio, 0);
 				audioDevice->startStream();
 			}
 			else
@@ -286,7 +286,7 @@ bool MySound::OpenSound(bool wait)
 	return true;
 }
 
-void MySound::CloseSound()
+void GOrgueSound::CloseSound()
 {
 	bool was_active = b_active;
 
@@ -319,7 +319,7 @@ void MySound::CloseSound()
 		MIDIAllNotesOff();
 }
 
-bool MySound::ResetSound()
+bool GOrgueSound::ResetSound()
 {
 	wxBusyCursor busy;
 	bool was_active = b_active;
@@ -350,7 +350,7 @@ bool MySound::ResetSound()
 	return true;
 }
 
-void MySound::OpenWAV()
+void GOrgueSound::OpenWAV()
 {
 	if (f_output)
         return;
@@ -366,7 +366,7 @@ void MySound::OpenWAV()
 	}
 }
 
-void MySound::CloseWAV()
+void GOrgueSound::CloseWAV()
 {
 	if (!f_output)
 		return;
@@ -378,7 +378,7 @@ void MySound::CloseWAV()
 	f_output = 0;
 }
 
-void MySound::UpdateOrganMIDI()
+void GOrgueSound::UpdateOrganMIDI()
 {
     long count=pConfig->Read("OrganMIDI/Count", 0L);
     for (long i=0; i<count; i++) {

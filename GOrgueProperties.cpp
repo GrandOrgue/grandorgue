@@ -20,9 +20,9 @@
  * MA 02111-1307, USA.
  */
 
-#include "MyOrgan.h"
+#include "GrandOrgue.h"
 
-extern MyOrganFile* organfile;
+extern GrandOrgueFile* organfile;
 
 BEGIN_EVENT_TABLE(wxStaticLink, wxStaticText)
     EVT_LEFT_UP(wxStaticLink::OnClick)
@@ -45,7 +45,7 @@ void wxStaticLink::OnClick(wxMouseEvent& event)
     ::wxLaunchDefaultBrowser(m_url);
 }
 
-wxStaticText* MyPropertiesText(wxWindow* parent, int title, wxString text)
+wxStaticText* GOrguePropertiesText(wxWindow* parent, int title, wxString text)
 {
 	wxStaticText* item = new wxStaticText(parent, wxID_ANY, text);
 
@@ -62,43 +62,43 @@ wxStaticText* MyPropertiesText(wxWindow* parent, int title, wxString text)
 	return item;
 }
 
-bool MyPropertiesTest(wxString& what)
+bool GOrguePropertiesTest(wxString& what)
 {
 	return !what.IsEmpty() && what.CmpNoCase("fictional") && what.CmpNoCase("unknown") && what.CmpNoCase("none") && what.CmpNoCase("N/A");
 }
 
-MyProperties::MyProperties(wxWindow* win) : wxDialog(win, wxID_ANY, (wxString)_("Organ Properties"))
+GOrgueProperties::GOrgueProperties(wxWindow* win) : wxDialog(win, wxID_ANY, (wxString)_("Organ Properties"))
 {
 	wxASSERT(organfile);
     wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
-	sizer->Add(MyPropertiesText(this, 0, _("Title")), 0);
-	sizer->Add(MyPropertiesText(this, 300, organfile->ChurchName), 0, wxLEFT, 10);
-	if (MyPropertiesTest(organfile->ChurchAddress))
+	sizer->Add(GOrguePropertiesText(this, 0, _("Title")), 0);
+	sizer->Add(GOrguePropertiesText(this, 300, organfile->ChurchName), 0, wxLEFT, 10);
+	if (GOrguePropertiesTest(organfile->ChurchAddress))
 	{
-		sizer->Add(MyPropertiesText(this, 0, _("Address")), 0, wxTOP, 5);
-		sizer->Add(MyPropertiesText(this, 300, organfile->ChurchAddress), 0, wxLEFT, 10);
+		sizer->Add(GOrguePropertiesText(this, 0, _("Address")), 0, wxTOP, 5);
+		sizer->Add(GOrguePropertiesText(this, 300, organfile->ChurchAddress), 0, wxLEFT, 10);
 	}
-	if (MyPropertiesTest(organfile->OrganBuilder))
+	if (GOrguePropertiesTest(organfile->OrganBuilder))
 	{
-		sizer->Add(MyPropertiesText(this, 0, _("Builder")), 0, wxTOP, 5);
-		sizer->Add(MyPropertiesText(this, 300, organfile->OrganBuilder), 0, wxLEFT, 10);
+		sizer->Add(GOrguePropertiesText(this, 0, _("Builder")), 0, wxTOP, 5);
+		sizer->Add(GOrguePropertiesText(this, 300, organfile->OrganBuilder), 0, wxLEFT, 10);
 	}
-	if (MyPropertiesTest(organfile->OrganBuildDate))
+	if (GOrguePropertiesTest(organfile->OrganBuildDate))
 	{
-		sizer->Add(MyPropertiesText(this, 0,  _("Build Date")), 0, wxTOP, 5);
-		sizer->Add(MyPropertiesText(this, 300, organfile->OrganBuildDate), 0, wxLEFT, 10);
+		sizer->Add(GOrguePropertiesText(this, 0,  _("Build Date")), 0, wxTOP, 5);
+		sizer->Add(GOrguePropertiesText(this, 300, organfile->OrganBuildDate), 0, wxLEFT, 10);
 	}
-	if (MyPropertiesTest(organfile->RecordingDetails))
+	if (GOrguePropertiesTest(organfile->RecordingDetails))
 	{
-		sizer->Add(MyPropertiesText(this, 0,  _("Recording Details")), 0, wxTOP, 5);
-		sizer->Add(MyPropertiesText(this, 300, organfile->RecordingDetails), 0, wxLEFT, 10);
+		sizer->Add(GOrguePropertiesText(this, 0,  _("Recording Details")), 0, wxTOP, 5);
+		sizer->Add(GOrguePropertiesText(this, 300, organfile->RecordingDetails), 0, wxLEFT, 10);
 	}
-	if (MyPropertiesTest(organfile->OrganComments))
+	if (GOrguePropertiesTest(organfile->OrganComments))
 	{
-		sizer->Add(MyPropertiesText(this, 0,  _("Other Comments")), 0, wxTOP, 5);
-		sizer->Add(MyPropertiesText(this, 300, organfile->OrganComments), 0, wxLEFT, 10);
+		sizer->Add(GOrguePropertiesText(this, 0,  _("Other Comments")), 0, wxTOP, 5);
+		sizer->Add(GOrguePropertiesText(this, 300, organfile->OrganComments), 0, wxLEFT, 10);
 	}
 
 	if (!organfile->InfoFilename.IsEmpty())
@@ -111,16 +111,16 @@ MyProperties::MyProperties(wxWindow* win) : wxDialog(win, wxID_ANY, (wxString)_(
 	topSizer->Fit(this);
 }
 
-MyProperties::~MyProperties(void)
+GOrgueProperties::~GOrgueProperties(void)
 {
 }
 
-BEGIN_EVENT_TABLE(MyRegister, wxDialog)
-    EVT_TEXT(ID_LICENSEKEY, MyRegister::OnKey)
-    EVT_BUTTON(wxID_HELP, MyRegister::OnHelp)
+BEGIN_EVENT_TABLE(GOrgueRegister, wxDialog)
+    EVT_TEXT(ID_LICENSEKEY, GOrgueRegister::OnKey)
+    EVT_BUTTON(wxID_HELP, GOrgueRegister::OnHelp)
 END_EVENT_TABLE()
 
-void MyRegister::OnKey(wxCommandEvent& event)
+void GOrgueRegister::OnKey(wxCommandEvent& event)
 {
     int i, j;
     wxString str(event.GetString());
@@ -133,22 +133,22 @@ void MyRegister::OnKey(wxCommandEvent& event)
     event.Skip();
 }
 
-void MyRegister::OnHelp(wxCommandEvent& event)
+void GOrgueRegister::OnHelp(wxCommandEvent& event)
 {
     ::wxGetApp().m_help->Display(_("Register"));
 }
 
-MyRegister::MyRegister(wxWindow* parent) : wxDialog(parent, wxID_ANY, (wxString)_("Register"))
+GOrgueRegister::GOrgueRegister(wxWindow* parent) : wxDialog(parent, wxID_ANY, (wxString)_("Register"))
 {
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
-    sizer->Add(MyPropertiesText(this, 460, _("This program is free. You may use this version as you need. ")), 0, wxBOTTOM, 5);
+    sizer->Add(GOrguePropertiesText(this, 460, _("This program is free. You may use this version as you need. ")), 0, wxBOTTOM, 5);
     sizer->Add(new wxStaticLink(this, "http://www.grand-orgue.com", "http://www.grand-orgue.com"), 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 15);
-    sizer->Add(MyPropertiesText(this, 460, _("Enjoy.")), 0, wxBOTTOM, 5);
+    sizer->Add(GOrguePropertiesText(this, 460, _("Enjoy.")), 0, wxBOTTOM, 5);
     /*sizer->Add(m_key = new wxTextCtrl(this, ID_LICENSEKEY, wxEmptyString, wxDefaultPosition, wxSize(wxDefaultCoord, 130), wxTE_MULTILINE), 0, wxEXPAND | wxBOTTOM, 5);
     m_key->SetFont(wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT));
-    sizer->Add(MyPropertiesText(this, -460, _("If you would like to continue evaluating, you would simply need to reload the current sample set or load a different one.")), 0);
+    sizer->Add(GOrguePropertiesText(this, -460, _("If you would like to continue evaluating, you would simply need to reload the current sample set or load a different one.")), 0);
     */
 	topSizer->Add(sizer, 0, wxALL, 10);
 	topSizer->Add(new wxStaticLine(this), 0, wxEXPAND | wxLEFT | wxRIGHT, 5);
@@ -162,6 +162,6 @@ MyRegister::MyRegister(wxWindow* parent) : wxDialog(parent, wxID_ANY, (wxString)
 	m_key->SetFocus();
 }
 
-MyRegister::~MyRegister(void)
+GOrgueRegister::~GOrgueRegister(void)
 {
 }

@@ -20,7 +20,7 @@
  * MA 02111-1307, USA.
  */
 
-#define mymemset(where, what, howmany) asm("\n\tcld\n\trep\n\tstosl\n" : : "D" (where), "a" (what), "c" (howmany))
+#define GOrgueMemset(where, what, howmany) asm("\n\tcld\n\trep\n\tstosl\n" : : "D" (where), "a" (what), "c" (howmany))
 
 #define ASM_DECODE_SC(z) "                    \n\
     movl (%0,%1),%10                          \n\
@@ -133,11 +133,11 @@ DecodeMC" #z ":                               \n\
 "
 
 #define ASM_LOOP(q,z) "                       \n\
-MyLoop" #z #q ":                              \n\
+GOrgueLoop" #z #q ":                              \n\
     " ASM_DECODE_##z(q) ASM_LOOP_##q "        \n\
-    js MyLoop" #z #q "                        \n\
+    js GOrgueLoop" #z #q "                        \n\
     orl %1,%1                                 \n\
-    js MyDone                                 \n\
+    js GOrgueDone                                 \n\
     jz NotOverflow" #z #q "                   \n\
     movl $8,%10                               \n\
     subl %10,%11                              \n\
@@ -148,7 +148,7 @@ MyLoop" #z #q ":                              \n\
     movq %%mm0,(%12,%11)                      \n\
 NotOverflow" #z #q ":                         \n\
     testl $2,%5                               \n\
-    jnz MyStage2                              \n\
+    jnz GOrgueStage2                              \n\
     movl $1,%5                                \n\
     movl %14,%0                               \n\
     movl %15,%1                               \n\
@@ -158,15 +158,15 @@ NotOverflow" #z #q ":                         \n\
     orl %11,%11                               \n\
     movl %10,%4                               \n\
     js NewSampleType" #q "                    \n\
-    jmp MyDone                                \n\
+    jmp GOrgueDone                                \n\
 "
 
 #define ASM_CORE(q) "                         \n\
 NewSampleType" #q ":                          \n\
     cmpl $2,%4                                \n\
-    jz MyLoopSC" #q "                         \n\
-    jnc MyLoopSU" #q "                        \n\
-    jpo MyLoopMC" #q "                        \n\
+    jz GOrgueLoopSC" #q "                         \n\
+    jnc GOrgueLoopSU" #q "                        \n\
+    jpo GOrgueLoopMC" #q "                        \n\
     " ASM_LOOP(q,MU) "                        \n\
     " ASM_LOOP(q,SC) "                        \n\
     " ASM_LOOP(q,SU) "                        \n\
