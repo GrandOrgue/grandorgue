@@ -202,12 +202,24 @@ int GOrgueSoundCallbackAudio(char* buffer, int bufferSize, void* WXUNUSED(userDa
     for (k = 0; k < bufferSize; k += 2)
     {
         register double d;
-        d = (final_buff[k + 0] >? clamp_min) <? clamp_max;
-        ((float*)buffer)[k + 0]  = (float)d;
-        g_sound->meter_left  >?= fabs(d);
-        d = (final_buff[k + 1] >? clamp_min) <? clamp_max;
-        ((float*)buffer)[k + 1]  = (float)d;
-        g_sound->meter_right >?= fabs(d);
+        d = final_buff[k + 0];
+        if (d < clamp_min)
+        	d = clamp_min;
+        else if (d > clamp_max)
+        	d = clamp_max;
+        d = fabs(d);
+        if (d > g_sound->meter_left)
+        	g_sound->meter_left = d;
+
+        d = final_buff[k + 1];
+        if (d < clamp_min)
+        	d = clamp_min;
+        else if (d > clamp_max)
+        	d = clamp_max;
+        d = fabs(d);
+        if (d > g_sound->meter_right)
+        	g_sound->meter_right = d;
+
     }
 
 	if (g_sound->f_output)

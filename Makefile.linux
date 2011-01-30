@@ -20,11 +20,24 @@ PROGRAM = GrandOrgue
 
 # if your program has more than one source file, add more .o files to the line
 # below
-OBJECTS = MyOrgan.o MyLCD.o Images.o MyMeter.o MyProperties.o MySound.o OrganDocument.o OrganFile.o OrganView.o SettingsDialog.o wxGaugeAudio.o RtMidi.o RtAudio.o
+OBJECTS = GrandOrgue.o \
+GOrgueLCD.o \
+Images.o \
+GOrgueMeter.o \
+GOrgueProperties.o \
+GOrgueSound.o \
+OrganDocument.o \
+OrganFile.o \
+OrganView.o \
+SettingsDialog.o \
+wxGaugeAudio.o \
+RtMidi.o \
+RtAudio.o
 
 
 # you shouldn't have to edit anything below this line
-CXX = g++-3.4 # $(shell $(WX_CONFIG) --cxx)
+#CXX = g++-3.4 # $(shell $(WX_CONFIG) --cxx)
+CXX = g++
 
 .SUFFIXES:	.o .cpp
 
