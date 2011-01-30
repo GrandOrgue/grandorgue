@@ -329,7 +329,7 @@ wxPanel* SettingsDialog::CreateOrganPage(wxWindow* parent)
 
     long count=pConfig->Read("OrganMIDI/Count", 0L);
     for (long i=0; i<count; i++) {
-        wxString itemstr="OrganMIDI/Organ"+wxString::Format("%d", i);
+        wxString itemstr="OrganMIDI/Organ"+wxString::Format("%ld", i);
         wxString file=pConfig->Read(itemstr+".file", "");
         int j=pConfig->Read(itemstr+".midi", 0L);
         organlist->InsertItem(i, file);

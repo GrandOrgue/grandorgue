@@ -54,7 +54,7 @@ RtMidi :: RtMidi()
 void RtMidi :: error( RtError::Type type )
 {
   if (type == RtError::WARNING) {
-    wxLogWarning(errorString_.c_str());
+    wxLogWarning("%s", errorString_.c_str());
   }
   else if (type == RtError::DEBUG_WARNING) {
 #if defined(__RTMIDI_DEBUG__)

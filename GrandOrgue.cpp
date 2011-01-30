@@ -559,7 +559,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
         }
         if (todo.empty())
         {
-            ::wxLogWarning(_("The sample cache is already up to date."));
+            ::wxLogWarning("%s", "The sample cache is already up to date.");
             return;
         }
 

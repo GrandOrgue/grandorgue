@@ -36,7 +36,7 @@ public:
 	{
 		return size;
 	}
-	bool operator== (char* cmp)
+	bool operator== (const char* cmp)
 	{
 	    return type == *((int*)cmp);
 	}

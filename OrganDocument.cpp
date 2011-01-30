@@ -60,7 +60,7 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 		if (!file2.IsEmpty())
             DeleteAllViews();
 		if (error != "!")
-			::wxLogError(error);
+			::wxLogError("%s", (const char*)error.mb_str(wxConvUTF8));
         b_loaded = true;
 		return false;
 	}
