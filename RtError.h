@@ -49,9 +49,9 @@ public:
   virtual void printMessage(void)
   {
 	  if (type_ <= DEBUG_WARNING)
-		  ::wxLogWarning(getMessageString());
+		  ::wxLogWarning("%s", getMessageString());
 	  else
-		  ::wxLogError(getMessageString());
+		  ::wxLogError("%s", getMessageString());
   }
 
   //! Returns the thrown error message type.

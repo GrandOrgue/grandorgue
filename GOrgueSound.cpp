@@ -31,12 +31,12 @@ GOrgueSound* g_sound = 0;
 
 #ifdef _WIN32
  RtAudio::RtAudioApi i_APIs[] = { RtAudio::WINDOWS_DS, RtAudio::WINDOWS_ASIO };
- char* s_APIs[] = { "DirectSound: ", "ASIO: " };
+ const wxChar* s_APIs[] = { wxT("DirectSound: "), wxT("ASIO: ") };
 #endif
 
 #ifdef linux
   RtAudio::RtAudioApi i_APIs[] = {RtAudio::LINUX_JACK, RtAudio::LINUX_ALSA};// RtAudio::LINUX_OSS };
-  char* s_APIs[] = {"Jack: ", "Alsa: " }; //{ " Jack: ", "Alsa: ", "OSS: " };
+  const wxChar* s_APIs[] = { wxT("Jack: "), wxT("Alsa: ") }; //{ " Jack: ", "Alsa: ", "OSS: " };
 #endif
 
 #include "GOrgueSoundCallbackMIDI.h"
@@ -382,7 +382,7 @@ void GOrgueSound::UpdateOrganMIDI()
 {
     long count=pConfig->Read("OrganMIDI/Count", 0L);
     for (long i=0; i<count; i++) {
-        wxString itemstr="OrganMIDI/Organ"+wxString::Format("%d", i);
+        wxString itemstr = "OrganMIDI/Organ" + wxString::Format("%ld", i);
         long j=pConfig->Read(itemstr+".midi", 0L);
         wxString file=pConfig->Read(itemstr+".file");
         organmidiEvents.insert(std::pair<long, wxString>(j, file) );

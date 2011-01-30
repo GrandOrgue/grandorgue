@@ -92,17 +92,19 @@ const int i_MIDIEvents0[] = {0x0000,0xB000};
 const int i_MIDIEvents1[] = {0x0000,0x9000};
 const int i_MIDIEvents2[] = {0x0000,0x9000,0xB000,0xC000};
 
-struct
+typedef struct
 {
 	const char** names;
 	const int* events;
 	const int count;
-} g_MIDIEvents[6] =
+} MIDIEventType;
+
+static const MIDIEventType g_MIDIEvents[6] =
 {
 	{s_MIDIEvents0, i_MIDIEvents0, 2},
 	{s_MIDIEvents1, i_MIDIEvents1, 2},
 	{s_MIDIEvents2, i_MIDIEvents2, 4},
 	{s_MIDIEvents2, i_MIDIEvents2, 4},
 	{s_MIDIEvents2, i_MIDIEvents2, 4},
-	{s_MIDIEvents2, i_MIDIEvents2, 4},
+	{s_MIDIEvents2, i_MIDIEvents2, 4}
 };
