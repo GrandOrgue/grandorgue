@@ -2276,8 +2276,9 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
                                 if (s_ptr[k] & 0x8000)
                                     s_ptr[k]++;
                                 peaktemp  = s_ptr[k++];
-                                peaktemp ^= (peaktemp >> 15);
-                                peak >?= peaktemp;
+                                peaktemp ^= (peaktemp >> 15); //TODO: I do not think this is correct. Nick A
+                                if (peaktemp > peak)
+                                	peak = peaktemp;
                             }
                         }
                         else
@@ -2290,8 +2291,9 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
                                 if (s_ptr[k] & 0x8000)
                                     s_ptr[k]++;
                                 peaktemp += s_ptr[k++];
-                                peaktemp ^= (peaktemp >> 15);
-                                peak >?= peaktemp;
+                                peaktemp ^= (peaktemp >> 15); //TODO: I do not think this is correct. Nick A
+                                if (peaktemp > peak)
+                                	peak = peaktemp;
                             }
                             peak >>= 1;
                         }

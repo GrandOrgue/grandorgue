@@ -586,7 +586,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
                 break;
 
             #ifdef linux
-            ffile = open(fn, O_WRONLY | O_CREAT);
+            ffile = open(fn, O_WRONLY | O_CREAT, 0);
             #endif
             #ifdef __WIN32__
             ffile = _open(fn, _O_BINARY | _O_WRONLY | _O_SEQUENTIAL | _O_CREAT, _S_IREAD | _S_IWRITE);
