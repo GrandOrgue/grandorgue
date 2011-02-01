@@ -21,32 +21,24 @@
  */
 
 #pragma once
+#include <wx/docview.h>
+
+class OrganPanel;
 
 class OrganView : public wxView
 {
-	DECLARE_DYNAMIC_CLASS(OrganView)
-public:
-    bool OnCreate(wxDocument *doc, long flags);
-	void OnErase(wxEraseEvent& event);
-	void OnPaint(wxPaintEvent& event);
-	void OnDraw(wxDC *dc);
-	void OnDrawstop(wxCommandEvent& event);
-	void OnNoteOnOff(wxCommandEvent& event);
-    void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
-	void OnMouseLeftDown(wxMouseEvent& event);
-	void OnMouseRightDown(wxMouseEvent& event);
-	void OnMouseScroll(wxMouseEvent& event);
-    bool OnClose(bool deleteWindow = true);
+  DECLARE_DYNAMIC_CLASS(OrganView);
+  public:
+  bool OnCreate(wxDocument *doc, long flags);
+  bool OnClose(bool deleteWindow = true);
+  void OnDraw(wxDC *dc);
+  void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
+  void OnDrawstop(wxCommandEvent& event);
+  void OnNoteOnOff(wxCommandEvent& event);
 
-	DECLARE_EVENT_TABLE()
+  private:
+  OrganPanel* m_panel;
+  DECLARE_EVENT_TABLE();
 
-private:
-	wxBitmap m_clientBitmap;
-	wxPoint m_clientOrigin;
-	wxBrush m_pedalBrush;
-
-	void DrawClickables(wxDC* dc = NULL, int xx = 0, int yy = 0, bool right = false, int scroll = 0);
-
-	void DrawKey(wxDC& dc, int man, int k, bool usepen = true, wxRegion* region = 0);
-	void WrapText(wxDC& dc, wxString& ptr, int width);
 };
+

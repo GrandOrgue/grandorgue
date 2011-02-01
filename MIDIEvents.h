@@ -97,9 +97,9 @@ typedef struct
 	const char** names;
 	const int* events;
 	const int count;
-} MIDIEventType;
+} MIDIEvents;
 
-static const MIDIEventType g_MIDIEvents[6] =
+MIDIEvents  g_MIDIEvents[6] =
 {
 	{s_MIDIEvents0, i_MIDIEvents0, 2},
 	{s_MIDIEvents1, i_MIDIEvents1, 2},

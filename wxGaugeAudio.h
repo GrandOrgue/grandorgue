@@ -21,7 +21,8 @@
  */
 
 #pragma once
-
+#include <wx/control.h>
+class GOrgueFrame;
 class wxGaugeAudio : public wxControl
 {
 public:
@@ -37,5 +38,5 @@ public:
 protected:
 	int m_value;
 	bool m_clip;
-	class GOrgueFrame* m_frame;
+	GOrgueFrame* m_frame;
 };

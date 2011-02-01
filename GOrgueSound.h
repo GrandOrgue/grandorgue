@@ -21,6 +21,11 @@
  */
 
 #pragma once
+#include <map>
+#include "RtAudio.h"
+#include "OrganFile.h"
+#include "RtMidi.h"
+#include "GrandOrgueDef.h"
 
 BEGIN_DECLARE_EVENT_TYPES()
 	DECLARE_EVENT_TYPE(wxEVT_DRAWSTOP, -1)
@@ -33,6 +38,8 @@ BEGIN_DECLARE_EVENT_TYPES()
 END_DECLARE_EVENT_TYPES()
 
 #pragma pack(1)
+
+class wxConfigBase;
 
 class GOrgueSound
 {
@@ -66,7 +73,7 @@ public:
 	int volume;
 	int transpose;
 
-	std::map<wxString, std::pair<int, RtAudio::RtAudioApi> > m_audioDevices;
+	std::map<wxString, std::pair<int, RtAudio::Api> > m_audioDevices;
 	RtAudio* audioDevice;
 	int n_latency;
 

@@ -20,7 +20,14 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueSound.h"
 #include "GrandOrgue.h"
+#include "GrandOrgueFrame.h"
+#include "OrganDocument.h"
+#include "GrandOrgueFile.h"
+#if defined(__WXMSW__)
+    #include <wx/msw/regconf.h>
+#endif
 
 struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
 
@@ -30,13 +37,13 @@ extern long i_MIDIMessages[];
 GOrgueSound* g_sound = 0;
 
 #ifdef _WIN32
- RtAudio::RtAudioApi i_APIs[] = { RtAudio::WINDOWS_DS, RtAudio::WINDOWS_ASIO };
- const wxChar* s_APIs[] = { wxT("DirectSound: "), wxT("ASIO: ") };
+ RtAudio::Api i_APIs[] = { RtAudio::WINDOWS_DS, RtAudio::WINDOWS_ASIO };
+ const char* s_APIs[] = { "DirectSound: ", "ASIO: " };
 #endif
 
 #ifdef linux
-  RtAudio::RtAudioApi i_APIs[] = {RtAudio::LINUX_JACK, RtAudio::LINUX_ALSA};// RtAudio::LINUX_OSS };
-  const wxChar* s_APIs[] = { wxT("Jack: "), wxT("Alsa: ") }; //{ " Jack: ", "Alsa: ", "OSS: " };
+  RtAudio::Api i_APIs[] = {RtAudio::UNIX_JACK, RtAudio::LINUX_ALSA};// RtAudio::LINUX_OSS };
+  std::string  s_APIs[] = {"Jack: ", "Alsa: " }; //{ " Jack: ", "Alsa: ", "OSS: " };
 #endif
 
 #include "GOrgueSoundCallbackMIDI.h"
@@ -51,38 +58,51 @@ DEFINE_EVENT_TYPE(wxEVT_METERS)
 DEFINE_EVENT_TYPE(wxEVT_LOADFILE)
 
 GOrgueSound::GOrgueSound(void)
+: organmidiEvents(),
+  sw(),
+  pConfig(wxConfigBase::Get()),
+  format(0),
+  m_parent(NULL),
+  samplers_count(0),
+  polyphony(0),
+  poly_soft(0),
+  volume(0),
+  transpose(0),
+  m_audioDevices(),
+  audioDevice(NULL),
+  n_latency(0),
+  m_midiDevices(),
+  midiDevices(NULL),
+  b_midiDevices(NULL),
+  i_midiDevices(NULL),
+  n_midiDevices(0),
+  b_limit(0), b_stereo(0), b_align(0), b_detach(0), b_scale(0), b_random(0),
+  b_stoprecording(false), b_memset(false),
+  f_output(NULL),
+  meter_counter(0),
+  meter_poly(0),
+  meter_left(0),
+  meter_right(0),
+  b_active(false), b_listening(false),
+  listen_evthandler(NULL),
+  defaultAudio("")
 {
-	int i, j, k;
-
-	m_parent = 0;
-
-	b_active = b_listening = false;
+	int j, k;
 	g_sound = this;
-	pConfig = wxConfigBase::Get();
-
-	midiDevices = 0;
-	b_midiDevices = 0;
-	i_midiDevices = 0;
-	audioDevice = 0;
-
-	meter_counter = meter_poly = 0;
-	meter_left = meter_right = 0.0;
-	b_stoprecording = b_memset = false;
-	f_output = 0;
 
 	try
 	{
-		for (k = 0; k < (int)(sizeof(i_APIs) / sizeof(RtAudio::RtAudioApi)); k++)
+		for (k = 0; k < (int)(sizeof(i_APIs) / sizeof(RtAudio::Api)); k++)
 		{
         	    audioDevice = new RtAudio(i_APIs[k]);
 
-			for (i = 1; i <= audioDevice->getDeviceCount(); i++)
+			for (size_t i = 0; i < audioDevice->getDeviceCount(); i++)
 			{
-				RtAudioDeviceInfo info = audioDevice->getDeviceInfo(i);
+			  RtAudio::DeviceInfo info = audioDevice->getDeviceInfo(i);
 				wxString name = info.name.c_str();
 				name.Replace("\\", "|");
 				name = s_APIs[k] + name;
-				if (info.isDefault && defaultAudio.IsEmpty())
+				if (info.isDefaultOutput && defaultAudio.IsEmpty())
 					defaultAudio = name;
 				if (i_APIs[k] != RtAudio::WINDOWS_DS)
 				{
@@ -104,13 +124,13 @@ GOrgueSound::GOrgueSound(void)
 			audioDevice = 0;
 		}
 
-	        RtMidiIn midiDevice;
+		RtMidiIn midiDevice;
 		n_midiDevices = midiDevice.getPortCount();
 
 		midiDevices = new RtMidiIn*[n_midiDevices];
 		b_midiDevices = new bool[n_midiDevices];
 		i_midiDevices = new int[n_midiDevices];
-		for (i = 0; i < n_midiDevices; i++)
+		for (int i = 0; i < n_midiDevices; i++)
 		{
 			midiDevices[i] = new RtMidiIn();
 			wxString name = midiDevices[i]->getPortName(i).c_str();
@@ -147,9 +167,9 @@ GOrgueSound::~GOrgueSound(void)
 			midiDevices = 0;
 		}
 		if (b_midiDevices)
-			delete b_midiDevices;
+			delete [] b_midiDevices;
 		if (i_midiDevices)
-			delete i_midiDevices;
+			delete [] i_midiDevices;
 		if (audioDevice)
 		{
 			delete audioDevice;
@@ -215,39 +235,104 @@ bool GOrgueSound::OpenSound(bool wait)
 			}
 		}
 
-		std::map<wxString, std::pair<int, RtAudio::RtAudioApi> >::iterator it;
+		std::map<wxString, std::pair<int, RtAudio::Api> >::iterator it;
 		it = m_audioDevices.find(defaultAudio.c_str());
 		if (it != m_audioDevices.end())
 		{
-			int bufferSize, numberOfBuffers;
+			unsigned int bufferSize, numberOfBuffers;
 			audioDevice = new RtAudio(it->second.second);
 			if (defaultAudio.StartsWith("ASIO: "))
 			{
 			    numberOfBuffers = 2;
-			    bufferSize = (n_latency * 441 + numberOfBuffers * 5) / (numberOfBuffers * 10);
-			    bufferSize &= 0xFFFFFFF0; // i think it only needs to be aligned to x2, but just to be sane and safe
-			    if (bufferSize < 64) bufferSize = 64;
-		            if (bufferSize > 1024) bufferSize = 1024;
+			    int bufferCalc = (n_latency * 25);
+                if (bufferCalc <= 256) bufferSize = 128;
+                else if (bufferCalc > 256)
+                    {
+                        if (bufferCalc <= 512) bufferSize = 256;
+                        else if (bufferCalc > 512)
+                        {
+                            if (bufferCalc <= 768) bufferSize = 384;
+                            else if (bufferCalc > 768)
+                                {
+                                    if (bufferCalc <= 1024) bufferSize = 512;
+                                    else if (bufferCalc > 1024)
+                                        {
+                                            if (bufferCalc <= 1536) bufferSize = 768;
+                                            else if (bufferCalc > 1536) bufferSize = 1024;
+                                        }
+                                }
+                        }
+                    }
 			}
 			else if (defaultAudio.StartsWith("Jack: "))
 			{
 			    numberOfBuffers = 1;
 			    bufferSize=1024;
 			}
+            else if (defaultAudio.StartsWith("DirectSound: "))
+            {
+                numberOfBuffers = 2;
+                int bufferCalc = (n_latency * 25);
+                if (bufferCalc <= 256) bufferSize = 128;
+                else if (bufferCalc > 256)
+                    {
+                        if (bufferCalc <= 512) bufferSize = 256;
+                        else if (bufferCalc > 512)
+                        {
+                            if (bufferCalc <= 768) bufferSize = 384;
+                            else if (bufferCalc > 768)
+                                {
+                                    if (bufferCalc <= 1024) bufferSize = 512;
+                                    else if (bufferCalc > 1024)
+                                    {
+                                        numberOfBuffers = 3;
+                                            {
+                                                if (bufferCalc <= 1536) bufferSize = 512;
+                                                else if (bufferCalc > 1536)
+                                                    {
+                                                    if (bufferCalc <= 2048)
+                                                            {
+                                                                numberOfBuffers = 4;
+                                                                bufferSize = 512;
+                                                            }
+                                                        else if (bufferCalc > 2048)
+                                                            {
+                                                                numberOfBuffers = 5;
+                                                                if (bufferCalc <= 2560) bufferSize = 512;
+                                                                else if (bufferCalc > 2560)
+                                                                    {
+                                                                        numberOfBuffers = 6;
+                                                                        if (bufferCalc <= 3072) bufferSize = 512;
+                                                                        else if (bufferCalc > 3072) bufferSize = 1024;
+                                                                    }
+                                                            }
+
+                                                    }
+                                            }
+                                    }
+                                }
+                        }
+                    }
+            }
 			else
 			{
 			    bufferSize = 128;
-			    numberOfBuffers = (n_latency * 441 + bufferSize * 5) / (bufferSize * 10);
+			    numberOfBuffers = (n_latency * 25) / bufferSize;
 			    if (numberOfBuffers < 2) numberOfBuffers = 2;
 			}
 
-			audioDevice->openStream(it->second.first, 2, 0, 0, RTAUDIO_FLOAT32, 44100, &bufferSize, numberOfBuffers);
+			RtAudio::StreamParameters aOutputParam;
+			aOutputParam.deviceId=it->second.first;
+			aOutputParam.nChannels=2; //stereo
+
+			RtAudio::StreamOptions aOptions;
+			aOptions.numberOfBuffers=numberOfBuffers;
+			audioDevice->openStream(&aOutputParam,NULL,RTAUDIO_FLOAT32, 44100, &bufferSize,&GOrgueSoundCallbackAudio,NULL,&aOptions);
 
 			if (bufferSize <= 1024)
 			{
-				n_latency = (bufferSize * numberOfBuffers * 10 + 221) / 441;
+				n_latency = (bufferSize * numberOfBuffers ) / 25;
 				pConfig->Write("Devices/Sound/" + defaultAudio, n_latency);
-				audioDevice->setStreamCallback(&GOrgueSoundCallbackAudio, 0);
 				audioDevice->startStream();
 			}
 			else
@@ -258,8 +343,8 @@ bool GOrgueSound::OpenSound(bool wait)
 		                CloseSound();
 		                return false;
 			}
-			RtAudioDeviceInfo info = audioDevice->getDeviceInfo(it->second.first);
-			format = audioDevice->getOutputFormat();
+			RtAudio::DeviceInfo info = audioDevice->getDeviceInfo(it->second.first);
+            format = RTAUDIO_FLOAT32;
 		}
 
 		if (!n_midi || it == m_audioDevices.end())
@@ -324,7 +409,7 @@ bool GOrgueSound::ResetSound()
 	wxBusyCursor busy;
 	bool was_active = b_active;
 
-	int temp = g_sound->volume;
+	int temp = volume;
 	CloseSound();
 	if (!OpenSound())
 		return false;
@@ -337,12 +422,12 @@ bool GOrgueSound::ResetSound()
         if (doc && doc->b_loaded)
         {
             b_active = true;
-            for (int i = 0; i < organfile->NumberOfTremulants; i++)
+            for (int i = 0; i < organfile->m_NumberOfTremulants; i++)
             {
-                if (organfile->tremulant[i].DefaultToEngaged)
+                if (organfile->m_tremulant[i].DefaultToEngaged)
                 {
-                    organfile->tremulant[i].Set(false);
-                    organfile->tremulant[i].Set(true);
+                    organfile->m_tremulant[i].Set(false);
+                    organfile->m_tremulant[i].Set(true);
                 }
             }
         }
@@ -359,7 +444,7 @@ void GOrgueSound::OpenWAV()
 	{
 		wxConfig::Get()->Write("wavPath", dlg.GetDirectory());
 		b_stoprecording = false;
-		if (f_output = fopen(dlg.GetPath(), "wb"))
+		if ((f_output = fopen(dlg.GetPath(), "wb")))
 			fwrite(&WAVE, sizeof(WAVE), 1, f_output);
 		else
 			::wxLogError("Unable to open file for writing");
@@ -387,4 +472,12 @@ void GOrgueSound::UpdateOrganMIDI()
         wxString file=pConfig->Read(itemstr+".file");
         organmidiEvents.insert(std::pair<long, wxString>(j, file) );
     }
+}
+
+void GOrgueSound::MIDIPretend(bool on)
+{
+	for (int i = organfile->m_FirstManual; i <= organfile->m_NumberOfManuals; i++)
+		for (int j = 0; j < organfile->m_manual[i].NumberOfLogicalKeys; j++)
+			if (organfile->m_manual[i].m_MIDI[j] & 1)
+				organfile->m_manual[i].Set(j + organfile->m_manual[i].FirstAccessibleKeyMIDINoteNumber, on, true);
 }

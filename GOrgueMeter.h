@@ -22,6 +22,11 @@
 
 #pragma once
 
+#include <wx/control.h>
+
+class wxSpinCtrl;
+class wxGaugeAudio;
+
 class GOrgueMeter : public wxControl
 {
 public:

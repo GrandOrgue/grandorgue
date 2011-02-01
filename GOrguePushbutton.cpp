@@ -1,0 +1,106 @@
+/*
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
+ *
+ * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
+ * MyOrgan is a Trademark of Milan Digital Audio LLC
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+ * MA 02111-1307, USA.
+ */
+
+#include "GOrguePushbutton.h"
+#include "IniFileConfig.h"
+#include "GrandOrgueFile.h"
+#include "GrandOrgue.h"
+#include "GrandOrgueFrame.h"
+#include "GOrgueSound.h"
+#include "OrganFile.h"
+#include "SettingsDialog.h"
+
+extern GrandOrgueFile* organfile;
+extern GOrgueSound* g_sound;
+extern const char* s_MIDIMessages[];
+
+void GOrguePushbutton::MIDI(void)
+{
+  int event = 0xC000;
+  if (m_ManualNumber > -1)
+	event = g_sound->i_midiEvents[organfile->m_manual[m_ManualNumber].MIDIInputNumber + 7] ^ 0x5000;
+  MIDIListenDialog dlg(::wxGetApp().frame, _("Pushbutton Trigger"), event | (MIDIProgramChangeNumber - 1), m_ManualNumber > -1 ? 4 : 5);
+  if (dlg.ShowModal() == wxID_OK)
+	{
+	  MIDIProgramChangeNumber = (dlg.GetEvent() & 0x7F) + 1;
+	  ::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
+	}
+}
+
+bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
+{
+  int x, y, i;
+  if (!Displayed)
+	return false;
+
+  x = organfile->m_PistonX + (DispButtonCol - 1) * 44 + 6;
+  if (DispButtonRow > 99)
+	{
+	  y = organfile->m_JambTopPiston + (DispButtonRow - 100) * 40 + 5;
+	}
+  else
+	{
+	  i = DispButtonRow;
+	  if (i == 99)
+		i = 0;
+
+	  if (i > organfile->m_NumberOfManuals)
+		y = organfile->m_HackY - (i - organfile->m_NumberOfManuals) * 72 + 32 + 5;
+	  else
+		y = organfile->m_manual[i].m_PistonY + 5;
+
+	  if (organfile->m_DispExtraPedalButtonRow && !DispButtonRow)
+		y += 40;
+	  if (organfile->m_DispExtraPedalButtonRowOffset && DispButtonRow == 99)
+		x -= 22;
+	}
+  if (!DispKeyLabelOnLeft)
+	x -= 13;
+
+  if (!dc)
+	return !(xx < x || xx > x + 30 || yy < y || yy > y + 30 || (x + 15 - xx) * (x + 15 - xx) + (y + 15 - yy) * (y + 15 - yy) > 225);
+
+  wxMemoryDC mdc;
+  wxRect rect(x + 1, y + 1, 31 - 1, 30 - 1);
+  wxBitmap bmp = organfile->m_images[DispImageNum + 4];
+  dc->DrawBitmap(bmp, x, y, true);
+  dc->SetTextForeground(DispLabelColour);
+  wxFont font = *wxNORMAL_FONT;
+  font.SetFaceName(organfile->m_DispControlLabelFont);
+  font.SetPointSize(DispLabelFontSize);
+  dc->SetFont(font);
+  dc->DrawLabel(Name, rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+  if (dc2)
+	dc2->Blit(x, y, 31, 30, dc, x, y);
+  return false;
+}
+
+void GOrguePushbutton::Load(IniFileConfig& cfg, const char* group)
+{
+  DispButtonRow=cfg.ReadInteger( group,"DispButtonRow",    0, 99 + organfile->m_DispExtraButtonRows);
+  DispButtonCol=cfg.ReadInteger( group,"DispButtonCol",    1, organfile->m_DispButtonCols);
+  DispImageNum=cfg.ReadInteger( group,"DispImageNum",    1,    2);
+  MIDIProgramChangeNumber=cfg.ReadInteger( group,"MIDIProgramChangeNumber",    1,  128);
+  DispImageNum--;
+
+  GOrgueControl::Load(cfg, group);
+}

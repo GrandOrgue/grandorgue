@@ -20,9 +20,20 @@
  * MA 02111-1307, USA.
  */
 
+#include "SettingsDialog.h"
 #include "GrandOrgue.h"
-
+#include "GrandOrgueFrame.h"
+#include "GrandOrgueID.h"
+#include "GOrgueSound.h"
 #include "MIDIEvents.h"
+#include <wx/spinctrl.h>
+#include <wx/tglbtn.h>
+#include <wx/bookctrl.h>
+#include <wx/numdlg.h>
+#include <wx/html/helpctrl.h>
+#include <wx/statline.h>
+
+#include <wx/listctrl.h>
 
 IMPLEMENT_CLASS(SettingsDialog, wxPropertySheetDialog)
 IMPLEMENT_CLASS(MIDIListenDialog, wxDialog)
@@ -140,7 +151,7 @@ wxSize(603,500)
 SettingsDialog::~SettingsDialog()
 {
     g_sound->m_parent = 0;
-    if (::wxGetApp().m_docManager->GetCurrentDocument() && (b_stereo != g_sound->b_stereo || b_squash != wxConfigBase::Get()->Read("LosslessCompression", 1)))
+    if ((b_stereo != g_sound->b_stereo || b_squash != wxConfigBase::Get()->Read("LosslessCompression", 1)))
     {
         if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), APP_NAME, wxYES_NO | wxICON_QUESTION) == wxYES)
         {
@@ -183,7 +194,7 @@ void SettingsDialog::UpdateSoundStatus()
 wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 {
 	int i;
-	std::map<wxString, std::pair<int, RtAudio::RtAudioApi> >::iterator it1;
+	std::map<wxString, std::pair<int, RtAudio::Api> >::iterator it1;
 	std::map<wxString, int>::iterator it2;
 
 	wxPanel* panel = new wxPanel(parent, wxID_ANY);
@@ -435,7 +446,7 @@ void SettingsDialog::UpdateOrganMessages(int i)
 
 void SettingsDialog::OnChanged(wxCommandEvent& event)
 {
-	register int id = event.GetId();
+	int id = event.GetId();
 	if (id == ID_LATENCY)
 	{
 		long n = c_latency->GetValue(), v;
@@ -528,7 +539,6 @@ void SettingsDialog::OnOK(wxCommandEvent& event)
 
 bool SettingsDialog::DoApply()
 {
-	int i, j;
 
 	//if (!this->FindWindowById(wxID_APPLY, this)->IsEnabled())
         //return true;
@@ -536,8 +546,10 @@ bool SettingsDialog::DoApply()
 	if (!(this->Validate()))
 		return false;
 
-	for (i = 0;	i < page1checklist->GetCount(); i++)
+	for (size_t i = 0;	i < page1checklist->GetCount(); i++)
 	{
+		int j;
+
 		j = page1checklistdata[i];
 		if (!page1checklist->IsChecked(i))
             j = -j - 1;
