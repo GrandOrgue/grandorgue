@@ -19,8 +19,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
  * MA 02111-1307, USA.
  */
+#include <wx/spinctrl.h>
 
+#include "GOrgueMeter.h"
+#include "GOrgueSound.h"
+#include "wxGaugeAudio.h"
+#include "GrandOrgueFile.h"
+#include "GrandOrgueID.h"
 #include "GrandOrgue.h"
+#include "GrandOrgueFrame.h"
+
+#if defined(__WXMSW__)
+    #include <wx/msw/regconf.h>
+#endif
+
 
 extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
@@ -36,7 +48,8 @@ BEGIN_EVENT_TABLE(GOrgueMeter, wxControl)
     EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueMeter::OnEnter)
 END_EVENT_TABLE()
 
-GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count) : wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
+GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
+: wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
 {
 	//static const wxChar* strings[] = {_("T"),_("M"), _("P"), _("V")};
 	static const wxChar* strings[] = {_(""),_(""), _(""), _("")};
@@ -172,7 +185,7 @@ void GOrgueMeter::OnFrame(wxCommandEvent& event)
 	}
 
 	if (organfile)
-		organfile->framegeneral[n - 1].Push();
+		organfile->m_framegeneral[n - 1].Push();
 }
 
 void GOrgueMeter::OnTranspose(wxCommandEvent& event)
@@ -195,7 +208,7 @@ void GOrgueMeter::OnTranspose(wxCommandEvent& event)
 void GOrgueMeter::OnEnter(wxCommandEvent& event)
 {
 	if (event.GetId() == ID_METER_FRAME_SPIN && organfile)
-		organfile->framegeneral[m_spin->GetValue() - 1].Push();
+		organfile->m_framegeneral[m_spin->GetValue() - 1].Push();
 	::wxGetApp().frame->SetFocus();
 }
 

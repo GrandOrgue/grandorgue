@@ -1,0 +1,61 @@
+/*
+ * GrandOrgue - free pipe organ simulator based on MyOrgan
+ *
+ * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
+ * MyOrgan is a Trademark of Milan Digital Audio LLC
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+ * MA 02111-1307, USA.
+ */
+
+#pragma once
+
+#include <wx/wx.h>
+
+class wxView;
+class GOrgueDrawstop;
+class GOrguePushbutton;
+
+class OrganPanel : public wxPanel
+{
+public:
+  OrganPanel(wxWindow* parent):
+	wxPanel(parent, wxID_ANY,wxDefaultPosition, wxDefaultSize,  wxTAB_TRAVERSAL, "panel")
+  {}
+  void OnErase(wxEraseEvent& event);
+  void OnPaint(wxPaintEvent& event);
+  void OnDraw(wxDC *dc);
+  void OnDrawstop(wxCommandEvent& event);
+  void OnNoteOnOff(wxCommandEvent& event);
+  void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
+  void OnMouseLeftDown(wxMouseEvent& event);
+  void OnMouseRightDown(wxMouseEvent& event);
+  void OnMouseScroll(wxMouseEvent& event);
+  void OnKeyCommand(wxKeyEvent& event);
+  DECLARE_EVENT_TABLE();
+
+private:
+  wxBitmap m_clientBitmap;
+  wxPoint m_clientOrigin;
+  wxBrush m_pedalBrush;
+  void DrawClickables(wxDC* dc = NULL, int xx = 0, int yy = 0, bool right = false, int scroll = 0);
+  void HelpDrawStop(GOrgueDrawstop* stop, wxDC* dc, int xx, int yy, bool right);
+  void HelpDrawButton(GOrguePushbutton* button, wxDC* dc, int xx, int yy, bool right);
+
+  void DrawKey(wxDC& dc, int man, int k, bool usepen = true, wxRegion* region = 0);
+  void WrapText(wxDC& dc, wxString& ptr, int width);
+
+
+};

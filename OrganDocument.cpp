@@ -20,7 +20,13 @@
  * MA 02111-1307, USA.
  */
 
+#include "OrganDocument.h"
 #include "GrandOrgue.h"
+#include "GrandOrgueFrame.h"
+#include "GOrgueSound.h"
+#include "wxGaugeAudio.h"
+#include "GOrgueMeter.h"
+#include "GrandOrgueFile.h"
 
 IMPLEMENT_DYNAMIC_CLASS(OrganDocument, wxDocument)
 
@@ -59,13 +65,13 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 		CloseOrgan();
 		if (!file2.IsEmpty())
             DeleteAllViews();
-		if (error != "!")
-			::wxLogError("%s", (const char*)error.mb_str(wxConvUTF8));
+		 if (error != "!")
+		   ::wxLogError("%s\n",(const char*)error.mb_str(wxConvUTF8));
         b_loaded = true;
 		return false;
 	}
 
-	SetTitle(organfile->ChurchName);
+	SetTitle(organfile->m_ChurchName);
 
 	Modify(false);
 	UpdateAllViews(0, this);

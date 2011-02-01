@@ -1,6 +1,6 @@
-MyOrgan is a pipe organ sampler.
+GrandOrgue is a sample based pipe organ simulator.
 
-To compile, currently MinGW must be used.
+To compile in Windows, currently MinGW must be used.
 You will need to get the ASIO SDK and put it in the ASIO/ direcotry.
       http://www.steinberg.net/534+M52087573ab0.html
       (this link could easily change - search for ASIO SDK)
@@ -18,6 +18,9 @@ contents of the help folder, then change the zip extension to htb.
 Changes  31-03-2007 by Johan Blok (Media Center edition)
 - some support of VFD (display) while loading samplesets
 - loads a different organ driven by MIDI
+Changes  2009 by Graham Goode
+- changed the look and feel of the menu and taskbar with new Icons
+- changed the default look with updated console graphics
 
 To compile: 
 - directx headers are also required (download Microsoft directX SDK)

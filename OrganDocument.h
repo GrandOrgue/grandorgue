@@ -21,6 +21,8 @@
  */
 
 #pragma once
+#include <wx/defs.h>
+#include <wx/docview.h>
 
 class RIFF
 {

@@ -20,7 +20,10 @@
  * MA 02111-1307, USA.
  */
 
+#include "wxGaugeAudio.h"
+#include <wx/dcmemory.h>
 #include "GrandOrgue.h"
+#include "GrandOrgueFrame.h"
 
 BEGIN_EVENT_TABLE(wxGaugeAudio, wxControl)
 	EVT_ERASE_BACKGROUND(wxGaugeAudio::OnErase)

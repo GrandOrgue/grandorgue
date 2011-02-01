@@ -1,30 +1,16 @@
-About the linux port of MyOrgan
+About the linux port of GrandOrgue
 
-To compile the linux port the following is needed:
-- gtk2
-- wxWidgets 2.6.3 or 2.7.0 (ansi version!)
-- g++-3.4 (some assembler parts are not accepted by recent versions of gcc)
+We have used the CodeBlocks IDE to provide a similar building experience to that of GrandOrgue in Windows, so you will need:
 
-A configure script is not yet available. The makefile will work on most systems.
-It uses wx-config to determine include directories and libraries.
+- CodeBlocks 8.02 or higher
+- WxWidgets 2.8-0 or higher (with ansi)
+- gcc 4.x
+- g++ 4.x
+- libasound2-dev
+- libjack-dev 
 
-From a shell type:
-make -f Makefile.linux
+Once these are installed, load the GrandOrgue.Linux.cbp in CodeBlocks and start exploring and building the code.
 
-The result will be an excutable called MyOrgan, place it somewhere in your path 
-(for example /usr/local/bin).
+I have used Ubuntu 9.10 to compile the GrandOrgue 0.2 release, and to work on the 0.3 code base...
 
-Limitations:
-- At the moment only ALSA is supported.
-Although RtAudio supports Jack I did not manage to get it working.
-
-To be able to use MIDI input module snd_seq should be loaded. Support for
-USB MIDI devices is available on linux via module snd-usb-audio. Use 
-sudo modprobe <modulename> to load them (as root) or add them to /etc/modules.
-Module snd_seq should be loaded before MyOrgan is started.
-
-Known problems/TODO:
-- In some circumstances, labels are not displayed because the organ file
-contains foreign characters. The class wxConfig does not seem to read
-these characters properly under linux. Unicode version might help.
-- wxAPPLY button dissapeared in recent versions of wxWidgets
+If you have any questions please contact me at ggoode.sa (at) gmail (dot) com.

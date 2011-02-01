@@ -4,13 +4,13 @@
 	<Project>
 		<Option title="GrandOrgue" />
 		<Option pch_mode="0" />
-		<Option compiler="gnu_gcc_compiler_34" />
+		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
 				<Option output="Debug/GrandOrgue" prefix_auto="0" extension_auto="0" />
 				<Option object_output="Debug" />
 				<Option type="0" />
-				<Option compiler="gnu_gcc_compiler_34" />
+				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
@@ -22,7 +22,7 @@
 				<Option output="Release/GrandOrgue" prefix_auto="0" extension_auto="0" />
 				<Option object_output="Release" />
 				<Option type="0" />
-				<Option compiler="gnu_gcc_compiler_34" />
+				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Option projectResourceIncludeDirsRelation="0" />
 			</Target>
@@ -35,36 +35,62 @@
 			<Add option="`wx-config --debug=no --unicode=no --cxxflags`" />
 			<Add option="-fomit-frame-pointer" />
 			<Add option="-ffast-math" />
-			<Add option="-D__LINUX_JACK__" />
+			<Add option="-D__UNIX_JACK__" />
 			<Add option="-D__LINUX_ALSA__" />
 			<Add option="-D__LINUX_ALSASEQ__" />
-			<Add directory="directx/Include" />
 		</Compiler>
 		<Linker>
 			<Add option="`wx-config --unicode=no --debug=no --libs`" />
 			<Add library="asound" />
 			<Add library="jack" />
 		</Linker>
+		<Unit filename="GOrgueControl.cpp" />
+		<Unit filename="GOrgueControl.h" />
+		<Unit filename="GOrgueCoupler.cpp" />
+		<Unit filename="GOrgueCoupler.h" />
+		<Unit filename="GOrgueDivisional.cpp" />
+		<Unit filename="GOrgueDivisional.h" />
+		<Unit filename="GOrgueDrawStop.cpp" />
+		<Unit filename="GOrgueDrawStop.h" />
+		<Unit filename="GOrgueDrawable.h" />
+		<Unit filename="GOrgueLCD.cpp" />
+		<Unit filename="GOrgueLCD.h" />
+		<Unit filename="GOrgueManual.cpp" />
+		<Unit filename="GOrgueManual.h" />
+		<Unit filename="GOrgueMeter.cpp" />
+		<Unit filename="GOrgueMeter.h" />
+		<Unit filename="GOrguePipe.cpp" />
+		<Unit filename="GOrguePipe.h" />
+		<Unit filename="GOrgueProperties.cpp" />
+		<Unit filename="GOrgueProperties.h" />
+		<Unit filename="GOrguePushbutton.cpp" />
+		<Unit filename="GOrguePushbutton.h" />
+		<Unit filename="GOrgueSound.cpp" />
+		<Unit filename="GOrgueSound.h" />
+		<Unit filename="GOrgueSoundCallbackAudio.cpp" />
+		<Unit filename="GOrgueSoundCallbackAudio.h" />
+		<Unit filename="GOrgueSoundCallbackMIDI.cpp" />
+		<Unit filename="GOrgueSoundCallbackMIDI.h" />
+		<Unit filename="GOrgueThread.h" />
+		<Unit filename="GrandOrgue.cpp" />
+		<Unit filename="GrandOrgue.h" />
+		<Unit filename="GrandOrgueDef.h" />
+		<Unit filename="GrandOrgueFile.cpp" />
+		<Unit filename="GrandOrgueFile.h" />
+		<Unit filename="GrandOrgueFrame.cpp" />
+		<Unit filename="GrandOrgueFrame.h" />
+		<Unit filename="GrandOrgueID.h" />
 		<Unit filename="Images.cpp" />
+		<Unit filename="IniFileConfig.cpp" />
+		<Unit filename="IniFileConfig.h" />
 		<Unit filename="KeyConvert.h" />
 		<Unit filename="MIDIEvents.h" />
-		<Unit filename="MMXSound.h" />
-		<Unit filename="MyLCD.cpp" />
-		<Unit filename="MyLCD.h" />
-		<Unit filename="MyMeter.cpp" />
-		<Unit filename="MyMeter.h" />
-		<Unit filename="MyOrgan.cpp" />
-		<Unit filename="MyOrgan.h" />
-		<Unit filename="MyProperties.cpp" />
-		<Unit filename="MyProperties.h" />
-		<Unit filename="MySound.cpp" />
-		<Unit filename="MySound.h" />
-		<Unit filename="MySoundCallbackAudio.h" />
-		<Unit filename="MySoundCallbackMIDI.h" />
 		<Unit filename="OrganDocument.cpp" />
 		<Unit filename="OrganDocument.h" />
 		<Unit filename="OrganFile.cpp" />
 		<Unit filename="OrganFile.h" />
+		<Unit filename="OrganPanel.cpp" />
+		<Unit filename="OrganPanel.h" />
 		<Unit filename="OrganView.cpp" />
 		<Unit filename="OrganView.h" />
 		<Unit filename="RtAudio.cpp" />
@@ -74,7 +100,9 @@
 		<Unit filename="RtMidi.h" />
 		<Unit filename="SettingsDialog.cpp" />
 		<Unit filename="SettingsDialog.h" />
-		<Unit filename="ToolbarImages.h" />
+		<Unit filename="SplashScreen.cpp" />
+		<Unit filename="SplashScreen.h" />
+		<Unit filename="license.txt" />
 		<Unit filename="resource.h" />
 		<Unit filename="wxGaugeAudio.cpp" />
 		<Unit filename="wxGaugeAudio.h" />

@@ -23,6 +23,20 @@
 #pragma once
 
 #define ORGANMESSAGE_TYPE 2
+#include <vector>
+#include <wx/propdlg.h>
+
+class wxButton;
+class wxCheckBox;
+class wxCheckListBox;
+class wxChoice;
+class wxConfigBase;
+class wxListEvent;
+class wxListView;
+class wxPanel;
+class wxSpinCtrl;
+class wxStaticText;
+class wxToggleButton;
 
 class SettingsDialog : public wxPropertySheetDialog
 {
