@@ -26,8 +26,7 @@
 #include <wx/wx.h>
 #include "GOrgueControl.h"
 #include "GOrgueDrawable.h"
-
-class IniFileConfig;
+#include "IniFileConfig.h"
 
 class GOrgueDrawstop : public GOrgueControl, GOrgueDrawable
 {

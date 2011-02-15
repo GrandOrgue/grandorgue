@@ -20,31 +20,32 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUECONTROL_H
-#define GORGUECONTROL_H
+#ifndef GORGUELABEL_H
+#define GORGUELABEL_H
 
 #include <wx/wx.h>
 #include "IniFileConfig.h"
 
-class GOrgueControl 
+class GOrgueLabel
 {
+
 public:
-  GOrgueControl():
-	Displayed(false), DispKeyLabelOnLeft(false),
-	ObjectNumber(0), ShortcutKey(0), DispLabelFontSize(0),
-	DispLabelColour(0,0,0), Name()
-  {}
-  virtual ~GOrgueControl(){}
 
-	void Load(IniFileConfig& cfg, const char* group);
-
-	bool Displayed : 1;
-	bool DispKeyLabelOnLeft : 1;
-	wxInt16 ObjectNumber;
-	wxInt16 ShortcutKey;
+	bool FreeXPlacement : 1;
+	bool FreeYPlacement : 1;
+	bool DispSpanDrawstopColToRight : 1;
+	bool DispAtTopOfDrawstopCol : 1;
+	wxInt16 DispDrawstopCol;
+	wxInt16 DispXpos;
+	wxInt16 DispYpos;
 	wxInt16 DispLabelFontSize;
+	wxInt16 DispImageNum;
 	wxColour DispLabelColour;
 	wxString Name;
+
+	GOrgueLabel();
+	void Load(IniFileConfig& cfg, const char* group);
+
 };
 
 #endif

@@ -20,31 +20,41 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUECONTROL_H
-#define GORGUECONTROL_H
+#ifndef GORGUESTOP_H
+#define GORGUESTOP_H
 
-#include <wx/wx.h>
 #include "IniFileConfig.h"
+#include "GOrgueDrawStop.h"
 
-class GOrgueControl 
+class GOrgueStop : public GOrgueDrawstop
 {
 public:
-  GOrgueControl():
-	Displayed(false), DispKeyLabelOnLeft(false),
-	ObjectNumber(0), ShortcutKey(0), DispLabelFontSize(0),
-	DispLabelColour(0,0,0), Name()
+  GOrgueStop():
+	GOrgueDrawstop(),m_ManualNumber(0),
+	Percussive(false),m_auto(false),
+	AmplitudeLevel(0),NumberOfLogicalPipes(0),
+	FirstAccessiblePipeLogicalPipeNumber(0),
+	FirstAccessiblePipeLogicalKeyNumber(0),
+	NumberOfAccessiblePipes(0),	WindchestGroup(0),
+	pipe(NULL)
   {}
-  virtual ~GOrgueControl(){}
 
-	void Load(IniFileConfig& cfg, const char* group);
+    void Load(IniFileConfig& cfg, const char* group);
+    void Save(IniFileConfig& cfg, bool prefix) { GOrgueDrawstop::Save(cfg, prefix, "Stop"); }
+	bool Set(bool on);
+	~GOrgueStop(void);
 
-	bool Displayed : 1;
-	bool DispKeyLabelOnLeft : 1;
-	wxInt16 ObjectNumber;
-	wxInt16 ShortcutKey;
-	wxInt16 DispLabelFontSize;
-	wxColour DispLabelColour;
-	wxString Name;
+	wxInt16 m_ManualNumber;
+
+	bool Percussive : 1;
+	bool m_auto : 1;
+	wxInt16 AmplitudeLevel;
+	wxInt16 NumberOfLogicalPipes;
+	wxInt16 FirstAccessiblePipeLogicalPipeNumber;
+	wxInt16 FirstAccessiblePipeLogicalKeyNumber;
+	wxInt16 NumberOfAccessiblePipes;
+	wxInt16 WindchestGroup;
+	short* pipe;
 };
 
-#endif
+#endif /* GORGUESTOP_H_ */

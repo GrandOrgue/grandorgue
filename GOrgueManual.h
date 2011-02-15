@@ -25,11 +25,10 @@
 
 #include <wx/wx.h>
 #include <vector>
-
-class IniFileConfig;
-class GOrgueStop;
-class GOrgueCoupler;
-class GOrgueDivisional;
+#include "IniFileConfig.h"
+#include "GOrgueStop.h"
+#include "GOrgueCoupler.h"
+#include "GOrgueDivisional.h"
 
 class GOrgueManual 
 {

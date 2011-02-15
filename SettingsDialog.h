@@ -116,35 +116,5 @@ protected:
 	wxButton* page2button, *addButton, *delButton, *propButton;
 };
 
-class MIDIListenDialog : public wxDialog
-{
-DECLARE_CLASS(MIDIListenDialog)
-public:
-	MIDIListenDialog(wxWindow* parent, wxString title, int what, int type);
-	~MIDIListenDialog();
-
-	int GetEvent();
-	bool PutEvent(int what);
-	void OnEvent(wxCommandEvent& event);
-	void OnListenClick(wxCommandEvent& event);
-	void OnListenMIDI(wxCommandEvent& event);
-    void OnHelp(wxCommandEvent& event);
-
-	int event;
-	wxChoice* m_event;
-	wxSpinCtrl *m_channel, *m_data;
-
-	DECLARE_EVENT_TABLE()
-
-protected:
-	enum {
-		ID_EVENT = 200,
-		ID_CHANNEL,
-		ID_LISTEN,
-	};
-
-    int type;
-	wxToggleButton* m_listen;
-};
 
 #endif

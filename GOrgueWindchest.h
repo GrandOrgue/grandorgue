@@ -20,31 +20,29 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUECONTROL_H
-#define GORGUECONTROL_H
+#ifndef GORGUEWINDCHEST_H
+#define GORGUEWINDCHEST_H
 
 #include <wx/wx.h>
 #include "IniFileConfig.h"
 
-class GOrgueControl 
-{
-public:
-  GOrgueControl():
-	Displayed(false), DispKeyLabelOnLeft(false),
-	ObjectNumber(0), ShortcutKey(0), DispLabelFontSize(0),
-	DispLabelColour(0,0,0), Name()
-  {}
-  virtual ~GOrgueControl(){}
+#define MAX_ENCLOSURES 6
+#define MAX_TREMULANTS 6
 
+class GOrgueWindchest
+{
+
+public:
+
+	double m_Volume;
+	wxInt16 NumberOfEnclosures;
+	wxInt16 NumberOfTremulants;
+	wxInt16 enclosure[MAX_ENCLOSURES];
+    wxInt16 tremulant[MAX_TREMULANTS];
+
+	GOrgueWindchest();
 	void Load(IniFileConfig& cfg, const char* group);
 
-	bool Displayed : 1;
-	bool DispKeyLabelOnLeft : 1;
-	wxInt16 ObjectNumber;
-	wxInt16 ShortcutKey;
-	wxInt16 DispLabelFontSize;
-	wxColour DispLabelColour;
-	wxString Name;
 };
 
-#endif
+#endif /* GORGUEWINDCHEST_H_ */

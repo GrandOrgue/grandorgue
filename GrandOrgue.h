@@ -26,6 +26,7 @@
 #include "GrandOrgueDef.h"
 
 #include <wx/wx.h>
+#include <wx/html/helpctrl.h>
 
 #ifdef __WXMSW__
 #include <wx/msw/private.h>
@@ -37,12 +38,12 @@
 #include "GOrgueLCD.h"
 #endif
 
-class GOrgueSound;
-class GOrgueMeter;
-class wxHtmlHelpController;
+#include "GOrgueSound.h"
+#include "GOrgueMeter.h"
+#include "GrandOrgueFrame.h"
+
 class wxSingleInstanceChecker;
 class wxSplashScreenWindow;
-class GOrgueFrame;
 class wxDocManager;
 class wxConfigBase;
 class stServer;

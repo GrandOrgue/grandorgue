@@ -31,6 +31,10 @@
 #include "OrganFile.h"
 #include "GOrgueManual.h"
 #include "GOrguePushbutton.h"
+#include "GOrgueEnclosure.h"
+#include "GOrgueWindchest.h"
+#include "GOrgueLabel.h"
+#include "GOrgueFrameGeneral.h"
 
 class GrandOrgueFile 
 {

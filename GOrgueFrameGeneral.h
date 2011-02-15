@@ -20,31 +20,29 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUECONTROL_H
-#define GORGUECONTROL_H
+#ifndef GORGUEFRAMEGENERAL_H
+#define GORGUEFRAMEGENERAL_H
 
-#include <wx/wx.h>
-#include "IniFileConfig.h"
+#include "GOrguePushbutton.h"
 
-class GOrgueControl 
+class GOrgueFrameGeneral : public GOrguePushbutton
 {
 public:
-  GOrgueControl():
-	Displayed(false), DispKeyLabelOnLeft(false),
-	ObjectNumber(0), ShortcutKey(0), DispLabelFontSize(0),
-	DispLabelColour(0,0,0), Name()
-  {}
-  virtual ~GOrgueControl(){}
 
+	GOrgueFrameGeneral();
 	void Load(IniFileConfig& cfg, const char* group);
+    void Save(IniFileConfig& cfg, bool prefix, wxString group = "General");
+	void Push(int depth = 0);
 
-	bool Displayed : 1;
-	bool DispKeyLabelOnLeft : 1;
-	wxInt16 ObjectNumber;
-	wxInt16 ShortcutKey;
-	wxInt16 DispLabelFontSize;
-	wxColour DispLabelColour;
-	wxString Name;
+	wxInt16 NumberOfStops;
+	wxInt16 NumberOfCouplers;
+	wxInt16 NumberOfTremulants;
+	wxInt16 NumberOfDivisionalCouplers;
+
+	wxByte stop[7][8][2];
+	wxByte coupler[7][2][2];
+	wxByte tremulant[2][2];
+	wxByte divisionalcoupler[1][2];
 };
 
-#endif
+#endif /* GORGUEFRAMEGENERAL_H */

@@ -31,6 +31,7 @@
 #include "GOrguePushbutton.h"
 #include "GOrgueDrawStop.h"
 #include "GOrgueCoupler.h"
+#include "GOrgueFrameGeneral.h"
 
 #define PHASE_ALIGN_RES 31
 #define PHASE_ALIGN_ABS ((PHASE_ALIGN_RES) >> 1)
@@ -39,7 +40,7 @@
 #define GET_BIT(x,y,z) (x[y >> 3][z] & (0x80 >> (y & 7)) ? true : false)
 #define SET_BIT(x,y,z,b) (b ? x[y >> 3][z] |= (0x80 >> (y & 7)) : x[y >> 3][z] &= (0xFFFFFF7F >> (y & 7)))
 
-#pragma pack(1)
+/* #pragma pack(1) - removed by nappleton */
 
 // TODO: long long on linux or other platforms
 #ifdef _WIN32
@@ -51,6 +52,7 @@
 
 class GOrguePipe;
 class IniFileConfig;
+
 class GOrgueSampler
 {
 public:
@@ -60,65 +62,6 @@ public:
 	int fade, fadein, fadeout, faderemain, fademax, time, offset, type;
 	int current, stage, overflowing, shift;
 	wxInt64 overflow, f, v;
-};
-
-
-
-
-
-
-
-class GOrgueStop : public GOrgueDrawstop
-{
-public:
-  GOrgueStop():
-	GOrgueDrawstop(),m_ManualNumber(0),
-	Percussive(false),m_auto(false),
-	AmplitudeLevel(0),NumberOfLogicalPipes(0),
-	FirstAccessiblePipeLogicalPipeNumber(0),
-	FirstAccessiblePipeLogicalKeyNumber(0),
-	NumberOfAccessiblePipes(0),	WindchestGroup(0),
-	pipe(NULL)
-  {}
-
-    void Load(IniFileConfig& cfg, const char* group);
-    void Save(IniFileConfig& cfg, bool prefix) { GOrgueDrawstop::Save(cfg, prefix, "Stop"); }
-	bool Set(bool on);
-	~GOrgueStop(void);
-
-	wxInt16 m_ManualNumber;
-
-	bool Percussive : 1;
-	bool m_auto : 1;
-	wxInt16 AmplitudeLevel;
-	wxInt16 NumberOfLogicalPipes;
-	wxInt16 FirstAccessiblePipeLogicalPipeNumber;
-	wxInt16 FirstAccessiblePipeLogicalKeyNumber;
-	wxInt16 NumberOfAccessiblePipes;
-	wxInt16 WindchestGroup;
-	short* pipe;
-};
-
-class GOrgueEnclosure : public GOrgueDrawable
-{
-public:
-  GOrgueEnclosure():
-	
-	m_X(0), AmpMinimumLevel(0),
-	MIDIInputNumber(0),
-	MIDIValue(0), Name()
-  {}
-
-	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
-	void Load(IniFileConfig& cfg, const char* group);
-	void Set(int n);
-	void MIDI(void);
-
-	wxInt16 m_X;
-	wxInt16 AmpMinimumLevel;
-	wxInt16 MIDIInputNumber;
-	wxInt16 MIDIValue;
-	wxString Name;
 };
 
 class GOrgueTremulant : public GOrgueDrawstop
@@ -140,80 +83,6 @@ public:
 	wxInt16 StopRate;
 	wxInt16 AmpModDepth;
 	GOrguePipe* pipe;
-};
-
-class GOrgueWindchest 
-{
-public:
-  GOrgueWindchest():
-	
-	m_Volume(0.0),
-	NumberOfEnclosures(0),
-	NumberOfTremulants(0),
-	enclosure(),tremulant()
-  {
-	for(int i=0;i<6;i++)
-	  {
-		enclosure[i]=0;
-		tremulant[i]=0;
-	  }
-  }
-  
-	void Load(IniFileConfig& cfg, const char* group);
-
-	double m_Volume;
-	wxInt16 NumberOfEnclosures;
-	wxInt16 NumberOfTremulants;
-	wxInt16 enclosure[6];
-    wxInt16 tremulant[6];
-};
-
-class GOrgueFrameGeneral : public GOrguePushbutton
-{
-public:
-  GOrgueFrameGeneral():
-	GOrguePushbutton(),
-	NumberOfStops(0),
-	NumberOfCouplers(0),
-	NumberOfTremulants(0),
-	NumberOfDivisionalCouplers(0),
-	stop(),coupler(),tremulant(),
-	divisionalcoupler()
-  {
-	for(int i=0;i<7;i++)
-	  {
-		for (int j = 0; i < 8; ++i)
-		{
-		  stop[i][j][0]=0;
-		  stop[i][j][1]=0;
-		}
-		for (int j = 0; i < 2; ++i)
-		{
-		  coupler[i][j][0]=0;
-		  coupler[i][j][1]=0;
-		}
-	  }
-	tremulant[0][0]=0;
-	tremulant[0][1]=0;
-	tremulant[1][0]=0;
-	tremulant[1][1]=0;
-	divisionalcoupler[0][0]=0;
-	divisionalcoupler[0][1]=0;
-  }
-
-	void Load(IniFileConfig& cfg, const char* group);
-    void Save(IniFileConfig& cfg, bool prefix, wxString group = "General");
-	void Push(int depth = 0);
-
-	wxInt16 NumberOfStops;
-	wxInt16 NumberOfCouplers;
-	wxInt16 NumberOfTremulants;
-	wxInt16 NumberOfDivisionalCouplers;
-
-	wxByte stop[7][8][2];
-	wxByte coupler[7][2][2];
-	wxByte tremulant[2][2];
-	wxByte divisionalcoupler[1][2];
 };
 
 class GOrgueGeneral : public GOrgueFrameGeneral
@@ -263,38 +132,6 @@ public:
 	wxInt16 manual[7];
 };
 
-class GOrgueLabel 
-{
-public:
-  GOrgueLabel():
-	FreeXPlacement(false),
-	FreeYPlacement(false),
-	DispSpanDrawstopColToRight(false),
-	DispAtTopOfDrawstopCol(false),
-	DispDrawstopCol(0),DispXpos(0),
-	DispYpos(0),DispLabelFontSize(0),
-	DispImageNum(0),DispLabelColour(0,0,0),
-	Name()
-  {}
-
-	void Load(IniFileConfig& cfg, const char* group);
-
-	bool FreeXPlacement : 1;
-	bool FreeYPlacement : 1;
-	bool DispSpanDrawstopColToRight : 1;
-	bool DispAtTopOfDrawstopCol : 1;
-
-	wxInt16 DispDrawstopCol;
-	wxInt16 DispXpos;
-	wxInt16 DispYpos;
-	wxInt16 DispLabelFontSize;
-	wxInt16 DispImageNum;
-	wxColour DispLabelColour;
-
-	wxString Name;
-};
-
-
-#pragma pack()
+/* #pragma pack() - removed by nappleton */
 
 #endif

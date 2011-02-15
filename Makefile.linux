@@ -25,6 +25,9 @@ GOrgueControl.o \
 GOrgueCoupler.o \
 GOrgueDivisional.o \
 GOrgueDrawStop.o \
+GOrgueEnclosure.o \
+GOrgueFrameGeneral.o \
+GOrgueLabel.o \
 GOrgueLCD.o \
 GOrgueManual.o \
 GOrgueMeter.o \
@@ -34,11 +37,15 @@ GOrguePushbutton.o \
 GOrgueSound.o \
 GOrgueSoundCallbackAudio.o \
 GOrgueSoundCallbackMIDI.o \
+GOrgueStop.o \
+GOrgueWindchest.o \
 GrandOrgue.o \
 GrandOrgueFile.o \
 GrandOrgueFrame.o \
 Images.o \
 IniFileConfig.o \
+MIDIEvents.o \
+MIDIListenDialog.o \
 OrganDocument.o \
 OrganFile.o \
 OrganPanel.o \

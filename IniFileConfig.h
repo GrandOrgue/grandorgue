@@ -28,6 +28,7 @@
 class wxColour;
 class wxString;
 class wxFileConfig;
+
 enum ValueType
 {
 	ORGAN_BOOLEAN,

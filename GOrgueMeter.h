@@ -24,9 +24,8 @@
 #define GORGUEMETER_H
 
 #include <wx/control.h>
-
-class wxSpinCtrl;
-class wxGaugeAudio;
+#include <wx/spinctrl.h>
+#include "wxGaugeAudio.h"
 
 class GOrgueMeter : public wxControl
 {
