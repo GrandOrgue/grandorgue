@@ -20,7 +20,9 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GORGUESOUND_H
+#define GORGUESOUND_H
+
 #include <map>
 #include "RtAudio.h"
 #include "OrganFile.h"
@@ -117,3 +119,5 @@ struct struct_WAVE
 };
 
 #pragma pack()
+
+#endif

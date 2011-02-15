@@ -20,7 +20,9 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GORGUECOUPLER_H
+#define GORGUECOUPLER_H
+
 #include <wx/wx.h>
 #include "GOrgueDrawStop.h"
 
@@ -51,3 +53,5 @@ public:
 	wxInt16 DestinationManual;
 	wxInt16 DestinationKeyshift;
 };
+
+#endif

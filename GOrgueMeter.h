@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GORGUEMETER_H
+#define GORGUEMETER_H
 
 #include <wx/control.h>
 
@@ -48,3 +49,5 @@ private:
 	bool m_block;
 	wxSpinCtrl* m_spin;
 };
+
+#endif

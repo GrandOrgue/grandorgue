@@ -20,7 +20,9 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GORGUEPIPE_H
+#define GORGUEPIPE_H
+
 #include <wx/wx.h>
 
 #define PHASE_ALIGN_RES 31
@@ -55,3 +57,5 @@ public:
 	wxInt16 ra_v[PHASE_ALIGN_RES_VA][4];
 	wxByte data[1];	// expandable
 };
+
+#endif

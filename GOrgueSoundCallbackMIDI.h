@@ -20,7 +20,12 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GORGUESOUNDCALLBACKMIDI_H
+#define GORGUESOUNDCALLBACKMIDI_H
+
 #include <vector>
+
 void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which);
 void MIDIAllNotesOff();
+
+#endif

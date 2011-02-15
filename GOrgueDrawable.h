@@ -20,8 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
-
+#ifndef GORGUEDRAWABLE_H
+#define GORGUEDRAWABLE_H
 
 class GOrgueDrawable
 {
@@ -31,3 +31,5 @@ public:
   virtual bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0)=0;
 
 };
+
+#endif

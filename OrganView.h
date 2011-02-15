@@ -20,7 +20,9 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef ORGANVIEW_H
+#define ORGANVIEW_H
+
 #include <wx/docview.h>
 
 class OrganPanel;
@@ -42,3 +44,4 @@ class OrganView : public wxView
 
 };
 
+#endif

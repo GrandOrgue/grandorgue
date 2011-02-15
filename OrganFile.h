@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef ORGANFILE_H
+#define ORGANFILE_H
 
 #include <vector>
 #include <wx/fileconf.h>
@@ -295,3 +296,5 @@ public:
 
 
 #pragma pack()
+
+#endif

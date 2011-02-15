@@ -20,7 +20,9 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GORGUEMANUAL_H
+#define GORGUEMANUAL_H
+
 #include <wx/wx.h>
 #include <vector>
 
@@ -80,3 +82,4 @@ public:
 	GOrgueDivisional* divisional;
 };
 
+#endif

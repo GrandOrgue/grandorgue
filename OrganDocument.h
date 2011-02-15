@@ -20,7 +20,9 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef ORGANDOCUMENT_H
+#define ORGANDOCUMENT_H
+
 #include <wx/defs.h>
 #include <wx/docview.h>
 
@@ -66,3 +68,5 @@ public:
 private:
 	void CloseOrgan();
 };
+
+#endif

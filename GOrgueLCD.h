@@ -10,7 +10,8 @@
 //
 //
 
-#pragma once
+#ifndef GORGUELCD_H
+#define GORGUELCD_H
 
 #define LCD_DRIVER_IMONVFD 0
 #define LCD_DRIVER_MIDI 1
@@ -21,6 +22,4 @@ void GOrgueLCD_WriteLineOne(const wxString& str);
 void GOrgueLCD_WriteLineTwo(const wxString& str, long t=0);
 wxString GOrgueLCD_ErrorMsg();
 
-
-
-
+#endif

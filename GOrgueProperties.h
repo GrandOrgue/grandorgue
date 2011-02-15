@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GORGUEPROPERTIES_H
+#define GORGUEPROPERTIES_H
 
 class wxStaticLink : public wxStaticText
 {
@@ -53,3 +54,5 @@ protected:
         ID_LICENSEKEY = 300
     };
 };
+
+#endif

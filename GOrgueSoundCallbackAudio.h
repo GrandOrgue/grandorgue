@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GORGUESOUNDCALLBACKAUDIO_H
+#define GORGUESOUNDCALLBACKAUDIO_H
 
 #include "RtAudio.h"
 
@@ -29,3 +30,5 @@ int GOrgueSoundCallbackAudio( void *outputBuffer, void *inputBuffer,
 							  double streamTime,
 							  RtAudioStreamStatus status,
 							  void *userData );
+
+#endif

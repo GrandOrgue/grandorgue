@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef MIDIEVENTS_H
+#define MIDIEVENTS_H
 
 const char* s_MIDIMessages[] =
 {
@@ -108,3 +109,5 @@ MIDIEvents  g_MIDIEvents[6] =
 	{s_MIDIEvents2, i_MIDIEvents2, 4},
 	{s_MIDIEvents2, i_MIDIEvents2, 4}
 };
+
+#endif
