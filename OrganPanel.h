@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef ORGANPANEL_H
+#define ORGANPANEL_H
 
 #include <wx/wx.h>
 
@@ -59,3 +60,5 @@ private:
 
 
 };
+
+#endif

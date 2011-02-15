@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GRANDORGUEFRAME_H
+#define GRANDORGUEFRAME_H
 
 #include <wx/docview.h>
 #include <wx/bitmap.h>
@@ -78,3 +79,5 @@ public:
 protected:
 	void AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString = wxEmptyString, unsigned char* toolbarImage = 0, int size = 0, wxItemKind kind = wxITEM_NORMAL);
 };
+
+#endif

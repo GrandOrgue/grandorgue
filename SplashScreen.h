@@ -19,7 +19,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-#pragma once
+
+#ifndef SPLASHSCREEN_H
+#define SPLASHSCREEN_H
 
 #include <wx/wx.h>
 
@@ -53,3 +55,5 @@ protected:
     DECLARE_EVENT_TABLE()
     DECLARE_NO_COPY_CLASS(wxSplashScreenModal)
 };
+
+#endif

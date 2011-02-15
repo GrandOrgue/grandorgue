@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GRANDORGUE_H
+#define GRANDORGUE_H
 
 #include "GrandOrgueDef.h"
 
@@ -68,3 +69,4 @@ protected:
 
 DECLARE_APP(GOrgueApp)
 
+#endif

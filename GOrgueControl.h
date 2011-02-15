@@ -20,8 +20,11 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GORGUECONTROL_H
+#define GORGUECONTROL_H
+
 #include <wx/wx.h>
+
 class IniFileConfig;
 
 class GOrgueControl 
@@ -44,3 +47,5 @@ public:
 	wxColour DispLabelColour;
 	wxString Name;
 };
+
+#endif

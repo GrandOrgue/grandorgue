@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef INIFILECONFIG_H
+#define INIFILECONFIG_H
 
 #include <wx/wx.h>
 
@@ -58,3 +59,5 @@ private:
   bool ReadKey(const char* group, const char* key, void* retval, ValueType type, bool required = true, int nmin = 0, int nmax = 0);
   wxFileConfig* m_cfg;
 };
+
+#endif

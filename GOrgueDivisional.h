@@ -20,9 +20,10 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
-#include "GOrguePushbutton.h"
+#ifndef GORGUEDIVISIONAL_H
+#define GORGUEDIVISIONAL_H
 
+#include "GOrguePushbutton.h"
 
 class GOrgueDivisional : public GOrguePushbutton
 {
@@ -62,3 +63,5 @@ public:
 	wxByte coupler[2][2];
 	wxByte tremulant[2][2];
 };
+
+#endif

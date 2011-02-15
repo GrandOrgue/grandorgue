@@ -20,8 +20,11 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef WXGAUGEAUDIO_H
+#define WXGAUGEAUDIO_H
+
 #include <wx/control.h>
+
 class GOrgueFrame;
 class wxGaugeAudio : public wxControl
 {
@@ -40,3 +43,5 @@ protected:
 	bool m_clip;
 	GOrgueFrame* m_frame;
 };
+
+#endif

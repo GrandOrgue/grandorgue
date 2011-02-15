@@ -20,6 +20,9 @@
  * MA 02111-1307, USA.
  */
 
+#ifndef KEYCONVERT_H
+#define KEYCONVERT_H
+
 int WXKtoVK(int what)
 {
     if ((what >= 'A' && what <= 'Z') || (what >= '0' && what <= '9') || what == WXK_SPACE || what == WXK_BACK || what == WXK_TAB || what == WXK_RETURN || what == WXK_ESCAPE)
@@ -65,3 +68,5 @@ int WXKtoVK(int what)
     if (what=='`') return 223;
     return 0;
 }
+
+#endif

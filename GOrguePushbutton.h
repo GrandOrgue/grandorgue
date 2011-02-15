@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GORGUEPUSHBUTTON_H
+#define GORGUEPUSHBUTTON_H
 
 #include <wx/wx.h>
 #include "GOrgueControl.h"
@@ -48,3 +49,5 @@ public:
 	wxInt16 DispImageNum;
 	wxInt16 MIDIProgramChangeNumber;
 };
+
+#endif

@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef SETTINGSDIALOG_H
+#define SETTINGSDIALOG_H
 
 #define ORGANMESSAGE_TYPE 2
 #include <vector>
@@ -145,3 +146,5 @@ protected:
     int type;
 	wxToggleButton* m_listen;
 };
+
+#endif

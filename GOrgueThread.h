@@ -19,6 +19,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
  * MA 02111-1307, USA.
  */
+
+#ifndef GORGUETHREAD_H
+#define GORGUETHREAD_H
+
 class GOrgueThread : public wxThread
 {
 public:
@@ -62,3 +66,5 @@ public:
     char* m_buffer;
     unsigned m_length;
 };
+
+#endif

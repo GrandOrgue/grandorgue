@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GRANDORGUEID_H
+#define GRANDORGUEID_H
 
 #include <wx/wx.h>
 
@@ -56,3 +57,5 @@ enum
 	ID_METER_FRAME_SPIN,
 	ID_METER_TRANSPOSE_SPIN,
 };
+
+#endif

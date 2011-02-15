@@ -20,7 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#pragma once
+#ifndef GRANDORGUEFILE_H
+#define GRANDORGUEFILE_H
 
 #include <vector>
 #include <wx/wx.h>
@@ -158,3 +159,5 @@ private:
   int readOneFile(int file, char* buffer, unsigned length);
   void fillBufferWithTremulant(const GOrgueTremulant& tremulant,short* buffer);
 };
+
+#endif
