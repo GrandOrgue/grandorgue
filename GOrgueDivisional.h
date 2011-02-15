@@ -24,6 +24,7 @@
 #define GORGUEDIVISIONAL_H
 
 #include "GOrguePushbutton.h"
+#include "IniFileConfig.h"
 
 class GOrgueDivisional : public GOrguePushbutton
 {

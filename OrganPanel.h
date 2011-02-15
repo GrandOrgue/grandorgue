@@ -24,10 +24,9 @@
 #define ORGANPANEL_H
 
 #include <wx/wx.h>
-
-class wxView;
-class GOrgueDrawstop;
-class GOrguePushbutton;
+#include <wx/docview.h>
+#include "GOrgueDrawStop.h"
+#include "GOrguePushbutton.h"
 
 class OrganPanel : public wxPanel
 {

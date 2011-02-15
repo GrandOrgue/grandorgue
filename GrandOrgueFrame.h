@@ -26,8 +26,9 @@
 #include <wx/docview.h>
 #include <wx/bitmap.h>
 #include <wx/brush.h>
+#include <wx/dcmemory.h>
+
 class GOrgueMeter;
-class wxMemoryDC;
 
 class GOrgueFrame: public wxDocParentFrame
 {

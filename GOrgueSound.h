@@ -39,8 +39,7 @@ BEGIN_DECLARE_EVENT_TYPES()
 	DECLARE_EVENT_TYPE(wxEVT_LOADFILE, -1)
 END_DECLARE_EVENT_TYPES()
 
-#pragma pack(1)
-
+/* TODO: I think this should be imported using a #include ... there is some ambiguity */
 class wxConfigBase;
 
 class GOrgueSound
@@ -100,6 +99,8 @@ public:
 
 	wxString defaultAudio;
 };
+
+#pragma pack(1)
 
 struct struct_WAVE
 {

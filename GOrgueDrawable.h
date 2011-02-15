@@ -23,6 +23,8 @@
 #ifndef GORGUEDRAWABLE_H
 #define GORGUEDRAWABLE_H
 
+#include <wx/dc.h>
+
 class GOrgueDrawable
 {
 public:

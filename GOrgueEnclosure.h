@@ -20,31 +20,29 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUECONTROL_H
-#define GORGUECONTROL_H
+#ifndef GORGUEENCLOSURE_H_
+#define GORGUEENCLOSURE_H_
 
-#include <wx/wx.h>
+#include "GOrgueDrawable.h"
 #include "IniFileConfig.h"
+#include <wx/wx.h>
 
-class GOrgueControl 
+class GOrgueEnclosure : public GOrgueDrawable
 {
+
 public:
-  GOrgueControl():
-	Displayed(false), DispKeyLabelOnLeft(false),
-	ObjectNumber(0), ShortcutKey(0), DispLabelFontSize(0),
-	DispLabelColour(0,0,0), Name()
-  {}
-  virtual ~GOrgueControl(){}
-
-	void Load(IniFileConfig& cfg, const char* group);
-
-	bool Displayed : 1;
-	bool DispKeyLabelOnLeft : 1;
-	wxInt16 ObjectNumber;
-	wxInt16 ShortcutKey;
-	wxInt16 DispLabelFontSize;
-	wxColour DispLabelColour;
+	wxInt16 m_X;
+	wxInt16 AmpMinimumLevel;
+	wxInt16 MIDIInputNumber;
+	wxInt16 MIDIValue;
 	wxString Name;
+
+	GOrgueEnclosure();
+	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
+	void Load(IniFileConfig& cfg, const char* group);
+	void Set(int n);
+	void MIDI(void);
+
 };
 
-#endif
+#endif /* GORGUEENCLOSURE_H_ */

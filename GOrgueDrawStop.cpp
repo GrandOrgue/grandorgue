@@ -27,7 +27,7 @@
 #include "GrandOrgueFrame.h"
 #include "GOrgueSound.h"
 #include "OrganFile.h"
-#include "SettingsDialog.h"
+#include "MIDIListenDialog.h"
 #include <wx/docview.h>
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;

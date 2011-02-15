@@ -26,7 +26,7 @@
 #include "GrandOrgueFrame.h"
 #include "GOrgueSound.h"
 #include "OrganFile.h"
-#include "SettingsDialog.h"
+#include "MIDIListenDialog.h"
 #include "GOrgueDivisional.h"
 #include <algorithm>
 

@@ -24,8 +24,8 @@
 #define WXGAUGEAUDIO_H
 
 #include <wx/control.h>
+#include "GrandOrgueFrame.h"
 
-class GOrgueFrame;
 class wxGaugeAudio : public wxControl
 {
 public:

@@ -24,8 +24,7 @@
 #define ORGANVIEW_H
 
 #include <wx/docview.h>
-
-class OrganPanel;
+#include "OrganPanel.h"
 
 class OrganView : public wxView
 {
