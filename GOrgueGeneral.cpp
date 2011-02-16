@@ -20,41 +20,16 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUEPIPE_H
-#define GORGUEPIPE_H
+#include "GOrgueGeneral.h"
 
-#include <wx/wx.h>
-#include "GOrgueSound.h"
-
-#define PHASE_ALIGN_RES 31
-#define PHASE_ALIGN_ABS ((PHASE_ALIGN_RES) >> 1)
-#define PHASE_ALIGN_RES_VA ((PHASE_ALIGN_RES) * 2)
-
-class GOrguePipe
+void GOrgueGeneral::Load(IniFileConfig& cfg, const char* group)
 {
-public:
+	GOrgueFrameGeneral::Load(cfg, group);
+	GOrguePushbutton::Load(cfg, group);
+}
 
-	void Set(bool on);
-	int ra_getindex(int *f, int *v);
-	int ra_getindex(short *f, short *v);
-
-	unsigned _fourcc;
-    unsigned _adler32;
-	GOrguePipe* _this;
-	float pitch;
-	GOrgueSampler* sampler;
-	int instances;
-	int WindchestGroup;
-	wxByte* ptr[3];
-	int offset[3];
-	int types[3];
-	wxInt16 f[3][4];	// v______ joined
-	wxInt16 v[3][4];	// ^
-	int ra_shift, ra_amp, ra_volume, ra_factor;
-	int ra_offset[PHASE_ALIGN_RES_VA];
-	wxInt16 ra_f[PHASE_ALIGN_RES_VA][4];
-	wxInt16 ra_v[PHASE_ALIGN_RES_VA][4];
-	wxByte data[1];	// expandable
-};
-
-#endif
+void GOrgueGeneral::Save(IniFileConfig& cfg, bool prefix)
+{
+    GOrguePushbutton::Save(cfg, prefix, "General");
+    GOrgueFrameGeneral::Save(cfg, prefix);
+}

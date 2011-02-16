@@ -30,12 +30,7 @@
 class GOrguePushbutton : public GOrgueControl,GOrgueDrawable
 {
 public:
-  GOrguePushbutton():
-	GOrgueControl(),m_ManualNumber(0),DispButtonRow(0),
-	DispButtonCol(0),DispImageNum(0),
-	MIDIProgramChangeNumber(0)
-  {}
-
+	GOrguePushbutton();
 	void Load(IniFileConfig& cfg, const char* group);
     void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
