@@ -23,6 +23,8 @@
 #ifndef GORGUESOUND_H
 #define GORGUESOUND_H
 
+#include <wx/wx.h>
+#include <wx/stopwatch.h>
 #include <map>
 #include "RtAudio.h"
 #include "OrganFile.h"
@@ -41,6 +43,20 @@ END_DECLARE_EVENT_TYPES()
 
 /* TODO: I think this should be imported using a #include ... there is some ambiguity */
 class wxConfigBase;
+
+class GOrguePipe;
+
+struct GOrgueSamplerT
+{
+	GOrgueSamplerT* next;		// must be first!
+	GOrguePipe* pipe;
+	wxByte* ptr;
+	int fade, fadein, fadeout, faderemain, fademax, time, offset, type;
+	int current, stage, overflowing, shift;
+	wxInt64 overflow, f, v;
+};
+
+typedef struct GOrgueSamplerT GOrgueSampler;
 
 class GOrgueSound
 {

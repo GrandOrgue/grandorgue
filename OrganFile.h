@@ -22,7 +22,7 @@
 
 #ifndef ORGANFILE_H
 #define ORGANFILE_H
-
+/*
 #include <vector>
 #include <wx/fileconf.h>
 #include <wx/filename.h>
@@ -32,106 +32,25 @@
 #include "GOrgueDrawStop.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueFrameGeneral.h"
-
+*/
+/*
 #define PHASE_ALIGN_RES 31
 #define PHASE_ALIGN_ABS ((PHASE_ALIGN_RES) >> 1)
 #define PHASE_ALIGN_RES_VA ((PHASE_ALIGN_RES) * 2)
-
+*/
+/*
 #define GET_BIT(x,y,z) (x[y >> 3][z] & (0x80 >> (y & 7)) ? true : false)
 #define SET_BIT(x,y,z,b) (b ? x[y >> 3][z] |= (0x80 >> (y & 7)) : x[y >> 3][z] &= (0xFFFFFF7F >> (y & 7)))
-
-/* #pragma pack(1) - removed by nappleton */
+*/
 
 // TODO: long long on linux or other platforms
+/*
 #ifdef _WIN32
   typedef __int64 wxInt64;
 #endif
 #ifdef linux
   typedef long long wxInt64;
 #endif
-
-class GOrguePipe;
-class IniFileConfig;
-
-class GOrgueSampler
-{
-public:
-	GOrgueSampler* next;		// must be first!
-	GOrguePipe* pipe;
-	wxByte* ptr;
-	int fade, fadein, fadeout, faderemain, fademax, time, offset, type;
-	int current, stage, overflowing, shift;
-	wxInt64 overflow, f, v;
-};
-
-class GOrgueTremulant : public GOrgueDrawstop
-{
-public:
-  GOrgueTremulant():
-	GOrgueDrawstop(),
-	Period(0),StartRate(0),
-	StopRate(0),AmpModDepth(0),
-	pipe(NULL)
-  {}
-
-	void Load(IniFileConfig& cfg, const char* group);
-    void Save(IniFileConfig& cfg, bool prefix) { GOrgueDrawstop::Save(cfg, prefix, "Tremulant"); }
-	bool Set(bool on);
-
-	wxInt32 Period;
-	wxInt16 StartRate;
-	wxInt16 StopRate;
-	wxInt16 AmpModDepth;
-	GOrguePipe* pipe;
-};
-
-class GOrgueGeneral : public GOrgueFrameGeneral
-{
-public:
-	void Load(IniFileConfig& cfg, const char* group);
-	void Save(IniFileConfig& cfg, bool prefix)
-	{
-        GOrguePushbutton::Save(cfg, prefix, "General");
-        GOrgueFrameGeneral::Save(cfg, prefix);
-    }
-};
-
-class GOrguePiston : public GOrguePushbutton
-{
-public:
-  GOrguePiston():
-	GOrguePushbutton(),drawstop(NULL)
-  {}
-	void Load(IniFileConfig& cfg, const char* group);
-	void Save(IniFileConfig& cfg, bool prefix) { GOrguePushbutton::Save(cfg, prefix, "ReversiblePiston"); }
-	void Push(int depth = 0);
-
-	GOrgueDrawstop* drawstop;
-};
-
-class GOrgueDivisionalCoupler : public GOrgueDrawstop
-{
-public:
-  GOrgueDivisionalCoupler():
-	GOrgueDrawstop(),
-	BiDirectionalCoupling(false),
-	NumberOfManuals(0),manual()
-  {
-	for (int i = 0; i < 7; ++i)
-	{
-	  manual[i]=0;
-	}
-  }
-
-	void Load(IniFileConfig& cfg, const char* group);
-    void Save(IniFileConfig& cfg, bool prefix) { GOrgueDrawstop::Save(cfg, prefix, "DivisionalCoupler"); }
-	bool Set(bool on);
-
-	bool BiDirectionalCoupling : 1;
-	wxInt16 NumberOfManuals;
-	wxInt16 manual[7];
-};
-
-/* #pragma pack() - removed by nappleton */
+*/
 
 #endif

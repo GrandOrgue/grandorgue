@@ -29,6 +29,9 @@
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
 
+#define GET_BIT(x,y,z) (x[y >> 3][z] & (0x80 >> (y & 7)) ? true : false)
+#define SET_BIT(x,y,z,b) (b ? x[y >> 3][z] |= (0x80 >> (y & 7)) : x[y >> 3][z] &= (0xFFFFFF7F >> (y & 7)))
+
 GOrgueFrameGeneral::GOrgueFrameGeneral():
 	GOrguePushbutton(),
 	NumberOfStops(0),

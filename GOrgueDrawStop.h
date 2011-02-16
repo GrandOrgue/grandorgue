@@ -30,29 +30,24 @@
 
 class GOrgueDrawstop : public GOrgueControl, GOrgueDrawable
 {
+
 public:
-  GOrgueDrawstop():
-	GOrgueControl(),DefaultToEngaged(false),
-	DisplayInInvertedState(false), DispDrawstopRow(0),
-	DispDrawstopCol(0), DispImageNum(0),
-	StopControlMIDIKeyNumber(0)
-  {}
+	bool DefaultToEngaged : 1;
+	bool DisplayInInvertedState : 1;
+	wxInt16 DispDrawstopRow;
+	wxInt16 DispDrawstopCol;
+	wxInt16 DispImageNum;
+	wxInt16 StopControlMIDIKeyNumber;
 
-  void Load(IniFileConfig& cfg, const char* group);
-  void Save(IniFileConfig& cfg, bool prefix, wxString group);
-  virtual bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
-  void Push(void) {
-	Set(DefaultToEngaged ^ true); };
-  void MIDI(void);
-  virtual bool Set(bool on);
-  virtual ~GOrgueDrawstop() { };
+	GOrgueDrawstop();
+	virtual ~GOrgueDrawstop();
+	void Load(IniFileConfig& cfg, const char* group);
+	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	virtual bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
+	void Push(void);
+	void MIDI(void);
+	virtual bool Set(bool on);
 
-  bool DefaultToEngaged : 1;
-  bool DisplayInInvertedState : 1;
-  wxInt16 DispDrawstopRow;
-  wxInt16 DispDrawstopCol;
-  wxInt16 DispImageNum;
-  wxInt16 StopControlMIDIKeyNumber;
 };
 
 #endif

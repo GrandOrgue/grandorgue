@@ -35,6 +35,10 @@
 #include "GOrgueWindchest.h"
 #include "GOrgueLabel.h"
 #include "GOrgueFrameGeneral.h"
+#include "GOrgueTremulant.h"
+#include "GOrguePiston.h"
+#include "GOrgueGeneral.h"
+#include "GOrgueDivisionalCoupler.h"
 
 class GrandOrgueFile 
 {

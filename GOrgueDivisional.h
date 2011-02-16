@@ -28,41 +28,21 @@
 
 class GOrgueDivisional : public GOrguePushbutton
 {
+
 public:
-  GOrgueDivisional():
-	GOrguePushbutton(),
-	m_DivisionalNumber(0),
-	NumberOfStops(0),
-	NumberOfCouplers(0),
-	NumberOfTremulants(0),
-	stop(),coupler(),tremulant()
-  {
-	for(int i=0;i<8;i++)
-	  {
-		stop[i][0]=0;
-		stop[i][1]=0;
-	  }
-	for(int i=0;i<2;i++)
-	  {
-		coupler[i][0]=0;
-		coupler[i][1]=0;
-		tremulant[i][0]=0;
-		tremulant[i][1]=0;
-	  }
-  }
-
-	void Load(IniFileConfig& cfg, const char* group);
-    void Save(IniFileConfig& cfg, bool prefix, wxString group = "Divisional");
-	void Push(int depth = 0);
-
 	wxInt16 m_DivisionalNumber;
-
 	wxInt16 NumberOfStops;
 	wxInt16 NumberOfCouplers;
 	wxInt16 NumberOfTremulants;
 	wxByte stop[8][2];
 	wxByte coupler[2][2];
 	wxByte tremulant[2][2];
+
+	GOrgueDivisional();
+	void Load(IniFileConfig& cfg, const char* group);
+	void Save(IniFileConfig& cfg, bool prefix, wxString group = "Divisional");
+	void Push(int depth = 0);
+
 };
 
 #endif

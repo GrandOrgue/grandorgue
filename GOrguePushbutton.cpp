@@ -33,74 +33,91 @@ extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
 extern const char* s_MIDIMessages[];
 
+GOrguePushbutton::GOrguePushbutton() :
+	GOrgueControl(),
+	m_ManualNumber(0),
+	DispButtonRow(0),
+	DispButtonCol(0),
+	DispImageNum(0),
+	MIDIProgramChangeNumber(0)
+{
+
+}
+
 void GOrguePushbutton::MIDI(void)
 {
-  int event = 0xC000;
-  if (m_ManualNumber > -1)
-	event = g_sound->i_midiEvents[organfile->m_manual[m_ManualNumber].MIDIInputNumber + 7] ^ 0x5000;
-  MIDIListenDialog dlg(::wxGetApp().frame, _("Pushbutton Trigger"), event | (MIDIProgramChangeNumber - 1), m_ManualNumber > -1 ? 4 : 5);
-  if (dlg.ShowModal() == wxID_OK)
+	int event = 0xC000;
+	if (m_ManualNumber > -1)
+		event = g_sound->i_midiEvents[organfile->m_manual[m_ManualNumber].MIDIInputNumber + 7] ^ 0x5000;
+	MIDIListenDialog dlg(::wxGetApp().frame, _("Pushbutton Trigger"), event | (MIDIProgramChangeNumber - 1), m_ManualNumber > -1 ? 4 : 5);
+	if (dlg.ShowModal() == wxID_OK)
 	{
-	  MIDIProgramChangeNumber = (dlg.GetEvent() & 0x7F) + 1;
-	  ::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
+		MIDIProgramChangeNumber = (dlg.GetEvent() & 0x7F) + 1;
+		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
 	}
 }
 
 bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 {
-  int x, y, i;
-  if (!Displayed)
+	int x, y, i;
+	if (!Displayed)
+		return false;
+
+	x = organfile->m_PistonX + (DispButtonCol - 1) * 44 + 6;
+	if (DispButtonRow > 99)
+	{
+		y = organfile->m_JambTopPiston + (DispButtonRow - 100) * 40 + 5;
+	}
+	else
+	{
+		i = DispButtonRow;
+		if (i == 99)
+			i = 0;
+
+		if (i > organfile->m_NumberOfManuals)
+			y = organfile->m_HackY - (i - organfile->m_NumberOfManuals) * 72 + 32 + 5;
+		else
+			y = organfile->m_manual[i].m_PistonY + 5;
+
+		if (organfile->m_DispExtraPedalButtonRow && !DispButtonRow)
+			y += 40;
+		if (organfile->m_DispExtraPedalButtonRowOffset && DispButtonRow == 99)
+			x -= 22;
+	}
+	if (!DispKeyLabelOnLeft)
+		x -= 13;
+
+	if (!dc)
+		return !(xx < x || xx > x + 30 || yy < y || yy > y + 30 || (x + 15 - xx) * (x + 15 - xx) + (y + 15 - yy) * (y + 15 - yy) > 225);
+
+	wxMemoryDC mdc;
+	wxRect rect(x + 1, y + 1, 31 - 1, 30 - 1);
+	wxBitmap bmp = organfile->m_images[DispImageNum + 4];
+	dc->DrawBitmap(bmp, x, y, true);
+	dc->SetTextForeground(DispLabelColour);
+	wxFont font = *wxNORMAL_FONT;
+	font.SetFaceName(organfile->m_DispControlLabelFont);
+	font.SetPointSize(DispLabelFontSize);
+	dc->SetFont(font);
+	dc->DrawLabel(Name, rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+	if (dc2)
+		dc2->Blit(x, y, 31, 30, dc, x, y);
 	return false;
 
-  x = organfile->m_PistonX + (DispButtonCol - 1) * 44 + 6;
-  if (DispButtonRow > 99)
-	{
-	  y = organfile->m_JambTopPiston + (DispButtonRow - 100) * 40 + 5;
-	}
-  else
-	{
-	  i = DispButtonRow;
-	  if (i == 99)
-		i = 0;
-
-	  if (i > organfile->m_NumberOfManuals)
-		y = organfile->m_HackY - (i - organfile->m_NumberOfManuals) * 72 + 32 + 5;
-	  else
-		y = organfile->m_manual[i].m_PistonY + 5;
-
-	  if (organfile->m_DispExtraPedalButtonRow && !DispButtonRow)
-		y += 40;
-	  if (organfile->m_DispExtraPedalButtonRowOffset && DispButtonRow == 99)
-		x -= 22;
-	}
-  if (!DispKeyLabelOnLeft)
-	x -= 13;
-
-  if (!dc)
-	return !(xx < x || xx > x + 30 || yy < y || yy > y + 30 || (x + 15 - xx) * (x + 15 - xx) + (y + 15 - yy) * (y + 15 - yy) > 225);
-
-  wxMemoryDC mdc;
-  wxRect rect(x + 1, y + 1, 31 - 1, 30 - 1);
-  wxBitmap bmp = organfile->m_images[DispImageNum + 4];
-  dc->DrawBitmap(bmp, x, y, true);
-  dc->SetTextForeground(DispLabelColour);
-  wxFont font = *wxNORMAL_FONT;
-  font.SetFaceName(organfile->m_DispControlLabelFont);
-  font.SetPointSize(DispLabelFontSize);
-  dc->SetFont(font);
-  dc->DrawLabel(Name, rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
-  if (dc2)
-	dc2->Blit(x, y, 31, 30, dc, x, y);
-  return false;
 }
 
 void GOrguePushbutton::Load(IniFileConfig& cfg, const char* group)
 {
-  DispButtonRow=cfg.ReadInteger( group,"DispButtonRow",    0, 99 + organfile->m_DispExtraButtonRows);
-  DispButtonCol=cfg.ReadInteger( group,"DispButtonCol",    1, organfile->m_DispButtonCols);
-  DispImageNum=cfg.ReadInteger( group,"DispImageNum",    1,    2);
-  MIDIProgramChangeNumber=cfg.ReadInteger( group,"MIDIProgramChangeNumber",    1,  128);
-  DispImageNum--;
+	DispButtonRow = cfg.ReadInteger(group, "DispButtonRow", 0, 99 + organfile->m_DispExtraButtonRows);
+	DispButtonCol = cfg.ReadInteger(group, "DispButtonCol", 1, organfile->m_DispButtonCols);
+	DispImageNum = cfg.ReadInteger(group, "DispImageNum", 1, 2);
+	MIDIProgramChangeNumber = cfg.ReadInteger(group, "MIDIProgramChangeNumber", 1, 128);
+	DispImageNum--;
+	GOrgueControl::Load(cfg, group);
+}
 
-  GOrgueControl::Load(cfg, group);
+void GOrguePushbutton::Save(IniFileConfig& cfg, bool prefix, wxString group)
+{
+	group.Printf("%s%03d", group.c_str(), ObjectNumber);
+	cfg.SaveHelper(prefix, group, "MIDIProgramChangeNumber", MIDIProgramChangeNumber);
 }
