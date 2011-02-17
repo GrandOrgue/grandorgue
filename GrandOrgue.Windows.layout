@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
-	<File name="GOrgueMeter.cpp" open="1" top="0" tabpos="1">
+	<File name="GOrgueDivisional.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1123" topLine="18" />
+	</File>
+	<File name="GOrgueDrawStop.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1118" topLine="15" />
+	</File>
+	<File name="GOrgueEnclosure.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1010" topLine="21" />
+	</File>
+	<File name="GOrgueMeter.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="1068" topLine="15" />
 	</File>
 	<File name="GOrgueMeter.h" open="0" top="0" tabpos="0">
 		<Cursor position="442" topLine="21" />
 	</File>
-	<File name="GOrgueSound.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="1080" topLine="18" />
+	<File name="GOrgueSound.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="1042" topLine="18" />
 	</File>
-	<File name="GrandOrgue.cpp" open="1" top="0" tabpos="3">
+	<File name="GrandOrgue.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="6143" topLine="230" />
 	</File>
 	<File name="GrandOrgue.h" open="0" top="0" tabpos="1">
@@ -31,6 +40,9 @@
 	<File name="MIDIEvents.h" open="0" top="0" tabpos="0">
 		<Cursor position="138" topLine="1" />
 	</File>
+	<File name="MIDIListenDialog.h" open="0" top="0" tabpos="0">
+		<Cursor position="621" topLine="18" />
+	</File>
 	<File name="OrganDocument.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="1019" topLine="8" />
 	</File>
@@ -49,20 +61,23 @@
 	<File name="OrganView.h" open="0" top="0" tabpos="0">
 		<Cursor position="138" topLine="0" />
 	</File>
-	<File name="RtAudio.cpp" open="1" top="0" tabpos="4">
+	<File name="RtAudio.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="90953" topLine="2521" />
 	</File>
 	<File name="RtMidi.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="6260" topLine="180" />
 	</File>
-	<File name="SettingsDialog.cpp" open="1" top="0" tabpos="5">
+	<File name="SettingsDialog.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="1163" topLine="21" />
 	</File>
 	<File name="SettingsDialog.h" open="0" top="0" tabpos="4">
 		<Cursor position="138" topLine="1" />
 	</File>
-	<File name="include\combase.cpp" open="1" top="1" tabpos="6">
+	<File name="include\combase.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="484" topLine="24" />
+	</File>
+	<File name="include\iasiodrv.h" open="0" top="0" tabpos="0">
+		<Cursor position="222" topLine="0" />
 	</File>
 	<File name="resource.h" open="0" top="0" tabpos="0">
 		<Cursor position="93" topLine="0" />
