@@ -10,35 +10,11 @@
 	<File name="MIDIEvents.h" open="0" top="0" tabpos="0">
 		<Cursor position="185" topLine="0" />
 	</File>
-	<File name="OrganDocument.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="185" topLine="0" />
-	</File>
-	<File name="OrganDocument.h" open="0" top="0" tabpos="0">
-		<Cursor position="185" topLine="0" />
-	</File>
-	<File name="OrganFile.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="89492" topLine="2475" />
-	</File>
-	<File name="OrganFile.h" open="0" top="0" tabpos="0">
-		<Cursor position="184" topLine="0" />
-	</File>
-	<File name="OrganView.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="3320" topLine="57" />
-	</File>
-	<File name="OrganView.h" open="0" top="0" tabpos="0">
-		<Cursor position="185" topLine="0" />
-	</File>
 	<File name="RtAudio.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="110512" topLine="3365" />
 	</File>
 	<File name="RtAudio.h" open="0" top="0" tabpos="2">
 		<Cursor position="6140" topLine="136" />
-	</File>
-	<File name="SettingsDialog.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="676" topLine="0" />
-	</File>
-	<File name="SettingsDialog.h" open="0" top="0" tabpos="0">
-		<Cursor position="185" topLine="0" />
 	</File>
 	<File name="resource.h" open="0" top="0" tabpos="5">
 		<Cursor position="0" topLine="0" />
