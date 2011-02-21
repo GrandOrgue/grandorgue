@@ -66,7 +66,7 @@ wxStaticText* GOrguePropertiesText(wxWindow* parent, int title, wxString text)
 	return item;
 }
 
-bool GOrguePropertiesTest(wxString& what)
+bool GOrguePropertiesTest(const wxString& what)
 {
 	return !what.IsEmpty() && what.CmpNoCase("fictional") && what.CmpNoCase("unknown") && what.CmpNoCase("none") && what.CmpNoCase("N/A");
 }
@@ -78,35 +78,35 @@ GOrgueProperties::GOrgueProperties(wxWindow* win) : wxDialog(win, wxID_ANY, (wxS
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
 	sizer->Add(GOrguePropertiesText(this, 0, _("Title")), 0);
-	sizer->Add(GOrguePropertiesText(this, 300, organfile->m_ChurchName), 0, wxLEFT, 10);
-	if (GOrguePropertiesTest(organfile->m_ChurchAddress))
+	sizer->Add(GOrguePropertiesText(this, 300, organfile->GetChurchName()), 0, wxLEFT, 10);
+	if (GOrguePropertiesTest(organfile->GetChurchAddress()))
 	{
 		sizer->Add(GOrguePropertiesText(this, 0, _("Address")), 0, wxTOP, 5);
-		sizer->Add(GOrguePropertiesText(this, 300, organfile->m_ChurchAddress), 0, wxLEFT, 10);
+		sizer->Add(GOrguePropertiesText(this, 300, organfile->GetChurchAddress()), 0, wxLEFT, 10);
 	}
-	if (GOrguePropertiesTest(organfile->m_OrganBuilder))
+	if (GOrguePropertiesTest(organfile->GetOrganBuilder()))
 	{
 		sizer->Add(GOrguePropertiesText(this, 0, _("Builder")), 0, wxTOP, 5);
-		sizer->Add(GOrguePropertiesText(this, 300, organfile->m_OrganBuilder), 0, wxLEFT, 10);
+		sizer->Add(GOrguePropertiesText(this, 300, organfile->GetOrganBuilder()), 0, wxLEFT, 10);
 	}
-	if (GOrguePropertiesTest(organfile->m_OrganBuildDate))
+	if (GOrguePropertiesTest(organfile->GetOrganBuildDate()))
 	{
 		sizer->Add(GOrguePropertiesText(this, 0,  _("Build Date")), 0, wxTOP, 5);
-		sizer->Add(GOrguePropertiesText(this, 300, organfile->m_OrganBuildDate), 0, wxLEFT, 10);
+		sizer->Add(GOrguePropertiesText(this, 300, organfile->GetOrganBuildDate()), 0, wxLEFT, 10);
 	}
-	if (GOrguePropertiesTest(organfile->m_RecordingDetails))
+	if (GOrguePropertiesTest(organfile->GetRecordingDetails()))
 	{
 		sizer->Add(GOrguePropertiesText(this, 0,  _("Recording Details")), 0, wxTOP, 5);
-		sizer->Add(GOrguePropertiesText(this, 300, organfile->m_RecordingDetails), 0, wxLEFT, 10);
+		sizer->Add(GOrguePropertiesText(this, 300, organfile->GetRecordingDetails()), 0, wxLEFT, 10);
 	}
-	if (GOrguePropertiesTest(organfile->m_OrganComments))
+	if (GOrguePropertiesTest(organfile->GetOrganComments()))
 	{
 		sizer->Add(GOrguePropertiesText(this, 0,  _("Other Comments")), 0, wxTOP, 5);
-		sizer->Add(GOrguePropertiesText(this, 300, organfile->m_OrganComments), 0, wxLEFT, 10);
+		sizer->Add(GOrguePropertiesText(this, 300, organfile->GetOrganComments()), 0, wxLEFT, 10);
 	}
 
-	if (!organfile->m_InfoFilename.IsEmpty())
-	    sizer->Add(new wxStaticLink(this, _("More Information"), organfile->m_InfoFilename), 0, wxTOP | wxALIGN_CENTER_HORIZONTAL, 5);
+	if (!organfile->GetInfoFilename().IsEmpty())
+	    sizer->Add(new wxStaticLink(this, _("More Information"), organfile->GetInfoFilename()), 0, wxTOP | wxALIGN_CENTER_HORIZONTAL, 5);
 	topSizer->Add(sizer, 0, wxALL, 10);
 	topSizer->Add(new wxStaticLine(this), 0, wxEXPAND | wxLEFT | wxRIGHT, 5);
 	topSizer->Add(CreateButtonSizer(wxOK), 0, wxALL | wxEXPAND, 10);

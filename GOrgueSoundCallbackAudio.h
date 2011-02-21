@@ -25,10 +25,5 @@
 
 #include "RtAudio.h"
 
-int GOrgueSoundCallbackAudio( void *outputBuffer, void *inputBuffer,
-							  unsigned int nFrames,
-							  double streamTime,
-							  RtAudioStreamStatus status,
-							  void *userData );
 
 #endif

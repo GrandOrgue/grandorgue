@@ -21,20 +21,18 @@
  */
 
 #include "GOrgueSoundCallbackAudio.h"
-#include "GOrgueSoundCallbackMIDI.h"
+
+#include "GOrgueEnclosure.h"
+#include "GOrguePipe.h"
 #include "GOrgueSound.h"
+#include "GOrgueWindchest.h"
 #include "GrandOrgue.h"
 #include "GrandOrgueFile.h"
-#include "GrandOrgueFrame.h"
 
 extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
 
-double final_buff[1024 * 2];
-float volume_buff[1024 * 2];
-int g_buff[11][(1024 + 2) * 2];
-
-
+/* TODO: very grumpy that these are living here... */
 void stereoUncompressed(GOrgueSampler* sampler,short* output)
 {
     short* input=(short*)(sampler->ptr+sampler->current);
@@ -45,6 +43,7 @@ void stereoUncompressed(GOrgueSampler* sampler,short* output)
     sampler->current+=8;
 
 }
+
 void monoUncompressed(GOrgueSampler* sampler,short* output)
 {
     short* input=(short*)(sampler->ptr+sampler->current);
@@ -55,6 +54,7 @@ void monoUncompressed(GOrgueSampler* sampler,short* output)
     sampler->current+=4;
 
 }
+
 void monoCompressed(GOrgueSampler* sampler,short* output)
 {
     short* v=(short*)&sampler->v;
@@ -152,135 +152,142 @@ void stereoCompressed(GOrgueSampler* sampler,short* output)
 // this callback will fill the buffer with bufferSize frame
 // audio is opened with 32 bit stereo, so one frame is 64bit (32bit for right 32bit for left)
 // So buffer can handle 8*bufferSize char (or 2*bufferSize float)
-int GOrgueSoundCallbackAudio( void *outputBuffer, void *inputBuffer,
-                                unsigned int nFrames,
-                                double streamTime,
-                                RtAudioStreamStatus status,
-                                void *userData )
+int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
+                             unsigned int nFrames,
+                             double streamTime,
+                             RtAudioStreamStatus status,
+                             void *userData )
 {
+
+	GOrgueSound* instance = (GOrgueSound*)userData;
 	int i, j;
 	float* buffer=static_cast<float*>(outputBuffer);
 
 	if (organfile)
-        organfile->m_elapsed = g_sound->sw.Time();
+        organfile->SetElapsedTime(instance->sw.Time());
 
+	/* Process any MIDI messages
+	 * TODO: this is a very good candidate for a thread. */
 	std::vector<unsigned char> msg;
-	for (j = 0; j < g_sound->n_midiDevices; j++)
+	for (j = 0; j < instance->n_midiDevices; j++)
 	{
-		if (!g_sound->b_midiDevices[j])
+		if (!instance->b_midiDevices[j])
 			continue;
 
 		for(;;)
 		{
-			g_sound->midiDevices[j]->getMessage(&msg);
+			instance->midiDevices[j]->getMessage(&msg);
 			if (msg.empty())
 				break;
-			GOrgueSoundCallbackMIDI(msg, j);
+			MIDICallback(msg, j, instance);
 		}
 	}
 
-	if (!g_sound->b_active || !g_sound->samplers_count)
+	/* if no samplers playing, or sound is disabled, fill buffer with zero
+	 * and finish */
+	if (!instance->b_active || !instance->samplers_count)
 		memset(buffer, 0, nFrames);
-	if (!g_sound->b_active)
+	if (!instance->b_active)
 		return 0;
 
-	if (g_sound->samplers_count > g_sound->meter_poly)
-		g_sound->meter_poly = g_sound->samplers_count;
+	if (instance->samplers_count > instance->meter_poly)
+		instance->meter_poly = instance->samplers_count;
 
-	std::fill(final_buff,final_buff+2048,0);
+	std::fill(instance->final_buff, instance->final_buff+2048,0);
 
-	for (j = 0; j < organfile->m_NumberOfTremulants + 1 + organfile->m_NumberOfWindchestGroups; j++)
+	for (j = 0; j < organfile->GetTremulantCount() + 1 + organfile->GetWinchestGroupCount(); j++)
 	{
-		if (!g_sound->windchests[j])
+		if (!instance->windchests[j])
 			continue;
 
-		GOrgueSampler* ptr = (GOrgueSampler*)(g_sound->windchests + j);
+		GOrgueSampler* ptr = (GOrgueSampler*)(instance->windchests + j);
 
 		int* this_buff;
-		if (j < organfile->m_NumberOfTremulants)
-			this_buff = g_buff[j + 1] + 2;
+		if (j < organfile->GetTremulantCount())
+			this_buff = instance->g_buff[j + 1] + 2;
 		else
 		{
-			this_buff = g_buff[0] + 2;
+			this_buff = instance->g_buff[0] + 2;
 			double d = 1.0, scale = 1.0/12700.0;
-			for (i = 0; i < organfile->m_windchest[j].NumberOfEnclosures; i++)
+			for (i = 0; i < organfile->GetWindchest(j)->NumberOfEnclosures; i++)
 			{
-				GOrgueEnclosure* enclosure = organfile->m_enclosure + (organfile->m_windchest[j].enclosure[i]);
+				GOrgueEnclosure* enclosure = organfile->GetEnclosure(organfile->GetWindchest(j)->enclosure[i]);
 				d *= (double)(enclosure->MIDIValue * (100 - enclosure->AmpMinimumLevel) + 127 * enclosure->AmpMinimumLevel) * scale;
 			}
-			organfile->m_windchest[j].m_Volume = d;
-			d *= g_sound->volume;
+			organfile->GetWindchest(j)->m_Volume = d;
+			d *= instance->volume;
 			d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
 
 			float f = d;
-			std::fill(volume_buff,volume_buff+2048,f);
+			std::fill(instance->volume_buff, instance->volume_buff+2048,f);
 		}
 
-		std::fill(this_buff,this_buff+2052,(j < organfile->m_NumberOfTremulants ? 0x800000 : 0));
-		for (GOrgueSampler* sampler = g_sound->windchests[j]; sampler; sampler = sampler->next)
+		std::fill(this_buff, this_buff + 2052, (j < organfile->GetTremulantCount() ? 0x800000 : 0));
+
+		for (GOrgueSampler* sampler = instance->windchests[j]; sampler; sampler = sampler->next)
 		{
-            if (g_sound->b_limit && g_sound->samplers_count >= g_sound->poly_soft && sampler->stage == 2 && organfile->m_elapsed - sampler->time > 250)
-                sampler->fadeout = 4;
+			if (instance->b_limit && instance->samplers_count >= instance->poly_soft && sampler->stage == 2 && organfile->GetElapsedTime() - sampler->time > 250)
+				sampler->fadeout = 4;
 
-                int* write_iterator=this_buff;
+			int* write_iterator=this_buff;
 //                printf("sampler %x fade %d fadein %d fadeout %d\n",sampler,sampler->fade,sampler->fadein,sampler->fadeout);
-                for(unsigned int i=0;i<nFrames;i+=2)
-                {
-                    short buffer[4];
-                    //Overflow should not be necessary
-                    if(sampler->type==2)
-                        stereoCompressed(sampler,buffer);
-                    if(sampler->type==3)
-                        stereoUncompressed(sampler,buffer);
-                    if(sampler->type==1)
-                        monoUncompressed(sampler,buffer);
-                    if(sampler->type==0)
-                        monoCompressed(sampler,buffer);
+			for(unsigned int i=0;i<nFrames;i+=2)
+			{
+				short buffer[4];
+				//Overflow should not be necessary
+				if(sampler->type==2)
+					stereoCompressed(sampler,buffer);
+				if(sampler->type==3)
+					stereoUncompressed(sampler,buffer);
+				if(sampler->type==1)
+					monoUncompressed(sampler,buffer);
+				if(sampler->type==0)
+					monoCompressed(sampler,buffer);
 
-                    if(sampler->current>=0)
-                    {
-                        if( sampler->stage!=2)
-                        {
-                            sampler->stage=1;
-                            sampler->ptr=sampler->pipe->ptr[1];
-                            sampler->current=sampler->pipe->offset[1];
-                            sampler->type=sampler->pipe->types[1];
-                            sampler->f=*(wxInt64*)&sampler->pipe->f[1];
-                            sampler->v=*(wxInt64*)&sampler->pipe->v[1];
+				if(sampler->current>=0)
+				{
+					if( sampler->stage!=2)
+					{
+						sampler->stage=1;
+						sampler->ptr=sampler->pipe->ptr[1];
+						sampler->current=sampler->pipe->offset[1];
+						sampler->type=sampler->pipe->types[1];
+						sampler->f=*(wxInt64*)&sampler->pipe->f[1];
+						sampler->v=*(wxInt64*)&sampler->pipe->v[1];
 
-                        }
-                        else
-                        {
-                            sampler->pipe=0;
-                        }
-                    }
+					}
+					else
+					{
+						sampler->pipe=0;
+					}
+				}
 
-                    if(!sampler->pipe)
-                        break;
+				if(!sampler->pipe)
+					break;
 
-                    int intbuffer[4];
-                    intbuffer[0]=buffer[0]*sampler->fade;
-                    intbuffer[1]=buffer[1]*sampler->fade;
-                    intbuffer[2]=buffer[2]*sampler->fade;
-                    intbuffer[3]=buffer[3]*sampler->fade;
+				int intbuffer[4];
+				intbuffer[0]=buffer[0]*sampler->fade;
+				intbuffer[1]=buffer[1]*sampler->fade;
+				intbuffer[2]=buffer[2]*sampler->fade;
+				intbuffer[3]=buffer[3]*sampler->fade;
 
-                    if(sampler->fadein+sampler->fadeout)
-                    {
+				if(sampler->fadein+sampler->fadeout)
+				{
 
-                        sampler->fade+=sampler->fadein+sampler->fadeout;
-                        if(sampler->fade>0)
-                            sampler->fade=0;
-                    }
-                    write_iterator[0]+=(intbuffer[0])>>sampler->shift;
-                    write_iterator[1]+=(intbuffer[1])>>sampler->shift;
-                    write_iterator[2]+=(intbuffer[2])>>sampler->shift;
-                    write_iterator[3]+=(intbuffer[3])>>sampler->shift;
+					sampler->fade+=sampler->fadein+sampler->fadeout;
+					if(sampler->fade>0)
+						sampler->fade=0;
+				}
+				write_iterator[0]+=(intbuffer[0])>>sampler->shift;
+				write_iterator[1]+=(intbuffer[1])>>sampler->shift;
+				write_iterator[2]+=(intbuffer[2])>>sampler->shift;
+				write_iterator[3]+=(intbuffer[3])>>sampler->shift;
 //                    printf("write iter  %d  %d  %d %d\n", write_iterator[0],write_iterator[1],write_iterator[2],write_iterator[3]);
-                    write_iterator+=4;
+				write_iterator+=4;
 
 
 
-                }
+			}
 //                printf("fade %d fadein %d fadeout %d\n",sampler->fade,sampler->fadein,sampler->fadeout);
 
 			if (!sampler->pipe && (!sampler->overflowing || !sampler->overflow))
@@ -298,81 +305,85 @@ int GOrgueSoundCallbackAudio( void *outputBuffer, void *inputBuffer,
 			if (!sampler->pipe || !sampler->fade)
 			{
 				ptr->next = sampler->next;
-				g_sound->samplers_open[--(g_sound->samplers_count)] = sampler;
+				instance->samplers_open[--(instance->samplers_count)] = sampler;
 			}
 			else
 				ptr = sampler;
 		}
 
-		if (j >= organfile->m_NumberOfTremulants)
+		if (j >= organfile->GetTremulantCount())
 		{
 			int *ptr;
-			for (i = 0; i < organfile->m_windchest[j].NumberOfTremulants; i++)
+			for (i = 0; i < organfile->GetWindchest(j)->NumberOfTremulants; i++)
 			{
 
-				if (!g_sound->windchests[organfile->m_windchest[j].tremulant[i]])
+				if (!instance->windchests[organfile->GetWindchest(j)->tremulant[i]])
 					continue;
-                ptr = g_buff[organfile->m_windchest[j].tremulant[i] + 1] + 2;
-                for (unsigned int k = 0; k < nFrames*2; k++)
-                #ifdef linux
-                    //multiply by 2^-23
-                    volume_buff[k] *= scalb(ptr[k], -23);
-                #endif
-                #ifdef _WIN32
-                    volume_buff[k] *= _scalb(ptr[k], -23);
-                #endif
+				ptr = instance->g_buff[organfile->GetWindchest(j)->tremulant[i] + 1] + 2;
+				for (unsigned int k = 0; k < nFrames*2; k++)
+				{
+#ifdef linux
+					//multiply by 2^-23
+					instance->volume_buff[k] *= scalb(ptr[k], -23);
+#endif
+#ifdef _WIN32
+					instance->volume_buff[k] *= _scalb(ptr[k], -23);
+#endif
+				}
+
 			}
 
 			ptr = this_buff;
 			for (unsigned int k = 0; k < nFrames*2; k++)
 			{
-                double d = this_buff[k];
+				double d = this_buff[k];
 //                printf("data : %f\n",d);
-			    d *= volume_buff[k];
-                final_buff[k] += d;
+				d *= instance->volume_buff[k];
+				instance->final_buff[k] += d;
 			}
 		}
 	}
 
-    double clamp_min = -1.0, clamp_max = 1.0;
-    for (unsigned int k = 0; k < nFrames*2; k += 2)
-    {
-        double d;
-        d = std::min(std::max(final_buff[k + 0], clamp_min) , clamp_max);
-        ((float*)buffer)[k + 0]  = (float)d;
-        g_sound->meter_left  = std::max(g_sound->meter_left,fabs(d));
-        d = std::min(std::max(final_buff[k + 1] , clamp_min) , clamp_max);
-        ((float*)buffer)[k + 1]  = (float)d;
-        g_sound->meter_right = std::max( g_sound->meter_right,fabs(d));
-    }
-
-	if (g_sound->f_output)
+	double clamp_min = -1.0, clamp_max = 1.0;
+	for (unsigned int k = 0; k < nFrames*2; k += 2)
 	{
-		fwrite(buffer, sizeof(float), nFrames*2, g_sound->f_output);
-		if (g_sound->b_stoprecording)
-			g_sound->CloseWAV();
+		double d;
+		d = std::min(std::max(instance->final_buff[k + 0], clamp_min) , clamp_max);
+		((float*)buffer)[k + 0]  = (float)d;
+		instance->meter_left  = std::max(instance->meter_left,fabs(d));
+		d = std::min(std::max(instance->final_buff[k + 1] , clamp_min) , clamp_max);
+		((float*)buffer)[k + 1]  = (float)d;
+		instance->meter_right = std::max( instance->meter_right,fabs(d));
 	}
 
-	g_sound->meter_counter += nFrames;
-	if (g_sound->meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
+	if (instance->f_output)
 	{
-        int n = 0;
-        // polyphony
-        n |= ( 33 * g_sound->meter_poly ) / g_sound->polyphony;
-        n <<= 8;
-        // right channel
-        n |= lrint(32.50000000000001 * g_sound->meter_right);
-        n <<= 8;
-        // left  channel
-        n |= lrint(32.50000000000001 * g_sound->meter_left );
+		fwrite(buffer, sizeof(float), nFrames*2, instance->f_output);
+		if (instance->b_stoprecording)
+			instance->CloseWAV();
+	}
 
-        wxCommandEvent event(wxEVT_METERS, 0);
-        event.SetInt(n);
-        ::wxGetApp().frame->AddPendingEvent(event);
+	instance->meter_counter += nFrames;
+	if (instance->meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
+	{
+		int n = 0;
+		// polyphony
+		n |= ( 33 * instance->meter_poly ) / instance->polyphony;
+		n <<= 8;
+		// right channel
+		n |= lrint(32.50000000000001 * instance->meter_right);
+		n <<= 8;
+		// left  channel
+		n |= lrint(32.50000000000001 * instance->meter_left );
 
-        g_sound->meter_counter = g_sound->meter_poly = 0;
-        g_sound->meter_left = g_sound->meter_right = 0.0;
+		wxCommandEvent event(wxEVT_METERS, 0);
+		event.SetInt(n);
+		::wxGetApp().frame->AddPendingEvent(event);
+
+		instance->meter_counter = instance->meter_poly = 0;
+		instance->meter_left = instance->meter_right = 0.0;
 	}
 
 	return 0;
 }
+

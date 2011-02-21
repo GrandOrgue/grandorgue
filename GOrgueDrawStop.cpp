@@ -21,14 +21,18 @@
  */
 
 #include "GOrgueDrawStop.h"
-#include "IniFileConfig.h"
-#include "GrandOrgueFile.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
-#include "GOrgueSound.h"
-#include "OrganFile.h"
-#include "MIDIListenDialog.h"
+
 #include <wx/docview.h>
+#include "IniFileConfig.h"
+#include "GOrgueDisplayMetrics.h"
+#include "GOrguePiston.h"
+#include "GOrgueSound.h"
+#include "GrandOrgue.h"
+#include "GrandOrgueFile.h"
+#include "GrandOrgueFrame.h"
+#include "MIDIListenDialog.h"
+#include "OrganFile.h"
+
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
@@ -51,10 +55,11 @@ GOrgueDrawstop::~GOrgueDrawstop()
 
 }
 
-void GOrgueDrawstop::Load(IniFileConfig& cfg, const char* group)
+void GOrgueDrawstop::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
 {
-	DispDrawstopRow = cfg.ReadInteger(group, "DispDrawstopRow", 1, 99 + organfile->m_DispExtraDrawstopRows);
-	DispDrawstopCol = cfg.ReadInteger(group, "DispDrawstopCol", 1, DispDrawstopRow > 99 ? organfile->m_DispExtraDrawstopCols : organfile->m_DispDrawstopCols);
+	DisplayMetrics = displayMetrics;
+	DispDrawstopRow = cfg.ReadInteger(group, "DispDrawstopRow", 1, 99 + DisplayMetrics->NumberOfExtraDrawstopRowsToDisplay());
+	DispDrawstopCol = cfg.ReadInteger(group, "DispDrawstopCol", 1, DispDrawstopRow > 99 ? DisplayMetrics->NumberOfExtraDrawstopColsToDisplay() : DisplayMetrics->NumberOfDrawstopColsToDisplay());
 	DefaultToEngaged = cfg.ReadBoolean(group, "DefaultToEngaged");
 	DisplayInInvertedState = cfg.ReadBoolean(group, "DisplayInInvertedState");
 	DispImageNum = cfg.ReadInteger(group, "DispImageNum", 1, 2);
@@ -64,7 +69,6 @@ void GOrgueDrawstop::Load(IniFileConfig& cfg, const char* group)
 
 void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
-	group.Printf("%s%03d", group.c_str(), ObjectNumber);
 	cfg.SaveHelper(prefix, group, "DefaultToEngaged", DefaultToEngaged ? "Y" : "N");
 	cfg.SaveHelper(prefix, group, "StopControlMIDIKeyNumber", StopControlMIDIKeyNumber);
 }
@@ -75,43 +79,16 @@ bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 	if (!Displayed)
 		return false;
 
-	if (DispDrawstopRow > 99)
-	{
-		x = organfile->m_JambTopX + (DispDrawstopCol - 1) * 78 + 6;
-		y = organfile->m_JambTopDrawstop + (DispDrawstopRow - 100) * 69 + 2;
-	}
-	else
-	{
-		i = organfile->m_DispDrawstopCols >> 1;
-		if (DispDrawstopCol <= i)
-		{
-			x = organfile->m_JambLeftX + (DispDrawstopCol - 1) * 78 + 6;
-			y = organfile->m_JambLeftRightY + (DispDrawstopRow - 1) * 69 + 32;
-		}
-		else
-		{
-			x = organfile->m_JambRightX + (DispDrawstopCol - 1 - i) * 78 + 6;
-			y = organfile->m_JambLeftRightY + (DispDrawstopRow - 1) * 69 + 32;
-		}
-		if (organfile->m_DispPairDrawstopCols)
-			x += (((DispDrawstopCol - 1) % i) >> 1) * 18;
-		if (DispDrawstopCol <= i)
-			i = DispDrawstopCol;
-		else
-			i = organfile->m_DispDrawstopCols - DispDrawstopCol + 1;
-		if (organfile->m_DispDrawstopColsOffset && (i & 1) ^ organfile->m_DispDrawstopOuterColOffsetUp)
-			y += 35;
-	}
+	DisplayMetrics->GetDrawstopBlitPosition(DispDrawstopRow, DispDrawstopCol, &x, &y);
 
 	if (!dc)
 		return !(xx < x || xx > x + 64 || yy < y || yy > y + 64 || (x + 32 - xx) * (x + 32 - xx) + (y + 32 - yy) * (y + 32 - yy) > 1024);
 
 	wxRect rect(x, y + 1, 65, 65 - 1);
-	wxBitmap bmp = organfile->m_images[((DispImageNum - 1) << 1) + (DisplayInInvertedState ^ DefaultToEngaged ? 1 : 0)];
-	dc->DrawBitmap(bmp, x, y, true);
+	wxBitmap* bmp = organfile->GetImage(((DispImageNum - 1) << 1) + (DisplayInInvertedState ^ DefaultToEngaged ? 1 : 0));
+	dc->DrawBitmap(*bmp, x, y, true);
 	dc->SetTextForeground(DispLabelColour);
-	wxFont font = *wxNORMAL_FONT;
-	font.SetFaceName(organfile->m_DispControlLabelFont);
+	wxFont font = DisplayMetrics->GetControlLabelFont();
 	font.SetPointSize(DispLabelFontSize);
 	dc->SetFont(font);
 	dc->DrawLabel(Name, rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
@@ -126,7 +103,6 @@ void GOrgueDrawstop::Push()
 {
 	Set(DefaultToEngaged ^ true);
 };
-
 
 void GOrgueDrawstop::MIDI(void)
 {
@@ -146,13 +122,14 @@ bool GOrgueDrawstop::Set(bool on)
 	wxCommandEvent event(wxEVT_DRAWSTOP, 0);
 	event.SetClientData(this);
 	::wxGetApp().frame->AddPendingEvent(event);
-	for (int i = 0; i < organfile->m_NumberOfReversiblePistons; i++)
+	for (int i = 0; i < organfile->GetNumberOfReversiblePistons(); i++)
 	{
-		if (organfile->m_piston[i].drawstop == this)
-	    {
-			organfile->m_piston[i].DispImageNum = (organfile->m_piston[i].DispImageNum & 1) | (on ^ DisplayInInvertedState ? 2 : 0);
+		if (organfile->GetPiston(i)->drawstop == this)
+		{
+			organfile->GetPiston(i)->DispImageNum = (organfile->GetPiston(i)->DispImageNum & 1) | (on ^ DisplayInInvertedState ? 2 : 0);
 			wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-			event.SetClientData(organfile->m_piston + i);
+			/*event.SetClientData(organfile->m_piston + i);*/ /* TODO: the equivilent of this may be wrong */
+			event.SetClientData(organfile->GetPiston(i));
 			::wxGetApp().frame->AddPendingEvent(event);
 	    }
 	}

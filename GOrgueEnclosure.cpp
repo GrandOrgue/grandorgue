@@ -25,6 +25,8 @@
 #include "GrandOrgueFile.h"
 #include "GrandOrgue.h"
 #include "MIDIListenDialog.h"
+#include "GOrgueDisplayMetrics.h"
+#include "IniFileConfig.h"
 
 /* TODO: This should not be... */
 extern GOrgueSound* g_sound;
@@ -46,12 +48,12 @@ bool GOrgueEnclosure::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 
 	if (!dc)
 	{
-		wxRect rect(m_X, organfile->m_EnclosureY, 46, 61);
+		wxRect rect(m_X, DisplayMetrics->GetEnclosureY(), 46, 61);
 		return rect.Contains(xx, yy);
 	}
 
 	dc->SetBrush(*wxBLACK_BRUSH);
-	dc->DrawRectangle(m_X, organfile->m_EnclosureY + 13, 46, 44);
+	dc->DrawRectangle(m_X, DisplayMetrics->GetEnclosureY() + 13, 46, 44);
 	int dx = 1 + ( 3 * MIDIValue) / 127;
 	int dy = 1 + (13 * MIDIValue) / 127;
 	wxPoint points[4];
@@ -59,20 +61,21 @@ bool GOrgueEnclosure::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 	points[1].x = m_X + 38 - dx;
 	points[2].x = m_X + 38 + dx;
 	points[3].x = m_X +  7 - dx;
-	points[0].y = points[1].y = organfile->m_EnclosureY + 13 + dy;
-	points[2].y = points[3].y = organfile->m_EnclosureY + 56 - dy;
+	points[0].y = points[1].y = DisplayMetrics->GetEnclosureY() + 13 + dy;
+	points[2].y = points[3].y = DisplayMetrics->GetEnclosureY() + 56 - dy;
 	dc->SetBrush(::wxGetApp().frame->m_pedalBrush);
 	dc->DrawPolygon(4, points);
 
 	if (dc2)
-		dc2->Blit(m_X, organfile->m_EnclosureY + 13, 46, 44, dc, m_X, organfile->m_EnclosureY + 13);
+		dc2->Blit(m_X, DisplayMetrics->GetEnclosureY() + 13, 46, 44, dc, m_X, DisplayMetrics->GetEnclosureY() + 13);
 
 	return false;
 
 }
 
-void GOrgueEnclosure::Load(IniFileConfig& cfg, const char* group)
+void GOrgueEnclosure::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
 {
+	DisplayMetrics = displayMetrics;
 	Name=cfg.ReadString( group,"Name",   64);
 	AmpMinimumLevel=cfg.ReadInteger( group,"AmpMinimumLevel",    0,  100);
 	MIDIInputNumber=cfg.ReadInteger( group,"MIDIInputNumber",    1,    6);

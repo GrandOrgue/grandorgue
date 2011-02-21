@@ -21,19 +21,25 @@
  */
 
 #include "GOrgueSound.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
-#include "OrganDocument.h"
-#include "GrandOrgueFile.h"
+
 #if defined(__WXMSW__)
     #include <wx/msw/regconf.h>
 #endif
+#include "GrandOrgue.h"
+#include "GrandOrgueFrame.h"
+#include "GrandOrgueFile.h"
+#include "GrandOrgueID.h"
+#include "GOrguePipe.h"
+#include "GOrgueStop.h"
+#include "GOrgueTremulant.h"
+#include "OrganDocument.h"
 
 struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
 
 extern GrandOrgueFile* organfile;
 extern const char* s_MIDIMessages[];
 extern long i_MIDIMessages[];
+
 GOrgueSound* g_sound = 0;
 
 #ifdef _WIN32
@@ -62,7 +68,7 @@ GOrgueSound::GOrgueSound(void)
   sw(),
   pConfig(wxConfigBase::Get()),
   format(0),
-  m_parent(NULL),
+  logSoundErrors(NULL),
   samplers_count(0),
   polyphony(0),
   poly_soft(0),
@@ -327,7 +333,7 @@ bool GOrgueSound::OpenSound(bool wait)
 
 			RtAudio::StreamOptions aOptions;
 			aOptions.numberOfBuffers=numberOfBuffers;
-			audioDevice->openStream(&aOutputParam,NULL,RTAUDIO_FLOAT32, 44100, &bufferSize,&GOrgueSoundCallbackAudio,NULL,&aOptions);
+			audioDevice->openStream(&aOutputParam, NULL, RTAUDIO_FLOAT32, 44100, &bufferSize, &GOrgueSound::AudioCallback, this, &aOptions);
 
 			if (bufferSize <= 1024)
 			{
@@ -338,7 +344,7 @@ bool GOrgueSound::OpenSound(bool wait)
 			else
 			{
 		                ::wxSleep(1);
-		                if (m_parent)
+		                if (logSoundErrors)
 		                    ::wxLogError("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
 		                CloseSound();
 		                return false;
@@ -350,7 +356,7 @@ bool GOrgueSound::OpenSound(bool wait)
 		if (!n_midi || it == m_audioDevices.end())
 		{
             ::wxSleep(1);
-			if (m_parent)
+			if (logSoundErrors)
                 ::wxLogWarning(n_midi ? "No audio device is selected; neither MIDI input nor sound output will occur!" : "No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!");
 			CloseSound();
 			return false;
@@ -359,7 +365,7 @@ bool GOrgueSound::OpenSound(bool wait)
 	catch (RtError &e)
 	{
 		::wxSleep(1);
-		if (m_parent)
+		if (logSoundErrors)
             e.printMessage();
 		CloseSound();
 		return false;
@@ -422,33 +428,17 @@ bool GOrgueSound::ResetSound()
         if (doc && doc->b_loaded)
         {
             b_active = true;
-            for (int i = 0; i < organfile->m_NumberOfTremulants; i++)
+            for (int i = 0; i < organfile->GetTremulantCount(); i++)
             {
-                if (organfile->m_tremulant[i].DefaultToEngaged)
+                if (organfile->GetTremulant(i)->DefaultToEngaged)
                 {
-                    organfile->m_tremulant[i].Set(false);
-                    organfile->m_tremulant[i].Set(true);
+                    organfile->GetTremulant(i)->Set(false);
+                    organfile->GetTremulant(i)->Set(true);
                 }
             }
         }
 	}
 	return true;
-}
-
-void GOrgueSound::OpenWAV()
-{
-	if (f_output)
-        return;
-	wxFileDialog dlg(::wxGetApp().frame, _("Save as"), wxConfig::Get()->Read("wavPath", ::wxGetApp().m_path), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxSAVE | wxOVERWRITE_PROMPT);
-	if (dlg.ShowModal() == wxID_OK)
-	{
-		wxConfig::Get()->Write("wavPath", dlg.GetDirectory());
-		b_stoprecording = false;
-		if ((f_output = fopen(dlg.GetPath(), "wb")))
-			fwrite(&WAVE, sizeof(WAVE), 1, f_output);
-		else
-			::wxLogError("Unable to open file for writing");
-	}
 }
 
 void GOrgueSound::CloseWAV()
@@ -476,8 +466,189 @@ void GOrgueSound::UpdateOrganMIDI()
 
 void GOrgueSound::MIDIPretend(bool on)
 {
-	for (int i = organfile->m_FirstManual; i <= organfile->m_NumberOfManuals; i++)
-		for (int j = 0; j < organfile->m_manual[i].NumberOfLogicalKeys; j++)
-			if (organfile->m_manual[i].m_MIDI[j] & 1)
-				organfile->m_manual[i].Set(j + organfile->m_manual[i].FirstAccessibleKeyMIDINoteNumber, on, true);
+	for (int i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
+		for (int j = 0; j < organfile->GetManual(i)->NumberOfLogicalKeys; j++)
+			if (organfile->GetManual(i)->m_MIDI[j] & 1)
+				organfile->GetManual(i)->Set(j + organfile->GetManual(i)->FirstAccessibleKeyMIDINoteNumber, on, true);
+}
+
+void GOrgueSound::SetPolyphonyLimit(int polyphony)
+{
+	this->polyphony = polyphony;
+}
+
+void GOrgueSound::SetPolyphonySoftLimit(int polyphony_soft)
+{
+	this->poly_soft = polyphony_soft;
+}
+
+void GOrgueSound::SetVolume(int volume)
+{
+	this->volume = volume;
+}
+
+void GOrgueSound::SetTranspose(int transpose)
+{
+	this->transpose = transpose;
+}
+
+GOrgueSampler* GOrgueSound::OpenNewSampler()
+{
+
+	if (samplers_count >= polyphony)
+		return NULL;
+
+	GOrgueSampler* sampler = samplers_open[samplers_count++];
+	memset(sampler, 0, sizeof(GOrgueSampler));
+	return sampler;
+
+}
+
+bool GOrgueSound::HasRandomPipeSpeech()
+{
+	return b_random;
+}
+
+bool GOrgueSound::HasReleaseAlignment()
+{
+	return b_align;
+}
+
+bool GOrgueSound::HasScaledReleases()
+{
+	return b_scale;
+}
+
+void GOrgueSound::MIDIAllNotesOff()
+{
+	int i, j, k;
+
+	if (!organfile)
+		return;
+
+	for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
+	{
+		for (j = 0; j < organfile->GetManual(i)->NumberOfAccessibleKeys; j++)
+            organfile->GetManual(i)->m_MIDI[j] = 0;
+		for (j = 0; j < organfile->GetManual(i)->NumberOfAccessibleKeys; j++)
+		{
+			wxCommandEvent event(wxEVT_NOTEONOFF, 0);
+			event.SetInt(i);
+			event.SetExtraLong(j);
+			::wxGetApp().frame->AddPendingEvent(event);
+		}
+		for (j = 0; j < organfile->GetManual(i)->NumberOfStops; j++)
+		{
+			for (k = 0; k < organfile->GetManual(i)->stop[j]->NumberOfLogicalPipes; k++)
+			{
+				register GOrguePipe* pipe = organfile->GetPipe(organfile->GetManual(i)->stop[j]->pipe[k]);
+				if (pipe->instances > -1)
+					pipe->instances = 0;
+				pipe->sampler = 0;
+			}
+			if (organfile->GetManual(i)->stop[j]->m_auto)
+                organfile->GetManual(i)->stop[j]->Set(false);
+		}
+	}
+}
+
+bool GOrgueSound::IsStereo()
+{
+	return b_stereo;
+}
+
+int GOrgueSound::GetVolume()
+{
+	return volume;
+}
+
+bool GOrgueSound::IsRecording()
+{
+	return f_output && !b_stoprecording;
+}
+
+/* FIXME: This code is not thread-safe and is likely to cause future problems */
+void GOrgueSound::StartRecording()
+{
+	if (f_output)
+        return;
+	b_stoprecording = false;
+	wxFileDialog dlg(::wxGetApp().frame, _("Save as"), wxConfig::Get()->Read("wavPath", ::wxGetApp().m_path), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxSAVE | wxOVERWRITE_PROMPT);
+	if (dlg.ShowModal() == wxID_OK)
+	{
+		wxConfig::Get()->Write("wavPath", dlg.GetDirectory());
+		if ((f_output = fopen(dlg.GetPath(), "wb")))
+			fwrite(&WAVE, sizeof(WAVE), 1, f_output);
+		else
+			::wxLogError("Unable to open file for writing");
+	}
+}
+
+void GOrgueSound::StopRecording()
+{
+	if (f_output)
+		return;
+	b_stoprecording = true;
+}
+
+bool GOrgueSound::HasMIDIDevice()
+{
+	for (int i = 0; i < n_midiDevices; i++)
+		if (b_midiDevices[i])
+			return true;
+}
+
+bool GOrgueSound::HasMIDIListener()
+{
+	return (listen_evthandler) && b_listening;
+}
+
+void GOrgueSound::SetMIDIListener(wxEvtHandler* handler)
+{
+	if (handler == NULL)
+	{
+		b_listening = false;
+		listen_evthandler = NULL;
+	}
+	else
+	{
+		listen_evthandler = handler;
+		b_listening = true;
+	}
+}
+
+bool GOrgueSound::IsActive()
+{
+	return b_active;
+}
+
+void GOrgueSound::ActivatePlayback()
+{
+	/* FIXME: we should probably check that the driver is actually open */
+	b_active = true;
+}
+
+void GOrgueSound::SetLogSoundErrorMessages(bool settingsDialogVisible)
+{
+	logSoundErrors = settingsDialogVisible;
+}
+
+std::map<wxString, std::pair<int, RtAudio::Api> >& GOrgueSound::GetAudioDevices()
+{
+	return m_audioDevices;
+}
+
+std::map<wxString, int>& GOrgueSound::GetMIDIDevices()
+{
+	return m_midiDevices;
+}
+
+const wxString GOrgueSound::GetDefaultAudioDevice()
+{
+	return defaultAudio;
+}
+
+const RtAudioFormat GOrgueSound::GetAudioFormat()
+{
+	return format;
 }

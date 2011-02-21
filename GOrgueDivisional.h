@@ -24,22 +24,28 @@
 #define GORGUEDIVISIONAL_H
 
 #include "GOrguePushbutton.h"
-#include "IniFileConfig.h"
+
+class GOrgueManual;
+class IniFileConfig;
+class GOrgueDisplayMetrics;
 
 class GOrgueDivisional : public GOrguePushbutton
 {
 
 public:
-	wxInt16 m_DivisionalNumber;
-	wxInt16 NumberOfStops;
-	wxInt16 NumberOfCouplers;
-	wxInt16 NumberOfTremulants;
+
+	int m_DivisionalNumber;
+	int m_manualNumber;
+	int NumberOfStops;
+	int NumberOfCouplers;
+	int NumberOfTremulants;
+
 	wxByte stop[8][2];
 	wxByte coupler[2][2];
 	wxByte tremulant[2][2];
 
 	GOrgueDivisional();
-	void Load(IniFileConfig& cfg, const char* group);
+	void Load(IniFileConfig& cfg, const char* group, int manualNumber, int divisionalNumber, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group = "Divisional");
 	void Push(int depth = 0);
 

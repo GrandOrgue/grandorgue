@@ -27,17 +27,20 @@
 #include "GOrgueControl.h"
 #include "GOrgueDrawable.h"
 
-class GOrguePushbutton : public GOrgueControl,GOrgueDrawable
+class GOrgueDisplayMetrics;
+
+class GOrguePushbutton : public GOrgueControl, GOrgueDrawable
 {
 public:
 	GOrguePushbutton();
-	void Load(IniFileConfig& cfg, const char* group);
+	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
     void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	virtual void Push(int depth = 0) { };
 	void MIDI(void);
 	virtual ~GOrguePushbutton() { };
 
+	GOrgueDisplayMetrics* DisplayMetrics;
 	wxInt16 m_ManualNumber;
 	wxInt16 DispButtonRow;
 	wxInt16 DispButtonCol;

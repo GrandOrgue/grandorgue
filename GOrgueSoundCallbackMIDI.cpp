@@ -21,68 +21,42 @@
  */
 
 #include "GOrgueSoundCallbackMIDI.h"
-#include "GOrgueSound.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueID.h"
-#include "GrandOrgueFrame.h"
-#include "GOrgueMeter.h"
-#include "GrandOrgueFile.h"
+
+#include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
+#include "GOrgueDivisionalCoupler.h"
+#include "GOrgueEnclosure.h"
+#include "GOrgueGeneral.h"
+#include "GOrgueMeter.h"
+#include "GOrguePiston.h"
+#include "GOrgueSound.h"
+#include "GOrgueStop.h"
+#include "GOrgueTremulant.h"
+#include "GrandOrgue.h"
+#include "GrandOrgueFile.h"
+#include "GrandOrgueFrame.h"
+#include "GrandOrgueID.h"
 
 extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
 
-
-void MIDIAllNotesOff()
-{
-	int i, j, k;
-
-	if (!organfile)
-		return;
-
-	for (i = organfile->m_FirstManual; i <= organfile->m_NumberOfManuals; i++)
-	{
-		for (j = 0; j < organfile->m_manual[i].NumberOfAccessibleKeys; j++)
-            organfile->m_manual[i].m_MIDI[j] = 0;
-		for (j = 0; j < organfile->m_manual[i].NumberOfAccessibleKeys; j++)
-		{
-			wxCommandEvent event(wxEVT_NOTEONOFF, 0);
-			event.SetInt(i);
-			event.SetExtraLong(j);
-			::wxGetApp().frame->AddPendingEvent(event);
-		}
-		for (j = 0; j < organfile->m_manual[i].NumberOfStops; j++)
-		{
-			for (k = 0; k < organfile->m_manual[i].stop[j]->NumberOfLogicalPipes; k++)
-			{
-				register GOrguePipe* pipe = organfile->m_pipe[organfile->m_manual[i].stop[j]->pipe[k]];
-				if (pipe->instances > -1)
-					pipe->instances = 0;
-				pipe->sampler = 0;
-			}
-			if (organfile->m_manual[i].stop[j]->m_auto)
-                organfile->m_manual[i].stop[j]->Set(false);
-		}
-	}
-}
-
-void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
+void GOrgueSound::MIDICallback(std::vector<unsigned char>& msg, int which, GOrgueSound* gOrgueSoundInstance)
 {
 	int i, j, k, q, Noteoffset;
 
     Noteoffset = 0;
     // MIDI message FF : reset
-    if (msg[0] == 0xFF && g_sound->b_active && organfile)
+    if (msg[0] == 0xFF && gOrgueSoundInstance->b_active && organfile)
 	{
-        for (k = organfile->m_FirstManual; k <= organfile->m_NumberOfManuals; k++)
+        for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
         {
-            for (j = 0; j < organfile->m_manual[k].NumberOfStops; j++)
-                organfile->m_manual[k].stop[j]->Set(false);
-            for (j = 0; j < organfile->m_manual[k].NumberOfCouplers; j++)
-                organfile->m_manual[k].coupler[j].Set(false);
-            for (j = 0; j < organfile->m_manual[k].NumberOfDivisionals; j++)
+            for (j = 0; j < organfile->GetManual(k)->NumberOfStops; j++)
+                organfile->GetManual(k)->stop[j]->Set(false);
+            for (j = 0; j < organfile->GetManual(k)->NumberOfCouplers; j++)
+                organfile->GetManual(k)->coupler[j].Set(false);
+            for (j = 0; j < organfile->GetManual(k)->NumberOfDivisionals; j++)
             {
-                GOrgueDivisional *divisional = organfile->m_manual[k].divisional + j;
+                GOrgueDivisional *divisional = organfile->GetManual(k)->divisional + j;
                 if (divisional->DispImageNum & 2)
                 {
                     divisional->DispImageNum &= 1;
@@ -93,14 +67,14 @@ void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
             }
 
         }
-        for (j = 0; j < organfile->m_NumberOfTremulants; j++)
-            organfile->m_tremulant[j].Set(false);
-        for (j = 0; j < organfile->m_NumberOfDivisionalCouplers; j++)
-            organfile->m_divisionalcoupler[j].Set(false);
+        for (j = 0; j < organfile->GetTremulantCount(); j++)
+            organfile->GetTremulant(j)->Set(false);
+        for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
+            organfile->GetDivisionalCoupler(j)->Set(false);
 
-        for (k = 0; k < organfile->m_NumberOfGenerals; k++)
+        for (k = 0; k < organfile->GetGeneralCount(); k++)
         {
-            GOrgueGeneral *general = organfile->m_general + k;
+            GOrgueGeneral *general = organfile->GetGeneral(k);
             if (general->DispImageNum & 2)
             {
                 general->DispImageNum &= 1;
@@ -113,7 +87,6 @@ void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
         return;
 	}
 
-
 	register unsigned char c = msg[0] & 0xF0; // c = MIDI message code without chanel number in c
 
 	if (c == 0x80 && msg.size() == 3) // if MIDI code for note OFF and 2 data bytes
@@ -121,33 +94,34 @@ void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
 		c ^= 0x10; // c = 0x90 , MIDI code note ON
 		msg[2] = 0; // set velocity to zero
 	}
-	msg[0] = c | ((msg[0] + g_sound->i_midiDevices[which]) & 0x0F); // msg[0] = MIDI code + channel from device + channel offset
+	msg[0] = c | ((msg[0] + gOrgueSoundInstance->i_midiDevices[which]) & 0x0F); // msg[0] = MIDI code + channel from device + channel offset
 
 	j = msg[0] << 8; // j = channel in higher byte
 	if (msg.size() > 1) // if midi meesage has data
 		j |= msg[1]; // j = channel in higher byte and first byte of MIDI data in lower byte
-	if (g_sound->b_listening)
+	if (gOrgueSoundInstance->b_listening)
 	{
 		wxCommandEvent event(wxEVT_LISTENING, 0);
 		event.SetInt(j);
-		g_sound->listen_evthandler->AddPendingEvent(event);
+		gOrgueSoundInstance->listen_evthandler->AddPendingEvent(event);
 	}
 
-	if (!g_sound->b_active || msg.size() < 2)
+	if (!gOrgueSoundInstance->b_active || msg.size() < 2)
 		return;
     // MIDI code for controller
 	if (c == 0xB0 && (msg[1] == 120 || msg[1] == 123) && organfile)
 	{
-        for (i = organfile->m_FirstManual; i <= organfile->m_NumberOfManuals; i++)
-            if (msg[0] == ((g_sound->i_midiEvents[organfile->m_manual[i].MIDIInputNumber + 7] | 0xB000) >> 8))
-                for (j = 0; j < organfile->m_manual[i].NumberOfAccessibleKeys; j++)
-                    if (organfile->m_manual[i].m_MIDI[j] == 1)
-                        organfile->m_manual[i].Set(j + organfile->m_manual[i].FirstAccessibleKeyMIDINoteNumber, false);
+        for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
+            if (msg[0] == ((gOrgueSoundInstance->i_midiEvents[organfile->GetManual(i)->MIDIInputNumber + 7] | 0xB000) >> 8))
+                for (j = 0; j < organfile->GetManual(i)->NumberOfAccessibleKeys; j++)
+                    if (organfile->GetManual(i)->m_MIDI[j] == 1)
+                        organfile->GetManual(i)->Set(j + organfile->GetManual(i)->FirstAccessibleKeyMIDINoteNumber, false);
+
         return;
 	}
 
 	// MIDI code for memory set
-	if (g_sound->i_midiEvents[15] == j && (((j & 0xF000) == 0xC000) || g_sound->b_memset ^ (bool)msg[2]))
+	if (gOrgueSoundInstance->i_midiEvents[15] == j && (((j & 0xF000) == 0xC000) || gOrgueSoundInstance->b_memset ^ (bool)msg[2]))
 	{
         ::wxGetApp().frame->ProcessCommand(ID_AUDIO_MEMSET);
 		::wxGetApp().frame->UpdateWindowUI();
@@ -155,8 +129,8 @@ void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
 
     // MIDI for different organ??
 	std::map<long, wxString>::iterator it;
-	it=g_sound->organmidiEvents.find(j);
-	if (it!=g_sound->organmidiEvents.end()) {
+	it=gOrgueSoundInstance->organmidiEvents.find(j);
+	if (it!=gOrgueSoundInstance->organmidiEvents.end()) {
 //	    wxMessageDialog dlg(::wxGetApp().frame, it->second);
 //	    dlg.ShowModal();
         wxCommandEvent event(wxEVT_LOADFILE, 0);
@@ -177,9 +151,9 @@ void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
 			if (i != 8)
                 i = 14;
 		}
-		GOrgueevent = g_sound->i_midiEvents[i];
+		GOrgueevent = gOrgueSoundInstance->i_midiEvents[i];
 		if (i>=8 && i<=13) GOrgueevent &= 0xFF00;
-  //      if ((g_sound->i_midiEvents[i] & 0xFF00) == j )
+  //      if ((gOrgueSoundInstance->i_midiEvents[i] & 0xFF00) == j )
         if (GOrgueevent == j)
 		{
 			if (i < 2)
@@ -192,60 +166,61 @@ void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
 			else if (i < 8)
 			{
 				q = i - 1;
-				for (k = 0; k < organfile->m_NumberOfEnclosures; k++)
-					if (organfile->m_enclosure[k].MIDIInputNumber == q)
-						organfile->m_enclosure[k].Set(msg[2]);
+				for (k = 0; k < organfile->GetEnclosureCount(); k++)
+					if (organfile->GetEnclosure(k)->MIDIInputNumber == q)
+						organfile->GetEnclosure(k)->Set(msg[2]);
 			}
 			else if (i < 14)
 			{
 				q = i - 7;
-				for (k = organfile->m_FirstManual; k <= organfile->m_NumberOfManuals; k++)
+				for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
 				{
-				    if (!organfile->m_manual[k].Displayed)
+				    if (!organfile->GetManual(k)->Displayed)
                         continue;
-                    offset = g_sound->i_midiEvents[i] & 0xFF;
-                    if  (offset > 127) offset = offset - 140;
-					if (organfile->m_manual[k].MIDIInputNumber == q)
-						organfile->m_manual[k].Set(msg[1]+offset+g_sound->transpose, msg[2] ? true : false);
+                    offset = gOrgueSoundInstance->i_midiEvents[i] & 0xFF;
+                    if  (offset > 127)
+							offset = offset - 140;
+					if (organfile->GetManual(k)->MIDIInputNumber == q)
+						organfile->GetManual(k)->Set(msg[1]+offset+gOrgueSoundInstance->transpose, msg[2] ? true : false);
 				}
 			}
 			else
 			{
 			    if ((c == 0x90 || c == 0xB0) && msg.size() == 3)
 			    {
-                    for (k = organfile->m_FirstManual; k <= organfile->m_NumberOfManuals; k++)
+                    for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
                     {
-                        for (j = 0; j < organfile->m_manual[k].NumberOfStops; j++)
-                            if (msg[1] == organfile->m_manual[k].stop[j]->StopControlMIDIKeyNumber)
-                                organfile->m_manual[k].stop[j]->Set(msg[2] ? true : false);
-                        for (j = 0; j < organfile->m_manual[k].NumberOfCouplers; j++)
-                            if (msg[1] == organfile->m_manual[k].coupler[j].StopControlMIDIKeyNumber)
-                                organfile->m_manual[k].coupler[j].Set(msg[2] ? true : false);
+                        for (j = 0; j < organfile->GetManual(k)->NumberOfStops; j++)
+                            if (msg[1] == organfile->GetManual(k)->stop[j]->StopControlMIDIKeyNumber)
+                                organfile->GetManual(k)->stop[j]->Set(msg[2] ? true : false);
+                        for (j = 0; j < organfile->GetManual(k)->NumberOfCouplers; j++)
+                            if (msg[1] == organfile->GetManual(k)->coupler[j].StopControlMIDIKeyNumber)
+                                organfile->GetManual(k)->coupler[j].Set(msg[2] ? true : false);
                     }
-                    for (j = 0; j < organfile->m_NumberOfTremulants; j++)
-                        if (msg[1] == organfile->m_tremulant[j].StopControlMIDIKeyNumber)
-                            organfile->m_tremulant[j].Set(msg[2] ? true : false);
-                    for (j = 0; j < organfile->m_NumberOfDivisionalCouplers; j++)
-                        if (msg[1] == organfile->m_divisionalcoupler[j].StopControlMIDIKeyNumber)
-                            organfile->m_divisionalcoupler[j].Set(msg[2] ? true : false);
+                    for (j = 0; j < organfile->GetTremulantCount(); j++)
+                        if (msg[1] == organfile->GetTremulant(j)->StopControlMIDIKeyNumber)
+                            organfile->GetTremulant(j)->Set(msg[2] ? true : false);
+                    for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
+                        if (msg[1] == organfile->GetDivisionalCoupler(j)->StopControlMIDIKeyNumber)
+                            organfile->GetDivisionalCoupler(j)->Set(msg[2] ? true : false);
 			    }
 			    else if (c == 0xC0 && msg.size() == 2)
 			    {
-                    for (k = organfile->m_FirstManual; k <= organfile->m_NumberOfManuals; k++)
+                    for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
                     {
-                        for (j = 0; j < organfile->m_manual[k].NumberOfStops; j++)
-                            if (msg[1] == organfile->m_manual[k].stop[j]->StopControlMIDIKeyNumber)
-                                organfile->m_manual[k].stop[j]->Push();
-                        for (j = 0; j < organfile->m_manual[k].NumberOfCouplers; j++)
-                            if (msg[1] == organfile->m_manual[k].coupler[j].StopControlMIDIKeyNumber)
-                                organfile->m_manual[k].coupler[j].Push();
+                        for (j = 0; j < organfile->GetManual(k)->NumberOfStops; j++)
+                            if (msg[1] == organfile->GetManual(k)->stop[j]->StopControlMIDIKeyNumber)
+                                organfile->GetManual(k)->stop[j]->Push();
+                        for (j = 0; j < organfile->GetManual(k)->NumberOfCouplers; j++)
+                            if (msg[1] == organfile->GetManual(k)->coupler[j].StopControlMIDIKeyNumber)
+                                organfile->GetManual(k)->coupler[j].Push();
                     }
-                    for (j = 0; j < organfile->m_NumberOfTremulants; j++)
-                        if (msg[1] == organfile->m_tremulant[j].StopControlMIDIKeyNumber)
-                            organfile->m_tremulant[j].Push();
-                    for (j = 0; j < organfile->m_NumberOfDivisionalCouplers; j++)
-                        if (msg[1] == organfile->m_divisionalcoupler[j].StopControlMIDIKeyNumber)
-                            organfile->m_divisionalcoupler[j].Push();
+                    for (j = 0; j < organfile->GetTremulantCount(); j++)
+                        if (msg[1] == organfile->GetTremulant(j)->StopControlMIDIKeyNumber)
+                            organfile->GetTremulant(j)->Push();
+                    for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
+                        if (msg[1] == organfile->GetDivisionalCoupler(j)->StopControlMIDIKeyNumber)
+                            organfile->GetDivisionalCoupler(j)->Push();
 			    }
 			}
 		}
@@ -253,15 +228,16 @@ void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which)
 
 	if (c == 0xC0)
 	{
-		for (k = organfile->m_FirstManual; k <= organfile->m_NumberOfManuals; k++)
-			for (j = 0; j < organfile->m_manual[k].NumberOfDivisionals; j++)
-				if (msg[0] == (g_sound->i_midiEvents[organfile->m_manual[k].MIDIInputNumber + 7] ^ 0x5000) >> 8 && msg[1] == organfile->m_manual[k].divisional[j].MIDIProgramChangeNumber - 1)
-					organfile->m_manual[k].divisional[j].Push();
-		for (j = 0; j < organfile->m_NumberOfGenerals; j++)
-			if (msg[1] == organfile->m_general[j].MIDIProgramChangeNumber - 1)
-				organfile->m_general[j].Push();
-		for (j = 0; j < organfile->m_NumberOfReversiblePistons; j++)
-			if (msg[1] == organfile->m_piston[j].MIDIProgramChangeNumber - 1)
-				organfile->m_piston[j].Push();
+		for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
+			for (j = 0; j < organfile->GetManual(k)->NumberOfDivisionals; j++)
+				if (msg[0] == (gOrgueSoundInstance->i_midiEvents[organfile->GetManual(k)->MIDIInputNumber + 7] ^ 0x5000) >> 8 && msg[1] == organfile->GetManual(k)->divisional[j].MIDIProgramChangeNumber - 1)
+					organfile->GetManual(k)->divisional[j].Push();
+		for (j = 0; j < organfile->GetGeneralCount(); j++)
+			if (msg[1] == organfile->GetGeneral(j)->MIDIProgramChangeNumber - 1)
+				organfile->GetGeneral(j)->Push();
+		for (j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
+			if (msg[1] == organfile->GetPiston(j)->MIDIProgramChangeNumber - 1)
+				organfile->GetPiston(j)->Push();
 	}
 }
+

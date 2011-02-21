@@ -24,22 +24,25 @@
 #define GORGUEENCLOSURE_H_
 
 #include "GOrgueDrawable.h"
-#include "IniFileConfig.h"
 #include <wx/wx.h>
+
+class GOrgueDisplayMetrics;
+class IniFileConfig;
 
 class GOrgueEnclosure : public GOrgueDrawable
 {
 
 public:
-	wxInt16 m_X;
-	wxInt16 AmpMinimumLevel;
-	wxInt16 MIDIInputNumber;
-	wxInt16 MIDIValue;
+	int m_X;
+	int AmpMinimumLevel;
+	int MIDIInputNumber;
+	int MIDIValue;
 	wxString Name;
+	GOrgueDisplayMetrics* DisplayMetrics;
 
 	GOrgueEnclosure();
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
-	void Load(IniFileConfig& cfg, const char* group);
+	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
 	void Set(int n);
 	void MIDI(void);
 

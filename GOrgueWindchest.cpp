@@ -55,12 +55,12 @@ void GOrgueWindchest::Load(IniFileConfig& cfg, const char* group)
 	for (i = 0; i < NumberOfEnclosures; i++)
 	{
 		sprintf(buffer, "Enclosure%03d", i + 1);
-		enclosure[i] = cfg.ReadInteger( group, buffer, 1, organfile->m_NumberOfEnclosures) - 1;
+		enclosure[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetEnclosureCount()) - 1;
 	}
 	for (i = 0; i < NumberOfTremulants; i++)
 	{
 		sprintf(buffer, "Tremulant%03d", i + 1);
-		tremulant[i] = cfg.ReadInteger( group, buffer, 1, organfile->m_NumberOfTremulants) - 1;
+		tremulant[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetTremulantCount()) - 1;
 	}
 
 }

@@ -21,11 +21,12 @@
  */
 
 #include "GOrgueGeneral.h"
+#include "IniFileConfig.h"
 
-void GOrgueGeneral::Load(IniFileConfig& cfg, const char* group)
+void GOrgueGeneral::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
 {
 	GOrgueFrameGeneral::Load(cfg, group);
-	GOrguePushbutton::Load(cfg, group);
+	GOrguePushbutton::Load(cfg, group, displayMetrics);
 }
 
 void GOrgueGeneral::Save(IniFileConfig& cfg, bool prefix)

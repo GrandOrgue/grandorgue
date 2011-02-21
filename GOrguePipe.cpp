@@ -22,6 +22,7 @@
 
 #include "GOrguePipe.h"
 #include "GOrgueSound.h"
+#include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 
 extern GOrgueSound* g_sound;
@@ -33,14 +34,14 @@ void GOrguePipe::Set(bool on)
 	{
 		if (instances < 1)
 		{
-			if (g_sound->samplers_count >= g_sound->polyphony)
+			GOrgueSampler* sampler = g_sound->OpenNewSampler();
+			if (sampler == NULL)
 				return;
-			GOrgueSampler* sampler = g_sound->samplers_open[g_sound->samplers_count++];
-			memset(sampler, 0, sizeof(GOrgueSampler));
+
 			if (instances < 0)
 				sampler->stage = 2;
-			else if (g_sound->b_random && !g_sound->windchests[WindchestGroup])
-			sampler->offset = rand() & 0x78;
+			else if (g_sound->HasRandomPipeSpeech() && !g_sound->windchests[WindchestGroup])
+				sampler->offset = rand() & 0x78;
 			sampler->type = types[0];
 			sampler->fade = sampler->fademax = ra_amp;
 			sampler->current = offset[0];
@@ -49,7 +50,7 @@ void GOrguePipe::Set(bool on)
 			sampler->shift = ra_shift;
 			sampler->f = *(wxInt64*)(f[0]);
 			sampler->v = *(wxInt64*)(v[0]);
-			sampler->time = organfile->m_elapsed;
+			sampler->time = organfile->GetElapsedTime();
 			this->sampler = sampler;
 
 			sampler->next = g_sound->windchests[WindchestGroup];
@@ -64,56 +65,58 @@ void GOrguePipe::Set(bool on)
 		{
 			if (instances == 1)
 			{
-				if (g_sound->samplers_count < g_sound->polyphony && organfile->m_windchest[WindchestGroup].m_Volume)
+				if (organfile->GetWindchest(WindchestGroup)->m_Volume)
 				{
-					GOrgueSampler* sampler = g_sound->samplers_open[g_sound->samplers_count++];
-					memset(sampler, 0, sizeof(GOrgueSampler));
-					sampler->current = offset[2];
-					sampler->ptr = ptr[2];
-					sampler->pipe = this;
-                    sampler->shift = ra_shift;
-					sampler->stage = 2;
-					sampler->type = types[2];
-					int time = organfile->m_elapsed - this->sampler->time;
-                    sampler->time = organfile->m_elapsed;
-					sampler->fademax = ra_amp;
-					if (g_sound->b_scale && WindchestGroup >= organfile->m_NumberOfTremulants)
-					{
-						if (time < 256)
-							sampler->fademax = (sampler->fademax * (16384 + (time << 5))) >> 15;
-						if (time < 1024)
-							sampler->fadeout = 0x0001;
-					}
-					if (g_sound->b_detach && WindchestGroup >= organfile->m_NumberOfTremulants)
-						sampler->fademax = lrint(((double)sampler->fademax) * organfile->m_windchest[WindchestGroup].m_Volume);
-					sampler->fadein = (sampler->fademax + 128) >> 8;
-					if (!sampler->fadein)
-						sampler->fadein--;
-					sampler->faderemain = 512;	// 32768*65536 / 64*65536
-
-					if (g_sound->b_align)
-					{
-						int index = ra_getindex((short*)&this->sampler->f, (short*)&this->sampler->v);
-						sampler->current = ra_offset[index];
-						sampler->f = *(wxInt64*)(ra_f[index]);
-						sampler->v = *(wxInt64*)(ra_v[index]);
-					}
-					else
+					GOrgueSampler* sampler = g_sound->OpenNewSampler();
+					if (sampler != NULL)
 					{
 						sampler->current = offset[2];
-						sampler->f = *(wxInt64*)(f[2]);
-						sampler->v = *(wxInt64*)(v[2]);
-					}
+						sampler->ptr = ptr[2];
+						sampler->pipe = this;
+						sampler->shift = ra_shift;
+						sampler->stage = 2;
+						sampler->type = types[2];
+						int time = organfile->GetElapsedTime() - this->sampler->time;
+						sampler->time = organfile->GetElapsedTime();
+						sampler->fademax = ra_amp;
+						if (g_sound->HasScaledReleases() && WindchestGroup >= organfile->GetTremulantCount())
+						{
+							if (time < 256)
+								sampler->fademax = (sampler->fademax * (16384 + (time << 5))) >> 15;
+							if (time < 1024)
+								sampler->fadeout = 0x0001;
+						}
+						if (g_sound->b_detach && WindchestGroup >= organfile->GetTremulantCount())
+							sampler->fademax = lrint(((double)sampler->fademax) * organfile->GetWindchest(WindchestGroup)->m_Volume);
+						sampler->fadein = (sampler->fademax + 128) >> 8;
+						if (!sampler->fadein)
+							sampler->fadein--;
+						sampler->faderemain = 512;	// 32768*65536 / 64*65536
 
-					if (g_sound->b_detach && WindchestGroup >= organfile->m_NumberOfTremulants)
-					{
-						sampler->next = g_sound->windchests[organfile->m_NumberOfTremulants];
-						g_sound->windchests[organfile->m_NumberOfTremulants] = sampler;
-					}
-					else
-					{
-						sampler->next = g_sound->windchests[WindchestGroup];
-						g_sound->windchests[WindchestGroup] = sampler;
+						if (g_sound->HasReleaseAlignment())
+						{
+							int index = ra_getindex((short*)&this->sampler->f, (short*)&this->sampler->v);
+							sampler->current = ra_offset[index];
+							sampler->f = *(wxInt64*)(ra_f[index]);
+							sampler->v = *(wxInt64*)(ra_v[index]);
+						}
+						else
+						{
+							sampler->current = offset[2];
+							sampler->f = *(wxInt64*)(f[2]);
+							sampler->v = *(wxInt64*)(v[2]);
+						}
+
+						if (g_sound->b_detach && WindchestGroup >= organfile->GetTremulantCount())
+						{
+							sampler->next = g_sound->windchests[organfile->GetTremulantCount()];
+							g_sound->windchests[organfile->GetTremulantCount()] = sampler;
+						}
+						else
+						{
+							sampler->next = g_sound->windchests[WindchestGroup];
+							g_sound->windchests[WindchestGroup] = sampler;
+						}
 					}
 				}
                 sampler->fadeout = (-ra_amp - 128) >> 8;

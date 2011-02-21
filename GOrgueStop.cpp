@@ -23,68 +23,96 @@
 #include "GOrgueStop.h"
 #include "GrandOrgueFile.h"
 #include "GOrgueSound.h"
+#include "GOrgueDisplayMetrics.h"
 
 /* TODO: This should not be... */
 extern GrandOrgueFile* organfile;
 
-void GOrgueStop::Load(IniFileConfig& cfg, const char* group)
+GOrgueStop::GOrgueStop() :
+	GOrgueDrawstop(),
+	m_ManualNumber(0),
+	Percussive(false),
+	m_auto(false),
+	AmplitudeLevel(0),
+	NumberOfLogicalPipes(0),
+	FirstAccessiblePipeLogicalPipeNumber(0),
+	FirstAccessiblePipeLogicalKeyNumber(0),
+	NumberOfAccessiblePipes(0),
+	WindchestGroup(0),
+	pipe(NULL)
 {
-  AmplitudeLevel=cfg.ReadInteger( group,"AmplitudeLevel",    0, 1000);
-  NumberOfLogicalPipes=cfg.ReadInteger( group,"NumberOfLogicalPipes",    1,  192);
-  FirstAccessiblePipeLogicalPipeNumber=cfg.ReadInteger( group,"FirstAccessiblePipeLogicalPipeNumber",    1, NumberOfLogicalPipes);
-  FirstAccessiblePipeLogicalKeyNumber=cfg.ReadInteger( group,"FirstAccessiblePipeLogicalKeyNumber",    1,  128);
-  NumberOfAccessiblePipes=cfg.ReadInteger( group,"NumberOfAccessiblePipes",    1, NumberOfLogicalPipes);
-  WindchestGroup=cfg.ReadInteger( group,"WindchestGroup",    1, organfile->m_NumberOfWindchestGroups);
-  Percussive=cfg.ReadBoolean( group,"Percussive");
 
-  WindchestGroup += organfile->m_NumberOfTremulants;    // we would + 1 but it already has it: clever!
+}
 
-  int i;
-  char buffer[64];
+void GOrgueStop::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
+{
+	AmplitudeLevel = cfg.ReadInteger(group, "AmplitudeLevel", 0, 1000);
+	NumberOfLogicalPipes = cfg.ReadInteger(group, "NumberOfLogicalPipes", 1, 192);
+	FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, "FirstAccessiblePipeLogicalPipeNumber", 1, NumberOfLogicalPipes);
+	FirstAccessiblePipeLogicalKeyNumber = cfg.ReadInteger(group, "FirstAccessiblePipeLogicalKeyNumber", 1,  128);
+	NumberOfAccessiblePipes = cfg.ReadInteger(group,"NumberOfAccessiblePipes", 1, NumberOfLogicalPipes);
+	WindchestGroup = cfg.ReadInteger(group,"WindchestGroup", 1, organfile->GetWinchestGroupCount());
+	Percussive = cfg.ReadBoolean(group,"Percussive");
 
-  pipe = new wxInt16[NumberOfLogicalPipes];
-  for (i = 0; i < NumberOfLogicalPipes; i++)
+	WindchestGroup += organfile->GetTremulantCount();    // we would + 1 but it already has it: clever!
+
+	int i;
+	char buffer[64];
+
+	pipe = new wxInt16[NumberOfLogicalPipes];
+	for (i = 0; i < NumberOfLogicalPipes; i++)
 	{
-	  sprintf(buffer, "Pipe%03d", i + 1);
-	  wxString file = cfg.ReadString( group, buffer);
-	  organfile->m_pipe_ptrs.push_back(pipe + i);
-	  organfile->m_pipe_files.push_back(file);
-	  organfile->m_pipe_windchests.push_back(WindchestGroup);
-	  organfile->m_pipe_percussive.push_back(Percussive);
-	  if (!file.StartsWith("REF:"))
+		sprintf(buffer, "Pipe%03d", i + 1);
+		wxString file = cfg.ReadString(group, buffer);
+
+		// FIXME: this is one of the important fixes for this file, these
+		// need to change... they should probably be local to GOrgueStop and
+		// accessible by organ file... possibly, they should even be pushed
+		// into a vector stored in the parameters (at least for the file
+		// list)
+		organfile->m_pipe_ptrs.push_back(&pipe[i]);
+		organfile->m_pipe_files.push_back(file);
+		organfile->m_pipe_windchests.push_back(WindchestGroup);
+		organfile->m_pipe_percussive.push_back(Percussive);
+		if (!file.StartsWith("REF:"))
 		{
-		  organfile->m_pipe_amplitudes.push_back(organfile->m_AmplitudeLevel * AmplitudeLevel);
-		  organfile->m_NumberOfPipes++;
+			organfile->m_pipe_amplitudes.push_back(organfile->GetAmplitude() * AmplitudeLevel);
+			organfile->m_NumberOfPipes++;
 		}
 	}
 
-  m_auto = NumberOfLogicalPipes == 1;
+	m_auto = NumberOfLogicalPipes == 1;
 
-  GOrgueDrawstop::Load(cfg, group);
+	GOrgueDrawstop::Load(cfg, group, displayMetrics);
+}
+
+void GOrgueStop::Save(IniFileConfig& cfg, bool prefix)
+{
+	GOrgueDrawstop::Save(cfg, prefix, "Stop");
 }
 
 bool GOrgueStop::Set(bool on)
 {
-  if (DefaultToEngaged == on)
-	return on;
-  DefaultToEngaged = on;
-  GOrgueSound::MIDIPretend(true);
-  DefaultToEngaged = !on;
-  GOrgueSound::MIDIPretend(false);
+	if (DefaultToEngaged == on)
+		return on;
+	DefaultToEngaged = on;
+	GOrgueSound::MIDIPretend(true);
+	DefaultToEngaged = !on;
+	GOrgueSound::MIDIPretend(false);
 
-  bool retval = GOrgueDrawstop::Set(on);
+	bool retval = GOrgueDrawstop::Set(on);
 
-  if (m_auto)
+	if (m_auto)
 	{
-	  GOrgueManual* manual = organfile->m_manual + m_ManualNumber;
-	  manual->Set(manual->FirstAccessibleKeyMIDINoteNumber + FirstAccessiblePipeLogicalKeyNumber - 1, on);
+		GOrgueManual* manual = organfile->GetManual(m_ManualNumber);
+		manual->Set(manual->FirstAccessibleKeyMIDINoteNumber + FirstAccessiblePipeLogicalKeyNumber - 1, on);
 	}
 
-  return retval;
+	return retval;
 }
 
 GOrgueStop::~GOrgueStop(void)
 {
-  if (pipe)
-	delete[] pipe;
+	if (pipe)
+		delete[] pipe;
 }

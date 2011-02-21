@@ -40,7 +40,7 @@ public:
 	GOrguePipe* pipe;
 
 	GOrgueTremulant();
-	void Load(IniFileConfig& cfg, const char* group);
+	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
     void Save(IniFileConfig& cfg, bool prefix);
     bool Set(bool on);
 

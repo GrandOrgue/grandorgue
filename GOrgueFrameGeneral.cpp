@@ -21,8 +21,15 @@
  */
 
 #include "GOrgueFrameGeneral.h"
-#include "GrandOrgueFile.h"
+
+#include "GOrgueCoupler.h"
+#include "GOrgueDivisional.h"
+#include "GOrgueDivisionalCoupler.h"
+#include "GOrgueGeneral.h"
 #include "GOrgueSound.h"
+#include "GOrgueStop.h"
+#include "GOrgueTremulant.h"
+#include "GrandOrgueFile.h"
 #include "GrandOrgue.h"
 
 /* TODO: This should not be... */
@@ -66,224 +73,223 @@ GOrgueFrameGeneral::GOrgueFrameGeneral():
 
 void GOrgueFrameGeneral::Load(IniFileConfig& cfg, const char* group)
 {
-  m_ManualNumber = -1;
+	m_ManualNumber = -1;
 
-  NumberOfStops=cfg.ReadInteger( group,"NumberOfStops",    0,  448);	// the spec says 512, but 64 * 7 = 448
-  NumberOfCouplers=cfg.ReadInteger( group,"NumberOfCouplers",    0,   64);
-  NumberOfTremulants=cfg.ReadInteger( group,"NumberOfTremulants",    0,   16);
-  NumberOfDivisionalCouplers=cfg.ReadInteger( group,"NumberOfDivisionalCouplers",    0,    8, organfile->m_GeneralsStoreDivisionalCouplers);
+	NumberOfStops = cfg.ReadInteger(group, "NumberOfStops", 0, 448);	// the spec says 512, but 64 * 7 = 448
+	NumberOfCouplers = cfg.ReadInteger(group, "NumberOfCouplers", 0, 64);
+	NumberOfTremulants = cfg.ReadInteger(group, "NumberOfTremulants", 0, 16);
+	NumberOfDivisionalCouplers = cfg.ReadInteger(group, "NumberOfDivisionalCouplers", 0, 8, organfile->GeneralsStoreDivisionalCouplers());
 
-  int i, j, k, m;
-  char buffer[64];
+	int i, j, k, m;
+	char buffer[64];
 
-  for (i = 0; i < NumberOfStops; i++)
+	for (i = 0; i < NumberOfStops; i++)
 	{
-	  sprintf(buffer, "StopManual%03d", i + 1);
-	  m = cfg.ReadInteger( group, buffer, organfile->m_FirstManual, organfile->m_NumberOfManuals);
-	  sprintf(buffer, "StopNumber%03d", i + 1);
-	  j = cfg.ReadInteger( group, buffer, -organfile->m_manual[m].NumberOfStops, organfile->m_manual[m].NumberOfStops);
-	  k = abs(j) - 1;
-	  if (k >= 0)
+		sprintf(buffer, "StopManual%03d", i + 1);
+		m = cfg.ReadInteger(group, buffer, organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
+		sprintf(buffer, "StopNumber%03d", i + 1);
+		j = cfg.ReadInteger(group, buffer, -organfile->GetManual(m)->NumberOfStops, organfile->GetManual(m)->NumberOfStops);
+		k = abs(j) - 1;
+		if (k >= 0)
 		{
-		  SET_BIT(stop[m], k, 0, true);
-		  SET_BIT(stop[m], k, 1, j >= 0);
+			SET_BIT(stop[m], k, 0, true);
+			SET_BIT(stop[m], k, 1, j >= 0);
 		}
 	}
-  for (i = 0; i < NumberOfCouplers; i++)
+	for (i = 0; i < NumberOfCouplers; i++)
 	{
-	  sprintf(buffer, "CouplerManual%03d", i + 1);
-	  m = cfg.ReadInteger( group, buffer, organfile->m_FirstManual, organfile->m_NumberOfManuals);
-	  sprintf(buffer, "CouplerNumber%03d", i + 1);
-	  j = cfg.ReadInteger( group, buffer, -organfile->m_manual[m].NumberOfCouplers, organfile->m_manual[m].NumberOfCouplers);
-	  k = abs(j) - 1;
-	  if (k >= 0)
+		sprintf(buffer, "CouplerManual%03d", i + 1);
+		m = cfg.ReadInteger(group, buffer, organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
+		sprintf(buffer, "CouplerNumber%03d", i + 1);
+		j = cfg.ReadInteger(group, buffer, -organfile->GetManual(m)->NumberOfCouplers, organfile->GetManual(m)->NumberOfCouplers);
+		k = abs(j) - 1;
+		if (k >= 0)
 		{
-		  SET_BIT(coupler[m], k, 0, true);
-		  SET_BIT(coupler[m], k, 1, j >= 0);
+			SET_BIT(coupler[m], k, 0, true);
+			SET_BIT(coupler[m], k, 1, j >= 0);
 		}
 	}
-  for (i = 0; i < NumberOfTremulants; i++)
+	for (i = 0; i < NumberOfTremulants; i++)
 	{
-	  sprintf(buffer, "TremulantNumber%03d", i + 1);
-	  j = cfg.ReadInteger( group, buffer, -organfile->m_NumberOfTremulants, organfile->m_NumberOfTremulants);
-	  k = abs(j) - 1;
-	  if (k >= 0)
+		sprintf(buffer, "TremulantNumber%03d", i + 1);
+		j = cfg.ReadInteger(group, buffer, -organfile->GetTremulantCount(), organfile->GetTremulantCount());
+		k = abs(j) - 1;
+		if (k >= 0)
 		{
-		  SET_BIT(tremulant, k, 0, true);
-		  SET_BIT(tremulant, k, 1, j >= 0);
+			SET_BIT(tremulant, k, 0, true);
+			SET_BIT(tremulant, k, 1, j >= 0);
 		}
 	}
-  for (i = 0; i < NumberOfDivisionalCouplers; i++)
+	for (i = 0; i < NumberOfDivisionalCouplers; i++)
 	{
-	  sprintf(buffer, "DivisionalCouplerNumber%03d", i + 1);
-	  j = cfg.ReadInteger( group, buffer, -organfile->m_NumberOfDivisionalCouplers, organfile->m_NumberOfDivisionalCouplers);
-	  k = abs(j) - 1;
-	  if (k >= 0)
+		sprintf(buffer, "DivisionalCouplerNumber%03d", i + 1);
+		j = cfg.ReadInteger( group, buffer, -organfile->GetDivisionalCouplerCount(), organfile->GetDivisionalCouplerCount());
+		k = abs(j) - 1;
+		if (k >= 0)
 		{
-		  SET_BIT(divisionalcoupler, k, 0, true);
-		  SET_BIT(divisionalcoupler, k, 1, j >= 0);
+			SET_BIT(divisionalcoupler, k, 0, true);
+			SET_BIT(divisionalcoupler, k, 1, j >= 0);
 		}
 	}
 }
 
 void GOrgueFrameGeneral::Push(int WXUNUSED(depth))
 {
-  int i, j, k;
+	int i, j, k;
 
-  if (g_sound->b_memset)
+	if (g_sound->b_memset)
 	{
-	  NumberOfStops = NumberOfCouplers = NumberOfTremulants = NumberOfDivisionalCouplers = 0;
-	  memset(stop, 0, sizeof(stop) + sizeof(coupler) + sizeof(tremulant) + sizeof(divisionalcoupler));
-	  for (j = organfile->m_FirstManual; j <= organfile->m_NumberOfManuals; j++)
+		NumberOfStops = NumberOfCouplers = NumberOfTremulants = NumberOfDivisionalCouplers = 0;
+		memset(stop, 0, sizeof(stop) + sizeof(coupler) + sizeof(tremulant) + sizeof(divisionalcoupler));
+		for (j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
 		{
-		  for (i = 0; i < organfile->m_manual[j].NumberOfStops; i++)
+			for (i = 0; i < organfile->GetManual(j)->NumberOfStops; i++)
 			{
-			  if (!organfile->m_CombinationsStoreNonDisplayedDrawstops && !organfile->m_manual[j].stop[i]->Displayed)
+				if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !organfile->GetManual(j)->stop[i]->Displayed)
+					continue;
+				NumberOfStops++;
+				SET_BIT(stop[j], i, 0, true);
+				SET_BIT(stop[j], i, 1, organfile->GetManual(j)->stop[i]->DefaultToEngaged);
+			}
+		}
+		for (j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
+		{
+			for (i = 0; i < organfile->GetManual(j)->NumberOfCouplers; i++)
+			{
+				if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !organfile->GetManual(j)->coupler[i].Displayed)
+					continue;
+				NumberOfCouplers++;
+				SET_BIT(coupler[j], i, 0, true);
+				SET_BIT(coupler[j], i, 1, organfile->GetManual(j)->coupler[i].DefaultToEngaged);
+			}
+		}
+		for (i = 0; i < organfile->GetTremulantCount(); i++)
+		{
+			if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !organfile->GetTremulant(i)->Displayed)
 				continue;
-			  NumberOfStops++;
-			  SET_BIT(stop[j], i, 0, true);
-			  SET_BIT(stop[j], i, 1, organfile->m_manual[j].stop[i]->DefaultToEngaged);
-			}
+			NumberOfTremulants++;
+			SET_BIT(tremulant, i, 0, true);
+			SET_BIT(tremulant, i, 1, organfile->GetTremulant(i)->DefaultToEngaged);
 		}
-	  for (j = organfile->m_FirstManual; j <= organfile->m_NumberOfManuals; j++)
+		if (organfile->GeneralsStoreDivisionalCouplers())
 		{
-		  for (i = 0; i < organfile->m_manual[j].NumberOfCouplers; i++)
+			for (i = 0; i < organfile->GetDivisionalCouplerCount(); i++)
 			{
-			  if (!organfile->m_CombinationsStoreNonDisplayedDrawstops && !organfile->m_manual[j].coupler[i].Displayed)
-				continue;
-			  NumberOfCouplers++;
-			  SET_BIT(coupler[j], i, 0, true);
-			  SET_BIT(coupler[j], i, 1, organfile->m_manual[j].coupler[i].DefaultToEngaged);
+				NumberOfDivisionalCouplers++;
+				SET_BIT(divisionalcoupler, i, 0, true);
+				SET_BIT(divisionalcoupler, i, 1, organfile->GetDivisionalCoupler(i)->DefaultToEngaged);
 			}
 		}
-	  for (i = 0; i < organfile->m_NumberOfTremulants; i++)
+		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
+	}
+	else
+	{
+		for (k = 0; ;k++)
 		{
-		  if (!organfile->m_CombinationsStoreNonDisplayedDrawstops && !organfile->m_tremulant[i].Displayed)
-			continue;
-		  NumberOfTremulants++;
-		  SET_BIT(tremulant, i, 0, true);
-		  SET_BIT(tremulant, i, 1, organfile->m_tremulant[i].DefaultToEngaged);
-		}
-	  if (organfile->m_GeneralsStoreDivisionalCouplers)
-		{
-		  for (i = 0; i < organfile->m_NumberOfDivisionalCouplers; i++)
+			for (j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
 			{
-			  NumberOfDivisionalCouplers++;
-			  SET_BIT(divisionalcoupler, i, 0, true);
-			  SET_BIT(divisionalcoupler, i, 1, organfile->m_divisionalcoupler[i].DefaultToEngaged);
+				for (i = 0; i < organfile->GetManual(j)->NumberOfStops; i++)
+					if (GET_BIT(stop[j], i, 0))
+						SET_BIT(stop[j], i, 1, k < 2 ? organfile->GetManual(j)->stop[i]->Set(GET_BIT(stop[j], i, 1)) : GET_BIT(stop[j], i, 1));
+				for (i = 0; i < organfile->GetManual(j)->NumberOfCouplers; i++)
+					if (GET_BIT(coupler[j], i, 0))
+						SET_BIT(coupler[j], i, 1, k < 2 ? organfile->GetManual(j)->coupler[i].Set(GET_BIT(coupler[j], i, 1)) : GET_BIT(coupler[j], i, 1));
+			}
+			for (i = 0; i < organfile->GetTremulantCount(); i++)
+				if (GET_BIT(tremulant, i, 0))
+					SET_BIT(tremulant, i, 1, k < 2 ? organfile->GetTremulant(i)->Set(GET_BIT(tremulant, i, 1)) : GET_BIT(tremulant, i, 1));
+			for (i = 0; i < organfile->GetDivisionalCouplerCount(); i++)
+				if (GET_BIT(divisionalcoupler, i, 0))
+					SET_BIT(divisionalcoupler, i, 1, k < 2 ? organfile->GetDivisionalCoupler(i)->Set(GET_BIT(divisionalcoupler, i, 1)) : GET_BIT(divisionalcoupler, i, 1));
+			if (k > 1)
+				break;
+			GOrgueSound::MIDIPretend(!k);
+		}
+	}
+
+	wxByte used = 0;
+	for (j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
+	{
+		for (i = 0; i < 8; i++)
+			used |= stop[j][i][1];
+		for (i = 0; i < 2; i++)
+			used |= coupler[j][i][1];
+	}
+	used |= tremulant[0][1] | tremulant[1][1] | divisionalcoupler[0][1];
+
+	for (k = 0; k < organfile->GetGeneralCount(); k++)
+	{
+		GOrgueGeneral* general = organfile->GetGeneral(k);
+		int on = ((general == this && used) ? 2 : 0);
+		if ((general->DispImageNum & 2) != on)
+		{
+			general->DispImageNum = (general->DispImageNum & 1) | on;
+			wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
+			event.SetClientData(general);
+			::wxGetApp().frame->AddPendingEvent(event);
+		}
+	}
+
+	for (j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
+	{
+		for (k = 0; k < organfile->GetManual(j)->NumberOfDivisionals; k++)
+		{
+			GOrgueDivisional *divisional = organfile->GetManual(j)->divisional + k;
+			if (divisional->DispImageNum & 2)
+			{
+				divisional->DispImageNum &= 1;
+				wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
+				event.SetClientData(divisional);
+				::wxGetApp().frame->AddPendingEvent(event);
 			}
 		}
-	  ::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
 	}
-  else
-	{
-	  for (k = 0; ;k++)
-        {
-		  for (j = organfile->m_FirstManual; j <= organfile->m_NumberOfManuals; j++)
-            {
-			  for (i = 0; i < organfile->m_manual[j].NumberOfStops; i++)
-				if (GET_BIT(stop[j], i, 0))
-				  SET_BIT(stop[j], i, 1, k < 2 ? organfile->m_manual[j].stop[i]->Set(GET_BIT(stop[j], i, 1)) : GET_BIT(stop[j], i, 1));
-			  for (i = 0; i < organfile->m_manual[j].NumberOfCouplers; i++)
-				if (GET_BIT(coupler[j], i, 0))
-				  SET_BIT(coupler[j], i, 1, k < 2 ? organfile->m_manual[j].coupler[i].Set(GET_BIT(coupler[j], i, 1)) : GET_BIT(coupler[j], i, 1));
-            }
-		  for (i = 0; i < organfile->m_NumberOfTremulants; i++)
-			if (GET_BIT(tremulant, i, 0))
-			  SET_BIT(tremulant, i, 1, k < 2 ? organfile->m_tremulant[i].Set(GET_BIT(tremulant, i, 1)) : GET_BIT(tremulant, i, 1));
-		  for (i = 0; i < organfile->m_NumberOfDivisionalCouplers; i++)
-			if (GET_BIT(divisionalcoupler, i, 0))
-			  SET_BIT(divisionalcoupler, i, 1, k < 2 ? organfile->m_divisionalcoupler[i].Set(GET_BIT(divisionalcoupler, i, 1)) : GET_BIT(divisionalcoupler, i, 1));
-		  if (k > 1)
-			break;
-		  GOrgueSound::MIDIPretend(!k);
-        }
-	}
-
-  wxByte used = 0;
-  for (j = organfile->m_FirstManual; j <= organfile->m_NumberOfManuals; j++)
-    {
-	  for (i = 0; i < 8; i++)
-		used |= stop[j][i][1];
-	  for (i = 0; i < 2; i++)
-		used |= coupler[j][i][1];
-    }
-  used |= tremulant[0][1] | tremulant[1][1] | divisionalcoupler[0][1];
-
-  for (k = 0; k < organfile->m_NumberOfGenerals; k++)
-	{
-	  GOrgueGeneral *general = organfile->m_general + k;
-	  int on = ((general == this && used) ? 2 : 0);
-	  if ((general->DispImageNum & 2) != on)
-	    {
-		  general->DispImageNum = (general->DispImageNum & 1) | on;
-		  wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-		  event.SetClientData(general);
-		  ::wxGetApp().frame->AddPendingEvent(event);
-	    }
-	}
-
-  for (j = organfile->m_FirstManual; j <= organfile->m_NumberOfManuals; j++)
-    {
-	  for (k = 0; k < organfile->m_manual[j].NumberOfDivisionals; k++)
-        {
-		  GOrgueDivisional *divisional = organfile->m_manual[j].divisional + k;
-		  if (divisional->DispImageNum & 2)
-            {
-			  divisional->DispImageNum &= 1;
-			  wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-			  event.SetClientData(divisional);
-			  ::wxGetApp().frame->AddPendingEvent(event);
-            }
-        }
-    }
 }
 
 void GOrgueFrameGeneral::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
-  if (ObjectNumber > 99 && !(NumberOfStops | NumberOfCouplers | NumberOfTremulants | NumberOfDivisionalCouplers))
-	return;
+	if (ObjectNumber > 99 && !(NumberOfStops | NumberOfCouplers | NumberOfTremulants | NumberOfDivisionalCouplers))
+		return;
 
-  GOrguePushbutton::Save(cfg, prefix, group);
+	GOrguePushbutton::Save(cfg, prefix, group);
 
-  group.Printf("%s%03d", group.c_str(), ObjectNumber);
-  cfg.SaveHelper( prefix, group, "NumberOfStops", NumberOfStops);
-  cfg.SaveHelper( prefix, group, "NumberOfCouplers", NumberOfCouplers);
-  cfg.SaveHelper( prefix, group, "NumberOfTremulants", NumberOfTremulants);
-  cfg.SaveHelper( prefix, group, "NumberOfDivisionalCouplers", NumberOfDivisionalCouplers);
+	cfg.SaveHelper( prefix, group, "NumberOfStops", NumberOfStops);
+	cfg.SaveHelper( prefix, group, "NumberOfCouplers", NumberOfCouplers);
+	cfg.SaveHelper( prefix, group, "NumberOfTremulants", NumberOfTremulants);
+	cfg.SaveHelper( prefix, group, "NumberOfDivisionalCouplers", NumberOfDivisionalCouplers);
 
-  int i, j, k;
-  char buffer[64];
+	int i, j, k;
+	char buffer[64];
 
-  for (j = organfile->m_FirstManual, k = 1; j <= organfile->m_NumberOfManuals; j++)
-	for (i = 0; i < organfile->m_manual[j].NumberOfStops; i++)
-	  if (GET_BIT(stop[j], i, 0))
+	for (j = organfile->GetFirstManualIndex(), k = 1; j <= organfile->GetManualAndPedalCount(); j++)
+		for (i = 0; i < organfile->GetManual(j)->NumberOfStops; i++)
+			if (GET_BIT(stop[j], i, 0))
+			{
+				sprintf(buffer, "StopManual%03d", k);
+				cfg.SaveHelper( prefix, group, buffer, j, true, true);
+				sprintf(buffer, "StopNumber%03d", k++);
+				cfg.SaveHelper( prefix, group, buffer, GET_BIT(stop[j], i, 1) ? i + 1 : -1 - i, true);
+			}
+	for (j = organfile->GetFirstManualIndex(), k = 1; j <= organfile->GetManualAndPedalCount(); j++)
+		for (i = 0; i < organfile->GetManual(j)->NumberOfCouplers; i++)
+			if (GET_BIT(coupler[j], i, 0))
+			{
+				sprintf(buffer, "CouplerManual%03d", k);
+				cfg.SaveHelper( prefix, group, buffer, j, true, true);
+				sprintf(buffer, "CouplerNumber%03d", k++);
+				cfg.SaveHelper( prefix, group, buffer, GET_BIT(coupler[j], i, 1) ? i + 1 : -1 - i, true);
+			}
+	for (i = 0, k = 1; i < organfile->GetTremulantCount(); i++)
+		if (GET_BIT(tremulant, i, 0))
 		{
-		  sprintf(buffer, "StopManual%03d", k);
-		  cfg.SaveHelper( prefix, group, buffer, j, true, true);
-		  sprintf(buffer, "StopNumber%03d", k++);
-		  cfg.SaveHelper( prefix, group, buffer, GET_BIT(stop[j], i, 1) ? i + 1 : -1 - i, true);
+			sprintf(buffer, "TremulantNumber%03d", k++);
+			cfg.SaveHelper( prefix, group, buffer, GET_BIT(tremulant, i, 1) ? i + 1 : -1 - i, true);
 		}
-  for (j = organfile->m_FirstManual, k = 1; j <= organfile->m_NumberOfManuals; j++)
-	for (i = 0; i < organfile->m_manual[j].NumberOfCouplers; i++)
-	  if (GET_BIT(coupler[j], i, 0))
+	for (i = 0, k = 1; i < organfile->GetDivisionalCouplerCount(); i++)
+		if (GET_BIT(divisionalcoupler, i, 0))
 		{
-		  sprintf(buffer, "CouplerManual%03d", k);
-		  cfg.SaveHelper( prefix, group, buffer, j, true, true);
-		  sprintf(buffer, "CouplerNumber%03d", k++);
-		  cfg.SaveHelper( prefix, group, buffer, GET_BIT(coupler[j], i, 1) ? i + 1 : -1 - i, true);
+			sprintf(buffer, "DivisionalCouplerNumber%03d", k++);
+			cfg.SaveHelper( prefix, group, buffer, GET_BIT(divisionalcoupler, i, 1) ? i + 1 : -1 - i, true);
 		}
-  for (i = 0, k = 1; i < organfile->m_NumberOfTremulants; i++)
-	if (GET_BIT(tremulant, i, 0))
-	  {
-		sprintf(buffer, "TremulantNumber%03d", k++);
-		cfg.SaveHelper( prefix, group, buffer, GET_BIT(tremulant, i, 1) ? i + 1 : -1 - i, true);
-	  }
-  for (i = 0, k = 1; i < organfile->m_NumberOfDivisionalCouplers; i++)
-	if (GET_BIT(divisionalcoupler, i, 0))
-	  {
-		sprintf(buffer, "DivisionalCouplerNumber%03d", k++);
-		cfg.SaveHelper( prefix, group, buffer, GET_BIT(divisionalcoupler, i, 1) ? i + 1 : -1 - i, true);
-	  }
 }
 

@@ -23,35 +23,31 @@
 #ifndef GORGUECOUPLER_H
 #define GORGUECOUPLER_H
 
-#include <wx/wx.h>
 #include "GOrgueDrawStop.h"
+
+class IniFileConfig;
+class GOrgueDisplayMetrics;
 
 class GOrgueCoupler : public GOrgueDrawstop
 {
+
+
 public:
-  GOrgueCoupler():
-	GOrgueDrawstop(),UnisonOff(false),
-	CoupleToSubsequentUnisonIntermanualCouplers(false),
-	CoupleToSubsequentUpwardIntermanualCouplers(false),
-	CoupleToSubsequentDownwardIntermanualCouplers(false),
-	CoupleToSubsequentUpwardIntramanualCouplers(false),
-	CoupleToSubsequentDownwardIntramanualCouplers(false),
-	DestinationManual(0),DestinationKeyshift(0)
-  {}
 
-
-	void Load(IniFileConfig& cfg, const char* group);
-    void Save(IniFileConfig& cfg, bool prefix) { GOrgueDrawstop::Save(cfg, prefix, "Coupler"); }
+	GOrgueCoupler();
+	void Load(IniFileConfig& cfg, const char* group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
+	void Save(IniFileConfig& cfg, bool prefix);
 	bool Set(bool on);
 
-	bool UnisonOff : 1;
-	bool CoupleToSubsequentUnisonIntermanualCouplers : 1;
-	bool CoupleToSubsequentUpwardIntermanualCouplers : 1;
-	bool CoupleToSubsequentDownwardIntermanualCouplers : 1;
-	bool CoupleToSubsequentUpwardIntramanualCouplers : 1;
-	bool CoupleToSubsequentDownwardIntramanualCouplers : 1;
-	wxInt16 DestinationManual;
-	wxInt16 DestinationKeyshift;
+	bool UnisonOff;
+	bool CoupleToSubsequentUnisonIntermanualCouplers;
+	bool CoupleToSubsequentUpwardIntermanualCouplers;
+	bool CoupleToSubsequentDownwardIntermanualCouplers;
+	bool CoupleToSubsequentUpwardIntramanualCouplers;
+	bool CoupleToSubsequentDownwardIntramanualCouplers;
+	int DestinationManual;
+	int DestinationKeyshift;
+
 };
 
 #endif

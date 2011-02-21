@@ -21,15 +21,6 @@
  */
 
 #include "GrandOrgueFrame.h"
-#include "GOrgueMeter.h"
-#include "GrandOrgueID.h"
-#include "GOrgueSound.h"
-#include "GrandOrgueFile.h"
-#include "GrandOrgue.h"
-#include "OrganDocument.h"
-#include "SettingsDialog.h"
-#include "GOrgueProperties.h"
-#include "SplashScreen.h"
 
 #include <wx/dcmemory.h>
 #include <wx/menu.h>
@@ -40,7 +31,17 @@
 #include <wx/config.h>
 #include <wx/progdlg.h>
 #include <wx/html/helpctrl.h>
-#include "wx/splash.h"
+#include <wx/splash.h>
+#include "GOrgueMeter.h"
+#include "GOrguePipe.h"
+#include "GOrgueProperties.h"
+#include "GOrgueSound.h"
+#include "GrandOrgueID.h"
+#include "GrandOrgueFile.h"
+#include "GrandOrgue.h"
+#include "OrganDocument.h"
+#include "SettingsDialog.h"
+#include "SplashScreen.h"
 #include "zlib.h"
 
 
@@ -112,6 +113,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
     : wxDocParentFrame(manager, frame, id, title, pos, size, type)
 {
 	m_gaugedc = 0;
+	m_opening = false;
 
 	SetIcon(wxIcon("#101"));
 
@@ -216,11 +218,11 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 	if (g_sound)
 	{
 		if (event.GetId() == ID_AUDIO_RECORD)
-			event.Check(g_sound->f_output && !g_sound->b_stoprecording);
+			event.Check(g_sound->IsRecording());
 		else if (event.GetId() == ID_AUDIO_MEMSET)
 			event.Check(g_sound->b_memset);
 	}
-	event.Enable(organfile && m_docManager->GetCurrentDocument() && (event.GetId() == ID_FILE_REVERT ? organfile->m_b_customized : true));
+	event.Enable(organfile && m_docManager->GetCurrentDocument() && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
 }
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
@@ -230,18 +232,18 @@ void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
    bool prev = false;
     if (organfile)
     {
-        prev = organfile->m_opening;
-        organfile->m_opening = true;
+        prev = m_opening;
+        m_opening = true;
     }
     m_docManager->CreateDocument(event.GetString(), wxDOC_SILENT);
     if (organfile)  // hopefully so...
-        organfile->m_opening = prev;
+        m_opening = prev;
 }
 
 void GOrgueFrame::OnOpen(wxCommandEvent& event)
 {
 	if (organfile)
-		organfile->m_opening = true;
+		m_opening = true;
 	if (event.GetId() == ID_FILE_OPEN)
 	{
 		wxFileName fn = wxFileName::GetCwd();
@@ -251,7 +253,7 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 		if (organfile)
 		{
 			wxConfig::Get()->Write("organPath", ::wxGetApp().m_docManager->GetLastDirectory());
-			organfile->m_opening = false;
+			m_opening = false;
 		}
 	}
 	else
@@ -268,11 +270,11 @@ void GOrgueFrame::OnLoad(wxCommandEvent& event)
     if (dlg.ShowModal() == wxID_OK)
     {
         wxConfig::Get()->Write("cmbPath", dlg.GetDirectory());
-        wxString file = organfile->m_filename;
-        organfile->m_opening = true;
+        wxString file = organfile->GetODFFilename();
+        m_opening = true;
         doc->DoOpenDocument(file, dlg.GetPath());
         if (organfile)
-            organfile->m_opening = false;
+            m_opening = false;
     }
 }
 
@@ -367,7 +369,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
                 break;
             }
 
-            GOrguePipe* pipe = organfile->m_pipe[todo[i]];
+            GOrguePipe* pipe = organfile->GetPipe(todo[i]);
             int size = organfile->m_pipe_filesizes[todo[i]];
             pipe->_this = pipe;
             pipe->_adler32 = adler32(0, (Bytef*)&pipe->_this, size - offsetof(GOrguePipe, _this));
@@ -403,7 +405,7 @@ void GOrgueFrame::OnRevert(wxCommandEvent& event)
     {
         {
             wxLog::EnableLogging(false);
-            wxFileConfig cfg(wxEmptyString, wxEmptyString, organfile->m_filename, wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS);
+            wxFileConfig cfg(wxEmptyString, wxEmptyString, organfile->GetODFFilename(), wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS);
             wxLog::EnableLogging(true);
             m_docManager->GetCurrentDocument()->Modify(false);
             organfile->Revert(cfg);
@@ -430,10 +432,10 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 	if (!g_sound)
 		return;
 
-	if (g_sound->f_output)
-		g_sound->b_stoprecording = true;
+	if (g_sound->IsRecording())
+		g_sound->StopRecording();
 	else
-		g_sound->OpenWAV();
+		g_sound->StartRecording();
 }
 
 void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))

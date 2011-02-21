@@ -58,6 +58,10 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	CloseOrgan();
 	bool open_sound = g_sound->OpenSound(false);
 
+	/* abort if we failed to open the sound device */
+	if (!open_sound)
+		return false;
+
 	organfile = new GrandOrgueFile;
 	wxString error = organfile->Load(file, file2);
 	if (!error.IsEmpty())
@@ -71,12 +75,13 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 		return false;
 	}
 
-	SetTitle(organfile->m_ChurchName);
+	SetTitle(organfile->GetChurchName());
 
 	Modify(false);
 	UpdateAllViews(0, this);
 
-	g_sound->b_active = open_sound;
+	/* we have loaded the organ so we can now enable playback */
+	g_sound->ActivatePlayback();
 	b_loaded = true;
 
 	return true;

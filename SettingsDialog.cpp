@@ -80,7 +80,7 @@ wxSize(603,500)
 {
 	wxASSERT(g_sound);
 
-	b_stereo = g_sound->b_stereo;
+	b_stereo = g_sound->IsStereo();
 	b_squash = wxConfigBase::Get()->Read("LosslessCompression", 1);
 
 	pConfig = wxConfigBase::Get();
@@ -111,13 +111,13 @@ wxSize(603,500)
 
 	page2list->SetColumnWidth(1, page2list->GetClientSize().GetWidth() - page2list->GetColumnWidth(0) - 108);
 
-	g_sound->m_parent = (wxWindow*)this;
+	g_sound->SetLogSoundErrorMessages(true);
 }
 
 SettingsDialog::~SettingsDialog()
 {
-    g_sound->m_parent = 0;
-    if ((b_stereo != g_sound->b_stereo || b_squash != wxConfigBase::Get()->Read("LosslessCompression", 1)))
+	g_sound->SetLogSoundErrorMessages(false);
+    if ((b_stereo != g_sound->IsStereo() || b_squash != wxConfigBase::Get()->Read("LosslessCompression", 1)))
     {
         if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), APP_NAME, wxYES_NO | wxICON_QUESTION) == wxYES)
         {
@@ -129,32 +129,32 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::UpdateSoundStatus()
 {
-    c_latency->SetValue(pConfig->Read("Devices/Sound/" + c_sound->GetStringSelection(), 0L));
-    wxString str;
-    switch(g_sound->format)
-    {
-    case RTAUDIO_SINT8:
-        str = "8 bit PCM";
-        break;
-    case RTAUDIO_SINT16:
-        str = "16 bit PCM";
-        break;
-    case RTAUDIO_SINT24:
-        str = "24 bit PCM";
-        break;
-    case RTAUDIO_SINT32:
-        str = "32 bit PCM";
-        break;
-    case RTAUDIO_FLOAT32:
-        str = "32 bit float";
-        break;
-    case RTAUDIO_FLOAT64:
-        str = "64 bit float";
-        break;
-    default:
-        str = "none";
-    }
-    c_format->SetLabel(str);
+	c_latency->SetValue(pConfig->Read("Devices/Sound/" + c_sound->GetStringSelection(), 0L));
+	wxString str;
+	switch(g_sound->GetAudioFormat())
+	{
+		case RTAUDIO_SINT8:
+			str = "8 bit PCM";
+			break;
+		case RTAUDIO_SINT16:
+			str = "16 bit PCM";
+			break;
+		case RTAUDIO_SINT24:
+			str = "24 bit PCM";
+			break;
+		case RTAUDIO_SINT32:
+			str = "32 bit PCM";
+			break;
+		case RTAUDIO_FLOAT32:
+			str = "32 bit float";
+			break;
+		case RTAUDIO_FLOAT64:
+			str = "64 bit float";
+			break;
+		default:
+			str = "none";
+	}
+	c_format->SetLabel(str);
 }
 
 wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
@@ -169,7 +169,10 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 
 	wxArrayString choices;
 
-	for (it2 = g_sound->m_midiDevices.begin(); it2 != g_sound->m_midiDevices.end(); it2++)
+	if (!g_sound)
+		throw "g_sound has not been allocated";
+
+	for (it2 = g_sound->GetMIDIDevices().begin(); it2 != g_sound->GetMIDIDevices().end(); it2++)
 	{
 		choices.push_back(it2->first);
 		page1checklistdata.push_back(pConfig->Read("Devices/MIDI/" + it2->first, 0L));
@@ -193,12 +196,12 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	wxBoxSizer* item9 = new wxBoxSizer(wxVERTICAL);
 	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
 
-	for (it1 = g_sound->m_audioDevices.begin(); it1 != g_sound->m_audioDevices.end(); it1++)
+	for (it1 = g_sound->GetAudioDevices().begin(); it1 != g_sound->GetAudioDevices().end(); it1++)
 		choices.push_back(it1->first);
 	wxBoxSizer* item1 = new wxStaticBoxSizer(wxVERTICAL, panel, _("Sound &output device"));
 	item9->Add(item1, 0, wxEXPAND | wxALL, 5);
 	c_sound = new wxChoice(panel, ID_SOUND_DEVICE, wxDefaultPosition, wxDefaultSize, choices);
-	c_sound->SetStringSelection(g_sound->defaultAudio);
+	c_sound->SetStringSelection(g_sound->GetDefaultAudioDevice());
 	c_sound->SetStringSelection(pConfig->Read("Devices/DefaultSound", wxEmptyString));
 	item1->Add(c_sound, 0, wxEXPAND | wxALL, 5);
 
