@@ -25,38 +25,40 @@
 
 #include <wx/wx.h>
 #include <wx/docview.h>
-#include "GOrgueDrawStop.h"
-#include "GOrguePushbutton.h"
+
+class GOrgueDisplayMetrics;
+class GOrgueDrawstop;
+class GOrguePushbutton;
 
 class OrganPanel : public wxPanel
 {
-public:
-  OrganPanel(wxWindow* parent):
-	wxPanel(parent, wxID_ANY,wxDefaultPosition, wxDefaultSize,  wxTAB_TRAVERSAL, "panel")
-  {}
-  void OnErase(wxEraseEvent& event);
-  void OnPaint(wxPaintEvent& event);
-  void OnDraw(wxDC *dc);
-  void OnDrawstop(wxCommandEvent& event);
-  void OnNoteOnOff(wxCommandEvent& event);
-  void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
-  void OnMouseLeftDown(wxMouseEvent& event);
-  void OnMouseRightDown(wxMouseEvent& event);
-  void OnMouseScroll(wxMouseEvent& event);
-  void OnKeyCommand(wxKeyEvent& event);
-  DECLARE_EVENT_TABLE();
 
 private:
-  wxBitmap m_clientBitmap;
-  wxPoint m_clientOrigin;
-  wxBrush m_pedalBrush;
-  void DrawClickables(wxDC* dc = NULL, int xx = 0, int yy = 0, bool right = false, int scroll = 0);
-  void HelpDrawStop(GOrgueDrawstop* stop, wxDC* dc, int xx, int yy, bool right);
-  void HelpDrawButton(GOrguePushbutton* button, wxDC* dc, int xx, int yy, bool right);
+	wxBitmap m_clientBitmap;
+	wxPoint m_clientOrigin;
+	wxBrush m_pedalBrush;
 
-  void DrawKey(wxDC& dc, int man, int k, bool usepen = true, wxRegion* region = 0);
-  void WrapText(wxDC& dc, wxString& ptr, int width);
+	GOrgueDisplayMetrics* displayMetrics;
 
+	void DrawClickables(wxDC* dc = NULL, int xx = 0, int yy = 0, bool right = false, int scroll = 0);
+	void HelpDrawStop(GOrgueDrawstop* stop, wxDC* dc, int xx, int yy, bool right);
+	void HelpDrawButton(GOrguePushbutton* button, wxDC* dc, int xx, int yy, bool right);
+	void DrawKey(wxDC& dc, int man, int k, bool usepen = true, wxRegion* region = 0);
+	void WrapText(wxDC& dc, wxString& ptr, int width);
+
+public:
+	OrganPanel(wxWindow* parent);
+	void OnErase(wxEraseEvent& event);
+	void OnPaint(wxPaintEvent& event);
+	void OnDraw(wxDC *dc);
+	void OnDrawstop(wxCommandEvent& event);
+	void OnNoteOnOff(wxCommandEvent& event);
+	void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
+	void OnMouseLeftDown(wxMouseEvent& event);
+	void OnMouseRightDown(wxMouseEvent& event);
+	void OnMouseScroll(wxMouseEvent& event);
+	void OnKeyCommand(wxKeyEvent& event);
+	DECLARE_EVENT_TABLE();
 
 };
 

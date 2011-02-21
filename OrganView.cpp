@@ -70,12 +70,6 @@ void OrganView::OnDraw(wxDC* dc)
 {
   m_panel->OnDraw(dc);
 }
-void OrganPanel::OnDraw(wxDC* dc)
-{
-  if (!m_clientBitmap.Ok() || !organfile || !organfile->m_JambLeftRightWidth)
-	return;
-  dc->DrawBitmap(m_clientBitmap, m_clientOrigin.x, m_clientOrigin.y, false);
-}
 
 void OrganView::OnDrawstop(wxCommandEvent& event)
 {

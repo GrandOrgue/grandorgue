@@ -20,21 +20,55 @@
  * MA 02111-1307, USA.
  */
 #include "GOrgueManual.h"
-#include "IniFileConfig.h"
+
+#include <algorithm>
+#include "GOrgueCoupler.h"
+#include "GOrgueDivisional.h"
+#include "GOrguePipe.h"
+#include "GOrgueSound.h"
+#include "GOrgueStop.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
-#include "GOrgueSound.h"
-#include "OrganFile.h"
+#include "IniFileConfig.h"
 #include "MIDIListenDialog.h"
-#include "GOrgueDivisional.h"
-#include <algorithm>
+#include "OrganFile.h"
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
 extern const char* s_MIDIMessages[];
 
-void GOrgueManual::Load(IniFileConfig& cfg, const char* group)
+GOrgueManual::GOrgueManual() :
+	Displayed(false),
+	DispKeyColourInverted(false),
+	DispKeyColourWooden(false),
+	m_ManualNumber(0),
+	m_Width(0),
+	m_Height(0),
+	m_X(0),
+	m_Y(0),
+	m_KeysY(0),
+	m_PistonY(0),
+	m_MIDI(),
+	NumberOfLogicalKeys(0),
+	FirstAccessibleKeyLogicalKeyNumber(0),
+	FirstAccessibleKeyMIDINoteNumber(0),
+	NumberOfAccessibleKeys(0),
+	MIDIInputNumber(0),
+	NumberOfStops(0),
+	NumberOfCouplers(0),
+	NumberOfDivisionals(0),
+	NumberOfTremulants(0),
+	tremulant(),
+	Name(),
+	stop(NULL),
+	coupler(NULL),
+	divisional(NULL)
+{
+
+}
+
+void GOrgueManual::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
 {
   Name								 = cfg.ReadString( group,"Name",   32);
   NumberOfLogicalKeys				 = cfg.ReadInteger( group,"NumberOfLogicalKeys",    1,  192);
@@ -60,7 +94,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, const char* group)
 	  sprintf(buffer, "Stop%03d", i + 1);
 	  sprintf(buffer, "Stop%03d", cfg.ReadInteger( group, buffer, 1, 448));
 	  stop[i]->m_ManualNumber = m_ManualNumber;
-	  stop[i]->Load(cfg, buffer);
+	  stop[i]->Load(cfg, buffer, displayMetrics);
 	}
 
   coupler = new GOrgueCoupler[NumberOfCouplers];
@@ -68,7 +102,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, const char* group)
 	{
 	  sprintf(buffer, "Coupler%03d", i + 1);
 	  sprintf(buffer, "Coupler%03d", cfg.ReadInteger( group, buffer, 1, 64));
-	  coupler[i].Load(cfg, buffer);
+	  coupler[i].Load(cfg, buffer, organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount(), displayMetrics);
 	}
 
   divisional = new GOrgueDivisional[NumberOfDivisionals];
@@ -76,15 +110,13 @@ void GOrgueManual::Load(IniFileConfig& cfg, const char* group)
 	{
 	  sprintf(buffer, "Divisional%03d", i + 1);
 	  sprintf(buffer, "Divisional%03d", cfg.ReadInteger( group, buffer, 1, 224));
-	  divisional[i].m_ManualNumber = m_ManualNumber;
-	  divisional[i].m_DivisionalNumber = i;
-	  divisional[i].Load(cfg, buffer);
+	  divisional[i].Load(cfg, buffer, m_ManualNumber, i, displayMetrics);
 	}
 
   for (i = 0; i < NumberOfTremulants; i++)
 	{
 	  sprintf(buffer, "Tremulant%03d", i + 1);
-	  tremulant[i] = cfg.ReadInteger( group, buffer, 1, organfile->m_NumberOfTremulants);
+	  tremulant[i] = cfg.ReadInteger( group, buffer, 1, organfile->GetTremulantCount());
 	}
 
   for (i = 0; i < NumberOfStops; i++)
@@ -162,7 +194,7 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 							  (j != m_ManualNumber && coupler[i].DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntermanualCouplers)
 							  )))
 		{
-		  organfile->m_manual[j].Set(note + FirstAccessibleKeyMIDINoteNumber + coupler[i].DestinationKeyshift, on, false, depth + 1, coupler + i);
+		  organfile->GetManual(j)->Set(note + FirstAccessibleKeyMIDINoteNumber + coupler[i].DestinationKeyshift, on, false, depth + 1, coupler + i);
 		}
 	}
 
@@ -177,7 +209,7 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 			continue;
 		  j += stop[i]->FirstAccessiblePipeLogicalPipeNumber - 1;
 
-		  organfile->m_pipe[stop[i]->pipe[j]]->Set(on);
+		  organfile->GetPipe(stop[i]->pipe[j])->Set(on);
 		}
 	}
 

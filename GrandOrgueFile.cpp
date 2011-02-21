@@ -21,28 +21,43 @@
  */
 
 #include "GrandOrgueFile.h"
-#include "OrganFile.h"
-#include "GOrgueSound.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
+
+#include <math.h>
 #include <wx/progdlg.h>
-#include "IniFileConfig.h"
-#include "GOrgueThread.h"
-#include "OrganDocument.h"
 #include <wx/image.h>
 #include <wx/mstream.h>
-#include "GOrgueMeter.h"
+
+#include "IniFileConfig.h"
+#include "GrandOrgue.h"
+#include "GrandOrgueFrame.h"
+#include "GOrgueCoupler.h"
+#include "GOrgueDisplayMetrics.h"
 #include "GOrgueDivisional.h"
+#include "GOrgueDivisionalCoupler.h"
+#include "GOrgueEnclosure.h"
+#include "GOrgueFrameGeneral.h"
+#include "GOrgueGeneral.h"
+#include "GOrgueLabel.h"
+#include "GOrgueMeter.h"
+#include "GOrguePipe.h"
+#include "GOrguePiston.h"
+#include "GOrguePushbutton.h"
+#include "GOrgueSound.h"
+#include "GOrgueStop.h"
+#include "GOrgueThread.h"
+#include "GOrgueTremulant.h"
+#include "GOrgueWindchest.h"
+#include "OrganDocument.h"
+#include "OrganFile.h"
 #include "zlib.h"
-#include <math.h>
 
 extern GOrgueSound* g_sound;
 GrandOrgueFile* organfile = 0;
 extern const unsigned char* ImageLoader_Stops[];
 extern int c_ImageLoader_Stops[];
 
-GrandOrgueFile::GrandOrgueFile()
-	:m_pipe_filenames(),
+GrandOrgueFile::GrandOrgueFile() :
+	m_pipe_filenames(),
 	m_pipe_filesizes(),
 	m_pipe_files(),
 	m_pipe_ptrs(),
@@ -55,45 +70,12 @@ GrandOrgueFile::GrandOrgueFile()
 	m_cfg(NULL),
 	m_filename(),
 	m_elapsed(0),
- 	m_opening(false),
 	m_b_customized(false),
 	m_DivisionalsStoreIntermanualCouplers(false),
 	m_DivisionalsStoreIntramanualCouplers(false),
 	m_DivisionalsStoreTremulants(false),
 	m_GeneralsStoreDivisionalCouplers(false),
 	m_CombinationsStoreNonDisplayedDrawstops(false),
-	m_DispDrawstopColsOffset(false),
-	m_DispDrawstopOuterColOffsetUp(false),
-	m_DispPairDrawstopCols(false),
-	m_DispExtraPedalButtonRow(false),
-	m_DispExtraPedalButtonRowOffset(false),
-	m_DispExtraPedalButtonRowOffsetRight(false),
-	m_DispButtonsAboveManuals(false),
-	m_DispTrimAboveManuals(false),
-	m_DispTrimBelowManuals(false),
-	m_DispTrimAboveExtraRows(false),
-	m_DispExtraDrawstopRowsAboveExtraButtonRows(false),
-
-	m_JambLeftRightWidth(0),
-	m_JambLeftRightHeight(0),
-	m_JambLeftRightY(0),
-	m_JambLeftX(0),
-	m_JambRightX(0),
-	m_JambTopWidth(0),
-	m_JambTopHeight(0),
-	m_JambTopX(0),
-	m_JambTopY(0),
-	m_HackY(0),
-	m_JambTopPiston(0),
-	m_JambTopDrawstop(0),
-	m_CenterX(0),
-	m_CenterY(0),
-	m_CenterWidth(0),
-	m_PistonX(0),
-	m_PistonWidth(0),
-	m_PistonTopHeight(0),
-	m_EnclosureWidth(0),
-	m_EnclosureY(0),
 	m_HighestSampleFormat(0),
 	m_FirstManual(0),
 	m_NumberOfManuals(0),
@@ -108,20 +90,6 @@ GrandOrgueFile::GrandOrgueFile()
 	m_NumberOfStops(0),
 	m_NumberOfPipes(0),
 	m_AmplitudeLevel(0),
-	m_DispScreenSizeHoriz(0),
-	m_DispScreenSizeVert(0),
-	m_DispDrawstopBackgroundImageNum(0),
-	m_DispConsoleBackgroundImageNum(0),
-	m_DispKeyHorizBackgroundImageNum(0),
-	m_DispKeyVertBackgroundImageNum(0),
-	m_DispDrawstopInsetBackgroundImageNum(0),
-	m_DispDrawstopCols(0),
-	m_DispDrawstopRows(0),
-	m_DispExtraDrawstopRows(0),
-	m_DispExtraDrawstopCols(0),
-	m_DispButtonCols(0),
-	m_DispExtraButtonRows(0),
-	m_DispShortcutKeyLabelColour(),
     m_HauptwerkOrganFileFormatVersion(),
 	m_ChurchName(),
 	m_ChurchAddress(),
@@ -130,9 +98,6 @@ GrandOrgueFile::GrandOrgueFile()
 	m_OrganComments(),
 	m_RecordingDetails(),
     m_InfoFilename(),
-	m_DispControlLabelFont(),
-	m_DispShortcutKeyLabelFont(),
-	m_DispGroupLabelFont(),
 	m_enclosure(NULL),
 	m_tremulant(NULL),
 	m_windchest(NULL),
@@ -142,16 +107,16 @@ GrandOrgueFile::GrandOrgueFile()
 	m_framegeneral(NULL),
 	m_divisionalcoupler(NULL),
 	m_pipe(NULL)
-  {
+{
 	for (int i = 0; i < 9; ++i)
 	{
-	  m_images[i]=wxBitmap();
+		m_images[i]=wxBitmap();
 	}
 	for (int i = 0; i < 7; ++i)
 	{
-	  m_manual[i]=GOrgueManual();
+		m_manual[i]=GOrgueManual();
 	}
-  }
+}
 
 
 
@@ -163,7 +128,7 @@ void GrandOrgueFile::CompressWAV(char*& compress, short* fv, short* ptr, int cou
 	int i, j, count2;
 
 	// not recommended, but if they want to, reduce stereo to mono
-	if (channels == 2 && !(g_sound->b_stereo))
+	if (channels == 2 && !(g_sound->IsStereo()))
 	{
 		for (int i = 0, j = 0; i < count; i += 2)
 			ptr[j++] = ((int)ptr[i] + (int)ptr[i + 1]) >> 1;
@@ -371,137 +336,114 @@ Done:
 
 void GrandOrgueFile::readOrganFile()
 {
-	  IniFileConfig ini(m_cfg);
-		  const char group[] = "Organ";
+	IniFileConfig ini(m_cfg);
+	const char group[] = "Organ";
 
-        m_HauptwerkOrganFileFormatVersion=ini.ReadString( group,"HauptwerkOrganFileFormatVersion",  256, false);
-        m_ChurchName=ini.ReadString( group,"ChurchName",  128);
-        m_ChurchAddress=ini.ReadString( group,"ChurchAddress",  128);
-        m_OrganBuilder=ini.ReadString( group,"OrganBuilder",  128, false);
-        m_OrganBuildDate=ini.ReadString( group,"OrganBuildDate",  128, false);
-        m_OrganComments=ini.ReadString( group,"OrganComments",  256, false);
-        m_RecordingDetails=ini.ReadString( group,"RecordingDetails",  256, false);
-        m_InfoFilename=ini.ReadString( group,"InfoFilename",  256, false);
-        wxFileName fn = m_filename;
-        if (m_InfoFilename.IsEmpty())
-            fn.SetExt(".html");
-        else
-            fn.SetFullName(m_InfoFilename);
-        if (fn.FileExists())
-            m_InfoFilename = fn.GetFullPath();
-        else
-            m_InfoFilename = wxEmptyString;
+	/* load all GUI display metrics */
+	m_DisplayMetrics = new GOrgueDisplayMetrics(ini);
 
-        m_NumberOfManuals=ini.ReadInteger( group,"NumberOfManuals",    1,    6);
-        m_FirstManual = ini.ReadBoolean( group, "HasPedals") ? 0 : 1;
-        m_NumberOfEnclosures=ini.ReadInteger( group,"NumberOfEnclosures",    0,    6);
-        m_NumberOfTremulants=ini.ReadInteger( group,"NumberOfTremulants",    0,   10);
-        m_NumberOfWindchestGroups=ini.ReadInteger( group,"NumberOfWindchestGroups",    1,   12);
-        m_NumberOfReversiblePistons=ini.ReadInteger( group,"NumberOfReversiblePistons",    0,   32);
-        m_NumberOfLabels=ini.ReadInteger( group,"NumberOfLabels",    0,   16);
-        m_NumberOfGenerals=ini.ReadInteger( group,"NumberOfGenerals",    0,   99);
-        m_NumberOfFrameGenerals = 512;	// we never want this to change, what's the point?
-        m_NumberOfDivisionalCouplers=ini.ReadInteger( group,"NumberOfDivisionalCouplers",    0,    8);
-        m_AmplitudeLevel=ini.ReadInteger( group,"AmplitudeLevel",    0, 1000);
-        m_DivisionalsStoreIntermanualCouplers=ini.ReadBoolean( group,"DivisionalsStoreIntermanualCouplers");
-        m_DivisionalsStoreIntramanualCouplers=ini.ReadBoolean( group,"DivisionalsStoreIntramanualCouplers");
-        m_DivisionalsStoreTremulants=ini.ReadBoolean( group,"DivisionalsStoreTremulants");
-        m_GeneralsStoreDivisionalCouplers=ini.ReadBoolean( group,"GeneralsStoreDivisionalCouplers");
-        m_CombinationsStoreNonDisplayedDrawstops=ini.ReadBoolean( group,"CombinationsStoreNonDisplayedDrawstops");
-        m_DispScreenSizeHoriz=ini.ReadSize( group,"DispScreenSizeHoriz",    0);
-        m_DispScreenSizeVert=ini.ReadSize( group,"DispScreenSizeVert",    1);
-        m_DispDrawstopBackgroundImageNum=ini.ReadInteger( group,"DispDrawstopBackgroundImageNum",    1,   64);
-        m_DispConsoleBackgroundImageNum=ini.ReadInteger( group,"DispConsoleBackgroundImageNum",    1,   64);
-        m_DispKeyHorizBackgroundImageNum=ini.ReadInteger( group,"DispKeyHorizBackgroundImageNum",    1,   64);
-        m_DispKeyVertBackgroundImageNum=ini.ReadInteger( group,"DispKeyVertBackgroundImageNum",    1,   64);
-        m_DispDrawstopInsetBackgroundImageNum=ini.ReadInteger( group,"DispDrawstopInsetBackgroundImageNum",    1,   64);
-        m_DispControlLabelFont=ini.ReadString( group,"DispControlLabelFont");
-        m_DispShortcutKeyLabelFont=ini.ReadString( group,"DispShortcutKeyLabelFont");
-        m_DispShortcutKeyLabelColour=ini.ReadColor( group,"DispShortcutKeyLabelColour");
-        m_DispGroupLabelFont=ini.ReadString( group,"DispGroupLabelFont");
-        m_DispDrawstopCols=ini.ReadInteger( group,"DispDrawstopCols",    2,   12);
-        m_DispDrawstopRows=ini.ReadInteger( group,"DispDrawstopRows",    1,   20);
-        m_DispDrawstopColsOffset=ini.ReadBoolean( group,"DispDrawstopColsOffset");
-        m_DispDrawstopOuterColOffsetUp=ini.ReadBoolean( group,"DispDrawstopOuterColOffsetUp", m_DispDrawstopColsOffset);
-        m_DispPairDrawstopCols=ini.ReadBoolean( group,"DispPairDrawstopCols");
-        m_DispExtraDrawstopRows=ini.ReadInteger( group,"DispExtraDrawstopRows",    0,    8);
-        m_DispExtraDrawstopCols=ini.ReadInteger( group,"DispExtraDrawstopCols",    0,   40);
-        m_DispButtonCols=ini.ReadInteger( group,"DispButtonCols",    1,   32);
-        m_DispExtraButtonRows=ini.ReadInteger( group,"DispExtraButtonRows",    0,    8);
-        m_DispExtraPedalButtonRow=ini.ReadBoolean( group,"DispExtraPedalButtonRow");
-        m_DispExtraPedalButtonRowOffset=ini.ReadBoolean( group,"DispExtraPedalButtonRowOffset", m_DispExtraPedalButtonRow);
-        m_DispExtraPedalButtonRowOffsetRight=ini.ReadBoolean( group,"DispExtraPedalButtonRowOffsetRight", m_DispExtraPedalButtonRow);
-        m_DispButtonsAboveManuals=ini.ReadBoolean( group,"DispButtonsAboveManuals");
-        m_DispTrimAboveManuals=ini.ReadBoolean( group,"DispTrimAboveManuals");
-        m_DispTrimBelowManuals=ini.ReadBoolean( group,"DispTrimBelowManuals");
-        m_DispTrimAboveExtraRows=ini.ReadBoolean( group,"DispTrimAboveExtraRows");
-        m_DispExtraDrawstopRowsAboveExtraButtonRows=ini.ReadBoolean( group,"DispExtraDrawstopRowsAboveExtraButtonRows");
+	/* load church info */
+	m_HauptwerkOrganFileFormatVersion = ini.ReadString( group,"HauptwerkOrganFileFormatVersion",  256, false);
+	m_ChurchName = ini.ReadString( group,"ChurchName",  128);
+	m_ChurchAddress = ini.ReadString( group,"ChurchAddress",  128);
+	m_OrganBuilder = ini.ReadString( group,"OrganBuilder",  128, false);
+	m_OrganBuildDate = ini.ReadString( group,"OrganBuildDate",  128, false);
+	m_OrganComments = ini.ReadString( group,"OrganComments",  256, false);
+	m_RecordingDetails = ini.ReadString( group,"RecordingDetails",  256, false);
+	m_InfoFilename = ini.ReadString( group,"InfoFilename",  256, false);
+	wxFileName fn = m_filename;
+	if (m_InfoFilename.IsEmpty())
+		fn.SetExt(".html");
+	else
+		fn.SetFullName(m_InfoFilename);
+	if (fn.FileExists())
+		m_InfoFilename = fn.GetFullPath();
+	else
+		m_InfoFilename = wxEmptyString;
 
-        char buffer[64];
+	/* load basic organ information */
+	m_NumberOfManuals = ini.ReadInteger(group, "NumberOfManuals", 1, 6);
+	m_FirstManual = ini.ReadBoolean(group, "HasPedals") ? 0 : 1;
+	m_NumberOfEnclosures = ini.ReadInteger(group, "NumberOfEnclosures", 0, 6);
+	m_NumberOfTremulants = ini.ReadInteger(group, "NumberOfTremulants", 0, 10);
+	m_NumberOfWindchestGroups = ini.ReadInteger(group, "NumberOfWindchestGroups", 1, 12);
+	m_NumberOfReversiblePistons = ini.ReadInteger(group, "NumberOfReversiblePistons", 0, 32);
+	m_NumberOfLabels = ini.ReadInteger(group, "NumberOfLabels", 0, 16);
+	m_NumberOfGenerals = ini.ReadInteger(group, "NumberOfGenerals", 0, 99);
+	m_NumberOfFrameGenerals = 512;	// we never want this to change, what's the point?
+	m_NumberOfDivisionalCouplers = ini.ReadInteger(group, "NumberOfDivisionalCouplers", 0, 8);
+	m_AmplitudeLevel = ini.ReadInteger(group, "AmplitudeLevel", 0, 1000);
+	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, "DivisionalsStoreIntermanualCouplers");
+	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(group, "DivisionalsStoreIntramanualCouplers");
+	m_DivisionalsStoreTremulants = ini.ReadBoolean(group, "DivisionalsStoreTremulants");
+	m_GeneralsStoreDivisionalCouplers = ini.ReadBoolean(group, "GeneralsStoreDivisionalCouplers");
+	m_CombinationsStoreNonDisplayedDrawstops = ini.ReadBoolean(group, "CombinationsStoreNonDisplayedDrawstops");
 
-        for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
-        {
-            sprintf(buffer, "Manual%03d", i);
-            m_manual[i].m_ManualNumber = i;
-            m_manual[i].Load(ini, buffer);
-        }
+	char buffer[64];
 
-        m_enclosure = new GOrgueEnclosure[m_NumberOfEnclosures];
-        for (int i = 0; i < m_NumberOfEnclosures; i++)
-        {
-            sprintf(buffer, "Enclosure%03d", i + 1);
-            m_enclosure[i].Load(ini, buffer);
-        }
+	for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+	{
+		sprintf(buffer, "Manual%03d", i);
+		m_manual[i].m_ManualNumber = i;
+		m_manual[i].Load(ini, buffer, m_DisplayMetrics);
+	}
 
-        m_windchest = new GOrgueWindchest[m_NumberOfTremulants + 1 + m_NumberOfWindchestGroups];
-        for (int i = 0; i < m_NumberOfWindchestGroups; i++)
-        {
-            sprintf(buffer, "WindchestGroup%03d", i + 1);
-            m_windchest[m_NumberOfTremulants + 1 + i].Load(ini, buffer);
-        }
+	m_enclosure = new GOrgueEnclosure[m_NumberOfEnclosures];
+	for (int i = 0; i < m_NumberOfEnclosures; i++)
+	{
+		sprintf(buffer, "Enclosure%03d", i + 1);
+		m_enclosure[i].Load(ini, buffer, m_DisplayMetrics);
+	}
 
-        m_tremulant = new GOrgueTremulant[m_NumberOfTremulants];
-        for (int i = 0; i < m_NumberOfTremulants; i++)
-        {
-            sprintf(buffer, "Tremulant%03d", i + 1);
-            m_tremulant[i].Load(ini, buffer);
-        }
+	m_windchest = new GOrgueWindchest[m_NumberOfTremulants + 1 + m_NumberOfWindchestGroups];
+	for (int i = 0; i < m_NumberOfWindchestGroups; i++)
+	{
+		sprintf(buffer, "WindchestGroup%03d", i + 1);
+		m_windchest[m_NumberOfTremulants + 1 + i].Load(ini, buffer);
+	}
 
-        m_piston = new GOrguePiston[m_NumberOfReversiblePistons];
-        for (int i = 0; i < m_NumberOfReversiblePistons; i++)
-        {
-            sprintf(buffer, "ReversiblePiston%03d", i + 1);
-            m_piston[i].Load(ini, buffer);
-        }
+	m_tremulant = new GOrgueTremulant[m_NumberOfTremulants];
+	for (int i = 0; i < m_NumberOfTremulants; i++)
+	{
+		sprintf(buffer, "Tremulant%03d", i + 1);
+		m_tremulant[i].Load(ini, buffer, m_DisplayMetrics);
+	}
 
-        m_label = new GOrgueLabel[m_NumberOfLabels];
-        for (int i = 0; i < m_NumberOfLabels; i++)
-        {
-            sprintf(buffer, "Label%03d", i + 1);
-            m_label[i].Load(ini, buffer);
-        }
+	m_piston = new GOrguePiston[m_NumberOfReversiblePistons];
+	for (int i = 0; i < m_NumberOfReversiblePistons; i++)
+	{
+		sprintf(buffer, "ReversiblePiston%03d", i + 1);
+		m_piston[i].Load(ini, buffer, m_DisplayMetrics);
+	}
 
-        m_general = new GOrgueGeneral[m_NumberOfGenerals];
-        for (int i = 0; i < m_NumberOfGenerals; i++)
-        {
-            sprintf(buffer, "General%03d", i + 1);
-            m_general[i].Load(ini, buffer);
-        }
+	m_label = new GOrgueLabel[m_NumberOfLabels];
+	for (int i = 0; i < m_NumberOfLabels; i++)
+	{
+		sprintf(buffer, "Label%03d", i + 1);
+		m_label[i].Load(ini, buffer, m_DisplayMetrics);
+	}
 
-        m_framegeneral = new GOrgueFrameGeneral[m_NumberOfFrameGenerals];
-        for (int i = 0; i < m_NumberOfFrameGenerals; i++)
-        {
-            sprintf(buffer, "General%03d", i + 100);
-            m_framegeneral[i].Load(ini, buffer);
-            m_framegeneral[i].ObjectNumber = i + 100;
-        }
+	m_general = new GOrgueGeneral[m_NumberOfGenerals];
+	for (int i = 0; i < m_NumberOfGenerals; i++)
+	{
+		sprintf(buffer, "General%03d", i + 1);
+		m_general[i].Load(ini, buffer, m_DisplayMetrics);
+	}
 
-        m_divisionalcoupler = new GOrgueDivisionalCoupler[m_NumberOfDivisionalCouplers];
-        for (int i = 0; i < m_NumberOfDivisionalCouplers; i++)
-        {
-            sprintf(buffer, "DivisionalCoupler%03d", i + 1);
-            m_divisionalcoupler[i].Load(ini, buffer);
-        }
+	m_framegeneral = new GOrgueFrameGeneral[m_NumberOfFrameGenerals];
+	for (int i = 0; i < m_NumberOfFrameGenerals; i++)
+	{
+		sprintf(buffer, "General%03d", i + 100);
+		m_framegeneral[i].Load(ini, buffer);
+		m_framegeneral[i].ObjectNumber = i + 100;
+	}
+
+	m_divisionalcoupler = new GOrgueDivisionalCoupler[m_NumberOfDivisionalCouplers];
+	for (int i = 0; i < m_NumberOfDivisionalCouplers; i++)
+	{
+		sprintf(buffer, "DivisionalCoupler%03d", i + 1);
+		m_divisionalcoupler[i].Load(ini, buffer, m_FirstManual, m_NumberOfManuals, m_DisplayMetrics);
+	}
 
 }
 
@@ -613,360 +555,845 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	m_compress_p = 0;
 	int ffile = -1;
 
+	/* The wave filenames stored in m_pipe_files are relative paths. This code
+	 * takes each filename, converts it to it's absolute path and then stores
+	 * it into the pipe_keys vector (FIXME: bad variable name). Reference pipe
+	 * filenames are converted to an empty string so for each m_pipe_files[x],
+	 * pipe_keys[x] is it's absolute path. */
 	std::vector<wxString> pipe_keys;
 	for (std::vector<wxString>::const_iterator aFileIter = m_pipe_files.begin();
-		 aFileIter != m_pipe_files.end(); ++aFileIter)
+		 aFileIter != m_pipe_files.end();
+		 ++aFileIter)
 	{
-        if (aFileIter->StartsWith("REF:"))
-        {
-            pipe_keys.push_back(wxEmptyString);
-            continue;
-        }
-        m_path = *aFileIter;
-        m_path.MakeAbsolute();
-        key.Printf("%s", m_path.GetFullPath().c_str());
 
+		if (aFileIter->StartsWith("REF:"))
+		{
+			pipe_keys.push_back(wxEmptyString);
+			continue;
+		}
+
+		m_path = *aFileIter;
+		m_path.MakeAbsolute();
+
+		// FIXME: breaks an eventual translation to unicode
+		key.Printf("%s", m_path.GetFullPath().c_str());
 		pipe_keys.push_back(key);
+
 	}
 
-	int ii=m_pipe_files.size();
-    int max=ii+m_NumberOfTremulants;
-    for (int i = 0; i < max; i++)
-    {
-	  wxLogDebug("Loading file %s",m_pipe_files[i].c_str());
-        if (i < ii)
-        {
-            if (m_pipe_files[i].StartsWith("REF:"))
-                continue;
-            if (!dlg.Update(((progress + 1) << 15) / (int)(m_NumberOfPipes + m_NumberOfTremulants + 1), m_pipe_files[i]))
-            {
-                error = "!";
-                break;
-            }
-            // 327: max parameter to progress dialog divided by 100 to calculate percentage
+	/* Load pipes */
+	for (int i = 0; i < m_pipe_files.size(); i++)
+	{
+
+		wxLogDebug("Loading file %s", m_pipe_files[i].c_str());
+
+		/* If this pipe filename is a reference to another pipe, skip. We
+		 * load these pipes later... */
+		if (m_pipe_files[i].StartsWith("REF:"))
+			continue;
+
+		/* Update the progress dialog */
+		if (!dlg.Update(((progress + 1) << 15) / (int)(m_NumberOfPipes + 1), m_pipe_files[i]))
+		{
+			error = "!"; // FIXME: what is this? how can a progress dialog fail to update?
+			break;
+		}
+
+		// 327: max parameter to progress dialog divided by 100 to calculate percentage
 #ifdef __VFD__
-            int n=(((progress + 1) << 15) / (int)(organfile->NumberOfPipes + organfile->NumberOfTremulants ))/327;
-            GOrgueLCD_WriteLineTwo(wxString::Format("Loading %d%%", n));
+		int n=(((progress + 1) << 15) / (int)(organfile->NumberOfPipes + organfile->NumberOfTremulants ))/327;
+		GOrgueLCD_WriteLineTwo(wxString::Format("Loading %d%%", n));
 #endif
-            key = pipe_keys[i];
 
-        }
-        else if (!dlg.Update(((progress + 1) << 15) / (int)(m_NumberOfPipes + m_NumberOfTremulants + 1), wxString("Tremulant ") << m_tremulant[i - ii].ObjectNumber))
-        {
-            error = "!";
-            break;
-        }
+		/* FIXME: bad variable name. "pipe_filename" suggestion */
+		key = pipe_keys[i];
 
+		{
+			try
+			{
+				unsigned wavestart = 0;
+				unsigned wavesize = 0;
+				unsigned loopstart = 0;
+				unsigned loopend = 0;
+				unsigned release = 0;
+				unsigned q;
+				unsigned r;
+				unsigned length = 0;
+				int channels = 0;
+				int peak = 0;
+				int amp = 10000;
+				int k;
+				int jj;
 
-        {
-            try
-            {
-                unsigned wavestart = 0;
-                unsigned wavesize = 0;
-                unsigned loopstart = 0;
-                unsigned loopend = 0;
-                unsigned release = 0, q, r, length = 0;
-                int channels = 0, peak = 0, amp = 10000, k, jj;
+				temp = key.c_str();
 
-                if (i < ii)
-                {
-						temp = key.c_str();
-                        // Open file, because of efficiency wxFile is not used
-                        #ifdef linux
-                        temp.Replace("\\", "/");
-                        ffile = open(temp, O_RDONLY);
-                        struct stat ffile_info;
-                        fstat(ffile, &ffile_info);
-                        length = ffile_info.st_size;
-                        #endif
-                        #ifdef _WIN32
-                        ffile = _open(temp, _O_BINARY | _O_RDONLY | _O_SEQUENTIAL);
-                        length = _filelength(ffile);
-                        #endif
-                        if (ffile == -1) // TODO: better errorhandling (linux)
-                        {
-                            throw (char*)" Failed to open";
-                        }
+				/* Open file, because of efficiency wxFile is not used
+				 * FIXME: ^^^ the above comment was here when I started working
+				 * on the code... I'm not sure what it means? Has the efficency
+				 * of wxFile been tested? I think we should put it back in and
+				 * make use of the cross-platform benefits. */
+#ifdef linux
+				temp.Replace("\\", "/");
+				ffile = open(temp, O_RDONLY);
+				struct stat ffile_info;
+				fstat(ffile, &ffile_info);
+				length = ffile_info.st_size;
+#endif
+#ifdef _WIN32
+				ffile = _open(temp, _O_BINARY | _O_RDONLY | _O_SEQUENTIAL);
+				length = _filelength(ffile);
+#endif
 
-                }
-                else if (i >= ii)
-                {
-                    channels = 1;
-                    wavestart = 4;
-                    loopstart = 441000 / m_tremulant[i - ii].StartRate;
-                    release = loopend = loopstart + 441 * m_tremulant[i - ii].Period / 10;
-                    wavesize = release + 441000 / m_tremulant[i - ii].StopRate;
-                    length = 8 + sizeof(short) * wavesize;
-                }
+				/* FIXME: better errorhandling (linux) < this causes GrandOrgue
+				 * to quit ungracefully! very bad. */
+				if (ffile == -1)
+				{
+					char message[1024];
+					const char* x = temp.mb_str();
+					sprintf(message, "Failed to open file '%s'\n", x);
+					throw message;
+				}
 
-                    if (!mbuffer_p)
-                        ptr = (char*)malloc(mbuffer_s = length + 8);
-                    else if (length + 8 > mbuffer_s)
-                        ptr = (char*)realloc(mbuffer_p, mbuffer_s = length + 8);
-                    else
-                        ptr = (char*)mbuffer_p;
-                    if (!ptr)
-                    {
-					  throw (char*)_(" Out of memory loading");
-                    }
-                    mbuffer_p = ptr;
+				/* FIXME: this is pointless. This is the load code. Delays of
+				 * microseconds are unimportant. The temporary buffer should be
+				 * malloced for each file and freed on cleanup. */
+				if (!mbuffer_p)
+					ptr = (char*)malloc(mbuffer_s = length + 8);
+				else if (length + 8 > mbuffer_s)
+					ptr = (char*)realloc(mbuffer_p, mbuffer_s = length + 8);
+				else
+					ptr = (char*)mbuffer_p;
 
-                if (i < ii)
-                {
-				  length=readOneFile(ffile, mbuffer_p, length);
-                }
+				if (!ptr)
+					throw (char*)_(" Out of memory loading");
 
-                ptr = mbuffer_p;
+				mbuffer_p = ptr;
+				length=readOneFile(ffile, mbuffer_p, length);
 
-                if (i >= ii)
-                {
-				  
+				{
+
+					RIFF riff;
+
+					/* Check that this is a valid RIFF file */
+					if (length >= 12)
+					{
+						riff.Analyze(ptr, 0);
+						if (!(riff == "RIFF"&&
+								(riff.GetSize() == length - 8 || riff.GetSize() == length)
+								&& !strncmp(ptr + 8, "WAVE", 4)))
+							throw (char*)"<Invalid WAV file";
+
+					}
+					else
+						throw (char*)"<Invalid WAV file";
+
+					/* Find required chunks... */
+					for (j = 12; j + 8 <= (int)length;)
+					{
+
+						riff.Analyze(ptr, j);
+						j += 8;
+
+						/* Is this the data chunk? */
+						if (riff == "data")
+						{
+								wavestart = j;
+								wavesize = riff.GetSize() / 2;
+						}
+
+						jj = j; // TODO: Figure what this is for...
+
+						/* Move J forward to the offset of the next chunk */
+						j += (riff.GetSize() + 1) & 0xFFFFFFFE;
+						if (j > (int)length)
+							throw (char*)"<Invalid WAV file";
+
+						/* Is this the format chunk?? */
+						if (riff == "fmt ")
+						{
+
+							/* FIXME: This could be done much more elequently */
+							/* Ensure format chunk size is 16 (basic wave
+							 * format chunk... no extensible data... and
+							 * that the format tag is 1 */
+							if (riff.GetSize() < 16 || wxINT16_SWAP_ON_BE(*(short*)(ptr + j - riff.GetSize())) != 1)
+								throw (char*)"<Not PCM data in";
+
+							/* get channels and ensure only mono or stereo */
+							channels = wxUINT16_SWAP_ON_BE(*(unsigned short*)(ptr + j - riff.GetSize() + 2));
+							if (channels < 1 || channels > 2)
+								throw (char*)"<More than 2 channels in";
+
+							/* get sample rate and ensure only 44.1 kHz */
+							if (wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + j - riff.GetSize() + 4)) != 44100)
+								throw (char*)"<Not 44.1kHz sampling rate in";
+
+						}
+
+						/* Is this the cue chunk? */
+						else if (riff == "cue " && !m_pipe_percussive[i])
+						{
+
+							if (riff.GetSize() < 4)
+								throw (char*)"<Invalid CUE chunk in";
+
+							/* k is the number of cue points. Ensure that the
+							 * chunk has enough room to store 'k' cue points */
+							k = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + j - riff.GetSize()));
+							if (riff.GetSize() < 4 + 24 * (unsigned)k)
+								throw (char*)"<Invalid CUE chunk in";
+
+							jj += 4; /* jj now points to the position of the first cue point */
+
+							/* read each cue points position value. If the
+							 * position is greater than the currently stored
+							 * release position, update it. */
+							for (; k>0; k--)
+							{
+								q = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + jj + 20)) * channels;
+								if (q > release)
+									release = q;
+								jj += 24;
+							}
+
+						}
+
+						/* Is this the sampler chunk (contains loop/pitch information */
+						else if (riff == "smpl" && !m_pipe_percussive[i])
+						{
+
+							/* TODO: we could support multiple sample loops? */
+							if (riff.GetSize() < 36)
+								throw (char*)"<Invalid SMPL chunk in";
+
+							/* Read the number of loops and ensure that the
+							 * chunk is large enough to store them all. */
+							k = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + j - riff.GetSize() + 28));
+							if (riff.GetSize() < 36 + 24 * (unsigned)k)
+								throw (char*)"<Invalid SMPL chunk in";
+
+							jj += 36; /* jj now points to the offset of the first sampler loop */
+
+							/* NOTE: for now, we just get the *longest* loop. */
+							for (; k>0; k--)
+							{
+
+								q = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + jj +  8)) * channels;
+								r = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + jj + 12)) * channels + channels;
+								if (r - q > loopend - loopstart)
+								{
+									loopend   = r;
+									loopstart = q;
+								}
+								jj += 24;
+
+							}
+
+						}
+
+					} /* for */
+
+					/* We have looked at all the chunks, j should now equal
+					 * the wave file main chunk's length (as we have read
+					 * all chunks. */
+					if (!length || j != (int)length)
+						throw (char*)"<Invalid WAV file";
+
+					/* Find the wave's peak samples */
+					int peaktemp;
+					s_ptr = (short*)(ptr + wavestart) + wavesize;
+					if (channels == 1)
+					{
+						for (k = -(int)wavesize; k; k++)
+						{
+							/* FIXME: if sample < 0 sample++ ?? what
+							 * this cannot be good... what is going on here?
+							 *
+							 * peaktemp = s_ptr[k] xor (s_ptr[k] >> 15)
+							 * ... which basically means if s_ptr[k] < 0,
+							 * flip the LSB of s_ptr[k]. */
+							/*
+							if (s_ptr[k] & 0x8000)
+								s_ptr[k]++;
+							peaktemp  = s_ptr[k];
+							peaktemp ^= (peaktemp >> 15);
+							*/
+							peaktemp = abs(peak);
+							peak = std::max(peaktemp,peak);
+						}
+					}
+					else
+					{
+						for (k = -(int)wavesize; k; k+=2)
+						{
+							/*
+							if (s_ptr[k] & 0x8000)
+								s_ptr[k]++;
+							peaktemp  = s_ptr[k++];
+							if (s_ptr[k] & 0x8000)
+								s_ptr[k]++;
+							peaktemp += s_ptr[k++];
+							peaktemp ^= (peaktemp >> 15);
+							*/
+							peaktemp = abs(s_ptr[k] + s_ptr[k+1]);
+							peak = std::max(peaktemp,peak);
+						}
+						peak = peak / 2;
+					}
+
+					// learning lesson: never ever trust the range values of outside sources to be correct!
+					if (loopstart >= loopend || loopstart >= wavesize ||
+						loopend >= wavesize || release >= wavesize ||
+						!loopend || !release)
+						loopstart = loopend = release = 0;
+
+				}
+
+				amp = m_pipe_amplitudes[progress];
+
+				k = offsetof(GOrguePipe, data) + sizeof(short) * (12 + loopstart + (loopend - loopstart) + (wavesize - release));
+
+				/* FIXME: for the same reason as previously, this should be
+				 * allocated on a per pipe basis... */
+				if (!m_compress_p)
+					compress = (char*)malloc(compress_s = k);
+				else if (k > (int)compress_s)
+					compress = (char*)realloc(m_compress_p, compress_s = k);
+				else
+					compress = (char*)m_compress_p;
+				if (!compress)
+					throw (char*)_("<Out of memory loading");
+				m_compress_p = (GOrguePipe*)compress;
+
+				compress = (char*)m_compress_p->data;
+				*(int*)(ptr + wavestart - 4) = 0;
+				*(int*)(ptr + wavestart + sizeof(short) * wavesize) = 0;
+
+				m_compress_p->ra_volume = peak;
+				m_compress_p->ra_factor = (PHASE_ALIGN_RES << 25) / (peak + 1);
+
+				if (release)
+				{
+					if (release + channels < wavesize)
+						release += channels;
+					if (loopstart & channels)
+					{
+						wavestart -= channels << 1;
+						loopstart += channels;
+						loopend   += channels;
+						release   += channels;
+						wavesize  += channels;
+					}
+					if ((wavesize - release) & channels)
+						wavesize   += channels;
+
+					CompressWAV(compress, m_compress_p->f[0], (short*)(ptr + wavestart), loopstart, channels, 0);
+					CompressWAV(compress, m_compress_p->f[1], (short*)(ptr + wavestart) + loopstart, loopend - loopstart, channels, 1);
+					CompressWAV(compress, m_compress_p->f[2], (short*)(ptr + wavestart) + release, wavesize - release, channels, 2);
+					m_compress_p->instances = 0;
+				}
+				else
+				{
+					if (wavesize & channels)
+						wavesize += channels;
+					CompressWAV(compress, m_compress_p->f[0], (short*)(ptr + wavestart), wavesize, channels, 0);
+					m_compress_p->instances = -1;
+				}
+
+				k = compress - (char*)m_compress_p;
+				m_pipe[progress] = (GOrguePipe*)malloc(k);
+				if (!m_pipe[progress])
+					throw (char*)_("<Out of memory loading");
+				memcpy(m_pipe[progress], m_compress_p, k);
+
+				m_pipe[progress]->ra_shift = 7;
+				while (amp > 10000)
+				{
+					m_pipe[progress]->ra_shift--;
+					amp >>= 1;
+				}
+				m_pipe[progress]->ra_amp = (amp << 15) / -10000;
+				m_pipe[progress]->sampler = 0;
+				for (k = 0; k < 3; k++)
+					m_pipe[progress]->ptr[k] += (unsigned)m_pipe[progress];
+			}
+			catch (char* str)
+			{
+			  wxLogError("%s",str);
+			  error.Printf("%s '%s'", str + 1, key.c_str());
+			  break;
+			}
+		}
+
+		*m_pipe_ptrs[i] = (short)progress;
+		m_pipe[progress++]->WindchestGroup = m_pipe_windchests[i];
+
+	}
+
+	/* Load tremulants */
+	for (int i = 0; i < m_NumberOfTremulants; i++)
+	{
+
+		wxLogDebug("Loading tremulant #%d", i);
+
+		{
+			try
+			{
+				unsigned wavestart = 0;
+				unsigned wavesize = 0;
+				unsigned loopstart = 0;
+				unsigned loopend = 0;
+				unsigned release = 0, q, r, length = 0;
+				int channels = 0, peak = 0, amp = 10000, k, jj;
+
+				channels = 1;
+				wavestart = 4;
+				loopstart = 441000 / m_tremulant[i].StartRate;
+				release = loopend = loopstart + 441 * m_tremulant[i].Period / 10;
+				wavesize = release + 441000 / m_tremulant[i].StopRate;
+				length = 8 + sizeof(short) * wavesize;
+
+				if (!mbuffer_p)
+					ptr = (char*)malloc(mbuffer_s = length + 8);
+				else if (length + 8 > mbuffer_s)
+					ptr = (char*)realloc(mbuffer_p, mbuffer_s = length + 8);
+				else
+					ptr = (char*)mbuffer_p;
+
+				if (!ptr)
+				{
+					throw (char*)_(" Out of memory loading");
+				}
+				mbuffer_p = ptr;
+
+				ptr = mbuffer_p;
+
+				fillBufferWithTremulant(m_tremulant[i],(short*)ptr);
+				peak =  (16384 * m_tremulant[i].AmpModDepth / 100);
+
+				k = offsetof(GOrguePipe, data) + sizeof(short) * (12 + loopstart + (loopend - loopstart) + (wavesize - release));
+
+				if (!m_compress_p)
+					compress = (char*)malloc(compress_s = k);
+				else if (k > (int)compress_s)
+					compress = (char*)realloc(m_compress_p, compress_s = k);
+				else
+					compress = (char*)m_compress_p;
+
+				if (!compress)
+					throw (char*)_("<Out of memory loading");
+				m_compress_p = (GOrguePipe*)compress;
+
+				compress = (char*)m_compress_p->data;
+				*(int*)(ptr + wavestart - 4) = 0;
+				*(int*)(ptr + wavestart + sizeof(short) * wavesize) = 0;
+
+				m_compress_p->ra_volume = peak;
+				m_compress_p->ra_factor = (PHASE_ALIGN_RES << 25) / (peak + 1);
+
+				if (release)
+				{
+					if (release + channels < wavesize)
+						release += channels;
+					if (loopstart & channels)
+					{
+						wavestart -= channels << 1;
+						loopstart += channels;
+						loopend   += channels;
+						release   += channels;
+						wavesize  += channels;
+					}
+					if ((wavesize - release) & channels)
+						wavesize   += channels;
+
+					CompressWAV(compress, m_compress_p->f[0], (short*)(ptr + wavestart), loopstart, channels, 0);
+					CompressWAV(compress, m_compress_p->f[1], (short*)(ptr + wavestart) + loopstart, loopend - loopstart, channels, 1);
+					CompressWAV(compress, m_compress_p->f[2], (short*)(ptr + wavestart) + release, wavesize - release, channels, 2);
+					m_compress_p->instances = 0;
+				}
+				else
+				{
+					if (wavesize & channels)
+						wavesize += channels;
+					CompressWAV(compress, m_compress_p->f[0], (short*)(ptr + wavestart), wavesize, channels, 0);
+					m_compress_p->instances = -1;
+				}
+
+				k = compress - (char*)m_compress_p;
+				m_pipe[progress] = (GOrguePipe*)malloc(k);
+				if (!m_pipe[progress])
+					throw (char*)_("<Out of memory loading");
+				memcpy(m_pipe[progress], m_compress_p, k);
+
+				m_pipe[progress]->ra_shift = 7;
+				while (amp > 10000)
+				{
+					m_pipe[progress]->ra_shift--;
+					amp >>= 1;
+				}
+				m_pipe[progress]->ra_amp = (amp << 15) / -10000;
+				m_pipe[progress]->sampler = 0;
+				for (k = 0; k < 3; k++)
+					m_pipe[progress]->ptr[k] += (unsigned)m_pipe[progress];
+			}
+			catch (char* str)
+			{
+			  wxLogError("%s",str);
+			  error.Printf("%s '%s'", str + 1, "Tremulant");
+			  break;
+			}
+		}
+
+		m_tremulant[i].pipe = m_pipe[progress];
+		m_pipe[progress++]->WindchestGroup = i;
+
+	}
+
+	/*
+	int ii=m_pipe_files.size();
+	int max=ii+m_NumberOfTremulants;
+	for (int i = 0; i < max; i++)
+	{
+		wxLogDebug("Loading file %s",m_pipe_files[i].c_str());
+		if (i < ii)
+		{
+			if (m_pipe_files[i].StartsWith("REF:"))
+				continue;
+			if (!dlg.Update(((progress + 1) << 15) / (int)(m_NumberOfPipes + m_NumberOfTremulants + 1), m_pipe_files[i]))
+			{
+				error = "!";
+				break;
+			}
+			// 327: max parameter to progress dialog divided by 100 to calculate percentage
+#ifdef __VFD__
+			int n=(((progress + 1) << 15) / (int)(organfile->NumberOfPipes + organfile->NumberOfTremulants ))/327;
+			GOrgueLCD_WriteLineTwo(wxString::Format("Loading %d%%", n));
+#endif
+			key = pipe_keys[i];
+
+		}
+		else if (!dlg.Update(((progress + 1) << 15) / (int)(m_NumberOfPipes + m_NumberOfTremulants + 1), wxString("Tremulant ") << m_tremulant[i - ii].ObjectNumber))
+		{
+			error = "!";
+			break;
+		}
+
+		{
+			try
+			{
+				unsigned wavestart = 0;
+				unsigned wavesize = 0;
+				unsigned loopstart = 0;
+				unsigned loopend = 0;
+				unsigned release = 0, q, r, length = 0;
+				int channels = 0, peak = 0, amp = 10000, k, jj;
+
+				if (i < ii)
+				{
+					temp = key.c_str();
+					// Open file, because of efficiency wxFile is not used
+#ifdef linux
+					temp.Replace("\\", "/");
+					ffile = open(temp, O_RDONLY);
+					struct stat ffile_info;
+					fstat(ffile, &ffile_info);
+					length = ffile_info.st_size;
+#endif
+#ifdef _WIN32
+					ffile = _open(temp, _O_BINARY | _O_RDONLY | _O_SEQUENTIAL);
+					length = _filelength(ffile);
+#endif
+					if (ffile == -1) // TODO: better errorhandling (linux)
+					{
+						char message[1024];
+						const char* x = temp.mb_str();
+						sprintf(message, "Failed to open file '%s'\n", x);
+						throw message;
+					}
+
+				}
+				else if (i >= ii)
+				{
+					channels = 1;
+					wavestart = 4;
+					loopstart = 441000 / m_tremulant[i - ii].StartRate;
+					release = loopend = loopstart + 441 * m_tremulant[i - ii].Period / 10;
+					wavesize = release + 441000 / m_tremulant[i - ii].StopRate;
+					length = 8 + sizeof(short) * wavesize;
+				}
+
+				if (!mbuffer_p)
+					ptr = (char*)malloc(mbuffer_s = length + 8);
+				else if (length + 8 > mbuffer_s)
+					ptr = (char*)realloc(mbuffer_p, mbuffer_s = length + 8);
+				else
+					ptr = (char*)mbuffer_p;
+
+				if (!ptr)
+				{
+					throw (char*)_(" Out of memory loading");
+				}
+				mbuffer_p = ptr;
+
+				if (i < ii)
+				{
+					length=readOneFile(ffile, mbuffer_p, length);
+				}
+
+				ptr = mbuffer_p;
+
+				if (i >= ii)
+				{
+
 					fillBufferWithTremulant(m_tremulant[i-ii],(short*)ptr);
 					peak =  (16384 * m_tremulant[i-ii].AmpModDepth / 100);
-                }
-                else
-                {
-                    {
-                        RIFF riff;
-                        if (length >= 12)
-                        {
-                            riff.Analyze(ptr, 0);
-                                if (!(riff == "RIFF"&&
-                                       (riff.GetSize() == length - 8 || riff.GetSize() == length)
-                                  && !strncmp(ptr + 8, "WAVE", 4)))
-								  {
-									throw (char*)"<Invalid WAV file";
-								  }
-                        }
-                        else
-						  {
-                            throw (char*)"<Invalid WAV file";
-						  }
+				}
+				else
+				{
+					{
+						RIFF riff;
+						if (length >= 12)
+						{
+							riff.Analyze(ptr, 0);
+							if (!(riff == "RIFF"&&
+									(riff.GetSize() == length - 8 || riff.GetSize() == length)
+									&& !strncmp(ptr + 8, "WAVE", 4)))
+							{
+								throw (char*)"<Invalid WAV file";
+							}
+						}
+						else
+						{
+							throw (char*)"<Invalid WAV file";
+						}
 
-                        for (j = 12; j + 8 <= (int)length; )
-                        {
-                            riff.Analyze(ptr, j);
-                            j += 8;
-                            if (riff == "data")
-                            {
-                                wavestart = j;
-                                wavesize = riff.GetSize() / 2;
-                            }
-                            jj = j;
-                            j += (riff.GetSize() + 1) & 0xFFFFFFFE;
-                            if (j > (int)length)
-							  {
-                                throw (char*)"<Invalid WAV file";
-							  }
-                            if (riff == "fmt ")
-                            {
-                                if (riff.GetSize() < 16 || wxINT16_SWAP_ON_BE(*(short*)(ptr + j - riff.GetSize())) != 1)
-								  {
-                                    throw (char*)"<Not PCM data in";
-								  }
-                                channels = wxUINT16_SWAP_ON_BE(*(unsigned short*)(ptr + j - riff.GetSize() + 2));
-                                if (channels < 1 || channels > 2)
-                                    throw (char*)"<More than 2 channels in";
-                                if (wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + j - riff.GetSize() + 4)) != 44100)
-                                    throw (char*)"<Not 44.1kHz sampling rate in";
-                            }
-                            else if (riff == "cue " && !m_pipe_percussive[i])
-                            {
-                                if (riff.GetSize() < 4)
-                                    throw (char*)"<Invalid CUE chunk in";
-                                k = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + j - riff.GetSize()));
-                                if (riff.GetSize() < 4 + 24 * (unsigned)k)
-                                    throw (char*)"<Invalid CUE chunk in";
-                                jj += 4;
-                                while (k)
-                                {
-                                    q = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + jj + 20)) * channels;
-                                    if (q > release)
-                                        release = q;
-                                    k--;
-                                    jj += 24;
-                                }
-                            }
-                            else if (riff == "smpl" && !m_pipe_percussive[i])
-                            {
-                                // TODO: we could support multiple sample loops?
-                                if (riff.GetSize() < 36)
-                                    throw (char*)"<Invalid SMPL chunk in";
-                                k = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + j - riff.GetSize() + 28));
-                                if (riff.GetSize() < 36 + 24 * (unsigned)k)
-                                    throw (char*)"<Invalid SMPL chunk in";
+						for (j = 12; j + 8 <= (int)length; )
+						{
+							riff.Analyze(ptr, j);
+							j += 8;
+							if (riff == "data")
+							{
+								wavestart = j;
+								wavesize = riff.GetSize() / 2;
+							}
+							jj = j;
+							j += (riff.GetSize() + 1) & 0xFFFFFFFE;
+							if (j > (int)length)
+							{
+								throw (char*)"<Invalid WAV file";
+							}
+							if (riff == "fmt ")
+							{
+								if (riff.GetSize() < 16 || wxINT16_SWAP_ON_BE(*(short*)(ptr + j - riff.GetSize())) != 1)
+								{
+									throw (char*)"<Not PCM data in";
+								}
+								channels = wxUINT16_SWAP_ON_BE(*(unsigned short*)(ptr + j - riff.GetSize() + 2));
+								if (channels < 1 || channels > 2)
+									throw (char*)"<More than 2 channels in";
+								if (wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + j - riff.GetSize() + 4)) != 44100)
+									throw (char*)"<Not 44.1kHz sampling rate in";
+							}
+							else if (riff == "cue " && !m_pipe_percussive[i])
+							{
+								if (riff.GetSize() < 4)
+									throw (char*)"<Invalid CUE chunk in";
+								k = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + j - riff.GetSize()));
+								if (riff.GetSize() < 4 + 24 * (unsigned)k)
+									throw (char*)"<Invalid CUE chunk in";
+								jj += 4;
+								while (k)
+								{
+									q = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + jj + 20)) * channels;
+									if (q > release)
+										release = q;
+									k--;
+									jj += 24;
+								}
+							}
+							else if (riff == "smpl" && !m_pipe_percussive[i])
+							{
+								// TODO: we could support multiple sample loops?
+								if (riff.GetSize() < 36)
+									throw (char*)"<Invalid SMPL chunk in";
+								k = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + j - riff.GetSize() + 28));
+								if (riff.GetSize() < 36 + 24 * (unsigned)k)
+									throw (char*)"<Invalid SMPL chunk in";
 
-                                jj += 36;
-                                // NOTE: for now, we just get the *longest* loop.
-                                while (k)
-                                {
-                                    q = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + jj +  8)) * channels;
-                                    r = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + jj + 12)) * channels + channels;
-                                    if (r - q > loopend - loopstart)
-                                    {
-                                        loopend   = r;
-                                        loopstart = q;
-                                    }
-                                    k--;
-                                    jj += 24;
-                                }
-                            }
-                        }
-                        if (!length || j != (int)length)
-                            throw (char*)"<Invalid WAV file";
+								jj += 36;
+								// NOTE: for now, we just get the *longest* loop.
+								while (k)
+								{
+									q = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + jj +  8)) * channels;
+									r = wxUINT32_SWAP_ON_BE(*(unsigned*)(ptr + jj + 12)) * channels + channels;
+									if (r - q > loopend - loopstart)
+									{
+										loopend   = r;
+										loopstart = q;
+									}
+									k--;
+									jj += 24;
+								}
+							}
+						}
+						if (!length || j != (int)length)
+							throw (char*)"<Invalid WAV file";
 
-                        int peaktemp;
-                        s_ptr = (short*)(ptr + wavestart) + wavesize;
-                        if (channels == 1)
-                        {
-                            for (k = -(int)wavesize; k; )
-                            {
-                                if (s_ptr[k] & 0x8000)
-                                    s_ptr[k]++;
-                                peaktemp  = s_ptr[k++];
-                                peaktemp ^= (peaktemp >> 15);
-                                    peak = std::max(peaktemp,peak);
-                            }
-                        }
-                        else
-                        {
-                            for (k = -(int)wavesize; k; )
-                            {
-                                if (s_ptr[k] & 0x8000)
-                                    s_ptr[k]++;
-                                peaktemp  = s_ptr[k++];
-                                if (s_ptr[k] & 0x8000)
-                                    s_ptr[k]++;
-                                peaktemp += s_ptr[k++];
-                                peaktemp ^= (peaktemp >> 15);
-                                peak = std::max(peaktemp,peak);
-                            }
-                            peak >>= 1;
-                        }
+						int peaktemp;
+						s_ptr = (short*)(ptr + wavestart) + wavesize;
+						if (channels == 1)
+						{
+							for (k = -(int)wavesize; k; )
+							{
+								if (s_ptr[k] & 0x8000)
+									s_ptr[k]++;
+								peaktemp  = s_ptr[k++];
+								peaktemp ^= (peaktemp >> 15);
+								peak = std::max(peaktemp,peak);
+							}
+						}
+						else
+						{
+							for (k = -(int)wavesize; k; )
+							{
+								if (s_ptr[k] & 0x8000)
+									s_ptr[k]++;
+								peaktemp  = s_ptr[k++];
+								if (s_ptr[k] & 0x8000)
+									s_ptr[k]++;
+								peaktemp += s_ptr[k++];
+								peaktemp ^= (peaktemp >> 15);
+								peak = std::max(peaktemp,peak);
+							}
+							peak >>= 1;
+						}
 
-                        // learning lesson: never ever trust the range values of outside sources to be correct!
-                        if (loopstart >= loopend || loopstart >= wavesize || loopend >= wavesize || release >= wavesize || !loopend || !release)
-                            loopstart = loopend = release = 0;
-                    }
-                    amp = m_pipe_amplitudes[progress];
-                }
+						// learning lesson: never ever trust the range values of outside sources to be correct!
+						if (loopstart >= loopend || loopstart >= wavesize || loopend >= wavesize || release >= wavesize || !loopend || !release)
+							loopstart = loopend = release = 0;
+					}
+					amp = m_pipe_amplitudes[progress];
+				}
 
-                        k = offsetof(GOrguePipe, data) + sizeof(short) * (12 + loopstart + (loopend - loopstart) + (wavesize - release));
-                        if (!m_compress_p)
-                            compress = (char*)malloc(compress_s = k);
-                        else if (k > (int)compress_s)
-                            compress = (char*)realloc(m_compress_p, compress_s = k);
-                        else
-                            compress = (char*)m_compress_p;
-                        if (!compress)
-                            throw (char*)_("<Out of memory loading");
-                        m_compress_p = (GOrguePipe*)compress;
+				k = offsetof(GOrguePipe, data) + sizeof(short) * (12 + loopstart + (loopend - loopstart) + (wavesize - release));
+				if (!m_compress_p)
+					compress = (char*)malloc(compress_s = k);
+				else if (k > (int)compress_s)
+					compress = (char*)realloc(m_compress_p, compress_s = k);
+				else
+					compress = (char*)m_compress_p;
+				if (!compress)
+					throw (char*)_("<Out of memory loading");
+				m_compress_p = (GOrguePipe*)compress;
 
-                        compress = (char*)m_compress_p->data;
-                        *(int*)(ptr + wavestart - 4) = 0;
-                        *(int*)(ptr + wavestart + sizeof(short) * wavesize) = 0;
+				compress = (char*)m_compress_p->data;
+				*(int*)(ptr + wavestart - 4) = 0;
+				*(int*)(ptr + wavestart + sizeof(short) * wavesize) = 0;
 
-                        m_compress_p->ra_volume = peak;
-                        m_compress_p->ra_factor = (PHASE_ALIGN_RES << 25) / (peak + 1);
+				m_compress_p->ra_volume = peak;
+				m_compress_p->ra_factor = (PHASE_ALIGN_RES << 25) / (peak + 1);
 
-                        if (release)
-                        {
-                            if (release + channels < wavesize)
-                                release += channels;
-                            if (loopstart & channels)
-                            {
-                                wavestart -= channels << 1;
-                                loopstart += channels;
-                                loopend   += channels;
-                                release   += channels;
-                                wavesize  += channels;
-                            }
-                            if ((wavesize - release) & channels)
-                                wavesize   += channels;
+				if (release)
+				{
+					if (release + channels < wavesize)
+						release += channels;
+					if (loopstart & channels)
+					{
+						wavestart -= channels << 1;
+						loopstart += channels;
+						loopend   += channels;
+						release   += channels;
+						wavesize  += channels;
+					}
+					if ((wavesize - release) & channels)
+						wavesize   += channels;
 
-                            CompressWAV(compress, m_compress_p->f[0], (short*)(ptr + wavestart), loopstart, channels, 0);
-                            CompressWAV(compress, m_compress_p->f[1], (short*)(ptr + wavestart) + loopstart, loopend - loopstart, channels, 1);
-                            CompressWAV(compress, m_compress_p->f[2], (short*)(ptr + wavestart) + release, wavesize - release, channels, 2);
-                            m_compress_p->instances = 0;
-                        }
-                        else
-                        {
-                            if (wavesize & channels)
-                                wavesize += channels;
-                            CompressWAV(compress, m_compress_p->f[0], (short*)(ptr + wavestart), wavesize, channels, 0);
-                            m_compress_p->instances = -1;
-                        }
+					CompressWAV(compress, m_compress_p->f[0], (short*)(ptr + wavestart), loopstart, channels, 0);
+					CompressWAV(compress, m_compress_p->f[1], (short*)(ptr + wavestart) + loopstart, loopend - loopstart, channels, 1);
+					CompressWAV(compress, m_compress_p->f[2], (short*)(ptr + wavestart) + release, wavesize - release, channels, 2);
+					m_compress_p->instances = 0;
+				}
+				else
+				{
+					if (wavesize & channels)
+						wavesize += channels;
+					CompressWAV(compress, m_compress_p->f[0], (short*)(ptr + wavestart), wavesize, channels, 0);
+					m_compress_p->instances = -1;
+				}
 
-                        k = compress - (char*)m_compress_p;
-                        m_pipe[progress] = (GOrguePipe*)malloc(k);
-                        if (!m_pipe[progress])
-                            throw (char*)_("<Out of memory loading");
-                        memcpy(m_pipe[progress], m_compress_p, k);
+				k = compress - (char*)m_compress_p;
+				m_pipe[progress] = (GOrguePipe*)malloc(k);
+				if (!m_pipe[progress])
+					throw (char*)_("<Out of memory loading");
+				memcpy(m_pipe[progress], m_compress_p, k);
 
-                    m_pipe[progress]->ra_shift = 7;
-                    while (amp > 10000)
-                    {
-                        m_pipe[progress]->ra_shift--;
-                        amp >>= 1;
-                    }
-                    m_pipe[progress]->ra_amp = (amp << 15) / -10000;
-                    m_pipe[progress]->sampler = 0;
-					for (k = 0; k < 3; k++)
-					  m_pipe[progress]->ptr[k] += (unsigned)m_pipe[progress];
-            }
-            catch (char* str)
-            {
+				m_pipe[progress]->ra_shift = 7;
+				while (amp > 10000)
+				{
+					m_pipe[progress]->ra_shift--;
+					amp >>= 1;
+				}
+				m_pipe[progress]->ra_amp = (amp << 15) / -10000;
+				m_pipe[progress]->sampler = 0;
+				for (k = 0; k < 3; k++)
+					m_pipe[progress]->ptr[k] += (unsigned)m_pipe[progress];
+			}
+			catch (char* str)
+			{
 			  wxLogError("%s",str);
 			  error.Printf("%s '%s'", str + 1, i < ii ?  key.c_str()  : "Tremulant");
 			  break;
-            }
-        }
+			}
+		}
 
-        if (i >= ii)
-        {
-            m_tremulant[i - ii].pipe = m_pipe[progress];
-            m_pipe[progress++]->WindchestGroup = i - ii;
-        }
-        else 
-        {
-            *m_pipe_ptrs[i] = (short)progress;
-            m_pipe[progress++]->WindchestGroup = m_pipe_windchests[i];
-        }
-    }
+		if (i >= ii)
+		{
+			m_tremulant[i - ii].pipe = m_pipe[progress];
+			m_pipe[progress++]->WindchestGroup = i - ii;
+		}
+		else
+		{
+			*m_pipe_ptrs[i] = (short)progress;
+			m_pipe[progress++]->WindchestGroup = m_pipe_windchests[i];
+		}
+	}*/
 
 
-    if (mbuffer_p)
-        free(mbuffer_p);
-    if (m_compress_p)
-        free(m_compress_p);
+	if (mbuffer_p)
+		free(mbuffer_p);
+	if (m_compress_p)
+		free(m_compress_p);
 
-    for (int i = 0; i < ii; i++)
-    {
-        if (!m_pipe_files[i].StartsWith("REF:"))
-            continue;
-        int manual, stop, pipe;
-        sscanf(m_pipe_files[i].c_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
-        if (manual >= m_FirstManual && manual <= m_NumberOfManuals)
-        {
-            if (stop >= 1 && stop <= m_manual[manual].NumberOfStops)
-            {
-			  if (pipe >= 1 && pipe <= m_manual[manual].stop[stop-1]->NumberOfLogicalPipes)
-                    *m_pipe_ptrs[i] = m_manual[manual].stop[stop-1]->pipe[pipe-1];
-                else
-                    return "Invalid reference " + m_pipe_files[i];
-            }
-            else
-                return "Invalid reference " + m_pipe_files[i];
-        }
-        else
-            return "Invalid reference " + m_pipe_files[i];
-    }
+	/* Resolve references in m_pipe_files */
+	/* This code goes through the list of all pipe filenames
+	 * searching for filenames starting with the "REF:" identifier,
+	 * if a pipe is found, it will try to resolve the pipe.	*/
+	for (int i = 0; i < m_pipe_files.size(); i++)
+	{
 
+		if (!m_pipe_files[i].StartsWith("REF:"))
+			continue;
+
+		int manual, stop, pipe;
+		sscanf(m_pipe_files[i].c_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
+		if ((manual < m_FirstManual) || (manual > m_NumberOfManuals) ||
+			(stop <= 0) || (stop > m_manual[manual].NumberOfStops) ||
+			(pipe <= 0) || (pipe > m_manual[manual].stop[stop-1]->NumberOfLogicalPipes))
+			return "Invalid reference " + m_pipe_files[i];
+
+		*m_pipe_ptrs[i] = m_manual[manual].stop[stop-1]->pipe[pipe-1];
+
+	}
+
+	/* TODO: ? check for correctness ? */
+	/* Load the images for the stops */
 	for (int i = 0; i < 9; i++)
 	{
+
 		wxMemoryInputStream mem((const char*)ImageLoader_Stops[i], c_ImageLoader_Stops[i]);
 		wxImage img(mem, wxBITMAP_TYPE_PNG);
 		m_images[i] = wxBitmap(img);
+
 	}
 
 	m_pipe_files.clear();
@@ -977,14 +1404,16 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	if (m_cfg)
 	{
-	    ::wxGetApp().frame->m_meters[0]->SetValue(m_cfg->Read("/Organ/Volume", g_sound->volume));
-        delete m_cfg;
-        m_cfg = 0;
+		::wxGetApp().frame->m_meters[0]->SetValue(m_cfg->Read("/Organ/Volume", g_sound->GetVolume()));
+		delete m_cfg;
+		m_cfg = 0;
 	}
+
 #ifdef __VFD__
-    GOrgueLCD_WriteLineTwo("Ready!");
+	GOrgueLCD_WriteLineTwo("Ready!");
 #endif
 	return wxEmptyString;
+
 }
 
 GrandOrgueFile::~GrandOrgueFile(void)
@@ -992,9 +1421,6 @@ GrandOrgueFile::~GrandOrgueFile(void)
 	for (int i = 0; i < m_NumberOfTremulants; i++)
         if (m_tremulant && m_tremulant[i].pipe)
             free(m_tremulant[i].pipe);
-	if (!m_opening)
-	{
-	}
 	if (m_pipe)
 		delete[] m_pipe;
 	if (m_divisionalcoupler)
@@ -1061,7 +1487,7 @@ void GrandOrgueFile::Save(const wxString& file)
     aIni.SaveHelper(prefix, "Organ", "ChurchAddress", m_ChurchAddress);
     aIni.SaveHelper(prefix, "Organ", "HauptwerkOrganFileFormatVersion", m_HauptwerkOrganFileFormatVersion);
     aIni.SaveHelper(prefix, "Organ", "NumberOfFrameGenerals", m_NumberOfFrameGenerals);
-    aIni.SaveHelper(prefix, "Organ", "Volume", g_sound->volume);
+    aIni.SaveHelper(prefix, "Organ", "Volume", g_sound->GetVolume());
 
     int i, j;
 
@@ -1159,3 +1585,194 @@ void GrandOrgueFile::fillBufferWithTremulant(const GOrgueTremulant& tremulant,sh
 	}
   while (++j);
 }
+
+int GrandOrgueFile::GetFirstManualIndex()
+{
+	return m_FirstManual;
+}
+
+int GrandOrgueFile::GetManualAndPedalCount()
+{
+	return m_NumberOfManuals;
+}
+
+GOrgueManual* GrandOrgueFile::GetManual(unsigned index)
+{
+	return &m_manual[index];
+}
+
+int GrandOrgueFile::GetTremulantCount()
+{
+	return m_NumberOfTremulants;
+}
+
+GOrgueTremulant* GrandOrgueFile::GetTremulant(unsigned index)
+{
+	return &m_tremulant[index];
+}
+
+bool GrandOrgueFile::DivisionalsStoreIntermanualCouplers()
+{
+	return m_DivisionalsStoreIntermanualCouplers;
+}
+
+bool GrandOrgueFile::DivisionalsStoreIntramanualCouplers()
+{
+	return m_DivisionalsStoreIntramanualCouplers;
+}
+
+bool GrandOrgueFile::DivisionalsStoreTremulants()
+{
+	return m_DivisionalsStoreTremulants;
+}
+
+int GrandOrgueFile::GetDivisionalCouplerCount()
+{
+	return m_NumberOfDivisionalCouplers;
+}
+
+GOrgueDivisionalCoupler* GrandOrgueFile::GetDivisionalCoupler(unsigned index)
+{
+	return &m_divisionalcoupler[index];
+}
+
+bool GrandOrgueFile::CombinationsStoreNonDisplayedDrawstops()
+{
+	return m_CombinationsStoreNonDisplayedDrawstops;
+}
+
+GOrgueDisplayMetrics* GrandOrgueFile::GetDisplayMetrics()
+{
+	return m_DisplayMetrics;
+}
+
+wxBitmap* GrandOrgueFile::GetImage(unsigned index)
+{
+	return &m_images[index];
+}
+
+int GrandOrgueFile::GetNumberOfReversiblePistons()
+{
+	return m_NumberOfReversiblePistons;
+}
+
+GOrguePiston* GrandOrgueFile::GetPiston(unsigned index)
+{
+	return &m_piston[index];
+}
+
+bool GrandOrgueFile::GeneralsStoreDivisionalCouplers()
+{
+	return m_GeneralsStoreDivisionalCouplers;
+}
+
+int GrandOrgueFile::GetGeneralCount()
+{
+	return m_NumberOfGenerals;
+}
+
+GOrgueGeneral* GrandOrgueFile::GetGeneral(unsigned index)
+{
+	return &m_general[index];
+}
+
+GOrguePipe* GrandOrgueFile::GetPipe(unsigned index)
+{
+	return m_pipe[index];
+}
+
+GOrgueFrameGeneral* GrandOrgueFile::GetFrameGeneral(unsigned index)
+{
+	return &m_framegeneral[index];
+}
+
+long GrandOrgueFile::GetElapsedTime()
+{
+	return m_elapsed;
+}
+
+void GrandOrgueFile::SetElapsedTime(long elapsed)
+{
+	m_elapsed = elapsed;
+}
+
+GOrgueWindchest* GrandOrgueFile::GetWindchest(unsigned index)
+{
+	return &m_windchest[index];
+}
+
+int GrandOrgueFile::GetWinchestGroupCount()
+{
+	return m_NumberOfWindchestGroups;
+}
+
+const wxString& GrandOrgueFile::GetChurchName()
+{
+	return m_ChurchName;
+}
+
+const wxString& GrandOrgueFile::GetChurchAddress()
+{
+	return m_ChurchAddress;
+}
+
+const wxString& GrandOrgueFile::GetOrganBuilder()
+{
+	return m_OrganBuilder;
+}
+
+const wxString& GrandOrgueFile::GetOrganBuildDate()
+{
+	return m_OrganBuildDate;
+}
+
+const wxString& GrandOrgueFile::GetOrganComments()
+{
+	return m_OrganComments;
+}
+
+const wxString& GrandOrgueFile::GetRecordingDetails()
+{
+	return m_RecordingDetails;
+}
+
+const wxString& GrandOrgueFile::GetInfoFilename()
+{
+	return m_InfoFilename;
+}
+
+GOrgueEnclosure* GrandOrgueFile::GetEnclosure(unsigned index)
+{
+	return &m_enclosure[index];
+}
+
+int GrandOrgueFile::GetEnclosureCount()
+{
+	return m_NumberOfEnclosures;
+}
+
+int GrandOrgueFile::GetAmplitude()
+{
+	return m_AmplitudeLevel;
+}
+
+bool GrandOrgueFile::IsCustomized()
+{
+	return m_b_customized;
+}
+
+const wxString& GrandOrgueFile::GetODFFilename()
+{
+	return m_filename;
+}
+
+GOrgueLabel* GrandOrgueFile::GetLabel(unsigned index)
+{
+	return &m_label[index];
+}
+
+int GrandOrgueFile::GetLabelCount()
+{
+	return m_NumberOfLabels;
+}
+

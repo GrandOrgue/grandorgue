@@ -109,14 +109,14 @@ MIDIListenDialog::MIDIListenDialog(wxWindow* win, wxString title, int what, int 
 	PutEvent(what);
 
 	m_listen->Disable();
-	for (int i = 0; i < g_sound->n_midiDevices; i++)
-		if (g_sound->b_midiDevices[i])
-			m_listen->Enable();
+	if (g_sound->HasMIDIDevice())
+		m_listen->Enable();
+
 }
 
 MIDIListenDialog::~MIDIListenDialog()
 {
-	g_sound->b_listening = false;
+	g_sound->SetMIDIListener(NULL);
 }
 
 int MIDIListenDialog::GetEvent()
@@ -204,12 +204,11 @@ void MIDIListenDialog::OnListenClick(wxCommandEvent &event)
 	if (m_listen->GetValue())
 	{
 		this->SetCursor(wxCursor(wxCURSOR_WAIT));
-		g_sound->listen_evthandler = GetEventHandler();
-		g_sound->b_listening = true;
+		g_sound->SetMIDIListener(GetEventHandler());
 	}
 	else
 	{
-		g_sound->b_listening = false;
+		g_sound->SetMIDIListener(NULL);
 		this->SetCursor(wxCursor(wxCURSOR_ARROW));
 	}
 }
@@ -219,7 +218,8 @@ void MIDIListenDialog::OnListenMIDI(wxCommandEvent &event)
 	int what = event.GetInt();
 	if (PutEvent(what))
 	{
-		m_listen->SetValue(g_sound->b_listening = false);
+		m_listen->SetValue(false);
+		g_sound->SetMIDIListener(NULL);
 		this->SetCursor(wxCursor(wxCURSOR_ARROW));
 	}
 }

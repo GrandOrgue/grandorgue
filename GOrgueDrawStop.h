@@ -28,20 +28,23 @@
 #include "GOrgueDrawable.h"
 #include "IniFileConfig.h"
 
+class GOrgueDisplayMetrics;
+
 class GOrgueDrawstop : public GOrgueControl, GOrgueDrawable
 {
 
 public:
-	bool DefaultToEngaged : 1;
-	bool DisplayInInvertedState : 1;
-	wxInt16 DispDrawstopRow;
-	wxInt16 DispDrawstopCol;
-	wxInt16 DispImageNum;
-	wxInt16 StopControlMIDIKeyNumber;
+	bool DefaultToEngaged;
+	bool DisplayInInvertedState;
+	int DispDrawstopRow;
+	int DispDrawstopCol;
+	int DispImageNum;
+	int StopControlMIDIKeyNumber;
+	GOrgueDisplayMetrics* DisplayMetrics;
 
 	GOrgueDrawstop();
 	virtual ~GOrgueDrawstop();
-	void Load(IniFileConfig& cfg, const char* group);
+	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	virtual bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	void Push(void);

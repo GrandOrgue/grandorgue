@@ -25,6 +25,8 @@
 
 #include "GOrguePushbutton.h"
 
+class IniFileConfig;
+
 class GOrgueFrameGeneral : public GOrguePushbutton
 {
 public:
@@ -34,10 +36,10 @@ public:
     void Save(IniFileConfig& cfg, bool prefix, wxString group = "General");
 	void Push(int depth = 0);
 
-	wxInt16 NumberOfStops;
-	wxInt16 NumberOfCouplers;
-	wxInt16 NumberOfTremulants;
-	wxInt16 NumberOfDivisionalCouplers;
+	int NumberOfStops;
+	int NumberOfCouplers;
+	int NumberOfTremulants;
+	int NumberOfDivisionalCouplers;
 
 	wxByte stop[7][8][2];
 	wxByte coupler[7][2][2];

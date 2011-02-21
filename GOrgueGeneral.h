@@ -24,13 +24,15 @@
 #define GORGUEGENERAL_H
 
 #include "GOrgueFrameGeneral.h"
-#include "IniFileConfig.h"
+
+class GOrgueDisplayMetrics;
+class IniFileConfig;
 
 class GOrgueGeneral : public GOrgueFrameGeneral
 {
 
 public:
-	void Load(IniFileConfig& cfg, const char* group);
+	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 
 };

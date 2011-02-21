@@ -25,7 +25,5 @@
 
 #include <vector>
 
-void GOrgueSoundCallbackMIDI(std::vector<unsigned char>& msg, int which);
-void MIDIAllNotesOff();
 
 #endif

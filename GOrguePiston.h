@@ -24,8 +24,10 @@
 #define GORGUEPISTON_H
 
 #include "GOrguePushbutton.h"
-#include "GOrgueDrawStop.h"
-#include "IniFileConfig.h"
+
+class GOrgueDisplayMetrics;
+class IniFileConfig;
+class GOrgueDrawstop;
 
 class GOrguePiston : public GOrguePushbutton
 {
@@ -35,7 +37,7 @@ public:
 	GOrgueDrawstop* drawstop;
 
 	GOrguePiston();
-	void Load(IniFileConfig& cfg, const char* group);
+	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Push(int depth = 0);
 

@@ -22,14 +22,27 @@
 
 #include "GOrgueCoupler.h"
 #include "IniFileConfig.h"
-#include "GrandOrgueFile.h"
+#include "GOrgueDrawStop.h"
 #include "GOrgueSound.h"
-extern GrandOrgueFile* organfile;
 
-void GOrgueCoupler::Load(IniFileConfig& cfg, const char* group)
+GOrgueCoupler::GOrgueCoupler() :
+	GOrgueDrawstop(),
+	UnisonOff(false),
+	CoupleToSubsequentUnisonIntermanualCouplers(false),
+	CoupleToSubsequentUpwardIntermanualCouplers(false),
+	CoupleToSubsequentDownwardIntermanualCouplers(false),
+	CoupleToSubsequentUpwardIntramanualCouplers(false),
+	CoupleToSubsequentDownwardIntramanualCouplers(false),
+	DestinationManual(0),
+	DestinationKeyshift(0)
+{
+
+}
+
+void GOrgueCoupler::Load(IniFileConfig& cfg, const char* group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics)
 {
   UnisonOff										= cfg.ReadBoolean( group,"UnisonOff");
-  DestinationManual								= cfg.ReadInteger( group,"DestinationManual", organfile->m_FirstManual, organfile->m_NumberOfManuals, !UnisonOff);
+  DestinationManual								= cfg.ReadInteger( group,"DestinationManual", firstValidManualIndex, numberOfManuals, !UnisonOff);
   DestinationKeyshift							= cfg.ReadInteger( group,"DestinationKeyshift",  -24,   24, !UnisonOff);
   CoupleToSubsequentUnisonIntermanualCouplers	= cfg.ReadBoolean( group,"CoupleToSubsequentUnisonIntermanualCouplers", !UnisonOff);
   CoupleToSubsequentUpwardIntermanualCouplers	= cfg.ReadBoolean( group,"CoupleToSubsequentUpwardIntermanualCouplers", !UnisonOff);
@@ -37,7 +50,12 @@ void GOrgueCoupler::Load(IniFileConfig& cfg, const char* group)
   CoupleToSubsequentUpwardIntramanualCouplers	= cfg.ReadBoolean( group,"CoupleToSubsequentUpwardIntramanualCouplers", !UnisonOff);
   CoupleToSubsequentDownwardIntramanualCouplers	= cfg.ReadBoolean( group,"CoupleToSubsequentDownwardIntramanualCouplers", !UnisonOff);
 
-  GOrgueDrawstop::Load(cfg, group);
+  GOrgueDrawstop::Load(cfg, group, displayMetrics );
+}
+
+void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix)
+{
+	GOrgueDrawstop::Save(cfg, prefix, "Coupler");
 }
 
 bool GOrgueCoupler::Set(bool on)

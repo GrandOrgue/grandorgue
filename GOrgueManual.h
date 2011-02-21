@@ -25,32 +25,19 @@
 
 #include <wx/wx.h>
 #include <vector>
-#include "IniFileConfig.h"
-#include "GOrgueStop.h"
-#include "GOrgueCoupler.h"
-#include "GOrgueDivisional.h"
+
+class GOrgueDisplayMetrics;
+class GOrgueStop;
+class GOrgueCoupler;
+class GOrgueDivisional;
+class IniFileConfig;
 
 class GOrgueManual 
 {
-public:
-  GOrgueManual():
-		Displayed(false),
-	DispKeyColourInverted(false),
-	DispKeyColourWooden(false),
-	m_ManualNumber(0),m_Width(0),
-	m_Height(0), m_X(0), m_Y(0),
-	m_KeysY(0), m_PistonY(0),
-	m_MIDI(),NumberOfLogicalKeys(0),
-	FirstAccessibleKeyLogicalKeyNumber(0),
-	FirstAccessibleKeyMIDINoteNumber(0),
-	NumberOfAccessibleKeys(0),MIDIInputNumber(0),
-	NumberOfStops(0),NumberOfCouplers(0),
-	NumberOfDivisionals(0),NumberOfTremulants(0),
-	tremulant(),Name(),	stop(NULL),
-	coupler(NULL),divisional(NULL)
-  {}
 
-	void Load(IniFileConfig& cfg, const char* group);
+public:
+	GOrgueManual();
+	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
 	void Set(int note, bool on, bool pretend = false, int depth = 0, GOrgueCoupler* prev = 0);
 	void MIDI(void);
 	~GOrgueManual(void);
@@ -59,26 +46,27 @@ public:
 	bool DispKeyColourInverted : 1;
 	bool DispKeyColourWooden : 1;
 
-	wxInt16 m_ManualNumber;
-	wxInt16 m_Width, m_Height, m_X, m_Y, m_KeysY, m_PistonY;
+	int m_ManualNumber;
+	int m_Width, m_Height, m_X, m_Y, m_KeysY, m_PistonY;
 	wxInt16 m_MIDI[85];
 
-	wxInt16 NumberOfLogicalKeys;
-	wxInt16 FirstAccessibleKeyLogicalKeyNumber;
-	wxInt16 FirstAccessibleKeyMIDINoteNumber;
-	wxInt16 NumberOfAccessibleKeys;
-	wxInt16 MIDIInputNumber;
-	wxInt16 NumberOfStops;
-	wxInt16 NumberOfCouplers;
-	wxInt16 NumberOfDivisionals;
-	wxInt16 NumberOfTremulants;
+	int NumberOfLogicalKeys;
+	int FirstAccessibleKeyLogicalKeyNumber;
+	int FirstAccessibleKeyMIDINoteNumber;
+	int NumberOfAccessibleKeys;
+	int MIDIInputNumber;
+	int NumberOfStops;
+	int NumberOfCouplers;
+	int NumberOfDivisionals;
+	int NumberOfTremulants;
 	wxInt16 tremulant[10];
 
 	wxString Name;
 
-  std::vector<GOrgueStop*> stop;
+	std::vector<GOrgueStop*> stop;
 	GOrgueCoupler* coupler;
 	GOrgueDivisional* divisional;
+
 };
 
 #endif

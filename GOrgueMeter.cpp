@@ -21,13 +21,14 @@
  */
 #include <wx/spinctrl.h>
 
+#include "GOrgueFrameGeneral.h"
 #include "GOrgueMeter.h"
 #include "GOrgueSound.h"
-#include "wxGaugeAudio.h"
-#include "GrandOrgueFile.h"
-#include "GrandOrgueID.h"
 #include "GrandOrgue.h"
+#include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
+#include "GrandOrgueID.h"
+#include "wxGaugeAudio.h"
 
 #if defined(__WXMSW__)
     #include <wx/msw/regconf.h>
@@ -139,7 +140,7 @@ void GOrgueMeter::OnVolume(wxCommandEvent& event)
 #endif
 	}
 	if (g_sound)
-	    g_sound->volume = n;
+	    g_sound->SetVolume(n);
 
 	m_meters[0]->ResetClip();
 	m_meters[1]->ResetClip();
@@ -166,8 +167,8 @@ void GOrgueMeter::OnPolyphony(wxCommandEvent& event)
 	wxConfig::Get()->Write("PolyphonyLimit", n);
 	if (g_sound)
 	{
-		g_sound->polyphony = n;
-		g_sound->poly_soft = (g_sound->polyphony * 3) / 4;
+		g_sound->SetPolyphonyLimit(n);
+		g_sound->SetPolyphonySoftLimit((n * 3) / 4);
     }
 }
 
@@ -185,7 +186,7 @@ void GOrgueMeter::OnFrame(wxCommandEvent& event)
 	}
 
 	if (organfile)
-		organfile->m_framegeneral[n - 1].Push();
+		organfile->GetFrameGeneral(n - 1)->Push();
 }
 
 void GOrgueMeter::OnTranspose(wxCommandEvent& event)
@@ -201,14 +202,14 @@ void GOrgueMeter::OnTranspose(wxCommandEvent& event)
 	}
     if (g_sound)
     {
-        g_sound->transpose = n;
+        g_sound->SetTranspose(n);
 		g_sound->ResetSound();
     }
 }
 void GOrgueMeter::OnEnter(wxCommandEvent& event)
 {
 	if (event.GetId() == ID_METER_FRAME_SPIN && organfile)
-		organfile->m_framegeneral[m_spin->GetValue() - 1].Push();
+		organfile->GetFrameGeneral(m_spin->GetValue() - 1)->Push();
 	::wxGetApp().frame->SetFocus();
 }
 

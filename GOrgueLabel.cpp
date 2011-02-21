@@ -22,6 +22,8 @@
 
 #include "GOrgueLabel.h"
 #include "GrandOrgueFile.h"
+#include "GOrgueDisplayMetrics.h"
+#include "IniFileConfig.h"
 
 /* TODO: This should not be... */
 extern GrandOrgueFile* organfile;
@@ -42,34 +44,34 @@ GOrgueLabel::GOrgueLabel() :
 
 }
 
-void GOrgueLabel::Load(IniFileConfig& cfg, const char* group)
+void GOrgueLabel::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
 {
-  Name=cfg.ReadString( group,"Name",   64);
-  FreeXPlacement=cfg.ReadBoolean( group,"FreeXPlacement");
-  FreeYPlacement=cfg.ReadBoolean( group,"FreeYPlacement");
+	Name=cfg.ReadString( group,"Name",   64);
+	FreeXPlacement=cfg.ReadBoolean( group,"FreeXPlacement");
+	FreeYPlacement=cfg.ReadBoolean( group,"FreeYPlacement");
 
-  if (!FreeXPlacement)
+	if (!FreeXPlacement)
 	{
-	  DispDrawstopCol=cfg.ReadInteger( group,"DispDrawstopCol",    1, organfile->m_DispDrawstopCols);
-	  DispSpanDrawstopColToRight=cfg.ReadBoolean( group,"DispSpanDrawstopColToRight");
+		DispDrawstopCol=cfg.ReadInteger(group, "DispDrawstopCol", 1, displayMetrics->NumberOfDrawstopColsToDisplay());
+		DispSpanDrawstopColToRight=cfg.ReadBoolean(group, "DispSpanDrawstopColToRight");
 	}
-  else
-	DispXpos=cfg.ReadInteger( group,"DispXpos",    0, organfile->m_DispScreenSizeHoriz);
+	else
+		DispXpos=cfg.ReadInteger(group, "DispXpos", 0, displayMetrics->GetScreenWidth());
 
-  if (!FreeYPlacement)
-	DispAtTopOfDrawstopCol=cfg.ReadBoolean( group,"DispAtTopOfDrawstopCol");
-  else
-	DispYpos=cfg.ReadInteger( group,"DispYpos",    0, organfile->m_DispScreenSizeVert);
+	if (!FreeYPlacement)
+		DispAtTopOfDrawstopCol=cfg.ReadBoolean(group, "DispAtTopOfDrawstopCol");
+	else
+		DispYpos=cfg.ReadInteger(group, "DispYpos", 0, displayMetrics->GetScreenHeight());
 
-  // NOTICE: this should not be allowed, but some existing definition files use improper values
-  if (!DispXpos)
-	DispYpos++;
-  if (!DispYpos)
-	DispYpos++;
+	// NOTICE: this should not be allowed, but some existing definition files use improper values
+	if (!DispXpos)
+		DispYpos++;
+	if (!DispYpos)
+		DispYpos++;
 
-  DispLabelColour=cfg.ReadColor( group,"DispLabelColour");
-  DispLabelFontSize=cfg.ReadFontSize( group,"DispLabelFontSize");
-  DispImageNum=cfg.ReadInteger( group,"DispImageNum",    1,    1);
+	DispLabelColour = cfg.ReadColor(group, "DispLabelColour");
+	DispLabelFontSize = cfg.ReadFontSize(group, "DispLabelFontSize");
+	DispImageNum = cfg.ReadInteger(group, "DispImageNum", 1, 1);
 }
 
 

@@ -22,6 +22,11 @@
 
 #include "GOrguePiston.h"
 #include "GrandOrgueFile.h"
+#include "GOrgueDrawStop.h"
+#include "GOrgueCoupler.h"
+#include "GOrgueStop.h"
+#include "GOrgueTremulant.h"
+#include "IniFileConfig.h"
 
 /* TODO: This should not be... */
 extern GrandOrgueFile* organfile;
@@ -33,7 +38,7 @@ GOrguePiston::GOrguePiston() :
 
 }
 
-void GOrguePiston::Load(IniFileConfig& cfg, const char* group)
+void GOrguePiston::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
 {
 
 	int i, j;
@@ -42,23 +47,23 @@ void GOrguePiston::Load(IniFileConfig& cfg, const char* group)
 
 	if (type == "STOP")
 	{
-		i = cfg.ReadInteger(group, "ManualNumber", organfile->m_FirstManual, organfile->m_NumberOfManuals);
-		j = cfg.ReadInteger(group, "ObjectNumber", 1, organfile->m_manual[i].NumberOfStops) - 1;
-		drawstop = organfile->m_manual[i].stop[j];
+		i = cfg.ReadInteger(group, "ManualNumber", organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
+		j = cfg.ReadInteger(group, "ObjectNumber", 1, organfile->GetManual(i)->NumberOfStops) - 1;
+		drawstop = organfile->GetManual(i)->stop[j];
 	}
 	if (type == "COUPLER")
 	{
-		i = cfg.ReadInteger(group, "ManualNumber", organfile->m_FirstManual, organfile->m_NumberOfManuals);
-		j = cfg.ReadInteger(group, "ObjectNumber", 1, organfile->m_manual[i].NumberOfCouplers) - 1;
-		drawstop = &organfile->m_manual[i].coupler[j];
+		i = cfg.ReadInteger(group, "ManualNumber", organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
+		j = cfg.ReadInteger(group, "ObjectNumber", 1, organfile->GetManual(i)->NumberOfCouplers) - 1;
+		drawstop = &organfile->GetManual(i)->coupler[j];
 	}
 	if (type == "TREMULANT")
 	{
-		j = ObjectNumber=cfg.ReadInteger(group, "ObjectNumber", 1, organfile->m_NumberOfTremulants) - 1;
-		drawstop = &organfile->m_tremulant[j];
+		j = ObjectNumber=cfg.ReadInteger(group, "ObjectNumber", 1, organfile->GetTremulantCount()) - 1;
+		drawstop = organfile->GetTremulant(j);
 	}
 
-	GOrguePushbutton::Load(cfg, group);
+	GOrguePushbutton::Load(cfg, group, displayMetrics);
 	if (drawstop->DefaultToEngaged ^ drawstop->DisplayInInvertedState)
 		DispImageNum ^= 2;
 

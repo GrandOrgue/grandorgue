@@ -24,27 +24,29 @@
 #define GORGUELABEL_H
 
 #include <wx/wx.h>
-#include "IniFileConfig.h"
+
+class GOrgueDisplayMetrics;
+class IniFileConfig;
 
 class GOrgueLabel
 {
 
 public:
 
-	bool FreeXPlacement : 1;
-	bool FreeYPlacement : 1;
-	bool DispSpanDrawstopColToRight : 1;
-	bool DispAtTopOfDrawstopCol : 1;
-	wxInt16 DispDrawstopCol;
-	wxInt16 DispXpos;
-	wxInt16 DispYpos;
-	wxInt16 DispLabelFontSize;
-	wxInt16 DispImageNum;
+	bool FreeXPlacement;
+	bool FreeYPlacement;
+	bool DispSpanDrawstopColToRight;
+	bool DispAtTopOfDrawstopCol;
+	int DispDrawstopCol;
+	int DispXpos;
+	int DispYpos;
+	int DispLabelFontSize;
+	int DispImageNum;
 	wxColour DispLabelColour;
 	wxString Name;
 
 	GOrgueLabel();
-	void Load(IniFileConfig& cfg, const char* group);
+	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
 
 };
 

@@ -46,77 +46,12 @@ class wxConfigBase;
 
 class GOrguePipe;
 
-struct GOrgueSamplerT
-{
-	GOrgueSamplerT* next;		// must be first!
-	GOrguePipe* pipe;
-	wxByte* ptr;
-	int fade, fadein, fadeout, faderemain, fademax, time, offset, type;
-	int current, stage, overflowing, shift;
-	wxInt64 overflow, f, v;
-};
+#define DATA_TYPE_MONO_COMPRESSED     0
+#define DATA_TYPE_MONO_UNCOMPRESSED   1
+#define DATA_TYPE_STEREO_COMPRESSED   2
+#define DATA_TYPE_STEREO_UNCOMPRESSED 3
 
-typedef struct GOrgueSamplerT GOrgueSampler;
-
-class GOrgueSound
-{
-public:
-	GOrgueSound(void);
-	~GOrgueSound(void);
-
-	bool OpenSound(bool wait = true);
-	void CloseSound();
-	bool ResetSound();
-
-	void OpenWAV();
-	void CloseWAV();
-
-    void UpdateOrganMIDI();
-    std::map<long, wxString> organmidiEvents;
-
-	static void MIDIPretend(bool on);
-
-	wxStopWatch sw;
-
-	wxConfigBase *pConfig;
-
-	GOrgueSampler samplers[MAX_POLYPHONY];
-	GOrgueSampler* samplers_open[MAX_POLYPHONY];
-	GOrgueSampler* windchests[10 + 1 + 16];		// maximum 10 tremulants + 1 detach + 16 windchests
-	RtAudioFormat format;
-	wxWindow* m_parent;
-	int samplers_count;
-	int polyphony, poly_soft;
-	int volume;
-	int transpose;
-
-	std::map<wxString, std::pair<int, RtAudio::Api> > m_audioDevices;
-	RtAudio* audioDevice;
-	int n_latency;
-
-	std::map<wxString, int> m_midiDevices;
-	RtMidiIn** midiDevices;
-	bool* b_midiDevices;
-	int* i_midiDevices;
-	int n_midiDevices;
-	int i_midiEvents[16];
-
-	int b_limit, b_stereo, b_align, b_detach, b_scale, b_random;
-	bool b_stoprecording, b_memset;
-	FILE *f_output;
-
-	short meter_counter;
-	short meter_poly;
-	double meter_left;
-	double meter_right;
-
-	bool b_active, b_listening;
-	wxEvtHandler* listen_evthandler;
-
-	wxString defaultAudio;
-};
-
-#pragma pack(1)
+#pragma pack(push, 1)
 
 struct struct_WAVE
 {
@@ -135,6 +70,138 @@ struct struct_WAVE
 	int Subchunk2Size;
 };
 
-#pragma pack()
+#pragma pack(pop)
+
+struct GOrgueSamplerT
+{
+	GOrgueSamplerT* next;		// must be first!
+	GOrguePipe* pipe;
+	wxByte* ptr;
+	int fade, fadein, fadeout, faderemain, fademax, time, offset;
+	int type; /* DATA_TYPE_xxxxx */
+	int current, stage, overflowing, shift;
+	wxInt64 overflow, f, v;
+};
+
+typedef struct GOrgueSamplerT GOrgueSampler;
+
+class GOrgueSound
+{
+
+private:
+
+	/* These are only used by the audio callback... */
+	double final_buff[1024 * 2];
+	float volume_buff[1024 * 2];
+	int g_buff[11][(1024 + 2) * 2];
+	/* end audio callback variables */
+
+	wxStopWatch sw;
+
+	wxConfigBase *pConfig;
+
+	GOrgueSampler samplers[MAX_POLYPHONY];
+	GOrgueSampler* samplers_open[MAX_POLYPHONY];
+	RtAudioFormat format;
+	/* wxWindow* m_parent; - this was pointless  */
+
+	bool logSoundErrors;
+
+	int samplers_count;
+	int polyphony;
+	int poly_soft;
+	int volume;
+	int transpose;
+
+	std::map<wxString, std::pair<int, RtAudio::Api> > m_audioDevices;
+	RtAudio* audioDevice;
+	int n_latency;
+
+	std::map<wxString, int> m_midiDevices;
+	RtMidiIn** midiDevices;
+	bool* b_midiDevices;
+	int* i_midiDevices;
+	int n_midiDevices;
+
+	int b_limit, b_stereo, b_align, b_scale;
+	int b_random;
+	bool b_stoprecording;
+	FILE *f_output;
+
+	short meter_counter;
+	short meter_poly;
+	double meter_left;
+	double meter_right;
+
+	bool b_active;
+
+	/* related to the midi listener */
+	/* TODO: find out if b_listening is redundant */
+	bool b_listening;
+	wxEvtHandler* listen_evthandler;
+
+	wxString defaultAudio;
+
+	void MIDIAllNotesOff();
+
+private:
+
+	static int AudioCallback(void *outputBuffer, void *inputBuffer, unsigned int nFrames, double streamTime, RtAudioStreamStatus status, void *userData);
+	static void MIDICallback(std::vector<unsigned char>& msg, int which, GOrgueSound* gOrgueSoundInstance);
+
+public:
+
+	bool b_memset;
+	int i_midiEvents[16];
+	GOrgueSampler* windchests[10 + 1 + 16];		// maximum 10 tremulants + 1 detach + 16 windchests
+	int b_detach;
+
+	GOrgueSound(void);
+	~GOrgueSound(void);
+
+	bool OpenSound(bool wait = true);
+	void CloseSound();
+	bool ResetSound();
+
+	void CloseWAV();
+
+    void UpdateOrganMIDI();
+    std::map<long, wxString> organmidiEvents;
+
+	static void MIDIPretend(bool on);
+
+	void SetPolyphonyLimit(int polyphony);
+	void SetPolyphonySoftLimit(int polyphony_soft);
+	void SetVolume(int volume);
+	int GetVolume();
+	void SetTranspose(int transpose);
+	GOrgueSampler* OpenNewSampler();
+	bool HasRandomPipeSpeech();
+	bool HasReleaseAlignment();
+	bool HasScaledReleases();
+	bool IsStereo();
+
+	bool IsRecording();
+	void StartRecording();
+	void StopRecording();
+
+	bool HasMIDIDevice();
+	bool HasMIDIListener();
+	void SetMIDIListener(wxEvtHandler* handler);
+
+	bool IsActive();
+	void ActivatePlayback();
+
+	void SetLogSoundErrorMessages(bool settingsDialogVisible);
+
+	const RtAudioFormat GetAudioFormat();
+
+	/* TODO: these should have const scope */
+	std::map<wxString, std::pair<int, RtAudio::Api> >& GetAudioDevices();
+	std::map<wxString, int>& GetMIDIDevices();
+	const wxString GetDefaultAudioDevice();
+
+
+};
 
 #endif

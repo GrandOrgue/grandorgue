@@ -24,18 +24,15 @@
 #define GORGUECONTROL_H
 
 #include <wx/wx.h>
-#include "IniFileConfig.h"
+
+class IniFileConfig;
 
 class GOrgueControl 
 {
-public:
-  GOrgueControl():
-	Displayed(false), DispKeyLabelOnLeft(false),
-	ObjectNumber(0), ShortcutKey(0), DispLabelFontSize(0),
-	DispLabelColour(0,0,0), Name()
-  {}
-  virtual ~GOrgueControl(){}
 
+public:
+	GOrgueControl();
+	virtual ~GOrgueControl();
 	void Load(IniFileConfig& cfg, const char* group);
 
 	bool Displayed : 1;
@@ -45,6 +42,7 @@ public:
 	wxInt16 DispLabelFontSize;
 	wxColour DispLabelColour;
 	wxString Name;
+
 };
 
 #endif

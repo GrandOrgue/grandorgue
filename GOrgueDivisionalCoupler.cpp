@@ -39,7 +39,7 @@ GOrgueDivisionalCoupler::GOrgueDivisionalCoupler() :
 }
 
 
-void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, const char* group)
+void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, const char* group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics)
 {
 
 	int i;
@@ -50,9 +50,9 @@ void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, const char* group)
 	for (i = 0; i < NumberOfManuals; i++)
 	{
 		sprintf(buffer, "Manual%03d", i + 1);
-		manual[i] = cfg.ReadInteger(group, buffer, organfile->m_FirstManual, organfile->m_NumberOfManuals);
+		manual[i] = cfg.ReadInteger(group, buffer, firstValidManualIndex, numberOfManuals);
 	}
-	GOrgueDrawstop::Load(cfg, group);
+	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 
 }
 

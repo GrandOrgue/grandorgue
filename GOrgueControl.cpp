@@ -23,15 +23,34 @@
 #include "GOrgueControl.h"
 #include "IniFileConfig.h"
 
+GOrgueControl::GOrgueControl() :
+	Displayed(false),
+	DispKeyLabelOnLeft(false),
+	ObjectNumber(0),
+	ShortcutKey(0),
+	DispLabelFontSize(0),
+	DispLabelColour(0,0,0),
+	Name()
+{
+
+}
+
+GOrgueControl::~GOrgueControl()
+{
+
+}
+
 void GOrgueControl::Load(IniFileConfig& cfg, const char* group)
 {
-  Name				 = cfg.ReadString( group,"Name",   64);
-  ShortcutKey		 = cfg.ReadInteger( group,"ShortcutKey",    0,  255, false);
-  Displayed			 = cfg.ReadBoolean( group,"Displayed");
-  DispKeyLabelOnLeft = cfg.ReadBoolean( group,"DispKeyLabelOnLeft");
-  DispLabelColour	 = cfg.ReadColor( group,"DispLabelColour");
-  DispLabelFontSize	 = cfg.ReadFontSize( group,"DispLabelFontSize");
 
-  if (strlen(group) >= 3)
-	ObjectNumber = atoi(group + strlen(group) - 3);
+	Name = cfg.ReadString(group, "Name", 64);
+	ShortcutKey = cfg.ReadInteger(group, "ShortcutKey", 0, 255, false);
+	Displayed = cfg.ReadBoolean(group, "Displayed");
+	DispKeyLabelOnLeft = cfg.ReadBoolean(group, "DispKeyLabelOnLeft");
+	DispLabelColour = cfg.ReadColor(group, "DispLabelColour");
+	DispLabelFontSize = cfg.ReadFontSize(group, "DispLabelFontSize");
+
+	if (strlen(group) >= 3)
+		ObjectNumber = atoi(group + strlen(group) - 3);
+
 }
