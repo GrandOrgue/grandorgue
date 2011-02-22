@@ -26,28 +26,19 @@
 #include <wx/wx.h>
 #include <vector>
 
-class GOrgueDisplayMetrics;
-class GOrgueStop;
 class GOrgueCoupler;
+class GOrgueDisplayMetrics;
 class GOrgueDivisional;
+class GOrgueStop;
+class GOrgueTremulant;
 class IniFileConfig;
 
 class GOrgueManual 
 {
 
-public:
-	GOrgueManual();
-	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
-	void Set(int note, bool on, bool pretend = false, int depth = 0, GOrgueCoupler* prev = 0);
-	void MIDI(void);
-	~GOrgueManual(void);
-
-	bool Displayed : 1;
-	bool DispKeyColourInverted : 1;
-	bool DispKeyColourWooden : 1;
+private:
 
 	int m_ManualNumber;
-	int m_Width, m_Height, m_X, m_Y, m_KeysY, m_PistonY;
 	wxInt16 m_MIDI[85];
 
 	int NumberOfLogicalKeys;
@@ -66,6 +57,37 @@ public:
 	std::vector<GOrgueStop*> stop;
 	GOrgueCoupler* coupler;
 	GOrgueDivisional* divisional;
+
+
+public:
+
+	bool Displayed : 1;
+	int m_Width, m_Height, m_X, m_Y, m_KeysY, m_PistonY;
+	bool DispKeyColourInverted : 1;
+	bool DispKeyColourWooden : 1;
+
+	GOrgueManual();
+	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics, int manualNumber);
+	void Set(int note, bool on, bool pretend = false, int depth = 0, GOrgueCoupler* prev = 0);
+	void MIDI(void);
+	~GOrgueManual(void);
+
+	int GetNumberOfAccessibleKeys();
+	int GetFirstAccessibleKeyMIDINoteNumber();
+	int GetMIDIInputNumber();
+	int GetLogicalKeyCount();
+	void AllNotesOff();
+	void MIDIPretend(bool on);
+	bool IsKeyDown(int midiNoteNumber);
+
+	int GetStopCount();
+	GOrgueStop* GetStop(unsigned index);
+	int GetCouplerCount();
+	GOrgueCoupler* GetCoupler(unsigned index);
+	int GetDivisionalCount();
+	GOrgueDivisional* GetDivisional(unsigned index);
+	int GetTremulantCount();
+	GOrgueTremulant* GetTremulant(unsigned index);
 
 };
 

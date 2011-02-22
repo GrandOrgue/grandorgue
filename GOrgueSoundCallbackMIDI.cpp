@@ -50,13 +50,13 @@ void GOrgueSound::MIDICallback(std::vector<unsigned char>& msg, int which, GOrgu
 	{
         for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
         {
-            for (j = 0; j < organfile->GetManual(k)->NumberOfStops; j++)
-                organfile->GetManual(k)->stop[j]->Set(false);
-            for (j = 0; j < organfile->GetManual(k)->NumberOfCouplers; j++)
-                organfile->GetManual(k)->coupler[j].Set(false);
-            for (j = 0; j < organfile->GetManual(k)->NumberOfDivisionals; j++)
+            for (j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
+                organfile->GetManual(k)->GetStop(j)->Set(false);
+            for (j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
+                organfile->GetManual(k)->GetCoupler(j)->Set(false);
+            for (j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
             {
-                GOrgueDivisional *divisional = organfile->GetManual(k)->divisional + j;
+                GOrgueDivisional *divisional = organfile->GetManual(k)->GetDivisional(j);
                 if (divisional->DispImageNum & 2)
                 {
                     divisional->DispImageNum &= 1;
@@ -108,15 +108,23 @@ void GOrgueSound::MIDICallback(std::vector<unsigned char>& msg, int which, GOrgu
 
 	if (!gOrgueSoundInstance->b_active || msg.size() < 2)
 		return;
-    // MIDI code for controller
+
+	// MIDI code for controller
 	if (c == 0xB0 && (msg[1] == 120 || msg[1] == 123) && organfile)
 	{
         for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-            if (msg[0] == ((gOrgueSoundInstance->i_midiEvents[organfile->GetManual(i)->MIDIInputNumber + 7] | 0xB000) >> 8))
-                for (j = 0; j < organfile->GetManual(i)->NumberOfAccessibleKeys; j++)
+            if (msg[0] == ((gOrgueSoundInstance->i_midiEvents[organfile->GetManual(i)->GetMIDIInputNumber() + 7] | 0xB000) >> 8))
+            {
+/* TODO: this code is not equivalent to the old code but seems to be the right
+ * thing to do given the context... (midi controller change/all notes off) */
+#if 0
+            	for (j = 0; j < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); j++)
                     if (organfile->GetManual(i)->m_MIDI[j] == 1)
                         organfile->GetManual(i)->Set(j + organfile->GetManual(i)->FirstAccessibleKeyMIDINoteNumber, false);
-
+#else
+            	organfile->GetManual(i)->AllNotesOff();
+#endif
+            }
         return;
 	}
 
@@ -180,7 +188,7 @@ void GOrgueSound::MIDICallback(std::vector<unsigned char>& msg, int which, GOrgu
                     offset = gOrgueSoundInstance->i_midiEvents[i] & 0xFF;
                     if  (offset > 127)
 							offset = offset - 140;
-					if (organfile->GetManual(k)->MIDIInputNumber == q)
+					if (organfile->GetManual(k)->GetMIDIInputNumber() == q)
 						organfile->GetManual(k)->Set(msg[1]+offset+gOrgueSoundInstance->transpose, msg[2] ? true : false);
 				}
 			}
@@ -190,12 +198,12 @@ void GOrgueSound::MIDICallback(std::vector<unsigned char>& msg, int which, GOrgu
 			    {
                     for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
                     {
-                        for (j = 0; j < organfile->GetManual(k)->NumberOfStops; j++)
-                            if (msg[1] == organfile->GetManual(k)->stop[j]->StopControlMIDIKeyNumber)
-                                organfile->GetManual(k)->stop[j]->Set(msg[2] ? true : false);
-                        for (j = 0; j < organfile->GetManual(k)->NumberOfCouplers; j++)
-                            if (msg[1] == organfile->GetManual(k)->coupler[j].StopControlMIDIKeyNumber)
-                                organfile->GetManual(k)->coupler[j].Set(msg[2] ? true : false);
+                        for (j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
+                            if (msg[1] == organfile->GetManual(k)->GetStop(j)->StopControlMIDIKeyNumber)
+                                organfile->GetManual(k)->GetStop(j)->Set(msg[2] ? true : false);
+                        for (j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
+                            if (msg[1] == organfile->GetManual(k)->GetCoupler(j)->StopControlMIDIKeyNumber)
+                                organfile->GetManual(k)->GetCoupler(j)->Set(msg[2] ? true : false);
                     }
                     for (j = 0; j < organfile->GetTremulantCount(); j++)
                         if (msg[1] == organfile->GetTremulant(j)->StopControlMIDIKeyNumber)
@@ -208,12 +216,12 @@ void GOrgueSound::MIDICallback(std::vector<unsigned char>& msg, int which, GOrgu
 			    {
                     for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
                     {
-                        for (j = 0; j < organfile->GetManual(k)->NumberOfStops; j++)
-                            if (msg[1] == organfile->GetManual(k)->stop[j]->StopControlMIDIKeyNumber)
-                                organfile->GetManual(k)->stop[j]->Push();
-                        for (j = 0; j < organfile->GetManual(k)->NumberOfCouplers; j++)
-                            if (msg[1] == organfile->GetManual(k)->coupler[j].StopControlMIDIKeyNumber)
-                                organfile->GetManual(k)->coupler[j].Push();
+                        for (j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
+                            if (msg[1] == organfile->GetManual(k)->GetStop(j)->StopControlMIDIKeyNumber)
+                                organfile->GetManual(k)->GetStop(j)->Push();
+                        for (j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
+                            if (msg[1] == organfile->GetManual(k)->GetCoupler(j)->StopControlMIDIKeyNumber)
+                                organfile->GetManual(k)->GetCoupler(j)->Push();
                     }
                     for (j = 0; j < organfile->GetTremulantCount(); j++)
                         if (msg[1] == organfile->GetTremulant(j)->StopControlMIDIKeyNumber)
@@ -229,9 +237,9 @@ void GOrgueSound::MIDICallback(std::vector<unsigned char>& msg, int which, GOrgu
 	if (c == 0xC0)
 	{
 		for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
-			for (j = 0; j < organfile->GetManual(k)->NumberOfDivisionals; j++)
-				if (msg[0] == (gOrgueSoundInstance->i_midiEvents[organfile->GetManual(k)->MIDIInputNumber + 7] ^ 0x5000) >> 8 && msg[1] == organfile->GetManual(k)->divisional[j].MIDIProgramChangeNumber - 1)
-					organfile->GetManual(k)->divisional[j].Push();
+			for (j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
+				if (msg[0] == (gOrgueSoundInstance->i_midiEvents[organfile->GetManual(k)->GetMIDIInputNumber() + 7] ^ 0x5000) >> 8 && msg[1] == organfile->GetManual(k)->GetDivisional(j)->MIDIProgramChangeNumber - 1)
+					organfile->GetManual(k)->GetDivisional(j)->Push();
 		for (j = 0; j < organfile->GetGeneralCount(); j++)
 			if (msg[1] == organfile->GetGeneral(j)->MIDIProgramChangeNumber - 1)
 				organfile->GetGeneral(j)->Push();

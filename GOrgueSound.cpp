@@ -467,9 +467,7 @@ void GOrgueSound::UpdateOrganMIDI()
 void GOrgueSound::MIDIPretend(bool on)
 {
 	for (int i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-		for (int j = 0; j < organfile->GetManual(i)->NumberOfLogicalKeys; j++)
-			if (organfile->GetManual(i)->m_MIDI[j] & 1)
-				organfile->GetManual(i)->Set(j + organfile->GetManual(i)->FirstAccessibleKeyMIDINoteNumber, on, true);
+		organfile->GetManual(i)->MIDIPretend(on);
 }
 
 void GOrgueSound::SetPolyphonyLimit(int polyphony)
@@ -528,26 +526,18 @@ void GOrgueSound::MIDIAllNotesOff()
 
 	for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
 	{
-		for (j = 0; j < organfile->GetManual(i)->NumberOfAccessibleKeys; j++)
-            organfile->GetManual(i)->m_MIDI[j] = 0;
-		for (j = 0; j < organfile->GetManual(i)->NumberOfAccessibleKeys; j++)
+		organfile->GetManual(i)->AllNotesOff();
+		for (j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
 		{
-			wxCommandEvent event(wxEVT_NOTEONOFF, 0);
-			event.SetInt(i);
-			event.SetExtraLong(j);
-			::wxGetApp().frame->AddPendingEvent(event);
-		}
-		for (j = 0; j < organfile->GetManual(i)->NumberOfStops; j++)
-		{
-			for (k = 0; k < organfile->GetManual(i)->stop[j]->NumberOfLogicalPipes; k++)
+			for (k = 0; k < organfile->GetManual(i)->GetStop(j)->NumberOfLogicalPipes; k++)
 			{
-				register GOrguePipe* pipe = organfile->GetPipe(organfile->GetManual(i)->stop[j]->pipe[k]);
+				register GOrguePipe* pipe = organfile->GetPipe(organfile->GetManual(i)->GetStop(j)->pipe[k]);
 				if (pipe->instances > -1)
 					pipe->instances = 0;
 				pipe->sampler = 0;
 			}
-			if (organfile->GetManual(i)->stop[j]->m_auto)
-                organfile->GetManual(i)->stop[j]->Set(false);
+			if (organfile->GetManual(i)->GetStop(j)->m_auto)
+                organfile->GetManual(i)->GetStop(j)->Set(false);
 		}
 	}
 }

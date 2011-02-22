@@ -102,10 +102,13 @@ bool GOrgueStop::Set(bool on)
 
 	bool retval = GOrgueDrawstop::Set(on);
 
+	/* m_auto seems to state that if a stop only has 1 note, the note isn't
+	 * actually controlled by a manual, but will be on if the stop is on and
+	 * off if the stop is off... */
 	if (m_auto)
 	{
 		GOrgueManual* manual = organfile->GetManual(m_ManualNumber);
-		manual->Set(manual->FirstAccessibleKeyMIDINoteNumber + FirstAccessiblePipeLogicalKeyNumber - 1, on);
+		manual->Set(manual->GetFirstAccessibleKeyMIDINoteNumber() + FirstAccessiblePipeLogicalKeyNumber - 1, on);
 	}
 
 	return retval;

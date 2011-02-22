@@ -431,19 +431,19 @@ void GOrgueDisplayMetrics::Update()
 		organfile->GetManual(i)->m_Width = 1;
 		if (i)
 		{
-			for (int j = 0; j < organfile->GetManual(i)->NumberOfAccessibleKeys; j++)
+			for (int j = 0; j < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); j++)
 			{
-				int k = (organfile->GetManual(i)->FirstAccessibleKeyMIDINoteNumber + j) % 12;
+				int k = (organfile->GetManual(i)->GetFirstAccessibleKeyMIDINoteNumber() + j) % 12;
 				if ((k < 5 && !(k & 1)) || (k >= 5 && (k & 1)))
 					organfile->GetManual(i)->m_Width += 12;
 			}
 		}
 		else
 		{
-			for (int j = 0; j < organfile->GetManual(i)->NumberOfAccessibleKeys; j++)
+			for (int j = 0; j < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); j++)
 			{
 				organfile->GetManual(i)->m_Width += 7;
-				int k = (organfile->GetManual(i)->FirstAccessibleKeyMIDINoteNumber + j) % 12;
+				int k = (organfile->GetManual(i)->GetFirstAccessibleKeyMIDINoteNumber() + j) % 12;
 				if (j && (!k || k == 5))
 					organfile->GetManual(i)->m_Width += 7;
 			}

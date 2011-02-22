@@ -48,14 +48,14 @@ void GOrguePiston::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetr
 	if (type == "STOP")
 	{
 		i = cfg.ReadInteger(group, "ManualNumber", organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
-		j = cfg.ReadInteger(group, "ObjectNumber", 1, organfile->GetManual(i)->NumberOfStops) - 1;
-		drawstop = organfile->GetManual(i)->stop[j];
+		j = cfg.ReadInteger(group, "ObjectNumber", 1, organfile->GetManual(i)->GetStopCount()) - 1;
+		drawstop = organfile->GetManual(i)->GetStop(j);
 	}
 	if (type == "COUPLER")
 	{
 		i = cfg.ReadInteger(group, "ManualNumber", organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
-		j = cfg.ReadInteger(group, "ObjectNumber", 1, organfile->GetManual(i)->NumberOfCouplers) - 1;
-		drawstop = &organfile->GetManual(i)->coupler[j];
+		j = cfg.ReadInteger(group, "ObjectNumber", 1, organfile->GetManual(i)->GetCouplerCount()) - 1;
+		drawstop = organfile->GetManual(i)->GetCoupler(j);
 	}
 	if (type == "TREMULANT")
 	{
