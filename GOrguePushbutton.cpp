@@ -49,7 +49,7 @@ void GOrguePushbutton::MIDI(void)
 {
 	int event = 0xC000;
 	if (m_ManualNumber > -1)
-		event = g_sound->i_midiEvents[organfile->GetManual(m_ManualNumber)->MIDIInputNumber + 7] ^ 0x5000;
+		event = g_sound->i_midiEvents[organfile->GetManual(m_ManualNumber)->GetMIDIInputNumber() + 7] ^ 0x5000;
 	MIDIListenDialog dlg(::wxGetApp().frame, _("Pushbutton Trigger"), event | (MIDIProgramChangeNumber - 1), m_ManualNumber > -1 ? 4 : 5);
 	if (dlg.ShowModal() == wxID_OK)
 	{

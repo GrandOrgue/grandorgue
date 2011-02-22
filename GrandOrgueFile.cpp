@@ -384,8 +384,7 @@ void GrandOrgueFile::readOrganFile()
 	for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
 	{
 		sprintf(buffer, "Manual%03d", i);
-		m_manual[i].m_ManualNumber = i;
-		m_manual[i].Load(ini, buffer, m_DisplayMetrics);
+		m_manual[i].Load(ini, buffer, m_DisplayMetrics, i);
 	}
 
 	m_enclosure = new GOrgueEnclosure[m_NumberOfEnclosures];
@@ -1377,11 +1376,11 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		int manual, stop, pipe;
 		sscanf(m_pipe_files[i].c_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
 		if ((manual < m_FirstManual) || (manual > m_NumberOfManuals) ||
-			(stop <= 0) || (stop > m_manual[manual].NumberOfStops) ||
-			(pipe <= 0) || (pipe > m_manual[manual].stop[stop-1]->NumberOfLogicalPipes))
+			(stop <= 0) || (stop > m_manual[manual].GetStopCount()) ||
+			(pipe <= 0) || (pipe > m_manual[manual].GetStop(stop-1)->NumberOfLogicalPipes))
 			return "Invalid reference " + m_pipe_files[i];
 
-		*m_pipe_ptrs[i] = m_manual[manual].stop[stop-1]->pipe[pipe-1];
+		*m_pipe_ptrs[i] = m_manual[manual].GetStop(stop-1)->pipe[pipe-1];
 
 	}
 
@@ -1493,12 +1492,12 @@ void GrandOrgueFile::Save(const wxString& file)
 
 	for (i = m_FirstManual; i <= m_NumberOfManuals; i++)
 	{
-		for (j = 0; j < m_manual[i].NumberOfStops; j++)
-			m_manual[i].stop[j]->Save(aIni, prefix);
-		for (j = 0; j < m_manual[i].NumberOfCouplers; j++)
-			m_manual[i].coupler[j].Save(aIni, prefix);
-		for (j = 0; j < m_manual[i].NumberOfDivisionals; j++)
-			m_manual[i].divisional[j].Save(aIni, prefix);
+		for (j = 0; j < m_manual[i].GetStopCount(); j++)
+			m_manual[i].GetStop(j)->Save(aIni, prefix);
+		for (j = 0; j < m_manual[i].GetCouplerCount(); j++)
+			m_manual[i].GetCoupler(j)->Save(aIni, prefix);
+		for (j = 0; j < m_manual[i].GetDivisionalCount(); j++)
+			m_manual[i].GetDivisional(j)->Save(aIni, prefix);
 	}
 	for (j = 0; j < m_NumberOfTremulants; j++)
 		m_tremulant[j].Save(aIni, prefix);

@@ -175,40 +175,40 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 			continue;
 
 		font = displayMetrics->GetControlLabelFont();
-		for (j = 0; j < organfile->GetManual(i)->NumberOfStops; j++)
+		for (j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
 		{
-			if (organfile->GetManual(i)->stop[j]->Displayed)
+			if (organfile->GetManual(i)->GetStop(j)->Displayed)
 			{
-				font.SetPointSize(organfile->GetManual(i)->stop[j]->DispLabelFontSize);
+				font.SetPointSize(organfile->GetManual(i)->GetStop(j)->DispLabelFontSize);
 				dc.SetFont(font);
-				WrapText(dc, organfile->GetManual(i)->stop[j]->Name, 51);
+				WrapText(dc, organfile->GetManual(i)->GetStop(j)->Name, 51);
 			}
 		}
 
-		for (j = 0; j < organfile->GetManual(i)->NumberOfCouplers; j++)
+		for (j = 0; j < organfile->GetManual(i)->GetCouplerCount(); j++)
 		{
-			if (organfile->GetManual(i)->coupler[j].Displayed)
+			if (organfile->GetManual(i)->GetCoupler(j)->Displayed)
 			{
-				font.SetPointSize(organfile->GetManual(i)->coupler[j].DispLabelFontSize);
+				font.SetPointSize(organfile->GetManual(i)->GetCoupler(j)->DispLabelFontSize);
 				dc.SetFont(font);
-				WrapText(dc, organfile->GetManual(i)->coupler[j].Name, 51);
+				WrapText(dc, organfile->GetManual(i)->GetCoupler(j)->Name, 51);
 			}
 		}
 
-		for (j = 0; j < organfile->GetManual(i)->NumberOfDivisionals; j++)
+		for (j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
 		{
-			if (organfile->GetManual(i)->divisional[j].Displayed)
+			if (organfile->GetManual(i)->GetDivisional(j)->Displayed)
 			{
-				font.SetPointSize(organfile->GetManual(i)->divisional[j].DispLabelFontSize);
+				font.SetPointSize(organfile->GetManual(i)->GetDivisional(j)->DispLabelFontSize);
 				dc.SetFont(font);
-				WrapText(dc, organfile->GetManual(i)->divisional[j].Name, 28);
+				WrapText(dc, organfile->GetManual(i)->GetDivisional(j)->Name, 28);
 			}
 		}
 
 		wxRegion region;
-		for (j = 0; j < organfile->GetManual(i)->NumberOfAccessibleKeys; j++)
+		for (j = 0; j < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); j++)
 		{
-			k = organfile->GetManual(i)->FirstAccessibleKeyMIDINoteNumber + j;
+			k = organfile->GetManual(i)->GetFirstAccessibleKeyMIDINoteNumber() + j;
 			if ( (((k % 12) < 5 && !(k & 1)) || ((k % 12) >= 5 && (k & 1))))
 				DrawKey(dc, i, j, false, &region);
 		}
@@ -229,9 +229,9 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 		}
 		region.Clear();
 
-		for (j = 0; j < organfile->GetManual(i)->NumberOfAccessibleKeys; j++)
+		for (j = 0; j < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); j++)
 		{
-			k = organfile->GetManual(i)->FirstAccessibleKeyMIDINoteNumber + j;
+			k = organfile->GetManual(i)->GetFirstAccessibleKeyMIDINoteNumber() + j;
 			if (!(((k % 12) < 5 && !(k & 1)) || ((k % 12) >= 5 && (k & 1))))
 				DrawKey(dc, i, j, false, &region);
 		}
@@ -251,7 +251,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 				organfile->GetManual(i)->m_Height);
 		}
 
-		for (k = 0; k < organfile->GetManual(i)->NumberOfAccessibleKeys; k++)
+		for (k = 0; k < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); k++)
 			DrawKey(dc, i, k);
 
 	}
@@ -377,10 +377,10 @@ void OrganPanel::DrawKey(wxDC& dc, int man, int k, bool usepen, wxRegion* region
 	int x, cx, cy, j, z;
 	static int addends[12] = {0, 9, 12, 21, 24, 36, 45, 48, 57, 60, 69, 72};
 
-	if (k < 0 || k > manual->NumberOfAccessibleKeys)
+	if (k < 0 || k > manual->GetNumberOfAccessibleKeys())
 		return;
 
-	k += manual->FirstAccessibleKeyMIDINoteNumber;
+	k += manual->GetFirstAccessibleKeyMIDINoteNumber();
 	z  = (((k % 12) < 5 && !(k & 1)) || ((k % 12) >= 5 && (k & 1))) ? 0 : 1;
 	cx = 7;
 	cy = 20;
@@ -388,7 +388,7 @@ void OrganPanel::DrawKey(wxDC& dc, int man, int k, bool usepen, wxRegion* region
 	{
 		x  = manual->m_X + (k / 12) * 84;
 		x += addends[k % 12];
-		j  = manual->FirstAccessibleKeyMIDINoteNumber;
+		j  = manual->GetFirstAccessibleKeyMIDINoteNumber();
 		x -= (j / 12) * 84;
 		x -= addends[j % 12];
 		if (!z)
@@ -404,7 +404,7 @@ void OrganPanel::DrawKey(wxDC& dc, int man, int k, bool usepen, wxRegion* region
 		x += (k % 12) * 7;
 		if ((k % 12) >= 5)
 			x += 7;
-		j  = manual->FirstAccessibleKeyMIDINoteNumber;
+		j  = manual->GetFirstAccessibleKeyMIDINoteNumber();
 		x -= (j / 12) * 98;
 		x -= (j % 12) * 7;
 		if ((j % 12) >= 5)
@@ -425,9 +425,9 @@ void OrganPanel::DrawKey(wxDC& dc, int man, int k, bool usepen, wxRegion* region
 		reg.Union(x, manual->m_KeysY + 18, 14, 14);
 		z = 0;
 		j = k % 12;
-		if (k > manual->FirstAccessibleKeyMIDINoteNumber && j && j != 5)
+		if (k > manual->GetFirstAccessibleKeyMIDINoteNumber() && j && j != 5)
 			z |= 2;
-		if (k < manual->FirstAccessibleKeyMIDINoteNumber + manual->NumberOfAccessibleKeys - 1 && j != 4 && j != 11)
+		if (k < manual->GetFirstAccessibleKeyMIDINoteNumber() + manual->GetNumberOfAccessibleKeys() - 1 && j != 4 && j != 11)
 			z |= 1;
 
 		if (!(z & 2))
@@ -440,18 +440,23 @@ void OrganPanel::DrawKey(wxDC& dc, int man, int k, bool usepen, wxRegion* region
 		region->Union(reg);
 	if (usepen)
 	{
-		k -= manual->FirstAccessibleKeyMIDINoteNumber;
-		const wxPen* pen = manual->m_MIDI[k] ? wxRED_PEN : wxGREY_PEN;
+
+		const wxPen* pen = manual->IsKeyDown(k) ? wxRED_PEN : wxGREY_PEN;
 		dc.SetPen(*pen);
 		wxRegion exclude;
-		if (k > 0 && manual->m_MIDI[k - 1])
+
+		if (k > 0 && manual->IsKeyDown(k - 1))
 			DrawKey(dc, man, k - 1, 0, &exclude);
-		if ((z & 2) && k > 1 && manual->m_MIDI[k - 2])
+
+		if ((z & 2) && k > 1 && manual->IsKeyDown(k - 2))
 			DrawKey(dc, man, k - 2, 0, &exclude);
-		if (k < manual->NumberOfAccessibleKeys - 1 && manual->m_MIDI[k + 1])
+
+		if (k < manual->GetNumberOfAccessibleKeys() - 1 && manual->IsKeyDown(k + 1))
 			DrawKey(dc, man, k + 1, 0, &exclude);
-		if ((z & 1) && k < manual->NumberOfAccessibleKeys - 2 && manual->m_MIDI[k + 2])
+
+		if ((z & 1) && k < manual->GetNumberOfAccessibleKeys() - 2 && manual->IsKeyDown(k + 2))
 			DrawKey(dc, man, k + 2, 0, &exclude);
+
 		if (!exclude.IsEmpty())
 		{
 			reg.Subtract(exclude);
@@ -595,12 +600,12 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 	{
 		for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
 		{
-			for (j = 0; j < organfile->GetManual(i)->NumberOfStops; j++)
-				HelpDrawStop(organfile->GetManual(i)->stop[j], dc, xx, yy, right);
-			for (j = 0; j < organfile->GetManual(i)->NumberOfCouplers; j++)
-				HelpDrawStop(&organfile->GetManual(i)->coupler[j], dc, xx, yy, right);
-			for (j = 0; j < organfile->GetManual(i)->NumberOfDivisionals; j++)
-				HelpDrawButton(&organfile->GetManual(i)->divisional[j], dc, xx, yy, right);
+			for (j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
+				HelpDrawStop(organfile->GetManual(i)->GetStop(j), dc, xx, yy, right);
+			for (j = 0; j < organfile->GetManual(i)->GetCouplerCount(); j++)
+				HelpDrawStop(organfile->GetManual(i)->GetCoupler(j), dc, xx, yy, right);
+			for (j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
+				HelpDrawButton(organfile->GetManual(i)->GetDivisional(j), dc, xx, yy, right);
 			if (dc || !organfile->GetManual(i)->Displayed)
 				continue;
 
@@ -745,17 +750,17 @@ void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 				{
 					for (int i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
 					{
-						for (int j = 0; j < organfile->GetManual(i)->NumberOfStops; j++)
+						for (int j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
 						{
-							if (k == organfile->GetManual(i)->stop[j]->ShortcutKey)
-								organfile->GetManual(i)->stop[j]->Push();
+							if (k == organfile->GetManual(i)->GetStop(j)->ShortcutKey)
+								organfile->GetManual(i)->GetStop(j)->Push();
 						}
-						for (int j = 0; j < organfile->GetManual(i)->NumberOfCouplers; j++)
-							if (k == organfile->GetManual(i)->coupler[j].ShortcutKey)
-								organfile->GetManual(i)->coupler[j].Push();
-						for (int j = 0; j < organfile->GetManual(i)->NumberOfDivisionals; j++)
-							if (k == organfile->GetManual(i)->divisional[j].ShortcutKey)
-								organfile->GetManual(i)->divisional[j].Push();
+						for (int j = 0; j < organfile->GetManual(i)->GetCouplerCount(); j++)
+							if (k == organfile->GetManual(i)->GetCoupler(j)->ShortcutKey)
+								organfile->GetManual(i)->GetCoupler(j)->Push();
+						for (int j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
+							if (k == organfile->GetManual(i)->GetDivisional(j)->ShortcutKey)
+								organfile->GetManual(i)->GetDivisional(j)->Push();
 					}
 					for (int j = 0; j < organfile->GetTremulantCount(); j++)
 						if (k == organfile->GetTremulant(j)->ShortcutKey)

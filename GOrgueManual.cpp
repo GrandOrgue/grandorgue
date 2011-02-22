@@ -68,7 +68,7 @@ GOrgueManual::GOrgueManual() :
 
 }
 
-void GOrgueManual::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueManual::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics, int manualNumber)
 {
   Name								 = cfg.ReadString( group,"Name",   32);
   NumberOfLogicalKeys				 = cfg.ReadInteger( group,"NumberOfLogicalKeys",    1,  192);
@@ -83,6 +83,8 @@ void GOrgueManual::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetr
   NumberOfCouplers					 = cfg.ReadInteger( group,"NumberOfCouplers",    0,   16, false);
   NumberOfDivisionals				 = cfg.ReadInteger( group,"NumberOfDivisionals",    0,   32, false);
   NumberOfTremulants				 = cfg.ReadInteger( group,"NumberOfTremulants",    0,   10, false);
+
+  m_ManualNumber = manualNumber;
 
   int i, j;
   char buffer[64];
@@ -252,3 +254,102 @@ GOrgueManual::~GOrgueManual(void)
   if (divisional)
 	delete[] divisional;
 }
+
+int GOrgueManual::GetMIDIInputNumber()
+{
+	return MIDIInputNumber;
+}
+
+int GOrgueManual::GetLogicalKeyCount()
+{
+	return NumberOfLogicalKeys;
+}
+
+int GOrgueManual::GetNumberOfAccessibleKeys()
+{
+	return NumberOfAccessibleKeys;
+}
+
+/* TODO: I suspect this could be made private or into something better... */
+int GOrgueManual::GetFirstAccessibleKeyMIDINoteNumber()
+{
+	return FirstAccessibleKeyMIDINoteNumber;
+}
+
+int GOrgueManual::GetStopCount()
+{
+	return NumberOfStops;
+}
+
+GOrgueStop* GOrgueManual::GetStop(unsigned index)
+{
+	assert(index < NumberOfStops);
+	return stop[index];
+}
+
+int GOrgueManual::GetCouplerCount()
+{
+	return NumberOfCouplers;
+}
+
+GOrgueCoupler* GOrgueManual::GetCoupler(unsigned index)
+{
+	assert(index < NumberOfCouplers);
+	return &coupler[index];
+}
+
+int GOrgueManual::GetDivisionalCount()
+{
+	return NumberOfDivisionals;
+}
+
+GOrgueDivisional* GOrgueManual::GetDivisional(unsigned index)
+{
+	assert(index < NumberOfDivisionals);
+	return &divisional[index];
+}
+
+int GOrgueManual::GetTremulantCount()
+{
+	return NumberOfTremulants;
+}
+
+GOrgueTremulant* GOrgueManual::GetTremulant(unsigned index)
+{
+	/* FIXME: Figure out what's going on here - then document and fix it. */
+	assert(index < NumberOfTremulants);
+	return organfile->GetTremulant(tremulant[index] - 1);
+}
+
+void GOrgueManual::AllNotesOff()
+{
+
+	/* TODO: I'm not sure if these are allowed to be merged into one loop. */
+	for (int j = 0; j < GetNumberOfAccessibleKeys(); j++)
+        m_MIDI[j] = 0;
+	for (int j = 0; j < GetNumberOfAccessibleKeys(); j++)
+	{
+		wxCommandEvent event(wxEVT_NOTEONOFF, 0);
+		event.SetInt(m_ManualNumber);
+		event.SetExtraLong(j);
+		::wxGetApp().frame->AddPendingEvent(event);
+	}
+}
+
+/* TODO: figure out what this thing does and document it */
+void GOrgueManual::MIDIPretend(bool on)
+{
+	for (int j = 0; j < NumberOfLogicalKeys; j++)
+		if (m_MIDI[j] & 1)
+			Set(j + FirstAccessibleKeyMIDINoteNumber, on, true);
+}
+
+bool GOrgueManual::IsKeyDown(int midiNoteNumber)
+{
+	if (midiNoteNumber < FirstAccessibleKeyMIDINoteNumber)
+		return false;
+	if (midiNoteNumber > FirstAccessibleKeyMIDINoteNumber + NumberOfLogicalKeys - 1)
+		return false;
+	return m_MIDI[midiNoteNumber - FirstAccessibleKeyMIDINoteNumber];
+}
+
