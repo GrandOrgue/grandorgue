@@ -68,7 +68,7 @@ CXX = g++
 .SUFFIXES:	.o .cpp
 
 .cpp.o :
-	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O2 -fomit-frame-pointer -ffast-math -mmmx -msse -msse2 -msse3 -D__LINUX_JACK__ -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -o $@ $<
+	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O2 -fomit-frame-pointer -ffast-math -mmmx -msse -msse2 -msse3 -D__UNIX_JACK__ -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -o $@ $<
 #	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O3 -funit-at-a-time -ffast-math -fomit-frame-pointer -mmmx -msse -msse2 -msse3  -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -D__WXDEBUG__ -o $@ $<
 
 all:    $(PROGRAM)
