@@ -2,7 +2,7 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
 	<File name="GOrgueDivisional.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="1123" topLine="18" />
+		<Cursor position="1215" topLine="24" />
 	</File>
 	<File name="GOrgueDrawStop.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="1118" topLine="15" />
@@ -23,7 +23,7 @@
 		<Cursor position="6143" topLine="230" />
 	</File>
 	<File name="GrandOrgue.h" open="0" top="0" tabpos="1">
-		<Cursor position="320" topLine="0" />
+		<Cursor position="320" topLine="53" />
 	</File>
 	<File name="GrandOrgue.rc" open="0" top="0" tabpos="1">
 		<Cursor position="1941" topLine="16" />
