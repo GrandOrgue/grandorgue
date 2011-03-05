@@ -455,7 +455,9 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 
 			attackSamples = wave.GetLoopStartPosition();
 			unsigned loopStart = wave.GetLoopStartPosition();
-			unsigned loopEnd = wave.GetLoopEndPosition();
+			assert(loopStart > 0);
+			assert(wave.GetLoopEndPosition() > loopStart);
+			unsigned loopSamples = wave.GetLoopEndPosition() - loopStart + 1;
 			unsigned releaseOffset = wave.GetReleaseMarkerPosition();
 			unsigned releaseSamples = wave.GetLength() - releaseOffset;
 
@@ -464,15 +466,12 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 
 			if (attackSamples % 2)
 			{
-				attackSamples += 1;
-				loopStart += 1;
-				loopEnd += 1;
+				attackSamples -= 1;
+				loopStart -= 1;
 			}
 
-			unsigned loopSamples = loopEnd - loopStart + 1;
 			if (loopSamples % 2)
 			{
-				loopEnd += 1;
 				loopSamples += 1;
 				loopSampleAdded = true;
 			}
@@ -482,10 +481,6 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 				releaseSamples += 1;
 				releaseSampleAdded = true;
 			}
-
-			/* Get number of samples in the loop */
-			assert(loopEnd > loopStart);
-			assert(loopStart > 0);
 
 			m_loop.offset = (int)loopSamples * sizeof(wxInt16) * wave.GetChannels();
 			m_loop.data = (unsigned char*)malloc(wave.GetChannels() * loopSamples * sizeof(wxInt16));
@@ -501,7 +496,7 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 				for (unsigned int i = 0; i < wave.GetChannels(); i++)
 				{
 					wxInt16 a = *(wxInt16*)&m_loop.data[i * sizeof(wxInt16)];
-					wxInt16 *b = (wxInt16*)&m_loop.data[(loopSamples - 2 * wave.GetChannels() + i) * sizeof(wxInt16)];
+					wxInt16 *b = (wxInt16*)&m_loop.data[((loopSamples - 2) * wave.GetChannels() + i) * sizeof(wxInt16)];
 					a = (*b + a) / 2;
 					b += wave.GetChannels();
 					*b = a;
