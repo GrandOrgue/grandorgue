@@ -278,7 +278,14 @@ void GOrgueWave::Open(const wxString& filename)
 		/* Read the header, get it's size and make sure that it makes sense. */
 		GO_WAVECHUNKHEADER* riffHeader = (GO_WAVECHUNKHEADER*)(ptr + offset);
 		unsigned long riffChunkSize = wxUINT32_SWAP_ON_BE(riffHeader->dwSize);
+
+		/*
 		if (!CompareFourCC(riffHeader->fccChunk, "RIFF") || (riffChunkSize > length - 8))
+			throw (char*)"< Invalid RIFF file";
+		*/
+
+		/* Pribac compatibility */
+		if (!CompareFourCC(riffHeader->fccChunk, "RIFF"))
 			throw (char*)"< Invalid RIFF file";
 		offset += sizeof(GO_WAVECHUNKHEADER);
 
@@ -331,6 +338,21 @@ void GOrgueWave::Open(const wxString& filename)
 
 		/* Free the memory used to hold the file */
 		free(ptr);
+
+	}
+	catch (char* msg)
+	{
+
+		fprintf(stderr, "unhandled exception: %s\n", msg);
+
+		/* Free the memory used to hold the file */
+		free(ptr);
+
+		/* Free any memory that was allocated by chunk loading procedures */
+		Close();
+
+		/* Rethrow the exception */
+		throw;
 
 	}
 	catch (...)
