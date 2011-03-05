@@ -329,6 +329,8 @@ void GOrgueWave::Open(const wxString& filename)
 			!loopEnd || !release)
 			loopStart = loopEnd = release = 0;
 
+		/* Free the memory used to hold the file */
+		free(ptr);
 
 	}
 	catch (...)

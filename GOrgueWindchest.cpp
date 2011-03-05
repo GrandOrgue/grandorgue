@@ -21,13 +21,14 @@
  */
 
 #include "GOrgueWindchest.h"
+
+#include "GOrgueEnclosure.h"
 #include "GrandOrgueFile.h"
 
 /* TODO: This should not be... */
 extern GrandOrgueFile* organfile;
 
 GOrgueWindchest::GOrgueWindchest() :
-	m_Volume(0.0),
 	NumberOfEnclosures(0),
 	NumberOfTremulants(0),
 	enclosure(),
@@ -63,4 +64,21 @@ void GOrgueWindchest::Load(IniFileConfig& cfg, const char* group)
 		tremulant[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetTremulantCount()) - 1;
 	}
 
+}
+
+double GOrgueWindchest::GetVolume()
+{
+	double d = 1.0;
+	const double scale = 1.0 / 12700.0;
+	for (int i = 0; i < NumberOfEnclosures; i++)
+	{
+		GOrgueEnclosure* e = organfile->GetEnclosure(enclosure[i]);
+		d *= (double)(e->MIDIValue * (100 - e->AmpMinimumLevel) + 127 * e->AmpMinimumLevel) * scale;
+	}
+	return d;
+}
+
+int GOrgueWindchest::GetTremulantCount()
+{
+	return NumberOfTremulants;
 }

@@ -478,7 +478,15 @@ GrandOrgueFile::~GrandOrgueFile(void)
         if (m_tremulant && m_tremulant[i].pipe)
             free(m_tremulant[i].pipe);
 	if (m_pipe)
+	{
+		for (unsigned i = 0; i < m_NumberOfPipes + m_NumberOfTremulants; i++)
+			if (m_pipe[i])
+			{
+				delete m_pipe[i];
+				m_pipe[i] = NULL;
+			}
 		delete[] m_pipe;
+	}
 	if (m_divisionalcoupler)
 		delete[] m_divisionalcoupler;
 	if (m_framegeneral)

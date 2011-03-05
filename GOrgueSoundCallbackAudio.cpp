@@ -210,13 +210,7 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 		else
 		{
 			this_buff = instance->g_buff[0] + 2;
-			double d = 1.0, scale = 1.0/12700.0;
-			for (i = 0; i < organfile->GetWindchest(j)->NumberOfEnclosures; i++)
-			{
-				GOrgueEnclosure* enclosure = organfile->GetEnclosure(organfile->GetWindchest(j)->enclosure[i]);
-				d *= (double)(enclosure->MIDIValue * (100 - enclosure->AmpMinimumLevel) + 127 * enclosure->AmpMinimumLevel) * scale;
-			}
-			organfile->GetWindchest(j)->m_Volume = d;
+			double d = organfile->GetWindchest(j)->GetVolume();
 			d *= instance->volume;
 			d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
 
@@ -321,7 +315,7 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 		if (j >= organfile->GetTremulantCount())
 		{
 			int *ptr;
-			for (i = 0; i < organfile->GetWindchest(j)->NumberOfTremulants; i++)
+			for (i = 0; i < organfile->GetWindchest(j)->GetTremulantCount(); i++)
 			{
 
 				if (!instance->windchests[organfile->GetWindchest(j)->tremulant[i]])
