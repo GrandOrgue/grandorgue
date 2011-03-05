@@ -190,9 +190,11 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 	if (!instance->b_active)
 		return 0;
 
+	/* update the polyphony meter if a new peak has occured */
 	if (instance->samplers_count > instance->meter_poly)
 		instance->meter_poly = instance->samplers_count;
 
+	/* initialise the output buffer */
 	std::fill(instance->final_buff, instance->final_buff+2048,0);
 
 	for (j = 0; j < organfile->GetTremulantCount() + 1 + organfile->GetWinchestGroupCount(); j++)
@@ -226,6 +228,7 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 
 		for (GOrgueSampler* sampler = instance->windchests[j]; sampler; sampler = sampler->next)
 		{
+
 			if (instance->b_limit && instance->samplers_count >= instance->poly_soft && sampler->stage == 2 && organfile->GetElapsedTime() - sampler->time > 250)
 				sampler->fadeout = 4;
 
@@ -244,22 +247,26 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 				if(sampler->type==0)
 					monoCompressed(sampler,buffer);
 
-				if(sampler->current>=0)
+				if(sampler->stage != 2)
 				{
-					if( sampler->stage!=2)
-					{
-						sampler->stage=1;
-						sampler->ptr=sampler->pipe->ptr[1];
-						sampler->current=sampler->pipe->offset[1];
-						sampler->type=sampler->pipe->types[1];
-						sampler->f=*(wxInt64*)&sampler->pipe->f[1];
-						sampler->v=*(wxInt64*)&sampler->pipe->v[1];
 
-					}
-					else
+					unsigned currentBlockLen = (sampler->stage == 1) ? sampler->pipe->m_loop.offset : sampler->pipe->m_attack.offset;
+
+					if(sampler->current >= currentBlockLen)
 					{
-						sampler->pipe=0;
+						sampler->stage = 1;
+						sampler->ptr = sampler->pipe->m_loop.data;
+						sampler->current = 0;//sampler->pipe->m_loop.offset;
+						sampler->type = sampler->pipe->m_loop.type;
+						sampler->f = *(wxInt64*)&sampler->pipe->m_loop.f;
+						sampler->v = *(wxInt64*)&sampler->pipe->m_loop.v;
 					}
+
+				}
+				else
+				{
+					if(sampler->current >= sampler->pipe->m_release.offset)
+						sampler->pipe = NULL;
 				}
 
 				if(!sampler->pipe)

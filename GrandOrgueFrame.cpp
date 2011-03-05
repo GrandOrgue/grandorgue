@@ -310,6 +310,7 @@ wxString formatSize(wxLongLong& size)
 
 void GOrgueFrame::OnCache(wxCommandEvent& event)
 {
+#if 0
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc || !organfile)
         return;
@@ -392,6 +393,9 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
             }
         }
     }
+#else
+    throw (char*)"< sample cache disabled until further notice by nappleton";
+#endif
 }
 
 void GOrgueFrame::OnReload(wxCommandEvent& event)
