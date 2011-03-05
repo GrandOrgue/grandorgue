@@ -493,7 +493,6 @@ GrandOrgueFile::~GrandOrgueFile(void)
 		for (unsigned i = 0; i < m_NumberOfPipes + m_NumberOfTremulants; i++)
 			if (m_pipe[i])
 			{
-				printf("nbp=%d,nbt=%d,i=%u\n", (int)m_NumberOfPipes, (int)m_NumberOfTremulants, i);
 				delete m_pipe[i];
 				m_pipe[i] = NULL;
 			}
