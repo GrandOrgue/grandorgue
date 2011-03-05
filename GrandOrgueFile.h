@@ -101,16 +101,6 @@ class GrandOrgueFile
 	int readOneFile(int file, char* buffer, unsigned length);
 	void fillBufferWithTremulant(const GOrgueTremulant& tremulant,short* buffer);
 
-	short SynthTrem(double amp, double angle)
-	{
-		return (short)(amp * sin(angle));
-	}
-
-	short SynthTrem(double amp, double angle, double fade)
-	{
-		return (short)(fade * amp * sin(angle));
-	}
-
 	void CompressWAV(char*& compress, short* fv, short* ptr, int count, int channels, int stage);
 
 public:

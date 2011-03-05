@@ -21,6 +21,7 @@ PROGRAM = GrandOrgue
 # if your program has more than one source file, add more .o files to the line
 # below
 OBJECTS = \
+GOrgueWave.o \
 GOrgueControl.o \
 GOrgueCoupler.o \
 GOrgueDisplayMetrics.o \
