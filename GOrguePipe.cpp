@@ -275,6 +275,17 @@ GOrguePipe::GOrguePipe()
 	memset(&m_attack, 0, sizeof(m_attack));
 	memset(&m_loop, 0, sizeof(m_loop));
 	memset(&m_release, 0, sizeof(m_release));
+
+	_fourcc = 0;
+	_adler32 = 0;
+	_this = NULL;
+	pitch = 0;
+	sampler = NULL;
+	instances = 0;
+	WindchestGroup = 0;
+	ra_amp = 0;
+	ra_shift = 0;
+
 }
 
 void GOrguePipe::SetOn()
@@ -399,6 +410,10 @@ void GOrguePipe::SetOff()
 
 void GOrguePipe::Set(bool on)
 {
+	if (on)
+		printf("pipe::set(true)\n");
+	else
+		printf("pipe::set(false)\n");
 	if (on)
 		SetOn();
 	else

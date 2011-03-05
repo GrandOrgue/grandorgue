@@ -399,7 +399,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		int amp = m_pipe_amplitudes[progress];
 		m_pipe[progress]->LoadFromFile(key, amp);
 		*m_pipe_ptrs[i] = (short)progress;
-		m_pipe[progress++]->WindchestGroup = m_pipe_windchests[i];
+		m_pipe[progress]->WindchestGroup = m_pipe_windchests[i];
+		progress++;
 
 	}
 
@@ -411,7 +412,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 		m_pipe[progress]->CreateFromTremulant(&m_tremulant[i]);
 		m_tremulant[i].pipe = m_pipe[progress];
-		m_pipe[progress++]->WindchestGroup = i;
+		m_pipe[progress]->WindchestGroup = i;
+		progress++;
 
 	}
 
@@ -474,14 +476,24 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 GrandOrgueFile::~GrandOrgueFile(void)
 {
+
+	/*
+	 * This code used to delete the tremulants, but because of the code below
+	 * and because they are stored in pipe objects, it is not necessary... but
+	 * should come back at some point, because tremulants should not be stored
+	 * in the pipes array... it doesn't make sense.
+	 *
 	for (int i = 0; i < m_NumberOfTremulants; i++)
         if (m_tremulant && m_tremulant[i].pipe)
             free(m_tremulant[i].pipe);
+	*/
+
 	if (m_pipe)
 	{
 		for (unsigned i = 0; i < m_NumberOfPipes + m_NumberOfTremulants; i++)
 			if (m_pipe[i])
 			{
+				printf("nbp=%d,nbt=%d,i=%u\n", (int)m_NumberOfPipes, (int)m_NumberOfTremulants, i);
 				delete m_pipe[i];
 				m_pipe[i] = NULL;
 			}
