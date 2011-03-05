@@ -411,10 +411,6 @@ void GOrguePipe::SetOff()
 void GOrguePipe::Set(bool on)
 {
 	if (on)
-		printf("pipe::set(true)\n");
-	else
-		printf("pipe::set(false)\n");
-	if (on)
 		SetOn();
 	else
 		SetOff();
