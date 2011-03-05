@@ -48,6 +48,8 @@
 		<Unit filename="GOrgueControl.h" />
 		<Unit filename="GOrgueCoupler.cpp" />
 		<Unit filename="GOrgueCoupler.h" />
+		<Unit filename="GOrgueDisplayMetrics.cpp" />
+		<Unit filename="GOrgueDisplayMetrics.h" />
 		<Unit filename="GOrgueDivisional.cpp" />
 		<Unit filename="GOrgueDivisional.h" />
 		<Unit filename="GOrgueDivisionalCoupler.cpp" />
@@ -88,6 +90,9 @@
 		<Unit filename="GOrgueThread.h" />
 		<Unit filename="GOrgueTremulant.cpp" />
 		<Unit filename="GOrgueTremulant.h" />
+		<Unit filename="GOrgueWave.cpp" />
+		<Unit filename="GOrgueWave.h" />
+		<Unit filename="GOrgueWaveTypes.h" />
 		<Unit filename="GOrgueWindchest.cpp" />
 		<Unit filename="GOrgueWindchest.h" />
 		<Unit filename="GrandOrgue.cpp" />
