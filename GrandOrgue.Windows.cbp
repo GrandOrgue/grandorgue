@@ -130,6 +130,8 @@
 		<Unit filename="GOrgueThread.h" />
 		<Unit filename="GOrgueTremulant.cpp" />
 		<Unit filename="GOrgueTremulant.h" />
+		<Unit filename="GOrgueWave.cpp" />
+		<Unit filename="GOrgueWave.h" />
 		<Unit filename="GOrgueWindchest.cpp" />
 		<Unit filename="GOrgueWindchest.h" />
 		<Unit filename="GrandOrgue-0.xpm" />
