@@ -332,7 +332,8 @@ void GOrguePipe::SetOff()
 	if (instances > 0)
 		return;
 
-	if (organfile->GetWindchest(WindchestGroup)->m_Volume)
+	double vol = organfile->GetWindchest(WindchestGroup)->GetVolume();
+	if (vol)
 	{
 		GOrgueSampler* sampler = g_sound->OpenNewSampler();
 		if (sampler != NULL)
@@ -354,7 +355,7 @@ void GOrguePipe::SetOff()
 					sampler->fadeout = 0x0001;
 			}
 			if (g_sound->b_detach && WindchestGroup >= organfile->GetTremulantCount())
-				sampler->fademax = lrint(((double)sampler->fademax) * organfile->GetWindchest(WindchestGroup)->m_Volume);
+				sampler->fademax = lrint(((double)sampler->fademax) * vol);
 			sampler->fadein = (sampler->fademax + 128) >> 8;
 			if (!sampler->fadein)
 				sampler->fadein--;

@@ -32,16 +32,21 @@
 class GOrgueWindchest
 {
 
-public:
+private:
 
-	double m_Volume;
 	wxInt16 NumberOfEnclosures;
 	wxInt16 NumberOfTremulants;
 	wxInt16 enclosure[MAX_ENCLOSURES];
+
+public:
+
     wxInt16 tremulant[MAX_TREMULANTS];
 
-	GOrgueWindchest();
+    GOrgueWindchest();
 	void Load(IniFileConfig& cfg, const char* group);
+	double GetVolume();
+	int GetTremulantCount();
+
 
 };
 
