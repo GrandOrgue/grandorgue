@@ -30,6 +30,13 @@
 extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
 
+/* This parameter defines how many samples should be added to the end of each
+ * audio section (i.e. the "attack", "loop" or "release" segment). It is
+ * necessary due to how the sampler fetches samples. Probably not a good idea
+ * to lower this value unless you know exactly what you're doing.
+ */
+#define SAMPLE_SLACK 2
+
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 
 /* FIXME: This function must be broken - not going to even start describing the problem.
@@ -423,7 +430,8 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 	wave.Open(filename);
 
 	/* allocate data to work with */
-	wxInt16* data = (wxInt16*)malloc(wave.GetChannels() * wave.GetLength() * sizeof(wxInt16));
+	unsigned totalDataSize = wave.GetLength() * sizeof(wxInt16) * wave.GetChannels();
+	wxInt16* data = (wxInt16*)malloc(totalDataSize);
 	if (data == NULL)
 		throw (char*)"< out of memory allocating wave";
 
@@ -453,79 +461,82 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 		if (wave.HasLoops() && wave.HasReleaseMarker())
 		{
 
+			/* The wave has loops and a release marker so truncate the samples
+			 * stored in the attack portion to the beginning of the loop.
+			 */
 			attackSamples = wave.GetLoopStartPosition();
+
+			/* Get the loop parameters */
 			unsigned loopStart = wave.GetLoopStartPosition();
 			assert(loopStart > 0);
 			assert(wave.GetLoopEndPosition() > loopStart);
 			unsigned loopSamples = wave.GetLoopEndPosition() - loopStart + 1;
-			unsigned releaseOffset = wave.GetReleaseMarkerPosition();
-			unsigned releaseSamples = wave.GetLength() - releaseOffset;
+			unsigned loopSamplesInMem = loopSamples + SAMPLE_SLACK;
 
-			bool loopSampleAdded = false;
-			bool releaseSampleAdded = false;
-
-			if (attackSamples % 2)
-			{
-				attackSamples -= 1;
-				loopStart -= 1;
-			}
-
-			if (loopSamples % 2)
-			{
-				loopSamples += 1;
-				loopSampleAdded = true;
-			}
-
-			if (releaseSamples % 2)
-			{
-				releaseSamples += 1;
-				releaseSampleAdded = true;
-			}
-
-			m_loop.offset = (int)loopSamples * sizeof(wxInt16) * wave.GetChannels();
-			m_loop.data = (unsigned char*)malloc(wave.GetChannels() * loopSamples * sizeof(wxInt16));
+			/* Allocate memory for the loop, copy the loop into it and then
+			 * copy some slack samples from the beginning of the loop onto
+			 * the end to ensure correct operation of the sampler.
+			 */
+			m_loop.offset = loopSamples * sizeof(wxInt16) * wave.GetChannels();
+			m_loop.data = (unsigned char*)malloc(loopSamplesInMem * sizeof(wxInt16) * wave.GetChannels());
 			if (m_loop.data == NULL)
 				throw (char*)"< out of memory allocating loop";
-
 			memcpy(m_loop.data,
 				&data[loopStart * wave.GetChannels()],
 				m_loop.offset);
+			memcpy(&m_loop.data[m_loop.offset],
+				&data[loopStart * wave.GetChannels()],
+				loopSamplesInMem * sizeof(wxInt16) * wave.GetChannels() - m_loop.offset);
 
-			if (loopSampleAdded)
-			{
-				for (unsigned int i = 0; i < wave.GetChannels(); i++)
-				{
-					wxInt16 a = *(wxInt16*)&m_loop.data[i * sizeof(wxInt16)];
-					wxInt16 *b = (wxInt16*)&m_loop.data[((loopSamples - 2) * wave.GetChannels() + i) * sizeof(wxInt16)];
-					a = (*b + a) / 2;
-					b += wave.GetChannels();
-					*b = a;
-				}
-			}
+			/* Get the release parameters from the wave file. */
+			unsigned releaseOffset = wave.GetReleaseMarkerPosition();
+			unsigned releaseSamples = wave.GetLength() - releaseOffset;
+			unsigned releaseSamplesInMem = releaseSamples + SAMPLE_SLACK;
 
-			assert(loopStart < attackSamples + 1);
-
+			/* Allocate memory for the release, copy the release into it and
+			 * pad the slack samples with zeroes to ensure correct operation
+			 * of the sampler.
+			 */
 			m_release.offset = (int)releaseSamples * sizeof(wxInt16) * wave.GetChannels();
-			m_release.data = (unsigned char*)malloc(m_release.offset);
+			m_release.data = (unsigned char*)malloc(releaseSamplesInMem * sizeof(wxInt16) * wave.GetChannels());
 			if (m_release.data == NULL)
 				throw (char*)"< out of memory allocating release";
-
 			memcpy(m_release.data,
-				&data[(wave.GetLength() - releaseSamples - 1) * wave.GetChannels()],
+				&data[(wave.GetLength() - releaseSamples) * wave.GetChannels()],
 				m_release.offset);
+			memset(&m_release.data[m_release.offset],
+				0,
+				releaseSamplesInMem * sizeof(wxInt16) * wave.GetChannels() - m_release.offset);
 
 		}
 
-		/* Load attack segment */
+		/* Allocate memory for the attack. */
 		assert(attackSamples != 0);
+		unsigned attackSamplesInMem = attackSamples + SAMPLE_SLACK;
 		m_attack.offset = (int)attackSamples * sizeof(wxInt16) * wave.GetChannels();
-		m_attack.data = (unsigned char*)malloc(m_attack.offset);
+		assert(m_attack.offset < totalDataSize);
+		m_attack.data = (unsigned char*)malloc(attackSamplesInMem * sizeof(wxInt16) * wave.GetChannels());
 		if (m_attack.data == NULL)
 			throw (char*)"< out of memory allocating attack";
 
-		memcpy(m_attack.data,
-			&data[0],
-			m_attack.offset);
+		if (attackSamplesInMem <= wave.GetLength())
+		{
+			memcpy(m_attack.data,
+				&data[0],
+				attackSamplesInMem * sizeof(wxInt16) * wave.GetChannels());
+		}
+		else
+		{
+			memset(
+				m_attack.data,
+				0,
+				(attackSamplesInMem - wave.GetLength()) * sizeof(wxInt16) * wave.GetChannels());
+			memcpy(&m_attack.data[(attackSamplesInMem - wave.GetLength()) * sizeof(wxInt16) * wave.GetChannels()],
+				&data[0],
+				totalDataSize);
+		}
+
+
 
 		ra_shift = 7;
 		while (amp > 10000)

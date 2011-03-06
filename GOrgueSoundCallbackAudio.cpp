@@ -250,7 +250,7 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 					{
 						sampler->stage = 1;
 						sampler->ptr = sampler->pipe->m_loop.data;
-						sampler->current = 0;//sampler->pipe->m_loop.offset;
+						sampler->current = sampler->current - currentBlockLen;//sampler->pipe->m_loop.offset;
 						sampler->type = sampler->pipe->m_loop.type;
 						sampler->f = *(wxInt64*)&sampler->pipe->m_loop.f;
 						sampler->v = *(wxInt64*)&sampler->pipe->m_loop.v;
