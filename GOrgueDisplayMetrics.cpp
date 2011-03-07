@@ -315,7 +315,14 @@ void GOrgueDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const 
 	if (drawstopRow > 99)
 	{
 		*blitX = GetJambTopX() + (drawstopCol - 1) * 78 + 6;
-		*blitY = GetJambTopDrawstop() + (drawstopRow - 100) * 69 + 2;
+		if (m_DispExtraDrawstopRowsAboveExtraButtonRows)
+		{
+		    *blitY = GetJambTopDrawstop() + (drawstopRow - 100) * 69 + 2;
+		}
+		else
+		{
+            *blitY = GetJambTopDrawstop() + (drawstopRow - 100) * 69 + (m_DispExtraButtonRows * 40) + 2;
+		}
 	}
 	else
 	{
@@ -349,7 +356,14 @@ void GOrgueDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const 
 	*blitX = GetPistonX() + (buttonCol - 1) * 44 + 6;
 	if (buttonRow > 99)
 	{
+	    if (m_DispExtraDrawstopRowsAboveExtraButtonRows)
+	    {
+        *blitY = GetJambTopPiston() + (buttonRow - 100) * 40 + (m_DispExtraDrawstopRows * 69) + 5;
+	    }
+		else
+		{
 		*blitY = GetJambTopPiston() + (buttonRow - 100) * 40 + 5;
+		}
 	}
 	else
 	{
