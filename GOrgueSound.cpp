@@ -577,8 +577,8 @@ void GOrgueSound::StartRecording()
 void GOrgueSound::StopRecording()
 {
 	if (f_output)
+		b_stoprecording = true;
 		return;
-	b_stoprecording = true;
 }
 
 bool GOrgueSound::HasMIDIDevice()
