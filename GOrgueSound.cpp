@@ -566,11 +566,16 @@ void GOrgueSound::StartRecording()
 	wxFileDialog dlg(::wxGetApp().frame, _("Save as"), wxConfig::Get()->Read("wavPath", ::wxGetApp().m_path), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxSAVE | wxOVERWRITE_PROMPT);
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		wxConfig::Get()->Write("wavPath", dlg.GetDirectory());
-		if ((f_output = fopen(dlg.GetPath(), "wb")))
-			fwrite(&WAVE, sizeof(WAVE), 1, f_output);
-		else
-			::wxLogError("Unable to open file for writing");
+        wxConfig::Get()->Write("wavPath", dlg.GetDirectory());
+        wxString filepath = dlg.GetPath();
+        if (filepath.Find(".wav") == wxNOT_FOUND) {
+            filepath.append(".wav");
+        }
+        if ((f_output = fopen(filepath, "wb")))
+            fwrite(&WAVE, sizeof(WAVE), 1, f_output);
+        else
+            ::wxLogError("Unable to open file for writing");
+
 	}
 }
 
@@ -579,6 +584,7 @@ void GOrgueSound::StopRecording()
 	if (f_output)
 		b_stoprecording = true;
 		return;
+
 }
 
 bool GOrgueSound::HasMIDIDevice()
