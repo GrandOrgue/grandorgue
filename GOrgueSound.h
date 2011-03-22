@@ -117,7 +117,7 @@ private:
 	RtAudio* audioDevice;
 	int n_latency;
 
-	std::map<wxString, int> m_midiDevices;
+	std::multimap<wxString, int> m_midiDevices;
 	RtMidiIn** midiDevices;
 	bool* b_midiDevices;
 	int* i_midiDevices;
@@ -198,7 +198,7 @@ public:
 
 	/* TODO: these should have const scope */
 	std::map<wxString, std::pair<int, RtAudio::Api> >& GetAudioDevices();
-	std::map<wxString, int>& GetMIDIDevices();
+	std::multimap<wxString, int>& GetMIDIDevices();
 	const wxString GetDefaultAudioDevice();
 
 
