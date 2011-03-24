@@ -141,7 +141,7 @@ GOrgueSound::GOrgueSound(void)
 			midiDevices[i] = new RtMidiIn();
 			wxString name = midiDevices[i]->getPortName(i).c_str();
 			name.Replace("\\", "|");
-			m_midiDevices.insert(std::make_pair(name, i));
+			m_midiDevices[name] = i;
 			b_midiDevices[i] = false;
 			i_midiDevices[i] = 0;
 		}
@@ -192,7 +192,7 @@ bool GOrgueSound::OpenSound(bool wait)
 {
 	int i;
 
-	std::multimap<wxString, int>::iterator it2;
+	std::map<wxString, int>::iterator it2;
 	for (it2 = m_midiDevices.begin(); it2 != m_midiDevices.end(); it2++)
 		pConfig->Read("Devices/MIDI/" + it2->first, -1);
 	for (i = 0; i < 16; i++)
@@ -218,7 +218,7 @@ bool GOrgueSound::OpenSound(bool wait)
 
 	try
 	{
-		std::multimap<wxString, int>::iterator it2;
+		std::map<wxString, int>::iterator it2;
 		int n_midi = 0;
 		for (it2 = m_midiDevices.begin(); it2 != m_midiDevices.end(); it2++)
 		{
@@ -634,7 +634,7 @@ std::map<wxString, std::pair<int, RtAudio::Api> >& GOrgueSound::GetAudioDevices(
 	return m_audioDevices;
 }
 
-std::multimap<wxString, int>& GOrgueSound::GetMIDIDevices()
+std::map<wxString, int>& GOrgueSound::GetMIDIDevices()
 {
 	return m_midiDevices;
 }
