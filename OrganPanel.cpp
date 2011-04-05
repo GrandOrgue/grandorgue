@@ -445,17 +445,26 @@ void OrganPanel::DrawKey(wxDC& dc, int man, int k, bool usepen, wxRegion* region
 		dc.SetPen(*pen);
 		wxRegion exclude;
 
-		if (k > 0 && manual->IsKeyDown(k - 1))
+		if ((k - manual->GetFirstAccessibleKeyMIDINoteNumber()) > 0 && manual->IsKeyDown(k - 1)) {
+			k -= manual->GetFirstAccessibleKeyMIDINoteNumber();
 			DrawKey(dc, man, k - 1, 0, &exclude);
-
-		if ((z & 2) && k > 1 && manual->IsKeyDown(k - 2))
+			k += manual->GetFirstAccessibleKeyMIDINoteNumber();
+		}
+		if ((z & 2) && (k - manual->GetFirstAccessibleKeyMIDINoteNumber()) > 1 && manual->IsKeyDown(k - 2)) {
+			k -= manual->GetFirstAccessibleKeyMIDINoteNumber();
 			DrawKey(dc, man, k - 2, 0, &exclude);
-
-		if (k < manual->GetNumberOfAccessibleKeys() - 1 && manual->IsKeyDown(k + 1))
+			k += manual->GetFirstAccessibleKeyMIDINoteNumber();
+		}
+		if ((k - manual->GetFirstAccessibleKeyMIDINoteNumber()) < manual->GetNumberOfAccessibleKeys() - 1 && manual->IsKeyDown(k + 1)) {
+			k -= manual->GetFirstAccessibleKeyMIDINoteNumber();
 			DrawKey(dc, man, k + 1, 0, &exclude);
-
-		if ((z & 1) && k < manual->GetNumberOfAccessibleKeys() - 2 && manual->IsKeyDown(k + 2))
+			k += manual->GetFirstAccessibleKeyMIDINoteNumber();
+		}
+		if ((z & 1) && (k - manual->GetFirstAccessibleKeyMIDINoteNumber()) < manual->GetNumberOfAccessibleKeys() - 2 && manual->IsKeyDown(k + 2)) {
+			k -= manual->GetFirstAccessibleKeyMIDINoteNumber();
 			DrawKey(dc, man, k + 2, 0, &exclude);
+			k += manual->GetFirstAccessibleKeyMIDINoteNumber();
+		}
 
 		if (!exclude.IsEmpty())
 		{
