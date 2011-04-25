@@ -490,14 +490,14 @@ void GOrgueSound::SetTranspose(int transpose)
 	this->transpose = transpose;
 }
 
-GOrgueSampler* GOrgueSound::OpenNewSampler()
+GO_SAMPLER* GOrgueSound::OpenNewSampler()
 {
 
 	if (samplers_count >= polyphony)
 		return NULL;
 
-	GOrgueSampler* sampler = samplers_open[samplers_count++];
-	memset(sampler, 0, sizeof(GOrgueSampler));
+	GO_SAMPLER* sampler = samplers_open[samplers_count++];
+	memset(sampler, 0, sizeof(GO_SAMPLER));
 	return sampler;
 
 }
@@ -581,10 +581,9 @@ void GOrgueSound::StartRecording()
 
 void GOrgueSound::StopRecording()
 {
-	if (f_output)
-		b_stoprecording = true;
+	if (!f_output)
 		return;
-
+	b_stoprecording = true;
 }
 
 bool GOrgueSound::HasMIDIDevice()

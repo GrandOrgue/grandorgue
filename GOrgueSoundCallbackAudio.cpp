@@ -32,34 +32,69 @@
 extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
 
-/* TODO: very grumpy that these are living here... */
-void stereoUncompressed(GOrgueSampler* sampler,short* output)
+static
+inline
+void stereoUncompressed
+	(GO_SAMPLER* sampler
+	,short* output
+	)
 {
-    short* input=(short*)(sampler->ptr+sampler->current);
-    output[0] = input[0];
-    output[1] = input[1];
-    output[2] = input[2];
-    output[3] = input[3];
-    sampler->current+=8;
+
+	short *input = (short*)(sampler->ptr + sampler->position);
+	int *v = sampler->v;
+	int *f = sampler->f;
+
+	output[0] = input[0];
+	output[1] = input[1];
+	output[2] = input[2];
+	output[3] = input[3];
+
+	f[0] = input[2];
+	v[0] = f[0] - input[0];
+	f[1] = input[3];
+	v[1] = f[1] - input[1];
+
+	sampler->position += 8;
 
 }
 
-void monoUncompressed(GOrgueSampler* sampler,short* output)
+static
+inline
+void monoUncompressed
+	(GO_SAMPLER* sampler
+	,short* output
+	)
 {
-    short* input=(short*)(sampler->ptr+sampler->current);
-    output[0] = input[0];
-    output[1] = input[0];
-    output[2] = input[1];
-    output[3] = input[1];
-    sampler->current+=4;
+
+	short* input=(short*)(sampler->ptr + sampler->position);
+	int *v = sampler->v;
+	int *f = sampler->f;
+
+	output[0] = input[0];
+	output[1] = input[0];
+	output[2] = input[1];
+	output[3] = input[1];
+
+	f[0] = input[1];
+	v[0] = f[0] - input[0];
+
+	sampler->position += 4;
 
 }
 
-void monoCompressed(GOrgueSampler* sampler,short* output)
+static
+inline
+void monoCompressed
+	(GO_SAMPLER* sampler
+	,short* output
+	)
 {
-    short* v=(short*)&sampler->v;
+
+	throw (char*)"unimplemented";
+
+    /*short* v=(short*)&sampler->v;
     short* f=(short*)&sampler->f;
-    wxByte* input=sampler->ptr+sampler->current;
+    wxByte* input=sampler->ptr+sampler->position;
 
     // we are in little endian, so the byte the most to the right is in input[0]
     // check at the end of the first 32bits
@@ -72,7 +107,7 @@ void monoCompressed(GOrgueSampler* sampler,short* output)
         v[1]+=((char*)(&inputAsInt))[0];
         v[2]+=((char*)(&inputAsInt))[1];
         v[3]+=((char*)(&inputAsInt))[1];
-        sampler->current+=4;
+        sampler->position+=4;
 
     }
     else
@@ -84,7 +119,7 @@ void monoCompressed(GOrgueSampler* sampler,short* output)
         v[1]+=(((char*)(&inputAsInt1))[0]<<8)|((short)(input[2]));
         v[2]+=(((char*)(&inputAsInt1))[1]<<8)|((short)(input[3]));
         v[3]+=(((char*)(&inputAsInt1))[1]<<8)|((short)(input[3]));
-        sampler->current+=8;
+        sampler->position+=8;
     }
 
     f[0]+=v[0];
@@ -96,72 +131,228 @@ void monoCompressed(GOrgueSampler* sampler,short* output)
     output[0] = f[0];
     output[1] = f[1];
     output[2] = f[2];
-    output[3] = f[3];
+    output[3] = f[3];*/
 
 }
+
 //if the data is compressed, 32 bits represents 4 data ((Right and Left) * 2)
 // we know the data is compressed because these 32bits ends with 1.
 //if the data is uncompressed, 64 bits represents 4 data
 // the first 32bits end with a 0.
-void stereoCompressed(GOrgueSampler* sampler,short* output)
+static
+inline
+void stereoCompressed
+	(GO_SAMPLER* sampler
+	,short* output
+	)
 {
-    short* v=(short*)&sampler->v;
-    short* f=(short*)&sampler->f;
-    wxByte* input=sampler->ptr+sampler->current;
-//    printf("current %d input0 : %d v %d f %d\n",sampler->current, input[0],v[0],f[0]);
 
-    // we are in little endian, so the byte the most to the right is in input[0]
-    // check at the end of the first 32bits
-    if(input[0]&0x01)
-        // an int is 32 bit so we will use int
-    {
-        int inputAsInt=*(int*)input;
-        inputAsInt>>=1;
-        v[0]+=((char*)(&inputAsInt))[0];
-        v[1]+=((char*)(&inputAsInt))[1];
-        v[2]+=((char*)(&inputAsInt))[2];
-        v[3]+=((char*)(&inputAsInt))[3];
-        sampler->current+=4;
+	throw (char*)"unimplemented";
 
-    }
-    else
-    {
-        int inputAsInt1=*(int*)input;
-        inputAsInt1>>=1;
+/*throw 0;
 
-        v[0]+=(((char*)(&inputAsInt1))[0]<<8)|((short)(input[4]));
-        v[1]+=(((char*)(&inputAsInt1))[1]<<8)|((short)(input[5]));
-        v[2]+=(((char*)(&inputAsInt1))[2]<<8)|((short)(input[6]));
-        v[3]+=(((char*)(&inputAsInt1))[3]<<8)|((short)(input[7]));
-        sampler->current+=8;
-    }
+	short* v=(short*)&sampler->v;
+	short* f=(short*)&sampler->f;
+	wxByte* input=sampler->ptr+sampler->position;
 
-    f[0]+=v[0];
-    f[1]+=v[1];
-    f[2]+=v[2];
-    f[3]+=v[3];
+	// we are in little endian, so the byte the most to the right is in input[0]
+	// check at the end of the first 32bits
+	if(input[0]&0x01)
+	{
+		// an int is 32 bit so we will use int
+		int inputAsInt=*(int*)input;
+		inputAsInt>>=1;
+		v[0]+=((char*)(&inputAsInt))[0];
+		v[1]+=((char*)(&inputAsInt))[1];
+		v[2]+=((char*)(&inputAsInt))[2];
+		v[3]+=((char*)(&inputAsInt))[3];
+		sampler->position+=4;
+
+	}
+	else
+	{
+		int inputAsInt1=*(int*)input;
+		inputAsInt1>>=1;
+
+		v[0]+=(((char*)(&inputAsInt1))[0]<<8)|((short)(input[4]));
+		v[1]+=(((char*)(&inputAsInt1))[1]<<8)|((short)(input[5]));
+		v[2]+=(((char*)(&inputAsInt1))[2]<<8)|((short)(input[6]));
+		v[3]+=(((char*)(&inputAsInt1))[3]<<8)|((short)(input[7]));
+		sampler->position+=8;
+	}
+
+	f[0]+=v[0];
+	f[1]+=v[1];
+	f[2]+=v[2];
+	f[3]+=v[3];
 
 
-    output[0] = f[0];
+	output[0] = f[0];
     output[1] = f[1];
     output[2] = f[2];
     output[3] = f[3];
+*/
+}
+
+inline
+void GOrgueSound::ProcessAudioSamplers
+	(GO_SAMPLER** listStart
+	,GOrgueSound* instance
+	,unsigned int nFrames
+	,int* out_buffer /* todo: technically this should be long */
+	)
+{
+
+	GO_SAMPLER* previousValidSampler = *listStart;
+	for (GO_SAMPLER* sampler = *listStart; sampler; sampler = sampler->next)
+	{
+
+		if  (
+			 (instance->b_limit) &&
+			 (instance->samplers_count >= instance->poly_soft) &&
+			 (sampler->stage == GSS_RELEASE) &&
+			 (organfile->GetElapsedTime() - sampler->time > 250)
+			)
+			sampler->fadeout = 4;
+
+		int* write_iterator = out_buffer;
+		for(unsigned int i = 0; i < nFrames; i += 2)
+		{
+
+			short buffer[4];
+
+			switch (sampler->type)
+			{
+				case AC_UNCOMPRESSED_MONO:
+					monoUncompressed(sampler, buffer);
+					break;
+				case AC_COMPRESSED_MONO:
+					monoCompressed(sampler, buffer);
+					break;
+				case AC_UNCOMPRESSED_STEREO:
+					stereoUncompressed(sampler, buffer);
+					break;
+				case AC_COMPRESSED_STEREO:
+					stereoCompressed(sampler, buffer);
+					break;
+				default:
+					throw (char*)"bad sampler->type";
+			}
+
+			if(sampler->stage == GSS_RELEASE)
+			{
+
+				/* If this is the end of the release, and there are no more
+				 * samples to play back, the sampler is no-longer needed.
+				 * We can set the pipe to NULL and break out of this loop.
+				 */
+				assert(sampler->pipe);
+				if (sampler->position >= sampler->pipe->m_release.size)
+					sampler->pipe = NULL;
+
+			}
+			else
+			{
+
+				unsigned currentBlockSize = (sampler->stage == GSS_LOOP) ? sampler->pipe->m_loop.size : sampler->pipe->m_attack.size;
+				if(sampler->position >= currentBlockSize)
+				{
+					sampler->stage = GSS_LOOP;
+					sampler->ptr = sampler->pipe->m_loop.data;
+					sampler->position -= currentBlockSize;
+					sampler->type = sampler->pipe->m_loop.type;
+					memcpy(sampler->f, sampler->pipe->m_loop.start_f, MAX_OUTPUT_CHANNELS * sizeof(sampler->f[0]));
+					memcpy(sampler->v, sampler->pipe->m_loop.start_v, MAX_OUTPUT_CHANNELS * sizeof(sampler->v[0]));
+				}
+
+			}
+
+			if (!sampler->pipe)
+				break;
+
+			/* Multiply each of the buffer samples by the fade factor - note:
+			 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero
+			 */
+			int intbuffer[4];
+			intbuffer[0] = buffer[0] * sampler->fade;
+			intbuffer[1] = buffer[1] * sampler->fade;
+			intbuffer[2] = buffer[2] * sampler->fade;
+			intbuffer[3] = buffer[3] * sampler->fade;
+			if (sampler->fadein + sampler->fadeout)
+			{
+
+				sampler->fade += sampler->fadein + sampler->fadeout;
+				if(sampler->fade > 0)
+					sampler->fade = 0;
+
+			}
+
+			/* Add these samples to the current output buffer shifting
+			 * right by the necessary amount to bring the sample gain back
+			 * to unity (this value is computed in GOrguePipe.cpp)
+			 */
+			write_iterator[0] += intbuffer[0] >> sampler->shift;
+			write_iterator[1] += intbuffer[1] >> sampler->shift;
+			write_iterator[2] += intbuffer[2] >> sampler->shift;
+			write_iterator[3] += intbuffer[3] >> sampler->shift;
+			write_iterator += 4;
+
+		}
+
+		// printf("fade %d fadein %d fadeout %d\n",sampler->fade,sampler->fadein,sampler->fadeout);
+		if (sampler->pipe)
+		{
+			if (sampler->fade < sampler->fademax)
+			{
+				sampler->fadein = 0;
+			}
+			else if (sampler->fadein)
+			{
+				sampler->faderemain -= nFrames;
+				if (sampler->faderemain <= 0)
+					sampler->fadein = 0;
+			}
+		}
+
+		/* if this sampler's pipe has been set to null or the fade value is
+		 * zero, the sample is no longer required and can be removed from the
+		 * linked list. If it was still supplying audio, we must update the
+		 * previous valid sampler. */
+		// printf("sampler : %x sample_pipe:%x sampler_fade :%d current : %d\n",sampler,sampler->pipe,sampler->fade,sampler->current);
+		if (!sampler->pipe || !sampler->fade)
+		{
+			/* sampler needs to be removed from the list */
+			if (sampler == *listStart)
+				*listStart = sampler->next;
+			previousValidSampler->next = sampler->next;
+			instance->samplers_open[--instance->samplers_count] = sampler;
+		}
+		else
+		{
+			previousValidSampler = sampler;
+		}
+
+	}
 
 }
+
+
 
 // this callback will fill the buffer with bufferSize frame
 // audio is opened with 32 bit stereo, so one frame is 64bit (32bit for right 32bit for left)
 // So buffer can handle 8*bufferSize char (or 2*bufferSize float)
-int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
-                             unsigned int nFrames,
-                             double streamTime,
-                             RtAudioStreamStatus status,
-                             void *userData )
+int GOrgueSound::AudioCallback
+	(void *outputBuffer
+	,void *inputBuffer
+	,unsigned int nFrames
+	,double streamTime
+	,RtAudioStreamStatus status
+	,void *userData
+	)
 {
 
 	GOrgueSound* instance = (GOrgueSound*)userData;
-	int i, j;
-	float* buffer=static_cast<float*>(outputBuffer);
+	float* buffer = static_cast<float*>(outputBuffer);
 
 	if (organfile)
         organfile->SetElapsedTime(instance->sw.Time());
@@ -169,7 +360,7 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 	/* Process any MIDI messages
 	 * TODO: this is a very good candidate for a thread. */
 	std::vector<unsigned char> msg;
-	for (j = 0; j < instance->n_midiDevices; j++)
+	for (int j = 0; j < instance->n_midiDevices; j++)
 	{
 		if (!instance->b_midiDevices[j])
 			continue;
@@ -195,14 +386,14 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 		instance->meter_poly = instance->samplers_count;
 
 	/* initialise the output buffer */
-	std::fill(instance->final_buff, instance->final_buff+2048,0);
+	std::fill(instance->final_buff, instance->final_buff + 2048,0);
 
-	for (j = 0; j < organfile->GetTremulantCount() + 1 + organfile->GetWinchestGroupCount(); j++)
+
+	for (int j = 0; j < organfile->GetTremulantCount() + organfile->GetWinchestGroupCount() + 1; j++)
 	{
-		if (!instance->windchests[j])
-			continue;
 
-		GOrgueSampler* ptr = (GOrgueSampler*)(instance->windchests + j);
+		if (instance->windchests[j] == NULL)
+			continue;
 
 		int* this_buff;
 		if (j < organfile->GetTremulantCount())
@@ -215,107 +406,20 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 			d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
 
 			float f = d;
-			std::fill(instance->volume_buff, instance->volume_buff+2048,f);
+			std::fill(instance->volume_buff, instance->volume_buff + 2048,f);
 		}
-
 		std::fill(this_buff, this_buff + 2052, (j < organfile->GetTremulantCount() ? 0x800000 : 0));
 
-		for (GOrgueSampler* sampler = instance->windchests[j]; sampler; sampler = sampler->next)
-		{
-
-			if (instance->b_limit && instance->samplers_count >= instance->poly_soft && sampler->stage == 2 && organfile->GetElapsedTime() - sampler->time > 250)
-				sampler->fadeout = 4;
-
-			int* write_iterator=this_buff;
-//                printf("sampler %x fade %d fadein %d fadeout %d\n",sampler,sampler->fade,sampler->fadein,sampler->fadeout);
-			for(unsigned int i=0;i<nFrames;i+=2)
-			{
-				short buffer[4];
-				//Overflow should not be necessary
-				if(sampler->type==2)
-					stereoCompressed(sampler,buffer);
-				if(sampler->type==3)
-					stereoUncompressed(sampler,buffer);
-				if(sampler->type==1)
-					monoUncompressed(sampler,buffer);
-				if(sampler->type==0)
-					monoCompressed(sampler,buffer);
-
-				if(sampler->stage != 2)
-				{
-
-					unsigned currentBlockLen = (sampler->stage == 1) ? sampler->pipe->m_loop.offset : sampler->pipe->m_attack.offset;
-
-					if(sampler->current >= currentBlockLen)
-					{
-						sampler->stage = 1;
-						sampler->ptr = sampler->pipe->m_loop.data;
-						sampler->current = sampler->current - currentBlockLen;//sampler->pipe->m_loop.offset;
-						sampler->type = sampler->pipe->m_loop.type;
-						sampler->f = *(wxInt64*)&sampler->pipe->m_loop.f;
-						sampler->v = *(wxInt64*)&sampler->pipe->m_loop.v;
-					}
-
-				}
-				else
-				{
-					if(sampler->current >= sampler->pipe->m_release.offset)
-						sampler->pipe = NULL;
-				}
-
-				if(!sampler->pipe)
-					break;
-
-				int intbuffer[4];
-				intbuffer[0]=buffer[0]*sampler->fade;
-				intbuffer[1]=buffer[1]*sampler->fade;
-				intbuffer[2]=buffer[2]*sampler->fade;
-				intbuffer[3]=buffer[3]*sampler->fade;
-
-				if(sampler->fadein+sampler->fadeout)
-				{
-
-					sampler->fade+=sampler->fadein+sampler->fadeout;
-					if(sampler->fade>0)
-						sampler->fade=0;
-				}
-				write_iterator[0]+=(intbuffer[0])>>sampler->shift;
-				write_iterator[1]+=(intbuffer[1])>>sampler->shift;
-				write_iterator[2]+=(intbuffer[2])>>sampler->shift;
-				write_iterator[3]+=(intbuffer[3])>>sampler->shift;
-//                    printf("write iter  %d  %d  %d %d\n", write_iterator[0],write_iterator[1],write_iterator[2],write_iterator[3]);
-				write_iterator+=4;
-
-
-
-			}
-//                printf("fade %d fadein %d fadeout %d\n",sampler->fade,sampler->fadein,sampler->fadeout);
-
-			if (!sampler->pipe && (!sampler->overflowing || !sampler->overflow))
-				sampler->fade = 0;
-			else if (sampler->fade < sampler->fademax)
-				sampler->fadein = 0;
-			else if (sampler->fadein)
-			{
-				sampler->faderemain -= nFrames;
-				if (sampler->faderemain <= 0)
-					sampler->fadein = 0;
-			}
-
-//            printf("sampler : %x sample_pipe:%x sampler_fade :%d current : %d\n",sampler,sampler->pipe,sampler->fade,sampler->current);
-			if (!sampler->pipe || !sampler->fade)
-			{
-				ptr->next = sampler->next;
-				instance->samplers_open[--(instance->samplers_count)] = sampler;
-			}
-			else
-				ptr = sampler;
-		}
+		ProcessAudioSamplers
+			(&(instance->windchests[j])
+			,instance
+			,nFrames
+			,this_buff);
 
 		if (j >= organfile->GetTremulantCount())
 		{
 			int *ptr;
-			for (i = 0; i < organfile->GetWindchest(j)->GetTremulantCount(); i++)
+			for (int i = 0; i < organfile->GetWindchest(j)->GetTremulantCount(); i++)
 			{
 
 				if (!instance->windchests[organfile->GetWindchest(j)->tremulant[i]])
@@ -345,6 +449,7 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 		}
 	}
 
+	/* Clamp the output */
 	double clamp_min = -1.0, clamp_max = 1.0;
 	for (unsigned int k = 0; k < nFrames*2; k += 2)
 	{
@@ -357,6 +462,7 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 		instance->meter_right = std::max( instance->meter_right,fabs(d));
 	}
 
+	/* Write data to file if recording is enabled*/
 	if (instance->f_output)
 	{
 		fwrite(buffer, sizeof(float), nFrames*2, instance->f_output);
@@ -364,6 +470,7 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer,
 			instance->CloseWAV();
 	}
 
+	/* Update the meter */
 	instance->meter_counter += nFrames;
 	if (instance->meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
 	{

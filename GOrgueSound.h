@@ -51,6 +51,8 @@ class GOrguePipe;
 #define DATA_TYPE_STEREO_COMPRESSED   2
 #define DATA_TYPE_STEREO_UNCOMPRESSED 3
 
+#define MAX_OUTPUT_CHANNELS 2
+
 #pragma pack(push, 1)
 
 struct struct_WAVE
@@ -72,18 +74,62 @@ struct struct_WAVE
 
 #pragma pack(pop)
 
-struct GOrgueSamplerT
+typedef enum {
+	GSS_ATTACK = 0,
+	GSS_LOOP = 1,
+	GSS_RELEASE = 2
+} GO_SAMPLER_STAGE;
+
+typedef struct GO_SAMPLER_T
 {
-	GOrgueSamplerT* next;		// must be first!
+	GO_SAMPLER_T* next;		// must be first!
 	GOrguePipe* pipe;
 	wxByte* ptr;
-	int fade, fadein, fadeout, faderemain, fademax, time, offset;
-	int type; /* DATA_TYPE_xxxxx */
-	int current, stage, overflowing, shift;
-	wxInt64 overflow, f, v;
-};
 
-typedef struct GOrgueSamplerT GOrgueSampler;
+	/* the fade parameter is would be more appropriately named "gain". It is
+	 * modified on a frame-by frame basis by the fadein and fadeout parameters
+	 * which get added to it. The maximum value is defined by fademax and is
+	 * a NEGATIVE value. When fade is zero, the sampler will be discarded back
+	 * into the sampler pool. When it is equal to fademax, the sample will be
+	 * being played back at its appropriate volume (determined by amplitude
+	 * factors throughout the organ definition file.
+	 *
+	 * The time taken for a sample to fade out for a given a value of fadeout
+	 * is:
+	 * { frames to fadeout } =  { fademax } / { fadeout }
+	 * { frame length } = 2 / { sample rate }
+	 * { time to fadeout } = { frames to fadeout } * { frame length }
+	 *                     = ( 2 * { fademax } ) / ( { fadeout } * { samplerate } )
+	 * therefore:
+	 * { fadeout } = ( 2 * { fademax } ) / ( { samplerate } * { time to fadeout } )
+	 */
+	int fade;
+	int fadein;
+	int fadeout;
+	int faderemain;
+	int fademax;
+
+
+
+	int time;
+
+	int type; /* DATA_TYPE_xxxxx */
+	int shift;
+
+	/* size in bytes of in this sample */
+	int size;
+
+	/* current byte index of the current block into this sample */
+	int position;
+
+	GO_SAMPLER_STAGE stage; /*overflowing,*/
+
+	int f[MAX_OUTPUT_CHANNELS]; /* these values are used for release alignment lookups and */
+	int v[MAX_OUTPUT_CHANNELS]; /* the compression algorithm */
+
+	//wxInt64 /*overflow, */ f, v;
+
+} GO_SAMPLER;
 
 class GOrgueSound
 {
@@ -100,8 +146,8 @@ private:
 
 	wxConfigBase *pConfig;
 
-	GOrgueSampler samplers[MAX_POLYPHONY];
-	GOrgueSampler* samplers_open[MAX_POLYPHONY];
+	GO_SAMPLER samplers[MAX_POLYPHONY];
+	GO_SAMPLER* samplers_open[MAX_POLYPHONY];
 	RtAudioFormat format;
 	/* wxWindow* m_parent; - this was pointless  */
 
@@ -146,6 +192,7 @@ private:
 
 private:
 
+	static void ProcessAudioSamplers(GO_SAMPLER** listStart, GOrgueSound* instance, unsigned int nFrames, int* out_buffer);
 	static int AudioCallback(void *outputBuffer, void *inputBuffer, unsigned int nFrames, double streamTime, RtAudioStreamStatus status, void *userData);
 	static void MIDICallback(std::vector<unsigned char>& msg, int which, GOrgueSound* gOrgueSoundInstance);
 
@@ -153,7 +200,13 @@ public:
 
 	bool b_memset;
 	int i_midiEvents[16];
-	GOrgueSampler* windchests[10 + 1 + 16];		// maximum 10 tremulants + 1 detach + 16 windchests
+
+	/* windchests... pipes and tremulants belong to these (need to figure out
+	 * what tremulants are doing in this group...). Groups from 0 to
+	 * GetTremulantCount-1 are purely there for tremulants. Followed by 1
+	 * chest for detached releases, followed by the normal windchests for
+	 * pipes... */
+	GO_SAMPLER* windchests[10 + 1 + 16];		// maximum 10 tremulants + 1 detach + 16 windchests
 	int b_detach;
 
 	GOrgueSound(void);
@@ -175,7 +228,9 @@ public:
 	void SetVolume(int volume);
 	int GetVolume();
 	void SetTranspose(int transpose);
-	GOrgueSampler* OpenNewSampler();
+
+	GO_SAMPLER* OpenNewSampler();
+
 	bool HasRandomPipeSpeech();
 	bool HasReleaseAlignment();
 	bool HasScaledReleases();
