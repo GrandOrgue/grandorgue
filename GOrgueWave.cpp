@@ -29,6 +29,7 @@ void GOrgueWave::SetInvalid()
 	dataSize = 0;
 	channels = 0;
 	bytesPerSample = 0;
+	sampleRate = 0;
 	hasLoops = false;
 	hasFormat = false;
 	release = 0;
@@ -85,13 +86,9 @@ void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
 
 	/* get channels and ensure only mono or stereo */
 	channels = wxUINT16_SWAP_ON_BE(format->wf.wf.nChannels);
-	if (channels < 1 || channels > 2)
-		throw (char*)"< More than 2 channels in";
 
 	/* get sample rate and ensure only 44.1 kHz */
-	unsigned sampleRate = wxUINT32_SWAP_ON_BE(format->wf.wf.nSamplesPerSec);
-	if (sampleRate != 44100)
-		throw (char*)"< Not 44.1kHz sampling rate in";
+	sampleRate = wxUINT32_SWAP_ON_BE(format->wf.wf.nSamplesPerSec);
 
 	unsigned bitsPerSample = wxUINT16_SWAP_ON_BE(format->wf.wBitsPerSample);
 	if (bitsPerSample % 8)
@@ -177,7 +174,7 @@ void GOrgueWave::FindPeaks()
 			peaktemp ^= (peaktemp >> 15);
 			*/
 			peaktemp = abs(s_ptr[k]);
-			peak = std::max(peaktemp,peak);
+			peak = std::max(peaktemp, peak);
 		}
 	}
 	else
@@ -465,5 +462,12 @@ bool GOrgueWave::HasLoops()
 {
 
 	return hasLoops;
+
+}
+
+unsigned GOrgueWave::GetSampleRate()
+{
+
+	return sampleRate;
 
 }

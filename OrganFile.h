@@ -33,11 +33,7 @@
 #include "GOrgueCoupler.h"
 #include "GOrgueFrameGeneral.h"
 */
-/*
-#define PHASE_ALIGN_RES 31
-#define PHASE_ALIGN_ABS ((PHASE_ALIGN_RES) >> 1)
-#define PHASE_ALIGN_RES_VA ((PHASE_ALIGN_RES) * 2)
-*/
+
 /*
 #define GET_BIT(x,y,z) (x[y >> 3][z] & (0x80 >> (y & 7)) ? true : false)
 #define SET_BIT(x,y,z,b) (b ? x[y >> 3][z] |= (0x80 >> (y & 7)) : x[y >> 3][z] &= (0xFFFFFF7F >> (y & 7)))

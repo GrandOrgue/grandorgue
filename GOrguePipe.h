@@ -26,20 +26,38 @@
 #include <wx/wx.h>
 #include "GOrgueSound.h"
 
-#define PHASE_ALIGN_RES 31
-#define PHASE_ALIGN_ABS ((PHASE_ALIGN_RES) >> 1)
-#define PHASE_ALIGN_RES_VA ((PHASE_ALIGN_RES) * 2)
-
 class GOrgueTremulant;
+
+#define PHASE_ALIGN_DERIVATIVES    2
+#define PHASE_ALIGN_AMPLITUDES     32
+#define PHASE_ALIGN_MIN_FREQUENCY  20 /* Hertz */
+
+typedef enum
+{
+	AC_COMPRESSED_MONO = 0,
+	AC_UNCOMPRESSED_MONO = 1,
+	AC_COMPRESSED_STEREO = 2,
+	AC_UNCOMPRESSED_STEREO = 3
+} AUDIO_SECTION_TYPE;
 
 typedef struct
 {
-	int offset;
-	int type;
-	wxInt16 f[4];
-	wxInt16 v[4];
+
+	/* Size of the section in BYTES */
+	int size;
+
+	/* Type of the data which is stored in the data pointer */
+	AUDIO_SECTION_TYPE type;
+
+	/* The starting sample and derivatives for each channel (used in the
+	 * compression and release-alignment schemes */
+	int start_f[MAX_OUTPUT_CHANNELS];
+	int start_v[MAX_OUTPUT_CHANNELS];
+
+	/* Pointer to (size) bytes of data encoded in the format (type) */
 	unsigned char* data;
-} AUDIOSECTION;
+
+} AUDIO_SECTION;
 
 class GOrguePipe
 {
@@ -49,49 +67,41 @@ private:
 	void SetOn();
 	void SetOff();
 
+	int m_Channels;
+	int m_SampleRate;
+	int m_PhaseAlignMaxAmplitude;
+	int m_PhaseAlignMaxDerivative;
+
+	int m_PhaseAlignmentTable[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
+	int m_PhaseAlignmentTable_f[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES][MAX_OUTPUT_CHANNELS];
+	int m_PhaseAlignmentTable_v[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES][MAX_OUTPUT_CHANNELS];
+
+	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
+	void ComputeReleaseAlignmentInfo();
+	void SetupReleaseSamplerPosition(GO_SAMPLER& newReleaseSampler);
 
 public:
 
 	~GOrguePipe();
 	GOrguePipe();
+
 	void Set(bool on);
 	void LoadFromFile(const wxString& filename, int amp);
 	void CreateFromTremulant(GOrgueTremulant* tremulant);
 
-	/*
-	int ra_getindex(int *f, int *v);
-	int ra_getindex(short *f, short *v);
-*/
-
-	unsigned _fourcc;
-    unsigned _adler32;
-	GOrguePipe* _this;
 	float pitch;
-	GOrgueSampler* sampler;
+	GO_SAMPLER* sampler;
 	int instances;
+
+	/* states which windchest this pipe belongs to... groups from
+	 * 0 to GetTremulantCount-1 are purely there for tremulants. */
 	int WindchestGroup;
 	int ra_amp;
 	int ra_shift;
 
-	AUDIOSECTION m_attack;
-	AUDIOSECTION m_loop;
-	AUDIOSECTION m_release;
-
-/*
-	wxByte* ptr[3];
-	int offset[3];
-	int types[3];
-	wxInt16 f[3][4];	// v______ joined
-	wxInt16 v[3][4];	// ^
-/*
-	/*
-	int ra_volume, ra_factor;
-	int ra_offset[PHASE_ALIGN_RES_VA];
-	wxInt16 ra_f[PHASE_ALIGN_RES_VA][4];
-	wxInt16 ra_v[PHASE_ALIGN_RES_VA][4];
-*/
-
-//	wxByte data[1];	// expandable
+	AUDIO_SECTION m_attack;
+	AUDIO_SECTION m_loop;
+	AUDIO_SECTION m_release;
 
 };
 

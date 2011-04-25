@@ -516,6 +516,9 @@ GrandOrgueFile::~GrandOrgueFile(void)
 		delete[] m_enclosure;
 	if (m_cfg)
 		delete m_cfg;
+	if (m_DisplayMetrics)
+		delete m_DisplayMetrics;
+
 }
 void GrandOrgueFile::Revert(wxFileConfig& cfg)
 {

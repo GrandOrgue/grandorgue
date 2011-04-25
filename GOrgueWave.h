@@ -36,6 +36,7 @@ private:
 	unsigned channels;
 	unsigned release;
 	unsigned bytesPerSample;
+	unsigned sampleRate;
 	bool hasFormat;
 
 	bool hasRelease;
@@ -100,6 +101,9 @@ public:
 	 * specified read format and sample rate.
 	 */
 	void ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFormat, unsigned sampleRate);
+
+
+	unsigned GetSampleRate();
 
 	unsigned GetPeak();
 
