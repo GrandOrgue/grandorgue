@@ -71,8 +71,8 @@ CXX = g++
 # use -DPALIGN_DEBUG to display phase alignment debugging information
 
 .cpp.o :
-#	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O2 -fomit-frame-pointer -ffast-math -mmmx -msse -msse2 -msse3 -D__UNIX_JACK__ -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -o $@ $<
-	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O0 -funit-at-a-time -ffast-math -fomit-frame-pointer -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -DNDEBUG -o $@ $<
+	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O2 -fomit-frame-pointer -ffast-math -mmmx -msse -msse2 -msse3 -D__UNIX_JACK__ -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -DNDEBUG -o $@ $<
+#	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O0 -funit-at-a-time -ffast-math -fomit-frame-pointer -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -o $@ $<
 
 all:    $(PROGRAM)
 
