@@ -25,6 +25,9 @@
 				<Option compiler="gnu_gcc_compiler_34" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Option projectResourceIncludeDirsRelation="0" />
+				<Compiler>
+					<Add option="-DDNDEBUG" />
+				</Compiler>
 			</Target>
 		</Build>
 		<VirtualTargets>
