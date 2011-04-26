@@ -68,7 +68,7 @@ GOrgueSound::GOrgueSound(void)
   sw(),
   pConfig(wxConfigBase::Get()),
   format(0),
-  logSoundErrors(NULL),
+  logSoundErrors(false),
   samplers_count(0),
   polyphony(0),
   poly_soft(0),

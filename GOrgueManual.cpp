@@ -61,7 +61,7 @@ GOrgueManual::GOrgueManual() :
 	NumberOfTremulants(0),
 	tremulant(),
 	Name(),
-	stop(NULL),
+	stop(),
 	coupler(NULL),
 	divisional(NULL)
 {
