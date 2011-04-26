@@ -38,6 +38,7 @@
 				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
 					<Add option="-mtune=pentium3" />
+					<Add option="-DNDEBUG" />
 					<Add directory="..\..\wxWidgets-2.8.10" />
 				</Compiler>
 				<Linker>
@@ -56,8 +57,8 @@
 			<Add alias="All" targets="Debug;Release;" />
 		</VirtualTargets>
 		<Compiler>
-			<Add option="-fomit-frame-pointer" />
 			<Add option="-O2" />
+			<Add option="-fomit-frame-pointer" />
 			<Add option="-pipe" />
 			<Add option="-mthreads" />
 			<Add option="-ffast-math" />
