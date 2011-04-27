@@ -29,9 +29,26 @@ extern GrandOrgueFile* organfile;
 #define DISPLAY_METRICS_GROUP "Organ"
 
 GOrgueDisplayMetrics::GOrgueDisplayMetrics(IniFileConfig& ini) :
+	m_DispScreenSizeHoriz(0),
+	m_DispScreenSizeVert(0),
+	m_DispDrawstopBackgroundImageNum(0),
+	m_DispConsoleBackgroundImageNum(0),
+	m_DispKeyHorizBackgroundImageNum(0),
+	m_DispKeyVertBackgroundImageNum(0),
+	m_DispDrawstopInsetBackgroundImageNum(0),
+	m_DispControlLabelFont(),
+	m_DispShortcutKeyLabelFont(),
+	m_DispShortcutKeyLabelColour(),
+	m_DispGroupLabelFont(),
+	m_DispDrawstopCols(0),
+	m_DispDrawstopRows(0),
 	m_DispDrawstopColsOffset(false),
 	m_DispDrawstopOuterColOffsetUp(false),
 	m_DispPairDrawstopCols(false),
+	m_DispExtraDrawstopRows(0),
+	m_DispExtraDrawstopCols(0),
+	m_DispButtonCols(0),
+	m_DispExtraButtonRows(0),
 	m_DispExtraPedalButtonRow(false),
 	m_DispExtraPedalButtonRowOffset(false),
 	m_DispExtraPedalButtonRowOffsetRight(false),
@@ -42,23 +59,8 @@ GOrgueDisplayMetrics::GOrgueDisplayMetrics(IniFileConfig& ini) :
 	m_DispExtraDrawstopRowsAboveExtraButtonRows(false),
 	m_HackY(0),
 	m_EnclosureY(0),
-	m_DispScreenSizeHoriz(0),
-	m_DispScreenSizeVert(0),
-	m_DispDrawstopBackgroundImageNum(0),
-	m_DispConsoleBackgroundImageNum(0),
-	m_DispKeyHorizBackgroundImageNum(0),
-	m_DispKeyVertBackgroundImageNum(0),
-	m_DispDrawstopInsetBackgroundImageNum(0),
-	m_DispDrawstopCols(0),
-	m_DispDrawstopRows(0),
-	m_DispExtraDrawstopRows(0),
-	m_DispExtraDrawstopCols(0),
-	m_DispButtonCols(0),
-	m_DispExtraButtonRows(0),
-	m_DispShortcutKeyLabelColour(),
-	m_DispControlLabelFont(),
-	m_DispShortcutKeyLabelFont(),
-	m_DispGroupLabelFont()
+	m_CenterY(0),
+	m_CenterWidth(0)
 {
     m_DispScreenSizeHoriz = ini.ReadSize(DISPLAY_METRICS_GROUP, "DispScreenSizeHoriz", 0);
     m_DispScreenSizeVert = ini.ReadSize(DISPLAY_METRICS_GROUP, "DispScreenSizeVert", 1);

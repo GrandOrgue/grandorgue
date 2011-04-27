@@ -75,7 +75,7 @@ void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix, wxString group)
 
 bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 {
-	int x, y, i;
+	int x, y;
 	if (!Displayed)
 		return false;
 

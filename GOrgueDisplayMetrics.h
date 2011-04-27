@@ -46,39 +46,27 @@ private:
 	wxString m_DispGroupLabelFont;
 	int m_DispDrawstopCols;
 	int m_DispDrawstopRows;
-	bool m_DispDrawstopColsOffset : 1;
-	bool m_DispDrawstopOuterColOffsetUp : 1;
-	bool m_DispPairDrawstopCols : 1;
+	bool m_DispDrawstopColsOffset;
+	bool m_DispDrawstopOuterColOffsetUp;
+	bool m_DispPairDrawstopCols;
 	int m_DispExtraDrawstopRows;
 	int m_DispExtraDrawstopCols;
 	int m_DispButtonCols;
 	int m_DispExtraButtonRows;
-	bool m_DispExtraPedalButtonRow : 1;
-	bool m_DispExtraPedalButtonRowOffset : 1;
-	bool m_DispExtraPedalButtonRowOffsetRight : 1;
-	bool m_DispButtonsAboveManuals : 1;
-	bool m_DispTrimAboveManuals : 1;
-	bool m_DispTrimBelowManuals : 1;
-	bool m_DispTrimAboveExtraRows : 1;
-	bool m_DispExtraDrawstopRowsAboveExtraButtonRows : 1;
+	bool m_DispExtraPedalButtonRow;
+	bool m_DispExtraPedalButtonRowOffset;
+	bool m_DispExtraPedalButtonRowOffsetRight;
+	bool m_DispButtonsAboveManuals;
+	bool m_DispTrimAboveManuals;
+	bool m_DispTrimBelowManuals;
+	bool m_DispTrimAboveExtraRows;
+	bool m_DispExtraDrawstopRowsAboveExtraButtonRows;
 
 	/* values computed on screen update */
-	/* FIXME: some of these are candidates to become locals - I don't
-	 * think they are used anywhere outside of Update(); */
-//	wxInt16 m_JambLeftX;
-//	wxInt16 m_JambTopDrawstop;
-
-	/* not yet exported */
-//	wxInt16 m_JambLeftRightWidth;
-//	wxInt16 m_JambRightX;
-//	wxInt16 m_JambTopHeight;
 	int m_HackY;
-//	wxInt16 m_JambTopPiston;
+	int m_EnclosureY;
 	int m_CenterY;
 	int m_CenterWidth;
-//	wxInt16 m_PistonTopHeight;
-//	wxInt16 m_EnclosureWidth;
-	int m_EnclosureY;
 
 public:
 

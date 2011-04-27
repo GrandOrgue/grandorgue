@@ -54,7 +54,6 @@ class GrandOrgueFile
 	long m_elapsed;
 
 	bool m_b_customized : 1;
-
 	bool m_DivisionalsStoreIntermanualCouplers : 1;
 	bool m_DivisionalsStoreIntramanualCouplers : 1;
 	bool m_DivisionalsStoreTremulants : 1;

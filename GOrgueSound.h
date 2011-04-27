@@ -74,17 +74,46 @@ struct struct_WAVE
 
 #pragma pack(pop)
 
+typedef enum
+{
+	AC_COMPRESSED_MONO = 0,
+	AC_UNCOMPRESSED_MONO = 1,
+	AC_COMPRESSED_STEREO = 2,
+	AC_UNCOMPRESSED_STEREO = 3
+} AUDIO_SECTION_TYPE;
+
 typedef enum {
 	GSS_ATTACK = 0,
 	GSS_LOOP = 1,
 	GSS_RELEASE = 2
-} GO_SAMPLER_STAGE;
+} AUDIO_SECTION_STAGE;
+
+typedef struct
+{
+
+	/* Size of the section in BYTES */
+	int size;
+
+	/* Type of the data which is stored in the data pointer */
+	AUDIO_SECTION_TYPE type;
+	AUDIO_SECTION_STAGE stage; /*overflowing,*/
+
+	/* The starting sample and derivatives for each channel (used in the
+	 * compression and release-alignment schemes */
+	int start_f[MAX_OUTPUT_CHANNELS];
+	int start_v[MAX_OUTPUT_CHANNELS];
+
+	/* Pointer to (size) bytes of data encoded in the format (type) */
+	unsigned char* data;
+
+} AUDIO_SECTION;
 
 typedef struct GO_SAMPLER_T
 {
 	GO_SAMPLER_T* next;		// must be first!
+
 	GOrguePipe* pipe;
-	wxByte* ptr;
+	AUDIO_SECTION* pipe_section;
 
 	/* the fade parameter is would be more appropriately named "gain". It is
 	 * modified on a frame-by frame basis by the fadein and fadeout parameters
@@ -109,25 +138,16 @@ typedef struct GO_SAMPLER_T
 	int faderemain;
 	int fademax;
 
-
-
 	int time;
 
-	int type; /* DATA_TYPE_xxxxx */
 	int shift;
-
-	/* size in bytes of in this sample */
-	int size;
 
 	/* current byte index of the current block into this sample */
 	int position;
 
-	GO_SAMPLER_STAGE stage; /*overflowing,*/
-
 	int f[MAX_OUTPUT_CHANNELS]; /* these values are used for release alignment lookups and */
 	int v[MAX_OUTPUT_CHANNELS]; /* the compression algorithm */
 
-	//wxInt64 /*overflow, */ f, v;
 
 } GO_SAMPLER;
 

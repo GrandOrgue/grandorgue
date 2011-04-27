@@ -7,19 +7,27 @@
 # own programs, the comments explain which parts of it you may have to modify
 # to use it for your own programs
 
-
 # you may change WX_CONFIG value to use a specific wx-config and to pass it
 # some options, for example "--inplace" to use an uninstalled wxWindows
 # version
 #
 # by default, wx-config from the PATH is used
-WX_CONFIG := wx-config --debug=no --unicode=no #--version=
 
-# set this to the name of the main executable file
-PROGRAM = GrandOrgue
+#--version=
 
-# if your program has more than one source file, add more .o files to the line
-# below
+# debug settings
+DEBUG                     = yes
+
+# the following debug settings will only be in effect if "DEBUG" is set to
+# "yes".
+DEBUG_RELEASE_ALIGNMENT   = yes
+DEBUG_WX                  = no
+
+# Jack and Alsa will only be used if compiling on a Linux platform
+USING_JACK                = yes
+USING_ALSA                = yes
+
+# objects to use in the build
 OBJECTS = \
 GOrgueWave.o \
 GOrgueControl.o \
@@ -39,6 +47,7 @@ GOrguePipe.o \
 GOrguePiston.o \
 GOrgueProperties.o \
 GOrguePushbutton.o \
+GOrgueReleaseAlignTable.o \
 GOrgueSound.o \
 GOrgueSoundCallbackAudio.o \
 GOrgueSoundCallbackMIDI.o \
@@ -61,23 +70,71 @@ SettingsDialog.o \
 SplashScreen.o \
 wxGaugeAudio.o
 
-
-# you shouldn't have to edit anything below this line
-#CXX = g++-3.4 # $(shell $(WX_CONFIG) --cxx)
+# the C++ compiler
 CXX = g++
+
+# general compilation flags applying to all build modes
+CXXFLAGS = -fomit-frame-pointer -ffast-math -Wall
+
+ifeq ($(DEBUG),yes)
+# debug build configuration
+ifeq ($(DEBUG_WX),yes)
+WX_CONFIG := wx-config --unicode=no --debug=yes
+else
+WX_CONFIG := wx-config --unicode=no --debug=no
+endif
+CXXFLAGS += -g -O0 -mmmx -msse -msse2 -msse3 -funit-at-a-time
+ifeq ($(DEBUG_RELEASE_ALIGNMENT),yes)
+CXXFLAGS += -DPALIGN_DEBUG
+endif
+else
+# release build configuration
+WX_CONFIG := wx-config --unicode=no --debug=no
+CXXFLAGS += -O2 -mmmx -msse -msse2 -msse3 -DNDEBUG
+endif
+
+CXXFLAGS += `$(WX_CONFIG) --cxxflags`
+LDFLAGS = `$(WX_CONFIG) --libs`
+LDFLAGS += -lpthread
+
+# detect operating system
+UNAME := $(shell uname)
+ifeq ($(UNAME),Linux)
+SYSTEM = linux
+else
+SYSTEM = windows
+endif
+
+ifeq ($(SYSTEM),linux)
+# Linux sound targets
+
+ifeq ($(USING_JACK),yes)
+CXXFLAGS += -D__UNIX_JACK__
+LDFLAGS += -ljack
+endif
+
+ifeq ($(USING_ALSA),yes)
+CXXFLAGS += -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__
+LDFLAGS += -lasound
+endif
+
+else
+# Windows sound targets
+
+endif
+
+# set this to the name of the main executable file
+PROGRAM = GrandOrgue
 
 .SUFFIXES:	.o .cpp
 
-# use -DPALIGN_DEBUG to display phase alignment debugging information
-
 .cpp.o :
-	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O2 -fomit-frame-pointer -ffast-math -mmmx -msse -msse2 -msse3 -D__UNIX_JACK__ -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -DNDEBUG -o $@ $<
-#	$(CXX) -c `$(WX_CONFIG) --cxxflags` -g -O0 -funit-at-a-time -ffast-math -fomit-frame-pointer -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -o $@ $<
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 all:    $(PROGRAM)
 
 $(PROGRAM):	$(OBJECTS)
-	$(CXX) -o $(PROGRAM) $(OBJECTS) `$(WX_CONFIG) --libs` -lasound -lpthread -ljack
+	$(CXX) $(LDFLAGS) -o $(PROGRAM) $(OBJECTS)
 
 clean: 
 	rm -f *.o $(PROGRAM)

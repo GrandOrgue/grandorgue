@@ -25,6 +25,7 @@
 #include "GOrgueTremulant.h"
 #include "GOrgueWave.h"
 #include "GOrgueWindchest.h"
+#include "GOrgueReleaseAlignTable.h"
 #include "GrandOrgueFile.h"
 
 extern GOrgueSound* g_sound;
@@ -49,7 +50,7 @@ void GOrguePipe::GetMaxAmplitudeAndDerivative
 	assert((section.size % (m_Channels * sizeof(wxInt16))) == 0);
 	unsigned int sectionLen = section.size / (m_Channels * sizeof(wxInt16));
 
-	int f;
+	int f = 0; /* to avoid compiler warning */
 	for (unsigned int i = 0; i < sectionLen; i++)
 	{
 
@@ -80,229 +81,47 @@ void GOrguePipe::GetMaxAmplitudeAndDerivative
 void GOrguePipe::ComputeReleaseAlignmentInfo()
 {
 
-	memset(m_PhaseAlignmentTable, 0, sizeof(m_PhaseAlignmentTable));
-	memset(m_PhaseAlignmentTable_f, 0, sizeof(m_PhaseAlignmentTable_f));
-	memset(m_PhaseAlignmentTable_v, 0, sizeof(m_PhaseAlignmentTable_v));
-
-	/* We will use a short portion of the release to analyse to get the
-	 * release offset table. This length is defined by the
-	 * PHASE_ALIGN_MIN_FREQUENCY macro and should be set to the lowest
-	 * frequency pipe you would ever expect... if this length is greater
-	 * than the length of the release, truncate it */
-	unsigned searchLen = m_SampleRate / PHASE_ALIGN_MIN_FREQUENCY;
-	unsigned releaseLen = m_release.size / (m_Channels * sizeof(wxInt16));
-	if (searchLen > releaseLen)
-		searchLen = releaseLen;
-
-	/* If number of samples in the release is not enough to fill the release
-	 * table, abort - release alignment probably wont help. */
-	if (searchLen < PHASE_ALIGN_AMPLITUDES * PHASE_ALIGN_DERIVATIVES * 2)
-		return;
+	FREE_AND_NULL(m_ra_table);
 
 	/* Find the maximum amplitude and derivative of the waveform */
-	m_PhaseAlignMaxAmplitude = 0;
-	m_PhaseAlignMaxDerivative = 0;
-	GetMaxAmplitudeAndDerivative(m_attack,  m_PhaseAlignMaxAmplitude, m_PhaseAlignMaxDerivative);
-	GetMaxAmplitudeAndDerivative(m_loop,    m_PhaseAlignMaxAmplitude, m_PhaseAlignMaxDerivative);
-	GetMaxAmplitudeAndDerivative(m_release, m_PhaseAlignMaxAmplitude, m_PhaseAlignMaxDerivative);
+	int phase_align_max_amplitude = 0;
+	int phase_align_max_derivative = 0;
+	GetMaxAmplitudeAndDerivative(m_attack,  phase_align_max_amplitude, phase_align_max_derivative);
+	GetMaxAmplitudeAndDerivative(m_loop,    phase_align_max_amplitude, phase_align_max_derivative);
+	GetMaxAmplitudeAndDerivative(m_release, phase_align_max_amplitude, phase_align_max_derivative);
 
-	assert(m_PhaseAlignMaxDerivative != 0);
-	assert(m_PhaseAlignMaxAmplitude != 0);
-
-	/* Generate the release table using the small portion of the release... */
-	bool found[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
-	memset(found, 0, sizeof(found));
-	int f[MAX_OUTPUT_CHANNELS];
-	int v[MAX_OUTPUT_CHANNELS];
-	for (unsigned i = 0; i < searchLen; i++)
+	if ((phase_align_max_derivative != 0) && (phase_align_max_amplitude != 0))
 	{
 
-		/* Store previous values */
-		int f_p[MAX_OUTPUT_CHANNELS];
-		memcpy(f_p, f, sizeof(int) * MAX_OUTPUT_CHANNELS);
-
-		int fsum = 0;
-		for (unsigned int j = 0; j < m_Channels; j++)
-		{
-			f[j] = *((wxInt16*)&m_release.data[(i * m_Channels + j) * sizeof(wxInt16)]);
-			fsum += f[j];
-		}
-
-		if (i == 0)
-			continue;
-
-		int vsum = 0;
-		for (unsigned int j = 0; j < m_Channels; j++)
-		{
-			v[j] = f[j] - f_p[j];
-			vsum += v[j];
-		}
-
-		/* Bring v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
-		int v_mod = vsum + m_PhaseAlignMaxDerivative - 1;
-		int derivIndex = (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative);
-
-		/* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
-		int f_mod = fsum + m_PhaseAlignMaxAmplitude - 1;
-		int ampIndex = (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude);
-
-		/* Store this release point if it was not already found */
-		assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
-		assert((ampIndex >= 0)   && (ampIndex < PHASE_ALIGN_AMPLITUDES));
-		if (!found[derivIndex][ampIndex])
-		{
-			m_PhaseAlignmentTable[derivIndex][ampIndex] = i * m_Channels * sizeof(wxInt16);
-			for (unsigned int k = 0; k < m_Channels; k++)
-			{
-				m_PhaseAlignmentTable_f[derivIndex][ampIndex][k] = f[k];
-				m_PhaseAlignmentTable_v[derivIndex][ampIndex][k] = v[k];
-			}
-			found[derivIndex][ampIndex] = true;
-		}
+		m_ra_table = new GOrgueReleaseAlignTable();
+		m_ra_table->ComputeTable
+			(m_release
+			,phase_align_max_amplitude
+			,phase_align_max_derivative
+			,m_SampleRate
+			,m_Channels
+			);
 
 	}
-
-#ifndef NDEBUG
-#ifdef PALIGN_DEBUG
-	/* print some phase debugging information */
-	for (unsigned int i = 0; i < PHASE_ALIGN_DERIVATIVES; i++)
-	{
-		printf("deridx: %d\n", i);
-		for (unsigned int j = 0; j < PHASE_ALIGN_AMPLITUDES; j++)
-			if (found[i][j])
-				printf("  idx %d: found\n", j);
-			else
-				printf("  idx %d: not found\n", j);
-
-	}
-#endif
-#endif
-
-	/* Phase 2, if there are any entries in the table which were not found,
-	 * attempt to fill them with the nearest available value. */
-	for (int i = 0; i < PHASE_ALIGN_DERIVATIVES; i++)
-		for (int j = 0; j < PHASE_ALIGN_AMPLITUDES; j++)
-			if (!found[i][j])
-			{
-				bool foundsecond = false;
-				for (int l = 0; (l < PHASE_ALIGN_DERIVATIVES) && (!foundsecond); l++)
-					for (int k = 0; (k < PHASE_ALIGN_AMPLITUDES) && (!foundsecond); k++)
-					{
-						foundsecond = true;
-						int sl = (l + 1) / 2;
-						if ((sl & 1) == 0)
-							sl = -sl;
-						if ((i + sl < PHASE_ALIGN_DERIVATIVES) && (i + sl >= 0))
-						{
-							if ((j + k < PHASE_ALIGN_AMPLITUDES) && (found[i + sl][j + k]))
-							{
-								m_PhaseAlignmentTable[i][j] = m_PhaseAlignmentTable[i + sl][j + k];
-								for (unsigned int z = 0; z < m_Channels; z++)
-								{
-									m_PhaseAlignmentTable_f[i][j][z] = m_PhaseAlignmentTable_f[i + sl][j + k][z];
-									m_PhaseAlignmentTable_v[i][j][z] = m_PhaseAlignmentTable_v[i + sl][j + k][z];
-								}
-							}
-							else if ((j - k >= 0) && (found[i + sl][j - k]))
-							{
-								m_PhaseAlignmentTable[i][j] = m_PhaseAlignmentTable[i + sl][j - k];
-								for (unsigned int z = 0; z < m_Channels; z++)
-								{
-									m_PhaseAlignmentTable_f[i][j][z] = m_PhaseAlignmentTable_f[i + sl][j - k][z];
-									m_PhaseAlignmentTable_v[i][j][z] = m_PhaseAlignmentTable_v[i + sl][j - k][z];
-								}
-							}
-							else
-							{
-								foundsecond = false;
-							}
-						}
-						else
-						{
-							foundsecond = false;
-						}
-					}
-
-				assert(foundsecond);
-				foundsecond = false;
-
-			}
 
 }
-
-void GOrguePipe::SetupReleaseSamplerPosition(GO_SAMPLER& newReleaseSampler)
-{
-
-	assert(sampler != NULL);
-
-	/* Get combined release f's and v's
-	 * TODO: it might be good to check that the compiler
-	 * un-rolls this loop */
-	int v_mod = 0;
-	int f_mod = 0;
-	for (unsigned i = 0; i < MAX_OUTPUT_CHANNELS; i++)
-	{
-		v_mod += sampler->v[i];
-		f_mod += sampler->f[i];
-	}
-
-	/* Bring f and v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
-	v_mod += (m_PhaseAlignMaxDerivative - 1);
-	f_mod += (m_PhaseAlignMaxAmplitude - 1);
-
-	int derivIndex = m_PhaseAlignMaxDerivative ?
-			(PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative) :
-			PHASE_ALIGN_DERIVATIVES / 2;
-
-	assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
-
-	/* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
-	int ampIndex = m_PhaseAlignMaxAmplitude ?
-			(PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude) :
-			PHASE_ALIGN_AMPLITUDES / 2;
-
-	assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
-
-	/* Store this release point if it was not already found */
-	newReleaseSampler.position  = m_PhaseAlignmentTable[derivIndex][ampIndex];
-	for (unsigned int i = 0; i < MAX_OUTPUT_CHANNELS; i++)
-	{
-		newReleaseSampler.f[i] = m_PhaseAlignmentTable_f[derivIndex][ampIndex][i];
-		newReleaseSampler.v[i] = m_PhaseAlignmentTable_v[derivIndex][ampIndex][i];
-	}
-
-#ifndef NDEBUG
-#ifdef PALIGN_DEBUG
-	printf("setup release using alignment:\n");
-	printf("  pos:    %d\n", newReleaseSampler.position);
-	printf("  derIdx: %d\n", derivIndex);
-	printf("  ampIdx: %d\n", ampIndex);
-#endif
-#endif
-
-}
-
 
 GOrguePipe::~GOrguePipe()
 {
 	FREE_AND_NULL(m_attack.data);
 	FREE_AND_NULL(m_loop.data);
 	FREE_AND_NULL(m_release.data);
+	FREE_AND_NULL(m_ra_table);
 }
 
 GOrguePipe::GOrguePipe()
 {
 
-	memset(m_PhaseAlignmentTable, 0, sizeof(m_PhaseAlignmentTable));
-	memset(m_PhaseAlignmentTable_f, 0, sizeof(m_PhaseAlignmentTable_f));
-	memset(m_PhaseAlignmentTable_v, 0, sizeof(m_PhaseAlignmentTable_v));
-	m_PhaseAlignMaxAmplitude = 0;
-	m_PhaseAlignMaxDerivative = 0;
-
 	memset(&m_attack, 0, sizeof(m_attack));
 	memset(&m_loop, 0, sizeof(m_loop));
 	memset(&m_release, 0, sizeof(m_release));
 
+	m_ra_table = NULL;
 	pitch = 0;
 	sampler = NULL;
 	instances = 0;
@@ -329,24 +148,25 @@ void GOrguePipe::SetOn()
 
 	if (instances < 0)
 	{
-		sampler->stage = GSS_RELEASE;
+//		sampler->stage = GSS_RELEASE;
+		throw (char*)"regression - this should be impossible";
 	}
-	else
-	{
-		sampler->stage = GSS_ATTACK;
+
+	sampler->pipe = this;
+	sampler->pipe_section = &m_attack;
+	sampler->position = 0;
+	memcpy(sampler->f, sampler->pipe_section->start_f, MAX_OUTPUT_CHANNELS * sizeof(sampler->f[0]));
+	memcpy(sampler->v, sampler->pipe_section->start_v, MAX_OUTPUT_CHANNELS * sizeof(sampler->v[0]));
+
+//	else
+//	{
+//		sampler->stage = GSS_ATTACK;
 //		if (g_sound->HasRandomPipeSpeech() && !g_sound->windchests[WindchestGroup])
 //			sampler->position = rand() & 0x78;
-	}
+//	}
 
-	sampler->type = m_attack.type;
 	sampler->fade = sampler->fademax = ra_amp;
-
-	sampler->position = 0;// m_attack.offset;
-	sampler->ptr = m_attack.data;
-	sampler->pipe = this;
 	sampler->shift = ra_shift;
-//	memcpy(sampler->f, m_attack.start_f, MAX_OUTPUT_CHANNELS * sizeof(sampler->f[0]));
-//	memcpy(sampler->v, m_attack.start_v, MAX_OUTPUT_CHANNELS * sizeof(sampler->v[0]));
 	sampler->time = organfile->GetElapsedTime();
 
 	this->sampler = sampler;
@@ -378,12 +198,10 @@ void GOrguePipe::SetOff()
 		if (new_sampler != NULL)
 		{
 
-			new_sampler->position = 0;
-			new_sampler->ptr = m_release.data;
 			new_sampler->pipe = this;
+			new_sampler->pipe_section = &m_release;
+			new_sampler->position = 0;
 			new_sampler->shift = ra_shift;
-			new_sampler->stage = GSS_RELEASE;
-			new_sampler->type = m_release.type;
 			int time = organfile->GetElapsedTime() - sampler->time;
 			new_sampler->time = organfile->GetElapsedTime();
 			new_sampler->fademax = ra_amp;
@@ -403,9 +221,9 @@ void GOrguePipe::SetOff()
 			new_sampler->faderemain = 512;	// 32768*65536 / 64*65536
 
 			/* FIXME: this must be enabled again at some point soon */
-			if (g_sound->HasReleaseAlignment())
+			if (g_sound->HasReleaseAlignment() && (m_ra_table != NULL))
 			{
-				SetupReleaseSamplerPosition(*new_sampler);
+				m_ra_table->SetupRelease(*new_sampler, *sampler);
 			}
 			else
 			{
@@ -607,6 +425,10 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 			m_release.type = AC_UNCOMPRESSED_STEREO;
 		}
 
+		m_attack.stage = GSS_ATTACK;
+		m_loop.stage = GSS_LOOP;
+		m_release.stage = GSS_RELEASE;
+
 		ComputeReleaseAlignmentInfo();
 
 	}
@@ -704,6 +526,9 @@ void GOrguePipe::CreateFromTremulant(GOrgueTremulant* tremulant)
 		m_attack.type = AC_UNCOMPRESSED_MONO;
 		m_loop.type = AC_UNCOMPRESSED_MONO;
 		m_release.type = AC_UNCOMPRESSED_MONO;
+		m_attack.stage = GSS_ATTACK;
+		m_loop.stage = GSS_LOOP;
+		m_release.stage = GSS_RELEASE;
 
 		ComputeReleaseAlignmentInfo();
 
