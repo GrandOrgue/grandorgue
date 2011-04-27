@@ -39,16 +39,7 @@ extern GOrgueSound* g_sound;
 extern const char* s_MIDIMessages[];
 
 GOrgueManual::GOrgueManual() :
-	Displayed(false),
-	DispKeyColourInverted(false),
-	DispKeyColourWooden(false),
 	m_ManualNumber(0),
-	m_Width(0),
-	m_Height(0),
-	m_X(0),
-	m_Y(0),
-	m_KeysY(0),
-	m_PistonY(0),
 	m_MIDI(),
 	NumberOfLogicalKeys(0),
 	FirstAccessibleKeyLogicalKeyNumber(0),
@@ -63,7 +54,16 @@ GOrgueManual::GOrgueManual() :
 	Name(),
 	stop(),
 	coupler(NULL),
-	divisional(NULL)
+	divisional(NULL),
+	Displayed(false),
+	m_Width(0),
+	m_Height(0),
+	m_X(0),
+	m_Y(0),
+	m_KeysY(0),
+	m_PistonY(0),
+	DispKeyColourInverted(false),
+	DispKeyColourWooden(false)
 {
 
 }

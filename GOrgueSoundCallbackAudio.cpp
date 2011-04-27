@@ -40,7 +40,7 @@ void stereoUncompressed
 	)
 {
 
-	short *input = (short*)(sampler->ptr + sampler->position);
+	short *input = (short*)(sampler->pipe_section->data + sampler->position);
 	int *v = sampler->v;
 	int *f = sampler->f;
 
@@ -66,7 +66,7 @@ void monoUncompressed
 	)
 {
 
-	short* input=(short*)(sampler->ptr + sampler->position);
+	short* input=(short*)(sampler->pipe_section->data + sampler->position);
 	int *v = sampler->v;
 	int *f = sampler->f;
 
@@ -210,7 +210,7 @@ void GOrgueSound::ProcessAudioSamplers
 		if  (
 			 (instance->b_limit) &&
 			 (instance->samplers_count >= instance->poly_soft) &&
-			 (sampler->stage == GSS_RELEASE) &&
+			 (sampler->pipe_section->stage == GSS_RELEASE) &&
 			 (organfile->GetElapsedTime() - sampler->time > 250)
 			)
 			sampler->fadeout = 4;
@@ -221,7 +221,7 @@ void GOrgueSound::ProcessAudioSamplers
 
 			short buffer[4];
 
-			switch (sampler->type)
+			switch (sampler->pipe_section->type)
 			{
 				case AC_UNCOMPRESSED_MONO:
 					monoUncompressed(sampler, buffer);
@@ -239,7 +239,7 @@ void GOrgueSound::ProcessAudioSamplers
 					throw (char*)"bad sampler->type";
 			}
 
-			if(sampler->stage == GSS_RELEASE)
+			if(sampler->pipe_section->stage == GSS_RELEASE)
 			{
 
 				/* If this is the end of the release, and there are no more
@@ -254,13 +254,11 @@ void GOrgueSound::ProcessAudioSamplers
 			else
 			{
 
-				unsigned currentBlockSize = (sampler->stage == GSS_LOOP) ? sampler->pipe->m_loop.size : sampler->pipe->m_attack.size;
+				int currentBlockSize = sampler->pipe_section->size;
 				if(sampler->position >= currentBlockSize)
 				{
-					sampler->stage = GSS_LOOP;
-					sampler->ptr = sampler->pipe->m_loop.data;
+					sampler->pipe_section = &(sampler->pipe->m_loop);
 					sampler->position -= currentBlockSize;
-					sampler->type = sampler->pipe->m_loop.type;
 					memcpy(sampler->f, sampler->pipe->m_loop.start_f, MAX_OUTPUT_CHANNELS * sizeof(sampler->f[0]));
 					memcpy(sampler->v, sampler->pipe->m_loop.start_v, MAX_OUTPUT_CHANNELS * sizeof(sampler->v[0]));
 				}

@@ -329,19 +329,16 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	m_pipe = new GOrguePipe*[m_NumberOfPipes + m_NumberOfTremulants];
 	memset(m_pipe, 0, sizeof(GOrguePipe*) * (m_NumberOfPipes + m_NumberOfTremulants));
 
-	for (unsigned int i = 0; i < m_NumberOfPipes + m_NumberOfTremulants; i++)
+	for (int i = 0; i < m_NumberOfPipes + m_NumberOfTremulants; i++)
 		m_pipe[i] = new GOrguePipe();
 
 	m_path = file;
 	m_path.MakeAbsolute();
 	wxString temp;
 	m_path.SetCwd(m_path.GetPath());
-	int j, progress = 0;
-	char *mbuffer_p = 0, *ptr, *compress;
-	short *s_ptr;
-	unsigned mbuffer_s = 0, compress_s = 0;
+	int progress = 0;
+	char *mbuffer_p = 0;
 	m_compress_p = 0;
-	int ffile = -1;
 
 	/* The wave filenames stored in m_pipe_files are relative paths. This code
 	 * takes each filename, converts it to it's absolute path and then stores
@@ -370,7 +367,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	}
 
 	/* Load pipes */
-	for (int i = 0; i < m_pipe_files.size(); i++)
+	for (unsigned int i = 0; i < m_pipe_files.size(); i++)
 	{
 
 		wxLogDebug("Loading file %s", m_pipe_files[i].c_str());
@@ -426,7 +423,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	/* This code goes through the list of all pipe filenames
 	 * searching for filenames starting with the "REF:" identifier,
 	 * if a pipe is found, it will try to resolve the pipe.	*/
-	for (int i = 0; i < m_pipe_files.size(); i++)
+	for (unsigned int i = 0; i < m_pipe_files.size(); i++)
 	{
 
 		if (!m_pipe_files[i].StartsWith("REF:"))
@@ -490,7 +487,7 @@ GrandOrgueFile::~GrandOrgueFile(void)
 
 	if (m_pipe)
 	{
-		for (unsigned i = 0; i < m_NumberOfPipes + m_NumberOfTremulants; i++)
+		for (int i = 0; i < m_NumberOfPipes + m_NumberOfTremulants; i++)
 			if (m_pipe[i])
 			{
 				delete m_pipe[i];

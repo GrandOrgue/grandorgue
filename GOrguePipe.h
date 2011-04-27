@@ -27,37 +27,7 @@
 #include "GOrgueSound.h"
 
 class GOrgueTremulant;
-
-#define PHASE_ALIGN_DERIVATIVES    2
-#define PHASE_ALIGN_AMPLITUDES     32
-#define PHASE_ALIGN_MIN_FREQUENCY  20 /* Hertz */
-
-typedef enum
-{
-	AC_COMPRESSED_MONO = 0,
-	AC_UNCOMPRESSED_MONO = 1,
-	AC_COMPRESSED_STEREO = 2,
-	AC_UNCOMPRESSED_STEREO = 3
-} AUDIO_SECTION_TYPE;
-
-typedef struct
-{
-
-	/* Size of the section in BYTES */
-	int size;
-
-	/* Type of the data which is stored in the data pointer */
-	AUDIO_SECTION_TYPE type;
-
-	/* The starting sample and derivatives for each channel (used in the
-	 * compression and release-alignment schemes */
-	int start_f[MAX_OUTPUT_CHANNELS];
-	int start_v[MAX_OUTPUT_CHANNELS];
-
-	/* Pointer to (size) bytes of data encoded in the format (type) */
-	unsigned char* data;
-
-} AUDIO_SECTION;
+class GOrgueReleaseAlignTable;
 
 class GOrguePipe
 {
@@ -67,18 +37,13 @@ private:
 	void SetOn();
 	void SetOff();
 
-	int m_Channels;
-	int m_SampleRate;
-	int m_PhaseAlignMaxAmplitude;
-	int m_PhaseAlignMaxDerivative;
+	unsigned int m_Channels;
+	unsigned int m_SampleRate;
 
-	int m_PhaseAlignmentTable[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
-	int m_PhaseAlignmentTable_f[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES][MAX_OUTPUT_CHANNELS];
-	int m_PhaseAlignmentTable_v[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES][MAX_OUTPUT_CHANNELS];
+	GOrgueReleaseAlignTable* m_ra_table;
 
 	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
 	void ComputeReleaseAlignmentInfo();
-	void SetupReleaseSamplerPosition(GO_SAMPLER& newReleaseSampler);
 
 public:
 

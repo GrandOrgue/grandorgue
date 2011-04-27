@@ -112,9 +112,6 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 	wxMemoryDC dc;
 	dc.SelectObject(m_clientBitmap);
 
-	int JambLeftX = (displayMetrics->GetCenterX() - displayMetrics->GetJambLeftRightWidth()) >> 1;
-	int JambRightX = JambLeftX + displayMetrics->GetCenterX() + displayMetrics->GetCenterWidth();
-
 	TileWood(dc, displayMetrics->GetDrawstopBackgroundImageNum(), 0, 0, displayMetrics->GetCenterX(), displayMetrics->GetScreenHeight());
 	TileWood(dc, displayMetrics->GetDrawstopBackgroundImageNum(), displayMetrics->GetCenterX() + displayMetrics->GetCenterWidth(), 0, displayMetrics->GetScreenWidth() - (displayMetrics->GetCenterX() + displayMetrics->GetCenterWidth()), displayMetrics->GetScreenHeight());
 	TileWood(dc, displayMetrics->GetConsoleBackgroundImageNum(), displayMetrics->GetCenterX(), 0, displayMetrics->GetCenterWidth(), displayMetrics->GetScreenHeight());
