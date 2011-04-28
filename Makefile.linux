@@ -16,7 +16,7 @@
 #--version=
 
 # debug settings
-DEBUG                     = yes
+DEBUG                     = no
 
 # the following debug settings will only be in effect if "DEBUG" is set to
 # "yes".

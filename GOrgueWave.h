@@ -24,6 +24,13 @@
 #define GORGUEWAVE_H
 
 #include <wx/wx.h>
+#include <vector>
+
+typedef struct
+{
+	unsigned start_sample;
+	unsigned end_sample;
+} GO_WAVE_LOOP;
 
 class GOrgueWave
 {
@@ -40,9 +47,6 @@ private:
 	bool hasFormat;
 
 	bool hasRelease;
-	unsigned loopStart;
-	unsigned loopEnd;
-	bool hasLoops;
 
 	unsigned peak;
 
@@ -52,6 +56,10 @@ private:
 	void LoadCueChunk(char* ptr, unsigned long length);
 	void LoadSamplerChunk(char* ptr, unsigned long length);
 	void FindPeaks();
+
+	const unsigned GetLongestLoop();
+
+	std::vector<GO_WAVE_LOOP> loops;
 
 public:
 
@@ -87,7 +95,8 @@ public:
 	 */
 	unsigned GetLoopEndPosition();
 
-	bool HasLoops();
+	unsigned GetNbLoops();
+	const GO_WAVE_LOOP& GetLoop(unsigned idx);
 
 	/* GetLength()
 	 * Returns the number of blocks in the wave file (there are *channel*
