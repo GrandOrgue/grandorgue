@@ -30,15 +30,14 @@ void GOrgueWave::SetInvalid()
 	channels = 0;
 	bytesPerSample = 0;
 	sampleRate = 0;
-	hasLoops = false;
 	hasFormat = false;
 	release = 0;
 	hasRelease = false;
-	loopStart = 0;
-	loopEnd = 0;
+	loops.clear();
 }
 
-GOrgueWave::GOrgueWave()
+GOrgueWave::GOrgueWave() :
+	loops()
 {
 
 	/* Start up the waveform in an invalid state */
@@ -125,7 +124,6 @@ void GOrgueWave::LoadCueChunk(char* ptr, unsigned long length)
 void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
 {
 
-	/* TODO: we could support multiple sample loops? */
 	if (length < sizeof(GO_WAVESAMPLERCHUNK))
 		throw (char*)"< Invalid SMPL chunk in";
 
@@ -134,19 +132,14 @@ void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
 	if (length < sizeof(GO_WAVESAMPLERCHUNK) + sizeof(GO_WAVESAMPLERLOOP) * numberOfLoops)
 		throw (char*)"<Invalid SMPL chunk in";
 
-	/* NOTE: for now, we just get the *longest* loop. */
 	GO_WAVESAMPLERLOOP* loops = (GO_WAVESAMPLERLOOP*)(ptr + sizeof(GO_WAVESAMPLERCHUNK));
+	this->loops.clear();
 	for (unsigned k = 0; k < numberOfLoops; k++)
 	{
-		unsigned q = wxUINT32_SWAP_ON_BE(loops[k].dwStart);
-		unsigned r = wxUINT32_SWAP_ON_BE(loops[k].dwEnd);
-		if (r - q > loopEnd - loopStart)
-		{
-			loopEnd   = r;
-			loopStart = q;
-			hasLoops = true;
-		}
-
+		GO_WAVE_LOOP l;
+		l.start_sample = wxUINT32_SWAP_ON_BE(loops[k].dwStart);
+		l.end_sample = wxUINT32_SWAP_ON_BE(loops[k].dwEnd);
+		this->loops.push_back(l);
 	}
 
 }
@@ -328,10 +321,15 @@ void GOrgueWave::Open(const wxString& filename)
 			throw (char*)"<Invalid WAV file";
 
 		// learning lesson: never ever trust the range values of outside sources to be correct!
-		if (loopStart >= loopEnd || loopStart >= dataSize ||
-			loopEnd >= dataSize || release >= dataSize ||
-			!loopEnd || !release)
-			loopStart = loopEnd = release = 0;
+		for (unsigned int i = 0; i < loops.size(); i++)
+		{
+			if ((loops[i].start_sample >= loops[i].end_sample) ||
+				(loops[i].start_sample >= dataSize) ||
+				(loops[i].end_sample >= dataSize) ||
+				(loops[i].end_sample == 0) ||
+				(release == 0))
+				loops.erase(loops.begin() + i);
+		}
 
 		/* Free the memory used to hold the file */
 		free(ptr);
@@ -408,17 +406,40 @@ unsigned GOrgueWave::GetReleaseMarkerPosition()
 
 }
 
+const unsigned GOrgueWave::GetLongestLoop()
+{
+
+	if (loops.size() < 1)
+		throw (char*)"wave does not contain loops";
+
+	assert(loops[0].end_sample > loops[0].start_sample);
+
+	unsigned lidx = 0;
+	for (unsigned int i = 1; i < loops.size(); i++)
+	{
+
+		assert(loops[i].end_sample > loops[i].start_sample);
+		if ((loops[i].end_sample - loops[i].start_sample) >
+			(loops[lidx].end_sample - loops[lidx].start_sample))
+			lidx = i;
+
+	}
+
+	return lidx;
+
+}
+
 unsigned GOrgueWave::GetLoopStartPosition()
 {
 
-	return loopStart;
+	return loops[GetLongestLoop()].start_sample;
 
 }
 
 unsigned GOrgueWave::GetLoopEndPosition()
 {
 
-	return loopEnd;
+	return loops[GetLongestLoop()].end_sample;
 
 }
 
@@ -458,10 +479,18 @@ void GOrgueWave::ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFor
 
 }
 
-bool GOrgueWave::HasLoops()
+unsigned GOrgueWave::GetNbLoops()
 {
 
-	return hasLoops;
+	return loops.size();
+
+}
+
+const GO_WAVE_LOOP& GOrgueWave::GetLoop(unsigned idx)
+{
+
+	assert(idx < loops.size());
+	return loops[idx];
 
 }
 

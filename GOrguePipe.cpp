@@ -314,7 +314,7 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 
 		unsigned attackSamples = wave.GetLength();
 
-		if (wave.HasLoops() && wave.HasReleaseMarker())
+		if ((wave.GetNbLoops() > 0) && wave.HasReleaseMarker())
 		{
 
 			/* The wave has loops and a release marker so truncate the samples
