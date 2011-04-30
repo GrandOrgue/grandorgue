@@ -570,21 +570,30 @@ void GOrgueSound::StartRecording()
 
 void GOrgueSound::StopRecording()
 {
+
 	if (!f_output)
 		return;
+
 	b_stoprecording = true;
+
 }
 
 bool GOrgueSound::HasMIDIDevice()
 {
+
 	for (int i = 0; i < n_midiDevices; i++)
 		if (b_midiDevices[i])
 			return true;
+
+	return false;
+
 }
 
 bool GOrgueSound::HasMIDIListener()
 {
-	return (listen_evthandler) && b_listening;
+
+	return (listen_evthandler) && (b_listening);
+
 }
 
 void GOrgueSound::SetMIDIListener(wxEvtHandler* handler)

@@ -26,6 +26,7 @@
 #include <wx/wx.h>
 
 class IniFileConfig;
+class GOrgueEnclosure;
 
 class GOrgueDisplayMetrics
 {
@@ -86,6 +87,7 @@ public:
 
 	int GetEnclosureWidth();
 	int GetEnclosureY();
+	int GetEnclosureX(const GOrgueEnclosure* enclosure);
 
 	int GetScreenWidth();
 	int GetScreenHeight();

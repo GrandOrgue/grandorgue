@@ -60,7 +60,7 @@ void GOrguePushbutton::MIDI(void)
 
 bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 {
-	int x, y, i;
+	int x, y;
 	if (!Displayed)
 		return false;
 

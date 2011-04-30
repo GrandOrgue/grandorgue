@@ -296,17 +296,8 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 	j = (displayMetrics->GetScreenWidth() - displayMetrics->GetEnclosureWidth() + 6) >> 1;
 	dc.SetPen(*wxTRANSPARENT_PEN);
 	dc.SetBrush(*wxBLACK_BRUSH);
-	for (i = 0; i < organfile->GetEnclosureCount(); i++)
-	{
-		organfile->GetEnclosure(i)->m_X = j;
-		wxRect rect(organfile->GetEnclosure(i)->m_X, displayMetrics->GetEnclosureY(), 46, 61);
-		dc.DrawRectangle(rect.x, rect.y, rect.width, rect.height);
-		font.SetPointSize(7);
-		dc.SetFont(font);
-		dc.SetTextForeground(*wxWHITE);
-		dc.DrawLabel(organfile->GetEnclosure(i)->Name, rect, wxALIGN_CENTER_HORIZONTAL);
-		j += 52;
-	}
+	for (unsigned l = 0; l < organfile->GetEnclosureCount(); l++)
+		organfile->GetEnclosure(l)->DrawLabel(dc);
 
 	DrawClickables(&dc);
 
@@ -639,14 +630,14 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 			HelpDrawButton(organfile->GetPiston(j), dc, xx, yy, right);
 	}
 
-	for (i = 0; i < organfile->GetEnclosureCount(); i++)
+	for (unsigned l = 0; l < organfile->GetEnclosureCount(); l++)
 	{
-		if (organfile->GetEnclosure(i)->Draw(xx, yy, dc))
+		if (organfile->GetEnclosure(l)->Draw(xx, yy, dc))
 		{
 			if (right)
-				organfile->GetEnclosure(i)->MIDI();
+				organfile->GetEnclosure(l)->MIDI();
 			else if (scroll)
-				organfile->GetEnclosure(i)->Set(organfile->GetEnclosure(i)->MIDIValue + (scroll > 0 ? 16 : -16));
+				organfile->GetEnclosure(l)->Scroll(scroll > 0);
 		}
 	}
 }

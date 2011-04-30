@@ -34,7 +34,6 @@ extern char* s_MIDIMessages[];
 extern GrandOrgueFile* organfile;
 
 GOrgueEnclosure::GOrgueEnclosure() :
-	m_X(0),
 	AmpMinimumLevel(0),
 	MIDIInputNumber(0),
 	MIDIValue(0),
@@ -46,28 +45,41 @@ GOrgueEnclosure::GOrgueEnclosure() :
 bool GOrgueEnclosure::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 {
 
+	int enclosure_x = DisplayMetrics->GetEnclosureX(this);
+	int enclosure_y = DisplayMetrics->GetEnclosureY();
+
 	if (!dc)
 	{
-		wxRect rect(m_X, DisplayMetrics->GetEnclosureY(), 46, 61);
+		wxRect rect(enclosure_x, enclosure_y, 46, 61);
 		return rect.Contains(xx, yy);
 	}
 
 	dc->SetBrush(*wxBLACK_BRUSH);
-	dc->DrawRectangle(m_X, DisplayMetrics->GetEnclosureY() + 13, 46, 44);
+	dc->DrawRectangle(enclosure_x, enclosure_y + 13, 46, 44);
 	int dx = 1 + ( 3 * MIDIValue) / 127;
 	int dy = 1 + (13 * MIDIValue) / 127;
 	wxPoint points[4];
-	points[0].x = m_X +  7 + dx;
-	points[1].x = m_X + 38 - dx;
-	points[2].x = m_X + 38 + dx;
-	points[3].x = m_X +  7 - dx;
-	points[0].y = points[1].y = DisplayMetrics->GetEnclosureY() + 13 + dy;
-	points[2].y = points[3].y = DisplayMetrics->GetEnclosureY() + 56 - dy;
+	points[0].x = enclosure_x +  7 + dx;
+	points[1].x = enclosure_x + 38 - dx;
+	points[2].x = enclosure_x + 38 + dx;
+	points[3].x = enclosure_x +  7 - dx;
+	points[0].y = points[1].y = enclosure_y + 13 + dy;
+	points[2].y = points[3].y = enclosure_y + 56 - dy;
 	dc->SetBrush(::wxGetApp().frame->m_pedalBrush);
 	dc->DrawPolygon(4, points);
 
 	if (dc2)
-		dc2->Blit(m_X, DisplayMetrics->GetEnclosureY() + 13, 46, 44, dc, m_X, DisplayMetrics->GetEnclosureY() + 13);
+	{
+		dc2->Blit
+			(enclosure_x
+			,enclosure_y + 13
+			,46
+			,44
+			,dc
+			,enclosure_x
+			,enclosure_y + 13
+			);
+	}
 
 	return false;
 
@@ -103,4 +115,47 @@ void GOrgueEnclosure::MIDI(void)
 		wxConfigBase::Get()->Write(wxString("MIDI/") + s_MIDIMessages[index], dlg.GetEvent());
 		g_sound->ResetSound();
 	}
+}
+
+int GOrgueEnclosure::GetMIDIInputNumber()
+{
+
+	return MIDIInputNumber;
+
+}
+
+float GOrgueEnclosure::GetAttenuation()
+{
+
+	static const float scale = 1.0 / 12700.0;
+	return (float)(MIDIValue * (100 - AmpMinimumLevel) + 127 * AmpMinimumLevel) * scale;
+
+}
+
+void GOrgueEnclosure::DrawLabel(wxDC& dc)
+{
+
+	int enclosure_x = DisplayMetrics->GetEnclosureX(this);
+	int enclosure_y = DisplayMetrics->GetEnclosureY();
+
+	dc.SetPen(*wxTRANSPARENT_PEN);
+	dc.SetBrush(*wxBLACK_BRUSH);
+
+	wxRect rect(enclosure_x, enclosure_y, 46, 61);
+	dc.DrawRectangle(rect.x, rect.y, rect.width, rect.height);
+
+	wxFont font = *wxNORMAL_FONT;
+	font.SetPointSize(7);
+	dc.SetFont(font);
+	dc.SetTextForeground(*wxWHITE);
+
+	dc.DrawLabel(Name, rect, wxALIGN_CENTER_HORIZONTAL);
+
+}
+
+void GOrgueEnclosure::Scroll(bool scroll_up)
+{
+
+	Set(MIDIValue + (scroll_up ? 16 : -16));
+
 }

@@ -142,7 +142,7 @@ public:
 	GOrgueWindchest* GetWindchest(unsigned index);
 	int GetWinchestGroupCount();
 	GOrgueEnclosure* GetEnclosure(unsigned index);
-	int GetEnclosureCount();
+	unsigned GetEnclosureCount();
 	GOrgueLabel* GetLabel(unsigned index);
 	int GetLabelCount();
 

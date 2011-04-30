@@ -174,9 +174,9 @@ void GOrgueSound::MIDICallback(std::vector<unsigned char>& msg, int which, GOrgu
 			else if (i < 8)
 			{
 				q = i - 1;
-				for (k = 0; k < organfile->GetEnclosureCount(); k++)
-					if (organfile->GetEnclosure(k)->MIDIInputNumber == q)
-						organfile->GetEnclosure(k)->Set(msg[2]);
+				for (unsigned l = 0; l < organfile->GetEnclosureCount(); l++)
+					if (organfile->GetEnclosure(l)->GetMIDIInputNumber() == q)
+						organfile->GetEnclosure(l)->Set(msg[2]);
 			}
 			else if (i < 14)
 			{

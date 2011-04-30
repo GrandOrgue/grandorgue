@@ -69,12 +69,8 @@ void GOrgueWindchest::Load(IniFileConfig& cfg, const char* group)
 double GOrgueWindchest::GetVolume()
 {
 	double d = 1.0;
-	const double scale = 1.0 / 12700.0;
 	for (int i = 0; i < NumberOfEnclosures; i++)
-	{
-		GOrgueEnclosure* e = organfile->GetEnclosure(enclosure[i]);
-		d *= (double)(e->MIDIValue * (100 - e->AmpMinimumLevel) + 127 * e->AmpMinimumLevel) * scale;
-	}
+		d  *= organfile->GetEnclosure(enclosure[i])->GetAttenuation();
 	return d;
 }
 
