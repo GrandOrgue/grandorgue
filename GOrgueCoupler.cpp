@@ -24,6 +24,7 @@
 #include "IniFileConfig.h"
 #include "GOrgueDrawStop.h"
 #include "GOrgueSound.h"
+#include "GrandOrgueFile.h"
 
 GOrgueCoupler::GOrgueCoupler() :
 	GOrgueDrawstop(),
@@ -41,30 +42,37 @@ GOrgueCoupler::GOrgueCoupler() :
 
 void GOrgueCoupler::Load(IniFileConfig& cfg, const char* group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics)
 {
-  UnisonOff										= cfg.ReadBoolean( group,"UnisonOff");
-  DestinationManual								= cfg.ReadInteger( group,"DestinationManual", firstValidManualIndex, numberOfManuals, !UnisonOff);
-  DestinationKeyshift							= cfg.ReadInteger( group,"DestinationKeyshift",  -24,   24, !UnisonOff);
-  CoupleToSubsequentUnisonIntermanualCouplers	= cfg.ReadBoolean( group,"CoupleToSubsequentUnisonIntermanualCouplers", !UnisonOff);
-  CoupleToSubsequentUpwardIntermanualCouplers	= cfg.ReadBoolean( group,"CoupleToSubsequentUpwardIntermanualCouplers", !UnisonOff);
-  CoupleToSubsequentDownwardIntermanualCouplers	= cfg.ReadBoolean( group,"CoupleToSubsequentDownwardIntermanualCouplers", !UnisonOff);
-  CoupleToSubsequentUpwardIntramanualCouplers	= cfg.ReadBoolean( group,"CoupleToSubsequentUpwardIntramanualCouplers", !UnisonOff);
-  CoupleToSubsequentDownwardIntramanualCouplers	= cfg.ReadBoolean( group,"CoupleToSubsequentDownwardIntramanualCouplers", !UnisonOff);
 
-  GOrgueDrawstop::Load(cfg, group, displayMetrics );
+	UnisonOff                                     = cfg.ReadBoolean(group, "UnisonOff");
+	DestinationManual                             = cfg.ReadInteger(group, "DestinationManual", firstValidManualIndex, numberOfManuals, !UnisonOff);
+	DestinationKeyshift                           = cfg.ReadInteger(group, "DestinationKeyshift", -24, 24, !UnisonOff);
+	CoupleToSubsequentUnisonIntermanualCouplers   = cfg.ReadBoolean(group, "CoupleToSubsequentUnisonIntermanualCouplers", !UnisonOff);
+	CoupleToSubsequentUpwardIntermanualCouplers   = cfg.ReadBoolean(group, "CoupleToSubsequentUpwardIntermanualCouplers", !UnisonOff);
+	CoupleToSubsequentDownwardIntermanualCouplers = cfg.ReadBoolean(group, "CoupleToSubsequentDownwardIntermanualCouplers", !UnisonOff);
+	CoupleToSubsequentUpwardIntramanualCouplers   = cfg.ReadBoolean(group, "CoupleToSubsequentUpwardIntramanualCouplers", !UnisonOff);
+	CoupleToSubsequentDownwardIntramanualCouplers = cfg.ReadBoolean(group, "CoupleToSubsequentDownwardIntramanualCouplers", !UnisonOff);
+	GOrgueDrawstop::Load(cfg, group, displayMetrics);
+
 }
 
 void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix)
 {
+
 	GOrgueDrawstop::Save(cfg, prefix, "Coupler");
+
 }
 
-bool GOrgueCoupler::Set(bool on)
+bool GOrgueCoupler::Set(GrandOrgueFile& organ, bool on)
 {
-  if (DefaultToEngaged == on)
-	return on;
-  DefaultToEngaged = on;
-  GOrgueSound::MIDIPretend(true);
-  DefaultToEngaged = !on;
-  GOrgueSound::MIDIPretend(false);
-  return GOrgueDrawstop::Set(on);
+
+	if (DefaultToEngaged == on)
+		return on;
+
+	DefaultToEngaged = on;
+	organ.MIDIPretend(true);
+	DefaultToEngaged = !on;
+	organ.MIDIPretend(false);
+
+	return GOrgueDrawstop::Set(on);
+
 }

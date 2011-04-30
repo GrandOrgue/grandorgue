@@ -96,9 +96,9 @@ bool GOrgueStop::Set(bool on)
 	if (DefaultToEngaged == on)
 		return on;
 	DefaultToEngaged = on;
-	GOrgueSound::MIDIPretend(true);
+	organfile->MIDIPretend(true);
 	DefaultToEngaged = !on;
-	GOrgueSound::MIDIPretend(false);
+	organfile->MIDIPretend(false);
 
 	bool retval = GOrgueDrawstop::Set(on);
 

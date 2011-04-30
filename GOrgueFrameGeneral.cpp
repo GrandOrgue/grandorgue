@@ -193,7 +193,7 @@ void GOrgueFrameGeneral::Push(int WXUNUSED(depth))
 						SET_BIT(stop[j], i, 1, k < 2 ? organfile->GetManual(j)->GetStop(i)->Set(GET_BIT(stop[j], i, 1)) : GET_BIT(stop[j], i, 1));
 				for (i = 0; i < organfile->GetManual(j)->GetCouplerCount(); i++)
 					if (GET_BIT(coupler[j], i, 0))
-						SET_BIT(coupler[j], i, 1, k < 2 ? organfile->GetManual(j)->GetCoupler(i)->Set(GET_BIT(coupler[j], i, 1)) : GET_BIT(coupler[j], i, 1));
+						SET_BIT(coupler[j], i, 1, k < 2 ? organfile->GetManual(j)->GetCoupler(i)->Set(*organfile, GET_BIT(coupler[j], i, 1)) : GET_BIT(coupler[j], i, 1));
 			}
 			for (i = 0; i < organfile->GetTremulantCount(); i++)
 				if (GET_BIT(tremulant, i, 0))
@@ -203,7 +203,7 @@ void GOrgueFrameGeneral::Push(int WXUNUSED(depth))
 					SET_BIT(divisionalcoupler, i, 1, k < 2 ? organfile->GetDivisionalCoupler(i)->Set(GET_BIT(divisionalcoupler, i, 1)) : GET_BIT(divisionalcoupler, i, 1));
 			if (k > 1)
 				break;
-			GOrgueSound::MIDIPretend(!k);
+			organfile->MIDIPretend(!k);
 		}
 	}
 

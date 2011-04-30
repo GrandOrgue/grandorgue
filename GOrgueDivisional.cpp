@@ -225,13 +225,13 @@ void GOrgueDivisional::Push(int depth)
 					SET_BIT(stop, i, 1, k < 2 ? associatedManual->GetStop(i)->Set(GET_BIT(stop, i, 1)) : GET_BIT(stop, i, 1));
 			for (i = 0; i < associatedManual->GetCouplerCount(); i++)
 				if (GET_BIT(coupler, i, 0))
-					SET_BIT(coupler, i, 1, k < 2 ? associatedManual->GetCoupler(i)->Set(GET_BIT(coupler, i, 1)) : GET_BIT(coupler, i, 1));
+					SET_BIT(coupler, i, 1, k < 2 ? associatedManual->GetCoupler(i)->Set(*organfile, GET_BIT(coupler, i, 1)) : GET_BIT(coupler, i, 1));
 			for (i = 0; i < associatedManual->GetTremulantCount(); i++)
 				if (GET_BIT(tremulant, i, 0))
 					SET_BIT(tremulant, i, 1, k < 2 ? associatedManual->GetTremulant(i)->Set(GET_BIT(tremulant, i, 1)) : GET_BIT(tremulant, i, 1));
 			if (k >= 2)
 				break;
-			GOrgueSound::MIDIPretend(!k);
+			organfile->MIDIPretend(!k);
         }
 	}
 

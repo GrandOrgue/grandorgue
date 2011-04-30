@@ -27,6 +27,7 @@
 
 class IniFileConfig;
 class GOrgueDisplayMetrics;
+class GrandOrgueFile;
 
 class GOrgueCoupler : public GOrgueDrawstop
 {
@@ -37,7 +38,7 @@ public:
 	GOrgueCoupler();
 	void Load(IniFileConfig& cfg, const char* group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
-	bool Set(bool on);
+	bool Set(GrandOrgueFile& organ, bool on);
 
 	bool UnisonOff;
 	bool CoupleToSubsequentUnisonIntermanualCouplers;
