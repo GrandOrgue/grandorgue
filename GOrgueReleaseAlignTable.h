@@ -8,8 +8,6 @@
 #ifndef GORGUERELEASEALIGNTABLE_H_
 #define GORGUERELEASEALIGNTABLE_H_
 
-#include "GOrgueSound.h"
-
 #define PHASE_ALIGN_DERIVATIVES    2
 #define PHASE_ALIGN_AMPLITUDES     32
 #define PHASE_ALIGN_MIN_FREQUENCY  20 /* Hertz */
@@ -17,8 +15,10 @@
 /* data structure required to support release alignment tracking. */
 typedef struct
 {
-	int f[4];
-} GO_RELEASE_TRACKER;
+	int f[2];
+} GO_RELEASE_TRACKING_INFO;
+
+#include "GOrgueSound.h"
 
 class GOrgueReleaseAlignTable
 {
@@ -29,8 +29,8 @@ private:
 	int m_PhaseAlignMaxAmplitude;
 	int m_PhaseAlignMaxDerivative;
 	int m_PhaseAlignmentTable[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
-	int m_PhaseAlignmentTable_f[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES][MAX_OUTPUT_CHANNELS];
-	int m_PhaseAlignmentTable_v[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES][MAX_OUTPUT_CHANNELS];
+	int m_PhaseAlignmentTable_f[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
+	int m_PhaseAlignmentTable_v[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
 
 public:
 
@@ -38,7 +38,7 @@ public:
 	~GOrgueReleaseAlignTable();
 
 	void ComputeTable
-		(const AUDIO_SECTION& m_release
+		(const AUDIO_SECTION_T& m_release
 		,const int phase_align_max_amplitude
 		,const int phase_align_max_derivative
 		,const unsigned int sample_rate
@@ -46,13 +46,58 @@ public:
 		);
 
 	void SetupRelease
-		(GO_SAMPLER& release_sampler
-		,const GO_SAMPLER& old_sampler
+		(GO_SAMPLER_T& release_sampler
+		,const GO_SAMPLER_T& old_sampler
 		);
 
 
 
+	static void UpdateTrackingInfo
+		(GO_RELEASE_TRACKING_INFO& track_info
+		,const unsigned nb_samples
+		,const int* samples
+		);
+
+	static void CopyTrackingInfo
+		(GO_RELEASE_TRACKING_INFO& dest
+		,const GO_RELEASE_TRACKING_INFO& source
+		);
+
+
 };
 
+inline
+void GOrgueReleaseAlignTable::UpdateTrackingInfo
+	(GO_RELEASE_TRACKING_INFO& track_info
+	,const unsigned nb_samples
+	,const int* samples
+	)
+{
+
+	if (nb_samples < 1)
+		return;
+
+	if (nb_samples < 2)
+	{
+		track_info.f[1] = track_info.f[0];
+		track_info.f[0] = samples[0];
+		return;
+	}
+
+	track_info.f[1] = samples[nb_samples-2];
+	track_info.f[0] = samples[nb_samples-1];
+
+}
+
+inline
+void GOrgueReleaseAlignTable::CopyTrackingInfo
+	(GO_RELEASE_TRACKING_INFO& dest
+	,const GO_RELEASE_TRACKING_INFO& source
+	)
+{
+
+	memcpy(&dest, &source, sizeof(source));
+
+}
 
 #endif /* GORGUERELEASEALIGNTABLE_H_ */

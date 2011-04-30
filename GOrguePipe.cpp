@@ -155,8 +155,11 @@ void GOrguePipe::SetOn()
 	sampler->pipe = this;
 	sampler->pipe_section = &m_attack;
 	sampler->position = 0;
-	memcpy(sampler->f, sampler->pipe_section->start_f, MAX_OUTPUT_CHANNELS * sizeof(sampler->f[0]));
-	memcpy(sampler->v, sampler->pipe_section->start_v, MAX_OUTPUT_CHANNELS * sizeof(sampler->v[0]));
+
+	GOrgueReleaseAlignTable::CopyTrackingInfo
+		(sampler->release_tracker
+		,m_attack.release_tracker_initial
+		);
 
 //	else
 //	{
@@ -228,8 +231,10 @@ void GOrguePipe::SetOff()
 			else
 			{
 				new_sampler->position = 0; //m_release.offset;
-				memcpy(new_sampler->f, m_release.start_f, MAX_OUTPUT_CHANNELS * sizeof(new_sampler->f[0]));
-				memcpy(new_sampler->v, m_release.start_v, MAX_OUTPUT_CHANNELS * sizeof(new_sampler->v[0]));
+				GOrgueReleaseAlignTable::CopyTrackingInfo
+					(new_sampler->release_tracker
+					,m_release.release_tracker_initial
+					);
 			}
 
 			const int detached_windchest_index = organfile->GetTremulantCount();
@@ -370,7 +375,7 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 		assert(attackSamples != 0);
 		unsigned attackSamplesInMem = attackSamples + SAMPLE_SLACK;
 		m_attack.size = (int)attackSamples * sizeof(wxInt16) * m_Channels;
-		assert(m_attack.size < totalDataSize);
+		assert(m_attack.size <= totalDataSize); /* can be equal for percussive samples */
 		m_attack.data = (unsigned char*)malloc(attackSamplesInMem * sizeof(wxInt16) * m_Channels);
 		if (m_attack.data == NULL)
 			throw (char*)"< out of memory allocating attack";
@@ -541,6 +546,11 @@ void GOrguePipe::CreateFromTremulant(GOrgueTremulant* tremulant)
 		throw;
 	}
 
+}
+
+void GOrguePipe::SetWindchestGroup(int windchest_group)
+{
+	WindchestGroup = windchest_group;
 }
 
 /* FIXME: This function must be broken - not going to even start describing the problem.
@@ -774,3 +784,13 @@ void GOrguePipe::CreateFromTremulant(GOrgueTremulant* tremulant)
 //			m_compress_p->ra_offset[j] -= size;
 //}
 
+//FIXME: this function should not exist... it is here purely for legacy
+//support in GOrgueSound::MIDIAllNotesOff()
+void GOrguePipe::FastAbort()
+{
+
+	if (instances > -1)
+		instances = 0;
+	sampler = 0;
+
+}

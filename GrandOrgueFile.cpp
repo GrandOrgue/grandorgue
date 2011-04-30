@@ -396,7 +396,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		int amp = m_pipe_amplitudes[progress];
 		m_pipe[progress]->LoadFromFile(key, amp);
 		*m_pipe_ptrs[i] = (short)progress;
-		m_pipe[progress]->WindchestGroup = m_pipe_windchests[i];
+		m_pipe[progress]->SetWindchestGroup(m_pipe_windchests[i]);
 		progress++;
 
 	}
@@ -409,7 +409,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 		m_pipe[progress]->CreateFromTremulant(&m_tremulant[i]);
 		m_tremulant[i].pipe = m_pipe[progress];
-		m_pipe[progress]->WindchestGroup = i;
+		m_pipe[progress]->SetWindchestGroup(i);
 		progress++;
 
 	}
@@ -776,5 +776,11 @@ GOrgueLabel* GrandOrgueFile::GetLabel(unsigned index)
 int GrandOrgueFile::GetLabelCount()
 {
 	return m_NumberOfLabels;
+}
+
+void GrandOrgueFile::MIDIPretend(bool on)
+{
+	for (int i = GetFirstManualIndex(); i <= GetManualAndPedalCount(); i++)
+		GetManual(i)->MIDIPretend(on);
 }
 

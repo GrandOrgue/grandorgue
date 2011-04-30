@@ -99,11 +99,8 @@ void GOrgueReleaseAlignTable::ComputeTable
 		if (!found[derivIndex][ampIndex])
 		{
 			m_PhaseAlignmentTable[derivIndex][ampIndex] = i * m_Channels * sizeof(wxInt16);
-			for (unsigned int k = 0; k < m_Channels; k++)
-			{
-				m_PhaseAlignmentTable_f[derivIndex][ampIndex][k] = f[k];
-				m_PhaseAlignmentTable_v[derivIndex][ampIndex][k] = v[k];
-			}
+			m_PhaseAlignmentTable_f[derivIndex][ampIndex] = fsum;
+			m_PhaseAlignmentTable_v[derivIndex][ampIndex] = vsum;
 			found[derivIndex][ampIndex] = true;
 		}
 
@@ -144,19 +141,16 @@ void GOrgueReleaseAlignTable::ComputeTable
 							if ((j + k < PHASE_ALIGN_AMPLITUDES) && (found[i + sl][j + k]))
 							{
 								m_PhaseAlignmentTable[i][j] = m_PhaseAlignmentTable[i + sl][j + k];
-								for (unsigned int z = 0; z < m_Channels; z++)
-								{
-									m_PhaseAlignmentTable_f[i][j][z] = m_PhaseAlignmentTable_f[i + sl][j + k][z];
-									m_PhaseAlignmentTable_v[i][j][z] = m_PhaseAlignmentTable_v[i + sl][j + k][z];
-								}
+								m_PhaseAlignmentTable_f[i][j] = m_PhaseAlignmentTable_f[i + sl][j + k];
+								m_PhaseAlignmentTable_v[i][j] = m_PhaseAlignmentTable_v[i + sl][j + k];
 							}
 							else if ((j - k >= 0) && (found[i + sl][j - k]))
 							{
 								m_PhaseAlignmentTable[i][j] = m_PhaseAlignmentTable[i + sl][j - k];
 								for (unsigned int z = 0; z < m_Channels; z++)
 								{
-									m_PhaseAlignmentTable_f[i][j][z] = m_PhaseAlignmentTable_f[i + sl][j - k][z];
-									m_PhaseAlignmentTable_v[i][j][z] = m_PhaseAlignmentTable_v[i + sl][j - k][z];
+									m_PhaseAlignmentTable_f[i][j] = m_PhaseAlignmentTable_f[i + sl][j - k];
+									m_PhaseAlignmentTable_v[i][j] = m_PhaseAlignmentTable_v[i + sl][j - k];
 								}
 							}
 							else
@@ -186,13 +180,8 @@ void GOrgueReleaseAlignTable::SetupRelease
 	/* Get combined release f's and v's
 	 * TODO: it might be good to check that the compiler
 	 * un-rolls this loop */
-	int v_mod = 0;
-	int f_mod = 0;
-	for (unsigned i = 0; i < MAX_OUTPUT_CHANNELS; i++)
-	{
-		v_mod += old_sampler.v[i];
-		f_mod += old_sampler.f[i];
-	}
+	int f_mod = old_sampler.release_tracker.f[0];
+	int v_mod = f_mod - old_sampler.release_tracker.f[1];
 
 	/* Bring f and v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
 	v_mod += (m_PhaseAlignMaxDerivative - 1);
@@ -213,11 +202,8 @@ void GOrgueReleaseAlignTable::SetupRelease
 
 	/* Store this release point if it was not already found */
 	release_sampler.position  = m_PhaseAlignmentTable[derivIndex][ampIndex];
-	for (unsigned int i = 0; i < MAX_OUTPUT_CHANNELS; i++)
-	{
-		release_sampler.f[i] = m_PhaseAlignmentTable_f[derivIndex][ampIndex][i];
-		release_sampler.v[i] = m_PhaseAlignmentTable_v[derivIndex][ampIndex][i];
-	}
+	release_sampler.release_tracker.f[0] = m_PhaseAlignmentTable_f[derivIndex][ampIndex];
+	release_sampler.release_tracker.f[1] = release_sampler.release_tracker.f[0] - m_PhaseAlignmentTable_v[derivIndex][ampIndex];
 
 #ifndef NDEBUG
 #ifdef PALIGN_DEBUG

@@ -177,6 +177,8 @@ public:
 	const wxString& GetRecordingDetails();
 	const wxString& GetInfoFilename();
 
+	void MIDIPretend(bool on);
+
 };
 
 #endif

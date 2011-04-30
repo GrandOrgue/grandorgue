@@ -464,12 +464,6 @@ void GOrgueSound::UpdateOrganMIDI()
     }
 }
 
-void GOrgueSound::MIDIPretend(bool on)
-{
-	for (int i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-		organfile->GetManual(i)->MIDIPretend(on);
-}
-
 void GOrgueSound::SetPolyphonyLimit(int polyphony)
 {
 	this->polyphony = polyphony;
@@ -530,12 +524,7 @@ void GOrgueSound::MIDIAllNotesOff()
 		for (j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
 		{
 			for (k = 0; k < organfile->GetManual(i)->GetStop(j)->NumberOfLogicalPipes; k++)
-			{
-				register GOrguePipe* pipe = organfile->GetPipe(organfile->GetManual(i)->GetStop(j)->pipe[k]);
-				if (pipe->instances > -1)
-					pipe->instances = 0;
-				pipe->sampler = 0;
-			}
+				organfile->GetPipe(organfile->GetManual(i)->GetStop(j)->pipe[k])->FastAbort();
 			if (organfile->GetManual(i)->GetStop(j)->m_auto)
                 organfile->GetManual(i)->GetStop(j)->Set(false);
 		}

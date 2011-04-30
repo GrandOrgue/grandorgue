@@ -53,7 +53,7 @@ void GOrgueSound::MIDICallback(std::vector<unsigned char>& msg, int which, GOrgu
             for (j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
                 organfile->GetManual(k)->GetStop(j)->Set(false);
             for (j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
-                organfile->GetManual(k)->GetCoupler(j)->Set(false);
+                organfile->GetManual(k)->GetCoupler(j)->Set(*organfile, false);
             for (j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
             {
                 GOrgueDivisional *divisional = organfile->GetManual(k)->GetDivisional(j);
@@ -203,7 +203,7 @@ void GOrgueSound::MIDICallback(std::vector<unsigned char>& msg, int which, GOrgu
                                 organfile->GetManual(k)->GetStop(j)->Set(msg[2] ? true : false);
                         for (j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
                             if (msg[1] == organfile->GetManual(k)->GetCoupler(j)->StopControlMIDIKeyNumber)
-                                organfile->GetManual(k)->GetCoupler(j)->Set(msg[2] ? true : false);
+                                organfile->GetManual(k)->GetCoupler(j)->Set(*organfile, msg[2] ? true : false);
                     }
                     for (j = 0; j < organfile->GetTremulantCount(); j++)
                         if (msg[1] == organfile->GetTremulant(j)->StopControlMIDIKeyNumber)

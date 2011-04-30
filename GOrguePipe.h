@@ -40,20 +40,6 @@ private:
 	unsigned int m_Channels;
 	unsigned int m_SampleRate;
 
-	GOrgueReleaseAlignTable* m_ra_table;
-
-	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
-	void ComputeReleaseAlignmentInfo();
-
-public:
-
-	~GOrguePipe();
-	GOrguePipe();
-
-	void Set(bool on);
-	void LoadFromFile(const wxString& filename, int amp);
-	void CreateFromTremulant(GOrgueTremulant* tremulant);
-
 	float pitch;
 	GO_SAMPLER* sampler;
 	int instances;
@@ -68,6 +54,39 @@ public:
 	AUDIO_SECTION m_loop;
 	AUDIO_SECTION m_release;
 
+	GOrgueReleaseAlignTable* m_ra_table;
+
+	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
+	void ComputeReleaseAlignmentInfo();
+
+public:
+
+	~GOrguePipe();
+	GOrguePipe();
+
+	void Set(bool on);
+	void LoadFromFile(const wxString& filename, int amp);
+	void CreateFromTremulant(GOrgueTremulant* tremulant);
+	void SetWindchestGroup(int windchest_group);
+
+	const AUDIO_SECTION* GetLoop();
+	const AUDIO_SECTION* GetRelease();
+
+	void FastAbort();
+
 };
+
+inline
+const AUDIO_SECTION* GOrguePipe::GetLoop()
+{
+	return &m_loop;
+}
+
+inline
+const AUDIO_SECTION* GOrguePipe::GetRelease()
+{
+	return &m_release;
+}
+
 
 #endif

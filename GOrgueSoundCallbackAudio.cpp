@@ -36,23 +36,25 @@ static
 inline
 void stereoUncompressed
 	(GO_SAMPLER* sampler
-	,short* output
+	,int* output
 	)
 {
 
 	short *input = (short*)(sampler->pipe_section->data + sampler->position);
-	int *v = sampler->v;
-	int *f = sampler->f;
 
-	output[0] = input[0];
-	output[1] = input[1];
+	output[0] = input[0] + input[1];
+	output[1] = input[2] + input[3];
 	output[2] = input[2];
 	output[3] = input[3];
 
-	f[0] = input[2];
-	v[0] = f[0] - input[0];
-	f[1] = input[3];
-	v[1] = f[1] - input[1];
+	GOrgueReleaseAlignTable::UpdateTrackingInfo
+		(sampler->release_tracker
+		,2
+		,output
+		);
+
+	output[0] = input[0];
+	output[1] = input[1];
 
 	sampler->position += 8;
 
@@ -62,21 +64,22 @@ static
 inline
 void monoUncompressed
 	(GO_SAMPLER* sampler
-	,short* output
+	,int* output
 	)
 {
 
 	short* input=(short*)(sampler->pipe_section->data + sampler->position);
-	int *v = sampler->v;
-	int *f = sampler->f;
 
 	output[0] = input[0];
 	output[1] = input[0];
 	output[2] = input[1];
 	output[3] = input[1];
 
-	f[0] = input[1];
-	v[0] = f[0] - input[0];
+	GOrgueReleaseAlignTable::UpdateTrackingInfo
+		(sampler->release_tracker
+		,2
+		,&(output[1])
+		);
 
 	sampler->position += 4;
 
@@ -86,7 +89,7 @@ static
 inline
 void monoCompressed
 	(GO_SAMPLER* sampler
-	,short* output
+	,int* output
 	)
 {
 
@@ -143,7 +146,7 @@ static
 inline
 void stereoCompressed
 	(GO_SAMPLER* sampler
-	,short* output
+	,int* output
 	)
 {
 
@@ -194,6 +197,34 @@ void stereoCompressed
 */
 }
 
+static
+inline
+void GetNextFrame
+	(GO_SAMPLER* sampler
+	,int* buffer
+	)
+{
+
+	switch (sampler->pipe_section->type)
+	{
+		case AC_UNCOMPRESSED_MONO:
+			monoUncompressed(sampler, buffer);
+			break;
+		case AC_COMPRESSED_MONO:
+			monoCompressed(sampler, buffer);
+			break;
+		case AC_UNCOMPRESSED_STEREO:
+			stereoUncompressed(sampler, buffer);
+			break;
+		case AC_COMPRESSED_STEREO:
+			stereoCompressed(sampler, buffer);
+			break;
+		default:
+			throw (char*)"bad sampler->type";
+	}
+
+}
+
 inline
 void GOrgueSound::ProcessAudioSamplers
 	(GO_SAMPLER** listStart
@@ -216,28 +247,13 @@ void GOrgueSound::ProcessAudioSamplers
 			sampler->fadeout = 4;
 
 		int* write_iterator = out_buffer;
+
 		for(unsigned int i = 0; i < nFrames; i += 2)
 		{
 
-			short buffer[4];
+			int intbuffer[4];
 
-			switch (sampler->pipe_section->type)
-			{
-				case AC_UNCOMPRESSED_MONO:
-					monoUncompressed(sampler, buffer);
-					break;
-				case AC_COMPRESSED_MONO:
-					monoCompressed(sampler, buffer);
-					break;
-				case AC_UNCOMPRESSED_STEREO:
-					stereoUncompressed(sampler, buffer);
-					break;
-				case AC_COMPRESSED_STEREO:
-					stereoCompressed(sampler, buffer);
-					break;
-				default:
-					throw (char*)"bad sampler->type";
-			}
+			GetNextFrame(sampler, intbuffer);
 
 			if(sampler->pipe_section->stage == GSS_RELEASE)
 			{
@@ -247,7 +263,7 @@ void GOrgueSound::ProcessAudioSamplers
 				 * We can set the pipe to NULL and break out of this loop.
 				 */
 				assert(sampler->pipe);
-				if (sampler->position >= sampler->pipe->m_release.size)
+				if (sampler->position >= sampler->pipe->GetRelease()->size)
 					sampler->pipe = NULL;
 
 			}
@@ -257,10 +273,12 @@ void GOrgueSound::ProcessAudioSamplers
 				int currentBlockSize = sampler->pipe_section->size;
 				if(sampler->position >= currentBlockSize)
 				{
-					sampler->pipe_section = &(sampler->pipe->m_loop);
+					sampler->pipe_section = sampler->pipe->GetLoop();
 					sampler->position -= currentBlockSize;
-					memcpy(sampler->f, sampler->pipe->m_loop.start_f, MAX_OUTPUT_CHANNELS * sizeof(sampler->f[0]));
-					memcpy(sampler->v, sampler->pipe->m_loop.start_v, MAX_OUTPUT_CHANNELS * sizeof(sampler->v[0]));
+					GOrgueReleaseAlignTable::CopyTrackingInfo
+						(sampler->release_tracker
+						,sampler->pipe->GetLoop()->release_tracker_initial
+						);
 				}
 
 			}
@@ -271,11 +289,10 @@ void GOrgueSound::ProcessAudioSamplers
 			/* Multiply each of the buffer samples by the fade factor - note:
 			 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero
 			 */
-			int intbuffer[4];
-			intbuffer[0] = buffer[0] * sampler->fade;
-			intbuffer[1] = buffer[1] * sampler->fade;
-			intbuffer[2] = buffer[2] * sampler->fade;
-			intbuffer[3] = buffer[3] * sampler->fade;
+			intbuffer[0] *= sampler->fade;
+			intbuffer[1] *= sampler->fade;
+			intbuffer[2] *= sampler->fade;
+			intbuffer[3] *= sampler->fade;
 			if (sampler->fadein + sampler->fadeout)
 			{
 
@@ -333,8 +350,6 @@ void GOrgueSound::ProcessAudioSamplers
 	}
 
 }
-
-
 
 // this callback will fill the buffer with bufferSize frame
 // audio is opened with 32 bit stereo, so one frame is 64bit (32bit for right 32bit for left)
