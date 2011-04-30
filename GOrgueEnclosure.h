@@ -32,19 +32,27 @@ class IniFileConfig;
 class GOrgueEnclosure : public GOrgueDrawable
 {
 
-public:
-	int m_X;
+private:
+
 	int AmpMinimumLevel;
 	int MIDIInputNumber;
 	int MIDIValue;
 	wxString Name;
 	GOrgueDisplayMetrics* DisplayMetrics;
 
+public:
+
 	GOrgueEnclosure();
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
 	void Set(int n);
 	void MIDI(void);
+	int GetMIDIInputNumber();
+	float GetAttenuation();
+
+	void Scroll(bool scroll_up);
+
+	void DrawLabel(wxDC& dc);
 
 };
 

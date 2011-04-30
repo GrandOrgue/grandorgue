@@ -269,6 +269,23 @@ int GOrgueDisplayMetrics::GetEnclosureY()
 	return m_EnclosureY;
 }
 
+int GOrgueDisplayMetrics::GetEnclosureX(const GOrgueEnclosure* enclosure)
+{
+
+	assert(enclosure);
+
+	int enclosure_x = (GetScreenWidth() - GetEnclosureWidth() + 6) >> 1;
+	for (unsigned int i = 0; i < organfile->GetEnclosureCount(); i++)
+	{
+		if (organfile->GetEnclosure(i) == enclosure)
+			return enclosure_x;
+		enclosure_x += 52;
+	}
+
+	throw (char*)"enclosure not found";
+
+}
+
 int GOrgueDisplayMetrics::GetJambLeftX()
 {
 	int jamblx = (GetCenterX() - GetJambLeftRightWidth()) >> 1;

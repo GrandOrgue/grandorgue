@@ -748,7 +748,7 @@ GOrgueEnclosure* GrandOrgueFile::GetEnclosure(unsigned index)
 	return &m_enclosure[index];
 }
 
-int GrandOrgueFile::GetEnclosureCount()
+unsigned GrandOrgueFile::GetEnclosureCount()
 {
 	return m_NumberOfEnclosures;
 }
