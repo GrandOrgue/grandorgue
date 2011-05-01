@@ -190,6 +190,9 @@ void GOrguePipe::SetOff()
 
 	instances--;
 
+	if (m_loop.data == NULL)
+		return;
+
 	if (instances > 0)
 		return;
 
@@ -294,6 +297,10 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 	wxInt16* data = (wxInt16*)malloc(totalDataSize);
 	if (data == NULL)
 		throw (char*)"< out of memory allocating wave";
+
+	memset(&m_loop, 0, sizeof(m_loop));
+	memset(&m_attack, 0, sizeof(m_attack));
+	memset(&m_release, 0, sizeof(m_release));
 
 	try
 	{
@@ -434,7 +441,8 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 		m_loop.stage = GSS_LOOP;
 		m_release.stage = GSS_RELEASE;
 
-		ComputeReleaseAlignmentInfo();
+		if (wave.HasReleaseMarker())
+			ComputeReleaseAlignmentInfo();
 
 	}
 	catch (char* error)
