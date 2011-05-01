@@ -46,24 +46,33 @@ GOrgueLabel::GOrgueLabel() :
 
 void GOrgueLabel::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
 {
-	Name=cfg.ReadString( group,"Name",   64);
-	FreeXPlacement=cfg.ReadBoolean( group,"FreeXPlacement");
-	FreeYPlacement=cfg.ReadBoolean( group,"FreeYPlacement");
+
+	Name = cfg.ReadString(group, "Name", 64);
+	FreeXPlacement = cfg.ReadBoolean(group, "FreeXPlacement");
+	FreeYPlacement = cfg.ReadBoolean(group, "FreeYPlacement");
+	DisplayMetrics = displayMetrics;
 
 	if (!FreeXPlacement)
 	{
-		DispDrawstopCol=cfg.ReadInteger(group, "DispDrawstopCol", 1, displayMetrics->NumberOfDrawstopColsToDisplay());
-		DispSpanDrawstopColToRight=cfg.ReadBoolean(group, "DispSpanDrawstopColToRight");
+		DispDrawstopCol = cfg.ReadInteger(group, "DispDrawstopCol", 1, displayMetrics->NumberOfDrawstopColsToDisplay());
+		DispSpanDrawstopColToRight = cfg.ReadBoolean(group, "DispSpanDrawstopColToRight");
 	}
 	else
-		DispXpos=cfg.ReadInteger(group, "DispXpos", 0, displayMetrics->GetScreenWidth());
+	{
+		DispXpos = cfg.ReadInteger(group, "DispXpos", 0, displayMetrics->GetScreenWidth());
+	}
 
 	if (!FreeYPlacement)
-		DispAtTopOfDrawstopCol=cfg.ReadBoolean(group, "DispAtTopOfDrawstopCol");
+	{
+		DispAtTopOfDrawstopCol = cfg.ReadBoolean(group, "DispAtTopOfDrawstopCol");
+	}
 	else
-		DispYpos=cfg.ReadInteger(group, "DispYpos", 0, displayMetrics->GetScreenHeight());
+	{
+		DispYpos = cfg.ReadInteger(group, "DispYpos", 0, displayMetrics->GetScreenHeight());
+	}
 
-	// NOTICE: this should not be allowed, but some existing definition files use improper values
+	/* NOTICE: this should not be allowed, but some existing definition files
+	 * use improper values */
 	if (!DispXpos)
 		DispYpos++;
 	if (!DispYpos)
@@ -74,4 +83,39 @@ void GOrgueLabel::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetri
 	DispImageNum = cfg.ReadInteger(group, "DispImageNum", 1, 1);
 }
 
+void GOrgueLabel::Draw(wxDC& dc)
+{
 
+	if (!FreeXPlacement)
+	{
+		int i = DisplayMetrics->NumberOfDrawstopColsToDisplay() >> 1;
+		if (DispDrawstopCol <= i)
+			DispXpos = DisplayMetrics->GetJambLeftX()  + (DispDrawstopCol - 1) * 78 + 1;
+		else
+			DispXpos = DisplayMetrics->GetJambRightX() + (DispDrawstopCol - 1 - i) * 78 + 1;
+		if (DispSpanDrawstopColToRight)
+			DispXpos += 39;
+	}
+
+	if (!FreeYPlacement)
+	{
+		DispYpos = DisplayMetrics->GetJambLeftRightY() + 1;
+		if (!DispAtTopOfDrawstopCol)
+			DispYpos += DisplayMetrics->GetJambLeftRightHeight() - 32;
+	}
+
+	wxRect rect(
+		DispXpos - 1,
+		DispYpos - 1,
+		78,
+		22);
+
+	dc.DrawBitmap(*organfile->GetImage(8), rect.x, rect.y, false);
+
+	wxFont font = DisplayMetrics->GetGroupLabelFont();
+	font.SetPointSize(DispLabelFontSize);
+	dc.SetTextForeground(DispLabelColour);
+	dc.SetFont(font);
+	dc.DrawLabel(Name, rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+
+}

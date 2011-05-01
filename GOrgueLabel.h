@@ -31,7 +31,7 @@ class IniFileConfig;
 class GOrgueLabel
 {
 
-public:
+private:
 
 	bool FreeXPlacement;
 	bool FreeYPlacement;
@@ -44,9 +44,13 @@ public:
 	int DispImageNum;
 	wxColour DispLabelColour;
 	wxString Name;
+	GOrgueDisplayMetrics* DisplayMetrics;
+
+public:
 
 	GOrgueLabel();
 	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
+	void Draw(wxDC& dc);
 
 };
 

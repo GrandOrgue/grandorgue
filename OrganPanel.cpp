@@ -302,41 +302,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 	DrawClickables(&dc);
 
 	for (j = 0; j < organfile->GetLabelCount(); j++)
-	{
-
-		if (!organfile->GetLabel(j)->FreeXPlacement)
-		{
-			i = displayMetrics->NumberOfDrawstopColsToDisplay() >> 1;
-			if (organfile->GetLabel(j)->DispDrawstopCol <= i)
-				organfile->GetLabel(j)->DispXpos = displayMetrics->GetJambLeftX()  + (organfile->GetLabel(j)->DispDrawstopCol - 1) * 78 + 1;
-			else
-				organfile->GetLabel(j)->DispXpos = displayMetrics->GetJambRightX() + (organfile->GetLabel(j)->DispDrawstopCol - 1 - i) * 78 + 1;
-			if (organfile->GetLabel(j)->DispSpanDrawstopColToRight)
-				organfile->GetLabel(j)->DispXpos += 39;
-		}
-
-		if (!organfile->GetLabel(j)->FreeYPlacement)
-		{
-			organfile->GetLabel(j)->DispYpos = displayMetrics->GetJambLeftRightY() + 1;
-			if (!organfile->GetLabel(j)->DispAtTopOfDrawstopCol)
-				organfile->GetLabel(j)->DispYpos += displayMetrics->GetJambLeftRightHeight() - 32;
-		}
-
-		wxRect rect(
-			organfile->GetLabel(j)->DispXpos - 1,
-			organfile->GetLabel(j)->DispYpos - 1,
-			78,
-			22);
-
-		dc.DrawBitmap(*organfile->GetImage(8), rect.x, rect.y, false);
-
-		font = displayMetrics->GetGroupLabelFont();
-		font.SetPointSize(organfile->GetLabel(j)->DispLabelFontSize);
-		dc.SetTextForeground(organfile->GetLabel(j)->DispLabelColour);
-		dc.SetFont(font);
-		dc.DrawLabel(organfile->GetLabel(j)->Name, rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
-
-	}
+		organfile->GetLabel(j)->Draw(dc);
 
 	dc.SelectObject(wxNullBitmap);
 
