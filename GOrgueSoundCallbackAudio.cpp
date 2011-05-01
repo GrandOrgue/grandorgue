@@ -40,7 +40,7 @@ void stereoUncompressed
 	)
 {
 
-	short *input = (short*)(sampler->pipe_section->data + sampler->position);
+	short* input = (short*)(sampler->pipe_section->data + sampler->position);
 
 	output[0] = input[0] + input[1];
 	output[1] = input[2] + input[3];
@@ -68,7 +68,7 @@ void monoUncompressed
 	)
 {
 
-	short* input=(short*)(sampler->pipe_section->data + sampler->position);
+	short* input = (short*)(sampler->pipe_section->data + sampler->position);
 
 	output[0] = input[0];
 	output[1] = input[0];
@@ -230,7 +230,7 @@ void GOrgueSound::ProcessAudioSamplers
 	(GO_SAMPLER** listStart
 	,GOrgueSound* instance
 	,unsigned int nFrames
-	,int* out_buffer /* todo: technically this should be long */
+	,int* out_buffer
 	)
 {
 
@@ -274,13 +274,24 @@ void GOrgueSound::ProcessAudioSamplers
 				if(sampler->position >= currentBlockSize)
 				{
 					sampler->pipe_section = sampler->pipe->GetLoop();
-					sampler->position -= currentBlockSize;
-					GOrgueReleaseAlignTable::CopyTrackingInfo
-						(sampler->release_tracker
-						,sampler->pipe->GetLoop()->release_tracker_initial
-						);
+					if (sampler->pipe_section->data == NULL)
+					{
+						/* the pipe is percussive and the attack has completed
+						 * so we are therefore finished with this sampler. */
+						sampler->pipe = NULL;
+					}
+					else
+					{
+						/* the pipe is not percussive (normal). The loop or
+						 * attack segment has completed so we now (re)enter the
+						 * loop. */
+						sampler->position -= currentBlockSize;
+						GOrgueReleaseAlignTable::CopyTrackingInfo
+							(sampler->release_tracker
+							,sampler->pipe->GetLoop()->release_tracker_initial
+							);
+					}
 				}
-
 			}
 
 			if (!sampler->pipe)
