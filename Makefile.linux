@@ -26,6 +26,7 @@ DEBUG_WX                  = no
 # Jack and Alsa will only be used if compiling on a Linux platform
 USING_JACK                = yes
 USING_ALSA                = yes
+USING_OSS                 = no
 
 # objects to use in the build
 OBJECTS = \
@@ -116,6 +117,11 @@ endif
 ifeq ($(USING_ALSA),yes)
 CXXFLAGS += -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__
 LDFLAGS += -lasound
+endif
+
+ifeq ($(USING_OSS),yes)
+CXXFLAGS += -D__LINUX_OSS__
+LDFLAGS += -laoss
 endif
 
 else

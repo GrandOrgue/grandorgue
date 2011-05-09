@@ -113,7 +113,7 @@ void GOrgueEnclosure::MIDI(void)
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		wxConfigBase::Get()->Write(wxString("MIDI/") + s_MIDIMessages[index], dlg.GetEvent());
-		g_sound->ResetSound();
+		g_sound->ResetSound(organfile);
 	}
 }
 

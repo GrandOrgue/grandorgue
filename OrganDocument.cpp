@@ -56,7 +56,7 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	wxBusyCursor busy;
 
 	CloseOrgan();
-	bool open_sound = g_sound->OpenSound(false);
+	bool open_sound = g_sound->OpenSound(false, NULL);
 
 	/* abort if we failed to open the sound device */
 	if (!open_sound)
@@ -95,7 +95,7 @@ bool OrganDocument::DoSaveDocument(const wxString& file)
 
 void OrganDocument::CloseOrgan()
 {
-	g_sound->CloseSound();
+	g_sound->CloseSound(organfile);
 	if (organfile)
 	{
 		delete organfile;

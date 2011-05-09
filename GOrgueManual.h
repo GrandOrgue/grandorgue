@@ -46,10 +46,11 @@ private:
 	int FirstAccessibleKeyMIDINoteNumber;
 	int NumberOfAccessibleKeys;
 	int MIDIInputNumber;
-	int NumberOfStops;
-	int NumberOfCouplers;
-	int NumberOfDivisionals;
-	int NumberOfTremulants;
+
+	unsigned NumberOfStops;
+	unsigned NumberOfCouplers;
+	unsigned NumberOfDivisionals;
+	unsigned NumberOfTremulants;
 	wxInt16 tremulant[10];
 
 	wxString Name;

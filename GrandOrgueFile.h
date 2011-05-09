@@ -45,7 +45,20 @@ class GOrgueWindchest;
 class GrandOrgueFile 
 {
 
-	wxBitmap m_images[9];
+public:
+
+	/* FIXME: these should not be a part of the organ file class... I think
+	 * they possibly belong in stop. */
+	std::vector<wxString> m_pipe_filenames;
+	std::vector<int> m_pipe_filesizes;
+	std::vector<wxString> m_pipe_files;
+	std::vector<wxInt16*> m_pipe_ptrs;
+	std::vector<wxInt16> m_pipe_windchests;
+	std::vector<wxInt16> m_pipe_percussive;
+	std::vector<int> m_pipe_amplitudes;
+
+public:
+
 	wxFileName m_path;
 	int m_b_squash;
 	GOrguePipe* m_compress_p;
@@ -72,6 +85,13 @@ class GrandOrgueFile
 	wxInt16 m_NumberOfFrameGenerals;
 	wxInt16 m_NumberOfDivisionalCouplers;
 	wxInt16 m_NumberOfStops;
+
+public:
+
+	wxInt16 m_NumberOfPipes;
+
+private:
+
 	wxInt16 m_AmplitudeLevel;
 
     wxString m_HauptwerkOrganFileFormatVersion;
@@ -85,7 +105,6 @@ class GrandOrgueFile
 
 	GOrgueDisplayMetrics* m_DisplayMetrics;
 
-	GOrgueManual m_manual[7];
 	GOrgueEnclosure* m_enclosure;
 	GOrgueTremulant* m_tremulant;
 	GOrgueWindchest* m_windchest;
@@ -96,6 +115,9 @@ class GrandOrgueFile
 	GOrgueDivisionalCoupler* m_divisionalcoupler;
 	GOrguePipe** m_pipe;
 
+	GOrgueManual m_manual[7];
+	wxBitmap m_images[9];
+
 	void readOrganFile();
 	/*	int readOneFile(int file, char* buffer, unsigned length);
 	void fillBufferWithTremulant(const GOrgueTremulant& tremulant,short* buffer);
@@ -103,18 +125,6 @@ class GrandOrgueFile
 	void CompressWAV(char*& compress, short* fv, short* ptr, int count, int channels, int stage);*/
 
 public:
-
-	/* FIXME: these should not be a part of the organ file class... I think
-	 * they possibly belong in stop. */
-	std::vector<wxString> m_pipe_files;
-	std::vector<wxInt16*> m_pipe_ptrs;
-	std::vector<wxInt16> m_pipe_windchests;
-	std::vector<wxInt16> m_pipe_percussive;
-	std::vector<int> m_pipe_amplitudes;
-	std::vector<wxString> m_pipe_filenames;
-	std::vector<int> m_pipe_filesizes;
-
-	wxInt16 m_NumberOfPipes;
 
 	GrandOrgueFile();
 	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);

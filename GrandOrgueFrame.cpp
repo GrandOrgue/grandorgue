@@ -428,7 +428,7 @@ void GOrgueFrame::OnAudioPanic(wxCommandEvent& WXUNUSED(event))
 {
 	if (!g_sound)
 		return;
-	g_sound->ResetSound();
+	g_sound->ResetSound(organfile);
 }
 
 void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
@@ -461,20 +461,6 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 void GOrgueFrame::OnHelp(wxCommandEvent& event)
 {
     ::wxGetApp().m_help->Display("User Interface");
-}
-
-void GOrgueFrame::OnHelpRegister(wxCommandEvent& event)
-{
-	GOrgueRegister dlg(this);
-	if (dlg.ShowModal() == wxID_OK)
-	{
-	    wxString str1 = dlg.m_key->GetValue(), str2;
-	    for (int i = 0; i < (int)str1.length(); i++)
-            if ((str1[i] >= '2' && str1[i] <= '9') || (str1[i] >= 'A' && str1[i] <= 'Z'))
-                str2 += str1[i];
-        ::wxConfig::Get()->Write("ProductKey", str2);
-	    ProcessCommand(wxID_ABOUT);
-	}
 }
 
 void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)

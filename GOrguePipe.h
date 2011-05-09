@@ -66,7 +66,6 @@ public:
 
 	void Set(bool on);
 	void LoadFromFile(const wxString& filename, int amp);
-	void CreateFromTremulant(GOrgueTremulant* tremulant);
 	void SetWindchestGroup(int windchest_group);
 
 	const AUDIO_SECTION* GetLoop();

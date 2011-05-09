@@ -159,6 +159,8 @@ typedef struct GO_SAMPLER_T
 
 } GO_SAMPLER;
 
+class GrandOrgueFile;
+
 class GOrgueSound
 {
 
@@ -191,11 +193,21 @@ private:
 	RtAudio* audioDevice;
 	int n_latency;
 
-	std::map<wxString, int> m_midiDevices;
+	std::map<wxString, int> m_midi_device_map;
+
+	typedef struct {
+		RtMidiIn* midi_in;
+		bool active;
+		int id;
+	} MIDI_DEVICE;
+
+	std::vector<MIDI_DEVICE> m_midi_devices;
+
+	/*
 	RtMidiIn** midiDevices;
 	bool* b_midiDevices;
 	int* i_midiDevices;
-	int n_midiDevices;
+	int n_midiDevices;*/
 
 	int b_limit, b_stereo, b_align, b_scale;
 	int b_random;
@@ -216,13 +228,42 @@ private:
 
 	wxString defaultAudio;
 
-	void MIDIAllNotesOff();
+	/* FIXME: this should not require a reference to the ODF, but this cannot
+	 * be removed until the ODF and GUI is peeled away from the sound system.
+	 */
+	void MIDIAllNotesOff(GrandOrgueFile* organfile);
 
 private:
 
-	static void ProcessAudioSamplers(GO_SAMPLER** listStart, GOrgueSound* instance, unsigned int nFrames, int* out_buffer);
-	static int AudioCallback(void *outputBuffer, void *inputBuffer, unsigned int nFrames, double streamTime, RtAudioStreamStatus status, void *userData);
-	static void MIDICallback(std::vector<unsigned char>& msg, int which, GOrgueSound* gOrgueSoundInstance);
+	void ProcessAudioSamplers
+		(GO_SAMPLER** list_start
+		,unsigned int n_frames
+		,int* output_buffer
+		);
+
+	void MIDICallback
+		(std::vector<unsigned char>& msg
+		,int which
+		);
+
+	/* The RtAudio callback (below) will call this function, localising it to
+	 * the correct GOrgueSound object. */
+	int AudioCallbackLocal
+		(float *output_buffer
+		,unsigned int n_frames
+		,double stream_time
+		);
+
+	/* This is the callback issued by RtAudio */
+	static
+	int AudioCallback
+		(void *outputBuffer
+		,void *inputBuffer
+		,unsigned int nFrames
+		,double streamTime
+		,RtAudioStreamStatus status
+		,void *userData
+		);
 
 public:
 
@@ -240,16 +281,16 @@ public:
 	GOrgueSound(void);
 	~GOrgueSound(void);
 
-	bool OpenSound(bool wait = true);
-	void CloseSound();
-	bool ResetSound();
+	bool OpenSound(bool wait, GrandOrgueFile* organfile);
+	void CloseSound(GrandOrgueFile* organfile);
+	bool ResetSound(GrandOrgueFile* organfile);
 
 	void CloseWAV();
 
     void UpdateOrganMIDI();
     std::map<long, wxString> organmidiEvents;
 
-	static void MIDIPretend(bool on);
+//	static void MIDIPretend(bool on);
 
 	void SetPolyphonyLimit(int polyphony);
 	void SetPolyphonySoftLimit(int polyphony_soft);
