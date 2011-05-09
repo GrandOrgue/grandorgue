@@ -99,6 +99,7 @@ GrandOrgueFile::GrandOrgueFile() :
 	m_OrganComments(),
 	m_RecordingDetails(),
     m_InfoFilename(),
+    m_DisplayMetrics(NULL),
 	m_enclosure(NULL),
 	m_tremulant(NULL),
 	m_windchest(NULL),
@@ -401,8 +402,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	}
 
-	/* Load tremulants */
-	for (int i = 0; i < m_NumberOfTremulants; i++)
+	/* FIXME: Load tremulants */
+/*	for (int i = 0; i < m_NumberOfTremulants; i++)
 	{
 
 		wxLogDebug("Loading tremulant #%d", i);
@@ -412,7 +413,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		m_pipe[progress]->SetWindchestGroup(i);
 		progress++;
 
-	}
+	}*/
 
 	if (mbuffer_p)
 		free(mbuffer_p);
@@ -780,7 +781,7 @@ int GrandOrgueFile::GetLabelCount()
 
 void GrandOrgueFile::MIDIPretend(bool on)
 {
-	for (int i = GetFirstManualIndex(); i <= GetManualAndPedalCount(); i++)
-		GetManual(i)->MIDIPretend(on);
+	for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+		m_manual[i].MIDIPretend(on);
 }
 

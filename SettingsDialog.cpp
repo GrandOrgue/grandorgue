@@ -534,7 +534,7 @@ bool SettingsDialog::DoApply()
 	pConfig->Write("ScaleRelease", (long)c_scale->IsChecked());
 	pConfig->Write("RandomizeSpeaking", (long)c_random->IsChecked());
 
-    g_sound->ResetSound();
+    g_sound->ResetSound(NULL);
     UpdateSoundStatus();
 	//this->FindWindowById(wxID_APPLY, this)->Disable();
 

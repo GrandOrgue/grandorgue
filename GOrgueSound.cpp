@@ -36,24 +36,49 @@
 
 struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
 
-extern GrandOrgueFile* organfile;
+#define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
+
+//extern GrandOrgueFile* organfile;
 extern const char* s_MIDIMessages[];
 extern long i_MIDIMessages[];
 
 GOrgueSound* g_sound = 0;
 
+typedef struct COMPILED_SOUND_API_T
+{
+	const char* name;
+	RtAudio::Api api;
+} COMPILED_SOUND_API;
+
+static const COMPILED_SOUND_API g_available_apis[] = {
+
 #ifdef _WIN32
- RtAudio::Api i_APIs[] = { RtAudio::WINDOWS_DS, RtAudio::WINDOWS_ASIO };
- const char* s_APIs[] = { "DirectSound: ", "ASIO: " };
+
+#ifdef __WINDOWS_DS__
+	{"DirectSound: ", RtAudio::WINDOWS_DS},
+#endif
+#ifdef __WINDOWS_ASIO__
+	{"ASIO: ", RtAudio::WINDOWS_ASIO},
 #endif
 
-#ifdef linux
-  RtAudio::Api i_APIs[] = {RtAudio::UNIX_JACK, RtAudio::LINUX_ALSA};// RtAudio::LINUX_OSS };
-  std::string  s_APIs[] = {"Jack: ", "Alsa: " }; //{ " Jack: ", "Alsa: ", "OSS: " };
+#elif linux
+
+#ifdef __UNIX_JACK__
+	{"Jack: ", RtAudio::UNIX_JACK},
+#endif
+#ifdef __LINUX_ALSA__
+	{"Alsa: ", RtAudio::LINUX_ALSA},
+#endif
+#ifdef __LINUX_OSS__
+	{"OSS: ", RtAudio::LINUX_OSS},
 #endif
 
-#include "GOrgueSoundCallbackMIDI.h"
-#include "GOrgueSoundCallbackAudio.h"
+#endif /* linux sound api's */
+
+	/* sentinel */
+	{NULL, RtAudio::UNSPECIFIED}
+
+};
 
 DEFINE_EVENT_TYPE(wxEVT_DRAWSTOP)
 DEFINE_EVENT_TYPE(wxEVT_PUSHBUTTON)
@@ -63,137 +88,243 @@ DEFINE_EVENT_TYPE(wxEVT_LISTENING)
 DEFINE_EVENT_TYPE(wxEVT_METERS)
 DEFINE_EVENT_TYPE(wxEVT_LOADFILE)
 
-GOrgueSound::GOrgueSound(void)
-: organmidiEvents(),
-  sw(),
-  pConfig(wxConfigBase::Get()),
-  format(0),
-  logSoundErrors(false),
-  samplers_count(0),
-  polyphony(0),
-  poly_soft(0),
-  volume(0),
-  transpose(0),
-  m_audioDevices(),
-  audioDevice(NULL),
-  n_latency(0),
-  m_midiDevices(),
-  midiDevices(NULL),
-  b_midiDevices(NULL),
-  i_midiDevices(NULL),
-  n_midiDevices(0),
-  b_limit(0), b_stereo(0), b_align(0), b_detach(0), b_scale(0), b_random(0),
-  b_stoprecording(false), b_memset(false),
-  f_output(NULL),
-  meter_counter(0),
-  meter_poly(0),
-  meter_left(0),
-  meter_right(0),
-  b_active(false), b_listening(false),
-  listen_evthandler(NULL),
-  defaultAudio("")
+GOrgueSound::GOrgueSound(void) :
+	sw(),
+	pConfig(wxConfigBase::Get()),
+	format(0),
+	logSoundErrors(false),
+	samplers_count(0),
+	polyphony(0),
+	poly_soft(0),
+	volume(0),
+	transpose(0),
+	m_audioDevices(),
+	audioDevice(NULL),
+	n_latency(0),
+	m_midi_device_map(),
+	m_midi_devices(),
+/*	midiDevices(NULL),
+	b_midiDevices(NULL),
+	i_midiDevices(NULL),
+	n_midiDevices(0),*/
+	b_limit(0),
+	b_stereo(0),
+	b_align(0),
+	b_scale(0),
+	b_random(0),
+	b_stoprecording(false),
+	f_output(NULL),
+	meter_counter(0),
+	meter_poly(0),
+	meter_left(0),
+	meter_right(0),
+	b_active(false), b_listening(false),
+	listen_evthandler(NULL),
+	defaultAudio(""),
+	b_memset(false),
+	b_detach(0),
+	organmidiEvents()
 {
-	int j, k;
+
 	g_sound = this;
 
 	try
 	{
-		for (k = 0; k < (int)(sizeof(i_APIs) / sizeof(RtAudio::Api)); k++)
+
+		for (unsigned k = 0; g_available_apis[k].name != NULL; k++)
 		{
-        	    audioDevice = new RtAudio(i_APIs[k]);
+
+			audioDevice = new RtAudio(g_available_apis[k].api);
 
 			for (size_t i = 0; i < audioDevice->getDeviceCount(); i++)
 			{
-			  RtAudio::DeviceInfo info = audioDevice->getDeviceInfo(i);
+
+				RtAudio::DeviceInfo info = audioDevice->getDeviceInfo(i);
+
 				wxString name = info.name.c_str();
 				name.Replace("\\", "|");
-				name = s_APIs[k] + name;
+				name = wxString(g_available_apis[k].name) + name;
+
 				if (info.isDefaultOutput && defaultAudio.IsEmpty())
 					defaultAudio = name;
-				if (i_APIs[k] != RtAudio::WINDOWS_DS)
+
+				unsigned sample_rate_index = info.sampleRates.size();
+				if (g_available_apis[k].api != RtAudio::WINDOWS_DS)
 				{
-					for (j = 0; j < (int)info.sampleRates.size(); j++)
+					/* TODO: can a Windows developer explain why this is necessary? */
+					for (unsigned j = 0; j < sample_rate_index; j++)
 						if (info.sampleRates[j] == 44100)
-							break;
+							sample_rate_index = j;
 				}
 				else
 				{
-					j = 0;
+					sample_rate_index = 0;
 					if (info.sampleRates.size() && info.sampleRates.back() < 44100)
-						j = info.sampleRates.size();
+						sample_rate_index = info.sampleRates.size();
 				}
-				if (info.outputChannels < 2 || !info.probed || j == (int)info.sampleRates.size() || m_audioDevices.find(name) != m_audioDevices.end())
+
+				if (
+						(info.outputChannels < 2) ||
+						(!info.probed) ||
+						(sample_rate_index == (int)info.sampleRates.size()) ||
+						(m_audioDevices.find(name) != m_audioDevices.end())
+					)
 					continue;
-				m_audioDevices[name] = std::make_pair(i, i_APIs[k]);
+
+				m_audioDevices[name] = std::make_pair(i, g_available_apis[k].api);
+
 			}
+
 			delete audioDevice;
 			audioDevice = 0;
+
 		}
 
-		RtMidiIn midiDevice;
-		n_midiDevices = midiDevice.getPortCount();
-
-		midiDevices = new RtMidiIn*[n_midiDevices];
-		b_midiDevices = new bool[n_midiDevices];
-		i_midiDevices = new int[n_midiDevices];
-		for (int i = 0; i < n_midiDevices; i++)
+		RtMidiIn midi_dev;
+		for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
 		{
-			midiDevices[i] = new RtMidiIn();
-			wxString name = midiDevices[i]->getPortName(i).c_str();
+
+			MIDI_DEVICE t;
+			t.midi_in = new RtMidiIn();
+			t.id = 0;
+			t.active = false;
+			m_midi_devices.push_back(t);
+
+			wxString name = t.midi_in->getPortName(i).c_str();
 			name.Replace("\\", "|");
-			m_midiDevices[name] = i;
-			b_midiDevices[i] = false;
-			i_midiDevices[i] = 0;
+			m_midi_device_map[name] = i;
+
 		}
+
 	}
 	catch (RtError &e)
 	{
 		e.printMessage();
-		CloseSound();
+		CloseSound(NULL);
 	}
+
 }
 
 GOrgueSound::~GOrgueSound(void)
 {
-	CloseSound();
+
+	CloseSound(NULL);
+
 	try
 	{
-		if (midiDevices)
+
+		/* dispose of all midi devices */
+		while (m_midi_devices.size())
 		{
-			for (int i = 0; i < n_midiDevices; i++)
-			{
-				if (midiDevices[i])
-				{
-					if (b_midiDevices[i])
-						midiDevices[i]->closePort();
-					delete midiDevices[i];
-				}
-			}
-			delete [] midiDevices;
-			midiDevices = 0;
+			if (m_midi_devices.back().midi_in)
+				m_midi_devices.back().midi_in->closePort();
+			DELETE_AND_NULL(m_midi_devices.back().midi_in);
+			m_midi_devices.pop_back();
 		}
-		if (b_midiDevices)
-			delete [] b_midiDevices;
-		if (i_midiDevices)
-			delete [] i_midiDevices;
-		if (audioDevice)
-		{
-			delete audioDevice;
-			audioDevice = 0;
-		}
+
+		/* dispose of the audio playback device */
+		DELETE_AND_NULL(audioDevice);
+
 	}
 	catch (RtError &e)
 	{
 		e.printMessage();
 	}
+
 }
 
-bool GOrgueSound::OpenSound(bool wait)
+static
+void GetDefaultDirectSoundConfig(const int latency, unsigned &nb_buffers, unsigned &buffer_size)
+{
+
+	int bufferCalc = (latency * 25);
+
+	nb_buffers = 2;
+
+	if (bufferCalc <= 256)
+	{
+		buffer_size = 128;
+		return;
+	}
+
+	if (bufferCalc <= 512)
+	{
+		buffer_size = 256;
+		return;
+	}
+
+	if (bufferCalc <= 768)
+	{
+		buffer_size = 384;
+		return;
+	}
+
+	if (bufferCalc <= 3072)
+	{
+		buffer_size = 512;
+		nb_buffers = bufferCalc / 512;
+		if (bufferCalc % 512)
+			nb_buffers++;
+		return;
+	}
+
+	buffer_size = 1024;
+	nb_buffers = bufferCalc / 1024;
+	if (bufferCalc % 1024)
+		nb_buffers++;
+
+}
+
+static
+void GetDefaultAsioSoundConfig(const int latency, unsigned &nb_buffers, unsigned &buffer_size)
+{
+
+	int buffer_calc = (latency * 25);
+
+	nb_buffers = 2;
+
+	if (buffer_calc <= 256)
+		buffer_size = 128;
+	else if (buffer_calc <= 512)
+		buffer_size = 256;
+	else if (buffer_calc <= 768)
+		buffer_size = 384;
+	else if (buffer_calc <= 1024)
+		buffer_size = 512;
+	else if (buffer_calc <= 1536)
+		buffer_size = 768;
+	else
+		buffer_size = 1024;
+
+}
+
+static
+void GetDefaultJackSoundConfig(const int latency, unsigned &nb_buffers, unsigned &buffer_size)
+{
+
+	nb_buffers = 1;
+	buffer_size = 1024;
+
+}
+
+static
+void GetDefaultUnknownSoundConfig(const int latency, unsigned &nb_buffers, unsigned &buffer_size)
+{
+
+	buffer_size = 128;
+
+	nb_buffers = (latency * 25) / buffer_size;
+	if (nb_buffers < 2)
+		nb_buffers = 2;
+
+}
+
+bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 {
 	int i;
 
 	std::map<wxString, int>::iterator it2;
-	for (it2 = m_midiDevices.begin(); it2 != m_midiDevices.end(); it2++)
+	for (it2 = m_midi_device_map.begin(); it2 != m_midi_device_map.end(); it2++)
 		pConfig->Read("Devices/MIDI/" + it2->first, -1);
 	for (i = 0; i < 16; i++)
 		i_midiEvents[i] = pConfig->Read(wxString("MIDI/") + s_MIDIMessages[i], i_MIDIMessages[i]);
@@ -220,24 +351,25 @@ bool GOrgueSound::OpenSound(bool wait)
 	{
 		std::map<wxString, int>::iterator it2;
 		int n_midi = 0;
-		for (it2 = m_midiDevices.begin(); it2 != m_midiDevices.end(); it2++)
+		for (it2 = m_midi_device_map.begin(); it2 != m_midi_device_map.end(); it2++)
 		{
 			i = pConfig->Read("Devices/MIDI/" + it2->first, 0L);
+			MIDI_DEVICE& this_dev = m_midi_devices[it2->second];
 			if (i >= 0)
 			{
 				n_midi++;
-				i_midiDevices[it2->second] = i;
-				if (!b_midiDevices[it2->second])
+				this_dev.id = i;
+				if (!this_dev.active)
 				{
-					b_midiDevices[it2->second] = true;
- 					midiDevices[it2->second]->openPort(it2->second);
- 					//midiDevices[it2->second]->ignoreTypes(false,false,false);
+					assert(this_dev.midi_in);
+					this_dev.midi_in->openPort(it2->second);
+					this_dev.active = true;
 				}
 			}
-			else if (b_midiDevices[it2->second])
+			else if (this_dev.active)
 			{
-				b_midiDevices[it2->second] = false;
-				midiDevices[it2->second]->closePort();
+				this_dev.active = false;
+				this_dev.midi_in->closePort();
 			}
 		}
 
@@ -248,84 +380,13 @@ bool GOrgueSound::OpenSound(bool wait)
 			unsigned int bufferSize, numberOfBuffers;
 			audioDevice = new RtAudio(it->second.second);
 			if (defaultAudio.StartsWith("ASIO: "))
-			{
-			    numberOfBuffers = 2;
-			    int bufferCalc = (n_latency * 25);
-                if (bufferCalc <= 256) bufferSize = 128;
-                else if (bufferCalc > 256)
-                    {
-                        if (bufferCalc <= 512) bufferSize = 256;
-                        else if (bufferCalc > 512)
-                        {
-                            if (bufferCalc <= 768) bufferSize = 384;
-                            else if (bufferCalc > 768)
-                                {
-                                    if (bufferCalc <= 1024) bufferSize = 512;
-                                    else if (bufferCalc > 1024)
-                                        {
-                                            if (bufferCalc <= 1536) bufferSize = 768;
-                                            else if (bufferCalc > 1536) bufferSize = 1024;
-                                        }
-                                }
-                        }
-                    }
-			}
+				GetDefaultAsioSoundConfig(n_latency, numberOfBuffers, bufferSize);
 			else if (defaultAudio.StartsWith("Jack: "))
-			{
-			    numberOfBuffers = 1;
-			    bufferSize=1024;
-			}
+				GetDefaultJackSoundConfig(n_latency, numberOfBuffers, bufferSize);
             else if (defaultAudio.StartsWith("DirectSound: "))
-            {
-                numberOfBuffers = 2;
-                int bufferCalc = (n_latency * 25);
-                if (bufferCalc <= 256) bufferSize = 128;
-                else if (bufferCalc > 256)
-                    {
-                        if (bufferCalc <= 512) bufferSize = 256;
-                        else if (bufferCalc > 512)
-                        {
-                            if (bufferCalc <= 768) bufferSize = 384;
-                            else if (bufferCalc > 768)
-                                {
-                                    if (bufferCalc <= 1024) bufferSize = 512;
-                                    else if (bufferCalc > 1024)
-                                    {
-                                        numberOfBuffers = 3;
-                                            {
-                                                if (bufferCalc <= 1536) bufferSize = 512;
-                                                else if (bufferCalc > 1536)
-                                                    {
-                                                    if (bufferCalc <= 2048)
-                                                            {
-                                                                numberOfBuffers = 4;
-                                                                bufferSize = 512;
-                                                            }
-                                                        else if (bufferCalc > 2048)
-                                                            {
-                                                                numberOfBuffers = 5;
-                                                                if (bufferCalc <= 2560) bufferSize = 512;
-                                                                else if (bufferCalc > 2560)
-                                                                    {
-                                                                        numberOfBuffers = 6;
-                                                                        if (bufferCalc <= 3072) bufferSize = 512;
-                                                                        else if (bufferCalc > 3072) bufferSize = 1024;
-                                                                    }
-                                                            }
-
-                                                    }
-                                            }
-                                    }
-                                }
-                        }
-                    }
-            }
+            	GetDefaultDirectSoundConfig(n_latency, numberOfBuffers, bufferSize);
 			else
-			{
-			    bufferSize = 128;
-			    numberOfBuffers = (n_latency * 25) / bufferSize;
-			    if (numberOfBuffers < 2) numberOfBuffers = 2;
-			}
+				GetDefaultUnknownSoundConfig(n_latency, numberOfBuffers, bufferSize);
 
 			RtAudio::StreamParameters aOutputParam;
 			aOutputParam.deviceId=it->second.first;
@@ -343,11 +404,11 @@ bool GOrgueSound::OpenSound(bool wait)
 			}
 			else
 			{
-		                ::wxSleep(1);
-		                if (logSoundErrors)
-		                    ::wxLogError("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
-		                CloseSound();
-		                return false;
+				::wxSleep(1);
+				if (logSoundErrors)
+					::wxLogError("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
+				CloseSound(organfile);
+				return false;
 			}
 			RtAudio::DeviceInfo info = audioDevice->getDeviceInfo(it->second.first);
             format = RTAUDIO_FLOAT32;
@@ -358,7 +419,7 @@ bool GOrgueSound::OpenSound(bool wait)
             ::wxSleep(1);
 			if (logSoundErrors)
                 ::wxLogWarning(n_midi ? "No audio device is selected; neither MIDI input nor sound output will occur!" : "No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!");
-			CloseSound();
+			CloseSound(organfile);
 			return false;
 		}
 	}
@@ -367,7 +428,7 @@ bool GOrgueSound::OpenSound(bool wait)
 		::wxSleep(1);
 		if (logSoundErrors)
             e.printMessage();
-		CloseSound();
+		CloseSound(organfile);
 		return false;
 	}
 
@@ -377,7 +438,7 @@ bool GOrgueSound::OpenSound(bool wait)
 	return true;
 }
 
-void GOrgueSound::CloseSound()
+void GOrgueSound::CloseSound(GrandOrgueFile* organfile)
 {
 	bool was_active = b_active;
 
@@ -407,17 +468,17 @@ void GOrgueSound::CloseSound()
 
 	::wxMilliSleep(10);
 	if (was_active)
-		MIDIAllNotesOff();
+		MIDIAllNotesOff(organfile);
 }
 
-bool GOrgueSound::ResetSound()
+bool GOrgueSound::ResetSound(GrandOrgueFile* organfile)
 {
 	wxBusyCursor busy;
 	bool was_active = b_active;
 
 	int temp = volume;
-	CloseSound();
-	if (!OpenSound())
+	CloseSound(organfile);
+	if (!OpenSound(true, organfile))
 		return false;
 	if (!temp)  // don't let resetting sound reactivate an organ
         g_sound->volume = temp;
@@ -511,7 +572,7 @@ bool GOrgueSound::HasScaledReleases()
 	return b_scale;
 }
 
-void GOrgueSound::MIDIAllNotesOff()
+void GOrgueSound::MIDIAllNotesOff(GrandOrgueFile* organfile)
 {
 	int i, j, k;
 
@@ -581,8 +642,8 @@ void GOrgueSound::StopRecording()
 bool GOrgueSound::HasMIDIDevice()
 {
 
-	for (int i = 0; i < n_midiDevices; i++)
-		if (b_midiDevices[i])
+	for (unsigned i = 0; i < m_midi_devices.size(); i++)
+		if (m_midi_devices[i].active)
 			return true;
 
 	return false;
@@ -633,7 +694,7 @@ std::map<wxString, std::pair<int, RtAudio::Api> >& GOrgueSound::GetAudioDevices(
 
 std::map<wxString, int>& GOrgueSound::GetMIDIDevices()
 {
-	return m_midiDevices;
+	return m_midi_device_map;
 }
 
 const wxString GOrgueSound::GetDefaultAudioDevice()

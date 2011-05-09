@@ -50,9 +50,10 @@ void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix)
 
 bool GOrgueTremulant::Set(bool on)
 {
-	if (DefaultToEngaged == on)
+	return false;
+	/*if (DefaultToEngaged == on)
 		return on;
 	pipe->Set(on);
-	return GOrgueDrawstop::Set(on);
+	return GOrgueDrawstop::Set(on);*/
 }
 

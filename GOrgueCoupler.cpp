@@ -26,6 +26,8 @@
 #include "GOrgueSound.h"
 #include "GrandOrgueFile.h"
 
+extern GrandOrgueFile* organfile;
+
 GOrgueCoupler::GOrgueCoupler() :
 	GOrgueDrawstop(),
 	UnisonOff(false),
@@ -62,16 +64,16 @@ void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix)
 
 }
 
-bool GOrgueCoupler::Set(GrandOrgueFile& organ, bool on)
+bool GOrgueCoupler::Set(bool on)
 {
 
 	if (DefaultToEngaged == on)
 		return on;
 
 	DefaultToEngaged = on;
-	organ.MIDIPretend(true);
+	organfile->MIDIPretend(true);
 	DefaultToEngaged = !on;
-	organ.MIDIPretend(false);
+	organfile->MIDIPretend(false);
 
 	return GOrgueDrawstop::Set(on);
 

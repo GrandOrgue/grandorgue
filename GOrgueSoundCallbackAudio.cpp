@@ -20,16 +20,15 @@
  * MA 02111-1307, USA.
  */
 
-#include "GOrgueSoundCallbackAudio.h"
+#include "GOrgueSound.h"
 
 #include "GOrgueEnclosure.h"
 #include "GOrguePipe.h"
-#include "GOrgueSound.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgue.h"
 #include "GrandOrgueFile.h"
+#include "RtAudio.h"
 
-extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
 
 static
@@ -227,28 +226,28 @@ void GetNextFrame
 
 inline
 void GOrgueSound::ProcessAudioSamplers
-	(GO_SAMPLER** listStart
-	,GOrgueSound* instance
-	,unsigned int nFrames
-	,int* out_buffer
+	(GO_SAMPLER** list_start
+	,unsigned int n_frames
+	,int* output_buffer
 	)
 {
 
-	GO_SAMPLER* previousValidSampler = *listStart;
-	for (GO_SAMPLER* sampler = *listStart; sampler; sampler = sampler->next)
+	assert(list_start);
+	GO_SAMPLER* previous_valid_sampler = *list_start;
+	for (GO_SAMPLER* sampler = *list_start; sampler; sampler = sampler->next)
 	{
 
 		if  (
-			 (instance->b_limit) &&
-			 (instance->samplers_count >= instance->poly_soft) &&
-			 (sampler->pipe_section->stage == GSS_RELEASE) &&
-			 (organfile->GetElapsedTime() - sampler->time > 250)
+				(b_limit) &&
+				(samplers_count >= poly_soft) &&
+				(sampler->pipe_section->stage == GSS_RELEASE) &&
+				(organfile->GetElapsedTime() - sampler->time > 250)
 			)
 			sampler->fadeout = 4;
 
-		int* write_iterator = out_buffer;
+		int* write_iterator = output_buffer;
 
-		for(unsigned int i = 0; i < nFrames; i += 2)
+		for(unsigned int i = 0; i < n_frames; i += 2)
 		{
 
 			int intbuffer[4];
@@ -325,7 +324,6 @@ void GOrgueSound::ProcessAudioSamplers
 
 		}
 
-		// printf("fade %d fadein %d fadeout %d\n",sampler->fade,sampler->fadein,sampler->fadeout);
 		if (sampler->pipe)
 		{
 			if (sampler->fade < sampler->fademax)
@@ -334,7 +332,7 @@ void GOrgueSound::ProcessAudioSamplers
 			}
 			else if (sampler->fadein)
 			{
-				sampler->faderemain -= nFrames;
+				sampler->faderemain -= n_frames;
 				if (sampler->faderemain <= 0)
 					sampler->fadein = 0;
 			}
@@ -348,14 +346,14 @@ void GOrgueSound::ProcessAudioSamplers
 		if (!sampler->pipe || !sampler->fade)
 		{
 			/* sampler needs to be removed from the list */
-			if (sampler == *listStart)
-				*listStart = sampler->next;
-			previousValidSampler->next = sampler->next;
-			instance->samplers_open[--instance->samplers_count] = sampler;
+			if (sampler == *list_start)
+				*list_start = sampler->next;
+			previous_valid_sampler->next = sampler->next;
+			samplers_open[--samplers_count] = sampler;
 		}
 		else
 		{
-			previousValidSampler = sampler;
+			previous_valid_sampler = sampler;
 		}
 
 	}
@@ -365,79 +363,80 @@ void GOrgueSound::ProcessAudioSamplers
 // this callback will fill the buffer with bufferSize frame
 // audio is opened with 32 bit stereo, so one frame is 64bit (32bit for right 32bit for left)
 // So buffer can handle 8*bufferSize char (or 2*bufferSize float)
-int GOrgueSound::AudioCallback
-	(void *outputBuffer
-	,void *inputBuffer
-	,unsigned int nFrames
-	,double streamTime
-	,RtAudioStreamStatus status
-	,void *userData
+inline
+int GOrgueSound::AudioCallbackLocal
+	(float *output_buffer
+	,unsigned int n_frames
+	,double stream_time
 	)
 {
 
-	GOrgueSound* instance = (GOrgueSound*)userData;
-	float* buffer = static_cast<float*>(outputBuffer);
-
 	if (organfile)
-        organfile->SetElapsedTime(instance->sw.Time());
+        organfile->SetElapsedTime(sw.Time());
 
 	/* Process any MIDI messages
 	 * TODO: this is a very good candidate for a thread. */
 	std::vector<unsigned char> msg;
-	for (int j = 0; j < instance->n_midiDevices; j++)
+	for (unsigned j = 0; j < m_midi_devices.size(); j++)
 	{
-		if (!instance->b_midiDevices[j])
+
+		if (!m_midi_devices[j].active)
 			continue;
 
 		for(;;)
 		{
-			instance->midiDevices[j]->getMessage(&msg);
+			m_midi_devices[j].midi_in->getMessage(&msg);
 			if (msg.empty())
 				break;
-			MIDICallback(msg, j, instance);
+			MIDICallback(msg, j);
 		}
+
 	}
 
-	/* if no samplers playing, or sound is disabled, fill buffer with zero
-	 * and finish */
-	if (!instance->b_active || !instance->samplers_count)
-		memset(buffer, 0, nFrames);
-	if (!instance->b_active)
-		return 0;
+	/* if no samplers playing, or sound is disabled, fill buffer with zero */
+	if (!b_active || !samplers_count)
+	{
+
+		memset(output_buffer, 0, (n_frames * sizeof(float)));
+
+		/* we can only abort for the case of the sound system not being active
+		 * (because recording could be enabled... */
+		if (!b_active)
+			return 0;
+
+	}
 
 	/* update the polyphony meter if a new peak has occured */
-	if (instance->samplers_count > instance->meter_poly)
-		instance->meter_poly = instance->samplers_count;
+	if (samplers_count > meter_poly)
+		meter_poly = samplers_count;
 
 	/* initialise the output buffer */
-	std::fill(instance->final_buff, instance->final_buff + 2048,0);
-
+	std::fill(final_buff, final_buff + 2048,0);
 
 	for (int j = 0; j < organfile->GetTremulantCount() + organfile->GetWinchestGroupCount() + 1; j++)
 	{
 
-		if (instance->windchests[j] == NULL)
+		if (windchests[j] == NULL)
 			continue;
 
 		int* this_buff;
 		if (j < organfile->GetTremulantCount())
-			this_buff = instance->g_buff[j + 1] + 2;
+			this_buff = g_buff[j + 1] + 2;
 		else
 		{
-			this_buff = instance->g_buff[0] + 2;
+			this_buff = g_buff[0] + 2;
 			double d = organfile->GetWindchest(j)->GetVolume();
-			d *= instance->volume;
+			d *= volume;
 			d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
 
 			float f = d;
-			std::fill(instance->volume_buff, instance->volume_buff + 2048,f);
+			std::fill(volume_buff, volume_buff + 2048,f);
 		}
 		std::fill(this_buff, this_buff + 2052, (j < organfile->GetTremulantCount() ? 0x800000 : 0));
 
 		ProcessAudioSamplers
-			(&(instance->windchests[j])
-			,instance
-			,nFrames
+			(&(windchests[j])
+			,n_frames
 			,this_buff);
 
 		if (j >= organfile->GetTremulantCount())
@@ -446,76 +445,96 @@ int GOrgueSound::AudioCallback
 			for (int i = 0; i < organfile->GetWindchest(j)->GetTremulantCount(); i++)
 			{
 
-				if (!instance->windchests[organfile->GetWindchest(j)->tremulant[i]])
+				if (!windchests[organfile->GetWindchest(j)->tremulant[i]])
 					continue;
-				ptr = instance->g_buff[organfile->GetWindchest(j)->tremulant[i] + 1] + 2;
-				for (unsigned int k = 0; k < nFrames*2; k++)
+				ptr = g_buff[organfile->GetWindchest(j)->tremulant[i] + 1] + 2;
+				for (unsigned int k = 0; k < n_frames*2; k++)
 				{
 #ifdef linux
 					//multiply by 2^-23
-					instance->volume_buff[k] *= scalb(ptr[k], -23);
+					volume_buff[k] *= scalb(ptr[k], -23);
 #endif
 #ifdef _WIN32
-					instance->volume_buff[k] *= _scalb(ptr[k], -23);
+					volume_buff[k] *= _scalb(ptr[k], -23);
 #endif
 				}
 
 			}
 
 			ptr = this_buff;
-			for (unsigned int k = 0; k < nFrames*2; k++)
+			for (unsigned int k = 0; k < n_frames*2; k++)
 			{
 				double d = this_buff[k];
-//                printf("data : %f\n",d);
-				d *= instance->volume_buff[k];
-				instance->final_buff[k] += d;
+				d *= volume_buff[k];
+				final_buff[k] += d;
 			}
 		}
 	}
 
 	/* Clamp the output */
 	double clamp_min = -1.0, clamp_max = 1.0;
-	for (unsigned int k = 0; k < nFrames*2; k += 2)
+	for (unsigned int k = 0; k < n_frames * 2; k += 2)
 	{
-		double d;
-		d = std::min(std::max(instance->final_buff[k + 0], clamp_min) , clamp_max);
-		((float*)buffer)[k + 0]  = (float)d;
-		instance->meter_left  = std::max(instance->meter_left,fabs(d));
-		d = std::min(std::max(instance->final_buff[k + 1] , clamp_min) , clamp_max);
-		((float*)buffer)[k + 1]  = (float)d;
-		instance->meter_right = std::max( instance->meter_right,fabs(d));
+
+		double d = std::min(std::max(final_buff[k + 0], clamp_min), clamp_max);
+		output_buffer[k + 0]  = (float)d;
+		meter_left  = std::max(meter_left, fabs(d));
+
+		d = std::min(std::max(final_buff[k + 1], clamp_min), clamp_max);
+		output_buffer[k + 1]  = (float)d;
+		meter_right = std::max(meter_right, fabs(d));
+
 	}
 
 	/* Write data to file if recording is enabled*/
-	if (instance->f_output)
+	if (f_output)
 	{
-		fwrite(buffer, sizeof(float), nFrames*2, instance->f_output);
-		if (instance->b_stoprecording)
-			instance->CloseWAV();
+		fwrite(output_buffer, sizeof(float), n_frames * 2, f_output);
+		if (b_stoprecording)
+			CloseWAV();
 	}
 
 	/* Update the meter */
-	instance->meter_counter += nFrames;
-	if (instance->meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
+	meter_counter += n_frames;
+	if (meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
 	{
-		int n = 0;
+
 		// polyphony
-		n |= ( 33 * instance->meter_poly ) / instance->polyphony;
+		int n = ( 33 * meter_poly ) / polyphony;
 		n <<= 8;
 		// right channel
-		n |= lrint(32.50000000000001 * instance->meter_right);
+		n |= lrint(32.50000000000001 * meter_right);
 		n <<= 8;
 		// left  channel
-		n |= lrint(32.50000000000001 * instance->meter_left );
+		n |= lrint(32.50000000000001 * meter_left );
 
 		wxCommandEvent event(wxEVT_METERS, 0);
 		event.SetInt(n);
 		::wxGetApp().frame->AddPendingEvent(event);
 
-		instance->meter_counter = instance->meter_poly = 0;
-		instance->meter_left = instance->meter_right = 0.0;
+		meter_counter = meter_poly = 0;
+		meter_left = meter_right = 0.0;
+
 	}
 
 	return 0;
 }
 
+int
+GOrgueSound::AudioCallback
+	(void *outputBuffer
+	,void *inputBuffer
+	,unsigned int nFrames
+	,double streamTime
+	,RtAudioStreamStatus status
+	,void *userData)
+{
+
+	assert(userData);
+	return ((GOrgueSound*)userData)->AudioCallbackLocal
+		(static_cast<float*>(outputBuffer)
+		,nFrames
+		,streamTime
+		);
+
+}

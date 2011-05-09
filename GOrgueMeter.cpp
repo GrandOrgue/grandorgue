@@ -203,7 +203,7 @@ void GOrgueMeter::OnTranspose(wxCommandEvent& event)
     if (g_sound)
     {
         g_sound->SetTranspose(n);
-		g_sound->ResetSound();
+		g_sound->ResetSound(organfile);
     }
 }
 void GOrgueMeter::OnEnter(wxCommandEvent& event)

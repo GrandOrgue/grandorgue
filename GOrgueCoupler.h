@@ -38,7 +38,7 @@ public:
 	GOrgueCoupler();
 	void Load(IniFileConfig& cfg, const char* group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
-	bool Set(GrandOrgueFile& organ, bool on);
+	bool Set(bool on);
 
 	bool UnisonOff;
 	bool CoupleToSubsequentUnisonIntermanualCouplers;

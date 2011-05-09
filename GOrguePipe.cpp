@@ -382,7 +382,7 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 		assert(attackSamples != 0);
 		unsigned attackSamplesInMem = attackSamples + SAMPLE_SLACK;
 		m_attack.size = (int)attackSamples * sizeof(wxInt16) * m_Channels;
-		assert(m_attack.size <= totalDataSize); /* can be equal for percussive samples */
+		assert((unsigned)m_attack.size <= totalDataSize); /* can be equal for percussive samples */
 		m_attack.data = (unsigned char*)malloc(attackSamplesInMem * sizeof(wxInt16) * m_Channels);
 		if (m_attack.data == NULL)
 			throw (char*)"< out of memory allocating attack";
@@ -473,87 +473,6 @@ short SynthTrem(double amp, double angle)
 short SynthTrem(double amp, double angle, double fade)
 {
 	return (short)(fade * amp * sin(angle));
-}
-
-void GOrguePipe::CreateFromTremulant(GOrgueTremulant* tremulant)
-{
-
-	static const int amp = 10000;
-	int peak = 16384 * tremulant->AmpModDepth / 100;
-	double trem_amp = (16384 * tremulant->AmpModDepth / 100);
-	double trem_param = 0.14247585730565955729989312395825 / (double)tremulant->Period;
-
-	unsigned loopstart = 441000 / tremulant->StartRate;
-	unsigned loopend = loopstart + 441 * tremulant->Period / 10;
-	unsigned release = loopend;
-	unsigned wavestart = 0;
-	unsigned wavesize = release + 441000 / tremulant->StopRate;
-	unsigned length = sizeof(short) * wavesize;
-
-	try
-	{
-
-		unsigned q, r;
-		int  k, jj;
-
-		double trem_angle = 0.0;
-
-		m_Channels = 1;
-		m_SampleRate = 44100;
-
-		/* Generate startup */
-		m_attack.data = (unsigned char*)malloc(loopstart * sizeof(wxInt16));
-		if (m_attack.data == NULL)
-			throw (char*)"< out of memory";
-		for (unsigned j = 0; j < loopstart; j++)
-		{
-			double trem_fade = (double)j / loopstart;
-			((wxInt16*)m_attack.data)[j] = SynthTrem(trem_amp, trem_angle, trem_fade);
-			trem_angle += trem_param * trem_fade;
-		}
-
-		/* Generate loop */
-		m_loop.data = (unsigned char*)malloc((loopend - loopstart + 1) * sizeof(wxInt16));
-		if (m_loop.data == NULL)
-			throw (char*)"< out of memory";
-		for (unsigned j = 0; j < (loopend - loopstart + 1); j++)
-		{
-			((wxInt16*)m_loop.data)[j] = SynthTrem(trem_amp, trem_angle);
-			trem_angle += trem_param;
-		}
-
-		/* Generate release */
-		m_release.data = (unsigned char*)malloc((wavesize - loopend - 1) * sizeof(wxInt16));
-		if (m_release.data == NULL)
-			throw (char*)"< out of memory";
-		for (unsigned j = 0; j < (wavesize - loopend - 1); j++)
-		{
-			double trem_fade = (double)(j - loopend - 1) / (wavesize - loopend - 1);
-			((wxInt16*)m_release.data)[j] = SynthTrem(trem_amp, trem_angle, trem_fade);
-			trem_angle += trem_param * trem_fade;
-		}
-
-		ra_shift = 7;
-		ra_amp = (amp << 15) / -10000;
-		sampler = NULL;
-		m_attack.type = AC_UNCOMPRESSED_MONO;
-		m_loop.type = AC_UNCOMPRESSED_MONO;
-		m_release.type = AC_UNCOMPRESSED_MONO;
-		m_attack.stage = GSS_ATTACK;
-		m_loop.stage = GSS_LOOP;
-		m_release.stage = GSS_RELEASE;
-
-		ComputeReleaseAlignmentInfo();
-
-	}
-	catch (...)
-	{
-		FREE_AND_NULL(m_attack.data);
-		FREE_AND_NULL(m_loop.data);
-		FREE_AND_NULL(m_release.data);
-		throw;
-	}
-
 }
 
 void GOrguePipe::SetWindchestGroup(int windchest_group)

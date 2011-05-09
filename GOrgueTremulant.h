@@ -31,13 +31,15 @@
 class GOrgueTremulant : public GOrgueDrawstop
 {
 
-public:
+private:
 
 	wxInt32 Period;
 	wxInt16 StartRate;
 	wxInt16 StopRate;
 	wxInt16 AmpModDepth;
 	GOrguePipe* pipe;
+
+public:
 
 	GOrgueTremulant();
 	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);

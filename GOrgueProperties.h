@@ -40,19 +40,4 @@ public:
 	~GOrgueProperties(void);
 };
 
-class GOrgueRegister : public wxDialog
-{
-public:
-	GOrgueRegister(wxWindow* parent);
-	~GOrgueRegister(void);
-	void OnKey(wxCommandEvent& event);
-	void OnHelp(wxCommandEvent& event);
-    wxTextCtrl* m_key;
-	DECLARE_EVENT_TABLE()
-protected:
-    enum {
-        ID_LICENSEKEY = 300
-    };
-};
-
 #endif
