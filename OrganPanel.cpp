@@ -23,7 +23,6 @@
 #include "OrganPanel.h"
 
 #include <algorithm>
-#include <wx/docview.h>
 #include <wx/event.h>
 #include <wx/mstream.h>
 #include "GOrgueCoupler.h"

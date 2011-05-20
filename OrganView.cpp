@@ -27,7 +27,6 @@
 #include "GrandOrgueFile.h"
 #include "OrganDocument.h"
 #include "GOrgueMeter.h"
-#include "OrganPanel.h"
 
 IMPLEMENT_DYNAMIC_CLASS(OrganView, wxView)
 

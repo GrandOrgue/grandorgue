@@ -19,16 +19,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-#include <wx/spinctrl.h>
 
-#include "GOrgueFrameGeneral.h"
 #include "GOrgueMeter.h"
+#include "GOrgueFrameGeneral.h"
 #include "GOrgueSound.h"
 #include "GrandOrgue.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
 #include "GrandOrgueID.h"
-#include "wxGaugeAudio.h"
 
 #if defined(__WXMSW__)
     #include <wx/msw/regconf.h>

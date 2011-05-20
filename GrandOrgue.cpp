@@ -25,9 +25,6 @@
 #define _WIN32_WINNT 0x0500
 
 #include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
-#include "GOrgueSound.h"
-#include "GOrgueMeter.h"
 #include "OrganView.h"
 #include "OrganDocument.h"
 #include "SettingsDialog.h"
@@ -38,7 +35,6 @@
 #include <wx/snglinst.h>
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
-#include <wx/html/helpctrl.h>
 #include <wx/splash.h>
 
 #ifdef __WIN32__
@@ -52,8 +48,6 @@
 IMPLEMENT_APP(GOrgueApp)
 
 extern GrandOrgueFile* organfile;
-
-
 
 class stConnection : public wxConnection
 {

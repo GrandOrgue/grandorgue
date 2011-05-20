@@ -33,7 +33,6 @@
 #include <wx/msw/registry.h>
 #endif
 
-
 #ifdef __VFD__
 #include "GOrgueLCD.h"
 #endif

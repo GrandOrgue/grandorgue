@@ -32,7 +32,6 @@
 #include "GrandOrgue.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
-#include "OrganFile.h"
 #include "SettingsDialog.h"
 
 extern GrandOrgueFile* organfile;

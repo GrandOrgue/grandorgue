@@ -23,7 +23,6 @@
 #include "GOrgueDrawStop.h"
 
 #include <wx/docview.h>
-#include "IniFileConfig.h"
 #include "GOrgueDisplayMetrics.h"
 #include "GOrguePiston.h"
 #include "GOrgueSound.h"
@@ -31,8 +30,6 @@
 #include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
 #include "MIDIListenDialog.h"
-#include "OrganFile.h"
-
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;

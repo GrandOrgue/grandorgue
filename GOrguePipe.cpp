@@ -21,7 +21,6 @@
  */
 
 #include "GOrguePipe.h"
-#include "GOrgueSound.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueWave.h"
 #include "GOrgueWindchest.h"

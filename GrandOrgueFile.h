@@ -28,7 +28,6 @@
 #include <wx/fileconf.h>
 #include <wx/filename.h>
 #include "GOrgueManual.h"
-#include "OrganFile.h"
 
 class GOrgueDisplayMetrics;
 class GOrgueDivisionalCoupler;
