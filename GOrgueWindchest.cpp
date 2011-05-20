@@ -21,7 +21,6 @@
  */
 
 #include "GOrgueWindchest.h"
-
 #include "GOrgueEnclosure.h"
 #include "GrandOrgueFile.h"
 

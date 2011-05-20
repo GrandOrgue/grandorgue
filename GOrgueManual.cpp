@@ -32,7 +32,6 @@
 #include "GrandOrgueFrame.h"
 #include "IniFileConfig.h"
 #include "MIDIListenDialog.h"
-#include "OrganFile.h"
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;

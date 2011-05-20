@@ -22,7 +22,6 @@
 
 #include "GOrgueCoupler.h"
 #include "IniFileConfig.h"
-#include "GOrgueDrawStop.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueFile.h"
 

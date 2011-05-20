@@ -22,7 +22,6 @@
 
 #include "GrandOrgueFrame.h"
 
-#include <wx/dcmemory.h>
 #include <wx/menu.h>
 #include <wx/mstream.h>
 #include <wx/image.h>

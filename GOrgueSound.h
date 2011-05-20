@@ -35,7 +35,6 @@
 #include <wx/stopwatch.h>
 #include <map>
 #include "RtAudio.h"
-#include "OrganFile.h"
 #include "RtMidi.h"
 #include "GrandOrgueDef.h"
 
@@ -66,7 +65,7 @@ struct struct_WAVE
 	char ChunkID[4];
 	int ChunkSize;
 	char Format[4];
-    char Subchunk1ID[4];
+    	char Subchunk1ID[4];
 	int Subchunk1Size;
 	short AudioFormat;
 	short NumChannels;
@@ -287,8 +286,8 @@ public:
 
 	void CloseWAV();
 
-    void UpdateOrganMIDI();
-    std::map<long, wxString> organmidiEvents;
+	void UpdateOrganMIDI();
+	std::map<long, wxString> organmidiEvents;
 
 //	static void MIDIPretend(bool on);
 

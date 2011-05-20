@@ -49,7 +49,6 @@
 #include "GOrgueWave.h"
 #include "GOrgueWindchest.h"
 #include "OrganDocument.h"
-#include "OrganFile.h"
 #include "zlib.h"
 
 extern GOrgueSound* g_sound;
