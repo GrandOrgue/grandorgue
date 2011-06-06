@@ -23,7 +23,7 @@
 #ifndef GRANDORGUEDEF_H
 #define GRANDORGUEDEF_H
 
-#define APP_NAME "GrandOrgue v0.3.0.2"
+#define APP_NAME "GrandOrgue v0.3.0.3"
 #define MAX_POLYPHONY 4096
 #define LOW_MEM_CONDITION 33554432
 
