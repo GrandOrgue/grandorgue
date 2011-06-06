@@ -49,9 +49,6 @@
 	<File name="OrganDocument.h" open="0" top="0" tabpos="0">
 		<Cursor position="138" topLine="0" />
 	</File>
-	<File name="OrganFile.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="93635" topLine="2605" />
-	</File>
 	<File name="OrganFile.h" open="0" top="0" tabpos="12">
 		<Cursor position="11431" topLine="435" />
 	</File>
@@ -62,7 +59,7 @@
 		<Cursor position="138" topLine="0" />
 	</File>
 	<File name="RtAudio.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="90953" topLine="2521" />
+		<Cursor position="90982" topLine="2514" />
 	</File>
 	<File name="RtMidi.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="6260" topLine="180" />

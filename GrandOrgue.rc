@@ -44,7 +44,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,3,0,1
+ FILEVERSION 0,3,0,3
  PRODUCTVERSION 0,3,0,0
  FILEFLAGSMASK 0x1fL
 #ifdef _DEBUG
@@ -62,7 +62,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "GrandOrgue"
             VALUE "FileDescription", "GrandOrgue"
-            VALUE "FileVersion", "0.3.0.2"
+            VALUE "FileVersion", "0.3.0.3"
             VALUE "InternalName", "GrandOrgue"
             VALUE "LegalCopyright", "GPL v2"
             VALUE "OriginalFilename", "GrandOrgue.exe"

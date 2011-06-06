@@ -3604,3 +3604,720 @@
 	"GOrgueMeter.h"
 	"OrganPanel.h"
 
+1298459576 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguecontrol.cpp
+	"GOrgueControl.h"
+	"IniFileConfig.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguecontrol.h
+	<wx/wx.h>
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\inifileconfig.h
+	<wx/wx.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguecoupler.cpp
+	"GOrgueCoupler.h"
+	"IniFileConfig.h"
+	"GOrgueSound.h"
+	"GrandOrgueFile.h"
+
+1305808980 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguecoupler.h
+	"GOrgueDrawStop.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedrawstop.h
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrgueDrawable.h"
+	"IniFileConfig.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedrawable.h
+	<wx/dc.h>
+
+1307352322 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguesound.h
+	<wx/wx.h>
+	<wx/stopwatch.h>
+	<map>
+	"RtAudio.h"
+	"RtMidi.h"
+	"GrandOrgueDef.h"
+	"GOrgueReleaseAlignTable.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\rtaudio.h
+	<string>
+	<vector>
+	"RtError.h"
+	<windows.h>
+	<process.h>
+	<pthread.h>
+	<sys/time.h>
+	<sstream>
+	<CoreAudio/AudioHardware.h>
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\rterror.h
+	<exception>
+	<iostream>
+	<string>
+
+1307352322 c:\grandorgue.0.3-source\2011-06-06\trunk\rtmidi.h
+	"RtError.h"
+	<string>
+	<vector>
+	<queue>
+
+1307353546 c:\grandorgue.0.3-source\2011-06-06\trunk\grandorguedef.h
+
+1304255804 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguereleasealigntable.h
+	"GOrgueSound.h"
+
+1307352322 c:\grandorgue.0.3-source\2011-06-06\trunk\grandorguefile.h
+	<vector>
+	<wx/wx.h>
+	<wx/fileconf.h>
+	<wx/filename.h>
+	"GOrgueManual.h"
+
+1305808980 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguemanual.h
+	<wx/wx.h>
+	<vector>
+
+1304255804 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedisplaymetrics.cpp
+	"GOrgueDisplayMetrics.h"
+	"GrandOrgueFile.h"
+	"IniFileConfig.h"
+
+1304255804 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedisplaymetrics.h
+	<wx/wx.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedivisional.cpp
+	"GOrgueDivisional.h"
+	<wx/docview.h>
+	"IniFileConfig.h"
+	"GOrgueCoupler.h"
+	"GOrgueDivisionalCoupler.h"
+	"GOrgueSound.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+	"SettingsDialog.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedivisional.h
+	"GOrguePushbutton.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepushbutton.h
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrgueDrawable.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedivisionalcoupler.h
+	<wx/wx.h>
+	"GOrgueDrawStop.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguestop.h
+	"IniFileConfig.h"
+	"GOrgueDrawStop.h"
+
+1305808980 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguetremulant.h
+	<wx/wx.h>
+	"GOrguePipe.h"
+	"GOrgueDrawStop.h"
+	"IniFileConfig.h"
+
+1305808980 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepipe.h
+	<wx/wx.h>
+	"GOrgueSound.h"
+
+1307352322 c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgue.h
+	"GrandOrgueDef.h"
+	<wx/wx.h>
+	<wx/html/helpctrl.h>
+	<wx/msw/private.h>
+	<wx/msw/registry.h>
+	"GOrgueLCD.h"
+	"GOrgueSound.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFrame.h"
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguelcd.h
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguemeter.h
+	<wx/control.h>
+	<wx/spinctrl.h>
+	"wxGaugeAudio.h"
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\wxgaugeaudio.h
+	<wx/control.h>
+	"GrandOrgueFrame.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgueframe.h
+	<wx/docview.h>
+	<wx/bitmap.h>
+	<wx/brush.h>
+	<wx/dcmemory.h>
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\settingsdialog.h
+	<vector>
+	<wx/propdlg.h>
+
+1298459576 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedivisionalcoupler.cpp
+	"GOrgueDivisionalCoupler.h"
+	"GrandOrgueFile.h"
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedrawstop.cpp
+	"GOrgueDrawStop.h"
+	<wx/docview.h>
+	"GOrgueDisplayMetrics.h"
+	"GOrguePiston.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+	"MIDIListenDialog.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepiston.h
+	"GOrguePushbutton.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\midilistendialog.h
+	<wx/wx.h>
+	<wx/tglbtn.h>
+	<wx/spinctrl.h>
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueenclosure.cpp
+	<wx/app.h>
+	"GOrgueEnclosure.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"MIDIListenDialog.h"
+	"GOrgueDisplayMetrics.h"
+	"IniFileConfig.h"
+
+1304255804 c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueenclosure.h
+	"GOrgueDrawable.h"
+	<wx/wx.h>
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueframegeneral.cpp
+	"GOrgueFrameGeneral.h"
+	"GOrgueCoupler.h"
+	"GOrgueDivisional.h"
+	"GOrgueDivisionalCoupler.h"
+	"GOrgueGeneral.h"
+	"GOrgueSound.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueframegeneral.h
+	"GOrguePushbutton.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguegeneral.h
+	"GOrgueFrameGeneral.h"
+
+1298459576 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguegeneral.cpp
+	"GOrgueGeneral.h"
+	"IniFileConfig.h"
+
+1297922089 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguelcd.cpp
+	"GrandOrgue.h"
+	"imon/SG_VFD.h"
+
+1272976696 c:\grandorgue.0.3-source\2011-06-06\trunk\imon\sg_vfd.h
+
+1304255804 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguelabel.cpp
+	"GOrgueLabel.h"
+	"GrandOrgueFile.h"
+	"GOrgueDisplayMetrics.h"
+	"IniFileConfig.h"
+
+1304255804 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguelabel.h
+	<wx/wx.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguemanual.cpp
+	"GOrgueManual.h"
+	<algorithm>
+	"GOrgueCoupler.h"
+	"GOrgueDivisional.h"
+	"GOrguePipe.h"
+	"GOrgueSound.h"
+	"GOrgueStop.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"IniFileConfig.h"
+	"MIDIListenDialog.h"
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguemeter.cpp
+	"GOrgueMeter.h"
+	"GOrgueFrameGeneral.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+	"GrandOrgueID.h"
+	<wx/msw/regconf.h>
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgueid.h
+	<wx/wx.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepipe.cpp
+	"GOrguePipe.h"
+	"GOrgueTremulant.h"
+	"GOrgueWave.h"
+	"GOrgueWindchest.h"
+	"GOrgueReleaseAlignTable.h"
+	"GrandOrgueFile.h"
+
+1304054888 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguewave.h
+	<wx/wx.h>
+	<vector>
+
+1299324583 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguewindchest.h
+	<wx/wx.h>
+	"IniFileConfig.h"
+
+1298459576 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepiston.cpp
+	"GOrguePiston.h"
+	"GrandOrgueFile.h"
+	"GOrgueDrawStop.h"
+	"GOrgueCoupler.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"IniFileConfig.h"
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueproperties.cpp
+	"GrandOrgue.h"
+	"GOrgueProperties.h"
+	<wx/statline.h>
+	<wx/html/helpctrl.h>
+	"GrandOrgueFile.h"
+
+1305808980 c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueproperties.h
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepushbutton.cpp
+	"GOrguePushbutton.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"MIDIListenDialog.h"
+	"GOrgueDisplayMetrics.h"
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguesound.cpp
+	"GOrgueSound.h"
+	<wx/msw/regconf.h>
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueID.h"
+	"GOrguePipe.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"OrganDocument.h"
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\organdocument.h
+	<wx/defs.h>
+	<wx/docview.h>
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguesoundcallbackaudio.cpp
+	"GOrgueSound.h"
+	"GOrgueEnclosure.h"
+	"GOrguePipe.h"
+	"GOrgueWindchest.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"RtAudio.h"
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguesoundcallbackmidi.cpp
+	"GOrgueSound.h"
+	"GOrgueCoupler.h"
+	"GOrgueDivisional.h"
+	"GOrgueDivisionalCoupler.h"
+	"GOrgueEnclosure.h"
+	"GOrgueGeneral.h"
+	"GOrgueMeter.h"
+	"GOrguePiston.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+	"GrandOrgueID.h"
+	<vector>
+
+1304255804 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguestop.cpp
+	"GOrgueStop.h"
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+	"GOrgueDisplayMetrics.h"
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguetremulant.cpp
+	"GOrgueTremulant.h"
+	"GOrgueDisplayMetrics.h"
+
+1304054888 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguewave.cpp
+	"GOrgueWave.h"
+	"GOrgueWaveTypes.h"
+
+1299315878 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguewavetypes.h
+	<wx/wx.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguewindchest.cpp
+	"GOrgueWindchest.h"
+	"GOrgueEnclosure.h"
+	"GrandOrgueFile.h"
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgue.cpp
+	"GrandOrgue.h"
+	"OrganView.h"
+	"OrganDocument.h"
+	"SettingsDialog.h"
+	"GrandOrgueFile.h"
+	"GOrgueDivisional.h"
+	<wx/ipc.h>
+	<wx/snglinst.h>
+	<wx/filesys.h>
+	<wx/fs_zip.h>
+	<wx/splash.h>
+	<windows.h>
+	<shlobj.h>
+	"zlib.h"
+	<malloc.h>
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\organview.h
+	<wx/docview.h>
+	"OrganPanel.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\organpanel.h
+	<wx/wx.h>
+	<wx/docview.h>
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\zlib.h
+	"zconf.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1307353312 source:c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgue.rc
+	"resource.h"
+	"afxres.h"
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\resource.h
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\grandorguefile.cpp
+	"GrandOrgueFile.h"
+	<math.h>
+	<wx/progdlg.h>
+	<wx/image.h>
+	<wx/mstream.h>
+	"IniFileConfig.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueCoupler.h"
+	"GOrgueDisplayMetrics.h"
+	"GOrgueDivisional.h"
+	"GOrgueDivisionalCoupler.h"
+	"GOrgueEnclosure.h"
+	"GOrgueFrameGeneral.h"
+	"GOrgueGeneral.h"
+	"GOrgueLabel.h"
+	"GOrgueMeter.h"
+	"GOrguePipe.h"
+	"GOrguePiston.h"
+	"GOrguePushbutton.h"
+	"GOrgueSound.h"
+	"GOrgueStop.h"
+	"GOrgueThread.h"
+	"GOrgueTremulant.h"
+	"GOrgueWave.h"
+	"GOrgueWindchest.h"
+	"OrganDocument.h"
+	"zlib.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguethread.h
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgueframe.cpp
+	"GrandOrgueFrame.h"
+	<wx/menu.h>
+	<wx/mstream.h>
+	<wx/image.h>
+	<wx/toolbar.h>
+	<wx/icon.h>
+	<wx/config.h>
+	<wx/progdlg.h>
+	<wx/html/helpctrl.h>
+	<wx/splash.h>
+	"GOrgueMeter.h"
+	"GOrguePipe.h"
+	"GOrgueProperties.h"
+	"GOrgueSound.h"
+	"GrandOrgueID.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"OrganDocument.h"
+	"SettingsDialog.h"
+	"SplashScreen.h"
+	"zlib.h"
+	"images/help.h"
+	"images/open.h"
+	"images/panic.h"
+	"images/properties.h"
+	"images/record.h"
+	"images/reload.h"
+	"images/save.h"
+	"images/settings.h"
+	"images/set.h"
+	"images/volume.h"
+	"images/polyphony.h"
+	"images/memory.h"
+	"images/transpose.h"
+	"images/gauge.h"
+	"images/splash.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\splashscreen.h
+	<wx/wx.h>
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\help.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\open.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\panic.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\properties.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\record.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\reload.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\save.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\settings.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\set.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\volume.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\polyphony.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\memory.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\transpose.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\gauge.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\splash.h
+
+1297922089 source:c:\grandorgue.0.3-source\2011-06-06\trunk\images.cpp
+
+1297922088 source:c:\grandorgue.0.3-source\2011-06-06\trunk\inifileconfig.cpp
+	"IniFileConfig.h"
+	<wx/fileconf.h>
+
+1297922089 source:c:\grandorgue.0.3-source\2011-06-06\trunk\midievents.cpp
+	"MIDIEvents.h"
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\midievents.h
+
+1298459576 source:c:\grandorgue.0.3-source\2011-06-06\trunk\midilistendialog.cpp
+	<wx/statline.h>
+	"MIDIListenDialog.h"
+	"GOrgueSound.h"
+	"MIDIEvents.h"
+	"GrandOrgue.h"
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\organdocument.cpp
+	"OrganDocument.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"wxGaugeAudio.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFile.h"
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\organpanel.cpp
+	"OrganPanel.h"
+	<algorithm>
+	<wx/event.h>
+	<wx/mstream.h>
+	"GOrgueCoupler.h"
+	"GOrgueDrawStop.h"
+	"GOrgueDisplayMetrics.h"
+	"GOrgueDivisional.h"
+	"GOrgueDivisionalCoupler.h"
+	"GOrgueDrawStop.h"
+	"GOrgueEnclosure.h"
+	"GOrgueGeneral.h"
+	"GOrgueLabel.h"
+	"GOrgueMeter.h"
+	"GOrguePiston.h"
+	"GOrguePushbutton.h"
+	"GOrgueSound.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+	"GrandOrgueID.h"
+	"KeyConvert.h"
+	"OrganDocument.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\keyconvert.h
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\organview.cpp
+	"OrganView.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"GrandOrgueFile.h"
+	"OrganDocument.h"
+	"GOrgueMeter.h"
+
+1304255804 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguereleasealigntable.cpp
+	"GOrgueReleaseAlignTable.h"
+	<stdlib.h>
+	<stdio.h>
+
+1297922089 source:c:\grandorgue.0.3-source\2011-06-06\trunk\rtaudio.cpp
+	"RtAudio.h"
+	<iostream>
+	<cstdlib>
+	<cstring>
+	<climits>
+	<jack/jack.h>
+	<unistd.h>
+	<cstdio>
+	"include/asiosys.h"
+	"include/asio.h"
+	"include/iasiothiscallresolver.h"
+	"include/asiodrivers.h"
+	<cmath>
+	"include/dsound.h"
+	<assert.h>
+	<algorithm>
+	"tchar.h"
+	<alsa/asoundlib.h>
+	<unistd.h>
+	<unistd.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	"soundcard.h"
+	<errno.h>
+	<math.h>
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiosys.h
+
+1134491546 c:\grandorgue.0.3-source\2011-06-06\trunk\include\asio.h
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\iasiothiscallresolver.h
+	<windows.h>
+	"asiodrvr.h"
+
+948133988 c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiodrvr.h
+	"asiosys.h"
+	"asio.h"
+	<windows.h>
+	"combase.h"
+	"iasiodrv.h"
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\combase.h
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\iasiodrv.h
+	"asiosys.h"
+	"asio.h"
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiodrivers.h
+	"ginclude.h"
+	"CodeFragments.hpp"
+	<windows.h>
+	"asiolist.h"
+	"asiolist.h"
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\ginclude.h
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiolist.h
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\dsound.h
+	<objbase.h>
+	<float.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\rtmidi.cpp
+	"RtMidi.h"
+	<sstream>
+	<CoreMIDI/CoreMIDI.h>
+	<CoreAudio/HostTime.h>
+	<CoreServices/CoreServices.h>
+	<pthread.h>
+	<sys/time.h>
+	<alsa/asoundlib.h>
+	<pthread.h>
+	<sys/time.h>
+	<unistd.h>
+	<dmedia/midi.h>
+	<windows.h>
+	<mmsystem.h>
+	<jack/jack.h>
+	<jack/midiport.h>
+	<jack/ringbuffer.h>
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\settingsdialog.cpp
+	<wx/spinctrl.h>
+	<wx/tglbtn.h>
+	<wx/bookctrl.h>
+	<wx/numdlg.h>
+	<wx/html/helpctrl.h>
+	<wx/statline.h>
+	<wx/listctrl.h>
+	"MIDIListenDialog.h"
+	"SettingsDialog.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GrandOrgueID.h"
+	"GOrgueSound.h"
+	"MIDIEvents.h"
+
+1297922089 source:c:\grandorgue.0.3-source\2011-06-06\trunk\splashscreen.cpp
+	"SplashScreen.h"
+	"wx/splash.h"
+
+948122484 source:c:\grandorgue.0.3-source\2011-06-06\trunk\include\asio.cpp
+	<string.h>
+	"asiosys.h"
+	"asio.h"
+	"asiodrvr.h"
+	"windows.h"
+	"iasiodrv.h"
+	"asiodrivers.h"
+	"asiodrvr.h"
+
+1272976748 source:c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiodrivers.cpp
+	<string.h>
+	"asiodrivers.h"
+	"iasiodrv.h"
+	"asiolist.h"
+
+1272976748 source:c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiolist.cpp
+	<windows.h>
+	"iasiodrv.h"
+	"asiolist.h"
+
+1272976748 source:c:\grandorgue.0.3-source\2011-06-06\trunk\include\combase.cpp
+	<windows.h>
+	"wxdebug.h"
+	"combase.h"
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\wxdebug.h
+
+1272976748 source:c:\grandorgue.0.3-source\2011-06-06\trunk\include\iasiothiscallresolver.cpp
+	<new>
+	<assert.h>
+	"iasiothiscallresolver.h"
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\wxgaugeaudio.cpp
+	"wxGaugeAudio.h"
+	<wx/dcmemory.h>
+	"GrandOrgue.h"
+
