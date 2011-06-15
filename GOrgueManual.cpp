@@ -216,6 +216,7 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 			if (!stop[i]->DefaultToEngaged)
 				continue;
 			j = note - (stop[i]->FirstAccessiblePipeLogicalKeyNumber - 1);
+			j += (FirstAccessibleKeyLogicalKeyNumber - 1); // Correction to take FirstAccessibleKeyLogicalKeyNumber of the manual into account
 			if (j < 0 || j >= stop[i]->NumberOfAccessiblePipes)
 				continue;
 			j += stop[i]->FirstAccessiblePipeLogicalPipeNumber - 1;
