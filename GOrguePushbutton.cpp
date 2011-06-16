@@ -28,6 +28,7 @@
 #include "GOrgueSound.h"
 #include "MIDIListenDialog.h"
 #include "GOrgueDisplayMetrics.h"
+#include "GOrgueMidi.h"
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
@@ -46,15 +47,24 @@ GOrguePushbutton::GOrguePushbutton() :
 
 void GOrguePushbutton::MIDI(void)
 {
+
 	int event = 0xC000;
 	if (m_ManualNumber > -1)
-		event = g_sound->i_midiEvents[organfile->GetManual(m_ManualNumber)->GetMIDIInputNumber() + 7] ^ 0x5000;
-	MIDIListenDialog dlg(::wxGetApp().frame, _("Pushbutton Trigger"), event | (MIDIProgramChangeNumber - 1), m_ManualNumber > -1 ? 4 : 5);
+		event = g_sound->GetMidi().GetMidiEventByChannel(organfile->GetManual(m_ManualNumber)->GetMIDIInputNumber() + 7) ^ 0x5000;
+
+	MIDIListenDialog dlg
+		(::wxGetApp().frame
+		,wxString(wxT("Pushbutton Trigger"))
+		,(m_ManualNumber > -1) ? MIDIListenDialog::LSTN_DRAWSTOP : MIDIListenDialog::LSTN_NON_DRAWSTOP_BUTTON
+		,event | (MIDIProgramChangeNumber - 1)
+		);
+
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		MIDIProgramChangeNumber = (dlg.GetEvent() & 0x7F) + 1;
 		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
 	}
+
 }
 
 bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)

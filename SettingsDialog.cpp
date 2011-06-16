@@ -33,8 +33,8 @@
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
 #include "GrandOrgueID.h"
+#include "GOrgueMidi.h"
 #include "GOrgueSound.h"
-#include "MIDIEvents.h"
 
 IMPLEMENT_CLASS(SettingsDialog, wxPropertySheetDialog)
 
@@ -172,7 +172,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	if (!g_sound)
 		throw "g_sound has not been allocated";
 
-	for (it2 = g_sound->GetMIDIDevices().begin(); it2 != g_sound->GetMIDIDevices().end(); it2++)
+	for (it2 = g_sound->GetMidi().GetDevices().begin(); it2 != g_sound->GetMidi().GetDevices().end(); it2++)
 	{
 		choices.push_back(it2->first);
 		page1checklistdata.push_back(pConfig->Read("Devices/MIDI/" + it2->first, 0L));
@@ -267,9 +267,9 @@ wxPanel* SettingsDialog::CreateMessagesPage(wxWindow* parent)
 	page2button->Disable();
 	topSizer->Add(page2button, 0, wxALIGN_RIGHT | wxALL, 5);
 
-	for (int i = 0; i < 16; i++)
+	for (unsigned i = 0; i < GOrgueMidi::NbMidiEvents(); i++)
 	{
-		page2list->InsertItem(i, _(s_MIDIMessages[i]));
+		page2list->InsertItem(i, GOrgueMidi::GetMidiEventTitle(i));
 		UpdateMessages(i);
 	}
 
@@ -355,62 +355,66 @@ void SettingsDialog::OnDelOrgan(wxCommandEvent& event) {
     pConfig->DeleteEntry(itemstr+".midi");
 }
 
-void SettingsDialog::OnOrganProperties(wxCommandEvent& event) {
-//	page2button->Enable();
+void SettingsDialog::OnOrganProperties(wxCommandEvent& event)
+{
+
 	int index = organlist->GetFirstSelected();
-	int what = organlist->GetItemData(index);
-	MIDIListenDialog dlg(this, organlist->GetItemText(index), what, ORGANMESSAGE_TYPE);
+
+	MIDIListenDialog dlg
+		(this
+		,organlist->GetItemText(index)
+		,MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN
+		,organlist->GetItemData(index)
+		);
+
 	if (dlg.ShowModal() == wxID_OK)
 	{
-	    organlist->SetItemData(index, dlg.GetEvent());
+		organlist->SetItemData(index, dlg.GetEvent());
 		UpdateOrganMessages(index);
-        organlist->SetColumnWidth(1, wxLIST_AUTOSIZE);
-        organlist->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
-        organlist->SetColumnWidth(3, wxLIST_AUTOSIZE_USEHEADER);
-	//	OnChanged(event);
+		organlist->SetColumnWidth(1, wxLIST_AUTOSIZE);
+		organlist->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
+		organlist->SetColumnWidth(3, wxLIST_AUTOSIZE_USEHEADER);
 	}
 
 }
 
 void SettingsDialog::UpdateMessages(int i)
 {
-	int offset;
-	int j;
-	int type;
-	type = i < 8 ? 0 : 1;
-	j = pConfig->Read(wxString("MIDI/") + s_MIDIMessages[i], 0L);
-	if (i < 2 || i == 15)
-		type = 2;
-    else if (i > 13)
-        type = 3;
-	page2list->SetItem(i, 1, GetEventTitle(j, type));
-	page2list->SetItem(i, 2, GetEventChannelString(j));
+
+	MIDIListenDialog::LISTEN_DIALOG_TYPE type = GOrgueMidi::GetMidiEventListenDialogType(i);
+	int j = pConfig->Read(wxString("MIDI/") + GOrgueMidi::GetMidiEventTitle(i), 0L);
+	page2list->SetItem(i, 1, MIDIListenDialog::GetEventTitle(j, type));
+	page2list->SetItem(i, 2, MIDIListenDialog::GetEventChannelString(j));
+
 	if (type != 3 && j)
 	{
+		int offset = (j & 0xF000) == 0xC000 ? 1 : 0;
 		wxString temp;
-		offset = (j & 0xF000) == 0xC000 ? 1 : 0;
-        if (type == 1 ) // when type == 1 (keyboards) data contained in lower byte correspond to note offset
-        {
-            if ((j&0xFF)>0x7F) offset = -140; // negative numbers are coded as 128=-12 140=0
-        }
-        temp << ((j & 0xFF) + offset );
+		if (type == 1 ) // when type == 1 (keyboards) data contained in lower byte correspond to note offset
+		{
+			if ((j&0xFF)>0x7F) offset = -140; // negative numbers are coded as 128=-12 140=0
+		}
+		temp << ((j & 0xFF) + offset );
 		page2list->SetItem(i, 3, temp);
 	}
+
 	page2list->SetItemData(i, j);
+
 }
 
 void SettingsDialog::UpdateOrganMessages(int i)
 {
-    int offset;
-    int j=organlist->GetItemData(i);
-    organlist->SetItem(i, 1, GetEventTitle(j, ORGANMESSAGE_TYPE));
-    organlist->SetItem(i, 2, GetEventChannelString(j));
-    // data
-    wxString temp;
-	offset = (j & 0xF000) == 0xC000 ? 1 : 0;
-	temp << ((j & 0x7F) + offset );
+
+	int j = organlist->GetItemData(i);
+	organlist->SetItem(i, 1, MIDIListenDialog::GetEventTitle(j, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN));
+	organlist->SetItem(i, 2, MIDIListenDialog::GetEventChannelString(j));
+	// data
+	wxString temp;
+	int offset = (j & 0xF000) == 0xC000 ? 1 : 0;
+	temp << ((j & 0x7F) + offset);
 	organlist->SetItem(i, 3, temp);
 	organlist->SetItemData(i, j);
+
 }
 
 void SettingsDialog::OnChanged(wxCommandEvent& event)
@@ -460,21 +464,25 @@ void SettingsDialog::OnEventListClick(wxListEvent& event)
 
 void SettingsDialog::OnEventListDoubleClick(wxListEvent& event)
 {
+
 	page2button->Enable();
+
 	int index = page2list->GetFirstSelected();
-	int what = page2list->GetItemData(index);
-	int type = index < 8 ? 0 : 1;
-	if (index < 2 || index == 15)
-		type = 2;
-    else if (index > 13)
-        type = 3;
-	MIDIListenDialog dlg(this, page2list->GetItemText(index), what, type);
+
+	MIDIListenDialog dlg
+		(this
+		,page2list->GetItemText(index)
+		,GOrgueMidi::GetMidiEventListenDialogType(index)
+		,page2list->GetItemData(index)
+		);
+
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		pConfig->Write(wxString("MIDI/") + s_MIDIMessages[index], dlg.GetEvent());
+		pConfig->Write(wxString("MIDI/") + GOrgueMidi::GetMidiEventTitle(index), dlg.GetEvent());
 		UpdateMessages(index);
 		OnChanged(event);
 	}
+
 }
 
 void SettingsDialog::OnEventListDoubleClickC(wxCommandEvent& event)

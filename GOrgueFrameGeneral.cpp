@@ -31,6 +31,7 @@
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgue.h"
+#include "GOrgueMidi.h"
 
 /* TODO: This should not be... */
 extern GrandOrgueFile* organfile;
@@ -137,7 +138,7 @@ void GOrgueFrameGeneral::Push(int WXUNUSED(depth))
 {
 	int i, j, k;
 
-	if (g_sound->b_memset)
+	if (g_sound->GetMidi().SetterActive())
 	{
 		NumberOfStops = NumberOfCouplers = NumberOfTremulants = NumberOfDivisionalCouplers = 0;
 		memset(stop, 0, sizeof(stop) + sizeof(coupler) + sizeof(tremulant) + sizeof(divisionalcoupler));

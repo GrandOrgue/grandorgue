@@ -21,76 +21,68 @@
  */
 
 #include "OrganView.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
+#include "OrganPanel.h"
 #include "GOrgueSound.h"
-#include "GrandOrgueFile.h"
-#include "OrganDocument.h"
-#include "GOrgueMeter.h"
+#include "GrandOrgue.h"
 
 IMPLEMENT_DYNAMIC_CLASS(OrganView, wxView)
 
-extern void MIDIStopChange(GOrgueStop& stop, bool on, int manual);
-extern void MIDICouplerChange(GOrgueCoupler& stop, bool on);
-extern void MIDIDivisionalCouplerChange(GOrgueDivisionalCoupler& stop, bool on);
-extern void MIDIDivisionalPush(int manual, int which, int depth = 0);
-extern void MIDIGeneralPush(GOrgueGeneral& general);
-
-extern GrandOrgueFile* organfile;
-
-
-
 BEGIN_EVENT_TABLE(OrganView, wxView)
-EVT_COMMAND(0, wxEVT_DRAWSTOP, OrganView::OnDrawstop)
-EVT_COMMAND(0, wxEVT_PUSHBUTTON, OrganView::OnDrawstop)
-EVT_COMMAND(0, wxEVT_ENCLOSURE, OrganView::OnDrawstop)
-EVT_COMMAND(0, wxEVT_NOTEONOFF, OrganView::OnNoteOnOff)
+	EVT_COMMAND(0, wxEVT_DRAWSTOP, OrganView::OnDrawstop)
+	EVT_COMMAND(0, wxEVT_PUSHBUTTON, OrganView::OnDrawstop)
+	EVT_COMMAND(0, wxEVT_ENCLOSURE, OrganView::OnDrawstop)
+	EVT_COMMAND(0, wxEVT_NOTEONOFF, OrganView::OnNoteOnOff)
 END_EVENT_TABLE()
-
-
 
 bool OrganView::OnCreate(wxDocument *doc, long flags)
 {
-  m_panel=new OrganPanel(::wxGetApp().frame);
-  SetFrame(::wxGetApp().frame);
-  // Activate(true);
-  // GetFrame()->SetFocus();
 
-  return true;
+	m_panel=new OrganPanel(::wxGetApp().frame);
+	SetFrame(::wxGetApp().frame);
+	return true;
+
 }
 
 void OrganView::OnUpdate(wxView *sender, wxObject *hint)
 {
-  m_panel->OnUpdate(sender,hint);
+
+	m_panel->OnUpdate(sender,hint);
+
 }
 
 
 void OrganView::OnDraw(wxDC* dc)
 {
-  m_panel->OnDraw(dc);
+
+	m_panel->OnDraw(dc);
+
 }
 
 void OrganView::OnDrawstop(wxCommandEvent& event)
 {
-  m_panel->OnDrawstop(event);
-}
 
+	m_panel->OnDrawstop(event);
+
+}
 
 void OrganView::OnNoteOnOff(wxCommandEvent& event)
 {
-  m_panel->OnNoteOnOff(event);
+
+	m_panel->OnNoteOnOff(event);
+
 }
 
 bool OrganView::OnClose(bool deleteWindow)
 {
-  m_panel->Destroy();
-  GetFrame()->SetBackgroundStyle(wxBG_STYLE_SYSTEM);
-  GetFrame()->Refresh();
-  if (!GetDocument()->Close())
-	return false;
 
-  SetFrame(0);
-  Activate(false);
+	m_panel->Destroy();
+	GetFrame()->SetBackgroundStyle(wxBG_STYLE_SYSTEM);
+	GetFrame()->Refresh();
+	if (!GetDocument()->Close())
+		return false;
 
-  return true;
+	SetFrame(0);
+	Activate(false);
+	return true;
+
 }

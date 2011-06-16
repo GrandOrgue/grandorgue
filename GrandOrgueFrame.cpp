@@ -32,6 +32,7 @@
 #include <wx/html/helpctrl.h>
 #include <wx/splash.h>
 #include "GOrgueMeter.h"
+#include "GOrgueMidi.h"
 #include "GOrguePipe.h"
 #include "GOrgueProperties.h"
 #include "GOrgueSound.h"
@@ -219,7 +220,7 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		if (event.GetId() == ID_AUDIO_RECORD)
 			event.Check(g_sound->IsRecording());
 		else if (event.GetId() == ID_AUDIO_MEMSET)
-			event.Check(g_sound->b_memset);
+			event.Check(g_sound->GetMidi().SetterActive());
 	}
 	event.Enable(organfile && m_docManager->GetCurrentDocument() && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
 }
@@ -445,16 +446,16 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 {
 	if (!::wxGetApp().m_docManager->GetCurrentDocument() || !g_sound)
 		return;
-	g_sound->b_memset ^= true;
+	g_sound->GetMidi().ToggleSetter();
 }
 
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 {
-::wxLogDebug("settingsdialog..");
-    SettingsDialog dialog(this);
-    ::wxLogDebug("success");
-    dialog.ShowModal();
-    g_sound->UpdateOrganMIDI();
+	::wxLogDebug("settingsdialog..");
+	SettingsDialog dialog(this);
+	::wxLogDebug("success");
+	dialog.ShowModal();
+	g_sound->GetMidi().UpdateOrganMIDI();
 }
 
 void GOrgueFrame::OnHelp(wxCommandEvent& event)

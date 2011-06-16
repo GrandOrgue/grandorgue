@@ -23,6 +23,7 @@
 #include "GOrgueSound.h"
 
 #include "GOrgueEnclosure.h"
+#include "GOrgueMidi.h"
 #include "GOrguePipe.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgue.h"
@@ -374,24 +375,7 @@ int GOrgueSound::AudioCallbackLocal
 	if (organfile)
         organfile->SetElapsedTime(sw.Time());
 
-	/* Process any MIDI messages
-	 * TODO: this is a very good candidate for a thread. */
-	std::vector<unsigned char> msg;
-	for (unsigned j = 0; j < m_midi_devices.size(); j++)
-	{
-
-		if (!m_midi_devices[j].active)
-			continue;
-
-		for(;;)
-		{
-			m_midi_devices[j].midi_in->getMessage(&msg);
-			if (msg.empty())
-				break;
-			MIDICallback(msg, j);
-		}
-
-	}
+	m_midi->ProcessMessages(b_active);
 
 	/* if no samplers playing, or sound is disabled, fill buffer with zero */
 	if (!b_active || !samplers_count)
