@@ -21,6 +21,8 @@
  */
 
 #include "GOrgueMeter.h"
+
+#include "GOrgueMidi.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueSound.h"
 #include "GrandOrgue.h"
@@ -200,7 +202,7 @@ void GOrgueMeter::OnTranspose(wxCommandEvent& event)
 	}
     if (g_sound)
     {
-        g_sound->SetTranspose(n);
+        g_sound->GetMidi().SetTranspose(n);
 		g_sound->ResetSound(organfile);
     }
 }

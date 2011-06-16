@@ -20,7 +20,7 @@
  * MA 02111-1307, USA.
  */
 
-#include "GOrgueSound.h"
+#include "GOrgueMidi.h"
 
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
@@ -36,19 +36,186 @@
 #include "GrandOrgueFrame.h"
 #include "GrandOrgueID.h"
 #include <vector>
+#include <wx/config.h>
 
 extern GrandOrgueFile* organfile;
 
+#define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
+
+typedef struct
+{
+	const wxChar*                              event_name;
+	const long                                 default_mask;
+	const MIDIListenDialog::LISTEN_DIALOG_TYPE listener_dialog_type;
+} MIDI_EVENT;
+
+static const MIDI_EVENT g_available_midi_events[NB_MIDI_EVENTS] =
+{
+	{wxT("Previous Memory"),   0xC400, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN},
+	{wxT("Next Memory"),       0xC401, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN},
+	{wxT("Enclosure 1"),       0xB001, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxT("Enclosure 2"),       0xB101, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxT("Enclosure 3"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxT("Enclosure 4"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxT("Enclosure 5"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxT("Enclosure 6"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxT("Manual 1 (Pedal)"),  0x9000, MIDIListenDialog::LSTN_MANUAL},
+	{wxT("Manual 2 (Great)"),  0x9100, MIDIListenDialog::LSTN_MANUAL},
+	{wxT("Manual 3 (Swell)"),  0x9200, MIDIListenDialog::LSTN_MANUAL},
+	{wxT("Manual 4 (Choir)"),  0x9300, MIDIListenDialog::LSTN_MANUAL},
+	{wxT("Manual 5 (Solo)"),   0x9500, MIDIListenDialog::LSTN_MANUAL},
+	{wxT("Manual 6 (Echo)"),   0x9600, MIDIListenDialog::LSTN_MANUAL},
+	{wxT("Stop Changes"),      0x9400, MIDIListenDialog::LSTN_SETTINGSDLG_STOP_CHANGE},
+	{wxT("Memory Set"),        0x0000, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN}
+};
+
+unsigned GOrgueMidi::NbMidiEvents()
+{
+
+	return NB_MIDI_EVENTS;
+
+}
+
+wxString GOrgueMidi::GetMidiEventTitle(const unsigned idx)
+{
+
+	assert(idx < NB_MIDI_EVENTS);
+	return wxString(g_available_midi_events[idx].event_name);
+
+}
+
+MIDIListenDialog::LISTEN_DIALOG_TYPE GOrgueMidi::GetMidiEventListenDialogType(const unsigned idx)
+{
+
+	assert(idx < NB_MIDI_EVENTS);
+	return g_available_midi_events[idx].listener_dialog_type;
+
+}
+
+GOrgueMidi::GOrgueMidi() :
+	m_global_config(wxConfigBase::Get()),
+	m_midi_device_map(),
+	m_midi_devices(),
+	m_transpose(0),
+	m_listening(false),
+	m_memset(false),
+	m_listen_evthandler(NULL),
+	m_organ_midi_events()
+{
+
+	RtMidiIn midi_dev;
+	for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
+	{
+
+		MIDI_DEVICE t;
+		t.midi_in = new RtMidiIn();
+		t.id = 0;
+		t.active = false;
+		m_midi_devices.push_back(t);
+
+		wxString name = wxString::FromAscii(t.midi_in->getPortName(i).c_str());
+		name.Replace(wxT("\\"), wxT("|"));
+		m_midi_device_map[name] = i;
+
+	}
+
+}
+
+GOrgueMidi::~GOrgueMidi()
+{
+
+	try
+	{
+
+		/* dispose of all midi devices */
+		while (m_midi_devices.size())
+		{
+			if (m_midi_devices.back().midi_in)
+				m_midi_devices.back().midi_in->closePort();
+			DELETE_AND_NULL(m_midi_devices.back().midi_in);
+			m_midi_devices.pop_back();
+		}
+
+	}
+	catch (RtError &e)
+	{
+		e.printMessage();
+	}
+
+}
+
+void GOrgueMidi::Open()
+{
+
+	std::map<wxString, int>::iterator it2;
+
+	for (it2 = m_midi_device_map.begin(); it2 != m_midi_device_map.end(); it2++)
+		m_global_config->Read(wxT("Devices/MIDI/") + it2->first, -1);
+
+	for (unsigned i = 0; i < NB_MIDI_EVENTS; i++)
+		m_midi_events[i] = m_global_config->Read
+			(wxString(wxT("MIDI/")) + g_available_midi_events[i].event_name
+			,g_available_midi_events[i].default_mask
+			);
+
+	for (it2 = m_midi_device_map.begin(); it2 != m_midi_device_map.end(); it2++)
+	{
+
+		MIDI_DEVICE& this_dev = m_midi_devices[it2->second];
+		int i = m_global_config->Read(wxT("Devices/MIDI/") + it2->first, 0L);
+		if (i >= 0)
+		{
+			this_dev.id = i;
+			if (!this_dev.active)
+			{
+				assert(this_dev.midi_in);
+				this_dev.midi_in->openPort(it2->second);
+				this_dev.active = true;
+			}
+		}
+		else if (this_dev.active)
+		{
+			this_dev.active = false;
+			this_dev.midi_in->closePort();
+		}
+
+	}
+
+}
+
+std::map<wxString, int>& GOrgueMidi::GetDevices()
+{
+	return m_midi_device_map;
+}
+
+bool GOrgueMidi::HasActiveDevice()
+{
+
+	for (unsigned i = 0; i < m_midi_devices.size(); i++)
+		if (m_midi_devices[i].active)
+			return true;
+
+	return false;
+
+}
+
+void GOrgueMidi::SetTranspose(int transpose)
+{
+	m_transpose = transpose;
+}
+
 void
-GOrgueSound::MIDICallback
-	(std::vector<unsigned char>& msg
-	,int which)
+GOrgueMidi::ProcessMessage
+	(const bool active
+	,std::vector<unsigned char>& msg
+	,int which
+	)
 {
 	int i, j, k, q, Noteoffset;
 
     Noteoffset = 0;
     // MIDI message FF : reset
-    if (msg[0] == 0xFF && b_active && organfile)
+    if (msg[0] == 0xFF && active && organfile)
 	{
         for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
         {
@@ -101,21 +268,21 @@ GOrgueSound::MIDICallback
 	j = msg[0] << 8; // j = channel in higher byte
 	if (msg.size() > 1) // if midi meesage has data
 		j |= msg[1]; // j = channel in higher byte and first byte of MIDI data in lower byte
-	if (b_listening)
+	if (m_listening)
 	{
 		wxCommandEvent event(wxEVT_LISTENING, 0);
 		event.SetInt(j);
-		listen_evthandler->AddPendingEvent(event);
+		m_listen_evthandler->AddPendingEvent(event);
 	}
 
-	if (!b_active || msg.size() < 2)
+	if (!active || msg.size() < 2)
 		return;
 
 	// MIDI code for controller
 	if (c == 0xB0 && (msg[1] == 120 || msg[1] == 123) && organfile)
 	{
         for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-            if (msg[0] == ((i_midiEvents[organfile->GetManual(i)->GetMIDIInputNumber() + 7] | 0xB000) >> 8))
+            if (msg[0] == ((m_midi_events[organfile->GetManual(i)->GetMIDIInputNumber() + 7] | 0xB000) >> 8))
             {
 /* TODO: this code is not equivalent to the old code but seems to be the right
  * thing to do given the context... (midi controller change/all notes off) */
@@ -131,7 +298,7 @@ GOrgueSound::MIDICallback
 	}
 
 	// MIDI code for memory set
-	if (i_midiEvents[15] == j && (((j & 0xF000) == 0xC000) || b_memset ^ (bool)msg[2]))
+	if (m_midi_events[15] == j && (((j & 0xF000) == 0xC000) || m_memset ^ (bool)msg[2]))
 	{
         ::wxGetApp().frame->ProcessCommand(ID_AUDIO_MEMSET);
 		::wxGetApp().frame->UpdateWindowUI();
@@ -139,15 +306,12 @@ GOrgueSound::MIDICallback
 
     // MIDI for different organ??
 	std::map<long, wxString>::iterator it;
-	it=organmidiEvents.find(j);
-	if (it!=organmidiEvents.end()) {
-//	    wxMessageDialog dlg(::wxGetApp().frame, it->second);
-//	    dlg.ShowModal();
+	it = m_organ_midi_events.find(j);
+	if (it != m_organ_midi_events.end())
+	{
         wxCommandEvent event(wxEVT_LOADFILE, 0);
         event.SetString(it->second);
         ::wxGetApp().frame->AddPendingEvent(event);
-//        ::wxGetApp().frame->ProcessCommand(wxEVT_LOADFILE);
-//        organfile->Load(it->second);
 	}
 
 	// For the 16 MIDI devices
@@ -161,7 +325,7 @@ GOrgueSound::MIDICallback
 			if (i != 8)
                 i = 14;
 		}
-		GOrgueevent = i_midiEvents[i];
+		GOrgueevent = m_midi_events[i];
 		if (i>=8 && i<=13) GOrgueevent &= 0xFF00;
   //      if ((gOrgueSoundInstance->i_midiEvents[i] & 0xFF00) == j )
         if (GOrgueevent == j)
@@ -187,11 +351,11 @@ GOrgueSound::MIDICallback
 				{
 				    if (!organfile->GetManual(k)->Displayed)
                         continue;
-                    offset = i_midiEvents[i] & 0xFF;
+                    offset = m_midi_events[i] & 0xFF;
                     if  (offset > 127)
 							offset = offset - 140;
 					if (organfile->GetManual(k)->GetMIDIInputNumber() == q)
-						organfile->GetManual(k)->Set(msg[1]+offset+transpose, msg[2] ? true : false);
+						organfile->GetManual(k)->Set(msg[1] + offset + m_transpose, msg[2] ? true : false);
 				}
 			}
 			else
@@ -240,7 +404,7 @@ GOrgueSound::MIDICallback
 	{
 		for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
 			for (j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
-				if (msg[0] == (i_midiEvents[organfile->GetManual(k)->GetMIDIInputNumber() + 7] ^ 0x5000) >> 8 && msg[1] == organfile->GetManual(k)->GetDivisional(j)->MIDIProgramChangeNumber - 1)
+				if (msg[0] == (m_midi_events[organfile->GetManual(k)->GetMIDIInputNumber() + 7] ^ 0x5000) >> 8 && msg[1] == organfile->GetManual(k)->GetDivisional(j)->MIDIProgramChangeNumber - 1)
 					organfile->GetManual(k)->GetDivisional(j)->Push();
 		for (j = 0; j < organfile->GetGeneralCount(); j++)
 			if (msg[1] == organfile->GetGeneral(j)->MIDIProgramChangeNumber - 1)
@@ -251,3 +415,90 @@ GOrgueSound::MIDICallback
 	}
 }
 
+
+bool GOrgueMidi::HasListener()
+{
+
+	return (m_listen_evthandler) && (m_listening);
+
+}
+
+void GOrgueMidi::SetListener(wxEvtHandler* event_handler)
+{
+
+	m_listening = (event_handler != NULL);
+	m_listen_evthandler = event_handler;
+
+}
+
+void GOrgueMidi::UpdateOrganMIDI()
+{
+
+	long count = m_global_config->Read(wxT("OrganMIDI/Count"), 0L);
+	for (long i = 0; i < count; i++)
+	{
+		wxString itemstr = wxT("OrganMIDI/Organ") + wxString::Format("%ld", i);
+		long j = m_global_config->Read(itemstr + wxT(".midi"), 0L);
+		wxString file = m_global_config->Read(itemstr + wxT(".file"));
+		m_organ_midi_events.insert(std::pair<long, wxString>(j, file));
+	}
+
+}
+
+bool GOrgueMidi::SetterActive()
+{
+
+	return m_memset;
+
+}
+
+int GOrgueMidi::GetMidiEventByChannel(int channel)
+{
+
+	return m_midi_events[channel];
+
+}
+
+int GOrgueMidi::GetStopMidiEvent()
+{
+
+	return m_midi_events[14];
+
+}
+
+int GOrgueMidi::GetManualMidiEvent(int manual_nb)
+{
+
+	return m_midi_events[7 + manual_nb];
+
+}
+
+void GOrgueMidi::ProcessMessages(const bool audio_active)
+{
+
+	/* Process any MIDI messages */
+	std::vector<unsigned char> msg;
+	for (unsigned j = 0; j < m_midi_devices.size(); j++)
+	{
+
+		if (!m_midi_devices[j].active)
+			continue;
+
+		for(;;)
+		{
+			m_midi_devices[j].midi_in->getMessage(&msg);
+			if (msg.empty())
+				break;
+			ProcessMessage(audio_active, msg, j);
+		}
+
+	}
+
+}
+
+void GOrgueMidi::ToggleSetter()
+{
+
+	m_memset = !m_memset;
+
+}

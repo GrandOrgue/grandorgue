@@ -24,22 +24,27 @@
 #define ORGANVIEW_H
 
 #include <wx/docview.h>
-#include "OrganPanel.h"
+
+class OrganPanel;
 
 class OrganView : public wxView
 {
-  DECLARE_DYNAMIC_CLASS(OrganView);
-  public:
-  bool OnCreate(wxDocument *doc, long flags);
-  bool OnClose(bool deleteWindow = true);
-  void OnDraw(wxDC *dc);
-  void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
-  void OnDrawstop(wxCommandEvent& event);
-  void OnNoteOnOff(wxCommandEvent& event);
 
-  private:
-  OrganPanel* m_panel;
-  DECLARE_EVENT_TABLE();
+	DECLARE_DYNAMIC_CLASS(OrganView);
+
+public:
+
+	bool OnCreate(wxDocument *doc, long flags);
+	bool OnClose(bool deleteWindow = true);
+	void OnDraw(wxDC *dc);
+	void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
+	void OnDrawstop(wxCommandEvent& event);
+	void OnNoteOnOff(wxCommandEvent& event);
+
+private:
+
+	OrganPanel* m_panel;
+	DECLARE_EVENT_TABLE();
 
 };
 

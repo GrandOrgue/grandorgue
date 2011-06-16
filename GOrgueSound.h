@@ -65,7 +65,7 @@ struct struct_WAVE
 	char ChunkID[4];
 	int ChunkSize;
 	char Format[4];
-    	char Subchunk1ID[4];
+    char Subchunk1ID[4];
 	int Subchunk1Size;
 	short AudioFormat;
 	short NumChannels;
@@ -159,6 +159,7 @@ typedef struct GO_SAMPLER_T
 } GO_SAMPLER;
 
 class GrandOrgueFile;
+class GOrgueMidi;
 
 class GOrgueSound
 {
@@ -178,7 +179,6 @@ private:
 	GO_SAMPLER samplers[MAX_POLYPHONY];
 	GO_SAMPLER* samplers_open[MAX_POLYPHONY];
 	RtAudioFormat format;
-	/* wxWindow* m_parent; - this was pointless  */
 
 	bool logSoundErrors;
 
@@ -186,27 +186,10 @@ private:
 	int polyphony;
 	int poly_soft;
 	int volume;
-	int transpose;
 
 	std::map<wxString, std::pair<int, RtAudio::Api> > m_audioDevices;
 	RtAudio* audioDevice;
 	int n_latency;
-
-	std::map<wxString, int> m_midi_device_map;
-
-	typedef struct {
-		RtMidiIn* midi_in;
-		bool active;
-		int id;
-	} MIDI_DEVICE;
-
-	std::vector<MIDI_DEVICE> m_midi_devices;
-
-	/*
-	RtMidiIn** midiDevices;
-	bool* b_midiDevices;
-	int* i_midiDevices;
-	int n_midiDevices;*/
 
 	int b_limit, b_stereo, b_align, b_scale;
 	int b_random;
@@ -220,12 +203,9 @@ private:
 
 	bool b_active;
 
-	/* related to the midi listener */
-	/* TODO: find out if b_listening is redundant */
-	bool b_listening;
-	wxEvtHandler* listen_evthandler;
-
 	wxString defaultAudio;
+
+	GOrgueMidi* m_midi;
 
 	/* FIXME: this should not require a reference to the ODF, but this cannot
 	 * be removed until the ODF and GUI is peeled away from the sound system.
@@ -266,9 +246,6 @@ private:
 
 public:
 
-	bool b_memset;
-	int i_midiEvents[16];
-
 	/* windchests... pipes and tremulants belong to these (need to figure out
 	 * what tremulants are doing in this group...). Groups from 0 to
 	 * GetTremulantCount-1 are purely there for tremulants. Followed by 1
@@ -286,16 +263,10 @@ public:
 
 	void CloseWAV();
 
-	void UpdateOrganMIDI();
-	std::map<long, wxString> organmidiEvents;
-
-//	static void MIDIPretend(bool on);
-
 	void SetPolyphonyLimit(int polyphony);
 	void SetPolyphonySoftLimit(int polyphony_soft);
 	void SetVolume(int volume);
 	int GetVolume();
-	void SetTranspose(int transpose);
 
 	GO_SAMPLER* OpenNewSampler();
 
@@ -308,10 +279,6 @@ public:
 	void StartRecording();
 	void StopRecording();
 
-	bool HasMIDIDevice();
-	bool HasMIDIListener();
-	void SetMIDIListener(wxEvtHandler* handler);
-
 	bool IsActive();
 	void ActivatePlayback();
 
@@ -321,9 +288,9 @@ public:
 
 	/* TODO: these should have const scope */
 	std::map<wxString, std::pair<int, RtAudio::Api> >& GetAudioDevices();
-	std::map<wxString, int>& GetMIDIDevices();
 	const wxString GetDefaultAudioDevice();
 
+	GOrgueMidi& GetMidi();
 
 };
 

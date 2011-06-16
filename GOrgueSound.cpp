@@ -33,6 +33,7 @@
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "OrganDocument.h"
+#include "GOrgueMidi.h"
 
 struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
 
@@ -44,42 +45,6 @@ extern long i_MIDIMessages[];
 
 GOrgueSound* g_sound = 0;
 
-typedef struct COMPILED_SOUND_API_T
-{
-	const char* name;
-	RtAudio::Api api;
-} COMPILED_SOUND_API;
-
-static const COMPILED_SOUND_API g_available_apis[] = {
-
-#ifdef _WIN32
-
-#ifdef __WINDOWS_DS__
-	{"DirectSound: ", RtAudio::WINDOWS_DS},
-#endif
-#ifdef __WINDOWS_ASIO__
-	{"ASIO: ", RtAudio::WINDOWS_ASIO},
-#endif
-
-#elif linux
-
-#ifdef __UNIX_JACK__
-	{"Jack: ", RtAudio::UNIX_JACK},
-#endif
-#ifdef __LINUX_ALSA__
-	{"Alsa: ", RtAudio::LINUX_ALSA},
-#endif
-#ifdef __LINUX_OSS__
-	{"OSS: ", RtAudio::LINUX_OSS},
-#endif
-
-#endif /* linux sound api's */
-
-	/* sentinel */
-	{NULL, RtAudio::UNSPECIFIED}
-
-};
-
 DEFINE_EVENT_TYPE(wxEVT_DRAWSTOP)
 DEFINE_EVENT_TYPE(wxEVT_PUSHBUTTON)
 DEFINE_EVENT_TYPE(wxEVT_ENCLOSURE)
@@ -87,6 +52,33 @@ DEFINE_EVENT_TYPE(wxEVT_NOTEONOFF)
 DEFINE_EVENT_TYPE(wxEVT_LISTENING)
 DEFINE_EVENT_TYPE(wxEVT_METERS)
 DEFINE_EVENT_TYPE(wxEVT_LOADFILE)
+
+wxString GetRtApiStr(const RtAudio::Api api)
+{
+
+	switch (api)
+	{
+
+	case RtAudio::LINUX_ALSA:
+		return wxString(wxT("Alsa"));
+	case RtAudio::LINUX_OSS:
+		return wxString(wxT("OSS"));
+	case RtAudio::MACOSX_CORE:
+		return wxString(wxT("Core"));
+	case RtAudio::UNIX_JACK:
+		return wxString(wxT("Jack"));
+	case RtAudio::WINDOWS_ASIO:
+		return wxString(wxT("ASIO"));
+	case RtAudio::WINDOWS_DS:
+		return wxString(wxT("DirectSound"));
+	case RtAudio::UNSPECIFIED:
+	default:
+		return wxString(wxT("Unknown"));
+
+	}
+
+}
+
 
 GOrgueSound::GOrgueSound(void) :
 	sw(),
@@ -97,16 +89,9 @@ GOrgueSound::GOrgueSound(void) :
 	polyphony(0),
 	poly_soft(0),
 	volume(0),
-	transpose(0),
 	m_audioDevices(),
 	audioDevice(NULL),
 	n_latency(0),
-	m_midi_device_map(),
-	m_midi_devices(),
-/*	midiDevices(NULL),
-	b_midiDevices(NULL),
-	i_midiDevices(NULL),
-	n_midiDevices(0),*/
 	b_limit(0),
 	b_stereo(0),
 	b_align(0),
@@ -118,12 +103,9 @@ GOrgueSound::GOrgueSound(void) :
 	meter_poly(0),
 	meter_left(0),
 	meter_right(0),
-	b_active(false), b_listening(false),
-	listen_evthandler(NULL),
+	b_active(false),
 	defaultAudio(""),
-	b_memset(false),
-	b_detach(0),
-	organmidiEvents()
+	b_detach(0)
 {
 
 	g_sound = this;
@@ -131,25 +113,26 @@ GOrgueSound::GOrgueSound(void) :
 	try
 	{
 
-		for (unsigned k = 0; g_available_apis[k].name != NULL; k++)
+		std::vector<RtAudio::Api> rtaudio_apis;
+		RtAudio::getCompiledApi(rtaudio_apis);
+
+		for (unsigned k = 0; k < rtaudio_apis.size(); k++)
 		{
 
-			audioDevice = new RtAudio(g_available_apis[k].api);
-
-			for (size_t i = 0; i < audioDevice->getDeviceCount(); i++)
+			audioDevice = new RtAudio(rtaudio_apis[k]);
+			for (unsigned i = 0; i < audioDevice->getDeviceCount(); i++)
 			{
 
 				RtAudio::DeviceInfo info = audioDevice->getDeviceInfo(i);
-
-				wxString name = info.name.c_str();
-				name.Replace("\\", "|");
-				name = wxString(g_available_apis[k].name) + name;
+				wxString dev_name = wxString::FromAscii(info.name.c_str());
+				dev_name.Replace("\\", "|");
+				wxString name = GetRtApiStr(rtaudio_apis[k]) + wxString(wxT(": ")) + dev_name;
 
 				if (info.isDefaultOutput && defaultAudio.IsEmpty())
 					defaultAudio = name;
 
 				unsigned sample_rate_index = info.sampleRates.size();
-				if (g_available_apis[k].api != RtAudio::WINDOWS_DS)
+				if (rtaudio_apis[k] != RtAudio::WINDOWS_DS)
 				{
 					/* TODO: can a Windows developer explain why this is necessary? */
 					for (unsigned j = 0; j < sample_rate_index; j++)
@@ -171,7 +154,7 @@ GOrgueSound::GOrgueSound(void) :
 					)
 					continue;
 
-				m_audioDevices[name] = std::make_pair(i, g_available_apis[k].api);
+				m_audioDevices[name] = std::make_pair(i, rtaudio_apis[k]);
 
 			}
 
@@ -180,21 +163,7 @@ GOrgueSound::GOrgueSound(void) :
 
 		}
 
-		RtMidiIn midi_dev;
-		for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
-		{
-
-			MIDI_DEVICE t;
-			t.midi_in = new RtMidiIn();
-			t.id = 0;
-			t.active = false;
-			m_midi_devices.push_back(t);
-
-			wxString name = t.midi_in->getPortName(i).c_str();
-			name.Replace("\\", "|");
-			m_midi_device_map[name] = i;
-
-		}
+		m_midi = new GOrgueMidi();
 
 	}
 	catch (RtError &e)
@@ -210,17 +179,11 @@ GOrgueSound::~GOrgueSound(void)
 
 	CloseSound(NULL);
 
+	/* dispose of midi devices */
+	DELETE_AND_NULL(m_midi);
+
 	try
 	{
-
-		/* dispose of all midi devices */
-		while (m_midi_devices.size())
-		{
-			if (m_midi_devices.back().midi_in)
-				m_midi_devices.back().midi_in->closePort();
-			DELETE_AND_NULL(m_midi_devices.back().midi_in);
-			m_midi_devices.pop_back();
-		}
 
 		/* dispose of the audio playback device */
 		DELETE_AND_NULL(audioDevice);
@@ -319,15 +282,37 @@ void GetDefaultUnknownSoundConfig(const int latency, unsigned &nb_buffers, unsig
 
 }
 
+static
+void GetAudioBufferConfig
+	(const RtAudio::Api api
+	,const unsigned latency
+	,unsigned &nb_buffers
+	,unsigned &buffer_size
+	)
+{
+
+	switch (api)
+	{
+
+	case RtAudio::WINDOWS_DS:
+		GetDefaultDirectSoundConfig(latency, nb_buffers, buffer_size);
+		break;
+	case RtAudio::UNIX_JACK:
+		GetDefaultJackSoundConfig(latency, nb_buffers, buffer_size);
+		break;
+	case RtAudio::WINDOWS_ASIO:
+		GetDefaultAsioSoundConfig(latency, nb_buffers, buffer_size);
+		break;
+	default:
+		GetDefaultUnknownSoundConfig(latency, nb_buffers, buffer_size);
+
+	}
+
+}
+
 bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 {
 	int i;
-
-	std::map<wxString, int>::iterator it2;
-	for (it2 = m_midi_device_map.begin(); it2 != m_midi_device_map.end(); it2++)
-		pConfig->Read("Devices/MIDI/" + it2->first, -1);
-	for (i = 0; i < 16; i++)
-		i_midiEvents[i] = pConfig->Read(wxString("MIDI/") + s_MIDIMessages[i], i_MIDIMessages[i]);
 
 	defaultAudio = pConfig->Read("Devices/DefaultSound", defaultAudio);
 	n_latency = pConfig->Read("Devices/Sound/" + defaultAudio, 12);
@@ -349,56 +334,41 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 
 	try
 	{
-		std::map<wxString, int>::iterator it2;
-		int n_midi = 0;
-		for (it2 = m_midi_device_map.begin(); it2 != m_midi_device_map.end(); it2++)
-		{
-			i = pConfig->Read("Devices/MIDI/" + it2->first, 0L);
-			MIDI_DEVICE& this_dev = m_midi_devices[it2->second];
-			if (i >= 0)
-			{
-				n_midi++;
-				this_dev.id = i;
-				if (!this_dev.active)
-				{
-					assert(this_dev.midi_in);
-					this_dev.midi_in->openPort(it2->second);
-					this_dev.active = true;
-				}
-			}
-			else if (this_dev.active)
-			{
-				this_dev.active = false;
-				this_dev.midi_in->closePort();
-			}
-		}
+
+		m_midi->Open();
 
 		std::map<wxString, std::pair<int, RtAudio::Api> >::iterator it;
-		it = m_audioDevices.find(defaultAudio.c_str());
+		it = m_audioDevices.find(wxString::FromAscii(defaultAudio.c_str()));
 		if (it != m_audioDevices.end())
 		{
-			unsigned int bufferSize, numberOfBuffers;
+
 			audioDevice = new RtAudio(it->second.second);
-			if (defaultAudio.StartsWith("ASIO: "))
-				GetDefaultAsioSoundConfig(n_latency, numberOfBuffers, bufferSize);
-			else if (defaultAudio.StartsWith("Jack: "))
-				GetDefaultJackSoundConfig(n_latency, numberOfBuffers, bufferSize);
-            else if (defaultAudio.StartsWith("DirectSound: "))
-            	GetDefaultDirectSoundConfig(n_latency, numberOfBuffers, bufferSize);
-			else
-				GetDefaultUnknownSoundConfig(n_latency, numberOfBuffers, bufferSize);
+
+			unsigned int buffer_size, number_of_buffers;
+			GetAudioBufferConfig(it->second.second, n_latency, number_of_buffers, buffer_size);
 
 			RtAudio::StreamParameters aOutputParam;
-			aOutputParam.deviceId=it->second.first;
-			aOutputParam.nChannels=2; //stereo
+			aOutputParam.deviceId = it->second.first;
+			aOutputParam.nChannels = 2; //stereo
 
 			RtAudio::StreamOptions aOptions;
-			aOptions.numberOfBuffers=numberOfBuffers;
-			audioDevice->openStream(&aOutputParam, NULL, RTAUDIO_FLOAT32, 44100, &bufferSize, &GOrgueSound::AudioCallback, this, &aOptions);
+			aOptions.numberOfBuffers = number_of_buffers;
 
-			if (bufferSize <= 1024)
+            format = RTAUDIO_FLOAT32;
+			audioDevice->openStream
+				(&aOutputParam
+				,NULL
+				,format
+				,44100
+				,&buffer_size
+				,&GOrgueSound::AudioCallback
+				,this
+				,&aOptions
+				);
+
+			if (buffer_size <= 1024)
 			{
-				n_latency = (bufferSize * numberOfBuffers ) / 25;
+				n_latency = (buffer_size * number_of_buffers ) / 25;
 				pConfig->Write("Devices/Sound/" + defaultAudio, n_latency);
 				audioDevice->startStream();
 			}
@@ -410,18 +380,24 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 				CloseSound(organfile);
 				return false;
 			}
-			RtAudio::DeviceInfo info = audioDevice->getDeviceInfo(it->second.first);
-            format = RTAUDIO_FLOAT32;
+
 		}
 
-		if (!n_midi || it == m_audioDevices.end())
+		if (!m_midi->HasActiveDevice() || it == m_audioDevices.end())
 		{
-            ::wxSleep(1);
+
+			::wxSleep(1);
 			if (logSoundErrors)
-                ::wxLogWarning(n_midi ? "No audio device is selected; neither MIDI input nor sound output will occur!" : "No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!");
+				::wxLogWarning
+					( m_midi->HasActiveDevice()
+					? wxT("No audio device is selected; neither MIDI input nor sound output will occur!")
+					: wxT("No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!")
+					);
 			CloseSound(organfile);
 			return false;
+
 		}
+
 	}
 	catch (RtError &e)
 	{
@@ -514,17 +490,6 @@ void GOrgueSound::CloseWAV()
 	f_output = 0;
 }
 
-void GOrgueSound::UpdateOrganMIDI()
-{
-    long count=pConfig->Read("OrganMIDI/Count", 0L);
-    for (long i=0; i<count; i++) {
-        wxString itemstr = "OrganMIDI/Organ" + wxString::Format("%ld", i);
-        long j=pConfig->Read(itemstr+".midi", 0L);
-        wxString file=pConfig->Read(itemstr+".file");
-        organmidiEvents.insert(std::pair<long, wxString>(j, file) );
-    }
-}
-
 void GOrgueSound::SetPolyphonyLimit(int polyphony)
 {
 	this->polyphony = polyphony;
@@ -538,11 +503,6 @@ void GOrgueSound::SetPolyphonySoftLimit(int polyphony_soft)
 void GOrgueSound::SetVolume(int volume)
 {
 	this->volume = volume;
-}
-
-void GOrgueSound::SetTranspose(int transpose)
-{
-	this->transpose = transpose;
 }
 
 GO_SAMPLER* GOrgueSound::OpenNewSampler()
@@ -639,38 +599,6 @@ void GOrgueSound::StopRecording()
 
 }
 
-bool GOrgueSound::HasMIDIDevice()
-{
-
-	for (unsigned i = 0; i < m_midi_devices.size(); i++)
-		if (m_midi_devices[i].active)
-			return true;
-
-	return false;
-
-}
-
-bool GOrgueSound::HasMIDIListener()
-{
-
-	return (listen_evthandler) && (b_listening);
-
-}
-
-void GOrgueSound::SetMIDIListener(wxEvtHandler* handler)
-{
-	if (handler == NULL)
-	{
-		b_listening = false;
-		listen_evthandler = NULL;
-	}
-	else
-	{
-		listen_evthandler = handler;
-		b_listening = true;
-	}
-}
-
 bool GOrgueSound::IsActive()
 {
 	return b_active;
@@ -692,11 +620,6 @@ std::map<wxString, std::pair<int, RtAudio::Api> >& GOrgueSound::GetAudioDevices(
 	return m_audioDevices;
 }
 
-std::map<wxString, int>& GOrgueSound::GetMIDIDevices()
-{
-	return m_midi_device_map;
-}
-
 const wxString GOrgueSound::GetDefaultAudioDevice()
 {
 	return defaultAudio;
@@ -706,3 +629,9 @@ const RtAudioFormat GOrgueSound::GetAudioFormat()
 {
 	return format;
 }
+
+GOrgueMidi& GOrgueSound::GetMidi()
+{
+	return *m_midi;
+}
+

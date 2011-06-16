@@ -32,10 +32,10 @@
 #include "GrandOrgueFrame.h"
 #include "IniFileConfig.h"
 #include "MIDIListenDialog.h"
+#include "GOrgueMidi.h"
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
-extern const char* s_MIDIMessages[];
 
 GOrgueManual::GOrgueManual() :
 	m_ManualNumber(0),
@@ -237,13 +237,25 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 
 void GOrgueManual::MIDI(void)
 {
+
 	int index = MIDIInputNumber + 7;
-	MIDIListenDialog dlg(::wxGetApp().frame, _(s_MIDIMessages[index]), g_sound->i_midiEvents[index], 1);
+
+	MIDIListenDialog dlg
+		(::wxGetApp().frame
+		,GOrgueMidi::GetMidiEventTitle(index)
+		,MIDIListenDialog::LSTN_MANUAL
+		,g_sound->GetMidi().GetManualMidiEvent(MIDIInputNumber)
+		);
+
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		wxConfigBase::Get()->Write(wxString("MIDI/") + s_MIDIMessages[index], dlg.GetEvent());
+		wxConfigBase::Get()->Write
+			(wxString("MIDI/") + GOrgueMidi::GetMidiEventTitle(index)
+			,dlg.GetEvent()
+			);
 		g_sound->ResetSound(organfile);
 	}
+
 }
 
 

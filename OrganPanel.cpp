@@ -35,6 +35,7 @@
 #include "GOrgueGeneral.h"
 #include "GOrgueLabel.h"
 #include "GOrgueMeter.h"
+#include "GOrgueMidi.h"
 #include "GOrguePiston.h"
 #include "GOrguePushbutton.h"
 #include "GOrgueSound.h"
@@ -665,13 +666,13 @@ void OrganPanel::WrapText(wxDC& dc, wxString& string, int width)
 	}
 	*ptr = 0;
 
-	string = str.c_str();
+	string = wxString::FromAscii(str.c_str());
 }
 
 
 void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 {
-	if (g_sound && g_sound->b_memset ^ event.ShiftDown())
+	if (g_sound && g_sound->GetMidi().SetterActive() ^ event.ShiftDown())
 	{
 		::wxGetApp().frame->ProcessCommand(ID_AUDIO_MEMSET);
 		UpdateWindowUI();

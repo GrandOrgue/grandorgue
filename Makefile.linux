@@ -43,6 +43,7 @@ GOrgueGeneral.o \
 GOrgueLabel.o \
 GOrgueLCD.o \
 GOrgueManual.o \
+GOrgueMidi.o \
 GOrgueMeter.o \
 GOrguePipe.o \
 GOrguePiston.o \
@@ -51,7 +52,6 @@ GOrguePushbutton.o \
 GOrgueReleaseAlignTable.o \
 GOrgueSound.o \
 GOrgueSoundCallbackAudio.o \
-GOrgueSoundCallbackMIDI.o \
 GOrgueStop.o \
 GOrgueTremulant.o \
 GOrgueWindchest.o \
@@ -60,7 +60,6 @@ GrandOrgueFile.o \
 GrandOrgueFrame.o \
 Images.o \
 IniFileConfig.o \
-MIDIEvents.o \
 MIDIListenDialog.o \
 OrganDocument.o \
 OrganPanel.o \

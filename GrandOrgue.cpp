@@ -30,6 +30,7 @@
 #include "SettingsDialog.h"
 #include "GrandOrgueFile.h"
 #include "GOrgueDivisional.h"
+#include "GOrgueMidi.h"
 
 #include <wx/ipc.h>
 #include <wx/snglinst.h>
@@ -219,7 +220,7 @@ bool GOrgueApp::OnInit()
     GOrgueLCD_Open();
 #endif
 
-    m_soundSystem->UpdateOrganMIDI(); //retrieve MIDI settings for loading organs
+    m_soundSystem->GetMidi().UpdateOrganMIDI(); //retrieve MIDI settings for loading organs
 
 	return true;
 }

@@ -23,7 +23,6 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
-#define ORGANMESSAGE_TYPE 2
 #include <vector>
 #include <wx/propdlg.h>
 

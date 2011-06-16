@@ -33,6 +33,7 @@
 #include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
 #include "SettingsDialog.h"
+#include "GOrgueMidi.h"
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
@@ -178,7 +179,7 @@ void GOrgueDivisional::Push(int depth)
 	int i, k;
 	GOrgueManual* associatedManual = organfile->GetManual(m_ManualNumber);
 
-	if (g_sound->b_memset)
+	if (g_sound->GetMidi().SetterActive())
 	{
 		NumberOfStops = NumberOfCouplers = NumberOfTremulants = 0;
 		memset(stop, 0, sizeof(stop) + sizeof(coupler) + sizeof(tremulant));

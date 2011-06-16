@@ -30,6 +30,7 @@
 #include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
 #include "MIDIListenDialog.h"
+#include "GOrgueMidi.h"
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
@@ -103,12 +104,22 @@ void GOrgueDrawstop::Push()
 
 void GOrgueDrawstop::MIDI(void)
 {
-	MIDIListenDialog dlg(::wxGetApp().frame, _("Drawstop Trigger"), g_sound->i_midiEvents[14] | StopControlMIDIKeyNumber, 4);
+
+	MIDIListenDialog dlg
+		(::wxGetApp().frame
+		,wxString(wxT("Drawstop Trigger"))
+		,MIDIListenDialog::LSTN_DRAWSTOP
+		,g_sound->GetMidi().GetStopMidiEvent() | StopControlMIDIKeyNumber
+		);
+
 	if (dlg.ShowModal() == wxID_OK)
 	{
+
 		StopControlMIDIKeyNumber = dlg.GetEvent() & 0x7F;
 		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
+
 	}
+
 }
 
 bool GOrgueDrawstop::Set(bool on)

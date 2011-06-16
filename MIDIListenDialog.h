@@ -29,38 +29,76 @@
 
 class MIDIListenDialog : public wxDialog
 {
+
 DECLARE_CLASS(MIDIListenDialog)
+
+
 public:
-	MIDIListenDialog(wxWindow* parent, wxString title, int what, int type);
+
+	typedef enum
+	{
+		LSTN_ENCLOSURE = 0,
+		LSTN_MANUAL = 1,
+		LSTN_SETTINGSDLG_MEMORY_OR_ORGAN = 2,
+		LSTN_SETTINGSDLG_STOP_CHANGE = 3,
+		LSTN_DRAWSTOP = 4,
+		LSTN_NON_DRAWSTOP_BUTTON = 5
+	} LISTEN_DIALOG_TYPE;
+
+	typedef struct
+	{
+		const wxChar* name;
+		int event;
+	} LISTEN_DIALOG_SETUP_EVENT;
+
+	typedef struct
+	{
+		unsigned count;
+		const LISTEN_DIALOG_SETUP_EVENT *elements;
+	} LISTEN_DIALOG_EVENTS;
+
+private:
+
+	static const LISTEN_DIALOG_EVENTS GetEventFromType(const LISTEN_DIALOG_TYPE type);
+	LISTEN_DIALOG_TYPE m_type;
+    int event;
+	wxChoice* m_event;
+	wxSpinCtrl *m_channel, *m_data;
+	wxToggleButton* m_listen;
+
+public:
+
+	MIDIListenDialog
+		(wxWindow* parent
+		,wxString title
+		,const LISTEN_DIALOG_TYPE type
+		,const int event_id
+		);
+
 	~MIDIListenDialog();
+
+	static unsigned GetEventChannel(unsigned what);
+	static wxString GetEventTitle(int what, const LISTEN_DIALOG_TYPE type);
+	static wxString GetEventChannelString(int what);
 
 	int GetEvent();
 	bool PutEvent(int what);
 	void OnEvent(wxCommandEvent& event);
 	void OnListenClick(wxCommandEvent& event);
 	void OnListenMIDI(wxCommandEvent& event);
-    void OnHelp(wxCommandEvent& event);
-
-	int event;
-	wxChoice* m_event;
-	wxSpinCtrl *m_channel, *m_data;
+	void OnHelp(wxCommandEvent& event);
 
 	DECLARE_EVENT_TABLE()
 
+
 protected:
+
 	enum {
 		ID_EVENT = 200,
 		ID_CHANNEL,
 		ID_LISTEN,
 	};
 
-    int type;
-	wxToggleButton* m_listen;
-
 };
-
-wxString GetEventTitle(int what, int type);
-int GetEventChannel(int what);
-wxString GetEventChannelString(int what);
 
 #endif /* MIDILISTENDIALOG_H_ */
