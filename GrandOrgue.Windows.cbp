@@ -112,6 +112,8 @@
 		<Unit filename="GOrgueManual.h" />
 		<Unit filename="GOrgueMeter.cpp" />
 		<Unit filename="GOrgueMeter.h" />
+		<Unit filename="GOrgueMidi.cpp" />
+		<Unit filename="GOrgueMidi.h" />
 		<Unit filename="GOrguePipe.cpp" />
 		<Unit filename="GOrguePipe.h" />
 		<Unit filename="GOrguePiston.cpp" />
@@ -125,9 +127,6 @@
 		<Unit filename="GOrgueSound.cpp" />
 		<Unit filename="GOrgueSound.h" />
 		<Unit filename="GOrgueSoundCallbackAudio.cpp" />
-		<Unit filename="GOrgueSoundCallbackAudio.h" />
-		<Unit filename="GOrgueSoundCallbackMIDI.cpp" />
-		<Unit filename="GOrgueSoundCallbackMIDI.h" />
 		<Unit filename="GOrgueStop.cpp" />
 		<Unit filename="GOrgueStop.h" />
 		<Unit filename="GOrgueThread.h" />
@@ -154,13 +153,10 @@
 		<Unit filename="IniFileConfig.cpp" />
 		<Unit filename="IniFileConfig.h" />
 		<Unit filename="KeyConvert.h" />
-		<Unit filename="MIDIEvents.cpp" />
-		<Unit filename="MIDIEvents.h" />
 		<Unit filename="MIDIListenDialog.cpp" />
 		<Unit filename="MIDIListenDialog.h" />
 		<Unit filename="OrganDocument.cpp" />
 		<Unit filename="OrganDocument.h" />
-		<Unit filename="OrganFile.h" />
 		<Unit filename="OrganPanel.cpp" />
 		<Unit filename="OrganPanel.h" />
 		<Unit filename="OrganView.cpp" />
