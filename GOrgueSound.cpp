@@ -619,6 +619,22 @@ std::map<wxString, std::pair<int, RtAudio::Api> >& GOrgueSound::GetAudioDevices(
 	return m_audioDevices;
 }
 
+const unsigned GOrgueSound::GetActualLatency(const wxString device, const unsigned latency)
+{
+
+	std::map<wxString, std::pair<int, RtAudio::Api> >::iterator it;
+	it = m_audioDevices.find(device);
+	if (it != m_audioDevices.end())
+	{
+		unsigned int buffer_size, number_of_buffers;
+		GetAudioBufferConfig(it->second.second, latency, number_of_buffers, buffer_size);
+		return (buffer_size * number_of_buffers) / 25;
+	}
+
+	throw (wxChar*)wxT("failed to get buffer configuration");
+
+}
+
 const wxString GOrgueSound::GetDefaultAudioDevice()
 {
 	return defaultAudio;
