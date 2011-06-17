@@ -24,6 +24,7 @@
 #define GORGUEDISPLAYMETRICS_H
 
 #include <wx/wx.h>
+#include <vector>
 
 class IniFileConfig;
 class GOrgueEnclosure;
@@ -31,7 +32,33 @@ class GOrgueEnclosure;
 class GOrgueDisplayMetrics
 {
 
+public:
+
+	typedef struct
+	{
+		int width;
+		int height;
+		int y;
+		int x;
+		int keys_y;
+		int piston_y;
+	} MANUAL_RENDER_INFO;
+
 private:
+
+	typedef struct
+	{
+		bool displayed;
+		unsigned nb_accessible_keys;
+		int first_accessible_key_midi_note_nb;
+		MANUAL_RENDER_INFO render_info;
+	} MANUAL_INFO;
+
+	/* Values loaded in constructor */
+	unsigned m_nb_enclosures;
+	unsigned m_nb_manuals;
+	unsigned m_first_manual;
+	std::vector<MANUAL_INFO> m_manual_info;
 
 	/* Values loaded from ODF */
 	int m_DispScreenSizeHoriz;
@@ -68,6 +95,8 @@ private:
 	int m_EnclosureY;
 	int m_CenterY;
 	int m_CenterWidth;
+
+	void Update();
 
 public:
 
@@ -120,7 +149,7 @@ public:
 	bool HasTrimAboveExtraRows();
 	bool HasExtraPedalButtonRow();
 
-	void Update();
+	const MANUAL_RENDER_INFO& GetManualRenderInfo(const unsigned manual_nb) const;
 
 };
 

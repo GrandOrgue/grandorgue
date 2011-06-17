@@ -38,13 +38,11 @@ private:
 	wxPoint m_clientOrigin;
 	wxBrush m_pedalBrush;
 
-	GOrgueDisplayMetrics* displayMetrics;
+	GOrgueDisplayMetrics* m_display_metrics;
 
 	void DrawClickables(wxDC* dc = NULL, int xx = 0, int yy = 0, bool right = false, int scroll = 0);
 	void HelpDrawStop(GOrgueDrawstop* stop, wxDC* dc, int xx, int yy, bool right);
 	void HelpDrawButton(GOrguePushbutton* button, wxDC* dc, int xx, int yy, bool right);
-	void DrawKey(wxDC& dc, int man, int k, bool usepen = true, wxRegion* region = 0);
-	void WrapText(wxDC& dc, wxString& ptr, int width);
 
 public:
 	OrganPanel(wxWindow* parent);
@@ -58,6 +56,10 @@ public:
 	void OnMouseRightDown(wxMouseEvent& event);
 	void OnMouseScroll(wxMouseEvent& event);
 	void OnKeyCommand(wxKeyEvent& event);
+
+	static void TileWood(wxDC& dc, int which, int sx, int sy, int cx, int cy);
+	static void WrapText(wxDC& dc, wxString& ptr, int width);
+
 	DECLARE_EVENT_TABLE();
 
 };

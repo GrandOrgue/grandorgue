@@ -85,12 +85,15 @@ bool GOrgueEnclosure::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 
 }
 
-void GOrgueEnclosure::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueEnclosure::Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrgueDisplayMetrics* displayMetrics)
 {
+	char buffer[32];
+	sprintf(buffer, "Enclosure%03u", enclosure_nb + 1);
+	m_enclosure_nb = enclosure_nb;
 	DisplayMetrics = displayMetrics;
-	Name=cfg.ReadString( group,"Name",   64);
-	AmpMinimumLevel=cfg.ReadInteger( group,"AmpMinimumLevel",    0,  100);
-	MIDIInputNumber=cfg.ReadInteger( group,"MIDIInputNumber",    1,    6);
+	Name = cfg.ReadString(buffer, "Name", 64);
+	AmpMinimumLevel = cfg.ReadInteger(buffer, "AmpMinimumLevel", 0, 100);
+	MIDIInputNumber = cfg.ReadInteger(buffer, "MIDIInputNumber", 1, 6);
 	Set(127);	// default to full volume until we receive any messages
 }
 
@@ -169,5 +172,12 @@ void GOrgueEnclosure::Scroll(bool scroll_up)
 {
 
 	Set(MIDIValue + (scroll_up ? 16 : -16));
+
+}
+
+bool GOrgueEnclosure::IsEnclosure(const unsigned nb) const
+{
+
+	return (m_enclosure_nb == nb);
 
 }

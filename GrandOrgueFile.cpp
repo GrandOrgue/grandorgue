@@ -175,10 +175,7 @@ void GrandOrgueFile::readOrganFile()
 
 	m_enclosure = new GOrgueEnclosure[m_NumberOfEnclosures];
 	for (int i = 0; i < m_NumberOfEnclosures; i++)
-	{
-		sprintf(buffer, "Enclosure%03d", i + 1);
-		m_enclosure[i].Load(ini, buffer, m_DisplayMetrics);
-	}
+		m_enclosure[i].Load(ini, i, m_DisplayMetrics);
 
 	m_windchest = new GOrgueWindchest[m_NumberOfTremulants + 1 + m_NumberOfWindchestGroups];
 	for (int i = 0; i < m_NumberOfWindchestGroups; i++)

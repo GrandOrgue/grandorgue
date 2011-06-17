@@ -349,7 +349,7 @@ GOrgueMidi::ProcessMessage
 				q = i - 7;
 				for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
 				{
-				    if (!organfile->GetManual(k)->Displayed)
+				    if (!organfile->GetManual(k)->IsDisplayed())
                         continue;
                     offset = m_midi_events[i] & 0xFF;
                     if  (offset > 127)

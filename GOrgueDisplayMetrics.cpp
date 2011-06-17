@@ -21,14 +21,16 @@
  */
 
 #include "GOrgueDisplayMetrics.h"
-#include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
-
-extern GrandOrgueFile* organfile;
+#include "GOrgueEnclosure.h"
 
 #define DISPLAY_METRICS_GROUP "Organ"
 
 GOrgueDisplayMetrics::GOrgueDisplayMetrics(IniFileConfig& ini) :
+	m_nb_enclosures(0),
+	m_nb_manuals(0),
+	m_first_manual(0),
+	m_manual_info(),
 	m_DispScreenSizeHoriz(0),
 	m_DispScreenSizeVert(0),
 	m_DispDrawstopBackgroundImageNum(0),
@@ -62,6 +64,26 @@ GOrgueDisplayMetrics::GOrgueDisplayMetrics(IniFileConfig& ini) :
 	m_CenterY(0),
 	m_CenterWidth(0)
 {
+
+	m_nb_enclosures = ini.ReadInteger(wxT("Organ"), wxT("NumberOfEnclosures"), 0, 6);
+	m_nb_manuals    = ini.ReadInteger(wxT("Organ"), wxT("NumberOfManuals"), 1, 6);
+	m_first_manual  = ini.ReadBoolean(wxT("Organ"), wxT("HasPedals")) ? 0 : 1;
+
+	for (unsigned int i = 0; i <= m_nb_manuals; i++)
+	{
+		char buffer[64];
+		MANUAL_INFO man;
+		memset(&man, 0, sizeof(man));
+		if (i >= m_first_manual)
+		{
+			sprintf(buffer, "Manual%03u", i);
+			man.displayed                         = ini.ReadBoolean(buffer, wxT("Displayed"));
+			man.first_accessible_key_midi_note_nb = ini.ReadInteger(buffer, wxT("FirstAccessibleKeyMIDINoteNumber"), 0, 127);
+			man.nb_accessible_keys                = ini.ReadInteger(buffer, wxT("NumberOfAccessibleKeys"), 0, 85);
+		}
+		m_manual_info.push_back(man);
+	}
+
     m_DispScreenSizeHoriz = ini.ReadSize(DISPLAY_METRICS_GROUP, "DispScreenSizeHoriz", 0);
     m_DispScreenSizeVert = ini.ReadSize(DISPLAY_METRICS_GROUP, "DispScreenSizeVert", 1);
     m_DispDrawstopBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispDrawstopBackgroundImageNum", 1, 64);
@@ -90,6 +112,9 @@ GOrgueDisplayMetrics::GOrgueDisplayMetrics(IniFileConfig& ini) :
     m_DispTrimBelowManuals = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispTrimBelowManuals");
     m_DispTrimAboveExtraRows = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispTrimAboveExtraRows");
     m_DispExtraDrawstopRowsAboveExtraButtonRows = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispExtraDrawstopRowsAboveExtraButtonRows");
+
+    Update();
+
 }
 
 /*
@@ -261,7 +286,7 @@ int GOrgueDisplayMetrics::GetCenterY()
 
 int GOrgueDisplayMetrics::GetEnclosureWidth()
 {
-	return 52 * organfile->GetEnclosureCount();
+	return 52 * m_nb_enclosures;
 }
 
 int GOrgueDisplayMetrics::GetEnclosureY()
@@ -275,9 +300,9 @@ int GOrgueDisplayMetrics::GetEnclosureX(const GOrgueEnclosure* enclosure)
 	assert(enclosure);
 
 	int enclosure_x = (GetScreenWidth() - GetEnclosureWidth() + 6) >> 1;
-	for (unsigned int i = 0; i < organfile->GetEnclosureCount(); i++)
+	for (unsigned int i = 0; i < m_nb_enclosures; i++)
 	{
-		if (organfile->GetEnclosure(i) == enclosure)
+		if (enclosure->IsEnclosure(i))
 			return enclosure_x;
 		enclosure_x += 52;
 	}
@@ -371,7 +396,7 @@ void GOrgueDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const 
 
 void GOrgueDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY)
 {
-	int i;
+
 	*blitX = GetPistonX() + (buttonCol - 1) * 44 + 6;
 	if (buttonRow > 99)
 	{
@@ -386,20 +411,21 @@ void GOrgueDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const 
 	}
 	else
 	{
-		i = buttonRow;
+		int i = buttonRow;
 		if (i == 99)
 			i = 0;
 
-		if (i > organfile->GetManualAndPedalCount())
-			*blitY = m_HackY - (i - organfile->GetManualAndPedalCount()) * 72 + 32 + 5;
+		if (i > (int)m_nb_manuals)
+			*blitY = m_HackY - (i - (int)m_nb_manuals) * 72 + 32 + 5;
 		else
-			*blitY = organfile->GetManual(i)->m_PistonY + 5;
+			*blitY = m_manual_info[i].render_info.piston_y + 5;
 
 		if (m_DispExtraPedalButtonRow && !buttonRow)
 			*blitY += 40;
 		if (m_DispExtraPedalButtonRowOffset && buttonRow == 99)
 			*blitX -= 22;
 	}
+
 }
 
 /*
@@ -415,23 +441,23 @@ void GOrgueDisplayMetrics::Update()
 	m_CenterY = m_DispScreenSizeVert - 40;
 	m_CenterWidth = std::max(GetJambTopWidth(), GetPistonWidth());
 
-	for (int i = 0; i <= organfile->GetManualAndPedalCount(); i++)
+	for (unsigned i = 0; i <= m_nb_manuals; i++)
 	{
 
 		if (!i)
 		{
-			organfile->GetManual(0)->m_Height = 40;
-			organfile->GetManual(0)->m_KeysY = organfile->GetManual(0)->m_Y = m_CenterY;
+			m_manual_info[0].render_info.height = 40;
+			m_manual_info[0].render_info.keys_y = m_manual_info[0].render_info.y = m_CenterY;
 			m_CenterY -= 40;
 			if (m_DispExtraPedalButtonRow)
 				m_CenterY -= 40;
-			organfile->GetManual(0)->m_PistonY = m_CenterY;
-			m_CenterY -= 87;	// enclosure area
+			m_manual_info[0].render_info.piston_y = m_CenterY;
+			m_CenterY -= 87;
 			m_CenterWidth = std::max(m_CenterWidth, GetEnclosureWidth());
 			m_EnclosureY = m_CenterY + 12;
 		}
 
-		if (!organfile->GetManual(i)->Displayed || i < organfile->GetFirstManualIndex())
+		if (!m_manual_info[i].displayed || i < m_first_manual)
 			continue;
 
 		if (i)
@@ -439,52 +465,52 @@ void GOrgueDisplayMetrics::Update()
 			if (!m_DispButtonsAboveManuals)
 			{
 				m_CenterY -= 40;
-				organfile->GetManual(i)->m_PistonY = m_CenterY;
+				m_manual_info[i].render_info.piston_y = m_CenterY;
 			}
-			organfile->GetManual(i)->m_Height = 32;
+			m_manual_info[i].render_info.height = 32;
 			if (m_DispTrimBelowManuals && i == 1)
 			{
-				organfile->GetManual(i)->m_Height += 8;
+				m_manual_info[i].render_info.height += 8;
 				m_CenterY -= 8;
 			}
 			m_CenterY -= 32;
-			organfile->GetManual(i)->m_KeysY = m_CenterY;
-			if (m_DispTrimAboveManuals && i == organfile->GetManualAndPedalCount())
+			m_manual_info[i].render_info.keys_y = m_CenterY;
+			if (m_DispTrimAboveManuals && i == m_nb_manuals)
 			{
-				organfile->GetManual(i)->m_Height += 8;
 				m_CenterY -= 8;
+				m_manual_info[i].render_info.height += 8;
 			}
 			if (m_DispButtonsAboveManuals)
 			{
 				m_CenterY -= 40;
-				organfile->GetManual(i)->m_PistonY = m_CenterY;
+				m_manual_info[i].render_info.piston_y = m_CenterY;
 			}
-			organfile->GetManual(i)->m_Y = m_CenterY;
+			m_manual_info[i].render_info.y = m_CenterY;
 		}
-		organfile->GetManual(i)->m_Width = 1;
+		m_manual_info[i].render_info.width = 1;
 		if (i)
 		{
-			for (int j = 0; j < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); j++)
+			for (unsigned j = 0; j < m_manual_info[i].nb_accessible_keys; j++)
 			{
-				int k = (organfile->GetManual(i)->GetFirstAccessibleKeyMIDINoteNumber() + j) % 12;
+				int k = (m_manual_info[i].first_accessible_key_midi_note_nb + j) % 12;
 				if ((k < 5 && !(k & 1)) || (k >= 5 && (k & 1)))
-					organfile->GetManual(i)->m_Width += 12;
+					m_manual_info[i].render_info.width += 12;
 			}
 		}
 		else
 		{
-			for (int j = 0; j < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); j++)
+			for (unsigned j = 0; j < m_manual_info[i].nb_accessible_keys; j++)
 			{
-				organfile->GetManual(i)->m_Width += 7;
-				int k = (organfile->GetManual(i)->GetFirstAccessibleKeyMIDINoteNumber() + j) % 12;
+				m_manual_info[i].render_info.width += 7;
+				int k = (m_manual_info[i].first_accessible_key_midi_note_nb + j) % 12;
 				if (j && (!k || k == 5))
-					organfile->GetManual(i)->m_Width += 7;
+					m_manual_info[i].render_info.width += 7;
 			}
 		}
-		organfile->GetManual(i)->m_X = (m_DispScreenSizeHoriz - organfile->GetManual(i)->m_Width) >> 1;
-		organfile->GetManual(i)->m_Width += 16;
-		if (organfile->GetManual(i)->m_Width > m_CenterWidth)
-			m_CenterWidth = organfile->GetManual(i)->m_Width;
+		m_manual_info[i].render_info.x = (m_DispScreenSizeHoriz - m_manual_info[i].render_info.width) >> 1;
+		m_manual_info[i].render_info.width += 16;
+		if (m_manual_info[i].render_info.width > m_CenterWidth)
+			m_CenterWidth = m_manual_info[i].render_info.width;
 	}
 
   /*
@@ -502,8 +528,13 @@ void GOrgueDisplayMetrics::Update()
 	if (m_DispTrimAboveExtraRows)
 		m_CenterY -= 8;
 
+}
 
-	/* FIXME: what is this below to-do supposed to do? do we need to do it? (nappleton) */
-	/* TODO: trim should be displayed, blah */
+const GOrgueDisplayMetrics::MANUAL_RENDER_INFO& GOrgueDisplayMetrics::GetManualRenderInfo(const unsigned manual_nb) const
+{
+
+	assert(manual_nb < m_manual_info.size());
+	assert(manual_nb >= m_first_manual);
+	return m_manual_info[manual_nb].render_info;
 
 }

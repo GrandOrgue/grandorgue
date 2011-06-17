@@ -33,36 +33,32 @@
 #include "IniFileConfig.h"
 #include "MIDIListenDialog.h"
 #include "GOrgueMidi.h"
+#include "OrganPanel.h"
+#include "GOrgueDisplayMetrics.h"
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
 
 GOrgueManual::GOrgueManual() :
-	m_ManualNumber(0),
-	m_MIDI(),
-	NumberOfLogicalKeys(0),
-	FirstAccessibleKeyLogicalKeyNumber(0),
-	FirstAccessibleKeyMIDINoteNumber(0),
-	NumberOfAccessibleKeys(0),
-	MIDIInputNumber(0),
-	NumberOfStops(0),
-	NumberOfCouplers(0),
-	NumberOfDivisionals(0),
-	NumberOfTremulants(0),
-	tremulant(),
-	Name(),
-	stop(),
-	coupler(NULL),
-	divisional(NULL),
-	Displayed(false),
-	m_Width(0),
-	m_Height(0),
-	m_X(0),
-	m_Y(0),
-	m_KeysY(0),
-	m_PistonY(0),
-	DispKeyColourInverted(false),
-	DispKeyColourWooden(false)
+	m_manual_number(0),
+	m_midi(),
+	m_first_accessible_logical_key_nb(0),
+	m_nb_logical_keys(0),
+	m_first_accessible_key_midi_note_nb(0),
+	m_nb_accessible_keys(0),
+	m_midi_input_number(0),
+	m_nb_stops(0),
+	m_nb_couplers(0),
+	m_nb_divisionals(0),
+	m_nb_tremulants(0),
+	m_tremulant_ids(),
+	m_name(),
+	m_stops(),
+	m_couplers(NULL),
+	m_divisionals(NULL),
+	m_displayed(false),
+	m_key_colour_inverted(false),
+	m_key_colour_wooden(false)
 {
 
 }
@@ -70,67 +66,67 @@ GOrgueManual::GOrgueManual() :
 void GOrgueManual::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics, int manualNumber)
 {
 
-	Name                                = cfg.ReadString (group, "Name", 32);
-	NumberOfLogicalKeys                 = cfg.ReadInteger(group, "NumberOfLogicalKeys", 1, 192);
-	FirstAccessibleKeyLogicalKeyNumber  = cfg.ReadInteger(group, "FirstAccessibleKeyLogicalKeyNumber", 1, NumberOfLogicalKeys);
-	FirstAccessibleKeyMIDINoteNumber    = cfg.ReadInteger(group, "FirstAccessibleKeyMIDINoteNumber", 0, 127);
-	NumberOfAccessibleKeys              = cfg.ReadInteger(group, "NumberOfAccessibleKeys", 0, 85);
-	MIDIInputNumber                     = cfg.ReadInteger(group, "MIDIInputNumber", 1, 6);
-	Displayed                           = cfg.ReadBoolean(group, "Displayed");
-	DispKeyColourInverted               = cfg.ReadBoolean(group, "DispKeyColourInverted");
-	DispKeyColourWooden                 = cfg.ReadBoolean(group, "DispKeyColourWooden", false);
-	NumberOfStops                       = cfg.ReadInteger(group, "NumberOfStops", 0, 64);
-	NumberOfCouplers                    = cfg.ReadInteger(group, "NumberOfCouplers", 0, 16, false);
-	NumberOfDivisionals                 = cfg.ReadInteger(group, "NumberOfDivisionals", 0, 32, false);
-	NumberOfTremulants                  = cfg.ReadInteger(group, "NumberOfTremulants", 0, 10, false);
-
-	m_ManualNumber = manualNumber;
+	m_name                              = cfg.ReadString (group, "Name", 32);
+	m_nb_logical_keys                   = cfg.ReadInteger(group, "NumberOfLogicalKeys", 1, 192);
+	m_first_accessible_logical_key_nb   = cfg.ReadInteger(group, "FirstAccessibleKeyLogicalKeyNumber", 1, m_nb_logical_keys);
+	m_first_accessible_key_midi_note_nb = cfg.ReadInteger(group, "FirstAccessibleKeyMIDINoteNumber", 0, 127);
+	m_nb_accessible_keys                = cfg.ReadInteger(group, "NumberOfAccessibleKeys", 0, 85);
+	m_midi_input_number                 = cfg.ReadInteger(group, "MIDIInputNumber", 1, 6);
+	m_displayed                         = cfg.ReadBoolean(group, "Displayed");
+	m_key_colour_inverted               = cfg.ReadBoolean(group, "DispKeyColourInverted");
+	m_key_colour_wooden                 = cfg.ReadBoolean(group, "DispKeyColourWooden", false);
+	m_nb_stops                          = cfg.ReadInteger(group, "NumberOfStops", 0, 64);
+	m_nb_couplers                       = cfg.ReadInteger(group, "NumberOfCouplers", 0, 16, false);
+	m_nb_divisionals                    = cfg.ReadInteger(group, "NumberOfDivisionals", 0, 32, false);
+	m_nb_tremulants                     = cfg.ReadInteger(group, "NumberOfTremulants", 0, 10, false);
+	m_manual_number = manualNumber;
+	m_display_metrics = displayMetrics;
 
 	char buffer[64];
 
-	for (unsigned i = 0; i < NumberOfStops; i++)
+	for (unsigned i = 0; i < m_nb_stops; i++)
 	{
-		stop.push_back(new GOrgueStop());
+		m_stops.push_back(new GOrgueStop());
 		sprintf(buffer, "Stop%03d", i + 1);
-		sprintf(buffer, "Stop%03d", cfg.ReadInteger( group, buffer, 1, 448));
-		stop[i]->m_ManualNumber = m_ManualNumber;
-		stop[i]->Load(cfg, buffer, displayMetrics);
+		sprintf(buffer, "Stop%03d", cfg.ReadInteger(group, buffer, 1, 448));
+		m_stops[i]->m_ManualNumber = m_manual_number;
+		m_stops[i]->Load(cfg, buffer, displayMetrics);
 	}
 
-	coupler = new GOrgueCoupler[NumberOfCouplers];
-	for (unsigned i = 0; i < NumberOfCouplers; i++)
+	m_couplers = new GOrgueCoupler[m_nb_couplers];
+	for (unsigned i = 0; i < m_nb_couplers; i++)
 	{
 		sprintf(buffer, "Coupler%03d", i + 1);
-		sprintf(buffer, "Coupler%03d", cfg.ReadInteger( group, buffer, 1, 64));
-		coupler[i].Load(cfg, buffer, organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount(), displayMetrics);
+		sprintf(buffer, "Coupler%03d", cfg.ReadInteger(group, buffer, 1, 64));
+		m_couplers[i].Load(cfg, buffer, organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount(), displayMetrics);
 	}
 
-	divisional = new GOrgueDivisional[NumberOfDivisionals];
-	for (unsigned i = 0; i < NumberOfDivisionals; i++)
+	m_divisionals = new GOrgueDivisional[m_nb_divisionals];
+	for (unsigned i = 0; i < m_nb_divisionals; i++)
 	{
 		sprintf(buffer, "Divisional%03d", i + 1);
-		sprintf(buffer, "Divisional%03d", cfg.ReadInteger( group, buffer, 1, 224));
-		divisional[i].Load(cfg, buffer, m_ManualNumber, i, displayMetrics);
+		sprintf(buffer, "Divisional%03d", cfg.ReadInteger(group, buffer, 1, 224));
+		m_divisionals[i].Load(cfg, buffer, m_manual_number, i, displayMetrics);
 	}
 
-	for (unsigned i = 0; i < NumberOfTremulants; i++)
+	for (unsigned i = 0; i < m_nb_tremulants; i++)
 	{
 		sprintf(buffer, "Tremulant%03d", i + 1);
-		tremulant[i] = cfg.ReadInteger( group, buffer, 1, organfile->GetTremulantCount());
+		m_tremulant_ids[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetTremulantCount());
 	}
 
-	for (unsigned i = 0; i < NumberOfStops; i++)
+	for (unsigned i = 0; i < m_nb_stops; i++)
 	{
-		if (!stop[i]->m_auto)
+		if (!m_stops[i]->m_auto)
 			continue;
-		for (unsigned j = 0; j < NumberOfStops; j++)
+		for (unsigned j = 0; j < m_nb_stops; j++)
 		{
 			if (i == j)
 				continue;
-			if (stop[j]->FirstAccessiblePipeLogicalKeyNumber < stop[i]->FirstAccessiblePipeLogicalKeyNumber + stop[i]->NumberOfAccessiblePipes &&
-				stop[j]->FirstAccessiblePipeLogicalKeyNumber + stop[j]->NumberOfAccessiblePipes > stop[i]->FirstAccessiblePipeLogicalKeyNumber)
+			if (m_stops[j]->FirstAccessiblePipeLogicalKeyNumber < m_stops[i]->FirstAccessiblePipeLogicalKeyNumber + m_stops[i]->NumberOfAccessiblePipes &&
+					m_stops[j]->FirstAccessiblePipeLogicalKeyNumber + m_stops[j]->NumberOfAccessiblePipes > m_stops[i]->FirstAccessiblePipeLogicalKeyNumber)
 			{
-				stop[i]->m_auto = stop[j]->m_auto = false;
+				m_stops[i]->m_auto = m_stops[j]->m_auto = false;
 				break;
 			}
 		}
@@ -154,8 +150,8 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 		return;
 	}
 
-	note -= FirstAccessibleKeyMIDINoteNumber;
-	bool outofrange = note < 0 || note >= NumberOfAccessibleKeys;
+	note -= m_first_accessible_key_midi_note_nb;
+	bool outofrange = note < 0 || note >= (int)m_nb_accessible_keys;
 
 	if (!depth && outofrange)
 		return;
@@ -164,29 +160,29 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 	{
 		if (depth)
 		{
-			if (!(m_MIDI[note] >> 1) && !on)
+			if (!(m_midi[note] >> 1) && !on)
 				return;
-			m_MIDI[note] += on ? 2 : -2;
+			m_midi[note] += on ? 2 : -2;
 		}
 		else
 		{
-			if ((m_MIDI[note] & 1) ^ !on)
+			if ((m_midi[note] & 1) ^ !on)
 				return;
-			m_MIDI[note]  = (m_MIDI[note] & 0xFFFFFFFE) | (on ? 1 : 0);
+			m_midi[note]  = (m_midi[note] & 0xFFFFFFFE) | (on ? 1 : 0);
 		}
 	}
 
 	bool unisonoff = false;
-	for (unsigned i = 0; i < NumberOfCouplers; i++)
+	for (unsigned i = 0; i < m_nb_couplers; i++)
 	{
-		if (!coupler[i].DefaultToEngaged)
+		if (!m_couplers[i].DefaultToEngaged)
 			continue;
-		if (coupler[i].UnisonOff && (!depth || (prev && prev->CoupleToSubsequentUnisonIntermanualCouplers)))
+		if (m_couplers[i].UnisonOff && (!depth || (prev && prev->CoupleToSubsequentUnisonIntermanualCouplers)))
 		{
 			unisonoff = true;
 			continue;
 		}
-		j = coupler[i].DestinationManual;
+		j = m_couplers[i].DestinationManual;
 		if (
 				(!depth)
 				||
@@ -194,41 +190,41 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 					(prev)
 					&&
 					(
-						(j == m_ManualNumber && coupler[i].DestinationKeyshift < 0 && prev->CoupleToSubsequentDownwardIntramanualCouplers)
+						(j == m_manual_number && m_couplers[i].DestinationKeyshift < 0 && prev->CoupleToSubsequentDownwardIntramanualCouplers)
 						||
-						(j == m_ManualNumber && coupler[i].DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntramanualCouplers)
+						(j == m_manual_number && m_couplers[i].DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntramanualCouplers)
 						||
-						(j != m_ManualNumber && coupler[i].DestinationKeyshift < 0 && prev->CoupleToSubsequentDownwardIntermanualCouplers)
+						(j != m_manual_number && m_couplers[i].DestinationKeyshift < 0 && prev->CoupleToSubsequentDownwardIntermanualCouplers)
 						||
-						(j != m_ManualNumber && coupler[i].DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntermanualCouplers)
+						(j != m_manual_number && m_couplers[i].DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntermanualCouplers)
 					)
 				)
 			)
 		{
-			organfile->GetManual(j)->Set(note + FirstAccessibleKeyMIDINoteNumber + coupler[i].DestinationKeyshift, on, false, depth + 1, coupler + i);
+			organfile->GetManual(j)->Set(note + m_first_accessible_key_midi_note_nb + m_couplers[i].DestinationKeyshift, on, false, depth + 1, m_couplers + i);
 		}
 	}
 
 	if (!unisonoff)
 	{
-		for (unsigned i = 0; i < NumberOfStops; i++)
+		for (unsigned i = 0; i < m_nb_stops; i++)
 		{
-			if (!stop[i]->DefaultToEngaged)
+			if (!m_stops[i]->DefaultToEngaged)
 				continue;
-			j = note - (stop[i]->FirstAccessiblePipeLogicalKeyNumber - 1);
-			j += (FirstAccessibleKeyLogicalKeyNumber - 1); // Correction to take FirstAccessibleKeyLogicalKeyNumber of the manual into account
-			if (j < 0 || j >= stop[i]->NumberOfAccessiblePipes)
+			j = note - (m_stops[i]->FirstAccessiblePipeLogicalKeyNumber - 1);
+			j += (m_first_accessible_logical_key_nb - 1); // Correction to take FirstAccessibleKeyLogicalKeyNumber of the manual into account
+			if (j < 0 || j >= m_stops[i]->NumberOfAccessiblePipes)
 				continue;
-			j += stop[i]->FirstAccessiblePipeLogicalPipeNumber - 1;
+			j += m_stops[i]->FirstAccessiblePipeLogicalPipeNumber - 1;
 
-			organfile->GetPipe(stop[i]->pipe[j])->Set(on);
+			organfile->GetPipe(m_stops[i]->pipe[j])->Set(on);
 		}
 	}
 
 	if (!outofrange)
 	{
 		wxCommandEvent event(wxEVT_NOTEONOFF, 0);
-		event.SetInt(m_ManualNumber);
+		event.SetInt(m_manual_number);
 		event.SetExtraLong(note);
 		::wxGetApp().frame->AddPendingEvent(event);
 	}
@@ -238,13 +234,13 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 void GOrgueManual::MIDI(void)
 {
 
-	int index = MIDIInputNumber + 7;
+	int index = m_midi_input_number + 7;
 
 	MIDIListenDialog dlg
 		(::wxGetApp().frame
 		,GOrgueMidi::GetMidiEventTitle(index)
 		,MIDIListenDialog::LSTN_MANUAL
-		,g_sound->GetMidi().GetManualMidiEvent(MIDIInputNumber)
+		,g_sound->GetMidi().GetManualMidiEvent(m_midi_input_number)
 		);
 
 	if (dlg.ShowModal() == wxID_OK)
@@ -270,108 +266,421 @@ struct delete_functor
 
 GOrgueManual::~GOrgueManual(void)
 {
-	std::for_each(stop.begin(),stop.end(),delete_functor<GOrgueStop>());
-	if (coupler)
-		delete[] coupler;
-	if (divisional)
-		delete[] divisional;
+	std::for_each(m_stops.begin(), m_stops.end(), delete_functor<GOrgueStop>());
+	if (m_couplers)
+		delete[] m_couplers;
+	if (m_divisionals)
+		delete[] m_divisionals;
 }
 
 int GOrgueManual::GetMIDIInputNumber()
 {
-	return MIDIInputNumber;
+	return m_midi_input_number;
 }
 
 int GOrgueManual::GetLogicalKeyCount()
 {
-	return NumberOfLogicalKeys;
+	return m_nb_logical_keys;
 }
 
 int GOrgueManual::GetNumberOfAccessibleKeys()
 {
-	return NumberOfAccessibleKeys;
+	return m_nb_accessible_keys;
 }
 
 /* TODO: I suspect this could be made private or into something better... */
 int GOrgueManual::GetFirstAccessibleKeyMIDINoteNumber()
 {
-	return FirstAccessibleKeyMIDINoteNumber;
+	return m_first_accessible_key_midi_note_nb;
 }
 
 int GOrgueManual::GetStopCount()
 {
-	return NumberOfStops;
+	return m_nb_stops;
 }
 
 GOrgueStop* GOrgueManual::GetStop(unsigned index)
 {
-	assert(index < NumberOfStops);
-	return stop[index];
+	assert(index < m_nb_stops);
+	return m_stops[index];
 }
 
 int GOrgueManual::GetCouplerCount()
 {
-	return NumberOfCouplers;
+	return m_nb_couplers;
 }
 
 GOrgueCoupler* GOrgueManual::GetCoupler(unsigned index)
 {
-	assert(index < NumberOfCouplers);
-	return &coupler[index];
+	assert(index < m_nb_couplers);
+	return &m_couplers[index];
 }
 
 int GOrgueManual::GetDivisionalCount()
 {
-	return NumberOfDivisionals;
+	return m_nb_divisionals;
 }
 
 GOrgueDivisional* GOrgueManual::GetDivisional(unsigned index)
 {
-	assert(index < NumberOfDivisionals);
-	return &divisional[index];
+	assert(index < m_nb_divisionals);
+	return &m_divisionals[index];
 }
 
 int GOrgueManual::GetTremulantCount()
 {
-	return NumberOfTremulants;
+	return m_nb_tremulants;
 }
 
 GOrgueTremulant* GOrgueManual::GetTremulant(unsigned index)
 {
-	/* FIXME: Figure out what's going on here - then document and fix it. */
-	assert(index < NumberOfTremulants);
-	return organfile->GetTremulant(tremulant[index] - 1);
+	assert(index < m_nb_tremulants);
+	return organfile->GetTremulant(m_tremulant_ids[index] - 1);
 }
 
 void GOrgueManual::AllNotesOff()
 {
 
 	/* TODO: I'm not sure if these are allowed to be merged into one loop. */
-	for (int j = 0; j < GetNumberOfAccessibleKeys(); j++)
-        m_MIDI[j] = 0;
-	for (int j = 0; j < GetNumberOfAccessibleKeys(); j++)
+	for (unsigned j = 0; j < m_nb_accessible_keys; j++)
+        m_midi[j] = 0;
+
+	for (unsigned j = 0; j < m_nb_accessible_keys; j++)
 	{
 		wxCommandEvent event(wxEVT_NOTEONOFF, 0);
-		event.SetInt(m_ManualNumber);
+		event.SetInt(m_manual_number);
 		event.SetExtraLong(j);
 		::wxGetApp().frame->AddPendingEvent(event);
 	}
+
 }
 
 /* TODO: figure out what this thing does and document it */
 void GOrgueManual::MIDIPretend(bool on)
 {
-	for (int j = 0; j < NumberOfLogicalKeys; j++)
-		if (m_MIDI[j] & 1)
-			Set(j + FirstAccessibleKeyMIDINoteNumber, on, true);
+	for (unsigned j = 0; j < m_nb_logical_keys; j++)
+		if (m_midi[j] & 1)
+			Set(j + m_first_accessible_key_midi_note_nb, on, true);
 }
 
 bool GOrgueManual::IsKeyDown(int midiNoteNumber)
 {
-	if (midiNoteNumber < FirstAccessibleKeyMIDINoteNumber)
+	if (midiNoteNumber < m_first_accessible_key_midi_note_nb)
 		return false;
-	if (midiNoteNumber > FirstAccessibleKeyMIDINoteNumber + NumberOfLogicalKeys - 1)
+	if (midiNoteNumber > m_first_accessible_key_midi_note_nb + (int)m_nb_logical_keys - 1)
 		return false;
-	return m_MIDI[midiNoteNumber - FirstAccessibleKeyMIDINoteNumber];
+	return m_midi[midiNoteNumber - m_first_accessible_key_midi_note_nb];
 }
 
+void GOrgueManual::GetKeyDimensions
+	(const int key_midi_nb
+	,int &x
+	,int &cx
+	,int &cy
+	,int &z
+	)
+{
+
+	static const int addends[12] = {0, 9, 12, 21, 24, 36, 45, 48, 57, 60, 69, 72};
+
+	/* Key MIDI number must be valid for this manual */
+	assert
+		(
+			(key_midi_nb >= m_first_accessible_key_midi_note_nb)
+			&&
+			(key_midi_nb < (int)m_nb_accessible_keys + m_first_accessible_key_midi_note_nb)
+		);
+
+	const GOrgueDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
+
+	int is_natural = (((key_midi_nb % 12) < 5 && !(key_midi_nb & 1)) || ((key_midi_nb % 12) >= 5 && (key_midi_nb & 1))) ? 0 : 1;
+	int j;
+	if (m_manual_number)
+	{
+		x  = mri.x + (key_midi_nb / 12) * 84;
+		x += addends[key_midi_nb % 12];
+		j  = m_first_accessible_key_midi_note_nb;
+		x -= (j / 12) * 84;
+		x -= addends[j % 12];
+		if (is_natural)
+		{
+			cx = 7;
+			cy = 20;
+		}
+		else
+		{
+			cx = 13;
+			cy = 32;
+		}
+	}
+	else
+	{
+		cx = 8;
+		x  = mri.x + (key_midi_nb / 12) * 98;
+		x += (key_midi_nb % 12) * 7;
+		if ((key_midi_nb % 12) >= 5)
+			x += 7;
+		j  = m_first_accessible_key_midi_note_nb;
+		x -= (j / 12) * 98;
+		x -= (j % 12) * 7;
+		if ((j % 12) >= 5)
+			x -= 7;
+		if (is_natural)
+		{
+			cy = 20;
+		}
+		else
+		{
+			cy = 40;
+		}
+	}
+
+	if (!m_manual_number || is_natural)
+	{
+		z = -4;
+	}
+	else
+	{
+		z = 0;
+
+		int j = key_midi_nb % 12;
+		if (key_midi_nb > m_first_accessible_key_midi_note_nb && j && j != 5)
+			z |= 2;
+		if (key_midi_nb < m_first_accessible_key_midi_note_nb + (int)m_nb_accessible_keys - 1 && j != 4 && j != 11)
+			z |= 1;
+	}
+
+
+}
+
+wxRegion GOrgueManual::GetKeyRegion
+	(unsigned key_nb
+	)
+{
+
+	int x, cx, cy, z;
+	wxRegion reg;
+
+	assert((key_nb >= 0) && (key_nb < (int)m_nb_accessible_keys)); /* the index must be valid */
+
+	const GOrgueDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
+
+	key_nb += m_first_accessible_key_midi_note_nb;
+	GetKeyDimensions(key_nb, x, cx, cy, z);
+
+	int is_sharp  = (((key_nb % 12) < 5 && !(key_nb & 1)) || ((key_nb % 12) >= 5 && (key_nb & 1))) ? 0 : 1;
+
+	if (!m_manual_number || is_sharp)
+	{
+		reg.Union(x, mri.keys_y, cx + 1, cy);
+	}
+	else
+	{
+		reg.Union(x + 3, mri.keys_y, 8, cy);
+		reg.Union(x, mri.keys_y + 18, 14, 14);
+
+		if (!(z & 2))
+			reg.Union(x, mri.keys_y, 3, 18);
+		if (!(z & 1))
+			reg.Union(x + 11, mri.keys_y, 3, 18);
+	}
+
+	return reg;
+
+}
+
+void GOrgueManual::DrawKey
+	(wxDC& dc
+	,unsigned key_nb)
+{
+
+	static wxPoint g_points[4][17] = {
+		{ wxPoint( 0, 0), wxPoint(13, 0), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0, 1), wxPoint(12, 1), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1, 1), },
+		{ wxPoint( 0, 0), wxPoint(10, 0), wxPoint(10,18), wxPoint(13,18), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0, 1), wxPoint( 9, 1), wxPoint( 9,19), wxPoint(12,19), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1, 1), },
+		{ wxPoint( 3, 0), wxPoint(13, 0), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0,18), wxPoint( 3,18), wxPoint( 3, 1), wxPoint(12, 1), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1,19), wxPoint( 4,19), wxPoint( 4, 1), },
+		{ wxPoint( 3, 0), wxPoint(10, 0), wxPoint(10,18), wxPoint(13,18), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0,18), wxPoint( 3,18), wxPoint( 3, 1), wxPoint( 9, 1), wxPoint( 9,19), wxPoint(12,19), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1,19), wxPoint( 4,19), wxPoint( 4, 1), },
+	};
+
+	assert(key_nb < m_nb_accessible_keys); /* the index must be valid */
+	assert(m_displayed);
+
+	int k = key_nb + m_first_accessible_key_midi_note_nb;
+	int x, cx, cy, z;
+	GetKeyDimensions(k, x, cx, cy, z);
+
+	const wxPen* pen = IsKeyDown(k) ? wxRED_PEN : wxGREY_PEN;
+	dc.SetPen(*pen);
+	wxRegion exclude;
+
+	if ((k - m_first_accessible_key_midi_note_nb) > 0 && IsKeyDown(k - 1)) {
+		k -= m_first_accessible_key_midi_note_nb;
+		exclude.Union(GetKeyRegion(k - 1));
+		k += m_first_accessible_key_midi_note_nb;
+	}
+	if ((z & 2) && (k - m_first_accessible_key_midi_note_nb) > 1 && IsKeyDown(k - 2)) {
+		k -= m_first_accessible_key_midi_note_nb;
+		exclude.Union(GetKeyRegion(k - 2));
+		k += m_first_accessible_key_midi_note_nb;
+	}
+	if ((k - m_first_accessible_key_midi_note_nb) < m_nb_accessible_keys - 1 && IsKeyDown(k + 1)) {
+		k -= m_first_accessible_key_midi_note_nb;
+		exclude.Union(GetKeyRegion(k + 1));
+		k += m_first_accessible_key_midi_note_nb;
+	}
+	if ((z & 1) && (k - m_first_accessible_key_midi_note_nb) < m_nb_accessible_keys - 2 && IsKeyDown(k + 2)) {
+		k -= m_first_accessible_key_midi_note_nb;
+		exclude.Union(GetKeyRegion(k + 2));
+		k += m_first_accessible_key_midi_note_nb;
+	}
+
+	wxRegion reg = GetKeyRegion(key_nb);
+
+	if (!exclude.IsEmpty())
+	{
+		reg.Subtract(exclude);
+		reg.Offset(dc.LogicalToDeviceX(0), dc.LogicalToDeviceY(0));
+		dc.SetClippingRegion(reg);
+	}
+
+	const GOrgueDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
+
+	if (z < 0)
+	{
+		dc.SetBrush(*wxTRANSPARENT_BRUSH);
+		dc.DrawRectangle(x, mri.keys_y, cx + 1, cy);
+		dc.DrawRectangle(x + 1, mri.keys_y + 1, cx - 1, cy - 2);
+	}
+	else
+	{
+		dc.DrawPolygon(9 + (((z + 1) >> 1) << 2), g_points[z], x, mri.keys_y);
+	}
+
+	if (!exclude.IsEmpty())
+		dc.DestroyClippingRegion();
+
+}
+
+void GOrgueManual::Draw(wxDC& dc)
+{
+
+	assert(m_displayed);
+
+	const GOrgueDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
+
+	OrganPanel::TileWood
+		(dc
+		,m_display_metrics->GetKeyVertBackgroundImageNum()
+		,m_display_metrics->GetCenterX()
+		,mri.y
+		,m_display_metrics->GetCenterWidth()
+		,mri.height
+		);
+
+	OrganPanel::TileWood
+		(dc
+		,m_display_metrics->GetKeyHorizBackgroundImageNum()
+		,m_display_metrics->GetCenterX()
+		,mri.piston_y
+		,m_display_metrics->GetCenterWidth()
+		,(!m_manual_number && m_display_metrics->HasExtraPedalButtonRow()) ? 80 : 40
+		);
+
+	if (m_manual_number < organfile->GetFirstManualIndex())
+		return;
+
+	wxFont font = m_display_metrics->GetControlLabelFont();
+	for (unsigned j = 0; j < m_nb_stops; j++)
+	{
+		if (m_stops[j]->Displayed)
+		{
+			font.SetPointSize(m_stops[j]->DispLabelFontSize);
+			dc.SetFont(font);
+			OrganPanel::WrapText(dc, m_stops[j]->Name, 51);
+		}
+	}
+
+	for (unsigned j = 0; j < m_nb_couplers; j++)
+	{
+		if (m_couplers[j].Displayed)
+		{
+			font.SetPointSize(m_couplers[j].DispLabelFontSize);
+			dc.SetFont(font);
+			OrganPanel::WrapText(dc, m_couplers[j].Name, 51);
+		}
+	}
+
+	for (unsigned j = 0; j < m_nb_divisionals; j++)
+	{
+		if (m_divisionals[j].Displayed)
+		{
+			font.SetPointSize(m_divisionals[j].DispLabelFontSize);
+			dc.SetFont(font);
+			OrganPanel::WrapText(dc, m_divisionals[j].Name, 28);
+		}
+	}
+
+	wxRegion region;
+	for (unsigned j = 0; j < m_nb_accessible_keys; j++)
+	{
+		unsigned k = m_first_accessible_key_midi_note_nb + j;
+		if ( (((k % 12) < 5 && !(k & 1)) || ((k % 12) >= 5 && (k & 1))))
+			region.Union(GetKeyRegion(j));
+	}
+
+	if (!region.IsEmpty())
+	{
+
+		unsigned j = 31 + (m_key_colour_inverted << 1);
+		if (j == 31 && (m_key_colour_wooden || !m_manual_number))
+			j = 35;
+
+		dc.SetClippingRegion(region);
+		OrganPanel::TileWood
+			(dc
+			,j
+			,m_display_metrics->GetCenterX()
+			,mri.keys_y
+			,m_display_metrics->GetCenterWidth()
+			,mri.height
+			);
+
+	}
+	region.Clear();
+
+	for (unsigned j = 0; j < m_nb_accessible_keys; j++)
+	{
+		unsigned k = m_first_accessible_key_midi_note_nb + j;
+		if (!(((k % 12) < 5 && !(k & 1)) || ((k % 12) >= 5 && (k & 1))))
+			region.Union(GetKeyRegion(j));
+	}
+
+	if (!region.IsEmpty())
+	{
+
+		unsigned j = 33 - (m_key_colour_inverted << 1);
+		if (j == 31 && (m_key_colour_wooden || !m_manual_number))
+			j = (m_display_metrics->GetKeyVertBackgroundImageNum() % 10) == 1 && !m_manual_number ? 13 : 35;
+
+		dc.SetClippingRegion(region);
+		OrganPanel::TileWood
+			(dc
+			,j
+			,m_display_metrics->GetCenterX()
+			,mri.keys_y
+			,m_display_metrics->GetCenterWidth()
+			,mri.height
+			);
+
+	}
+
+	for (unsigned j = 0; j < m_nb_accessible_keys; j++)
+		DrawKey(dc, j);
+
+}
+
+bool GOrgueManual::IsDisplayed()
+{
+
+	return m_displayed;
+
+}
