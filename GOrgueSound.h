@@ -252,7 +252,6 @@ public:
 	 * chest for detached releases, followed by the normal windchests for
 	 * pipes... */
 	GO_SAMPLER* windchests[10 + 1 + 16];		// maximum 10 tremulants + 1 detach + 16 windchests
-	int b_detach;
 
 	GOrgueSound(void);
 	~GOrgueSound(void);

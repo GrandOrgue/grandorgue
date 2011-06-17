@@ -90,7 +90,6 @@ protected:
 		ID_ENHANCE_SQUASH,
 		ID_ENHANCE_MANAGE_POLYPHONY,
 		ID_ENHANCE_ALIGN_RELEASE,
-		ID_ENHANCE_DETACH_RELEASE,
 		ID_ENHANCE_SCALE_RELEASE,
 		ID_ENHANCE_RANDOMIZE,
 
@@ -114,7 +113,7 @@ protected:
 	wxStaticText* c_actual_latency;
 	wxSpinCtrl* c_polyphony;
 	wxChoice* c_stereo;
-	wxCheckBox *c_squash, *c_limit, *c_align, *c_detach, *c_scale, *c_random;
+	wxCheckBox *c_squash, *c_limit, *c_align, *c_scale, *c_random;
 	bool b_squash, b_stereo;
 
 	wxListView* page2list, *organlist;
