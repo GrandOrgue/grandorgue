@@ -368,8 +368,7 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 
 			if (buffer_size <= 1024)
 			{
-				n_latency = (buffer_size * number_of_buffers ) / 25;
-				pConfig->Write("Devices/Sound/" + defaultAudio, n_latency);
+				n_latency = (buffer_size * number_of_buffers) / 25;
 				audioDevice->startStream();
 			}
 			else

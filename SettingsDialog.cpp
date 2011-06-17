@@ -437,7 +437,7 @@ void SettingsDialog::OnChanged(wxCommandEvent& event)
 void SettingsDialog::OnDevicesSoundChoice(wxCommandEvent& event)
 {
 	OnChanged(event);
-	c_latency  ->SetValue(pConfig->Read("Devices/Sound/" + c_sound->GetStringSelection(), 15));
+	c_latency->SetValue(pConfig->Read("Devices/Sound/" + c_sound->GetStringSelection(), 15));
 }
 
 void SettingsDialog::OnDevicesMIDIClick(wxCommandEvent& event)
