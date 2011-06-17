@@ -34,6 +34,7 @@ class GOrgueEnclosure : public GOrgueDrawable
 
 private:
 
+	unsigned m_enclosure_nb;
 	int AmpMinimumLevel;
 	int MIDIInputNumber;
 	int MIDIValue;
@@ -44,7 +45,7 @@ public:
 
 	GOrgueEnclosure();
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
-	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrgueDisplayMetrics* displayMetrics);
 	void Set(int n);
 	void MIDI(void);
 	int GetMIDIInputNumber();
@@ -53,6 +54,8 @@ public:
 	void Scroll(bool scroll_up);
 
 	void DrawLabel(wxDC& dc);
+
+	bool IsEnclosure(const unsigned nb) const;
 
 };
 

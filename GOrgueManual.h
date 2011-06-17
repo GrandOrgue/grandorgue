@@ -38,34 +38,36 @@ class GOrgueManual
 
 private:
 
-	int m_ManualNumber;
-	wxInt16 m_MIDI[85];
+	int m_manual_number;
+	GOrgueDisplayMetrics* m_display_metrics;
+	wxInt16 m_midi[85];
+	int m_first_accessible_logical_key_nb;
+	unsigned m_nb_logical_keys;
+	int m_first_accessible_key_midi_note_nb;
+	unsigned m_nb_accessible_keys;
 
-	int NumberOfLogicalKeys;
-	int FirstAccessibleKeyLogicalKeyNumber;
-	int FirstAccessibleKeyMIDINoteNumber;
-	int NumberOfAccessibleKeys;
-	int MIDIInputNumber;
+	int m_midi_input_number;
 
-	unsigned NumberOfStops;
-	unsigned NumberOfCouplers;
-	unsigned NumberOfDivisionals;
-	unsigned NumberOfTremulants;
-	wxInt16 tremulant[10];
+	unsigned m_nb_stops;
+	unsigned m_nb_couplers;
+	unsigned m_nb_divisionals;
+	unsigned m_nb_tremulants;
 
-	wxString Name;
+	wxInt16 m_tremulant_ids[10];
 
-	std::vector<GOrgueStop*> stop;
-	GOrgueCoupler* coupler;
-	GOrgueDivisional* divisional;
+	wxString m_name;
 
+	std::vector<GOrgueStop*> m_stops;
+	GOrgueCoupler* m_couplers;
+	GOrgueDivisional* m_divisionals;
+	bool m_displayed : 1;
+	bool m_key_colour_inverted : 1;
+	bool m_key_colour_wooden : 1;
+
+	void GetKeyDimensions(const int key_midi_nb, int &x, int &cx, int &cy, int &z);
+	wxRegion GetKeyRegion(unsigned key_nb);
 
 public:
-
-	bool Displayed : 1;
-	int m_Width, m_Height, m_X, m_Y, m_KeysY, m_PistonY;
-	bool DispKeyColourInverted : 1;
-	bool DispKeyColourWooden : 1;
 
 	GOrgueManual();
 	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics, int manualNumber);
@@ -89,6 +91,10 @@ public:
 	GOrgueDivisional* GetDivisional(unsigned index);
 	int GetTremulantCount();
 	GOrgueTremulant* GetTremulant(unsigned index);
+
+	void DrawKey(wxDC& dc, unsigned key_nb);
+	void Draw(wxDC& dc);
+	bool IsDisplayed();
 
 };
 

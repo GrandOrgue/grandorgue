@@ -70,14 +70,7 @@ OrganPanel::OrganPanel(wxWindow* parent) :
 {
 }
 
-wxPoint g_points[4][17] = {
-  { wxPoint( 0, 0), wxPoint(13, 0), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0, 1), wxPoint(12, 1), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1, 1), },
-  { wxPoint( 0, 0), wxPoint(10, 0), wxPoint(10,18), wxPoint(13,18), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0, 1), wxPoint( 9, 1), wxPoint( 9,19), wxPoint(12,19), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1, 1), },
-  { wxPoint( 3, 0), wxPoint(13, 0), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0,18), wxPoint( 3,18), wxPoint( 3, 1), wxPoint(12, 1), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1,19), wxPoint( 4,19), wxPoint( 4, 1), },
-  { wxPoint( 3, 0), wxPoint(10, 0), wxPoint(10,18), wxPoint(13,18), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0,18), wxPoint( 3,18), wxPoint( 3, 1), wxPoint( 9, 1), wxPoint( 9,19), wxPoint(12,19), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1,19), wxPoint( 4,19), wxPoint( 4, 1), },
-};
-
-void TileWood(wxDC& dc, int which, int sx, int sy, int cx, int cy)
+void OrganPanel::TileWood(wxDC& dc, int which, int sx, int sy, int cx, int cy)
 {
 	int x, y;
 	wxMemoryInputStream mem((const char*)ImageLoader_Wood[(which - 1) >> 1], c_ImageLoader_Wood[(which - 1) >> 1]);
@@ -94,162 +87,64 @@ void TileWood(wxDC& dc, int which, int sx, int sy, int cx, int cy)
 
 void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 {
-	int i, j, k;
-	wxFont font = *wxNORMAL_FONT;
 
-	// if (m_clientBitmap.Ok() && !hint)
-	// 	return;
+	int i, j;
+	wxFont font = *wxNORMAL_FONT;
 
 	m_clientOrigin = GetClientAreaOrigin();
 
 	if (organfile)
-	{
-		displayMetrics = organfile->GetDisplayMetrics();
-		displayMetrics->Update();
-	}
+		m_display_metrics = organfile->GetDisplayMetrics();
 
-	m_clientBitmap = wxBitmap(displayMetrics->GetScreenWidth(), displayMetrics->GetScreenHeight());
+	m_clientBitmap = wxBitmap(m_display_metrics->GetScreenWidth(), m_display_metrics->GetScreenHeight());
 	wxMemoryDC dc;
 	dc.SelectObject(m_clientBitmap);
 
-	TileWood(dc, displayMetrics->GetDrawstopBackgroundImageNum(), 0, 0, displayMetrics->GetCenterX(), displayMetrics->GetScreenHeight());
-	TileWood(dc, displayMetrics->GetDrawstopBackgroundImageNum(), displayMetrics->GetCenterX() + displayMetrics->GetCenterWidth(), 0, displayMetrics->GetScreenWidth() - (displayMetrics->GetCenterX() + displayMetrics->GetCenterWidth()), displayMetrics->GetScreenHeight());
-	TileWood(dc, displayMetrics->GetConsoleBackgroundImageNum(), displayMetrics->GetCenterX(), 0, displayMetrics->GetCenterWidth(), displayMetrics->GetScreenHeight());
+	TileWood(dc, m_display_metrics->GetDrawstopBackgroundImageNum(), 0, 0, m_display_metrics->GetCenterX(), m_display_metrics->GetScreenHeight());
+	TileWood(dc, m_display_metrics->GetDrawstopBackgroundImageNum(), m_display_metrics->GetCenterX() + m_display_metrics->GetCenterWidth(), 0, m_display_metrics->GetScreenWidth() - (m_display_metrics->GetCenterX() + m_display_metrics->GetCenterWidth()), m_display_metrics->GetScreenHeight());
+	TileWood(dc, m_display_metrics->GetConsoleBackgroundImageNum(), m_display_metrics->GetCenterX(), 0, m_display_metrics->GetCenterWidth(), m_display_metrics->GetScreenHeight());
 
-	if (displayMetrics->HasPairDrawstopCols())
+	if (m_display_metrics->HasPairDrawstopCols())
 	{
-		for (i = 0; i < (displayMetrics->NumberOfDrawstopColsToDisplay() >> 2); i++)
+		for (i = 0; i < (m_display_metrics->NumberOfDrawstopColsToDisplay() >> 2); i++)
 		{
 			TileWood(dc,
-				displayMetrics->GetDrawstopInsetBackgroundImageNum(),
-				i * 174 + displayMetrics->GetJambLeftX() - 5,
-				displayMetrics->GetJambLeftRightY(),
+				m_display_metrics->GetDrawstopInsetBackgroundImageNum(),
+				i * 174 + m_display_metrics->GetJambLeftX() - 5,
+				m_display_metrics->GetJambLeftRightY(),
 				166,
-				displayMetrics->GetJambLeftRightHeight());
+				m_display_metrics->GetJambLeftRightHeight());
 			TileWood(dc,
-				displayMetrics->GetDrawstopInsetBackgroundImageNum(),
-				i * 174 + displayMetrics->GetJambRightX() - 5,
-				displayMetrics->GetJambLeftRightY(),
+				m_display_metrics->GetDrawstopInsetBackgroundImageNum(),
+				i * 174 + m_display_metrics->GetJambRightX() - 5,
+				m_display_metrics->GetJambLeftRightY(),
 				166,
-				displayMetrics->GetJambLeftRightHeight());
+				m_display_metrics->GetJambLeftRightHeight());
 		}
 	}
 
-	if (displayMetrics->HasTrimAboveExtraRows())
+	if (m_display_metrics->HasTrimAboveExtraRows())
 		TileWood(dc,
-			displayMetrics->GetKeyVertBackgroundImageNum(),
-			displayMetrics->GetCenterX(),
-			displayMetrics->GetCenterY(),
-			displayMetrics->GetCenterWidth(),
+			m_display_metrics->GetKeyVertBackgroundImageNum(),
+			m_display_metrics->GetCenterX(),
+			m_display_metrics->GetCenterY(),
+			m_display_metrics->GetCenterWidth(),
 			8);
 
-	if (displayMetrics->GetJambTopHeight() + displayMetrics->GetPistonTopHeight())
+	if (m_display_metrics->GetJambTopHeight() + m_display_metrics->GetPistonTopHeight())
 		TileWood(dc,
-			displayMetrics->GetKeyHorizBackgroundImageNum(),
-			displayMetrics->GetCenterX(),
-			displayMetrics->GetJambTopY(),
-			displayMetrics->GetCenterWidth(),
-			displayMetrics->GetJambTopHeight() + displayMetrics->GetPistonTopHeight());
+			m_display_metrics->GetKeyHorizBackgroundImageNum(),
+			m_display_metrics->GetCenterX(),
+			m_display_metrics->GetJambTopY(),
+			m_display_metrics->GetCenterWidth(),
+			m_display_metrics->GetJambTopHeight() + m_display_metrics->GetPistonTopHeight());
 
 	for (i = 0; i <= organfile->GetManualAndPedalCount(); i++)
 	{
 
-		TileWood(dc,
-			displayMetrics->GetKeyVertBackgroundImageNum(),
-			displayMetrics->GetCenterX(),
-			organfile->GetManual(i)->m_Y,
-			displayMetrics->GetCenterWidth(),
-			organfile->GetManual(i)->m_Height);
-
-		TileWood(dc,
-			displayMetrics->GetKeyHorizBackgroundImageNum(),
-			displayMetrics->GetCenterX(),
-			organfile->GetManual(i)->m_PistonY,
-			displayMetrics->GetCenterWidth(),
-			(!i && displayMetrics->HasExtraPedalButtonRow()) ? 80 : 40);
-
-		if (i < organfile->GetFirstManualIndex())
-			continue;
-
-		font = displayMetrics->GetControlLabelFont();
-		for (j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
-		{
-			if (organfile->GetManual(i)->GetStop(j)->Displayed)
-			{
-				font.SetPointSize(organfile->GetManual(i)->GetStop(j)->DispLabelFontSize);
-				dc.SetFont(font);
-				WrapText(dc, organfile->GetManual(i)->GetStop(j)->Name, 51);
-			}
-		}
-
-		for (j = 0; j < organfile->GetManual(i)->GetCouplerCount(); j++)
-		{
-			if (organfile->GetManual(i)->GetCoupler(j)->Displayed)
-			{
-				font.SetPointSize(organfile->GetManual(i)->GetCoupler(j)->DispLabelFontSize);
-				dc.SetFont(font);
-				WrapText(dc, organfile->GetManual(i)->GetCoupler(j)->Name, 51);
-			}
-		}
-
-		for (j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
-		{
-			if (organfile->GetManual(i)->GetDivisional(j)->Displayed)
-			{
-				font.SetPointSize(organfile->GetManual(i)->GetDivisional(j)->DispLabelFontSize);
-				dc.SetFont(font);
-				WrapText(dc, organfile->GetManual(i)->GetDivisional(j)->Name, 28);
-			}
-		}
-
-		wxRegion region;
-		for (j = 0; j < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); j++)
-		{
-			k = organfile->GetManual(i)->GetFirstAccessibleKeyMIDINoteNumber() + j;
-			if ( (((k % 12) < 5 && !(k & 1)) || ((k % 12) >= 5 && (k & 1))))
-				DrawKey(dc, i, j, false, &region);
-		}
-
-		j = 31 + (organfile->GetManual(i)->DispKeyColourInverted << 1);
-		if (j == 31 && (organfile->GetManual(i)->DispKeyColourWooden || !i))
-			j = 35;
-
-		if (!region.IsEmpty())
-		{
-			dc.SetClippingRegion(region);
-			TileWood(dc,
-				j,
-				displayMetrics->GetCenterX(),
-				organfile->GetManual(i)->m_KeysY,
-				displayMetrics->GetCenterWidth(),
-				organfile->GetManual(i)->m_Height);
-		}
-		region.Clear();
-
-		for (j = 0; j < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); j++)
-		{
-			k = organfile->GetManual(i)->GetFirstAccessibleKeyMIDINoteNumber() + j;
-			if (!(((k % 12) < 5 && !(k & 1)) || ((k % 12) >= 5 && (k & 1))))
-				DrawKey(dc, i, j, false, &region);
-		}
-
-		j = 33 - (organfile->GetManual(i)->DispKeyColourInverted << 1);
-		if (j == 31 && (organfile->GetManual(i)->DispKeyColourWooden || !i))
-			j = (displayMetrics->GetKeyVertBackgroundImageNum() % 10) == 1 && !i ? 13 : 35;
-
-		if (!region.IsEmpty())
-		{
-			dc.SetClippingRegion(region);
-			TileWood(dc,
-				j,
-				displayMetrics->GetCenterX(),
-				organfile->GetManual(i)->m_KeysY,
-				displayMetrics->GetCenterWidth(),
-				organfile->GetManual(i)->m_Height);
-		}
-
-		for (k = 0; k < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); k++)
-			DrawKey(dc, i, k);
+		GOrgueManual* man = organfile->GetManual(i);
+		if (man->IsDisplayed())
+			man->Draw(dc);
 
 	}
 
@@ -293,7 +188,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 		}
 	}
 
-	j = (displayMetrics->GetScreenWidth() - displayMetrics->GetEnclosureWidth() + 6) >> 1;
+	j = (m_display_metrics->GetScreenWidth() - m_display_metrics->GetEnclosureWidth() + 6) >> 1;
 	dc.SetPen(*wxTRANSPARENT_PEN);
 	dc.SetBrush(*wxBLACK_BRUSH);
 	for (unsigned l = 0; l < organfile->GetEnclosureCount(); l++)
@@ -307,12 +202,12 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 	dc.SelectObject(wxNullBitmap);
 
 	GetParent()->SetClientSize(
-		displayMetrics->GetScreenWidth(),
-		displayMetrics->GetScreenHeight());
+		m_display_metrics->GetScreenWidth(),
+		m_display_metrics->GetScreenHeight());
 
 	SetSize(
-		displayMetrics->GetScreenWidth(),
-		displayMetrics->GetScreenHeight());
+		m_display_metrics->GetScreenWidth(),
+		m_display_metrics->GetScreenHeight());
 
 	GetParent()->Center(wxBOTH);
 	GetParent()->SetBackgroundStyle(wxBG_STYLE_CUSTOM);
@@ -320,130 +215,9 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 
 }
 
-void OrganPanel::DrawKey(wxDC& dc, int man, int k, bool usepen, wxRegion* region)
-{
-
-	GOrgueManual* manual = organfile->GetManual(man);
-
-	if (!manual->Displayed)
-		return;
-
-	int x, cx, cy, j, z;
-	static int addends[12] = {0, 9, 12, 21, 24, 36, 45, 48, 57, 60, 69, 72};
-
-	if (k < 0 || k > manual->GetNumberOfAccessibleKeys())
-		return;
-
-	k += manual->GetFirstAccessibleKeyMIDINoteNumber();
-	z  = (((k % 12) < 5 && !(k & 1)) || ((k % 12) >= 5 && (k & 1))) ? 0 : 1;
-	cx = 7;
-	cy = 20;
-	if (man)
-	{
-		x  = manual->m_X + (k / 12) * 84;
-		x += addends[k % 12];
-		j  = manual->GetFirstAccessibleKeyMIDINoteNumber();
-		x -= (j / 12) * 84;
-		x -= addends[j % 12];
-		if (!z)
-		{
-			cx = 13;
-			cy = 32;
-		}
-	}
-	else
-	{
-		cx = 8;
-		x  = manual->m_X + (k / 12) * 98;
-		x += (k % 12) * 7;
-		if ((k % 12) >= 5)
-			x += 7;
-		j  = manual->GetFirstAccessibleKeyMIDINoteNumber();
-		x -= (j / 12) * 98;
-		x -= (j % 12) * 7;
-		if ((j % 12) >= 5)
-			x -= 7;
-		if (!z)
-			cy = 40;
-	}
-
-	wxRegion reg;
-	if (!man || z)
-	{
-		reg.Union(x, manual->m_KeysY, cx + 1, cy);
-		z = -4;
-	}
-	else
-	{
-		reg.Union(x + 3, manual->m_KeysY, 8, cy);
-		reg.Union(x, manual->m_KeysY + 18, 14, 14);
-		z = 0;
-		j = k % 12;
-		if (k > manual->GetFirstAccessibleKeyMIDINoteNumber() && j && j != 5)
-			z |= 2;
-		if (k < manual->GetFirstAccessibleKeyMIDINoteNumber() + manual->GetNumberOfAccessibleKeys() - 1 && j != 4 && j != 11)
-			z |= 1;
-
-		if (!(z & 2))
-			reg.Union(x, manual->m_KeysY, 3, 18);
-		if (!(z & 1))
-			reg.Union(x + 11, manual->m_KeysY, 3, 18);
-	}
-
-	if (region)
-		region->Union(reg);
-	if (usepen)
-	{
-
-		const wxPen* pen = manual->IsKeyDown(k) ? wxRED_PEN : wxGREY_PEN;
-		dc.SetPen(*pen);
-		wxRegion exclude;
-
-		if ((k - manual->GetFirstAccessibleKeyMIDINoteNumber()) > 0 && manual->IsKeyDown(k - 1)) {
-			k -= manual->GetFirstAccessibleKeyMIDINoteNumber();
-			DrawKey(dc, man, k - 1, 0, &exclude);
-			k += manual->GetFirstAccessibleKeyMIDINoteNumber();
-		}
-		if ((z & 2) && (k - manual->GetFirstAccessibleKeyMIDINoteNumber()) > 1 && manual->IsKeyDown(k - 2)) {
-			k -= manual->GetFirstAccessibleKeyMIDINoteNumber();
-			DrawKey(dc, man, k - 2, 0, &exclude);
-			k += manual->GetFirstAccessibleKeyMIDINoteNumber();
-		}
-		if ((k - manual->GetFirstAccessibleKeyMIDINoteNumber()) < manual->GetNumberOfAccessibleKeys() - 1 && manual->IsKeyDown(k + 1)) {
-			k -= manual->GetFirstAccessibleKeyMIDINoteNumber();
-			DrawKey(dc, man, k + 1, 0, &exclude);
-			k += manual->GetFirstAccessibleKeyMIDINoteNumber();
-		}
-		if ((z & 1) && (k - manual->GetFirstAccessibleKeyMIDINoteNumber()) < manual->GetNumberOfAccessibleKeys() - 2 && manual->IsKeyDown(k + 2)) {
-			k -= manual->GetFirstAccessibleKeyMIDINoteNumber();
-			DrawKey(dc, man, k + 2, 0, &exclude);
-			k += manual->GetFirstAccessibleKeyMIDINoteNumber();
-		}
-
-		if (!exclude.IsEmpty())
-		{
-			reg.Subtract(exclude);
-			reg.Offset(dc.LogicalToDeviceX(0), dc.LogicalToDeviceY(0));
-			dc.SetClippingRegion(reg);
-		}
-		if (z < 0)
-		{
-			dc.SetBrush(*wxTRANSPARENT_BRUSH);
-			dc.DrawRectangle(x, manual->m_KeysY, cx + 1, cy);
-			dc.DrawRectangle(x + 1, manual->m_KeysY + 1, cx - 1, cy - 2);
-		}
-		else
-		{
-			dc.DrawPolygon(9 + (((z + 1) >> 1) << 2), g_points[z], x, manual->m_KeysY);
-		}
-		if (!exclude.IsEmpty())
-			dc.DestroyClippingRegion();
-	}
-}
-
 void OrganPanel::OnErase(wxEraseEvent& event)
 {
-	if (!m_clientBitmap.Ok() || !organfile || !displayMetrics->GetJambLeftRightWidth())
+	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
 	{
 		event.Skip();
 		return;
@@ -453,7 +227,7 @@ void OrganPanel::OnErase(wxEraseEvent& event)
 }
 void OrganPanel::OnPaint(wxPaintEvent& event)
 {
-	if (!m_clientBitmap.Ok() || !organfile || !displayMetrics->GetJambLeftRightWidth())
+	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
 	{
 		event.Skip();
 		return;
@@ -464,7 +238,7 @@ void OrganPanel::OnPaint(wxPaintEvent& event)
 
 void OrganPanel::OnDrawstop(wxCommandEvent& event)
 {
-	if (!m_clientBitmap.Ok() || !organfile || !displayMetrics->GetJambLeftRightWidth())
+	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
 		return;
 
 	wxMemoryDC mdc;
@@ -477,15 +251,22 @@ void OrganPanel::OnDrawstop(wxCommandEvent& event)
 
 void OrganPanel::OnNoteOnOff(wxCommandEvent& event)
 {
-	if (!m_clientBitmap.Ok() || !organfile || !displayMetrics->GetJambLeftRightWidth())
+
+	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
 		return;
 
 	wxMemoryDC mdc;
 	mdc.SelectObject(m_clientBitmap);
 	wxClientDC dc(this);
 	dc.SetDeviceOrigin(m_clientOrigin.x, m_clientOrigin.y);
-	DrawKey(mdc, event.GetInt(), event.GetExtraLong(), true);
-	DrawKey( dc, event.GetInt(), event.GetExtraLong(), true);
+
+	GOrgueManual* man = organfile->GetManual(event.GetInt());
+	if (man->IsDisplayed())
+	{
+		man->DrawKey(mdc, event.GetExtraLong());
+		man->DrawKey( dc, event.GetExtraLong());
+	}
+
 }
 
 void OrganPanel::OnMouseLeftDown(wxMouseEvent& event)
@@ -569,14 +350,17 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 				HelpDrawStop(organfile->GetManual(i)->GetCoupler(j), dc, xx, yy, right);
 			for (j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
 				HelpDrawButton(organfile->GetManual(i)->GetDivisional(j), dc, xx, yy, right);
-			if (dc || !organfile->GetManual(i)->Displayed)
+			if (dc || !organfile->GetManual(i)->IsDisplayed())
 				continue;
 
-			wxRect rect(
-				organfile->GetManual(i)->m_X,
-				organfile->GetManual(i)->m_Y,
-				organfile->GetManual(i)->m_Width,
-				organfile->GetManual(i)->m_Height);
+			const GOrgueDisplayMetrics::MANUAL_RENDER_INFO& mri = m_display_metrics->GetManualRenderInfo(i);
+
+			wxRect rect
+				(mri.x
+				,mri.y
+				,mri.width
+				,mri.height
+				);
 
 			if (rect.Contains(xx, yy))
 			{
@@ -747,7 +531,7 @@ void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 
 void OrganPanel::OnDraw(wxDC* dc)
 {
-	if (!m_clientBitmap.Ok() || !organfile || !displayMetrics->GetJambLeftRightWidth())
+	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
 		return;
 	dc->DrawBitmap(m_clientBitmap, m_clientOrigin.x, m_clientOrigin.y, false);
 }
