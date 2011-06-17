@@ -104,8 +104,7 @@ GOrgueSound::GOrgueSound(void) :
 	meter_left(0),
 	meter_right(0),
 	b_active(false),
-	defaultAudio(""),
-	b_detach(0)
+	defaultAudio("")
 {
 
 	g_sound = this;
@@ -322,7 +321,6 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 	b_stereo = pConfig->Read("StereoEnabled", 1);
 	b_limit  = pConfig->Read("ManagePolyphony", 1);
 	b_align  = pConfig->Read("AlignRelease", 1);
-	b_detach = pConfig->Read("DetachRelease", 1);
 	b_scale  = pConfig->Read("ScaleRelease", 1);
 	b_random = pConfig->Read("RandomizeSpeaking", 1);
 

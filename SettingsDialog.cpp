@@ -50,7 +50,6 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHECKBOX(ID_ENHANCE_SQUASH, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_MANAGE_POLYPHONY, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_ALIGN_RELEASE, SettingsDialog::OnChanged)
-	EVT_CHECKBOX(ID_ENHANCE_DETACH_RELEASE, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_SCALE_RELEASE, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_RANDOMIZE, SettingsDialog::OnChanged)
 
@@ -257,7 +256,6 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
     item6->Add(c_squash = new wxCheckBox(panel, ID_ENHANCE_SQUASH,           _("Lossless compression")          ), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_limit  = new wxCheckBox(panel, ID_ENHANCE_MANAGE_POLYPHONY, _("Active polyphony management")   ), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_align  = new wxCheckBox(panel, ID_ENHANCE_ALIGN_RELEASE,    _("Release sample phase alignment")), 0, wxEXPAND | wxALL, 5);
-    item6->Add(c_detach = new wxCheckBox(panel, ID_ENHANCE_DETACH_RELEASE,   _("Release sample detachment"     )), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_scale  = new wxCheckBox(panel, ID_ENHANCE_SCALE_RELEASE,    _("Release sample scaling"        )), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_random = new wxCheckBox(panel, ID_ENHANCE_RANDOMIZE,        _("Randomize pipe speaking"       )), 0, wxEXPAND | wxALL, 5);
 	if (pConfig->Read("LosslessCompression", 1))
@@ -266,8 +264,6 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 		c_limit ->SetValue(true);
 	if (pConfig->Read("AlignRelease", 1))
 		c_align ->SetValue(true);
-	if (pConfig->Read("DetachRelease", 1))
-		c_detach->SetValue(true);
 	if (pConfig->Read("ScaleRelease", 1))
 		c_scale ->SetValue(true);
 	if (pConfig->Read("RandomizeSpeaking", 1))
@@ -564,7 +560,6 @@ bool SettingsDialog::DoApply()
 	pConfig->Write("LosslessCompression", (long)c_squash->IsChecked());
 	pConfig->Write("ManagePolyphony", (long)c_limit->IsChecked());
 	pConfig->Write("AlignRelease", (long)c_align->IsChecked());
-	pConfig->Write("DetachRelease", (long)c_detach->IsChecked());
 	pConfig->Write("ScaleRelease", (long)c_scale->IsChecked());
 	pConfig->Write("RandomizeSpeaking", (long)c_random->IsChecked());
 

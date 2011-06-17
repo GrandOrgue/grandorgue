@@ -218,7 +218,7 @@ void GOrguePipe::SetOff()
 				if (time < 1024)
 					new_sampler->fadeout = 0x0001;
 			}
-			if (g_sound->b_detach && not_a_tremulant)
+			if (not_a_tremulant)
 				new_sampler->fademax = lrint(vol * new_sampler->fademax);
 			new_sampler->fadein = (new_sampler->fademax + 128) >> 8;
 			if (new_sampler->fadein == 0)
@@ -240,7 +240,7 @@ void GOrguePipe::SetOff()
 			}
 
 			const int detached_windchest_index = organfile->GetTremulantCount();
-			if (g_sound->b_detach && not_a_tremulant)
+			if (not_a_tremulant)
 			{
 				/* detached releases are enabled and the pipe was on a regular
 				 * windchest. Play the release on the detached windchest */
