@@ -290,6 +290,8 @@ public:
 	std::map<wxString, std::pair<int, RtAudio::Api> >& GetAudioDevices();
 	const wxString GetDefaultAudioDevice();
 
+	const unsigned GetActualLatency(const wxString device, const unsigned latency);
+
 	GOrgueMidi& GetMidi();
 
 };

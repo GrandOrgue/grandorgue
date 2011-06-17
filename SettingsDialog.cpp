@@ -46,7 +46,6 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_LISTBOX_DCLICK(ID_MIDI_DEVICES, SettingsDialog::OnDevicesMIDIDoubleClick)
 	EVT_BUTTON(ID_MIDI_PROPERTIES, SettingsDialog::OnDevicesMIDIDoubleClick)
 	EVT_CHOICE(ID_SOUND_DEVICE, SettingsDialog::OnDevicesSoundChoice)
-	EVT_TEXT(ID_LATENCY, SettingsDialog::OnChanged)
 	EVT_CHOICE(ID_MONO_STEREO, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_SQUASH, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_MANAGE_POLYPHONY, SettingsDialog::OnChanged)
@@ -68,7 +67,27 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_BUTTON(wxID_APPLY, SettingsDialog::OnApply)
 	EVT_BUTTON(wxID_OK, SettingsDialog::OnOK)
 	EVT_BUTTON(wxID_HELP, SettingsDialog::OnHelp)
+
+	EVT_SPINCTRL(ID_LATENCY, SettingsDialog::OnLatencySpinnerChange)
+
 END_EVENT_TABLE()
+
+void SettingsDialog::SetLatencySpinner(int latency)
+{
+
+	if (c_latency->GetValue() != latency)
+		c_latency->SetValue(latency);
+
+	wxString act;
+
+	if (g_sound)
+		act.Printf(wxT("%u ms"), g_sound->GetActualLatency(c_sound->GetStringSelection(), latency));
+	else
+		act = wxT("---");
+
+	c_actual_latency->SetLabel(act);
+
+}
 
 SettingsDialog::SettingsDialog(wxWindow* win) : wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition,
 #ifdef __WXMSW__
@@ -129,7 +148,9 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::UpdateSoundStatus()
 {
-	c_latency->SetValue(pConfig->Read("Devices/Sound/" + c_sound->GetStringSelection(), 0L));
+
+	SetLatencySpinner(pConfig->Read("Devices/Sound/" + c_sound->GetStringSelection(), 0L));
+
 	wxString str;
 	switch(g_sound->GetAudioFormat())
 	{
@@ -208,14 +229,22 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	choices.clear();
 	choices.push_back(_("Mono"));
 	choices.push_back(_("Stereo"));
-	wxFlexGridSizer* grid = new wxFlexGridSizer(3, 2, 5, 5);
+
+	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 5, 5);
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Output Resolution:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	grid->Add(c_format = new wxStaticText(panel, wxID_ANY, wxEmptyString));
+
+	/* estimated latency */
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Estimated &Latency:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 	wxBoxSizer* latency = new wxBoxSizer(wxHORIZONTAL);
 	latency->Add(c_latency = new wxSpinCtrl(panel, ID_LATENCY, wxEmptyString, wxDefaultPosition, wxSize(48, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 999), 0);
 	latency->Add(new wxStaticText(panel, wxID_ANY, "ms"), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 5);
 	grid->Add(latency, 0);
+
+	/* actual latency */
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Actual Latency:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	grid->Add(c_actual_latency = new wxStaticText(panel, wxID_ANY, wxEmptyString));
+
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Load &stereo samples in:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(c_stereo = new wxChoice(panel, ID_MONO_STEREO, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 	item1->Add(grid, 0, wxEXPAND | wxALL, 5);
@@ -419,25 +448,22 @@ void SettingsDialog::UpdateOrganMessages(int i)
 
 void SettingsDialog::OnChanged(wxCommandEvent& event)
 {
-	int id = event.GetId();
-	if (id == ID_LATENCY)
-	{
-		long n = c_latency->GetValue(), v;
-		if (!event.GetString().ToLong(&v) || n != v)
-		{
-			c_latency->SetValue(n);
-			c_latency->SetSelection(-1, -1);
-			return;
-		}
-	}
 
-	//this->FindWindowById(wxID_APPLY, this)->Enable();
 }
 
 void SettingsDialog::OnDevicesSoundChoice(wxCommandEvent& event)
 {
-	OnChanged(event);
-	c_latency->SetValue(pConfig->Read("Devices/Sound/" + c_sound->GetStringSelection(), 15));
+
+	int lat = pConfig->Read("Devices/Sound/" + c_sound->GetStringSelection(), 15);
+	SetLatencySpinner(lat);
+
+}
+
+void SettingsDialog::OnLatencySpinnerChange(wxSpinEvent& event)
+{
+
+	SetLatencySpinner(event.GetPosition());
+
 }
 
 void SettingsDialog::OnDevicesMIDIClick(wxCommandEvent& event)
@@ -503,22 +529,22 @@ void SettingsDialog::OnHelp(wxCommandEvent& event)
 
 void SettingsDialog::OnOK(wxCommandEvent& event)
 {
-    pConfig->Write(wxString("OrganMIDI/Count"), organlist->GetItemCount());
-    for (int i=0; i<organlist->GetItemCount(); i++) {
-      wxString itemstr=wxString::Format("OrganMIDI/Organ%d", i);
-      pConfig->Write(itemstr+".file", organlist->GetItemText(i));
-      pConfig->Write(itemstr+".midi", (long)organlist->GetItemData(i));
-    }
+
+	pConfig->Write(wxString("OrganMIDI/Count"), organlist->GetItemCount());
+	for (int i=0; i<organlist->GetItemCount(); i++)
+	{
+		wxString itemstr=wxString::Format("OrganMIDI/Organ%d", i);
+		pConfig->Write(itemstr+".file", organlist->GetItemText(i));
+		pConfig->Write(itemstr+".midi", (long)organlist->GetItemData(i));
+	}
 
 	if (DoApply())
-        event.Skip();
+		event.Skip();
+
 }
 
 bool SettingsDialog::DoApply()
 {
-
-	//if (!this->FindWindowById(wxID_APPLY, this)->IsEnabled())
-        //return true;
 
 	if (!(this->Validate()))
 		return false;
@@ -544,7 +570,6 @@ bool SettingsDialog::DoApply()
 
     g_sound->ResetSound(NULL);
     UpdateSoundStatus();
-	//this->FindWindowById(wxID_APPLY, this)->Disable();
 
 	return true;
 }

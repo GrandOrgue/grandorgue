@@ -41,6 +41,10 @@ class wxToggleButton;
 class SettingsDialog : public wxPropertySheetDialog
 {
 DECLARE_CLASS(SettingsDialog)
+private:
+
+	void SetLatencySpinner(int latency);
+
 public:
 	SettingsDialog(wxWindow* parent);
 	~SettingsDialog();
@@ -71,6 +75,7 @@ public:
 	void OnDelOrgan(wxCommandEvent& event);
 	void OnOrganProperties(wxCommandEvent& event);
 
+	void OnLatencySpinnerChange(wxSpinEvent& event);
 
 	DECLARE_EVENT_TABLE()
 
@@ -106,6 +111,7 @@ protected:
 	wxChoice* c_sound;
 	wxStaticText* c_format;
 	wxSpinCtrl* c_latency;
+	wxStaticText* c_actual_latency;
 	wxSpinCtrl* c_polyphony;
 	wxChoice* c_stereo;
 	wxCheckBox *c_squash, *c_limit, *c_align, *c_detach, *c_scale, *c_random;
