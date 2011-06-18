@@ -74,28 +74,35 @@ END_EVENT_TABLE()
 void SettingsDialog::SetLatencySpinner(int latency)
 {
 
+	int corresponding_estimated_latency = pConfig->Read(wxT("Devices/Sound/") + c_sound->GetStringSelection(), -1);
+
 	if (c_latency->GetValue() != latency)
 		c_latency->SetValue(latency);
 
-	wxString act;
+	wxString lat_s = wxT("---");
+	if (latency == corresponding_estimated_latency)
+	{
 
-	if (g_sound)
-		act.Printf(wxT("%u ms"), g_sound->GetActualLatency(c_sound->GetStringSelection(), latency));
-	else
-		act = wxT("---");
+		long int lat_l = pConfig->Read(wxT("Devices/Sound/ActualLatency/") + c_sound->GetStringSelection(), -1);
+		if (lat_l > 0)
+			lat_s.Printf(wxT("%ld ms"), lat_l);
 
-	c_actual_latency->SetLabel(act);
+	}
+
+	c_actual_latency->SetLabel(lat_s);
 
 }
 
-SettingsDialog::SettingsDialog(wxWindow* win) : wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition,
 #ifdef __WXMSW__
-wxSize(453,450)
+#define SETTINGS_DLG_SIZE wxSize(453,450)
 #else
-wxSize(603,500)
+#define SETTINGS_DLG_SIZE wxSize(603,500)
 #endif
-)
+
+SettingsDialog::SettingsDialog(wxWindow* win) :
+	wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, SETTINGS_DLG_SIZE)
 {
+
 	wxASSERT(g_sound);
 
 	b_stereo = g_sound->IsStereo();
@@ -180,7 +187,7 @@ void SettingsDialog::UpdateSoundStatus()
 wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 {
 	int i;
-	std::map<wxString, std::pair<int, RtAudio::Api> >::iterator it1;
+	std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>::iterator it1;
 	std::map<wxString, int>::iterator it2;
 
 	wxPanel* panel = new wxPanel(parent, wxID_ANY);
@@ -234,14 +241,14 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(c_format = new wxStaticText(panel, wxID_ANY, wxEmptyString));
 
 	/* estimated latency */
-	grid->Add(new wxStaticText(panel, wxID_ANY, _("Estimated &Latency:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Desired &Latency:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 	wxBoxSizer* latency = new wxBoxSizer(wxHORIZONTAL);
 	latency->Add(c_latency = new wxSpinCtrl(panel, ID_LATENCY, wxEmptyString, wxDefaultPosition, wxSize(48, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 999), 0);
 	latency->Add(new wxStaticText(panel, wxID_ANY, "ms"), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 5);
 	grid->Add(latency, 0);
 
-	/* actual latency */
-	grid->Add(new wxStaticText(panel, wxID_ANY, _("Actual Latency:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	/* achieved latency for the above estimate */
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Achieved Latency:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	grid->Add(c_actual_latency = new wxStaticText(panel, wxID_ANY, wxEmptyString));
 
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Load &stereo samples in:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
@@ -249,7 +256,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	item1->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	UpdateSoundStatus();
-	c_stereo   ->Select(pConfig->Read("StereoEnabled", 0L));
+	c_stereo->Select(pConfig->Read("StereoEnabled", 0L));
 
 	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Enhancements"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);

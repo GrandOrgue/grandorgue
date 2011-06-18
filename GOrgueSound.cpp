@@ -53,6 +53,7 @@ DEFINE_EVENT_TYPE(wxEVT_LISTENING)
 DEFINE_EVENT_TYPE(wxEVT_METERS)
 DEFINE_EVENT_TYPE(wxEVT_LOADFILE)
 
+static
 wxString GetRtApiStr(const RtAudio::Api api)
 {
 
@@ -79,6 +80,76 @@ wxString GetRtApiStr(const RtAudio::Api api)
 
 }
 
+void GetDefaultDirectSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
+{
+
+	int bufferCalc = (latency * 44100) / 1000;
+
+	*nb_buffers = 2;
+
+	if (bufferCalc <= 256)
+	{
+		*buffer_size = 128;
+		return;
+	}
+
+	if (bufferCalc <= 512)
+	{
+		*buffer_size = 256;
+		return;
+	}
+
+	if (bufferCalc <= 3072)
+	{
+		*buffer_size = 512;
+		*nb_buffers = bufferCalc / 512;
+		if (bufferCalc % 512)
+			(*nb_buffers)++;
+		return;
+	}
+
+	*buffer_size = 1024;
+	*nb_buffers = bufferCalc / 1024;
+	if (bufferCalc % 1024)
+		(*nb_buffers)++;
+
+}
+
+void GetDefaultAsioSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
+{
+
+	int buffer_calc = (latency * 44100) / 1000;
+
+	*nb_buffers = 2;
+
+	if (buffer_calc <= 256)
+		*buffer_size = 128;
+	else if (buffer_calc <= 512)
+		*buffer_size = 256;
+	else if (buffer_calc <= 1024)
+		*buffer_size = 512;
+	else
+		*buffer_size = 1024;
+
+}
+
+void GetDefaultJackSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
+{
+
+	*nb_buffers = 1;
+	*buffer_size = 1024;
+
+}
+
+void GetDefaultUnknownSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
+{
+
+	*buffer_size = 256;
+	*nb_buffers = (latency * 44100) / (*buffer_size * 1000);
+	if (*nb_buffers < 2)
+		*nb_buffers = 2;
+
+}
 
 GOrgueSound::GOrgueSound(void) :
 	sw(),
@@ -91,7 +162,8 @@ GOrgueSound::GOrgueSound(void) :
 	volume(0),
 	m_audioDevices(),
 	audioDevice(NULL),
-	n_latency(0),
+	m_samples_per_buffer(0),
+	m_nb_buffers(0),
 	b_limit(0),
 	b_stereo(0),
 	b_align(0),
@@ -153,7 +225,24 @@ GOrgueSound::GOrgueSound(void) :
 					)
 					continue;
 
-				m_audioDevices[name] = std::make_pair(i, rtaudio_apis[k]);
+				GO_SOUND_DEV_CONFIG cfg;
+				cfg.rt_api = rtaudio_apis[k];
+				cfg.rt_api_subindex = i;
+				switch (cfg.rt_api)
+				{
+				case RtAudio::WINDOWS_DS:
+					cfg.latency_config_func = GetDefaultDirectSoundConfig;
+					break;
+				case RtAudio::UNIX_JACK:
+					cfg.latency_config_func = GetDefaultJackSoundConfig;
+					break;
+				case RtAudio::WINDOWS_ASIO:
+					cfg.latency_config_func = GetDefaultAsioSoundConfig;
+					break;
+				default:
+					cfg.latency_config_func = GetDefaultUnknownSoundConfig;
+				}
+				m_audioDevices[name] = cfg;
 
 			}
 
@@ -195,126 +284,11 @@ GOrgueSound::~GOrgueSound(void)
 
 }
 
-static
-void GetDefaultDirectSoundConfig(const int latency, unsigned &nb_buffers, unsigned &buffer_size)
-{
-
-	int bufferCalc = (latency * 25);
-
-	nb_buffers = 2;
-
-	if (bufferCalc <= 256)
-	{
-		buffer_size = 128;
-		return;
-	}
-
-	if (bufferCalc <= 512)
-	{
-		buffer_size = 256;
-		return;
-	}
-
-	if (bufferCalc <= 768)
-	{
-		buffer_size = 384;
-		return;
-	}
-
-	if (bufferCalc <= 3072)
-	{
-		buffer_size = 512;
-		nb_buffers = bufferCalc / 512;
-		if (bufferCalc % 512)
-			nb_buffers++;
-		return;
-	}
-
-	buffer_size = 1024;
-	nb_buffers = bufferCalc / 1024;
-	if (bufferCalc % 1024)
-		nb_buffers++;
-
-}
-
-static
-void GetDefaultAsioSoundConfig(const int latency, unsigned &nb_buffers, unsigned &buffer_size)
-{
-
-	int buffer_calc = (latency * 25);
-
-	nb_buffers = 2;
-
-	if (buffer_calc <= 256)
-		buffer_size = 128;
-	else if (buffer_calc <= 512)
-		buffer_size = 256;
-	else if (buffer_calc <= 768)
-		buffer_size = 384;
-	else if (buffer_calc <= 1024)
-		buffer_size = 512;
-	else if (buffer_calc <= 1536)
-		buffer_size = 768;
-	else
-		buffer_size = 1024;
-
-}
-
-static
-void GetDefaultJackSoundConfig(const int latency, unsigned &nb_buffers, unsigned &buffer_size)
-{
-
-	nb_buffers = 1;
-	buffer_size = 1024;
-
-}
-
-static
-void GetDefaultUnknownSoundConfig(const int latency, unsigned &nb_buffers, unsigned &buffer_size)
-{
-
-	buffer_size = 128;
-
-	nb_buffers = (latency * 25) / buffer_size;
-	if (nb_buffers < 2)
-		nb_buffers = 2;
-
-}
-
-static
-void GetAudioBufferConfig
-	(const RtAudio::Api api
-	,const unsigned latency
-	,unsigned &nb_buffers
-	,unsigned &buffer_size
-	)
-{
-
-	switch (api)
-	{
-
-	case RtAudio::WINDOWS_DS:
-		GetDefaultDirectSoundConfig(latency, nb_buffers, buffer_size);
-		break;
-	case RtAudio::UNIX_JACK:
-		GetDefaultJackSoundConfig(latency, nb_buffers, buffer_size);
-		break;
-	case RtAudio::WINDOWS_ASIO:
-		GetDefaultAsioSoundConfig(latency, nb_buffers, buffer_size);
-		break;
-	default:
-		GetDefaultUnknownSoundConfig(latency, nb_buffers, buffer_size);
-
-	}
-
-}
-
 bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 {
 	int i;
 
 	defaultAudio = pConfig->Read("Devices/DefaultSound", defaultAudio);
-	n_latency = pConfig->Read("Devices/Sound/" + defaultAudio, 12);
 	volume = pConfig->Read("Volume", 50);
 	polyphony = pConfig->Read("PolyphonyLimit", 2048);
 	poly_soft = (polyphony * 3) / 4;
@@ -335,22 +309,22 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 
 		m_midi->Open();
 
-		std::map<wxString, std::pair<int, RtAudio::Api> >::iterator it;
+		std::map<wxString, GO_SOUND_DEV_CONFIG>::iterator it;
 		it = m_audioDevices.find(wxString::FromAscii(defaultAudio.c_str()));
 		if (it != m_audioDevices.end())
 		{
 
-			audioDevice = new RtAudio(it->second.second);
+			audioDevice = new RtAudio(it->second.rt_api);
 
-			unsigned int buffer_size, number_of_buffers;
-			GetAudioBufferConfig(it->second.second, n_latency, number_of_buffers, buffer_size);
+			unsigned try_latency = pConfig->Read("Devices/Sound/" + defaultAudio, 12);
+			it->second.latency_config_func(try_latency, &m_nb_buffers, &m_samples_per_buffer);
 
 			RtAudio::StreamParameters aOutputParam;
-			aOutputParam.deviceId = it->second.first;
+			aOutputParam.deviceId = it->second.rt_api_subindex;
 			aOutputParam.nChannels = 2; //stereo
 
 			RtAudio::StreamOptions aOptions;
-			aOptions.numberOfBuffers = number_of_buffers;
+			aOptions.numberOfBuffers = m_nb_buffers;
 
             format = RTAUDIO_FLOAT32;
 			audioDevice->openStream
@@ -358,16 +332,18 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 				,NULL
 				,format
 				,44100
-				,&buffer_size
+				,&m_samples_per_buffer
 				,&GOrgueSound::AudioCallback
 				,this
 				,&aOptions
 				);
 
-			if (buffer_size <= 1024)
+			m_nb_buffers = aOptions.numberOfBuffers;
+
+			if (m_samples_per_buffer <= 1024)
 			{
-				n_latency = (buffer_size * number_of_buffers) / 25;
 				audioDevice->startStream();
+				pConfig->Write(wxT("Devices/Sound/ActualLatency/") + defaultAudio, GetLatency());
 			}
 			else
 			{
@@ -612,24 +588,26 @@ void GOrgueSound::SetLogSoundErrorMessages(bool settingsDialogVisible)
 	logSoundErrors = settingsDialogVisible;
 }
 
-std::map<wxString, std::pair<int, RtAudio::Api> >& GOrgueSound::GetAudioDevices()
+std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>& GOrgueSound::GetAudioDevices()
 {
 	return m_audioDevices;
 }
 
-const unsigned GOrgueSound::GetActualLatency(const wxString device, const unsigned latency)
+const int GOrgueSound::GetLatency()
 {
 
-	std::map<wxString, std::pair<int, RtAudio::Api> >::iterator it;
-	it = m_audioDevices.find(device);
-	if (it != m_audioDevices.end())
-	{
-		unsigned int buffer_size, number_of_buffers;
-		GetAudioBufferConfig(it->second.second, latency, number_of_buffers, buffer_size);
-		return (buffer_size * number_of_buffers) / 25;
-	}
+	if (!audioDevice)
+		return -1;
 
-	throw (wxChar*)wxT("failed to get buffer configuration");
+	int actual_latency = audioDevice->getStreamLatency();
+
+	/* getStreamLatency returns zero if not supported by the API, in which
+	 * case we will make a best guess.
+	 */
+	if (actual_latency == 0)
+		actual_latency = m_samples_per_buffer * m_nb_buffers;
+
+	return (actual_latency * 1000) / 44100;
 
 }
 
