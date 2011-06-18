@@ -33,7 +33,7 @@ class GOrgueControl
 public:
 	GOrgueControl();
 	virtual ~GOrgueControl();
-	void Load(IniFileConfig& cfg, const char* group);
+	void Load(IniFileConfig& cfg, wxString group);
 
 	bool Displayed : 1;
 	bool DispKeyLabelOnLeft : 1;

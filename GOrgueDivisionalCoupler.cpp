@@ -39,17 +39,17 @@ GOrgueDivisionalCoupler::GOrgueDivisionalCoupler() :
 }
 
 
-void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, const char* group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, wxString group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics)
 {
 
 	int i;
-	char buffer[64];
+	wxString buffer;
 
-	BiDirectionalCoupling=cfg.ReadBoolean( group,"BiDirectionalCoupling");
-	NumberOfManuals=cfg.ReadInteger( group,"NumberOfManuals",    1,    6);
+	BiDirectionalCoupling=cfg.ReadBoolean( group,wxT("BiDirectionalCoupling"));
+	NumberOfManuals=cfg.ReadInteger( group,wxT("NumberOfManuals"),    1,    6);
 	for (i = 0; i < NumberOfManuals; i++)
 	{
-		sprintf(buffer, "Manual%03d", i + 1);
+		buffer.Printf(wxT("Manual%03d"), i + 1);
 		manual[i] = cfg.ReadInteger(group, buffer, firstValidManualIndex, numberOfManuals);
 	}
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
@@ -58,7 +58,7 @@ void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, const char* group, int fi
 
 void GOrgueDivisionalCoupler::Save(IniFileConfig& cfg, bool prefix)
 {
-	GOrgueDrawstop::Save(cfg, prefix, "DivisionalCoupler");
+	GOrgueDrawstop::Save(cfg, prefix, wxT("DivisionalCoupler"));
 }
 
 bool GOrgueDivisionalCoupler::Set(bool on)

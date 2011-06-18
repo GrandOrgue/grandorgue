@@ -41,17 +41,17 @@ GOrgueCoupler::GOrgueCoupler() :
 
 }
 
-void GOrgueCoupler::Load(IniFileConfig& cfg, const char* group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics)
 {
 
-	UnisonOff                                     = cfg.ReadBoolean(group, "UnisonOff");
-	DestinationManual                             = cfg.ReadInteger(group, "DestinationManual", firstValidManualIndex, numberOfManuals, !UnisonOff);
-	DestinationKeyshift                           = cfg.ReadInteger(group, "DestinationKeyshift", -24, 24, !UnisonOff);
-	CoupleToSubsequentUnisonIntermanualCouplers   = cfg.ReadBoolean(group, "CoupleToSubsequentUnisonIntermanualCouplers", !UnisonOff);
-	CoupleToSubsequentUpwardIntermanualCouplers   = cfg.ReadBoolean(group, "CoupleToSubsequentUpwardIntermanualCouplers", !UnisonOff);
-	CoupleToSubsequentDownwardIntermanualCouplers = cfg.ReadBoolean(group, "CoupleToSubsequentDownwardIntermanualCouplers", !UnisonOff);
-	CoupleToSubsequentUpwardIntramanualCouplers   = cfg.ReadBoolean(group, "CoupleToSubsequentUpwardIntramanualCouplers", !UnisonOff);
-	CoupleToSubsequentDownwardIntramanualCouplers = cfg.ReadBoolean(group, "CoupleToSubsequentDownwardIntramanualCouplers", !UnisonOff);
+	UnisonOff                                     = cfg.ReadBoolean(group, wxT("UnisonOff"));
+	DestinationManual                             = cfg.ReadInteger(group, wxT("DestinationManual"), firstValidManualIndex, numberOfManuals, !UnisonOff);
+	DestinationKeyshift                           = cfg.ReadInteger(group, wxT("DestinationKeyshift"), -24, 24, !UnisonOff);
+	CoupleToSubsequentUnisonIntermanualCouplers   = cfg.ReadBoolean(group, wxT("CoupleToSubsequentUnisonIntermanualCouplers"), !UnisonOff);
+	CoupleToSubsequentUpwardIntermanualCouplers   = cfg.ReadBoolean(group, wxT("CoupleToSubsequentUpwardIntermanualCouplers"), !UnisonOff);
+	CoupleToSubsequentDownwardIntermanualCouplers = cfg.ReadBoolean(group, wxT("CoupleToSubsequentDownwardIntermanualCouplers"), !UnisonOff);
+	CoupleToSubsequentUpwardIntramanualCouplers   = cfg.ReadBoolean(group, wxT("CoupleToSubsequentUpwardIntramanualCouplers"), !UnisonOff);
+	CoupleToSubsequentDownwardIntramanualCouplers = cfg.ReadBoolean(group, wxT("CoupleToSubsequentDownwardIntramanualCouplers"), !UnisonOff);
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 
 }
@@ -59,7 +59,7 @@ void GOrgueCoupler::Load(IniFileConfig& cfg, const char* group, int firstValidMa
 void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix)
 {
 
-	GOrgueDrawstop::Save(cfg, prefix, "Coupler");
+	GOrgueDrawstop::Save(cfg, prefix, wxT("Coupler"));
 
 }
 

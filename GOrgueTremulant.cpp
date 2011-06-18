@@ -34,18 +34,18 @@ GOrgueTremulant::GOrgueTremulant() :
 
 }
 
-void GOrgueTremulant::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
 {
-	Period = cfg.ReadLong(group, "Period", 32, 441000);
-	StartRate = cfg.ReadInteger(group, "StartRate", 1, 100);
-	StopRate = cfg.ReadInteger(group, "StopRate", 1, 100);
-	AmpModDepth = cfg.ReadInteger(group, "AmpModDepth", 1, 100);
+	Period = cfg.ReadLong(group, wxT("Period"), 32, 441000);
+	StartRate = cfg.ReadInteger(group, wxT("StartRate"), 1, 100);
+	StopRate = cfg.ReadInteger(group, wxT("StopRate"), 1, 100);
+	AmpModDepth = cfg.ReadInteger(group, wxT("AmpModDepth"), 1, 100);
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 }
 
 void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix)
 {
-	GOrgueDrawstop::Save(cfg, prefix, "Tremulant");
+	GOrgueDrawstop::Save(cfg, prefix, wxT("Tremulant"));
 }
 
 bool GOrgueTremulant::Set(bool on)

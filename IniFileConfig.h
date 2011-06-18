@@ -45,19 +45,19 @@ class IniFileConfig
 public:
   IniFileConfig(wxFileConfig* iCfg):
 	m_cfg(iCfg){}
-  bool ReadBoolean(const char* group, const char* key, bool required = true);
-  wxColour ReadColor(const char* group, const char* key, bool required = true);
-  wxString ReadString(const char* group, const char* key, int nmax = 4096, bool required = true);
-  wxInt16 ReadInteger(const char* group, const char* key, int nmin = 0, int nmax = 0, bool required = true);
-  wxInt32 ReadLong(const char* group, const char* key, int nmin = 0, int nmax = 0, bool required = true);
-  wxInt16 ReadSize(const char* group, const char* key, int nmin = 0, bool required = true);
-  wxInt16 ReadFontSize(const char* group, const char* key, bool required = true);
+  bool ReadBoolean(wxString group, wxString key, bool required = true);
+  wxColour ReadColor(wxString group, wxString key, bool required = true);
+  wxString ReadString(wxString group, wxString key, int nmax = 4096, bool required = true);
+  wxInt16 ReadInteger(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
+  wxInt32 ReadLong(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
+  wxInt16 ReadSize(wxString group, wxString key, int nmin = 0, bool required = true);
+  wxInt16 ReadFontSize(wxString group, wxString key, bool required = true);
   void SaveHelper(bool prefix, wxString group, wxString key, wxString value);
   void SaveHelper( bool prefix, wxString group, wxString key, int value, bool sign = false, bool force = false);
 
 
 private:
-  bool ReadKey(const char* group, const char* key, void* retval, ValueType type, bool required = true, int nmin = 0, int nmax = 0);
+  bool ReadKey(wxString group, wxString key, void* retval, ValueType type, bool required = true, int nmin = 0, int nmax = 0);
   wxFileConfig* m_cfg;
 };
 

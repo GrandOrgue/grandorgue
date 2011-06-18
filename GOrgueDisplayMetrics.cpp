@@ -24,7 +24,7 @@
 #include "IniFileConfig.h"
 #include "GOrgueEnclosure.h"
 
-#define DISPLAY_METRICS_GROUP "Organ"
+#define DISPLAY_METRICS_GROUP wxT("Organ")
 
 GOrgueDisplayMetrics::GOrgueDisplayMetrics(IniFileConfig& ini) :
 	m_nb_enclosures(0),
@@ -71,12 +71,12 @@ GOrgueDisplayMetrics::GOrgueDisplayMetrics(IniFileConfig& ini) :
 
 	for (unsigned int i = 0; i <= m_nb_manuals; i++)
 	{
-		char buffer[64];
+		wxString buffer;
 		MANUAL_INFO man;
 		memset(&man, 0, sizeof(man));
 		if (i >= m_first_manual)
 		{
-			sprintf(buffer, "Manual%03u", i);
+			buffer.Printf(wxT("Manual%03u"), i);
 			man.displayed                         = ini.ReadBoolean(buffer, wxT("Displayed"));
 			man.first_accessible_key_midi_note_nb = ini.ReadInteger(buffer, wxT("FirstAccessibleKeyMIDINoteNumber"), 0, 127);
 			man.nb_accessible_keys                = ini.ReadInteger(buffer, wxT("NumberOfAccessibleKeys"), 0, 85);
@@ -84,34 +84,34 @@ GOrgueDisplayMetrics::GOrgueDisplayMetrics(IniFileConfig& ini) :
 		m_manual_info.push_back(man);
 	}
 
-    m_DispScreenSizeHoriz = ini.ReadSize(DISPLAY_METRICS_GROUP, "DispScreenSizeHoriz", 0);
-    m_DispScreenSizeVert = ini.ReadSize(DISPLAY_METRICS_GROUP, "DispScreenSizeVert", 1);
-    m_DispDrawstopBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispDrawstopBackgroundImageNum", 1, 64);
-    m_DispConsoleBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispConsoleBackgroundImageNum", 1, 64);
-    m_DispKeyHorizBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispKeyHorizBackgroundImageNum", 1, 64);
-    m_DispKeyVertBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispKeyVertBackgroundImageNum", 1, 64);
-    m_DispDrawstopInsetBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispDrawstopInsetBackgroundImageNum", 1, 64);
-    m_DispControlLabelFont = ini.ReadString(DISPLAY_METRICS_GROUP, "DispControlLabelFont");
-    m_DispShortcutKeyLabelFont = ini.ReadString(DISPLAY_METRICS_GROUP, "DispShortcutKeyLabelFont");
-    m_DispShortcutKeyLabelColour = ini.ReadColor(DISPLAY_METRICS_GROUP, "DispShortcutKeyLabelColour");
-    m_DispGroupLabelFont = ini.ReadString(DISPLAY_METRICS_GROUP, "DispGroupLabelFont");
-    m_DispDrawstopCols = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispDrawstopCols", 2, 12);
-    m_DispDrawstopRows = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispDrawstopRows", 1, 20);
-    m_DispDrawstopColsOffset = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispDrawstopColsOffset");
-    m_DispDrawstopOuterColOffsetUp = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispDrawstopOuterColOffsetUp", m_DispDrawstopColsOffset);
-    m_DispPairDrawstopCols = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispPairDrawstopCols");
-    m_DispExtraDrawstopRows = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispExtraDrawstopRows", 0, 8);
-    m_DispExtraDrawstopCols = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispExtraDrawstopCols", 0, 40);
-    m_DispButtonCols = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispButtonCols", 1, 32);
-    m_DispExtraButtonRows = ini.ReadInteger(DISPLAY_METRICS_GROUP, "DispExtraButtonRows", 0, 8);
-    m_DispExtraPedalButtonRow = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispExtraPedalButtonRow");
-    m_DispExtraPedalButtonRowOffset = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispExtraPedalButtonRowOffset", m_DispExtraPedalButtonRow);
-    m_DispExtraPedalButtonRowOffsetRight = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispExtraPedalButtonRowOffsetRight", m_DispExtraPedalButtonRow);
-    m_DispButtonsAboveManuals = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispButtonsAboveManuals");
-    m_DispTrimAboveManuals = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispTrimAboveManuals");
-    m_DispTrimBelowManuals = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispTrimBelowManuals");
-    m_DispTrimAboveExtraRows = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispTrimAboveExtraRows");
-    m_DispExtraDrawstopRowsAboveExtraButtonRows = ini.ReadBoolean(DISPLAY_METRICS_GROUP, "DispExtraDrawstopRowsAboveExtraButtonRows");
+    m_DispScreenSizeHoriz = ini.ReadSize(DISPLAY_METRICS_GROUP, wxT("DispScreenSizeHoriz"), 0);
+    m_DispScreenSizeVert = ini.ReadSize(DISPLAY_METRICS_GROUP, wxT("DispScreenSizeVert"), 1);
+    m_DispDrawstopBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispDrawstopBackgroundImageNum"), 1, 64);
+    m_DispConsoleBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispConsoleBackgroundImageNum"), 1, 64);
+    m_DispKeyHorizBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispKeyHorizBackgroundImageNum"), 1, 64);
+    m_DispKeyVertBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispKeyVertBackgroundImageNum"), 1, 64);
+    m_DispDrawstopInsetBackgroundImageNum = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispDrawstopInsetBackgroundImageNum"), 1, 64);
+    m_DispControlLabelFont = ini.ReadString(DISPLAY_METRICS_GROUP, wxT("DispControlLabelFont"));
+    m_DispShortcutKeyLabelFont = ini.ReadString(DISPLAY_METRICS_GROUP, wxT("DispShortcutKeyLabelFont"));
+    m_DispShortcutKeyLabelColour = ini.ReadColor(DISPLAY_METRICS_GROUP, wxT("DispShortcutKeyLabelColour"));
+    m_DispGroupLabelFont = ini.ReadString(DISPLAY_METRICS_GROUP, wxT("DispGroupLabelFont"));
+    m_DispDrawstopCols = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispDrawstopCols"), 2, 12);
+    m_DispDrawstopRows = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispDrawstopRows"), 1, 20);
+    m_DispDrawstopColsOffset = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispDrawstopColsOffset"));
+    m_DispDrawstopOuterColOffsetUp = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispDrawstopOuterColOffsetUp"), m_DispDrawstopColsOffset);
+    m_DispPairDrawstopCols = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispPairDrawstopCols"));
+    m_DispExtraDrawstopRows = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispExtraDrawstopRows"), 0, 8);
+    m_DispExtraDrawstopCols = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispExtraDrawstopCols"), 0, 40);
+    m_DispButtonCols = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispButtonCols"), 1, 32);
+    m_DispExtraButtonRows = ini.ReadInteger(DISPLAY_METRICS_GROUP, wxT("DispExtraButtonRows"), 0, 8);
+    m_DispExtraPedalButtonRow = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispExtraPedalButtonRow"));
+    m_DispExtraPedalButtonRowOffset = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispExtraPedalButtonRowOffset"), m_DispExtraPedalButtonRow);
+    m_DispExtraPedalButtonRowOffsetRight = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispExtraPedalButtonRowOffsetRight"), m_DispExtraPedalButtonRow);
+    m_DispButtonsAboveManuals = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispButtonsAboveManuals"));
+    m_DispTrimAboveManuals = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispTrimAboveManuals"));
+    m_DispTrimBelowManuals = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispTrimBelowManuals"));
+    m_DispTrimAboveExtraRows = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispTrimAboveExtraRows"));
+    m_DispExtraDrawstopRowsAboveExtraButtonRows = ini.ReadBoolean(DISPLAY_METRICS_GROUP, wxT("DispExtraDrawstopRowsAboveExtraButtonRows"));
 
     Update();
 

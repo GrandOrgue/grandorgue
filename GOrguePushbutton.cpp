@@ -32,7 +32,6 @@
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
-extern const char* s_MIDIMessages[];
 
 GOrguePushbutton::GOrguePushbutton() :
 	GOrgueControl(),
@@ -96,18 +95,18 @@ bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 
 }
 
-void GOrguePushbutton::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
+void GOrguePushbutton::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
 {
 	DisplayMetrics = displayMetrics;
-	DispButtonRow = cfg.ReadInteger(group, "DispButtonRow", 0, 99 + displayMetrics->NumberOfExtraButtonRows());
-	DispButtonCol = cfg.ReadInteger(group, "DispButtonCol", 1, displayMetrics->NumberOfButtonCols());
-	DispImageNum = cfg.ReadInteger(group, "DispImageNum", 1, 2);
-	MIDIProgramChangeNumber = cfg.ReadInteger(group, "MIDIProgramChangeNumber", 1, 128);
+	DispButtonRow = cfg.ReadInteger(group, wxT("DispButtonRow"), 0, 99 + displayMetrics->NumberOfExtraButtonRows());
+	DispButtonCol = cfg.ReadInteger(group, wxT("DispButtonCol"), 1, displayMetrics->NumberOfButtonCols());
+	DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 2);
+	MIDIProgramChangeNumber = cfg.ReadInteger(group, wxT("MIDIProgramChangeNumber"), 1, 128);
 	DispImageNum--;
 	GOrgueControl::Load(cfg, group);
 }
 
 void GOrguePushbutton::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
-	cfg.SaveHelper(prefix, group, "MIDIProgramChangeNumber", MIDIProgramChangeNumber);
+	cfg.SaveHelper(prefix, group, wxT("MIDIProgramChangeNumber"), MIDIProgramChangeNumber);
 }

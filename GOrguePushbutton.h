@@ -33,7 +33,7 @@ class GOrguePushbutton : public GOrgueControl, GOrgueDrawable
 {
 public:
 	GOrguePushbutton();
-	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
     void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	virtual void Push(int depth = 0) { };

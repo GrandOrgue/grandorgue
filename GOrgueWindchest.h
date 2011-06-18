@@ -43,7 +43,7 @@ public:
     wxInt16 tremulant[MAX_TREMULANTS];
 
     GOrgueWindchest();
-	void Load(IniFileConfig& cfg, const char* group);
+	void Load(IniFileConfig& cfg, wxString group);
 	double GetVolume();
 	int GetTremulantCount();
 

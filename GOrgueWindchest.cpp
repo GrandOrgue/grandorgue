@@ -43,23 +43,23 @@ GOrgueWindchest::GOrgueWindchest() :
 }
 
 
-void GOrgueWindchest::Load(IniFileConfig& cfg, const char* group)
+void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group)
 {
 
 	int i;
-	char buffer[64];
+	wxString buffer;
 
-	NumberOfEnclosures = cfg.ReadInteger(group, "NumberOfEnclosures", 0, 6);
-	NumberOfTremulants = cfg.ReadInteger(group, "NumberOfTremulants", 0, 6);
+	NumberOfEnclosures = cfg.ReadInteger(group, wxT("NumberOfEnclosures"), 0, 6);
+	NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, 6);
 
 	for (i = 0; i < NumberOfEnclosures; i++)
 	{
-		sprintf(buffer, "Enclosure%03d", i + 1);
+		buffer.Printf(wxT("Enclosure%03d"), i + 1);
 		enclosure[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetEnclosureCount()) - 1;
 	}
 	for (i = 0; i < NumberOfTremulants; i++)
 	{
-		sprintf(buffer, "Tremulant%03d", i + 1);
+		buffer.Printf(wxT("Tremulant%03d"), i + 1);
 		tremulant[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetTremulantCount()) - 1;
 	}
 

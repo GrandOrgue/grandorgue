@@ -103,10 +103,10 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
             SetValue(1);
             break;
 		case 2:
-            SetValue(wxConfig::Get()->Read("PolyphonyLimit", 2048));
+            SetValue(wxConfig::Get()->Read(wxT("PolyphonyLimit"), 2048));
             break;
 		case 3:
-            SetValue(wxConfig::Get()->Read("Volume", 50));
+            SetValue(wxConfig::Get()->Read(wxT("Volume"), 50));
             break;
 	}
 }
@@ -145,7 +145,7 @@ void GOrgueMeter::OnVolume(wxCommandEvent& event)
 	m_meters[0]->ResetClip();
 	m_meters[1]->ResetClip();
 
-	wxConfig::Get()->Write("Volume", n);
+	wxConfig::Get()->Write(wxT("Volume"), n);
 }
 
 void GOrgueMeter::OnPolyphony(wxCommandEvent& event)
@@ -164,7 +164,7 @@ void GOrgueMeter::OnPolyphony(wxCommandEvent& event)
 	wxColour colour = m_meters[0]->GetBackgroundColour();
 	m_meters[0]->ResetClip();
 
-	wxConfig::Get()->Write("PolyphonyLimit", n);
+	wxConfig::Get()->Write(wxT("PolyphonyLimit"), n);
 	if (g_sound)
 	{
 		g_sound->SetPolyphonyLimit(n);

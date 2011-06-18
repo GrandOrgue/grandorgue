@@ -63,32 +63,32 @@ GOrgueManual::GOrgueManual() :
 
 }
 
-void GOrgueManual::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics, int manualNumber)
+void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics, int manualNumber)
 {
 
-	m_name                              = cfg.ReadString (group, "Name", 32);
-	m_nb_logical_keys                   = cfg.ReadInteger(group, "NumberOfLogicalKeys", 1, 192);
-	m_first_accessible_logical_key_nb   = cfg.ReadInteger(group, "FirstAccessibleKeyLogicalKeyNumber", 1, m_nb_logical_keys);
-	m_first_accessible_key_midi_note_nb = cfg.ReadInteger(group, "FirstAccessibleKeyMIDINoteNumber", 0, 127);
-	m_nb_accessible_keys                = cfg.ReadInteger(group, "NumberOfAccessibleKeys", 0, 85);
-	m_midi_input_number                 = cfg.ReadInteger(group, "MIDIInputNumber", 1, 6);
-	m_displayed                         = cfg.ReadBoolean(group, "Displayed");
-	m_key_colour_inverted               = cfg.ReadBoolean(group, "DispKeyColourInverted");
-	m_key_colour_wooden                 = cfg.ReadBoolean(group, "DispKeyColourWooden", false);
-	m_nb_stops                          = cfg.ReadInteger(group, "NumberOfStops", 0, 64);
-	m_nb_couplers                       = cfg.ReadInteger(group, "NumberOfCouplers", 0, 16, false);
-	m_nb_divisionals                    = cfg.ReadInteger(group, "NumberOfDivisionals", 0, 32, false);
-	m_nb_tremulants                     = cfg.ReadInteger(group, "NumberOfTremulants", 0, 10, false);
+	m_name                              = cfg.ReadString (group, wxT("Name"), 32);
+	m_nb_logical_keys                   = cfg.ReadInteger(group, wxT("NumberOfLogicalKeys"), 1, 192);
+	m_first_accessible_logical_key_nb   = cfg.ReadInteger(group, wxT("FirstAccessibleKeyLogicalKeyNumber"), 1, m_nb_logical_keys);
+	m_first_accessible_key_midi_note_nb = cfg.ReadInteger(group, wxT("FirstAccessibleKeyMIDINoteNumber"), 0, 127);
+	m_nb_accessible_keys                = cfg.ReadInteger(group, wxT("NumberOfAccessibleKeys"), 0, 85);
+	m_midi_input_number                 = cfg.ReadInteger(group, wxT("MIDIInputNumber"), 1, 6);
+	m_displayed                         = cfg.ReadBoolean(group, wxT("Displayed"));
+	m_key_colour_inverted               = cfg.ReadBoolean(group, wxT("DispKeyColourInverted"));
+	m_key_colour_wooden                 = cfg.ReadBoolean(group, wxT("DispKeyColourWooden"), false);
+	m_nb_stops                          = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, 64);
+	m_nb_couplers                       = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, 16, false);
+	m_nb_divisionals                    = cfg.ReadInteger(group, wxT("NumberOfDivisionals"), 0, 32, false);
+	m_nb_tremulants                     = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, 10, false);
 	m_manual_number = manualNumber;
 	m_display_metrics = displayMetrics;
 
-	char buffer[64];
+	wxString buffer;
 
 	for (unsigned i = 0; i < m_nb_stops; i++)
 	{
 		m_stops.push_back(new GOrgueStop());
-		sprintf(buffer, "Stop%03d", i + 1);
-		sprintf(buffer, "Stop%03d", cfg.ReadInteger(group, buffer, 1, 448));
+		buffer.Printf(wxT("Stop%03d"), i + 1);
+		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(group, buffer, 1, 448));
 		m_stops[i]->m_ManualNumber = m_manual_number;
 		m_stops[i]->Load(cfg, buffer, displayMetrics);
 	}
@@ -96,22 +96,22 @@ void GOrgueManual::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetr
 	m_couplers = new GOrgueCoupler[m_nb_couplers];
 	for (unsigned i = 0; i < m_nb_couplers; i++)
 	{
-		sprintf(buffer, "Coupler%03d", i + 1);
-		sprintf(buffer, "Coupler%03d", cfg.ReadInteger(group, buffer, 1, 64));
+		buffer.Printf(wxT("Coupler%03d"), i + 1);
+		buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(group, buffer, 1, 64));
 		m_couplers[i].Load(cfg, buffer, organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount(), displayMetrics);
 	}
 
 	m_divisionals = new GOrgueDivisional[m_nb_divisionals];
 	for (unsigned i = 0; i < m_nb_divisionals; i++)
 	{
-		sprintf(buffer, "Divisional%03d", i + 1);
-		sprintf(buffer, "Divisional%03d", cfg.ReadInteger(group, buffer, 1, 224));
+		buffer.Printf(wxT("Divisional%03d"), i + 1);
+		buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(group, buffer, 1, 224));
 		m_divisionals[i].Load(cfg, buffer, m_manual_number, i, displayMetrics);
 	}
 
 	for (unsigned i = 0; i < m_nb_tremulants; i++)
 	{
-		sprintf(buffer, "Tremulant%03d", i + 1);
+		buffer.Printf(wxT("Tremulant%03d"), i + 1);
 		m_tremulant_ids[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetTremulantCount());
 	}
 
@@ -146,7 +146,7 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 
 	if (depth > 32)
 	{
-		::wxLogFatalError("Infinite recursive coupling detected!");
+		::wxLogFatalError(_("Infinite recursive coupling detected!"));
 		return;
 	}
 
@@ -246,7 +246,7 @@ void GOrgueManual::MIDI(void)
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		wxConfigBase::Get()->Write
-			(wxString("MIDI/") + GOrgueMidi::GetMidiEventTitle(index)
+			(wxString(wxT("MIDI/")) + GOrgueMidi::GetMidiEventTitle(index)
 			,dlg.GetEvent()
 			);
 		g_sound->ResetSound(organfile);

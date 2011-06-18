@@ -36,7 +36,7 @@ extern GrandOrgueFile* organfile;
 OrganDocument::~OrganDocument(void)
 {
 	CloseOrgan();
-	::wxGetApp().frame->SetTitle(APP_NAME);
+	::wxGetApp().frame->SetTitle(wxT(APP_NAME));
 }
 
 bool OrganDocument::OnCloseDocument()
@@ -69,8 +69,8 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 		CloseOrgan();
 		if (!file2.IsEmpty())
             DeleteAllViews();
-		 if (error != "!")
-		   ::wxLogError("%s\n",(const char*)error.mb_str(wxConvUTF8));
+		 if (error != wxT("!"))
+		   ::wxLogError(wxT("%s\n"),error.c_str());
         b_loaded = true;
 		return false;
 	}

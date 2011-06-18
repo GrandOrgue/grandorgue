@@ -40,8 +40,6 @@ struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
 //extern GrandOrgueFile* organfile;
-extern const char* s_MIDIMessages[];
-extern long i_MIDIMessages[];
 
 GOrgueSound* g_sound = 0;
 
@@ -176,7 +174,7 @@ GOrgueSound::GOrgueSound(void) :
 	meter_left(0),
 	meter_right(0),
 	b_active(false),
-	defaultAudio("")
+	defaultAudio(wxT(""))
 {
 
 	g_sound = this;
@@ -196,7 +194,7 @@ GOrgueSound::GOrgueSound(void) :
 
 				RtAudio::DeviceInfo info = audioDevice->getDeviceInfo(i);
 				wxString dev_name = wxString::FromAscii(info.name.c_str());
-				dev_name.Replace("\\", "|");
+				dev_name.Replace(wxT("\\"), wxT("|"));
 				wxString name = GetRtApiStr(rtaudio_apis[k]) + wxString(wxT(": ")) + dev_name;
 
 				if (info.isDefaultOutput && defaultAudio.IsEmpty())
@@ -288,15 +286,15 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 {
 	int i;
 
-	defaultAudio = pConfig->Read("Devices/DefaultSound", defaultAudio);
-	volume = pConfig->Read("Volume", 50);
-	polyphony = pConfig->Read("PolyphonyLimit", 2048);
+	defaultAudio = pConfig->Read(wxT("Devices/DefaultSound"), defaultAudio);
+	volume = pConfig->Read(wxT("Volume"), 50);
+	polyphony = pConfig->Read(wxT("PolyphonyLimit"), 2048);
 	poly_soft = (polyphony * 3) / 4;
-	b_stereo = pConfig->Read("StereoEnabled", 1);
-	b_limit  = pConfig->Read("ManagePolyphony", 1);
-	b_align  = pConfig->Read("AlignRelease", 1);
-	b_scale  = pConfig->Read("ScaleRelease", 1);
-	b_random = pConfig->Read("RandomizeSpeaking", 1);
+	b_stereo = pConfig->Read(wxT("StereoEnabled"), 1);
+	b_limit  = pConfig->Read(wxT("ManagePolyphony"), 1);
+	b_align  = pConfig->Read(wxT("AlignRelease"), 1);
+	b_scale  = pConfig->Read(wxT("ScaleRelease"), 1);
+	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
 
 	samplers_count = 0;
 	for (i = 0; i < MAX_POLYPHONY; i++)
@@ -310,13 +308,13 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 		m_midi->Open();
 
 		std::map<wxString, GO_SOUND_DEV_CONFIG>::iterator it;
-		it = m_audioDevices.find(wxString::FromAscii(defaultAudio.c_str()));
+		it = m_audioDevices.find(defaultAudio);
 		if (it != m_audioDevices.end())
 		{
 
 			audioDevice = new RtAudio(it->second.rt_api);
 
-			unsigned try_latency = pConfig->Read("Devices/Sound/" + defaultAudio, 12);
+			unsigned try_latency = pConfig->Read(wxT("Devices/Sound/") + defaultAudio, 12);
 			it->second.latency_config_func(try_latency, &m_nb_buffers, &m_samples_per_buffer);
 
 			RtAudio::StreamParameters aOutputParam;
@@ -349,7 +347,7 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 			{
 				::wxSleep(1);
 				if (logSoundErrors)
-					::wxLogError("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
+					::wxLogError(_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur."));
 				CloseSound(organfile);
 				return false;
 			}
@@ -546,18 +544,18 @@ void GOrgueSound::StartRecording()
 	if (f_output)
         return;
 	b_stoprecording = false;
-	wxFileDialog dlg(::wxGetApp().frame, _("Save as"), wxConfig::Get()->Read("wavPath", ::wxGetApp().m_path), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxSAVE | wxOVERWRITE_PROMPT);
+	wxFileDialog dlg(::wxGetApp().frame, _("Save as"), wxConfig::Get()->Read(wxT("wavPath"), ::wxGetApp().m_path), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxSAVE | wxOVERWRITE_PROMPT);
 	if (dlg.ShowModal() == wxID_OK)
 	{
-        wxConfig::Get()->Write("wavPath", dlg.GetDirectory());
+        wxConfig::Get()->Write(wxT("wavPath"), dlg.GetDirectory());
         wxString filepath = dlg.GetPath();
-        if (filepath.Find(".wav") == wxNOT_FOUND) {
-            filepath.append(".wav");
+        if (filepath.Find(wxT(".wav")) == wxNOT_FOUND) {
+            filepath.append(wxT(".wav"));
         }
-        if ((f_output = fopen(filepath, "wb")))
+        if ((f_output = fopen(filepath.mb_str(), "wb")))
             fwrite(&WAVE, sizeof(WAVE), 1, f_output);
         else
-            ::wxLogError("Unable to open file for writing");
+            ::wxLogError(_("Unable to open file for writing"));
 
 	}
 }
