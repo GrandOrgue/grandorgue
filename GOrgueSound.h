@@ -164,6 +164,15 @@ class GOrgueMidi;
 class GOrgueSound
 {
 
+public:
+
+	typedef struct
+	{
+		RtAudio::Api rt_api;
+		int rt_api_subindex;
+		void (*latency_config_func)(const int latency_ms, unsigned *nb_buffers, unsigned *buffer_size);
+	} GO_SOUND_DEV_CONFIG;
+
 private:
 
 	/* These are only used by the audio callback... */
@@ -187,9 +196,12 @@ private:
 	int poly_soft;
 	int volume;
 
-	std::map<wxString, std::pair<int, RtAudio::Api> > m_audioDevices;
+	std::map<wxString, GO_SOUND_DEV_CONFIG> m_audioDevices;
 	RtAudio* audioDevice;
-	int n_latency;
+/*	int n_latency;*/
+
+	unsigned m_samples_per_buffer;
+	unsigned m_nb_buffers;
 
 	int b_limit, b_stereo, b_align, b_scale;
 	int b_random;
@@ -286,10 +298,10 @@ public:
 	const RtAudioFormat GetAudioFormat();
 
 	/* TODO: these should have const scope */
-	std::map<wxString, std::pair<int, RtAudio::Api> >& GetAudioDevices();
+	std::map<wxString, GO_SOUND_DEV_CONFIG>& GetAudioDevices();
 	const wxString GetDefaultAudioDevice();
 
-	const unsigned GetActualLatency(const wxString device, const unsigned latency);
+	const int GetLatency();
 
 	GOrgueMidi& GetMidi();
 
