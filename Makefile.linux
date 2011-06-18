@@ -110,6 +110,8 @@ CXXFLAGS         = -fomit-frame-pointer -ffast-math -Wall
 
 ifeq ($(SYSTEM),linux)
 
+BIN_EXTENSION =
+
 ifeq ($(USING_JACK),yes)
 CXXFLAGS += -D__UNIX_JACK__
 LDFLAGS += -ljack
@@ -126,6 +128,8 @@ LDFLAGS += -laoss
 endif
 
 else
+
+BIN_EXTENSION = .exe
 
 endif
 
@@ -154,10 +158,10 @@ GO_RELEASE_UNICODE_LDFLAGS     = $(LDFLAGS) `wx-config --debug=no --unicode=yes 
 GO_DEBUG_UNICODE_LDFLAGS       = $(LDFLAGS) `wx-config $(WX_CONFIG_DEBUG) --unicode=yes --libs` -lpthread
 
 # executable filenames
-GO_TARGET_RELEASE_EXE          = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_RELEASE)
-GO_TARGET_DEBUG_EXE            = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_DEBUG)
-GO_TARGET_RELEASE_UNICODE_EXE  = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_RELEASE_UNICODE)
-GO_TARGET_DEBUG_UNICODE_EXE    = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_DEBUG_UNICODE)
+GO_TARGET_RELEASE_EXE          = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_RELEASE)$(BIN_EXTENSION)
+GO_TARGET_DEBUG_EXE            = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_DEBUG)$(BIN_EXTENSION)
+GO_TARGET_RELEASE_UNICODE_EXE  = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_RELEASE_UNICODE)$(BIN_EXTENSION)
+GO_TARGET_DEBUG_UNICODE_EXE    = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_DEBUG_UNICODE)$(BIN_EXTENSION)
 
 # phony targets
 all: $(GO_TARGET_RELEASE_EXE) $(GO_TARGET_DEBUG_EXE) # the unicode targets should be added once supported
