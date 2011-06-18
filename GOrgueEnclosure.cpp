@@ -87,13 +87,13 @@ bool GOrgueEnclosure::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 
 void GOrgueEnclosure::Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrgueDisplayMetrics* displayMetrics)
 {
-	char buffer[32];
-	sprintf(buffer, "Enclosure%03u", enclosure_nb + 1);
+	wxString buffer;
+	buffer.Printf(wxT("Enclosure%03u"), enclosure_nb + 1);
 	m_enclosure_nb = enclosure_nb;
 	DisplayMetrics = displayMetrics;
-	Name = cfg.ReadString(buffer, "Name", 64);
-	AmpMinimumLevel = cfg.ReadInteger(buffer, "AmpMinimumLevel", 0, 100);
-	MIDIInputNumber = cfg.ReadInteger(buffer, "MIDIInputNumber", 1, 6);
+	Name = cfg.ReadString(buffer, wxT("Name"), 64);
+	AmpMinimumLevel = cfg.ReadInteger(buffer, wxT("AmpMinimumLevel"), 0, 100);
+	MIDIInputNumber = cfg.ReadInteger(buffer, wxT("MIDIInputNumber"), 1, 6);
 	Set(127);	// default to full volume until we receive any messages
 }
 
@@ -124,7 +124,7 @@ void GOrgueEnclosure::MIDI(void)
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		wxConfigBase::Get()->Write
-			(wxString("MIDI/") + GOrgueMidi::GetMidiEventTitle(index)
+			(wxString(wxT("MIDI/")) + GOrgueMidi::GetMidiEventTitle(index)
 			,dlg.GetEvent()
 			);
 		g_sound->ResetSound(organfile);

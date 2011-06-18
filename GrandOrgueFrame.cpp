@@ -115,7 +115,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_gaugedc = 0;
 	m_opening = false;
 
-	SetIcon(wxIcon("#101"));
+	SetIcon(wxIcon(wxT("#101")));
 
 	wxMenu *file_menu = new wxMenu;
 
@@ -247,12 +247,12 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 	if (event.GetId() == ID_FILE_OPEN)
 	{
 		wxFileName fn = wxFileName::GetCwd();
-		fn.AppendDir("organs");
-		::wxGetApp().m_docManager->SetLastDirectory(wxConfig::Get()->Read("organPath", fn.GetPath()));
+		fn.AppendDir(wxT("organs"));
+		::wxGetApp().m_docManager->SetLastDirectory(wxConfig::Get()->Read(wxT("organPath"), fn.GetPath()));
 		ProcessCommand(wxID_OPEN);
 		if (organfile)
 		{
-			wxConfig::Get()->Write("organPath", ::wxGetApp().m_docManager->GetLastDirectory());
+			wxConfig::Get()->Write(wxT("organPath"), ::wxGetApp().m_docManager->GetLastDirectory());
 			m_opening = false;
 		}
 	}
@@ -266,10 +266,10 @@ void GOrgueFrame::OnLoad(wxCommandEvent& event)
 	if (!doc || !organfile)
         return;
 
-    wxFileDialog dlg(::wxGetApp().frame, _("Import Settings"), wxConfig::Get()->Read("cmbPath", ::wxGetApp().m_path + "My Organs"), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxOPEN | wxFILE_MUST_EXIST);
+    wxFileDialog dlg(::wxGetApp().frame, _("Import Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxOPEN | wxFILE_MUST_EXIST);
     if (dlg.ShowModal() == wxID_OK)
     {
-        wxConfig::Get()->Write("cmbPath", dlg.GetDirectory());
+        wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
         wxString file = organfile->GetODFFilename();
         m_opening = true;
         doc->DoOpenDocument(file, dlg.GetPath());
@@ -284,10 +284,10 @@ void GOrgueFrame::OnSave(wxCommandEvent& event)
 	if (!doc || !organfile)
         return;
 
-    wxFileDialog dlg(::wxGetApp().frame, _("Export Settings"), wxConfig::Get()->Read("cmbPath", ::wxGetApp().m_path + "My Organs"), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxSAVE | wxOVERWRITE_PROMPT);
+    wxFileDialog dlg(::wxGetApp().frame, _("Export Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxSAVE | wxOVERWRITE_PROMPT);
     if (dlg.ShowModal() == wxID_OK)
     {
-        wxConfig::Get()->Write("cmbPath", dlg.GetDirectory());
+        wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
         doc->DoSaveDocument(dlg.GetPath());
         doc->Modify(false);
     }
@@ -296,7 +296,7 @@ void GOrgueFrame::OnSave(wxCommandEvent& event)
 wxString formatSize(wxLongLong& size)
 {
     double n = (double)size.ToLong();
-    char sizes[][3] = {"KB", "MB", "GB", "TB"};
+    wxChar sizes[][3] = {wxT("KB"), wxT("MB"), wxT("GB"), wxT("TB")};
     int i;
 
     for (i = 0; i < 3; i++)
@@ -305,7 +305,7 @@ wxString formatSize(wxLongLong& size)
         if (n < 1024.0)
             break;
     }
-    return wxString::Format("%.2f %s", n, sizes[i]);
+    return wxString::Format(wxT("%.2f %s"), n, sizes[i]);
 }
 
 void GOrgueFrame::OnCache(wxCommandEvent& event)
@@ -366,7 +366,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
             #endif
             if (ffile == -1)
             {
-                ::wxLogWarning("Could not write to '%s'", fn);
+                ::wxLogWarning(_("Could not write to '%s'"), fn);
                 break;
             }
 
@@ -388,7 +388,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
             if (written != organfile->m_pipe_filesizes[todo[i]])
             {
                 ::wxRemoveFile(fn);
-                ::wxLogWarning("Could not write to '%s'", fn);
+                ::wxLogWarning(_("Could not write to '%s'"), fn);
                 break;
             }
         }
@@ -405,7 +405,7 @@ void GOrgueFrame::OnReload(wxCommandEvent& event)
 
 void GOrgueFrame::OnRevert(wxCommandEvent& event)
 {
-    if (organfile && m_docManager->GetCurrentDocument() && ::wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), APP_NAME, wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
+    if (organfile && m_docManager->GetCurrentDocument() && ::wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), wxT(APP_NAME), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
     {
         {
             wxLog::EnableLogging(false);
@@ -460,7 +460,7 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnHelp(wxCommandEvent& event)
 {
-    ::wxGetApp().m_help->Display("User Interface");
+    ::wxGetApp().m_help->Display(_("User Interface"));
 }
 
 void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)

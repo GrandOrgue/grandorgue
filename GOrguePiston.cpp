@@ -38,28 +38,28 @@ GOrguePiston::GOrguePiston() :
 
 }
 
-void GOrguePiston::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
+void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
 {
 
 	int i, j;
-	wxString type = cfg.ReadString(group, "ObjectType");
+	wxString type = cfg.ReadString(group, wxT("ObjectType"));
 	type.MakeUpper();
 
-	if (type == "STOP")
+	if (type == wxT("STOP"))
 	{
-		i = cfg.ReadInteger(group, "ManualNumber", organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
-		j = cfg.ReadInteger(group, "ObjectNumber", 1, organfile->GetManual(i)->GetStopCount()) - 1;
+		i = cfg.ReadInteger(group, wxT("ManualNumber"), organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
+		j = cfg.ReadInteger(group, wxT("ObjectNumber"), 1, organfile->GetManual(i)->GetStopCount()) - 1;
 		drawstop = organfile->GetManual(i)->GetStop(j);
 	}
-	if (type == "COUPLER")
+	if (type == wxT("COUPLER"))
 	{
-		i = cfg.ReadInteger(group, "ManualNumber", organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
-		j = cfg.ReadInteger(group, "ObjectNumber", 1, organfile->GetManual(i)->GetCouplerCount()) - 1;
+		i = cfg.ReadInteger(group, wxT("ManualNumber"), organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
+		j = cfg.ReadInteger(group, wxT("ObjectNumber"), 1, organfile->GetManual(i)->GetCouplerCount()) - 1;
 		drawstop = organfile->GetManual(i)->GetCoupler(j);
 	}
-	if (type == "TREMULANT")
+	if (type == wxT("TREMULANT"))
 	{
-		j = ObjectNumber=cfg.ReadInteger(group, "ObjectNumber", 1, organfile->GetTremulantCount()) - 1;
+		j = ObjectNumber=cfg.ReadInteger(group, wxT("ObjectNumber"), 1, organfile->GetTremulantCount()) - 1;
 		drawstop = organfile->GetTremulant(j);
 	}
 
@@ -71,7 +71,7 @@ void GOrguePiston::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetr
 
 void GOrguePiston::Save(IniFileConfig& cfg, bool prefix)
 {
-	GOrguePushbutton::Save(cfg, prefix, "ReversiblePiston");
+	GOrguePushbutton::Save(cfg, prefix, wxT("ReversiblePiston"));
 }
 
 void GOrguePiston::Push(int WXUNUSED(depth))

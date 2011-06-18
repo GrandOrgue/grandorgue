@@ -44,31 +44,31 @@ GOrgueLabel::GOrgueLabel() :
 
 }
 
-void GOrgueLabel::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueLabel::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
 {
 
-	Name = cfg.ReadString(group, "Name", 64);
-	FreeXPlacement = cfg.ReadBoolean(group, "FreeXPlacement");
-	FreeYPlacement = cfg.ReadBoolean(group, "FreeYPlacement");
+	Name = cfg.ReadString(group, wxT("Name"), 64);
+	FreeXPlacement = cfg.ReadBoolean(group, wxT("FreeXPlacement"));
+	FreeYPlacement = cfg.ReadBoolean(group, wxT("FreeYPlacement"));
 	DisplayMetrics = displayMetrics;
 
 	if (!FreeXPlacement)
 	{
-		DispDrawstopCol = cfg.ReadInteger(group, "DispDrawstopCol", 1, displayMetrics->NumberOfDrawstopColsToDisplay());
-		DispSpanDrawstopColToRight = cfg.ReadBoolean(group, "DispSpanDrawstopColToRight");
+		DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, displayMetrics->NumberOfDrawstopColsToDisplay());
+		DispSpanDrawstopColToRight = cfg.ReadBoolean(group, wxT("DispSpanDrawstopColToRight"));
 	}
 	else
 	{
-		DispXpos = cfg.ReadInteger(group, "DispXpos", 0, displayMetrics->GetScreenWidth());
+		DispXpos = cfg.ReadInteger(group, wxT("DispXpos"), 0, displayMetrics->GetScreenWidth());
 	}
 
 	if (!FreeYPlacement)
 	{
-		DispAtTopOfDrawstopCol = cfg.ReadBoolean(group, "DispAtTopOfDrawstopCol");
+		DispAtTopOfDrawstopCol = cfg.ReadBoolean(group, wxT("DispAtTopOfDrawstopCol"));
 	}
 	else
 	{
-		DispYpos = cfg.ReadInteger(group, "DispYpos", 0, displayMetrics->GetScreenHeight());
+		DispYpos = cfg.ReadInteger(group, wxT("DispYpos"), 0, displayMetrics->GetScreenHeight());
 	}
 
 	/* NOTICE: this should not be allowed, but some existing definition files
@@ -78,9 +78,9 @@ void GOrgueLabel::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetri
 	if (!DispYpos)
 		DispYpos++;
 
-	DispLabelColour = cfg.ReadColor(group, "DispLabelColour");
-	DispLabelFontSize = cfg.ReadFontSize(group, "DispLabelFontSize");
-	DispImageNum = cfg.ReadInteger(group, "DispImageNum", 1, 1);
+	DispLabelColour = cfg.ReadColor(group, wxT("DispLabelColour"));
+	DispLabelFontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"));
+	DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 1);
 }
 
 void GOrgueLabel::Draw(wxDC& dc)

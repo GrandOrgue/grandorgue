@@ -32,8 +32,8 @@ class GOrgueFrameGeneral : public GOrguePushbutton
 public:
 
 	GOrgueFrameGeneral();
-	void Load(IniFileConfig& cfg, const char* group);
-    void Save(IniFileConfig& cfg, bool prefix, wxString group = "General");
+	void Load(IniFileConfig& cfg, wxString group);
+	void Save(IniFileConfig& cfg, bool prefix, wxString group = wxT("General"));
 	void Push(int depth = 0);
 
 	int NumberOfStops;

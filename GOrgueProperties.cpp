@@ -68,7 +68,7 @@ wxStaticText* GOrguePropertiesText(wxWindow* parent, int title, wxString text)
 
 bool GOrguePropertiesTest(const wxString& what)
 {
-	return !what.IsEmpty() && what.CmpNoCase("fictional") && what.CmpNoCase("unknown") && what.CmpNoCase("none") && what.CmpNoCase("N/A");
+	return !what.IsEmpty() && what.CmpNoCase(wxT("fictional")) && what.CmpNoCase(wxT("unknown")) && what.CmpNoCase(wxT("none")) && what.CmpNoCase(wxT("N/A"));
 }
 
 GOrgueProperties::GOrgueProperties(wxWindow* win) : wxDialog(win, wxID_ANY, (wxString)_("Organ Properties"))

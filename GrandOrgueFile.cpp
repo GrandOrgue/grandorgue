@@ -123,23 +123,23 @@ GrandOrgueFile::GrandOrgueFile() :
 void GrandOrgueFile::readOrganFile()
 {
 	IniFileConfig ini(m_cfg);
-	const char group[] = "Organ";
+	wxString group = wxT("Organ");
 
 	/* load all GUI display metrics */
 	m_DisplayMetrics = new GOrgueDisplayMetrics(ini);
 
 	/* load church info */
-	m_HauptwerkOrganFileFormatVersion = ini.ReadString( group,"HauptwerkOrganFileFormatVersion",  256, false);
-	m_ChurchName = ini.ReadString( group,"ChurchName",  128);
-	m_ChurchAddress = ini.ReadString( group,"ChurchAddress",  128);
-	m_OrganBuilder = ini.ReadString( group,"OrganBuilder",  128, false);
-	m_OrganBuildDate = ini.ReadString( group,"OrganBuildDate",  128, false);
-	m_OrganComments = ini.ReadString( group,"OrganComments",  256, false);
-	m_RecordingDetails = ini.ReadString( group,"RecordingDetails",  256, false);
-	m_InfoFilename = ini.ReadString( group,"InfoFilename",  256, false);
+	m_HauptwerkOrganFileFormatVersion = ini.ReadString(group, wxT("HauptwerkOrganFileFormatVersion"),  256, false);
+	m_ChurchName = ini.ReadString(group, wxT("ChurchName"),  128);
+	m_ChurchAddress = ini.ReadString(group, wxT("ChurchAddress"),  128);
+	m_OrganBuilder = ini.ReadString(group, wxT("OrganBuilder"),  128, false);
+	m_OrganBuildDate = ini.ReadString(group, wxT("OrganBuildDate"),  128, false);
+	m_OrganComments = ini.ReadString(group, wxT("OrganComments"),  256, false);
+	m_RecordingDetails = ini.ReadString(group, wxT("RecordingDetails"),  256, false);
+	m_InfoFilename = ini.ReadString(group, wxT("InfoFilename"),  256, false);
 	wxFileName fn = m_filename;
 	if (m_InfoFilename.IsEmpty())
-		fn.SetExt(".html");
+		fn.SetExt(wxT(".html"));
 	else
 		fn.SetFullName(m_InfoFilename);
 	if (fn.FileExists())
@@ -148,28 +148,28 @@ void GrandOrgueFile::readOrganFile()
 		m_InfoFilename = wxEmptyString;
 
 	/* load basic organ information */
-	m_NumberOfManuals = ini.ReadInteger(group, "NumberOfManuals", 1, 6);
-	m_FirstManual = ini.ReadBoolean(group, "HasPedals") ? 0 : 1;
-	m_NumberOfEnclosures = ini.ReadInteger(group, "NumberOfEnclosures", 0, 6);
-	m_NumberOfTremulants = ini.ReadInteger(group, "NumberOfTremulants", 0, 10);
-	m_NumberOfWindchestGroups = ini.ReadInteger(group, "NumberOfWindchestGroups", 1, 12);
-	m_NumberOfReversiblePistons = ini.ReadInteger(group, "NumberOfReversiblePistons", 0, 32);
-	m_NumberOfLabels = ini.ReadInteger(group, "NumberOfLabels", 0, 16);
-	m_NumberOfGenerals = ini.ReadInteger(group, "NumberOfGenerals", 0, 99);
+	m_NumberOfManuals = ini.ReadInteger(group, wxT("NumberOfManuals"), 1, 6);
+	m_FirstManual = ini.ReadBoolean(group, wxT("HasPedals")) ? 0 : 1;
+	m_NumberOfEnclosures = ini.ReadInteger(group, wxT("NumberOfEnclosures"), 0, 6);
+	m_NumberOfTremulants = ini.ReadInteger(group, wxT("NumberOfTremulants"), 0, 10);
+	m_NumberOfWindchestGroups = ini.ReadInteger(group, wxT("NumberOfWindchestGroups"), 1, 12);
+	m_NumberOfReversiblePistons = ini.ReadInteger(group, wxT("NumberOfReversiblePistons"), 0, 32);
+	m_NumberOfLabels = ini.ReadInteger(group, wxT("NumberOfLabels"), 0, 16);
+	m_NumberOfGenerals = ini.ReadInteger(group, wxT("NumberOfGenerals"), 0, 99);
 	m_NumberOfFrameGenerals = 512;	// we never want this to change, what's the point?
-	m_NumberOfDivisionalCouplers = ini.ReadInteger(group, "NumberOfDivisionalCouplers", 0, 8);
-	m_AmplitudeLevel = ini.ReadInteger(group, "AmplitudeLevel", 0, 1000);
-	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, "DivisionalsStoreIntermanualCouplers");
-	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(group, "DivisionalsStoreIntramanualCouplers");
-	m_DivisionalsStoreTremulants = ini.ReadBoolean(group, "DivisionalsStoreTremulants");
-	m_GeneralsStoreDivisionalCouplers = ini.ReadBoolean(group, "GeneralsStoreDivisionalCouplers");
-	m_CombinationsStoreNonDisplayedDrawstops = ini.ReadBoolean(group, "CombinationsStoreNonDisplayedDrawstops");
+	m_NumberOfDivisionalCouplers = ini.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, 8);
+	m_AmplitudeLevel = ini.ReadInteger(group, wxT("AmplitudeLevel"), 0, 1000);
+	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntermanualCouplers"));
+	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntramanualCouplers"));
+	m_DivisionalsStoreTremulants = ini.ReadBoolean(group, wxT("DivisionalsStoreTremulants"));
+	m_GeneralsStoreDivisionalCouplers = ini.ReadBoolean(group, wxT("GeneralsStoreDivisionalCouplers"));
+	m_CombinationsStoreNonDisplayedDrawstops = ini.ReadBoolean(group, wxT("CombinationsStoreNonDisplayedDrawstops"));
 
-	char buffer[64];
+	wxString buffer;
 
 	for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
 	{
-		sprintf(buffer, "Manual%03d", i);
+		buffer.Printf(wxT("Manual%03d"), i);
 		m_manual[i].Load(ini, buffer, m_DisplayMetrics, i);
 	}
 
@@ -180,42 +180,42 @@ void GrandOrgueFile::readOrganFile()
 	m_windchest = new GOrgueWindchest[m_NumberOfTremulants + 1 + m_NumberOfWindchestGroups];
 	for (int i = 0; i < m_NumberOfWindchestGroups; i++)
 	{
-		sprintf(buffer, "WindchestGroup%03d", i + 1);
+		buffer.Printf(wxT("WindchestGroup%03d"), i + 1);
 		m_windchest[m_NumberOfTremulants + 1 + i].Load(ini, buffer);
 	}
 
 	m_tremulant = new GOrgueTremulant[m_NumberOfTremulants];
 	for (int i = 0; i < m_NumberOfTremulants; i++)
 	{
-		sprintf(buffer, "Tremulant%03d", i + 1);
+		buffer.Printf(wxT("Tremulant%03d"), i + 1);
 		m_tremulant[i].Load(ini, buffer, m_DisplayMetrics);
 	}
 
 	m_piston = new GOrguePiston[m_NumberOfReversiblePistons];
 	for (int i = 0; i < m_NumberOfReversiblePistons; i++)
 	{
-		sprintf(buffer, "ReversiblePiston%03d", i + 1);
+		buffer.Printf(wxT("ReversiblePiston%03d"), i + 1);
 		m_piston[i].Load(ini, buffer, m_DisplayMetrics);
 	}
 
 	m_label = new GOrgueLabel[m_NumberOfLabels];
 	for (int i = 0; i < m_NumberOfLabels; i++)
 	{
-		sprintf(buffer, "Label%03d", i + 1);
+		buffer.Printf(wxT("Label%03d"), i + 1);
 		m_label[i].Load(ini, buffer, m_DisplayMetrics);
 	}
 
 	m_general = new GOrgueGeneral[m_NumberOfGenerals];
 	for (int i = 0; i < m_NumberOfGenerals; i++)
 	{
-		sprintf(buffer, "General%03d", i + 1);
+		buffer.Printf(wxT("General%03d"), i + 1);
 		m_general[i].Load(ini, buffer, m_DisplayMetrics);
 	}
 
 	m_framegeneral = new GOrgueFrameGeneral[m_NumberOfFrameGenerals];
 	for (int i = 0; i < m_NumberOfFrameGenerals; i++)
 	{
-		sprintf(buffer, "General%03d", i + 100);
+		buffer.Printf(wxT("General%03d"), i + 100);
 		m_framegeneral[i].Load(ini, buffer);
 		m_framegeneral[i].ObjectNumber = i + 100;
 	}
@@ -223,7 +223,7 @@ void GrandOrgueFile::readOrganFile()
 	m_divisionalcoupler = new GOrgueDivisionalCoupler[m_NumberOfDivisionalCouplers];
 	for (int i = 0; i < m_NumberOfDivisionalCouplers; i++)
 	{
-		sprintf(buffer, "DivisionalCoupler%03d", i + 1);
+		buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
 		m_divisionalcoupler[i].Load(ini, buffer, m_FirstManual, m_NumberOfManuals, m_DisplayMetrics);
 	}
 
@@ -236,18 +236,18 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	wxProgressDialog dlg(_("Loading sample set"), _("Parsing sample set definition file"), 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
 
 	m_filename = file;
-	m_b_squash = wxConfigBase::Get()->Read("LosslessCompression", 1);
+	m_b_squash = wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1);
 
-	wxString key, key2, error = "!";
+	wxString key, key2, error = wxT("!");
 
   	// NOTICE: unfortunately, the format is not adhered to well at all. with logging enabled, most sample sets generate warnings.
     wxLog::EnableLogging(false);
-    m_cfg = cfg = new wxFileConfig(wxEmptyString, wxEmptyString, wxEmptyString, file, wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS);
+    m_cfg = cfg = new wxFileConfig(wxEmptyString, wxEmptyString, wxEmptyString, file, wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
     wxLog::EnableLogging(true);
 
     if (!cfg->GetNumberOfGroups())
 	{
-		error.Printf("Unable to read '%s'", file.c_str());
+		error.Printf(_("Unable to read '%s'"), file.c_str());
 		return error;
 	}
 
@@ -256,18 +256,18 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
     bool bCont = cfg->GetFirstGroup(key, cookie);
     while (bCont)
     {
-        if (key.StartsWith("_"))
+        if (key.StartsWith(wxT("_")))
         {
             m_b_customized = true;
-            cfg->SetPath('/' + key);
+            cfg->SetPath(wxT('/') + key);
             long cookie2;
             bool bCont2 = cfg->GetFirstEntry(key2, cookie2);
             while (bCont2)
             {
-                cfg->Write('/' + key.Mid(1) + '/' + key2, cfg->Read(key2));
+                cfg->Write(wxT('/') + key.Mid(1) + wxT('/') + key2, cfg->Read(key2));
                 bCont2 = cfg->GetNextEntry(key2, cookie2);
             }
-            cfg->SetPath("/");
+            cfg->SetPath(wxT("/"));
         }
         bCont = cfg->GetNextGroup(key, cookie);
     }
@@ -276,25 +276,25 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	{
 	    // NOTICE: unfortunately, the format is not adhered to well at all. with logging enabled, most sample sets generate warnings.
         wxLog::EnableLogging(false);
-		extra_cfg = new wxFileConfig(wxEmptyString, wxEmptyString, wxEmptyString, file2, wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS);
+		extra_cfg = new wxFileConfig(wxEmptyString, wxEmptyString, wxEmptyString, file2, wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
         wxLog::EnableLogging(true);
 
-		key = "/Organ/ChurchName";
+		key = wxT("/Organ/ChurchName");
 		if (cfg->Read(key).Trim() == extra_cfg->Read(key).Trim())
 		{
 			long cookie;
 			bool bCont = extra_cfg->GetFirstGroup(key, cookie);
 			while (bCont)
 			{
-				extra_cfg->SetPath('/' + key);
+				extra_cfg->SetPath(wxT('/') + key);
 				long cookie2;
 				bool bCont2 = extra_cfg->GetFirstEntry(key2, cookie2);
 				while (bCont2)
 				{
-					cfg->Write(key + '/' + key2, extra_cfg->Read(key2));
+					cfg->Write(key + wxT('/') + key2, extra_cfg->Read(key2));
 					bCont2 = extra_cfg->GetNextEntry(key2, cookie2);
 				}
-				extra_cfg->SetPath("/");
+				extra_cfg->SetPath(wxT("/"));
 				bCont = extra_cfg->GetNextGroup(key, cookie);
 			}
 		}
@@ -302,10 +302,10 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		{
 			if (!extra_cfg->GetNumberOfGroups())
 			{
-				error.Printf("Unable to read '%s'", file2.c_str());
+				error.Printf(_("Unable to read '%s'"), file2.c_str());
 				return error;
 			}
-			::wxLogWarning("This combination file is only compatible with:\n%s", extra_cfg->Read(key).c_str());
+			::wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_cfg->Read(key).c_str());
 		}
 		delete extra_cfg;
 	}
@@ -348,7 +348,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		 ++aFileIter)
 	{
 
-		if (aFileIter->StartsWith("REF:"))
+		if (aFileIter->StartsWith(wxT("REF:")))
 		{
 			pipe_keys.push_back(wxEmptyString);
 			continue;
@@ -358,7 +358,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		m_path.MakeAbsolute();
 
 		// FIXME: breaks an eventual translation to unicode
-		key.Printf("%s", m_path.GetFullPath().c_str());
+		key.Printf(wxT("%s"), m_path.GetFullPath().c_str());
 		pipe_keys.push_back(key);
 
 	}
@@ -367,17 +367,17 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	for (unsigned int i = 0; i < m_pipe_files.size(); i++)
 	{
 
-		wxLogDebug("Loading file %s", m_pipe_files[i].c_str());
+		wxLogDebug(_("Loading file %s"), m_pipe_files[i].c_str());
 
 		/* If this pipe filename is a reference to another pipe, skip. We
 		 * load these pipes later... */
-		if (m_pipe_files[i].StartsWith("REF:"))
+		if (m_pipe_files[i].StartsWith(wxT("REF:")))
 			continue;
 
 		/* Update the progress dialog */
 		if (!dlg.Update(((progress + 1) << 15) / (int)(m_NumberOfPipes + 1), m_pipe_files[i]))
 		{
-			error = "!"; // FIXME: what is this? how can a progress dialog fail to update?
+			error = wxT("!"); // FIXME: what is this? how can a progress dialog fail to update?
 			break;
 		}
 
@@ -402,7 +402,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 /*	for (int i = 0; i < m_NumberOfTremulants; i++)
 	{
 
-		wxLogDebug("Loading tremulant #%d", i);
+		wxLogDebug(_("Loading tremulant #%d"), i);
 
 		m_pipe[progress]->CreateFromTremulant(&m_tremulant[i]);
 		m_tremulant[i].pipe = m_pipe[progress];
@@ -423,15 +423,15 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	for (unsigned int i = 0; i < m_pipe_files.size(); i++)
 	{
 
-		if (!m_pipe_files[i].StartsWith("REF:"))
+		if (!m_pipe_files[i].StartsWith(wxT("REF:")))
 			continue;
 
 		int manual, stop, pipe;
-		sscanf(m_pipe_files[i].c_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
+		sscanf(m_pipe_files[i].mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
 		if ((manual < m_FirstManual) || (manual > m_NumberOfManuals) ||
 			(stop <= 0) || (stop > m_manual[manual].GetStopCount()) ||
 			(pipe <= 0) || (pipe > m_manual[manual].GetStop(stop-1)->NumberOfLogicalPipes))
-			return "Invalid reference " + m_pipe_files[i];
+			return _("Invalid reference ") + m_pipe_files[i];
 
 		*m_pipe_ptrs[i] = m_manual[manual].GetStop(stop-1)->pipe[pipe-1];
 
@@ -456,7 +456,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	if (m_cfg)
 	{
-		::wxGetApp().frame->m_meters[0]->SetValue(m_cfg->Read("/Organ/Volume", g_sound->GetVolume()));
+		::wxGetApp().frame->m_meters[0]->SetValue(m_cfg->Read(wxT("/Organ/Volume"), g_sound->GetVolume()));
 		delete m_cfg;
 		m_cfg = 0;
 	}
@@ -524,7 +524,7 @@ void GrandOrgueFile::Revert(wxFileConfig& cfg)
     wxArrayString to_drop;
     while (bCont)
     {
-        if (key.StartsWith("_"))
+        if (key.StartsWith(wxT("_")))
             to_drop.Add(key);
         bCont = cfg.GetNextGroup(key, cookie);
     }
@@ -537,29 +537,29 @@ void GrandOrgueFile::Save(const wxString& file)
     wxFileName fn(file);
     bool prefix = true;
 
-    if (fn.GetExt().CmpNoCase("organ"))
+    if (fn.GetExt().CmpNoCase(wxT("organ")))
     {
         if (::wxFileExists(file) && !::wxRemoveFile(file))
         {
-            ::wxLogError("Could not write to '%s'", file.c_str());
+            ::wxLogError(_("Could not write to '%s'"), file.c_str());
             return;
         }
         prefix = false;
     }
 
     wxLog::EnableLogging(false);
-    wxFileConfig cfg(wxEmptyString, wxEmptyString, file, wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS);
+    wxFileConfig cfg(wxEmptyString, wxEmptyString, file, wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
     wxLog::EnableLogging(true);
     if (prefix)
         Revert(cfg);
 	m_b_customized = true;
 
 	IniFileConfig aIni(&cfg);
-    aIni.SaveHelper(prefix, "Organ", "ChurchName", m_ChurchName);
-    aIni.SaveHelper(prefix, "Organ", "ChurchAddress", m_ChurchAddress);
-    aIni.SaveHelper(prefix, "Organ", "HauptwerkOrganFileFormatVersion", m_HauptwerkOrganFileFormatVersion);
-    aIni.SaveHelper(prefix, "Organ", "NumberOfFrameGenerals", m_NumberOfFrameGenerals);
-    aIni.SaveHelper(prefix, "Organ", "Volume", g_sound->GetVolume());
+    aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchName"), m_ChurchName);
+    aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
+    aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
+    aIni.SaveHelper(prefix, wxT("Organ"), wxT("NumberOfFrameGenerals"), m_NumberOfFrameGenerals);
+    aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), g_sound->GetVolume());
 
     int i, j;
 

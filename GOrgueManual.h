@@ -70,7 +70,7 @@ private:
 public:
 
 	GOrgueManual();
-	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics, int manualNumber);
+	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics, int manualNumber);
 	void Set(int note, bool on, bool pretend = false, int depth = 0, GOrgueCoupler* prev = 0);
 	void MIDI(void);
 	~GOrgueManual(void);

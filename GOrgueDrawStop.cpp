@@ -34,7 +34,6 @@
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
-extern const char* s_MIDIMessages[];
 
 GOrgueDrawstop::GOrgueDrawstop() :
 	GOrgueControl(),
@@ -53,22 +52,22 @@ GOrgueDrawstop::~GOrgueDrawstop()
 
 }
 
-void GOrgueDrawstop::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
 {
 	DisplayMetrics = displayMetrics;
-	DispDrawstopRow = cfg.ReadInteger(group, "DispDrawstopRow", 1, 99 + DisplayMetrics->NumberOfExtraDrawstopRowsToDisplay());
-	DispDrawstopCol = cfg.ReadInteger(group, "DispDrawstopCol", 1, DispDrawstopRow > 99 ? DisplayMetrics->NumberOfExtraDrawstopColsToDisplay() : DisplayMetrics->NumberOfDrawstopColsToDisplay());
-	DefaultToEngaged = cfg.ReadBoolean(group, "DefaultToEngaged");
-	DisplayInInvertedState = cfg.ReadBoolean(group, "DisplayInInvertedState");
-	DispImageNum = cfg.ReadInteger(group, "DispImageNum", 1, 2);
-	StopControlMIDIKeyNumber = cfg.ReadInteger(group, "StopControlMIDIKeyNumber", 0, 127, false);
+	DispDrawstopRow = cfg.ReadInteger(group, wxT("DispDrawstopRow"), 1, 99 + DisplayMetrics->NumberOfExtraDrawstopRowsToDisplay());
+	DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, DispDrawstopRow > 99 ? DisplayMetrics->NumberOfExtraDrawstopColsToDisplay() : DisplayMetrics->NumberOfDrawstopColsToDisplay());
+	DefaultToEngaged = cfg.ReadBoolean(group, wxT("DefaultToEngaged"));
+	DisplayInInvertedState = cfg.ReadBoolean(group, wxT("DisplayInInvertedState"));
+	DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 2);
+	StopControlMIDIKeyNumber = cfg.ReadInteger(group, wxT("StopControlMIDIKeyNumber"), 0, 127, false);
 	GOrgueControl::Load(cfg, group);
 }
 
 void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
-	cfg.SaveHelper(prefix, group, "DefaultToEngaged", DefaultToEngaged ? "Y" : "N");
-	cfg.SaveHelper(prefix, group, "StopControlMIDIKeyNumber", StopControlMIDIKeyNumber);
+	cfg.SaveHelper(prefix, group, wxT("DefaultToEngaged"), DefaultToEngaged ? wxT("Y") : wxT("N"));
+	cfg.SaveHelper(prefix, group, wxT("StopControlMIDIKeyNumber"), StopControlMIDIKeyNumber);
 }
 
 bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)

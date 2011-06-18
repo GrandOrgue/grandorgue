@@ -76,7 +76,7 @@ public:
         if (!app->frame || !app->m_docManager)
             return false;
 
-        if (topic == "open")
+        if (topic == wxT("open"))
             return new stConnection();
         return 0;
     }
@@ -138,15 +138,15 @@ bool GOrgueApp::OnInit()
         break;
     }
 
-	single_instance = new wxSingleInstanceChecker(APP_NAME);
+	single_instance = new wxSingleInstanceChecker(wxT(APP_NAME));
 	if (single_instance->IsAnotherRunning())
 	{
 	    wxLogNull logNull;
 	    stClient* client = new stClient;
-	    wxConnectionBase* connection = client->MakeConnection(wxT("localhost"), APP_NAME, wxT("open"));
+	    wxConnectionBase* connection = client->MakeConnection(wxT("localhost"), wxT(APP_NAME), wxT("open"));
 	    if (connection)
 	    {
-	        connection->Execute(argc > 1 ? argv[1] : "");
+	        connection->Execute(argc > 1 ? argv[1] : wxT(""));
 	        connection->Disconnect();
 	        delete connection;
 	    }
@@ -156,12 +156,12 @@ bool GOrgueApp::OnInit()
 	else
 	{
 	    m_server = new stServer;
-	    if (!m_server->Create(APP_NAME))
+	    if (!m_server->Create(wxT(APP_NAME)))
             ::wxLogError(wxT("Failed to create IPC service."));
 	}
 
-	SetAppName(APP_NAME);
-	SetClassName(APP_NAME);
+	SetAppName(wxT(APP_NAME));
+	SetClassName(wxT(APP_NAME));
 	SetVendorName(wxT("Our Organ"));
 	pConfig = wxConfigBase::Get();
 	pConfig->SetRecordDefaults();
@@ -188,15 +188,15 @@ bool GOrgueApp::OnInit()
 #ifdef linux
 	wxLog *logger=new wxLogStream(&std::cout);
 	wxLog::SetActiveTarget(logger);
-    m_path="$HOME"; //TODO??
+    m_path=wxT("$HOME"); //TODO??
     //wxFont::SetDefaultEncoding(wxFONTENCODING_CP1250);
 #endif
 	m_docManager = new GOrgueDocManager;
-	new wxDocTemplate(m_docManager, _("Sample set definition files"), "*.organ", wxEmptyString, "organ", "Organ Doc", "Organ View", CLASSINFO(OrganDocument), CLASSINFO(OrganView));
+	new wxDocTemplate(m_docManager, _("Sample set definition files"), wxT("*.organ"), wxEmptyString, wxT("organ"), wxT("Organ Doc"), wxT("Organ View"), CLASSINFO(OrganDocument), CLASSINFO(OrganView));
 	m_docManager->SetMaxDocsOpen(1);
 
 	m_soundSystem = new GOrgueSound();
-	frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, APP_NAME, wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE  | wxMAXIMIZE_BOX | wxRESIZE_BORDER);
+	frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE  | wxMAXIMIZE_BOX | wxRESIZE_BORDER);
 	frame->DoSplash();
 	bool open_sound = m_soundSystem->OpenSound(true, organfile);
 	::wxSleep(2);

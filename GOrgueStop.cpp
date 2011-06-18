@@ -44,25 +44,25 @@ GOrgueStop::GOrgueStop() :
 
 }
 
-void GOrgueStop::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
 {
-	AmplitudeLevel = cfg.ReadInteger(group, "AmplitudeLevel", 0, 1000);
-	NumberOfLogicalPipes = cfg.ReadInteger(group, "NumberOfLogicalPipes", 1, 192);
-	FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, "FirstAccessiblePipeLogicalPipeNumber", 1, NumberOfLogicalPipes);
-	FirstAccessiblePipeLogicalKeyNumber = cfg.ReadInteger(group, "FirstAccessiblePipeLogicalKeyNumber", 1,  128);
-	NumberOfAccessiblePipes = cfg.ReadInteger(group,"NumberOfAccessiblePipes", 1, NumberOfLogicalPipes);
-	WindchestGroup = cfg.ReadInteger(group,"WindchestGroup", 1, organfile->GetWinchestGroupCount());
-	Percussive = cfg.ReadBoolean(group,"Percussive");
+	AmplitudeLevel = cfg.ReadInteger(group, wxT("AmplitudeLevel"), 0, 1000);
+	NumberOfLogicalPipes = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
+	FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, NumberOfLogicalPipes);
+	FirstAccessiblePipeLogicalKeyNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
+	NumberOfAccessiblePipes = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, NumberOfLogicalPipes);
+	WindchestGroup = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, organfile->GetWinchestGroupCount());
+	Percussive = cfg.ReadBoolean(group, wxT("Percussive"));
 
 	WindchestGroup += organfile->GetTremulantCount();    // we would + 1 but it already has it: clever!
 
 	int i;
-	char buffer[64];
+	wxString buffer;
 
 	pipe = new wxInt16[NumberOfLogicalPipes];
 	for (i = 0; i < NumberOfLogicalPipes; i++)
 	{
-		sprintf(buffer, "Pipe%03d", i + 1);
+		buffer.Printf(wxT("Pipe%03d"), i + 1);
 		wxString file = cfg.ReadString(group, buffer);
 
 		// FIXME: this is one of the important fixes for this file, these
@@ -74,7 +74,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetric
 		organfile->m_pipe_files.push_back(file);
 		organfile->m_pipe_windchests.push_back(WindchestGroup);
 		organfile->m_pipe_percussive.push_back(Percussive);
-		if (!file.StartsWith("REF:"))
+		if (!file.StartsWith(wxT("REF:")))
 		{
 			organfile->m_pipe_amplitudes.push_back(organfile->GetAmplitude() * AmplitudeLevel);
 			organfile->m_NumberOfPipes++;
@@ -88,7 +88,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetric
 
 void GOrgueStop::Save(IniFileConfig& cfg, bool prefix)
 {
-	GOrgueDrawstop::Save(cfg, prefix, "Stop");
+	GOrgueDrawstop::Save(cfg, prefix, wxT("Stop"));
 }
 
 bool GOrgueStop::Set(bool on)

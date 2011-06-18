@@ -24,7 +24,7 @@
 #include "IniFileConfig.h"
 #include <wx/fileconf.h>
 
-bool IniFileConfig::ReadKey(const char* group, const char* key, void* retval, ValueType type, bool required, int nmin, int nmax)
+bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueType type, bool required, int nmin, int nmax)
 {
 	wxString string;
 	wxInt16 integer;
@@ -32,10 +32,10 @@ bool IniFileConfig::ReadKey(const char* group, const char* key, void* retval, Va
 
 	try
 	{
-		m_cfg->SetPath("/");
+		m_cfg->SetPath(wxT("/"));
 		if (!m_cfg->HasGroup(group))
 		{//JB: strncasecmp was strnicmp
-			if (strlen(group) >= 8 && !strncasecmp(group, "General", 7) && group[7] > '0')	// FrameGeneral groups aren't required.
+			if (group.length() >= 8 && !group.Mid(0, 7).CmpNoCase(wxT("General")) && group[7] > wxT('0'))	// FrameGeneral groups aren't required.
 			{
 			    if (type == ORGAN_INTEGER)
                     *(wxInt16*)retval = 0;
@@ -43,7 +43,7 @@ bool IniFileConfig::ReadKey(const char* group, const char* key, void* retval, Va
 			}
 			throw -1;
 		}
-		m_cfg->SetPath(wxString("/") + group);
+		m_cfg->SetPath(wxT("/") + group);
 
 		if (type >= ORGAN_INTEGER)
 		{
@@ -55,9 +55,9 @@ bool IniFileConfig::ReadKey(const char* group, const char* key, void* retval, Va
 			}
 			else
 			{
-				if (!::wxIsdigit(string[0]) && string[0] != '+' && string[0] != '-' && string.CmpNoCase("none"))
+				if (!::wxIsdigit(string[0]) && string[0] != '+' && string[0] != '-' && string.CmpNoCase(wxT("none")))
 					throw -3;
-				integer = atoi(string.c_str() + (string[0] == '+' ? 1 : 0));
+				integer = atoi(string.mb_str() + (string[0] == '+' ? 1 : 0));
 			}
 
 			if (integer >= nmin && integer <= nmax)
@@ -89,69 +89,69 @@ bool IniFileConfig::ReadKey(const char* group, const char* key, void* retval, Va
 				case ORGAN_BOOLEAN:
 					// we cannot assign bitfield bool's the normal way
 					// pointers to bitfields are not allowed!
-					if (string[0] == 'Y')
+					if (string[0] == wxT('Y'))
 						return true;
-					else if (string[0] == 'N')
+					else if (string[0] == wxT('N'))
 						return false;
 					else
 						throw -3;
 					break;
 				case ORGAN_FONTSIZE:
-					if (string == "SMALL")
+					if (string == wxT("SMALL"))
 						integer = 6;
-					else if (string == "NORMAL")
+					else if (string == wxT("NORMAL"))
 						integer = 7;
-					else if (string == "LARGE")
+					else if (string == wxT("LARGE"))
 						integer = 10;
 					else
 						throw -3;
 					*(wxInt16*)retval = integer;
 					break;
 				case ORGAN_SIZE:
-					if (string == "SMALL")
+					if (string == wxT("SMALL"))
 						integer = 0;
-					else if (string == "MEDIUM")
+					else if (string == wxT("MEDIUM"))
 						integer = 1;
-					else if (string == "MEDIUM LARGE")
+					else if (string == wxT("MEDIUM LARGE"))
 						integer = 2;
-					else if (string == "LARGE")
+					else if (string == wxT("LARGE"))
 						integer = 3;
 					else
 						throw -3;
 					*(wxInt16*)retval = sizes[nmin][integer];
 					break;
 				case ORGAN_COLOR:
-					if (string == "BLACK")
+					if (string == wxT("BLACK"))
 						*(wxColour*)retval = wxColour(0x00, 0x00, 0x00);
-					else if (string == "BLUE")
+					else if (string == wxT("BLUE"))
 						*(wxColour*)retval = wxColour(0x00, 0x00, 0xFF);
-					else if (string == "DARK BLUE")
+					else if (string == wxT("DARK BLUE"))
 						*(wxColour*)retval = wxColour(0x00, 0x00, 0x80);
-					else if (string == "GREEN")
+					else if (string == wxT("GREEN"))
 						*(wxColour*)retval = wxColour(0x00, 0xFF, 0x00);
-					else if (string == "DARK GREEN")
+					else if (string == wxT("DARK GREEN"))
 						*(wxColour*)retval = wxColour(0x00, 0x80, 0x00);
-					else if (string == "CYAN")
+					else if (string == wxT("CYAN"))
 						*(wxColour*)retval = wxColour(0x00, 0xFF, 0xFF);
-					else if (string == "DARK CYAN")
+					else if (string == wxT("DARK CYAN"))
 						*(wxColour*)retval = wxColour(0x00, 0x80, 0x80);
-					else if (string == "RED")
+					else if (string == wxT("RED"))
 						*(wxColour*)retval = wxColour(0xFF, 0x00, 0x00);
-					else if (string == "DARK RED")
+					else if (string == wxT("DARK RED"))
 						*(wxColour*)retval = wxColour(0x80, 0x00, 0x00);
-					else if (string == "MAGENTA")
+					else if (string == wxT("MAGENTA"))
 						*(wxColour*)retval = wxColour(0xFF, 0x00, 0xFF);
-					else if (string == "DARK MAGENTA")
+					else if (string == wxT("DARK MAGENTA"))
 						*(wxColour*)retval = wxColour(0x80, 0x00, 0x80);
-					else if (string == "YELLOW")
+					else if (string == wxT("YELLOW"))
 						*(wxColour*)retval = wxColour(0xFF, 0xFF, 0x00);
-					else if (string == "DARK YELLOW")
+					else if (string == wxT("DARK YELLOW"))
 						*(wxColour*)retval = wxColour(0x80, 0x80, 0x00);
-					else if (string == "LIGHT GREY")
+					else if (string == wxT("LIGHT GREY"))
 						*(wxColour*)retval = wxColour(0xC0, 0xC0, 0xC0);
-					else if (string == "DARK GREY")
+					else if (string == wxT("DARK GREY"))
 						*(wxColour*)retval = wxColour(0x80, 0x80, 0x80);
-					else if (string == "WHITE")
+					else if (string == wxT("WHITE"))
 						*(wxColour*)retval = wxColour(0xFF, 0xFF, 0xFF);
 					else
 						throw -3;
@@ -172,16 +172,16 @@ bool IniFileConfig::ReadKey(const char* group, const char* key, void* retval, Va
 		switch(exception)
 		{
 		case -1:
-			error.Printf("Missing required group '/%s'", group);
+			error.Printf(_("Missing required group '/%s'"), group.c_str());
 			break;
 		case -2:
-			error.Printf("Missing required value '/%s/%s'", group, key);
+			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
 			break;
 		case -3:
-			error.Printf("Invalid value '/%s/%s'", group, key);
+			error.Printf(_("Invalid value '/%s/%s'"), group.c_str(), key.c_str());
 			break;
 		case -4:
-			error.Printf("Out of range value '/%s/%s'", group, key);
+			error.Printf(_("Out of range value '/%s/%s'"), group.c_str(), key.c_str());
 			break;
 		}
 		throw error;
@@ -190,47 +190,47 @@ bool IniFileConfig::ReadKey(const char* group, const char* key, void* retval, Va
 	return false;
 }
 
-bool IniFileConfig::ReadBoolean(const char* group, const char* key, bool required)
+bool IniFileConfig::ReadBoolean(wxString group, wxString key, bool required)
 {
 	return ReadKey(group, key, 0, ORGAN_BOOLEAN, required);
 }
 
-wxColour IniFileConfig::ReadColor(const char* group, const char* key, bool required)
+wxColour IniFileConfig::ReadColor(wxString group, wxString key, bool required)
 {
 	wxColour retval;
 	ReadKey(group, key, &retval, ORGAN_COLOR, required);
 	return retval;
 }
 
-wxString IniFileConfig::ReadString(const char* group, const char* key, int nmax, bool required)
+wxString IniFileConfig::ReadString(wxString group, wxString key, int nmax, bool required)
 {
 	wxString retval;
 	ReadKey(group, key, &retval, ORGAN_STRING, required, 0, nmax);
 	return retval;
 }
 
-wxInt16 IniFileConfig::ReadInteger(const char* group, const char* key, int nmin, int nmax, bool required)
+wxInt16 IniFileConfig::ReadInteger(wxString group, wxString key, int nmin, int nmax, bool required)
 {
 	wxInt16 retval;
 	ReadKey(group, key, &retval, ORGAN_INTEGER, required, nmin, nmax);
 	return retval;
 }
 
-wxInt32 IniFileConfig::ReadLong(const char* group, const char* key, int nmin, int nmax, bool required)
+wxInt32 IniFileConfig::ReadLong(wxString group, wxString key, int nmin, int nmax, bool required)
 {
 	wxInt32 retval;
 	ReadKey(group, key, &retval, ORGAN_LONG, required, nmin, nmax);
 	return retval;
 }
 
-wxInt16 IniFileConfig::ReadSize(const char* group, const char* key, int nmin, bool required)
+wxInt16 IniFileConfig::ReadSize(wxString group, wxString key, int nmin, bool required)
 {
 	wxInt16 retval;
 	ReadKey(group, key, &retval, ORGAN_SIZE, required, nmin);
 	return retval;
 }
 
-wxInt16 IniFileConfig::ReadFontSize(const char* group, const char* key, bool required)
+wxInt16 IniFileConfig::ReadFontSize(wxString group, wxString key, bool required)
 {
 	wxInt16 retval;
 	ReadKey(group, key, &retval, ORGAN_FONTSIZE, required);
@@ -239,12 +239,12 @@ wxInt16 IniFileConfig::ReadFontSize(const char* group, const char* key, bool req
 
 void IniFileConfig::SaveHelper(bool prefix, wxString group, wxString key, wxString value)
 {
-    wxString str = group + '/' + key;
+    wxString str = group + wxT('/') + key;
     if (m_cfg->Read(str) != value)
     {
         if (prefix)
         {
-            m_cfg->Write('_' + str, value);
+            m_cfg->Write(wxT('_') + str, value);
         }
         else
             m_cfg->Write(str, value);
@@ -255,15 +255,15 @@ void IniFileConfig::SaveHelper( bool prefix, wxString group, wxString key, int v
 {
     wxString str;
     if (force)
-        str.Printf("%03d", value);
+        str.Printf(wxT("%03d"), value);
     else if (sign)
     {
         if (value >= 0)
-            str.Printf("+%03d", value);
+            str.Printf(wxT("+%03d"), value);
         else
-            str.Printf("-%03d", -value);
+            str.Printf(wxT("-%03d"), -value);
     }
     else
-        str.Printf("%d", value);
+        str.Printf(wxT("%d"), value);
     SaveHelper(prefix, group, key, str);
 }

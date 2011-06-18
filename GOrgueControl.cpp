@@ -40,17 +40,17 @@ GOrgueControl::~GOrgueControl()
 
 }
 
-void GOrgueControl::Load(IniFileConfig& cfg, const char* group)
+void GOrgueControl::Load(IniFileConfig& cfg, wxString group)
 {
 
-	Name = cfg.ReadString(group, "Name", 64);
-	ShortcutKey = cfg.ReadInteger(group, "ShortcutKey", 0, 255, false);
-	Displayed = cfg.ReadBoolean(group, "Displayed");
-	DispKeyLabelOnLeft = cfg.ReadBoolean(group, "DispKeyLabelOnLeft");
-	DispLabelColour = cfg.ReadColor(group, "DispLabelColour");
-	DispLabelFontSize = cfg.ReadFontSize(group, "DispLabelFontSize");
+	Name = cfg.ReadString(group, wxT("Name"), 64);
+	ShortcutKey = cfg.ReadInteger(group, wxT("ShortcutKey"), 0, 255, false);
+	Displayed = cfg.ReadBoolean(group, wxT("Displayed"));
+	DispKeyLabelOnLeft = cfg.ReadBoolean(group, wxT("DispKeyLabelOnLeft"));
+	DispLabelColour = cfg.ReadColor(group, wxT("DispLabelColour"));
+	DispLabelFontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"));
 
-	if (strlen(group) >= 3)
-		ObjectNumber = atoi(group + strlen(group) - 3);
+	if (group.length() >= 3)
+		ObjectNumber = atoi(group.mb_str() + group.length() - 3);
 
 }

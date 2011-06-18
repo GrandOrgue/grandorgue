@@ -106,7 +106,7 @@ SettingsDialog::SettingsDialog(wxWindow* win) :
 	wxASSERT(g_sound);
 
 	b_stereo = g_sound->IsStereo();
-	b_squash = wxConfigBase::Get()->Read("LosslessCompression", 1);
+	b_squash = wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1);
 
 	pConfig = wxConfigBase::Get();
 
@@ -142,9 +142,9 @@ SettingsDialog::SettingsDialog(wxWindow* win) :
 SettingsDialog::~SettingsDialog()
 {
 	g_sound->SetLogSoundErrorMessages(false);
-    if ((b_stereo != g_sound->IsStereo() || b_squash != wxConfigBase::Get()->Read("LosslessCompression", 1)))
+    if ((b_stereo != g_sound->IsStereo() || b_squash != wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1)))
     {
-        if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), APP_NAME, wxYES_NO | wxICON_QUESTION) == wxYES)
+        if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION) == wxYES)
         {
             wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
             ::wxGetApp().frame->AddPendingEvent(event);
@@ -155,31 +155,31 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::UpdateSoundStatus()
 {
 
-	SetLatencySpinner(pConfig->Read("Devices/Sound/" + c_sound->GetStringSelection(), 0L));
+	SetLatencySpinner(pConfig->Read(wxT("Devices/Sound/") + c_sound->GetStringSelection(), 0L));
 
 	wxString str;
 	switch(g_sound->GetAudioFormat())
 	{
 		case RTAUDIO_SINT8:
-			str = "8 bit PCM";
+			str = _("8 bit PCM");
 			break;
 		case RTAUDIO_SINT16:
-			str = "16 bit PCM";
+			str = _("16 bit PCM");
 			break;
 		case RTAUDIO_SINT24:
-			str = "24 bit PCM";
+			str = _("24 bit PCM");
 			break;
 		case RTAUDIO_SINT32:
-			str = "32 bit PCM";
+			str = _("32 bit PCM");
 			break;
 		case RTAUDIO_FLOAT32:
-			str = "32 bit float";
+			str = _("32 bit float");
 			break;
 		case RTAUDIO_FLOAT64:
-			str = "64 bit float";
+			str = _("64 bit float");
 			break;
 		default:
-			str = "none";
+			str = _("none");
 	}
 	c_format->SetLabel(str);
 }
@@ -202,7 +202,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	for (it2 = g_sound->GetMidi().GetDevices().begin(); it2 != g_sound->GetMidi().GetDevices().end(); it2++)
 	{
 		choices.push_back(it2->first);
-		page1checklistdata.push_back(pConfig->Read("Devices/MIDI/" + it2->first, 0L));
+		page1checklistdata.push_back(pConfig->Read(wxT("Devices/MIDI/") + it2->first, 0L));
 	}
 	wxBoxSizer* item3 = new wxStaticBoxSizer(wxVERTICAL, panel, _("MIDI &input devices"));
 	item0->Add(item3, 0, wxEXPAND | wxALL, 5);
@@ -229,7 +229,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	item9->Add(item1, 0, wxEXPAND | wxALL, 5);
 	c_sound = new wxChoice(panel, ID_SOUND_DEVICE, wxDefaultPosition, wxDefaultSize, choices);
 	c_sound->SetStringSelection(g_sound->GetDefaultAudioDevice());
-	c_sound->SetStringSelection(pConfig->Read("Devices/DefaultSound", wxEmptyString));
+	c_sound->SetStringSelection(pConfig->Read(wxT("Devices/DefaultSound"), wxEmptyString));
 	item1->Add(c_sound, 0, wxEXPAND | wxALL, 5);
 
 	choices.clear();
@@ -244,7 +244,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Desired &Latency:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 	wxBoxSizer* latency = new wxBoxSizer(wxHORIZONTAL);
 	latency->Add(c_latency = new wxSpinCtrl(panel, ID_LATENCY, wxEmptyString, wxDefaultPosition, wxSize(48, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 999), 0);
-	latency->Add(new wxStaticText(panel, wxID_ANY, "ms"), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 5);
+	latency->Add(new wxStaticText(panel, wxID_ANY, _("ms")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 5);
 	grid->Add(latency, 0);
 
 	/* achieved latency for the above estimate */
@@ -256,7 +256,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	item1->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	UpdateSoundStatus();
-	c_stereo->Select(pConfig->Read("StereoEnabled", 0L));
+	c_stereo->Select(pConfig->Read(wxT("StereoEnabled"), 0L));
 
 	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Enhancements"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
@@ -265,15 +265,15 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
     item6->Add(c_align  = new wxCheckBox(panel, ID_ENHANCE_ALIGN_RELEASE,    _("Release sample phase alignment")), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_scale  = new wxCheckBox(panel, ID_ENHANCE_SCALE_RELEASE,    _("Release sample scaling"        )), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_random = new wxCheckBox(panel, ID_ENHANCE_RANDOMIZE,        _("Randomize pipe speaking"       )), 0, wxEXPAND | wxALL, 5);
-	if (pConfig->Read("LosslessCompression", 1))
+	if (pConfig->Read(wxT("LosslessCompression"), 1))
 		c_squash->SetValue(true);
-	if (pConfig->Read("ManagePolyphony", 1))
+	if (pConfig->Read(wxT("ManagePolyphony"), 1))
 		c_limit ->SetValue(true);
-	if (pConfig->Read("AlignRelease", 1))
+	if (pConfig->Read(wxT("AlignRelease"), 1))
 		c_align ->SetValue(true);
-	if (pConfig->Read("ScaleRelease", 1))
+	if (pConfig->Read(wxT("ScaleRelease"), 1))
 		c_scale ->SetValue(true);
-	if (pConfig->Read("RandomizeSpeaking", 1))
+	if (pConfig->Read(wxT("RandomizeSpeaking"), 1))
 		c_random->SetValue(true);
 
     topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
@@ -339,11 +339,11 @@ wxPanel* SettingsDialog::CreateOrganPage(wxWindow* parent)
 	buttonSizer->Add(delButton, 0, wxALIGN_LEFT | wxALL, 5);
     topSizer->Add(buttonSizer, 0, wxALL, 5);
 
-    long count=pConfig->Read("OrganMIDI/Count", 0L);
+    long count=pConfig->Read(wxT("OrganMIDI/Count"), 0L);
     for (long i=0; i<count; i++) {
-        wxString itemstr="OrganMIDI/Organ"+wxString::Format("%ld", i);
-        wxString file=pConfig->Read(itemstr+".file", "");
-        int j=pConfig->Read(itemstr+".midi", 0L);
+        wxString itemstr=wxT("OrganMIDI/Organ")+wxString::Format(wxT("%ld"), i);
+        wxString file=pConfig->Read(itemstr+wxT(".file"), wxT(""));
+        int j=pConfig->Read(itemstr+wxT(".midi"), 0L);
         organlist->InsertItem(i, file);
         organlist->SetItemData(i, j);
         UpdateOrganMessages(i);
@@ -372,7 +372,7 @@ void SettingsDialog::OnOrganEventListDoubleClick(wxListEvent& event) {
 
 void SettingsDialog::OnAddOrgan(wxCommandEvent& event) {
     //ask for .organ file
-    wxFileDialog dlg(this, "Choose a file", "", "", "*.organ", wxFILE_MUST_EXIST | wxOPEN);
+    wxFileDialog dlg(this, _("Choose a file"), wxT(""), wxT(""), _("*.organ"), wxFILE_MUST_EXIST | wxOPEN);
     if (dlg.ShowModal()==wxID_OK) {
         organlist->InsertItem(organlist->GetItemCount(), dlg.GetPath());
         organlist->SetColumnWidth(0, wxLIST_AUTOSIZE);
@@ -381,10 +381,10 @@ void SettingsDialog::OnAddOrgan(wxCommandEvent& event) {
 
 void SettingsDialog::OnDelOrgan(wxCommandEvent& event) {
     int index=organlist->GetFirstSelected();
-    wxString itemstr="OrganMIDI/Organ"+wxString::Format("%d", index);
+    wxString itemstr=wxT("OrganMIDI/Organ")+wxString::Format(wxT("%d"), index);
     organlist->DeleteItem(index);
-    pConfig->DeleteEntry(itemstr+".file");
-    pConfig->DeleteEntry(itemstr+".midi");
+    pConfig->DeleteEntry(itemstr+wxT(".file"));
+    pConfig->DeleteEntry(itemstr+wxT(".midi"));
 }
 
 void SettingsDialog::OnOrganProperties(wxCommandEvent& event)
@@ -414,7 +414,7 @@ void SettingsDialog::UpdateMessages(int i)
 {
 
 	MIDIListenDialog::LISTEN_DIALOG_TYPE type = GOrgueMidi::GetMidiEventListenDialogType(i);
-	int j = pConfig->Read(wxString("MIDI/") + GOrgueMidi::GetMidiEventTitle(i), 0L);
+	int j = pConfig->Read(wxString(wxT("MIDI/")) + GOrgueMidi::GetMidiEventTitle(i), 0L);
 	page2list->SetItem(i, 1, MIDIListenDialog::GetEventTitle(j, type));
 	page2list->SetItem(i, 2, MIDIListenDialog::GetEventChannelString(j));
 
@@ -457,7 +457,7 @@ void SettingsDialog::OnChanged(wxCommandEvent& event)
 void SettingsDialog::OnDevicesSoundChoice(wxCommandEvent& event)
 {
 
-	int lat = pConfig->Read("Devices/Sound/" + c_sound->GetStringSelection(), 15);
+	int lat = pConfig->Read(wxT("Devices/Sound/") + c_sound->GetStringSelection(), 15);
 	SetLatencySpinner(lat);
 
 }
@@ -507,7 +507,7 @@ void SettingsDialog::OnEventListDoubleClick(wxListEvent& event)
 
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		pConfig->Write(wxString("MIDI/") + GOrgueMidi::GetMidiEventTitle(index), dlg.GetEvent());
+		pConfig->Write(wxString(wxT("MIDI/")) + GOrgueMidi::GetMidiEventTitle(index), dlg.GetEvent());
 		UpdateMessages(index);
 		OnChanged(event);
 	}
@@ -533,12 +533,12 @@ void SettingsDialog::OnHelp(wxCommandEvent& event)
 void SettingsDialog::OnOK(wxCommandEvent& event)
 {
 
-	pConfig->Write(wxString("OrganMIDI/Count"), organlist->GetItemCount());
+	pConfig->Write(wxT("OrganMIDI/Count"), organlist->GetItemCount());
 	for (int i=0; i<organlist->GetItemCount(); i++)
 	{
-		wxString itemstr=wxString::Format("OrganMIDI/Organ%d", i);
-		pConfig->Write(itemstr+".file", organlist->GetItemText(i));
-		pConfig->Write(itemstr+".midi", (long)organlist->GetItemData(i));
+		wxString itemstr=wxString::Format(wxT("OrganMIDI/Organ%d"), i);
+		pConfig->Write(itemstr+wxT(".file"), organlist->GetItemText(i));
+		pConfig->Write(itemstr+wxT(".midi"), (long)organlist->GetItemData(i));
 	}
 
 	if (DoApply())
@@ -559,16 +559,16 @@ bool SettingsDialog::DoApply()
 		j = page1checklistdata[i];
 		if (!page1checklist->IsChecked(i))
             j = -j - 1;
-        pConfig->Write("Devices/MIDI/" + page1checklist->GetString(i), j);
+        pConfig->Write(wxT("Devices/MIDI/") + page1checklist->GetString(i), j);
 	}
-	pConfig->Write("Devices/DefaultSound", c_sound->GetStringSelection());
-	pConfig->Write("Devices/Sound/" + c_sound->GetStringSelection(), c_latency->GetValue());
-	pConfig->Write("StereoEnabled", c_stereo->GetSelection());
-	pConfig->Write("LosslessCompression", (long)c_squash->IsChecked());
-	pConfig->Write("ManagePolyphony", (long)c_limit->IsChecked());
-	pConfig->Write("AlignRelease", (long)c_align->IsChecked());
-	pConfig->Write("ScaleRelease", (long)c_scale->IsChecked());
-	pConfig->Write("RandomizeSpeaking", (long)c_random->IsChecked());
+	pConfig->Write(wxT("Devices/DefaultSound"), c_sound->GetStringSelection());
+	pConfig->Write(wxT("Devices/Sound/") + c_sound->GetStringSelection(), c_latency->GetValue());
+	pConfig->Write(wxT("StereoEnabled"), c_stereo->GetSelection());
+	pConfig->Write(wxT("LosslessCompression"), (long)c_squash->IsChecked());
+	pConfig->Write(wxT("ManagePolyphony"), (long)c_limit->IsChecked());
+	pConfig->Write(wxT("AlignRelease"), (long)c_align->IsChecked());
+	pConfig->Write(wxT("ScaleRelease"), (long)c_scale->IsChecked());
+	pConfig->Write(wxT("RandomizeSpeaking"), (long)c_random->IsChecked());
 
     g_sound->ResetSound(NULL);
     UpdateSoundStatus();

@@ -37,7 +37,7 @@ public:
 	wxInt16 manual[7];
 
 	GOrgueDivisionalCoupler();
-	void Load(IniFileConfig& cfg, const char* group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 	bool Set(bool on);
 

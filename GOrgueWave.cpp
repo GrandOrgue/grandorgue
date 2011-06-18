@@ -230,8 +230,8 @@ void GOrgueWave::Open(const wxString& filename)
 	 * of wxFile been tested? I think we should put it back in and
 	 * make use of the cross-platform benefits. */
 #ifdef linux
-	temp.Replace("\\", "/");
-	int ffile = open(temp, O_RDONLY);
+	temp.Replace(wxT("\\"), wxT("/"));
+	int ffile = open(temp.mb_str(), O_RDONLY);
 	struct stat ffile_info;
 	fstat(ffile, &ffile_info);
 	unsigned length = ffile_info.st_size;

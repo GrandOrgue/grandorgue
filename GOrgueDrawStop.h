@@ -44,7 +44,7 @@ public:
 
 	GOrgueDrawstop();
 	virtual ~GOrgueDrawstop();
-	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	virtual bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	void Push(void);

@@ -66,7 +66,7 @@ extern const unsigned char* ImageLoader_Wood[];
 extern int c_ImageLoader_Wood[];
 
 OrganPanel::OrganPanel(wxWindow* parent) :
-	wxPanel(parent, wxID_ANY,wxDefaultPosition, wxDefaultSize,  wxTAB_TRAVERSAL, "panel")
+	wxPanel(parent, wxID_ANY,wxDefaultPosition, wxDefaultSize,  wxTAB_TRAVERSAL, wxT("panel"))
 {
 }
 
@@ -396,13 +396,13 @@ void OrganPanel::WrapText(wxDC& dc, wxString& string, int width)
 {
 	wxString str = string;
 
-	char *ptr = (char*)str.c_str();
-	char *p = ptr, *lastspace = 0;
+	wxChar *ptr = (wxChar*)str.c_str();
+	wxChar *p = ptr, *lastspace = 0;
 	wxCoord cx, cy;
 
 	while (p)
 	{
-		p = strchr(p, ' ');
+		p = wxStrchr(p, ' ');
 		if (p)
 		{
 			*p = 0;
@@ -432,7 +432,7 @@ void OrganPanel::WrapText(wxDC& dc, wxString& string, int width)
 	}
 
 	lastspace = 0;
-	p = ptr = (char*)str.c_str();
+	p = ptr = (wxChar*)str.c_str();
 	while (*p)
 	{
 		if (*p == ' ')
@@ -450,7 +450,7 @@ void OrganPanel::WrapText(wxDC& dc, wxString& string, int width)
 	}
 	*ptr = 0;
 
-	string = wxString::FromAscii(str.c_str());
+	string = str.c_str();
 }
 
 

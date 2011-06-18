@@ -49,7 +49,7 @@ private:
 public:
 
 	GOrgueLabel();
-	void Load(IniFileConfig& cfg, const char* group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Draw(wxDC& dc);
 
 };

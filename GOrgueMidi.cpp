@@ -437,7 +437,7 @@ void GOrgueMidi::UpdateOrganMIDI()
 	long count = m_global_config->Read(wxT("OrganMIDI/Count"), 0L);
 	for (long i = 0; i < count; i++)
 	{
-		wxString itemstr = wxT("OrganMIDI/Organ") + wxString::Format("%ld", i);
+		wxString itemstr = wxT("OrganMIDI/Organ") + wxString::Format(wxT("%ld"), i);
 		long j = m_global_config->Read(itemstr + wxT(".midi"), 0L);
 		wxString file = m_global_config->Read(itemstr + wxT(".file"));
 		m_organ_midi_events.insert(std::pair<long, wxString>(j, file));
