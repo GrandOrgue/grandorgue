@@ -1,7 +1,8 @@
 #
-# File:		Makefile for MyOrgan
-# Author:	Johan Blok
-# Created:	2006
+# File:     Makefile for MyOrgan
+# Authors:  Johan Blok
+#           Nicholas Appleton
+# Created:  2006
 
 # this makefile may also be used as a template for simple makefiles for your
 # own programs, the comments explain which parts of it you may have to modify
@@ -15,18 +16,29 @@
 
 #--version=
 
-# debug settings
-DEBUG                     = no
+GO_TARGET_RELEASE           = grandorgue
+GO_TARGET_DEBUG             = grandorgue_d
+GO_TARGET_RELEASE_UNICODE   = grandorgue_u
+GO_TARGET_DEBUG_UNICODE     = grandorgue_du
 
-# the following debug settings will only be in effect if "DEBUG" is set to
+# directory to place object files
+OBJ_DIR                     = obj
+
+# directory to place executable files
+BIN_DIR                     = bin
+
+# phony targets
+.PHONY: all clean $(GO_TARGET_RELEASE) $(GO_TARGET_DEBUG) $(GO_TARGET_RELEASE_UNICODE) $(GO_TARGET_DEBUG_UNICODE)
+
+# the following debug settings will only be in effect in debug mode
 # "yes".
-DEBUG_RELEASE_ALIGNMENT   = yes
-DEBUG_WX                  = no
+DEBUG_RELEASE_ALIGNMENT     = yes
+DEBUG_WX                    = no
 
 # Jack and Alsa will only be used if compiling on a Linux platform
-USING_JACK                = yes
-USING_ALSA                = yes
-USING_OSS                 = no
+USING_JACK                  = yes
+USING_ALSA                  = yes
+USING_OSS                   = no
 
 # objects to use in the build
 OBJECTS = \
@@ -70,33 +82,6 @@ SettingsDialog.o \
 SplashScreen.o \
 wxGaugeAudio.o
 
-# the C++ compiler
-CXX = g++
-
-# general compilation flags applying to all build modes
-CXXFLAGS = -fomit-frame-pointer -ffast-math -Wall
-
-ifeq ($(DEBUG),yes)
-# debug build configuration
-ifeq ($(DEBUG_WX),yes)
-WX_CONFIG := wx-config --unicode=no --debug=yes
-else
-WX_CONFIG := wx-config --unicode=no --debug=no
-endif
-CXXFLAGS += -g -O0 -mmmx -msse -msse2 -msse3 -funit-at-a-time
-ifeq ($(DEBUG_RELEASE_ALIGNMENT),yes)
-CXXFLAGS += -DPALIGN_DEBUG
-endif
-else
-# release build configuration
-WX_CONFIG := wx-config --unicode=no --debug=no
-CXXFLAGS += -O2 -mmmx -msse -msse2 -msse3 -DNDEBUG
-endif
-
-CXXFLAGS += `$(WX_CONFIG) --cxxflags`
-LDFLAGS = `$(WX_CONFIG) --libs`
-LDFLAGS += -lpthread
-
 # detect operating system
 UNAME := $(shell uname)
 ifeq ($(UNAME),Linux)
@@ -105,8 +90,25 @@ else
 SYSTEM = windows
 endif
 
+# object directories for different builds
+GO_RELEASE_OBJ_DIR         = $(OBJ_DIR)/$(SYSTEM)/$(GO_TARGET_RELEASE)
+GO_DEBUG_OBJ_DIR           = $(OBJ_DIR)/$(SYSTEM)/$(GO_TARGET_DEBUG)
+GO_RELEASE_UNICODE_OBJ_DIR = $(OBJ_DIR)/$(SYSTEM)/$(GO_TARGET_RELEASE_UNICODE)
+GO_DEBUG_UNICODE_OBJ_DIR   = $(OBJ_DIR)/$(SYSTEM)/$(GO_TARGET_DEBUG_UNICODE)
+
+# object filenames for different builds
+GO_RELEASE_OBJS            = $(addprefix $(GO_RELEASE_OBJ_DIR)/,$(OBJECTS))
+GO_DEBUG_OBJS              = $(addprefix $(GO_DEBUG_OBJ_DIR)/,$(OBJECTS))
+GO_RELEASE_UNICODE_OBJS    = $(addprefix $(GO_RELEASE_UNICODE_OBJ_DIR)/,$(OBJECTS))
+GO_DEBUG_UNICODE_OBJS      = $(addprefix $(GO_DEBUG_UNICODE_OBJ_DIR)/,$(OBJECTS))
+
+# the C++ compiler
+CXX = g++
+
+# common compilation flags applying to all build modes
+CXXFLAGS         = -fomit-frame-pointer -ffast-math -Wall
+
 ifeq ($(SYSTEM),linux)
-# Linux sound targets
 
 ifeq ($(USING_JACK),yes)
 CXXFLAGS += -D__UNIX_JACK__
@@ -124,22 +126,84 @@ LDFLAGS += -laoss
 endif
 
 else
-# Windows sound targets
 
 endif
 
-# set this to the name of the main executable file
-PROGRAM = GrandOrgue
+# get common compilation flags
+RELEASE_CXXFLAGS = -O2 -mmmx -msse -msse2 -msse3 -DNDEBUG
+DEBUG_CXXFLAGS   = -g -O0 -mmmx -msse -msse2 -msse3 -funit-at-a-time
+ifeq ($(DEBUG_RELEASE_ALIGNMENT),yes)
+DEBUG_CXXFLAGS  += -DPALIGN_DEBUG
+endif
+ifeq ($(DEBUG_WX),yes)
+WX_CONFIG_DEBUG := --debug=yes
+else
+WX_CONFIG_DEBUG := --debug=no
+endif
 
-.SUFFIXES:	.o .cpp
+# build configuration specific compiler flags
+GO_RELEASE_CXXFLAGS            = $(CXXFLAGS) $(RELEASE_CXXFLAGS) `wx-config --debug=no --unicode=no --cxxflags`
+GO_DEBUG_CXXFLAGS              = $(CXXFLAGS) $(DEBUG_CXXFLAGS) `wx-config $(WX_CONFIG_DEBUG) --unicode=no --cxxflags`
+GO_RELEASE_UNICODE_CXXFLAGS    = $(CXXFLAGS) $(RELEASE_CXXFLAGS) `wx-config --debug=no --unicode=yes --cxxflags`
+GO_DEBUG_UNICODE_CXXFLAGS      = $(CXXFLAGS) $(DEBUG_CXXFLAGS) `wx-config $(WX_CONFIG_DEBUG) --unicode=yes --cxxflags`
 
-.cpp.o :
-	$(CXX) -c $(CXXFLAGS) -o $@ $<
+# build configuration specific linker flags
+GO_RELEASE_LDFLAGS             = $(LDFLAGS) `wx-config --debug=no --unicode=no --libs` -lpthread
+GO_DEBUG_LDFLAGS               = $(LDFLAGS) `wx-config $(WX_CONFIG_DEBUG) --unicode=no --libs` -lpthread
+GO_RELEASE_UNICODE_LDFLAGS     = $(LDFLAGS) `wx-config --debug=no --unicode=yes --libs` -lpthread
+GO_DEBUG_UNICODE_LDFLAGS       = $(LDFLAGS) `wx-config $(WX_CONFIG_DEBUG) --unicode=yes --libs` -lpthread
 
-all:    $(PROGRAM)
+# executable filenames
+GO_TARGET_RELEASE_EXE          = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_RELEASE)
+GO_TARGET_DEBUG_EXE            = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_DEBUG)
+GO_TARGET_RELEASE_UNICODE_EXE  = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_RELEASE_UNICODE)
+GO_TARGET_DEBUG_UNICODE_EXE    = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_DEBUG_UNICODE)
 
-$(PROGRAM):	$(OBJECTS)
-	$(CXX) $(LDFLAGS) -o $(PROGRAM) $(OBJECTS)
+# phony targets
+all: $(GO_TARGET_RELEASE_EXE) $(GO_TARGET_DEBUG_EXE) # the unicode targets should be added once supported
+
+$(GO_TARGET_RELEASE): $(GO_TARGET_RELEASE_EXE)
+
+$(GO_TARGET_DEBUG): $(GO_TARGET_DEBUG_EXE)
+
+$(GO_TARGET_RELEASE_UNICODE): $(GO_TARGET_RELEASE_UNICODE_EXE)
+
+$(GO_TARGET_DEBUG_UNICODE): $(GO_TARGET_DEBUG_UNICODE_EXE)
 
 clean: 
-	rm -f *.o $(PROGRAM)
+	rm -f $(GO_TARGET_RELEASE_EXE) $(GO_TARGET_DEBUG_EXE) $(GO_TARGET_RELEASE_UNICODE_EXE) $(GO_TARGET_DEBUG_UNICODE_EXE) $(GO_RELEASE_OBJS) $(GO_DEBUG_OBJS) $(GO_RELEASE_UNICODE_OBJS) $(GO_DEBUG_UNICODE_OBJS)
+
+# executable targets
+$(GO_TARGET_RELEASE_EXE): $(GO_RELEASE_OBJS)
+	@test -d $(dir $@) || mkdir -p $(dir $@)
+	$(CXX) $(GO_RELEASE_LDFLAGS) -o $(GO_TARGET_RELEASE_EXE) $(GO_RELEASE_OBJS)
+
+$(GO_TARGET_DEBUG_EXE): $(GO_DEBUG_OBJS)
+	@test -d $(dir $@) || mkdir -p $(dir $@)
+	$(CXX) $(GO_DEBUG_LDFLAGS) -o $(GO_TARGET_DEBUG_EXE) $(GO_DEBUG_OBJS)
+
+$(GO_TARGET_RELEASE_UNICODE_EXE): $(GO_RELEASE_UNICODE_OBJS)
+	@test -d $(dir $@) || mkdir -p $(dir $@)
+	$(CXX) $(GO_RELEASE_UNICODE_LDFLAGS) -o $(GO_TARGET_RELEASE_UNICODE_EXE) $(GO_RELEASE_UNICODE_OBJS)
+
+$(GO_TARGET_DEBUG_UNICODE_EXE): $(GO_DEBUG_UNICODE_OBJS)
+	@test -d $(dir $@) || mkdir -p $(dir $@)
+	$(CXX) $(GO_DEBUG_UNICODE_LDFLAGS) -o $(GO_TARGET_DEBUG_UNICODE_EXE) $(GO_DEBUG_UNICODE_OBJS)
+
+# object targets
+$(GO_RELEASE_OBJ_DIR)/%.o: %.cpp
+	@test -d $(GO_RELEASE_OBJ_DIR) || mkdir -p $(GO_RELEASE_OBJ_DIR)
+	$(CXX) -c $(GO_RELEASE_CXXFLAGS) -o $@ $<
+
+$(GO_DEBUG_OBJ_DIR)/%.o: %.cpp
+	@test -d $(GO_DEBUG_OBJ_DIR) || mkdir -p $(GO_DEBUG_OBJ_DIR)
+	$(CXX) -c $(GO_DEBUG_CXXFLAGS) -o $@ $<
+	
+$(GO_RELEASE_UNICODE_OBJ_DIR)/%.o: %.cpp
+	@test -d $(GO_RELEASE_UNICODE_OBJ_DIR) || mkdir -p $(GO_RELEASE_UNICODE_OBJ_DIR)
+	$(CXX) -c $(GO_RELEASE_UNICODE_CXXFLAGS) -o $@ $<
+	
+$(GO_DEBUG_UNICODE_OBJ_DIR)/%.o: %.cpp
+	@test -d $(GO_DEBUG_UNICODE_OBJ_DIR) || mkdir -p $(GO_DEBUG_UNICODE_OBJ_DIR)
+	$(CXX) -c $(GO_DEBUG_UNICODE_CXXFLAGS) -o $@ $<
+	
