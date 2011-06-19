@@ -51,6 +51,7 @@ GOrguePiston.o \
 GOrgueProperties.o \
 GOrguePushbutton.o \
 GOrgueReleaseAlignTable.o \
+GOrgueRtHelpers.o \
 GOrgueSound.o \
 GOrgueSoundCallbackAudio.o \
 GOrgueStop.o \
