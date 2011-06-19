@@ -35,6 +35,7 @@
 #include "GrandOrgueID.h"
 #include "GOrgueMidi.h"
 #include "GOrgueSound.h"
+#include "GOrgueRtHelpers.h"
 
 IMPLEMENT_CLASS(SettingsDialog, wxPropertySheetDialog)
 
@@ -156,32 +157,8 @@ void SettingsDialog::UpdateSoundStatus()
 {
 
 	SetLatencySpinner(pConfig->Read(wxT("Devices/Sound/") + c_sound->GetStringSelection(), 0L));
+	c_format->SetLabel(wxString(GOrgueRtHelpers::GetAudioFormatName(g_sound->GetAudioFormat())));
 
-	wxString str;
-	switch(g_sound->GetAudioFormat())
-	{
-		case RTAUDIO_SINT8:
-			str = _("8 bit PCM");
-			break;
-		case RTAUDIO_SINT16:
-			str = _("16 bit PCM");
-			break;
-		case RTAUDIO_SINT24:
-			str = _("24 bit PCM");
-			break;
-		case RTAUDIO_SINT32:
-			str = _("32 bit PCM");
-			break;
-		case RTAUDIO_FLOAT32:
-			str = _("32 bit float");
-			break;
-		case RTAUDIO_FLOAT64:
-			str = _("64 bit float");
-			break;
-		default:
-			str = _("none");
-	}
-	c_format->SetLabel(str);
 }
 
 wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)

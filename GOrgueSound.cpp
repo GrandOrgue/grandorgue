@@ -51,104 +51,6 @@ DEFINE_EVENT_TYPE(wxEVT_LISTENING)
 DEFINE_EVENT_TYPE(wxEVT_METERS)
 DEFINE_EVENT_TYPE(wxEVT_LOADFILE)
 
-static
-wxString GetRtApiStr(const RtAudio::Api api)
-{
-
-	switch (api)
-	{
-
-	case RtAudio::LINUX_ALSA:
-		return wxString(wxT("Alsa"));
-	case RtAudio::LINUX_OSS:
-		return wxString(wxT("OSS"));
-	case RtAudio::MACOSX_CORE:
-		return wxString(wxT("Core"));
-	case RtAudio::UNIX_JACK:
-		return wxString(wxT("Jack"));
-	case RtAudio::WINDOWS_ASIO:
-		return wxString(wxT("ASIO"));
-	case RtAudio::WINDOWS_DS:
-		return wxString(wxT("DirectSound"));
-	case RtAudio::UNSPECIFIED:
-	default:
-		return wxString(wxT("Unknown"));
-
-	}
-
-}
-
-void GetDefaultDirectSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
-{
-
-	int bufferCalc = (latency * 44100) / 1000;
-
-	*nb_buffers = 2;
-
-	if (bufferCalc <= 256)
-	{
-		*buffer_size = 128;
-		return;
-	}
-
-	if (bufferCalc <= 512)
-	{
-		*buffer_size = 256;
-		return;
-	}
-
-	if (bufferCalc <= 3072)
-	{
-		*buffer_size = 512;
-		*nb_buffers = bufferCalc / 512;
-		if (bufferCalc % 512)
-			(*nb_buffers)++;
-		return;
-	}
-
-	*buffer_size = 1024;
-	*nb_buffers = bufferCalc / 1024;
-	if (bufferCalc % 1024)
-		(*nb_buffers)++;
-
-}
-
-void GetDefaultAsioSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
-{
-
-	int buffer_calc = (latency * 44100) / 1000;
-
-	*nb_buffers = 2;
-
-	if (buffer_calc <= 256)
-		*buffer_size = 128;
-	else if (buffer_calc <= 512)
-		*buffer_size = 256;
-	else if (buffer_calc <= 1024)
-		*buffer_size = 512;
-	else
-		*buffer_size = 1024;
-
-}
-
-void GetDefaultJackSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
-{
-
-	*nb_buffers = 1;
-	*buffer_size = 1024;
-
-}
-
-void GetDefaultUnknownSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
-{
-
-	*buffer_size = 256;
-	*nb_buffers = (latency * 44100) / (*buffer_size * 1000);
-	if (*nb_buffers < 2)
-		*nb_buffers = 2;
-
-}
-
 GOrgueSound::GOrgueSound(void) :
 	sw(),
 	pConfig(wxConfigBase::Get()),
@@ -195,7 +97,7 @@ GOrgueSound::GOrgueSound(void) :
 				RtAudio::DeviceInfo info = audioDevice->getDeviceInfo(i);
 				wxString dev_name = wxString::FromAscii(info.name.c_str());
 				dev_name.Replace(wxT("\\"), wxT("|"));
-				wxString name = GetRtApiStr(rtaudio_apis[k]) + wxString(wxT(": ")) + dev_name;
+				wxString name = wxString(GOrgueRtHelpers::GetApiName(rtaudio_apis[k])) + wxString(wxT(": ")) + dev_name;
 
 				if (info.isDefaultOutput && defaultAudio.IsEmpty())
 					defaultAudio = name;
@@ -226,20 +128,6 @@ GOrgueSound::GOrgueSound(void) :
 				GO_SOUND_DEV_CONFIG cfg;
 				cfg.rt_api = rtaudio_apis[k];
 				cfg.rt_api_subindex = i;
-				switch (cfg.rt_api)
-				{
-				case RtAudio::WINDOWS_DS:
-					cfg.latency_config_func = GetDefaultDirectSoundConfig;
-					break;
-				case RtAudio::UNIX_JACK:
-					cfg.latency_config_func = GetDefaultJackSoundConfig;
-					break;
-				case RtAudio::WINDOWS_ASIO:
-					cfg.latency_config_func = GetDefaultAsioSoundConfig;
-					break;
-				default:
-					cfg.latency_config_func = GetDefaultUnknownSoundConfig;
-				}
 				m_audioDevices[name] = cfg;
 
 			}
@@ -315,7 +203,7 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 			audioDevice = new RtAudio(it->second.rt_api);
 
 			unsigned try_latency = pConfig->Read(wxT("Devices/Sound/") + defaultAudio, 12);
-			it->second.latency_config_func(try_latency, &m_nb_buffers, &m_samples_per_buffer);
+			GOrgueRtHelpers::GetBufferConfig(it->second.rt_api, try_latency, &m_nb_buffers, &m_samples_per_buffer);
 
 			RtAudio::StreamParameters aOutputParam;
 			aOutputParam.deviceId = it->second.rt_api_subindex;

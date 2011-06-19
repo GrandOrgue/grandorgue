@@ -37,6 +37,7 @@
 #include "RtAudio.h"
 #include "RtMidi.h"
 #include "GrandOrgueDef.h"
+#include "GOrgueRtHelpers.h"
 
 BEGIN_DECLARE_EVENT_TYPES()
 
@@ -178,7 +179,6 @@ public:
 	{
 		RtAudio::Api rt_api;
 		int rt_api_subindex;
-		void (*latency_config_func)(const int latency_ms, unsigned *nb_buffers, unsigned *buffer_size);
 	} GO_SOUND_DEV_CONFIG;
 
 private:
