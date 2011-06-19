@@ -347,7 +347,7 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 			{
 				::wxSleep(1);
 				if (logSoundErrors)
-					::wxLogError("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
+					::wxLogError(wxT("Cannot use buffer size above 1024 samples; unacceptable quantization would occur."));
 				CloseSound(organfile);
 				return false;
 			}
@@ -555,7 +555,7 @@ void GOrgueSound::StartRecording()
         if ((f_output = fopen(filepath.mb_str(), "wb")))
             fwrite(&WAVE, sizeof(WAVE), 1, f_output);
         else
-            ::wxLogError("Unable to open file for writing");
+            ::wxLogError(wxT("Unable to open file for writing"));
 
 	}
 }

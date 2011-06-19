@@ -146,7 +146,7 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 
 	if (depth > 32)
 	{
-		::wxLogFatalError("Infinite recursive coupling detected!");
+		::wxLogFatalError(wxT("Infinite recursive coupling detected!"));
 		return;
 	}
 
