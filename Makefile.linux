@@ -33,12 +33,15 @@ BIN_DIR                     = bin
 # the following debug settings will only be in effect in debug mode
 # "yes".
 DEBUG_RELEASE_ALIGNMENT     = yes
-DEBUG_WX                    = no
+DEBUG_WX                    = yes
 
 # Jack and Alsa will only be used if compiling on a Linux platform
 USING_JACK                  = yes
 USING_ALSA                  = yes
 USING_OSS                   = no
+USING_DIRECTSOUND           = yes
+# USING_MM                  = yes (you have no choice at present)
+USING_ASIO                  = no # untested!
 
 # objects to use in the build
 OBJECTS = \
@@ -127,9 +130,25 @@ CXXFLAGS += -D__LINUX_OSS__
 LDFLAGS += -laoss
 endif
 
+LDFLAGS += -lpthread
+
 else
 
 BIN_EXTENSION = .exe
+
+ifeq ($(USING_DIRECTSOUND),yes)
+CXXFLAGS += -D__WINDOWS_DS__ -Idirectx/Include
+LDFLAGS += -ldsound
+endif
+
+ifeq ($(USING_ASIO),yes)
+CXXFLAGS += -D__WINDOWS_ASIO__
+endif
+
+# most of these libraries were taken straight from the Windows CodeBlocks
+# project file. winmm and ole32 are necessary, I'm not sure about the rest...
+LDFLAGS += -lwinmm -lcomdlg32 -lshell32 -lcomctl32 -ladvapi32 -lole32 -loleaut32 -luuid
+CXXFLAGS += -D__WINDOWS_MM__ # needed for RtMidi
 
 endif
 
@@ -152,10 +171,10 @@ GO_RELEASE_UNICODE_CXXFLAGS    = $(CXXFLAGS) $(RELEASE_CXXFLAGS) `wx-config --de
 GO_DEBUG_UNICODE_CXXFLAGS      = $(CXXFLAGS) $(DEBUG_CXXFLAGS) `wx-config $(WX_CONFIG_DEBUG) --unicode=yes --cxxflags`
 
 # build configuration specific linker flags
-GO_RELEASE_LDFLAGS             = $(LDFLAGS) `wx-config --debug=no --unicode=no --libs` -lpthread
-GO_DEBUG_LDFLAGS               = $(LDFLAGS) `wx-config $(WX_CONFIG_DEBUG) --unicode=no --libs` -lpthread
-GO_RELEASE_UNICODE_LDFLAGS     = $(LDFLAGS) `wx-config --debug=no --unicode=yes --libs` -lpthread
-GO_DEBUG_UNICODE_LDFLAGS       = $(LDFLAGS) `wx-config $(WX_CONFIG_DEBUG) --unicode=yes --libs` -lpthread
+GO_RELEASE_LDFLAGS             = $(LDFLAGS) `wx-config --debug=no --unicode=no --libs`
+GO_DEBUG_LDFLAGS               = $(LDFLAGS) `wx-config $(WX_CONFIG_DEBUG) --unicode=no --libs`
+GO_RELEASE_UNICODE_LDFLAGS     = $(LDFLAGS) `wx-config --debug=no --unicode=yes --libs`
+GO_DEBUG_UNICODE_LDFLAGS       = $(LDFLAGS) `wx-config $(WX_CONFIG_DEBUG) --unicode=yes --libs`
 
 # executable filenames
 GO_TARGET_RELEASE_EXE          = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_RELEASE)$(BIN_EXTENSION)
@@ -180,34 +199,34 @@ clean:
 # executable targets
 $(GO_TARGET_RELEASE_EXE): $(GO_RELEASE_OBJS)
 	@test -d $(dir $@) || mkdir -p $(dir $@)
-	$(CXX) $(GO_RELEASE_LDFLAGS) -o $(GO_TARGET_RELEASE_EXE) $(GO_RELEASE_OBJS)
+	$(CXX) -o $(GO_TARGET_RELEASE_EXE) $(GO_RELEASE_OBJS) $(GO_RELEASE_LDFLAGS)
 
 $(GO_TARGET_DEBUG_EXE): $(GO_DEBUG_OBJS)
 	@test -d $(dir $@) || mkdir -p $(dir $@)
-	$(CXX) $(GO_DEBUG_LDFLAGS) -o $(GO_TARGET_DEBUG_EXE) $(GO_DEBUG_OBJS)
+	$(CXX) -o $(GO_TARGET_DEBUG_EXE) $(GO_DEBUG_OBJS) $(GO_DEBUG_LDFLAGS)
 
 $(GO_TARGET_RELEASE_UNICODE_EXE): $(GO_RELEASE_UNICODE_OBJS)
 	@test -d $(dir $@) || mkdir -p $(dir $@)
-	$(CXX) $(GO_RELEASE_UNICODE_LDFLAGS) -o $(GO_TARGET_RELEASE_UNICODE_EXE) $(GO_RELEASE_UNICODE_OBJS)
+	$(CXX) -o $(GO_TARGET_RELEASE_UNICODE_EXE) $(GO_RELEASE_UNICODE_OBJS) $(GO_RELEASE_UNICODE_LDFLAGS)
 
 $(GO_TARGET_DEBUG_UNICODE_EXE): $(GO_DEBUG_UNICODE_OBJS)
 	@test -d $(dir $@) || mkdir -p $(dir $@)
-	$(CXX) $(GO_DEBUG_UNICODE_LDFLAGS) -o $(GO_TARGET_DEBUG_UNICODE_EXE) $(GO_DEBUG_UNICODE_OBJS)
+	$(CXX) -o $(GO_TARGET_DEBUG_UNICODE_EXE) $(GO_DEBUG_UNICODE_OBJS) $(GO_DEBUG_UNICODE_LDFLAGS)
 
 # object targets
 $(GO_RELEASE_OBJ_DIR)/%.o: %.cpp
-	@test -d $(GO_RELEASE_OBJ_DIR) || mkdir -p $(GO_RELEASE_OBJ_DIR)
+	@test -d $(dir $@) || mkdir -p $(dir $@)
 	$(CXX) -c $(GO_RELEASE_CXXFLAGS) -o $@ $<
 
 $(GO_DEBUG_OBJ_DIR)/%.o: %.cpp
-	@test -d $(GO_DEBUG_OBJ_DIR) || mkdir -p $(GO_DEBUG_OBJ_DIR)
+	@test -d $(dir $@) || mkdir -p $(dir $@)
 	$(CXX) -c $(GO_DEBUG_CXXFLAGS) -o $@ $<
 	
 $(GO_RELEASE_UNICODE_OBJ_DIR)/%.o: %.cpp
-	@test -d $(GO_RELEASE_UNICODE_OBJ_DIR) || mkdir -p $(GO_RELEASE_UNICODE_OBJ_DIR)
+	@test -d $(dir $@) || mkdir -p $(dir $@)
 	$(CXX) -c $(GO_RELEASE_UNICODE_CXXFLAGS) -o $@ $<
 	
 $(GO_DEBUG_UNICODE_OBJ_DIR)/%.o: %.cpp
-	@test -d $(GO_DEBUG_UNICODE_OBJ_DIR) || mkdir -p $(GO_DEBUG_UNICODE_OBJ_DIR)
+	@test -d $(dir $@) || mkdir -p $(dir $@)
 	$(CXX) -c $(GO_DEBUG_UNICODE_CXXFLAGS) -o $@ $<
 	
