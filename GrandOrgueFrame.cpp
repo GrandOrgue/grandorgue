@@ -115,7 +115,9 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_gaugedc = 0;
 	m_opening = false;
 
+#ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
+#endif
 
 	wxMenu *file_menu = new wxMenu;
 
@@ -451,9 +453,9 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 {
-	::wxLogDebug("settingsdialog..");
+	::wxLogDebug(wxT("settingsdialog.."));
 	SettingsDialog dialog(this);
-	::wxLogDebug("success");
+	::wxLogDebug(wxT("success"));
 	dialog.ShowModal();
 	g_sound->GetMidi().UpdateOrganMIDI();
 }
