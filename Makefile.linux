@@ -1,38 +1,24 @@
 #
 # File:     Makefile for MyOrgan
 # Authors:  Johan Blok
-#           Nicholas Appleton
+#           Nicholas Appleton (2010-2011)
 # Created:  2006
 
-# this makefile may also be used as a template for simple makefiles for your
-# own programs, the comments explain which parts of it you may have to modify
-# to use it for your own programs
-
-# you may change WX_CONFIG value to use a specific wx-config and to pass it
-# some options, for example "--inplace" to use an uninstalled wxWindows
-# version
-#
-# by default, wx-config from the PATH is used
-
-#--version=
-
+# currently supported targets
 GO_TARGET_RELEASE           = grandorgue
 GO_TARGET_DEBUG             = grandorgue_d
 GO_TARGET_RELEASE_UNICODE   = grandorgue_u
 GO_TARGET_DEBUG_UNICODE     = grandorgue_du
 
-# directory to place object files
-OBJ_DIR                     = obj
+# the following "DEBUG_xxx" settings will only be in effect for a debug build
+# configuration.
 
-# directory to place executable files
-BIN_DIR                     = bin
-
-# phony targets
-.PHONY: all clean $(GO_TARGET_RELEASE) $(GO_TARGET_DEBUG) $(GO_TARGET_RELEASE_UNICODE) $(GO_TARGET_DEBUG_UNICODE)
-
-# the following debug settings will only be in effect in debug mode
-# "yes".
+# do you want extended release alignment debugging information dumped to the
+# console?
 DEBUG_RELEASE_ALIGNMENT     = yes
+
+# when compiling a debug version of GrandOrgue, do you also want to use
+# a debug version of wxWidgets?
 DEBUG_WX                    = yes
 
 # Jack and Alsa will only be used if compiling on a Linux platform
@@ -84,6 +70,15 @@ RtMidi.o \
 SettingsDialog.o \
 SplashScreen.o \
 wxGaugeAudio.o
+
+# phony targets
+.PHONY: help all clean $(GO_TARGET_RELEASE) $(GO_TARGET_DEBUG) $(GO_TARGET_RELEASE_UNICODE) $(GO_TARGET_DEBUG_UNICODE)
+
+# directory to place object files
+OBJ_DIR                     = obj
+
+# directory to place executable files
+BIN_DIR                     = bin
 
 # detect operating system
 UNAME := $(shell uname)
@@ -183,6 +178,19 @@ GO_TARGET_RELEASE_UNICODE_EXE  = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_RELEASE_UNICOD
 GO_TARGET_DEBUG_UNICODE_EXE    = $(BIN_DIR)/$(SYSTEM)/$(GO_TARGET_DEBUG_UNICODE)$(BIN_EXTENSION)
 
 # phony targets
+help:
+	@echo "GrandOrgue Makefile"
+	@echo "Type:"
+	@echo "  make help          To display this message."
+	@echo "  make all           Will build all currently supported configurations"
+	@echo "                     of GrandOrgue."
+	@echo "  make grandorgue    Will build an ansi release version of GrandOrgue."
+	@echo "  make grandorgue_d  Will build an ansi debug version of GrandOrgue."
+	@echo "  make grandorgue_ru Will build a unicode release version of GrandOrgue."
+	@echo "  make grandorgue_du Will build a unicode debug version of GrandOrgue."
+	@echo "  make clean         Will erase all compiled object files and all built"
+	@echo "                     executables for this system."
+
 all: $(GO_TARGET_RELEASE_EXE) $(GO_TARGET_DEBUG_EXE) # the unicode targets should be added once supported
 
 $(GO_TARGET_RELEASE): $(GO_TARGET_RELEASE_EXE)
@@ -229,4 +237,3 @@ $(GO_RELEASE_UNICODE_OBJ_DIR)/%.o: %.cpp
 $(GO_DEBUG_UNICODE_OBJ_DIR)/%.o: %.cpp
 	@test -d $(dir $@) || mkdir -p $(dir $@)
 	$(CXX) -c $(GO_DEBUG_UNICODE_CXXFLAGS) -o $@ $<
-	
