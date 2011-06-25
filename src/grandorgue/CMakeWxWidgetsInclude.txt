@@ -15,7 +15,7 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
    set(wxWidgets_USE_DEBUG OFF)
 endif ()
 
-set(wxWidgets_CONFIGURATION required_wx_CONFIGURATION)
+set(wxWidgets_CONFIGURATION ${required_wx_CONFIGURATION})
 
 # pull in wxWidgets
 find_package(wxWidgets)
