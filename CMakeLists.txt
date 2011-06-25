@@ -2,16 +2,20 @@ cmake_minimum_required(VERSION 2.6)
 
 project(GrandOrgue CXX)
 
+set(wxWidgets_ROOT_DIR C:/wxWidgets-2.8.12)
 set(UNICODE OFF)
-
 set(RTAUDIO_USE_JACK ON)
 set(RTAUDIO_USE_OSS OFF)
 set(RTAUDIO_USE_ALSA ON)
+set(RTAUDIO_USE_DSOUND ON)
+set(RTAUDIO_USE_ASIO OFF)
 set(RTMIDI_USE_JACK ON)
 set(RTMIDI_USE_ALSA ON)
+set(RTMIDI_USE_MM ON)
 
-if (NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE Release)
+if (CMAKE_BUILD_TYPE STREQUAL "")
+   message(STATUS "No build configuration specified. Defaulting to 'Release' build.")
+   set(CMAKE_BUILD_TYPE "Release")
 endif ()
 
 # setup compiler flags for debug vs release compiles
@@ -23,20 +27,14 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
 endif ()
 
 # include RtAudio
-add_subdirectory(src/rt bin)
+add_subdirectory(src/rt lib/rt)
 add_subdirectory(src/grandorgue bin)
 
-message(STATUS "================================================================================")
+message(STATUS "============================================================================")
 message(STATUS " ")
 message(STATUS "  Project                     : ${PROJECT_NAME}")
 message(STATUS "  Description                 : ${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 message(STATUS "  Version                     : ${VERSION}")
 message(STATUS " ")
-message(STATUS "  wxWidgets version           : ${wxWidgets_VERSION}")
-message(STATUS "  wxWidgets config binary     : ${wxWidgets_CONFIG_EXECUTABLE}")
-message(STATUS "  wxWidgets Static linking    : ${wxWidgets_USE_STATIC}")
-message(STATUS "  wxWidgets Unicode?          : ${wxWidgets_USE_UNICODE}")
-message(STATUS "  wxWidgets Debug?            : ${wxWidgets_USE_DEBUG}")
-message(STATUS "================================================================================")
 message(STATUS " ")
 

@@ -1,7 +1,8 @@
-set(wxWidgets_CONFIGURATION msw) # for MSW only
+message(STATUS "Hunting for wxWidgets...")
 
+set(required_wx_CONFIGURATION msw) # for MSW only
 if (UNICODE)
-   set(wxWidgets_CONFIGURATION "${wxWidgets_CONFIGURATION}u") # for MSW only
+   set(required_wx_CONFIGURATION "${required_wx_CONFIGURATION}u") # for MSW only
    set(wxWidgets_USE_UNICODE ON)
 else ()
    set(wxWidgets_USE_UNICODE OFF)
@@ -9,16 +10,38 @@ endif ()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
    set(wxWidgets_USE_DEBUG ON)
-   set(wxWidgets_CONFIGURATION "${wxWidgets_CONFIGURATION}d") # for MSW only
+   set(required_wx_CONFIGURATION "${required_wx_CONFIGURATION}d") # for MSW only
 elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
    set(wxWidgets_USE_DEBUG OFF)
 endif ()
 
+set(wxWidgets_CONFIGURATION required_wx_CONFIGURATION)
+
 # pull in wxWidgets
 find_package(wxWidgets)
-if (wxWidgets_FOUND)
-   include(${wxWidgets_USE_FILE})
-else ()
-   message("GrandOrgue requires wxWidgets!")
+
+# display the version that was hunted for
+if (WIN32)
+   message(STATUS "  required configuration      : ${required_wx_CONFIGURATION}")
+   message(STATUS "  wxWidgets configuration     : ${wxWidgets_CONFIGURATION}")
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   message(STATUS "  wxWidgets version           : ${wxWidgets_VERSION}")
+   message(STATUS "  wxWidgets config binary     : ${wxWidgets_CONFIG_EXECUTABLE}")
+   message(STATUS "  wxWidgets Static linking    : ${wxWidgets_USE_STATIC}")
+   message(STATUS "  wxWidgets Unicode?          : ${wxWidgets_USE_UNICODE}")
+   message(STATUS "  wxWidgets Debug?            : ${wxWidgets_USE_DEBUG}")
 endif ()
 
+
+if (wxWidgets_FOUND)
+   if (required_wx_CONFIGURATION STREQUAL wxWidgets_CONFIGURATION)
+      include(${wxWidgets_USE_FILE})
+      message(STATUS "wxWidgets configuration was found.")
+   else ()
+      message(FATAL_ERROR "Found wxWidgets but could not find required configuration.")
+   endif ()
+else ()
+   message(FATAL_ERROR "Could not find wxWidgets!")
+endif ()
+   
+message(STATUS "============================================================================")

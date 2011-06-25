@@ -27,7 +27,7 @@
 
 class wxSplashScreenWindow;
 
-class WXDLLIMPEXP_ADV wxSplashScreenModal : public wxDialog
+class /*WXDLLIMPEXP_ADV*/ wxSplashScreenModal : public wxDialog
 {
 public:
     // for RTTI macros only

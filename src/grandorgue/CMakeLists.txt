@@ -45,7 +45,13 @@ SettingsDialog.cpp
 SplashScreen.cpp
 wxGaugeAudio.cpp)
 
-add_executable(grandorgue ${grandorgue_src})
+if (WIN32)
+   add_subdirectory(resource bin/resource)
+   add_executable(grandorgue WIN32 ${grandorgue_src})
+   target_link_libraries(grandorgue GrandOrgueResources)
+else ()
+   add_executable(grandorgue ${grandorgue_src})
+endif ()
 
 target_link_libraries(grandorgue ${wxWidgets_LIBRARIES} RtAudio RtMidi)
 
