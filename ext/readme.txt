@@ -1,2 +1,2 @@
-External files go into this directory. The contents of this directory should
-NOT be placed on the SVN.
+External files go into this directory. Source code placed in this directory
+should NOT be placed on the SVN.
