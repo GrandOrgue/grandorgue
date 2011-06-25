@@ -46,9 +46,19 @@ SplashScreen.cpp
 wxGaugeAudio.cpp)
 
 if (WIN32)
-   add_subdirectory(resource bin/resource)
+
+   if (MINGW)
+      set(CMAKE_RC_COMPILER_INIT windres)
+      enable_language(RC)
+      set(CMAKE_RC_COMPILE_OBJECT
+         "<CMAKE_RC_COMPILER> -I${CMAKE_CURRENT_SOURCE_DIR}/resource -o <OBJECT> <SOURCE>")
+   endif ()
+
+endif ()
+
+if (WIN32)
+   set(grandorgue_src ${grandorgue_src} resource/GrandOrgue.rc)
    add_executable(grandorgue WIN32 ${grandorgue_src})
-   target_link_libraries(grandorgue GrandOrgueResources)
 else ()
    add_executable(grandorgue ${grandorgue_src})
 endif ()
