@@ -1,0 +1,48 @@
+# this makefile is designed to be included by the main makefile and will
+# enable the compilation of RtAudio.
+
+RTAUDIO_OBJECTS     := RtAudio.o
+
+# directory in source and object folders where rtaudio files are located
+RTAUDIO_DIR         := rtaudio
+
+# add the objects to the main build objects
+OBJECTS             += $(addprefix $(RTAUDIO_DIR)/,$(RTAUDIO_OBJECTS))
+
+# get configuration flags
+ifeq ($(SYSTEM),linux)
+
+ifeq ($(RTAUDIO_USING_JACK),yes)
+RTAUDIO_CXXFLAGS += -D__UNIX_JACK__
+LDFLAGS += `pkg-config --cflags --libs jack`
+endif
+
+ifeq ($(RTAUDIO_USING_ALSA),yes)
+RTAUDIO_CXXFLAGS += -D__LINUX_ALSA__
+LDFLAGS += -lasound
+endif
+
+ifeq ($(RTAUDIO_USING_OSS),yes)
+RTAUDIO_CXXFLAGS += -D__LINUX_OSS__
+LDFLAGS += -laoss
+endif
+
+LDFLAGS += -lpthread
+
+else
+
+ifeq ($(RTAUDIO_USING_DIRECTSOUND),yes)
+RTAUDIO_CXXFLAGS += -D__WINDOWS_DS__ -I$(SRC_DIR)/$(RTAUDIO_DIR)/directx/Include
+LDFLAGS += -ldsound
+endif
+
+ifeq ($(RTAUDIO_USING_ASIO),yes)
+RTAUDIO_CXXFLAGS += -D__WINDOWS_ASIO__
+endif
+
+endif
+
+# make rule for rtaudio objects
+$(OBJ_DIR)/$(RTAUDIO_DIR)/%.o: %.cpp
+	@test -d $(dir $@) || mkdir -p $(dir $@)
+	$(CXX) -c $(CXXFLAGS) $(RTAUDIO_CXXFLAGS) -o $@ $<
