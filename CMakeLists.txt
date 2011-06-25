@@ -2,13 +2,21 @@ cmake_minimum_required(VERSION 2.6)
 
 project(GrandOrgue CXX)
 
-set(wxWidgets_ROOT_DIR C:/wxWidgets-2.8.12)
-set(UNICODE OFF)
+if (WIN32)
+   # On Windows platforms, it is necessary to specify the root installation
+   # path of wxWidgets.
+   set(wxWidgets_ROOT_DIR C:/wxWidgets-2.8.12)
+endif ()
+
+# Build configuration options
+if (NOT UNICODE)
+   set(UNICODE OFF)
+endif ()
 set(RTAUDIO_USE_JACK ON)
 set(RTAUDIO_USE_OSS OFF)
 set(RTAUDIO_USE_ALSA ON)
 set(RTAUDIO_USE_DSOUND ON)
-set(RTAUDIO_USE_ASIO OFF)
+set(RTAUDIO_USE_ASIO ON)
 set(RTMIDI_USE_JACK ON)
 set(RTMIDI_USE_ALSA ON)
 set(RTMIDI_USE_MM ON)
