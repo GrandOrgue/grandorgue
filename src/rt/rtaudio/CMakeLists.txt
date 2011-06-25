@@ -3,6 +3,21 @@ message(STATUS "RtAudio build Configuration")
 include_directories(../include)
 
 set(RtAudio_Sources RtAudio.cpp)
+
+if (WIN32)
+   if (RTAUDIO_USE_ASIO)
+      set(RtAudio_Sources ${RtAudio_Sources}
+         ../../../ext/rt/asio/include/register.cpp
+         ../../../ext/rt/asio/include/asiodrivers.cpp
+         ../../../ext/rt/asio/include/asiolist.cpp
+         ../../../ext/rt/asio/include/asio.cpp
+         ../../../ext/rt/asio/include/combase.cpp
+         ../../../ext/rt/asio/include/debugmessage.cpp
+         ../../../ext/rt/asio/include/dllentry.cpp
+         asiohelpers/include/iasiothiscallresolver.cpp)
+   endif ()
+endif ()
+
 add_library(RtAudio STATIC ${RtAudio_Sources})
 
 if (WIN32)
@@ -20,6 +35,8 @@ if (WIN32)
    if (RTAUDIO_USE_ASIO)
       add_definitions(-D__WINDOWS_ASIO__)
       include_directories(../../../ext/rt/asio)
+      include_directories(../../../ext/rt/asio/include)
+      include_directories(asiohelpers)
    endif ()
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
