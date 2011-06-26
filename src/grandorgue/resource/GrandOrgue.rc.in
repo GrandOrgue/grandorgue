@@ -65,15 +65,8 @@ BEGIN
             VALUE "CompanyName",        "@PROJECT_NAME@"
 #ifdef NDEBUG
             VALUE "FileDescription",    "@PROJECT_NAME@"
-            VALUE "IsDebug",            "True"
 #else
             VALUE "FileDescription",    "@PROJECT_NAME@ (Debug Version)"
-            VALUE "IsDebug",            "False"
-#endif
-#if (@VERSION_STAGE@ == 3)
-            VALUE "IsPreRelease",       "False"
-#else
-            VALUE "IsPreRelease",       "True"
 #endif
             VALUE "FileVersion",        "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_STAGE@.@VERSION_REVISION@"
             VALUE "InternalName",       "@PROJECT_NAME@"
@@ -82,8 +75,6 @@ BEGIN
             VALUE "PrivateBuild",       "Release"
             VALUE "ProductName",        "@PROJECT_NAME@"
             VALUE "ProductVersion",     "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_STAGE@"
-            VALUE "ProductMajorPart",   "@VERSION_MAJOR@"
-            VALUE "ProductMinorPart",   "@VERSION_MINOR@"
         END
     END
     BLOCK "VarFileInfo"

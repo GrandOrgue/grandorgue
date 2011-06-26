@@ -94,11 +94,11 @@ void SettingsDialog::SetLatencySpinner(int latency)
 
 }
 
-#ifdef __WXMSW__
-#define SETTINGS_DLG_SIZE wxSize(453,450)
-#else
+//#ifdef __WXMSW__
+//#define SETTINGS_DLG_SIZE wxSize(453,450)
+//#else
 #define SETTINGS_DLG_SIZE wxSize(603,500)
-#endif
+//#endif
 
 SettingsDialog::SettingsDialog(wxWindow* win) :
 	wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, SETTINGS_DLG_SIZE)
