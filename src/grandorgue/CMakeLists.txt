@@ -51,26 +51,29 @@ wxGaugeAudio.cpp)
 if (WIN32)
 
    if (MINGW)
+
       set(CMAKE_RC_COMPILER_INIT windres)
       enable_language(RC)
+
       if (CMAKE_BUILD_TYPE STREQUAL "Debug")
          set(rc_debug_flag "")
       else ()
          set(rc_debug_flag "-DNDEBUG")
       endif ()
-      set(CMAKE_RC_COMPILE_OBJECT
-         "<CMAKE_RC_COMPILER> ${rc_debug_flag} -D_WIN32 -I${CMAKE_CURRENT_SOURCE_DIR}/resource -o <OBJECT> <SOURCE>")
+
+      set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> ${rc_debug_flag} -D_WIN32 -I${CMAKE_CURRENT_SOURCE_DIR}/resource -o <OBJECT> <SOURCE>")
+
    endif ()
 
-endif ()
-
-if (WIN32)
    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.rc/GrandOrgue.rc)
    set(grandorgue_src ${grandorgue_src} ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.rc/GrandOrgue.rc)
-   add_executable(grandorgue WIN32 ${grandorgue_src})
+   add_executable(${PROJECT_NAME} WIN32 ${grandorgue_src})
+
 else ()
-   add_executable(grandorgue ${grandorgue_src})
+
+   add_executable(${PROJECT_NAME} ${grandorgue_src})
+
 endif ()
 
-target_link_libraries(grandorgue ${wxWidgets_LIBRARIES} RtAudio RtMidi)
+target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} RtAudio RtMidi)
 

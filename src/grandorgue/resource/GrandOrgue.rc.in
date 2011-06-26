@@ -46,31 +46,44 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #define APP_NAME "@PROJECT_NAME@ v@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_STAGE@.@VERSION_REVISION@"
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION @VERSION_MAJOR@,@VERSION_MINOR@,@VERSION_STAGE@,@VERSION_REVISION@
- PRODUCTVERSION @VERSION_MAJOR@,@VERSION_MINOR@,@VERSION_STAGE@,0
- FILEFLAGSMASK 0x1fL
+ FILEVERSION           @VERSION_MAJOR@,@VERSION_MINOR@,@VERSION_STAGE@,@VERSION_REVISION@
+ PRODUCTVERSION        @VERSION_MAJOR@,@VERSION_MINOR@,@VERSION_STAGE@,0
+ FILEFLAGSMASK         0x1fL
 #ifndef NDEBUG
- FILEFLAGS 0x9L
+ FILEFLAGS             0x9L
 #else
- FILEFLAGS 0x8L
+ FILEFLAGS             0x8L
 #endif
- FILEOS 0x4L
- FILETYPE 0x1L
- FILESUBTYPE 0x0L
+ FILEOS                VOS_NT_WINDOWS32
+ FILETYPE              VFT_APP
+ FILESUBTYPE           0x0L
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "@PROJECT_NAME@"
-            VALUE "FileDescription", "@PROJECT_NAME@"
-            VALUE "FileVersion", "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_STAGE@.@VERSION_REVISION@"
-            VALUE "InternalName", "@PROJECT_NAME@"
-            VALUE "LegalCopyright", "GPL v2"
-            VALUE "OriginalFilename", "GrandOrgue.exe"
-            VALUE "PrivateBuild", "Release"
-            VALUE "ProductName", "@PROJECT_NAME@"
-            VALUE "ProductVersion", "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_STAGE@"
+            VALUE "CompanyName",        "@PROJECT_NAME@"
+#ifdef NDEBUG
+            VALUE "FileDescription",    "@PROJECT_NAME@"
+            VALUE "IsDebug",            "True"
+#else
+            VALUE "FileDescription",    "@PROJECT_NAME@ (Debug Version)"
+            VALUE "IsDebug",            "False"
+#endif
+#if (@VERSION_STAGE@ == 3)
+            VALUE "IsPreRelease",       "False"
+#else
+            VALUE "IsPreRelease",       "True"
+#endif
+            VALUE "FileVersion",        "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_STAGE@.@VERSION_REVISION@"
+            VALUE "InternalName",       "@PROJECT_NAME@"
+            VALUE "LegalCopyright",     "GPL v2"
+            VALUE "OriginalFilename",   "@PROJECT_NAME@.exe"
+            VALUE "PrivateBuild",       "Release"
+            VALUE "ProductName",        "@PROJECT_NAME@"
+            VALUE "ProductVersion",     "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_STAGE@"
+            VALUE "ProductMajorPart",   "@VERSION_MAJOR@"
+            VALUE "ProductMinorPart",   "@VERSION_MINOR@"
         END
     END
     BLOCK "VarFileInfo"
