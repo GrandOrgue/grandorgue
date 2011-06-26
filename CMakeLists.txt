@@ -9,7 +9,7 @@ if (WIN32)
 endif ()
 
 # Build configuration options
-if (NOT UNICODE)
+if (NOT DEFINED UNICODE)
    set(UNICODE OFF)
 endif ()
 set(RTAUDIO_USE_JACK ON)
@@ -20,6 +20,13 @@ set(RTAUDIO_USE_ASIO ON)
 set(RTMIDI_USE_JACK ON)
 set(RTMIDI_USE_ALSA ON)
 set(RTMIDI_USE_MM ON)
+
+# Project version numbers
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 3)
+set(VERSION_STAGE 0)
+set(VERSION_REVISION 3)
+set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION})
 
 if (CMAKE_BUILD_TYPE STREQUAL "")
    message(STATUS "No build configuration specified. Defaulting to 'Release' build.")
@@ -38,11 +45,8 @@ endif ()
 add_subdirectory(src/rt lib/rt)
 add_subdirectory(src/grandorgue bin)
 
-message(STATUS "============================================================================")
-message(STATUS " ")
 message(STATUS "  Project                     : ${PROJECT_NAME}")
 message(STATUS "  Description                 : ${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 message(STATUS "  Version                     : ${VERSION}")
+message(STATUS "============================================================================")
 message(STATUS " ")
-message(STATUS " ")
-

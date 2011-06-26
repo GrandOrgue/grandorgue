@@ -1,47 +1,101 @@
 message(STATUS "Hunting for wxWidgets...")
 
-set(required_wx_CONFIGURATION msw) # for MSW only
-if (UNICODE)
-   set(required_wx_CONFIGURATION "${required_wx_CONFIGURATION}u") # for MSW only
-   set(wxWidgets_USE_UNICODE ON)
+# Note:
+#   Specification of the correct wxWidgets library is OS specific when using
+# find_package. For all targets, the wxWidgets_USE_STATIC specifies whether
+# static linkage or dynamic linkage is required (the parent script defines this
+# variable). On Linux targets, wxWidgets_USE_UNICODE and wxWidgets_USE_DEBUG
+# specify which flavor of wxWidgets which should be used. On Windows, the
+# wxWidgets_CONFIGURATION variable specifies the build type. Recall:
+#   msw    : Windows ansi release of wxWindows
+#   mswu   : Windows unicode release of wxWindows
+#   mswd   : Windows ansi debug build of wxWindows
+#   mswud  : Windows unicode debug build of wxWindows
+# 
+#   For some reason, if wxWidgets is installed and found and the configuration
+# we want is not available (on Linux or Windows), the values we set will be
+# replaced by the closest match and wxWidgets_FOUND will be set to true. The
+# the values we assigned to the configuration variables will be replaced. This
+# is not the behavior we want hence the required_* variables.
+
+# Figure out what the build configuration is supposed to be...
+if (DEFINED wxWidgets_USE_STATIC)
+   set(required_wx_USE_STATIC ${wxWidgets_USE_STATIC})
 else ()
-   set(wxWidgets_USE_UNICODE OFF)
+   set(required_wx_USE_STATIC OFF)
+   message(WARNING "wxWidgets_USE_STATIC was not specified. Defaulting to OFF")
 endif ()
-
+set(required_wx_CONFIGURATION msw)
+if (UNICODE)
+   set(required_wx_CONFIGURATION "${required_wx_CONFIGURATION}u")
+   set(required_wx_USE_UNICODE ON)
+else ()
+   set(required_wx_USE_UNICODE OFF)
+endif ()
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-   set(wxWidgets_USE_DEBUG ON)
-   set(required_wx_CONFIGURATION "${required_wx_CONFIGURATION}d") # for MSW only
+   set(required_wx_CONFIGURATION "${required_wx_CONFIGURATION}d")
+   set(required_wx_USE_DEBUG ON)
 elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
-   set(wxWidgets_USE_DEBUG OFF)
+   set(required_wx_USE_DEBUG OFF)
 endif ()
 
+# Set the search configuration.
 set(wxWidgets_CONFIGURATION ${required_wx_CONFIGURATION})
+set(wxWidgets_USE_UNICODE ${required_wx_USE_UNICODE})
+set(wxWidgets_USE_DEBUG ${required_wx_USE_DEBUG})
+set(wxWidgets_USE_STATIC ${required_wx_USE_STATIC})
 
-# pull in wxWidgets
+# Find wxWidgets
 find_package(wxWidgets)
 
-# display the version that was hunted for
+# Display the version that was hunted for
 if (WIN32)
-   message(STATUS "  required configuration      : ${required_wx_CONFIGURATION}")
    if (wxWidgets_FOUND)
-      message(STATUS "  wxWidgets configuration     : ${wxWidgets_CONFIGURATION}")
+      message(STATUS "  wxWidgets configuration     : ${wxWidgets_CONFIGURATION} (required ${required_wx_CONFIGURATION})")
    else ()
-      message(STATUS "  wxWidgets configuration     : not found")
+      message(STATUS "  wxWidgets configuration     : not found (required ${required_wx_CONFIGURATION})")
    endif ()
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-   message(STATUS "  wxWidgets version           : ${wxWidgets_VERSION}")
-   message(STATUS "  wxWidgets config binary     : ${wxWidgets_CONFIG_EXECUTABLE}")
-   message(STATUS "  wxWidgets Static linking    : ${wxWidgets_USE_STATIC}")
-   message(STATUS "  wxWidgets Unicode?          : ${wxWidgets_USE_UNICODE}")
-   message(STATUS "  wxWidgets Debug?            : ${wxWidgets_USE_DEBUG}")
+   if (wxWidgets_FOUND)
+      message(STATUS "  wxWidgets version           : ${wxWidgets_VERSION}")
+      message(STATUS "  wxWidgets config binary     : ${wxWidgets_CONFIG_EXECUTABLE}")
+      message(STATUS "  wxWidgets Static linking    : ${wxWidgets_USE_STATIC} (required ${required_wx_USE_STATIC})")
+      message(STATUS "  wxWidgets Unicode?          : ${wxWidgets_USE_UNICODE} (required ${required_wx_USE_UNICODE})")
+      message(STATUS "  wxWidgets Debug?            : ${wxWidgets_USE_DEBUG} (required ${required_wx_USE_DEBUG})")
+   else ()
+      message(STATUS "  wxWidgets version           : not found")
+      message(STATUS "  wxWidgets config binary     : not found")
+      message(STATUS "  wxWidgets Static linking    : not found (required ${required_wx_USE_STATIC})")
+      message(STATUS "  wxWidgets Unicode?          : not found (required ${required_wx_USE_UNICODE})")
+      message(STATUS "  wxWidgets Debug?            : not found (required ${required_wx_USE_DEBUG})")
+   endif ()
 endif ()
 
+# Figure out if this was the configuration being searched for.
+set(valid_conf_found ON)
+if (WIN32)
+   if (NOT ${required_wx_CONFIGURATION} STREQUAL ${wxWidgets_CONFIGURATION})
+      set(valid_conf_found OFF)
+   endif ()
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   if (NOT ${required_wx_USE_UNICODE} STREQUAL ${wxWidgets_USE_UNICODE})
+      set(valid_conf_found OFF)
+   endif ()
+   if (NOT ${required_wx_USE_DEBUG} STREQUAL ${wxWidgets_USE_DEBUG})
+      set(valid_conf_found OFF)
+   endif ()
+   if (NOT ${required_wx_USE_STATIC} STREQUAL ${wxWidgets_USE_STATIC})
+      set(valid_conf_found OFF)
+   endif ()
+endif ()
+
+# Was it found OK?
 if (wxWidgets_FOUND)
-   if (required_wx_CONFIGURATION STREQUAL wxWidgets_CONFIGURATION)
+   if (valid_conf_found)
       include(${wxWidgets_USE_FILE})
-      message(STATUS "wxWidgets configuration was found.")
+      message(STATUS "Matching wxWidgets configuration was found.")
    else ()
-      message(FATAL_ERROR "Found wxWidgets but could not find required configuration.")
+      message(FATAL_ERROR "Found wxWidgets but could not find the required configuration.")
    endif ()
 else ()
    message(FATAL_ERROR "Could not find wxWidgets!")

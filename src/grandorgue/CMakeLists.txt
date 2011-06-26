@@ -5,6 +5,9 @@ set(wxWidgets_USE_STATIC OFF)
 set(wxWidgets_USE_LIBS base core net adv html)
 include(CMakeWxWidgetsInclude.txt)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgueDef.h.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h/GrandOrgueDef.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h)
+
 set(grandorgue_src
 GOrgueWave.cpp
 GOrgueControl.cpp
