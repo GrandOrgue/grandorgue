@@ -43,11 +43,13 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Version
 //
 
+#define APP_NAME "@PROJECT_NAME@ v@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_STAGE@.@VERSION_REVISION@"
+
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,3,0,3
- PRODUCTVERSION 0,3,0,0
+ FILEVERSION @VERSION_MAJOR@,@VERSION_MINOR@,@VERSION_STAGE@,@VERSION_REVISION@
+ PRODUCTVERSION @VERSION_MAJOR@,@VERSION_MINOR@,@VERSION_STAGE@,0
  FILEFLAGSMASK 0x1fL
-#ifdef _DEBUG
+#ifndef NDEBUG
  FILEFLAGS 0x9L
 #else
  FILEFLAGS 0x8L
@@ -60,15 +62,15 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "GrandOrgue"
-            VALUE "FileDescription", "GrandOrgue"
-            VALUE "FileVersion", "0.3.0.3"
-            VALUE "InternalName", "GrandOrgue"
+            VALUE "CompanyName", "@PROJECT_NAME@"
+            VALUE "FileDescription", "@PROJECT_NAME@"
+            VALUE "FileVersion", "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_STAGE@.@VERSION_REVISION@"
+            VALUE "InternalName", "@PROJECT_NAME@"
             VALUE "LegalCopyright", "GPL v2"
             VALUE "OriginalFilename", "GrandOrgue.exe"
             VALUE "PrivateBuild", "Release"
-            VALUE "ProductName", "GrandOrgue"
-            VALUE "ProductVersion", "0.3.0"
+            VALUE "ProductName", "@PROJECT_NAME@"
+            VALUE "ProductVersion", "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_STAGE@"
         END
     END
     BLOCK "VarFileInfo"
