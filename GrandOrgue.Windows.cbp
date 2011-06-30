@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="GrandOrgue" />
+		<Option pch_mode="0" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="Debug\GrandOrgue.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output="Debug" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Option projectResourceIncludeDirsRelation="0" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-D__WXDEBUG__" />
+					<Add directory="..\..\wxWidgets-2.8.10" />
+				</Compiler>
+				<Linker>
+					<Add library="libwxmsw28d_html" />
+					<Add library="libwxmsw28d_adv" />
+					<Add library="libwxmsw28d_core" />
+					<Add library="libwxbase28d" />
+					<Add library="libwxzlibd" />
+					<Add library="libwxjpegd" />
+					<Add library="libwxpngd" />
+					<Add library="imon\SG_VFD.lib" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="Release\GrandOrgue.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output="Release" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Option projectResourceIncludeDirsRelation="0" />
+				<Compiler>
+					<Add option="-mtune=pentium3" />
+					<Add option="-DNDEBUG" />
+					<Add directory="..\..\wxWidgets-2.8.10" />
+				</Compiler>
+				<Linker>
+					<Add library="libwxmsw28_html" />
+					<Add library="libwxmsw28_adv" />
+					<Add library="libwxmsw28_core" />
+					<Add library="libwxbase28" />
+					<Add library="libwxzlib" />
+					<Add library="libwxjpeg" />
+					<Add library="libwxpng" />
+					<Add library="imon\SG_VFD.lib" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="Debug;Release;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add option="-O2" />
+			<Add option="-fomit-frame-pointer" />
+			<Add option="-pipe" />
+			<Add option="-mthreads" />
+			<Add option="-ffast-math" />
+			<Add option="-D__GNUWIN32__" />
+			<Add option="-D__WXMSW__" />
+			<Add option="-D__WINDOWS_ASIO__" />
+			<Add option="-D__WINDOWS_MM__" />
+			<Add option="-D__WINDOWS_DS__" />
+			<Add directory="$(#wx.include)" />
+			<Add directory="directx\Include" />
+			<Add directory="..\..\wxWidgets-2.8.10" />
+		</Compiler>
+		<Linker>
+			<Add option="-Wl,--large-address-aware" />
+			<Add option="-ffast-math" />
+			<Add library="winmm" />
+			<Add library="comdlg32" />
+			<Add library="shell32" />
+			<Add library="comctl32" />
+			<Add library="advapi32" />
+			<Add library="ole32" />
+			<Add library="dsound" />
+			<Add library="oleaut32" />
+			<Add library="uuid" />
+			<Add directory="$(#wx.lib)\gcc_lib" />
+		</Linker>
+		<Unit filename="GOrgueControl.cpp" />
+		<Unit filename="GOrgueControl.h" />
+		<Unit filename="GOrgueCoupler.cpp" />
+		<Unit filename="GOrgueCoupler.h" />
+		<Unit filename="GOrgueDisplayMetrics.cpp" />
+		<Unit filename="GOrgueDisplayMetrics.h" />
+		<Unit filename="GOrgueDivisional.cpp" />
+		<Unit filename="GOrgueDivisional.h" />
+		<Unit filename="GOrgueDivisionalCoupler.cpp" />
+		<Unit filename="GOrgueDivisionalCoupler.h" />
+		<Unit filename="GOrgueDrawStop.cpp" />
+		<Unit filename="GOrgueDrawStop.h" />
+		<Unit filename="GOrgueDrawable.h" />
+		<Unit filename="GOrgueEnclosure.cpp" />
+		<Unit filename="GOrgueEnclosure.h" />
+		<Unit filename="GOrgueFrameGeneral.cpp" />
+		<Unit filename="GOrgueFrameGeneral.h" />
+		<Unit filename="GOrgueGeneral.cpp" />
+		<Unit filename="GOrgueGeneral.h" />
+		<Unit filename="GOrgueLCD.cpp" />
+		<Unit filename="GOrgueLCD.h" />
+		<Unit filename="GOrgueLabel.cpp" />
+		<Unit filename="GOrgueLabel.h" />
+		<Unit filename="GOrgueManual.cpp" />
+		<Unit filename="GOrgueManual.h" />
+		<Unit filename="GOrgueMeter.cpp" />
+		<Unit filename="GOrgueMeter.h" />
+		<Unit filename="GOrgueMidi.cpp" />
+		<Unit filename="GOrgueMidi.h" />
+		<Unit filename="GOrguePipe.cpp" />
+		<Unit filename="GOrguePipe.h" />
+		<Unit filename="GOrguePiston.cpp" />
+		<Unit filename="GOrguePiston.h" />
+		<Unit filename="GOrgueProperties.cpp" />
+		<Unit filename="GOrgueProperties.h" />
+		<Unit filename="GOrguePushbutton.cpp" />
+		<Unit filename="GOrguePushbutton.h" />
+		<Unit filename="GOrgueReleaseAlignTable.cpp" />
+		<Unit filename="GOrgueReleaseAlignTable.h" />
+		<Unit filename="GOrgueSound.cpp" />
+		<Unit filename="GOrgueSound.h" />
+		<Unit filename="GOrgueSoundCallbackAudio.cpp" />
+		<Unit filename="GOrgueStop.cpp" />
+		<Unit filename="GOrgueStop.h" />
+		<Unit filename="GOrgueThread.h" />
+		<Unit filename="GOrgueTremulant.cpp" />
+		<Unit filename="GOrgueTremulant.h" />
+		<Unit filename="GOrgueWave.cpp" />
+		<Unit filename="GOrgueWave.h" />
+		<Unit filename="GOrgueWaveTypes.h" />
+		<Unit filename="GOrgueWindchest.cpp" />
+		<Unit filename="GOrgueWindchest.h" />
+		<Unit filename="GrandOrgue.cpp" />
+		<Unit filename="GrandOrgue.h" />
+		<Unit filename="GrandOrgue.manifest" />
+		<Unit filename="GrandOrgue.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="GrandOrgueDef.h" />
+		<Unit filename="GrandOrgueFile.cpp" />
+		<Unit filename="GrandOrgueFile.h" />
+		<Unit filename="GrandOrgueFrame.cpp" />
+		<Unit filename="GrandOrgueFrame.h" />
+		<Unit filename="GrandOrgueID.h" />
+		<Unit filename="Images.cpp" />
+		<Unit filename="IniFileConfig.cpp" />
+		<Unit filename="IniFileConfig.h" />
+		<Unit filename="KeyConvert.h" />
+		<Unit filename="MIDIListenDialog.cpp" />
+		<Unit filename="MIDIListenDialog.h" />
+		<Unit filename="OrganDocument.cpp" />
+		<Unit filename="OrganDocument.h" />
+		<Unit filename="OrganPanel.cpp" />
+		<Unit filename="OrganPanel.h" />
+		<Unit filename="OrganView.cpp" />
+		<Unit filename="OrganView.h" />
+		<Unit filename="RtAudio.cpp" />
+		<Unit filename="RtAudio.h" />
+		<Unit filename="RtError.h" />
+		<Unit filename="RtMidi.cpp" />
+		<Unit filename="RtMidi.h" />
+		<Unit filename="SettingsDialog.cpp" />
+		<Unit filename="SettingsDialog.h" />
+		<Unit filename="SplashScreen.cpp" />
+		<Unit filename="SplashScreen.h" />
+		<Unit filename="include\asio.cpp" />
+		<Unit filename="include\asio.h" />
+		<Unit filename="include\asiodrivers.cpp" />
+		<Unit filename="include\asiodrivers.h" />
+		<Unit filename="include\asiodrvr.h" />
+		<Unit filename="include\asiolist.cpp" />
+		<Unit filename="include\asiolist.h" />
+		<Unit filename="include\asiosys.h" />
+		<Unit filename="include\combase.cpp" />
+		<Unit filename="include\combase.h" />
+		<Unit filename="include\dsound.h" />
+		<Unit filename="include\iasiodrv.h" />
+		<Unit filename="include\iasiothiscallresolver.cpp" />
+		<Unit filename="include\iasiothiscallresolver.h" />
+		<Unit filename="include\wxdebug.h" />
+		<Unit filename="resource.h" />
+		<Unit filename="wxGaugeAudio.cpp" />
+		<Unit filename="wxGaugeAudio.h" />
+		<Unit filename="zconf.h" />
+		<Unit filename="zlib.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,4323 @@
+# depslib dependency file v1.0
+1272566604 source:c:\updatedlinux\grandorgue.0.3\gorguecontrol.cpp
+	"GOrgueControl.h"
+	"IniFileConfig.h"
+
+1272566604 c:\updatedlinux\grandorgue.0.3\gorguecontrol.h
+	<wx/wx.h>
+
+1186407694 c:\wxwidgets-2.8.10\include\wx\wx.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/dynarray.h"
+	"wx/list.h"
+	"wx/hash.h"
+	"wx/string.h"
+	"wx/hashmap.h"
+	"wx/arrstr.h"
+	"wx/intl.h"
+	"wx/log.h"
+	"wx/event.h"
+	"wx/app.h"
+	"wx/utils.h"
+	"wx/stream.h"
+	"wx/memory.h"
+	"wx/math.h"
+	"wx/stopwatch.h"
+	"wx/module.h"
+	"wx/window.h"
+	"wx/containr.h"
+	"wx/panel.h"
+	"wx/toplevel.h"
+	"wx/frame.h"
+	"wx/gdicmn.h"
+	"wx/gdiobj.h"
+	"wx/region.h"
+	"wx/bitmap.h"
+	"wx/image.h"
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/dc.h"
+	"wx/dcclient.h"
+	"wx/dcmemory.h"
+	"wx/dcprint.h"
+	"wx/dcscreen.h"
+	"wx/button.h"
+	"wx/menuitem.h"
+	"wx/menu.h"
+	"wx/pen.h"
+	"wx/brush.h"
+	"wx/palette.h"
+	"wx/icon.h"
+	"wx/cursor.h"
+	"wx/dialog.h"
+	"wx/timer.h"
+	"wx/settings.h"
+	"wx/msgdlg.h"
+	"wx/cmndata.h"
+	"wx/dataobj.h"
+	"wx/control.h"
+	"wx/ctrlsub.h"
+	"wx/bmpbuttn.h"
+	"wx/checkbox.h"
+	"wx/checklst.h"
+	"wx/choice.h"
+	"wx/scrolbar.h"
+	"wx/stattext.h"
+	"wx/statbmp.h"
+	"wx/statbox.h"
+	"wx/listbox.h"
+	"wx/radiobox.h"
+	"wx/radiobut.h"
+	"wx/textctrl.h"
+	"wx/slider.h"
+	"wx/gauge.h"
+	"wx/scrolwin.h"
+	"wx/dirdlg.h"
+	"wx/toolbar.h"
+	"wx/combobox.h"
+	"wx/layout.h"
+	"wx/sizer.h"
+	"wx/mdi.h"
+	"wx/statusbr.h"
+	"wx/choicdlg.h"
+	"wx/textdlg.h"
+	"wx/filedlg.h"
+	"wx/validate.h"
+	"wx/valtext.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\defs.h
+	"wx/platform.h"
+	"wx/features.h"
+	"wx/version.h"
+	"wx/dlimpexp.h"
+	"wx/debug.h"
+	<stddef.h>
+	<sys/types.h>
+	<unistd.h>
+	"wx/msw/winundef.h"
+
+1213612286 c:\wxwidgets-2.8.10\include\wx\platform.h
+	<stddef.h>
+	<AvailabilityMacros.h>
+	<unistd.h>
+	"wx/mac/carbon/config_xcode.h"
+	"wx/setup.h"
+	"wx/chkconf.h"
+	"wx/msw/wince/libraries.h"
+	"wx/msw/libraries.h"
+	"wx/msw/gccpriv.h"
+	<AvailabilityMacros.h>
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\setup.h
+
+1187332094 c:\wxwidgets-2.8.10\include\wx\chkconf.h
+	"wx/palmos/chkconf.h"
+	"wx/msw/wince/chkconf.h"
+	"wx/msw/chkconf.h"
+	"wx/mac/chkconf.h"
+	"wx/os2/chkconf.h"
+	"wx/mgl/chkconf.h"
+	"wx/dfb/chkconf.h"
+	"wx/motif/chkconf.h"
+	"wx/x11/chkconf.h"
+	"wx/univ/chkconf.h"
+
+1234515644 c:\wxwidgets-2.8.10\include\wx\msw\wince\chkconf.h
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\chkconf.h
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\chkconf.h
+
+1186407648 c:\wxwidgets-2.8.10\include\wx\msw\wince\libraries.h
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\libraries.h
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\gccpriv.h
+	<_mingw.h>
+	<w32api.h>
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\features.h
+
+1234515646 c:\wxwidgets-2.8.10\include\wx\version.h
+	"wx/cpp.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\cpp.h
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\dlimpexp.h
+
+1220338544 c:\wxwidgets-2.8.10\include\wx\debug.h
+	<assert.h>
+	<limits.h>
+	"wx/wxchar.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\wxchar.h
+	"wx/platform.h"
+	"wx/dlimpexp.h"
+	<stdio.h>
+	<stdarg.h>
+	<sys/types.h>
+	<wchar.h>
+	<wcstr.h>
+	<stdlib.h>
+	<widec.h>
+	<ctype.h>
+	<memory.h>
+	<stddef.h>
+	<stddef.h>
+	<string.h>
+	<ctype.h>
+	<tchar.h>
+	<ctype.h>
+	<ctype.h>
+	<stdio.h>
+	<wctype.h>
+	<stdio.h>
+	<stdio.h>
+	<ctype.h>
+	<string.h>
+	<stdio.h>
+	<time.h>
+	<time.h>
+	<string.h>
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\winundef.h
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\object.h
+	"wx/memory.h"
+	"wx/xti.h"
+	"wx/msw/msvcrt.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\memory.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/msgout.h"
+	<stddef.h>
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\string.h
+	"wx/defs.h"
+	<ctype.h>
+	<stdio.h>
+	<string.h>
+	<stdarg.h>
+	<limits.h>
+	<string.h>
+	<stdio.h>
+	<stdarg.h>
+	<limits.h>
+	<stdlib.h>
+	<strings.h>
+	<StringMgr.h>
+	"wx/wxchar.h"
+	"wx/buffer.h"
+	"wx/strconv.h"
+	"wx/beforestd.h"
+	<string>
+	"wx/afterstd.h"
+	"wx/arrstr.h"
+	"wx/iosfwrap.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\buffer.h
+	"wx/wxchar.h"
+	<stdlib.h>
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\strconv.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+	"wx/buffer.h"
+	"typeinfo.h"
+	<stdlib.h>
+	"wx/fontenc.h"
+
+1186407694 c:\wxwidgets-2.8.10\include\wx\fontenc.h
+
+1186407694 c:\wxwidgets-2.8.10\include\wx\beforestd.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\afterstd.h
+	"wx/msw/winundef.h"
+
+1234515646 c:\wxwidgets-2.8.10\include\wx\arrstr.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\dynarray.h
+	"wx/defs.h"
+	"wx/beforestd.h"
+	<vector>
+	<algorithm>
+	"wx/afterstd.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\iosfwrap.h
+	<iostream.h>
+	<iosfwd>
+	"wx/msw/winundef.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\msgout.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\xti.h
+	"wx/defs.h"
+	"wx/memory.h"
+	"wx/flags.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/hashmap.h"
+	"wx/log.h"
+	"wx/intl.h"
+	<typeinfo>
+	"wx/dynarray.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\flags.h
+
+1234515646 c:\wxwidgets-2.8.10\include\wx\hashmap.h
+	"wx/string.h"
+	<unordered_map>
+	<tr1/unordered_map>
+	<ext/hash_map>
+	<hash_map>
+	<stddef.h>
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\log.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	<time.h>
+	"wx/dynarray.h"
+	"wx/iosfwrap.h"
+	"wx/generic/logg.h"
+	"wx/cocoa/log.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\logg.h
+
+1213612286 c:\wxwidgets-2.8.10\include\wx\intl.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/fontenc.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\msvcrt.h
+	<stdlib.h>
+	<crtdbg.h>
+
+1234515646 c:\wxwidgets-2.8.10\include\wx\list.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/beforestd.h"
+	<algorithm>
+	<iterator>
+	<list>
+	"wx/afterstd.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\hash.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\event.h
+	"wx/defs.h"
+	"wx/cpp.h"
+	"wx/object.h"
+	"wx/clntdata.h"
+	"wx/gdicmn.h"
+	"wx/cursor.h"
+	"wx/thread.h"
+	"wx/dynarray.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\clntdata.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/hashmap.h"
+	"wx/vector.h"
+
+1186407694 c:\wxwidgets-2.8.10\include\wx\vector.h
+	"wx/defs.h"
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\gdicmn.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/string.h"
+	"wx/fontenc.h"
+	"wx/hashmap.h"
+	"wx/math.h"
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\math.h
+	"wx/defs.h"
+	<math.h>
+	<float.h>
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\cursor.h
+	"wx/defs.h"
+	"wx/palmos/cursor.h"
+	"wx/msw/cursor.h"
+	"wx/motif/cursor.h"
+	"wx/gtk/cursor.h"
+	"wx/gtk1/cursor.h"
+	"wx/x11/cursor.h"
+	"wx/mgl/cursor.h"
+	"wx/dfb/cursor.h"
+	"wx/mac/cursor.h"
+	"wx/cocoa/cursor.h"
+	"wx/os2/cursor.h"
+	"wx/utils.h"
+
+1195455330 c:\wxwidgets-2.8.10\include\wx\msw\cursor.h
+	"wx/msw/gdiimage.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\gdiimage.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/list.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\gdiobj.h
+	"wx/object.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\utils.h
+	"wx/object.h"
+	"wx/list.h"
+	"wx/filefn.h"
+	"wx/gdicmn.h"
+	"wx/longlong.h"
+	"wx/platinfo.h"
+	<direct.h>
+	<dirent.h>
+	<unistd.h>
+	<stdio.h>
+
+1213612286 c:\wxwidgets-2.8.10\include\wx\filefn.h
+	"wx/list.h"
+	"wx/arrstr.h"
+	"wx/msw/wince/time.h"
+	"wx/msw/private.h"
+	<time.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<utime.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stat.h>
+	<unistd.h>
+	<unix.h>
+	<process.h>
+	"wx/os2/private.h"
+	<direct.h>
+	<io.h>
+	<unistd.h>
+	<unistd.h>
+	<dirent.h>
+	<direct.h>
+	<dos.h>
+	<io.h>
+	<direct.h>
+	<dos.h>
+	<io.h>
+	<io.h>
+	<unistd.h>
+	<dir.h>
+	<dir.h>
+	<unix.h>
+	<fcntl.h>
+	<sys/types.h>
+
+1186407648 c:\wxwidgets-2.8.10\include\wx\msw\wince\time.h
+
+1194610574 c:\wxwidgets-2.8.10\include\wx\msw\private.h
+	"wx/msw/wrapwin.h"
+	"wx/msw/microwin.h"
+	"wx/log.h"
+	"wx/gdicmn.h"
+	"wx/colour.h"
+
+1213612284 c:\wxwidgets-2.8.10\include\wx\msw\wrapwin.h
+	"wx/platform.h"
+	<windows.h>
+	"wx/msw/winundef.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\microwin.h
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\colour.h
+	"wx/defs.h"
+	"wx/gdiobj.h"
+	"wx/variant.h"
+	"wx/generic/colour.h"
+	"wx/msw/colour.h"
+	"wx/motif/colour.h"
+	"wx/gtk/colour.h"
+	"wx/gtk1/colour.h"
+	"wx/generic/colour.h"
+	"wx/generic/colour.h"
+	"wx/x11/colour.h"
+	"wx/mac/colour.h"
+	"wx/cocoa/colour.h"
+	"wx/os2/colour.h"
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\variant.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/list.h"
+	"wx/cpp.h"
+	"wx/datetime.h"
+	"wx/db.h"
+	"wx/iosfwrap.h"
+
+1234515646 c:\wxwidgets-2.8.10\include\wx\datetime.h
+	"wx/defs.h"
+	<time.h>
+	"wx/msw/wince/time.h"
+	<limits.h>
+	"wx/longlong.h"
+	"wx/dynarray.h"
+
+1220338544 c:\wxwidgets-2.8.10\include\wx\longlong.h
+	"wx/defs.h"
+	"wx/string.h"
+	<limits.h>
+	"wx/iosfwrap.h"
+
+1234515646 c:\wxwidgets-2.8.10\include\wx\db.h
+	"wx/defs.h"
+	"wx/string.h"
+	<afxwin.h>
+	"wx/msw/wrapwin.h"
+	"sql.h"
+	"sqlext.h"
+	"odbcinst.h"
+	"wx/msw/wrapwin.h"
+	"wx/isql.h"
+	"wx/isqlext.h"
+	<sql.h>
+	<sqlext.h>
+	<sql.h>
+	<sqlext.h>
+	"wx/object.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\isql.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\isqlext.h
+	"wx/isql.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\colour.h
+	"wx/object.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\colour.h
+	"wx/object.h"
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\platinfo.h
+	"wx/string.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\thread.h
+	"wx/defs.h"
+
+1296802540 c:\wxwidgets-2.8.10\include\wx\app.h
+	"wx/event.h"
+	"wx/build.h"
+	"wx/init.h"
+	"wx/intl.h"
+	<windows.h>
+	<wx/msw/winundef.h>
+	"wx/palmos/app.h"
+	"wx/msw/app.h"
+	"wx/motif/app.h"
+	"wx/mgl/app.h"
+	"wx/dfb/app.h"
+	"wx/gtk/app.h"
+	"wx/gtk1/app.h"
+	"wx/x11/app.h"
+	"wx/mac/app.h"
+	"wx/cocoa/app.h"
+	"wx/os2/app.h"
+	"wx/univ/theme.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\build.h
+	"wx/version.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\init.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\app.h
+	"wx/event.h"
+	"wx/icon.h"
+	"wx/msw/wrapwin.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\icon.h
+	"wx/iconloc.h"
+	"wx/generic/icon.h"
+	"wx/msw/icon.h"
+	"wx/motif/icon.h"
+	"wx/generic/icon.h"
+	"wx/generic/icon.h"
+	"wx/generic/icon.h"
+	"wx/generic/icon.h"
+	"wx/generic/icon.h"
+	"wx/mac/icon.h"
+	"wx/cocoa/icon.h"
+	"wx/os2/icon.h"
+	"wx/variant.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\iconloc.h
+	"wx/string.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\icon.h
+	"wx/bitmap.h"
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\bitmap.h
+	"wx/string.h"
+	"wx/gdicmn.h"
+	"wx/colour.h"
+	"wx/variant.h"
+	"wx/palmos/bitmap.h"
+	"wx/msw/bitmap.h"
+	"wx/x11/bitmap.h"
+	"wx/gtk/bitmap.h"
+	"wx/gtk1/bitmap.h"
+	"wx/x11/bitmap.h"
+	"wx/mgl/bitmap.h"
+	"wx/dfb/bitmap.h"
+	"wx/mac/bitmap.h"
+	"wx/cocoa/bitmap.h"
+	"wx/os2/bitmap.h"
+	"wx/generic/mask.h"
+
+1194610574 c:\wxwidgets-2.8.10\include\wx\msw\bitmap.h
+	"wx/msw/gdiimage.h"
+	"wx/palette.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\palette.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/palmos/palette.h"
+	"wx/msw/palette.h"
+	"wx/motif/palette.h"
+	"wx/generic/paletteg.h"
+	"wx/x11/palette.h"
+	"wx/mgl/palette.h"
+	"wx/mac/palette.h"
+	"wx/os2/palette.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\palette.h
+	"wx/gdiobj.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\paletteg.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\mask.h
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\icon.h
+	"wx/msw/gdiimage.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\theme.h
+	"wx/string.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\stream.h
+	"wx/defs.h"
+	<stdio.h>
+	"wx/object.h"
+	"wx/string.h"
+	"wx/filefn.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\stopwatch.h
+	"wx/defs.h"
+	"wx/longlong.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\module.h
+	"wx/object.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+
+1234515648 c:\wxwidgets-2.8.10\include\wx\window.h
+	"wx/event.h"
+	"wx/list.h"
+	"wx/cursor.h"
+	"wx/font.h"
+	"wx/colour.h"
+	"wx/region.h"
+	"wx/utils.h"
+	"wx/intl.h"
+	"wx/validate.h"
+	"wx/palette.h"
+	"wx/accel.h"
+	"wx/access.h"
+	"wx/palmos/window.h"
+	"wx/msw/window.h"
+	"wx/motif/window.h"
+	"wx/gtk/window.h"
+	"wx/gtk1/window.h"
+	"wx/x11/window.h"
+	"wx/mgl/window.h"
+	"wx/dfb/window.h"
+	"wx/mac/window.h"
+	"wx/cocoa/window.h"
+	"wx/os2/window.h"
+	"wx/univ/window.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\font.h
+	"wx/defs.h"
+	"wx/fontenc.h"
+	"wx/gdiobj.h"
+	"wx/palmos/font.h"
+	"wx/msw/font.h"
+	"wx/motif/font.h"
+	"wx/gtk/font.h"
+	"wx/gtk1/font.h"
+	"wx/x11/font.h"
+	"wx/mgl/font.h"
+	"wx/dfb/font.h"
+	"wx/mac/font.h"
+	"wx/cocoa/font.h"
+	"wx/os2/font.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\font.h
+	"wx/gdicmn.h"
+
+1194610578 c:\wxwidgets-2.8.10\include\wx\region.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/palmos/region.h"
+	"wx/msw/region.h"
+	"wx/gtk/region.h"
+	"wx/gtk1/region.h"
+	"wx/x11/region.h"
+	"wx/mgl/region.h"
+	"wx/dfb/region.h"
+	"wx/mac/region.h"
+	"wx/cocoa/region.h"
+	"wx/os2/region.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\region.h
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\validate.h
+	"wx/defs.h"
+	"wx/event.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\accel.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/generic/accel.h"
+	"wx/msw/accel.h"
+	"wx/motif/accel.h"
+	"wx/gtk/accel.h"
+	"wx/gtk1/accel.h"
+	"wx/mac/accel.h"
+	"wx/generic/accel.h"
+	"wx/os2/accel.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\accel.h
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\accel.h
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\access.h
+	"wx/defs.h"
+	"wx/variant.h"
+	"wx/msw/ole/access.h"
+
+1186407642 c:\wxwidgets-2.8.10\include\wx\msw\ole\access.h
+
+1213612284 c:\wxwidgets-2.8.10\include\wx\msw\window.h
+	"wx/hash.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\window.h
+	"wx/bitmap.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\containr.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\panel.h
+	"wx/generic/panelg.h"
+
+1194610578 c:\wxwidgets-2.8.10\include\wx\generic\panelg.h
+	"wx/window.h"
+	"wx/containr.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\toplevel.h
+	"wx/window.h"
+	"wx/iconbndl.h"
+	"wx/palmos/toplevel.h"
+	"wx/msw/toplevel.h"
+	"wx/gtk/toplevel.h"
+	"wx/gtk1/toplevel.h"
+	"wx/x11/toplevel.h"
+	"wx/mgl/toplevel.h"
+	"wx/dfb/toplevel.h"
+	"wx/mac/toplevel.h"
+	"wx/cocoa/toplevel.h"
+	"wx/os2/toplevel.h"
+	"wx/motif/toplevel.h"
+	"wx/univ/toplevel.h"
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\iconbndl.h
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\toplevel.h
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\toplevel.h
+	"wx/univ/inpcons.h"
+	"wx/univ/inphand.h"
+	"wx/icon.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\inpcons.h
+	"wx/object.h"
+	"wx/event.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\inphand.h
+	"wx/univ/inpcons.h"
+
+1195455332 c:\wxwidgets-2.8.10\include\wx\frame.h
+	"wx/toplevel.h"
+	"wx/univ/frame.h"
+	"wx/palmos/frame.h"
+	"wx/msw/frame.h"
+	"wx/gtk/frame.h"
+	"wx/gtk1/frame.h"
+	"wx/motif/frame.h"
+	"wx/mac/frame.h"
+	"wx/cocoa/frame.h"
+	"wx/os2/frame.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\frame.h
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\frame.h
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\image.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdicmn.h"
+	"wx/hashmap.h"
+	"wx/stream.h"
+	"wx/variant.h"
+	"wx/imagbmp.h"
+	"wx/imagpng.h"
+	"wx/imaggif.h"
+	"wx/imagpcx.h"
+	"wx/imagjpeg.h"
+	"wx/imagtga.h"
+	"wx/imagtiff.h"
+	"wx/imagpnm.h"
+	"wx/imagxpm.h"
+	"wx/imagiff.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\imagbmp.h
+	"wx/image.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\imagpng.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\imaggif.h
+	"wx/image.h"
+
+1186407694 c:\wxwidgets-2.8.10\include\wx\imagpcx.h
+	"wx/image.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\imagjpeg.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\imagtga.h
+	"wx/image.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\imagtiff.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\imagpnm.h
+	"wx/image.h"
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\imagxpm.h
+	"wx/image.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\imagiff.h
+	"wx/image.h"
+
+1234515646 c:\wxwidgets-2.8.10\include\wx\dc.h
+	"wx/object.h"
+	"wx/intl.h"
+	"wx/cursor.h"
+	"wx/font.h"
+	"wx/colour.h"
+	"wx/bitmap.h"
+	"wx/brush.h"
+	"wx/pen.h"
+	"wx/palette.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+	"wx/math.h"
+	"wx/palmos/dc.h"
+	"wx/msw/dc.h"
+	"wx/motif/dc.h"
+	"wx/gtk/dc.h"
+	"wx/gtk1/dc.h"
+	"wx/x11/dc.h"
+	"wx/mgl/dc.h"
+	"wx/dfb/dc.h"
+	"wx/mac/dc.h"
+	"wx/cocoa/dc.h"
+	"wx/os2/dc.h"
+	"wx/dcgraph.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\brush.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/palmos/brush.h"
+	"wx/msw/brush.h"
+	"wx/x11/brush.h"
+	"wx/gtk/brush.h"
+	"wx/gtk1/brush.h"
+	"wx/mgl/brush.h"
+	"wx/dfb/brush.h"
+	"wx/mac/brush.h"
+	"wx/cocoa/brush.h"
+	"wx/os2/brush.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\brush.h
+	"wx/gdicmn.h"
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\pen.h
+	"wx/defs.h"
+	"wx/palmos/pen.h"
+	"wx/msw/pen.h"
+	"wx/x11/pen.h"
+	"wx/gtk/pen.h"
+	"wx/gtk1/pen.h"
+	"wx/mgl/pen.h"
+	"wx/dfb/pen.h"
+	"wx/mac/pen.h"
+	"wx/cocoa/pen.h"
+	"wx/os2/pen.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\pen.h
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\dc.h
+	"wx/defs.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\dcgraph.h
+	"wx/geometry.h"
+	"wx/dynarray.h"
+	"wx/graphics.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\geometry.h
+	"wx/defs.h"
+	"wx/utils.h"
+	"wx/gdicmn.h"
+	"wx/math.h"
+
+1234515648 c:\wxwidgets-2.8.10\include\wx\graphics.h
+	"wx/defs.h"
+	"wx/geometry.h"
+	"wx/dynarray.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\dcclient.h
+	"wx/defs.h"
+	"wx/palmos/dcclient.h"
+	"wx/msw/dcclient.h"
+	"wx/motif/dcclient.h"
+	"wx/gtk/dcclient.h"
+	"wx/gtk1/dcclient.h"
+	"wx/x11/dcclient.h"
+	"wx/mgl/dcclient.h"
+	"wx/dfb/dcclient.h"
+	"wx/mac/dcclient.h"
+	"wx/cocoa/dcclient.h"
+	"wx/os2/dcclient.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\dcclient.h
+	"wx/dc.h"
+	"wx/dynarray.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\dcmemory.h
+	"wx/bitmap.h"
+	"wx/palmos/dcmemory.h"
+	"wx/msw/dcmemory.h"
+	"wx/motif/dcmemory.h"
+	"wx/gtk/dcmemory.h"
+	"wx/gtk1/dcmemory.h"
+	"wx/x11/dcmemory.h"
+	"wx/mgl/dcmemory.h"
+	"wx/dfb/dcmemory.h"
+	"wx/mac/dcmemory.h"
+	"wx/cocoa/dcmemory.h"
+	"wx/os2/dcmemory.h"
+
+1188280274 c:\wxwidgets-2.8.10\include\wx\msw\dcmemory.h
+	"wx/dcclient.h"
+
+1186407694 c:\wxwidgets-2.8.10\include\wx\dcprint.h
+	"wx/defs.h"
+	"wx/palmos/dcprint.h"
+	"wx/msw/dcprint.h"
+	"wx/os2/dcprint.h"
+	"wx/mac/dcprint.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\dcprint.h
+	"wx/dc.h"
+	"wx/cmndata.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\cmndata.h
+	"wx/window.h"
+	"wx/font.h"
+	"wx/encinfo.h"
+	"wx/colour.h"
+	"wx/gdicmn.h"
+	"wx/stream.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\encinfo.h
+	"wx/string.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\dcscreen.h
+	"wx/defs.h"
+	"wx/palmos/dcscreen.h"
+	"wx/msw/dcscreen.h"
+	"wx/motif/dcscreen.h"
+	"wx/gtk/dcscreen.h"
+	"wx/gtk1/dcscreen.h"
+	"wx/x11/dcscreen.h"
+	"wx/mgl/dcscreen.h"
+	"wx/dfb/dcscreen.h"
+	"wx/mac/dcscreen.h"
+	"wx/cocoa/dcscreen.h"
+	"wx/os2/dcscreen.h"
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\dcscreen.h
+	"wx/dc.h"
+
+1194610578 c:\wxwidgets-2.8.10\include\wx\button.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/button.h"
+	"wx/msw/button.h"
+	"wx/motif/button.h"
+	"wx/gtk/button.h"
+	"wx/gtk1/button.h"
+	"wx/mac/button.h"
+	"wx/cocoa/button.h"
+	"wx/os2/button.h"
+	"wx/palmos/button.h"
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\control.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/univ/control.h"
+	"wx/palmos/control.h"
+	"wx/msw/control.h"
+	"wx/motif/control.h"
+	"wx/gtk/control.h"
+	"wx/gtk1/control.h"
+	"wx/mac/control.h"
+	"wx/cocoa/control.h"
+	"wx/os2/control.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\control.h
+	"wx/univ/inphand.h"
+	"wx/univ/inpcons.h"
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\control.h
+	"wx/dynarray.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\button.h
+	"wx/bitmap.h"
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\button.h
+
+1194610578 c:\wxwidgets-2.8.10\include\wx\menuitem.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/univ/menuitem.h"
+	"wx/palmos/menuitem.h"
+	"wx/msw/menuitem.h"
+	"wx/motif/menuitem.h"
+	"wx/gtk/menuitem.h"
+	"wx/gtk1/menuitem.h"
+	"wx/mac/menuitem.h"
+	"wx/cocoa/menuitem.h"
+	"wx/os2/menuitem.h"
+
+1187158704 c:\wxwidgets-2.8.10\include\wx\univ\menuitem.h
+
+1187158710 c:\wxwidgets-2.8.10\include\wx\msw\menuitem.h
+	"wx/ownerdrw.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\ownerdrw.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+	"wx/font.h"
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\menu.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/window.h"
+	"wx/menuitem.h"
+	"wx/univ/menu.h"
+	"wx/palmos/menu.h"
+	"wx/msw/menu.h"
+	"wx/motif/menu.h"
+	"wx/gtk/menu.h"
+	"wx/gtk1/menu.h"
+	"wx/mac/menu.h"
+	"wx/cocoa/menu.h"
+	"wx/os2/menu.h"
+
+1187158704 c:\wxwidgets-2.8.10\include\wx\univ\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+
+1194610574 c:\wxwidgets-2.8.10\include\wx\msw\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1195455332 c:\wxwidgets-2.8.10\include\wx\dialog.h
+	"wx/defs.h"
+	"wx/containr.h"
+	"wx/toplevel.h"
+	"wx/univ/dialog.h"
+	"wx/palmos/dialog.h"
+	"wx/msw/dialog.h"
+	"wx/motif/dialog.h"
+	"wx/gtk/dialog.h"
+	"wx/gtk1/dialog.h"
+	"wx/mac/dialog.h"
+	"wx/cocoa/dialog.h"
+	"wx/os2/dialog.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\dialog.h
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\dialog.h
+	"wx/panel.h"
+
+1186407694 c:\wxwidgets-2.8.10\include\wx\timer.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/longlong.h"
+	"wx/event.h"
+	"wx/stopwatch.h"
+	"wx/window.h"
+	"wx/msw/timer.h"
+	"wx/motif/timer.h"
+	"wx/gtk/timer.h"
+	"wx/gtk1/timer.h"
+	"wx/generic/timer.h"
+	"wx/cocoa/timer.h"
+	"wx/mac/timer.h"
+	"wx/os2/timer.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\timer.h
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\timer.h
+
+1234515646 c:\wxwidgets-2.8.10\include\wx\settings.h
+	"wx/colour.h"
+	"wx/font.h"
+
+1195455332 c:\wxwidgets-2.8.10\include\wx\msgdlg.h
+	"wx/defs.h"
+	"wx/generic/msgdlgg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/palmos/msgdlg.h"
+	"wx/msw/msgdlg.h"
+	"wx/motif/msgdlg.h"
+	"wx/gtk/msgdlg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/mac/msgdlg.h"
+	"wx/cocoa/msgdlg.h"
+	"wx/os2/msgdlg.h"
+
+1195455332 c:\wxwidgets-2.8.10\include\wx\generic\msgdlgg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\msgdlg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\dataobj.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/bitmap.h"
+	"wx/list.h"
+	"wx/arrstr.h"
+	"wx/msw/ole/dataform.h"
+	"wx/motif/dataform.h"
+	"wx/gtk/dataform.h"
+	"wx/gtk1/dataform.h"
+	"wx/x11/dataform.h"
+	"wx/mac/dataform.h"
+	"wx/cocoa/dataform.h"
+	"wx/os2/dataform.h"
+	"wx/msw/ole/dataobj.h"
+	"wx/motif/dataobj.h"
+	"wx/x11/dataobj.h"
+	"wx/gtk/dataobj.h"
+	"wx/gtk1/dataobj.h"
+	"wx/mac/dataobj.h"
+	"wx/cocoa/dataobj.h"
+	"wx/os2/dataobj.h"
+	"wx/msw/ole/dataobj2.h"
+	"wx/gtk/dataobj2.h"
+	"wx/gtk1/dataobj2.h"
+	"wx/x11/dataobj2.h"
+	"wx/motif/dataobj2.h"
+	"wx/mac/dataobj2.h"
+	"wx/cocoa/dataobj2.h"
+	"wx/os2/dataobj2.h"
+
+1186407642 c:\wxwidgets-2.8.10\include\wx\msw\ole\dataform.h
+
+1186407642 c:\wxwidgets-2.8.10\include\wx\msw\ole\dataobj.h
+
+1186407642 c:\wxwidgets-2.8.10\include\wx\msw\ole\dataobj2.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\ctrlsub.h
+	"wx/defs.h"
+	"wx/control.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\bmpbuttn.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/button.h"
+	"wx/univ/bmpbuttn.h"
+	"wx/msw/bmpbuttn.h"
+	"wx/motif/bmpbuttn.h"
+	"wx/gtk/bmpbuttn.h"
+	"wx/gtk1/bmpbuttn.h"
+	"wx/mac/bmpbuttn.h"
+	"wx/cocoa/bmpbuttn.h"
+	"wx/os2/bmpbuttn.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\bmpbuttn.h
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\bmpbuttn.h
+	"wx/button.h"
+	"wx/bitmap.h"
+	"wx/brush.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\checkbox.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/checkbox.h"
+	"wx/msw/checkbox.h"
+	"wx/motif/checkbox.h"
+	"wx/gtk/checkbox.h"
+	"wx/gtk1/checkbox.h"
+	"wx/mac/checkbox.h"
+	"wx/cocoa/checkbox.h"
+	"wx/os2/checkbox.h"
+	"wx/palmos/checkbox.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\checkbox.h
+	"wx/button.h"
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\checkbox.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\checklst.h
+	"wx/listbox.h"
+	"wx/univ/checklst.h"
+	"wx/msw/wince/checklst.h"
+	"wx/msw/checklst.h"
+	"wx/motif/checklst.h"
+	"wx/gtk/checklst.h"
+	"wx/gtk1/checklst.h"
+	"wx/mac/checklst.h"
+	"wx/cocoa/checklst.h"
+	"wx/os2/checklst.h"
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\listbox.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/listbox.h"
+	"wx/msw/listbox.h"
+	"wx/motif/listbox.h"
+	"wx/gtk/listbox.h"
+	"wx/gtk1/listbox.h"
+	"wx/mac/listbox.h"
+	"wx/os2/listbox.h"
+	"wx/cocoa/listbox.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\listbox.h
+	"wx/scrolwin.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\scrolwin.h
+	"wx/panel.h"
+	"wx/gtk/scrolwin.h"
+	"wx/gtk1/scrolwin.h"
+
+1194610574 c:\wxwidgets-2.8.10\include\wx\msw\listbox.h
+	"wx/dynarray.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\checklst.h
+
+1186407648 c:\wxwidgets-2.8.10\include\wx\msw\wince\checklst.h
+
+1194610574 c:\wxwidgets-2.8.10\include\wx\msw\checklst.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\choice.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/choice.h"
+	"wx/msw/wince/choicece.h"
+	"wx/msw/choice.h"
+	"wx/motif/choice.h"
+	"wx/gtk/choice.h"
+	"wx/gtk1/choice.h"
+	"wx/mac/choice.h"
+	"wx/cocoa/choice.h"
+	"wx/os2/choice.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\choice.h
+	"wx/combobox.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\combobox.h
+	"wx/defs.h"
+	"wx/textctrl.h"
+	"wx/ctrlsub.h"
+	"wx/univ/combobox.h"
+	"wx/msw/combobox.h"
+	"wx/motif/combobox.h"
+	"wx/gtk/combobox.h"
+	"wx/gtk1/combobox.h"
+	"wx/mac/combobox.h"
+	"wx/cocoa/combobox.h"
+	"wx/os2/combobox.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\textctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+	"wx/ioswrap.h"
+	"wx/x11/textctrl.h"
+	"wx/univ/textctrl.h"
+	"wx/msw/wince/textctrlce.h"
+	"wx/msw/textctrl.h"
+	"wx/motif/textctrl.h"
+	"wx/gtk/textctrl.h"
+	"wx/gtk1/textctrl.h"
+	"wx/mac/textctrl.h"
+	"wx/cocoa/textctrl.h"
+	"wx/os2/textctrl.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\ioswrap.h
+	<iostream.h>
+	<iostream>
+	"wx/msw/winundef.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\textctrl.h
+	"wx/scrolwin.h"
+	"wx/univ/inphand.h"
+
+1186407648 c:\wxwidgets-2.8.10\include\wx\msw\wince\textctrlce.h
+	"wx/dynarray.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\textctrl.h
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\combobox.h
+	"wx/combo.h"
+
+1195455332 c:\wxwidgets-2.8.10\include\wx\combo.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/renderer.h"
+	"wx/bitmap.h"
+	"wx/msw/combo.h"
+	"wx/generic/combo.h"
+
+1211434090 c:\wxwidgets-2.8.10\include\wx\renderer.h
+	"wx/gdicmn.h"
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/bitmap.h"
+	"wx/string.h"
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\combo.h
+	"wx/timer.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\combo.h
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\combobox.h
+	"wx/choice.h"
+
+1186407648 c:\wxwidgets-2.8.10\include\wx\msw\wince\choicece.h
+	"wx/defs.h"
+	"wx/dynarray.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\choice.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\scrolbar.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/scrolbar.h"
+	"wx/msw/scrolbar.h"
+	"wx/motif/scrolbar.h"
+	"wx/gtk/scrolbar.h"
+	"wx/gtk1/scrolbar.h"
+	"wx/mac/scrolbar.h"
+	"wx/cocoa/scrolbar.h"
+	"wx/os2/scrolbar.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\scrolbar.h
+	"wx/univ/scrarrow.h"
+	"wx/renderer.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\scrarrow.h
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\scrolbar.h
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\stattext.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/stattext.h"
+	"wx/msw/stattext.h"
+	"wx/motif/stattext.h"
+	"wx/gtk/stattext.h"
+	"wx/gtk1/stattext.h"
+	"wx/mac/stattext.h"
+	"wx/cocoa/stattext.h"
+	"wx/os2/stattext.h"
+	"wx/palmos/stattext.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\stattext.h
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\stattext.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\statbmp.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/bitmap.h"
+	"wx/icon.h"
+	"wx/univ/statbmp.h"
+	"wx/msw/statbmp.h"
+	"wx/motif/statbmp.h"
+	"wx/gtk/statbmp.h"
+	"wx/gtk1/statbmp.h"
+	"wx/mac/statbmp.h"
+	"wx/cocoa/statbmp.h"
+	"wx/os2/statbmp.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\statbmp.h
+	"wx/bitmap.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\statbmp.h
+	"wx/control.h"
+	"wx/icon.h"
+	"wx/bitmap.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\statbox.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/statbox.h"
+	"wx/msw/statbox.h"
+	"wx/motif/statbox.h"
+	"wx/gtk/statbox.h"
+	"wx/gtk1/statbox.h"
+	"wx/mac/statbox.h"
+	"wx/cocoa/statbox.h"
+	"wx/os2/statbox.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\statbox.h
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\statbox.h
+
+1220338544 c:\wxwidgets-2.8.10\include\wx\radiobox.h
+	"wx/ctrlsub.h"
+	"wx/dynarray.h"
+	"wx/univ/radiobox.h"
+	"wx/msw/radiobox.h"
+	"wx/motif/radiobox.h"
+	"wx/gtk/radiobox.h"
+	"wx/gtk1/radiobox.h"
+	"wx/mac/radiobox.h"
+	"wx/cocoa/radiobox.h"
+	"wx/os2/radiobox.h"
+	"wx/palmos/radiobox.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\radiobox.h
+	"wx/statbox.h"
+	"wx/dynarray.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\radiobox.h
+	"wx/statbox.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\radiobut.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/radiobut.h"
+	"wx/msw/radiobut.h"
+	"wx/motif/radiobut.h"
+	"wx/gtk/radiobut.h"
+	"wx/gtk1/radiobut.h"
+	"wx/mac/radiobut.h"
+	"wx/cocoa/radiobut.h"
+	"wx/os2/radiobut.h"
+	"wx/palmos/radiobut.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\radiobut.h
+	"wx/checkbox.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\radiobut.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\slider.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/slider.h"
+	"wx/msw/slider95.h"
+	"wx/motif/slider.h"
+	"wx/gtk/slider.h"
+	"wx/gtk1/slider.h"
+	"wx/mac/slider.h"
+	"wx/cocoa/slider.h"
+	"wx/os2/slider.h"
+	"wx/palmos/slider.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\slider.h
+	"wx/univ/scrthumb.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\scrthumb.h
+	"wx/timer.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\slider95.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\gauge.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/gauge.h"
+	"wx/msw/gauge95.h"
+	"wx/motif/gauge.h"
+	"wx/gtk/gauge.h"
+	"wx/gtk1/gauge.h"
+	"wx/mac/gauge.h"
+	"wx/cocoa/gauge.h"
+	"wx/os2/gauge.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\gauge.h
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\gauge95.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\dirdlg.h
+	"wx/dialog.h"
+	"wx/generic/dirdlgg.h"
+	"wx/generic/dirdlgg.h"
+	"wx/generic/dirdlgg.h"
+	"wx/msw/dirdlg.h"
+	"wx/gtk/dirdlg.h"
+	"wx/generic/dirdlgg.h"
+	"wx/mac/dirdlg.h"
+	"wx/cocoa/dirdlg.h"
+	"wx/generic/dirdlgg.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\dirdlgg.h
+	"wx/dialog.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\dirdlg.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\toolbar.h
+	"wx/defs.h"
+	"wx/tbarbase.h"
+	"wx/univ/toolbar.h"
+	"wx/palmos/toolbar.h"
+	"wx/msw/tbar95.h"
+	"wx/msw/wince/tbarwce.h"
+	"wx/motif/toolbar.h"
+	"wx/gtk/tbargtk.h"
+	"wx/gtk1/tbargtk.h"
+	"wx/mac/toolbar.h"
+	"wx/cocoa/toolbar.h"
+	"wx/os2/toolbar.h"
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\tbarbase.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/list.h"
+	"wx/control.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\toolbar.h
+	"wx/button.h"
+
+1234515644 c:\wxwidgets-2.8.10\include\wx\msw\tbar95.h
+	"wx/dynarray.h"
+	"wx/imaglist.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\imaglist.h
+	"wx/generic/imaglist.h"
+	"wx/msw/imaglist.h"
+	"wx/mac/imaglist.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\imaglist.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/icon.h"
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\imaglist.h
+	"wx/bitmap.h"
+
+1186407648 c:\wxwidgets-2.8.10\include\wx\msw\wince\tbarwce.h
+	"wx/dynarray.h"
+	"wx/msw/tbar95.h"
+
+1194610578 c:\wxwidgets-2.8.10\include\wx\layout.h
+	"wx/object.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\sizer.h
+	"wx/defs.h"
+	"wx/window.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\mdi.h
+	"wx/defs.h"
+	"wx/generic/mdig.h"
+	"wx/msw/mdi.h"
+	"wx/motif/mdi.h"
+	"wx/gtk/mdi.h"
+	"wx/gtk1/mdi.h"
+	"wx/mac/mdi.h"
+	"wx/cocoa/mdi.h"
+	"wx/generic/mdig.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\mdig.h
+	"wx/frame.h"
+	"wx/panel.h"
+	"wx/notebook.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\notebook.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+	"wx/univ/notebook.h"
+	"wx/msw/notebook.h"
+	"wx/generic/notebook.h"
+	"wx/gtk/notebook.h"
+	"wx/gtk1/notebook.h"
+	"wx/mac/notebook.h"
+	"wx/cocoa/notebook.h"
+	"wx/os2/notebook.h"
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\bookctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/dynarray.h"
+	"wx/notebook.h"
+	"wx/choicebk.h"
+
+1234515646 c:\wxwidgets-2.8.10\include\wx\choicebk.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+	"wx/choice.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\notebook.h
+	"wx/arrstr.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\notebook.h
+	"wx/control.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\notebook.h
+	"wx/event.h"
+	"wx/control.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\mdi.h
+	"wx/frame.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\statusbr.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+	"wx/univ/statusbr.h"
+	"wx/palmos/statusbr.h"
+	"wx/msw/statbr95.h"
+	"wx/generic/statusbr.h"
+	"wx/mac/statusbr.h"
+	"wx/generic/statusbr.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\statusbr.h
+	"wx/univ/inpcons.h"
+	"wx/arrstr.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\statbr95.h
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\statusbr.h
+	"wx/defs.h"
+	"wx/pen.h"
+	"wx/arrstr.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\choicdlg.h
+	"wx/generic/choicdgg.h"
+
+1194610578 c:\wxwidgets-2.8.10\include\wx\generic\choicdgg.h
+	"wx/dynarray.h"
+	"wx/dialog.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\textdlg.h
+	"wx/generic/textdlgg.h"
+	"wx/numdlg.h"
+
+1194610578 c:\wxwidgets-2.8.10\include\wx\generic\textdlgg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/valtext.h"
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\valtext.h
+	"wx/defs.h"
+	"wx/textctrl.h"
+	"wx/validate.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\numdlg.h
+	"wx/defs.h"
+	"wx/generic/numdlgg.h"
+
+1194610578 c:\wxwidgets-2.8.10\include\wx\generic\numdlgg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\filedlg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/arrstr.h"
+	"wx/generic/filedlgg.h"
+	"wx/msw/filedlg.h"
+	"wx/motif/filedlg.h"
+	"wx/gtk/filedlg.h"
+	"wx/generic/filedlgg.h"
+	"wx/gtk1/filedlg.h"
+	"wx/mac/filedlg.h"
+	"wx/cocoa/filedlg.h"
+	"wx/os2/filedlg.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\filedlgg.h
+	"wx/listctrl.h"
+	"wx/datetime.h"
+	"wx/filefn.h"
+	"wx/filedlg.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\listctrl.h
+	"wx/defs.h"
+	"wx/listbase.h"
+	"wx/msw/listctrl.h"
+	"wx/mac/carbon/listctrl.h"
+	"wx/generic/listctrl.h"
+
+1186407694 c:\wxwidgets-2.8.10\include\wx\listbase.h
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/gdicmn.h"
+	"wx/event.h"
+
+1220338542 c:\wxwidgets-2.8.10\include\wx\msw\listctrl.h
+	"wx/textctrl.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\listctrl.h
+	"wx/textctrl.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\filedlg.h
+
+1272566602 c:\updatedlinux\grandorgue.0.3\inifileconfig.h
+	<wx/wx.h>
+
+1272566604 source:c:\updatedlinux\grandorgue.0.3\gorguecoupler.cpp
+	"GOrgueCoupler.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+
+1272566604 c:\updatedlinux\grandorgue.0.3\gorguecoupler.h
+	<wx/wx.h>
+	"GOrgueDrawStop.h"
+
+1272566604 c:\updatedlinux\grandorgue.0.3\gorguedrawstop.h
+	<wx/wx.h>
+	"GOrgueControl.h"
+
+1272566602 c:\updatedlinux\grandorgue.0.3\grandorguefile.h
+	<vector>
+	<wx/wx.h>
+	<wx/fileconf.h>
+	<wx/filename.h>
+	"GOrguePipe.h"
+	"OrganFile.h"
+	"GOrgueManual.h"
+	"GOrguePushbutton.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\fileconf.h
+	"wx/defs.h"
+	"wx/textfile.h"
+	"wx/string.h"
+	"wx/confbase.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\textfile.h
+	"wx/defs.h"
+	"wx/textbuf.h"
+	"wx/file.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\textbuf.h
+	"wx/defs.h"
+	"wx/arrstr.h"
+	"wx/convauto.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\convauto.h
+	"wx/strconv.h"
+
+1186407694 c:\wxwidgets-2.8.10\include\wx\file.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/filefn.h"
+	"wx/strconv.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\confbase.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/string.h"
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\filename.h
+	"wx/arrstr.h"
+	"wx/filefn.h"
+	"wx/datetime.h"
+	"wx/intl.h"
+
+1272566604 c:\updatedlinux\grandorgue.0.3\gorguepipe.h
+	<wx/wx.h>
+
+1272566602 c:\updatedlinux\grandorgue.0.3\organfile.h
+	<vector>
+	<wx/fileconf.h>
+	<wx/filename.h>
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrguePushbutton.h"
+	"GOrgueDrawStop.h"
+	"GOrgueCoupler.h"
+
+1272566602 c:\updatedlinux\grandorgue.0.3\gorguepushbutton.h
+	<wx/wx.h>
+	"GOrgueControl.h"
+
+1272566604 c:\updatedlinux\grandorgue.0.3\gorguemanual.h
+	<wx/wx.h>
+
+1272566602 c:\updatedlinux\grandorgue.0.3\gorguesound.h
+	<map>
+	"RtAudio.h"
+	"OrganFile.h"
+	"RtMidi.h"
+	"GrandOrgueDef.h"
+
+1272566602 c:\updatedlinux\grandorgue.0.3\rtaudio.h
+	<string>
+	<vector>
+	"RtError.h"
+	<windows.h>
+	<process.h>
+	<pthread.h>
+	<sys/time.h>
+	<sstream>
+	<CoreAudio/AudioHardware.h>
+
+1272566602 c:\updatedlinux\grandorgue.0.3\rterror.h
+	<exception>
+	<iostream>
+	<string>
+
+1272566602 c:\updatedlinux\grandorgue.0.3\rtmidi.h
+	"RtError.h"
+	<string>
+	<vector>
+	<queue>
+
+1272566602 c:\updatedlinux\grandorgue.0.3\grandorguedef.h
+
+1272566604 source:c:\updatedlinux\grandorgue.0.3\gorguedivisional.cpp
+	"GOrgueDivisional.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"SettingsDialog.h"
+
+1272566604 c:\updatedlinux\grandorgue.0.3\gorguedivisional.h
+	"GOrguePushbutton.h"
+
+1272566602 c:\updatedlinux\grandorgue.0.3\grandorgue.h
+	"GrandOrgueDef.h"
+	<wx/wx.h>
+	<wx/docview.h>
+	<wx/msw/private.h>
+	<wx/msw/registry.h>
+	<map>
+	<string>
+	"zlib.h"
+	"GOrgueLCD.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\docview.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/string.h"
+	"wx/frame.h"
+	"wx/print.h"
+	"wx/iosfwrap.h"
+	"wx/stream.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\print.h
+	"wx/defs.h"
+	"wx/msw/printwin.h"
+	"wx/mac/printmac.h"
+	"wx/os2/printos2.h"
+	"wx/generic/printps.h"
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\printwin.h
+	"wx/prntbase.h"
+
+1220338544 c:\wxwidgets-2.8.10\include\wx\prntbase.h
+	"wx/defs.h"
+	"wx/event.h"
+	"wx/cmndata.h"
+	"wx/panel.h"
+	"wx/scrolwin.h"
+	"wx/dialog.h"
+	"wx/frame.h"
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\printps.h
+	"wx/prntbase.h"
+
+1194610574 c:\wxwidgets-2.8.10\include\wx\msw\registry.h
+
+1272566602 c:\updatedlinux\grandorgue.0.3\zlib.h
+	"zconf.h"
+
+1272566602 c:\updatedlinux\grandorgue.0.3\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1272566602 c:\updatedlinux\grandorgue.0.3\gorguelcd.h
+
+1272566602 c:\updatedlinux\grandorgue.0.3\settingsdialog.h
+	<vector>
+	<wx/propdlg.h>
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\propdlg.h
+	"wx/generic/propdlg.h"
+
+1195455332 c:\wxwidgets-2.8.10\include\wx\generic\propdlg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+
+1272566602 source:c:\updatedlinux\grandorgue.0.3\gorguedrawstop.cpp
+	"GOrgueDrawStop.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"SettingsDialog.h"
+
+1272566604 source:c:\updatedlinux\grandorgue.0.3\gorguelcd.cpp
+	"GrandOrgue.h"
+	"imon/SG_VFD.h"
+
+1272566618 c:\updatedlinux\grandorgue.0.3\imon\sg_vfd.h
+
+1272566602 source:c:\updatedlinux\grandorgue.0.3\gorguemanual.cpp
+	"GOrgueManual.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"SettingsDialog.h"
+	"GOrgueDivisional.h"
+
+1272567927 source:c:\updatedlinux\grandorgue.0.3\gorguemeter.cpp
+	<wx/spinctrl.h>
+	"GOrgueMeter.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"wxGaugeAudio.h"
+	"GrandOrgueFile.h"
+	<wx/msw/regconf.h>
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\spinctrl.h
+	"wx/defs.h"
+	"wx/spinbutt.h"
+	"wx/generic/spinctlg.h"
+	"wx/msw/spinctrl.h"
+	"wx/os2/spinctrl.h"
+	"wx/gtk/spinctrl.h"
+	"wx/gtk1/spinctrl.h"
+	"wx/generic/spinctlg.h"
+	"wx/mac/spinctrl.h"
+	"wx/generic/spinctlg.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\spinbutt.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/event.h"
+	"wx/univ/spinbutt.h"
+	"wx/msw/spinbutt.h"
+	"wx/motif/spinbutt.h"
+	"wx/gtk/spinbutt.h"
+	"wx/gtk1/spinbutt.h"
+	"wx/mac/spinbutt.h"
+	"wx/cocoa/spinbutt.h"
+	"wx/os2/spinbutt.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\spinbutt.h
+	"wx/univ/scrarrow.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\spinbutt.h
+	"wx/control.h"
+	"wx/event.h"
+
+1211176294 c:\wxwidgets-2.8.10\include\wx\generic\spinctlg.h
+	"wx/textctrl.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\spinctrl.h
+	"wx/spinbutt.h"
+	"wx/dynarray.h"
+
+1272566602 c:\updatedlinux\grandorgue.0.3\gorguemeter.h
+	<wx/control.h>
+
+1272566602 c:\updatedlinux\grandorgue.0.3\wxgaugeaudio.h
+	<wx/control.h>
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\regconf.h
+	"wx/msw/registry.h"
+	"wx/object.h"
+	"wx/confbase.h"
+
+1272566602 source:c:\updatedlinux\grandorgue.0.3\gorguepipe.cpp
+	"GOrguePipe.h"
+	"GOrgueSound.h"
+	"GrandOrgueFile.h"
+
+1272566602 source:c:\updatedlinux\grandorgue.0.3\gorgueproperties.cpp
+	"GrandOrgue.h"
+	"GOrgueProperties.h"
+	<wx/statline.h>
+	<wx/html/helpctrl.h>
+	"GrandOrgueFile.h"
+
+1272566602 c:\updatedlinux\grandorgue.0.3\gorgueproperties.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\statline.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/statline.h"
+	"wx/msw/statline.h"
+	"wx/gtk/statline.h"
+	"wx/gtk1/statline.h"
+	"wx/os2/statline.h"
+	"wx/mac/statline.h"
+	"wx/cocoa/statline.h"
+	"wx/generic/statline.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\statline.h
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\statline.h
+
+1186407686 c:\wxwidgets-2.8.10\include\wx\generic\statline.h
+
+1194610576 c:\wxwidgets-2.8.10\include\wx\html\helpctrl.h
+	"wx/defs.h"
+	"wx/helpbase.h"
+	"wx/html/helpfrm.h"
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\helpbase.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdicmn.h"
+	"wx/frame.h"
+
+1211176292 c:\wxwidgets-2.8.10\include\wx\html\helpfrm.h
+	"wx/defs.h"
+	"wx/helpbase.h"
+	"wx/html/helpdata.h"
+	"wx/window.h"
+	"wx/frame.h"
+	"wx/config.h"
+	"wx/splitter.h"
+	"wx/notebook.h"
+	"wx/listbox.h"
+	"wx/choice.h"
+	"wx/combobox.h"
+	"wx/checkbox.h"
+	"wx/stattext.h"
+	"wx/html/htmlwin.h"
+	"wx/html/helpwnd.h"
+	"wx/html/htmprint.h"
+
+1211176292 c:\wxwidgets-2.8.10\include\wx\html\helpdata.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/filesys.h"
+	"wx/dynarray.h"
+	"wx/font.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\filesys.h
+	"wx/defs.h"
+	"wx/stream.h"
+	"wx/datetime.h"
+	"wx/filename.h"
+	"wx/hashmap.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\config.h
+	"wx/defs.h"
+	"wx/confbase.h"
+	"wx/msw/regconf.h"
+	"wx/msw/iniconf.h"
+	"wx/palmos/prefconf.h"
+	"wx/fileconf.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\iniconf.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\splitter.h
+	"wx/event.h"
+	"wx/generic/splitter.h"
+
+1211176294 c:\wxwidgets-2.8.10\include\wx\generic\splitter.h
+	"wx/window.h"
+	"wx/containr.h"
+
+1211176292 c:\wxwidgets-2.8.10\include\wx\html\htmlwin.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/scrolwin.h"
+	"wx/config.h"
+	"wx/stopwatch.h"
+	"wx/html/winpars.h"
+	"wx/html/htmlcell.h"
+	"wx/filesys.h"
+	"wx/html/htmlfilt.h"
+	"wx/filename.h"
+	"wx/bitmap.h"
+
+1236322344 c:\wxwidgets-2.8.10\include\wx\html\winpars.h
+	"wx/defs.h"
+	"wx/module.h"
+	"wx/font.h"
+	"wx/html/htmlpars.h"
+	"wx/html/htmlcell.h"
+	"wx/encconv.h"
+
+1194610576 c:\wxwidgets-2.8.10\include\wx\html\htmlpars.h
+	"wx/defs.h"
+	"wx/html/htmltag.h"
+	"wx/filesys.h"
+	"wx/hash.h"
+	"wx/fontenc.h"
+
+1194610576 c:\wxwidgets-2.8.10\include\wx\html\htmltag.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/arrstr.h"
+
+1211176292 c:\wxwidgets-2.8.10\include\wx\html\htmlcell.h
+	"wx/defs.h"
+	"wx/html/htmltag.h"
+	"wx/html/htmldefs.h"
+	"wx/window.h"
+
+1186407668 c:\wxwidgets-2.8.10\include\wx\html\htmldefs.h
+	"wx/defs.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\encconv.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/fontenc.h"
+	"wx/dynarray.h"
+
+1186407668 c:\wxwidgets-2.8.10\include\wx\html\htmlfilt.h
+	"wx/defs.h"
+	"wx/filesys.h"
+
+1194610576 c:\wxwidgets-2.8.10\include\wx\html\helpwnd.h
+	"wx/defs.h"
+	"wx/helpbase.h"
+	"wx/html/helpdata.h"
+	"wx/window.h"
+	"wx/frame.h"
+	"wx/config.h"
+	"wx/splitter.h"
+	"wx/notebook.h"
+	"wx/listbox.h"
+	"wx/choice.h"
+	"wx/combobox.h"
+	"wx/checkbox.h"
+	"wx/stattext.h"
+	"wx/html/htmlwin.h"
+	"wx/html/htmprint.h"
+
+1186407668 c:\wxwidgets-2.8.10\include\wx\html\htmprint.h
+	"wx/defs.h"
+	"wx/html/htmlcell.h"
+	"wx/html/winpars.h"
+	"wx/html/htmlfilt.h"
+	"wx/print.h"
+	"wx/printdlg.h"
+	<limits.h>
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\printdlg.h
+	"wx/defs.h"
+	"wx/event.h"
+	"wx/dialog.h"
+	"wx/intl.h"
+	"wx/cmndata.h"
+
+1272566604 source:c:\updatedlinux\grandorgue.0.3\gorguepushbutton.cpp
+	"GOrguePushbutton.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"SettingsDialog.h"
+
+1272568024 source:c:\updatedlinux\grandorgue.0.3\gorguesound.cpp
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"OrganDocument.h"
+	"GrandOrgueFile.h"
+	<wx/msw/regconf.h>
+	"GOrgueSoundCallbackMIDI.h"
+	"GOrgueSoundCallbackAudio.h"
+
+1272566602 c:\updatedlinux\grandorgue.0.3\organdocument.h
+	<wx/defs.h>
+	<wx/docview.h>
+
+1272566602 c:\updatedlinux\grandorgue.0.3\gorguesoundcallbackmidi.h
+	<vector>
+
+1272566602 c:\updatedlinux\grandorgue.0.3\gorguesoundcallbackaudio.h
+	"RtAudio.h"
+
+1272566602 source:c:\updatedlinux\grandorgue.0.3\gorguesoundcallbackaudio.cpp
+	"GOrgueSoundCallbackAudio.h"
+	"GOrgueSoundCallbackMIDI.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+
+1272566602 source:c:\updatedlinux\grandorgue.0.3\gorguesoundcallbackmidi.cpp
+	"GOrgueSoundCallbackMIDI.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFile.h"
+	"GOrgueDivisional.h"
+
+1272568086 source:c:\updatedlinux\grandorgue.0.3\grandorgue.cpp
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"GOrgueMeter.h"
+	"OrganView.h"
+	"OrganDocument.h"
+	"SettingsDialog.h"
+	"GOrgueProperties.h"
+	"GrandOrgueFile.h"
+	"GOrgueDivisional.h"
+	<wx/ipc.h>
+	<wx/snglinst.h>
+	<wx/filesys.h>
+	<wx/fs_zip.h>
+	<wx/html/helpctrl.h>
+	<wx/mstream.h>
+	<wx/splash.h>
+	<wx/progdlg.h>
+	"images/help.h"
+	"images/open.h"
+	"images/panic.h"
+	"images/properties.h"
+	"images/record.h"
+	"images/reload.h"
+	"images/save.h"
+	"images/settings.h"
+	"images/set.h"
+	"images/volume.h"
+	"images/polyphony.h"
+	"images/memory.h"
+	"images/transpose.h"
+	"images/gauge.h"
+	"images/splash.h"
+	"KeyConvert.h"
+	<windows.h>
+	<shlobj.h>
+	<malloc.h>
+
+1272566602 c:\updatedlinux\grandorgue.0.3\organview.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\ipc.h
+	"wx/dde.h"
+	"wx/sckipc.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\dde.h
+	"wx/list.h"
+	"wx/msw/dde.h"
+
+1211176290 c:\wxwidgets-2.8.10\include\wx\msw\dde.h
+	"wx/ipcbase.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\ipcbase.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\sckipc.h
+	"wx/defs.h"
+	"wx/ipcbase.h"
+	"wx/socket.h"
+	"wx/sckstrm.h"
+	"wx/datstrm.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\socket.h
+	"wx/defs.h"
+	"wx/event.h"
+	"wx/sckaddr.h"
+	"wx/gsocket.h"
+	"wx/list.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\sckaddr.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/gsocket.h"
+	<sys/socket.h>
+	<sys/un.h>
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\gsocket.h
+	"wx/defs.h"
+	"wx/dlimpexp.h"
+	<stddef.h>
+	<sys/types.h>
+	<stdlib.h>
+	"wx/msw/gsockmsw.h"
+	"wx/mac/gsockmac.h"
+	"wx/unix/gsockunx.h"
+
+1186407652 c:\wxwidgets-2.8.10\include\wx\msw\gsockmsw.h
+	"wx/setup.h"
+	"wx/gsocket.h"
+	"gsocket.h"
+	"wx/msw/wrapwin.h"
+	<sys/types.h>
+	<winsock.h>
+
+1186407596 c:\wxwidgets-2.8.10\include\wx\unix\gsockunx.h
+	"wx/setup.h"
+	"wx/gsocket.h"
+	"gsocket.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\sckstrm.h
+	"wx/stream.h"
+	"wx/socket.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\datstrm.h
+	"wx/stream.h"
+	"wx/longlong.h"
+	"wx/convauto.h"
+
+1194610580 c:\wxwidgets-2.8.10\include\wx\snglinst.h
+
+1186407690 c:\wxwidgets-2.8.10\include\wx\fs_zip.h
+	"wx/defs.h"
+	"wx/fs_arc.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\fs_arc.h
+	"wx/defs.h"
+	"wx/filesys.h"
+	"wx/hashmap.h"
+
+1211176296 c:\wxwidgets-2.8.10\include\wx\mstream.h
+	"wx/defs.h"
+	"wx/stream.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\splash.h
+	"wx/generic/splash.h"
+
+1211176294 c:\wxwidgets-2.8.10\include\wx\generic\splash.h
+	"wx/bitmap.h"
+	"wx/timer.h"
+	"wx/frame.h"
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\progdlg.h
+	"wx/defs.h"
+	"wx/palmos/progdlg.h"
+	"wx/generic/progdlgg.h"
+
+1211176294 c:\wxwidgets-2.8.10\include\wx\generic\progdlgg.h
+	"wx/defs.h"
+	"wx/progdlg.h"
+	"wx/dialog.h"
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\help.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\open.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\panic.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\properties.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\record.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\reload.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\save.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\settings.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\set.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\volume.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\polyphony.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\memory.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\transpose.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\gauge.h
+
+1272566614 c:\updatedlinux\grandorgue.0.3\images\splash.h
+
+1272566602 c:\updatedlinux\grandorgue.0.3\keyconvert.h
+
+1272567326 source:c:\updatedlinux\grandorgue.0.3\grandorgue.rc
+	"resource.h"
+	"afxres.h"
+
+1272566604 c:\updatedlinux\grandorgue.0.3\resource.h
+
+1272566604 source:c:\updatedlinux\grandorgue.0.3\grandorguefile.cpp
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	<wx/progdlg.h>
+	"IniFileConfig.h"
+	"GOrgueThread.h"
+	"OrganDocument.h"
+	<wx/image.h>
+	<wx/mstream.h>
+	"GOrgueMeter.h"
+	"GOrgueDivisional.h"
+
+1272566602 c:\updatedlinux\grandorgue.0.3\gorguethread.h
+
+1272566604 source:c:\updatedlinux\grandorgue.0.3\images.cpp
+
+1272566604 source:c:\updatedlinux\grandorgue.0.3\inifileconfig.cpp
+	"IniFileConfig.h"
+	<wx/fileconf.h>
+
+1272566602 source:c:\updatedlinux\grandorgue.0.3\organdocument.cpp
+	"OrganDocument.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"wxGaugeAudio.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFile.h"
+
+1272566602 source:c:\updatedlinux\grandorgue.0.3\organfile.cpp
+	"GrandOrgue.h"
+	"GOrguePipe.h"
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+	"SettingsDialog.h"
+	"OrganDocument.h"
+	<wx/mstream.h>
+	"IniFileConfig.h"
+	"GOrgueDivisional.h"
+
+1272566602 source:c:\updatedlinux\grandorgue.0.3\organview.cpp
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"OrganView.h"
+	<wx/mstream.h>
+	"GrandOrgueFile.h"
+	"GOrgueDivisional.h"
+
+1272568346 source:c:\updatedlinux\grandorgue.0.3\rtaudio.cpp
+	"RtAudio.h"
+	<iostream>
+	<cstdlib>
+	<cstring>
+	<climits>
+	<jack/jack.h>
+	<unistd.h>
+	<cstdio>
+	"include/asiosys.h"
+	"include/asio.h"
+	"include/iasiothiscallresolver.h"
+	"include/asiodrivers.h"
+	<cmath>
+	"include/dsound.h"
+	<assert.h>
+	<algorithm>
+	"tchar.h"
+	<alsa/asoundlib.h>
+	<unistd.h>
+	<unistd.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	"soundcard.h"
+	<errno.h>
+	<math.h>
+
+1272566618 c:\updatedlinux\grandorgue.0.3\include\asiosys.h
+
+1272566616 c:\updatedlinux\grandorgue.0.3\include\asio.h
+
+1272566618 c:\updatedlinux\grandorgue.0.3\include\iasiothiscallresolver.h
+	<windows.h>
+	"iasiodrv.h"
+
+1272566616 c:\updatedlinux\grandorgue.0.3\include\iasiodrv.h
+	"asiosys.h"
+	"asio.h"
+
+1272566616 c:\updatedlinux\grandorgue.0.3\include\asiodrivers.h
+	"ginclude.h"
+	"CodeFragments.hpp"
+	<windows.h>
+	"asiolist.h"
+	"asiolist.h"
+
+1272566618 c:\updatedlinux\grandorgue.0.3\include\ginclude.h
+
+1272566616 c:\updatedlinux\grandorgue.0.3\include\asiolist.h
+
+1272566616 c:\updatedlinux\grandorgue.0.3\include\dsound.h
+	<objbase.h>
+	<float.h>
+
+1272566604 source:c:\updatedlinux\grandorgue.0.3\rtmidi.cpp
+	"RtMidi.h"
+	<sstream>
+	<CoreMIDI/CoreMIDI.h>
+	<CoreAudio/HostTime.h>
+	<CoreServices/CoreServices.h>
+	<pthread.h>
+	<sys/time.h>
+	<alsa/asoundlib.h>
+	<pthread.h>
+	<sys/time.h>
+	<unistd.h>
+	<dmedia/midi.h>
+	<windows.h>
+	<mmsystem.h>
+
+1272566616 source:c:\updatedlinux\grandorgue.0.3\include\asio.cpp
+	<string.h>
+	"asiosys.h"
+	"asio.h"
+	"asiodrvr.h"
+	"windows.h"
+	"iasiodrv.h"
+	"asiodrivers.h"
+	"asiodrvr.h"
+
+1272566616 c:\updatedlinux\grandorgue.0.3\include\asiodrvr.h
+	"asiosys.h"
+	"asio.h"
+	<windows.h>
+	"combase.h"
+	"iasiodrv.h"
+
+1272566616 c:\updatedlinux\grandorgue.0.3\include\combase.h
+
+1272566616 source:c:\updatedlinux\grandorgue.0.3\include\asiodrivers.cpp
+	<string.h>
+	"asiodrivers.h"
+	"iasiodrv.h"
+	"asiolist.h"
+
+1272566616 source:c:\updatedlinux\grandorgue.0.3\include\asiolist.cpp
+	<windows.h>
+	"iasiodrv.h"
+	"asiolist.h"
+
+1272976765 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguecontrol.cpp
+	"GOrgueControl.h"
+	"IniFileConfig.h"
+
+1272976765 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguecontrol.h
+	<wx/wx.h>
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\inifileconfig.h
+	<wx/wx.h>
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguecoupler.cpp
+	"GOrgueCoupler.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+
+1272976765 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguecoupler.h
+	<wx/wx.h>
+	"GOrgueDrawStop.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguedrawstop.h
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrgueDrawable.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguedrawable.h
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\grandorguefile.h
+	<vector>
+	<wx/wx.h>
+	<wx/fileconf.h>
+	<wx/filename.h>
+	"GOrguePipe.h"
+	"OrganFile.h"
+	"GOrgueManual.h"
+	"GOrguePushbutton.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguepipe.h
+	<wx/wx.h>
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\organfile.h
+	<vector>
+	<wx/fileconf.h>
+	<wx/filename.h>
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrguePushbutton.h"
+	"GOrgueDrawStop.h"
+	"GOrgueCoupler.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguepushbutton.h
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrgueDrawable.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguemanual.h
+	<wx/wx.h>
+	<vector>
+
+1272976765 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguesound.h
+	<map>
+	"RtAudio.h"
+	"OrganFile.h"
+	"RtMidi.h"
+	"GrandOrgueDef.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\rtaudio.h
+	<string>
+	<vector>
+	"RtError.h"
+	<windows.h>
+	<process.h>
+	<pthread.h>
+	<sys/time.h>
+	<sstream>
+	<CoreAudio/AudioHardware.h>
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\rterror.h
+	<exception>
+	<iostream>
+	<string>
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\rtmidi.h
+	"RtError.h"
+	<string>
+	<vector>
+	<queue>
+
+1272976765 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\grandorguedef.h
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguedivisional.cpp
+	"GOrgueDivisional.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"SettingsDialog.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguedivisional.h
+	"GOrguePushbutton.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\grandorgue.h
+	"GrandOrgueDef.h"
+	<wx/wx.h>
+	<wx/docview.h>
+	<wx/msw/private.h>
+	<wx/msw/registry.h>
+	<map>
+	<string>
+	"zlib.h"
+	"GOrgueLCD.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\zlib.h
+	"zconf.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguelcd.h
+
+1272976765 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\settingsdialog.h
+	<vector>
+	<wx/propdlg.h>
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguedrawstop.cpp
+	"GOrgueDrawStop.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"SettingsDialog.h"
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguelcd.cpp
+	"GrandOrgue.h"
+	"imon/SG_VFD.h"
+
+1272976753 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\imon\sg_vfd.h
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguemanual.cpp
+	"GOrgueManual.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"SettingsDialog.h"
+	"GOrgueDivisional.h"
+	<algorithm>
+
+1272976765 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguemeter.cpp
+	<wx/spinctrl.h>
+	"GOrgueMeter.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"wxGaugeAudio.h"
+	"GrandOrgueFile.h"
+	<wx/msw/regconf.h>
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguemeter.h
+	<wx/control.h>
+
+1272976765 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\wxgaugeaudio.h
+	<wx/control.h>
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguepipe.cpp
+	"GOrguePipe.h"
+	"GOrgueSound.h"
+	"GrandOrgueFile.h"
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorgueproperties.cpp
+	"GrandOrgue.h"
+	"GOrgueProperties.h"
+	<wx/statline.h>
+	<wx/html/helpctrl.h>
+	"GrandOrgueFile.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorgueproperties.h
+
+1272976765 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguepushbutton.cpp
+	"GOrguePushbutton.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"SettingsDialog.h"
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguesound.cpp
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"OrganDocument.h"
+	"GrandOrgueFile.h"
+	<wx/msw/regconf.h>
+	"GOrgueSoundCallbackMIDI.h"
+	"GOrgueSoundCallbackAudio.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\organdocument.h
+	<wx/defs.h>
+	<wx/docview.h>
+
+1272976765 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguesoundcallbackmidi.h
+	<vector>
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguesoundcallbackaudio.h
+	"RtAudio.h"
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguesoundcallbackaudio.cpp
+	"GOrgueSoundCallbackAudio.h"
+	"GOrgueSoundCallbackMIDI.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguesoundcallbackmidi.cpp
+	"GOrgueSoundCallbackMIDI.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFile.h"
+	"GOrgueDivisional.h"
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\grandorgue.rc
+	"resource.h"
+	"afxres.h"
+
+1272976765 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\resource.h
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\grandorguefile.cpp
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	<wx/progdlg.h>
+	"IniFileConfig.h"
+	"GOrgueThread.h"
+	"OrganDocument.h"
+	<wx/image.h>
+	<wx/mstream.h>
+	"GOrgueMeter.h"
+	"GOrgueDivisional.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\gorguethread.h
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images.cpp
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\inifileconfig.cpp
+	"IniFileConfig.h"
+	<wx/fileconf.h>
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\organdocument.cpp
+	"OrganDocument.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"wxGaugeAudio.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFile.h"
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\organfile.cpp
+	"GrandOrgue.h"
+	"GOrguePipe.h"
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+	"SettingsDialog.h"
+	"OrganDocument.h"
+	<wx/mstream.h>
+	"IniFileConfig.h"
+	"GOrgueDivisional.h"
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\organview.cpp
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"OrganView.h"
+	"GrandOrgueFile.h"
+	"OrganDocument.h"
+	"GOrgueMeter.h"
+	"OrganPanel.h"
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\organview.h
+	<wx/docview.h>
+
+1272976765 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\organpanel.h
+	<wx/wx.h>
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\rtaudio.cpp
+	"RtAudio.h"
+	<iostream>
+	<cstdlib>
+	<cstring>
+	<climits>
+	<jack/jack.h>
+	<unistd.h>
+	<cstdio>
+	"include/asiosys.h"
+	"include/asio.h"
+	"include/iasiothiscallresolver.h"
+	"include/asiodrivers.h"
+	<cmath>
+	"include/dsound.h"
+	<assert.h>
+	<algorithm>
+	"tchar.h"
+	<alsa/asoundlib.h>
+	<unistd.h>
+	<unistd.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	"soundcard.h"
+	<errno.h>
+	<math.h>
+
+1272976746 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\asiosys.h
+
+1272976746 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\asio.h
+
+1272976746 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\iasiothiscallresolver.h
+	<windows.h>
+	"asiodrvr.h"
+
+1272976746 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\asiodrvr.h
+	"asiosys.h"
+	"asio.h"
+	<windows.h>
+	"combase.h"
+	"iasiodrv.h"
+
+1272976746 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\combase.h
+
+1272976746 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\iasiodrv.h
+	"asiosys.h"
+	"asio.h"
+
+1272976746 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\asiodrivers.h
+	"ginclude.h"
+	"CodeFragments.hpp"
+	<windows.h>
+	"asiolist.h"
+	"asiolist.h"
+
+1272976746 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\ginclude.h
+
+1272976747 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\asiolist.h
+
+1272976746 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\dsound.h
+	<objbase.h>
+	<float.h>
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\rtmidi.cpp
+	"RtMidi.h"
+	<sstream>
+	<CoreMIDI/CoreMIDI.h>
+	<CoreAudio/HostTime.h>
+	<CoreServices/CoreServices.h>
+	<pthread.h>
+	<sys/time.h>
+	<alsa/asoundlib.h>
+	<pthread.h>
+	<sys/time.h>
+	<unistd.h>
+	<dmedia/midi.h>
+	<windows.h>
+	<mmsystem.h>
+
+1272976764 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\settingsdialog.cpp
+	"SettingsDialog.h"
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"MIDIEvents.h"
+	<wx/spinctrl.h>
+	<wx/tglbtn.h>
+	<wx/bookctrl.h>
+	<wx/numdlg.h>
+	<wx/html/helpctrl.h>
+	<wx/statline.h>
+	<wx/listctrl.h>
+
+1272976764 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\midievents.h
+
+1186407692 c:\wxwidgets-2.8.10\include\wx\tglbtn.h
+	"wx/defs.h"
+	"wx/event.h"
+	"wx/control.h"
+	"wx/univ/tglbtn.h"
+	"wx/msw/tglbtn.h"
+	"wx/gtk/tglbtn.h"
+	"wx/gtk1/tglbtn.h"
+	"wx/motif/tglbtn.h"
+	"wx/mac/tglbtn.h"
+	"wx/palmos/tglbtn.h"
+	"wx/os2/tglbtn.h"
+
+1186407594 c:\wxwidgets-2.8.10\include\wx\univ\tglbtn.h
+	"wx/button.h"
+
+1186407650 c:\wxwidgets-2.8.10\include\wx\msw\tglbtn.h
+
+1272976746 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\asio.cpp
+	<string.h>
+	"asiosys.h"
+	"asio.h"
+	"asiodrvr.h"
+	"windows.h"
+	"iasiodrv.h"
+	"asiodrivers.h"
+	"asiodrvr.h"
+
+1272976746 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\asiodrivers.cpp
+	<string.h>
+	"asiodrivers.h"
+	"iasiodrv.h"
+	"asiolist.h"
+
+1272976746 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\asiolist.cpp
+	<windows.h>
+	"iasiodrv.h"
+	"asiolist.h"
+
+1272976746 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\combase.cpp
+	<windows.h>
+	"wxdebug.h"
+	"combase.h"
+
+1272976746 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\wxdebug.h
+
+1272976746 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\include\iasiothiscallresolver.cpp
+	<new>
+	<assert.h>
+	"iasiothiscallresolver.h"
+
+1272976765 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\wxgaugeaudio.cpp
+	"wxGaugeAudio.h"
+	<wx/dcmemory.h>
+	"GrandOrgue.h"
+
+1273561252 source:c:\grandorgue.0.3-source\may10th\grandorgue.0.3\grandorgue.cpp
+	"GrandOrgue.h"
+	"GOrgueSound.h"
+	"GOrgueMeter.h"
+	"OrganView.h"
+	"OrganDocument.h"
+	"SettingsDialog.h"
+	"GOrgueProperties.h"
+	"GrandOrgueFile.h"
+	"GOrgueDivisional.h"
+	<wx/ipc.h>
+	<wx/snglinst.h>
+	<wx/filesys.h>
+	<wx/fs_zip.h>
+	<wx/html/helpctrl.h>
+	<wx/mstream.h>
+	<wx/splash.h>
+	<wx/progdlg.h>
+	"images/help.h"
+	"images/open.h"
+	"images/panic.h"
+	"images/properties.h"
+	"images/record.h"
+	"images/reload.h"
+	"images/save.h"
+	"images/settings.h"
+	"images/set.h"
+	"images/volume.h"
+	"images/polyphony.h"
+	"images/memory.h"
+	"images/transpose.h"
+	"images/gauge.h"
+	"images/splash.h"
+	<windows.h>
+	<shlobj.h>
+	<malloc.h>
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\help.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\open.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\panic.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\properties.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\record.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\reload.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\save.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\settings.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\set.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\volume.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\polyphony.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\memory.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\transpose.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\gauge.h
+
+1272976756 c:\grandorgue.0.3-source\may10th\grandorgue.0.3\images\splash.h
+
+1272976766 source:c:\grandorgue.0.3-source\22nd june\grandorgue.0.3\grandorgue.rc
+	"resource.h"
+	"afxres.h"
+
+1272976766 c:\grandorgue.0.3-source\22nd june\grandorgue.0.3\resource.h
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguecontrol.cpp
+	"GOrgueControl.h"
+	"IniFileConfig.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguecontrol.h
+	<wx/wx.h>
+	"IniFileConfig.h"
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\inifileconfig.h
+	<wx/wx.h>
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguecoupler.cpp
+	"GOrgueCoupler.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguecoupler.h
+	<wx/wx.h>
+	"GOrgueDrawStop.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguedrawstop.h
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrgueDrawable.h"
+	"IniFileConfig.h"
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguedrawable.h
+	<wx/dc.h>
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\grandorguefile.h
+	<vector>
+	<wx/wx.h>
+	<wx/fileconf.h>
+	<wx/filename.h>
+	"GOrguePipe.h"
+	"OrganFile.h"
+	"GOrgueManual.h"
+	"GOrguePushbutton.h"
+	"GOrgueEnclosure.h"
+	"GOrgueWindchest.h"
+	"GOrgueLabel.h"
+	"GOrgueFrameGeneral.h"
+	"GOrgueTremulant.h"
+	"GOrguePiston.h"
+	"GOrgueGeneral.h"
+	"GOrgueDivisionalCoupler.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguepipe.h
+	<wx/wx.h>
+	"GOrgueSound.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguesound.h
+	<wx/wx.h>
+	<wx/stopwatch.h>
+	<map>
+	"RtAudio.h"
+	"OrganFile.h"
+	"RtMidi.h"
+	"GrandOrgueDef.h"
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\rtaudio.h
+	<string>
+	<vector>
+	"RtError.h"
+	<windows.h>
+	<process.h>
+	<pthread.h>
+	<sys/time.h>
+	<sstream>
+	<CoreAudio/AudioHardware.h>
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\rterror.h
+	<exception>
+	<iostream>
+	<string>
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\organfile.h
+	<vector>
+	<wx/fileconf.h>
+	<wx/filename.h>
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrguePushbutton.h"
+	"GOrgueDrawStop.h"
+	"GOrgueCoupler.h"
+	"GOrgueFrameGeneral.h"
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguepushbutton.h
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrgueDrawable.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorgueframegeneral.h
+	"GOrguePushbutton.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\rtmidi.h
+	"RtError.h"
+	<string>
+	<vector>
+	<queue>
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\grandorguedef.h
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguemanual.h
+	<wx/wx.h>
+	<vector>
+	"IniFileConfig.h"
+	"GOrgueStop.h"
+	"GOrgueCoupler.h"
+	"GOrgueDivisional.h"
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguestop.h
+	"IniFileConfig.h"
+	"GOrgueDrawStop.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguedivisional.h
+	"GOrguePushbutton.h"
+	"IniFileConfig.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorgueenclosure.h
+	"GOrgueDrawable.h"
+	"IniFileConfig.h"
+	<wx/wx.h>
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguewindchest.h
+	<wx/wx.h>
+	"IniFileConfig.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguelabel.h
+	<wx/wx.h>
+	"IniFileConfig.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguetremulant.h
+	<wx/wx.h>
+	"GOrguePipe.h"
+	"GOrgueDrawStop.h"
+	"IniFileConfig.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguepiston.h
+	"GOrguePushbutton.h"
+	"GOrgueDrawStop.h"
+	"IniFileConfig.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguegeneral.h
+	"GOrgueFrameGeneral.h"
+	"IniFileConfig.h"
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguedivisionalcoupler.h
+	<wx/wx.h>
+	"GOrgueDrawStop.h"
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguedivisional.cpp
+	"GOrgueDivisional.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"SettingsDialog.h"
+	<wx/docview.h>
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\grandorgue.h
+	"GrandOrgueDef.h"
+	<wx/wx.h>
+	<wx/html/helpctrl.h>
+	<wx/msw/private.h>
+	<wx/msw/registry.h>
+	"GOrgueLCD.h"
+	"GOrgueSound.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFrame.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguelcd.h
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguemeter.h
+	<wx/control.h>
+	<wx/spinctrl.h>
+	"wxGaugeAudio.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\wxgaugeaudio.h
+	<wx/control.h>
+	"GrandOrgueFrame.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\grandorgueframe.h
+	<wx/docview.h>
+	<wx/bitmap.h>
+	<wx/brush.h>
+	<wx/dcmemory.h>
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\settingsdialog.h
+	<vector>
+	<wx/propdlg.h>
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguedivisionalcoupler.cpp
+	"GOrgueDivisionalCoupler.h"
+	"GrandOrgueFile.h"
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguedrawstop.cpp
+	"GOrgueDrawStop.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"MIDIListenDialog.h"
+	<wx/docview.h>
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\midilistendialog.h
+	<wx/wx.h>
+	<wx/tglbtn.h>
+	<wx/spinctrl.h>
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorgueenclosure.cpp
+	<wx/app.h>
+	"GOrgueEnclosure.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"MIDIListenDialog.h"
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorgueframegeneral.cpp
+	"GOrgueFrameGeneral.h"
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguegeneral.cpp
+	"GOrgueGeneral.h"
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguelcd.cpp
+	"GrandOrgue.h"
+	"imon/SG_VFD.h"
+
+1272976696 c:\grandorgue.0.3-source\feb17th2011\trunk\imon\sg_vfd.h
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguelabel.cpp
+	"GOrgueLabel.h"
+	"GrandOrgueFile.h"
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguemanual.cpp
+	"GOrgueManual.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"MIDIListenDialog.h"
+	"GOrgueDivisional.h"
+	<algorithm>
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguemeter.cpp
+	<wx/spinctrl.h>
+	"GOrgueMeter.h"
+	"GOrgueSound.h"
+	"wxGaugeAudio.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueID.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	<wx/msw/regconf.h>
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\grandorgueid.h
+	<wx/wx.h>
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguepipe.cpp
+	"GOrguePipe.h"
+	"GOrgueSound.h"
+	"GrandOrgueFile.h"
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguepiston.cpp
+	"GOrguePiston.h"
+	"GrandOrgueFile.h"
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorgueproperties.cpp
+	"GrandOrgue.h"
+	"GOrgueProperties.h"
+	<wx/statline.h>
+	<wx/html/helpctrl.h>
+	"GrandOrgueFile.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorgueproperties.h
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguepushbutton.cpp
+	"GOrguePushbutton.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"OrganFile.h"
+	"MIDIListenDialog.h"
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguesound.cpp
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"OrganDocument.h"
+	"GrandOrgueFile.h"
+	<wx/msw/regconf.h>
+	"GOrgueSoundCallbackMIDI.h"
+	"GOrgueSoundCallbackAudio.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\organdocument.h
+	<wx/defs.h>
+	<wx/docview.h>
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguesoundcallbackmidi.h
+	<vector>
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguesoundcallbackaudio.h
+	"RtAudio.h"
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguesoundcallbackaudio.cpp
+	"GOrgueSoundCallbackAudio.h"
+	"GOrgueSoundCallbackMIDI.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguesoundcallbackmidi.cpp
+	"GOrgueSoundCallbackMIDI.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueID.h"
+	"GrandOrgueFrame.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFile.h"
+	"GOrgueDivisional.h"
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguestop.cpp
+	"GOrgueStop.h"
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguetremulant.cpp
+	"GOrgueTremulant.h"
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\gorguewindchest.cpp
+	"GOrgueWindchest.h"
+	"GrandOrgueFile.h"
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\grandorgue.cpp
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"GOrgueMeter.h"
+	"OrganView.h"
+	"OrganDocument.h"
+	"SettingsDialog.h"
+	"GrandOrgueFile.h"
+	"GOrgueDivisional.h"
+	<wx/ipc.h>
+	<wx/snglinst.h>
+	<wx/filesys.h>
+	<wx/fs_zip.h>
+	<wx/html/helpctrl.h>
+	<wx/splash.h>
+	<windows.h>
+	<shlobj.h>
+	"zlib.h"
+	<malloc.h>
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\organview.h
+	<wx/docview.h>
+	"OrganPanel.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\organpanel.h
+	<wx/wx.h>
+	<wx/docview.h>
+	"GOrgueDrawStop.h"
+	"GOrguePushbutton.h"
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\zlib.h
+	"zconf.h"
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\grandorgue.rc
+	"resource.h"
+	"afxres.h"
+
+1297922089 c:\grandorgue.0.3-source\feb17th2011\trunk\resource.h
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\grandorguefile.cpp
+	"GrandOrgueFile.h"
+	"OrganFile.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	<wx/progdlg.h>
+	"IniFileConfig.h"
+	"GOrgueThread.h"
+	"OrganDocument.h"
+	<wx/image.h>
+	<wx/mstream.h>
+	"GOrgueMeter.h"
+	"GOrgueDivisional.h"
+	"zlib.h"
+	<math.h>
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\gorguethread.h
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\grandorgueframe.cpp
+	"GrandOrgueFrame.h"
+	"GOrgueMeter.h"
+	"GrandOrgueID.h"
+	"GOrgueSound.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"OrganDocument.h"
+	"SettingsDialog.h"
+	"GOrgueProperties.h"
+	"SplashScreen.h"
+	<wx/dcmemory.h>
+	<wx/menu.h>
+	<wx/mstream.h>
+	<wx/image.h>
+	<wx/toolbar.h>
+	<wx/icon.h>
+	<wx/config.h>
+	<wx/progdlg.h>
+	<wx/html/helpctrl.h>
+	"wx/splash.h"
+	"zlib.h"
+	"images/help.h"
+	"images/open.h"
+	"images/panic.h"
+	"images/properties.h"
+	"images/record.h"
+	"images/reload.h"
+	"images/save.h"
+	"images/settings.h"
+	"images/set.h"
+	"images/volume.h"
+	"images/polyphony.h"
+	"images/memory.h"
+	"images/transpose.h"
+	"images/gauge.h"
+	"images/splash.h"
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\splashscreen.h
+	<wx/wx.h>
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\help.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\open.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\panic.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\properties.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\record.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\reload.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\save.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\settings.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\set.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\volume.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\polyphony.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\memory.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\transpose.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\gauge.h
+
+1272976612 c:\grandorgue.0.3-source\feb17th2011\trunk\images\splash.h
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\images.cpp
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\inifileconfig.cpp
+	"IniFileConfig.h"
+	<wx/fileconf.h>
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\organdocument.cpp
+	"OrganDocument.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"wxGaugeAudio.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFile.h"
+
+1297922088 source:c:\grandorgue.0.3-source\feb17th2011\trunk\organfile.cpp
+	"OrganFile.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrguePipe.h"
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+	"SettingsDialog.h"
+	"OrganDocument.h"
+	<wx/mstream.h>
+	"IniFileConfig.h"
+	"GOrgueDivisional.h"
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\organpanel.cpp
+	"OrganPanel.h"
+	<wx/docview.h>
+	<wx/event.h>
+	"GOrgueDrawStop.h"
+	"GrandOrgueFile.h"
+	<algorithm>
+	<wx/mstream.h>
+	"GOrgueDivisional.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueID.h"
+	"GrandOrgueFrame.h"
+	"OrganDocument.h"
+	"GOrgueMeter.h"
+	"KeyConvert.h"
+
+1297922088 c:\grandorgue.0.3-source\feb17th2011\trunk\keyconvert.h
+
+1297922089 source:c:\grandorgue.0.3-source\feb17th2011\trunk\organview.cpp
+	"OrganView.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"GrandOrgueFile.h"
+	"OrganDocument.h"
+	"GOrgueMeter.h"
+	"OrganPanel.h"
+
+1298459576 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguecontrol.cpp
+	"GOrgueControl.h"
+	"IniFileConfig.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguecontrol.h
+	<wx/wx.h>
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\inifileconfig.h
+	<wx/wx.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguecoupler.cpp
+	"GOrgueCoupler.h"
+	"IniFileConfig.h"
+	"GOrgueSound.h"
+	"GrandOrgueFile.h"
+
+1305808980 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguecoupler.h
+	"GOrgueDrawStop.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedrawstop.h
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrgueDrawable.h"
+	"IniFileConfig.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedrawable.h
+	<wx/dc.h>
+
+1307352322 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguesound.h
+	<wx/wx.h>
+	<wx/stopwatch.h>
+	<map>
+	"RtAudio.h"
+	"RtMidi.h"
+	"GrandOrgueDef.h"
+	"GOrgueReleaseAlignTable.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\rtaudio.h
+	<string>
+	<vector>
+	"RtError.h"
+	<windows.h>
+	<process.h>
+	<pthread.h>
+	<sys/time.h>
+	<sstream>
+	<CoreAudio/AudioHardware.h>
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\rterror.h
+	<exception>
+	<iostream>
+	<string>
+
+1307352322 c:\grandorgue.0.3-source\2011-06-06\trunk\rtmidi.h
+	"RtError.h"
+	<string>
+	<vector>
+	<queue>
+
+1307353546 c:\grandorgue.0.3-source\2011-06-06\trunk\grandorguedef.h
+
+1304255804 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguereleasealigntable.h
+	"GOrgueSound.h"
+
+1307352322 c:\grandorgue.0.3-source\2011-06-06\trunk\grandorguefile.h
+	<vector>
+	<wx/wx.h>
+	<wx/fileconf.h>
+	<wx/filename.h>
+	"GOrgueManual.h"
+
+1305808980 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguemanual.h
+	<wx/wx.h>
+	<vector>
+
+1304255804 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedisplaymetrics.cpp
+	"GOrgueDisplayMetrics.h"
+	"GrandOrgueFile.h"
+	"IniFileConfig.h"
+
+1304255804 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedisplaymetrics.h
+	<wx/wx.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedivisional.cpp
+	"GOrgueDivisional.h"
+	<wx/docview.h>
+	"IniFileConfig.h"
+	"GOrgueCoupler.h"
+	"GOrgueDivisionalCoupler.h"
+	"GOrgueSound.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+	"SettingsDialog.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedivisional.h
+	"GOrguePushbutton.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepushbutton.h
+	<wx/wx.h>
+	"GOrgueControl.h"
+	"GOrgueDrawable.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedivisionalcoupler.h
+	<wx/wx.h>
+	"GOrgueDrawStop.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguestop.h
+	"IniFileConfig.h"
+	"GOrgueDrawStop.h"
+
+1305808980 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguetremulant.h
+	<wx/wx.h>
+	"GOrguePipe.h"
+	"GOrgueDrawStop.h"
+	"IniFileConfig.h"
+
+1305808980 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepipe.h
+	<wx/wx.h>
+	"GOrgueSound.h"
+
+1307352322 c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgue.h
+	"GrandOrgueDef.h"
+	<wx/wx.h>
+	<wx/html/helpctrl.h>
+	<wx/msw/private.h>
+	<wx/msw/registry.h>
+	"GOrgueLCD.h"
+	"GOrgueSound.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFrame.h"
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguelcd.h
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguemeter.h
+	<wx/control.h>
+	<wx/spinctrl.h>
+	"wxGaugeAudio.h"
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\wxgaugeaudio.h
+	<wx/control.h>
+	"GrandOrgueFrame.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgueframe.h
+	<wx/docview.h>
+	<wx/bitmap.h>
+	<wx/brush.h>
+	<wx/dcmemory.h>
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\settingsdialog.h
+	<vector>
+	<wx/propdlg.h>
+
+1298459576 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedivisionalcoupler.cpp
+	"GOrgueDivisionalCoupler.h"
+	"GrandOrgueFile.h"
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguedrawstop.cpp
+	"GOrgueDrawStop.h"
+	<wx/docview.h>
+	"GOrgueDisplayMetrics.h"
+	"GOrguePiston.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+	"MIDIListenDialog.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepiston.h
+	"GOrguePushbutton.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\midilistendialog.h
+	<wx/wx.h>
+	<wx/tglbtn.h>
+	<wx/spinctrl.h>
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueenclosure.cpp
+	<wx/app.h>
+	"GOrgueEnclosure.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"MIDIListenDialog.h"
+	"GOrgueDisplayMetrics.h"
+	"IniFileConfig.h"
+
+1304255804 c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueenclosure.h
+	"GOrgueDrawable.h"
+	<wx/wx.h>
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueframegeneral.cpp
+	"GOrgueFrameGeneral.h"
+	"GOrgueCoupler.h"
+	"GOrgueDivisional.h"
+	"GOrgueDivisionalCoupler.h"
+	"GOrgueGeneral.h"
+	"GOrgueSound.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueframegeneral.h
+	"GOrguePushbutton.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguegeneral.h
+	"GOrgueFrameGeneral.h"
+
+1298459576 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguegeneral.cpp
+	"GOrgueGeneral.h"
+	"IniFileConfig.h"
+
+1297922089 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguelcd.cpp
+	"GrandOrgue.h"
+	"imon/SG_VFD.h"
+
+1272976696 c:\grandorgue.0.3-source\2011-06-06\trunk\imon\sg_vfd.h
+
+1304255804 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguelabel.cpp
+	"GOrgueLabel.h"
+	"GrandOrgueFile.h"
+	"GOrgueDisplayMetrics.h"
+	"IniFileConfig.h"
+
+1304255804 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguelabel.h
+	<wx/wx.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguemanual.cpp
+	"GOrgueManual.h"
+	<algorithm>
+	"GOrgueCoupler.h"
+	"GOrgueDivisional.h"
+	"GOrguePipe.h"
+	"GOrgueSound.h"
+	"GOrgueStop.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"IniFileConfig.h"
+	"MIDIListenDialog.h"
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguemeter.cpp
+	"GOrgueMeter.h"
+	"GOrgueFrameGeneral.h"
+	"GOrgueSound.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+	"GrandOrgueID.h"
+	<wx/msw/regconf.h>
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgueid.h
+	<wx/wx.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepipe.cpp
+	"GOrguePipe.h"
+	"GOrgueTremulant.h"
+	"GOrgueWave.h"
+	"GOrgueWindchest.h"
+	"GOrgueReleaseAlignTable.h"
+	"GrandOrgueFile.h"
+
+1304054888 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguewave.h
+	<wx/wx.h>
+	<vector>
+
+1299324583 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguewindchest.h
+	<wx/wx.h>
+	"IniFileConfig.h"
+
+1298459576 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepiston.cpp
+	"GOrguePiston.h"
+	"GrandOrgueFile.h"
+	"GOrgueDrawStop.h"
+	"GOrgueCoupler.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"IniFileConfig.h"
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueproperties.cpp
+	"GrandOrgue.h"
+	"GOrgueProperties.h"
+	<wx/statline.h>
+	<wx/html/helpctrl.h>
+	"GrandOrgueFile.h"
+
+1305808980 c:\grandorgue.0.3-source\2011-06-06\trunk\gorgueproperties.h
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguepushbutton.cpp
+	"GOrguePushbutton.h"
+	"IniFileConfig.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"MIDIListenDialog.h"
+	"GOrgueDisplayMetrics.h"
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguesound.cpp
+	"GOrgueSound.h"
+	<wx/msw/regconf.h>
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueID.h"
+	"GOrguePipe.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"OrganDocument.h"
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\organdocument.h
+	<wx/defs.h>
+	<wx/docview.h>
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguesoundcallbackaudio.cpp
+	"GOrgueSound.h"
+	"GOrgueEnclosure.h"
+	"GOrguePipe.h"
+	"GOrgueWindchest.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"RtAudio.h"
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguesoundcallbackmidi.cpp
+	"GOrgueSound.h"
+	"GOrgueCoupler.h"
+	"GOrgueDivisional.h"
+	"GOrgueDivisionalCoupler.h"
+	"GOrgueEnclosure.h"
+	"GOrgueGeneral.h"
+	"GOrgueMeter.h"
+	"GOrguePiston.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+	"GrandOrgueID.h"
+	<vector>
+
+1304255804 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguestop.cpp
+	"GOrgueStop.h"
+	"GrandOrgueFile.h"
+	"GOrgueSound.h"
+	"GOrgueDisplayMetrics.h"
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguetremulant.cpp
+	"GOrgueTremulant.h"
+	"GOrgueDisplayMetrics.h"
+
+1304054888 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguewave.cpp
+	"GOrgueWave.h"
+	"GOrgueWaveTypes.h"
+
+1299315878 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguewavetypes.h
+	<wx/wx.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguewindchest.cpp
+	"GOrgueWindchest.h"
+	"GOrgueEnclosure.h"
+	"GrandOrgueFile.h"
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgue.cpp
+	"GrandOrgue.h"
+	"OrganView.h"
+	"OrganDocument.h"
+	"SettingsDialog.h"
+	"GrandOrgueFile.h"
+	"GOrgueDivisional.h"
+	<wx/ipc.h>
+	<wx/snglinst.h>
+	<wx/filesys.h>
+	<wx/fs_zip.h>
+	<wx/splash.h>
+	<windows.h>
+	<shlobj.h>
+	"zlib.h"
+	<malloc.h>
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\organview.h
+	<wx/docview.h>
+	"OrganPanel.h"
+
+1298459576 c:\grandorgue.0.3-source\2011-06-06\trunk\organpanel.h
+	<wx/wx.h>
+	<wx/docview.h>
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\zlib.h
+	"zconf.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1307353312 source:c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgue.rc
+	"resource.h"
+	"afxres.h"
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\resource.h
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\grandorguefile.cpp
+	"GrandOrgueFile.h"
+	<math.h>
+	<wx/progdlg.h>
+	<wx/image.h>
+	<wx/mstream.h>
+	"IniFileConfig.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueCoupler.h"
+	"GOrgueDisplayMetrics.h"
+	"GOrgueDivisional.h"
+	"GOrgueDivisionalCoupler.h"
+	"GOrgueEnclosure.h"
+	"GOrgueFrameGeneral.h"
+	"GOrgueGeneral.h"
+	"GOrgueLabel.h"
+	"GOrgueMeter.h"
+	"GOrguePipe.h"
+	"GOrguePiston.h"
+	"GOrguePushbutton.h"
+	"GOrgueSound.h"
+	"GOrgueStop.h"
+	"GOrgueThread.h"
+	"GOrgueTremulant.h"
+	"GOrgueWave.h"
+	"GOrgueWindchest.h"
+	"OrganDocument.h"
+	"zlib.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\gorguethread.h
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\grandorgueframe.cpp
+	"GrandOrgueFrame.h"
+	<wx/menu.h>
+	<wx/mstream.h>
+	<wx/image.h>
+	<wx/toolbar.h>
+	<wx/icon.h>
+	<wx/config.h>
+	<wx/progdlg.h>
+	<wx/html/helpctrl.h>
+	<wx/splash.h>
+	"GOrgueMeter.h"
+	"GOrguePipe.h"
+	"GOrgueProperties.h"
+	"GOrgueSound.h"
+	"GrandOrgueID.h"
+	"GrandOrgueFile.h"
+	"GrandOrgue.h"
+	"OrganDocument.h"
+	"SettingsDialog.h"
+	"SplashScreen.h"
+	"zlib.h"
+	"images/help.h"
+	"images/open.h"
+	"images/panic.h"
+	"images/properties.h"
+	"images/record.h"
+	"images/reload.h"
+	"images/save.h"
+	"images/settings.h"
+	"images/set.h"
+	"images/volume.h"
+	"images/polyphony.h"
+	"images/memory.h"
+	"images/transpose.h"
+	"images/gauge.h"
+	"images/splash.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\splashscreen.h
+	<wx/wx.h>
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\help.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\open.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\panic.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\properties.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\record.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\reload.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\save.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\settings.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\set.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\volume.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\polyphony.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\memory.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\transpose.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\gauge.h
+
+1272976612 c:\grandorgue.0.3-source\2011-06-06\trunk\images\splash.h
+
+1297922089 source:c:\grandorgue.0.3-source\2011-06-06\trunk\images.cpp
+
+1297922088 source:c:\grandorgue.0.3-source\2011-06-06\trunk\inifileconfig.cpp
+	"IniFileConfig.h"
+	<wx/fileconf.h>
+
+1297922089 source:c:\grandorgue.0.3-source\2011-06-06\trunk\midievents.cpp
+	"MIDIEvents.h"
+
+1297922089 c:\grandorgue.0.3-source\2011-06-06\trunk\midievents.h
+
+1298459576 source:c:\grandorgue.0.3-source\2011-06-06\trunk\midilistendialog.cpp
+	<wx/statline.h>
+	"MIDIListenDialog.h"
+	"GOrgueSound.h"
+	"MIDIEvents.h"
+	"GrandOrgue.h"
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\organdocument.cpp
+	"OrganDocument.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"wxGaugeAudio.h"
+	"GOrgueMeter.h"
+	"GrandOrgueFile.h"
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\organpanel.cpp
+	"OrganPanel.h"
+	<algorithm>
+	<wx/event.h>
+	<wx/mstream.h>
+	"GOrgueCoupler.h"
+	"GOrgueDrawStop.h"
+	"GOrgueDisplayMetrics.h"
+	"GOrgueDivisional.h"
+	"GOrgueDivisionalCoupler.h"
+	"GOrgueDrawStop.h"
+	"GOrgueEnclosure.h"
+	"GOrgueGeneral.h"
+	"GOrgueLabel.h"
+	"GOrgueMeter.h"
+	"GOrguePiston.h"
+	"GOrguePushbutton.h"
+	"GOrgueSound.h"
+	"GOrgueStop.h"
+	"GOrgueTremulant.h"
+	"GrandOrgue.h"
+	"GrandOrgueFile.h"
+	"GrandOrgueFrame.h"
+	"GrandOrgueID.h"
+	"KeyConvert.h"
+	"OrganDocument.h"
+
+1297922088 c:\grandorgue.0.3-source\2011-06-06\trunk\keyconvert.h
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\organview.cpp
+	"OrganView.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GOrgueSound.h"
+	"GrandOrgueFile.h"
+	"OrganDocument.h"
+	"GOrgueMeter.h"
+
+1304255804 source:c:\grandorgue.0.3-source\2011-06-06\trunk\gorguereleasealigntable.cpp
+	"GOrgueReleaseAlignTable.h"
+	<stdlib.h>
+	<stdio.h>
+
+1297922089 source:c:\grandorgue.0.3-source\2011-06-06\trunk\rtaudio.cpp
+	"RtAudio.h"
+	<iostream>
+	<cstdlib>
+	<cstring>
+	<climits>
+	<jack/jack.h>
+	<unistd.h>
+	<cstdio>
+	"include/asiosys.h"
+	"include/asio.h"
+	"include/iasiothiscallresolver.h"
+	"include/asiodrivers.h"
+	<cmath>
+	"include/dsound.h"
+	<assert.h>
+	<algorithm>
+	"tchar.h"
+	<alsa/asoundlib.h>
+	<unistd.h>
+	<unistd.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	"soundcard.h"
+	<errno.h>
+	<math.h>
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiosys.h
+
+1134491546 c:\grandorgue.0.3-source\2011-06-06\trunk\include\asio.h
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\iasiothiscallresolver.h
+	<windows.h>
+	"asiodrvr.h"
+
+948133988 c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiodrvr.h
+	"asiosys.h"
+	"asio.h"
+	<windows.h>
+	"combase.h"
+	"iasiodrv.h"
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\combase.h
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\iasiodrv.h
+	"asiosys.h"
+	"asio.h"
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiodrivers.h
+	"ginclude.h"
+	"CodeFragments.hpp"
+	<windows.h>
+	"asiolist.h"
+	"asiolist.h"
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\ginclude.h
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiolist.h
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\dsound.h
+	<objbase.h>
+	<float.h>
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\rtmidi.cpp
+	"RtMidi.h"
+	<sstream>
+	<CoreMIDI/CoreMIDI.h>
+	<CoreAudio/HostTime.h>
+	<CoreServices/CoreServices.h>
+	<pthread.h>
+	<sys/time.h>
+	<alsa/asoundlib.h>
+	<pthread.h>
+	<sys/time.h>
+	<unistd.h>
+	<dmedia/midi.h>
+	<windows.h>
+	<mmsystem.h>
+	<jack/jack.h>
+	<jack/midiport.h>
+	<jack/ringbuffer.h>
+
+1305808980 source:c:\grandorgue.0.3-source\2011-06-06\trunk\settingsdialog.cpp
+	<wx/spinctrl.h>
+	<wx/tglbtn.h>
+	<wx/bookctrl.h>
+	<wx/numdlg.h>
+	<wx/html/helpctrl.h>
+	<wx/statline.h>
+	<wx/listctrl.h>
+	"MIDIListenDialog.h"
+	"SettingsDialog.h"
+	"GrandOrgue.h"
+	"GrandOrgueFrame.h"
+	"GrandOrgueID.h"
+	"GOrgueSound.h"
+	"MIDIEvents.h"
+
+1297922089 source:c:\grandorgue.0.3-source\2011-06-06\trunk\splashscreen.cpp
+	"SplashScreen.h"
+	"wx/splash.h"
+
+948122484 source:c:\grandorgue.0.3-source\2011-06-06\trunk\include\asio.cpp
+	<string.h>
+	"asiosys.h"
+	"asio.h"
+	"asiodrvr.h"
+	"windows.h"
+	"iasiodrv.h"
+	"asiodrivers.h"
+	"asiodrvr.h"
+
+1272976748 source:c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiodrivers.cpp
+	<string.h>
+	"asiodrivers.h"
+	"iasiodrv.h"
+	"asiolist.h"
+
+1272976748 source:c:\grandorgue.0.3-source\2011-06-06\trunk\include\asiolist.cpp
+	<windows.h>
+	"iasiodrv.h"
+	"asiolist.h"
+
+1272976748 source:c:\grandorgue.0.3-source\2011-06-06\trunk\include\combase.cpp
+	<windows.h>
+	"wxdebug.h"
+	"combase.h"
+
+1272976748 c:\grandorgue.0.3-source\2011-06-06\trunk\include\wxdebug.h
+
+1272976748 source:c:\grandorgue.0.3-source\2011-06-06\trunk\include\iasiothiscallresolver.cpp
+	<new>
+	<assert.h>
+	"iasiothiscallresolver.h"
+
+1307352322 source:c:\grandorgue.0.3-source\2011-06-06\trunk\wxgaugeaudio.cpp
+	"wxGaugeAudio.h"
+	<wx/dcmemory.h>
+	"GrandOrgue.h"
+
