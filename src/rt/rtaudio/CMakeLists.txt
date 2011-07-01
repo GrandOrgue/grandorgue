@@ -1,0 +1,72 @@
+message(STATUS "RtAudio build Configuration")
+
+include_directories(../include)
+
+set(RtAudio_Sources RtAudio.cpp)
+
+if (WIN32)
+   if (RTAUDIO_USE_ASIO)
+      set(RtAudio_Sources ${RtAudio_Sources}
+         ../../../ext/rt/asio/include/register.cpp
+         ../../../ext/rt/asio/include/asiodrivers.cpp
+         ../../../ext/rt/asio/include/asiolist.cpp
+         ../../../ext/rt/asio/include/asio.cpp
+         ../../../ext/rt/asio/include/combase.cpp
+         ../../../ext/rt/asio/include/debugmessage.cpp
+         ../../../ext/rt/asio/include/dllentry.cpp
+         asiohelpers/include/iasiothiscallresolver.cpp)
+   endif ()
+endif ()
+
+add_library(RtAudio STATIC ${RtAudio_Sources})
+
+if (WIN32)
+
+   message(STATUS "  Building a Windows configuration")
+   message(STATUS "    Support for DirectSound   : ${RTAUDIO_USE_DSOUND}")
+   message(STATUS "    Support for Asio          : ${RTAUDIO_USE_ASIO}")
+
+   if (RTAUDIO_USE_DSOUND)
+      add_definitions(-D__WINDOWS_DS__)
+      include_directories(../../../ext/rt/directx)
+      target_link_libraries(RtAudio dsound)
+   endif ()
+
+   if (RTAUDIO_USE_ASIO)
+      add_definitions(-D__WINDOWS_ASIO__)
+      include_directories(../../../ext/rt/asio)
+      include_directories(../../../ext/rt/asio/include)
+      include_directories(asiohelpers)
+   endif ()
+
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+   message(STATUS "  Building a Linux configuration")
+   message(STATUS "    Support for Jack          : ${RTAUDIO_USE_JACK}")
+   message(STATUS "    Support for Alsa          : ${RTAUDIO_USE_ALSA}")
+   message(STATUS "    Support for OSS           : ${RTAUDIO_USE_OSS}")
+
+   if (RTAUDIO_USE_JACK)
+      add_definitions(-D__UNIX_JACK__)
+      target_link_libraries(RtAudio jack)
+   endif ()
+
+   if (RTAUDIO_USE_ALSA)
+      add_definitions(-D__LINUX_ALSA__)
+      target_link_libraries(RtAudio asound)
+   endif ()
+
+   if (RTAUDIO_USE_OSS)
+      add_definitions(-D__LINUX_OSS__)
+      target_link_libraries(RtAudio aoss)
+   endif ()
+
+   target_link_libraries(RtAudio pthread)
+
+else ()
+
+   message(FATAL_ERROR "  Unknown/unsupported build configuration")
+
+endif ()
+
+message(STATUS "============================================================================")
