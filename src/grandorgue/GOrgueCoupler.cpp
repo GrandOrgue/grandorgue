@@ -56,10 +56,10 @@ void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, int firstValidManua
 
 }
 
-void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
 
-	GOrgueDrawstop::Save(cfg, prefix, wxT("Coupler"));
+	GOrgueDrawstop::Save(cfg, prefix, group);
 
 }
 

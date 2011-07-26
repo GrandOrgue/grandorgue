@@ -43,9 +43,9 @@ void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetr
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 }
 
-void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
-	GOrgueDrawstop::Save(cfg, prefix, wxT("Tremulant"));
+	GOrgueDrawstop::Save(cfg, prefix, group);
 }
 
 bool GOrgueTremulant::Set(bool on)

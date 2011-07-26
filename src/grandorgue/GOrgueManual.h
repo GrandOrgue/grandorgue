@@ -71,6 +71,7 @@ public:
 
 	GOrgueManual();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics, int manualNumber);
+	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Set(int note, bool on, bool pretend = false, int depth = 0, GOrgueCoupler* prev = 0);
 	void MIDI(void);
 	~GOrgueManual(void);

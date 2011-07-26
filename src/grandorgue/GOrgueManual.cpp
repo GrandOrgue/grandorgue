@@ -684,3 +684,27 @@ bool GOrgueManual::IsDisplayed()
 	return m_displayed;
 
 }
+
+void GOrgueManual::Save(IniFileConfig& cfg, bool prefix, wxString group)
+{
+	wxString buffer;
+
+	for (unsigned i = 0; i < m_nb_stops; i++)
+	{
+		buffer.Printf(wxT("Stop%03d"), m_stops[i]->ObjectNumber);
+		m_stops[i]->Save(cfg, prefix, buffer);
+	}
+
+	m_couplers = new GOrgueCoupler[m_nb_couplers];
+	for (unsigned i = 0; i < m_nb_couplers; i++)
+	{
+                buffer.Printf(wxT("Coupler%03d"), m_couplers[i].ObjectNumber);
+		m_couplers[i].Save(cfg, prefix, buffer);
+	}
+
+	for (unsigned i = 0; i < m_nb_divisionals; i++)
+	{
+		buffer.Printf(wxT("Divisional%03d"), m_divisionals[i].ObjectNumber);
+		m_divisionals[i].Save(cfg, prefix, buffer);
+	}
+}
