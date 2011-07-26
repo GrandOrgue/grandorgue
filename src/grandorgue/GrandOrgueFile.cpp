@@ -156,7 +156,7 @@ void GrandOrgueFile::readOrganFile()
 	m_NumberOfReversiblePistons = ini.ReadInteger(group, wxT("NumberOfReversiblePistons"), 0, 32);
 	m_NumberOfLabels = ini.ReadInteger(group, wxT("NumberOfLabels"), 0, 16);
 	m_NumberOfGenerals = ini.ReadInteger(group, wxT("NumberOfGenerals"), 0, 99);
-	m_NumberOfFrameGenerals = 512;	// we never want this to change, what's the point?
+	m_NumberOfFrameGenerals = 999;	// we never want this to change, what's the point?
 	m_NumberOfDivisionalCouplers = ini.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, 8);
 	m_AmplitudeLevel = ini.ReadInteger(group, wxT("AmplitudeLevel"), 0, 1000);
 	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntermanualCouplers"));
@@ -215,9 +215,8 @@ void GrandOrgueFile::readOrganFile()
 	m_framegeneral = new GOrgueFrameGeneral[m_NumberOfFrameGenerals];
 	for (int i = 0; i < m_NumberOfFrameGenerals; i++)
 	{
-		buffer.Printf(wxT("General%03d"), i + 100);
+		buffer.Printf(wxT("FrameGeneral%03d"), i + 1);
 		m_framegeneral[i].Load(ini, buffer);
-		m_framegeneral[i].ObjectNumber = i + 100;
 	}
 
 	m_divisionalcoupler = new GOrgueDivisionalCoupler[m_NumberOfDivisionalCouplers];
@@ -534,54 +533,67 @@ void GrandOrgueFile::Revert(wxFileConfig& cfg)
 
 void GrandOrgueFile::Save(const wxString& file)
 {
-    wxFileName fn(file);
-    bool prefix = true;
 
-    if (fn.GetExt().CmpNoCase(wxT("organ")))
-    {
-        if (::wxFileExists(file) && !::wxRemoveFile(file))
-        {
-            ::wxLogError(_("Could not write to '%s'"), file.c_str());
-            return;
-        }
-        prefix = false;
-    }
+	wxFileName fn(file);
+	wxString buffer;
+	bool prefix = true;
 
-    wxLog::EnableLogging(false);
-    wxFileConfig cfg(wxEmptyString, wxEmptyString, file, wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
-    wxLog::EnableLogging(true);
-    if (prefix)
-        Revert(cfg);
+	if (fn.GetExt().CmpNoCase(wxT("organ")))
+	{
+		if (::wxFileExists(file) && !::wxRemoveFile(file))
+		{
+			::wxLogError(_("Could not write to '%s'"), file.c_str());
+			return;
+		}
+		prefix = false;
+	}
+
+	wxLog::EnableLogging(false);
+	wxFileConfig cfg(wxEmptyString, wxEmptyString, file, wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
+	wxLog::EnableLogging(true);
+	if (prefix)
+		Revert(cfg);
 	m_b_customized = true;
 
 	IniFileConfig aIni(&cfg);
-    aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchName"), m_ChurchName);
-    aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
-    aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
-    aIni.SaveHelper(prefix, wxT("Organ"), wxT("NumberOfFrameGenerals"), m_NumberOfFrameGenerals);
-    aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), g_sound->GetVolume());
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchName"), m_ChurchName);
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("NumberOfFrameGenerals"), m_NumberOfFrameGenerals);
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), g_sound->GetVolume());
 
     int i, j;
 
 	for (i = m_FirstManual; i <= m_NumberOfManuals; i++)
 	{
-		for (j = 0; j < m_manual[i].GetStopCount(); j++)
-			m_manual[i].GetStop(j)->Save(aIni, prefix);
-		for (j = 0; j < m_manual[i].GetCouplerCount(); j++)
-			m_manual[i].GetCoupler(j)->Save(aIni, prefix);
-		for (j = 0; j < m_manual[i].GetDivisionalCount(); j++)
-			m_manual[i].GetDivisional(j)->Save(aIni, prefix);
+		buffer.Printf(wxT("Manual%03d"), i);
+		m_manual[i].Save(aIni, prefix, buffer);
 	}
 	for (j = 0; j < m_NumberOfTremulants; j++)
-		m_tremulant[j].Save(aIni, prefix);
+	{
+		buffer.Printf(wxT("Tremulant%03d"), j + 1);
+		m_tremulant[j].Save(aIni, prefix, buffer);
+	}
 	for (j = 0; j < m_NumberOfDivisionalCouplers; j++)
-		m_divisionalcoupler[j].Save(aIni, prefix);
+	{
+		buffer.Printf(wxT("DivisionalCoupler%03d"), j + 1);
+		m_divisionalcoupler[j].Save(aIni, prefix, buffer);
+	}
 	for (j = 0; j < m_NumberOfGenerals; j++)
-		m_general[j].Save(aIni, prefix);
+	{
+		buffer.Printf(wxT("General%03d"), j + 1);
+		m_general[j].Save(aIni, prefix, buffer);
+	}
 	for (j = 0; j < m_NumberOfFrameGenerals; j++)
-		m_framegeneral[j].Save(aIni, prefix);
+	{
+		buffer.Printf(wxT("FrameGeneral%03d"), j + 1);
+		m_framegeneral[j].Save(aIni, prefix, buffer);
+	}
 	for (j = 0; j < m_NumberOfReversiblePistons; j++)
-		m_piston[j].Save(aIni, prefix);
+	{
+		buffer.Printf(wxT("ReversiblePiston%03d"), j + 1);
+		m_piston[j].Save(aIni, prefix, buffer);
+	}
 
 }
 

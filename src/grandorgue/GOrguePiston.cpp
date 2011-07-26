@@ -69,9 +69,9 @@ void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 
 }
 
-void GOrguePiston::Save(IniFileConfig& cfg, bool prefix)
+void GOrguePiston::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
-	GOrguePushbutton::Save(cfg, prefix, wxT("ReversiblePiston"));
+	GOrguePushbutton::Save(cfg, prefix, group);
 }
 
 void GOrguePiston::Push(int WXUNUSED(depth))

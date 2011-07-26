@@ -23,28 +23,28 @@
 #ifndef GORGUEFRAMEGENERAL_H
 #define GORGUEFRAMEGENERAL_H
 
+#include <vector>
 #include "GOrguePushbutton.h"
 
 class IniFileConfig;
 
 class GOrgueFrameGeneral : public GOrguePushbutton
 {
-public:
 
+private:
+	std::vector<int> m_Stops;
+	std::vector<int> m_StopManual;
+	std::vector<int> m_Couplers;
+	std::vector<int> m_CouplerManual;
+	std::vector<int> m_Tremulants;
+	std::vector<int> m_DivisionalCouplers;
+
+public:
 	GOrgueFrameGeneral();
 	void Load(IniFileConfig& cfg, wxString group);
-	void Save(IniFileConfig& cfg, bool prefix, wxString group = wxT("General"));
+	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Push(int depth = 0);
 
-	int NumberOfStops;
-	int NumberOfCouplers;
-	int NumberOfTremulants;
-	int NumberOfDivisionalCouplers;
-
-	wxByte stop[7][8][2];
-	wxByte coupler[7][2][2];
-	wxByte tremulant[2][2];
-	wxByte divisionalcoupler[1][2];
 };
 
 #endif /* GORGUEFRAMEGENERAL_H */

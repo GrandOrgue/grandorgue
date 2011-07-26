@@ -35,10 +35,10 @@ bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueTyp
 		m_cfg->SetPath(wxT("/"));
 		if (!m_cfg->HasGroup(group))
 		{//JB: strncasecmp was strnicmp
-			if (group.length() >= 8 && !group.Mid(0, 7).CmpNoCase(wxT("General")) && group[7] > wxT('0'))	// FrameGeneral groups aren't required.
+			if (group.length() >= 12 && !group.Mid(0, 12).CmpNoCase(wxT("FrameGeneral")))	// FrameGeneral groups aren't required.
 			{
-			    if (type == ORGAN_INTEGER)
-                    *(wxInt16*)retval = 0;
+				if (type == ORGAN_INTEGER)
+					*(wxInt16*)retval = 0;
 				return false;
 			}
 			throw -1;
@@ -239,31 +239,31 @@ wxInt16 IniFileConfig::ReadFontSize(wxString group, wxString key, bool required)
 
 void IniFileConfig::SaveHelper(bool prefix, wxString group, wxString key, wxString value)
 {
-    wxString str = group + wxT('/') + key;
-    if (m_cfg->Read(str) != value)
-    {
-        if (prefix)
-        {
-            m_cfg->Write(wxT('_') + str, value);
-        }
-        else
-            m_cfg->Write(str, value);
-    }
+	wxString str = group + wxT('/') + key;
+	if (m_cfg->Read(str) != value)
+	{
+		if (prefix)
+		{
+			m_cfg->Write(wxT('_') + str, value);
+		}
+		else
+			m_cfg->Write(str, value);
+	}
 }
 
 void IniFileConfig::SaveHelper( bool prefix, wxString group, wxString key, int value, bool sign, bool force)
 {
-    wxString str;
-    if (force)
-        str.Printf(wxT("%03d"), value);
-    else if (sign)
-    {
-        if (value >= 0)
-            str.Printf(wxT("+%03d"), value);
-        else
-            str.Printf(wxT("-%03d"), -value);
-    }
-    else
-        str.Printf(wxT("%d"), value);
-    SaveHelper(prefix, group, key, str);
+	wxString str;
+	if (force)
+		str.Printf(wxT("%03d"), value);
+	else if (sign)
+	{
+		if (value >= 0)
+			str.Printf(wxT("+%03d"), value);
+		else
+			str.Printf(wxT("-%03d"), -value);
+	}
+	else
+		str.Printf(wxT("%d"), value);
+	SaveHelper(prefix, group, key, str);
 }

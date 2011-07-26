@@ -32,7 +32,6 @@ class GOrgueTremulant : public GOrgueDrawstop
 {
 
 private:
-
 	wxInt32 Period;
 	wxInt16 StartRate;
 	wxInt16 StopRate;
@@ -40,11 +39,10 @@ private:
 	GOrguePipe* pipe;
 
 public:
-
 	GOrgueTremulant();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
-    void Save(IniFileConfig& cfg, bool prefix);
-    bool Set(bool on);
+	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	bool Set(bool on);
 
 };
 

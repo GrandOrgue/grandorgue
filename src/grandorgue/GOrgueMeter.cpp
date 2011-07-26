@@ -42,11 +42,11 @@ BEGIN_EVENT_TABLE(GOrgueMeter, wxControl)
 	EVT_TEXT(ID_METER_AUDIO_SPIN, GOrgueMeter::OnVolume)
 	EVT_TEXT(ID_METER_POLY_SPIN,  GOrgueMeter::OnPolyphony)
 	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueMeter::OnFrame)
-    EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueMeter::OnTranspose)
+	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueMeter::OnTranspose)
 	EVT_TEXT_ENTER(ID_METER_AUDIO_SPIN, GOrgueMeter::OnEnter)
 	EVT_TEXT_ENTER(ID_METER_POLY_SPIN,  GOrgueMeter::OnEnter)
 	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN,  GOrgueMeter::OnEnter)
-    EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueMeter::OnEnter)
+	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueMeter::OnEnter)
 END_EVENT_TABLE()
 
 GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
@@ -65,17 +65,17 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 
 	switch (count)
 	{
-        case 0:
-            m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
-            break;
-		case 1:
-		case 3:
-		    m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 1, (count == 2) ? 512 : 100);
-            break;
-		case 2:
-            m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(56, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 4096);
-            break;
-    }
+	case 0:
+		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
+		break;
+	case 1:
+	case 3:
+		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 1, (count == 1) ? 999 : 100);
+		break;
+	case 2:
+		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(56, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 4096);
+		break;
+	}
 
 	topSizer->Add(m_spin, 0, wxALIGN_CENTER_VERTICAL);
 
@@ -96,18 +96,18 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 
 	switch (count)
 	{
-        case 0:
-            SetValue(0);
-            break;
-		case 1:
-            SetValue(1);
-            break;
-		case 2:
-            SetValue(wxConfig::Get()->Read(wxT("PolyphonyLimit"), 2048));
-            break;
-		case 3:
-            SetValue(wxConfig::Get()->Read(wxT("Volume"), 50));
-            break;
+	case 0:
+		SetValue(0);
+		break;
+	case 1:
+		SetValue(1);
+		break;
+	case 2:
+		SetValue(wxConfig::Get()->Read(wxT("PolyphonyLimit"), 2048));
+		break;
+	case 3:
+		SetValue(wxConfig::Get()->Read(wxT("Volume"), 50));
+		break;
 	}
 }
 
@@ -200,11 +200,11 @@ void GOrgueMeter::OnTranspose(wxCommandEvent& event)
 		return;
 #endif
 	}
-    if (g_sound)
-    {
-        g_sound->GetMidi().SetTranspose(n);
+	if (g_sound)
+	{
+		g_sound->GetMidi().SetTranspose(n);
 		g_sound->ResetSound(organfile);
-    }
+	}
 }
 void GOrgueMeter::OnEnter(wxCommandEvent& event)
 {

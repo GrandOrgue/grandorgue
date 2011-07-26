@@ -31,7 +31,7 @@ class GOrgueStop : public GOrgueDrawstop
 public:
 	GOrgueStop();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
-	void Save(IniFileConfig& cfg, bool prefix);
+	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	bool Set(bool on);
 	~GOrgueStop(void);
 

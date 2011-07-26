@@ -37,7 +37,7 @@ public:
 
 	GOrgueCoupler();
 	void Load(IniFileConfig& cfg, wxString group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
-	void Save(IniFileConfig& cfg, bool prefix);
+	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	bool Set(bool on);
 
 	bool UnisonOff;

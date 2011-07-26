@@ -29,8 +29,8 @@ void GOrgueGeneral::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetric
 	GOrguePushbutton::Load(cfg, group, displayMetrics);
 }
 
-void GOrgueGeneral::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueGeneral::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
-    GOrguePushbutton::Save(cfg, prefix, wxT("General"));
-    GOrgueFrameGeneral::Save(cfg, prefix);
+	GOrguePushbutton::Save(cfg, prefix, group);
+	GOrgueFrameGeneral::Save(cfg, prefix, group);
 }

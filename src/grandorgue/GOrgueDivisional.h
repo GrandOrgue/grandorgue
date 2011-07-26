@@ -23,6 +23,7 @@
 #ifndef GORGUEDIVISIONAL_H
 #define GORGUEDIVISIONAL_H
 
+#include <vector>
 #include "GOrguePushbutton.h"
 
 class GOrgueManual;
@@ -36,17 +37,13 @@ public:
 
 	int m_DivisionalNumber;
 	int m_manualNumber;
-	int NumberOfStops;
-	int NumberOfCouplers;
-	int NumberOfTremulants;
-
-	wxByte stop[8][2];
-	wxByte coupler[2][2];
-	wxByte tremulant[2][2];
+	std::vector<int> m_Stops;
+	std::vector<int> m_Couplers;
+	std::vector<int> m_Tremulants;
 
 	GOrgueDivisional();
 	void Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, GOrgueDisplayMetrics* displayMetrics);
-	void Save(IniFileConfig& cfg, bool prefix, wxString group = wxT("Divisional"));
+	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Push(int depth = 0);
 
 };
