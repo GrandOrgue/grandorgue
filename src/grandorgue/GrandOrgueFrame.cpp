@@ -477,7 +477,7 @@ void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
 
 void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
 {
-	//
+	m_meters[2]->OnFrame(event);
 }
 
 void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
