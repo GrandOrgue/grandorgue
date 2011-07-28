@@ -117,16 +117,19 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 
 	for (unsigned i = 0; i < m_nb_stops; i++)
 	{
-		if (!m_stops[i]->m_auto)
+		if (!m_stops[i]->m_Auto)
 			continue;
 		for (unsigned j = 0; j < m_nb_stops; j++)
 		{
 			if (i == j)
 				continue;
-			if (m_stops[j]->FirstAccessiblePipeLogicalKeyNumber < m_stops[i]->FirstAccessiblePipeLogicalKeyNumber + m_stops[i]->NumberOfAccessiblePipes &&
-					m_stops[j]->FirstAccessiblePipeLogicalKeyNumber + m_stops[j]->NumberOfAccessiblePipes > m_stops[i]->FirstAccessiblePipeLogicalKeyNumber)
+			if (
+					(m_stops[j]->FirstAccessiblePipeLogicalKeyNumber < m_stops[i]->FirstAccessiblePipeLogicalKeyNumber + m_stops[i]->NumberOfAccessiblePipes)
+					&&
+					(m_stops[j]->FirstAccessiblePipeLogicalKeyNumber + m_stops[j]->NumberOfAccessiblePipes > m_stops[i]->FirstAccessiblePipeLogicalKeyNumber)
+				)
 			{
-				m_stops[i]->m_auto = m_stops[j]->m_auto = false;
+				m_stops[i]->m_Auto = m_stops[j]->m_Auto = false;
 				break;
 			}
 		}
@@ -707,10 +710,4 @@ void GOrgueManual::Save(IniFileConfig& cfg, bool prefix, wxString group)
 		buffer.Printf(wxT("Divisional%03d"), m_divisionals[i].ObjectNumber);
 		m_divisionals[i].Save(cfg, prefix, buffer);
 	}
-}
-
-void GOrgueManual::LoadData(wxProgressDialog& progress)
-{
-	for (unsigned i = 0; i < m_nb_stops; i++)
-	    m_stops[i]->LoadData(progress);
 }

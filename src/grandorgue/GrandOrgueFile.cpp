@@ -320,11 +320,27 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	try
 	{
 
+		/* Figure out how many pipes there are */
+		unsigned nb_pipes = 0;
+		unsigned nb_loaded_pipes = 0;
+		for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+			for (int j = 0; j < m_manual[i].GetStopCount(); j++)
+				nb_pipes += m_manual[i].GetStop(j)->GetPipeCount();
+
 	  	/* Load pipes */
 		for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
-		{
-			m_manual[i].LoadData(dlg);
-		}
+			for (int j = 0; j < m_manual[i].GetStopCount(); j++)
+				for (unsigned k = 0; k < m_manual[i].GetStop(j)->GetPipeCount(); k++)
+				{
+					GOrguePipe* pipe = m_manual[i].GetStop(j)->GetPipe(k);
+					pipe->LoadData();
+					nb_loaded_pipes++;
+					dlg.Update(
+						(nb_loaded_pipes << 15) / (int)(nb_pipes + 1)
+						,pipe->GetFilename()
+						);
+				}
+
 	}
 	catch (wxString error_)
 	{
