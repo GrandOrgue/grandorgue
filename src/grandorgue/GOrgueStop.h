@@ -28,8 +28,6 @@
 #include "IniFileConfig.h"
 #include "GOrgueDrawStop.h"
 
-class wxProgressDialog;
-
 class GOrguePipe;
 
 class GOrgueStop : public GOrgueDrawstop
