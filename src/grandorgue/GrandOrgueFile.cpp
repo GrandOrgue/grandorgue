@@ -335,10 +335,18 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 					GOrguePipe* pipe = m_manual[i].GetStop(j)->GetPipe(k);
 					pipe->LoadData();
 					nb_loaded_pipes++;
-					dlg.Update(
-						(nb_loaded_pipes << 15) / (int)(nb_pipes + 1)
+					dlg.Update
+						((nb_loaded_pipes << 15) / (nb_pipes + 1)
 						,pipe->GetFilename()
 						);
+#ifdef __VFD__
+					GOrgueLCD_WriteLineTwo
+						(wxString::Format
+							("Loading %d%%"
+							,(nb_loaded_pipes * 100) / (nb_pipes + 1);
+							)
+						);
+#endif
 				}
 
 	}

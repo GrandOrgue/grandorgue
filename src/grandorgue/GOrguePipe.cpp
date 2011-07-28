@@ -297,11 +297,6 @@ void GOrguePipe::Set(bool on)
 void GOrguePipe::LoadData()
 {
 
-#ifdef __VFD__
-	int n=(((m_NumberOfLoadedPipes) << 15) / (int)(m_NumberOfPipes))/327;
-	GOrgueLCD_WriteLineTwo(wxString::Format("Loading %d%%", n));
-#endif
-
 	if (m_filename.StartsWith(wxT("REF:")))
 	{
 		int manual, stop, pipe;
@@ -315,6 +310,7 @@ void GOrguePipe::LoadData()
 
 		return;
 	}
+
 	wxLogDebug(_("Loading file %s"), m_filename.c_str());
 
 	GOrgueWave wave;
