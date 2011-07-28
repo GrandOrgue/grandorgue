@@ -23,15 +23,26 @@
 #ifndef GORGUESTOP_H
 #define GORGUESTOP_H
 
+#include <vector>
+#include <wx/wx.h>
 #include "IniFileConfig.h"
 #include "GOrgueDrawStop.h"
 
+class wxProgressDialog;
+
+class GOrguePipe;
+
 class GOrgueStop : public GOrgueDrawstop
 {
+private:
+	std::vector<GOrguePipe*> m_pipes;
+
 public:
 	GOrgueStop();
+	GOrguePipe* GetPipe(unsigned index);
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	void LoadData(wxProgressDialog& progress);
 	bool Set(bool on);
 	~GOrgueStop(void);
 
@@ -45,7 +56,6 @@ public:
 	wxInt16 FirstAccessiblePipeLogicalKeyNumber;
 	wxInt16 NumberOfAccessiblePipes;
 	wxInt16 WindchestGroup;
-	short* pipe;
 };
 
 #endif /* GORGUESTOP_H_ */

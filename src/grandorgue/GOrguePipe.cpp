@@ -20,12 +20,17 @@
  * MA 02111-1307, USA.
  */
 
+#include <wx/progdlg.h>
 #include "GOrguePipe.h"
+#include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueWave.h"
 #include "GOrgueWindchest.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GrandOrgueFile.h"
+
+int GOrguePipe::m_NumberOfPipes = 0;
+int GOrguePipe::m_NumberOfLoadedPipes = 0;
 
 extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
@@ -113,8 +118,13 @@ GOrguePipe::~GOrguePipe()
 	FREE_AND_NULL(m_ra_table);
 }
 
-GOrguePipe::GOrguePipe()
+GOrguePipe::GOrguePipe(wxString filename, bool percussive, int windchestGroup, int amplitude)
 {
+	m_filename = filename;
+	m_percussive = percussive;
+	m_WindchestGroup = windchestGroup;
+	m_amplitude = amplitude;
+	m_ref = NULL;
 
 	memset(&m_attack, 0, sizeof(m_attack));
 	memset(&m_loop, 0, sizeof(m_loop));
@@ -124,12 +134,11 @@ GOrguePipe::GOrguePipe()
 	pitch = 0;
 	sampler = NULL;
 	instances = 0;
-	WindchestGroup = 0;
 	ra_amp = 0;
 	ra_shift = 0;
 	m_SampleRate = 0;
 	m_Channels = 0;
-
+	m_NumberOfPipes++;
 }
 
 void GOrguePipe::SetOn()
@@ -148,7 +157,7 @@ void GOrguePipe::SetOn()
 	if (instances < 0)
 	{
 //		sampler->stage = GSS_RELEASE;
-		throw (char*)"regression - this should be impossible";
+		throw (wxString)_("regression - this should be impossible");
 	}
 
 	sampler->pipe = this;
@@ -163,7 +172,7 @@ void GOrguePipe::SetOn()
 //	else
 //	{
 //		sampler->stage = GSS_ATTACK;
-//		if (g_sound->HasRandomPipeSpeech() && !g_sound->windchests[WindchestGroup])
+//		if (g_sound->HasRandomPipeSpeech() && !g_sound->windchests[m_WindchestGroup])
 //			sampler->position = rand() & 0x78;
 //	}
 
@@ -173,8 +182,8 @@ void GOrguePipe::SetOn()
 
 	this->sampler = sampler;
 
-	sampler->next = g_sound->windchests[WindchestGroup];
-	g_sound->windchests[WindchestGroup] = sampler;
+	sampler->next = g_sound->windchests[m_WindchestGroup];
+	g_sound->windchests[m_WindchestGroup] = sampler;
 
 	if (instances == 0)
 		instances++;
@@ -195,7 +204,7 @@ void GOrguePipe::SetOff()
 	if (instances > 0)
 		return;
 
-	double vol = organfile->GetWindchest(WindchestGroup)->GetVolume();
+	double vol = organfile->GetWindchest(m_WindchestGroup)->GetVolume();
 	if (vol)
 	{
 
@@ -210,7 +219,7 @@ void GOrguePipe::SetOff()
 			int time = organfile->GetElapsedTime() - sampler->time;
 			new_sampler->time = organfile->GetElapsedTime();
 			new_sampler->fademax = ra_amp;
-			bool not_a_tremulant = (WindchestGroup >= organfile->GetTremulantCount());
+			bool not_a_tremulant = (m_WindchestGroup >= organfile->GetTremulantCount());
 			if (g_sound->HasScaledReleases() && not_a_tremulant)
 			{
 				if (time < 256)
@@ -252,8 +261,8 @@ void GOrguePipe::SetOff()
 				/* detached releases are disabled (or this isn't really a pipe)
 				 * so put the release on the same windchest as the pipe (which
 				 * means it will still be affected by tremulants - yuck). */
-				new_sampler->next = g_sound->windchests[WindchestGroup];
-				g_sound->windchests[WindchestGroup] = new_sampler;
+				new_sampler->next = g_sound->windchests[m_WindchestGroup];
+				g_sound->windchests[m_WindchestGroup] = new_sampler;
 			}
 
 		}
@@ -279,23 +288,51 @@ void GOrguePipe::SetOff()
 
 void GOrguePipe::Set(bool on)
 {
+	if (m_ref)
+	{
+		m_ref->Set(on);
+		return;
+	}
 	if (on)
 		SetOn();
 	else
 		SetOff();
 }
 
-void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
+void GOrguePipe::LoadData(wxProgressDialog& progress)
 {
+	int amp = m_amplitude;
+
+	m_NumberOfLoadedPipes++;
+	progress.Update((m_NumberOfLoadedPipes << 15) / (int)(m_NumberOfPipes + 1), m_filename);
+#ifdef __VFD__
+	int n=(((m_NumberOfLoadedPipes) << 15) / (int)(m_NumberOfPipes))/327;
+	GOrgueLCD_WriteLineTwo(wxString::Format("Loading %d%%", n));
+#endif
+
+	if (m_filename.StartsWith(wxT("REF:")))
+	{
+		int manual, stop, pipe;
+		sscanf(m_filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
+		if ((manual < organfile->GetFirstManualIndex()) || (manual > organfile->GetManualAndPedalCount()) ||
+			(stop <= 0) || (stop > organfile->GetManual(manual)->GetStopCount()) ||
+			(pipe <= 0) || (pipe > organfile->GetManual(manual)->GetStop(stop-1)->NumberOfLogicalPipes))
+			throw (wxString)_("Invalid reference ") + m_filename;
+
+		m_ref = organfile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
+
+		return;
+	}
+	wxLogDebug(_("Loading file %s"), m_filename.c_str());
 
 	GOrgueWave wave;
-	wave.Open(filename);
+	wave.Open(m_filename);
 
 	/* allocate data to work with */
 	unsigned totalDataSize = wave.GetLength() * sizeof(wxInt16) * wave.GetChannels();
 	wxInt16* data = (wxInt16*)malloc(totalDataSize);
 	if (data == NULL)
-		throw (char*)"< out of memory allocating wave";
+		throw (wxString)_("< out of memory allocating wave");
 
 	memset(&m_loop, 0, sizeof(m_loop));
 	memset(&m_attack, 0, sizeof(m_attack));
@@ -309,7 +346,7 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 
 		m_Channels = wave.GetChannels();
 		if (m_Channels < 1 || m_Channels > 2)
-			throw (char*)"< More than 2 channels in";
+			throw (wxString)_("< More than 2 channels in");
 
 		/* FIXME: This code was present in the original version (however it
 		 * has been modified extremely heavily).
@@ -347,7 +384,7 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 			m_loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
 			m_loop.data = (unsigned char*)malloc(loopSamplesInMem * sizeof(wxInt16) * m_Channels);
 			if (m_loop.data == NULL)
-				throw (char*)"< out of memory allocating loop";
+				throw (wxString)_("< out of memory allocating loop");
 			memcpy(m_loop.data,
 				&data[loopStart * m_Channels],
 				m_loop.size);
@@ -367,7 +404,7 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 			m_release.size = (int)releaseSamples * sizeof(wxInt16) * m_Channels;
 			m_release.data = (unsigned char*)malloc(releaseSamplesInMem * sizeof(wxInt16) * m_Channels);
 			if (m_release.data == NULL)
-				throw (char*)"< out of memory allocating release";
+				throw (wxString)_("< out of memory allocating release");
 			memcpy(m_release.data,
 				&data[(wave.GetLength() - releaseSamples) * m_Channels],
 				m_release.size);
@@ -384,7 +421,7 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 		assert((unsigned)m_attack.size <= totalDataSize); /* can be equal for percussive samples */
 		m_attack.data = (unsigned char*)malloc(attackSamplesInMem * sizeof(wxInt16) * m_Channels);
 		if (m_attack.data == NULL)
-			throw (char*)"< out of memory allocating attack";
+			throw (wxString)_("< out of memory allocating attack");
 
 		if (attackSamplesInMem <= wave.GetLength())
 		{
@@ -444,9 +481,9 @@ void GOrguePipe::LoadFromFile(const wxString& filename, int amp)
 			ComputeReleaseAlignmentInfo();
 
 	}
-	catch (char* error)
+	catch (wxString error)
 	{
-		fprintf(stderr, "caught exception: %s\n", error);
+		wxLogError(_("caught exception: %s\n"), error.c_str());
 		FREE_AND_NULL(data);
 		FREE_AND_NULL(m_attack.data);
 		FREE_AND_NULL(m_loop.data);
@@ -472,11 +509,6 @@ short SynthTrem(double amp, double angle)
 short SynthTrem(double amp, double angle, double fade)
 {
 	return (short)(fade * amp * sin(angle));
-}
-
-void GOrguePipe::SetWindchestGroup(int windchest_group)
-{
-	WindchestGroup = windchest_group;
 }
 
 /* FIXME: This function must be broken - not going to even start describing the problem.
@@ -714,7 +746,8 @@ void GOrguePipe::SetWindchestGroup(int windchest_group)
 //support in GOrgueSound::MIDIAllNotesOff()
 void GOrguePipe::FastAbort()
 {
-
+	if (m_ref)
+		m_ref->FastAbort();	
 	if (instances > -1)
 		instances = 0;
 	sampler = 0;

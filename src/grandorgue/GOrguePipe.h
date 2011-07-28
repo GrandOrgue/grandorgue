@@ -26,6 +26,8 @@
 #include <wx/wx.h>
 #include "GOrgueSound.h"
 
+class wxProgressDialog;
+
 class GOrgueTremulant;
 class GOrgueReleaseAlignTable;
 
@@ -46,7 +48,7 @@ private:
 
 	/* states which windchest this pipe belongs to... groups from
 	 * 0 to GetTremulantCount-1 are purely there for tremulants. */
-	int WindchestGroup;
+	int m_WindchestGroup;
 	int ra_amp;
 	int ra_shift;
 
@@ -59,14 +61,22 @@ private:
 	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
 	void ComputeReleaseAlignmentInfo();
 
+	wxString m_filename;
+	bool m_percussive;
+	int m_amplitude;
+	GOrguePipe* m_ref;
+
+	/* only needed for progress dialog */
+	static int m_NumberOfPipes;
+	static int m_NumberOfLoadedPipes;
+
 public:
 
 	~GOrguePipe();
-	GOrguePipe();
+	GOrguePipe(wxString filename, bool percussive, int windchestGroup, int amplitude);
 
 	void Set(bool on);
-	void LoadFromFile(const wxString& filename, int amp);
-	void SetWindchestGroup(int windchest_group);
+	void LoadData(wxProgressDialog& progress);
 
 	const AUDIO_SECTION* GetLoop();
 	const AUDIO_SECTION* GetRelease();
@@ -78,12 +88,16 @@ public:
 inline
 const AUDIO_SECTION* GOrguePipe::GetLoop()
 {
+	if (m_ref)
+		return m_ref->GetLoop();
 	return &m_loop;
 }
 
 inline
 const AUDIO_SECTION* GOrguePipe::GetRelease()
 {
+	if (m_ref)
+		return m_ref->GetRelease();
 	return &m_release;
 }
 

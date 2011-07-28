@@ -43,19 +43,6 @@ class GOrgueWindchest;
 
 class GrandOrgueFile 
 {
-
-public:
-
-	/* FIXME: these should not be a part of the organ file class... I think
-	 * they possibly belong in stop. */
-	std::vector<wxString> m_pipe_filenames;
-	std::vector<int> m_pipe_filesizes;
-	std::vector<wxString> m_pipe_files;
-	std::vector<wxInt16*> m_pipe_ptrs;
-	std::vector<wxInt16> m_pipe_windchests;
-	std::vector<wxInt16> m_pipe_percussive;
-	std::vector<int> m_pipe_amplitudes;
-
 public:
 
 	wxFileName m_path;
@@ -83,11 +70,6 @@ public:
 	wxInt16 m_NumberOfGenerals;
 	wxInt16 m_NumberOfFrameGenerals;
 	wxInt16 m_NumberOfDivisionalCouplers;
-	wxInt16 m_NumberOfStops;
-
-public:
-
-	wxInt16 m_NumberOfPipes;
 
 private:
 

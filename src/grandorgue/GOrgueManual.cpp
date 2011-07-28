@@ -217,7 +217,7 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 				continue;
 			j += m_stops[i]->FirstAccessiblePipeLogicalPipeNumber - 1;
 
-			organfile->GetPipe(m_stops[i]->pipe[j])->Set(on);
+			m_stops[i]->GetPipe(j)->Set(on);
 		}
 	}
 
@@ -707,4 +707,10 @@ void GOrgueManual::Save(IniFileConfig& cfg, bool prefix, wxString group)
 		buffer.Printf(wxT("Divisional%03d"), m_divisionals[i].ObjectNumber);
 		m_divisionals[i].Save(cfg, prefix, buffer);
 	}
+}
+
+void GOrgueManual::LoadData(wxProgressDialog& progress)
+{
+	for (unsigned i = 0; i < m_nb_stops; i++)
+	    m_stops[i]->LoadData(progress);
 }

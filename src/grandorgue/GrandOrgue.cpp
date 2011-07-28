@@ -42,7 +42,6 @@
 #include <windows.h>
 #include <shlobj.h>
 #endif
-#include "zlib.h"
 
 #include <malloc.h>
 

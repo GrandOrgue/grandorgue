@@ -68,10 +68,13 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	{
 		CloseOrgan();
 		if (!file2.IsEmpty())
-            DeleteAllViews();
+			DeleteAllViews();
 		 if (error != wxT("!"))
-		   ::wxLogError(wxT("%s\n"),error.c_str());
-        b_loaded = true;
+		 {
+			::wxLogError(wxT("%s\n"),error.c_str());
+			wxMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
+		}
+		b_loaded = true;
 		return false;
 	}
 
