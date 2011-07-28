@@ -21,6 +21,7 @@
  */
 
 #include "GOrgueStop.h"
+#include "GOrguePipe.h"
 #include "GrandOrgueFile.h"
 #include "GOrgueSound.h"
 #include "GOrgueDisplayMetrics.h"
@@ -30,6 +31,7 @@ extern GrandOrgueFile* organfile;
 
 GOrgueStop::GOrgueStop() :
 	GOrgueDrawstop(),
+	m_pipes(0),
 	m_ManualNumber(0),
 	Percussive(false),
 	m_auto(false),
@@ -38,10 +40,8 @@ GOrgueStop::GOrgueStop() :
 	FirstAccessiblePipeLogicalPipeNumber(0),
 	FirstAccessiblePipeLogicalKeyNumber(0),
 	NumberOfAccessiblePipes(0),
-	WindchestGroup(0),
-	pipe(NULL)
+	WindchestGroup(0)
 {
-
 }
 
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
@@ -59,26 +59,13 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* 
 	int i;
 	wxString buffer;
 
-	pipe = new wxInt16[NumberOfLogicalPipes];
+	m_pipes.clear();
 	for (i = 0; i < NumberOfLogicalPipes; i++)
 	{
 		buffer.Printf(wxT("Pipe%03d"), i + 1);
 		wxString file = cfg.ReadString(group, buffer);
 
-		// FIXME: this is one of the important fixes for this file, these
-		// need to change... they should probably be local to GOrgueStop and
-		// accessible by organ file... possibly, they should even be pushed
-		// into a vector stored in the parameters (at least for the file
-		// list)
-		organfile->m_pipe_ptrs.push_back(&pipe[i]);
-		organfile->m_pipe_files.push_back(file);
-		organfile->m_pipe_windchests.push_back(WindchestGroup);
-		organfile->m_pipe_percussive.push_back(Percussive);
-		if (!file.StartsWith(wxT("REF:")))
-		{
-			organfile->m_pipe_amplitudes.push_back(organfile->GetAmplitude() * AmplitudeLevel);
-			organfile->m_NumberOfPipes++;
-		}
+		m_pipes.push_back(new GOrguePipe(file, Percussive, WindchestGroup, organfile->GetAmplitude() * AmplitudeLevel));
 	}
 
 	m_auto = NumberOfLogicalPipes == 1;
@@ -114,8 +101,20 @@ bool GOrgueStop::Set(bool on)
 	return retval;
 }
 
+GOrguePipe* GOrgueStop::GetPipe(unsigned index)
+{
+	return m_pipes[index];
+}
+
 GOrgueStop::~GOrgueStop(void)
 {
-	if (pipe)
-		delete[] pipe;
+	for(unsigned i = 0; i < m_pipes.size(); i++)
+		     if (m_pipes[i])
+		     	delete m_pipes[i];
+}
+
+void GOrgueStop::LoadData(wxProgressDialog& progress)
+{
+	for(unsigned i = 0; i < m_pipes.size(); i++)
+		     m_pipes[i]->LoadData(progress);
 }

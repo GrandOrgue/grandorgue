@@ -49,7 +49,6 @@
 #include "GOrgueWave.h"
 #include "GOrgueWindchest.h"
 #include "OrganDocument.h"
-#include "zlib.h"
 
 extern GOrgueSound* g_sound;
 GrandOrgueFile* organfile = 0;
@@ -57,13 +56,6 @@ extern const unsigned char* ImageLoader_Stops[];
 extern int c_ImageLoader_Stops[];
 
 GrandOrgueFile::GrandOrgueFile() :
-	m_pipe_filenames(),
-	m_pipe_filesizes(),
-	m_pipe_files(),
-	m_pipe_ptrs(),
-	m_pipe_windchests(),
-	m_pipe_percussive(),
-	m_pipe_amplitudes(),
 	m_path(),
 	m_b_squash(0),
 	m_compress_p(NULL),
@@ -87,8 +79,6 @@ GrandOrgueFile::GrandOrgueFile() :
 	m_NumberOfGenerals(0),
 	m_NumberOfFrameGenerals(0),
 	m_NumberOfDivisionalCouplers(0),
-	m_NumberOfStops(0),
-	m_NumberOfPipes(0),
 	m_AmplitudeLevel(0),
     m_HauptwerkOrganFileFormatVersion(),
 	m_ChurchName(),
@@ -322,79 +312,23 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
     GOrgueLCD_WriteLineOne(ChurchName+" "+OrganBuilder);
     GOrgueLCD_WriteLineTwo("Loading...");
 #endif
-	m_pipe = new GOrguePipe*[m_NumberOfPipes + m_NumberOfTremulants];
-	memset(m_pipe, 0, sizeof(GOrguePipe*) * (m_NumberOfPipes + m_NumberOfTremulants));
-
-	for (int i = 0; i < m_NumberOfPipes + m_NumberOfTremulants; i++)
-		m_pipe[i] = new GOrguePipe();
-
 	m_path = file;
 	m_path.MakeAbsolute();
 	wxString temp;
 	m_path.SetCwd(m_path.GetPath());
-	int progress = 0;
-	char *mbuffer_p = 0;
-	m_compress_p = 0;
 
-	/* The wave filenames stored in m_pipe_files are relative paths. This code
-	 * takes each filename, converts it to it's absolute path and then stores
-	 * it into the pipe_keys vector (FIXME: bad variable name). Reference pipe
-	 * filenames are converted to an empty string so for each m_pipe_files[x],
-	 * pipe_keys[x] is it's absolute path. */
-	std::vector<wxString> pipe_keys;
-	for (std::vector<wxString>::const_iterator aFileIter = m_pipe_files.begin();
-		 aFileIter != m_pipe_files.end();
-		 ++aFileIter)
+	try
 	{
 
-		if (aFileIter->StartsWith(wxT("REF:")))
+	  	/* Load pipes */
+		for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
 		{
-			pipe_keys.push_back(wxEmptyString);
-			continue;
+			m_manual[i].LoadData(dlg);
 		}
-
-		m_path = *aFileIter;
-		m_path.MakeAbsolute();
-
-		// FIXME: breaks an eventual translation to unicode
-		key.Printf(wxT("%s"), m_path.GetFullPath().c_str());
-		pipe_keys.push_back(key);
-
 	}
-
-	/* Load pipes */
-	for (unsigned int i = 0; i < m_pipe_files.size(); i++)
+	catch (wxString error_)
 	{
-
-		wxLogDebug(_("Loading file %s"), m_pipe_files[i].c_str());
-
-		/* If this pipe filename is a reference to another pipe, skip. We
-		 * load these pipes later... */
-		if (m_pipe_files[i].StartsWith(wxT("REF:")))
-			continue;
-
-		/* Update the progress dialog */
-		if (!dlg.Update(((progress + 1) << 15) / (int)(m_NumberOfPipes + 1), m_pipe_files[i]))
-		{
-			error = wxT("!"); // FIXME: what is this? how can a progress dialog fail to update?
-			break;
-		}
-
-		// 327: max parameter to progress dialog divided by 100 to calculate percentage
-#ifdef __VFD__
-		int n=(((progress + 1) << 15) / (int)(organfile->NumberOfPipes + organfile->NumberOfTremulants ))/327;
-		GOrgueLCD_WriteLineTwo(wxString::Format("Loading %d%%", n));
-#endif
-
-		/* FIXME: bad variable name. "pipe_filename" suggestion */
-		key = pipe_keys[i];
-
-		int amp = m_pipe_amplitudes[progress];
-		m_pipe[progress]->LoadFromFile(key, amp);
-		*m_pipe_ptrs[i] = (short)progress;
-		m_pipe[progress]->SetWindchestGroup(m_pipe_windchests[i]);
-		progress++;
-
+		return error_;
 	}
 
 	/* FIXME: Load tremulants */
@@ -410,32 +344,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	}*/
 
-	if (mbuffer_p)
-		free(mbuffer_p);
-	if (m_compress_p)
-		free(m_compress_p);
-
-	/* Resolve references in m_pipe_files */
-	/* This code goes through the list of all pipe filenames
-	 * searching for filenames starting with the "REF:" identifier,
-	 * if a pipe is found, it will try to resolve the pipe.	*/
-	for (unsigned int i = 0; i < m_pipe_files.size(); i++)
-	{
-
-		if (!m_pipe_files[i].StartsWith(wxT("REF:")))
-			continue;
-
-		int manual, stop, pipe;
-		sscanf(m_pipe_files[i].mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
-		if ((manual < m_FirstManual) || (manual > m_NumberOfManuals) ||
-			(stop <= 0) || (stop > m_manual[manual].GetStopCount()) ||
-			(pipe <= 0) || (pipe > m_manual[manual].GetStop(stop-1)->NumberOfLogicalPipes))
-			return _("Invalid reference ") + m_pipe_files[i];
-
-		*m_pipe_ptrs[i] = m_manual[manual].GetStop(stop-1)->pipe[pipe-1];
-
-	}
-
 	/* TODO: ? check for correctness ? */
 	/* Load the images for the stops */
 	for (int i = 0; i < 9; i++)
@@ -446,12 +354,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		m_images[i] = wxBitmap(img);
 
 	}
-
-	m_pipe_files.clear();
-	m_pipe_ptrs.clear();
-	m_pipe_amplitudes.clear();
-	m_pipe_windchests.clear();
-	m_pipe_percussive.clear();
 
 	if (m_cfg)
 	{
@@ -481,16 +383,6 @@ GrandOrgueFile::~GrandOrgueFile(void)
             free(m_tremulant[i].pipe);
 	*/
 
-	if (m_pipe)
-	{
-		for (int i = 0; i < m_NumberOfPipes + m_NumberOfTremulants; i++)
-			if (m_pipe[i])
-			{
-				delete m_pipe[i];
-				m_pipe[i] = NULL;
-			}
-		delete[] m_pipe;
-	}
 	if (m_divisionalcoupler)
 		delete[] m_divisionalcoupler;
 	if (m_framegeneral)

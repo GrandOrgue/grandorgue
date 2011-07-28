@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include <wx/wx.h>
 #include "GOrgueWave.h"
 #include "GOrgueWaveTypes.h"
 
@@ -57,11 +58,11 @@ void GOrgueWave::LoadDataChunk(char* ptr, unsigned long length)
 {
 
 	if (!hasFormat)
-		throw (char*)"< Malformed wave file. Format chunk must preceed data chunk.";
+		throw (wxString)_("< Malformed wave file. Format chunk must preceed data chunk.");
 
 	data = (char*)malloc(length);
 	if (data == NULL)
-		throw (char*)"< Failed to allocate memory for wave data";
+		throw (wxString)_("< Failed to allocate memory for wave data");
 
 	dataSize = length;
 	memcpy(data, ptr, dataSize);
@@ -76,12 +77,12 @@ void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
 	 * format chunk... no extensible data... and
 	 * that the format tag is 1 */
 	if (length < sizeof(GO_WAVEFORMATPCM))
-		throw (char*)"< Invalid WAVE format chunk";
+		throw (wxString)_("< Invalid WAVE format chunk");
 
 	GO_WAVEFORMATPCMEX* format = (GO_WAVEFORMATPCMEX*)ptr;
 	unsigned formatCode = wxUINT16_SWAP_ON_BE(format->wf.wf.wFormatTag);
 	if (formatCode != 1)
-		throw (char*)"< Not PCM data in";
+		throw (wxString)_("< Not PCM data in");
 
 	/* get channels and ensure only mono or stereo */
 	channels = wxUINT16_SWAP_ON_BE(format->wf.wf.nChannels);
@@ -91,7 +92,7 @@ void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
 
 	unsigned bitsPerSample = wxUINT16_SWAP_ON_BE(format->wf.wBitsPerSample);
 	if (bitsPerSample % 8)
-		throw (char*)"< Bits per sample must be a multiple of 8 in this implementation";
+		throw (wxString)_("< Bits per sample must be a multiple of 8 in this implementation");
 	bytesPerSample = bitsPerSample / 8;
 
 	hasFormat = true;
@@ -102,12 +103,12 @@ void GOrgueWave::LoadCueChunk(char* ptr, unsigned long length)
 {
 
 	if (length < sizeof(GO_WAVECUECHUNK))
-		throw (char*)"< Invalid CUE chunk in";
+		throw (wxString)_("< Invalid CUE chunk in");
 
 	GO_WAVECUECHUNK* cue = (GO_WAVECUECHUNK*)ptr;
 	unsigned nbPoints = wxUINT32_SWAP_ON_BE(cue->dwCuePoints);
 	if (length < sizeof(GO_WAVECUECHUNK) + sizeof(GO_WAVECUEPOINT) * nbPoints)
-		throw (char*)"< Invalid CUE chunk in";
+		throw (wxString)_("< Invalid CUE chunk in");
 
 	GO_WAVECUEPOINT* points = (GO_WAVECUEPOINT*)(ptr + sizeof(GO_WAVECUECHUNK));
 	hasRelease = (nbPoints > 0);
@@ -125,12 +126,12 @@ void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
 {
 
 	if (length < sizeof(GO_WAVESAMPLERCHUNK))
-		throw (char*)"< Invalid SMPL chunk in";
+		throw (wxString)_("< Invalid SMPL chunk in");
 
 	GO_WAVESAMPLERCHUNK* sampler = (GO_WAVESAMPLERCHUNK*)ptr;
 	unsigned numberOfLoops = wxUINT32_SWAP_ON_BE(sampler->cSampleLoops);
 	if (length < sizeof(GO_WAVESAMPLERCHUNK) + sizeof(GO_WAVESAMPLERLOOP) * numberOfLoops)
-		throw (char*)"<Invalid SMPL chunk in";
+		throw (wxString)_("<Invalid SMPL chunk in");
 
 	GO_WAVESAMPLERLOOP* loops = (GO_WAVESAMPLERLOOP*)(ptr + sizeof(GO_WAVESAMPLERCHUNK));
 	this->loops.clear();
@@ -245,23 +246,22 @@ void GOrgueWave::Open(const wxString& filename)
 	 * to quit ungracefully! very bad. */
 	if (ffile == -1)
 	{
-		char message[1024];
-		const char* x = temp.mb_str();
-		sprintf(message, "Failed to open file '%s'\n", x);
+		wxString message;
+		message.Printf(_("Failed to open file '%s'\n"), temp.c_str());
 		throw message;
 	}
 
 	// Allocate memory for wave and read it.
 	char* ptr = (char*)malloc(length);
 	if (!ptr)
-		throw (char*)_(" Out of memory loading");
+		throw (wxString)_(" Out of memory loading");
 
 	unsigned offset = 0;
 	try
 	{
 
 		if (length < 12)
-			throw (char*)"< Not a RIFF file";
+			throw (wxString)_("< Not a RIFF file");
 
 		length = readOneFile(ffile, ptr, length);
 
@@ -271,18 +271,18 @@ void GOrgueWave::Open(const wxString& filename)
 
 		/*
 		if (!CompareFourCC(riffHeader->fccChunk, "RIFF") || (riffChunkSize > length - 8))
-			throw (char*)"< Invalid RIFF file";
+			throw (wxString)_("< Invalid RIFF file");
 		*/
 
 		/* Pribac compatibility */
 		if (!CompareFourCC(riffHeader->fccChunk, "RIFF"))
-			throw (char*)"< Invalid RIFF file";
+			throw (wxString)_("< Invalid RIFF file");
 		offset += sizeof(GO_WAVECHUNKHEADER);
 
 		/* Make sure this is a RIFF/WAVE file */
 		GO_FOURCC* riffIdent = (GO_FOURCC*)(ptr + offset);
 		if (!CompareFourCC(*riffIdent, "WAVE"))
-			throw (char*)"< Invalid RIFF/WAVE file";
+			throw (wxString)_("< Invalid RIFF/WAVE file");
 		offset += sizeof(GO_FOURCC);
 
 		/* This is a bit more leaniant than the original code... it will
@@ -318,7 +318,7 @@ void GOrgueWave::Open(const wxString& filename)
 		}
 
 		if (offset != length)
-			throw (char*)"<Invalid WAV file";
+			throw (wxString)_("<Invalid WAV file");
 
 		// learning lesson: never ever trust the range values of outside sources to be correct!
 		for (unsigned int i = 0; i < loops.size(); i++)
@@ -335,10 +335,10 @@ void GOrgueWave::Open(const wxString& filename)
 		free(ptr);
 
 	}
-	catch (char* msg)
+	catch (wxString msg)
 	{
 
-		fprintf(stderr, "unhandled exception: %s\n", msg);
+		wxLogError(_("unhandled exception: %s\n"), msg.c_str());
 
 		/* Free the memory used to hold the file */
 		free(ptr);
@@ -348,7 +348,6 @@ void GOrgueWave::Open(const wxString& filename)
 
 		/* Rethrow the exception */
 		throw;
-
 	}
 	catch (...)
 	{
@@ -410,7 +409,7 @@ const unsigned GOrgueWave::GetLongestLoop()
 {
 
 	if (loops.size() < 1)
-		throw (char*)"wave does not contain loops";
+		throw (wxString)_("wave does not contain loops");
 
 	assert(loops[0].end_sample > loops[0].start_sample);
 
@@ -463,18 +462,18 @@ void GOrgueWave::ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFor
 {
 
 	if (sampleRate != 44100)
-		throw (char*)"bad format!";
+		throw (wxString)_("bad format!");
 
 	switch (readFormat)
 	{
 		case SF_SIGNEDSHORT:
 			if (bytesPerSample != 2)
-				throw (char*)"bad format!";
+				throw (wxString)_("bad format!");
 			memcpy(destBuffer, data, bytesPerSample * channels * GetLength());
 			break;
 
 		default:
-			throw (char*)"bad format!";
+			throw (wxString)_("bad format!");
 	}
 
 }

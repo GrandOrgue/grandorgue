@@ -42,7 +42,6 @@
 #include "OrganDocument.h"
 #include "SettingsDialog.h"
 #include "SplashScreen.h"
-#include "zlib.h"
 
 
 // New PNG Icons for the toolbar images added by Graham Goode in Nov 2009
@@ -482,7 +481,7 @@ void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
 
 void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 {
-	//
+	m_meters[2]->OnFrame(event);
 }
 
 void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)

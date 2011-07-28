@@ -404,7 +404,7 @@ void GOrgueSound::MIDIAllNotesOff(GrandOrgueFile* organfile)
 		for (j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
 		{
 			for (k = 0; k < organfile->GetManual(i)->GetStop(j)->NumberOfLogicalPipes; k++)
-				organfile->GetPipe(organfile->GetManual(i)->GetStop(j)->pipe[k])->FastAbort();
+				organfile->GetManual(i)->GetStop(j)->GetPipe(k)->FastAbort();
 			if (organfile->GetManual(i)->GetStop(j)->m_auto)
                 organfile->GetManual(i)->GetStop(j)->Set(false);
 		}

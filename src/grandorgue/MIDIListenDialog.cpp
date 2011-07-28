@@ -77,7 +77,7 @@ const MIDIListenDialog::LISTEN_DIALOG_EVENTS MIDIListenDialog::GetEventFromType(
 		rv.elements = events2;
 		break;
 	default:
-		throw (char*)"Invalid event type";
+		throw (wxString)_("Invalid event type");
 	}
 
 	return rv;
