@@ -31,10 +31,10 @@ extern GrandOrgueFile* organfile;
 
 GOrgueStop::GOrgueStop() :
 	GOrgueDrawstop(),
-	m_pipes(0),
+	m_Pipes(0),
 	m_ManualNumber(0),
 	Percussive(false),
-	m_auto(false),
+	m_Auto(false),
 	AmplitudeLevel(0),
 	NumberOfLogicalPipes(0),
 	FirstAccessiblePipeLogicalPipeNumber(0),
@@ -59,16 +59,16 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* 
 	int i;
 	wxString buffer;
 
-	m_pipes.clear();
+	m_Pipes.clear();
 	for (i = 0; i < NumberOfLogicalPipes; i++)
 	{
 		buffer.Printf(wxT("Pipe%03d"), i + 1);
 		wxString file = cfg.ReadString(group, buffer);
 
-		m_pipes.push_back(new GOrguePipe(file, Percussive, WindchestGroup, organfile->GetAmplitude() * AmplitudeLevel));
+		m_Pipes.push_back(new GOrguePipe(file, Percussive, WindchestGroup, organfile->GetAmplitude() * AmplitudeLevel));
 	}
 
-	m_auto = NumberOfLogicalPipes == 1;
+	m_Auto = NumberOfLogicalPipes == 1;
 
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 }
@@ -92,7 +92,7 @@ bool GOrgueStop::Set(bool on)
 	/* m_auto seems to state that if a stop only has 1 note, the note isn't
 	 * actually controlled by a manual, but will be on if the stop is on and
 	 * off if the stop is off... */
-	if (m_auto)
+	if (m_Auto)
 	{
 		GOrgueManual* manual = organfile->GetManual(m_ManualNumber);
 		manual->Set(manual->GetFirstAccessibleKeyMIDINoteNumber() + FirstAccessiblePipeLogicalKeyNumber - 1, on);
@@ -103,18 +103,20 @@ bool GOrgueStop::Set(bool on)
 
 GOrguePipe* GOrgueStop::GetPipe(unsigned index)
 {
-	return m_pipes[index];
+	return m_Pipes[index];
 }
 
 GOrgueStop::~GOrgueStop(void)
 {
-	for(unsigned i = 0; i < m_pipes.size(); i++)
-		     if (m_pipes[i])
-		     	delete m_pipes[i];
+	while (m_Pipes.size())
+	{
+		if (m_Pipes.back())
+			delete m_Pipes.back();
+		m_Pipes.pop_back();
+	}
 }
 
-void GOrgueStop::LoadData(wxProgressDialog& progress)
+unsigned GOrgueStop::GetPipeCount()
 {
-	for(unsigned i = 0; i < m_pipes.size(); i++)
-		     m_pipes[i]->LoadData(progress);
+	return m_Pipes.size();
 }

@@ -35,21 +35,21 @@ class GOrguePipe;
 class GOrgueStop : public GOrgueDrawstop
 {
 private:
-	std::vector<GOrguePipe*> m_pipes;
+	std::vector<GOrguePipe*> m_Pipes;
 
 public:
 	GOrgueStop();
 	GOrguePipe* GetPipe(unsigned index);
+	unsigned GetPipeCount();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
-	void LoadData(wxProgressDialog& progress);
 	bool Set(bool on);
 	~GOrgueStop(void);
 
 	wxInt16 m_ManualNumber;
 
 	bool Percussive : 1;
-	bool m_auto : 1;
+	bool m_Auto : 1;
 	wxInt16 AmplitudeLevel;
 	wxInt16 NumberOfLogicalPipes;
 	wxInt16 FirstAccessiblePipeLogicalPipeNumber;

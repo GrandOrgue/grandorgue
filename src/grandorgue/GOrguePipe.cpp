@@ -20,7 +20,6 @@
  * MA 02111-1307, USA.
  */
 
-#include <wx/progdlg.h>
 #include "GOrguePipe.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
@@ -28,9 +27,6 @@
 #include "GOrgueWindchest.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GrandOrgueFile.h"
-
-int GOrguePipe::m_NumberOfPipes = 0;
-int GOrguePipe::m_NumberOfLoadedPipes = 0;
 
 extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
@@ -138,7 +134,6 @@ GOrguePipe::GOrguePipe(wxString filename, bool percussive, int windchestGroup, i
 	ra_shift = 0;
 	m_SampleRate = 0;
 	m_Channels = 0;
-	m_NumberOfPipes++;
 }
 
 void GOrguePipe::SetOn()
@@ -299,12 +294,9 @@ void GOrguePipe::Set(bool on)
 		SetOff();
 }
 
-void GOrguePipe::LoadData(wxProgressDialog& progress)
+void GOrguePipe::LoadData()
 {
-	int amp = m_amplitude;
 
-	m_NumberOfLoadedPipes++;
-	progress.Update((m_NumberOfLoadedPipes << 15) / (int)(m_NumberOfPipes + 1), m_filename);
 #ifdef __VFD__
 	int n=(((m_NumberOfLoadedPipes) << 15) / (int)(m_NumberOfPipes))/327;
 	GOrgueLCD_WriteLineTwo(wxString::Format("Loading %d%%", n));
@@ -446,6 +438,7 @@ void GOrguePipe::LoadData(wxProgressDialog& progress)
 		/* Amplitude is the combination of global amplitude volume and the stop
 		 * volume. 10000 would correspond to sample playback at normal volume.
 		 */
+		int amp = m_amplitude;
 		ra_shift = 7;
 		while (amp > 10000)
 		{
@@ -752,4 +745,9 @@ void GOrguePipe::FastAbort()
 		instances = 0;
 	sampler = 0;
 
+}
+
+wxString GOrguePipe::GetFilename()
+{
+	return m_filename;
 }

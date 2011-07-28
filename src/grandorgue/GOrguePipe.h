@@ -26,8 +26,6 @@
 #include <wx/wx.h>
 #include "GOrgueSound.h"
 
-class wxProgressDialog;
-
 class GOrgueTremulant;
 class GOrgueReleaseAlignTable;
 
@@ -66,22 +64,20 @@ private:
 	int m_amplitude;
 	GOrguePipe* m_ref;
 
-	/* only needed for progress dialog */
-	static int m_NumberOfPipes;
-	static int m_NumberOfLoadedPipes;
-
 public:
 
 	~GOrguePipe();
 	GOrguePipe(wxString filename, bool percussive, int windchestGroup, int amplitude);
 
 	void Set(bool on);
-	void LoadData(wxProgressDialog& progress);
+	void LoadData();
 
 	const AUDIO_SECTION* GetLoop();
 	const AUDIO_SECTION* GetRelease();
 
 	void FastAbort();
+
+	wxString GetFilename();
 
 };
 
@@ -100,6 +96,5 @@ const AUDIO_SECTION* GOrguePipe::GetRelease()
 		return m_ref->GetRelease();
 	return &m_release;
 }
-
 
 #endif
