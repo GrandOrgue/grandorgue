@@ -115,6 +115,7 @@ GrandOrgueFile::GrandOrgueFile() :
 bool GrandOrgueFile::TryLoad
 	(wxInputStream* cache
 	,wxProgressDialog& dlg
+	,wxString& error
 	)
 {
 
@@ -140,7 +141,10 @@ bool GrandOrgueFile::TryLoad
 					{
 						if (!pipe->LoadCache(cache))
 						{
-							wxLogError(_("Load of %s from the cache failed"), pipe->GetFilename().c_str());
+							error = wxString::Format
+								(_("Failed to read %s from cache.")
+								,pipe->GetFilename().c_str()
+								);
 							return false;
 						}
 					}
@@ -164,8 +168,9 @@ bool GrandOrgueFile::TryLoad
 				}
 
 	}
-	catch (wxString error_)
+	catch (wxString msg)
 	{
+		error = msg;
 		success = false;
 	}
 
@@ -383,38 +388,52 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	try
 	{
 
-		wxFileInputStream cache(file + wxT(".cache"));
-		wxZlibInputStream zin(cache);
-		bool cache_load_ok = cache.IsOk() && zin.IsOk();
-		if (cache_load_ok)
+		wxString cache_filename = file + wxT(".cache");
+		wxString load_error;
+		bool cache_ok = false;
+
+		if (wxFileExists(cache_filename))
 		{
-			int magic;
-			zin.Read(&magic, sizeof(magic));
-			if (
-					(zin.LastRead() != sizeof(magic))
-					||
-					(magic != GRANDORGUE_CACHE_MAGIC)
-				)
+
+			wxFileInputStream cache(file + wxT(".cache"));
+			wxZlibInputStream zin(cache);
+
+			cache_ok = cache.IsOk() && zin.IsOk();
+
+			if (cache_ok)
 			{
-				cache_load_ok = false;
-				wxLogWarning(wxT("%s"), _("Cache file had bad magic - bypassing cache."));
+				int magic;
+				zin.Read(&magic, sizeof(magic));
+				if (
+						(zin.LastRead() != sizeof(magic))
+						||
+						(magic != GRANDORGUE_CACHE_MAGIC)
+					)
+				{
+					cache_ok = false;
+					wxLogWarning
+						(_("Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache.")
+						,GRANDORGUE_CACHE_MAGIC
+						,magic
+						);
+				}
 			}
+
+			if (cache_ok)
+			{
+				if (!TryLoad(&zin, dlg, load_error))
+				{
+					cache_ok = false;
+					wxLogError(_("Cache load failure: %s"), load_error.c_str());
+				}
+			}
+
 		}
 
-		if (cache_load_ok)
+		if (!cache_ok)
 		{
-			wxLogMessage(wxT("%s"), _("Loading organ from cache..."));
-			if (!TryLoad(&zin, dlg))
-			{
-				cache_load_ok = false;
-				wxLogError(wxT("%s"), _("Loading from the cache failed"));
-			}
-		}
-
-		if (!cache_load_ok)
-		{
-			if (!TryLoad(NULL, dlg))
-				return wxT("Failed to load organ");
+			if (!TryLoad(NULL, dlg, load_error))
+				return load_error;
 		}
 
 	}
