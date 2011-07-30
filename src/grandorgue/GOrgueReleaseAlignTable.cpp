@@ -5,6 +5,8 @@
  *      Author: nappleton
  */
 
+#include <wx/stream.h>
+
 #include "GOrgueReleaseAlignTable.h"
 #include <stdlib.h>
 
@@ -27,6 +29,47 @@ GOrgueReleaseAlignTable::~GOrgueReleaseAlignTable()
 {
 
 }
+
+bool GOrgueReleaseAlignTable::Load(wxInputStream* cache)
+{
+	cache->Read(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude));
+	if (cache->LastRead() != sizeof(m_PhaseAlignMaxAmplitude))
+		return false;
+	cache->Read(&m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative));
+	if (cache->LastRead() != sizeof(m_PhaseAlignMaxDerivative))
+		return false;
+	cache->Read(&m_PhaseAlignmentTable, sizeof(m_PhaseAlignmentTable));
+	if (cache->LastRead() != sizeof(m_PhaseAlignmentTable))
+		return false;
+	cache->Read(&m_PhaseAlignmentTable_f, sizeof(m_PhaseAlignmentTable_f));
+	if (cache->LastRead() != sizeof(m_PhaseAlignmentTable_f))
+		return false;
+	cache->Read(&m_PhaseAlignmentTable_v, sizeof(m_PhaseAlignmentTable_v));
+	if (cache->LastRead() != sizeof(m_PhaseAlignmentTable_v))
+		return false;
+	return true;
+}
+
+bool GOrgueReleaseAlignTable::Save(wxOutputStream* cache)
+{
+	cache->Write(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude));
+	if (cache->LastWrite() != sizeof(m_PhaseAlignMaxAmplitude))
+		return false;
+	cache->Write(&m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative));
+	if (cache->LastWrite() != sizeof(m_PhaseAlignMaxDerivative))
+		return false;
+	cache->Write(&m_PhaseAlignmentTable, sizeof(m_PhaseAlignmentTable));
+	if (cache->LastWrite() != sizeof(m_PhaseAlignmentTable))
+		return false;
+	cache->Write(&m_PhaseAlignmentTable_f, sizeof(m_PhaseAlignmentTable_f));
+	if (cache->LastWrite() != sizeof(m_PhaseAlignmentTable_f))
+		return false;
+	cache->Write(&m_PhaseAlignmentTable_v, sizeof(m_PhaseAlignmentTable_v));
+	if (cache->LastWrite() != sizeof(m_PhaseAlignmentTable_v))
+		return false;
+	return true;
+}
+
 
 void GOrgueReleaseAlignTable::ComputeTable
 	(const AUDIO_SECTION& release

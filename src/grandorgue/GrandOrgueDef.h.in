@@ -27,4 +27,7 @@
 #define MAX_POLYPHONY 4096
 #define LOW_MEM_CONDITION 33554432
 
+/* Value which is used to identify a valid cached organ data file. */
+#define GRANDORGUE_CACHE_MAGIC 0x12341234
+
 #endif

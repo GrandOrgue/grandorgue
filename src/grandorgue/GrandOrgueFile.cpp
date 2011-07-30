@@ -26,6 +26,9 @@
 #include <wx/progdlg.h>
 #include <wx/image.h>
 #include <wx/mstream.h>
+#include <wx/stream.h>
+#include <wx/wfstream.h>
+#include <wx/zstream.h>
 
 #include "IniFileConfig.h"
 #include "GrandOrgue.h"
@@ -327,27 +330,73 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 			for (int j = 0; j < m_manual[i].GetStopCount(); j++)
 				nb_pipes += m_manual[i].GetStop(j)->GetPipeCount();
 
-	  	/* Load pipes */
-		for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
-			for (int j = 0; j < m_manual[i].GetStopCount(); j++)
-				for (unsigned k = 0; k < m_manual[i].GetStop(j)->GetPipeCount(); k++)
-				{
-					GOrguePipe* pipe = m_manual[i].GetStop(j)->GetPipe(k);
-					pipe->LoadData();
-					nb_loaded_pipes++;
-					dlg.Update
-						((nb_loaded_pipes << 15) / (nb_pipes + 1)
-						,pipe->GetFilename()
-						);
+		wxFileInputStream cache(file + wxT(".cache"));
+		wxZlibInputStream zin(cache);
+
+		bool cache_load_ok = true;
+	  	/* Load pipes from cache */
+		if (cache.IsOk() && zin.IsOk())
+		{
+			int magic;
+			zin.Read(&magic, sizeof(magic));
+			if (zin.LastRead() != sizeof(magic) ||
+			    magic != GRANDORGUE_CACHE_MAGIC)
+				cache_load_ok = false;
+
+			for (int i = m_FirstManual; cache_load_ok && i <= m_NumberOfManuals; i++)
+				for (int j = 0; cache_load_ok && j < m_manual[i].GetStopCount(); j++)
+					for (unsigned k = 0; cache_load_ok && k < m_manual[i].GetStop(j)->GetPipeCount(); k++)
+					{
+						GOrguePipe* pipe = m_manual[i].GetStop(j)->GetPipe(k);
+						if (!pipe->LoadCache(&zin))
+						{
+							cache_load_ok = false;
+							wxLogError(_("Load of %s from the cache failed"), pipe->GetFilename().c_str());
+						}
+						nb_loaded_pipes++;
+						dlg.Update
+							((nb_loaded_pipes << 15) / (nb_pipes + 1)
+							,pipe->GetFilename()
+							);
 #ifdef __VFD__
-					GOrgueLCD_WriteLineTwo
-						(wxString::Format
-							("Loading %d%%"
-							,(nb_loaded_pipes * 100) / (nb_pipes + 1);
-							)
-						);
+						GOrgueLCD_WriteLineTwo
+							(wxString::Format
+								("Loading %d%%"
+								,(nb_loaded_pipes * 100) / (nb_pipes + 1);
+								)
+							);
 #endif
-				}
+					}
+			if (!cache_load_ok)
+				wxLogError(wxT("%s"), _("Loading from the cache failed"));
+		}
+		else
+			cache_load_ok = false;	
+
+		nb_loaded_pipes = 0;
+
+	  	/* Load pipes */
+		if (!cache_load_ok)
+			for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+				for (int j = 0; j < m_manual[i].GetStopCount(); j++)
+					for (unsigned k = 0; k < m_manual[i].GetStop(j)->GetPipeCount(); k++)
+					{
+						GOrguePipe* pipe = m_manual[i].GetStop(j)->GetPipe(k);
+						pipe->LoadData();
+						nb_loaded_pipes++;
+						dlg.Update
+							((nb_loaded_pipes << 15) / (nb_pipes + 1)
+							,pipe->GetFilename()
+							);
+#ifdef __VFD__
+						GOrgueLCD_WriteLineTwo
+							(wxString::Format
+								("Loading %d%%"
+								,(nb_loaded_pipes * 100) / (nb_pipes + 1);
+								)
+							);
+#endif
+					}
 
 	}
 	catch (wxString error_)

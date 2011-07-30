@@ -93,7 +93,7 @@ void monoCompressed
 	)
 {
 
-	throw (char*)"unimplemented";
+	throw (wxString)_("unimplemented");
 
     /*short* v=(short*)&sampler->v;
     short* f=(short*)&sampler->f;
@@ -150,7 +150,7 @@ void stereoCompressed
 	)
 {
 
-	throw (char*)"unimplemented";
+	throw (wxString)_("unimplemented");
 
 /*throw 0;
 
@@ -220,7 +220,7 @@ void GetNextFrame
 			stereoCompressed(sampler, buffer);
 			break;
 		default:
-			throw (char*)"bad sampler->type";
+			throw (wxString)_("bad sampler->type");
 	}
 
 }
@@ -270,7 +270,7 @@ void GOrgueSound::ProcessAudioSamplers
 			else
 			{
 
-				int currentBlockSize = sampler->pipe_section->size;
+				unsigned currentBlockSize = sampler->pipe_section->size;
 				if(sampler->position >= currentBlockSize)
 				{
 					sampler->pipe_section = sampler->pipe->GetLoop();

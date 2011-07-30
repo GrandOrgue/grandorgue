@@ -44,6 +44,7 @@ public:
 	void OnLoad(wxCommandEvent& event);
 	void OnSave(wxCommandEvent& event);
 	void OnCache(wxCommandEvent& event);
+	void OnCacheDelete(wxCommandEvent& event);
 	void OnReload(wxCommandEvent& event);
 	void OnRevert(wxCommandEvent& event);
 	void OnProperties(wxCommandEvent& event);

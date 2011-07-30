@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include <wx/stream.h>
 #include "GOrguePipe.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
@@ -294,8 +295,138 @@ void GOrguePipe::Set(bool on)
 		SetOff();
 }
 
+bool GOrguePipe::LoadCache(wxInputStream* cache)
+{
+	bool release;
+
+	if (m_filename.StartsWith(wxT("REF:")))
+	{
+		int manual, stop, pipe;
+		sscanf(m_filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
+		if ((manual < organfile->GetFirstManualIndex()) || (manual > organfile->GetManualAndPedalCount()) ||
+			(stop <= 0) || (stop > organfile->GetManual(manual)->GetStopCount()) ||
+			(pipe <= 0) || (pipe > organfile->GetManual(manual)->GetStop(stop-1)->NumberOfLogicalPipes))
+			throw (wxString)_("Invalid reference ") + m_filename;
+
+		m_ref = organfile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
+
+		return true;
+	}
+
+	cache->Read(&m_attack, sizeof(m_attack));
+	if (cache->LastRead() != sizeof(m_attack))
+	{
+		m_attack.data = NULL;
+		return false;
+	}
+	m_attack.data = (unsigned char*)malloc(m_attack.alloc_size);
+	if (m_attack.data == NULL)
+		throw (wxString)_("< out of memory allocating samples");
+	cache->Read(m_attack.data, m_attack.alloc_size);
+	if (cache->LastRead() != m_attack.alloc_size)
+		return false;
+
+	cache->Read(&m_loop, sizeof(m_loop));
+	if (cache->LastRead() != sizeof(m_loop))
+	{
+		m_loop.data = NULL;
+		return false;
+	}
+	m_loop.data = (unsigned char*)malloc(m_loop.alloc_size);
+	if (m_loop.data == NULL)
+		throw (wxString)_("< out of memory allocating samples");
+	cache->Read(m_loop.data, m_loop.alloc_size);
+	if (cache->LastRead() != m_loop.alloc_size)
+		return false;
+
+	cache->Read(&m_release, sizeof(m_release));
+	if (cache->LastRead() != sizeof(m_release))
+	{
+		m_release.data = NULL;
+		return false;
+	}
+	m_release.data = (unsigned char*)malloc(m_release.alloc_size);
+	if (m_release.data == NULL)
+		throw (wxString)_("< out of memory allocating samples");
+	cache->Read(m_release.data, m_release.alloc_size);
+	if (cache->LastRead() != m_release.alloc_size)
+		return false;
+
+	cache->Read(&ra_amp, sizeof(ra_amp));
+	if (cache->LastRead() != sizeof(ra_amp))
+		return false;
+
+	cache->Read(&ra_shift, sizeof(ra_shift));
+	if (cache->LastRead() != sizeof(ra_shift))
+		return false;
+
+	cache->Read(&release, sizeof(release));
+	if (cache->LastRead() != sizeof(release))
+		return false;
+	if (!release)
+		return true;
+
+	m_ra_table = new GOrgueReleaseAlignTable();
+	if (!m_ra_table->Load(cache))
+		return false;	
+
+	return true;
+}
+
+bool GOrguePipe::SaveCache(wxOutputStream* cache)
+{
+	bool release;
+
+	if (m_ref)
+		return true;
+
+	cache->Write(&m_attack, sizeof(m_attack));
+	if (cache->LastWrite() != sizeof(m_attack))
+		return false;
+	cache->Write(m_attack.data, m_attack.alloc_size);
+	if (cache->LastWrite() != m_attack.alloc_size)
+		return false;
+
+	cache->Write(&m_loop, sizeof(m_loop));
+	if (cache->LastWrite() != sizeof(m_loop))
+		return false;
+	cache->Write(m_loop.data, m_loop.alloc_size);
+	if (cache->LastWrite() != m_loop.alloc_size)
+		return false;
+
+	cache->Write(&m_release, sizeof(m_release));
+	if (cache->LastWrite() != sizeof(m_release))
+		return false;
+	cache->Write(m_release.data, m_release.alloc_size);
+	if (cache->LastWrite() != m_release.alloc_size)
+		return false;
+
+	cache->Write(&ra_amp, sizeof(ra_amp));
+	if (cache->LastWrite() != sizeof(ra_amp))
+		return false;
+
+	cache->Write(&ra_shift, sizeof(ra_shift));
+	if (cache->LastWrite() != sizeof(ra_shift))
+		return false;
+
+	release = m_ra_table != NULL;
+	cache->Write(&release, sizeof(release));
+	if (cache->LastWrite() != sizeof(release))
+		return false;
+
+	if (!m_ra_table->Save(cache))
+		return false;	
+
+	return true;
+}
+
 void GOrguePipe::LoadData()
 {
+	FREE_AND_NULL(m_attack.data);
+	FREE_AND_NULL(m_loop.data);
+	FREE_AND_NULL(m_release.data);
+	FREE_AND_NULL(m_ra_table);
+	m_ra_table = NULL;
 
 	if (m_filename.StartsWith(wxT("REF:")))
 	{
@@ -370,7 +501,8 @@ void GOrguePipe::LoadData()
 			 * the end to ensure correct operation of the sampler.
 			 */
 			m_loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
-			m_loop.data = (unsigned char*)malloc(loopSamplesInMem * sizeof(wxInt16) * m_Channels);
+			m_loop.alloc_size = loopSamplesInMem * sizeof(wxInt16) * m_Channels;
+			m_loop.data = (unsigned char*)malloc(m_loop.alloc_size);
 			if (m_loop.data == NULL)
 				throw (wxString)_("< out of memory allocating loop");
 			memcpy(m_loop.data,
@@ -389,8 +521,9 @@ void GOrguePipe::LoadData()
 			 * pad the slack samples with zeroes to ensure correct operation
 			 * of the sampler.
 			 */
-			m_release.size = (int)releaseSamples * sizeof(wxInt16) * m_Channels;
-			m_release.data = (unsigned char*)malloc(releaseSamplesInMem * sizeof(wxInt16) * m_Channels);
+			m_release.size = releaseSamples * sizeof(wxInt16) * m_Channels;
+			m_release.alloc_size = releaseSamplesInMem * sizeof(wxInt16) * m_Channels;
+			m_release.data = (unsigned char*)malloc(m_release.alloc_size);
 			if (m_release.data == NULL)
 				throw (wxString)_("< out of memory allocating release");
 			memcpy(m_release.data,
@@ -405,9 +538,10 @@ void GOrguePipe::LoadData()
 		/* Allocate memory for the attack. */
 		assert(attackSamples != 0);
 		unsigned attackSamplesInMem = attackSamples + SAMPLE_SLACK;
-		m_attack.size = (int)attackSamples * sizeof(wxInt16) * m_Channels;
+		m_attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
+		m_attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
 		assert((unsigned)m_attack.size <= totalDataSize); /* can be equal for percussive samples */
-		m_attack.data = (unsigned char*)malloc(attackSamplesInMem * sizeof(wxInt16) * m_Channels);
+		m_attack.data = (unsigned char*)malloc(m_attack.alloc_size);
 		if (m_attack.data == NULL)
 			throw (wxString)_("< out of memory allocating attack");
 

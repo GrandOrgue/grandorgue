@@ -20,6 +20,9 @@ typedef struct
 
 #include "GOrgueSound.h"
 
+class wxInputStream;
+class wxOutputStream;
+
 class GOrgueReleaseAlignTable
 {
 
@@ -36,6 +39,9 @@ public:
 
 	GOrgueReleaseAlignTable();
 	~GOrgueReleaseAlignTable();
+
+	bool Load(wxInputStream* cache);
+	bool Save(wxOutputStream* cache);
 
 	void ComputeTable
 		(const AUDIO_SECTION_T& m_release
