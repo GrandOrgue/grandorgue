@@ -100,7 +100,7 @@ private:
 	wxBitmap m_images[9];
 
 	void readOrganFile();
-	bool TryLoad(wxInputStream* cache, wxProgressDialog& dlg);
+	bool TryLoad(wxInputStream* cache, wxProgressDialog& dlg, wxString& error);
 	/*	int readOneFile(int file, char* buffer, unsigned length);
 	void fillBufferWithTremulant(const GOrgueTremulant& tremulant,short* buffer);
 
