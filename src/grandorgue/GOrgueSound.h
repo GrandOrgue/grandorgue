@@ -111,7 +111,8 @@ typedef struct AUDIO_SECTION_T
 {
 
 	/* Size of the section in BYTES */
-	int size;
+	unsigned size;
+	unsigned alloc_size;
 
 	/* Type of the data which is stored in the data pointer */
 	AUDIO_SECTION_TYPE type;
@@ -163,7 +164,7 @@ typedef struct GO_SAMPLER_T
 	int shift;
 
 	/* current byte index of the current block into this sample */
-	int position;
+	unsigned position;
 
 } GO_SAMPLER;
 

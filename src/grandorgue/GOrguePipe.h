@@ -26,6 +26,9 @@
 #include <wx/wx.h>
 #include "GOrgueSound.h"
 
+class wxInputStream;
+class wxOutputStream;
+
 class GOrgueTremulant;
 class GOrgueReleaseAlignTable;
 
@@ -71,6 +74,9 @@ public:
 
 	void Set(bool on);
 	void LoadData();
+
+	bool LoadCache(wxInputStream* cache);
+	bool SaveCache(wxOutputStream* cache);
 
 	const AUDIO_SECTION* GetLoop();
 	const AUDIO_SECTION* GetRelease();

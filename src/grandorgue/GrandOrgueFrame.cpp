@@ -25,15 +25,20 @@
 #include <wx/menu.h>
 #include <wx/mstream.h>
 #include <wx/image.h>
+#include <wx/filefn.h>
 #include <wx/toolbar.h>
 #include <wx/icon.h>
 #include <wx/config.h>
 #include <wx/progdlg.h>
+#include <wx/stream.h>
+#include <wx/wfstream.h>
+#include <wx/zstream.h>
 #include <wx/html/helpctrl.h>
 #include <wx/splash.h>
 #include "GOrgueMeter.h"
 #include "GOrgueMidi.h"
 #include "GOrguePipe.h"
+#include "GOrgueStop.h"
 #include "GOrgueProperties.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
@@ -75,6 +80,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(ID_FILE_LOAD, GOrgueFrame::OnLoad)
 	EVT_MENU(ID_FILE_SAVE, GOrgueFrame::OnSave)
 	EVT_MENU(ID_FILE_CACHE, GOrgueFrame::OnCache)
+	EVT_MENU(ID_FILE_CACHE_DELETE, GOrgueFrame::OnCacheDelete)
 	EVT_MENU(ID_AUDIO_PANIC, GOrgueFrame::OnAudioPanic)
 	EVT_MENU(ID_AUDIO_RECORD, GOrgueFrame::OnAudioRecord)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
@@ -135,7 +141,9 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	file_menu->AppendSeparator();
 	AddTool(file_menu, ID_FILE_LOAD, _("&Import Settings..."));
 	AddTool(file_menu, ID_FILE_SAVE, _("&Export Settings..."));
+	file_menu->AppendSeparator();
 	AddTool(file_menu, ID_FILE_CACHE, _("&Update Cache..."));
+	AddTool(file_menu, ID_FILE_CACHE_DELETE, _("Delete &Cache..."));
 	file_menu->AppendSeparator();
 	AddTool(file_menu, wxID_SAVE, _("&Save\tCtrl+S"), _("Save"), Icon_save, sizeof(Icon_save));
 	AddTool(file_menu, wxID_CLOSE, _("&Close"));
@@ -311,92 +319,64 @@ wxString formatSize(wxLongLong& size)
 
 void GOrgueFrame::OnCache(wxCommandEvent& event)
 {
-#if 0
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc || !organfile)
         return;
 
-    int i;
-    std::vector<int> todo;
-    wxLongLong freespace, required = 0;
+	/* Figure out how many pipes there are */
+	unsigned nb_pipes = 0;
+	unsigned nb_saved_pipes = 0;
+	for (int i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
+		for (int j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
+			nb_pipes += organfile->GetManual(i)->GetStop(j)->GetPipeCount();
 
-    {
-        wxBusyCursor busy;
+	wxString filename = organfile->GetODFFilename() + wxT(".cache");
+	wxFileOutputStream file(filename);
+	wxZlibOutputStream zout(file);
 
-        for (i = 0; i < (int)organfile->m_pipe_filenames.size(); i++)
-        {
-            if (organfile->m_pipe_filenames[i].IsEmpty())
-                continue;
-            wxString temp = organfile->m_pipe_filenames[i].BeforeLast('-');
-            if (!::wxFileExists(organfile->m_pipe_filenames[i]) || (::wxFileExists(temp) && ::wxFileModificationTime(temp) > ::wxFileModificationTime(organfile->m_pipe_filenames[i])))
-                todo.push_back(i);
-        }
-        if (todo.empty())
-        {
-            ::wxLogWarning("The sample cache is already up to date.");
-            return;
-        }
+	wxProgressDialog dlg(_("Creating sample cache"), wxEmptyString, 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
 
-        ::wxGetDiskSpace(wxFileName(organfile->m_pipe_filenames[todo[0]]).GetPath(), 0, &freespace);
-        for (i = 0; i < (int)todo.size(); i++)
-            required += organfile->m_pipe_filesizes[todo[i]];
-    }
+	/* Save pipes to cache */
+	bool cache_save_ok = true;
+	int magic = GRANDORGUE_CACHE_MAGIC;
+	zout.Write(&magic, sizeof(magic));
+	if (zout.LastWrite() != sizeof(magic))
+		cache_save_ok = false;
 
-    int ffile, written;
-    if (::wxMessageBox(_(
-        "Updating the sample cache decreases\n"
-        "load time at the cost of disk space.\n"
-        "\n"
-        "Required: " ) + formatSize(required)  + _("\n"
-        "Available: ") + formatSize(freespace) + _("\n"
-        "\n"
-        "Continue with this operation?"), APP_NAME, wxYES_NO | wxICON_QUESTION) == wxYES)
-    {
-        wxProgressDialog dlg(_("Updating sample cache"), wxEmptyString, todo.size(), 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
-        for (i = 0; i < (int)todo.size(); i++)
-        {
-            char* fn = (char*)organfile->m_pipe_filenames[todo[i]].c_str();
-            if (!dlg.Update(i, fn))
-                break;
+	for (int i = organfile->GetFirstManualIndex(); cache_save_ok && i <= organfile->GetManualAndPedalCount(); i++)
+		for (int j = 0; cache_save_ok && j < organfile->GetManual(i)->GetStopCount(); j++)
+			for (unsigned k = 0; cache_save_ok && k < organfile->GetManual(i)->GetStop(j)->GetPipeCount(); k++)
+			{
+				GOrguePipe* pipe = organfile->GetManual(i)->GetStop(j)->GetPipe(k);
+				if (!pipe->SaveCache(&zout))
+				{
+					cache_save_ok = false;
+					wxLogError(_("Save of %s to the cache failed"), pipe->GetFilename().c_str());
+				}
+				nb_saved_pipes++;
+				dlg.Update
+					((nb_saved_pipes << 15) / (nb_pipes + 1)
+					,pipe->GetFilename()
+					);
+			}
+	zout.Close();
+	file.Close();
+	if (!cache_save_ok)
+	{
+		wxLogError(wxT("%s"), _("Creating the cache failed"));
+		wxMessageBox(_("Creating the cache failed"), _("Error"), wxOK | wxICON_ERROR, NULL);
+		wxRemoveFile(filename);
+	}
+}
 
-            #ifdef linux
-                ffile = open(fn, O_WRONLY | O_CREAT,S_IREAD | S_IWRITE);
-            #endif
-            #ifdef __WIN32__
-            ffile = _open(fn, _O_BINARY | _O_WRONLY | _O_SEQUENTIAL | _O_CREAT, _S_IREAD | _S_IWRITE);
-            #endif
-            if (ffile == -1)
-            {
-                ::wxLogWarning(_("Could not write to '%s'"), fn);
-                break;
-            }
+void GOrgueFrame::OnCacheDelete(wxCommandEvent& event)
+{
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	if (!doc || !organfile)
+        return;
 
-            GOrguePipe* pipe = organfile->GetPipe(todo[i]);
-            int size = organfile->m_pipe_filesizes[todo[i]];
-            pipe->_this = pipe;
-            pipe->_adler32 = adler32(0, (Bytef*)&pipe->_this, size - offsetof(GOrguePipe, _this));
-            pipe->_fourcc = *(unsigned *)"GOrgueOc";
-
-            #ifdef linux
-            written = write(ffile, pipe, size);
-            close(ffile);
-            #endif
-            #ifdef __WIN32__
-             written = _write(ffile, pipe, size);
-            _close(ffile);
-            #endif
-
-            if (written != organfile->m_pipe_filesizes[todo[i]])
-            {
-                ::wxRemoveFile(fn);
-                ::wxLogWarning(_("Could not write to '%s'"), fn);
-                break;
-            }
-        }
-    }
-#else
-    throw (char*)"< sample cache disabled until further notice by nappleton";
-#endif
+	wxString filename = organfile->GetODFFilename() + wxT(".cache");
+	wxRemoveFile(filename);
 }
 
 void GOrgueFrame::OnReload(wxCommandEvent& event)
@@ -481,7 +461,7 @@ void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
 
 void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 {
-	m_meters[2]->OnFrame(event);
+	m_meters[0]->OnTranspose(event);
 }
 
 void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)

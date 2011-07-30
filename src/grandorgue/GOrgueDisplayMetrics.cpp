@@ -307,7 +307,7 @@ int GOrgueDisplayMetrics::GetEnclosureX(const GOrgueEnclosure* enclosure)
 		enclosure_x += 52;
 	}
 
-	throw (char*)"enclosure not found";
+	throw (wxString)_("enclosure not found");
 
 }
 
