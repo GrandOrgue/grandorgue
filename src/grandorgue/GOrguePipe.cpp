@@ -297,7 +297,12 @@ void GOrguePipe::Set(bool on)
 
 bool GOrguePipe::LoadCache(wxInputStream* cache)
 {
-	bool release;
+
+	FREE_AND_NULL(m_attack.data);
+	FREE_AND_NULL(m_loop.data);
+	FREE_AND_NULL(m_release.data);
+	FREE_AND_NULL(m_ra_table);
+	m_ra_table = NULL;
 
 	if (m_filename.StartsWith(wxT("REF:")))
 	{
@@ -360,22 +365,23 @@ bool GOrguePipe::LoadCache(wxInputStream* cache)
 	if (cache->LastRead() != sizeof(ra_shift))
 		return false;
 
+	bool release;
 	cache->Read(&release, sizeof(release));
 	if (cache->LastRead() != sizeof(release))
 		return false;
-	if (!release)
-		return true;
 
-	m_ra_table = new GOrgueReleaseAlignTable();
-	if (!m_ra_table->Load(cache))
-		return false;	
+	if (release)
+	{
+		m_ra_table = new GOrgueReleaseAlignTable();
+		if (!m_ra_table->Load(cache))
+			return false;
+	}
 
 	return true;
 }
 
 bool GOrguePipe::SaveCache(wxOutputStream* cache)
 {
-	bool release;
 
 	if (m_ref)
 		return true;
@@ -409,19 +415,22 @@ bool GOrguePipe::SaveCache(wxOutputStream* cache)
 	if (cache->LastWrite() != sizeof(ra_shift))
 		return false;
 
-	release = m_ra_table != NULL;
+	bool release = m_ra_table != NULL;
 	cache->Write(&release, sizeof(release));
 	if (cache->LastWrite() != sizeof(release))
 		return false;
 
-	if (!m_ra_table->Save(cache))
-		return false;	
+	if (release)
+		if (!m_ra_table->Save(cache))
+			return false;
 
 	return true;
+
 }
 
 void GOrguePipe::LoadData()
 {
+
 	FREE_AND_NULL(m_attack.data);
 	FREE_AND_NULL(m_loop.data);
 	FREE_AND_NULL(m_release.data);
