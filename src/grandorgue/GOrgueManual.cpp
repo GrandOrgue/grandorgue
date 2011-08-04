@@ -149,7 +149,7 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 
 	if (depth > 32)
 	{
-		::wxLogFatalError(wxT("Infinite recursive coupling detected!"));
+		::wxLogFatalError(_("Infinite recursive coupling detected!"));
 		return;
 	}
 
@@ -241,7 +241,7 @@ void GOrgueManual::MIDI(void)
 
 	MIDIListenDialog dlg
 		(::wxGetApp().frame
-		,GOrgueMidi::GetMidiEventTitle(index)
+		,GOrgueMidi::GetMidiEventUserTitle(index)
 		,MIDIListenDialog::LSTN_MANUAL
 		,g_sound->GetMidi().GetManualMidiEvent(m_midi_input_number)
 		);

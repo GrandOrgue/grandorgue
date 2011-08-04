@@ -42,20 +42,20 @@ const MIDIListenDialog::LISTEN_DIALOG_EVENTS MIDIListenDialog::GetEventFromType(
 {
 
 	static const LISTEN_DIALOG_SETUP_EVENT events0[2] = {
-		{wxT("(none)"),            0x0000},
-		{wxT("Bx Controller"),     0xB000}
+		{wxTRANSLATE("(none)"),            0x0000},
+		{wxTRANSLATE("Bx Controller"),     0xB000}
 	};
 
 	static const LISTEN_DIALOG_SETUP_EVENT events1[2] = {
-		{wxT("(none)"),            0x0000},
-		{wxT("9x Note On"),        0x9000}
+		{wxTRANSLATE("(none)"),            0x0000},
+		{wxTRANSLATE("9x Note On"),        0x9000}
 	};
 
 	static const LISTEN_DIALOG_SETUP_EVENT events2[4] = {
-		{wxT("(none)"),            0x0000},
-		{wxT("9x Note On"),        0x9000},
-		{wxT("Bx Controller"),     0xB000},
-		{wxT("Cx Program Change"), 0xC000}
+		{wxTRANSLATE("(none)"),            0x0000},
+		{wxTRANSLATE("9x Note On"),        0x9000},
+		{wxTRANSLATE("Bx Controller"),     0xB000},
+		{wxTRANSLATE("Cx Program Change"), 0xC000}
 	};
 
 	LISTEN_DIALOG_EVENTS rv;
@@ -93,7 +93,7 @@ wxString MIDIListenDialog::GetEventTitle(int what, const MIDIListenDialog::LISTE
 
 	for (unsigned i = 0; i < events.count; i++)
 		if (events.elements[i].event == what)
-			return wxString(events.elements[i].name);
+			return wxGetTranslation(events.elements[i].name);
 
 	return wxEmptyString;
 
@@ -149,7 +149,7 @@ MIDIListenDialog::MIDIListenDialog
 
 	m_event = new wxChoice(this, ID_EVENT);
 	for (unsigned i = 0; i < event.count; i++)
-		m_event->Append(wxString(event.elements[i].name));
+		m_event->Append(wxGetTranslation(event.elements[i].name));
 
 	sizer->Add(m_event, 1, wxEXPAND);
 

@@ -116,7 +116,7 @@ void GOrgueEnclosure::MIDI(void)
 
 	MIDIListenDialog dlg
 		(::wxGetApp().frame
-		,GOrgueMidi::GetMidiEventTitle(index)
+		,GOrgueMidi::GetMidiEventUserTitle(index)
 		,MIDIListenDialog::LSTN_ENCLOSURE
 		,g_sound->GetMidi().GetMidiEventByChannel(index)
 		);

@@ -305,7 +305,7 @@ void GOrgueFrame::OnSave(wxCommandEvent& event)
 wxString formatSize(wxLongLong& size)
 {
     double n = (double)size.ToLong();
-    wxChar sizes[][3] = {wxT("KB"), wxT("MB"), wxT("GB"), wxT("TB")};
+    wxChar sizes[][3] = {wxTRANSLATE("KB"), wxTRANSLATE("MB"), wxTRANSLATE("GB"), wxTRANSLATE("TB")};
     int i;
 
     for (i = 0; i < 3; i++)
@@ -314,7 +314,7 @@ wxString formatSize(wxLongLong& size)
         if (n < 1024.0)
             break;
     }
-    return wxString::Format(wxT("%.2f %s"), n, sizes[i]);
+    return wxString::Format(wxT("%.2f %s"), n, wxGetTranslation(sizes[i]));
 }
 
 void GOrgueFrame::OnCache(wxCommandEvent& event)
@@ -363,7 +363,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	file.Close();
 	if (!cache_save_ok)
 	{
-		wxLogError(wxT("%s"), _("Creating the cache failed"));
+		wxLogError(_("Creating the cache failed"));
 		wxMessageBox(_("Creating the cache failed"), _("Error"), wxOK | wxICON_ERROR, NULL);
 		wxRemoveFile(filename);
 	}
@@ -432,9 +432,9 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 {
-	::wxLogDebug(wxT("settingsdialog.."));
+	::wxLogDebug(_("settingsdialog.."));
 	SettingsDialog dialog(this);
-	::wxLogDebug(wxT("success"));
+	::wxLogDebug(_("success"));
 	dialog.ShowModal();
 	g_sound->GetMidi().UpdateOrganMIDI();
 }

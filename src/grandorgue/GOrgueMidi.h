@@ -86,6 +86,7 @@ public:
 
 	static unsigned NbMidiEvents();
 	static wxString GetMidiEventTitle(const unsigned idx);
+	static wxString GetMidiEventUserTitle(const unsigned idx);
 	static MIDIListenDialog::LISTEN_DIALOG_TYPE GetMidiEventListenDialogType(const unsigned idx);
 
 

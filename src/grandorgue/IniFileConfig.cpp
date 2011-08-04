@@ -55,9 +55,9 @@ bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueTyp
 			}
 			else
 			{
-				if (!::wxIsdigit(string[0]) && string[0] != '+' && string[0] != '-' && string.CmpNoCase(wxT("none")))
+				if (!::wxIsdigit(string[0]) && string[0] != wxT('+') && string[0] != wxT('-') && string.CmpNoCase(wxT("none")))
 					throw -3;
-				integer = atoi(string.mb_str() + (string[0] == '+' ? 1 : 0));
+				integer = atoi(string.mb_str() + (string[0] == wxT('+') ? 1 : 0));
 			}
 
 			if (integer >= nmin && integer <= nmax)

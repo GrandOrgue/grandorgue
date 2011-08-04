@@ -106,7 +106,7 @@ void GOrgueDrawstop::MIDI(void)
 
 	MIDIListenDialog dlg
 		(::wxGetApp().frame
-		,wxString(wxT("Drawstop Trigger"))
+		,_("Drawstop Trigger")
 		,MIDIListenDialog::LSTN_DRAWSTOP
 		,g_sound->GetMidi().GetStopMidiEvent() | StopControlMIDIKeyNumber
 		);
