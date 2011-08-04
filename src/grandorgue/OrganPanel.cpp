@@ -394,63 +394,57 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 
 void OrganPanel::WrapText(wxDC& dc, wxString& string, int width)
 {
-	wxString str = string;
-
-	wxChar *ptr = (wxChar*)str.c_str();
-	wxChar *p = ptr, *lastspace = 0;
+	wxString str, line, work;
 	wxCoord cx, cy;
 
-	while (p)
+	/* string.Length() + 1 iterations */
+	for(unsigned i = 0; i <= string.Length(); i++)
 	{
-		p = wxStrchr(p, ' ');
-		if (p)
+		bool maybreak = false;
+		if (string[i] == wxT(' ') || string[i] == wxT('\n'))
 		{
-			*p = 0;
-			dc.GetTextExtent(ptr, &cx, &cy);
-			*p = ' ';
-		}
-		else
-			dc.GetTextExtent(ptr, &cx, &cy);
-		if (cx > width)
-		{
-			if (lastspace)
-			{
-				*lastspace = '\n';
-				if (p)
-					ptr = p = lastspace + 1;
-			}
+			if (work.length() < 2)
+				maybreak = false;
 			else
-			{
-				if (p)
-					*p++ = '\n';
-				ptr = p;
-			}
-			lastspace = 0;
+				maybreak = true;
 		}
-		else if (p)
-			lastspace = p++;
-	}
-
-	lastspace = 0;
-	p = ptr = (wxChar*)str.c_str();
-	while (*p)
-	{
-		if (*p == ' ')
+		if (maybreak || i == string.Length())
 		{
-			if (!lastspace)
-				lastspace = ptr;
+			if (!work.Length())
+				continue;
+			dc.GetTextExtent(line + wxT(' ') + work, &cx, &cy);
+			if (cx > width)
+			{
+				if (!str.Length())
+					str = line;
+				else
+					str = str + wxT('\n') + line;
+				line = wxT("");
+			}
+
+			if (!line.Length())
+				line = work;
+			else
+				line = line + wxT(' ') + work;
+
+			work = wxT("");
 		}
 		else
 		{
-			if (*p == '\n' && lastspace)
-				ptr = lastspace;
-			lastspace = 0;
+			if (string[i] == wxT(' ') || string[i] == wxT('\n'))
+			{
+				if (work.Length() && work[work.Length()-1] != wxT(' '))
+					work += wxT(' ');
+			}	
+			else
+				work += string[i];
 		}
-		*ptr++ = *p++;
 	}
-	*ptr = 0;
-
-	string = str.c_str();
+	if (!str.Length())
+		str = line;
+	else
+		str = str + wxT('\n') + line;
+	string = str;
 }
 
 
