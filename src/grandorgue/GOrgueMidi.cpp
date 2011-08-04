@@ -51,22 +51,22 @@ typedef struct
 
 static const MIDI_EVENT g_available_midi_events[NB_MIDI_EVENTS] =
 {
-	{wxT("Previous Memory"),   0xC400, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN},
-	{wxT("Next Memory"),       0xC401, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN},
-	{wxT("Enclosure 1"),       0xB001, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxT("Enclosure 2"),       0xB101, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxT("Enclosure 3"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxT("Enclosure 4"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxT("Enclosure 5"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxT("Enclosure 6"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxT("Manual 1 (Pedal)"),  0x9000, MIDIListenDialog::LSTN_MANUAL},
-	{wxT("Manual 2 (Great)"),  0x9100, MIDIListenDialog::LSTN_MANUAL},
-	{wxT("Manual 3 (Swell)"),  0x9200, MIDIListenDialog::LSTN_MANUAL},
-	{wxT("Manual 4 (Choir)"),  0x9300, MIDIListenDialog::LSTN_MANUAL},
-	{wxT("Manual 5 (Solo)"),   0x9500, MIDIListenDialog::LSTN_MANUAL},
-	{wxT("Manual 6 (Echo)"),   0x9600, MIDIListenDialog::LSTN_MANUAL},
-	{wxT("Stop Changes"),      0x9400, MIDIListenDialog::LSTN_SETTINGSDLG_STOP_CHANGE},
-	{wxT("Memory Set"),        0x0000, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN}
+	{wxTRANSLATE("Previous Memory"),   0xC400, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN},
+	{wxTRANSLATE("Next Memory"),       0xC401, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN},
+	{wxTRANSLATE("Enclosure 1"),       0xB001, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxTRANSLATE("Enclosure 2"),       0xB101, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxTRANSLATE("Enclosure 3"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxTRANSLATE("Enclosure 4"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxTRANSLATE("Enclosure 5"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxTRANSLATE("Enclosure 6"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
+	{wxTRANSLATE("Manual 1 (Pedal)"),  0x9000, MIDIListenDialog::LSTN_MANUAL},
+	{wxTRANSLATE("Manual 2 (Great)"),  0x9100, MIDIListenDialog::LSTN_MANUAL},
+	{wxTRANSLATE("Manual 3 (Swell)"),  0x9200, MIDIListenDialog::LSTN_MANUAL},
+	{wxTRANSLATE("Manual 4 (Choir)"),  0x9300, MIDIListenDialog::LSTN_MANUAL},
+	{wxTRANSLATE("Manual 5 (Solo)"),   0x9500, MIDIListenDialog::LSTN_MANUAL},
+	{wxTRANSLATE("Manual 6 (Echo)"),   0x9600, MIDIListenDialog::LSTN_MANUAL},
+	{wxTRANSLATE("Stop Changes"),      0x9400, MIDIListenDialog::LSTN_SETTINGSDLG_STOP_CHANGE},
+	{wxTRANSLATE("Memory Set"),        0x0000, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN}
 };
 
 unsigned GOrgueMidi::NbMidiEvents()
@@ -81,6 +81,14 @@ wxString GOrgueMidi::GetMidiEventTitle(const unsigned idx)
 
 	assert(idx < NB_MIDI_EVENTS);
 	return wxString(g_available_midi_events[idx].event_name);
+
+}
+
+wxString GOrgueMidi::GetMidiEventUserTitle(const unsigned idx)
+{
+
+	assert(idx < NB_MIDI_EVENTS);
+	return wxGetTranslation(g_available_midi_events[idx].event_name);
 
 }
 

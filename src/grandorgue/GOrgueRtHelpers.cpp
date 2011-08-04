@@ -85,20 +85,20 @@ const wxChar* GOrgueRtHelpers::GetApiName(const RtAudio::Api api)
 	{
 
 	case RtAudio::LINUX_ALSA:
-		return wxT("Alsa");
+		return _("Alsa");
 	case RtAudio::LINUX_OSS:
-		return wxT("OSS");
+		return _("OSS");
 	case RtAudio::MACOSX_CORE:
-		return wxT("Core");
+		return _("Core");
 	case RtAudio::UNIX_JACK:
-		return wxT("Jack");
+		return _("Jack");
 	case RtAudio::WINDOWS_ASIO:
-		return wxT("ASIO");
+		return _("ASIO");
 	case RtAudio::WINDOWS_DS:
-		return wxT("DirectSound");
+		return _("DirectSound");
 	case RtAudio::UNSPECIFIED:
 	default:
-		return wxT("Unknown");
+		return _("Unknown");
 
 	}
 
@@ -136,25 +136,25 @@ const wxChar* GOrgueRtHelpers::GetAudioFormatName(const int rt_audio_format)
 	{
 
 	case RTAUDIO_SINT8:
-		return wxT("8 bit PCM");
+		return _("8 bit PCM");
 
 	case RTAUDIO_SINT16:
-		return wxT("16 bit PCM");
+		return _("16 bit PCM");
 
 	case RTAUDIO_SINT24:
-		return wxT("24 bit PCM");
+		return _("24 bit PCM");
 
 	case RTAUDIO_SINT32:
-		return wxT("32 bit PCM");
+		return _("32 bit PCM");
 
 	case RTAUDIO_FLOAT32:
-		return wxT("32 bit float");
+		return _("32 bit float");
 
 	case RTAUDIO_FLOAT64:
-		return wxT("64 bit float");
+		return _("64 bit float");
 
 	default:
-		return wxT("none");
+		return _("none");
 
 	}
 

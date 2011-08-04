@@ -235,7 +235,7 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 			{
 				::wxSleep(1);
 				if (logSoundErrors)
-					::wxLogError(wxT("Cannot use buffer size above 1024 samples; unacceptable quantization would occur."));
+					::wxLogError(_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur."));
 				CloseSound(organfile);
 				return false;
 			}
@@ -249,8 +249,8 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 			if (logSoundErrors)
 				::wxLogWarning
 					( m_midi->HasActiveDevice()
-					? wxT("No audio device is selected; neither MIDI input nor sound output will occur!")
-					: wxT("No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!")
+					? _("No audio device is selected; neither MIDI input nor sound output will occur!")
+					: _("No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!")
 					);
 			CloseSound(organfile);
 			return false;
@@ -443,7 +443,7 @@ void GOrgueSound::StartRecording()
         if ((f_output = fopen(filepath.mb_str(), "wb")))
             fwrite(&WAVE, sizeof(WAVE), 1, f_output);
         else
-            ::wxLogError(wxT("Unable to open file for writing"));
+            ::wxLogError(_("Unable to open file for writing"));
 
 	}
 }

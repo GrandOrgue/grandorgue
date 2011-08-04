@@ -53,7 +53,7 @@ void GOrguePushbutton::MIDI(void)
 
 	MIDIListenDialog dlg
 		(::wxGetApp().frame
-		,wxString(wxT("Pushbutton Trigger"))
+		,_("Pushbutton Trigger")
 		,(m_ManualNumber > -1) ? MIDIListenDialog::LSTN_DRAWSTOP : MIDIListenDialog::LSTN_NON_DRAWSTOP_BUTTON
 		,event | (MIDIProgramChangeNumber - 1)
 		);

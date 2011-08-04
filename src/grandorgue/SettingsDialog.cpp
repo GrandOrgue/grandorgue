@@ -86,7 +86,7 @@ void SettingsDialog::SetLatencySpinner(int latency)
 
 		long int lat_l = pConfig->Read(wxT("Devices/Sound/ActualLatency/") + c_sound->GetStringSelection(), -1);
 		if (lat_l > 0)
-			lat_s.Printf(wxT("%ld ms"), lat_l);
+			lat_s.Printf(_("%ld ms"), lat_l);
 
 	}
 
@@ -278,7 +278,7 @@ wxPanel* SettingsDialog::CreateMessagesPage(wxWindow* parent)
 
 	for (unsigned i = 0; i < GOrgueMidi::NbMidiEvents(); i++)
 	{
-		page2list->InsertItem(i, GOrgueMidi::GetMidiEventTitle(i));
+		page2list->InsertItem(i, GOrgueMidi::GetMidiEventUserTitle(i));
 		UpdateMessages(i);
 	}
 

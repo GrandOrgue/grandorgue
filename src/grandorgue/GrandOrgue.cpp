@@ -120,22 +120,8 @@ GOrgueApp::GOrgueApp()
 
 bool GOrgueApp::OnInit()
 {
-    int lang = m_locale.GetSystemLanguage();
-
-    switch(lang)
-    {
-    case wxLANGUAGE_GERMAN:
-    case wxLANGUAGE_GERMAN_AUSTRIAN:
-    case wxLANGUAGE_GERMAN_BELGIUM:
-    case wxLANGUAGE_GERMAN_LIECHTENSTEIN:
-    case wxLANGUAGE_GERMAN_LUXEMBOURG:
-    case wxLANGUAGE_GERMAN_SWISS:
-        m_locale.Init(wxLANGUAGE_GERMAN);
+        m_locale.Init(wxLANGUAGE_DEFAULT);
         m_locale.AddCatalog(wxT("GrandOrgue"));
-        break;
-    default:
-        break;
-    }
 
 	single_instance = new wxSingleInstanceChecker(wxT(APP_NAME));
 	if (single_instance->IsAnotherRunning())
@@ -156,12 +142,12 @@ bool GOrgueApp::OnInit()
 	{
 	    m_server = new stServer;
 	    if (!m_server->Create(wxT(APP_NAME)))
-            ::wxLogError(wxT("Failed to create IPC service."));
+            ::wxLogError(_("Failed to create IPC service."));
 	}
 
 	SetAppName(wxT(APP_NAME));
 	SetClassName(wxT(APP_NAME));
-	SetVendorName(wxT("Our Organ"));
+	SetVendorName(_("Our Organ"));
 	pConfig = wxConfigBase::Get();
 	pConfig->SetRecordDefaults();
 
@@ -191,7 +177,7 @@ bool GOrgueApp::OnInit()
     //wxFont::SetDefaultEncoding(wxFONTENCODING_CP1250);
 #endif
 	m_docManager = new GOrgueDocManager;
-	new wxDocTemplate(m_docManager, _("Sample set definition files"), wxT("*.organ"), wxEmptyString, wxT("organ"), wxT("Organ Doc"), wxT("Organ View"), CLASSINFO(OrganDocument), CLASSINFO(OrganView));
+	new wxDocTemplate(m_docManager, _("Sample set definition files"), _("*.organ"), wxEmptyString, wxT("organ"), _("Organ Doc"), _("Organ View"), CLASSINFO(OrganDocument), CLASSINFO(OrganView));
 	m_docManager->SetMaxDocsOpen(1);
 
 	m_soundSystem = new GOrgueSound();

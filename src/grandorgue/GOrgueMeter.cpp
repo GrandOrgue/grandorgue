@@ -53,7 +53,7 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 : wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
 {
 	//static const wxChar* strings[] = {_("T"),_("M"), _("P"), _("V")};
-	static const wxChar* strings[] = {_(""),_(""), _(""), _("")};
+	static const wxChar* strings[] = {wxT(""),wxT(""), wxT(""), wxT("")};
 	if (count < 0 || count > 3)
 		count = 0;
 	m_count = count;
