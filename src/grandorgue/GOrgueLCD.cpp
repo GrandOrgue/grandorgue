@@ -10,9 +10,9 @@
 //
 //
 
-#ifdef __VFD__
-
 #include "GrandOrgue.h"
+
+#ifdef __VFD__
 
 #ifdef __WIN32__
 #include "imon/SG_VFD.h"
@@ -26,7 +26,6 @@ static HINSTANCE dllHandle = NULL;
 static InitType iMONVFD_InitPtr = NULL;
 static UninitType iMONVFD_UninitPtr = NULL;
 static SetTextType iMONVFD_SetTextPtr = NULL;
-
 
 #endif
 
@@ -110,4 +109,25 @@ wxString GOrgueLCD_ErrorMsg()
 {
 	return wxEmptyString;
 }
+#else
+
+bool GOrgueLCD_Open(const int d)
+{
+	return true;
+}
+
+void GOrgueLCD_Close()
+{
+}
+
+void GOrgueLCD_WriteLineOne(const wxString& str)
+{
+	wxLogDebug(_("LCD-1: %s"), str.c_str());
+}
+
+void GOrgueLCD_WriteLineTwo(const wxString& str, long t)
+{
+	wxLogDebug(_("LCD-2: %s"), str.c_str());
+}
+
 #endif

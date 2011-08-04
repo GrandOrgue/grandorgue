@@ -215,9 +215,7 @@ bool GOrgueApp::OnInit()
         argv[1][0] = 0;
         argc = 1;
     }
-#ifdef __VFD__
     GOrgueLCD_Open();
-#endif
 
     m_soundSystem->GetMidi().UpdateOrganMIDI(); //retrieve MIDI settings for loading organs
 
@@ -238,9 +236,7 @@ void GOrgueApp::AsyncLoadFile(wxString what)
 
 int GOrgueApp::OnExit()
 {
-#ifdef __VFD__
-    GOrgueLCD_Close();
-#endif
+	GOrgueLCD_Close();
 	delete m_soundSystem;
 	if (m_docManager)
 	{
