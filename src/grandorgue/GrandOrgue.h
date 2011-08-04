@@ -33,10 +33,7 @@
 #include <wx/msw/registry.h>
 #endif
 
-#ifdef __VFD__
 #include "GOrgueLCD.h"
-#endif
-
 #include "GOrgueSound.h"
 #include "GOrgueMeter.h"
 #include "GrandOrgueFrame.h"

@@ -157,14 +157,11 @@ bool GrandOrgueFile::TryLoad
 						((nb_loaded_pipes << 15) / (nb_pipes + 1)
 						,pipe->GetFilename()
 						);
-	#ifdef __VFD__
 					GOrgueLCD_WriteLineTwo
 						(wxString::Format
-							("Loading %d%%"
-							,(nb_loaded_pipes * 100) / (nb_pipes + 1);
-							)
+							(_("Loading %d%%")
+							,(nb_loaded_pipes * 100) / (nb_pipes + 1))
 						);
-	#endif
 				}
 
 	}
@@ -376,10 +373,9 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		return error_;
 	}
 
-#ifdef __VFD__
-    GOrgueLCD_WriteLineOne(ChurchName+" "+OrganBuilder);
-    GOrgueLCD_WriteLineTwo("Loading...");
-#endif
+ 	GOrgueLCD_WriteLineOne(m_ChurchName+wxT(" ")+m_OrganBuilder);
+	GOrgueLCD_WriteLineTwo(_("Loading..."));
+
 	m_path = file;
 	m_path.MakeAbsolute();
 	wxString temp;
@@ -473,9 +469,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		m_cfg = 0;
 	}
 
-#ifdef __VFD__
-	GOrgueLCD_WriteLineTwo("Ready!");
-#endif
+	GOrgueLCD_WriteLineTwo(_("Ready!"));
+
 	return wxEmptyString;
 
 }
