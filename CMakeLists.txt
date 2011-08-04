@@ -44,6 +44,7 @@ endif ()
 # include RtAudio
 add_subdirectory(src/rt lib/rt)
 add_subdirectory(src/grandorgue bin)
+add_subdirectory(po)
 
 message(STATUS "  Project                     : ${PROJECT_NAME}")
 message(STATUS "  Description                 : ${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")

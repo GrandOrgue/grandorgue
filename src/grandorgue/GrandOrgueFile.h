@@ -117,6 +117,7 @@ public:
 	/* Access to the display metrics presented by the ODF */
 	GOrgueDisplayMetrics* GetDisplayMetrics();
 
+	void GenerateCacheHash(unsigned char hash[20]);
 	/* Access to internal ODF objects */
 	int GetManualAndPedalCount();
 	int GetFirstManualIndex();

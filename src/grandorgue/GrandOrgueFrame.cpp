@@ -342,6 +342,12 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	zout.Write(&magic, sizeof(magic));
 	if (zout.LastWrite() != sizeof(magic))
 		cache_save_ok = false;
+	
+	unsigned char hash[20];
+	organfile->GenerateCacheHash(hash);
+	zout.Write(hash, sizeof(hash));
+	if (zout.LastWrite() != sizeof(hash))
+		cache_save_ok = false;
 
 	for (int i = organfile->GetFirstManualIndex(); cache_save_ok && i <= organfile->GetManualAndPedalCount(); i++)
 		for (int j = 0; cache_save_ok && j < organfile->GetManual(i)->GetStopCount(); j++)

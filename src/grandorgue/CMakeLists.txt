@@ -9,6 +9,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgueDef.h.in ${CMAKE_CURRENT_BI
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h)
 
 set(grandorgue_src
+contrib/sha1.cpp
 GOrgueWave.cpp
 GOrgueControl.cpp
 GOrgueCoupler.cpp
