@@ -1,0 +1,26 @@
+Works on Linux (and Windows too).
+
+gettext utitlities must be installed to create/compile translations.
+Binary .mo files from Linux should be usable on Windows too.
+
+How to update:
+1) make update-pot
+Creates/Updates po/GrandOrgue.pot
+2) make merge-pot
+Merges new strings into po/*.po
+3) 
+Edit po/$LANG.po. Search for fuzzy or untranslated entries and correct them.
+KDE includes lokalize (http://userbase.kde.org/Lokalize), a
+end-user friendly editor.
+4) Commit the changed po files.
+
+How to add a new language:
+1) make update-pot
+2) Add a new po file, eg. for de:
+cd po
+msginit -i GrandOrgue.pot -l de -o de.po
+3) Rerun cmake, so that it recognize the new po file
+4) Edit & commit the po/$LANG.po
+
+The translations are automatically built/installed, if the gettext
+utilties are available.

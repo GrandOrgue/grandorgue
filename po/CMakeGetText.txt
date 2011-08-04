@@ -1,0 +1,37 @@
+FIND_PROGRAM(GETTEXT_XGETTEXT_EXECUTABLE xgettext)
+
+MACRO(GETTEXT_UPDATE_POT target _potFile)
+	ADD_CUSTOM_TARGET(${target} COMMAND ${GETTEXT_XGETTEXT_EXECUTABLE} -o ${_potFile} ${ARGN})
+ENDMACRO(GETTEXT_UPDATE_POT)
+
+MACRO(GETTEXT_MERGE_PO target _potFile)
+	FOREACH (_currentPoFile ${ARGN})
+		ADD_CUSTOM_TARGET(${target} COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} --update --backup=none -s ${_currentPoFile} ${_potFile})
+	ENDFOREACH (_currentPoFile )
+ENDMACRO(GETTEXT_MERGE_PO)
+
+MACRO(GETTEXT_INSTALL_PO basename)
+	SET(_moFiles)
+	SET(_addToAll)
+	IF (GETTEXT_FOUND)
+		SET(_addToAll "ALL")
+	ENDIF()
+	FOREACH (_currentPoFile ${ARGN})
+		GET_FILENAME_COMPONENT(_lang ${_currentPoFile} NAME_WE)
+		SET(_moDir ${CMAKE_BINARY_DIR}/share/locale/${_lang}/LC_MESSAGES)
+		SET(_moFile ${_moDir}/${basename}.mo)
+		SET(_moFiles ${_moFiles} ${_moFile})
+		file(MAKE_DIRECTORY ${_moDir})
+
+		ADD_CUSTOM_COMMAND( 
+			OUTPUT ${_moFile} 
+			COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${_moFile} ${_currentPoFile}
+			DEPENDS ${_currentPoFile} 
+		)
+		IF (GETTEXT_FOUND)
+			INSTALL(FILES ${_moFile} DESTINATION share/locale/${_lang}/LC_MESSAGES RENAME ${basename}.mo)
+		ENDIF()
+	ENDFOREACH (_currentPoFile )
+
+	ADD_CUSTOM_TARGET(translations ${_addToAll} DEPENDS ${_moFiles})
+ENDMACRO(GETTEXT_INSTALL_PO)

@@ -52,6 +52,7 @@
 #include "GOrgueWave.h"
 #include "GOrgueWindchest.h"
 #include "OrganDocument.h"
+#include "contrib/sha1.h"
 
 extern GOrgueSound* g_sound;
 GrandOrgueFile* organfile = 0;
@@ -111,6 +112,35 @@ GrandOrgueFile::GrandOrgueFile() :
 		m_manual[i] = GOrgueManual();
 	}
 }
+
+void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
+{
+	SHA_CTX ctx;
+	int len;
+	SHA1_Init(&ctx);
+	for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+		for (int j = 0; j < m_manual[i].GetStopCount(); j++)
+		{
+			SHA1_Update(&ctx, &m_manual[i].GetStop(j)->AmplitudeLevel, sizeof(m_manual[i].GetStop(j)->AmplitudeLevel));
+			for (unsigned k = 0; k < m_manual[i].GetStop(j)->GetPipeCount(); k++)
+			{
+				wxString filename = m_manual[i].GetStop(j)->GetPipe(k)->GetFilename();
+				SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+			}
+		}
+
+	SHA1_Update(&ctx, &m_AmplitudeLevel, sizeof(m_AmplitudeLevel));
+
+	len = sizeof(AUDIO_SECTION);
+	SHA1_Update(&ctx, &len, sizeof(len));
+	len = sizeof(GOrguePipe);
+	SHA1_Update(&ctx, &len, sizeof(len));
+	len = sizeof(GOrgueReleaseAlignTable);
+	SHA1_Update(&ctx, &len, sizeof(len));
+
+	SHA1_Final(hash, &ctx);
+}
+
 
 bool GrandOrgueFile::TryLoad
 	(wxInputStream* cache
@@ -399,6 +429,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 			if (cache_ok)
 			{
 				int magic;
+				unsigned char hash1[20], hash2[20];
 				zin.Read(&magic, sizeof(magic));
 				if (
 						(zin.LastRead() != sizeof(magic))
@@ -412,6 +443,14 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 						,GRANDORGUE_CACHE_MAGIC
 						,magic
 						);
+				}
+				GenerateCacheHash(hash1);
+				zin.Read(hash2, sizeof(hash2));
+				if (zin.LastRead() != sizeof(hash2) ||
+				    memcmp(hash1, hash2, sizeof(hash1)))
+				{
+					cache_ok = false;
+					wxLogWarning (_("Cache file had diffent hash bypassing cache."));
 				}
 			}
 
