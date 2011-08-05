@@ -5,9 +5,11 @@ MACRO(GETTEXT_UPDATE_POT target _potFile)
 ENDMACRO(GETTEXT_UPDATE_POT)
 
 MACRO(GETTEXT_MERGE_PO target _potFile)
+	SET(_cmds)
 	FOREACH (_currentPoFile ${ARGN})
-		ADD_CUSTOM_TARGET(${target} COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} --update --backup=none -s ${_currentPoFile} ${_potFile})
+		SET(_cmds ${_cmds} COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} --update --backup=none -s ${_currentPoFile} ${_potFile} -v )
 	ENDFOREACH (_currentPoFile )
+	ADD_CUSTOM_TARGET(${target} ${_cmds})
 ENDMACRO(GETTEXT_MERGE_PO)
 
 MACRO(GETTEXT_INSTALL_PO basename)
