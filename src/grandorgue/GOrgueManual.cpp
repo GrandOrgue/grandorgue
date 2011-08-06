@@ -115,25 +115,6 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 		m_tremulant_ids[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetTremulantCount());
 	}
 
-	for (unsigned i = 0; i < m_nb_stops; i++)
-	{
-		if (!m_stops[i]->m_Auto)
-			continue;
-		for (unsigned j = 0; j < m_nb_stops; j++)
-		{
-			if (i == j)
-				continue;
-			if (
-					(m_stops[j]->FirstAccessiblePipeLogicalKeyNumber < m_stops[i]->FirstAccessiblePipeLogicalKeyNumber + m_stops[i]->NumberOfAccessiblePipes)
-					&&
-					(m_stops[j]->FirstAccessiblePipeLogicalKeyNumber + m_stops[j]->NumberOfAccessiblePipes > m_stops[i]->FirstAccessiblePipeLogicalKeyNumber)
-				)
-			{
-				m_stops[i]->m_Auto = m_stops[j]->m_Auto = false;
-				break;
-			}
-		}
-	}
 }
 
 void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler* prev)
