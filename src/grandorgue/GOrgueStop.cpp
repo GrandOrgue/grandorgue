@@ -68,7 +68,14 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* 
 		m_Pipes.push_back(new GOrguePipe(file, Percussive, WindchestGroup, organfile->GetAmplitude() * AmplitudeLevel));
 	}
 
-	m_Auto = NumberOfLogicalPipes == 1;
+	if (NumberOfLogicalPipes == 1)
+	{
+		/* m_auto seems to state that if a stop only has 1 note, the note isn't
+		 * actually controlled by a manual, but will be on if the stop is on and
+		 * off if the stop is off... */
+		m_Auto = true;
+		NumberOfAccessiblePipes = 0;
+	}
 
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 }
@@ -89,14 +96,8 @@ void GOrgueStop::Set(bool on)
 
 	GOrgueDrawstop::Set(on);
 
-	/* m_auto seems to state that if a stop only has 1 note, the note isn't
-	 * actually controlled by a manual, but will be on if the stop is on and
-	 * off if the stop is off... */
 	if (m_Auto)
-	{
-		GOrgueManual* manual = organfile->GetManual(m_ManualNumber);
-		manual->Set(manual->GetFirstAccessibleKeyMIDINoteNumber() + FirstAccessiblePipeLogicalKeyNumber - 1, on);
-	}
+		m_Pipes[0]->Set(on);
 
 }
 
