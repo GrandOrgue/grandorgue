@@ -36,10 +36,11 @@ private:
 	wxInt16 StartRate;
 	wxInt16 StopRate;
 	wxInt16 AmpModDepth;
-	GOrguePipe* pipe;
+	GOrguePipe* m_pipe;
 
 public:
 	GOrgueTremulant();
+	~GOrgueTremulant();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	bool Set(bool on);

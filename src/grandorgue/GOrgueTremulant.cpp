@@ -29,9 +29,14 @@ GOrgueTremulant::GOrgueTremulant() :
 	StartRate(0),
 	StopRate(0),
 	AmpModDepth(0),
-	pipe(NULL)
+	m_pipe(NULL)
 {
+}
 
+GOrgueTremulant::~GOrgueTremulant()
+{
+	if (m_pipe)
+		delete m_pipe;
 }
 
 void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
@@ -41,6 +46,11 @@ void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetr
 	StopRate = cfg.ReadInteger(group, wxT("StopRate"), 1, 100);
 	AmpModDepth = cfg.ReadInteger(group, wxT("AmpModDepth"), 1, 100);
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
+	if (m_pipe)
+		delete m_pipe;
+	m_pipe = new GOrguePipe(wxT(""), false, ObjectNumber - 1, 0);
+	m_pipe->CreateTremulant(Period, StartRate, StopRate, AmpModDepth);
+	m_pipe->Set(DefaultToEngaged);
 }
 
 void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix, wxString group)
@@ -50,10 +60,10 @@ void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix, wxString group)
 
 bool GOrgueTremulant::Set(bool on)
 {
-	return false;
-	/*if (DefaultToEngaged == on)
+	if (DefaultToEngaged == on)
 		return on;
-	pipe->Set(on);
-	return GOrgueDrawstop::Set(on);*/
+	if (m_pipe)
+		m_pipe->Set(on);
+	return GOrgueDrawstop::Set(on);
 }
 

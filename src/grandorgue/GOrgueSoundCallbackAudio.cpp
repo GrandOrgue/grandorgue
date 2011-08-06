@@ -434,13 +434,8 @@ int GOrgueSound::AudioCallbackLocal
 				ptr = g_buff[organfile->GetWindchest(j)->tremulant[i] + 1] + 2;
 				for (unsigned int k = 0; k < n_frames*2; k++)
 				{
-#ifdef linux
 					//multiply by 2^-23
-					volume_buff[k] *= scalb(ptr[k], -23);
-#endif
-#ifdef _WIN32
-					volume_buff[k] *= _scalb(ptr[k], -23);
-#endif
+					volume_buff[k] *= ldexp(ptr[k], -23);
 				}
 
 			}
