@@ -21,6 +21,7 @@
  */
 
 #include <wx/wx.h>
+#include <wx/file.h>
 #include "GOrgueWave.h"
 #include "GOrgueWaveTypes.h"
 
@@ -193,30 +194,6 @@ void GOrgueWave::FindPeaks()
 
 }
 
-int readOneFile(int file, char* buffer, unsigned length)
-{
-  unsigned remain = length;
-  for(;;)
-	{
-#ifdef _WIN32
-	  remain -= _read(file, buffer, remain >= BUFSIZ ? BUFSIZ : remain);
-#endif
-#ifdef linux
-	  remain -= read(file, buffer, remain >= BUFSIZ ? BUFSIZ : remain); // TODO better error handling
-#endif
-	  if (!remain)
-		break;
-	  buffer += BUFSIZ;
-	}
-#ifdef _WIN32
-  _close(file);
-#endif
-#ifdef linux
-  close(file);
-#endif
-  return length;
-}
-
 void GOrgueWave::Open(const wxString& filename)
 {
 
@@ -224,33 +201,20 @@ void GOrgueWave::Open(const wxString& filename)
 	Close();
 
 	wxString temp = filename;
+	wxFile file;
 
-	/* Open file, because of efficiency wxFile is not used
-	 * FIXME: ^^^ the above comment was here when I started working
-	 * on the code... I'm not sure what it means? Has the efficency
-	 * of wxFile been tested? I think we should put it back in and
-	 * make use of the cross-platform benefits. */
 #ifdef linux
 	temp.Replace(wxT("\\"), wxT("/"));
-	int ffile = open(temp.mb_str(), O_RDONLY);
-	struct stat ffile_info;
-	fstat(ffile, &ffile_info);
-	unsigned length = ffile_info.st_size;
-#endif
-#ifdef _WIN32
-	int ffile = _open(temp, _O_BINARY | _O_RDONLY | _O_SEQUENTIAL);
-	unsigned length = _filelength(ffile);
 #endif
 
-	/* FIXME: better errorhandling (linux) < this causes GrandOrgue
-	 * to quit ungracefully! very bad. */
-	if (ffile == -1)
+	if (!file.Open(temp, wxFile::read))
 	{
 		wxString message;
 		message.Printf(_("Failed to open file '%s'\n"), temp.c_str());
 		throw message;
 	}
-
+	unsigned length = file.Length();
+	
 	// Allocate memory for wave and read it.
 	char* ptr = (char*)malloc(length);
 	if (!ptr)
@@ -263,7 +227,13 @@ void GOrgueWave::Open(const wxString& filename)
 		if (length < 12)
 			throw (wxString)_("< Not a RIFF file");
 
-		length = readOneFile(ffile, ptr, length);
+		if (file.Read(ptr, length) != length)
+		{
+			wxString message;
+			message.Printf(_("Failed to read file '%s'\n"), temp.c_str());
+			throw message;
+		}
+		file.Close();
 
 		/* Read the header, get it's size and make sure that it makes sense. */
 		GO_WAVECHUNKHEADER* riffHeader = (GO_WAVECHUNKHEADER*)(ptr + offset);
