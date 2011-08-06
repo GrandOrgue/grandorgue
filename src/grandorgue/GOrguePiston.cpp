@@ -74,7 +74,7 @@ void GOrguePiston::Save(IniFileConfig& cfg, bool prefix, wxString group)
 	GOrguePushbutton::Save(cfg, prefix, group);
 }
 
-void GOrguePiston::Push(int WXUNUSED(depth))
+void GOrguePiston::Push()
 {
 	this->drawstop->Push();
 }

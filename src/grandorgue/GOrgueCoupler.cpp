@@ -63,17 +63,17 @@ void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix, wxString group)
 
 }
 
-bool GOrgueCoupler::Set(bool on)
+void GOrgueCoupler::Set(bool on)
 {
 
 	if (DefaultToEngaged == on)
-		return on;
+		return;
 
 	DefaultToEngaged = on;
 	organfile->MIDIPretend(true);
 	DefaultToEngaged = !on;
 	organfile->MIDIPretend(false);
 
-	return GOrgueDrawstop::Set(on);
+	GOrgueDrawstop::Set(on);
 
 }

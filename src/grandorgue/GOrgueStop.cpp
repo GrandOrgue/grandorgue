@@ -78,16 +78,16 @@ void GOrgueStop::Save(IniFileConfig& cfg, bool prefix, wxString group)
 	GOrgueDrawstop::Save(cfg, prefix, group);
 }
 
-bool GOrgueStop::Set(bool on)
+void GOrgueStop::Set(bool on)
 {
 	if (DefaultToEngaged == on)
-		return on;
+		return;
 	DefaultToEngaged = on;
 	organfile->MIDIPretend(true);
 	DefaultToEngaged = !on;
 	organfile->MIDIPretend(false);
 
-	bool retval = GOrgueDrawstop::Set(on);
+	GOrgueDrawstop::Set(on);
 
 	/* m_auto seems to state that if a stop only has 1 note, the note isn't
 	 * actually controlled by a manual, but will be on if the stop is on and
@@ -98,7 +98,6 @@ bool GOrgueStop::Set(bool on)
 		manual->Set(manual->GetFirstAccessibleKeyMIDINoteNumber() + FirstAccessiblePipeLogicalKeyNumber - 1, on);
 	}
 
-	return retval;
 }
 
 GOrguePipe* GOrgueStop::GetPipe(unsigned index)

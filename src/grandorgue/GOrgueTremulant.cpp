@@ -58,12 +58,12 @@ void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix, wxString group)
 	GOrgueDrawstop::Save(cfg, prefix, group);
 }
 
-bool GOrgueTremulant::Set(bool on)
+void GOrgueTremulant::Set(bool on)
 {
 	if (DefaultToEngaged == on)
-		return on;
+		return;
 	if (m_pipe)
 		m_pipe->Set(on);
-	return GOrgueDrawstop::Set(on);
+	GOrgueDrawstop::Set(on);
 }
 

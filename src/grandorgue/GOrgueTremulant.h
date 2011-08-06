@@ -43,7 +43,7 @@ public:
 	~GOrgueTremulant();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
-	bool Set(bool on);
+	void Set(bool on);
 
 };
 

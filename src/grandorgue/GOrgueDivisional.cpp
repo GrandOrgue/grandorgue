@@ -128,7 +128,7 @@ void GOrgueDivisional::Save(IniFileConfig& cfg, bool prefix, wxString group)
 
 }
 
-void GOrgueDivisional::Push(int depth)
+void GOrgueDivisional::PushLocal()
 {
 
 	bool used = false;
@@ -168,7 +168,6 @@ void GOrgueDivisional::Push(int depth)
 			}
 		}
 		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
-		depth = 1;
 	}
 	else
 	{
@@ -212,8 +211,14 @@ void GOrgueDivisional::Push(int depth)
 			::wxGetApp().frame->AddPendingEvent(event);
 		}
 	}
+}
 
-	if (depth)
+void GOrgueDivisional::Push()
+{
+	PushLocal();
+
+	/* only use divisional couples, if not in setter mode */
+	if (g_sound->GetMidi().SetterActive())
 		return;
 
 	for (int k = 0; k < organfile->GetDivisionalCouplerCount(); k++)
@@ -230,7 +235,7 @@ void GOrgueDivisional::Push(int depth)
 				continue;
 
 			for (int j = i + 1; j < coupler->NumberOfManuals; j++)
-				organfile->GetManual(coupler->manual[j])->GetDivisional(m_DivisionalNumber)->Push(depth + 1);
+				organfile->GetManual(coupler->manual[j])->GetDivisional(m_DivisionalNumber)->PushLocal();
 
 			if (coupler->BiDirectionalCoupling)
 			{
@@ -239,7 +244,7 @@ void GOrgueDivisional::Push(int depth)
 				{
 					if (coupler->manual[j] == m_ManualNumber)
 						break;
-					organfile->GetManual(coupler->manual[j])->GetDivisional(m_DivisionalNumber)->Push(depth + 1);
+					organfile->GetManual(coupler->manual[j])->GetDivisional(m_DivisionalNumber)->PushLocal();
 				}
 
 			}

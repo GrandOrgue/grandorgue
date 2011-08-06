@@ -104,7 +104,7 @@ void GOrgueFrameGeneral::Load(IniFileConfig& cfg, wxString group)
 
 }
 
-void GOrgueFrameGeneral::Push(int WXUNUSED(depth))
+void GOrgueFrameGeneral::Push()
 {
 
 	bool used = false;
