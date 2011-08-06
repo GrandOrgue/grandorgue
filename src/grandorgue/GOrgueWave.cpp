@@ -213,7 +213,7 @@ void GOrgueWave::Open(const wxString& filename)
 		message.Printf(_("Failed to open file '%s'\n"), temp.c_str());
 		throw message;
 	}
-	unsigned length = file.Length();
+	wxFileOffset length = file.Length();
 	
 	// Allocate memory for wave and read it.
 	char* ptr = (char*)malloc(length);
