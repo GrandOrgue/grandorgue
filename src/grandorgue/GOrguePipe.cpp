@@ -643,6 +643,120 @@ short SynthTrem(double amp, double angle, double fade)
 	return (short)(fade * amp * sin(angle));
 }
 
+void GOrguePipe::CreateTremulant(int period, int startRate, int stopRate, int ampModDepth)
+{
+	FREE_AND_NULL(m_attack.data);
+	FREE_AND_NULL(m_loop.data);
+	FREE_AND_NULL(m_release.data);
+	FREE_AND_NULL(m_ra_table);
+	m_ra_table = NULL;
+	memset(&m_loop, 0, sizeof(m_loop));
+	memset(&m_attack, 0, sizeof(m_attack));
+	memset(&m_release, 0, sizeof(m_release));
+
+	m_Channels = 1;
+	if (m_Channels == 1)
+	{
+		m_attack.type = AC_UNCOMPRESSED_MONO;
+		m_loop.type = AC_UNCOMPRESSED_MONO;
+		m_release.type = AC_UNCOMPRESSED_MONO;
+	}
+	else
+	{
+		m_attack.type = AC_UNCOMPRESSED_STEREO;
+		m_loop.type = AC_UNCOMPRESSED_STEREO;
+		m_release.type = AC_UNCOMPRESSED_STEREO;
+	}
+
+	m_attack.stage = GSS_ATTACK;
+	m_loop.stage = GSS_LOOP;
+	m_release.stage = GSS_RELEASE;
+
+	double trem_freq = 1000.0 / period;
+	int sample_freq = 44100;
+
+	unsigned attackSamples  = sample_freq / startRate;
+	unsigned attackSamplesInMem = attackSamples + SAMPLE_SLACK;
+	unsigned loopSamples  = sample_freq / trem_freq;
+	unsigned loopSamplesInMem = loopSamples + SAMPLE_SLACK;
+	unsigned releaseSamples  = sample_freq / stopRate;
+	unsigned releaseSamplesInMem = releaseSamples + SAMPLE_SLACK;
+
+	m_attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
+	m_attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
+	m_attack.data = (unsigned char*)malloc(m_attack.alloc_size);
+	if (m_attack.data == NULL)
+		throw (wxString)_("< out of memory allocating attack");
+
+	m_loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
+	m_loop.alloc_size = loopSamplesInMem * sizeof(wxInt16) * m_Channels;
+	m_loop.data = (unsigned char*)malloc(m_loop.alloc_size);
+	if (m_loop.data == NULL)
+		throw (wxString)_("< out of memory allocating loop");
+
+	m_release.size = releaseSamples * sizeof(wxInt16) * m_Channels;
+	m_release.alloc_size = releaseSamplesInMem * sizeof(wxInt16) * m_Channels;
+	m_release.data = (unsigned char*)malloc(m_release.alloc_size);
+	if (m_release.data == NULL)
+		throw (wxString)_("< out of memory allocating release");
+
+	double pi = 3.14159265358979323846;
+	double trem_amp   = (0x7FF0 * ampModDepth / 100);
+	double trem_param = 2 * pi  / loopSamples;
+	double trem_fade, trem_inc, trem_angle;
+	short *ptr;
+	trem_inc = 1.0 / attackSamples;
+	trem_fade = trem_angle = 0.0;
+	ptr = (short*)m_attack.data;
+	for(unsigned i = 0; i < attackSamples; i++)
+	{
+		ptr[i] = SynthTrem(trem_amp, trem_angle, trem_fade);
+		trem_angle += trem_param * trem_fade;
+		trem_fade += trem_inc;
+	}
+
+	ptr = (short*)m_loop.data;
+	for(unsigned i = 0; i < loopSamples; i++)
+	{
+		ptr[i] = SynthTrem(trem_amp, trem_angle);
+		trem_angle += trem_param;
+	}
+
+	trem_inc = 1.0 / (double)releaseSamples;
+	trem_fade = 1.0 - trem_inc;
+	ptr = (short*)m_release.data;
+	for(unsigned i = 0; i < releaseSamples; i++)
+	{
+		ptr[i] = SynthTrem(trem_amp, trem_angle, trem_fade);
+		trem_angle += trem_param * trem_fade;
+		trem_fade -= trem_inc;
+	}
+
+	memcpy(&m_loop.data[m_loop.size],
+	       &m_loop.data[0],
+	       loopSamplesInMem * sizeof(wxInt16) * m_Channels - m_loop.size);
+
+	memcpy(&m_attack.data[m_attack.size],
+	       &m_loop.data[0],
+	       attackSamplesInMem * sizeof(wxInt16) * m_Channels - m_attack.size);
+
+	memcpy(&m_release.data[m_release.size],
+	       &m_release.data[m_release.size-(releaseSamplesInMem * sizeof(wxInt16) * m_Channels - m_release.size)],
+	       releaseSamplesInMem * sizeof(wxInt16) * m_Channels - m_release.size);
+
+	int amp = 10000;
+	ra_shift = 7;
+	while (amp > 10000)
+	{
+		ra_shift--;
+		amp >>= 1;
+	}
+	ra_amp = (amp << 15) / -10000;
+
+	ComputeReleaseAlignmentInfo();
+}
+
+
 /* FIXME: This function must be broken - not going to even start describing the problem.
  * TODO: "count" refers to the number of BYTES in the stream... not samples.
  *

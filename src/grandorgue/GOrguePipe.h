@@ -74,6 +74,7 @@ public:
 
 	void Set(bool on);
 	void LoadData();
+	void CreateTremulant(int period, int startRate, int stopRate, int ampModDepth);
 
 	bool LoadCache(wxInputStream* cache);
 	bool SaveCache(wxOutputStream* cache);
