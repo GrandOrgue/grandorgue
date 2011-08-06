@@ -41,7 +41,7 @@ public:
 	unsigned GetPipeCount();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
-	bool Set(bool on);
+	void Set(bool on);
 	~GOrgueStop(void);
 
 	wxInt16 m_ManualNumber;

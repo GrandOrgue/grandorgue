@@ -121,10 +121,10 @@ void GOrgueDrawstop::MIDI(void)
 
 }
 
-bool GOrgueDrawstop::Set(bool on)
+void GOrgueDrawstop::Set(bool on)
 {
 	if (DefaultToEngaged == on)
-		return on;
+		return;
 	DefaultToEngaged = on;
 	wxCommandEvent event(wxEVT_DRAWSTOP, 0);
 	event.SetClientData(this);
@@ -140,8 +140,5 @@ bool GOrgueDrawstop::Set(bool on)
 			::wxGetApp().frame->AddPendingEvent(event);
 	    }
 	}
-#ifdef __VFD__
 	GOrgueLCD_WriteLineTwo(Name, 2000);
-#endif
-	return !on;
 }

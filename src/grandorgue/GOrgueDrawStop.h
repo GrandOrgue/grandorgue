@@ -49,7 +49,7 @@ public:
 	virtual bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	void Push(void);
 	void MIDI(void);
-	virtual bool Set(bool on);
+	virtual void Set(bool on);
 
 };
 

@@ -61,12 +61,12 @@ void GOrgueDivisionalCoupler::Save(IniFileConfig& cfg, bool prefix, wxString gro
 	GOrgueDrawstop::Save(cfg, prefix, group);
 }
 
-bool GOrgueDivisionalCoupler::Set(bool on)
+void GOrgueDivisionalCoupler::Set(bool on)
 {
 
 	if (DefaultToEngaged == on)
-		return on;
-	return GOrgueDrawstop::Set(on);
+		return;
+	GOrgueDrawstop::Set(on);
 
 }
 

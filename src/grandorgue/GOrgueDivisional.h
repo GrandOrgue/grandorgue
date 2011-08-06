@@ -32,6 +32,8 @@ class GOrgueDisplayMetrics;
 
 class GOrgueDivisional : public GOrguePushbutton
 {
+protected:
+	void PushLocal();
 
 public:
 
@@ -44,7 +46,7 @@ public:
 	GOrgueDivisional();
 	void Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
-	void Push(int depth = 0);
+	void Push();
 
 };
 
