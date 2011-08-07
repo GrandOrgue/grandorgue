@@ -23,8 +23,6 @@
 #ifndef GORGUESOUND_H
 #define GORGUESOUND_H
 
-#define MAX_OUTPUT_CHANNELS 2
-
 /* BLOCKS_PER_FRAME specifies the number of mono samples or stereo sample
  * pairs which are decoded for each iteration of the audio engines main loop.
  * Setting this value too low will result in inefficiencies or certain
