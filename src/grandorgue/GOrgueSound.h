@@ -29,7 +29,7 @@
  * pairs which are decoded for each iteration of the audio engines main loop.
  * Setting this value too low will result in inefficiencies or certain
  * features (compression) failing to work. */
-#define BLOCKS_PER_FRAME 2
+#define BLOCKS_PER_FRAME 64
 
 #include <wx/wx.h>
 #include <wx/stopwatch.h>
@@ -187,7 +187,11 @@ private:
 	/* These are only used by the audio callback... */
 	double final_buff[1024 * 2];
 	float volume_buff[1024 * 2];
-	int g_buff[11][(1024 + 2) * 2];
+	int g_buff[11][(1024 + BLOCKS_PER_FRAME) * 2];
+
+	/* this buffer is used as a temprary when decoding frame data */
+	int m_TempDecodeBuffer[(1024 + BLOCKS_PER_FRAME) * 2];
+
 	/* end audio callback variables */
 
 	wxStopWatch sw;

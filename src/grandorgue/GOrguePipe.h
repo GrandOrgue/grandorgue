@@ -26,9 +26,6 @@
 #include <wx/wx.h>
 #include "GOrgueSound.h"
 
-class wxInputStream;
-class wxOutputStream;
-
 class GOrgueTremulant;
 class GOrgueReleaseAlignTable;
 

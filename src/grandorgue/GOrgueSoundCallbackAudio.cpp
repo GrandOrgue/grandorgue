@@ -40,23 +40,22 @@ void stereoUncompressed
 	)
 {
 
-	short* input = (short*)(sampler->pipe_section->data + sampler->position);
-
-	output[0] = input[0] + input[1];
-	output[1] = input[2] + input[3];
-	output[2] = input[2];
-	output[3] = input[3];
-
+	// "borrow" the output buffer to compute release alignment info
+	wxInt16* input = (wxInt16*)(sampler->pipe_section->data + sampler->position);
+	output[0] = (int)input[BLOCKS_PER_FRAME * 2 - 4] + input[BLOCKS_PER_FRAME * 2 - 3];
+	output[1] = (int)input[BLOCKS_PER_FRAME * 2 - 2] + input[BLOCKS_PER_FRAME * 2 - 1];
 	GOrgueReleaseAlignTable::UpdateTrackingInfo
 		(sampler->release_tracker
 		,2
 		,output
 		);
 
-	output[0] = input[0];
-	output[1] = input[1];
+	// copy the sample buffer
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME * 2; i++, input++, output++)
+		*output = *input;
 
-	sampler->position += 8;
+	// update the position
+	sampler->position += BLOCKS_PER_FRAME * sizeof(wxInt16) * 2;
 
 }
 
@@ -68,20 +67,24 @@ void monoUncompressed
 	)
 {
 
-	short* input = (short*)(sampler->pipe_section->data + sampler->position);
+	// copy the sample buffer
+	wxInt16* input = (wxInt16*)(sampler->pipe_section->data + sampler->position);
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; i++, input++, output += 2)
+	{
+		output[0] = *input;
+		output[1] = *input;
+	}
 
-	output[0] = input[0];
-	output[1] = input[0];
-	output[2] = input[1];
-	output[3] = input[1];
-
+	// update the alignment tracker
+	int* ra_pos = (output - 3);
 	GOrgueReleaseAlignTable::UpdateTrackingInfo
 		(sampler->release_tracker
 		,2
-		,&(output[1])
+		,ra_pos
 		);
 
-	sampler->position += 4;
+	// update the position
+	sampler->position += BLOCKS_PER_FRAME * sizeof(wxInt16);
 
 }
 
@@ -234,6 +237,7 @@ void GOrgueSound::ProcessAudioSamplers
 {
 
 	assert(list_start);
+	assert((n_frames & (nframes - 1)) == 0);
 	GO_SAMPLER* previous_valid_sampler = *list_start;
 	for (GO_SAMPLER* sampler = *list_start; sampler; sampler = sampler->next)
 	{
@@ -246,14 +250,11 @@ void GOrgueSound::ProcessAudioSamplers
 			)
 			sampler->fadeout = 4;
 
-		int* write_iterator = output_buffer;
-
-		for(unsigned int i = 0; i < n_frames; i += 2)
+		int* decode_pos = m_TempDecodeBuffer;
+		for(unsigned int i = 0; i < n_frames; i += BLOCKS_PER_FRAME, decode_pos += BLOCKS_PER_FRAME * 2)
 		{
 
-			int intbuffer[4];
-
-			GetNextFrame(sampler, intbuffer);
+			GetNextFrame(sampler, decode_pos);
 
 			if(sampler->pipe_section->stage == GSS_RELEASE)
 			{
@@ -296,14 +297,21 @@ void GOrgueSound::ProcessAudioSamplers
 
 			if (!sampler->pipe)
 				break;
+		}
+
+		/* Process fade on the sampler */
+		decode_pos = m_TempDecodeBuffer;
+		int* write_iterator = output_buffer;
+		for(unsigned int i = 0; i < n_frames / 2; i++, write_iterator += 4, decode_pos += 4)
+		{
 
 			/* Multiply each of the buffer samples by the fade factor - note:
 			 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero
 			 */
-			intbuffer[0] *= sampler->fade;
-			intbuffer[1] *= sampler->fade;
-			intbuffer[2] *= sampler->fade;
-			intbuffer[3] *= sampler->fade;
+			decode_pos[0] *= sampler->fade;
+			decode_pos[1] *= sampler->fade;
+			decode_pos[2] *= sampler->fade;
+			decode_pos[3] *= sampler->fade;
 			if (sampler->fadein + sampler->fadeout)
 			{
 
@@ -317,11 +325,10 @@ void GOrgueSound::ProcessAudioSamplers
 			 * right by the necessary amount to bring the sample gain back
 			 * to unity (this value is computed in GOrguePipe.cpp)
 			 */
-			write_iterator[0] += intbuffer[0] >> sampler->shift;
-			write_iterator[1] += intbuffer[1] >> sampler->shift;
-			write_iterator[2] += intbuffer[2] >> sampler->shift;
-			write_iterator[3] += intbuffer[3] >> sampler->shift;
-			write_iterator += 4;
+			write_iterator[0] += decode_pos[0] >> sampler->shift;
+			write_iterator[1] += decode_pos[1] >> sampler->shift;
+			write_iterator[2] += decode_pos[2] >> sampler->shift;
+			write_iterator[3] += decode_pos[3] >> sampler->shift;
 
 		}
 
