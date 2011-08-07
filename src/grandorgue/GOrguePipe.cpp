@@ -32,13 +32,6 @@
 extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
 
-/* This parameter defines how many samples should be added to the end of each
- * audio section (i.e. the "attack", "loop" or "release" segment). It is
- * necessary due to how the sampler fetches samples. Probably not a good idea
- * to lower this value unless you know exactly what you're doing.
- */
-#define SAMPLE_SLACK 2
-
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 
 void GOrguePipe::GetMaxAmplitudeAndDerivative
@@ -476,20 +469,15 @@ void GOrguePipe::LoadData()
 		if (m_Channels < 1 || m_Channels > 2)
 			throw (wxString)_("< More than 2 channels in");
 
-		/* FIXME: This code was present in the original version (however it
-		 * has been modified extremely heavily).
-		 *
-		 * Basically, sample playback reads blocks of two samples at a time,
+		/* Basically, sample playback reads BLOCKS_PER_FRAME * 2 samples at a
+		 * time (because the engine always plays back in stereo at present),
 		 * which means that if the loop ranges, attack segment length or
-		 * release segment length is not a multiple of 2, the sound will
-		 * crack. This is a hack to restore playback to something which should
-		 * behave - but there are likely to be situations where it won't and
-		 * I believe that these are the situations that have been reported on
-		 * the bug tracker related to clicks in the audio.
+		 * release segment length is not a multiple of BLOCKS_PER_FRAME, the
+		 * sound will crackle. The following code is used to ensure that each
+		 * data range will always have enough samples for their intended
+		 * purposes.
 		 */
-
 		unsigned attackSamples = wave.GetLength();
-
 		if ((wave.GetNbLoops() > 0) && wave.HasReleaseMarker())
 		{
 
@@ -501,7 +489,7 @@ void GOrguePipe::LoadData()
 			/* Get the loop parameters */
 			unsigned loopStart = wave.GetLoopStartPosition();
 			unsigned loopSamples = wave.GetLoopEndPosition() - loopStart + 1;
-			unsigned loopSamplesInMem = loopSamples + SAMPLE_SLACK;
+			unsigned loopSamplesInMem = loopSamples + BLOCKS_PER_FRAME;
 			assert(loopStart > 0);
 			assert(wave.GetLoopEndPosition() > loopStart);
 
@@ -524,7 +512,7 @@ void GOrguePipe::LoadData()
 			/* Get the release parameters from the wave file. */
 			unsigned releaseOffset = wave.GetReleaseMarkerPosition();
 			unsigned releaseSamples = wave.GetLength() - releaseOffset;
-			unsigned releaseSamplesInMem = releaseSamples + SAMPLE_SLACK;
+			unsigned releaseSamplesInMem = releaseSamples + BLOCKS_PER_FRAME;
 
 			/* Allocate memory for the release, copy the release into it and
 			 * pad the slack samples with zeroes to ensure correct operation
@@ -546,7 +534,7 @@ void GOrguePipe::LoadData()
 
 		/* Allocate memory for the attack. */
 		assert(attackSamples != 0);
-		unsigned attackSamplesInMem = attackSamples + SAMPLE_SLACK;
+		unsigned attackSamplesInMem = attackSamples + BLOCKS_PER_FRAME;
 		m_attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
 		m_attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
 		assert((unsigned)m_attack.size <= totalDataSize); /* can be equal for percussive samples */
@@ -676,11 +664,11 @@ void GOrguePipe::CreateTremulant(int period, int startRate, int stopRate, int am
 	int sample_freq = 44100;
 
 	unsigned attackSamples  = sample_freq / startRate;
-	unsigned attackSamplesInMem = attackSamples + SAMPLE_SLACK;
+	unsigned attackSamplesInMem = attackSamples + BLOCKS_PER_FRAME;
 	unsigned loopSamples  = sample_freq / trem_freq;
-	unsigned loopSamplesInMem = loopSamples + SAMPLE_SLACK;
+	unsigned loopSamplesInMem = loopSamples + BLOCKS_PER_FRAME;
 	unsigned releaseSamples  = sample_freq / stopRate;
-	unsigned releaseSamplesInMem = releaseSamples + SAMPLE_SLACK;
+	unsigned releaseSamplesInMem = releaseSamples + BLOCKS_PER_FRAME;
 
 	m_attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
 	m_attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;

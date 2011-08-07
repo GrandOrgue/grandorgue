@@ -172,7 +172,9 @@ GOrgueSound::~GOrgueSound(void)
 
 bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 {
+
 	int i;
+	bool opened_ok = true;
 
 	defaultAudio = pConfig->Read(wxT("Devices/DefaultSound"), defaultAudio);
 	volume = pConfig->Read(wxT("Volume"), 50);
@@ -232,45 +234,40 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 				pConfig->Write(wxT("Devices/Sound/ActualLatency/") + defaultAudio, GetLatency());
 			}
 			else
-			{
-				::wxSleep(1);
-				if (logSoundErrors)
-					::wxLogError(_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur."));
-				CloseSound(organfile);
-				return false;
-			}
+				throw (wxString)_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
+
+			if (m_samples_per_buffer % BLOCKS_PER_FRAME != 0)
+				throw (wxString)_("Samples per buffer not divisible by BLOCKS_PER_FRAME.");
 
 		}
+		else
+			throw (wxString)_("No audio device is selected; neither MIDI input nor sound output will occur!");
 
-		if (!m_midi->HasActiveDevice() || it == m_audioDevices.end())
-		{
-
-			::wxSleep(1);
-			if (logSoundErrors)
-				::wxLogWarning
-					( m_midi->HasActiveDevice()
-					? _("No audio device is selected; neither MIDI input nor sound output will occur!")
-					: _("No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!")
-					);
-			CloseSound(organfile);
-			return false;
-
-		}
+		if (!m_midi->HasActiveDevice())
+			throw (wxString)_("No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!");
 
 	}
 	catch (RtError &e)
 	{
-		::wxSleep(1);
 		if (logSoundErrors)
-            e.printMessage();
-		CloseSound(organfile);
-		return false;
+			e.printMessage();
+		opened_ok = false;
+	}
+	catch (wxString &msg)
+	{
+		if (logSoundErrors)
+			wxLogError(msg.c_str());
+		opened_ok = false;
 	}
 
-	if (wait)
+	if ((!opened_ok) || (wait))
 		::wxSleep(1);
 
-	return true;
+	if (!opened_ok)
+		CloseSound(organfile);
+
+	return opened_ok;
+
 }
 
 void GOrgueSound::CloseSound(GrandOrgueFile* organfile)
