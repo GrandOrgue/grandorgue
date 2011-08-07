@@ -254,14 +254,9 @@ void ApplySamplerFade
 			decoded_sampler_audio_frame[2] *= fade;
 			decoded_sampler_audio_frame[3] *= fade;
 
-			if (fade_in_plus_out)
-			{
-
-				fade += fade_in_plus_out;
-				if(fade > 0)
-					fade = 0;
-
-			}
+			fade += fade_in_plus_out;
+			if(fade > 0)
+				fade = 0;
 
 		}
 
@@ -478,19 +473,11 @@ int GOrgueSound::AudioCallbackLocal
 		if (windchests[j] == NULL)
 			continue;
 
-		int* this_buff;
-		if (j < organfile->GetTremulantCount())
-			this_buff = g_buff[j + 1] + 2;
-		else
-		{
-			this_buff = g_buff[0] + 2;
-			double d = organfile->GetWindchest(j)->GetVolume();
-			d *= volume;
-			d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
-			float f = d;
-			std::fill(volume_buff, volume_buff + 2048, f);
-		}
-		std::fill(this_buff, this_buff + 2052, (j < organfile->GetTremulantCount() ? 0x800000 : 0));
+		int* this_buff = (j < organfile->GetTremulantCount())
+			? g_buff[j + 1] + 2
+			: g_buff[0] + 2;
+
+		std::fill(this_buff, this_buff + 2048, (j < organfile->GetTremulantCount() ? 0x800000 : 0));
 
 		ProcessAudioSamplers
 			(&(windchests[j])
@@ -499,6 +486,13 @@ int GOrgueSound::AudioCallbackLocal
 
 		if (j >= organfile->GetTremulantCount())
 		{
+
+			double d = organfile->GetWindchest(j)->GetVolume();
+			d *= volume;
+			d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
+			float f = d;
+			std::fill(volume_buff, volume_buff + 2048, f);
+
 			int *ptr;
 			for (int i = 0; i < organfile->GetWindchest(j)->GetTremulantCount(); i++)
 			{
