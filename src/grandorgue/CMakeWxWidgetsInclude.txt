@@ -61,7 +61,7 @@ if (WIN32)
 endif ()
 
 # Find wxWidgets
-find_package(wxWidgets COMPONENTS html adv core base net)
+find_package(wxWidgets COMPONENTS html net adv core base)
 
 # Continuation of the previous hack for Windows.
 if (WIN32)
