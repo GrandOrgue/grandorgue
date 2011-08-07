@@ -38,7 +38,7 @@ add_definitions("-fomit-frame-pointer -ffast-math -Wall")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
    add_definitions("-g -O0 -mmmx -msse -msse2 -msse3 -funit-at-a-time")
 elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
-   add_definitions("-O2 -mmmx -msse -msse2 -msse3 -DNDEBUG")
+   add_definitions("-O3 -mmmx -msse -msse2 -msse3 -DNDEBUG")
 endif ()
 
 # include RtAudio
