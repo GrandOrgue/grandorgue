@@ -306,6 +306,16 @@ void ReadSamplerFrames
 	for(unsigned int i = 0; i < n_blocks; i += BLOCKS_PER_FRAME, decoded_sampler_audio_frame += BLOCKS_PER_FRAME * 2)
 	{
 
+		if (!sampler->pipe)
+		{
+			std::fill
+				(decoded_sampler_audio_frame
+				,decoded_sampler_audio_frame + (BLOCKS_PER_FRAME * 2)
+				,0
+				);
+			continue;
+		}
+
 		GetNextFrame(sampler, decoded_sampler_audio_frame);
 
 		if(sampler->pipe_section->stage == GSS_RELEASE)
@@ -351,9 +361,6 @@ void ReadSamplerFrames
 				}
 			}
 		}
-
-		if (!sampler->pipe)
-			break;
 
 	}
 
@@ -474,8 +481,8 @@ int GOrgueSound::AudioCallbackLocal
 			continue;
 
 		int* this_buff = (j < organfile->GetTremulantCount())
-			? g_buff[j + 1] + 2
-			: g_buff[0] + 2;
+			? g_buff[j + 1]
+			: g_buff[0];
 
 		std::fill(this_buff, this_buff + 2048, (j < organfile->GetTremulantCount() ? 0x800000 : 0));
 
@@ -499,7 +506,7 @@ int GOrgueSound::AudioCallbackLocal
 
 				if (!windchests[organfile->GetWindchest(j)->tremulant[i]])
 					continue;
-				ptr = g_buff[organfile->GetWindchest(j)->tremulant[i] + 1] + 2;
+				ptr = g_buff[organfile->GetWindchest(j)->tremulant[i] + 1];
 				for (unsigned int k = 0; k < n_frames*2; k++)
 				{
 					//multiply by 2^-23
