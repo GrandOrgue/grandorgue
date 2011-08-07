@@ -31,6 +31,14 @@
  * features (compression) failing to work. */
 #define BLOCKS_PER_FRAME 64
 
+/* Maximum number of blocks (1 block is nChannels samples) per frame */
+#define MAX_FRAME_SIZE 1024
+
+/* Maximum number of channels the engine supports. This value can not be
+ * changed at present.
+ */
+#define MAX_OUTPUT_CHANNELS 2
+
 #include <wx/wx.h>
 #include <wx/stopwatch.h>
 #include <map>
@@ -185,12 +193,12 @@ public:
 private:
 
 	/* These are only used by the audio callback... */
-	double final_buff[1024 * 2];
-	float volume_buff[1024 * 2];
-	int g_buff[11][(1024 + BLOCKS_PER_FRAME) * 2];
+	double final_buff[MAX_FRAME_SIZE * MAX_OUTPUT_CHANNELS];
+	float volume_buff[MAX_FRAME_SIZE * MAX_OUTPUT_CHANNELS];
+	int g_buff[11][(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
 
 	/* this buffer is used as a temprary when decoding frame data */
-	int m_TempDecodeBuffer[(1024 + BLOCKS_PER_FRAME) * 2];
+	int m_TempDecodeBuffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
 
 	/* end audio callback variables */
 
