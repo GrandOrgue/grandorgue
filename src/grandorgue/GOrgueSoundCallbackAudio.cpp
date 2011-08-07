@@ -228,6 +228,142 @@ void GetNextFrame
 
 }
 
+static
+inline
+void ApplySamplerFade
+	(GO_SAMPLER* sampler
+	,unsigned int n_blocks
+	,int* decoded_sampler_audio_frame
+	)
+{
+
+	/* Multiply each of the buffer samples by the fade factor - note:
+	 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero.
+	 * Note: this for loop has been split by an if to aide the vectorizer.
+	 */
+	int fade_in_plus_out = sampler->fadein + sampler->fadeout;
+	int fade = sampler->fade;
+	if (fade_in_plus_out)
+	{
+
+		for(unsigned int i = 0; i < n_blocks / 2; i++, decoded_sampler_audio_frame += 4)
+		{
+
+			decoded_sampler_audio_frame[0] *= fade;
+			decoded_sampler_audio_frame[1] *= fade;
+			decoded_sampler_audio_frame[2] *= fade;
+			decoded_sampler_audio_frame[3] *= fade;
+
+			if (fade_in_plus_out)
+			{
+
+				fade += fade_in_plus_out;
+				if(fade > 0)
+					fade = 0;
+
+			}
+
+		}
+
+		sampler->fade = fade;
+
+	}
+	else
+	{
+
+		for(unsigned int i = 0; i < n_blocks / 2; i++, decoded_sampler_audio_frame += 4)
+		{
+
+			decoded_sampler_audio_frame[0] *= fade;
+			decoded_sampler_audio_frame[1] *= fade;
+			decoded_sampler_audio_frame[2] *= fade;
+			decoded_sampler_audio_frame[3] *= fade;
+
+		}
+
+	}
+
+	if (sampler->pipe)
+	{
+		if (sampler->fade < sampler->fademax)
+		{
+			sampler->fadein = 0;
+		}
+		else if (sampler->fadein)
+		{
+			sampler->faderemain -= n_blocks;
+			if (sampler->faderemain <= 0)
+				sampler->fadein = 0;
+		}
+	}
+
+}
+
+static
+inline
+void ReadSamplerFrames
+	(GO_SAMPLER* sampler
+	,unsigned int n_blocks
+	,int* decoded_sampler_audio_frame
+	)
+{
+
+	for(unsigned int i = 0; i < n_blocks; i += BLOCKS_PER_FRAME, decoded_sampler_audio_frame += BLOCKS_PER_FRAME * 2)
+	{
+
+		GetNextFrame(sampler, decoded_sampler_audio_frame);
+
+		if(sampler->pipe_section->stage == GSS_RELEASE)
+		{
+
+			/* If this is the end of the release, and there are no more
+			 * samples to play back, the sampler is no-longer needed.
+			 * We can set the pipe to NULL and break out of this loop.
+			 */
+			assert(sampler->pipe);
+			if (sampler->position >= sampler->pipe->GetRelease()->size)
+				sampler->pipe = NULL;
+
+		}
+		else
+		{
+
+			unsigned currentBlockSize = sampler->pipe_section->size;
+			if(sampler->position >= currentBlockSize)
+			{
+				sampler->pipe_section = sampler->pipe->GetLoop();
+				if (sampler->pipe_section->data == NULL)
+				{
+					/* the pipe is percussive and the attack has completed
+					 * so we are therefore finished with this sampler. */
+					sampler->pipe = NULL;
+				}
+				else
+				{
+					/* the pipe is not percussive (normal). The loop or
+					 * attack segment has completed so we now (re)enter the
+					 * loop. */
+					sampler->position -= currentBlockSize;
+
+					/* FIXME: This is wrong. This copies the release
+					 * tracking info for sample zero, but it may well be
+					 * a much later sample within the block...
+					 */
+					GOrgueReleaseAlignTable::CopyTrackingInfo
+						(sampler->release_tracker
+						,sampler->pipe->GetLoop()->release_tracker_initial
+						);
+				}
+			}
+		}
+
+		if (!sampler->pipe)
+			break;
+
+	}
+
+}
+
 inline
 void GOrgueSound::ProcessAudioSamplers
 	(GO_SAMPLER** list_start
@@ -237,7 +373,8 @@ void GOrgueSound::ProcessAudioSamplers
 {
 
 	assert(list_start);
-	assert((n_frames & (nframes - 1)) == 0);
+	assert((n_frames & (n_frames - 1)) == 0);
+	assert(n_frames > BLOCKS_PER_FRAME);
 	GO_SAMPLER* previous_valid_sampler = *list_start;
 	for (GO_SAMPLER* sampler = *list_start; sampler; sampler = sampler->next)
 	{
@@ -250,100 +387,31 @@ void GOrgueSound::ProcessAudioSamplers
 			)
 			sampler->fadeout = 4;
 
-		int* decode_pos = m_TempDecodeBuffer;
-		for(unsigned int i = 0; i < n_frames; i += BLOCKS_PER_FRAME, decode_pos += BLOCKS_PER_FRAME * 2)
-		{
+		ReadSamplerFrames
+			(sampler
+			,n_frames
+			,m_TempDecodeBuffer
+			);
 
-			GetNextFrame(sampler, decode_pos);
+		ApplySamplerFade
+			(sampler
+			,n_frames
+			,m_TempDecodeBuffer
+			);
 
-			if(sampler->pipe_section->stage == GSS_RELEASE)
-			{
-
-				/* If this is the end of the release, and there are no more
-				 * samples to play back, the sampler is no-longer needed.
-				 * We can set the pipe to NULL and break out of this loop.
-				 */
-				assert(sampler->pipe);
-				if (sampler->position >= sampler->pipe->GetRelease()->size)
-					sampler->pipe = NULL;
-
-			}
-			else
-			{
-
-				unsigned currentBlockSize = sampler->pipe_section->size;
-				if(sampler->position >= currentBlockSize)
-				{
-					sampler->pipe_section = sampler->pipe->GetLoop();
-					if (sampler->pipe_section->data == NULL)
-					{
-						/* the pipe is percussive and the attack has completed
-						 * so we are therefore finished with this sampler. */
-						sampler->pipe = NULL;
-					}
-					else
-					{
-						/* the pipe is not percussive (normal). The loop or
-						 * attack segment has completed so we now (re)enter the
-						 * loop. */
-						sampler->position -= currentBlockSize;
-						GOrgueReleaseAlignTable::CopyTrackingInfo
-							(sampler->release_tracker
-							,sampler->pipe->GetLoop()->release_tracker_initial
-							);
-					}
-				}
-			}
-
-			if (!sampler->pipe)
-				break;
-		}
-
-		/* Process fade on the sampler */
-		decode_pos = m_TempDecodeBuffer;
+		/* Add these samples to the current output buffer shifting
+		 * right by the necessary amount to bring the sample gain back
+		 * to unity (this value is computed in GOrguePipe.cpp)
+		 */
+		int shift = sampler->shift;
 		int* write_iterator = output_buffer;
+		int* decode_pos = m_TempDecodeBuffer;
 		for(unsigned int i = 0; i < n_frames / 2; i++, write_iterator += 4, decode_pos += 4)
 		{
-
-			/* Multiply each of the buffer samples by the fade factor - note:
-			 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero
-			 */
-			decode_pos[0] *= sampler->fade;
-			decode_pos[1] *= sampler->fade;
-			decode_pos[2] *= sampler->fade;
-			decode_pos[3] *= sampler->fade;
-			if (sampler->fadein + sampler->fadeout)
-			{
-
-				sampler->fade += sampler->fadein + sampler->fadeout;
-				if(sampler->fade > 0)
-					sampler->fade = 0;
-
-			}
-
-			/* Add these samples to the current output buffer shifting
-			 * right by the necessary amount to bring the sample gain back
-			 * to unity (this value is computed in GOrguePipe.cpp)
-			 */
-			write_iterator[0] += decode_pos[0] >> sampler->shift;
-			write_iterator[1] += decode_pos[1] >> sampler->shift;
-			write_iterator[2] += decode_pos[2] >> sampler->shift;
-			write_iterator[3] += decode_pos[3] >> sampler->shift;
-
-		}
-
-		if (sampler->pipe)
-		{
-			if (sampler->fade < sampler->fademax)
-			{
-				sampler->fadein = 0;
-			}
-			else if (sampler->fadein)
-			{
-				sampler->faderemain -= n_frames;
-				if (sampler->faderemain <= 0)
-					sampler->fadein = 0;
-			}
+			write_iterator[0] += decode_pos[0] >> shift;
+			write_iterator[1] += decode_pos[1] >> shift;
+			write_iterator[2] += decode_pos[2] >> shift;
+			write_iterator[3] += decode_pos[3] >> shift;
 		}
 
 		/* if this sampler's pipe has been set to null or the fade value is
@@ -380,7 +448,7 @@ int GOrgueSound::AudioCallbackLocal
 {
 
 	if (organfile)
-        organfile->SetElapsedTime(sw.Time());
+		organfile->SetElapsedTime(sw.Time());
 
 	m_midi->ProcessMessages(b_active);
 
@@ -402,7 +470,7 @@ int GOrgueSound::AudioCallbackLocal
 		meter_poly = samplers_count;
 
 	/* initialise the output buffer */
-	std::fill(final_buff, final_buff + 2048,0);
+	std::fill(final_buff, final_buff + 2048, 0);
 
 	for (int j = 0; j < organfile->GetTremulantCount() + organfile->GetWinchestGroupCount() + 1; j++)
 	{
@@ -419,9 +487,8 @@ int GOrgueSound::AudioCallbackLocal
 			double d = organfile->GetWindchest(j)->GetVolume();
 			d *= volume;
 			d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
-
 			float f = d;
-			std::fill(volume_buff, volume_buff + 2048,f);
+			std::fill(volume_buff, volume_buff + 2048, f);
 		}
 		std::fill(this_buff, this_buff + 2052, (j < organfile->GetTremulantCount() ? 0x800000 : 0));
 
