@@ -165,10 +165,10 @@ bool GOrgueApp::OnInit()
 #ifdef __WIN32__
 
 	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
-	char docs[MAX_PATH];
+	wxChar docs[MAX_PATH];
 	SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, 0, docs);
 	m_path = docs;
-	m_path += "\\";
+	m_path += wxT("\\");
 #endif
 #ifdef linux
 	wxLog *logger=new wxLogStream(&std::cout);
