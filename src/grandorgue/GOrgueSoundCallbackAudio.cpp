@@ -585,6 +585,18 @@ GOrgueSound::AudioCallback
 {
 
 	assert(userData);
+
+	if (nFrames & (BLOCKS_PER_FRAME - 1))
+	{
+		wxString error;
+		error.Printf
+			(_("Audio callback of %u blocks requested. Must be divisible by %u.")
+			,nFrames
+			,BLOCKS_PER_FRAME
+			);
+		throw error;
+	}
+
 	return ((GOrgueSound*)userData)->AudioCallbackLocal
 		(static_cast<float*>(outputBuffer)
 		,nFrames
