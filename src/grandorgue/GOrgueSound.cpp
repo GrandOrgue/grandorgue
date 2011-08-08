@@ -174,7 +174,7 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 {
 
 	int i;
-	bool opened_ok = true;
+	bool opened_ok = false;
 
 	defaultAudio = pConfig->Read(wxT("Devices/DefaultSound"), defaultAudio);
 	volume = pConfig->Read(wxT("Volume"), 50);
@@ -214,7 +214,7 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 			RtAudio::StreamOptions aOptions;
 			aOptions.numberOfBuffers = m_nb_buffers;
 
-            format = RTAUDIO_FLOAT32;
+			format = RTAUDIO_FLOAT32;
 			audioDevice->openStream
 				(&aOutputParam
 				,NULL
@@ -236,8 +236,14 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 			else
 				throw (wxString)_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
 
-			if (m_samples_per_buffer % BLOCKS_PER_FRAME != 0)
-				throw (wxString)_("Samples per buffer not divisible by BLOCKS_PER_FRAME.");
+			if (m_samples_per_buffer & (BLOCKS_PER_FRAME - 1))
+			{
+				wxLogWarning
+					(_("Audio engine wants frame size of %u blocks which is indivisible by %u.")
+					,m_samples_per_buffer
+					,BLOCKS_PER_FRAME
+					);
+			}
 
 		}
 		else
@@ -246,18 +252,18 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 		if (!m_midi->HasActiveDevice())
 			throw (wxString)_("No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!");
 
+		opened_ok = true;
+
 	}
 	catch (RtError &e)
 	{
 		if (logSoundErrors)
 			e.printMessage();
-		opened_ok = false;
 	}
 	catch (wxString &msg)
 	{
 		if (logSoundErrors)
 			wxLogError(msg.c_str());
-		opened_ok = false;
 	}
 
 	if ((!opened_ok) || (wait))
