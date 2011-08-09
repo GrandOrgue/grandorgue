@@ -162,7 +162,7 @@ typedef struct GO_SAMPLER_T
 	int fade;
 	int fadein;
 	int fadeout;
-	int faderemain;
+	unsigned faderemain;
 	int fademax;
 
 	int time;
