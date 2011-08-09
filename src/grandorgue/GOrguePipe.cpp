@@ -187,6 +187,8 @@ void GOrguePipe::SetOff()
 
 	instances--;
 
+	assert(sampler);
+
 	if (m_loop.data == NULL)
 		return;
 
@@ -205,23 +207,45 @@ void GOrguePipe::SetOff()
 			new_sampler->pipe_section = &m_release;
 			new_sampler->position = 0;
 			new_sampler->shift = ra_shift;
-			int time = organfile->GetElapsedTime() - sampler->time;
 			new_sampler->time = organfile->GetElapsedTime();
 			new_sampler->fademax = ra_amp;
-			bool not_a_tremulant = (m_WindchestGroup >= organfile->GetTremulantCount());
-			if (g_sound->HasScaledReleases() && not_a_tremulant)
-			{
-				if (time < 256)
-					new_sampler->fademax = (ra_amp * (16384 + (time << 5))) >> 15;
-				if (time < 1024)
-					new_sampler->fadeout = 0x0001;
-			}
+			const bool not_a_tremulant = (m_WindchestGroup >= organfile->GetTremulantCount());
 			if (not_a_tremulant)
+			{
+				if (g_sound->HasScaledReleases())
+				{
+					int time = organfile->GetElapsedTime() - sampler->time;
+					if (time < 256)
+						new_sampler->fademax = (ra_amp * (16384 + (time * 64))) >> 15;
+					if (time < 1024)
+						new_sampler->fadeout = 1; /* nominal = 1.5 seconds */
+				}
 				new_sampler->fademax = lrint(vol * new_sampler->fademax);
+			}
+
+			/* Determines how much fadein to apply every 2 samples. If the pipe
+			 * has an amplitude of 10000 (which is nominal) and has been
+			 * playing for a long period of time, this value will be equal to
+			 *
+			 *   ra_amp + 128 >> 8
+			 * = -32640 >> 8
+			 * = -128
+			 *
+			 * So for fade to reach fademax would take:
+			 *
+			 *   2 * fademax / fadein
+			 * = 2 * -32768 / -128
+			 * = 512 samples or
+			 * = 12ms
+			 */
 			new_sampler->fadein = (new_sampler->fademax + 128) >> 8;
 			if (new_sampler->fadein == 0)
 				new_sampler->fadein--;
-			new_sampler->faderemain = 512;	// 32768*65536 / 64*65536
+
+			/* This determines the period of time the release is allowed to
+			 * fade in for in samples. 512 equates to roughly 12ms.
+			 */
+			new_sampler->faderemain = 512;
 
 			/* FIXME: this must be enabled again at some point soon */
 			if (g_sound->HasReleaseAlignment() && (m_ra_table != NULL))
@@ -264,13 +288,23 @@ void GOrguePipe::SetOff()
 	 * which will decay this portion of the pipe. The sampler will
 	 * automatically be placed back in the pool when the fade restores to
 	 * zero.
+	 *
+	 * Fadeout is added to the fade value in the sampler every 2 samples, so
+	 * a pipe with an amplitude of 10000 (unadjusted playback level) will have
+	 * a fadeout value of
+	 *
+	 *   (32768 - 128) >> 8
+	 * = 127
+	 *
+	 * Which means that the sampler will fade out over a period of
+	 *   (2 * 32768) / 127
+	 * = 516 samples = 12ms
 	 */
-	assert(sampler);
 	sampler->fadeout = (-ra_amp - 128) >> 8; /* recall that ra_amp is negative
 	                                          * so this will actually be a
 	                                          * positive number */
-    if (!sampler->fadeout) /* ensure that the sample will fade out */
-        sampler->fadeout++;
+	if (!sampler->fadeout) /* ensure that the sample will fade out */
+		sampler->fadeout++;
 	this->sampler = 0;
 
 }

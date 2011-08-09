@@ -42,8 +42,8 @@ void stereoUncompressed
 
 	// "borrow" the output buffer to compute release alignment info
 	wxInt16* input = (wxInt16*)(sampler->pipe_section->data + sampler->position);
-	output[0] = (int)input[BLOCKS_PER_FRAME * 2 - 4] + input[BLOCKS_PER_FRAME * 2 - 3];
-	output[1] = (int)input[BLOCKS_PER_FRAME * 2 - 2] + input[BLOCKS_PER_FRAME * 2 - 1];
+	output[0] = (int)(input[BLOCKS_PER_FRAME * 2 - 4]) + input[BLOCKS_PER_FRAME * 2 - 3];
+	output[1] = (int)(input[BLOCKS_PER_FRAME * 2 - 2]) + input[BLOCKS_PER_FRAME * 2 - 1];
 	GOrgueReleaseAlignTable::UpdateTrackingInfo
 		(sampler->release_tracker
 		,2
@@ -210,20 +210,18 @@ void GetNextFrame
 
 	switch (sampler->pipe_section->type)
 	{
-		case AC_UNCOMPRESSED_MONO:
-			monoUncompressed(sampler, buffer);
-			break;
-		case AC_COMPRESSED_MONO:
-			monoCompressed(sampler, buffer);
+		case AC_COMPRESSED_STEREO:
+			stereoCompressed(sampler, buffer);
 			break;
 		case AC_UNCOMPRESSED_STEREO:
 			stereoUncompressed(sampler, buffer);
 			break;
-		case AC_COMPRESSED_STEREO:
-			stereoCompressed(sampler, buffer);
+		case AC_COMPRESSED_MONO:
+			monoCompressed(sampler, buffer);
 			break;
 		default:
-			throw (wxString)_("bad sampler->type");
+			assert(sampler->pipe_section->type == AC_UNCOMPRESSED_MONO);
+			monoUncompressed(sampler, buffer);
 	}
 
 }
@@ -283,11 +281,13 @@ void ApplySamplerFade
 		if (sampler->fade < sampler->fademax)
 		{
 			sampler->fadein = 0;
+			sampler->fade = sampler->fademax;
 		}
-		else if (sampler->fadein)
+		else if (sampler->fadein < 0)
 		{
-			sampler->faderemain -= n_blocks;
-			if (sampler->faderemain <= 0)
+			if (sampler->faderemain >= n_blocks)
+				sampler->faderemain -= n_blocks;
+			else
 				sampler->fadein = 0;
 		}
 	}
@@ -349,15 +349,10 @@ void ReadSamplerFrames
 					 * attack segment has completed so we now (re)enter the
 					 * loop. */
 					sampler->position -= currentBlockSize;
-
-					/* FIXME: This is wrong. This copies the release
-					 * tracking info for sample zero, but it may well be
-					 * a much later sample within the block...
-					 */
-					GOrgueReleaseAlignTable::CopyTrackingInfo
+					/*GOrgueReleaseAlignTable::CopyTrackingInfo
 						(sampler->release_tracker
 						,sampler->pipe->GetLoop()->release_tracker_initial
-						);
+						);*/
 				}
 			}
 		}
@@ -484,12 +479,17 @@ int GOrgueSound::AudioCallbackLocal
 			? g_buff[j + 1]
 			: g_buff[0];
 
-		std::fill(this_buff, this_buff + 2048, (j < organfile->GetTremulantCount() ? 0x800000 : 0));
+		std::fill
+			(this_buff
+			,this_buff + 2048
+			,(j < organfile->GetTremulantCount()) ? 0x800000 : 0
+			);
 
 		ProcessAudioSamplers
 			(&(windchests[j])
 			,n_frames
-			,this_buff);
+			,this_buff
+			);
 
 		if (j >= organfile->GetTremulantCount())
 		{
