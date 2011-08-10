@@ -253,8 +253,16 @@ void ApplySamplerFade
 			decoded_sampler_audio_frame[3] *= fade;
 
 			fade += fade_in_plus_out;
-			if(fade > 0)
+			if (fade > 0)
+			{
 				fade = 0;
+				sampler->fadeout = 0;
+			}
+			else if (fade < sampler->fademax)
+			{
+				fade = sampler->fademax;
+				sampler->fadein = 0;
+			}
 
 		}
 
@@ -278,12 +286,7 @@ void ApplySamplerFade
 
 	if (sampler->pipe)
 	{
-		if (sampler->fade < sampler->fademax)
-		{
-			sampler->fadein = 0;
-			sampler->fade = sampler->fademax;
-		}
-		else if (sampler->fadein < 0)
+		if (sampler->fadein < 0)
 		{
 			if (sampler->faderemain >= n_blocks)
 				sampler->faderemain -= n_blocks;
