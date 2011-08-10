@@ -24,6 +24,12 @@
 #include "IniFileConfig.h"
 #include <wx/fileconf.h>
 
+IniFileConfig::IniFileConfig(wxFileConfig& odf_ini_file) :
+	m_ODFIni (odf_ini_file)
+{
+
+}
+
 bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueType type, bool required, int nmin, int nmax)
 {
 	wxString string;
@@ -32,8 +38,8 @@ bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueTyp
 
 	try
 	{
-		m_cfg->SetPath(wxT("/"));
-		if (!m_cfg->HasGroup(group))
+		m_ODFIni.SetPath(wxT("/"));
+		if (!m_ODFIni.HasGroup(group))
 		{//JB: strncasecmp was strnicmp
 			if (group.length() >= 12 && !group.Mid(0, 12).CmpNoCase(wxT("FrameGeneral")))	// FrameGeneral groups aren't required.
 			{
@@ -43,11 +49,11 @@ bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueTyp
 			}
 			throw -1;
 		}
-		m_cfg->SetPath(wxT("/") + group);
+		m_ODFIni.SetPath(wxT("/") + group);
 
 		if (type >= ORGAN_INTEGER)
 		{
-			if (!m_cfg->Read(key, &string) || string.empty())
+			if (!m_ODFIni.Read(key, &string) || string.empty())
 			{
 				integer = nmin;
 				if (required)
@@ -72,7 +78,7 @@ bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueTyp
 		}
 		else
 		{
-			if (!m_cfg->Read(key, &string))
+			if (!m_ODFIni.Read(key, &string))
 			{
 				if (required)
 					throw -2;
@@ -240,14 +246,14 @@ wxInt16 IniFileConfig::ReadFontSize(wxString group, wxString key, bool required)
 void IniFileConfig::SaveHelper(bool prefix, wxString group, wxString key, wxString value)
 {
 	wxString str = group + wxT('/') + key;
-	if (m_cfg->Read(str) != value)
+	if (m_ODFIni.Read(str) != value)
 	{
 		if (prefix)
 		{
-			m_cfg->Write(wxT('_') + str, value);
+			m_ODFIni.Write(wxT('_') + str, value);
 		}
 		else
-			m_cfg->Write(str, value);
+			m_ODFIni.Write(str, value);
 	}
 }
 

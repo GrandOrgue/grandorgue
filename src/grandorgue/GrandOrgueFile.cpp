@@ -63,7 +63,6 @@ GrandOrgueFile::GrandOrgueFile() :
 	m_path(),
 	m_b_squash(0),
 	m_compress_p(NULL),
-	m_cfg(NULL),
 	m_filename(),
 	m_elapsed(0),
 	m_b_customized(false),
@@ -149,7 +148,7 @@ bool GrandOrgueFile::TryLoad
 	)
 {
 
-	bool success = true;
+	bool success = false;
 
 	try
 	{
@@ -194,20 +193,22 @@ bool GrandOrgueFile::TryLoad
 						);
 				}
 
+		success = true;
+
 	}
 	catch (wxString msg)
 	{
 		error = msg;
-		success = false;
 	}
 
 	return success;
 
 }
 
-void GrandOrgueFile::readOrganFile()
+void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 {
-	IniFileConfig ini(m_cfg);
+
+	IniFileConfig ini(odf_ini_file);
 	wxString group = wxT("Organ");
 
 	/* load all GUI display metrics */
@@ -315,95 +316,116 @@ void GrandOrgueFile::readOrganFile()
 
 wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 {
-	wxFileConfig *cfg = 0, *extra_cfg = 0;
 
-	wxProgressDialog dlg(_("Loading sample set"), _("Parsing sample set definition file"), 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
+	wxProgressDialog dlg
+		(_("Loading sample set")
+		,_("Parsing sample set definition file")
+		,32768
+		,0
+		,wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME
+		);
 
 	m_filename = file;
 	m_b_squash = wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1);
 
-	wxString key, key2, error = wxT("!");
+	// NOTICE: unfortunately, the format is not adhered to well at all. With
+	// logging enabled, most sample sets generate warnings.
+	wxLog::EnableLogging(false);
+	wxFileConfig odf_ini_file
+		(wxEmptyString
+		,wxEmptyString
+		,wxEmptyString
+		,file
+		,wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS
+		,wxCSConv(wxT("ISO-8859-1"))
+		);
+	wxLog::EnableLogging(true);
 
-  	// NOTICE: unfortunately, the format is not adhered to well at all. with logging enabled, most sample sets generate warnings.
-    wxLog::EnableLogging(false);
-    m_cfg = cfg = new wxFileConfig(wxEmptyString, wxEmptyString, wxEmptyString, file, wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
-    wxLog::EnableLogging(true);
-
-    if (!cfg->GetNumberOfGroups())
+	if (!odf_ini_file.GetNumberOfGroups())
 	{
+		wxString error;
 		error.Printf(_("Unable to read '%s'"), file.c_str());
 		return error;
 	}
+	wxString key, key2, error = wxT("!");
 
 	m_b_customized = false;
     long cookie;
-    bool bCont = cfg->GetFirstGroup(key, cookie);
+    bool bCont = odf_ini_file.GetFirstGroup(key, cookie);
     while (bCont)
     {
         if (key.StartsWith(wxT("_")))
         {
             m_b_customized = true;
-            cfg->SetPath(wxT('/') + key);
+            odf_ini_file.SetPath(wxT('/') + key);
             long cookie2;
-            bool bCont2 = cfg->GetFirstEntry(key2, cookie2);
+            bool bCont2 = odf_ini_file.GetFirstEntry(key2, cookie2);
             while (bCont2)
             {
-                cfg->Write(wxT('/') + key.Mid(1) + wxT('/') + key2, cfg->Read(key2));
-                bCont2 = cfg->GetNextEntry(key2, cookie2);
+                odf_ini_file.Write(wxT('/') + key.Mid(1) + wxT('/') + key2, odf_ini_file.Read(key2));
+                bCont2 = odf_ini_file.GetNextEntry(key2, cookie2);
             }
-            cfg->SetPath(wxT("/"));
+            odf_ini_file.SetPath(wxT("/"));
         }
-        bCont = cfg->GetNextGroup(key, cookie);
+        bCont = odf_ini_file.GetNextGroup(key, cookie);
     }
 
 	if (!file2.IsEmpty())
 	{
-	    // NOTICE: unfortunately, the format is not adhered to well at all. with logging enabled, most sample sets generate warnings.
-        wxLog::EnableLogging(false);
-		extra_cfg = new wxFileConfig(wxEmptyString, wxEmptyString, wxEmptyString, file2, wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
-        wxLog::EnableLogging(true);
+
+		// NOTICE: unfortunately, the format is not adhered to well at all.
+		// with logging enabled, most sample sets generate warnings.
+		wxLog::EnableLogging(false);
+		wxFileConfig extra_odf_config
+			(wxEmptyString
+			,wxEmptyString
+			,wxEmptyString
+			,file2
+			,wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS
+			,wxCSConv(wxT("ISO-8859-1"))
+			);
+		wxLog::EnableLogging(true);
 
 		key = wxT("/Organ/ChurchName");
-		if (cfg->Read(key).Trim() == extra_cfg->Read(key).Trim())
+		if (odf_ini_file.Read(key).Trim() == extra_odf_config.Read(key).Trim())
 		{
 			long cookie;
-			bool bCont = extra_cfg->GetFirstGroup(key, cookie);
+			bool bCont = extra_odf_config.GetFirstGroup(key, cookie);
 			while (bCont)
 			{
-				extra_cfg->SetPath(wxT('/') + key);
+				extra_odf_config.SetPath(wxT('/') + key);
 				long cookie2;
-				bool bCont2 = extra_cfg->GetFirstEntry(key2, cookie2);
+				bool bCont2 = extra_odf_config.GetFirstEntry(key2, cookie2);
 				while (bCont2)
 				{
-					cfg->Write(key + wxT('/') + key2, extra_cfg->Read(key2));
-					bCont2 = extra_cfg->GetNextEntry(key2, cookie2);
+					odf_ini_file.Write(key + wxT('/') + key2, extra_odf_config.Read(key2));
+					bCont2 = extra_odf_config.GetNextEntry(key2, cookie2);
 				}
-				extra_cfg->SetPath(wxT("/"));
-				bCont = extra_cfg->GetNextGroup(key, cookie);
+				extra_odf_config.SetPath(wxT("/"));
+				bCont = extra_odf_config.GetNextGroup(key, cookie);
 			}
 		}
 		else
 		{
-			if (!extra_cfg->GetNumberOfGroups())
+			if (!extra_odf_config.GetNumberOfGroups())
 			{
 				error.Printf(_("Unable to read '%s'"), file2.c_str());
 				return error;
 			}
-			::wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_cfg->Read(key).c_str());
+			::wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_odf_config.Read(key).c_str());
 		}
-		delete extra_cfg;
 	}
 
 	try
 	{
-		readOrganFile();
+		ReadOrganFile(odf_ini_file);
 	}
 	catch (wxString error_)
 	{
 		return error_;
 	}
 
- 	GOrgueLCD_WriteLineOne(m_ChurchName+wxT(" ")+m_OrganBuilder);
+	GOrgueLCD_WriteLineOne(m_ChurchName + wxT(" ") + m_OrganBuilder);
 	GOrgueLCD_WriteLineTwo(_("Loading..."));
 
 	m_path = file;
@@ -477,19 +499,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		return error_;
 	}
 
-	/* FIXME: Load tremulants */
-/*	for (int i = 0; i < m_NumberOfTremulants; i++)
-	{
-
-		wxLogDebug(_("Loading tremulant #%d"), i);
-
-		m_pipe[progress]->CreateFromTremulant(&m_tremulant[i]);
-		m_tremulant[i].pipe = m_pipe[progress];
-		m_pipe[progress]->SetWindchestGroup(i);
-		progress++;
-
-	}*/
-
 	/* TODO: ? check for correctness ? */
 	/* Load the images for the stops */
 	for (int i = 0; i < 9; i++)
@@ -501,12 +510,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	}
 
-	if (m_cfg)
-	{
-		::wxGetApp().frame->m_meters[0]->SetValue(m_cfg->Read(wxT("/Organ/Volume"), g_sound->GetVolume()));
-		delete m_cfg;
-		m_cfg = 0;
-	}
+	::wxGetApp().frame->m_meters[0]->SetValue(odf_ini_file.Read(wxT("/Organ/Volume"), g_sound->GetVolume()));
 
 	GOrgueLCD_WriteLineTwo(_("Ready!"));
 
@@ -516,17 +520,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 GrandOrgueFile::~GrandOrgueFile(void)
 {
-
-	/*
-	 * This code used to delete the tremulants, but because of the code below
-	 * and because they are stored in pipe objects, it is not necessary... but
-	 * should come back at some point, because tremulants should not be stored
-	 * in the pipes array... it doesn't make sense.
-	 *
-	for (int i = 0; i < m_NumberOfTremulants; i++)
-        if (m_tremulant && m_tremulant[i].pipe)
-            free(m_tremulant[i].pipe);
-	*/
 
 	if (m_divisionalcoupler)
 		delete[] m_divisionalcoupler;
@@ -544,8 +537,6 @@ GrandOrgueFile::~GrandOrgueFile(void)
 		delete[] m_tremulant;
 	if (m_enclosure)
 		delete[] m_enclosure;
-	if (m_cfg)
-		delete m_cfg;
 	if (m_DisplayMetrics)
 		delete m_DisplayMetrics;
 
@@ -586,20 +577,28 @@ void GrandOrgueFile::Save(const wxString& file)
 	}
 
 	wxLog::EnableLogging(false);
-	wxFileConfig cfg(wxEmptyString, wxEmptyString, file, wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
+	wxFileConfig cfg
+		(wxEmptyString
+		,wxEmptyString
+		,file
+		,wxEmptyString
+		,wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS
+		,wxCSConv(wxT("ISO-8859-1"))
+		);
 	wxLog::EnableLogging(true);
+
 	if (prefix)
 		Revert(cfg);
 	m_b_customized = true;
 
-	IniFileConfig aIni(&cfg);
+	IniFileConfig aIni(cfg);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchName"), m_ChurchName);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("NumberOfFrameGenerals"), m_NumberOfFrameGenerals);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), g_sound->GetVolume());
 
-    int i, j;
+	int i, j;
 
 	for (i = m_FirstManual; i <= m_NumberOfManuals; i++)
 	{

@@ -42,23 +42,23 @@ enum ValueType
 
 class IniFileConfig
 {
-public:
-  IniFileConfig(wxFileConfig* iCfg):
-	m_cfg(iCfg){}
-  bool ReadBoolean(wxString group, wxString key, bool required = true);
-  wxColour ReadColor(wxString group, wxString key, bool required = true);
-  wxString ReadString(wxString group, wxString key, int nmax = 4096, bool required = true);
-  wxInt16 ReadInteger(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
-  wxInt32 ReadLong(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
-  wxInt16 ReadSize(wxString group, wxString key, int nmin = 0, bool required = true);
-  wxInt16 ReadFontSize(wxString group, wxString key, bool required = true);
-  void SaveHelper(bool prefix, wxString group, wxString key, wxString value);
-  void SaveHelper( bool prefix, wxString group, wxString key, int value, bool sign = false, bool force = false);
-
 
 private:
-  bool ReadKey(wxString group, wxString key, void* retval, ValueType type, bool required = true, int nmin = 0, int nmax = 0);
-  wxFileConfig* m_cfg;
+	bool ReadKey(wxString group, wxString key, void* retval, ValueType type, bool required = true, int nmin = 0, int nmax = 0);
+	wxFileConfig& m_ODFIni;
+
+public:
+	IniFileConfig(wxFileConfig& iCfg);
+	bool ReadBoolean(wxString group, wxString key, bool required = true);
+	wxColour ReadColor(wxString group, wxString key, bool required = true);
+	wxString ReadString(wxString group, wxString key, int nmax = 4096, bool required = true);
+	wxInt16 ReadInteger(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
+	wxInt32 ReadLong(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
+	wxInt16 ReadSize(wxString group, wxString key, int nmin = 0, bool required = true);
+	wxInt16 ReadFontSize(wxString group, wxString key, bool required = true);
+	void SaveHelper(bool prefix, wxString group, wxString key, wxString value);
+	void SaveHelper( bool prefix, wxString group, wxString key, int value, bool sign = false, bool force = false);
+
 };
 
 #endif
