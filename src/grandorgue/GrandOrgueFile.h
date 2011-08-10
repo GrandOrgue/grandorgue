@@ -43,12 +43,12 @@ class GOrgueWindchest;
 
 class GrandOrgueFile 
 {
-public:
+
+private:
 
 	wxFileName m_path;
 	int m_b_squash;
 	GOrguePipe* m_compress_p;
-	wxFileConfig *m_cfg;
 	wxString m_filename;
 	long m_elapsed;
 
@@ -71,8 +71,6 @@ public:
 	wxInt16 m_NumberOfFrameGenerals;
 	wxInt16 m_NumberOfDivisionalCouplers;
 
-private:
-
 	wxInt16 m_AmplitudeLevel;
 
     wxString m_HauptwerkOrganFileFormatVersion;
@@ -82,7 +80,7 @@ private:
 	wxString m_OrganBuildDate;
 	wxString m_OrganComments;
 	wxString m_RecordingDetails;
-    wxString m_InfoFilename;
+	wxString m_InfoFilename;
 
 	GOrgueDisplayMetrics* m_DisplayMetrics;
 
@@ -99,12 +97,8 @@ private:
 	GOrgueManual m_manual[7];
 	wxBitmap m_images[9];
 
-	void readOrganFile();
+	void ReadOrganFile(wxFileConfig& odf_ini_file);
 	bool TryLoad(wxInputStream* cache, wxProgressDialog& dlg, wxString& error);
-	/*	int readOneFile(int file, char* buffer, unsigned length);
-	void fillBufferWithTremulant(const GOrgueTremulant& tremulant,short* buffer);
-
-	void CompressWAV(char*& compress, short* fv, short* ptr, int count, int channels, int stage);*/
 
 public:
 
