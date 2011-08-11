@@ -34,26 +34,29 @@ class GOrgueStop : public GOrgueDrawstop
 {
 private:
 	std::vector<GOrguePipe*> m_Pipes;
+	unsigned m_ManualNumber;
+	bool m_Percussive;
+	unsigned m_AmplitudeLevel;
+	unsigned m_FirstAccessiblePipeLogicalPipeNumber;
+	unsigned m_FirstAccessiblePipeLogicalKeyNumber;
+	unsigned m_NumberOfAccessiblePipes;
+	unsigned m_WindchestGroup;
 
 public:
-	GOrgueStop();
+	GOrgueStop(unsigned manual_number);
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
-	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* display_metrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Set(bool on);
 	~GOrgueStop(void);
 
-	wxInt16 m_ManualNumber;
+	unsigned GetFirstAccessiblePipeLogicalPipeNumber() const;
+	unsigned GetFirstAccessiblePipeLogicalKeyNumber() const;
+	unsigned GetNbAccessiblePipes() const;
+	unsigned IsAuto() const;
+	unsigned GetAmplitude() const;
 
-	bool Percussive : 1;
-	bool m_Auto : 1;
-	wxInt16 AmplitudeLevel;
-	wxInt16 NumberOfLogicalPipes;
-	wxInt16 FirstAccessiblePipeLogicalPipeNumber;
-	wxInt16 FirstAccessiblePipeLogicalKeyNumber;
-	wxInt16 NumberOfAccessiblePipes;
-	wxInt16 WindchestGroup;
 };
 
 #endif /* GORGUESTOP_H_ */

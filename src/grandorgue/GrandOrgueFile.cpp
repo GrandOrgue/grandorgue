@@ -119,7 +119,8 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 	for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
 		for (int j = 0; j < m_manual[i].GetStopCount(); j++)
 		{
-			SHA1_Update(&ctx, &m_manual[i].GetStop(j)->AmplitudeLevel, sizeof(m_manual[i].GetStop(j)->AmplitudeLevel));
+			unsigned stop_amplitude = m_manual[i].GetStop(j)->GetAmplitude();
+			SHA1_Update(&ctx, &stop_amplitude, sizeof(stop_amplitude));
 			for (unsigned k = 0; k < m_manual[i].GetStop(j)->GetPipeCount(); k++)
 			{
 				wxString filename = m_manual[i].GetStop(j)->GetPipe(k)->GetFilename();
