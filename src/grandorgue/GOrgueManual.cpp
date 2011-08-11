@@ -82,10 +82,9 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 
 	for (unsigned i = 0; i < m_nb_stops; i++)
 	{
-		m_stops.push_back(new GOrgueStop());
+		m_stops.push_back(new GOrgueStop(m_manual_number));
 		buffer.Printf(wxT("Stop%03d"), i + 1);
 		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(group, buffer, 1, 448));
-		m_stops[i]->m_ManualNumber = m_manual_number;
 		m_stops[i]->Load(cfg, buffer, displayMetrics);
 	}
 
@@ -194,11 +193,11 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 		{
 			if (!m_stops[i]->DefaultToEngaged)
 				continue;
-			j = note - (m_stops[i]->FirstAccessiblePipeLogicalKeyNumber - 1);
+			j = note - ((int)m_stops[i]->GetFirstAccessiblePipeLogicalKeyNumber() - 1);
 			j += (m_first_accessible_logical_key_nb - 1); // Correction to take FirstAccessibleKeyLogicalKeyNumber of the manual into account
-			if (j < 0 || j >= m_stops[i]->NumberOfAccessiblePipes)
+			if (j < 0 || j >= (int)m_stops[i]->GetNbAccessiblePipes())
 				continue;
-			j += m_stops[i]->FirstAccessiblePipeLogicalPipeNumber - 1;
+			j += (int)(m_stops[i]->GetFirstAccessiblePipeLogicalPipeNumber()) - 1;
 
 			m_stops[i]->GetPipe(j)->Set(on);
 		}

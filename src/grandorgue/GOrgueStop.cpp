@@ -29,55 +29,82 @@
 /* TODO: This should not be... */
 extern GrandOrgueFile* organfile;
 
-GOrgueStop::GOrgueStop() :
+GOrgueStop::GOrgueStop(unsigned manual_number) :
 	GOrgueDrawstop(),
 	m_Pipes(0),
-	m_ManualNumber(0),
-	Percussive(false),
-	m_Auto(false),
-	AmplitudeLevel(0),
-	NumberOfLogicalPipes(0),
-	FirstAccessiblePipeLogicalPipeNumber(0),
-	FirstAccessiblePipeLogicalKeyNumber(0),
-	NumberOfAccessiblePipes(0),
-	WindchestGroup(0)
+	m_ManualNumber(manual_number),
+	m_Percussive(false),
+	m_AmplitudeLevel(0),
+	m_FirstAccessiblePipeLogicalPipeNumber(0),
+	m_FirstAccessiblePipeLogicalKeyNumber(0),
+	m_NumberOfAccessiblePipes(0),
+	m_WindchestGroup(0)
 {
 }
 
-void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
+unsigned GOrgueStop::GetFirstAccessiblePipeLogicalPipeNumber() const
 {
-	AmplitudeLevel = cfg.ReadInteger(group, wxT("AmplitudeLevel"), 0, 1000);
-	NumberOfLogicalPipes = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
-	FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, NumberOfLogicalPipes);
-	FirstAccessiblePipeLogicalKeyNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
-	NumberOfAccessiblePipes = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, NumberOfLogicalPipes);
-	WindchestGroup = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, organfile->GetWinchestGroupCount());
-	Percussive = cfg.ReadBoolean(group, wxT("Percussive"));
+	return m_FirstAccessiblePipeLogicalPipeNumber;
+}
 
-	WindchestGroup += organfile->GetTremulantCount();    // we would + 1 but it already has it: clever!
+unsigned GOrgueStop::GetFirstAccessiblePipeLogicalKeyNumber() const
+{
+	return m_FirstAccessiblePipeLogicalKeyNumber;
+}
 
-	int i;
-	wxString buffer;
+unsigned GOrgueStop::GetNbAccessiblePipes() const
+{
+	return
+		IsAuto()
+		? 0 /* When there is only one logical pipe, the pipe plays whenever
+		     * the stop is on and we "fake" that the stop has no accessible
+		     * pipes. */
+		: m_NumberOfAccessiblePipes;
+}
+
+unsigned GOrgueStop::IsAuto() const
+{
+	/* m_auto seems to state that if a stop only has 1 note, the note isn't
+	 * actually controlled by a manual, but will be on if the stop is on and
+	 * off if the stop is off... */
+	return (m_Pipes.size() == 1);
+}
+
+unsigned GOrgueStop::GetAmplitude() const
+{
+	return m_AmplitudeLevel;
+}
+
+void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* display_metrics)
+{
+
+	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
+	m_AmplitudeLevel                       = cfg.ReadInteger(group, wxT("AmplitudeLevel"), 0, 1000);
+	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
+	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
+	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
+	m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, organfile->GetWinchestGroupCount());
+	m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
+	m_WindchestGroup                      += organfile->GetTremulantCount();    // we would + 1 but it already has it: clever!
 
 	m_Pipes.clear();
-	for (i = 0; i < NumberOfLogicalPipes; i++)
+	for (unsigned i = 0; i < number_of_logical_pipes; i++)
 	{
-		buffer.Printf(wxT("Pipe%03d"), i + 1);
-		wxString file = cfg.ReadString(group, buffer);
-
-		m_Pipes.push_back(new GOrguePipe(file, Percussive, WindchestGroup, organfile->GetAmplitude() * AmplitudeLevel));
+		wxString buffer;
+		buffer.Printf(wxT("Pipe%03u"), i + 1);
+		wxString filename = cfg.ReadString(group, buffer);
+		m_Pipes.push_back
+			(new GOrguePipe
+				(filename
+				,m_Percussive
+				,m_WindchestGroup
+				,organfile->GetAmplitude() * m_AmplitudeLevel
+				)
+			);
 	}
 
-	if (NumberOfLogicalPipes == 1)
-	{
-		/* m_auto seems to state that if a stop only has 1 note, the note isn't
-		 * actually controlled by a manual, but will be on if the stop is on and
-		 * off if the stop is off... */
-		m_Auto = true;
-		NumberOfAccessiblePipes = 0;
-	}
+	GOrgueDrawstop::Load(cfg, group, display_metrics);
 
-	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 }
 
 void GOrgueStop::Save(IniFileConfig& cfg, bool prefix, wxString group)
@@ -96,7 +123,7 @@ void GOrgueStop::Set(bool on)
 
 	GOrgueDrawstop::Set(on);
 
-	if (m_Auto)
+	if (IsAuto())
 		m_Pipes[0]->Set(on);
 
 }
