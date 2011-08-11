@@ -47,15 +47,11 @@ GOrgueManual::GOrgueManual() :
 	m_first_accessible_key_midi_note_nb(0),
 	m_nb_accessible_keys(0),
 	m_midi_input_number(0),
-	m_nb_stops(0),
-	m_nb_couplers(0),
-	m_nb_divisionals(0),
-	m_nb_tremulants(0),
-	m_tremulant_ids(),
+	m_tremulant_ids(0),
 	m_name(),
-	m_stops(),
-	m_couplers(NULL),
-	m_divisionals(NULL),
+	m_stops(0),
+	m_couplers(0),
+	m_divisionals(0),
 	m_displayed(false),
 	m_key_colour_inverted(false),
 	m_key_colour_wooden(false)
@@ -75,10 +71,10 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 	m_displayed                         = cfg.ReadBoolean(group, wxT("Displayed"));
 	m_key_colour_inverted               = cfg.ReadBoolean(group, wxT("DispKeyColourInverted"));
 	m_key_colour_wooden                 = cfg.ReadBoolean(group, wxT("DispKeyColourWooden"), false);
-	m_nb_stops                          = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, 64);
-	m_nb_couplers                       = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, 16, false);
-	m_nb_divisionals                    = cfg.ReadInteger(group, wxT("NumberOfDivisionals"), 0, 32, false);
-	m_nb_tremulants                     = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, 10, false);
+	unsigned m_nb_stops                 = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, 64);
+	unsigned m_nb_couplers              = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, 16, false);
+	unsigned m_nb_divisionals           = cfg.ReadInteger(group, wxT("NumberOfDivisionals"), 0, 32, false);
+	unsigned m_nb_tremulants            = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, 10, false);
 	m_manual_number = manualNumber;
 	m_display_metrics = displayMetrics;
 
@@ -93,26 +89,29 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 		m_stops[i]->Load(cfg, buffer, displayMetrics);
 	}
 
-	m_couplers = new GOrgueCoupler[m_nb_couplers];
+	m_couplers.resize(0);
 	for (unsigned i = 0; i < m_nb_couplers; i++)
 	{
+		m_couplers.push_back(new GOrgueCoupler(m_manual_number));
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
 		buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(group, buffer, 1, 64));
-		m_couplers[i].Load(cfg, buffer, organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount(), displayMetrics);
+		m_couplers[i]->Load(cfg, buffer, organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount(), displayMetrics);
 	}
 
-	m_divisionals = new GOrgueDivisional[m_nb_divisionals];
-	for (unsigned i = 0; i < m_nb_divisionals; i++)
-	{
-		buffer.Printf(wxT("Divisional%03d"), i + 1);
-		buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(group, buffer, 1, 224));
-		m_divisionals[i].Load(cfg, buffer, m_manual_number, i, displayMetrics);
-	}
-
+	m_tremulant_ids.resize(0);
 	for (unsigned i = 0; i < m_nb_tremulants; i++)
 	{
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		m_tremulant_ids[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetTremulantCount());
+		m_tremulant_ids.push_back(cfg.ReadInteger(group, buffer, 1, organfile->GetTremulantCount()));
+	}
+
+	m_divisionals.resize(0);
+	for (unsigned i = 0; i < m_nb_divisionals; i++)
+	{
+		m_divisionals.push_back(new GOrgueDivisional());
+		buffer.Printf(wxT("Divisional%03d"), i + 1);
+		buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(group, buffer, 1, 224));
+		m_divisionals[i]->Load(cfg, buffer, m_manual_number, i, displayMetrics);
 	}
 
 }
@@ -157,16 +156,16 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 	}
 
 	bool unisonoff = false;
-	for (unsigned i = 0; i < m_nb_couplers; i++)
+	for (unsigned i = 0; i < m_couplers.size(); i++)
 	{
-		if (!m_couplers[i].DefaultToEngaged)
+		if (!m_couplers[i]->DefaultToEngaged)
 			continue;
-		if (m_couplers[i].UnisonOff && (!depth || (prev && prev->CoupleToSubsequentUnisonIntermanualCouplers)))
+		if (m_couplers[i]->UnisonOff && (!depth || (prev && prev->CoupleToSubsequentUnisonIntermanualCouplers)))
 		{
 			unisonoff = true;
 			continue;
 		}
-		j = m_couplers[i].DestinationManual;
+		j = m_couplers[i]->DestinationManual;
 		if (
 				(!depth)
 				||
@@ -174,24 +173,24 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 					(prev)
 					&&
 					(
-						(j == m_manual_number && m_couplers[i].DestinationKeyshift < 0 && prev->CoupleToSubsequentDownwardIntramanualCouplers)
+						(j == m_manual_number && m_couplers[i]->DestinationKeyshift < 0 && prev->CoupleToSubsequentDownwardIntramanualCouplers)
 						||
-						(j == m_manual_number && m_couplers[i].DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntramanualCouplers)
+						(j == m_manual_number && m_couplers[i]->DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntramanualCouplers)
 						||
-						(j != m_manual_number && m_couplers[i].DestinationKeyshift < 0 && prev->CoupleToSubsequentDownwardIntermanualCouplers)
+						(j != m_manual_number && m_couplers[i]->DestinationKeyshift < 0 && prev->CoupleToSubsequentDownwardIntermanualCouplers)
 						||
-						(j != m_manual_number && m_couplers[i].DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntermanualCouplers)
+						(j != m_manual_number && m_couplers[i]->DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntermanualCouplers)
 					)
 				)
 			)
 		{
-			organfile->GetManual(j)->Set(note + m_first_accessible_key_midi_note_nb + m_couplers[i].DestinationKeyshift, on, false, depth + 1, m_couplers + i);
+			organfile->GetManual(j)->Set(note + m_first_accessible_key_midi_note_nb + m_couplers[i]->DestinationKeyshift, on, false, depth + 1, m_couplers[i]);
 		}
 	}
 
 	if (!unisonoff)
 	{
-		for (unsigned i = 0; i < m_nb_stops; i++)
+		for (unsigned i = 0; i < m_stops.size(); i++)
 		{
 			if (!m_stops[i]->DefaultToEngaged)
 				continue;
@@ -251,10 +250,8 @@ struct delete_functor
 GOrgueManual::~GOrgueManual(void)
 {
 	std::for_each(m_stops.begin(), m_stops.end(), delete_functor<GOrgueStop>());
-	if (m_couplers)
-		delete[] m_couplers;
-	if (m_divisionals)
-		delete[] m_divisionals;
+	std::for_each(m_couplers.begin(), m_couplers.end(), delete_functor<GOrgueCoupler>());
+	std::for_each(m_divisionals.begin(), m_divisionals.end(), delete_functor<GOrgueDivisional>());
 }
 
 int GOrgueManual::GetMIDIInputNumber()
@@ -262,63 +259,63 @@ int GOrgueManual::GetMIDIInputNumber()
 	return m_midi_input_number;
 }
 
-int GOrgueManual::GetLogicalKeyCount()
+unsigned GOrgueManual::GetLogicalKeyCount()
 {
 	return m_nb_logical_keys;
 }
 
-int GOrgueManual::GetNumberOfAccessibleKeys()
+unsigned GOrgueManual::GetNumberOfAccessibleKeys()
 {
 	return m_nb_accessible_keys;
 }
 
 /* TODO: I suspect this could be made private or into something better... */
-int GOrgueManual::GetFirstAccessibleKeyMIDINoteNumber()
+unsigned GOrgueManual::GetFirstAccessibleKeyMIDINoteNumber()
 {
 	return m_first_accessible_key_midi_note_nb;
 }
 
 int GOrgueManual::GetStopCount()
 {
-	return m_nb_stops;
+	return m_stops.size();
 }
 
 GOrgueStop* GOrgueManual::GetStop(unsigned index)
 {
-	assert(index < m_nb_stops);
+	assert(index < m_stops.size());
 	return m_stops[index];
 }
 
 int GOrgueManual::GetCouplerCount()
 {
-	return m_nb_couplers;
+	return m_couplers.size();
 }
 
 GOrgueCoupler* GOrgueManual::GetCoupler(unsigned index)
 {
-	assert(index < m_nb_couplers);
-	return &m_couplers[index];
+	assert(index < m_couplers.size());
+	return m_couplers[index];
 }
 
 int GOrgueManual::GetDivisionalCount()
 {
-	return m_nb_divisionals;
+	return m_divisionals.size();
 }
 
 GOrgueDivisional* GOrgueManual::GetDivisional(unsigned index)
 {
-	assert(index < m_nb_divisionals);
-	return &m_divisionals[index];
+	assert(index < m_divisionals.size());
+	return m_divisionals[index];
 }
 
 int GOrgueManual::GetTremulantCount()
 {
-	return m_nb_tremulants;
+	return m_tremulant_ids.size();
 }
 
 GOrgueTremulant* GOrgueManual::GetTremulant(unsigned index)
 {
-	assert(index < m_nb_tremulants);
+	assert(index < m_tremulant_ids.size());
 	return organfile->GetTremulant(m_tremulant_ids[index] - 1);
 }
 
@@ -347,11 +344,11 @@ void GOrgueManual::MIDIPretend(bool on)
 			Set(j + m_first_accessible_key_midi_note_nb, on, true);
 }
 
-bool GOrgueManual::IsKeyDown(int midiNoteNumber)
+bool GOrgueManual::IsKeyDown(unsigned midiNoteNumber)
 {
 	if (midiNoteNumber < m_first_accessible_key_midi_note_nb)
 		return false;
-	if (midiNoteNumber > m_first_accessible_key_midi_note_nb + (int)m_nb_logical_keys - 1)
+	if (midiNoteNumber >= m_first_accessible_key_midi_note_nb + m_nb_accessible_keys)
 		return false;
 	return m_midi[midiNoteNumber - m_first_accessible_key_midi_note_nb];
 }
@@ -428,9 +425,9 @@ void GOrgueManual::GetKeyDimensions
 		z = 0;
 
 		int j = key_midi_nb % 12;
-		if (key_midi_nb > m_first_accessible_key_midi_note_nb && j && j != 5)
+		if (key_midi_nb > (int)m_first_accessible_key_midi_note_nb && j && j != 5)
 			z |= 2;
-		if (key_midi_nb < m_first_accessible_key_midi_note_nb + (int)m_nb_accessible_keys - 1 && j != 4 && j != 11)
+		if (key_midi_nb < (int)m_first_accessible_key_midi_note_nb + (int)m_nb_accessible_keys - 1 && j != 4 && j != 11)
 			z |= 1;
 	}
 
@@ -573,7 +570,7 @@ void GOrgueManual::Draw(wxDC& dc)
 		return;
 
 	wxFont font = m_display_metrics->GetControlLabelFont();
-	for (unsigned j = 0; j < m_nb_stops; j++)
+	for (unsigned j = 0; j < m_stops.size(); j++)
 	{
 		if (m_stops[j]->Displayed)
 		{
@@ -583,23 +580,23 @@ void GOrgueManual::Draw(wxDC& dc)
 		}
 	}
 
-	for (unsigned j = 0; j < m_nb_couplers; j++)
+	for (unsigned j = 0; j < m_couplers.size(); j++)
 	{
-		if (m_couplers[j].Displayed)
+		if (m_couplers[j]->Displayed)
 		{
-			font.SetPointSize(m_couplers[j].DispLabelFontSize);
+			font.SetPointSize(m_couplers[j]->DispLabelFontSize);
 			dc.SetFont(font);
-			OrganPanel::WrapText(dc, m_couplers[j].Name, 51);
+			OrganPanel::WrapText(dc, m_couplers[j]->Name, 51);
 		}
 	}
 
-	for (unsigned j = 0; j < m_nb_divisionals; j++)
+	for (unsigned j = 0; j < m_divisionals.size(); j++)
 	{
-		if (m_divisionals[j].Displayed)
+		if (m_divisionals[j]->Displayed)
 		{
-			font.SetPointSize(m_divisionals[j].DispLabelFontSize);
+			font.SetPointSize(m_divisionals[j]->DispLabelFontSize);
 			dc.SetFont(font);
-			OrganPanel::WrapText(dc, m_divisionals[j].Name, 28);
+			OrganPanel::WrapText(dc, m_divisionals[j]->Name, 28);
 		}
 	}
 
@@ -673,22 +670,21 @@ void GOrgueManual::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
 	wxString buffer;
 
-	for (unsigned i = 0; i < m_nb_stops; i++)
+	for (unsigned i = 0; i < m_stops.size(); i++)
 	{
 		buffer.Printf(wxT("Stop%03d"), m_stops[i]->ObjectNumber);
 		m_stops[i]->Save(cfg, prefix, buffer);
 	}
 
-	m_couplers = new GOrgueCoupler[m_nb_couplers];
-	for (unsigned i = 0; i < m_nb_couplers; i++)
+	for (unsigned i = 0; i < m_couplers.size(); i++)
 	{
-                buffer.Printf(wxT("Coupler%03d"), m_couplers[i].ObjectNumber);
-		m_couplers[i].Save(cfg, prefix, buffer);
+                buffer.Printf(wxT("Coupler%03d"), m_couplers[i]->ObjectNumber);
+		m_couplers[i]->Save(cfg, prefix, buffer);
 	}
 
-	for (unsigned i = 0; i < m_nb_divisionals; i++)
+	for (unsigned i = 0; i < m_divisionals.size(); i++)
 	{
-		buffer.Printf(wxT("Divisional%03d"), m_divisionals[i].ObjectNumber);
-		m_divisionals[i].Save(cfg, prefix, buffer);
+		buffer.Printf(wxT("Divisional%03d"), m_divisionals[i]->ObjectNumber);
+		m_divisionals[i]->Save(cfg, prefix, buffer);
 	}
 }
