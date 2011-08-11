@@ -27,7 +27,7 @@
 
 extern GrandOrgueFile* organfile;
 
-GOrgueCoupler::GOrgueCoupler() :
+GOrgueCoupler::GOrgueCoupler(unsigned sourceManual) :
 	GOrgueDrawstop(),
 	UnisonOff(false),
 	CoupleToSubsequentUnisonIntermanualCouplers(false),

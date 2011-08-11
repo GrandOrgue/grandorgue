@@ -43,25 +43,20 @@ private:
 	int m_manual_number;
 	GOrgueDisplayMetrics* m_display_metrics;
 	wxInt16 m_midi[85];
-	int m_first_accessible_logical_key_nb;
+	unsigned m_first_accessible_logical_key_nb;
 	unsigned m_nb_logical_keys;
-	int m_first_accessible_key_midi_note_nb;
+	unsigned m_first_accessible_key_midi_note_nb;
 	unsigned m_nb_accessible_keys;
 
 	int m_midi_input_number;
 
-	unsigned m_nb_stops;
-	unsigned m_nb_couplers;
-	unsigned m_nb_divisionals;
-	unsigned m_nb_tremulants;
-
-	wxInt16 m_tremulant_ids[10];
+	std::vector<unsigned> m_tremulant_ids;
 
 	wxString m_name;
 
 	std::vector<GOrgueStop*> m_stops;
-	GOrgueCoupler* m_couplers;
-	GOrgueDivisional* m_divisionals;
+	std::vector<GOrgueCoupler*> m_couplers;
+	std::vector<GOrgueDivisional*> m_divisionals;
 	bool m_displayed : 1;
 	bool m_key_colour_inverted : 1;
 	bool m_key_colour_wooden : 1;
@@ -78,13 +73,13 @@ public:
 	void MIDI(void);
 	~GOrgueManual(void);
 
-	int GetNumberOfAccessibleKeys();
-	int GetFirstAccessibleKeyMIDINoteNumber();
+	unsigned GetNumberOfAccessibleKeys();
+	unsigned GetFirstAccessibleKeyMIDINoteNumber();
 	int GetMIDIInputNumber();
-	int GetLogicalKeyCount();
+	unsigned GetLogicalKeyCount();
 	void AllNotesOff();
 	void MIDIPretend(bool on);
-	bool IsKeyDown(int midiNoteNumber);
+	bool IsKeyDown(unsigned midiNoteNumber);
 
 	int GetStopCount();
 	GOrgueStop* GetStop(unsigned index);
