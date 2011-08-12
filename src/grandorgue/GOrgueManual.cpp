@@ -690,6 +690,8 @@ void GOrgueManual::Save(IniFileConfig& cfg, bool prefix, wxString group)
 
 void GOrgueManual::Abort()
 {
+	AllNotesOff();
+
 	for (unsigned i = 0; i < m_stops.size(); i++)
 		m_stops[i]->Abort();
 }

@@ -278,8 +278,6 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 
 void GOrgueSound::CloseSound(GrandOrgueFile* organfile)
 {
-	bool was_active = b_active;
-
 	if (f_output)
 	{
 		b_stoprecording = true;
@@ -307,8 +305,6 @@ void GOrgueSound::CloseSound(GrandOrgueFile* organfile)
 	::wxMilliSleep(10);
 	if (organfile)
 		organfile->Abort();
-	if (was_active)
-		MIDIAllNotesOff(organfile);
 }
 
 bool GOrgueSound::ResetSound(GrandOrgueFile* organfile)
@@ -385,20 +381,6 @@ bool GOrgueSound::HasReleaseAlignment()
 bool GOrgueSound::HasScaledReleases()
 {
 	return b_scale;
-}
-
-void GOrgueSound::MIDIAllNotesOff(GrandOrgueFile* organfile)
-{
-	int i;
-
-	if (!organfile)
-		return;
-
-	for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-	{
-		GOrgueManual* man = organfile->GetManual(i);
-		man->AllNotesOff();
-	}
 }
 
 bool GOrgueSound::IsStereo()
