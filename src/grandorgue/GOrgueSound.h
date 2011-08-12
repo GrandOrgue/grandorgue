@@ -238,11 +238,6 @@ private:
 
 	GOrgueMidi* m_midi;
 
-	/* FIXME: this should not require a reference to the ODF, but this cannot
-	 * be removed until the ODF and GUI is peeled away from the sound system.
-	 */
-	void MIDIAllNotesOff(GrandOrgueFile* organfile);
-
 private:
 
 	void ProcessAudioSamplers
