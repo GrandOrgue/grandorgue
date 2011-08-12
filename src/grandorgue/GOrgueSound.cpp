@@ -305,6 +305,8 @@ void GOrgueSound::CloseSound(GrandOrgueFile* organfile)
 	}
 
 	::wxMilliSleep(10);
+	if (organfile)
+		organfile->Abort();
 	if (was_active)
 		MIDIAllNotesOff(organfile);
 }
@@ -323,19 +325,10 @@ bool GOrgueSound::ResetSound(GrandOrgueFile* organfile)
 	b_active = was_active;
 	if (organfile)
 	{
-        OrganDocument* doc = (OrganDocument*)(::wxGetApp().m_docManager->GetCurrentDocument());
-        if (doc && doc->b_loaded)
-        {
-            b_active = true;
-            for (int i = 0; i < organfile->GetTremulantCount(); i++)
-            {
-                if (organfile->GetTremulant(i)->DefaultToEngaged)
-                {
-                    organfile->GetTremulant(i)->Set(false);
-                    organfile->GetTremulant(i)->Set(true);
-                }
-            }
-        }
+		organfile->PreparePlayback();
+		OrganDocument* doc = (OrganDocument*)(::wxGetApp().m_docManager->GetCurrentDocument());
+		if (doc && doc->b_loaded)
+			b_active = true;
 	}
 	return true;
 }

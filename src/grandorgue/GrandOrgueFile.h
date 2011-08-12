@@ -106,6 +106,8 @@ public:
 	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);
 	void Save(const wxString& file);
 	void Revert(wxFileConfig& cfg);
+	void Abort();
+	void PreparePlayback();
 	~GrandOrgueFile(void);
 
 	/* Access to the display metrics presented by the ODF */

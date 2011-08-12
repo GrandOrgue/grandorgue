@@ -50,7 +50,6 @@ void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetr
 		delete m_pipe;
 	m_pipe = new GOrguePipe(wxT(""), false, ObjectNumber - 1, 0);
 	m_pipe->CreateTremulant(Period, StartRate, StopRate, AmpModDepth);
-	m_pipe->Set(DefaultToEngaged);
 }
 
 void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix, wxString group)
@@ -67,3 +66,14 @@ void GOrgueTremulant::Set(bool on)
 	GOrgueDrawstop::Set(on);
 }
 
+void GOrgueTremulant::Abort()
+{
+	if (m_pipe)
+		m_pipe->FastAbort();
+}
+
+void GOrgueTremulant::PreparePlayback()
+{
+	if (m_pipe && DefaultToEngaged)
+		m_pipe->Set(true);
+}
