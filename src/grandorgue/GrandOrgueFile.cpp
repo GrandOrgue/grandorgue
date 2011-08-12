@@ -825,6 +825,12 @@ int GrandOrgueFile::GetLabelCount()
 	return m_NumberOfLabels;
 }
 
+void GrandOrgueFile::MIDIPretend(bool on)
+{
+	for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+		m_manual[i].MIDIPretend(on);
+}
+
 void GrandOrgueFile::Abort()
 {
 	for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
