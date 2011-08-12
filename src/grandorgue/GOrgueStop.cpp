@@ -32,6 +32,7 @@ extern GrandOrgueFile* organfile;
 GOrgueStop::GOrgueStop(unsigned manual_number) :
 	GOrgueDrawstop(),
 	m_Pipes(0),
+	m_KeyState(0),
 	m_ManualNumber(manual_number),
 	m_Percussive(false),
 	m_AmplitudeLevel(0),
@@ -102,6 +103,8 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* 
 				)
 			);
 	}
+	m_KeyState.resize(m_NumberOfAccessiblePipes);
+	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
 
 	GOrgueDrawstop::Load(cfg, group, display_metrics);
 
@@ -112,20 +115,37 @@ void GOrgueStop::Save(IniFileConfig& cfg, bool prefix, wxString group)
 	GOrgueDrawstop::Save(cfg, prefix, group);
 }
 
+void GOrgueStop::SetKey(unsigned note, int on)
+{
+	if (note < m_FirstAccessiblePipeLogicalKeyNumber || note >= m_FirstAccessiblePipeLogicalKeyNumber + m_NumberOfAccessiblePipes)
+		return;
+	note -= m_FirstAccessiblePipeLogicalKeyNumber;
+	
+	unsigned last = m_KeyState[note];
+	m_KeyState[note] += on;
+
+	if (DefaultToEngaged)
+	{
+		if (last > 0 && m_KeyState[note] == 0)
+			m_Pipes[note + m_FirstAccessiblePipeLogicalPipeNumber - 1]->Set(false);
+		if (last == 0 && m_KeyState[note] > 0)
+			m_Pipes[note + m_FirstAccessiblePipeLogicalPipeNumber - 1]->Set(true);
+	}
+}
+
+
 void GOrgueStop::Set(bool on)
 {
 	if (DefaultToEngaged == on)
 		return;
-	DefaultToEngaged = on;
-	organfile->MIDIPretend(true);
-	DefaultToEngaged = !on;
-	organfile->MIDIPretend(false);
+	for(unsigned i = 0; i < m_NumberOfAccessiblePipes; i++)
+		if (m_KeyState[i])
+			m_Pipes[i + m_FirstAccessiblePipeLogicalPipeNumber - 1]->Set(on);
 
 	GOrgueDrawstop::Set(on);
 
 	if (IsAuto())
 		m_Pipes[0]->Set(on);
-
 }
 
 GOrguePipe* GOrgueStop::GetPipe(unsigned index)
@@ -158,6 +178,9 @@ void GOrgueStop::Abort()
 
 void GOrgueStop::PreparePlayback()
 {
+	m_KeyState.resize(m_NumberOfAccessiblePipes);
+	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
+
 	if (IsAuto() && DefaultToEngaged)
 		m_Pipes[0]->Set(true);
 }

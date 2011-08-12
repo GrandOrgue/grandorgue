@@ -190,17 +190,7 @@ void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler
 	if (!unisonoff)
 	{
 		for (unsigned i = 0; i < m_stops.size(); i++)
-		{
-			if (!m_stops[i]->DefaultToEngaged)
-				continue;
-			j = note - ((int)m_stops[i]->GetFirstAccessiblePipeLogicalKeyNumber() - 1);
-			j += (m_first_accessible_logical_key_nb - 1); // Correction to take FirstAccessibleKeyLogicalKeyNumber of the manual into account
-			if (j < 0 || j >= (int)m_stops[i]->GetNbAccessiblePipes())
-				continue;
-			j += (int)(m_stops[i]->GetFirstAccessiblePipeLogicalPipeNumber()) - 1;
-
-			m_stops[i]->GetPipe(j)->Set(on);
-		}
+			m_stops[i]->SetKey(note + 1, on ? 1 : -1);
 	}
 
 	if (!outofrange)
