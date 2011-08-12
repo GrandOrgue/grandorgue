@@ -389,7 +389,7 @@ bool GOrgueSound::HasScaledReleases()
 
 void GOrgueSound::MIDIAllNotesOff(GrandOrgueFile* organfile)
 {
-	int i, j;
+	int i;
 
 	if (!organfile)
 		return;
@@ -398,14 +398,6 @@ void GOrgueSound::MIDIAllNotesOff(GrandOrgueFile* organfile)
 	{
 		GOrgueManual* man = organfile->GetManual(i);
 		man->AllNotesOff();
-		for (j = 0; j < man->GetStopCount(); j++)
-		{
-			GOrgueStop* stop = man->GetStop(j);
-			for (unsigned k = 0; k < stop->GetPipeCount(); k++)
-				stop->GetPipe(k)->FastAbort();
-			if (stop->IsAuto())
-				stop->Set(false);
-		}
 	}
 }
 

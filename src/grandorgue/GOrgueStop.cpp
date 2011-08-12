@@ -147,3 +147,17 @@ unsigned GOrgueStop::GetPipeCount()
 {
 	return m_Pipes.size();
 }
+
+void GOrgueStop::Abort()
+{
+	if (IsAuto())
+		Set(false);
+	for(unsigned i = 0; i < m_Pipes.size(); i++)
+		m_Pipes[i]->FastAbort();
+}
+
+void GOrgueStop::PreparePlayback()
+{
+	if (IsAuto() && DefaultToEngaged)
+		m_Pipes[0]->Set(true);
+}

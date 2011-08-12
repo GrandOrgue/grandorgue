@@ -49,6 +49,8 @@ public:
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* display_metrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Set(bool on);
+	void Abort();
+	void PreparePlayback();
 	~GOrgueStop(void);
 
 	unsigned GetFirstAccessiblePipeLogicalPipeNumber() const;
