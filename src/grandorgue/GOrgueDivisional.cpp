@@ -151,7 +151,7 @@ void GOrgueDivisional::PushLocal()
 		{
 			if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetCoupler(i)->Displayed)
 				continue;
-			if ((organfile->DivisionalsStoreIntramanualCouplers() && m_ManualNumber == associatedManual->GetCoupler(i)->DestinationManual) || (organfile->DivisionalsStoreIntermanualCouplers() && m_ManualNumber != associatedManual->GetCoupler(i)->DestinationManual))
+			if ((organfile->DivisionalsStoreIntramanualCouplers() && !associatedManual->GetCoupler(i)->IsIntermanual()) || (organfile->DivisionalsStoreIntermanualCouplers() && associatedManual->GetCoupler(i)->IsIntermanual()))
 			{
 				m_Couplers.push_back(associatedManual->GetCoupler(i)->DefaultToEngaged ? i + 1 : -i - 1);
 				used |= associatedManual->GetCoupler(i)->DefaultToEngaged;

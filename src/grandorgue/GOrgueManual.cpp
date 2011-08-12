@@ -40,12 +40,14 @@ extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
 
 GOrgueManual::GOrgueManual() :
+	m_KeyPressed(0),
+	m_KeyState(0),
 	m_manual_number(0),
-	m_midi(),
 	m_first_accessible_logical_key_nb(0),
 	m_nb_logical_keys(0),
 	m_first_accessible_key_midi_note_nb(0),
 	m_nb_accessible_keys(0),
+	m_UnisonOff(0),
 	m_midi_input_number(0),
 	m_tremulant_ids(0),
 	m_name(),
@@ -113,95 +115,74 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 		m_divisionals[i]->Load(cfg, buffer, m_manual_number, i, displayMetrics);
 	}
 
+	m_KeyState.resize(m_nb_logical_keys);
+	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
+	m_KeyPressed.resize(m_nb_accessible_keys);
+	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
 }
 
-void GOrgueManual::Set(int note, bool on, bool pretend, int depth, GOrgueCoupler* prev)
+void GOrgueManual::SetKey(unsigned note, int on, GOrgueCoupler* prev)
 {
-	int j;
-
-	// test polyphony?
-#if 0
-	for (i = 0; i < organfile->m_NumberOfPipes; i++)
-		organfile->m_pipe[i]->Set(on);
-	return;
-#endif
-
-	if (depth > 32)
-	{
-		::wxLogFatalError(_("Infinite recursive coupling detected!"));
-		return;
-	}
-
-	note -= m_first_accessible_key_midi_note_nb;
-	bool outofrange = note < 0 || note >= (int)m_nb_accessible_keys;
-
-	if (!depth && outofrange)
+	if (note < 0 || note >= m_nb_logical_keys || !on)
 		return;
 
-	if (!outofrange && !pretend)
-	{
-		if (depth)
-		{
-			if (!(m_midi[note] >> 1) && !on)
-				return;
-			m_midi[note] += on ? 2 : -2;
-		}
-		else
-		{
-			if ((m_midi[note] & 1) ^ !on)
-				return;
-			m_midi[note]  = (m_midi[note] & 0xFFFFFFFE) | (on ? 1 : 0);
-		}
-	}
+	m_KeyState[note] += on;
 
 	bool unisonoff = false;
 	for (unsigned i = 0; i < m_couplers.size(); i++)
 	{
-		if (!m_couplers[i]->DefaultToEngaged)
-			continue;
-		if (m_couplers[i]->UnisonOff && (!depth || (prev && prev->CoupleToSubsequentUnisonIntermanualCouplers)))
-		{
+		if (m_couplers[i]->IsUnisonOff() && !prev && m_couplers[i]->DefaultToEngaged)
 			unisonoff = true;
-			continue;
-		}
-		j = m_couplers[i]->DestinationManual;
-		if (
-				(!depth)
-				||
-				(
-					(prev)
-					&&
-					(
-						(j == m_manual_number && m_couplers[i]->DestinationKeyshift < 0 && prev->CoupleToSubsequentDownwardIntramanualCouplers)
-						||
-						(j == m_manual_number && m_couplers[i]->DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntramanualCouplers)
-						||
-						(j != m_manual_number && m_couplers[i]->DestinationKeyshift < 0 && prev->CoupleToSubsequentDownwardIntermanualCouplers)
-						||
-						(j != m_manual_number && m_couplers[i]->DestinationKeyshift > 0 && prev->CoupleToSubsequentUpwardIntermanualCouplers)
-					)
-				)
-			)
-		{
-			organfile->GetManual(j)->Set(note + m_first_accessible_key_midi_note_nb + m_couplers[i]->DestinationKeyshift, on, false, depth + 1, m_couplers[i]);
-		}
+		m_couplers[i]->SetKey(note, on, prev);
 	}
 
 	if (!unisonoff)
 	{
 		for (unsigned i = 0; i < m_stops.size(); i++)
-			m_stops[i]->SetKey(note + 1, on ? 1 : -1);
+			m_stops[i]->SetKey(note + 1, on);
 	}
 
-	if (!outofrange)
+	if (m_first_accessible_logical_key_nb <= note + 1 && note <= m_first_accessible_logical_key_nb + m_nb_accessible_keys)
 	{
 		wxCommandEvent event(wxEVT_NOTEONOFF, 0);
 		event.SetInt(m_manual_number);
-		event.SetExtraLong(note);
+		event.SetExtraLong(note - m_first_accessible_logical_key_nb + 1);
 		::wxGetApp().frame->AddPendingEvent(event);
 	}
 }
 
+#define TRIGGER_LEVEL (2<<9)
+
+void GOrgueManual::Set(unsigned note, bool on)
+{
+	if (note < m_first_accessible_key_midi_note_nb || note >= m_first_accessible_key_midi_note_nb + m_nb_accessible_keys)
+		return;
+	if (m_KeyPressed[note - m_first_accessible_key_midi_note_nb] == on)
+		return;
+	m_KeyPressed[note - m_first_accessible_key_midi_note_nb] = on;
+	SetKey(note - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1, on ? TRIGGER_LEVEL : -(TRIGGER_LEVEL), NULL);
+}
+
+void GOrgueManual::SetUnisonOff(bool on)
+{
+	if (on)
+	{
+		if (m_UnisonOff++)
+			return;
+	}
+	else
+	{
+		if (--m_UnisonOff)
+			return;
+	}
+	for(unsigned i = 0; i < m_KeyPressed.size(); i++)
+	{
+		int note = i + m_first_accessible_logical_key_nb - 1;
+		if (m_KeyPressed[note])
+			for (unsigned j = 0; j < m_stops.size(); j++)
+				m_stops[j]->SetKey(note + 1, on ? -TRIGGER_LEVEL : TRIGGER_LEVEL);
+	}
+}
 
 void GOrgueManual::MIDI(void)
 {
@@ -311,9 +292,8 @@ GOrgueTremulant* GOrgueManual::GetTremulant(unsigned index)
 void GOrgueManual::AllNotesOff()
 {
 
-	/* TODO: I'm not sure if these are allowed to be merged into one loop. */
 	for (unsigned j = 0; j < m_nb_accessible_keys; j++)
-        m_midi[j] = 0;
+		Set(m_first_accessible_key_midi_note_nb + j, false);
 
 	for (unsigned j = 0; j < m_nb_accessible_keys; j++)
 	{
@@ -325,21 +305,13 @@ void GOrgueManual::AllNotesOff()
 
 }
 
-/* TODO: figure out what this thing does and document it */
-void GOrgueManual::MIDIPretend(bool on)
-{
-	for (unsigned j = 0; j < m_nb_logical_keys; j++)
-		if (m_midi[j] & 1)
-			Set(j + m_first_accessible_key_midi_note_nb, on, true);
-}
-
 bool GOrgueManual::IsKeyDown(unsigned midiNoteNumber)
 {
 	if (midiNoteNumber < m_first_accessible_key_midi_note_nb)
 		return false;
 	if (midiNoteNumber >= m_first_accessible_key_midi_note_nb + m_nb_accessible_keys)
 		return false;
-	return m_midi[midiNoteNumber - m_first_accessible_key_midi_note_nb];
+	return m_KeyState[midiNoteNumber - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1] > 0;
 }
 
 void GOrgueManual::GetKeyDimensions
@@ -688,6 +660,15 @@ void GOrgueManual::Abort()
 
 void GOrgueManual::PreparePlayback()
 {
+	m_KeyState.resize(m_nb_logical_keys);
+	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
+	m_KeyPressed.resize(m_nb_accessible_keys);
+	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
+	m_UnisonOff = 0;
+
 	for (unsigned i = 0; i < m_stops.size(); i++)
 		m_stops[i]->PreparePlayback();
+
+	for (unsigned i = 0; i < m_couplers.size(); i++)
+		m_couplers[i]->PreparePlayback();
 }
