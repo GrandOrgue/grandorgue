@@ -23,6 +23,7 @@
 #ifndef GORGUECOUPLER_H
 #define GORGUECOUPLER_H
 
+#include <vector>
 #include "GOrgueDrawStop.h"
 
 class IniFileConfig;
@@ -31,23 +32,35 @@ class GrandOrgueFile;
 
 class GOrgueCoupler : public GOrgueDrawstop
 {
+	bool m_UnisonOff;
+	bool m_CoupleToSubsequentUnisonIntermanualCouplers;
+	bool m_CoupleToSubsequentUpwardIntermanualCouplers;
+	bool m_CoupleToSubsequentDownwardIntermanualCouplers;
+	bool m_CoupleToSubsequentUpwardIntramanualCouplers;
+	bool m_CoupleToSubsequentDownwardIntramanualCouplers;
+	unsigned m_SourceManual;
+	unsigned m_DestinationManual;
+	int m_DestinationKeyshift;
+	/* Input state to the coupler */
+	std::vector<unsigned> m_KeyState;
+	/* Intended output state always assuming the coupler is ON */
+	std::vector<unsigned> m_InternalState;
+	/* Current ouput state */
+	std::vector<unsigned> m_OutState;
 
-
+	void ChangeKey(int note, int on);
+	void SetOut(int note, int on);
+	unsigned GetInternalState(int note);
 public:
 
 	GOrgueCoupler(unsigned sourceManual);
-	void Load(IniFileConfig& cfg, wxString group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, unsigned firstValidManualIndex, unsigned numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
 	void Set(bool on);
-
-	bool UnisonOff;
-	bool CoupleToSubsequentUnisonIntermanualCouplers;
-	bool CoupleToSubsequentUpwardIntermanualCouplers;
-	bool CoupleToSubsequentDownwardIntermanualCouplers;
-	bool CoupleToSubsequentUpwardIntramanualCouplers;
-	bool CoupleToSubsequentDownwardIntramanualCouplers;
-	int DestinationManual;
-	int DestinationKeyshift;
+	void PreparePlayback();
+	bool IsIntermanual();
+	bool IsUnisonOff();
 
 };
 
