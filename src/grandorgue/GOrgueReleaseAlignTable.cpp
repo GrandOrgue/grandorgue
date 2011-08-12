@@ -220,9 +220,7 @@ void GOrgueReleaseAlignTable::SetupRelease
 	)
 {
 
-	/* Get combined release f's and v's
-	 * TODO: it might be good to check that the compiler
-	 * un-rolls this loop */
+	/* Get combined release f's and v's */
 	int f_mod = old_sampler.release_tracker.f[0];
 	int v_mod = f_mod - old_sampler.release_tracker.f[1];
 
