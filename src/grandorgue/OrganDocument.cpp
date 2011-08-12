@@ -77,6 +77,7 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 		b_loaded = true;
 		return false;
 	}
+	organfile->PreparePlayback();
 
 	SetTitle(organfile->GetChurchName());
 
