@@ -34,6 +34,7 @@ class GOrgueStop : public GOrgueDrawstop
 {
 private:
 	std::vector<GOrguePipe*> m_Pipes;
+	std::vector<unsigned> m_KeyState;
 	unsigned m_ManualNumber;
 	bool m_Percussive;
 	unsigned m_AmplitudeLevel;
@@ -49,6 +50,7 @@ public:
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* display_metrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Set(bool on);
+	void SetKey(unsigned note, int on);
 	void Abort();
 	void PreparePlayback();
 	~GOrgueStop(void);
