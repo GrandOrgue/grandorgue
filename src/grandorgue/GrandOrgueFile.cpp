@@ -833,12 +833,18 @@ void GrandOrgueFile::MIDIPretend(bool on)
 
 void GrandOrgueFile::Abort()
 {
+	for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+		m_manual[i].Abort();
+
 	for (int j = 0; j < m_NumberOfTremulants; j++)
 		m_tremulant[j].Abort();
 }
 
 void GrandOrgueFile::PreparePlayback()
 {
+	for (int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+		m_manual[i].PreparePlayback();
+
 	for (int j = 0; j < m_NumberOfTremulants; j++)
 		m_tremulant[j].PreparePlayback();
 }

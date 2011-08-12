@@ -687,3 +687,15 @@ void GOrgueManual::Save(IniFileConfig& cfg, bool prefix, wxString group)
 		m_divisionals[i]->Save(cfg, prefix, buffer);
 	}
 }
+
+void GOrgueManual::Abort()
+{
+	for (unsigned i = 0; i < m_stops.size(); i++)
+		m_stops[i]->Abort();
+}
+
+void GOrgueManual::PreparePlayback()
+{
+	for (unsigned i = 0; i < m_stops.size(); i++)
+		m_stops[i]->PreparePlayback();
+}
