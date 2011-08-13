@@ -26,32 +26,11 @@
 #include <wx/defs.h>
 #include <wx/docview.h>
 
-class RIFF
-{
-public:
-	void Analyze(void* ptr, unsigned i)
-	{
-		char* p = (char*)ptr + i;
-		type = *((int*)p);
-		unsigned* pp = (unsigned*)(p + 4);
-		size = wxUINT32_SWAP_ON_BE(*pp);
-	}
-	unsigned GetSize()
-	{
-		return size;
-	}
-	bool operator== (const char* cmp)
-	{
-	    return type == *((int*)cmp);
-	}
-private:
-    int type;
-	unsigned size;
-};
-
 class OrganDocument : public wxDocument
 {
+
 	DECLARE_DYNAMIC_CLASS(OrganDocument)
+
 public:
 	OrganDocument(void) { b_loaded = false; };
 	~OrganDocument(void);
@@ -61,12 +40,14 @@ public:
 	bool DoOpenDocument(const wxString& file);
 	bool DoSaveDocument(const wxString& file);
 
-    bool Save() { return OnSaveDocument(m_documentFile); }
+	bool Save() { return OnSaveDocument(m_documentFile); }
 
 	bool b_loaded;
 
 private:
+
 	void CloseOrgan();
+
 };
 
 #endif
