@@ -139,7 +139,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 			m_display_metrics->GetCenterWidth(),
 			m_display_metrics->GetJambTopHeight() + m_display_metrics->GetPistonTopHeight());
 
-	for (i = 0; i <= organfile->GetManualAndPedalCount(); i++)
+	for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
 	{
 
 		GOrgueManual* man = organfile->GetManual(i);
