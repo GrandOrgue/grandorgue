@@ -474,23 +474,23 @@ int GOrgueSound::AudioCallbackLocal
 
 	for (unsigned j = 0; j < organfile->GetTremulantCount(); j++)
 	{
-		if (tremulants[j] == NULL)
+		if (m_tremulants[j].sampler == NULL)
 			continue;
 
-		int* this_buff = g_buff[j + 1];
+		int* this_buff = m_tremulants[j].buff;
 
 		std::fill (this_buff, this_buff + 2048, 0x800000);
 
-		ProcessAudioSamplers (&(tremulants[j]), n_frames, this_buff);
+		ProcessAudioSamplers (&(m_tremulants[j].sampler), n_frames, this_buff);
 	}
 
-	if (detachedRelease != NULL)
+	if (m_detachedRelease != NULL)
 	{
-		int* this_buff = g_buff[0];
+		int* this_buff = g_buff;
 
 		std::fill (this_buff, this_buff + 2048, 0);
 
-		ProcessAudioSamplers(&detachedRelease, n_frames, this_buff);
+		ProcessAudioSamplers(&m_detachedRelease, n_frames, this_buff);
 
 		double d = 1.0;
 		d *= volume;
@@ -510,14 +510,14 @@ int GOrgueSound::AudioCallbackLocal
 	for (unsigned j = 0; j < organfile->GetWinchestGroupCount(); j++)
 	{
 
-		if (windchests[j] == NULL)
+		if (m_windchests[j] == NULL)
 			continue;
 
-		int* this_buff = g_buff[0];
+		int* this_buff = g_buff;
 
 		std::fill (this_buff, this_buff + 2048, 0);
 
-		ProcessAudioSamplers(&(windchests[j]), n_frames, this_buff);
+		ProcessAudioSamplers(&(m_windchests[j]), n_frames, this_buff);
 
 		GOrgueWindchest* current_windchest = organfile->GetWindchest(j);
 		double d = current_windchest->GetVolume();
@@ -529,9 +529,9 @@ int GOrgueSound::AudioCallbackLocal
 		for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
 		{
 			unsigned tremulant_pos = current_windchest->GetTremulantId(i);
-			if (!tremulants[tremulant_pos])
+			if (!m_tremulants[tremulant_pos].sampler)
 				continue;
-			int *ptr = g_buff[tremulant_pos + 1];
+			int *ptr = m_tremulants[tremulant_pos].buff;
 			for (unsigned int k = 0; k < n_frames*2; k++)
 			{
 				//multiply by 2^-23
