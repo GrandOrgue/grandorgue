@@ -228,23 +228,23 @@ void GOrgueDivisional::Push()
 		if (!coupler->DefaultToEngaged)
 			continue;
 
-		for (int i = 0; i < coupler->NumberOfManuals; i++)
+		for (unsigned i = 0; i < coupler->GetNumberOfManuals(); i++)
 		{
 
-			if (coupler->manual[i] != m_ManualNumber)
+			if (coupler->GetManual(i) != m_ManualNumber)
 				continue;
 
-			for (int j = i + 1; j < coupler->NumberOfManuals; j++)
-				organfile->GetManual(coupler->manual[j])->GetDivisional(m_DivisionalNumber)->PushLocal();
+			for (unsigned int j = i + 1; j < coupler->GetNumberOfManuals(); j++)
+				organfile->GetManual(coupler->GetManual(j))->GetDivisional(m_DivisionalNumber)->PushLocal();
 
-			if (coupler->BiDirectionalCoupling)
+			if (coupler->IsBidirectional())
 			{
 
-				for (int j = 0; j < coupler->NumberOfManuals; j++)
+				for (unsigned j = 0; j < coupler->GetNumberOfManuals(); j++)
 				{
-					if (coupler->manual[j] == m_ManualNumber)
+					if (coupler->GetManual(j) == m_ManualNumber)
 						break;
-					organfile->GetManual(coupler->manual[j])->GetDivisional(m_DivisionalNumber)->PushLocal();
+					organfile->GetManual(coupler->GetManual(j))->GetDivisional(m_DivisionalNumber)->PushLocal();
 				}
 
 			}

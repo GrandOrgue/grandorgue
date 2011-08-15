@@ -82,6 +82,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 
 	wxString buffer;
 
+	m_stops.resize(0);
 	for (unsigned i = 0; i < m_nb_stops; i++)
 	{
 		m_stops.push_back(new GOrgueStop(m_manual_number));
