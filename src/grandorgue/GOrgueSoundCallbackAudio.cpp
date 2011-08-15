@@ -472,60 +472,80 @@ int GOrgueSound::AudioCallbackLocal
 	/* initialise the output buffer */
 	std::fill(final_buff, final_buff + 2048, 0);
 
-	for (int j = 0; j < organfile->GetTremulantCount() + organfile->GetWinchestGroupCount() + 1; j++)
+	for (unsigned j = 0; j < organfile->GetTremulantCount(); j++)
+	{
+		if (tremulants[j] == NULL)
+			continue;
+
+		int* this_buff = g_buff[j + 1];
+
+		std::fill (this_buff, this_buff + 2048, 0x800000);
+
+		ProcessAudioSamplers (&(tremulants[j]), n_frames, this_buff);
+	}
+
+	if (detachedRelease != NULL)
+	{
+		int* this_buff = g_buff[0];
+
+		std::fill (this_buff, this_buff + 2048, 0);
+
+		ProcessAudioSamplers(&detachedRelease, n_frames, this_buff);
+
+		double d = 1.0;
+		d *= volume;
+		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
+		float f = d;
+		std::fill(volume_buff, volume_buff + 2048, f);
+
+		for (unsigned int k = 0; k < n_frames*2; k++)
+		{
+			double d = this_buff[k];
+			d *= volume_buff[k];
+			final_buff[k] += d;
+		}
+
+	}
+
+	for (unsigned j = 0; j < organfile->GetWinchestGroupCount(); j++)
 	{
 
 		if (windchests[j] == NULL)
 			continue;
 
-		int* this_buff = (j < organfile->GetTremulantCount())
-			? g_buff[j + 1]
-			: g_buff[0];
+		int* this_buff = g_buff[0];
 
-		std::fill
-			(this_buff
-			,this_buff + 2048
-			,(j < organfile->GetTremulantCount()) ? 0x800000 : 0
-			);
+		std::fill (this_buff, this_buff + 2048, 0);
 
-		ProcessAudioSamplers
-			(&(windchests[j])
-			,n_frames
-			,this_buff
-			);
+		ProcessAudioSamplers(&(windchests[j]), n_frames, this_buff);
 
-		if (j >= organfile->GetTremulantCount())
+		GOrgueWindchest* current_windchest = organfile->GetWindchest(j);
+		double d = current_windchest->GetVolume();
+		d *= volume;
+		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
+		float f = d;
+		std::fill(volume_buff, volume_buff + 2048, f);
+
+		for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
 		{
-
-			double d = organfile->GetWindchest(j)->GetVolume();
-			d *= volume;
-			d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
-			float f = d;
-			std::fill(volume_buff, volume_buff + 2048, f);
-
-			int *ptr;
-			for (int i = 0; i < organfile->GetWindchest(j)->GetTremulantCount(); i++)
-			{
-
-				if (!windchests[organfile->GetWindchest(j)->GetTremulantId(i)])
-					continue;
-				ptr = g_buff[organfile->GetWindchest(j)->GetTremulantId(i) + 1];
-				for (unsigned int k = 0; k < n_frames*2; k++)
-				{
-					//multiply by 2^-23
-					volume_buff[k] *= ldexp(ptr[k], -23);
-				}
-
-			}
-
-			ptr = this_buff;
+			unsigned tremulant_pos = current_windchest->GetTremulantId(i);
+			if (!tremulants[tremulant_pos])
+				continue;
+			int *ptr = g_buff[tremulant_pos + 1];
 			for (unsigned int k = 0; k < n_frames*2; k++)
 			{
-				double d = this_buff[k];
-				d *= volume_buff[k];
-				final_buff[k] += d;
+				//multiply by 2^-23
+				volume_buff[k] *= ldexp(ptr[k], -23);
 			}
 		}
+
+		for (unsigned int k = 0; k < n_frames*2; k++)
+		{
+			double d = this_buff[k];
+			d *= volume_buff[k];
+			final_buff[k] += d;
+		}
+
 	}
 
 	/* Clamp the output */

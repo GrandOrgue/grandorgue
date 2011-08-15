@@ -48,7 +48,7 @@ void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetr
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 	if (m_pipe)
 		delete m_pipe;
-	m_pipe = new GOrguePipe(wxT(""), false, ObjectNumber - 1, 0);
+	m_pipe = new GOrguePipe(wxT(""), false, -ObjectNumber, 0);
 	m_pipe->CreateTremulant(Period, StartRate, StopRate, AmpModDepth);
 }
 

@@ -270,14 +270,11 @@ private:
 		,void *userData
 		);
 
-public:
+	GO_SAMPLER* windchests[16];		// maximum 16 windchests
+	GO_SAMPLER* detachedRelease;		// maximum 1 detach
+	GO_SAMPLER* tremulants[10];		// maximum 10 tremulants
 
-	/* windchests... pipes and tremulants belong to these (need to figure out
-	 * what tremulants are doing in this group...). Groups from 0 to
-	 * GetTremulantCount-1 are purely there for tremulants. Followed by 1
-	 * chest for detached releases, followed by the normal windchests for
-	 * pipes... */
-	GO_SAMPLER* windchests[10 + 1 + 16];		// maximum 10 tremulants + 1 detach + 16 windchests
+public:
 
 	GOrgueSound(void);
 	~GOrgueSound(void);
@@ -294,6 +291,12 @@ public:
 	int GetVolume();
 
 	GO_SAMPLER* OpenNewSampler();
+	/* samplerGroupID:
+	   -1 .. -n Tremulants
+	   0 detached release
+	   1 .. n Windchests
+	*/
+	void StartSampler(GO_SAMPLER* sampler, int samplerGroupID);
 
 	bool HasRandomPipeSpeech();
 	bool HasReleaseAlignment();

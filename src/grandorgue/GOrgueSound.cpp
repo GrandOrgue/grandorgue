@@ -120,7 +120,7 @@ GOrgueSound::GOrgueSound(void) :
 				if (
 						(info.outputChannels < 2) ||
 						(!info.probed) ||
-						(sample_rate_index == (int)info.sampleRates.size()) ||
+						(sample_rate_index == info.sampleRates.size()) ||
 						(m_audioDevices.find(name) != m_audioDevices.end())
 					)
 					continue;
@@ -189,8 +189,11 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 	samplers_count = 0;
 	for (i = 0; i < MAX_POLYPHONY; i++)
 		samplers_open[i] = samplers + i;
-	for (i = 0; i < 26; i++)
+	for (i = 0; i < 16; i++)
 		windchests[i] = 0;
+	for (i = 0; i < 10; i++)
+		tremulants[i] = 0;
+	detachedRelease = 0;
 
 	try
 	{
@@ -484,3 +487,21 @@ GOrgueMidi& GOrgueSound::GetMidi()
 	return *m_midi;
 }
 
+void GOrgueSound::StartSampler(GO_SAMPLER* sampler, int samplerGroupId)
+{
+	if (samplerGroupId == 0)
+	{
+		sampler->next = detachedRelease;
+		detachedRelease = sampler;
+	}
+	else if (samplerGroupId < 0)
+	{
+		sampler->next = tremulants[-1-samplerGroupId];
+		tremulants[-1-samplerGroupId] = sampler;
+	}
+	else
+	{
+		sampler->next = windchests[samplerGroupId - 1];
+		windchests[samplerGroupId - 1] = sampler;
+	}
+}
