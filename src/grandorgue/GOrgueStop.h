@@ -24,6 +24,7 @@
 #define GORGUESTOP_H
 
 #include <vector>
+#include "ptrvector.h"
 #include <wx/wx.h>
 #include "IniFileConfig.h"
 #include "GOrgueDrawStop.h"
@@ -33,7 +34,7 @@ class GOrguePipe;
 class GOrgueStop : public GOrgueDrawstop
 {
 private:
-	std::vector<GOrguePipe*> m_Pipes;
+	ptr_vector<GOrguePipe> m_Pipes;
 	std::vector<unsigned> m_KeyState;
 	unsigned m_ManualNumber;
 	bool m_Percussive;

@@ -25,6 +25,7 @@
 
 #include <wx/wx.h>
 #include <vector>
+#include "ptrvector.h"
 
 class wxProgressDialog;
 
@@ -58,9 +59,9 @@ private:
 
 	wxString m_name;
 
-	std::vector<GOrgueStop*> m_stops;
-	std::vector<GOrgueCoupler*> m_couplers;
-	std::vector<GOrgueDivisional*> m_divisionals;
+	ptr_vector<GOrgueStop> m_stops;
+	ptr_vector<GOrgueCoupler> m_couplers;
+	ptr_vector<GOrgueDivisional> m_divisionals;
 	bool m_displayed : 1;
 	bool m_key_colour_inverted : 1;
 	bool m_key_colour_wooden : 1;

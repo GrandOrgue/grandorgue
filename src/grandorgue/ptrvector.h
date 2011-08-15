@@ -57,7 +57,7 @@ public:
 		return std::vector<T*>::at(pos);
 	}
 
-	unsigned size()
+	unsigned size() const
 	{
 		return std::vector<T*>::size();
 	}
