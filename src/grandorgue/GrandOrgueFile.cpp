@@ -638,7 +638,7 @@ GOrgueManual* GrandOrgueFile::GetManual(unsigned index)
 	return m_manual[index];
 }
 
-int GrandOrgueFile::GetTremulantCount()
+unsigned GrandOrgueFile::GetTremulantCount()
 {
 	return m_tremulant.size();
 }
@@ -733,7 +733,7 @@ GOrgueWindchest* GrandOrgueFile::GetWindchest(unsigned index)
 	return m_windchest[index];
 }
 
-int GrandOrgueFile::GetWinchestGroupCount()
+unsigned GrandOrgueFile::GetWinchestGroupCount()
 {
 	return m_windchest.size();
 }

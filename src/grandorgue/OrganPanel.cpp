@@ -158,7 +158,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 		}
 	}
 
-	for (j = 0; j < organfile->GetTremulantCount(); j++)
+	for (unsigned j = 0; j < organfile->GetTremulantCount(); j++)
 	{
 		if (organfile->GetTremulant(j)->Displayed)
 		{
@@ -370,8 +370,8 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 
 		}
 
-		for (j = 0; j < organfile->GetTremulantCount(); j++)
-			HelpDrawStop(organfile->GetTremulant(j), dc, xx, yy, right);
+		for (unsigned k = 0; k < organfile->GetTremulantCount(); k++)
+			HelpDrawStop(organfile->GetTremulant(k), dc, xx, yy, right);
 		for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
 			HelpDrawStop(organfile->GetDivisionalCoupler(j), dc, xx, yy, right);
 		for (j = 0; j < organfile->GetGeneralCount(); j++)
@@ -503,7 +503,7 @@ void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 							if (k == organfile->GetManual(i)->GetDivisional(j)->ShortcutKey)
 								organfile->GetManual(i)->GetDivisional(j)->Push();
 					}
-					for (int j = 0; j < organfile->GetTremulantCount(); j++)
+					for (unsigned j = 0; j < organfile->GetTremulantCount(); j++)
 						if (k == organfile->GetTremulant(j)->ShortcutKey)
 							organfile->GetTremulant(j)->Push();
 					for (int j = 0; j < organfile->GetDivisionalCouplerCount(); j++)

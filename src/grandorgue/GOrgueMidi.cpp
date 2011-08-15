@@ -244,8 +244,8 @@ GOrgueMidi::ProcessMessage
             }
 
         }
-        for (j = 0; j < organfile->GetTremulantCount(); j++)
-            organfile->GetTremulant(j)->Set(false);
+        for (unsigned l = 0; l < organfile->GetTremulantCount(); l++)
+            organfile->GetTremulant(l)->Set(false);
         for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
             organfile->GetDivisionalCoupler(j)->Set(false);
 
@@ -379,9 +379,9 @@ GOrgueMidi::ProcessMessage
                             if (msg[1] == organfile->GetManual(k)->GetCoupler(j)->StopControlMIDIKeyNumber)
                                 organfile->GetManual(k)->GetCoupler(j)->Set(msg[2] ? true : false);
                     }
-                    for (j = 0; j < organfile->GetTremulantCount(); j++)
-                        if (msg[1] == organfile->GetTremulant(j)->StopControlMIDIKeyNumber)
-                            organfile->GetTremulant(j)->Set(msg[2] ? true : false);
+                    for (unsigned l = 0; l < organfile->GetTremulantCount(); l++)
+                        if (msg[1] == organfile->GetTremulant(l)->StopControlMIDIKeyNumber)
+                            organfile->GetTremulant(l)->Set(msg[2] ? true : false);
                     for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
                         if (msg[1] == organfile->GetDivisionalCoupler(j)->StopControlMIDIKeyNumber)
                             organfile->GetDivisionalCoupler(j)->Set(msg[2] ? true : false);
@@ -397,9 +397,9 @@ GOrgueMidi::ProcessMessage
                             if (msg[1] == organfile->GetManual(k)->GetCoupler(j)->StopControlMIDIKeyNumber)
                                 organfile->GetManual(k)->GetCoupler(j)->Push();
                     }
-                    for (j = 0; j < organfile->GetTremulantCount(); j++)
-                        if (msg[1] == organfile->GetTremulant(j)->StopControlMIDIKeyNumber)
-                            organfile->GetTremulant(j)->Push();
+                    for (unsigned l = 0; l < organfile->GetTremulantCount(); l++)
+                        if (msg[1] == organfile->GetTremulant(l)->StopControlMIDIKeyNumber)
+                            organfile->GetTremulant(l)->Push();
                     for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
                         if (msg[1] == organfile->GetDivisionalCoupler(j)->StopControlMIDIKeyNumber)
                             organfile->GetDivisionalCoupler(j)->Push();
