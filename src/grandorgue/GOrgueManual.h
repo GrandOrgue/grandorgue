@@ -40,13 +40,17 @@ class GOrgueManual
 
 private:
 
+	/* Keyboard state */
+	std::vector<bool> m_KeyPressed;
+	/* Internal state affected by couplers */
+	std::vector<unsigned> m_KeyState;
 	int m_manual_number;
 	GOrgueDisplayMetrics* m_display_metrics;
-	wxInt16 m_midi[85];
 	unsigned m_first_accessible_logical_key_nb;
 	unsigned m_nb_logical_keys;
 	unsigned m_first_accessible_key_midi_note_nb;
 	unsigned m_nb_accessible_keys;
+	unsigned m_UnisonOff;
 
 	int m_midi_input_number;
 
@@ -69,7 +73,9 @@ public:
 	GOrgueManual();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics, int manualNumber);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
-	void Set(int note, bool on, bool pretend = false, int depth = 0, GOrgueCoupler* prev = 0);
+	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
+	void Set(unsigned note, bool on);
+	void SetUnisonOff(bool on);
 	void Abort();
 	void PreparePlayback();
 	void MIDI(void);
@@ -77,10 +83,10 @@ public:
 
 	unsigned GetNumberOfAccessibleKeys();
 	unsigned GetFirstAccessibleKeyMIDINoteNumber();
+	int GetFirstLogicalKeyMIDINoteNumber();
 	int GetMIDIInputNumber();
 	unsigned GetLogicalKeyCount();
 	void AllNotesOff();
-	void MIDIPretend(bool on);
 	bool IsKeyDown(unsigned midiNoteNumber);
 
 	int GetStopCount();
