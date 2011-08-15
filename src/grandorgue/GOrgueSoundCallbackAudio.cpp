@@ -507,9 +507,9 @@ int GOrgueSound::AudioCallbackLocal
 			for (int i = 0; i < organfile->GetWindchest(j)->GetTremulantCount(); i++)
 			{
 
-				if (!windchests[organfile->GetWindchest(j)->tremulant[i]])
+				if (!windchests[organfile->GetWindchest(j)->GetTremulantId(i)])
 					continue;
-				ptr = g_buff[organfile->GetWindchest(j)->tremulant[i] + 1];
+				ptr = g_buff[organfile->GetWindchest(j)->GetTremulantId(i) + 1];
 				for (unsigned int k = 0; k < n_frames*2; k++)
 				{
 					//multiply by 2^-23
