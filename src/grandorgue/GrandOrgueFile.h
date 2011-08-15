@@ -24,6 +24,7 @@
 #define GRANDORGUEFILE_H
 
 #include <vector>
+#include "ptrvector.h"
 #include <wx/wx.h>
 #include <wx/fileconf.h>
 #include <wx/filename.h>
@@ -61,19 +62,10 @@ private:
 
 	wxInt16 m_HighestSampleFormat;
 	wxInt16 m_FirstManual;
-	wxInt16 m_NumberOfManuals;
-	wxInt16 m_NumberOfEnclosures;
-	wxInt16 m_NumberOfTremulants;
-	wxInt16 m_NumberOfWindchestGroups;
-	wxInt16 m_NumberOfReversiblePistons;
-	wxInt16 m_NumberOfLabels;
-	wxInt16 m_NumberOfGenerals;
-	wxInt16 m_NumberOfFrameGenerals;
-	wxInt16 m_NumberOfDivisionalCouplers;
 
 	wxInt16 m_AmplitudeLevel;
 
-    wxString m_HauptwerkOrganFileFormatVersion;
+	wxString m_HauptwerkOrganFileFormatVersion;
 	wxString m_ChurchName;
 	wxString m_ChurchAddress;
 	wxString m_OrganBuilder;
@@ -84,18 +76,17 @@ private:
 
 	GOrgueDisplayMetrics* m_DisplayMetrics;
 
-	GOrgueEnclosure* m_enclosure;
-	GOrgueTremulant* m_tremulant;
-	GOrgueWindchest* m_windchest;
-	GOrguePiston* m_piston;
-	GOrgueLabel* m_label;
-	GOrgueGeneral* m_general;
-	GOrgueFrameGeneral* m_framegeneral;
-	GOrgueDivisionalCoupler* m_divisionalcoupler;
-	GOrguePipe** m_pipe;
+	ptr_vector<GOrgueEnclosure> m_enclosure;
+	ptr_vector<GOrgueTremulant> m_tremulant;
+	ptr_vector<GOrgueWindchest> m_windchest;
+	ptr_vector<GOrguePiston> m_piston;
+	ptr_vector<GOrgueLabel> m_label;
+	ptr_vector<GOrgueGeneral> m_general;
+	ptr_vector<GOrgueFrameGeneral> m_framegeneral;
+	ptr_vector<GOrgueDivisionalCoupler> m_divisionalcoupler;
+	ptr_vector<GOrgueManual> m_manual;
 
-	GOrgueManual m_manual[7];
-	wxBitmap m_images[9];
+	std::vector<wxBitmap> m_images;
 
 	void ReadOrganFile(wxFileConfig& odf_ini_file);
 	bool TryLoad(wxInputStream* cache, wxProgressDialog& dlg, wxString& error);
@@ -126,7 +117,6 @@ public:
 	GOrgueGeneral* GetGeneral(unsigned index);
 	int GetNumberOfReversiblePistons();
 	GOrguePiston* GetPiston(unsigned index);
-	GOrguePipe* GetPipe(unsigned index);
 	GOrgueFrameGeneral* GetFrameGeneral(unsigned index);
 	GOrgueWindchest* GetWindchest(unsigned index);
 	int GetWinchestGroupCount();
