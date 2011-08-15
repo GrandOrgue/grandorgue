@@ -173,7 +173,6 @@ GOrgueSound::~GOrgueSound(void)
 bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 {
 
-	int i;
 	bool opened_ok = false;
 
 	defaultAudio = pConfig->Read(wxT("Devices/DefaultSound"), defaultAudio);
@@ -187,13 +186,9 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
 
 	samplers_count = 0;
-	for (i = 0; i < MAX_POLYPHONY; i++)
+	for (unsigned i = 0; i < MAX_POLYPHONY; i++)
 		samplers_open[i] = samplers + i;
-	for (i = 0; i < 16; i++)
-		windchests[i] = 0;
-	for (i = 0; i < 10; i++)
-		tremulants[i] = 0;
-	detachedRelease = 0;
+	PreparePlayback(organfile);
 
 	try
 	{
@@ -438,6 +433,19 @@ bool GOrgueSound::IsActive()
 	return b_active;
 }
 
+void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
+{
+	if (organfile)
+	{
+		m_windchests.resize(organfile->GetWinchestGroupCount());
+		m_tremulants.resize(organfile->GetTremulantCount());
+	}
+	std::fill(m_windchests.begin(), m_windchests.end(), (GO_SAMPLER*)0);
+	for (unsigned i = 0; i < m_tremulants.size(); i++)
+		m_tremulants[i].sampler = 0;
+	m_detachedRelease = 0;
+}
+
 void GOrgueSound::ActivatePlayback()
 {
 	/* FIXME: we should probably check that the driver is actually open */
@@ -491,17 +499,17 @@ void GOrgueSound::StartSampler(GO_SAMPLER* sampler, int samplerGroupId)
 {
 	if (samplerGroupId == 0)
 	{
-		sampler->next = detachedRelease;
-		detachedRelease = sampler;
+		sampler->next = m_detachedRelease;
+		m_detachedRelease = sampler;
 	}
 	else if (samplerGroupId < 0)
 	{
-		sampler->next = tremulants[-1-samplerGroupId];
-		tremulants[-1-samplerGroupId] = sampler;
+		sampler->next = m_tremulants[-1-samplerGroupId].sampler;
+		m_tremulants[-1-samplerGroupId].sampler = sampler;
 	}
 	else
 	{
-		sampler->next = windchests[samplerGroupId - 1];
-		windchests[samplerGroupId - 1] = sampler;
+		sampler->next = m_windchests[samplerGroupId - 1];
+		m_windchests[samplerGroupId - 1] = sampler;
 	}
 }

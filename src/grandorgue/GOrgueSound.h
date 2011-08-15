@@ -40,6 +40,7 @@
 #include <wx/wx.h>
 #include <wx/stopwatch.h>
 #include <map>
+#include <vector>
 #include "RtAudio.h"
 #include "RtMidi.h"
 #include "GrandOrgueDef.h"
@@ -189,11 +190,16 @@ public:
 	} GO_SOUND_DEV_CONFIG;
 
 private:
+	typedef int sound_buffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
+	typedef struct {
+		GO_SAMPLER* sampler;
+		sound_buffer buff;
+	} tremulant_data;
 
 	/* These are only used by the audio callback... */
 	double final_buff[MAX_FRAME_SIZE * MAX_OUTPUT_CHANNELS];
 	float volume_buff[MAX_FRAME_SIZE * MAX_OUTPUT_CHANNELS];
-	int g_buff[11][(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
+	sound_buffer g_buff;
 
 	/* this buffer is used as a temprary when decoding frame data */
 	int m_TempDecodeBuffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
@@ -270,9 +276,9 @@ private:
 		,void *userData
 		);
 
-	GO_SAMPLER* windchests[16];		// maximum 16 windchests
-	GO_SAMPLER* detachedRelease;		// maximum 1 detach
-	GO_SAMPLER* tremulants[10];		// maximum 10 tremulants
+	std::vector<GO_SAMPLER*> m_windchests;
+	GO_SAMPLER* m_detachedRelease;
+	std::vector<tremulant_data> m_tremulants;
 
 public:
 
@@ -308,6 +314,7 @@ public:
 	void StopRecording();
 
 	bool IsActive();
+	void PreparePlayback(GrandOrgueFile* organfile);
 	void ActivatePlayback();
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
