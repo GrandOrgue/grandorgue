@@ -109,7 +109,7 @@ public:
 	int GetManualAndPedalCount();
 	int GetFirstManualIndex();
 	GOrgueManual* GetManual(unsigned index);
-	int GetTremulantCount();
+	unsigned GetTremulantCount();
 	GOrgueTremulant* GetTremulant(unsigned index);
 	int GetDivisionalCouplerCount();
 	GOrgueDivisionalCoupler* GetDivisionalCoupler(unsigned index);
@@ -119,7 +119,7 @@ public:
 	GOrguePiston* GetPiston(unsigned index);
 	GOrgueFrameGeneral* GetFrameGeneral(unsigned index);
 	GOrgueWindchest* GetWindchest(unsigned index);
-	int GetWinchestGroupCount();
+	unsigned GetWinchestGroupCount();
 	GOrgueEnclosure* GetEnclosure(unsigned index);
 	unsigned GetEnclosureCount();
 	GOrgueLabel* GetLabel(unsigned index);

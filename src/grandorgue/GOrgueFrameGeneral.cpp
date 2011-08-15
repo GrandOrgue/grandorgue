@@ -143,7 +143,7 @@ void GOrgueFrameGeneral::Push()
 			}
 		}
 
-		for (int i = 0; i < organfile->GetTremulantCount(); i++)
+		for (unsigned i = 0; i < organfile->GetTremulantCount(); i++)
 		{
 			if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !organfile->GetTremulant(i)->Displayed)
 				continue;
