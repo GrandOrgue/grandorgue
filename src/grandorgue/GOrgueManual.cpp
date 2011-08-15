@@ -124,7 +124,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 
 void GOrgueManual::SetKey(unsigned note, int on, GOrgueCoupler* prev)
 {
-	if (note < 0 || note >= m_nb_logical_keys || !on)
+	if (note < 0 || note >= m_KeyState.size() || !on)
 		return;
 
 	m_KeyState[note] += on;
@@ -156,7 +156,7 @@ void GOrgueManual::SetKey(unsigned note, int on, GOrgueCoupler* prev)
 
 void GOrgueManual::Set(unsigned note, bool on)
 {
-	if (note < m_first_accessible_key_midi_note_nb || note >= m_first_accessible_key_midi_note_nb + m_nb_accessible_keys)
+	if (note < m_first_accessible_key_midi_note_nb || note >= m_first_accessible_key_midi_note_nb + m_KeyPressed.size())
 		return;
 	if (m_KeyPressed[note - m_first_accessible_key_midi_note_nb] == on)
 		return;
