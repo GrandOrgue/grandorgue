@@ -38,7 +38,7 @@ protected:
 public:
 
 	int m_DivisionalNumber;
-	int m_manualNumber;
+	unsigned m_ManualNumber;
 	std::vector<int> m_Stops;
 	std::vector<int> m_Couplers;
 	std::vector<int> m_Tremulants;

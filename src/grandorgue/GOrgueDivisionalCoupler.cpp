@@ -28,29 +28,24 @@ extern GrandOrgueFile* organfile;
 
 GOrgueDivisionalCoupler::GOrgueDivisionalCoupler() :
 	GOrgueDrawstop(),
-	BiDirectionalCoupling(false),
-	NumberOfManuals(0),
-	manual()
+	m_BiDirectionalCoupling(false),
+	m_manuals(0)
 {
-	for (int i = 0; i < 7; ++i)
-	{
-		manual[i]=0;
-	}
 }
 
 
 void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, wxString group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics)
 {
-
-	int i;
 	wxString buffer;
 
-	BiDirectionalCoupling=cfg.ReadBoolean( group,wxT("BiDirectionalCoupling"));
-	NumberOfManuals=cfg.ReadInteger( group,wxT("NumberOfManuals"),    1,    6);
-	for (i = 0; i < NumberOfManuals; i++)
+	m_BiDirectionalCoupling=cfg.ReadBoolean( group,wxT("BiDirectionalCoupling"));
+	unsigned NumberOfManuals=cfg.ReadInteger( group,wxT("NumberOfManuals"),  1, numberOfManuals - firstValidManualIndex + 1);
+
+	m_manuals.resize(0);
+	for (unsigned i = 0; i < NumberOfManuals; i++)
 	{
 		buffer.Printf(wxT("Manual%03d"), i + 1);
-		manual[i] = cfg.ReadInteger(group, buffer, firstValidManualIndex, numberOfManuals);
+		m_manuals.push_back(cfg.ReadInteger(group, buffer, firstValidManualIndex, numberOfManuals));
 	}
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 
@@ -70,3 +65,17 @@ void GOrgueDivisionalCoupler::Set(bool on)
 
 }
 
+unsigned GOrgueDivisionalCoupler::GetNumberOfManuals()
+{
+	return m_manuals.size();
+}
+
+unsigned GOrgueDivisionalCoupler::GetManual(unsigned index)
+{
+	return m_manuals[index];
+}
+
+bool GOrgueDivisionalCoupler::IsBidirectional()
+{
+	return m_BiDirectionalCoupling;
+}

@@ -23,6 +23,7 @@
 #ifndef GORGUEDIVISIONALCOUPLER_H
 #define GORGUEDIVISIONALCOUPLER_H
 
+#include <vector>
 #include <wx/wx.h>
 #include "GOrgueDrawStop.h"
 
@@ -30,17 +31,19 @@ class GOrgueDisplayMetrics;
 
 class GOrgueDivisionalCoupler : public GOrgueDrawstop
 {
+private:
+ 	bool m_BiDirectionalCoupling;
+	std::vector<unsigned> m_manuals;
 
 public:
-	bool BiDirectionalCoupling : 1;
-	wxInt16 NumberOfManuals;
-	wxInt16 manual[7];
-
 	GOrgueDivisionalCoupler();
 	void Load(IniFileConfig& cfg, wxString group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Set(bool on);
 
+	unsigned GetNumberOfManuals();
+	unsigned GetManual(unsigned index);
+	bool IsBidirectional();
 };
 
 #endif /* GORGUEDIVISIONALCOUPLER_H */
