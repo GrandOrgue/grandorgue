@@ -208,21 +208,8 @@ void GOrgueManual::MIDI(void)
 
 }
 
-
-template<class T>
-struct delete_functor
-{
-	void operator()(T* p)
-	{
-		delete p;
-	}
-};
-
 GOrgueManual::~GOrgueManual(void)
 {
-	std::for_each(m_stops.begin(), m_stops.end(), delete_functor<GOrgueStop>());
-	std::for_each(m_couplers.begin(), m_couplers.end(), delete_functor<GOrgueCoupler>());
-	std::for_each(m_divisionals.begin(), m_divisionals.end(), delete_functor<GOrgueDivisional>());
 }
 
 int GOrgueManual::GetMIDIInputNumber()

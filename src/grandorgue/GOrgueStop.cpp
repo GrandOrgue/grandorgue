@@ -155,12 +155,6 @@ GOrguePipe* GOrgueStop::GetPipe(unsigned index)
 
 GOrgueStop::~GOrgueStop(void)
 {
-	while (m_Pipes.size())
-	{
-		if (m_Pipes.back())
-			delete m_Pipes.back();
-		m_Pipes.pop_back();
-	}
 }
 
 unsigned GOrgueStop::GetPipeCount()
