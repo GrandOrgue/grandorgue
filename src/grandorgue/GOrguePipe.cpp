@@ -108,11 +108,11 @@ GOrguePipe::~GOrguePipe()
 	FREE_AND_NULL(m_ra_table);
 }
 
-GOrguePipe::GOrguePipe(wxString filename, bool percussive, int windchestGroup, int amplitude)
+GOrguePipe::GOrguePipe(wxString filename, bool percussive, int samplerGroupID, int amplitude)
 {
 	m_filename = filename;
 	m_percussive = percussive;
-	m_WindchestGroup = windchestGroup;
+	m_SamplerGroupID = samplerGroupID;
 	m_amplitude = amplitude;
 	m_ref = NULL;
 
@@ -171,8 +171,7 @@ void GOrguePipe::SetOn()
 
 	this->sampler = sampler;
 
-	sampler->next = g_sound->windchests[m_WindchestGroup];
-	g_sound->windchests[m_WindchestGroup] = sampler;
+	g_sound->StartSampler(sampler, m_SamplerGroupID);
 
 	if (instances == 0)
 		instances++;
@@ -195,7 +194,7 @@ void GOrguePipe::SetOff()
 	if (instances > 0)
 		return;
 
-	double vol = organfile->GetWindchest(m_WindchestGroup)->GetVolume();
+	double vol = m_SamplerGroupID < 0 ? 1.0 : organfile->GetWindchest(m_SamplerGroupID - 1)->GetVolume();
 	if (vol)
 	{
 
@@ -209,7 +208,7 @@ void GOrguePipe::SetOff()
 			new_sampler->shift = ra_shift;
 			new_sampler->time = organfile->GetElapsedTime();
 			new_sampler->fademax = ra_amp;
-			const bool not_a_tremulant = (m_WindchestGroup >= organfile->GetTremulantCount());
+			const bool not_a_tremulant = (m_SamplerGroupID >= 0);
 			if (not_a_tremulant)
 			{
 				if (g_sound->HasScaledReleases())
@@ -261,21 +260,19 @@ void GOrguePipe::SetOff()
 					);
 			}
 
-			const int detached_windchest_index = organfile->GetTremulantCount();
+			const int detached_windchest_index = 0;
 			if (not_a_tremulant)
 			{
 				/* detached releases are enabled and the pipe was on a regular
 				 * windchest. Play the release on the detached windchest */
-				new_sampler->next = g_sound->windchests[detached_windchest_index];
-				g_sound->windchests[detached_windchest_index] = new_sampler;
+				g_sound->StartSampler(new_sampler, detached_windchest_index);
 			}
 			else
 			{
 				/* detached releases are disabled (or this isn't really a pipe)
 				 * so put the release on the same windchest as the pipe (which
 				 * means it will still be affected by tremulants - yuck). */
-				new_sampler->next = g_sound->windchests[m_WindchestGroup];
-				g_sound->windchests[m_WindchestGroup] = new_sampler;
+				g_sound->StartSampler(new_sampler, m_SamplerGroupID);
 			}
 
 		}

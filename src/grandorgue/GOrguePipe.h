@@ -44,9 +44,8 @@ private:
 	GO_SAMPLER* sampler;
 	int instances;
 
-	/* states which windchest this pipe belongs to... groups from
-	 * 0 to GetTremulantCount-1 are purely there for tremulants. */
-	int m_WindchestGroup;
+	/* states which windchest this pipe belongs to , see GOrgueSound::StartSampler */
+	int m_SamplerGroupID;
 	int ra_amp;
 	int ra_shift;
 
@@ -67,7 +66,7 @@ private:
 public:
 
 	~GOrguePipe();
-	GOrguePipe(wxString filename, bool percussive, int windchestGroup, int amplitude);
+	GOrguePipe(wxString filename, bool percussive, int samplerGroupID, int amplitude);
 
 	void Set(bool on);
 	void LoadData();

@@ -86,7 +86,6 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* 
 	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
 	m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, organfile->GetWinchestGroupCount());
 	m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
-	m_WindchestGroup                      += organfile->GetTremulantCount();    // we would + 1 but it already has it: clever!
 
 	m_Pipes.clear();
 	for (unsigned i = 0; i < number_of_logical_pipes; i++)
