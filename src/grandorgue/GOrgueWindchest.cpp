@@ -28,39 +28,31 @@
 extern GrandOrgueFile* organfile;
 
 GOrgueWindchest::GOrgueWindchest() :
-	NumberOfEnclosures(0),
-	NumberOfTremulants(0),
-	enclosure(),
-	tremulant()
+	m_enclosure(0),
+	m_tremulant(0)
 {
-
-	for(unsigned int i = 0; i < MAX_TREMULANTS; i++)
-		tremulant[i]=0;
-
-	for(unsigned int i = 0; i < MAX_ENCLOSURES; i++)
-		enclosure[i]=0;
-
 }
 
 
 void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group)
 {
+	unsigned NumberOfEnclosures = cfg.ReadInteger(group, wxT("NumberOfEnclosures"), 0, organfile->GetEnclosureCount());
+	unsigned NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, organfile->GetTremulantCount());
 
-	int i;
-	wxString buffer;
-
-	NumberOfEnclosures = cfg.ReadInteger(group, wxT("NumberOfEnclosures"), 0, 6);
-	NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, 6);
-
-	for (i = 0; i < NumberOfEnclosures; i++)
+	m_enclosure.resize(0);
+	for (unsigned i = 0; i < NumberOfEnclosures; i++)
 	{
+		wxString buffer;
 		buffer.Printf(wxT("Enclosure%03d"), i + 1);
-		enclosure[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetEnclosureCount()) - 1;
+		m_enclosure.push_back(cfg.ReadInteger(group, buffer, 1, organfile->GetEnclosureCount()) - 1);
 	}
-	for (i = 0; i < NumberOfTremulants; i++)
+
+	m_tremulant.resize(0);
+	for (unsigned i = 0; i < NumberOfTremulants; i++)
 	{
+		wxString buffer;
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		tremulant[i] = cfg.ReadInteger(group, buffer, 1, organfile->GetTremulantCount()) - 1;
+		m_tremulant.push_back(cfg.ReadInteger(group, buffer, 1, organfile->GetTremulantCount()) - 1);
 	}
 
 }
@@ -68,12 +60,17 @@ void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group)
 double GOrgueWindchest::GetVolume()
 {
 	double d = 1.0;
-	for (int i = 0; i < NumberOfEnclosures; i++)
-		d  *= organfile->GetEnclosure(enclosure[i])->GetAttenuation();
+	for (unsigned i = 0; i < m_enclosure.size(); i++)
+		d  *= organfile->GetEnclosure(m_enclosure[i])->GetAttenuation();
 	return d;
 }
 
-int GOrgueWindchest::GetTremulantCount()
+unsigned GOrgueWindchest::GetTremulantCount()
 {
-	return NumberOfTremulants;
+	return m_tremulant.size();
+}
+
+unsigned GOrgueWindchest::GetTremulantId(unsigned no)
+{
+	return m_tremulant[no];
 }

@@ -23,30 +23,25 @@
 #ifndef GORGUEWINDCHEST_H
 #define GORGUEWINDCHEST_H
 
+#include <vector>
 #include <wx/wx.h>
 #include "IniFileConfig.h"
-
-#define MAX_ENCLOSURES 6
-#define MAX_TREMULANTS 6
 
 class GOrgueWindchest
 {
 
 private:
 
-	wxInt16 NumberOfEnclosures;
-	wxInt16 NumberOfTremulants;
-	wxInt16 enclosure[MAX_ENCLOSURES];
+	std::vector<unsigned> m_enclosure;
+	std::vector<unsigned> m_tremulant;
 
 public:
 
-    wxInt16 tremulant[MAX_TREMULANTS];
-
-    GOrgueWindchest();
+	GOrgueWindchest();
 	void Load(IniFileConfig& cfg, wxString group);
 	double GetVolume();
-	int GetTremulantCount();
-
+	unsigned GetTremulantCount();
+	unsigned GetTremulantId(unsigned index);
 
 };
 
