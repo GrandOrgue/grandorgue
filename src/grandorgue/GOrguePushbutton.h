@@ -39,6 +39,7 @@ public:
 	virtual void Push() { };
 	void MIDI(void);
 	virtual ~GOrguePushbutton() { };
+	void Display(bool onoff);
 
 	GOrgueDisplayMetrics* DisplayMetrics;
 	wxInt16 m_ManualNumber;

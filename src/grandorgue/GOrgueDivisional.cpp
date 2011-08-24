@@ -202,14 +202,7 @@ void GOrgueDivisional::PushLocal()
 	for (int k = 0; k < associatedManual->GetDivisionalCount(); k++)
 	{
 		GOrgueDivisional *divisional = associatedManual->GetDivisional(k);
-		int on = ((divisional == this && used) ? 2 : 0);
-		if ((divisional->DispImageNum & 2) != on)
-		{
-			divisional->DispImageNum = (divisional->DispImageNum & 1) | on;
-			wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-			event.SetClientData(divisional);
-			::wxGetApp().frame->AddPendingEvent(event);
-		}
+		divisional->Display(divisional == this && used);
 	}
 }
 
