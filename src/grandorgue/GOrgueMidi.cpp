@@ -232,17 +232,7 @@ GOrgueMidi::ProcessMessage
             for (j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
                 organfile->GetManual(k)->GetCoupler(j)->Set(false);
             for (j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
-            {
-                GOrgueDivisional *divisional = organfile->GetManual(k)->GetDivisional(j);
-                if (divisional->DispImageNum & 2)
-                {
-                    divisional->DispImageNum &= 1;
-                    wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-                    event.SetClientData(divisional);
-                    ::wxGetApp().frame->AddPendingEvent(event);
-                }
-            }
-
+		organfile->GetManual(k)->GetDivisional(j)->Display(false);
         }
         for (unsigned l = 0; l < organfile->GetTremulantCount(); l++)
             organfile->GetTremulant(l)->Set(false);
@@ -250,16 +240,7 @@ GOrgueMidi::ProcessMessage
             organfile->GetDivisionalCoupler(j)->Set(false);
 
         for (k = 0; k < organfile->GetGeneralCount(); k++)
-        {
-            GOrgueGeneral *general = organfile->GetGeneral(k);
-            if (general->DispImageNum & 2)
-            {
-                general->DispImageNum &= 1;
-                wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-                event.SetClientData(general);
-                ::wxGetApp().frame->AddPendingEvent(event);
-            }
-        }
+		organfile->GetGeneral(k)->Display(false);
 
         return;
 	}

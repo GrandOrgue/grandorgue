@@ -207,29 +207,13 @@ void GOrgueFrameGeneral::Push()
 	for (int k = 0; k < organfile->GetGeneralCount(); k++)
 	{
 		GOrgueGeneral* general = organfile->GetGeneral(k);
-		int on = ((general == this && used) ? 2 : 0);
-		if ((general->DispImageNum & 2) != on)
-		{
-			general->DispImageNum = (general->DispImageNum & 1) | on;
-			wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-			event.SetClientData(general);
-			::wxGetApp().frame->AddPendingEvent(event);
-		}
+		general->Display(general == this && used);
 	}
 
 	for (int j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
 	{
 		for (int k = 0; k < organfile->GetManual(j)->GetDivisionalCount(); k++)
-		{
-			GOrgueDivisional *divisional = organfile->GetManual(j)->GetDivisional(k);
-			if (divisional->DispImageNum & 2)
-			{
-				divisional->DispImageNum &= 1;
-				wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-				event.SetClientData(divisional);
-				::wxGetApp().frame->AddPendingEvent(event);
-			}
-		}
+			organfile->GetManual(j)->GetDivisional(k)->Display(false);
 	}
 }
 

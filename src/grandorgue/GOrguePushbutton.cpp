@@ -110,3 +110,15 @@ void GOrguePushbutton::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
 	cfg.SaveHelper(prefix, group, wxT("MIDIProgramChangeNumber"), MIDIProgramChangeNumber);
 }
+
+void GOrguePushbutton::Display(bool onoff)
+{
+	int on = (onoff ? 2 : 0);
+	if ((DispImageNum & 2) != on)
+	{
+		DispImageNum = (DispImageNum & 1) | on;
+		wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
+		event.SetClientData(this);
+		::wxGetApp().frame->AddPendingEvent(event);
+	}
+}
