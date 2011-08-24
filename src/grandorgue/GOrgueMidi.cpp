@@ -219,27 +219,27 @@ GOrgueMidi::ProcessMessage
 	,int which
 	)
 {
-	int i, j, k, q, Noteoffset;
+	int i, j, q, Noteoffset;
 
     Noteoffset = 0;
     // MIDI message FF : reset
     if (msg[0] == 0xFF && active && organfile)
 	{
-        for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
+        for (unsigned k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
         {
-            for (j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
+            for (unsigned j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
                 organfile->GetManual(k)->GetStop(j)->Set(false);
-            for (j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
+            for (unsigned j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
                 organfile->GetManual(k)->GetCoupler(j)->Set(false);
-            for (j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
+            for (unsigned j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
 		organfile->GetManual(k)->GetDivisional(j)->Display(false);
         }
         for (unsigned l = 0; l < organfile->GetTremulantCount(); l++)
             organfile->GetTremulant(l)->Set(false);
-        for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
+        for (unsigned j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
             organfile->GetDivisionalCoupler(j)->Set(false);
 
-        for (k = 0; k < organfile->GetGeneralCount(); k++)
+        for (unsigned k = 0; k < organfile->GetGeneralCount(); k++)
 		organfile->GetGeneral(k)->Display(false);
 
         return;
@@ -270,7 +270,7 @@ GOrgueMidi::ProcessMessage
 	// MIDI code for controller
 	if (c == 0xB0 && (msg[1] == 120 || msg[1] == 123) && organfile)
 	{
-        for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
+        for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
             if (msg[0] == ((m_midi_events[organfile->GetManual(i)->GetMIDIInputNumber() + 7] | 0xB000) >> 8))
             {
 /* TODO: this code is not equivalent to the old code but seems to be the right
@@ -336,7 +336,7 @@ GOrgueMidi::ProcessMessage
 			else if (i < 14)
 			{
 				q = i - 7;
-				for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
+				for (unsigned k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
 				{
 				    if (!organfile->GetManual(k)->IsDisplayed())
                         continue;
@@ -351,37 +351,37 @@ GOrgueMidi::ProcessMessage
 			{
 			    if ((c == 0x90 || c == 0xB0) && msg.size() == 3)
 			    {
-                    for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
+                    for (unsigned k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
                     {
-                        for (j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
+                        for (unsigned j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
                             if (msg[1] == organfile->GetManual(k)->GetStop(j)->StopControlMIDIKeyNumber)
                                 organfile->GetManual(k)->GetStop(j)->Set(msg[2] ? true : false);
-                        for (j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
+                        for (unsigned j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
                             if (msg[1] == organfile->GetManual(k)->GetCoupler(j)->StopControlMIDIKeyNumber)
                                 organfile->GetManual(k)->GetCoupler(j)->Set(msg[2] ? true : false);
                     }
                     for (unsigned l = 0; l < organfile->GetTremulantCount(); l++)
                         if (msg[1] == organfile->GetTremulant(l)->StopControlMIDIKeyNumber)
                             organfile->GetTremulant(l)->Set(msg[2] ? true : false);
-                    for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
+                    for (unsigned j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
                         if (msg[1] == organfile->GetDivisionalCoupler(j)->StopControlMIDIKeyNumber)
                             organfile->GetDivisionalCoupler(j)->Set(msg[2] ? true : false);
 			    }
 			    else if (c == 0xC0 && msg.size() == 2)
 			    {
-                    for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
+                    for (unsigned k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
                     {
-                        for (j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
+                        for (unsigned j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
                             if (msg[1] == organfile->GetManual(k)->GetStop(j)->StopControlMIDIKeyNumber)
                                 organfile->GetManual(k)->GetStop(j)->Push();
-                        for (j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
+                        for (unsigned j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
                             if (msg[1] == organfile->GetManual(k)->GetCoupler(j)->StopControlMIDIKeyNumber)
                                 organfile->GetManual(k)->GetCoupler(j)->Push();
                     }
                     for (unsigned l = 0; l < organfile->GetTremulantCount(); l++)
                         if (msg[1] == organfile->GetTremulant(l)->StopControlMIDIKeyNumber)
                             organfile->GetTremulant(l)->Push();
-                    for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
+                    for (unsigned j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
                         if (msg[1] == organfile->GetDivisionalCoupler(j)->StopControlMIDIKeyNumber)
                             organfile->GetDivisionalCoupler(j)->Push();
 			    }
@@ -391,14 +391,14 @@ GOrgueMidi::ProcessMessage
 
 	if (c == 0xC0)
 	{
-		for (k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
-			for (j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
+		for (unsigned k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
+			for (unsigned j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
 				if (msg[0] == (m_midi_events[organfile->GetManual(k)->GetMIDIInputNumber() + 7] ^ 0x5000) >> 8 && msg[1] == organfile->GetManual(k)->GetDivisional(j)->MIDIProgramChangeNumber - 1)
 					organfile->GetManual(k)->GetDivisional(j)->Push();
-		for (j = 0; j < organfile->GetGeneralCount(); j++)
+		for (unsigned j = 0; j < organfile->GetGeneralCount(); j++)
 			if (msg[1] == organfile->GetGeneral(j)->MIDIProgramChangeNumber - 1)
 				organfile->GetGeneral(j)->Push();
-		for (j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
+		for (unsigned j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
 			if (msg[1] == organfile->GetPiston(j)->MIDIProgramChangeNumber - 1)
 				organfile->GetPiston(j)->Push();
 	}

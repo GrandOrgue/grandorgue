@@ -106,16 +106,16 @@ public:
 
 	void GenerateCacheHash(unsigned char hash[20]);
 	/* Access to internal ODF objects */
-	int GetManualAndPedalCount();
-	int GetFirstManualIndex();
+	unsigned GetManualAndPedalCount();
+	unsigned GetFirstManualIndex();
 	GOrgueManual* GetManual(unsigned index);
 	unsigned GetTremulantCount();
 	GOrgueTremulant* GetTremulant(unsigned index);
-	int GetDivisionalCouplerCount();
+	unsigned GetDivisionalCouplerCount();
 	GOrgueDivisionalCoupler* GetDivisionalCoupler(unsigned index);
-	int GetGeneralCount();
+	unsigned GetGeneralCount();
 	GOrgueGeneral* GetGeneral(unsigned index);
-	int GetNumberOfReversiblePistons();
+	unsigned GetNumberOfReversiblePistons();
 	GOrguePiston* GetPiston(unsigned index);
 	GOrgueFrameGeneral* GetFrameGeneral(unsigned index);
 	GOrgueWindchest* GetWindchest(unsigned index);
@@ -123,7 +123,7 @@ public:
 	GOrgueEnclosure* GetEnclosure(unsigned index);
 	unsigned GetEnclosureCount();
 	GOrgueLabel* GetLabel(unsigned index);
-	int GetLabelCount();
+	unsigned GetLabelCount();
 
 	/* ODF general properties */
 	bool DivisionalsStoreIntermanualCouplers();

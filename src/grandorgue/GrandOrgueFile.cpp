@@ -105,7 +105,7 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 	int len;
 	SHA1_Init(&ctx);
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		for (int j = 0; j < m_manual[i]->GetStopCount(); j++)
+		for (unsigned j = 0; j < m_manual[i]->GetStopCount(); j++)
 		{
 			unsigned stop_amplitude = m_manual[i]->GetStop(j)->GetAmplitude();
 			SHA1_Update(&ctx, &stop_amplitude, sizeof(stop_amplitude));
@@ -146,13 +146,13 @@ bool GrandOrgueFile::TryLoad
 		/* Figure out how many pipes there are */
 		unsigned nb_pipes = 0;
 		for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-			for (int j = 0; j < m_manual[i]->GetStopCount(); j++)
+			for (unsigned j = 0; j < m_manual[i]->GetStopCount(); j++)
 				nb_pipes += m_manual[i]->GetStop(j)->GetPipeCount();
 
 		/* Load pipes */
 		unsigned nb_loaded_pipes = 0;
 		for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-			for (int j = 0; j < m_manual[i]->GetStopCount(); j++)
+			for (unsigned j = 0; j < m_manual[i]->GetStopCount(); j++)
 				for (unsigned k = 0; k < m_manual[i]->GetStop(j)->GetPipeCount(); k++)
 				{
 					GOrguePipe* pipe = m_manual[i]->GetStop(j)->GetPipe(k);
@@ -621,12 +621,12 @@ void GrandOrgueFile::Save(const wxString& file)
 
 }
 
-int GrandOrgueFile::GetFirstManualIndex()
+unsigned GrandOrgueFile::GetFirstManualIndex()
 {
 	return m_FirstManual;
 }
 
-int GrandOrgueFile::GetManualAndPedalCount()
+unsigned GrandOrgueFile::GetManualAndPedalCount()
 {
 	if (!m_manual.size())
 		return 0;
@@ -663,7 +663,7 @@ bool GrandOrgueFile::DivisionalsStoreTremulants()
 	return m_DivisionalsStoreTremulants;
 }
 
-int GrandOrgueFile::GetDivisionalCouplerCount()
+unsigned GrandOrgueFile::GetDivisionalCouplerCount()
 {
 	return m_divisionalcoupler.size();
 }
@@ -688,7 +688,7 @@ wxBitmap* GrandOrgueFile::GetImage(unsigned index)
 	return &m_images[index];
 }
 
-int GrandOrgueFile::GetNumberOfReversiblePistons()
+unsigned GrandOrgueFile::GetNumberOfReversiblePistons()
 {
 	return m_piston.size();
 }
@@ -703,7 +703,7 @@ bool GrandOrgueFile::GeneralsStoreDivisionalCouplers()
 	return m_GeneralsStoreDivisionalCouplers;
 }
 
-int GrandOrgueFile::GetGeneralCount()
+unsigned GrandOrgueFile::GetGeneralCount()
 {
 	return m_general.size();
 }
@@ -803,7 +803,7 @@ GOrgueLabel* GrandOrgueFile::GetLabel(unsigned index)
 	return m_label[index];
 }
 
-int GrandOrgueFile::GetLabelCount()
+unsigned GrandOrgueFile::GetLabelCount()
 {
 	return m_label.size();
 }

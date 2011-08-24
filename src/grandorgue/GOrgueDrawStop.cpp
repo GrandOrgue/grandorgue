@@ -129,7 +129,7 @@ void GOrgueDrawstop::Set(bool on)
 	wxCommandEvent event(wxEVT_DRAWSTOP, 0);
 	event.SetClientData(this);
 	::wxGetApp().frame->AddPendingEvent(event);
-	for (int i = 0; i < organfile->GetNumberOfReversiblePistons(); i++)
+	for (unsigned i = 0; i < organfile->GetNumberOfReversiblePistons(); i++)
 	{
 		if (organfile->GetPiston(i)->drawstop == this)
 		{

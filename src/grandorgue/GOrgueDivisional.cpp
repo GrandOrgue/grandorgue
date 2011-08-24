@@ -140,14 +140,14 @@ void GOrgueDivisional::PushLocal()
 		m_Stops.clear();
 		m_Couplers.clear();
 		m_Tremulants.clear();
-		for (int i = 0; i < associatedManual->GetStopCount(); i++)
+		for (unsigned i = 0; i < associatedManual->GetStopCount(); i++)
 		{
 			if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetStop(i)->Displayed)
 				continue;
 			m_Stops.push_back(associatedManual->GetStop(i)->DefaultToEngaged ? i + 1 : -i - 1);
 			used |= associatedManual->GetStop(i)->DefaultToEngaged;
 		}
-		for (int i = 0; i < associatedManual->GetCouplerCount(); i++)
+		for (unsigned i = 0; i < associatedManual->GetCouplerCount(); i++)
 		{
 			if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetCoupler(i)->Displayed)
 				continue;
@@ -159,7 +159,7 @@ void GOrgueDivisional::PushLocal()
 		}
 		if (organfile->DivisionalsStoreTremulants())
 		{
-			for (int i = 0; i < associatedManual->GetTremulantCount(); i++)
+			for (unsigned i = 0; i < associatedManual->GetTremulantCount(); i++)
 			{
 				if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetTremulant(i)->Displayed)
 					continue;
@@ -199,7 +199,7 @@ void GOrgueDivisional::PushLocal()
 		}
 	}
 
-	for (int k = 0; k < associatedManual->GetDivisionalCount(); k++)
+	for (unsigned k = 0; k < associatedManual->GetDivisionalCount(); k++)
 	{
 		GOrgueDivisional *divisional = associatedManual->GetDivisional(k);
 		divisional->Display(divisional == this && used);
@@ -214,7 +214,7 @@ void GOrgueDivisional::Push()
 	if (g_sound->GetMidi().SetterActive())
 		return;
 
-	for (int k = 0; k < organfile->GetDivisionalCouplerCount(); k++)
+	for (unsigned k = 0; k < organfile->GetDivisionalCouplerCount(); k++)
 	{
 
 		GOrgueDivisionalCoupler* coupler = organfile->GetDivisionalCoupler(k);

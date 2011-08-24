@@ -326,8 +326,8 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	/* Figure out how many pipes there are */
 	unsigned nb_pipes = 0;
 	unsigned nb_saved_pipes = 0;
-	for (int i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-		for (int j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
+	for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
+		for (unsigned j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
 			nb_pipes += organfile->GetManual(i)->GetStop(j)->GetPipeCount();
 
 	wxString filename = organfile->GetODFFilename() + wxT(".cache");
@@ -349,8 +349,8 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	if (zout.LastWrite() != sizeof(hash))
 		cache_save_ok = false;
 
-	for (int i = organfile->GetFirstManualIndex(); cache_save_ok && i <= organfile->GetManualAndPedalCount(); i++)
-		for (int j = 0; cache_save_ok && j < organfile->GetManual(i)->GetStopCount(); j++)
+	for (unsigned i = organfile->GetFirstManualIndex(); cache_save_ok && i <= organfile->GetManualAndPedalCount(); i++)
+		for (unsigned j = 0; cache_save_ok && j < organfile->GetManual(i)->GetStopCount(); j++)
 			for (unsigned k = 0; cache_save_ok && k < organfile->GetManual(i)->GetStop(j)->GetPipeCount(); k++)
 			{
 				GOrguePipe* pipe = organfile->GetManual(i)->GetStop(j)->GetPipe(k);
