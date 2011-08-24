@@ -238,7 +238,7 @@ int GOrgueManual::GetFirstLogicalKeyMIDINoteNumber()
 	return m_first_accessible_key_midi_note_nb - m_first_accessible_logical_key_nb + 1;
 }
 
-int GOrgueManual::GetStopCount()
+unsigned GOrgueManual::GetStopCount()
 {
 	return m_stops.size();
 }
@@ -249,7 +249,7 @@ GOrgueStop* GOrgueManual::GetStop(unsigned index)
 	return m_stops[index];
 }
 
-int GOrgueManual::GetCouplerCount()
+unsigned GOrgueManual::GetCouplerCount()
 {
 	return m_couplers.size();
 }
@@ -260,7 +260,7 @@ GOrgueCoupler* GOrgueManual::GetCoupler(unsigned index)
 	return m_couplers[index];
 }
 
-int GOrgueManual::GetDivisionalCount()
+unsigned GOrgueManual::GetDivisionalCount()
 {
 	return m_divisionals.size();
 }
@@ -271,7 +271,7 @@ GOrgueDivisional* GOrgueManual::GetDivisional(unsigned index)
 	return m_divisionals[index];
 }
 
-int GOrgueManual::GetTremulantCount()
+unsigned GOrgueManual::GetTremulantCount()
 {
 	return m_tremulant_ids.size();
 }

@@ -139,7 +139,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 			m_display_metrics->GetCenterWidth(),
 			m_display_metrics->GetJambTopHeight() + m_display_metrics->GetPistonTopHeight());
 
-	for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
+	for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
 	{
 
 		GOrgueManual* man = organfile->GetManual(i);
@@ -148,7 +148,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 
 	}
 
-	for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
+	for (unsigned j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
 	{
 		if (organfile->GetDivisionalCoupler(j)->Displayed)
 		{
@@ -168,7 +168,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 		}
 	}
 
-	for (j = 0; j < organfile->GetGeneralCount(); j++)
+	for (unsigned j = 0; j < organfile->GetGeneralCount(); j++)
 	{
 		if (organfile->GetGeneral(j)->Displayed)
 		{
@@ -178,7 +178,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 		}
 	}
 
-	for (j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
+	for (unsigned j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
 	{
 		if (organfile->GetPiston(j)->Displayed)
 		{
@@ -196,7 +196,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 
 	DrawClickables(&dc);
 
-	for (j = 0; j < organfile->GetLabelCount(); j++)
+	for (unsigned j = 0; j < organfile->GetLabelCount(); j++)
 		organfile->GetLabel(j)->Draw(dc);
 
 	dc.SelectObject(wxNullBitmap);
@@ -336,19 +336,18 @@ void OrganPanel::HelpDrawButton(GOrguePushbutton* button, wxDC* dc, int xx, int 
 
 void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll)
 {
-	int i, j;
 	if (!m_clientBitmap.Ok())
 		return;
 
 	if (!scroll)
 	{
-		for (i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
+		for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
 		{
-			for (j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
+			for (unsigned j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
 				HelpDrawStop(organfile->GetManual(i)->GetStop(j), dc, xx, yy, right);
-			for (j = 0; j < organfile->GetManual(i)->GetCouplerCount(); j++)
+			for (unsigned j = 0; j < organfile->GetManual(i)->GetCouplerCount(); j++)
 				HelpDrawStop(organfile->GetManual(i)->GetCoupler(j), dc, xx, yy, right);
-			for (j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
+			for (unsigned j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
 				HelpDrawButton(organfile->GetManual(i)->GetDivisional(j), dc, xx, yy, right);
 			if (dc || !organfile->GetManual(i)->IsDisplayed())
 				continue;
@@ -372,11 +371,11 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 
 		for (unsigned k = 0; k < organfile->GetTremulantCount(); k++)
 			HelpDrawStop(organfile->GetTremulant(k), dc, xx, yy, right);
-		for (j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
+		for (unsigned j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
 			HelpDrawStop(organfile->GetDivisionalCoupler(j), dc, xx, yy, right);
-		for (j = 0; j < organfile->GetGeneralCount(); j++)
+		for (unsigned j = 0; j < organfile->GetGeneralCount(); j++)
 			HelpDrawButton(organfile->GetGeneral(j), dc, xx, yy, right);
-		for (j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
+		for (unsigned j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
 			HelpDrawButton(organfile->GetPiston(j), dc, xx, yy, right);
 	}
 
@@ -489,30 +488,30 @@ void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 			{
 				if (organfile && doc && doc->b_loaded && (k = WXKtoVK(k)))
 				{
-					for (int i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
+					for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
 					{
-						for (int j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
+						for (unsigned j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
 						{
 							if (k == organfile->GetManual(i)->GetStop(j)->ShortcutKey)
 								organfile->GetManual(i)->GetStop(j)->Push();
 						}
-						for (int j = 0; j < organfile->GetManual(i)->GetCouplerCount(); j++)
+						for (unsigned j = 0; j < organfile->GetManual(i)->GetCouplerCount(); j++)
 							if (k == organfile->GetManual(i)->GetCoupler(j)->ShortcutKey)
 								organfile->GetManual(i)->GetCoupler(j)->Push();
-						for (int j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
+						for (unsigned j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
 							if (k == organfile->GetManual(i)->GetDivisional(j)->ShortcutKey)
 								organfile->GetManual(i)->GetDivisional(j)->Push();
 					}
 					for (unsigned j = 0; j < organfile->GetTremulantCount(); j++)
 						if (k == organfile->GetTremulant(j)->ShortcutKey)
 							organfile->GetTremulant(j)->Push();
-					for (int j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
+					for (unsigned j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
 						if (k == organfile->GetDivisionalCoupler(j)->ShortcutKey)
 							organfile->GetDivisionalCoupler(j)->Push();
-					for (int j = 0; j < organfile->GetGeneralCount(); j++)
+					for (unsigned j = 0; j < organfile->GetGeneralCount(); j++)
 						if (k == organfile->GetGeneral(j)->ShortcutKey)
 							organfile->GetGeneral(j)->Push();
-					for (int j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
+					for (unsigned j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
 						if (k == organfile->GetPiston(j)->ShortcutKey)
 							organfile->GetPiston(j)->Push();
 				}

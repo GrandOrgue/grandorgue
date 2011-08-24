@@ -119,9 +119,9 @@ void GOrgueFrameGeneral::Push()
 		m_Tremulants.clear();
 		m_DivisionalCouplers.clear();
 
-		for (int j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
+		for (unsigned j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
 		{
-			for (int i = 0; i < organfile->GetManual(j)->GetStopCount(); i++)
+			for (unsigned i = 0; i < organfile->GetManual(j)->GetStopCount(); i++)
 			{
 				if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !organfile->GetManual(j)->GetStop(i)->Displayed)
 					continue;
@@ -131,9 +131,9 @@ void GOrgueFrameGeneral::Push()
 			}
 		}
 
-		for (int j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
+		for (unsigned j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
 		{
-			for (int i = 0; i < organfile->GetManual(j)->GetCouplerCount(); i++)
+			for (unsigned i = 0; i < organfile->GetManual(j)->GetCouplerCount(); i++)
 			{
 				if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !organfile->GetManual(j)->GetCoupler(i)->Displayed)
 					continue;
@@ -153,7 +153,7 @@ void GOrgueFrameGeneral::Push()
 
 		if (organfile->GeneralsStoreDivisionalCouplers())
 		{
-			for (int i = 0; i < organfile->GetDivisionalCouplerCount(); i++)
+			for (unsigned i = 0; i < organfile->GetDivisionalCouplerCount(); i++)
 			{
 				m_DivisionalCouplers.push_back (organfile->GetDivisionalCoupler(i)->DefaultToEngaged ? i + 1 : -1 - 1);
 				used |= organfile->GetDivisionalCoupler(i)->DefaultToEngaged;
@@ -204,15 +204,15 @@ void GOrgueFrameGeneral::Push()
 
 	}
 
-	for (int k = 0; k < organfile->GetGeneralCount(); k++)
+	for (unsigned k = 0; k < organfile->GetGeneralCount(); k++)
 	{
 		GOrgueGeneral* general = organfile->GetGeneral(k);
 		general->Display(general == this && used);
 	}
 
-	for (int j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
+	for (unsigned j = organfile->GetFirstManualIndex(); j <= organfile->GetManualAndPedalCount(); j++)
 	{
-		for (int k = 0; k < organfile->GetManual(j)->GetDivisionalCount(); k++)
+		for (unsigned k = 0; k < organfile->GetManual(j)->GetDivisionalCount(); k++)
 			organfile->GetManual(j)->GetDivisional(k)->Display(false);
 	}
 }

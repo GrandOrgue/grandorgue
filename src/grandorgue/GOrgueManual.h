@@ -45,7 +45,7 @@ private:
 	std::vector<bool> m_KeyPressed;
 	/* Internal state affected by couplers */
 	std::vector<unsigned> m_KeyState;
-	int m_manual_number;
+	unsigned m_manual_number;
 	GOrgueDisplayMetrics* m_display_metrics;
 	unsigned m_first_accessible_logical_key_nb;
 	unsigned m_nb_logical_keys;
@@ -90,13 +90,13 @@ public:
 	void AllNotesOff();
 	bool IsKeyDown(unsigned midiNoteNumber);
 
-	int GetStopCount();
+	unsigned GetStopCount();
 	GOrgueStop* GetStop(unsigned index);
-	int GetCouplerCount();
+	unsigned GetCouplerCount();
 	GOrgueCoupler* GetCoupler(unsigned index);
-	int GetDivisionalCount();
+	unsigned GetDivisionalCount();
 	GOrgueDivisional* GetDivisional(unsigned index);
-	int GetTremulantCount();
+	unsigned GetTremulantCount();
 	GOrgueTremulant* GetTremulant(unsigned index);
 
 	void DrawKey(wxDC& dc, unsigned key_nb);

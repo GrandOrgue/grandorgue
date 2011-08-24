@@ -330,8 +330,7 @@ bool GOrguePipe::LoadCache(wxInputStream* cache)
 
 	if (m_filename.StartsWith(wxT("REF:")))
 	{
-		int manual, stop;
-		unsigned pipe;
+		unsigned manual, stop, pipe;
 		sscanf(m_filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
 		if ((manual < organfile->GetFirstManualIndex()) || (manual > organfile->GetManualAndPedalCount()) ||
 			(stop <= 0) || (stop > organfile->GetManual(manual)->GetStopCount()) ||
@@ -464,8 +463,7 @@ void GOrguePipe::LoadData()
 
 	if (m_filename.StartsWith(wxT("REF:")))
 	{
-		int manual, stop;
-		unsigned pipe;
+		unsigned manual, stop, pipe;
 		sscanf(m_filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
 		if ((manual < organfile->GetFirstManualIndex()) || (manual > organfile->GetManualAndPedalCount()) ||
 			(stop <= 0) || (stop > organfile->GetManual(manual)->GetStopCount()) ||
