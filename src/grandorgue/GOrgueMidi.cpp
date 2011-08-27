@@ -251,11 +251,9 @@ GOrgueMidi::ProcessMessage
 	if (e.GetChannel() != -1)
 		e.SetChannel(((e.GetChannel() - 1 + m_midi_devices[which].id) & 0x0F) + 1);
 
-	int i, j, Noteoffset;
+	int i, j;
 
-	Noteoffset = 0;
-    // MIDI message FF : reset
-	if (msg[0] == 0xFF && active && organfile)
+	if (e.GetMidiType() == MIDI_RESET && active && organfile)
 	{
 		organfile->Reset();
 		return;
@@ -281,7 +279,7 @@ GOrgueMidi::ProcessMessage
 		m_listen_evthandler->AddPendingEvent(e);
 	}
 
-	if (!active || msg.size() < 2)
+	if (!active)
 		return;
 	if (organfile)
 		organfile->ProcessMidi(e);
