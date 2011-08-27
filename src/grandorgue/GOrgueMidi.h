@@ -44,6 +44,8 @@ private:
 		wxString name;
 		bool active;
 		int id;
+		unsigned bank_lsb[16];
+		unsigned bank_msb[16];
 	} MIDI_DEVICE;
 
 	wxConfigBase *m_global_config;

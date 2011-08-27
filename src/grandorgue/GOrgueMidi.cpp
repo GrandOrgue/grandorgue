@@ -172,6 +172,8 @@ void GOrgueMidi::Open()
 	{
 
 		MIDI_DEVICE& this_dev = m_midi_devices[it2->second];
+		memset(this_dev.bank_msb, 0, sizeof(this_dev.bank_msb));
+		memset(this_dev.bank_lsb, 0, sizeof(this_dev.bank_lsb));
 		int i = m_global_config->Read(wxT("Devices/MIDI/") + it2->first, 0L);
 		if (i >= 0)
 		{
@@ -231,6 +233,19 @@ GOrgueMidi::ProcessMessage
 	if (e.GetMidiType() == MIDI_NONE)
 		return;
 	e.SetDevice(m_midi_devices[which].name);
+
+	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_BANK_SELECT_MSB)
+	{
+		m_midi_devices[which].bank_msb[e.GetChannel() - 1] = e.GetValue();
+		return;
+	}
+	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_BANK_SELECT_LSB)
+	{
+		m_midi_devices[which].bank_lsb[e.GetChannel() - 1] = e.GetValue();
+		return;
+	}
+	if (e.GetMidiType() == MIDI_PGM_CHANGE)
+		e.SetKey(((e.GetKey() - 1) | (m_midi_devices[which].bank_lsb[e.GetChannel() - 1] << 7) | (m_midi_devices[which].bank_msb[e.GetChannel() - 1] << 14)) + 1);
 
 	/* Compat stuff */
 	if (e.GetChannel() != -1)
