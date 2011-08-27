@@ -23,6 +23,7 @@ GOrgueLabel.cpp
 GOrgueLCD.cpp
 GOrgueManual.cpp
 GOrgueMidi.cpp
+GOrgueMidiEvent.cpp
 GOrgueMeter.cpp
 GOrguePipe.cpp
 GOrguePiston.cpp
