@@ -99,6 +99,7 @@ public:
 	unsigned GetTremulantCount();
 	GOrgueTremulant* GetTremulant(unsigned index);
 
+	void Click(unsigned x, unsigned y);
 	void DrawKey(wxDC& dc, unsigned key_nb);
 	void Draw(wxDC& dc);
 	bool IsDisplayed();
