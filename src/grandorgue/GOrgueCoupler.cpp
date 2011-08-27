@@ -66,6 +66,12 @@ void GOrgueCoupler::PreparePlayback()
 	m_Keyshift = m_DestinationKeyshift + src->GetFirstLogicalKeyMIDINoteNumber() - dest->GetFirstLogicalKeyMIDINoteNumber();
 }
 
+const struct IniFileEnumEntry GOrgueCoupler::m_coupler_types[]={
+	{ wxT("Normal"), COUPLER_NORMAL},
+	{ wxT("Bass"), COUPLER_BASS},
+	{ wxT("Melody"), COUPLER_MELODY},
+};
+
 
 void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, unsigned firstValidManualIndex, unsigned numberOfManuals, GOrgueDisplayMetrics* displayMetrics)
 {
@@ -80,19 +86,7 @@ void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, unsigned firstValid
 	m_CoupleToSubsequentDownwardIntramanualCouplers = cfg.ReadBoolean(group, wxT("CoupleToSubsequentDownwardIntramanualCouplers"), !m_UnisonOff);
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 
-	wxString type = cfg.ReadString(group, wxT("CouplerType"), 20, false);
-	if (type == wxT("Bass"))
-		m_CouplerType = COUPLER_BASS;
-	else if (type == wxT("Melody"))
-		m_CouplerType = COUPLER_MELODY;
-	else if (type == wxT("Normal") || type == wxT(""))
-		m_CouplerType = COUPLER_NORMAL;
-	else
-	{
-		wxString error;
-		error.Printf(_("Invalid coupler type for %s: '%s'"), group.c_str(), type.c_str());
-		throw (wxString)error;
-	}
+	m_CouplerType = (GOrgueCouplerType)cfg.ReadEnum(group, wxT("CouplerType"), m_coupler_types, sizeof(m_coupler_types) / sizeof(m_coupler_types[0]), false);
 }
 
 void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix, wxString group)
