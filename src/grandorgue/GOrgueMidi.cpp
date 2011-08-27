@@ -351,30 +351,7 @@ GOrgueMidi::ProcessMessage
 						organfile->GetManual(k)->Set(msg[1] + offset + m_transpose, msg[2] ? true : false);
 				}
 			}
-			else
-			{
-			    if ((c == 0x90 || c == 0xB0) && msg.size() == 3)
-			    {
-			    }
-			    else if (c == 0xC0 && msg.size() == 2)
-			    {
-			    }
-			}
 		}
-	}
-
-	if (c == 0xC0)
-	{
-		for (unsigned k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
-			for (unsigned j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
-				if (msg[0] == (m_midi_events[organfile->GetManual(k)->GetMIDIInputNumber() + 7] ^ 0x5000) >> 8 && msg[1] == organfile->GetManual(k)->GetDivisional(j)->MIDIProgramChangeNumber - 1)
-					organfile->GetManual(k)->GetDivisional(j)->Push();
-		for (unsigned j = 0; j < organfile->GetGeneralCount(); j++)
-			if (msg[1] == organfile->GetGeneral(j)->MIDIProgramChangeNumber - 1)
-				organfile->GetGeneral(j)->Push();
-		for (unsigned j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
-			if (msg[1] == organfile->GetPiston(j)->MIDIProgramChangeNumber - 1)
-				organfile->GetPiston(j)->Push();
 	}
 }
 

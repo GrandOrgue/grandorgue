@@ -26,7 +26,7 @@
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
 #include "GOrgueSound.h"
-#include "MIDIListenDialog.h"
+#include "MIDIEventDialog.h"
 #include "GOrgueDisplayMetrics.h"
 #include "GOrgueMidi.h"
 
@@ -35,35 +35,23 @@ extern GOrgueSound* g_sound;
 
 GOrguePushbutton::GOrguePushbutton() :
 	GOrgueControl(),
+	m_midi(MIDI_RECV_BUTTON),
 	m_ManualNumber(0),
 	DispButtonRow(0),
 	DispButtonCol(0),
-	DispImageNum(0),
-	MIDIProgramChangeNumber(0)
+	DispImageNum(0)
 {
-
 }
 
 void GOrguePushbutton::MIDI(void)
 {
-
-	int event = 0xC000;
-	if (m_ManualNumber > -1)
-		event = g_sound->GetMidi().GetMidiEventByChannel(organfile->GetManual(m_ManualNumber)->GetMIDIInputNumber() + 7) ^ 0x5000;
-
-	MIDIListenDialog dlg
-		(::wxGetApp().frame
-		,_("Pushbutton Trigger")
-		,(m_ManualNumber > -1) ? MIDIListenDialog::LSTN_DRAWSTOP : MIDIListenDialog::LSTN_NON_DRAWSTOP_BUTTON
-		,event | (MIDIProgramChangeNumber - 1)
-		);
+	MIDIEventDialog dlg (::wxGetApp().frame, _("Midi-Settings for Pushbutton - ")+Name ,m_midi);
 
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		MIDIProgramChangeNumber = (dlg.GetEvent() & 0x7F) + 1;
+		m_midi = dlg.GetResult();
 		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
 	}
-
 }
 
 bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
@@ -101,14 +89,14 @@ void GOrguePushbutton::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMet
 	DispButtonRow = cfg.ReadInteger(group, wxT("DispButtonRow"), 0, 99 + displayMetrics->NumberOfExtraButtonRows());
 	DispButtonCol = cfg.ReadInteger(group, wxT("DispButtonCol"), 1, displayMetrics->NumberOfButtonCols());
 	DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 2);
-	MIDIProgramChangeNumber = cfg.ReadInteger(group, wxT("MIDIProgramChangeNumber"), 1, 128);
 	DispImageNum--;
+	m_midi.Load(cfg, group);
 	GOrgueControl::Load(cfg, group);
 }
 
 void GOrguePushbutton::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
-	cfg.SaveHelper(prefix, group, wxT("MIDIProgramChangeNumber"), MIDIProgramChangeNumber);
+	m_midi.Save(cfg, prefix, group);
 }
 
 void GOrguePushbutton::Display(bool onoff)
@@ -125,4 +113,14 @@ void GOrguePushbutton::Display(bool onoff)
 
 void GOrguePushbutton::ProcessMidi(const GOrgueMidiEvent& event)
 {
+	switch(m_midi.Match(event))
+	{
+	case MIDI_MATCH_CHANGE:
+	case MIDI_MATCH_ON:
+		Push();
+		break;
+
+	default:
+		break;
+	}
 }
