@@ -1,0 +1,13 @@
+The GrandOrgue file format is based on the Hauptwerk 1 file format.
+
+Changes/clarficiation for GrandOrgue:
+
+Section [Coupler999]:
+
+The setting "DestinationKeyshift" (Range -24 to 24) specifies the keyboard shift between
+source and destionan manual in term of absolute MIDI note numbers (not logical keys).
+
+The optional setting "CouplerType" can be set to:
+* Normal - standard coupler
+* Melody - melody coupler
+* Bass - bass coupler
