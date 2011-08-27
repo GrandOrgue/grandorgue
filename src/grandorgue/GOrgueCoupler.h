@@ -27,18 +27,21 @@
 #include "GOrgueDrawStop.h"
 
 class IniFileConfig;
+struct IniFileEnumEntry;
 class GOrgueDisplayMetrics;
 class GrandOrgueFile;
 
 class GOrgueCoupler : public GOrgueDrawstop
 {
+	typedef enum { COUPLER_NORMAL, COUPLER_BASS, COUPLER_MELODY } GOrgueCouplerType;
+	static const struct IniFileEnumEntry m_coupler_types[];
 	bool m_UnisonOff;
 	bool m_CoupleToSubsequentUnisonIntermanualCouplers;
 	bool m_CoupleToSubsequentUpwardIntermanualCouplers;
 	bool m_CoupleToSubsequentDownwardIntermanualCouplers;
 	bool m_CoupleToSubsequentUpwardIntramanualCouplers;
 	bool m_CoupleToSubsequentDownwardIntramanualCouplers;
-	enum { COUPLER_NORMAL, COUPLER_BASS, COUPLER_MELODY } m_CouplerType;
+	GOrgueCouplerType m_CouplerType;
 	unsigned m_SourceManual;
 	unsigned m_DestinationManual;
 	int m_DestinationKeyshift;
