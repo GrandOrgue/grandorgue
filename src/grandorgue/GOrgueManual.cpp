@@ -31,7 +31,7 @@
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
 #include "IniFileConfig.h"
-#include "MIDIListenDialog.h"
+#include "MIDIEventDialog.h"
 #include "GOrgueMidi.h"
 #include "OrganPanel.h"
 #include "GOrgueDisplayMetrics.h"
@@ -40,6 +40,7 @@ extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
 
 GOrgueManual::GOrgueManual() :
+	m_midi(MIDI_RECV_MANUAL),
 	m_KeyPressed(0),
 	m_KeyState(0),
 	m_manual_number(0),
@@ -80,6 +81,8 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 	m_manual_number = manualNumber;
 	m_display_metrics = displayMetrics;
 
+	m_midi.SetManual(manualNumber);
+
 	wxString buffer;
 
 	m_stops.resize(0);
@@ -115,6 +118,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 		buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(group, buffer, 1, 224));
 		m_divisionals[i]->Load(cfg, buffer, m_manual_number, i, displayMetrics);
 	}
+	m_midi.Load(cfg, group);
 
 	m_KeyState.resize(m_nb_logical_keys);
 	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
@@ -187,23 +191,13 @@ void GOrgueManual::SetUnisonOff(bool on)
 
 void GOrgueManual::MIDI(void)
 {
-
-	int index = m_midi_input_number + 7;
-
-	MIDIListenDialog dlg
-		(::wxGetApp().frame
-		,GOrgueMidi::GetMidiEventUserTitle(index)
-		,MIDIListenDialog::LSTN_MANUAL
-		,g_sound->GetMidi().GetManualMidiEvent(m_midi_input_number)
-		);
+	MIDIEventDialog dlg (::wxGetApp().frame, _("Midi-Settings for Manual - ")+m_name ,m_midi);
 
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		wxConfigBase::Get()->Write
-			(wxString(wxT("MIDI/")) + GOrgueMidi::GetMidiEventTitle(index)
-			,dlg.GetEvent()
-			);
-		g_sound->ResetSound(organfile);
+		m_midi = dlg.GetResult();
+		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
+		AllNotesOff();
 	}
 
 }
@@ -655,6 +649,7 @@ void GOrgueManual::Save(IniFileConfig& cfg, bool prefix, wxString group)
 		buffer.Printf(wxT("Divisional%03d"), m_divisionals[i]->ObjectNumber);
 		m_divisionals[i]->Save(cfg, prefix, buffer);
 	}
+	m_midi.Save(cfg, prefix, group);
 }
 
 void GOrgueManual::Abort()
@@ -682,6 +677,7 @@ void GOrgueManual::PreparePlayback()
 
 void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
 {
+	int key;
 
 	for(unsigned i = 0; i < m_stops.size(); i++)
 		m_stops[i]->ProcessMidi(event);
@@ -692,6 +688,26 @@ void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
 	for(unsigned i = 0; i < m_divisionals.size(); i++)
 		m_divisionals[i]->ProcessMidi(event);
 
+	if (!IsDisplayed())
+		return;
+
+	switch(m_midi.Match(event, key))
+	{
+	case MIDI_MATCH_ON:
+		Set(key, true);
+		break;
+
+	case MIDI_MATCH_OFF:
+		Set(key, false);
+		break;
+		
+	case MIDI_MATCH_RESET:
+		AllNotesOff();
+		break;
+		
+	default:
+		break;
+	}
 }
 
 void GOrgueManual::Reset()

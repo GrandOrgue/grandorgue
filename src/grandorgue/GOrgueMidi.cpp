@@ -236,7 +236,7 @@ GOrgueMidi::ProcessMessage
 	if (e.GetChannel() != -1)
 		e.SetChannel(((e.GetChannel() - 1 + m_midi_devices[which].id) & 0x0F) + 1);
 
-	int i, j, q, Noteoffset;
+	int i, j, Noteoffset;
 
 	Noteoffset = 0;
     // MIDI message FF : reset
@@ -271,25 +271,6 @@ GOrgueMidi::ProcessMessage
 	if (organfile)
 		organfile->ProcessMidi(e);
 
-	// MIDI code for controller
-	if (c == 0xB0 && (msg[1] == 120 || msg[1] == 123) && organfile)
-	{
-        for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-            if (msg[0] == ((m_midi_events[organfile->GetManual(i)->GetMIDIInputNumber() + 7] | 0xB000) >> 8))
-            {
-/* TODO: this code is not equivalent to the old code but seems to be the right
- * thing to do given the context... (midi controller change/all notes off) */
-#if 0
-            	for (j = 0; j < organfile->GetManual(i)->GetNumberOfAccessibleKeys(); j++)
-                    if (organfile->GetManual(i)->m_MIDI[j] == 1)
-                        organfile->GetManual(i)->Set(j + organfile->GetManual(i)->FirstAccessibleKeyMIDINoteNumber, false);
-#else
-            	organfile->GetManual(i)->AllNotesOff();
-#endif
-            }
-        return;
-	}
-
 	// MIDI code for memory set
 	if (m_midi_events[15] == j && (((j & 0xF000) == 0xC000) || m_memset ^ (bool)msg[2]))
 	{
@@ -307,21 +288,11 @@ GOrgueMidi::ProcessMessage
         ::wxGetApp().frame->AddPendingEvent(event);
 	}
 
-	// For the 16 MIDI devices
-	int GOrgueevent, offset;
-	for (i = 0; i < 15; i++)
+	int GOrgueevent;
+	for (i = 0; i < 2; i++)
 	{
-		// ??
-		if (i == 8 || (i == 2 && msg.size() < 3))
-		{
-			j &= 0xFF00;
-			if (i != 8)
-                i = 14;
-		}
 		GOrgueevent = m_midi_events[i];
-		if (i>=8 && i<=13) GOrgueevent &= 0xFF00;
-  //      if ((gOrgueSoundInstance->i_midiEvents[i] & 0xFF00) == j )
-        if (GOrgueevent == j)
+		if (GOrgueevent == j)
 		{
 			if (i < 2)
 			{
@@ -329,23 +300,6 @@ GOrgueMidi::ProcessMessage
 					continue;
 				GOrgueMeter* meter = ::wxGetApp().frame->m_meters[2];
 				meter->SetValue(meter->GetValue() + (i ? 1 : -1));
-			}
-			else if (i < 8)
-			{
-			}
-			else if (i < 14)
-			{
-				q = i - 7;
-				for (unsigned k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
-				{
-				    if (!organfile->GetManual(k)->IsDisplayed())
-                        continue;
-                    offset = m_midi_events[i] & 0xFF;
-                    if  (offset > 127)
-							offset = offset - 140;
-					if (organfile->GetManual(k)->GetMIDIInputNumber() == q)
-						organfile->GetManual(k)->Set(msg[1] + offset + m_transpose, msg[2] ? true : false);
-				}
 			}
 		}
 	}

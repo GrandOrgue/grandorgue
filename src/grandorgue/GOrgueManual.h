@@ -27,6 +27,8 @@
 #include <vector>
 #include "ptrvector.h"
 
+#include "GOrgueMidiReceiver.h"
+
 class wxProgressDialog;
 
 class GOrgueCoupler;
@@ -39,9 +41,8 @@ class IniFileConfig;
 
 class GOrgueManual 
 {
-
 private:
-
+	GOrgueMidiReceiver m_midi;
 	/* Keyboard state */
 	std::vector<bool> m_KeyPressed;
 	/* Internal state affected by couplers */
