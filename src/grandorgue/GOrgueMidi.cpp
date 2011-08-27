@@ -226,28 +226,12 @@ GOrgueMidi::ProcessMessage
 {
 	int i, j, q, Noteoffset;
 
-    Noteoffset = 0;
+	Noteoffset = 0;
     // MIDI message FF : reset
-    if (msg[0] == 0xFF && active && organfile)
+	if (msg[0] == 0xFF && active && organfile)
 	{
-        for (unsigned k = organfile->GetFirstManualIndex(); k <= organfile->GetManualAndPedalCount(); k++)
-        {
-            for (unsigned j = 0; j < organfile->GetManual(k)->GetStopCount(); j++)
-                organfile->GetManual(k)->GetStop(j)->Set(false);
-            for (unsigned j = 0; j < organfile->GetManual(k)->GetCouplerCount(); j++)
-                organfile->GetManual(k)->GetCoupler(j)->Set(false);
-            for (unsigned j = 0; j < organfile->GetManual(k)->GetDivisionalCount(); j++)
-		organfile->GetManual(k)->GetDivisional(j)->Display(false);
-        }
-        for (unsigned l = 0; l < organfile->GetTremulantCount(); l++)
-            organfile->GetTremulant(l)->Set(false);
-        for (unsigned j = 0; j < organfile->GetDivisionalCouplerCount(); j++)
-            organfile->GetDivisionalCoupler(j)->Set(false);
-
-        for (unsigned k = 0; k < organfile->GetGeneralCount(); k++)
-		organfile->GetGeneral(k)->Display(false);
-
-        return;
+		organfile->Reset();
+		return;
 	}
 
 	register unsigned char c = msg[0] & 0xF0; // c = MIDI message code without chanel number in c
