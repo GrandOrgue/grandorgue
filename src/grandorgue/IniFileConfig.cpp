@@ -243,6 +243,22 @@ wxInt16 IniFileConfig::ReadFontSize(wxString group, wxString key, bool required)
 	return retval;
 }
 
+int IniFileConfig::ReadEnum(wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required)
+{
+	wxString value = ReadString(group, key, 255, required);
+	for (unsigned i = 0; i < count; i++)
+		if (entry[i].name == value)
+			return entry[i].value;
+	if (required || !value.IsEmpty())
+	{
+		wxString error;
+		error.Printf(_("Invalid value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		throw error;
+	}
+	return entry[0].value;
+}
+
+
 void IniFileConfig::SaveHelper(bool prefix, wxString group, wxString key, wxString value)
 {
 	wxString str = group + wxT('/') + key;
@@ -272,4 +288,15 @@ void IniFileConfig::SaveHelper( bool prefix, wxString group, wxString key, int v
 	else
 		str.Printf(wxT("%d"), value);
 	SaveHelper(prefix, group, key, str);
+}
+
+void IniFileConfig::SaveHelper(bool prefix, wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count)
+{
+	for (unsigned i = 0; i < count; i++)
+		if (entry[i].value == value)
+		{
+			SaveHelper(prefix, group, key, entry[i].name);
+			return;
+		}
+	wxLogError(_("Invalid enum value for /%s/%s: %d"), group.c_str(), key.c_str(), value);
 }

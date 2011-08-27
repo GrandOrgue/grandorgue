@@ -40,6 +40,11 @@ enum ValueType
 	ORGAN_LONG,
 };
 
+struct IniFileEnumEntry {
+	wxString name;
+	int value;
+};
+
 class IniFileConfig
 {
 
@@ -56,8 +61,10 @@ public:
 	int ReadLong(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
 	wxInt16 ReadSize(wxString group, wxString key, int nmin = 0, bool required = true);
 	wxInt16 ReadFontSize(wxString group, wxString key, bool required = true);
+	int ReadEnum(wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required = true);
 	void SaveHelper(bool prefix, wxString group, wxString key, wxString value);
 	void SaveHelper( bool prefix, wxString group, wxString key, int value, bool sign = false, bool force = false);
+	void SaveHelper(bool prefix, wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count);
 
 };
 
