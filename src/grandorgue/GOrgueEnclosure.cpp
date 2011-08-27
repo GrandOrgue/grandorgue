@@ -185,3 +185,7 @@ bool GOrgueEnclosure::IsEnclosure(const unsigned nb) const
 	return (m_enclosure_nb == nb);
 
 }
+
+void GOrgueEnclosure::ProcessMidi(const GOrgueMidiEvent& event)
+{
+}

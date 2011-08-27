@@ -142,3 +142,7 @@ void GOrgueDrawstop::Set(bool on)
 	}
 	GOrgueLCD_WriteLineTwo(Name, 2000);
 }
+
+void GOrgueDrawstop::ProcessMidi(const GOrgueMidiEvent& event)
+{
+}
