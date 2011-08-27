@@ -33,7 +33,7 @@ IniFileConfig::IniFileConfig(wxFileConfig& odf_ini_file) :
 bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueType type, bool required, int nmin, int nmax)
 {
 	wxString string;
-	wxInt16 integer;
+	int integer;
 	static wxInt16 sizes[2][4] = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
 
 	try
@@ -44,7 +44,7 @@ bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueTyp
 			if (group.length() >= 12 && !group.Mid(0, 12).CmpNoCase(wxT("FrameGeneral")))	// FrameGeneral groups aren't required.
 			{
 				if (type == ORGAN_INTEGER)
-					*(wxInt16*)retval = 0;
+					*(int*)retval = 0;
 				return false;
 			}
 			throw -1;
@@ -69,9 +69,9 @@ bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueTyp
 			if (integer >= nmin && integer <= nmax)
 			{
 				if (type == ORGAN_LONG)
-					*(wxInt32*)retval = integer;
+					*(int*)retval = integer;
 				else
-					*(wxInt16*)retval = integer;
+					*(int*)retval = integer;
 			}
 			else
 				throw -4;
@@ -215,16 +215,16 @@ wxString IniFileConfig::ReadString(wxString group, wxString key, int nmax, bool 
 	return retval;
 }
 
-wxInt16 IniFileConfig::ReadInteger(wxString group, wxString key, int nmin, int nmax, bool required)
+int IniFileConfig::ReadInteger(wxString group, wxString key, int nmin, int nmax, bool required)
 {
-	wxInt16 retval;
+	int retval;
 	ReadKey(group, key, &retval, ORGAN_INTEGER, required, nmin, nmax);
 	return retval;
 }
 
-wxInt32 IniFileConfig::ReadLong(wxString group, wxString key, int nmin, int nmax, bool required)
+int IniFileConfig::ReadLong(wxString group, wxString key, int nmin, int nmax, bool required)
 {
-	wxInt32 retval;
+	int retval;
 	ReadKey(group, key, &retval, ORGAN_LONG, required, nmin, nmax);
 	return retval;
 }

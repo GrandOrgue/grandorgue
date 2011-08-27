@@ -52,8 +52,8 @@ public:
 	bool ReadBoolean(wxString group, wxString key, bool required = true);
 	wxColour ReadColor(wxString group, wxString key, bool required = true);
 	wxString ReadString(wxString group, wxString key, int nmax = 4096, bool required = true);
-	wxInt16 ReadInteger(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
-	wxInt32 ReadLong(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
+	int ReadInteger(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
+	int ReadLong(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
 	wxInt16 ReadSize(wxString group, wxString key, int nmin = 0, bool required = true);
 	wxInt16 ReadFontSize(wxString group, wxString key, bool required = true);
 	void SaveHelper(bool prefix, wxString group, wxString key, wxString value);
