@@ -332,10 +332,6 @@ GOrgueMidi::ProcessMessage
 			}
 			else if (i < 8)
 			{
-				q = i - 1;
-				for (unsigned l = 0; l < organfile->GetEnclosureCount(); l++)
-					if (organfile->GetEnclosure(l)->GetMIDIInputNumber() == q)
-						organfile->GetEnclosure(l)->Set(msg[2]);
 			}
 			else if (i < 14)
 			{

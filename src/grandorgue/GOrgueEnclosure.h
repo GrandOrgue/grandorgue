@@ -24,6 +24,7 @@
 #define GORGUEENCLOSURE_H_
 
 #include "GOrgueDrawable.h"
+#include "GOrgueMidiReceiver.h"
 #include <wx/wx.h>
 
 class GOrgueDisplayMetrics;
@@ -32,9 +33,8 @@ class IniFileConfig;
 
 class GOrgueEnclosure : public GOrgueDrawable
 {
-
 private:
-
+	GOrgueMidiReceiver m_midi;
 	unsigned m_enclosure_nb;
 	int AmpMinimumLevel;
 	int MIDIInputNumber;
