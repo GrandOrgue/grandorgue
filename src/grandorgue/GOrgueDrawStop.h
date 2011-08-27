@@ -26,6 +26,7 @@
 #include <wx/wx.h>
 #include "GOrgueControl.h"
 #include "GOrgueDrawable.h"
+#include "GOrgueMidiReceiver.h"
 #include "IniFileConfig.h"
 
 class GOrgueDisplayMetrics;
@@ -33,6 +34,8 @@ class GOrgueMidiEvent;
 
 class GOrgueDrawstop : public GOrgueControl, GOrgueDrawable
 {
+protected:
+	GOrgueMidiReceiver m_midi;
 
 public:
 	bool DefaultToEngaged;
@@ -40,7 +43,6 @@ public:
 	int DispDrawstopRow;
 	int DispDrawstopCol;
 	int DispImageNum;
-	int StopControlMIDIKeyNumber;
 	GOrgueDisplayMetrics* DisplayMetrics;
 
 	GOrgueDrawstop();

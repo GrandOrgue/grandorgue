@@ -29,7 +29,7 @@
 #include "GrandOrgue.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
-#include "MIDIListenDialog.h"
+#include "MIDIEventDialog.h"
 #include "GOrgueMidi.h"
 
 extern GrandOrgueFile* organfile;
@@ -37,12 +37,12 @@ extern GOrgueSound* g_sound;
 
 GOrgueDrawstop::GOrgueDrawstop() :
 	GOrgueControl(),
+	m_midi(MIDI_RECV_DRAWSTOP),
 	DefaultToEngaged(false),
 	DisplayInInvertedState(false),
 	DispDrawstopRow(0),
 	DispDrawstopCol(0),
-	DispImageNum(0),
-	StopControlMIDIKeyNumber(0)
+	DispImageNum(0)
 {
 
 }
@@ -60,14 +60,14 @@ void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetri
 	DefaultToEngaged = cfg.ReadBoolean(group, wxT("DefaultToEngaged"));
 	DisplayInInvertedState = cfg.ReadBoolean(group, wxT("DisplayInInvertedState"));
 	DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 2);
-	StopControlMIDIKeyNumber = cfg.ReadInteger(group, wxT("StopControlMIDIKeyNumber"), 0, 127, false);
+	m_midi.Load(cfg, group);
 	GOrgueControl::Load(cfg, group);
 }
 
 void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
+	m_midi.Save(cfg, prefix, group);
 	cfg.SaveHelper(prefix, group, wxT("DefaultToEngaged"), DefaultToEngaged ? wxT("Y") : wxT("N"));
-	cfg.SaveHelper(prefix, group, wxT("StopControlMIDIKeyNumber"), StopControlMIDIKeyNumber);
 }
 
 bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
@@ -103,22 +103,13 @@ void GOrgueDrawstop::Push()
 
 void GOrgueDrawstop::MIDI(void)
 {
-
-	MIDIListenDialog dlg
-		(::wxGetApp().frame
-		,_("Drawstop Trigger")
-		,MIDIListenDialog::LSTN_DRAWSTOP
-		,g_sound->GetMidi().GetStopMidiEvent() | StopControlMIDIKeyNumber
-		);
+	MIDIEventDialog dlg (::wxGetApp().frame, _("Midi-Settings for Drawstop - ")+Name ,m_midi);
 
 	if (dlg.ShowModal() == wxID_OK)
 	{
-
-		StopControlMIDIKeyNumber = dlg.GetEvent() & 0x7F;
+		m_midi = dlg.GetResult();
 		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
-
 	}
-
 }
 
 void GOrgueDrawstop::Set(bool on)
@@ -145,4 +136,21 @@ void GOrgueDrawstop::Set(bool on)
 
 void GOrgueDrawstop::ProcessMidi(const GOrgueMidiEvent& event)
 {
+	switch(m_midi.Match(event))
+	{
+	case MIDI_MATCH_CHANGE:
+		Push();
+		break;
+
+	case MIDI_MATCH_ON:
+		Set(true);
+		break;
+
+	case MIDI_MATCH_OFF:
+		Set(false);
+		break;
+
+	default:
+		break;
+	}
 }
