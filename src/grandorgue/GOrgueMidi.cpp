@@ -28,6 +28,7 @@
 #include "GOrgueEnclosure.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueMeter.h"
+#include "GOrgueMidiEvent.h"
 #include "GOrguePiston.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
@@ -119,9 +120,10 @@ GOrgueMidi::GOrgueMidi() :
 		t.midi_in = new RtMidiIn();
 		t.id = 0;
 		t.active = false;
+		wxString name = wxString::FromAscii(t.midi_in->getPortName(i).c_str());
+		t.name = name;
 		m_midi_devices.push_back(t);
 
-		wxString name = wxString::FromAscii(t.midi_in->getPortName(i).c_str());
 		name.Replace(wxT("\\"), wxT("|"));
 		m_midi_device_map[name] = i;
 
@@ -224,6 +226,16 @@ GOrgueMidi::ProcessMessage
 	,int which
 	)
 {
+	GOrgueMidiEvent e;
+	e.FromMidi(msg);
+	if (e.GetMidiType() == MIDI_NONE)
+		return;
+	e.SetDevice(m_midi_devices[which].name);
+
+	/* Compat stuff */
+	if (e.GetChannel() != -1)
+		e.SetChannel(((e.GetChannel() - 1 + m_midi_devices[which].id) & 0x0F) + 1);
+
 	int i, j, q, Noteoffset;
 
 	Noteoffset = 0;
@@ -251,10 +263,13 @@ GOrgueMidi::ProcessMessage
 		wxCommandEvent event(wxEVT_LISTENING, 0);
 		event.SetInt(j);
 		m_listen_evthandler->AddPendingEvent(event);
+		m_listen_evthandler->AddPendingEvent(e);
 	}
 
 	if (!active || msg.size() < 2)
 		return;
+	if (organfile)
+		organfile->ProcessMidi(e);
 
 	// MIDI code for controller
 	if (c == 0xB0 && (msg[1] == 120 || msg[1] == 123) && organfile)

@@ -41,6 +41,7 @@ private:
 
 	typedef struct {
 		RtMidiIn* midi_in;
+		wxString name;
 		bool active;
 		int id;
 	} MIDI_DEVICE;
