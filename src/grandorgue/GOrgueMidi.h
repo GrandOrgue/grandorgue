@@ -75,6 +75,7 @@ public:
 	void UpdateOrganMIDI();
 	std::map<wxString, int>& GetDevices();
 	bool HasActiveDevice();
+	int GetTranspose();
 	void SetTranspose(int transpose);
 
 	bool SetterActive();
