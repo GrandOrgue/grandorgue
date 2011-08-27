@@ -207,6 +207,11 @@ bool GOrgueMidi::HasActiveDevice()
 
 }
 
+int GOrgueMidi::GetTranspose()
+{
+	return m_transpose;
+}
+
 void GOrgueMidi::SetTranspose(int transpose)
 {
 	m_transpose = transpose;
