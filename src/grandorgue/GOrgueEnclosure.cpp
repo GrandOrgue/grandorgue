@@ -24,7 +24,7 @@
 #include "GOrgueEnclosure.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgue.h"
-#include "MIDIListenDialog.h"
+#include "MIDIEventDialog.h"
 #include "GOrgueDisplayMetrics.h"
 #include "IniFileConfig.h"
 #include "GOrgueMidi.h"
@@ -34,6 +34,7 @@ extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
 
 GOrgueEnclosure::GOrgueEnclosure() :
+	m_midi(MIDI_RECV_ENCLOSURE),
 	AmpMinimumLevel(0),
 	MIDIInputNumber(0),
 	MIDIValue(0),
@@ -95,10 +96,15 @@ void GOrgueEnclosure::Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrg
 	AmpMinimumLevel = cfg.ReadInteger(buffer, wxT("AmpMinimumLevel"), 0, 100);
 	MIDIInputNumber = cfg.ReadInteger(buffer, wxT("MIDIInputNumber"), 1, 6);
 	Set(127);	// default to full volume until we receive any messages
+	m_midi.SetManual(enclosure_nb);
+	m_midi.Load(cfg, buffer);
 }
 
 void GOrgueEnclosure::Save(IniFileConfig& cfg, bool prefix)
 {
+	wxString buffer;
+	buffer.Printf(wxT("Enclosure%03u"), m_enclosure_nb + 1);
+	m_midi.Save(cfg, prefix, buffer);
 }
 
 void GOrgueEnclosure::Set(int n)
@@ -115,23 +121,12 @@ void GOrgueEnclosure::Set(int n)
 
 void GOrgueEnclosure::MIDI(void)
 {
-
-	int index = MIDIInputNumber + 1;
-
-	MIDIListenDialog dlg
-		(::wxGetApp().frame
-		,GOrgueMidi::GetMidiEventUserTitle(index)
-		,MIDIListenDialog::LSTN_ENCLOSURE
-		,g_sound->GetMidi().GetMidiEventByChannel(index)
-		);
+	MIDIEventDialog dlg (::wxGetApp().frame, _("Midi-Settings for Enclosure - ")+Name ,m_midi);
 
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		wxConfigBase::Get()->Write
-			(wxString(wxT("MIDI/")) + GOrgueMidi::GetMidiEventTitle(index)
-			,dlg.GetEvent()
-			);
-		g_sound->ResetSound(organfile);
+		m_midi = dlg.GetResult();
+		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
 	}
 
 }
@@ -188,4 +183,7 @@ bool GOrgueEnclosure::IsEnclosure(const unsigned nb) const
 
 void GOrgueEnclosure::ProcessMidi(const GOrgueMidiEvent& event)
 {
+	int value;
+	if (m_midi.Match(event, value) == MIDI_MATCH_CHANGE)
+		Set(value);
 }
