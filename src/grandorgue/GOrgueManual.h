@@ -32,6 +32,7 @@ class wxProgressDialog;
 class GOrgueCoupler;
 class GOrgueDisplayMetrics;
 class GOrgueDivisional;
+class GOrgueMidiEvent;
 class GOrgueStop;
 class GOrgueTremulant;
 class IniFileConfig;
@@ -80,6 +81,7 @@ public:
 	void Abort();
 	void PreparePlayback();
 	void Reset();
+	void ProcessMidi(const GOrgueMidiEvent& event);
 	void MIDI(void);
 	~GOrgueManual(void);
 

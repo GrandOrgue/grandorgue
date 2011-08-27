@@ -28,6 +28,7 @@
 #include "GOrgueDrawable.h"
 
 class GOrgueDisplayMetrics;
+class GOrgueMidiEvent;
 
 class GOrguePushbutton : public GOrgueControl, GOrgueDrawable
 {
@@ -37,6 +38,7 @@ public:
     void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	virtual void Push() { };
+	void ProcessMidi(const GOrgueMidiEvent& event);
 	void MIDI(void);
 	virtual ~GOrguePushbutton() { };
 	void Display(bool onoff);

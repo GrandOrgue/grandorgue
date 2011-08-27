@@ -36,6 +36,7 @@ class GOrgueEnclosure;
 class GOrgueFrameGeneral;
 class GOrgueGeneral;
 class GOrgueLabel;
+class GOrgueMidiEvent;
 class GOrguePipe;
 class GOrguePiston;
 class GOrguePushbutton;
@@ -100,6 +101,7 @@ public:
 	void Abort();
 	void PreparePlayback();
 	void Reset();
+	void ProcessMidi(const GOrgueMidiEvent& event);
 	~GrandOrgueFile(void);
 
 	/* Access to the display metrics presented by the ODF */

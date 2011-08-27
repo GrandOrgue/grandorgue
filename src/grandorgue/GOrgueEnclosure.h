@@ -27,6 +27,7 @@
 #include <wx/wx.h>
 
 class GOrgueDisplayMetrics;
+class GOrgueMidiEvent;
 class IniFileConfig;
 
 class GOrgueEnclosure : public GOrgueDrawable
@@ -48,6 +49,7 @@ public:
 	void Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(int n);
+	void ProcessMidi(const GOrgueMidiEvent& event);
 	void MIDI(void);
 	int GetMIDIInputNumber();
 	float GetAttenuation();

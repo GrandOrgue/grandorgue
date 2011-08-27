@@ -122,3 +122,7 @@ void GOrguePushbutton::Display(bool onoff)
 		::wxGetApp().frame->AddPendingEvent(event);
 	}
 }
+
+void GOrguePushbutton::ProcessMidi(const GOrgueMidiEvent& event)
+{
+}

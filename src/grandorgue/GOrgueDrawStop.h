@@ -29,6 +29,7 @@
 #include "IniFileConfig.h"
 
 class GOrgueDisplayMetrics;
+class GOrgueMidiEvent;
 
 class GOrgueDrawstop : public GOrgueControl, GOrgueDrawable
 {
@@ -48,6 +49,7 @@ public:
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	virtual bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	void Push(void);
+	void ProcessMidi(const GOrgueMidiEvent& event);
 	void MIDI(void);
 	virtual void Set(bool on);
 

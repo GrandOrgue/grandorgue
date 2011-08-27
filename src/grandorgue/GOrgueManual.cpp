@@ -680,6 +680,20 @@ void GOrgueManual::PreparePlayback()
 		m_couplers[i]->PreparePlayback();
 }
 
+void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
+{
+
+	for(unsigned i = 0; i < m_stops.size(); i++)
+		m_stops[i]->ProcessMidi(event);
+
+	for(unsigned i = 0; i < m_couplers.size(); i++)
+		m_couplers[i]->ProcessMidi(event);
+
+	for(unsigned i = 0; i < m_divisionals.size(); i++)
+		m_divisionals[i]->ProcessMidi(event);
+
+}
+
 void GOrgueManual::Reset()
 {
 	for (unsigned j = 0; j < GetStopCount(); j++)
