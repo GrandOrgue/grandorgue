@@ -42,6 +42,7 @@ GrandOrgueFile.cpp
 GrandOrgueFrame.cpp
 Images.cpp
 IniFileConfig.cpp
+MIDIEventDialog.cpp
 MIDIListenDialog.cpp
 OrganDocument.cpp
 OrganPanel.cpp
