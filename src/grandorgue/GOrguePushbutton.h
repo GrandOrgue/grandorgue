@@ -26,12 +26,16 @@
 #include <wx/wx.h>
 #include "GOrgueControl.h"
 #include "GOrgueDrawable.h"
+#include "GOrgueMidiReceiver.h"
 
 class GOrgueDisplayMetrics;
 class GOrgueMidiEvent;
 
 class GOrguePushbutton : public GOrgueControl, GOrgueDrawable
 {
+protected:
+	GOrgueMidiReceiver m_midi;
+
 public:
 	GOrguePushbutton();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
@@ -48,7 +52,6 @@ public:
 	wxInt16 DispButtonRow;
 	wxInt16 DispButtonCol;
 	wxInt16 DispImageNum;
-	wxInt16 MIDIProgramChangeNumber;
 };
 
 #endif

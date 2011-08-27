@@ -59,6 +59,8 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 	m_Couplers.clear();
 	m_Tremulants.clear();
 
+	m_midi.SetManual(manualNumber);
+
 	GOrgueManual* associatedManual = organfile->GetManual(m_ManualNumber);
 
 	int NumberOfStops = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount());
