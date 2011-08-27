@@ -99,6 +99,7 @@ public:
 	void Revert(wxFileConfig& cfg);
 	void Abort();
 	void PreparePlayback();
+	void Reset();
 	~GrandOrgueFile(void);
 
 	/* Access to the display metrics presented by the ODF */

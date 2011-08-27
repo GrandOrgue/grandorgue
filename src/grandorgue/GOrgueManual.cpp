@@ -679,3 +679,13 @@ void GOrgueManual::PreparePlayback()
 	for (unsigned i = 0; i < m_couplers.size(); i++)
 		m_couplers[i]->PreparePlayback();
 }
+
+void GOrgueManual::Reset()
+{
+	for (unsigned j = 0; j < GetStopCount(); j++)
+                GetStop(j)->Set(false);
+	for (unsigned j = 0; j < GetCouplerCount(); j++)
+                GetCoupler(j)->Set(false);
+	for (unsigned j = 0; j < GetDivisionalCount(); j++)
+		GetDivisional(j)->Display(false);
+}

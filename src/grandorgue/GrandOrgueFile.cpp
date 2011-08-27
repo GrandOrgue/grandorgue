@@ -825,3 +825,15 @@ void GrandOrgueFile::PreparePlayback()
 	for (unsigned j = 0; j < m_tremulant.size(); j++)
 		m_tremulant[j]->PreparePlayback();
 }
+
+void GrandOrgueFile::Reset()
+{
+        for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
+		GetManual(k)->Reset();
+        for (unsigned l = 0; l < GetTremulantCount(); l++)
+		GetTremulant(l)->Set(false);
+        for (unsigned j = 0; j < GetDivisionalCouplerCount(); j++)
+		     GetDivisionalCoupler(j)->Set(false);
+        for (unsigned k = 0; k < GetGeneralCount(); k++)
+		GetGeneral(k)->Display(false);
+}

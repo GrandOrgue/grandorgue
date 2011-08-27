@@ -79,6 +79,7 @@ public:
 	void SetUnisonOff(bool on);
 	void Abort();
 	void PreparePlayback();
+	void Reset();
 	void MIDI(void);
 	~GOrgueManual(void);
 
