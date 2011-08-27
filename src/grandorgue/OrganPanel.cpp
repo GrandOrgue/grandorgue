@@ -365,6 +365,8 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 			{
 				if (right)
 					organfile->GetManual(i)->MIDI();
+				else
+					organfile->GetManual(i)->Click(xx, yy);
 			}
 
 		}

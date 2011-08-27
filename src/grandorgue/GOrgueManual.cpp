@@ -424,6 +424,20 @@ wxRegion GOrgueManual::GetKeyRegion
 
 }
 
+void GOrgueManual::Click(unsigned xx, unsigned yy)
+{
+	wxRegion reg;
+	for(unsigned i = 0; i < m_nb_accessible_keys; i++)
+	{
+		reg = GetKeyRegion(i);
+		if (reg.Contains(xx, yy))
+		{
+			Set(i + m_first_accessible_key_midi_note_nb, !IsKeyDown(i + m_first_accessible_key_midi_note_nb));
+			return;
+		}
+	}
+}
+
 void GOrgueManual::DrawKey
 	(wxDC& dc
 	,unsigned key_nb)
