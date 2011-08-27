@@ -97,6 +97,10 @@ void GOrgueEnclosure::Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrg
 	Set(127);	// default to full volume until we receive any messages
 }
 
+void GOrgueEnclosure::Save(IniFileConfig& cfg, bool prefix)
+{
+}
+
 void GOrgueEnclosure::Set(int n)
 {
 	if (n < 0)

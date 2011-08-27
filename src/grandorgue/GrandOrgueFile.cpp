@@ -618,6 +618,8 @@ void GrandOrgueFile::Save(const wxString& file)
 		buffer.Printf(wxT("ReversiblePiston%03d"), j + 1);
 		m_piston[j]->Save(aIni, prefix, buffer);
 	}
+	for (unsigned j = 0; j < m_enclosure.size(); j++)
+		m_enclosure[j]->Save(aIni, prefix);
 
 }
 

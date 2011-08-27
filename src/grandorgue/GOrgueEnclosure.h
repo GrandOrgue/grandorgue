@@ -46,6 +46,7 @@ public:
 	GOrgueEnclosure();
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	void Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrgueDisplayMetrics* displayMetrics);
+	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(int n);
 	void MIDI(void);
 	int GetMIDIInputNumber();
