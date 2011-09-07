@@ -33,12 +33,10 @@ GOrgueControl::GOrgueControl() :
 	DispLabelColour(0,0,0),
 	Name()
 {
-
 }
 
 GOrgueControl::~GOrgueControl()
 {
-
 }
 
 void GOrgueControl::Load(IniFileConfig& cfg, wxString group)
@@ -58,4 +56,14 @@ void GOrgueControl::Load(IniFileConfig& cfg, wxString group)
 
 void GOrgueControl::Save(IniFileConfig& cfg, bool prefix)
 {
+}
+
+bool GOrgueControl::IsDisplayed()
+{
+	return Displayed;
+}
+
+const wxString& GOrgueControl::GetName()
+{
+	return Name;
 }

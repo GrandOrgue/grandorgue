@@ -37,6 +37,8 @@ public:
 	virtual ~GOrgueControl();
 	void Load(IniFileConfig& cfg, wxString group);
 	virtual void Save(IniFileConfig& cfg, bool prefix);
+	bool IsDisplayed();
+	const wxString& GetName();
 
 	bool Displayed : 1;
 	bool DispKeyLabelOnLeft : 1;
