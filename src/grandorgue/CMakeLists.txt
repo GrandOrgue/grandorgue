@@ -14,6 +14,8 @@ GOGUIDisplayMetrics.cpp
 GOGUIDrawStop.cpp
 GOGUIEnclosure.cpp
 GOGUILabel.cpp
+GOGUIManual.cpp
+GOGUIManualBackground.cpp
 GOGUIPanel.cpp
 GOGUIPushbutton.cpp
 GOrgueWave.cpp

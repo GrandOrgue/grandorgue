@@ -26,6 +26,8 @@
 #include "GOGUIDrawStop.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUILabel.h"
+#include "GOGUIManual.h"
+#include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPushbutton.h"
 #include "GOrgueCoupler.h"
@@ -105,6 +107,18 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 		wxString buffer;
 		m_Name = m_organfile->GetChurchName();
 
+		for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
+		{
+			wxString group;
+			group.Printf(wxT("Manual%03d"), i);
+			if (m_organfile->GetManual(i)->IsDisplayed())
+			{
+				GOGUIControl* control = new GOGUIManualBackground(this, i);
+				control->Load(cfg, group);
+				AddControl(control);
+			}
+		}
+
 		for (unsigned i = 0; i < m_organfile->GetEnclosureCount(); i++)
 		{
 			buffer.Printf(wxT("Enclosure%03d"), i + 1);
@@ -153,6 +167,13 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 		{
 			wxString group;
 			group.Printf(wxT("Manual%03d"), i);
+			if (m_organfile->GetManual(i)->IsDisplayed())
+			{
+				GOGUIControl* control = new GOGUIManual(this, m_organfile->GetManual(i), i);
+				control->Load(cfg, group);
+				AddControl(control);
+			}
+
 			for(unsigned j = 0; j < m_organfile->GetManual(i)->GetCouplerCount(); j++)
 				if (m_organfile->GetManual(i)->GetCoupler(j)->IsDisplayed())
 				{

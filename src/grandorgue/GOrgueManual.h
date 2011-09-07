@@ -32,7 +32,6 @@
 class wxProgressDialog;
 
 class GOrgueCoupler;
-class GOGUIDisplayMetrics;
 class GOrgueDivisional;
 class GOrgueMidiEvent;
 class GOrgueStop;
@@ -51,7 +50,6 @@ private:
 	/* Internal state affected by couplers */
 	std::vector<unsigned> m_KeyState;
 	unsigned m_manual_number;
-	GOGUIDisplayMetrics* m_display_metrics;
 	unsigned m_first_accessible_logical_key_nb;
 	unsigned m_nb_logical_keys;
 	unsigned m_first_accessible_key_midi_note_nb;
@@ -67,17 +65,12 @@ private:
 	ptr_vector<GOrgueStop> m_stops;
 	ptr_vector<GOrgueCoupler> m_couplers;
 	ptr_vector<GOrgueDivisional> m_divisionals;
-	bool m_displayed : 1;
-	bool m_key_colour_inverted : 1;
-	bool m_key_colour_wooden : 1;
-
-	void GetKeyDimensions(const int key_midi_nb, int &x, int &cx, int &cy, int &z);
-	wxRegion GetKeyRegion(unsigned key_nb);
+	bool m_displayed;
 
 public:
 
 	GOrgueManual(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics, int manualNumber);
+	void Load(IniFileConfig& cfg, wxString group, int manualNumber);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
 	void Set(unsigned note, bool on);
@@ -87,7 +80,6 @@ public:
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	GOrgueMidiReceiver& GetMidiReceiver();
-	void MIDI(void);
 	~GOrgueManual(void);
 
 	unsigned GetNumberOfAccessibleKeys();
@@ -108,9 +100,6 @@ public:
 	GOrgueTremulant* GetTremulant(unsigned index);
 
 	const wxString& GetName();
-	void Click(unsigned x, unsigned y);
-	void DrawKey(wxDC& dc, unsigned key_nb);
-	void Draw(wxDC& dc);
 	bool IsDisplayed();
 
 };
