@@ -16,6 +16,8 @@
 #define LCD_DRIVER_IMONVFD 0
 #define LCD_DRIVER_MIDI 1
 
+#include <wx/wx.h>
+
 bool GOrgueLCD_Open(const int d=LCD_DRIVER_IMONVFD);
 void GOrgueLCD_Close();
 void GOrgueLCD_WriteLineOne(const wxString& str);

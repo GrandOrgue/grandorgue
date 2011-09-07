@@ -10,7 +10,7 @@
 //
 //
 
-#include "GrandOrgue.h"
+#include "GOrgueLCD.h"
 
 #ifdef __VFD__
 
