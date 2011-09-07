@@ -848,3 +848,8 @@ void GrandOrgueFile::Reset()
         for (unsigned k = 0; k < GetGeneralCount(); k++)
 		GetGeneral(k)->Display(false);
 }
+
+void GrandOrgueFile::Modified()
+{
+	::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
+}

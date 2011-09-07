@@ -48,7 +48,7 @@ void GOrguePushbutton::MIDI(void)
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		m_midi = dlg.GetResult();
-		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
+		m_organfile->Modified();
 	}
 }
 

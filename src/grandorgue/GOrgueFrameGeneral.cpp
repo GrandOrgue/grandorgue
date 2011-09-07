@@ -160,7 +160,7 @@ void GOrgueFrameGeneral::Push()
 			}
 		}
 
-		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
+		m_organfile->Modified();
 
 	}
 	else

@@ -102,6 +102,7 @@ public:
 	void PreparePlayback();
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
+	void Modified();
 	~GrandOrgueFile(void);
 
 	/* Access to the display metrics presented by the ODF */
