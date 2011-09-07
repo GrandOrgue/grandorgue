@@ -36,7 +36,6 @@
 #include "GrandOrgueFrame.h"
 #include "GrandOrgueID.h"
 #include "KeyConvert.h"
-#include "OrganDocument.h"
 
 BEGIN_EVENT_TABLE(OrganPanel, wxPanel)
 EVT_ERASE_BACKGROUND(OrganPanel::OnErase)
@@ -177,49 +176,14 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 
 void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 {
-	if (g_sound && g_sound->GetMidi().SetterActive() ^ event.ShiftDown())
-	{
-		::wxGetApp().frame->ProcessCommand(ID_AUDIO_MEMSET);
-		UpdateWindowUI();
-	}
-
 	int k = event.GetKeyCode();
 	if ( !event.AltDown())
 	{
 
-		GOrgueMeter* meter = ::wxGetApp().frame->m_meters[2];
-		OrganDocument* doc = (OrganDocument*)::wxGetApp().m_docManager->GetCurrentDocument();
-		switch(k)
-		{
-			case WXK_ESCAPE:
-			{
-				::wxGetApp().frame->ProcessCommand(ID_AUDIO_PANIC);
-				break;
-			}
-			case WXK_LEFT:
-			{
-				meter->SetValue(meter->GetValue() - 1);
-				break;
-			}
-			case WXK_DOWN:
-			{
-				if (organfile)
-					organfile->GetFrameGeneral(meter->GetValue() - 1)->Push();
-				break;
-			}
-			case WXK_RIGHT:
-			{
-				meter->SetValue(meter->GetValue() + 1);
-				break;
-			}
-			default:
-			{
-				if (organfile && doc && (k = WXKtoVK(k)))
-					organfile->GetPanel(0)->HandleKey(k);
-				event.Skip();
-			}
-		}
+		if (organfile && (k = WXKtoVK(k)))
+			organfile->GetPanel(0)->HandleKey(k);
 	}
+	event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
 	event.Skip();
 }
 

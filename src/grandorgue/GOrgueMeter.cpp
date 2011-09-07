@@ -23,10 +23,8 @@
 #include "GOrgueMeter.h"
 
 #include "GOrgueMidi.h"
-#include "GOrgueFrameGeneral.h"
 #include "GOrgueSound.h"
 #include "GrandOrgue.h"
-#include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
 #include "GrandOrgueID.h"
 #include "wxGaugeAudio.h"
@@ -35,9 +33,7 @@
     #include <wx/msw/regconf.h>
 #endif
 
-
 extern GOrgueSound* g_sound;
-extern GrandOrgueFile* organfile;
 
 BEGIN_EVENT_TABLE(GOrgueMeter, wxControl)
 	EVT_TEXT(ID_METER_AUDIO_SPIN, GOrgueMeter::OnVolume)
@@ -186,8 +182,7 @@ void GOrgueMeter::OnFrame(wxCommandEvent& event)
 #endif
 	}
 
-	if (organfile)
-		organfile->GetFrameGeneral(n - 1)->Push();
+	::wxGetApp().frame->ChangeSetter(n - 1);
 }
 
 void GOrgueMeter::OnTranspose(wxCommandEvent& event)
@@ -209,8 +204,8 @@ void GOrgueMeter::OnTranspose(wxCommandEvent& event)
 }
 void GOrgueMeter::OnEnter(wxCommandEvent& event)
 {
-	if (event.GetId() == ID_METER_FRAME_SPIN && organfile)
-		organfile->GetFrameGeneral(m_spin->GetValue() - 1)->Push();
+	if (event.GetId() == ID_METER_FRAME_SPIN)
+		::wxGetApp().frame->ChangeSetter(m_spin->GetValue() - 1);
 	::wxGetApp().frame->SetFocus();
 }
 
