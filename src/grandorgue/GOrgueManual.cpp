@@ -686,9 +686,6 @@ void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
 	for(unsigned i = 0; i < m_divisionals.size(); i++)
 		m_divisionals[i]->ProcessMidi(event);
 
-	if (!IsDisplayed())
-		return;
-
 	switch(m_midi.Match(event, key))
 	{
 	case MIDI_MATCH_ON:
