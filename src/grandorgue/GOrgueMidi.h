@@ -31,6 +31,7 @@
 class RtMidiIn;
 
 class wxConfigBase;
+class GrandOrgueFile;
 
 #define NB_MIDI_EVENTS (16)
 
@@ -56,6 +57,7 @@ private:
 	bool m_memset;
 	wxEvtHandler* m_listen_evthandler;
 	std::map<long, wxString> m_organ_midi_events;
+	GrandOrgueFile* m_organfile;
 
 	int m_midi_events[NB_MIDI_EVENTS];
 
@@ -71,6 +73,7 @@ public:
 	~GOrgueMidi();
 
 	void Open();
+	void SetOrganFile(GrandOrgueFile* organfile);
 	void ProcessMessages(const bool audio_active);
 
 	bool HasListener();

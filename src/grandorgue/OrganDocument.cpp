@@ -100,7 +100,7 @@ bool OrganDocument::DoSaveDocument(const wxString& file)
 
 void OrganDocument::CloseOrgan()
 {
-	g_sound->CloseSound(organfile);
+	g_sound->CloseSound();
 	if (organfile)
 	{
 		delete organfile;

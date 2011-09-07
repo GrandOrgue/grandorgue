@@ -31,6 +31,7 @@
 #include "GrandOrgueID.h"
 #include "GOrguePipe.h"
 #include "GOrgueStop.h"
+#include "GOrgueRtHelpers.h"
 #include "GOrgueTremulant.h"
 #include "OrganDocument.h"
 #include "GOrgueMidi.h"
@@ -38,8 +39,6 @@
 struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
-
-//extern GrandOrgueFile* organfile;
 
 GOrgueSound* g_sound = 0;
 
@@ -144,7 +143,7 @@ GOrgueSound::GOrgueSound(void) :
 	catch (RtError &e)
 	{
 		e.printMessage();
-		CloseSound(NULL);
+		CloseSound();
 	}
 
 }
@@ -152,7 +151,7 @@ GOrgueSound::GOrgueSound(void) :
 GOrgueSound::~GOrgueSound(void)
 {
 
-	CloseSound(NULL);
+	CloseSound();
 
 	/* dispose of midi devices */
 	DELETE_AND_NULL(m_midi);
@@ -269,13 +268,13 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
 		::wxSleep(1);
 
 	if (!opened_ok)
-		CloseSound(organfile);
+		CloseSound();
 
 	return opened_ok;
 
 }
 
-void GOrgueSound::CloseSound(GrandOrgueFile* organfile)
+void GOrgueSound::CloseSound()
 {
 	if (f_output)
 	{
@@ -302,17 +301,20 @@ void GOrgueSound::CloseSound(GrandOrgueFile* organfile)
 	}
 
 	::wxMilliSleep(10);
-	if (organfile)
-		organfile->Abort();
+	if (m_organfile)
+		m_organfile->Abort();
+	m_organfile = NULL;
+	m_midi->SetOrganFile(NULL);
 }
 
-bool GOrgueSound::ResetSound(GrandOrgueFile* organfile)
+bool GOrgueSound::ResetSound()
 {
 	wxBusyCursor busy;
 	bool was_active = b_active;
+	GrandOrgueFile* organfile = m_organfile;
 
 	int temp = volume;
-	CloseSound(organfile);
+	CloseSound();
 	if (!OpenSound(true, organfile))
 		return false;
 	if (!temp)  // don't let resetting sound reactivate an organ
@@ -436,6 +438,9 @@ bool GOrgueSound::IsActive()
 
 void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 {
+	m_organfile = organfile;
+	m_midi->SetOrganFile(organfile);
+
 	if (organfile)
 	{
 		m_windchests.resize(organfile->GetWinchestGroupCount());

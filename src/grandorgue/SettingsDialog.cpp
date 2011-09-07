@@ -547,7 +547,7 @@ bool SettingsDialog::DoApply()
 	pConfig->Write(wxT("ScaleRelease"), (long)c_scale->IsChecked());
 	pConfig->Write(wxT("RandomizeSpeaking"), (long)c_random->IsChecked());
 
-    g_sound->ResetSound(NULL);
+    g_sound->ResetSound();
     UpdateSoundStatus();
 
 	return true;
