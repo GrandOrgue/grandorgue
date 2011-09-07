@@ -64,6 +64,10 @@ public:
 	void OnSettingsMemory(wxCommandEvent& event);
 	void OnSettingsTranspose(wxCommandEvent& event);
 	//
+	void OnKeyCommand(wxKeyEvent& event);
+	void ChangeSetter(unsigned position);
+
+	void OnSize(wxSizeEvent& event);
 
 	void OnMenuOpen(wxMenuEvent& event);
 

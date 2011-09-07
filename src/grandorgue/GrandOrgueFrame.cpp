@@ -35,6 +35,7 @@
 #include <wx/zstream.h>
 #include <wx/html/helpctrl.h>
 #include <wx/splash.h>
+#include "GOrgueFrameGeneral.h"
 #include "GOrgueMeter.h"
 #include "GOrgueMidi.h"
 #include "GOrguePipe.h"
@@ -70,6 +71,7 @@
 // end
 IMPLEMENT_CLASS(GOrgueFrame, wxDocParentFrame)
 BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
+	EVT_KEY_DOWN(GOrgueFrame::OnKeyCommand)
 	EVT_COMMAND(0, wxEVT_METERS, GOrgueFrame::OnMeters)
 	EVT_COMMAND(0, wxEVT_LOADFILE, GOrgueFrame::OnLoadFile)
     EVT_MENU_OPEN(GOrgueFrame::OnMenuOpen)
@@ -94,6 +96,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(ID_MEMORY, GOrgueFrame::OnSettingsMemory)
 	EVT_MENU(ID_TRANSPOSE, GOrgueFrame::OnSettingsTranspose)
 	// End
+	EVT_SIZE(GOrgueFrame::OnSize)
 
 	EVT_UPDATE_UI(wxID_SAVE, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
@@ -199,6 +202,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 
 	SetClientSize(880, 495);	// default minimal size
 	Center(wxBOTH);
+	SetAutoLayout(true);
 }
 
 GOrgueFrame::~GOrgueFrame()
@@ -209,6 +213,22 @@ GOrgueFrame::~GOrgueFrame()
         m_gaugedc = 0;
     }
 }
+
+void GOrgueFrame::OnSize(wxSizeEvent& event)
+{
+	wxWindow *child = (wxWindow *)NULL;
+        for ( wxWindowList::compatibility_iterator node = GetChildren().GetFirst(); node; node = node->GetNext() )
+        {
+		wxWindow *win = node->GetData();
+		if ( !win->IsTopLevel() && !IsOneOfBars(win) )
+		{
+			child = win;
+		}
+	}
+	if (child)
+		child->SetSize(0, 0, GetClientSize().GetWidth(), GetClientSize().GetHeight());
+}
+
 
 void GOrgueFrame::OnMeters(wxCommandEvent& event)
 {
@@ -471,4 +491,51 @@ void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
 {
     DoMenuUpdates(event.GetMenu());
     event.Skip();
+}
+
+void GOrgueFrame::ChangeSetter(unsigned position)
+{
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	if (doc && organfile)
+		organfile->GetFrameGeneral(position)->Push();
+}
+
+void GOrgueFrame::OnKeyCommand(wxKeyEvent& event)
+{
+	if (g_sound && g_sound->GetMidi().SetterActive() ^ event.ShiftDown())
+	{
+		ProcessCommand(ID_AUDIO_MEMSET);
+		UpdateWindowUI();
+	}
+
+	int k = event.GetKeyCode();
+	if ( !event.AltDown())
+	{
+
+		GOrgueMeter* meter = m_meters[2];
+		switch(k)
+		{
+			case WXK_ESCAPE:
+			{
+				ProcessCommand(ID_AUDIO_PANIC);
+				break;
+			}
+			case WXK_LEFT:
+			{
+				meter->SetValue(meter->GetValue() - 1);
+				break;
+			}
+			case WXK_DOWN:
+			{
+				ChangeSetter(meter->GetValue() - 1);
+				break;
+			}
+			case WXK_RIGHT:
+			{
+				meter->SetValue(meter->GetValue() + 1);
+				break;
+			}
+		}
+	}
+	event.Skip();
 }
