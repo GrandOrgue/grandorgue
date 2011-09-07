@@ -13,6 +13,7 @@ GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
 GOGUIDrawStop.cpp
 GOGUIEnclosure.cpp
+GOGUIHW1Background.cpp
 GOGUILabel.cpp
 GOGUIManual.cpp
 GOGUIManualBackground.cpp

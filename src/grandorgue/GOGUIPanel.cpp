@@ -25,6 +25,7 @@
 #include "GOGUIControl.h"
 #include "GOGUIDrawStop.h"
 #include "GOGUIEnclosure.h"
+#include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
@@ -107,6 +108,13 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 		wxString buffer;
 		m_Name = m_organfile->GetChurchName();
 
+		{
+			buffer.Printf(wxT("---"));
+			GOGUIControl* control = new GOGUIHW1Background(this);
+			control->Load(cfg, buffer);
+			AddControl(control);
+		}
+		
 		for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
 		{
 			wxString group;
