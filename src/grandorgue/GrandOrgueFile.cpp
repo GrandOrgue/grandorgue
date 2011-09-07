@@ -276,7 +276,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
 	{
 		buffer.Printf(wxT("Manual%03d"), i);
-		m_manual[i]->Load(ini, buffer, m_DisplayMetrics, i);
+		m_manual[i]->Load(ini, buffer, i);
 	}
 
 	m_piston.resize(0);

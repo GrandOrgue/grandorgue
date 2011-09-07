@@ -131,15 +131,6 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 			m_display_metrics->GetCenterWidth(),
 			m_display_metrics->GetJambTopHeight() + m_display_metrics->GetPistonTopHeight());
 
-	for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-	{
-
-		GOrgueManual* man = organfile->GetManual(i);
-		if (man->IsDisplayed())
-			man->Draw(dc);
-
-	}
-
 	dc.SetPen(*wxTRANSPARENT_PEN);
 	dc.SetBrush(*wxBLACK_BRUSH);
 
@@ -226,13 +217,6 @@ void OrganPanel::OnNoteOnOff(wxCommandEvent& event)
 	wxClientDC dc(this);
 	dc.SetDeviceOrigin(m_clientOrigin.x, m_clientOrigin.y);
 
-	GOrgueManual* man = organfile->GetManual(event.GetInt());
-	if (man->IsDisplayed())
-	{
-		man->DrawKey(mdc, event.GetExtraLong());
-		man->DrawKey( dc, event.GetExtraLong());
-	}
-
 }
 
 void OrganPanel::OnMouseLeftDown(wxMouseEvent& event)
@@ -271,33 +255,7 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 		organfile->GetPanel(0)->Draw(dc);
 
 	if (!scroll)
-	{
 		organfile->GetPanel(0)->HandleMousePress(xx, yy, right);
-
-		for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-		{
-			if (dc || !organfile->GetManual(i)->IsDisplayed())
-				continue;
-
-			const GOGUIDisplayMetrics::MANUAL_RENDER_INFO& mri = m_display_metrics->GetManualRenderInfo(i);
-
-			wxRect rect
-				(mri.x
-				,mri.y
-				,mri.width
-				,mri.height
-				);
-
-			if (rect.Contains(xx, yy))
-			{
-				if (right)
-					organfile->GetManual(i)->MIDI();
-				else
-					organfile->GetManual(i)->Click(xx, yy);
-			}
-
-		}
-	}
 
 	if (scroll)
 		organfile->GetPanel(0)->HandleMouseScroll(xx, yy, scroll);
