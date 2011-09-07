@@ -12,6 +12,7 @@ contrib/sha1.cpp
 GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
 GOGUIDrawStop.cpp
+GOGUIEnclosure.cpp
 GOGUIPanel.cpp
 GOGUIPushbutton.cpp
 GOrgueWave.cpp

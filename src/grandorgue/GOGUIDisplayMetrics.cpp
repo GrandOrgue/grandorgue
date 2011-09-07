@@ -22,7 +22,7 @@
 
 #include "GOGUIDisplayMetrics.h"
 #include "IniFileConfig.h"
-#include "GOrgueEnclosure.h"
+#include "GOGUIEnclosure.h"
 
 #define DISPLAY_METRICS_GROUP wxT("Organ")
 
@@ -294,7 +294,7 @@ int GOGUIDisplayMetrics::GetEnclosureY()
 	return m_EnclosureY;
 }
 
-int GOGUIDisplayMetrics::GetEnclosureX(const GOrgueEnclosure* enclosure)
+int GOGUIDisplayMetrics::GetEnclosureX(const GOGUIEnclosure* enclosure)
 {
 
 	assert(enclosure);
@@ -537,4 +537,11 @@ const GOGUIDisplayMetrics::MANUAL_RENDER_INFO& GOGUIDisplayMetrics::GetManualRen
 	assert(manual_nb >= m_first_manual);
 	return m_manual_info[manual_nb].render_info;
 
+}
+
+wxBrush GOGUIDisplayMetrics::GetPedalBrush()
+{
+	wxBrush brush;
+	brush.SetColour(0xA0, 0x80, 0x40);
+	return brush;
 }

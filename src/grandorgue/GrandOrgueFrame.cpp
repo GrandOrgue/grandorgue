@@ -199,10 +199,6 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 
 	SetClientSize(880, 495);	// default minimal size
 	Center(wxBOTH);
-
-
-    m_pedalBrush.SetColour(0xA0, 0x80, 0x40);
-
 }
 
 GOrgueFrame::~GOrgueFrame()

@@ -27,7 +27,7 @@
 #include <vector>
 
 class IniFileConfig;
-class GOrgueEnclosure;
+class GOGUIEnclosure;
 
 class GOGUIDisplayMetrics
 {
@@ -107,7 +107,7 @@ public:
 	int NumberOfDrawstopColsToDisplay();
 	int NumberOfButtonCols();
 	int NumberOfExtraButtonRows();
-
+	wxBrush GetPedalBrush();
 
 	void GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int* blitX, int* blitY);
 	void GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY);
@@ -116,7 +116,7 @@ public:
 
 	int GetEnclosureWidth();
 	int GetEnclosureY();
-	int GetEnclosureX(const GOrgueEnclosure* enclosure);
+	int GetEnclosureX(const GOGUIEnclosure* enclosure);
 
 	int GetScreenWidth();
 	int GetScreenHeight();
@@ -153,4 +153,4 @@ public:
 
 };
 
-#endif /* GORGUEDISPLAYMETRICS_H */
+#endif

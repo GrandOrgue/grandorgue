@@ -26,7 +26,6 @@
 #include <wx/event.h>
 #include <wx/mstream.h>
 #include "GOGUIDisplayMetrics.h"
-#include "GOrgueEnclosure.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueLabel.h"
 #include "GOrgueMeter.h"
@@ -82,7 +81,7 @@ void OrganPanel::TileWood(wxDC& dc, int which, int sx, int sy, int cx, int cy)
 void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 {
 
-	int i, j;
+	int i;
 	wxFont font = *wxNORMAL_FONT;
 
 	m_clientOrigin = GetClientAreaOrigin();
@@ -142,11 +141,8 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 
 	}
 
-	j = (m_display_metrics->GetScreenWidth() - m_display_metrics->GetEnclosureWidth() + 6) >> 1;
 	dc.SetPen(*wxTRANSPARENT_PEN);
 	dc.SetBrush(*wxBLACK_BRUSH);
-	for (unsigned l = 0; l < organfile->GetEnclosureCount(); l++)
-		organfile->GetEnclosure(l)->DrawLabel(dc);
 
 	DrawClickables(&dc);
 
@@ -199,8 +195,6 @@ void OrganPanel::OnDrawstop(wxCommandEvent& event)
 	mdc.SelectObject(m_clientBitmap);
 	wxClientDC dc(this);
 	dc.SetDeviceOrigin(m_clientOrigin.x, m_clientOrigin.y);
-
-	static_cast<GOrgueDrawable*>(event.GetClientData())->Draw(0, 0, &mdc, &dc);
 }
 
 void OrganPanel::CopyToScreen(wxDC* mdc, const wxRect& rect)
@@ -311,17 +305,6 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 
 	if (scroll)
 		organfile->GetPanel(0)->HandleMouseScroll(xx, yy, scroll);
-
-	for (unsigned l = 0; l < organfile->GetEnclosureCount(); l++)
-	{
-		if (organfile->GetEnclosure(l)->Draw(xx, yy, dc))
-		{
-			if (right)
-				organfile->GetEnclosure(l)->MIDI();
-			else if (scroll)
-				organfile->GetEnclosure(l)->Scroll(scroll > 0);
-		}
-	}
 }
 
 void OrganPanel::OnKeyCommand(wxKeyEvent& event)
