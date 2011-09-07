@@ -100,6 +100,11 @@ void GOrgueDrawstop::Push()
 	Set(m_DefaultToEngaged ^ true);
 };
 
+GOrgueMidiReceiver& GOrgueDrawstop::GetMidiReceiver()
+{
+	return m_midi;
+}
+
 void GOrgueDrawstop::MIDI(void)
 {
 	MIDIEventDialog dlg (::wxGetApp().frame, _("Midi-Settings for Drawstop - ")+Name ,m_midi);

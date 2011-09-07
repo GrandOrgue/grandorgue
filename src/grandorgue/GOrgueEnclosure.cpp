@@ -182,3 +182,9 @@ void GOrgueEnclosure::ProcessMidi(const GOrgueMidiEvent& event)
 	if (m_midi.Match(event, value) == MIDI_MATCH_CHANGE)
 		Set(value);
 }
+
+GOrgueMidiReceiver& GOrgueEnclosure::GetMidiReceiver()
+{
+	return m_midi;
+}
+

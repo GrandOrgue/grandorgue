@@ -53,6 +53,7 @@ public:
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(int n);
 	void ProcessMidi(const GOrgueMidiEvent& event);
+	GOrgueMidiReceiver& GetMidiReceiver();
 	void MIDI(void);
 	int GetMIDIInputNumber();
 	float GetAttenuation();
