@@ -214,7 +214,7 @@ void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 			}
 			default:
 			{
-				if (organfile && doc && doc->b_loaded && (k = WXKtoVK(k)))
+				if (organfile && doc && (k = WXKtoVK(k)))
 					organfile->GetPanel(0)->HandleKey(k);
 				event.Skip();
 			}

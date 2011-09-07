@@ -33,7 +33,7 @@ IMPLEMENT_DYNAMIC_CLASS(OrganDocument, wxDocument)
 extern GOrgueSound* g_sound;
 extern GrandOrgueFile* organfile;
 
-OrganDocument::~OrganDocument(void)
+OrganDocument::~OrganDocument()
 {
 	CloseOrgan();
 	::wxGetApp().frame->SetTitle(wxT(APP_NAME));
@@ -41,8 +41,6 @@ OrganDocument::~OrganDocument(void)
 
 bool OrganDocument::OnCloseDocument()
 {
-    if (!b_loaded)
-        return false;
     return wxDocument::OnCloseDocument();
 }
 
@@ -74,7 +72,6 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 			::wxLogError(wxT("%s\n"),error.c_str());
 			wxMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
 		}
-		b_loaded = true;
 		return false;
 	}
 	g_sound->PreparePlayback(organfile);
@@ -87,7 +84,6 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 
 	/* we have loaded the organ so we can now enable playback */
 	g_sound->ActivatePlayback();
-	b_loaded = true;
 
 	return true;
 }

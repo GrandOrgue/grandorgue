@@ -32,8 +32,8 @@ class OrganDocument : public wxDocument
 	DECLARE_DYNAMIC_CLASS(OrganDocument)
 
 public:
-	OrganDocument(void) { b_loaded = false; };
-	~OrganDocument(void);
+	OrganDocument() { };
+	~OrganDocument();
 
 	bool OnCloseDocument();
 	bool DoOpenDocument(const wxString& file, const wxString& file2);
@@ -41,8 +41,6 @@ public:
 	bool DoSaveDocument(const wxString& file);
 
 	bool Save() { return OnSaveDocument(m_documentFile); }
-
-	bool b_loaded;
 
 private:
 
