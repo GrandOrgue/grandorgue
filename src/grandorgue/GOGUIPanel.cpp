@@ -24,6 +24,7 @@
 #include <wx/mstream.h>
 #include "GOGUIControl.h"
 #include "GOGUIDrawStop.h"
+#include "GOGUIEnclosure.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPushbutton.h"
 #include "GOrgueCoupler.h"
@@ -102,6 +103,14 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 	{
 		wxString buffer;
 		m_Name = m_organfile->GetChurchName();
+
+		for (unsigned i = 0; i < m_organfile->GetEnclosureCount(); i++)
+		{
+			buffer.Printf(wxT("Enclosure%03d"), i + 1);
+			GOGUIControl* control = new GOGUIEnclosure(this, m_organfile->GetEnclosure(i), i);
+			control->Load(cfg, buffer);
+			AddControl(control);
+		}
 
 		for (unsigned i = 0; i < m_organfile->GetTremulantCount(); i++)
 			if (m_organfile->GetTremulant(i)->IsDisplayed())

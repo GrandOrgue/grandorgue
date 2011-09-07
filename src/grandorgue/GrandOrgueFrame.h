@@ -24,8 +24,6 @@
 #define GRANDORGUEFRAME_H
 
 #include <wx/docview.h>
-#include <wx/bitmap.h>
-#include <wx/brush.h>
 #include <wx/dcmemory.h>
 
 class GOrgueMeter;
@@ -76,7 +74,6 @@ public:
 	GOrgueMeter* m_meters[4];
 	wxMemoryDC* m_gaugedc;
 	wxBitmap m_gauge;
-	wxBrush m_pedalBrush;
  	bool m_opening;
 
 	DECLARE_EVENT_TABLE()

@@ -20,42 +20,29 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUEENCLOSURE_H_
-#define GORGUEENCLOSURE_H_
+#ifndef GOGUIENCLOSURE_H
+#define GOGUIENCLOSURE_H
 
-#include "GOrgueMidiReceiver.h"
-#include <wx/wx.h>
+#include "GOGUIControl.h"
 
-class GOrgueMidiEvent;
-class GrandOrgueFile;
-class IniFileConfig;
+class GOrgueEnclosure;
 
-class GOrgueEnclosure
+class GOGUIEnclosure : public GOGUIControl
 {
 private:
-	wxString m_group;
-	GOrgueMidiReceiver m_midi;
-	GrandOrgueFile* m_organfile;
-	int m_AmpMinimumLevel;
-	int m_MIDIInputNumber;
-	int m_MIDIValue;
-	wxString m_Name;
-
+	GOrgueEnclosure* m_enclosure;
+	unsigned m_enclosure_nb;
+	
 public:
+	GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb);
 
-	GOrgueEnclosure(GrandOrgueFile* organfile);
-	virtual ~GOrgueEnclosure();
-	void Load(IniFileConfig& cfg, wxString group, int enclosure_nb);
-	void Save(IniFileConfig& cfg, bool prefix);
-	void Set(int n);
-	void ProcessMidi(const GOrgueMidiEvent& event);
-	GOrgueMidiReceiver& GetMidiReceiver();
-	const wxString& GetName();
-	int GetValue();
-	int GetMIDIInputNumber();
-	float GetAttenuation();
+	void Load(IniFileConfig& cfg, wxString group);
 
-	void Scroll(bool scroll_up);
+	void Draw(wxDC* dc);
+	void HandleMousePress(int x, int y, bool right);
+	void HandleMouseScroll(int x, int y, int amount);
+
+	bool IsEnclosure(const unsigned nb) const;
 };
 
-#endif /* GORGUEENCLOSURE_H_ */
+#endif

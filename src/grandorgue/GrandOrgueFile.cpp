@@ -266,7 +266,8 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	for (unsigned i = 0; i < m_NumberOfEnclosures; i++)
 	{
 		m_enclosure.push_back(new GOrgueEnclosure(this));
-		m_enclosure[i]->Load(ini, i, m_DisplayMetrics);
+		buffer.Printf(wxT("Enclosure%03u"), i + 1);
+		m_enclosure[i]->Load(ini, buffer, i);
 	}
 
 	m_tremulant.resize(0);
