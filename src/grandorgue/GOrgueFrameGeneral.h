@@ -42,7 +42,7 @@ private:
 public:
 	GOrgueFrameGeneral(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group);
-	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	void Save(IniFileConfig& cfg, bool prefix);
 	void Push();
 
 };

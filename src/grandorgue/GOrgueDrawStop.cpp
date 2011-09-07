@@ -62,10 +62,11 @@ void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetri
 	GOrgueControl::Load(cfg, group);
 }
 
-void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix, wxString group)
+void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix)
 {
-	m_midi.Save(cfg, prefix, group);
-	cfg.SaveHelper(prefix, group, wxT("DefaultToEngaged"), m_DefaultToEngaged ? wxT("Y") : wxT("N"));
+	m_midi.Save(cfg, prefix, m_group);
+	cfg.SaveHelper(prefix, m_group, wxT("DefaultToEngaged"), m_DefaultToEngaged ? wxT("Y") : wxT("N"));
+	GOrgueControl::Save(cfg, prefix);
 }
 
 bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)

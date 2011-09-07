@@ -37,8 +37,8 @@ private:
 
 public:
 	GOrgueDivisionalCoupler(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
-	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
+	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
 
 	unsigned GetNumberOfManuals();

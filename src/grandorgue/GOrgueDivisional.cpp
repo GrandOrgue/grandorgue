@@ -94,39 +94,36 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 	}
 
 	GOrguePushbutton::Load(cfg, group, displayMetrics);
-
 }
 
-void GOrgueDivisional::Save(IniFileConfig& cfg, bool prefix, wxString group)
+void GOrgueDivisional::Save(IniFileConfig& cfg, bool prefix)
 {
-
 	unsigned int i;
 	wxString buffer;
 
-	GOrguePushbutton::Save(cfg, prefix, group);
+	GOrguePushbutton::Save(cfg, prefix);
 
-	cfg.SaveHelper(prefix, group, wxT("NumberOfStops"), m_Stops.size());
-	cfg.SaveHelper(prefix, group, wxT("NumberOfCouplers"), m_Couplers.size());
-	cfg.SaveHelper(prefix, group, wxT("NumberOfTremulants"), m_Tremulants.size());
+	cfg.SaveHelper(prefix, m_group, wxT("NumberOfStops"), m_Stops.size());
+	cfg.SaveHelper(prefix, m_group, wxT("NumberOfCouplers"), m_Couplers.size());
+	cfg.SaveHelper(prefix, m_group, wxT("NumberOfTremulants"), m_Tremulants.size());
 
 	for (i = 0; i < m_Stops.size(); i++)
 	{
 		buffer.Printf(wxT("Stop%03d"), i + 1);
-		cfg.SaveHelper(prefix, group, buffer, m_Stops[i], true);
+		cfg.SaveHelper(prefix, m_group, buffer, m_Stops[i], true);
 	}
 
 	for (i = 0; i < m_Couplers.size(); i++)
 	{
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
-		cfg.SaveHelper(prefix, group, buffer, m_Couplers[i], true);
+		cfg.SaveHelper(prefix, m_group, buffer, m_Couplers[i], true);
 	}
 
 	for (i = 0; i < m_Tremulants.size(); i++)
 	{
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		cfg.SaveHelper(prefix, group, buffer, m_Tremulants[i], true);
+		cfg.SaveHelper(prefix, m_group, buffer, m_Tremulants[i], true);
 	}
-
 }
 
 void GOrgueDivisional::PushLocal()

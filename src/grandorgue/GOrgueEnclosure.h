@@ -35,6 +35,7 @@ class IniFileConfig;
 class GOrgueEnclosure : public GOrgueDrawable
 {
 private:
+	wxString m_group;
 	GOrgueMidiReceiver m_midi;
 	GrandOrgueFile* m_organfile;
 	unsigned m_enclosure_nb;

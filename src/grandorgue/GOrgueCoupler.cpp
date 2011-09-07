@@ -71,11 +71,11 @@ const struct IniFileEnumEntry GOrgueCoupler::m_coupler_types[]={
 };
 
 
-void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, unsigned firstValidManualIndex, unsigned numberOfManuals, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
 {
 
 	m_UnisonOff                                     = cfg.ReadBoolean(group, wxT("UnisonOff"));
-	m_DestinationManual                             = cfg.ReadInteger(group, wxT("DestinationManual"), firstValidManualIndex, numberOfManuals, !m_UnisonOff);
+	m_DestinationManual                             = cfg.ReadInteger(group, wxT("DestinationManual"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount(), !m_UnisonOff);
 	m_DestinationKeyshift                           = cfg.ReadInteger(group, wxT("DestinationKeyshift"), -24, 24, !m_UnisonOff);
 	m_CoupleToSubsequentUnisonIntermanualCouplers   = cfg.ReadBoolean(group, wxT("CoupleToSubsequentUnisonIntermanualCouplers"), !m_UnisonOff);
 	m_CoupleToSubsequentUpwardIntermanualCouplers   = cfg.ReadBoolean(group, wxT("CoupleToSubsequentUpwardIntermanualCouplers"), !m_UnisonOff);
@@ -87,11 +87,9 @@ void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, unsigned firstValid
 	m_CouplerType = (GOrgueCouplerType)cfg.ReadEnum(group, wxT("CouplerType"), m_coupler_types, sizeof(m_coupler_types) / sizeof(m_coupler_types[0]), false);
 }
 
-void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix, wxString group)
+void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix)
 {
-
-	GOrgueDrawstop::Save(cfg, prefix, group);
-
+	GOrgueDrawstop::Save(cfg, prefix);
 }
 
 void GOrgueCoupler::SetOut(int noteNumber, int on)

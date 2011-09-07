@@ -43,6 +43,7 @@ class IniFileConfig;
 class GOrgueManual 
 {
 private:
+	wxString m_group;
 	GOrgueMidiReceiver m_midi;
 	GrandOrgueFile* m_organfile;
 	/* Keyboard state */
@@ -77,7 +78,7 @@ public:
 
 	GOrgueManual(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics, int manualNumber);
-	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	void Save(IniFileConfig& cfg, bool prefix);
 	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
 	void Set(unsigned note, bool on);
 	void SetUnisonOff(bool on);

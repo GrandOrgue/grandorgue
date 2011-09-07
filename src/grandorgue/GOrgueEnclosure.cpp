@@ -30,6 +30,7 @@
 #include "GOrgueMidi.h"
 
 GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
+	m_group(wxT("---")),
 	m_midi(organfile, MIDI_RECV_ENCLOSURE),
 	m_organfile(organfile),
 	AmpMinimumLevel(0),
@@ -85,23 +86,20 @@ bool GOrgueEnclosure::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 
 void GOrgueEnclosure::Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrgueDisplayMetrics* displayMetrics)
 {
-	wxString buffer;
-	buffer.Printf(wxT("Enclosure%03u"), enclosure_nb + 1);
+	m_group.Printf(wxT("Enclosure%03u"), enclosure_nb + 1);
 	m_enclosure_nb = enclosure_nb;
 	DisplayMetrics = displayMetrics;
-	Name = cfg.ReadString(buffer, wxT("Name"), 64);
-	AmpMinimumLevel = cfg.ReadInteger(buffer, wxT("AmpMinimumLevel"), 0, 100);
-	MIDIInputNumber = cfg.ReadInteger(buffer, wxT("MIDIInputNumber"), 1, 6);
+	Name = cfg.ReadString(m_group, wxT("Name"), 64);
+	AmpMinimumLevel = cfg.ReadInteger(m_group, wxT("AmpMinimumLevel"), 0, 100);
+	MIDIInputNumber = cfg.ReadInteger(m_group, wxT("MIDIInputNumber"), 1, 6);
 	Set(127);	// default to full volume until we receive any messages
 	m_midi.SetManual(enclosure_nb);
-	m_midi.Load(cfg, buffer);
+	m_midi.Load(cfg, m_group);
 }
 
 void GOrgueEnclosure::Save(IniFileConfig& cfg, bool prefix)
 {
-	wxString buffer;
-	buffer.Printf(wxT("Enclosure%03u"), m_enclosure_nb + 1);
-	m_midi.Save(cfg, prefix, buffer);
+	m_midi.Save(cfg, prefix, m_group);
 }
 
 void GOrgueEnclosure::Set(int n)

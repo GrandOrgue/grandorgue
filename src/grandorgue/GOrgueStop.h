@@ -49,7 +49,7 @@ public:
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* display_metrics);
-	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
 	void SetKey(unsigned note, int on);
 	void Abort();
