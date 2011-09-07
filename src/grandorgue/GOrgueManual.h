@@ -32,7 +32,7 @@
 class wxProgressDialog;
 
 class GOrgueCoupler;
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 class GOrgueDivisional;
 class GOrgueMidiEvent;
 class GOrgueStop;
@@ -51,7 +51,7 @@ private:
 	/* Internal state affected by couplers */
 	std::vector<unsigned> m_KeyState;
 	unsigned m_manual_number;
-	GOrgueDisplayMetrics* m_display_metrics;
+	GOGUIDisplayMetrics* m_display_metrics;
 	unsigned m_first_accessible_logical_key_nb;
 	unsigned m_nb_logical_keys;
 	unsigned m_first_accessible_key_midi_note_nb;
@@ -77,7 +77,7 @@ private:
 public:
 
 	GOrgueManual(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics, int manualNumber);
+	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics, int manualNumber);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
 	void Set(unsigned note, bool on);

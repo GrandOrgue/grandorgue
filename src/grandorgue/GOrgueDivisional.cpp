@@ -46,7 +46,7 @@ GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile) :
 {
 }
 
-void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, GOGUIDisplayMetrics* displayMetrics)
 {
 
 	int i;

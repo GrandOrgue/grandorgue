@@ -71,7 +71,7 @@ const struct IniFileEnumEntry GOrgueCoupler::m_coupler_types[]={
 };
 
 
-void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
 {
 
 	m_UnisonOff                                     = cfg.ReadBoolean(group, wxT("UnisonOff"));

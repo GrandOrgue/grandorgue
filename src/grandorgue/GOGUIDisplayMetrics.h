@@ -29,7 +29,7 @@
 class IniFileConfig;
 class GOrgueEnclosure;
 
-class GOrgueDisplayMetrics
+class GOGUIDisplayMetrics
 {
 
 public:
@@ -100,7 +100,7 @@ private:
 
 public:
 
-	GOrgueDisplayMetrics(IniFileConfig& ini);
+	GOGUIDisplayMetrics(IniFileConfig& ini);
 
 	int NumberOfExtraDrawstopRowsToDisplay();
 	int NumberOfExtraDrawstopColsToDisplay();

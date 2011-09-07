@@ -41,7 +41,7 @@ private:
 public:
 	GOrgueTremulant(GrandOrgueFile* organfile);
 	~GOrgueTremulant();
-	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
 	void Abort();

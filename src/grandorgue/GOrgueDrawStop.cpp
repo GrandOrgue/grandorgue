@@ -23,7 +23,7 @@
 #include "GOrgueDrawStop.h"
 
 #include <wx/docview.h>
-#include "GOrgueDisplayMetrics.h"
+#include "GOGUIDisplayMetrics.h"
 #include "GOrguePiston.h"
 #include "GOrgueSound.h"
 #include "GrandOrgue.h"
@@ -50,7 +50,7 @@ GOrgueDrawstop::~GOrgueDrawstop()
 
 }
 
-void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
 {
 	DisplayMetrics = displayMetrics;
 	DispDrawstopRow = cfg.ReadInteger(group, wxT("DispDrawstopRow"), 1, 99 + DisplayMetrics->NumberOfExtraDrawstopRowsToDisplay());

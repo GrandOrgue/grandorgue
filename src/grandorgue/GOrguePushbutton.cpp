@@ -27,7 +27,7 @@
 #include "GrandOrgueFrame.h"
 #include "GOrgueSound.h"
 #include "MIDIEventDialog.h"
-#include "GOrgueDisplayMetrics.h"
+#include "GOGUIDisplayMetrics.h"
 #include "GOrgueMidi.h"
 
 GOrguePushbutton::GOrguePushbutton(GrandOrgueFile* organfile) :
@@ -81,7 +81,7 @@ bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 
 }
 
-void GOrguePushbutton::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
+void GOrguePushbutton::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
 {
 	DisplayMetrics = displayMetrics;
 	DispButtonRow = cfg.ReadInteger(group, wxT("DispButtonRow"), 0, 99 + displayMetrics->NumberOfExtraButtonRows());

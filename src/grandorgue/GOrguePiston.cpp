@@ -35,7 +35,7 @@ GOrguePiston::GOrguePiston(GrandOrgueFile* organfile) :
 
 }
 
-void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
+void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
 {
 
 	int i, j;

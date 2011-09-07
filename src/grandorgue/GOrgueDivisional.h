@@ -28,7 +28,7 @@
 
 class GOrgueManual;
 class IniFileConfig;
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 
 class GOrgueDivisional : public GOrguePushbutton
 {
@@ -44,7 +44,7 @@ public:
 	std::vector<int> m_Tremulants;
 
 	GOrgueDivisional(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, GOGUIDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Push();
 

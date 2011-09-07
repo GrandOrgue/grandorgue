@@ -22,7 +22,7 @@
 
 #include "GOrgueLabel.h"
 #include "GrandOrgueFile.h"
-#include "GOrgueDisplayMetrics.h"
+#include "GOGUIDisplayMetrics.h"
 #include "IniFileConfig.h"
 
 GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
@@ -42,7 +42,7 @@ GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
 
 }
 
-void GOrgueLabel::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueLabel::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
 {
 
 	Name = cfg.ReadString(group, wxT("Name"), 64);

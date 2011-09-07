@@ -28,7 +28,7 @@
 #include "GOrgueDrawable.h"
 #include "GOrgueMidiReceiver.h"
 
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
@@ -40,7 +40,7 @@ protected:
 
 public:
 	GOrguePushbutton(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	virtual void Push() { };
@@ -49,7 +49,7 @@ public:
 	virtual ~GOrguePushbutton() { };
 	void Display(bool onoff);
 
-	GOrgueDisplayMetrics* DisplayMetrics;
+	GOGUIDisplayMetrics* DisplayMetrics;
 	wxInt16 m_ManualNumber;
 	wxInt16 DispButtonRow;
 	wxInt16 DispButtonCol;

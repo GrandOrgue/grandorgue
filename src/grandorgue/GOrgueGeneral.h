@@ -25,7 +25,7 @@
 
 #include "GOrgueFrameGeneral.h"
 
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 class IniFileConfig;
 
 class GOrgueGeneral : public GOrgueFrameGeneral
@@ -33,7 +33,7 @@ class GOrgueGeneral : public GOrgueFrameGeneral
 
 public:
 	GOrgueGeneral(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 
 };
