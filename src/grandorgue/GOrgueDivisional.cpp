@@ -22,17 +22,14 @@
 
 #include "GOrgueDivisional.h"
 
-#include <wx/docview.h>
 #include "IniFileConfig.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
-#include "GrandOrgue.h"
+#include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
-#include "GrandOrgueFrame.h"
-#include "SettingsDialog.h"
 #include "GOrgueMidi.h"
 
 extern GOrgueSound* g_sound;
@@ -46,7 +43,7 @@ GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile) :
 {
 }
 
-void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, GOGUIDisplayMetrics* displayMetrics)
+void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber)
 {
 
 	int i;
@@ -93,7 +90,7 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 		}
 	}
 
-	GOrguePushbutton::Load(cfg, group, displayMetrics);
+	GOrguePushbutton::Load(cfg, group);
 }
 
 void GOrgueDivisional::Save(IniFileConfig& cfg, bool prefix)

@@ -25,6 +25,7 @@
 #include "GOGUIControl.h"
 #include "GOGUIDrawStop.h"
 #include "GOGUIPanel.h"
+#include "GOGUIPushbutton.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
@@ -119,6 +120,24 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 				control->Load(cfg, buffer);
 				AddControl(control);
 			}	
+		
+		for (unsigned i = 0; i < m_organfile->GetGeneralCount(); i++)
+			if (m_organfile->GetGeneral(i)->IsDisplayed())
+			{
+				buffer.Printf(wxT("General%03d"), i + 1);
+				GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetGeneral(i));
+				control->Load(cfg, buffer);
+				AddControl(control);
+			}	
+
+		for (unsigned i = 0; i < m_organfile->GetNumberOfReversiblePistons(); i++)
+			if (m_organfile->GetPiston(i)->IsDisplayed())
+			{
+				buffer.Printf(wxT("ReversiblePiston%03d"), i + 1);
+				GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetPiston(i));
+				control->Load(cfg, buffer);
+				AddControl(control);
+			}	
 
 		for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
 		{
@@ -140,6 +159,16 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 					buffer.Printf(wxT("Stop%03d"), j + 1);
 					buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(group, buffer, 1, 448));
 					GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetManual(i)->GetStop(j));
+					control->Load(cfg, buffer);
+					AddControl(control);
+				}
+				
+			for(unsigned j = 0; j < m_organfile->GetManual(i)->GetDivisionalCount(); j++)
+				if (m_organfile->GetManual(i)->GetDivisional(j)->IsDisplayed())
+				{
+					buffer.Printf(wxT("Divisional%03d"), j + 1);
+					buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(group, buffer, 1, 224));
+					GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetManual(i)->GetDivisional(j));
 					control->Load(cfg, buffer);
 					AddControl(control);
 				}

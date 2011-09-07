@@ -25,19 +25,13 @@
 #include <algorithm>
 #include <wx/event.h>
 #include <wx/mstream.h>
-#include "GOrgueCoupler.h"
 #include "GOGUIDisplayMetrics.h"
-#include "GOrgueDivisional.h"
-#include "GOrgueDivisionalCoupler.h"
 #include "GOrgueEnclosure.h"
-#include "GOrgueGeneral.h"
+#include "GOrgueFrameGeneral.h"
 #include "GOrgueLabel.h"
 #include "GOrgueMeter.h"
 #include "GOrgueMidi.h"
-#include "GOrguePiston.h"
-#include "GOrguePushbutton.h"
 #include "GOrgueSound.h"
-#include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GOGUIPanel.h"
 #include "GOGUIControl.h"
@@ -146,26 +140,6 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 		if (man->IsDisplayed())
 			man->Draw(dc);
 
-	}
-
-	for (unsigned j = 0; j < organfile->GetGeneralCount(); j++)
-	{
-		if (organfile->GetGeneral(j)->Displayed)
-		{
-			font.SetPointSize(organfile->GetGeneral(j)->DispLabelFontSize);
-			dc.SetFont(font);
-			WrapText(dc, organfile->GetGeneral(j)->Name, 28);
-		}
-	}
-
-	for (unsigned j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
-	{
-		if (organfile->GetPiston(j)->Displayed)
-		{
-			font.SetPointSize(organfile->GetPiston(j)->DispLabelFontSize);
-			dc.SetFont(font);
-			WrapText(dc, organfile->GetPiston(j)->Name, 28);
-		}
 	}
 
 	j = (m_display_metrics->GetScreenWidth() - m_display_metrics->GetEnclosureWidth() + 6) >> 1;
@@ -298,25 +272,6 @@ void OrganPanel::OnMouseScroll(wxMouseEvent& event)
 }
 
 
-void OrganPanel::HelpDrawButton(GOrguePushbutton* button, wxDC* dc, int xx, int yy, bool right)
-{
-	if (button->Draw(xx, yy, dc))
-	{
-		if (right)
-			button->MIDI();
-		else
-		{
-			button->Push();
-			wxMemoryDC mdc;
-			mdc.SelectObject(m_clientBitmap);
-			wxClientDC dc(this);
-			dc.SetDeviceOrigin(m_clientOrigin.x, m_clientOrigin.y);
-
-			button->Draw(0, 0, &mdc, &dc);
-		}
-	}
-}
-
 void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll)
 {
 	if (!m_clientBitmap.Ok())
@@ -331,8 +286,6 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 
 		for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
 		{
-			for (unsigned j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
-				HelpDrawButton(organfile->GetManual(i)->GetDivisional(j), dc, xx, yy, right);
 			if (dc || !organfile->GetManual(i)->IsDisplayed())
 				continue;
 
@@ -354,11 +307,6 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 			}
 
 		}
-
-		for (unsigned j = 0; j < organfile->GetGeneralCount(); j++)
-			HelpDrawButton(organfile->GetGeneral(j), dc, xx, yy, right);
-		for (unsigned j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
-			HelpDrawButton(organfile->GetPiston(j), dc, xx, yy, right);
 	}
 
 	if (scroll)
@@ -472,21 +420,7 @@ void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 			default:
 			{
 				if (organfile && doc && doc->b_loaded && (k = WXKtoVK(k)))
-				{
 					organfile->GetPanel(0)->HandleKey(k);
-					for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-					{
-						for (unsigned j = 0; j < organfile->GetManual(i)->GetDivisionalCount(); j++)
-							if (k == organfile->GetManual(i)->GetDivisional(j)->ShortcutKey)
-								organfile->GetManual(i)->GetDivisional(j)->Push();
-					}
-					for (unsigned j = 0; j < organfile->GetGeneralCount(); j++)
-						if (k == organfile->GetGeneral(j)->ShortcutKey)
-							organfile->GetGeneral(j)->Push();
-					for (unsigned j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
-						if (k == organfile->GetPiston(j)->ShortcutKey)
-							organfile->GetPiston(j)->Push();
-				}
 				event.Skip();
 			}
 		}

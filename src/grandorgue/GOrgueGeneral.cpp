@@ -28,10 +28,10 @@ GOrgueGeneral::GOrgueGeneral(GrandOrgueFile* organfile):
 {
 }
 
-void GOrgueGeneral::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
+void GOrgueGeneral::Load(IniFileConfig& cfg, wxString group)
 {
 	GOrgueFrameGeneral::Load(cfg, group);
-	GOrguePushbutton::Load(cfg, group, displayMetrics);
+	GOrguePushbutton::Load(cfg, group);
 }
 
 void GOrgueGeneral::Save(IniFileConfig& cfg, bool prefix)

@@ -23,22 +23,12 @@
 #include "GOrguePushbutton.h"
 #include "IniFileConfig.h"
 #include "GrandOrgueFile.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
-#include "GOrgueSound.h"
-#include "MIDIEventDialog.h"
-#include "GOGUIDisplayMetrics.h"
-#include "GOrgueMidi.h"
 
 GOrguePushbutton::GOrguePushbutton(GrandOrgueFile* organfile) :
 	GOrgueControl(),
 	m_midi(organfile, MIDI_RECV_BUTTON),
 	m_organfile(organfile),
-	m_IsPushed(false),
-	m_ManualNumber(0),
-	DispButtonRow(0),
-	DispButtonCol(0),
-	DispImageNum(0)
+	m_IsPushed(false)
 {
 }
 
@@ -47,53 +37,8 @@ GOrgueMidiReceiver& GOrguePushbutton::GetMidiReceiver()
 	return m_midi;
 }
 
-void GOrguePushbutton::MIDI(void)
+void GOrguePushbutton::Load(IniFileConfig& cfg, wxString group)
 {
-	MIDIEventDialog dlg (::wxGetApp().frame, _("Midi-Settings for Pushbutton - ")+Name ,m_midi);
-
-	if (dlg.ShowModal() == wxID_OK)
-	{
-		m_midi = dlg.GetResult();
-		m_organfile->Modified();
-	}
-}
-
-bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
-{
-	int x, y;
-	if (!Displayed)
-		return false;
-
-	DisplayMetrics->GetPushbuttonBlitPosition(DispButtonRow, DispButtonCol, &x, &y);
-
-	if (!DispKeyLabelOnLeft)
-		x -= 13;
-
-	if (!dc)
-		return !(xx < x || xx > x + 30 || yy < y || yy > y + 30 || (x + 15 - xx) * (x + 15 - xx) + (y + 15 - yy) * (y + 15 - yy) > 225);
-
-	wxMemoryDC mdc;
-	wxRect rect(x + 1, y + 1, 31 - 1, 30 - 1);
-	wxBitmap* bmp = m_organfile->GetImage(DispImageNum + 4 + (IsPushed() ? 2 : 0));
-	dc->DrawBitmap(*bmp, x, y, true);
-	dc->SetTextForeground(DispLabelColour);
-	wxFont font = DisplayMetrics->GetControlLabelFont();
-	font.SetPointSize(DispLabelFontSize);
-	dc->SetFont(font);
-	dc->DrawLabel(Name, rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
-	if (dc2)
-		dc2->Blit(x, y, 31, 30, dc, x, y);
-	return false;
-
-}
-
-void GOrguePushbutton::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
-{
-	DisplayMetrics = displayMetrics;
-	DispButtonRow = cfg.ReadInteger(group, wxT("DispButtonRow"), 0, 99 + displayMetrics->NumberOfExtraButtonRows());
-	DispButtonCol = cfg.ReadInteger(group, wxT("DispButtonCol"), 1, displayMetrics->NumberOfButtonCols());
-	DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 2);
-	DispImageNum--;
 	m_midi.Load(cfg, group);
 	GOrgueControl::Load(cfg, group);
 }
@@ -108,9 +53,6 @@ void GOrguePushbutton::Display(bool on)
 	if (m_IsPushed != on)
 	{
 		m_IsPushed = on;
-		wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-		event.SetClientData((GOrgueDrawable*)this);
-		::wxGetApp().frame->AddPendingEvent(event);
 		m_organfile->ControlChanged(this);
 	}
 }

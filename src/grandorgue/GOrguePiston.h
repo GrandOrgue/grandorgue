@@ -25,7 +25,6 @@
 
 #include "GOrguePushbutton.h"
 
-class GOGUIDisplayMetrics;
 class IniFileConfig;
 class GOrgueDrawstop;
 
@@ -37,10 +36,9 @@ public:
 	GOrgueDrawstop* drawstop;
 
 	GOrguePiston(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Push();
-
 	void ControlChanged(void* control);
 };
 
