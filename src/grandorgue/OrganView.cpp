@@ -28,10 +28,6 @@
 IMPLEMENT_DYNAMIC_CLASS(OrganView, wxView)
 
 BEGIN_EVENT_TABLE(OrganView, wxView)
-	EVT_COMMAND(0, wxEVT_DRAWSTOP, OrganView::OnDrawstop)
-	EVT_COMMAND(0, wxEVT_PUSHBUTTON, OrganView::OnDrawstop)
-	EVT_COMMAND(0, wxEVT_ENCLOSURE, OrganView::OnDrawstop)
-	EVT_COMMAND(0, wxEVT_NOTEONOFF, OrganView::OnNoteOnOff)
 	EVT_COMMAND(0, wxEVT_GOCONTROL, OrganView::OnGOControl)
 END_EVENT_TABLE()
 
@@ -56,20 +52,6 @@ void OrganView::OnDraw(wxDC* dc)
 {
 
 	m_panel->OnDraw(dc);
-
-}
-
-void OrganView::OnDrawstop(wxCommandEvent& event)
-{
-
-	m_panel->OnDrawstop(event);
-
-}
-
-void OrganView::OnNoteOnOff(wxCommandEvent& event)
-{
-
-	m_panel->OnNoteOnOff(event);
 
 }
 

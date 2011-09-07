@@ -38,8 +38,6 @@ public:
 	bool OnClose(bool deleteWindow = true);
 	void OnDraw(wxDC *dc);
 	void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
-	void OnDrawstop(wxCommandEvent& event);
-	void OnNoteOnOff(wxCommandEvent& event);
 	void OnGOControl(wxCommandEvent& event);
 
 private:
