@@ -140,14 +140,14 @@ void GOrgueDivisional::PushLocal()
 		m_Tremulants.clear();
 		for (unsigned i = 0; i < associatedManual->GetStopCount(); i++)
 		{
-			if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetStop(i)->Displayed)
+			if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetStop(i)->IsDisplayed())
 				continue;
 			m_Stops.push_back(associatedManual->GetStop(i)->IsEngaged() ? i + 1 : -i - 1);
 			used |= associatedManual->GetStop(i)->IsEngaged();
 		}
 		for (unsigned i = 0; i < associatedManual->GetCouplerCount(); i++)
 		{
-			if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetCoupler(i)->Displayed)
+			if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetCoupler(i)->IsDisplayed())
 				continue;
 			if ((m_organfile->DivisionalsStoreIntramanualCouplers() && !associatedManual->GetCoupler(i)->IsIntermanual()) || (m_organfile->DivisionalsStoreIntermanualCouplers() && associatedManual->GetCoupler(i)->IsIntermanual()))
 			{
@@ -159,7 +159,7 @@ void GOrgueDivisional::PushLocal()
 		{
 			for (unsigned i = 0; i < associatedManual->GetTremulantCount(); i++)
 			{
-				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetTremulant(i)->Displayed)
+				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetTremulant(i)->IsDisplayed())
 					continue;
 				m_Tremulants.push_back(associatedManual->GetTremulant(i)->IsEngaged() ? i + 1 : -i - 1);
 				used |= associatedManual->GetTremulant(i)->IsEngaged();
