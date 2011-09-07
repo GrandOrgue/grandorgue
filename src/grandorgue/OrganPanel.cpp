@@ -324,62 +324,6 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 	}
 }
 
-void OrganPanel::WrapText(wxDC& dc, wxString& string, int width)
-{
-	wxString str, line, work;
-	wxCoord cx, cy;
-
-	/* string.Length() + 1 iterations */
-	for(unsigned i = 0; i <= string.Length(); i++)
-	{
-		bool maybreak = false;
-		if (string[i] == wxT(' ') || string[i] == wxT('\n'))
-		{
-			if (work.length() < 2)
-				maybreak = false;
-			else
-				maybreak = true;
-		}
-		if (maybreak || i == string.Length())
-		{
-			if (!work.Length())
-				continue;
-			dc.GetTextExtent(line + wxT(' ') + work, &cx, &cy);
-			if (cx > width)
-			{
-				if (!str.Length())
-					str = line;
-				else
-					str = str + wxT('\n') + line;
-				line = wxT("");
-			}
-
-			if (!line.Length())
-				line = work;
-			else
-				line = line + wxT(' ') + work;
-
-			work = wxT("");
-		}
-		else
-		{
-			if (string[i] == wxT(' ') || string[i] == wxT('\n'))
-			{
-				if (work.Length() && work[work.Length()-1] != wxT(' '))
-					work += wxT(' ');
-			}	
-			else
-				work += string[i];
-		}
-	}
-	if (!str.Length())
-		str = line;
-	else
-		str = str + wxT('\n') + line;
-	string = str;
-}
-
-
 void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 {
 	if (g_sound && g_sound->GetMidi().SetterActive() ^ event.ShiftDown())

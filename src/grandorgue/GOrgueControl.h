@@ -31,6 +31,8 @@ class GOrgueControl
 {
 protected:
 	wxString m_group;
+	bool m_Displayed;
+	wxString m_Name;
 
 public:
 	GOrgueControl();
@@ -39,15 +41,6 @@ public:
 	virtual void Save(IniFileConfig& cfg, bool prefix);
 	bool IsDisplayed();
 	const wxString& GetName();
-
-	bool Displayed : 1;
-	bool DispKeyLabelOnLeft : 1;
-	wxInt16 ObjectNumber;
-	wxInt16 ShortcutKey;
-	wxInt16 DispLabelFontSize;
-	wxColour DispLabelColour;
-	wxString Name;
-
 };
 
 #endif

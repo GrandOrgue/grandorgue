@@ -25,13 +25,8 @@
 
 GOrgueControl::GOrgueControl() :
 	m_group(wxT("---")),
-	Displayed(false),
-	DispKeyLabelOnLeft(false),
-	ObjectNumber(0),
-	ShortcutKey(0),
-	DispLabelFontSize(0),
-	DispLabelColour(0,0,0),
-	Name()
+	m_Displayed(false),
+	m_Name()
 {
 }
 
@@ -42,16 +37,8 @@ GOrgueControl::~GOrgueControl()
 void GOrgueControl::Load(IniFileConfig& cfg, wxString group)
 {
 	m_group = group;
-	Name = cfg.ReadString(group, wxT("Name"), 64);
-	ShortcutKey = cfg.ReadInteger(group, wxT("ShortcutKey"), 0, 255, false);
-	Displayed = cfg.ReadBoolean(group, wxT("Displayed"));
-	DispKeyLabelOnLeft = cfg.ReadBoolean(group, wxT("DispKeyLabelOnLeft"));
-	DispLabelColour = cfg.ReadColor(group, wxT("DispLabelColour"));
-	DispLabelFontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"));
-
-	if (group.length() >= 3)
-		ObjectNumber = atoi(group.mb_str() + group.length() - 3);
-
+	m_Name = cfg.ReadString(group, wxT("Name"), 64);
+	m_Displayed = cfg.ReadBoolean(group, wxT("Displayed"));
 }
 
 void GOrgueControl::Save(IniFileConfig& cfg, bool prefix)
@@ -60,10 +47,10 @@ void GOrgueControl::Save(IniFileConfig& cfg, bool prefix)
 
 bool GOrgueControl::IsDisplayed()
 {
-	return Displayed;
+	return m_Displayed;
 }
 
 const wxString& GOrgueControl::GetName()
 {
-	return Name;
+	return m_Name;
 }
