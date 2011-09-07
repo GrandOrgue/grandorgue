@@ -29,7 +29,7 @@
 #include "GOrgueMidiReceiver.h"
 #include "IniFileConfig.h"
 
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
@@ -45,11 +45,11 @@ public:
 	int DispDrawstopRow;
 	int DispDrawstopCol;
 	int DispImageNum;
-	GOrgueDisplayMetrics* DisplayMetrics;
+	GOGUIDisplayMetrics* DisplayMetrics;
 
 	GOrgueDrawstop(GrandOrgueFile* organfile);
 	virtual ~GOrgueDrawstop();
-	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 	virtual bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	void Push(void);

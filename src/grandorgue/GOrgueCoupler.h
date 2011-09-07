@@ -28,7 +28,7 @@
 
 class IniFileConfig;
 struct IniFileEnumEntry;
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 class GrandOrgueFile;
 
 class GOrgueCoupler : public GOrgueDrawstop
@@ -61,7 +61,7 @@ class GOrgueCoupler : public GOrgueDrawstop
 public:
 
 	GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual);
-	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
 	void Set(bool on);

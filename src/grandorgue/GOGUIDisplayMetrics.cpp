@@ -20,13 +20,13 @@
  * MA 02111-1307, USA.
  */
 
-#include "GOrgueDisplayMetrics.h"
+#include "GOGUIDisplayMetrics.h"
 #include "IniFileConfig.h"
 #include "GOrgueEnclosure.h"
 
 #define DISPLAY_METRICS_GROUP wxT("Organ")
 
-GOrgueDisplayMetrics::GOrgueDisplayMetrics(IniFileConfig& ini) :
+GOGUIDisplayMetrics::GOGUIDisplayMetrics(IniFileConfig& ini) :
 	m_nb_enclosures(0),
 	m_nb_manuals(0),
 	m_first_manual(0),
@@ -121,79 +121,79 @@ GOrgueDisplayMetrics::GOrgueDisplayMetrics(IniFileConfig& ini) :
  * BASIC EXPORTS STRAIGHT FROM ODF
  */
 
-int GOrgueDisplayMetrics::NumberOfExtraDrawstopRowsToDisplay()
+int GOGUIDisplayMetrics::NumberOfExtraDrawstopRowsToDisplay()
 {
 	return m_DispExtraDrawstopRows;
 }
 
-int GOrgueDisplayMetrics::NumberOfExtraDrawstopColsToDisplay()
+int GOGUIDisplayMetrics::NumberOfExtraDrawstopColsToDisplay()
 {
 	return m_DispExtraDrawstopCols;
 }
 
-int GOrgueDisplayMetrics::NumberOfDrawstopColsToDisplay()
+int GOGUIDisplayMetrics::NumberOfDrawstopColsToDisplay()
 {
 	return m_DispDrawstopCols;
 }
 
-int GOrgueDisplayMetrics::NumberOfButtonCols()
+int GOGUIDisplayMetrics::NumberOfButtonCols()
 {
 	return m_DispButtonCols;
 }
 
-int GOrgueDisplayMetrics::NumberOfExtraButtonRows()
+int GOGUIDisplayMetrics::NumberOfExtraButtonRows()
 {
 	return m_DispExtraButtonRows;
 }
 
-int GOrgueDisplayMetrics::GetDrawstopBackgroundImageNum()
+int GOGUIDisplayMetrics::GetDrawstopBackgroundImageNum()
 {
 	return m_DispDrawstopBackgroundImageNum;
 }
 
-int GOrgueDisplayMetrics::GetConsoleBackgroundImageNum()
+int GOGUIDisplayMetrics::GetConsoleBackgroundImageNum()
 {
 	return m_DispConsoleBackgroundImageNum;
 }
 
-int GOrgueDisplayMetrics::GetDrawstopInsetBackgroundImageNum()
+int GOGUIDisplayMetrics::GetDrawstopInsetBackgroundImageNum()
 {
 	return m_DispDrawstopInsetBackgroundImageNum;
 }
 
-int GOrgueDisplayMetrics::GetKeyVertBackgroundImageNum()
+int GOGUIDisplayMetrics::GetKeyVertBackgroundImageNum()
 {
 	return m_DispKeyVertBackgroundImageNum;
 }
 
-int GOrgueDisplayMetrics::GetKeyHorizBackgroundImageNum()
+int GOGUIDisplayMetrics::GetKeyHorizBackgroundImageNum()
 {
 	return m_DispKeyHorizBackgroundImageNum;
 }
 
-bool GOrgueDisplayMetrics::HasPairDrawstopCols()
+bool GOGUIDisplayMetrics::HasPairDrawstopCols()
 {
 	return m_DispPairDrawstopCols;
 }
 
-bool GOrgueDisplayMetrics::HasTrimAboveExtraRows()
+bool GOGUIDisplayMetrics::HasTrimAboveExtraRows()
 {
 	return m_DispTrimAboveExtraRows;
 }
 
-bool GOrgueDisplayMetrics::HasExtraPedalButtonRow()
+bool GOGUIDisplayMetrics::HasExtraPedalButtonRow()
 {
 	return m_DispExtraPedalButtonRow;
 }
 
-wxFont GOrgueDisplayMetrics::GetControlLabelFont()
+wxFont GOGUIDisplayMetrics::GetControlLabelFont()
 {
 	wxFont font = *wxNORMAL_FONT;
 	font.SetFaceName(m_DispControlLabelFont);
 	return font;
 }
 
-wxFont GOrgueDisplayMetrics::GetGroupLabelFont()
+wxFont GOGUIDisplayMetrics::GetGroupLabelFont()
 {
 	wxFont font = *wxNORMAL_FONT;
 #ifdef linux
@@ -203,12 +203,12 @@ wxFont GOrgueDisplayMetrics::GetGroupLabelFont()
 	return font;
 }
 
-int GOrgueDisplayMetrics::GetScreenWidth()
+int GOGUIDisplayMetrics::GetScreenWidth()
 {
 	return m_DispScreenSizeHoriz;
 }
 
-int GOrgueDisplayMetrics::GetScreenHeight()
+int GOGUIDisplayMetrics::GetScreenHeight()
 {
 	return m_DispScreenSizeVert;
 }
@@ -217,17 +217,17 @@ int GOrgueDisplayMetrics::GetScreenHeight()
  * COMPUTED VALUES FROM ODF PARAMETERS
  */
 
-int GOrgueDisplayMetrics::GetJambLeftRightHeight()
+int GOGUIDisplayMetrics::GetJambLeftRightHeight()
 {
 	return (m_DispDrawstopRows + 1) * 69;
 }
 
-int GOrgueDisplayMetrics::GetJambLeftRightY()
+int GOGUIDisplayMetrics::GetJambLeftRightY()
 {
 	return (m_DispScreenSizeVert - GetJambLeftRightHeight() - (m_DispDrawstopColsOffset ? 35 : 0)) >> 1;
 }
 
-int GOrgueDisplayMetrics::GetJambLeftRightWidth()
+int GOGUIDisplayMetrics::GetJambLeftRightWidth()
 {
 	int jamblrw = m_DispDrawstopCols * 39;
 	if (m_DispPairDrawstopCols)
@@ -235,32 +235,32 @@ int GOrgueDisplayMetrics::GetJambLeftRightWidth()
 	return jamblrw;
 }
 
-int GOrgueDisplayMetrics::GetJambTopHeight()
+int GOGUIDisplayMetrics::GetJambTopHeight()
 {
 	return m_DispExtraDrawstopRows * 69;
 }
 
-int GOrgueDisplayMetrics::GetJambTopWidth()
+int GOGUIDisplayMetrics::GetJambTopWidth()
 {
 	return m_DispExtraDrawstopCols * 78;
 }
 
-int GOrgueDisplayMetrics::GetJambTopX()
+int GOGUIDisplayMetrics::GetJambTopX()
 {
 	return (m_DispScreenSizeHoriz - GetJambTopWidth()) >> 1;
 }
 
-int GOrgueDisplayMetrics::GetPistonTopHeight()
+int GOGUIDisplayMetrics::GetPistonTopHeight()
 {
 	return m_DispExtraButtonRows * 40;
 }
 
-int GOrgueDisplayMetrics::GetPistonWidth()
+int GOGUIDisplayMetrics::GetPistonWidth()
 {
 	return m_DispButtonCols * 44;
 }
 
-int GOrgueDisplayMetrics::GetPistonX()
+int GOGUIDisplayMetrics::GetPistonX()
 {
 	return (m_DispScreenSizeHoriz - GetPistonWidth()) >> 1;
 }
@@ -269,32 +269,32 @@ int GOrgueDisplayMetrics::GetPistonX()
  * COMPUTED VALUES FROM ODF PARAMETERS & SCREEN
  */
 
-int GOrgueDisplayMetrics::GetCenterWidth()
+int GOGUIDisplayMetrics::GetCenterWidth()
 {
 	return m_CenterWidth;
 }
 
-int GOrgueDisplayMetrics::GetCenterX()
+int GOGUIDisplayMetrics::GetCenterX()
 {
 	return (m_DispScreenSizeHoriz - m_CenterWidth) >> 1;
 }
 
-int GOrgueDisplayMetrics::GetCenterY()
+int GOGUIDisplayMetrics::GetCenterY()
 {
 	return m_CenterY;
 }
 
-int GOrgueDisplayMetrics::GetEnclosureWidth()
+int GOGUIDisplayMetrics::GetEnclosureWidth()
 {
 	return 52 * m_nb_enclosures;
 }
 
-int GOrgueDisplayMetrics::GetEnclosureY()
+int GOGUIDisplayMetrics::GetEnclosureY()
 {
 	return m_EnclosureY;
 }
 
-int GOrgueDisplayMetrics::GetEnclosureX(const GOrgueEnclosure* enclosure)
+int GOGUIDisplayMetrics::GetEnclosureX(const GOrgueEnclosure* enclosure)
 {
 
 	assert(enclosure);
@@ -311,7 +311,7 @@ int GOrgueDisplayMetrics::GetEnclosureX(const GOrgueEnclosure* enclosure)
 
 }
 
-int GOrgueDisplayMetrics::GetJambLeftX()
+int GOGUIDisplayMetrics::GetJambLeftX()
 {
 	int jamblx = (GetCenterX() - GetJambLeftRightWidth()) >> 1;
 	if (m_DispPairDrawstopCols)
@@ -319,7 +319,7 @@ int GOrgueDisplayMetrics::GetJambLeftX()
 	return jamblx;
 }
 
-int GOrgueDisplayMetrics::GetJambRightX()
+int GOGUIDisplayMetrics::GetJambRightX()
 {
 	int jambrx = GetJambLeftX() + GetCenterX() + m_CenterWidth;
 	if (m_DispPairDrawstopCols)
@@ -327,21 +327,21 @@ int GOrgueDisplayMetrics::GetJambRightX()
 	return jambrx;
 }
 
-int GOrgueDisplayMetrics::GetJambTopDrawstop()
+int GOGUIDisplayMetrics::GetJambTopDrawstop()
 {
 	if (m_DispTrimAboveExtraRows)
 		return m_CenterY + 8;
 	return m_CenterY;
 }
 
-int GOrgueDisplayMetrics::GetJambTopPiston()
+int GOGUIDisplayMetrics::GetJambTopPiston()
 {
 	if (m_DispTrimAboveExtraRows)
 		return m_CenterY + 8;
 	return m_CenterY;
 }
 
-int GOrgueDisplayMetrics::GetJambTopY()
+int GOGUIDisplayMetrics::GetJambTopY()
 {
 	if (m_DispTrimAboveExtraRows)
 		return m_CenterY + 8;
@@ -352,7 +352,7 @@ int GOrgueDisplayMetrics::GetJambTopY()
  * BLIT POSITION FUNCTIONS
  */
 
-void GOrgueDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int* blitX, int* blitY)
+void GOGUIDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int* blitX, int* blitY)
 {
 	// FIXME: check blitX and blitY for null ptr
 	int i;
@@ -394,7 +394,7 @@ void GOrgueDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const 
 	}
 }
 
-void GOrgueDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY)
+void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY)
 {
 
 	*blitX = GetPistonX() + (buttonCol - 1) * 44 + 6;
@@ -435,7 +435,7 @@ void GOrgueDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const 
 
 /* TODO: this method could do with a cleanup */
 
-void GOrgueDisplayMetrics::Update()
+void GOGUIDisplayMetrics::Update()
 {
 
 	m_CenterY = m_DispScreenSizeVert - 40;
@@ -530,7 +530,7 @@ void GOrgueDisplayMetrics::Update()
 
 }
 
-const GOrgueDisplayMetrics::MANUAL_RENDER_INFO& GOrgueDisplayMetrics::GetManualRenderInfo(const unsigned manual_nb) const
+const GOGUIDisplayMetrics::MANUAL_RENDER_INFO& GOGUIDisplayMetrics::GetManualRenderInfo(const unsigned manual_nb) const
 {
 
 	assert(manual_nb < m_manual_info.size());

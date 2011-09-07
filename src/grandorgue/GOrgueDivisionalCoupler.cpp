@@ -31,7 +31,7 @@ GOrgueDivisionalCoupler::GOrgueDivisionalCoupler(GrandOrgueFile* organfile) :
 }
 
 
-void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
 {
 	wxString buffer;
 

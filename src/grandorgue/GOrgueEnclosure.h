@@ -27,7 +27,7 @@
 #include "GOrgueMidiReceiver.h"
 #include <wx/wx.h>
 
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 class IniFileConfig;
@@ -43,13 +43,13 @@ private:
 	int MIDIInputNumber;
 	int MIDIValue;
 	wxString Name;
-	GOrgueDisplayMetrics* DisplayMetrics;
+	GOGUIDisplayMetrics* DisplayMetrics;
 
 public:
 
 	GOrgueEnclosure(GrandOrgueFile* organfile);
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
-	void Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOGUIDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(int n);
 	void ProcessMidi(const GOrgueMidiEvent& event);

@@ -34,7 +34,7 @@
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
 #include "GOrgueCoupler.h"
-#include "GOrgueDisplayMetrics.h"
+#include "GOGUIDisplayMetrics.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueEnclosure.h"
@@ -202,7 +202,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	wxString group = wxT("Organ");
 
 	/* load all GUI display metrics */
-	m_DisplayMetrics = new GOrgueDisplayMetrics(ini);
+	m_DisplayMetrics = new GOGUIDisplayMetrics(ini);
 
 	/* load church info */
 	m_HauptwerkOrganFileFormatVersion = ini.ReadString(group, wxT("HauptwerkOrganFileFormatVersion"),  256, false);
@@ -668,7 +668,7 @@ bool GrandOrgueFile::CombinationsStoreNonDisplayedDrawstops()
 	return m_CombinationsStoreNonDisplayedDrawstops;
 }
 
-GOrgueDisplayMetrics* GrandOrgueFile::GetDisplayMetrics()
+GOGUIDisplayMetrics* GrandOrgueFile::GetDisplayMetrics()
 {
 	return m_DisplayMetrics;
 }

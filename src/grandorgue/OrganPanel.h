@@ -26,7 +26,7 @@
 #include <wx/wx.h>
 #include <wx/docview.h>
 
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 class GOrgueDrawstop;
 class GOrguePushbutton;
 
@@ -38,7 +38,7 @@ private:
 	wxPoint m_clientOrigin;
 	wxBrush m_pedalBrush;
 
-	GOrgueDisplayMetrics* m_display_metrics;
+	GOGUIDisplayMetrics* m_display_metrics;
 
 	void DrawClickables(wxDC* dc = NULL, int xx = 0, int yy = 0, bool right = false, int scroll = 0);
 	void HelpDrawStop(GOrgueDrawstop* stop, wxDC* dc, int xx, int yy, bool right);

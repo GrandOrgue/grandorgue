@@ -30,7 +30,7 @@
 #include <wx/filename.h>
 #include "GOrgueManual.h"
 
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 class GOrgueDivisionalCoupler;
 class GOrgueEnclosure;
 class GOrgueFrameGeneral;
@@ -75,7 +75,7 @@ private:
 	wxString m_RecordingDetails;
 	wxString m_InfoFilename;
 
-	GOrgueDisplayMetrics* m_DisplayMetrics;
+	GOGUIDisplayMetrics* m_DisplayMetrics;
 
 	ptr_vector<GOrgueEnclosure> m_enclosure;
 	ptr_vector<GOrgueTremulant> m_tremulant;
@@ -105,7 +105,7 @@ public:
 	~GrandOrgueFile(void);
 
 	/* Access to the display metrics presented by the ODF */
-	GOrgueDisplayMetrics* GetDisplayMetrics();
+	GOGUIDisplayMetrics* GetDisplayMetrics();
 
 	void GenerateCacheHash(unsigned char hash[20]);
 	/* Access to internal ODF objects */

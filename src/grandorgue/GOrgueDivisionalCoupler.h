@@ -27,7 +27,7 @@
 #include <wx/wx.h>
 #include "GOrgueDrawStop.h"
 
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 
 class GOrgueDivisionalCoupler : public GOrgueDrawstop
 {
@@ -37,7 +37,7 @@ private:
 
 public:
 	GOrgueDivisionalCoupler(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
 

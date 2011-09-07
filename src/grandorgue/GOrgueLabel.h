@@ -25,7 +25,7 @@
 
 #include <wx/wx.h>
 
-class GOrgueDisplayMetrics;
+class GOGUIDisplayMetrics;
 class GrandOrgueFile;
 class IniFileConfig;
 
@@ -46,12 +46,12 @@ private:
 	int DispImageNum;
 	wxColour DispLabelColour;
 	wxString Name;
-	GOrgueDisplayMetrics* DisplayMetrics;
+	GOGUIDisplayMetrics* DisplayMetrics;
 
 public:
 
 	GOrgueLabel(GrandOrgueFile* m_organfile);
-	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics);
 	void Draw(wxDC& dc);
 
 };

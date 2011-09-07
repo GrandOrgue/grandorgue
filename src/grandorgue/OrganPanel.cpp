@@ -27,7 +27,7 @@
 #include <wx/mstream.h>
 #include "GOrgueCoupler.h"
 #include "GOrgueDrawStop.h"
-#include "GOrgueDisplayMetrics.h"
+#include "GOGUIDisplayMetrics.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueDrawStop.h"
@@ -352,7 +352,7 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 			if (dc || !organfile->GetManual(i)->IsDisplayed())
 				continue;
 
-			const GOrgueDisplayMetrics::MANUAL_RENDER_INFO& mri = m_display_metrics->GetManualRenderInfo(i);
+			const GOGUIDisplayMetrics::MANUAL_RENDER_INFO& mri = m_display_metrics->GetManualRenderInfo(i);
 
 			wxRect rect
 				(mri.x

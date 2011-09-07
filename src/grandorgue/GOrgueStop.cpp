@@ -24,7 +24,7 @@
 #include "GOrguePipe.h"
 #include "GrandOrgueFile.h"
 #include "GOrgueSound.h"
-#include "GOrgueDisplayMetrics.h"
+#include "GOGUIDisplayMetrics.h"
 
 GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number) :
 	GOrgueDrawstop(organfile),
@@ -73,7 +73,7 @@ unsigned GOrgueStop::GetAmplitude() const
 	return m_AmplitudeLevel;
 }
 
-void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* display_metrics)
+void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* display_metrics)
 {
 
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);

@@ -12,7 +12,7 @@ contrib/sha1.cpp
 GOrgueWave.cpp
 GOrgueControl.cpp
 GOrgueCoupler.cpp
-GOrgueDisplayMetrics.cpp
+GOGUIDisplayMetrics.cpp
 GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp
 GOrgueDrawStop.cpp

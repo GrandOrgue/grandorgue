@@ -28,7 +28,7 @@ GOrgueGeneral::GOrgueGeneral(GrandOrgueFile* organfile):
 {
 }
 
-void GOrgueGeneral::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueGeneral::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
 {
 	GOrgueFrameGeneral::Load(cfg, group);
 	GOrguePushbutton::Load(cfg, group, displayMetrics);

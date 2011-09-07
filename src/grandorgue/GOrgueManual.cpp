@@ -33,7 +33,7 @@
 #include "MIDIEventDialog.h"
 #include "GOrgueMidi.h"
 #include "OrganPanel.h"
-#include "GOrgueDisplayMetrics.h"
+#include "GOGUIDisplayMetrics.h"
 
 GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_group(wxT("---")),
@@ -60,7 +60,7 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 
 }
 
-void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics, int manualNumber)
+void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics, int manualNumber)
 {
 	m_group = group;
 	m_name                              = cfg.ReadString (group, wxT("Name"), 32);
@@ -318,7 +318,7 @@ void GOrgueManual::GetKeyDimensions
 			(key_midi_nb < (int)m_nb_accessible_keys + m_first_accessible_key_midi_note_nb)
 		);
 
-	const GOrgueDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
 
 	int is_natural = (((key_midi_nb % 12) < 5 && !(key_midi_nb & 1)) || ((key_midi_nb % 12) >= 5 && (key_midi_nb & 1))) ? 0 : 1;
 	int j;
@@ -390,7 +390,7 @@ wxRegion GOrgueManual::GetKeyRegion
 
 	assert((key_nb >= 0) && (key_nb < (int)m_nb_accessible_keys)); /* the index must be valid */
 
-	const GOrgueDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
 
 	key_nb += m_first_accessible_key_midi_note_nb;
 	GetKeyDimensions(key_nb, x, cx, cy, z);
@@ -483,7 +483,7 @@ void GOrgueManual::DrawKey
 		dc.SetClippingRegion(reg);
 	}
 
-	const GOrgueDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
 
 	if (z < 0)
 	{
@@ -506,7 +506,7 @@ void GOrgueManual::Draw(wxDC& dc)
 
 	assert(m_displayed);
 
-	const GOrgueDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_display_metrics->GetManualRenderInfo(m_manual_number);
 
 	OrganPanel::TileWood
 		(dc

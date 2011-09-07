@@ -25,7 +25,7 @@
 #include "GrandOrgueFile.h"
 #include "GrandOrgue.h"
 #include "MIDIEventDialog.h"
-#include "GOrgueDisplayMetrics.h"
+#include "GOGUIDisplayMetrics.h"
 #include "IniFileConfig.h"
 #include "GOrgueMidi.h"
 
@@ -84,7 +84,7 @@ bool GOrgueEnclosure::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 
 }
 
-void GOrgueEnclosure::Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrgueDisplayMetrics* displayMetrics)
+void GOrgueEnclosure::Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOGUIDisplayMetrics* displayMetrics)
 {
 	m_group.Printf(wxT("Enclosure%03u"), enclosure_nb + 1);
 	m_enclosure_nb = enclosure_nb;
