@@ -41,6 +41,8 @@
 #include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
+#include "GOGUIPanel.h"
+#include "GOGUIControl.h"
 #include "GrandOrgue.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
@@ -249,6 +251,28 @@ void OrganPanel::OnDrawstop(wxCommandEvent& event)
 	static_cast<GOrgueDrawable*>(event.GetClientData())->Draw(0, 0, &mdc, &dc);
 }
 
+void OrganPanel::CopyToScreen(wxDC* mdc, const wxRect& rect)
+{
+	wxClientDC dc(this);
+	dc.SetDeviceOrigin(m_clientOrigin.x, m_clientOrigin.y);
+	
+	dc.Blit(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight(), mdc, rect.GetX(), rect.GetY());
+}
+
+void OrganPanel::OnGOControl(wxCommandEvent& event)
+{
+	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
+		return;
+
+	GOGUIControl* control = static_cast<GOGUIControl*>(event.GetClientData());
+
+	wxMemoryDC mdc;
+	mdc.SelectObject(m_clientBitmap);
+	
+	control->Draw(&mdc);
+	CopyToScreen(&mdc, control->GetBoundingRect());
+}
+
 void OrganPanel::OnNoteOnOff(wxCommandEvent& event)
 {
 
@@ -339,8 +363,13 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 	if (!m_clientBitmap.Ok())
 		return;
 
+	if (dc)
+		organfile->GetPanel(0)->Draw(dc);
+
 	if (!scroll)
 	{
+		organfile->GetPanel(0)->HandleMousePress(xx, yy, right);
+
 		for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
 		{
 			for (unsigned j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
@@ -380,6 +409,9 @@ void OrganPanel::DrawClickables(wxDC* dc, int xx, int yy, bool right, int scroll
 		for (unsigned j = 0; j < organfile->GetNumberOfReversiblePistons(); j++)
 			HelpDrawButton(organfile->GetPiston(j), dc, xx, yy, right);
 	}
+
+	if (scroll)
+		organfile->GetPanel(0)->HandleMouseScroll(xx, yy, scroll);
 
 	for (unsigned l = 0; l < organfile->GetEnclosureCount(); l++)
 	{
@@ -490,6 +522,7 @@ void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 			{
 				if (organfile && doc && doc->b_loaded && (k = WXKtoVK(k)))
 				{
+					organfile->GetPanel(0)->HandleKey(k);
 					for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
 					{
 						for (unsigned j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)

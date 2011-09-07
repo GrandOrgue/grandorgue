@@ -42,6 +42,7 @@ class GOrguePiston;
 class GOrguePushbutton;
 class GOrgueTremulant;
 class GOrgueWindchest;
+class GOGUIPanel;
 
 class GrandOrgueFile 
 {
@@ -86,6 +87,7 @@ private:
 	ptr_vector<GOrgueFrameGeneral> m_framegeneral;
 	ptr_vector<GOrgueDivisionalCoupler> m_divisionalcoupler;
 	ptr_vector<GOrgueManual> m_manual;
+	ptr_vector<GOGUIPanel> m_panels;
 
 	std::vector<wxBitmap> m_images;
 
@@ -127,6 +129,8 @@ public:
 	unsigned GetWinchestGroupCount();
 	GOrgueEnclosure* GetEnclosure(unsigned index);
 	unsigned GetEnclosureCount();
+	GOGUIPanel* GetPanel(unsigned index);
+	unsigned GetPanelCount();
 	GOrgueLabel* GetLabel(unsigned index);
 	unsigned GetLabelCount();
 

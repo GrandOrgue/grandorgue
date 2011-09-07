@@ -41,6 +41,7 @@ private:
 	GOGUIDisplayMetrics* m_display_metrics;
 
 	void DrawClickables(wxDC* dc = NULL, int xx = 0, int yy = 0, bool right = false, int scroll = 0);
+	void CopyToScreen(wxDC* mdc, const wxRect& rect);
 	void HelpDrawStop(GOrgueDrawstop* stop, wxDC* dc, int xx, int yy, bool right);
 	void HelpDrawButton(GOrguePushbutton* button, wxDC* dc, int xx, int yy, bool right);
 
@@ -49,6 +50,7 @@ public:
 	void OnErase(wxEraseEvent& event);
 	void OnPaint(wxPaintEvent& event);
 	void OnDraw(wxDC *dc);
+	void OnGOControl(wxCommandEvent& event);
 	void OnDrawstop(wxCommandEvent& event);
 	void OnNoteOnOff(wxCommandEvent& event);
 	void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);

@@ -9,10 +9,12 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h)
 
 set(grandorgue_src
 contrib/sha1.cpp
+GOGUIControl.cpp
+GOGUIDisplayMetrics.cpp
+GOGUIPanel.cpp
 GOrgueWave.cpp
 GOrgueControl.cpp
 GOrgueCoupler.cpp
-GOGUIDisplayMetrics.cpp
 GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp
 GOrgueDrawStop.cpp
