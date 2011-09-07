@@ -33,9 +33,7 @@
 #include <wx/msw/registry.h>
 #endif
 
-#include "GOrgueLCD.h"
 #include "GOrgueSound.h"
-#include "GOrgueMeter.h"
 #include "GrandOrgueFrame.h"
 
 class wxSingleInstanceChecker;

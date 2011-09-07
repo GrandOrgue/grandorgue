@@ -39,6 +39,7 @@
 #include "GOrgueMidi.h"
 #include "GOrguePipe.h"
 #include "GOrgueStop.h"
+#include "GOrgueManual.h"
 #include "GOrgueProperties.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"

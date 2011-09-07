@@ -40,6 +40,8 @@
 #include "GOrgueEnclosure.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueGeneral.h"
+#include "GOrgueLCD.h"
+#include "GOrgueManual.h"
 #include "GOrgueMeter.h"
 #include "GOrguePipe.h"
 #include "GOrguePiston.h"

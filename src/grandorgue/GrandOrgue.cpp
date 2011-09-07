@@ -28,8 +28,7 @@
 #include "OrganView.h"
 #include "OrganDocument.h"
 #include "SettingsDialog.h"
-#include "GrandOrgueFile.h"
-#include "GOrgueDivisional.h"
+#include "GOrgueLCD.h"
 #include "GOrgueMidi.h"
 
 #include <wx/ipc.h>
