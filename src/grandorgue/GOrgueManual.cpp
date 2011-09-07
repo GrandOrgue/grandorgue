@@ -36,6 +36,7 @@
 #include "GOrgueDisplayMetrics.h"
 
 GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
+	m_group(wxT("---")),
 	m_midi(organfile, MIDI_RECV_MANUAL),
 	m_organfile(organfile),
 	m_KeyPressed(0),
@@ -61,7 +62,7 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 
 void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics, int manualNumber)
 {
-
+	m_group = group;
 	m_name                              = cfg.ReadString (group, wxT("Name"), 32);
 	m_nb_logical_keys                   = cfg.ReadInteger(group, wxT("NumberOfLogicalKeys"), 1, 192);
 	m_first_accessible_logical_key_nb   = cfg.ReadInteger(group, wxT("FirstAccessibleKeyLogicalKeyNumber"), 1, m_nb_logical_keys);
@@ -97,7 +98,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 		m_couplers.push_back(new GOrgueCoupler(m_organfile, m_manual_number));
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
 		buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(group, buffer, 1, 64));
-		m_couplers[i]->Load(cfg, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount(), displayMetrics);
+		m_couplers[i]->Load(cfg, buffer, displayMetrics);
 	}
 
 	m_tremulant_ids.resize(0);
@@ -625,28 +626,20 @@ bool GOrgueManual::IsDisplayed()
 
 }
 
-void GOrgueManual::Save(IniFileConfig& cfg, bool prefix, wxString group)
+void GOrgueManual::Save(IniFileConfig& cfg, bool prefix)
 {
 	wxString buffer;
 
 	for (unsigned i = 0; i < m_stops.size(); i++)
-	{
-		buffer.Printf(wxT("Stop%03d"), m_stops[i]->ObjectNumber);
-		m_stops[i]->Save(cfg, prefix, buffer);
-	}
+		m_stops[i]->Save(cfg, prefix);
 
 	for (unsigned i = 0; i < m_couplers.size(); i++)
-	{
-                buffer.Printf(wxT("Coupler%03d"), m_couplers[i]->ObjectNumber);
-		m_couplers[i]->Save(cfg, prefix, buffer);
-	}
+		m_couplers[i]->Save(cfg, prefix);
 
 	for (unsigned i = 0; i < m_divisionals.size(); i++)
-	{
-		buffer.Printf(wxT("Divisional%03d"), m_divisionals[i]->ObjectNumber);
-		m_divisionals[i]->Save(cfg, prefix, buffer);
-	}
-	m_midi.Save(cfg, prefix, group);
+		m_divisionals[i]->Save(cfg, prefix);
+
+	m_midi.Save(cfg, prefix, m_group);
 }
 
 void GOrgueManual::Abort()

@@ -107,9 +107,9 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* 
 
 }
 
-void GOrgueStop::Save(IniFileConfig& cfg, bool prefix, wxString group)
+void GOrgueStop::Save(IniFileConfig& cfg, bool prefix)
 {
-	GOrgueDrawstop::Save(cfg, prefix, group);
+	GOrgueDrawstop::Save(cfg, prefix);
 }
 
 void GOrgueStop::SetKey(unsigned note, int on)

@@ -300,7 +300,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_divisionalcoupler.push_back(new GOrgueDivisionalCoupler(this));
 		buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
-		m_divisionalcoupler[i]->Load(ini, buffer, m_FirstManual, m_NumberOfManuals, m_DisplayMetrics);
+		m_divisionalcoupler[i]->Load(ini, buffer, m_DisplayMetrics);
 	}
 
 	m_general.resize(0);
@@ -589,35 +589,23 @@ void GrandOrgueFile::Save(const wxString& file)
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), g_sound->GetVolume());
 
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-	{
-		buffer.Printf(wxT("Manual%03d"), i);
-		m_manual[i]->Save(aIni, prefix, buffer);
-	}
+		m_manual[i]->Save(aIni, prefix);
+
 	for (unsigned j = 0; j < m_tremulant.size(); j++)
-	{
-		buffer.Printf(wxT("Tremulant%03d"), j + 1);
-		m_tremulant[j]->Save(aIni, prefix, buffer);
-	}
+		m_tremulant[j]->Save(aIni, prefix);
+
 	for (unsigned j = 0; j < m_divisionalcoupler.size(); j++)
-	{
-		buffer.Printf(wxT("DivisionalCoupler%03d"), j + 1);
-		m_divisionalcoupler[j]->Save(aIni, prefix, buffer);
-	}
+		m_divisionalcoupler[j]->Save(aIni, prefix);
+
 	for (unsigned j = 0; j < m_general.size(); j++)
-	{
-		buffer.Printf(wxT("General%03d"), j + 1);
-		m_general[j]->Save(aIni, prefix, buffer);
-	}
+		m_general[j]->Save(aIni, prefix);
+
 	for (unsigned j = 0; j < m_framegeneral.size(); j++)
-	{
-		buffer.Printf(wxT("FrameGeneral%03d"), j + 1);
-		m_framegeneral[j]->Save(aIni, prefix, buffer);
-	}
+		m_framegeneral[j]->Save(aIni, prefix);
+
 	for (unsigned j = 0; j < m_piston.size(); j++)
-	{
-		buffer.Printf(wxT("ReversiblePiston%03d"), j + 1);
-		m_piston[j]->Save(aIni, prefix, buffer);
-	}
+		m_piston[j]->Save(aIni, prefix);
+
 	for (unsigned j = 0; j < m_enclosure.size(); j++)
 		m_enclosure[j]->Save(aIni, prefix);
 

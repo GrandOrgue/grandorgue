@@ -24,6 +24,7 @@
 #include "IniFileConfig.h"
 
 GOrgueControl::GOrgueControl() :
+	m_group(wxT("---")),
 	Displayed(false),
 	DispKeyLabelOnLeft(false),
 	ObjectNumber(0),
@@ -42,7 +43,7 @@ GOrgueControl::~GOrgueControl()
 
 void GOrgueControl::Load(IniFileConfig& cfg, wxString group)
 {
-
+	m_group = group;
 	Name = cfg.ReadString(group, wxT("Name"), 64);
 	ShortcutKey = cfg.ReadInteger(group, wxT("ShortcutKey"), 0, 255, false);
 	Displayed = cfg.ReadBoolean(group, wxT("Displayed"));
@@ -53,4 +54,8 @@ void GOrgueControl::Load(IniFileConfig& cfg, wxString group)
 	if (group.length() >= 3)
 		ObjectNumber = atoi(group.mb_str() + group.length() - 3);
 
+}
+
+void GOrgueControl::Save(IniFileConfig& cfg, bool prefix)
+{
 }

@@ -66,9 +66,9 @@ void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 
 }
 
-void GOrguePiston::Save(IniFileConfig& cfg, bool prefix, wxString group)
+void GOrguePiston::Save(IniFileConfig& cfg, bool prefix)
 {
-	GOrguePushbutton::Save(cfg, prefix, group);
+	GOrguePushbutton::Save(cfg, prefix);
 }
 
 void GOrguePiston::Push()

@@ -42,7 +42,7 @@ public:
 	GOrgueTremulant(GrandOrgueFile* organfile);
 	~GOrgueTremulant();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
-	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
 	void Abort();
 	void PreparePlayback();

@@ -50,7 +50,7 @@ public:
 	GOrgueDrawstop(GrandOrgueFile* organfile);
 	virtual ~GOrgueDrawstop();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
-	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	void Save(IniFileConfig& cfg, bool prefix);
 	virtual bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	void Push(void);
 	void ProcessMidi(const GOrgueMidiEvent& event);

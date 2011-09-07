@@ -61,8 +61,8 @@ class GOrgueCoupler : public GOrgueDrawstop
 public:
 
 	GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual);
-	void Load(IniFileConfig& cfg, wxString group, unsigned firstValidManualIndex, unsigned numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
-	void Save(IniFileConfig& cfg, bool prefix, wxString group);
+	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
+	void Save(IniFileConfig& cfg, bool prefix);
 	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
 	void Set(bool on);
 	void PreparePlayback();

@@ -52,9 +52,9 @@ void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetr
 	m_pipe->CreateTremulant(Period, StartRate, StopRate, AmpModDepth);
 }
 
-void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix, wxString group)
+void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix)
 {
-	GOrgueDrawstop::Save(cfg, prefix, group);
+	GOrgueDrawstop::Save(cfg, prefix);
 }
 
 void GOrgueTremulant::Set(bool on)

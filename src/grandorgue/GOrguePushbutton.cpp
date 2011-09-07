@@ -92,9 +92,9 @@ void GOrguePushbutton::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMet
 	GOrgueControl::Load(cfg, group);
 }
 
-void GOrguePushbutton::Save(IniFileConfig& cfg, bool prefix, wxString group)
+void GOrguePushbutton::Save(IniFileConfig& cfg, bool prefix)
 {
-	m_midi.Save(cfg, prefix, group);
+	m_midi.Save(cfg, prefix, m_group);
 }
 
 void GOrguePushbutton::Display(bool onoff)
