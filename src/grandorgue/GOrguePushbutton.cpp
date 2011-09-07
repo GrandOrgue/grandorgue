@@ -111,6 +111,7 @@ void GOrguePushbutton::Display(bool on)
 		wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
 		event.SetClientData((GOrgueDrawable*)this);
 		::wxGetApp().frame->AddPendingEvent(event);
+		m_organfile->ControlChanged(this);
 	}
 }
 

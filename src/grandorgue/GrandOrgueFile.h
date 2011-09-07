@@ -102,6 +102,7 @@ public:
 	void PreparePlayback();
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
+	void ControlChanged(void* control);
 	void Modified();
 	~GrandOrgueFile(void);
 

@@ -849,6 +849,14 @@ void GrandOrgueFile::Reset()
 		GetGeneral(k)->Display(false);
 }
 
+void GrandOrgueFile::ControlChanged(void* control)
+{
+	if (!control)
+		return;
+	for(unsigned i = 0; i < m_piston.size(); i++)
+		m_piston[i]->ControlChanged(control);
+}
+
 void GrandOrgueFile::Modified()
 {
 	::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);

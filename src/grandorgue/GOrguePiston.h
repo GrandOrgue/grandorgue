@@ -41,6 +41,7 @@ public:
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Push();
 
+	void ControlChanged(void* control);
 };
 
 #endif /* GORGUEPISTON_H */
