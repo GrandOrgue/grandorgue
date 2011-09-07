@@ -23,8 +23,6 @@
 #include "GOrgueStop.h"
 #include "GOrguePipe.h"
 #include "GrandOrgueFile.h"
-#include "GOrgueSound.h"
-#include "GOGUIDisplayMetrics.h"
 
 GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number) :
 	GOrgueDrawstop(organfile),
@@ -73,7 +71,7 @@ unsigned GOrgueStop::GetAmplitude() const
 	return m_AmplitudeLevel;
 }
 
-void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* display_metrics)
+void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
 
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
@@ -103,7 +101,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* d
 	m_KeyState.resize(m_NumberOfAccessiblePipes);
 	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
 
-	GOrgueDrawstop::Load(cfg, group, display_metrics);
+	GOrgueDrawstop::Load(cfg, group);
 
 }
 

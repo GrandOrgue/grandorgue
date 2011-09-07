@@ -89,7 +89,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics*
 		m_stops.push_back(new GOrgueStop(m_organfile, m_manual_number));
 		buffer.Printf(wxT("Stop%03d"), i + 1);
 		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(group, buffer, 1, 448));
-		m_stops[i]->Load(cfg, buffer, displayMetrics);
+		m_stops[i]->Load(cfg, buffer);
 	}
 
 	m_couplers.resize(0);
@@ -98,7 +98,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics*
 		m_couplers.push_back(new GOrgueCoupler(m_organfile, m_manual_number));
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
 		buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(group, buffer, 1, 64));
-		m_couplers[i]->Load(cfg, buffer, displayMetrics);
+		m_couplers[i]->Load(cfg, buffer);
 	}
 
 	m_tremulant_ids.resize(0);
@@ -541,25 +541,6 @@ void GOrgueManual::Draw(wxDC& dc)
 		return;
 
 	wxFont font = m_display_metrics->GetControlLabelFont();
-	for (unsigned j = 0; j < m_stops.size(); j++)
-	{
-		if (m_stops[j]->Displayed)
-		{
-			font.SetPointSize(m_stops[j]->DispLabelFontSize);
-			dc.SetFont(font);
-			OrganPanel::WrapText(dc, m_stops[j]->Name, 51);
-		}
-	}
-
-	for (unsigned j = 0; j < m_couplers.size(); j++)
-	{
-		if (m_couplers[j]->Displayed)
-		{
-			font.SetPointSize(m_couplers[j]->DispLabelFontSize);
-			dc.SetFont(font);
-			OrganPanel::WrapText(dc, m_couplers[j]->Name, 51);
-		}
-	}
 
 	for (unsigned j = 0; j < m_divisionals.size(); j++)
 	{

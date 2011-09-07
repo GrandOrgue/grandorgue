@@ -21,26 +21,15 @@
  */
 
 #include "GOrgueDrawStop.h"
-
-#include <wx/docview.h>
-#include "GOGUIDisplayMetrics.h"
-#include "GOrguePiston.h"
-#include "GOrgueSound.h"
-#include "GrandOrgue.h"
+#include "GOrgueLCD.h"
 #include "GrandOrgueFile.h"
-#include "GrandOrgueFrame.h"
-#include "MIDIEventDialog.h"
-#include "GOrgueMidi.h"
 
 GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
 	GOrgueControl(),
 	m_midi(organfile, MIDI_RECV_DRAWSTOP),
 	m_organfile(organfile),
 	m_DefaultToEngaged(false),
-	DisplayInInvertedState(false),
-	DispDrawstopRow(0),
-	DispDrawstopCol(0),
-	DispImageNum(0)
+	m_DisplayInInvertedState(false)
 {
 
 }
@@ -50,14 +39,10 @@ GOrgueDrawstop::~GOrgueDrawstop()
 
 }
 
-void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
+void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group)
 {
-	DisplayMetrics = displayMetrics;
-	DispDrawstopRow = cfg.ReadInteger(group, wxT("DispDrawstopRow"), 1, 99 + DisplayMetrics->NumberOfExtraDrawstopRowsToDisplay());
-	DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, DispDrawstopRow > 99 ? DisplayMetrics->NumberOfExtraDrawstopColsToDisplay() : DisplayMetrics->NumberOfDrawstopColsToDisplay());
 	m_DefaultToEngaged = cfg.ReadBoolean(group, wxT("DefaultToEngaged"));
-	DisplayInInvertedState = cfg.ReadBoolean(group, wxT("DisplayInInvertedState"));
-	DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 2);
+	m_DisplayInInvertedState = cfg.ReadBoolean(group, wxT("DisplayInInvertedState"));
 	m_midi.Load(cfg, group);
 	GOrgueControl::Load(cfg, group);
 }
@@ -69,51 +54,14 @@ void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix)
 	GOrgueControl::Save(cfg, prefix);
 }
 
-bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
-{
-	int x, y;
-	if (!Displayed)
-		return false;
-
-	DisplayMetrics->GetDrawstopBlitPosition(DispDrawstopRow, DispDrawstopCol, &x, &y);
-
-	if (!dc)
-		return !(xx < x || xx > x + 64 || yy < y || yy > y + 64 || (x + 32 - xx) * (x + 32 - xx) + (y + 32 - yy) * (y + 32 - yy) > 1024);
-
-	wxRect rect(x, y + 1, 65, 65 - 1);
-	wxBitmap* bmp = m_organfile->GetImage(((DispImageNum - 1) << 1) + (DisplayInInvertedState ^ m_DefaultToEngaged ? 1 : 0));
-	dc->DrawBitmap(*bmp, x, y, true);
-	dc->SetTextForeground(DispLabelColour);
-	wxFont font = DisplayMetrics->GetControlLabelFont();
-	font.SetPointSize(DispLabelFontSize);
-	dc->SetFont(font);
-	dc->DrawLabel(Name, rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
-
-	if (dc2)
-		dc2->Blit(x, y, 65, 65, dc, x, y);
-	return false;
-
-}
-
 void GOrgueDrawstop::Push()
 {
 	Set(m_DefaultToEngaged ^ true);
-};
+}
 
 GOrgueMidiReceiver& GOrgueDrawstop::GetMidiReceiver()
 {
 	return m_midi;
-}
-
-void GOrgueDrawstop::MIDI(void)
-{
-	MIDIEventDialog dlg (::wxGetApp().frame, _("Midi-Settings for Drawstop - ")+Name ,m_midi);
-
-	if (dlg.ShowModal() == wxID_OK)
-	{
-		m_midi = dlg.GetResult();
-		m_organfile->Modified();
-	}
 }
 
 void GOrgueDrawstop::Set(bool on)
@@ -121,9 +69,6 @@ void GOrgueDrawstop::Set(bool on)
 	if (m_DefaultToEngaged == on)
 		return;
 	m_DefaultToEngaged = on;
-	wxCommandEvent event(wxEVT_DRAWSTOP, 0);
-	event.SetClientData((GOrgueDrawable*)this);
-	::wxGetApp().frame->AddPendingEvent(event);
 	m_organfile->ControlChanged(this);
 	GOrgueLCD_WriteLineTwo(GetName(), 2000);
 }
@@ -156,5 +101,5 @@ bool GOrgueDrawstop::IsEngaged() const
 
 bool GOrgueDrawstop::DisplayInverted() const
 {
-	return DisplayInInvertedState;
+	return m_DisplayInInvertedState;
 }

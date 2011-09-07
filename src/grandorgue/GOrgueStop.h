@@ -48,7 +48,7 @@ public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number);
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
-	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* display_metrics);
+	void Load(IniFileConfig& cfg, wxString group);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
 	void SetKey(unsigned note, int on);

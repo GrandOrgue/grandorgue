@@ -23,6 +23,7 @@
 #include <wx/image.h>
 #include <wx/mstream.h>
 #include "GOGUIControl.h"
+#include "GOGUIDrawStop.h"
 #include "GOGUIPanel.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
@@ -98,7 +99,51 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 	m_metrics = new GOGUIDisplayMetrics(cfg);
 
 	{
+		wxString buffer;
 		m_Name = m_organfile->GetChurchName();
+
+		for (unsigned i = 0; i < m_organfile->GetTremulantCount(); i++)
+			if (m_organfile->GetTremulant(i)->IsDisplayed())
+			{
+				buffer.Printf(wxT("Tremulant%03d"), i + 1);
+				GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetTremulant(i));
+				control->Load(cfg, buffer);
+				AddControl(control);
+			}	
+		
+		for (unsigned i = 0; i < m_organfile->GetDivisionalCouplerCount(); i++)
+			if (m_organfile->GetDivisionalCoupler(i)->IsDisplayed())
+			{
+				buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
+				GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetDivisionalCoupler(i));
+				control->Load(cfg, buffer);
+				AddControl(control);
+			}	
+
+		for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
+		{
+			wxString group;
+			group.Printf(wxT("Manual%03d"), i);
+			for(unsigned j = 0; j < m_organfile->GetManual(i)->GetCouplerCount(); j++)
+				if (m_organfile->GetManual(i)->GetCoupler(j)->IsDisplayed())
+				{
+					buffer.Printf(wxT("Coupler%03d"), j + 1);
+					buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(group, buffer, 1, 64));
+					GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetManual(i)->GetCoupler(j));
+					control->Load(cfg, buffer);
+					AddControl(control);
+				}
+
+			for(unsigned j = 0; j < m_organfile->GetManual(i)->GetStopCount(); j++)
+				if (m_organfile->GetManual(i)->GetStop(j)->IsDisplayed())
+				{
+					buffer.Printf(wxT("Stop%03d"), j + 1);
+					buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(group, buffer, 1, 448));
+					GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetManual(i)->GetStop(j));
+					control->Load(cfg, buffer);
+					AddControl(control);
+				}
+		}
 	}
 }
 

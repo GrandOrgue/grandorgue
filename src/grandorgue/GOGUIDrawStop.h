@@ -20,38 +20,33 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUEDRAWSTOP_H
-#define GORGUEDRAWSTOP_H
+#ifndef GOGUIDRAWSTOP_H
+#define GOGUIDRAWSTOP_H
 
-#include <wx/wx.h>
-#include "GOrgueControl.h"
-#include "GOrgueMidiReceiver.h"
-#include "IniFileConfig.h"
+#include "GOGUIControl.h"
 
-class GOrgueMidiEvent;
-class GrandOrgueFile;
+class GOrgueDrawstop;
 
-class GOrgueDrawstop : public GOrgueControl
+class GOGUIDrawstop : public GOGUIControl
 {
-protected:
-	GOrgueMidiReceiver m_midi;
-	GrandOrgueFile* m_organfile;
-	bool m_DefaultToEngaged;
-	bool m_DisplayInInvertedState;
-
+private:
+	GOrgueDrawstop* m_drawstop;
+	int m_ShortcutKey;
+	bool m_DispKeyLabelOnLeft;
+	int m_DispLabelFontSize;
+	wxColour m_DispLabelColour;
+	int m_DispDrawstopRow;
+	int m_DispDrawstopCol;
+	int m_DispImageNum;
+	
 public:
+	GOGUIDrawstop(GOGUIPanel* panel, GOrgueDrawstop* control);
 
-	GOrgueDrawstop(GrandOrgueFile* organfile);
-	virtual ~GOrgueDrawstop();
 	void Load(IniFileConfig& cfg, wxString group);
-	void Save(IniFileConfig& cfg, bool prefix);
-	void Push(void);
-	void ProcessMidi(const GOrgueMidiEvent& event);
-	GOrgueMidiReceiver& GetMidiReceiver();
-	bool IsEngaged() const;
-	bool DisplayInverted() const;
-	virtual void Set(bool on);
 
+	void Draw(wxDC* dc);
+	void HandleKey(int key);
+	void HandleMousePress(int x, int y, bool right);
 };
 
 #endif

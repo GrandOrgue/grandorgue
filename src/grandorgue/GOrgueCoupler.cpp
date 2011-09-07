@@ -23,6 +23,7 @@
 #include "GOrgueCoupler.h"
 #include "IniFileConfig.h"
 #include "GOrgueSound.h"
+#include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
 
 GOrgueCoupler::GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual) :
@@ -71,7 +72,7 @@ const struct IniFileEnumEntry GOrgueCoupler::m_coupler_types[]={
 };
 
 
-void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
+void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group)
 {
 
 	m_UnisonOff                                     = cfg.ReadBoolean(group, wxT("UnisonOff"));
@@ -82,7 +83,7 @@ void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics
 	m_CoupleToSubsequentDownwardIntermanualCouplers = cfg.ReadBoolean(group, wxT("CoupleToSubsequentDownwardIntermanualCouplers"), !m_UnisonOff);
 	m_CoupleToSubsequentUpwardIntramanualCouplers   = cfg.ReadBoolean(group, wxT("CoupleToSubsequentUpwardIntramanualCouplers"), !m_UnisonOff);
 	m_CoupleToSubsequentDownwardIntramanualCouplers = cfg.ReadBoolean(group, wxT("CoupleToSubsequentDownwardIntramanualCouplers"), !m_UnisonOff);
-	GOrgueDrawstop::Load(cfg, group, displayMetrics);
+	GOrgueDrawstop::Load(cfg, group);
 
 	m_CouplerType = (GOrgueCouplerType)cfg.ReadEnum(group, wxT("CouplerType"), m_coupler_types, sizeof(m_coupler_types) / sizeof(m_coupler_types[0]), false);
 }

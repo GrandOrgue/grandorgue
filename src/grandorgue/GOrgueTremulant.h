@@ -24,9 +24,10 @@
 #define GORGUETREMULANT_H
 
 #include <wx/wx.h>
-#include "GOrguePipe.h"
 #include "GOrgueDrawStop.h"
 #include "IniFileConfig.h"
+
+class GOrguePipe;
 
 class GOrgueTremulant : public GOrgueDrawstop
 {
@@ -41,7 +42,7 @@ private:
 public:
 	GOrgueTremulant(GrandOrgueFile* organfile);
 	~GOrgueTremulant();
-	void Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics);
+	void Load(IniFileConfig& cfg, wxString group, unsigned ObjectNumber);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
 	void Abort();
