@@ -125,8 +125,8 @@ void GOrgueFrameGeneral::Push()
 				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !m_organfile->GetManual(j)->GetStop(i)->Displayed)
 					continue;
 				m_StopManual.push_back(j);
-				m_Stops.push_back(m_organfile->GetManual(j)->GetStop(i)->DefaultToEngaged ? i + 1 : -i - 1);
-				used |= m_organfile->GetManual(j)->GetStop(i)->DefaultToEngaged;
+				m_Stops.push_back(m_organfile->GetManual(j)->GetStop(i)->IsEngaged() ? i + 1 : -i - 1);
+				used |= m_organfile->GetManual(j)->GetStop(i)->IsEngaged();
 			}
 		}
 
@@ -137,8 +137,8 @@ void GOrgueFrameGeneral::Push()
 				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !m_organfile->GetManual(j)->GetCoupler(i)->Displayed)
 					continue;
 				m_CouplerManual.push_back(j);
-				m_Couplers.push_back (m_organfile->GetManual(j)->GetCoupler(i)->DefaultToEngaged ? i + 1 : -i - 1);
-				used |= m_organfile->GetManual(j)->GetCoupler(i)->DefaultToEngaged;
+				m_Couplers.push_back (m_organfile->GetManual(j)->GetCoupler(i)->IsEngaged() ? i + 1 : -i - 1);
+				used |= m_organfile->GetManual(j)->GetCoupler(i)->IsEngaged();
 			}
 		}
 
@@ -146,16 +146,16 @@ void GOrgueFrameGeneral::Push()
 		{
 			if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !m_organfile->GetTremulant(i)->Displayed)
 				continue;
-			m_Tremulants.push_back (m_organfile->GetTremulant(i)->DefaultToEngaged ? i + 1 : -i - 1);
-			used |= m_organfile->GetTremulant(i)->DefaultToEngaged;
+			m_Tremulants.push_back (m_organfile->GetTremulant(i)->IsEngaged() ? i + 1 : -i - 1);
+			used |= m_organfile->GetTremulant(i)->IsEngaged();
 		}
 
 		if (m_organfile->GeneralsStoreDivisionalCouplers())
 		{
 			for (unsigned i = 0; i < m_organfile->GetDivisionalCouplerCount(); i++)
 			{
-				m_DivisionalCouplers.push_back (m_organfile->GetDivisionalCoupler(i)->DefaultToEngaged ? i + 1 : -1 - 1);
-				used |= m_organfile->GetDivisionalCoupler(i)->DefaultToEngaged;
+				m_DivisionalCouplers.push_back (m_organfile->GetDivisionalCoupler(i)->IsEngaged() ? i + 1 : -1 - 1);
+				used |= m_organfile->GetDivisionalCoupler(i)->IsEngaged();
 			}
 		}
 

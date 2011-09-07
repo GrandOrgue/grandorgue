@@ -145,8 +145,8 @@ void GOrgueDivisional::PushLocal()
 		{
 			if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetStop(i)->Displayed)
 				continue;
-			m_Stops.push_back(associatedManual->GetStop(i)->DefaultToEngaged ? i + 1 : -i - 1);
-			used |= associatedManual->GetStop(i)->DefaultToEngaged;
+			m_Stops.push_back(associatedManual->GetStop(i)->IsEngaged() ? i + 1 : -i - 1);
+			used |= associatedManual->GetStop(i)->IsEngaged();
 		}
 		for (unsigned i = 0; i < associatedManual->GetCouplerCount(); i++)
 		{
@@ -154,8 +154,8 @@ void GOrgueDivisional::PushLocal()
 				continue;
 			if ((m_organfile->DivisionalsStoreIntramanualCouplers() && !associatedManual->GetCoupler(i)->IsIntermanual()) || (m_organfile->DivisionalsStoreIntermanualCouplers() && associatedManual->GetCoupler(i)->IsIntermanual()))
 			{
-				m_Couplers.push_back(associatedManual->GetCoupler(i)->DefaultToEngaged ? i + 1 : -i - 1);
-				used |= associatedManual->GetCoupler(i)->DefaultToEngaged;
+				m_Couplers.push_back(associatedManual->GetCoupler(i)->IsEngaged() ? i + 1 : -i - 1);
+				used |= associatedManual->GetCoupler(i)->IsEngaged();
 			}
 		}
 		if (m_organfile->DivisionalsStoreTremulants())
@@ -164,8 +164,8 @@ void GOrgueDivisional::PushLocal()
 			{
 				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetTremulant(i)->Displayed)
 					continue;
-				m_Tremulants.push_back(associatedManual->GetTremulant(i)->DefaultToEngaged ? i + 1 : -i - 1);
-				used |= associatedManual->GetTremulant(i)->DefaultToEngaged;
+				m_Tremulants.push_back(associatedManual->GetTremulant(i)->IsEngaged() ? i + 1 : -i - 1);
+				used |= associatedManual->GetTremulant(i)->IsEngaged();
 			}
 		}
 		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
@@ -219,7 +219,7 @@ void GOrgueDivisional::Push()
 	{
 
 		GOrgueDivisionalCoupler* coupler = m_organfile->GetDivisionalCoupler(k);
-		if (!coupler->DefaultToEngaged)
+		if (!coupler->IsEngaged())
 			continue;
 
 		for (unsigned i = 0; i < coupler->GetNumberOfManuals(); i++)

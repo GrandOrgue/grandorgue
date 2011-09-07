@@ -121,7 +121,7 @@ void GOrgueStop::SetKey(unsigned note, int on)
 	unsigned last = m_KeyState[note];
 	m_KeyState[note] += on;
 
-	if (DefaultToEngaged)
+	if (IsEngaged())
 	{
 		if (last > 0 && m_KeyState[note] == 0)
 			m_Pipes[note + m_FirstAccessiblePipeLogicalPipeNumber - 1]->Set(false);
@@ -133,7 +133,7 @@ void GOrgueStop::SetKey(unsigned note, int on)
 
 void GOrgueStop::Set(bool on)
 {
-	if (DefaultToEngaged == on)
+	if (IsEngaged() == on)
 		return;
 	for(unsigned i = 0; i < m_NumberOfAccessiblePipes; i++)
 		if (m_KeyState[i])
@@ -172,6 +172,6 @@ void GOrgueStop::PreparePlayback()
 	m_KeyState.resize(m_NumberOfAccessiblePipes);
 	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
 
-	if (IsAuto() && DefaultToEngaged)
+	if (IsAuto() && IsEngaged())
 		m_Pipes[0]->Set(true);
 }
