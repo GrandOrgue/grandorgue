@@ -60,8 +60,13 @@ void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics*
 	}
 
 	GOrguePushbutton::Load(cfg, group, displayMetrics);
-	Display(drawstop->IsEngaged() ^ drawstop->DisplayInverted());
+	ControlChanged(drawstop);
+}
 
+void GOrguePiston::ControlChanged(void* control)
+{
+	if (control == drawstop)
+		Display(drawstop->IsEngaged() ^ drawstop->DisplayInverted());
 }
 
 void GOrguePiston::Save(IniFileConfig& cfg, bool prefix)

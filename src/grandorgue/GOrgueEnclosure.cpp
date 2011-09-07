@@ -112,6 +112,7 @@ void GOrgueEnclosure::Set(int n)
 	wxCommandEvent event(wxEVT_ENCLOSURE, 0);
 	event.SetClientData((GOrgueDrawable*)this);
 	::wxGetApp().frame->AddPendingEvent(event);
+	m_organfile->ControlChanged(this);
 }
 
 void GOrgueEnclosure::MIDI(void)

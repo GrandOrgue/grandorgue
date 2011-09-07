@@ -151,6 +151,7 @@ void GOrgueManual::SetKey(unsigned note, int on, GOrgueCoupler* prev)
 		event.SetInt(m_manual_number);
 		event.SetExtraLong(note - m_first_accessible_logical_key_nb + 1);
 		::wxGetApp().frame->AddPendingEvent(event);
+		m_organfile->ControlChanged(this);
 	}
 }
 

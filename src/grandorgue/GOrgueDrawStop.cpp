@@ -124,11 +124,7 @@ void GOrgueDrawstop::Set(bool on)
 	wxCommandEvent event(wxEVT_DRAWSTOP, 0);
 	event.SetClientData((GOrgueDrawable*)this);
 	::wxGetApp().frame->AddPendingEvent(event);
-	for (unsigned i = 0; i < m_organfile->GetNumberOfReversiblePistons(); i++)
-	{
-		if (m_organfile->GetPiston(i)->drawstop == this)
-			m_organfile->GetPiston(i)->Display (on ^ DisplayInInvertedState);
-	}
+	m_organfile->ControlChanged(this);
 	GOrgueLCD_WriteLineTwo(GetName(), 2000);
 }
 
