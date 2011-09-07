@@ -26,11 +26,11 @@
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueGeneral.h"
+#include "GOrgueManual.h"
 #include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
-#include "GrandOrgue.h"
 #include "GOrgueMidi.h"
 
 /* TODO: This should not be... */
@@ -57,7 +57,6 @@ void GOrgueFrameGeneral::Load(IniFileConfig& cfg, wxString group)
 	m_CouplerManual.clear();
 	m_Tremulants.clear();
 	m_DivisionalCouplers.clear();
-	m_ManualNumber = -1;
 
 	unsigned NumberOfStops = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, 999);
 	unsigned NumberOfCouplers = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, 999);
@@ -159,9 +158,7 @@ void GOrgueFrameGeneral::Push()
 				used |= m_organfile->GetDivisionalCoupler(i)->IsEngaged();
 			}
 		}
-
 		m_organfile->Modified();
-
 	}
 	else
 	{

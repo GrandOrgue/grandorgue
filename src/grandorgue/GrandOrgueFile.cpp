@@ -294,7 +294,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_piston.push_back(new GOrguePiston(this));
 		buffer.Printf(wxT("ReversiblePiston%03d"), i + 1);
-		m_piston[i]->Load(ini, buffer, m_DisplayMetrics);
+		m_piston[i]->Load(ini, buffer);
 	}
 
 	m_divisionalcoupler.resize(0);
@@ -310,7 +310,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_general.push_back(new GOrgueGeneral(this));
 		buffer.Printf(wxT("General%03d"), i + 1);
-		m_general[i]->Load(ini, buffer, m_DisplayMetrics);
+		m_general[i]->Load(ini, buffer);
 	}
 
 	m_framegeneral.resize(0);

@@ -114,7 +114,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics*
 		m_divisionals.push_back(new GOrgueDivisional(m_organfile));
 		buffer.Printf(wxT("Divisional%03d"), i + 1);
 		buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(group, buffer, 1, 224));
-		m_divisionals[i]->Load(cfg, buffer, m_manual_number, i, displayMetrics);
+		m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
 	}
 	m_midi.Load(cfg, group);
 
@@ -541,16 +541,6 @@ void GOrgueManual::Draw(wxDC& dc)
 		return;
 
 	wxFont font = m_display_metrics->GetControlLabelFont();
-
-	for (unsigned j = 0; j < m_divisionals.size(); j++)
-	{
-		if (m_divisionals[j]->Displayed)
-		{
-			font.SetPointSize(m_divisionals[j]->DispLabelFontSize);
-			dc.SetFont(font);
-			OrganPanel::WrapText(dc, m_divisionals[j]->Name, 28);
-		}
-	}
 
 	wxRegion region;
 	for (unsigned j = 0; j < m_nb_accessible_keys; j++)

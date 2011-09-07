@@ -27,7 +27,6 @@
 #include <wx/docview.h>
 
 class GOGUIDisplayMetrics;
-class GOrguePushbutton;
 
 class OrganPanel : public wxPanel
 {
@@ -41,7 +40,6 @@ private:
 
 	void DrawClickables(wxDC* dc = NULL, int xx = 0, int yy = 0, bool right = false, int scroll = 0);
 	void CopyToScreen(wxDC* mdc, const wxRect& rect);
-	void HelpDrawButton(GOrguePushbutton* button, wxDC* dc, int xx, int yy, bool right);
 
 public:
 	OrganPanel(wxWindow* parent);

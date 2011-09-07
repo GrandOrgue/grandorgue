@@ -25,6 +25,7 @@
 #include "GOrgueDrawStop.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueStop.h"
+#include "GOrgueManual.h"
 #include "GOrgueTremulant.h"
 #include "IniFileConfig.h"
 
@@ -34,7 +35,7 @@ GOrguePiston::GOrguePiston(GrandOrgueFile* organfile) :
 {
 }
 
-void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
+void GOrguePiston::Load(IniFileConfig& cfg, wxString group)
 {
 
 	int i, j;
@@ -55,11 +56,11 @@ void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics*
 	}
 	if (type == wxT("TREMULANT"))
 	{
-		j = ObjectNumber=cfg.ReadInteger(group, wxT("ObjectNumber"), 1, m_organfile->GetTremulantCount()) - 1;
+		j = cfg.ReadInteger(group, wxT("ObjectNumber"), 1, m_organfile->GetTremulantCount()) - 1;
 		drawstop = m_organfile->GetTremulant(j);
 	}
 
-	GOrguePushbutton::Load(cfg, group, displayMetrics);
+	GOrguePushbutton::Load(cfg, group);
 	ControlChanged(drawstop);
 }
 

@@ -20,34 +20,33 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUEPUSHBUTTON_H
-#define GORGUEPUSHBUTTON_H
+#ifndef GOGUIPUSHBUTTON_H
+#define GOGUIPUSHBUTTON_H
 
-#include <wx/wx.h>
-#include "GOrgueControl.h"
-#include "GOrgueMidiReceiver.h"
+#include "GOGUIControl.h"
 
-class GOrgueMidiEvent;
-class GrandOrgueFile;
+class GOrguePushbutton;
 
-class GOrguePushbutton : public GOrgueControl
+class GOGUIPushbutton : public GOGUIControl
 {
-protected:
-	GOrgueMidiReceiver m_midi;
-	GrandOrgueFile* m_organfile;
-	bool m_IsPushed;
-
+private:
+	GOrguePushbutton* m_pushbutton;
+	int m_ShortcutKey;
+	bool m_DispKeyLabelOnLeft;
+	int m_DispLabelFontSize;
+	wxColour m_DispLabelColour;
+	int m_DispButtonRow;
+	int m_DispButtonCol;
+	int m_DispImageNum;
+	
 public:
-	GOrguePushbutton(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group);
-	void Save(IniFileConfig& cfg, bool prefix);
-	virtual void Push() { };
-	void ProcessMidi(const GOrgueMidiEvent& event);
-	GOrgueMidiReceiver& GetMidiReceiver();
-	virtual ~GOrguePushbutton() { };
-	void Display(bool onoff);
-	bool IsPushed();
+	GOGUIPushbutton(GOGUIPanel* panel, GOrguePushbutton* control);
 
+	void Load(IniFileConfig& cfg, wxString group);
+
+	void Draw(wxDC* dc);
+	void HandleKey(int key);
+	void HandleMousePress(int x, int y, bool right);
 };
 
 #endif

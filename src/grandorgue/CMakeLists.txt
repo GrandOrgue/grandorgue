@@ -13,6 +13,7 @@ GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
 GOGUIDrawStop.cpp
 GOGUIPanel.cpp
+GOGUIPushbutton.cpp
 GOrgueWave.cpp
 GOrgueControl.cpp
 GOrgueCoupler.cpp
