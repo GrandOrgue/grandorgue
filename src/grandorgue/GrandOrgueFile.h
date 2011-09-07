@@ -31,7 +31,6 @@
 
 class wxProgressDialog;
 
-class GOGUIDisplayMetrics;
 class GOrgueDivisionalCoupler;
 class GOrgueEnclosure;
 class GOrgueFrameGeneral;
@@ -77,8 +76,6 @@ private:
 	wxString m_RecordingDetails;
 	wxString m_InfoFilename;
 
-	GOGUIDisplayMetrics* m_DisplayMetrics;
-
 	ptr_vector<GOrgueEnclosure> m_enclosure;
 	ptr_vector<GOrgueTremulant> m_tremulant;
 	ptr_vector<GOrgueWindchest> m_windchest;
@@ -88,8 +85,6 @@ private:
 	ptr_vector<GOrgueDivisionalCoupler> m_divisionalcoupler;
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
-
-	std::vector<wxBitmap> m_images;
 
 	void ReadOrganFile(wxFileConfig& odf_ini_file);
 	bool TryLoad(wxInputStream* cache, wxProgressDialog& dlg, wxString& error);
@@ -107,9 +102,6 @@ public:
 	void ControlChanged(void* control);
 	void Modified();
 	~GrandOrgueFile(void);
-
-	/* Access to the display metrics presented by the ODF */
-	GOGUIDisplayMetrics* GetDisplayMetrics();
 
 	void GenerateCacheHash(unsigned char hash[20]);
 	/* Access to internal ODF objects */
@@ -138,8 +130,6 @@ public:
 	bool DivisionalsStoreTremulants();
 	bool CombinationsStoreNonDisplayedDrawstops();
 	bool GeneralsStoreDivisionalCouplers();
-
-	wxBitmap* GetImage(unsigned index);
 
 	long GetElapsedTime();
 	void SetElapsedTime(long elapsed);

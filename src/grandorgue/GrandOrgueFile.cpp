@@ -34,7 +34,6 @@
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
 #include "GOrgueCoupler.h"
-#include "GOGUIDisplayMetrics.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueEnclosure.h"
@@ -57,8 +56,6 @@
 
 extern GOrgueSound* g_sound;
 GrandOrgueFile* organfile = 0;
-extern const unsigned char* ImageLoader_Stops[];
-extern int c_ImageLoader_Stops[];
 
 GrandOrgueFile::GrandOrgueFile() :
 	m_path(),
@@ -83,7 +80,6 @@ GrandOrgueFile::GrandOrgueFile() :
 	m_OrganComments(),
 	m_RecordingDetails(),
 	m_InfoFilename(),
-	m_DisplayMetrics(NULL),
 	m_enclosure(0),
 	m_tremulant(0),
 	m_windchest(0),
@@ -92,13 +88,8 @@ GrandOrgueFile::GrandOrgueFile() :
 	m_framegeneral(0),
 	m_divisionalcoupler(0),
 	m_manual(0),
-	m_panels(0),
-	m_images(0)
+	m_panels(0)
 {
-	for (int i = 0; i < 9; ++i)
-	{
-		m_images.push_back(wxBitmap());
-	}
 }
 
 void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
@@ -202,9 +193,6 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 
 	IniFileConfig ini(odf_ini_file);
 	wxString group = wxT("Organ");
-
-	/* load all GUI display metrics */
-	m_DisplayMetrics = new GOGUIDisplayMetrics(ini);
 
 	/* load church info */
 	m_HauptwerkOrganFileFormatVersion = ini.ReadString(group, wxT("HauptwerkOrganFileFormatVersion"),  256, false);
@@ -503,17 +491,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		return error_;
 	}
 
-	/* TODO: ? check for correctness ? */
-	/* Load the images for the stops */
-	for (int i = 0; i < 9; i++)
-	{
-
-		wxMemoryInputStream mem((const char*)ImageLoader_Stops[i], c_ImageLoader_Stops[i]);
-		wxImage img(mem, wxBITMAP_TYPE_PNG);
-		m_images[i] = wxBitmap(img);
-
-	}
-
 	::wxGetApp().frame->m_meters[0]->SetValue(odf_ini_file.Read(wxT("/Organ/Volume"), g_sound->GetVolume()));
 
 	GOrgueLCD_WriteLineTwo(_("Ready!"));
@@ -524,9 +501,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 GrandOrgueFile::~GrandOrgueFile(void)
 {
-	if (m_DisplayMetrics)
-		delete m_DisplayMetrics;
-
 }
 void GrandOrgueFile::Revert(wxFileConfig& cfg)
 {
@@ -665,16 +639,6 @@ GOrgueDivisionalCoupler* GrandOrgueFile::GetDivisionalCoupler(unsigned index)
 bool GrandOrgueFile::CombinationsStoreNonDisplayedDrawstops()
 {
 	return m_CombinationsStoreNonDisplayedDrawstops;
-}
-
-GOGUIDisplayMetrics* GrandOrgueFile::GetDisplayMetrics()
-{
-	return m_DisplayMetrics;
-}
-
-wxBitmap* GrandOrgueFile::GetImage(unsigned index)
-{
-	return &m_images[index];
 }
 
 unsigned GrandOrgueFile::GetNumberOfReversiblePistons()
