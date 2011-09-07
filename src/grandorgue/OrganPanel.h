@@ -43,8 +43,6 @@ public:
 	void OnPaint(wxPaintEvent& event);
 	void OnDraw(wxDC *dc);
 	void OnGOControl(wxCommandEvent& event);
-	void OnDrawstop(wxCommandEvent& event);
-	void OnNoteOnOff(wxCommandEvent& event);
 	void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
 	void OnMouseLeftDown(wxMouseEvent& event);
 	void OnMouseRightDown(wxMouseEvent& event);

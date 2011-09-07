@@ -29,7 +29,6 @@
 #include "GOrgueMeter.h"
 #include "GOrgueMidi.h"
 #include "GOrgueSound.h"
-#include "GOrgueTremulant.h"
 #include "GOGUIPanel.h"
 #include "GOGUIControl.h"
 #include "GrandOrgue.h"
@@ -112,17 +111,6 @@ void OrganPanel::OnPaint(wxPaintEvent& event)
 	OnDraw((wxDC*)&dc);
 }
 
-void OrganPanel::OnDrawstop(wxCommandEvent& event)
-{
-	if (!m_clientBitmap.Ok() || !organfile)
-		return;
-
-	wxMemoryDC mdc;
-	mdc.SelectObject(m_clientBitmap);
-	wxClientDC dc(this);
-	dc.SetDeviceOrigin(m_clientOrigin.x, m_clientOrigin.y);
-}
-
 void OrganPanel::CopyToScreen(wxDC* mdc, const wxRect& rect)
 {
 	wxClientDC dc(this);
@@ -143,19 +131,6 @@ void OrganPanel::OnGOControl(wxCommandEvent& event)
 	
 	control->Draw(&mdc);
 	CopyToScreen(&mdc, control->GetBoundingRect());
-}
-
-void OrganPanel::OnNoteOnOff(wxCommandEvent& event)
-{
-
-	if (!m_clientBitmap.Ok() || !organfile)
-		return;
-
-	wxMemoryDC mdc;
-	mdc.SelectObject(m_clientBitmap);
-	wxClientDC dc(this);
-	dc.SetDeviceOrigin(m_clientOrigin.x, m_clientOrigin.y);
-
 }
 
 void OrganPanel::OnMouseLeftDown(wxMouseEvent& event)
