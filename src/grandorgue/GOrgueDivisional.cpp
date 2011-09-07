@@ -165,7 +165,7 @@ void GOrgueDivisional::PushLocal()
 				used |= associatedManual->GetTremulant(i)->IsEngaged();
 			}
 		}
-		::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
+		m_organfile->Modified();
 	}
 	else
 	{
