@@ -11,6 +11,7 @@ set(grandorgue_src
 contrib/sha1.cpp
 GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
+GOGUIDrawStop.cpp
 GOGUIPanel.cpp
 GOrgueWave.cpp
 GOrgueControl.cpp

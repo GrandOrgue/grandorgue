@@ -31,7 +31,7 @@ GOrgueDivisionalCoupler::GOrgueDivisionalCoupler(GrandOrgueFile* organfile) :
 }
 
 
-void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
+void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, wxString group)
 {
 	wxString buffer;
 
@@ -44,7 +44,7 @@ void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, wxString group, GOGUIDisp
 		buffer.Printf(wxT("Manual%03d"), i + 1);
 		m_manuals.push_back(cfg.ReadInteger(group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount()));
 	}
-	GOrgueDrawstop::Load(cfg, group, displayMetrics);
+	GOrgueDrawstop::Load(cfg, group);
 
 }
 

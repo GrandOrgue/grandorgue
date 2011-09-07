@@ -21,7 +21,7 @@
  */
 
 #include "GOrgueTremulant.h"
-#include "GOGUIDisplayMetrics.h"
+#include "GOrguePipe.h"
 
 GOrgueTremulant::GOrgueTremulant(GrandOrgueFile* organfile) :
 	GOrgueDrawstop(organfile),
@@ -39,13 +39,13 @@ GOrgueTremulant::~GOrgueTremulant()
 		delete m_pipe;
 }
 
-void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
+void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, unsigned ObjectNumber)
 {
 	Period = cfg.ReadLong(group, wxT("Period"), 32, 441000);
 	StartRate = cfg.ReadInteger(group, wxT("StartRate"), 1, 100);
 	StopRate = cfg.ReadInteger(group, wxT("StopRate"), 1, 100);
 	AmpModDepth = cfg.ReadInteger(group, wxT("AmpModDepth"), 1, 100);
-	GOrgueDrawstop::Load(cfg, group, displayMetrics);
+	GOrgueDrawstop::Load(cfg, group);
 	if (m_pipe)
 		delete m_pipe;
 	m_pipe = new GOrguePipe(m_organfile, wxT(""), false, -ObjectNumber, 0);

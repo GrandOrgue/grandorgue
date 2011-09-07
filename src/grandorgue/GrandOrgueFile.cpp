@@ -274,7 +274,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_tremulant.push_back(new GOrgueTremulant(this));
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		m_tremulant[i]->Load(ini, buffer, m_DisplayMetrics);
+		m_tremulant[i]->Load(ini, buffer, i + 1);
 	}
 
 	for (unsigned  i = 0; i < m_NumberOfWindchestGroups; i++)
@@ -302,7 +302,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_divisionalcoupler.push_back(new GOrgueDivisionalCoupler(this));
 		buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
-		m_divisionalcoupler[i]->Load(ini, buffer, m_DisplayMetrics);
+		m_divisionalcoupler[i]->Load(ini, buffer);
 	}
 
 	m_general.resize(0);
