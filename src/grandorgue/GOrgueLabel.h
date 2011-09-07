@@ -26,12 +26,14 @@
 #include <wx/wx.h>
 
 class GOrgueDisplayMetrics;
+class GrandOrgueFile;
 class IniFileConfig;
 
 class GOrgueLabel
 {
 
 private:
+	GrandOrgueFile* m_organfile;
 
 	bool FreeXPlacement;
 	bool FreeYPlacement;
@@ -48,7 +50,7 @@ private:
 
 public:
 
-	GOrgueLabel();
+	GOrgueLabel(GrandOrgueFile* m_organfile);
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Draw(wxDC& dc);
 

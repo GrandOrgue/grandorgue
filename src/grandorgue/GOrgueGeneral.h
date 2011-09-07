@@ -32,6 +32,7 @@ class GOrgueGeneral : public GOrgueFrameGeneral
 {
 
 public:
+	GOrgueGeneral(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 

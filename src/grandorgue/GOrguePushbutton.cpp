@@ -30,12 +30,10 @@
 #include "GOrgueDisplayMetrics.h"
 #include "GOrgueMidi.h"
 
-extern GrandOrgueFile* organfile;
-extern GOrgueSound* g_sound;
-
-GOrguePushbutton::GOrguePushbutton() :
+GOrguePushbutton::GOrguePushbutton(GrandOrgueFile* organfile) :
 	GOrgueControl(),
-	m_midi(MIDI_RECV_BUTTON),
+	m_midi(organfile, MIDI_RECV_BUTTON),
+	m_organfile(organfile),
 	m_ManualNumber(0),
 	DispButtonRow(0),
 	DispButtonCol(0),
@@ -70,7 +68,7 @@ bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 
 	wxMemoryDC mdc;
 	wxRect rect(x + 1, y + 1, 31 - 1, 30 - 1);
-	wxBitmap* bmp = organfile->GetImage(DispImageNum + 4);
+	wxBitmap* bmp = m_organfile->GetImage(DispImageNum + 4);
 	dc->DrawBitmap(*bmp, x, y, true);
 	dc->SetTextForeground(DispLabelColour);
 	wxFont font = DisplayMetrics->GetControlLabelFont();

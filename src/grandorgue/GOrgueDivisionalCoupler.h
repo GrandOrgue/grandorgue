@@ -36,7 +36,7 @@ private:
 	std::vector<unsigned> m_manuals;
 
 public:
-	GOrgueDivisionalCoupler();
+	GOrgueDivisionalCoupler(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, int firstValidManualIndex, int numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Set(bool on);

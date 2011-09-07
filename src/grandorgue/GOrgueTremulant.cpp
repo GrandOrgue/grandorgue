@@ -23,8 +23,8 @@
 #include "GOrgueTremulant.h"
 #include "GOrgueDisplayMetrics.h"
 
-GOrgueTremulant::GOrgueTremulant() :
-	GOrgueDrawstop(),
+GOrgueTremulant::GOrgueTremulant(GrandOrgueFile* organfile) :
+	GOrgueDrawstop(organfile),
 	Period(0),
 	StartRate(0),
 	StopRate(0),
@@ -48,7 +48,7 @@ void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetr
 	GOrgueDrawstop::Load(cfg, group, displayMetrics);
 	if (m_pipe)
 		delete m_pipe;
-	m_pipe = new GOrguePipe(wxT(""), false, -ObjectNumber, 0);
+	m_pipe = new GOrguePipe(m_organfile, wxT(""), false, -ObjectNumber, 0);
 	m_pipe->CreateTremulant(Period, StartRate, StopRate, AmpModDepth);
 }
 

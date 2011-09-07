@@ -31,11 +31,13 @@
 
 class GOrgueDisplayMetrics;
 class GOrgueMidiEvent;
+class GrandOrgueFile;
 
 class GOrgueDrawstop : public GOrgueControl, GOrgueDrawable
 {
 protected:
 	GOrgueMidiReceiver m_midi;
+	GrandOrgueFile* m_organfile;
 
 public:
 	bool DefaultToEngaged;
@@ -45,7 +47,7 @@ public:
 	int DispImageNum;
 	GOrgueDisplayMetrics* DisplayMetrics;
 
-	GOrgueDrawstop();
+	GOrgueDrawstop(GrandOrgueFile* organfile);
 	virtual ~GOrgueDrawstop();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);

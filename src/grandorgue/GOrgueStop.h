@@ -45,7 +45,7 @@ private:
 	unsigned m_WindchestGroup;
 
 public:
-	GOrgueStop(unsigned manual_number);
+	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number);
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* display_metrics);

@@ -27,17 +27,19 @@
 #include <wx/wx.h>
 #include "IniFileConfig.h"
 
+class GrandOrgueFile;
+
 class GOrgueWindchest
 {
 
 private:
-
+	GrandOrgueFile* m_organfile;
 	std::vector<unsigned> m_enclosure;
 	std::vector<unsigned> m_tremulant;
 
 public:
 
-	GOrgueWindchest();
+	GOrgueWindchest(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group);
 	double GetVolume();
 	unsigned GetTremulantCount();

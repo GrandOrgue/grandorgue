@@ -28,10 +28,10 @@
 #include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
 
-extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
 
-GOrgueMidiReceiver::GOrgueMidiReceiver(MIDI_RECEIVER_TYPE type):
+GOrgueMidiReceiver::GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type):
+	m_organfile(organfile),
 	m_type(type),
 	m_Key(-1),
 	m_Manual(-1),
@@ -122,21 +122,21 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 			m_events[0].type = MIDI_M_PGM_CHANGE;
 			if (m_Manual != -1)
 			{
-				int what = g_sound->GetMidi().GetManualMidiEvent(organfile->GetManual(m_Manual)->GetMIDIInputNumber());
+				int what = g_sound->GetMidi().GetManualMidiEvent(m_organfile->GetManual(m_Manual)->GetMIDIInputNumber());
 				m_events[0].channel = ((what >> 8) & 0xF) + 1;
 			}
 			m_events[0].key = cfg.ReadInteger(group, wxT("MIDIProgramChangeNumber"), 1, 128);
 		}
 		if (m_type == MIDI_RECV_MANUAL)
 		{
-			int what = g_sound->GetMidi().GetManualMidiEvent(organfile->GetManual(m_Manual)->GetMIDIInputNumber());
+			int what = g_sound->GetMidi().GetManualMidiEvent(m_organfile->GetManual(m_Manual)->GetMIDIInputNumber());
 			m_events[0].type = MIDI_M_NOTE;
 			m_events[0].channel = ((what >> 8) & 0xF) + 1;
 			m_events[0].key = (what & 0xFF) < 0x7F ? (what & 0xFF) : ((what & 0xFF) - 140);
 		}
 		if (m_type == MIDI_RECV_ENCLOSURE)
 		{
-			int what = g_sound->GetMidi().GetMidiEventByChannel(organfile->GetEnclosure(m_Manual)->GetMIDIInputNumber() + 1);
+			int what = g_sound->GetMidi().GetMidiEventByChannel(m_organfile->GetEnclosure(m_Manual)->GetMIDIInputNumber() + 1);
 			m_events[0].type = MIDI_M_CTRL_CHANGE;
 			m_events[0].channel = ((what >> 8) & 0xF) + 1;
 			m_events[0].key = what & 0x7F;

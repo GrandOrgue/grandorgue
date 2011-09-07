@@ -27,6 +27,7 @@
 #include <vector>
 #include "GOrgueMidiEvent.h"
 
+class GrandOrgueFile;
 class IniFileConfig;
 struct IniFileEnumEntry;
 
@@ -66,6 +67,7 @@ typedef struct {
 
 class GOrgueMidiReceiver {
 private:
+	GrandOrgueFile* m_organfile;
 	static const struct IniFileEnumEntry m_MidiTypes[];
 	MIDI_RECEIVER_TYPE m_type;
 	int m_Key;
@@ -73,7 +75,7 @@ private:
 	std::vector<MIDI_MATCH_EVENT> m_events;
 
 public:
-	GOrgueMidiReceiver(MIDI_RECEIVER_TYPE type);
+	GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type);
 
 	void Load(IniFileConfig& cfg, wxString group);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);

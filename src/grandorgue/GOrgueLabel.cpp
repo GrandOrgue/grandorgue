@@ -25,10 +25,8 @@
 #include "GOrgueDisplayMetrics.h"
 #include "IniFileConfig.h"
 
-/* TODO: This should not be... */
-extern GrandOrgueFile* organfile;
-
-GOrgueLabel::GOrgueLabel() :
+GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
+	m_organfile(organfile),
 	FreeXPlacement(false),
 	FreeYPlacement(false),
 	DispSpanDrawstopColToRight(false),
@@ -110,7 +108,7 @@ void GOrgueLabel::Draw(wxDC& dc)
 		78,
 		22);
 
-	dc.DrawBitmap(*organfile->GetImage(8), rect.x, rect.y, false);
+	dc.DrawBitmap(*m_organfile->GetImage(8), rect.x, rect.y, false);
 
 	wxFont font = DisplayMetrics->GetGroupLabelFont();
 	font.SetPointSize(DispLabelFontSize);

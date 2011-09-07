@@ -407,7 +407,7 @@ void GOrgueFrame::OnRevert(wxCommandEvent& event)
 
 void GOrgueFrame::OnProperties(wxCommandEvent& event)
 {
-	GOrgueProperties dlg(this);
+	GOrgueProperties dlg(organfile, this);
 	dlg.ShowModal();
 }
 
