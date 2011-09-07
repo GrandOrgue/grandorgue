@@ -133,7 +133,7 @@ void GOrgueManual::SetKey(unsigned note, int on, GOrgueCoupler* prev)
 	bool unisonoff = false;
 	for (unsigned i = 0; i < m_couplers.size(); i++)
 	{
-		if (m_couplers[i]->IsUnisonOff() && !prev && m_couplers[i]->DefaultToEngaged)
+		if (m_couplers[i]->IsUnisonOff() && !prev && m_couplers[i]->IsEngaged())
 			unisonoff = true;
 		m_couplers[i]->SetKey(note, on, prev);
 	}

@@ -58,7 +58,7 @@ void GOrgueCoupler::PreparePlayback()
 	m_OutState.resize(dest->GetLogicalKeyCount());
 	std::fill(m_OutState.begin(), m_OutState.end(), 0);
 
-	if (m_UnisonOff && DefaultToEngaged)
+	if (m_UnisonOff && IsEngaged())
 		src->SetUnisonOff(true);
 
 	m_Keyshift = m_DestinationKeyshift + src->GetFirstLogicalKeyMIDINoteNumber() - dest->GetFirstLogicalKeyMIDINoteNumber();
@@ -103,7 +103,7 @@ void GOrgueCoupler::SetOut(int noteNumber, int on)
 		return;
 	m_InternalState[note]+=on;
 
-	if (!DefaultToEngaged)
+	if (!IsEngaged())
 		return;
 	unsigned newstate = (m_InternalState[note] / 2);
 	int change = newstate - m_OutState[note];
@@ -188,7 +188,7 @@ void GOrgueCoupler::SetKey(unsigned note, int on, GOrgueCoupler* prev)
 
 void GOrgueCoupler::Set(bool on)
 {
-	if (DefaultToEngaged == on)
+	if (IsEngaged() == on)
 		return;
 
 	GOrgueDrawstop::Set(on);

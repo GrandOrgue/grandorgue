@@ -59,7 +59,7 @@ void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix, wxString group)
 
 void GOrgueTremulant::Set(bool on)
 {
-	if (DefaultToEngaged == on)
+	if (IsEngaged() == on)
 		return;
 	if (m_pipe)
 		m_pipe->Set(on);
@@ -74,6 +74,6 @@ void GOrgueTremulant::Abort()
 
 void GOrgueTremulant::PreparePlayback()
 {
-	if (m_pipe && DefaultToEngaged)
+	if (m_pipe && IsEngaged())
 		m_pipe->Set(true);
 }

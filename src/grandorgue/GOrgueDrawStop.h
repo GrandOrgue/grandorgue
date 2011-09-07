@@ -38,9 +38,9 @@ class GOrgueDrawstop : public GOrgueControl, GOrgueDrawable
 protected:
 	GOrgueMidiReceiver m_midi;
 	GrandOrgueFile* m_organfile;
+	bool m_DefaultToEngaged;
 
 public:
-	bool DefaultToEngaged;
 	bool DisplayInInvertedState;
 	int DispDrawstopRow;
 	int DispDrawstopCol;
@@ -55,6 +55,7 @@ public:
 	void Push(void);
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void MIDI(void);
+	bool IsEngaged() const;
 	virtual void Set(bool on);
 
 };

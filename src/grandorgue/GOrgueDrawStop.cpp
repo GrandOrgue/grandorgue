@@ -36,7 +36,7 @@ GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
 	GOrgueControl(),
 	m_midi(organfile, MIDI_RECV_DRAWSTOP),
 	m_organfile(organfile),
-	DefaultToEngaged(false),
+	m_DefaultToEngaged(false),
 	DisplayInInvertedState(false),
 	DispDrawstopRow(0),
 	DispDrawstopCol(0),
@@ -55,7 +55,7 @@ void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetri
 	DisplayMetrics = displayMetrics;
 	DispDrawstopRow = cfg.ReadInteger(group, wxT("DispDrawstopRow"), 1, 99 + DisplayMetrics->NumberOfExtraDrawstopRowsToDisplay());
 	DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, DispDrawstopRow > 99 ? DisplayMetrics->NumberOfExtraDrawstopColsToDisplay() : DisplayMetrics->NumberOfDrawstopColsToDisplay());
-	DefaultToEngaged = cfg.ReadBoolean(group, wxT("DefaultToEngaged"));
+	m_DefaultToEngaged = cfg.ReadBoolean(group, wxT("DefaultToEngaged"));
 	DisplayInInvertedState = cfg.ReadBoolean(group, wxT("DisplayInInvertedState"));
 	DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 2);
 	m_midi.Load(cfg, group);
@@ -65,7 +65,7 @@ void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetri
 void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
 	m_midi.Save(cfg, prefix, group);
-	cfg.SaveHelper(prefix, group, wxT("DefaultToEngaged"), DefaultToEngaged ? wxT("Y") : wxT("N"));
+	cfg.SaveHelper(prefix, group, wxT("DefaultToEngaged"), m_DefaultToEngaged ? wxT("Y") : wxT("N"));
 }
 
 bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
@@ -80,7 +80,7 @@ bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 		return !(xx < x || xx > x + 64 || yy < y || yy > y + 64 || (x + 32 - xx) * (x + 32 - xx) + (y + 32 - yy) * (y + 32 - yy) > 1024);
 
 	wxRect rect(x, y + 1, 65, 65 - 1);
-	wxBitmap* bmp = m_organfile->GetImage(((DispImageNum - 1) << 1) + (DisplayInInvertedState ^ DefaultToEngaged ? 1 : 0));
+	wxBitmap* bmp = m_organfile->GetImage(((DispImageNum - 1) << 1) + (DisplayInInvertedState ^ m_DefaultToEngaged ? 1 : 0));
 	dc->DrawBitmap(*bmp, x, y, true);
 	dc->SetTextForeground(DispLabelColour);
 	wxFont font = DisplayMetrics->GetControlLabelFont();
@@ -96,7 +96,7 @@ bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 
 void GOrgueDrawstop::Push()
 {
-	Set(DefaultToEngaged ^ true);
+	Set(m_DefaultToEngaged ^ true);
 };
 
 void GOrgueDrawstop::MIDI(void)
@@ -112,9 +112,9 @@ void GOrgueDrawstop::MIDI(void)
 
 void GOrgueDrawstop::Set(bool on)
 {
-	if (DefaultToEngaged == on)
+	if (m_DefaultToEngaged == on)
 		return;
-	DefaultToEngaged = on;
+	m_DefaultToEngaged = on;
 	wxCommandEvent event(wxEVT_DRAWSTOP, 0);
 	event.SetClientData(this);
 	::wxGetApp().frame->AddPendingEvent(event);
@@ -151,4 +151,9 @@ void GOrgueDrawstop::ProcessMidi(const GOrgueMidiEvent& event)
 	default:
 		break;
 	}
+}
+
+bool GOrgueDrawstop::IsEngaged() const
+{
+	return m_DefaultToEngaged;
 }

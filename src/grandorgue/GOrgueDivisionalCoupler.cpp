@@ -55,11 +55,7 @@ void GOrgueDivisionalCoupler::Save(IniFileConfig& cfg, bool prefix, wxString gro
 
 void GOrgueDivisionalCoupler::Set(bool on)
 {
-
-	if (DefaultToEngaged == on)
-		return;
 	GOrgueDrawstop::Set(on);
-
 }
 
 unsigned GOrgueDivisionalCoupler::GetNumberOfManuals()

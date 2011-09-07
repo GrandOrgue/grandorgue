@@ -61,7 +61,7 @@ void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 	}
 
 	GOrguePushbutton::Load(cfg, group, displayMetrics);
-	if (drawstop->DefaultToEngaged ^ drawstop->DisplayInInvertedState)
+	if (drawstop->IsEngaged() ^ drawstop->DisplayInInvertedState)
 		DispImageNum ^= 2;
 
 }
