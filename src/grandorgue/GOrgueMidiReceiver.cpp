@@ -23,6 +23,7 @@
 #include "GOrgueMidi.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrgueManual.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueFile.h"

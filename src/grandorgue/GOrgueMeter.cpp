@@ -29,6 +29,7 @@
 #include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
 #include "GrandOrgueID.h"
+#include "wxGaugeAudio.h"
 
 #if defined(__WXMSW__)
     #include <wx/msw/regconf.h>

@@ -28,13 +28,15 @@
 #include <wx/wx.h>
 #include <wx/fileconf.h>
 #include <wx/filename.h>
-#include "GOrgueManual.h"
+
+class wxProgressDialog;
 
 class GOGUIDisplayMetrics;
 class GOrgueDivisionalCoupler;
 class GOrgueEnclosure;
 class GOrgueFrameGeneral;
 class GOrgueGeneral;
+class GOrgueManual;
 class GOrgueMidiEvent;
 class GOrguePipe;
 class GOrguePiston;

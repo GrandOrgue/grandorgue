@@ -35,6 +35,7 @@ class wxListEvent;
 class wxListView;
 class wxPanel;
 class wxSpinCtrl;
+class wxSpinEvent;
 class wxStaticText;
 class wxToggleButton;
 
