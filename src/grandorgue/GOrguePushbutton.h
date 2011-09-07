@@ -30,14 +30,16 @@
 
 class GOrgueDisplayMetrics;
 class GOrgueMidiEvent;
+class GrandOrgueFile;
 
 class GOrguePushbutton : public GOrgueControl, GOrgueDrawable
 {
 protected:
 	GOrgueMidiReceiver m_midi;
+	GrandOrgueFile* m_organfile;
 
 public:
-	GOrguePushbutton();
+	GOrguePushbutton(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
     void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);

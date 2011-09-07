@@ -29,12 +29,9 @@
 #include "IniFileConfig.h"
 #include "GOrgueMidi.h"
 
-/* TODO: This should not be... */
-extern GOrgueSound* g_sound;
-extern GrandOrgueFile* organfile;
-
-GOrgueEnclosure::GOrgueEnclosure() :
-	m_midi(MIDI_RECV_ENCLOSURE),
+GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
+	m_midi(organfile, MIDI_RECV_ENCLOSURE),
+	m_organfile(organfile),
 	AmpMinimumLevel(0),
 	MIDIInputNumber(0),
 	MIDIValue(0),

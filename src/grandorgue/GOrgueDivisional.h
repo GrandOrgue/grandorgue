@@ -43,7 +43,7 @@ public:
 	std::vector<int> m_Couplers;
 	std::vector<int> m_Tremulants;
 
-	GOrgueDivisional();
+	GOrgueDivisional(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Push();

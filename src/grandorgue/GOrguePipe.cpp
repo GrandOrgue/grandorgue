@@ -30,7 +30,6 @@
 #include "GrandOrgueFile.h"
 
 extern GOrgueSound* g_sound;
-extern GrandOrgueFile* organfile;
 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 
@@ -108,7 +107,8 @@ GOrguePipe::~GOrguePipe()
 	FREE_AND_NULL(m_ra_table);
 }
 
-GOrguePipe::GOrguePipe(wxString filename, bool percussive, int samplerGroupID, int amplitude)
+GOrguePipe::GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int samplerGroupID, int amplitude):
+	m_organfile(organfile)
 {
 	m_filename = filename;
 	m_percussive = percussive;
@@ -167,7 +167,7 @@ void GOrguePipe::SetOn()
 
 	sampler->fade = sampler->fademax = ra_amp;
 	sampler->shift = ra_shift;
-	sampler->time = organfile->GetElapsedTime();
+	sampler->time = m_organfile->GetElapsedTime();
 
 	this->sampler = sampler;
 
@@ -194,7 +194,7 @@ void GOrguePipe::SetOff()
 	if (instances > 0)
 		return;
 
-	double vol = m_SamplerGroupID < 0 ? 1.0 : organfile->GetWindchest(m_SamplerGroupID - 1)->GetVolume();
+	double vol = m_SamplerGroupID < 0 ? 1.0 : m_organfile->GetWindchest(m_SamplerGroupID - 1)->GetVolume();
 	if (vol)
 	{
 
@@ -206,14 +206,14 @@ void GOrguePipe::SetOff()
 			new_sampler->pipe_section = &m_release;
 			new_sampler->position = 0;
 			new_sampler->shift = ra_shift;
-			new_sampler->time = organfile->GetElapsedTime();
+			new_sampler->time = m_organfile->GetElapsedTime();
 			new_sampler->fademax = ra_amp;
 			const bool not_a_tremulant = (m_SamplerGroupID >= 0);
 			if (not_a_tremulant)
 			{
 				if (g_sound->HasScaledReleases())
 				{
-					int time = organfile->GetElapsedTime() - sampler->time;
+					int time = m_organfile->GetElapsedTime() - sampler->time;
 					if (time < 256)
 						new_sampler->fademax = (ra_amp * (16384 + (time * 64))) >> 15;
 					if (time < 1024)
@@ -332,12 +332,12 @@ bool GOrguePipe::LoadCache(wxInputStream* cache)
 	{
 		unsigned manual, stop, pipe;
 		sscanf(m_filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
-		if ((manual < organfile->GetFirstManualIndex()) || (manual > organfile->GetManualAndPedalCount()) ||
-			(stop <= 0) || (stop > organfile->GetManual(manual)->GetStopCount()) ||
-			(pipe <= 0) || (pipe > organfile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
+		if ((manual < m_organfile->GetFirstManualIndex()) || (manual > m_organfile->GetManualAndPedalCount()) ||
+			(stop <= 0) || (stop > m_organfile->GetManual(manual)->GetStopCount()) ||
+			(pipe <= 0) || (pipe > m_organfile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
 			throw (wxString)_("Invalid reference ") + m_filename;
 
-		m_ref = organfile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
+		m_ref = m_organfile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
 
 		return true;
 	}
@@ -465,12 +465,12 @@ void GOrguePipe::LoadData()
 	{
 		unsigned manual, stop, pipe;
 		sscanf(m_filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
-		if ((manual < organfile->GetFirstManualIndex()) || (manual > organfile->GetManualAndPedalCount()) ||
-			(stop <= 0) || (stop > organfile->GetManual(manual)->GetStopCount()) ||
-			(pipe <= 0) || (pipe > organfile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
+		if ((manual < m_organfile->GetFirstManualIndex()) || (manual > m_organfile->GetManualAndPedalCount()) ||
+			(stop <= 0) || (stop > m_organfile->GetManual(manual)->GetStopCount()) ||
+			(pipe <= 0) || (pipe > m_organfile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
 			throw (wxString)_("Invalid reference ") + m_filename;
 
-		m_ref = organfile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
+		m_ref = m_organfile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
 
 		return;
 	}

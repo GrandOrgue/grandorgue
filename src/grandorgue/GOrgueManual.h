@@ -37,12 +37,14 @@ class GOrgueDivisional;
 class GOrgueMidiEvent;
 class GOrgueStop;
 class GOrgueTremulant;
+class GrandOrgueFile;
 class IniFileConfig;
 
 class GOrgueManual 
 {
 private:
 	GOrgueMidiReceiver m_midi;
+	GrandOrgueFile* m_organfile;
 	/* Keyboard state */
 	std::vector<bool> m_KeyPressed;
 	/* Internal state affected by couplers */
@@ -73,7 +75,7 @@ private:
 
 public:
 
-	GOrgueManual();
+	GOrgueManual(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics, int manualNumber);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void SetKey(unsigned note, int on, GOrgueCoupler* prev);

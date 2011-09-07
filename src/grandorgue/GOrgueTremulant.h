@@ -39,7 +39,7 @@ private:
 	GOrguePipe* m_pipe;
 
 public:
-	GOrgueTremulant();
+	GOrgueTremulant(GrandOrgueFile* organfile);
 	~GOrgueTremulant();
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);

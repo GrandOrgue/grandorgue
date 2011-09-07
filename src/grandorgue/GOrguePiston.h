@@ -36,7 +36,7 @@ public:
 
 	GOrgueDrawstop* drawstop;
 
-	GOrguePiston();
+	GOrguePiston(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Push();

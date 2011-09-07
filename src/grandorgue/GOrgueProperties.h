@@ -23,6 +23,8 @@
 #ifndef GORGUEPROPERTIES_H
 #define GORGUEPROPERTIES_H
 
+class GrandOrgueFile;
+
 class wxStaticLink : public wxStaticText
 {
 public:
@@ -35,8 +37,11 @@ protected:
 
 class GOrgueProperties : public wxDialog
 {
+private:
+	GrandOrgueFile* m_organfile;
+
 public:
-	GOrgueProperties(wxWindow* parent);
+	GOrgueProperties(GrandOrgueFile* organfile, wxWindow* parent);
 	~GOrgueProperties(void);
 };
 

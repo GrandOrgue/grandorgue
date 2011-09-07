@@ -23,6 +23,11 @@
 #include "GOrgueGeneral.h"
 #include "IniFileConfig.h"
 
+GOrgueGeneral::GOrgueGeneral(GrandOrgueFile* organfile):
+	GOrgueFrameGeneral(organfile)
+{
+}
+
 void GOrgueGeneral::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* displayMetrics)
 {
 	GOrgueFrameGeneral::Load(cfg, group);

@@ -28,11 +28,13 @@
 
 class GOrgueTremulant;
 class GOrgueReleaseAlignTable;
+class GrandOrgueFile;
 
 class GOrguePipe
 {
 
 private:
+	GrandOrgueFile* m_organfile;
 
 	void SetOn();
 	void SetOff();
@@ -66,7 +68,7 @@ private:
 public:
 
 	~GOrguePipe();
-	GOrguePipe(wxString filename, bool percussive, int samplerGroupID, int amplitude);
+	GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int samplerGroupID, int amplitude);
 
 	void Set(bool on);
 	void LoadData();

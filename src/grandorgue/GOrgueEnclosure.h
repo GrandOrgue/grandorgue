@@ -29,12 +29,14 @@
 
 class GOrgueDisplayMetrics;
 class GOrgueMidiEvent;
+class GrandOrgueFile;
 class IniFileConfig;
 
 class GOrgueEnclosure : public GOrgueDrawable
 {
 private:
 	GOrgueMidiReceiver m_midi;
+	GrandOrgueFile* m_organfile;
 	unsigned m_enclosure_nb;
 	int AmpMinimumLevel;
 	int MIDIInputNumber;
@@ -44,7 +46,7 @@ private:
 
 public:
 
-	GOrgueEnclosure();
+	GOrgueEnclosure(GrandOrgueFile* organfile);
 	bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	void Load(IniFileConfig& cfg, const unsigned enclosure_nb, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix);

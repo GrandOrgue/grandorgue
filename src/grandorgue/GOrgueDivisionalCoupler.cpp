@@ -23,11 +23,8 @@
 #include "GOrgueDivisionalCoupler.h"
 #include "GrandOrgueFile.h"
 
-/* TODO: This should not be... */
-extern GrandOrgueFile* organfile;
-
-GOrgueDivisionalCoupler::GOrgueDivisionalCoupler() :
-	GOrgueDrawstop(),
+GOrgueDivisionalCoupler::GOrgueDivisionalCoupler(GrandOrgueFile* organfile) :
+	GOrgueDrawstop(organfile),
 	m_BiDirectionalCoupling(false),
 	m_manuals(0)
 {

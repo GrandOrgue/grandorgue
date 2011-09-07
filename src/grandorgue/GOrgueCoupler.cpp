@@ -25,10 +25,8 @@
 #include "GOrgueSound.h"
 #include "GrandOrgueFile.h"
 
-extern GrandOrgueFile* organfile;
-
-GOrgueCoupler::GOrgueCoupler(unsigned sourceManual) :
-	GOrgueDrawstop(),
+GOrgueCoupler::GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual) :
+	GOrgueDrawstop(organfile),
 	m_UnisonOff(false),
 	m_CoupleToSubsequentUnisonIntermanualCouplers(false),
 	m_CoupleToSubsequentUpwardIntermanualCouplers(false),
@@ -50,8 +48,8 @@ GOrgueCoupler::GOrgueCoupler(unsigned sourceManual) :
 
 void GOrgueCoupler::PreparePlayback()
 {
-	GOrgueManual* src = organfile->GetManual(m_SourceManual);
-	GOrgueManual* dest = organfile->GetManual(m_DestinationManual);
+	GOrgueManual* src = m_organfile->GetManual(m_SourceManual);
+	GOrgueManual* dest = m_organfile->GetManual(m_DestinationManual);
 
 	m_KeyState.resize(src->GetLogicalKeyCount());
 	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
@@ -109,7 +107,7 @@ void GOrgueCoupler::SetOut(int noteNumber, int on)
 		return;
 	unsigned newstate = (m_InternalState[note] / 2);
 	int change = newstate - m_OutState[note];
-	GOrgueManual* dest = organfile->GetManual(m_DestinationManual);
+	GOrgueManual* dest = m_organfile->GetManual(m_DestinationManual);
 	m_OutState[note] += change;
 	dest->SetKey(note, change, this);
 }
@@ -195,10 +193,10 @@ void GOrgueCoupler::Set(bool on)
 
 	GOrgueDrawstop::Set(on);
 
-	GOrgueManual* dest = organfile->GetManual(m_DestinationManual);
+	GOrgueManual* dest = m_organfile->GetManual(m_DestinationManual);
 
 	if (m_UnisonOff)
-		organfile->GetManual(m_SourceManual)->SetUnisonOff(on);
+		m_organfile->GetManual(m_SourceManual)->SetUnisonOff(on);
 
 	for(unsigned i = 0; i < m_InternalState.size(); i++)
 	{

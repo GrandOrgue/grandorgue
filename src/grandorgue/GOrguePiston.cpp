@@ -28,11 +28,8 @@
 #include "GOrgueTremulant.h"
 #include "IniFileConfig.h"
 
-/* TODO: This should not be... */
-extern GrandOrgueFile* organfile;
-
-GOrguePiston::GOrguePiston() :
-	GOrguePushbutton(),
+GOrguePiston::GOrguePiston(GrandOrgueFile* organfile) :
+	GOrguePushbutton(organfile),
 	drawstop(NULL)
 {
 
@@ -47,20 +44,20 @@ void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics
 
 	if (type == wxT("STOP"))
 	{
-		i = cfg.ReadInteger(group, wxT("ManualNumber"), organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
-		j = cfg.ReadInteger(group, wxT("ObjectNumber"), 1, organfile->GetManual(i)->GetStopCount()) - 1;
-		drawstop = organfile->GetManual(i)->GetStop(j);
+		i = cfg.ReadInteger(group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+		j = cfg.ReadInteger(group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetStopCount()) - 1;
+		drawstop = m_organfile->GetManual(i)->GetStop(j);
 	}
 	if (type == wxT("COUPLER"))
 	{
-		i = cfg.ReadInteger(group, wxT("ManualNumber"), organfile->GetFirstManualIndex(), organfile->GetManualAndPedalCount());
-		j = cfg.ReadInteger(group, wxT("ObjectNumber"), 1, organfile->GetManual(i)->GetCouplerCount()) - 1;
-		drawstop = organfile->GetManual(i)->GetCoupler(j);
+		i = cfg.ReadInteger(group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+		j = cfg.ReadInteger(group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetCouplerCount()) - 1;
+		drawstop = m_organfile->GetManual(i)->GetCoupler(j);
 	}
 	if (type == wxT("TREMULANT"))
 	{
-		j = ObjectNumber=cfg.ReadInteger(group, wxT("ObjectNumber"), 1, organfile->GetTremulantCount()) - 1;
-		drawstop = organfile->GetTremulant(j);
+		j = ObjectNumber=cfg.ReadInteger(group, wxT("ObjectNumber"), 1, m_organfile->GetTremulantCount()) - 1;
+		drawstop = m_organfile->GetTremulant(j);
 	}
 
 	GOrguePushbutton::Load(cfg, group, displayMetrics);

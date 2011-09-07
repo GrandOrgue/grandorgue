@@ -245,17 +245,17 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 
 	m_windchest.resize(0);
 	for (unsigned i = 0; i < m_NumberOfWindchestGroups; i++)
-		m_windchest.push_back(new GOrgueWindchest());
+		m_windchest.push_back(new GOrgueWindchest(this));
 
 	m_manual.resize(0);
 	m_manual.resize(m_FirstManual); // Add empty slot for pedal, if necessary
 	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
-		m_manual.push_back(new GOrgueManual());
+		m_manual.push_back(new GOrgueManual(this));
 
 	m_label.resize(0);
 	for (unsigned i = 0; i < m_NumberOfLabels; i++)
 	{
-		m_label.push_back(new GOrgueLabel());
+		m_label.push_back(new GOrgueLabel(this));
 		buffer.Printf(wxT("Label%03d"), i + 1);
 		m_label[i]->Load(ini, buffer, m_DisplayMetrics);
 	}
@@ -263,14 +263,14 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_enclosure.resize(0);
 	for (unsigned i = 0; i < m_NumberOfEnclosures; i++)
 	{
-		m_enclosure.push_back(new GOrgueEnclosure());
+		m_enclosure.push_back(new GOrgueEnclosure(this));
 		m_enclosure[i]->Load(ini, i, m_DisplayMetrics);
 	}
 
 	m_tremulant.resize(0);
 	for (unsigned i = 0; i < m_NumberOfTremulants; i++)
 	{
-		m_tremulant.push_back(new GOrgueTremulant());
+		m_tremulant.push_back(new GOrgueTremulant(this));
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
 		m_tremulant[i]->Load(ini, buffer, m_DisplayMetrics);
 	}
@@ -290,7 +290,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_piston.resize(0);
 	for (unsigned i = 0; i < m_NumberOfReversiblePistons; i++)
 	{
-		m_piston.push_back(new GOrguePiston());
+		m_piston.push_back(new GOrguePiston(this));
 		buffer.Printf(wxT("ReversiblePiston%03d"), i + 1);
 		m_piston[i]->Load(ini, buffer, m_DisplayMetrics);
 	}
@@ -298,7 +298,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_divisionalcoupler.resize(0);
 	for (unsigned i = 0; i < m_NumberOfDivisionalCouplers; i++)
 	{
-		m_divisionalcoupler.push_back(new GOrgueDivisionalCoupler());
+		m_divisionalcoupler.push_back(new GOrgueDivisionalCoupler(this));
 		buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
 		m_divisionalcoupler[i]->Load(ini, buffer, m_FirstManual, m_NumberOfManuals, m_DisplayMetrics);
 	}
@@ -306,7 +306,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_general.resize(0);
 	for (unsigned i = 0; i < m_NumberOfGenerals; i++)
 	{
-		m_general.push_back(new GOrgueGeneral());
+		m_general.push_back(new GOrgueGeneral(this));
 		buffer.Printf(wxT("General%03d"), i + 1);
 		m_general[i]->Load(ini, buffer, m_DisplayMetrics);
 	}
@@ -314,7 +314,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_framegeneral.resize(0);
 	for (unsigned i = 0; i < m_NumberOfFrameGenerals; i++)
 	{
-		m_framegeneral.push_back(new GOrgueFrameGeneral());
+		m_framegeneral.push_back(new GOrgueFrameGeneral(this));
 		buffer.Printf(wxT("FrameGeneral%03d"), i + 1);
 		m_framegeneral[i]->Load(ini, buffer);
 	}

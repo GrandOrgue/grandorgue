@@ -32,12 +32,10 @@
 #include "MIDIEventDialog.h"
 #include "GOrgueMidi.h"
 
-extern GrandOrgueFile* organfile;
-extern GOrgueSound* g_sound;
-
-GOrgueDrawstop::GOrgueDrawstop() :
+GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
 	GOrgueControl(),
-	m_midi(MIDI_RECV_DRAWSTOP),
+	m_midi(organfile, MIDI_RECV_DRAWSTOP),
+	m_organfile(organfile),
 	DefaultToEngaged(false),
 	DisplayInInvertedState(false),
 	DispDrawstopRow(0),
@@ -82,7 +80,7 @@ bool GOrgueDrawstop::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 		return !(xx < x || xx > x + 64 || yy < y || yy > y + 64 || (x + 32 - xx) * (x + 32 - xx) + (y + 32 - yy) * (y + 32 - yy) > 1024);
 
 	wxRect rect(x, y + 1, 65, 65 - 1);
-	wxBitmap* bmp = organfile->GetImage(((DispImageNum - 1) << 1) + (DisplayInInvertedState ^ DefaultToEngaged ? 1 : 0));
+	wxBitmap* bmp = m_organfile->GetImage(((DispImageNum - 1) << 1) + (DisplayInInvertedState ^ DefaultToEngaged ? 1 : 0));
 	dc->DrawBitmap(*bmp, x, y, true);
 	dc->SetTextForeground(DispLabelColour);
 	wxFont font = DisplayMetrics->GetControlLabelFont();
@@ -120,14 +118,14 @@ void GOrgueDrawstop::Set(bool on)
 	wxCommandEvent event(wxEVT_DRAWSTOP, 0);
 	event.SetClientData(this);
 	::wxGetApp().frame->AddPendingEvent(event);
-	for (unsigned i = 0; i < organfile->GetNumberOfReversiblePistons(); i++)
+	for (unsigned i = 0; i < m_organfile->GetNumberOfReversiblePistons(); i++)
 	{
-		if (organfile->GetPiston(i)->drawstop == this)
+		if (m_organfile->GetPiston(i)->drawstop == this)
 		{
-			organfile->GetPiston(i)->DispImageNum = (organfile->GetPiston(i)->DispImageNum & 1) | (on ^ DisplayInInvertedState ? 2 : 0);
+			m_organfile->GetPiston(i)->DispImageNum = (m_organfile->GetPiston(i)->DispImageNum & 1) | (on ^ DisplayInInvertedState ? 2 : 0);
 			wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-			/*event.SetClientData(organfile->m_piston + i);*/ /* TODO: the equivilent of this may be wrong */
-			event.SetClientData(organfile->GetPiston(i));
+			/*event.SetClientData(m_organfile->m_piston + i);*/ /* TODO: the equivilent of this may be wrong */
+			event.SetClientData(m_organfile->GetPiston(i));
 			::wxGetApp().frame->AddPendingEvent(event);
 	    }
 	}

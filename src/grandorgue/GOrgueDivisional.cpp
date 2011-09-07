@@ -35,11 +35,10 @@
 #include "SettingsDialog.h"
 #include "GOrgueMidi.h"
 
-extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
 
-GOrgueDivisional::GOrgueDivisional() :
-	GOrguePushbutton(),
+GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile) :
+	GOrguePushbutton(organfile),
 	m_DivisionalNumber(0),
 	m_Stops(),
 	m_Couplers(),
@@ -61,11 +60,11 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 
 	m_midi.SetManual(manualNumber);
 
-	GOrgueManual* associatedManual = organfile->GetManual(m_ManualNumber);
+	GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
 
 	int NumberOfStops = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount());
-	int NumberOfCouplers = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), organfile->DivisionalsStoreIntermanualCouplers() || organfile->DivisionalsStoreIntramanualCouplers());
-	int NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, organfile->GetTremulantCount(), organfile->DivisionalsStoreTremulants());
+	int NumberOfCouplers = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers());
+	int NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), m_organfile->DivisionalsStoreTremulants());
 
 	m_Stops.resize(NumberOfStops);
 	for (i = 0; i < NumberOfStops; i++)
@@ -74,7 +73,7 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 		m_Stops[i] = cfg.ReadInteger( group, buffer, -associatedManual->GetStopCount(), associatedManual->GetStopCount());
 	}
 
-	if (organfile->DivisionalsStoreIntermanualCouplers() || organfile->DivisionalsStoreIntramanualCouplers())
+	if (m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers())
 	{
 		m_Couplers.resize(NumberOfCouplers);
 		for (i = 0; i < NumberOfCouplers; i++)
@@ -84,7 +83,7 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 		}
 	}
 
-	if (organfile->DivisionalsStoreTremulants())
+	if (m_organfile->DivisionalsStoreTremulants())
 	{
 		m_Tremulants.resize(NumberOfTremulants);
 		for (i = 0; i < NumberOfTremulants; i++)
@@ -134,7 +133,7 @@ void GOrgueDivisional::PushLocal()
 {
 
 	bool used = false;
-	GOrgueManual* associatedManual = organfile->GetManual(m_ManualNumber);
+	GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
 
 	if (g_sound->GetMidi().SetterActive())
 	{
@@ -144,26 +143,26 @@ void GOrgueDivisional::PushLocal()
 		m_Tremulants.clear();
 		for (unsigned i = 0; i < associatedManual->GetStopCount(); i++)
 		{
-			if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetStop(i)->Displayed)
+			if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetStop(i)->Displayed)
 				continue;
 			m_Stops.push_back(associatedManual->GetStop(i)->DefaultToEngaged ? i + 1 : -i - 1);
 			used |= associatedManual->GetStop(i)->DefaultToEngaged;
 		}
 		for (unsigned i = 0; i < associatedManual->GetCouplerCount(); i++)
 		{
-			if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetCoupler(i)->Displayed)
+			if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetCoupler(i)->Displayed)
 				continue;
-			if ((organfile->DivisionalsStoreIntramanualCouplers() && !associatedManual->GetCoupler(i)->IsIntermanual()) || (organfile->DivisionalsStoreIntermanualCouplers() && associatedManual->GetCoupler(i)->IsIntermanual()))
+			if ((m_organfile->DivisionalsStoreIntramanualCouplers() && !associatedManual->GetCoupler(i)->IsIntermanual()) || (m_organfile->DivisionalsStoreIntermanualCouplers() && associatedManual->GetCoupler(i)->IsIntermanual()))
 			{
 				m_Couplers.push_back(associatedManual->GetCoupler(i)->DefaultToEngaged ? i + 1 : -i - 1);
 				used |= associatedManual->GetCoupler(i)->DefaultToEngaged;
 			}
 		}
-		if (organfile->DivisionalsStoreTremulants())
+		if (m_organfile->DivisionalsStoreTremulants())
 		{
 			for (unsigned i = 0; i < associatedManual->GetTremulantCount(); i++)
 			{
-				if (!organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetTremulant(i)->Displayed)
+				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetTremulant(i)->Displayed)
 					continue;
 				m_Tremulants.push_back(associatedManual->GetTremulant(i)->DefaultToEngaged ? i + 1 : -i - 1);
 				used |= associatedManual->GetTremulant(i)->DefaultToEngaged;
@@ -216,10 +215,10 @@ void GOrgueDivisional::Push()
 	if (g_sound->GetMidi().SetterActive())
 		return;
 
-	for (unsigned k = 0; k < organfile->GetDivisionalCouplerCount(); k++)
+	for (unsigned k = 0; k < m_organfile->GetDivisionalCouplerCount(); k++)
 	{
 
-		GOrgueDivisionalCoupler* coupler = organfile->GetDivisionalCoupler(k);
+		GOrgueDivisionalCoupler* coupler = m_organfile->GetDivisionalCoupler(k);
 		if (!coupler->DefaultToEngaged)
 			continue;
 
@@ -230,7 +229,7 @@ void GOrgueDivisional::Push()
 				continue;
 
 			for (unsigned int j = i + 1; j < coupler->GetNumberOfManuals(); j++)
-				organfile->GetManual(coupler->GetManual(j))->GetDivisional(m_DivisionalNumber)->PushLocal();
+				m_organfile->GetManual(coupler->GetManual(j))->GetDivisional(m_DivisionalNumber)->PushLocal();
 
 			if (coupler->IsBidirectional())
 			{
@@ -239,7 +238,7 @@ void GOrgueDivisional::Push()
 				{
 					if (coupler->GetManual(j) == m_ManualNumber)
 						break;
-					organfile->GetManual(coupler->GetManual(j))->GetDivisional(m_DivisionalNumber)->PushLocal();
+					m_organfile->GetManual(coupler->GetManual(j))->GetDivisional(m_DivisionalNumber)->PushLocal();
 				}
 
 			}

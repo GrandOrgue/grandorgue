@@ -26,11 +26,8 @@
 #include "GOrgueSound.h"
 #include "GOrgueDisplayMetrics.h"
 
-/* TODO: This should not be... */
-extern GrandOrgueFile* organfile;
-
-GOrgueStop::GOrgueStop(unsigned manual_number) :
-	GOrgueDrawstop(),
+GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number) :
+	GOrgueDrawstop(organfile),
 	m_Pipes(0),
 	m_KeyState(0),
 	m_ManualNumber(manual_number),
@@ -84,7 +81,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* 
 	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
 	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
 	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
-	m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, organfile->GetWinchestGroupCount());
+	m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, m_organfile->GetWinchestGroupCount());
 	m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
 
 	m_Pipes.clear();
@@ -95,10 +92,11 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group, GOrgueDisplayMetrics* 
 		wxString filename = cfg.ReadString(group, buffer);
 		m_Pipes.push_back
 			(new GOrguePipe
-				(filename
+				(m_organfile
+				,filename
 				,m_Percussive
 				,m_WindchestGroup
-				,organfile->GetAmplitude() * m_AmplitudeLevel
+				,m_organfile->GetAmplitude() * m_AmplitudeLevel
 				)
 			);
 	}

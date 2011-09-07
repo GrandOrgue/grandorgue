@@ -40,7 +40,7 @@ private:
 	std::vector<int> m_DivisionalCouplers;
 
 public:
-	GOrgueFrameGeneral();
+	GOrgueFrameGeneral(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void Push();

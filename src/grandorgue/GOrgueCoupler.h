@@ -60,7 +60,7 @@ class GOrgueCoupler : public GOrgueDrawstop
 	unsigned GetInternalState(int note);
 public:
 
-	GOrgueCoupler(unsigned sourceManual);
+	GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual);
 	void Load(IniFileConfig& cfg, wxString group, unsigned firstValidManualIndex, unsigned numberOfManuals, GOrgueDisplayMetrics* displayMetrics);
 	void Save(IniFileConfig& cfg, bool prefix, wxString group);
 	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
