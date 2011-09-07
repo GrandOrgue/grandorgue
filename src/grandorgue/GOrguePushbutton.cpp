@@ -41,6 +41,11 @@ GOrguePushbutton::GOrguePushbutton(GrandOrgueFile* organfile) :
 {
 }
 
+GOrgueMidiReceiver& GOrguePushbutton::GetMidiReceiver()
+{
+	return m_midi;
+}
+
 void GOrguePushbutton::MIDI(void)
 {
 	MIDIEventDialog dlg (::wxGetApp().frame, _("Midi-Settings for Pushbutton - ")+Name ,m_midi);

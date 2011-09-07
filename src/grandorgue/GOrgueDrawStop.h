@@ -54,6 +54,7 @@ public:
 	virtual bool Draw(int xx, int yy, wxDC* dc = 0, wxDC* dc2 = 0);
 	void Push(void);
 	void ProcessMidi(const GOrgueMidiEvent& event);
+	GOrgueMidiReceiver& GetMidiReceiver();
 	void MIDI(void);
 	bool IsEngaged() const;
 	virtual void Set(bool on);

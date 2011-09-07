@@ -204,6 +204,11 @@ GOrgueManual::~GOrgueManual(void)
 {
 }
 
+GOrgueMidiReceiver& GOrgueManual::GetMidiReceiver()
+{
+	return m_midi;
+}
+
 int GOrgueManual::GetMIDIInputNumber()
 {
 	return m_midi_input_number;

@@ -86,6 +86,7 @@ public:
 	void PreparePlayback();
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
+	GOrgueMidiReceiver& GetMidiReceiver();
 	void MIDI(void);
 	~GOrgueManual(void);
 
