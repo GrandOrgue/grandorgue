@@ -44,7 +44,6 @@
 #include "RtAudio.h"
 #include "RtMidi.h"
 #include "GrandOrgueDef.h"
-#include "GOrgueRtHelpers.h"
 
 BEGIN_DECLARE_EVENT_TYPES()
 
@@ -243,6 +242,7 @@ private:
 	wxString defaultAudio;
 
 	GOrgueMidi* m_midi;
+	GrandOrgueFile* m_organfile;
 
 private:
 
@@ -286,8 +286,8 @@ public:
 	~GOrgueSound(void);
 
 	bool OpenSound(bool wait, GrandOrgueFile* organfile);
-	void CloseSound(GrandOrgueFile* organfile);
-	bool ResetSound(GrandOrgueFile* organfile);
+	void CloseSound();
+	bool ResetSound();
 
 	void CloseWAV();
 

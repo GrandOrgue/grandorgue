@@ -39,8 +39,6 @@
 #include <vector>
 #include <wx/config.h>
 
-extern GrandOrgueFile* organfile;
-
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
 typedef struct
@@ -109,7 +107,8 @@ GOrgueMidi::GOrgueMidi() :
 	m_listening(false),
 	m_memset(false),
 	m_listen_evthandler(NULL),
-	m_organ_midi_events()
+	m_organ_midi_events(),
+	m_organfile(NULL)
 {
 
 	RtMidiIn midi_dev;
@@ -200,6 +199,11 @@ std::map<wxString, int>& GOrgueMidi::GetDevices()
 	return m_midi_device_map;
 }
 
+void GOrgueMidi::SetOrganFile(GrandOrgueFile* organfile)
+{
+	m_organfile = organfile;
+}
+
 bool GOrgueMidi::HasActiveDevice()
 {
 
@@ -253,9 +257,9 @@ GOrgueMidi::ProcessMessage
 
 	int i, j;
 
-	if (e.GetMidiType() == MIDI_RESET && active && organfile)
+	if (e.GetMidiType() == MIDI_RESET && active && m_organfile)
 	{
-		organfile->Reset();
+		m_organfile->Reset();
 		return;
 	}
 
@@ -281,8 +285,8 @@ GOrgueMidi::ProcessMessage
 
 	if (!active)
 		return;
-	if (organfile)
-		organfile->ProcessMidi(e);
+	if (m_organfile)
+		m_organfile->ProcessMidi(e);
 
 	// MIDI code for memory set
 	if (m_midi_events[15] == j && (((j & 0xF000) == 0xC000) || m_memset ^ (bool)msg[2]))

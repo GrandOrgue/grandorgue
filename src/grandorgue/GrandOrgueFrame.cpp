@@ -412,7 +412,7 @@ void GOrgueFrame::OnAudioPanic(wxCommandEvent& WXUNUSED(event))
 {
 	if (!g_sound)
 		return;
-	g_sound->ResetSound(organfile);
+	g_sound->ResetSound();
 }
 
 void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))

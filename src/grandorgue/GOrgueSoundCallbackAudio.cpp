@@ -30,8 +30,6 @@
 #include "GrandOrgueFile.h"
 #include "RtAudio.h"
 
-extern GrandOrgueFile* organfile;
-
 static
 inline
 void stereoUncompressed
@@ -383,7 +381,7 @@ void GOrgueSound::ProcessAudioSamplers
 				(b_limit) &&
 				(samplers_count >= poly_soft) &&
 				(sampler->pipe_section->stage == GSS_RELEASE) &&
-				(organfile->GetElapsedTime() - sampler->time > 250)
+				(m_organfile->GetElapsedTime() - sampler->time > 250)
 			)
 			sampler->fadeout = 4;
 
@@ -447,20 +445,20 @@ int GOrgueSound::AudioCallbackLocal
 	)
 {
 
-	if (organfile)
-		organfile->SetElapsedTime(sw.Time());
+	if (m_organfile)
+		m_organfile->SetElapsedTime(sw.Time());
 
 	m_midi->ProcessMessages(b_active);
 
 	/* if no samplers playing, or sound is disabled, fill buffer with zero */
-	if (!b_active || !samplers_count)
+	if (!b_active || !samplers_count || !m_organfile)
 	{
 
 		memset(output_buffer, 0, (n_frames * sizeof(float)));
 
 		/* we can only abort for the case of the sound system not being active
 		 * (because recording could be enabled... */
-		if (!b_active)
+		if (!b_active || !m_organfile)
 			return 0;
 
 	}
@@ -472,7 +470,7 @@ int GOrgueSound::AudioCallbackLocal
 	/* initialise the output buffer */
 	std::fill(final_buff, final_buff + 2048, 0);
 
-	for (unsigned j = 0; j < organfile->GetTremulantCount(); j++)
+	for (unsigned j = 0; j < m_organfile->GetTremulantCount(); j++)
 	{
 		if (m_tremulants[j].sampler == NULL)
 			continue;
@@ -507,7 +505,7 @@ int GOrgueSound::AudioCallbackLocal
 
 	}
 
-	for (unsigned j = 0; j < organfile->GetWinchestGroupCount(); j++)
+	for (unsigned j = 0; j < m_organfile->GetWinchestGroupCount(); j++)
 	{
 
 		if (m_windchests[j] == NULL)
@@ -519,7 +517,7 @@ int GOrgueSound::AudioCallbackLocal
 
 		ProcessAudioSamplers(&(m_windchests[j]), n_frames, this_buff);
 
-		GOrgueWindchest* current_windchest = organfile->GetWindchest(j);
+		GOrgueWindchest* current_windchest = m_organfile->GetWindchest(j);
 		double d = current_windchest->GetVolume();
 		d *= volume;
 		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100

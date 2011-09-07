@@ -24,8 +24,6 @@
 
 #include <math.h>
 #include <wx/progdlg.h>
-#include <wx/image.h>
-#include <wx/mstream.h>
 #include <wx/stream.h>
 #include <wx/wfstream.h>
 #include <wx/zstream.h>
@@ -502,6 +500,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 GrandOrgueFile::~GrandOrgueFile(void)
 {
 }
+
 void GrandOrgueFile::Revert(wxFileConfig& cfg)
 {
     if (!m_b_customized)

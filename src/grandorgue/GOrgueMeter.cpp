@@ -204,7 +204,7 @@ void GOrgueMeter::OnTranspose(wxCommandEvent& event)
 	if (g_sound)
 	{
 		g_sound->GetMidi().SetTranspose(n);
-		g_sound->ResetSound(organfile);
+		g_sound->ResetSound();
 	}
 }
 void GOrgueMeter::OnEnter(wxCommandEvent& event)
