@@ -20,6 +20,8 @@
  * MA 02111-1307, USA.
  */
 
+#include "Images.h"
+
 // Original Wood Images based on HW1 Format
  const unsigned char Image_Wood01[]=
  {
@@ -56035,3 +56037,6 @@ int c_ImageLoader_Stops[] = {
 	sizeof(Image_draw1off), sizeof(Image_draw1on), sizeof(Image_draw2off), sizeof(Image_draw2on),
 	sizeof(Image_hpiston), sizeof(Image_fpiston), sizeof(Image_hpiston2), sizeof(Image_fpiston2), sizeof(Image_label),
 };
+
+int count_ImageLoader_Stops = sizeof(ImageLoader_Stops) / sizeof(ImageLoader_Stops[0]);
+int count_ImageLoader_Wood = sizeof(ImageLoader_Wood) / sizeof(ImageLoader_Wood[0]);
