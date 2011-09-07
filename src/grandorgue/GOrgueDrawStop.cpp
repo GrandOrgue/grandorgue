@@ -122,20 +122,14 @@ void GOrgueDrawstop::Set(bool on)
 		return;
 	m_DefaultToEngaged = on;
 	wxCommandEvent event(wxEVT_DRAWSTOP, 0);
-	event.SetClientData(this);
+	event.SetClientData((GOrgueDrawable*)this);
 	::wxGetApp().frame->AddPendingEvent(event);
 	for (unsigned i = 0; i < m_organfile->GetNumberOfReversiblePistons(); i++)
 	{
 		if (m_organfile->GetPiston(i)->drawstop == this)
-		{
-			m_organfile->GetPiston(i)->DispImageNum = (m_organfile->GetPiston(i)->DispImageNum & 1) | (on ^ DisplayInInvertedState ? 2 : 0);
-			wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-			/*event.SetClientData(m_organfile->m_piston + i);*/ /* TODO: the equivilent of this may be wrong */
-			event.SetClientData(m_organfile->GetPiston(i));
-			::wxGetApp().frame->AddPendingEvent(event);
-	    }
+			m_organfile->GetPiston(i)->Display (on ^ DisplayInInvertedState);
 	}
-	GOrgueLCD_WriteLineTwo(Name, 2000);
+	GOrgueLCD_WriteLineTwo(GetName(), 2000);
 }
 
 void GOrgueDrawstop::ProcessMidi(const GOrgueMidiEvent& event)
@@ -162,4 +156,9 @@ void GOrgueDrawstop::ProcessMidi(const GOrgueMidiEvent& event)
 bool GOrgueDrawstop::IsEngaged() const
 {
 	return m_DefaultToEngaged;
+}
+
+bool GOrgueDrawstop::DisplayInverted() const
+{
+	return DisplayInInvertedState;
 }

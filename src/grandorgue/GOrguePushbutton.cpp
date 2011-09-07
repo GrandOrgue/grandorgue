@@ -34,6 +34,7 @@ GOrguePushbutton::GOrguePushbutton(GrandOrgueFile* organfile) :
 	GOrgueControl(),
 	m_midi(organfile, MIDI_RECV_BUTTON),
 	m_organfile(organfile),
+	m_IsPushed(false),
 	m_ManualNumber(0),
 	DispButtonRow(0),
 	DispButtonCol(0),
@@ -73,7 +74,7 @@ bool GOrguePushbutton::Draw(int xx, int yy, wxDC* dc, wxDC* dc2)
 
 	wxMemoryDC mdc;
 	wxRect rect(x + 1, y + 1, 31 - 1, 30 - 1);
-	wxBitmap* bmp = m_organfile->GetImage(DispImageNum + 4);
+	wxBitmap* bmp = m_organfile->GetImage(DispImageNum + 4 + (IsPushed() ? 2 : 0));
 	dc->DrawBitmap(*bmp, x, y, true);
 	dc->SetTextForeground(DispLabelColour);
 	wxFont font = DisplayMetrics->GetControlLabelFont();
@@ -102,14 +103,13 @@ void GOrguePushbutton::Save(IniFileConfig& cfg, bool prefix)
 	m_midi.Save(cfg, prefix, m_group);
 }
 
-void GOrguePushbutton::Display(bool onoff)
+void GOrguePushbutton::Display(bool on)
 {
-	int on = (onoff ? 2 : 0);
-	if ((DispImageNum & 2) != on)
+	if (m_IsPushed != on)
 	{
-		DispImageNum = (DispImageNum & 1) | on;
+		m_IsPushed = on;
 		wxCommandEvent event(wxEVT_PUSHBUTTON, 0);
-		event.SetClientData(this);
+		event.SetClientData((GOrgueDrawable*)this);
 		::wxGetApp().frame->AddPendingEvent(event);
 	}
 }
@@ -126,4 +126,9 @@ void GOrguePushbutton::ProcessMidi(const GOrgueMidiEvent& event)
 	default:
 		break;
 	}
+}
+
+bool GOrguePushbutton::IsPushed()
+{
+	return m_IsPushed;
 }

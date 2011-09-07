@@ -57,6 +57,7 @@ public:
 	GOrgueMidiReceiver& GetMidiReceiver();
 	void MIDI(void);
 	bool IsEngaged() const;
+	bool DisplayInverted() const;
 	virtual void Set(bool on);
 
 };

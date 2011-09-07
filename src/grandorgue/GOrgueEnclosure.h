@@ -54,6 +54,8 @@ public:
 	void Set(int n);
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	GOrgueMidiReceiver& GetMidiReceiver();
+	const wxString& GetName();
+	int GetValue();
 	void MIDI(void);
 	int GetMIDIInputNumber();
 	float GetAttenuation();
