@@ -51,6 +51,7 @@
 #include "GOrgueWave.h"
 #include "GOrgueWindchest.h"
 #include "OrganDocument.h"
+#include "GOGUIPanel.h"
 #include "contrib/sha1.h"
 
 extern GOrgueSound* g_sound;
@@ -91,6 +92,7 @@ GrandOrgueFile::GrandOrgueFile() :
 	m_framegeneral(0),
 	m_divisionalcoupler(0),
 	m_manual(0),
+	m_panels(0),
 	m_images(0)
 {
 	for (int i = 0; i < 9; ++i)
@@ -319,6 +321,9 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 		m_framegeneral[i]->Load(ini, buffer);
 	}
 
+	m_panels.resize(0);
+	m_panels.push_back(new GOGUIPanel(this));
+	m_panels[0]->Load(ini, wxT("Organ"));
 }
 
 wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
@@ -609,6 +614,8 @@ void GrandOrgueFile::Save(const wxString& file)
 	for (unsigned j = 0; j < m_enclosure.size(); j++)
 		m_enclosure[j]->Save(aIni, prefix);
 
+	for(unsigned i = 0; i < m_panels.size(); i++)
+		m_panels[i]->Save(aIni, prefix);
 }
 
 unsigned GrandOrgueFile::GetFirstManualIndex()
@@ -726,6 +733,16 @@ GOrgueWindchest* GrandOrgueFile::GetWindchest(unsigned index)
 unsigned GrandOrgueFile::GetWinchestGroupCount()
 {
 	return m_windchest.size();
+}
+
+GOGUIPanel* GrandOrgueFile::GetPanel(unsigned index)
+{
+	return m_panels[index];
+}
+
+unsigned GrandOrgueFile::GetPanelCount()
+{
+	return m_panels.size();
 }
 
 const wxString& GrandOrgueFile::GetChurchName()
@@ -853,6 +870,8 @@ void GrandOrgueFile::ControlChanged(void* control)
 {
 	if (!control)
 		return;
+	for(unsigned i = 0; i < m_panels.size(); i++)
+		m_panels[i]->ControlChanged(control);
 	for(unsigned i = 0; i < m_piston.size(); i++)
 		m_piston[i]->ControlChanged(control);
 }

@@ -20,8 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUEDISPLAYMETRICS_H
-#define GORGUEDISPLAYMETRICS_H
+#ifndef GOGUIDISPLAYMETRICS_H
+#define GOGUIDISPLAYMETRICS_H
 
 #include <wx/wx.h>
 #include <vector>

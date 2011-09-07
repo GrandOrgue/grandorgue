@@ -32,6 +32,7 @@ BEGIN_EVENT_TABLE(OrganView, wxView)
 	EVT_COMMAND(0, wxEVT_PUSHBUTTON, OrganView::OnDrawstop)
 	EVT_COMMAND(0, wxEVT_ENCLOSURE, OrganView::OnDrawstop)
 	EVT_COMMAND(0, wxEVT_NOTEONOFF, OrganView::OnNoteOnOff)
+	EVT_COMMAND(0, wxEVT_GOCONTROL, OrganView::OnGOControl)
 END_EVENT_TABLE()
 
 bool OrganView::OnCreate(wxDocument *doc, long flags)
@@ -70,6 +71,11 @@ void OrganView::OnNoteOnOff(wxCommandEvent& event)
 
 	m_panel->OnNoteOnOff(event);
 
+}
+
+void OrganView::OnGOControl(wxCommandEvent& event)
+{
+	m_panel->OnGOControl(event);
 }
 
 bool OrganView::OnClose(bool deleteWindow)

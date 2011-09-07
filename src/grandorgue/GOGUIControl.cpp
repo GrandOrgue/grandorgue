@@ -20,33 +20,55 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef ORGANVIEW_H
-#define ORGANVIEW_H
+#include "GOGUIControl.h"
+#include "GOGUIPanel.h"
+#include "IniFileConfig.h"
 
-#include <wx/docview.h>
-
-class OrganPanel;
-
-class OrganView : public wxView
+GOGUIControl::GOGUIControl(GOGUIPanel* panel,void* control) :
+	m_panel(panel),
+	m_group(wxT("---")),
+	m_control(control),
+	m_BoundingRect(0, 0, 0, 0)
 {
+	m_metrics = panel->GetDisplayMetrics();
+}
 
-	DECLARE_DYNAMIC_CLASS(OrganView);
+GOGUIControl::~GOGUIControl()
+{
+}
 
-public:
+void GOGUIControl::Load(IniFileConfig& cfg, wxString group)
+{
+	m_group = group;
+}
 
-	bool OnCreate(wxDocument *doc, long flags);
-	bool OnClose(bool deleteWindow = true);
-	void OnDraw(wxDC *dc);
-	void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
-	void OnDrawstop(wxCommandEvent& event);
-	void OnNoteOnOff(wxCommandEvent& event);
-	void OnGOControl(wxCommandEvent& event);
+void GOGUIControl::Save(IniFileConfig& cfg, bool prefix)
+{
+}
 
-private:
+void GOGUIControl::ControlChanged(void* control)
+{
+	if (control == m_control)
+		m_panel->AddEvent(this);
+}
 
-	OrganPanel* m_panel;
-	DECLARE_EVENT_TABLE();
+void GOGUIControl::Draw(wxDC* dc)
+{
+}
 
-};
+void GOGUIControl::HandleKey(int key)
+{
+}
 
-#endif
+void GOGUIControl::HandleMousePress(int x, int y, bool right)
+{
+}
+
+void GOGUIControl::HandleMouseScroll(int x, int y, int amount)
+{
+}
+
+const wxRect& GOGUIControl::GetBoundingRect()
+{
+	return m_BoundingRect;
+}
