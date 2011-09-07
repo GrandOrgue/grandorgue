@@ -24,6 +24,7 @@
 #include "GOrguePipe.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
+#include "GOrgueManual.h"
 #include "GOrgueWave.h"
 #include "GOrgueWindchest.h"
 #include "GOrgueReleaseAlignTable.h"
@@ -32,6 +33,7 @@
 extern GOrgueSound* g_sound;
 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
+#define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
 void GOrguePipe::GetMaxAmplitudeAndDerivative
 	(AUDIO_SECTION& section
@@ -74,7 +76,7 @@ void GOrguePipe::GetMaxAmplitudeAndDerivative
 void GOrguePipe::ComputeReleaseAlignmentInfo()
 {
 
-	FREE_AND_NULL(m_ra_table);
+	DELETE_AND_NULL(m_ra_table);
 
 	/* Find the maximum amplitude and derivative of the waveform */
 	int phase_align_max_amplitude = 0;
@@ -104,7 +106,7 @@ GOrguePipe::~GOrguePipe()
 	FREE_AND_NULL(m_attack.data);
 	FREE_AND_NULL(m_loop.data);
 	FREE_AND_NULL(m_release.data);
-	FREE_AND_NULL(m_ra_table);
+	DELETE_AND_NULL(m_ra_table);
 }
 
 GOrguePipe::GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int samplerGroupID, int amplitude):
@@ -325,7 +327,7 @@ bool GOrguePipe::LoadCache(wxInputStream* cache)
 	FREE_AND_NULL(m_attack.data);
 	FREE_AND_NULL(m_loop.data);
 	FREE_AND_NULL(m_release.data);
-	FREE_AND_NULL(m_ra_table);
+	DELETE_AND_NULL(m_ra_table);
 	m_ra_table = NULL;
 
 	if (m_filename.StartsWith(wxT("REF:")))
@@ -458,7 +460,7 @@ void GOrguePipe::LoadData()
 	FREE_AND_NULL(m_attack.data);
 	FREE_AND_NULL(m_loop.data);
 	FREE_AND_NULL(m_release.data);
-	FREE_AND_NULL(m_ra_table);
+	DELETE_AND_NULL(m_ra_table);
 	m_ra_table = NULL;
 
 	if (m_filename.StartsWith(wxT("REF:")))
@@ -667,7 +669,7 @@ void GOrguePipe::CreateTremulant(int period, int startRate, int stopRate, int am
 	FREE_AND_NULL(m_attack.data);
 	FREE_AND_NULL(m_loop.data);
 	FREE_AND_NULL(m_release.data);
-	FREE_AND_NULL(m_ra_table);
+	DELETE_AND_NULL(m_ra_table);
 	m_ra_table = NULL;
 	memset(&m_loop, 0, sizeof(m_loop));
 	memset(&m_attack, 0, sizeof(m_attack));
