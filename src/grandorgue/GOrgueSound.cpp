@@ -33,7 +33,6 @@
 #include "GOrgueStop.h"
 #include "GOrgueRtHelpers.h"
 #include "GOrgueTremulant.h"
-#include "OrganDocument.h"
 #include "GOrgueMidi.h"
 
 struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
@@ -319,9 +318,7 @@ bool GOrgueSound::ResetSound()
 	if (organfile)
 	{
 		organfile->PreparePlayback();
-		OrganDocument* doc = (OrganDocument*)(::wxGetApp().m_docManager->GetCurrentDocument());
-		if (doc && doc->b_loaded)
-			b_active = true;
+		b_active = true;
 	}
 	return true;
 }

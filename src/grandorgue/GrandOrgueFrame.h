@@ -74,7 +74,6 @@ public:
 	GOrgueMeter* m_meters[4];
 	wxMemoryDC* m_gaugedc;
 	wxBitmap m_gauge;
- 	bool m_opening;
 
 	DECLARE_EVENT_TABLE()
 protected:

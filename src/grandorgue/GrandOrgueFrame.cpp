@@ -119,7 +119,6 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
     : wxDocParentFrame(manager, frame, id, title, pos, size, type)
 {
 	m_gaugedc = 0;
-	m_opening = false;
 
 #ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
@@ -235,21 +234,11 @@ void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
     if (!IsEnabled())
         return;
-   bool prev = false;
-    if (organfile)
-    {
-        prev = m_opening;
-        m_opening = true;
-    }
     m_docManager->CreateDocument(event.GetString(), wxDOC_SILENT);
-    if (organfile)  // hopefully so...
-        m_opening = prev;
 }
 
 void GOrgueFrame::OnOpen(wxCommandEvent& event)
 {
-	if (organfile)
-		m_opening = true;
 	if (event.GetId() == ID_FILE_OPEN)
 	{
 		wxFileName fn = wxFileName::GetCwd();
@@ -259,7 +248,6 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 		if (organfile)
 		{
 			wxConfig::Get()->Write(wxT("organPath"), ::wxGetApp().m_docManager->GetLastDirectory());
-			m_opening = false;
 		}
 	}
 	else
@@ -277,10 +265,7 @@ void GOrgueFrame::OnLoad(wxCommandEvent& event)
     {
         wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
         wxString file = organfile->GetODFFilename();
-        m_opening = true;
         doc->DoOpenDocument(file, dlg.GetPath());
-        if (organfile)
-            m_opening = false;
     }
 }
 
