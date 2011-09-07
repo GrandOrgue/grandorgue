@@ -26,8 +26,6 @@
 #include <wx/wx.h>
 #include <wx/docview.h>
 
-class GOGUIDisplayMetrics;
-
 class OrganPanel : public wxPanel
 {
 
@@ -35,8 +33,6 @@ private:
 	wxBitmap m_clientBitmap;
 	wxPoint m_clientOrigin;
 	wxBrush m_pedalBrush;
-
-	GOGUIDisplayMetrics* m_display_metrics;
 
 	void DrawClickables(wxDC* dc = NULL, int xx = 0, int yy = 0, bool right = false, int scroll = 0);
 	void CopyToScreen(wxDC* mdc, const wxRect& rect);

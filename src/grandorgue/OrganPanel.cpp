@@ -25,7 +25,6 @@
 #include <algorithm>
 #include <wx/event.h>
 #include <wx/mstream.h>
-#include "GOGUIDisplayMetrics.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueMeter.h"
 #include "GOrgueMidi.h"
@@ -67,10 +66,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 
 	m_clientOrigin = GetClientAreaOrigin();
 
-	if (organfile)
-		m_display_metrics = organfile->GetDisplayMetrics();
-
-	m_clientBitmap = wxBitmap(m_display_metrics->GetScreenWidth(), m_display_metrics->GetScreenHeight());
+	m_clientBitmap = wxBitmap(organfile->GetPanel(0)->GetWidth(), organfile->GetPanel(0)->GetHeight());
 	wxMemoryDC dc;
 	dc.SelectObject(m_clientBitmap);
 
@@ -82,12 +78,12 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 	dc.SelectObject(wxNullBitmap);
 
 	GetParent()->SetClientSize(
-		m_display_metrics->GetScreenWidth(),
-		m_display_metrics->GetScreenHeight());
+		organfile->GetPanel(0)->GetWidth(),
+		organfile->GetPanel(0)->GetHeight());
 
 	SetSize(
-		m_display_metrics->GetScreenWidth(),
-		m_display_metrics->GetScreenHeight());
+		organfile->GetPanel(0)->GetWidth(),
+		organfile->GetPanel(0)->GetHeight());
 
 	GetParent()->Center(wxBOTH);
 	GetParent()->SetBackgroundStyle(wxBG_STYLE_CUSTOM);
@@ -97,7 +93,7 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 
 void OrganPanel::OnErase(wxEraseEvent& event)
 {
-	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
+	if (!m_clientBitmap.Ok() || !organfile)
 	{
 		event.Skip();
 		return;
@@ -107,7 +103,7 @@ void OrganPanel::OnErase(wxEraseEvent& event)
 }
 void OrganPanel::OnPaint(wxPaintEvent& event)
 {
-	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
+	if (!m_clientBitmap.Ok() || !organfile)
 	{
 		event.Skip();
 		return;
@@ -118,7 +114,7 @@ void OrganPanel::OnPaint(wxPaintEvent& event)
 
 void OrganPanel::OnDrawstop(wxCommandEvent& event)
 {
-	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
+	if (!m_clientBitmap.Ok() || !organfile)
 		return;
 
 	wxMemoryDC mdc;
@@ -137,7 +133,7 @@ void OrganPanel::CopyToScreen(wxDC* mdc, const wxRect& rect)
 
 void OrganPanel::OnGOControl(wxCommandEvent& event)
 {
-	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
+	if (!m_clientBitmap.Ok() || !organfile)
 		return;
 
 	GOGUIControl* control = static_cast<GOGUIControl*>(event.GetClientData());
@@ -152,7 +148,7 @@ void OrganPanel::OnGOControl(wxCommandEvent& event)
 void OrganPanel::OnNoteOnOff(wxCommandEvent& event)
 {
 
-	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
+	if (!m_clientBitmap.Ok() || !organfile)
 		return;
 
 	wxMemoryDC mdc;
@@ -254,7 +250,7 @@ void OrganPanel::OnKeyCommand(wxKeyEvent& event)
 
 void OrganPanel::OnDraw(wxDC* dc)
 {
-	if (!m_clientBitmap.Ok() || !organfile || !m_display_metrics->GetJambLeftRightWidth())
+	if (!m_clientBitmap.Ok() || !organfile)
 		return;
 	dc->DrawBitmap(m_clientBitmap, m_clientOrigin.x, m_clientOrigin.y, false);
 }
