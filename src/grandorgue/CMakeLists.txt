@@ -13,6 +13,7 @@ GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
 GOGUIDrawStop.cpp
 GOGUIEnclosure.cpp
+GOGUILabel.cpp
 GOGUIPanel.cpp
 GOGUIPushbutton.cpp
 GOrgueWave.cpp
@@ -24,7 +25,6 @@ GOrgueDrawStop.cpp
 GOrgueEnclosure.cpp
 GOrgueFrameGeneral.cpp
 GOrgueGeneral.cpp
-GOrgueLabel.cpp
 GOrgueLCD.cpp
 GOrgueManual.cpp
 GOrgueMidi.cpp

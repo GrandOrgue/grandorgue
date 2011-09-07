@@ -27,7 +27,6 @@
 #include <wx/mstream.h>
 #include "GOGUIDisplayMetrics.h"
 #include "GOrgueFrameGeneral.h"
-#include "GOrgueLabel.h"
 #include "GOrgueMeter.h"
 #include "GOrgueMidi.h"
 #include "GOrgueSound.h"
@@ -145,9 +144,6 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 	dc.SetBrush(*wxBLACK_BRUSH);
 
 	DrawClickables(&dc);
-
-	for (unsigned j = 0; j < organfile->GetLabelCount(); j++)
-		organfile->GetLabel(j)->Draw(dc);
 
 	dc.SelectObject(wxNullBitmap);
 
