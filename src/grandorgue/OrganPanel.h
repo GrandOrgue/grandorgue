@@ -56,7 +56,6 @@ public:
 	void OnKeyCommand(wxKeyEvent& event);
 
 	static void TileWood(wxDC& dc, int which, int sx, int sy, int cx, int cy);
-	static void WrapText(wxDC& dc, wxString& ptr, int width);
 
 	DECLARE_EVENT_TABLE();
 
