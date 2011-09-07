@@ -55,8 +55,6 @@ public:
 	void OnMouseScroll(wxMouseEvent& event);
 	void OnKeyCommand(wxKeyEvent& event);
 
-	static void TileWood(wxDC& dc, int which, int sx, int sy, int cx, int cy);
-
 	DECLARE_EVENT_TABLE();
 
 };

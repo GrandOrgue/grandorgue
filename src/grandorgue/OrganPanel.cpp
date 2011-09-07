@@ -54,33 +54,15 @@ END_EVENT_TABLE()
 
 extern GrandOrgueFile* organfile;
 extern GOrgueSound* g_sound;
-extern const unsigned char* ImageLoader_Wood[];
-extern int c_ImageLoader_Wood[];
 
 OrganPanel::OrganPanel(wxWindow* parent) :
 	wxPanel(parent, wxID_ANY,wxDefaultPosition, wxDefaultSize,  wxTAB_TRAVERSAL, wxT("panel"))
 {
 }
 
-void OrganPanel::TileWood(wxDC& dc, int which, int sx, int sy, int cx, int cy)
-{
-	int x, y;
-	wxMemoryInputStream mem((const char*)ImageLoader_Wood[(which - 1) >> 1], c_ImageLoader_Wood[(which - 1) >> 1]);
-	wxImage img(mem, wxBITMAP_TYPE_JPEG);
-	if ((which - 1) & 1)
-		img = img.Rotate90();
-	wxBitmap bmp(img);
-	dc.SetClippingRegion(sx, sy, cx, cy);
-	for (y = sy & 0xFFFFFF00; y < sy + cy; y += 256)
-		for (x = sx & 0xFFFFFF00; x < sx + cx; x += 256)
-			dc.DrawBitmap(bmp, x, y, false);
-	dc.DestroyClippingRegion();
-}
-
 void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 {
 
-	int i;
 	wxFont font = *wxNORMAL_FONT;
 
 	m_clientOrigin = GetClientAreaOrigin();
@@ -91,45 +73,6 @@ void OrganPanel::OnUpdate(wxView *WXUNUSED(sender), wxObject *hint)
 	m_clientBitmap = wxBitmap(m_display_metrics->GetScreenWidth(), m_display_metrics->GetScreenHeight());
 	wxMemoryDC dc;
 	dc.SelectObject(m_clientBitmap);
-
-	TileWood(dc, m_display_metrics->GetDrawstopBackgroundImageNum(), 0, 0, m_display_metrics->GetCenterX(), m_display_metrics->GetScreenHeight());
-	TileWood(dc, m_display_metrics->GetDrawstopBackgroundImageNum(), m_display_metrics->GetCenterX() + m_display_metrics->GetCenterWidth(), 0, m_display_metrics->GetScreenWidth() - (m_display_metrics->GetCenterX() + m_display_metrics->GetCenterWidth()), m_display_metrics->GetScreenHeight());
-	TileWood(dc, m_display_metrics->GetConsoleBackgroundImageNum(), m_display_metrics->GetCenterX(), 0, m_display_metrics->GetCenterWidth(), m_display_metrics->GetScreenHeight());
-
-	if (m_display_metrics->HasPairDrawstopCols())
-	{
-		for (i = 0; i < (m_display_metrics->NumberOfDrawstopColsToDisplay() >> 2); i++)
-		{
-			TileWood(dc,
-				m_display_metrics->GetDrawstopInsetBackgroundImageNum(),
-				i * 174 + m_display_metrics->GetJambLeftX() - 5,
-				m_display_metrics->GetJambLeftRightY(),
-				166,
-				m_display_metrics->GetJambLeftRightHeight());
-			TileWood(dc,
-				m_display_metrics->GetDrawstopInsetBackgroundImageNum(),
-				i * 174 + m_display_metrics->GetJambRightX() - 5,
-				m_display_metrics->GetJambLeftRightY(),
-				166,
-				m_display_metrics->GetJambLeftRightHeight());
-		}
-	}
-
-	if (m_display_metrics->HasTrimAboveExtraRows())
-		TileWood(dc,
-			m_display_metrics->GetKeyVertBackgroundImageNum(),
-			m_display_metrics->GetCenterX(),
-			m_display_metrics->GetCenterY(),
-			m_display_metrics->GetCenterWidth(),
-			8);
-
-	if (m_display_metrics->GetJambTopHeight() + m_display_metrics->GetPistonTopHeight())
-		TileWood(dc,
-			m_display_metrics->GetKeyHorizBackgroundImageNum(),
-			m_display_metrics->GetCenterX(),
-			m_display_metrics->GetJambTopY(),
-			m_display_metrics->GetCenterWidth(),
-			m_display_metrics->GetJambTopHeight() + m_display_metrics->GetPistonTopHeight());
 
 	dc.SetPen(*wxTRANSPARENT_PEN);
 	dc.SetBrush(*wxBLACK_BRUSH);
