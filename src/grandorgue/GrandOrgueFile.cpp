@@ -40,7 +40,6 @@
 #include "GOrgueEnclosure.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueGeneral.h"
-#include "GOrgueLabel.h"
 #include "GOrgueMeter.h"
 #include "GOrguePipe.h"
 #include "GOrguePiston.h"
@@ -87,7 +86,6 @@ GrandOrgueFile::GrandOrgueFile() :
 	m_tremulant(0),
 	m_windchest(0),
 	m_piston(0),
-	m_label(0),
 	m_general(0),
 	m_framegeneral(0),
 	m_divisionalcoupler(0),
@@ -232,7 +230,6 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	unsigned m_NumberOfTremulants = ini.ReadInteger(group, wxT("NumberOfTremulants"), 0, 10);
 	unsigned m_NumberOfWindchestGroups = ini.ReadInteger(group, wxT("NumberOfWindchestGroups"), 1, 12);
 	unsigned m_NumberOfReversiblePistons = ini.ReadInteger(group, wxT("NumberOfReversiblePistons"), 0, 32);
-	unsigned m_NumberOfLabels = ini.ReadInteger(group, wxT("NumberOfLabels"), 0, 16);
 	unsigned m_NumberOfGenerals = ini.ReadInteger(group, wxT("NumberOfGenerals"), 0, 99);
 	unsigned m_NumberOfFrameGenerals = 999;	// we never want this to change, what's the point?
 	unsigned m_NumberOfDivisionalCouplers = ini.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, 8);
@@ -253,14 +250,6 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_manual.resize(m_FirstManual); // Add empty slot for pedal, if necessary
 	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
 		m_manual.push_back(new GOrgueManual(this));
-
-	m_label.resize(0);
-	for (unsigned i = 0; i < m_NumberOfLabels; i++)
-	{
-		m_label.push_back(new GOrgueLabel(this));
-		buffer.Printf(wxT("Label%03d"), i + 1);
-		m_label[i]->Load(ini, buffer, m_DisplayMetrics);
-	}
 
 	m_enclosure.resize(0);
 	for (unsigned i = 0; i < m_NumberOfEnclosures; i++)
@@ -804,16 +793,6 @@ bool GrandOrgueFile::IsCustomized()
 const wxString& GrandOrgueFile::GetODFFilename()
 {
 	return m_filename;
-}
-
-GOrgueLabel* GrandOrgueFile::GetLabel(unsigned index)
-{
-	return m_label[index];
-}
-
-unsigned GrandOrgueFile::GetLabelCount()
-{
-	return m_label.size();
 }
 
 void GrandOrgueFile::Abort()

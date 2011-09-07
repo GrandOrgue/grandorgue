@@ -25,6 +25,7 @@
 #include "GOGUIControl.h"
 #include "GOGUIDrawStop.h"
 #include "GOGUIEnclosure.h"
+#include "GOGUILabel.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPushbutton.h"
 #include "GOrgueCoupler.h"
@@ -181,6 +182,15 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 					control->Load(cfg, buffer);
 					AddControl(control);
 				}
+		}
+
+		unsigned m_NumberOfLabels = cfg.ReadInteger(group, wxT("NumberOfLabels"), 0, 16);
+		for (unsigned i = 0; i < m_NumberOfLabels; i++)
+		{
+			buffer.Printf(wxT("Label%03d"), i + 1);
+			GOGUIControl* control = new GOGUILabel(this);
+			control->Load(cfg, buffer);
+			AddControl(control);
 		}
 	}
 }

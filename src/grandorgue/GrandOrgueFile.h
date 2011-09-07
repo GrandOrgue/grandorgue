@@ -35,7 +35,6 @@ class GOrgueDivisionalCoupler;
 class GOrgueEnclosure;
 class GOrgueFrameGeneral;
 class GOrgueGeneral;
-class GOrgueLabel;
 class GOrgueMidiEvent;
 class GOrguePipe;
 class GOrguePiston;
@@ -82,7 +81,6 @@ private:
 	ptr_vector<GOrgueTremulant> m_tremulant;
 	ptr_vector<GOrgueWindchest> m_windchest;
 	ptr_vector<GOrguePiston> m_piston;
-	ptr_vector<GOrgueLabel> m_label;
 	ptr_vector<GOrgueGeneral> m_general;
 	ptr_vector<GOrgueFrameGeneral> m_framegeneral;
 	ptr_vector<GOrgueDivisionalCoupler> m_divisionalcoupler;
@@ -131,8 +129,6 @@ public:
 	unsigned GetEnclosureCount();
 	GOGUIPanel* GetPanel(unsigned index);
 	unsigned GetPanelCount();
-	GOrgueLabel* GetLabel(unsigned index);
-	unsigned GetLabelCount();
 
 	/* ODF general properties */
 	bool DivisionalsStoreIntermanualCouplers();
