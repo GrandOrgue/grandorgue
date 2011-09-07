@@ -107,6 +107,7 @@ public:
 	unsigned GetTremulantCount();
 	GOrgueTremulant* GetTremulant(unsigned index);
 
+	const wxString& GetName();
 	void Click(unsigned x, unsigned y);
 	void DrawKey(wxDC& dc, unsigned key_nb);
 	void Draw(wxDC& dc);

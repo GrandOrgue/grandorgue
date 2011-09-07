@@ -37,6 +37,7 @@ class GOrguePushbutton : public GOrgueControl, GOrgueDrawable
 protected:
 	GOrgueMidiReceiver m_midi;
 	GrandOrgueFile* m_organfile;
+	bool m_IsPushed;
 
 public:
 	GOrguePushbutton(GrandOrgueFile* organfile);
@@ -49,6 +50,7 @@ public:
 	void MIDI(void);
 	virtual ~GOrguePushbutton() { };
 	void Display(bool onoff);
+	bool IsPushed();
 
 	GOGUIDisplayMetrics* DisplayMetrics;
 	wxInt16 m_ManualNumber;

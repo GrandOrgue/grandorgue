@@ -32,7 +32,6 @@ GOrguePiston::GOrguePiston(GrandOrgueFile* organfile) :
 	GOrguePushbutton(organfile),
 	drawstop(NULL)
 {
-
 }
 
 void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics* displayMetrics)
@@ -61,8 +60,7 @@ void GOrguePiston::Load(IniFileConfig& cfg, wxString group, GOGUIDisplayMetrics*
 	}
 
 	GOrguePushbutton::Load(cfg, group, displayMetrics);
-	if (drawstop->IsEngaged() ^ drawstop->DisplayInInvertedState)
-		DispImageNum ^= 2;
+	Display(drawstop->IsEngaged() ^ drawstop->DisplayInverted());
 
 }
 

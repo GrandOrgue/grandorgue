@@ -110,7 +110,7 @@ void GOrgueEnclosure::Set(int n)
 		n = 127;
 	MIDIValue = n;
 	wxCommandEvent event(wxEVT_ENCLOSURE, 0);
-	event.SetClientData(this);
+	event.SetClientData((GOrgueDrawable*)this);
 	::wxGetApp().frame->AddPendingEvent(event);
 }
 
@@ -188,3 +188,12 @@ GOrgueMidiReceiver& GOrgueEnclosure::GetMidiReceiver()
 	return m_midi;
 }
 
+const wxString& GOrgueEnclosure::GetName()
+{
+	return Name;
+}
+
+int GOrgueEnclosure::GetValue()
+{
+	return MIDIValue;
+}

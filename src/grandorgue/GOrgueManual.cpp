@@ -209,6 +209,11 @@ GOrgueMidiReceiver& GOrgueManual::GetMidiReceiver()
 	return m_midi;
 }
 
+const wxString& GOrgueManual::GetName()
+{
+	return m_name;
+}
+
 int GOrgueManual::GetMIDIInputNumber()
 {
 	return m_midi_input_number;
@@ -626,9 +631,7 @@ void GOrgueManual::Draw(wxDC& dc)
 
 bool GOrgueManual::IsDisplayed()
 {
-
 	return m_displayed;
-
 }
 
 void GOrgueManual::Save(IniFileConfig& cfg, bool prefix)
