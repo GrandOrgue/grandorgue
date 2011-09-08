@@ -27,6 +27,7 @@
 #include <vector>
 
 class IniFileConfig;
+class GrandOrgueFile;
 class GOGUIEnclosure;
 
 class GOGUIDisplayMetrics
@@ -45,6 +46,8 @@ public:
 	} MANUAL_RENDER_INFO;
 
 private:
+	wxString m_group;
+	GrandOrgueFile* m_organfile;
 
 	typedef struct
 	{
@@ -100,7 +103,7 @@ private:
 
 public:
 
-	GOGUIDisplayMetrics(IniFileConfig& ini);
+	GOGUIDisplayMetrics(IniFileConfig& ini, GrandOrgueFile* organfile, wxString group);
 
 	int NumberOfExtraDrawstopRowsToDisplay();
 	int NumberOfExtraDrawstopColsToDisplay();

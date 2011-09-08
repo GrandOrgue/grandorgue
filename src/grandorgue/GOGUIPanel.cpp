@@ -102,7 +102,7 @@ void GOGUIPanel::SetWindow(wxWindow* window)
 
 void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 {
-	m_metrics = new GOGUIDisplayMetrics(cfg);
+	m_metrics = new GOGUIDisplayMetrics(cfg, m_organfile, wxT(""));
 
 	{
 		wxString buffer;
