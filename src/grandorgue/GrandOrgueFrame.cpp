@@ -103,9 +103,6 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 END_EVENT_TABLE()
 
 extern GOrgueSound* g_sound;
-extern GrandOrgueFile* organfile;
-
-
 
 void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, unsigned char* toolbarImage, int size, wxItemKind kind)
 {
@@ -247,7 +244,10 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		else if (event.GetId() == ID_AUDIO_MEMSET)
 			event.Check(g_sound->GetMidi().SetterActive());
 	}
-	event.Enable(organfile && m_docManager->GetCurrentDocument() && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
+	GrandOrgueFile* organfile = NULL;
+	if (m_docManager->GetCurrentDocument())
+		organfile = ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile();
+	event.Enable(organfile && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
 }
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
@@ -265,7 +265,7 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 		fn.AppendDir(wxT("organs"));
 		::wxGetApp().m_docManager->SetLastDirectory(wxConfig::Get()->Read(wxT("organPath"), fn.GetPath()));
 		ProcessCommand(wxID_OPEN);
-		if (organfile)
+		if (m_docManager->GetCurrentDocument() && ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile())
 		{
 			wxConfig::Get()->Write(wxT("organPath"), ::wxGetApp().m_docManager->GetLastDirectory());
 		}
@@ -277,31 +277,31 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 void GOrgueFrame::OnLoad(wxCommandEvent& event)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
-	if (!doc || !organfile)
-        return;
+	if (!doc)
+		return;
 
-    wxFileDialog dlg(::wxGetApp().frame, _("Import Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxOPEN | wxFILE_MUST_EXIST);
-    if (dlg.ShowModal() == wxID_OK)
-    {
-        wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
-        wxString file = organfile->GetODFFilename();
-        doc->DoOpenDocument(file, dlg.GetPath());
-    }
+	wxFileDialog dlg(::wxGetApp().frame, _("Import Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxOPEN | wxFILE_MUST_EXIST);
+	if (dlg.ShowModal() == wxID_OK)
+	{
+		wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
+		wxString file = doc->GetOrganFile()->GetODFFilename();
+		doc->DoOpenDocument(file, dlg.GetPath());
+	}
 }
 
 void GOrgueFrame::OnSave(wxCommandEvent& event)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
-	if (!doc || !organfile)
-        return;
+	if (!doc)
+		return;
 
-    wxFileDialog dlg(::wxGetApp().frame, _("Export Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxSAVE | wxOVERWRITE_PROMPT);
-    if (dlg.ShowModal() == wxID_OK)
-    {
-        wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
-        doc->DoSaveDocument(dlg.GetPath());
-        doc->Modify(false);
-    }
+	wxFileDialog dlg(::wxGetApp().frame, _("Export Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxSAVE | wxOVERWRITE_PROMPT);
+	if (dlg.ShowModal() == wxID_OK)
+	{
+		wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
+		doc->DoSaveDocument(dlg.GetPath());
+		doc->Modify(false);
+	}
 }
 
 wxString formatSize(wxLongLong& size)
@@ -322,8 +322,9 @@ wxString formatSize(wxLongLong& size)
 void GOrgueFrame::OnCache(wxCommandEvent& event)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
-	if (!doc || !organfile)
-        return;
+	if (!doc)
+		return;
+	GrandOrgueFile* organfile = doc->GetOrganFile();
 
 	/* Figure out how many pipes there are */
 	unsigned nb_pipes = 0;
@@ -380,10 +381,10 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 void GOrgueFrame::OnCacheDelete(wxCommandEvent& event)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
-	if (!doc || !organfile)
-        return;
+	if (!doc)
+		return;
 
-	wxString filename = organfile->GetODFFilename() + wxT(".cache");
+	wxString filename = doc->GetOrganFile()->GetODFFilename() + wxT(".cache");
 	wxRemoveFile(filename);
 }
 
@@ -394,22 +395,22 @@ void GOrgueFrame::OnReload(wxCommandEvent& event)
 
 void GOrgueFrame::OnRevert(wxCommandEvent& event)
 {
-    if (organfile && m_docManager->GetCurrentDocument() && ::wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), wxT(APP_NAME), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
-    {
-        {
-            wxLog::EnableLogging(false);
-            wxFileConfig cfg(wxEmptyString, wxEmptyString, organfile->GetODFFilename(), wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS);
-            wxLog::EnableLogging(true);
-            m_docManager->GetCurrentDocument()->Modify(false);
-            organfile->Revert(cfg);
-        }
-        ProcessCommand(wxID_FILE1);
-    }
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	if (doc && doc->GetOrganFile() && ::wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), wxT(APP_NAME), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
+	{
+		wxLog::EnableLogging(false);
+		wxFileConfig cfg(wxEmptyString, wxEmptyString, doc->GetOrganFile()->GetODFFilename(), wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS);
+		wxLog::EnableLogging(true);
+		m_docManager->GetCurrentDocument()->Modify(false);
+		doc->GetOrganFile()->Revert(cfg);
+		ProcessCommand(wxID_FILE1);
+	}
 }
 
 void GOrgueFrame::OnProperties(wxCommandEvent& event)
 {
-	GOrgueProperties dlg(organfile, this);
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueProperties dlg(doc->GetOrganFile(), this);
 	dlg.ShowModal();
 }
 
@@ -496,8 +497,8 @@ void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
 void GOrgueFrame::ChangeSetter(unsigned position)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
-	if (doc && organfile)
-		organfile->GetFrameGeneral(position)->Push();
+	if (doc && doc->GetOrganFile())
+		doc->GetOrganFile()->GetFrameGeneral(position)->Push();
 }
 
 void GOrgueFrame::OnKeyCommand(wxKeyEvent& event)
