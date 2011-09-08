@@ -30,6 +30,7 @@ class GOrgueControl;
 class GOGUIDisplayMetrics;
 class GrandOrgueFile;
 class GOGUIControl;
+class GOGUIPanelWidget;
 class IniFileConfig;
 
 class GOGUIPanel {
@@ -40,7 +41,7 @@ protected:
 	ptr_vector<wxBitmap> m_WoodImages;
 	wxString m_Name;
 	GOGUIDisplayMetrics* m_metrics;
-	wxWindow* m_window;
+	GOGUIPanelWidget* m_window;
 	wxWindow* m_parent;
 
 public:
@@ -49,8 +50,8 @@ public:
 	void Load(IniFileConfig& cfg, wxString group);
 	void Save(IniFileConfig& cfg, bool prefix);
 
-	wxWindow* GetWindow();
-	void SetWindow(wxWindow* window);
+	GOGUIPanelWidget* GetWindow();
+	void SetWindow(GOGUIPanelWidget* window);
 
 	GrandOrgueFile* GetOrganFile();
 	const wxString& GetName();

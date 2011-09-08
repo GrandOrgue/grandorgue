@@ -18,6 +18,7 @@ GOGUILabel.cpp
 GOGUIManual.cpp
 GOGUIManualBackground.cpp
 GOGUIPanel.cpp
+GOGUIPanelWidget.cpp
 GOGUIPushbutton.cpp
 GOrgueWave.cpp
 GOrgueControl.cpp
@@ -53,7 +54,6 @@ IniFileConfig.cpp
 MIDIEventDialog.cpp
 MIDIListenDialog.cpp
 OrganDocument.cpp
-OrganPanel.cpp
 OrganView.cpp
 SettingsDialog.cpp
 SplashScreen.cpp

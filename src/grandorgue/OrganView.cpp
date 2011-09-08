@@ -21,56 +21,115 @@
  */
 
 #include "OrganView.h"
-#include "OrganPanel.h"
-#include "GOrgueSound.h"
+#include "GOGUIPanel.h"
+#include "GOGUIPanelWidget.h"
+#include "OrganDocument.h"
+#include "GrandOrgueFile.h"
 #include "GrandOrgue.h"
 
 IMPLEMENT_DYNAMIC_CLASS(OrganView, wxView)
 
-BEGIN_EVENT_TABLE(OrganView, wxView)
-	EVT_COMMAND(0, wxEVT_GOCONTROL, OrganView::OnGOControl)
-END_EVENT_TABLE()
+
+OrganView::OrganView(unsigned panelID) :
+	m_panel(NULL),
+	m_container(NULL),
+	m_frame(NULL),
+	m_doc(NULL),
+	m_panelID(panelID)
+{
+}
+
+OrganView::~OrganView()
+{
+	if (m_container)
+	{
+		GrandOrgueFile* organfile = m_doc->GetOrganFile();
+		organfile->GetPanel(m_panelID)->SetParentWindow(NULL);
+	}
+}
+
+bool OrganView::CreateWindow()
+{
+	if (!m_doc)
+		return false;
+	GrandOrgueFile* organfile = m_doc->GetOrganFile();
+	if (!organfile)
+		return false;
+	if (organfile->GetPanelCount() <= m_panelID)
+		return false;
+	if (organfile->GetPanel(m_panelID)->GetWindow())
+		return false;
+
+	if (!m_frame)
+	{
+		m_frame = new wxDocChildFrame(m_doc, this, NULL, -1, organfile->GetPanel(m_panelID)->GetName());
+		m_container = new wxScrolledWindow(m_frame);
+		SetFrame(m_frame);
+	}
+	else
+	{
+		m_frame = ::wxGetApp().frame;
+		m_container = new wxScrolledWindow(m_frame);
+		SetFrame(m_container);
+	}
+	m_panel = new GOGUIPanelWidget(organfile->GetPanel(m_panelID), m_container);
+
+	/* Calculate scrollbar size */
+	m_container->SetSize(50, 50);
+	m_container->SetVirtualSize(100, 100);
+	m_container->SetScrollRate(5, 5);
+	wxSize scroll = m_container->GetSize();
+	scroll.DecBy(m_container->GetClientSize());
+
+	wxSize max = m_panel->GetSize();
+	max.DecBy(scroll);
+	m_container->SetVirtualSize(max);
+	m_container->SetSize(m_panel->GetSize());
+
+	m_frame->SetMaxSize(wxSize(wxDefaultCoord, wxDefaultCoord));
+	m_frame->SetClientSize(m_panel->GetSize());
+	m_frame->SetMaxSize(m_frame->GetSize());
+	m_frame->Center(wxBOTH);
+	m_frame->Show();
+
+	organfile->GetPanel(m_panelID)->SetParentWindow(GetFrame());
+	return true;
+}
 
 bool OrganView::OnCreate(wxDocument *doc, long flags)
 {
-
-	m_panel=new OrganPanel(::wxGetApp().frame);
-	SetFrame(::wxGetApp().frame);
+	m_doc = (OrganDocument*)doc;
+	if (m_panelID)
+		m_frame = NULL;
+	else
+		m_frame = ::wxGetApp().frame;
+	CreateWindow();
 	return true;
 
 }
 
 void OrganView::OnUpdate(wxView *sender, wxObject *hint)
 {
-
-	m_panel->OnUpdate(sender,hint);
-
+	if (m_panel)
+		m_panel->OnUpdate();
+	else if (!CreateWindow())
+		Close(true);
 }
 
-
-void OrganView::OnDraw(wxDC* dc)
+void OrganView::OnDraw(wxDC*)
 {
-
-	m_panel->OnDraw(dc);
-
-}
-
-void OrganView::OnGOControl(wxCommandEvent& event)
-{
-	m_panel->OnGOControl(event);
 }
 
 bool OrganView::OnClose(bool deleteWindow)
 {
-
-	m_panel->Destroy();
-	GetFrame()->SetBackgroundStyle(wxBG_STYLE_SYSTEM);
-	GetFrame()->Refresh();
-	if (!GetDocument()->Close())
-		return false;
-
-	SetFrame(0);
+	if (GetFrame() && deleteWindow)
+	{
+		GetFrame()->Destroy();
+		SetFrame(0);
+	}
 	Activate(false);
-	return true;
+	if (m_panelID >= 1)
+		return true;
 
+	return wxView::OnClose(deleteWindow);
 }

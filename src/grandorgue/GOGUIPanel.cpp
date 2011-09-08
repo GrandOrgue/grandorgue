@@ -30,6 +30,7 @@
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
+#include "GOGUIPanelWidget.h"
 #include "GOGUIPushbutton.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
@@ -43,8 +44,6 @@
 #include "GOGUIDisplayMetrics.h"
 #include "IniFileConfig.h"
 #include "Images.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
 
 GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
@@ -78,6 +77,8 @@ GOGUIPanel::~GOGUIPanel()
 		delete m_metrics;
 	if (m_parent)
 		m_parent->Destroy();
+	if (m_window)
+		m_window->Destroy();
 }
 
 GrandOrgueFile* GOGUIPanel::GetOrganFile()
@@ -90,12 +91,12 @@ const wxString& GOGUIPanel::GetName()
 	return m_Name;
 }
 
-wxWindow* GOGUIPanel::GetWindow()
+GOGUIPanelWidget* GOGUIPanel::GetWindow()
 {
 	return m_window;
 }
 
-void GOGUIPanel::SetWindow(wxWindow* window)
+void GOGUIPanel::SetWindow(GOGUIPanelWidget* window)
 {
 	m_window = window;
 }
@@ -236,7 +237,7 @@ unsigned GOGUIPanel::GetHeight()
 
 wxWindow* GOGUIPanel::GetParentWindow()
 {
-	return ::wxGetApp().frame;
+	return m_parent;
 }
 
 void GOGUIPanel::SetParentWindow(wxWindow* win)
@@ -248,7 +249,8 @@ void GOGUIPanel::AddEvent(GOGUIControl* control)
 {
 	wxCommandEvent event(wxEVT_GOCONTROL, 0);
 	event.SetClientData(control);
-	::wxGetApp().frame->AddPendingEvent(event);
+	if (m_window)
+		m_window->AddPendingEvent(event);
 }
 
 void GOGUIPanel::AddControl(GOGUIControl* control)
