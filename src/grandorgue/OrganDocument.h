@@ -26,13 +26,17 @@
 #include <wx/defs.h>
 #include <wx/docview.h>
 
+class GrandOrgueFile;
+
 class OrganDocument : public wxDocument
 {
+private:
+	GrandOrgueFile* m_organfile;
 
-	DECLARE_DYNAMIC_CLASS(OrganDocument)
+	void CloseOrgan();
 
 public:
-	OrganDocument() { };
+	OrganDocument();
 	~OrganDocument();
 
 	bool OnCloseDocument();
@@ -42,10 +46,11 @@ public:
 
 	bool Save() { return OnSaveDocument(m_documentFile); }
 
+	GrandOrgueFile* GetOrganFile();
+
 private:
 
-	void CloseOrgan();
-
+	DECLARE_DYNAMIC_CLASS(OrganDocument)
 };
 
 #endif
