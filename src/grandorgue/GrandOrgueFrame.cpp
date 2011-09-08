@@ -24,7 +24,6 @@
 
 #include <algorithm>
 #include <wx/menu.h>
-#include <wx/mstream.h>
 #include <wx/image.h>
 #include <wx/filefn.h>
 #include <wx/toolbar.h>
@@ -36,6 +35,7 @@
 #include <wx/zstream.h>
 #include <wx/html/helpctrl.h>
 #include <wx/splash.h>
+#include "Images.h"
 #include "GOGUIPanel.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueMeter.h"
@@ -53,25 +53,6 @@
 #include "SettingsDialog.h"
 #include "SplashScreen.h"
 
-
-// New PNG Icons for the toolbar images added by Graham Goode in Nov 2009
-#include "images/help.h"
-#include "images/open.h"
-#include "images/panic.h"
-#include "images/properties.h"
-#include "images/record.h"
-#include "images/reload.h"
-#include "images/save.h"
-#include "images/settings.h"
-#include "images/set.h"
-#include "images/volume.h"
-#include "images/polyphony.h"
-#include "images/memory.h"
-#include "images/transpose.h"
-#include "images/gauge.h"
-#include "images/splash.h"
-
-// end
 IMPLEMENT_CLASS(GOrgueFrame, wxDocParentFrame)
 BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_KEY_DOWN(GOrgueFrame::OnKeyCommand)
@@ -109,15 +90,15 @@ END_EVENT_TABLE()
 
 extern GOrgueSound* g_sound;
 
-void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, unsigned char* toolbarImage, int size, wxItemKind kind)
+void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString)
+{
+	menu->Append(id, item, wxEmptyString, wxITEM_NORMAL);
+}
+
+void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, const wxBitmap& toolbarImage, wxItemKind kind)
 {
 	menu->Append(id, item, wxEmptyString, kind);
-	if (toolbarImage)
-	{
-        wxMemoryInputStream mem(toolbarImage, size);
-        wxImage img(mem, wxBITMAP_TYPE_PNG);
-        GetToolBar()->AddTool(id, item, wxBitmap(img), helpString, kind);
-	}
+        GetToolBar()->AddTool(id, item, toolbarImage, helpString, kind);
 }
 
 GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type) :
@@ -139,10 +120,10 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	wxToolBar* tb = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
 	tb->SetToolBitmapSize(wxSize(16, 16));
 
-	AddTool(file_menu, ID_FILE_OPEN, _("&Open...\tCtrl+O"), _("Open"), Icon_open, sizeof(Icon_open));
+	AddTool(file_menu, ID_FILE_OPEN, _("&Open...\tCtrl+O"), _("Open"), GetImage_open());
 	file_menu->Append(wxID_ANY, _("Open &Recent"), recent_menu);
 	file_menu->AppendSeparator();
-	AddTool(file_menu, ID_FILE_RELOAD, _("Re&load"), _("Reload"), Icon_reload, sizeof(Icon_reload));
+	AddTool(file_menu, ID_FILE_RELOAD, _("Re&load"), _("Reload"), GetImage_reload());
 	AddTool(file_menu, ID_FILE_REVERT, _("Reset to &Defaults"));
 	file_menu->AppendSeparator();
 	AddTool(file_menu, ID_FILE_LOAD, _("&Import Settings..."));
@@ -151,33 +132,30 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	AddTool(file_menu, ID_FILE_CACHE, _("&Update Cache..."));
 	AddTool(file_menu, ID_FILE_CACHE_DELETE, _("Delete &Cache..."));
 	file_menu->AppendSeparator();
-	AddTool(file_menu, wxID_SAVE, _("&Save\tCtrl+S"), _("Save"), Icon_save, sizeof(Icon_save));
+	AddTool(file_menu, wxID_SAVE, _("&Save\tCtrl+S"), _("Save"), GetImage_save());
 	AddTool(file_menu, wxID_CLOSE, _("&Close"));
-	AddTool(file_menu, ID_FILE_PROPERTIES, _("&Properties..."), _("Properties"), Icon_properties, sizeof(Icon_properties));
+	AddTool(file_menu, ID_FILE_PROPERTIES, _("&Properties..."), _("Properties"), GetImage_properties());
 	file_menu->AppendSeparator();
 	AddTool(file_menu, wxID_EXIT, _("E&xit"));
 	tb->AddSeparator();
 
 	wxMenu *audio_menu = new wxMenu;
-	AddTool(audio_menu, ID_AUDIO_RECORD, _("&Record...\tCtrl+R"), _("Record"), Icon_record, sizeof(Icon_record), wxITEM_CHECK);
-	AddTool(audio_menu, ID_AUDIO_MEMSET, _("&Memory Set\tShift"), _("Memory Set"), Icon_set, sizeof(Icon_set), wxITEM_CHECK);
+	AddTool(audio_menu, ID_AUDIO_RECORD, _("&Record...\tCtrl+R"), _("Record"), GetImage_record(), wxITEM_CHECK);
+	AddTool(audio_menu, ID_AUDIO_MEMSET, _("&Memory Set\tShift"), _("Memory Set"), GetImage_set(), wxITEM_CHECK);
 	audio_menu->AppendSeparator();
-	AddTool(audio_menu, ID_AUDIO_PANIC, _("&Panic\tEscape"), _("Panic"), Icon_panic, sizeof(Icon_panic));
-	AddTool(audio_menu, ID_AUDIO_SETTINGS, _("&Settings..."), _("Audio Settings"), Icon_settings, sizeof(Icon_settings));
+	AddTool(audio_menu, ID_AUDIO_PANIC, _("&Panic\tEscape"), _("Panic"), GetImage_panic());
+	AddTool(audio_menu, ID_AUDIO_SETTINGS, _("&Settings..."), _("Audio Settings"), GetImage_settings());
 	//tb->AddSeparator();
 
 	wxMenu *help_menu = new wxMenu;
-	//AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"), Icon_help, sizeof(Icon_help));
+	//AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"), GetImage_help, sizeof(GetImage_help));
 	AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"));
 	AddTool(help_menu, wxID_ABOUT, _("&About"));
 	tb->AddSeparator();
 	// Changed Text to Icons to reduce screen space - Graham Goode Nov 2009
-    wxMenu *settings_menu = new wxMenu;
-	{
-        wxMemoryInputStream mem(Icon_gauge, sizeof(Icon_gauge));
-        wxImage img(mem, wxBITMAP_TYPE_GIF);
-        m_gauge = wxBitmap(img);
-	}
+	wxMenu *settings_menu = new wxMenu;
+        m_gauge = GetImage_gauge();
+
 	m_gaugedc = new wxMemoryDC();
 	m_gaugedc->SelectObject(m_gauge);
 
@@ -186,13 +164,13 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_meters[2] = new GOrgueMeter(tb, ID_METER_FRAME_SPIN, 1);
 	m_meters[3] = new GOrgueMeter(tb, ID_METER_TRANSPOSE_SPIN, 0);
 
-	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), Icon_volume, sizeof(Icon_volume));
+	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
 	tb->AddControl(m_meters[0]);
-	AddTool(settings_menu, ID_POLYPHONY, _("&Polyphony"), _("Polyphony"), Icon_polyphony, sizeof(Icon_polyphony));
+	AddTool(settings_menu, ID_POLYPHONY, _("&Polyphony"), _("Polyphony"), GetImage_polyphony());
 	tb->AddControl(m_meters[1]);
-	AddTool(settings_menu, ID_MEMORY, _("&Memory Level"), _("Memory Level"), Icon_memory, sizeof(Icon_memory));
+	AddTool(settings_menu, ID_MEMORY, _("&Memory Level"), _("Memory Level"), GetImage_memory());
 	tb->AddControl(m_meters[2]);
-	AddTool(settings_menu, ID_TRANSPOSE, _("&Transpose"), _("Transpose"), Icon_transpose, sizeof(Icon_transpose));
+	AddTool(settings_menu, ID_TRANSPOSE, _("&Transpose"), _("Transpose"), GetImage_transpose());
 	tb->AddControl(m_meters[3]);
 
 
@@ -528,9 +506,7 @@ void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)
 
 void GOrgueFrame::DoSplash(bool timeout)
 {
-    wxMemoryInputStream mem(Image_Splash, sizeof(Image_Splash));
-	wxImage img(mem, wxBITMAP_TYPE_JPEG);
-	wxSplashScreenModal* splash = new wxSplashScreenModal(wxBitmap(img), timeout ? wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_TIMEOUT : wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT, 3000, this, wxID_ANY);
+	wxSplashScreenModal* splash = new wxSplashScreenModal(GetImage_Splash(), timeout ? wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_TIMEOUT : wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT, 3000, this, wxID_ANY);
 	if (!timeout)
 		splash->ShowModal();
 }

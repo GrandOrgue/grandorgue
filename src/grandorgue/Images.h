@@ -20,14 +20,73 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef IMAGES_H
-#define IMAGES_H
+#ifndef GO_IMAGES_H /* using IMAGES_H causes a preprocessor conflict */
+#define GO_IMAGES_H
 
-extern const unsigned char* ImageLoader_Wood[];
-extern int c_ImageLoader_Wood[];
-extern const unsigned char* ImageLoader_Stops[];
-extern int c_ImageLoader_Stops[];
-extern int count_ImageLoader_Stops;
-extern int count_ImageLoader_Wood;
+#include <wx/bitmap.h>
+
+typedef wxBitmap (*GetImage_Func)();
+
+wxBitmap GetImage_draw1off();
+wxBitmap GetImage_draw1on();
+wxBitmap GetImage_draw2off();
+wxBitmap GetImage_draw2on();
+wxBitmap GetImage_fpiston();
+wxBitmap GetImage_fpiston2();
+wxBitmap GetImage_gauge();
+wxBitmap GetImage_help();
+wxBitmap GetImage_hpiston();
+wxBitmap GetImage_hpiston2();
+wxBitmap GetImage_label();
+wxBitmap GetImage_memory();
+wxBitmap GetImage_open();
+wxBitmap GetImage_panic();
+wxBitmap GetImage_polyphony();
+wxBitmap GetImage_properties();
+wxBitmap GetImage_record();
+wxBitmap GetImage_reload();
+wxBitmap GetImage_save();
+wxBitmap GetImage_set();
+wxBitmap GetImage_settings();
+wxBitmap GetImage_Splash();
+wxBitmap GetImage_transpose();
+wxBitmap GetImage_volume();
+wxBitmap GetImage_Wood01();
+wxBitmap GetImage_Wood03();
+wxBitmap GetImage_Wood05();
+wxBitmap GetImage_Wood07();
+wxBitmap GetImage_Wood09();
+wxBitmap GetImage_Wood11();
+wxBitmap GetImage_Wood13();
+wxBitmap GetImage_Wood15();
+wxBitmap GetImage_Wood17();
+wxBitmap GetImage_Wood19();
+wxBitmap GetImage_Wood21();
+wxBitmap GetImage_Wood23();
+wxBitmap GetImage_Wood25();
+wxBitmap GetImage_Wood27();
+wxBitmap GetImage_Wood29();
+wxBitmap GetImage_Wood31();
+wxBitmap GetImage_Wood33();
+wxBitmap GetImage_Wood35();
+wxBitmap GetImage_Wood37();
+wxBitmap GetImage_Wood39();
+wxBitmap GetImage_Wood41();
+wxBitmap GetImage_Wood43();
+wxBitmap GetImage_Wood45();
+wxBitmap GetImage_Wood47();
+wxBitmap GetImage_Wood49();
+wxBitmap GetImage_Wood51();
+wxBitmap GetImage_Wood53();
+wxBitmap GetImage_Wood55();
+wxBitmap GetImage_Wood57();
+wxBitmap GetImage_Wood59();
+wxBitmap GetImage_Wood61();
+wxBitmap GetImage_Wood63();
+
+unsigned GetImageCount_Stop();
+wxBitmap GetImage_Stop(unsigned index);
+unsigned GetImageCount_Wood();
+wxBitmap GetImage_Wood(unsigned index);
 
 #endif
