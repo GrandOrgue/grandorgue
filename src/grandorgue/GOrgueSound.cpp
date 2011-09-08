@@ -41,7 +41,6 @@ struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 
 
 GOrgueSound* g_sound = 0;
 
-DEFINE_EVENT_TYPE(wxEVT_GOCONTROL)
 DEFINE_EVENT_TYPE(wxEVT_LISTENING)
 DEFINE_EVENT_TYPE(wxEVT_METERS)
 DEFINE_EVENT_TYPE(wxEVT_LOADFILE)

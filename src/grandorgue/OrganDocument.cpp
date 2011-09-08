@@ -31,7 +31,6 @@
 IMPLEMENT_DYNAMIC_CLASS(OrganDocument, wxDocument)
 
 extern GOrgueSound* g_sound;
-GrandOrgueFile* organfile = NULL;
 
 OrganDocument::OrganDocument() :
 	m_organfile(NULL)
@@ -80,7 +79,6 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	}
 	g_sound->PreparePlayback(m_organfile);
 	m_organfile->PreparePlayback();
-	organfile = m_organfile;
 
 	SetTitle(m_organfile->GetChurchName());
 
@@ -103,7 +101,6 @@ void OrganDocument::CloseOrgan()
 	{
 		delete m_organfile;
 		m_organfile = 0;
-		organfile = 0;
 	}
 	::wxGetApp().frame->m_meters[0]->m_meters[0]->ResetClip();
 	::wxGetApp().frame->m_meters[0]->m_meters[1]->ResetClip();

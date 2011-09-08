@@ -25,26 +25,30 @@
 
 #include <wx/docview.h>
 
-class OrganPanel;
+class GOGUIPanelWidget;
+class OrganDocument;
 
 class OrganView : public wxView
 {
+private:
+	GOGUIPanelWidget* m_panel;
+	wxScrolledWindow* m_container;
+	wxWindow* m_frame;
+	OrganDocument* m_doc;
+	unsigned m_panelID;
 
-	DECLARE_DYNAMIC_CLASS(OrganView);
-
+	bool CreateWindow();
 public:
+	OrganView(unsigned m_panelID = 0);
+	~OrganView();
 
 	bool OnCreate(wxDocument *doc, long flags);
 	bool OnClose(bool deleteWindow = true);
-	void OnDraw(wxDC *dc);
+	void OnDraw(wxDC*);
 	void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
-	void OnGOControl(wxCommandEvent& event);
 
 private:
-
-	OrganPanel* m_panel;
-	DECLARE_EVENT_TABLE();
-
+	DECLARE_DYNAMIC_CLASS(OrganView);
 };
 
 #endif

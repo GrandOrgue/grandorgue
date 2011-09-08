@@ -20,37 +20,38 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef ORGANPANEL_H
-#define ORGANPANEL_H
+#ifndef GOGUIPANELWIDGET_H
+#define GOGUIPANELWIDGET_H
 
 #include <wx/wx.h>
-#include <wx/docview.h>
 
-class OrganPanel : public wxPanel
+class GOGUIPanel;
+
+DECLARE_EVENT_TYPE(wxEVT_GOCONTROL, -1)
+
+class GOGUIPanelWidget : public wxPanel
 {
-
 private:
-	wxBitmap m_clientBitmap;
-	wxPoint m_clientOrigin;
-	wxBrush m_pedalBrush;
+	GOGUIPanel* m_panel;
+	wxBitmap m_ClientBitmap;
 
-	void DrawClickables(wxDC* dc = NULL, int xx = 0, int yy = 0, bool right = false, int scroll = 0);
 	void CopyToScreen(wxDC* mdc, const wxRect& rect);
 
 public:
-	OrganPanel(wxWindow* parent);
+	GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindowID id = wxID_ANY);
+	~GOGUIPanelWidget();
+
+	void OnUpdate();
+	void OnDraw(wxDC* dc);
 	void OnErase(wxEraseEvent& event);
 	void OnPaint(wxPaintEvent& event);
-	void OnDraw(wxDC *dc);
 	void OnGOControl(wxCommandEvent& event);
-	void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
 	void OnMouseLeftDown(wxMouseEvent& event);
 	void OnMouseRightDown(wxMouseEvent& event);
 	void OnMouseScroll(wxMouseEvent& event);
 	void OnKeyCommand(wxKeyEvent& event);
 
 	DECLARE_EVENT_TABLE();
-
 };
 
 #endif
