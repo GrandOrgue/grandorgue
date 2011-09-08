@@ -31,12 +31,16 @@
 IMPLEMENT_DYNAMIC_CLASS(OrganDocument, wxDocument)
 
 extern GOrgueSound* g_sound;
-extern GrandOrgueFile* organfile;
+GrandOrgueFile* organfile = NULL;
+
+OrganDocument::OrganDocument() :
+	m_organfile(NULL)
+{
+}
 
 OrganDocument::~OrganDocument()
 {
 	CloseOrgan();
-	::wxGetApp().frame->SetTitle(wxT(APP_NAME));
 }
 
 bool OrganDocument::OnCloseDocument()
@@ -60,27 +64,25 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	if (!open_sound)
 		return false;
 
-	organfile = new GrandOrgueFile;
-	wxString error = organfile->Load(file, file2);
+	m_organfile = new GrandOrgueFile;
+	wxString error = m_organfile->Load(file, file2);
 	if (!error.IsEmpty())
 	{
-		CloseOrgan();
-		if (!file2.IsEmpty())
-			DeleteAllViews();
-		 if (error != wxT("!"))
-		 {
+		if (error != wxT("!"))
+		{
 			::wxLogError(wxT("%s\n"),error.c_str());
 			wxMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
 		}
+		CloseOrgan();
+		if (!file2.IsEmpty())
+			DeleteAllViews();
 		return false;
 	}
-	g_sound->PreparePlayback(organfile);
-	organfile->PreparePlayback();
+	g_sound->PreparePlayback(m_organfile);
+	m_organfile->PreparePlayback();
+	organfile = m_organfile;
 
-	SetTitle(organfile->GetChurchName());
-
-	Modify(false);
-	UpdateAllViews(0, this);
+	SetTitle(m_organfile->GetChurchName());
 
 	/* we have loaded the organ so we can now enable playback */
 	g_sound->ActivatePlayback();
@@ -90,19 +92,25 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 
 bool OrganDocument::DoSaveDocument(const wxString& file)
 {
-	organfile->Save(file);
+	m_organfile->Save(file);
 	return true;
 }
 
 void OrganDocument::CloseOrgan()
 {
 	g_sound->CloseSound();
-	if (organfile)
+	if (m_organfile)
 	{
-		delete organfile;
+		delete m_organfile;
+		m_organfile = 0;
 		organfile = 0;
 	}
 	::wxGetApp().frame->m_meters[0]->m_meters[0]->ResetClip();
 	::wxGetApp().frame->m_meters[0]->m_meters[1]->ResetClip();
 	::wxGetApp().frame->m_meters[1]->m_meters[0]->ResetClip();
+}
+
+GrandOrgueFile* OrganDocument::GetOrganFile()
+{
+	return m_organfile;
 }

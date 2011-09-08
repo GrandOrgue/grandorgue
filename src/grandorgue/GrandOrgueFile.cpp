@@ -53,7 +53,6 @@
 #include "contrib/sha1.h"
 
 extern GOrgueSound* g_sound;
-GrandOrgueFile* organfile = 0;
 
 GrandOrgueFile::GrandOrgueFile() :
 	m_path(),
