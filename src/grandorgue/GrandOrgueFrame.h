@@ -31,6 +31,7 @@ class GOrgueMeter;
 class GOrgueFrame: public wxDocParentFrame
 {
 	DECLARE_CLASS(GOrgueFrame)
+	wxMenu* m_panel_menu;
 public:
     GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type);
     ~GOrgueFrame(void);
@@ -66,6 +67,8 @@ public:
 	//
 	void OnKeyCommand(wxKeyEvent& event);
 	void ChangeSetter(unsigned position);
+	void OnUpdatePanelMenu(wxUpdateUIEvent& event);
+	void OnPanel(wxCommandEvent& event);
 
 	void OnSize(wxSizeEvent& event);
 

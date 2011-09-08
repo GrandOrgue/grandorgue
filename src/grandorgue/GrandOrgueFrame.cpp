@@ -22,6 +22,7 @@
 
 #include "GrandOrgueFrame.h"
 
+#include <algorithm>
 #include <wx/menu.h>
 #include <wx/mstream.h>
 #include <wx/image.h>
@@ -35,6 +36,7 @@
 #include <wx/zstream.h>
 #include <wx/html/helpctrl.h>
 #include <wx/splash.h>
+#include "GOGUIPanel.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueMeter.h"
 #include "GOrgueMidi.h"
@@ -47,6 +49,7 @@
 #include "GrandOrgueFile.h"
 #include "GrandOrgue.h"
 #include "OrganDocument.h"
+#include "OrganView.h"
 #include "SettingsDialog.h"
 #include "SplashScreen.h"
 
@@ -96,6 +99,8 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(ID_MEMORY, GOrgueFrame::OnSettingsMemory)
 	EVT_MENU(ID_TRANSPOSE, GOrgueFrame::OnSettingsTranspose)
 	// End
+	EVT_MENU_RANGE(ID_PANEL_FIRST, ID_PANEL_LAST, GOrgueFrame::OnPanel)
+	EVT_UPDATE_UI(ID_PANEL_MENU, GOrgueFrame::OnUpdatePanelMenu)
 	EVT_SIZE(GOrgueFrame::OnSize)
 
 	EVT_UPDATE_UI(wxID_SAVE, GOrgueFrame::OnUpdateLoaded)
@@ -115,8 +120,9 @@ void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxSt
 	}
 }
 
-GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type)
-    : wxDocParentFrame(manager, frame, id, title, pos, size, type)
+GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type) :
+	wxDocParentFrame(manager, frame, id, title, pos, size, type),
+	m_panel_menu(NULL)
 {
 	m_gaugedc = 0;
 
@@ -209,6 +215,48 @@ GOrgueFrame::~GOrgueFrame()
         delete m_gaugedc;
         m_gaugedc = 0;
     }
+}
+
+void GOrgueFrame::OnPanel(wxCommandEvent& event)
+{
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
+	unsigned no = event.GetId() - ID_PANEL_FIRST + 1;
+	if (!organfile || organfile->GetPanelCount() <= no)
+		return;
+	wxWindow* win = organfile->GetPanel(no)->GetParentWindow();
+	if (win)
+	{
+		win->Raise();
+		win->SetFocus();
+	}
+	else
+	{
+		OrganView* view = new OrganView(no);
+		view->SetDocument(doc);
+		view->OnCreate(doc, 0);
+	}
+}
+
+void GOrgueFrame::OnUpdatePanelMenu(wxUpdateUIEvent& event)
+{
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
+	unsigned panelcount = std::min (organfile ? organfile->GetPanelCount() - 1 : 0, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
+	while (m_panel_menu->GetMenuItemCount() < panelcount)
+		m_panel_menu->AppendCheckItem(ID_PANEL_FIRST + m_panel_menu->GetMenuItemCount(), wxT("_"));
+	
+	while (m_panel_menu->GetMenuItemCount() > panelcount)
+	{
+		m_panel_menu->Destroy(m_panel_menu->FindItemByPosition(m_panel_menu->GetMenuItemCount() - 1));
+	}
+
+	for(unsigned i = 0; i < panelcount; i++)
+	{
+		wxMenuItem* item = m_panel_menu->FindItemByPosition(i);
+		item->SetItemLabel(organfile->GetPanel(i + 1)->GetName());
+		item->Check(organfile->GetPanel(i + 1)->GetParentWindow() ? true : false);
+	}
 }
 
 void GOrgueFrame::OnSize(wxSizeEvent& event)
