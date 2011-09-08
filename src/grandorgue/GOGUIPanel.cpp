@@ -55,19 +55,14 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_window(0),
 	m_parent(0)
 {
-	for (int i = 0; i < count_ImageLoader_Stops; ++i)
+	for (unsigned i = 0; i < GetImageCount_Stop(); i++)
+		m_images.push_back(new wxBitmap(GetImage_Stop(i)));
+
+	for (unsigned i = 0; i < GetImageCount_Wood(); i++)
 	{
-		wxMemoryInputStream mem((const char*)ImageLoader_Stops[i], c_ImageLoader_Stops[i]);
-		wxImage img(mem, wxBITMAP_TYPE_PNG);
-		m_images.push_back(new wxBitmap(img));
-	}
-	for (int i = 0; i < count_ImageLoader_Wood; ++i)
-	{
-		wxMemoryInputStream mem((const char*)ImageLoader_Wood[i], c_ImageLoader_Wood[i]);
-		wxImage img(mem, wxBITMAP_TYPE_JPEG);
-		m_WoodImages.push_back(new wxBitmap(img));
-		img = img.Rotate90();
-		m_WoodImages.push_back(new wxBitmap(img));
+		wxBitmap bmp = GetImage_Wood(i);
+		m_WoodImages.push_back(new wxBitmap(bmp));
+		m_WoodImages.push_back(new wxBitmap(bmp.ConvertToImage().Rotate90()));
 	}
 }
 

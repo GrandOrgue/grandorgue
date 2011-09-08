@@ -84,7 +84,8 @@ public:
 
 	DECLARE_EVENT_TABLE()
 protected:
-	void AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString = wxEmptyString, unsigned char* toolbarImage = 0, int size = 0, wxItemKind kind = wxITEM_NORMAL);
+	void AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString = wxEmptyString);
+	void AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, const wxBitmap& toolbarImage, wxItemKind kind = wxITEM_NORMAL);
 };
 
 #endif

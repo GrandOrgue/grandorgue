@@ -1,0 +1,22 @@
+IF(CMAKE_CROSSCOMPILING)
+  SET(IMPORT_EXECUTABLES "IMPORTFILE-NOTFOUND" CACHE FILEPATH "Point it to the export file from a native build")
+  INCLUDE(${IMPORT_EXECUTABLES})
+ENDIF(CMAKE_CROSSCOMPILING)
+
+IF(NOT CMAKE_CROSSCOMPILING)
+   ADD_EXECUTABLE(imageconverter imageconverter.cpp)
+ENDIF(NOT CMAKE_CROSSCOMPILING)
+
+IF(NOT CMAKE_CROSSCOMPILING) 
+  EXPORT(TARGETS imageconverter FILE ${CMAKE_BINARY_DIR}/ImportExecutables.cmake )
+ENDIF(NOT CMAKE_CROSSCOMPILING) 
+
+SET(IMAGE_LIST)
+
+MACRO(CONVERTIMAGE imagefile)
+	GET_FILENAME_COMPONENT(basename ${imagefile} NAME_WE)
+	SET(IMAGE_LIST ${IMAGE_LIST} ${basename}.cpp)
+	ADD_CUSTOM_COMMAND(OUTPUT ${basename}.cpp
+	                   COMMAND imageconverter ${CMAKE_CURRENT_SOURCE_DIR}/images/${imagefile} ${basename}.cpp ${basename}
+	                   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/images/${imagefile} imageconverter)
+ENDMACRO(CONVERTIMAGE)
