@@ -23,8 +23,7 @@
 #ifndef WXGAUGEAUDIO_H
 #define WXGAUGEAUDIO_H
 
-#include <wx/control.h>
-#include "GrandOrgueFrame.h"
+#include <wx/wx.h>
 
 class wxGaugeAudio : public wxControl
 {
@@ -41,7 +40,8 @@ public:
 protected:
 	int m_value;
 	bool m_clip;
-	GOrgueFrame* m_frame;
+	wxMemoryDC m_gaugedc;
+	wxBitmap m_gauge;
 };
 
 #endif

@@ -105,8 +105,6 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	wxDocParentFrame(manager, frame, id, title, pos, size, type),
 	m_panel_menu(NULL)
 {
-	m_gaugedc = 0;
-
 #ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
 #endif
@@ -154,10 +152,6 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	tb->AddSeparator();
 	// Changed Text to Icons to reduce screen space - Graham Goode Nov 2009
 	wxMenu *settings_menu = new wxMenu;
-        m_gauge = GetImage_gauge();
-
-	m_gaugedc = new wxMemoryDC();
-	m_gaugedc->SelectObject(m_gauge);
 
 	m_meters[0] = new GOrgueMeter(tb, ID_METER_AUDIO_SPIN, 3);
 	m_meters[1] = new GOrgueMeter(tb, ID_METER_POLY_SPIN,  2);
@@ -188,11 +182,6 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 
 GOrgueFrame::~GOrgueFrame()
 {
-    if (m_gaugedc)
-    {
-        delete m_gaugedc;
-        m_gaugedc = 0;
-    }
 }
 
 void GOrgueFrame::OnPanel(wxCommandEvent& event)
