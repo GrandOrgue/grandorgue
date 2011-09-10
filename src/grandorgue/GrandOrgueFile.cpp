@@ -163,10 +163,11 @@ bool GrandOrgueFile::TryLoad
 						pipe->LoadData();
 					}
 					nb_loaded_pipes++;
-					dlg.Update
-						((nb_loaded_pipes << 15) / (nb_pipes + 1)
-						,pipe->GetFilename()
-						);
+					if (!dlg.Update	((nb_loaded_pipes << 15) / (nb_pipes + 1), pipe->GetFilename()))
+					{
+						error = _("Load aborted by the user");
+						return false;
+					}
 					GOrgueLCD_WriteLineTwo
 						(wxString::Format
 							(_("Loading %d%%")
@@ -475,6 +476,10 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 				}
 			}
 
+			if (!cache_ok)
+			{
+				wxMessageBox(_("The cache for this organ is outdated. Please update or delete it."), _("Warning"), wxOK | wxICON_WARNING, NULL);
+			}
 		}
 
 		if (!cache_ok)
@@ -495,6 +500,73 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	return wxEmptyString;
 
+}
+bool GrandOrgueFile::CachePresent()
+{
+	wxString cache_filename = m_filename + wxT(".cache");
+	return wxFileExists(cache_filename);
+}
+bool GrandOrgueFile::UpdateCache()
+{
+	wxString cache_filename = m_filename + wxT(".cache");
+
+	/* Figure out how many pipes there are */
+	unsigned nb_pipes = 0;
+	unsigned nb_saved_pipes = 0;
+	for (unsigned i = GetFirstManualIndex(); i <= GetManualAndPedalCount(); i++)
+		for (unsigned j = 0; j < GetManual(i)->GetStopCount(); j++)
+			nb_pipes += GetManual(i)->GetStop(j)->GetPipeCount();
+
+	wxProgressDialog dlg(_("Creating sample cache"), wxEmptyString, 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
+	wxFileOutputStream file(cache_filename);
+	wxZlibOutputStream zout(file);
+
+	/* Save pipes to cache */
+	bool cache_save_ok = true;
+	int magic = GRANDORGUE_CACHE_MAGIC;
+	zout.Write(&magic, sizeof(magic));
+	if (zout.LastWrite() != sizeof(magic))
+		cache_save_ok = false;
+	
+	unsigned char hash[20];
+	GenerateCacheHash(hash);
+	zout.Write(hash, sizeof(hash));
+	if (zout.LastWrite() != sizeof(hash))
+		cache_save_ok = false;
+
+	for (unsigned i = GetFirstManualIndex(); cache_save_ok && i <= GetManualAndPedalCount(); i++)
+		for (unsigned j = 0; cache_save_ok && j < GetManual(i)->GetStopCount(); j++)
+			for (unsigned k = 0; cache_save_ok && k < GetManual(i)->GetStop(j)->GetPipeCount(); k++)
+			{
+				GOrguePipe* pipe = GetManual(i)->GetStop(j)->GetPipe(k);
+				if (!pipe->SaveCache(&zout))
+				{
+					cache_save_ok = false;
+					wxLogError(_("Save of %s to the cache failed"), pipe->GetFilename().c_str());
+				}
+				nb_saved_pipes++;
+				if (!dlg.Update ((nb_saved_pipes << 15) / (nb_pipes + 1), pipe->GetFilename()))
+				{
+					zout.Close();
+					file.Close();
+					DeleteCache();
+					return false;
+				}
+			}
+	zout.Close();
+	file.Close();
+	if (!cache_save_ok)
+	{
+		DeleteCache();
+		return false;
+	}
+	return true;
+}
+
+void GrandOrgueFile::DeleteCache()
+{
+	wxString cache_filename = m_filename + wxT(".cache");
+	wxRemoveFile(cache_filename);
 }
 
 GrandOrgueFile::~GrandOrgueFile(void)
