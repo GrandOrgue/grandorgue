@@ -20,10 +20,8 @@
  * MA 02111-1307, USA.
  */
 
-#include "GrandOrgue.h"
-#include "GOrgueProperties.h"
 #include <wx/statline.h>
-#include <wx/html/helpctrl.h>
+#include "GOrgueProperties.h"
 #include "GrandOrgueFile.h"
 
 BEGIN_EVENT_TABLE(wxStaticLink, wxStaticText)
