@@ -182,7 +182,8 @@ void GOrgueMeter::OnFrame(wxCommandEvent& event)
 #endif
 	}
 
-	::wxGetApp().frame->ChangeSetter(n - 1);
+	if (::wxGetApp().frame)
+		::wxGetApp().frame->ChangeSetter(n - 1);
 }
 
 void GOrgueMeter::OnTranspose(wxCommandEvent& event)
@@ -205,7 +206,8 @@ void GOrgueMeter::OnTranspose(wxCommandEvent& event)
 void GOrgueMeter::OnEnter(wxCommandEvent& event)
 {
 	if (event.GetId() == ID_METER_FRAME_SPIN)
-		::wxGetApp().frame->ChangeSetter(m_spin->GetValue() - 1);
+		if (::wxGetApp().frame)
+			::wxGetApp().frame->ChangeSetter(m_spin->GetValue() - 1);
 	::wxGetApp().frame->SetFocus();
 }
 
