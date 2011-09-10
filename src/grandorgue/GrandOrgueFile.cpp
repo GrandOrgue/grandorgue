@@ -47,7 +47,6 @@
 #include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
-#include "GOrgueWave.h"
 #include "GOrgueWindchest.h"
 #include "OrganDocument.h"
 #include "GOGUIPanel.h"

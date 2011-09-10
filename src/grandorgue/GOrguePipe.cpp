@@ -480,8 +480,12 @@ void GOrguePipe::LoadData()
 
 	wxLogDebug(_("Loading file %s"), m_filename.c_str());
 
+	/* Translate directory seperator from ODF(\) to native format */
+	wxString temp = m_filename;
+	temp.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
+
 	GOrgueWave wave;
-	wave.Open(m_filename);
+	wave.Open(temp);
 
 	/* allocate data to work with */
 	unsigned totalDataSize = wave.GetLength() * sizeof(wxInt16) * wave.GetChannels();
