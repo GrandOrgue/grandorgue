@@ -258,7 +258,7 @@ void GOrgueWave::Open(const wxString& filename)
 		/* This is a bit more leaniant than the original code... it will
 		 * truncate the usable size of the file if the size on disk is larger
 		 * than the size of the RIFF chunk */
-		if (length > riffChunkSize + 8)
+		if ((unsigned long)length > riffChunkSize + 8)
 			length = riffChunkSize + 8;
 
 		/* Find required chunks... */
