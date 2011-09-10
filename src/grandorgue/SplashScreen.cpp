@@ -20,8 +20,8 @@
  * MA 02111-1307, USA.
  */
 
+#include <wx/splash.h>
 #include "SplashScreen.h"
-#include "wx/splash.h"
 
 #define wxSPLASH_TIMER_ID 9999
 
@@ -55,11 +55,8 @@ wxSplashScreenModal::wxSplashScreenModal(const wxBitmap& bitmap, long splashStyl
 
     Show(true);
     m_window->SetFocus();
-#if defined( __WXMSW__ ) || defined(__WXMAC__)
     Update(); // Without this, you see a blank screen for an instant
-#else
     wxYieldIfNeeded(); // Should eliminate this
-#endif
 }
 
 wxSplashScreenModal::~wxSplashScreenModal()

@@ -27,11 +27,9 @@
 
 class wxSplashScreenWindow;
 
-class /*WXDLLIMPEXP_ADV*/ wxSplashScreenModal : public wxDialog
+class wxSplashScreenModal : public wxDialog
 {
 public:
-    // for RTTI macros only
-    wxSplashScreenModal() {}
     wxSplashScreenModal(const wxBitmap& bitmap, long splashStyle, int milliseconds,
                    wxWindow* parent, wxWindowID id,
                    const wxPoint& pos = wxDefaultPosition,
