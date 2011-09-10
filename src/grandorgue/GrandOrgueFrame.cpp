@@ -278,11 +278,11 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 	{
 		wxFileName fn = wxFileName::GetCwd();
 		fn.AppendDir(wxT("organs"));
-		::wxGetApp().m_docManager->SetLastDirectory(wxConfig::Get()->Read(wxT("organPath"), fn.GetPath()));
+		GetDocumentManager()->SetLastDirectory(wxConfig::Get()->Read(wxT("organPath"), fn.GetPath()));
 		ProcessCommand(wxID_OPEN);
 		if (m_docManager->GetCurrentDocument() && ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile())
 		{
-			wxConfig::Get()->Write(wxT("organPath"), ::wxGetApp().m_docManager->GetLastDirectory());
+			wxConfig::Get()->Write(wxT("organPath"), GetDocumentManager()->GetLastDirectory());
 		}
 	}
 	else
@@ -295,7 +295,7 @@ void GOrgueFrame::OnLoad(wxCommandEvent& event)
 	if (!doc)
 		return;
 
-	wxFileDialog dlg(::wxGetApp().frame, _("Import Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxOPEN | wxFILE_MUST_EXIST);
+	wxFileDialog dlg(this, _("Import Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxOPEN | wxFILE_MUST_EXIST);
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
@@ -310,7 +310,7 @@ void GOrgueFrame::OnSave(wxCommandEvent& event)
 	if (!doc)
 		return;
 
-	wxFileDialog dlg(::wxGetApp().frame, _("Export Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxSAVE | wxOVERWRITE_PROMPT);
+	wxFileDialog dlg(this, _("Export Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxSAVE | wxOVERWRITE_PROMPT);
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
@@ -449,7 +449,7 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 {
-	if (!::wxGetApp().m_docManager->GetCurrentDocument() || !g_sound)
+	if (!GetDocumentManager()->GetCurrentDocument() || !g_sound)
 		return;
 	g_sound->GetMidi().ToggleSetter();
 }
