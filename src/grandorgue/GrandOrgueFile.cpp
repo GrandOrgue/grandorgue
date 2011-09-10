@@ -43,6 +43,7 @@
 #include "GOrguePipe.h"
 #include "GOrguePiston.h"
 #include "GOrguePushbutton.h"
+#include "GOrgueReleaseAlignTable.h"
 #include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"

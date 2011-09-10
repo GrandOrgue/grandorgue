@@ -25,6 +25,7 @@
 #include "GOrgueEnclosure.h"
 #include "GOrgueMidi.h"
 #include "GOrguePipe.h"
+#include "GOrgueReleaseAlignTable.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgue.h"
 #include "GrandOrgueFile.h"

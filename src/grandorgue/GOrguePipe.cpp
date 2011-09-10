@@ -22,6 +22,7 @@
 
 #include <wx/stream.h>
 #include "GOrguePipe.h"
+#include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueManual.h"
