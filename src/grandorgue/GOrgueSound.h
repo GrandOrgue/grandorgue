@@ -175,7 +175,7 @@ public:
 	bool IsStereo();
 
 	bool IsRecording();
-	void StartRecording();
+	void StartRecording(wxString filename);
 	void StopRecording();
 
 	bool IsActive();

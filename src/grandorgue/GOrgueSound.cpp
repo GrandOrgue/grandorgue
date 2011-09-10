@@ -21,18 +21,8 @@
  */
 
 #include "GOrgueSound.h"
-
-#if defined(__WXMSW__)
-    #include <wx/msw/regconf.h>
-#endif
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
 #include "GrandOrgueFile.h"
-#include "GrandOrgueID.h"
-#include "GOrguePipe.h"
-#include "GOrgueStop.h"
 #include "GOrgueRtHelpers.h"
-#include "GOrgueTremulant.h"
 #include "GOrgueMidi.h"
 
 struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
@@ -392,25 +382,19 @@ bool GOrgueSound::IsRecording()
 }
 
 /* FIXME: This code is not thread-safe and is likely to cause future problems */
-void GOrgueSound::StartRecording()
+void GOrgueSound::StartRecording(wxString filepath)
 {
 	if (f_output)
-        return;
+		return;
 	b_stoprecording = false;
-	wxFileDialog dlg(::wxGetApp().frame, _("Save as"), wxConfig::Get()->Read(wxT("wavPath"), ::wxGetApp().m_path), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxSAVE | wxOVERWRITE_PROMPT);
-	if (dlg.ShowModal() == wxID_OK)
+	FILE* out = fopen(filepath.mb_str(), "wb");
+	if (out)
 	{
-        wxConfig::Get()->Write(wxT("wavPath"), dlg.GetDirectory());
-        wxString filepath = dlg.GetPath();
-        if (filepath.Find(wxT(".wav")) == wxNOT_FOUND) {
-            filepath.append(wxT(".wav"));
-        }
-        if ((f_output = fopen(filepath.mb_str(), "wb")))
-            fwrite(&WAVE, sizeof(WAVE), 1, f_output);
+		fwrite(&WAVE, sizeof(WAVE), 1, out);
+		f_output = out;
+	}
         else
             ::wxLogError(_("Unable to open file for writing"));
-
-	}
 }
 
 void GOrgueSound::StopRecording()
