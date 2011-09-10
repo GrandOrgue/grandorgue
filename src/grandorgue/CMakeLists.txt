@@ -1,7 +1,12 @@
 include_directories(../rt/include)
 
 # include wxWidgets
-set(wxWidgets_USE_STATIC OFF)
+if (STATIC)
+  set(wxWidgets_USE_STATIC ON)
+else()
+  set(wxWidgets_USE_STATIC OFF)
+endif()
+
 include(CMakeWxWidgetsInclude.txt)
 include(CMakeImages.txt)
 
