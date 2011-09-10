@@ -105,7 +105,6 @@ void GOrgueDocManager::OnUpdateFileSave(wxUpdateUIEvent& event)
 GOrgueApp::GOrgueApp()
   :frame(NULL),
    m_docManager(NULL),
-   m_path(),
    m_help(NULL),
    m_locale(),
    m_server(NULL),
@@ -150,7 +149,7 @@ bool GOrgueApp::OnInit()
 
 
 	wxIdleEvent::SetMode(wxIDLE_PROCESS_SPECIFIED);
-    wxFileSystem::AddHandler(new wxZipFSHandler);
+	wxFileSystem::AddHandler(new wxZipFSHandler);
 	wxImage::AddHandler(new wxJPEGHandler);
 	wxImage::AddHandler(new wxGIFHandler);
 	wxImage::AddHandler(new wxPNGHandler);
@@ -160,17 +159,11 @@ bool GOrgueApp::OnInit()
         m_help->AddBook(wxFileName(wxT("GrandOrgue.htb")));
 
 #ifdef __WIN32__
-
 	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
-	wxChar docs[MAX_PATH];
-	SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, 0, docs);
-	m_path = docs;
-	m_path += wxT("\\");
 #endif
 #ifdef linux
 	wxLog *logger=new wxLogStream(&std::cout);
 	wxLog::SetActiveTarget(logger);
-    m_path=wxT("$HOME"); //TODO??
     //wxFont::SetDefaultEncoding(wxFONTENCODING_CP1250);
 #endif
 	m_docManager = new GOrgueDocManager;
@@ -184,23 +177,23 @@ bool GOrgueApp::OnInit()
 	::wxSleep(2);
 	frame->Show(true);
 
-    if (!open_sound)
+	if (!open_sound)
 	{
 	    SettingsDialog dialog(frame);
-        SetTopWindow(&dialog);
+	    SetTopWindow(&dialog);
 	    dialog.ShowModal();
 	}
-    SetTopWindow(frame);
+	SetTopWindow(frame);
 
-    if (argc > 1 && argv[1][0])
-    {
-        AsyncLoadFile(argv[1]);
-        argv[1][0] = 0;
-        argc = 1;
-    }
-    GOrgueLCD_Open();
+	if (argc > 1 && argv[1][0])
+	{
+		AsyncLoadFile(argv[1]);
+		argv[1][0] = 0;
+		argc = 1;
+	}
+	GOrgueLCD_Open();
 
-    m_soundSystem->GetMidi().UpdateOrganMIDI(); //retrieve MIDI settings for loading organs
+	m_soundSystem->GetMidi().UpdateOrganMIDI(); //retrieve MIDI settings for loading organs
 
 	return true;
 }
