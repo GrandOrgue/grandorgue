@@ -43,12 +43,14 @@ class GOrguePushbutton;
 class GOrgueTremulant;
 class GOrgueWindchest;
 class GOGUIPanel;
+class OrganDocument;
 
 class GrandOrgueFile 
 {
 
 private:
 
+	OrganDocument* m_doc;
 	wxFileName m_path;
 	int m_b_squash;
 	GOrguePipe* m_compress_p;
@@ -91,7 +93,7 @@ private:
 
 public:
 
-	GrandOrgueFile();
+	GrandOrgueFile(OrganDocument* doc);
 	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);
 	void Save(const wxString& file);
 	void Revert(wxFileConfig& cfg);
