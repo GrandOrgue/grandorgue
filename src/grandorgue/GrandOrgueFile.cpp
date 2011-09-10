@@ -55,7 +55,8 @@
 
 extern GOrgueSound* g_sound;
 
-GrandOrgueFile::GrandOrgueFile() :
+GrandOrgueFile::GrandOrgueFile(OrganDocument* doc) :
+	m_doc(doc),
 	m_path(),
 	m_b_squash(0),
 	m_compress_p(NULL),
@@ -823,5 +824,5 @@ void GrandOrgueFile::ControlChanged(void* control)
 
 void GrandOrgueFile::Modified()
 {
-	::wxGetApp().m_docManager->GetCurrentDocument()->Modify(true);
+	m_doc->Modify(true);
 }
