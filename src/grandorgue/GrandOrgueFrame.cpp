@@ -444,7 +444,19 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 	if (g_sound->IsRecording())
 		g_sound->StopRecording();
 	else
-		g_sound->StartRecording();
+	{
+		wxFileDialog dlg(this, _("Save as"), wxConfig::Get()->Read(wxT("wavPath"), ::wxGetApp().m_path), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxSAVE | wxOVERWRITE_PROMPT);
+		if (dlg.ShowModal() == wxID_OK)
+			{
+				wxConfig::Get()->Write(wxT("wavPath"), dlg.GetDirectory());
+				wxString filepath = dlg.GetPath();
+				if (filepath.Find(wxT(".wav")) == wxNOT_FOUND)
+				{
+					filepath.append(wxT(".wav"));
+				}
+				g_sound->StartRecording(filepath);
+			}
+	}
 }
 
 void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
