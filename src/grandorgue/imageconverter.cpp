@@ -33,7 +33,7 @@ int main(int ac, const char* ag[])
 		printf("Usage: %s graphic-file output-file structure-name\n", ag[0]);
 		return 1;
 	}
-	in = fopen(ag[1], "r");
+	in = fopen(ag[1], "rb");
 	if (!in)
 	{
 		printf("Error opening %s\n", ag[1]);
