@@ -79,8 +79,6 @@ public:
 	void OnUpdateLoaded(wxUpdateUIEvent& event);
 
 	GOrgueMeter* m_meters[4];
-	wxMemoryDC* m_gaugedc;
-	wxBitmap m_gauge;
 
 	DECLARE_EVENT_TABLE()
 protected:
