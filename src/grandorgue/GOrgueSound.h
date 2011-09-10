@@ -23,19 +23,6 @@
 #ifndef GORGUESOUND_H
 #define GORGUESOUND_H
 
-/* BLOCKS_PER_FRAME specifies the number of mono samples or stereo sample
- * pairs which are decoded for each iteration of the audio engines main loop.
- * Setting this value too low will result in inefficiencies or certain
- * features (compression) failing to work. */
-#define BLOCKS_PER_FRAME 64
-
-/* Maximum number of blocks (1 block is nChannels samples) per frame */
-#define MAX_FRAME_SIZE 1024
-
-/* Maximum number of channels the engine supports. This value can not be
- * changed at present.
- */
-#define MAX_OUTPUT_CHANNELS 2
 
 #include <wx/wx.h>
 #include <wx/stopwatch.h>
@@ -61,117 +48,10 @@ END_DECLARE_EVENT_TYPES()
 
 /* TODO: I think this should be imported using a #include ... there is some ambiguity */
 class wxConfigBase;
-
-class GOrguePipe;
-
-#define DATA_TYPE_MONO_COMPRESSED     0
-#define DATA_TYPE_MONO_UNCOMPRESSED   1
-#define DATA_TYPE_STEREO_COMPRESSED   2
-#define DATA_TYPE_STEREO_UNCOMPRESSED 3
-
-#pragma pack(push, 1)
-
-struct struct_WAVE
-{
-	char ChunkID[4];
-	int ChunkSize;
-	char Format[4];
-    char Subchunk1ID[4];
-	int Subchunk1Size;
-	short AudioFormat;
-	short NumChannels;
-	int SampleRate;
-	int ByteRate;
-	short BlockAlign;
-	short BitsPerSample;
-	char Subchunk2ID[4];
-	int Subchunk2Size;
-};
-
-#pragma pack(pop)
-
-typedef enum
-{
-	AC_COMPRESSED_MONO = 0,
-	AC_UNCOMPRESSED_MONO = 1,
-	AC_COMPRESSED_STEREO = 2,
-	AC_UNCOMPRESSED_STEREO = 3
-} AUDIO_SECTION_TYPE;
-
-typedef enum {
-	GSS_ATTACK = 0,
-	GSS_LOOP = 1,
-	GSS_RELEASE = 2
-} AUDIO_SECTION_STAGE;
-
-struct AUDIO_SECTION_T;
-struct GO_SAMPLER_T;
-
-#include "GOrgueReleaseAlignTable.h"
-
-typedef struct AUDIO_SECTION_T
-{
-
-	/* Size of the section in BYTES */
-	unsigned size;
-	unsigned alloc_size;
-
-	/* Type of the data which is stored in the data pointer */
-	AUDIO_SECTION_TYPE type;
-	AUDIO_SECTION_STAGE stage; /*overflowing,*/
-
-	/* The starting sample and derivatives for each channel (used in the
-	 * compression and release-alignment schemes */
-	GO_RELEASE_TRACKING_INFO release_tracker_initial;
-
-	/* Pointer to (size) bytes of data encoded in the format (type) */
-	unsigned char* data;
-
-} AUDIO_SECTION;
-
-typedef struct GO_SAMPLER_T
-{
-	GO_SAMPLER_T* next;		// must be first!
-
-	GOrguePipe* pipe;
-	const AUDIO_SECTION* pipe_section;
-
-	GO_RELEASE_TRACKING_INFO release_tracker;
-
-	/* the fade parameter is would be more appropriately named "gain". It is
-	 * modified on a frame-by frame basis by the fadein and fadeout parameters
-	 * which get added to it. The maximum value is defined by fademax and is
-	 * a NEGATIVE value. When fade is zero, the sampler will be discarded back
-	 * into the sampler pool. When it is equal to fademax, the sample will be
-	 * being played back at its appropriate volume (determined by amplitude
-	 * factors throughout the organ definition file.
-	 *
-	 * The time taken for a sample to fade out for a given a value of fadeout
-	 * is:
-	 * { frames to fadeout } =  { fademax } / { fadeout }
-	 * { frame length } = 2 / { sample rate }
-	 * { time to fadeout } = { frames to fadeout } * { frame length }
-	 *                     = ( 2 * { fademax } ) / ( { fadeout } * { samplerate } )
-	 * therefore:
-	 * { fadeout } = ( 2 * { fademax } ) / ( { samplerate } * { time to fadeout } )
-	 */
-	int fade;
-	int fadein;
-	int fadeout;
-	unsigned faderemain;
-	int fademax;
-
-	int time;
-
-	int shift;
-
-	/* current byte index of the current block into this sample */
-	unsigned position;
-
-} GO_SAMPLER;
-
 class GrandOrgueFile;
 class GOrgueMidi;
+
+#include "GOrgueSoundTypes.h"
 
 class GOrgueSound
 {

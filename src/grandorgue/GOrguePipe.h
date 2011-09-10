@@ -24,7 +24,7 @@
 #define GORGUEPIPE_H
 
 #include <wx/wx.h>
-#include "GOrgueSound.h"
+#include "GOrgueSoundTypes.h"
 
 class GOrgueTremulant;
 class GOrgueReleaseAlignTable;

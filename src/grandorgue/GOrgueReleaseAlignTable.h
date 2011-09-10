@@ -12,13 +12,7 @@
 #define PHASE_ALIGN_AMPLITUDES     32
 #define PHASE_ALIGN_MIN_FREQUENCY  20 /* Hertz */
 
-/* data structure required to support release alignment tracking. */
-typedef struct
-{
-	int f[2];
-} GO_RELEASE_TRACKING_INFO;
-
-#include "GOrgueSound.h"
+#include "GOrgueSoundTypes.h"
 
 class wxInputStream;
 class wxOutputStream;
