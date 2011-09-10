@@ -51,7 +51,6 @@ public:
   void AsyncLoadFile(wxString iFile);
   GOrgueFrame* frame;
   wxDocManager* m_docManager;
-  wxString m_path;
   wxHtmlHelpController* m_help;
 protected:
   wxLocale m_locale;

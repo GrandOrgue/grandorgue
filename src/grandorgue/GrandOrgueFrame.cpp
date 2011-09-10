@@ -23,6 +23,7 @@
 #include "GrandOrgueFrame.h"
 
 #include <algorithm>
+#include <wx/stdpaths.h>
 #include <wx/html/helpctrl.h>
 #include <wx/splash.h>
 #include "Images.h"
@@ -279,13 +280,24 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 		event.Skip();
 }
 
+wxString GOrgueFrame::GetDocumentDirectory()
+{
+	return wxStandardPaths::Get().GetDocumentsDir();
+}
+
+wxString GOrgueFrame::GetOrganDirectory()
+{
+	return GetDocumentDirectory() + wxFileName::GetPathSeparator() + _("My Organs");
+}
+
+
 void GOrgueFrame::OnLoad(wxCommandEvent& event)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
 
-	wxFileDialog dlg(this, _("Import Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxOPEN | wxFILE_MUST_EXIST);
+	wxFileDialog dlg(this, _("Import Settings"), wxConfig::Get()->Read(wxT("cmbPath"), GetOrganDirectory()), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxOPEN | wxFILE_MUST_EXIST);
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
@@ -300,7 +312,7 @@ void GOrgueFrame::OnSave(wxCommandEvent& event)
 	if (!doc)
 		return;
 
-	wxFileDialog dlg(this, _("Export Settings"), wxConfig::Get()->Read(wxT("cmbPath"), ::wxGetApp().m_path + wxT("My Organs")), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxSAVE | wxOVERWRITE_PROMPT);
+	wxFileDialog dlg(this, _("Export Settings"), wxConfig::Get()->Read(wxT("cmbPath"), GetOrganDirectory()), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxSAVE | wxOVERWRITE_PROMPT);
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
@@ -386,7 +398,7 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 		g_sound->StopRecording();
 	else
 	{
-		wxFileDialog dlg(this, _("Save as"), wxConfig::Get()->Read(wxT("wavPath"), ::wxGetApp().m_path), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxSAVE | wxOVERWRITE_PROMPT);
+		wxFileDialog dlg(this, _("Save as"), wxConfig::Get()->Read(wxT("wavPath"), GetDocumentDirectory()), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxSAVE | wxOVERWRITE_PROMPT);
 		if (dlg.ShowModal() == wxID_OK)
 			{
 				wxConfig::Get()->Write(wxT("wavPath"), dlg.GetDirectory());
