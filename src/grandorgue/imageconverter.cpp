@@ -26,7 +26,7 @@ int main(int ac, const char* ag[])
 {
 	FILE* in, *out;
 	unsigned char c;
-	unsigned pos;
+	unsigned pos = 0;
 
 	if (ac != 4)
 	{
