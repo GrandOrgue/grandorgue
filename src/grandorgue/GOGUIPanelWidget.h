@@ -27,7 +27,7 @@
 
 class GOGUIPanel;
 
-DECLARE_EVENT_TYPE(wxEVT_GOCONTROL, -1)
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL, -1)
 
 class GOGUIPanelWidget : public wxPanel
 {

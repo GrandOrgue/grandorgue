@@ -25,7 +25,7 @@
 #include "GOGUIPanelWidget.h"
 #include "KeyConvert.h"
 
-DEFINE_EVENT_TYPE(wxEVT_GOCONTROL)
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL)
 
 BEGIN_EVENT_TABLE(GOGUIPanelWidget, wxPanel)
 	EVT_ERASE_BACKGROUND(GOGUIPanelWidget::OnErase)
