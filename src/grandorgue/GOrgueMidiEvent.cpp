@@ -22,7 +22,7 @@
 
 #include "GOrgueMidiEvent.h"
 
-DEFINE_EVENT_TYPE( wxEVT_MIDI_ACTION )
+DEFINE_LOCAL_EVENT_TYPE( wxEVT_MIDI_ACTION )
 
 IMPLEMENT_DYNAMIC_CLASS( GOrgueMidiEvent, wxEvent )
 

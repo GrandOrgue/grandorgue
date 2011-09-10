@@ -39,7 +39,7 @@ typedef enum {
 #define MIDI_CTRL_SOUNDS_OFF 120
 #define MIDI_CTRL_NOTES_OFF 123
 
-DECLARE_EVENT_TYPE( wxEVT_MIDI_ACTION, -1 )
+DECLARE_LOCAL_EVENT_TYPE( wxEVT_MIDI_ACTION, -1 )
 
 class GOrgueMidiEvent : public wxEvent {
 public:

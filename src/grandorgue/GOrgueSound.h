@@ -32,21 +32,10 @@
 #include "RtMidi.h"
 #include "GrandOrgueDef.h"
 
-BEGIN_DECLARE_EVENT_TYPES()
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_LISTENING, -1)
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_METERS, -1)
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_LOADFILE, -1)
 
-/* Unfortunately, it seems to be necessary to use
- * DECLARE_EXPORTED_EVENT_TYPE when compiling for Windows as the wx headers
- * seem to declare the events as DLL exports when wx-config states that
- * wxWidgets was compiled using dynamic link libraries
- */
-
-	DECLARE_EXPORTED_EVENT_TYPE(wxEMPTY_PARAMETER_VALUE, wxEVT_LISTENING, -1)
-	DECLARE_EXPORTED_EVENT_TYPE(wxEMPTY_PARAMETER_VALUE, wxEVT_METERS, -1)
-	DECLARE_EXPORTED_EVENT_TYPE(wxEMPTY_PARAMETER_VALUE, wxEVT_LOADFILE, -1)
-
-END_DECLARE_EVENT_TYPES()
-
-/* TODO: I think this should be imported using a #include ... there is some ambiguity */
 class wxConfigBase;
 class GrandOrgueFile;
 class GOrgueMidi;
