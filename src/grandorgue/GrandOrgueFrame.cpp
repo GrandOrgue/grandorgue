@@ -23,16 +23,6 @@
 #include "GrandOrgueFrame.h"
 
 #include <algorithm>
-#include <wx/menu.h>
-#include <wx/image.h>
-#include <wx/filefn.h>
-#include <wx/toolbar.h>
-#include <wx/icon.h>
-#include <wx/config.h>
-#include <wx/progdlg.h>
-#include <wx/stream.h>
-#include <wx/wfstream.h>
-#include <wx/zstream.h>
 #include <wx/html/helpctrl.h>
 #include <wx/splash.h>
 #include "Images.h"
@@ -40,9 +30,6 @@
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueMeter.h"
 #include "GOrgueMidi.h"
-#include "GOrguePipe.h"
-#include "GOrgueStop.h"
-#include "GOrgueManual.h"
 #include "GOrgueProperties.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
@@ -58,7 +45,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_KEY_DOWN(GOrgueFrame::OnKeyCommand)
 	EVT_COMMAND(0, wxEVT_METERS, GOrgueFrame::OnMeters)
 	EVT_COMMAND(0, wxEVT_LOADFILE, GOrgueFrame::OnLoadFile)
-    EVT_MENU_OPEN(GOrgueFrame::OnMenuOpen)
+	EVT_MENU_OPEN(GOrgueFrame::OnMenuOpen)
 	EVT_MENU(ID_FILE_OPEN, GOrgueFrame::OnOpen)
 	EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9, GOrgueFrame::OnOpen)
 	EVT_MENU(ID_FILE_RELOAD, GOrgueFrame::OnReload)
@@ -262,7 +249,10 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 	GrandOrgueFile* organfile = NULL;
 	if (m_docManager->GetCurrentDocument())
 		organfile = ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile();
-	event.Enable(organfile && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
+	if (event.GetId() == ID_FILE_CACHE_DELETE)
+		event.Enable(organfile && organfile->CachePresent());
+	else
+		event.Enable(organfile && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
 }
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
@@ -339,57 +329,10 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
-	GrandOrgueFile* organfile = doc->GetOrganFile();
-
-	/* Figure out how many pipes there are */
-	unsigned nb_pipes = 0;
-	unsigned nb_saved_pipes = 0;
-	for (unsigned i = organfile->GetFirstManualIndex(); i <= organfile->GetManualAndPedalCount(); i++)
-		for (unsigned j = 0; j < organfile->GetManual(i)->GetStopCount(); j++)
-			nb_pipes += organfile->GetManual(i)->GetStop(j)->GetPipeCount();
-
-	wxString filename = organfile->GetODFFilename() + wxT(".cache");
-	wxFileOutputStream file(filename);
-	wxZlibOutputStream zout(file);
-
-	wxProgressDialog dlg(_("Creating sample cache"), wxEmptyString, 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
-
-	/* Save pipes to cache */
-	bool cache_save_ok = true;
-	int magic = GRANDORGUE_CACHE_MAGIC;
-	zout.Write(&magic, sizeof(magic));
-	if (zout.LastWrite() != sizeof(magic))
-		cache_save_ok = false;
-	
-	unsigned char hash[20];
-	organfile->GenerateCacheHash(hash);
-	zout.Write(hash, sizeof(hash));
-	if (zout.LastWrite() != sizeof(hash))
-		cache_save_ok = false;
-
-	for (unsigned i = organfile->GetFirstManualIndex(); cache_save_ok && i <= organfile->GetManualAndPedalCount(); i++)
-		for (unsigned j = 0; cache_save_ok && j < organfile->GetManual(i)->GetStopCount(); j++)
-			for (unsigned k = 0; cache_save_ok && k < organfile->GetManual(i)->GetStop(j)->GetPipeCount(); k++)
-			{
-				GOrguePipe* pipe = organfile->GetManual(i)->GetStop(j)->GetPipe(k);
-				if (!pipe->SaveCache(&zout))
-				{
-					cache_save_ok = false;
-					wxLogError(_("Save of %s to the cache failed"), pipe->GetFilename().c_str());
-				}
-				nb_saved_pipes++;
-				dlg.Update
-					((nb_saved_pipes << 15) / (nb_pipes + 1)
-					,pipe->GetFilename()
-					);
-			}
-	zout.Close();
-	file.Close();
-	if (!cache_save_ok)
+	if (!doc->GetOrganFile()->UpdateCache())
 	{
 		wxLogError(_("Creating the cache failed"));
 		wxMessageBox(_("Creating the cache failed"), _("Error"), wxOK | wxICON_ERROR, NULL);
-		wxRemoveFile(filename);
 	}
 }
 
@@ -398,9 +341,7 @@ void GOrgueFrame::OnCacheDelete(wxCommandEvent& event)
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
-
-	wxString filename = doc->GetOrganFile()->GetODFFilename() + wxT(".cache");
-	wxRemoveFile(filename);
+	doc->GetOrganFile()->DeleteCache();
 }
 
 void GOrgueFrame::OnReload(wxCommandEvent& event)

@@ -90,12 +90,16 @@ private:
 
 	void ReadOrganFile(wxFileConfig& odf_ini_file);
 	bool TryLoad(wxInputStream* cache, wxProgressDialog& dlg, wxString& error);
+	void GenerateCacheHash(unsigned char hash[20]);
 
 public:
 
 	GrandOrgueFile(OrganDocument* doc);
 	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);
 	void Save(const wxString& file);
+	bool CachePresent();
+	bool UpdateCache();
+	void DeleteCache();
 	void Revert(wxFileConfig& cfg);
 	void Abort();
 	void PreparePlayback();
@@ -105,7 +109,6 @@ public:
 	void Modified();
 	~GrandOrgueFile(void);
 
-	void GenerateCacheHash(unsigned char hash[20]);
 	/* Access to internal ODF objects */
 	unsigned GetManualAndPedalCount();
 	unsigned GetFirstManualIndex();
