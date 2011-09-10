@@ -200,17 +200,11 @@ void GOrgueWave::Open(const wxString& filename)
 	/* Close any currently open wave data */
 	Close();
 
-	wxString temp = filename;
 	wxFile file;
-
-#ifdef linux
-	temp.Replace(wxT("\\"), wxT("/"));
-#endif
-
-	if (!file.Open(temp, wxFile::read))
+	if (!file.Open(filename, wxFile::read))
 	{
 		wxString message;
-		message.Printf(_("Failed to open file '%s'\n"), temp.c_str());
+		message.Printf(_("Failed to open file '%s'\n"), filename.c_str());
 		throw message;
 	}
 	wxFileOffset length = file.Length();
@@ -230,7 +224,7 @@ void GOrgueWave::Open(const wxString& filename)
 		if (file.Read(ptr, length) != length)
 		{
 			wxString message;
-			message.Printf(_("Failed to read file '%s'\n"), temp.c_str());
+			message.Printf(_("Failed to read file '%s'\n"), filename.c_str());
 			throw message;
 		}
 		file.Close();
