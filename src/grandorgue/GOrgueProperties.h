@@ -23,16 +23,18 @@
 #ifndef GORGUEPROPERTIES_H
 #define GORGUEPROPERTIES_H
 
+#include <wx/wx.h>
+
 class GrandOrgueFile;
 
 class wxStaticLink : public wxStaticText
 {
 public:
-    wxStaticLink(wxWindow* parent, const wxString& label, const wxString& url);
+	wxStaticLink(wxWindow* parent, const wxString& label, const wxString& url);
 	void OnClick(wxMouseEvent& event);
 	DECLARE_EVENT_TABLE()
 protected:
-    wxString m_url;
+	wxString m_url;
 };
 
 class GOrgueProperties : public wxDialog
