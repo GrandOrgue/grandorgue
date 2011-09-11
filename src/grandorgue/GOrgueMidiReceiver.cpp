@@ -35,7 +35,7 @@ GOrgueMidiReceiver::GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_
 	m_organfile(organfile),
 	m_type(type),
 	m_Key(-1),
-	m_Manual(-1),
+	m_Index(-1),
 	m_events(0)
 {
 }
@@ -45,9 +45,9 @@ MIDI_RECEIVER_TYPE GOrgueMidiReceiver::GetType() const
 	return m_type;
 }
 
-void GOrgueMidiReceiver::SetManual(int manual)
+void GOrgueMidiReceiver::SetIndex(int index)
 {
-	m_Manual = manual;
+	m_Index = index;
 }
 
 const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
@@ -125,17 +125,27 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		if (m_type == MIDI_RECV_BUTTON)
 		{
 			m_events[0].type = MIDI_M_PGM_CHANGE;
-			if (m_Manual != -1)
+			if (m_Index > 6)
 			{
-				int what = g_sound->GetMidi().GetManualMidiEvent(m_organfile->GetManual(m_Manual)->GetMIDIInputNumber());
+				m_events.resize(0);
+				return;
+			}
+			if (m_Index != -1)
+			{
+				int what = g_sound->GetMidi().GetManualMidiEvent(m_organfile->GetManual(m_Index)->GetMIDIInputNumber());
 				m_events[0].channel = ((what >> 8) & 0xF) + 1;
 			}
 			m_events[0].key = cfg.ReadInteger(group, wxT("MIDIProgramChangeNumber"), 1, 128);
 		}
 		if (m_type == MIDI_RECV_MANUAL)
 		{
-			int what = g_sound->GetMidi().GetManualMidiEvent(m_organfile->GetManual(m_Manual)->GetMIDIInputNumber());
-			if (m_Manual > 6 || !m_organfile->GetManual(m_Manual)->IsDisplayed() || (what & 0xF000) == 0)
+			if (m_Index > 6)
+			{
+				m_events.resize(0);
+				return;
+			}
+			int what = g_sound->GetMidi().GetManualMidiEvent(m_organfile->GetManual(m_Index)->GetMIDIInputNumber());
+			if (!m_organfile->GetManual(m_Index)->IsDisplayed() || (what & 0xF000) == 0)
 			{
 				m_events.resize(0);
 				return;
@@ -146,8 +156,13 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		}
 		if (m_type == MIDI_RECV_ENCLOSURE)
 		{
-			int what = g_sound->GetMidi().GetMidiEventByChannel(m_organfile->GetEnclosure(m_Manual)->GetMIDIInputNumber() + 1);
-			if (m_Manual >= 6 || (what & 0xF000) == 0)
+			if (m_Index >= 6)
+			{
+				m_events.resize(0);
+				return;
+			}
+			int what = g_sound->GetMidi().GetMidiEventByChannel(m_organfile->GetEnclosure(m_Index)->GetMIDIInputNumber() + 1);
+			if ((what & 0xF000) == 0)
 			{
 				m_events.resize(0);
 				return;

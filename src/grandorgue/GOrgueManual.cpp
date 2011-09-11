@@ -66,7 +66,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
 	unsigned m_nb_tremulants            = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, 10, false);
 	m_manual_number = manualNumber;
 
-	m_midi.SetManual(manualNumber);
+	m_midi.SetIndex(manualNumber);
 
 	wxString buffer;
 

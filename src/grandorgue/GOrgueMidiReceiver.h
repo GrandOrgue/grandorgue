@@ -71,7 +71,7 @@ private:
 	static const struct IniFileEnumEntry m_MidiTypes[];
 	MIDI_RECEIVER_TYPE m_type;
 	int m_Key;
-	int m_Manual;
+	int m_Index;
 	std::vector<MIDI_MATCH_EVENT> m_events;
 
 public:
@@ -82,7 +82,7 @@ public:
 
 	MIDI_RECEIVER_TYPE GetType() const;
 
-	void SetManual(int manual);
+	void SetIndex(int index);
 
 	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e);
  	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e, int& value);
