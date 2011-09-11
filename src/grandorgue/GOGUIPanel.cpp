@@ -42,6 +42,7 @@
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
 #include "GOGUIDisplayMetrics.h"
+#include "GOGUIHW1DisplayMetrics.h"
 #include "IniFileConfig.h"
 #include "Images.h"
 
@@ -98,7 +99,7 @@ void GOGUIPanel::SetWindow(GOGUIPanelWidget* window)
 
 void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 {
-	m_metrics = new GOGUIDisplayMetrics(cfg, m_organfile, wxT(""));
+	m_metrics = new GOGUIHW1DisplayMetrics(cfg, m_organfile, wxT(""));
 
 	{
 		wxString buffer;
