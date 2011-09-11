@@ -41,17 +41,18 @@ void stereoUncompressed
 
 	// "borrow" the output buffer to compute release alignment info
 	wxInt16* input = (wxInt16*)(sampler->pipe_section->data + sampler->position);
-	output[0] = (int)(input[BLOCKS_PER_FRAME * 2 - 4]) + input[BLOCKS_PER_FRAME * 2 - 3];
-	output[1] = (int)(input[BLOCKS_PER_FRAME * 2 - 2]) + input[BLOCKS_PER_FRAME * 2 - 1];
-	GOrgueReleaseAlignTable::UpdateTrackingInfo
-		(sampler->release_tracker
-		,2
-		,output
-		);
 
 	// copy the sample buffer
-	for (unsigned int i = 0; i < BLOCKS_PER_FRAME * 2; i++, input++, output++)
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME * 2; input++, output++, i++)
 		*output = *input;
+
+	// update sample history (for release alignment / compression)
+	input -= BLOCK_HISTORY * 2;
+	for (unsigned i = 0; i < BLOCK_HISTORY; i++)
+	{
+		sampler->history[i * MAX_OUTPUT_CHANNELS + 0] = input[i * 2 + 0];
+		sampler->history[i * MAX_OUTPUT_CHANNELS + 1] = input[i * 2 + 1];
+	}
 
 	// update the position
 	sampler->position += BLOCKS_PER_FRAME * sizeof(wxInt16) * 2;
@@ -74,13 +75,10 @@ void monoUncompressed
 		output[1] = *input;
 	}
 
-	// update the alignment tracker
-	int* ra_pos = (output - 3);
-	GOrgueReleaseAlignTable::UpdateTrackingInfo
-		(sampler->release_tracker
-		,2
-		,ra_pos
-		);
+	// update sample history (for release alignment / compression)
+	input -= BLOCK_HISTORY;
+	for (unsigned i = 0; i < BLOCK_HISTORY; i++, input++)
+		sampler->history[i * MAX_OUTPUT_CHANNELS] = *input;
 
 	// update the position
 	sampler->position += BLOCKS_PER_FRAME * sizeof(wxInt16);
@@ -351,10 +349,6 @@ void ReadSamplerFrames
 					 * attack segment has completed so we now (re)enter the
 					 * loop. */
 					sampler->position -= currentBlockSize;
-					/*GOrgueReleaseAlignTable::CopyTrackingInfo
-						(sampler->release_tracker
-						,sampler->pipe->GetLoop()->release_tracker_initial
-						);*/
 				}
 			}
 		}

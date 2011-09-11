@@ -117,6 +117,8 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 	SHA1_Update(&ctx, &len, sizeof(len));
 	len = BLOCKS_PER_FRAME;
 	SHA1_Update(&ctx, &len, sizeof(len));
+	len = BLOCK_HISTORY;
+	SHA1_Update(&ctx, &len, sizeof(len));
 
 	SHA1_Final(hash, &ctx);
 }
