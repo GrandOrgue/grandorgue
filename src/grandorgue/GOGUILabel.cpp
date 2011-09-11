@@ -41,6 +41,22 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel) :
 {
 }
 
+void GOGUILabel::SetText(const wxString& text)
+{
+	m_Name = text;
+	m_panel->AddEvent(this);
+}
+
+void GOGUILabel::Init(unsigned x, unsigned y)
+{
+	m_DispXpos = x;
+	m_DispYpos = y;
+	m_DispLabelColour = wxColor(0,0,0);
+	m_DispLabelFontSize = 7;
+
+	m_BoundingRect = wxRect(m_DispXpos - 1, m_DispYpos - 1, 78, 22);
+}
+
 void GOGUILabel::Load(IniFileConfig& cfg, wxString group)
 {
 
