@@ -28,6 +28,7 @@
 #include "OrganView.h"
 #include "OrganDocument.h"
 #include "SettingsDialog.h"
+#include "GOrgueEvent.h"
 #include "GOrgueLCD.h"
 #include "GOrgueMidi.h"
 #include "GOrgueSound.h"
