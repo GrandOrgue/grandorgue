@@ -156,9 +156,10 @@ void GOrguePipe::SetOn()
 	sampler->pipe_section = &m_attack;
 	sampler->position = 0;
 
-	GOrgueReleaseAlignTable::CopyTrackingInfo
-		(sampler->release_tracker
-		,m_attack.release_tracker_initial
+	memcpy
+		(sampler->history
+		,m_attack.history
+		,sizeof(sampler->history)
 		);
 
 //	else
@@ -257,9 +258,10 @@ void GOrguePipe::SetOff()
 			else
 			{
 				new_sampler->position = 0; //m_release.offset;
-				GOrgueReleaseAlignTable::CopyTrackingInfo
-					(new_sampler->release_tracker
-					,m_release.release_tracker_initial
+				memcpy
+					(new_sampler->history
+					,m_release.history
+					,sizeof(new_sampler->history)
 					);
 			}
 

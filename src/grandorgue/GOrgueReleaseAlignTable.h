@@ -25,9 +25,8 @@ private:
 	unsigned int m_Channels;
 	int m_PhaseAlignMaxAmplitude;
 	int m_PhaseAlignMaxDerivative;
-	int m_PhaseAlignmentTable[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
-	int m_PhaseAlignmentTable_f[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
-	int m_PhaseAlignmentTable_v[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
+	int m_PositionEntries[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
+	int m_HistoryEntries[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES][BLOCK_HISTORY * MAX_OUTPUT_CHANNELS];
 
 public:
 
@@ -50,54 +49,6 @@ public:
 		,const GO_SAMPLER_T& old_sampler
 		);
 
-
-
-	static void UpdateTrackingInfo
-		(GO_RELEASE_TRACKING_INFO& track_info
-		,const unsigned nb_samples
-		,const int* samples
-		);
-
-	static void CopyTrackingInfo
-		(GO_RELEASE_TRACKING_INFO& dest
-		,const GO_RELEASE_TRACKING_INFO& source
-		);
-
-
 };
-
-inline
-void GOrgueReleaseAlignTable::UpdateTrackingInfo
-	(GO_RELEASE_TRACKING_INFO& track_info
-	,const unsigned nb_samples
-	,const int* samples
-	)
-{
-
-	if (nb_samples < 1)
-		return;
-
-	if (nb_samples < 2)
-	{
-		track_info.f[1] = track_info.f[0];
-		track_info.f[0] = samples[0];
-		return;
-	}
-
-	track_info.f[1] = samples[nb_samples-2];
-	track_info.f[0] = samples[nb_samples-1];
-
-}
-
-inline
-void GOrgueReleaseAlignTable::CopyTrackingInfo
-	(GO_RELEASE_TRACKING_INFO& dest
-	,const GO_RELEASE_TRACKING_INFO& source
-	)
-{
-
-	memcpy(&dest, &source, sizeof(source));
-
-}
 
 #endif /* GORGUERELEASEALIGNTABLE_H_ */
