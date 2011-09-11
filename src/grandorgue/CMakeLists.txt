@@ -85,6 +85,7 @@ GOGUIManualBackground.cpp
 GOGUIPanel.cpp
 GOGUIPanelWidget.cpp
 GOGUIPushbutton.cpp
+GOGUISetterButton.cpp
 GOrgueWave.cpp
 GOrgueControl.cpp
 GOrgueCoupler.cpp
@@ -107,6 +108,7 @@ GOrgueProperties.cpp
 GOrguePushbutton.cpp
 GOrgueReleaseAlignTable.cpp
 GOrgueRtHelpers.cpp
+GOrgueSetterButton.cpp
 GOrgueSound.cpp
 GOrgueSoundCallbackAudio.cpp
 GOrgueStop.cpp
