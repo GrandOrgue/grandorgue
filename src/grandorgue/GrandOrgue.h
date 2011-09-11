@@ -28,19 +28,14 @@
 #include <wx/wx.h>
 #include <wx/html/helpctrl.h>
 
-#ifdef __WXMSW__
-#include <wx/msw/private.h>
-#include <wx/msw/registry.h>
-#endif
-
-#include "GOrgueSound.h"
-#include "GrandOrgueFrame.h"
-
 class wxSingleInstanceChecker;
 class wxSplashScreenWindow;
 class wxDocManager;
 class wxConfigBase;
 class stServer;
+
+class GOrgueFrame;
+class GOrgueSound;
 
 class GOrgueApp : public wxApp
 {

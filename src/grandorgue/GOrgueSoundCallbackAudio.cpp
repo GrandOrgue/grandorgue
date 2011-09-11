@@ -29,6 +29,7 @@
 #include "GOrgueWindchest.h"
 #include "GrandOrgue.h"
 #include "GrandOrgueFile.h"
+#include "GrandOrgueFrame.h"
 #include "RtAudio.h"
 
 static

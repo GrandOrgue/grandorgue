@@ -25,6 +25,7 @@
 #include "GOGUIPanelWidget.h"
 #include "OrganDocument.h"
 #include "GrandOrgueFile.h"
+#include "GrandOrgueFrame.h"
 #include "GrandOrgue.h"
 
 IMPLEMENT_DYNAMIC_CLASS(OrganView, wxView)

@@ -30,6 +30,8 @@
 #include "SettingsDialog.h"
 #include "GOrgueLCD.h"
 #include "GOrgueMidi.h"
+#include "GOrgueSound.h"
+#include "GrandOrgueFrame.h"
 
 #include <wx/ipc.h>
 #include <wx/snglinst.h>
@@ -39,7 +41,6 @@
 
 #ifdef __WIN32__
 #include <windows.h>
-#include <shlobj.h>
 #endif
 
 #include <malloc.h>
