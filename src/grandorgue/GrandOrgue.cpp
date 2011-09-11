@@ -173,6 +173,7 @@ bool GOrgueApp::OnInit()
 
 	m_soundSystem = new GOrgueSound();
 	frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE  | wxMAXIMIZE_BOX | wxRESIZE_BORDER);
+	SetTopWindow(frame);
 	frame->DoSplash();
 	bool open_sound = m_soundSystem->OpenSound(true, NULL);
 	::wxSleep(2);
@@ -181,10 +182,8 @@ bool GOrgueApp::OnInit()
 	if (!open_sound)
 	{
 	    SettingsDialog dialog(frame);
-	    SetTopWindow(&dialog);
 	    dialog.ShowModal();
 	}
-	SetTopWindow(frame);
 
 	if (argc > 1 && argv[1][0])
 	{
