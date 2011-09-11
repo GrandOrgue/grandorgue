@@ -44,6 +44,7 @@ BEGIN_EVENT_TABLE(GOrgueMeter, wxControl)
 	EVT_TEXT_ENTER(ID_METER_POLY_SPIN,  GOrgueMeter::OnEnter)
 	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN,  GOrgueMeter::OnEnter)
 	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueMeter::OnEnter)
+	EVT_SLIDER(0, GOrgueMeter::OnChange)
 END_EVENT_TABLE()
 
 GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
@@ -117,6 +118,19 @@ void GOrgueMeter::SetValue(int n)
 {
 	m_spin->SetValue(n);
 }
+
+void GOrgueMeter::ChangeValue(int n)
+{
+	wxCommandEvent event(wxEVT_COMMAND_SLIDER_UPDATED, 0);
+	event.SetInt(n);
+	AddPendingEvent(event);
+}
+
+void GOrgueMeter::OnChange(wxCommandEvent& event)
+{
+	m_spin->SetValue(event.GetInt());
+}
+
 
 void GOrgueMeter::SetValue(int which, int n)
 {

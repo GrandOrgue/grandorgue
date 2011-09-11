@@ -97,6 +97,15 @@ void GOGUIPanel::SetWindow(GOGUIPanelWidget* window)
 	m_window = window;
 }
 
+
+void GOGUIPanel::Init(GOGUIDisplayMetrics* metrics, wxString name)
+{
+	m_metrics = metrics;
+	m_Name = name;
+	m_controls.resize(0);
+}
+
+
 void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 {
 	m_metrics = new GOGUIHW1DisplayMetrics(cfg, m_organfile, wxT(""));
