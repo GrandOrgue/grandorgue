@@ -47,6 +47,7 @@ protected:
 public:
 	GOGUIPanel(GrandOrgueFile* organfile);
 	virtual ~GOGUIPanel();
+	void Init(GOGUIDisplayMetrics* metrics, wxString name);
 	void Load(IniFileConfig& cfg, wxString group);
 	void Save(IniFileConfig& cfg, bool prefix);
 

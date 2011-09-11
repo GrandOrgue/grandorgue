@@ -108,6 +108,7 @@ GOrgueProperties.cpp
 GOrguePushbutton.cpp
 GOrgueReleaseAlignTable.cpp
 GOrgueRtHelpers.cpp
+GOrgueSetter.cpp
 GOrgueSetterButton.cpp
 GOrgueSound.cpp
 GOrgueSoundCallbackAudio.cpp

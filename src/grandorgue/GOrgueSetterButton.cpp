@@ -21,6 +21,7 @@
  */
 
 #include "GOrgueSetterButton.h"
+#include "GOrgueSetter.h"
 #include "GrandOrgueFile.h"
 
 GOrgueSetterButton::GOrgueSetterButton(GrandOrgueFile* organfile, GOrgueSetter* setter, bool Pushbutton) :
@@ -54,7 +55,7 @@ void GOrgueSetterButton::Save(IniFileConfig& cfg, bool prefix)
 void GOrgueSetterButton::Push()
 {
 	if (m_Pushbutton)
-		;
+		m_setter->Change(this);
 	else
 		Set(m_DefaultToEngaged ^ true);
 }
@@ -74,6 +75,7 @@ void GOrgueSetterButton::Set(bool on)
 {
 	if (m_DefaultToEngaged == on)
 		return;
+	m_setter->Change(this);
 	m_DefaultToEngaged = on;
 	m_organfile->ControlChanged(this);
 }
