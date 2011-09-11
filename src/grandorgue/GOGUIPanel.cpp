@@ -38,6 +38,7 @@
 #include "GOrgueGeneral.h"
 #include "GOrgueManual.h"
 #include "GOrguePiston.h"
+#include "GOrgueSetter.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
@@ -303,6 +304,29 @@ wxBitmap* GOGUIPanel::GetWoodImage(unsigned index)
 
 void GOGUIPanel::HandleKey(int key)
 {
+	switch(key)
+	{
+	case 256: /* Left */
+		m_organfile->GetSetter()->Prev();
+		break;
+
+	case 257: /* right */
+		m_organfile->GetSetter()->Next();
+		break;
+
+	case 258: /* down */
+		m_organfile->GetSetter()->Push();
+		break;
+
+	case 259: /* Shift not down */
+		m_organfile->GetSetter()->SetterActive(false);
+		break;
+
+	case 260: /* Shift down */
+		m_organfile->GetSetter()->SetterActive(true);
+		break;
+	}
+	
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->HandleKey(key);
 }

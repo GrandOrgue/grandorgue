@@ -67,8 +67,10 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
 		break;
 	case 1:
+		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 999);
+		break;
 	case 3:
-		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 1, (count == 1) ? 999 : 100);
+		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 100);
 		break;
 	case 2:
 		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(56, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 4096);
@@ -98,7 +100,7 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 		SetValue(0);
 		break;
 	case 1:
-		SetValue(1);
+		SetValue(0);
 		break;
 	case 2:
 		SetValue(wxConfig::Get()->Read(wxT("PolyphonyLimit"), 2048));
@@ -197,7 +199,7 @@ void GOrgueMeter::OnFrame(wxCommandEvent& event)
 	}
 
 	if (::wxGetApp().frame)
-		::wxGetApp().frame->ChangeSetter(n - 1);
+		::wxGetApp().frame->ChangeSetter(n);
 }
 
 void GOrgueMeter::OnTranspose(wxCommandEvent& event)
@@ -221,7 +223,7 @@ void GOrgueMeter::OnEnter(wxCommandEvent& event)
 {
 	if (event.GetId() == ID_METER_FRAME_SPIN)
 		if (::wxGetApp().frame)
-			::wxGetApp().frame->ChangeSetter(m_spin->GetValue() - 1);
+			::wxGetApp().frame->ChangeSetter(m_spin->GetValue());
 	::wxGetApp().frame->SetFocus();
 }
 

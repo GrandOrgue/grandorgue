@@ -125,8 +125,14 @@ void GOGUIPanelWidget::OnKeyCommand(wxKeyEvent& event)
 	int k = event.GetKeyCode();
 	if ( !event.AltDown())
 	{
+		if (!event.ShiftDown())
+			m_panel->HandleKey(259); /* Disable setter */
+		if (event.ShiftDown())
+			m_panel->HandleKey(260); /* Enable setter */
+
 		k = WXKtoVK(k);
-		m_panel->HandleKey(k);
+		if (k)
+			m_panel->HandleKey(k);
 	}
 	event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
 	event.Skip();

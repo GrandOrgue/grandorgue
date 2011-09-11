@@ -29,10 +29,10 @@
 #include "Images.h"
 #include "GOGUIPanel.h"
 #include "GOrgueEvent.h"
-#include "GOrgueFrameGeneral.h"
 #include "GOrgueMeter.h"
 #include "GOrgueMidi.h"
 #include "GOrgueProperties.h"
+#include "GOrgueSetter.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
@@ -156,10 +156,14 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	AddTool(settings_menu, ID_TRANSPOSE, _("&Transpose"), _("Transpose"), GetImage_transpose());
 	tb->AddControl(m_meters[3]);
 
+	wxMenu * organ_menu = new wxMenu;
+	m_panel_menu = new wxMenu();
+	organ_menu->Append(ID_PANEL_MENU, _("&Panel"), m_panel_menu);
 
 	wxMenuBar *menu_bar = new wxMenuBar;
 	menu_bar->Append(file_menu, _("&File"));
 	menu_bar->Append(audio_menu, _("&Audio"));
+	menu_bar->Append(organ_menu, _("&Organ"));
 	menu_bar->Append(help_menu, _("&Help"));
 	SetMenuBar(menu_bar);
 	tb->Realize();
@@ -241,16 +245,16 @@ void GOrgueFrame::OnMeters(wxCommandEvent& event)
 
 void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 {
+	GrandOrgueFile* organfile = NULL;
+	if (m_docManager->GetCurrentDocument())
+		organfile = ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile();
 	if (g_sound)
 	{
 		if (event.GetId() == ID_AUDIO_RECORD)
 			event.Check(g_sound->IsRecording());
 		else if (event.GetId() == ID_AUDIO_MEMSET)
-			event.Check(g_sound->GetMidi().SetterActive());
+			event.Check(organfile && organfile->GetSetter()->IsSetterActive());
 	}
-	GrandOrgueFile* organfile = NULL;
-	if (m_docManager->GetCurrentDocument())
-		organfile = ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile();
 	if (event.GetId() == ID_FILE_CACHE_DELETE)
 		event.Enable(organfile && organfile->CachePresent());
 	else
@@ -415,9 +419,10 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 {
-	if (!GetDocumentManager()->GetCurrentDocument() || !g_sound)
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	if (!doc)
 		return;
-	g_sound->GetMidi().ToggleSetter();
+	doc->GetOrganFile()->GetSetter()->ToggleSetter();
 }
 
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
@@ -477,42 +482,19 @@ void GOrgueFrame::ChangeSetter(unsigned position)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (doc && doc->GetOrganFile())
-		doc->GetOrganFile()->GetFrameGeneral(position)->Push();
+		doc->GetOrganFile()->GetSetter()->SetPosition(position);
 }
 
 void GOrgueFrame::OnKeyCommand(wxKeyEvent& event)
 {
-	if (g_sound && g_sound->GetMidi().SetterActive() ^ event.ShiftDown())
-	{
-		ProcessCommand(ID_AUDIO_MEMSET);
-		UpdateWindowUI();
-	}
-
 	int k = event.GetKeyCode();
 	if ( !event.AltDown())
 	{
-
-		GOrgueMeter* meter = m_meters[2];
 		switch(k)
 		{
 			case WXK_ESCAPE:
 			{
 				ProcessCommand(ID_AUDIO_PANIC);
-				break;
-			}
-			case WXK_LEFT:
-			{
-				meter->SetValue(meter->GetValue() - 1);
-				break;
-			}
-			case WXK_DOWN:
-			{
-				ChangeSetter(meter->GetValue() - 1);
-				break;
-			}
-			case WXK_RIGHT:
-			{
-				meter->SetValue(meter->GetValue() + 1);
 				break;
 			}
 		}

@@ -54,7 +54,6 @@ private:
 	std::vector<MIDI_DEVICE> m_midi_devices;
 	int m_transpose;
 	bool m_listening;
-	bool m_memset;
 	wxEvtHandler* m_listen_evthandler;
 	std::map<long, wxString> m_organ_midi_events;
 	GrandOrgueFile* m_organfile;
@@ -83,9 +82,6 @@ public:
 	bool HasActiveDevice();
 	int GetTranspose();
 	void SetTranspose(int transpose);
-
-	bool SetterActive();
-	void ToggleSetter();
 
 	int GetMidiEventByChannel(int channel);
 	int GetStopMidiEvent();

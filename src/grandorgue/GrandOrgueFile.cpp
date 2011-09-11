@@ -35,7 +35,6 @@
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueEnclosure.h"
-#include "GOrgueFrameGeneral.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
 #include "GOrgueManual.h"
@@ -44,6 +43,7 @@
 #include "GOrguePiston.h"
 #include "GOrguePushbutton.h"
 #include "GOrgueReleaseAlignTable.h"
+#include "GOrgueSetter.h"
 #include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
@@ -58,9 +58,9 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc) :
 	m_doc(doc),
 	m_path(),
 	m_b_squash(0),
-	m_compress_p(NULL),
 	m_filename(),
 	m_elapsed(0),
+	m_setter(0),
 	m_b_customized(false),
 	m_DivisionalsStoreIntermanualCouplers(false),
 	m_DivisionalsStoreIntramanualCouplers(false),
@@ -83,7 +83,6 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc) :
 	m_windchest(0),
 	m_piston(0),
 	m_general(0),
-	m_framegeneral(0),
 	m_divisionalcoupler(0),
 	m_manual(0),
 	m_panels(0)
@@ -222,7 +221,6 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	unsigned m_NumberOfWindchestGroups = ini.ReadInteger(group, wxT("NumberOfWindchestGroups"), 1, 12);
 	unsigned m_NumberOfReversiblePistons = ini.ReadInteger(group, wxT("NumberOfReversiblePistons"), 0, 32);
 	unsigned m_NumberOfGenerals = ini.ReadInteger(group, wxT("NumberOfGenerals"), 0, 99);
-	unsigned m_NumberOfFrameGenerals = 999;	// we never want this to change, what's the point?
 	unsigned m_NumberOfDivisionalCouplers = ini.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, 8);
 	m_AmplitudeLevel = ini.ReadInteger(group, wxT("AmplitudeLevel"), 0, 1000);
 	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntermanualCouplers"));
@@ -294,17 +292,14 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 		m_general[i]->Load(ini, buffer);
 	}
 
-	m_framegeneral.resize(0);
-	for (unsigned i = 0; i < m_NumberOfFrameGenerals; i++)
-	{
-		m_framegeneral.push_back(new GOrgueFrameGeneral(this));
-		buffer.Printf(wxT("FrameGeneral%03d"), i + 1);
-		m_framegeneral[i]->Load(ini, buffer);
-	}
+	m_setter = new GOrgueSetter(this);
+	m_setter->Load(ini);
 
 	m_panels.resize(0);
 	m_panels.push_back(new GOGUIPanel(this));
 	m_panels[0]->Load(ini, wxT("Organ"));
+
+	m_panels.push_back(m_setter->CreatePanel());
 }
 
 wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
@@ -573,6 +568,8 @@ void GrandOrgueFile::DeleteCache()
 
 GrandOrgueFile::~GrandOrgueFile(void)
 {
+	if (m_setter)
+		delete m_setter;
 }
 
 void GrandOrgueFile::Revert(wxFileConfig& cfg)
@@ -629,7 +626,6 @@ void GrandOrgueFile::Save(const wxString& file)
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchName"), m_ChurchName);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
-	aIni.SaveHelper(prefix, wxT("Organ"), wxT("NumberOfFrameGenerals"), m_framegeneral.size());
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), g_sound->GetVolume());
 
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
@@ -644,8 +640,8 @@ void GrandOrgueFile::Save(const wxString& file)
 	for (unsigned j = 0; j < m_general.size(); j++)
 		m_general[j]->Save(aIni, prefix);
 
-	for (unsigned j = 0; j < m_framegeneral.size(); j++)
-		m_framegeneral[j]->Save(aIni, prefix);
+	if (m_setter)
+		m_setter->Save(aIni, prefix);
 
 	for (unsigned j = 0; j < m_piston.size(); j++)
 		m_piston[j]->Save(aIni, prefix);
@@ -739,9 +735,9 @@ GOrgueGeneral* GrandOrgueFile::GetGeneral(unsigned index)
 	return m_general[index];
 }
 
-GOrgueFrameGeneral* GrandOrgueFile::GetFrameGeneral(unsigned index)
+GOrgueSetter* GrandOrgueFile::GetSetter()
 {
-	return m_framegeneral[index];
+	return m_setter;
 }
 
 long GrandOrgueFile::GetElapsedTime()
@@ -850,6 +846,8 @@ void GrandOrgueFile::PreparePlayback()
 
 	for (unsigned j = 0; j < m_tremulant.size(); j++)
 		m_tremulant[j]->PreparePlayback();
+
+	m_setter->PreparePlayback();
 }
 
 void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)
@@ -871,6 +869,8 @@ void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)
 
 	for(unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->ProcessMidi(event);
+	
+	m_setter->ProcessMidi(event);
 }
 
 void GrandOrgueFile::Reset()

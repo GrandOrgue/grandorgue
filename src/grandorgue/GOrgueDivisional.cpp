@@ -25,14 +25,11 @@
 #include "IniFileConfig.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisionalCoupler.h"
-#include "GOrgueSound.h"
+#include "GOrgueSetter.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
-#include "GOrgueMidi.h"
-
-extern GOrgueSound* g_sound;
 
 GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile) :
 	GOrguePushbutton(organfile),
@@ -129,7 +126,7 @@ void GOrgueDivisional::PushLocal()
 	bool used = false;
 	GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
 
-	if (g_sound->GetMidi().SetterActive())
+	if (m_organfile->GetSetter()->IsSetterActive())
 	{
 
 		m_Stops.clear();
@@ -206,7 +203,7 @@ void GOrgueDivisional::Push()
 	PushLocal();
 
 	/* only use divisional couples, if not in setter mode */
-	if (g_sound->GetMidi().SetterActive())
+	if (m_organfile->GetSetter()->IsSetterActive())
 		return;
 
 	for (unsigned k = 0; k < m_organfile->GetDivisionalCouplerCount(); k++)
