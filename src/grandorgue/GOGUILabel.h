@@ -42,6 +42,8 @@ private:
 
 public:
 	GOGUILabel(GOGUIPanel* panel);
+	void SetText(const wxString& text);
+	void Init(unsigned x, unsigned y);
 	void Load(IniFileConfig& cfg, wxString group);
 
 	void Draw(wxDC* dc);
