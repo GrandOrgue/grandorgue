@@ -165,6 +165,18 @@ GOGUIPanel* GOrgueSetter::CreatePanel()
 	button->Init(1, 102);
 	panel->AddControl(button);
 
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_REGULAR]);
+	button->Init(3, 102);
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPE]);
+	button->Init(4, 102);
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPED]);
+	button->Init(5, 102);
+	panel->AddControl(button);
+
 	return panel;
 }
 
