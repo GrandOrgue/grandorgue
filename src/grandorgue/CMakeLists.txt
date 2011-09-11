@@ -75,6 +75,7 @@ contrib/sha1.cpp
 GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
 GOGUIHW1DisplayMetrics.cpp
+GOGUISetterDisplayMetrics.cpp
 GOGUIDrawStop.cpp
 GOGUIEnclosure.cpp
 GOGUIHW1Background.cpp

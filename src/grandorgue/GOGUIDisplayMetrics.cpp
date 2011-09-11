@@ -398,7 +398,7 @@ void GOGUIDisplayMetrics::Update()
 	for (unsigned i = 0; i <= m_nb_manuals; i++)
 	{
 
-		if (!i)
+		if (!i && m_nb_manuals >= m_first_manual)
 		{
 			m_manual_info[0].render_info.height = 40;
 			m_manual_info[0].render_info.keys_y = m_manual_info[0].render_info.y = m_CenterY;
