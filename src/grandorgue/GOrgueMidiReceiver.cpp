@@ -99,6 +99,35 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		m_events[0].device = wxT("");
 		m_events[0].type = MIDI_M_NONE;
 		m_events[0].key = -1;
+		if (m_type == MIDI_RECV_SETTER)
+		{
+			if (m_Index == -1)
+			{
+				m_events.resize(0);
+				return;
+			}
+			int what = g_sound->GetMidi().GetMidiEventByChannel(m_Index);
+			m_events[0].channel = ((what >> 8) & 0xF) + 1;
+			m_events[0].key = (what & 0x7F);
+			if ((what & 0xF000) == 0xC000)
+			{
+				m_events[0].type = MIDI_M_PGM_CHANGE;
+				m_events[0].key++;
+			}
+			if ((what & 0xF000) == 0xB000)
+			{
+				m_events[0].type = MIDI_M_CTRL_CHANGE;
+			}
+			if ((what & 0xF000) == 0x9000)
+			{
+				m_events[0].type = MIDI_M_NOTE;
+			}
+			if ((what & 0xF000) == 0)
+			{
+				m_events.resize(0);
+			}
+			
+		}
 		if (m_type == MIDI_RECV_DRAWSTOP)
 		{
 			int what = g_sound->GetMidi().GetStopMidiEvent();
