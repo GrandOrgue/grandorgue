@@ -148,7 +148,7 @@ SettingsDialog::~SettingsDialog()
         if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION) == wxYES)
         {
             wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
-            ::wxGetApp().frame->AddPendingEvent(event);
+            wxTheApp->GetTopWindow()->AddPendingEvent(event);
         }
     }
 }

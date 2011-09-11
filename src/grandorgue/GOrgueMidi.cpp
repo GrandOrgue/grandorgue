@@ -20,23 +20,15 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
-
-#include "GOrgueCoupler.h"
-#include "GOrgueDivisional.h"
-#include "GOrgueDivisionalCoupler.h"
-#include "GOrgueEnclosure.h"
-#include "GOrgueGeneral.h"
 #include "GOrgueMeter.h"
 #include "GOrgueMidiEvent.h"
-#include "GOrguePiston.h"
 #include "GOrgueSound.h"
-#include "GOrgueStop.h"
-#include "GOrgueTremulant.h"
 #include "GrandOrgue.h"
+#include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
-#include "GrandOrgueID.h"
 #include "RtMidi.h"
 #include <vector>
 #include <wx/config.h>
@@ -297,14 +289,14 @@ GOrgueMidi::ProcessMessage
 		::wxGetApp().frame->UpdateWindowUI();
 	}
 
-    // MIDI for different organ??
+	// MIDI for different organ??
 	std::map<long, wxString>::iterator it;
 	it = m_organ_midi_events.find(j);
 	if (it != m_organ_midi_events.end())
 	{
-        wxCommandEvent event(wxEVT_LOADFILE, 0);
-        event.SetString(it->second);
-        ::wxGetApp().frame->AddPendingEvent(event);
+		wxCommandEvent event(wxEVT_LOADFILE, 0);
+		event.SetString(it->second);
+		wxTheApp->GetTopWindow()->AddPendingEvent(event);
 	}
 
 	int GOrgueevent;

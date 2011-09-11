@@ -28,6 +28,7 @@
 #include <wx/splash.h>
 #include "Images.h"
 #include "GOGUIPanel.h"
+#include "GOrgueEvent.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueMeter.h"
 #include "GOrgueMidi.h"

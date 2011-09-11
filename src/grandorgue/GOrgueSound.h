@@ -31,10 +31,6 @@
 #include "RtAudio.h"
 #include "GrandOrgueDef.h"
 
-DECLARE_LOCAL_EVENT_TYPE(wxEVT_LISTENING, -1)
-DECLARE_LOCAL_EVENT_TYPE(wxEVT_METERS, -1)
-DECLARE_LOCAL_EVENT_TYPE(wxEVT_LOADFILE, -1)
-
 class wxConfigBase;
 class GrandOrgueFile;
 class GOrgueMidi;

@@ -22,14 +22,12 @@
 
 #include "GOrgueSound.h"
 
-#include "GOrgueEnclosure.h"
+#include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrguePipe.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueWindchest.h"
-#include "GrandOrgue.h"
 #include "GrandOrgueFile.h"
-#include "GrandOrgueFrame.h"
 #include "RtAudio.h"
 
 static
@@ -581,7 +579,7 @@ int GOrgueSound::AudioCallbackLocal
 
 		wxCommandEvent event(wxEVT_METERS, 0);
 		event.SetInt(n);
-		::wxGetApp().frame->AddPendingEvent(event);
+		wxTheApp->GetTopWindow()->AddPendingEvent(event);
 
 		meter_counter = meter_poly = 0;
 		meter_left = meter_right = 0.0;

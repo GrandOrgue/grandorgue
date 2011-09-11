@@ -90,6 +90,7 @@ GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp
 GOrgueDrawStop.cpp
 GOrgueEnclosure.cpp
+GOrgueEvent.cpp
 GOrgueFrameGeneral.cpp
 GOrgueGeneral.cpp
 GOrgueLCD.cpp

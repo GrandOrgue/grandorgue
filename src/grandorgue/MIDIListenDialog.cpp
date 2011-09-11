@@ -22,6 +22,7 @@
 
 #include <wx/statline.h>
 #include "MIDIListenDialog.h"
+#include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrgueSound.h"
 #include "GrandOrgue.h"
