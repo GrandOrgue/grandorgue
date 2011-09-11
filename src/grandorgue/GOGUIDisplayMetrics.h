@@ -45,7 +45,7 @@ public:
 		int piston_y;
 	} MANUAL_RENDER_INFO;
 
-private:
+protected:
 	wxString m_group;
 	GrandOrgueFile* m_organfile;
 
@@ -99,60 +99,61 @@ private:
 	int m_CenterY;
 	int m_CenterWidth;
 
-	void Update();
+	virtual void Update();
 
 public:
 
-	GOGUIDisplayMetrics(IniFileConfig& ini, GrandOrgueFile* organfile, wxString group);
+	GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString group);
+	virtual ~GOGUIDisplayMetrics();
 
-	int NumberOfExtraDrawstopRowsToDisplay();
-	int NumberOfExtraDrawstopColsToDisplay();
-	int NumberOfDrawstopColsToDisplay();
-	int NumberOfButtonCols();
-	int NumberOfExtraButtonRows();
-	wxBrush GetPedalBrush();
+	virtual int NumberOfExtraDrawstopRowsToDisplay();
+	virtual int NumberOfExtraDrawstopColsToDisplay();
+	virtual int NumberOfDrawstopColsToDisplay();
+	virtual int NumberOfButtonCols();
+	virtual int NumberOfExtraButtonRows();
+	virtual wxBrush GetPedalBrush();
 
-	void GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int* blitX, int* blitY);
-	void GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY);
-	wxFont GetControlLabelFont();
-	wxFont GetGroupLabelFont();
+	virtual void GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int* blitX, int* blitY);
+	virtual void GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY);
+	virtual wxFont GetControlLabelFont();
+	virtual wxFont GetGroupLabelFont();
 
-	int GetEnclosureWidth();
-	int GetEnclosureY();
-	int GetEnclosureX(const GOGUIEnclosure* enclosure);
+	virtual int GetEnclosureWidth();
+	virtual int GetEnclosureY();
+	virtual int GetEnclosureX(const GOGUIEnclosure* enclosure);
 
-	int GetScreenWidth();
-	int GetScreenHeight();
+	virtual int GetScreenWidth();
+	virtual int GetScreenHeight();
 
-	int GetJambLeftRightWidth();
-	int GetJambLeftRightHeight();
-	int GetJambLeftRightY();
-	int GetJambLeftX();
-	int GetJambRightX();
-	int GetJambTopDrawstop();
-	int GetJambTopPiston();
-	int GetJambTopHeight();
-	int GetJambTopWidth();
-	int GetJambTopX();
-	int GetJambTopY();
-	int GetPistonTopHeight();
-	int GetPistonWidth();
-	int GetPistonX();
-	int GetCenterWidth();
-	int GetCenterY();
-	int GetCenterX();
+	virtual int GetJambLeftRightWidth();
+	virtual int GetJambLeftRightHeight();
+	virtual int GetJambLeftRightY();
+	virtual int GetJambLeftX();
+	virtual int GetJambRightX();
+	virtual int GetJambTopDrawstop();
+	virtual int GetJambTopPiston();
+	virtual int GetJambTopHeight();
+	virtual int GetJambTopWidth();
+	virtual int GetJambTopX();
+	virtual int GetJambTopY();
+	virtual int GetPistonTopHeight();
+	virtual int GetPistonWidth();
+	virtual int GetPistonX();
+	virtual int GetCenterWidth();
+	virtual int GetCenterY();
+	virtual int GetCenterX();
 
-	int GetDrawstopBackgroundImageNum();
-	int GetConsoleBackgroundImageNum();
-	int GetDrawstopInsetBackgroundImageNum();
-	int GetKeyVertBackgroundImageNum();
-	int GetKeyHorizBackgroundImageNum();
+	virtual int GetDrawstopBackgroundImageNum();
+	virtual int GetConsoleBackgroundImageNum();
+	virtual int GetDrawstopInsetBackgroundImageNum();
+	virtual int GetKeyVertBackgroundImageNum();
+	virtual int GetKeyHorizBackgroundImageNum();
 
-	bool HasPairDrawstopCols();
-	bool HasTrimAboveExtraRows();
-	bool HasExtraPedalButtonRow();
+	virtual bool HasPairDrawstopCols();
+	virtual bool HasTrimAboveExtraRows();
+	virtual bool HasExtraPedalButtonRow();
 
-	const MANUAL_RENDER_INFO& GetManualRenderInfo(const unsigned manual_nb) const;
+	virtual const MANUAL_RENDER_INFO& GetManualRenderInfo(const unsigned manual_nb) const;
 
 };
 

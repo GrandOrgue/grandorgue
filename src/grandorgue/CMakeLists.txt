@@ -74,6 +74,7 @@ set(grandorgue_src
 contrib/sha1.cpp
 GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
+GOGUIHW1DisplayMetrics.cpp
 GOGUIDrawStop.cpp
 GOGUIEnclosure.cpp
 GOGUIHW1Background.cpp
