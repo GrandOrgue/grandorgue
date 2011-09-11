@@ -29,7 +29,6 @@
 #include <map>
 #include <vector>
 #include "RtAudio.h"
-#include "RtMidi.h"
 #include "GrandOrgueDef.h"
 
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_LISTENING, -1)

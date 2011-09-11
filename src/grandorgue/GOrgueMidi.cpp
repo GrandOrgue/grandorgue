@@ -30,12 +30,14 @@
 #include "GOrgueMeter.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrguePiston.h"
+#include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgue.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgueFrame.h"
 #include "GrandOrgueID.h"
+#include "RtMidi.h"
 #include <vector>
 #include <wx/config.h>
 
