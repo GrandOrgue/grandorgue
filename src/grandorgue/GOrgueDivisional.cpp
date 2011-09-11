@@ -55,7 +55,7 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 	m_Couplers.clear();
 	m_Tremulants.clear();
 
-	m_midi.SetManual(manualNumber);
+	m_midi.SetIndex(manualNumber);
 
 	GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
 

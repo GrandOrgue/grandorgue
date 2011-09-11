@@ -47,7 +47,7 @@ void GOrgueEnclosure::Load(IniFileConfig& cfg, wxString group, int enclosure_nb)
 	m_AmpMinimumLevel = cfg.ReadInteger(m_group, wxT("AmpMinimumLevel"), 0, 100);
 	m_MIDIInputNumber = cfg.ReadInteger(m_group, wxT("MIDIInputNumber"), 1, 6);
 	Set(127);	// default to full volume until we receive any messages
-	m_midi.SetManual(enclosure_nb);
+	m_midi.SetIndex(enclosure_nb);
 	m_midi.Load(cfg, m_group);
 }
 
