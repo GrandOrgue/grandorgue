@@ -22,13 +22,8 @@
 
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
-#include "GOrgueMeter.h"
 #include "GOrgueMidiEvent.h"
-#include "GOrgueSound.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
-#include "GrandOrgueFrame.h"
 #include "RtMidi.h"
 #include <vector>
 #include <wx/config.h>
@@ -99,7 +94,6 @@ GOrgueMidi::GOrgueMidi() :
 	m_midi_devices(),
 	m_transpose(0),
 	m_listening(false),
-	m_memset(false),
 	m_listen_evthandler(NULL),
 	m_organ_midi_events(),
 	m_organfile(NULL)
@@ -249,7 +243,7 @@ GOrgueMidi::ProcessMessage
 	if (e.GetChannel() != -1)
 		e.SetChannel(((e.GetChannel() - 1 + m_midi_devices[which].id) & 0x0F) + 1);
 
-	int i, j;
+	int j;
 
 	if (e.GetMidiType() == MIDI_RESET && active && m_organfile)
 	{
@@ -282,13 +276,6 @@ GOrgueMidi::ProcessMessage
 	if (m_organfile)
 		m_organfile->ProcessMidi(e);
 
-	// MIDI code for memory set
-	if (m_midi_events[15] == j && (((j & 0xF000) == 0xC000) || m_memset ^ (bool)msg[2]))
-	{
-        ::wxGetApp().frame->ProcessCommand(ID_AUDIO_MEMSET);
-		::wxGetApp().frame->UpdateWindowUI();
-	}
-
 	// MIDI for different organ??
 	std::map<long, wxString>::iterator it;
 	it = m_organ_midi_events.find(j);
@@ -297,22 +284,6 @@ GOrgueMidi::ProcessMessage
 		wxCommandEvent event(wxEVT_LOADFILE, 0);
 		event.SetString(it->second);
 		wxTheApp->GetTopWindow()->AddPendingEvent(event);
-	}
-
-	int GOrgueevent;
-	for (i = 0; i < 2; i++)
-	{
-		GOrgueevent = m_midi_events[i];
-		if (GOrgueevent == j)
-		{
-			if (i < 2)
-			{
-				if (msg.size() > 2 && !msg[2])
-					continue;
-				GOrgueMeter* meter = ::wxGetApp().frame->m_meters[2];
-				meter->SetValue(meter->GetValue() + (i ? 1 : -1));
-			}
-		}
 	}
 }
 
@@ -343,13 +314,6 @@ void GOrgueMidi::UpdateOrganMIDI()
 		wxString file = m_global_config->Read(itemstr + wxT(".file"));
 		m_organ_midi_events.insert(std::pair<long, wxString>(j, file));
 	}
-
-}
-
-bool GOrgueMidi::SetterActive()
-{
-
-	return m_memset;
 
 }
 
@@ -397,9 +361,3 @@ void GOrgueMidi::ProcessMessages(const bool audio_active)
 
 }
 
-void GOrgueMidi::ToggleSetter()
-{
-
-	m_memset = !m_memset;
-
-}

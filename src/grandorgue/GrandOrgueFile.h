@@ -33,13 +33,12 @@ class wxProgressDialog;
 
 class GOrgueDivisionalCoupler;
 class GOrgueEnclosure;
-class GOrgueFrameGeneral;
 class GOrgueGeneral;
 class GOrgueManual;
 class GOrgueMidiEvent;
-class GOrguePipe;
 class GOrguePiston;
 class GOrguePushbutton;
+class GOrgueSetter;
 class GOrgueTremulant;
 class GOrgueWindchest;
 class GOGUIPanel;
@@ -53,9 +52,9 @@ private:
 	OrganDocument* m_doc;
 	wxFileName m_path;
 	int m_b_squash;
-	GOrguePipe* m_compress_p;
 	wxString m_filename;
 	long m_elapsed;
+	GOrgueSetter* m_setter;
 
 	bool m_b_customized : 1;
 	bool m_DivisionalsStoreIntermanualCouplers : 1;
@@ -83,7 +82,6 @@ private:
 	ptr_vector<GOrgueWindchest> m_windchest;
 	ptr_vector<GOrguePiston> m_piston;
 	ptr_vector<GOrgueGeneral> m_general;
-	ptr_vector<GOrgueFrameGeneral> m_framegeneral;
 	ptr_vector<GOrgueDivisionalCoupler> m_divisionalcoupler;
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
@@ -121,7 +119,7 @@ public:
 	GOrgueGeneral* GetGeneral(unsigned index);
 	unsigned GetNumberOfReversiblePistons();
 	GOrguePiston* GetPiston(unsigned index);
-	GOrgueFrameGeneral* GetFrameGeneral(unsigned index);
+	GOrgueSetter* GetSetter();
 	GOrgueWindchest* GetWindchest(unsigned index);
 	unsigned GetWinchestGroupCount();
 	GOrgueEnclosure* GetEnclosure(unsigned index);

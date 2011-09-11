@@ -27,14 +27,10 @@
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueManual.h"
-#include "GOrgueSound.h"
+#include "GOrgueSetter.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
-#include "GOrgueMidi.h"
-
-/* TODO: This should not be... */
-extern GOrgueSound* g_sound;
 
 GOrgueFrameGeneral::GOrgueFrameGeneral(GrandOrgueFile* organfile):
 	GOrguePushbutton(organfile),
@@ -108,7 +104,7 @@ void GOrgueFrameGeneral::Push()
 
 	bool used = false;
 
-	if (g_sound->GetMidi().SetterActive())
+	if (m_organfile->GetSetter()->IsSetterActive())
 	{
 
 		m_Stops.clear();

@@ -66,6 +66,9 @@ int WXKtoVK(int what)
     if (what== '}') return 221;
     if (what=='#') return 222;
     if (what=='`') return 223;
+    if (what==WXK_LEFT) return 256;
+    if (what==WXK_RIGHT) return 257;
+    if (what==WXK_DOWN) return 258;
     return 0;
 }
 

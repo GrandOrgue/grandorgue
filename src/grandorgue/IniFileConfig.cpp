@@ -41,6 +41,13 @@ bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueTyp
 		m_ODFIni.SetPath(wxT("/"));
 		if (!m_ODFIni.HasGroup(group))
 		{//JB: strncasecmp was strnicmp
+			if (group.length() >= 6 && !group.Mid(0, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
+			{
+				if (type == ORGAN_INTEGER)
+					*(int*)retval = nmin;
+				return false;
+			}
+
 			if (group.length() >= 12 && !group.Mid(0, 12).CmpNoCase(wxT("FrameGeneral")))	// FrameGeneral groups aren't required.
 			{
 				if (type == ORGAN_INTEGER)
