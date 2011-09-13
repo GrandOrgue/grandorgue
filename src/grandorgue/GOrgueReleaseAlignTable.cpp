@@ -111,11 +111,11 @@ void GOrgueReleaseAlignTable::ComputeTable
 
 		/* Bring v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
 		int v_mod = (f - f_p) + m_PhaseAlignMaxDerivative - 1;
-		int derivIndex = (PHASE_ALIGN_DERIVATIVES * v_mod + m_PhaseAlignMaxDerivative) / (2 * m_PhaseAlignMaxDerivative);
+		int derivIndex = (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative);
 
 		/* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
 		int f_mod = f + m_PhaseAlignMaxAmplitude - 1;
-		int ampIndex = (PHASE_ALIGN_AMPLITUDES * f_mod + m_PhaseAlignMaxAmplitude) / (2 * m_PhaseAlignMaxAmplitude);
+		int ampIndex = (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude);
 
 		/* Store this release point if it was not already found */
 		assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
@@ -224,12 +224,12 @@ void GOrgueReleaseAlignTable::SetupRelease
 	f_mod += (m_PhaseAlignMaxAmplitude - 1);
 
 	int derivIndex = m_PhaseAlignMaxDerivative ?
-			(PHASE_ALIGN_DERIVATIVES * v_mod + m_PhaseAlignMaxDerivative) / (2 * m_PhaseAlignMaxDerivative) :
+			(PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative) :
 			PHASE_ALIGN_DERIVATIVES / 2;
 
 	/* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
 	int ampIndex = m_PhaseAlignMaxAmplitude ?
-			(PHASE_ALIGN_AMPLITUDES * f_mod + m_PhaseAlignMaxAmplitude) / (2 * m_PhaseAlignMaxAmplitude) :
+			(PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude) :
 			PHASE_ALIGN_AMPLITUDES / 2;
 
 	/* Store this release point if it was not already found */
