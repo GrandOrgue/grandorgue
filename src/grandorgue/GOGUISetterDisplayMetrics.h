@@ -25,11 +25,13 @@
 
 #include "GOGUIDisplayMetrics.h"
 
+typedef enum { GOGUI_SETTER_SETTER, GOGUI_SETTER_GENERALS, GOGUI_SETTER_CRESCENDO } GOGUISetterType;
+
 class GOGUISetterDisplayMetrics : public GOGUIDisplayMetrics
 {
 public:
 
-	GOGUISetterDisplayMetrics(GrandOrgueFile* organfile, wxString group);
+	GOGUISetterDisplayMetrics(IniFileConfig& ini, GrandOrgueFile* organfile, wxString group, GOGUISetterType type);
 };
 
 #endif
