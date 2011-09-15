@@ -98,14 +98,14 @@ GOrgueSetter::~GOrgueSetter()
 {
 }
 
-GOGUIPanel* GOrgueSetter::CreatePanel()
+GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 {
 	GOGUIControl* control;
 	GOGUISetterButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(m_organfile, wxT(""));
-	panel->Init(metrics, _("Setter"));
+	panel->Init(cfg, metrics, _("Setter"), wxT("SetterPanel"));
 
 	control = new GOGUIHW1Background(panel);
 	panel->AddControl(control);

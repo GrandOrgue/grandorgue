@@ -55,7 +55,9 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_Name(),
 	m_metrics(0),
 	m_window(0),
-	m_parent(0)
+	m_parent(0),
+	m_group(),
+	m_size(0, 0, 0, 0)
 {
 	for (unsigned i = 0; i < GetImageCount_Stop(); i++)
 		m_images.push_back(new wxBitmap(GetImage_Stop(i)));
@@ -99,21 +101,30 @@ void GOGUIPanel::SetWindow(GOGUIPanelWidget* window)
 }
 
 
-void GOGUIPanel::Init(GOGUIDisplayMetrics* metrics, wxString name)
+void GOGUIPanel::Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group)
 {
 	m_metrics = metrics;
 	m_Name = name;
 	m_controls.resize(0);
+	m_group = group;
+
+	int x = cfg.ReadInteger(m_group, wxT("WindowX"), 0, 10000, false, 0);
+	int y = cfg.ReadInteger(m_group, wxT("WindowY"), 0, 10000, false, 0);
+	int w = cfg.ReadInteger(m_group, wxT("WindowWidth"), 0, 10000, false, 0);
+	int h = cfg.ReadInteger(m_group, wxT("WindowHeight"), 0, 10000, false, 0);
+	m_size = wxRect(x, y, w, h);
 }
 
 
 void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 {
 	m_metrics = new GOGUIHW1DisplayMetrics(cfg, m_organfile, wxT(""));
+	m_group = group;
 
 	{
 		wxString buffer;
 		m_Name = m_organfile->GetChurchName();
+		m_group = group = wxT("Organ");
 
 		{
 			buffer.Printf(wxT("---"));
@@ -229,6 +240,12 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			AddControl(control);
 		}
 	}
+
+	int x = cfg.ReadInteger(m_group, wxT("WindowX"), 0, 10000, false, 0);
+	int y = cfg.ReadInteger(m_group, wxT("WindowY"), 0, 10000, false, 0);
+	int w = cfg.ReadInteger(m_group, wxT("WindowWidth"), 0, 10000, false, 0);
+	int h = cfg.ReadInteger(m_group, wxT("WindowHeight"), 0, 10000, false, 0);
+	m_size = wxRect(x, y, w, h);
 }
 
 unsigned GOGUIPanel::GetWidth()
@@ -249,6 +266,11 @@ wxWindow* GOGUIPanel::GetParentWindow()
 void GOGUIPanel::SetParentWindow(wxWindow* win)
 {
 	m_parent = win;
+}
+
+wxRect GOGUIPanel::GetWindowSize()
+{
+	return m_size;
 }
 
 void GOGUIPanel::AddEvent(GOGUIControl* control)
@@ -285,6 +307,15 @@ void GOGUIPanel::Save(IniFileConfig& cfg, bool prefix)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->Save(cfg, prefix);
+
+	if (m_parent)
+	{
+		wxRect size = m_parent->GetScreenRect();
+		cfg.SaveHelper(prefix, m_group, wxT("WindowX"), size.GetLeft());
+		cfg.SaveHelper(prefix, m_group, wxT("WindowY"), size.GetTop());
+		cfg.SaveHelper(prefix, m_group, wxT("WindowWidth"), size.GetWidth());
+		cfg.SaveHelper(prefix, m_group, wxT("WindowHeight"), size.GetHeight());
+	}
 }
 
 void GOGUIPanel::Modified()

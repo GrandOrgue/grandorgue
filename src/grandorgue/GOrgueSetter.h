@@ -57,7 +57,7 @@ public:
 	GOrgueSetter(GrandOrgueFile* organfile);
 	virtual ~GOrgueSetter();
 
-	GOGUIPanel* CreatePanel();
+	GOGUIPanel* CreateSetterPanel(IniFileConfig& cfg);
 	void Load(IniFileConfig& cfg);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void PreparePlayback();
