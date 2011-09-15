@@ -299,7 +299,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_panels.push_back(new GOGUIPanel(this));
 	m_panels[0]->Load(ini, wxT("Organ"));
 
-	m_panels.push_back(m_setter->CreatePanel());
+	m_panels.push_back(m_setter->CreateSetterPanel(ini));
 }
 
 wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)

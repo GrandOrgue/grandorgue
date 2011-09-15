@@ -85,10 +85,14 @@ bool OrganView::CreateWindow()
 	m_container->SetVirtualSize(max);
 	m_container->SetSize(m_panel->GetSize());
 
+	wxRect size = organfile->GetPanel(m_panelID)->GetWindowSize();
 	m_frame->SetMaxSize(wxSize(wxDefaultCoord, wxDefaultCoord));
 	m_frame->SetClientSize(m_panel->GetSize());
 	m_frame->SetMaxSize(m_frame->GetSize());
-	m_frame->Center(wxBOTH);
+	if (size.GetWidth() && size.GetHeight())
+		m_frame->SetSize(size);
+	else
+		m_frame->Center(wxBOTH);
 	m_frame->Show();
 
 	organfile->GetPanel(m_panelID)->SetParentWindow(GetFrame());

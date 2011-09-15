@@ -43,11 +43,13 @@ protected:
 	GOGUIDisplayMetrics* m_metrics;
 	GOGUIPanelWidget* m_window;
 	wxWindow* m_parent;
+	wxString m_group;
+	wxRect m_size;
 
 public:
 	GOGUIPanel(GrandOrgueFile* organfile);
 	virtual ~GOGUIPanel();
-	void Init(GOGUIDisplayMetrics* metrics, wxString name);
+	void Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group);
 	void Load(IniFileConfig& cfg, wxString group);
 	void Save(IniFileConfig& cfg, bool prefix);
 
@@ -75,6 +77,7 @@ public:
 
 	wxWindow* GetParentWindow();
 	void SetParentWindow(wxWindow* win);
+	wxRect GetWindowSize();
 };
 
 
