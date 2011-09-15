@@ -118,9 +118,10 @@ void GOGUIPanel::Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString
 
 void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 {
-	m_metrics = new GOGUIHW1DisplayMetrics(cfg, m_organfile, wxT(""));
+	m_metrics = new GOGUIHW1DisplayMetrics(cfg, m_organfile, group);
 	m_group = group;
 
+	if (group.IsEmpty())
 	{
 		wxString buffer;
 		m_Name = m_organfile->GetChurchName();
@@ -245,6 +246,153 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			buffer.Printf(wxT("Label%03d"), i + 1);
 			GOGUIControl* control = new GOGUILabel(this, NULL);
 			control->Load(cfg, buffer);
+			AddControl(control);
+		}
+	}
+	else
+	{
+		wxString buffer;
+		m_Name = cfg.ReadString(group, wxT("Name"), 100);
+		unsigned m_nb_manuals    = cfg.ReadInteger(group, wxT("NumberOfManuals"), 0, m_organfile->GetManualAndPedalCount());
+		unsigned m_first_manual  = cfg.ReadBoolean(group, wxT("HasPedals")) ? 0 : 1;
+		unsigned m_NumberOfEnclosures = cfg.ReadInteger(group, wxT("NumberOfEnclosures"), 0, m_organfile->GetEnclosureCount());
+		unsigned m_NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount());
+		unsigned m_NumberOfReversiblePistons = cfg.ReadInteger(group, wxT("NumberOfReversiblePistons"), 0, m_organfile->GetNumberOfReversiblePistons());
+		unsigned m_NumberOfGenerals = cfg.ReadInteger(group, wxT("NumberOfGenerals"), 0, m_organfile->GetGeneralCount());
+		unsigned m_NumberOfDivisionalCouplers = cfg.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, m_organfile->GetDivisionalCouplerCount());
+		unsigned m_NumberOfStops = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, 999);
+		unsigned m_NumberOfCouplers = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, 999);
+		unsigned m_NumberOfDivisionals = cfg.ReadInteger(group, wxT("NumberOfDivisionals"), 0, 999);
+
+		unsigned m_NumberOfSetterElements = cfg.ReadInteger(group, wxT("NumberOfSetterElements"), 0, 999, false);
+		for (unsigned i = 0; i < m_NumberOfSetterElements; i++)
+		{
+			buffer.Printf(wxT("SetterElement%03d"), i + 1);
+			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, group + buffer, this));
+		}
+
+		if (m_first_manual < m_organfile->GetFirstManualIndex())
+			m_first_manual = m_organfile->GetFirstManualIndex();
+
+		{
+			buffer.Printf(wxT("---"));
+			GOGUIControl* control = new GOGUIHW1Background(this);
+			control->Load(cfg, buffer);
+			AddControl(control);
+		}
+		
+		for (unsigned int i = m_first_manual; i <= m_nb_manuals; i++)
+		{
+			buffer.Printf(wxT("Manual%03d"), i);
+			unsigned manual_nb  = cfg.ReadInteger(group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+			buffer.Printf(wxT("Manual%03d"), manual_nb);
+			GOGUIControl* control = new GOGUIManualBackground(this, i);
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}
+
+		for (unsigned i = 0; i < m_NumberOfEnclosures; i++)
+		{
+			buffer.Printf(wxT("Enclosure%03d"), i + 1);
+			unsigned enclosure_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetEnclosureCount());
+			buffer.Printf(wxT("Enclosure%03d"), enclosure_nb);
+			GOGUIControl* control = new GOGUIEnclosure(this, m_organfile->GetEnclosure(enclosure_nb - 1), i);
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}
+
+		for (unsigned i = 0; i < m_NumberOfTremulants; i++)
+		{
+			buffer.Printf(wxT("Tremulant%03d"), i + 1);
+			unsigned tremulant_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetTremulantCount());
+			buffer.Printf(wxT("Tremulant%03d"), tremulant_nb);
+			GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetTremulant(tremulant_nb - 1));
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}	
+		
+		for (unsigned i = 0; i < m_NumberOfDivisionalCouplers; i++)
+		{
+			buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
+			unsigned coupler_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetDivisionalCouplerCount());
+			buffer.Printf(wxT("DivisionalCoupler%03d"), coupler_nb);
+			GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetDivisionalCoupler(coupler_nb - 1));
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}	
+		
+		for (unsigned i = 0; i < m_NumberOfGenerals; i++)
+		{
+			buffer.Printf(wxT("General%03d"), i + 1);
+			unsigned general_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetGeneralCount());
+			buffer.Printf(wxT("General%03d"), general_nb);
+			GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetGeneral(general_nb - 1));
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}	
+
+		for (unsigned i = 0; i < m_NumberOfReversiblePistons; i++)
+		{
+			buffer.Printf(wxT("ReversiblePiston%03d"), i + 1);
+			unsigned piston_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetNumberOfReversiblePistons());
+			buffer.Printf(wxT("ReversiblePiston%03d"), piston_nb);
+			GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetPiston(piston_nb - 1));
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}	
+
+		for (unsigned int i = m_first_manual; i <= m_nb_manuals; i++)
+		{
+			buffer.Printf(wxT("Manual%03d"), i);
+			unsigned manual_nb  = cfg.ReadInteger(group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+			buffer.Printf(wxT("Manual%03d"), manual_nb);
+			GOGUIControl* control = new GOGUIManual(this, m_organfile->GetManual(manual_nb), i);
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}
+
+		for(unsigned j = 0; j < m_NumberOfCouplers; j++)
+		{
+			buffer.Printf(wxT("Coupler%03dManual"), j + 1);
+			unsigned manual_nb  = cfg.ReadInteger(group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+			buffer.Printf(wxT("Coupler%03d"), j + 1);
+			unsigned coupler_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetManual(manual_nb)->GetCouplerCount());
+			buffer.Printf(wxT("Coupler%03d"), j + 1);
+			GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetManual(manual_nb)->GetCoupler(coupler_nb - 1));
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}
+
+		for(unsigned j = 0; j < m_NumberOfStops; j++)
+		{
+			buffer.Printf(wxT("Stop%03dManual"), j + 1);
+			unsigned manual_nb  = cfg.ReadInteger(group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+			buffer.Printf(wxT("Stop%03d"), j + 1);
+			unsigned stop_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetManual(manual_nb)->GetStopCount());
+			buffer.Printf(wxT("Stop%03d"), j + 1);
+			GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetManual(manual_nb)->GetStop(stop_nb - 1));
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}
+				
+		for(unsigned j = 0; j < m_NumberOfDivisionals; j++)
+		{
+			buffer.Printf(wxT("Divisional%03dManual"), j + 1);
+			unsigned manual_nb  = cfg.ReadInteger(group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+			buffer.Printf(wxT("Divisional%03d"), j + 1);
+			unsigned divisional_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetManual(manual_nb)->GetDivisionalCount());
+			buffer.Printf(wxT("Divisional%03d"), j + 1);
+			GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetManual(manual_nb)->GetDivisional(divisional_nb - 1));
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}
+
+		unsigned m_NumberOfLabels = cfg.ReadInteger(group, wxT("NumberOfLabels"), 0, 16);
+		for (unsigned i = 0; i < m_NumberOfLabels; i++)
+		{
+			buffer.Printf(wxT("Label%03d"), i + 1);
+			GOGUIControl* control = new GOGUILabel(this, NULL);
+			control->Load(cfg, group + buffer);
 			AddControl(control);
 		}
 	}

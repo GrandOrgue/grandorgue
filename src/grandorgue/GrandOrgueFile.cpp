@@ -222,6 +222,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	unsigned m_NumberOfReversiblePistons = ini.ReadInteger(group, wxT("NumberOfReversiblePistons"), 0, 32);
 	unsigned m_NumberOfGenerals = ini.ReadInteger(group, wxT("NumberOfGenerals"), 0, 99);
 	unsigned m_NumberOfDivisionalCouplers = ini.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, 8);
+	unsigned m_NumberOfPanels = ini.ReadInteger(group, wxT("NumberOfPanels"), 0, 100, false);
 	m_AmplitudeLevel = ini.ReadInteger(group, wxT("AmplitudeLevel"), 0, 1000);
 	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntermanualCouplers"));
 	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntramanualCouplers"));
@@ -297,7 +298,14 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 
 	m_panels.resize(0);
 	m_panels.push_back(new GOGUIPanel(this));
-	m_panels[0]->Load(ini, wxT("Organ"));
+	m_panels[0]->Load(ini, wxT(""));
+
+	for (unsigned i = 0; i < m_NumberOfPanels; i++)
+	{
+		buffer.Printf(wxT("Panel%03d"), i + 1);
+		m_panels.push_back(new GOGUIPanel(this));
+		m_panels[i + 1]->Load(ini, buffer);
+	}
 
 	m_panels.push_back(m_setter->CreateCrescendoPanel(ini));
 	m_panels.push_back(m_setter->CreateGeneralsPanel(ini));
