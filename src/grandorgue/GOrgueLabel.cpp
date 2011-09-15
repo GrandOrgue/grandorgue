@@ -20,35 +20,26 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GOGUILABEL_H
-#define GOGUILABEL_H
+#include "GOrgueLabel.h"
+#include "GrandOrgueFile.h"
 
-#include "GOGUIControl.h"
-
-class GOrgueLabel;
-
-class GOGUILabel : public GOGUIControl
+GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
+	m_Name(),
+	m_organfile(organfile)
 {
-private:
-	bool m_FreeXPlacement;
-	bool m_FreeYPlacement;
-	bool m_DispSpanDrawstopColToRight;
-	bool m_DispAtTopOfDrawstopCol;
-	int m_DispDrawstopCol;
-	int m_DispXpos;
-	int m_DispYpos;
-	int m_DispLabelFontSize;
-	int m_DispImageNum;
-	wxColour m_DispLabelColour;
-	wxString m_Name;
-	GOrgueLabel* m_label;
+}
 
-public:
-	GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label);
-	void Init(unsigned x, unsigned y);
-	void Load(IniFileConfig& cfg, wxString group);
+GOrgueLabel::~GOrgueLabel()
+{
+}
 
-	void Draw(wxDC* dc);
-};
+const wxString& GOrgueLabel::GetName()
+{
+	return m_Name;
+}
 
-#endif
+void GOrgueLabel::SetName(wxString name)
+{
+	m_Name = name;
+	m_organfile->ControlChanged(this);
+}

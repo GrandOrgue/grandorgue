@@ -20,35 +20,25 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GOGUILABEL_H
-#define GOGUILABEL_H
+#ifndef GORGUELABEL_H
+#define GORGUELABEL_H
 
-#include "GOGUIControl.h"
+#include <wx/wx.h>
 
-class GOrgueLabel;
+class IniFileConfig;
+class GrandOrgueFile;
 
-class GOGUILabel : public GOGUIControl
+class GOrgueLabel 
 {
-private:
-	bool m_FreeXPlacement;
-	bool m_FreeYPlacement;
-	bool m_DispSpanDrawstopColToRight;
-	bool m_DispAtTopOfDrawstopCol;
-	int m_DispDrawstopCol;
-	int m_DispXpos;
-	int m_DispYpos;
-	int m_DispLabelFontSize;
-	int m_DispImageNum;
-	wxColour m_DispLabelColour;
+protected:
 	wxString m_Name;
-	GOrgueLabel* m_label;
+	GrandOrgueFile* m_organfile;
 
 public:
-	GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label);
-	void Init(unsigned x, unsigned y);
-	void Load(IniFileConfig& cfg, wxString group);
-
-	void Draw(wxDC* dc);
+	GOrgueLabel(GrandOrgueFile* organfile);
+	virtual ~GOrgueLabel();
+	const wxString& GetName();
+	void SetName(wxString name);
 };
 
 #endif

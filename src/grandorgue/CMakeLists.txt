@@ -96,6 +96,7 @@ GOrgueEnclosure.cpp
 GOrgueEvent.cpp
 GOrgueFrameGeneral.cpp
 GOrgueGeneral.cpp
+GOrgueLabel.cpp
 GOrgueLCD.cpp
 GOrgueManual.cpp
 GOrgueMidi.cpp

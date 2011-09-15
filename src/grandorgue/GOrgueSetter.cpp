@@ -65,7 +65,7 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_pos(0),
 	m_framegeneral(0),
 	m_button(0),
-	m_PosDisplay(NULL),
+	m_PosDisplay(organfile),
 	m_SetterType(SETTER_REGULAR)
 {
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
@@ -110,9 +110,9 @@ GOGUIPanel* GOrgueSetter::CreatePanel()
 	control = new GOGUIHW1Background(panel);
 	panel->AddControl(control);
 
-	m_PosDisplay=new GOGUILabel(panel);
-	m_PosDisplay->Init(350, 10);
-	panel->AddControl(m_PosDisplay);
+	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay);
+	PosDisplay->Init(350, 10);
+	panel->AddControl(PosDisplay);
 
 	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CURRENT]);
 	button->Init(1, 100);
@@ -303,8 +303,7 @@ void GOrgueSetter::PreparePlayback()
 {
 	wxString buffer;
 	buffer.Printf(wxT("%03d"), m_pos);
-	if (m_PosDisplay)
-		m_PosDisplay->SetText(buffer);
+	m_PosDisplay.SetName(buffer);
 	::wxGetApp().frame->m_meters[2]->ChangeValue(m_pos);
 }
 
@@ -369,8 +368,7 @@ void GOrgueSetter::SetPosition(int pos, bool push)
 		m_framegeneral[m_pos]->Push();
 
 	buffer.Printf(wxT("%03d"), m_pos);
-	if (m_PosDisplay)
-		m_PosDisplay->SetText(buffer);
+	m_PosDisplay.SetName(buffer);
 	if (pos != old_pos)
 		::wxGetApp().frame->m_meters[2]->ChangeValue(m_pos);
 }

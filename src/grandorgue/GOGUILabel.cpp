@@ -23,10 +23,11 @@
 #include "GOGUILabel.h"
 #include "GOGUIPanel.h"
 #include "GOGUIDisplayMetrics.h"
+#include "GOrgueLabel.h"
 #include "IniFileConfig.h"
 
-GOGUILabel::GOGUILabel(GOGUIPanel* panel) :
-	GOGUIControl(panel, NULL),
+GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label) :
+	GOGUIControl(panel, label),
 	m_FreeXPlacement(false),
 	m_FreeYPlacement(false),
 	m_DispSpanDrawstopColToRight(false),
@@ -37,14 +38,9 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel) :
 	m_DispLabelFontSize(0),
 	m_DispImageNum(0),
 	m_DispLabelColour(0,0,0),
-	m_Name()
+	m_Name(),
+	m_label(label)
 {
-}
-
-void GOGUILabel::SetText(const wxString& text)
-{
-	m_Name = text;
-	m_panel->AddEvent(this);
 }
 
 void GOGUILabel::Init(unsigned x, unsigned y)
@@ -117,6 +113,9 @@ void GOGUILabel::Load(IniFileConfig& cfg, wxString group)
 
 void GOGUILabel::Draw(wxDC* dc)
 {
+	if (m_label)
+		m_Name = m_label->GetName();
+
 	dc->DrawBitmap(*m_panel->GetImage(8), m_BoundingRect.GetX(), m_BoundingRect.GetY(), false);
 
 	wxFont font = m_metrics->GetGroupLabelFont();
