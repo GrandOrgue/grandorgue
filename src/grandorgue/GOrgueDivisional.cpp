@@ -128,38 +128,112 @@ void GOrgueDivisional::PushLocal()
 
 	if (m_organfile->GetSetter()->IsSetterActive())
 	{
-
-		m_Stops.clear();
-		m_Couplers.clear();
-		m_Tremulants.clear();
-		for (unsigned i = 0; i < associatedManual->GetStopCount(); i++)
+		if (m_organfile->GetSetter()->GetSetterType() == SETTER_REGULAR)
 		{
-			if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetStop(i)->IsDisplayed())
-				continue;
-			m_Stops.push_back(associatedManual->GetStop(i)->IsEngaged() ? i + 1 : -i - 1);
-			used |= associatedManual->GetStop(i)->IsEngaged();
-		}
-		for (unsigned i = 0; i < associatedManual->GetCouplerCount(); i++)
-		{
-			if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetCoupler(i)->IsDisplayed())
-				continue;
-			if ((m_organfile->DivisionalsStoreIntramanualCouplers() && !associatedManual->GetCoupler(i)->IsIntermanual()) || (m_organfile->DivisionalsStoreIntermanualCouplers() && associatedManual->GetCoupler(i)->IsIntermanual()))
+			m_Stops.clear();
+			m_Couplers.clear();
+			m_Tremulants.clear();
+			for (unsigned i = 0; i < associatedManual->GetStopCount(); i++)
 			{
-				m_Couplers.push_back(associatedManual->GetCoupler(i)->IsEngaged() ? i + 1 : -i - 1);
-				used |= associatedManual->GetCoupler(i)->IsEngaged();
-			}
-		}
-		if (m_organfile->DivisionalsStoreTremulants())
-		{
-			for (unsigned i = 0; i < associatedManual->GetTremulantCount(); i++)
-			{
-				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetTremulant(i)->IsDisplayed())
+				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetStop(i)->IsDisplayed())
 					continue;
-				m_Tremulants.push_back(associatedManual->GetTremulant(i)->IsEngaged() ? i + 1 : -i - 1);
-				used |= associatedManual->GetTremulant(i)->IsEngaged();
+				m_Stops.push_back(associatedManual->GetStop(i)->IsEngaged() ? i + 1 : -i - 1);
+				used |= associatedManual->GetStop(i)->IsEngaged();
+			}
+			for (unsigned i = 0; i < associatedManual->GetCouplerCount(); i++)
+			{
+				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetCoupler(i)->IsDisplayed())
+					continue;
+				if ((m_organfile->DivisionalsStoreIntramanualCouplers() && !associatedManual->GetCoupler(i)->IsIntermanual()) || (m_organfile->DivisionalsStoreIntermanualCouplers() && associatedManual->GetCoupler(i)->IsIntermanual()))
+				{
+					m_Couplers.push_back(associatedManual->GetCoupler(i)->IsEngaged() ? i + 1 : -i - 1);
+					used |= associatedManual->GetCoupler(i)->IsEngaged();
+				}
+			}
+			if (m_organfile->DivisionalsStoreTremulants())
+			{
+				for (unsigned i = 0; i < associatedManual->GetTremulantCount(); i++)
+				{
+					if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetTremulant(i)->IsDisplayed())
+						continue;
+					m_Tremulants.push_back(associatedManual->GetTremulant(i)->IsEngaged() ? i + 1 : -i - 1);
+					used |= associatedManual->GetTremulant(i)->IsEngaged();
+				}
+			}
+			m_organfile->Modified();
+		}
+		if (m_organfile->GetSetter()->GetSetterType() == SETTER_SCOPE)
+		{
+			m_Stops.clear();
+			m_Couplers.clear();
+			m_Tremulants.clear();
+			for (unsigned i = 0; i < associatedManual->GetStopCount(); i++)
+			{
+				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetStop(i)->IsDisplayed())
+					continue;
+				if (associatedManual->GetStop(i)->IsEngaged())
+					m_Stops.push_back(i + 1);
+			}
+			for (unsigned i = 0; i < associatedManual->GetCouplerCount(); i++)
+			{
+				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetCoupler(i)->IsDisplayed())
+					continue;
+				if ((m_organfile->DivisionalsStoreIntramanualCouplers() && !associatedManual->GetCoupler(i)->IsIntermanual()) || (m_organfile->DivisionalsStoreIntermanualCouplers() && associatedManual->GetCoupler(i)->IsIntermanual()))
+				{
+					if (associatedManual->GetCoupler(i)->IsEngaged())
+						m_Couplers.push_back(i + 1);
+				}
+			}
+			if (m_organfile->DivisionalsStoreTremulants())
+			{
+				for (unsigned i = 0; i < associatedManual->GetTremulantCount(); i++)
+				{
+					if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !associatedManual->GetTremulant(i)->IsDisplayed())
+						continue;
+					if (associatedManual->GetTremulant(i)->IsEngaged())
+						m_Tremulants.push_back(i + 1);
+				}
+			}
+			m_organfile->Modified();
+		}
+		if (m_organfile->GetSetter()->GetSetterType() == SETTER_SCOPED)
+		{
+			for (unsigned i = 0; i < m_Stops.size(); i++)
+			{
+				if (!m_Stops[i])
+					continue;
+				unsigned k = abs(m_Stops[i]) - 1;
+				if (associatedManual->GetStop(k)->IsEngaged())
+					m_Stops[i] = k + 1;
+				else
+					m_Stops[i] = -k - 1;
+				used |= m_Stops[i] > 0;
+			}
+	
+			for (unsigned i = 0; i < m_Couplers.size(); i++)
+			{
+				if (!m_Couplers[i])
+					continue;
+				unsigned k = abs(m_Couplers[i]) - 1;
+				if (associatedManual->GetCoupler(k)->IsEngaged())
+					m_Couplers[i] = k + 1;
+				else
+					m_Couplers[i] = -k - 1;
+				used |= m_Couplers[i] > 0;
+			}
+	
+			for (unsigned i = 0; i < m_Tremulants.size(); i++)
+			{
+				if (!m_Tremulants[i])
+					continue;
+				unsigned k = abs(m_Tremulants[i]) - 1;
+				if (associatedManual->GetTremulant(k)->IsEngaged())
+					m_Tremulants[i] = k + 1;
+				else
+					m_Tremulants[i] = k - 1;
+				used |= m_Tremulants[i] > 0;
 			}
 		}
-		m_organfile->Modified();
 	}
 	else
 	{
