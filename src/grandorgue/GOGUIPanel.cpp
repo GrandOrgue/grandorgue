@@ -224,7 +224,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 		for (unsigned i = 0; i < m_NumberOfLabels; i++)
 		{
 			buffer.Printf(wxT("Label%03d"), i + 1);
-			GOGUIControl* control = new GOGUILabel(this);
+			GOGUIControl* control = new GOGUILabel(this, NULL);
 			control->Load(cfg, buffer);
 			AddControl(control);
 		}

@@ -24,6 +24,7 @@
 #define GORGUESETTER_H
 
 #include "ptrvector.h"
+#include "GOrgueLabel.h"
 
 class GOGUIPanel;
 class GOGUILabel;
@@ -47,7 +48,7 @@ private:
 	unsigned m_pos;
 	ptr_vector<GOrgueFrameGeneral> m_framegeneral;
 	ptr_vector<GOrgueSetterButton> m_button;
-	GOGUILabel* m_PosDisplay;
+	GOrgueLabel m_PosDisplay;
 	SetterType m_SetterType;
 
 	void SetSetterType(SetterType type);
