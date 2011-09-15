@@ -30,227 +30,235 @@ IniFileConfig::IniFileConfig(wxFileConfig& odf_ini_file) :
 
 }
 
-bool IniFileConfig::ReadKey(wxString group, wxString key, void* retval, ValueType type, bool required, int nmin, int nmax)
+wxString IniFileConfig::ReadString(wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue)
 {
-	wxString string;
-	int integer;
-	static wxInt16 sizes[2][4] = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
+	wxString value;
 
-	try
+	m_ODFIni.SetPath(wxT("/"));
+	if (!m_ODFIni.HasGroup(group))
 	{
-		m_ODFIni.SetPath(wxT("/"));
-		if (!m_ODFIni.HasGroup(group))
-		{//JB: strncasecmp was strnicmp
-			if (group.length() >= 6 && !group.Mid(0, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
-			{
-				if (type == ORGAN_INTEGER)
-					*(int*)retval = nmin;
-				return false;
-			}
+		if (group.length() >= 6 && !group.Mid(0, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
+			return defaultValue;
 
-			if (group.length() >= 12 && !group.Mid(0, 12).CmpNoCase(wxT("FrameGeneral")))	// FrameGeneral groups aren't required.
-			{
-				if (type == ORGAN_INTEGER)
-					*(int*)retval = 0;
-				return false;
-			}
-			throw -1;
-		}
-		m_ODFIni.SetPath(wxT("/") + group);
+		if (group.length() >= 12 && !group.Mid(0, 12).CmpNoCase(wxT("FrameGeneral")))	// FrameGeneral groups aren't required.
+			return defaultValue;
 
-		if (type >= ORGAN_INTEGER)
+		if (required)
 		{
-			if (!m_ODFIni.Read(key, &string) || string.empty())
-			{
-				integer = nmin;
-				if (required)
-					throw -2;
-			}
-			else
-			{
-				if (!::wxIsdigit(string[0]) && string[0] != wxT('+') && string[0] != wxT('-') && string.CmpNoCase(wxT("none")))
-					throw -3;
-				integer = atoi(string.mb_str() + (string[0] == wxT('+') ? 1 : 0));
-			}
-
-			if (integer >= nmin && integer <= nmax)
-			{
-				if (type == ORGAN_LONG)
-					*(int*)retval = integer;
-				else
-					*(int*)retval = integer;
-			}
-			else
-				throw -4;
-		}
-		else
-		{
-			if (!m_ODFIni.Read(key, &string))
-			{
-				if (required)
-					throw -2;
-			}
-			else
-			{
-				string.Trim();
-				if (type < ORGAN_STRING)
-					string.MakeUpper();
-
-				integer = 0;
-				switch(type)
-				{
-				case ORGAN_BOOLEAN:
-					// we cannot assign bitfield bool's the normal way
-					// pointers to bitfields are not allowed!
-					if (string[0] == wxT('Y'))
-						return true;
-					else if (string[0] == wxT('N'))
-						return false;
-					else
-						throw -3;
-					break;
-				case ORGAN_FONTSIZE:
-					if (string == wxT("SMALL"))
-						integer = 6;
-					else if (string == wxT("NORMAL"))
-						integer = 7;
-					else if (string == wxT("LARGE"))
-						integer = 10;
-					else
-						throw -3;
-					*(wxInt16*)retval = integer;
-					break;
-				case ORGAN_SIZE:
-					if (string == wxT("SMALL"))
-						integer = 0;
-					else if (string == wxT("MEDIUM"))
-						integer = 1;
-					else if (string == wxT("MEDIUM LARGE"))
-						integer = 2;
-					else if (string == wxT("LARGE"))
-						integer = 3;
-					else
-						throw -3;
-					*(wxInt16*)retval = sizes[nmin][integer];
-					break;
-				case ORGAN_COLOR:
-					if (string == wxT("BLACK"))
-						*(wxColour*)retval = wxColour(0x00, 0x00, 0x00);
-					else if (string == wxT("BLUE"))
-						*(wxColour*)retval = wxColour(0x00, 0x00, 0xFF);
-					else if (string == wxT("DARK BLUE"))
-						*(wxColour*)retval = wxColour(0x00, 0x00, 0x80);
-					else if (string == wxT("GREEN"))
-						*(wxColour*)retval = wxColour(0x00, 0xFF, 0x00);
-					else if (string == wxT("DARK GREEN"))
-						*(wxColour*)retval = wxColour(0x00, 0x80, 0x00);
-					else if (string == wxT("CYAN"))
-						*(wxColour*)retval = wxColour(0x00, 0xFF, 0xFF);
-					else if (string == wxT("DARK CYAN"))
-						*(wxColour*)retval = wxColour(0x00, 0x80, 0x80);
-					else if (string == wxT("RED"))
-						*(wxColour*)retval = wxColour(0xFF, 0x00, 0x00);
-					else if (string == wxT("DARK RED"))
-						*(wxColour*)retval = wxColour(0x80, 0x00, 0x00);
-					else if (string == wxT("MAGENTA"))
-						*(wxColour*)retval = wxColour(0xFF, 0x00, 0xFF);
-					else if (string == wxT("DARK MAGENTA"))
-						*(wxColour*)retval = wxColour(0x80, 0x00, 0x80);
-					else if (string == wxT("YELLOW"))
-						*(wxColour*)retval = wxColour(0xFF, 0xFF, 0x00);
-					else if (string == wxT("DARK YELLOW"))
-						*(wxColour*)retval = wxColour(0x80, 0x80, 0x00);
-					else if (string == wxT("LIGHT GREY"))
-						*(wxColour*)retval = wxColour(0xC0, 0xC0, 0xC0);
-					else if (string == wxT("DARK GREY"))
-						*(wxColour*)retval = wxColour(0x80, 0x80, 0x80);
-					else if (string == wxT("WHITE"))
-						*(wxColour*)retval = wxColour(0xFF, 0xFF, 0xFF);
-					else
-						throw -3;
-					break;
-				case ORGAN_STRING:
-					if ((int)string.length() > nmax)
-						throw -4;
-					*(wxString*)retval = string;
-                default:
-					break;
-				}
-			}
+			wxString error;
+			error.Printf(_("Missing required group '/%s'"), group.c_str());
+			throw error;
 		}
 	}
-	catch(int exception)
+
+	m_ODFIni.SetPath(wxT("/") + group);
+
+	if (!m_ODFIni.Read(key, &value))
+	{
+		if (required)
+		{
+			wxString error;
+			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
+			throw error;
+		}
+		else
+			return defaultValue;
+	}
+
+	value.Trim();
+	if (value.length() > nmax)
 	{
 		wxString error;
-		switch(exception)
-		{
-		case -1:
-			error.Printf(_("Missing required group '/%s'"), group.c_str());
-			break;
-		case -2:
-			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
-			break;
-		case -3:
-			error.Printf(_("Invalid value '/%s/%s'"), group.c_str(), key.c_str());
-			break;
-		case -4:
-			error.Printf(_("Out of range value '/%s/%s'"), group.c_str(), key.c_str());
-			break;
-		}
+		error.Printf(_("Value too long: '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
 		throw error;
 	}
 
-	return false;
+	return value;
 }
 
 bool IniFileConfig::ReadBoolean(wxString group, wxString key, bool required)
 {
-	return ReadKey(group, key, 0, ORGAN_BOOLEAN, required);
+	return ReadBoolean(group, key, required, false);
+}
+
+bool IniFileConfig::ReadBoolean(wxString group, wxString key, bool required, bool defaultValue)
+{
+	wxString value = ReadString(group, key, 255, required, defaultValue ? wxT("Y") : wxT("N"));
+	value.MakeUpper();
+	value.Trim();
+
+	if (value.Length() && value[0] == wxT('Y'))
+		return true;
+	else if (value.Length() && value[0] == wxT('N'))
+		return false;
+
+	wxString error;
+	error.Printf(_("Invalid boolean value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	throw error;
 }
 
 wxColour IniFileConfig::ReadColor(wxString group, wxString key, bool required)
 {
-	wxColour retval;
-	ReadKey(group, key, &retval, ORGAN_COLOR, required);
-	return retval;
+	return ReadColor(group, key, required, wxT("BLACK"));
 }
 
-wxString IniFileConfig::ReadString(wxString group, wxString key, int nmax, bool required)
+wxColour IniFileConfig::ReadColor(wxString group, wxString key, bool required, wxString defaultValue)
 {
-	wxString retval;
-	ReadKey(group, key, &retval, ORGAN_STRING, required, 0, nmax);
-	return retval;
+	wxString value = ReadString(group, key, 255, required, defaultValue);
+
+	value.MakeUpper();
+	value.Trim();
+
+	if (value == wxT("BLACK"))
+		return wxColour(0x00, 0x00, 0x00);
+	else if (value == wxT("BLUE"))
+		return wxColour(0x00, 0x00, 0xFF);
+	else if (value == wxT("DARK BLUE"))
+		return wxColour(0x00, 0x00, 0x80);
+	else if (value == wxT("GREEN"))
+		return wxColour(0x00, 0xFF, 0x00);
+	else if (value == wxT("DARK GREEN"))
+		return wxColour(0x00, 0x80, 0x00);
+	else if (value == wxT("CYAN"))
+		return wxColour(0x00, 0xFF, 0xFF);
+	else if (value == wxT("DARK CYAN"))
+		return wxColour(0x00, 0x80, 0x80);
+	else if (value == wxT("RED"))
+		return wxColour(0xFF, 0x00, 0x00);
+	else if (value == wxT("DARK RED"))
+		return wxColour(0x80, 0x00, 0x00);
+	else if (value == wxT("MAGENTA"))
+		return wxColour(0xFF, 0x00, 0xFF);
+	else if (value == wxT("DARK MAGENTA"))
+		return wxColour(0x80, 0x00, 0x80);
+	else if (value == wxT("YELLOW"))
+		return wxColour(0xFF, 0xFF, 0x00);
+	else if (value == wxT("DARK YELLOW"))
+		return wxColour(0x80, 0x80, 0x00);
+	else if (value == wxT("LIGHT GREY"))
+		return wxColour(0xC0, 0xC0, 0xC0);
+	else if (value == wxT("DARK GREY"))
+		return wxColour(0x80, 0x80, 0x80);
+	else if (value == wxT("WHITE"))
+		return wxColour(0xFF, 0xFF, 0xFF);
+	
+	wxString error;
+	error.Printf(_("Invalid color '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	throw error;
+}
+
+wxString IniFileConfig::ReadString(wxString group, wxString key, unsigned nmax, bool required)
+{
+	return ReadString(group, key, nmax, required, wxT(""));
 }
 
 int IniFileConfig::ReadInteger(wxString group, wxString key, int nmin, int nmax, bool required)
 {
-	int retval;
-	ReadKey(group, key, &retval, ORGAN_INTEGER, required, nmin, nmax);
-	return retval;
+	return ReadInteger(group, key, nmin, nmax, required, nmin);
+}
+
+int IniFileConfig::ReadInteger(wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue)
+{
+	wxString value = ReadString(group, key, 255, required, wxString::Format(wxT("%d"), defaultValue));
+
+	if (value.IsEmpty())
+	{
+		if (required)
+		{
+			wxString error;
+			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
+			throw error;
+		}
+		else
+			return defaultValue;
+	}
+
+	if (!::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")))
+	{
+		wxString error;
+		error.Printf(_("Invalid integer value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		throw error;
+	}
+
+	int retval = atoi(value.mb_str() + (value[0] == wxT('+') ? 1 : 0));
+
+	if (nmin <= retval && retval <= nmax)
+		return retval;
+
+	wxString error;
+	error.Printf(_("Out of range value '/%s/%s': %d"), group.c_str(), key.c_str(), retval);
+	throw error;
 }
 
 int IniFileConfig::ReadLong(wxString group, wxString key, int nmin, int nmax, bool required)
 {
-	int retval;
-	ReadKey(group, key, &retval, ORGAN_LONG, required, nmin, nmax);
-	return retval;
+	return ReadInteger(group, key, nmin, nmax, required);
 }
 
-wxInt16 IniFileConfig::ReadSize(wxString group, wxString key, int nmin, bool required)
+int IniFileConfig::ReadLong(wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue)
 {
-	wxInt16 retval;
-	ReadKey(group, key, &retval, ORGAN_SIZE, required, nmin);
-	return retval;
+	return ReadInteger(group, key, nmin, nmax, required, defaultValue);
 }
 
-wxInt16 IniFileConfig::ReadFontSize(wxString group, wxString key, bool required)
+unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bool required)
 {
-	wxInt16 retval;
-	ReadKey(group, key, &retval, ORGAN_FONTSIZE, required);
-	return retval;
+	return ReadSize(group, key, type, required, wxT("SMALL"));
 }
 
-int IniFileConfig::ReadEnum(wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required)
+unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bool required, wxString defaultValue)
+{
+	static const int sizes[2][4] = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
+
+	wxString value = ReadString(group, key, 255, required, defaultValue);
+
+	value.MakeUpper();
+	value.Trim();
+
+	if (value.IsEmpty() && !required)
+		value = defaultValue;
+
+	if (value == wxT("SMALL"))
+		return sizes[type][0];
+	else if (value == wxT("MEDIUM"))
+		return sizes[type][1];
+	else if (value == wxT("MEDIUM LARGE"))
+		return sizes[type][2];
+	else if (value == wxT("LARGE"))
+		return sizes[type][3];
+
+	wxString error;
+	error.Printf(_("Invalid size '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	throw error;
+}
+
+unsigned IniFileConfig::ReadFontSize(wxString group, wxString key, bool required)
+{
+	return ReadFontSize(group, key, required, wxT("NORMAL"));
+}
+
+unsigned IniFileConfig::ReadFontSize(wxString group, wxString key, bool required, wxString defaultValue)
+{
+	wxString value = ReadString(group, key, 255, required, defaultValue);
+
+	value.MakeUpper();
+	value.Trim();
+
+	if (value.IsEmpty() && !required)
+		value = defaultValue;
+
+	if (value == wxT("SMALL"))
+		return 6;
+	else if (value == wxT("NORMAL"))
+		return 7;
+	else if (value == wxT("LARGE"))
+		return 10;
+	
+	wxString error;
+	error.Printf(_("Invalid font size '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	throw error;
+}
+
+int IniFileConfig::ReadEnum(wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required, int defaultValue)
 {
 	wxString value = ReadString(group, key, 255, required);
 	for (unsigned i = 0; i < count; i++)
@@ -259,10 +267,15 @@ int IniFileConfig::ReadEnum(wxString group, wxString key, const struct IniFileEn
 	if (required || !value.IsEmpty())
 	{
 		wxString error;
-		error.Printf(_("Invalid value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		error.Printf(_("Invalid enum value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
 		throw error;
 	}
-	return entry[0].value;
+	return defaultValue;
+}
+
+int IniFileConfig::ReadEnum(wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required)
+{
+	return ReadEnum(group, key, entry, count, required, entry[0].value);
 }
 
 
