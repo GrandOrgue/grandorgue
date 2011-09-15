@@ -45,6 +45,7 @@ public:
 
 	GOrgueEnclosure(GrandOrgueFile* organfile);
 	virtual ~GOrgueEnclosure();
+	void Init(IniFileConfig& cfg, wxString group, wxString Name);
 	void Load(IniFileConfig& cfg, wxString group, int enclosure_nb);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(int n);

@@ -40,6 +40,14 @@ GOrgueEnclosure::~GOrgueEnclosure()
 {
 }
 
+void GOrgueEnclosure::Init(IniFileConfig& cfg, wxString group, wxString Name)
+{
+	m_group = group;
+	m_Name = cfg.ReadString(m_group, wxT("Name"), 64, false, Name);
+	Set(0);	// default to down
+	m_midi.Load(cfg, m_group);
+}
+
 void GOrgueEnclosure::Load(IniFileConfig& cfg, wxString group, int enclosure_nb)
 {
 	m_group = group;
