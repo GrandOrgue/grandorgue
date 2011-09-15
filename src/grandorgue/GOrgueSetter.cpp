@@ -59,6 +59,8 @@ enum {
 	ID_SETTER_SCOPE,
 	ID_SETTER_SCOPED,
 	ID_SETTER_FULL,
+	ID_SETTER_DELETE,
+	ID_SETTER_INSERT,
 
 	ID_SETTER_GENERAL00,
 	ID_SETTER_GENERAL01,
@@ -121,6 +123,8 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, false));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
 	for(unsigned i = 0; i < 30; i++)
 		m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
@@ -261,6 +265,14 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 	button->Init(cfg, 7, 102, wxT("SetterFull"));
 	panel->AddControl(button);
 
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_INSERT]);
+	button->Init(cfg, 9, 102, wxT("SetterInsert"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_DELETE]);
+	button->Init(cfg, 10, 102, wxT("SetterDelete"));
+	panel->AddControl(button);
+
 	return panel;
 }
 
@@ -301,6 +313,9 @@ void GOrgueSetter::Load(IniFileConfig& cfg)
 	m_button[ID_SETTER_SCOPE]->Load(cfg, wxT("SetterScope"), _("Scope"));
 	m_button[ID_SETTER_SCOPED]->Load(cfg, wxT("SetterScoped"), _("Scoped"));
 	m_button[ID_SETTER_FULL]->Load(cfg, wxT("SetterFull"), _("Full"));
+
+	m_button[ID_SETTER_INSERT]->Load(cfg, wxT("SetterInsert"), _("Insert"));
+	m_button[ID_SETTER_DELETE]->Load(cfg, wxT("SetterDelete"), _("Delete"));
 
 	for(unsigned i = 0; i < 10; i++)
 	{
@@ -378,6 +393,16 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 				SetPosition(0, false);
 				break;
 			case ID_SETTER_CURRENT:
+				SetPosition(m_pos);
+				break;
+			case ID_SETTER_DELETE:
+				for(unsigned j = m_pos; j < m_framegeneral.size() - 1; j++)
+					m_framegeneral[j]->Copy(m_framegeneral[j + 1]);
+				ResetDisplay();
+				break;
+			case ID_SETTER_INSERT:
+				for (unsigned j = m_framegeneral.size() - 1; j > m_pos; j--)
+					m_framegeneral[j]->Copy(m_framegeneral[j - 1]);
 				SetPosition(m_pos);
 				break;
 			case ID_SETTER_L0:
