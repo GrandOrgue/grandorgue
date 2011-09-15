@@ -119,7 +119,9 @@ void GOrgueFrameGeneral::Push()
 			{
 				for (unsigned i = 0; i < m_organfile->GetManual(j)->GetStopCount(); i++)
 				{
-					if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !m_organfile->GetManual(j)->GetStop(i)->IsDisplayed())
+					if (!m_organfile->GetSetter()->StoreInvisibleObjects() && 
+					    !m_organfile->CombinationsStoreNonDisplayedDrawstops() && 
+					    !m_organfile->GetManual(j)->GetStop(i)->IsDisplayed())
 						continue;
 					m_StopManual.push_back(j);
 					m_Stops.push_back(m_organfile->GetManual(j)->GetStop(i)->IsEngaged() ? i + 1 : -i - 1);
@@ -131,7 +133,9 @@ void GOrgueFrameGeneral::Push()
 			{
 				for (unsigned i = 0; i < m_organfile->GetManual(j)->GetCouplerCount(); i++)
 				{
-					if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !m_organfile->GetManual(j)->GetCoupler(i)->IsDisplayed())
+					if (!m_organfile->GetSetter()->StoreInvisibleObjects() && 
+					    !m_organfile->CombinationsStoreNonDisplayedDrawstops() &&
+					    !m_organfile->GetManual(j)->GetCoupler(i)->IsDisplayed())
 						continue;
 					m_CouplerManual.push_back(j);
 					m_Couplers.push_back (m_organfile->GetManual(j)->GetCoupler(i)->IsEngaged() ? i + 1 : -i - 1);
@@ -141,7 +145,9 @@ void GOrgueFrameGeneral::Push()
 	
 			for (unsigned i = 0; i < m_organfile->GetTremulantCount(); i++)
 			{
-				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !m_organfile->GetTremulant(i)->IsDisplayed())
+				if (!m_organfile->GetSetter()->StoreInvisibleObjects() &&
+				    !m_organfile->CombinationsStoreNonDisplayedDrawstops() &&
+				    !m_organfile->GetTremulant(i)->IsDisplayed())
 					continue;
 				m_Tremulants.push_back (m_organfile->GetTremulant(i)->IsEngaged() ? i + 1 : -i - 1);
 				used |= m_organfile->GetTremulant(i)->IsEngaged();
@@ -170,7 +176,9 @@ void GOrgueFrameGeneral::Push()
 			{
 				for (unsigned i = 0; i < m_organfile->GetManual(j)->GetStopCount(); i++)
 				{
-					if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !m_organfile->GetManual(j)->GetStop(i)->IsDisplayed())
+					if (!m_organfile->GetSetter()->StoreInvisibleObjects() && 
+					    !m_organfile->CombinationsStoreNonDisplayedDrawstops() &&
+					    !m_organfile->GetManual(j)->GetStop(i)->IsDisplayed())
 						continue;
 					if (m_organfile->GetManual(j)->GetStop(i)->IsEngaged())
 					{
@@ -184,7 +192,9 @@ void GOrgueFrameGeneral::Push()
 			{
 				for (unsigned i = 0; i < m_organfile->GetManual(j)->GetCouplerCount(); i++)
 				{
-					if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !m_organfile->GetManual(j)->GetCoupler(i)->IsDisplayed())
+					if (!m_organfile->GetSetter()->StoreInvisibleObjects() &&
+					    !m_organfile->CombinationsStoreNonDisplayedDrawstops() &&
+					    !m_organfile->GetManual(j)->GetCoupler(i)->IsDisplayed())
 						continue;
 					if (m_organfile->GetManual(j)->GetCoupler(i)->IsEngaged())
 					{
@@ -196,7 +206,9 @@ void GOrgueFrameGeneral::Push()
 	
 			for (unsigned i = 0; i < m_organfile->GetTremulantCount(); i++)
 			{
-				if (!m_organfile->CombinationsStoreNonDisplayedDrawstops() && !m_organfile->GetTremulant(i)->IsDisplayed())
+				if (!m_organfile->GetSetter()->StoreInvisibleObjects() &&
+				    !m_organfile->CombinationsStoreNonDisplayedDrawstops() &&
+				    !m_organfile->GetTremulant(i)->IsDisplayed())
 					continue;
 				if (m_organfile->GetTremulant(i)->IsEngaged())
 					m_Tremulants.push_back (i + 1);

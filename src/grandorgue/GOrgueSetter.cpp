@@ -312,6 +312,11 @@ bool GOrgueSetter::IsSetterActive()
 	return m_button[ID_SETTER_SET]->IsEngaged();
 }
 
+bool GOrgueSetter::StoreInvisibleObjects()
+{
+	return false;
+}
+
 void GOrgueSetter::SetterActive(bool on)
 {
 	m_button[ID_SETTER_SET]->Set(on);
