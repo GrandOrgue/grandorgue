@@ -1,5 +1,7 @@
 message(STATUS "RtAudio build Configuration")
 
+INCLUDE (CheckIncludeFileCXX)
+
 include_directories(../include)
 
 set(RtAudio_Sources RtAudio.cpp)
@@ -29,6 +31,12 @@ if (WIN32)
    if (RTAUDIO_USE_DSOUND)
       add_definitions(-D__WINDOWS_DS__)
       include_directories(../../../ext/rt/directx)
+      check_include_file_cxx(dsound.h DSOUND_H_EXISTS)
+      if (${DSOUND_H_EXISTS})
+      else()
+	include_directories(../../../ext/rt/wine)
+	include_directories(../../../ext/rt/wine/include)
+      endif ()
       target_link_libraries(RtAudio dsound)
    endif ()
 
