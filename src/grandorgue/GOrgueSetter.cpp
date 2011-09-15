@@ -111,7 +111,7 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 	panel->AddControl(control);
 
 	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay);
-	PosDisplay->Init(350, 10);
+	PosDisplay->Init(cfg, 350, 10, wxT("SetterCurrentPosition"));
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CURRENT]);

@@ -43,12 +43,58 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label) :
 {
 }
 
-void GOGUILabel::Init(unsigned x, unsigned y)
+void GOGUILabel::Init(IniFileConfig& cfg, unsigned x, unsigned y, wxString group)
 {
-	m_DispXpos = x;
-	m_DispYpos = y;
-	m_DispLabelColour = wxColor(0,0,0);
-	m_DispLabelFontSize = 7;
+	m_FreeXPlacement = cfg.ReadBoolean(group, wxT("FreeXPlacement"), false, true);
+	m_FreeYPlacement = cfg.ReadBoolean(group, wxT("FreeYPlacement"), false, true);
+
+	if (!m_FreeXPlacement)
+	{
+		m_DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, m_metrics->NumberOfDrawstopColsToDisplay(), false, 1);
+		m_DispSpanDrawstopColToRight = cfg.ReadBoolean(group, wxT("DispSpanDrawstopColToRight"), false, false);
+	}
+	else
+	{
+		m_DispXpos = cfg.ReadInteger(group, wxT("DispXpos"), 0, m_metrics->GetScreenWidth(), false, x);
+	}
+
+	if (!m_FreeYPlacement)
+	{
+		m_DispAtTopOfDrawstopCol = cfg.ReadBoolean(group, wxT("DispAtTopOfDrawstopCol"), false, false);
+	}
+	else
+	{
+		m_DispYpos = cfg.ReadInteger(group, wxT("DispYpos"), 0, m_metrics->GetScreenHeight(), false, y);
+	}
+
+	/* NOTICE: this should not be allowed, but some existing definition files
+	 * use improper values */
+	if (!m_DispXpos)
+		m_DispYpos++;
+	if (!m_DispYpos)
+		m_DispYpos++;
+
+	m_DispLabelColour = cfg.ReadColor(group, wxT("DispLabelColour"), false, wxT("BLACK"));
+	m_DispLabelFontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"), false, wxT("NORMAL"));
+	m_DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 1, false, 1);
+
+	if (!m_FreeXPlacement)
+	{
+		int i = m_metrics->NumberOfDrawstopColsToDisplay() >> 1;
+		if (m_DispDrawstopCol <= i)
+			m_DispXpos = m_metrics->GetJambLeftX()  + (m_DispDrawstopCol - 1) * 78 + 1;
+		else
+			m_DispXpos = m_metrics->GetJambRightX() + (m_DispDrawstopCol - 1 - i) * 78 + 1;
+		if (m_DispSpanDrawstopColToRight)
+			m_DispXpos += 39;
+	}
+
+	if (!m_FreeYPlacement)
+	{
+		m_DispYpos = m_metrics->GetJambLeftRightY() + 1;
+		if (!m_DispAtTopOfDrawstopCol)
+			m_DispYpos += m_metrics->GetJambLeftRightHeight() - 32;
+	}
 
 	m_BoundingRect = wxRect(m_DispXpos - 1, m_DispYpos - 1, 78, 22);
 }
