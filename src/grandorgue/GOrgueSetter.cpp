@@ -59,12 +59,45 @@ enum {
 	ID_SETTER_SCOPE,
 	ID_SETTER_SCOPED,
 	ID_SETTER_FULL,
+
+	ID_SETTER_GENERAL00,
+	ID_SETTER_GENERAL01,
+	ID_SETTER_GENERAL02,
+	ID_SETTER_GENERAL03,
+	ID_SETTER_GENERAL04,
+	ID_SETTER_GENERAL05,
+	ID_SETTER_GENERAL06,
+	ID_SETTER_GENERAL07,
+	ID_SETTER_GENERAL08,
+	ID_SETTER_GENERAL09,
+	ID_SETTER_GENERAL10,
+	ID_SETTER_GENERAL11,
+	ID_SETTER_GENERAL12,
+	ID_SETTER_GENERAL13,
+	ID_SETTER_GENERAL14,
+	ID_SETTER_GENERAL15,
+	ID_SETTER_GENERAL16,
+	ID_SETTER_GENERAL17,
+	ID_SETTER_GENERAL18,
+	ID_SETTER_GENERAL19,
+	ID_SETTER_GENERAL20,
+	ID_SETTER_GENERAL21,
+	ID_SETTER_GENERAL22,
+	ID_SETTER_GENERAL23,
+	ID_SETTER_GENERAL24,
+	ID_SETTER_GENERAL25,
+	ID_SETTER_GENERAL26,
+	ID_SETTER_GENERAL27,
+	ID_SETTER_GENERAL28,
+	ID_SETTER_GENERAL29,
+
 };
 
 GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_pos(0),
 	m_framegeneral(0),
+	m_general(0),
 	m_button(0),
 	m_PosDisplay(organfile),
 	m_SetterType(SETTER_REGULAR)
@@ -89,6 +122,9 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, false));
 
+	for(unsigned i = 0; i < 30; i++)
+		m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+
 	m_button[ID_SETTER_PREV]->GetMidiReceiver().SetIndex(0);
 	m_button[ID_SETTER_NEXT]->GetMidiReceiver().SetIndex(1);
 	m_button[ID_SETTER_SET]->GetMidiReceiver().SetIndex(15);
@@ -98,6 +134,48 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 
 GOrgueSetter::~GOrgueSetter()
 {
+}
+
+GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(IniFileConfig& cfg)
+{
+	GOGUIControl* control;
+	GOGUISetterButton* button;
+
+	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterGenerals"), GOGUI_SETTER_GENERALS);
+	panel->Init(cfg, metrics, _("Generals"), wxT("SetterGeneralsPanel"));
+
+	control = new GOGUIHW1Background(panel);
+	panel->AddControl(control);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SET]);
+	button->Init(cfg, 1, 100, wxT("SetterGeneralsSet"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_REGULAR]);
+	button->Init(cfg, 3, 100, wxT("SetterGerneralsRegular"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPE]);
+	button->Init(cfg, 4, 100, wxT("SetterGeneralsScope"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPED]);
+	button->Init(cfg, 5, 100, wxT("SetterGeneralsScoped"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_FULL]);
+	button->Init(cfg, 7, 100, wxT("SetterGeneralsFull"));
+	panel->AddControl(button);
+
+	for(unsigned i = 0; i < 30; i++)
+	{
+		button = new GOGUISetterButton(panel, m_button[ID_SETTER_GENERAL00 + i]);
+		button->Init(cfg, (i % 10) + 1, 100 + i / 10, wxString::Format(wxT("SetterGeneral%d"), i + 1), true);
+		panel->AddControl(button);
+	}
+
+	return panel;
 }
 
 GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
@@ -199,6 +277,14 @@ void GOrgueSetter::Load(IniFileConfig& cfg)
 		m_framegeneral[i]->Load(cfg, buffer);
 	}
 
+	m_general.resize(0);
+	for (unsigned i = 0; i < m_NumberOfFrameGenerals; i++)
+	{
+		m_general.push_back(new GOrgueFrameGeneral(m_organfile));
+		buffer.Printf(wxT("SetterGeneral%03d"), i + 1);
+		m_general[i]->Load(cfg, buffer);
+	}
+
 	m_button[ID_SETTER_PREV]->Load(cfg, wxT("SetterPrev"), _("Previous"));
 	m_button[ID_SETTER_NEXT]->Load(cfg, wxT("SetterNext"), _("Next"));
 	m_button[ID_SETTER_SET]->Load(cfg, wxT("SetterSet"), _("Set"));
@@ -224,6 +310,15 @@ void GOrgueSetter::Load(IniFileConfig& cfg)
 		group.Printf(wxT("SetterL%d"), i);
 		m_button[ID_SETTER_L0 + i]->Load(cfg, group, buffer);
 	}
+
+	for(unsigned i = 0; i < 30; i++)
+	{
+		wxString group;
+		wxString buffer;
+		buffer.Printf(_("%d"), i+1);
+		group.Printf(wxT("SetterGeneral%d"), i);
+		m_button[ID_SETTER_GENERAL00 + i]->Load(cfg, group, buffer);
+	}
 }
 
 void GOrgueSetter::Save(IniFileConfig& cfg, bool prefix)
@@ -232,6 +327,9 @@ void GOrgueSetter::Save(IniFileConfig& cfg, bool prefix)
 
 	for (unsigned j = 0; j < m_framegeneral.size(); j++)
 		m_framegeneral[j]->Save(cfg, prefix);
+
+	for (unsigned j = 0; j < m_general.size(); j++)
+		m_general[j]->Save(cfg, prefix);
 
 	for (unsigned j = 0; j < m_button.size(); j++)
 		m_button[j]->Save(cfg, prefix);
@@ -293,6 +391,40 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 			case ID_SETTER_L8:
 			case ID_SETTER_L9:
 				SetPosition(m_pos - (m_pos % 10) + i - ID_SETTER_L0);
+				break;
+			case ID_SETTER_GENERAL00:
+			case ID_SETTER_GENERAL01:
+			case ID_SETTER_GENERAL02:
+			case ID_SETTER_GENERAL03:
+			case ID_SETTER_GENERAL04:
+			case ID_SETTER_GENERAL05:
+			case ID_SETTER_GENERAL06:
+			case ID_SETTER_GENERAL07:
+			case ID_SETTER_GENERAL08:
+			case ID_SETTER_GENERAL09:
+			case ID_SETTER_GENERAL10:
+			case ID_SETTER_GENERAL11:
+			case ID_SETTER_GENERAL12:
+			case ID_SETTER_GENERAL13:
+			case ID_SETTER_GENERAL14:
+			case ID_SETTER_GENERAL15:
+			case ID_SETTER_GENERAL16:
+			case ID_SETTER_GENERAL17:
+			case ID_SETTER_GENERAL18:
+			case ID_SETTER_GENERAL19:
+			case ID_SETTER_GENERAL20:
+			case ID_SETTER_GENERAL21:
+			case ID_SETTER_GENERAL22:
+			case ID_SETTER_GENERAL23:
+			case ID_SETTER_GENERAL24:
+			case ID_SETTER_GENERAL25:
+			case ID_SETTER_GENERAL26:
+			case ID_SETTER_GENERAL27:
+			case ID_SETTER_GENERAL28:
+			case ID_SETTER_GENERAL29:
+				m_general[i - ID_SETTER_GENERAL00]->Push();
+				ResetDisplay();
+				m_button[i]->Display(true);
 				break;
 			case ID_SETTER_REGULAR:
 				SetSetterType(SETTER_REGULAR);
@@ -367,6 +499,15 @@ void GOrgueSetter::SetSetterType(SetterType type)
 	m_button[ID_SETTER_SCOPED]->Display(type == SETTER_SCOPED);
 }
 
+void GOrgueSetter::ResetDisplay()
+{
+	m_button[ID_SETTER_HOME]->Display(false);
+	for(unsigned i = 0; i < 10; i++)
+		m_button[ID_SETTER_L0 + i]->Display(false);
+	for(unsigned i = 0; i < 30; i++)
+		m_button[ID_SETTER_GENERAL00 + i]->Display(false);
+}
+
 void GOrgueSetter::SetPosition(int pos, bool push)
 {
 	wxString buffer;
@@ -377,12 +518,21 @@ void GOrgueSetter::SetPosition(int pos, bool push)
 		pos -= m_framegeneral.size();
 	m_pos = pos;
 	if (push)
+	{
 		m_framegeneral[m_pos]->Push();
+
+		m_button[ID_SETTER_HOME]->Display(m_pos == 0);
+		for(unsigned i = 0; i < 10; i++)
+			m_button[ID_SETTER_L0 + i]->Display((m_pos % 10) == i);
+		for(unsigned i = 0; i < 30; i++)
+			m_button[ID_SETTER_GENERAL00 + i]->Display(false);
+	}
 
 	buffer.Printf(wxT("%03d"), m_pos);
 	m_PosDisplay.SetName(buffer);
 	if (pos != old_pos)
 		::wxGetApp().frame->m_meters[2]->ChangeValue(m_pos);
+
 }
 
 

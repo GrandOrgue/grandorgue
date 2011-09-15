@@ -47,6 +47,7 @@ private:
 	GrandOrgueFile* m_organfile;
 	unsigned m_pos;
 	ptr_vector<GOrgueFrameGeneral> m_framegeneral;
+	ptr_vector<GOrgueFrameGeneral> m_general;
 	ptr_vector<GOrgueSetterButton> m_button;
 	GOrgueLabel m_PosDisplay;
 	SetterType m_SetterType;
@@ -57,6 +58,7 @@ public:
 	GOrgueSetter(GrandOrgueFile* organfile);
 	virtual ~GOrgueSetter();
 
+	GOGUIPanel* CreateGeneralsPanel(IniFileConfig& cfg);
 	GOGUIPanel* CreateSetterPanel(IniFileConfig& cfg);
 	void Load(IniFileConfig& cfg);
 	void Save(IniFileConfig& cfg, bool prefix);
@@ -75,6 +77,7 @@ public:
 	void Push();
 	unsigned GetPosition();
 	void SetPosition(int pos, bool push = true);
+	void ResetDisplay();
 };
 
 #endif
