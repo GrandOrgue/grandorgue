@@ -52,6 +52,8 @@ public:
 	int ReadInteger(wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue);
 	int ReadLong(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
 	int ReadLong(wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue);
+	double ReadFloat(wxString group, wxString key, double nmin = 0, double nmax = 0, bool required = true);
+	double ReadFloat(wxString group, wxString key, double nmin, double nmax, bool required, double defaultValue);
 	unsigned ReadSize(wxString group, wxString key, unsigned type = 0, bool required = true);
 	unsigned ReadSize(wxString group, wxString key, unsigned type, bool required, wxString defaultValue);
 	unsigned ReadFontSize(wxString group, wxString key, bool required = true);

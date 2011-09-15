@@ -200,6 +200,44 @@ int IniFileConfig::ReadLong(wxString group, wxString key, int nmin, int nmax, bo
 	return ReadInteger(group, key, nmin, nmax, required, defaultValue);
 }
 
+double IniFileConfig::ReadFloat(wxString group, wxString key, double nmin, double nmax, bool required)
+{
+	return ReadFloat(group, key, nmin, nmax, required, nmin);
+}
+
+double IniFileConfig::ReadFloat(wxString group, wxString key, double nmin, double nmax, bool required, double defaultValue)
+{
+	wxString value = ReadString(group, key, 255, required, wxString::Format(wxT("%e"), defaultValue));
+
+	if (value.IsEmpty())
+	{
+		if (required)
+		{
+			wxString error;
+			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
+			throw error;
+		}
+		else
+			return defaultValue;
+	}
+
+	if (!::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")))
+	{
+		wxString error;
+		error.Printf(_("Invalid float value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		throw error;
+	}
+
+	double retval = atof(value.mb_str() + (value[0] == wxT('+') ? 1 : 0));
+
+	if (nmin <= retval && retval <= nmax)
+		return retval;
+
+	wxString error;
+	error.Printf(_("Out of range value '/%s/%s': %d"), group.c_str(), key.c_str(), retval);
+	throw error;
+}
+
 unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bool required)
 {
 	return ReadSize(group, key, type, required, wxT("SMALL"));
@@ -226,6 +264,13 @@ unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bo
 	else if (value == wxT("LARGE"))
 		return sizes[type][3];
 
+	if (::wxIsdigit(value[0]))
+	{
+		int size = atoi(value.mb_str());
+		if (100 <= size && size <= 4000)
+			return size;
+	}
+	
 	wxString error;
 	error.Printf(_("Invalid size '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	throw error;
