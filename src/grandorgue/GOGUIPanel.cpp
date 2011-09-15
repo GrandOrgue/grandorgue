@@ -133,6 +133,14 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			AddControl(control);
 		}
 		
+
+		unsigned m_NumberOfSetterElements = cfg.ReadInteger(group, wxT("NumberOfSetterElements"), 0, 999, false);
+		for (unsigned i = 0; i < m_NumberOfSetterElements; i++)
+		{
+			buffer.Printf(wxT("SetterElement%03d"), i + 1);
+			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this));
+		}
+
 		for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
 		{
 			wxString group;
