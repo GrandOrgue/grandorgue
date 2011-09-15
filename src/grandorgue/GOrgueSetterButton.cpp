@@ -23,6 +23,7 @@
 #include "GOrgueSetterButton.h"
 #include "GOrgueSetter.h"
 #include "GrandOrgueFile.h"
+#include "IniFileConfig.h"
 
 GOrgueSetterButton::GOrgueSetterButton(GrandOrgueFile* organfile, GOrgueSetter* setter, bool Pushbutton) :
 	m_midi(organfile, MIDI_RECV_SETTER),
@@ -43,7 +44,7 @@ GOrgueSetterButton::~GOrgueSetterButton()
 void GOrgueSetterButton::Load(IniFileConfig& cfg, wxString group, wxString Name)
 {
 	m_group = group;
-	m_Name = Name;
+	m_Name = cfg.ReadString(group, wxT("Name"), 255, false, Name);
 	m_midi.Load(cfg, group);
 }
 
