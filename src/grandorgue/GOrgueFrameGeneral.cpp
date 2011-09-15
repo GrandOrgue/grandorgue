@@ -328,6 +328,8 @@ void GOrgueFrameGeneral::Push()
 		for (unsigned k = 0; k < m_organfile->GetManual(j)->GetDivisionalCount(); k++)
 			m_organfile->GetManual(j)->GetDivisional(k)->Display(false);
 	}
+
+	m_organfile->GetSetter()->ResetDisplay();
 }
 
 void GOrgueFrameGeneral::Save(IniFileConfig& cfg, bool prefix)
