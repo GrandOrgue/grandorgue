@@ -29,17 +29,6 @@ class wxColour;
 class wxString;
 class wxFileConfig;
 
-enum ValueType
-{
-	ORGAN_BOOLEAN,
-	ORGAN_FONTSIZE,
-	ORGAN_SIZE,
-	ORGAN_COLOR,
-	ORGAN_STRING,
-	ORGAN_INTEGER,
-	ORGAN_LONG,
-};
-
 struct IniFileEnumEntry {
 	wxString name;
 	int value;
@@ -49,19 +38,26 @@ class IniFileConfig
 {
 
 private:
-	bool ReadKey(wxString group, wxString key, void* retval, ValueType type, bool required = true, int nmin = 0, int nmax = 0);
 	wxFileConfig& m_ODFIni;
 
 public:
 	IniFileConfig(wxFileConfig& iCfg);
 	bool ReadBoolean(wxString group, wxString key, bool required = true);
+	bool ReadBoolean(wxString group, wxString key, bool required, bool defaultValue);
 	wxColour ReadColor(wxString group, wxString key, bool required = true);
-	wxString ReadString(wxString group, wxString key, int nmax = 4096, bool required = true);
+	wxColour ReadColor(wxString group, wxString key, bool required, wxString defaultValue);
+	wxString ReadString(wxString group, wxString key, unsigned nmax = 4096, bool required = true);
+	wxString ReadString(wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue);
 	int ReadInteger(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
+	int ReadInteger(wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue);
 	int ReadLong(wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
-	wxInt16 ReadSize(wxString group, wxString key, int nmin = 0, bool required = true);
-	wxInt16 ReadFontSize(wxString group, wxString key, bool required = true);
+	int ReadLong(wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue);
+	unsigned ReadSize(wxString group, wxString key, unsigned type = 0, bool required = true);
+	unsigned ReadSize(wxString group, wxString key, unsigned type, bool required, wxString defaultValue);
+	unsigned ReadFontSize(wxString group, wxString key, bool required = true);
+	unsigned ReadFontSize(wxString group, wxString key, bool required, wxString defaultValue);
 	int ReadEnum(wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required = true);
+	int ReadEnum(wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required, int defaultValue);
 	void SaveHelper(bool prefix, wxString group, wxString key, wxString value);
 	void SaveHelper( bool prefix, wxString group, wxString key, int value, bool sign = false, bool force = false);
 	void SaveHelper(bool prefix, wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count);
