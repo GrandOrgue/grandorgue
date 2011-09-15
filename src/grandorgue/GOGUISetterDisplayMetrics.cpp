@@ -22,10 +22,14 @@
 
 #include "GOGUISetterDisplayMetrics.h"
 #include "GrandOrgueFile.h"
+#include "IniFileConfig.h"
 
-GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GrandOrgueFile* organfile, wxString group) :
+GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(IniFileConfig& ini, GrandOrgueFile* organfile, wxString group, GOGUISetterType type) :
 	GOGUIDisplayMetrics(organfile, group)
 {
+	bool IsSetter = type == GOGUI_SETTER_SETTER;
+	bool IsCrescendo = type == GOGUI_SETTER_CRESCENDO;
+
 	m_nb_enclosures = 0;
 	m_nb_manuals    = 0;
 	m_first_manual  = 1;
@@ -38,34 +42,34 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GrandOrgueFile* organfile, 
 		m_manual_info.push_back(man);
 	}
 
-	m_DispScreenSizeHoriz = 800;
-	m_DispScreenSizeVert = 300;
-	m_DispDrawstopBackgroundImageNum = 31;
-	m_DispConsoleBackgroundImageNum = 32;
-	m_DispKeyHorizBackgroundImageNum = 32;
-	m_DispKeyVertBackgroundImageNum = 31;
-	m_DispDrawstopInsetBackgroundImageNum = 33;
-	m_DispControlLabelFont = wxT("Times New Roman");
-	m_DispShortcutKeyLabelFont = wxT("Times New Roman");
-	m_DispShortcutKeyLabelColour = wxColour(0xFF, 0xFF, 0x00);
-	m_DispGroupLabelFont = wxT("Times New Roman");
-	m_DispDrawstopCols = 0;
-	m_DispDrawstopRows = 0;
-	m_DispDrawstopColsOffset = false;
-	m_DispDrawstopOuterColOffsetUp = false;
-	m_DispPairDrawstopCols = false;
-	m_DispExtraDrawstopRows = 3;
-	m_DispExtraDrawstopCols = 10;
-	m_DispButtonCols = 10;
-	m_DispExtraButtonRows = 0;
-	m_DispExtraPedalButtonRow = false;
-	m_DispExtraPedalButtonRowOffset = false;
-	m_DispExtraPedalButtonRowOffsetRight = false;
-	m_DispButtonsAboveManuals = true;
-	m_DispTrimAboveManuals = true;
-	m_DispTrimBelowManuals = true;
-	m_DispTrimAboveExtraRows = true;
-	m_DispExtraDrawstopRowsAboveExtraButtonRows = true;
+	m_DispScreenSizeHoriz = ini.ReadSize(m_group, wxT("DispScreenSizeHoriz"), 0, false, IsSetter ? wxT("800") : IsCrescendo ? wxT("700") : wxT("600"));
+	m_DispScreenSizeVert = ini.ReadSize(m_group, wxT("DispScreenSizeVert"), 1, false, IsSetter ? wxT("300") : IsCrescendo ? wxT("300") : wxT("250"));
+	m_DispDrawstopBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispDrawstopBackgroundImageNum"), 1, 64, false, 31);
+	m_DispConsoleBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispConsoleBackgroundImageNum"), 1, 64, false, 32);
+	m_DispKeyHorizBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispKeyHorizBackgroundImageNum"), 1, 64, false, 32);
+	m_DispKeyVertBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispKeyVertBackgroundImageNum"), 1, 64, false, 31);
+	m_DispDrawstopInsetBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispDrawstopInsetBackgroundImageNum"), 1, 64, false, 33);
+	m_DispControlLabelFont = ini.ReadString(m_group, wxT("DispControlLabelFont"), 255, false, wxT("Times New Roman"));
+	m_DispShortcutKeyLabelFont = ini.ReadString(m_group, wxT("DispShortcutKeyLabelFont"), 255, false, wxT("Times New Roman"));
+	m_DispShortcutKeyLabelColour = ini.ReadColor(m_group, wxT("DispShortcutKeyLabelColour"), false, wxT("Yellow"));
+	m_DispGroupLabelFont = ini.ReadString(m_group, wxT("DispGroupLabelFont"), 255, false, wxT("Times New Roman"));
+	m_DispDrawstopCols = ini.ReadInteger(m_group, wxT("DispDrawstopCols"), 0, 12, false, 0);
+	m_DispDrawstopRows = ini.ReadInteger(m_group, wxT("DispDrawstopRows"), 0, 20, false, 0);
+	m_DispDrawstopColsOffset = ini.ReadBoolean(m_group, wxT("DispDrawstopColsOffset"), false, false);
+	m_DispDrawstopOuterColOffsetUp = ini.ReadBoolean(m_group, wxT("DispDrawstopOuterColOffsetUp"), false, false);
+	m_DispPairDrawstopCols = ini.ReadBoolean(m_group, wxT("DispPairDrawstopCols"), false, false);
+	m_DispExtraDrawstopRows = ini.ReadInteger(m_group, wxT("DispExtraDrawstopRows"), 0, 8, false, IsSetter ? 3 : IsCrescendo ? 2: 1);
+	m_DispExtraDrawstopCols = ini.ReadInteger(m_group, wxT("DispExtraDrawstopCols"), 0, 40, false, IsSetter ? 10 : IsCrescendo ? 8 : 7);
+	m_DispButtonCols = ini.ReadInteger(m_group, wxT("DispButtonCols"), 1, 32, false, 10);
+	m_DispExtraButtonRows = ini.ReadInteger(m_group, wxT("DispExtraButtonRows"), 0, 8, false, IsSetter ? 0 : IsCrescendo ? 0 : 3);
+	m_DispExtraPedalButtonRow = ini.ReadBoolean(m_group, wxT("DispExtraPedalButtonRow"), false, false);
+	m_DispExtraPedalButtonRowOffset = ini.ReadBoolean(m_group, wxT("DispExtraPedalButtonRowOffset"), false, false);
+	m_DispExtraPedalButtonRowOffsetRight = ini.ReadBoolean(m_group, wxT("DispExtraPedalButtonRowOffsetRight"), false, false);
+	m_DispButtonsAboveManuals = ini.ReadBoolean(m_group, wxT("DispButtonsAboveManuals"), false, true);
+	m_DispTrimAboveManuals = ini.ReadBoolean(m_group, wxT("DispTrimAboveManuals"), false, true);
+	m_DispTrimBelowManuals = ini.ReadBoolean(m_group, wxT("DispTrimBelowManuals"), false, true);
+	m_DispTrimAboveExtraRows = ini.ReadBoolean(m_group, wxT("DispTrimAboveExtraRows"), false, true);
+	m_DispExtraDrawstopRowsAboveExtraButtonRows = ini.ReadBoolean(m_group, wxT("DispExtraDrawstopRowsAboveExtraButtonRows"), false, true);
 
 	Update();
 }
