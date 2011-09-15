@@ -57,7 +57,8 @@ enum {
 	ID_SETTER_L9,
 	ID_SETTER_REGULAR,
 	ID_SETTER_SCOPE,
-	ID_SETTER_SCOPED
+	ID_SETTER_SCOPED,
+	ID_SETTER_FULL,
 };
 
 GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
@@ -86,6 +87,7 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, false));
 
 	m_button[ID_SETTER_PREV]->GetMidiReceiver().SetIndex(0);
 	m_button[ID_SETTER_NEXT]->GetMidiReceiver().SetIndex(1);
@@ -177,6 +179,10 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 	button->Init(cfg, 5, 102, wxT("SetterScoped"));
 	panel->AddControl(button);
 
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_FULL]);
+	button->Init(cfg, 7, 102, wxT("SetterFull"));
+	panel->AddControl(button);
+
 	return panel;
 }
 
@@ -208,6 +214,7 @@ void GOrgueSetter::Load(IniFileConfig& cfg)
 	m_button[ID_SETTER_REGULAR]->Load(cfg, wxT("SetterRegular"), _("Regular"));
 	m_button[ID_SETTER_SCOPE]->Load(cfg, wxT("SetterScope"), _("Scope"));
 	m_button[ID_SETTER_SCOPED]->Load(cfg, wxT("SetterScoped"), _("Scoped"));
+	m_button[ID_SETTER_FULL]->Load(cfg, wxT("SetterFull"), _("Full"));
 
 	for(unsigned i = 0; i < 10; i++)
 	{
@@ -314,7 +321,7 @@ bool GOrgueSetter::IsSetterActive()
 
 bool GOrgueSetter::StoreInvisibleObjects()
 {
-	return false;
+	return m_button[ID_SETTER_FULL]->IsEngaged();
 }
 
 void GOrgueSetter::SetterActive(bool on)
