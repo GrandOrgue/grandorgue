@@ -29,11 +29,13 @@
 
 class GOGUIPanel;
 class GOGUILabel;
+class GOGUIControl;
 class GOrgueFrameGeneral;
 class GOrgueMidiEvent;
 class GOrgueSetterButton;
 class GrandOrgueFile;
 class IniFileConfig;
+struct IniFileEnumEntry;
 
 typedef enum 
 {
@@ -62,6 +64,8 @@ private:
 	void SetCrescendoType(unsigned no);
 	void Crescendo(int pos, bool force = false);
 
+	static const struct IniFileEnumEntry m_setter_element_types[];
+
 public:
 	GOrgueSetter(GrandOrgueFile* organfile);
 	virtual ~GOrgueSetter();
@@ -69,6 +73,8 @@ public:
 	GOGUIPanel* CreateGeneralsPanel(IniFileConfig& cfg);
 	GOGUIPanel* CreateSetterPanel(IniFileConfig& cfg);
 	GOGUIPanel* CreateCrescendoPanel(IniFileConfig& cfg);
+	GOGUIControl* CreateGUIElement(IniFileConfig& cfg, wxString group, GOGUIPanel* panel);
+
 	void Load(IniFileConfig& cfg);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void PreparePlayback();

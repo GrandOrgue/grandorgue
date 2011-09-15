@@ -109,6 +109,78 @@ enum {
 	ID_SETTER_CRESCENDO_SWELL
 };
 
+const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
+	{ wxT("Prev"), ID_SETTER_PREV },
+	{ wxT("Next"), ID_SETTER_NEXT },
+	{ wxT("Set"), ID_SETTER_SET },
+	{ wxT("M1"), ID_SETTER_M1 },
+	{ wxT("M10"), ID_SETTER_M10 },
+	{ wxT("M100"), ID_SETTER_M100 },
+	{ wxT("P1"), ID_SETTER_P1 },
+	{ wxT("P10"), ID_SETTER_P10 },
+	{ wxT("P100"), ID_SETTER_P100 },
+	{ wxT("Current"), ID_SETTER_CURRENT },
+	{ wxT("Home"), ID_SETTER_HOME },
+	{ wxT("L1"), ID_SETTER_L1 },
+	{ wxT("L2"), ID_SETTER_L2 },
+	{ wxT("L3"), ID_SETTER_L3 },
+	{ wxT("L4"), ID_SETTER_L4 },
+	{ wxT("L5"), ID_SETTER_L5 },
+	{ wxT("L6"), ID_SETTER_L6 },
+	{ wxT("L7"), ID_SETTER_L7 },
+	{ wxT("L8"), ID_SETTER_L8 },
+	{ wxT("L9"), ID_SETTER_L9 },
+	{ wxT("L0"), ID_SETTER_L0 },
+	{ wxT("Regular"), ID_SETTER_REGULAR },
+	{ wxT("Scope"), ID_SETTER_SCOPE },
+	{ wxT("Scoped"), ID_SETTER_SCOPED },
+	{ wxT("Label"), ID_SETTER_LABEL },
+	{ wxT("Full"), ID_SETTER_FULL },
+	{ wxT("Insert"), ID_SETTER_INSERT },
+	{ wxT("Delete"), ID_SETTER_DELETE },
+	{ wxT("General01"), ID_SETTER_GENERAL00 },
+	{ wxT("General02"), ID_SETTER_GENERAL01 },
+	{ wxT("General03"), ID_SETTER_GENERAL02 },
+	{ wxT("General04"), ID_SETTER_GENERAL03 },
+	{ wxT("General05"), ID_SETTER_GENERAL04 },
+	{ wxT("General06"), ID_SETTER_GENERAL05 },
+	{ wxT("General07"), ID_SETTER_GENERAL06 },
+	{ wxT("General08"), ID_SETTER_GENERAL07 },
+	{ wxT("General09"), ID_SETTER_GENERAL08 },
+	{ wxT("General10"), ID_SETTER_GENERAL09 },
+	{ wxT("General11"), ID_SETTER_GENERAL10 },
+	{ wxT("General12"), ID_SETTER_GENERAL11 },
+	{ wxT("General13"), ID_SETTER_GENERAL12 },
+	{ wxT("General14"), ID_SETTER_GENERAL13 },
+	{ wxT("General15"), ID_SETTER_GENERAL14 },
+	{ wxT("General16"), ID_SETTER_GENERAL15 },
+	{ wxT("General17"), ID_SETTER_GENERAL16 },
+	{ wxT("General18"), ID_SETTER_GENERAL17 },
+	{ wxT("General19"), ID_SETTER_GENERAL18 },
+	{ wxT("General20"), ID_SETTER_GENERAL19 },
+	{ wxT("General21"), ID_SETTER_GENERAL20 },
+	{ wxT("General22"), ID_SETTER_GENERAL21 },
+	{ wxT("General23"), ID_SETTER_GENERAL22 },
+	{ wxT("General24"), ID_SETTER_GENERAL23 },
+	{ wxT("General25"), ID_SETTER_GENERAL24 },
+	{ wxT("General26"), ID_SETTER_GENERAL25 },
+	{ wxT("General27"), ID_SETTER_GENERAL26 },
+	{ wxT("General28"), ID_SETTER_GENERAL27 },
+	{ wxT("General29"), ID_SETTER_GENERAL28 },
+	{ wxT("General30"), ID_SETTER_GENERAL29 },
+
+	{ wxT("CrescendoA"), ID_SETTER_CRESCENDO_A },
+	{ wxT("CrescendoB"), ID_SETTER_CRESCENDO_B },
+	{ wxT("CrescendoC"), ID_SETTER_CRESCENDO_C },
+	{ wxT("CrescendoD"), ID_SETTER_CRESCENDO_D },
+	{ wxT("CrescendoPrev"), ID_SETTER_CRESCENDO_PREV },
+	{ wxT("CrescendoCurrent"), ID_SETTER_CRESCENDO_CURRENT },
+	{ wxT("CrescendoNext"), ID_SETTER_CRESCENDO_NEXT },
+	{ wxT("Swell"), ID_SETTER_CRESCENDO_SWELL },
+	{ wxT("CrescendoLabel"), ID_SETTER_CRESCENDO_LABEL },
+
+};
+
 GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_pos(0),
@@ -166,6 +238,34 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 
 GOrgueSetter::~GOrgueSetter()
 {
+}
+
+
+GOGUIControl* GOrgueSetter::CreateGUIElement(IniFileConfig& cfg, wxString group, GOGUIPanel* panel)
+{
+	unsigned element  = cfg.ReadEnum(group, wxT("Type"), m_setter_element_types, sizeof(m_setter_element_types) / sizeof(m_setter_element_types[0]), true);
+	if (element == ID_SETTER_LABEL)
+	{
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay);
+		PosDisplay->Init(cfg, 350, 10, group);
+		return PosDisplay;
+	}
+	if (element == ID_SETTER_CRESCENDO_LABEL)
+	{
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay);
+		PosDisplay->Init(cfg, 350, 10, group);
+		return PosDisplay;
+	}
+	if (element == ID_SETTER_CRESCENDO_SWELL)
+	{
+		GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell, panel->GetDisplayMetrics()->NewEnclosure());
+		enclosure->Load(cfg, wxT("SetterSwell"));
+		return enclosure;
+	}
+
+	GOGUISetterButton* button = new GOGUISetterButton(panel, m_button[element]);
+	button->Init(cfg, 1, 1, group);
+	return button;
 }
 
 GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(IniFileConfig& cfg)
