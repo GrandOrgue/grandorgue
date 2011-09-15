@@ -168,7 +168,7 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		}
 		if (m_type == MIDI_RECV_MANUAL)
 		{
-			if (m_Index > 6)
+			if (m_Index > 6 || m_Index == -1)
 			{
 				m_events.resize(0);
 				return;
@@ -185,7 +185,7 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		}
 		if (m_type == MIDI_RECV_ENCLOSURE)
 		{
-			if (m_Index >= 6)
+			if (m_Index >= 6 || m_Index  == -1)
 			{
 				m_events.resize(0);
 				return;
