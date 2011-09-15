@@ -410,6 +410,11 @@ void GOGUIDisplayMetrics::Update()
 			m_CenterWidth = std::max(m_CenterWidth, GetEnclosureWidth());
 			m_EnclosureY = m_CenterY + 12;
 		}
+		if (!i && m_nb_manuals < m_first_manual && m_nb_enclosures)
+		{
+			m_CenterY -= 87;
+			m_EnclosureY = m_CenterY + 12;
+		}
 
 		if (!m_manual_info[i].displayed || i < m_first_manual)
 			continue;
@@ -498,4 +503,11 @@ wxBrush GOGUIDisplayMetrics::GetPedalBrush()
 	wxBrush brush;
 	brush.SetColour(0xA0, 0x80, 0x40);
 	return brush;
+}
+
+unsigned GOGUIDisplayMetrics::NewEnclosure()
+{
+	unsigned no = m_nb_enclosures++;
+	Update();
+	return no;
 }

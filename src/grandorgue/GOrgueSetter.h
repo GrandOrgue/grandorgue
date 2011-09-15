@@ -25,6 +25,7 @@
 
 #include "ptrvector.h"
 #include "GOrgueLabel.h"
+#include "GOrgueEnclosure.h"
 
 class GOGUIPanel;
 class GOGUILabel;
@@ -46,13 +47,20 @@ class GOrgueSetter
 private:
 	GrandOrgueFile* m_organfile;
 	unsigned m_pos;
+	unsigned m_crescendopos;
+	unsigned m_crescendobank;
 	ptr_vector<GOrgueFrameGeneral> m_framegeneral;
 	ptr_vector<GOrgueFrameGeneral> m_general;
+	ptr_vector<GOrgueFrameGeneral> m_crescendo;
 	ptr_vector<GOrgueSetterButton> m_button;
 	GOrgueLabel m_PosDisplay;
+	GOrgueLabel m_CrescendoDisplay;
+	GOrgueEnclosure m_swell;
 	SetterType m_SetterType;
 
 	void SetSetterType(SetterType type);
+	void SetCrescendoType(unsigned no);
+	void Crescendo(int pos, bool force = false);
 
 public:
 	GOrgueSetter(GrandOrgueFile* organfile);
@@ -60,11 +68,13 @@ public:
 
 	GOGUIPanel* CreateGeneralsPanel(IniFileConfig& cfg);
 	GOGUIPanel* CreateSetterPanel(IniFileConfig& cfg);
+	GOGUIPanel* CreateCrescendoPanel(IniFileConfig& cfg);
 	void Load(IniFileConfig& cfg);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void PreparePlayback();
 	void Change(GOrgueSetterButton* button);
 	void ProcessMidi(const GOrgueMidiEvent& event);
+	void ControlChanged(void* control);
 
 	bool StoreInvisibleObjects();
 	bool IsSetterActive();

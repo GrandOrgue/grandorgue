@@ -299,6 +299,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_panels.push_back(new GOGUIPanel(this));
 	m_panels[0]->Load(ini, wxT("Organ"));
 
+	m_panels.push_back(m_setter->CreateCrescendoPanel(ini));
 	m_panels.push_back(m_setter->CreateGeneralsPanel(ini));
 	m_panels.push_back(m_setter->CreateSetterPanel(ini));
 }
@@ -894,6 +895,7 @@ void GrandOrgueFile::ControlChanged(void* control)
 		m_panels[i]->ControlChanged(control);
 	for(unsigned i = 0; i < m_piston.size(); i++)
 		m_piston[i]->ControlChanged(control);
+	m_setter->ControlChanged(control);
 }
 
 void GrandOrgueFile::Modified()

@@ -153,6 +153,8 @@ public:
 	virtual bool HasTrimAboveExtraRows();
 	virtual bool HasExtraPedalButtonRow();
 
+	virtual unsigned NewEnclosure();
+
 	virtual const MANUAL_RENDER_INFO& GetManualRenderInfo(const unsigned manual_nb) const;
 
 };

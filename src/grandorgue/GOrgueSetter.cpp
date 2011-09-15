@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOGUIEnclosure.h"
 #include "GOGUILabel.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUIPanel.h"
@@ -32,6 +33,8 @@
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
 #include "IniFileConfig.h"
+
+#define CRESCENDO_STEPS 32
 
 enum {
 	ID_SETTER_PREV = 0,
@@ -93,15 +96,31 @@ enum {
 	ID_SETTER_GENERAL28,
 	ID_SETTER_GENERAL29,
 
+	ID_SETTER_CRESCENDO_PREV,
+	ID_SETTER_CRESCENDO_CURRENT,
+	ID_SETTER_CRESCENDO_NEXT,
+	ID_SETTER_CRESCENDO_A,
+	ID_SETTER_CRESCENDO_B,
+	ID_SETTER_CRESCENDO_C,
+	ID_SETTER_CRESCENDO_D,
+
+	ID_SETTER_LABEL, /* Must be the last elements */
+	ID_SETTER_CRESCENDO_LABEL,
+	ID_SETTER_CRESCENDO_SWELL
 };
 
 GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_pos(0),
+	m_crescendopos(0),
+	m_crescendobank(0),
 	m_framegeneral(0),
 	m_general(0),
+	m_crescendo(0),
 	m_button(0),
 	m_PosDisplay(organfile),
+	m_CrescendoDisplay(organfile),
+	m_swell(organfile),
 	m_SetterType(SETTER_REGULAR)
 {
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
@@ -129,11 +148,20 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	for(unsigned i = 0; i < 30; i++)
 		m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+
 	m_button[ID_SETTER_PREV]->GetMidiReceiver().SetIndex(0);
 	m_button[ID_SETTER_NEXT]->GetMidiReceiver().SetIndex(1);
 	m_button[ID_SETTER_SET]->GetMidiReceiver().SetIndex(15);
 
 	SetSetterType(m_SetterType);
+	SetCrescendoType(m_crescendobank);
 }
 
 GOrgueSetter::~GOrgueSetter()
@@ -276,6 +304,77 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 	return panel;
 }
 
+GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(IniFileConfig& cfg)
+{
+	GOGUIControl* control;
+	GOGUISetterButton* button;
+
+	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterCrescendo"), GOGUI_SETTER_CRESCENDO);
+	panel->Init(cfg, metrics, _("Crescendo Swell"), wxT("SetterCrescendoPanel"));
+
+	control = new GOGUIHW1Background(panel);
+	panel->AddControl(control);
+
+	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell, panel->GetDisplayMetrics()->NewEnclosure());
+	enclosure->Load(cfg, wxT("SetterSwell"));
+	panel->AddControl(enclosure);
+
+	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay);
+	PosDisplay->Init(cfg, 350, 10, wxT("SetterCrescendoPosition"));
+	panel->AddControl(PosDisplay);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SET]);
+	button->Init(cfg, 1, 100, wxT("SetterCrescendoSet"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_REGULAR]);
+	button->Init(cfg, 3, 100, wxT("SetterCrescendoRegular"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPE]);
+	button->Init(cfg, 4, 100, wxT("SetterCrescendoScope"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPED]);
+	button->Init(cfg, 5, 100, wxT("SetterCrescendoScoped"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_FULL]);
+	button->Init(cfg, 7, 100, wxT("SetterCrescendoFull"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_A]);
+	button->Init(cfg, 1, 101, wxT("SetterCrescendoA"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_B]);
+	button->Init(cfg, 2, 101, wxT("SetterCrescendoB"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_C]);
+	button->Init(cfg, 3, 101, wxT("SetterCrescendoC"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_D]);
+	button->Init(cfg, 4, 101, wxT("SetterCrescendoD"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_PREV]);
+	button->Init(cfg, 6, 101, wxT("SetterCrescendoPrev"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_CURRENT]);
+	button->Init(cfg, 7, 101, wxT("SetterCrescendoCurrent"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_NEXT]);
+	button->Init(cfg, 8, 101, wxT("SetterCrescendoNext"));
+	panel->AddControl(button);
+
+	return panel;
+}
+
 void GOrgueSetter::Load(IniFileConfig& cfg)
 {
 	wxString buffer;
@@ -297,6 +396,14 @@ void GOrgueSetter::Load(IniFileConfig& cfg)
 		m_general[i]->Load(cfg, buffer);
 	}
 
+	m_crescendo.resize(0);
+	for (unsigned i = 0; i < 4 * CRESCENDO_STEPS; i++)
+	{
+		m_crescendo.push_back(new GOrgueFrameGeneral(m_organfile));
+		buffer.Printf(wxT("SetterCrescendo%d_%03d"), (i / CRESCENDO_STEPS) + 1, (i % CRESCENDO_STEPS)+ 1);
+		m_crescendo[i]->Load(cfg, buffer);
+	}
+
 	m_button[ID_SETTER_PREV]->Load(cfg, wxT("SetterPrev"), _("Previous"));
 	m_button[ID_SETTER_NEXT]->Load(cfg, wxT("SetterNext"), _("Next"));
 	m_button[ID_SETTER_SET]->Load(cfg, wxT("SetterSet"), _("Set"));
@@ -316,6 +423,16 @@ void GOrgueSetter::Load(IniFileConfig& cfg)
 
 	m_button[ID_SETTER_INSERT]->Load(cfg, wxT("SetterInsert"), _("Insert"));
 	m_button[ID_SETTER_DELETE]->Load(cfg, wxT("SetterDelete"), _("Delete"));
+
+	m_button[ID_SETTER_CRESCENDO_PREV]->Load(cfg, wxT("SetterCrescendoPrev"), _("<"));
+	m_button[ID_SETTER_CRESCENDO_NEXT]->Load(cfg, wxT("SetterCrescendoNext"), _(">"));
+	m_button[ID_SETTER_CRESCENDO_CURRENT]->Load(cfg, wxT("SetterCrescendoCurrent"), _("Current"));
+	m_button[ID_SETTER_CRESCENDO_A]->Load(cfg, wxT("SetterCrescendoA"), _("A"));
+	m_button[ID_SETTER_CRESCENDO_B]->Load(cfg, wxT("SetterCrescendoB"), _("B"));
+	m_button[ID_SETTER_CRESCENDO_C]->Load(cfg, wxT("SetterCrescendoC"), _("C"));
+	m_button[ID_SETTER_CRESCENDO_D]->Load(cfg, wxT("SetterCrescendoD"), _("D"));
+
+	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"));
 
 	for(unsigned i = 0; i < 10; i++)
 	{
@@ -346,8 +463,13 @@ void GOrgueSetter::Save(IniFileConfig& cfg, bool prefix)
 	for (unsigned j = 0; j < m_general.size(); j++)
 		m_general[j]->Save(cfg, prefix);
 
+	for (unsigned j = 0; j < m_crescendo.size(); j++)
+		m_crescendo[j]->Save(cfg, prefix);
+
 	for (unsigned j = 0; j < m_button.size(); j++)
 		m_button[j]->Save(cfg, prefix);
+
+	m_swell.Save(cfg, prefix);
 }
 
 void GOrgueSetter::ProcessMidi(const GOrgueMidiEvent& event)
@@ -460,6 +582,22 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 			case ID_SETTER_SCOPED:
 				SetSetterType(SETTER_SCOPED);
 				break;
+			case ID_SETTER_CRESCENDO_A:
+			case ID_SETTER_CRESCENDO_B:
+			case ID_SETTER_CRESCENDO_C:
+			case ID_SETTER_CRESCENDO_D:
+				SetCrescendoType(i - ID_SETTER_CRESCENDO_A);
+				break;
+
+			case ID_SETTER_CRESCENDO_PREV:
+				Crescendo(m_crescendopos - 1, true);
+				break;
+			case ID_SETTER_CRESCENDO_NEXT:
+				Crescendo(m_crescendopos + 1, true);
+				break;
+			case ID_SETTER_CRESCENDO_CURRENT:
+				m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
+				break;
 			}
 }
 
@@ -469,6 +607,9 @@ void GOrgueSetter::PreparePlayback()
 	buffer.Printf(wxT("%03d"), m_pos);
 	m_PosDisplay.SetName(buffer);
 	::wxGetApp().frame->m_meters[2]->ChangeValue(m_pos);
+
+	buffer.Printf(wxT("%d"), m_crescendopos);
+	m_CrescendoDisplay.SetName(buffer);
 }
 
 bool GOrgueSetter::IsSetterActive()
@@ -524,6 +665,15 @@ void GOrgueSetter::SetSetterType(SetterType type)
 	m_button[ID_SETTER_SCOPED]->Display(type == SETTER_SCOPED);
 }
 
+void GOrgueSetter::SetCrescendoType(unsigned no)
+{
+	m_crescendobank = no;
+	m_button[ID_SETTER_CRESCENDO_A]->Display(no == 0);
+	m_button[ID_SETTER_CRESCENDO_B]->Display(no == 1);
+	m_button[ID_SETTER_CRESCENDO_C]->Display(no == 2);
+	m_button[ID_SETTER_CRESCENDO_D]->Display(no == 3);
+}
+
 void GOrgueSetter::ResetDisplay()
 {
 	m_button[ID_SETTER_HOME]->Display(false);
@@ -560,4 +710,36 @@ void GOrgueSetter::SetPosition(int pos, bool push)
 
 }
 
+void GOrgueSetter::Crescendo(int newpos, bool force)
+{
+	if (newpos < 0)
+		newpos = 0;
+	if (newpos > CRESCENDO_STEPS - 1)
+		newpos = CRESCENDO_STEPS - 1;
+	if (IsSetterActive() && !force)
+		return;
+	unsigned pos = newpos;
+	if (pos == m_crescendopos)
+		return;
+
+	while (pos > m_crescendopos)
+	{
+		m_crescendo[++m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
+	}
+
+	while (pos < m_crescendopos)
+	{
+		m_crescendo[--m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
+	}
+
+	wxString buffer;
+	buffer.Printf(wxT("%d"), m_crescendopos);
+	m_CrescendoDisplay.SetName(buffer);
+}
+
+void GOrgueSetter::ControlChanged(void* control)
+{
+	if (control == &m_swell)
+		Crescendo(m_swell.GetValue() * CRESCENDO_STEPS / 128);
+}
 
