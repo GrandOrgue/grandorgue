@@ -64,6 +64,7 @@ public:
 	void Change(GOrgueSetterButton* button);
 	void ProcessMidi(const GOrgueMidiEvent& event);
 
+	bool StoreInvisibleObjects();
 	bool IsSetterActive();
 	void ToggleSetter();
 	void SetterActive(bool on);
