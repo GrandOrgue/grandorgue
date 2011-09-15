@@ -37,11 +37,12 @@ private:
 	int m_DispDrawstopRow;
 	int m_DispDrawstopCol;
 	int m_DispImageNum;
+	bool m_Piston;
 	
 public:
 	GOGUISetterButton(GOGUIPanel* panel, GOrgueSetterButton* control);
 
-	void Init(unsigned x, unsigned y);
+	void Init(IniFileConfig& cfg, unsigned x, unsigned y, wxString group, bool IsPiston = false);
 
 	void Draw(wxDC* dc);
 	void HandleMousePress(int x, int y, bool right);
