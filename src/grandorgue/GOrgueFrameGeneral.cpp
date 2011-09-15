@@ -43,6 +43,18 @@ GOrgueFrameGeneral::GOrgueFrameGeneral(GrandOrgueFile* organfile):
 {
 }
 
+void GOrgueFrameGeneral::Copy(GOrgueFrameGeneral* general)
+{
+	m_Stops = general->m_Stops;
+	m_StopManual = general->m_StopManual;
+	m_Couplers = general->m_Couplers;
+	m_CouplerManual = general->m_CouplerManual;
+	m_Tremulants = general->m_Tremulants;
+	m_DivisionalCouplers = general->m_DivisionalCouplers;
+	m_organfile->Modified();
+}
+
+
 void GOrgueFrameGeneral::Load(IniFileConfig& cfg, wxString group)
 {
 	m_group = group;
