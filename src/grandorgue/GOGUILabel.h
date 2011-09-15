@@ -45,7 +45,7 @@ private:
 
 public:
 	GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label);
-	void Init(unsigned x, unsigned y);
+	void Init(IniFileConfig& cfg, unsigned x, unsigned y, wxString group);
 	void Load(IniFileConfig& cfg, wxString group);
 
 	void Draw(wxDC* dc);
