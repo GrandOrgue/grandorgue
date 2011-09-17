@@ -31,6 +31,7 @@
 #include <string.h>
 
 class GOrgueWindchest;
+class GOSoundProvider;
 class GrandOrgueFile;
 
 typedef struct
@@ -110,8 +111,8 @@ public:
 	int GetVolume() const;
 	void SetScaledReleases(bool enable);
 
-	SAMPLER_HANDLE StartSample(const GOrguePipe *pipe);
-	void StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle);
+	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id);
+	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 
 	int GetSamples
 		(float      *output_buffer

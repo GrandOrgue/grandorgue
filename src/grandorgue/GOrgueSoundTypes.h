@@ -41,7 +41,7 @@
  */
 #define MAX_OUTPUT_CHANNELS    2
 
-class GOrguePipe;
+class GOSoundProvider;
 
 #define DATA_TYPE_MONO_COMPRESSED     0
 #define DATA_TYPE_MONO_UNCOMPRESSED   1
@@ -113,7 +113,8 @@ typedef struct AUDIO_SECTION_T
 typedef struct GO_SAMPLER_T
 {
 	struct GO_SAMPLER_T       *next;		// must be first!
-	const GOrguePipe          *pipe;
+	const GOSoundProvider     *pipe;
+	int                        sampler_group_id;
 	const AUDIO_SECTION       *pipe_section;
 	int                        history[BLOCK_HISTORY * MAX_OUTPUT_CHANNELS];
 	/* the fade parameter is would be more appropriately named "gain". It is

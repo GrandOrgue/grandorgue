@@ -20,66 +20,76 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUEPIPE_H
-#define GORGUEPIPE_H
+#ifndef GOSOUNDPROVIDER_H_
+#define GOSOUNDPROVIDER_H_
 
 #include <wx/wx.h>
 #include "GOrgueSoundTypes.h"
-#include "GOSoundEngine.h"
-#include "GOSoundProvider.h"
 
-class GOrgueTremulant;
-class GOrgueReleaseAlignTable;
-class GrandOrgueFile;
-
-class GOrguePipe
+class GOSoundProvider
 {
 
 private:
-	GrandOrgueFile* m_organfile;
-	SAMPLER_HANDLE  m_Sampler;
-	float pitch;
-	int instances;
+	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
 
-	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
-	int m_SamplerGroupID;
-	wxString m_filename;
-	bool m_percussive;
-	int m_amplitude;
-	GOrguePipe* m_ref;
-	GOSoundProvider* m_SoundProvider;
+protected:
+	int            ra_amp;
+	int            ra_shift;
+	AUDIO_SECTION  m_attack;
+	AUDIO_SECTION  m_loop;
+	AUDIO_SECTION  m_release;
+	unsigned int   m_Channels;
+	unsigned int   m_SampleRate;
+	void ComputeReleaseAlignmentInfo();
 
-	void SetOn();
-	void SetOff();
-	GOSoundProvider* GetSoundProvider();
 public:
 
-	~GOrguePipe();
-	GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int samplerGroupID, int amplitude);
+	GOSoundProvider();
+	~GOSoundProvider();
 
-	void Set(bool on);
-	void LoadData();
-	void CreateTremulant(int period, int startRate, int stopRate, int ampModDepth);
+	void ClearData();
 
-	bool LoadCache(wxInputStream* cache);
-	bool SaveCache(wxOutputStream* cache);
+	virtual bool LoadCache(wxInputStream* cache);
+	virtual bool SaveCache(wxOutputStream* cache);
 
-	const AUDIO_SECTION* GetAttack() const;
 	const AUDIO_SECTION* GetLoop() const;
 	const AUDIO_SECTION* GetRelease() const;
+	const AUDIO_SECTION* GetAttack() const;
 	int GetScaleAmplitude() const;
 	int GetScaleShift() const;
-	int GetSamplerGroupID() const;
-
-	void FastAbort();
-	wxString GetFilename();
+	int IsOneshot() const;
 
 };
 
 inline
-int GOrguePipe::GetSamplerGroupID() const
+const AUDIO_SECTION* GOSoundProvider::GetLoop() const
 {
-	return m_SamplerGroupID;
+	return &m_loop;
 }
 
-#endif
+inline
+const AUDIO_SECTION* GOSoundProvider::GetRelease() const
+{
+	return &m_release;
+}
+
+inline
+const AUDIO_SECTION* GOSoundProvider::GetAttack() const
+{
+	return &m_attack;
+}
+
+inline
+int GOSoundProvider::GetScaleAmplitude() const
+{
+	return ra_amp;
+}
+
+inline
+int GOSoundProvider::GetScaleShift() const
+{
+	return ra_shift;
+}
+
+
+#endif /* GOSOUNDPROVIDER_H_ */
