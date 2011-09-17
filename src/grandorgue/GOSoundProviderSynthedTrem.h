@@ -30,7 +30,7 @@ class GOSoundProviderSynthedTrem : public GOSoundProvider
 
 public:
 
-	void Create(int period, int startRate, int stopRate, int ampModDepth);
+	void Create(int period, int start_rate, int stop_rate, int amp_mod_depth);
 
 };
 

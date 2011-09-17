@@ -48,9 +48,9 @@ void GOSoundProviderWave::LoadFromFile
 	if (data == NULL)
 		throw (wxString)_("< out of memory allocating wave");
 
-	memset(&m_loop, 0, sizeof(m_loop));
-	memset(&m_attack, 0, sizeof(m_attack));
-	memset(&m_release, 0, sizeof(m_release));
+	memset(&m_Loop, 0, sizeof(m_Loop));
+	memset(&m_Attack, 0, sizeof(m_Attack));
+	memset(&m_Release, 0, sizeof(m_Release));
 
 	try
 	{
@@ -90,17 +90,21 @@ void GOSoundProviderWave::LoadFromFile
 			 * copy some slack samples from the beginning of the loop onto
 			 * the end to ensure correct operation of the sampler.
 			 */
-			m_loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
-			m_loop.alloc_size = loopSamplesInMem * sizeof(wxInt16) * m_Channels;
-			m_loop.data = (unsigned char*)malloc(m_loop.alloc_size);
-			if (m_loop.data == NULL)
+			m_Loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
+			m_Loop.alloc_size = loopSamplesInMem * sizeof(wxInt16) * m_Channels;
+			m_Loop.data = (unsigned char*)malloc(m_Loop.alloc_size);
+			if (m_Loop.data == NULL)
 				throw (wxString)_("< out of memory allocating loop");
-			memcpy(m_loop.data,
-				&data[loopStart * m_Channels],
-				m_loop.size);
-			memcpy(&m_loop.data[m_loop.size],
-				&data[loopStart * m_Channels],
-				loopSamplesInMem * sizeof(wxInt16) * m_Channels - m_loop.size);
+			memcpy
+				(m_Loop.data
+				,&data[loopStart * m_Channels]
+				,m_Loop.size
+				);
+			memcpy
+				(&m_Loop.data[m_Loop.size]
+				,&data[loopStart * m_Channels]
+				,loopSamplesInMem * sizeof(wxInt16) * m_Channels - m_Loop.size
+				);
 
 			/* Get the release parameters from the wave file. */
 			unsigned releaseOffset = wave.GetReleaseMarkerPosition();
@@ -111,45 +115,54 @@ void GOSoundProviderWave::LoadFromFile
 			 * pad the slack samples with zeroes to ensure correct operation
 			 * of the sampler.
 			 */
-			m_release.size = releaseSamples * sizeof(wxInt16) * m_Channels;
-			m_release.alloc_size = releaseSamplesInMem * sizeof(wxInt16) * m_Channels;
-			m_release.data = (unsigned char*)malloc(m_release.alloc_size);
-			if (m_release.data == NULL)
+			m_Release.size = releaseSamples * sizeof(wxInt16) * m_Channels;
+			m_Release.alloc_size = releaseSamplesInMem * sizeof(wxInt16) * m_Channels;
+			m_Release.data = (unsigned char*)malloc(m_Release.alloc_size);
+			if (m_Release.data == NULL)
 				throw (wxString)_("< out of memory allocating release");
-			memcpy(m_release.data,
-				&data[(wave.GetLength() - releaseSamples) * m_Channels],
-				m_release.size);
-			memset(&m_release.data[m_release.size],
-				0,
-				releaseSamplesInMem * sizeof(wxInt16) * m_Channels - m_release.size);
+			memcpy
+				(m_Release.data
+				,&data[(wave.GetLength() - releaseSamples) * m_Channels]
+				,m_Release.size
+				);
+			memset
+				(&m_Release.data[m_Release.size]
+				,0
+				,releaseSamplesInMem * sizeof(wxInt16) * m_Channels - m_Release.size
+				);
 
 		}
 
 		/* Allocate memory for the attack. */
 		assert(attackSamples != 0);
 		unsigned attackSamplesInMem = attackSamples + BLOCKS_PER_FRAME;
-		m_attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
-		m_attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
-		assert((unsigned)m_attack.size <= totalDataSize); /* can be equal for percussive samples */
-		m_attack.data = (unsigned char*)malloc(m_attack.alloc_size);
-		if (m_attack.data == NULL)
+		m_Attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
+		m_Attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
+		assert((unsigned)m_Attack.size <= totalDataSize); /* can be equal for percussive samples */
+		m_Attack.data = (unsigned char*)malloc(m_Attack.alloc_size);
+		if (m_Attack.data == NULL)
 			throw (wxString)_("< out of memory allocating attack");
 
 		if (attackSamplesInMem <= wave.GetLength())
 		{
-			memcpy(m_attack.data,
-				&data[0],
-				attackSamplesInMem * sizeof(wxInt16) * m_Channels);
+			memcpy
+				(m_Attack.data
+				,&data[0]
+				,attackSamplesInMem * sizeof(wxInt16) * m_Channels
+				);
 		}
 		else
 		{
-			memset(
-				m_attack.data,
-				0,
-				(attackSamplesInMem - wave.GetLength()) * sizeof(wxInt16) * m_Channels);
-			memcpy(&m_attack.data[(attackSamplesInMem - wave.GetLength()) * sizeof(wxInt16) * m_Channels],
-				&data[0],
-				totalDataSize);
+			memset
+				(m_Attack.data
+				,0
+				,(attackSamplesInMem - wave.GetLength()) * sizeof(wxInt16) * m_Channels
+				);
+			memcpy
+				(&m_Attack.data[(attackSamplesInMem - wave.GetLength()) * sizeof(wxInt16) * m_Channels]
+				,&data[0]
+				,totalDataSize
+				);
 		}
 
 		/* data is no longer needed */
@@ -159,10 +172,10 @@ void GOSoundProviderWave::LoadFromFile
 		 * volume. 10000 would correspond to sample playback at normal volume.
 		 */
 		int amp = fixed_amplitude;
-		ra_shift = 7;
+		m_ScaleShift = 7;
 		while (amp > 10000)
 		{
-			ra_shift--;
+			m_ScaleShift--;
 			amp >>= 1;
 		}
 
@@ -170,24 +183,24 @@ void GOSoundProviderWave::LoadFromFile
 		 * sample (in the form of the "fade" parameter) fademax is also set
 		 * to this value to specify a maximum multiplier that can be applied
 		 * to keep the sample within the required headroom. */
-		ra_amp = (amp << 15) / -10000;
+		m_ScaleAmp = (amp << 15) / -10000;
 
 		if (m_Channels == 1)
 		{
-			m_attack.type = AC_UNCOMPRESSED_MONO;
-			m_loop.type = AC_UNCOMPRESSED_MONO;
-			m_release.type = AC_UNCOMPRESSED_MONO;
+			m_Attack.type = AC_UNCOMPRESSED_MONO;
+			m_Loop.type = AC_UNCOMPRESSED_MONO;
+			m_Release.type = AC_UNCOMPRESSED_MONO;
 		}
 		else
 		{
-			m_attack.type = AC_UNCOMPRESSED_STEREO;
-			m_loop.type = AC_UNCOMPRESSED_STEREO;
-			m_release.type = AC_UNCOMPRESSED_STEREO;
+			m_Attack.type = AC_UNCOMPRESSED_STEREO;
+			m_Loop.type = AC_UNCOMPRESSED_STEREO;
+			m_Release.type = AC_UNCOMPRESSED_STEREO;
 		}
 
-		m_attack.stage = GSS_ATTACK;
-		m_loop.stage = GSS_LOOP;
-		m_release.stage = GSS_RELEASE;
+		m_Attack.stage = GSS_ATTACK;
+		m_Loop.stage = GSS_LOOP;
+		m_Release.stage = GSS_RELEASE;
 
 		if (wave.HasReleaseMarker())
 			ComputeReleaseAlignmentInfo();
@@ -197,17 +210,17 @@ void GOSoundProviderWave::LoadFromFile
 	{
 		wxLogError(_("caught exception: %s\n"), error.c_str());
 		FREE_AND_NULL(data);
-		FREE_AND_NULL(m_attack.data);
-		FREE_AND_NULL(m_loop.data);
-		FREE_AND_NULL(m_release.data);
+		FREE_AND_NULL(m_Attack.data);
+		FREE_AND_NULL(m_Loop.data);
+		FREE_AND_NULL(m_Release.data);
 		throw;
 	}
 	catch (...)
 	{
 		FREE_AND_NULL(data);
-		FREE_AND_NULL(m_attack.data);
-		FREE_AND_NULL(m_loop.data);
-		FREE_AND_NULL(m_release.data);
+		FREE_AND_NULL(m_Attack.data);
+		FREE_AND_NULL(m_Loop.data);
+		FREE_AND_NULL(m_Release.data);
 		throw;
 	}
 

@@ -32,63 +32,68 @@ short SynthTrem(double amp, double angle, double fade)
 	return (short)(fade * amp * sin(angle));
 }
 
-void GOSoundProviderSynthedTrem::Create(int period, int startRate, int stopRate, int ampModDepth)
+void GOSoundProviderSynthedTrem::Create
+	(int period
+	,int start_rate
+	,int stop_rate
+	,int amp_mod_depth
+	)
 {
+
 	m_Channels = 1;
 	if (m_Channels == 1)
-
 	{
-		m_attack.type = AC_UNCOMPRESSED_MONO;
-		m_loop.type = AC_UNCOMPRESSED_MONO;
-		m_release.type = AC_UNCOMPRESSED_MONO;
+		m_Attack.type = AC_UNCOMPRESSED_MONO;
+		m_Loop.type = AC_UNCOMPRESSED_MONO;
+		m_Release.type = AC_UNCOMPRESSED_MONO;
 	}
 	else
 	{
-		m_attack.type = AC_UNCOMPRESSED_STEREO;
-		m_loop.type = AC_UNCOMPRESSED_STEREO;
-		m_release.type = AC_UNCOMPRESSED_STEREO;
+		m_Attack.type = AC_UNCOMPRESSED_STEREO;
+		m_Loop.type = AC_UNCOMPRESSED_STEREO;
+		m_Release.type = AC_UNCOMPRESSED_STEREO;
 	}
 
-	m_attack.stage = GSS_ATTACK;
-	m_loop.stage = GSS_LOOP;
-	m_release.stage = GSS_RELEASE;
+	m_Attack.stage = GSS_ATTACK;
+	m_Loop.stage = GSS_LOOP;
+	m_Release.stage = GSS_RELEASE;
 
 	double trem_freq = 1000.0 / period;
 	int sample_freq = 44100;
 
-	unsigned attackSamples  = sample_freq / startRate;
+	unsigned attackSamples  = sample_freq / start_rate;
 	unsigned attackSamplesInMem = attackSamples + BLOCKS_PER_FRAME;
 	unsigned loopSamples  = sample_freq / trem_freq;
 	unsigned loopSamplesInMem = loopSamples + BLOCKS_PER_FRAME;
-	unsigned releaseSamples  = sample_freq / stopRate;
+	unsigned releaseSamples  = sample_freq / stop_rate;
 	unsigned releaseSamplesInMem = releaseSamples + BLOCKS_PER_FRAME;
 
-	m_attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
-	m_attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
-	m_attack.data = (unsigned char*)malloc(m_attack.alloc_size);
-	if (m_attack.data == NULL)
+	m_Attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
+	m_Attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
+	m_Attack.data = (unsigned char*)malloc(m_Attack.alloc_size);
+	if (m_Attack.data == NULL)
 		throw (wxString)_("< out of memory allocating attack");
 
-	m_loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
-	m_loop.alloc_size = loopSamplesInMem * sizeof(wxInt16) * m_Channels;
-	m_loop.data = (unsigned char*)malloc(m_loop.alloc_size);
-	if (m_loop.data == NULL)
+	m_Loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
+	m_Loop.alloc_size = loopSamplesInMem * sizeof(wxInt16) * m_Channels;
+	m_Loop.data = (unsigned char*)malloc(m_Loop.alloc_size);
+	if (m_Loop.data == NULL)
 		throw (wxString)_("< out of memory allocating loop");
 
-	m_release.size = releaseSamples * sizeof(wxInt16) * m_Channels;
-	m_release.alloc_size = releaseSamplesInMem * sizeof(wxInt16) * m_Channels;
-	m_release.data = (unsigned char*)malloc(m_release.alloc_size);
-	if (m_release.data == NULL)
+	m_Release.size = releaseSamples * sizeof(wxInt16) * m_Channels;
+	m_Release.alloc_size = releaseSamplesInMem * sizeof(wxInt16) * m_Channels;
+	m_Release.data = (unsigned char*)malloc(m_Release.alloc_size);
+	if (m_Release.data == NULL)
 		throw (wxString)_("< out of memory allocating release");
 
 	double pi = 3.14159265358979323846;
-	double trem_amp   = (0x7FF0 * ampModDepth / 100);
+	double trem_amp   = (0x7FF0 * amp_mod_depth / 100);
 	double trem_param = 2 * pi  / loopSamples;
 	double trem_fade, trem_inc, trem_angle;
 	short *ptr;
 	trem_inc = 1.0 / attackSamples;
 	trem_fade = trem_angle = 0.0;
-	ptr = (short*)m_attack.data;
+	ptr = (short*)m_Attack.data;
 	for(unsigned i = 0; i < attackSamples; i++)
 	{
 		ptr[i] = SynthTrem(trem_amp, trem_angle, trem_fade);
@@ -96,7 +101,7 @@ void GOSoundProviderSynthedTrem::Create(int period, int startRate, int stopRate,
 		trem_fade += trem_inc;
 	}
 
-	ptr = (short*)m_loop.data;
+	ptr = (short*)m_Loop.data;
 	for(unsigned i = 0; i < loopSamples; i++)
 	{
 		ptr[i] = SynthTrem(trem_amp, trem_angle);
@@ -105,7 +110,7 @@ void GOSoundProviderSynthedTrem::Create(int period, int startRate, int stopRate,
 
 	trem_inc = 1.0 / (double)releaseSamples;
 	trem_fade = 1.0 - trem_inc;
-	ptr = (short*)m_release.data;
+	ptr = (short*)m_Release.data;
 	for(unsigned i = 0; i < releaseSamples; i++)
 	{
 		ptr[i] = SynthTrem(trem_amp, trem_angle, trem_fade);
@@ -113,26 +118,32 @@ void GOSoundProviderSynthedTrem::Create(int period, int startRate, int stopRate,
 		trem_fade -= trem_inc;
 	}
 
-	memcpy(&m_loop.data[m_loop.size],
-	       &m_loop.data[0],
-	       loopSamplesInMem * sizeof(wxInt16) * m_Channels - m_loop.size);
+	memcpy
+		(&m_Loop.data[m_Loop.size]
+		,&m_Loop.data[0]
+		,loopSamplesInMem * sizeof(wxInt16) * m_Channels - m_Loop.size
+		);
 
-	memcpy(&m_attack.data[m_attack.size],
-	       &m_loop.data[0],
-	       attackSamplesInMem * sizeof(wxInt16) * m_Channels - m_attack.size);
+	memcpy
+		(&m_Attack.data[m_Attack.size]
+		,&m_Loop.data[0]
+		,attackSamplesInMem * sizeof(wxInt16) * m_Channels - m_Attack.size
+		);
 
-	memcpy(&m_release.data[m_release.size],
-	       &m_release.data[m_release.size-(releaseSamplesInMem * sizeof(wxInt16) * m_Channels - m_release.size)],
-	       releaseSamplesInMem * sizeof(wxInt16) * m_Channels - m_release.size);
+	memcpy
+		(&m_Release.data[m_Release.size]
+		,&m_Release.data[m_Release.size-(releaseSamplesInMem * sizeof(wxInt16) * m_Channels - m_Release.size)]
+		,releaseSamplesInMem * sizeof(wxInt16) * m_Channels - m_Release.size
+		);
 
 	int amp = 10000;
-	ra_shift = 7;
+	m_ScaleShift = 7;
 	while (amp > 10000)
 	{
-		ra_shift--;
+		m_ScaleShift--;
 		amp >>= 1;
 	}
-	ra_amp = (amp << 15) / -10000;
+	m_ScaleAmp = (amp << 15) / -10000;
 
 	ComputeReleaseAlignmentInfo();
 

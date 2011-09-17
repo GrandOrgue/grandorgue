@@ -31,15 +31,17 @@ class GOSoundProvider
 
 private:
 	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
+	static bool SaveCacheAudioSection(wxOutputStream* cache, const AUDIO_SECTION* section, bool save_align_tracker);
+	static bool LoadCacheAudioSection(wxInputStream* cache, AUDIO_SECTION* section, bool load_align_tracker);
 
 protected:
-	int            ra_amp;
-	int            ra_shift;
-	AUDIO_SECTION  m_attack;
-	AUDIO_SECTION  m_loop;
-	AUDIO_SECTION  m_release;
+	int            m_ScaleAmp;
+	int            m_ScaleShift;
 	unsigned int   m_Channels;
 	unsigned int   m_SampleRate;
+	AUDIO_SECTION  m_Attack;
+	AUDIO_SECTION  m_Loop;
+	AUDIO_SECTION  m_Release;
 	void ComputeReleaseAlignmentInfo();
 
 public:
@@ -64,31 +66,31 @@ public:
 inline
 const AUDIO_SECTION* GOSoundProvider::GetLoop() const
 {
-	return &m_loop;
+	return &m_Loop;
 }
 
 inline
 const AUDIO_SECTION* GOSoundProvider::GetRelease() const
 {
-	return &m_release;
+	return &m_Release;
 }
 
 inline
 const AUDIO_SECTION* GOSoundProvider::GetAttack() const
 {
-	return &m_attack;
+	return &m_Attack;
 }
 
 inline
 int GOSoundProvider::GetScaleAmplitude() const
 {
-	return ra_amp;
+	return m_ScaleAmp;
 }
 
 inline
 int GOSoundProvider::GetScaleShift() const
 {
-	return ra_shift;
+	return m_ScaleShift;
 }
 
 
