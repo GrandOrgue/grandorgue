@@ -59,7 +59,6 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc) :
 	m_path(),
 	m_b_squash(0),
 	m_filename(),
-	m_elapsed(0),
 	m_setter(0),
 	m_b_customized(false),
 	m_DivisionalsStoreIntermanualCouplers(false),
@@ -748,16 +747,6 @@ GOrgueGeneral* GrandOrgueFile::GetGeneral(unsigned index)
 GOrgueSetter* GrandOrgueFile::GetSetter()
 {
 	return m_setter;
-}
-
-long GrandOrgueFile::GetElapsedTime()
-{
-	return m_elapsed;
-}
-
-void GrandOrgueFile::SetElapsedTime(long elapsed)
-{
-	m_elapsed = elapsed;
 }
 
 GOrgueWindchest* GrandOrgueFile::GetWindchest(unsigned index)
