@@ -87,6 +87,9 @@ GOGUIPanelWidget.cpp
 GOGUIPushbutton.cpp
 GOGUISetterButton.cpp
 GOSoundEngine.cpp
+GOSoundProvider.cpp
+GOSoundProviderSynthedTrem.cpp
+GOSoundProviderWave.cpp
 GOSoundSamplerPool.cpp
 GOrgueWave.cpp
 GOrgueControl.cpp

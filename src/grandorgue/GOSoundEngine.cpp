@@ -21,6 +21,7 @@
  */
 
 #include "GOSoundEngine.h"
+#include "GOSoundProvider.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrguePipe.h"
@@ -640,13 +641,14 @@ int GOSoundEngine::GetSamples
 }
 
 
-SAMPLER_HANDLE GOSoundEngine::StartSample(const GOrguePipe* pipe)
+SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id)
 {
 	GO_SAMPLER* sampler = m_SamplerPool.GetSampler();
 	if (sampler)
 	{
 		sampler->pipe = pipe;
 		sampler->pipe_section = pipe->GetAttack();
+		sampler->sampler_group_id = sampler_group_id;
 		sampler->position = 0;
 		memcpy
 			(sampler->history
@@ -662,12 +664,12 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOrguePipe* pipe)
 		sampler->fade = sampler->fademax = pipe->GetScaleAmplitude();
 		sampler->shift = pipe->GetScaleShift();
 		sampler->time = m_CurrentTime;
-		StartSampler(sampler, pipe->GetSamplerGroupID());
+		StartSampler(sampler, sampler_group_id);
 	}
 	return sampler;
 }
 
-void GOSoundEngine::StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle)
+void GOSoundEngine::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle)
 {
 
 	assert(handle);
@@ -680,11 +682,10 @@ void GOSoundEngine::StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle)
 	if (pipe != handle->pipe)
 		return;
 
-	const GOrguePipe* this_pipe = handle->pipe;
-	int this_pipe_sampler_group_id = this_pipe->GetSamplerGroupID();
-	double vol = (this_pipe_sampler_group_id < 0)
+	const GOSoundProvider* this_pipe = handle->pipe;
+	double vol = (handle->sampler_group_id < 0)
 	           ? 1.0
-	           : m_Windchests[this_pipe_sampler_group_id - 1].windchest->GetVolume();
+	           : m_Windchests[handle->sampler_group_id - 1].windchest->GetVolume();
 
 	// FIXME: this is wrong... the intention is to not create a release for a
 	// sample being played back with zero amplitude but this is a comparison
@@ -704,7 +705,7 @@ void GOSoundEngine::StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle)
 			new_sampler->time         = m_CurrentTime;
 			new_sampler->fademax      = this_pipe->GetScaleAmplitude();
 
-			const bool not_a_tremulant = (this_pipe_sampler_group_id >= 0);
+			const bool not_a_tremulant = (handle->sampler_group_id >= 0);
 			if (not_a_tremulant)
 			{
 				if (m_ScaledReleases)
@@ -769,7 +770,7 @@ void GOSoundEngine::StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle)
 				/* detached releases are disabled (or this isn't really a pipe)
 				 * so put the release on the same windchest as the pipe (which
 				 * means it will still be affected by tremulants - yuck). */
-				StartSampler(new_sampler, this_pipe_sampler_group_id);
+				StartSampler(new_sampler, handle->sampler_group_id);
 			}
 
 		}
