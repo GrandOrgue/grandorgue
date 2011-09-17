@@ -36,49 +36,48 @@ GOrguePipe::GOrguePipe
 	(GrandOrgueFile* organfile
 	,wxString filename
 	,bool percussive
-	,int samplerGroupID
+	,int sampler_group_id
 	,int amplitude
 	) :
-	m_organfile(organfile),
+	m_OrganFile(organfile),
 	m_Sampler(NULL),
-	pitch(0.0),
-	instances(0),
-	m_SamplerGroupID(samplerGroupID),
-	m_filename(filename),
-	m_percussive(percussive),
-	m_amplitude(amplitude),
-	m_ref(NULL),
+	m_Instances(0),
+	m_SamplerGroupID(sampler_group_id),
+	m_Filename(filename),
+	m_Percussive(percussive),
+	m_Amplitude(amplitude),
+	m_Reference(NULL),
 	m_SoundProvider()
 {
 }
 
 GOSoundProvider* GOrguePipe::GetSoundProvider()
 {
-	if (m_ref)
-		return m_ref->GetSoundProvider();
+	if (m_Reference)
+		return m_Reference->GetSoundProvider();
 	return &m_SoundProvider;
 }
 
 void GOrguePipe::SetOn()
 {
-	if (instances > 0)
+	if (m_Instances > 0)
 	{
-		instances++;
+		m_Instances++;
 	}
 	else
 	{
 		m_Sampler = g_sound->GetEngine().StartSample(GetSoundProvider(), m_SamplerGroupID);
-		if ((m_Sampler) && (instances == 0))
-			instances++;
+		if ((m_Sampler) && (m_Instances == 0))
+			m_Instances++;
 	}
 }
 
 void GOrguePipe::SetOff()
 {
-	if (instances > 0)
+	if (m_Instances > 0)
 	{
-		instances--;
-		if ((!GetSoundProvider()->IsOneshot()) && (instances == 0))
+		m_Instances--;
+		if ((!GetSoundProvider()->IsOneshot()) && (m_Instances == 0))
 		{
 			g_sound->GetEngine().StopSample(GetSoundProvider(), m_Sampler);
 			this->m_Sampler = 0;
@@ -88,9 +87,9 @@ void GOrguePipe::SetOff()
 
 void GOrguePipe::Set(bool on)
 {
-	if (m_ref)
+	if (m_Reference)
 	{
-		m_ref->Set(on);
+		m_Reference->Set(on);
 		return;
 	}
 	if (on)
@@ -101,68 +100,57 @@ void GOrguePipe::Set(bool on)
 
 bool GOrguePipe::LoadCache(wxInputStream* cache)
 {
-
-	if (m_filename.StartsWith(wxT("REF:")))
+	if (m_Filename.StartsWith(wxT("REF:")))
 	{
 		unsigned manual, stop, pipe;
-		sscanf(m_filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
-		if ((manual < m_organfile->GetFirstManualIndex()) || (manual > m_organfile->GetManualAndPedalCount()) ||
-			(stop <= 0) || (stop > m_organfile->GetManual(manual)->GetStopCount()) ||
-			(pipe <= 0) || (pipe > m_organfile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
-			throw (wxString)_("Invalid reference ") + m_filename;
-
-		m_ref = m_organfile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
-
+		sscanf(m_Filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
+		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual > m_OrganFile->GetManualAndPedalCount()) ||
+			(stop <= 0) || (stop > m_OrganFile->GetManual(manual)->GetStopCount()) ||
+			(pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
+			throw (wxString)_("Invalid reference ") + m_Filename;
+		m_Reference = m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
 		return true;
 	}
-
+	m_Reference = NULL;
 	return m_SoundProvider.LoadCache(cache);
-
 }
 
 bool GOrguePipe::SaveCache(wxOutputStream* cache)
 {
-
-	if (m_ref)
+	if (m_Reference)
 		return true;
-
 	return m_SoundProvider.SaveCache(cache);
-
 }
 
 void GOrguePipe::LoadData()
 {
-
-	if (m_filename.StartsWith(wxT("REF:")))
+	if (m_Filename.StartsWith(wxT("REF:")))
 	{
 		unsigned manual, stop, pipe;
-		sscanf(m_filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
-		if ((manual < m_organfile->GetFirstManualIndex()) || (manual > m_organfile->GetManualAndPedalCount()) ||
-			(stop <= 0) || (stop > m_organfile->GetManual(manual)->GetStopCount()) ||
-			(pipe <= 0) || (pipe > m_organfile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
-			throw (wxString)_("Invalid reference ") + m_filename;
-
-		m_ref = m_organfile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
-
+		sscanf(m_Filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
+		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual > m_OrganFile->GetManualAndPedalCount()) ||
+			(stop <= 0) || (stop > m_OrganFile->GetManual(manual)->GetStopCount()) ||
+			(pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
+			throw (wxString)_("Invalid reference ") + m_Filename;
+		m_Reference = m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
 		return;
 	}
-
-	m_SoundProvider.LoadFromFile(m_filename, m_amplitude);
-
+	m_Reference = NULL;
+	m_SoundProvider.LoadFromFile(m_Filename, m_Amplitude);
 }
 
 //FIXME: this function should not exist... it is here purely for legacy
 //support in GOrgueSound::MIDIAllNotesOff()
 void GOrguePipe::FastAbort()
 {
-	if (m_ref)
-		m_ref->FastAbort();	
-	if (instances > -1)
-		instances = 0;
+	if (m_Reference)
+		m_Reference->FastAbort();
+	if (m_Instances > -1)
+		m_Instances = 0;
 	m_Sampler = 0;
 }
 
 wxString GOrguePipe::GetFilename()
 {
-	return m_filename;
+	return m_Filename;
 }
