@@ -26,10 +26,8 @@
 #include <wx/wx.h>
 #include "GOrgueSoundTypes.h"
 #include "GOSoundEngine.h"
-#include "GOSoundProvider.h"
+#include "GOSoundProviderWave.h"
 
-class GOrgueTremulant;
-class GOrgueReleaseAlignTable;
 class GrandOrgueFile;
 
 class GOrguePipe
@@ -46,20 +44,19 @@ private:
 	wxString m_filename;
 	bool m_percussive;
 	int m_amplitude;
+
 	GOrguePipe* m_ref;
-	GOSoundProvider* m_SoundProvider;
+	GOSoundProviderWave m_SoundProvider;
 
 	void SetOn();
 	void SetOff();
 	GOSoundProvider* GetSoundProvider();
-public:
 
-	~GOrguePipe();
+public:
 	GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int samplerGroupID, int amplitude);
 
 	void Set(bool on);
 	void LoadData();
-	void CreateTremulant(int period, int startRate, int stopRate, int ampModDepth);
 
 	bool LoadCache(wxInputStream* cache);
 	bool SaveCache(wxOutputStream* cache);

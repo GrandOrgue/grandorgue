@@ -47,7 +47,7 @@ protected:
 public:
 
 	GOSoundProvider();
-	~GOSoundProvider();
+	virtual ~GOSoundProvider();
 
 	void ClearData();
 
