@@ -34,18 +34,16 @@ class GOrguePipe
 {
 
 private:
-	GrandOrgueFile* m_organfile;
+	GrandOrgueFile* m_OrganFile;
 	SAMPLER_HANDLE  m_Sampler;
-	float pitch;
-	int instances;
+	int m_Instances;
 
 	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
 	int m_SamplerGroupID;
-	wxString m_filename;
-	bool m_percussive;
-	int m_amplitude;
-
-	GOrguePipe* m_ref;
+	wxString m_Filename;
+	bool m_Percussive;
+	int m_Amplitude;
+	GOrguePipe* m_Reference;
 	GOSoundProviderWave m_SoundProvider;
 
 	void SetOn();
@@ -53,30 +51,14 @@ private:
 	GOSoundProvider* GetSoundProvider();
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int samplerGroupID, int amplitude);
-
+	GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int sampler_group_id, int amplitude);
 	void Set(bool on);
 	void LoadData();
-
 	bool LoadCache(wxInputStream* cache);
 	bool SaveCache(wxOutputStream* cache);
-
-	const AUDIO_SECTION* GetAttack() const;
-	const AUDIO_SECTION* GetLoop() const;
-	const AUDIO_SECTION* GetRelease() const;
-	int GetScaleAmplitude() const;
-	int GetScaleShift() const;
-	int GetSamplerGroupID() const;
-
 	void FastAbort();
 	wxString GetFilename();
 
 };
-
-inline
-int GOrguePipe::GetSamplerGroupID() const
-{
-	return m_SamplerGroupID;
-}
 
 #endif
