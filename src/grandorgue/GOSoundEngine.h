@@ -24,7 +24,9 @@
 #define GOSOUNDENGINE_H_
 
 #include "GOrgueSoundTypes.h"
+#include "GOSoundSamplerPool.h"
 #include "GrandOrgueDef.h"
+#include "wx/thread.h"
 #include <vector>
 #include <string.h>
 
@@ -59,17 +61,16 @@ private:
 		sound_buffer  buff;
 	} tremulant_data;
 
-	GO_SAMPLER    *m_DetachedRelease;
-	unsigned       m_SamplerCount;
-	unsigned       m_PolyphonyLimit;
-	unsigned       m_PolyphonySoftLimit;
-	bool           m_PolyphonyLimiting;
-	bool           m_ScaledReleases;
-	bool           m_ReleaseAlignmentEnabled;
-	int            m_Volume;
-	unsigned long  m_CurrentTime;
-	std::vector<windchest_entry> m_Windchests;
-	std::vector<tremulant_data>  m_Tremulants;
+	GO_SAMPLER                   *m_DetachedRelease;
+	unsigned                      m_PolyphonySoftLimit;
+	bool                          m_PolyphonyLimiting;
+	bool                          m_ScaledReleases;
+	bool                          m_ReleaseAlignmentEnabled;
+	int                           m_Volume;
+	unsigned long                 m_CurrentTime;
+	GOSoundSamplerPool            m_SamplerPool;
+	std::vector<windchest_entry>  m_Windchests;
+	std::vector<tremulant_data>   m_Tremulants;
 
 	void ProcessAudioSamplers
 		(GO_SAMPLER** list_start
@@ -82,9 +83,6 @@ private:
 		,int which
 		);
 
-	/* These are only used by the audio callback... */
-	GO_SAMPLER    *m_AvailableSamplers[MAX_POLYPHONY];
-
 	/* Per sampler decode buffer */
 	int            m_TempDecodeBuffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
 	double         m_FinalBuffer[MAX_FRAME_SIZE * MAX_OUTPUT_CHANNELS];
@@ -93,9 +91,12 @@ private:
 	/* Per sampler list decode buffer */
 	sound_buffer   m_TempSoundBuffer;
 
-	GO_SAMPLER     m_Samplers[MAX_POLYPHONY];
-
-	GO_SAMPLER* OpenNewSampler();
+	/* samplerGroupID:
+	   -1 .. -n Tremulants
+	   0 detached release
+	   1 .. n Windchests
+	*/
+	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id);
 
 public:
 
@@ -109,7 +110,6 @@ public:
 	int GetVolume() const;
 	void SetScaledReleases(bool enable);
 
-	void StartSampler(GO_SAMPLER* sampler, int samplerGroupId);
 	unsigned GetCurrentTime() const;
 	SAMPLER_HANDLE StartSample(const GOrguePipe *pipe);
 	void StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle);
