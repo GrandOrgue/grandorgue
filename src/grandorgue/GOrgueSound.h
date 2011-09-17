@@ -67,7 +67,7 @@ private:
 	unsigned m_samples_per_buffer;
 	unsigned m_nb_buffers;
 
-	int b_stereo, b_align, b_scale;
+	int b_stereo, b_align;
 	int b_random;
 	bool b_stoprecording;
 	FILE *f_output;
@@ -116,7 +116,6 @@ public:
 	void SetVolume(int volume);
 	int GetVolume();
 
-	GO_SAMPLER* OpenNewSampler();
 	/* samplerGroupID:
 	   -1 .. -n Tremulants
 	   0 detached release
@@ -125,8 +124,6 @@ public:
 	void StartSampler(GO_SAMPLER* sampler, int samplerGroupID);
 
 	bool HasRandomPipeSpeech();
-	bool HasReleaseAlignment();
-	bool HasScaledReleases();
 	bool IsStereo();
 
 	bool IsRecording();
@@ -150,6 +147,8 @@ public:
 	const int GetLatency();
 
 	GOrgueMidi& GetMidi();
+
+	GOSoundEngine& GetEngine();
 
 };
 

@@ -25,6 +25,7 @@
 
 #include <wx/wx.h>
 #include "GOrgueSoundTypes.h"
+#include "GOSoundEngine.h"
 
 class GOrgueTremulant;
 class GOrgueReleaseAlignTable;
@@ -39,11 +40,11 @@ private:
 	void SetOn();
 	void SetOff();
 
-	unsigned int m_Channels;
-	unsigned int m_SampleRate;
+	unsigned int    m_Channels;
+	unsigned int    m_SampleRate;
+	SAMPLER_HANDLE  m_Sampler;
 
 	float pitch;
-	GO_SAMPLER* sampler;
 	int instances;
 
 	/* states which windchest this pipe belongs to , see GOrgueSound::StartSampler */
@@ -54,8 +55,6 @@ private:
 	AUDIO_SECTION m_attack;
 	AUDIO_SECTION m_loop;
 	AUDIO_SECTION m_release;
-
-	GOrgueReleaseAlignTable* m_ra_table;
 
 	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
 	void ComputeReleaseAlignmentInfo();
@@ -77,17 +76,20 @@ public:
 	bool LoadCache(wxInputStream* cache);
 	bool SaveCache(wxOutputStream* cache);
 
-	const AUDIO_SECTION* GetLoop();
-	const AUDIO_SECTION* GetRelease();
+	const AUDIO_SECTION* GetAttack() const;
+	const AUDIO_SECTION* GetLoop() const;
+	const AUDIO_SECTION* GetRelease() const;
+	int GetScaleAmplitude() const;
+	int GetScaleShift() const;
+	int GetSamplerGroupID() const;
 
 	void FastAbort();
-
 	wxString GetFilename();
 
 };
 
 inline
-const AUDIO_SECTION* GOrguePipe::GetLoop()
+const AUDIO_SECTION* GOrguePipe::GetLoop() const
 {
 	if (m_ref)
 		return m_ref->GetLoop();
@@ -95,11 +97,37 @@ const AUDIO_SECTION* GOrguePipe::GetLoop()
 }
 
 inline
-const AUDIO_SECTION* GOrguePipe::GetRelease()
+const AUDIO_SECTION* GOrguePipe::GetRelease() const
 {
 	if (m_ref)
 		return m_ref->GetRelease();
 	return &m_release;
+}
+
+inline
+const AUDIO_SECTION* GOrguePipe::GetAttack() const
+{
+	if (m_ref)
+		return m_ref->GetAttack();
+	return &m_attack;
+}
+
+inline
+int GOrguePipe::GetScaleAmplitude() const
+{
+	return ra_amp;
+}
+
+inline
+int GOrguePipe::GetScaleShift() const
+{
+	return ra_shift;
+}
+
+inline
+int GOrguePipe::GetSamplerGroupID() const
+{
+	return m_SamplerGroupID;
 }
 
 #endif

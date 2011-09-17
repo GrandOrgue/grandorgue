@@ -77,7 +77,7 @@ void GOrguePipe::GetMaxAmplitudeAndDerivative
 void GOrguePipe::ComputeReleaseAlignmentInfo()
 {
 
-	DELETE_AND_NULL(m_ra_table);
+	DELETE_AND_NULL(m_release.release_aligner);
 
 	/* Find the maximum amplitude and derivative of the waveform */
 	int phase_align_max_amplitude = 0;
@@ -89,8 +89,8 @@ void GOrguePipe::ComputeReleaseAlignmentInfo()
 	if ((phase_align_max_derivative != 0) && (phase_align_max_amplitude != 0))
 	{
 
-		m_ra_table = new GOrgueReleaseAlignTable();
-		m_ra_table->ComputeTable
+		m_release.release_aligner = new GOrgueReleaseAlignTable();
+		m_release.release_aligner->ComputeTable
 			(m_release
 			,phase_align_max_amplitude
 			,phase_align_max_derivative
@@ -107,7 +107,7 @@ GOrguePipe::~GOrguePipe()
 	FREE_AND_NULL(m_attack.data);
 	FREE_AND_NULL(m_loop.data);
 	FREE_AND_NULL(m_release.data);
-	DELETE_AND_NULL(m_ra_table);
+	DELETE_AND_NULL(m_release.release_aligner);
 }
 
 GOrguePipe::GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int samplerGroupID, int amplitude):
@@ -123,9 +123,8 @@ GOrguePipe::GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percus
 	memset(&m_loop, 0, sizeof(m_loop));
 	memset(&m_release, 0, sizeof(m_release));
 
-	m_ra_table = NULL;
 	pitch = 0;
-	sampler = NULL;
+	m_Sampler = NULL;
 	instances = 0;
 	ra_amp = 0;
 	ra_shift = 0;
@@ -135,180 +134,32 @@ GOrguePipe::GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percus
 
 void GOrguePipe::SetOn()
 {
-
 	if (instances > 0)
 	{
 		instances++;
-		return;
 	}
-
-	GO_SAMPLER* sampler = g_sound->OpenNewSampler();
-	if (sampler == NULL)
-		return;
-
-	if (instances < 0)
+	else
 	{
-//		sampler->stage = GSS_RELEASE;
-		throw (wxString)_("regression - this should be impossible");
+		m_Sampler = g_sound->GetEngine().StartSample(this);
+		if ((m_Sampler) && (instances == 0))
+			instances++;
 	}
-
-	sampler->pipe = this;
-	sampler->pipe_section = &m_attack;
-	sampler->position = 0;
-
-	memcpy
-		(sampler->history
-		,m_attack.history
-		,sizeof(sampler->history)
-		);
-
-//	else
-//	{
-//		sampler->stage = GSS_ATTACK;
-//		if (g_sound->HasRandomPipeSpeech() && !g_sound->windchests[m_WindchestGroup])
-//			sampler->position = rand() & 0x78;
-//	}
-
-	sampler->fade = sampler->fademax = ra_amp;
-	sampler->shift = ra_shift;
-	sampler->time = g_sound->GetSamplerTime();
-
-	this->sampler = sampler;
-
-	g_sound->StartSampler(sampler, m_SamplerGroupID);
-
-	if (instances == 0)
-		instances++;
-
 }
 
 void GOrguePipe::SetOff()
 {
-
-	if (instances <= 0)
-		return;
-
-	instances--;
-
-	assert(sampler);
-
-	if (m_loop.data == NULL)
-		return;
-
 	if (instances > 0)
-		return;
-
-	double vol = m_SamplerGroupID < 0 ? 1.0 : m_organfile->GetWindchest(m_SamplerGroupID - 1)->GetVolume();
-	if (vol)
 	{
-
-		GO_SAMPLER* new_sampler = g_sound->OpenNewSampler();
-		if (new_sampler != NULL)
+		instances--;
+		// If m_loop.data is null, the sample has no loop section which means
+		// that it is a one-shot sample. We do not need to tell this sampler
+		// to die.
+		if ((m_loop.data != NULL) && (instances == 0))
 		{
-
-			new_sampler->pipe = this;
-			new_sampler->pipe_section = &m_release;
-			new_sampler->position = 0;
-			new_sampler->shift = ra_shift;
-			new_sampler->time = m_organfile->GetElapsedTime();
-			new_sampler->fademax = ra_amp;
-			const bool not_a_tremulant = (m_SamplerGroupID >= 0);
-			if (not_a_tremulant)
-			{
-				if (g_sound->HasScaledReleases())
-				{
-					int time = m_organfile->GetElapsedTime() - sampler->time;
-					if (time < 256)
-						new_sampler->fademax = (ra_amp * (16384 + (time * 64))) >> 15;
-					if (time < 1024)
-						new_sampler->fadeout = 1; /* nominal = 1.5 seconds */
-				}
-				new_sampler->fademax = lrint(vol * new_sampler->fademax);
-			}
-
-			/* Determines how much fadein to apply every 2 samples. If the pipe
-			 * has an amplitude of 10000 (which is nominal) and has been
-			 * playing for a long period of time, this value will be equal to
-			 *
-			 *   ra_amp + 128 >> 8
-			 * = -32640 >> 8
-			 * = -128
-			 *
-			 * So for fade to reach fademax would take:
-			 *
-			 *   2 * fademax / fadein
-			 * = 2 * -32768 / -128
-			 * = 512 samples or
-			 * = 12ms
-			 */
-			new_sampler->fadein = (new_sampler->fademax + 128) >> 8;
-			if (new_sampler->fadein == 0)
-				new_sampler->fadein--;
-
-			/* This determines the period of time the release is allowed to
-			 * fade in for in samples. 512 equates to roughly 12ms.
-			 */
-			new_sampler->faderemain = 512;
-
-			/* FIXME: this must be enabled again at some point soon */
-			if (g_sound->HasReleaseAlignment() && (m_ra_table != NULL))
-			{
-				m_ra_table->SetupRelease(*new_sampler, *sampler);
-			}
-			else
-			{
-				new_sampler->position = 0; //m_release.offset;
-				memcpy
-					(new_sampler->history
-					,m_release.history
-					,sizeof(new_sampler->history)
-					);
-			}
-
-			const int detached_windchest_index = 0;
-			if (not_a_tremulant)
-			{
-				/* detached releases are enabled and the pipe was on a regular
-				 * windchest. Play the release on the detached windchest */
-				g_sound->StartSampler(new_sampler, detached_windchest_index);
-			}
-			else
-			{
-				/* detached releases are disabled (or this isn't really a pipe)
-				 * so put the release on the same windchest as the pipe (which
-				 * means it will still be affected by tremulants - yuck). */
-				g_sound->StartSampler(new_sampler, m_SamplerGroupID);
-			}
-
+			g_sound->GetEngine().StopSample(this, m_Sampler);
+			this->m_Sampler = 0;
 		}
-
 	}
-
-	/* The above code created a new sampler to playback the release, the
-	 * following code takes the active sampler for this pipe (which will be
-	 * in either the attack or loop section) and sets the fadeout property
-	 * which will decay this portion of the pipe. The sampler will
-	 * automatically be placed back in the pool when the fade restores to
-	 * zero.
-	 *
-	 * Fadeout is added to the fade value in the sampler every 2 samples, so
-	 * a pipe with an amplitude of 10000 (unadjusted playback level) will have
-	 * a fadeout value of
-	 *
-	 *   (32768 - 128) >> 8
-	 * = 127
-	 *
-	 * Which means that the sampler will fade out over a period of
-	 *   (2 * 32768) / 127
-	 * = 516 samples = 12ms
-	 */
-	sampler->fadeout = (-ra_amp - 128) >> 8; /* recall that ra_amp is negative
-	                                          * so this will actually be a
-	                                          * positive number */
-	if (!sampler->fadeout) /* ensure that the sample will fade out */
-		sampler->fadeout++;
-	this->sampler = 0;
-
 }
 
 void GOrguePipe::Set(bool on)
@@ -330,8 +181,7 @@ bool GOrguePipe::LoadCache(wxInputStream* cache)
 	FREE_AND_NULL(m_attack.data);
 	FREE_AND_NULL(m_loop.data);
 	FREE_AND_NULL(m_release.data);
-	DELETE_AND_NULL(m_ra_table);
-	m_ra_table = NULL;
+	DELETE_AND_NULL(m_release.release_aligner);
 
 	if (m_filename.StartsWith(wxT("REF:")))
 	{
@@ -374,11 +224,11 @@ bool GOrguePipe::LoadCache(wxInputStream* cache)
 		return false;
 
 	cache->Read(&m_release, sizeof(m_release));
+	m_release.release_aligner = NULL;
+	m_release.data = NULL;
 	if (cache->LastRead() != sizeof(m_release))
-	{
-		m_release.data = NULL;
 		return false;
-	}
+
 	m_release.data = (unsigned char*)malloc(m_release.alloc_size);
 	if (m_release.data == NULL)
 		throw (wxString)_("< out of memory allocating samples");
@@ -401,8 +251,8 @@ bool GOrguePipe::LoadCache(wxInputStream* cache)
 
 	if (release)
 	{
-		m_ra_table = new GOrgueReleaseAlignTable();
-		if (!m_ra_table->Load(cache))
+		m_release.release_aligner = new GOrgueReleaseAlignTable();
+		if (!m_release.release_aligner->Load(cache))
 			return false;
 	}
 
@@ -444,13 +294,13 @@ bool GOrguePipe::SaveCache(wxOutputStream* cache)
 	if (cache->LastWrite() != sizeof(ra_shift))
 		return false;
 
-	bool release = m_ra_table != NULL;
+	bool release = m_release.release_aligner != NULL;
 	cache->Write(&release, sizeof(release));
 	if (cache->LastWrite() != sizeof(release))
 		return false;
 
 	if (release)
-		if (!m_ra_table->Save(cache))
+		if (!m_release.release_aligner->Save(cache))
 			return false;
 
 	return true;
@@ -463,8 +313,7 @@ void GOrguePipe::LoadData()
 	FREE_AND_NULL(m_attack.data);
 	FREE_AND_NULL(m_loop.data);
 	FREE_AND_NULL(m_release.data);
-	DELETE_AND_NULL(m_ra_table);
-	m_ra_table = NULL;
+	DELETE_AND_NULL(m_release.release_aligner);
 
 	if (m_filename.StartsWith(wxT("REF:")))
 	{
@@ -618,7 +467,7 @@ void GOrguePipe::LoadData()
 		 * to this value to specify a maximum multiplier that can be applied
 		 * to keep the sample within the required headroom. */
 		ra_amp = (amp << 15) / -10000;
-		sampler = NULL;
+		m_Sampler = NULL;
 
 		if (m_Channels == 1)
 		{
@@ -676,8 +525,8 @@ void GOrguePipe::CreateTremulant(int period, int startRate, int stopRate, int am
 	FREE_AND_NULL(m_attack.data);
 	FREE_AND_NULL(m_loop.data);
 	FREE_AND_NULL(m_release.data);
-	DELETE_AND_NULL(m_ra_table);
-	m_ra_table = NULL;
+	DELETE_AND_NULL(m_release.release_aligner);
+
 	memset(&m_loop, 0, sizeof(m_loop));
 	memset(&m_attack, 0, sizeof(m_attack));
 	memset(&m_release, 0, sizeof(m_release));
@@ -1024,7 +873,7 @@ void GOrguePipe::FastAbort()
 		m_ref->FastAbort();	
 	if (instances > -1)
 		instances = 0;
-	sampler = 0;
+	m_Sampler = 0;
 
 }
 

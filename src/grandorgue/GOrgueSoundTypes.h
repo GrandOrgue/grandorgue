@@ -85,12 +85,7 @@ typedef enum {
 
 struct AUDIO_SECTION_T;
 struct GO_SAMPLER_T;
-
-/* data structure required to support release alignment tracking. */
-/*typedef struct
-{
-	int f[2];
-} GO_RELEASE_TRACKING_INFO;*/
+class GOrgueReleaseAlignTable;
 
 typedef struct AUDIO_SECTION_T
 {
@@ -108,14 +103,17 @@ typedef struct AUDIO_SECTION_T
 	int                        history[BLOCK_HISTORY * MAX_OUTPUT_CHANNELS];
 
 	/* Pointer to (size) bytes of data encoded in the format (type) */
-	unsigned char*             data;
+	unsigned char             *data;
+
+	/* If this is a release section, it may contain an alignment table */
+	GOrgueReleaseAlignTable   *release_aligner;
 
 } AUDIO_SECTION;
 
 typedef struct GO_SAMPLER_T
 {
 	struct GO_SAMPLER_T       *next;		// must be first!
-	GOrguePipe                *pipe;
+	const GOrguePipe          *pipe;
 	const AUDIO_SECTION       *pipe_section;
 	int                        history[BLOCK_HISTORY * MAX_OUTPUT_CHANNELS];
 	/* the fade parameter is would be more appropriately named "gain". It is
