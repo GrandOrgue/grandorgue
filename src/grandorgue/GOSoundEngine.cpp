@@ -35,13 +35,12 @@ GOSoundEngine::GOSoundEngine() :
 	m_PolyphonyLimit(2048),
 	m_PolyphonySoftLimit((2048*3)/4),
 	m_PolyphonyLimiting(true),
+	m_ScaledReleases(true),
+	m_ReleaseAlignmentEnabled(true),
 	m_Volume(100),
 	m_CurrentTime(0),
 	m_Windchests(),
 	m_Tremulants()
-
-
-
 {
 
 }
@@ -95,6 +94,11 @@ unsigned GOSoundEngine::GetHardPolyphony() const
 int GOSoundEngine::GetVolume() const
 {
 	return m_Volume;
+}
+
+void GOSoundEngine::SetScaledReleases(bool enable)
+{
+	m_ScaledReleases = enable;
 }
 
 void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int samplerGroupId)
@@ -656,3 +660,165 @@ int GOSoundEngine::GetSamples
 	return 0;
 }
 
+
+SAMPLER_HANDLE GOSoundEngine::StartSample(const GOrguePipe* pipe)
+{
+	GO_SAMPLER* sampler = OpenNewSampler();
+	if (sampler)
+	{
+		sampler->pipe = pipe;
+		sampler->pipe_section = pipe->GetAttack();
+		sampler->position = 0;
+		memcpy
+			(sampler->history
+			,pipe->GetAttack()->history
+			,sizeof(sampler->history)
+			);
+		//	else
+		//	{
+		//		sampler->stage = GSS_ATTACK;
+		//		if (g_sound->HasRandomPipeSpeech() && !g_sound->windchests[m_WindchestGroup])
+		//			sampler->position = rand() & 0x78;
+		//	}
+		sampler->fade = sampler->fademax = pipe->GetScaleAmplitude();
+		sampler->shift = pipe->GetScaleShift();
+		sampler->time = GetCurrentTime();
+		StartSampler(sampler, pipe->GetSamplerGroupID());
+	}
+	return sampler;
+}
+
+void GOSoundEngine::StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle)
+{
+
+	assert(handle);
+	assert(pipe);
+
+	// The following condition could arise if a one-shot sample is played,
+	// decays away (and hence the sampler is discarded back into the pool), and
+	// then the user releases a key. If the sampler had already been reused
+	// with another pipe, that sample would erroneously be told to decay.
+	if (pipe != handle->pipe)
+		return;
+
+	const GOrguePipe* this_pipe = handle->pipe;
+	int this_pipe_sampler_group_id = this_pipe->GetSamplerGroupID();
+	double vol = (this_pipe_sampler_group_id < 0)
+	           ? 1.0
+	           : m_Windchests[this_pipe_sampler_group_id - 1].windchest->GetVolume();
+
+	// FIXME: this is wrong... the intention is to not create a release for a
+	// sample being played back with zero amplitude but this is a comparison
+	// against a double. We should test against a minimum level.
+	if (vol)
+	{
+
+		GO_SAMPLER* new_sampler = OpenNewSampler();
+		if (new_sampler != NULL)
+		{
+
+			const AUDIO_SECTION* release_section = this_pipe->GetRelease();
+			new_sampler->pipe         = this_pipe;
+			new_sampler->pipe_section = release_section;
+			new_sampler->position     = 0;
+			new_sampler->shift        = this_pipe->GetScaleShift();
+			new_sampler->time         = GetCurrentTime();
+			new_sampler->fademax      = this_pipe->GetScaleAmplitude();
+
+			const bool not_a_tremulant = (this_pipe_sampler_group_id >= 0);
+			if (not_a_tremulant)
+			{
+				if (m_ScaledReleases)
+				{
+					int time = ((GetCurrentTime() - handle->time) * 64000) / 44100;
+					if (time < 256)
+						new_sampler->fademax = (this_pipe->GetScaleAmplitude() * (16384 + (time * 64))) >> 15;
+					if (time < 1024)
+						new_sampler->fadeout = 1; /* nominal = 1.5 seconds */
+				}
+				new_sampler->fademax = lrint(vol * new_sampler->fademax);
+			}
+
+			/* Determines how much fadein to apply every 2 samples. If the pipe
+			 * has an amplitude of 10000 (which is nominal) and has been
+			 * playing for a long period of time, this value will be equal to
+			 *
+			 *   ra_amp + 128 >> 8
+			 * = -32640 >> 8
+			 * = -128
+			 *
+			 * So for fade to reach fademax would take:
+			 *
+			 *   2 * fademax / fadein
+			 * = 2 * -32768 / -128
+			 * = 512 samples or
+			 * = 12ms
+			 */
+			new_sampler->fadein = (new_sampler->fademax + 128) >> 8;
+			if (new_sampler->fadein == 0)
+				new_sampler->fadein--;
+
+			/* This determines the period of time the release is allowed to
+			 * fade in for in samples. 512 equates to roughly 12ms.
+			 */
+			new_sampler->faderemain = 512;
+
+			/* FIXME: this must be enabled again at some point soon */
+			if (m_ReleaseAlignmentEnabled && (release_section->release_aligner != NULL))
+			{
+				release_section->release_aligner->SetupRelease(*new_sampler, *handle);
+			}
+			else
+			{
+				new_sampler->position = 0; //m_release.offset;
+				memcpy
+					(new_sampler->history
+					,release_section->history
+					,sizeof(new_sampler->history)
+					);
+			}
+
+			const int detached_windchest_index = 0;
+			if (not_a_tremulant)
+			{
+				/* detached releases are enabled and the pipe was on a regular
+				 * windchest. Play the release on the detached windchest */
+				StartSampler(new_sampler, detached_windchest_index);
+			}
+			else
+			{
+				/* detached releases are disabled (or this isn't really a pipe)
+				 * so put the release on the same windchest as the pipe (which
+				 * means it will still be affected by tremulants - yuck). */
+				StartSampler(new_sampler, this_pipe_sampler_group_id);
+			}
+
+		}
+
+	}
+
+	/* The above code created a new sampler to playback the release, the
+	 * following code takes the active sampler for this pipe (which will be
+	 * in either the attack or loop section) and sets the fadeout property
+	 * which will decay this portion of the pipe. The sampler will
+	 * automatically be placed back in the pool when the fade restores to
+	 * zero.
+	 *
+	 * Fadeout is added to the fade value in the sampler every 2 samples, so
+	 * a pipe with an amplitude of 10000 (unadjusted playback level) will have
+	 * a fadeout value of
+	 *
+	 *   (32768 - 128) >> 8
+	 * = 127
+	 *
+	 * Which means that the sampler will fade out over a period of
+	 *   (2 * 32768) / 127
+	 * = 516 samples = 12ms
+	 */
+	handle->fadeout = (-handle->pipe->GetScaleAmplitude() - 128) >> 8; /* recall that ra_amp is negative
+	                                          * so this will actually be a
+	                                          * positive number */
+	if (!handle->fadeout) /* ensure that the sample will fade out */
+		handle->fadeout++;
+
+}

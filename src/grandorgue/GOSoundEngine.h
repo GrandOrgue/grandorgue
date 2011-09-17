@@ -23,6 +23,8 @@ typedef struct
 	double meter_right;
 } METER_INFO;
 
+typedef GO_SAMPLER* SAMPLER_HANDLE;
+
 class GOSoundEngine
 {
 
@@ -47,6 +49,8 @@ private:
 	unsigned       m_PolyphonyLimit;
 	unsigned       m_PolyphonySoftLimit;
 	bool           m_PolyphonyLimiting;
+	bool           m_ScaledReleases;
+	bool           m_ReleaseAlignmentEnabled;
 	int            m_Volume;
 	unsigned long  m_CurrentTime;
 	std::vector<windchest_entry> m_Windchests;
@@ -76,19 +80,24 @@ private:
 
 	GO_SAMPLER     m_Samplers[MAX_POLYPHONY];
 
+	GO_SAMPLER* OpenNewSampler();
+
 public:
 
 	GOSoundEngine();
 	void Reset();
 	void Setup(GrandOrgueFile* organ_file);
-	GO_SAMPLER* OpenNewSampler();
 	void SetVolume(int volume);
 	void SetHardPolyphony(unsigned polyphony);
 	void SetPolyphonyLimiting(bool limiting);
 	unsigned GetHardPolyphony() const;
 	int GetVolume() const;
+	void SetScaledReleases(bool enable);
+
 	void StartSampler(GO_SAMPLER* sampler, int samplerGroupId);
 	unsigned GetCurrentTime() const;
+	SAMPLER_HANDLE StartSample(const GOrguePipe *pipe);
+	void StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle);
 
 	int GetSamples
 		(float      *output_buffer

@@ -43,7 +43,6 @@ GOrgueSound::GOrgueSound(void) :
 	m_nb_buffers(0),
 	b_stereo(0),
 	b_align(0),
-	b_scale(0),
 	b_random(0),
 	b_stoprecording(false),
 	f_output(NULL),
@@ -153,9 +152,9 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile, bool open_inac
 	m_SoundEngine.SetPolyphonyLimiting(pConfig->Read(wxT("ManagePolyphony"), 1));
 	m_SoundEngine.SetHardPolyphony(pConfig->Read(wxT("PolyphonyLimit"), 2048));
 	m_SoundEngine.SetVolume((open_inactive) ? 0 : pConfig->Read(wxT("Volume"), 50));
+	m_SoundEngine.SetScaledReleases(pConfig->Read(wxT("ScaleRelease"), 1));
 	b_stereo = pConfig->Read(wxT("StereoEnabled"), 1);
 	b_align  = pConfig->Read(wxT("AlignRelease"), 1);
-	b_scale  = pConfig->Read(wxT("ScaleRelease"), 1);
 	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
 
 	m_SoundEngine.Reset();
@@ -319,26 +318,9 @@ void GOrgueSound::SetVolume(int volume)
 	m_SoundEngine.SetVolume(volume);
 }
 
-GO_SAMPLER* GOrgueSound::OpenNewSampler()
-{
-
-	return m_SoundEngine.OpenNewSampler();
-
-}
-
 bool GOrgueSound::HasRandomPipeSpeech()
 {
 	return b_random;
-}
-
-bool GOrgueSound::HasReleaseAlignment()
-{
-	return b_align;
-}
-
-bool GOrgueSound::HasScaledReleases()
-{
-	return b_scale;
 }
 
 bool GOrgueSound::IsStereo()
@@ -554,4 +536,9 @@ GOrgueSound::AudioCallback
 unsigned GOrgueSound::GetSamplerTime() const
 {
 	return m_SoundEngine.GetCurrentTime();
+}
+
+GOSoundEngine& GOrgueSound::GetEngine()
+{
+	return m_SoundEngine;
 }
