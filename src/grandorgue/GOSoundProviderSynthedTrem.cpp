@@ -40,6 +40,8 @@ void GOSoundProviderSynthedTrem::Create
 	)
 {
 
+	ClearData();
+
 	m_Channels = 1;
 	if (m_Channels == 1)
 	{
