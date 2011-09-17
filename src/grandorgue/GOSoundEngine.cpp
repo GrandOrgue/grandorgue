@@ -105,12 +105,6 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
 	}
 }
 
-unsigned GOSoundEngine::GetCurrentTime() const
-{
-	return m_CurrentTime;
-}
-
-
 void GOSoundEngine::Setup(GrandOrgueFile* organ_file)
 {
 	m_Windchests.resize(organ_file->GetWinchestGroupCount());
@@ -667,7 +661,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOrguePipe* pipe)
 		//	}
 		sampler->fade = sampler->fademax = pipe->GetScaleAmplitude();
 		sampler->shift = pipe->GetScaleShift();
-		sampler->time = GetCurrentTime();
+		sampler->time = m_CurrentTime;
 		StartSampler(sampler, pipe->GetSamplerGroupID());
 	}
 	return sampler;
@@ -707,7 +701,7 @@ void GOSoundEngine::StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle)
 			new_sampler->pipe_section = release_section;
 			new_sampler->position     = 0;
 			new_sampler->shift        = this_pipe->GetScaleShift();
-			new_sampler->time         = GetCurrentTime();
+			new_sampler->time         = m_CurrentTime;
 			new_sampler->fademax      = this_pipe->GetScaleAmplitude();
 
 			const bool not_a_tremulant = (this_pipe_sampler_group_id >= 0);
@@ -715,7 +709,7 @@ void GOSoundEngine::StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle)
 			{
 				if (m_ScaledReleases)
 				{
-					int time = ((GetCurrentTime() - handle->time) * 64000) / 44100;
+					int time = ((m_CurrentTime - handle->time) * (1000 * BLOCKS_PER_FRAME)) / 44100;
 					if (time < 256)
 						new_sampler->fademax = (this_pipe->GetScaleAmplitude() * (16384 + (time * 64))) >> 15;
 					if (time < 1024)

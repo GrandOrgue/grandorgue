@@ -33,7 +33,6 @@ struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 
 GOrgueSound* g_sound = 0;
 
 GOrgueSound::GOrgueSound(void) :
-	sw(),
 	pConfig(wxConfigBase::Get()),
 	format(0),
 	logSoundErrors(false),
@@ -424,9 +423,6 @@ int GOrgueSound::AudioCallbackLocal
 	)
 {
 
-	if (m_organfile)
-		m_organfile->SetElapsedTime(sw.Time());
-
 	m_midi->ProcessMessages(b_active);
 
 	if (!b_active || !m_organfile)
@@ -512,10 +508,6 @@ GOrgueSound::AudioCallback
 		,streamTime
 		);
 
-}
-unsigned GOrgueSound::GetSamplerTime() const
-{
-	return m_SoundEngine.GetCurrentTime();
 }
 
 GOSoundEngine& GOrgueSound::GetEngine()

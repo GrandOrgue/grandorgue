@@ -110,7 +110,6 @@ public:
 	int GetVolume() const;
 	void SetScaledReleases(bool enable);
 
-	unsigned GetCurrentTime() const;
 	SAMPLER_HANDLE StartSample(const GOrguePipe *pipe);
 	void StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle);
 

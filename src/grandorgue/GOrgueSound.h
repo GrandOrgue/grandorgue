@@ -51,9 +51,6 @@ public:
 private:
 
 	/* end audio callback variables */
-
-	wxStopWatch sw;
-
 	wxConfigBase *pConfig;
 
 	RtAudioFormat format;
@@ -122,8 +119,6 @@ public:
 	bool IsActive();
 	void PreparePlayback(GrandOrgueFile* organfile);
 	void ActivatePlayback();
-
-	unsigned GetSamplerTime() const;
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
 

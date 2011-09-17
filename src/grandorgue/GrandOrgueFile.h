@@ -53,7 +53,6 @@ private:
 	wxFileName m_path;
 	int m_b_squash;
 	wxString m_filename;
-	long m_elapsed;
 	GOrgueSetter* m_setter;
 
 	bool m_b_customized : 1;
@@ -133,9 +132,6 @@ public:
 	bool DivisionalsStoreTremulants();
 	bool CombinationsStoreNonDisplayedDrawstops();
 	bool GeneralsStoreDivisionalCouplers();
-
-	long GetElapsedTime();
-	void SetElapsedTime(long elapsed);
 
 	/* Overal amplitude of the organ when played back (used to prevent
 	 * clipping, etc) */
