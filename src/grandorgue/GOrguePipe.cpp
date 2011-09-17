@@ -171,7 +171,7 @@ void GOrguePipe::SetOn()
 
 	sampler->fade = sampler->fademax = ra_amp;
 	sampler->shift = ra_shift;
-	sampler->time = m_organfile->GetElapsedTime();
+	sampler->time = g_sound->GetSamplerTime();
 
 	this->sampler = sampler;
 

@@ -24,6 +24,7 @@
 #include "GrandOrgueFile.h"
 #include "GOrgueRtHelpers.h"
 #include "GOrgueMidi.h"
+#include "GOrgueEvent.h"
 
 struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
 
@@ -36,15 +37,10 @@ GOrgueSound::GOrgueSound(void) :
 	pConfig(wxConfigBase::Get()),
 	format(0),
 	logSoundErrors(false),
-	samplers_count(0),
-	polyphony(0),
-	poly_soft(0),
-	volume(0),
 	m_audioDevices(),
 	audioDevice(NULL),
 	m_samples_per_buffer(0),
 	m_nb_buffers(0),
-	b_limit(0),
 	b_stereo(0),
 	b_align(0),
 	b_scale(0),
@@ -52,14 +48,12 @@ GOrgueSound::GOrgueSound(void) :
 	b_stoprecording(false),
 	f_output(NULL),
 	meter_counter(0),
-	meter_poly(0),
-	meter_left(0),
-	meter_right(0),
 	b_active(false),
 	defaultAudio(wxT(""))
 {
 
 	g_sound = this;
+	memset(&meter_info, 0, sizeof(meter_info));
 
 	try
 	{
@@ -150,24 +144,22 @@ GOrgueSound::~GOrgueSound(void)
 
 }
 
-bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile)
+bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile, bool open_inactive)
 {
 
 	bool opened_ok = false;
 
 	defaultAudio = pConfig->Read(wxT("Devices/DefaultSound"), defaultAudio);
-	volume = pConfig->Read(wxT("Volume"), 50);
-	polyphony = pConfig->Read(wxT("PolyphonyLimit"), 2048);
-	poly_soft = (polyphony * 3) / 4;
+	m_SoundEngine.SetPolyphonyLimiting(pConfig->Read(wxT("ManagePolyphony"), 1));
+	m_SoundEngine.SetHardPolyphony(pConfig->Read(wxT("PolyphonyLimit"), 2048));
+	m_SoundEngine.SetVolume((open_inactive) ? 0 : pConfig->Read(wxT("Volume"), 50));
 	b_stereo = pConfig->Read(wxT("StereoEnabled"), 1);
-	b_limit  = pConfig->Read(wxT("ManagePolyphony"), 1);
 	b_align  = pConfig->Read(wxT("AlignRelease"), 1);
 	b_scale  = pConfig->Read(wxT("ScaleRelease"), 1);
 	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
 
-	samplers_count = 0;
-	for (unsigned i = 0; i < MAX_POLYPHONY; i++)
-		samplers_open[i] = samplers + i;
+	m_SoundEngine.Reset();
+
 	PreparePlayback(organfile);
 
 	try
@@ -293,12 +285,9 @@ bool GOrgueSound::ResetSound()
 	bool was_active = b_active;
 	GrandOrgueFile* organfile = m_organfile;
 
-	int temp = volume;
 	CloseSound();
-	if (!OpenSound(true, organfile))
+	if (!OpenSound(true, organfile, (m_SoundEngine.GetVolume() == 0) || !(b_active)))
 		return false;
-	if (!temp)  // don't let resetting sound reactivate an organ
-        g_sound->volume = temp;
 	b_active = was_active;
 	if (organfile)
 	{
@@ -322,28 +311,18 @@ void GOrgueSound::CloseWAV()
 
 void GOrgueSound::SetPolyphonyLimit(int polyphony)
 {
-	this->polyphony = polyphony;
-}
-
-void GOrgueSound::SetPolyphonySoftLimit(int polyphony_soft)
-{
-	this->poly_soft = polyphony_soft;
+	m_SoundEngine.SetHardPolyphony(polyphony);
 }
 
 void GOrgueSound::SetVolume(int volume)
 {
-	this->volume = volume;
+	m_SoundEngine.SetVolume(volume);
 }
 
 GO_SAMPLER* GOrgueSound::OpenNewSampler()
 {
 
-	if (samplers_count >= polyphony)
-		return NULL;
-
-	GO_SAMPLER* sampler = samplers_open[samplers_count++];
-	memset(sampler, 0, sizeof(GO_SAMPLER));
-	return sampler;
+	return m_SoundEngine.OpenNewSampler();
 
 }
 
@@ -369,7 +348,7 @@ bool GOrgueSound::IsStereo()
 
 int GOrgueSound::GetVolume()
 {
-	return volume;
+	return m_SoundEngine.GetVolume();
 }
 
 bool GOrgueSound::IsRecording()
@@ -412,16 +391,14 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 {
 	m_organfile = organfile;
 	m_midi->SetOrganFile(organfile);
-
 	if (organfile)
 	{
-		m_windchests.resize(organfile->GetWinchestGroupCount());
-		m_tremulants.resize(organfile->GetTremulantCount());
+		m_SoundEngine.Setup(organfile);
 	}
-	std::fill(m_windchests.begin(), m_windchests.end(), (GO_SAMPLER*)0);
-	for (unsigned i = 0; i < m_tremulants.size(); i++)
-		m_tremulants[i].sampler = 0;
-	m_detachedRelease = 0;
+	else
+	{
+		m_SoundEngine.Reset();
+	}
 }
 
 void GOrgueSound::ActivatePlayback()
@@ -475,19 +452,106 @@ GOrgueMidi& GOrgueSound::GetMidi()
 
 void GOrgueSound::StartSampler(GO_SAMPLER* sampler, int samplerGroupId)
 {
-	if (samplerGroupId == 0)
+	m_SoundEngine.StartSampler(sampler, samplerGroupId);
+}
+
+int GOrgueSound::AudioCallbackLocal
+	(float* output_buffer
+	,unsigned int n_frames
+	,double stream_time
+	)
+{
+
+	if (m_organfile)
+		m_organfile->SetElapsedTime(sw.Time());
+
+	m_midi->ProcessMessages(b_active);
+
+	if (!b_active || !m_organfile)
 	{
-		sampler->next = m_detachedRelease;
-		m_detachedRelease = sampler;
+
+		memset(output_buffer, 0, (n_frames * sizeof(float)));
+
+		/* we can only abort for the case of the sound system not being active
+		 * (because recording could be enabled... */
+		if (!b_active || !m_organfile)
+			return 0;
+
 	}
-	else if (samplerGroupId < 0)
+
+	int r = m_SoundEngine.GetSamples
+		(output_buffer
+		,n_frames
+		,stream_time
+		,&meter_info
+		);
+
+	/* Write data to file if recording is enabled*/
+	if (f_output)
 	{
-		sampler->next = m_tremulants[-1-samplerGroupId].sampler;
-		m_tremulants[-1-samplerGroupId].sampler = sampler;
+		fwrite(output_buffer, sizeof(float), n_frames * 2, f_output);
+		if (b_stoprecording)
+			CloseWAV();
 	}
-	else
+
+	/* Update meters */
+	meter_counter += n_frames;
+	if (meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
 	{
-		sampler->next = m_windchests[samplerGroupId - 1];
-		m_windchests[samplerGroupId - 1] = sampler;
+
+		// polyphony
+		int n = (33 * meter_info.current_polyphony) / m_SoundEngine.GetHardPolyphony();
+		n <<= 8;
+		// right channel
+		n |= lrint(32.50000000000001 * meter_info.meter_right);
+		n <<= 8;
+		// left  channel
+		n |= lrint(32.50000000000001 * meter_info.meter_left);
+
+		wxCommandEvent event(wxEVT_METERS, 0);
+		event.SetInt(n);
+		wxTheApp->GetTopWindow()->AddPendingEvent(event);
+
+		meter_counter = meter_info.current_polyphony = 0;
+		meter_info.meter_left = meter_info.meter_right = 0.0;
+
 	}
+
+	return r;
+
+}
+
+int
+GOrgueSound::AudioCallback
+	(void *outputBuffer
+	,void *inputBuffer
+	,unsigned int nFrames
+	,double streamTime
+	,RtAudioStreamStatus status
+	,void *userData)
+{
+
+	assert(userData);
+
+	if (nFrames & (BLOCKS_PER_FRAME - 1))
+	{
+		wxString error;
+		error.Printf
+			(_("Audio callback of %u blocks requested. Must be divisible by %u.")
+			,nFrames
+			,BLOCKS_PER_FRAME
+			);
+		throw error;
+	}
+
+	return static_cast<GOrgueSound*>(userData)->AudioCallbackLocal
+		(static_cast<float*>(outputBuffer)
+		,nFrames
+		,streamTime
+		);
+
+}
+unsigned GOrgueSound::GetSamplerTime() const
+{
+	return m_SoundEngine.GetCurrentTime();
 }

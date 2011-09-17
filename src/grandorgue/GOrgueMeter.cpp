@@ -181,8 +181,7 @@ void GOrgueMeter::OnPolyphony(wxCommandEvent& event)
 	if (g_sound)
 	{
 		g_sound->SetPolyphonyLimit(n);
-		g_sound->SetPolyphonySoftLimit((n * 3) / 4);
-    }
+	}
 }
 
 void GOrgueMeter::OnFrame(wxCommandEvent& event)
