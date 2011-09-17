@@ -501,7 +501,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		return error_;
 	}
 
-	::wxGetApp().frame->m_meters[0]->SetValue(odf_ini_file.Read(wxT("/Organ/Volume"), g_sound->GetVolume()));
+	::wxGetApp().frame->m_meters[0]->SetValue(odf_ini_file.Read(wxT("/Organ/Volume"), g_sound->GetEngine().GetVolume()));
 
 	GOrgueLCD_WriteLineTwo(_("Ready!"));
 
@@ -636,7 +636,7 @@ void GrandOrgueFile::Save(const wxString& file)
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchName"), m_ChurchName);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
-	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), g_sound->GetVolume());
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), g_sound->GetEngine().GetVolume());
 
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->Save(aIni, prefix);

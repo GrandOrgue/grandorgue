@@ -31,43 +31,28 @@
 
 GOSoundEngine::GOSoundEngine() :
 	m_DetachedRelease(0),
-	m_SamplerCount(0),
-	m_PolyphonyLimit(2048),
-	m_PolyphonySoftLimit((2048*3)/4),
 	m_PolyphonyLimiting(true),
 	m_ScaledReleases(true),
 	m_ReleaseAlignmentEnabled(true),
 	m_Volume(100),
 	m_CurrentTime(0),
+	m_SamplerPool(),
 	m_Windchests(),
 	m_Tremulants()
 {
-
+	m_SamplerPool.SetUsageLimit(2048);
+	m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
 }
 
 void GOSoundEngine::Reset()
 {
-	m_SamplerCount = 0;
-	for (unsigned i = 0; i < MAX_POLYPHONY; i++)
-		m_AvailableSamplers[i] = m_Samplers + i;
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
 		m_Windchests[i].base_sampler = 0;
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 		m_Tremulants[i].sampler = 0;
 	m_DetachedRelease = 0;
+	m_SamplerPool.ReturnAll();
 	m_CurrentTime = 0;
-}
-
-GO_SAMPLER* GOSoundEngine::OpenNewSampler()
-{
-
-	if (m_SamplerCount >= m_PolyphonyLimit)
-		return NULL;
-
-	GO_SAMPLER* sampler = m_AvailableSamplers[m_SamplerCount++];
-	memset(sampler, 0, sizeof(GO_SAMPLER));
-	return sampler;
-
 }
 
 void GOSoundEngine::SetVolume(int volume)
@@ -77,8 +62,8 @@ void GOSoundEngine::SetVolume(int volume)
 
 void GOSoundEngine::SetHardPolyphony(unsigned polyphony)
 {
-	m_PolyphonyLimit = polyphony;
-	m_PolyphonySoftLimit = (polyphony * 3) / 4;
+	m_SamplerPool.SetUsageLimit(polyphony);
+	m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
 }
 
 void GOSoundEngine::SetPolyphonyLimiting(bool limiting)
@@ -88,7 +73,7 @@ void GOSoundEngine::SetPolyphonyLimiting(bool limiting)
 
 unsigned GOSoundEngine::GetHardPolyphony() const
 {
-	return m_PolyphonyLimit;
+	return m_SamplerPool.GetUsageLimit();
 }
 
 int GOSoundEngine::GetVolume() const
@@ -101,22 +86,22 @@ void GOSoundEngine::SetScaledReleases(bool enable)
 	m_ScaledReleases = enable;
 }
 
-void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int samplerGroupId)
+void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
 {
-	if (samplerGroupId == 0)
+	if (sampler_group_id == 0)
 	{
 		sampler->next = m_DetachedRelease;
 		m_DetachedRelease = sampler;
 	}
-	else if (samplerGroupId < 0)
+	else if (sampler_group_id < 0)
 	{
-		sampler->next = m_Tremulants[-1-samplerGroupId].sampler;
-		m_Tremulants[-1-samplerGroupId].sampler = sampler;
+		sampler->next = m_Tremulants[-1-sampler_group_id].sampler;
+		m_Tremulants[-1-sampler_group_id].sampler = sampler;
 	}
 	else
 	{
-		sampler->next = m_Windchests[samplerGroupId - 1].base_sampler;
-		m_Windchests[samplerGroupId - 1].base_sampler = sampler;
+		sampler->next = m_Windchests[sampler_group_id - 1].base_sampler;
+		m_Windchests[sampler_group_id - 1].base_sampler = sampler;
 	}
 }
 
@@ -478,7 +463,7 @@ void GOSoundEngine::ProcessAudioSamplers
 
 		if  (
 				(m_PolyphonyLimiting) &&
-				(m_SamplerCount >= m_PolyphonySoftLimit) &&
+				(m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
 				(sampler->pipe_section->stage == GSS_RELEASE) &&
 				(m_CurrentTime - sampler->time > 172)
 			)
@@ -522,8 +507,7 @@ void GOSoundEngine::ProcessAudioSamplers
 			if (sampler == *list_start)
 				*list_start = sampler->next;
 			previous_valid_sampler->next = sampler->next;
-			assert(samplers_count > 0);
-			m_AvailableSamplers[--m_SamplerCount] = sampler;
+			m_SamplerPool.ReturnSampler(sampler);
 		}
 		else
 		{
@@ -546,7 +530,7 @@ int GOSoundEngine::GetSamples
 {
 
 	/* if no samplers playing, or sound is disabled, fill buffer with zero */
-	if (!m_SamplerCount)
+	if (!m_SamplerPool.UsedSamplerCount())
 		memset(output_buffer, 0, (n_frames * sizeof(float)));
 
 	/* initialise the output buffer */
@@ -628,12 +612,15 @@ int GOSoundEngine::GetSamples
 
 	}
 
+	m_CurrentTime += 1;
+
 	/* Clamp the output */
 	double clamp_min = -1.0, clamp_max = 1.0;
 	if (meter_info)
 	{
-		if (m_SamplerCount > meter_info->current_polyphony)
-			meter_info->current_polyphony = m_SamplerCount;
+		unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
+		if (used_samplers > meter_info->current_polyphony)
+			meter_info->current_polyphony = used_samplers;
 		for (unsigned int k = 0; k < n_frames * 2; k += 2)
 		{
 			double d = std::min(std::max(m_FinalBuffer[k + 0], clamp_min), clamp_max);
@@ -655,15 +642,13 @@ int GOSoundEngine::GetSamples
 		}
 	}
 
-	m_CurrentTime += 1;
-
 	return 0;
 }
 
 
 SAMPLER_HANDLE GOSoundEngine::StartSample(const GOrguePipe* pipe)
 {
-	GO_SAMPLER* sampler = OpenNewSampler();
+	GO_SAMPLER* sampler = m_SamplerPool.GetSampler();
 	if (sampler)
 	{
 		sampler->pipe = pipe;
@@ -713,7 +698,7 @@ void GOSoundEngine::StopSample(const GOrguePipe *pipe, SAMPLER_HANDLE handle)
 	if (vol)
 	{
 
-		GO_SAMPLER* new_sampler = OpenNewSampler();
+		GO_SAMPLER* new_sampler = m_SamplerPool.GetSampler();
 		if (new_sampler != NULL)
 		{
 

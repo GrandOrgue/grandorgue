@@ -308,16 +308,6 @@ void GOrgueSound::CloseWAV()
 	f_output = 0;
 }
 
-void GOrgueSound::SetPolyphonyLimit(int polyphony)
-{
-	m_SoundEngine.SetHardPolyphony(polyphony);
-}
-
-void GOrgueSound::SetVolume(int volume)
-{
-	m_SoundEngine.SetVolume(volume);
-}
-
 bool GOrgueSound::HasRandomPipeSpeech()
 {
 	return b_random;
@@ -326,11 +316,6 @@ bool GOrgueSound::HasRandomPipeSpeech()
 bool GOrgueSound::IsStereo()
 {
 	return b_stereo;
-}
-
-int GOrgueSound::GetVolume()
-{
-	return m_SoundEngine.GetVolume();
 }
 
 bool GOrgueSound::IsRecording()
@@ -430,11 +415,6 @@ const RtAudioFormat GOrgueSound::GetAudioFormat()
 GOrgueMidi& GOrgueSound::GetMidi()
 {
 	return *m_midi;
-}
-
-void GOrgueSound::StartSampler(GO_SAMPLER* sampler, int samplerGroupId)
-{
-	m_SoundEngine.StartSampler(sampler, samplerGroupId);
 }
 
 int GOrgueSound::AudioCallbackLocal

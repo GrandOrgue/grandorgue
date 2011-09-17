@@ -112,17 +112,6 @@ public:
 
 	void CloseWAV();
 
-	void SetPolyphonyLimit(int polyphony);
-	void SetVolume(int volume);
-	int GetVolume();
-
-	/* samplerGroupID:
-	   -1 .. -n Tremulants
-	   0 detached release
-	   1 .. n Windchests
-	*/
-	void StartSampler(GO_SAMPLER* sampler, int samplerGroupID);
-
 	bool HasRandomPipeSpeech();
 	bool IsStereo();
 

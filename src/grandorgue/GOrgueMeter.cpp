@@ -153,7 +153,7 @@ void GOrgueMeter::OnVolume(wxCommandEvent& event)
 #endif
 	}
 	if (g_sound)
-	    g_sound->SetVolume(n);
+	    g_sound->GetEngine().SetVolume(n);
 
 	m_meters[0]->ResetClip();
 	m_meters[1]->ResetClip();
@@ -180,7 +180,7 @@ void GOrgueMeter::OnPolyphony(wxCommandEvent& event)
 	wxConfig::Get()->Write(wxT("PolyphonyLimit"), n);
 	if (g_sound)
 	{
-		g_sound->SetPolyphonyLimit(n);
+		g_sound->GetEngine().SetHardPolyphony(n);
 	}
 }
 
