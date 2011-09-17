@@ -33,6 +33,8 @@ void GOSoundProviderWave::LoadFromFile
 	)
 {
 
+	ClearData();
+
 	wxLogDebug(_("Loading file %s"), filename.c_str());
 
 	/* Translate directory seperator from ODF(\) to native format */
