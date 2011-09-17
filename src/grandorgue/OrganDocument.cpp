@@ -57,7 +57,7 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	wxBusyCursor busy;
 
 	CloseOrgan();
-	bool open_sound = g_sound->OpenSound(false, NULL);
+	bool open_sound = g_sound->OpenSound(false, NULL, false);
 
 	/* abort if we failed to open the sound device */
 	if (!open_sound)

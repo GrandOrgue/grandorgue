@@ -20,8 +20,7 @@
  * MA 02111-1307, USA.
  */
 
-#include "GOrgueSound.h"
-
+#include "GOSoundEngine.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrguePipe.h"
@@ -29,6 +28,108 @@
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 #include "RtAudio.h"
+
+GOSoundEngine::GOSoundEngine() :
+	m_DetachedRelease(0),
+	m_SamplerCount(0),
+	m_PolyphonyLimit(2048),
+	m_PolyphonySoftLimit((2048*3)/4),
+	m_PolyphonyLimiting(true),
+	m_Volume(100),
+	m_CurrentTime(0),
+	m_Windchests(),
+	m_Tremulants()
+
+
+
+{
+
+}
+
+void GOSoundEngine::Reset()
+{
+	m_SamplerCount = 0;
+	for (unsigned i = 0; i < MAX_POLYPHONY; i++)
+		m_AvailableSamplers[i] = m_Samplers + i;
+	for (unsigned i = 0; i < m_Windchests.size(); i++)
+		m_Windchests[i].base_sampler = 0;
+	for (unsigned i = 0; i < m_Tremulants.size(); i++)
+		m_Tremulants[i].sampler = 0;
+	m_DetachedRelease = 0;
+	m_CurrentTime = 0;
+}
+
+GO_SAMPLER* GOSoundEngine::OpenNewSampler()
+{
+
+	if (m_SamplerCount >= m_PolyphonyLimit)
+		return NULL;
+
+	GO_SAMPLER* sampler = m_AvailableSamplers[m_SamplerCount++];
+	memset(sampler, 0, sizeof(GO_SAMPLER));
+	return sampler;
+
+}
+
+void GOSoundEngine::SetVolume(int volume)
+{
+	m_Volume = volume;
+}
+
+void GOSoundEngine::SetHardPolyphony(unsigned polyphony)
+{
+	m_PolyphonyLimit = polyphony;
+	m_PolyphonySoftLimit = (polyphony * 3) / 4;
+}
+
+void GOSoundEngine::SetPolyphonyLimiting(bool limiting)
+{
+	m_PolyphonyLimiting = limiting;
+}
+
+unsigned GOSoundEngine::GetHardPolyphony() const
+{
+	return m_PolyphonyLimit;
+}
+
+int GOSoundEngine::GetVolume() const
+{
+	return m_Volume;
+}
+
+void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int samplerGroupId)
+{
+	if (samplerGroupId == 0)
+	{
+		sampler->next = m_DetachedRelease;
+		m_DetachedRelease = sampler;
+	}
+	else if (samplerGroupId < 0)
+	{
+		sampler->next = m_Tremulants[-1-samplerGroupId].sampler;
+		m_Tremulants[-1-samplerGroupId].sampler = sampler;
+	}
+	else
+	{
+		sampler->next = m_Windchests[samplerGroupId - 1].base_sampler;
+		m_Windchests[samplerGroupId - 1].base_sampler = sampler;
+	}
+}
+
+unsigned GOSoundEngine::GetCurrentTime() const
+{
+	return m_CurrentTime;
+}
+
+
+void GOSoundEngine::Setup(GrandOrgueFile* organ_file)
+{
+	m_Windchests.resize(organ_file->GetWinchestGroupCount());
+	for (unsigned i = 0; i < m_Windchests.size(); i++)
+		m_Windchests[i].windchest = organ_file->GetWindchest(i);
+	m_Tremulants.resize(organ_file->GetTremulantCount());
+	Reset();
+}
 
 static
 inline
@@ -357,7 +458,7 @@ void ReadSamplerFrames
 }
 
 inline
-void GOrgueSound::ProcessAudioSamplers
+void GOSoundEngine::ProcessAudioSamplers
 	(GO_SAMPLER** list_start
 	,unsigned int n_frames
 	,int* output_buffer
@@ -372,10 +473,10 @@ void GOrgueSound::ProcessAudioSamplers
 	{
 
 		if  (
-				(b_limit) &&
-				(samplers_count >= poly_soft) &&
+				(m_PolyphonyLimiting) &&
+				(m_SamplerCount >= m_PolyphonySoftLimit) &&
 				(sampler->pipe_section->stage == GSS_RELEASE) &&
-				(m_organfile->GetElapsedTime() - sampler->time > 250)
+				(m_CurrentTime - sampler->time > 172)
 			)
 			sampler->fadeout = 4;
 
@@ -417,7 +518,8 @@ void GOrgueSound::ProcessAudioSamplers
 			if (sampler == *list_start)
 				*list_start = sampler->next;
 			previous_valid_sampler->next = sampler->next;
-			samplers_open[--samplers_count] = sampler;
+			assert(samplers_count > 0);
+			m_AvailableSamplers[--m_SamplerCount] = sampler;
 		}
 		else
 		{
@@ -431,160 +533,125 @@ void GOrgueSound::ProcessAudioSamplers
 // this callback will fill the buffer with bufferSize frame
 // audio is opened with 32 bit stereo, so one frame is 64bit (32bit for right 32bit for left)
 // So buffer can handle 8*bufferSize char (or 2*bufferSize float)
-inline
-int GOrgueSound::AudioCallbackLocal
-	(float *output_buffer
-	,unsigned int n_frames
-	,double stream_time
+int GOSoundEngine::GetSamples
+	(float      *output_buffer
+	,unsigned    n_frames
+	,double      stream_time
+	,METER_INFO *meter_info
 	)
 {
 
-	if (m_organfile)
-		m_organfile->SetElapsedTime(sw.Time());
-
-	m_midi->ProcessMessages(b_active);
-
 	/* if no samplers playing, or sound is disabled, fill buffer with zero */
-	if (!b_active || !samplers_count || !m_organfile)
-	{
-
+	if (!m_SamplerCount)
 		memset(output_buffer, 0, (n_frames * sizeof(float)));
 
-		/* we can only abort for the case of the sound system not being active
-		 * (because recording could be enabled... */
-		if (!b_active || !m_organfile)
-			return 0;
-
-	}
-
-	/* update the polyphony meter if a new peak has occured */
-	if (samplers_count > meter_poly)
-		meter_poly = samplers_count;
-
 	/* initialise the output buffer */
-	std::fill(final_buff, final_buff + 2048, 0);
+	std::fill(m_FinalBuffer, m_FinalBuffer + 2048, 0);
 
-	for (unsigned j = 0; j < m_organfile->GetTremulantCount(); j++)
+	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 	{
-		if (m_tremulants[j].sampler == NULL)
+		if (m_Tremulants[j].sampler == NULL)
 			continue;
 
-		int* this_buff = m_tremulants[j].buff;
+		int* this_buff = m_Tremulants[j].buff;
 
 		std::fill (this_buff, this_buff + 2048, 0x800000);
 
-		ProcessAudioSamplers (&(m_tremulants[j].sampler), n_frames, this_buff);
+		ProcessAudioSamplers (&(m_Tremulants[j].sampler), n_frames, this_buff);
 	}
 
-	if (m_detachedRelease != NULL)
+	if (m_DetachedRelease != NULL)
 	{
-		int* this_buff = g_buff;
+		int* this_buff = m_TempSoundBuffer;
 
 		std::fill (this_buff, this_buff + 2048, 0);
 
-		ProcessAudioSamplers(&m_detachedRelease, n_frames, this_buff);
+		ProcessAudioSamplers(&m_DetachedRelease, n_frames, this_buff);
 
 		double d = 1.0;
-		d *= volume;
+		d *= m_Volume;
 		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
 		float f = d;
-		std::fill(volume_buff, volume_buff + 2048, f);
+		std::fill(m_VolumeBuffer, m_VolumeBuffer + 2048, f);
 
 		for (unsigned int k = 0; k < n_frames*2; k++)
 		{
 			double d = this_buff[k];
-			d *= volume_buff[k];
-			final_buff[k] += d;
+			d *= m_VolumeBuffer[k];
+			m_FinalBuffer[k] += d;
 		}
 
 	}
 
-	for (unsigned j = 0; j < m_organfile->GetWinchestGroupCount(); j++)
+	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
 
-		if (m_windchests[j] == NULL)
+		if (m_Windchests[j].base_sampler == NULL)
 			continue;
 
-		int* this_buff = g_buff;
+		int* this_buff = m_TempSoundBuffer;
 
 		std::fill (this_buff, this_buff + 2048, 0);
 
-		ProcessAudioSamplers(&(m_windchests[j]), n_frames, this_buff);
+		ProcessAudioSamplers(&(m_Windchests[j].base_sampler), n_frames, this_buff);
 
-		GOrgueWindchest* current_windchest = m_organfile->GetWindchest(j);
+		GOrgueWindchest* current_windchest = m_Windchests[j].windchest;
 		double d = current_windchest->GetVolume();
-		d *= volume;
+		d *= m_Volume;
 		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
 		float f = d;
-		std::fill(volume_buff, volume_buff + 2048, f);
+		std::fill(m_VolumeBuffer, m_VolumeBuffer + 2048, f);
 
 		for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
 		{
 			unsigned tremulant_pos = current_windchest->GetTremulantId(i);
-			if (!m_tremulants[tremulant_pos].sampler)
+			if (!m_Tremulants[tremulant_pos].sampler)
 				continue;
-			int *ptr = m_tremulants[tremulant_pos].buff;
+			int *ptr = m_Tremulants[tremulant_pos].buff;
 			for (unsigned int k = 0; k < n_frames*2; k++)
 			{
 				//multiply by 2^-23
-				volume_buff[k] *= ldexp(ptr[k], -23);
+				m_VolumeBuffer[k] *= ldexp(ptr[k], -23);
 			}
 		}
 
 		for (unsigned int k = 0; k < n_frames*2; k++)
 		{
 			double d = this_buff[k];
-			d *= volume_buff[k];
-			final_buff[k] += d;
+			d *= m_VolumeBuffer[k];
+			m_FinalBuffer[k] += d;
 		}
 
 	}
 
 	/* Clamp the output */
 	double clamp_min = -1.0, clamp_max = 1.0;
-	for (unsigned int k = 0; k < n_frames * 2; k += 2)
+	if (meter_info)
 	{
-
-		double d = std::min(std::max(final_buff[k + 0], clamp_min), clamp_max);
-		output_buffer[k + 0]  = (float)d;
-		meter_left  = std::max(meter_left, fabs(d));
-
-		d = std::min(std::max(final_buff[k + 1], clamp_min), clamp_max);
-		output_buffer[k + 1]  = (float)d;
-		meter_right = std::max(meter_right, fabs(d));
-
+		if (m_SamplerCount > meter_info->current_polyphony)
+			meter_info->current_polyphony = m_SamplerCount;
+		for (unsigned int k = 0; k < n_frames * 2; k += 2)
+		{
+			double d = std::min(std::max(m_FinalBuffer[k + 0], clamp_min), clamp_max);
+			output_buffer[k + 0]  = (float)d;
+			meter_info->meter_left = (meter_info->meter_left > output_buffer[k + 0]) ? meter_info->meter_left : output_buffer[k + 0];
+			d = std::min(std::max(m_FinalBuffer[k + 1], clamp_min), clamp_max);
+			output_buffer[k + 1]  = (float)d;
+			meter_info->meter_right = (meter_info->meter_right > output_buffer[k + 1]) ? meter_info->meter_right : output_buffer[k + 1];
+		}
+	}
+	else
+	{
+		for (unsigned int k = 0; k < n_frames * 2; k += 2)
+		{
+			double d = std::min(std::max(m_FinalBuffer[k + 0], clamp_min), clamp_max);
+			output_buffer[k + 0]  = (float)d;
+			d = std::min(std::max(m_FinalBuffer[k + 1], clamp_min), clamp_max);
+			output_buffer[k + 1]  = (float)d;
+		}
 	}
 
-	/* Write data to file if recording is enabled*/
-	if (f_output)
-	{
-		fwrite(output_buffer, sizeof(float), n_frames * 2, f_output);
-		if (b_stoprecording)
-			CloseWAV();
-	}
-
-	/* Update the meter */
-	meter_counter += n_frames;
-	if (meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
-	{
-
-		// polyphony
-		int n = ( 33 * meter_poly ) / polyphony;
-		n <<= 8;
-		// right channel
-		n |= lrint(32.50000000000001 * meter_right);
-		n <<= 8;
-		// left  channel
-		n |= lrint(32.50000000000001 * meter_left );
-
-		wxCommandEvent event(wxEVT_METERS, 0);
-		event.SetInt(n);
-		wxTheApp->GetTopWindow()->AddPendingEvent(event);
-
-		meter_counter = meter_poly = 0;
-		meter_left = meter_right = 0.0;
-
-	}
+	m_CurrentTime += 1;
 
 	return 0;
 }

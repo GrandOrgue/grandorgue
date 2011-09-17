@@ -86,6 +86,7 @@ GOGUIPanel.cpp
 GOGUIPanelWidget.cpp
 GOGUIPushbutton.cpp
 GOGUISetterButton.cpp
+GOSoundEngine.cpp
 GOrgueWave.cpp
 GOrgueControl.cpp
 GOrgueCoupler.cpp
@@ -112,7 +113,6 @@ GOrgueRtHelpers.cpp
 GOrgueSetter.cpp
 GOrgueSetterButton.cpp
 GOrgueSound.cpp
-GOrgueSoundCallbackAudio.cpp
 GOrgueStop.cpp
 GOrgueTremulant.cpp
 GOrgueWindchest.cpp

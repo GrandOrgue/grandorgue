@@ -23,13 +23,13 @@
 #ifndef GORGUESOUND_H
 #define GORGUESOUND_H
 
-
 #include <wx/wx.h>
 #include <wx/stopwatch.h>
 #include <map>
 #include <vector>
 #include "RtAudio.h"
 #include "GrandOrgueDef.h"
+#include "GOSoundEngine.h"
 
 class wxConfigBase;
 class GrandOrgueFile;
@@ -49,19 +49,6 @@ public:
 	} GO_SOUND_DEV_CONFIG;
 
 private:
-	typedef int sound_buffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
-	typedef struct {
-		GO_SAMPLER* sampler;
-		sound_buffer buff;
-	} tremulant_data;
-
-	/* These are only used by the audio callback... */
-	double final_buff[MAX_FRAME_SIZE * MAX_OUTPUT_CHANNELS];
-	float volume_buff[MAX_FRAME_SIZE * MAX_OUTPUT_CHANNELS];
-	sound_buffer g_buff;
-
-	/* this buffer is used as a temprary when decoding frame data */
-	int m_TempDecodeBuffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
 
 	/* end audio callback variables */
 
@@ -69,16 +56,9 @@ private:
 
 	wxConfigBase *pConfig;
 
-	GO_SAMPLER samplers[MAX_POLYPHONY];
-	GO_SAMPLER* samplers_open[MAX_POLYPHONY];
 	RtAudioFormat format;
 
 	bool logSoundErrors;
-
-	int samplers_count;
-	int polyphony;
-	int poly_soft;
-	int volume;
 
 	std::map<wxString, GO_SOUND_DEV_CONFIG> m_audioDevices;
 	RtAudio* audioDevice;
@@ -87,15 +67,13 @@ private:
 	unsigned m_samples_per_buffer;
 	unsigned m_nb_buffers;
 
-	int b_limit, b_stereo, b_align, b_scale;
+	int b_stereo, b_align, b_scale;
 	int b_random;
 	bool b_stoprecording;
 	FILE *f_output;
 
 	short meter_counter;
-	short meter_poly;
-	double meter_left;
-	double meter_right;
+	METER_INFO meter_info;
 
 	bool b_active;
 
@@ -104,25 +82,12 @@ private:
 	GOrgueMidi* m_midi;
 	GrandOrgueFile* m_organfile;
 
-private:
+	GOSoundEngine m_SoundEngine;
 
-	void ProcessAudioSamplers
-		(GO_SAMPLER** list_start
-		,unsigned int n_frames
-		,int* output_buffer
-		);
-
-	void MIDICallback
-		(std::vector<unsigned char>& msg
-		,int which
-		);
-
-	/* The RtAudio callback (below) will call this function, localising it to
-	 * the correct GOrgueSound object. */
 	int AudioCallbackLocal
-		(float *output_buffer
-		,unsigned int n_frames
-		,double stream_time
+		(float* outputBuffer
+		,unsigned int nFrames
+		,double streamTime
 		);
 
 	/* This is the callback issued by RtAudio */
@@ -136,23 +101,18 @@ private:
 		,void *userData
 		);
 
-	std::vector<GO_SAMPLER*> m_windchests;
-	GO_SAMPLER* m_detachedRelease;
-	std::vector<tremulant_data> m_tremulants;
-
 public:
 
 	GOrgueSound(void);
 	~GOrgueSound(void);
 
-	bool OpenSound(bool wait, GrandOrgueFile* organfile);
+	bool OpenSound(bool wait, GrandOrgueFile* organfile, bool open_inactive);
 	void CloseSound();
 	bool ResetSound();
 
 	void CloseWAV();
 
 	void SetPolyphonyLimit(int polyphony);
-	void SetPolyphonySoftLimit(int polyphony_soft);
 	void SetVolume(int volume);
 	int GetVolume();
 
@@ -176,6 +136,8 @@ public:
 	bool IsActive();
 	void PreparePlayback(GrandOrgueFile* organfile);
 	void ActivatePlayback();
+
+	unsigned GetSamplerTime() const;
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
 
