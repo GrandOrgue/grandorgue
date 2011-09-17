@@ -109,7 +109,7 @@ bool GOSoundProvider::LoadCache(wxInputStream* cache)
 	if (!LoadCacheAudioSection(cache, &m_Loop, false))
 		return false;
 
-	if (!LoadCacheAudioSection(cache, &m_Release, false))
+	if (!LoadCacheAudioSection(cache, &m_Release, true))
 		return false;
 
 	return true;
@@ -120,7 +120,7 @@ bool GOSoundProvider::SaveCacheAudioSection
 	(wxOutputStream* cache, const AUDIO_SECTION* section, bool save_align_tracker)
 {
 
-	cache->Write(&section, sizeof(AUDIO_SECTION));
+	cache->Write(section, sizeof(AUDIO_SECTION));
 	if (cache->LastWrite() != sizeof(AUDIO_SECTION))
 		return false;
 
@@ -131,12 +131,12 @@ bool GOSoundProvider::SaveCacheAudioSection
 	if (save_align_tracker)
 	{
 
-		bool release = section->release_aligner != NULL;
-		cache->Write(&release, sizeof(release));
-		if (cache->LastWrite() != sizeof(release))
+		bool has_align_tracker = section->release_aligner != NULL;
+		cache->Write(&has_align_tracker, sizeof(has_align_tracker));
+		if (cache->LastWrite() != sizeof(has_align_tracker))
 			return false;
 
-		if (release)
+		if (has_align_tracker)
 			if (!section->release_aligner->Save(cache))
 				return false;
 
