@@ -253,7 +253,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_tremulant.push_back(new GOrgueTremulant(this));
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		m_tremulant[i]->Load(ini, buffer, i + 1);
+		m_tremulant[i]->Load(ini, buffer, -((int)(i + 1)));
 	}
 
 	for (unsigned  i = 0; i < m_NumberOfWindchestGroups; i++)

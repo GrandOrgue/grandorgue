@@ -21,35 +21,37 @@
  */
 
 #include "GOrgueTremulant.h"
-#include "GOrguePipe.h"
+#include "GOrgueSound.h"
+
+extern GOrgueSound* g_sound;
 
 GOrgueTremulant::GOrgueTremulant(GrandOrgueFile* organfile) :
 	GOrgueDrawstop(organfile),
-	Period(0),
-	StartRate(0),
-	StopRate(0),
-	AmpModDepth(0),
-	m_pipe(NULL)
+	m_Period(0),
+	m_StartRate(0),
+	m_StopRate(0),
+	m_AmpModDepth(0),
+	m_TremProvider(),
+	m_PlaybackHandle(0),
+	m_SamplerGroupID(0)
 {
 }
 
 GOrgueTremulant::~GOrgueTremulant()
 {
-	if (m_pipe)
-		delete m_pipe;
 }
 
-void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, unsigned ObjectNumber)
+void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, int sampler_group_id)
 {
-	Period = cfg.ReadLong(group, wxT("Period"), 32, 441000);
-	StartRate = cfg.ReadInteger(group, wxT("StartRate"), 1, 100);
-	StopRate = cfg.ReadInteger(group, wxT("StopRate"), 1, 100);
-	AmpModDepth = cfg.ReadInteger(group, wxT("AmpModDepth"), 1, 100);
+	m_Period            = cfg.ReadLong(group, wxT("Period"), 32, 441000);
+	m_StartRate         = cfg.ReadInteger(group, wxT("StartRate"), 1, 100);
+	m_StopRate          = cfg.ReadInteger(group, wxT("StopRate"), 1, 100);
+	m_AmpModDepth       = cfg.ReadInteger(group, wxT("AmpModDepth"), 1, 100);
+	m_SamplerGroupID    = sampler_group_id;
+	m_PlaybackHandle    = 0;
+	m_TremProvider.Create(m_Period, m_StartRate, m_StopRate, m_AmpModDepth);
+	assert(!m_TremProvider.IsOneshot());
 	GOrgueDrawstop::Load(cfg, group);
-	if (m_pipe)
-		delete m_pipe;
-	m_pipe = new GOrguePipe(m_organfile, wxT(""), false, -ObjectNumber, 0);
-	m_pipe->CreateTremulant(Period, StartRate, StopRate, AmpModDepth);
 }
 
 void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix)
@@ -59,21 +61,33 @@ void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix)
 
 void GOrgueTremulant::Set(bool on)
 {
-	if (IsEngaged() == on)
-		return;
-	if (m_pipe)
-		m_pipe->Set(on);
-	GOrgueDrawstop::Set(on);
+	if (IsEngaged() != on)
+	{
+		if (on)
+		{
+			assert(m_SamplerGroupID < 0);
+			m_PlaybackHandle = g_sound->GetEngine().StartSample(&m_TremProvider, m_SamplerGroupID);
+			on = (m_PlaybackHandle != NULL);
+		}
+		else
+		{
+			assert(m_PlaybackHandle);
+			g_sound->GetEngine().StopSample(&m_TremProvider, m_PlaybackHandle);
+		}
+		GOrgueDrawstop::Set(on);
+	}
 }
 
 void GOrgueTremulant::Abort()
 {
-	if (m_pipe)
-		m_pipe->FastAbort();
+	m_PlaybackHandle = NULL;
 }
 
 void GOrgueTremulant::PreparePlayback()
 {
-	if (m_pipe && IsEngaged())
-		m_pipe->Set(true);
+	if (IsEngaged())
+	{
+		assert(m_SamplerGroupID < 0);
+		m_PlaybackHandle = g_sound->GetEngine().StartSample(&m_TremProvider, m_SamplerGroupID);
+	}
 }

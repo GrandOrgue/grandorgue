@@ -26,23 +26,25 @@
 #include <wx/wx.h>
 #include "GOrgueDrawStop.h"
 #include "IniFileConfig.h"
-
-class GOrguePipe;
+#include "GOSoundProviderSynthedTrem.h"
+#include "GOSoundEngine.h"
 
 class GOrgueTremulant : public GOrgueDrawstop
 {
 
 private:
-	wxInt32 Period;
-	wxInt16 StartRate;
-	wxInt16 StopRate;
-	wxInt16 AmpModDepth;
-	GOrguePipe* m_pipe;
+	int m_Period;
+	int m_StartRate;
+	int m_StopRate;
+	int m_AmpModDepth;
+	GOSoundProviderSynthedTrem m_TremProvider;
+	SAMPLER_HANDLE m_PlaybackHandle;
+	int m_SamplerGroupID;
 
 public:
 	GOrgueTremulant(GrandOrgueFile* organfile);
 	~GOrgueTremulant();
-	void Load(IniFileConfig& cfg, wxString group, unsigned ObjectNumber);
+	void Load(IniFileConfig& cfg, wxString group, int sampler_group_id);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
 	void Abort();
