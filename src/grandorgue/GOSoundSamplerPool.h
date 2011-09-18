@@ -32,11 +32,11 @@ class GOSoundSamplerPool
 {
 
 private:
-	wxCriticalSection m_lock;
-	unsigned       m_SamplerCount;
-	unsigned       m_UsageLimit;
-	GO_SAMPLER    *m_AvailableSamplers[MAX_POLYPHONY];
-	GO_SAMPLER     m_Samplers[MAX_POLYPHONY];
+	wxCriticalSection  m_Lock;
+	unsigned           m_SamplerCount;
+	unsigned           m_UsageLimit;
+	GO_SAMPLER        *m_AvailableSamplers[MAX_POLYPHONY];
+	GO_SAMPLER         m_Samplers[MAX_POLYPHONY];
 
 public:
 	GOSoundSamplerPool();
