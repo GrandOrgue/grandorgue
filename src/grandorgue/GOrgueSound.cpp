@@ -140,7 +140,7 @@ GOrgueSound::~GOrgueSound(void)
 
 }
 
-bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile, bool open_inactive)
+bool GOrgueSound::OpenSound()
 {
 
 	bool opened_ok = false;
@@ -148,15 +148,13 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile, bool open_inac
 	defaultAudio = pConfig->Read(wxT("Devices/DefaultSound"), defaultAudio);
 	m_SoundEngine.SetPolyphonyLimiting(pConfig->Read(wxT("ManagePolyphony"), 1));
 	m_SoundEngine.SetHardPolyphony(pConfig->Read(wxT("PolyphonyLimit"), 2048));
-	m_SoundEngine.SetVolume((open_inactive) ? 0 : pConfig->Read(wxT("Volume"), 50));
+	m_SoundEngine.SetVolume(pConfig->Read(wxT("Volume"), 50));
 	m_SoundEngine.SetScaledReleases(pConfig->Read(wxT("ScaleRelease"), 1));
 	b_stereo = pConfig->Read(wxT("StereoEnabled"), 1);
 	b_align  = pConfig->Read(wxT("AlignRelease"), 1);
 	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
 
-	m_SoundEngine.Reset();
-
-	PreparePlayback(organfile);
+	PreparePlayback(NULL);
 
 	try
 	{
@@ -232,9 +230,6 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile, bool open_inac
 			wxLogError(msg.c_str());
 	}
 
-	if ((!opened_ok) || (wait))
-		::wxSleep(1);
-
 	if (!opened_ok)
 		CloseSound();
 
@@ -263,11 +258,12 @@ void GOrgueSound::CloseSound()
 		e.printMessage();
 	}
 
-	::wxMilliSleep(10);
+	wxCriticalSectionLocker locker(m_lock);
+
+	m_midi->SetOrganFile(NULL);
 	if (m_organfile)
 		m_organfile->Abort();
 	m_organfile = NULL;
-	m_midi->SetOrganFile(NULL);
 }
 
 bool GOrgueSound::ResetSound()
@@ -277,12 +273,12 @@ bool GOrgueSound::ResetSound()
 	GrandOrgueFile* organfile = m_organfile;
 
 	CloseSound();
-	if (!OpenSound(true, organfile, (m_SoundEngine.GetVolume() == 0) || !(b_active)))
+	if (!OpenSound())
 		return false;
 	b_active = was_active;
 	if (organfile)
 	{
-		organfile->PreparePlayback();
+		PreparePlayback(organfile);
 		b_active = true;
 	}
 	return true;
@@ -320,16 +316,19 @@ bool GOrgueSound::IsActive()
 
 void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 {
+	wxCriticalSectionLocker locker(m_lock);
+
 	m_organfile = organfile;
-	m_midi->SetOrganFile(organfile);
 	if (organfile)
 	{
 		m_SoundEngine.Setup(organfile);
+		organfile->PreparePlayback();
 	}
 	else
 	{
 		m_SoundEngine.Reset();
 	}
+	m_midi->SetOrganFile(organfile);
 }
 
 void GOrgueSound::ActivatePlayback()
@@ -387,6 +386,7 @@ int GOrgueSound::AudioCallbackLocal
 	,double stream_time
 	)
 {
+	wxCriticalSectionLocker locker(m_lock);
 
 	if (!b_active || !m_organfile)
 	{
