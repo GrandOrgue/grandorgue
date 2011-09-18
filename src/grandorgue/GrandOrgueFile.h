@@ -43,6 +43,9 @@ class GOrgueTremulant;
 class GOrgueWindchest;
 class GOGUIPanel;
 class OrganDocument;
+class GOSoundProvider;
+class GOSoundEngine;
+typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
 class GrandOrgueFile 
 {
@@ -86,6 +89,8 @@ private:
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
 
+	GOSoundEngine* m_soundengine;
+
 	void ReadOrganFile(wxFileConfig& odf_ini_file);
 	bool TryLoad(wxInputStream* cache, wxProgressDialog& dlg, wxString& error);
 	void GenerateCacheHash(unsigned char hash[20]);
@@ -100,7 +105,7 @@ public:
 	void DeleteCache();
 	void Revert(wxFileConfig& cfg);
 	void Abort();
-	void PreparePlayback();
+	void PreparePlayback(GOSoundEngine* engine);
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void ControlChanged(void* control);
@@ -156,6 +161,8 @@ public:
 	const wxString& GetRecordingDetails();
 	const wxString& GetInfoFilename();
 
+	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id);
+	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 };
 
 #endif

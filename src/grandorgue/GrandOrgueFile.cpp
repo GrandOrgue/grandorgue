@@ -47,6 +47,7 @@
 #include "OrganDocument.h"
 #include "GrandOrgueDef.h"
 #include "GOGUIPanel.h"
+#include "GOSoundEngine.h"
 #include "contrib/sha1.h"
 
 GrandOrgueFile::GrandOrgueFile(OrganDocument* doc) :
@@ -80,7 +81,8 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc) :
 	m_general(0),
 	m_divisionalcoupler(0),
 	m_manual(0),
-	m_panels(0)
+	m_panels(0),
+	m_soundengine(0)
 {
 }
 
@@ -835,8 +837,23 @@ const wxString& GrandOrgueFile::GetODFFilename()
 	return m_filename;
 }
 
+SAMPLER_HANDLE GrandOrgueFile::StartSample(const GOSoundProvider *pipe, int sampler_group_id)
+{
+	if (!m_soundengine)
+		return NULL;
+	return m_soundengine->StartSample(pipe, sampler_group_id);
+}
+
+void GrandOrgueFile::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle)
+{
+	if (m_soundengine)
+		m_soundengine->StopSample(pipe, handle);
+}
+
 void GrandOrgueFile::Abort()
 {
+	m_soundengine = NULL;
+
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->Abort();
 
@@ -844,8 +861,10 @@ void GrandOrgueFile::Abort()
 		m_tremulant[i]->Abort();
 }
 
-void GrandOrgueFile::PreparePlayback()
+void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine)
 {
+	m_soundengine = engine;
+
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->PreparePlayback();
 

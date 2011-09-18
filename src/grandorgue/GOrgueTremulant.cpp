@@ -21,10 +21,8 @@
  */
 
 #include "GOrgueTremulant.h"
-#include "GOrgueSound.h"
+#include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
-
-extern GOrgueSound* g_sound;
 
 GOrgueTremulant::GOrgueTremulant(GrandOrgueFile* organfile) :
 	GOrgueDrawstop(organfile),
@@ -67,13 +65,13 @@ void GOrgueTremulant::Set(bool on)
 		if (on)
 		{
 			assert(m_SamplerGroupID < 0);
-			m_PlaybackHandle = g_sound->GetEngine().StartSample(&m_TremProvider, m_SamplerGroupID);
+			m_PlaybackHandle = m_organfile->StartSample(&m_TremProvider, m_SamplerGroupID);
 			on = (m_PlaybackHandle != NULL);
 		}
 		else
 		{
 			assert(m_PlaybackHandle);
-			g_sound->GetEngine().StopSample(&m_TremProvider, m_PlaybackHandle);
+			m_organfile->StopSample(&m_TremProvider, m_PlaybackHandle);
 		}
 		GOrgueDrawstop::Set(on);
 	}
@@ -89,6 +87,6 @@ void GOrgueTremulant::PreparePlayback()
 	if (IsEngaged())
 	{
 		assert(m_SamplerGroupID < 0);
-		m_PlaybackHandle = g_sound->GetEngine().StartSample(&m_TremProvider, m_SamplerGroupID);
+		m_PlaybackHandle = m_organfile->StartSample(&m_TremProvider, m_SamplerGroupID);
 	}
 }

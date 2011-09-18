@@ -322,7 +322,7 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 	if (organfile)
 	{
 		m_SoundEngine.Setup(organfile);
-		organfile->PreparePlayback();
+		organfile->PreparePlayback(&GetEngine());
 	}
 	else
 	{
