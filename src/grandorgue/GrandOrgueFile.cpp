@@ -29,8 +29,6 @@
 #include <wx/zstream.h>
 
 #include "IniFileConfig.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
@@ -38,21 +36,18 @@
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
 #include "GOrgueManual.h"
-#include "GOrgueMeter.h"
 #include "GOrguePipe.h"
 #include "GOrguePiston.h"
 #include "GOrguePushbutton.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueSetter.h"
-#include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueWindchest.h"
 #include "OrganDocument.h"
+#include "GrandOrgueDef.h"
 #include "GOGUIPanel.h"
 #include "contrib/sha1.h"
-
-extern GOrgueSound* g_sound;
 
 GrandOrgueFile::GrandOrgueFile(OrganDocument* doc) :
 	m_doc(doc),
@@ -60,6 +55,7 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc) :
 	m_b_squash(0),
 	m_filename(),
 	m_setter(0),
+	m_volume(0),
 	m_b_customized(false),
 	m_DivisionalsStoreIntermanualCouplers(false),
 	m_DivisionalsStoreIntramanualCouplers(false),
@@ -228,6 +224,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_DivisionalsStoreTremulants = ini.ReadBoolean(group, wxT("DivisionalsStoreTremulants"));
 	m_GeneralsStoreDivisionalCouplers = ini.ReadBoolean(group, wxT("GeneralsStoreDivisionalCouplers"));
 	m_CombinationsStoreNonDisplayedDrawstops = ini.ReadBoolean(group, wxT("CombinationsStoreNonDisplayedDrawstops"));
+	m_volume = ini.ReadInteger(group, wxT("Volume"), -1, 100, false, -1);
 
 	wxString buffer;
 
@@ -500,8 +497,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		return error_;
 	}
 
-	::wxGetApp().frame->m_meters[0]->SetValue(odf_ini_file.Read(wxT("/Organ/Volume"), g_sound->GetEngine().GetVolume()));
-
 	GOrgueLCD_WriteLineTwo(_("Ready!"));
 
 	return wxEmptyString;
@@ -635,7 +630,8 @@ void GrandOrgueFile::Save(const wxString& file)
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchName"), m_ChurchName);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
-	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), g_sound->GetEngine().GetVolume());
+	if (m_volume >= 0)
+		aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), m_volume);
 
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->Save(aIni, prefix);
@@ -660,6 +656,16 @@ void GrandOrgueFile::Save(const wxString& file)
 
 	for(unsigned i = 0; i < m_panels.size(); i++)
 		m_panels[i]->Save(aIni, prefix);
+}
+
+void GrandOrgueFile::SetVolume(int volume)
+{
+	m_volume = volume;
+}
+
+int GrandOrgueFile::GetVolume()
+{
+	return m_volume;
 }
 
 unsigned GrandOrgueFile::GetFirstManualIndex()

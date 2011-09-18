@@ -54,6 +54,7 @@ private:
 	int m_b_squash;
 	wxString m_filename;
 	GOrgueSetter* m_setter;
+	int m_volume;
 
 	bool m_b_customized : 1;
 	bool m_DivisionalsStoreIntermanualCouplers : 1;
@@ -132,6 +133,9 @@ public:
 	bool DivisionalsStoreTremulants();
 	bool CombinationsStoreNonDisplayedDrawstops();
 	bool GeneralsStoreDivisionalCouplers();
+
+	void SetVolume(int volume);
+	int GetVolume();
 
 	/* Overal amplitude of the organ when played back (used to prevent
 	 * clipping, etc) */
