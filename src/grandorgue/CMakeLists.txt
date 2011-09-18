@@ -90,6 +90,7 @@ GOSoundEngine.cpp
 GOSoundProvider.cpp
 GOSoundProviderSynthedTrem.cpp
 GOSoundProviderWave.cpp
+GOSoundRecorder.cpp
 GOSoundSamplerPool.cpp
 GOrgueWave.cpp
 GOrgueControl.cpp

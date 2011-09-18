@@ -36,6 +36,7 @@ class GrandOrgueFile;
 class GOrgueMidi;
 
 #include "GOrgueSoundTypes.h"
+#include "GOSoundRecorder.h"
 
 class GOrgueSound
 {
@@ -66,8 +67,6 @@ private:
 
 	int b_stereo, b_align;
 	int b_random;
-	bool b_stoprecording;
-	FILE *f_output;
 
 	short meter_counter;
 	METER_INFO meter_info;
@@ -78,6 +77,7 @@ private:
 
 	GOrgueMidi* m_midi;
 	GrandOrgueFile* m_organfile;
+	GOSoundRecorder m_recorder;
 
 	GOSoundEngine m_SoundEngine;
 
@@ -106,8 +106,6 @@ public:
 	bool OpenSound(bool wait, GrandOrgueFile* organfile, bool open_inactive);
 	void CloseSound();
 	bool ResetSound();
-
-	void CloseWAV();
 
 	bool HasRandomPipeSpeech();
 	bool IsStereo();
