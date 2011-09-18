@@ -26,7 +26,6 @@
 #include "GOrgueSoundTypes.h"
 #include "GOSoundSamplerPool.h"
 #include "GrandOrgueDef.h"
-#include "wx/thread.h"
 #include <vector>
 #include <string.h>
 

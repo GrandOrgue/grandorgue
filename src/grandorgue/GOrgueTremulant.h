@@ -25,9 +25,10 @@
 
 #include <wx/wx.h>
 #include "GOrgueDrawStop.h"
-#include "IniFileConfig.h"
 #include "GOSoundProviderSynthedTrem.h"
-#include "GOSoundEngine.h"
+
+class IniFileConfig;
+typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
 class GOrgueTremulant : public GOrgueDrawstop
 {

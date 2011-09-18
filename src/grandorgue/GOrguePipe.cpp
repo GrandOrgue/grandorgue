@@ -25,8 +25,6 @@
 #include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueManual.h"
-#include "GOrgueWindchest.h"
-#include "GOrgueReleaseAlignTable.h"
 #include "GrandOrgueFile.h"
 #include "GOSoundProviderWave.h"
 

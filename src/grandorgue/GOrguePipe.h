@@ -24,11 +24,10 @@
 #define GORGUEPIPE_H
 
 #include <wx/wx.h>
-#include "GOrgueSoundTypes.h"
-#include "GOSoundEngine.h"
 #include "GOSoundProviderWave.h"
 
 class GrandOrgueFile;
+typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
 class GOrguePipe
 {
