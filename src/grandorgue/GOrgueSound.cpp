@@ -43,8 +43,6 @@ GOrgueSound::GOrgueSound(void) :
 	b_stereo(0),
 	b_align(0),
 	b_random(0),
-	b_stoprecording(false),
-	f_output(NULL),
 	meter_counter(0),
 	b_active(false),
 	defaultAudio(wxT(""))
@@ -246,12 +244,7 @@ bool GOrgueSound::OpenSound(bool wait, GrandOrgueFile* organfile, bool open_inac
 
 void GOrgueSound::CloseSound()
 {
-	if (f_output)
-	{
-		b_stoprecording = true;
-		::wxMilliSleep(100);
-		CloseWAV();		// this should never be necessary...
-	}
+	m_recorder.Close();
 
 	b_active = false;
 
@@ -295,18 +288,6 @@ bool GOrgueSound::ResetSound()
 	return true;
 }
 
-void GOrgueSound::CloseWAV()
-{
-	if (!f_output)
-		return;
-	WAVE.Subchunk2Size = (WAVE.ChunkSize = ftell(f_output) - 8) - 36;
-    fseek(f_output, 0, SEEK_SET);
-	fwrite(&WAVE, sizeof(WAVE), 1, f_output);
-	fclose(f_output);
-	b_stoprecording = false;
-	f_output = 0;
-}
-
 bool GOrgueSound::HasRandomPipeSpeech()
 {
 	return b_random;
@@ -319,33 +300,17 @@ bool GOrgueSound::IsStereo()
 
 bool GOrgueSound::IsRecording()
 {
-	return f_output && !b_stoprecording;
+	return m_recorder.IsOpen();
 }
 
-/* FIXME: This code is not thread-safe and is likely to cause future problems */
 void GOrgueSound::StartRecording(wxString filepath)
 {
-	if (f_output)
-		return;
-	b_stoprecording = false;
-	FILE* out = fopen(filepath.mb_str(), "wb");
-	if (out)
-	{
-		fwrite(&WAVE, sizeof(WAVE), 1, out);
-		f_output = out;
-	}
-        else
-            ::wxLogError(_("Unable to open file for writing"));
+	m_recorder.Open(filepath);
 }
 
 void GOrgueSound::StopRecording()
 {
-
-	if (!f_output)
-		return;
-
-	b_stoprecording = true;
-
+	m_recorder.Close();
 }
 
 bool GOrgueSound::IsActive()
@@ -445,12 +410,7 @@ int GOrgueSound::AudioCallbackLocal
 		);
 
 	/* Write data to file if recording is enabled*/
-	if (f_output)
-	{
-		fwrite(output_buffer, sizeof(float), n_frames * 2, f_output);
-		if (b_stoprecording)
-			CloseWAV();
-	}
+	m_recorder.Write(output_buffer, n_frames * 2);
 
 	/* Update meters */
 	meter_counter += n_frames;
