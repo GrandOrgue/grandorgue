@@ -388,8 +388,6 @@ int GOrgueSound::AudioCallbackLocal
 	)
 {
 
-	m_midi->ProcessMessages(b_active);
-
 	if (!b_active || !m_organfile)
 	{
 

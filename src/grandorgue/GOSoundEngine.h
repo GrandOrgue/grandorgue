@@ -78,10 +78,6 @@ private:
 		,int* output_buffer
 		);
 
-	void MIDICallback
-		(std::vector<unsigned char>& msg
-		,int which
-		);
 
 	/* Per sampler decode buffer */
 	int            m_TempDecodeBuffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
