@@ -22,13 +22,10 @@
 
 #include <wx/stream.h>
 #include "GOrguePipe.h"
-#include "GOrgueSound.h"
 #include "GOrgueStop.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
 #include "GOSoundProviderWave.h"
-
-extern GOrgueSound* g_sound;
 
 GOrguePipe::GOrguePipe
 	(GrandOrgueFile* organfile
@@ -64,7 +61,7 @@ void GOrguePipe::SetOn()
 	}
 	else
 	{
-		m_Sampler = g_sound->GetEngine().StartSample(GetSoundProvider(), m_SamplerGroupID);
+		m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID);
 		if ((m_Sampler) && (m_Instances == 0))
 			m_Instances++;
 	}
@@ -77,7 +74,7 @@ void GOrguePipe::SetOff()
 		m_Instances--;
 		if ((!GetSoundProvider()->IsOneshot()) && (m_Instances == 0))
 		{
-			g_sound->GetEngine().StopSample(GetSoundProvider(), m_Sampler);
+			m_OrganFile->StopSample(GetSoundProvider(), m_Sampler);
 			this->m_Sampler = 0;
 		}
 	}
@@ -143,8 +140,7 @@ void GOrguePipe::FastAbort()
 {
 	if (m_Reference)
 		m_Reference->FastAbort();
-	if (m_Instances > -1)
-		m_Instances = 0;
+	m_Instances = 0;
 	m_Sampler = 0;
 }
 
