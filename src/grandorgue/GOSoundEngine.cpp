@@ -23,12 +23,10 @@
 #include "GOSoundEngine.h"
 #include "GOSoundProvider.h"
 #include "GOrgueEvent.h"
-#include "GOrgueMidi.h"
 #include "GOrguePipe.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
-#include "RtAudio.h"
 
 GOSoundEngine::GOSoundEngine() :
 	m_DetachedRelease(0),

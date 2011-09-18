@@ -221,7 +221,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 void GOrgueReleaseAlignTable::SetupRelease
 	(GO_SAMPLER& release_sampler
 	,const GO_SAMPLER& old_sampler
-	)
+	) const
 {
 
 	/* Get combined release f's and v's */

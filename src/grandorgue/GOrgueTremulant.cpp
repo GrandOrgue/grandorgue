@@ -22,6 +22,7 @@
 
 #include "GOrgueTremulant.h"
 #include "GOrgueSound.h"
+#include "IniFileConfig.h"
 
 extern GOrgueSound* g_sound;
 

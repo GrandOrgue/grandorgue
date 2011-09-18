@@ -62,7 +62,7 @@ public:
 	void SetupRelease
 		(GO_SAMPLER_T& release_sampler
 		,const GO_SAMPLER_T& old_sampler
-		);
+		) const;
 
 };
 
