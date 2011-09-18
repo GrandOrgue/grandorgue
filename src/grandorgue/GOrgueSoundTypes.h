@@ -143,6 +143,7 @@ typedef struct GO_SAMPLER_T
 	int                        shift;
 	/* current byte index of the current block into this sample */
 	unsigned                   position;
+	bool                       stop;
 } GO_SAMPLER;
 
 
