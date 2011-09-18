@@ -23,6 +23,8 @@
 #ifndef GOSOUNDSAMPLERPOOL_H_
 #define GOSOUNDSAMPLERPOOL_H_
 
+#include <wx/wx.h>
+
 #include "GrandOrgueDef.h"
 #include "GOrgueSoundTypes.h"
 
@@ -30,6 +32,7 @@ class GOSoundSamplerPool
 {
 
 private:
+	wxCriticalSection m_lock;
 	unsigned       m_SamplerCount;
 	unsigned       m_UsageLimit;
 	GO_SAMPLER    *m_AvailableSamplers[MAX_POLYPHONY];
