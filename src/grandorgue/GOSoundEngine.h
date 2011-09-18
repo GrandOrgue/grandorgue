@@ -27,7 +27,6 @@
 #include "GOSoundSamplerPool.h"
 #include "GrandOrgueDef.h"
 #include <vector>
-#include <string.h>
 
 class GOrgueWindchest;
 class GOSoundProvider;
@@ -49,19 +48,36 @@ private:
 
 	typedef int sound_buffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
 
-	typedef struct
+	/* This is inteded to be struct, but needs copy constructors to make wxCriticalSection work with std::vector */
+	class GOSamplerEntry
 	{
-		GO_SAMPLER      *base_sampler;
-		GOrgueWindchest *windchest;
-	} windchest_entry;
+	public:
+		GO_SAMPLER       *sampler;
+		sound_buffer      buff;
+		wxCriticalSection lock;
+		GOrgueWindchest  *windchest;
 
-	typedef struct
-	{
-		GO_SAMPLER   *sampler;
-		sound_buffer  buff;
-	} tremulant_data;
+		GOSamplerEntry()
+		{
+			sampler = NULL;
+			windchest = NULL;
+		}
 
-	GO_SAMPLER                   *m_DetachedRelease;
+		GOSamplerEntry(const GOSamplerEntry& entry)
+		{
+			sampler = entry.sampler;
+			windchest = entry.windchest;
+		}
+
+		const GOSamplerEntry& operator=(const GOSamplerEntry& entry)
+		{
+			sampler = entry.sampler;
+			windchest = entry.windchest;
+			return *this;
+		}
+	};
+
+	GOSamplerEntry                m_DetachedRelease;
 	unsigned                      m_PolyphonySoftLimit;
 	bool                          m_PolyphonyLimiting;
 	bool                          m_ScaledReleases;
@@ -69,15 +85,10 @@ private:
 	int                           m_Volume;
 	unsigned long                 m_CurrentTime;
 	GOSoundSamplerPool            m_SamplerPool;
-	std::vector<windchest_entry>  m_Windchests;
-	std::vector<tremulant_data>   m_Tremulants;
+	std::vector<GOSamplerEntry>   m_Windchests;
+	std::vector<GOSamplerEntry>   m_Tremulants;
 
-	void ProcessAudioSamplers
-		(GO_SAMPLER** list_start
-		,unsigned int n_frames
-		,int* output_buffer
-		);
-
+	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, int* output_buffer);
 
 	/* Per sampler decode buffer */
 	int            m_TempDecodeBuffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
@@ -93,6 +104,8 @@ private:
 	   1 .. n Windchests
 	*/
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id);
+	void StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_id);
+	void CreateReleaseSampler(GO_SAMPLER* sampler);
 
 public:
 

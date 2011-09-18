@@ -29,7 +29,6 @@
 #include "GrandOrgueFile.h"
 
 GOSoundEngine::GOSoundEngine() :
-	m_DetachedRelease(0),
 	m_PolyphonyLimiting(true),
 	m_ScaledReleases(true),
 	m_ReleaseAlignmentEnabled(true),
@@ -41,15 +40,16 @@ GOSoundEngine::GOSoundEngine() :
 {
 	m_SamplerPool.SetUsageLimit(2048);
 	m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
+	Reset();
 }
 
 void GOSoundEngine::Reset()
 {
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
-		m_Windchests[i].base_sampler = 0;
+		m_Windchests[i].sampler = 0;
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 		m_Tremulants[i].sampler = 0;
-	m_DetachedRelease = 0;
+	m_DetachedRelease.sampler = 0;
 	m_SamplerPool.ReturnAll();
 	m_CurrentTime = 0;
 }
@@ -87,21 +87,35 @@ void GOSoundEngine::SetScaledReleases(bool enable)
 
 void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
 {
+	GOSamplerEntry* state;
+
 	if (sampler_group_id == 0)
-	{
-		sampler->next = m_DetachedRelease;
-		m_DetachedRelease = sampler;
-	}
+		state = &m_DetachedRelease;
 	else if (sampler_group_id < 0)
-	{
-		sampler->next = m_Tremulants[-1-sampler_group_id].sampler;
-		m_Tremulants[-1-sampler_group_id].sampler = sampler;
-	}
+		state = &m_Tremulants[-1-sampler_group_id];
 	else
-	{
-		sampler->next = m_Windchests[sampler_group_id - 1].base_sampler;
-		m_Windchests[sampler_group_id - 1].base_sampler = sampler;
-	}
+		state = &m_Windchests[sampler_group_id - 1];
+
+	wxCriticalSectionLocker locker(state->lock);
+	sampler->sampler_group_id = sampler_group_id;
+	sampler->next = state->sampler;
+	state->sampler = sampler;
+}
+
+void GOSoundEngine::StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_id)
+{
+	GOSamplerEntry* state;
+
+	if (sampler_group_id == 0)
+		state = &m_DetachedRelease;
+	else if (sampler_group_id < 0)
+		state = &m_Tremulants[-1-sampler_group_id];
+	else
+		state = &m_Windchests[sampler_group_id - 1];
+
+	sampler->sampler_group_id = sampler_group_id;
+	sampler->next = state->sampler;
+	state->sampler = sampler;
 }
 
 void GOSoundEngine::Setup(GrandOrgueFile* organ_file)
@@ -439,20 +453,45 @@ void ReadSamplerFrames
 
 }
 
-inline
-void GOSoundEngine::ProcessAudioSamplers
-	(GO_SAMPLER** list_start
-	,unsigned int n_frames
-	,int* output_buffer
-	)
+void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, int* output_buffer)
 {
+	wxCriticalSectionLocker locker(state.lock);
+	GO_SAMPLER** list_start = &state.sampler;
 
-	assert(list_start);
 	assert((n_frames & (n_frames - 1)) == 0);
 	assert(n_frames > BLOCKS_PER_FRAME);
 	GO_SAMPLER* previous_valid_sampler = *list_start;
 	for (GO_SAMPLER* sampler = *list_start; sampler; sampler = sampler->next)
 	{
+		if (sampler->stop)
+		{
+			CreateReleaseSampler(sampler);
+
+			/* The above code created a new sampler to playback the release, the
+			 * following code takes the active sampler for this pipe (which will be
+			 * in either the attack or loop section) and sets the fadeout property
+			 * which will decay this portion of the pipe. The sampler will
+			 * automatically be placed back in the pool when the fade restores to
+			 * zero.
+			 *
+			 * Fadeout is added to the fade value in the sampler every 2 samples, so
+			 * a pipe with an amplitude of 10000 (unadjusted playback level) will have
+			 * a fadeout value of
+			 *
+			 *   (32768 - 128) >> 8
+			 * = 127
+			 *
+			 * Which means that the sampler will fade out over a period of
+			 *   (2 * 32768) / 127
+			 * = 516 samples = 12ms
+			 */
+			sampler->fadeout = (-sampler->pipe->GetScaleAmplitude() - 128) >> 8; /* recall that ra_amp is negative
+											      * so this will actually be a
+											      * positive number */
+			if (!sampler->fadeout) /* ensure that the sample will fade out */
+				sampler->fadeout++;
+			sampler->stop = false;
+		}
 
 		if  (
 				(m_PolyphonyLimiting) &&
@@ -538,16 +577,16 @@ int GOSoundEngine::GetSamples
 
 		std::fill (this_buff, this_buff + 2048, 0x800000);
 
-		ProcessAudioSamplers (&(m_Tremulants[j].sampler), n_frames, this_buff);
+		ProcessAudioSamplers (m_Tremulants[j], n_frames, this_buff);
 	}
 
-	if (m_DetachedRelease != NULL)
+	if (m_DetachedRelease.sampler != NULL)
 	{
 		int* this_buff = m_TempSoundBuffer;
 
 		std::fill (this_buff, this_buff + 2048, 0);
 
-		ProcessAudioSamplers(&m_DetachedRelease, n_frames, this_buff);
+		ProcessAudioSamplers(m_DetachedRelease, n_frames, this_buff);
 
 		double d = 1.0;
 		d *= m_Volume;
@@ -567,14 +606,14 @@ int GOSoundEngine::GetSamples
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
 
-		if (m_Windchests[j].base_sampler == NULL)
+		if (m_Windchests[j].sampler == NULL)
 			continue;
 
 		int* this_buff = m_TempSoundBuffer;
 
 		std::fill (this_buff, this_buff + 2048, 0);
 
-		ProcessAudioSamplers(&(m_Windchests[j].base_sampler), n_frames, this_buff);
+		ProcessAudioSamplers(m_Windchests[j], n_frames, this_buff);
 
 		GOrgueWindchest* current_windchest = m_Windchests[j].windchest;
 		double d = current_windchest->GetVolume();
@@ -646,7 +685,6 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 	{
 		sampler->pipe = pipe;
 		sampler->pipe_section = pipe->GetAttack();
-		sampler->sampler_group_id = sampler_group_id;
 		sampler->position = 0;
 		memcpy
 			(sampler->history
@@ -667,17 +705,9 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 	return sampler;
 }
 
-void GOSoundEngine::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle)
+void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 {
-
-	assert(handle);
-	assert(pipe);
-
-	// The following condition could arise if a one-shot sample is played,
-	// decays away (and hence the sampler is discarded back into the pool), and
-	// then the user releases a key. If the sampler had already been reused
-	// with another pipe, that sample would erroneously be told to decay.
-	if (pipe != handle->pipe)
+	if (!handle->pipe)
 		return;
 
 	const GOSoundProvider* this_pipe = handle->pipe;
@@ -690,7 +720,6 @@ void GOSoundEngine::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handl
 	// against a double. We should test against a minimum level.
 	if (vol)
 	{
-
 		GO_SAMPLER* new_sampler = m_SamplerPool.GetSampler();
 		if (new_sampler != NULL)
 		{
@@ -757,46 +786,42 @@ void GOSoundEngine::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handl
 			}
 
 			const int detached_windchest_index = 0;
+			int windchest_index;
 			if (not_a_tremulant)
 			{
 				/* detached releases are enabled and the pipe was on a regular
 				 * windchest. Play the release on the detached windchest */
-				StartSampler(new_sampler, detached_windchest_index);
+				windchest_index = detached_windchest_index;
 			}
 			else
 			{
 				/* detached releases are disabled (or this isn't really a pipe)
 				 * so put the release on the same windchest as the pipe (which
 				 * means it will still be affected by tremulants - yuck). */
-				StartSampler(new_sampler, handle->sampler_group_id);
+				windchest_index = handle->sampler_group_id;
 			}
-
+			if (handle->sampler_group_id == windchest_index)
+				StartSamplerUnlocked(new_sampler, windchest_index);
+			else
+				StartSampler(new_sampler, windchest_index);
 		}
 
 	}
+}
 
-	/* The above code created a new sampler to playback the release, the
-	 * following code takes the active sampler for this pipe (which will be
-	 * in either the attack or loop section) and sets the fadeout property
-	 * which will decay this portion of the pipe. The sampler will
-	 * automatically be placed back in the pool when the fade restores to
-	 * zero.
-	 *
-	 * Fadeout is added to the fade value in the sampler every 2 samples, so
-	 * a pipe with an amplitude of 10000 (unadjusted playback level) will have
-	 * a fadeout value of
-	 *
-	 *   (32768 - 128) >> 8
-	 * = 127
-	 *
-	 * Which means that the sampler will fade out over a period of
-	 *   (2 * 32768) / 127
-	 * = 516 samples = 12ms
-	 */
-	handle->fadeout = (-handle->pipe->GetScaleAmplitude() - 128) >> 8; /* recall that ra_amp is negative
-	                                          * so this will actually be a
-	                                          * positive number */
-	if (!handle->fadeout) /* ensure that the sample will fade out */
-		handle->fadeout++;
 
+void GOSoundEngine::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle)
+{
+
+	assert(handle);
+	assert(pipe);
+
+	// The following condition could arise if a one-shot sample is played,
+	// decays away (and hence the sampler is discarded back into the pool), and
+	// then the user releases a key. If the sampler had already been reused
+	// with another pipe, that sample would erroneously be told to decay.
+	if (pipe != handle->pipe)
+		return;
+
+	handle->stop = true;
 }
