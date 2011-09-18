@@ -79,6 +79,8 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	}
 	g_sound->PreparePlayback(m_organfile);
 	m_organfile->PreparePlayback();
+	if (m_organfile->GetVolume() != -1)
+		::wxGetApp().frame->m_meters[0]->SetValue(m_organfile->GetVolume());
 
 	SetTitle(m_organfile->GetChurchName());
 
@@ -90,6 +92,7 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 
 bool OrganDocument::DoSaveDocument(const wxString& file)
 {
+	m_organfile->SetVolume(g_sound->GetEngine().GetVolume());
 	m_organfile->Save(file);
 	return true;
 }
