@@ -50,6 +50,7 @@ public:
 	} GO_SOUND_DEV_CONFIG;
 
 private:
+	wxCriticalSection m_lock;
 
 	/* end audio callback variables */
 	wxConfigBase *pConfig;
@@ -103,7 +104,7 @@ public:
 	GOrgueSound(void);
 	~GOrgueSound(void);
 
-	bool OpenSound(bool wait, GrandOrgueFile* organfile, bool open_inactive);
+	bool OpenSound();
 	void CloseSound();
 	bool ResetSound();
 
