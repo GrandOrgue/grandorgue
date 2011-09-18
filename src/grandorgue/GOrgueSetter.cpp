@@ -576,6 +576,8 @@ void GOrgueSetter::ProcessMidi(const GOrgueMidiEvent& event)
 {
 	for(unsigned i = 0; i < m_button.size(); i++)
 		m_button[i]->ProcessMidi(event);
+
+	m_swell.ProcessMidi(event);
 }
 
 void GOrgueSetter::Change(GOrgueSetterButton* button)
@@ -708,7 +710,7 @@ void GOrgueSetter::PreparePlayback()
 	m_PosDisplay.SetName(buffer);
 	::wxGetApp().frame->m_meters[2]->ChangeValue(m_pos);
 
-	buffer.Printf(wxT("%d"), m_crescendopos);
+	buffer.Printf(wxT("%d"), m_crescendopos + 1);
 	m_CrescendoDisplay.SetName(buffer);
 }
 
@@ -833,7 +835,7 @@ void GOrgueSetter::Crescendo(int newpos, bool force)
 	}
 
 	wxString buffer;
-	buffer.Printf(wxT("%d"), m_crescendopos);
+	buffer.Printf(wxT("%d"), m_crescendopos + 1);
 	m_CrescendoDisplay.SetName(buffer);
 }
 

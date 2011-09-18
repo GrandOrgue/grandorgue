@@ -87,7 +87,7 @@ float GOrgueEnclosure::GetAttenuation()
 
 void GOrgueEnclosure::Scroll(bool scroll_up)
 {
-	Set(m_MIDIValue + (scroll_up ? 16 : -16));
+	Set(m_MIDIValue + (scroll_up ? 4 : -4));
 }
 
 void GOrgueEnclosure::ProcessMidi(const GOrgueMidiEvent& event)
