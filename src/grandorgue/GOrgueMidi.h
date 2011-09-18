@@ -47,6 +47,7 @@ private:
 		int id;
 		unsigned bank_lsb[16];
 		unsigned bank_msb[16];
+		GOrgueMidi* midi;
 	} MIDI_DEVICE;
 
 	wxConfigBase *m_global_config;
@@ -57,14 +58,13 @@ private:
 	wxEvtHandler* m_listen_evthandler;
 	std::map<long, wxString> m_organ_midi_events;
 	GrandOrgueFile* m_organfile;
+	wxCriticalSection m_lock;
 
 	int m_midi_events[NB_MIDI_EVENTS];
 
-	void ProcessMessage
-		(const bool active
-		,std::vector<unsigned char>& msg
-		,int which
-		);
+	void ProcessMessage(std::vector<unsigned char>& msg, int which);
+
+	static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData);
 
 public:
 
@@ -73,7 +73,6 @@ public:
 
 	void Open();
 	void SetOrganFile(GrandOrgueFile* organfile);
-	void ProcessMessages(const bool audio_active);
 
 	bool HasListener();
 	void SetListener(wxEvtHandler* event_handler);
