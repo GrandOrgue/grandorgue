@@ -45,6 +45,7 @@ private:
 		wxString name;
 		bool active;
 		int id;
+		int no;
 		unsigned bank_lsb[16];
 		unsigned bank_msb[16];
 		GOrgueMidi* midi;

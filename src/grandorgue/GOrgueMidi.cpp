@@ -99,6 +99,7 @@ GOrgueMidi::GOrgueMidi() :
 		t.midi_in = new RtMidiIn();
 		t.id = 0;
 		t.midi = this;
+		t.no = i;
 		t.active = false;
 		wxString name = wxString::FromAscii(t.midi_in->getPortName(i).c_str());
 		t.name = name;
@@ -322,6 +323,6 @@ void GOrgueMidi::MIDICallback (double timeStamp, std::vector<unsigned char>* msg
 	if (!m_dev->active)
 		return;
 	wxMutexGuiEnter();
-	m_dev->midi->ProcessMessage(*msg, m_dev->id);
+	m_dev->midi->ProcessMessage(*msg, m_dev->no);
 	wxMutexGuiLeave();
 }
