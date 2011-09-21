@@ -105,7 +105,7 @@ private:
 	*/
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id);
 	void StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_id);
-	void CreateReleaseSampler(GO_SAMPLER* sampler);
+	void CreateReleaseSampler(const GO_SAMPLER* sampler);
 
 public:
 
