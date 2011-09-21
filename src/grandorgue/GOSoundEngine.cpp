@@ -428,7 +428,6 @@ void ReadSamplerFrames
 		}
 		else
 		{
-
 			unsigned currentBlockSize = sampler->pipe_section->size;
 			if(sampler->position >= currentBlockSize)
 			{
@@ -463,6 +462,27 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 	GO_SAMPLER* previous_valid_sampler = *list_start;
 	for (GO_SAMPLER* sampler = *list_start; sampler; sampler = sampler->next)
 	{
+
+		if  (
+				(m_PolyphonyLimiting) &&
+				(m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
+				(sampler->pipe_section->stage == GSS_RELEASE) &&
+				(m_CurrentTime - sampler->time > 172)
+			)
+			sampler->fadeout = 4;
+
+		ReadSamplerFrames
+			(sampler
+			,n_frames
+			,m_TempDecodeBuffer
+			);
+
+		ApplySamplerFade
+			(sampler
+			,n_frames
+			,m_TempDecodeBuffer
+			);
+
 		if (sampler->stop)
 		{
 			CreateReleaseSampler(sampler);
@@ -490,28 +510,9 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 											      * positive number */
 			if (!sampler->fadeout) /* ensure that the sample will fade out */
 				sampler->fadeout++;
+
 			sampler->stop = false;
 		}
-
-		if  (
-				(m_PolyphonyLimiting) &&
-				(m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
-				(sampler->pipe_section->stage == GSS_RELEASE) &&
-				(m_CurrentTime - sampler->time > 172)
-			)
-			sampler->fadeout = 4;
-
-		ReadSamplerFrames
-			(sampler
-			,n_frames
-			,m_TempDecodeBuffer
-			);
-
-		ApplySamplerFade
-			(sampler
-			,n_frames
-			,m_TempDecodeBuffer
-			);
 
 		/* Add these samples to the current output buffer shifting
 		 * right by the necessary amount to bring the sample gain back
