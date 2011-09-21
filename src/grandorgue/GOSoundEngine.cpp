@@ -706,7 +706,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 	return sampler;
 }
 
-void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
+void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 {
 	if (!handle->pipe)
 		return;
