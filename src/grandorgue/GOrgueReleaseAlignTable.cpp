@@ -25,18 +25,10 @@
 #include "GOrgueReleaseAlignTable.h"
 #include <stdlib.h>
 
-#ifndef NDEBUG
-#ifdef PALIGN_DEBUG
-#include <stdio.h>
-#endif
-#endif
-
 GOrgueReleaseAlignTable::GOrgueReleaseAlignTable()
 {
-	memset(m_PositionEntries, 0, sizeof(m_PositionEntries));
-	memset(m_HistoryEntries, 0, sizeof(m_HistoryEntries));
-	m_PhaseAlignMaxAmplitude = 0;
-	m_PhaseAlignMaxDerivative = 0;
+	m_Channels = 0;
+	memset(m_Table, 0, sizeof(m_Table));
 }
 
 GOrgueReleaseAlignTable::~GOrgueReleaseAlignTable()
@@ -46,34 +38,22 @@ GOrgueReleaseAlignTable::~GOrgueReleaseAlignTable()
 
 bool GOrgueReleaseAlignTable::Load(wxInputStream* cache)
 {
-	cache->Read(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude));
-	if (cache->LastRead() != sizeof(m_PhaseAlignMaxAmplitude))
+	cache->Read(&m_Table, sizeof(m_Table));
+	if (cache->LastRead() != sizeof(m_Table))
 		return false;
-	cache->Read(&m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative));
-	if (cache->LastRead() != sizeof(m_PhaseAlignMaxDerivative))
-		return false;
-	cache->Read(&m_PositionEntries, sizeof(m_PositionEntries));
-	if (cache->LastRead() != sizeof(m_PositionEntries))
-		return false;
-	cache->Read(&m_HistoryEntries, sizeof(m_HistoryEntries));
-	if (cache->LastRead() != sizeof(m_HistoryEntries))
+	cache->Read(&m_Channels, sizeof(m_Channels));
+	if (cache->LastRead() != sizeof(m_Channels))
 		return false;
 	return true;
 }
 
 bool GOrgueReleaseAlignTable::Save(wxOutputStream* cache)
 {
-	cache->Write(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude));
-	if (cache->LastWrite() != sizeof(m_PhaseAlignMaxAmplitude))
+	cache->Write(&m_Table, sizeof(m_Table));
+	if (cache->LastWrite() != sizeof(m_Table))
 		return false;
-	cache->Write(&m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative));
-	if (cache->LastWrite() != sizeof(m_PhaseAlignMaxDerivative))
-		return false;
-	cache->Write(&m_PositionEntries, sizeof(m_PositionEntries));
-	if (cache->LastWrite() != sizeof(m_PositionEntries))
-		return false;
-	cache->Write(&m_HistoryEntries, sizeof(m_HistoryEntries));
-	if (cache->LastWrite() != sizeof(m_HistoryEntries))
+	cache->Write(&m_Channels, sizeof(m_Channels));
+	if (cache->LastWrite() != sizeof(m_Channels))
 		return false;
 	return true;
 }
@@ -81,141 +61,22 @@ bool GOrgueReleaseAlignTable::Save(wxOutputStream* cache)
 
 void GOrgueReleaseAlignTable::ComputeTable
 	(const AUDIO_SECTION& release
-	,const int phase_align_max_amplitude
-	,const int phase_align_max_derivative
 	,const unsigned int sample_rate
 	,const unsigned int channels
 	)
 {
-
 	m_Channels = channels;
-	m_PhaseAlignMaxDerivative = phase_align_max_derivative;
-	m_PhaseAlignMaxAmplitude = phase_align_max_amplitude;
+	memset(m_Table, 0, sizeof(m_Table));
 
-	/* We will use a short portion of the release to analyse to get the
-	 * release offset table. This length is defined by the
-	 * PHASE_ALIGN_MIN_FREQUENCY macro and should be set to the lowest
-	 * frequency pipe you would ever expect... if this length is greater
-	 * than the length of the release, truncate it */
-	unsigned searchLen = sample_rate / PHASE_ALIGN_MIN_FREQUENCY;
-	unsigned releaseLen = release.size / (m_Channels * sizeof(wxInt16));
-	if (releaseLen < BLOCK_HISTORY)
-		return;
-	if (searchLen > releaseLen - BLOCK_HISTORY)
-		searchLen = releaseLen - BLOCK_HISTORY;
-	/* If number of samples in the release is not enough to fill the release
-	 * table, abort - release alignment probably wont help. */
-	if (searchLen < PHASE_ALIGN_AMPLITUDES * PHASE_ALIGN_DERIVATIVES * 2)
+	unsigned release_length = release.size / (m_Channels * sizeof(wxInt16));
+	unsigned search_length = BLOCK_HISTORY + TABLE_SIZE;
+	if (search_length > release_length)
 		return;
 
-	/* Generate the release table using the small portion of the release... */
-	bool found[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
-	memset(found, 0, sizeof(found));
-
-	int f_p = 0;
-	for (unsigned int j = 0; j < m_Channels; j++)
-		f_p += ((wxInt16*)release.data)[(BLOCK_HISTORY - 1) * m_Channels + j];
-
-	for (unsigned i = BLOCK_HISTORY; i < searchLen + BLOCK_HISTORY; i++)
-	{
-
-		/* Store previous values */
-		int f = 0;
-		for (unsigned int j = 0; j < m_Channels; j++)
-			f += ((wxInt16*)release.data)[i * m_Channels + j];
-
-		/* Bring v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
-		int v_mod = (f - f_p) + m_PhaseAlignMaxDerivative - 1;
-		int derivIndex = (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative);
-
-		/* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
-		int f_mod = f + m_PhaseAlignMaxAmplitude - 1;
-		int ampIndex = (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude);
-
-		/* Store this release point if it was not already found */
-		assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
-		assert((ampIndex >= 0)   && (ampIndex < PHASE_ALIGN_AMPLITUDES));
-		derivIndex = (derivIndex < 0) ? 0 : ((derivIndex >= PHASE_ALIGN_DERIVATIVES) ? PHASE_ALIGN_DERIVATIVES-1 : derivIndex);
-		ampIndex = (ampIndex < 0) ? 0 : ((ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES-1 : ampIndex);
-		if (!found[derivIndex][ampIndex])
-		{
-			m_PositionEntries[derivIndex][ampIndex] = i * m_Channels * sizeof(wxInt16);
-			for (unsigned j = 0; j < BLOCK_HISTORY; j++)
-				for (unsigned k = 0; k < MAX_OUTPUT_CHANNELS; k++)
-					m_HistoryEntries[derivIndex][ampIndex][j * MAX_OUTPUT_CHANNELS + k]
-							= ((k < m_Channels) && (i + j - BLOCK_HISTORY  > 0))
-							? ((wxInt16*)release.data)[(i + j - BLOCK_HISTORY) * m_Channels + k]
-							: 0;
-			found[derivIndex][ampIndex] = true;
-		}
-
-		f_p = f;
-
-	}
-
-#ifndef NDEBUG
-#ifdef PALIGN_DEBUG
-	/* print some phase debugging information */
-	for (unsigned int i = 0; i < PHASE_ALIGN_DERIVATIVES; i++)
-	{
-		printf("deridx: %d\n", i);
-		for (unsigned int j = 0; j < PHASE_ALIGN_AMPLITUDES; j++)
-			if (found[i][j])
-				printf("  idx %d: found\n", j);
-			else
-				printf("  idx %d: not found\n", j);
-
-	}
-#endif
-#endif
-
-	/* Phase 2, if there are any entries in the table which were not found,
-	 * attempt to fill them with the nearest available value. */
-	for (int i = 0; i < PHASE_ALIGN_DERIVATIVES; i++)
-		for (int j = 0; j < PHASE_ALIGN_AMPLITUDES; j++)
-			if (!found[i][j])
-			{
-				bool foundsecond = false;
-				for (int l = 0; (l < PHASE_ALIGN_DERIVATIVES) && (!foundsecond); l++)
-					for (int k = 0; (k < PHASE_ALIGN_AMPLITUDES) && (!foundsecond); k++)
-					{
-						foundsecond = true;
-						int sl = (l + 1) / 2;
-						if ((l & 1) == 0)
-							sl = -sl;
-						int sk = (k + 2) / 2;
-						if ((k & 1) == 0)
-							sk = -sk;
-						if  (
-								(i + sl < PHASE_ALIGN_DERIVATIVES)
-								&&
-								(i + sl >= 0)
-								&&
-								(j + sk < PHASE_ALIGN_AMPLITUDES)
-								&&
-								(j + sk >= 0)
-								&&
-								(found[i + sl][j + sk])
-							)
-							{
-								m_PositionEntries[i][j] = m_PositionEntries[i + sl][j + sk];
-								memcpy
-									(m_HistoryEntries[i][j]
-									,m_HistoryEntries[i+sl][j+sk]
-									,sizeof(m_HistoryEntries[i][j])
-									);
-							}
-						else
-						{
-							foundsecond = false;
-						}
-					}
-
-				assert(foundsecond);
-				foundsecond = false;
-
-			}
-
+	const wxInt16* data = (wxInt16*)release.data;
+	for (unsigned i = 0; i < search_length; i++)
+		for (unsigned j = 0; j < channels; j++)
+			m_Table[i * MAX_OUTPUT_CHANNELS + j] = data[i * channels + j];
 }
 
 void GOrgueReleaseAlignTable::SetupRelease
@@ -223,49 +84,40 @@ void GOrgueReleaseAlignTable::SetupRelease
 	,const GO_SAMPLER& old_sampler
 	) const
 {
+	int min_error = 0;
+	unsigned min_error_pos = 0;
+	unsigned i;
 
-	/* Get combined release f's and v's */
-	int f_mod = 0;
-	int v_mod = 0;
-	for (unsigned i = 0; i < MAX_OUTPUT_CHANNELS; i++)
+	for (i = 0; i < TABLE_SIZE; i++)
 	{
-		f_mod += old_sampler.history[(BLOCK_HISTORY - 1) * MAX_OUTPUT_CHANNELS + i];
-		v_mod += old_sampler.history[(BLOCK_HISTORY - 2) * MAX_OUTPUT_CHANNELS + i];
+		int this_error = 0;
+		for (unsigned j = 0; (j < BLOCK_HISTORY) && (this_error < INT_MAX); j++)
+			for (unsigned k = 0; (k < m_Channels) && (this_error < INT_MAX); k++)
+			{
+				int error = abs(old_sampler.history[j * MAX_OUTPUT_CHANNELS + k] - m_Table[(i + j) * MAX_OUTPUT_CHANNELS + k]);
+				if (error > 8192)
+				{
+					this_error = INT_MAX;
+				}
+				else
+				{
+					error = (error * error) >> 1;
+					this_error += error;
+				}
+			}
+		if ((this_error < min_error) || (i == 0))
+		{
+			min_error_pos = i;
+			min_error = this_error;
+			if (min_error < 10)
+				break;
+		}
 	}
-	v_mod = f_mod - v_mod;
 
-	/* Bring f and v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
-	v_mod += (m_PhaseAlignMaxDerivative - 1);
-	f_mod += (m_PhaseAlignMaxAmplitude - 1);
-
-	int derivIndex = m_PhaseAlignMaxDerivative ?
-			(PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative) :
-			PHASE_ALIGN_DERIVATIVES / 2;
-
-	/* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
-	int ampIndex = m_PhaseAlignMaxAmplitude ?
-			(PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude) :
-			PHASE_ALIGN_AMPLITUDES / 2;
-
-	/* Store this release point if it was not already found */
-	assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
-	assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
-	derivIndex = (derivIndex < 0) ? 0 : ((derivIndex >= PHASE_ALIGN_DERIVATIVES) ? PHASE_ALIGN_DERIVATIVES-1 : derivIndex);
-	ampIndex = (ampIndex < 0) ? 0 : ((ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES-1 : ampIndex);
-	release_sampler.position  = m_PositionEntries[derivIndex][ampIndex];
+	release_sampler.position = (BLOCK_HISTORY + min_error_pos) * m_Channels * sizeof(wxInt16);
 	memcpy
 		(release_sampler.history
-		,m_HistoryEntries[derivIndex][ampIndex]
+		,&(m_Table[i * MAX_OUTPUT_CHANNELS])
 		,sizeof(release_sampler.history)
 		);
-
-#ifndef NDEBUG
-#ifdef PALIGN_DEBUG
-	printf("setup release using alignment:\n");
-	printf("  pos:    %d\n", release_sampler.position);
-	printf("  derIdx: %d\n", derivIndex);
-	printf("  ampIdx: %d\n", ampIndex);
-#endif
-#endif
-
 }

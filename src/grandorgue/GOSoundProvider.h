@@ -30,7 +30,6 @@ class GOSoundProvider
 {
 
 private:
-	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
 	static bool SaveCacheAudioSection(wxOutputStream* cache, const AUDIO_SECTION* section, bool save_align_tracker);
 	static bool LoadCacheAudioSection(wxInputStream* cache, AUDIO_SECTION* section, bool load_align_tracker);
 

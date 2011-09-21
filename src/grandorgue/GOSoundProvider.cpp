@@ -170,41 +170,6 @@ bool GOSoundProvider::SaveCache(wxOutputStream* cache)
 
 }
 
-void GOSoundProvider::GetMaxAmplitudeAndDerivative
-	(AUDIO_SECTION& section
-	,int& runningMaxAmplitude
-	,int& runningMaxDerivative
-	)
-{
-
-	assert((section.size % (m_Channels * sizeof(wxInt16))) == 0);
-	unsigned int sectionLen = section.size / (m_Channels * sizeof(wxInt16));
-
-	int f = 0; /* to avoid compiler warning */
-	for (unsigned int i = 0; i < sectionLen; i++)
-	{
-
-		/* Get sum of amplitudes in channels */
-		int f_p = f;
-		f = 0;
-		for (unsigned int j = 0; j < m_Channels; j++)
-			f += *((wxInt16*)&section.data[(i * m_Channels + j) * sizeof(wxInt16)]);
-
-		if (abs(f) > runningMaxAmplitude)
-			runningMaxAmplitude = abs(f);
-
-		if (i == 0)
-			continue;
-
-		/* Get v */
-		int v = f - f_p;
-		if (abs(v) > runningMaxDerivative)
-			runningMaxDerivative = abs(v);
-
-	}
-
-}
-
 /* REGRESSION TODO: It would be good for somebody to do some rigorous
  * testing on this code before this comment is removed. It is designed
  * based on a dream. */
@@ -213,26 +178,12 @@ void GOSoundProvider::ComputeReleaseAlignmentInfo()
 
 	DELETE_AND_NULL(m_Release.release_aligner);
 
-	/* Find the maximum amplitude and derivative of the waveform */
-	int phase_align_max_amplitude = 0;
-	int phase_align_max_derivative = 0;
-	GetMaxAmplitudeAndDerivative(m_Attack,  phase_align_max_amplitude, phase_align_max_derivative);
-	GetMaxAmplitudeAndDerivative(m_Loop,    phase_align_max_amplitude, phase_align_max_derivative);
-	GetMaxAmplitudeAndDerivative(m_Release, phase_align_max_amplitude, phase_align_max_derivative);
-
-	if ((phase_align_max_derivative != 0) && (phase_align_max_amplitude != 0))
-	{
-
-		m_Release.release_aligner = new GOrgueReleaseAlignTable();
-		m_Release.release_aligner->ComputeTable
-			(m_Release
-			,phase_align_max_amplitude
-			,phase_align_max_derivative
-			,m_SampleRate
-			,m_Channels
-			);
-
-	}
+	m_Release.release_aligner = new GOrgueReleaseAlignTable();
+	m_Release.release_aligner->ComputeTable
+		(m_Release
+		,m_SampleRate
+		,m_Channels
+		);
 
 }
 
