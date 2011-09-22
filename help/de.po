@@ -1,0 +1,28 @@
+# German translations for old-pc package
+# Copyright (C) 2011 Free Software Foundation, Inc.
+# This file is distributed under the same license as the old-pc package.
+# Martin Koegler <martin.koegler@chello.at>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GrandOrgue\n"
+"POT-Creation-Date: 2011-09-21 07:54+0300\n"
+"PO-Revision-Date: 2011-09-21 08:25+0200\n"
+"Last-Translator: Martin Koegler\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. type: Attribute 'lang' of: <book>
+#: grandorgue.xml:3
+msgid "en"
+msgstr "de"
+
+#. type: Content of: <book><chapter><title>
+#: grandorgue.xml:7
+msgid "Welcome"
+msgstr "Willkommen"
+
