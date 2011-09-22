@@ -1,0 +1,87 @@
+FIND_PROGRAM(XSLTPROC xsltproc)
+FIND_PROGRAM(ZIP zip)
+FIND_PROGRAM(PO4A_GETTEXT po4a-gettextize)
+FIND_PROGRAM(PO4A_TRANSLATE po4a-translate)
+FIND_PATH(DOCBOOK_PATH htmlhelp/htmlhelp.xsl ${DOCBOOK_DIR} /usr/share/xml/docbook/stylesheet/nwalsh CMAKE_FIND_ROOT_PATH_BOTH)
+
+IF (NOT DOCBOOK_PATH)
+   MESSAGE(STATUS "docbook-xsl stylesheets not found")
+ENDIF()
+IF (NOT XSLTPROC)
+   MESSAGE(STATUS "xsltproc not found")
+ENDIF()
+IF (NOT ZIP)
+   MESSAGE(STATUS "zip not found")
+ENDIF()
+IF (NOT PO4A_GETTEXT)
+   MESSAGE(STATUS "po4a-gettext not found (package po4a)")
+ENDIF()
+IF (NOT PO4A_TRANSLATE)
+   MESSAGE(STATUS "po4a-translate not found (package po4a)")
+ENDIF()
+
+SET(BUILD_HELP "NO")
+IF(XSLTPROC AND DOCBOOK_PATH AND ZIP)
+   SET(BUILD_HELP YES)
+ELSE()
+   MESSAGE(STATUS "Not build help - some programs are missing")
+ENDIF()
+
+SET(BUILD_HELP_TRANSLATE "NO")
+IF(XSLTPROC AND DOCBOOK_PATH AND ZIP AND PO4A_GETTEXT AND PO4A_TRANSLATE)
+   SET(BUILD_HELP_TRANSLATE YES)
+ELSE()
+   MESSAGE(STATUS "Not building translations - some programs are missing")
+ENDIF()
+
+IF(WIN32)
+  SET(HELPDIR ${CMAKE_BINARY_DIR}/bin/help)
+  SET(HELPINSTDIR help)
+ELSE()
+  SET(HELPDIR "${CMAKE_BINARY_DIR}/share/${PROJECT_NAME} v${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION}/help")
+  SET(HELPINSTDIR "share/${PROJECT_NAME} v${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION}/help")
+ENDIF()
+
+MACRO(BUILD_HELPFILE target target_default xmlfile VARIANT)
+  SET(BUILDDIR ${CMAKE_CURRENT_BINARY_DIR}/help${VARIANT})
+  SET(SRCDIR ${CMAKE_CURRENT_SOURCE_DIR})
+  FILE(GLOB IMAGES ${SRCDIR}/*.gif ${SRCDIR}/*.jpg)
+  file(MAKE_DIRECTORY ${BUILDDIR})
+  file(MAKE_DIRECTORY ${HELPDIR})
+
+  SET(_ImgList)
+  FOREACH(_currentImg ${IMAGES})
+    GET_FILENAME_COMPONENT(IMG_NAME ${_currentImg} NAME)
+    ADD_CUSTOM_COMMAND(OUTPUT ${BUILDDIR}/${IMG_NAME} COMMAND ${CMAKE_COMMAND} -E copy ${_currentImg} ${BUILDDIR}/${IMG_NAME} DEPENDS ${_currentImg})
+    SET(_ImgList ${_ImgList} ${BUILDDIR}/${IMG_NAME})
+  ENDFOREACH()
+  
+  ADD_CUSTOM_COMMAND(OUTPUT ${BUILDDIR}/GrandOrgue.hhp COMMAND ${XSLTPROC}
+    ARGS --path ${DOCBOOK_PATH}/htmlhelp ${SRCDIR}/grandorgue.xsl ${xmlfile}
+    WORKING_DIRECTORY ${BUILDDIR} DEPENDS ${SRCDIR}/grandorgue.xsl ${xmlfile})
+
+  ADD_CUSTOM_COMMAND(OUTPUT ${HELPDIR}/GrandOrgue${VARIANT}.htb COMMAND ${ZIP} 
+    ARGS --filesync ${HELPDIR}/GrandOrgue${VARIANT}.htb * WORKING_DIRECTORY ${BUILDDIR}
+    DEPENDS ${_ImgList} ${BUILDDIR}/GrandOrgue.hhp)
+
+  IF (${target_default} STREQUAL "YES")
+    INSTALL(FILES ${HELPDIR}/GrandOrgue${VARIANT}.htb DESTINATION ${HELPINSTDIR})
+    ADD_CUSTOM_TARGET(${target} ALL DEPENDS ${HELPDIR}/GrandOrgue${VARIANT}.htb)
+  ELSE()
+    ADD_CUSTOM_TARGET(${target} DEPENDS ${HELPDIR}/GrandOrgue${VARIANT}.htb)
+  ENDIF()
+ENDMACRO()
+
+MACRO(PO4A_UPDATE_POT target _potFile xmlfile)
+  ADD_CUSTOM_TARGET(${target} COMMAND ${PO4A_GETTEXT} ARGS -f docbook -m ${xmlfile} -p ${CMAKE_CURRENT_BINARY_DIR}/${_potFile} --package-name=GrandOrgue --msgid-bugs-address="ourorgan-developers@lists.sourceforge.net" WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+ENDMACRO()
+
+MACRO(PO4A_BUILD_HELP target xmlfile)
+  FOREACH(_currentPoFile ${ARGN})
+    GET_FILENAME_COMPONENT(_lang ${_currentPoFile} NAME_WE)
+    ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.xml COMMAND ${PO4A_TRANSLATE}
+      ARGS -f docbook -m ${xmlfile} -p ${_currentPoFile} -l ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.xml -k 0
+      DEPENDS ${_currentPoFile} ${xmlfile})
+    BUILD_HELPFILE(${target} ${BUILD_HELP_TRANSLATE} ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.xml _${_lang})
+  ENDFOREACH()
+ENDMACRO()
