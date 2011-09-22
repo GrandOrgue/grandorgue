@@ -30,9 +30,8 @@
 
 #include "MIDIListenDialog.h"
 #include "SettingsDialog.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
 #include "GrandOrgueID.h"
+#include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrgueSound.h"
 #include "GOrgueRtHelpers.h"
@@ -504,7 +503,9 @@ void SettingsDialog::OnApply(wxCommandEvent& event)
 
 void SettingsDialog::OnHelp(wxCommandEvent& event)
 {
-    ::wxGetApp().m_help->Display(((wxNotebook*)GetBookCtrl())->GetSelection() ? _("MIDI Settings") : _("Device Settings"));
+	wxCommandEvent help(wxEVT_SHOWHELP, 0);
+	help.SetString(((wxNotebook*)GetBookCtrl())->GetSelection() ? _("MIDI Settings") : _("Device Settings"));
+	wxTheApp->GetTopWindow()->AddPendingEvent(help);
 }
 
 void SettingsDialog::OnOK(wxCommandEvent& event)

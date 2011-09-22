@@ -63,6 +63,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(ID_AUDIO_SETTINGS, GOrgueFrame::OnAudioSettings)
 	EVT_MENU(wxID_HELP, GOrgueFrame::OnHelp)
 	EVT_MENU(wxID_ABOUT, GOrgueFrame::OnHelpAbout)
+	EVT_COMMAND(0, wxEVT_SHOWHELP, GOrgueFrame::OnShowHelp)
 	// New events for Volume, Polyphony, Memory Level, and Transpose
 	EVT_MENU(ID_VOLUME, GOrgueFrame::OnSettingsVolume)
 	EVT_MENU(ID_POLYPHONY, GOrgueFrame::OnSettingsPolyphony)
@@ -92,11 +93,13 @@ void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxSt
 
 GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type) :
 	wxDocParentFrame(manager, frame, id, title, pos, size, type),
-	m_panel_menu(NULL)
+	m_panel_menu(NULL),
+	m_Help(NULL)
 {
 #ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
 #endif
+	InitHelp();
 
 	wxMenu *file_menu = new wxMenu;
 
@@ -175,6 +178,32 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 
 GOrgueFrame::~GOrgueFrame()
 {
+	if (m_Help)
+		delete m_Help;
+}
+
+void GOrgueFrame::InitHelp()
+{
+	m_Help = new wxHtmlHelpController(wxHF_CONTENTS | wxHF_INDEX | wxHF_SEARCH | wxHF_ICONS_BOOK | wxHF_FLAT_TOOLBAR);
+
+	wxString result;
+	wxString lang = wxGetLocale()->GetCanonicalName();
+
+	wxString searchpath;
+	searchpath.Append(wxStandardPaths::Get().GetResourcesDir() + wxFILE_SEP_PATH + wxT("help"));
+
+	if (!wxFindFileInPath(&result, searchpath, wxT("GrandOrgue_") + lang + wxT(".htb")))
+	{
+		if (lang.Find(wxT('_')))
+			lang = lang.Left(lang.Find(wxT('_')));
+		if (!wxFindFileInPath(&result, searchpath, wxT("GrandOrgue_") + lang + wxT(".htb")))
+		{
+			if (!wxFindFileInPath(&result, searchpath, wxT("GrandOrgue.htb")))
+				result = wxT("GrandOrgue.htb");
+		}
+	}
+	wxLogDebug(_("Using helpfile %s (search path: %s)"), result.c_str(), searchpath.c_str());
+        m_Help->AddBook(result);
 }
 
 void GOrgueFrame::OnPanel(wxCommandEvent& event)
@@ -436,7 +465,14 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnHelp(wxCommandEvent& event)
 {
-    ::wxGetApp().m_help->Display(_("User Interface"));
+	wxCommandEvent help(wxEVT_SHOWHELP, 0);
+	help.SetString(_("User Interface"));
+	ProcessEvent(help);
+}
+
+void GOrgueFrame::OnShowHelp(wxCommandEvent& event)
+{
+	m_Help->Display(event.GetString());
 }
 
 void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)
