@@ -40,7 +40,7 @@ int main(int ac, const char* ag[])
 		return 1;
 	}
 	out = fopen(ag[2], "w");
-	if (!in)
+	if (!out)
 	{
 		printf("Error opening %s\n", ag[2]);
 		return 1;
