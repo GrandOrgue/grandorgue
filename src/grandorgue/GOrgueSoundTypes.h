@@ -25,7 +25,7 @@
 
 /* Number of samples to store from previous block decode as history. This may
  * be needed for features such as release alignment and compression. */
-#define BLOCK_HISTORY          16
+#define BLOCK_HISTORY          2
 
 /* BLOCKS_PER_FRAME specifies the number of mono samples or stereo sample
  * pairs which are decoded for each iteration of the audio engines main loop.
