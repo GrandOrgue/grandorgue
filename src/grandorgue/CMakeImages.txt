@@ -15,8 +15,10 @@ SET(IMAGE_LIST)
 
 MACRO(CONVERTIMAGE imagefile)
 	GET_FILENAME_COMPONENT(basename ${imagefile} NAME_WE)
-	SET(IMAGE_LIST ${IMAGE_LIST} ${basename}.cpp)
-	ADD_CUSTOM_COMMAND(OUTPUT ${basename}.cpp
-	                   COMMAND imageconverter ${CMAKE_CURRENT_SOURCE_DIR}/images/${imagefile} ${basename}.cpp ${basename}
+	SET(IMAGE_LIST ${IMAGE_LIST} img/${basename}.cpp)
+	SET(IMAGE_DIR ${CMAKE_CURRENT_BINARY_DIR}/img)
+	FILE(MAKE_DIRECTORY ${IMAGE_DIR})
+	ADD_CUSTOM_COMMAND(OUTPUT ${IMAGE_DIR}/${basename}.cpp
+	                   COMMAND imageconverter ${CMAKE_CURRENT_SOURCE_DIR}/images/${imagefile} ${IMAGE_DIR}/${basename}.cpp ${basename}
 	                   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/images/${imagefile} imageconverter)
 ENDMACRO(CONVERTIMAGE)
