@@ -79,7 +79,10 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	}
 	g_sound->PreparePlayback(m_organfile);
 	if (m_organfile->GetVolume() != -1)
+	{
 		::wxGetApp().frame->m_meters[0]->SetValue(m_organfile->GetVolume());
+		g_sound->GetEngine().SetVolume(m_organfile->GetVolume());
+	}
 
 	SetTitle(m_organfile->GetChurchName());
 
