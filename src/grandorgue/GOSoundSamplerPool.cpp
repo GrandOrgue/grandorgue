@@ -42,7 +42,7 @@ void GOSoundSamplerPool::ReturnAll()
 
 void GOSoundSamplerPool::SetUsageLimit(unsigned count)
 {
-	m_UsageLimit = (m_UsageLimit <= MAX_POLYPHONY) ? m_UsageLimit : MAX_POLYPHONY;
+	m_UsageLimit = (count <= MAX_POLYPHONY) ? count : MAX_POLYPHONY;
 }
 
 GO_SAMPLER* GOSoundSamplerPool::GetSampler()
