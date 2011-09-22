@@ -1,0 +1,944 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<book lang="en">
+  <title>GrandOrgue Help</title>
+  <titleabbrev>GrandOrgue</titleabbrev>
+  <chapter>
+    <title>Welcome</title>
+    <para>
+Welcome to the manual for GrandOrgue.
+    </para>
+    <itemizedlist mark="bullet">
+      <listitem>
+        <para>
+Click the Contents tab to display a list of important topics about the
+program.
+	</para>
+      </listitem>
+      <listitem>
+        <para>
+Click the Index tab to display an alphabetical listing of topics.
+	</para>
+      </listitem>
+      <listitem>
+        <para>
+Click the Search tab to search for a specific word in the help system.
+	</para>
+      </listitem>
+    </itemizedlist>
+  </chapter>
+  <chapter>
+    <title>Getting Started</title>
+    <indexterm>
+      <primary>Getting Started</primary>
+    </indexterm>
+    <sect1>
+      <title>Introduction</title>
+      <indexterm>
+        <primary>Introduction</primary>
+      </indexterm>
+      <para>
+GrandOrgue allows the user to load and play virtual pipe organs.
+Using sample sets, GrandOrgue is able to combine the individual pipe
+sounds and organ behaviours to simulate a variety of pipe organs.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Sample Sets</title>
+      <indexterm>
+        <primary>Sample Sets</primary>
+      </indexterm>
+      <para>
+GrandOrgue is capable of loading and faithfully reproducing a variety
+of sample sets. Through extensive testing, it appears highly
+compatible with definition files that have worked in Hauptwerk&#x2122;
+version 1. Other types of sample sets may also be compatible, and
+other formats may soon be available. As such, you won't be able to do
+anything at all with GrandOrgue without at least one sample
+set. Sample sets generally come packaged or with installers. By
+default, the software loads organs from "My Organs" in your documents
+folder, but you may store sample sets wherever is convenient and space
+permits.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Features</title>
+      <indexterm>
+        <primary>Features</primary>
+      </indexterm>
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>
+High definition output with supporting hardware
+	  </para>
+        </listitem>
+        <listitem>
+          <para>
+Optimized MMX&#xAE; core for extraordinary polyphony
+	  </para>
+        </listitem>
+        <listitem>
+          <para>
+High precision internal processing for optimal sound quality
+	  </para>
+        </listitem>
+        <listitem>
+          <para>
+Polyphony management to avoid CPU overload
+	  </para>
+        </listitem>
+        <listitem>
+          <para>
+Low latency output with proper hardware support
+	  </para>
+        </listitem>
+        <listitem>
+          <para>
+Quick and easy MIDI setup, including "Listen for Event"
+	  </para>
+        </listitem>
+        <listitem>
+          <para>
+Lossless compression reduces RAM requirements by up to 40%
+	  </para>
+        </listitem>
+        <listitem>
+          <para>
+Release sample enhancements for realistic sound
+	  </para>
+        </listitem>
+        <listitem>
+          <para>
+All features and enhancements configurable
+	  </para>
+        </listitem>
+        <listitem>
+          <para>
+High speed loading and caching of sample sets
+	  </para>
+        </listitem>
+        <listitem>
+          <para>
+Save settings per sample set or export to settings files
+	  </para>
+        </listitem>
+      </itemizedlist>
+    </sect1>
+    <sect1>
+      <title>Requirements</title>
+      <indexterm>
+        <primary>Requirements</primary>
+      </indexterm>
+      <sect2>
+        <title>All Platforms</title>
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para>
+Pentium&#xAE; II equivalent, or better
+	    </para>
+            <para>
+              <emphasis>NOTE: A newer, faster processor will permit a higher
+polyphony</emphasis>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+Sufficient RAM to fully load the largest sample set you wish to use
+	    </para>
+          </listitem>
+          <listitem>
+            <para>
+A hard disk (or other storage) with enough free space to store sample sets
+	    </para>
+          </listitem>
+        </itemizedlist>
+      </sect2>
+      <sect2>
+        <title>Microsoft&#xAE; Windows&#xAE;</title>
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para>
+Windows&#xAE; 2000, XP, or later
+	    </para>
+            <para>
+              <emphasis>&gt;NOTE: Older versions are not supported, although the software may function properly</emphasis>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+Sound card supporting DirectSound&#xAE; and/or ASIO&#x2122; (recommended)
+	    </para>
+          </listitem>
+          <listitem>
+            <para>
+MIDI interface device or loopback driver
+	    </para>
+          </listitem>
+        </itemizedlist>
+      </sect2>
+    </sect1>
+  </chapter>
+  <chapter>
+    <title>User Interface</title>
+    <indexterm>
+      <primary>User Interface</primary>
+    </indexterm>
+    <figure>
+      <title>GrandOrgue User Interface</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="GrandOrgue.jpg"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    <sect1>
+      <title>Volume Control</title>
+      <indexterm>
+        <primary>Volume Control</primary>
+      </indexterm>
+      <para>
+The volume control sets the volume control <emphasis>as a
+percentage</emphasis> of full volume. Note that this is percentage of
+voltage, and therefore every half corresponds to -6dB. That is, 50% is
+-6dB, 25% is -12dB, etc. To the right of the spinner are the left and
+right audio monitors, respectively. The clip indicator at the far
+right will turn red if clipping occurs, and will stay red until the
+volume is adjusted.
+</para>
+    </sect1>
+    <sect1>
+      <title>Polyphony Control</title>
+      <indexterm>
+        <primary>Polyphony Control</primary>
+      </indexterm>
+      <para>
+The polyphony control sets the maximum polyphony before GrandOrgue
+will refuse to play any additional samples. To oversimplify, polyphony
+is the number of pipes that may sound simultaneously; but polyphony
+may also be consumed when a key is released. It is recommended to
+experiment with this setting initially, but leave it once you find an
+acceptable setting. Your setting should balance between too little
+polyphony (where you might not be able to play many notes on large
+sample sets) and too much polyphony (where the CPU will overload and
+artifacts will appear in the sound). Note that "wet" sample sets
+(those with considerable reverberation) will consume polyphony many
+seconds after the note is actually released. The default setting of
+1024 should provide a reasonable starting point on a 1GHz CPU. To the
+right of the spinner is the polyphony monitor. The clip indicator at
+the far right will turn red if the polyphony limit has been reached,
+and will stay red until the polyphony is adjusted.
+</para>
+    </sect1>
+    <sect1>
+      <title>Program Changes</title>
+      <indexterm>
+        <primary>Program Changes</primary>
+      </indexterm>
+      <para>
+The spinner sets the current program number. This might be termed a
+"sequencer" on modern computerized organs. It is possible to store up
+to 512 organ states and access them sequentially via the predefined
+MIDI events, or access any setting directly through the spinner. You
+may also use the left and right keys on the keyboard to scroll through
+the programs, and down to reactivate the current program (if you have
+changed the stops since last activating it, for example). Note also
+that when memory set is engaged, the target program wil be stored to,
+i.e. if you push Shift + Right then the program would be advanced and
+the current settings would be saved to this same next program.
+</para>
+    </sect1>
+    <sect1>
+      <title>Manuals</title>
+      <indexterm>
+        <primary>Manuals</primary>
+      </indexterm>
+      <para>
+Each manual as well as the pedalboard is displayed in the center of
+the screen. The keys are outlined when messages are received, but may
+not be engaged by clicking the mouse. Right clicking on a manual will
+open its corresponding MIDI Event Editor.
+</para>
+    </sect1>
+    <sect1>
+      <title>Expression Pedals</title>
+      <indexterm>
+        <primary>Expression Pedals</primary>
+      </indexterm>
+      <para>
+Directly above the pedalboard are displayed the pedals, sometimes
+referred to as "swell pedals", although they may control any of the
+manuals (Great, Swell, Wonderful, etc). On a pipe organ, swell
+shutters dampen the sound, and this is simulated in GrandOrgue by
+adjusting the volume of the enclosed pipes. While the mouse is over a
+pedal, you may use the mouse wheel to adjust its position, or right
+click to open its corresponding MIDI Event Editor.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Drawstops</title>
+      <indexterm>
+        <primary>Drawstops</primary>
+      </indexterm>
+      <para>
+The drawstops engage or disengage various components of the organ when
+clicked - generally new ranks of pipes which are applied to each
+manual. Other drawstops may perform actions such as coupling one
+manual to another. This deals with the functionality of pipe organs
+and is beyond the scope of this documentation. Right clicking on a
+drawstop will open its corresponding MIDI Event Editor. Any changes
+made there may be saved in the organ definition file or settings
+files.
+</para>
+    </sect1>
+    <sect1>
+      <title>Pistons</title>
+      <indexterm>
+        <primary>Pistons</primary>
+      </indexterm>
+      <para>
+Pistons generally perform an action when clicked and do not have an
+on/off toggle, although some pistons may toggle in this way. Pistons
+often recall drawstop combinations, and when used in combination with
+the Memory Set, you can store your own combinations in the
+pistons. Right clicking on a piston will open its corresponding MIDI
+Event Editor. Any changes made there may be saved in the organ
+definition file or settings files.
+      </para>
+    </sect1>
+  </chapter>
+  <chapter>
+    <title>File Menu</title>
+    <indexterm>
+      <primary>File Menu</primary>
+    </indexterm>
+    <para>
+The File menu contains commands for dealing with the loading and
+saving of sample sets.
+    </para>
+    <sect1>
+      <title>Open</title>
+      <indexterm>
+        <primary>Open</primary>
+      </indexterm>
+      <para>
+Import a sample set stored in a definition file. The location will be
+remembered for the next open operation. The most recently used sample
+sets are also remembered and available in the "Import Recent"
+popup. Loading sample sets takes some time; a progress window will
+display indicating estimated time remaining and other indicators. If
+you open a new sample set which shares samples with the previously
+loaded sample set, those files are cached and will not be reloaded
+from disk.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Reload</title>
+      <indexterm>
+        <primary>Reload</primary>
+      </indexterm>
+      <para>
+Reload the currently loaded sample set from disk. This may be used to
+quickly restore a sample set to its saved status, for example if a
+settings file has been applied.
+      </para>
+    </sect1>
+    <sect1 id="resettodefaults">
+      <title>Reset to Defaults</title>
+      <indexterm>
+        <primary>Reset to Defaults</primary>
+      </indexterm>
+      <para>
+Reset the currently loaded sample set to the settings as originally
+supplied by the sample set provider. You will be asked to verify that
+you wish to discard your modifications. Note that these settings are
+stored at the end of the definition file and could be easily removed
+with a text editor as well if necessary.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Import Settings</title>
+      <indexterm>
+        <primary>Import Settings</primary>
+      </indexterm>
+      <para>
+Apply a settings file to the currently loaded sample set. Note that
+settings may only be applied to a matching sample set, and you will
+receive a warning if you try to do otherwise. The location will be
+remembered for the next time, independently of other saved locations.
+</para>
+    </sect1>
+    <sect1>
+      <title>Export Settings</title>
+      <indexterm>
+        <primary>Export Settings</primary>
+      </indexterm>
+      <para>
+Save a settings file including the stop and piston MIDI messages; stop
+engaged states; divisional, general, and program combinations; and the
+volume.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Update Cache</title>
+      <indexterm>
+        <primary>Update Cache</primary>
+      </indexterm>
+      <para>
+Save the loaded and processed samples to the hard disk. Doing so
+decreases loading time at the expense of hard disk space. Selecting
+this option displays a message indicating how much space is required
+and confirming that you would like to proceed. If compression is
+disabled, load speed only increases by 10 to 15%. However, with
+compression enabled, the load time when using the sample cache may be
+cut by 40% or more.
+      </para>
+      <para>
+Note that different load settings or tunings each require their own
+cache file. For example, stereo compressed samples and mono
+uncompressed samples each need their own cache. It is therefore
+recommended that you limit your cache updates to one particular load
+type (preferably stereo compressed, as this is the recommended
+setting).
+</para>
+    </sect1>
+    <sect1>
+      <title>Save</title>
+      <indexterm>
+        <primary>Save</primary>
+      </indexterm>
+      <para>
+Save to the definition file: the stop and piston MIDI messages; stop
+engaged states; divisional, general, and program combinations; and the
+volume. Note that this is completely reversible using the <link linkend="resettodefaults">Reset to Defaults</link> option, and is the
+recommend method for most users.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Close</title>
+      <indexterm>
+        <primary>Close</primary>
+      </indexterm>
+      <para>
+Close the currently loaded sample set. If you have made any settings
+changes, you will be asked if you would like to save them before the
+sample set closes. Note that this will also unload the sample set and
+free the RAM it required.
+</para>
+    </sect1>
+    <sect1>
+      <title>Properties</title>
+      <indexterm>
+        <primary>Properties</primary>
+      </indexterm>
+      <para>
+This window displays various characteristics of the loaded sample set
+as provided by the sample set producer. If available, there is also a
+link to "More Information" which will open additional information in
+another application.
+      </para>
+    </sect1>
+  </chapter>
+  <chapter>
+    <title>Audio Menu</title>
+    <indexterm>
+      <primary>Audio Menu</primary>
+    </indexterm>
+    <para>
+The Audio menu contains commands for dealing with loaded organs and
+associated settings.
+    </para>
+    <sect1>
+      <title>Record</title>
+      <indexterm>
+        <primary>Record</primary>
+      </indexterm>
+      <para>
+Opens a dialog prompting where to save the recorded WAV file. The
+location will be remembered for the next time, independently of other
+saved locations. Upon clicking selecting a file name, recording
+commences and continues until the Record menu option or toolbar button
+is selected again.  A checkmark appears next to the menu item, and the
+toolbar button remains pushed, to indicate when recording is active.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Memory Set</title>
+      <indexterm>
+        <primary>Memory Set</primary>
+      </indexterm>
+      <para>
+Enters memory set mode until the Memory Set menu option or toolbar
+button is selected again. While the memory set is engaged, whenever
+you push a divisional or general piston or activate a program change,
+the organ will store the current settings to that piston or program
+change rather than recalling them. For example, engaging a divisional
+piston 1 during memory set will store the state of stops for that
+manual into piston 1, which could then be pushed later (after memory
+set has been disengaged) to recall those stops. A checkmark appears
+next to the menu item, and the toolbar button remains pushed, to
+indicate when memory set is active.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Panic</title>
+      <indexterm>
+        <primary>Panic</primary>
+      </indexterm>
+      <para>
+The effect of the panic button is to reset the sound, stopping all
+sound and turning off all notes. It may also be quickly accessed on
+the toolbar or via the Escape key. This should be generally
+unnecessary, although it may be useful if you need to quickly stop the
+sound output, or if the sound is breaking up due to CPU overload.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Settings</title>
+      <indexterm>
+        <primary>Settings</primary>
+      </indexterm>
+      <para>
+Displays a tabbed dialog containg the audio settings. For more
+information, refer to the <link linkend="devicesettings">Device
+Settings</link> and <link linkend="midisettings">MIDI Settings</link>
+sections.
+      </para>
+    </sect1>
+  </chapter>
+  <chapter>
+    <title>Help Menu</title>
+    <indexterm>
+      <primary>Help Menu</primary>
+    </indexterm>
+    <sect1>
+      <title>Index</title>
+      <indexterm>
+        <primary>Index</primary>
+      </indexterm>
+      <para>
+Opens this help document. Pressing F1 at other locations in the
+program will jump directly to the appropriate topic.
+      </para>
+    </sect1>
+    <sect1>
+      <title>About</title>
+      <indexterm>
+        <primary>About</primary>
+      </indexterm>
+      <para>Displays the splash screen.</para>
+    </sect1>
+  </chapter>
+  <chapter id="midisettings">
+    <title>MIDI Settings</title>
+    <indexterm>
+      <primary>MIDI Settings</primary>
+    </indexterm>
+    <figure>
+      <title>MIDI Settings dialog</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="GrandOrgueMIDI.gif"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    <sect1>
+      <title>MIDI Messages</title>
+      <indexterm>
+        <primary>MIDI Messages</primary>
+      </indexterm>
+      <para>
+This screen lists all of the MIDI actions which GrandOrgue can respond
+to. The "Action" column describes the action; the "Event" column shows
+the MIDI event it is currently tied to; the "Channel" column indicates
+which channel the action will listen on, if any; the "Data" column
+indicates the specific data which will trigger the action - for
+example, a controller number or a program change number. These actions
+may be modified by selecting the action and clicking "Properties", or
+by double-clicking on the action.
+</para>
+    </sect1>
+    <sect1>
+      <title>MIDI Event Properties</title>
+      <indexterm>
+        <primary>MIDI Event Properties</primary>
+      </indexterm>
+      <para>
+This displays the MIDI event editor dialog. You may select an event
+from the drop-down box (only available events will be shown), or you
+may select "(none)" to disable the action. The channel spinner sets
+the channel tied ot the MIDI message, and the data spinner (when
+applicable) selects the data tied to the MIDI message. For easy
+configuration, click "Listen for Event" and then perform the desired
+MIDI action (i.e. push a note on the appropriate keyboard, do a
+program change, flip a MIDI switch, etc). If the performed MIDI event
+is allowed for this action, its data is filled in and the "Listen for
+Event" button is deactivated. You may also manually deactivate the
+listener by clicking on it again. Be sure to select OK to save your
+changes when you're done.
+      </para>
+    </sect1>
+  </chapter>
+  <chapter id="devicesettings">
+    <title>Device Settings</title>
+    <indexterm>
+      <primary>Device Settings</primary>
+    </indexterm>
+    <figure>
+      <title>Device Settings dialog</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="GrandOrgueAudio.gif"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    <sect1>
+      <title>MIDI Input Devices</title>
+      <indexterm>
+        <primary>MIDI Input Devices</primary>
+      </indexterm>
+      <para>
+A list of all MIDI input interfaces available. Selecting a device
+means that GrandOrgue will listen for incoming MIDI messages on
+through that interface. This allows to listen to more than one device
+at a time; for example, to listen to both a controller and a sequencer
+or loopback device.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Advanced</title>
+      <indexterm>
+        <primary>Advanced</primary>
+      </indexterm>
+      <para>
+Either select a device and click Advanced, or double click on the
+device. This brings up a window that allows the setting of a channel
+offset. A channel offset allows the use of two MIDI interfaces with
+conflicting MIDI channels. For example, applying a channel offset of 8
+to one of the MIDI interfaces would cause that interface's channel 1
+to appear as channel 9, channel 2 to appear as channel 10, and so
+on. This may be useful if you have multiple keyboards that are
+configured to use the same channel.
+</para>
+    </sect1>
+    <sect1>
+      <title>Sound Output Device</title>
+      <indexterm>
+        <primary>Sound Output Device</primary>
+      </indexterm>
+      <para>
+Provides a list of available sound output devices. Note that only one
+device may be used for sound output at a time. Devices are prefixed by
+their type, e.g. "ASIO", "DirectSound", etc.
+      </para>
+      <para><emphasis>NOTE:</emphasis> If an ASIO device does not appear, it may
+be set to an incompatible format. The control panel for the ASIO
+device must be set to 44.1kHz 16-bit sound.
+</para>
+    </sect1>
+    <sect1>
+      <title>Estimated Latency</title>
+      <indexterm>
+        <primary>Estimated Latency</primary>
+      </indexterm>
+      <para>
+This allows you to set a <emphasis>requested</emphasis> latency, and
+after you click OK or Apply, the sound system will determine tne
+closest feasible latency and change the value to this
+<emphasis>estimated</emphasis> latency. Note that the estimate is
+based on numbers provided by the hardware and may vary. <emphasis>Many
+ASIO devices do not allow you to change their latency except in their
+control panel when the device is not in use.</emphasis> Refer to your
+sound card documentation for more information. Note that use of third
+party drivers, such as ASIO4All, may function properly but is not
+supported.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Load Stereo Samples</title>
+      <indexterm>
+        <primary>Load Stereo Samples</primary>
+      </indexterm>
+      <para>
+If set to Mono, all samples are loaded in Mono. When compression is
+disabled, this will save 50%, but when compression is enabled, much
+less will be saved because the compression is much less effective on
+monoaural inputs.
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Memory</term>
+          <listitem>
+            <para>Variable savings up to 50%</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Polyphony</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Load time</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Lossless Compression</title>
+      <indexterm>
+        <primary>Lossless Compression</primary>
+      </indexterm>
+      <para>
+Uses a lossless algorithm (i.e. the original samples can be perfectly
+reconstructed) so that RAM requirements are lessened. Particularly
+useful for large sample sets.
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Memory</term>
+          <listitem>
+            <para>Variable savings up to 40%</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Polyphony</term>
+          <listitem>
+            <para>Approx. 10% lower</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Load time</term>
+          <listitem>
+            <para>Approx. 20% slower</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Active Polyphony Management</title>
+      <indexterm>
+        <primary>Active Polyphony Management</primary>
+      </indexterm>
+      <para>
+When polyphony reaches 3/4 of the current maximum value, release
+samples (reverberation tails) are faded out in order to conserve
+polyphony.
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Memory</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Polyphony</term>
+          <listitem>
+            <para>Conserved</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Load time</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Release Sample Phase Alignment</title>
+      <indexterm>
+        <primary>Release Sample Phase Alignment</primary>
+      </indexterm>
+      <para>
+When a note is released, phase cancellation may occur as the release
+sample cross fades in. Selecting this option will make a best effort
+to phase align the release sample to help minimize this effect.
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Memory</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Polyphony</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Load time</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Release Sample Detachment</title>
+      <indexterm>
+        <primary>Release Sample Detachment</primary>
+      </indexterm>
+      <para>
+When a note is released, the tremulants or swell pedals would not
+normally affect the reverberation, and therefore it is highly
+recommended to leave this option engaged.
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Memory</term>
+          <listitem>
+            <para>Variable savings up to 50%</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Polyphony</term>
+          <listitem>
+            <para>Slight impact</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Load time</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Release Sample Scaling</title>
+      <indexterm>
+        <primary>Release Sample Scaling</primary>
+      </indexterm>
+      <para>
+For those sample sets with long reverberation tails ("wet"), enabling
+this option will fade out the release sample if the note is played
+staccato. It will have little to no effect on "dry" sample sets.
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Memory</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Polyphony</term>
+          <listitem>
+            <para>Slight impact</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Load time</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Randomize Pipe Speaking</title>
+      <indexterm>
+        <primary>Randomize Pipe Speaking</primary>
+      </indexterm>
+      <para>
+This will apply a very small (less than 1ms) random delay before each
+pipe begins to speak. This may help combinations of stops to sound
+more natural and less repetitive.
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Memory</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Polyphony</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Load time</term>
+          <listitem>
+            <para>No impact</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+  </chapter>
+  <chapter>
+    <title>Frequently Asked Questions</title>
+    <indexterm>
+      <primary>Frequently Asked Questions</primary>
+    </indexterm>
+    <para>
+This section will be populated once questions become frequently asked.
+    </para>
+  </chapter>
+  <chapter>
+    <title>Technical Support</title>
+    <indexterm>
+      <primary>Technical Support</primary>
+    </indexterm>
+    <para>
+GrandOrgue is an open source project distributed under the GNU General
+Public License. For information, comments, questions, or problems,
+please visit the project pages on sourceforge.
+    </para>
+  </chapter>
+  <chapter>
+    <title>History</title>
+    <indexterm>
+      <primary>History</primary>
+    </indexterm>
+    <para>
+GrandOrgue is a project based on a previous GNU GPL project with a
+very similar that that has been discontinued.
+    </para>
+    <sect1>
+      <title>0.1.0 (2009-06-7)</title>
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>
+Initial release of this new branch of virtual pipe organ based on
+<emphasis>..Organ</emphasis>.
+	  </para>
+        </listitem>
+      </itemizedlist>
+    </sect1>
+  </chapter>
+  <chapter>
+    <title>License</title>
+    <para>
+GrandOrgue - free pipe organ simulator based on MyOrgan
+    </para>
+    <para>
+MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
+MyOrgan is a Trademark of Milan Digital Audio LLC
+    </para>
+    <para>
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+    </para>
+    <para>
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+    </para>
+    <para>
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA.
+    </para>
+  </chapter>
+</book>
