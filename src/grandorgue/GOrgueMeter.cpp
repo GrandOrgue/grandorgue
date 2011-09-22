@@ -29,9 +29,7 @@
 #include "GrandOrgueID.h"
 #include "wxGaugeAudio.h"
 
-#if defined(__WXMSW__)
-    #include <wx/msw/regconf.h>
-#endif
+#include <wx/confbase.h>
 
 extern GOrgueSound* g_sound;
 
@@ -103,10 +101,10 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 		SetValue(0);
 		break;
 	case 2:
-		SetValue(wxConfig::Get()->Read(wxT("PolyphonyLimit"), 2048));
+		SetValue(wxConfigBase::Get()->Read(wxT("PolyphonyLimit"), 2048));
 		break;
 	case 3:
-		SetValue(wxConfig::Get()->Read(wxT("Volume"), 50));
+		SetValue(wxConfigBase::Get()->Read(wxT("Volume"), 50));
 		break;
 	}
 }
@@ -158,7 +156,7 @@ void GOrgueMeter::OnVolume(wxCommandEvent& event)
 	m_meters[0]->ResetClip();
 	m_meters[1]->ResetClip();
 
-	wxConfig::Get()->Write(wxT("Volume"), n);
+	wxConfigBase::Get()->Write(wxT("Volume"), n);
 }
 
 void GOrgueMeter::OnPolyphony(wxCommandEvent& event)
@@ -177,7 +175,7 @@ void GOrgueMeter::OnPolyphony(wxCommandEvent& event)
 	wxColour colour = m_meters[0]->GetBackgroundColour();
 	m_meters[0]->ResetClip();
 
-	wxConfig::Get()->Write(wxT("PolyphonyLimit"), n);
+	wxConfigBase::Get()->Write(wxT("PolyphonyLimit"), n);
 	if (g_sound)
 	{
 		g_sound->GetEngine().SetHardPolyphony(n);

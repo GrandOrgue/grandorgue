@@ -26,12 +26,15 @@
 #include <wx/docview.h>
 #include <wx/dcmemory.h>
 
+class wxHtmlHelpController;
 class GOrgueMeter;
 
 class GOrgueFrame: public wxDocParentFrame
 {
 	DECLARE_CLASS(GOrgueFrame)
 	wxMenu* m_panel_menu;
+	wxHtmlHelpController* m_Help;
+
 public:
     GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type);
     ~GOrgueFrame(void);
@@ -54,8 +57,8 @@ public:
 	void OnAudioSettings(wxCommandEvent& event);
 
 	void OnHelp(wxCommandEvent& event);
-	void OnHelpRegister(wxCommandEvent& event);
 	void OnHelpAbout(wxCommandEvent& event);
+	void OnShowHelp(wxCommandEvent& event);
 
 	//Added by Graham Goode Nov 2009
 	// Added to allow for the mouse-over event creating a description of the new icons
@@ -86,6 +89,7 @@ protected:
 	void AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, const wxBitmap& toolbarImage, wxItemKind kind = wxITEM_NORMAL);
 	wxString GetDocumentDirectory();
 	wxString GetOrganDirectory();
+	void InitHelp();
 };
 
 #endif

@@ -25,7 +25,6 @@
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrgueSound.h"
-#include "GrandOrgue.h"
 
 /* TODO: This should not be... */
 extern GOrgueSound* g_sound;
@@ -317,6 +316,8 @@ void MIDIListenDialog::OnListenMIDI(wxCommandEvent &event)
 
 void MIDIListenDialog::OnHelp(wxCommandEvent& event)
 {
-    ::wxGetApp().m_help->Display(_("MIDI Messages"));
+	wxCommandEvent help(wxEVT_SHOWHELP, 0);
+	help.SetString(_("MIDI Messages"));
+	wxTheApp->GetTopWindow()->AddPendingEvent(help);
 }
 

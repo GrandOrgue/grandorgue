@@ -39,6 +39,7 @@
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
 #include <wx/splash.h>
+#include <wx/confbase.h>
 
 #ifdef __WIN32__
 #include <windows.h>
@@ -57,7 +58,7 @@ public:
     {
         GOrgueApp* app = &::wxGetApp();
 
-        app->frame->Raise();
+        app->GetTopWindow()->Raise();
         if (data[0])
             app->AsyncLoadFile(data);
 
@@ -71,7 +72,7 @@ public:
     wxConnectionBase* OnAcceptConnection(const wxString& topic)
     {
         GOrgueApp* app = &::wxGetApp();
-        if (!app->frame || !app->m_docManager)
+        if (!app->GetTopWindow())
             return false;
 
         if (topic == wxT("open"))
@@ -106,12 +107,11 @@ void GOrgueDocManager::OnUpdateFileSave(wxUpdateUIEvent& event)
 
 GOrgueApp::GOrgueApp()
   :frame(NULL),
-   m_docManager(NULL),
-   m_help(NULL),
    m_locale(),
    m_server(NULL),
    m_soundSystem(NULL),
    pConfig(NULL),
+   m_docManager(NULL),
    single_instance(NULL)
 {
 }
@@ -156,9 +156,6 @@ bool GOrgueApp::OnInit()
 	wxImage::AddHandler(new wxGIFHandler);
 	wxImage::AddHandler(new wxPNGHandler);
 	srand(::wxGetUTCTime());
-
-	m_help = new wxHtmlHelpController(wxHF_CONTENTS | wxHF_INDEX | wxHF_SEARCH | wxHF_ICONS_BOOK | wxHF_FLAT_TOOLBAR);
-        m_help->AddBook(wxFileName(wxT("GrandOrgue.htb")));
 
 #ifdef __WIN32__
 	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
@@ -220,10 +217,9 @@ int GOrgueApp::OnExit()
 		m_docManager->FileHistorySave(*pConfig);
 		delete m_docManager;
 	}
-	delete m_help;
-    delete m_server;
-    delete single_instance;
+	delete m_server;
+	delete single_instance;
 
-    return wxApp::OnExit();
+	return wxApp::OnExit();
 }
 

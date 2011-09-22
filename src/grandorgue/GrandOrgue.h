@@ -26,7 +26,6 @@
 #include "GrandOrgueDef.h"
 
 #include <wx/wx.h>
-#include <wx/html/helpctrl.h>
 
 class wxSingleInstanceChecker;
 class wxSplashScreenWindow;
@@ -45,13 +44,12 @@ public:
   int OnExit();
   void AsyncLoadFile(wxString iFile);
   GOrgueFrame* frame;
-  wxDocManager* m_docManager;
-  wxHtmlHelpController* m_help;
 protected:
   wxLocale m_locale;
   stServer* m_server;
   GOrgueSound* m_soundSystem;
   wxConfigBase* pConfig;
+  wxDocManager* m_docManager;
   wxSingleInstanceChecker* single_instance;
 };
 
