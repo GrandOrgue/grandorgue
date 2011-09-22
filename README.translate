@@ -3,7 +3,7 @@ Works on Linux (and Windows too).
 gettext utitlities must be installed to create/compile translations.
 Binary .mo files from Linux should be usable on Windows too.
 
-How to update:
+How to update the translations:
 1) make update-pot
 Creates/Updates po/GrandOrgue.pot
 2) make merge-pot
@@ -24,3 +24,30 @@ msginit -i GrandOrgue.pot -l de -o de.po
 
 The translations are automatically built/installed, if the gettext
 utilties are available.
+
+
+
+How to handle the translation of the help system:
+-------------------------------------------------
+
+For building the (translated) help, you need to install Docbook-xsl, xslproc, zip
+and po4a. The docbook installation directory can be hinted to cmake with DOCBOOK_DIR.
+
+How to update the translations:
+1) make help-update-pot
+Creates/Updates help/grandorgue.pot
+2) make help-merge-pot
+Merges new strings into help/*.po
+3)
+Edit po/$LANG.po. Search for fuzzy or untranslated entries and correct them.
+KDE includes lokalize (http://userbase.kde.org/Lokalize), a
+end-user friendly editor.
+4) Commit the changed po files.
+
+How to add a new language:
+1) make help-update-pot
+2) Add a new po file, eg. for de:
+cd po
+msginit -i grandorgue.pot -l de -o de.po
+3) Rerun cmake, so that it recognize the new po file
+4) Edit & commit the help/$LANG.po

@@ -55,6 +55,7 @@ endif ()
 add_subdirectory(src/rt lib/rt)
 add_subdirectory(src/grandorgue bin)
 add_subdirectory(po)
+add_subdirectory(help)
 
 set(CPACK_PACKAGE_NAME "GrandOrgue")
 set(CPACK_PACKAGE_VENDOR "Our Organ")
