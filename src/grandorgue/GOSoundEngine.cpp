@@ -567,7 +567,7 @@ int GOSoundEngine::GetSamples
 		memset(output_buffer, 0, (n_frames * sizeof(float)));
 
 	/* initialise the output buffer */
-	std::fill(m_FinalBuffer, m_FinalBuffer + 2048, 0);
+	std::fill(m_FinalBuffer, m_FinalBuffer + GO_SOUND_BUFFER_SIZE, 0);
 
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 	{
@@ -576,7 +576,7 @@ int GOSoundEngine::GetSamples
 
 		int* this_buff = m_Tremulants[j].buff;
 
-		std::fill (this_buff, this_buff + 2048, 0x800000);
+		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0x800000);
 
 		ProcessAudioSamplers (m_Tremulants[j], n_frames, this_buff);
 	}
@@ -585,7 +585,7 @@ int GOSoundEngine::GetSamples
 	{
 		int* this_buff = m_TempSoundBuffer;
 
-		std::fill (this_buff, this_buff + 2048, 0);
+		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
 
 		ProcessAudioSamplers(m_DetachedRelease, n_frames, this_buff);
 
@@ -593,7 +593,7 @@ int GOSoundEngine::GetSamples
 		d *= m_Volume;
 		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
 		float f = d;
-		std::fill(m_VolumeBuffer, m_VolumeBuffer + 2048, f);
+		std::fill(m_VolumeBuffer, m_VolumeBuffer + GO_SOUND_BUFFER_SIZE, f);
 
 		for (unsigned int k = 0; k < n_frames*2; k++)
 		{
@@ -612,7 +612,7 @@ int GOSoundEngine::GetSamples
 
 		int* this_buff = m_TempSoundBuffer;
 
-		std::fill (this_buff, this_buff + 2048, 0);
+		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
 
 		ProcessAudioSamplers(m_Windchests[j], n_frames, this_buff);
 
@@ -621,7 +621,7 @@ int GOSoundEngine::GetSamples
 		d *= m_Volume;
 		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
 		float f = d;
-		std::fill(m_VolumeBuffer, m_VolumeBuffer + 2048, f);
+		std::fill(m_VolumeBuffer, m_VolumeBuffer + GO_SOUND_BUFFER_SIZE, f);
 
 		for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
 		{
@@ -738,7 +738,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			{
 				if (m_ScaledReleases)
 				{
-					int time = ((m_CurrentTime - handle->time) * (1000 * BLOCKS_PER_FRAME)) / 44100;
+					int time = ((m_CurrentTime - handle->time) * (10 * BLOCKS_PER_FRAME)) / 441;
 					if (time < 256)
 						new_sampler->fademax = (this_pipe->GetScaleAmplitude() * (16384 + (time * 64))) >> 15;
 					if (time < 1024)
