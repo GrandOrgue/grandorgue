@@ -28,6 +28,8 @@
 #include "GrandOrgueDef.h"
 #include <vector>
 
+#define GO_SOUND_BUFFER_SIZE ((MAX_FRAME_SIZE) * (MAX_OUTPUT_CHANNELS))
+
 class GOrgueWindchest;
 class GOSoundProvider;
 class GrandOrgueFile;
@@ -46,7 +48,7 @@ class GOSoundEngine
 
 private:
 
-	typedef int sound_buffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
+	typedef int sound_buffer[GO_SOUND_BUFFER_SIZE];
 
 	/* This is inteded to be struct, but needs copy constructors to make wxCriticalSection work with std::vector */
 	class GOSamplerEntry
@@ -87,16 +89,12 @@ private:
 	GOSoundSamplerPool            m_SamplerPool;
 	std::vector<GOSamplerEntry>   m_Windchests;
 	std::vector<GOSamplerEntry>   m_Tremulants;
-
-	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, int* output_buffer);
-
-	/* Per sampler decode buffer */
-	int            m_TempDecodeBuffer[(MAX_FRAME_SIZE + BLOCKS_PER_FRAME) * MAX_OUTPUT_CHANNELS];
-	double         m_FinalBuffer[MAX_FRAME_SIZE * MAX_OUTPUT_CHANNELS];
-	float          m_VolumeBuffer[MAX_FRAME_SIZE * MAX_OUTPUT_CHANNELS];
-
+	/* Per sampler decode buffers */
+	sound_buffer                  m_TempDecodeBuffer;
+	double                        m_FinalBuffer[GO_SOUND_BUFFER_SIZE];
+	float                         m_VolumeBuffer[GO_SOUND_BUFFER_SIZE];
 	/* Per sampler list decode buffer */
-	sound_buffer   m_TempSoundBuffer;
+	sound_buffer                  m_TempSoundBuffer;
 
 	/* samplerGroupID:
 	   -1 .. -n Tremulants
@@ -106,6 +104,7 @@ private:
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id);
 	void StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_id);
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
+	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, int* output_buffer);
 
 public:
 
