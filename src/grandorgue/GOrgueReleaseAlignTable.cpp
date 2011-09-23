@@ -97,15 +97,13 @@ void GOrgueReleaseAlignTable::ComputeTable
 	 * PHASE_ALIGN_MIN_FREQUENCY macro and should be set to the lowest
 	 * frequency pipe you would ever expect... if this length is greater
 	 * than the length of the release, truncate it */
-	unsigned searchLen = sample_rate / PHASE_ALIGN_MIN_FREQUENCY;
-	unsigned releaseLen = release.size / (m_Channels * sizeof(wxInt16));
-	if (releaseLen < BLOCK_HISTORY)
+	unsigned required_search_len = sample_rate / PHASE_ALIGN_MIN_FREQUENCY;
+	unsigned release_len = release.size / (m_Channels * sizeof(wxInt16));
+	if (release_len < required_search_len + BLOCK_HISTORY)
 		return;
-	if (searchLen > releaseLen - BLOCK_HISTORY)
-		searchLen = releaseLen - BLOCK_HISTORY;
 	/* If number of samples in the release is not enough to fill the release
 	 * table, abort - release alignment probably wont help. */
-	if (searchLen < PHASE_ALIGN_AMPLITUDES * PHASE_ALIGN_DERIVATIVES * 2)
+	if (required_search_len < PHASE_ALIGN_AMPLITUDES * PHASE_ALIGN_DERIVATIVES * 2)
 		return;
 
 	/* Generate the release table using the small portion of the release... */
@@ -116,7 +114,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 	for (unsigned int j = 0; j < m_Channels; j++)
 		f_p += ((wxInt16*)release.data)[(BLOCK_HISTORY - 1) * m_Channels + j];
 
-	for (unsigned i = BLOCK_HISTORY; i < searchLen + BLOCK_HISTORY; i++)
+	for (unsigned i = BLOCK_HISTORY; i < required_search_len; i++)
 	{
 
 		/* Store previous values */
@@ -139,11 +137,11 @@ void GOrgueReleaseAlignTable::ComputeTable
 		ampIndex = (ampIndex < 0) ? 0 : ((ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES-1 : ampIndex);
 		if (!found[derivIndex][ampIndex])
 		{
-			m_PositionEntries[derivIndex][ampIndex] = i * m_Channels * sizeof(wxInt16);
+			m_PositionEntries[derivIndex][ampIndex] = (i + 1) * m_Channels * sizeof(wxInt16);
 			for (unsigned j = 0; j < BLOCK_HISTORY; j++)
 				for (unsigned k = 0; k < MAX_OUTPUT_CHANNELS; k++)
 					m_HistoryEntries[derivIndex][ampIndex][j * MAX_OUTPUT_CHANNELS + k]
-							= ((k < m_Channels) && (i + j - BLOCK_HISTORY  > 0))
+							= (k < m_Channels)
 							? ((wxInt16*)release.data)[(i + j - BLOCK_HISTORY) * m_Channels + k]
 							: 0;
 			found[derivIndex][ampIndex] = true;
