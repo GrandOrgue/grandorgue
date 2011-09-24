@@ -79,11 +79,11 @@ void GOSoundProviderWave::LoadFromFile
 			/* The wave has loops and a release marker so truncate the samples
 			 * stored in the attack portion to the beginning of the loop.
 			 */
-			attackSamples = wave.GetLoopStartPosition();
+			attackSamples = wave.GetLongestLoop().start_sample;;
 
 			/* Get the loop parameters */
-			unsigned loopStart = wave.GetLoopStartPosition();
-			unsigned loopSamples = wave.GetLoopEndPosition() - loopStart + 1;
+			unsigned loopStart = attackSamples;
+			unsigned loopSamples = wave.GetLongestLoop().end_sample - loopStart + 1;
 			unsigned loopSamplesInMem = loopSamples + EXTRA_FRAMES;
 			assert(loopStart > 0);
 			assert(wave.GetLoopEndPosition() > loopStart);
