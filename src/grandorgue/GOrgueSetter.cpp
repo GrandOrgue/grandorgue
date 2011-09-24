@@ -32,6 +32,7 @@
 #include "GOrgueSetterButton.h"
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
+#include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
 
 #define CRESCENDO_STEPS 32
@@ -48,6 +49,7 @@ enum {
 	ID_SETTER_P100,
 	ID_SETTER_CURRENT,
 	ID_SETTER_HOME,
+	ID_SETTER_GC,
 	ID_SETTER_L0,
 	ID_SETTER_L1,
 	ID_SETTER_L2,
@@ -121,6 +123,7 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("P100"), ID_SETTER_P100 },
 	{ wxT("Current"), ID_SETTER_CURRENT },
 	{ wxT("Home"), ID_SETTER_HOME },
+	{ wxT("GC"), ID_SETTER_GC },
 	{ wxT("L1"), ID_SETTER_L1 },
 	{ wxT("L2"), ID_SETTER_L2 },
 	{ wxT("L3"), ID_SETTER_L3 },
@@ -198,6 +201,7 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, false));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
@@ -393,6 +397,10 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 	button->Init(cfg, 7, 102, wxT("SetterFull"));
 	panel->AddControl(button);
 
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_GC]);
+	button->Init(cfg, 8, 102, wxT("SetterInsert"));
+	panel->AddControl(button);
+
 	button = new GOGUISetterButton(panel, m_button[ID_SETTER_INSERT]);
 	button->Init(cfg, 9, 102, wxT("SetterInsert"));
 	panel->AddControl(button);
@@ -515,6 +523,7 @@ void GOrgueSetter::Load(IniFileConfig& cfg)
 	m_button[ID_SETTER_P100]->Load(cfg, wxT("SetterP100"), _("+100"));
 	m_button[ID_SETTER_CURRENT]->Load(cfg, wxT("SetterCurrent"), _("Current"));
 	m_button[ID_SETTER_HOME]->Load(cfg, wxT("SetterHome"), _("000"));
+	m_button[ID_SETTER_GC]->Load(cfg, wxT("SetterGC"), _("G.C."));
 
 	m_button[ID_SETTER_REGULAR]->Load(cfg, wxT("SetterRegular"), _("Regular"));
 	m_button[ID_SETTER_SCOPE]->Load(cfg, wxT("SetterScope"), _("Scope"));
@@ -615,6 +624,9 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 				break;
 			case ID_SETTER_HOME:
 				SetPosition(0, false);
+				break;
+			case ID_SETTER_GC:
+				m_organfile->Reset();
 				break;
 			case ID_SETTER_CURRENT:
 				SetPosition(m_pos);
