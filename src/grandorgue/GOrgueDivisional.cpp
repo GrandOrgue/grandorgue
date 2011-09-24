@@ -36,7 +36,8 @@ GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile) :
 	m_DivisionalNumber(0),
 	m_Stops(),
 	m_Couplers(),
-	m_Tremulants()
+	m_Tremulants(),
+	m_Protected(false)
 {
 }
 
@@ -59,6 +60,7 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 	int NumberOfStops = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount());
 	int NumberOfCouplers = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers());
 	int NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), m_organfile->DivisionalsStoreTremulants());
+	m_Protected = cfg.ReadBoolean(group, wxT("Protected"), false, false);
 
 	m_Stops.resize(NumberOfStops);
 	for (i = 0; i < NumberOfStops; i++)
@@ -128,6 +130,8 @@ void GOrgueDivisional::PushLocal()
 
 	if (m_organfile->GetSetter()->IsSetterActive())
 	{
+		if (m_Protected)
+			return;
 		if (m_organfile->GetSetter()->GetSetterType() == SETTER_REGULAR)
 		{
 			m_Stops.clear();

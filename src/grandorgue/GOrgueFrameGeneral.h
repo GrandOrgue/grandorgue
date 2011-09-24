@@ -38,6 +38,7 @@ private:
 	std::vector<int> m_CouplerManual;
 	std::vector<int> m_Tremulants;
 	std::vector<int> m_DivisionalCouplers;
+	bool m_Protected;
 
 public:
 	GOrgueFrameGeneral(GrandOrgueFile* organfile);
