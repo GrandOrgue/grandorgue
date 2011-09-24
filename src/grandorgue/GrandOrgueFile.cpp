@@ -907,6 +907,7 @@ void GrandOrgueFile::Reset()
 		     GetDivisionalCoupler(j)->Set(false);
         for (unsigned k = 0; k < GetGeneralCount(); k++)
 		GetGeneral(k)->Display(false);
+	m_setter->ResetDisplay();
 }
 
 void GrandOrgueFile::ControlChanged(void* control)

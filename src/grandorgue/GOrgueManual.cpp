@@ -346,10 +346,14 @@ void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
 
 void GOrgueManual::Reset()
 {
-	for (unsigned j = 0; j < GetStopCount(); j++)
-                GetStop(j)->Set(false);
 	for (unsigned j = 0; j < GetCouplerCount(); j++)
                 GetCoupler(j)->Set(false);
 	for (unsigned j = 0; j < GetDivisionalCount(); j++)
 		GetDivisional(j)->Display(false);
+
+	if (GetStopCount() == 1 && !GetStop(0)->IsDisplayed())
+		return;
+	
+	for (unsigned j = 0; j < GetStopCount(); j++)
+                GetStop(j)->Set(false);
 }
