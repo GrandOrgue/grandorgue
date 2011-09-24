@@ -64,29 +64,35 @@ void GOSoundProviderSynthedTrem::Create
 	int sample_freq = 44100;
 
 	unsigned attackSamples  = sample_freq / start_rate;
-	unsigned attackSamplesInMem = attackSamples + BLOCKS_PER_FRAME;
+	unsigned attackSamplesInMem = attackSamples + EXTRA_FRAMES;
 	unsigned loopSamples  = sample_freq / trem_freq;
-	unsigned loopSamplesInMem = loopSamples + BLOCKS_PER_FRAME;
+	unsigned loopSamplesInMem = loopSamples + EXTRA_FRAMES;
 	unsigned releaseSamples  = sample_freq / stop_rate;
-	unsigned releaseSamplesInMem = releaseSamples + BLOCKS_PER_FRAME;
+	unsigned releaseSamplesInMem = releaseSamples + EXTRA_FRAMES;
 
 	m_Attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
 	m_Attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
 	m_Attack.data = (unsigned char*)malloc(m_Attack.alloc_size);
 	if (m_Attack.data == NULL)
 		throw (wxString)_("< out of memory allocating attack");
+	m_Attack.sample_rate = sample_freq;
+	m_Attack.sample_count = attackSamples;
 
 	m_Loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
 	m_Loop.alloc_size = loopSamplesInMem * sizeof(wxInt16) * m_Channels;
 	m_Loop.data = (unsigned char*)malloc(m_Loop.alloc_size);
 	if (m_Loop.data == NULL)
 		throw (wxString)_("< out of memory allocating loop");
+	m_Loop.sample_rate = sample_freq;
+	m_Loop.sample_count = loopSamples;
 
 	m_Release.size = releaseSamples * sizeof(wxInt16) * m_Channels;
 	m_Release.alloc_size = releaseSamplesInMem * sizeof(wxInt16) * m_Channels;
 	m_Release.data = (unsigned char*)malloc(m_Release.alloc_size);
 	if (m_Release.data == NULL)
 		throw (wxString)_("< out of memory allocating release");
+	m_Release.sample_rate = sample_freq;
+	m_Release.sample_count = releaseSamples;
 
 	double pi = 3.14159265358979323846;
 	double trem_amp   = (0x7FF0 * amp_mod_depth / 100);

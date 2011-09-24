@@ -31,16 +31,17 @@ class GOrgueRtHelpers
 
 private:
 
-	static void GetDirectSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size);
-	static void GetAsioSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size);
-	static void GetJackSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size);
-	static void GetUnknownSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size);
+	static void GetDirectSoundConfig(const int latency, unsigned sample_rate, unsigned *nb_buffers, unsigned *buffer_size);
+	static void GetAsioSoundConfig(const int latency, unsigned sample_rate, unsigned *nb_buffers, unsigned *buffer_size);
+	static void GetJackSoundConfig(const int latency, unsigned sample_rate, unsigned *nb_buffers, unsigned *buffer_size);
+	static void GetUnknownSoundConfig(const int latency, unsigned sample_rate, unsigned *nb_buffers, unsigned *buffer_size);
 
 public:
 
 	static void GetBufferConfig
 		(const RtAudio::Api   rt_api
 		,const unsigned       latency_ms
+		,unsigned             sample_rate
 		,unsigned            *nb_buffers
 		,unsigned            *buffer_size_samples
 		);

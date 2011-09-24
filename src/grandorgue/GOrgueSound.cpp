@@ -26,8 +26,6 @@
 #include "GOrgueMidi.h"
 #include "GOrgueEvent.h"
 
-struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
-
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
 GOrgueSound* g_sound = 0;
@@ -73,18 +71,13 @@ GOrgueSound::GOrgueSound(void) :
 					defaultAudio = name;
 
 				unsigned sample_rate_index = info.sampleRates.size();
-				if (rtaudio_apis[k] != RtAudio::WINDOWS_DS)
+
+				for (unsigned j = 0; j < info.sampleRates.size(); j++)
 				{
-					/* TODO: can a Windows developer explain why this is necessary? */
-					for (unsigned j = 0; j < sample_rate_index; j++)
-						if (info.sampleRates[j] == 44100)
-							sample_rate_index = j;
-				}
-				else
-				{
-					sample_rate_index = 0;
-					if (info.sampleRates.size() && info.sampleRates.back() < 44100)
-						sample_rate_index = info.sampleRates.size();
+					if (info.sampleRates[j] == 44100)
+						sample_rate_index = j;
+					if (info.sampleRates[j] == 48000)
+						sample_rate_index = j;
 				}
 
 				if (
@@ -153,6 +146,7 @@ bool GOrgueSound::OpenSound()
 	b_stereo = pConfig->Read(wxT("StereoEnabled"), 1);
 	b_align  = pConfig->Read(wxT("AlignRelease"), 1);
 	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
+	unsigned sample_rate = pConfig->Read(wxT("SampleRate"), 44100);
 
 	PreparePlayback(NULL);
 
@@ -165,11 +159,13 @@ bool GOrgueSound::OpenSound()
 		it = m_audioDevices.find(defaultAudio);
 		if (it != m_audioDevices.end())
 		{
+			GetEngine().SetSampleRate(sample_rate);
+			m_recorder.SetSampleRate(sample_rate);
 
 			audioDevice = new RtAudio(it->second.rt_api);
 
 			unsigned try_latency = pConfig->Read(wxT("Devices/Sound/") + defaultAudio, 12);
-			GOrgueRtHelpers::GetBufferConfig(it->second.rt_api, try_latency, &m_nb_buffers, &m_samples_per_buffer);
+			GOrgueRtHelpers::GetBufferConfig(it->second.rt_api, try_latency, sample_rate, &m_nb_buffers, &m_samples_per_buffer);
 
 			RtAudio::StreamParameters aOutputParam;
 			aOutputParam.deviceId = it->second.rt_api_subindex;
@@ -183,7 +179,7 @@ bool GOrgueSound::OpenSound()
 				(&aOutputParam
 				,NULL
 				,format
-				,44100
+				,sample_rate
 				,&m_samples_per_buffer
 				,&GOrgueSound::AudioCallback
 				,this
@@ -208,7 +204,8 @@ bool GOrgueSound::OpenSound()
 					,BLOCKS_PER_FRAME
 					);
 			}
-
+			GetEngine().SetSampleRate(audioDevice->getStreamSampleRate());
+			m_recorder.SetSampleRate(audioDevice->getStreamSampleRate());
 		}
 		else
 			throw (wxString)_("No audio device is selected; neither MIDI input nor sound output will occur!");
@@ -361,7 +358,7 @@ const int GOrgueSound::GetLatency()
 	if (actual_latency == 0)
 		actual_latency = m_samples_per_buffer * m_nb_buffers;
 
-	return (actual_latency * 1000) / 44100;
+	return (actual_latency * 1000) / GetEngine().GetSampleRate();
 
 }
 

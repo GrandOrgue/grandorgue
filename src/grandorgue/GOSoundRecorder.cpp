@@ -24,8 +24,9 @@
 #include "GOrgueSoundTypes.h"
 
 GOSoundRecorder::GOSoundRecorder() :
-	m_file(),
-	m_lock()
+        m_file(),
+        m_lock(),
+        m_SampleRate(0)
 {
 }
 
@@ -36,7 +37,7 @@ GOSoundRecorder::~GOSoundRecorder()
 
 void GOSoundRecorder::Open(wxString filename)
 {
-	struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
+	struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, m_SampleRate, m_SampleRate * 8, 8, 32, {'d','a','t','a'}, 0};
 
 	Close();
 
@@ -59,7 +60,7 @@ bool GOSoundRecorder::IsOpen()
 void GOSoundRecorder::Close()
 {
 	wxCriticalSectionLocker locker(m_lock);
-	struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, 44100, 352800, 8, 32, {'d','a','t','a'}, 0};
+	struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, m_SampleRate, m_SampleRate * 8, 8, 32, {'d','a','t','a'}, 0};
 
 	if (!m_file.IsOpened())
 		return;
@@ -68,6 +69,11 @@ void GOSoundRecorder::Close()
 	m_file.Seek(0);
 	m_file.Write(&WAVE, sizeof(WAVE));
 	m_file.Close();
+}
+
+void GOSoundRecorder::SetSampleRate(unsigned sample_rate)
+{
+	m_SampleRate = sample_rate;
 }
 
 void GOSoundRecorder::Write(float* data, unsigned count)

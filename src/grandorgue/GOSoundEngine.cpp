@@ -33,6 +33,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_ScaledReleases(true),
 	m_ReleaseAlignmentEnabled(true),
 	m_Volume(100),
+	m_SampleRate(0),
 	m_CurrentTime(0),
 	m_SamplerPool(),
 	m_Windchests(),
@@ -57,6 +58,16 @@ void GOSoundEngine::Reset()
 void GOSoundEngine::SetVolume(int volume)
 {
 	m_Volume = volume;
+}
+
+void GOSoundEngine::SetSampleRate(unsigned sample_rate)
+{
+	m_SampleRate = sample_rate;
+}
+
+unsigned GOSoundEngine::GetSampleRate()
+{
+	return m_SampleRate;
 }
 
 void GOSoundEngine::SetHardPolyphony(unsigned polyphony)
@@ -127,6 +138,8 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file)
 	Reset();
 }
 
+typedef wxInt16 steroSample[0][2];
+
 static
 inline
 void stereoUncompressed
@@ -136,23 +149,22 @@ void stereoUncompressed
 {
 
 	// "borrow" the output buffer to compute release alignment info
-	wxInt16* input = (wxInt16*)(sampler->pipe_section->data + sampler->position);
+	steroSample& input = (steroSample&)*(wxInt16*)(sampler->pipe_section->data);
 
 	// copy the sample buffer
-	for (unsigned int i = 0; i < BLOCKS_PER_FRAME * 2; input++, output++, i++)
-		*output = *input;
-
-	// update sample history (for release alignment / compression)
-	input -= BLOCK_HISTORY * 2;
-	for (unsigned i = 0; i < BLOCK_HISTORY; i++)
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; sampler->position += sampler->increment, output+=2, i++)
 	{
-		sampler->history[i][0] = input[i * 2 + 0];
-		sampler->history[i][1] = input[i * 2 + 1];
+		output[0] = input[(unsigned)sampler->position][0];
+		output[1] = input[(unsigned)sampler->position][1];
 	}
 
-	// update the position
-	sampler->position += BLOCKS_PER_FRAME * sizeof(wxInt16) * 2;
-
+	// update sample history (for release alignment / compression)
+	unsigned pos = (unsigned)sampler->position - BLOCK_HISTORY;
+	for (unsigned i = 0; i < BLOCK_HISTORY; i++, pos++)
+	{
+		sampler->history[i][0] = input[pos][0];
+		sampler->history[i][1] = input[pos][1];
+	}
 }
 
 static
@@ -164,21 +176,17 @@ void monoUncompressed
 {
 
 	// copy the sample buffer
-	wxInt16* input = (wxInt16*)(sampler->pipe_section->data + sampler->position);
-	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; i++, input++, output += 2)
+	wxInt16* input = (wxInt16*)(sampler->pipe_section->data);
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; i++, sampler->position += sampler->increment, output += 2)
 	{
-		output[0] = *input;
-		output[1] = *input;
+		output[0] = input[(unsigned)sampler->position];
+		output[1] = input[(unsigned)sampler->position];
 	}
 
 	// update sample history (for release alignment / compression)
-	input -= BLOCK_HISTORY;
-	for (unsigned i = 0; i < BLOCK_HISTORY; i++, input++)
-		sampler->history[i][0] = *input;
-
-	// update the position
-	sampler->position += BLOCKS_PER_FRAME * sizeof(wxInt16);
-
+	unsigned pos = (unsigned)sampler->position - BLOCK_HISTORY;
+	for (unsigned i = 0; i < BLOCK_HISTORY; i++, pos++)
+		sampler->history[i][0] = input[pos];
 }
 
 static
@@ -390,9 +398,8 @@ void ApplySamplerFade
 
 }
 
-static
 inline
-void ReadSamplerFrames
+void GOSoundEngine::ReadSamplerFrames
 	(GO_SAMPLER* sampler
 	,unsigned int n_blocks
 	,int* decoded_sampler_audio_frame
@@ -422,13 +429,13 @@ void ReadSamplerFrames
 			 * We can set the pipe to NULL and break out of this loop.
 			 */
 			assert(sampler->pipe);
-			if (sampler->position >= sampler->pipe->GetRelease()->size)
+			if (sampler->position >= sampler->pipe->GetRelease()->sample_count)
 				sampler->pipe = NULL;
 
 		}
 		else
 		{
-			unsigned currentBlockSize = sampler->pipe_section->size;
+			unsigned currentBlockSize = sampler->pipe_section->sample_count;
 			if(sampler->position >= currentBlockSize)
 			{
 				sampler->pipe_section = sampler->pipe->GetLoop();
@@ -444,6 +451,7 @@ void ReadSamplerFrames
 					 * attack segment has completed so we now (re)enter the
 					 * loop. */
 					sampler->position -= currentBlockSize;
+					sampler->increment = sampler->pipe_section->sample_rate / (float) m_SampleRate;
 				}
 			}
 		}
@@ -686,6 +694,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 	{
 		sampler->pipe = pipe;
 		sampler->pipe_section = pipe->GetAttack();
+		sampler->increment = sampler->pipe_section->sample_rate / (float) m_SampleRate;
 		sampler->position = 0;
 		memcpy
 			(sampler->history
@@ -729,6 +738,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->pipe         = this_pipe;
 			new_sampler->pipe_section = release_section;
 			new_sampler->position     = 0;
+			new_sampler->increment    = new_sampler->pipe_section->sample_rate / (float) m_SampleRate;
 			new_sampler->shift        = this_pipe->GetScaleShift();
 			new_sampler->time         = m_CurrentTime;
 			new_sampler->fademax      = this_pipe->GetScaleAmplitude();

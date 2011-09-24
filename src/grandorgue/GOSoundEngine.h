@@ -85,14 +85,17 @@ private:
 	bool                          m_ScaledReleases;
 	bool                          m_ReleaseAlignmentEnabled;
 	int                           m_Volume;
+	unsigned                      m_SampleRate;
 	unsigned long                 m_CurrentTime;
 	GOSoundSamplerPool            m_SamplerPool;
 	std::vector<GOSamplerEntry>   m_Windchests;
 	std::vector<GOSamplerEntry>   m_Tremulants;
+
 	/* Per sampler decode buffers */
 	sound_buffer                  m_TempDecodeBuffer;
 	double                        m_FinalBuffer[GO_SOUND_BUFFER_SIZE];
 	float                         m_VolumeBuffer[GO_SOUND_BUFFER_SIZE];
+
 	/* Per sampler list decode buffer */
 	sound_buffer                  m_TempSoundBuffer;
 
@@ -104,6 +107,7 @@ private:
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id);
 	void StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_id);
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
+	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, int* decoded_sampler_audio_frame);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, int* output_buffer);
 
 public:
@@ -112,6 +116,8 @@ public:
 	void Reset();
 	void Setup(GrandOrgueFile* organ_file);
 	void SetVolume(int volume);
+	void SetSampleRate(unsigned sample_rate);
+	unsigned GetSampleRate();
 	void SetHardPolyphony(unsigned polyphony);
 	void SetPolyphonyLimiting(bool limiting);
 	unsigned GetHardPolyphony() const;

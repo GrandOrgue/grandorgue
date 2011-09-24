@@ -137,7 +137,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 		ampIndex = (ampIndex < 0) ? 0 : ((ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES-1 : ampIndex);
 		if (!found[derivIndex][ampIndex])
 		{
-			m_PositionEntries[derivIndex][ampIndex] = (i + 1) * m_Channels * sizeof(wxInt16);
+			m_PositionEntries[derivIndex][ampIndex] = i + 1;
 			for (unsigned j = 0; j < BLOCK_HISTORY; j++)
 				for (unsigned k = 0; k < MAX_OUTPUT_CHANNELS; k++)
 					m_HistoryEntries[derivIndex][ampIndex][j * MAX_OUTPUT_CHANNELS + k]

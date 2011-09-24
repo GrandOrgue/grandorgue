@@ -33,6 +33,9 @@
  * features (compression) failing to work. */
 #define BLOCKS_PER_FRAME       64
 
+/* Number of extra samples to avoid out of array accesses */
+#define EXTRA_FRAMES       128
+
 /* Maximum number of blocks (1 block is nChannels samples) per frame */
 #define MAX_FRAME_SIZE         1024
 
@@ -93,6 +96,8 @@ typedef struct AUDIO_SECTION_T
 	/* Size of the section in BYTES */
 	unsigned                   size;
 	unsigned                   alloc_size;
+	unsigned                   sample_count;
+	unsigned                   sample_rate;
 
 	/* Type of the data which is stored in the data pointer */
 	AUDIO_SECTION_TYPE         type;
@@ -141,8 +146,9 @@ typedef struct GO_SAMPLER_T
 	int                        fademax;
 	int                        time;
 	int                        shift;
-	/* current byte index of the current block into this sample */
-	unsigned                   position;
+	/* current index of the current block into this sample */
+	float                      position;
+	float                      increment;
 	bool                       stop;
 } GO_SAMPLER;
 
