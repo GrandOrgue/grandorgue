@@ -305,12 +305,10 @@ const GO_WAVE_LOOP& GOrgueWave::GetLongestLoop() const
 	unsigned lidx = 0;
 	for (unsigned int i = 1; i < loops.size(); i++)
 	{
-
 		assert(loops[i].end_sample > loops[i].start_sample);
 		if ((loops[i].end_sample - loops[i].start_sample) >
 			(loops[lidx].end_sample - loops[lidx].start_sample))
 			lidx = i;
-
 	}
 
 	return loops[lidx];
@@ -323,17 +321,29 @@ unsigned GOrgueWave::GetLength() const
 	return dataSize / (bytesPerSample * channels);
 }
 
-void GOrgueWave::ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFormat, unsigned sample_rate) const
+void GOrgueWave::ReadSamples
+	(void* dest_buffer                        /** Pointer to received sample data */
+	,GOrgueWave::SAMPLE_FORMAT read_format    /** Format of the above buffer */
+	,unsigned sample_rate                     /** Sample rate to read data at */
+	) const
 {
 	if (sampleRate != sample_rate)
 		throw (wxString)_("bad format!");
+	if (bytesPerSample != 2)
+		throw (wxString)_("Unsupported format");
 
-	switch (readFormat)
+	switch (read_format)
 	{
 		case SF_SIGNEDSHORT:
-			if (bytesPerSample != 2)
-				throw (wxString)_("bad format!");
-			memcpy(destBuffer, data, bytesPerSample * channels * GetLength());
+			memcpy(dest_buffer, data, bytesPerSample * channels * GetLength());
+			break;
+		case SF_IEEE_FLOAT:
+			{
+				wxInt16 *input = (wxInt16*)data;
+				float *output  = (float*)dest_buffer;
+				for (unsigned i = 0; i < channels * GetLength(); i++, input++, output++)
+					*output = *input / 32768.0f;
+			}
 			break;
 		default:
 			throw (wxString)_("bad format!");
