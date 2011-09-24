@@ -154,16 +154,18 @@ void stereoUncompressed
 	// copy the sample buffer
 	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; sampler->position += sampler->increment, output+=2, i++)
 	{
-		output[0] = input[(unsigned)sampler->position][0];
-		output[1] = input[(unsigned)sampler->position][1];
+		unsigned pos = (unsigned)sampler->position;
+		float fract = sampler->position - pos;
+		output[0] = input[pos][0] * (1 - fract) + input[pos + 1][0] * fract;
+		output[1] = input[pos][1] * (1 - fract) + input[pos + 1][1] * fract;
 	}
 
 	// update sample history (for release alignment / compression)
-	unsigned pos = (unsigned)sampler->position - BLOCK_HISTORY;
-	for (unsigned i = 0; i < BLOCK_HISTORY; i++, pos++)
+	unsigned pos = (unsigned)sampler->position;
+	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
 	{
-		sampler->history[i][0] = input[pos][0];
-		sampler->history[i][1] = input[pos][1];
+		sampler->history[i - 1][0] = input[pos][0];
+		sampler->history[i - 1][1] = input[pos][1];
 	}
 }
 
@@ -179,14 +181,16 @@ void monoUncompressed
 	wxInt16* input = (wxInt16*)(sampler->pipe_section->data);
 	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; i++, sampler->position += sampler->increment, output += 2)
 	{
-		output[0] = input[(unsigned)sampler->position];
-		output[1] = input[(unsigned)sampler->position];
+		unsigned pos = (unsigned)sampler->position;
+		float fract = sampler->position - pos;
+		output[0] = input[pos] * (1 - fract) + input[pos + 1] * fract;
+		output[1] = input[pos] * (1 - fract) + input[pos + 1] * fract;
 	}
 
 	// update sample history (for release alignment / compression)
-	unsigned pos = (unsigned)sampler->position - BLOCK_HISTORY;
-	for (unsigned i = 0; i < BLOCK_HISTORY; i++, pos++)
-		sampler->history[i][0] = input[pos];
+	unsigned pos = (unsigned)sampler->position;
+	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
+		sampler->history[i - 1][0] = input[pos];
 }
 
 static
