@@ -47,6 +47,7 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_BUTTON(ID_MIDI_PROPERTIES, SettingsDialog::OnDevicesMIDIDoubleClick)
 	EVT_CHOICE(ID_SOUND_DEVICE, SettingsDialog::OnDevicesSoundChoice)
 	EVT_CHOICE(ID_MONO_STEREO, SettingsDialog::OnChanged)
+	EVT_CHOICE(ID_SAMPLE_RATE, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_SQUASH, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_MANAGE_POLYPHONY, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_ALIGN_RELEASE, SettingsDialog::OnChanged)
@@ -231,8 +232,15 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(c_stereo = new wxChoice(panel, ID_MONO_STEREO, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 	item1->Add(grid, 0, wxEXPAND | wxALL, 5);
 
+	choices.clear();
+	choices.push_back(_("44100"));
+	choices.push_back(_("48000"));
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(c_SampleRate = new wxChoice(panel, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
 	UpdateSoundStatus();
 	c_stereo->Select(pConfig->Read(wxT("StereoEnabled"), 0L));
+	c_SampleRate->Select(pConfig->Read(wxT("SampleRate"), 0L) == 48000 ? 1 : 0);
 
 	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Enhancements"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
@@ -547,6 +555,7 @@ bool SettingsDialog::DoApply()
 	pConfig->Write(wxT("AlignRelease"), (long)c_align->IsChecked());
 	pConfig->Write(wxT("ScaleRelease"), (long)c_scale->IsChecked());
 	pConfig->Write(wxT("RandomizeSpeaking"), (long)c_random->IsChecked());
+	pConfig->Write(wxT("SampleRate"), c_SampleRate->GetSelection() ? wxT("48000") : wxT("44100"));
 
     g_sound->ResetSound();
     UpdateSoundStatus();

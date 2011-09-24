@@ -57,8 +57,8 @@ void GOSoundProviderWave::LoadFromFile
 	try
 	{
 
-		wave.ReadSamples(data, GOrgueWave::SF_SIGNEDSHORT, 44100);
-		m_SampleRate = 44100;
+		m_SampleRate = wave.GetSampleRate();
+		wave.ReadSamples(data, GOrgueWave::SF_SIGNEDSHORT, m_SampleRate);
 
 		m_Channels = wave.GetChannels();
 		if (m_Channels < 1 || m_Channels > 2)
@@ -84,7 +84,7 @@ void GOSoundProviderWave::LoadFromFile
 			/* Get the loop parameters */
 			unsigned loopStart = wave.GetLoopStartPosition();
 			unsigned loopSamples = wave.GetLoopEndPosition() - loopStart + 1;
-			unsigned loopSamplesInMem = loopSamples + BLOCKS_PER_FRAME;
+			unsigned loopSamplesInMem = loopSamples + EXTRA_FRAMES;
 			assert(loopStart > 0);
 			assert(wave.GetLoopEndPosition() > loopStart);
 
@@ -97,6 +97,9 @@ void GOSoundProviderWave::LoadFromFile
 			m_Loop.data = (unsigned char*)malloc(m_Loop.alloc_size);
 			if (m_Loop.data == NULL)
 				throw (wxString)_("< out of memory allocating loop");
+			m_Loop.sample_rate = m_SampleRate;
+			m_Loop.sample_count = loopSamples;
+
 			memcpy
 				(m_Loop.data
 				,&data[loopStart * m_Channels]
@@ -111,7 +114,7 @@ void GOSoundProviderWave::LoadFromFile
 			/* Get the release parameters from the wave file. */
 			unsigned releaseOffset = wave.GetReleaseMarkerPosition();
 			unsigned releaseSamples = wave.GetLength() - releaseOffset;
-			unsigned releaseSamplesInMem = releaseSamples + BLOCKS_PER_FRAME;
+			unsigned releaseSamplesInMem = releaseSamples + EXTRA_FRAMES;
 
 			/* Allocate memory for the release, copy the release into it and
 			 * pad the slack samples with zeroes to ensure correct operation
@@ -122,6 +125,9 @@ void GOSoundProviderWave::LoadFromFile
 			m_Release.data = (unsigned char*)malloc(m_Release.alloc_size);
 			if (m_Release.data == NULL)
 				throw (wxString)_("< out of memory allocating release");
+			m_Release.sample_rate = m_SampleRate;
+			m_Release.sample_count = releaseSamples;
+
 			memcpy
 				(m_Release.data
 				,&data[(wave.GetLength() - releaseSamples) * m_Channels]
@@ -137,13 +143,15 @@ void GOSoundProviderWave::LoadFromFile
 
 		/* Allocate memory for the attack. */
 		assert(attackSamples != 0);
-		unsigned attackSamplesInMem = attackSamples + BLOCKS_PER_FRAME;
+		unsigned attackSamplesInMem = attackSamples + EXTRA_FRAMES;
 		m_Attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
 		m_Attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
 		assert((unsigned)m_Attack.size <= totalDataSize); /* can be equal for percussive samples */
 		m_Attack.data = (unsigned char*)malloc(m_Attack.alloc_size);
 		if (m_Attack.data == NULL)
 			throw (wxString)_("< out of memory allocating attack");
+		m_Attack.sample_rate = m_SampleRate;
+		m_Attack.sample_count = attackSamples;
 
 		if (attackSamplesInMem <= wave.GetLength())
 		{

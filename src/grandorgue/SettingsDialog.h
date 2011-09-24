@@ -88,6 +88,7 @@ protected:
 		ID_LATENCY,
 		ID_POLYPHONY,
 		ID_MONO_STEREO,
+		ID_SAMPLE_RATE,
 		ID_ENHANCE_SQUASH,
 		ID_ENHANCE_MANAGE_POLYPHONY,
 		ID_ENHANCE_ALIGN_RELEASE,
@@ -114,6 +115,7 @@ protected:
 	wxStaticText* c_actual_latency;
 	wxSpinCtrl* c_polyphony;
 	wxChoice* c_stereo;
+	wxChoice* c_SampleRate;
 	wxCheckBox *c_squash, *c_limit, *c_align, *c_scale, *c_random;
 	bool b_squash, b_stereo;
 

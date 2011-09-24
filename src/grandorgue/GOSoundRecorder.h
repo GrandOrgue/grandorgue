@@ -30,6 +30,7 @@ class GOSoundRecorder {
 private:
 	wxFile m_file;
 	wxCriticalSection m_lock;
+	unsigned m_SampleRate;
 
 public:
 	GOSoundRecorder();
@@ -38,6 +39,7 @@ public:
 	void Open(wxString filename);
 	bool IsOpen();
 	void Close();
+	void SetSampleRate(unsigned sample_rate);
 
 	void Write(float* data, unsigned count);
 };

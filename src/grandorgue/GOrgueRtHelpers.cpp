@@ -22,10 +22,10 @@
 
 #include "GOrgueRtHelpers.h"
 
-void GOrgueRtHelpers::GetDirectSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
+void GOrgueRtHelpers::GetDirectSoundConfig(const int latency, unsigned sample_rate, unsigned *nb_buffers, unsigned *buffer_size)
 {
 
-	int bufferCalc = (latency * 44100) / 1000;
+	int bufferCalc = (latency * sample_rate) / 1000;
 
 	*nb_buffers = 2;
 
@@ -57,10 +57,10 @@ void GOrgueRtHelpers::GetDirectSoundConfig(const int latency, unsigned *nb_buffe
 
 }
 
-void GOrgueRtHelpers::GetAsioSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
+void GOrgueRtHelpers::GetAsioSoundConfig(const int latency, unsigned sample_rate, unsigned *nb_buffers, unsigned *buffer_size)
 {
 
-	int buffer_calc = (latency * 44100) / 1000;
+	int buffer_calc = (latency * sample_rate) / 1000;
 
 	*nb_buffers = 2;
 
@@ -75,7 +75,7 @@ void GOrgueRtHelpers::GetAsioSoundConfig(const int latency, unsigned *nb_buffers
 
 }
 
-void GOrgueRtHelpers::GetJackSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
+void GOrgueRtHelpers::GetJackSoundConfig(const int latency, unsigned sample_rate, unsigned *nb_buffers, unsigned *buffer_size)
 {
 
 	*nb_buffers = 1;
@@ -83,11 +83,11 @@ void GOrgueRtHelpers::GetJackSoundConfig(const int latency, unsigned *nb_buffers
 
 }
 
-void GOrgueRtHelpers::GetUnknownSoundConfig(const int latency, unsigned *nb_buffers, unsigned *buffer_size)
+void GOrgueRtHelpers::GetUnknownSoundConfig(const int latency, unsigned sample_rate, unsigned *nb_buffers, unsigned *buffer_size)
 {
 
 	*buffer_size = 256;
-	*nb_buffers = (latency * 44100) / (*buffer_size * 1000);
+	*nb_buffers = (latency * sample_rate) / (*buffer_size * 1000);
 	if (*nb_buffers < 2)
 		*nb_buffers = 2;
 
@@ -122,6 +122,7 @@ const wxChar* GOrgueRtHelpers::GetApiName(const RtAudio::Api api)
 void GOrgueRtHelpers::GetBufferConfig
 	(const RtAudio::Api rt_api
 	,const unsigned latency_ms
+	,unsigned sample_rate
 	,unsigned *nb_buffers
 	,unsigned *buffer_size_samples
 	)
@@ -130,16 +131,16 @@ void GOrgueRtHelpers::GetBufferConfig
 	switch (rt_api)
 	{
 	case RtAudio::WINDOWS_DS:
-		GetDirectSoundConfig(latency_ms, nb_buffers, buffer_size_samples);
+		GetDirectSoundConfig(latency_ms, sample_rate, nb_buffers, buffer_size_samples);
 		break;
 	case RtAudio::UNIX_JACK:
-		GetJackSoundConfig(latency_ms, nb_buffers, buffer_size_samples);
+		GetJackSoundConfig(latency_ms, sample_rate, nb_buffers, buffer_size_samples);
 		break;
 	case RtAudio::WINDOWS_ASIO:
-		GetAsioSoundConfig(latency_ms, nb_buffers, buffer_size_samples);
+		GetAsioSoundConfig(latency_ms, sample_rate, nb_buffers, buffer_size_samples);
 		break;
 	default:
-		GetUnknownSoundConfig(latency_ms, nb_buffers, buffer_size_samples);
+		GetUnknownSoundConfig(latency_ms, sample_rate, nb_buffers, buffer_size_samples);
 	}
 
 }

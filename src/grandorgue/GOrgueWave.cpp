@@ -422,10 +422,10 @@ unsigned GOrgueWave::GetLength()
 
 }
 
-void GOrgueWave::ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFormat, unsigned sampleRate)
+void GOrgueWave::ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFormat, unsigned sample_rate)
 {
 
-	if (sampleRate != 44100)
+	if (sampleRate != sample_rate)
 		throw (wxString)_("bad format!");
 
 	switch (readFormat)
