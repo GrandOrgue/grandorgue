@@ -39,7 +39,8 @@ GOrgueFrameGeneral::GOrgueFrameGeneral(GrandOrgueFile* organfile):
 	m_Couplers(),
 	m_CouplerManual(),
 	m_Tremulants(),
-	m_DivisionalCouplers()
+	m_DivisionalCouplers(),
+	m_Protected(false)
 {
 }
 
@@ -70,6 +71,7 @@ void GOrgueFrameGeneral::Load(IniFileConfig& cfg, wxString group)
 	unsigned NumberOfCouplers = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, 999);
 	unsigned NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, 999);
 	unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, 999, m_organfile->GeneralsStoreDivisionalCouplers());
+	m_Protected = cfg.ReadBoolean(group, wxT("Protected"), false, false);
 
 	wxString buffer;
 
@@ -118,6 +120,8 @@ void GOrgueFrameGeneral::Push()
 
 	if (m_organfile->GetSetter()->IsSetterActive())
 	{
+		if (m_Protected)
+			return;
 		if (m_organfile->GetSetter()->GetSetterType() == SETTER_REGULAR)
 		{
 			m_Stops.clear();

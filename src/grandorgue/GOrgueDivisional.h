@@ -40,6 +40,7 @@ public:
 	std::vector<int> m_Stops;
 	std::vector<int> m_Couplers;
 	std::vector<int> m_Tremulants;
+	bool m_Protected;
 
 	GOrgueDivisional(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber);
