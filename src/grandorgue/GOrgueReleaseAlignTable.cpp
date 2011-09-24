@@ -227,8 +227,8 @@ void GOrgueReleaseAlignTable::SetupRelease
 	int v_mod = 0;
 	for (unsigned i = 0; i < MAX_OUTPUT_CHANNELS; i++)
 	{
-		f_mod += old_sampler.history[(BLOCK_HISTORY - 1) * MAX_OUTPUT_CHANNELS + i];
-		v_mod += old_sampler.history[(BLOCK_HISTORY - 2) * MAX_OUTPUT_CHANNELS + i];
+		f_mod += old_sampler.history[(BLOCK_HISTORY - 1)][i];
+		v_mod += old_sampler.history[(BLOCK_HISTORY - 2)][i];
 	}
 	v_mod = f_mod - v_mod;
 

@@ -146,8 +146,8 @@ void stereoUncompressed
 	input -= BLOCK_HISTORY * 2;
 	for (unsigned i = 0; i < BLOCK_HISTORY; i++)
 	{
-		sampler->history[i * MAX_OUTPUT_CHANNELS + 0] = input[i * 2 + 0];
-		sampler->history[i * MAX_OUTPUT_CHANNELS + 1] = input[i * 2 + 1];
+		sampler->history[i][0] = input[i * 2 + 0];
+		sampler->history[i][1] = input[i * 2 + 1];
 	}
 
 	// update the position
@@ -174,7 +174,7 @@ void monoUncompressed
 	// update sample history (for release alignment / compression)
 	input -= BLOCK_HISTORY;
 	for (unsigned i = 0; i < BLOCK_HISTORY; i++, input++)
-		sampler->history[i * MAX_OUTPUT_CHANNELS] = *input;
+		sampler->history[i][0] = *input;
 
 	// update the position
 	sampler->position += BLOCKS_PER_FRAME * sizeof(wxInt16);

@@ -100,7 +100,7 @@ typedef struct AUDIO_SECTION_T
 
 	/* The starting sample and derivatives for each channel (used in the
 	 * compression and release-alignment schemes */
-	int                        history[BLOCK_HISTORY * MAX_OUTPUT_CHANNELS];
+	int                        history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
 
 	/* Pointer to (size) bytes of data encoded in the format (type) */
 	unsigned char             *data;
@@ -116,7 +116,7 @@ typedef struct GO_SAMPLER_T
 	const GOSoundProvider     *pipe;
 	int                        sampler_group_id;
 	const AUDIO_SECTION       *pipe_section;
-	int                        history[BLOCK_HISTORY * MAX_OUTPUT_CHANNELS];
+	int                        history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
 	/* the fade parameter is would be more appropriately named "gain". It is
 	 * modified on a frame-by frame basis by the fadein and fadeout parameters
 	 * which get added to it. The maximum value is defined by fademax and is
