@@ -41,23 +41,18 @@ void GOrgueWave::SetInvalid()
 GOrgueWave::GOrgueWave() :
 	loops()
 {
-
 	/* Start up the waveform in an invalid state */
 	SetInvalid();
-
 }
 
 GOrgueWave::~GOrgueWave()
 {
-
 	/* Close and free any currently open wave data */
 	Close();
-
 }
 
 void GOrgueWave::LoadDataChunk(char* ptr, unsigned long length)
 {
-
 	if (!hasFormat)
 		throw (wxString)_("< Malformed wave file. Format chunk must preceed data chunk.");
 
@@ -67,12 +62,10 @@ void GOrgueWave::LoadDataChunk(char* ptr, unsigned long length)
 
 	dataSize = length;
 	memcpy(data, ptr, dataSize);
-
 }
 
 void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
 {
-
 	/* FIXME: This could be done much more elequently */
 	/* Ensure format chunk size is 16 (basic wave
 	 * format chunk... no extensible data... and
@@ -97,12 +90,10 @@ void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
 	bytesPerSample = bitsPerSample / 8;
 
 	hasFormat = true;
-
 }
 
 void GOrgueWave::LoadCueChunk(char* ptr, unsigned long length)
 {
-
 	if (length < sizeof(GO_WAVECUECHUNK))
 		throw (wxString)_("< Invalid CUE chunk in");
 
@@ -120,12 +111,10 @@ void GOrgueWave::LoadCueChunk(char* ptr, unsigned long length)
 		if (position > release)
 			release = position;
 	}
-
 }
 
 void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
 {
-
 	if (length < sizeof(GO_WAVESAMPLERCHUNK))
 		throw (wxString)_("< Invalid SMPL chunk in");
 
@@ -143,60 +132,10 @@ void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
 		l.end_sample = wxUINT32_SWAP_ON_BE(loops[k].dwEnd);
 		this->loops.push_back(l);
 	}
-
-}
-
-void GOrgueWave::FindPeaks()
-{
-
-	/* Find the wave's peak samples */
-	short* s_ptr = (short*)data;
-	if (channels == 1)
-	{
-		unsigned peaktemp;
-		for (unsigned k = 0; k < dataSize; k++)
-		{
-			/* FIXME: if sample < 0 sample++ ?? what
-			 * this cannot be good... what is going on here?
-			 *
-			 * peaktemp = s_ptr[k] xor (s_ptr[k] >> 15)
-			 * ... which basically means if s_ptr[k] < 0,
-			 * flip the LSB of s_ptr[k]. */
-			/*
-			if (s_ptr[k] & 0x8000)
-				s_ptr[k]++;
-			peaktemp  = s_ptr[k];
-			peaktemp ^= (peaktemp >> 15);
-			*/
-			peaktemp = abs(s_ptr[k]);
-			peak = std::max(peaktemp, peak);
-		}
-	}
-	else
-	{
-		unsigned peaktemp;
-		for (unsigned k = 0; k < dataSize; k += 2)
-		{
-			/*
-			if (s_ptr[k] & 0x8000)
-				s_ptr[k]++;
-			peaktemp  = s_ptr[k++];
-			if (s_ptr[k] & 0x8000)
-				s_ptr[k]++;
-			peaktemp += s_ptr[k++];
-			peaktemp ^= (peaktemp >> 15);
-			*/
-			peaktemp = abs(s_ptr[k] + s_ptr[k+1]);
-			peak = std::max(peaktemp,peak);
-		}
-		peak = peak / 2;
-	}
-
 }
 
 void GOrgueWave::Open(const wxString& filename)
 {
-
 	/* Close any currently open wave data */
 	Close();
 
@@ -301,7 +240,6 @@ void GOrgueWave::Open(const wxString& filename)
 	}
 	catch (wxString msg)
 	{
-
 		wxLogError(_("unhandled exception: %s\n"), msg.c_str());
 
 		/* Free the memory used to hold the file */
@@ -315,7 +253,6 @@ void GOrgueWave::Open(const wxString& filename)
 	}
 	catch (...)
 	{
-
 		/* Free the memory used to hold the file */
 		free(ptr);
 
@@ -324,14 +261,11 @@ void GOrgueWave::Open(const wxString& filename)
 
 		/* Rethrow the exception */
 		throw;
-
 	}
-
 }
 
 void GOrgueWave::Close()
 {
-
 	/* Free the wave data if it has been alloc'ed */
 	if (data != NULL)
 	{
@@ -342,41 +276,32 @@ void GOrgueWave::Close()
 	/* Set the wave to the invalid state. This ensures that data will be set
 	 * to NULL and dataSize will be set to zero... etc */
 	SetInvalid();
-
 }
 
-unsigned GOrgueWave::GetChannels()
+unsigned GOrgueWave::GetChannels() const
 {
-
 	return channels;
-
 }
 
-bool GOrgueWave::HasReleaseMarker()
+bool GOrgueWave::HasReleaseMarker() const
 {
-
 	return hasRelease;
-
 }
 
-unsigned GOrgueWave::GetReleaseMarkerPosition()
+unsigned GOrgueWave::GetReleaseMarkerPosition() const
 {
-
 	/* release = dwSampleOffset from cue chunk. This is a byte offset into
 	 * the data chunk. Compute this to a block start
 	 */
 	return release;
-
 }
 
-const unsigned GOrgueWave::GetLongestLoop()
+const GO_WAVE_LOOP& GOrgueWave::GetLongestLoop() const
 {
-
 	if (loops.size() < 1)
 		throw (wxString)_("wave does not contain loops");
 
 	assert(loops[0].end_sample > loops[0].start_sample);
-
 	unsigned lidx = 0;
 	for (unsigned int i = 1; i < loops.size(); i++)
 	{
@@ -388,43 +313,18 @@ const unsigned GOrgueWave::GetLongestLoop()
 
 	}
 
-	return lidx;
-
+	return loops[lidx];
 }
 
-unsigned GOrgueWave::GetLoopStartPosition()
+unsigned GOrgueWave::GetLength() const
 {
-
-	return loops[GetLongestLoop()].start_sample;
-
-}
-
-unsigned GOrgueWave::GetLoopEndPosition()
-{
-
-	return loops[GetLongestLoop()].end_sample;
-
-}
-
-unsigned GOrgueWave::GetPeak()
-{
-
-	return peak;
-
-}
-
-unsigned GOrgueWave::GetLength()
-{
-
 	/* return number of samples in the stream */
 	assert((dataSize % (bytesPerSample * channels)) == 0);
 	return dataSize / (bytesPerSample * channels);
-
 }
 
-void GOrgueWave::ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFormat, unsigned sample_rate)
+void GOrgueWave::ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFormat, unsigned sample_rate) const
 {
-
 	if (sampleRate != sample_rate)
 		throw (wxString)_("bad format!");
 
@@ -435,31 +335,23 @@ void GOrgueWave::ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFor
 				throw (wxString)_("bad format!");
 			memcpy(destBuffer, data, bytesPerSample * channels * GetLength());
 			break;
-
 		default:
 			throw (wxString)_("bad format!");
 	}
-
 }
 
-unsigned GOrgueWave::GetNbLoops()
+unsigned GOrgueWave::GetNbLoops() const
 {
-
 	return loops.size();
-
 }
 
-const GO_WAVE_LOOP& GOrgueWave::GetLoop(unsigned idx)
+const GO_WAVE_LOOP& GOrgueWave::GetLoop(unsigned idx) const
 {
-
 	assert(idx < loops.size());
 	return loops[idx];
-
 }
 
-unsigned GOrgueWave::GetSampleRate()
+unsigned GOrgueWave::GetSampleRate() const
 {
-
 	return sampleRate;
-
 }

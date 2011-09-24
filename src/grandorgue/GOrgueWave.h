@@ -55,9 +55,6 @@ private:
 	void LoadFormatChunk(char* ptr, unsigned long length);
 	void LoadCueChunk(char* ptr, unsigned long length);
 	void LoadSamplerChunk(char* ptr, unsigned long length);
-	void FindPeaks();
-
-	const unsigned GetLongestLoop();
 
 	std::vector<GO_WAVE_LOOP> loops;
 
@@ -77,46 +74,33 @@ public:
 	/* GetChannels()
 	 * Returns the number of channels in the wave stream.
 	 */
-	unsigned GetChannels();
+	unsigned GetChannels() const;
 
 	/* GetReleaseMarkerPosition()
 	 * Returns the block where the release marker has been placed at.
 	 */
-	bool HasReleaseMarker();
-	unsigned GetReleaseMarkerPosition();
+	bool HasReleaseMarker() const;
+	unsigned GetReleaseMarkerPosition() const;
 
-	/* GetLoopStartPosition()
-	 * Returns the block containing the loop's start position.
-	 */
-	unsigned GetLoopStartPosition();
-
-	/* GetLoopEndPosition()
-	 * Returns the block containing the loop's end position.
-	 */
-	unsigned GetLoopEndPosition();
-
-	unsigned GetNbLoops();
-	const GO_WAVE_LOOP& GetLoop(unsigned idx);
+	unsigned GetNbLoops() const;
+	const GO_WAVE_LOOP& GetLoop(unsigned idx) const;
+	const GO_WAVE_LOOP& GetLongestLoop() const;
 
 	/* GetLength()
 	 * Returns the number of blocks in the wave file (there are *channel*
 	 * samples in a block so for a mono wave, this will simply be the number
 	 * of samples)
 	 */
-	unsigned GetLength();
+	unsigned GetLength() const;
 
 	/* ReadSamples()
 	 * Reads all of the samples in the wave file into destBuffer at the
 	 * specified read format and sample rate.
 	 */
-	void ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFormat, unsigned sampleRate);
+	void ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFormat, unsigned sampleRate) const;
 
 
-	unsigned GetSampleRate();
-
-	unsigned GetPeak();
-
-//	char* GetData();
+	unsigned GetSampleRate() const;
 
 
 
