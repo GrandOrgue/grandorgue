@@ -62,7 +62,8 @@ public:
 
 	typedef enum
 	{
-		SF_SIGNEDSHORT
+		SF_SIGNEDSHORT,
+		SF_IEEE_FLOAT
 	} SAMPLE_FORMAT;
 
 	GOrgueWave();
@@ -97,7 +98,7 @@ public:
 	 * Reads all of the samples in the wave file into destBuffer at the
 	 * specified read format and sample rate.
 	 */
-	void ReadSamples(void* destBuffer, GOrgueWave::SAMPLE_FORMAT readFormat, unsigned sampleRate) const;
+	void ReadSamples(void* dest_buffer, GOrgueWave::SAMPLE_FORMAT read_format, unsigned sample_rate) const;
 
 
 	unsigned GetSampleRate() const;
