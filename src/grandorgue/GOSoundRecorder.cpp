@@ -23,6 +23,28 @@
 #include "GOSoundRecorder.h"
 #include "GOrgueSoundTypes.h"
 
+#pragma pack(push, 1)
+
+struct struct_WAVE
+{
+	char ChunkID[4];
+	wxUint32 ChunkSize;
+	char Format[4];
+	char Subchunk1ID[4];
+	wxUint32 Subchunk1Size;
+	wxUint16 AudioFormat;
+	wxUint16 NumChannels;
+	wxUint32 SampleRate;
+	wxUint32 ByteRate;
+	wxUint16 BlockAlign;
+	wxUint16 BitsPerSample;
+	char Subchunk2ID[4];
+	wxUint32 Subchunk2Size;
+};
+
+#pragma pack(pop)
+
+
 GOSoundRecorder::GOSoundRecorder() :
         m_file(),
         m_lock(),
@@ -37,7 +59,20 @@ GOSoundRecorder::~GOSoundRecorder()
 
 void GOSoundRecorder::Open(wxString filename)
 {
-	struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, m_SampleRate, m_SampleRate * 8, 8, 32, {'d','a','t','a'}, 0};
+	struct_WAVE WAVE = {
+		{'R','I','F','F'}, 
+		wxUINT32_SWAP_ON_BE(0), 
+		{'W','A','V','E'}, 
+		{'f','m','t',' '}, 
+		wxUINT32_SWAP_ON_BE(16), 
+		wxUINT16_SWAP_ON_BE(3), 
+		wxUINT16_SWAP_ON_BE(2), 
+		wxUINT32_SWAP_ON_BE(m_SampleRate), 
+		wxUINT32_SWAP_ON_BE(m_SampleRate * 8), 
+		wxUINT16_SWAP_ON_BE(8), 
+		wxUINT16_SWAP_ON_BE(32), 
+		{'d','a','t','a'}, 
+		wxUINT32_SWAP_ON_BE(0)};
 
 	Close();
 
@@ -60,12 +95,25 @@ bool GOSoundRecorder::IsOpen()
 void GOSoundRecorder::Close()
 {
 	wxCriticalSectionLocker locker(m_lock);
-	struct_WAVE WAVE = {{'R','I','F','F'}, 0, {'W','A','V','E'}, {'f','m','t',' '}, 16, 3, 2, m_SampleRate, m_SampleRate * 8, 8, 32, {'d','a','t','a'}, 0};
+	struct_WAVE WAVE = {
+		{'R','I','F','F'}, 
+		wxUINT32_SWAP_ON_BE(0), 
+		{'W','A','V','E'}, 
+		{'f','m','t',' '}, 
+		wxUINT32_SWAP_ON_BE(16), 
+		wxUINT16_SWAP_ON_BE(3), 
+		wxUINT16_SWAP_ON_BE(2), 
+		wxUINT32_SWAP_ON_BE(m_SampleRate), 
+		wxUINT32_SWAP_ON_BE(m_SampleRate * 8), 
+		wxUINT16_SWAP_ON_BE(8), 
+		wxUINT16_SWAP_ON_BE(32), 
+		{'d','a','t','a'}, 
+		wxUINT32_SWAP_ON_BE(0)};
 
 	if (!m_file.IsOpened())
 		return;
-	WAVE.ChunkSize = m_file.Tell() - 8;
-	WAVE.Subchunk2Size = WAVE.ChunkSize - 36;
+	WAVE.ChunkSize = wxUINT32_SWAP_ON_BE(m_file.Tell() - 8);
+	WAVE.Subchunk2Size = wxUINT32_SWAP_ON_BE((m_file.Tell() - 8) - 36);
 	m_file.Seek(0);
 	m_file.Write(&WAVE, sizeof(WAVE));
 	m_file.Close();
