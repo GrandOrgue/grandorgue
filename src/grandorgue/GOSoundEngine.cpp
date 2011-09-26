@@ -571,14 +571,13 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 			/* sampler needs to be removed from the list */
 			if (sampler == *list_start)
 				*list_start = sampler->next;
-			previous_valid_sampler->next = sampler->next;
+			else
+				previous_valid_sampler->next = sampler->next;
 			m_SamplerPool.ReturnSampler(sampler);
 			state.count--;
 		}
 		else
-		{
 			previous_valid_sampler = sampler;
-		}
 
 	}
 
