@@ -506,13 +506,13 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 		ReadSamplerFrames
 			(sampler
 			,n_frames
-			,m_TempDecodeBuffer
+			,state.temp
 			);
 
 		ApplySamplerFade
 			(sampler
 			,n_frames
-			,m_TempDecodeBuffer
+			,state.temp
 			);
 
 		if (sampler->stop)
@@ -552,7 +552,7 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 		 */
 		int shift = sampler->shift;
 		int* write_iterator = output_buffer;
-		int* decode_pos = m_TempDecodeBuffer;
+		int* decode_pos = state.temp;
 		for(unsigned int i = 0; i < n_frames / 2; i++, write_iterator += 4, decode_pos += 4)
 		{
 			write_iterator[0] += decode_pos[0] >> shift;
@@ -619,7 +619,7 @@ int GOSoundEngine::GetSamples
 		if (m_Windchests[j].sampler == NULL)
 			continue;
 
-		int* this_buff = m_TempSoundBuffer;
+		int* this_buff = m_Windchests[j].buff;
 
 		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
 
@@ -659,7 +659,7 @@ int GOSoundEngine::GetSamples
 		if (m_DetachedRelease[j].sampler == NULL)
 			continue;
 
-		int* this_buff = m_TempSoundBuffer;
+		int* this_buff = m_DetachedRelease[j].buff;
 
 		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
 
