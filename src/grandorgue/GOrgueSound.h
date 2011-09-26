@@ -27,6 +27,7 @@
 #include <wx/stopwatch.h>
 #include <map>
 #include <vector>
+#include "ptrvector.h"
 #include "RtAudio.h"
 #include "GrandOrgueDef.h"
 #include "GOSoundEngine.h"
@@ -34,6 +35,7 @@
 class wxConfigBase;
 class GrandOrgueFile;
 class GOrgueMidi;
+class GOSoundThread;
 
 #include "GOrgueSoundTypes.h"
 #include "GOSoundRecorder.h"
@@ -68,6 +70,8 @@ private:
 
 	int b_stereo, b_align;
 	int b_random;
+	unsigned m_Concurrency;
+	unsigned m_ReleaseConcurrency;
 
 	short meter_counter;
 	METER_INFO meter_info;
@@ -81,6 +85,7 @@ private:
 	GOSoundRecorder m_recorder;
 
 	GOSoundEngine m_SoundEngine;
+	ptr_vector <GOSoundThread> m_Threads;
 
 	int AudioCallbackLocal
 		(float* outputBuffer
@@ -98,6 +103,9 @@ private:
 		,RtAudioStreamStatus status
 		,void *userData
 		);
+
+	void StopThreads();
+	void StartThreads(unsigned windchests);
 
 public:
 
