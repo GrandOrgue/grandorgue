@@ -57,14 +57,19 @@ private:
 		GO_SAMPLER       *sampler;
 		sound_buffer      buff;
 		sound_buffer      temp;
+		/* access lock for sampler data */
 		wxCriticalSection lock;
+		/* access lock for data buffer */
+		wxCriticalSection mutex;
 		GOrgueWindchest  *windchest;
+		bool              done;
 		unsigned          count;
 
 		GOSamplerEntry()
 		{
 			sampler = NULL;
 			windchest = NULL;
+			done = false;
 			count = 0;
 		}
 
@@ -72,6 +77,7 @@ private:
 		{
 			sampler = entry.sampler;
 			windchest = entry.windchest;
+			done = false;
 			count = entry.count;
 		}
 
@@ -80,6 +86,7 @@ private:
 			sampler = entry.sampler;
 			windchest = entry.windchest;
 			count = entry.count;
+			done = false;
 			return *this;
 		}
 	};
@@ -111,6 +118,7 @@ private:
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
 	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, int* decoded_sampler_audio_frame);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, int* output_buffer);
+	void ResetDoneFlags();
 
 public:
 
@@ -135,7 +143,7 @@ public:
 		,double      stream_time
 		,METER_INFO *meter_info
 		);
-
+	void Process(unsigned sampler_group_id, unsigned n_frames);
 };
 
 #endif /* GOSOUNDENGINE_H_ */

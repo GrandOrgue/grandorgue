@@ -64,6 +64,7 @@ void GOSoundEngine::Reset()
 	}
 	m_SamplerPool.ReturnAll();
 	m_CurrentTime = 0;
+	ResetDoneFlags();
 }
 
 void GOSoundEngine::SetVolume(int volume)
@@ -580,7 +581,44 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 			previous_valid_sampler = sampler;
 
 	}
+	state.done = true;
+}
 
+void GOSoundEngine::Process(unsigned sampler_group_id, unsigned n_frames)
+{
+	GOSamplerEntry* state;
+
+	if (sampler_group_id == 0)
+		state = &m_DetachedRelease[0];
+	else if (sampler_group_id > m_Windchests.size())
+		state = &m_DetachedRelease[sampler_group_id - m_Windchests.size()];
+	else
+		state = &m_Windchests[sampler_group_id - 1];
+
+	wxCriticalSectionLocker locker(state->mutex);
+
+	int* this_buff = state->buff;
+
+	if (state->done)
+		return;
+
+	std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
+
+	ProcessAudioSamplers(*state, n_frames, this_buff);
+}
+
+void GOSoundEngine::ResetDoneFlags()
+{
+	for (unsigned j = 0; j < m_Windchests.size(); j++)
+	{
+		wxCriticalSectionLocker locker(m_Windchests[j].mutex);
+		m_Windchests[j].done = false;
+	}
+	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
+	{
+		wxCriticalSectionLocker locker(m_DetachedRelease[j].mutex);
+		m_DetachedRelease[j].done = false;
+	}
 }
 
 // this callback will fill the buffer with bufferSize frame
@@ -621,9 +659,14 @@ int GOSoundEngine::GetSamples
 
 		int* this_buff = m_Windchests[j].buff;
 
-		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
+		wxCriticalSectionLocker locker(m_Windchests[j].mutex);
 
-		ProcessAudioSamplers(m_Windchests[j], n_frames, this_buff);
+		if (!m_Windchests[j].done)
+		{
+			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
+
+			ProcessAudioSamplers(m_Windchests[j], n_frames, this_buff);
+		}
 
 		GOrgueWindchest* current_windchest = m_Windchests[j].windchest;
 		double d = current_windchest->GetVolume();
@@ -661,9 +704,14 @@ int GOSoundEngine::GetSamples
 
 		int* this_buff = m_DetachedRelease[j].buff;
 
-		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
+		wxCriticalSectionLocker locker(m_DetachedRelease[j].mutex);
 
-		ProcessAudioSamplers(m_DetachedRelease[j], n_frames, this_buff);
+		if (!m_DetachedRelease[j].done)
+		{
+			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
+
+			ProcessAudioSamplers(m_DetachedRelease[j], n_frames, this_buff);
+		}
 
 		double d = 1.0;
 		d *= m_Volume;
@@ -709,6 +757,8 @@ int GOSoundEngine::GetSamples
 			output_buffer[k + 1]  = (float)d;
 		}
 	}
+
+	ResetDoneFlags();
 
 	return 0;
 }
