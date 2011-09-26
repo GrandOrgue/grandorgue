@@ -63,7 +63,7 @@ private:
 	RtAudio* audioDevice;
 /*	int n_latency;*/
 
-	unsigned m_samples_per_buffer;
+	unsigned m_SamplesPerBuffer;
 	unsigned m_nb_buffers;
 
 	int b_stereo, b_align;

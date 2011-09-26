@@ -36,7 +36,7 @@ GOrgueSound::GOrgueSound(void) :
 	logSoundErrors(false),
 	m_audioDevices(),
 	audioDevice(NULL),
-	m_samples_per_buffer(0),
+	m_SamplesPerBuffer(0),
 	m_nb_buffers(0),
 	b_stereo(0),
 	b_align(0),
@@ -165,7 +165,7 @@ bool GOrgueSound::OpenSound()
 			audioDevice = new RtAudio(it->second.rt_api);
 
 			unsigned try_latency = pConfig->Read(wxT("Devices/Sound/") + defaultAudio, 12);
-			GOrgueRtHelpers::GetBufferConfig(it->second.rt_api, try_latency, sample_rate, &m_nb_buffers, &m_samples_per_buffer);
+			GOrgueRtHelpers::GetBufferConfig(it->second.rt_api, try_latency, sample_rate, &m_nb_buffers, &m_SamplesPerBuffer);
 
 			RtAudio::StreamParameters aOutputParam;
 			aOutputParam.deviceId = it->second.rt_api_subindex;
@@ -180,7 +180,7 @@ bool GOrgueSound::OpenSound()
 				,NULL
 				,format
 				,sample_rate
-				,&m_samples_per_buffer
+				,&m_SamplesPerBuffer
 				,&GOrgueSound::AudioCallback
 				,this
 				,&aOptions
@@ -188,7 +188,7 @@ bool GOrgueSound::OpenSound()
 
 			m_nb_buffers = aOptions.numberOfBuffers;
 
-			if (m_samples_per_buffer <= 1024)
+			if (m_SamplesPerBuffer <= 1024)
 			{
 				audioDevice->startStream();
 				pConfig->Write(wxT("Devices/Sound/ActualLatency/") + defaultAudio, GetLatency());
@@ -196,11 +196,11 @@ bool GOrgueSound::OpenSound()
 			else
 				throw (wxString)_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
 
-			if (m_samples_per_buffer & (BLOCKS_PER_FRAME - 1))
+			if (m_SamplesPerBuffer & (BLOCKS_PER_FRAME - 1))
 			{
 				wxLogWarning
 					(_("Audio engine wants frame size of %u blocks which is indivisible by %u.")
-					,m_samples_per_buffer
+					,m_SamplesPerBuffer
 					,BLOCKS_PER_FRAME
 					);
 			}
@@ -356,7 +356,7 @@ const int GOrgueSound::GetLatency()
 	 * case we will make a best guess.
 	 */
 	if (actual_latency == 0)
-		actual_latency = m_samples_per_buffer * m_nb_buffers;
+		actual_latency = m_SamplesPerBuffer * m_nb_buffers;
 
 	return (actual_latency * 1000) / GetEngine().GetSampleRate();
 
