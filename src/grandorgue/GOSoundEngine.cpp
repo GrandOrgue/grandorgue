@@ -496,78 +496,83 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 	for (GO_SAMPLER* sampler = *list_start; sampler; sampler = sampler->next)
 	{
 
-		if  (
-				(m_PolyphonyLimiting) &&
-				(m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
-				(sampler->pipe_section->stage == GSS_RELEASE) &&
-				(m_CurrentTime - sampler->time > 172)
-			)
-			sampler->fadeout = 4;
-
-		ReadSamplerFrames
-			(sampler
-			,n_frames
-			,state.temp
-			);
-
-		ApplySamplerFade
-			(sampler
-			,n_frames
-			,state.temp
-			);
-
-		if (sampler->stop)
+		const bool process_sampler = (sampler->time <= m_CurrentTime);
+		if (process_sampler)
 		{
-			CreateReleaseSampler(sampler);
 
-			/* The above code created a new sampler to playback the release, the
-			 * following code takes the active sampler for this pipe (which will be
-			 * in either the attack or loop section) and sets the fadeout property
-			 * which will decay this portion of the pipe. The sampler will
-			 * automatically be placed back in the pool when the fade restores to
-			 * zero.
-			 *
-			 * Fadeout is added to the fade value in the sampler every 2 samples, so
-			 * a pipe with an amplitude of 10000 (unadjusted playback level) will have
-			 * a fadeout value of
-			 *
-			 *   (32768 - 128) >> 8
-			 * = 127
-			 *
-			 * Which means that the sampler will fade out over a period of
-			 *   (2 * 32768) / 127
-			 * = 516 samples = 12ms
+			if  (
+					(m_PolyphonyLimiting) &&
+					(m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
+					(sampler->pipe_section->stage == GSS_RELEASE) &&
+					(m_CurrentTime - sampler->time > 172)
+				)
+				sampler->fadeout = 4;
+
+			ReadSamplerFrames
+				(sampler
+				,n_frames
+				,state.temp
+				);
+
+			ApplySamplerFade
+				(sampler
+				,n_frames
+				,state.temp
+				);
+
+			if (sampler->stop)
+			{
+				CreateReleaseSampler(sampler);
+
+				/* The above code created a new sampler to playback the release, the
+				 * following code takes the active sampler for this pipe (which will be
+				 * in either the attack or loop section) and sets the fadeout property
+				 * which will decay this portion of the pipe. The sampler will
+				 * automatically be placed back in the pool when the fade restores to
+				 * zero.
+				 *
+				 * Fadeout is added to the fade value in the sampler every 2 samples, so
+				 * a pipe with an amplitude of 10000 (unadjusted playback level) will have
+				 * a fadeout value of
+				 *
+				 *   (32768 - 128) >> 8
+				 * = 127
+				 *
+				 * Which means that the sampler will fade out over a period of
+				 *   (2 * 32768) / 127
+				 * = 516 samples = 12ms
+				 */
+				sampler->fadeout = (-sampler->pipe->GetScaleAmplitude() - 128) >> 8; /* recall that ra_amp is negative
+												      * so this will actually be a
+												      * positive number */
+				if (!sampler->fadeout) /* ensure that the sample will fade out */
+					sampler->fadeout++;
+
+				sampler->stop = false;
+			}
+
+			/* Add these samples to the current output buffer shifting
+			 * right by the necessary amount to bring the sample gain back
+			 * to unity (this value is computed in GOrguePipe.cpp)
 			 */
-			sampler->fadeout = (-sampler->pipe->GetScaleAmplitude() - 128) >> 8; /* recall that ra_amp is negative
-											      * so this will actually be a
-											      * positive number */
-			if (!sampler->fadeout) /* ensure that the sample will fade out */
-				sampler->fadeout++;
+			int shift = sampler->shift;
+			int* write_iterator = output_buffer;
+			int* decode_pos = state.temp;
+			for(unsigned int i = 0; i < n_frames / 2; i++, write_iterator += 4, decode_pos += 4)
+			{
+				write_iterator[0] += decode_pos[0] >> shift;
+				write_iterator[1] += decode_pos[1] >> shift;
+				write_iterator[2] += decode_pos[2] >> shift;
+				write_iterator[3] += decode_pos[3] >> shift;
+			}
 
-			sampler->stop = false;
-		}
-
-		/* Add these samples to the current output buffer shifting
-		 * right by the necessary amount to bring the sample gain back
-		 * to unity (this value is computed in GOrguePipe.cpp)
-		 */
-		int shift = sampler->shift;
-		int* write_iterator = output_buffer;
-		int* decode_pos = state.temp;
-		for(unsigned int i = 0; i < n_frames / 2; i++, write_iterator += 4, decode_pos += 4)
-		{
-			write_iterator[0] += decode_pos[0] >> shift;
-			write_iterator[1] += decode_pos[1] >> shift;
-			write_iterator[2] += decode_pos[2] >> shift;
-			write_iterator[3] += decode_pos[3] >> shift;
 		}
 
 		/* if this sampler's pipe has been set to null or the fade value is
 		 * zero, the sample is no longer required and can be removed from the
 		 * linked list. If it was still supplying audio, we must update the
 		 * previous valid sampler. */
-		// printf("sampler : %x sample_pipe:%x sampler_fade :%d current : %d\n",sampler,sampler->pipe,sampler->fade,sampler->current);
-		if (!sampler->pipe || !sampler->fade)
+		if (!sampler->pipe || (!sampler->fade && process_sampler))
 		{
 			/* sampler needs to be removed from the list */
 			if (sampler == *list_start)
@@ -817,7 +822,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->position     = 0;
 			new_sampler->increment    = new_sampler->pipe_section->sample_rate / (float) m_SampleRate;
 			new_sampler->shift        = this_pipe->GetScaleShift();
-			new_sampler->time         = m_CurrentTime;
+			new_sampler->time         = m_CurrentTime + 1;
 			new_sampler->fademax      = this_pipe->GetScaleAmplitude();
 
 			const bool not_a_tremulant = (handle->sampler_group_id >= 0);
