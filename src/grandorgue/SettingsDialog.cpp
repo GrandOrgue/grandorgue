@@ -48,6 +48,8 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHOICE(ID_SOUND_DEVICE, SettingsDialog::OnDevicesSoundChoice)
 	EVT_CHOICE(ID_MONO_STEREO, SettingsDialog::OnChanged)
 	EVT_CHOICE(ID_SAMPLE_RATE, SettingsDialog::OnChanged)
+	EVT_CHOICE(ID_CONCURRENCY, SettingsDialog::OnChanged)
+	EVT_CHOICE(ID_RELEASE_CONCURRENCY, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_SQUASH, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_MANAGE_POLYPHONY, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_ALIGN_RELEASE, SettingsDialog::OnChanged)
@@ -238,9 +240,23 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(c_SampleRate = new wxChoice(panel, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
+	choices.clear();
+	for (unsigned i = 0; i < 15; i++)
+		choices.push_back(wxString::Format(wxT("%d"), i));
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Concurreny Level:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(c_Concurrency = new wxChoice(panel, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
+	choices.clear();
+	for (unsigned i = 1; i < 8; i++)
+		choices.push_back(wxString::Format(wxT("%d"), i));
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Release Concurreny Level:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(c_ReleaseConcurrency = new wxChoice(panel, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
 	UpdateSoundStatus();
 	c_stereo->Select(pConfig->Read(wxT("StereoEnabled"), 0L));
 	c_SampleRate->Select(pConfig->Read(wxT("SampleRate"), 0L) == 48000 ? 1 : 0);
+	c_Concurrency->Select(pConfig->Read(wxT("Concurrency"), 0L));
+	c_ReleaseConcurrency->Select(pConfig->Read(wxT("ReleaseConcurrency"), 1L) - 1);
 
 	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Enhancements"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
@@ -556,6 +572,8 @@ bool SettingsDialog::DoApply()
 	pConfig->Write(wxT("ScaleRelease"), (long)c_scale->IsChecked());
 	pConfig->Write(wxT("RandomizeSpeaking"), (long)c_random->IsChecked());
 	pConfig->Write(wxT("SampleRate"), c_SampleRate->GetSelection() ? wxT("48000") : wxT("44100"));
+	pConfig->Write(wxT("Concurrency"), c_Concurrency->GetSelection());
+	pConfig->Write(wxT("ReleaseConcurrency"), c_ReleaseConcurrency->GetSelection() + 1);
 
     g_sound->ResetSound();
     UpdateSoundStatus();
