@@ -86,7 +86,7 @@ void GOSoundProviderWave::LoadFromFile
 			unsigned loopSamples = wave.GetLongestLoop().end_sample - loopStart + 1;
 			unsigned loopSamplesInMem = loopSamples + EXTRA_FRAMES;
 			assert(loopStart > 0);
-			assert(wave.GetLoopEndPosition() > loopStart);
+			assert(wave.GetLongestLoop().end_sample > loopStart);
 
 			/* Allocate memory for the loop, copy the loop into it and then
 			 * copy some slack samples from the beginning of the loop onto
