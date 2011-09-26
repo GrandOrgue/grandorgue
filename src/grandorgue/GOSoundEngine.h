@@ -56,6 +56,7 @@ private:
 	public:
 		GO_SAMPLER       *sampler;
 		sound_buffer      buff;
+		sound_buffer      temp;
 		wxCriticalSection lock;
 		GOrgueWindchest  *windchest;
 		unsigned          count;
@@ -96,12 +97,8 @@ private:
 	std::vector<GOSamplerEntry>   m_Tremulants;
 
 	/* Per sampler decode buffers */
-	sound_buffer                  m_TempDecodeBuffer;
 	double                        m_FinalBuffer[GO_SOUND_BUFFER_SIZE];
 	float                         m_VolumeBuffer[GO_SOUND_BUFFER_SIZE];
-
-	/* Per sampler list decode buffer */
-	sound_buffer                  m_TempSoundBuffer;
 
 	/* samplerGroupID:
 	   -1 .. -n Tremulants
