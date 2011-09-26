@@ -593,29 +593,6 @@ int GOSoundEngine::GetSamples
 		ProcessAudioSamplers (m_Tremulants[j], n_frames, this_buff);
 	}
 
-	if (m_DetachedRelease.sampler != NULL)
-	{
-		int* this_buff = m_TempSoundBuffer;
-
-		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
-
-		ProcessAudioSamplers(m_DetachedRelease, n_frames, this_buff);
-
-		double d = 1.0;
-		d *= m_Volume;
-		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
-		float f = d;
-		std::fill(m_VolumeBuffer, m_VolumeBuffer + GO_SOUND_BUFFER_SIZE, f);
-
-		for (unsigned int k = 0; k < n_frames*2; k++)
-		{
-			double d = this_buff[k];
-			d *= m_VolumeBuffer[k];
-			m_FinalBuffer[k] += d;
-		}
-
-	}
-
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
 
@@ -647,6 +624,29 @@ int GOSoundEngine::GetSamples
 				m_VolumeBuffer[k] *= ldexp(ptr[k], -23);
 			}
 		}
+
+		for (unsigned int k = 0; k < n_frames*2; k++)
+		{
+			double d = this_buff[k];
+			d *= m_VolumeBuffer[k];
+			m_FinalBuffer[k] += d;
+		}
+
+	}
+
+	if (m_DetachedRelease.sampler != NULL)
+	{
+		int* this_buff = m_TempSoundBuffer;
+
+		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
+
+		ProcessAudioSamplers(m_DetachedRelease, n_frames, this_buff);
+
+		double d = 1.0;
+		d *= m_Volume;
+		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
+		float f = d;
+		std::fill(m_VolumeBuffer, m_VolumeBuffer + GO_SOUND_BUFFER_SIZE, f);
 
 		for (unsigned int k = 0; k < n_frames*2; k++)
 		{
