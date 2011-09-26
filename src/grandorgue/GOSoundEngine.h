@@ -58,23 +58,27 @@ private:
 		sound_buffer      buff;
 		wxCriticalSection lock;
 		GOrgueWindchest  *windchest;
+		unsigned          count;
 
 		GOSamplerEntry()
 		{
 			sampler = NULL;
 			windchest = NULL;
+			count = 0;
 		}
 
 		GOSamplerEntry(const GOSamplerEntry& entry)
 		{
 			sampler = entry.sampler;
 			windchest = entry.windchest;
+			count = entry.count;
 		}
 
 		const GOSamplerEntry& operator=(const GOSamplerEntry& entry)
 		{
 			sampler = entry.sampler;
 			windchest = entry.windchest;
+			count = entry.count;
 			return *this;
 		}
 	};

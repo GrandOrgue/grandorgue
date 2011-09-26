@@ -48,11 +48,20 @@ GOSoundEngine::GOSoundEngine() :
 void GOSoundEngine::Reset()
 {
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
+	{
 		m_Windchests[i].sampler = 0;
+		m_Windchests[i].count = 0;
+	}
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
+	{
 		m_Tremulants[i].sampler = 0;
+		m_Tremulants[i].count = 0;
+	}
 	for (unsigned i = 0; i < m_DetachedRelease.size(); i++)
+	{
 		m_DetachedRelease[i].sampler = 0;
+		m_DetachedRelease[i].count = 0;
+	}
 	m_SamplerPool.ReturnAll();
 	m_CurrentTime = 0;
 }
@@ -113,6 +122,7 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
 	sampler->sampler_group_id = sampler_group_id;
 	sampler->next = state->sampler;
 	state->sampler = sampler;
+	state->count++;
 }
 
 void GOSoundEngine::StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_id)
@@ -129,6 +139,7 @@ void GOSoundEngine::StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_
 	sampler->sampler_group_id = sampler_group_id;
 	sampler->next = state->sampler;
 	state->sampler = sampler;
+	state->count++;
 }
 
 void GOSoundEngine::Setup(GrandOrgueFile* organ_file)
@@ -555,6 +566,7 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 				*list_start = sampler->next;
 			previous_valid_sampler->next = sampler->next;
 			m_SamplerPool.ReturnSampler(sampler);
+			state.count--;
 		}
 		else
 		{
