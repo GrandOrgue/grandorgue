@@ -36,6 +36,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_SampleRate(0),
 	m_CurrentTime(0),
 	m_SamplerPool(),
+	m_DetachedRelease(1),
 	m_Windchests(),
 	m_Tremulants()
 {
@@ -50,7 +51,8 @@ void GOSoundEngine::Reset()
 		m_Windchests[i].sampler = 0;
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 		m_Tremulants[i].sampler = 0;
-	m_DetachedRelease.sampler = 0;
+	for (unsigned i = 0; i < m_DetachedRelease.size(); i++)
+		m_DetachedRelease[i].sampler = 0;
 	m_SamplerPool.ReturnAll();
 	m_CurrentTime = 0;
 }
@@ -101,7 +103,7 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
 	GOSamplerEntry* state;
 
 	if (sampler_group_id == 0)
-		state = &m_DetachedRelease;
+		state = &m_DetachedRelease[0];
 	else if (sampler_group_id < 0)
 		state = &m_Tremulants[-1-sampler_group_id];
 	else
@@ -118,7 +120,7 @@ void GOSoundEngine::StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_
 	GOSamplerEntry* state;
 
 	if (sampler_group_id == 0)
-		state = &m_DetachedRelease;
+		state = &m_DetachedRelease[0];
 	else if (sampler_group_id < 0)
 		state = &m_Tremulants[-1-sampler_group_id];
 	else
@@ -634,13 +636,13 @@ int GOSoundEngine::GetSamples
 
 	}
 
-	if (m_DetachedRelease.sampler != NULL)
+	if (m_DetachedRelease[0].sampler != NULL)
 	{
 		int* this_buff = m_TempSoundBuffer;
 
 		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
 
-		ProcessAudioSamplers(m_DetachedRelease, n_frames, this_buff);
+		ProcessAudioSamplers(m_DetachedRelease[0], n_frames, this_buff);
 
 		double d = 1.0;
 		d *= m_Volume;

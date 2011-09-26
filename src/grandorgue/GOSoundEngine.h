@@ -79,7 +79,6 @@ private:
 		}
 	};
 
-	GOSamplerEntry                m_DetachedRelease;
 	unsigned                      m_PolyphonySoftLimit;
 	bool                          m_PolyphonyLimiting;
 	bool                          m_ScaledReleases;
@@ -88,6 +87,7 @@ private:
 	unsigned                      m_SampleRate;
 	unsigned long                 m_CurrentTime;
 	GOSoundSamplerPool            m_SamplerPool;
+	std::vector<GOSamplerEntry>   m_DetachedRelease;
 	std::vector<GOSamplerEntry>   m_Windchests;
 	std::vector<GOSamplerEntry>   m_Tremulants;
 
