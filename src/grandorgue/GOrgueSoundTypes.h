@@ -123,13 +123,12 @@ typedef struct GO_SAMPLER_T
 	int                        fadeout;
 	unsigned                   faderemain;
 	int                        fademax;
-	int                        time;
+	unsigned                   time;
 	int                        shift;
 	/* current index of the current block into this sample */
 	float                      position;
 	float                      increment;
 	bool                       stop;
 } GO_SAMPLER;
-
 
 #endif
