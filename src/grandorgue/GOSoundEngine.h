@@ -107,6 +107,7 @@ private:
 	   -1 .. -n Tremulants
 	   0 detached release
 	   1 .. n Windchests
+	   n+1 .. ? additional detached release processors
 	*/
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id);
 	void StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_id);
@@ -118,7 +119,7 @@ public:
 
 	GOSoundEngine();
 	void Reset();
-	void Setup(GrandOrgueFile* organ_file);
+	void Setup(GrandOrgueFile* organ_file, unsigned release_count = 1);
 	void SetVolume(int volume);
 	void SetSampleRate(unsigned sample_rate);
 	unsigned GetSampleRate();

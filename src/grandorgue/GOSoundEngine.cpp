@@ -115,6 +115,8 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
 		state = &m_DetachedRelease[0];
 	else if (sampler_group_id < 0)
 		state = &m_Tremulants[-1-sampler_group_id];
+	else if (sampler_group_id > (int) m_Windchests.size())
+		state = &m_DetachedRelease[sampler_group_id - m_Windchests.size()];
 	else
 		state = &m_Windchests[sampler_group_id - 1];
 
@@ -133,6 +135,8 @@ void GOSoundEngine::StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_
 		state = &m_DetachedRelease[0];
 	else if (sampler_group_id < 0)
 		state = &m_Tremulants[-1-sampler_group_id];
+	else if (sampler_group_id > (int) m_Windchests.size())
+		state = &m_DetachedRelease[sampler_group_id - m_Windchests.size()];
 	else
 		state = &m_Windchests[sampler_group_id - 1];
 
@@ -142,9 +146,12 @@ void GOSoundEngine::StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_
 	state->count++;
 }
 
-void GOSoundEngine::Setup(GrandOrgueFile* organ_file)
+void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 {
 	m_Windchests.resize(organ_file->GetWinchestGroupCount());
+	if (release_count < 1)
+		release_count = 1;
+	m_DetachedRelease.resize(release_count);
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
 		m_Windchests[i].windchest = organ_file->GetWindchest(i);
 	m_Tremulants.resize(organ_file->GetTremulantCount());
@@ -648,13 +655,16 @@ int GOSoundEngine::GetSamples
 
 	}
 
-	if (m_DetachedRelease[0].sampler != NULL)
+	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
 	{
+		if (m_DetachedRelease[j].sampler == NULL)
+			continue;
+
 		int* this_buff = m_TempSoundBuffer;
 
 		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
 
-		ProcessAudioSamplers(m_DetachedRelease[0], n_frames, this_buff);
+		ProcessAudioSamplers(m_DetachedRelease[j], n_frames, this_buff);
 
 		double d = 1.0;
 		d *= m_Volume;
@@ -814,12 +824,17 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 					);
 			}
 
-			const int detached_windchest_index = 0;
 			int windchest_index;
 			if (not_a_tremulant)
 			{
 				/* detached releases are enabled and the pipe was on a regular
 				 * windchest. Play the release on the detached windchest */
+				int detached_windchest_index = 0;
+				for(unsigned i = 1; i < m_DetachedRelease.size(); i++)
+					if (m_DetachedRelease[i].count < m_DetachedRelease[detached_windchest_index].count)
+						detached_windchest_index = i;
+				if (detached_windchest_index)
+					detached_windchest_index += m_Windchests.size();
 				windchest_index = detached_windchest_index;
 			}
 			else
