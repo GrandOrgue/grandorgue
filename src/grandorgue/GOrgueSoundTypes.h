@@ -51,27 +51,6 @@ class GOSoundProvider;
 #define DATA_TYPE_STEREO_COMPRESSED   2
 #define DATA_TYPE_STEREO_UNCOMPRESSED 3
 
-#pragma pack(push, 1)
-
-struct struct_WAVE
-{
-	char ChunkID[4];
-	int ChunkSize;
-	char Format[4];
-    char Subchunk1ID[4];
-	int Subchunk1Size;
-	short AudioFormat;
-	short NumChannels;
-	int SampleRate;
-	int ByteRate;
-	short BlockAlign;
-	short BitsPerSample;
-	char Subchunk2ID[4];
-	int Subchunk2Size;
-};
-
-#pragma pack(pop)
-
 typedef enum
 {
 	AC_COMPRESSED_MONO = 0,
