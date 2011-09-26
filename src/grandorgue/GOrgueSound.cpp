@@ -140,6 +140,32 @@ void GOrgueSound::StartThreads(unsigned windchests)
 {
 	StopThreads();
 
+	int n_cpus = m_Concurrency;
+
+	for (unsigned i = 0; i < m_ReleaseConcurrency && n_cpus; i++)
+	{
+		int no = i;
+		if (i > 0)
+			no += windchests;
+		/* Detaches Releases get their own threads, as they can be the biggest number */
+		m_Threads.push_back(new GOSoundThread(&GetEngine(), no, no, m_SamplesPerBuffer));
+		n_cpus--;
+	}
+
+	float fact = windchests / (!n_cpus ? 1 : n_cpus);
+	unsigned no = 1;
+	/* We don't create extra thread for last cpu */
+	for(int i = 0; i < n_cpus; i++, no++)
+	{
+		if (no > windchests)
+			break;
+		unsigned end = no + (fact + 0.5);
+		if (end > windchests)
+			end = windchests;
+		m_Threads.push_back(new GOSoundThread(&GetEngine(), no, end, m_SamplesPerBuffer));
+		no = end;
+	}
+
 	for(unsigned i = 0; i < m_Threads.size(); i++)
 		m_Threads[i]->Run();
 }
@@ -408,6 +434,8 @@ int GOrgueSound::AudioCallbackLocal
 	,double stream_time
 	)
 {
+	assert(n_frames == m_SamplesPerBuffer);
+
 	wxCriticalSectionLocker locker(m_lock);
 
 	if (!b_active || !m_organfile)
