@@ -21,6 +21,7 @@
  */
 
 #include "GOrgueSound.h"
+#include "GOSoundThread.h"
 #include "GrandOrgueFile.h"
 #include "GOrgueRtHelpers.h"
 #include "GOrgueMidi.h"
@@ -41,6 +42,8 @@ GOrgueSound::GOrgueSound(void) :
 	b_stereo(0),
 	b_align(0),
 	b_random(0),
+	m_Concurrency(0),
+	m_ReleaseConcurrency(1),
 	meter_counter(0),
 	b_active(false),
 	defaultAudio(wxT(""))
@@ -133,6 +136,21 @@ GOrgueSound::~GOrgueSound(void)
 
 }
 
+void GOrgueSound::StartThreads(unsigned windchests)
+{
+	StopThreads();
+
+	for(unsigned i = 0; i < m_Threads.size(); i++)
+		m_Threads[i]->Run();
+}
+
+void GOrgueSound::StopThreads()
+{
+	for(unsigned i = 0; i < m_Threads.size(); i++)
+		m_Threads[i]->Delete();
+	m_Threads.resize(0);
+}
+
 bool GOrgueSound::OpenSound()
 {
 
@@ -146,6 +164,10 @@ bool GOrgueSound::OpenSound()
 	b_stereo = pConfig->Read(wxT("StereoEnabled"), 1);
 	b_align  = pConfig->Read(wxT("AlignRelease"), 1);
 	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
+	m_Concurrency = pConfig->Read(wxT("Concurrency"), 0L);
+	m_ReleaseConcurrency = pConfig->Read(wxT("ReleaseConcurrency"), 1L);
+	if (m_ReleaseConcurrency < 1)
+		m_ReleaseConcurrency = 1;
 	unsigned sample_rate = pConfig->Read(wxT("SampleRate"), 44100);
 
 	PreparePlayback(NULL);
@@ -236,6 +258,7 @@ bool GOrgueSound::OpenSound()
 
 void GOrgueSound::CloseSound()
 {
+	StopThreads();
 	m_recorder.Close();
 
 	b_active = false;
@@ -316,10 +339,12 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 	wxCriticalSectionLocker locker(m_lock);
 
 	m_organfile = organfile;
+	StopThreads();
 	if (organfile)
 	{
-		m_SoundEngine.Setup(organfile);
+		m_SoundEngine.Setup(organfile, m_ReleaseConcurrency);
 		organfile->PreparePlayback(&GetEngine());
+		StartThreads(organfile->GetWinchestGroupCount());
 	}
 	else
 	{
@@ -429,6 +454,9 @@ int GOrgueSound::AudioCallbackLocal
 		meter_info.meter_left = meter_info.meter_right = 0.0;
 
 	}
+
+	for(unsigned i = 0; i < m_Threads.size(); i++)
+		m_Threads[i]->Wakeup();
 
 	return r;
 
