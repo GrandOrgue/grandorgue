@@ -329,24 +329,47 @@ void GOrgueWave::ReadSamples
 {
 	if (sampleRate != sample_rate)
 		throw (wxString)_("bad format!");
-	if (bytesPerSample != 2)
+
+	if (bytesPerSample < 1 || bytesPerSample > 3)
 		throw (wxString)_("Unsupported format");
 
-	switch (read_format)
+	char* input  = (char*)data;
+	char* output = (char*)dest_buffer;
+
+	for(unsigned i = 0; i < channels * GetLength(); i++)
 	{
-		case SF_SIGNEDSHORT:
-			memcpy(dest_buffer, data, bytesPerSample * channels * GetLength());
+		int value; /* Value will be stored with 24 fractional bits of precision */
+		switch(bytesPerSample)
+		{
+		case 1:
+			value = (*((unsigned char*)input) - 0x80);
+			value <<= 16;
 			break;
-		case SF_IEEE_FLOAT:
-			{
-				wxInt16 *input = (wxInt16*)data;
-				float *output  = (float*)dest_buffer;
-				for (unsigned i = 0; i < channels * GetLength(); i++, input++, output++)
-					*output = *input / 32768.0f;
-			}
+		case 2:
+			value = wxINT16_SWAP_ON_BE(*((wxInt16*)input));
+			value <<= 8;
+			break;
+		case 3:
+			value = GOInt24ToInt(*((GO_Int24*)input));
 			break;
 		default:
 			throw (wxString)_("bad format!");
+		}
+		input += bytesPerSample;
+
+		switch (read_format)
+		{
+		case SF_SIGNEDSHORT:
+			*(wxInt16*)output = value >> 8;
+			output += sizeof(wxInt16);
+			break;
+		case SF_IEEE_FLOAT:
+			*(float*)output = value / (float)(1 << 23);
+			output += sizeof(float);
+			break;
+		default:
+			throw (wxString)_("bad format!");
+		}
 	}
 }
 

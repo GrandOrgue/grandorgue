@@ -105,7 +105,8 @@ bool inline CompareFourCC(GO_FOURCC fcc, const char* text)
 }
 
 typedef struct {
-	unsigned char lo, mi, hi;
+	unsigned char lo, mi;
+	signed char hi;
 } GO_Int24;
 
 inline GO_Int24 IntToGOInt24(int value)
@@ -115,6 +116,11 @@ inline GO_Int24 IntToGOInt24(int value)
 	val.mi = (value >> 8) & 0xff;
 	val.hi = (value >> 16) & 0xff;
 	return val;
+}
+
+inline int GOInt24ToInt(GO_Int24 value)
+{
+	return ((value.hi << 16) | (value.mi << 8) | value.lo) >> 8;
 }
 
 #pragma pack(pop)
