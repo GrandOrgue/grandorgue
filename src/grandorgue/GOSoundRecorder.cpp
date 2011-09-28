@@ -21,7 +21,7 @@
  */
 
 #include "GOSoundRecorder.h"
-#include "GOrgueSoundTypes.h"
+#include "GOrgueWaveTypes.h"
 
 #pragma pack(push, 1)
 
@@ -48,7 +48,9 @@ struct struct_WAVE
 GOSoundRecorder::GOSoundRecorder() :
         m_file(),
         m_lock(),
-        m_SampleRate(0)
+        m_SampleRate(0),
+	m_Channels(2),
+	m_BytesPerSample(4)
 {
 }
 
@@ -65,12 +67,12 @@ void GOSoundRecorder::Open(wxString filename)
 		{'W','A','V','E'}, 
 		{'f','m','t',' '}, 
 		wxUINT32_SWAP_ON_BE(16), 
-		wxUINT16_SWAP_ON_BE(3), 
-		wxUINT16_SWAP_ON_BE(2), 
+		wxUINT16_SWAP_ON_BE(m_BytesPerSample == 4 ? 3 : 1), 
+		wxUINT16_SWAP_ON_BE(m_Channels), 
 		wxUINT32_SWAP_ON_BE(m_SampleRate), 
-		wxUINT32_SWAP_ON_BE(m_SampleRate * 8), 
-		wxUINT16_SWAP_ON_BE(8), 
-		wxUINT16_SWAP_ON_BE(32), 
+		wxUINT32_SWAP_ON_BE(m_SampleRate * m_BytesPerSample * m_Channels), 
+		wxUINT16_SWAP_ON_BE(m_BytesPerSample * m_Channels), 
+		wxUINT16_SWAP_ON_BE(8 * m_BytesPerSample), 
 		{'d','a','t','a'}, 
 		wxUINT32_SWAP_ON_BE(0)};
 
@@ -101,12 +103,12 @@ void GOSoundRecorder::Close()
 		{'W','A','V','E'}, 
 		{'f','m','t',' '}, 
 		wxUINT32_SWAP_ON_BE(16), 
-		wxUINT16_SWAP_ON_BE(3), 
-		wxUINT16_SWAP_ON_BE(2), 
+		wxUINT16_SWAP_ON_BE(m_BytesPerSample == 4 ? 3 : 1), 
+		wxUINT16_SWAP_ON_BE(m_Channels), 
 		wxUINT32_SWAP_ON_BE(m_SampleRate), 
-		wxUINT32_SWAP_ON_BE(m_SampleRate * 8), 
-		wxUINT16_SWAP_ON_BE(8), 
-		wxUINT16_SWAP_ON_BE(32), 
+		wxUINT32_SWAP_ON_BE(m_SampleRate  * m_BytesPerSample * m_Channels), 
+		wxUINT16_SWAP_ON_BE(m_BytesPerSample * m_Channels), 
+		wxUINT16_SWAP_ON_BE(8 * m_BytesPerSample), 
 		{'d','a','t','a'}, 
 		wxUINT32_SWAP_ON_BE(0)};
 
@@ -124,10 +126,67 @@ void GOSoundRecorder::SetSampleRate(unsigned sample_rate)
 	m_SampleRate = sample_rate;
 }
 
+void GOSoundRecorder::SetBytesPerSample(unsigned value)
+{
+	if (value < 1 || value > 4)
+		value = 4;
+	m_BytesPerSample = value;
+}
+
+
 void GOSoundRecorder::Write(float* data, unsigned count)
 {
        	wxCriticalSectionLocker locker(m_lock);
 	if (!m_file.IsOpened())
 		return;
-	m_file.Write(data, count * sizeof(float));
+	if (m_BytesPerSample == 4)
+		m_file.Write(data, count * sizeof(float));
+	else if (m_BytesPerSample == 1)
+	{
+		unsigned char* buf = (unsigned char*)buffer;
+		unsigned size = sizeof(buffer) / sizeof(unsigned char);
+		unsigned pos = 0;
+		for(unsigned i = 0; i < count; i++)
+		{
+			if (pos >= size)
+			{
+				m_file.Write(buf, pos * sizeof(unsigned char));
+				pos = 0;
+			}
+			buf[pos++] = (data[i] * 0x7F) + 0x81;
+		}
+		m_file.Write(buf, pos * sizeof(unsigned char));
+	}
+	else if (m_BytesPerSample == 2)
+	{
+		wxInt16* buf = (wxInt16*)buffer;
+		unsigned size = sizeof(buffer) / sizeof(wxInt16);
+		unsigned pos = 0;
+		for(unsigned i = 0; i < count; i++)
+		{
+			if (pos >= size)
+			{
+				m_file.Write(buf, pos * sizeof(wxInt16));
+				pos = 0;
+			}
+			buf[pos++] = wxINT16_SWAP_ON_BE(data[i] * 0x7FFF);
+		}
+		m_file.Write(buf, pos * sizeof(wxInt16));
+	}
+	else if (m_BytesPerSample == 3)
+	{
+		GO_Int24* buf = (GO_Int24*)buffer;
+		unsigned size = sizeof(buffer) / sizeof(GO_Int24);
+		unsigned pos = 0;
+		for(unsigned i = 0; i < count; i++)
+		{
+			if (pos >= size)
+			{
+				m_file.Write(buf, pos * sizeof(GO_Int24));
+				pos = 0;
+			}
+			buf[pos++] = IntToGOInt24(data[i] * 0x7FFFFF);
+		}
+		m_file.Write(buf, pos * sizeof(GO_Int24));
+	}
 }

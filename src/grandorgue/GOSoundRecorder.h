@@ -31,6 +31,9 @@ private:
 	wxFile m_file;
 	wxCriticalSection m_lock;
 	unsigned m_SampleRate;
+	unsigned m_Channels;
+	unsigned m_BytesPerSample;
+	char buffer[300];
 
 public:
 	GOSoundRecorder();
@@ -40,6 +43,8 @@ public:
 	bool IsOpen();
 	void Close();
 	void SetSampleRate(unsigned sample_rate);
+	/* 1 = 8 bit, 2 = 16 bit, 3 = 24 bit, 4 = float */
+	void SetBytesPerSample(unsigned value);
 
 	void Write(float* data, unsigned count);
 };
