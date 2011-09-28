@@ -32,7 +32,7 @@ GOSoundThread::GOSoundThread(GOSoundEngine* engine, int min_sampler_id, int max_
 	m_Stop(false),
 	m_Condition(m_Mutex)
 {
-	wxLogError(wxT("Create Thread %d %d %d"), m_MinSamplerID, m_MaxSamplerID, m_FrameCount);
+	wxLogDebug(wxT("Create Thread %d %d %d"), m_MinSamplerID, m_MaxSamplerID, m_FrameCount);
 	Create();
 	SetPriority(WXTHREAD_MAX_PRIORITY);
 }
