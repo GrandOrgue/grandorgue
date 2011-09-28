@@ -50,6 +50,7 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHOICE(ID_SAMPLE_RATE, SettingsDialog::OnChanged)
 	EVT_CHOICE(ID_CONCURRENCY, SettingsDialog::OnChanged)
 	EVT_CHOICE(ID_RELEASE_CONCURRENCY, SettingsDialog::OnChanged)
+	EVT_CHOICE(ID_WAVE_FORMAT, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_SQUASH, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_MANAGE_POLYPHONY, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_ALIGN_RELEASE, SettingsDialog::OnChanged)
@@ -99,7 +100,7 @@ void SettingsDialog::SetLatencySpinner(int latency)
 //#ifdef __WXMSW__
 //#define SETTINGS_DLG_SIZE wxSize(453,450)
 //#else
-#define SETTINGS_DLG_SIZE wxSize(603,500)
+#define SETTINGS_DLG_SIZE wxSize(603,600)
 //#endif
 
 SettingsDialog::SettingsDialog(wxWindow* win) :
@@ -252,11 +253,20 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Release Concurreny Level:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(c_ReleaseConcurrency = new wxChoice(panel, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
+	choices.clear();
+	choices.push_back(_("8 Bit PCM"));
+	choices.push_back(_("16 Bit PCM"));
+	choices.push_back(_("24 Bit PCM"));
+	choices.push_back(_("IEEE Float"));
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Recorder WAV Format:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(c_WaveFormat = new wxChoice(panel, ID_WAVE_FORMAT, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
 	UpdateSoundStatus();
 	c_stereo->Select(pConfig->Read(wxT("StereoEnabled"), 0L));
 	c_SampleRate->Select(pConfig->Read(wxT("SampleRate"), 0L) == 48000 ? 1 : 0);
 	c_Concurrency->Select(pConfig->Read(wxT("Concurrency"), 0L));
-	c_ReleaseConcurrency->Select(pConfig->Read(wxT("ReleaseConcurrency"), 1L) - 1);
+	c_ReleaseConcurrency->Select(pConfig->Read(wxT("ReleaseConcurrency"), 4L) - 1);
+	c_WaveFormat->Select(pConfig->Read(wxT("WaveFormat"), 1L) - 1);
 
 	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Enhancements"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
@@ -574,6 +584,7 @@ bool SettingsDialog::DoApply()
 	pConfig->Write(wxT("SampleRate"), c_SampleRate->GetSelection() ? 48000 : 44100);
 	pConfig->Write(wxT("Concurrency"), c_Concurrency->GetSelection());
 	pConfig->Write(wxT("ReleaseConcurrency"), c_ReleaseConcurrency->GetSelection() + 1);
+	pConfig->Write(wxT("WaveFormat"), c_WaveFormat->GetSelection() + 1);
 
     g_sound->ResetSound();
     UpdateSoundStatus();

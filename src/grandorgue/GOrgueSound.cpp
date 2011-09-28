@@ -195,6 +195,7 @@ bool GOrgueSound::OpenSound()
 	if (m_ReleaseConcurrency < 1)
 		m_ReleaseConcurrency = 1;
 	unsigned sample_rate = pConfig->Read(wxT("SampleRate"), 44100);
+	m_recorder.SetBytesPerSample(pConfig->Read(wxT("WaveFormat"), 4));
 
 	PreparePlayback(NULL);
 

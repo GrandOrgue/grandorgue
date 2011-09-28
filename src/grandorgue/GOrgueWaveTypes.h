@@ -94,7 +94,7 @@ typedef struct
 	wxUint32 cbSamplerData;
 } GO_WAVESAMPLERCHUNK;
 
-static bool CompareFourCC(GO_FOURCC fcc, const char* text)
+bool inline CompareFourCC(GO_FOURCC fcc, const char* text)
 {
 	assert(text != NULL);
 	assert(strlen(text) == 4);
@@ -102,6 +102,19 @@ static bool CompareFourCC(GO_FOURCC fcc, const char* text)
 			(fcc[1] == text[1]) &&
 			(fcc[2] == text[2]) &&
 			(fcc[3] == text[3]));
+}
+
+typedef struct {
+	unsigned char lo, mi, hi;
+} GO_Int24;
+
+inline GO_Int24 IntToGOInt24(int value)
+{
+	GO_Int24 val;
+	val.lo = (value >> 0) & 0xff;
+	val.mi = (value >> 8) & 0xff;
+	val.hi = (value >> 16) & 0xff;
+	return val;
 }
 
 #pragma pack(pop)

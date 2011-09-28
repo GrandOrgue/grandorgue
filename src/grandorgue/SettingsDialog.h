@@ -91,6 +91,7 @@ protected:
 		ID_SAMPLE_RATE,
 		ID_CONCURRENCY,
 		ID_RELEASE_CONCURRENCY,
+		ID_WAVE_FORMAT,
 		ID_ENHANCE_SQUASH,
 		ID_ENHANCE_MANAGE_POLYPHONY,
 		ID_ENHANCE_ALIGN_RELEASE,
@@ -120,6 +121,7 @@ protected:
 	wxChoice* c_SampleRate;
 	wxChoice* c_Concurrency;
 	wxChoice* c_ReleaseConcurrency;
+	wxChoice* c_WaveFormat;
 	wxCheckBox *c_squash, *c_limit, *c_align, *c_scale, *c_random;
 	bool b_squash, b_stereo;
 
