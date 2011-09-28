@@ -55,6 +55,7 @@ private:
 	{
 	public:
 		GO_SAMPLER       *sampler;
+		GO_SAMPLER       *new_sampler;
 		sound_buffer      buff;
 		sound_buffer      temp;
 		/* access lock for sampler data */
@@ -68,6 +69,7 @@ private:
 		GOSamplerEntry()
 		{
 			sampler = NULL;
+			new_sampler = NULL;
 			windchest = NULL;
 			done = false;
 			count = 0;
@@ -76,6 +78,7 @@ private:
 		GOSamplerEntry(const GOSamplerEntry& entry)
 		{
 			sampler = entry.sampler;
+			new_sampler = entry.new_sampler;
 			windchest = entry.windchest;
 			done = false;
 			count = entry.count;
@@ -84,6 +87,7 @@ private:
 		const GOSamplerEntry& operator=(const GOSamplerEntry& entry)
 		{
 			sampler = entry.sampler;
+			new_sampler = entry.new_sampler;
 			windchest = entry.windchest;
 			count = entry.count;
 			done = false;
@@ -114,7 +118,6 @@ private:
 	   n+1 .. ? additional detached release processors
 	*/
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id);
-	void StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_id);
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
 	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, int* decoded_sampler_audio_frame);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, int* output_buffer);

@@ -49,17 +49,18 @@ void GOSoundEngine::Reset()
 {
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
 	{
+		m_Windchests[i].new_sampler = 0;
 		m_Windchests[i].sampler = 0;
 		m_Windchests[i].count = 0;
 	}
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 	{
-		m_Tremulants[i].sampler = 0;
+		m_Tremulants[i].new_sampler = 0;
 		m_Tremulants[i].count = 0;
 	}
 	for (unsigned i = 0; i < m_DetachedRelease.size(); i++)
 	{
-		m_DetachedRelease[i].sampler = 0;
+		m_DetachedRelease[i].new_sampler = 0;
 		m_DetachedRelease[i].count = 0;
 	}
 	m_SamplerPool.ReturnAll();
@@ -123,27 +124,8 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
 
 	wxCriticalSectionLocker locker(state->lock);
 	sampler->sampler_group_id = sampler_group_id;
-	sampler->next = state->sampler;
-	state->sampler = sampler;
-	state->count++;
-}
-
-void GOSoundEngine::StartSamplerUnlocked(GO_SAMPLER* sampler, int sampler_group_id)
-{
-	GOSamplerEntry* state;
-
-	if (sampler_group_id == 0)
-		state = &m_DetachedRelease[0];
-	else if (sampler_group_id < 0)
-		state = &m_Tremulants[-1-sampler_group_id];
-	else if (sampler_group_id > (int) m_Windchests.size())
-		state = &m_DetachedRelease[sampler_group_id - m_Windchests.size()];
-	else
-		state = &m_Windchests[sampler_group_id - 1];
-
-	sampler->sampler_group_id = sampler_group_id;
-	sampler->next = state->sampler;
-	state->sampler = sampler;
+	sampler->next = state->new_sampler;
+	state->new_sampler = sampler;
 	state->count++;
 }
 
@@ -487,13 +469,23 @@ void GOSoundEngine::ReadSamplerFrames
 
 void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, int* output_buffer)
 {
-	wxCriticalSectionLocker locker(state.lock);
-	GO_SAMPLER** list_start = &state.sampler;
+	{
+		wxCriticalSectionLocker locker(state.lock);
+		if (state.new_sampler)
+		{
+			GO_SAMPLER* new_sampler = state.new_sampler;
+			while(new_sampler->next)
+				new_sampler = new_sampler->next;
+			new_sampler->next = state.sampler;
+			state.sampler = state.new_sampler;
+			state.new_sampler = 0;
+		}
+	}
 
 	assert((n_frames & (n_frames - 1)) == 0);
 	assert(n_frames > BLOCKS_PER_FRAME);
-	GO_SAMPLER* previous_valid_sampler = *list_start;
-	for (GO_SAMPLER* sampler = *list_start; sampler; sampler = sampler->next)
+	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
+	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
 	{
 
 		const bool process_sampler = (sampler->time <= m_CurrentTime);
@@ -568,6 +560,7 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 
 		}
 
+		next_sampler = sampler->next;
 		/* if this sampler's pipe has been set to null or the fade value is
 		 * zero, the sample is no longer required and can be removed from the
 		 * linked list. If it was still supplying audio, we must update the
@@ -575,15 +568,15 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 		if (!sampler->pipe || (!sampler->fade && process_sampler))
 		{
 			/* sampler needs to be removed from the list */
-			if (sampler == *list_start)
-				*list_start = sampler->next;
+			if (sampler == state.sampler)
+				state.sampler = sampler->next;
 			else
-				previous_valid_sampler->next = sampler->next;
+				previous_sampler->next = sampler->next;
 			m_SamplerPool.ReturnSampler(sampler);
 			state.count--;
 		}
 		else
-			previous_valid_sampler = sampler;
+			previous_sampler = sampler;
 
 	}
 	state.done = true;
@@ -898,10 +891,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				 * means it will still be affected by tremulants - yuck). */
 				windchest_index = handle->sampler_group_id;
 			}
-			if (handle->sampler_group_id == windchest_index)
-				StartSamplerUnlocked(new_sampler, windchest_index);
-			else
-				StartSampler(new_sampler, windchest_index);
+			StartSampler(new_sampler, windchest_index);
 		}
 
 	}
