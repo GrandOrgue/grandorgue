@@ -571,7 +571,7 @@ bool SettingsDialog::DoApply()
 	pConfig->Write(wxT("AlignRelease"), (long)c_align->IsChecked());
 	pConfig->Write(wxT("ScaleRelease"), (long)c_scale->IsChecked());
 	pConfig->Write(wxT("RandomizeSpeaking"), (long)c_random->IsChecked());
-	pConfig->Write(wxT("SampleRate"), c_SampleRate->GetSelection() ? wxT("48000") : wxT("44100"));
+	pConfig->Write(wxT("SampleRate"), c_SampleRate->GetSelection() ? 48000 : 44100);
 	pConfig->Write(wxT("Concurrency"), c_Concurrency->GetSelection());
 	pConfig->Write(wxT("ReleaseConcurrency"), c_ReleaseConcurrency->GetSelection() + 1);
 
