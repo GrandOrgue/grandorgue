@@ -133,10 +133,21 @@ void GOSoundRecorder::SetBytesPerSample(unsigned value)
 	m_BytesPerSample = value;
 }
 
+inline int float_to_fixed(float f, unsigned fractional_bits)
+{
+	assert(fractional_bits > 0);
+	int max_val = 1 << fractional_bits;
+	int f_exp = f * max_val;
+	if (f_exp < -max_val)
+		return -max_val;
+	if (f_exp > max_val - 1)
+		return max_val - 1;
+	return f_exp;
+}
 
 void GOSoundRecorder::Write(float* data, unsigned count)
 {
-       	wxCriticalSectionLocker locker(m_lock);
+	wxCriticalSectionLocker locker(m_lock);
 	if (!m_file.IsOpened())
 		return;
 	if (m_BytesPerSample == 4)
@@ -153,7 +164,7 @@ void GOSoundRecorder::Write(float* data, unsigned count)
 				m_file.Write(buf, pos * sizeof(unsigned char));
 				pos = 0;
 			}
-			buf[pos++] = (data[i] * 0x7F) + 0x81;
+			buf[pos++] = (unsigned char)(float_to_fixed(data[i], 7) + 128);
 		}
 		m_file.Write(buf, pos * sizeof(unsigned char));
 	}
@@ -169,7 +180,7 @@ void GOSoundRecorder::Write(float* data, unsigned count)
 				m_file.Write(buf, pos * sizeof(wxInt16));
 				pos = 0;
 			}
-			buf[pos++] = wxINT16_SWAP_ON_BE(data[i] * 0x7FFF);
+			buf[pos++] = wxINT16_SWAP_ON_BE(float_to_fixed(data[i], 15));
 		}
 		m_file.Write(buf, pos * sizeof(wxInt16));
 	}
@@ -185,7 +196,7 @@ void GOSoundRecorder::Write(float* data, unsigned count)
 				m_file.Write(buf, pos * sizeof(GO_Int24));
 				pos = 0;
 			}
-			buf[pos++] = IntToGOInt24(data[i] * 0x7FFFFF);
+			buf[pos++] = IntToGOInt24(float_to_fixed(data[i], 23));
 		}
 		m_file.Write(buf, pos * sizeof(GO_Int24));
 	}
