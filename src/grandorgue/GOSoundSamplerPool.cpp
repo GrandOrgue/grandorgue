@@ -26,7 +26,9 @@
 
 GOSoundSamplerPool::GOSoundSamplerPool() :
 	m_SamplerCount(0),
-	m_UsageLimit(MAX_POLYPHONY)
+	m_UsageLimit(0),
+	m_AvailableSamplers(NULL),
+	m_Samplers()
 {
 	ReturnAll();
 }
@@ -36,13 +38,31 @@ void GOSoundSamplerPool::ReturnAll()
 	wxCriticalSectionLocker locker(m_Lock);
 
 	m_SamplerCount = 0;
-	for (unsigned i = 0; i < MAX_POLYPHONY; i++)
-		m_AvailableSamplers[i] = m_Samplers + i;
+
+	if (m_Samplers.size() > m_UsageLimit)
+		m_Samplers.resize(m_UsageLimit);
+
+	if (m_Samplers.size())
+		m_AvailableSamplers = m_Samplers[0];
+	else
+		m_AvailableSamplers = NULL;
+
+	for (unsigned i = 0; i < m_Samplers.size(); i++)
+		m_Samplers[i]->next = (i + 1 < m_Samplers.size() ? m_Samplers[i + 1] : NULL);
 }
 
 void GOSoundSamplerPool::SetUsageLimit(unsigned count)
 {
-	m_UsageLimit = (count <= MAX_POLYPHONY) ? count : MAX_POLYPHONY;
+	m_UsageLimit = count;
+
+	wxCriticalSectionLocker locker(m_Lock);
+	while(m_Samplers.size() < m_UsageLimit)
+	{
+		GO_SAMPLER* sampler = new GO_SAMPLER;
+		sampler->next = m_AvailableSamplers;
+		m_AvailableSamplers = sampler;
+		m_Samplers.push_back(sampler);
+	}
 }
 
 GO_SAMPLER* GOSoundSamplerPool::GetSampler()
@@ -50,9 +70,11 @@ GO_SAMPLER* GOSoundSamplerPool::GetSampler()
 	wxCriticalSectionLocker locker(m_Lock);
 
 	GO_SAMPLER* sampler = NULL;
-	if (m_SamplerCount < m_UsageLimit)
+	if (m_SamplerCount < m_UsageLimit && m_AvailableSamplers)
 	{
-		sampler = m_AvailableSamplers[m_SamplerCount++];
+		sampler = m_AvailableSamplers;
+		m_AvailableSamplers = m_AvailableSamplers->next;
+		m_SamplerCount++;
 		memset(sampler, 0, sizeof(GO_SAMPLER));
 	}
 	return sampler;
@@ -63,6 +85,8 @@ void GOSoundSamplerPool::ReturnSampler(GO_SAMPLER* sampler)
 	wxCriticalSectionLocker locker(m_Lock);
 
 	assert(m_SamplerCount > 0);
-	m_AvailableSamplers[--m_SamplerCount] = sampler;
+	m_SamplerCount--;
+	sampler->next = m_AvailableSamplers;
+	m_AvailableSamplers = sampler;
 }
 
