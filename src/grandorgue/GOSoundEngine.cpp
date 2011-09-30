@@ -639,7 +639,7 @@ int GOSoundEngine::GetSamples
 
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 	{
-		if (m_Tremulants[j].sampler == NULL)
+		if (m_Tremulants[j].sampler == NULL && m_Tremulants[j].new_sampler == NULL)
 			continue;
 
 		int* this_buff = m_Tremulants[j].buff;
@@ -652,7 +652,7 @@ int GOSoundEngine::GetSamples
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
 
-		if (m_Windchests[j].sampler == NULL)
+		if (m_Windchests[j].sampler == NULL && m_Windchests[j].new_sampler == NULL)
 			continue;
 
 		int* this_buff = m_Windchests[j].buff;
@@ -697,7 +697,7 @@ int GOSoundEngine::GetSamples
 
 	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
 	{
-		if (m_DetachedRelease[j].sampler == NULL)
+		if (m_DetachedRelease[j].sampler == NULL && m_DetachedRelease[j].new_sampler == NULL)
 			continue;
 
 		int* this_buff = m_DetachedRelease[j].buff;
