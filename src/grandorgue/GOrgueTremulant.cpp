@@ -72,6 +72,7 @@ void GOrgueTremulant::Set(bool on)
 		{
 			assert(m_PlaybackHandle);
 			m_organfile->StopSample(&m_TremProvider, m_PlaybackHandle);
+			m_PlaybackHandle = NULL;
 		}
 		GOrgueDrawstop::Set(on);
 	}
