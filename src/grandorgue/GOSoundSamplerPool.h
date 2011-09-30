@@ -27,6 +27,7 @@
 
 #include "GrandOrgueDef.h"
 #include "GOrgueSoundTypes.h"
+#include "ptrvector.h"
 
 class GOSoundSamplerPool
 {
@@ -35,8 +36,8 @@ private:
 	wxCriticalSection  m_Lock;
 	unsigned           m_SamplerCount;
 	unsigned           m_UsageLimit;
-	GO_SAMPLER        *m_AvailableSamplers[MAX_POLYPHONY];
-	GO_SAMPLER         m_Samplers[MAX_POLYPHONY];
+	GO_SAMPLER        *m_AvailableSamplers;
+	ptr_vector<GO_SAMPLER> m_Samplers;
 
 public:
 	GOSoundSamplerPool();
