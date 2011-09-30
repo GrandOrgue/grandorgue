@@ -56,11 +56,13 @@ void GOSoundEngine::Reset()
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 	{
 		m_Tremulants[i].new_sampler = 0;
+		m_Tremulants[i].sampler = 0;
 		m_Tremulants[i].count = 0;
 	}
 	for (unsigned i = 0; i < m_DetachedRelease.size(); i++)
 	{
 		m_DetachedRelease[i].new_sampler = 0;
+		m_DetachedRelease[i].sampler = 0;
 		m_DetachedRelease[i].count = 0;
 	}
 	m_SamplerPool.ReturnAll();
