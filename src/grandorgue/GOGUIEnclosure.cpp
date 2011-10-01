@@ -78,6 +78,7 @@ void GOGUIEnclosure::Draw(wxDC* dc)
 	points[2].y = points[3].y = enclosure_y + 56 - dy;
 	dc->SetBrush(m_metrics->GetPedalBrush());
 	dc->DrawPolygon(4, points);
+	GOGUIControl::Draw(dc);
 }
 
 

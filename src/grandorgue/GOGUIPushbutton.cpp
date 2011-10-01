@@ -71,6 +71,7 @@ void GOGUIPushbutton::Draw(wxDC* dc)
 	font.SetPointSize(m_DispLabelFontSize);
 	dc->SetFont(font);
 	dc->DrawLabel(m_panel->WrapText(dc, m_pushbutton->GetName(), 28), rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+	GOGUIControl::Draw(dc);
 }
 
 void GOGUIPushbutton::HandleMousePress(int x, int y, bool right)

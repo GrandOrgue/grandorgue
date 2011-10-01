@@ -53,4 +53,5 @@ void GOGUIHW1Background::Draw(wxDC* dc)
 	if (m_metrics->GetJambTopHeight() + m_metrics->GetPistonTopHeight())
 		m_panel->TileWood(dc, m_metrics->GetKeyHorizBackgroundImageNum(), m_metrics->GetCenterX(), m_metrics->GetJambTopY(), 
 			 m_metrics->GetCenterWidth(), m_metrics->GetJambTopHeight() + m_metrics->GetPistonTopHeight());
+	GOGUIControl::Draw(dc);
 }

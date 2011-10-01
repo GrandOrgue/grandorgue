@@ -65,6 +65,7 @@ void GOGUIDrawstop::Draw(wxDC* dc)
 	font.SetPointSize(m_DispLabelFontSize);
 	dc->SetFont(font);
 	dc->DrawLabel(m_panel->WrapText(dc, m_drawstop->GetName(), 51), rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+	GOGUIControl::Draw(dc);
 }
 
 void GOGUIDrawstop::HandleMousePress(int x, int y, bool right)
