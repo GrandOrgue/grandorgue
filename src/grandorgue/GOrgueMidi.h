@@ -23,10 +23,10 @@
 #ifndef GORGUEMIDI_H
 #define GORGUEMIDI_H
 
-#include <vector>
 #include <map>
 #include <wx/wx.h>
 #include "MIDIListenDialog.h"
+#include "ptrvector.h"
 
 class RtMidiIn;
 
@@ -44,8 +44,8 @@ private:
 		RtMidiIn* midi_in;
 		wxString name;
 		bool active;
-		int id;
-		int no;
+		int channel_shift;
+		int rtmidi_port_no;
 		unsigned bank_lsb[16];
 		unsigned bank_msb[16];
 		GOrgueMidi* midi;
@@ -53,7 +53,7 @@ private:
 
 	wxConfigBase *m_global_config;
 	std::map<wxString, int> m_midi_device_map;
-	std::vector<MIDI_DEVICE> m_midi_devices;
+	ptr_vector<MIDI_DEVICE> m_midi_devices;
 	int m_transpose;
 	bool m_listening;
 	wxEvtHandler* m_listen_evthandler;
@@ -63,7 +63,7 @@ private:
 
 	int m_midi_events[NB_MIDI_EVENTS];
 
-	void ProcessMessage(std::vector<unsigned char>& msg, int which);
+	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device);
 
 	static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData);
 
@@ -73,6 +73,7 @@ public:
 	~GOrgueMidi();
 
 	void Open();
+	void UpdateDevices();
 	void SetOrganFile(GrandOrgueFile* organfile);
 
 	bool HasListener();

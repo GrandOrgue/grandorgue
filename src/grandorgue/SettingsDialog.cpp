@@ -178,7 +178,8 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 
 	if (!g_sound)
 		throw (wxString)_("g_sound has not been allocated");
-
+	
+	g_sound->GetMidi().UpdateDevices();
 	for (it2 = g_sound->GetMidi().GetDevices().begin(); it2 != g_sound->GetMidi().GetDevices().end(); it2++)
 	{
 		choices.push_back(it2->first);
