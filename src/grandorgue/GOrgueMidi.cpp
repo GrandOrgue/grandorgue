@@ -90,43 +90,46 @@ GOrgueMidi::GOrgueMidi() :
 	m_organ_midi_events(),
 	m_organfile(NULL)
 {
+	UpdateDevices();
+}
 
+void GOrgueMidi::UpdateDevices()
+{
 	RtMidiIn midi_dev;
 	for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
 	{
-
-		MIDI_DEVICE t;
-		t.midi_in = new RtMidiIn();
-		t.id = 0;
-		t.midi = this;
-		t.no = i;
-		t.active = false;
-		wxString name = wxString::FromAscii(t.midi_in->getPortName(i).c_str());
-		t.name = name;
-		m_midi_devices.push_back(t);
-
-		name.Replace(wxT("\\"), wxT("|"));
-		m_midi_device_map[name] = i;
-
+		wxString name = wxString::FromAscii(midi_dev.getPortName(i).c_str());
+		if (!m_midi_device_map.count(name))
+		{
+			MIDI_DEVICE *t = new MIDI_DEVICE;
+			t->midi_in = new RtMidiIn();
+			t->channel_shift = 0;
+			t->midi = this;
+			t->rtmidi_port_no = i;
+			t->active = false;
+			t->name = name;
+			m_midi_devices.push_back(t);
+			
+			name.Replace(wxT("\\"), wxT("|"));
+			m_midi_device_map[name] = m_midi_devices.size() - 1;
+		}
+		else
+			m_midi_devices[m_midi_device_map[name]]->rtmidi_port_no = i;
 	}
-
 }
+
 
 GOrgueMidi::~GOrgueMidi()
 {
-
 	try
 	{
-
 		/* dispose of all midi devices */
-		while (m_midi_devices.size())
+		for (unsigned i = 0; i < m_midi_devices.size(); i++)
 		{
-			if (m_midi_devices.back().midi_in)
-				m_midi_devices.back().midi_in->closePort();
-			DELETE_AND_NULL(m_midi_devices.back().midi_in);
-			m_midi_devices.pop_back();
+			if (m_midi_devices[i]->midi_in)
+				m_midi_devices[i]->midi_in->closePort();
+			DELETE_AND_NULL(m_midi_devices[i]->midi_in);
 		}
-
 	}
 	catch (RtError &e)
 	{
@@ -137,11 +140,7 @@ GOrgueMidi::~GOrgueMidi()
 
 void GOrgueMidi::Open()
 {
-
-	std::map<wxString, int>::iterator it2;
-
-	for (it2 = m_midi_device_map.begin(); it2 != m_midi_device_map.end(); it2++)
-		m_global_config->Read(wxT("Devices/MIDI/") + it2->first, -1);
+	UpdateDevices();
 
 	for (unsigned i = 0; i < NB_MIDI_EVENTS; i++)
 		m_midi_events[i] = m_global_config->Read
@@ -149,23 +148,20 @@ void GOrgueMidi::Open()
 			,g_available_midi_events[i].default_mask
 			);
 
-	for (it2 = m_midi_device_map.begin(); it2 != m_midi_device_map.end(); it2++)
+	for (unsigned i = 0; i < m_midi_devices.size(); i++)
 	{
-
-		MIDI_DEVICE& this_dev = m_midi_devices[it2->second];
+		MIDI_DEVICE& this_dev = *m_midi_devices[i];
 		memset(this_dev.bank_msb, 0, sizeof(this_dev.bank_msb));
 		memset(this_dev.bank_lsb, 0, sizeof(this_dev.bank_lsb));
-		int i = m_global_config->Read(wxT("Devices/MIDI/") + it2->first, 0L);
-		if (i >= 0)
+		int channel_shift = m_global_config->Read(wxT("Devices/MIDI/") + this_dev.name, 0L);
+		if (channel_shift >= 0)
 		{
-			this_dev.id = i;
-			if (!this_dev.active)
-			{
-				assert(this_dev.midi_in);
-				this_dev.midi_in->setCallback(&MIDICallback, &this_dev);
-				this_dev.midi_in->openPort(it2->second);
-				this_dev.active = true;
-			}
+			assert(this_dev.midi_in);
+			this_dev.channel_shift = channel_shift;
+			this_dev.midi_in->closePort();
+			this_dev.midi_in->setCallback(&MIDICallback, &this_dev);
+			this_dev.midi_in->openPort(this_dev.rtmidi_port_no);
+			this_dev.active = true;
 		}
 		else if (this_dev.active)
 		{
@@ -192,7 +188,7 @@ void GOrgueMidi::SetOrganFile(GrandOrgueFile* organfile)
 bool GOrgueMidi::HasActiveDevice()
 {
 	for (unsigned i = 0; i < m_midi_devices.size(); i++)
-		if (m_midi_devices[i].active)
+		if (m_midi_devices[i]->active)
 			return true;
 
 	return false;
@@ -208,31 +204,31 @@ void GOrgueMidi::SetTranspose(int transpose)
 	m_transpose = transpose;
 }
 
-void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, int which)
+void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device)
 {
 	wxCriticalSectionLocker locker(m_lock);
 	GOrgueMidiEvent e;
 	e.FromMidi(msg);
 	if (e.GetMidiType() == MIDI_NONE)
 		return;
-	e.SetDevice(m_midi_devices[which].name);
+	e.SetDevice(device->name);
 
 	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_BANK_SELECT_MSB)
 	{
-		m_midi_devices[which].bank_msb[e.GetChannel() - 1] = e.GetValue();
+		device->bank_msb[e.GetChannel() - 1] = e.GetValue();
 		return;
 	}
 	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_BANK_SELECT_LSB)
 	{
-		m_midi_devices[which].bank_lsb[e.GetChannel() - 1] = e.GetValue();
+		device->bank_lsb[e.GetChannel() - 1] = e.GetValue();
 		return;
 	}
 	if (e.GetMidiType() == MIDI_PGM_CHANGE)
-		e.SetKey(((e.GetKey() - 1) | (m_midi_devices[which].bank_lsb[e.GetChannel() - 1] << 7) | (m_midi_devices[which].bank_msb[e.GetChannel() - 1] << 14)) + 1);
+		e.SetKey(((e.GetKey() - 1) | (device->bank_lsb[e.GetChannel() - 1] << 7) | (device->bank_msb[e.GetChannel() - 1] << 14)) + 1);
 
 	/* Compat stuff */
 	if (e.GetChannel() != -1)
-		e.SetChannel(((e.GetChannel() - 1 + m_midi_devices[which].id) & 0x0F) + 1);
+		e.SetChannel(((e.GetChannel() - 1 + device->channel_shift) & 0x0F) + 1);
 
 	int j;
 
@@ -249,7 +245,7 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, int which)
 		c ^= 0x10; // c = 0x90 , MIDI code note ON
 		msg[2] = 0; // set velocity to zero
 	}
-	msg[0] = c | ((msg[0] + m_midi_devices[which].id) & 0x0F); // msg[0] = MIDI code + channel from device + channel offset
+	msg[0] = c | ((msg[0] + device->channel_shift) & 0x0F); // msg[0] = MIDI code + channel from device + channel offset
 
 	j = msg[0] << 8; // j = channel in higher byte
 	if (msg.size() > 1) // if midi meesage has data
@@ -323,6 +319,6 @@ void GOrgueMidi::MIDICallback (double timeStamp, std::vector<unsigned char>* msg
 	if (!m_dev->active)
 		return;
 	wxMutexGuiEnter();
-	m_dev->midi->ProcessMessage(*msg, m_dev->no);
+	m_dev->midi->ProcessMessage(*msg, m_dev);
 	wxMutexGuiLeave();
 }
