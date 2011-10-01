@@ -28,7 +28,8 @@ GOGUIControl::GOGUIControl(GOGUIPanel* panel,void* control) :
 	m_panel(panel),
 	m_group(wxT("---")),
 	m_control(control),
-	m_BoundingRect(0, 0, 0, 0)
+	m_BoundingRect(0, 0, 0, 0),
+	m_DrawPending(false)
 {
 	m_metrics = panel->GetDisplayMetrics();
 }
@@ -49,11 +50,16 @@ void GOGUIControl::Save(IniFileConfig& cfg, bool prefix)
 void GOGUIControl::ControlChanged(void* control)
 {
 	if (control == m_control)
-		m_panel->AddEvent(this);
+		if (!m_DrawPending)
+		{
+			m_DrawPending = true;
+			m_panel->AddEvent(this);
+		}
 }
 
 void GOGUIControl::Draw(wxDC* dc)
 {
+	m_DrawPending = false;
 }
 
 void GOGUIControl::HandleKey(int key)

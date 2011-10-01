@@ -169,5 +169,5 @@ void GOGUILabel::Draw(wxDC* dc)
 	dc->SetTextForeground(m_DispLabelColour);
 	dc->SetFont(font);
 	dc->DrawLabel(m_Name, m_BoundingRect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
-
+	GOGUIControl::Draw(dc);
 }

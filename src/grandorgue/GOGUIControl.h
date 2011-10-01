@@ -36,6 +36,7 @@ protected:
 	GOGUIDisplayMetrics* m_metrics;
 	void* m_control;
 	wxRect m_BoundingRect;
+	bool m_DrawPending;
 
 public:
 	GOGUIControl(GOGUIPanel* panel, void* control);

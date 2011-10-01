@@ -263,6 +263,7 @@ void GOGUIManual::Draw(wxDC* dc)
 
 	for (unsigned j = 0; j < m_manual->GetNumberOfAccessibleKeys(); j++)
 		DrawKey(dc, j);
+	GOGUIControl::Draw(dc);
 }
 
 void GOGUIManual::HandleMousePress(int x, int y, bool right)
