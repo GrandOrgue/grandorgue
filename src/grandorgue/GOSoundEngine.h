@@ -108,7 +108,7 @@ private:
 	std::vector<GOSamplerEntry>   m_Tremulants;
 
 	/* Per sampler decode buffers */
-	double                        m_FinalBuffer[GO_SOUND_BUFFER_SIZE];
+	float                         m_FinalBuffer[GO_SOUND_BUFFER_SIZE];
 	float                         m_VolumeBuffer[GO_SOUND_BUFFER_SIZE];
 
 	/* samplerGroupID:

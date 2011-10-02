@@ -55,12 +55,12 @@ void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group)
 
 }
 
-double GOrgueWindchest::GetVolume()
+float GOrgueWindchest::GetVolume()
 {
-	double d = 1.0;
+	float f = 1.0f;
 	for (unsigned i = 0; i < m_enclosure.size(); i++)
-		d  *= m_organfile->GetEnclosure(m_enclosure[i])->GetAttenuation();
-	return d;
+		f *= m_organfile->GetEnclosure(m_enclosure[i])->GetAttenuation();
+	return f;
 }
 
 unsigned GOrgueWindchest::GetTremulantCount()

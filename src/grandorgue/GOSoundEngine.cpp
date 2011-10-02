@@ -636,7 +636,7 @@ int GOSoundEngine::GetSamples
 		memset(output_buffer, 0, (n_frames * sizeof(float)));
 
 	/* initialise the output buffer */
-	std::fill(m_FinalBuffer, m_FinalBuffer + GO_SOUND_BUFFER_SIZE, 0);
+	std::fill(m_FinalBuffer, m_FinalBuffer + GO_SOUND_BUFFER_SIZE, 0.0f);
 
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 	{
@@ -694,7 +694,7 @@ int GOSoundEngine::GetSamples
 
 		if (!m_DetachedRelease[j].done)
 		{
-			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
+			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0.0f);
 			ProcessAudioSamplers(m_DetachedRelease[j], n_frames, this_buff);
 		}
 
@@ -708,7 +708,8 @@ int GOSoundEngine::GetSamples
 	m_CurrentTime += 1;
 
 	/* Clamp the output */
-	double clamp_min = -1.0, clamp_max = 1.0;
+	static const float CLAMP_MIN = -1.0f;
+	static const float CLAMP_MAX = 1.0f;
 	if (meter_info)
 	{
 		unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
@@ -716,22 +717,26 @@ int GOSoundEngine::GetSamples
 			meter_info->current_polyphony = used_samplers;
 		for (unsigned int k = 0; k < n_frames * 2; k += 2)
 		{
-			double d = std::min(std::max(m_FinalBuffer[k + 0], clamp_min), clamp_max);
-			output_buffer[k + 0]  = (float)d;
-			meter_info->meter_left = (meter_info->meter_left > output_buffer[k + 0]) ? meter_info->meter_left : output_buffer[k + 0];
-			d = std::min(std::max(m_FinalBuffer[k + 1], clamp_min), clamp_max);
-			output_buffer[k + 1]  = (float)d;
-			meter_info->meter_right = (meter_info->meter_right > output_buffer[k + 1]) ? meter_info->meter_right : output_buffer[k + 1];
+			float f = std::min(std::max(m_FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
+			output_buffer[k + 0] = f;
+			meter_info->meter_left  = (meter_info->meter_left > f)
+			                        ? meter_info->meter_left
+			                        : f;
+			f = std::min(std::max(m_FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
+			output_buffer[k + 1] = f;
+			meter_info->meter_right = (meter_info->meter_right > f)
+			                        ? meter_info->meter_right
+			                        : f;
 		}
 	}
 	else
 	{
 		for (unsigned int k = 0; k < n_frames * 2; k += 2)
 		{
-			double d = std::min(std::max(m_FinalBuffer[k + 0], clamp_min), clamp_max);
-			output_buffer[k + 0]  = (float)d;
-			d = std::min(std::max(m_FinalBuffer[k + 1], clamp_min), clamp_max);
-			output_buffer[k + 1]  = (float)d;
+			float f = std::min(std::max(m_FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
+			output_buffer[k + 0] = f;
+			f = std::min(std::max(m_FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
+			output_buffer[k + 1] = f;
 		}
 	}
 
@@ -775,9 +780,9 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 		return;
 
 	const GOSoundProvider* this_pipe = handle->pipe;
-	double vol = (handle->sampler_group_id < 0)
-	           ? 1.0
-	           : m_Windchests[handle->sampler_group_id - 1].windchest->GetVolume();
+	float vol = (handle->sampler_group_id < 0)
+	          ? 1.0f
+	          : m_Windchests[handle->sampler_group_id - 1].windchest->GetVolume();
 
 	// FIXME: this is wrong... the intention is to not create a release for a
 	// sample being played back with zero amplitude but this is a comparison
