@@ -181,19 +181,7 @@ void GOSoundProviderWave::LoadFromFile
 		/* Amplitude is the combination of global amplitude volume and the stop
 		 * volume. 10000 would correspond to sample playback at normal volume.
 		 */
-		int amp = fixed_amplitude;
-		m_ScaleShift = 7;
-		while (amp > 10000)
-		{
-			m_ScaleShift--;
-			amp >>= 1;
-		}
-
-		/* During normal playback, this value will be multipled with each
-		 * sample (in the form of the "fade" parameter) fademax is also set
-		 * to this value to specify a maximum multiplier that can be applied
-		 * to keep the sample within the required headroom. */
-		m_ScaleAmp = (amp << 15) / -10000;
+		m_Gain = fixed_amplitude / 10000.0f;
 
 		if (m_Channels == 1)
 		{

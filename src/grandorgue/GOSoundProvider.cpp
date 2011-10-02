@@ -32,8 +32,7 @@ GOSoundProvider::GOSoundProvider()
 	memset(&m_Loop, 0, sizeof(m_Loop));
 	memset(&m_Release, 0, sizeof(m_Release));
 	m_Channels = 0;
-	m_ScaleAmp = 0;
-	m_ScaleShift = 0;
+	m_Gain = 0.0f;
 	m_SampleRate = 0;
 }
 
@@ -95,12 +94,8 @@ bool GOSoundProvider::LoadCacheAudioSection
 bool GOSoundProvider::LoadCache(wxInputStream* cache)
 {
 
-	cache->Read(&m_ScaleAmp, sizeof(m_ScaleAmp));
-	if (cache->LastRead() != sizeof(m_ScaleAmp))
-		return false;
-
-	cache->Read(&m_ScaleShift, sizeof(m_ScaleShift));
-	if (cache->LastRead() != sizeof(m_ScaleShift))
+	cache->Read(&m_Gain, sizeof(m_Gain));
+	if (cache->LastRead() != sizeof(m_Gain))
 		return false;
 
 	if (!LoadCacheAudioSection(cache, &m_Attack, false))
@@ -149,12 +144,8 @@ bool GOSoundProvider::SaveCacheAudioSection
 bool GOSoundProvider::SaveCache(wxOutputStream* cache)
 {
 
-	cache->Write(&m_ScaleAmp, sizeof(m_ScaleAmp));
-	if (cache->LastWrite() != sizeof(m_ScaleAmp))
-		return false;
-
-	cache->Write(&m_ScaleShift, sizeof(m_ScaleShift));
-	if (cache->LastWrite() != sizeof(m_ScaleShift))
+	cache->Write(&m_Gain, sizeof(m_Gain));
+	if (cache->LastWrite() != sizeof(m_Gain))
 		return false;
 
 	if (!SaveCacheAudioSection(cache, &m_Attack, false))

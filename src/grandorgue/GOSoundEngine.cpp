@@ -546,11 +546,11 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				 *   (2 * 32768) / 127
 				 * = 516 samples = 12ms
 				 */
-				sampler->fadeout = (-sampler->pipe->GetScaleAmplitude() - 128) >> 8; /* recall that ra_amp is negative
+				sampler->fadeout = (int)(sampler->pipe->GetGain() * 128.0f - 0.5f); /* recall that ra_amp is negative
 												      * so this will actually be a
 												      * positive number */
-				if (!sampler->fadeout) /* ensure that the sample will fade out */
-					sampler->fadeout++;
+				if (sampler->fadeout <= 0) /* ensure that the sample will fade out */
+					sampler->fadeout = 1;
 
 				sampler->stop = false;
 			}
@@ -775,7 +775,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 		//		if (g_sound->HasRandomPipeSpeech() && !g_sound->windchests[m_WindchestGroup])
 		//			sampler->position = rand() & 0x78;
 		//	}
-		sampler->fade = sampler->fademax = pipe->GetScaleAmplitude();
+		sampler->fade = sampler->fademax = pipe->GetGain() * -32768.0f;
 		sampler->time = m_CurrentTime;
 		StartSampler(sampler, sampler_group_id);
 	}
@@ -807,7 +807,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->position     = 0;
 			new_sampler->increment    = new_sampler->pipe_section->sample_rate / (float) m_SampleRate;
 			new_sampler->time         = m_CurrentTime + 1;
-			new_sampler->fademax      = this_pipe->GetScaleAmplitude();
+			new_sampler->fademax      = this_pipe->GetGain() * -32768.0f;
 
 			const bool not_a_tremulant = (handle->sampler_group_id >= 0);
 			if (not_a_tremulant)
@@ -816,7 +816,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				{
 					int time = ((m_CurrentTime - handle->time) * (10 * BLOCKS_PER_FRAME)) / 441;
 					if (time < 256)
-						new_sampler->fademax = (this_pipe->GetScaleAmplitude() * (16384 + (time * 64))) >> 15;
+						new_sampler->fademax = (int)(-16384.0f + this_pipe->GetGain() * -64.0f * time);
 					if (time < 1024)
 						new_sampler->fadeout = 1; /* nominal = 1.5 seconds */
 				}
@@ -839,8 +839,8 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			 * = 12ms
 			 */
 			new_sampler->fadein = (new_sampler->fademax + 128) >> 8;
-			if (new_sampler->fadein == 0)
-				new_sampler->fadein--;
+			if (new_sampler->fadein >= 0)
+				new_sampler->fadein = -1;
 
 			/* This determines the period of time the release is allowed to
 			 * fade in for in samples. 512 equates to roughly 12ms.

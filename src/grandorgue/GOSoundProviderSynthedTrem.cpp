@@ -144,14 +144,7 @@ void GOSoundProviderSynthedTrem::Create
 		,releaseSamplesInMem * sizeof(wxInt16) * m_Channels - m_Release.size
 		);
 
-	int amp = 10000;
-	m_ScaleShift = 7;
-	while (amp > 10000)
-	{
-		m_ScaleShift--;
-		amp >>= 1;
-	}
-	m_ScaleAmp = (amp << 15) / -10000;
+	m_Gain = 1.0f;
 
 	ComputeReleaseAlignmentInfo();
 

@@ -35,8 +35,7 @@ private:
 	static bool LoadCacheAudioSection(wxInputStream* cache, AUDIO_SECTION* section, bool load_align_tracker);
 
 protected:
-	int            m_ScaleAmp;
-	int            m_ScaleShift;
+	float          m_Gain;
 	unsigned int   m_Channels;
 	unsigned int   m_SampleRate;
 	AUDIO_SECTION  m_Attack;
@@ -57,8 +56,7 @@ public:
 	const AUDIO_SECTION* GetLoop() const;
 	const AUDIO_SECTION* GetRelease() const;
 	const AUDIO_SECTION* GetAttack() const;
-	int GetScaleAmplitude() const;
-	int GetScaleShift() const;
+	float GetGain() const;
 	int IsOneshot() const;
 
 };
@@ -82,16 +80,9 @@ const AUDIO_SECTION* GOSoundProvider::GetAttack() const
 }
 
 inline
-int GOSoundProvider::GetScaleAmplitude() const
+float GOSoundProvider::GetGain() const
 {
-	return m_ScaleAmp;
+	return m_Gain;
 }
-
-inline
-int GOSoundProvider::GetScaleShift() const
-{
-	return m_ScaleShift;
-}
-
 
 #endif /* GOSOUNDPROVIDER_H_ */
