@@ -95,26 +95,33 @@ GOrgueMidi::GOrgueMidi() :
 
 void GOrgueMidi::UpdateDevices()
 {
-	RtMidiIn midi_dev;
-	for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
+	try
 	{
-		wxString name = wxString::FromAscii(midi_dev.getPortName(i).c_str());
-		if (!m_midi_device_map.count(name))
+		RtMidiIn midi_dev;
+		for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
 		{
-			MIDI_DEVICE *t = new MIDI_DEVICE;
-			t->midi_in = new RtMidiIn();
-			t->channel_shift = 0;
-			t->midi = this;
-			t->rtmidi_port_no = i;
-			t->active = false;
-			t->name = name;
-			m_midi_devices.push_back(t);
+			wxString name = wxString::FromAscii(midi_dev.getPortName(i).c_str());
+			if (!m_midi_device_map.count(name))
+			{
+				MIDI_DEVICE *t = new MIDI_DEVICE;
+				t->midi_in = new RtMidiIn();
+				t->channel_shift = 0;
+				t->midi = this;
+				t->rtmidi_port_no = i;
+				t->active = false;
+				t->name = name;
+				m_midi_devices.push_back(t);
 			
-			name.Replace(wxT("\\"), wxT("|"));
-			m_midi_device_map[name] = m_midi_devices.size() - 1;
+				name.Replace(wxT("\\"), wxT("|"));
+				m_midi_device_map[name] = m_midi_devices.size() - 1;
+			}
+			else
+				m_midi_devices[m_midi_device_map[name]]->rtmidi_port_no = i;
 		}
-		else
-			m_midi_devices[m_midi_device_map[name]]->rtmidi_port_no = i;
+	}
+	catch (RtError &e)
+	{
+		e.printMessage();
 	}
 }
 
