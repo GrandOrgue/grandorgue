@@ -145,6 +145,10 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 
 typedef wxInt16 steroSample[0][2];
 
+/* The block decode functions should provide whatever the normal resolution of
+ * the audio is. The fade engine should ensure that this data is always brought
+ * into the correct range. */
+
 static
 inline
 void stereoUncompressed
@@ -175,7 +179,7 @@ void stereoUncompressed
 
 	output -= BLOCKS_PER_FRAME * 2;
 	for (unsigned int i = 0; i < BLOCKS_PER_FRAME * 2; i++)
-		output[i] *= (1.0f / 1073741824.0f);
+		output[i] *= (1.0f / 1073741824.0f); /* output *= 2 ^ (-23 - 7) */
 
 }
 
@@ -330,18 +334,23 @@ void GetNextFrame
 
 	switch (sampler->pipe_section->type)
 	{
-		case AC_COMPRESSED_STEREO:
+		case AC_COMPRESSED_STEREO_16:
+		case AC_COMPRESSED_STEREO_24:
 			stereoCompressed(sampler, buffer);
 			break;
-		case AC_UNCOMPRESSED_STEREO:
+		case AC_UNCOMPRESSED_STEREO_16:
+		case AC_UNCOMPRESSED_STEREO_24:
 			stereoUncompressed(sampler, buffer);
 			break;
-		case AC_COMPRESSED_MONO:
+		case AC_COMPRESSED_MONO_16:
+		case AC_COMPRESSED_MONO_24:
 			monoCompressed(sampler, buffer);
 			break;
-		default:
-			assert(sampler->pipe_section->type == AC_UNCOMPRESSED_MONO);
+		case AC_UNCOMPRESSED_MONO_16:
+		case AC_UNCOMPRESSED_MONO_24:
 			monoUncompressed(sampler, buffer);
+		default:
+			assert(0 && "broken sampler type");
 	}
 
 }

@@ -185,15 +185,15 @@ void GOSoundProviderWave::LoadFromFile
 
 		if (m_Channels == 1)
 		{
-			m_Attack.type = AC_UNCOMPRESSED_MONO;
-			m_Loop.type = AC_UNCOMPRESSED_MONO;
-			m_Release.type = AC_UNCOMPRESSED_MONO;
+			m_Attack.type = AC_UNCOMPRESSED_MONO_16;
+			m_Loop.type = AC_UNCOMPRESSED_MONO_16;
+			m_Release.type = AC_UNCOMPRESSED_MONO_16;
 		}
 		else
 		{
-			m_Attack.type = AC_UNCOMPRESSED_STEREO;
-			m_Loop.type = AC_UNCOMPRESSED_STEREO;
-			m_Release.type = AC_UNCOMPRESSED_STEREO;
+			m_Attack.type = AC_UNCOMPRESSED_STEREO_16;
+			m_Loop.type = AC_UNCOMPRESSED_STEREO_16;
+			m_Release.type = AC_UNCOMPRESSED_STEREO_16;
 		}
 
 		m_Attack.stage = GSS_ATTACK;
