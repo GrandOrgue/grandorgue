@@ -57,7 +57,7 @@ private:
 		GO_SAMPLER       *sampler;
 		GO_SAMPLER       *new_sampler;
 		float             buff[GO_SOUND_BUFFER_SIZE];
-		sound_buffer      temp;
+		float             temp[GO_SOUND_BUFFER_SIZE];
 		/* access lock for sampler data */
 		wxCriticalSection lock;
 		/* access lock for data buffer */
@@ -119,7 +119,7 @@ private:
 	*/
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id);
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
-	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, int* decoded_sampler_audio_frame);
+	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, float* decoded_sampler_audio_frame);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, float* output_buffer);
 	void ResetDoneFlags();
 

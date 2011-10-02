@@ -149,7 +149,7 @@ static
 inline
 void stereoUncompressed
 	(GO_SAMPLER* sampler
-	,int* output
+	,float* output
 	)
 {
 
@@ -157,7 +157,7 @@ void stereoUncompressed
 	steroSample& input = (steroSample&)*(wxInt16*)(sampler->pipe_section->data);
 
 	// copy the sample buffer
-	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; sampler->position += sampler->increment, output+=2, i++)
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; sampler->position += sampler->increment, output += 2, i++)
 	{
 		unsigned pos = (unsigned)sampler->position;
 		float fract = sampler->position - pos;
@@ -172,13 +172,18 @@ void stereoUncompressed
 		sampler->history[i - 1][0] = input[pos][0];
 		sampler->history[i - 1][1] = input[pos][1];
 	}
+
+	output -= BLOCKS_PER_FRAME * 2;
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME * 2; i++)
+		output[i] *= (1.0f / 1073741824.0f);
+
 }
 
 static
 inline
 void monoUncompressed
 	(GO_SAMPLER* sampler
-	,int* output
+	,float* output
 	)
 {
 
@@ -196,13 +201,18 @@ void monoUncompressed
 	unsigned pos = (unsigned)sampler->position;
 	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
 		sampler->history[i - 1][0] = input[pos];
+
+	output -= BLOCKS_PER_FRAME * 2;
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME * 2; i++)
+		output[i] *= (1.0f / 1073741824.0f);
+
 }
 
 static
 inline
 void monoCompressed
 	(GO_SAMPLER* sampler
-	,int* output
+	,float* output
 	)
 {
 
@@ -259,7 +269,7 @@ static
 inline
 void stereoCompressed
 	(GO_SAMPLER* sampler
-	,int* output
+	,float* output
 	)
 {
 
@@ -314,7 +324,7 @@ static
 inline
 void GetNextFrame
 	(GO_SAMPLER* sampler
-	,int* buffer
+	,float* buffer
 	)
 {
 
@@ -341,7 +351,7 @@ inline
 void ApplySamplerFade
 	(GO_SAMPLER* sampler
 	,unsigned int n_blocks
-	,int* decoded_sampler_audio_frame
+	,float* decoded_sampler_audio_frame
 	)
 {
 
@@ -411,7 +421,7 @@ inline
 void GOSoundEngine::ReadSamplerFrames
 	(GO_SAMPLER* sampler
 	,unsigned int n_blocks
-	,int* decoded_sampler_audio_frame
+	,float* decoded_sampler_audio_frame
 	)
 {
 
@@ -423,7 +433,7 @@ void GOSoundEngine::ReadSamplerFrames
 			std::fill
 				(decoded_sampler_audio_frame
 				,decoded_sampler_audio_frame + (BLOCKS_PER_FRAME * 2)
-				,0
+				,0.0f
 				);
 			continue;
 		}
@@ -549,15 +559,14 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			 * right by the necessary amount to bring the sample gain back
 			 * to unity (this value is computed in GOrguePipe.cpp)
 			 */
-			int shift = sampler->shift;
 			float* write_iterator = output_buffer;
-			int* decode_pos = state.temp;
+			float* decode_pos = state.temp;
 			for(unsigned int i = 0; i < n_frames / 2; i++, write_iterator += 4, decode_pos += 4)
 			{
-				write_iterator[0] += (decode_pos[0] >> shift) * (1.0f / 8388608.0f);
-				write_iterator[1] += (decode_pos[1] >> shift) * (1.0f / 8388608.0f);
-				write_iterator[2] += (decode_pos[2] >> shift) * (1.0f / 8388608.0f);
-				write_iterator[3] += (decode_pos[3] >> shift) * (1.0f / 8388608.0f);
+				write_iterator[0] += decode_pos[0];
+				write_iterator[1] += decode_pos[1];
+				write_iterator[2] += decode_pos[2];
+				write_iterator[3] += decode_pos[3];
 			}
 
 		}
@@ -767,7 +776,6 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 		//			sampler->position = rand() & 0x78;
 		//	}
 		sampler->fade = sampler->fademax = pipe->GetScaleAmplitude();
-		sampler->shift = pipe->GetScaleShift();
 		sampler->time = m_CurrentTime;
 		StartSampler(sampler, sampler_group_id);
 	}
@@ -798,7 +806,6 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->pipe_section = release_section;
 			new_sampler->position     = 0;
 			new_sampler->increment    = new_sampler->pipe_section->sample_rate / (float) m_SampleRate;
-			new_sampler->shift        = this_pipe->GetScaleShift();
 			new_sampler->time         = m_CurrentTime + 1;
 			new_sampler->fademax      = this_pipe->GetScaleAmplitude();
 
