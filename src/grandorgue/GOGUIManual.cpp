@@ -170,25 +170,30 @@ void GOGUIManual::DrawKey(wxDC* dc, unsigned key_nb)
 	dc->SetPen(*pen);
 	wxRegion exclude;
 
-	if ((k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) > 0 && m_manual->IsKeyDown(k - 1)) {
-		k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		exclude.Union(GetKeyRegion(k - 1));
-		k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-	}
-	if ((z & 2) && (k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) > 1 && m_manual->IsKeyDown(k - 2)) {
-		k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		exclude.Union(GetKeyRegion(k - 2));
-		k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-	}
-	if ((k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) < m_manual->GetNumberOfAccessibleKeys() - 1 && m_manual->IsKeyDown(k + 1)) {
-		k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		exclude.Union(GetKeyRegion(k + 1));
-		k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-	}
-	if ((z & 1) && (k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) < m_manual->GetNumberOfAccessibleKeys() - 2 && m_manual->IsKeyDown(k + 2)) {
-		k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		exclude.Union(GetKeyRegion(k + 2));
-		k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+	if (!m_manual->IsKeyDown(k))
+	{
+
+		if ((k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) > 0 && m_manual->IsKeyDown(k - 1)) {
+			k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+			exclude.Union(GetKeyRegion(k - 1));
+			k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+		}
+		if ((z & 2) && (k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) > 1 && m_manual->IsKeyDown(k - 2)) {
+			k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+			exclude.Union(GetKeyRegion(k - 2));
+			k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+		}
+		if ((k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) < m_manual->GetNumberOfAccessibleKeys() - 1 && m_manual->IsKeyDown(k + 1)) {
+			k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+			exclude.Union(GetKeyRegion(k + 1));
+			k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+		}
+		if ((z & 1) && (k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) < m_manual->GetNumberOfAccessibleKeys() - 2 && m_manual->IsKeyDown(k + 2)) {
+			k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+			exclude.Union(GetKeyRegion(k + 2));
+			k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+		}
+
 	}
 
 	wxRegion reg = GetKeyRegion(key_nb);
