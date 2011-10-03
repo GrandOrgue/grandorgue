@@ -53,14 +53,10 @@ class GOSoundProvider;
 
 typedef enum
 {
-	AC_COMPRESSED_MONO_16 = 0,
-	AC_UNCOMPRESSED_MONO_16,
-	AC_COMPRESSED_STEREO_16,
-	AC_UNCOMPRESSED_STEREO_16,
-	AC_COMPRESSED_MONO_24,
-	AC_UNCOMPRESSED_MONO_24,
-	AC_COMPRESSED_STEREO_24,
-	AC_UNCOMPRESSED_STEREO_24,
+	AC_COMPRESSED_MONO = 0,
+	AC_UNCOMPRESSED_MONO,
+	AC_COMPRESSED_STEREO,
+	AC_UNCOMPRESSED_STEREO,
 } AUDIO_SECTION_TYPE;
 
 typedef enum {
@@ -96,6 +92,9 @@ typedef struct AUDIO_SECTION_T
 	/* If this is a release section, it may contain an alignment table */
 	GOrgueReleaseAlignTable   *release_aligner;
 
+	/* Number of significant bits in the decoded sample data */
+	unsigned                   sample_bits;
+
 } AUDIO_SECTION;
 
 typedef struct GO_SAMPLER_T
@@ -122,11 +121,11 @@ typedef struct GO_SAMPLER_T
 	 * therefore:
 	 * { fadeout } = ( 2 * { fademax } ) / ( { samplerate } * { time to fadeout } )
 	 */
-	int                        fade;
-	int                        fadein;
-	int                        fadeout;
+	float                      gain;
+	float                      gain_attack;
+	float                      gain_decay;
+	float                      gain_target;
 	unsigned                   faderemain;
-	int                        fademax;
 	unsigned                   time;
 	/* current index of the current block into this sample */
 	float                      position;

@@ -45,17 +45,20 @@ void GOSoundProviderSynthedTrem::Create
 	m_Channels = 1;
 	if (m_Channels == 1)
 	{
-		m_Attack.type = AC_UNCOMPRESSED_MONO_16;
-		m_Loop.type = AC_UNCOMPRESSED_MONO_16;
-		m_Release.type = AC_UNCOMPRESSED_MONO_16;
+		m_Attack.type = AC_UNCOMPRESSED_MONO;
+		m_Loop.type = AC_UNCOMPRESSED_MONO;
+		m_Release.type = AC_UNCOMPRESSED_MONO;
 	}
 	else
 	{
-		m_Attack.type = AC_UNCOMPRESSED_STEREO_16;
-		m_Loop.type = AC_UNCOMPRESSED_STEREO_16;
-		m_Release.type = AC_UNCOMPRESSED_STEREO_16;
+		m_Attack.type = AC_UNCOMPRESSED_STEREO;
+		m_Loop.type = AC_UNCOMPRESSED_STEREO;
+		m_Release.type = AC_UNCOMPRESSED_STEREO;
 	}
 
+	m_Attack.sample_bits = 16;
+	m_Loop.sample_bits = 16;
+	m_Release.sample_bits = 16;
 	m_Attack.stage = GSS_ATTACK;
 	m_Loop.stage = GSS_LOOP;
 	m_Release.stage = GSS_RELEASE;

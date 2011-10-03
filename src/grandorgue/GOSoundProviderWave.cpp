@@ -181,24 +181,16 @@ void GOSoundProviderWave::LoadFromFile
 		/* Amplitude is the combination of global amplitude volume and the stop
 		 * volume. 10000 would correspond to sample playback at normal volume.
 		 */
-		m_Gain = fixed_amplitude / 10000.0f;
-
-		if (m_Channels == 1)
-		{
-			m_Attack.type = AC_UNCOMPRESSED_MONO_16;
-			m_Loop.type = AC_UNCOMPRESSED_MONO_16;
-			m_Release.type = AC_UNCOMPRESSED_MONO_16;
-		}
-		else
-		{
-			m_Attack.type = AC_UNCOMPRESSED_STEREO_16;
-			m_Loop.type = AC_UNCOMPRESSED_STEREO_16;
-			m_Release.type = AC_UNCOMPRESSED_STEREO_16;
-		}
-
-		m_Attack.stage = GSS_ATTACK;
-		m_Loop.stage = GSS_LOOP;
-		m_Release.stage = GSS_RELEASE;
+		m_Gain                = fixed_amplitude / 10000.0f;
+		m_Attack.sample_bits  = 16;
+		m_Attack.stage        = GSS_ATTACK;
+		m_Attack.type         = (m_Channels == 1) ? AC_UNCOMPRESSED_MONO : AC_UNCOMPRESSED_STEREO;
+		m_Loop.sample_bits    = 16;
+		m_Loop.stage          = GSS_LOOP;
+		m_Loop.type           = (m_Channels == 1) ? AC_UNCOMPRESSED_MONO : AC_UNCOMPRESSED_STEREO;
+		m_Release.sample_bits = 16;
+		m_Release.stage       = GSS_RELEASE;
+		m_Release.type        = (m_Channels == 1) ? AC_UNCOMPRESSED_MONO : AC_UNCOMPRESSED_STEREO;
 
 		if (wave.HasReleaseMarker())
 			ComputeReleaseAlignmentInfo();
