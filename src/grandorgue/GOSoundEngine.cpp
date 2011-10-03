@@ -28,6 +28,18 @@
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 
+#define ADDITIONAL_FADE_HEADROOM (1)
+
+/* This parameter determines the cross fade length. The length in samples
+ * will be:
+ *                    2 ^ (CROSSFADE_LEN_BITS + 1)
+ * Reasonable durations
+ *   8   - 512 samples    (approx 12ms @ 44.1kHz)
+ *   9   - 1024 samples   (approx 23ms @ 44.1kHz)
+ *   10  - 2048 samples   (approx 46ms @ 44.1kHz)
+ */
+#define CROSSFADE_LEN_BITS (8)
+
 GOSoundEngine::GOSoundEngine() :
 	m_PolyphonyLimiting(true),
 	m_ScaledReleases(true),
@@ -145,11 +157,15 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 
 typedef wxInt16 steroSample[0][2];
 
+/* The block decode functions should provide whatever the normal resolution of
+ * the audio is. The fade engine should ensure that this data is always brought
+ * into the correct range. */
+
 static
 inline
 void stereoUncompressed
 	(GO_SAMPLER* sampler
-	,int* output
+	,float* output
 	)
 {
 
@@ -157,7 +173,7 @@ void stereoUncompressed
 	steroSample& input = (steroSample&)*(wxInt16*)(sampler->pipe_section->data);
 
 	// copy the sample buffer
-	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; sampler->position += sampler->increment, output+=2, i++)
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; sampler->position += sampler->increment, output += 2, i++)
 	{
 		unsigned pos = (unsigned)sampler->position;
 		float fract = sampler->position - pos;
@@ -172,13 +188,14 @@ void stereoUncompressed
 		sampler->history[i - 1][0] = input[pos][0];
 		sampler->history[i - 1][1] = input[pos][1];
 	}
+
 }
 
 static
 inline
 void monoUncompressed
 	(GO_SAMPLER* sampler
-	,int* output
+	,float* output
 	)
 {
 
@@ -196,13 +213,14 @@ void monoUncompressed
 	unsigned pos = (unsigned)sampler->position;
 	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
 		sampler->history[i - 1][0] = input[pos];
+
 }
 
 static
 inline
 void monoCompressed
 	(GO_SAMPLER* sampler
-	,int* output
+	,float* output
 	)
 {
 
@@ -259,7 +277,7 @@ static
 inline
 void stereoCompressed
 	(GO_SAMPLER* sampler
-	,int* output
+	,float* output
 	)
 {
 
@@ -314,7 +332,7 @@ static
 inline
 void GetNextFrame
 	(GO_SAMPLER* sampler
-	,int* buffer
+	,float* buffer
 	)
 {
 
@@ -329,9 +347,10 @@ void GetNextFrame
 		case AC_COMPRESSED_MONO:
 			monoCompressed(sampler, buffer);
 			break;
-		default:
-			assert(sampler->pipe_section->type == AC_UNCOMPRESSED_MONO);
+		case AC_UNCOMPRESSED_MONO:
 			monoUncompressed(sampler, buffer);
+		default:
+			assert(0 && "broken sampler type");
 	}
 
 }
@@ -341,7 +360,7 @@ inline
 void ApplySamplerFade
 	(GO_SAMPLER* sampler
 	,unsigned int n_blocks
-	,int* decoded_sampler_audio_frame
+	,float* decoded_sampler_audio_frame
 	)
 {
 
@@ -349,8 +368,8 @@ void ApplySamplerFade
 	 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero.
 	 * Note: this for loop has been split by an if to aide the vectorizer.
 	 */
-	int fade_in_plus_out = sampler->fadein + sampler->fadeout;
-	int fade = sampler->fade;
+	float fade_in_plus_out = sampler->gain_attack + sampler->gain_decay;
+	float fade = sampler->gain;
 	if (fade_in_plus_out)
 	{
 
@@ -363,20 +382,20 @@ void ApplySamplerFade
 			decoded_sampler_audio_frame[3] *= fade;
 
 			fade += fade_in_plus_out;
-			if (fade > 0)
+			if (fade < 0.0f)
 			{
-				fade = 0;
-				sampler->fadeout = 0;
+				fade = 0.0f;
+				sampler->gain_decay = 0.0f;
 			}
-			else if (fade < sampler->fademax)
+			else if (fade > sampler->gain_target)
 			{
-				fade = sampler->fademax;
-				sampler->fadein = 0;
+				fade = sampler->gain_target;
+				sampler->gain_attack = 0.0f;
 			}
 
 		}
 
-		sampler->fade = fade;
+		sampler->gain = fade;
 
 	}
 	else
@@ -396,12 +415,12 @@ void ApplySamplerFade
 
 	if (sampler->pipe)
 	{
-		if (sampler->fadein < 0)
+		if (sampler->gain_attack > 0.0f)
 		{
 			if (sampler->faderemain >= n_blocks)
 				sampler->faderemain -= n_blocks;
 			else
-				sampler->fadein = 0;
+				sampler->gain_attack = 0.0f;
 		}
 	}
 
@@ -411,7 +430,7 @@ inline
 void GOSoundEngine::ReadSamplerFrames
 	(GO_SAMPLER* sampler
 	,unsigned int n_blocks
-	,int* decoded_sampler_audio_frame
+	,float* decoded_sampler_audio_frame
 	)
 {
 
@@ -423,14 +442,14 @@ void GOSoundEngine::ReadSamplerFrames
 			std::fill
 				(decoded_sampler_audio_frame
 				,decoded_sampler_audio_frame + (BLOCKS_PER_FRAME * 2)
-				,0
+				,0.0f
 				);
 			continue;
 		}
 
 		GetNextFrame(sampler, decoded_sampler_audio_frame);
 
-		if(sampler->pipe_section->stage == GSS_RELEASE)
+		if (sampler->pipe_section->stage == GSS_RELEASE)
 		{
 
 			/* If this is the end of the release, and there are no more
@@ -445,7 +464,7 @@ void GOSoundEngine::ReadSamplerFrames
 		else
 		{
 			unsigned currentBlockSize = sampler->pipe_section->sample_count;
-			if(sampler->position >= currentBlockSize)
+			if (sampler->position >= currentBlockSize)
 			{
 				sampler->pipe_section = sampler->pipe->GetLoop();
 				if (sampler->pipe_section->data == NULL)
@@ -469,7 +488,7 @@ void GOSoundEngine::ReadSamplerFrames
 
 }
 
-void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, int* output_buffer)
+void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, float* output_buffer)
 {
 	{
 		wxCriticalSectionLocker locker(state.lock);
@@ -500,8 +519,19 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 					(sampler->pipe_section->stage == GSS_RELEASE) &&
 					(m_CurrentTime - sampler->time > 172)
 				)
-				sampler->fadeout = 4;
+				sampler->gain_decay =
+						-scalbnf(sampler->gain_target
+						        ,-13 /* results in approx 0.37s maximum decay length */
+						        );
 
+			/* The decoded sampler frame will contain values containing
+			 * sampler->pipe_section->sample_bits worth of significant bits.
+			 * It is the responsibility of the fade engine to bring these bits
+			 * back into a sensible state. This is achieved during setup of the
+			 * fade parameters. The gain target should be:
+			 *
+			 *     playback gain * (2 ^ -sampler->pipe_section->sample_bits)
+			 */
 			ReadSamplerFrames
 				(sampler
 				,n_frames
@@ -523,25 +553,11 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 				 * in either the attack or loop section) and sets the fadeout property
 				 * which will decay this portion of the pipe. The sampler will
 				 * automatically be placed back in the pool when the fade restores to
-				 * zero.
-				 *
-				 * Fadeout is added to the fade value in the sampler every 2 samples, so
-				 * a pipe with an amplitude of 10000 (unadjusted playback level) will have
-				 * a fadeout value of
-				 *
-				 *   (32768 - 128) >> 8
-				 * = 127
-				 *
-				 * Which means that the sampler will fade out over a period of
-				 *   (2 * 32768) / 127
-				 * = 516 samples = 12ms
-				 */
-				sampler->fadeout = (-sampler->pipe->GetScaleAmplitude() - 128) >> 8; /* recall that ra_amp is negative
-												      * so this will actually be a
-												      * positive number */
-				if (!sampler->fadeout) /* ensure that the sample will fade out */
-					sampler->fadeout++;
-
+				 * zero. */
+				sampler->gain_decay =
+						-scalbnf(sampler->gain_target
+						        ,-CROSSFADE_LEN_BITS
+						        );
 				sampler->stop = false;
 			}
 
@@ -549,15 +565,14 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 			 * right by the necessary amount to bring the sample gain back
 			 * to unity (this value is computed in GOrguePipe.cpp)
 			 */
-			int shift = sampler->shift;
-			int* write_iterator = output_buffer;
-			int* decode_pos = state.temp;
+			float* write_iterator = output_buffer;
+			float* decode_pos = state.temp;
 			for(unsigned int i = 0; i < n_frames / 2; i++, write_iterator += 4, decode_pos += 4)
 			{
-				write_iterator[0] += decode_pos[0] >> shift;
-				write_iterator[1] += decode_pos[1] >> shift;
-				write_iterator[2] += decode_pos[2] >> shift;
-				write_iterator[3] += decode_pos[3] >> shift;
+				write_iterator[0] += decode_pos[0];
+				write_iterator[1] += decode_pos[1];
+				write_iterator[2] += decode_pos[2];
+				write_iterator[3] += decode_pos[3];
 			}
 
 		}
@@ -567,7 +582,7 @@ void GOSoundEngine::ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_
 		 * zero, the sample is no longer required and can be removed from the
 		 * linked list. If it was still supplying audio, we must update the
 		 * previous valid sampler. */
-		if (!sampler->pipe || (!sampler->fade && process_sampler))
+		if (!sampler->pipe || ((sampler->gain <= 0.0f) && process_sampler))
 		{
 			/* sampler needs to be removed from the list */
 			if (sampler == state.sampler)
@@ -597,14 +612,13 @@ void GOSoundEngine::Process(unsigned sampler_group_id, unsigned n_frames)
 
 	wxCriticalSectionLocker locker(state->mutex);
 
-	int* this_buff = state->buff;
-
 	if (state->done)
 		return;
 
-	std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
-
+	float* this_buff = state->buff;
+	std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0.0f);
 	ProcessAudioSamplers(*state, n_frames, this_buff);
+
 }
 
 void GOSoundEngine::ResetDoneFlags()
@@ -637,18 +651,16 @@ int GOSoundEngine::GetSamples
 		memset(output_buffer, 0, (n_frames * sizeof(float)));
 
 	/* initialise the output buffer */
-	std::fill(m_FinalBuffer, m_FinalBuffer + GO_SOUND_BUFFER_SIZE, 0);
+	std::fill(m_FinalBuffer, m_FinalBuffer + GO_SOUND_BUFFER_SIZE, 0.0f);
 
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 	{
 		if (m_Tremulants[j].sampler == NULL && m_Tremulants[j].new_sampler == NULL)
 			continue;
 
-		int* this_buff = m_Tremulants[j].buff;
-
-		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0x800000);
-
-		ProcessAudioSamplers (m_Tremulants[j], n_frames, this_buff);
+		float* this_buff = m_Tremulants[j].buff;
+		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 1.0f);
+		ProcessAudioSamplers(m_Tremulants[j], n_frames, this_buff);
 	}
 
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
@@ -657,43 +669,32 @@ int GOSoundEngine::GetSamples
 		if (m_Windchests[j].sampler == NULL && m_Windchests[j].new_sampler == NULL)
 			continue;
 
-		int* this_buff = m_Windchests[j].buff;
+		float* this_buff = m_Windchests[j].buff;
 
 		wxCriticalSectionLocker locker(m_Windchests[j].mutex);
 
 		if (!m_Windchests[j].done)
 		{
-			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
-
+			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0.0f);
 			ProcessAudioSamplers(m_Windchests[j], n_frames, this_buff);
 		}
 
 		GOrgueWindchest* current_windchest = m_Windchests[j].windchest;
-		double d = current_windchest->GetVolume();
-		d *= m_Volume;
-		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
-		float f = d;
+		float f = current_windchest->GetVolume() * (m_Volume * 0.01f);
 		std::fill(m_VolumeBuffer, m_VolumeBuffer + GO_SOUND_BUFFER_SIZE, f);
-
 		for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
 		{
 			unsigned tremulant_pos = current_windchest->GetTremulantId(i);
-			if (!m_Tremulants[tremulant_pos].sampler)
-				continue;
-			int *ptr = m_Tremulants[tremulant_pos].buff;
-			for (unsigned int k = 0; k < n_frames*2; k++)
+			if (m_Tremulants[tremulant_pos].sampler)
 			{
-				//multiply by 2^-23
-				m_VolumeBuffer[k] *= ldexp(ptr[k], -23);
+				const float *ptr = m_Tremulants[tremulant_pos].buff;
+				for (unsigned int k = 0; k < n_frames * 2; k++)
+					m_VolumeBuffer[k] *= ptr[k];
 			}
 		}
 
-		for (unsigned int k = 0; k < n_frames*2; k++)
-		{
-			double d = this_buff[k];
-			d *= m_VolumeBuffer[k];
-			m_FinalBuffer[k] += d;
-		}
+		for (unsigned int k = 0; k < n_frames * 2; k++)
+			m_FinalBuffer[k] += this_buff[k] * m_VolumeBuffer[k];
 
 	}
 
@@ -702,36 +703,28 @@ int GOSoundEngine::GetSamples
 		if (m_DetachedRelease[j].sampler == NULL && m_DetachedRelease[j].new_sampler == NULL)
 			continue;
 
-		int* this_buff = m_DetachedRelease[j].buff;
+		float* this_buff = m_DetachedRelease[j].buff;
 
 		wxCriticalSectionLocker locker(m_DetachedRelease[j].mutex);
 
 		if (!m_DetachedRelease[j].done)
 		{
-			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0);
-
+			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0.0f);
 			ProcessAudioSamplers(m_DetachedRelease[j], n_frames, this_buff);
 		}
 
-		double d = 1.0;
-		d *= m_Volume;
-		d *= 0.00000000059604644775390625;  // (2 ^ -24) / 100
-		float f = d;
+		float f = m_Volume * 0.01f;
 		std::fill(m_VolumeBuffer, m_VolumeBuffer + GO_SOUND_BUFFER_SIZE, f);
-
-		for (unsigned int k = 0; k < n_frames*2; k++)
-		{
-			double d = this_buff[k];
-			d *= m_VolumeBuffer[k];
-			m_FinalBuffer[k] += d;
-		}
+		for (unsigned int k = 0; k < n_frames * 2; k++)
+			m_FinalBuffer[k] += this_buff[k] * m_VolumeBuffer[k];
 
 	}
 
 	m_CurrentTime += 1;
 
 	/* Clamp the output */
-	double clamp_min = -1.0, clamp_max = 1.0;
+	static const float CLAMP_MIN = -1.0f;
+	static const float CLAMP_MAX = 1.0f;
 	if (meter_info)
 	{
 		unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
@@ -739,22 +732,26 @@ int GOSoundEngine::GetSamples
 			meter_info->current_polyphony = used_samplers;
 		for (unsigned int k = 0; k < n_frames * 2; k += 2)
 		{
-			double d = std::min(std::max(m_FinalBuffer[k + 0], clamp_min), clamp_max);
-			output_buffer[k + 0]  = (float)d;
-			meter_info->meter_left = (meter_info->meter_left > output_buffer[k + 0]) ? meter_info->meter_left : output_buffer[k + 0];
-			d = std::min(std::max(m_FinalBuffer[k + 1], clamp_min), clamp_max);
-			output_buffer[k + 1]  = (float)d;
-			meter_info->meter_right = (meter_info->meter_right > output_buffer[k + 1]) ? meter_info->meter_right : output_buffer[k + 1];
+			float f = std::min(std::max(m_FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
+			output_buffer[k + 0] = f;
+			meter_info->meter_left  = (meter_info->meter_left > f)
+			                        ? meter_info->meter_left
+			                        : f;
+			f = std::min(std::max(m_FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
+			output_buffer[k + 1] = f;
+			meter_info->meter_right = (meter_info->meter_right > f)
+			                        ? meter_info->meter_right
+			                        : f;
 		}
 	}
 	else
 	{
 		for (unsigned int k = 0; k < n_frames * 2; k += 2)
 		{
-			double d = std::min(std::max(m_FinalBuffer[k + 0], clamp_min), clamp_max);
-			output_buffer[k + 0]  = (float)d;
-			d = std::min(std::max(m_FinalBuffer[k + 1], clamp_min), clamp_max);
-			output_buffer[k + 1]  = (float)d;
+			float f = std::min(std::max(m_FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
+			output_buffer[k + 0] = f;
+			f = std::min(std::max(m_FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
+			output_buffer[k + 1] = f;
 		}
 	}
 
@@ -784,8 +781,10 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 		//		if (g_sound->HasRandomPipeSpeech() && !g_sound->windchests[m_WindchestGroup])
 		//			sampler->position = rand() & 0x78;
 		//	}
-		sampler->fade = sampler->fademax = pipe->GetScaleAmplitude();
-		sampler->shift = pipe->GetScaleShift();
+		sampler->gain = sampler->gain_target =
+				scalbnf(pipe->GetGain()
+				       ,ADDITIONAL_FADE_HEADROOM - sampler->pipe_section->sample_bits
+				       );
 		sampler->time = m_CurrentTime;
 		StartSampler(sampler, sampler_group_id);
 	}
@@ -798,9 +797,9 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 		return;
 
 	const GOSoundProvider* this_pipe = handle->pipe;
-	double vol = (handle->sampler_group_id < 0)
-	           ? 1.0
-	           : m_Windchests[handle->sampler_group_id - 1].windchest->GetVolume();
+	float vol = (handle->sampler_group_id < 0)
+	          ? 1.0f
+	          : m_Windchests[handle->sampler_group_id - 1].windchest->GetVolume();
 
 	// FIXME: this is wrong... the intention is to not create a release for a
 	// sample being played back with zero amplitude but this is a comparison
@@ -816,22 +815,28 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->pipe_section = release_section;
 			new_sampler->position     = 0;
 			new_sampler->increment    = new_sampler->pipe_section->sample_rate / (float) m_SampleRate;
-			new_sampler->shift        = this_pipe->GetScaleShift();
 			new_sampler->time         = m_CurrentTime + 1;
-			new_sampler->fademax      = this_pipe->GetScaleAmplitude();
+			new_sampler->gain         = 0.0f;
+			new_sampler->gain_target  =
+					scalbnf(this_pipe->GetGain()
+					       ,ADDITIONAL_FADE_HEADROOM - release_section->sample_bits
+					       );
 
 			const bool not_a_tremulant = (handle->sampler_group_id >= 0);
 			if (not_a_tremulant)
 			{
+				new_sampler->gain_target = vol * new_sampler->gain_target;
 				if (m_ScaledReleases)
 				{
 					int time = ((m_CurrentTime - handle->time) * (10 * BLOCKS_PER_FRAME)) / 441;
 					if (time < 256)
-						new_sampler->fademax = (this_pipe->GetScaleAmplitude() * (16384 + (time * 64))) >> 15;
+						new_sampler->gain_target *= 0.5f + time * (1.0f / 512.0f);
 					if (time < 1024)
-						new_sampler->fadeout = 1; /* nominal = 1.5 seconds */
+						new_sampler->gain_decay =
+								-scalbnf(new_sampler->gain_target
+								        ,-15 /* results in approx 1.5 second maximum decay length */
+								        );
 				}
-				new_sampler->fademax = lrint(vol * new_sampler->fademax);
 			}
 
 			/* Determines how much fadein to apply every 2 samples. If the pipe
@@ -849,9 +854,11 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			 * = 512 samples or
 			 * = 12ms
 			 */
-			new_sampler->fadein = (new_sampler->fademax + 128) >> 8;
-			if (new_sampler->fadein == 0)
-				new_sampler->fadein--;
+			new_sampler->gain_attack =
+					scalbnf(new_sampler->gain_target
+					       ,-CROSSFADE_LEN_BITS
+					       );
+			assert(gain_attack > 0.0f);
 
 			/* This determines the period of time the release is allowed to
 			 * fade in for in samples. 512 equates to roughly 12ms.
