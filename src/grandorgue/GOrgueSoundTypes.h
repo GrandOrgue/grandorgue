@@ -93,7 +93,7 @@ typedef struct AUDIO_SECTION_T
 	GOrgueReleaseAlignTable   *release_aligner;
 
 	/* Number of significant bits in the decoded sample data */
-	unsigned                   sample_bits;
+	unsigned                   sample_frac_bits;
 
 } AUDIO_SECTION;
 

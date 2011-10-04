@@ -42,26 +42,16 @@ void GOSoundProviderSynthedTrem::Create
 
 	ClearData();
 
-	m_Channels = 1;
-	if (m_Channels == 1)
-	{
-		m_Attack.type = AC_UNCOMPRESSED_MONO;
-		m_Loop.type = AC_UNCOMPRESSED_MONO;
-		m_Release.type = AC_UNCOMPRESSED_MONO;
-	}
-	else
-	{
-		m_Attack.type = AC_UNCOMPRESSED_STEREO;
-		m_Loop.type = AC_UNCOMPRESSED_STEREO;
-		m_Release.type = AC_UNCOMPRESSED_STEREO;
-	}
-
-	m_Attack.sample_bits = 16;
-	m_Loop.sample_bits = 16;
-	m_Release.sample_bits = 16;
-	m_Attack.stage = GSS_ATTACK;
-	m_Loop.stage = GSS_LOOP;
-	m_Release.stage = GSS_RELEASE;
+	m_Channels                 = 1;
+	m_Attack.sample_frac_bits  = 15;
+	m_Attack.stage             = GSS_ATTACK;
+	m_Attack.type              = (m_Channels == 1) ? AC_UNCOMPRESSED_MONO : AC_UNCOMPRESSED_STEREO;
+	m_Loop.sample_frac_bits    = 15;
+	m_Loop.stage               = GSS_LOOP;
+	m_Loop.type                = (m_Channels == 1) ? AC_UNCOMPRESSED_MONO : AC_UNCOMPRESSED_STEREO;
+	m_Release.sample_frac_bits = 15;
+	m_Release.stage            = GSS_RELEASE;
+	m_Release.type             = (m_Channels == 1) ? AC_UNCOMPRESSED_MONO : AC_UNCOMPRESSED_STEREO;
 
 	double trem_freq = 1000.0 / period;
 	int sample_freq = 44100;
