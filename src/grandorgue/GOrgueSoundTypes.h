@@ -97,35 +97,16 @@ typedef struct AUDIO_SECTION_T
 
 } AUDIO_SECTION;
 
+#include "GOSoundFader.h"
+
 typedef struct GO_SAMPLER_T
 {
 	struct GO_SAMPLER_T       *next;		// must be first!
 	const GOSoundProvider     *pipe;
 	int                        sampler_group_id;
 	const AUDIO_SECTION       *pipe_section;
+	GOSoundFader               fader;
 	int                        history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
-	/* the fade parameter is would be more appropriately named "gain". It is
-	 * modified on a frame-by frame basis by the fadein and fadeout parameters
-	 * which get added to it. The maximum value is defined by fademax and is
-	 * a NEGATIVE value. When fade is zero, the sampler will be discarded back
-	 * into the sampler pool. When it is equal to fademax, the sample will be
-	 * being played back at its appropriate volume (determined by amplitude
-	 * factors throughout the organ definition file.
-	 *
-	 * The time taken for a sample to fade out for a given a value of fadeout
-	 * is:
-	 * { frames to fadeout } =  { fademax } / { fadeout }
-	 * { frame length } = 2 / { sample rate }
-	 * { time to fadeout } = { frames to fadeout } * { frame length }
-	 *                     = ( 2 * { fademax } ) / ( { fadeout } * { samplerate } )
-	 * therefore:
-	 * { fadeout } = ( 2 * { fademax } ) / ( { samplerate } * { time to fadeout } )
-	 */
-	float                      gain;
-	float                      gain_attack;
-	float                      gain_decay;
-	float                      gain_target;
-	unsigned                   faderemain;
 	unsigned                   time;
 	/* current index of the current block into this sample */
 	float                      position;

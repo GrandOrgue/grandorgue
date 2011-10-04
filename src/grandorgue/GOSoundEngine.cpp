@@ -354,77 +354,6 @@ void GetNextFrame
 
 }
 
-static
-inline
-void ApplySamplerFade
-	(GO_SAMPLER* sampler
-	,unsigned int n_blocks
-	,float* decoded_sampler_audio_frame
-	)
-{
-
-	/* Multiply each of the buffer samples by the fade factor - note:
-	 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero.
-	 * Note: this for loop has been split by an if to aide the vectorizer.
-	 */
-	float gain_delta = sampler->gain_attack + sampler->gain_decay;
-	float gain = sampler->gain;
-	if (gain_delta)
-	{
-
-		for(unsigned int i = 0; i < n_blocks / 2; i++, decoded_sampler_audio_frame += 4)
-		{
-
-			decoded_sampler_audio_frame[0] *= gain;
-			decoded_sampler_audio_frame[1] *= gain;
-			decoded_sampler_audio_frame[2] *= gain;
-			decoded_sampler_audio_frame[3] *= gain;
-
-			gain += gain_delta;
-			if (gain < 0.0f)
-			{
-				gain = 0.0f;
-				sampler->gain_decay = 0.0f;
-			}
-			else if (gain > sampler->gain_target)
-			{
-				gain = sampler->gain_target;
-				sampler->gain_attack = 0.0f;
-			}
-
-		}
-
-		sampler->gain = gain;
-
-	}
-	else
-	{
-
-		for(unsigned int i = 0; i < n_blocks / 2; i++, decoded_sampler_audio_frame += 4)
-		{
-
-			decoded_sampler_audio_frame[0] *= gain;
-			decoded_sampler_audio_frame[1] *= gain;
-			decoded_sampler_audio_frame[2] *= gain;
-			decoded_sampler_audio_frame[3] *= gain;
-
-		}
-
-	}
-
-	if (sampler->pipe)
-	{
-		if (sampler->gain_attack > 0.0f)
-		{
-			if (sampler->faderemain >= n_blocks)
-				sampler->faderemain -= n_blocks;
-			else
-				sampler->gain_attack = 0.0f;
-		}
-	}
-
-}
-
 inline
 void GOSoundEngine::ReadSamplerFrames
 	(GO_SAMPLER* sampler
@@ -518,10 +447,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 					(sampler->pipe_section->stage == GSS_RELEASE) &&
 					(m_CurrentTime - sampler->time > 172)
 				)
-				sampler->gain_decay =
-						-scalbnf(sampler->gain_target
-						        ,-13 /* results in approx 0.37s maximum decay length */
-						        );
+				FaderStartDecay(&sampler->fader, -13); /* Approx 0.37s at 44.1kHz */
 
 			/* The decoded sampler frame will contain values containing
 			 * sampler->pipe_section->sample_bits worth of significant bits.
@@ -537,8 +463,8 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				,state.temp
 				);
 
-			ApplySamplerFade
-				(sampler
+			FaderProcess
+				(&sampler->fader
 				,n_frames
 				,state.temp
 				);
@@ -553,10 +479,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				 * which will decay this portion of the pipe. The sampler will
 				 * automatically be placed back in the pool when the fade restores to
 				 * zero. */
-				sampler->gain_decay =
-						-scalbnf(sampler->gain_target
-						        ,-CROSSFADE_LEN_BITS
-						        );
+				FaderStartDecay(&sampler->fader, -CROSSFADE_LEN_BITS);
 				sampler->stop = false;
 			}
 
@@ -581,7 +504,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		 * zero, the sample is no longer required and can be removed from the
 		 * linked list. If it was still supplying audio, we must update the
 		 * previous valid sampler. */
-		if (!sampler->pipe || ((sampler->gain <= 0.0f) && process_sampler))
+		if (!sampler->pipe || (FaderIsSilent(&sampler->fader) && process_sampler))
 		{
 			/* sampler needs to be removed from the list */
 			if (sampler == state.sampler)
@@ -780,10 +703,8 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 		//		if (g_sound->HasRandomPipeSpeech() && !g_sound->windchests[m_WindchestGroup])
 		//			sampler->position = rand() & 0x78;
 		//	}
-		sampler->gain = sampler->gain_target =
-				scalbnf(pipe->GetGain()
-				       ,-sampler->pipe_section->sample_frac_bits
-				       );
+		const float playback_gain = scalbnf(pipe->GetGain(), -sampler->pipe_section->sample_frac_bits);
+		FaderNewConstant(&sampler->fader, playback_gain);
 		sampler->time = m_CurrentTime;
 		StartSampler(sampler, sampler_group_id);
 	}
@@ -815,8 +736,9 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->position     = 0;
 			new_sampler->increment    = new_sampler->pipe_section->sample_rate / (float) m_SampleRate;
 			new_sampler->time         = m_CurrentTime + 1;
-			new_sampler->gain         = 0.0f;
-			new_sampler->gain_target  =
+
+			int gain_decay_rate = 0;
+			float gain_target =
 					scalbnf(this_pipe->GetGain()
 					       ,-release_section->sample_frac_bits
 					       );
@@ -824,45 +746,25 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			const bool not_a_tremulant = (handle->sampler_group_id >= 0);
 			if (not_a_tremulant)
 			{
-				new_sampler->gain_target = vol * new_sampler->gain_target;
+				gain_target *= vol;
 				if (m_ScaledReleases)
 				{
 					int time = ((m_CurrentTime - handle->time) * (10 * BLOCKS_PER_FRAME)) / 441;
 					if (time < 256)
-						new_sampler->gain_target *= 0.5f + time * (1.0f / 512.0f);
+						gain_target *= 0.5f + time * (1.0f / 512.0f);
 					if (time < 1024)
-						new_sampler->gain_decay =
-								-scalbnf(new_sampler->gain_target
-								        ,-15 /* results in approx 1.5 second maximum decay length */
-								        );
+						gain_decay_rate = -15; /* results in approx 1.5 second maximum decay length */
 				}
 			}
 
-			/* Determines how much fadein to apply every 2 samples. If the pipe
-			 * has an amplitude of 10000 (which is nominal) and has been
-			 * playing for a long period of time, this value will be equal to
-			 *
-			 *   ra_amp + 128 >> 8
-			 * = -32640 >> 8
-			 * = -128
-			 *
-			 * So for fade to reach fademax would take:
-			 *
-			 *   2 * fademax / fadein
-			 * = 2 * -32768 / -128
-			 * = 512 samples or
-			 * = 12ms
-			 */
-			new_sampler->gain_attack =
-					scalbnf(new_sampler->gain_target
-					       ,-CROSSFADE_LEN_BITS
-					       );
-			assert(gain_attack > 0.0f);
-
-			/* This determines the period of time the release is allowed to
-			 * fade in for in samples. 512 equates to roughly 12ms.
-			 */
-			new_sampler->faderemain = 1 << (CROSSFADE_LEN_BITS + 1);
+			FaderNewAttacking
+				(&new_sampler->fader
+				,gain_target
+				,-(CROSSFADE_LEN_BITS)
+				,1 << (CROSSFADE_LEN_BITS + 1)
+				);
+			if (gain_decay_rate < 0)
+				FaderStartDecay(&new_sampler->fader, gain_decay_rate);
 
 			/* FIXME: this must be enabled again at some point soon */
 			if (m_ReleaseAlignmentEnabled && (release_section->release_aligner != NULL))
