@@ -120,7 +120,7 @@ inline GO_Int24 IntToGOInt24(int value)
 
 inline int GOInt24ToInt(GO_Int24 value)
 {
-	return ((value.hi << 16) | (value.mi << 8) | value.lo) >> 8;
+	return ((value.hi << 16) | (value.mi << 8) | value.lo);
 }
 
 #pragma pack(pop)
