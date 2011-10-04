@@ -28,8 +28,6 @@
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 
-#define ADDITIONAL_FADE_HEADROOM (1)
-
 /* This parameter determines the cross fade length. The length in samples
  * will be:
  *                    2 ^ (CROSSFADE_LEN_BITS + 1)
@@ -349,6 +347,7 @@ void GetNextFrame
 			break;
 		case AC_UNCOMPRESSED_MONO:
 			monoUncompressed(sampler, buffer);
+			break;
 		default:
 			assert(0 && "broken sampler type");
 	}
@@ -368,34 +367,34 @@ void ApplySamplerFade
 	 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero.
 	 * Note: this for loop has been split by an if to aide the vectorizer.
 	 */
-	float fade_in_plus_out = sampler->gain_attack + sampler->gain_decay;
-	float fade = sampler->gain;
-	if (fade_in_plus_out)
+	float gain_delta = sampler->gain_attack + sampler->gain_decay;
+	float gain = sampler->gain;
+	if (gain_delta)
 	{
 
 		for(unsigned int i = 0; i < n_blocks / 2; i++, decoded_sampler_audio_frame += 4)
 		{
 
-			decoded_sampler_audio_frame[0] *= fade;
-			decoded_sampler_audio_frame[1] *= fade;
-			decoded_sampler_audio_frame[2] *= fade;
-			decoded_sampler_audio_frame[3] *= fade;
+			decoded_sampler_audio_frame[0] *= gain;
+			decoded_sampler_audio_frame[1] *= gain;
+			decoded_sampler_audio_frame[2] *= gain;
+			decoded_sampler_audio_frame[3] *= gain;
 
-			fade += fade_in_plus_out;
-			if (fade < 0.0f)
+			gain += gain_delta;
+			if (gain < 0.0f)
 			{
-				fade = 0.0f;
+				gain = 0.0f;
 				sampler->gain_decay = 0.0f;
 			}
-			else if (fade > sampler->gain_target)
+			else if (gain > sampler->gain_target)
 			{
-				fade = sampler->gain_target;
+				gain = sampler->gain_target;
 				sampler->gain_attack = 0.0f;
 			}
 
 		}
 
-		sampler->gain = fade;
+		sampler->gain = gain;
 
 	}
 	else
@@ -404,10 +403,10 @@ void ApplySamplerFade
 		for(unsigned int i = 0; i < n_blocks / 2; i++, decoded_sampler_audio_frame += 4)
 		{
 
-			decoded_sampler_audio_frame[0] *= fade;
-			decoded_sampler_audio_frame[1] *= fade;
-			decoded_sampler_audio_frame[2] *= fade;
-			decoded_sampler_audio_frame[3] *= fade;
+			decoded_sampler_audio_frame[0] *= gain;
+			decoded_sampler_audio_frame[1] *= gain;
+			decoded_sampler_audio_frame[2] *= gain;
+			decoded_sampler_audio_frame[3] *= gain;
 
 		}
 
@@ -783,7 +782,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 		//	}
 		sampler->gain = sampler->gain_target =
 				scalbnf(pipe->GetGain()
-				       ,ADDITIONAL_FADE_HEADROOM - sampler->pipe_section->sample_bits
+				       ,-sampler->pipe_section->sample_frac_bits
 				       );
 		sampler->time = m_CurrentTime;
 		StartSampler(sampler, sampler_group_id);
@@ -819,7 +818,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->gain         = 0.0f;
 			new_sampler->gain_target  =
 					scalbnf(this_pipe->GetGain()
-					       ,ADDITIONAL_FADE_HEADROOM - release_section->sample_bits
+					       ,-release_section->sample_frac_bits
 					       );
 
 			const bool not_a_tremulant = (handle->sampler_group_id >= 0);
@@ -863,7 +862,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			/* This determines the period of time the release is allowed to
 			 * fade in for in samples. 512 equates to roughly 12ms.
 			 */
-			new_sampler->faderemain = 512;
+			new_sampler->faderemain = 1 << (CROSSFADE_LEN_BITS + 1);
 
 			/* FIXME: this must be enabled again at some point soon */
 			if (m_ReleaseAlignmentEnabled && (release_section->release_aligner != NULL))
