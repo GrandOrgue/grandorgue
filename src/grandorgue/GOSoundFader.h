@@ -28,11 +28,11 @@
 
 typedef struct
 {
-	float                      gain;
-	float                      gain_attack;
-	float                      gain_decay;
-	float                      gain_target;
-	unsigned                   faderemain;
+	float       gain;
+	float       attack;
+	float       decay;
+	float       target;
+	unsigned    nb_attack_frames_left;
 } GOSoundFader;
 
 static
@@ -48,7 +48,7 @@ void FaderProcess
 	 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero.
 	 * Note: this for loop has been split by an if to aide the vectorizer.
 	 */
-	float gain_delta = fader_state->gain_attack + fader_state->gain_decay;
+	float gain_delta = fader_state->attack + fader_state->decay;
 	float gain = fader_state->gain;
 	if (gain_delta)
 	{
@@ -65,12 +65,12 @@ void FaderProcess
 			if (gain < 0.0f)
 			{
 				gain = 0.0f;
-				fader_state->gain_decay = 0.0f;
+				fader_state->decay = 0.0f;
 			}
-			else if (gain > fader_state->gain_target)
+			else if (gain > fader_state->target)
 			{
-				gain = fader_state->gain_target;
-				fader_state->gain_attack = 0.0f;
+				gain = fader_state->target;
+				fader_state->attack = 0.0f;
 			}
 
 		}
@@ -93,12 +93,12 @@ void FaderProcess
 
 	}
 
-	if (fader_state->gain_attack > 0.0f)
+	if (fader_state->attack > 0.0f)
 	{
-		if (fader_state->faderemain >= n_blocks)
-			fader_state->faderemain -= n_blocks;
+		if (fader_state->nb_attack_frames_left >= n_blocks)
+			fader_state->nb_attack_frames_left -= n_blocks;
 		else
-			fader_state->gain_attack = 0.0f;
+			fader_state->attack = 0.0f;
 	}
 
 }
@@ -111,8 +111,8 @@ void FaderStartDecay
 	)
 {
 	assert(duration_shift < 0);
-	fader_state->gain_decay =
-			-scalbnf(fader_state->gain_target
+	fader_state->decay =
+			-scalbnf(fader_state->target
 			        ,duration_shift /* results in approx 0.37s maximum decay length */
 			        );
 }
@@ -135,14 +135,14 @@ void FaderNewAttacking
 	)
 {
 	assert(duration_shift < 0);
-	fader_state->gain         = 0.0f;
-	fader_state->gain_target = target_gain;
-	fader_state->gain_attack =
+	fader_state->nb_attack_frames_left = max_fadein_frames;
+	fader_state->decay  = 0.0f;
+	fader_state->gain   = 0.0f;
+	fader_state->target = target_gain;
+	fader_state->attack =
 			scalbnf(target_gain
 			       ,duration_shift
 			       );
-	fader_state->gain_decay = 0.0f;
-	fader_state->faderemain = max_fadein_frames;
 }
 
 static
@@ -152,9 +152,9 @@ void FaderNewConstant
 	,float            gain
 	)
 {
-	fader_state->faderemain = 0;
-	fader_state->gain_attack = fader_state->gain_decay = 0.0f;
-	fader_state->gain = fader_state->gain_target = gain;
+	fader_state->nb_attack_frames_left = 0;
+	fader_state->attack = fader_state->decay = 0.0f;
+	fader_state->gain = fader_state->target = gain;
 }
 
 #endif /* GOSOUNDFADER_H_ */
