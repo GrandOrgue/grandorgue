@@ -42,6 +42,7 @@ public:
 	OrganView(unsigned m_panelID = 0);
 	~OrganView();
 
+	void OnWindowClosed();
 	bool OnCreate(wxDocument *doc, long flags);
 	bool OnClose(bool deleteWindow = true);
 	void OnDraw(wxDC*);

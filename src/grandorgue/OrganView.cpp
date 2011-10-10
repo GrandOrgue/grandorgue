@@ -71,7 +71,7 @@ bool OrganView::CreateWindow()
 		m_container = new wxScrolledWindow(m_frame);
 		SetFrame(m_container);
 	}
-	m_panel = new GOGUIPanelWidget(organfile->GetPanel(m_panelID), m_container);
+	m_panel = new GOGUIPanelWidget(organfile->GetPanel(m_panelID), m_container, this);
 
 	/* Calculate scrollbar size */
 	m_container->SetSize(50, 50);
@@ -132,3 +132,10 @@ bool OrganView::OnClose(bool deleteWindow)
 
 	return wxView::OnClose(deleteWindow);
 }
+
+void OrganView::OnWindowClosed()
+{
+	m_panel = NULL;
+	SetFrame(0);
+}
+
