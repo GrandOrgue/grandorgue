@@ -25,6 +25,7 @@
 
 #include <wx/wx.h>
 
+class OrganView;
 class GOGUIPanel;
 
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL, -1)
@@ -34,11 +35,12 @@ class GOGUIPanelWidget : public wxPanel
 private:
 	GOGUIPanel* m_panel;
 	wxBitmap m_ClientBitmap;
+	OrganView* m_View;
 
 	void CopyToScreen(wxDC* mdc, const wxRect& rect);
 
 public:
-	GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindowID id = wxID_ANY);
+	GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, OrganView* view, wxWindowID id = wxID_ANY);
 	~GOGUIPanelWidget();
 
 	void OnUpdate();

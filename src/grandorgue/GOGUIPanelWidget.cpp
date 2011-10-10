@@ -23,6 +23,7 @@
 #include "GOGUIControl.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
+#include "OrganView.h"
 #include "KeyConvert.h"
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL)
@@ -39,9 +40,10 @@ BEGIN_EVENT_TABLE(GOGUIPanelWidget, wxPanel)
 	EVT_KEY_DOWN(GOGUIPanelWidget::OnKeyCommand)
 END_EVENT_TABLE()
 
-GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindowID id) :
+GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, OrganView* view, wxWindowID id) :
 	wxPanel(parent, id),
-	m_panel(panel)
+	m_panel(panel),
+	m_View(view)
 {
 	m_panel->SetWindow(this);
 	SetLabel(m_panel->GetName());
@@ -52,6 +54,9 @@ GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindow
 
 GOGUIPanelWidget::~GOGUIPanelWidget()
 {
+	if (m_View)
+		m_View->OnWindowClosed();
+
 	m_panel->SetWindow(NULL);
 }
 

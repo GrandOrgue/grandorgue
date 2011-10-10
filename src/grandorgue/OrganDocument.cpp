@@ -89,6 +89,8 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	/* we have loaded the organ so we can now enable playback */
 	g_sound->ActivatePlayback();
 
+	UpdateAllViews();
+
 	return true;
 }
 
