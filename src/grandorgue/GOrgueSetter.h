@@ -70,6 +70,7 @@ public:
 	GOrgueSetter(GrandOrgueFile* organfile);
 	virtual ~GOrgueSetter();
 
+	GOGUIPanel* CreateCouplerPanel(IniFileConfig& cfg, unsigned manual);
 	GOGUIPanel* CreateGeneralsPanel(IniFileConfig& cfg);
 	GOGUIPanel* CreateSetterPanel(IniFileConfig& cfg);
 	GOGUIPanel* CreateCrescendoPanel(IniFileConfig& cfg);

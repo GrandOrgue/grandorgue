@@ -40,7 +40,7 @@ private:
 	int m_DispImageNum;
 	
 public:
-	GOGUIDrawstop(GOGUIPanel* panel, GOrgueDrawstop* control);
+	GOGUIDrawstop(GOGUIPanel* panel, GOrgueDrawstop* control, unsigned x_pos = 0, unsigned y_pos = 0);
 
 	void Load(IniFileConfig& cfg, wxString group);
 
