@@ -94,7 +94,7 @@ void GOrgueFrameGeneral::Load(IniFileConfig& cfg, wxString group)
 		unsigned m = cfg.ReadInteger(group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 		m_CouplerManual[i] = m;
 		buffer.Printf(wxT("CouplerNumber%03d"), i + 1);
-		m_Couplers[i] = cfg.ReadInteger(group, buffer, -m_organfile->GetManual(m)->GetCouplerCount(), m_organfile->GetManual(m)->GetCouplerCount());
+		m_Couplers[i] = cfg.ReadInteger(group, buffer, -999, 999);
 	}
 
 	m_Tremulants.resize(NumberOfTremulants);
