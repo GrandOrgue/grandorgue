@@ -135,13 +135,6 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 		}
 		
 
-		unsigned m_NumberOfSetterElements = cfg.ReadInteger(group, wxT("NumberOfSetterElements"), 0, 999, false);
-		for (unsigned i = 0; i < m_NumberOfSetterElements; i++)
-		{
-			buffer.Printf(wxT("SetterElement%03d"), i + 1);
-			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this));
-		}
-
 		for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
 		{
 			wxString group;
@@ -152,6 +145,13 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 				control->Load(cfg, group);
 				AddControl(control);
 			}
+		}
+
+		unsigned m_NumberOfSetterElements = cfg.ReadInteger(group, wxT("NumberOfSetterElements"), 0, 999, false);
+		for (unsigned i = 0; i < m_NumberOfSetterElements; i++)
+		{
+			buffer.Printf(wxT("SetterElement%03d"), i + 1);
+			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this));
 		}
 
 		for (unsigned i = 0; i < m_organfile->GetEnclosureCount(); i++)
@@ -264,13 +264,6 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 		unsigned m_NumberOfCouplers = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, 999);
 		unsigned m_NumberOfDivisionals = cfg.ReadInteger(group, wxT("NumberOfDivisionals"), 0, 999);
 
-		unsigned m_NumberOfSetterElements = cfg.ReadInteger(group, wxT("NumberOfSetterElements"), 0, 999, false);
-		for (unsigned i = 0; i < m_NumberOfSetterElements; i++)
-		{
-			buffer.Printf(wxT("SetterElement%03d"), i + 1);
-			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, group + buffer, this));
-		}
-
 		if (m_first_manual < m_organfile->GetFirstManualIndex())
 			m_first_manual = m_organfile->GetFirstManualIndex();
 
@@ -289,6 +282,13 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			GOGUIControl* control = new GOGUIManualBackground(this, i);
 			control->Load(cfg, group + buffer);
 			AddControl(control);
+		}
+
+		unsigned m_NumberOfSetterElements = cfg.ReadInteger(group, wxT("NumberOfSetterElements"), 0, 999, false);
+		for (unsigned i = 0; i < m_NumberOfSetterElements; i++)
+		{
+			buffer.Printf(wxT("SetterElement%03d"), i + 1);
+			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, group + buffer, this));
 		}
 
 		for (unsigned i = 0; i < m_NumberOfEnclosures; i++)
