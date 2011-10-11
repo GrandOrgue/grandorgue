@@ -132,7 +132,12 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		{
 			int what = g_sound->GetMidi().GetStopMidiEvent();
 			m_events[0].channel = ((what >> 8) & 0xF) + 1;
-			m_events[0].key = cfg.ReadInteger(group, wxT("StopControlMIDIKeyNumber"), 0, 127, false);
+			m_events[0].key = cfg.ReadInteger(group, wxT("StopControlMIDIKeyNumber"), -1, 127, false);
+			if (m_events[0].key == -1)
+			{
+				m_events.resize(0);
+				return;
+			}
 			if ((what & 0xF000) == 0xC000)
 			{
 				m_events[0].type = MIDI_M_PGM_CHANGE;
@@ -164,7 +169,12 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 				int what = g_sound->GetMidi().GetManualMidiEvent(m_organfile->GetManual(m_Index)->GetMIDIInputNumber());
 				m_events[0].channel = ((what >> 8) & 0xF) + 1;
 			}
-			m_events[0].key = cfg.ReadInteger(group, wxT("MIDIProgramChangeNumber"), 1, 128);
+			m_events[0].key = cfg.ReadInteger(group, wxT("MIDIProgramChangeNumber"), 0, 128, false);
+			if (!m_events[0].key)
+			{
+				m_events.resize(0);
+				return;
+			}
 		}
 		if (m_type == MIDI_RECV_MANUAL)
 		{
