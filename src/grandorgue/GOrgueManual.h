@@ -94,6 +94,7 @@ public:
 	GOrgueStop* GetStop(unsigned index);
 	unsigned GetCouplerCount();
 	GOrgueCoupler* GetCoupler(unsigned index);
+	void AddCoupler(GOrgueCoupler* coupler);
 	unsigned GetDivisionalCount();
 	GOrgueDivisional* GetDivisional(unsigned index);
  	void AddDivisional(GOrgueDivisional* divisional);

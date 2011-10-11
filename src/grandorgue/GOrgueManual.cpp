@@ -231,6 +231,11 @@ GOrgueCoupler* GOrgueManual::GetCoupler(unsigned index)
 	return m_couplers[index];
 }
 
+void GOrgueManual::AddCoupler(GOrgueCoupler* coupler)
+{
+	m_couplers.push_back(coupler);
+}
+
 unsigned GOrgueManual::GetDivisionalCount()
 {
 	return m_divisionals.size();

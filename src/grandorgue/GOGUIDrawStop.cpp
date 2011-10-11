@@ -26,15 +26,15 @@
 #include "GOrgueDrawStop.h"
 #include "MIDIEventDialog.h"
 
-GOGUIDrawstop::GOGUIDrawstop(GOGUIPanel* panel, GOrgueDrawstop* control):
+GOGUIDrawstop::GOGUIDrawstop(GOGUIPanel* panel, GOrgueDrawstop* control, unsigned x_pos, unsigned y_pos):
 	GOGUIControl(panel, control),
 	m_drawstop(control),
 	m_ShortcutKey(0),
 	m_DispKeyLabelOnLeft(false),
 	m_DispLabelFontSize(0),
 	m_DispLabelColour(0,0,0),
-	m_DispDrawstopRow(0),
-	m_DispDrawstopCol(0),
+	m_DispDrawstopRow(y_pos),
+	m_DispDrawstopCol(x_pos),
 	m_DispImageNum(0)
 {
 }
@@ -42,13 +42,13 @@ GOGUIDrawstop::GOGUIDrawstop(GOGUIPanel* panel, GOrgueDrawstop* control):
 void GOGUIDrawstop::Load(IniFileConfig& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
-	m_ShortcutKey = cfg.ReadInteger(group, wxT("ShortcutKey"), 0, 255, false);
-	m_DispKeyLabelOnLeft = cfg.ReadBoolean(group, wxT("DispKeyLabelOnLeft"));
-	m_DispLabelColour = cfg.ReadColor(group, wxT("DispLabelColour"));
-	m_DispLabelFontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"));
-	m_DispDrawstopRow = cfg.ReadInteger(group, wxT("DispDrawstopRow"), 1, 99 + m_metrics->NumberOfExtraDrawstopRowsToDisplay());
-	m_DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, m_DispDrawstopRow > 99 ? m_metrics->NumberOfExtraDrawstopColsToDisplay() : m_metrics->NumberOfDrawstopColsToDisplay());
-	m_DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 2);
+	m_ShortcutKey = cfg.ReadInteger(group, wxT("ShortcutKey"), 0, 255, false, 0);
+	m_DispKeyLabelOnLeft = cfg.ReadBoolean(group, wxT("DispKeyLabelOnLeft"), true, false);
+	m_DispLabelColour = cfg.ReadColor(group, wxT("DispLabelColour"), true, wxT("Dark Red"));
+	m_DispLabelFontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"), true, wxT("normal"));
+	m_DispDrawstopRow = cfg.ReadInteger(group, wxT("DispDrawstopRow"), 1, 99 + m_metrics->NumberOfExtraDrawstopRowsToDisplay(), true, m_DispDrawstopRow);
+	m_DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, m_DispDrawstopRow > 99 ? m_metrics->NumberOfExtraDrawstopColsToDisplay() : m_metrics->NumberOfDrawstopColsToDisplay(), true, m_DispDrawstopCol);
+	m_DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 2, true, 1);
 
 	int x, y;
 	m_metrics->GetDrawstopBlitPosition(m_DispDrawstopRow, m_DispDrawstopCol, &x, &y);

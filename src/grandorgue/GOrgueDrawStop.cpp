@@ -39,12 +39,12 @@ GOrgueDrawstop::~GOrgueDrawstop()
 
 }
 
-void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group)
+void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, wxString name)
 {
 	m_DefaultToEngaged = cfg.ReadBoolean(group, wxT("DefaultToEngaged"));
 	m_DisplayInInvertedState = cfg.ReadBoolean(group, wxT("DisplayInInvertedState"));
 	m_midi.Load(cfg, group);
-	GOrgueControl::Load(cfg, group);
+	GOrgueControl::Load(cfg, group, name);
 }
 
 void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix)

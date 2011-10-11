@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOGUIDrawStop.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUILabel.h"
 #include "GOGUIHW1Background.h"
@@ -27,6 +28,7 @@
 #include "GOGUIPushbutton.h"
 #include "GOGUISetterButton.h"
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueManual.h"
@@ -274,6 +276,70 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(IniFileConfig& cfg, wxString group,
 	button->Init(cfg, 1, 1, group);
 	return button;
 }
+
+GOGUIPanel* GOrgueSetter::CreateCouplerPanel(IniFileConfig& cfg, unsigned manual_nr)
+{
+	GOGUIControl* control;
+	GOrgueManual* manual = m_organfile->GetManual(manual_nr);
+
+	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxString::Format(wxT("SetterCouplers%03d"), manual_nr), GOGUI_SETTER_COUPLER);
+	panel->Init(cfg, metrics, wxString::Format(_("Coupler %s"), manual->GetName().c_str()), wxString::Format(wxT("SetterCouplers%03d"), manual_nr));
+
+	control = new GOGUIHW1Background(panel);
+	panel->AddControl(control);
+
+	for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
+	{
+		int x, y;
+		GOrgueManual* dest_manual = m_organfile->GetManual(i);
+		GOrgueCoupler* coupler;
+
+		metrics->GetDrawstopBlitPosition(100 + i, 1, &x, &y);
+
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, NULL, x, y, dest_manual->GetName());
+		PosDisplay->Load(cfg, wxString::Format(wxT("SetterCoupler%03dLabel%03d"), manual_nr, i));
+		panel->AddControl(PosDisplay);
+
+		coupler = new GOrgueCoupler(m_organfile, manual_nr);
+		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i), _("16"), false, false, -12, i, GOrgueCoupler::COUPLER_NORMAL);
+		manual->AddCoupler(coupler);
+		control = new GOGUIDrawstop(panel, coupler, 2, 100 + i);
+		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i));
+		panel->AddControl(control);
+
+		coupler = new GOrgueCoupler(m_organfile, manual_nr);
+		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i), manual_nr != i ? _("8") : _("U.O."), manual_nr == i, false, 0, i, GOrgueCoupler::COUPLER_NORMAL);
+		manual->AddCoupler(coupler);
+		control = new GOGUIDrawstop(panel, coupler, 3, 100 + i);
+		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i));
+		panel->AddControl(control);
+
+		coupler = new GOrgueCoupler(m_organfile, manual_nr);
+		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i), _("4"), false, false, 12, i, GOrgueCoupler::COUPLER_NORMAL);
+		manual->AddCoupler(coupler);
+		control = new GOGUIDrawstop(panel, coupler, 4, 100 + i);
+		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i));
+		panel->AddControl(control);
+
+		coupler = new GOrgueCoupler(m_organfile, manual_nr);
+		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i), _("BAS"), false, false, 0, i, GOrgueCoupler::COUPLER_BASS);
+		manual->AddCoupler(coupler);
+		control = new GOGUIDrawstop(panel, coupler, 5, 100 + i);
+		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i));
+		panel->AddControl(control);
+
+		coupler = new GOrgueCoupler(m_organfile, manual_nr);
+		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i), _("MEL"), false, false, 0, i, GOrgueCoupler::COUPLER_MELODY);
+		manual->AddCoupler(coupler);
+		control = new GOGUIDrawstop(panel, coupler, 6, 100 + i);
+		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i));
+		panel->AddControl(control);
+	}
+
+	return panel;
+}
+
 
 GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(IniFileConfig& cfg)
 {

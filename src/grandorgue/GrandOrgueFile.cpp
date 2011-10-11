@@ -307,6 +307,8 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 		m_panels[i + 1]->Load(ini, buffer);
 	}
 
+	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+		m_panels.push_back(m_setter->CreateCouplerPanel(ini, i));
 	m_panels.push_back(m_setter->CreateCrescendoPanel(ini));
 	m_panels.push_back(m_setter->CreateDivisionalPanel(ini));
 	m_panels.push_back(m_setter->CreateGeneralsPanel(ini));

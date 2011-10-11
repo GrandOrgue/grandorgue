@@ -43,7 +43,7 @@ public:
 
 	GOrgueDrawstop(GrandOrgueFile* organfile);
 	virtual ~GOrgueDrawstop();
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(IniFileConfig& cfg, wxString group, wxString name = wxT(""));
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Push(void);
 	void ProcessMidi(const GOrgueMidiEvent& event);
