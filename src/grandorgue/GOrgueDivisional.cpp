@@ -219,6 +219,8 @@ void GOrgueDivisional::PushLocal()
 				if (!m_Stops[i])
 					continue;
 				unsigned k = abs(m_Stops[i]) - 1;
+				if (k >= associatedManual->GetStopCount())
+					continue;
 				if (associatedManual->GetStop(k)->IsEngaged())
 					m_Stops[i] = k + 1;
 				else
@@ -231,6 +233,8 @@ void GOrgueDivisional::PushLocal()
 				if (!m_Couplers[i])
 					continue;
 				unsigned k = abs(m_Couplers[i]) - 1;
+				if (k >= associatedManual->GetCouplerCount())
+					continue;
 				if (associatedManual->GetCoupler(k)->IsEngaged())
 					m_Couplers[i] = k + 1;
 				else
@@ -243,6 +247,8 @@ void GOrgueDivisional::PushLocal()
 				if (!m_Tremulants[i])
 					continue;
 				unsigned k = abs(m_Tremulants[i]) - 1;
+				if (k >= associatedManual->GetTremulantCount())
+					continue;
 				if (associatedManual->GetTremulant(k)->IsEngaged())
 					m_Tremulants[i] = k + 1;
 				else
@@ -258,6 +264,8 @@ void GOrgueDivisional::PushLocal()
 			if (!m_Stops[i])
 				continue;
 			unsigned k = abs(m_Stops[i]) - 1;
+			if (k >= associatedManual->GetStopCount())
+				continue;
 			associatedManual->GetStop(k)->Set(m_Stops[i] > 0);
 			used |= m_Stops[i] > 0;
 		}
@@ -267,6 +275,8 @@ void GOrgueDivisional::PushLocal()
 			if (!m_Couplers[i])
 				continue;
 			unsigned k = abs(m_Couplers[i]) - 1;
+			if (k >= associatedManual->GetCouplerCount())
+				continue;
 			associatedManual->GetCoupler(k)->Set(m_Couplers[i] > 0);
 			used |= m_Couplers[i] > 0;
 		}
@@ -276,6 +286,8 @@ void GOrgueDivisional::PushLocal()
 			if (!m_Tremulants[i])
 				continue;
 			unsigned k = abs(m_Tremulants[i]) - 1;
+			if (k >= associatedManual->GetTremulantCount())
+				continue;
 			associatedManual->GetTremulant(k)->Set(m_Tremulants[i] > 0);
 			used |= m_Tremulants[i] > 0;
 		}
