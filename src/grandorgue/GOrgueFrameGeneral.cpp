@@ -247,6 +247,9 @@ void GOrgueFrameGeneral::Push()
 				if (!m_Stops[i])
 					continue;
 				unsigned k = abs(m_Stops[i]) - 1;
+				if (m_StopManual[i] >= m_organfile->GetManualAndPedalCount() ||
+				    k >= m_organfile->GetManual(m_StopManual[i])->GetStopCount())
+					continue;
 				if (m_organfile->GetManual(m_StopManual[i])->GetStop(k)->IsEngaged())
 					m_Stops[i] = k + 1;
 				else
@@ -259,6 +262,9 @@ void GOrgueFrameGeneral::Push()
 				if (!m_Couplers[i])
 					continue;
 				unsigned k = abs(m_Couplers[i]) - 1;
+				if (m_CouplerManual[i] >= m_organfile->GetManualAndPedalCount() ||
+				    k >= m_organfile->GetManual(m_CouplerManual[i])->GetCouplerCount())
+					continue;
 				if (m_organfile->GetManual(m_CouplerManual[i])->GetCoupler(k)->IsEngaged())
 					m_Couplers[i] = k + 1;
 				else
@@ -271,6 +277,8 @@ void GOrgueFrameGeneral::Push()
 				if (!m_Tremulants[i])
 					continue;
 				unsigned k = abs(m_Tremulants[i]) - 1;
+				if (k >= m_organfile->GetTremulantCount())
+					continue;
 				if (m_organfile->GetTremulant(k)->IsEngaged())
 					m_Tremulants[i] = k + 1;
 				else
@@ -283,6 +291,8 @@ void GOrgueFrameGeneral::Push()
 				if (!m_DivisionalCouplers[i])
 					continue;
 				unsigned k = abs(m_DivisionalCouplers[i]) - 1;
+				if (k >= m_organfile->GetDivisionalCouplerCount())
+					continue;
 				if (m_organfile->GetDivisionalCoupler(k)->IsEngaged())
 					m_DivisionalCouplers[i] = k + 1;
 				else
@@ -300,6 +310,9 @@ void GOrgueFrameGeneral::Push()
 			if (!m_Stops[i])
 				continue;
 			unsigned k = abs(m_Stops[i]) - 1;
+			if (m_StopManual[i] >= m_organfile->GetManualAndPedalCount() ||
+			    k >= m_organfile->GetManual(m_StopManual[i])->GetStopCount())
+				continue;
 			m_organfile->GetManual(m_StopManual[i])->GetStop(k)->Set(m_Stops[i] > 0);
 			used |= m_Stops[i] > 0;
 		}
@@ -309,6 +322,9 @@ void GOrgueFrameGeneral::Push()
 			if (!m_Couplers[i])
 				continue;
 			unsigned k = abs(m_Couplers[i]) - 1;
+			if (m_CouplerManual[i] >= m_organfile->GetManualAndPedalCount() ||
+			    k >= m_organfile->GetManual(m_CouplerManual[i])->GetCouplerCount())
+				continue;
 			m_organfile->GetManual(m_CouplerManual[i])->GetCoupler(k)->Set(m_Couplers[i] > 0);
 			used |= m_Couplers[i] > 0;
 		}
@@ -318,6 +334,8 @@ void GOrgueFrameGeneral::Push()
 			if (!m_Tremulants[i])
 				continue;
 			unsigned k = abs(m_Tremulants[i]) - 1;
+			if (k >= m_organfile->GetTremulantCount())
+				continue;
 			m_organfile->GetTremulant(k)->Set(m_Tremulants[i] > 0);
 			used |= m_Tremulants[i] > 0;
 		}
@@ -327,6 +345,8 @@ void GOrgueFrameGeneral::Push()
 			if (!m_DivisionalCouplers[i])
 				continue;
 			unsigned k = abs(m_DivisionalCouplers[i]) - 1;
+			if (k >= m_organfile->GetDivisionalCouplerCount())
+				continue;
 			m_organfile->GetDivisionalCoupler(k)->Set(m_DivisionalCouplers[i] > 0);
 			used |= m_DivisionalCouplers[i] > 0;
 		}

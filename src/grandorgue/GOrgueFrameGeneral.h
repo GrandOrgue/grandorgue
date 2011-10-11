@@ -33,9 +33,9 @@ class GOrgueFrameGeneral : public GOrguePushbutton
 
 private:
 	std::vector<int> m_Stops;
-	std::vector<int> m_StopManual;
+	std::vector<unsigned> m_StopManual;
 	std::vector<int> m_Couplers;
-	std::vector<int> m_CouplerManual;
+	std::vector<unsigned> m_CouplerManual;
 	std::vector<int> m_Tremulants;
 	std::vector<int> m_DivisionalCouplers;
 	bool m_Protected;
