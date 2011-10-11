@@ -110,6 +110,7 @@ void GOrgueMidi::UpdateDevices()
 				t->rtmidi_port_no = i;
 				t->active = false;
 				t->name = name;
+				t->midi_in->setCallback(&MIDICallback, t);
 				m_midi_devices.push_back(t);
 			
 				name.Replace(wxT("\\"), wxT("|"));
@@ -163,12 +164,19 @@ void GOrgueMidi::Open()
 		int channel_shift = m_global_config->Read(wxT("Devices/MIDI/") + this_dev.name, 0L);
 		if (channel_shift >= 0)
 		{
-			assert(this_dev.midi_in);
-			this_dev.channel_shift = channel_shift;
-			this_dev.midi_in->closePort();
-			this_dev.midi_in->setCallback(&MIDICallback, &this_dev);
-			this_dev.midi_in->openPort(this_dev.rtmidi_port_no);
-			this_dev.active = true;
+			try
+			{
+				assert(this_dev.midi_in);
+				this_dev.channel_shift = channel_shift;
+				this_dev.midi_in->closePort();
+				this_dev.midi_in->openPort(this_dev.rtmidi_port_no);
+				this_dev.active = true;
+			}
+			catch (RtError &e)
+			{
+				e.printMessage();
+			}
+
 		}
 		else if (this_dev.active)
 		{
