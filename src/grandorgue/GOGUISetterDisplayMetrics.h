@@ -25,7 +25,7 @@
 
 #include "GOGUIDisplayMetrics.h"
 
-typedef enum { GOGUI_SETTER_SETTER, GOGUI_SETTER_GENERALS, GOGUI_SETTER_CRESCENDO } GOGUISetterType;
+typedef enum { GOGUI_SETTER_SETTER, GOGUI_SETTER_GENERALS, GOGUI_SETTER_CRESCENDO, GOGUI_SETTER_DIVISIONALS } GOGUISetterType;
 
 class GOGUISetterDisplayMetrics : public GOGUIDisplayMetrics
 {

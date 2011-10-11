@@ -308,6 +308,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	}
 
 	m_panels.push_back(m_setter->CreateCrescendoPanel(ini));
+	m_panels.push_back(m_setter->CreateDivisionalPanel(ini));
 	m_panels.push_back(m_setter->CreateGeneralsPanel(ini));
 	m_panels.push_back(m_setter->CreateSetterPanel(ini));
 }

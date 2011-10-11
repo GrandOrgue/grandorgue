@@ -34,11 +34,11 @@ GOrgueControl::~GOrgueControl()
 {
 }
 
-void GOrgueControl::Load(IniFileConfig& cfg, wxString group)
+void GOrgueControl::Load(IniFileConfig& cfg, wxString group, wxString name)
 {
 	m_group = group;
-	m_Name = cfg.ReadString(group, wxT("Name"), 64);
-	m_Displayed = cfg.ReadBoolean(group, wxT("Displayed"));
+	m_Name = cfg.ReadString(group, wxT("Name"), 64, true, name);
+	m_Displayed = cfg.ReadBoolean(group, wxT("Displayed"), true, false);
 }
 
 void GOrgueControl::Save(IniFileConfig& cfg, bool prefix)

@@ -39,7 +39,7 @@ protected:
 
 public:
 	GOrguePushbutton(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(IniFileConfig& cfg, wxString group, wxString name = wxT(""));
 	void Save(IniFileConfig& cfg, bool prefix);
 	virtual void Push() { };
 	void ProcessMidi(const GOrgueMidiEvent& event);
