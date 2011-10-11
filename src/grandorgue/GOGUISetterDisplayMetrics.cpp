@@ -27,8 +27,39 @@
 GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(IniFileConfig& ini, GrandOrgueFile* organfile, wxString group, GOGUISetterType type) :
 	GOGUIDisplayMetrics(organfile, group)
 {
-	bool IsSetter = type == GOGUI_SETTER_SETTER;
-	bool IsCrescendo = type == GOGUI_SETTER_CRESCENDO;
+	wxString x_size, y_size;
+	int drawstop_rows, drawstop_cols;
+	int button_rows, button_cols;
+
+	switch (type)
+	{
+	case GOGUI_SETTER_SETTER:
+		x_size = wxT("800");
+		y_size = wxT("300");
+		drawstop_rows = 3;
+		drawstop_cols = 10;
+		button_cols = 10;
+		button_rows = 0;
+		break;
+
+	case GOGUI_SETTER_CRESCENDO:
+		x_size = wxT("700");
+		y_size = wxT("300");
+		drawstop_rows = 2;
+		drawstop_cols = 8;
+		button_cols = 10;
+		button_rows = 0;
+		break;
+
+	case GOGUI_SETTER_GENERALS:
+	default:
+		x_size = wxT("600");
+		y_size = wxT("250");
+		drawstop_rows = 1;
+		drawstop_cols = 7;
+		button_cols = 10;
+		button_rows = 3;
+	}
 
 	m_nb_enclosures = 0;
 	m_nb_manuals    = 0;
@@ -42,8 +73,8 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(IniFileConfig& ini, GrandOr
 		m_manual_info.push_back(man);
 	}
 
-	m_DispScreenSizeHoriz = ini.ReadSize(m_group, wxT("DispScreenSizeHoriz"), 0, false, IsSetter ? wxT("800") : IsCrescendo ? wxT("700") : wxT("600"));
-	m_DispScreenSizeVert = ini.ReadSize(m_group, wxT("DispScreenSizeVert"), 1, false, IsSetter ? wxT("300") : IsCrescendo ? wxT("300") : wxT("250"));
+	m_DispScreenSizeHoriz = ini.ReadSize(m_group, wxT("DispScreenSizeHoriz"), 0, false, x_size);
+	m_DispScreenSizeVert = ini.ReadSize(m_group, wxT("DispScreenSizeVert"), 1, false, y_size);
 	m_DispDrawstopBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispDrawstopBackgroundImageNum"), 1, 64, false, 31);
 	m_DispConsoleBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispConsoleBackgroundImageNum"), 1, 64, false, 32);
 	m_DispKeyHorizBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispKeyHorizBackgroundImageNum"), 1, 64, false, 32);
@@ -58,10 +89,10 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(IniFileConfig& ini, GrandOr
 	m_DispDrawstopColsOffset = ini.ReadBoolean(m_group, wxT("DispDrawstopColsOffset"), false, false);
 	m_DispDrawstopOuterColOffsetUp = ini.ReadBoolean(m_group, wxT("DispDrawstopOuterColOffsetUp"), false, false);
 	m_DispPairDrawstopCols = ini.ReadBoolean(m_group, wxT("DispPairDrawstopCols"), false, false);
-	m_DispExtraDrawstopRows = ini.ReadInteger(m_group, wxT("DispExtraDrawstopRows"), 0, 8, false, IsSetter ? 3 : IsCrescendo ? 2: 1);
-	m_DispExtraDrawstopCols = ini.ReadInteger(m_group, wxT("DispExtraDrawstopCols"), 0, 40, false, IsSetter ? 10 : IsCrescendo ? 8 : 7);
-	m_DispButtonCols = ini.ReadInteger(m_group, wxT("DispButtonCols"), 1, 32, false, 10);
-	m_DispExtraButtonRows = ini.ReadInteger(m_group, wxT("DispExtraButtonRows"), 0, 8, false, IsSetter ? 0 : IsCrescendo ? 0 : 3);
+	m_DispExtraDrawstopRows = ini.ReadInteger(m_group, wxT("DispExtraDrawstopRows"), 0, 8, false, drawstop_rows);
+	m_DispExtraDrawstopCols = ini.ReadInteger(m_group, wxT("DispExtraDrawstopCols"), 0, 40, false, drawstop_cols);
+	m_DispButtonCols = ini.ReadInteger(m_group, wxT("DispButtonCols"), 1, 32, false, button_cols);
+	m_DispExtraButtonRows = ini.ReadInteger(m_group, wxT("DispExtraButtonRows"), 0, 8, false, button_rows);
 	m_DispExtraPedalButtonRow = ini.ReadBoolean(m_group, wxT("DispExtraPedalButtonRow"), false, false);
 	m_DispExtraPedalButtonRowOffset = ini.ReadBoolean(m_group, wxT("DispExtraPedalButtonRowOffset"), false, false);
 	m_DispExtraPedalButtonRowOffsetRight = ini.ReadBoolean(m_group, wxT("DispExtraPedalButtonRowOffsetRight"), false, false);
