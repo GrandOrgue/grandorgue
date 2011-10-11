@@ -51,6 +51,15 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(IniFileConfig& ini, GrandOr
 		button_rows = 0;
 		break;
 
+	case GOGUI_SETTER_DIVISIONALS:
+		x_size = wxT("600");
+		y_size = wxString::Format(wxT("%d"), 40 * (organfile->GetManualAndPedalCount() + 1) + 140);
+		drawstop_rows = 1;
+		drawstop_cols = 7;
+		button_cols = 13;
+		button_rows = organfile->GetManualAndPedalCount() + 1;
+		break;
+
 	case GOGUI_SETTER_GENERALS:
 	default:
 		x_size = wxT("600");

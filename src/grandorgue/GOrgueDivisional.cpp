@@ -41,7 +41,7 @@ GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile) :
 {
 }
 
-void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber)
+void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name)
 {
 
 	int i;
@@ -57,9 +57,9 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 
 	GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
 
-	int NumberOfStops = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount());
-	int NumberOfCouplers = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers());
-	int NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), m_organfile->DivisionalsStoreTremulants());
+	int NumberOfStops = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount(), true, 0);
+	int NumberOfCouplers = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers(), 0);
+	int NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), m_organfile->DivisionalsStoreTremulants(), 0);
 	m_Protected = cfg.ReadBoolean(group, wxT("Protected"), false, false);
 
 	m_Stops.resize(NumberOfStops);
@@ -89,7 +89,7 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 		}
 	}
 
-	GOrguePushbutton::Load(cfg, group);
+	GOrguePushbutton::Load(cfg, group, name);
 }
 
 void GOrgueDivisional::Save(IniFileConfig& cfg, bool prefix)

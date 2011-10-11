@@ -37,10 +37,10 @@ GOrgueMidiReceiver& GOrguePushbutton::GetMidiReceiver()
 	return m_midi;
 }
 
-void GOrguePushbutton::Load(IniFileConfig& cfg, wxString group)
+void GOrguePushbutton::Load(IniFileConfig& cfg, wxString group, wxString name)
 {
 	m_midi.Load(cfg, group);
-	GOrgueControl::Load(cfg, group);
+	GOrgueControl::Load(cfg, group, name);
 }
 
 void GOrguePushbutton::Save(IniFileConfig& cfg, bool prefix)

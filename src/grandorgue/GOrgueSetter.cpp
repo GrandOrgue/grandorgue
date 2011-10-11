@@ -24,9 +24,12 @@
 #include "GOGUILabel.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUIPanel.h"
+#include "GOGUIPushbutton.h"
 #include "GOGUISetterButton.h"
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOrgueDivisional.h"
 #include "GOrgueFrameGeneral.h"
+#include "GOrgueManual.h"
 #include "GOrgueMeter.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSetterButton.h"
@@ -270,6 +273,64 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(IniFileConfig& cfg, wxString group,
 	GOGUISetterButton* button = new GOGUISetterButton(panel, m_button[element]);
 	button->Init(cfg, 1, 1, group);
 	return button;
+}
+
+GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(IniFileConfig& cfg)
+{
+	GOGUIControl* control;
+	GOGUISetterButton* button;
+
+	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterDivisionals"), GOGUI_SETTER_DIVISIONALS);
+	panel->Init(cfg, metrics, _("Divisionals"), wxT("SetterDivisionalPanel"));
+
+	control = new GOGUIHW1Background(panel);
+	panel->AddControl(control);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SET]);
+	button->Init(cfg, 1, 100, wxT("SetterGeneralsSet"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_REGULAR]);
+	button->Init(cfg, 3, 100, wxT("SetterGerneralsRegular"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPE]);
+	button->Init(cfg, 4, 100, wxT("SetterGeneralsScope"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPED]);
+	button->Init(cfg, 5, 100, wxT("SetterGeneralsScoped"));
+	panel->AddControl(button);
+
+	button = new GOGUISetterButton(panel, m_button[ID_SETTER_FULL]);
+	button->Init(cfg, 7, 100, wxT("SetterGeneralsFull"));
+	panel->AddControl(button);
+
+	for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
+	{
+		int x, y;
+		GOrgueManual* manual = m_organfile->GetManual(i);
+
+		metrics->GetPushbuttonBlitPosition(100 + i, 1, &x, &y);
+
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, NULL, x, y, manual->GetName());
+		PosDisplay->Load(cfg, wxString::Format(wxT("SetterDivisionalLabel%03d"), i));
+		panel->AddControl(PosDisplay);
+
+		for(unsigned j = 0; j < 10; j++)
+		{
+			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile);
+			divisional->Load(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
+			manual->AddDivisional(divisional);
+
+			control = new GOGUIPushbutton(panel, divisional, j + 3, 100 + i);
+			control->Load(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100));
+			panel->AddControl(control);
+		}
+	}
+
+	return panel;
 }
 
 GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(IniFileConfig& cfg)

@@ -242,6 +242,11 @@ GOrgueDivisional* GOrgueManual::GetDivisional(unsigned index)
 	return m_divisionals[index];
 }
 
+void GOrgueManual::AddDivisional(GOrgueDivisional* divisional)
+{
+	m_divisionals.push_back(divisional);
+}
+
 unsigned GOrgueManual::GetTremulantCount()
 {
 	return m_tremulant_ids.size();

@@ -37,7 +37,7 @@ protected:
 public:
 	GOrgueControl();
 	virtual ~GOrgueControl();
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(IniFileConfig& cfg, wxString group, wxString name = wxT(""));
 	virtual void Save(IniFileConfig& cfg, bool prefix);
 	bool IsDisplayed();
 	const wxString& GetName();

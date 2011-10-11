@@ -43,7 +43,7 @@ public:
 	bool m_Protected;
 
 	GOrgueDivisional(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber);
+	void Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name = wxT(""));
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Push();
 

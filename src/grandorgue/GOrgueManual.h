@@ -96,6 +96,7 @@ public:
 	GOrgueCoupler* GetCoupler(unsigned index);
 	unsigned GetDivisionalCount();
 	GOrgueDivisional* GetDivisional(unsigned index);
+ 	void AddDivisional(GOrgueDivisional* divisional);
 	unsigned GetTremulantCount();
 	GOrgueTremulant* GetTremulant(unsigned index);
 
