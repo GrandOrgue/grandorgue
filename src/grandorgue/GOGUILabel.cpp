@@ -26,103 +26,47 @@
 #include "GOrgueLabel.h"
 #include "IniFileConfig.h"
 
-GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label) :
+GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, unsigned y_pos, wxString name) :
 	GOGUIControl(panel, label),
 	m_FreeXPlacement(false),
 	m_FreeYPlacement(false),
 	m_DispSpanDrawstopColToRight(false),
 	m_DispAtTopOfDrawstopCol(false),
 	m_DispDrawstopCol(0),
-	m_DispXpos(0),
-	m_DispYpos(0),
+	m_DispXpos(x_pos),
+	m_DispYpos(y_pos),
 	m_DispLabelFontSize(0),
 	m_DispImageNum(0),
 	m_DispLabelColour(0,0,0),
-	m_Name(),
+	m_Name(name),
 	m_label(label)
 {
-}
-
-void GOGUILabel::Init(IniFileConfig& cfg, unsigned x, unsigned y, wxString group)
-{
-	m_FreeXPlacement = cfg.ReadBoolean(group, wxT("FreeXPlacement"), false, true);
-	m_FreeYPlacement = cfg.ReadBoolean(group, wxT("FreeYPlacement"), false, true);
-
-	if (!m_FreeXPlacement)
-	{
-		m_DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, m_metrics->NumberOfDrawstopColsToDisplay(), false, 1);
-		m_DispSpanDrawstopColToRight = cfg.ReadBoolean(group, wxT("DispSpanDrawstopColToRight"), false, false);
-	}
-	else
-	{
-		m_DispXpos = cfg.ReadInteger(group, wxT("DispXpos"), 0, m_metrics->GetScreenWidth(), false, x);
-	}
-
-	if (!m_FreeYPlacement)
-	{
-		m_DispAtTopOfDrawstopCol = cfg.ReadBoolean(group, wxT("DispAtTopOfDrawstopCol"), false, false);
-	}
-	else
-	{
-		m_DispYpos = cfg.ReadInteger(group, wxT("DispYpos"), 0, m_metrics->GetScreenHeight(), false, y);
-	}
-
-	/* NOTICE: this should not be allowed, but some existing definition files
-	 * use improper values */
-	if (!m_DispXpos)
-		m_DispYpos++;
-	if (!m_DispYpos)
-		m_DispYpos++;
-
-	m_DispLabelColour = cfg.ReadColor(group, wxT("DispLabelColour"), false, wxT("BLACK"));
-	m_DispLabelFontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"), false, wxT("NORMAL"));
-	m_DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 1, false, 1);
-
-	if (!m_FreeXPlacement)
-	{
-		int i = m_metrics->NumberOfDrawstopColsToDisplay() >> 1;
-		if (m_DispDrawstopCol <= i)
-			m_DispXpos = m_metrics->GetJambLeftX()  + (m_DispDrawstopCol - 1) * 78 + 1;
-		else
-			m_DispXpos = m_metrics->GetJambRightX() + (m_DispDrawstopCol - 1 - i) * 78 + 1;
-		if (m_DispSpanDrawstopColToRight)
-			m_DispXpos += 39;
-	}
-
-	if (!m_FreeYPlacement)
-	{
-		m_DispYpos = m_metrics->GetJambLeftRightY() + 1;
-		if (!m_DispAtTopOfDrawstopCol)
-			m_DispYpos += m_metrics->GetJambLeftRightHeight() - 32;
-	}
-
-	m_BoundingRect = wxRect(m_DispXpos - 1, m_DispYpos - 1, 78, 22);
 }
 
 void GOGUILabel::Load(IniFileConfig& cfg, wxString group)
 {
 
-	m_Name = cfg.ReadString(group, wxT("Name"), 64);
-	m_FreeXPlacement = cfg.ReadBoolean(group, wxT("FreeXPlacement"));
-	m_FreeYPlacement = cfg.ReadBoolean(group, wxT("FreeYPlacement"));
+	m_Name = cfg.ReadString(group, wxT("Name"), 64, true, m_Name);
+	m_FreeXPlacement = cfg.ReadBoolean(group, wxT("FreeXPlacement"), true, true);
+	m_FreeYPlacement = cfg.ReadBoolean(group, wxT("FreeYPlacement"), true, true);
 
 	if (!m_FreeXPlacement)
 	{
-		m_DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, m_metrics->NumberOfDrawstopColsToDisplay());
-		m_DispSpanDrawstopColToRight = cfg.ReadBoolean(group, wxT("DispSpanDrawstopColToRight"));
+		m_DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, m_metrics->NumberOfDrawstopColsToDisplay(), true, 1);
+		m_DispSpanDrawstopColToRight = cfg.ReadBoolean(group, wxT("DispSpanDrawstopColToRight"), true, false);
 	}
 	else
 	{
-		m_DispXpos = cfg.ReadInteger(group, wxT("DispXpos"), 0, m_metrics->GetScreenWidth());
+		m_DispXpos = cfg.ReadInteger(group, wxT("DispXpos"), 0, m_metrics->GetScreenWidth(), true, m_DispXpos);
 	}
 
 	if (!m_FreeYPlacement)
 	{
-		m_DispAtTopOfDrawstopCol = cfg.ReadBoolean(group, wxT("DispAtTopOfDrawstopCol"));
+		m_DispAtTopOfDrawstopCol = cfg.ReadBoolean(group, wxT("DispAtTopOfDrawstopCol"), true, false);
 	}
 	else
 	{
-		m_DispYpos = cfg.ReadInteger(group, wxT("DispYpos"), 0, m_metrics->GetScreenHeight());
+		m_DispYpos = cfg.ReadInteger(group, wxT("DispYpos"), 0, m_metrics->GetScreenHeight(), true, m_DispYpos);
 	}
 
 	/* NOTICE: this should not be allowed, but some existing definition files
@@ -132,9 +76,9 @@ void GOGUILabel::Load(IniFileConfig& cfg, wxString group)
 	if (!m_DispYpos)
 		m_DispYpos++;
 
-	m_DispLabelColour = cfg.ReadColor(group, wxT("DispLabelColour"));
-	m_DispLabelFontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"));
-	m_DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 1);
+	m_DispLabelColour = cfg.ReadColor(group, wxT("DispLabelColour"), true, wxT("BLACK"));
+	m_DispLabelFontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"), true, wxT("NORMAL"));
+	m_DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 1, true, 1);
 
 	if (!m_FreeXPlacement)
 	{

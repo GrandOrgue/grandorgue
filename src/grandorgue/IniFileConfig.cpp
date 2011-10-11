@@ -39,6 +39,9 @@ wxString IniFileConfig::ReadString(wxString group, wxString key, unsigned nmax, 
 	{
 		if (group.length() >= 6 && !group.Mid(0, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
 			return defaultValue;
+		if (group.length() >= 5 && !group.Mid(0, 5).CmpNoCase(wxT("Panel")))
+			if (group.length() >= 14 && !group.Mid(8, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
+				return defaultValue;
 
 		if (group.length() >= 12 && !group.Mid(0, 12).CmpNoCase(wxT("FrameGeneral")))	// FrameGeneral groups aren't required.
 			return defaultValue;
@@ -57,6 +60,12 @@ wxString IniFileConfig::ReadString(wxString group, wxString key, unsigned nmax, 
 	{
 		if (required)
 		{
+			if (group.length() >= 6 && !group.Mid(0, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
+				return defaultValue;
+			if (group.length() >= 5 && !group.Mid(0, 5).CmpNoCase(wxT("Panel")))
+				if (group.length() >= 14 && !group.Mid(8, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
+					return defaultValue;
+
 			wxString error;
 			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
 			throw error;

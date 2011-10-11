@@ -250,14 +250,14 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(IniFileConfig& cfg, wxString group,
 	unsigned element  = cfg.ReadEnum(group, wxT("Type"), m_setter_element_types, sizeof(m_setter_element_types) / sizeof(m_setter_element_types[0]), true);
 	if (element == ID_SETTER_LABEL)
 	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay);
-		PosDisplay->Init(cfg, 350, 10, group);
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay, 350, 10);
+		PosDisplay->Load(cfg, group);
 		return PosDisplay;
 	}
 	if (element == ID_SETTER_CRESCENDO_LABEL)
 	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay);
-		PosDisplay->Init(cfg, 350, 10, group);
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay, 350, 10);
+		PosDisplay->Load(cfg, group);
 		return PosDisplay;
 	}
 	if (element == ID_SETTER_CRESCENDO_SWELL)
@@ -326,8 +326,8 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 	control = new GOGUIHW1Background(panel);
 	panel->AddControl(control);
 
-	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay);
-	PosDisplay->Init(cfg, 350, 10, wxT("SetterCurrentPosition"));
+	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay, 350, 10);
+	PosDisplay->Load(cfg, wxT("SetterCurrentPosition"));
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CURRENT]);
@@ -428,8 +428,8 @@ GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(IniFileConfig& cfg)
 	enclosure->Load(cfg, wxT("SetterSwell"));
 	panel->AddControl(enclosure);
 
-	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay);
-	PosDisplay->Init(cfg, 350, 10, wxT("SetterCrescendoPosition"));
+	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay, 350, 10);
+	PosDisplay->Load(cfg, wxT("SetterCrescendoPosition"));
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SET]);
