@@ -75,7 +75,7 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 		for (i = 0; i < NumberOfCouplers; i++)
 		{
 			buffer.Printf(wxT("Coupler%03d"), i + 1);
-			m_Couplers[i] = cfg.ReadInteger( group, buffer, -associatedManual->GetCouplerCount(), associatedManual->GetCouplerCount());
+			m_Couplers[i] = cfg.ReadInteger( group, buffer, -999, 999);
 		}
 	}
 
