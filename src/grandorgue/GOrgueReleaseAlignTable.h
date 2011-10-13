@@ -23,11 +23,11 @@
 #ifndef GORGUERELEASEALIGNTABLE_H_
 #define GORGUERELEASEALIGNTABLE_H_
 
+#include "GOSoundSampler.h"
+
 #define PHASE_ALIGN_DERIVATIVES    2
 #define PHASE_ALIGN_AMPLITUDES     32
 #define PHASE_ALIGN_MIN_FREQUENCY  20 /* Hertz */
-
-#include "GOrgueSoundTypes.h"
 
 class wxInputStream;
 class wxOutputStream;

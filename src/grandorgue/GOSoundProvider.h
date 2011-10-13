@@ -24,7 +24,7 @@
 #define GOSOUNDPROVIDER_H_
 
 #include <wx/wx.h>
-#include "GOrgueSoundTypes.h"
+#include "GOSoundAudioSection.h"
 
 class GOSoundProvider
 {
@@ -44,7 +44,6 @@ protected:
 	void ComputeReleaseAlignmentInfo();
 
 public:
-
 	GOSoundProvider();
 	virtual ~GOSoundProvider();
 

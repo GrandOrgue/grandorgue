@@ -23,6 +23,7 @@
 #include <wx/stream.h>
 
 #include "GOrgueReleaseAlignTable.h"
+#include "GOSoundAudioSection.h"
 #include <stdlib.h>
 
 #ifndef NDEBUG

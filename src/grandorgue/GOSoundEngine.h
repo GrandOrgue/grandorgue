@@ -23,7 +23,7 @@
 #ifndef GOSOUNDENGINE_H_
 #define GOSOUNDENGINE_H_
 
-#include "GOrgueSoundTypes.h"
+#include "GOSoundDefs.h"
 #include "GOSoundSamplerPool.h"
 #include "GrandOrgueDef.h"
 #include <vector>
@@ -41,6 +41,8 @@ typedef struct
 	double meter_right;
 } METER_INFO;
 
+struct GO_SAMPLER_T;
+typedef struct GO_SAMPLER_T GO_SAMPLER;
 typedef GO_SAMPLER* SAMPLER_HANDLE;
 
 class GOSoundEngine
