@@ -20,36 +20,10 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUESOUNDTYPES_H
-#define GORGUESOUNDTYPES_H
+#ifndef GOSOUNDAUDIOSECTION_H_
+#define GOSOUNDAUDIOSECTION_H_
 
-/* Number of samples to store from previous block decode as history. This may
- * be needed for features such as release alignment and compression. */
-#define BLOCK_HISTORY          2
-
-/* BLOCKS_PER_FRAME specifies the number of mono samples or stereo sample
- * pairs which are decoded for each iteration of the audio engines main loop.
- * Setting this value too low will result in inefficiencies or certain
- * features (compression) failing to work. */
-#define BLOCKS_PER_FRAME       64
-
-/* Number of extra samples to avoid out of array accesses */
-#define EXTRA_FRAMES       128
-
-/* Maximum number of blocks (1 block is nChannels samples) per frame */
-#define MAX_FRAME_SIZE         1024
-
-/* Maximum number of channels the engine supports. This value can not be
- * changed at present.
- */
-#define MAX_OUTPUT_CHANNELS    2
-
-class GOSoundProvider;
-
-#define DATA_TYPE_MONO_COMPRESSED     0
-#define DATA_TYPE_MONO_UNCOMPRESSED   1
-#define DATA_TYPE_STEREO_COMPRESSED   2
-#define DATA_TYPE_STEREO_UNCOMPRESSED 3
+#include "GOSoundDefs.h"
 
 typedef enum
 {
@@ -65,8 +39,6 @@ typedef enum {
 	GSS_RELEASE
 } AUDIO_SECTION_STAGE;
 
-struct AUDIO_SECTION_T;
-struct GO_SAMPLER_T;
 class GOrgueReleaseAlignTable;
 
 typedef struct AUDIO_SECTION_T
@@ -97,21 +69,4 @@ typedef struct AUDIO_SECTION_T
 
 } AUDIO_SECTION;
 
-#include "GOSoundFader.h"
-
-typedef struct GO_SAMPLER_T
-{
-	struct GO_SAMPLER_T       *next;		// must be first!
-	const GOSoundProvider     *pipe;
-	int                        sampler_group_id;
-	const AUDIO_SECTION       *pipe_section;
-	GOSoundFader               fader;
-	int                        history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
-	unsigned                   time;
-	/* current index of the current block into this sample */
-	float                      position;
-	float                      increment;
-	bool                       stop;
-} GO_SAMPLER;
-
-#endif
+#endif /* GOSOUNDAUDIOSECTION_H_ */

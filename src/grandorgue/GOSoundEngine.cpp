@@ -22,6 +22,7 @@
 
 #include "GOSoundEngine.h"
 #include "GOSoundProvider.h"
+#include "GOSoundSampler.h"
 #include "GOrgueEvent.h"
 #include "GOrguePipe.h"
 #include "GOrgueReleaseAlignTable.h"

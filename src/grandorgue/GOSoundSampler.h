@@ -20,44 +20,29 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GOSOUNDSAMPLERPOOL_H_
-#define GOSOUNDSAMPLERPOOL_H_
+#ifndef GOSOUNDSAMPLER_H_
+#define GOSOUNDSAMPLER_H_
 
-#include <wx/wx.h>
+#include "GOSoundFader.h"
+#include "GOSoundDefs.h"
 
-#include "GOSoundSampler.h"
-#include "ptrvector.h"
+class GOSoundProvider;
+struct AUDIO_SECTION_T;
+typedef struct AUDIO_SECTION_T AUDIO_SECTION;
 
-class GOSoundSamplerPool
+typedef struct GO_SAMPLER_T
 {
+	struct GO_SAMPLER_T       *next;
+	const GOSoundProvider     *pipe;
+	int                        sampler_group_id;
+	const AUDIO_SECTION       *pipe_section;
+	GOSoundFader               fader;
+	int                        history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
+	unsigned                   time;
+	/* current index of the current block into this sample */
+	float                      position;
+	float                      increment;
+	bool                       stop;
+} GO_SAMPLER;
 
-private:
-	wxCriticalSection       m_Lock;
-	unsigned                m_SamplerCount;
-	unsigned                m_UsageLimit;
-	GO_SAMPLER             *m_AvailableSamplers;
-	ptr_vector<GO_SAMPLER>  m_Samplers;
-
-public:
-	GOSoundSamplerPool();
-	GO_SAMPLER* GetSampler();
-	void ReturnSampler(GO_SAMPLER* sampler);
-	void ReturnAll();
-	unsigned GetUsageLimit() const;
-	void SetUsageLimit(unsigned count);
-	unsigned UsedSamplerCount() const;
-};
-
-inline
-unsigned GOSoundSamplerPool::GetUsageLimit() const
-{
-	return m_UsageLimit;
-}
-
-inline
-unsigned GOSoundSamplerPool::UsedSamplerCount() const
-{
-	return m_SamplerCount;
-}
-
-#endif /* GOSOUNDSAMPLERPOOL_H_ */
+#endif /* GOSOUNDSAMPLER_H_ */

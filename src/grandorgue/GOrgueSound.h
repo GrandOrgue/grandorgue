@@ -31,14 +31,12 @@
 #include "RtAudio.h"
 #include "GrandOrgueDef.h"
 #include "GOSoundEngine.h"
+#include "GOSoundRecorder.h"
 
 class wxConfigBase;
 class GrandOrgueFile;
 class GOrgueMidi;
 class GOSoundThread;
-
-#include "GOrgueSoundTypes.h"
-#include "GOSoundRecorder.h"
 
 class GOrgueSound
 {
