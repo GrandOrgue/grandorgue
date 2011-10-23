@@ -273,7 +273,9 @@ bool GOrgueSound::OpenSound()
 	catch (wxString &msg)
 	{
 		if (logSoundErrors)
-			wxLogError(msg.c_str());
+		{
+			wxLogError(wxT("%s"), msg.c_str());
+		}
 	}
 
 	if (!opened_ok)
