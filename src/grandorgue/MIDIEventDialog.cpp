@@ -177,7 +177,12 @@ void MIDIEventDialog::LoadEvent()
 	for(unsigned i = 0; i < m_midi.GetEventCount(); i++)
 		{
 			wxString buffer;
-			buffer.Printf(_("%d (%s)"), i + 1, m_midi.GetEvent(i).device.IsEmpty() ? _("Any device") : m_midi.GetEvent(i).device.c_str());
+			wxString device;
+			if (m_midi.GetEvent(i).device.IsEmpty())
+				device =  _("Any device");
+			else
+				device = m_midi.GetEvent(i).device;
+			buffer.Printf(_("%d (%s)"), i + 1, device.c_str());
 			m_eventno->Append(buffer);
 		}
 	m_eventno->Select(m_current);
