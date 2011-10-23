@@ -47,7 +47,7 @@ public:
 
 	typedef struct
 	{
-		const wxChar* name;
+		const wxString name;
 		int event;
 	} LISTEN_DIALOG_SETUP_EVENT;
 
