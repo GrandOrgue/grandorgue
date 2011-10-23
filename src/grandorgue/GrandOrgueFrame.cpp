@@ -358,7 +358,7 @@ void GOrgueFrame::OnSave(wxCommandEvent& event)
 wxString formatSize(wxLongLong& size)
 {
     double n = (double)size.ToLong();
-    wxChar sizes[][3] = {wxTRANSLATE("KB"), wxTRANSLATE("MB"), wxTRANSLATE("GB"), wxTRANSLATE("TB")};
+    const wxChar* sizes[] = {wxTRANSLATE("KB"), wxTRANSLATE("MB"), wxTRANSLATE("GB"), wxTRANSLATE("TB")};
     int i;
 
     for (i = 0; i < 3; i++)
