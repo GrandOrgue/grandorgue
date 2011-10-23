@@ -189,7 +189,7 @@ int IniFileConfig::ReadInteger(wxString group, wxString key, int nmin, int nmax,
 		throw error;
 	}
 
-	int retval = atoi(value.mb_str() + (value[0] == wxT('+') ? 1 : 0));
+	int retval = wxAtoi(value);
 
 	if (nmin <= retval && retval <= nmax)
 		return retval;
@@ -237,7 +237,7 @@ double IniFileConfig::ReadFloat(wxString group, wxString key, double nmin, doubl
 		throw error;
 	}
 
-	double retval = atof(value.mb_str() + (value[0] == wxT('+') ? 1 : 0));
+	double retval = wxAtof(value);
 
 	if (nmin <= retval && retval <= nmax)
 		return retval;
@@ -275,7 +275,7 @@ unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bo
 
 	if (::wxIsdigit(value[0]))
 	{
-		int size = atoi(value.mb_str());
+		int size = wxAtoi(value);
 		if (100 <= size && size <= 4000)
 			return size;
 	}
