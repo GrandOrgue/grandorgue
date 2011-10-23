@@ -32,7 +32,7 @@
 
 typedef struct
 {
-	const wxChar*                              event_name;
+	const wxString                             event_name;
 	const long                                 default_mask;
 	const MIDIListenDialog::LISTEN_DIALOG_TYPE listener_dialog_type;
 } MIDI_EVENT;
