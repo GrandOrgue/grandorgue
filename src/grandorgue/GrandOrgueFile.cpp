@@ -413,7 +413,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 				error.Printf(_("Unable to read '%s'"), file2.c_str());
 				return error;
 			}
-			::wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_odf_config.Read(key).c_str());
+			wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_odf_config.Read(key).c_str());
 		}
 	}
 
@@ -612,7 +612,7 @@ void GrandOrgueFile::Save(const wxString& file)
 	{
 		if (::wxFileExists(file) && !::wxRemoveFile(file))
 		{
-			::wxLogError(_("Could not write to '%s'"), file.c_str());
+			wxLogError(_("Could not write to '%s'"), file.c_str());
 			return;
 		}
 		prefix = false;

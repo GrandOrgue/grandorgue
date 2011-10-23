@@ -69,7 +69,7 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	{
 		if (error != wxT("!"))
 		{
-			::wxLogError(wxT("%s\n"),error.c_str());
+			wxLogError(wxT("%s\n"),error.c_str());
 			wxMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
 		}
 		CloseOrgan();

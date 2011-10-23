@@ -138,9 +138,11 @@ bool GOrgueApp::OnInit()
 	}
 	else
 	{
-	    m_server = new stServer;
-	    if (!m_server->Create(wxT(APP_NAME)))
-            ::wxLogError(_("Failed to create IPC service."));
+		m_server = new stServer;
+		if (!m_server->Create(wxT(APP_NAME)))
+		{
+			wxLogError(_("Failed to create IPC service."));
+		}
 	}
 
 	SetAppName(wxT(APP_NAME));
