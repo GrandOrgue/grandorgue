@@ -29,8 +29,8 @@ int WXKtoVK(int what)
         return what;
     if (what >= WXK_SHIFT && what <= WXK_CAPITAL)
         return what - WXK_SHIFT + 16;
-    if (what >= WXK_PRIOR && what <= WXK_INSERT)
-        return what - WXK_PRIOR + 33;
+    if (what >= WXK_PAGEUP && what <= WXK_INSERT)
+        return what - WXK_PAGEUP + 33;
     if (what >= WXK_NUMPAD0 && what <= WXK_F24)
         return what - WXK_NUMPAD0 + 96;
     if (what >= WXK_WINDOWS_LEFT && what <= WXK_WINDOWS_MENU)
