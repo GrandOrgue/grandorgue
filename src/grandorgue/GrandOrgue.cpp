@@ -205,7 +205,7 @@ void GOrgueApp::AsyncLoadFile(wxString what)
     fn.Normalize();
     wxCommandEvent event(wxEVT_LOADFILE, 0);
     event.SetString(fn.GetFullPath());
-    frame->AddPendingEvent(event);
+    frame->GetEventHandler()->AddPendingEvent(event);
 }
 
 int GOrgueApp::OnExit()

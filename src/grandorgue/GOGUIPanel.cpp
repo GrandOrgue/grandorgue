@@ -434,7 +434,7 @@ void GOGUIPanel::AddEvent(GOGUIControl* control)
 	wxCommandEvent event(wxEVT_GOCONTROL, 0);
 	event.SetClientData(control);
 	if (m_window)
-		m_window->AddPendingEvent(event);
+		m_window->GetEventHandler()->AddPendingEvent(event);
 }
 
 void GOGUIPanel::AddControl(GOGUIControl* control)

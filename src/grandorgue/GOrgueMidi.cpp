@@ -283,7 +283,7 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* de
 	{
 		wxCommandEvent event(wxEVT_LOADFILE, 0);
 		event.SetString(it->second);
-		wxTheApp->GetTopWindow()->AddPendingEvent(event);
+		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 	}
 }
 

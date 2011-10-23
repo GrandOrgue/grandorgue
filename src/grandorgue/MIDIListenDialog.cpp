@@ -318,6 +318,6 @@ void MIDIListenDialog::OnHelp(wxCommandEvent& event)
 {
 	wxCommandEvent help(wxEVT_SHOWHELP, 0);
 	help.SetString(_("MIDI Messages"));
-	wxTheApp->GetTopWindow()->AddPendingEvent(help);
+	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(help);
 }
 
