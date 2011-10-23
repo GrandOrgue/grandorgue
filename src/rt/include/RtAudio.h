@@ -10,7 +10,7 @@
     RtAudio WWW site: http://www.music.mcgill.ca/~gary/rtaudio/
 
     RtAudio: realtime audio i/o C++ classes
-    Copyright (c) 2001-2010 Gary P. Scavone
+    Copyright (c) 2001-2011 Gary P. Scavone
 
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation files
@@ -42,7 +42,7 @@
   \file RtAudio.h
  */
 
-// RtAudio: Version 4.0.7
+// RtAudio: Version 4.0.10
 
 #ifndef __RTAUDIO_H
 #define __RTAUDIO_H
@@ -59,10 +59,12 @@
     internal routines will automatically take care of any necessary
     byte-swapping between the host format and the soundcard.  Thus,
     endian-ness is not a concern in the following format definitions.
+    Note that 24-bit data is expected to be encapsulated in a 32-bit
+    format.
 
     - \e RTAUDIO_SINT8:   8-bit signed integer.
     - \e RTAUDIO_SINT16:  16-bit signed integer.
-    - \e RTAUDIO_SINT24:  Upper 3 bytes of 32-bit signed integer.
+    - \e RTAUDIO_SINT24:  Lower 3 bytes of 32-bit signed integer.
     - \e RTAUDIO_SINT32:  32-bit signed integer.
     - \e RTAUDIO_FLOAT32: Normalized between plus/minus 1.0.
     - \e RTAUDIO_FLOAT64: Normalized between plus/minus 1.0.
@@ -84,6 +86,7 @@ static const RtAudioFormat RTAUDIO_FLOAT64 = 0x20; // Normalized between plus/mi
     - \e RTAUDIO_NONINTERLEAVED:   Use non-interleaved buffers (default = interleaved).
     - \e RTAUDIO_MINIMIZE_LATENCY: Attempt to set stream parameters for lowest possible latency.
     - \e RTAUDIO_HOG_DEVICE:       Attempt grab device for exclusive use.
+    - \e RTAUDIO_ALSA_USE_DEFAULT: Use the "default" PCM device (ALSA only).
 
     By default, RtAudio streams pass and receive audio data from the
     client in an interleaved format.  By passing the
@@ -109,14 +112,19 @@ static const RtAudioFormat RTAUDIO_FLOAT64 = 0x20; // Normalized between plus/mi
     open the input and/or output stream device(s) for exclusive use.
     Note that this is not possible with all supported audio APIs.
 
-    If the RTAUDIO_SCHEDULE_REALTIME flag is set, RtAudio will attempt
+    If the RTAUDIO_SCHEDULE_REALTIME flag is set, RtAudio will attempt 
     to select realtime scheduling (round-robin) for the callback thread.
+
+    If the RTAUDIO_ALSA_USE_DEFAULT flag is set, RtAudio will attempt to
+    open the "default" PCM device when using the ALSA API. Note that this
+    will override any specified input or output device id.
 */
 typedef unsigned int RtAudioStreamFlags;
 static const RtAudioStreamFlags RTAUDIO_NONINTERLEAVED = 0x1;    // Use non-interleaved buffers (default = interleaved).
 static const RtAudioStreamFlags RTAUDIO_MINIMIZE_LATENCY = 0x2;  // Attempt to set stream parameters for lowest possible latency.
 static const RtAudioStreamFlags RTAUDIO_HOG_DEVICE = 0x4;        // Attempt grab device and prevent use by others.
 static const RtAudioStreamFlags RTAUDIO_SCHEDULE_REALTIME = 0x8; // Try to select realtime scheduling for callback thread.
+static const RtAudioStreamFlags RTAUDIO_ALSA_USE_DEFAULT = 0x10; // Use the "default" PCM device (ALSA only).
 
 /*! \typedef typedef unsigned long RtAudioStreamStatus;
     \brief RtAudio stream status (over- or underflow) flags.
@@ -248,6 +256,7 @@ class RtAudio
     - \e RTAUDIO_MINIMIZE_LATENCY:  Attempt to set stream parameters for lowest possible latency.
     - \e RTAUDIO_HOG_DEVICE:        Attempt grab device for exclusive use.
     - \e RTAUDIO_SCHEDULE_REALTIME: Attempt to select realtime scheduling for callback thread.
+    - \e RTAUDIO_ALSA_USE_DEFAULT:  Use the "default" PCM device (ALSA only).
 
     By default, RtAudio streams pass and receive audio data from the
     client in an interleaved format.  By passing the
@@ -273,10 +282,14 @@ class RtAudio
     open the input and/or output stream device(s) for exclusive use.
     Note that this is not possible with all supported audio APIs.
 
-    If the RTAUDIO_SCHEDULE_REALTIME flag is set, RtAudio will attempt
+    If the RTAUDIO_SCHEDULE_REALTIME flag is set, RtAudio will attempt 
     to select realtime scheduling (round-robin) for the callback thread.
     The \c priority parameter will only be used if the RTAUDIO_SCHEDULE_REALTIME
     flag is set. It defines the thread's realtime priority.
+
+    If the RTAUDIO_ALSA_USE_DEFAULT flag is set, RtAudio will attempt to
+    open the "default" PCM device when using the ALSA API. Note that this
+    will override any specified input or output device id.
 
     The \c numberOfBuffers parameter can be used to control stream
     latency in the Windows DirectSound, Linux OSS, and Linux Alsa APIs
@@ -292,7 +305,7 @@ class RtAudio
     RtAudio with Jack, each instance must have a unique client name.
   */
   struct StreamOptions {
-    RtAudioStreamFlags flags;      /*!< A bit-mask of stream flags (RTAUDIO_NONINTERLEAVED, RTAUDIO_MINIMIZE_LATENCY, RTAUDIO_HOG_DEVICE). */
+    RtAudioStreamFlags flags;      /*!< A bit-mask of stream flags (RTAUDIO_NONINTERLEAVED, RTAUDIO_MINIMIZE_LATENCY, RTAUDIO_HOG_DEVICE, RTAUDIO_ALSA_USE_DEFAULT). */
     unsigned int numberOfBuffers;  /*!< Number of stream buffers. */
     std::string streamName;        /*!< A stream name (currently used only in Jack). */
     int priority;                  /*!< Scheduling priority of callback thread (only used with flag RTAUDIO_SCHEDULE_REALTIME). */
@@ -335,7 +348,7 @@ class RtAudio
   /*!
     This function performs a system query of available devices each time it
     is called, thus supporting devices connected \e after instantiation. If
-    a system error occurs during processing, a warning will be issued.
+    a system error occurs during processing, a warning will be issued. 
   */
   unsigned int getDeviceCount( void ) throw();
 
@@ -402,7 +415,7 @@ class RtAudio
            from within the callback function.
     \param options An optional pointer to a structure containing various
            global stream options, including a list of OR'ed RtAudioStreamFlags
-           and a suggested number of stream buffers that can be used to
+           and a suggested number of stream buffers that can be used to 
            control stream latency.  More buffers typically result in more
            robust performance, though at a cost of greater latency.  If a
            value of zero is specified, a system-specific median value is
@@ -657,7 +670,7 @@ protected:
     "warning" message is reported and FAILURE is returned. A
     successful probe is indicated by a return value of SUCCESS.
   */
-  virtual bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels,
+  virtual bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels, 
                                 unsigned int firstChannel, unsigned int sampleRate,
                                 RtAudioFormat format, unsigned int *bufferSize,
                                 RtAudio::StreamOptions *options );
@@ -748,7 +761,7 @@ public:
 
   private:
 
-  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels,
+  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels, 
                         unsigned int firstChannel, unsigned int sampleRate,
                         RtAudioFormat format, unsigned int *bufferSize,
                         RtAudio::StreamOptions *options );
@@ -782,7 +795,7 @@ public:
 
   private:
 
-  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels,
+  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels, 
                         unsigned int firstChannel, unsigned int sampleRate,
                         RtAudioFormat format, unsigned int *bufferSize,
                         RtAudio::StreamOptions *options );
@@ -818,7 +831,7 @@ public:
   std::vector<RtAudio::DeviceInfo> devices_;
   void saveDeviceInfo( void );
   bool coInitialized_;
-  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels,
+  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels, 
                         unsigned int firstChannel, unsigned int sampleRate,
                         RtAudioFormat format, unsigned int *bufferSize,
                         RtAudio::StreamOptions *options );
@@ -856,7 +869,7 @@ public:
   bool coInitialized_;
   bool buffersRolling;
   long duplexPrerollBytes;
-  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels,
+  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels, 
                         unsigned int firstChannel, unsigned int sampleRate,
                         RtAudioFormat format, unsigned int *bufferSize,
                         RtAudio::StreamOptions *options );
@@ -890,7 +903,7 @@ public:
 
   std::vector<RtAudio::DeviceInfo> devices_;
   void saveDeviceInfo( void );
-  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels,
+  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels, 
                         unsigned int firstChannel, unsigned int sampleRate,
                         RtAudioFormat format, unsigned int *bufferSize,
                         RtAudio::StreamOptions *options );
@@ -922,7 +935,7 @@ public:
 
   private:
 
-  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels,
+  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels, 
                         unsigned int firstChannel, unsigned int sampleRate,
                         RtAudioFormat format, unsigned int *bufferSize,
                         RtAudio::StreamOptions *options );
@@ -947,7 +960,7 @@ public:
 
   private:
 
-  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels,
+  bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels, 
                         unsigned int firstChannel, unsigned int sampleRate,
                         RtAudioFormat format, unsigned int *bufferSize,
                         RtAudio::StreamOptions *options ) { return false; };
