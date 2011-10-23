@@ -151,7 +151,7 @@ SettingsDialog::~SettingsDialog()
         if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION) == wxYES)
         {
             wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
-            wxTheApp->GetTopWindow()->AddPendingEvent(event);
+            wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
         }
     }
 }
@@ -540,7 +540,7 @@ void SettingsDialog::OnHelp(wxCommandEvent& event)
 {
 	wxCommandEvent help(wxEVT_SHOWHELP, 0);
 	help.SetString(((wxNotebook*)GetBookCtrl())->GetSelection() ? _("MIDI Settings") : _("Device Settings"));
-	wxTheApp->GetTopWindow()->AddPendingEvent(help);
+	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(help);
 }
 
 void SettingsDialog::OnOK(wxCommandEvent& event)
