@@ -331,7 +331,7 @@ void GOrgueFrame::OnLoad(wxCommandEvent& event)
 	if (!doc)
 		return;
 
-	wxFileDialog dlg(this, _("Import Settings"), wxConfig::Get()->Read(wxT("cmbPath"), GetOrganDirectory()), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxOPEN | wxFILE_MUST_EXIST);
+	wxFileDialog dlg(this, _("Import Settings"), wxConfig::Get()->Read(wxT("cmbPath"), GetOrganDirectory()), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
@@ -346,7 +346,7 @@ void GOrgueFrame::OnSave(wxCommandEvent& event)
 	if (!doc)
 		return;
 
-	wxFileDialog dlg(this, _("Export Settings"), wxConfig::Get()->Read(wxT("cmbPath"), GetOrganDirectory()), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxSAVE | wxOVERWRITE_PROMPT);
+	wxFileDialog dlg(this, _("Export Settings"), wxConfig::Get()->Read(wxT("cmbPath"), GetOrganDirectory()), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
@@ -432,7 +432,7 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 		g_sound->StopRecording();
 	else
 	{
-		wxFileDialog dlg(this, _("Save as"), wxConfig::Get()->Read(wxT("wavPath"), GetDocumentDirectory()), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxSAVE | wxOVERWRITE_PROMPT);
+		wxFileDialog dlg(this, _("Save as"), wxConfig::Get()->Read(wxT("wavPath"), GetDocumentDirectory()), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 		if (dlg.ShowModal() == wxID_OK)
 			{
 				wxConfig::Get()->Write(wxT("wavPath"), dlg.GetDirectory());
