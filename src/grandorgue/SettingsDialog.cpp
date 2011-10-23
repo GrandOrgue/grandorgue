@@ -383,7 +383,7 @@ void SettingsDialog::OnOrganEventListDoubleClick(wxListEvent& event) {
 
 void SettingsDialog::OnAddOrgan(wxCommandEvent& event) {
     //ask for .organ file
-    wxFileDialog dlg(this, _("Choose a file"), wxT(""), wxT(""), _("*.organ"), wxFILE_MUST_EXIST | wxOPEN);
+    wxFileDialog dlg(this, _("Choose a file"), wxT(""), wxT(""), _("*.organ"), wxFD_FILE_MUST_EXIST | wxFD_OPEN);
     if (dlg.ShowModal()==wxID_OK) {
         organlist->InsertItem(organlist->GetItemCount(), dlg.GetPath());
         organlist->SetColumnWidth(0, wxLIST_AUTOSIZE);
