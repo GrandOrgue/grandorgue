@@ -83,7 +83,7 @@ void GOSoundRecorder::Open(wxString filename)
 	m_file.Create(filename, true);
 	if (!m_file.IsOpened())
 	{
-		::wxLogError(_("Unable to open file for writing"));
+		wxLogError(_("Unable to open file for writing"));
 		return;
 	}
 	m_file.Write(&WAVE, sizeof(WAVE));
