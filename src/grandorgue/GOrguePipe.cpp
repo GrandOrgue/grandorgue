@@ -98,7 +98,7 @@ bool GOrguePipe::LoadCache(wxInputStream* cache)
 	if (m_Filename.StartsWith(wxT("REF:")))
 	{
 		unsigned manual, stop, pipe;
-		sscanf(m_Filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
+		wxSscanf(m_Filename.Mid(4), wxT("%d:%d:%d"), &manual, &stop, &pipe);
 		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual > m_OrganFile->GetManualAndPedalCount()) ||
 			(stop <= 0) || (stop > m_OrganFile->GetManual(manual)->GetStopCount()) ||
 			(pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
@@ -122,7 +122,7 @@ void GOrguePipe::LoadData()
 	if (m_Filename.StartsWith(wxT("REF:")))
 	{
 		unsigned manual, stop, pipe;
-		sscanf(m_Filename.mb_str() + 4, "%d:%d:%d", &manual, &stop, &pipe);
+		wxSscanf(m_Filename.Mid(4), wxT("%d:%d:%d"), &manual, &stop, &pipe);
 		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual > m_OrganFile->GetManualAndPedalCount()) ||
 			(stop <= 0) || (stop > m_OrganFile->GetManual(manual)->GetStopCount()) ||
 			(pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
