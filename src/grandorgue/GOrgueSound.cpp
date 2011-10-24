@@ -142,6 +142,7 @@ void GOrgueSound::StartThreads(unsigned windchests)
 
 	int n_cpus = m_Concurrency;
 
+	wxCriticalSectionLocker thread_locker(m_thread_lock);
 	for (unsigned i = 0; i < m_ReleaseConcurrency && n_cpus; i++)
 	{
 		int no = i;
@@ -172,6 +173,7 @@ void GOrgueSound::StartThreads(unsigned windchests)
 
 void GOrgueSound::StopThreads()
 {
+	wxCriticalSectionLocker thread_locker(m_thread_lock);
 	for(unsigned i = 0; i < m_Threads.size(); i++)
 		m_Threads[i]->Delete();
 	m_Threads.resize(0);
@@ -486,6 +488,7 @@ int GOrgueSound::AudioCallbackLocal
 
 	}
 
+	wxCriticalSectionLocker thread_locker(m_thread_lock);
 	for(unsigned i = 0; i < m_Threads.size(); i++)
 		m_Threads[i]->Wakeup();
 
