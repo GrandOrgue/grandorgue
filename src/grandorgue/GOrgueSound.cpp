@@ -108,7 +108,8 @@ GOrgueSound::GOrgueSound(void) :
 	}
 	catch (RtError &e)
 	{
-		e.printMessage();
+		wxString error = wxString::FromAscii(e.getMessage().c_str());
+		wxLogError(_("RtAudio error: %s"), error.c_str());
 		CloseSound();
 	}
 
@@ -131,7 +132,8 @@ GOrgueSound::~GOrgueSound(void)
 	}
 	catch (RtError &e)
 	{
-		e.printMessage();
+		wxString error = wxString::FromAscii(e.getMessage().c_str());
+		wxLogError(_("RtAudio error: %s"), error.c_str());
 	}
 
 }
@@ -270,7 +272,10 @@ bool GOrgueSound::OpenSound()
 	catch (RtError &e)
 	{
 		if (logSoundErrors)
-			e.printMessage();
+		{
+			wxString error = wxString::FromAscii(e.getMessage().c_str());
+			wxLogError(_("RtAudio error: %s"), error.c_str());
+		}
 	}
 	catch (wxString &msg)
 	{
@@ -306,7 +311,8 @@ void GOrgueSound::CloseSound()
 	}
 	catch (RtError &e)
 	{
-		e.printMessage();
+		wxString error = wxString::FromAscii(e.getMessage().c_str());
+		wxLogError(_("RtAudio error: %s"), error.c_str());
 	}
 
 	wxCriticalSectionLocker locker(m_lock);
