@@ -122,7 +122,8 @@ void GOrgueMidi::UpdateDevices()
 	}
 	catch (RtError &e)
 	{
-		e.printMessage();
+		wxString error = wxString::FromAscii(e.getMessage().c_str());
+		wxLogError(_("RtMidi error: %s"), error.c_str());
 	}
 }
 
@@ -141,7 +142,8 @@ GOrgueMidi::~GOrgueMidi()
 	}
 	catch (RtError &e)
 	{
-		e.printMessage();
+		wxString error = wxString::FromAscii(e.getMessage().c_str());
+		wxLogError(_("RtMidi error: %s"), error.c_str());
 	}
 
 }
@@ -174,7 +176,8 @@ void GOrgueMidi::Open()
 			}
 			catch (RtError &e)
 			{
-				e.printMessage();
+				wxString error = wxString::FromAscii(e.getMessage().c_str());
+				wxLogError(_("RtMidi error: %s"), error.c_str());
 			}
 
 		}
