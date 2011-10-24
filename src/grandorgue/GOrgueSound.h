@@ -51,6 +51,7 @@ public:
 
 private:
 	wxCriticalSection m_lock;
+	wxCriticalSection m_thread_lock;
 
 	/* end audio callback variables */
 	wxConfigBase *pConfig;
