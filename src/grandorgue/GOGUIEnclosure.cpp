@@ -82,7 +82,7 @@ void GOGUIEnclosure::Draw(wxDC* dc)
 }
 
 
-void GOGUIEnclosure::HandleMousePress(int x, int y, bool right)
+void GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	if (!m_BoundingRect.Contains(x, y))
 		return;

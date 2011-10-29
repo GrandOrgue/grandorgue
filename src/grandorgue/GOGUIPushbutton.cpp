@@ -22,6 +22,7 @@
 
 #include "GOGUIPushbutton.h"
 #include "GOGUIPanel.h"
+#include "GOGUIMouseState.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOrguePushbutton.h"
 #include "MIDIEventDialog.h"
@@ -74,7 +75,7 @@ void GOGUIPushbutton::Draw(wxDC* dc)
 	GOGUIControl::Draw(dc);
 }
 
-void GOGUIPushbutton::HandleMousePress(int x, int y, bool right)
+void GOGUIPushbutton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	if (!m_BoundingRect.Contains(x, y))
 		return;
@@ -92,7 +93,13 @@ void GOGUIPushbutton::HandleMousePress(int x, int y, bool right)
 		}
 	}
 	else
+	{
+		if (state.GetControl() == this)
+			return;
+		state.SetControl(this);
+
 		m_pushbutton->Push();
+	}
 }
 
 void GOGUIPushbutton::HandleKey(int key)

@@ -22,6 +22,7 @@
 
 #include "GOGUIManual.h"
 #include "GOGUIPanel.h"
+#include "GOGUIMouseState.h"
 #include "IniFileConfig.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOrgueManual.h"
@@ -271,7 +272,7 @@ void GOGUIManual::Draw(wxDC* dc)
 	GOGUIControl::Draw(dc);
 }
 
-void GOGUIManual::HandleMousePress(int x, int y, bool right)
+void GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	if (!m_BoundingRect.Contains(x, y))
 		return;
@@ -296,6 +297,11 @@ void GOGUIManual::HandleMousePress(int x, int y, bool right)
 			reg = GetKeyRegion(i);
 			if (reg.Contains(x, y))
 			{
+				if (state.GetControl() == this && state.GetIndex() == i)
+					return;
+				state.SetControl(this);
+				state.SetIndex(i);
+
 				m_manual->Set(i + m_manual->GetFirstAccessibleKeyMIDINoteNumber(), !m_manual->IsKeyDown(i + m_manual->GetFirstAccessibleKeyMIDINoteNumber()));
 				return;
 			}

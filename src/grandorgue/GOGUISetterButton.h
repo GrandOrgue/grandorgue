@@ -45,7 +45,7 @@ public:
 	void Init(IniFileConfig& cfg, unsigned x, unsigned y, wxString group, bool IsPiston = false);
 
 	void Draw(wxDC* dc);
-	void HandleMousePress(int x, int y, bool right);
+	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 };
 
 #endif

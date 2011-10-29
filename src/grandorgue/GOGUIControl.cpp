@@ -66,7 +66,7 @@ void GOGUIControl::HandleKey(int key)
 {
 }
 
-void GOGUIControl::HandleMousePress(int x, int y, bool right)
+void GOGUIControl::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 }
 

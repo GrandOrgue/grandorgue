@@ -518,10 +518,10 @@ void GOGUIPanel::HandleKey(int key)
 		m_controls[i]->HandleKey(key);
 }
 
-void GOGUIPanel::HandleMousePress(int x, int y, bool right)
+void GOGUIPanel::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)
-		m_controls[i]->HandleMousePress(x, y, right);
+		m_controls[i]->HandleMousePress(x, y, right, state);
 }
 
 void GOGUIPanel::HandleMouseScroll(int x, int y, int amount)

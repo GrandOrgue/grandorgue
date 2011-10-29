@@ -39,7 +39,7 @@ public:
 	void Load(IniFileConfig& cfg, wxString group);
 
 	void Draw(wxDC* dc);
-	void HandleMousePress(int x, int y, bool right);
+	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	void HandleMouseScroll(int x, int y, int amount);
 
 	bool IsEnclosure(const unsigned nb) const;

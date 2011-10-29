@@ -20,38 +20,41 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GOGUICONTROL_H
-#define GOGUICONTROL_H
+#ifndef GOGUIMOUSESTATE_H
+#define GOGUIMOUSESTATE_H
 
-#include <wx/wx.h>
-
-class GOGUIPanel;
-class GOGUIDisplayMetrics;
-class IniFileConfig;
-class GOGUIMouseState;
-
-class GOGUIControl {
-protected:
-	GOGUIPanel* m_panel;
-	wxString m_group;
-	GOGUIDisplayMetrics* m_metrics;
-	void* m_control;
-	wxRect m_BoundingRect;
-	bool m_DrawPending;
+class GOGUIMouseState {
+	void * m_control;
+	unsigned m_index;
 
 public:
-	GOGUIControl(GOGUIPanel* panel, void* control);
-	virtual ~GOGUIControl();
+	GOGUIMouseState() :
+		m_control(0),
+		m_index(0)
+	{
+	}
 
-	virtual void Load(IniFileConfig& cfg, wxString group);
-	virtual void Save(IniFileConfig& cfg, bool prefix);
+	void* GetControl()
+	{
+		return m_control;
+	}
 
-	virtual void ControlChanged(void* control);
-	virtual void Draw(wxDC* dc);
-	virtual const wxRect& GetBoundingRect();
-	virtual void HandleKey(int key);
-	virtual void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
-	virtual void HandleMouseScroll(int x, int y, int amount);
+	unsigned GetIndex()
+	{
+		return m_index;
+	}
+
+	void SetControl(void* control)
+	{
+		m_control = control;
+	}
+
+	void SetIndex(unsigned index)
+	{
+		m_index = index;
+	}
+
 };
+
 
 #endif
