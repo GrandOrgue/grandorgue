@@ -46,7 +46,7 @@ public:
 
 	void Draw(wxDC* dc);
 	void HandleKey(int key);
-	void HandleMousePress(int x, int y, bool right);
+	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 };
 
 #endif

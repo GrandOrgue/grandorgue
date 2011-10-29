@@ -22,6 +22,7 @@
 
 #include "GOGUISetterButton.h"
 #include "GOGUIPanel.h"
+#include "GOGUIMouseState.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOrgueSetterButton.h"
 #include "MIDIEventDialog.h"
@@ -89,7 +90,7 @@ void GOGUISetterButton::Draw(wxDC* dc)
 	GOGUIControl::Draw(dc);
 }
 
-void GOGUISetterButton::HandleMousePress(int x, int y, bool right)
+void GOGUISetterButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	if (!m_BoundingRect.Contains(x, y))
 		return;
@@ -109,5 +110,11 @@ void GOGUISetterButton::HandleMousePress(int x, int y, bool right)
 		}
 	}
 	else
+	{
+		if (state.GetControl() == this)
+			return;
+		state.SetControl(this);
+
 		m_button->Push();
+	}
 }

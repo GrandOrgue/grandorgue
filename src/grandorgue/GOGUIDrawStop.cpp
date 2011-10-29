@@ -22,6 +22,7 @@
 
 #include "GOGUIDrawStop.h"
 #include "GOGUIPanel.h"
+#include "GOGUIMouseState.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOrgueDrawStop.h"
 #include "MIDIEventDialog.h"
@@ -68,7 +69,7 @@ void GOGUIDrawstop::Draw(wxDC* dc)
 	GOGUIControl::Draw(dc);
 }
 
-void GOGUIDrawstop::HandleMousePress(int x, int y, bool right)
+void GOGUIDrawstop::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	if (!m_BoundingRect.Contains(x, y))
 		return;
@@ -86,7 +87,13 @@ void GOGUIDrawstop::HandleMousePress(int x, int y, bool right)
 		}
 	}
 	else
+	{
+		if (state.GetControl() == this)
+			return;
+		state.SetControl(this);
+
 		m_drawstop->Push();
+	}
 }
 
 void GOGUIDrawstop::HandleKey(int key)

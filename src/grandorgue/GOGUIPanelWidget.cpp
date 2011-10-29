@@ -21,6 +21,7 @@
  */
 
 #include "GOGUIControl.h"
+#include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
 #include "OrganView.h"
@@ -108,13 +109,17 @@ void GOGUIPanelWidget::OnGOControl(wxCommandEvent& event)
 
 void GOGUIPanelWidget::OnMouseLeftDown(wxMouseEvent& event)
 {
-	m_panel->HandleMousePress(event.GetX(), event.GetY(), false);
+	GOGUIMouseState state;
+
+	m_panel->HandleMousePress(event.GetX(), event.GetY(), false, state);
 	event.Skip();
 }
 
 void GOGUIPanelWidget::OnMouseRightDown(wxMouseEvent& event)
 {
-	m_panel->HandleMousePress(event.GetX(), event.GetY(), true);
+	GOGUIMouseState state;
+
+	m_panel->HandleMousePress(event.GetX(), event.GetY(), true, state);
 	event.Skip();
 }
 

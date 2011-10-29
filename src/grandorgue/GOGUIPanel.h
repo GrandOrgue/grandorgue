@@ -32,6 +32,7 @@ class GrandOrgueFile;
 class GOGUIControl;
 class GOGUIPanelWidget;
 class IniFileConfig;
+class GOGUIMouseState;
 
 class GOGUIPanel {
 protected:
@@ -68,7 +69,7 @@ public:
 	wxBitmap* GetImage(unsigned index);
 	wxBitmap* GetWoodImage(unsigned index);
 	void HandleKey(int key);
-	void HandleMousePress(int x, int y, bool right);
+	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	void HandleMouseScroll(int x, int y, int amount);
 	void Modified();
 	
