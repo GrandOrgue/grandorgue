@@ -25,6 +25,8 @@
 
 #include <wx/wx.h>
 
+#include "GOGUIMouseState.h"
+
 class OrganView;
 class GOGUIPanel;
 
@@ -36,6 +38,7 @@ private:
 	GOGUIPanel* m_panel;
 	wxBitmap m_ClientBitmap;
 	OrganView* m_View;
+	GOGUIMouseState m_leftstate;
 
 	void CopyToScreen(wxDC* mdc, const wxRect& rect);
 
@@ -48,6 +51,7 @@ public:
 	void OnErase(wxEraseEvent& event);
 	void OnPaint(wxPaintEvent& event);
 	void OnGOControl(wxCommandEvent& event);
+	void OnMouseMove(wxMouseEvent& event);
 	void OnMouseLeftDown(wxMouseEvent& event);
 	void OnMouseRightDown(wxMouseEvent& event);
 	void OnMouseScroll(wxMouseEvent& event);

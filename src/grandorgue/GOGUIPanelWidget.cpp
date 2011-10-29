@@ -21,7 +21,6 @@
  */
 
 #include "GOGUIControl.h"
-#include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
 #include "OrganView.h"
@@ -33,6 +32,7 @@ BEGIN_EVENT_TABLE(GOGUIPanelWidget, wxPanel)
 	EVT_ERASE_BACKGROUND(GOGUIPanelWidget::OnErase)
 	EVT_PAINT(GOGUIPanelWidget::OnPaint)
 	EVT_COMMAND(0, wxEVT_GOCONTROL, GOGUIPanelWidget::OnGOControl)
+	EVT_MOTION(GOGUIPanelWidget::OnMouseMove)
 	EVT_LEFT_DOWN(GOGUIPanelWidget::OnMouseLeftDown)
 	EVT_LEFT_DCLICK(GOGUIPanelWidget::OnMouseLeftDown)
 	EVT_RIGHT_DOWN(GOGUIPanelWidget::OnMouseRightDown)
@@ -107,11 +107,23 @@ void GOGUIPanelWidget::OnGOControl(wxCommandEvent& event)
 	event.Skip();
 }
 
+void GOGUIPanelWidget::OnMouseMove(wxMouseEvent& event)
+{
+	if (!event.LeftIsDown())
+	{
+		m_leftstate.clear();
+		return;
+	}
+
+	m_panel->HandleMousePress(event.GetX(), event.GetY(), false, m_leftstate);
+	event.Skip();
+}
+
 void GOGUIPanelWidget::OnMouseLeftDown(wxMouseEvent& event)
 {
-	GOGUIMouseState state;
+	m_leftstate.clear();
 
-	m_panel->HandleMousePress(event.GetX(), event.GetY(), false, state);
+	m_panel->HandleMousePress(event.GetX(), event.GetY(), false, m_leftstate);
 	event.Skip();
 }
 

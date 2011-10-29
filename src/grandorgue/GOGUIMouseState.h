@@ -28,10 +28,15 @@ class GOGUIMouseState {
 	unsigned m_index;
 
 public:
-	GOGUIMouseState() :
-		m_control(0),
-		m_index(0)
+	GOGUIMouseState()
 	{
+		clear();
+	}
+
+	void clear()
+	{
+		m_control = 0;
+		m_index = 0;
 	}
 
 	void* GetControl()
