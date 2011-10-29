@@ -23,6 +23,7 @@
 #include "GOGUIEnclosure.h"
 #include "GOrgueEnclosure.h"
 #include "GOGUIDisplayMetrics.h"
+#include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "MIDIEventDialog.h"
 
@@ -96,6 +97,25 @@ void GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState&
 			m_midi = dlg.GetResult();
 			m_panel->Modified();
 		}
+	}
+	else
+	{
+		y -= m_BoundingRect.GetY() + 13;
+		if (y < 0 || y > 45)
+			return;
+		if (y > 16 && y < 29 )
+			y = 16;
+		else if (y >= 30)
+			y = 45 - y;
+
+		unsigned value = y;
+
+		if (state.GetControl() == this && state.GetIndex() == value)
+			return;
+		state.SetControl(this);
+		state.SetIndex(value);
+
+		m_enclosure->Set(value * 8);
 	}
 }
 
