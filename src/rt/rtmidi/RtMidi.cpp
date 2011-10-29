@@ -871,6 +871,7 @@ struct AlsaMidiData {
   unsigned int bufferSize;
   unsigned char *buffer;
   pthread_t thread;
+  pthread_t dummy_thread_id;
   unsigned long long lastTime;
   int queue_id; // an input queue is needed to get timestamped events
 };
@@ -905,6 +906,8 @@ extern "C" void *alsaMidiHandler( void *ptr )
   unsigned char *buffer = (unsigned char *) malloc( apiData->bufferSize );
   if ( buffer == NULL ) {
     data->doInput = false;
+    snd_midi_event_free( apiData->coder );
+    apiData->coder = 0;
     std::cerr << "\nRtMidiIn::alsaMidiHandler: error initializing buffer memory!\n\n";
     return 0;
   }
@@ -1049,6 +1052,7 @@ extern "C" void *alsaMidiHandler( void *ptr )
   if ( buffer ) free( buffer );
   snd_midi_event_free( apiData->coder );
   apiData->coder = 0;
+  apiData->thread = apiData->dummy_thread_id;
   return 0;
 }
 
@@ -1069,6 +1073,9 @@ void RtMidiIn :: initialize( const std::string& clientName )
   AlsaMidiData *data = (AlsaMidiData *) new AlsaMidiData;
   data->seq = seq;
   data->vport = -1;
+  data->subscription = 0;
+  data->dummy_thread_id = pthread_self();
+  data->thread = data->dummy_thread_id;
   apiData_ = (void *) data;
   inputData_.apiData = (void *) data;
 
@@ -1170,13 +1177,20 @@ void RtMidiIn :: openPort( unsigned int portNumber, const std::string portName )
 
   receiver.port = data->vport;
 
-  // Make subscription
-  snd_seq_port_subscribe_malloc( &data->subscription );
-  snd_seq_port_subscribe_set_sender(data->subscription, &sender);
-  snd_seq_port_subscribe_set_dest(data->subscription, &receiver);
-  if ( snd_seq_subscribe_port(data->seq, data->subscription) ) {
-    errorString_ = "RtMidiIn::openPort: ALSA error making port connection.";
-    error( RtError::DRIVER_ERROR );
+  if (!data->subscription) {
+    // Make subscription
+    if (snd_seq_port_subscribe_malloc( &data->subscription ) < 0) {
+      errorString_ = "RtMidiIn::openPort: ALSA error allocation port subscription.";
+      error( RtError::DRIVER_ERROR );
+    }
+    snd_seq_port_subscribe_set_sender(data->subscription, &sender);
+    snd_seq_port_subscribe_set_dest(data->subscription, &receiver);
+    if ( snd_seq_subscribe_port(data->seq, data->subscription) ) {
+      snd_seq_port_subscribe_free( data->subscription );
+      data->subscription = 0;
+      errorString_ = "RtMidiIn::openPort: ALSA error making port connection.";
+      error( RtError::DRIVER_ERROR );
+    }
   }
 
   if ( inputData_.doInput == false ) {
@@ -1197,6 +1211,7 @@ void RtMidiIn :: openPort( unsigned int portNumber, const std::string portName )
     if (err) {
       snd_seq_unsubscribe_port( data->seq, data->subscription );
       snd_seq_port_subscribe_free( data->subscription );
+      data->subscription = 0;
       inputData_.doInput = false;
       errorString_ = "RtMidiIn::openPort: error starting MIDI input thread!";
       error( RtError::THREAD_ERROR );
@@ -1234,6 +1249,10 @@ void RtMidiIn :: openVirtualPort( std::string portName )
   }
 
   if ( inputData_.doInput == false ) {
+    // Wait for old thread to stop, if still running
+    if (!pthread_equal(data->thread, data->dummy_thread_id))
+      pthread_join( data->thread, NULL );
+
     // Start the input queue
 #ifndef AVOID_TIMESTAMPING
     snd_seq_start_queue( data->seq, data->queue_id, NULL );
@@ -1249,8 +1268,11 @@ void RtMidiIn :: openVirtualPort( std::string portName )
     int err = pthread_create(&data->thread, &attr, alsaMidiHandler, &inputData_);
     pthread_attr_destroy(&attr);
     if (err) {
-      snd_seq_unsubscribe_port( data->seq, data->subscription );
-      snd_seq_port_subscribe_free( data->subscription );
+      if (data->subscription) {
+        snd_seq_unsubscribe_port( data->seq, data->subscription );
+        snd_seq_port_subscribe_free( data->subscription );
+	data->subscription = 0;
+      }
       inputData_.doInput = false;
       errorString_ = "RtMidiIn::openPort: error starting MIDI input thread!";
       error( RtError::THREAD_ERROR );
@@ -1260,16 +1282,27 @@ void RtMidiIn :: openVirtualPort( std::string portName )
 
 void RtMidiIn :: closePort( void )
 {
+  AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
+
   if ( connected_ ) {
-    AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
-    snd_seq_unsubscribe_port( data->seq, data->subscription );
-    snd_seq_port_subscribe_free( data->subscription );
+    if (data->subscription) {
+      snd_seq_unsubscribe_port( data->seq, data->subscription );
+      snd_seq_port_subscribe_free( data->subscription );
+      data->subscription = 0;
+    }
     // Stop the input queue
 #ifndef AVOID_TIMESTAMPING
     snd_seq_stop_queue( data->seq, data->queue_id, NULL );
     snd_seq_drain_output( data->seq );
 #endif
     connected_ = false;
+  }
+
+  // Stop thread to avoid triggering the callback, while the port is inteded to be closed
+  if ( inputData_.doInput ) {
+    inputData_.doInput = false;
+    if (!pthread_equal(data->thread, data->dummy_thread_id))
+      pthread_join( data->thread, NULL );
   }
 }
 
@@ -1282,7 +1315,8 @@ RtMidiIn :: ~RtMidiIn()
   AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
   if ( inputData_.doInput ) {
     inputData_.doInput = false;
-    pthread_join( data->thread, NULL );
+    if (!pthread_equal(data->thread, data->dummy_thread_id))
+      pthread_join( data->thread, NULL );
   }
 
   // Cleanup.
@@ -1454,12 +1488,17 @@ void RtMidiOut :: openPort( unsigned int portNumber, const std::string portName 
   sender.port = data->vport;
 
   // Make subscription
-  snd_seq_port_subscribe_malloc( &data->subscription );
+  if (snd_seq_port_subscribe_malloc( &data->subscription ) < 0) {
+    snd_seq_port_subscribe_free( data->subscription );
+    errorString_ = "RtMidiOut::openPort: error allocation port subscribtion.";
+    error( RtError::DRIVER_ERROR );
+  }
   snd_seq_port_subscribe_set_sender(data->subscription, &sender);
   snd_seq_port_subscribe_set_dest(data->subscription, &receiver);
   snd_seq_port_subscribe_set_time_update(data->subscription, 1);
   snd_seq_port_subscribe_set_time_real(data->subscription, 1);
   if ( snd_seq_subscribe_port(data->seq, data->subscription) ) {
+    snd_seq_port_subscribe_free( data->subscription );
     errorString_ = "RtMidiOut::openPort: ALSA error making port connection.";
     error( RtError::DRIVER_ERROR );
   }
@@ -2567,8 +2606,11 @@ void RtMidiIn :: initialize( const std::string& clientName )
 RtMidiIn :: ~RtMidiIn()
 {
   JackMidiData *data = static_cast<JackMidiData *> (apiData_);
+  closePort();
+
   jack_client_close( data->client );
 
+  delete data;
   // Delete the MIDI queue.
   if ( inputData_.queue.ringSize > 0 ) delete [] inputData_.queue.ring;
 }
@@ -2659,6 +2701,7 @@ void RtMidiIn :: closePort()
 
   if ( data->port == NULL ) return;
   jack_port_unregister( data->client, data->port );
+  data->port = NULL;
 }
 
 //*********************************************************************//
@@ -2714,11 +2757,14 @@ void RtMidiOut :: initialize( const std::string& clientName )
 RtMidiOut :: ~RtMidiOut()
 {
   JackMidiData *data = static_cast<JackMidiData *> (apiData_);
+  closePort();
 
   // Cleanup
   jack_client_close( data->client );
   jack_ringbuffer_free( data->buffSize );
   jack_ringbuffer_free( data->buffMessage );
+
+  delete data;
 }
 
 void RtMidiOut :: openPort( unsigned int portNumber, const std::string portName )
