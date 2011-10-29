@@ -62,7 +62,7 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(IniFileConfig& ini, GrandOr
 
 	case GOGUI_SETTER_COUPLER:
 		x_size = wxT("500");
-		y_size = wxString::Format(wxT("%d"), 90 * (organfile->GetManualAndPedalCount() + 1));;
+		y_size = wxString::Format(wxT("%d"), 20 + 80 * (organfile->GetManualAndPedalCount() + 1));;
 		drawstop_rows = organfile->GetManualAndPedalCount() + 1;
 		drawstop_cols = 6;
 		button_cols = 10;
@@ -91,13 +91,15 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(IniFileConfig& ini, GrandOr
 		m_manual_info.push_back(man);
 	}
 
+	int background_img = ini.ReadInteger(wxT("Organ"), wxT("DispConsoleBackgroundImageNum"), 1, 64, false, 32);
+
 	m_DispScreenSizeHoriz = ini.ReadSize(m_group, wxT("DispScreenSizeHoriz"), 0, false, x_size);
 	m_DispScreenSizeVert = ini.ReadSize(m_group, wxT("DispScreenSizeVert"), 1, false, y_size);
-	m_DispDrawstopBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispDrawstopBackgroundImageNum"), 1, 64, false, 31);
-	m_DispConsoleBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispConsoleBackgroundImageNum"), 1, 64, false, 32);
-	m_DispKeyHorizBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispKeyHorizBackgroundImageNum"), 1, 64, false, 32);
-	m_DispKeyVertBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispKeyVertBackgroundImageNum"), 1, 64, false, 31);
-	m_DispDrawstopInsetBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispDrawstopInsetBackgroundImageNum"), 1, 64, false, 33);
+	m_DispDrawstopBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispDrawstopBackgroundImageNum"), 1, 64, false, background_img);
+	m_DispConsoleBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispConsoleBackgroundImageNum"), 1, 64, false, background_img);
+	m_DispKeyHorizBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispKeyHorizBackgroundImageNum"), 1, 64, false, background_img);
+	m_DispKeyVertBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispKeyVertBackgroundImageNum"), 1, 64, false, background_img);
+	m_DispDrawstopInsetBackgroundImageNum = ini.ReadInteger(m_group, wxT("DispDrawstopInsetBackgroundImageNum"), 1, 64, false, background_img);
 	m_DispControlLabelFont = ini.ReadString(m_group, wxT("DispControlLabelFont"), 255, false, wxT("Times New Roman"));
 	m_DispShortcutKeyLabelFont = ini.ReadString(m_group, wxT("DispShortcutKeyLabelFont"), 255, false, wxT("Times New Roman"));
 	m_DispShortcutKeyLabelColour = ini.ReadColor(m_group, wxT("DispShortcutKeyLabelColour"), false, wxT("Yellow"));
