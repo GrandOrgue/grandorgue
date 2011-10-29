@@ -874,6 +874,7 @@ struct AlsaMidiData {
   pthread_t dummy_thread_id;
   unsigned long long lastTime;
   int queue_id; // an input queue is needed to get timestamped events
+  int trigger_fds[2];
 };
 
 #define PORT_TYPE( pinfo, bits ) ((snd_seq_port_info_get_capability(pinfo) & (bits)) == (bits))
@@ -893,6 +894,8 @@ extern "C" void *alsaMidiHandler( void *ptr )
   bool continueSysex = false;
   bool doDecode = false;
   RtMidiIn::MidiMessage message;
+  int poll_fd_count;
+  struct pollfd *poll_fds;
 
   snd_seq_event_t *ev;
   int result;
@@ -914,11 +917,22 @@ extern "C" void *alsaMidiHandler( void *ptr )
   snd_midi_event_init( apiData->coder );
   snd_midi_event_no_status( apiData->coder, 1 ); // suppress running status messages
 
+  poll_fd_count = snd_seq_poll_descriptors_count(apiData->seq, POLLIN) + 1;
+  poll_fds = (struct pollfd*)alloca(poll_fd_count * sizeof(struct pollfd));
+  snd_seq_poll_descriptors(apiData->seq, poll_fds + 1, poll_fd_count - 1, POLLIN);
+  poll_fds[0].fd = apiData->trigger_fds[0];
+  poll_fds[0].events = POLLIN;
+
   while ( data->doInput ) {
 
     if ( snd_seq_event_input_pending( apiData->seq, 1 ) == 0 ) {
-      // No data pending ... sleep a bit.
-      usleep( 1000 );
+      // No data pending
+      if (poll(poll_fds, poll_fd_count, -1) >= 0) {
+	if (poll_fds[0].revents & POLLIN) {
+          bool dummy;
+          read(poll_fds[0].fd, &dummy, sizeof(dummy));
+	}
+      }
       continue;
     }
 
@@ -1076,8 +1090,16 @@ void RtMidiIn :: initialize( const std::string& clientName )
   data->subscription = 0;
   data->dummy_thread_id = pthread_self();
   data->thread = data->dummy_thread_id;
+  data->trigger_fds[0] = -1;
+  data->trigger_fds[1] = -1;
   apiData_ = (void *) data;
   inputData_.apiData = (void *) data;
+
+  if (pipe(data->trigger_fds) == -1) {
+    errorString_ = "RtMidiIn::initialize: error creating pipe objects.";
+    error( RtError::DRIVER_ERROR );
+  }
+
 
   // Create the input queue
 #ifndef AVOID_TIMESTAMPING
@@ -1301,6 +1323,7 @@ void RtMidiIn :: closePort( void )
   // Stop thread to avoid triggering the callback, while the port is inteded to be closed
   if ( inputData_.doInput ) {
     inputData_.doInput = false;
+    write(data->trigger_fds[1], &inputData_.doInput, sizeof(inputData_.doInput));
     if (!pthread_equal(data->thread, data->dummy_thread_id))
       pthread_join( data->thread, NULL );
   }
@@ -1315,11 +1338,14 @@ RtMidiIn :: ~RtMidiIn()
   AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
   if ( inputData_.doInput ) {
     inputData_.doInput = false;
+    write(data->trigger_fds[1], &inputData_.doInput, sizeof(inputData_.doInput));
     if (!pthread_equal(data->thread, data->dummy_thread_id))
       pthread_join( data->thread, NULL );
   }
 
   // Cleanup.
+  close (data->trigger_fds[0]);
+  close (data->trigger_fds[1]);
   if ( data->vport >= 0 ) snd_seq_delete_port( data->seq, data->vport );
 #ifndef AVOID_TIMESTAMPING
   snd_seq_free_queue( data->seq, data->queue_id );
