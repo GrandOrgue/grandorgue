@@ -466,7 +466,13 @@ void GOGUIPanel::Save(IniFileConfig& cfg, bool prefix)
 
 	if (m_parent)
 	{
-		wxRect size = m_parent->GetScreenRect();
+		wxWindow* parent = m_parent;
+
+		if (parent->IsKindOf(CLASSINFO(wxScrolledWindow)))
+			/* parent for Main panel is not the main window */
+			parent = parent->GetParent();
+
+		wxRect size = parent->GetRect();
 		cfg.SaveHelper(prefix, m_group, wxT("WindowX"), size.GetLeft());
 		cfg.SaveHelper(prefix, m_group, wxT("WindowY"), size.GetTop());
 		cfg.SaveHelper(prefix, m_group, wxT("WindowWidth"), size.GetWidth());
