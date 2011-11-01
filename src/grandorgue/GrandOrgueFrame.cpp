@@ -30,7 +30,6 @@
 #include "Images.h"
 #include "GOGUIPanel.h"
 #include "GOrgueEvent.h"
-#include "GOrgueMeter.h"
 #include "GOrgueMidi.h"
 #include "GOrgueProperties.h"
 #include "GOrgueSetter.h"
@@ -81,6 +80,10 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueFrame::OnSettingsMemory)
 	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN, GOrgueFrame::OnSettingsMemory)
 	EVT_COMMAND(ID_METER_FRAME_SPIN, wxEVT_SETVALUE, GOrgueFrame::OnChangeSetter)
+	EVT_SLIDER(ID_METER_FRAME_SPIN, GOrgueFrame::OnChangeSetter)
+	EVT_TEXT(ID_METER_AUDIO_SPIN, GOrgueFrame::OnSettingsVolume)
+	EVT_TEXT_ENTER(ID_METER_AUDIO_SPIN, GOrgueFrame::OnSettingsVolume)
+	EVT_COMMAND(ID_METER_AUDIO_SPIN, wxEVT_SETVALUE, GOrgueFrame::OnChangeVolume)
 
 	EVT_UPDATE_UI(wxID_SAVE, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
@@ -108,7 +111,8 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_VolumeRight(NULL),
 	m_Transpose(NULL),
 	m_Polyphony(NULL),
-	m_SetterPosition(NULL)
+	m_SetterPosition(NULL),
+	m_Volume(NULL)
 {
 #ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
@@ -159,10 +163,10 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	// Changed Text to Icons to reduce screen space - Graham Goode Nov 2009
 	wxMenu *settings_menu = new wxMenu;
 
-	m_meters[0] = new GOrgueMeter(tb, ID_METER_AUDIO_SPIN, 3);
-
 	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
-	tb->AddControl(m_meters[0]);
+	m_Volume = new wxSpinCtrl(tb, ID_METER_AUDIO_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 100);
+	tb->AddControl(m_Volume);
+	m_Volume->SetValue(wxConfigBase::Get()->Read(wxT("Volume"), 50));
 
 	{
 		wxControl* control = new wxControl(tb, wxID_ANY);
@@ -516,7 +520,12 @@ void GOrgueFrame::OnShowHelp(wxCommandEvent& event)
 
 void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)
 {
-	//
+	long n = m_Volume->GetValue();
+
+	wxConfigBase::Get()->Write(wxT("Volume"), n);
+
+	if (g_sound)
+	    g_sound->GetEngine().SetVolume(n);
 }
 
 void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
@@ -570,6 +579,11 @@ void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
 void GOrgueFrame::OnChangeSetter(wxCommandEvent& event)
 {
 	m_SetterPosition->SetValue(event.GetInt());
+}
+
+void GOrgueFrame::OnChangeVolume(wxCommandEvent& event)
+{
+	m_Volume->SetValue(event.GetInt());
 }
 
 void GOrgueFrame::OnKeyCommand(wxKeyEvent& event)

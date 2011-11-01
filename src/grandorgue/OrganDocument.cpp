@@ -22,10 +22,8 @@
 
 #include "GOGUIPanel.h"
 #include "OrganDocument.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
+#include "GOrgueEvent.h"
 #include "GOrgueSound.h"
-#include "GOrgueMeter.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 
@@ -81,7 +79,10 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	g_sound->PreparePlayback(m_organfile);
 	if (m_organfile->GetVolume() != -1)
 	{
-		::wxGetApp().frame->m_meters[0]->SetValue(m_organfile->GetVolume());
+		wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
+		event.SetInt(m_organfile->GetVolume());
+		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+
 		g_sound->GetEngine().SetVolume(m_organfile->GetVolume());
 	}
 
