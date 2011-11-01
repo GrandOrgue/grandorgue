@@ -42,7 +42,10 @@ GOrgueCoupler::GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual) :
 	m_InternalState(0),
 	m_OutState(0),
 	m_CurrentTone(-1),
-	m_LastTone(-1)
+	m_LastTone(-1),
+	m_FirstMidiNote(0),
+	m_FirstLogicalKey(0),
+	m_NumberOfKeys(127)
 {
 }
 
@@ -62,6 +65,10 @@ void GOrgueCoupler::PreparePlayback()
 		src->SetUnisonOff(true);
 
 	m_Keyshift = m_DestinationKeyshift + src->GetFirstLogicalKeyMIDINoteNumber() - dest->GetFirstLogicalKeyMIDINoteNumber();
+	if (m_FirstMidiNote > src->GetFirstLogicalKeyMIDINoteNumber())
+		m_FirstLogicalKey = m_FirstMidiNote - src->GetFirstLogicalKeyMIDINoteNumber();
+	else
+		m_FirstLogicalKey = 0;
 }
 
 const struct IniFileEnumEntry GOrgueCoupler::m_coupler_types[]={
@@ -85,6 +92,8 @@ void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, wxString name, bool
 	GOrgueDrawstop::Load(cfg, group, name);
 
 	m_CouplerType = (GOrgueCouplerType)cfg.ReadEnum(group, wxT("CouplerType"), m_coupler_types, sizeof(m_coupler_types) / sizeof(m_coupler_types[0]), false, coupler_type);
+	m_FirstMidiNote = cfg.ReadInteger(group, wxT("FirstMIDINoteNumber"), 0, 127, false, 0); 
+	m_NumberOfKeys = cfg.ReadInteger(group, wxT("NumberOfKeys"), 0, 127, false, 127);
 }
 
 void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix)
@@ -179,6 +188,8 @@ void GOrgueCoupler::SetKey(unsigned note, int on, GOrgueCoupler* prev)
 			return;
 	}
 	if (note < 0 || note >= m_KeyState.size() || !on)
+		return;
+	if (note < m_FirstLogicalKey || note >= m_FirstLogicalKey + m_NumberOfKeys)
 		return;
 	m_KeyState[note]+=on;
 	ChangeKey(note, on);
