@@ -30,7 +30,8 @@ GOrgueCache::GOrgueCache(wxFile& cache_file, GOrgueMemoryPool& pool) :
 	m_stream(0),
 	m_fstream(0),
 	m_zstream(0),
-	m_pool(pool)
+	m_pool(pool),
+	m_Mapable(false)
 {
 	m_fstream = new wxFileInputStream(cache_file);
 	m_zstream = new wxZlibInputStream(*m_fstream);
@@ -39,6 +40,7 @@ GOrgueCache::GOrgueCache(wxFile& cache_file, GOrgueMemoryPool& pool) :
 	{
 		/* It looks like compressed data */
 		m_stream = m_zstream;
+		m_Mapable = false;
 	}
 	else
 	{
@@ -47,8 +49,14 @@ GOrgueCache::GOrgueCache(wxFile& cache_file, GOrgueMemoryPool& pool) :
 		m_zstream = 0;
 		m_fstream = new wxFileInputStream(cache_file);
 		m_stream = m_fstream;
+		m_Mapable = true;
 	}
 	m_stream->SeekI(0, wxFromStart);
+
+	if (m_stream->TellI() == wxInvalidOffset)
+		m_Mapable = false;
+	if (m_Mapable)
+		m_Mapable = m_pool.SetCacheFile(cache_file);
 }
 
 GOrgueCache::~GOrgueCache()
@@ -76,6 +84,15 @@ bool GOrgueCache::Read(void* data, unsigned length)
 
 void* GOrgueCache::ReadBlock(unsigned length)
 {
+	if (m_Mapable)
+	{
+		void *data = m_pool.GetCacheData(m_stream->TellI());
+		if (data)
+		{
+			m_stream->SeekI(length, wxFromCurrent);
+			return data;
+		}
+	}
 	void* data = m_pool.Alloc(length);
 	if (data == NULL)
 		throw (wxString)_("< out of memory allocating samples");
