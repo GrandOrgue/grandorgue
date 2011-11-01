@@ -86,7 +86,6 @@ GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_global_config(&settings.GetConfig()),
 	m_midi_device_map(),
 	m_midi_devices(),
-	m_transpose(0),
 	m_listening(false),
 	m_listen_evthandler(NULL),
 	m_organfile(NULL)
@@ -213,16 +212,6 @@ bool GOrgueMidi::HasActiveDevice()
 			return true;
 
 	return false;
-}
-
-int GOrgueMidi::GetTranspose()
-{
-	return m_transpose;
-}
-
-void GOrgueMidi::SetTranspose(int transpose)
-{
-	m_transpose = transpose;
 }
 
 void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device)

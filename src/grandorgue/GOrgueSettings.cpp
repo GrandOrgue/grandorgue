@@ -45,7 +45,8 @@ GOrgueSettings::GOrgueSettings() :
 	m_OrganMidiEvents(),
 	m_WAVPath(),
 	m_OrganPath(),
-	m_SettingPath()
+	m_SettingPath(),
+	m_Transpose(0)
 {
 	GetConfig().SetRecordDefaults();
 }
@@ -351,5 +352,15 @@ std::vector<wxString> GOrgueSettings::GetMidiDeviceList()
 
 	m_Config.SetPath(wxT("/"));
 	return list;
+}
+
+int GOrgueSettings::GetTranspose()
+{
+	return m_Transpose;
+}
+
+void GOrgueSettings::SetTranspose(int transpose)
+{
+	m_Transpose = transpose;
 }
 
