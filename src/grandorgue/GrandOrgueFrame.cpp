@@ -78,6 +78,9 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 	EVT_TEXT(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 	EVT_TEXT_ENTER(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
+	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueFrame::OnSettingsMemory)
+	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN, GOrgueFrame::OnSettingsMemory)
+	EVT_COMMAND(ID_METER_FRAME_SPIN, wxEVT_SETVALUE, GOrgueFrame::OnChangeSetter)
 
 	EVT_UPDATE_UI(wxID_SAVE, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
@@ -104,7 +107,8 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_VolumeLeft(NULL),
 	m_VolumeRight(NULL),
 	m_Transpose(NULL),
-	m_Polyphony(NULL)
+	m_Polyphony(NULL),
+	m_SetterPosition(NULL)
 {
 #ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
@@ -156,7 +160,6 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	wxMenu *settings_menu = new wxMenu;
 
 	m_meters[0] = new GOrgueMeter(tb, ID_METER_AUDIO_SPIN, 3);
-	m_meters[2] = new GOrgueMeter(tb, ID_METER_FRAME_SPIN, 1);
 
 	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
 	tb->AddControl(m_meters[0]);
@@ -186,7 +189,10 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	tb->AddControl(m_SamplerUsage);
 
 	AddTool(settings_menu, ID_MEMORY, _("&Memory Level"), _("Memory Level"), GetImage_memory());
-	tb->AddControl(m_meters[2]);
+	m_SetterPosition = new wxSpinCtrl(tb, ID_METER_FRAME_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 999);
+	tb->AddControl(m_SetterPosition);
+	m_SetterPosition->SetValue(0);
+
 	AddTool(settings_menu, ID_TRANSPOSE, _("&Transpose"), _("Transpose"), GetImage_transpose());
 	m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
 	tb->AddControl(m_Transpose);
@@ -524,7 +530,11 @@ void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
 
 void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
 {
-	m_meters[2]->OnFrame(event);
+	long n = m_SetterPosition->GetValue();
+
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	if (doc && doc->GetOrganFile())
+		doc->GetOrganFile()->GetSetter()->SetPosition(n);
 }
 
 void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
@@ -557,11 +567,9 @@ void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
     event.Skip();
 }
 
-void GOrgueFrame::ChangeSetter(unsigned position)
+void GOrgueFrame::OnChangeSetter(wxCommandEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
-	if (doc && doc->GetOrganFile())
-		doc->GetOrganFile()->GetSetter()->SetPosition(position);
+	m_SetterPosition->SetValue(event.GetInt());
 }
 
 void GOrgueFrame::OnKeyCommand(wxKeyEvent& event)

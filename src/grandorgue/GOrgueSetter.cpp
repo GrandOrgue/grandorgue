@@ -30,13 +30,12 @@
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
+#include "GOrgueEvent.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueManual.h"
-#include "GOrgueMeter.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSetterButton.h"
-#include "GrandOrgue.h"
-#include "GrandOrgueFrame.h"
+#include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
 
@@ -729,7 +728,7 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 				Next();
 				break;
 			case ID_SETTER_SET:
-				::wxGetApp().frame->UpdateWindowUI();
+				wxTheApp->GetTopWindow()->UpdateWindowUI();
 				break;
 			case ID_SETTER_M1:
 				SetPosition(m_pos - 1, false);
@@ -847,7 +846,10 @@ void GOrgueSetter::PreparePlayback()
 	wxString buffer;
 	buffer.Printf(wxT("%03d"), m_pos);
 	m_PosDisplay.SetName(buffer);
-	::wxGetApp().frame->m_meters[2]->ChangeValue(m_pos);
+
+	wxCommandEvent event(wxEVT_SETVALUE, ID_METER_FRAME_SPIN);
+	event.SetInt(m_pos);
+	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 
 	buffer.Printf(wxT("%d"), m_crescendopos + 1);
 	m_CrescendoDisplay.SetName(buffer);
@@ -947,7 +949,11 @@ void GOrgueSetter::SetPosition(int pos, bool push)
 	buffer.Printf(wxT("%03d"), m_pos);
 	m_PosDisplay.SetName(buffer);
 	if (pos != old_pos)
-		::wxGetApp().frame->m_meters[2]->ChangeValue(m_pos);
+	{
+		wxCommandEvent event(wxEVT_SETVALUE, ID_METER_FRAME_SPIN);
+		event.SetInt(m_pos);
+		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+	}
 
 }
 

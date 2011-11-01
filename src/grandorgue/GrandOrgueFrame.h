@@ -40,6 +40,7 @@ class GOrgueFrame: public wxDocParentFrame
 	wxGaugeAudio *m_VolumeLeft, *m_VolumeRight;
 	wxSpinCtrl* m_Transpose;
 	wxSpinCtrl* m_Polyphony;
+	wxSpinCtrl* m_SetterPosition;
 
 public:
     GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type);
@@ -75,7 +76,7 @@ public:
 	void OnSettingsTranspose(wxCommandEvent& event);
 	//
 	void OnKeyCommand(wxKeyEvent& event);
-	void ChangeSetter(unsigned position);
+	void OnChangeSetter(wxCommandEvent& event);
 	void OnUpdatePanelMenu(wxUpdateUIEvent& event);
 	void OnPanel(wxCommandEvent& event);
 

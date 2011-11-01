@@ -32,12 +32,9 @@ public:
 	GOrgueMeter(wxWindow* parent, wxWindowID id, int count);
 	~GOrgueMeter(void);
 	int GetValue();
-	void ChangeValue(int n);
 	void SetValue(int n);
 	void OnVolume(wxCommandEvent& event);
-	void OnFrame(wxCommandEvent& event);
 	void OnEnter(wxCommandEvent& event);
-	void OnChange(wxCommandEvent& event);
 
 	DECLARE_EVENT_TABLE()
 private:
