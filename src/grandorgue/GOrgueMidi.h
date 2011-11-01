@@ -31,6 +31,7 @@
 class RtMidiIn;
 
 class wxConfigBase;
+class GOrgueSettings;
 class GrandOrgueFile;
 
 #define NB_MIDI_EVENTS (16)
@@ -51,13 +52,13 @@ private:
 		GOrgueMidi* midi;
 	} MIDI_DEVICE;
 
+	GOrgueSettings& m_Settings;
 	wxConfigBase *m_global_config;
 	std::map<wxString, int> m_midi_device_map;
 	ptr_vector<MIDI_DEVICE> m_midi_devices;
 	int m_transpose;
 	bool m_listening;
 	wxEvtHandler* m_listen_evthandler;
-	std::map<long, wxString> m_organ_midi_events;
 	GrandOrgueFile* m_organfile;
 	wxCriticalSection m_lock;
 
@@ -69,7 +70,7 @@ private:
 
 public:
 
-	GOrgueMidi();
+	GOrgueMidi(GOrgueSettings& settings);
 	~GOrgueMidi();
 
 	void Open();
@@ -78,7 +79,6 @@ public:
 
 	bool HasListener();
 	void SetListener(wxEvtHandler* event_handler);
-	void UpdateOrganMIDI();
 	std::map<wxString, int>& GetDevices();
 	bool HasActiveDevice();
 	int GetTranspose();

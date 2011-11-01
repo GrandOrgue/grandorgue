@@ -190,8 +190,6 @@ bool GOrgueApp::OnInit()
 	}
 	GOrgueLCD_Open();
 
-	m_soundSystem->GetMidi().UpdateOrganMIDI(); //retrieve MIDI settings for loading organs
-
 	return true;
 }
 

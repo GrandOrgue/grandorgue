@@ -99,7 +99,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 
 		}
 
-		m_midi = new GOrgueMidi();
+		m_midi = new GOrgueMidi(m_Settings);
 
 	}
 	catch (RtError &e)

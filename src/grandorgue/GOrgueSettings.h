@@ -24,6 +24,7 @@
 #define GORGUESETTINGS_H
 
 #include <wx/wx.h>
+#include <map>
 class wxConfigBase;
 
 class GOrgueSettings {
@@ -42,6 +43,7 @@ private:
 	unsigned m_Volume;
 	unsigned m_PolyphonyLimit;
 	wxString m_DefaultAudioDevice;
+	std::map<long, wxString> m_OrganMidiEvents;
 
 public:
 	GOrgueSettings();
@@ -83,6 +85,9 @@ public:
 	void SetAudioDeviceLatency(wxString device, unsigned latency);
 	int GetAudioDeviceActualLatency(wxString device);
 	void SetAudioDeviceActualLatency(wxString device, unsigned latency);
+
+	const std::map<long, wxString>& GetOrganList();
+	void SetOrganList(std::map<long, wxString> list);
 };
 
 #endif

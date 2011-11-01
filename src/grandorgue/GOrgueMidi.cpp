@@ -23,6 +23,7 @@
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 #include "RtMidi.h"
 #include <vector>
@@ -80,14 +81,14 @@ MIDIListenDialog::LISTEN_DIALOG_TYPE GOrgueMidi::GetMidiEventListenDialogType(co
 	return g_available_midi_events[idx].listener_dialog_type;
 }
 
-GOrgueMidi::GOrgueMidi() :
-	m_global_config(wxConfigBase::Get()),
+GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
+	m_Settings(settings),
+	m_global_config(&settings.GetConfig()),
 	m_midi_device_map(),
 	m_midi_devices(),
 	m_transpose(0),
 	m_listening(false),
 	m_listen_evthandler(NULL),
-	m_organ_midi_events(),
 	m_organfile(NULL)
 {
 	UpdateDevices();
@@ -264,9 +265,8 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* de
 	if (j == -1)
 		return;
 	// MIDI for different organ??
-	std::map<long, wxString>::iterator it;
-	it = m_organ_midi_events.find(j);
-	if (it != m_organ_midi_events.end())
+	std::map<long, wxString>::const_iterator it = m_Settings.GetOrganList().find(j);
+	if (it != m_Settings.GetOrganList().end())
 	{
 		wxCommandEvent event(wxEVT_LOADFILE, 0);
 		event.SetString(it->second);
@@ -284,20 +284,6 @@ void GOrgueMidi::SetListener(wxEvtHandler* event_handler)
 {
 	m_listening = (event_handler != NULL);
 	m_listen_evthandler = event_handler;
-}
-
-void GOrgueMidi::UpdateOrganMIDI()
-{
-
-	long count = m_global_config->Read(wxT("OrganMIDI/Count"), 0L);
-	for (long i = 0; i < count; i++)
-	{
-		wxString itemstr = wxT("OrganMIDI/Organ") + wxString::Format(wxT("%ld"), i);
-		long j = m_global_config->Read(itemstr + wxT(".midi"), 0L);
-		wxString file = m_global_config->Read(itemstr + wxT(".file"));
-		m_organ_midi_events.insert(std::pair<long, wxString>(j, file));
-	}
-
 }
 
 int GOrgueMidi::GetMidiEventByChannel(int channel)
