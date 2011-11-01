@@ -60,6 +60,7 @@ private:
 	wxString m_filename;
 	GOrgueSetter* m_setter;
 	int m_volume;
+	bool m_Stereo;
 
 	bool m_b_customized : 1;
 	bool m_DivisionalsStoreIntermanualCouplers : 1;
@@ -101,7 +102,7 @@ private:
 
 public:
 
-	GrandOrgueFile(OrganDocument* doc);
+	GrandOrgueFile(OrganDocument* doc, bool stereo);
 	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);
 	void Save(const wxString& file);
 	bool CachePresent();
@@ -114,6 +115,7 @@ public:
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void ControlChanged(void* control);
 	void Modified();
+	bool IsStereo();
 	~GrandOrgueFile(void);
 
 	/* Access to internal ODF objects */

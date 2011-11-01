@@ -28,9 +28,11 @@
 
 class GOSoundProviderWave : public GOSoundProvider
 {
+private:
+	bool m_Stereo;
 
 public:
-	GOSoundProviderWave(GOrgueMemoryPool& pool);
+	GOSoundProviderWave(GOrgueMemoryPool& pool, bool stereo);
 
 	void LoadFromFile(wxString filename, int fixed_amplitude);
 
