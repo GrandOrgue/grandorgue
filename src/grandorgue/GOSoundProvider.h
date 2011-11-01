@@ -23,16 +23,17 @@
 #ifndef GOSOUNDPROVIDER_H_
 #define GOSOUNDPROVIDER_H_
 
-#include <wx/wx.h>
 #include "GOSoundAudioSection.h"
+class GOrgueCache;
+class GOrgueCacheWriter;
 
 class GOSoundProvider
 {
 
 private:
 	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
-	static bool SaveCacheAudioSection(wxOutputStream* cache, const AUDIO_SECTION* section, bool save_align_tracker);
-	static bool LoadCacheAudioSection(wxInputStream* cache, AUDIO_SECTION* section, bool load_align_tracker);
+	static bool SaveCacheAudioSection(GOrgueCacheWriter& cache, const AUDIO_SECTION* section, bool save_align_tracker);
+	static bool LoadCacheAudioSection(GOrgueCache& cache, AUDIO_SECTION* section, bool load_align_tracker);
 
 protected:
 	float          m_Gain;
@@ -49,8 +50,8 @@ public:
 
 	void ClearData();
 
-	virtual bool LoadCache(wxInputStream* cache);
-	virtual bool SaveCache(wxOutputStream* cache);
+	virtual bool LoadCache(GOrgueCache& cache);
+	virtual bool SaveCache(GOrgueCacheWriter& cache);
 
 	const AUDIO_SECTION* GetLoop() const;
 	const AUDIO_SECTION* GetRelease() const;

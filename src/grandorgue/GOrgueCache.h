@@ -20,46 +20,21 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUEPIPE_H
-#define GORGUEPIPE_H
+#ifndef GORGUECACHE_H_
+#define GORGUECACHE_H_
 
-#include <wx/wx.h>
-#include "GOSoundProviderWave.h"
+class wxInputStream;
 
-class GrandOrgueFile;
-class GOrgueCache;
-class GOrgueCacheWriter;
-typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
-
-class GOrguePipe
-{
-
-private:
-	GrandOrgueFile* m_OrganFile;
-	SAMPLER_HANDLE  m_Sampler;
-	int m_Instances;
-
-	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
-	int m_SamplerGroupID;
-	wxString m_Filename;
-	bool m_Percussive;
-	int m_Amplitude;
-	GOrguePipe* m_Reference;
-	GOSoundProviderWave m_SoundProvider;
-
-	void SetOn();
-	void SetOff();
-	GOSoundProvider* GetSoundProvider();
+class GOrgueCache {
+	wxInputStream& m_stream;
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int sampler_group_id, int amplitude);
-	void Set(bool on);
-	void LoadData();
-	bool LoadCache(GOrgueCache& cache);
-	bool SaveCache(GOrgueCacheWriter& cache);
-	void FastAbort();
-	wxString GetFilename();
+	GOrgueCache(wxInputStream& stream);
 
+	bool Read(void* data, unsigned length);
+	/* Allocate and read a block written by WriteBlock */
+	void* ReadBlock(unsigned length);
 };
+
 
 #endif

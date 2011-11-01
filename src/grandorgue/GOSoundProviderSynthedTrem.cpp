@@ -21,6 +21,7 @@
  */
 
 #include "GOSoundProviderSynthedTrem.h"
+#include <wx/wx.h>
 
 short SynthTrem(double amp, double angle)
 {

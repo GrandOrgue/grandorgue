@@ -22,6 +22,9 @@
 
 #include "GOSoundProvider.h"
 #include "GOrgueReleaseAlignTable.h"
+#include "GOrgueCache.h"
+#include "GOrgueCacheWriter.h"
+#include <wx/wx.h>
 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
@@ -53,30 +56,26 @@ void GOSoundProvider::ClearData()
 }
 
 bool GOSoundProvider::LoadCacheAudioSection
-	(wxInputStream* cache, AUDIO_SECTION* section, bool load_align_tracker)
+	(GOrgueCache& cache, AUDIO_SECTION* section, bool load_align_tracker)
 {
 
-	cache->Read(section, sizeof(AUDIO_SECTION));
+	bool result = cache.Read(section, sizeof(AUDIO_SECTION));
 	section->release_aligner = NULL;
 	section->data = NULL;
-	if (cache->LastRead() != sizeof(AUDIO_SECTION))
+	if (!result)
 		return false;
 
-	section->data = (unsigned char*)malloc(section->alloc_size);
+	section->data = (unsigned char*)cache.ReadBlock(section->alloc_size);
 	if (section->data == NULL)
-		throw (wxString)_("< out of memory allocating samples");
-
-	cache->Read(section->data, section->alloc_size);
-	if (cache->LastRead() != section->alloc_size)
 		return false;
 
 	if (load_align_tracker)
 	{
 
 		bool has_align_tracker;
-		cache->Read(&has_align_tracker, sizeof(has_align_tracker));
-		if (cache->LastRead() != sizeof(has_align_tracker))
+		if (!cache.Read(&has_align_tracker, sizeof(has_align_tracker)))
 			return false;
+
 
 		if (has_align_tracker)
 		{
@@ -91,11 +90,10 @@ bool GOSoundProvider::LoadCacheAudioSection
 
 }
 
-bool GOSoundProvider::LoadCache(wxInputStream* cache)
+bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 {
 
-	cache->Read(&m_Gain, sizeof(m_Gain));
-	if (cache->LastRead() != sizeof(m_Gain))
+	if (!cache.Read(&m_Gain, sizeof(m_Gain)))
 		return false;
 
 	if (!LoadCacheAudioSection(cache, &m_Attack, false))
@@ -112,23 +110,20 @@ bool GOSoundProvider::LoadCache(wxInputStream* cache)
 }
 
 bool GOSoundProvider::SaveCacheAudioSection
-	(wxOutputStream* cache, const AUDIO_SECTION* section, bool save_align_tracker)
+	(GOrgueCacheWriter& cache, const AUDIO_SECTION* section, bool save_align_tracker)
 {
 
-	cache->Write(section, sizeof(AUDIO_SECTION));
-	if (cache->LastWrite() != sizeof(AUDIO_SECTION))
+	if (!cache.Write(section, sizeof(AUDIO_SECTION)))
 		return false;
 
-	cache->Write(section->data, section->alloc_size);
-	if (cache->LastWrite() != section->alloc_size)
+	if (!cache.WriteBlock(section->data, section->alloc_size))
 		return false;
 
 	if (save_align_tracker)
 	{
 
 		bool has_align_tracker = section->release_aligner != NULL;
-		cache->Write(&has_align_tracker, sizeof(has_align_tracker));
-		if (cache->LastWrite() != sizeof(has_align_tracker))
+		if (!cache.Write(&has_align_tracker, sizeof(has_align_tracker)))
 			return false;
 
 		if (has_align_tracker)
@@ -141,11 +136,10 @@ bool GOSoundProvider::SaveCacheAudioSection
 
 }
 
-bool GOSoundProvider::SaveCache(wxOutputStream* cache)
+bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 {
 
-	cache->Write(&m_Gain, sizeof(m_Gain));
-	if (cache->LastWrite() != sizeof(m_Gain))
+	if (!cache.Write(&m_Gain, sizeof(m_Gain)))
 		return false;
 
 	if (!SaveCacheAudioSection(cache, &m_Attack, false))

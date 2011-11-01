@@ -20,9 +20,11 @@
  * MA 02111-1307, USA.
  */
 
-#include <wx/stream.h>
+#include <wx/wx.h>
 
 #include "GOrgueReleaseAlignTable.h"
+#include "GOrgueCache.h"
+#include "GOrgueCacheWriter.h"
 #include "GOSoundAudioSection.h"
 #include <stdlib.h>
 
@@ -45,36 +47,28 @@ GOrgueReleaseAlignTable::~GOrgueReleaseAlignTable()
 
 }
 
-bool GOrgueReleaseAlignTable::Load(wxInputStream* cache)
+bool GOrgueReleaseAlignTable::Load(GOrgueCache& cache)
 {
-	cache->Read(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude));
-	if (cache->LastRead() != sizeof(m_PhaseAlignMaxAmplitude))
+	if (!cache.Read(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude)))
 		return false;
-	cache->Read(&m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative));
-	if (cache->LastRead() != sizeof(m_PhaseAlignMaxDerivative))
+	if (!cache.Read(&m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative)))
 		return false;
-	cache->Read(&m_PositionEntries, sizeof(m_PositionEntries));
-	if (cache->LastRead() != sizeof(m_PositionEntries))
+	if (!cache.Read(&m_PositionEntries, sizeof(m_PositionEntries)))
 		return false;
-	cache->Read(&m_HistoryEntries, sizeof(m_HistoryEntries));
-	if (cache->LastRead() != sizeof(m_HistoryEntries))
+	if (!cache.Read(&m_HistoryEntries, sizeof(m_HistoryEntries)))
 		return false;
 	return true;
 }
 
-bool GOrgueReleaseAlignTable::Save(wxOutputStream* cache)
+bool GOrgueReleaseAlignTable::Save(GOrgueCacheWriter& cache)
 {
-	cache->Write(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude));
-	if (cache->LastWrite() != sizeof(m_PhaseAlignMaxAmplitude))
+	if (!cache.Write(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude)))
 		return false;
-	cache->Write(&m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative));
-	if (cache->LastWrite() != sizeof(m_PhaseAlignMaxDerivative))
+	if (!cache.Write(&m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative)))
 		return false;
-	cache->Write(&m_PositionEntries, sizeof(m_PositionEntries));
-	if (cache->LastWrite() != sizeof(m_PositionEntries))
+	if (!cache.Write(&m_PositionEntries, sizeof(m_PositionEntries)))
 		return false;
-	cache->Write(&m_HistoryEntries, sizeof(m_HistoryEntries));
-	if (cache->LastWrite() != sizeof(m_HistoryEntries))
+	if (!cache.Write(&m_HistoryEntries, sizeof(m_HistoryEntries)))
 		return false;
 	return true;
 }

@@ -31,6 +31,7 @@
 
 class wxProgressDialog;
 
+class GOrgueCache;
 class GOrgueDivisionalCoupler;
 class GOrgueEnclosure;
 class GOrgueGeneral;
@@ -92,7 +93,7 @@ private:
 	GOSoundEngine* m_soundengine;
 
 	void ReadOrganFile(wxFileConfig& odf_ini_file);
-	bool TryLoad(wxInputStream* cache, wxProgressDialog& dlg, wxString& error);
+	bool TryLoad(GOrgueCache* cache, wxProgressDialog& dlg, wxString& error);
 	void GenerateCacheHash(unsigned char hash[20]);
 
 public:

@@ -20,46 +20,26 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUEPIPE_H
-#define GORGUEPIPE_H
-
 #include <wx/wx.h>
-#include "GOSoundProviderWave.h"
+#include "GOrgueCacheWriter.h"
 
-class GrandOrgueFile;
-class GOrgueCache;
-class GOrgueCacheWriter;
-typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
-
-class GOrguePipe
+GOrgueCacheWriter::GOrgueCacheWriter(wxOutputStream& stream) :
+	m_stream(stream)
 {
+}
 
-private:
-	GrandOrgueFile* m_OrganFile;
-	SAMPLER_HANDLE  m_Sampler;
-	int m_Instances;
+bool GOrgueCacheWriter::Write(const void* data, unsigned length)
+{
+	m_stream.Write(data, length);
+	if (m_stream.LastWrite() != length)
+		return false;
+	return true;
+}
 
-	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
-	int m_SamplerGroupID;
-	wxString m_Filename;
-	bool m_Percussive;
-	int m_Amplitude;
-	GOrguePipe* m_Reference;
-	GOSoundProviderWave m_SoundProvider;
-
-	void SetOn();
-	void SetOff();
-	GOSoundProvider* GetSoundProvider();
-
-public:
-	GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int sampler_group_id, int amplitude);
-	void Set(bool on);
-	void LoadData();
-	bool LoadCache(GOrgueCache& cache);
-	bool SaveCache(GOrgueCacheWriter& cache);
-	void FastAbort();
-	wxString GetFilename();
-
-};
-
-#endif
+bool GOrgueCacheWriter::WriteBlock(const void* data, unsigned length)
+{
+	m_stream.Write(data, length);
+	if (m_stream.LastWrite() != length)
+		return false;
+	return true;
+}
