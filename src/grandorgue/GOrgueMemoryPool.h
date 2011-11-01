@@ -23,13 +23,19 @@
 #ifndef GORGUEMEMORYPOOL_H_
 #define GORGUEMEMORYPOOL_H_
 
+class wxFile;
+
 class GOrgueMemoryPool {
 
 public:
 	GOrgueMemoryPool();
+	~GOrgueMemoryPool();
 
 	void *Alloc(unsigned length);
 	void Free(void* data);
+
+	void *GetCacheData(unsigned long offset);
+	bool SetCacheFile(wxFile& cache_file);
 };
 
 

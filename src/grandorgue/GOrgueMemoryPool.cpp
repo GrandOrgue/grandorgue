@@ -21,10 +21,15 @@
  */
 
 #include <wx/wx.h>
+#include <wx/file.h>
 
 #include "GOrgueMemoryPool.h"
 
 GOrgueMemoryPool::GOrgueMemoryPool()
+{
+}
+
+GOrgueMemoryPool::~GOrgueMemoryPool()
 {
 }
 
@@ -41,3 +46,13 @@ void GOrgueMemoryPool::Free(void* data)
 	free(data);
 }
 
+void *GOrgueMemoryPool::GetCacheData(unsigned long offset)
+{
+	return NULL;
+}
+
+bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
+{
+	bool result = false;
+	return result;
+}

@@ -32,6 +32,7 @@ class GOrgueCache {
 	wxInputStream* m_fstream;
 	wxInputStream* m_zstream;
 	GOrgueMemoryPool& m_pool;
+	bool m_Mapable;
 
 public:
 	GOrgueCache(wxFile& cache_file, GOrgueMemoryPool& pool);
