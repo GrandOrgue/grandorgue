@@ -88,6 +88,9 @@ public:
 
 	const std::map<long, wxString>& GetOrganList();
 	void SetOrganList(std::map<long, wxString> list);
+
+	int GetMidiDeviceChannelShift(wxString device);
+	void SetMidiDeviceChannelShift(wxString device, int shift);
 };
 
 #endif

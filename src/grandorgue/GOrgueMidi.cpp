@@ -164,7 +164,7 @@ void GOrgueMidi::Open()
 		MIDI_DEVICE& this_dev = *m_midi_devices[i];
 		memset(this_dev.bank_msb, 0, sizeof(this_dev.bank_msb));
 		memset(this_dev.bank_lsb, 0, sizeof(this_dev.bank_lsb));
-		int channel_shift = m_global_config->Read(wxT("Devices/MIDI/") + this_dev.name, 0L);
+		int channel_shift = m_Settings.GetMidiDeviceChannelShift(this_dev.name);
 		if (channel_shift >= 0)
 		{
 			try

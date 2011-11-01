@@ -273,3 +273,13 @@ void GOrgueSettings::SetOrganList(std::map<long, wxString> list)
 	}
 	m_Config.Write(wxT("OrganMIDI/Count"), (long)count);
 }
+
+int GOrgueSettings::GetMidiDeviceChannelShift(wxString device)
+{
+	return m_Config.Read(wxT("Devices/MIDI/") + device, 0L);
+}
+
+void GOrgueSettings::SetMidiDeviceChannelShift(wxString device, int shift)
+{
+	m_Config.Write(wxT("Devices/MIDI/") + device, shift);
+}
