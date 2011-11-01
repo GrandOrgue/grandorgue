@@ -34,10 +34,7 @@ extern GOrgueSound* g_sound;
 
 BEGIN_EVENT_TABLE(GOrgueMeter, wxControl)
 	EVT_TEXT(ID_METER_AUDIO_SPIN, GOrgueMeter::OnVolume)
-	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueMeter::OnFrame)
 	EVT_TEXT_ENTER(ID_METER_AUDIO_SPIN, GOrgueMeter::OnEnter)
-	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN,  GOrgueMeter::OnEnter)
-	EVT_SLIDER(0, GOrgueMeter::OnChange)
 END_EVENT_TABLE()
 
 GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
@@ -52,9 +49,6 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 
 	switch (count)
 	{
-	case 1:
-		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 999);
-		break;
 	case 3:
 		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 100);
 		break;
@@ -68,9 +62,6 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 
 	switch (count)
 	{
-	case 1:
-		SetValue(0);
-		break;
 	case 3:
 		SetValue(wxConfigBase::Get()->Read(wxT("Volume"), 50));
 		break;
@@ -86,19 +77,6 @@ void GOrgueMeter::SetValue(int n)
 {
 	m_spin->SetValue(n);
 }
-
-void GOrgueMeter::ChangeValue(int n)
-{
-	wxCommandEvent event(wxEVT_COMMAND_SLIDER_UPDATED, 0);
-	event.SetInt(n);
-	AddPendingEvent(event);
-}
-
-void GOrgueMeter::OnChange(wxCommandEvent& event)
-{
-	m_spin->SetValue(event.GetInt());
-}
-
 
 void GOrgueMeter::OnVolume(wxCommandEvent& event)
 {
@@ -118,28 +96,8 @@ void GOrgueMeter::OnVolume(wxCommandEvent& event)
 	wxConfigBase::Get()->Write(wxT("Volume"), n);
 }
 
-void GOrgueMeter::OnFrame(wxCommandEvent& event)
-{
-	wxString str;
-	long n = m_spin->GetValue(), v;
-	if (!event.GetString().ToLong(&v) || n != v)
-	{
-		m_spin->SetValue(n);
-		m_spin->SetSelection(-1, -1);
-#ifdef __WXMSW__
-		return;
-#endif
-	}
-
-	if (::wxGetApp().frame)
-		::wxGetApp().frame->ChangeSetter(n);
-}
-
 void GOrgueMeter::OnEnter(wxCommandEvent& event)
 {
-	if (event.GetId() == ID_METER_FRAME_SPIN)
-		if (::wxGetApp().frame)
-			::wxGetApp().frame->ChangeSetter(m_spin->GetValue());
 	::wxGetApp().frame->SetFocus();
 }
 
