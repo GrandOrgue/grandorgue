@@ -20,11 +20,13 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOGUIPanel.h"
 #include "OrganDocument.h"
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
 #include "GOrgueSound.h"
 #include "GOrgueMeter.h"
+#include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 
 IMPLEMENT_DYNAMIC_CLASS(OrganDocument, wxDocument)
@@ -89,6 +91,13 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	g_sound->ActivatePlayback();
 
 	UpdateAllViews();
+
+	for (unsigned i = 1; i < m_organfile->GetPanelCount(); i++)
+		if (m_organfile->GetPanel(i)->InitialOpenWindow())
+		{
+			wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_FIRST + i - 1);
+			wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+		}
 
 	return true;
 }
