@@ -29,6 +29,8 @@ class GOrgueSettings {
 private:
 	wxConfigBase& m_Config;
 	bool m_Stereo;
+	unsigned m_Concurrency;
+	unsigned m_ReleaseConcurrency;
 
 public:
 	GOrgueSettings();
@@ -37,6 +39,11 @@ public:
 
 	bool GetLoadInStereo();
 	void SetLoadInStereo(bool stereo);
+
+	unsigned GetConcurrency();
+	void SetConcurrency(unsigned concurrency);
+	unsigned GetReleaseConcurrency();
+	void SetReleaseConcurrency(unsigned concurrency);
 };
 
 #endif

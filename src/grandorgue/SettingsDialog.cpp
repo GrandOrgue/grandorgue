@@ -267,8 +267,8 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	UpdateSoundStatus();
 	c_stereo->Select(m_Settings.GetLoadInStereo());
 	c_SampleRate->Select(pConfig->Read(wxT("SampleRate"), 0L) == 48000 ? 1 : 0);
-	c_Concurrency->Select(pConfig->Read(wxT("Concurrency"), 0L));
-	c_ReleaseConcurrency->Select(pConfig->Read(wxT("ReleaseConcurrency"), 4L) - 1);
+	c_Concurrency->Select(m_Settings.GetConcurrency());
+	c_ReleaseConcurrency->Select(m_Settings.GetReleaseConcurrency() - 1);
 	c_WaveFormat->Select(pConfig->Read(wxT("WaveFormat"), 1L) - 1);
 
 	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Enhancements"));
@@ -585,8 +585,8 @@ bool SettingsDialog::DoApply()
 	pConfig->Write(wxT("ScaleRelease"), (long)c_scale->IsChecked());
 	pConfig->Write(wxT("RandomizeSpeaking"), (long)c_random->IsChecked());
 	pConfig->Write(wxT("SampleRate"), c_SampleRate->GetSelection() ? 48000 : 44100);
-	pConfig->Write(wxT("Concurrency"), c_Concurrency->GetSelection());
-	pConfig->Write(wxT("ReleaseConcurrency"), c_ReleaseConcurrency->GetSelection() + 1);
+	m_Settings.SetConcurrency(c_Concurrency->GetSelection());
+	m_Settings.SetReleaseConcurrency(c_ReleaseConcurrency->GetSelection() + 1);
 	pConfig->Write(wxT("WaveFormat"), c_WaveFormat->GetSelection() + 1);
 
     g_sound->ResetSound();
