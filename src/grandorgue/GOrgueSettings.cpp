@@ -29,7 +29,14 @@ GOrgueSettings::GOrgueSettings() :
 	m_Config(*wxConfigBase::Get()),
 	m_Stereo(false),
 	m_Concurrency(0),
-	m_ReleaseConcurrency(1)
+	m_ReleaseConcurrency(1),
+	m_LosslessCompression(true),
+	m_ManagePolyphony(true),
+	m_CompressCache(true),
+	m_ScaleRelease(true),
+	m_RandomizeSpeaking(true),
+	m_SampleRate(44100),
+	m_WaveFormat(4)
 {
 }
 
@@ -40,6 +47,17 @@ void GOrgueSettings::Load()
 	m_ReleaseConcurrency = m_Config.Read(wxT("ReleaseConcurrency"), 1L);
 	if (m_ReleaseConcurrency < 1)
 		m_ReleaseConcurrency = 1;
+	m_LosslessCompression = m_Config.Read(wxT("LosslessCompression"), 1);
+	m_ManagePolyphony = m_Config.Read(wxT("ManagePolyphony"), 1);
+	m_CompressCache = m_Config.Read(wxT("CompressCache"), 1);
+	m_ScaleRelease = m_Config.Read(wxT("ScaleRelease"), 1);
+	m_RandomizeSpeaking = m_Config.Read(wxT("RandomizeSpeaking"), 1);
+	m_SampleRate = m_Config.Read(wxT("SampleRate"), 44100);
+	if (m_SampleRate < 1000)
+		m_SampleRate = 44100;
+	m_WaveFormat = m_Config.Read(wxT("WaveFormat"), 4);
+	if (m_WaveFormat > 4)
+		m_WaveFormat = 4;
 }
 
 bool GOrgueSettings::GetLoadInStereo()
@@ -75,4 +93,85 @@ void GOrgueSettings::SetReleaseConcurrency(unsigned concurrency)
 		concurrency = 1;
 	m_ReleaseConcurrency = concurrency;
 	m_Config.Write(wxT("ReleaseConcurrency"), (long)m_ReleaseConcurrency);
+}
+
+bool GOrgueSettings::GetLosslessCompression()
+{
+	return m_LosslessCompression;
+}
+
+void GOrgueSettings::SetLosslessCompression(bool lossless_compression)
+{
+	m_LosslessCompression = lossless_compression;
+	m_Config.Write(wxT("LosslessCompression"), m_LosslessCompression);
+}
+
+bool GOrgueSettings::GetManagePolyphony()
+{
+	return m_ManagePolyphony;
+}
+
+void GOrgueSettings::SetManagePolyphony(bool manage_polyphony)
+{
+	m_ManagePolyphony = manage_polyphony;
+	m_Config.Write(wxT("ManagePolyphony"), m_ManagePolyphony);
+}
+
+bool GOrgueSettings::GetCompressCache()
+{
+	return m_CompressCache;
+}
+
+void GOrgueSettings::SetCompressCache(bool compress)
+{
+	m_CompressCache = compress;
+	m_Config.Write(wxT("CompressCache"), m_CompressCache);
+}
+
+bool GOrgueSettings::GetScaleRelease()
+{
+	return m_ScaleRelease;
+}
+
+void GOrgueSettings::SetScaleRelease(bool scale_release)
+{
+	m_ScaleRelease = scale_release;
+	m_Config.Write(wxT("ScaleRelease"), m_ScaleRelease);
+}
+
+bool GOrgueSettings::GetRandomizeSpeaking()
+{
+	return m_RandomizeSpeaking;
+}
+
+void GOrgueSettings::SetRandomizeSpeaking(bool randomize)
+{
+	m_RandomizeSpeaking = randomize;
+	m_Config.Write(wxT("RandomizeSpeaking"), m_RandomizeSpeaking);
+}
+
+unsigned GOrgueSettings::GetSampleRate()
+{
+	return m_SampleRate;
+}
+
+void GOrgueSettings::SetSampleRate(unsigned sample_rate)
+{
+	if (sample_rate < 1000)
+		sample_rate = 44100;
+	m_SampleRate = sample_rate;
+	m_Config.Write(wxT("SampleRate"), (long)sample_rate);
+}
+
+unsigned GOrgueSettings::GetWaveFormatBytesPerSample()
+{
+	return m_WaveFormat;
+}
+
+void GOrgueSettings::SetWaveFormatBytesPerSample(unsigned bytes_per_sample)
+{
+	if (bytes_per_sample > 4)
+		bytes_per_sample = 4;
+	m_WaveFormat = bytes_per_sample;
+	m_Config.Write(wxT("WaveFormat"), (long)m_WaveFormat);
 }

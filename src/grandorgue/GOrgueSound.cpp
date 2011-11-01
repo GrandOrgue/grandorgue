@@ -39,8 +39,6 @@ GOrgueSound::GOrgueSound(void) :
 	audioDevice(NULL),
 	m_SamplesPerBuffer(0),
 	m_nb_buffers(0),
-	b_random(0),
-	m_CompressCache(true),
 	meter_counter(0),
 	b_active(false),
 	defaultAudio(wxT(""))
@@ -186,14 +184,12 @@ bool GOrgueSound::OpenSound()
 
 	m_Settings.Load();
 	defaultAudio = pConfig->Read(wxT("Devices/DefaultSound"), defaultAudio);
-	m_SoundEngine.SetPolyphonyLimiting(pConfig->Read(wxT("ManagePolyphony"), 1));
+	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
 	m_SoundEngine.SetHardPolyphony(pConfig->Read(wxT("PolyphonyLimit"), 2048));
 	m_SoundEngine.SetVolume(pConfig->Read(wxT("Volume"), 50));
-	m_SoundEngine.SetScaledReleases(pConfig->Read(wxT("ScaleRelease"), 1));
-	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
-	m_CompressCache = pConfig->Read(wxT("CompressCache"), 1);
-	unsigned sample_rate = pConfig->Read(wxT("SampleRate"), 44100);
-	m_recorder.SetBytesPerSample(pConfig->Read(wxT("WaveFormat"), 4));
+	m_SoundEngine.SetScaledReleases(m_Settings.GetScaleRelease());
+	unsigned sample_rate = m_Settings.GetSampleRate();
+	m_recorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
 
 	PreparePlayback(NULL);
 
@@ -336,19 +332,9 @@ bool GOrgueSound::ResetSound()
 	return true;
 }
 
-bool GOrgueSound::HasRandomPipeSpeech()
-{
-	return b_random;
-}
-
 GOrgueSettings& GOrgueSound::GetSettings()
 {
 	return m_Settings;
-}
-
-bool GOrgueSound::CompressCache()
-{
-	return m_CompressCache;
 }
 
 bool GOrgueSound::IsRecording()
