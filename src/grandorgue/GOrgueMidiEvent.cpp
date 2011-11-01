@@ -109,9 +109,13 @@ int GOrgueMidiEvent::GetEventCode()
 	switch(GetMidiType())
 	{
 	case MIDI_NOTE:
+		if (!GetValue())
+			return -1;
 		return 0x9000 | ((GetChannel() - 1) & 0x0F) << 8 | (GetKey() & 0x7F);
 
 	case MIDI_CTRL_CHANGE:
+		if (!GetValue())
+			return -1;
 		return 0xB000 | ((GetChannel() - 1) & 0x0F) << 8 | (GetKey() & 0x7F);
 		
 	case MIDI_PGM_CHANGE:
