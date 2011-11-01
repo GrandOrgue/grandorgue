@@ -502,7 +502,8 @@ int GOrgueSound::AudioCallbackLocal
 
 		wxCommandEvent event(wxEVT_METERS, 0);
 		event.SetInt(n);
-		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+		if (wxTheApp->GetTopWindow())
+			wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 
 		meter_counter = meter_info.current_polyphony = 0;
 		meter_info.meter_left = meter_info.meter_right = 0.0;
