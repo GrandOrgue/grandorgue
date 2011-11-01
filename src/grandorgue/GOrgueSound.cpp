@@ -322,6 +322,7 @@ void GOrgueSound::CloseSound()
 	if (m_organfile)
 		m_organfile->Abort();
 	m_organfile = NULL;
+	ResetMeters();
 }
 
 bool GOrgueSound::ResetSound()
@@ -443,6 +444,14 @@ const RtAudioFormat GOrgueSound::GetAudioFormat()
 GOrgueMidi& GOrgueSound::GetMidi()
 {
 	return *m_midi;
+}
+
+void GOrgueSound::ResetMeters()
+{
+	wxCommandEvent event(wxEVT_METERS, 0);
+	event.SetInt(0);
+	if (wxTheApp->GetTopWindow())
+		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 }
 
 int GOrgueSound::AudioCallbackLocal

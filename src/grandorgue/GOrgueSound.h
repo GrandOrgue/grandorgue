@@ -107,6 +107,8 @@ private:
 	void StopThreads();
 	void StartThreads(unsigned windchests);
 
+	void ResetMeters();
+
 public:
 
 	GOrgueSound(void);
