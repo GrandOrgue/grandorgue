@@ -31,6 +31,13 @@ private:
 	bool m_Stereo;
 	unsigned m_Concurrency;
 	unsigned m_ReleaseConcurrency;
+	bool m_LosslessCompression;
+	bool m_ManagePolyphony;
+	bool m_CompressCache;
+	bool m_ScaleRelease;
+	bool m_RandomizeSpeaking;
+	unsigned m_SampleRate;
+	unsigned m_WaveFormat;
 
 public:
 	GOrgueSettings();
@@ -44,6 +51,21 @@ public:
 	void SetConcurrency(unsigned concurrency);
 	unsigned GetReleaseConcurrency();
 	void SetReleaseConcurrency(unsigned concurrency);
+
+	bool GetLosslessCompression();
+	void SetLosslessCompression(bool lossless_compression);
+	bool GetManagePolyphony();
+	void SetManagePolyphony(bool manage_polyphony);
+	bool GetCompressCache();
+	void SetCompressCache(bool compress);
+	bool GetScaleRelease();
+	void SetScaleRelease(bool scale_release);
+	bool GetRandomizeSpeaking();
+	void SetRandomizeSpeaking(bool randomize);
+	unsigned GetSampleRate();
+	void SetSampleRate(unsigned sample_rate);
+	unsigned GetWaveFormatBytesPerSample();
+	void SetWaveFormatBytesPerSample(unsigned bytes_per_sample);
 };
 
 #endif

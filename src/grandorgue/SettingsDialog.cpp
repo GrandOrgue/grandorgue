@@ -112,7 +112,7 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSettings& settings) :
 	wxASSERT(g_sound);
 
 	b_stereo = m_Settings.GetLoadInStereo();
-	b_squash = wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1);
+	b_squash = m_Settings.GetLosslessCompression();
 
 	pConfig = wxConfigBase::Get();
 
@@ -148,7 +148,7 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSettings& settings) :
 SettingsDialog::~SettingsDialog()
 {
 	g_sound->SetLogSoundErrorMessages(false);
-	if ((b_stereo != m_Settings.GetLoadInStereo() || b_squash != wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1)))
+	if (b_stereo != m_Settings.GetLoadInStereo() || b_squash != m_Settings.GetLosslessCompression())
 	{
         if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION) == wxYES)
         {
@@ -266,27 +266,27 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 
 	UpdateSoundStatus();
 	c_stereo->Select(m_Settings.GetLoadInStereo());
-	c_SampleRate->Select(pConfig->Read(wxT("SampleRate"), 0L) == 48000 ? 1 : 0);
+	c_SampleRate->Select(m_Settings.GetSampleRate() == 48000 ? 1 : 0);
 	c_Concurrency->Select(m_Settings.GetConcurrency());
 	c_ReleaseConcurrency->Select(m_Settings.GetReleaseConcurrency() - 1);
-	c_WaveFormat->Select(pConfig->Read(wxT("WaveFormat"), 1L) - 1);
+	c_WaveFormat->Select(m_Settings.GetWaveFormatBytesPerSample() - 1);
 
 	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Enhancements"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
-    item6->Add(c_squash = new wxCheckBox(panel, ID_ENHANCE_SQUASH,           _("Lossless compression")          ), 0, wxEXPAND | wxALL, 5);
-    item6->Add(c_limit  = new wxCheckBox(panel, ID_ENHANCE_MANAGE_POLYPHONY, _("Active polyphony management")   ), 0, wxEXPAND | wxALL, 5);
-    item6->Add(c_CompressCache  = new wxCheckBox(panel, ID_COMPRESS_CACHE,    _("Compress Cache")), 0, wxEXPAND | wxALL, 5);
-    item6->Add(c_scale  = new wxCheckBox(panel, ID_ENHANCE_SCALE_RELEASE,    _("Release sample scaling"        )), 0, wxEXPAND | wxALL, 5);
-    item6->Add(c_random = new wxCheckBox(panel, ID_ENHANCE_RANDOMIZE,        _("Randomize pipe speaking"       )), 0, wxEXPAND | wxALL, 5);
-	if (pConfig->Read(wxT("LosslessCompression"), 1))
+	item6->Add(c_squash = new wxCheckBox(panel, ID_ENHANCE_SQUASH,           _("Lossless compression")          ), 0, wxEXPAND | wxALL, 5);
+	item6->Add(c_limit  = new wxCheckBox(panel, ID_ENHANCE_MANAGE_POLYPHONY, _("Active polyphony management")   ), 0, wxEXPAND | wxALL, 5);
+	item6->Add(c_CompressCache  = new wxCheckBox(panel, ID_COMPRESS_CACHE,    _("Compress Cache")), 0, wxEXPAND | wxALL, 5);
+	item6->Add(c_scale  = new wxCheckBox(panel, ID_ENHANCE_SCALE_RELEASE,    _("Release sample scaling"        )), 0, wxEXPAND | wxALL, 5);
+	item6->Add(c_random = new wxCheckBox(panel, ID_ENHANCE_RANDOMIZE,        _("Randomize pipe speaking"       )), 0, wxEXPAND | wxALL, 5);
+	if (m_Settings.GetLosslessCompression())
 		c_squash->SetValue(true);
-	if (pConfig->Read(wxT("ManagePolyphony"), 1))
+	if (m_Settings.GetManagePolyphony())
 		c_limit ->SetValue(true);
-	if (pConfig->Read(wxT("CompressCache"), 1))
+	if (m_Settings.GetCompressCache())
 		c_CompressCache ->SetValue(true);
-	if (pConfig->Read(wxT("ScaleRelease"), 1))
+	if (m_Settings.GetScaleRelease())
 		c_scale ->SetValue(true);
-	if (pConfig->Read(wxT("RandomizeSpeaking"), 1))
+	if (m_Settings.GetRandomizeSpeaking())
 		c_random->SetValue(true);
 
     topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
@@ -579,15 +579,15 @@ bool SettingsDialog::DoApply()
 	pConfig->Write(wxT("Devices/DefaultSound"), c_sound->GetStringSelection());
 	pConfig->Write(wxT("Devices/Sound/") + c_sound->GetStringSelection(), c_latency->GetValue());
 	m_Settings.SetLoadInStereo(c_stereo->GetSelection());
-	pConfig->Write(wxT("LosslessCompression"), (long)c_squash->IsChecked());
-	pConfig->Write(wxT("ManagePolyphony"), (long)c_limit->IsChecked());
-	pConfig->Write(wxT("CompressCache"), (long)c_CompressCache->IsChecked());
-	pConfig->Write(wxT("ScaleRelease"), (long)c_scale->IsChecked());
-	pConfig->Write(wxT("RandomizeSpeaking"), (long)c_random->IsChecked());
-	pConfig->Write(wxT("SampleRate"), c_SampleRate->GetSelection() ? 48000 : 44100);
+	m_Settings.SetLosslessCompression(c_squash->IsChecked());
+	m_Settings.SetManagePolyphony(c_limit->IsChecked());
+	m_Settings.SetCompressCache(c_CompressCache->IsChecked());
+	m_Settings.SetScaleRelease(c_scale->IsChecked());
+	m_Settings.SetRandomizeSpeaking(c_random->IsChecked());
+	m_Settings.SetSampleRate(c_SampleRate->GetSelection() ? 48000 : 44100);
 	m_Settings.SetConcurrency(c_Concurrency->GetSelection());
 	m_Settings.SetReleaseConcurrency(c_ReleaseConcurrency->GetSelection() + 1);
-	pConfig->Write(wxT("WaveFormat"), c_WaveFormat->GetSelection() + 1);
+	m_Settings.SetWaveFormatBytesPerSample(c_WaveFormat->GetSelection() + 1);
 
     g_sound->ResetSound();
     UpdateSoundStatus();

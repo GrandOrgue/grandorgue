@@ -63,13 +63,9 @@ private:
 
 	std::map<wxString, GO_SOUND_DEV_CONFIG> m_audioDevices;
 	RtAudio* audioDevice;
-/*	int n_latency;*/
 
 	unsigned m_SamplesPerBuffer;
 	unsigned m_nb_buffers;
-
-	int b_random;
-	bool m_CompressCache;
 
 	short meter_counter;
 	METER_INFO meter_info;
@@ -118,8 +114,6 @@ public:
 	void CloseSound();
 	bool ResetSound();
 
-	bool HasRandomPipeSpeech();
-	bool CompressCache();
 	GOrgueSettings& GetSettings();
 
 	bool IsRecording();
