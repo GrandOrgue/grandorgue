@@ -175,9 +175,10 @@ void GOrgueSound::StartThreads(unsigned windchests)
 
 void GOrgueSound::StopThreads()
 {
-	wxCriticalSectionLocker thread_locker(m_thread_lock);
 	for(unsigned i = 0; i < m_Threads.size(); i++)
 		m_Threads[i]->Delete();
+
+	wxCriticalSectionLocker thread_locker(m_thread_lock);
 	m_Threads.resize(0);
 }
 
