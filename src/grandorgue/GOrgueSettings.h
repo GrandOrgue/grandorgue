@@ -23,6 +23,7 @@
 #ifndef GORGUESETTINGS_H
 #define GORGUESETTINGS_H
 
+#include <wx/wx.h>
 class wxConfigBase;
 
 class GOrgueSettings {
@@ -40,6 +41,7 @@ private:
 	unsigned m_WaveFormat;
 	unsigned m_Volume;
 	unsigned m_PolyphonyLimit;
+	wxString m_DefaultAudioDevice;
 
 public:
 	GOrgueSettings();
@@ -74,6 +76,13 @@ public:
 	void SetVolume(unsigned volume);
 	unsigned GetPolyphonyLimit();
 	void SetPolyphonyLimit(unsigned polyphony_limit);
+
+	const wxString& GetDefaultAudioDevice();
+	void SetDefaultAudioDevice(wxString device);
+	unsigned GetAudioDeviceLatency(wxString device);
+	void SetAudioDeviceLatency(wxString device, unsigned latency);
+	int GetAudioDeviceActualLatency(wxString device);
+	void SetAudioDeviceActualLatency(wxString device, unsigned latency);
 };
 
 #endif

@@ -79,7 +79,7 @@ END_EVENT_TABLE()
 void SettingsDialog::SetLatencySpinner(int latency)
 {
 
-	int corresponding_estimated_latency = pConfig->Read(wxT("Devices/Sound/") + c_sound->GetStringSelection(), -1);
+	int corresponding_estimated_latency = m_Settings.GetAudioDeviceLatency(c_sound->GetStringSelection());
 
 	if (c_latency->GetValue() != latency)
 		c_latency->SetValue(latency);
@@ -88,7 +88,7 @@ void SettingsDialog::SetLatencySpinner(int latency)
 	if (latency == corresponding_estimated_latency)
 	{
 
-		long int lat_l = pConfig->Read(wxT("Devices/Sound/ActualLatency/") + c_sound->GetStringSelection(), -1);
+		long int lat_l = m_Settings.GetAudioDeviceActualLatency(c_sound->GetStringSelection());
 		if (lat_l > 0)
 			lat_s.Printf(_("%ld ms"), lat_l);
 
@@ -161,7 +161,7 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::UpdateSoundStatus()
 {
 
-	SetLatencySpinner(pConfig->Read(wxT("Devices/Sound/") + c_sound->GetStringSelection(), 0L));
+	SetLatencySpinner(m_Settings.GetAudioDeviceLatency(c_sound->GetStringSelection()));
 	c_format->SetLabel(wxString(GOrgueRtHelpers::GetAudioFormatName(g_sound->GetAudioFormat())));
 
 }
@@ -212,7 +212,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	item9->Add(item1, 0, wxEXPAND | wxALL, 5);
 	c_sound = new wxChoice(panel, ID_SOUND_DEVICE, wxDefaultPosition, wxDefaultSize, choices);
 	c_sound->SetStringSelection(g_sound->GetDefaultAudioDevice());
-	c_sound->SetStringSelection(pConfig->Read(wxT("Devices/DefaultSound"), wxEmptyString));
+	c_sound->SetStringSelection(m_Settings.GetDefaultAudioDevice());
 	item1->Add(c_sound, 0, wxEXPAND | wxALL, 5);
 
 	choices.clear();
@@ -470,7 +470,7 @@ void SettingsDialog::OnChanged(wxCommandEvent& event)
 void SettingsDialog::OnDevicesSoundChoice(wxCommandEvent& event)
 {
 
-	int lat = pConfig->Read(wxT("Devices/Sound/") + c_sound->GetStringSelection(), 15);
+	int lat = m_Settings.GetAudioDeviceLatency(c_sound->GetStringSelection());
 	SetLatencySpinner(lat);
 
 }
@@ -576,8 +576,8 @@ bool SettingsDialog::DoApply()
             j = -j - 1;
         pConfig->Write(wxT("Devices/MIDI/") + page1checklist->GetString(i), j);
 	}
-	pConfig->Write(wxT("Devices/DefaultSound"), c_sound->GetStringSelection());
-	pConfig->Write(wxT("Devices/Sound/") + c_sound->GetStringSelection(), c_latency->GetValue());
+	m_Settings.SetDefaultAudioDevice(c_sound->GetStringSelection());
+	m_Settings.SetAudioDeviceLatency(c_sound->GetStringSelection(), c_latency->GetValue());
 	m_Settings.SetLoadInStereo(c_stereo->GetSelection());
 	m_Settings.SetLosslessCompression(c_squash->IsChecked());
 	m_Settings.SetManagePolyphony(c_limit->IsChecked());

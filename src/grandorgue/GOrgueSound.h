@@ -34,7 +34,6 @@
 #include "GOSoundRecorder.h"
 #include "GOrgueSettings.h"
 
-class wxConfigBase;
 class GrandOrgueFile;
 class GOrgueMidi;
 class GOSoundThread;
@@ -53,9 +52,6 @@ public:
 private:
 	wxCriticalSection m_lock;
 	wxCriticalSection m_thread_lock;
-
-	/* end audio callback variables */
-	wxConfigBase *pConfig;
 
 	RtAudioFormat format;
 
