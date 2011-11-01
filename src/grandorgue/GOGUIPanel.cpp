@@ -66,7 +66,6 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	{
 		wxBitmap bmp = GetImage_Wood(i);
 		m_WoodImages.push_back(new wxBitmap(bmp));
-		m_WoodImages.push_back(new wxBitmap(bmp.ConvertToImage().Rotate90()));
 	}
 }
 
