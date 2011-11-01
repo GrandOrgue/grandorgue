@@ -76,6 +76,8 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_SIZE(GOrgueFrame::OnSize)
 	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
+	EVT_TEXT(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
+	EVT_TEXT_ENTER(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 
 	EVT_UPDATE_UI(wxID_SAVE, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
@@ -101,7 +103,8 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_SamplerUsage(NULL),
 	m_VolumeLeft(NULL),
 	m_VolumeRight(NULL),
-	m_Transpose(NULL)
+	m_Transpose(NULL),
+	m_Polyphony(NULL)
 {
 #ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
@@ -153,7 +156,6 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	wxMenu *settings_menu = new wxMenu;
 
 	m_meters[0] = new GOrgueMeter(tb, ID_METER_AUDIO_SPIN, 3);
-	m_meters[1] = new GOrgueMeter(tb, ID_METER_POLY_SPIN,  2);
 	m_meters[2] = new GOrgueMeter(tb, ID_METER_FRAME_SPIN, 1);
 
 	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
@@ -176,7 +178,10 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	}
 
 	AddTool(settings_menu, ID_POLYPHONY, _("&Polyphony"), _("Polyphony"), GetImage_polyphony());
-	tb->AddControl(m_meters[1]);
+	m_Polyphony = new wxSpinCtrl(tb, ID_METER_POLY_SPIN, wxEmptyString, wxDefaultPosition, wxSize(56, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 4096);
+	tb->AddControl(m_Polyphony);
+	m_Polyphony->SetValue(wxConfigBase::Get()->Read(wxT("PolyphonyLimit"), 2048));
+
 	m_SamplerUsage = new wxGaugeAudio(tb, wxID_ANY, wxDefaultPosition);
 	tb->AddControl(m_SamplerUsage);
 
@@ -510,7 +515,11 @@ void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)
 
 void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
 {
-	//
+	long n = m_Polyphony->GetValue();
+
+	wxConfigBase::Get()->Write(wxT("PolyphonyLimit"), n);
+	if (g_sound)
+		g_sound->GetEngine().SetHardPolyphony(n);
 }
 
 void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)

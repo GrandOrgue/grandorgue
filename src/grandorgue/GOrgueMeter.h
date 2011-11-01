@@ -35,7 +35,6 @@ public:
 	void ChangeValue(int n);
 	void SetValue(int n);
 	void OnVolume(wxCommandEvent& event);
-	void OnPolyphony(wxCommandEvent& event);
 	void OnFrame(wxCommandEvent& event);
 	void OnEnter(wxCommandEvent& event);
 	void OnChange(wxCommandEvent& event);

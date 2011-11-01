@@ -39,6 +39,7 @@ class GOrgueFrame: public wxDocParentFrame
 	wxGaugeAudio *m_SamplerUsage;
 	wxGaugeAudio *m_VolumeLeft, *m_VolumeRight;
 	wxSpinCtrl* m_Transpose;
+	wxSpinCtrl* m_Polyphony;
 
 public:
     GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type);
