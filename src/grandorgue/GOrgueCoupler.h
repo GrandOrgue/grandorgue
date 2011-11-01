@@ -55,6 +55,9 @@ private:
 	std::vector<unsigned> m_OutState;
 	int m_CurrentTone;
 	int m_LastTone;
+	int m_FirstMidiNote;
+	unsigned m_FirstLogicalKey;
+	unsigned m_NumberOfKeys;
 
 	void ChangeKey(int note, int on);
 	void SetOut(int note, int on);
