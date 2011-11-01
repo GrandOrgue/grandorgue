@@ -32,6 +32,7 @@
 #include "GrandOrgueDef.h"
 #include "GOSoundEngine.h"
 #include "GOSoundRecorder.h"
+#include "GOrgueSettings.h"
 
 class wxConfigBase;
 class GrandOrgueFile;
@@ -67,7 +68,6 @@ private:
 	unsigned m_SamplesPerBuffer;
 	unsigned m_nb_buffers;
 
-	int b_stereo;
 	int b_random;
 	unsigned m_Concurrency;
 	unsigned m_ReleaseConcurrency;
@@ -86,6 +86,8 @@ private:
 
 	GOSoundEngine m_SoundEngine;
 	ptr_vector <GOSoundThread> m_Threads;
+
+	GOrgueSettings m_Settings;
 
 	int AudioCallbackLocal
 		(float* outputBuffer
@@ -119,8 +121,8 @@ public:
 	bool ResetSound();
 
 	bool HasRandomPipeSpeech();
-	bool IsStereo();
 	bool CompressCache();
+	GOrgueSettings& GetSettings();
 
 	bool IsRecording();
 	void StartRecording(wxString filename);

@@ -33,6 +33,7 @@
 #include "GrandOrgueID.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
+#include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GOrgueRtHelpers.h"
 
@@ -103,13 +104,14 @@ void SettingsDialog::SetLatencySpinner(int latency)
 #define SETTINGS_DLG_SIZE wxSize(603,600)
 //#endif
 
-SettingsDialog::SettingsDialog(wxWindow* win) :
-	wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, SETTINGS_DLG_SIZE)
+SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSettings& settings) :
+	wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, SETTINGS_DLG_SIZE),
+	m_Settings(settings)
 {
 
 	wxASSERT(g_sound);
 
-	b_stereo = g_sound->IsStereo();
+	b_stereo = m_Settings.GetLoadInStereo();
 	b_squash = wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1);
 
 	pConfig = wxConfigBase::Get();
@@ -146,8 +148,8 @@ SettingsDialog::SettingsDialog(wxWindow* win) :
 SettingsDialog::~SettingsDialog()
 {
 	g_sound->SetLogSoundErrorMessages(false);
-    if ((b_stereo != g_sound->IsStereo() || b_squash != wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1)))
-    {
+	if ((b_stereo != m_Settings.GetLoadInStereo() || b_squash != wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1)))
+	{
         if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION) == wxYES)
         {
             wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
@@ -263,7 +265,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(c_WaveFormat = new wxChoice(panel, ID_WAVE_FORMAT, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	UpdateSoundStatus();
-	c_stereo->Select(pConfig->Read(wxT("StereoEnabled"), 0L));
+	c_stereo->Select(m_Settings.GetLoadInStereo());
 	c_SampleRate->Select(pConfig->Read(wxT("SampleRate"), 0L) == 48000 ? 1 : 0);
 	c_Concurrency->Select(pConfig->Read(wxT("Concurrency"), 0L));
 	c_ReleaseConcurrency->Select(pConfig->Read(wxT("ReleaseConcurrency"), 4L) - 1);
@@ -576,7 +578,7 @@ bool SettingsDialog::DoApply()
 	}
 	pConfig->Write(wxT("Devices/DefaultSound"), c_sound->GetStringSelection());
 	pConfig->Write(wxT("Devices/Sound/") + c_sound->GetStringSelection(), c_latency->GetValue());
-	pConfig->Write(wxT("StereoEnabled"), c_stereo->GetSelection());
+	m_Settings.SetLoadInStereo(c_stereo->GetSelection());
 	pConfig->Write(wxT("LosslessCompression"), (long)c_squash->IsChecked());
 	pConfig->Write(wxT("ManagePolyphony"), (long)c_limit->IsChecked());
 	pConfig->Write(wxT("CompressCache"), (long)c_CompressCache->IsChecked());

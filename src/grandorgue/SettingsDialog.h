@@ -39,15 +39,18 @@ class wxSpinEvent;
 class wxStaticText;
 class wxToggleButton;
 
+class GOrgueSettings;
+
 class SettingsDialog : public wxPropertySheetDialog
 {
 DECLARE_CLASS(SettingsDialog)
 private:
+	GOrgueSettings& m_Settings;
 
 	void SetLatencySpinner(int latency);
 
 public:
-	SettingsDialog(wxWindow* parent);
+	SettingsDialog(wxWindow* parent, GOrgueSettings& settings);
 	~SettingsDialog();
 
 	void UpdateSoundStatus();

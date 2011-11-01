@@ -23,6 +23,7 @@
 #include "GOrguePipe.h"
 #include "GOrgueStop.h"
 #include "GOrgueManual.h"
+#include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 #include "GOSoundProviderWave.h"
 
@@ -41,7 +42,7 @@ GOrguePipe::GOrguePipe
 	m_Percussive(percussive),
 	m_Amplitude(amplitude),
 	m_Reference(NULL),
-	m_SoundProvider(organfile->GetMemoryPool(), organfile->IsStereo())
+	m_SoundProvider(organfile->GetMemoryPool(), organfile->GetSettings().GetLoadInStereo())
 {
 }
 
