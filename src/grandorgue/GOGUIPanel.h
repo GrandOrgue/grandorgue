@@ -46,6 +46,7 @@ protected:
 	wxWindow* m_parent;
 	wxString m_group;
 	wxRect m_size;
+	bool m_InitialOpenWindow;
 
 public:
 	GOGUIPanel(GrandOrgueFile* organfile);
@@ -75,6 +76,7 @@ public:
 	
 	unsigned GetWidth();
 	unsigned GetHeight();
+	bool InitialOpenWindow();
 
 	wxWindow* GetParentWindow();
 	void SetParentWindow(wxWindow* win);

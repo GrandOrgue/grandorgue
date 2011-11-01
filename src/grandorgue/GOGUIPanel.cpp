@@ -57,7 +57,8 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_window(0),
 	m_parent(0),
 	m_group(),
-	m_size(0, 0, 0, 0)
+	m_size(0, 0, 0, 0),
+	m_InitialOpenWindow(false)
 {
 	for (unsigned i = 0; i < GetImageCount_Stop(); i++)
 		m_images.push_back(new wxBitmap(GetImage_Stop(i)));
@@ -77,6 +78,11 @@ GOGUIPanel::~GOGUIPanel()
 		m_parent->Destroy();
 	if (m_window)
 		m_window->Destroy();
+}
+
+bool GOGUIPanel::InitialOpenWindow()
+{
+	return m_InitialOpenWindow;
 }
 
 GrandOrgueFile* GOGUIPanel::GetOrganFile()
@@ -112,6 +118,8 @@ void GOGUIPanel::Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString
 	int w = cfg.ReadInteger(m_group, wxT("WindowWidth"), 0, 10000, false, 0);
 	int h = cfg.ReadInteger(m_group, wxT("WindowHeight"), 0, 10000, false, 0);
 	m_size = wxRect(x, y, w, h);
+
+	m_InitialOpenWindow = cfg.ReadBoolean(m_group, wxT("WindowDisplayed"), false, false);
 }
 
 
@@ -401,6 +409,8 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 	int w = cfg.ReadInteger(m_group, wxT("WindowWidth"), 0, 10000, false, 0);
 	int h = cfg.ReadInteger(m_group, wxT("WindowHeight"), 0, 10000, false, 0);
 	m_size = wxRect(x, y, w, h);
+
+	m_InitialOpenWindow = cfg.ReadBoolean(m_group, wxT("WindowDisplayed"), false, false);
 }
 
 unsigned GOGUIPanel::GetWidth()
@@ -463,6 +473,7 @@ void GOGUIPanel::Save(IniFileConfig& cfg, bool prefix)
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->Save(cfg, prefix);
 
+	cfg.SaveHelper(prefix, m_group, wxT("WindowDisplayed"), m_parent != NULL ? wxT("Y") : wxT("N"));
 	if (m_parent)
 	{
 		wxWindow* parent = m_parent;
