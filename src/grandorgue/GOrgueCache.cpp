@@ -23,17 +23,53 @@
 #include "GOrgueCache.h"
 #include "GOrgueMemoryPool.h"
 #include <wx/wx.h>
+#include <wx/wfstream.h>
+#include <wx/zstream.h>
 
-GOrgueCache::GOrgueCache(wxInputStream& stream, GOrgueMemoryPool& pool) :
-	m_stream(stream),
+GOrgueCache::GOrgueCache(wxFile& cache_file, GOrgueMemoryPool& pool) :
+	m_stream(0),
+	m_fstream(0),
+	m_zstream(0),
 	m_pool(pool)
 {
+	m_fstream = new wxFileInputStream(cache_file);
+	m_zstream = new wxZlibInputStream(*m_fstream);
+	m_zstream->Peek();
+	if (m_fstream->IsOk() && m_zstream->IsOk())
+	{
+		/* It looks like compressed data */
+		m_stream = m_zstream;
+	}
+	else
+	{
+		delete m_zstream;
+		delete m_fstream;
+		m_zstream = 0;
+		m_fstream = new wxFileInputStream(cache_file);
+		m_stream = m_fstream;
+	}
+	m_stream->SeekI(0, wxFromStart);
+}
+
+GOrgueCache::~GOrgueCache()
+{
+	Close();
+}
+
+void GOrgueCache::Close()
+{
+	if (m_zstream)
+		delete m_zstream;
+	m_zstream = 0;
+	if (m_fstream)
+		delete m_fstream;
+	m_fstream = 0;
 }
 
 bool GOrgueCache::Read(void* data, unsigned length)
 {
-	m_stream.Read(data, length);
-	if (m_stream.LastRead() != length)
+	m_stream->Read(data, length);
+	if (m_stream->LastRead() != length)
 		return false;
 	return true;
 }
@@ -44,8 +80,8 @@ void* GOrgueCache::ReadBlock(unsigned length)
 	if (data == NULL)
 		throw (wxString)_("< out of memory allocating samples");
 
-	m_stream.Read(data, length);
-	if (m_stream.LastRead() != length)
+	m_stream->Read(data, length);
+	if (m_stream->LastRead() != length)
 	{
 		m_pool.Free(data);
 		return NULL;

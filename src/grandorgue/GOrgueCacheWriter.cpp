@@ -21,25 +21,47 @@
  */
 
 #include <wx/wx.h>
+#include <wx/zstream.h>
 #include "GOrgueCacheWriter.h"
 
-GOrgueCacheWriter::GOrgueCacheWriter(wxOutputStream& stream) :
-	m_stream(stream)
+GOrgueCacheWriter::GOrgueCacheWriter(wxOutputStream& stream, bool compressed) :
+	m_zstream(0),
+	m_stream(&stream)
 {
+	if (compressed)
+	{
+		m_zstream = new wxZlibOutputStream(stream);
+		m_stream = m_zstream;
+	}
+}
+
+GOrgueCacheWriter::~GOrgueCacheWriter()
+{
+	Close();
 }
 
 bool GOrgueCacheWriter::Write(const void* data, unsigned length)
 {
-	m_stream.Write(data, length);
-	if (m_stream.LastWrite() != length)
+	m_stream->Write(data, length);
+	if (m_stream->LastWrite() != length)
 		return false;
 	return true;
 }
 
 bool GOrgueCacheWriter::WriteBlock(const void* data, unsigned length)
 {
-	m_stream.Write(data, length);
-	if (m_stream.LastWrite() != length)
+	m_stream->Write(data, length);
+	if (m_stream->LastWrite() != length)
 		return false;
 	return true;
+}
+
+void GOrgueCacheWriter::Close()
+{
+	if (m_stream)
+		m_stream->Close();
+	if (m_zstream)
+		delete m_zstream;
+	m_zstream = 0;
+	m_stream = 0;
 }

@@ -26,7 +26,6 @@
 #include <wx/progdlg.h>
 #include <wx/stream.h>
 #include <wx/wfstream.h>
-#include <wx/zstream.h>
 
 #include "IniFileConfig.h"
 #include "GOrgueCache.h"
@@ -455,22 +454,16 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		if (wxFileExists(cache_filename))
 		{
 
-			wxFileInputStream cache(file + wxT(".cache"));
-			wxZlibInputStream zin(cache);
-			GOrgueCache reader(zin, m_pool);
-
-			cache_ok = cache.IsOk() && zin.IsOk();
+			wxFile cache_file(file + wxT(".cache"));
+			GOrgueCache reader(cache_file, m_pool);
+			cache_ok = cache_file.IsOpened();
 
 			if (cache_ok)
 			{
 				int magic;
 				unsigned char hash1[20], hash2[20];
-				zin.Read(&magic, sizeof(magic));
-				if (
-						(zin.LastRead() != sizeof(magic))
-						||
-						(magic != GRANDORGUE_CACHE_MAGIC)
-					)
+				if (!reader.Read(&magic, sizeof(magic)) ||
+				    (magic != GRANDORGUE_CACHE_MAGIC))
 				{
 					cache_ok = false;
 					wxLogWarning
@@ -480,8 +473,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 						);
 				}
 				GenerateCacheHash(hash1);
-				zin.Read(hash2, sizeof(hash2));
-				if (zin.LastRead() != sizeof(hash2) ||
+				if (!reader.Read(hash2, sizeof(hash2)) || 
 				    memcmp(hash1, hash2, sizeof(hash1)))
 				{
 					cache_ok = false;
@@ -502,6 +494,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 			{
 				wxMessageBox(_("The cache for this organ is outdated. Please update or delete it."), _("Warning"), wxOK | wxICON_WARNING, NULL);
 			}
+
+			reader.Close();
 		}
 
 		if (!cache_ok)
@@ -540,20 +534,17 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 
 	wxProgressDialog dlg(_("Creating sample cache"), wxEmptyString, 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
 	wxFileOutputStream file(cache_filename);
-	wxZlibOutputStream zout(file);
-	GOrgueCacheWriter writer(zout);
+	GOrgueCacheWriter writer(file, compress);
 
 	/* Save pipes to cache */
 	bool cache_save_ok = true;
 	int magic = GRANDORGUE_CACHE_MAGIC;
-	zout.Write(&magic, sizeof(magic));
-	if (zout.LastWrite() != sizeof(magic))
+	if (!writer.Write(&magic, sizeof(magic)))
 		cache_save_ok = false;
 	
 	unsigned char hash[20];
 	GenerateCacheHash(hash);
-	zout.Write(hash, sizeof(hash));
-	if (zout.LastWrite() != sizeof(hash))
+	if (!writer.Write(hash, sizeof(hash)))
 		cache_save_ok = false;
 
 	for (unsigned i = GetFirstManualIndex(); cache_save_ok && i <= GetManualAndPedalCount(); i++)
@@ -569,14 +560,13 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 				nb_saved_pipes++;
 				if (!dlg.Update ((nb_saved_pipes << 15) / (nb_pipes + 1), pipe->GetFilename()))
 				{
-					zout.Close();
-					file.Close();
+					writer.Close();
 					DeleteCache();
 					return false;
 				}
 			}
-	zout.Close();
-	file.Close();
+
+	writer.Close();
 	if (!cache_save_ok)
 	{
 		DeleteCache();

@@ -24,18 +24,24 @@
 #define GORGUECACHE_H_
 
 class wxInputStream;
+class wxFile;
 class GOrgueMemoryPool;
 
 class GOrgueCache {
-	wxInputStream& m_stream;
+	wxInputStream* m_stream;
+	wxInputStream* m_fstream;
+	wxInputStream* m_zstream;
 	GOrgueMemoryPool& m_pool;
 
 public:
-	GOrgueCache(wxInputStream& stream, GOrgueMemoryPool& pool);
+	GOrgueCache(wxFile& cache_file, GOrgueMemoryPool& pool);
+	virtual ~GOrgueCache();
 
 	bool Read(void* data, unsigned length);
 	/* Allocate and read a block written by WriteBlock */
 	void* ReadBlock(unsigned length);
+
+	void Close();
 };
 
 

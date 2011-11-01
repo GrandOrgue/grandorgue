@@ -26,14 +26,18 @@
 class wxOutputStream;
 
 class GOrgueCacheWriter {
-	wxOutputStream& m_stream;
+	wxOutputStream* m_zstream;
+	wxOutputStream* m_stream;
 
 public:
-	GOrgueCacheWriter(wxOutputStream& stream);
+	GOrgueCacheWriter(wxOutputStream& stream, bool compressed);
+	virtual ~GOrgueCacheWriter();
 
 	bool Write(const void* data, unsigned length);
 	/* Write an bigger malloced block */
 	bool WriteBlock(const void* data, unsigned length);
+
+	void Close();
 };
 
 #endif
