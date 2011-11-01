@@ -112,7 +112,6 @@ GOrgueMemoryPool.cpp
 GOrgueMidi.cpp
 GOrgueMidiEvent.cpp
 GOrgueMidiReceiver.cpp
-GOrgueMeter.cpp
 GOrguePipe.cpp
 GOrguePiston.cpp
 GOrgueProperties.cpp
