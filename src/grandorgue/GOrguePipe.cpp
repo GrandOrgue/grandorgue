@@ -41,7 +41,7 @@ GOrguePipe::GOrguePipe
 	m_Percussive(percussive),
 	m_Amplitude(amplitude),
 	m_Reference(NULL),
-	m_SoundProvider(organfile->GetMemoryPool())
+	m_SoundProvider(organfile->GetMemoryPool(), organfile->IsStereo())
 {
 }
 

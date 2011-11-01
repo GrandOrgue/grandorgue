@@ -52,13 +52,14 @@
 #include "GOSoundEngine.h"
 #include "contrib/sha1.h"
 
-GrandOrgueFile::GrandOrgueFile(OrganDocument* doc) :
+GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, bool stereo) :
 	m_doc(doc),
 	m_path(),
 	m_b_squash(0),
 	m_filename(),
 	m_setter(0),
 	m_volume(0),
+	m_Stereo(stereo),
 	m_b_customized(false),
 	m_DivisionalsStoreIntermanualCouplers(false),
 	m_DivisionalsStoreIntramanualCouplers(false),
@@ -106,6 +107,7 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 		}
 
 	SHA1_Update(&ctx, &m_AmplitudeLevel, sizeof(m_AmplitudeLevel));
+	SHA1_Update(&ctx, &m_Stereo, sizeof(m_Stereo));
 
 	len = sizeof(AUDIO_SECTION);
 	SHA1_Update(&ctx, &len, sizeof(len));
@@ -687,6 +689,11 @@ void GrandOrgueFile::SetVolume(int volume)
 int GrandOrgueFile::GetVolume()
 {
 	return m_volume;
+}
+
+bool GrandOrgueFile::IsStereo()
+{
+	return m_Stereo;
 }
 
 unsigned GrandOrgueFile::GetFirstManualIndex()
