@@ -348,27 +348,16 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 	{
 		wxFileName fn = wxFileName::GetCwd();
 		fn.AppendDir(wxT("organs"));
-		GetDocumentManager()->SetLastDirectory(wxConfig::Get()->Read(wxT("organPath"), fn.GetPath()));
+		GetDocumentManager()->SetLastDirectory(m_Settings.GetOrganPath());
 		ProcessCommand(wxID_OPEN);
 		if (m_docManager->GetCurrentDocument() && ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile())
 		{
-			wxConfig::Get()->Write(wxT("organPath"), GetDocumentManager()->GetLastDirectory());
+			m_Settings.SetOrganPath(GetDocumentManager()->GetLastDirectory());
 		}
 	}
 	else
 		event.Skip();
 }
-
-wxString GOrgueFrame::GetDocumentDirectory()
-{
-	return wxStandardPaths::Get().GetDocumentsDir();
-}
-
-wxString GOrgueFrame::GetOrganDirectory()
-{
-	return GetDocumentDirectory() + wxFileName::GetPathSeparator() + _("My Organs");
-}
-
 
 void GOrgueFrame::OnLoad(wxCommandEvent& event)
 {
@@ -376,10 +365,10 @@ void GOrgueFrame::OnLoad(wxCommandEvent& event)
 	if (!doc)
 		return;
 
-	wxFileDialog dlg(this, _("Import Settings"), wxConfig::Get()->Read(wxT("cmbPath"), GetOrganDirectory()), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	wxFileDialog dlg(this, _("Import Settings"), m_Settings.GetSettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
+		m_Settings.SetSettingPath(dlg.GetDirectory());
 		wxString file = doc->GetOrganFile()->GetODFFilename();
 		doc->DoOpenDocument(file, dlg.GetPath());
 	}
@@ -391,10 +380,10 @@ void GOrgueFrame::OnSave(wxCommandEvent& event)
 	if (!doc)
 		return;
 
-	wxFileDialog dlg(this, _("Export Settings"), wxConfig::Get()->Read(wxT("cmbPath"), GetOrganDirectory()), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+	wxFileDialog dlg(this, _("Export Settings"), m_Settings.GetSettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		wxConfig::Get()->Write(wxT("cmbPath"), dlg.GetDirectory());
+		m_Settings.SetSettingPath(dlg.GetDirectory());
 		doc->DoSaveDocument(dlg.GetPath());
 		doc->Modify(false);
 	}
@@ -477,10 +466,10 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 		g_sound->StopRecording();
 	else
 	{
-		wxFileDialog dlg(this, _("Save as"), wxConfig::Get()->Read(wxT("wavPath"), GetDocumentDirectory()), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+		wxFileDialog dlg(this, _("Save as"), m_Settings.GetWAVPath(), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 		if (dlg.ShowModal() == wxID_OK)
 			{
-				wxConfig::Get()->Write(wxT("wavPath"), dlg.GetDirectory());
+				m_Settings.SetWAVPath(dlg.GetDirectory());
 				wxString filepath = dlg.GetPath();
 				if (filepath.Find(wxT(".wav")) == wxNOT_FOUND)
 				{

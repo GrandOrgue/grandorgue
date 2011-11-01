@@ -45,12 +45,24 @@ private:
 	unsigned m_PolyphonyLimit;
 	wxString m_DefaultAudioDevice;
 	std::map<long, wxString> m_OrganMidiEvents;
+	wxString m_WAVPath;
+	wxString m_OrganPath;
+	wxString m_SettingPath;
 
 public:
 	GOrgueSettings();
 
 	void Load();
 	wxConfigBase& GetConfig();
+	wxString GetStandardDocumentDirectory();
+	wxString GetStandardOrganDirectory();
+
+	wxString GetOrganPath();
+	void SetOrganPath(wxString path);
+	wxString GetSettingPath();
+	void SetSettingPath(wxString path);
+	wxString GetWAVPath();
+	void SetWAVPath(wxString path);
 
 	bool GetLoadInStereo();
 	void SetLoadInStereo(bool stereo);

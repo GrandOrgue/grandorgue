@@ -92,8 +92,6 @@ public:
 protected:
 	void AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString = wxEmptyString);
 	void AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, const wxBitmap& toolbarImage, wxItemKind kind = wxITEM_NORMAL);
-	wxString GetDocumentDirectory();
-	wxString GetOrganDirectory();
 	void InitHelp();
 };
 

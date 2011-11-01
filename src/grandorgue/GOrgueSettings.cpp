@@ -23,6 +23,8 @@
 #include "GOrgueSettings.h"
 
 #include <wx/wx.h>
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
 #include <wx/confbase.h>
 
 GOrgueSettings::GOrgueSettings() :
@@ -40,7 +42,10 @@ GOrgueSettings::GOrgueSettings() :
 	m_Volume(50),
 	m_PolyphonyLimit(2048),
 	m_DefaultAudioDevice(),
-	m_OrganMidiEvents()
+	m_OrganMidiEvents(),
+	m_WAVPath(),
+	m_OrganPath(),
+	m_SettingPath()
 {
 	GetConfig().SetRecordDefaults();
 }
@@ -83,6 +88,52 @@ void GOrgueSettings::Load()
 		wxString file = m_Config.Read(itemstr + wxT(".file"));
 		m_OrganMidiEvents.insert(std::pair<long, wxString>(j, file));
 	}
+	m_WAVPath = m_Config.Read(wxT("wavPath"), GetStandardDocumentDirectory());
+	m_OrganPath = m_Config.Read(wxT("organPath"), GetStandardOrganDirectory());
+	m_SettingPath = m_Config.Read(wxT("cmbPath"), GetStandardOrganDirectory());
+}
+
+wxString GOrgueSettings::GetStandardDocumentDirectory()
+{
+	return wxStandardPaths::Get().GetDocumentsDir();
+}
+
+wxString GOrgueSettings::GetStandardOrganDirectory()
+{
+	return GetStandardDocumentDirectory() + wxFileName::GetPathSeparator() + _("My Organs");
+}
+
+wxString GOrgueSettings::GetOrganPath()
+{
+	return m_OrganPath;
+}
+
+void GOrgueSettings::SetOrganPath(wxString path)
+{
+	m_OrganPath = path;
+	m_Config.Write(wxT("organPath"), m_OrganPath);
+}
+
+wxString GOrgueSettings::GetSettingPath()
+{
+	return m_SettingPath;
+}
+
+void GOrgueSettings::SetSettingPath(wxString path)
+{
+	m_SettingPath = path;
+	m_Config.Write(wxT("cmbPath"), m_SettingPath);
+}
+
+wxString GOrgueSettings::GetWAVPath()
+{
+	return m_WAVPath;
+}
+
+void GOrgueSettings::SetWAVPath(wxString path)
+{
+	m_WAVPath = path;
+	m_Config.Write(wxT("wavPath"), m_WAVPath);
 }
 
 bool GOrgueSettings::GetLoadInStereo()
