@@ -32,11 +32,11 @@
 #include "GrandOrgueDef.h"
 #include "GOSoundEngine.h"
 #include "GOSoundRecorder.h"
-#include "GOrgueSettings.h"
 
 class GrandOrgueFile;
 class GOrgueMidi;
 class GOSoundThread;
+class GOrgueSettings;
 
 class GOrgueSound
 {
@@ -77,7 +77,7 @@ private:
 	GOSoundEngine m_SoundEngine;
 	ptr_vector <GOSoundThread> m_Threads;
 
-	GOrgueSettings m_Settings;
+	GOrgueSettings& m_Settings;
 
 	int AudioCallbackLocal
 		(float* outputBuffer
@@ -103,8 +103,8 @@ private:
 
 public:
 
-	GOrgueSound(void);
-	~GOrgueSound(void);
+	GOrgueSound(GOrgueSettings& settings);
+	~GOrgueSound();
 
 	bool OpenSound();
 	void CloseSound();

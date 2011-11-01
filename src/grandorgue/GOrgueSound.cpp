@@ -25,13 +25,14 @@
 #include "GrandOrgueFile.h"
 #include "GOrgueRtHelpers.h"
 #include "GOrgueMidi.h"
+#include "GOrgueSettings.h"
 #include "GOrgueEvent.h"
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
 GOrgueSound* g_sound = 0;
 
-GOrgueSound::GOrgueSound(void) :
+GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	format(0),
 	logSoundErrors(false),
 	m_audioDevices(),
@@ -40,7 +41,8 @@ GOrgueSound::GOrgueSound(void) :
 	m_nb_buffers(0),
 	meter_counter(0),
 	b_active(false),
-	defaultAudio(wxT(""))
+	defaultAudio(wxT("")),
+	m_Settings(settings)
 {
 
 	g_sound = this;
@@ -109,7 +111,7 @@ GOrgueSound::GOrgueSound(void) :
 
 }
 
-GOrgueSound::~GOrgueSound(void)
+GOrgueSound::~GOrgueSound()
 {
 
 	CloseSound();
@@ -181,7 +183,6 @@ bool GOrgueSound::OpenSound()
 
 	bool opened_ok = false;
 
-	m_Settings.Load();
 	defaultAudio = m_Settings.GetDefaultAudioDevice();
 	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
 	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
