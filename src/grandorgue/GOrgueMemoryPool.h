@@ -23,9 +23,25 @@
 #ifndef GORGUEMEMORYPOOL_H_
 #define GORGUEMEMORYPOOL_H_
 
+#include <set>
 class wxFile;
 
 class GOrgueMemoryPool {
+	std::set<void*> m_PoolAllocs;
+	char* m_PoolStart;
+	char* m_PoolPtr;
+	char* m_PoolEnd;
+	char* m_CacheStart;
+	unsigned long m_PoolSize;
+	unsigned long m_PoolLimit;
+	unsigned long m_PageSize;
+	unsigned long m_CacheSize;
+
+	void InitPool();
+	void GrowPool(unsigned long size);
+	void FreePool();
+	void* PoolAlloc(unsigned length);
+	void AddPoolAlloc(void* data);
 
 public:
 	GOrgueMemoryPool();
