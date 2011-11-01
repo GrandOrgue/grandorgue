@@ -248,37 +248,21 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* de
 	if (e.GetChannel() != -1)
 		e.SetChannel(((e.GetChannel() - 1 + device->channel_shift) & 0x0F) + 1);
 
-	int j;
-
 	if (e.GetMidiType() == MIDI_RESET && m_organfile)
 	{
 		m_organfile->Reset();
 		return;
 	}
 
-	register unsigned char c = msg[0] & 0xF0; // c = MIDI message code without chanel number in c
-
-	if (c == 0x80 && msg.size() == 3) // if MIDI code for note OFF and 2 data bytes
-	{
-		c ^= 0x10; // c = 0x90 , MIDI code note ON
-		msg[2] = 0; // set velocity to zero
-	}
-	msg[0] = c | ((msg[0] + device->channel_shift) & 0x0F); // msg[0] = MIDI code + channel from device + channel offset
-
-	j = msg[0] << 8; // j = channel in higher byte
-	if (msg.size() > 1) // if midi meesage has data
-		j |= msg[1]; // j = channel in higher byte and first byte of MIDI data in lower byte
 	if (m_listening)
-	{
-		wxCommandEvent event(wxEVT_LISTENING, 0);
-		event.SetInt(j);
-		m_listen_evthandler->AddPendingEvent(event);
 		m_listen_evthandler->AddPendingEvent(e);
-	}
 
 	if (m_organfile)
 		m_organfile->ProcessMidi(e);
 
+	int j = e.GetEventCode();
+	if (j == -1)
+		return;
 	// MIDI for different organ??
 	std::map<long, wxString>::iterator it;
 	it = m_organ_midi_events.find(j);

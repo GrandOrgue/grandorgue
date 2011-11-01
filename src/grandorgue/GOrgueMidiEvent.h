@@ -95,6 +95,7 @@ public:
 	wxEvent* Clone() const;
 
 	void FromMidi(const std::vector<unsigned char>& msg);
+	int GetEventCode();
 
  private:
 	midi_message_type m_miditype;

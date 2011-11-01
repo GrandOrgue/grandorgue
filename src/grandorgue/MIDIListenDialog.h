@@ -27,6 +27,8 @@
 #include <wx/tglbtn.h>
 #include <wx/spinctrl.h>
 
+class GOrgueMidiEvent;
+
 class MIDIListenDialog : public wxDialog
 {
 
@@ -85,7 +87,7 @@ public:
 	bool PutEvent(int what);
 	void OnEvent(wxCommandEvent& event);
 	void OnListenClick(wxCommandEvent& event);
-	void OnListenMIDI(wxCommandEvent& event);
+	void OnMidiEvent(GOrgueMidiEvent& event);
 	void OnHelp(wxCommandEvent& event);
 
 	DECLARE_EVENT_TABLE()
