@@ -67,10 +67,11 @@ private:
 	unsigned m_SamplesPerBuffer;
 	unsigned m_nb_buffers;
 
-	int b_stereo, b_align;
+	int b_stereo;
 	int b_random;
 	unsigned m_Concurrency;
 	unsigned m_ReleaseConcurrency;
+	bool m_CompressCache;
 
 	short meter_counter;
 	METER_INFO meter_info;
@@ -117,6 +118,7 @@ public:
 
 	bool HasRandomPipeSpeech();
 	bool IsStereo();
+	bool CompressCache();
 
 	bool IsRecording();
 	void StartRecording(wxString filename);

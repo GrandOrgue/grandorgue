@@ -94,7 +94,7 @@ protected:
 		ID_WAVE_FORMAT,
 		ID_ENHANCE_SQUASH,
 		ID_ENHANCE_MANAGE_POLYPHONY,
-		ID_ENHANCE_ALIGN_RELEASE,
+		ID_COMPRESS_CACHE,
 		ID_ENHANCE_SCALE_RELEASE,
 		ID_ENHANCE_RANDOMIZE,
 
@@ -122,7 +122,7 @@ protected:
 	wxChoice* c_Concurrency;
 	wxChoice* c_ReleaseConcurrency;
 	wxChoice* c_WaveFormat;
-	wxCheckBox *c_squash, *c_limit, *c_align, *c_scale, *c_random;
+	wxCheckBox *c_squash, *c_limit, *c_CompressCache, *c_scale, *c_random;
 	bool b_squash, b_stereo;
 
 	wxListView* page2list, *organlist;
