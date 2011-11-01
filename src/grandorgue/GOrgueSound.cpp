@@ -32,7 +32,6 @@
 GOrgueSound* g_sound = 0;
 
 GOrgueSound::GOrgueSound(void) :
-	pConfig(wxConfigBase::Get()),
 	format(0),
 	logSoundErrors(false),
 	m_audioDevices(),
@@ -183,7 +182,7 @@ bool GOrgueSound::OpenSound()
 	bool opened_ok = false;
 
 	m_Settings.Load();
-	defaultAudio = pConfig->Read(wxT("Devices/DefaultSound"), defaultAudio);
+	defaultAudio = m_Settings.GetDefaultAudioDevice();
 	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
 	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
 	m_SoundEngine.SetVolume(m_Settings.GetVolume());
@@ -207,7 +206,7 @@ bool GOrgueSound::OpenSound()
 
 			audioDevice = new RtAudio(it->second.rt_api);
 
-			unsigned try_latency = pConfig->Read(wxT("Devices/Sound/") + defaultAudio, 12);
+			unsigned try_latency = m_Settings.GetAudioDeviceLatency(defaultAudio);
 			GOrgueRtHelpers::GetBufferConfig(it->second.rt_api, try_latency, sample_rate, &m_nb_buffers, &m_SamplesPerBuffer);
 
 			RtAudio::StreamParameters aOutputParam;
@@ -234,7 +233,7 @@ bool GOrgueSound::OpenSound()
 			if (m_SamplesPerBuffer <= 1024)
 			{
 				audioDevice->startStream();
-				pConfig->Write(wxT("Devices/Sound/ActualLatency/") + defaultAudio, GetLatency());
+				m_Settings.SetAudioDeviceActualLatency(defaultAudio, GetLatency());
 			}
 			else
 				throw (wxString)_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");

@@ -38,7 +38,8 @@ GOrgueSettings::GOrgueSettings() :
 	m_SampleRate(44100),
 	m_WaveFormat(4),
 	m_Volume(50),
-	m_PolyphonyLimit(2048)
+	m_PolyphonyLimit(2048),
+	m_DefaultAudioDevice()
 {
 }
 
@@ -69,6 +70,7 @@ void GOrgueSettings::Load()
 	if (m_Volume > 100)
 		m_Volume = 100;
 	m_PolyphonyLimit = m_Config.Read(wxT("PolyphonyLimit"), 2048);
+	m_DefaultAudioDevice = m_Config.Read(wxT("Devices/DefaultSound"), wxEmptyString);
 }
 
 bool GOrgueSettings::GetLoadInStereo()
@@ -209,4 +211,35 @@ void GOrgueSettings::SetPolyphonyLimit(unsigned polyphony_limit)
 {
 	m_PolyphonyLimit = polyphony_limit;
 	m_Config.Write(wxT("PolyphonyLimit"), (long)m_PolyphonyLimit);
+}
+
+const wxString& GOrgueSettings::GetDefaultAudioDevice()
+{
+	return m_DefaultAudioDevice;
+}
+
+void GOrgueSettings::SetDefaultAudioDevice(wxString device)
+{
+	m_DefaultAudioDevice = device;
+	m_Config.Write(wxT("Devices/DefaultSound"), m_DefaultAudioDevice);
+}
+
+unsigned GOrgueSettings::GetAudioDeviceLatency(wxString device)
+{
+	return m_Config.Read(wxT("Devices/Sound/") + device, 15L);
+}
+
+void GOrgueSettings::SetAudioDeviceLatency(wxString device, unsigned latency)
+{
+	m_Config.Write(wxT("Devices/Sound/") + device, (long) latency);
+}
+
+int GOrgueSettings::GetAudioDeviceActualLatency(wxString device)
+{
+	return m_Config.Read(wxT("Devices/Sound/ActualLatency/") + device, -1L);
+}
+
+void GOrgueSettings::SetAudioDeviceActualLatency(wxString device, unsigned latency)
+{
+	m_Config.Write(wxT("Devices/Sound/ActualLatency/") + device, (long) latency);
 }
