@@ -26,6 +26,7 @@
 #include <wx/stdpaths.h>
 #include <wx/html/helpctrl.h>
 #include <wx/splash.h>
+#include <wx/spinctrl.h>
 #include "wxGaugeAudio.h"
 #include "Images.h"
 #include "GOGUIPanel.h"
@@ -37,7 +38,6 @@
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
-#include "GrandOrgue.h"
 #include "OrganDocument.h"
 #include "OrganView.h"
 #include "SettingsDialog.h"
