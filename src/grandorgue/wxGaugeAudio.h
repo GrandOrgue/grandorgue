@@ -28,7 +28,7 @@
 class wxGaugeAudio : public wxControl
 {
 public:
-	wxGaugeAudio(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
+	wxGaugeAudio(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition);
 	~wxGaugeAudio(void);
 
 	void OnErase(wxEraseEvent& event);

@@ -82,7 +82,7 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 		for (int i = 0; i < (count-1); i++)
 		{
-			m_meters[i] = new wxGaugeAudio(this, id++, wxDefaultPosition, wxSize(73, 11));
+			m_meters[i] = new wxGaugeAudio(this, id++, wxDefaultPosition);
 			sizer->Add(m_meters[i], 0, wxFIXED_MINSIZE);
 		}
 		topSizer->Add(sizer, 0, wxLEFT | wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);

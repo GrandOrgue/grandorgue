@@ -27,7 +27,7 @@ BEGIN_EVENT_TABLE(wxGaugeAudio, wxControl)
 	EVT_ERASE_BACKGROUND(wxGaugeAudio::OnErase)
 END_EVENT_TABLE()
 
-wxGaugeAudio::wxGaugeAudio(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size) : wxControl(parent, id, pos, size, wxNO_BORDER)
+wxGaugeAudio::wxGaugeAudio(wxWindow* parent, wxWindowID id, const wxPoint& pos) : wxControl(parent, id, pos, wxSize(73, 11), wxNO_BORDER)
 {
 	m_value = 0;
 	m_clip = false;
