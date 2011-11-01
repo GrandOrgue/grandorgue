@@ -34,10 +34,8 @@ extern GOrgueSound* g_sound;
 
 BEGIN_EVENT_TABLE(GOrgueMeter, wxControl)
 	EVT_TEXT(ID_METER_AUDIO_SPIN, GOrgueMeter::OnVolume)
-	EVT_TEXT(ID_METER_POLY_SPIN,  GOrgueMeter::OnPolyphony)
 	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueMeter::OnFrame)
 	EVT_TEXT_ENTER(ID_METER_AUDIO_SPIN, GOrgueMeter::OnEnter)
-	EVT_TEXT_ENTER(ID_METER_POLY_SPIN,  GOrgueMeter::OnEnter)
 	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN,  GOrgueMeter::OnEnter)
 	EVT_SLIDER(0, GOrgueMeter::OnChange)
 END_EVENT_TABLE()
@@ -60,9 +58,6 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 	case 3:
 		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 100);
 		break;
-	case 2:
-		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(56, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 4096);
-		break;
 	}
 
 	topSizer->Add(m_spin, 0, wxALIGN_CENTER_VERTICAL);
@@ -75,9 +70,6 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 	{
 	case 1:
 		SetValue(0);
-		break;
-	case 2:
-		SetValue(wxConfigBase::Get()->Read(wxT("PolyphonyLimit"), 2048));
 		break;
 	case 3:
 		SetValue(wxConfigBase::Get()->Read(wxT("Volume"), 50));
@@ -124,26 +116,6 @@ void GOrgueMeter::OnVolume(wxCommandEvent& event)
 	    g_sound->GetEngine().SetVolume(n);
 
 	wxConfigBase::Get()->Write(wxT("Volume"), n);
-}
-
-void GOrgueMeter::OnPolyphony(wxCommandEvent& event)
-{
-	wxString str;
-	long n = m_spin->GetValue(), v;
-	if (!event.GetString().ToLong(&v) || n != v)
-	{
-		m_spin->SetValue(n);
-		m_spin->SetSelection(-1, -1);
-#ifdef __WXMSW__
-		return;
-#endif
-	}
-
-	wxConfigBase::Get()->Write(wxT("PolyphonyLimit"), n);
-	if (g_sound)
-	{
-		g_sound->GetEngine().SetHardPolyphony(n);
-	}
 }
 
 void GOrgueMeter::OnFrame(wxCommandEvent& event)
