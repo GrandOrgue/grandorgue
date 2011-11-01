@@ -36,6 +36,7 @@ class GOrgueMemoryPool {
 	unsigned long m_PoolLimit;
 	unsigned long m_PageSize;
 	unsigned long m_CacheSize;
+	char m_dummy;
 
 	void InitPool();
 	void GrowPool(unsigned long size);
@@ -50,7 +51,7 @@ public:
 	void *Alloc(unsigned length);
 	void Free(void* data);
 
-	void *GetCacheData(unsigned long offset);
+	void *GetCacheData(unsigned long offset, unsigned length);
 	bool SetCacheFile(wxFile& cache_file);
 };
 

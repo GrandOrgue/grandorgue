@@ -86,7 +86,7 @@ void* GOrgueCache::ReadBlock(unsigned length)
 {
 	if (m_Mapable)
 	{
-		void *data = m_pool.GetCacheData(m_stream->TellI());
+		void *data = m_pool.GetCacheData(m_stream->TellI(), length);
 		if (data)
 		{
 			m_stream->SeekI(length, wxFromCurrent);
