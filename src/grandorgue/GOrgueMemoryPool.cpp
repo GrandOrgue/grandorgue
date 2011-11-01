@@ -36,7 +36,8 @@ GOrgueMemoryPool::GOrgueMemoryPool() :
 	m_PoolSize(0),
 	m_PoolLimit(0),
 	m_PageSize(4096),
-	m_CacheSize(0)
+	m_CacheSize(0),
+	m_dummy(0)
 {
 	InitPool();
 }
@@ -97,11 +98,15 @@ void* GOrgueMemoryPool::PoolAlloc(unsigned length)
 	return NULL;
 }
 
-void *GOrgueMemoryPool::GetCacheData(unsigned long offset)
+void *GOrgueMemoryPool::GetCacheData(unsigned long offset, unsigned length)
 {
 	if (m_CacheStart)
 	{
 		char* data = m_CacheStart + offset;
+		for (unsigned i = 0; i < length; i+= 512)
+			m_dummy += data[i];
+		if (length)
+			m_dummy += data[length - 1];
 		AddPoolAlloc(data);
 		return data;
 	}
