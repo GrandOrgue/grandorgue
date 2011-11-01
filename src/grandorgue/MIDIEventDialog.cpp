@@ -21,9 +21,9 @@
  */
 
 #include <wx/statline.h>
-#include <wx/confbase.h>
 #include "MIDIEventDialog.h"
 #include "GOrgueMidi.h"
+#include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 
 extern GOrgueSound* g_sound;
@@ -43,7 +43,6 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 	wxDialog(parent, wxID_ANY, title),
 	m_midi(event)
 {
-	wxConfigBase* config = wxConfigBase::Get();
 
 	SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -99,22 +98,15 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 	SetSizer(topSizer);
 
 	m_device->Append(_("Any device"));
-	config->SetPath(wxT("/Devices/MIDI"));
-	
-	wxString str;
-	long no;
-	if (config->GetFirstEntry(str, no))
-		do
-		{
-			m_device->Append(str);
-		}
-		while (config->GetNextEntry(str, no));
 
-	config->SetPath(wxT("/"));
+	std::vector<wxString> device_names = m_midi.GetSettings().GetMidiDeviceList();
+	for(std::vector<wxString>::iterator it = device_names.begin(); it != device_names.end(); it++)
+		m_device->Append(*it);
 
 	m_channel->Append(_("Any channel"), (void*)-1);
 	for(unsigned int i = 1 ; i < 16; i++)
 	{
+		wxString str;
 		str.Printf(wxT("%d"),  i);
 		m_channel->Append(str, (void*)i);
 	}

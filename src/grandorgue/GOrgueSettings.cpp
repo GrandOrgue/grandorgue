@@ -283,3 +283,22 @@ void GOrgueSettings::SetMidiDeviceChannelShift(wxString device, int shift)
 {
 	m_Config.Write(wxT("Devices/MIDI/") + device, shift);
 }
+
+std::vector<wxString> GOrgueSettings::GetMidiDeviceList()
+{
+	std::vector<wxString> list;
+	wxString str;
+	long no;
+
+	m_Config.SetPath(wxT("/Devices/MIDI"));
+	if (m_Config.GetFirstEntry(str, no))
+		do
+		{
+			list.push_back(str);
+		}
+		while (m_Config.GetNextEntry(str, no));
+
+	m_Config.SetPath(wxT("/"));
+	return list;
+}
+
