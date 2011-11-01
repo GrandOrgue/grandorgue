@@ -47,6 +47,7 @@ public:
 	~GOrgueTremulant();
 	void Load(IniFileConfig& cfg, wxString group, int sampler_group_id);
 	void Save(IniFileConfig& cfg, bool prefix);
+	void InitSoundProvider();
 	void Set(bool on);
 	void Abort();
 	void PreparePlayback();

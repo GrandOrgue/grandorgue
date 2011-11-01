@@ -509,7 +509,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 			if (!TryLoad(NULL, dlg, load_error))
 				return load_error;
 		}
-
+		for (unsigned i = 0; i < m_tremulant.size(); i++)
+			m_tremulant[i]->InitSoundProvider();
 	}
 	catch (wxString error_)
 	{

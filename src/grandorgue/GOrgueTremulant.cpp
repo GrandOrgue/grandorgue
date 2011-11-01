@@ -48,9 +48,13 @@ void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, int sampler_group
 	m_AmpModDepth       = cfg.ReadInteger(group, wxT("AmpModDepth"), 1, 100);
 	m_SamplerGroupID    = sampler_group_id;
 	m_PlaybackHandle    = 0;
+	GOrgueDrawstop::Load(cfg, group);
+}
+
+void GOrgueTremulant::InitSoundProvider()
+{
 	m_TremProvider.Create(m_Period, m_StartRate, m_StopRate, m_AmpModDepth);
 	assert(!m_TremProvider.IsOneshot());
-	GOrgueDrawstop::Load(cfg, group);
 }
 
 void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix)
