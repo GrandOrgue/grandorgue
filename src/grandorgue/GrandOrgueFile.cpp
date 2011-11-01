@@ -42,6 +42,7 @@
 #include "GOrguePushbutton.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueSetter.h"
+#include "GOrgueSettings.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueWindchest.h"
@@ -51,14 +52,13 @@
 #include "GOSoundEngine.h"
 #include "contrib/sha1.h"
 
-GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, bool stereo) :
+GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_doc(doc),
 	m_path(),
 	m_b_squash(0),
 	m_filename(),
 	m_setter(0),
 	m_volume(0),
-	m_Stereo(stereo),
 	m_b_customized(false),
 	m_DivisionalsStoreIntermanualCouplers(false),
 	m_DivisionalsStoreIntramanualCouplers(false),
@@ -84,7 +84,8 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, bool stereo) :
 	m_divisionalcoupler(0),
 	m_manual(0),
 	m_panels(0),
-	m_soundengine(0)
+	m_soundengine(0),
+	m_Settings(settings)
 {
 }
 
@@ -106,7 +107,8 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 		}
 
 	SHA1_Update(&ctx, &m_AmplitudeLevel, sizeof(m_AmplitudeLevel));
-	SHA1_Update(&ctx, &m_Stereo, sizeof(m_Stereo));
+	bool stereo = m_Settings.GetLoadInStereo();
+	SHA1_Update(&ctx, &stereo, sizeof(stereo));
 
 	len = sizeof(AUDIO_SECTION);
 	SHA1_Update(&ctx, &len, sizeof(len));
@@ -683,11 +685,6 @@ int GrandOrgueFile::GetVolume()
 	return m_volume;
 }
 
-bool GrandOrgueFile::IsStereo()
-{
-	return m_Stereo;
-}
-
 unsigned GrandOrgueFile::GetFirstManualIndex()
 {
 	return m_FirstManual;
@@ -858,6 +855,11 @@ const wxString& GrandOrgueFile::GetODFFilename()
 GOrgueMemoryPool& GrandOrgueFile::GetMemoryPool()
 {
 	return m_pool;
+}
+
+GOrgueSettings& GrandOrgueFile::GetSettings()
+{
+	return m_Settings;
 }
 
 SAMPLER_HANDLE GrandOrgueFile::StartSample(const GOSoundProvider *pipe, int sampler_group_id)

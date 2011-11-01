@@ -62,7 +62,7 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	if (!open_sound)
 		return false;
 
-	m_organfile = new GrandOrgueFile(this, g_sound->IsStereo());
+	m_organfile = new GrandOrgueFile(this, g_sound->GetSettings());
 	wxString error = m_organfile->Load(file, file2);
 	if (!error.IsEmpty())
 	{

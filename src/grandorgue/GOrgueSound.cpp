@@ -39,7 +39,6 @@ GOrgueSound::GOrgueSound(void) :
 	audioDevice(NULL),
 	m_SamplesPerBuffer(0),
 	m_nb_buffers(0),
-	b_stereo(0),
 	b_random(0),
 	m_Concurrency(0),
 	m_ReleaseConcurrency(1),
@@ -187,12 +186,12 @@ bool GOrgueSound::OpenSound()
 
 	bool opened_ok = false;
 
+	m_Settings.Load();
 	defaultAudio = pConfig->Read(wxT("Devices/DefaultSound"), defaultAudio);
 	m_SoundEngine.SetPolyphonyLimiting(pConfig->Read(wxT("ManagePolyphony"), 1));
 	m_SoundEngine.SetHardPolyphony(pConfig->Read(wxT("PolyphonyLimit"), 2048));
 	m_SoundEngine.SetVolume(pConfig->Read(wxT("Volume"), 50));
 	m_SoundEngine.SetScaledReleases(pConfig->Read(wxT("ScaleRelease"), 1));
-	b_stereo = pConfig->Read(wxT("StereoEnabled"), 1);
 	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
 	m_Concurrency = pConfig->Read(wxT("Concurrency"), 0L);
 	m_ReleaseConcurrency = pConfig->Read(wxT("ReleaseConcurrency"), 1L);
@@ -348,9 +347,9 @@ bool GOrgueSound::HasRandomPipeSpeech()
 	return b_random;
 }
 
-bool GOrgueSound::IsStereo()
+GOrgueSettings& GOrgueSound::GetSettings()
 {
-	return b_stereo;
+	return m_Settings;
 }
 
 bool GOrgueSound::CompressCache()

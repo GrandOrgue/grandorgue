@@ -41,6 +41,7 @@ class GOrgueMidiEvent;
 class GOrguePiston;
 class GOrguePushbutton;
 class GOrgueSetter;
+class GOrgueSettings;
 class GOrgueTremulant;
 class GOrgueWindchest;
 class GOGUIPanel;
@@ -60,7 +61,6 @@ private:
 	wxString m_filename;
 	GOrgueSetter* m_setter;
 	int m_volume;
-	bool m_Stereo;
 
 	bool m_b_customized : 1;
 	bool m_DivisionalsStoreIntermanualCouplers : 1;
@@ -95,6 +95,7 @@ private:
 	GOSoundEngine* m_soundengine;
 
 	GOrgueMemoryPool m_pool;
+	GOrgueSettings& m_Settings;
 
 	void ReadOrganFile(wxFileConfig& odf_ini_file);
 	bool TryLoad(GOrgueCache* cache, wxProgressDialog& dlg, wxString& error);
@@ -102,7 +103,7 @@ private:
 
 public:
 
-	GrandOrgueFile(OrganDocument* doc, bool stereo);
+	GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings);
 	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);
 	void Save(const wxString& file);
 	bool CachePresent();
@@ -115,7 +116,6 @@ public:
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void ControlChanged(void* control);
 	void Modified();
-	bool IsStereo();
 	~GrandOrgueFile(void);
 
 	/* Access to internal ODF objects */
@@ -138,6 +138,7 @@ public:
 	GOGUIPanel* GetPanel(unsigned index);
 	unsigned GetPanelCount();
 	GOrgueMemoryPool& GetMemoryPool();
+	GOrgueSettings& GetSettings();
 
 	/* ODF general properties */
 	bool DivisionalsStoreIntermanualCouplers();

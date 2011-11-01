@@ -500,7 +500,7 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 {
 	wxLogDebug(_("settingsdialog.."));
-	SettingsDialog dialog(this);
+	SettingsDialog dialog(this, g_sound->GetSettings());
 	wxLogDebug(_("success"));
 	dialog.ShowModal();
 	g_sound->GetMidi().UpdateOrganMIDI();

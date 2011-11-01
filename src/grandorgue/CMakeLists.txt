@@ -120,6 +120,7 @@ GOrgueReleaseAlignTable.cpp
 GOrgueRtHelpers.cpp
 GOrgueSetter.cpp
 GOrgueSetterButton.cpp
+GOrgueSettings.cpp
 GOrgueSound.cpp
 GOrgueStop.cpp
 GOrgueTremulant.cpp
