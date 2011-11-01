@@ -98,11 +98,7 @@ void SettingsDialog::SetLatencySpinner(int latency)
 
 }
 
-//#ifdef __WXMSW__
-//#define SETTINGS_DLG_SIZE wxSize(453,450)
-//#else
 #define SETTINGS_DLG_SIZE wxSize(603,600)
-//#endif
 
 SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSettings& settings) :
 	wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, SETTINGS_DLG_SIZE),
@@ -114,26 +110,24 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSettings& settings) :
 	b_stereo = m_Settings.GetLoadInStereo();
 	b_squash = m_Settings.GetLosslessCompression();
 
-	pConfig = wxConfigBase::Get();
-
 	SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
 
-    CreateButtons(wxOK | wxCANCEL | wxHELP);
-    //JB: wxAPPLY not available in recent versions of wxWidgets
+	CreateButtons(wxOK | wxCANCEL | wxHELP);
+	//JB: wxAPPLY not available in recent versions of wxWidgets
 
-    wxBookCtrlBase* notebook = GetBookCtrl();
+	wxBookCtrlBase* notebook = GetBookCtrl();
 
-    wxPanel* devices  = CreateDevicesPage(notebook);
-    wxPanel* messages = CreateMessagesPage(notebook);
-    wxPanel* organs = CreateOrganPage(notebook);
+	wxPanel* devices  = CreateDevicesPage(notebook);
+	wxPanel* messages = CreateMessagesPage(notebook);
+	wxPanel* organs = CreateOrganPage(notebook);
 
-    notebook->AddPage(devices,  _("Devices"));
-    notebook->AddPage(messages, _("MIDI Messages"));
-    notebook->AddPage(organs, _("Organs"));
+	notebook->AddPage(devices,  _("Devices"));
+	notebook->AddPage(messages, _("MIDI Messages"));
+	notebook->AddPage(organs, _("Organs"));
 
 	//this->FindWindowById(wxID_APPLY, this)->Disable();
 
-    //LayoutDialog();
+	//LayoutDialog();
 
 	page2list->SetColumnWidth(0, wxLIST_AUTOSIZE);
 	page2list->SetColumnWidth(0, page2list->GetColumnWidth(0) + 16);
@@ -150,20 +144,18 @@ SettingsDialog::~SettingsDialog()
 	g_sound->SetLogSoundErrorMessages(false);
 	if (b_stereo != m_Settings.GetLoadInStereo() || b_squash != m_Settings.GetLosslessCompression())
 	{
-        if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION) == wxYES)
-        {
-            wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
-            wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-        }
-    }
+		if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION) == wxYES)
+		{
+			wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
+			wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+		}
+	}
 }
 
 void SettingsDialog::UpdateSoundStatus()
 {
-
 	SetLatencySpinner(m_Settings.GetAudioDeviceLatency(c_sound->GetStringSelection()));
 	c_format->SetLabel(wxString(GOrgueRtHelpers::GetAudioFormatName(g_sound->GetAudioFormat())));
-
 }
 
 wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
@@ -289,7 +281,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	if (m_Settings.GetRandomizeSpeaking())
 		c_random->SetValue(true);
 
-    topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
+	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
 	panel->SetSizer(topSizer);
 	topSizer->Fit(panel);
@@ -375,31 +367,35 @@ wxPanel* SettingsDialog::CreateOrganPage(wxWindow* parent)
 }
 
 
-void SettingsDialog::OnOrganEventListClick(wxListEvent& event) {
-  delButton->Enable();
-  propButton->Enable();
+void SettingsDialog::OnOrganEventListClick(wxListEvent& event)
+{
+	delButton->Enable();
+	propButton->Enable();
 }
 
-void SettingsDialog::OnOrganEventListDoubleClick(wxListEvent& event) {
+void SettingsDialog::OnOrganEventListDoubleClick(wxListEvent& event)
+{
 }
 
-void SettingsDialog::OnAddOrgan(wxCommandEvent& event) {
-    //ask for .organ file
-    wxFileDialog dlg(this, _("Choose a file"), wxT(""), wxT(""), _("*.organ"), wxFD_FILE_MUST_EXIST | wxFD_OPEN);
-    if (dlg.ShowModal()==wxID_OK) {
-        organlist->InsertItem(organlist->GetItemCount(), dlg.GetPath());
-        organlist->SetColumnWidth(0, wxLIST_AUTOSIZE);
-    }
+void SettingsDialog::OnAddOrgan(wxCommandEvent& event)
+{
+	//ask for .organ file
+	wxFileDialog dlg(this, _("Choose a file"), wxT(""), wxT(""), _("*.organ"), wxFD_FILE_MUST_EXIST | wxFD_OPEN);
+	if (dlg.ShowModal()==wxID_OK)
+	{
+		organlist->InsertItem(organlist->GetItemCount(), dlg.GetPath());
+		organlist->SetColumnWidth(0, wxLIST_AUTOSIZE);
+	}
 }
 
-void SettingsDialog::OnDelOrgan(wxCommandEvent& event) {
-    int index=organlist->GetFirstSelected();
-    organlist->DeleteItem(index);
+void SettingsDialog::OnDelOrgan(wxCommandEvent& event)
+{
+	int index=organlist->GetFirstSelected();
+	organlist->DeleteItem(index);
 }
 
 void SettingsDialog::OnOrganProperties(wxCommandEvent& event)
 {
-
 	int index = organlist->GetFirstSelected();
 
 	MIDIListenDialog dlg
