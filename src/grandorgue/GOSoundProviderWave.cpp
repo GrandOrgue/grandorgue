@@ -21,8 +21,14 @@
  */
 
 #include "GOSoundProviderWave.h"
+#include "GOrgueMemoryPool.h"
 #include "GOrgueWave.h"
 #include <wx/filename.h>
+
+GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool) :
+	GOSoundProvider(pool)
+{
+}
 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
@@ -94,7 +100,7 @@ void GOSoundProviderWave::LoadFromFile
 			 */
 			m_Loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
 			m_Loop.alloc_size = loopSamplesInMem * sizeof(wxInt16) * m_Channels;
-			m_Loop.data = (unsigned char*)malloc(m_Loop.alloc_size);
+			m_Loop.data = (unsigned char*)m_pool.Alloc(m_Loop.alloc_size);
 			if (m_Loop.data == NULL)
 				throw (wxString)_("< out of memory allocating loop");
 			m_Loop.sample_rate = m_SampleRate;
@@ -122,7 +128,7 @@ void GOSoundProviderWave::LoadFromFile
 			 */
 			m_Release.size = releaseSamples * sizeof(wxInt16) * m_Channels;
 			m_Release.alloc_size = releaseSamplesInMem * sizeof(wxInt16) * m_Channels;
-			m_Release.data = (unsigned char*)malloc(m_Release.alloc_size);
+			m_Release.data = (unsigned char*)m_pool.Alloc(m_Release.alloc_size);
 			if (m_Release.data == NULL)
 				throw (wxString)_("< out of memory allocating release");
 			m_Release.sample_rate = m_SampleRate;
@@ -147,7 +153,7 @@ void GOSoundProviderWave::LoadFromFile
 		m_Attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
 		m_Attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
 		assert((unsigned)m_Attack.size <= totalDataSize); /* can be equal for percussive samples */
-		m_Attack.data = (unsigned char*)malloc(m_Attack.alloc_size);
+		m_Attack.data = (unsigned char*)m_pool.Alloc(m_Attack.alloc_size);
 		if (m_Attack.data == NULL)
 			throw (wxString)_("< out of memory allocating attack");
 		m_Attack.sample_rate = m_SampleRate;
@@ -200,17 +206,13 @@ void GOSoundProviderWave::LoadFromFile
 	{
 		wxLogError(_("caught exception: %s\n"), error.c_str());
 		FREE_AND_NULL(data);
-		FREE_AND_NULL(m_Attack.data);
-		FREE_AND_NULL(m_Loop.data);
-		FREE_AND_NULL(m_Release.data);
+		ClearData();
 		throw;
 	}
 	catch (...)
 	{
 		FREE_AND_NULL(data);
-		FREE_AND_NULL(m_Attack.data);
-		FREE_AND_NULL(m_Loop.data);
-		FREE_AND_NULL(m_Release.data);
+		ClearData();
 		throw;
 	}
 

@@ -455,7 +455,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 			wxFileInputStream cache(file + wxT(".cache"));
 			wxZlibInputStream zin(cache);
-			GOrgueCache reader(zin);
+			GOrgueCache reader(zin, m_pool);
 
 			cache_ok = cache.IsOk() && zin.IsOk();
 
@@ -592,6 +592,9 @@ GrandOrgueFile::~GrandOrgueFile(void)
 {
 	if (m_setter)
 		delete m_setter;
+	// Just to be sure, that the sound providers are freed before the pool
+	m_manual.clear();
+	m_tremulant.clear();
 }
 
 void GrandOrgueFile::Revert(wxFileConfig& cfg)
@@ -851,6 +854,11 @@ bool GrandOrgueFile::IsCustomized()
 const wxString& GrandOrgueFile::GetODFFilename()
 {
 	return m_filename;
+}
+
+GOrgueMemoryPool& GrandOrgueFile::GetMemoryPool()
+{
+	return m_pool;
 }
 
 SAMPLER_HANDLE GrandOrgueFile::StartSample(const GOSoundProvider *pipe, int sampler_group_id)

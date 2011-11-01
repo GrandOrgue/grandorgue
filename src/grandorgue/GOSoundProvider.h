@@ -24,6 +24,7 @@
 #define GOSOUNDPROVIDER_H_
 
 #include "GOSoundAudioSection.h"
+class GOrgueMemoryPool;
 class GOrgueCache;
 class GOrgueCacheWriter;
 
@@ -42,10 +43,11 @@ protected:
 	AUDIO_SECTION  m_Attack;
 	AUDIO_SECTION  m_Loop;
 	AUDIO_SECTION  m_Release;
+	GOrgueMemoryPool& m_pool;
 	void ComputeReleaseAlignmentInfo();
 
 public:
-	GOSoundProvider();
+	GOSoundProvider(GOrgueMemoryPool& pool);
 	virtual ~GOSoundProvider();
 
 	void ClearData();
