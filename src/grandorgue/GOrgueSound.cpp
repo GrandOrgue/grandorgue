@@ -40,8 +40,6 @@ GOrgueSound::GOrgueSound(void) :
 	m_SamplesPerBuffer(0),
 	m_nb_buffers(0),
 	b_random(0),
-	m_Concurrency(0),
-	m_ReleaseConcurrency(1),
 	m_CompressCache(true),
 	meter_counter(0),
 	b_active(false),
@@ -141,10 +139,10 @@ void GOrgueSound::StartThreads(unsigned windchests)
 {
 	StopThreads();
 
-	int n_cpus = m_Concurrency;
+	int n_cpus = m_Settings.GetConcurrency();
 
 	wxCriticalSectionLocker thread_locker(m_thread_lock);
-	for (unsigned i = 0; i < m_ReleaseConcurrency && n_cpus; i++)
+	for (unsigned i = 0; i < m_Settings.GetReleaseConcurrency() && n_cpus; i++)
 	{
 		int no = i;
 		if (i > 0)
@@ -193,11 +191,7 @@ bool GOrgueSound::OpenSound()
 	m_SoundEngine.SetVolume(pConfig->Read(wxT("Volume"), 50));
 	m_SoundEngine.SetScaledReleases(pConfig->Read(wxT("ScaleRelease"), 1));
 	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
-	m_Concurrency = pConfig->Read(wxT("Concurrency"), 0L);
-	m_ReleaseConcurrency = pConfig->Read(wxT("ReleaseConcurrency"), 1L);
 	m_CompressCache = pConfig->Read(wxT("CompressCache"), 1);
-	if (m_ReleaseConcurrency < 1)
-		m_ReleaseConcurrency = 1;
 	unsigned sample_rate = pConfig->Read(wxT("SampleRate"), 44100);
 	m_recorder.SetBytesPerSample(pConfig->Read(wxT("WaveFormat"), 4));
 
@@ -385,7 +379,7 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 	StopThreads();
 	if (organfile)
 	{
-		m_SoundEngine.Setup(organfile, m_ReleaseConcurrency);
+		m_SoundEngine.Setup(organfile, m_Settings.GetReleaseConcurrency());
 		organfile->PreparePlayback(&GetEngine());
 		StartThreads(organfile->GetWinchestGroupCount());
 	}

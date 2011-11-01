@@ -27,13 +27,19 @@
 
 GOrgueSettings::GOrgueSettings() :
 	m_Config(*wxConfigBase::Get()),
-	m_Stereo(false)
+	m_Stereo(false),
+	m_Concurrency(0),
+	m_ReleaseConcurrency(1)
 {
 }
 
 void GOrgueSettings::Load()
 {
 	m_Stereo = m_Config.Read(wxT("StereoEnabled"), 1);
+	m_Concurrency = m_Config.Read(wxT("Concurrency"), 0L);
+	m_ReleaseConcurrency = m_Config.Read(wxT("ReleaseConcurrency"), 1L);
+	if (m_ReleaseConcurrency < 1)
+		m_ReleaseConcurrency = 1;
 }
 
 bool GOrgueSettings::GetLoadInStereo()
@@ -45,4 +51,28 @@ void GOrgueSettings::SetLoadInStereo(bool stereo)
 {
 	m_Stereo = stereo;
 	m_Config.Write(wxT("StereoEnabled"), m_Stereo);
+}
+
+unsigned GOrgueSettings::GetConcurrency()
+{
+	return m_Concurrency;
+}
+
+void GOrgueSettings::SetConcurrency(unsigned concurrency)
+{
+	m_Concurrency = concurrency;
+	m_Config.Write(wxT("Concurrency"), (long)m_Concurrency);
+}
+
+unsigned GOrgueSettings::GetReleaseConcurrency()
+{
+	return m_ReleaseConcurrency;
+}
+
+void GOrgueSettings::SetReleaseConcurrency(unsigned concurrency)
+{
+	if (concurrency < 1)
+		concurrency = 1;
+	m_ReleaseConcurrency = concurrency;
+	m_Config.Write(wxT("ReleaseConcurrency"), (long)m_ReleaseConcurrency);
 }
