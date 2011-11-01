@@ -525,6 +525,7 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 {
 	wxString cache_filename = m_filename + wxT(".cache");
 
+	DeleteCache();
 	/* Figure out how many pipes there are */
 	unsigned nb_pipes = 0;
 	unsigned nb_saved_pipes = 0;
