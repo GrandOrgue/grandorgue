@@ -26,6 +26,7 @@
 #include <wx/stdpaths.h>
 #include <wx/html/helpctrl.h>
 #include <wx/splash.h>
+#include "wxGaugeAudio.h"
 #include "Images.h"
 #include "GOGUIPanel.h"
 #include "GOrgueEvent.h"
@@ -94,7 +95,10 @@ void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxSt
 GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type) :
 	wxDocParentFrame(manager, frame, id, title, pos, size, type),
 	m_panel_menu(NULL),
-	m_Help(NULL)
+	m_Help(NULL),
+	m_SamplerUsage(NULL),
+	m_VolumeLeft(NULL),
+	m_VolumeRight(NULL)
 {
 #ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
@@ -152,8 +156,28 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 
 	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
 	tb->AddControl(m_meters[0]);
+
+	{
+		wxControl* control = new wxControl(tb, wxID_ANY);
+		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+
+		m_VolumeLeft = new wxGaugeAudio(control, wxID_ANY, wxDefaultPosition);
+		sizer->Add(m_VolumeLeft, 0, wxFIXED_MINSIZE);
+		m_VolumeRight = new wxGaugeAudio(control, wxID_ANY, wxDefaultPosition);
+		sizer->Add(m_VolumeRight, 0, wxFIXED_MINSIZE);
+		
+		control->SetSizer(sizer);
+		sizer->Fit(control);
+		control->Layout();
+
+		tb->AddControl(control);
+	}
+
 	AddTool(settings_menu, ID_POLYPHONY, _("&Polyphony"), _("Polyphony"), GetImage_polyphony());
 	tb->AddControl(m_meters[1]);
+	m_SamplerUsage = new wxGaugeAudio(tb, wxID_ANY, wxDefaultPosition);
+	tb->AddControl(m_SamplerUsage);
+
 	AddTool(settings_menu, ID_MEMORY, _("&Memory Level"), _("Memory Level"), GetImage_memory());
 	tb->AddControl(m_meters[2]);
 	AddTool(settings_menu, ID_TRANSPOSE, _("&Transpose"), _("Transpose"), GetImage_transpose());
@@ -267,9 +291,9 @@ void GOrgueFrame::OnSize(wxSizeEvent& event)
 void GOrgueFrame::OnMeters(wxCommandEvent& event)
 {
 	int n = event.GetInt();
-	m_meters[0]->SetValue(0, n);
-	m_meters[0]->SetValue(1, n >> 8);
-	m_meters[1]->SetValue(0, n >> 16);
+	m_VolumeLeft->SetValue (n & 0xFF);
+	m_VolumeRight->SetValue((n >> 8) & 0xFF);
+	m_SamplerUsage->SetValue((n >> 16) & 0xFF);
 }
 
 void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
