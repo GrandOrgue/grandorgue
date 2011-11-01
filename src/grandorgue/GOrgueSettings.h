@@ -38,11 +38,14 @@ private:
 	bool m_RandomizeSpeaking;
 	unsigned m_SampleRate;
 	unsigned m_WaveFormat;
+	unsigned m_Volume;
+	unsigned m_PolyphonyLimit;
 
 public:
 	GOrgueSettings();
 
 	void Load();
+	wxConfigBase& GetConfig();
 
 	bool GetLoadInStereo();
 	void SetLoadInStereo(bool stereo);
@@ -66,6 +69,11 @@ public:
 	void SetSampleRate(unsigned sample_rate);
 	unsigned GetWaveFormatBytesPerSample();
 	void SetWaveFormatBytesPerSample(unsigned bytes_per_sample);
+
+	unsigned GetVolume();
+	void SetVolume(unsigned volume);
+	unsigned GetPolyphonyLimit();
+	void SetPolyphonyLimit(unsigned polyphony_limit);
 };
 
 #endif
