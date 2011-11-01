@@ -33,6 +33,7 @@
 #include "GOrgueMidi.h"
 #include "GOrgueProperties.h"
 #include "GOrgueSetter.h"
+#include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"

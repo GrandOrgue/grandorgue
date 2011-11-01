@@ -41,6 +41,7 @@ GOrgueSettings::GOrgueSettings() :
 	m_PolyphonyLimit(2048),
 	m_DefaultAudioDevice()
 {
+	GetConfig().SetRecordDefaults();
 }
 
 wxConfigBase& GOrgueSettings::GetConfig()

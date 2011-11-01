@@ -30,11 +30,11 @@
 class wxSingleInstanceChecker;
 class wxSplashScreenWindow;
 class wxDocManager;
-class wxConfigBase;
 class stServer;
 
 class GOrgueFrame;
 class GOrgueSound;
+class GOrgueSettings;
 
 class GOrgueApp : public wxApp
 {
@@ -47,8 +47,8 @@ public:
 protected:
   wxLocale m_locale;
   stServer* m_server;
+  GOrgueSettings* m_Settings;
   GOrgueSound* m_soundSystem;
-  wxConfigBase* pConfig;
   wxDocManager* m_docManager;
   wxSingleInstanceChecker* single_instance;
 };

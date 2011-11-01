@@ -31,6 +31,7 @@
 #include "GOrgueEvent.h"
 #include "GOrgueLCD.h"
 #include "GOrgueMidi.h"
+#include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueFrame.h"
 
@@ -39,7 +40,6 @@
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
 #include <wx/splash.h>
-#include <wx/confbase.h>
 
 #ifdef __WIN32__
 #include <windows.h>
@@ -107,8 +107,8 @@ GOrgueApp::GOrgueApp()
   :frame(NULL),
    m_locale(),
    m_server(NULL),
+   m_Settings(NULL),
    m_soundSystem(NULL),
-   pConfig(NULL),
    m_docManager(NULL),
    single_instance(NULL)
 {
@@ -146,9 +146,9 @@ bool GOrgueApp::OnInit()
 	SetAppName(wxT(APP_NAME));
 	SetClassName(wxT(APP_NAME));
 	SetVendorName(_("Our Organ"));
-	pConfig = wxConfigBase::Get();
-	pConfig->SetRecordDefaults();
 
+	m_Settings = new GOrgueSettings();
+	m_Settings->Load();
 
 	wxIdleEvent::SetMode(wxIDLE_PROCESS_SPECIFIED);
 	wxFileSystem::AddHandler(new wxZipFSHandler);
@@ -169,7 +169,7 @@ bool GOrgueApp::OnInit()
 	new wxDocTemplate(m_docManager, _("Sample set definition files"), _("*.organ"), wxEmptyString, wxT("organ"), _("Organ Doc"), _("Organ View"), CLASSINFO(OrganDocument), CLASSINFO(OrganView));
 	m_docManager->SetMaxDocsOpen(1);
 
-	m_soundSystem = new GOrgueSound();
+	m_soundSystem = new GOrgueSound(*m_Settings);
 	frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE  | wxMAXIMIZE_BOX | wxRESIZE_BORDER);
 	SetTopWindow(frame);
 	frame->DoSplash();
@@ -213,11 +213,12 @@ int GOrgueApp::OnExit()
 	delete m_soundSystem;
 	if (m_docManager)
 	{
-		m_docManager->FileHistorySave(*pConfig);
+		m_docManager->FileHistorySave(m_Settings->GetConfig());
 		delete m_docManager;
 	}
 	delete m_server;
 	delete single_instance;
+	delete m_Settings;
 
 	return wxApp::OnExit();
 }
