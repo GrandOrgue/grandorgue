@@ -112,7 +112,8 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_Transpose(NULL),
 	m_Polyphony(NULL),
 	m_SetterPosition(NULL),
-	m_Volume(NULL)
+	m_Volume(NULL),
+	m_Settings(g_sound->GetSettings())
 {
 #ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
@@ -123,7 +124,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 
 	wxMenu *recent_menu = new wxMenu;
 	m_docManager->FileHistoryUseMenu(recent_menu);
-	m_docManager->FileHistoryLoad(*wxConfigBase::Get());
+	m_docManager->FileHistoryLoad(m_Settings.GetConfig());
 
 	wxToolBar* tb = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
 	tb->SetToolBitmapSize(wxSize(16, 16));
@@ -166,7 +167,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
 	m_Volume = new wxSpinCtrl(tb, ID_METER_AUDIO_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 100);
 	tb->AddControl(m_Volume);
-	m_Volume->SetValue(wxConfigBase::Get()->Read(wxT("Volume"), 50));
+	m_Volume->SetValue(m_Settings.GetVolume());
 
 	{
 		wxControl* control = new wxControl(tb, wxID_ANY);
@@ -187,7 +188,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	AddTool(settings_menu, ID_POLYPHONY, _("&Polyphony"), _("Polyphony"), GetImage_polyphony());
 	m_Polyphony = new wxSpinCtrl(tb, ID_METER_POLY_SPIN, wxEmptyString, wxDefaultPosition, wxSize(56, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 4096);
 	tb->AddControl(m_Polyphony);
-	m_Polyphony->SetValue(wxConfigBase::Get()->Read(wxT("PolyphonyLimit"), 2048));
+	m_Polyphony->SetValue(m_Settings.GetPolyphonyLimit());
 
 	m_SamplerUsage = new wxGaugeAudio(tb, wxID_ANY, wxDefaultPosition);
 	tb->AddControl(m_SamplerUsage);
@@ -418,7 +419,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
-	if (!doc->GetOrganFile()->UpdateCache(g_sound->GetSettings().GetCompressCache()))
+	if (!doc->GetOrganFile()->UpdateCache(m_Settings.GetCompressCache()))
 	{
 		wxLogError(_("Creating the cache failed"));
 		wxMessageBox(_("Creating the cache failed"), _("Error"), wxOK | wxICON_ERROR, NULL);
@@ -500,7 +501,7 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 {
 	wxLogDebug(_("settingsdialog.."));
-	SettingsDialog dialog(this, g_sound->GetSettings());
+	SettingsDialog dialog(this, m_Settings);
 	wxLogDebug(_("success"));
 	dialog.ShowModal();
 	g_sound->GetMidi().UpdateOrganMIDI();
@@ -522,19 +523,16 @@ void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)
 {
 	long n = m_Volume->GetValue();
 
-	wxConfigBase::Get()->Write(wxT("Volume"), n);
-
-	if (g_sound)
-	    g_sound->GetEngine().SetVolume(n);
+	m_Settings.SetVolume(n);
+	g_sound->GetEngine().SetVolume(n);
 }
 
 void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
 {
 	long n = m_Polyphony->GetValue();
 
-	wxConfigBase::Get()->Write(wxT("PolyphonyLimit"), n);
-	if (g_sound)
-		g_sound->GetEngine().SetHardPolyphony(n);
+	m_Settings.SetPolyphonyLimit(n);
+	g_sound->GetEngine().SetHardPolyphony(n);
 }
 
 void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
@@ -583,6 +581,7 @@ void GOrgueFrame::OnChangeSetter(wxCommandEvent& event)
 
 void GOrgueFrame::OnChangeVolume(wxCommandEvent& event)
 {
+	m_Settings.SetVolume(event.GetInt());
 	m_Volume->SetValue(event.GetInt());
 }
 

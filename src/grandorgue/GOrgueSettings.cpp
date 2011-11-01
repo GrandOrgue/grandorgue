@@ -36,8 +36,15 @@ GOrgueSettings::GOrgueSettings() :
 	m_ScaleRelease(true),
 	m_RandomizeSpeaking(true),
 	m_SampleRate(44100),
-	m_WaveFormat(4)
+	m_WaveFormat(4),
+	m_Volume(50),
+	m_PolyphonyLimit(2048)
 {
+}
+
+wxConfigBase& GOrgueSettings::GetConfig()
+{
+	return m_Config;
 }
 
 void GOrgueSettings::Load()
@@ -58,6 +65,10 @@ void GOrgueSettings::Load()
 	m_WaveFormat = m_Config.Read(wxT("WaveFormat"), 4);
 	if (m_WaveFormat > 4)
 		m_WaveFormat = 4;
+	m_Volume = m_Config.Read(wxT("Volume"), 50);
+	if (m_Volume > 100)
+		m_Volume = 100;
+	m_PolyphonyLimit = m_Config.Read(wxT("PolyphonyLimit"), 2048);
 }
 
 bool GOrgueSettings::GetLoadInStereo()
@@ -174,4 +185,28 @@ void GOrgueSettings::SetWaveFormatBytesPerSample(unsigned bytes_per_sample)
 		bytes_per_sample = 4;
 	m_WaveFormat = bytes_per_sample;
 	m_Config.Write(wxT("WaveFormat"), (long)m_WaveFormat);
+}
+
+unsigned GOrgueSettings::GetVolume()
+{
+	return m_Volume;
+}
+
+void GOrgueSettings::SetVolume(unsigned volume)
+{
+	if (volume > 100)
+		volume = 100;
+	m_Volume = volume;
+	m_Config.Write(wxT("Volume"), (long)m_Volume);
+}
+
+unsigned GOrgueSettings::GetPolyphonyLimit()
+{
+	return m_PolyphonyLimit;
+}
+
+void GOrgueSettings::SetPolyphonyLimit(unsigned polyphony_limit)
+{
+	m_PolyphonyLimit = polyphony_limit;
+	m_Config.Write(wxT("PolyphonyLimit"), (long)m_PolyphonyLimit);
 }

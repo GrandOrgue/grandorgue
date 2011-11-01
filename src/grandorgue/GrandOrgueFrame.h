@@ -29,7 +29,7 @@
 class wxHtmlHelpController;
 class wxGaugeAudio;
 class wxSpinCtrl;
-class GOrgueMeter;
+class GOrgueSettings;
 
 class GOrgueFrame: public wxDocParentFrame
 {
@@ -42,6 +42,7 @@ class GOrgueFrame: public wxDocParentFrame
 	wxSpinCtrl* m_Polyphony;
 	wxSpinCtrl* m_SetterPosition;
 	wxSpinCtrl* m_Volume;
+	GOrgueSettings& m_Settings;
 
 public:
     GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type);
@@ -49,7 +50,7 @@ public:
 
 	void OnMeters(wxCommandEvent& event);
 
-    void OnLoadFile(wxCommandEvent& event);
+	void OnLoadFile(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
 	void OnLoad(wxCommandEvent& event);
 	void OnSave(wxCommandEvent& event);
@@ -68,14 +69,11 @@ public:
 	void OnHelpAbout(wxCommandEvent& event);
 	void OnShowHelp(wxCommandEvent& event);
 
-	//Added by Graham Goode Nov 2009
-	// Added to allow for the mouse-over event creating a description of the new icons
-	// that were formerly just text
 	void OnSettingsVolume(wxCommandEvent& event);
 	void OnSettingsPolyphony(wxCommandEvent& event);
 	void OnSettingsMemory(wxCommandEvent& event);
 	void OnSettingsTranspose(wxCommandEvent& event);
-	//
+
 	void OnKeyCommand(wxKeyEvent& event);
 	void OnChangeSetter(wxCommandEvent& event);
 	void OnChangeVolume(wxCommandEvent& event);
@@ -89,8 +87,6 @@ public:
 	void DoSplash(bool timeout = true);
 
 	void OnUpdateLoaded(wxUpdateUIEvent& event);
-
-	GOrgueMeter* m_meters[4];
 
 	DECLARE_EVENT_TABLE()
 protected:

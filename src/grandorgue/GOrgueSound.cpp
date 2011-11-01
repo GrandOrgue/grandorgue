@@ -185,8 +185,8 @@ bool GOrgueSound::OpenSound()
 	m_Settings.Load();
 	defaultAudio = pConfig->Read(wxT("Devices/DefaultSound"), defaultAudio);
 	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
-	m_SoundEngine.SetHardPolyphony(pConfig->Read(wxT("PolyphonyLimit"), 2048));
-	m_SoundEngine.SetVolume(pConfig->Read(wxT("Volume"), 50));
+	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
+	m_SoundEngine.SetVolume(m_Settings.GetVolume());
 	m_SoundEngine.SetScaledReleases(m_Settings.GetScaleRelease());
 	unsigned sample_rate = m_Settings.GetSampleRate();
 	m_recorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
