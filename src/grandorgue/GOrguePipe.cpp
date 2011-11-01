@@ -20,7 +20,6 @@
  * MA 02111-1307, USA.
  */
 
-#include <wx/stream.h>
 #include "GOrguePipe.h"
 #include "GOrgueStop.h"
 #include "GOrgueManual.h"
@@ -93,7 +92,7 @@ void GOrguePipe::Set(bool on)
 		SetOff();
 }
 
-bool GOrguePipe::LoadCache(wxInputStream* cache)
+bool GOrguePipe::LoadCache(GOrgueCache& cache)
 {
 	if (m_Filename.StartsWith(wxT("REF:")))
 	{
@@ -110,7 +109,7 @@ bool GOrguePipe::LoadCache(wxInputStream* cache)
 	return m_SoundProvider.LoadCache(cache);
 }
 
-bool GOrguePipe::SaveCache(wxOutputStream* cache)
+bool GOrguePipe::SaveCache(GOrgueCacheWriter& cache)
 {
 	if (m_Reference)
 		return true;

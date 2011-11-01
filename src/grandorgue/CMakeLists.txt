@@ -94,6 +94,8 @@ GOSoundRecorder.cpp
 GOSoundSamplerPool.cpp
 GOSoundThread.cpp
 GOrgueWave.cpp
+GOrgueCache.cpp
+GOrgueCacheWriter.cpp
 GOrgueControl.cpp
 GOrgueCoupler.cpp
 GOrgueDivisional.cpp

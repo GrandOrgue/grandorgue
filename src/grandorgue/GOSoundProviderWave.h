@@ -24,6 +24,7 @@
 #define GOSOUNDPROVIDERWAVE_H_
 
 #include "GOSoundProvider.h"
+#include <wx/wx.h>
 
 class GOSoundProviderWave : public GOSoundProvider
 {

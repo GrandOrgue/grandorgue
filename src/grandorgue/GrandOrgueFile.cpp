@@ -29,6 +29,8 @@
 #include <wx/zstream.h>
 
 #include "IniFileConfig.h"
+#include "GOrgueCache.h"
+#include "GOrgueCacheWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
@@ -123,7 +125,7 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 
 
 bool GrandOrgueFile::TryLoad
-	(wxInputStream* cache
+	(GOrgueCache* cache
 	,wxProgressDialog& dlg
 	,wxString& error
 	)
@@ -150,7 +152,7 @@ bool GrandOrgueFile::TryLoad
 					GOrguePipe* pipe = m_manual[i]->GetStop(j)->GetPipe(k);
 					if (cache != NULL)
 					{
-						if (!pipe->LoadCache(cache))
+						if (!pipe->LoadCache(*cache))
 						{
 							error = wxString::Format
 								(_("Failed to read %s from cache.")
@@ -453,6 +455,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 			wxFileInputStream cache(file + wxT(".cache"));
 			wxZlibInputStream zin(cache);
+			GOrgueCache reader(zin);
 
 			cache_ok = cache.IsOk() && zin.IsOk();
 
@@ -486,7 +489,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 			if (cache_ok)
 			{
-				if (!TryLoad(&zin, dlg, load_error))
+				if (!TryLoad(&reader, dlg, load_error))
 				{
 					cache_ok = false;
 					wxLogError(_("Cache load failure: %s"), load_error.c_str());
@@ -535,6 +538,7 @@ bool GrandOrgueFile::UpdateCache()
 	wxProgressDialog dlg(_("Creating sample cache"), wxEmptyString, 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
 	wxFileOutputStream file(cache_filename);
 	wxZlibOutputStream zout(file);
+	GOrgueCacheWriter writer(zout);
 
 	/* Save pipes to cache */
 	bool cache_save_ok = true;
@@ -554,7 +558,7 @@ bool GrandOrgueFile::UpdateCache()
 			for (unsigned k = 0; cache_save_ok && k < GetManual(i)->GetStop(j)->GetPipeCount(); k++)
 			{
 				GOrguePipe* pipe = GetManual(i)->GetStop(j)->GetPipe(k);
-				if (!pipe->SaveCache(&zout))
+				if (!pipe->SaveCache(writer))
 				{
 					cache_save_ok = false;
 					wxLogError(_("Save of %s to the cache failed"), pipe->GetFilename().c_str());

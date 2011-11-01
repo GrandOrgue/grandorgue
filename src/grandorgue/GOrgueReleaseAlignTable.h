@@ -29,8 +29,8 @@
 #define PHASE_ALIGN_AMPLITUDES     32
 #define PHASE_ALIGN_MIN_FREQUENCY  20 /* Hertz */
 
-class wxInputStream;
-class wxOutputStream;
+class GOrgueCache;
+class GOrgueCacheWriter;
 
 class GOrgueReleaseAlignTable
 {
@@ -48,8 +48,8 @@ public:
 	GOrgueReleaseAlignTable();
 	~GOrgueReleaseAlignTable();
 
-	bool Load(wxInputStream* cache);
-	bool Save(wxOutputStream* cache);
+	bool Load(GOrgueCache& cache);
+	bool Save(GOrgueCacheWriter& cache);
 
 	void ComputeTable
 		(const AUDIO_SECTION_T& m_release
