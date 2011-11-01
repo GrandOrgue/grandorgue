@@ -55,7 +55,6 @@
 GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_doc(doc),
 	m_path(),
-	m_b_squash(0),
 	m_filename(),
 	m_setter(0),
 	m_volume(0),
@@ -339,7 +338,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	dlg.Update (0);
 
 	m_filename = file;
-	m_b_squash = wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1);
 
 	// NOTICE: unfortunately, the format is not adhered to well at all. With
 	// logging enabled, most sample sets generate warnings.

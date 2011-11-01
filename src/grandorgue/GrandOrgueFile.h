@@ -57,7 +57,6 @@ private:
 
 	OrganDocument* m_doc;
 	wxFileName m_path;
-	int m_b_squash;
 	wxString m_filename;
 	GOrgueSetter* m_setter;
 	int m_volume;
