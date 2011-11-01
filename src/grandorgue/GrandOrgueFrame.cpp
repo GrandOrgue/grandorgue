@@ -282,7 +282,7 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		if (event.GetId() == ID_AUDIO_RECORD)
 			event.Check(g_sound->IsRecording());
 		else if (event.GetId() == ID_AUDIO_MEMSET)
-			event.Check(organfile && organfile->GetSetter()->IsSetterActive());
+			event.Check(organfile && organfile->GetSetter() && organfile->GetSetter()->IsSetterActive());
 	}
 	if (event.GetId() == ID_FILE_CACHE_DELETE)
 		event.Enable(organfile && organfile->CachePresent());
