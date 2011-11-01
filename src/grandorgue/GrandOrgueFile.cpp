@@ -130,6 +130,7 @@ bool GrandOrgueFile::TryLoad
 {
 
 	bool success = false;
+	long last = wxGetUTCTime();
 
 	try
 	{
@@ -163,6 +164,11 @@ bool GrandOrgueFile::TryLoad
 						pipe->LoadData();
 					}
 					nb_loaded_pipes++;
+
+					if (last == wxGetUTCTime())
+						continue;
+
+					last = wxGetUTCTime();
 					if (!dlg.Update	((nb_loaded_pipes << 15) / (nb_pipes + 1), pipe->GetFilename()))
 					{
 						error = _("Load aborted by the user");
@@ -325,6 +331,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		,0
 		,wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME
 		);
+	dlg.Update (0);
 
 	m_filename = file;
 	m_b_squash = wxConfigBase::Get()->Read(wxT("LosslessCompression"), 1);
