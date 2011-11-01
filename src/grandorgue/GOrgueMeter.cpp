@@ -36,11 +36,9 @@ BEGIN_EVENT_TABLE(GOrgueMeter, wxControl)
 	EVT_TEXT(ID_METER_AUDIO_SPIN, GOrgueMeter::OnVolume)
 	EVT_TEXT(ID_METER_POLY_SPIN,  GOrgueMeter::OnPolyphony)
 	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueMeter::OnFrame)
-	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueMeter::OnTranspose)
 	EVT_TEXT_ENTER(ID_METER_AUDIO_SPIN, GOrgueMeter::OnEnter)
 	EVT_TEXT_ENTER(ID_METER_POLY_SPIN,  GOrgueMeter::OnEnter)
 	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN,  GOrgueMeter::OnEnter)
-	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueMeter::OnEnter)
 	EVT_SLIDER(0, GOrgueMeter::OnChange)
 END_EVENT_TABLE()
 
@@ -56,9 +54,6 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 
 	switch (count)
 	{
-	case 0:
-		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
-		break;
 	case 1:
 		m_spin = new wxSpinCtrl(this, id++, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 999);
 		break;
@@ -78,9 +73,6 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 
 	switch (count)
 	{
-	case 0:
-		SetValue(0);
-		break;
 	case 1:
 		SetValue(0);
 		break;
@@ -171,23 +163,6 @@ void GOrgueMeter::OnFrame(wxCommandEvent& event)
 		::wxGetApp().frame->ChangeSetter(n);
 }
 
-void GOrgueMeter::OnTranspose(wxCommandEvent& event)
-{
-	long n = m_spin->GetValue(), v;
-	if (!event.GetString().ToLong(&v) || n != v)
-	{
-		m_spin->SetValue(n);
-		m_spin->SetSelection(-1, -1);
-#ifdef __WXMSW__
-		return;
-#endif
-	}
-	if (g_sound)
-	{
-		g_sound->GetMidi().SetTranspose(n);
-		g_sound->ResetSound();
-	}
-}
 void GOrgueMeter::OnEnter(wxCommandEvent& event)
 {
 	if (event.GetId() == ID_METER_FRAME_SPIN)
