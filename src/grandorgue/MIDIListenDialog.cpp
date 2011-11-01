@@ -24,6 +24,7 @@
 #include "MIDIListenDialog.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
+#include "GOrgueMidiEvent.h"
 #include "GOrgueSound.h"
 
 /* TODO: This should not be... */
@@ -34,8 +35,8 @@ IMPLEMENT_CLASS(MIDIListenDialog, wxDialog)
 BEGIN_EVENT_TABLE(MIDIListenDialog, wxDialog)
 	EVT_CHOICE(ID_EVENT, MIDIListenDialog::OnEvent)
 	EVT_TOGGLEBUTTON(ID_LISTEN, MIDIListenDialog::OnListenClick)
-	EVT_COMMAND(0, wxEVT_LISTENING, MIDIListenDialog::OnListenMIDI)
 	EVT_BUTTON(wxID_HELP, MIDIListenDialog::OnHelp)
+	EVT_MIDI(MIDIListenDialog::OnMidiEvent)
 END_EVENT_TABLE()
 
 const MIDIListenDialog::LISTEN_DIALOG_EVENTS MIDIListenDialog::GetEventFromType(const LISTEN_DIALOG_TYPE type)
@@ -303,9 +304,11 @@ void MIDIListenDialog::OnListenClick(wxCommandEvent &event)
 	}
 }
 
-void MIDIListenDialog::OnListenMIDI(wxCommandEvent &event)
+void MIDIListenDialog::OnMidiEvent(GOrgueMidiEvent& event)
 {
-	int what = event.GetInt();
+	int what = event.GetEventCode();
+	if (what == -1)
+		return;
 	if (PutEvent(what))
 	{
 		m_listen->SetValue(false);
