@@ -185,7 +185,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	for (it2 = g_sound->GetMidi().GetDevices().begin(); it2 != g_sound->GetMidi().GetDevices().end(); it2++)
 	{
 		choices.push_back(it2->first);
-		page1checklistdata.push_back(pConfig->Read(wxT("Devices/MIDI/") + it2->first, 0L));
+		page1checklistdata.push_back(m_Settings.GetMidiDeviceChannelShift(it2->first));
 	}
 	wxBoxSizer* item3 = new wxStaticBoxSizer(wxVERTICAL, panel, _("MIDI &input devices"));
 	item0->Add(item3, 0, wxEXPAND | wxALL, 5);
@@ -567,8 +567,8 @@ bool SettingsDialog::DoApply()
 
 		j = page1checklistdata[i];
 		if (!page1checklist->IsChecked(i))
-            j = -j - 1;
-        pConfig->Write(wxT("Devices/MIDI/") + page1checklist->GetString(i), j);
+			j = -j - 1;
+		m_Settings.SetMidiDeviceChannelShift(page1checklist->GetString(i), j);
 	}
 	m_Settings.SetDefaultAudioDevice(c_sound->GetStringSelection());
 	m_Settings.SetAudioDeviceLatency(c_sound->GetStringSelection(), c_latency->GetValue());
@@ -583,8 +583,8 @@ bool SettingsDialog::DoApply()
 	m_Settings.SetReleaseConcurrency(c_ReleaseConcurrency->GetSelection() + 1);
 	m_Settings.SetWaveFormatBytesPerSample(c_WaveFormat->GetSelection() + 1);
 
-    g_sound->ResetSound();
-    UpdateSoundStatus();
+	g_sound->ResetSound();
+	UpdateSoundStatus();
 
 	return true;
 }
