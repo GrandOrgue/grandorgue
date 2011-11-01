@@ -37,7 +37,6 @@ public:
 	void OnVolume(wxCommandEvent& event);
 	void OnPolyphony(wxCommandEvent& event);
 	void OnFrame(wxCommandEvent& event);
-	void OnTranspose(wxCommandEvent& event);
 	void OnEnter(wxCommandEvent& event);
 	void OnChange(wxCommandEvent& event);
 

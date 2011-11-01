@@ -74,6 +74,8 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU_RANGE(ID_PANEL_FIRST, ID_PANEL_LAST, GOrgueFrame::OnPanel)
 	EVT_UPDATE_UI(ID_PANEL_MENU, GOrgueFrame::OnUpdatePanelMenu)
 	EVT_SIZE(GOrgueFrame::OnSize)
+	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
+	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 
 	EVT_UPDATE_UI(wxID_SAVE, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
@@ -98,7 +100,8 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_Help(NULL),
 	m_SamplerUsage(NULL),
 	m_VolumeLeft(NULL),
-	m_VolumeRight(NULL)
+	m_VolumeRight(NULL),
+	m_Transpose(NULL)
 {
 #ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
@@ -152,7 +155,6 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_meters[0] = new GOrgueMeter(tb, ID_METER_AUDIO_SPIN, 3);
 	m_meters[1] = new GOrgueMeter(tb, ID_METER_POLY_SPIN,  2);
 	m_meters[2] = new GOrgueMeter(tb, ID_METER_FRAME_SPIN, 1);
-	m_meters[3] = new GOrgueMeter(tb, ID_METER_TRANSPOSE_SPIN, 0);
 
 	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
 	tb->AddControl(m_meters[0]);
@@ -181,7 +183,9 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	AddTool(settings_menu, ID_MEMORY, _("&Memory Level"), _("Memory Level"), GetImage_memory());
 	tb->AddControl(m_meters[2]);
 	AddTool(settings_menu, ID_TRANSPOSE, _("&Transpose"), _("Transpose"), GetImage_transpose());
-	tb->AddControl(m_meters[3]);
+	m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
+	tb->AddControl(m_Transpose);
+	m_Transpose->SetValue(0);
 
 	wxMenu * organ_menu = new wxMenu;
 	m_panel_menu = new wxMenu();
@@ -516,7 +520,13 @@ void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
 
 void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 {
-	m_meters[0]->OnTranspose(event);
+	long n = m_Transpose->GetValue();
+
+	if (g_sound)
+	{
+		g_sound->GetMidi().SetTranspose(n);
+		g_sound->ResetSound();
+	}
 }
 
 void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)
