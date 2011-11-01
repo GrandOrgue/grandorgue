@@ -25,6 +25,7 @@
 #include "GOrgueMidiEvent.h"
 #include "GOrgueManual.h"
 #include "GOrgueEnclosure.h"
+#include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
@@ -260,7 +261,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& value)
 		{
 			if (e.GetMidiType() == MIDI_NOTE)
 			{
-				value = e.GetKey() + g_sound->GetMidi().GetTranspose() + m_events[i].key;
+				value = e.GetKey() + m_organfile->GetSettings().GetTranspose() + m_events[i].key;
 				if (e.GetValue())
 					return MIDI_MATCH_ON;
 				else

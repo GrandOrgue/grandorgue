@@ -48,6 +48,7 @@ private:
 	wxString m_WAVPath;
 	wxString m_OrganPath;
 	wxString m_SettingPath;
+	int m_Transpose;
 
 public:
 	GOrgueSettings();
@@ -105,6 +106,9 @@ public:
 	int GetMidiDeviceChannelShift(wxString device);
 	void SetMidiDeviceChannelShift(wxString device, int shift);
 	std::vector<wxString> GetMidiDeviceList();
+
+	int GetTranspose();
+	void SetTranspose(int transpose);
 };
 
 #endif

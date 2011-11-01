@@ -31,7 +31,6 @@
 #include "Images.h"
 #include "GOGUIPanel.h"
 #include "GOrgueEvent.h"
-#include "GOrgueMidi.h"
 #include "GOrgueProperties.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
@@ -539,7 +538,7 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 
 	if (g_sound)
 	{
-		g_sound->GetMidi().SetTranspose(n);
+		m_Settings.SetTranspose(n);
 		g_sound->ResetSound();
 	}
 }
