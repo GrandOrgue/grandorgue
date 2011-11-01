@@ -22,6 +22,9 @@
 
 #include <wx/wx.h>
 #include <wx/file.h>
+#ifdef linux
+#include <sys/mman.h>
+#endif
 
 #include "GOrgueMemoryPool.h"
 
@@ -110,6 +113,19 @@ bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 	bool result = false;
 	FreePool();
 
+#ifdef linux
+	m_CacheSize = cache_file.Length();
+	m_CacheStart = (char*)mmap(NULL, m_CacheSize, PROT_READ, MAP_SHARED, cache_file.fd(), 0);
+	if (m_CacheStart == MAP_FAILED)
+	{
+		m_CacheStart = 0;
+		m_CacheSize = 0;
+	}
+	else
+		result = true;
+	
+#endif
+
 	InitPool();
 	return result;
 }
@@ -121,12 +137,37 @@ void GOrgueMemoryPool::InitPool()
 	m_PoolSize = 0;
 	m_PoolLimit = 0;
 	
+#ifdef linux
+	m_PageSize = sysconf(_SC_PAGESIZE);
+	/* We reserve virtual address and add backing memory only, if the 
+	   memory region is needed.
+	   
+	   On 32 bit, limit to 2 GB address space (so 1 GB is left for the rest of GO)
+	   On 64 bit, we reserve the size of the physical memory
+	*/
+	if (sizeof(void*) == 4)
+		m_PoolLimit = 1l << 31;
+	else
+		m_PoolLimit = sysconf(_SC_PHYS_PAGES) * m_PageSize;
+
+	m_PoolLimit -= m_CacheSize;
+
+	m_PoolStart = (char*)mmap(NULL, m_PoolLimit, PROT_NONE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
+	if (m_PoolStart == MAP_FAILED)
+		m_PoolStart = 0;
+#endif
 	m_PoolPtr = m_PoolStart;
 	m_PoolEnd = m_PoolStart + m_PoolSize;
 }
 
 void GOrgueMemoryPool::FreePool()
 {
+#ifdef linux
+	if (m_PoolStart)
+		munmap(m_PoolStart, m_PoolLimit);
+	if (m_CacheSize)
+		munmap(m_CacheStart, m_CacheSize);
+#endif
 	m_PoolStart = 0;
 	m_PoolSize = 0;
 	m_PoolLimit = 0;
@@ -140,6 +181,11 @@ void GOrgueMemoryPool::GrowPool(unsigned long length)
 	unsigned long new_size = m_PoolSize + 1000 * m_PageSize;
 	if (new_size > m_PoolLimit)
 		return;
+#ifdef linux
+	if (mprotect(m_PoolStart, new_size, PROT_READ | PROT_WRITE) == -1)
+		return;
+	m_PoolSize = new_size;
+#endif	
 	m_PoolEnd = m_PoolStart + m_PoolSize;
 }
 
