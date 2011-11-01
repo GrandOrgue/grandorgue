@@ -39,7 +39,8 @@ GOrgueSettings::GOrgueSettings() :
 	m_WaveFormat(4),
 	m_Volume(50),
 	m_PolyphonyLimit(2048),
-	m_DefaultAudioDevice()
+	m_DefaultAudioDevice(),
+	m_OrganMidiEvents()
 {
 	GetConfig().SetRecordDefaults();
 }
@@ -72,6 +73,16 @@ void GOrgueSettings::Load()
 		m_Volume = 100;
 	m_PolyphonyLimit = m_Config.Read(wxT("PolyphonyLimit"), 2048);
 	m_DefaultAudioDevice = m_Config.Read(wxT("Devices/DefaultSound"), wxEmptyString);
+
+	m_OrganMidiEvents.clear();
+	long count = m_Config.Read(wxT("OrganMIDI/Count"), 0L);
+	for (long i = 0; i < count; i++)
+	{
+		wxString itemstr = wxT("OrganMIDI/Organ") + wxString::Format(wxT("%ld"), i);
+		long j = m_Config.Read(itemstr + wxT(".midi"), 0L);
+		wxString file = m_Config.Read(itemstr + wxT(".file"));
+		m_OrganMidiEvents.insert(std::pair<long, wxString>(j, file));
+	}
 }
 
 bool GOrgueSettings::GetLoadInStereo()
@@ -243,4 +254,22 @@ int GOrgueSettings::GetAudioDeviceActualLatency(wxString device)
 void GOrgueSettings::SetAudioDeviceActualLatency(wxString device, unsigned latency)
 {
 	m_Config.Write(wxT("Devices/Sound/ActualLatency/") + device, (long) latency);
+}
+
+const std::map<long, wxString>& GOrgueSettings::GetOrganList()
+{
+	return m_OrganMidiEvents;
+}
+
+void GOrgueSettings::SetOrganList(std::map<long, wxString> list)
+{
+	m_OrganMidiEvents = list;
+	unsigned count = 0;
+	for(std::map<long, wxString>::iterator it = m_OrganMidiEvents.begin(); it != m_OrganMidiEvents.end(); it++, count++)
+	{ 
+		wxString itemstr = wxString::Format(wxT("OrganMIDI/Organ%d"), count);
+		m_Config.Write(itemstr+wxT(".file"), it->second);
+		m_Config.Write(itemstr+wxT(".midi"), it->first);
+	}
+	m_Config.Write(wxT("OrganMIDI/Count"), (long)count);
 }

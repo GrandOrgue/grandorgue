@@ -337,10 +337,10 @@ wxPanel* SettingsDialog::CreateOrganPage(wxWindow* parent)
 	organlist->InsertColumn(1, _("Event"));
 	organlist->InsertColumn(2, _("Channel"));
 	organlist->InsertColumn(3, _("Data"));
-    topSizer->Add(organlist, 1, wxEXPAND | wxALL, 5);
+	topSizer->Add(organlist, 1, wxEXPAND | wxALL, 5);
 
-    wxBoxSizer* buttonSizer =  new wxBoxSizer(wxHORIZONTAL);
-    buttonSizer->AddSpacer(5);
+	wxBoxSizer* buttonSizer =  new wxBoxSizer(wxHORIZONTAL);
+	buttonSizer->AddSpacer(5);
 	propButton = new wxButton(panel, ID_EVENT_ORGANPROPERTIES, _("P&roperties..."));
 	propButton->Disable();
 	addButton = new wxButton(panel, ID_EVENT_ADD, _("&Add"));
@@ -348,25 +348,25 @@ wxPanel* SettingsDialog::CreateOrganPage(wxWindow* parent)
 	delButton->Disable();
 
 	buttonSizer->Add(propButton, 0, wxALIGN_RIGHT | wxALL, 5);
-    buttonSizer->Add(addButton, 0, wxALIGN_LEFT | wxALL, 5);
+	buttonSizer->Add(addButton, 0, wxALIGN_LEFT | wxALL, 5);
 	buttonSizer->Add(delButton, 0, wxALIGN_LEFT | wxALL, 5);
-    topSizer->Add(buttonSizer, 0, wxALL, 5);
+	topSizer->Add(buttonSizer, 0, wxALL, 5);
 
-    long count=pConfig->Read(wxT("OrganMIDI/Count"), 0L);
-    for (long i=0; i<count; i++) {
-        wxString itemstr=wxT("OrganMIDI/Organ")+wxString::Format(wxT("%ld"), i);
-        wxString file=pConfig->Read(itemstr+wxT(".file"), wxT(""));
-        int j=pConfig->Read(itemstr+wxT(".midi"), 0L);
-        organlist->InsertItem(i, file);
-        organlist->SetItemData(i, j);
-        UpdateOrganMessages(i);
-    }
-    if (count>0) {
-        organlist->SetColumnWidth(0, wxLIST_AUTOSIZE);
-        organlist->SetColumnWidth(1, wxLIST_AUTOSIZE);
-        organlist->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
-        organlist->SetColumnWidth(3, wxLIST_AUTOSIZE_USEHEADER);
-    }
+	std::map<long, wxString>::const_iterator it = m_Settings.GetOrganList().begin();
+	for(; it != m_Settings.GetOrganList().end(); it++)
+	{
+		unsigned i = organlist->GetItemCount();
+		organlist->InsertItem(i, it->second);
+		organlist->SetItemData(i, it->first);
+		UpdateOrganMessages(i);
+	}
+	if (organlist->GetItemCount())
+	{
+		organlist->SetColumnWidth(0, wxLIST_AUTOSIZE);
+		organlist->SetColumnWidth(1, wxLIST_AUTOSIZE);
+		organlist->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
+		organlist->SetColumnWidth(3, wxLIST_AUTOSIZE_USEHEADER);
+	}
 
 	topSizer->AddSpacer(5);
 	panel->SetSizer(topSizer);
@@ -394,10 +394,7 @@ void SettingsDialog::OnAddOrgan(wxCommandEvent& event) {
 
 void SettingsDialog::OnDelOrgan(wxCommandEvent& event) {
     int index=organlist->GetFirstSelected();
-    wxString itemstr=wxT("OrganMIDI/Organ")+wxString::Format(wxT("%d"), index);
     organlist->DeleteItem(index);
-    pConfig->DeleteEntry(itemstr+wxT(".file"));
-    pConfig->DeleteEntry(itemstr+wxT(".midi"));
 }
 
 void SettingsDialog::OnOrganProperties(wxCommandEvent& event)
@@ -547,14 +544,11 @@ void SettingsDialog::OnHelp(wxCommandEvent& event)
 
 void SettingsDialog::OnOK(wxCommandEvent& event)
 {
-
-	pConfig->Write(wxT("OrganMIDI/Count"), organlist->GetItemCount());
+	std::map<long, wxString> list;
 	for (int i=0; i<organlist->GetItemCount(); i++)
-	{
-		wxString itemstr=wxString::Format(wxT("OrganMIDI/Organ%d"), i);
-		pConfig->Write(itemstr+wxT(".file"), organlist->GetItemText(i));
-		pConfig->Write(itemstr+wxT(".midi"), (long)organlist->GetItemData(i));
-	}
+		list.insert(std::pair<long, wxString>(organlist->GetItemData(i), organlist->GetItemText(i)));
+
+	m_Settings.SetOrganList(list);
 
 	if (DoApply())
 		event.Skip();
