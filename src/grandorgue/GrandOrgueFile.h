@@ -28,6 +28,7 @@
 #include <wx/wx.h>
 #include <wx/fileconf.h>
 #include <wx/filename.h>
+#include "GOrgueMemoryPool.h"
 
 class wxProgressDialog;
 
@@ -92,6 +93,8 @@ private:
 
 	GOSoundEngine* m_soundengine;
 
+	GOrgueMemoryPool m_pool;
+
 	void ReadOrganFile(wxFileConfig& odf_ini_file);
 	bool TryLoad(GOrgueCache* cache, wxProgressDialog& dlg, wxString& error);
 	void GenerateCacheHash(unsigned char hash[20]);
@@ -132,6 +135,7 @@ public:
 	unsigned GetEnclosureCount();
 	GOGUIPanel* GetPanel(unsigned index);
 	unsigned GetPanelCount();
+	GOrgueMemoryPool& GetMemoryPool();
 
 	/* ODF general properties */
 	bool DivisionalsStoreIntermanualCouplers();

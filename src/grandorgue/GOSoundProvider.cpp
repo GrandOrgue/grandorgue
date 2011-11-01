@@ -24,12 +24,13 @@
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
+#include "GOrgueMemoryPool.h"
 #include <wx/wx.h>
 
-#define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
-GOSoundProvider::GOSoundProvider()
+GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
+	m_pool(pool)
 {
 	memset(&m_Attack, 0, sizeof(m_Attack));
 	memset(&m_Loop, 0, sizeof(m_Loop));
@@ -46,9 +47,9 @@ GOSoundProvider::~GOSoundProvider()
 
 void GOSoundProvider::ClearData()
 {
-	FREE_AND_NULL(m_Attack.data);
-	FREE_AND_NULL(m_Loop.data);
-	FREE_AND_NULL(m_Release.data);
+	m_pool.Free(m_Attack.data);
+	m_pool.Free(m_Loop.data);
+	m_pool.Free(m_Release.data);
 	DELETE_AND_NULL(m_Release.release_aligner);
 	memset(&m_Attack, 0, sizeof(m_Attack));
 	memset(&m_Loop, 0, sizeof(m_Loop));

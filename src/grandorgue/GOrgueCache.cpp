@@ -21,10 +21,12 @@
  */
 
 #include "GOrgueCache.h"
+#include "GOrgueMemoryPool.h"
 #include <wx/wx.h>
 
-GOrgueCache::GOrgueCache(wxInputStream& stream) :
-	m_stream(stream)
+GOrgueCache::GOrgueCache(wxInputStream& stream, GOrgueMemoryPool& pool) :
+	m_stream(stream),
+	m_pool(pool)
 {
 }
 
@@ -38,14 +40,14 @@ bool GOrgueCache::Read(void* data, unsigned length)
 
 void* GOrgueCache::ReadBlock(unsigned length)
 {
-	void* data = malloc(length);
+	void* data = m_pool.Alloc(length);
 	if (data == NULL)
 		throw (wxString)_("< out of memory allocating samples");
 
 	m_stream.Read(data, length);
 	if (m_stream.LastRead() != length)
 	{
-		free(data);
+		m_pool.Free(data);
 		return NULL;
 	}
 	return data;

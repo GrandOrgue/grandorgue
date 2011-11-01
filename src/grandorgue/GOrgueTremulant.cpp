@@ -30,7 +30,7 @@ GOrgueTremulant::GOrgueTremulant(GrandOrgueFile* organfile) :
 	m_StartRate(0),
 	m_StopRate(0),
 	m_AmpModDepth(0),
-	m_TremProvider(),
+	m_TremProvider(organfile->GetMemoryPool()),
 	m_PlaybackHandle(0),
 	m_SamplerGroupID(0)
 {

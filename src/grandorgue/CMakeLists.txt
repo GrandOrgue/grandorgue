@@ -108,6 +108,7 @@ GOrgueGeneral.cpp
 GOrgueLabel.cpp
 GOrgueLCD.cpp
 GOrgueManual.cpp
+GOrgueMemoryPool.cpp
 GOrgueMidi.cpp
 GOrgueMidiEvent.cpp
 GOrgueMidiReceiver.cpp

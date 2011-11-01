@@ -20,20 +20,17 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GOSOUNDPROVIDERWAVE_H_
-#define GOSOUNDPROVIDERWAVE_H_
+#ifndef GORGUEMEMORYPOOL_H_
+#define GORGUEMEMORYPOOL_H_
 
-#include "GOSoundProvider.h"
-#include <wx/wx.h>
-
-class GOSoundProviderWave : public GOSoundProvider
-{
+class GOrgueMemoryPool {
 
 public:
-	GOSoundProviderWave(GOrgueMemoryPool& pool);
+	GOrgueMemoryPool();
 
-	void LoadFromFile(wxString filename, int fixed_amplitude);
-
+	void *Alloc(unsigned length);
+	void Free(void* data);
 };
 
-#endif /* GOSOUNDPROVIDERWAVE_H_ */
+
+#endif

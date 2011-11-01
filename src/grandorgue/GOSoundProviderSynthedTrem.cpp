@@ -21,7 +21,13 @@
  */
 
 #include "GOSoundProviderSynthedTrem.h"
+#include "GOrgueMemoryPool.h"
 #include <wx/wx.h>
+
+GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOrgueMemoryPool& pool) :
+	GOSoundProvider(pool)
+{
+}
 
 short SynthTrem(double amp, double angle)
 {
@@ -66,7 +72,7 @@ void GOSoundProviderSynthedTrem::Create
 
 	m_Attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
 	m_Attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
-	m_Attack.data = (unsigned char*)malloc(m_Attack.alloc_size);
+	m_Attack.data = (unsigned char*)m_pool.Alloc(m_Attack.alloc_size);
 	if (m_Attack.data == NULL)
 		throw (wxString)_("< out of memory allocating attack");
 	m_Attack.sample_rate = sample_freq;
@@ -74,7 +80,7 @@ void GOSoundProviderSynthedTrem::Create
 
 	m_Loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
 	m_Loop.alloc_size = loopSamplesInMem * sizeof(wxInt16) * m_Channels;
-	m_Loop.data = (unsigned char*)malloc(m_Loop.alloc_size);
+	m_Loop.data = (unsigned char*)m_pool.Alloc(m_Loop.alloc_size);
 	if (m_Loop.data == NULL)
 		throw (wxString)_("< out of memory allocating loop");
 	m_Loop.sample_rate = sample_freq;
@@ -82,7 +88,7 @@ void GOSoundProviderSynthedTrem::Create
 
 	m_Release.size = releaseSamples * sizeof(wxInt16) * m_Channels;
 	m_Release.alloc_size = releaseSamplesInMem * sizeof(wxInt16) * m_Channels;
-	m_Release.data = (unsigned char*)malloc(m_Release.alloc_size);
+	m_Release.data = (unsigned char*)m_pool.Alloc(m_Release.alloc_size);
 	if (m_Release.data == NULL)
 		throw (wxString)_("< out of memory allocating release");
 	m_Release.sample_rate = sample_freq;

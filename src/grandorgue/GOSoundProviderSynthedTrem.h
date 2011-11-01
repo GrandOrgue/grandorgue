@@ -29,6 +29,7 @@ class GOSoundProviderSynthedTrem : public GOSoundProvider
 {
 
 public:
+	GOSoundProviderSynthedTrem(GOrgueMemoryPool& pool);
 
 	void Create(int period, int start_rate, int stop_rate, int amp_mod_depth);
 
