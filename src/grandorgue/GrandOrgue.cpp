@@ -174,7 +174,6 @@ bool GOrgueApp::OnInit()
 	SetTopWindow(frame);
 	frame->DoSplash();
 	bool open_sound = m_soundSystem->OpenSound();
-	::wxSleep(2);
 	frame->Show(true);
 
 	if (!open_sound)
