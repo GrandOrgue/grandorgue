@@ -45,8 +45,6 @@
 #include <windows.h>
 #endif
 
-#include <malloc.h>
-
 IMPLEMENT_APP(GOrgueApp)
 
 class stConnection : public wxConnection
