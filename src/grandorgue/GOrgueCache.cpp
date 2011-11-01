@@ -48,10 +48,10 @@ GOrgueCache::GOrgueCache(wxFile& cache_file, GOrgueMemoryPool& pool) :
 		delete m_fstream;
 		m_zstream = 0;
 		m_fstream = new wxFileInputStream(cache_file);
+		m_fstream->SeekI(0, wxFromStart);
 		m_stream = m_fstream;
 		m_Mapable = true;
 	}
-	m_stream->SeekI(0, wxFromStart);
 
 	if (m_stream->TellI() == wxInvalidOffset)
 		m_Mapable = false;
