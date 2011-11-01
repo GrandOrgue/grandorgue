@@ -24,7 +24,6 @@
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
 #include "GOrgueSound.h"
-#include "wxGaugeAudio.h"
 #include "GOrgueMeter.h"
 #include "GrandOrgueFile.h"
 
@@ -109,9 +108,6 @@ void OrganDocument::CloseOrgan()
 		delete m_organfile;
 		m_organfile = 0;
 	}
-	::wxGetApp().frame->m_meters[0]->m_meters[0]->ResetClip();
-	::wxGetApp().frame->m_meters[0]->m_meters[1]->ResetClip();
-	::wxGetApp().frame->m_meters[1]->m_meters[0]->ResetClip();
 }
 
 GrandOrgueFile* OrganDocument::GetOrganFile()
