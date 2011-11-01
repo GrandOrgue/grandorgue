@@ -169,6 +169,8 @@ void GOrgueMidi::Open()
 		{
 			try
 			{
+				wxCriticalSectionLocker locker(m_lock);
+
 				assert(this_dev.midi_in);
 				this_dev.channel_shift = channel_shift;
 				this_dev.midi_in->closePort();
