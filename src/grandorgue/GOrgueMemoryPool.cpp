@@ -80,6 +80,8 @@ void* GOrgueMemoryPool::PoolAlloc(unsigned length)
 {
 	if (!m_PoolStart)
 		return NULL;
+	if (!length)
+		length++;
 	if (m_PoolPtr + length < m_PoolEnd)
 	{
 		void* data = m_PoolPtr;
@@ -100,6 +102,8 @@ void* GOrgueMemoryPool::PoolAlloc(unsigned length)
 
 void *GOrgueMemoryPool::GetCacheData(unsigned long offset, unsigned length)
 {
+	if (!length)
+		return NULL;
 	if (m_CacheStart)
 	{
 		char* data = m_CacheStart + offset;
