@@ -25,34 +25,121 @@
 
 #include "GOrgueMemoryPool.h"
 
-GOrgueMemoryPool::GOrgueMemoryPool()
+GOrgueMemoryPool::GOrgueMemoryPool() :
+	m_PoolStart(0),
+	m_PoolPtr(0),
+	m_PoolEnd(0),
+	m_CacheStart(0),
+	m_PoolSize(0),
+	m_PoolLimit(0),
+	m_PageSize(4096),
+	m_CacheSize(0)
 {
+	InitPool();
 }
 
 GOrgueMemoryPool::~GOrgueMemoryPool()
 {
+	FreePool();
 }
 
 void *GOrgueMemoryPool::Alloc(unsigned length)
 {
-	void* data = malloc(length);
-	return data;
+	void* data = PoolAlloc(length);
+	if (data)
+	{
+		AddPoolAlloc(data);
+		return data;
+	}
+	return malloc(length);
 }
 
 void GOrgueMemoryPool::Free(void* data)
 {
 	if (!data)
 		return;
+	if (m_PoolAllocs.count(data))
+	{
+		/* Pool memory is not individually freed */
+		m_PoolAllocs.erase(m_PoolAllocs.find(data));
+		return;
+	}
 	free(data);
+}
+
+void GOrgueMemoryPool::AddPoolAlloc(void* data)
+{
+	m_PoolAllocs.insert(data);
+}
+
+void* GOrgueMemoryPool::PoolAlloc(unsigned length)
+{
+	if (!m_PoolStart)
+		return NULL;
+	if (m_PoolPtr + length < m_PoolEnd)
+	{
+		void* data = m_PoolPtr;
+		m_PoolPtr += length;
+		return data;
+	}
+	GrowPool(length);
+	if (m_PoolPtr + length < m_PoolEnd)
+	{
+		void* data = m_PoolPtr;
+		m_PoolPtr += length;
+		return data;
+	}
+	wxLogError(wxT("PoolAlloc failed: %d %d %08x %08x %08x"),
+		   length, m_PoolSize, m_PoolStart, m_PoolPtr, m_PoolEnd);
+	return NULL;
 }
 
 void *GOrgueMemoryPool::GetCacheData(unsigned long offset)
 {
+	if (m_CacheStart)
+	{
+		char* data = m_CacheStart + offset;
+		AddPoolAlloc(data);
+		return data;
+	}
 	return NULL;
 }
 
 bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 {
 	bool result = false;
+	FreePool();
+
+	InitPool();
 	return result;
 }
+
+
+void GOrgueMemoryPool::InitPool()
+{
+	m_PoolStart = 0;
+	m_PoolSize = 0;
+	m_PoolLimit = 0;
+	
+	m_PoolPtr = m_PoolStart;
+	m_PoolEnd = m_PoolStart + m_PoolSize;
+}
+
+void GOrgueMemoryPool::FreePool()
+{
+	m_PoolStart = 0;
+	m_PoolSize = 0;
+	m_PoolLimit = 0;
+	
+	m_CacheStart = 0;
+	m_CacheSize = 0;
+}
+
+void GOrgueMemoryPool::GrowPool(unsigned long length)
+{
+	unsigned long new_size = m_PoolSize + 1000 * m_PageSize;
+	if (new_size > m_PoolLimit)
+		return;
+	m_PoolEnd = m_PoolStart + m_PoolSize;
+}
+
