@@ -27,7 +27,6 @@
 #include "GrandOrgue.h"
 #include "GrandOrgueFrame.h"
 #include "GrandOrgueID.h"
-#include "wxGaugeAudio.h"
 
 #include <wx/confbase.h>
 
@@ -48,16 +47,12 @@ END_EVENT_TABLE()
 GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 : wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
 {
-	//static const wxChar* strings[] = {_("T"),_("M"), _("P"), _("V")};
-	static const wxChar* strings[] = {wxT(""),wxT(""), wxT(""), wxT("")};
 	if (count < 0 || count > 3)
 		count = 0;
 	m_count = count;
 	m_block = false;
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
-
-	topSizer->Add(new wxStaticText(this, wxID_ANY, strings[count]), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 0);
 
 	switch (count)
 	{
@@ -76,17 +71,6 @@ GOrgueMeter::GOrgueMeter(wxWindow* parent, wxWindowID id, int count)
 	}
 
 	topSizer->Add(m_spin, 0, wxALIGN_CENTER_VERTICAL);
-
-	if (count>1)
-	{
-		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-		for (int i = 0; i < (count-1); i++)
-		{
-			m_meters[i] = new wxGaugeAudio(this, id++, wxDefaultPosition);
-			sizer->Add(m_meters[i], 0, wxFIXED_MINSIZE);
-		}
-		topSizer->Add(sizer, 0, wxLEFT | wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
-	}
 
 	SetSizer(topSizer);
 	topSizer->Fit(this);
@@ -132,12 +116,6 @@ void GOrgueMeter::OnChange(wxCommandEvent& event)
 }
 
 
-void GOrgueMeter::SetValue(int which, int n)
-{
-	n &= 255;
-	m_meters[which]->SetValue(n);
-}
-
 void GOrgueMeter::OnVolume(wxCommandEvent& event)
 {
 	wxString str;
@@ -152,9 +130,6 @@ void GOrgueMeter::OnVolume(wxCommandEvent& event)
 	}
 	if (g_sound)
 	    g_sound->GetEngine().SetVolume(n);
-
-	m_meters[0]->ResetClip();
-	m_meters[1]->ResetClip();
 
 	wxConfigBase::Get()->Write(wxT("Volume"), n);
 }
@@ -171,9 +146,6 @@ void GOrgueMeter::OnPolyphony(wxCommandEvent& event)
 		return;
 #endif
 	}
-
-	wxColour colour = m_meters[0]->GetBackgroundColour();
-	m_meters[0]->ResetClip();
 
 	wxConfigBase::Get()->Write(wxT("PolyphonyLimit"), n);
 	if (g_sound)

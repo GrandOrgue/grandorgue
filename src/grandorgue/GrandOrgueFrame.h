@@ -27,6 +27,7 @@
 #include <wx/dcmemory.h>
 
 class wxHtmlHelpController;
+class wxGaugeAudio;
 class GOrgueMeter;
 
 class GOrgueFrame: public wxDocParentFrame
@@ -34,6 +35,8 @@ class GOrgueFrame: public wxDocParentFrame
 	DECLARE_CLASS(GOrgueFrame)
 	wxMenu* m_panel_menu;
 	wxHtmlHelpController* m_Help;
+	wxGaugeAudio *m_SamplerUsage;
+	wxGaugeAudio *m_VolumeLeft, *m_VolumeRight;
 
 public:
     GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type);

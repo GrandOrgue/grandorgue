@@ -26,8 +26,6 @@
 #include <wx/control.h>
 #include <wx/spinctrl.h>
 
-class wxGaugeAudio;
-
 class GOrgueMeter : public wxControl
 {
 public:
@@ -36,14 +34,12 @@ public:
 	int GetValue();
 	void ChangeValue(int n);
 	void SetValue(int n);
-	void SetValue(int which, int n);
 	void OnVolume(wxCommandEvent& event);
 	void OnPolyphony(wxCommandEvent& event);
 	void OnFrame(wxCommandEvent& event);
 	void OnTranspose(wxCommandEvent& event);
 	void OnEnter(wxCommandEvent& event);
 	void OnChange(wxCommandEvent& event);
-	wxGaugeAudio* m_meters[4];
 
 	DECLARE_EVENT_TABLE()
 private:
