@@ -40,10 +40,10 @@ GOrgueSound::GOrgueSound(void) :
 	m_SamplesPerBuffer(0),
 	m_nb_buffers(0),
 	b_stereo(0),
-	b_align(0),
 	b_random(0),
 	m_Concurrency(0),
 	m_ReleaseConcurrency(1),
+	m_CompressCache(true),
 	meter_counter(0),
 	b_active(false),
 	defaultAudio(wxT(""))
@@ -193,10 +193,10 @@ bool GOrgueSound::OpenSound()
 	m_SoundEngine.SetVolume(pConfig->Read(wxT("Volume"), 50));
 	m_SoundEngine.SetScaledReleases(pConfig->Read(wxT("ScaleRelease"), 1));
 	b_stereo = pConfig->Read(wxT("StereoEnabled"), 1);
-	b_align  = pConfig->Read(wxT("AlignRelease"), 1);
 	b_random = pConfig->Read(wxT("RandomizeSpeaking"), 1);
 	m_Concurrency = pConfig->Read(wxT("Concurrency"), 0L);
 	m_ReleaseConcurrency = pConfig->Read(wxT("ReleaseConcurrency"), 1L);
+	m_CompressCache = pConfig->Read(wxT("CompressCache"), 1);
 	if (m_ReleaseConcurrency < 1)
 		m_ReleaseConcurrency = 1;
 	unsigned sample_rate = pConfig->Read(wxT("SampleRate"), 44100);
@@ -350,6 +350,11 @@ bool GOrgueSound::HasRandomPipeSpeech()
 bool GOrgueSound::IsStereo()
 {
 	return b_stereo;
+}
+
+bool GOrgueSound::CompressCache()
+{
+	return m_CompressCache;
 }
 
 bool GOrgueSound::IsRecording()

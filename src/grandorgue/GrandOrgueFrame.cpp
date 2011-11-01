@@ -375,7 +375,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
-	if (!doc->GetOrganFile()->UpdateCache())
+	if (!doc->GetOrganFile()->UpdateCache(g_sound->CompressCache()))
 	{
 		wxLogError(_("Creating the cache failed"));
 		wxMessageBox(_("Creating the cache failed"), _("Error"), wxOK | wxICON_ERROR, NULL);

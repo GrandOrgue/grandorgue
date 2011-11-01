@@ -106,7 +106,7 @@ public:
 	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);
 	void Save(const wxString& file);
 	bool CachePresent();
-	bool UpdateCache();
+	bool UpdateCache(bool compress);
 	void DeleteCache();
 	void Revert(wxFileConfig& cfg);
 	void Abort();

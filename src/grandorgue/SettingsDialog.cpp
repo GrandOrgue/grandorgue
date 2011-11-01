@@ -53,7 +53,7 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHOICE(ID_WAVE_FORMAT, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_SQUASH, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_MANAGE_POLYPHONY, SettingsDialog::OnChanged)
-	EVT_CHECKBOX(ID_ENHANCE_ALIGN_RELEASE, SettingsDialog::OnChanged)
+	EVT_CHECKBOX(ID_COMPRESS_CACHE, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_SCALE_RELEASE, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_RANDOMIZE, SettingsDialog::OnChanged)
 
@@ -273,15 +273,15 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
     item6->Add(c_squash = new wxCheckBox(panel, ID_ENHANCE_SQUASH,           _("Lossless compression")          ), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_limit  = new wxCheckBox(panel, ID_ENHANCE_MANAGE_POLYPHONY, _("Active polyphony management")   ), 0, wxEXPAND | wxALL, 5);
-    item6->Add(c_align  = new wxCheckBox(panel, ID_ENHANCE_ALIGN_RELEASE,    _("Release sample phase alignment")), 0, wxEXPAND | wxALL, 5);
+    item6->Add(c_CompressCache  = new wxCheckBox(panel, ID_COMPRESS_CACHE,    _("Comress Cache")), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_scale  = new wxCheckBox(panel, ID_ENHANCE_SCALE_RELEASE,    _("Release sample scaling"        )), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_random = new wxCheckBox(panel, ID_ENHANCE_RANDOMIZE,        _("Randomize pipe speaking"       )), 0, wxEXPAND | wxALL, 5);
 	if (pConfig->Read(wxT("LosslessCompression"), 1))
 		c_squash->SetValue(true);
 	if (pConfig->Read(wxT("ManagePolyphony"), 1))
 		c_limit ->SetValue(true);
-	if (pConfig->Read(wxT("AlignRelease"), 1))
-		c_align ->SetValue(true);
+	if (pConfig->Read(wxT("CompressCache"), 1))
+		c_CompressCache ->SetValue(true);
 	if (pConfig->Read(wxT("ScaleRelease"), 1))
 		c_scale ->SetValue(true);
 	if (pConfig->Read(wxT("RandomizeSpeaking"), 1))
@@ -579,7 +579,7 @@ bool SettingsDialog::DoApply()
 	pConfig->Write(wxT("StereoEnabled"), c_stereo->GetSelection());
 	pConfig->Write(wxT("LosslessCompression"), (long)c_squash->IsChecked());
 	pConfig->Write(wxT("ManagePolyphony"), (long)c_limit->IsChecked());
-	pConfig->Write(wxT("AlignRelease"), (long)c_align->IsChecked());
+	pConfig->Write(wxT("CompressCache"), (long)c_CompressCache->IsChecked());
 	pConfig->Write(wxT("ScaleRelease"), (long)c_scale->IsChecked());
 	pConfig->Write(wxT("RandomizeSpeaking"), (long)c_random->IsChecked());
 	pConfig->Write(wxT("SampleRate"), c_SampleRate->GetSelection() ? 48000 : 44100);

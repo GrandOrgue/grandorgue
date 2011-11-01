@@ -527,7 +527,7 @@ bool GrandOrgueFile::CachePresent()
 	wxString cache_filename = m_filename + wxT(".cache");
 	return wxFileExists(cache_filename);
 }
-bool GrandOrgueFile::UpdateCache()
+bool GrandOrgueFile::UpdateCache(bool compress)
 {
 	wxString cache_filename = m_filename + wxT(".cache");
 
