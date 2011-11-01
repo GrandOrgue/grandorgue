@@ -29,6 +29,7 @@
 
 class GrandOrgueFile;
 class IniFileConfig;
+class GOrgueSettings;
 struct IniFileEnumEntry;
 
 typedef enum {
@@ -92,6 +93,8 @@ public:
 	MIDI_MATCH_EVENT& GetEvent(unsigned index);
 	unsigned AddNewEvent();
 	void DeleteEvent(unsigned index);
+
+	GOrgueSettings& GetSettings();
 };
 
 #endif

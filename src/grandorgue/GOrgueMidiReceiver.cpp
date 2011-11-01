@@ -338,3 +338,8 @@ void GOrgueMidiReceiver::DeleteEvent(unsigned index)
 {
 	m_events.erase(m_events.begin() + index);
 }
+
+GOrgueSettings& GOrgueMidiReceiver::GetSettings()
+{
+	return m_organfile->GetSettings();
+}

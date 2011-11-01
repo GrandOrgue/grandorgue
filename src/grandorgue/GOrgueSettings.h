@@ -25,6 +25,7 @@
 
 #include <wx/wx.h>
 #include <map>
+#include <vector>
 class wxConfigBase;
 
 class GOrgueSettings {
@@ -91,6 +92,7 @@ public:
 
 	int GetMidiDeviceChannelShift(wxString device);
 	void SetMidiDeviceChannelShift(wxString device, int shift);
+	std::vector<wxString> GetMidiDeviceList();
 };
 
 #endif
