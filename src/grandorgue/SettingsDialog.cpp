@@ -273,7 +273,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
     item6->Add(c_squash = new wxCheckBox(panel, ID_ENHANCE_SQUASH,           _("Lossless compression")          ), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_limit  = new wxCheckBox(panel, ID_ENHANCE_MANAGE_POLYPHONY, _("Active polyphony management")   ), 0, wxEXPAND | wxALL, 5);
-    item6->Add(c_CompressCache  = new wxCheckBox(panel, ID_COMPRESS_CACHE,    _("Comress Cache")), 0, wxEXPAND | wxALL, 5);
+    item6->Add(c_CompressCache  = new wxCheckBox(panel, ID_COMPRESS_CACHE,    _("Compress Cache")), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_scale  = new wxCheckBox(panel, ID_ENHANCE_SCALE_RELEASE,    _("Release sample scaling"        )), 0, wxEXPAND | wxALL, 5);
     item6->Add(c_random = new wxCheckBox(panel, ID_ENHANCE_RANDOMIZE,        _("Randomize pipe speaking"       )), 0, wxEXPAND | wxALL, 5);
 	if (pConfig->Read(wxT("LosslessCompression"), 1))
