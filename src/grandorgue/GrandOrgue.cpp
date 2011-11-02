@@ -103,8 +103,8 @@ void GOrgueDocManager::OnUpdateFileSave(wxUpdateUIEvent& event)
     event.Enable( doc );
 }
 
-GOrgueApp::GOrgueApp()
-  :frame(NULL),
+GOrgueApp::GOrgueApp() :
+   m_Frame(NULL),
    m_locale(),
    m_server(NULL),
    m_Settings(NULL),
@@ -163,22 +163,21 @@ bool GOrgueApp::OnInit()
 #ifdef linux
 	wxLog *logger=new wxLogStream(&std::cout);
 	wxLog::SetActiveTarget(logger);
-    //wxFont::SetDefaultEncoding(wxFONTENCODING_CP1250);
 #endif
 	m_docManager = new GOrgueDocManager;
 	new wxDocTemplate(m_docManager, _("Sample set definition files"), _("*.organ"), wxEmptyString, wxT("organ"), _("Organ Doc"), _("Organ View"), CLASSINFO(OrganDocument), CLASSINFO(OrganView));
 	m_docManager->SetMaxDocsOpen(1);
 
 	m_soundSystem = new GOrgueSound(*m_Settings);
-	frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE  | wxMAXIMIZE_BOX | wxRESIZE_BORDER, *m_soundSystem);
-	SetTopWindow(frame);
-	frame->DoSplash();
+	m_Frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE  | wxMAXIMIZE_BOX | wxRESIZE_BORDER, *m_soundSystem);
+	SetTopWindow(m_Frame);
+	m_Frame->DoSplash();
 	bool open_sound = m_soundSystem->OpenSound();
-	frame->Show(true);
+	m_Frame->Show(true);
 
 	if (!open_sound)
 	{
-		SettingsDialog dialog(frame, *m_soundSystem);
+		SettingsDialog dialog(m_Frame, *m_soundSystem);
 		dialog.ShowModal();
 	}
 
@@ -195,14 +194,14 @@ bool GOrgueApp::OnInit()
 
 void GOrgueApp::AsyncLoadFile(wxString what)
 {
-    if (!frame || !m_docManager)
+    if (!m_Frame || !m_docManager)
         return;
 
     wxFileName fn(what);
     fn.Normalize();
     wxCommandEvent event(wxEVT_LOADFILE, 0);
     event.SetString(fn.GetFullPath());
-    frame->GetEventHandler()->AddPendingEvent(event);
+    m_Frame->GetEventHandler()->AddPendingEvent(event);
 }
 
 int GOrgueApp::OnExit()
