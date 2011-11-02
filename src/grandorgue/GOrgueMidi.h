@@ -56,6 +56,7 @@ private:
 	wxEvtHandler* m_listen_evthandler;
 	GrandOrgueFile* m_organfile;
 	wxCriticalSection m_lock;
+	wxCriticalSection m_CloseLock;
 
 	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device);
 

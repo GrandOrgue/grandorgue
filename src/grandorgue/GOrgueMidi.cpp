@@ -83,6 +83,13 @@ GOrgueMidi::~GOrgueMidi()
 		/* dispose of all midi devices */
 		for (unsigned i = 0; i < m_midi_devices.size(); i++)
 		{
+			wxMutexGuiLeave();
+			{
+				wxCriticalSectionLocker locker(m_CloseLock);
+				m_midi_devices[i]->active = false;
+			}
+			wxMutexGuiEnter();
+
 			if (m_midi_devices[i]->midi_in)
 				m_midi_devices[i]->midi_in->closePort();
 			DELETE_AND_NULL(m_midi_devices[i]->midi_in);
@@ -110,7 +117,12 @@ void GOrgueMidi::Open()
 		{
 			try
 			{
-				wxCriticalSectionLocker locker(m_lock);
+				wxMutexGuiLeave();
+				{
+					wxCriticalSectionLocker locker(m_CloseLock);
+					this_dev.active = false;
+				}
+				wxMutexGuiEnter();
 
 				assert(this_dev.midi_in);
 				this_dev.channel_shift = channel_shift;
@@ -158,7 +170,15 @@ bool GOrgueMidi::HasActiveDevice()
 
 void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device)
 {
+	/* To avoid deadlocks while closing - must be the first one */
+	wxCriticalSectionLocker close_locker(m_CloseLock);
+	if (!device->active)
+		return;
+
+	/* Aquire first GUI lock and then MIDI state lock */
+	wxMutexGuiLocker gui_lock;
 	wxCriticalSectionLocker locker(m_lock);
+
 	GOrgueMidiEvent e;
 	e.FromMidi(msg);
 	if (e.GetMidiType() == MIDI_NONE)
@@ -222,9 +242,5 @@ void GOrgueMidi::SetListener(wxEvtHandler* event_handler)
 void GOrgueMidi::MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData)
 {
 	MIDI_DEVICE* m_dev = (MIDI_DEVICE*)userData;
-	if (!m_dev->active)
-		return;
-	wxMutexGuiEnter();
 	m_dev->midi->ProcessMessage(*msg, m_dev);
-	wxMutexGuiLeave();
 }
