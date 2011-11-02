@@ -41,6 +41,8 @@ class wxToggleButton;
 
 class GOrgueSettings;
 
+#include "MIDIListenDialog.h"
+
 class SettingsDialog : public wxPropertySheetDialog
 {
 DECLARE_CLASS(SettingsDialog)
@@ -48,6 +50,11 @@ private:
 	GOrgueSettings& m_Settings;
 
 	void SetLatencySpinner(int latency);
+	MIDIListenDialog::LISTEN_DIALOG_TYPE GetEventType(unsigned index);
+	unsigned GetEventCount();
+	wxString GetEventName(unsigned index);
+	int GetEventData(unsigned index);
+	void SetEventData(unsigned index, int event);
 
 public:
 	SettingsDialog(wxWindow* parent, GOrgueSettings& settings);
@@ -57,7 +64,7 @@ public:
 	wxPanel* CreateDevicesPage(wxWindow* parent);
 	wxPanel* CreateMessagesPage(wxWindow* parent);
 	wxPanel* CreateOrganPage(wxWindow* parent);
-	void UpdateMessages(int i);
+	void UpdateMessages(unsigned i);
 	void UpdateOrganMessages(int i);
 
 	void OnChanged(wxCommandEvent& event);

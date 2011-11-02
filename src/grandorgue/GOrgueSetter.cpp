@@ -238,7 +238,7 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 
 	m_button[ID_SETTER_PREV]->GetMidiReceiver().SetIndex(0);
 	m_button[ID_SETTER_NEXT]->GetMidiReceiver().SetIndex(1);
-	m_button[ID_SETTER_SET]->GetMidiReceiver().SetIndex(15);
+	m_button[ID_SETTER_SET]->GetMidiReceiver().SetIndex(2);
 
 	SetSetterType(m_SetterType);
 	SetCrescendoType(m_crescendobank);

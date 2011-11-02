@@ -27,63 +27,11 @@
 #include "GrandOrgueFile.h"
 #include "RtMidi.h"
 #include <vector>
-#include <wx/config.h>
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
-typedef struct
-{
-	const wxString                             event_name;
-	const long                                 default_mask;
-	const MIDIListenDialog::LISTEN_DIALOG_TYPE listener_dialog_type;
-} MIDI_EVENT;
-
-static const MIDI_EVENT g_available_midi_events[NB_MIDI_EVENTS] =
-{
-	{wxTRANSLATE("Previous Memory"),   0xC400, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN},
-	{wxTRANSLATE("Next Memory"),       0xC401, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN},
-	{wxTRANSLATE("Enclosure 1"),       0xB001, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxTRANSLATE("Enclosure 2"),       0xB101, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxTRANSLATE("Enclosure 3"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxTRANSLATE("Enclosure 4"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxTRANSLATE("Enclosure 5"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxTRANSLATE("Enclosure 6"),       0x0000, MIDIListenDialog::LSTN_ENCLOSURE},
-	{wxTRANSLATE("Manual 1 (Pedal)"),  0x9000, MIDIListenDialog::LSTN_MANUAL},
-	{wxTRANSLATE("Manual 2 (Great)"),  0x9100, MIDIListenDialog::LSTN_MANUAL},
-	{wxTRANSLATE("Manual 3 (Swell)"),  0x9200, MIDIListenDialog::LSTN_MANUAL},
-	{wxTRANSLATE("Manual 4 (Choir)"),  0x9300, MIDIListenDialog::LSTN_MANUAL},
-	{wxTRANSLATE("Manual 5 (Solo)"),   0x9500, MIDIListenDialog::LSTN_MANUAL},
-	{wxTRANSLATE("Manual 6 (Echo)"),   0x9600, MIDIListenDialog::LSTN_MANUAL},
-	{wxTRANSLATE("Stop Changes"),      0x9400, MIDIListenDialog::LSTN_SETTINGSDLG_STOP_CHANGE},
-	{wxTRANSLATE("Memory Set"),        0x0000, MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN}
-};
-
-unsigned GOrgueMidi::NbMidiEvents()
-{
-	return NB_MIDI_EVENTS;
-}
-
-wxString GOrgueMidi::GetMidiEventTitle(const unsigned idx)
-{
-	assert(idx < NB_MIDI_EVENTS);
-	return wxString(g_available_midi_events[idx].event_name);
-}
-
-wxString GOrgueMidi::GetMidiEventUserTitle(const unsigned idx)
-{
-	assert(idx < NB_MIDI_EVENTS);
-	return wxGetTranslation(g_available_midi_events[idx].event_name);
-}
-
-MIDIListenDialog::LISTEN_DIALOG_TYPE GOrgueMidi::GetMidiEventListenDialogType(const unsigned idx)
-{
-	assert(idx < NB_MIDI_EVENTS);
-	return g_available_midi_events[idx].listener_dialog_type;
-}
-
 GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_Settings(settings),
-	m_global_config(&settings.GetConfig()),
 	m_midi_device_map(),
 	m_midi_devices(),
 	m_listening(false),
@@ -151,12 +99,6 @@ GOrgueMidi::~GOrgueMidi()
 void GOrgueMidi::Open()
 {
 	UpdateDevices();
-
-	for (unsigned i = 0; i < NB_MIDI_EVENTS; i++)
-		m_midi_events[i] = m_global_config->Read
-			(wxString(wxT("MIDI/")) + g_available_midi_events[i].event_name
-			,g_available_midi_events[i].default_mask
-			);
 
 	for (unsigned i = 0; i < m_midi_devices.size(); i++)
 	{
@@ -275,21 +217,6 @@ void GOrgueMidi::SetListener(wxEvtHandler* event_handler)
 {
 	m_listening = (event_handler != NULL);
 	m_listen_evthandler = event_handler;
-}
-
-int GOrgueMidi::GetMidiEventByChannel(int channel)
-{
-	return m_midi_events[channel];
-}
-
-int GOrgueMidi::GetStopMidiEvent()
-{
-	return m_midi_events[14];
-}
-
-int GOrgueMidi::GetManualMidiEvent(int manual_nb)
-{
-	return m_midi_events[7 + manual_nb];
 }
 
 void GOrgueMidi::MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData)

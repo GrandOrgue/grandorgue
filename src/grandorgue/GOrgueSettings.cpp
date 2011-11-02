@@ -27,6 +27,33 @@
 #include <wx/filename.h>
 #include <wx/confbase.h>
 
+const wxString GOrgueSettings::m_ManualNames[] = {
+	wxTRANSLATE("Manual 1 (Pedal)"),
+	wxTRANSLATE("Manual 2 (Great)"),
+	wxTRANSLATE("Manual 3 (Swell)"),
+	wxTRANSLATE("Manual 4 (Choir)"),
+	wxTRANSLATE("Manual 5 (Solo)"),
+	wxTRANSLATE("Manual 6 (Echo)"),
+};
+
+const wxString GOrgueSettings::m_EnclosureNames[] = {
+	wxTRANSLATE("Enclosure 1"),
+	wxTRANSLATE("Enclosure 2"),
+	wxTRANSLATE("Enclosure 3"),
+	wxTRANSLATE("Enclosure 4"),
+	wxTRANSLATE("Enclosure 5"),
+	wxTRANSLATE("Enclosure 6"),
+};
+
+const wxString GOrgueSettings::m_SetterNames[] = {
+	wxTRANSLATE("Previous Memory"),
+	wxTRANSLATE("Next Memory"),
+	wxTRANSLATE("Memory Set"),
+};
+
+const wxString GOrgueSettings::m_StopChangeName = wxTRANSLATE("Stop Changes");
+
+
 GOrgueSettings::GOrgueSettings() :
 	m_Config(*wxConfigBase::Get()),
 	m_Stereo(false),
@@ -46,6 +73,10 @@ GOrgueSettings::GOrgueSettings() :
 	m_WAVPath(),
 	m_OrganPath(),
 	m_SettingPath(),
+	m_ManualEvents(),
+	m_EnclosureEvents(),
+	m_SetterEvents(),
+	m_StopChangeEvent(0),
 	m_Transpose(0)
 {
 	GetConfig().SetRecordDefaults();
@@ -92,6 +123,104 @@ void GOrgueSettings::Load()
 	m_WAVPath = m_Config.Read(wxT("wavPath"), GetStandardDocumentDirectory());
 	m_OrganPath = m_Config.Read(wxT("organPath"), GetStandardOrganDirectory());
 	m_SettingPath = m_Config.Read(wxT("cmbPath"), GetStandardOrganDirectory());
+
+	m_StopChangeEvent = m_Config.Read(wxString(wxT("MIDI/")) + m_StopChangeName, 0x9400);
+	for(unsigned i = 0; i < GetManualCount(); i++)
+		m_ManualEvents[i] = m_Config.Read(wxString(wxT("MIDI/")) + m_ManualNames[i], 0x9000 + (((i < 4 ? i : i + 1) << 8) & 0x0F00));
+
+	for(unsigned i = 0; i < GetEnclosureCount(); i++)
+		m_EnclosureEvents[i] = m_Config.Read(wxString(wxT("MIDI/")) + m_EnclosureNames[i], 0x0000L);
+
+	for(unsigned i = 0; i < GetSetterCount(); i++)
+		m_SetterEvents[i] = m_Config.Read(wxString(wxT("MIDI/")) + m_SetterNames[i], i < 2 ? (0xC400 + i) : 0x0000);
+}
+
+unsigned GOrgueSettings::GetManualCount()
+{
+	return sizeof(m_ManualEvents) / sizeof(m_ManualEvents[0]);
+}
+
+wxString GOrgueSettings::GetManualTitle(unsigned index)
+{
+	assert(index < GetManualCount());
+	return wxGetTranslation(m_ManualNames[index]);
+}
+
+int GOrgueSettings::GetManualEvent(unsigned index)
+{
+	assert(index < GetManualCount());
+	return m_ManualEvents[index];
+}
+
+void GOrgueSettings::SetManualEvent(unsigned index, int event)
+{
+	assert(index < GetManualCount());
+	m_ManualEvents[index] = event;
+	m_Config.Write(wxString(wxT("MIDI/")) + m_ManualNames[index], m_ManualEvents[index]);
+}
+
+unsigned GOrgueSettings::GetEnclosureCount()
+{
+	return sizeof(m_EnclosureEvents) / sizeof(m_EnclosureEvents[0]);
+}
+
+wxString GOrgueSettings::GetEnclosureTitle(unsigned index)
+{
+	assert(index < GetEnclosureCount());
+	return wxGetTranslation(m_EnclosureNames[index]);
+}
+
+int GOrgueSettings::GetEnclosureEvent(unsigned index)
+{
+	assert(index < GetEnclosureCount());
+	return m_EnclosureEvents[index];
+}
+
+void GOrgueSettings::SetEnclosureEvent(unsigned index, int event)
+{
+	assert(index < GetEnclosureCount());
+	m_EnclosureEvents[index] = event;
+	m_Config.Write(wxString(wxT("MIDI/")) + m_EnclosureNames[index], m_EnclosureEvents[index]);
+}
+
+unsigned GOrgueSettings::GetSetterCount()
+{
+	return sizeof(m_SetterEvents) / sizeof(m_SetterEvents[0]);
+}
+
+wxString GOrgueSettings::GetSetterTitle(unsigned index)
+{
+	assert(index < GetSetterCount());
+	return wxGetTranslation(m_SetterNames[index]);
+}
+
+int GOrgueSettings::GetSetterEvent(unsigned index)
+{
+	assert(index < GetSetterCount());
+	return m_SetterEvents[index];
+}
+
+void GOrgueSettings::SetSetterEvent(unsigned index, int event)
+{
+	assert(index < GetSetterCount());
+	m_SetterEvents[index] = event;
+	m_Config.Write(wxString(wxT("MIDI/")) + m_SetterNames[index], m_SetterEvents[index]);
+}
+
+wxString GOrgueSettings::GetStopChangeTitle()
+{
+	return wxGetTranslation(m_StopChangeName);
+}
+
+int GOrgueSettings::GetStopChangeEvent()
+{
+	return m_StopChangeEvent;
+}
+
+void GOrgueSettings::SetStopChangeEvent(int event)
+{
+	m_StopChangeEvent = event;
+	m_Config.Write(wxString(wxT("MIDI/")) + m_StopChangeName, m_StopChangeEvent);
 }
 
 wxString GOrgueSettings::GetStandardDocumentDirectory()
