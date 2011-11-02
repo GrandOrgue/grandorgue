@@ -534,6 +534,9 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 			nb_pipes += GetManual(i)->GetStop(j)->GetPipeCount();
 
 	wxProgressDialog dlg(_("Creating sample cache"), wxEmptyString, 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
+	long last = wxGetUTCTime();
+	dlg.Update(0);
+
 	wxFileOutputStream file(cache_filename);
 	GOrgueCacheWriter writer(file, compress);
 
@@ -559,6 +562,11 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 					wxLogError(_("Save of %s to the cache failed"), pipe->GetFilename().c_str());
 				}
 				nb_saved_pipes++;
+				
+				if (last == wxGetUTCTime())
+					continue;
+
+				last = wxGetUTCTime();
 				if (!dlg.Update ((nb_saved_pipes << 15) / (nb_pipes + 1), pipe->GetFilename()))
 				{
 					writer.Close();
