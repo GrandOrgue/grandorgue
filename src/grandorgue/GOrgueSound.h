@@ -66,8 +66,6 @@ private:
 	short meter_counter;
 	METER_INFO meter_info;
 
-	bool b_active;
-
 	wxString defaultAudio;
 
 	GOrgueMidi* m_midi;
@@ -116,9 +114,7 @@ public:
 	void StartRecording(wxString filename);
 	void StopRecording();
 
-	bool IsActive();
 	void PreparePlayback(GrandOrgueFile* organfile);
-	void ActivatePlayback();
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
 

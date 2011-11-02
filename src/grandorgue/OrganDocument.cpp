@@ -88,9 +88,6 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 
 	SetTitle(m_organfile->GetChurchName());
 
-	/* we have loaded the organ so we can now enable playback */
-	g_sound->ActivatePlayback();
-
 	UpdateAllViews();
 
 	for (unsigned i = 1; i < m_organfile->GetPanelCount(); i++)
