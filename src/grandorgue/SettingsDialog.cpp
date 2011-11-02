@@ -39,8 +39,6 @@
 
 IMPLEMENT_CLASS(SettingsDialog, wxPropertySheetDialog)
 
-extern GOrgueSound* g_sound;
-
 BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHECKLISTBOX(ID_MIDI_DEVICES, SettingsDialog::OnChanged)
 	EVT_LISTBOX(ID_MIDI_DEVICES, SettingsDialog::OnDevicesMIDIClick)
@@ -100,13 +98,11 @@ void SettingsDialog::SetLatencySpinner(int latency)
 
 #define SETTINGS_DLG_SIZE wxSize(603,600)
 
-SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSettings& settings) :
+SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, SETTINGS_DLG_SIZE),
-	m_Settings(settings)
+	m_Sound(sound),
+	m_Settings(sound.GetSettings())
 {
-
-	wxASSERT(g_sound);
-
 	b_stereo = m_Settings.GetLoadInStereo();
 	b_squash = m_Settings.GetLosslessCompression();
 
@@ -136,12 +132,12 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSettings& settings) :
 
 	page2list->SetColumnWidth(1, page2list->GetClientSize().GetWidth() - page2list->GetColumnWidth(0) - 108);
 
-	g_sound->SetLogSoundErrorMessages(true);
+	m_Sound.SetLogSoundErrorMessages(true);
 }
 
 SettingsDialog::~SettingsDialog()
 {
-	g_sound->SetLogSoundErrorMessages(false);
+	m_Sound.SetLogSoundErrorMessages(false);
 	if (b_stereo != m_Settings.GetLoadInStereo() || b_squash != m_Settings.GetLosslessCompression())
 	{
 		if (::wxMessageBox(_("Stereo mode and lossless compression won't take\neffect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION) == wxYES)
@@ -155,7 +151,7 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::UpdateSoundStatus()
 {
 	SetLatencySpinner(m_Settings.GetAudioDeviceLatency(c_sound->GetStringSelection()));
-	c_format->SetLabel(wxString(GOrgueRtHelpers::GetAudioFormatName(g_sound->GetAudioFormat())));
+	c_format->SetLabel(wxString(GOrgueRtHelpers::GetAudioFormatName(m_Sound.GetAudioFormat())));
 }
 
 wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
@@ -170,11 +166,8 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 
 	wxArrayString choices;
 
-	if (!g_sound)
-		throw (wxString)_("g_sound has not been allocated");
-	
-	g_sound->GetMidi().UpdateDevices();
-	for (it2 = g_sound->GetMidi().GetDevices().begin(); it2 != g_sound->GetMidi().GetDevices().end(); it2++)
+	m_Sound.GetMidi().UpdateDevices();
+	for (it2 = m_Sound.GetMidi().GetDevices().begin(); it2 != m_Sound.GetMidi().GetDevices().end(); it2++)
 	{
 		choices.push_back(it2->first);
 		page1checklistdata.push_back(m_Settings.GetMidiDeviceChannelShift(it2->first));
@@ -198,12 +191,12 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	wxBoxSizer* item9 = new wxBoxSizer(wxVERTICAL);
 	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
 
-	for (it1 = g_sound->GetAudioDevices().begin(); it1 != g_sound->GetAudioDevices().end(); it1++)
+	for (it1 = m_Sound.GetAudioDevices().begin(); it1 != m_Sound.GetAudioDevices().end(); it1++)
 		choices.push_back(it1->first);
 	wxBoxSizer* item1 = new wxStaticBoxSizer(wxVERTICAL, panel, _("Sound &output device"));
 	item9->Add(item1, 0, wxEXPAND | wxALL, 5);
 	c_sound = new wxChoice(panel, ID_SOUND_DEVICE, wxDefaultPosition, wxDefaultSize, choices);
-	c_sound->SetStringSelection(g_sound->GetDefaultAudioDevice());
+	c_sound->SetStringSelection(m_Sound.GetDefaultAudioDevice());
 	c_sound->SetStringSelection(m_Settings.GetDefaultAudioDevice());
 	item1->Add(c_sound, 0, wxEXPAND | wxALL, 5);
 
@@ -656,7 +649,7 @@ bool SettingsDialog::DoApply()
 	m_Settings.SetReleaseConcurrency(c_ReleaseConcurrency->GetSelection() + 1);
 	m_Settings.SetWaveFormatBytesPerSample(c_WaveFormat->GetSelection() + 1);
 
-	g_sound->ResetSound();
+	m_Sound.ResetSound();
 	UpdateSoundStatus();
 
 	return true;

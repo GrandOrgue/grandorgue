@@ -490,7 +490,7 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 {
 	wxLogDebug(_("settingsdialog.."));
-	SettingsDialog dialog(this, m_Settings);
+	SettingsDialog dialog(this, *g_sound);
 	wxLogDebug(_("success"));
 	dialog.ShowModal();
 }
