@@ -30,7 +30,6 @@ class wxButton;
 class wxCheckBox;
 class wxCheckListBox;
 class wxChoice;
-class wxConfigBase;
 class wxListEvent;
 class wxListView;
 class wxPanel;
@@ -115,8 +114,6 @@ protected:
 		ID_EVENT_ADD,
 		ID_EVENT_ORGANPROPERTIES
 	};
-
-	wxConfigBase *pConfig;
 
 	wxCheckListBox* page1checklist;
 	std::vector<int> page1checklistdata;
