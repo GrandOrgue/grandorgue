@@ -30,6 +30,7 @@ class wxHtmlHelpController;
 class wxGaugeAudio;
 class wxSpinCtrl;
 class GOrgueSettings;
+class GOrgueSound;
 
 class GOrgueFrame: public wxDocParentFrame
 {
@@ -42,11 +43,12 @@ class GOrgueFrame: public wxDocParentFrame
 	wxSpinCtrl* m_Polyphony;
 	wxSpinCtrl* m_SetterPosition;
 	wxSpinCtrl* m_Volume;
+	GOrgueSound& m_Sound;
 	GOrgueSettings& m_Settings;
 
 public:
-    GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type);
-    ~GOrgueFrame(void);
+	GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
+	~GOrgueFrame(void);
 
 	void OnMeters(wxCommandEvent& event);
 
