@@ -20,17 +20,13 @@
  * MA 02111-1307, USA.
  */
 
-#include "GOrgueMidi.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueManual.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueSettings.h"
-#include "GOrgueSound.h"
 #include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
-
-extern GOrgueSound* g_sound;
 
 GOrgueMidiReceiver::GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type):
 	m_organfile(organfile),
