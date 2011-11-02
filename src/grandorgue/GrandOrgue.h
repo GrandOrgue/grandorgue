@@ -43,8 +43,8 @@ public:
   bool OnInit();
   int OnExit();
   void AsyncLoadFile(wxString iFile);
-  GOrgueFrame* frame;
 protected:
+  GOrgueFrame* m_Frame;
   wxLocale m_locale;
   stServer* m_server;
   GOrgueSettings* m_Settings;
