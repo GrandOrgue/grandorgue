@@ -38,6 +38,7 @@ class wxSpinEvent;
 class wxStaticText;
 class wxToggleButton;
 
+class GOrgueSound;
 class GOrgueSettings;
 
 #include "MIDIListenDialog.h"
@@ -46,6 +47,7 @@ class SettingsDialog : public wxPropertySheetDialog
 {
 DECLARE_CLASS(SettingsDialog)
 private:
+	GOrgueSound& m_Sound;
 	GOrgueSettings& m_Settings;
 
 	void SetLatencySpinner(int latency);
@@ -56,7 +58,7 @@ private:
 	void SetEventData(unsigned index, int event);
 
 public:
-	SettingsDialog(wxWindow* parent, GOrgueSettings& settings);
+	SettingsDialog(wxWindow* parent, GOrgueSound& sound);
 	~SettingsDialog();
 
 	void UpdateSoundStatus();

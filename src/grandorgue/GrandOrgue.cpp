@@ -178,7 +178,7 @@ bool GOrgueApp::OnInit()
 
 	if (!open_sound)
 	{
-		SettingsDialog dialog(frame, m_soundSystem->GetSettings());
+		SettingsDialog dialog(frame, *m_soundSystem);
 		dialog.ShowModal();
 	}
 
