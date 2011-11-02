@@ -47,6 +47,8 @@ void* GOSoundThread::Entry()
 		}
 
 		wxMutexLocker lock(m_Mutex);
+		if (TestDestroy() || m_Stop)
+			break;
 		m_Condition.Wait();
 	}
 	return 0;
@@ -61,6 +63,9 @@ void GOSoundThread::Wakeup()
 void GOSoundThread::Delete()
 {
 	m_Stop = true;
-	Wakeup();
+	{
+		wxMutexLocker lock(m_Mutex);
+		m_Condition.Signal();
+	}
 	wxThread::Delete();
 }
