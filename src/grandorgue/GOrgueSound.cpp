@@ -40,7 +40,6 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	m_SamplesPerBuffer(0),
 	m_nb_buffers(0),
 	meter_counter(0),
-	b_active(false),
 	defaultAudio(wxT("")),
 	m_Settings(settings)
 {
@@ -287,8 +286,6 @@ void GOrgueSound::CloseSound()
 	StopThreads();
 	m_recorder.Close();
 
-	b_active = false;
-
 	try
 	{
 		if (audioDevice)
@@ -317,18 +314,14 @@ void GOrgueSound::CloseSound()
 bool GOrgueSound::ResetSound()
 {
 	wxBusyCursor busy;
-	bool was_active = b_active;
 	GrandOrgueFile* organfile = m_organfile;
 
 	CloseSound();
 	if (!OpenSound())
 		return false;
-	b_active = was_active;
 	if (organfile)
-	{
 		PreparePlayback(organfile);
-		b_active = true;
-	}
+
 	return true;
 }
 
@@ -352,11 +345,6 @@ void GOrgueSound::StopRecording()
 	m_recorder.Close();
 }
 
-bool GOrgueSound::IsActive()
-{
-	return b_active;
-}
-
 void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 {
 	wxCriticalSectionLocker locker(m_lock);
@@ -374,12 +362,6 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 		m_SoundEngine.Reset();
 	}
 	m_midi->SetOrganFile(organfile);
-}
-
-void GOrgueSound::ActivatePlayback()
-{
-	/* FIXME: we should probably check that the driver is actually open */
-	b_active = true;
 }
 
 void GOrgueSound::SetLogSoundErrorMessages(bool settingsDialogVisible)
@@ -442,18 +424,6 @@ int GOrgueSound::AudioCallbackLocal
 	assert(n_frames == m_SamplesPerBuffer);
 
 	wxCriticalSectionLocker locker(m_lock);
-
-	if (!b_active || !m_organfile)
-	{
-
-		memset(output_buffer, 0, (n_frames * sizeof(float)));
-
-		/* we can only abort for the case of the sound system not being active
-		 * (because recording could be enabled... */
-		if (!b_active || !m_organfile)
-			return 0;
-
-	}
 
 	int r = m_SoundEngine.GetSamples
 		(output_buffer

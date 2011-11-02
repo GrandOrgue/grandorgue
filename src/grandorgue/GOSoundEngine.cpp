@@ -568,11 +568,6 @@ int GOSoundEngine::GetSamples
 	,METER_INFO *meter_info
 	)
 {
-
-	/* if no samplers playing, or sound is disabled, fill buffer with zero */
-	if (!m_SamplerPool.UsedSamplerCount())
-		memset(output_buffer, 0, (n_frames * sizeof(float)));
-
 	/* initialise the output buffer */
 	std::fill(m_FinalBuffer, m_FinalBuffer + GO_SOUND_BUFFER_SIZE, 0.0f);
 
