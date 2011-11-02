@@ -89,8 +89,6 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
 
-extern GOrgueSound* g_sound;
-
 void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString)
 {
 	menu->Append(id, item, wxEmptyString, wxITEM_NORMAL);
@@ -102,7 +100,7 @@ void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxSt
         GetToolBar()->AddTool(id, item, toolbarImage, helpString, kind);
 }
 
-GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type) :
+GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound) :
 	wxDocParentFrame(manager, frame, id, title, pos, size, type),
 	m_panel_menu(NULL),
 	m_Help(NULL),
@@ -113,7 +111,8 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_Polyphony(NULL),
 	m_SetterPosition(NULL),
 	m_Volume(NULL),
-	m_Settings(g_sound->GetSettings())
+	m_Sound(sound),
+	m_Settings(sound.GetSettings())
 {
 #ifdef _WIN32
 	SetIcon(wxIcon(wxT("#101")));
@@ -321,13 +320,12 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 	GrandOrgueFile* organfile = NULL;
 	if (m_docManager->GetCurrentDocument())
 		organfile = ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile();
-	if (g_sound)
-	{
-		if (event.GetId() == ID_AUDIO_RECORD)
-			event.Check(g_sound->IsRecording());
-		else if (event.GetId() == ID_AUDIO_MEMSET)
-			event.Check(organfile && organfile->GetSetter() && organfile->GetSetter()->IsSetterActive());
-	}
+
+	if (event.GetId() == ID_AUDIO_RECORD)
+		event.Check(m_Sound.IsRecording());
+	else if (event.GetId() == ID_AUDIO_MEMSET)
+		event.Check(organfile && organfile->GetSetter() && organfile->GetSetter()->IsSetterActive());
+
 	if (event.GetId() == ID_FILE_CACHE_DELETE)
 		event.Enable(organfile && organfile->CachePresent());
 	else
@@ -451,18 +449,13 @@ void GOrgueFrame::OnProperties(wxCommandEvent& event)
 
 void GOrgueFrame::OnAudioPanic(wxCommandEvent& WXUNUSED(event))
 {
-	if (!g_sound)
-		return;
-	g_sound->ResetSound();
+	m_Sound.ResetSound();
 }
 
 void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 {
-	if (!g_sound)
-		return;
-
-	if (g_sound->IsRecording())
-		g_sound->StopRecording();
+	if (m_Sound.IsRecording())
+		m_Sound.StopRecording();
 	else
 	{
 		wxFileDialog dlg(this, _("Save as"), m_Settings.GetWAVPath(), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
@@ -474,7 +467,7 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 				{
 					filepath.append(wxT(".wav"));
 				}
-				g_sound->StartRecording(filepath);
+				m_Sound.StartRecording(filepath);
 			}
 	}
 }
@@ -490,7 +483,7 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 {
 	wxLogDebug(_("settingsdialog.."));
-	SettingsDialog dialog(this, *g_sound);
+	SettingsDialog dialog(this, m_Sound);
 	wxLogDebug(_("success"));
 	dialog.ShowModal();
 }
@@ -512,7 +505,7 @@ void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)
 	long n = m_Volume->GetValue();
 
 	m_Settings.SetVolume(n);
-	g_sound->GetEngine().SetVolume(n);
+	m_Sound.GetEngine().SetVolume(n);
 }
 
 void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
@@ -520,7 +513,7 @@ void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
 	long n = m_Polyphony->GetValue();
 
 	m_Settings.SetPolyphonyLimit(n);
-	g_sound->GetEngine().SetHardPolyphony(n);
+	m_Sound.GetEngine().SetHardPolyphony(n);
 }
 
 void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
@@ -536,11 +529,8 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 {
 	long n = m_Transpose->GetValue();
 
-	if (g_sound)
-	{
-		m_Settings.SetTranspose(n);
-		g_sound->ResetSound();
-	}
+	m_Settings.SetTranspose(n);
+	m_Sound.ResetSound();
 }
 
 void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)
