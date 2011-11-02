@@ -299,17 +299,16 @@ wxPanel* SettingsDialog::CreateMessagesPage(wxWindow* parent)
 	page2list->InsertColumn(1, _("Event"));
 	page2list->InsertColumn(2, _("Channel"));
 	page2list->InsertColumn(3, _("Data/Offset"));
-    topSizer->Add(page2list, 1, wxEXPAND | wxALL, 5);
+	topSizer->Add(page2list, 1, wxEXPAND | wxALL, 5);
 	page2button = new wxButton(panel, ID_EVENT_PROPERTIES, _("P&roperties..."));
 	page2button->Disable();
 	topSizer->Add(page2button, 0, wxALIGN_RIGHT | wxALL, 5);
 
-	for (unsigned i = 0; i < GOrgueMidi::NbMidiEvents(); i++)
+	for (unsigned i = 0; i < GetEventCount(); i++)
 	{
-		page2list->InsertItem(i, GOrgueMidi::GetMidiEventUserTitle(i));
+		page2list->InsertItem(i, GetEventName(i));
 		UpdateMessages(i);
 	}
-
 
 	topSizer->AddSpacer(5);
 	panel->SetSizer(topSizer);
@@ -416,15 +415,98 @@ void SettingsDialog::OnOrganProperties(wxCommandEvent& event)
 
 }
 
-void SettingsDialog::UpdateMessages(int i)
+unsigned SettingsDialog::GetEventCount()
 {
+	return m_Settings.GetSetterCount() + m_Settings.GetEnclosureCount() +
+		m_Settings.GetManualCount() + 1;
+}
 
-	MIDIListenDialog::LISTEN_DIALOG_TYPE type = GOrgueMidi::GetMidiEventListenDialogType(i);
-	int j = pConfig->Read(wxString(wxT("MIDI/")) + GOrgueMidi::GetMidiEventTitle(i), 0L);
+MIDIListenDialog::LISTEN_DIALOG_TYPE SettingsDialog::GetEventType(unsigned index)
+{
+	if (index < m_Settings.GetSetterCount())
+		return MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN;
+	index -= m_Settings.GetSetterCount();
+
+	if (index < m_Settings.GetEnclosureCount())
+		return MIDIListenDialog::LSTN_ENCLOSURE;
+	index -= m_Settings.GetEnclosureCount();
+
+	if (index < m_Settings.GetManualCount())
+		return MIDIListenDialog::LSTN_MANUAL;
+	index -= m_Settings.GetManualCount();
+
+	return MIDIListenDialog::LSTN_SETTINGSDLG_STOP_CHANGE;
+}
+
+wxString SettingsDialog::GetEventName(unsigned index)
+{
+	if (index < m_Settings.GetSetterCount())
+		return m_Settings.GetSetterTitle(index);
+	index -= m_Settings.GetSetterCount();
+
+	if (index < m_Settings.GetEnclosureCount())
+		return m_Settings.GetEnclosureTitle(index);
+	index -= m_Settings.GetEnclosureCount();
+
+	if (index < m_Settings.GetManualCount())
+		return m_Settings.GetManualTitle(index);
+	index -= m_Settings.GetManualCount();
+
+	return m_Settings.GetStopChangeTitle();
+}
+
+int SettingsDialog::GetEventData(unsigned index)
+{
+	if (index < m_Settings.GetSetterCount())
+		return m_Settings.GetSetterEvent(index);
+	index -= m_Settings.GetSetterCount();
+
+	if (index < m_Settings.GetEnclosureCount())
+		return m_Settings.GetEnclosureEvent(index);
+	index -= m_Settings.GetEnclosureCount();
+
+	if (index < m_Settings.GetManualCount())
+		return m_Settings.GetManualEvent(index);
+	index -= m_Settings.GetManualCount();
+
+	return m_Settings.GetStopChangeEvent();
+}
+
+void SettingsDialog::SetEventData(unsigned index, int event)
+{
+	if (index < m_Settings.GetSetterCount())
+	{
+		m_Settings.SetSetterEvent(index, event);
+		return;
+	}
+	index -= m_Settings.GetSetterCount();
+
+	if (index < m_Settings.GetEnclosureCount())
+	{
+		m_Settings.SetEnclosureEvent(index, event);
+		return;
+	}
+	index -= m_Settings.GetEnclosureCount();
+
+	if (index < m_Settings.GetManualCount())
+	{
+		m_Settings.SetManualEvent(index, event);
+		return;
+	}
+	index -= m_Settings.GetManualCount();
+
+	m_Settings.SetStopChangeEvent(event);
+}
+
+
+void SettingsDialog::UpdateMessages(unsigned i)
+{
+	MIDIListenDialog::LISTEN_DIALOG_TYPE type = GetEventType(i);
+	int j = GetEventData(i);
 	page2list->SetItem(i, 1, MIDIListenDialog::GetEventTitle(j, type));
 	page2list->SetItem(i, 2, MIDIListenDialog::GetEventChannelString(j));
 
-	if (type != 3 && j)
+	if (type != MIDIListenDialog::LSTN_SETTINGSDLG_STOP_CHANGE && j)
 	{
 		int offset = (j & 0xF000) == 0xC000 ? 1 : 0;
 		wxString temp;
@@ -504,16 +586,11 @@ void SettingsDialog::OnEventListDoubleClick(wxListEvent& event)
 
 	int index = page2list->GetFirstSelected();
 
-	MIDIListenDialog dlg
-		(this
-		,page2list->GetItemText(index)
-		,GOrgueMidi::GetMidiEventListenDialogType(index)
-		,page2list->GetItemData(index)
-		);
+	MIDIListenDialog dlg(this, page2list->GetItemText(index), GetEventType(index), page2list->GetItemData(index));
 
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		pConfig->Write(wxString(wxT("MIDI/")) + GOrgueMidi::GetMidiEventTitle(index), dlg.GetEvent());
+		SetEventData(index, dlg.GetEvent());
 		UpdateMessages(index);
 		OnChanged(event);
 	}
@@ -557,7 +634,7 @@ bool SettingsDialog::DoApply()
 	if (!(this->Validate()))
 		return false;
 
-	for (size_t i = 0;	i < page1checklist->GetCount(); i++)
+	for (size_t i = 0; i < page1checklist->GetCount(); i++)
 	{
 		int j;
 
