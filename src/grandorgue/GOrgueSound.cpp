@@ -304,7 +304,6 @@ void GOrgueSound::CloseSound()
 
 	wxCriticalSectionLocker locker(m_lock);
 
-	m_midi->SetOrganFile(NULL);
 	if (m_organfile)
 		m_organfile->Abort();
 	m_organfile = NULL;
@@ -361,7 +360,6 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 	{
 		m_SoundEngine.Reset();
 	}
-	m_midi->SetOrganFile(organfile);
 }
 
 void GOrgueSound::SetLogSoundErrorMessages(bool settingsDialogVisible)

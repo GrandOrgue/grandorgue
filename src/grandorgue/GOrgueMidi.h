@@ -54,9 +54,6 @@ private:
 	int m_transpose;
 	bool m_listening;
 	wxEvtHandler* m_listen_evthandler;
-	GrandOrgueFile* m_organfile;
-	wxCriticalSection m_lock;
-	wxCriticalSection m_CloseLock;
 
 	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device);
 
@@ -69,7 +66,6 @@ public:
 
 	void Open();
 	void UpdateDevices();
-	void SetOrganFile(GrandOrgueFile* organfile);
 
 	bool HasListener();
 	void SetListener(wxEvtHandler* event_handler);

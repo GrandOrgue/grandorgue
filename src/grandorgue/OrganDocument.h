@@ -26,11 +26,14 @@
 #include <wx/defs.h>
 #include <wx/docview.h>
 
+class GOrgueMidiEvent;
 class GrandOrgueFile;
 
 class OrganDocument : public wxDocument
 {
 private:
+	wxCriticalSection m_lock;
+	bool m_OrganFileReady;
 	GrandOrgueFile* m_organfile;
 
 	void CloseOrgan();
@@ -47,6 +50,8 @@ public:
 	bool Save() { return OnSaveDocument(m_documentFile); }
 
 	GrandOrgueFile* GetOrganFile();
+
+	void OnMidiEvent(GOrgueMidiEvent& event);
 
 private:
 
