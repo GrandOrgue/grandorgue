@@ -44,6 +44,7 @@
 
 IMPLEMENT_CLASS(GOrgueFrame, wxDocParentFrame)
 BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
+	EVT_MIDI(GOrgueFrame::OnMidiEvent)
 	EVT_KEY_DOWN(GOrgueFrame::OnKeyCommand)
 	EVT_COMMAND(0, wxEVT_METERS, GOrgueFrame::OnMeters)
 	EVT_COMMAND(0, wxEVT_LOADFILE, GOrgueFrame::OnLoadFile)
@@ -578,4 +579,23 @@ void GOrgueFrame::OnKeyCommand(wxKeyEvent& event)
 		}
 	}
 	event.Skip();
+}
+
+void GOrgueFrame::OnMidiEvent(GOrgueMidiEvent& event)
+{
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	if (doc)
+		doc->OnMidiEvent(event);
+
+	int j = event.GetEventCode();
+	if (j == -1)
+		return;
+	// MIDI for different organ??
+	std::map<long, wxString>::const_iterator it = m_Settings.GetOrganList().find(j);
+	if (it != m_Settings.GetOrganList().end())
+	{
+		wxCommandEvent evt(wxEVT_LOADFILE, 0);
+		evt.SetString(it->second);
+		GetEventHandler()->AddPendingEvent(evt);
+	}
 }

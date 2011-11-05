@@ -32,6 +32,7 @@ IMPLEMENT_DYNAMIC_CLASS(OrganDocument, wxDocument)
 extern GOrgueSound* g_sound;
 
 OrganDocument::OrganDocument() :
+	m_OrganFileReady(false),
 	m_organfile(NULL)
 {
 }
@@ -85,6 +86,7 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 
 		g_sound->GetEngine().SetVolume(m_organfile->GetVolume());
 	}
+	m_OrganFileReady = true;
 
 	SetTitle(m_organfile->GetChurchName());
 
@@ -110,6 +112,9 @@ bool OrganDocument::DoSaveDocument(const wxString& file)
 void OrganDocument::CloseOrgan()
 {
 	g_sound->CloseSound();
+
+	m_OrganFileReady = false;
+	wxCriticalSectionLocker locker(m_lock);
 	if (m_organfile)
 	{
 		delete m_organfile;
@@ -120,4 +125,15 @@ void OrganDocument::CloseOrgan()
 GrandOrgueFile* OrganDocument::GetOrganFile()
 {
 	return m_organfile;
+}
+
+void OrganDocument::OnMidiEvent(GOrgueMidiEvent& event)
+{
+	wxCriticalSectionLocker locker(m_lock);
+
+	if (!m_OrganFileReady)
+		return;
+
+	if (m_organfile)
+		m_organfile->ProcessMidi(event);
 }

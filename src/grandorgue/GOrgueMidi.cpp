@@ -24,7 +24,6 @@
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueSettings.h"
-#include "GrandOrgueFile.h"
 #include "RtMidi.h"
 #include <vector>
 
@@ -35,8 +34,7 @@ GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_midi_device_map(),
 	m_midi_devices(),
 	m_listening(false),
-	m_listen_evthandler(NULL),
-	m_organfile(NULL)
+	m_listen_evthandler(NULL)
 {
 	UpdateDevices();
 }
@@ -83,12 +81,7 @@ GOrgueMidi::~GOrgueMidi()
 		/* dispose of all midi devices */
 		for (unsigned i = 0; i < m_midi_devices.size(); i++)
 		{
-			wxMutexGuiLeave();
-			{
-				wxCriticalSectionLocker locker(m_CloseLock);
-				m_midi_devices[i]->active = false;
-			}
-			wxMutexGuiEnter();
+			m_midi_devices[i]->active = false;
 
 			if (m_midi_devices[i]->midi_in)
 				m_midi_devices[i]->midi_in->closePort();
@@ -117,12 +110,7 @@ void GOrgueMidi::Open()
 		{
 			try
 			{
-				wxMutexGuiLeave();
-				{
-					wxCriticalSectionLocker locker(m_CloseLock);
-					this_dev.active = false;
-				}
-				wxMutexGuiEnter();
+				this_dev.active = false;
 
 				assert(this_dev.midi_in);
 				this_dev.channel_shift = channel_shift;
@@ -152,13 +140,6 @@ std::map<wxString, int>& GOrgueMidi::GetDevices()
 	return m_midi_device_map;
 }
 
-void GOrgueMidi::SetOrganFile(GrandOrgueFile* organfile)
-{
-	wxCriticalSectionLocker locker(m_lock);
-
-	m_organfile = organfile;
-}
-
 bool GOrgueMidi::HasActiveDevice()
 {
 	for (unsigned i = 0; i < m_midi_devices.size(); i++)
@@ -170,14 +151,8 @@ bool GOrgueMidi::HasActiveDevice()
 
 void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device)
 {
-	/* To avoid deadlocks while closing - must be the first one */
-	wxCriticalSectionLocker close_locker(m_CloseLock);
 	if (!device->active)
 		return;
-
-	/* Aquire first GUI lock and then MIDI state lock */
-	wxMutexGuiLocker gui_lock;
-	wxCriticalSectionLocker locker(m_lock);
 
 	GOrgueMidiEvent e;
 	e.FromMidi(msg);
@@ -202,29 +177,11 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* de
 	if (e.GetChannel() != -1)
 		e.SetChannel(((e.GetChannel() - 1 + device->channel_shift) & 0x0F) + 1);
 
-	if (e.GetMidiType() == MIDI_RESET && m_organfile)
-	{
-		m_organfile->Reset();
-		return;
-	}
+	if (wxTheApp->GetTopWindow())
+		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(e);
 
 	if (m_listening)
 		m_listen_evthandler->AddPendingEvent(e);
-
-	if (m_organfile)
-		m_organfile->ProcessMidi(e);
-
-	int j = e.GetEventCode();
-	if (j == -1)
-		return;
-	// MIDI for different organ??
-	std::map<long, wxString>::const_iterator it = m_Settings.GetOrganList().find(j);
-	if (it != m_Settings.GetOrganList().end())
-	{
-		wxCommandEvent event(wxEVT_LOADFILE, 0);
-		event.SetString(it->second);
-		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-	}
 }
 
 

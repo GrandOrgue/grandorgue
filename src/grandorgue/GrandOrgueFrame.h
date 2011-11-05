@@ -29,6 +29,7 @@
 class wxHtmlHelpController;
 class wxGaugeAudio;
 class wxSpinCtrl;
+class GOrgueMidiEvent;
 class GOrgueSettings;
 class GOrgueSound;
 
@@ -85,6 +86,8 @@ public:
 	void OnSize(wxSizeEvent& event);
 
 	void OnMenuOpen(wxMenuEvent& event);
+
+	void OnMidiEvent(GOrgueMidiEvent& event);
 
 	void DoSplash(bool timeout = true);
 

@@ -907,6 +907,12 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine)
 
 void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)
 {
+	if (event.GetMidiType() == MIDI_RESET)
+	{
+		Reset();
+		return;
+	}
+
 	for(unsigned i = 0; i < m_enclosure.size(); i++)
 		m_enclosure[i]->ProcessMidi(event);
 
