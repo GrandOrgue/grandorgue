@@ -166,7 +166,7 @@ bool GOrgueApp::OnInit()
 	m_docManager->SetMaxDocsOpen(1);
 
 	m_soundSystem = new GOrgueSound(*m_Settings);
-	m_Frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE  | wxMAXIMIZE_BOX | wxRESIZE_BORDER, *m_soundSystem);
+	m_Frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_TITLE), wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE  | wxMAXIMIZE_BOX | wxRESIZE_BORDER, *m_soundSystem);
 	SetTopWindow(m_Frame);
 	m_Frame->DoSplash();
 	bool open_sound = m_soundSystem->OpenSound();
