@@ -1,3 +1,5 @@
+include(${CMAKE_SOURCE_DIR}/GetPrerequisites.cmake)
+
 macro(InstallWxTranslations)
   set(moFiles)
   foreach(dir ${ARGN})
@@ -77,3 +79,46 @@ macro(CopyWxTranslations)
   InstallWxTranslations(${searchdirs})
 endmacro(CopyWxTranslations)
 
+
+macro(CopyDependencies target)
+  set(searchdirs)
+  set(_libdirs)
+  foreach(_file ${wxWidgets_LIBRARIES})
+    string(REGEX REPLACE "^-L(.*)$" "\\1/dummy" _file ${_file})
+    get_filename_component(dir ${_file} PATH)
+    set(_libdirs ${_libdirs} ${dir})
+  endforeach()
+
+  foreach(_dir ${wxWidgets_LIBRARY_DIRS} ${_libdirs})
+    if(IS_DIRECTORY ${_dir})
+      list(APPEND searchdirs ${_dir})
+    endif()
+   endforeach()
+  list(REMOVE_DUPLICATES searchdirs)
+
+  set(DESTINATION_DIR bin)
+  set(BUILD_DIR ${CMAKE_BINARY_DIR}/bin)
+
+  get_target_property(targetfile ${target} LOCATION)
+
+  set(prereqs)
+  set(libraries_to_copy)
+  get_prerequisites("${targetfile}" prereqs 1 1 "${searchdirs}" "")
+
+  set(_dlls)
+  foreach(d ${prereqs})
+    if(EXISTS ${d})
+      GET_FILENAME_COMPONENT(_basename ${d} NAME)
+
+      ADD_CUSTOM_COMMAND( 
+        OUTPUT ${BUILD_DIR}/${_basename}
+        COMMAND ${CMAKE_COMMAND} -E copy ${d} ${BUILD_DIR}/${_basename}
+        DEPENDS ${d} 
+      )
+      install(FILES ${BUILD_DIR}/${_basename} DESTINATION ${DESTINATION_DIR})
+      list(APPEND _dlls ${BUILD_DIR}/${_basename})
+    endif()
+  endforeach()
+
+ add_custom_target(copy_dlls_dependencies ALL DEPENDS ${_dlls})
+endmacro(CopyDependencies)
