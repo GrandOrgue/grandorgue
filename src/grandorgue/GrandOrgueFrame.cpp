@@ -72,7 +72,6 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(ID_TRANSPOSE, GOrgueFrame::OnSettingsTranspose)
 	// End
 	EVT_MENU_RANGE(ID_PANEL_FIRST, ID_PANEL_LAST, GOrgueFrame::OnPanel)
-	EVT_UPDATE_UI(ID_PANEL_MENU, GOrgueFrame::OnUpdatePanelMenu)
 	EVT_SIZE(GOrgueFrame::OnSize)
 	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
@@ -204,14 +203,12 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	tb->AddControl(m_Transpose);
 	m_Transpose->SetValue(0);
 
-	wxMenu * organ_menu = new wxMenu;
 	m_panel_menu = new wxMenu();
-	organ_menu->Append(ID_PANEL_MENU, _("&Panel"), m_panel_menu);
 
 	wxMenuBar *menu_bar = new wxMenuBar;
 	menu_bar->Append(file_menu, _("&File"));
 	menu_bar->Append(audio_menu, _("&Audio"));
-	menu_bar->Append(organ_menu, _("&Organ"));
+	menu_bar->Append(m_panel_menu, _("&Panel"));
 	menu_bar->Append(help_menu, _("&Help"));
 	SetMenuBar(menu_bar);
 	tb->Realize();
@@ -272,7 +269,7 @@ void GOrgueFrame::OnPanel(wxCommandEvent& event)
 	}
 }
 
-void GOrgueFrame::OnUpdatePanelMenu(wxUpdateUIEvent& event)
+void GOrgueFrame::UpdatePanelMenu()
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
@@ -551,6 +548,8 @@ void GOrgueFrame::DoSplash(bool timeout)
 void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
 {
     DoMenuUpdates(event.GetMenu());
+    if (event.GetMenu() == m_panel_menu)
+	    UpdatePanelMenu();
     event.Skip();
 }
 

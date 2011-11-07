@@ -80,7 +80,6 @@ public:
 	void OnKeyCommand(wxKeyEvent& event);
 	void OnChangeSetter(wxCommandEvent& event);
 	void OnChangeVolume(wxCommandEvent& event);
-	void OnUpdatePanelMenu(wxUpdateUIEvent& event);
 	void OnPanel(wxCommandEvent& event);
 
 	void OnSize(wxSizeEvent& event);
@@ -95,6 +94,7 @@ public:
 
 	DECLARE_EVENT_TABLE()
 protected:
+	void UpdatePanelMenu();
 	void AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString = wxEmptyString);
 	void AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, const wxBitmap& toolbarImage, wxItemKind kind = wxITEM_NORMAL);
 	void InitHelp();
