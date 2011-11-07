@@ -274,19 +274,33 @@ void GOrgueFrame::UpdatePanelMenu()
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
 	unsigned panelcount = std::min (organfile ? organfile->GetPanelCount() - 1 : 0, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
-	while (m_panel_menu->GetMenuItemCount() < panelcount)
-		m_panel_menu->AppendCheckItem(ID_PANEL_FIRST + m_panel_menu->GetMenuItemCount(), wxT("_"));
-	
-	while (m_panel_menu->GetMenuItemCount() > panelcount)
-	{
+
+	while (m_panel_menu->GetMenuItemCount() > 0)
 		m_panel_menu->Destroy(m_panel_menu->FindItemByPosition(m_panel_menu->GetMenuItemCount() - 1));
-	}
 
 	for(unsigned i = 0; i < panelcount; i++)
 	{
-		wxMenuItem* item = m_panel_menu->FindItemByPosition(i);
-		item->SetItemLabel(organfile->GetPanel(i + 1)->GetName());
-		item->Check(organfile->GetPanel(i + 1)->GetParentWindow() ? true : false);
+		GOGUIPanel* panel = organfile->GetPanel(i + 1);
+		wxMenu* menu = NULL;
+		if (panel->GetGroupName() == wxEmptyString)
+			menu = m_panel_menu;
+		else
+		{
+			for(unsigned j = 0; j < m_panel_menu->GetMenuItemCount(); j++)
+			{
+				wxMenuItem* it = m_panel_menu->FindItemByPosition(j);
+				if (it->GetItemLabel() == panel->GetGroupName() && it->GetSubMenu())
+					menu = it->GetSubMenu();
+			}
+			if (!menu)
+			{
+				menu = new wxMenu();
+				m_panel_menu->AppendSubMenu(menu, panel->GetGroupName());
+			}
+		}
+		wxMenuItem* item = menu->AppendCheckItem(ID_PANEL_FIRST + i, wxT("_"));
+		item->SetItemLabel(panel->GetName());
+		item->Check(panel->GetParentWindow() ? true : false);
 	}
 }
 

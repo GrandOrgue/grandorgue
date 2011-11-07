@@ -53,6 +53,7 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_images(0),
 	m_WoodImages(0),
 	m_Name(),
+	m_GroupName(),
 	m_metrics(0),
 	m_window(0),
 	m_parent(0),
@@ -95,6 +96,11 @@ const wxString& GOGUIPanel::GetName()
 	return m_Name;
 }
 
+const wxString& GOGUIPanel::GetGroupName()
+{
+	return m_GroupName;
+}
+
 GOGUIPanelWidget* GOGUIPanel::GetWindow()
 {
 	return m_window;
@@ -106,10 +112,11 @@ void GOGUIPanel::SetWindow(GOGUIPanelWidget* window)
 }
 
 
-void GOGUIPanel::Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group)
+void GOGUIPanel::Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name)
 {
 	m_metrics = metrics;
 	m_Name = name;
+	m_GroupName = group_name;
 	m_controls.resize(0);
 	m_group = group;
 
@@ -132,6 +139,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 	{
 		wxString buffer;
 		m_Name = m_organfile->GetChurchName();
+		m_GroupName = wxT("");
 		m_group = group = wxT("Organ");
 
 		{
@@ -260,6 +268,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 	{
 		wxString buffer;
 		m_Name = cfg.ReadString(group, wxT("Name"), 100);
+		m_GroupName = cfg.ReadString(group, wxT("Group"), 100, false);
 		unsigned m_nb_manuals    = cfg.ReadInteger(group, wxT("NumberOfManuals"), 0, m_organfile->GetManualAndPedalCount());
 		unsigned m_first_manual  = cfg.ReadBoolean(group, wxT("HasPedals")) ? 0 : 1;
 		unsigned m_NumberOfEnclosures = cfg.ReadInteger(group, wxT("NumberOfEnclosures"), 0, m_organfile->GetEnclosureCount());
