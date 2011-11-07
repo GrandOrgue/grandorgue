@@ -152,6 +152,7 @@ bool GOrgueApp::OnInit()
 	wxImage::AddHandler(new wxJPEGHandler);
 	wxImage::AddHandler(new wxGIFHandler);
 	wxImage::AddHandler(new wxPNGHandler);
+	wxImage::AddHandler(new wxICOHandler);
 	srand(::wxGetUTCTime());
 
 #ifdef __WIN32__

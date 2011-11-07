@@ -25,6 +25,7 @@
 #include "GOGUIPanelWidget.h"
 #include "OrganDocument.h"
 #include "GrandOrgueFile.h"
+#include "Images.h"
 
 IMPLEMENT_DYNAMIC_CLASS(OrganView, wxView)
 
@@ -61,7 +62,11 @@ bool OrganView::CreateWindow()
 
 	if (m_panelID)
 	{
-		m_frame = new wxDocChildFrame(m_doc, this, NULL, -1, organfile->GetPanel(m_panelID)->GetName());
+		wxIcon icon;
+		icon.CopyFromBitmap(GetImage_GOIcon());
+		wxDocChildFrame* frame = new wxDocChildFrame(m_doc, this, NULL, -1, organfile->GetPanel(m_panelID)->GetName());
+		frame->SetIcon(icon);
+		m_frame = frame;
 		m_container = new wxScrolledWindow(m_frame);
 		SetFrame(m_frame);
 	}
