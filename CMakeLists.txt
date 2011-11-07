@@ -30,6 +30,13 @@ endif ()
 if (NOT DEFINED RTMIDI_USE_MM)
   set(RTMIDI_USE_MM ON)
 endif ()
+if (NOT DEFINED INSTALL_DEPEND)
+  if(WIN32)
+    set(INSTALL_DEPEND ON)
+  else()  
+    set(INSTALL_DEPEND OFF)
+  endif ()
+endif ()
 
 # Project version numbers
 set(VERSION_MAJOR 0)
