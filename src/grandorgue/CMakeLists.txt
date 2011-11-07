@@ -9,6 +9,7 @@ endif()
 
 include(CMakeWxWidgetsInclude.txt)
 include(CMakeImages.txt)
+include(CMakeWxBundle.txt)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgueDef.h.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h/GrandOrgueDef.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h)
@@ -170,3 +171,7 @@ endif ()
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} RtAudio RtMidi)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
+if (INSTALL_DEPEND STREQUAL "ON")
+  CopyWxTranslations()
+endif()
