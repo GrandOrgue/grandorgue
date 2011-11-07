@@ -115,9 +115,10 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_Sound(sound),
 	m_Settings(sound.GetSettings())
 {
-#ifdef _WIN32
-	SetIcon(wxIcon(wxT("#101")));
-#endif
+	wxIcon icon;
+	icon.CopyFromBitmap(GetImage_GOIcon());
+	SetIcon(icon);
+
 	InitHelp();
 
 	wxMenu *file_menu = new wxMenu;

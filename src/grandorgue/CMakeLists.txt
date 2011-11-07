@@ -69,6 +69,7 @@ CONVERTIMAGE(Wood57.jpg)
 CONVERTIMAGE(Wood59.jpg)
 CONVERTIMAGE(Wood61.jpg)
 CONVERTIMAGE(Wood63.jpg)
+CONVERTIMAGE(GOIcon.ico)
 
 set(grandorgue_src
 contrib/sha1.cpp
