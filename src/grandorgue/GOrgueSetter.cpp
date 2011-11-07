@@ -283,7 +283,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(IniFileConfig& cfg, unsigned manual
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxString::Format(wxT("SetterCouplers%03d"), manual_nr), GOGUI_SETTER_COUPLER);
-	panel->Init(cfg, metrics, wxString::Format(_("Coupler %s"), manual->GetName().c_str()), wxString::Format(wxT("SetterCouplers%03d"), manual_nr));
+	panel->Init(cfg, metrics, wxString::Format(_("Coupler %s"), manual->GetName().c_str()), wxString::Format(wxT("SetterCouplers%03d"), manual_nr), _("Coupler"));
 
 	control = new GOGUIHW1Background(panel);
 	panel->AddControl(control);

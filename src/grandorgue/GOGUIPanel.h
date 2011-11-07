@@ -41,6 +41,7 @@ protected:
 	ptr_vector<wxBitmap> m_images;
 	ptr_vector<wxBitmap> m_WoodImages;
 	wxString m_Name;
+	wxString m_GroupName;
 	GOGUIDisplayMetrics* m_metrics;
 	GOGUIPanelWidget* m_window;
 	wxWindow* m_parent;
@@ -51,7 +52,7 @@ protected:
 public:
 	GOGUIPanel(GrandOrgueFile* organfile);
 	virtual ~GOGUIPanel();
-	void Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group);
+	void Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name=wxT(""));
 	void Load(IniFileConfig& cfg, wxString group);
 	void Save(IniFileConfig& cfg, bool prefix);
 
@@ -60,6 +61,7 @@ public:
 
 	GrandOrgueFile* GetOrganFile();
 	const wxString& GetName();
+	const wxString& GetGroupName();
 	void AddEvent(GOGUIControl* control);
 	void AddControl(GOGUIControl* control);
 	GOGUIDisplayMetrics* GetDisplayMetrics();
