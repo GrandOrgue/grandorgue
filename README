@@ -1,30 +1,161 @@
 GrandOrgue is a sample based pipe organ simulator.
 
-To compile in Windows, currently MinGW must be used.
-You will need to get the ASIO SDK and put it in the ASIO/ direcotry.
-      http://www.steinberg.net/534+M52087573ab0.html
-      (this link could easily change - search for ASIO SDK)
-You will need to get and build wxWidgets, in the wxWidgets/ directory.
-      http://wxwidgets.org/downloads/      
+It currently supports Windows and Linux. Porting to other OS supported by RtMidi, 
+RtAudio and wxWidgets should be possible with some build system adjustments.
 
-Code::Blocks was used as the IDE.
-A Makefile was exported, but it has not been tested.
+Building on Windows:
+--------------------
 
-To change or add any translations requires gettext.
+1) Install mingw 
+2) Install cmake (http://www.cmake.org/)
+3) Download a copy of wxMSW (wxWidgets for Windows) from http://www.wxwidgets.org/downloads/ (latest stable release while writing this guide - v2.8.12)
+4) Extract it somewhere easily accessible. Best use a short, simple path without spaces like c:\wxWidgets
+5) Open the command interpreter (cmd.exe) and run:
+  cd C:\wxWidgets\build\msw
+  mingw32-make -f makefile.gcc BUILD=bbb UNICODE=uuu SHARED=sss
 
-Help uses CHM-like files and HTML. To make a new HTB, zip up the
-contents of the help folder, then change the zip extension to htb.
+Where bbb can equal:
 
-Changes  31-03-2007 by Johan Blok (Media Center edition)
-- some support of VFD (display) while loading samplesets
-- loads a different organ driven by MIDI
-Changes  2009 by Graham Goode
-- changed the look and feel of the menu and taskbar with new Icons
-- changed the default look with updated console graphics
+    * release - builds wxWidgets in an optimised release form without debugging information (default)
+    * debug - builds wxWidgets in debug mode with no optimisations 
 
-To compile: 
-- directx headers are also required (download Microsoft directX SDK)
-- iMON VFD API (http://www.soundgraph.com/aspv1/iMON/download/iMON_VFD_API.zip)
+uuu can equal:
 
-Currect Code::Blocks expects wxWidgets to reside in ./wxWidgets, directx in ./directx, iMON VFD API in ./imon
+    * 1 - builds a unicode version of wxWidgets
+    * 0 - builds an ANSI version of wxWidgets (default) 
+
+sss can equal:
+
+    * 1 - builds shared libraries (default)
+    * 0 - builds statically linked libraries 
+
+so eg:
+  mingw32-make -f makefile.gcc BUILD=release UNICODE=1 SHARED=0
+
+
+6) Extract a copy of the GrandOrgue sources somewhere (eg. c:\gosources) [this file is part of them]
+7) Create an empty build directory, eg. c:\gobuild
+8) open a command interpreter (cmd.exe) and run:
+ cd c:\gobuild
+ cmake <path to Grand Orgue sources> -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=bbb -DUNICODE=xxx -DwxWidgets_ROOT_DIR=<path to wxwidget>
+
+Where bbb is:
+  Release - release build
+  Debug - debug build
+
+xxx is:
+  1 - unicode build
+  0 - ansi build
+
+Both settings should match the wxWidget build.
+
+ cmake c:\gosources -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1  -DwxWidgets_ROOT_DIR=c:\wxWidgets
+
+If you want to use ASIO, wou will need to get the ASIO SDK (http://www.steinberg.net/) and put it in 
+the ext/rt/asio directory according to the various README files.
+
+If you don't want to use ASIO, add -DRTAUDIO_USE_ASIO=OFF to the cmake parameters.
+
+Running cmake will claim, that it can't find various tools (eg. xsltproc, zip, gettext, po4a, docbook-xsl) - 
+they are optional and used to build the help system and/or translations.
+
+9) Build the project by running
+mingw32-make
+in the build directory.
+
+The resulting executeable could require some DLLs from the wxWidgets build directory or mingw.
+If you start it, Window will report each missing DLL. Simply copy them into the same directory as
+GrandOrgue.exe.
+
+If you install the NSIS installer (http://nsis.sourceforge.net/), you
+can create a simple installer with
+mingw32-make package
+
+Building on Linux:
+------------------
+
+1) Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack) and alsa (libasound) from your distribution
+2) Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
+3) Extract the GO sources somewhere, eg: /home/user/gosources
+4) Create an empty build directory, eg: mkdir /home/user/gobuild
+5) Run cmake:
+  cd /home/user/gobuild
+  cmake -DUNICODE=xxx -DCMAKE_BUILD_TYPE=bbb -G "Unix Makefiles" <path to go-sources>
+  make
+
+Where bbb is:
+  Release - release build
+  Debug - debug build
+
+xxx is:
+  1 - unicode build (most linux distributions will likely ship a unicode build)
+  0 - ansi build
+
+eg:
+  cmake -DUNICODE=1 -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
+
+Hint: For debugging a release build, add the -DCMAKE_CXX_FLAGS=-g option to cmake.
+
+Building Linux packages:
+-----------------------
+To build a deb package (Debian/Ubuntu), do
+sudo apt-get install build-essential fakeroot
+dpkg-buildpackage -rfakeroot
+
+If dpkg-buildpackage reports, that a package is missing, please install them too (sudo apt-get install <packagename).
+
+Cross-compiling for Windows:
+----------------------------
+
+1) Install mingw (On debian, install the packages gcc-mingw32 and mingw32-runtime) and
+   all packages needed to build GO under Linux.
+2) Prepare 5 directores:
+  * extracted wxWidgets sources (I used 2.8.12) to a directory (/wxsrc)
+  * extract GO trunk sources (with my last patches) to a directory (/gosrc)
+  * create empty install directory (/inst)
+  * create empty win build directory (/buildwin)
+  * create empty linux build directory (/buildlinux)
+In the following, I use the short path from above - normally
+you would put them somewhere under $HOME and use something like /home/user/GO/wxsrc.
+3) Build wxWidgets
+cd /wxsrc
+./configure --host=i586-mingw32msvc --prefix=/inst --enable-unicode
+make
+make install 
+4) Build GO for linux
+cd /buildlinux
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release /gosrc  -DUNICODE=1
+make
+5) Create toolchain definition for windows, file /inst/toolchain.def:
+---------------------------------------------------------------------
+# the name of the target operating system
+SET(CMAKE_SYSTEM_NAME Windows)
+SET(MSYS 1)
+
+# which compilers to use for C and C++
+SET(CMAKE_C_COMPILER i586-mingw32msvc-gcc)
+SET(CMAKE_CXX_COMPILER i586-mingw32msvc-g++)
+SET(CMAKE_RC_COMPILER i586-mingw32msvc-windres)
+
+# here is the target environment located
+SET(CMAKE_FIND_ROOT_PATH  /usr/i586-mingw32msvc /inst)
+
+# adjust the default behaviour of the FIND_XXX() commands:
+# search headers and libraries in the target environment, search 
+# programs in the host environment
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+---------------------------------------------------------------------
+
+6) Build GO for windows
+cd /buildwin
+cmake -DCMAKE_TOOLCHAIN_FILE=/inst/toolchain.def /gosrc -DUNICODE=1 -DCMAKE_INSTALL_PREFIX=/inst -DSTATIC=1 -DIMPORT_EXECUTABLES=/buildlinux/ImportExecutables.cmake -DRTAUDIO_USE_ASIO=OFF
+make
+
+-DRTAUDIO_USE_ASIO=OFF turns building ASIO off - else you need to put the ASIO SDK into the sources
+
+7) If you have installed NSIS too, run
+make package
+to create an installer
 
