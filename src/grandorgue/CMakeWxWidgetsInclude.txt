@@ -63,6 +63,15 @@ endif ()
 # Find wxWidgets
 find_package(wxWidgets COMPONENTS html net adv core base)
 
+# Run a second time, as USE_* are not honored the first time 
+# with an empty cache
+set(wxWidgets_CONFIGURATION ${required_wx_CONFIGURATION})
+set(wxWidgets_USE_UNICODE ${required_wx_USE_UNICODE})
+set(wxWidgets_USE_DEBUG ${required_wx_USE_DEBUG})
+set(wxWidgets_USE_STATIC ${required_wx_USE_STATIC})
+find_package(wxWidgets COMPONENTS html net adv core base)
+
+
 # Continuation of the previous hack for Windows.
 if (WIN32)
    set(BUILD_SHARED_LIBS ${OLD_BUILD_SHARED_LIBS})
