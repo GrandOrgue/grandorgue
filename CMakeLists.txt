@@ -60,6 +60,11 @@ macro(add_option _option)
   endif()
 endmacro(add_option option)
 
+if(UNIX)
+  install(FILES GrandOrgue.desktop DESTINATION share/applications)
+  install(FILES GrandOrgue-0.xpm DESTINATION share/pixmaps RENAME GrandOrgue.xpm)
+endif()
+
 # setup compiler flags for debug vs release compiles
 add_option(fomit-frame-pointer)
 add_option(ffast-math)
