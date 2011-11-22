@@ -174,4 +174,5 @@ install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
 if (INSTALL_DEPEND STREQUAL "ON")
   CopyWxTranslations()
+  CopyDependencies(${PROJECT_NAME})
 endif()
