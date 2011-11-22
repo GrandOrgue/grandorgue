@@ -1,0 +1,13 @@
+Source: grandorgue
+Section: sound
+Priority: optional
+Maintainer: Martin Koegler <martin.koegler@chello.at
+Build-Depends: debhelper (>= 7), cdbs, cmake, gettext, po4a, libjack-jackd2-dev, libasound2-dev, libwxgtk2.8-dev, docbook-xsl, xsltproc, zip 
+Standards-Version: 3.8.4
+
+Package: grandorgue
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: GrandOrgue - Virtual Pipe Organ Software
+ GrandOrgue is a virtual pipe organ sample player application supporting
+ a HW1 compatible file format.
