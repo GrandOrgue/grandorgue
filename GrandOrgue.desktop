@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=GrandOrgue
+Comment=GrandOrgue - virtual pipe organ sample player
+Exec=GrandOrgue %f
+Icon=GrandOrgue.xpm
+Terminal=false
+Type=Application
+Categories=Audio;
+
