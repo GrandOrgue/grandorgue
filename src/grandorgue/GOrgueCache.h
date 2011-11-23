@@ -40,6 +40,7 @@ public:
 	virtual ~GOrgueCache();
 
 	bool ReadHeader();
+	void FreeCacheFile();
 
 	bool Read(void* data, unsigned length);
 	/* Allocate and read a block written by WriteBlock */

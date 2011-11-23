@@ -117,6 +117,12 @@ void *GOrgueMemoryPool::GetCacheData(unsigned long offset, unsigned length)
 	return NULL;
 }
 
+void GOrgueMemoryPool::FreeCacheFile()
+{
+	FreePool();
+	InitPool();
+}
+
 bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 {
 	bool result = false;
