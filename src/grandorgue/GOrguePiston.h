@@ -26,14 +26,14 @@
 #include "GOrguePushbutton.h"
 
 class IniFileConfig;
-class GOrgueDrawstop;
+class GOrgueButton;
 
 class GOrguePiston : public GOrguePushbutton
 {
 
 public:
 
-	GOrgueDrawstop* drawstop;
+	GOrgueButton* drawstop;
 
 	GOrguePiston(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group);

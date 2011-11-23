@@ -24,34 +24,15 @@
 #define GORGUEDRAWSTOP_H
 
 #include <wx/wx.h>
-#include "GOrgueControl.h"
-#include "GOrgueMidiReceiver.h"
-#include "IniFileConfig.h"
+#include "GOrgueButton.h"
 
-class GOrgueMidiEvent;
-class GrandOrgueFile;
-
-class GOrgueDrawstop : public GOrgueControl
+class GOrgueDrawstop : public GOrgueButton
 {
-protected:
-	GOrgueMidiReceiver m_midi;
-	GrandOrgueFile* m_organfile;
-	bool m_DefaultToEngaged;
-	bool m_DisplayInInvertedState;
-
 public:
-
 	GOrgueDrawstop(GrandOrgueFile* organfile);
-	virtual ~GOrgueDrawstop();
 	void Load(IniFileConfig& cfg, wxString group, wxString name = wxT(""));
 	void Save(IniFileConfig& cfg, bool prefix);
-	void Push(void);
-	void ProcessMidi(const GOrgueMidiEvent& event);
-	GOrgueMidiReceiver& GetMidiReceiver();
-	bool IsEngaged() const;
-	bool DisplayInverted() const;
 	virtual void Set(bool on);
-
 };
 
 #endif

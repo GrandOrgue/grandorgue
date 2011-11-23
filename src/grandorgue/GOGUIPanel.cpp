@@ -22,8 +22,8 @@
 
 #include <wx/image.h>
 #include <wx/mstream.h>
+#include "GOGUIButton.h"
 #include "GOGUIControl.h"
-#include "GOGUIDrawStop.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
@@ -31,7 +31,6 @@
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
-#include "GOGUIPushbutton.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
@@ -186,7 +185,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			if (m_organfile->GetTremulant(i)->IsDisplayed())
 			{
 				buffer.Printf(wxT("Tremulant%03d"), i + 1);
-				GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetTremulant(i));
+				GOGUIControl* control = new GOGUIButton(this, m_organfile->GetTremulant(i));
 				control->Load(cfg, buffer);
 				AddControl(control);
 			}	
@@ -195,7 +194,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			if (m_organfile->GetDivisionalCoupler(i)->IsDisplayed())
 			{
 				buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
-				GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetDivisionalCoupler(i));
+				GOGUIControl* control = new GOGUIButton(this, m_organfile->GetDivisionalCoupler(i));
 				control->Load(cfg, buffer);
 				AddControl(control);
 			}	
@@ -204,7 +203,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			if (m_organfile->GetGeneral(i)->IsDisplayed())
 			{
 				buffer.Printf(wxT("General%03d"), i + 1);
-				GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetGeneral(i));
+				GOGUIControl* control = new GOGUIButton(this, m_organfile->GetGeneral(i), true);
 				control->Load(cfg, buffer);
 				AddControl(control);
 			}	
@@ -213,7 +212,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			if (m_organfile->GetPiston(i)->IsDisplayed())
 			{
 				buffer.Printf(wxT("ReversiblePiston%03d"), i + 1);
-				GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetPiston(i));
+				GOGUIControl* control = new GOGUIButton(this, m_organfile->GetPiston(i), true);
 				control->Load(cfg, buffer);
 				AddControl(control);
 			}	
@@ -234,7 +233,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 				{
 					buffer.Printf(wxT("Coupler%03d"), j + 1);
 					buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(group, buffer, 1, 64));
-					GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetManual(i)->GetCoupler(j));
+					GOGUIControl* control = new GOGUIButton(this, m_organfile->GetManual(i)->GetCoupler(j));
 					control->Load(cfg, buffer);
 					AddControl(control);
 				}
@@ -244,7 +243,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 				{
 					buffer.Printf(wxT("Stop%03d"), j + 1);
 					buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(group, buffer, 1, 448));
-					GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetManual(i)->GetStop(j));
+					GOGUIControl* control = new GOGUIButton(this, m_organfile->GetManual(i)->GetStop(j));
 					control->Load(cfg, buffer);
 					AddControl(control);
 				}
@@ -254,13 +253,13 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 				{
 					buffer.Printf(wxT("Divisional%03d"), j + 1);
 					buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(group, buffer, 1, 224));
-					GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetManual(i)->GetDivisional(j));
+					GOGUIControl* control = new GOGUIButton(this, m_organfile->GetManual(i)->GetDivisional(j), true);
 					control->Load(cfg, buffer);
 					AddControl(control);
 				}
 		}
 
-		unsigned m_NumberOfLabels = cfg.ReadInteger(group, wxT("NumberOfLabels"), 0, 16);
+		unsigned m_NumberOfLabels = cfg.ReadInteger(group, wxT("NumberOfLabels"), 0, 999);
 		for (unsigned i = 0; i < m_NumberOfLabels; i++)
 		{
 			buffer.Printf(wxT("Label%03d"), i + 1);
@@ -327,7 +326,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			buffer.Printf(wxT("Tremulant%03d"), i + 1);
 			unsigned tremulant_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetTremulantCount());
 			buffer.Printf(wxT("Tremulant%03d"), tremulant_nb);
-			GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetTremulant(tremulant_nb - 1));
+			GOGUIControl* control = new GOGUIButton(this, m_organfile->GetTremulant(tremulant_nb - 1));
 			control->Load(cfg, group + buffer);
 			AddControl(control);
 		}	
@@ -337,7 +336,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
 			unsigned coupler_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetDivisionalCouplerCount());
 			buffer.Printf(wxT("DivisionalCoupler%03d"), coupler_nb);
-			GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetDivisionalCoupler(coupler_nb - 1));
+			GOGUIControl* control = new GOGUIButton(this, m_organfile->GetDivisionalCoupler(coupler_nb - 1));
 			control->Load(cfg, group + buffer);
 			AddControl(control);
 		}	
@@ -347,7 +346,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			buffer.Printf(wxT("General%03d"), i + 1);
 			unsigned general_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetGeneralCount());
 			buffer.Printf(wxT("General%03d"), general_nb);
-			GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetGeneral(general_nb - 1));
+			GOGUIControl* control = new GOGUIButton(this, m_organfile->GetGeneral(general_nb - 1), true);
 			control->Load(cfg, group + buffer);
 			AddControl(control);
 		}	
@@ -357,7 +356,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			buffer.Printf(wxT("ReversiblePiston%03d"), i + 1);
 			unsigned piston_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetNumberOfReversiblePistons());
 			buffer.Printf(wxT("ReversiblePiston%03d"), piston_nb);
-			GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetPiston(piston_nb - 1));
+			GOGUIControl* control = new GOGUIButton(this, m_organfile->GetPiston(piston_nb - 1), true);
 			control->Load(cfg, group + buffer);
 			AddControl(control);
 		}	
@@ -379,7 +378,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			buffer.Printf(wxT("Coupler%03d"), j + 1);
 			unsigned coupler_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetManual(manual_nb)->GetCouplerCount());
 			buffer.Printf(wxT("Coupler%03d"), j + 1);
-			GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetManual(manual_nb)->GetCoupler(coupler_nb - 1));
+			GOGUIControl* control = new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetCoupler(coupler_nb - 1));
 			control->Load(cfg, group + buffer);
 			AddControl(control);
 		}
@@ -391,7 +390,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			buffer.Printf(wxT("Stop%03d"), j + 1);
 			unsigned stop_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetManual(manual_nb)->GetStopCount());
 			buffer.Printf(wxT("Stop%03d"), j + 1);
-			GOGUIControl* control = new GOGUIDrawstop(this, m_organfile->GetManual(manual_nb)->GetStop(stop_nb - 1));
+			GOGUIControl* control = new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetStop(stop_nb - 1));
 			control->Load(cfg, group + buffer);
 			AddControl(control);
 		}
@@ -403,12 +402,12 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			buffer.Printf(wxT("Divisional%03d"), j + 1);
 			unsigned divisional_nb  = cfg.ReadInteger(group, buffer, 1, m_organfile->GetManual(manual_nb)->GetDivisionalCount());
 			buffer.Printf(wxT("Divisional%03d"), j + 1);
-			GOGUIControl* control = new GOGUIPushbutton(this, m_organfile->GetManual(manual_nb)->GetDivisional(divisional_nb - 1));
+			GOGUIControl* control = new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetDivisional(divisional_nb - 1), true);
 			control->Load(cfg, group + buffer);
 			AddControl(control);
 		}
 
-		unsigned m_NumberOfLabels = cfg.ReadInteger(group, wxT("NumberOfLabels"), 0, 16);
+		unsigned m_NumberOfLabels = cfg.ReadInteger(group, wxT("NumberOfLabels"), 0, 999);
 		for (unsigned i = 0; i < m_NumberOfLabels; i++)
 		{
 			buffer.Printf(wxT("Label%03d"), i + 1);

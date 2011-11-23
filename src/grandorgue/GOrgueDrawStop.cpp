@@ -22,84 +22,30 @@
 
 #include "GOrgueDrawStop.h"
 #include "GOrgueLCD.h"
-#include "GrandOrgueFile.h"
+#include "IniFileConfig.h"
 
 GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
-	GOrgueControl(),
-	m_midi(organfile, MIDI_RECV_DRAWSTOP),
-	m_organfile(organfile),
-	m_DefaultToEngaged(false),
-	m_DisplayInInvertedState(false)
+	GOrgueButton(organfile, MIDI_RECV_DRAWSTOP, false)
 {
-
-}
-
-GOrgueDrawstop::~GOrgueDrawstop()
-{
-
 }
 
 void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, wxString name)
 {
-	m_DefaultToEngaged = cfg.ReadBoolean(group, wxT("DefaultToEngaged"));
-	m_DisplayInInvertedState = cfg.ReadBoolean(group, wxT("DisplayInInvertedState"));
-	m_midi.Load(cfg, group);
-	GOrgueControl::Load(cfg, group, name);
+	m_Engaged = cfg.ReadBoolean(group, wxT("DefaultToEngaged"));
+	GOrgueButton::Load(cfg, group, name);
 }
 
 void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix)
 {
-	m_midi.Save(cfg, prefix, m_group);
-	cfg.SaveHelper(prefix, m_group, wxT("DefaultToEngaged"), m_DefaultToEngaged ? wxT("Y") : wxT("N"));
-	GOrgueControl::Save(cfg, prefix);
-}
-
-void GOrgueDrawstop::Push()
-{
-	Set(m_DefaultToEngaged ^ true);
-}
-
-GOrgueMidiReceiver& GOrgueDrawstop::GetMidiReceiver()
-{
-	return m_midi;
+	cfg.SaveHelper(prefix, m_group, wxT("DefaultToEngaged"), IsEngaged() ? wxT("Y") : wxT("N"));
+	GOrgueButton::Save(cfg, prefix);
 }
 
 void GOrgueDrawstop::Set(bool on)
 {
-	if (m_DefaultToEngaged == on)
+	if (IsEngaged() == on)
 		return;
-	m_DefaultToEngaged = on;
-	m_organfile->ControlChanged(this);
+	Display(on);
 	GOrgueLCD_WriteLineTwo(GetName(), 2000);
 }
 
-void GOrgueDrawstop::ProcessMidi(const GOrgueMidiEvent& event)
-{
-	switch(m_midi.Match(event))
-	{
-	case MIDI_MATCH_CHANGE:
-		Push();
-		break;
-
-	case MIDI_MATCH_ON:
-		Set(true);
-		break;
-
-	case MIDI_MATCH_OFF:
-		Set(false);
-		break;
-
-	default:
-		break;
-	}
-}
-
-bool GOrgueDrawstop::IsEngaged() const
-{
-	return m_DefaultToEngaged;
-}
-
-bool GOrgueDrawstop::DisplayInverted() const
-{
-	return m_DisplayInInvertedState;
-}

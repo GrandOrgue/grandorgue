@@ -24,30 +24,12 @@
 #define GORGUEPUSHBUTTON_H
 
 #include <wx/wx.h>
-#include "GOrgueControl.h"
-#include "GOrgueMidiReceiver.h"
+#include "GOrgueButton.h"
 
-class GOrgueMidiEvent;
-class GrandOrgueFile;
-
-class GOrguePushbutton : public GOrgueControl
+class GOrguePushbutton : public GOrgueButton
 {
-protected:
-	GOrgueMidiReceiver m_midi;
-	GrandOrgueFile* m_organfile;
-	bool m_IsPushed;
-
 public:
 	GOrguePushbutton(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, wxString name = wxT(""));
-	void Save(IniFileConfig& cfg, bool prefix);
-	virtual void Push() { };
-	void ProcessMidi(const GOrgueMidiEvent& event);
-	GOrgueMidiReceiver& GetMidiReceiver();
-	virtual ~GOrguePushbutton() { };
-	void Display(bool onoff);
-	bool IsPushed();
-
 };
 
 #endif
