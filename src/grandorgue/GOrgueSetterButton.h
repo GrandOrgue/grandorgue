@@ -24,36 +24,19 @@
 #define GORGUESETTERBUTTON_H
 
 #include <wx/wx.h>
-#include "GOrgueMidiReceiver.h"
+#include "GOrgueButton.h"
 
-class GOrgueMidiEvent;
 class GOrgueSetter;
-class GrandOrgueFile;
 
-class GOrgueSetterButton
+class GOrgueSetterButton : public GOrgueButton
 {
 protected:
-	GOrgueMidiReceiver m_midi;
-	GrandOrgueFile* m_organfile;
 	GOrgueSetter* m_setter;
-	bool m_DefaultToEngaged;
-	bool m_Pushbutton;
-	wxString m_Name;
-	wxString m_group;
 
 public:
-
 	GOrgueSetterButton(GrandOrgueFile* organfile, GOrgueSetter* setter, bool Pushbutton);
-	virtual ~GOrgueSetterButton();
-	void Load(IniFileConfig& cfg, wxString group, wxString Name);
-	void Save(IniFileConfig& cfg, bool prefix);
 	void Push(void);
 	void Set(bool on);
-	void Display(bool on);
-	void ProcessMidi(const GOrgueMidiEvent& event);
-	GOrgueMidiReceiver& GetMidiReceiver();
-	bool IsEngaged() const;
-	const wxString& GetName();
 };
 
 #endif

@@ -22,35 +22,11 @@
 
 #include "GOrgueSetterButton.h"
 #include "GOrgueSetter.h"
-#include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 GOrgueSetterButton::GOrgueSetterButton(GrandOrgueFile* organfile, GOrgueSetter* setter, bool Pushbutton) :
-	m_midi(organfile, MIDI_RECV_SETTER),
-	m_organfile(organfile),
-	m_setter(setter),
-	m_DefaultToEngaged(false),
-	m_Pushbutton(Pushbutton),
-	m_Name(),
-	m_group()
+	GOrgueButton(organfile, MIDI_RECV_SETTER, Pushbutton),
+	m_setter(setter)
 {
-}
-
-GOrgueSetterButton::~GOrgueSetterButton()
-{
-
-}
-
-void GOrgueSetterButton::Load(IniFileConfig& cfg, wxString group, wxString Name)
-{
-	m_group = group;
-	m_Name = cfg.ReadString(group, wxT("Name"), 255, false, Name);
-	m_midi.Load(cfg, group);
-}
-
-void GOrgueSetterButton::Save(IniFileConfig& cfg, bool prefix)
-{
-	m_midi.Save(cfg, prefix, m_group);
 }
 
 void GOrgueSetterButton::Push()
@@ -58,61 +34,13 @@ void GOrgueSetterButton::Push()
 	if (m_Pushbutton)
 		m_setter->Change(this);
 	else
-		Set(m_DefaultToEngaged ^ true);
-}
-
-GOrgueMidiReceiver& GOrgueSetterButton::GetMidiReceiver()
-{
-	return m_midi;
-}
-
-void GOrgueSetterButton::Display(bool on)
-{
-	m_DefaultToEngaged = on;
-	m_organfile->ControlChanged(this);
+		GOrgueButton::Push();
 }
 
 void GOrgueSetterButton::Set(bool on)
 {
-	if (m_DefaultToEngaged == on)
+	if (IsEngaged() == on)
 		return;
 	m_setter->Change(this);
-	m_DefaultToEngaged = on;
-	m_organfile->ControlChanged(this);
-}
-
-void GOrgueSetterButton::ProcessMidi(const GOrgueMidiEvent& event)
-{
-	switch(m_midi.Match(event))
-	{
-	case MIDI_MATCH_CHANGE:
-		Push();
-		break;
-
-	case MIDI_MATCH_ON:
-		if (m_Pushbutton)
-			Push();
-		else
-			Set(true);
-		break;
-
-	case MIDI_MATCH_OFF:
-		if (!m_Pushbutton)
-			Set(false);
-		break;
-
-	default:
-		break;
-	}
-}
-
-bool GOrgueSetterButton::IsEngaged() const
-{
-	return m_DefaultToEngaged;
-}
-
-
-const wxString& GOrgueSetterButton::GetName()
-{
-	return m_Name;
+	Display(on);
 }

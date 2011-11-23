@@ -21,57 +21,8 @@
  */
 
 #include "GOrguePushbutton.h"
-#include "IniFileConfig.h"
-#include "GrandOrgueFile.h"
 
 GOrguePushbutton::GOrguePushbutton(GrandOrgueFile* organfile) :
-	GOrgueControl(),
-	m_midi(organfile, MIDI_RECV_BUTTON),
-	m_organfile(organfile),
-	m_IsPushed(false)
+	GOrgueButton(organfile, MIDI_RECV_BUTTON, true)
 {
-}
-
-GOrgueMidiReceiver& GOrguePushbutton::GetMidiReceiver()
-{
-	return m_midi;
-}
-
-void GOrguePushbutton::Load(IniFileConfig& cfg, wxString group, wxString name)
-{
-	m_midi.Load(cfg, group);
-	GOrgueControl::Load(cfg, group, name);
-}
-
-void GOrguePushbutton::Save(IniFileConfig& cfg, bool prefix)
-{
-	m_midi.Save(cfg, prefix, m_group);
-}
-
-void GOrguePushbutton::Display(bool on)
-{
-	if (m_IsPushed != on)
-	{
-		m_IsPushed = on;
-		m_organfile->ControlChanged(this);
-	}
-}
-
-void GOrguePushbutton::ProcessMidi(const GOrgueMidiEvent& event)
-{
-	switch(m_midi.Match(event))
-	{
-	case MIDI_MATCH_CHANGE:
-	case MIDI_MATCH_ON:
-		Push();
-		break;
-
-	default:
-		break;
-	}
-}
-
-bool GOrguePushbutton::IsPushed()
-{
-	return m_IsPushed;
 }

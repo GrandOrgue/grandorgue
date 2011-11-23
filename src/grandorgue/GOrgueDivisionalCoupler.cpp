@@ -22,6 +22,7 @@
 
 #include "GOrgueDivisionalCoupler.h"
 #include "GrandOrgueFile.h"
+#include "IniFileConfig.h"
 
 GOrgueDivisionalCoupler::GOrgueDivisionalCoupler(GrandOrgueFile* organfile) :
 	GOrgueDrawstop(organfile),

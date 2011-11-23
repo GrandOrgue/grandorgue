@@ -26,7 +26,7 @@
 #include <wx/wx.h>
 #include "ptrvector.h"
 
-class GOrgueControl;
+class GOrgueButton;
 class GOGUIDisplayMetrics;
 class GrandOrgueFile;
 class GOGUIControl;

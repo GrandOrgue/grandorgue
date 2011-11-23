@@ -79,7 +79,6 @@ GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
 GOGUIHW1DisplayMetrics.cpp
 GOGUISetterDisplayMetrics.cpp
-GOGUIDrawStop.cpp
 GOGUIEnclosure.cpp
 GOGUIHW1Background.cpp
 GOGUILabel.cpp
@@ -87,8 +86,6 @@ GOGUIManual.cpp
 GOGUIManualBackground.cpp
 GOGUIPanel.cpp
 GOGUIPanelWidget.cpp
-GOGUIPushbutton.cpp
-GOGUISetterButton.cpp
 GOSoundEngine.cpp
 GOSoundProvider.cpp
 GOSoundProviderSynthedTrem.cpp
@@ -99,7 +96,6 @@ GOSoundThread.cpp
 GOrgueWave.cpp
 GOrgueCache.cpp
 GOrgueCacheWriter.cpp
-GOrgueControl.cpp
 GOrgueBitmapCache.cpp
 GOrgueButton.cpp
 GOrgueCoupler.cpp

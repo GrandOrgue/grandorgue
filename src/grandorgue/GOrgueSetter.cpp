@@ -20,13 +20,11 @@
  * MA 02111-1307, USA.
  */
 
-#include "GOGUIDrawStop.h"
+#include "GOGUIButton.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUILabel.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUIPanel.h"
-#include "GOGUIPushbutton.h"
-#include "GOGUISetterButton.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
@@ -271,8 +269,8 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(IniFileConfig& cfg, wxString group,
 		return enclosure;
 	}
 
-	GOGUISetterButton* button = new GOGUISetterButton(panel, m_button[element]);
-	button->Init(cfg, 1, 1, group);
+	GOGUIButton* button = new GOGUIButton(panel, m_button[element], false, 1, 1);
+	button->Load(cfg, group);
 	return button;
 }
 
@@ -303,35 +301,35 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(IniFileConfig& cfg, unsigned manual
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
 		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i), _("16"), false, false, -12, i, GOrgueCoupler::COUPLER_NORMAL);
 		manual->AddCoupler(coupler);
-		control = new GOGUIDrawstop(panel, coupler, 2, 100 + i);
+		control = new GOGUIButton(panel, coupler, false, 2, 100 + i);
 		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i));
 		panel->AddControl(control);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
 		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i), manual_nr != i ? _("8") : _("U.O."), manual_nr == i, false, 0, i, GOrgueCoupler::COUPLER_NORMAL);
 		manual->AddCoupler(coupler);
-		control = new GOGUIDrawstop(panel, coupler, 3, 100 + i);
+		control = new GOGUIButton(panel, coupler, false, 3, 100 + i);
 		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i));
 		panel->AddControl(control);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
 		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i), _("4"), false, false, 12, i, GOrgueCoupler::COUPLER_NORMAL);
 		manual->AddCoupler(coupler);
-		control = new GOGUIDrawstop(panel, coupler, 4, 100 + i);
+		control = new GOGUIButton(panel, coupler, false, 4, 100 + i);
 		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i));
 		panel->AddControl(control);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
 		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i), _("BAS"), false, false, 0, i, GOrgueCoupler::COUPLER_BASS);
 		manual->AddCoupler(coupler);
-		control = new GOGUIDrawstop(panel, coupler, 5, 100 + i);
+		control = new GOGUIButton(panel, coupler, false, 5, 100 + i);
 		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i));
 		panel->AddControl(control);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
 		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i), _("MEL"), false, false, 0, i, GOrgueCoupler::COUPLER_MELODY);
 		manual->AddCoupler(coupler);
-		control = new GOGUIDrawstop(panel, coupler, 6, 100 + i);
+		control = new GOGUIButton(panel, coupler, false, 6, 100 + i);
 		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i));
 		panel->AddControl(control);
 	}
@@ -343,7 +341,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(IniFileConfig& cfg, unsigned manual
 GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(IniFileConfig& cfg)
 {
 	GOGUIControl* control;
-	GOGUISetterButton* button;
+	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterDivisionals"), GOGUI_SETTER_DIVISIONALS);
@@ -352,24 +350,24 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(IniFileConfig& cfg)
 	control = new GOGUIHW1Background(panel);
 	panel->AddControl(control);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SET]);
-	button->Init(cfg, 1, 100, wxT("SetterGeneralsSet"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false, 1, 100);
+	button->Load(cfg, wxT("SetterGeneralsSet"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_REGULAR]);
-	button->Init(cfg, 3, 100, wxT("SetterGerneralsRegular"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_REGULAR], false, 3, 100);
+	button->Load(cfg, wxT("SetterGerneralsRegular"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPE]);
-	button->Init(cfg, 4, 100, wxT("SetterGeneralsScope"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPE], false, 4, 100);
+	button->Load(cfg, wxT("SetterGeneralsScope"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPED]);
-	button->Init(cfg, 5, 100, wxT("SetterGeneralsScoped"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPED], false, 5, 100);
+	button->Load(cfg, wxT("SetterGeneralsScoped"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_FULL]);
-	button->Init(cfg, 7, 100, wxT("SetterGeneralsFull"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_FULL], false, 7, 100);
+	button->Load(cfg, wxT("SetterGeneralsFull"));
 	panel->AddControl(button);
 
 	for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
@@ -389,7 +387,7 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(IniFileConfig& cfg)
 			divisional->Load(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
 			manual->AddDivisional(divisional);
 
-			control = new GOGUIPushbutton(panel, divisional, j + 3, 100 + i);
+			control = new GOGUIButton(panel, divisional, true, j + 3, 100 + i);
 			control->Load(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100));
 			panel->AddControl(control);
 		}
@@ -401,7 +399,7 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(IniFileConfig& cfg)
 GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(IniFileConfig& cfg)
 {
 	GOGUIControl* control;
-	GOGUISetterButton* button;
+	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterGenerals"), GOGUI_SETTER_GENERALS);
@@ -410,30 +408,30 @@ GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(IniFileConfig& cfg)
 	control = new GOGUIHW1Background(panel);
 	panel->AddControl(control);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SET]);
-	button->Init(cfg, 1, 100, wxT("SetterGeneralsSet"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false, 1, 100);
+	button->Load(cfg, wxT("SetterGeneralsSet"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_REGULAR]);
-	button->Init(cfg, 3, 100, wxT("SetterGerneralsRegular"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_REGULAR], false, 3, 100);
+	button->Load(cfg, wxT("SetterGerneralsRegular"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPE]);
-	button->Init(cfg, 4, 100, wxT("SetterGeneralsScope"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPE], false, 4, 100);
+	button->Load(cfg, wxT("SetterGeneralsScope"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPED]);
-	button->Init(cfg, 5, 100, wxT("SetterGeneralsScoped"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPED], false, 5, 100);
+	button->Load(cfg, wxT("SetterGeneralsScoped"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_FULL]);
-	button->Init(cfg, 7, 100, wxT("SetterGeneralsFull"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_FULL], false, 7, 100);
+	button->Load(cfg, wxT("SetterGeneralsFull"));
 	panel->AddControl(button);
 
 	for(unsigned i = 0; i < 30; i++)
 	{
-		button = new GOGUISetterButton(panel, m_button[ID_SETTER_GENERAL00 + i]);
-		button->Init(cfg, (i % 10) + 1, 100 + i / 10, wxString::Format(wxT("SetterGeneral%d"), i + 1), true);
+		button = new GOGUIButton(panel, m_button[ID_SETTER_GENERAL00 + i], true, (i % 10) + 1, 100 + i / 10);
+		button->Load(cfg, wxString::Format(wxT("SetterGeneral%d"), i + 1));
 		panel->AddControl(button);
 	}
 
@@ -443,7 +441,7 @@ GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(IniFileConfig& cfg)
 GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 {
 	GOGUIControl* control;
-	GOGUISetterButton* button;
+	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("Setter"), GOGUI_SETTER_SETTER);
@@ -456,83 +454,83 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 	PosDisplay->Load(cfg, wxT("SetterCurrentPosition"));
 	panel->AddControl(PosDisplay);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CURRENT]);
-	button->Init(cfg, 1, 100, wxT("SetterCurrent"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_CURRENT], false, 1, 100);
+	button->Load(cfg, wxT("SetterCurrent"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_M100]);
-	button->Init(cfg, 2, 100, wxT("SetterM100"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_M100], false, 2, 100);
+	button->Load(cfg, wxT("SetterM100"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_M10]);
-	button->Init(cfg, 3, 100, wxT("SetterM10"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_M10], false, 3, 100);
+	button->Load(cfg, wxT("SetterM10"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_M1]);
-	button->Init(cfg, 4, 100, wxT("SetterM1"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_M1], false, 4, 100);
+	button->Load(cfg, wxT("SetterM1"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_PREV]);
-	button->Init(cfg, 5, 100, wxT("SetterPrev"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PREV], false, 5, 100);
+	button->Load(cfg, wxT("SetterPrev"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_NEXT]);
-	button->Init(cfg, 6, 100, wxT("SetterNext"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_NEXT], false, 6, 100);
+	button->Load(cfg, wxT("SetterNext"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_P1]);
-	button->Init(cfg, 7, 100, wxT("SetterP1"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_P1], false, 7, 100);
+	button->Load(cfg, wxT("SetterP1"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_P10]);
-	button->Init(cfg, 8, 100, wxT("SetterP10"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_P10], false, 8, 100);
+	button->Load(cfg, wxT("SetterP10"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_P100]);
-	button->Init(cfg, 9, 100, wxT("SetterP100"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_P100], false, 9, 100);
+	button->Load(cfg, wxT("SetterP100"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_HOME]);
-	button->Init(cfg, 10, 100, wxT("SetterHome"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_HOME], false, 10, 100);
+	button->Load(cfg, wxT("SetterHome"));
 	panel->AddControl(button);
 
 	for(unsigned i = 0; i < 10; i++)
 	{
-		button = new GOGUISetterButton(panel, m_button[ID_SETTER_L0 + i]);
-		button->Init(cfg, i + 1, 101, wxString::Format(wxT("SetterL%d"), i));
+		button = new GOGUIButton(panel, m_button[ID_SETTER_L0 + i], false, i + 1, 101);
+		button->Load(cfg, wxString::Format(wxT("SetterL%d"), i));
 		panel->AddControl(button);
 	}
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SET]);
-	button->Init(cfg, 1, 102, wxT("SetterSet"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false, 1, 102);
+	button->Load(cfg, wxT("SetterSet"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_REGULAR]);
-	button->Init(cfg, 3, 102, wxT("SetterRegular"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_REGULAR], false, 3, 102);
+	button->Load(cfg, wxT("SetterRegular"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPE]);
-	button->Init(cfg, 4, 102, wxT("SetterScope"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPE], false, 4, 102);
+	button->Load(cfg, wxT("SetterScope"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPED]);
-	button->Init(cfg, 5, 102, wxT("SetterScoped"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPED], false, 5, 102);
+	button->Load(cfg, wxT("SetterScoped"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_FULL]);
-	button->Init(cfg, 7, 102, wxT("SetterFull"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_FULL], false, 7, 102);
+	button->Load(cfg, wxT("SetterFull"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_GC]);
-	button->Init(cfg, 8, 102, wxT("SetterInsert"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_GC], false, 8, 102);
+	button->Load(cfg, wxT("SetterInsert"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_INSERT]);
-	button->Init(cfg, 9, 102, wxT("SetterInsert"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_INSERT], false, 9, 102);
+	button->Load(cfg, wxT("SetterInsert"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_DELETE]);
-	button->Init(cfg, 10, 102, wxT("SetterDelete"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_DELETE], false, 10, 102);
+	button->Load(cfg, wxT("SetterDelete"));
 	panel->AddControl(button);
 
 	return panel;
@@ -541,7 +539,7 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(IniFileConfig& cfg)
 {
 	GOGUIControl* control;
-	GOGUISetterButton* button;
+	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterCrescendo"), GOGUI_SETTER_CRESCENDO);
@@ -558,52 +556,52 @@ GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(IniFileConfig& cfg)
 	PosDisplay->Load(cfg, wxT("SetterCrescendoPosition"));
 	panel->AddControl(PosDisplay);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SET]);
-	button->Init(cfg, 1, 100, wxT("SetterCrescendoSet"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false, 1, 100);
+	button->Load(cfg, wxT("SetterCrescendoSet"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_REGULAR]);
-	button->Init(cfg, 3, 100, wxT("SetterCrescendoRegular"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_REGULAR], false, 3, 100);
+	button->Load(cfg, wxT("SetterCrescendoRegular"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPE]);
-	button->Init(cfg, 4, 100, wxT("SetterCrescendoScope"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPE], false, 4, 100);
+	button->Load(cfg, wxT("SetterCrescendoScope"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_SCOPED]);
-	button->Init(cfg, 5, 100, wxT("SetterCrescendoScoped"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPED], false, 5, 100);
+	button->Load(cfg, wxT("SetterCrescendoScoped"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_FULL]);
-	button->Init(cfg, 7, 100, wxT("SetterCrescendoFull"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_FULL], false, 7, 100);
+	button->Load(cfg, wxT("SetterCrescendoFull"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_A]);
-	button->Init(cfg, 1, 101, wxT("SetterCrescendoA"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_A], false, 1, 101);
+	button->Load(cfg, wxT("SetterCrescendoA"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_B]);
-	button->Init(cfg, 2, 101, wxT("SetterCrescendoB"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_B], false, 2, 101);
+	button->Load(cfg, wxT("SetterCrescendoB"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_C]);
-	button->Init(cfg, 3, 101, wxT("SetterCrescendoC"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_C], false, 3, 101);
+	button->Load(cfg, wxT("SetterCrescendoC"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_D]);
-	button->Init(cfg, 4, 101, wxT("SetterCrescendoD"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_D], false, 4, 101);
+	button->Load(cfg, wxT("SetterCrescendoD"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_PREV]);
-	button->Init(cfg, 6, 101, wxT("SetterCrescendoPrev"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_PREV], false, 6, 101);
+	button->Load(cfg, wxT("SetterCrescendoPrev"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_CURRENT]);
-	button->Init(cfg, 7, 101, wxT("SetterCrescendoCurrent"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_CURRENT], false, 7, 101);
+	button->Load(cfg, wxT("SetterCrescendoCurrent"));
 	panel->AddControl(button);
 
-	button = new GOGUISetterButton(panel, m_button[ID_SETTER_CRESCENDO_NEXT]);
-	button->Init(cfg, 8, 101, wxT("SetterCrescendoNext"));
+	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_NEXT], false, 8, 101);
+	button->Load(cfg, wxT("SetterCrescendoNext"));
 	panel->AddControl(button);
 
 	return panel;
