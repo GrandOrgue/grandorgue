@@ -67,19 +67,14 @@ void GOSoundProviderWave::LoadFromFile
 	{
 
 		m_SampleRate = wave.GetSampleRate();
-		wave.ReadSamples(data, GOrgueWave::SF_SIGNEDSHORT, m_SampleRate);
-
 		m_Channels = wave.GetChannels();
+		if (!m_Stereo)
+			m_Channels = 1;
+		wave.ReadSamples(data, GOrgueWave::SF_SIGNEDSHORT, m_SampleRate, m_Channels);
+
 		if (m_Channels < 1 || m_Channels > 2)
 			throw (wxString)_("< More than 2 channels in");
 
-		if (m_Channels == 2 && !m_Stereo)
-		{
-			unsigned sample_count = wave.GetLength();
-			for(unsigned i = 0, j = 0; j < sample_count; j++, i+=2)
-				data[j] = (data[i] + data[i + 1]) >> 1;
-			m_Channels = 1;
-		}
 		/* Basically, sample playback reads BLOCKS_PER_FRAME * 2 samples at a
 		 * time (because the engine always plays back in stereo at present),
 		 * which means that if the loop ranges, attack segment length or

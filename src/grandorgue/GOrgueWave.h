@@ -98,7 +98,7 @@ public:
 	 * Reads all of the samples in the wave file into destBuffer at the
 	 * specified read format and sample rate.
 	 */
-	void ReadSamples(void* dest_buffer, GOrgueWave::SAMPLE_FORMAT read_format, unsigned sample_rate) const;
+	void ReadSamples(void* dest_buffer, GOrgueWave::SAMPLE_FORMAT read_format, unsigned sample_rate, unsigned channels) const;
 
 
 	unsigned GetSampleRate() const;
