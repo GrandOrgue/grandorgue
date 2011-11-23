@@ -50,7 +50,6 @@
 GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_controls(0),
-	m_images(0),
 	m_WoodImages(0),
 	m_Name(),
 	m_GroupName(),
@@ -61,9 +60,6 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_size(0, 0, 0, 0),
 	m_InitialOpenWindow(false)
 {
-	for (unsigned i = 0; i < GetImageCount_Stop(); i++)
-		m_images.push_back(new wxBitmap(GetImage_Stop(i)));
-
 	for (unsigned i = 0; i < GetImageCount_Wood(); i++)
 	{
 		wxBitmap bmp = GetImage_Wood(i);
@@ -525,11 +521,6 @@ void GOGUIPanel::Save(IniFileConfig& cfg, bool prefix)
 void GOGUIPanel::Modified()
 {
 	m_organfile->Modified();
-}
-
-wxBitmap* GOGUIPanel::GetImage(unsigned index)
-{
-	return m_images[index];
 }
 
 wxBitmap* GOGUIPanel::GetWoodImage(unsigned index)
