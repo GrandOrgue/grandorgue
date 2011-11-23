@@ -47,7 +47,6 @@
 #include "GOrgueTremulant.h"
 #include "GOrgueWindchest.h"
 #include "OrganDocument.h"
-#include "GrandOrgueDef.h"
 #include "GOGUIPanel.h"
 #include "GOSoundEngine.h"
 #include "contrib/sha1.h"
@@ -456,17 +455,11 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 			if (cache_ok)
 			{
-				int magic;
 				unsigned char hash1[20], hash2[20];
-				if (!reader.Read(&magic, sizeof(magic)) ||
-				    (magic != GRANDORGUE_CACHE_MAGIC))
+				if (!reader.ReadHeader())
 				{
 					cache_ok = false;
-					wxLogWarning
-						(_("Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache.")
-						,GRANDORGUE_CACHE_MAGIC
-						,magic
-						);
+					wxLogWarning (_("Cache file had bad magic bypassing cache."));
 				}
 				GenerateCacheHash(hash1);
 				if (!reader.Read(hash2, sizeof(hash2)) || 
@@ -537,10 +530,7 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 	GOrgueCacheWriter writer(file, compress);
 
 	/* Save pipes to cache */
-	bool cache_save_ok = true;
-	int magic = GRANDORGUE_CACHE_MAGIC;
-	if (!writer.Write(&magic, sizeof(magic)))
-		cache_save_ok = false;
+	bool cache_save_ok = writer.WriteHeader();
 	
 	unsigned char hash[20];
 	GenerateCacheHash(hash);

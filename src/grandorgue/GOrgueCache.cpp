@@ -21,6 +21,7 @@
  */
 
 #include "GOrgueCache.h"
+#include "GrandOrgueDef.h"
 #include "GOrgueMemoryPool.h"
 #include <wx/wx.h>
 #include <wx/wfstream.h>
@@ -31,29 +32,37 @@ GOrgueCache::GOrgueCache(wxFile& cache_file, GOrgueMemoryPool& pool) :
 	m_fstream(0),
 	m_zstream(0),
 	m_pool(pool),
-	m_Mapable(false)
+	m_Mapable(false),
+	m_OK(false)
 {
-	m_fstream = new wxFileInputStream(cache_file);
-	m_zstream = new wxZlibInputStream(*m_fstream);
-	m_zstream->Peek();
-	if (m_fstream->IsOk() && m_zstream->IsOk())
+	int magic;
+
+	m_stream = m_fstream = new wxFileInputStream(cache_file);
+
+	m_fstream->Read(&magic, sizeof(magic));
+	if (m_fstream->LastRead() == sizeof(magic) &&
+	    magic == GRANDORGUE_CACHE_MAGIC)
 	{
-		/* It looks like compressed data */
-		m_stream = m_zstream;
-		m_Mapable = false;
+		m_Mapable = true;
+		m_OK = true;
 	}
 	else
 	{
-		delete m_zstream;
-		delete m_fstream;
-		m_zstream = 0;
-		m_fstream = new wxFileInputStream(cache_file);
 		m_fstream->SeekI(0, wxFromStart);
-		m_stream = m_fstream;
-		m_Mapable = true;
+		m_stream = m_zstream = new wxZlibInputStream(*m_fstream);
+		if (m_fstream->IsOk() && m_zstream->IsOk())
+		{
+			m_zstream->Read(&magic, sizeof(magic));
+			if (m_zstream->LastRead() == sizeof(magic) &&
+			    magic == GRANDORGUE_CACHE_MAGIC)
+			{
+				m_Mapable = false;
+				m_OK = true;
+			}
+		}
 	}
 
-	if (m_stream->TellI() == wxInvalidOffset)
+	if (!m_OK ||  m_stream->TellI() == wxInvalidOffset)
 		m_Mapable = false;
 	if (m_Mapable)
 		m_Mapable = m_pool.SetCacheFile(cache_file);
@@ -63,6 +72,12 @@ GOrgueCache::~GOrgueCache()
 {
 	Close();
 }
+
+bool GOrgueCache::ReadHeader()
+{
+	return m_OK;
+}
+
 
 void GOrgueCache::Close()
 {

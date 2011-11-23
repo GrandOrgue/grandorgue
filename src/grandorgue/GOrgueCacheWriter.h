@@ -33,6 +33,7 @@ public:
 	GOrgueCacheWriter(wxOutputStream& stream, bool compressed);
 	virtual ~GOrgueCacheWriter();
 
+	bool WriteHeader();
 	bool Write(const void* data, unsigned length);
 	/* Write an bigger malloced block */
 	bool WriteBlock(const void* data, unsigned length);

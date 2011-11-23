@@ -22,6 +22,7 @@
 
 #include <wx/wx.h>
 #include <wx/zstream.h>
+#include "GrandOrgueDef.h"
 #include "GOrgueCacheWriter.h"
 
 GOrgueCacheWriter::GOrgueCacheWriter(wxOutputStream& stream, bool compressed) :
@@ -38,6 +39,14 @@ GOrgueCacheWriter::GOrgueCacheWriter(wxOutputStream& stream, bool compressed) :
 GOrgueCacheWriter::~GOrgueCacheWriter()
 {
 	Close();
+}
+
+bool GOrgueCacheWriter::WriteHeader()
+{
+	int magic = GRANDORGUE_CACHE_MAGIC;
+	if (!Write(&magic, sizeof(magic)))
+		return false;
+	return true;
 }
 
 bool GOrgueCacheWriter::Write(const void* data, unsigned length)

@@ -33,10 +33,13 @@ class GOrgueCache {
 	wxInputStream* m_zstream;
 	GOrgueMemoryPool& m_pool;
 	bool m_Mapable;
+	bool m_OK;
 
 public:
 	GOrgueCache(wxFile& cache_file, GOrgueMemoryPool& pool);
 	virtual ~GOrgueCache();
+
+	bool ReadHeader();
 
 	bool Read(void* data, unsigned length);
 	/* Allocate and read a block written by WriteBlock */
