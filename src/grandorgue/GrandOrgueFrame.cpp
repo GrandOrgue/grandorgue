@@ -356,8 +356,6 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 {
 	if (event.GetId() == ID_FILE_OPEN)
 	{
-		wxFileName fn = wxFileName::GetCwd();
-		fn.AppendDir(wxT("organs"));
 		GetDocumentManager()->SetLastDirectory(m_Settings.GetOrganPath());
 		ProcessCommand(wxID_OPEN);
 		if (m_docManager->GetCurrentDocument() && ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile())
