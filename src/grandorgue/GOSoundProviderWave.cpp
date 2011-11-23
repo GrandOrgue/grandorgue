@@ -26,9 +26,8 @@
 #include "GOrgueWave.h"
 #include <wx/filename.h>
 
-GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool, bool stereo) :
-	GOSoundProvider(pool),
-	m_Stereo(stereo)
+GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool) :
+	GOSoundProvider(pool)
 {
 }
 
@@ -39,6 +38,8 @@ void GOSoundProviderWave::LoadFromFile
 	(wxString filename
 	,int fixed_amplitude
 	,wxString path
+	,unsigned bytes_per_sample
+	,bool stereo
 	)
 {
 
@@ -54,7 +55,6 @@ void GOSoundProviderWave::LoadFromFile
 	GOrgueWave wave;
 	wave.Open(temp);
 
-	unsigned bytes_per_sample = sizeof(wxInt16);
 	/* allocate data to work with */
 	unsigned totalDataSize = wave.GetLength() * bytes_per_sample * wave.GetChannels();
 	char* data = (char*)malloc(totalDataSize);
@@ -69,9 +69,9 @@ void GOSoundProviderWave::LoadFromFile
 	{
 		m_SampleRate = wave.GetSampleRate();
 		unsigned channels = wave.GetChannels();
-		if (!m_Stereo)
+		if (!stereo)
 			channels = 1;
-		wave.ReadSamples(data, GOrgueWave::SF_SIGNEDSHORT, m_SampleRate, channels);
+		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bytes_per_sample, m_SampleRate, channels);
 
 		if (channels < 1 || channels > 2)
 			throw (wxString)_("< More than 2 channels in");

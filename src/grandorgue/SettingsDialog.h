@@ -129,11 +129,13 @@ protected:
 	wxSpinCtrl* c_polyphony;
 	wxChoice* c_stereo;
 	wxChoice* c_SampleRate;
+	wxChoice* c_BytesPerSample;
 	wxChoice* c_Concurrency;
 	wxChoice* c_ReleaseConcurrency;
 	wxChoice* c_WaveFormat;
 	wxCheckBox *c_squash, *c_limit, *c_CompressCache, *c_scale, *c_random;
 	bool b_squash, b_stereo;
+	unsigned m_OldBytesPerSample;
 
 	wxListView* page2list, *organlist;
 	wxButton* page2button, *addButton, *delButton, *propButton;

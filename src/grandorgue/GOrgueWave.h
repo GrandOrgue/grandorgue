@@ -62,7 +62,9 @@ public:
 
 	typedef enum
 	{
-		SF_SIGNEDSHORT,
+		SF_SIGNEDBYTE = 1,
+		SF_SIGNEDSHORT = 2,
+		SF_SIGNEDINT24 = 3,
 		SF_IEEE_FLOAT
 	} SAMPLE_FORMAT;
 

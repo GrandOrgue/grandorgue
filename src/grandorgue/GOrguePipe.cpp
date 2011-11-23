@@ -42,7 +42,7 @@ GOrguePipe::GOrguePipe
 	m_Percussive(percussive),
 	m_Amplitude(amplitude),
 	m_Reference(NULL),
-	m_SoundProvider(organfile->GetMemoryPool(), organfile->GetSettings().GetLoadInStereo())
+	m_SoundProvider(organfile->GetMemoryPool())
 {
 }
 
@@ -131,7 +131,8 @@ void GOrguePipe::LoadData()
 		return;
 	}
 	m_Reference = NULL;
-	m_SoundProvider.LoadFromFile(m_Filename, m_Amplitude, m_OrganFile->GetODFPath());
+	m_SoundProvider.LoadFromFile(m_Filename, m_Amplitude, m_OrganFile->GetODFPath(),
+				     m_OrganFile->GetSettings().GetBytesPerSample(), m_OrganFile->GetSettings().GetLoadInStereo());
 }
 
 //FIXME: this function should not exist... it is here purely for legacy
