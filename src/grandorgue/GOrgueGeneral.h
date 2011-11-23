@@ -23,18 +23,22 @@
 #ifndef GORGUEGENERAL_H
 #define GORGUEGENERAL_H
 
+#include "GOrguePushbutton.h"
 #include "GOrgueFrameGeneral.h"
 
 class IniFileConfig;
 
-class GOrgueGeneral : public GOrgueFrameGeneral
+class GOrgueGeneral : public GOrguePushbutton
 {
+private:
+	GOrgueFrameGeneral m_general;
 
 public:
 	GOrgueGeneral(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group);
 	void Save(IniFileConfig& cfg, bool prefix);
-
+	void Push();
+	GOrgueFrameGeneral& GetGeneral();
 };
 
 #endif /* GORGUEGENERAL_H */

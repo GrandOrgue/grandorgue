@@ -21,21 +21,31 @@
  */
 
 #include "GOrgueGeneral.h"
-#include "IniFileConfig.h"
 
 GOrgueGeneral::GOrgueGeneral(GrandOrgueFile* organfile):
-	GOrgueFrameGeneral(organfile)
+	GOrguePushbutton(organfile),
+	m_general(organfile)
 {
 }
 
 void GOrgueGeneral::Load(IniFileConfig& cfg, wxString group)
 {
-	GOrgueFrameGeneral::Load(cfg, group);
+	m_general.Load(cfg, group);
 	GOrguePushbutton::Load(cfg, group);
 }
 
 void GOrgueGeneral::Save(IniFileConfig& cfg, bool prefix)
 {
 	GOrguePushbutton::Save(cfg, prefix);
-	GOrgueFrameGeneral::Save(cfg, prefix);
+	m_general.Save(cfg, prefix);
+}
+
+void GOrgueGeneral::Push()
+{
+	m_general.Push();
+}
+
+GOrgueFrameGeneral& GOrgueGeneral::GetGeneral()
+{
+	return m_general;
 }

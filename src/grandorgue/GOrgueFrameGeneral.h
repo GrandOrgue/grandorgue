@@ -23,15 +23,17 @@
 #ifndef GORGUEFRAMEGENERAL_H
 #define GORGUEFRAMEGENERAL_H
 
+#include <wx/wx.h>
 #include <vector>
-#include "GOrguePushbutton.h"
 
+class GrandOrgueFile;
 class IniFileConfig;
 
-class GOrgueFrameGeneral : public GOrguePushbutton
+class GOrgueFrameGeneral
 {
-
 private:
+	GrandOrgueFile* m_organfile;
+	wxString m_group;
 	std::vector<int> m_Stops;
 	std::vector<unsigned> m_StopManual;
 	std::vector<int> m_Couplers;
