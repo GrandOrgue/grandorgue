@@ -26,6 +26,7 @@
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
 #include "GOSoundAudioSection.h"
+#include "GOSoundAudioSectionAccessor.h"
 #include <stdlib.h>
 
 #ifndef NDEBUG
@@ -73,17 +74,15 @@ bool GOrgueReleaseAlignTable::Save(GOrgueCacheWriter& cache)
 	return true;
 }
 
-
 void GOrgueReleaseAlignTable::ComputeTable
 	(const AUDIO_SECTION& release
 	,const int phase_align_max_amplitude
 	,const int phase_align_max_derivative
 	,const unsigned int sample_rate
-	,const unsigned int channels
 	)
 {
 
-	m_Channels = channels;
+	unsigned channels = GetAudioSectionChannelCount(release);
 	m_PhaseAlignMaxDerivative = phase_align_max_derivative;
 	m_PhaseAlignMaxAmplitude = phase_align_max_amplitude;
 
@@ -93,7 +92,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 	 * frequency pipe you would ever expect... if this length is greater
 	 * than the length of the release, truncate it */
 	unsigned required_search_len = sample_rate / PHASE_ALIGN_MIN_FREQUENCY;
-	unsigned release_len = release.size / (m_Channels * sizeof(wxInt16));
+	unsigned release_len = release.sample_count;
 	if (release_len < required_search_len + BLOCK_HISTORY)
 		return;
 	/* If number of samples in the release is not enough to fill the release
@@ -106,16 +105,16 @@ void GOrgueReleaseAlignTable::ComputeTable
 	memset(found, 0, sizeof(found));
 
 	int f_p = 0;
-	for (unsigned int j = 0; j < m_Channels; j++)
-		f_p += ((wxInt16*)release.data)[(BLOCK_HISTORY - 1) * m_Channels + j];
+	for (unsigned int j = 0; j < channels; j++)
+		f_p += GetAudioSectionSample(release, (BLOCK_HISTORY - 1), j);
 
 	for (unsigned i = BLOCK_HISTORY; i < required_search_len; i++)
 	{
 
 		/* Store previous values */
 		int f = 0;
-		for (unsigned int j = 0; j < m_Channels; j++)
-			f += ((wxInt16*)release.data)[i * m_Channels + j];
+		for (unsigned int j = 0; j < channels; j++)
+			f += GetAudioSectionSample(release, i, j);
 
 		/* Bring v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
 		int v_mod = (f - f_p) + m_PhaseAlignMaxDerivative - 1;
@@ -136,9 +135,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 			for (unsigned j = 0; j < BLOCK_HISTORY; j++)
 				for (unsigned k = 0; k < MAX_OUTPUT_CHANNELS; k++)
 					m_HistoryEntries[derivIndex][ampIndex][j * MAX_OUTPUT_CHANNELS + k]
-							= (k < m_Channels)
-							? ((wxInt16*)release.data)[(i + j - BLOCK_HISTORY) * m_Channels + k]
-							: 0;
+						= (k < channels) ? GetAudioSectionSample(release, i + j - BLOCK_HISTORY, k) : 0;
 			found[derivIndex][ampIndex] = true;
 		}
 

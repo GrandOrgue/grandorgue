@@ -37,7 +37,6 @@ class GOrgueReleaseAlignTable
 
 private:
 
-	unsigned int m_Channels;
 	int m_PhaseAlignMaxAmplitude;
 	int m_PhaseAlignMaxDerivative;
 	int m_PositionEntries[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
@@ -56,7 +55,6 @@ public:
 		,const int phase_align_max_amplitude
 		,const int phase_align_max_derivative
 		,const unsigned int sample_rate
-		,const unsigned int channels
 		);
 
 	void SetupRelease
