@@ -71,6 +71,25 @@ void GOrgueMemoryPool::Free(void* data)
 	free(data);
 }
 
+void * GOrgueMemoryPool::Realloc(void* data, unsigned old_length, unsigned new_length)
+{
+	if (m_PoolAllocs.count(data))
+	{
+		if (m_PoolPtr - old_length != data)
+		{
+			wxLogWarning(_("Realloc of non-top element failed"));
+			return data;
+		}
+		m_PoolPtr = m_PoolPtr - old_length + new_length;
+		return data;
+	}
+	void* new_data = realloc(data, new_length);
+	if (new_data)
+		return new_data;
+	return data;
+}
+
+
 void GOrgueMemoryPool::AddPoolAlloc(void* data)
 {
 	m_PoolAllocs.insert(data);

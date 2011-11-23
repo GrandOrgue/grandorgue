@@ -95,7 +95,7 @@ void GOrgueSettings::Load()
 	m_ReleaseConcurrency = m_Config.Read(wxT("ReleaseConcurrency"), 1L);
 	if (m_ReleaseConcurrency < 1)
 		m_ReleaseConcurrency = 1;
-	m_LosslessCompression = m_Config.Read(wxT("LosslessCompression"), 1);
+	m_LosslessCompression = m_Config.Read(wxT("LosslessCompression"), 0L);
 	m_ManagePolyphony = m_Config.Read(wxT("ManagePolyphony"), 1);
 	m_CompressCache = m_Config.Read(wxT("CompressCache"), 1);
 	m_ScaleRelease = m_Config.Read(wxT("ScaleRelease"), 1);

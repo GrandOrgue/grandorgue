@@ -49,6 +49,7 @@ public:
 	~GOrgueMemoryPool();
 
 	void *Alloc(unsigned length);
+	void *Realloc(void* data, unsigned old_length, unsigned new_length);
 	void Free(void* data);
 
 	void *GetCacheData(unsigned long offset, unsigned length);

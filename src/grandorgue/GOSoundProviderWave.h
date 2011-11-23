@@ -28,10 +28,12 @@
 
 class GOSoundProviderWave : public GOSoundProvider
 {
+	void Compress(AUDIO_SECTION& section, bool format16);
+
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
 
-	void LoadFromFile(wxString filename, int fixed_amplitude, wxString path, unsigned bytes_per_sample, bool stereo);
+	void LoadFromFile(wxString filename, int fixed_amplitude, wxString path, unsigned bytes_per_sample, bool stereo, bool compress);
 
 };
 

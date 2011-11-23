@@ -81,6 +81,8 @@ void GOrgueReleaseAlignTable::ComputeTable
 	,const unsigned int sample_rate
 	)
 {
+	DecompressionCache cache;
+	InitDecompressionCache(cache);
 
 	unsigned channels = GetAudioSectionChannelCount(release);
 	m_PhaseAlignMaxDerivative = phase_align_max_derivative;
@@ -106,7 +108,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 
 	int f_p = 0;
 	for (unsigned int j = 0; j < channels; j++)
-		f_p += GetAudioSectionSample(release, (BLOCK_HISTORY - 1), j);
+		f_p += GetAudioSectionSample(release, (BLOCK_HISTORY - 1), j, &cache);
 
 	for (unsigned i = BLOCK_HISTORY; i < required_search_len; i++)
 	{
@@ -114,7 +116,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 		/* Store previous values */
 		int f = 0;
 		for (unsigned int j = 0; j < channels; j++)
-			f += GetAudioSectionSample(release, i, j);
+			f += GetAudioSectionSample(release, i, j, &cache);
 
 		/* Bring v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
 		int v_mod = (f - f_p) + m_PhaseAlignMaxDerivative - 1;
@@ -135,7 +137,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 			for (unsigned j = 0; j < BLOCK_HISTORY; j++)
 				for (unsigned k = 0; k < MAX_OUTPUT_CHANNELS; k++)
 					m_HistoryEntries[derivIndex][ampIndex][j * MAX_OUTPUT_CHANNELS + k]
-						= (k < channels) ? GetAudioSectionSample(release, i + j - BLOCK_HISTORY, k) : 0;
+						= (k < channels) ? GetAudioSectionSample(release, i + j - BLOCK_HISTORY, k, &cache) : 0;
 			found[derivIndex][ampIndex] = true;
 		}
 
