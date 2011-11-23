@@ -38,7 +38,6 @@ class GOGUIPanel {
 protected:
 	GrandOrgueFile* m_organfile;
 	ptr_vector<GOGUIControl> m_controls;
-	ptr_vector<wxBitmap> m_images;
 	ptr_vector<wxBitmap> m_WoodImages;
 	wxString m_Name;
 	wxString m_GroupName;
@@ -70,7 +69,6 @@ public:
 	wxString WrapText(wxDC* dc, const wxString& string, int width);
 	void TileBitmap(wxDC* dc, wxBitmap* bitmap, wxRect target, int xo, int yo);
 	void TileWood(wxDC* dc, int which, int sx, int sy, int cx, int cy);
-	wxBitmap* GetImage(unsigned index);
 	wxBitmap* GetWoodImage(unsigned index);
 	wxBitmap* LoadBitmap(wxString filename, wxString maskname);
 	void HandleKey(int key);

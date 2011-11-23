@@ -118,8 +118,6 @@ wxBitmap GetImage_Wood63_r();
 
 wxBitmap GetImage_GOIcon();
 
-unsigned GetImageCount_Stop();
-wxBitmap GetImage_Stop(unsigned index);
 unsigned GetImageCount_Wood();
 wxBitmap GetImage_Wood(unsigned index);
 

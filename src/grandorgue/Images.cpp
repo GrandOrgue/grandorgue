@@ -36,22 +36,6 @@ static const GetImage_Func ImageLoader_Wood[] = {
 	GetImage_Wood59, GetImage_Wood59_r, GetImage_Wood61, GetImage_Wood61_r, GetImage_Wood63, GetImage_Wood63_r, 
 };
 
-static const GetImage_Func ImageLoader_Stops[] = {
-	GetImage_draw1off, GetImage_draw1on, GetImage_draw2off, GetImage_draw2on,
-	GetImage_hpiston, GetImage_fpiston, GetImage_hpiston2, GetImage_fpiston2, GetImage_label,
-};
-
-
-unsigned GetImageCount_Stop()
-{
-	return sizeof(ImageLoader_Stops) / sizeof(ImageLoader_Stops[0]);
-}
-
-wxBitmap GetImage_Stop(unsigned index)
-{
-	return ImageLoader_Stops[index]();
-}
-
 unsigned GetImageCount_Wood()
 {
 	return sizeof(ImageLoader_Wood) / sizeof(ImageLoader_Wood[0]);
