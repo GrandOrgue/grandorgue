@@ -97,6 +97,12 @@ bool GOrgueCache::Read(void* data, unsigned length)
 	return true;
 }
 
+void GOrgueCache::FreeCacheFile()
+{
+	m_Mapable = false;
+	m_pool.FreeCacheFile();
+}
+
 void* GOrgueCache::ReadBlock(unsigned length)
 {
 	if (m_Mapable)

@@ -53,6 +53,7 @@ public:
 
 	void *GetCacheData(unsigned long offset, unsigned length);
 	bool SetCacheFile(wxFile& cache_file);
+	void FreeCacheFile();
 };
 
 

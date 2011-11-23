@@ -468,6 +468,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 				    memcmp(hash1, hash2, sizeof(hash1)))
 				{
 					cache_ok = false;
+					reader.FreeCacheFile();
 					wxLogWarning (_("Cache file had diffent hash bypassing cache."));
 				}
 			}
