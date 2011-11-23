@@ -935,6 +935,87 @@ too.
  </para>
     </sect1>
     <sect1>
+      <title>Image objects</title>
+      <para>
+Images objects allow to display an image on a panel. They tile the images,
+if it is bigger then image size. It has the following attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>ImageOn</term>
+          <listitem>
+            <para>
+(string, required) Specifiy the file name of an image to use as on
+bitmap. If the bitmap contains a mask for transparency, it will be
+used.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Mask</term>
+          <listitem>
+            <para>
+(string, default: empty) File name for a external mask for the
+bitmap. If empty, no mask is added.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PositionX</term>
+          <listitem>
+            <para>
+(integer 0 - panel width, default: 0) X coordinate of the left side.
+to override X position for button
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PositionY</term>
+          <listitem>
+            <para>
+(integer 0 - panel height, default: 0) Y coordinate of the left side.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Width</term>
+          <listitem>
+            <para>
+(integer 0 - panel width, default: bitmap width) Width of the
+button. If larger than the bitmap, the bitmap is tiled.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Height</term>
+          <listitem>
+            <para>
+(integer 0 - panel height, default: bitmap height) Height of the
+button. If larger than the bitmap, the bitmap is tiled.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TileOffsetX</term>
+          <listitem>
+            <para>
+(integer 0 - bitmap width, default: 0) X position on the bitmap of the
+left pixel of the button
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TileOffsetY</term>
+          <listitem>
+            <para>
+(integer 0 - bitmap width, default: 0) Y position on the bitmap of the
+top pixel of the button
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
       <title>Button objects</title>
       <para>
 Button objects are defined on the main panel. Their section name
@@ -1521,6 +1602,16 @@ main panel.
 (integer 0-999, required) Number of labels on the panel. The section
 of the label GUI definitions are called
 <emphasis>Panel999Label999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfImages</term>
+          <listitem>
+            <para>
+(integer 0-999, required) Number of images on the panel. The section
+of the label GUI definitions are called
+<emphasis>Panel999Image999</emphasis>.
 	    </para>
           </listitem>
         </varlistentry>
