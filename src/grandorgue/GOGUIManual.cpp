@@ -44,7 +44,7 @@ void GOGUIManual::Load(IniFileConfig& cfg, wxString group)
 	m_key_colour_wooden                 = cfg.ReadBoolean(group, wxT("DispKeyColourWooden"), false);
 
 	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
-	m_BoundingRect = wxRect(mri.x, mri.y, mri.width, mri.height);
+	m_BoundingRect = wxRect(mri.x, mri.keys_y, mri.width, mri.height);
 }
 
 void GOGUIManual::GetKeyDimensions(unsigned key_midi_nb, int &x, int &cx, int &cy, int &z)
