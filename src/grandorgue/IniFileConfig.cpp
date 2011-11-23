@@ -150,6 +150,10 @@ wxColour IniFileConfig::ReadColor(wxString group, wxString key, bool required, w
 		return wxColour(0x80, 0x80, 0x80);
 	else if (value == wxT("WHITE"))
 		return wxColour(0xFF, 0xFF, 0xFF);
+
+	wxColour colour;
+	if (colour.Set(value))
+		return colour;
 	
 	wxString error;
 	error.Printf(_("Invalid color '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
@@ -306,7 +310,11 @@ unsigned IniFileConfig::ReadFontSize(wxString group, wxString key, bool required
 		return 7;
 	else if (value == wxT("LARGE"))
 		return 10;
-	
+
+	int val = wxAtoi(value);
+	if (val > 1)
+		return val;
+
 	wxString error;
 	error.Printf(_("Invalid font size '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	throw error;
