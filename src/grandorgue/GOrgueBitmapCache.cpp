@@ -41,6 +41,8 @@ GOrgueBitmapCache::GOrgueBitmapCache(GrandOrgueFile* organfile) :
 	RegisterBitmap(new wxBitmap(GetImage_hpiston2()), wxT("GO:piston01_on"));
 	RegisterBitmap(new wxBitmap(GetImage_fpiston()), wxT("GO:piston02_off"));
 	RegisterBitmap(new wxBitmap(GetImage_fpiston2()), wxT("GO:piston02_on"));
+
+	RegisterBitmap(new wxBitmap(GetImage_label()), wxT("GO:label01"));
 }
 
 GOrgueBitmapCache::~GOrgueBitmapCache()
