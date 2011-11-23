@@ -63,6 +63,7 @@ public:
 
 	void UpdateSoundStatus();
 	wxPanel* CreateDevicesPage(wxWindow* parent);
+	wxPanel* CreateOptionsPage(wxWindow* parent);
 	wxPanel* CreateMessagesPage(wxWindow* parent);
 	wxPanel* CreateOrganPage(wxWindow* parent);
 	void UpdateMessages(unsigned i);

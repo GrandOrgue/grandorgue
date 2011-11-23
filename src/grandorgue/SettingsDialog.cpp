@@ -116,8 +116,10 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	wxPanel* devices  = CreateDevicesPage(notebook);
 	wxPanel* messages = CreateMessagesPage(notebook);
 	wxPanel* organs = CreateOrganPage(notebook);
+	wxPanel* options = CreateOptionsPage(notebook);
 
 	notebook->AddPage(devices,  _("Devices"));
+	notebook->AddPage(options,  _("Options"));
 	notebook->AddPage(messages, _("MIDI Messages"));
 	notebook->AddPage(organs, _("Organs"));
 
@@ -229,6 +231,51 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(c_SampleRate = new wxChoice(panel, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
+	UpdateSoundStatus();
+	c_stereo->Select(m_Settings.GetLoadInStereo());
+	c_SampleRate->Select(m_Settings.GetSampleRate() == 48000 ? 1 : 0);
+
+	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
+	topSizer->AddSpacer(5);
+	panel->SetSizer(topSizer);
+	topSizer->Fit(panel);
+	return panel;
+}
+
+wxPanel* SettingsDialog::CreateOptionsPage(wxWindow* parent)
+{
+	wxArrayString choices;
+
+	wxPanel* panel = new wxPanel(parent, wxID_ANY);
+	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* item0 = new wxBoxSizer(wxHORIZONTAL);
+
+	wxBoxSizer* item9 = new wxBoxSizer(wxVERTICAL);
+	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
+
+	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Enhancements"));
+	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+	item6->Add(c_squash = new wxCheckBox(panel, ID_ENHANCE_SQUASH,           _("Lossless compression")          ), 0, wxEXPAND | wxALL, 5);
+	item6->Add(c_limit  = new wxCheckBox(panel, ID_ENHANCE_MANAGE_POLYPHONY, _("Active polyphony management")   ), 0, wxEXPAND | wxALL, 5);
+	item6->Add(c_CompressCache  = new wxCheckBox(panel, ID_COMPRESS_CACHE,    _("Compress Cache")), 0, wxEXPAND | wxALL, 5);
+	item6->Add(c_scale  = new wxCheckBox(panel, ID_ENHANCE_SCALE_RELEASE,    _("Release sample scaling"        )), 0, wxEXPAND | wxALL, 5);
+	item6->Add(c_random = new wxCheckBox(panel, ID_ENHANCE_RANDOMIZE,        _("Randomize pipe speaking"       )), 0, wxEXPAND | wxALL, 5);
+	if (m_Settings.GetLosslessCompression())
+		c_squash->SetValue(true);
+	if (m_Settings.GetManagePolyphony())
+		c_limit ->SetValue(true);
+	if (m_Settings.GetCompressCache())
+		c_CompressCache ->SetValue(true);
+	if (m_Settings.GetScaleRelease())
+		c_scale ->SetValue(true);
+	if (m_Settings.GetRandomizeSpeaking())
+		c_random->SetValue(true);
+
+
+	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 5, 5);
+	item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Sound Engine"));
+	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+
 	choices.clear();
 	for (unsigned i = 0; i < 15; i++)
 		choices.push_back(wxString::Format(wxT("%d"), i));
@@ -248,31 +295,11 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	choices.push_back(_("IEEE Float"));
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Recorder WAV Format:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(c_WaveFormat = new wxChoice(panel, ID_WAVE_FORMAT, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
-	UpdateSoundStatus();
-	c_stereo->Select(m_Settings.GetLoadInStereo());
-	c_SampleRate->Select(m_Settings.GetSampleRate() == 48000 ? 1 : 0);
 	c_Concurrency->Select(m_Settings.GetConcurrency());
 	c_ReleaseConcurrency->Select(m_Settings.GetReleaseConcurrency() - 1);
 	c_WaveFormat->Select(m_Settings.GetWaveFormatBytesPerSample() - 1);
-
-	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Enhancements"));
-	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
-	item6->Add(c_squash = new wxCheckBox(panel, ID_ENHANCE_SQUASH,           _("Lossless compression")          ), 0, wxEXPAND | wxALL, 5);
-	item6->Add(c_limit  = new wxCheckBox(panel, ID_ENHANCE_MANAGE_POLYPHONY, _("Active polyphony management")   ), 0, wxEXPAND | wxALL, 5);
-	item6->Add(c_CompressCache  = new wxCheckBox(panel, ID_COMPRESS_CACHE,    _("Compress Cache")), 0, wxEXPAND | wxALL, 5);
-	item6->Add(c_scale  = new wxCheckBox(panel, ID_ENHANCE_SCALE_RELEASE,    _("Release sample scaling"        )), 0, wxEXPAND | wxALL, 5);
-	item6->Add(c_random = new wxCheckBox(panel, ID_ENHANCE_RANDOMIZE,        _("Randomize pipe speaking"       )), 0, wxEXPAND | wxALL, 5);
-	if (m_Settings.GetLosslessCompression())
-		c_squash->SetValue(true);
-	if (m_Settings.GetManagePolyphony())
-		c_limit ->SetValue(true);
-	if (m_Settings.GetCompressCache())
-		c_CompressCache ->SetValue(true);
-	if (m_Settings.GetScaleRelease())
-		c_scale ->SetValue(true);
-	if (m_Settings.GetRandomizeSpeaking())
-		c_random->SetValue(true);
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
