@@ -99,6 +99,7 @@ GOrgueWave.cpp
 GOrgueCache.cpp
 GOrgueCacheWriter.cpp
 GOrgueControl.cpp
+GOrgueBitmapCache.cpp
 GOrgueCoupler.cpp
 GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp
