@@ -26,6 +26,7 @@
 #include "GOGUIControl.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUIHW1Background.h"
+#include "GOGUIImage.h"
 #include "GOGUILabel.h"
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
@@ -166,6 +167,15 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			}
 		}
 
+		unsigned m_NumberOfImages = cfg.ReadInteger(group, wxT("NumberOfImages"), 0, 999, false, 0);
+		for (unsigned i = 0; i < m_NumberOfImages; i++)
+		{
+			buffer.Printf(wxT("Image%03d"), i + 1);
+			GOGUIControl* control = new GOGUIImage(this);
+			control->Load(cfg, buffer);
+			AddControl(control);
+		}
+
 		unsigned m_NumberOfSetterElements = cfg.ReadInteger(group, wxT("NumberOfSetterElements"), 0, 999, false);
 		for (unsigned i = 0; i < m_NumberOfSetterElements; i++)
 		{
@@ -300,6 +310,15 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			unsigned manual_nb  = cfg.ReadInteger(group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 			buffer.Printf(wxT("Manual%03d"), manual_nb);
 			GOGUIControl* control = new GOGUIManualBackground(this, i);
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}
+
+		unsigned m_NumberOfImages = cfg.ReadInteger(group, wxT("NumberOfImages"), 0, 999, false, 0);
+		for (unsigned i = 0; i < m_NumberOfImages; i++)
+		{
+			buffer.Printf(wxT("Image%03d"), i + 1);
+			GOGUIControl* control = new GOGUIImage(this);
 			control->Load(cfg, group + buffer);
 			AddControl(control);
 		}
