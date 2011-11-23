@@ -932,7 +932,275 @@ The main section is called <emphasis>Organ</emphasis>. It defines the
 main panel too. Objects like stops only displayed on a non-main panel
 need an invisible definition for the backend part on the main panel
 too.
- </para>
+      </para>
+    </sect1>
+    <sect1>
+      <title>Organ section</title>
+      <para>
+This section describes the whole organ including the main panel,
+therefore the section includes all display metrics
+attributes. Additionally it includes the following attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>NumberOfImages</term>
+          <listitem>
+            <para>
+(integer 0-999, default: 0) Number of images on the panel. The section
+of the label GUI definitions are called
+<emphasis>Image999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfSetterElements</term>
+          <listitem>
+            <para>
+(integer 0-999, default: 0) Number of
+setter elements on the panel. The section of the GUI definitions are
+called <emphasis>SetterElement999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfLabels</term>
+          <listitem>
+            <para>
+(integer 0-999, required) Number of labels on the panel. The section
+of the label GUI definitions are called
+<emphasis>Label999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Label objects</title>
+      <para>
+Lable object allow to display a text label. The background is an image.
+It is tiled, if the image is smaller than the label area. A label has the following attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>FreeXPlacement</term>
+          <listitem>
+            <para>
+(boolean, default: true) True means, that the X position is determined
+by DispXpos, else by DispDrawstopCol and DispSpanDrawstopColToRight.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>FreeYPlacement</term>
+          <listitem>
+            <para>
+(boolean, default: true) True means, that the Y position is determined
+by DispYpos, else by DispAtTopOfDrawstopCol.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispXpos</term>
+          <listitem>
+            <para>
+(integer 0-panel width, default: 0) absolute X position
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispYpos</term>
+          <listitem>
+            <para>
+(integer 0-panel height, default: 0) absolute Y position
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispAtTopOfDrawstopCol</term>
+          <listitem>
+            <para>
+(boolean, required if FreeYPlacement is true) If true, the lable is
+display above the drawstop, else below.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopCol</term>
+          <listitem>
+            <para>
+(integer 1- number of drawstop columns, required if FreeXPlacement is
+false) Position label at the specified drawstop column.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispSpanDrawstopColToRight</term>
+          <listitem>
+            <para>
+(boolean, required if FreeXPlacement is false) If true, move label half of the drawstop
+with right.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispLabelColour</term>
+          <listitem>
+            <para>
+(color, default: black) Color for the label text.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispLabelFontSize</term>
+          <listitem>
+            <para>
+(font size, default: normal) Size of the label font
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DisplLabelFontName</term>
+          <listitem>
+            <para>
+(string, default: empty) Font for the text. Empty means use the
+group label font of the panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Name</term>
+          <listitem>
+            <para>
+	    (string, default: empty) The text to display on this object
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispImageNum</term>
+          <listitem>
+            <para>
+(integer 1-1, default: 1) Builtin bitmap set to use.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Image</term>
+          <listitem>
+            <para>
+(string, default: use internal bitmap according to DispImageNum)
+Specifiy the file name of an image to use as bitmap.  If the bitmap
+contains a mask for transparency, it will be used.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Mask</term>
+          <listitem>
+            <para>
+(string, default: empty) File name for a external mask for the
+bitmap. If empty, no mask is added.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PositionX</term>
+          <listitem>
+            <para>
+(integer 0 - panel width, default: according to the definitions above) Allow
+to override X position for button
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PositionY</term>
+          <listitem>
+            <para>
+(integer 0 - panel height, default: according to defintions above) Allow
+to override Y position for button
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Width</term>
+          <listitem>
+            <para>
+(integer 0 - panel width, default: bitmap width) Width of the
+button. If larger than the bitmap, the bitmap is tiled.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Height</term>
+          <listitem>
+            <para>
+(integer 0 - panel height, default: bitmap height) Height of the
+button. If larger than the bitmap, the bitmap is tiled.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TileOffsetX</term>
+          <listitem>
+            <para>
+(integer 0 - bitmap width, default: 0) X position on the bitmap of the
+left pixel of the button
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TileOffsetY</term>
+          <listitem>
+            <para>
+(integer 0 - bitmap width, default: 0) Y position on the bitmap of the
+top pixel of the button
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectLeft</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: 0) relative X of left core of the text
+rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectTop</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: 0) relative Y of left core of the text
+rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectWidth</term>
+          <listitem>
+            <para>
+(integer 0 - Width, default: Width) width of the text rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectHeight</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: Height) height of the text rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextBreakWidth</term>
+          <listitem>
+            <para>
+(integer 0 - text rectangle width, default: Width) If 0, no text is
+displayed. Otherwise the value specified the maximum line length used
+for text breaking.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
     </sect1>
     <sect1>
       <title>Image objects</title>
@@ -942,7 +1210,7 @@ if it is bigger then image size. It has the following attributes:
       </para>
       <variablelist>
         <varlistentry>
-          <term>ImageOn</term>
+          <term>Image</term>
           <listitem>
             <para>
 (string, required) Specifiy the file name of an image to use as on
@@ -1279,7 +1547,7 @@ rectangle
           <term>MouseRectWidth</term>
           <listitem>
             <para>
-(integer 0 - Width, default: 0) width of the mouse rectangle
+(integer 0 - Width, default: Width) width of the mouse rectangle
 	    </para>
           </listitem>
         </varlistentry>
@@ -1287,7 +1555,7 @@ rectangle
           <term>MouseRectHeight</term>
           <listitem>
             <para>
-(integer 0 - Height, default: 0) height of the mouse rectangle
+(integer 0 - Height, default: Height) height of the mouse rectangle
 	    </para>
           </listitem>
         </varlistentry>
@@ -1324,7 +1592,7 @@ rectangle
           <term>TextRectWidth</term>
           <listitem>
             <para>
-(integer 0 - Width, default: 0) width of the text rectangle
+(integer 0 - Width, default: Width) width of the text rectangle
 	    </para>
           </listitem>
         </varlistentry>
@@ -1332,7 +1600,7 @@ rectangle
           <term>TextRectHeight</term>
           <listitem>
             <para>
-(integer 0 - Height, default: 0) height of the text rectangle
+(integer 0 - Height, default: Height) height of the text rectangle
 	    </para>
           </listitem>
         </varlistentry>
@@ -1340,7 +1608,7 @@ rectangle
           <term>TextBreakWidth</term>
           <listitem>
             <para>
-(integer 0 - text rectangle width) If 0, no text is
+(integer 0 - text rectangle width, default: a little bit smaller than Width) If 0, no text is
 displayed. Otherwise the value specified the maximum line length used
 for text breaking.
 	    </para>
