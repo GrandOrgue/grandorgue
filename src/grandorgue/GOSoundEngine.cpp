@@ -745,7 +745,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				gain_target *= vol;
 				if (m_ScaledReleases)
 				{
-					int time = ((m_CurrentTime - handle->time) * (10 * BLOCKS_PER_FRAME)) / 441;
+					int time = ((m_CurrentTime - handle->time) * (10 * BLOCKS_PER_FRAME)) / (m_SampleRate / 100);
 					if (time < 256)
 						gain_target *= 0.5f + time * (1.0f / 512.0f);
 					if (time < 1024)
