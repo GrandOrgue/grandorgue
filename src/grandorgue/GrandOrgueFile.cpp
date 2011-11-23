@@ -83,6 +83,7 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_manual(0),
 	m_panels(0),
 	m_soundengine(0),
+	m_bitmaps(this),
 	m_Settings(settings)
 {
 }
@@ -866,6 +867,11 @@ GOrgueMemoryPool& GrandOrgueFile::GetMemoryPool()
 GOrgueSettings& GrandOrgueFile::GetSettings()
 {
 	return m_Settings;
+}
+
+GOrgueBitmapCache& GrandOrgueFile::GetBitmapCache()
+{
+	return m_bitmaps;
 }
 
 SAMPLER_HANDLE GrandOrgueFile::StartSample(const GOSoundProvider *pipe, int sampler_group_id)

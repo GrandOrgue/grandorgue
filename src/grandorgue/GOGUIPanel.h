@@ -68,9 +68,11 @@ public:
 	void ControlChanged(void* control);
 	void Draw(wxDC* dc);
 	wxString WrapText(wxDC* dc, const wxString& string, int width);
+	void TileBitmap(wxDC* dc, wxBitmap* bitmap, wxRect target, int xo, int yo);
 	void TileWood(wxDC* dc, int which, int sx, int sy, int cx, int cy);
 	wxBitmap* GetImage(unsigned index);
 	wxBitmap* GetWoodImage(unsigned index);
+	wxBitmap* LoadBitmap(wxString filename, wxString maskname);
 	void HandleKey(int key);
 	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	void HandleMouseScroll(int x, int y, int amount);

@@ -106,6 +106,11 @@ GOGUIPanelWidget* GOGUIPanel::GetWindow()
 	return m_window;
 }
 
+wxBitmap* GOGUIPanel::LoadBitmap(wxString filename, wxString maskname)
+{
+	return m_organfile->GetBitmapCache().GetBitmap(filename, maskname);
+}
+
 void GOGUIPanel::SetWindow(GOGUIPanelWidget* window)
 {
 	m_window = window;
@@ -553,6 +558,15 @@ void GOGUIPanel::HandleMouseScroll(int x, int y, int amount)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->HandleMouseScroll(x, y, amount);
+}
+
+void GOGUIPanel::TileBitmap(wxDC* dc, wxBitmap* bitmap, wxRect target, int xo, int yo)
+{
+	dc->SetClippingRegion(target);
+	for (int y = target.GetY() - yo; y < target.GetBottom(); y += bitmap->GetHeight())
+		for (int x = target.GetX() - xo; x < target.GetRight(); x += bitmap->GetWidth())
+			dc->DrawBitmap(*bitmap, x, y, true);
+	dc->DestroyClippingRegion();
 }
 
 void GOGUIPanel::TileWood(wxDC* dc, int which, int sx, int sy, int cx, int cy)

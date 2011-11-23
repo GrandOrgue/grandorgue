@@ -28,6 +28,7 @@
 #include <wx/wx.h>
 #include <wx/fileconf.h>
 #include <wx/filename.h>
+#include "GOrgueBitmapCache.h"
 #include "GOrgueMemoryPool.h"
 
 class wxProgressDialog;
@@ -93,6 +94,7 @@ private:
 	GOSoundEngine* m_soundengine;
 
 	GOrgueMemoryPool m_pool;
+	GOrgueBitmapCache m_bitmaps;
 	GOrgueSettings& m_Settings;
 
 	void ReadOrganFile(wxFileConfig& odf_ini_file);
@@ -137,6 +139,7 @@ public:
 	unsigned GetPanelCount();
 	GOrgueMemoryPool& GetMemoryPool();
 	GOrgueSettings& GetSettings();
+	GOrgueBitmapCache& GetBitmapCache();
 
 	/* ODF general properties */
 	bool DivisionalsStoreIntermanualCouplers();
