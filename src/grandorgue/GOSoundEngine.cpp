@@ -154,12 +154,12 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 	Reset();
 }
 
-typedef wxInt16 steroSample[0][2];
 
 /* The block decode functions should provide whatever the normal resolution of
  * the audio is. The fade engine should ensure that this data is always brought
  * into the correct range. */
 
+template<class T>
 static
 inline
 void stereoUncompressed
@@ -167,9 +167,10 @@ void stereoUncompressed
 	,float* output
 	)
 {
+	typedef T stereoSample[0][2];
 
 	// "borrow" the output buffer to compute release alignment info
-	steroSample& input = (steroSample&)*(wxInt16*)(sampler->pipe_section->data);
+	stereoSample& input = (stereoSample&)*(T*)(sampler->pipe_section->data);
 
 	// copy the sample buffer
 	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; sampler->position += sampler->increment, output += 2, i++)
@@ -187,9 +188,9 @@ void stereoUncompressed
 		sampler->history[i - 1][0] = input[pos][0];
 		sampler->history[i - 1][1] = input[pos][1];
 	}
-
 }
 
+template<class T>
 static
 inline
 void monoUncompressed
@@ -197,9 +198,8 @@ void monoUncompressed
 	,float* output
 	)
 {
-
 	// copy the sample buffer
-	wxInt16* input = (wxInt16*)(sampler->pipe_section->data);
+	T* input = (T*)(sampler->pipe_section->data);
 	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; i++, sampler->position += sampler->increment, output += 2)
 	{
 		unsigned pos = (unsigned)sampler->position;
@@ -212,7 +212,6 @@ void monoUncompressed
 	unsigned pos = (unsigned)sampler->position;
 	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
 		sampler->history[i - 1][0] = input[pos];
-
 }
 
 static
@@ -341,13 +340,13 @@ void GetNextFrame
 			stereoCompressed(sampler, buffer);
 			break;
 		case AC_UNCOMPRESSED_STEREO:
-			stereoUncompressed(sampler, buffer);
+			stereoUncompressed<wxInt16>(sampler, buffer);
 			break;
 		case AC_COMPRESSED_MONO:
 			monoCompressed(sampler, buffer);
 			break;
 		case AC_UNCOMPRESSED_MONO:
-			monoUncompressed(sampler, buffer);
+			monoUncompressed<wxInt16>(sampler, buffer);
 			break;
 		default:
 			assert(0 && "broken sampler type");
