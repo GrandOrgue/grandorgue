@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOSoundAudioSectionAccessor.h"
 #include "GOSoundEngine.h"
 #include "GOSoundProvider.h"
 #include "GOSoundSampler.h"
@@ -215,6 +216,7 @@ void monoUncompressed
 		sampler->history[i - 1][0] = input[pos];
 }
 
+template<bool format16>
 static
 inline
 void monoCompressed
@@ -222,56 +224,59 @@ void monoCompressed
 	,float* output
 	)
 {
+	int history[BLOCK_HISTORY];
+	unsigned hist_ptr = 0;
 
-	throw (wxString)_("unimplemented");
+	if (!sampler->ptr || sampler->last_position > sampler->position + 1)
+	{
+		sampler->last_position = 0;
+		sampler->diff_value[0] = 0;
+		sampler->last_value[0] = 0;
+		sampler->curr_value[0] = 0;
+		sampler->next_value[0] = 0;
+		sampler->ptr = sampler->pipe_section->data;
+	}
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; i++, sampler->position += sampler->increment, output += 2)
+	{
+		unsigned pos = (unsigned)sampler->position;
+		float fract = sampler->position - pos;
 
-    /*short* v=(short*)&sampler->v;
-    short* f=(short*)&sampler->f;
-    wxByte* input=sampler->ptr+sampler->position;
+		while(sampler->last_position <= pos + 1)
+		{
+			int val;
+			if (format16)
+				val = AudioReadCompressed16(sampler->ptr);
+			else
+				val = AudioReadCompressed8(sampler->ptr);
 
-    // we are in little endian, so the byte the most to the right is in input[0]
-    // check at the end of the first 32bits
-    if(input[0]&0x01)
-        // an int is 32 bit so we will use int
-    {
-        int inputAsInt=*(int*)input;
-        inputAsInt>>=1;
-        v[0]+=((char*)(&inputAsInt))[0];
-        v[1]+=((char*)(&inputAsInt))[0];
-        v[2]+=((char*)(&inputAsInt))[1];
-        v[3]+=((char*)(&inputAsInt))[1];
-        sampler->position+=4;
+			sampler->curr_value[0] = sampler->next_value[0];
+			sampler->next_value[0] = sampler->last_value[0] + val;
+			sampler->diff_value[0] = (sampler->diff_value[0] +  val) / 2;
+			sampler->last_value[0] = sampler->next_value[0] + sampler->diff_value[0];
+			history[hist_ptr] = sampler->curr_value[0];
 
-    }
-    else
-    {
-        int inputAsInt1=*(int*)input;
-        inputAsInt1>>=1;
+			sampler->last_position++;
+			hist_ptr++;
+			if (hist_ptr >= BLOCK_HISTORY)
+				hist_ptr = 0;
+		}
+		
+		output[0] = sampler->curr_value[0] * (1 - fract) + sampler->next_value[0] * fract;
+		output[1] = sampler->curr_value[0] * (1 - fract) + sampler->next_value[0] * fract;
+	}
 
-        v[0]+=(((char*)(&inputAsInt1))[0]<<8)|((short)(input[2]));
-        v[1]+=(((char*)(&inputAsInt1))[0]<<8)|((short)(input[2]));
-        v[2]+=(((char*)(&inputAsInt1))[1]<<8)|((short)(input[3]));
-        v[3]+=(((char*)(&inputAsInt1))[1]<<8)|((short)(input[3]));
-        sampler->position+=8;
-    }
-
-    f[0]+=v[0];
-    f[1]+=v[1];
-    f[2]+=v[2];
-    f[3]+=v[3];
-
-
-    output[0] = f[0];
-    output[1] = f[1];
-    output[2] = f[2];
-    output[3] = f[3];*/
-
+	// update sample history (for release alignment / compression)
+	for (unsigned i = BLOCK_HISTORY; i > 0; i--)
+	{
+		if (hist_ptr == 0)
+			hist_ptr = BLOCK_HISTORY - 1;
+		else
+			hist_ptr--;
+		sampler->history[i - 1][0] = history[hist_ptr];
+	}
 }
 
-//if the data is compressed, 32 bits represents 4 data ((Right and Left) * 2)
-// we know the data is compressed because these 32bits ends with 1.
-//if the data is uncompressed, 64 bits represents 4 data
-// the first 32bits end with a 0.
+template<bool format16>
 static
 inline
 void stereoCompressed
@@ -279,52 +284,66 @@ void stereoCompressed
 	,float* output
 	)
 {
+	int history[BLOCK_HISTORY][2];
+	unsigned hist_ptr = 0;
 
-	throw (wxString)_("unimplemented");
-
-/*throw 0;
-
-	short* v=(short*)&sampler->v;
-	short* f=(short*)&sampler->f;
-	wxByte* input=sampler->ptr+sampler->position;
-
-	// we are in little endian, so the byte the most to the right is in input[0]
-	// check at the end of the first 32bits
-	if(input[0]&0x01)
+	if (!sampler->ptr || sampler->last_position > sampler->position + 1)
 	{
-		// an int is 32 bit so we will use int
-		int inputAsInt=*(int*)input;
-		inputAsInt>>=1;
-		v[0]+=((char*)(&inputAsInt))[0];
-		v[1]+=((char*)(&inputAsInt))[1];
-		v[2]+=((char*)(&inputAsInt))[2];
-		v[3]+=((char*)(&inputAsInt))[3];
-		sampler->position+=4;
-
-	}
-	else
-	{
-		int inputAsInt1=*(int*)input;
-		inputAsInt1>>=1;
-
-		v[0]+=(((char*)(&inputAsInt1))[0]<<8)|((short)(input[4]));
-		v[1]+=(((char*)(&inputAsInt1))[1]<<8)|((short)(input[5]));
-		v[2]+=(((char*)(&inputAsInt1))[2]<<8)|((short)(input[6]));
-		v[3]+=(((char*)(&inputAsInt1))[3]<<8)|((short)(input[7]));
-		sampler->position+=8;
+		sampler->last_position = 0;
+		sampler->diff_value[0] = 0;
+		sampler->diff_value[1] = 0;
+		sampler->last_value[0] = 0;
+		sampler->last_value[1] = 0;
+		sampler->curr_value[0] = 0;
+		sampler->curr_value[1] = 0;
+		sampler->next_value[0] = 0;
+		sampler->next_value[1] = 0;
+		sampler->ptr = sampler->pipe_section->data;
 	}
 
-	f[0]+=v[0];
-	f[1]+=v[1];
-	f[2]+=v[2];
-	f[3]+=v[3];
+	// copy the sample buffer
+	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; sampler->position += sampler->increment, output += 2, i++)
+	{
+		unsigned pos = (unsigned)sampler->position;
+		float fract = sampler->position - pos;
 
 
-	output[0] = f[0];
-    output[1] = f[1];
-    output[2] = f[2];
-    output[3] = f[3];
-*/
+		while(sampler->last_position <= pos + 1)
+		{
+			for(unsigned j = 0; j < 2; j++)
+			{
+				int val;
+				if (format16)
+					val = AudioReadCompressed16(sampler->ptr);
+				else
+					val = AudioReadCompressed8(sampler->ptr);
+				sampler->curr_value[j] = sampler->next_value[j];
+				sampler->next_value[j] = sampler->last_value[j] + val;
+				sampler->diff_value[j] = (sampler->diff_value[j] +  val) / 2;
+				sampler->last_value[j] = sampler->next_value[j] + sampler->diff_value[j];
+				history[hist_ptr][j] = sampler->curr_value[j];
+			}
+
+			sampler->last_position++;
+			hist_ptr++;
+			if (hist_ptr >= BLOCK_HISTORY)
+				hist_ptr = 0;
+		}
+
+		output[0] = sampler->curr_value[0] * (1 - fract) + sampler->next_value[0] * fract;
+		output[1] = sampler->curr_value[1] * (1 - fract) + sampler->next_value[1] * fract;
+	}
+
+	// update sample history (for release alignment / compression)
+	for (unsigned i = BLOCK_HISTORY; i > 0; i--)
+	{
+		if (hist_ptr == 0)
+			hist_ptr = BLOCK_HISTORY - 1;
+		else
+			hist_ptr--;
+		sampler->history[i - 1][0] = history[hist_ptr][0];
+		sampler->history[i - 1][1] = history[hist_ptr][1];
+	}
 }
 
 static
@@ -355,11 +374,17 @@ void GetNextFrame
 		case AC_UNCOMPRESSED24_STEREO:
 			stereoUncompressed<Int24>(sampler, buffer);
 			break;
-		case AC_COMPRESSED_STEREO:
-			stereoCompressed(sampler, buffer);
+		case AC_COMPRESSED16_STEREO:
+			stereoCompressed<true>(sampler, buffer);
 			break;
-		case AC_COMPRESSED_MONO:
-			monoCompressed(sampler, buffer);
+		case AC_COMPRESSED8_STEREO:
+			stereoCompressed<false>(sampler, buffer);
+			break;
+		case AC_COMPRESSED8_MONO:
+			monoCompressed<false>(sampler, buffer);
+			break;
+		case AC_COMPRESSED16_MONO:
+			monoCompressed<true>(sampler, buffer);
 			break;
 		default:
 			assert(0 && "broken sampler type");
@@ -421,6 +446,7 @@ void GOSoundEngine::ReadSamplerFrames
 					 * loop. */
 					sampler->position -= currentBlockSize;
 					sampler->increment = sampler->pipe_section->sample_rate / (float) m_SampleRate;
+					sampler->ptr = NULL;
 				}
 			}
 		}

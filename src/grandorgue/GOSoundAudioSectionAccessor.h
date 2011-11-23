@@ -24,6 +24,7 @@
 #define GOSOUNDAUDIOSECTIONACCESSOR_H_
 
 #include "GOSoundAudioSection.h"
+#include "GOSoundCompress.h"
 #include "GOrgueInt24.h"
 #include <wx/wx.h>
 
@@ -43,19 +44,21 @@ static inline AUDIO_SECTION_TYPE GetAudioSectionType(unsigned bytes_per_sample, 
 		return AC_UNCOMPRESSED24_STEREO;
 
 	assert(0 && "Invalid sample block");
-	return AC_COMPRESSED_MONO;
+	return AC_UNCOMPRESSED8_MONO;
 }
 
 static inline unsigned GetAudioSectionChannelCount(const AUDIO_SECTION& release)
 {
 	switch (release.type)
 	{
-		case AC_COMPRESSED_STEREO:
+		case AC_COMPRESSED8_STEREO:
+		case AC_COMPRESSED16_STEREO:
 		case AC_UNCOMPRESSED8_STEREO:
 		case AC_UNCOMPRESSED16_STEREO:
 		case AC_UNCOMPRESSED24_STEREO:
 			return 2;
-		case AC_COMPRESSED_MONO:
+		case AC_COMPRESSED8_MONO:
+		case AC_COMPRESSED16_MONO:
 		case AC_UNCOMPRESSED8_MONO:
 		case AC_UNCOMPRESSED16_MONO:
 		case AC_UNCOMPRESSED24_MONO:
@@ -80,15 +83,19 @@ static inline unsigned GetAudioSectionBytesPerSample(const AUDIO_SECTION& releas
 		case AC_UNCOMPRESSED24_MONO:
 			return sizeof(Int24);
 
-		case AC_COMPRESSED_STEREO:
-		case AC_COMPRESSED_MONO:
+		case AC_COMPRESSED8_STEREO:
+		case AC_COMPRESSED8_MONO:
+		case AC_COMPRESSED16_STEREO:
+		case AC_COMPRESSED16_MONO:
+			return 0;
+
 		default:
 			assert(0 && "broken sampler type");
 			return 1;
 	}
 }
 
-static inline int GetAudioSectionSample(const AUDIO_SECTION& release, unsigned position, unsigned channel)
+static inline int GetAudioSectionSample(const AUDIO_SECTION& release, unsigned position, unsigned channel, DecompressionCache* cache = NULL)
 {
 	switch (release.type)
 	{
@@ -132,10 +139,54 @@ static inline int GetAudioSectionSample(const AUDIO_SECTION& release, unsigned p
 			return samples[position];
 		}
 
-		case AC_COMPRESSED_STEREO:
-		case AC_COMPRESSED_MONO:
-			assert(0 && "not supported sampler type");
-			return 1;
+		case AC_COMPRESSED8_MONO:
+		{
+			DecompressionCache tmp;
+			if (!cache)
+			{
+				cache = &tmp;
+				InitDecompressionCache(*cache);
+			}
+			DecompressTo(*cache, position, release.data, 1, false);
+			return cache->value[0];
+		}
+
+		case AC_COMPRESSED8_STEREO:
+		{
+			DecompressionCache tmp;
+			if (!cache)
+			{
+				cache = &tmp;
+				InitDecompressionCache(*cache);
+			}
+			DecompressTo(*cache, position, release.data, 2, false);
+			return cache->value[channel];
+		}
+
+		case AC_COMPRESSED16_MONO:
+		{
+			DecompressionCache tmp;
+			if (!cache)
+			{
+				cache = &tmp;
+				InitDecompressionCache(*cache);
+			}
+			DecompressTo(*cache, position, release.data, 1, true);
+			return cache->value[0];
+		}
+
+		case AC_COMPRESSED16_STEREO:
+		{
+			DecompressionCache tmp;
+			if (!cache)
+			{
+				cache = &tmp;
+				InitDecompressionCache(*cache);
+			}
+			DecompressTo(*cache, position, release.data, 2, true);
+			return cache->value[channel];
+		}
+
 		default:
 			assert(0 && "broken sampler type");
 			return 1;

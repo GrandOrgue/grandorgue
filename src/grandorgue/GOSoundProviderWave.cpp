@@ -34,12 +34,82 @@ GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool) :
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
+void GOSoundProviderWave::Compress(AUDIO_SECTION& section, bool format16)
+{
+	unsigned char* data = (unsigned char*)malloc(section.alloc_size);
+	unsigned output_len = 0;
+	if (!data)
+		return;
+
+	int diff[MAX_OUTPUT_CHANNELS];
+	int last[MAX_OUTPUT_CHANNELS];
+	memset(diff, 0, sizeof(diff));
+	memset(last, 0, sizeof(last));
+
+	unsigned channels = GetAudioSectionChannelCount(section);
+	for(unsigned i = 0; i < section.sample_count + EXTRA_FRAMES; i++)
+		for(unsigned j = 0; j < channels; j++)
+		{
+			int val = GetAudioSectionSample(section, i, j);
+			int encode = val - last[j];
+			diff[j] = (diff[j] + val - last[j]) / 2;
+			last[j] = val + diff[j];
+
+			if (format16)
+				AudioWriteCompressed16(data, output_len, encode);
+			else
+				AudioWriteCompressed8(data, output_len, encode);
+
+			if (output_len + 10 >= section.alloc_size)
+			{
+				free(data);
+				return;
+			}
+		}
+
+	AUDIO_SECTION_TYPE type;
+	if (channels == 2)
+		type = format16 ? AC_COMPRESSED16_STEREO : AC_COMPRESSED8_STEREO;
+	else
+		type = format16 ? AC_COMPRESSED16_MONO : AC_COMPRESSED8_MONO;
+
+	if (true) 	/* Verifcation of compression code */
+	{
+		AUDIO_SECTION new_section = section;
+		new_section.data = data;
+		new_section.size = output_len;
+		new_section.alloc_size = output_len;
+		DecompressionCache tmp;
+		InitDecompressionCache(tmp);
+		new_section.type = type;
+
+		for(unsigned i = 0; i < section.sample_count + EXTRA_FRAMES; i++)
+			for(unsigned j = 0; j < channels; j++)
+			{
+				int old_value = GetAudioSectionSample(section, i, j);
+				int new_value = GetAudioSectionSample(new_section, i, j, &tmp);
+				if (old_value != new_value)
+					wxLogError(wxT("%d %d: %d %d"), i, j, old_value, new_value);
+			}
+	
+		wxLogError(wxT("Compress: %d %d"), section.alloc_size, output_len);
+	}
+
+	section.data = (unsigned char*)m_pool.Realloc(section.data, section.alloc_size, output_len);
+	memcpy(section.data, data, output_len);
+	section.size = output_len;
+	section.alloc_size = output_len;
+	section.type = type;
+	free(data);
+}
+
 void GOSoundProviderWave::LoadFromFile
 	(wxString filename
 	,int fixed_amplitude
 	,wxString path
 	,unsigned bytes_per_sample
 	,bool stereo
+	,bool compress
 	)
 {
 
@@ -65,12 +135,23 @@ void GOSoundProviderWave::LoadFromFile
 	memset(&m_Attack, 0, sizeof(m_Attack));
 	memset(&m_Release, 0, sizeof(m_Release));
 
+	m_SampleRate = wave.GetSampleRate();
+	unsigned channels = wave.GetChannels();
+	if (!stereo)
+		channels = 1;
+
+	m_Attack.sample_frac_bits  = 8 * bytes_per_sample - 1;
+	m_Attack.stage             = GSS_ATTACK;
+	m_Attack.type              = GetAudioSectionType(bytes_per_sample, channels);
+	m_Loop.sample_frac_bits    = 8 * bytes_per_sample - 1;
+	m_Loop.stage               = GSS_LOOP;
+	m_Loop.type                = GetAudioSectionType(bytes_per_sample, channels);
+	m_Release.sample_frac_bits = 8 * bytes_per_sample - 1;
+	m_Release.stage            = GSS_RELEASE;
+	m_Release.type             = GetAudioSectionType(bytes_per_sample, channels);
+
 	try
 	{
-		m_SampleRate = wave.GetSampleRate();
-		unsigned channels = wave.GetChannels();
-		if (!stereo)
-			channels = 1;
 		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bytes_per_sample, m_SampleRate, channels);
 
 		if (channels < 1 || channels > 2)
@@ -123,6 +204,11 @@ void GOSoundProviderWave::LoadFromFile
 				,loopSamplesInMem * bytes_per_sample * channels - m_Loop.size
 				);
 
+			if (compress && bytes_per_sample == 3)
+				Compress(m_Loop, true);
+			if (compress && bytes_per_sample == 2)
+				Compress(m_Loop, false);
+
 			/* Get the release parameters from the wave file. */
 			unsigned releaseOffset = wave.GetReleaseMarkerPosition();
 			unsigned releaseSamples = wave.GetLength() - releaseOffset;
@@ -151,6 +237,10 @@ void GOSoundProviderWave::LoadFromFile
 				,releaseSamplesInMem * bytes_per_sample * channels - m_Release.size
 				);
 
+			if (compress && bytes_per_sample == 3)
+				Compress(m_Release, true);
+			if (compress && bytes_per_sample == 2)
+				Compress(m_Release, false);
 		}
 
 		/* Allocate memory for the attack. */
@@ -187,6 +277,11 @@ void GOSoundProviderWave::LoadFromFile
 				);
 		}
 
+		if (compress && bytes_per_sample == 3)
+			Compress(m_Attack, true);
+		if (compress && bytes_per_sample == 2)
+			Compress(m_Attack, false);
+
 		/* data is no longer needed */
 		FREE_AND_NULL(data);
 
@@ -194,15 +289,6 @@ void GOSoundProviderWave::LoadFromFile
 		 * volume. 10000 would correspond to sample playback at normal volume.
 		 */
 		m_Gain                     = fixed_amplitude / 10000.0f;
-		m_Attack.sample_frac_bits  = 8 * bytes_per_sample - 1;
-		m_Attack.stage             = GSS_ATTACK;
-		m_Attack.type              = GetAudioSectionType(bytes_per_sample, channels);
-		m_Loop.sample_frac_bits    = 8 * bytes_per_sample - 1;
-		m_Loop.stage               = GSS_LOOP;
-		m_Loop.type                = GetAudioSectionType(bytes_per_sample, channels);
-		m_Release.sample_frac_bits = 8 * bytes_per_sample - 1;
-		m_Release.stage            = GSS_RELEASE;
-		m_Release.type             = GetAudioSectionType(bytes_per_sample, channels);
 
 		if (wave.HasReleaseMarker())
 			ComputeReleaseAlignmentInfo();
@@ -223,235 +309,3 @@ void GOSoundProviderWave::LoadFromFile
 	}
 
 }
-
-/* FIXME: This function must be broken - not going to even start describing the problem.
- * TODO: "count" refers to the number of BYTES in the stream... not samples.
- *
- */
-
-//void GrandOrgueFile::CompressWAV(char*& compress, short* fv, short* ptr, int count, int channels, int stage)
-//{
-//	int f[4] = {0, 0, 0, 0}, v[4] = {0, 0, 0, 0}, a[4] = {0, 0, 0, 0};
-//	int size = 0, index;
-//	char* origlength;
-//	int i, j, count2;
-//
-//	/* not recommended, but if they want to, reduce stereo to mono
-//	 * ^^ the above was an original comment.
-//	 *
-//	 * the stream is converted to mono and count still refers to the number of
-//	 * bytes in the stream.
-//	 */
-//	if (channels == 2 && !(g_sound->IsStereo()))
-//	{
-//		for (int i = 0, j = 0; i < count; i += 2)
-//			ptr[j++] = ((int)ptr[i] + (int)ptr[i + 1]) >> 1;
-//		count >>= 1;
-//		channels = 1;
-//	}
-//
-//	/* maxsearch is the number of BYTES to look for phase alignment
-//	 */
-//	int maxsearch = 2206 * channels;	// ~20Hz maximum search width for phase alignment table
-//	if (maxsearch > count)
-//		maxsearch = count - (count & channels);
-//
-//	origlength = compress;
-//	m_compress_p->types[stage] = (channels - 1) << 1;
-//
-//	/*
-//	 * Initialise f's and v's in preparation for compression/phase alignment
-//	 */
-//	for (i = 0; i < 4; i++)
-//	{
-//		// stereo : j = i
-//		// mono   : j = i / 2
-//		j = i >> (2 - channels);
-//		if (count > channels * 2)
-//            v[i] = fv[i + 12] = ptr[j + channels * 2] - ptr[j];
-//		else
-//			v[i] = fv[i + 12] = 0;
-//		f[i] = fv[i] = ptr[j] - v[i];
-//	}
-//
-//	bool flags[PHASE_ALIGN_RES_VA];
-//	if (stage == 2)
-//	{
-//		for (j = 0; j < PHASE_ALIGN_RES_VA; j++)
-//		{
-//			flags[j] = false;
-//			m_compress_p->ra_offset[j] = 0;
-//			for (i = 0; i < 4; i++)
-//			{
-//				m_compress_p->ra_f[j][i] = f[i];
-//				m_compress_p->ra_v[j][i] = v[i];
-//			}
-//		}
-//
-//		int prev_index = m_compress_p->ra_getindex( f, v), prev_i = 0;
-//		for (i = 0, j = 0; i < maxsearch; )
-//		{
-//			v[j] = ptr[i] - f[j];
-//			f[j] = ptr[i];
-//			j++;
-//			if (channels == 1)
-//			{
-//				v[j] = v[j-1];
-//				f[j] = f[j-1];
-//				j++;
-//			}
-//			j &= 3;
-//			i++;
-//			if (!j)
-//			{
-//				index = m_compress_p->ra_getindex( f, v);
-//				if(index>=PHASE_ALIGN_RES_VA)
-//				  std::cout << index << ":index out of bound\n";
-//				if (index != prev_index)
-//				{
-//					if (!m_compress_p->ra_offset[prev_index])
-//						m_compress_p->ra_offset[prev_index] = ((prev_i + i) >> (channels + 1)) << (channels + 1);
-//					prev_i = i;
-//					prev_index = index;
-//				}
-//			}
-//		}
-//
-//		for (i = 0; i < 4; i++)
-//		{
-//			f[i] = fv[i];
-//			v[i] = fv[i + 12];
-//		}
-//	}
-//
-//	if (!m_b_squash)
-//		goto CantCompress;
-//
-//	count2 = count + (count & channels);
-//	if (count & channels)
-//		for (j = 0; j < channels; j++)
-//			*(ptr + count + j) = 2 * (int)*(ptr + count + j - 2 * channels) - (int)*(ptr + count + j - 4 * channels);
-//
-//	if (channels == 2)
-//	{
-//		for (i = 0; i < count2; )
-//		{
-//			int value;
-//			value = ptr[i] - f[0];
-//			a[0] = value - v[0];
-//			v[0] = value;
-//			f[0] = ptr[i++];
-//			value = ptr[i] - f[1];
-//			a[1] = value - v[1];
-//			v[1] = value;
-//			f[1] = ptr[i++];
-//			value = ptr[i] - f[2];
-//			a[2] = value - v[2];
-//			v[2] = value;
-//			f[2] = ptr[i++];
-//			value = ptr[i] - f[3];
-//			a[3] = value - v[3];
-//			v[3] = value;
-//			f[3] = ptr[i++];
-//
-//            if (((((v[0] + 32768) | (v[1] + 32768) | (v[2] + 32768) | (v[3] + 32768)) >> 16) | (((a[0] + 16384) | (a[1] + 16384) | (a[2] + 16384) | (a[3] + 16384)) >> 15)) && i < count)
-//                goto CantCompress;
-//            if ( (((a[0] + 128) | (a[1] + 128) | (a[2] + 128)) >> 8) | ((a[3] + 64) >> 7))
-//            {
-//                *(int*)(compress     ) = ((a[3] & 0xFF00) << 17) | ((a[2] & 0xFF00) <<  9) | ((a[1] & 0xFF00) <<  1) | ((a[0] & 0xFF00) >>  7);
-//                *(int*)(compress += 4) = ((a[3] & 0x00FF) << 24) | ((a[2] & 0x00FF) << 16) | ((a[1] & 0x00FF) <<  8) | ((a[0] & 0x00FF)      );
-//                size += i <= count ? 8 : 4;
-//            }
-//            else
-//            {
-//                *(int*)(compress     ) = ((a[3] & 0x00FF) << 25) | ((a[2] & 0x00FF) << 17) | ((a[1] & 0x00FF) <<  9) | ((a[0] & 0x00FF) <<  1) | 1;
-//                size += i <= count ? 4 : 2;
-//            }
-//            compress += 4;
-//
-//            if (i < maxsearch && stage == 2)
-//            {
-//                index = m_compress_p->ra_getindex( f, v);
-//                if (!flags[index] && m_compress_p->ra_offset[index] == i << 1)
-//                {
-//                    flags[index] = true;
-//                    m_compress_p->ra_offset[index] = size;
-//                    for (j = 0; j < 4; j++)
-//                    {
-//                        m_compress_p->ra_f[index][j] = f[j];
-//                        m_compress_p->ra_v[index][j] = v[j];
-//                    }
-//                }
-//            }
-//		}
-//	}
-//	else
-//	{
-//		for (i = 0; i < count2; )
-//		{
-//			int value;
-//			value = ptr[i] - f[0];
-//			a[0] = value - v[0];
-//			v[0] = value;
-//			f[0] = ptr[i++];
-//			value = ptr[i] - f[2];
-//			a[2] = value - v[2];
-//			v[2] = value;
-//			f[2] = ptr[i++];
-//
-//            if (((((v[0] + 32768) | (v[2] + 32768)) >> 16) | (((a[0] + 16384) | (a[2] + 16384)) >> 15)) && i < count)
-//                goto CantCompress;
-//
-//            if (((a[0] + 128) >> 8) | ((a[2] + 64) >> 7))
-//            {
-//                *(short*)(compress     ) = ((a[2] & 0xFF00) <<  1) | ((a[0] & 0xFF00) >>  7);
-//                *(short*)(compress += 2) = ((a[2] & 0x00FF) <<  8) | ((a[0] & 0x00FF)      );
-//                size += i <= count ? 4 : 2;
-//            }
-//            else
-//            {
-//                *(short*)(compress     ) = ((a[2] & 0x00FF) <<  9) | ((a[0] & 0x00FF) <<  1) | 1;
-//                size += i <= count ? 2 : 1;
-//            }
-//            compress += 2;
-//
-//            if (i < maxsearch && stage == 2)
-//            {
-//                f[1] = f[0];
-//                f[3] = f[2];
-//                v[1] = v[0];
-//                v[3] = v[2];
-//                index = m_compress_p->ra_getindex( f, v);
-//                if (!flags[index] && m_compress_p->ra_offset[index] == i << 1)
-//                {
-//                    flags[index] = true;
-//                    m_compress_p->ra_offset[index] = size;
-//                    for (j = 0; j < 4; j++)
-//                    {
-//                        m_compress_p->ra_f[index][j] = f[j];
-//                        m_compress_p->ra_v[index][j] = v[j];
-//                    }
-//                }
-//            }
-//		}
-//	}
-//	compress += channels << 1;
-//
-//	goto Done;
-//
-//CantCompress:
-//	m_compress_p->types[stage] |= 1;
-//
-//	compress = origlength;
-//	memcpy(compress, ptr, sizeof(short) * count);
-//	memcpy(compress+(sizeof(short) * count),ptr, sizeof(short) * (count & channels));
-//	compress=compress+(sizeof(short)*((count&channels) + count));
-//
-//Done:
-//	m_compress_p->ptr[stage]    = (wxByte*)((wxByte*)(origlength + size) - (wxByte*)m_compress_p);
-//	m_compress_p->offset[stage] = -size;
-//	if (stage == 2)
-//		for (j = 0; j < PHASE_ALIGN_RES_VA; j++)
-//			m_compress_p->ra_offset[j] -= size;
-//}
-

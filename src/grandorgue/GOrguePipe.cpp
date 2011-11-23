@@ -132,11 +132,10 @@ void GOrguePipe::LoadData()
 	}
 	m_Reference = NULL;
 	m_SoundProvider.LoadFromFile(m_Filename, m_Amplitude, m_OrganFile->GetODFPath(),
-				     m_OrganFile->GetSettings().GetBytesPerSample(), m_OrganFile->GetSettings().GetLoadInStereo());
+				     m_OrganFile->GetSettings().GetBytesPerSample(), m_OrganFile->GetSettings().GetLoadInStereo(),
+				     m_OrganFile->GetSettings().GetLosslessCompression());
 }
 
-//FIXME: this function should not exist... it is here purely for legacy
-//support in GOrgueSound::MIDIAllNotesOff()
 void GOrguePipe::FastAbort()
 {
 	if (m_Reference)

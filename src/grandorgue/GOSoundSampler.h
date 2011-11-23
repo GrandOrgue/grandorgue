@@ -43,6 +43,13 @@ typedef struct GO_SAMPLER_T
 	float                      position;
 	float                      increment;
 	bool                       stop;
+	/* for decoding compressed format */
+	unsigned                   last_position;
+	const unsigned char*       ptr;
+	int                        last_value[MAX_OUTPUT_CHANNELS];
+	int                        diff_value[MAX_OUTPUT_CHANNELS];
+	int                        curr_value[MAX_OUTPUT_CHANNELS];
+	int                        next_value[MAX_OUTPUT_CHANNELS];
 } GO_SAMPLER;
 
 #endif /* GOSOUNDSAMPLER_H_ */

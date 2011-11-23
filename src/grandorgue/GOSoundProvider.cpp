@@ -162,9 +162,11 @@ void GOSoundProvider::GetMaxAmplitudeAndDerivative
 	,int& runningMaxDerivative
 	)
 {
-
+	DecompressionCache cache;
 	unsigned int sectionLen = section.sample_count;
 	unsigned channels = GetAudioSectionChannelCount(section);
+
+	InitDecompressionCache(cache);
 
 	int f = 0; /* to avoid compiler warning */
 	for (unsigned int i = 0; i < sectionLen; i++)
@@ -174,7 +176,7 @@ void GOSoundProvider::GetMaxAmplitudeAndDerivative
 		int f_p = f;
 		f = 0;
 		for (unsigned int j = 0; j < channels; j++)
-			f += GetAudioSectionSample(section, i, j);
+			f += GetAudioSectionSample(section, i, j, &cache);
 
 		if (abs(f) > runningMaxAmplitude)
 			runningMaxAmplitude = abs(f);
