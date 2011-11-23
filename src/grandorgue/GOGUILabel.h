@@ -30,18 +30,18 @@ class GOrgueLabel;
 class GOGUILabel : public GOGUIControl
 {
 private:
-	bool m_FreeXPlacement;
-	bool m_FreeYPlacement;
-	bool m_DispSpanDrawstopColToRight;
-	bool m_DispAtTopOfDrawstopCol;
-	int m_DispDrawstopCol;
-	int m_DispXpos;
-	int m_DispYpos;
-	int m_DispLabelFontSize;
-	int m_DispImageNum;
-	wxColour m_DispLabelColour;
-	wxString m_Name;
-	GOrgueLabel* m_label;
+	unsigned m_DispXpos;
+	unsigned m_DispYpos;
+	GOrgueLabel* m_Label;
+	wxBitmap* m_Bitmap;
+	unsigned m_FontSize;
+	wxString m_FontName;
+	wxString m_Text;
+	wxColour m_TextColor;
+	wxRect m_TextRect;
+	unsigned m_TextWidth;
+	unsigned m_TileOffsetX;
+	unsigned m_TileOffsetY;
 
 public:
 	GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos = 0, unsigned y_pos = 0, wxString name = wxT(""));
