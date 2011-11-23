@@ -22,6 +22,7 @@
 
 #include <wx/wx.h>
 #include <wx/file.h>
+#include "GOrgueInt24.h"
 #include "GOrgueWave.h"
 #include "GOrgueWaveTypes.h"
 
@@ -376,9 +377,17 @@ void GOrgueWave::ReadSamples
 
 		switch (read_format)
 		{
+		case SF_SIGNEDBYTE:
+			*(wxInt8*)output = value >> 16;
+			output += sizeof(wxInt8);
+			break;
 		case SF_SIGNEDSHORT:
 			*(wxInt16*)output = value >> 8;
 			output += sizeof(wxInt16);
+			break;
+		case SF_SIGNEDINT24:
+			*(Int24*)output = value;
+			output += sizeof(Int24);
 			break;
 		case SF_IEEE_FLOAT:
 			*(float*)output = value / (float)(1 << 23);
