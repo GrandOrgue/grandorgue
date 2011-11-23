@@ -24,10 +24,8 @@
 #include "GrandOrgue.h"
 #include "OrganView.h"
 #include "OrganDocument.h"
-#include "SettingsDialog.h"
 #include "GOrgueEvent.h"
 #include "GOrgueLCD.h"
-#include "GOrgueMidi.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueFrame.h"
@@ -171,14 +169,7 @@ bool GOrgueApp::OnInit()
 	m_Frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_TITLE), wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE  | wxMAXIMIZE_BOX | wxRESIZE_BORDER, *m_soundSystem);
 	SetTopWindow(m_Frame);
 	m_Frame->DoSplash();
-	bool open_sound = m_soundSystem->OpenSound();
-	m_Frame->Show(true);
-
-	if (!open_sound)
-	{
-		SettingsDialog dialog(m_Frame, *m_soundSystem);
-		dialog.ShowModal();
-	}
+	m_Frame->Init();
 
 	if (argc > 1 && argv[1][0])
 	{

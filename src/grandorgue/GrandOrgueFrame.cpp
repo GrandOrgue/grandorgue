@@ -31,6 +31,7 @@
 #include "Images.h"
 #include "GOGUIPanel.h"
 #include "GOrgueEvent.h"
+#include "GOrgueMidi.h"
 #include "GOrgueProperties.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
@@ -222,6 +223,18 @@ GOrgueFrame::~GOrgueFrame()
 {
 	if (m_Help)
 		delete m_Help;
+}
+
+void GOrgueFrame::Init()
+{
+	Show(true);
+
+	bool open_sound = m_Sound.OpenSound();
+	if (!open_sound || !m_Sound.GetMidi().HasActiveDevice())
+	{
+		wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_AUDIO_SETTINGS);
+		GetEventHandler()->AddPendingEvent(event);
+	}
 }
 
 void GOrgueFrame::InitHelp()
