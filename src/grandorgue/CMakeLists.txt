@@ -74,6 +74,7 @@ CONVERTIMAGE(GOIcon.ico)
 
 set(grandorgue_src
 contrib/sha1.cpp
+GOGUIButton.cpp
 GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
 GOGUIHW1DisplayMetrics.cpp
@@ -100,6 +101,7 @@ GOrgueCache.cpp
 GOrgueCacheWriter.cpp
 GOrgueControl.cpp
 GOrgueBitmapCache.cpp
+GOrgueButton.cpp
 GOrgueCoupler.cpp
 GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp
