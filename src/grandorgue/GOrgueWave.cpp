@@ -325,6 +325,7 @@ void GOrgueWave::ReadSamples
 	(void* dest_buffer                        /** Pointer to received sample data */
 	,GOrgueWave::SAMPLE_FORMAT read_format    /** Format of the above buffer */
 	,unsigned sample_rate                     /** Sample rate to read data at */
+	,unsigned return_channels                 /** number of channels to return */
 	) const
 {
 	if (sampleRate != sample_rate)
@@ -333,29 +334,45 @@ void GOrgueWave::ReadSamples
 	if (bytesPerSample < 1 || bytesPerSample > 3)
 		throw (wxString)_("Unsupported format");
 
+	if (channels != return_channels && return_channels != 1)
+		throw (wxString)_("Unsupported channel count");
+
+	unsigned merge_count = 1;
+	/* need reduce stereo to mono ? */
+	if (channels != return_channels && return_channels == 1)
+		merge_count = channels;
+
 	char* input  = (char*)data;
 	char* output = (char*)dest_buffer;
 
-	for(unsigned i = 0; i < channels * GetLength(); i++)
+	for(unsigned i = 0; i < channels * GetLength() / merge_count; i++)
 	{
-		int value; /* Value will be stored with 24 fractional bits of precision */
-		switch(bytesPerSample)
+		int value = 0; /* Value will be stored with 24 fractional bits of precision */
+		for (unsigned j = 0; j < merge_count; j++)
 		{
-		case 1:
-			value = (*((unsigned char*)input) - 0x80);
-			value <<= 16;
-			break;
-		case 2:
-			value = wxINT16_SWAP_ON_BE(*((wxInt16*)input));
-			value <<= 8;
-			break;
-		case 3:
-			value = GOInt24ToInt(*((GO_Int24*)input));
-			break;
-		default:
-			throw (wxString)_("bad format!");
+			int val; /* Value will be stored with 24 fractional bits of precision */
+			switch(bytesPerSample)
+			{
+			case 1:
+				val = (*((unsigned char*)input) - 0x80);
+				val <<= 16;
+				break;
+			case 2:
+				val = wxINT16_SWAP_ON_BE(*((wxInt16*)input));
+				val <<= 8;
+				break;
+			case 3:
+				val = GOInt24ToInt(*((GO_Int24*)input));
+				break;
+			default:
+				throw (wxString)_("bad format!");
+			}
+			input += bytesPerSample;
+
+			value += val;
 		}
-		input += bytesPerSample;
+		if (merge_count > 1)
+			value = value / merge_count;
 
 		switch (read_format)
 		{
@@ -368,7 +385,7 @@ void GOrgueWave::ReadSamples
 			output += sizeof(float);
 			break;
 		default:
-			throw (wxString)_("bad format!");
+			throw (wxString)_("bad return format!");
 		}
 	}
 }
