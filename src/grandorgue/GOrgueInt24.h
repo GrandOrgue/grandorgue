@@ -23,24 +23,25 @@
 #ifndef GORGUEINT24_H
 #define GORGUEINT24_H
 
+#include <stdint.h>
+
 #pragma pack(push, 1)
 
 /* GCC generates for int x:24 an extra sign extend compared to the following */ 
 
 typedef struct {
-	unsigned char lo, mi;
-	signed char hi;
+	uint16_t lo, ;
+	int8_t hi;
 
 	void operator= (int value)
 	{
-		lo = (value >> 0) & 0xff;
-		mi = (value >> 8) & 0xff;
+		lo = (value >> 0) & 0xffff;
 		hi = (value >> 16) & 0xff;
 	}
 
 	operator int()
 	{
-		return ((hi << 16) | (mi << 8) | lo);
+		return ((hi << 16) | lo);
 	}
 } Int24;
 
