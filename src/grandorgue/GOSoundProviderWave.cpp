@@ -37,6 +37,7 @@ GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool, bool stereo) :
 void GOSoundProviderWave::LoadFromFile
 	(wxString filename
 	,int fixed_amplitude
+	,wxString path
 	)
 {
 
@@ -47,6 +48,7 @@ void GOSoundProviderWave::LoadFromFile
 	/* Translate directory seperator from ODF(\) to native format */
 	wxString temp = filename;
 	temp.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
+	temp = path + wxFileName::GetPathSeparator() + temp;
 
 	GOrgueWave wave;
 	wave.Open(temp);

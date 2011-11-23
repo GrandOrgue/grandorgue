@@ -55,7 +55,6 @@
 GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_doc(doc),
 	m_path(),
-	m_filename(),
 	m_setter(0),
 	m_volume(0),
 	m_b_customized(false),
@@ -212,7 +211,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_OrganComments = ini.ReadString(group, wxT("OrganComments"),  256, false);
 	m_RecordingDetails = ini.ReadString(group, wxT("RecordingDetails"),  256, false);
 	m_InfoFilename = ini.ReadString(group, wxT("InfoFilename"),  256, false);
-	wxFileName fn = m_filename;
+	wxFileName fn = GetODFFilename();
 	if (m_InfoFilename.IsEmpty())
 		fn.SetExt(wxT(".html"));
 	else
@@ -337,7 +336,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		);
 	dlg.Update (0);
 
-	m_filename = file;
+	m_path = file;
+	m_path.MakeAbsolute();
 
 	// NOTICE: unfortunately, the format is not adhered to well at all. With
 	// logging enabled, most sample sets generate warnings.
@@ -439,11 +439,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	GOrgueLCD_WriteLineOne(m_ChurchName + wxT(" ") + m_OrganBuilder);
 	GOrgueLCD_WriteLineTwo(_("Loading..."));
 
-	m_path = file;
-	m_path.MakeAbsolute();
-	wxString temp;
-	m_path.SetCwd(m_path.GetPath());
-
 	try
 	{
 
@@ -518,12 +513,12 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 }
 bool GrandOrgueFile::CachePresent()
 {
-	wxString cache_filename = m_filename + wxT(".cache");
+	wxString cache_filename = GetODFFilename() + wxT(".cache");
 	return wxFileExists(cache_filename);
 }
 bool GrandOrgueFile::UpdateCache(bool compress)
 {
-	wxString cache_filename = m_filename + wxT(".cache");
+	wxString cache_filename = GetODFFilename() + wxT(".cache");
 
 	DeleteCache();
 	/* Figure out how many pipes there are */
@@ -586,7 +581,7 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 
 void GrandOrgueFile::DeleteCache()
 {
-	wxString cache_filename = m_filename + wxT(".cache");
+	wxString cache_filename = GetODFFilename() + wxT(".cache");
 	wxRemoveFile(cache_filename);
 }
 
@@ -853,9 +848,14 @@ bool GrandOrgueFile::IsCustomized()
 	return m_b_customized;
 }
 
-const wxString& GrandOrgueFile::GetODFFilename()
+const wxString GrandOrgueFile::GetODFFilename()
 {
-	return m_filename;
+	return m_path.GetFullPath();
+}
+
+const wxString GrandOrgueFile::GetODFPath()
+{
+	return m_path.GetPath();
 }
 
 GOrgueMemoryPool& GrandOrgueFile::GetMemoryPool()
