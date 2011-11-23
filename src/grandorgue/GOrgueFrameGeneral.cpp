@@ -33,7 +33,8 @@
 #include "GrandOrgueFile.h"
 
 GOrgueFrameGeneral::GOrgueFrameGeneral(GrandOrgueFile* organfile):
-	GOrguePushbutton(organfile),
+	m_organfile(organfile),
+	m_group(),
 	m_Stops(),
 	m_StopManual(),
 	m_Couplers(),
@@ -356,7 +357,7 @@ void GOrgueFrameGeneral::Push()
 	for (unsigned k = 0; k < m_organfile->GetGeneralCount(); k++)
 	{
 		GOrgueGeneral* general = m_organfile->GetGeneral(k);
-		general->Display(general == this && used);
+		general->Display(&general->GetGeneral() == this && used);
 	}
 
 	for (unsigned j = m_organfile->GetFirstManualIndex(); j <= m_organfile->GetManualAndPedalCount(); j++)
@@ -370,8 +371,6 @@ void GOrgueFrameGeneral::Push()
 
 void GOrgueFrameGeneral::Save(IniFileConfig& cfg, bool prefix)
 {
-	GOrguePushbutton::Save(cfg, prefix);
-
 	cfg.SaveHelper( prefix, m_group, wxT("NumberOfStops"), m_Stops.size());
 	cfg.SaveHelper( prefix, m_group, wxT("NumberOfCouplers"), m_Couplers.size());
 	cfg.SaveHelper( prefix, m_group, wxT("NumberOfTremulants"), m_Tremulants.size());
@@ -406,6 +405,5 @@ void GOrgueFrameGeneral::Save(IniFileConfig& cfg, bool prefix)
 		buffer.Printf(wxT("DivisionalCouplerNumber%03d"), i + 1);
 		cfg.SaveHelper( prefix, m_group, buffer, m_DivisionalCouplers[i], true);
 	}
-
 }
 
