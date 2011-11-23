@@ -81,6 +81,7 @@ GOGUIHW1DisplayMetrics.cpp
 GOGUISetterDisplayMetrics.cpp
 GOGUIEnclosure.cpp
 GOGUIHW1Background.cpp
+GOGUIImage.cpp
 GOGUILabel.cpp
 GOGUIManual.cpp
 GOGUIManualBackground.cpp
