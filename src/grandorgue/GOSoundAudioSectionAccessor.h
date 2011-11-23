@@ -24,17 +24,26 @@
 #define GOSOUNDAUDIOSECTIONACCESSOR_H_
 
 #include "GOSoundAudioSection.h"
+#include "GOrgueInt24.h"
 #include <wx/wx.h>
 
 static inline AUDIO_SECTION_TYPE GetAudioSectionType(unsigned bytes_per_sample, unsigned channels)
 {
+	if (channels == 1 && bytes_per_sample == sizeof(wxInt8))
+		return AC_UNCOMPRESSED8_MONO;
+	if (channels == 2 && bytes_per_sample == sizeof(wxInt8))
+		return AC_UNCOMPRESSED8_STEREO;
 	if (channels == 1 && bytes_per_sample == sizeof(wxInt16))
-		return AC_UNCOMPRESSED_MONO;
+		return AC_UNCOMPRESSED16_MONO;
 	if (channels == 2 && bytes_per_sample == sizeof(wxInt16))
-		return AC_UNCOMPRESSED_STEREO;
+		return AC_UNCOMPRESSED16_STEREO;
+	if (channels == 1 && bytes_per_sample == sizeof(Int24))
+		return AC_UNCOMPRESSED24_MONO;
+	if (channels == 2 && bytes_per_sample == sizeof(Int24))
+		return AC_UNCOMPRESSED24_STEREO;
 
 	assert(0 && "Invalid sample block");
-	return AC_UNCOMPRESSED_MONO;
+	return AC_COMPRESSED_MONO;
 }
 
 static inline unsigned GetAudioSectionChannelCount(const AUDIO_SECTION& release)
@@ -42,11 +51,37 @@ static inline unsigned GetAudioSectionChannelCount(const AUDIO_SECTION& release)
 	switch (release.type)
 	{
 		case AC_COMPRESSED_STEREO:
-		case AC_UNCOMPRESSED_STEREO:
+		case AC_UNCOMPRESSED8_STEREO:
+		case AC_UNCOMPRESSED16_STEREO:
+		case AC_UNCOMPRESSED24_STEREO:
 			return 2;
 		case AC_COMPRESSED_MONO:
-		case AC_UNCOMPRESSED_MONO:
+		case AC_UNCOMPRESSED8_MONO:
+		case AC_UNCOMPRESSED16_MONO:
+		case AC_UNCOMPRESSED24_MONO:
 			return 1;
+		default:
+			assert(0 && "broken sampler type");
+			return 1;
+	}
+}
+
+static inline unsigned GetAudioSectionBytesPerSample(const AUDIO_SECTION& release)
+{
+	switch (release.type)
+	{
+		case AC_UNCOMPRESSED8_STEREO:
+		case AC_UNCOMPRESSED8_MONO:
+			return sizeof(wxInt8);
+		case AC_UNCOMPRESSED16_STEREO:
+		case AC_UNCOMPRESSED16_MONO:
+			return sizeof(wxInt16);
+		case AC_UNCOMPRESSED24_STEREO:
+		case AC_UNCOMPRESSED24_MONO:
+			return sizeof(Int24);
+
+		case AC_COMPRESSED_STEREO:
+		case AC_COMPRESSED_MONO:
 		default:
 			assert(0 && "broken sampler type");
 			return 1;
@@ -57,7 +92,20 @@ static inline int GetAudioSectionSample(const AUDIO_SECTION& release, unsigned p
 {
 	switch (release.type)
 	{
-		case AC_UNCOMPRESSED_STEREO:
+		case AC_UNCOMPRESSED8_STEREO:
+		{
+			typedef wxInt8 stereoSample[0][2];
+	
+			stereoSample& samples = (stereoSample&)*(wxInt8*)release.data; 
+			return samples[position][channel];
+		}
+
+		case AC_UNCOMPRESSED8_MONO:
+		{
+			wxInt8* samples = ((wxInt8*)release.data);
+			return samples[position];
+		}
+		case AC_UNCOMPRESSED16_STEREO:
 		{
 			typedef wxInt16 stereoSample[0][2];
 	
@@ -65,9 +113,22 @@ static inline int GetAudioSectionSample(const AUDIO_SECTION& release, unsigned p
 			return samples[position][channel];
 		}
 
-		case AC_UNCOMPRESSED_MONO:
+		case AC_UNCOMPRESSED16_MONO:
 		{
 			wxInt16* samples = ((wxInt16*)release.data);
+			return samples[position];
+		}
+		case AC_UNCOMPRESSED24_STEREO:
+		{
+			typedef Int24 stereoSample[0][2];
+	
+			stereoSample& samples = (stereoSample&)*(Int24*)release.data; 
+			return samples[position][channel];
+		}
+
+		case AC_UNCOMPRESSED24_MONO:
+		{
+			Int24* samples = ((Int24*)release.data);
 			return samples[position];
 		}
 

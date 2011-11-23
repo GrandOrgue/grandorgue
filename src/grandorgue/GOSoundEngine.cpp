@@ -24,6 +24,7 @@
 #include "GOSoundProvider.h"
 #include "GOSoundSampler.h"
 #include "GOrgueEvent.h"
+#include "GOrgueInt24.h"
 #include "GOrguePipe.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueWindchest.h"
@@ -336,17 +337,29 @@ void GetNextFrame
 
 	switch (sampler->pipe_section->type)
 	{
+		case AC_UNCOMPRESSED8_MONO:
+			monoUncompressed<wxInt8>(sampler, buffer);
+			break;
+		case AC_UNCOMPRESSED8_STEREO:
+			stereoUncompressed<wxInt8>(sampler, buffer);
+			break;
+		case AC_UNCOMPRESSED16_MONO:
+			monoUncompressed<wxInt16>(sampler, buffer);
+			break;
+		case AC_UNCOMPRESSED16_STEREO:
+			stereoUncompressed<wxInt16>(sampler, buffer);
+			break;
+		case AC_UNCOMPRESSED24_MONO:
+			monoUncompressed<Int24>(sampler, buffer);
+			break;
+		case AC_UNCOMPRESSED24_STEREO:
+			stereoUncompressed<Int24>(sampler, buffer);
+			break;
 		case AC_COMPRESSED_STEREO:
 			stereoCompressed(sampler, buffer);
 			break;
-		case AC_UNCOMPRESSED_STEREO:
-			stereoUncompressed<wxInt16>(sampler, buffer);
-			break;
 		case AC_COMPRESSED_MONO:
 			monoCompressed(sampler, buffer);
-			break;
-		case AC_UNCOMPRESSED_MONO:
-			monoUncompressed<wxInt16>(sampler, buffer);
 			break;
 		default:
 			assert(0 && "broken sampler type");
