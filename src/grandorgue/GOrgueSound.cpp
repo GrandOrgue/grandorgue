@@ -252,9 +252,6 @@ bool GOrgueSound::OpenSound()
 		else
 			throw (wxString)_("No audio device is selected; neither MIDI input nor sound output will occur!");
 
-		if (!m_midi->HasActiveDevice())
-			throw (wxString)_("No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!");
-
 		opened_ok = true;
 
 	}

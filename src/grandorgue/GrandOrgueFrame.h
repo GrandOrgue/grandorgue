@@ -51,6 +51,8 @@ public:
 	GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
 	~GOrgueFrame(void);
 
+	void Init();
+
 	void OnMeters(wxCommandEvent& event);
 
 	void OnLoadFile(wxCommandEvent& event);
