@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOSoundAudioSectionAccessor.h"
 #include "GOSoundProvider.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueCache.h"
@@ -35,7 +36,6 @@ GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
 	memset(&m_Attack, 0, sizeof(m_Attack));
 	memset(&m_Loop, 0, sizeof(m_Loop));
 	memset(&m_Release, 0, sizeof(m_Release));
-	m_Channels = 0;
 	m_Gain = 0.0f;
 	m_SampleRate = 0;
 }
@@ -163,8 +163,8 @@ void GOSoundProvider::GetMaxAmplitudeAndDerivative
 	)
 {
 
-	assert((section.size % (m_Channels * sizeof(wxInt16))) == 0);
-	unsigned int sectionLen = section.size / (m_Channels * sizeof(wxInt16));
+	unsigned int sectionLen = section.sample_count;
+	unsigned channels = GetAudioSectionChannelCount(section);
 
 	int f = 0; /* to avoid compiler warning */
 	for (unsigned int i = 0; i < sectionLen; i++)
@@ -173,8 +173,8 @@ void GOSoundProvider::GetMaxAmplitudeAndDerivative
 		/* Get sum of amplitudes in channels */
 		int f_p = f;
 		f = 0;
-		for (unsigned int j = 0; j < m_Channels; j++)
-			f += *((wxInt16*)&section.data[(i * m_Channels + j) * sizeof(wxInt16)]);
+		for (unsigned int j = 0; j < channels; j++)
+			f += GetAudioSectionSample(section, i, j);
 
 		if (abs(f) > runningMaxAmplitude)
 			runningMaxAmplitude = abs(f);
@@ -215,7 +215,6 @@ void GOSoundProvider::ComputeReleaseAlignmentInfo()
 			,phase_align_max_amplitude
 			,phase_align_max_derivative
 			,m_SampleRate
-			,m_Channels
 			);
 
 	}

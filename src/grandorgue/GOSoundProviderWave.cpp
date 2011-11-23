@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOSoundAudioSectionAccessor.h"
 #include "GOSoundProviderWave.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrgueWave.h"
@@ -53,9 +54,10 @@ void GOSoundProviderWave::LoadFromFile
 	GOrgueWave wave;
 	wave.Open(temp);
 
+	unsigned bytes_per_sample = sizeof(wxInt16);
 	/* allocate data to work with */
-	unsigned totalDataSize = wave.GetLength() * sizeof(wxInt16) * wave.GetChannels();
-	wxInt16* data = (wxInt16*)malloc(totalDataSize);
+	unsigned totalDataSize = wave.GetLength() * bytes_per_sample * wave.GetChannels();
+	char* data = (char*)malloc(totalDataSize);
 	if (data == NULL)
 		throw (wxString)_("< out of memory allocating wave");
 
@@ -65,14 +67,13 @@ void GOSoundProviderWave::LoadFromFile
 
 	try
 	{
-
 		m_SampleRate = wave.GetSampleRate();
-		m_Channels = wave.GetChannels();
+		unsigned channels = wave.GetChannels();
 		if (!m_Stereo)
-			m_Channels = 1;
-		wave.ReadSamples(data, GOrgueWave::SF_SIGNEDSHORT, m_SampleRate, m_Channels);
+			channels = 1;
+		wave.ReadSamples(data, GOrgueWave::SF_SIGNEDSHORT, m_SampleRate, channels);
 
-		if (m_Channels < 1 || m_Channels > 2)
+		if (channels < 1 || channels > 2)
 			throw (wxString)_("< More than 2 channels in");
 
 		/* Basically, sample playback reads BLOCKS_PER_FRAME * 2 samples at a
@@ -103,8 +104,8 @@ void GOSoundProviderWave::LoadFromFile
 			 * copy some slack samples from the beginning of the loop onto
 			 * the end to ensure correct operation of the sampler.
 			 */
-			m_Loop.size = loopSamples * sizeof(wxInt16) * m_Channels;
-			m_Loop.alloc_size = loopSamplesInMem * sizeof(wxInt16) * m_Channels;
+			m_Loop.size = loopSamples * bytes_per_sample * channels;
+			m_Loop.alloc_size = loopSamplesInMem * bytes_per_sample * channels;
 			m_Loop.data = (unsigned char*)m_pool.Alloc(m_Loop.alloc_size);
 			if (m_Loop.data == NULL)
 				throw (wxString)_("< out of memory allocating loop");
@@ -113,13 +114,13 @@ void GOSoundProviderWave::LoadFromFile
 
 			memcpy
 				(m_Loop.data
-				,&data[loopStart * m_Channels]
+				,data + bytes_per_sample * loopStart * channels
 				,m_Loop.size
 				);
 			memcpy
 				(&m_Loop.data[m_Loop.size]
-				,&data[loopStart * m_Channels]
-				,loopSamplesInMem * sizeof(wxInt16) * m_Channels - m_Loop.size
+				,data + bytes_per_sample * loopStart * channels
+				,loopSamplesInMem * bytes_per_sample * channels - m_Loop.size
 				);
 
 			/* Get the release parameters from the wave file. */
@@ -131,8 +132,8 @@ void GOSoundProviderWave::LoadFromFile
 			 * pad the slack samples with zeroes to ensure correct operation
 			 * of the sampler.
 			 */
-			m_Release.size = releaseSamples * sizeof(wxInt16) * m_Channels;
-			m_Release.alloc_size = releaseSamplesInMem * sizeof(wxInt16) * m_Channels;
+			m_Release.size = releaseSamples * bytes_per_sample * channels;
+			m_Release.alloc_size = releaseSamplesInMem * bytes_per_sample * channels;
 			m_Release.data = (unsigned char*)m_pool.Alloc(m_Release.alloc_size);
 			if (m_Release.data == NULL)
 				throw (wxString)_("< out of memory allocating release");
@@ -141,13 +142,13 @@ void GOSoundProviderWave::LoadFromFile
 
 			memcpy
 				(m_Release.data
-				,&data[(wave.GetLength() - releaseSamples) * m_Channels]
+				,data + bytes_per_sample * (wave.GetLength() - releaseSamples) * channels
 				,m_Release.size
 				);
 			memset
 				(&m_Release.data[m_Release.size]
 				,0
-				,releaseSamplesInMem * sizeof(wxInt16) * m_Channels - m_Release.size
+				,releaseSamplesInMem * bytes_per_sample * channels - m_Release.size
 				);
 
 		}
@@ -155,8 +156,8 @@ void GOSoundProviderWave::LoadFromFile
 		/* Allocate memory for the attack. */
 		assert(attackSamples != 0);
 		unsigned attackSamplesInMem = attackSamples + EXTRA_FRAMES;
-		m_Attack.size = attackSamples * sizeof(wxInt16) * m_Channels;
-		m_Attack.alloc_size = attackSamplesInMem * sizeof(wxInt16) * m_Channels;
+		m_Attack.size = attackSamples * bytes_per_sample * channels;
+		m_Attack.alloc_size = attackSamplesInMem * bytes_per_sample * channels;
 		assert((unsigned)m_Attack.size <= totalDataSize); /* can be equal for percussive samples */
 		m_Attack.data = (unsigned char*)m_pool.Alloc(m_Attack.alloc_size);
 		if (m_Attack.data == NULL)
@@ -168,8 +169,8 @@ void GOSoundProviderWave::LoadFromFile
 		{
 			memcpy
 				(m_Attack.data
-				,&data[0]
-				,attackSamplesInMem * sizeof(wxInt16) * m_Channels
+				,data
+				,attackSamplesInMem * bytes_per_sample * channels
 				);
 		}
 		else
@@ -177,11 +178,11 @@ void GOSoundProviderWave::LoadFromFile
 			memset
 				(m_Attack.data
 				,0
-				,(attackSamplesInMem - wave.GetLength()) * sizeof(wxInt16) * m_Channels
+				,(attackSamplesInMem - wave.GetLength()) * bytes_per_sample * channels
 				);
 			memcpy
-				(&m_Attack.data[(attackSamplesInMem - wave.GetLength()) * sizeof(wxInt16) * m_Channels]
-				,&data[0]
+				(&m_Attack.data[(attackSamplesInMem - wave.GetLength()) * bytes_per_sample * channels]
+				,data
 				,totalDataSize
 				);
 		}
@@ -193,15 +194,15 @@ void GOSoundProviderWave::LoadFromFile
 		 * volume. 10000 would correspond to sample playback at normal volume.
 		 */
 		m_Gain                     = fixed_amplitude / 10000.0f;
-		m_Attack.sample_frac_bits  = 15;
+		m_Attack.sample_frac_bits  = 8 * bytes_per_sample - 1;
 		m_Attack.stage             = GSS_ATTACK;
-		m_Attack.type              = (m_Channels == 1) ? AC_UNCOMPRESSED_MONO : AC_UNCOMPRESSED_STEREO;
-		m_Loop.sample_frac_bits    = 15;
+		m_Attack.type              = GetAudioSectionType(bytes_per_sample, channels);
+		m_Loop.sample_frac_bits    = 8 * bytes_per_sample - 1;
 		m_Loop.stage               = GSS_LOOP;
-		m_Loop.type                = (m_Channels == 1) ? AC_UNCOMPRESSED_MONO : AC_UNCOMPRESSED_STEREO;
-		m_Release.sample_frac_bits = 15;
+		m_Loop.type                = GetAudioSectionType(bytes_per_sample, channels);
+		m_Release.sample_frac_bits = 8 * bytes_per_sample - 1;
 		m_Release.stage            = GSS_RELEASE;
-		m_Release.type             = (m_Channels == 1) ? AC_UNCOMPRESSED_MONO : AC_UNCOMPRESSED_STEREO;
+		m_Release.type             = GetAudioSectionType(bytes_per_sample, channels);
 
 		if (wave.HasReleaseMarker())
 			ComputeReleaseAlignmentInfo();

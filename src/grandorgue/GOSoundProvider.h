@@ -38,7 +38,6 @@ private:
 
 protected:
 	float          m_Gain;
-	unsigned int   m_Channels;
 	unsigned int   m_SampleRate;
 	AUDIO_SECTION  m_Attack;
 	AUDIO_SECTION  m_Loop;
