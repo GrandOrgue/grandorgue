@@ -51,7 +51,7 @@ sounds and organ behaviours to simulate a variety of pipe organs.
       <para>
 GrandOrgue is capable of loading and faithfully reproducing a variety
 of sample sets. Through extensive testing, it appears highly
-compatible with definition files that have worked in Hauptwerk&#x2122;
+compatible with definition files that have worked in Hauptwerk&#8482;
 version 1. Other types of sample sets may also be compatible, and
 other formats may soon be available. As such, you won't be able to do
 anything at all with GrandOrgue without at least one sample
@@ -74,7 +74,7 @@ High definition output with supporting hardware
         </listitem>
         <listitem>
           <para>
-Optimized MMX&#xAE; core for extraordinary polyphony
+Optimized MMX® core for extraordinary polyphony
 	  </para>
         </listitem>
         <listitem>
@@ -134,7 +134,7 @@ Save settings per sample set or export to settings files
         <itemizedlist mark="bullet">
           <listitem>
             <para>
-Pentium&#xAE; II equivalent, or better
+Pentium® II equivalent, or better
 	    </para>
             <para>
               <emphasis>NOTE: A newer, faster processor will permit a higher
@@ -154,11 +154,11 @@ A hard disk (or other storage) with enough free space to store sample sets
         </itemizedlist>
       </sect2>
       <sect2>
-        <title>Microsoft&#xAE; Windows&#xAE;</title>
+        <title>Microsoft® Windows®</title>
         <itemizedlist mark="bullet">
           <listitem>
             <para>
-Windows&#xAE; 2000, XP, or later
+Windows® 2000, XP, or later
 	    </para>
             <para>
               <emphasis>&gt;NOTE: Older versions are not supported, although the software may function properly</emphasis>
@@ -166,7 +166,7 @@ Windows&#xAE; 2000, XP, or later
           </listitem>
           <listitem>
             <para>
-Sound card supporting DirectSound&#xAE; and/or ASIO&#x2122; (recommended)
+Sound card supporting DirectSound® and/or ASIO&#8482; (recommended)
 	    </para>
           </listitem>
           <listitem>
@@ -880,6 +880,652 @@ more natural and less repetitive.
     <para>
 This section will be populated once questions become frequently asked.
     </para>
+  </chapter>
+  <chapter>
+    <title>The Grand Orgue file format</title>
+    <sect1>
+      <title>General information</title>
+      <para>
+It is an INI file in ISO-8859-1 encoding. The standard extension is
+<emphasis>.organ</emphasis>.
+ </para>
+      <para>
+Comment lines are started with <emphasis>;</emphasis>.  Empty lines are ignored.
+ </para>
+      <para>
+Various settings are grouped in block. Each block is started with a
+line starting with <emphasis>[</emphasis>, followed by the section name and ended with <emphasis>]</emphasis>.
+Each block consists of list of name-values pairs seperated by <emphasis>=</emphasis>.
+ </para>
+      <para>
+File paths in this format are relative to the location of the organ
+file.  The directory seperator in this paths must be <emphasis>\</emphasis>. The paths
+should not contain <emphasis>/</emphasis>. The paths should be considered case sensitiv,
+even if it is not enforced on all plattforms.
+ </para>
+      <para>
+ Boolean values are represented as <emphasis>Y</emphasis> for true and
+ <emphasis>N</emphasis> for false.
+ </para>
+      <para>
+A color can be one of the following colors (not case sensitive):
+BLACK, BLUE, DARK BLUE, GREEN, DARK GREEN, CYAN, DARK CYAN, RED, DARK
+RED, MAGENTA, DARK MAGENTA, YELLOW, DARK YELLOW, LIGHT GREY, DARK
+GREY, WHITE
+Additionally, it supported the HTML syntax #RRGGBB
+</para>
+      <para>
+A font size can be one of the following values: SMALL, NORMAL, LARGE
+or a number bigger than 0.
+</para>
+      <para>
+The following image formats are supported: bmp, gif, jpg, ico, png
+</para>
+      <para>
+Objects in GrandOrgue are eg. manuals, stops, generals, ... . Each
+object can consist of backend part representing the object an its
+configuration (eg. list of sample file names) and multiple GUI
+representations.
+ </para>
+      <para>
+The main section is called <emphasis>Organ</emphasis>. It defines the
+main panel too. Objects like stops only displayed on a non-main panel
+need an invisible definition for the backend part on the main panel
+too.
+ </para>
+    </sect1>
+    <sect1>
+      <title>Button objects</title>
+      <para>
+Button objects are defined on the main panel. Their section name
+is based on their function. They share the following common properties:
+</para>
+      <variablelist>
+        <varlistentry>
+          <term>Name</term>
+          <listitem>
+            <para>
+	    (string, required) Name of the object. The name may be
+	    presented the user in lists too, therefore it should be
+	    descriptive.  If a GUI representations requires a shorter
+	    name, please override this value locally.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Displayed</term>
+          <listitem>
+            <para>
+(boolean, required) If true, the sections also includes the GUI
+properties for the main panel. Otherwise it is not displayed on the
+main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DisplayInInvertedState</term>
+          <listitem>
+            <para>
+(boolean, default: false) If true, off is displayed as on and on as
+off.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+The GUI properties of button objects are:
+</para>
+      <variablelist>
+        <varlistentry>
+          <term>DisplayAsPiston</term>
+          <listitem>
+            <para>
+(boolean, default: true for divisionals, generals and pistons, else
+false) True means to display as button, false as drawstop
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ShortcutKey</term>
+          <listitem>
+            <para>
+(integer 0-255, default: 0) 0 means no shortcut, else it specifies the
+key code of the shortcut key.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispLabelColour</term>
+          <listitem>
+            <para>
+(color, default: Dark Red) Color for the label text.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispLabelFontSize</term>
+          <listitem>
+            <para>
+(font size, default: normal) Size of the label font
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DisplLabelFontName</term>
+          <listitem>
+            <para>
+(string, default: empty) Font for the text. Empty means use the
+control label font of the panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispLabelText</term>
+          <listitem>
+            <para>
+(string, default: Name of the button) Content of the text label. You
+should set it, if you need to display a shorter string on the label.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispKeyLabelOnLeft</term>
+          <listitem>
+            <para>
+(boolean, default: true) If displayed as a piston and this attribute
+is false, move it a little bit left.  Otherwise ignored.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispImageNum</term>
+          <listitem>
+            <para>
+(integer 1-2, default: 1) Builtin bitmap set to use. GrandOrgue has
+two for drawstops and two for pistons.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispButtonRow</term>
+          <listitem>
+            <para>
+(button row, default: 1) If displayed as piston, it contains the
+button row according to the layout modell.  Otherwise ignored.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispButtonCol</term>
+          <listitem>
+            <para>
+(button column, default: 1) If displayed as piston, it contains the
+button column according to the layout modell.  Otherwise ignored.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopRow</term>
+          <listitem>
+            <para>
+(drawstop row, default: 1) If displayed as drawstop, it contains the
+drawstop row according to the layout modell.  Otherwise ignored.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopCol</term>
+          <listitem>
+            <para>
+(drawstop column, default: 1) If displayed as drawstop, it contains
+the drawstop column according to the layout modell.  Otherwise
+ignored.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ImageOn</term>
+          <listitem>
+            <para>
+(string, default: use internal bitmap according to DispImageNum)
+Specifiy the file name of an image to use as on bitmap.  If the bitmap
+contains a mask for transparency, it will be used.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ImageOff</term>
+          <listitem>
+            <para>
+(string, default: use internal bitmap according to DispImageNum)
+Specifiy the file name of an image to use as off bitmap. If the bitmap
+contains a mask for transparency, it will be used. The size must match
+the on bitmap.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MaskOn</term>
+          <listitem>
+            <para>
+(string, default: empty) File name for a external mask for the on
+bitmap. If empty, no mask is added.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MaskOff</term>
+          <listitem>
+            <para>
+(string, default: value of MaskOn) File name for a external mask for
+the off bitmap. If empty, no mask is added.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PositionX</term>
+          <listitem>
+            <para>
+(integer 0 - panel width, default: according to layout modell) Allow
+to override X position for button
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PositionY</term>
+          <listitem>
+            <para>
+(integer 0 - panel height, default: according to layout modell) Allow
+to override Y position for button
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Width</term>
+          <listitem>
+            <para>
+(integer 0 - panel width, default: bitmap width) Width of the
+button. If larger than the bitmap, the bitmap is tiled.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Height</term>
+          <listitem>
+            <para>
+(integer 0 - panel height, default: bitmap height) Height of the
+button. If larger than the bitmap, the bitmap is tiled.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TileOffsetX</term>
+          <listitem>
+            <para>
+(integer 0 - bitmap width, default: 0) X position on the bitmap of the
+left pixel of the button
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TileOffsetY</term>
+          <listitem>
+            <para>
+(integer 0 - bitmap width, default: 0) Y position on the bitmap of the
+top pixel of the button
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseRectLeft</term>
+          <listitem>
+            <para>
+(integer 0 - Width, default: 0) relative X of left core of the mouse
+rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseRectTop</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: 0) relative Y of left core of the mouse
+rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseRectWidth</term>
+          <listitem>
+            <para>
+(integer 0 - Width, default: 0) width of the mouse rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseRectHeight</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: 0) height of the mouse rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseRadius</term>
+          <listitem>
+            <para>
+(integer 0 - max(MouseRectHeight, MouseRectWidth), default:
+max(MouseRectHeight, MouseRectWidth) / 2) If 0, the mouse events are
+captured inside the mouse rectangle. Otherwise they must be inside a
+circle of the specified size too.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectLeft</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: 0) relative X of left core of the text
+rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectTop</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: 0) relative Y of left core of the text
+rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectWidth</term>
+          <listitem>
+            <para>
+(integer 0 - Width, default: 0) width of the text rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectHeight</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: 0) height of the text rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextBreakWidth</term>
+          <listitem>
+            <para>
+(integer 0 - text rectangle width) If 0, no text is
+displayed. Otherwise the value specified the maximum line length used
+for text breaking.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+Inside the button, the on/off bitmap (depending on the button state)
+is tiled. If a text width is set, a text label is displayed on it. Mouse events are only
+captured inside the mouse rectangle.
+</para>
+    </sect1>
+    <sect1>
+      <title>Additional panels</title>
+      <para>
+It is possible to define additional panels. The section is call
+<emphasis>Panel999</emphasis> with a number starting from 001.  All
+panels use the same layout engine as the main panel, therefore the section includes
+all display metrics attributes. Additionally it includes the following attributes:
+</para>
+      <variablelist>
+        <varlistentry>
+          <term>Name</term>
+          <listitem>
+            <para>
+(string, required) Name of the panel
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Group</term>
+          <listitem>
+            <para>
+(string, default: empty) If not empty, place it in the submenu with
+the specified name, else directly in the panel menu.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfManuals</term>
+          <listitem>
+            <para>
+(integer 1 - number of defined manuals) number of manuals to display on this panel
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>HasPedals</term>
+          <listitem>
+            <para>
+(boolean, required) Includes a manual displayed as pedal
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfSetterElements</term>
+          <listitem>
+            <para>
+(integer 0-999, default: 0) Number of
+setter elements on the panel. The section of the GUI definitions are
+called <emphasis>Panel999SetterElement999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfEnclosures</term>
+          <listitem>
+            <para>
+(integer 0 - number of defined enclosures, required) Number of
+enclosures on the panel. The section of the stops GUI definitions are
+called <emphasis>Panel999Enclosure999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Enclosure999</term>
+          <listitem>
+            <para>
+(valid enclosure number, required) Reference to the encolsure on the
+main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfTremulants</term>
+          <listitem>
+            <para>
+(integer 0 - number of defined tremulants, required) Number of
+tremulant on the panel. The section of the tremulants GUI definitions
+are called <emphasis>Panel999Tremulant999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Tremulant999</term>
+          <listitem>
+            <para>
+(valid tremulant number, required) Reference to the tremulant on the
+main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfReversiblePistons</term>
+          <listitem>
+            <para>
+(integer 0 - number of defined reversible pistons, required) Number of
+reversible pistons on the panel. The section of the reversible pistons
+GUI definitions are called
+<emphasis>Panel999ReversiblePiston999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ReversiblePiston999</term>
+          <listitem>
+            <para>
+(valid reversible piston number, required) Reference to the reversible
+piston on the main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfGenerals</term>
+          <listitem>
+            <para>
+(integer 0 - number of defined generals, required) Number of generals
+on the panel. The section of the generals GUI definitions are called
+<emphasis>Panel999General999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>General999</term>
+          <listitem>
+            <para>
+(valid general number, required) Reference to the general on the main
+panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfDivisionalCouplers</term>
+          <listitem>
+            <para>
+(integer 0 - number of defined divisional couplers, required) Number
+of divisional couplers on the panel. The section of the divisional
+coupler GUI definitions are called
+<emphasis>Panel999DivisionalCoupler999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DivisionalCoupler999</term>
+          <listitem>
+            <para>
+(valid divisional coupler number, required) Reference to the divisional coupler on the
+main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Manual999</term>
+          <listitem>
+            <para>
+(valid manual number, required) Number of the manual to use a
+specified manual on the panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfStops</term>
+          <listitem>
+            <para>
+(integer 0-999, required) Number of stops on the panel. The
+section of the stops GUI definitions are called
+<emphasis>Panel999Stop999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Stop999Manual</term>
+          <listitem>
+            <para>
+(valid manual number, required) Reference to the manual of the
+stop on the main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Stop999</term>
+          <listitem>
+            <para>
+(valid stop number, required) Reference to the stop on the
+main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfCouplers</term>
+          <listitem>
+            <para>
+(integer 0-999, required) Number of couplers on the panel. The
+section of the couplers GUI definitions are called
+<emphasis>Panel999Coupler999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Coupler999Manual</term>
+          <listitem>
+            <para>
+(valid manual number, required) Reference to the manual of the
+coupler on the main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Divisional999</term>
+          <listitem>
+            <para>
+(valid coupler number, required) Reference to the divisional on the
+main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfDivisionals</term>
+          <listitem>
+            <para>
+(integer 0-999, required) Number of divisionals on the panel. The
+section of the divisionals GUI definitions are called
+<emphasis>Panel999Divisional999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Divisional999Manual</term>
+          <listitem>
+            <para>
+(valid manual number, required) Reference to the manual of the
+divisional on the main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Divisional999</term>
+          <listitem>
+            <para>
+(valid divisional number, required) Reference to the divisional on the
+main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfLabels</term>
+          <listitem>
+            <para>
+(integer 0-999, required) Number of labels on the panel. The section
+of the label GUI definitions are called
+<emphasis>Panel999Label999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
   </chapter>
   <chapter>
     <title>Technical Support</title>
