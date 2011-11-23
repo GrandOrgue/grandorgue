@@ -131,7 +131,7 @@ void GOrguePipe::LoadData()
 		return;
 	}
 	m_Reference = NULL;
-	m_SoundProvider.LoadFromFile(m_Filename, m_Amplitude);
+	m_SoundProvider.LoadFromFile(m_Filename, m_Amplitude, m_OrganFile->GetODFPath());
 }
 
 //FIXME: this function should not exist... it is here purely for legacy

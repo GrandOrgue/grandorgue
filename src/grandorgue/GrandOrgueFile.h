@@ -57,7 +57,6 @@ private:
 
 	OrganDocument* m_doc;
 	wxFileName m_path;
-	wxString m_filename;
 	GOrgueSetter* m_setter;
 	int m_volume;
 
@@ -157,7 +156,8 @@ public:
 	bool IsCustomized();
 
 	/* Filename of the organ definition used to load */
-	const wxString& GetODFFilename();
+	const wxString GetODFFilename();
+	const wxString GetODFPath();
 
 	/* Organ and Building general information */
 	const wxString& GetChurchName();

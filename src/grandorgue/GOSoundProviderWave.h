@@ -34,7 +34,7 @@ private:
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool, bool stereo);
 
-	void LoadFromFile(wxString filename, int fixed_amplitude);
+	void LoadFromFile(wxString filename, int fixed_amplitude, wxString path);
 
 };
 
