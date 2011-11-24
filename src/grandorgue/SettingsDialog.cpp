@@ -107,8 +107,6 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	b_squash = m_Settings.GetLosslessCompression();
 	m_OldBytesPerSample = m_Settings.GetBytesPerSample();
 
-	SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
-
 	CreateButtons(wxOK | wxCANCEL | wxHELP);
 	//JB: wxAPPLY not available in recent versions of wxWidgets
 

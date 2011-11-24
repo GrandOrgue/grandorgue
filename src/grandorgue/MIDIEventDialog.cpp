@@ -44,7 +44,6 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 	m_midi(event)
 {
 
-	SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxFlexGridSizer* sizer = new wxFlexGridSizer(5, 2, 5, 5);
 	topSizer->Add(sizer, 0, wxALL, 6);
