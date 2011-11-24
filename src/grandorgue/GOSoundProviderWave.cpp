@@ -73,7 +73,7 @@ void GOSoundProviderWave::Compress(AUDIO_SECTION& section, bool format16)
 	else
 		type = format16 ? AC_COMPRESSED16_MONO : AC_COMPRESSED8_MONO;
 
-	if (true) 	/* Verifcation of compression code */
+	if (false) 	/* Verifcation of compression code */
 	{
 		AUDIO_SECTION new_section = section;
 		new_section.data = data;
