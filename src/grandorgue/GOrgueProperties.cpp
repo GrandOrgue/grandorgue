@@ -109,6 +109,15 @@ GOrgueProperties::GOrgueProperties(GrandOrgueFile* organfile, wxWindow* win) :
 	topSizer->Add(new wxStaticLine(this), 0, wxEXPAND | wxLEFT | wxRIGHT, 5);
 	topSizer->Add(CreateButtonSizer(wxOK), 0, wxALL | wxEXPAND, 10);
 
+	sizer->Add(GOrguePropertiesText(this, 0,  _("Allocated sample memory")), 0, wxTOP, 5);
+	float size;
+	size = m_organfile->GetMemoryPool().AllocSize() / (1024.0 * 1024.0);
+	sizer->Add(GOrguePropertiesText(this, 0,  wxString::Format(_("%.3f MB"), size)), 0, wxTOP, 5);
+
+	sizer->Add(GOrguePropertiesText(this, 0,  _("Mapped memory of the cache")), 0, wxTOP, 5);
+	size = m_organfile->GetMemoryPool().MappedSize() / (1024.0 * 1024.0);
+	sizer->Add(GOrguePropertiesText(this, 0,  wxString::Format(_("%.3f MB"), size)), 0, wxTOP, 5);
+
 	SetSizer(topSizer);
 	topSizer->Fit(this);
 }

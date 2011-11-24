@@ -37,6 +37,7 @@ GOrgueMemoryPool::GOrgueMemoryPool() :
 	m_PoolLimit(0),
 	m_PageSize(4096),
 	m_CacheSize(0),
+	m_MallocSize(0),
 	m_dummy(0)
 {
 	InitPool();
@@ -55,6 +56,7 @@ void *GOrgueMemoryPool::Alloc(unsigned length)
 		AddPoolAlloc(data);
 		return data;
 	}
+	m_MallocSize += length;
 	return malloc(length);
 }
 
@@ -83,6 +85,7 @@ void * GOrgueMemoryPool::Realloc(void* data, unsigned old_length, unsigned new_l
 		m_PoolPtr = m_PoolPtr - old_length + new_length;
 		return data;
 	}
+	m_MallocSize = m_MallocSize + new_length - old_length;
 	void* new_data = realloc(data, new_length);
 	if (new_data)
 		return new_data;
@@ -140,6 +143,16 @@ void GOrgueMemoryPool::FreeCacheFile()
 {
 	FreePool();
 	InitPool();
+}
+
+unsigned long GOrgueMemoryPool::AllocSize()
+{
+	return m_PoolSize + m_MallocSize;
+}
+
+unsigned long GOrgueMemoryPool::MappedSize()
+{
+	return m_CacheSize;
 }
 
 bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
