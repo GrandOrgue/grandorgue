@@ -104,6 +104,10 @@ dpkg-buildpackage -rfakeroot
 
 If dpkg-buildpackage reports, that a package is missing, please install them too (sudo apt-get install <packagename).
 
+GrandOrgue ships a spec file for building RPMs (tested with OpenSuSE).
+To build, copy the grandorgue tarball to the rpm SOURCE directory and run:
+rpmbuild -ba grandorgue.spec
+
 Cross-compiling for Windows:
 ----------------------------
 
