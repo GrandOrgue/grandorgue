@@ -139,7 +139,6 @@ MIDIListenDialog::MIDIListenDialog
 	m_type(type)
 {
 
-	SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxFlexGridSizer* sizer = new wxFlexGridSizer(3, 2, 5, 5);
 	topSizer->Add(sizer, 0, wxALL, 5);
