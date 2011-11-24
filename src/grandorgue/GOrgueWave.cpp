@@ -377,15 +377,23 @@ void GOrgueWave::ReadSamples
 
 		switch (read_format)
 		{
-		case SF_SIGNEDBYTE:
+		case SF_SIGNEDBYTE_8:
 			*(wxInt8*)output = value >> 16;
 			output += sizeof(wxInt8);
 			break;
-		case SF_SIGNEDSHORT:
+		case SF_SIGNEDSHORT_12:
+			*(wxInt16*)output = value >> 12;
+			output += sizeof(wxInt16);
+			break;
+		case SF_SIGNEDSHORT_16:
 			*(wxInt16*)output = value >> 8;
 			output += sizeof(wxInt16);
 			break;
-		case SF_SIGNEDINT24:
+		case SF_SIGNEDINT24_20:
+			*(Int24*)output = value >> 4;
+			output += sizeof(Int24);
+			break;
+		case SF_SIGNEDINT24_24:
 			*(Int24*)output = value;
 			output += sizeof(Int24);
 			break;

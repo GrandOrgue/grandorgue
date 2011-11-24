@@ -40,7 +40,7 @@ private:
 	bool m_ScaleRelease;
 	bool m_RandomizeSpeaking;
 	unsigned m_SampleRate;
-	unsigned m_BytesPerSample;
+	unsigned m_BitsPerSample;
 	unsigned m_WaveFormat;
 	unsigned m_Volume;
 	unsigned m_PolyphonyLimit;
@@ -116,8 +116,8 @@ public:
 	void SetSampleRate(unsigned sample_rate);
 	unsigned GetWaveFormatBytesPerSample();
 	void SetWaveFormatBytesPerSample(unsigned bytes_per_sample);
-	unsigned GetBytesPerSample();
-	void SetBytesPerSample(unsigned bytes_per_sample);
+	unsigned GetBitsPerSample();
+	void SetBitsPerSample(unsigned bits_per_sample);
 
 	unsigned GetVolume();
 	void SetVolume(unsigned volume);

@@ -132,7 +132,7 @@ void GOrguePipe::LoadData()
 	}
 	m_Reference = NULL;
 	m_SoundProvider.LoadFromFile(m_Filename, m_Amplitude, m_OrganFile->GetODFPath(),
-				     m_OrganFile->GetSettings().GetBytesPerSample(), m_OrganFile->GetSettings().GetLoadInStereo(),
+				     m_OrganFile->GetSettings().GetBitsPerSample(), m_OrganFile->GetSettings().GetLoadInStereo(),
 				     m_OrganFile->GetSettings().GetLosslessCompression());
 }
 
