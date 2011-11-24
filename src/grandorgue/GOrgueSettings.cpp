@@ -65,7 +65,7 @@ GOrgueSettings::GOrgueSettings() :
 	m_ScaleRelease(true),
 	m_RandomizeSpeaking(true),
 	m_SampleRate(44100),
-	m_BytesPerSample(2),
+	m_BitsPerSample(16),
 	m_WaveFormat(4),
 	m_Volume(50),
 	m_PolyphonyLimit(2048),
@@ -103,9 +103,9 @@ void GOrgueSettings::Load()
 	m_SampleRate = m_Config.Read(wxT("SampleRate"), 44100);
 	if (m_SampleRate < 1000)
 		m_SampleRate = 44100;
-	m_BytesPerSample = m_Config.Read(wxT("BytesPerSample"), 2);
-	if (m_BytesPerSample < 1 || m_BytesPerSample > 3)
-		m_BytesPerSample = 2;
+	m_BitsPerSample = m_Config.Read(wxT("BitsPerSample"), 2);
+	if (m_BitsPerSample != 8 && m_BitsPerSample != 12 && m_BitsPerSample != 16 && m_BitsPerSample != 20 && m_BitsPerSample != 24)
+		m_BitsPerSample = 16;
 	m_WaveFormat = m_Config.Read(wxT("WaveFormat"), 4);
 	if (m_WaveFormat < 1 || m_WaveFormat > 4)
 		m_WaveFormat = 4;
@@ -373,17 +373,17 @@ void GOrgueSettings::SetSampleRate(unsigned sample_rate)
 	m_Config.Write(wxT("SampleRate"), (long)sample_rate);
 }
 
-unsigned GOrgueSettings::GetBytesPerSample()
+unsigned GOrgueSettings::GetBitsPerSample()
 {
-	return m_BytesPerSample;
+	return m_BitsPerSample;
 }
 
-void GOrgueSettings::SetBytesPerSample(unsigned bytes_per_sample)
+void GOrgueSettings::SetBitsPerSample(unsigned bits_per_sample)
 {
-	if (bytes_per_sample < 1 || bytes_per_sample > 3)
-		bytes_per_sample = 2;
-	m_BytesPerSample = bytes_per_sample;
-	m_Config.Write(wxT("BytesPerSample"), (long)bytes_per_sample);
+	if (bits_per_sample != 8 && bits_per_sample != 12 && bits_per_sample != 16 && bits_per_sample != 20 && bits_per_sample != 24)
+		bits_per_sample = 16;
+	m_BitsPerSample = bits_per_sample;
+	m_Config.Write(wxT("BitsPerSample"), (long)m_BitsPerSample);
 }
 
 

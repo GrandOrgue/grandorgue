@@ -107,8 +107,8 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 	SHA1_Update(&ctx, &m_AmplitudeLevel, sizeof(m_AmplitudeLevel));
 	bool stereo = m_Settings.GetLoadInStereo();
 	SHA1_Update(&ctx, &stereo, sizeof(stereo));
-	unsigned bytes_per_sample = m_Settings.GetBytesPerSample();
-	SHA1_Update(&ctx, &bytes_per_sample, sizeof(bytes_per_sample));
+	unsigned bits_per_sample = m_Settings.GetBitsPerSample();
+	SHA1_Update(&ctx, &bits_per_sample, sizeof(bits_per_sample));
 	bool compress = m_Settings.GetLosslessCompression();
 	SHA1_Update(&ctx, &compress, sizeof(compress));
 

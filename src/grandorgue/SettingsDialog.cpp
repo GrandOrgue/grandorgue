@@ -105,7 +105,7 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 {
 	b_stereo = m_Settings.GetLoadInStereo();
 	b_squash = m_Settings.GetLosslessCompression();
-	m_OldBytesPerSample = m_Settings.GetBytesPerSample();
+	m_OldBitsPerSample = m_Settings.GetBitsPerSample();
 
 	CreateButtons(wxOK | wxCANCEL | wxHELP);
 	//JB: wxAPPLY not available in recent versions of wxWidgets
@@ -141,7 +141,7 @@ SettingsDialog::~SettingsDialog()
 	m_Sound.SetLogSoundErrorMessages(false);
 	if (b_stereo != m_Settings.GetLoadInStereo() || 
 	    b_squash != m_Settings.GetLosslessCompression() ||
-	    m_OldBytesPerSample != m_Settings.GetBytesPerSample())
+	    m_OldBitsPerSample != m_Settings.GetBitsPerSample())
 	{
 		if (::wxMessageBox(_("Some changed settings effect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION) == wxYES)
 		{
@@ -233,15 +233,15 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(c_SampleRate = new wxChoice(panel, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
-	for (unsigned i = 1; i < 4; i++)
-		choices.push_back(wxString::Format(wxT("%d bits"), i * 8));
+	for (unsigned i = 0; i < 5; i++)
+		choices.push_back(wxString::Format(wxT("%d bits"), 8 + i * 4));
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Sample size:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
-	grid->Add(c_BytesPerSample = new wxChoice(panel, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+	grid->Add(c_BitsPerSample = new wxChoice(panel, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	UpdateSoundStatus();
 	c_stereo->Select(m_Settings.GetLoadInStereo());
 	c_SampleRate->Select(m_Settings.GetSampleRate() == 48000 ? 1 : 0);
-	c_BytesPerSample->Select(m_Settings.GetBytesPerSample() - 1);
+	c_BitsPerSample->Select((m_Settings.GetBitsPerSample() - 8) / 4);
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
@@ -680,7 +680,7 @@ bool SettingsDialog::DoApply()
 	m_Settings.SetScaleRelease(c_scale->IsChecked());
 	m_Settings.SetRandomizeSpeaking(c_random->IsChecked());
 	m_Settings.SetSampleRate(c_SampleRate->GetSelection() ? 48000 : 44100);
-	m_Settings.SetBytesPerSample(c_BytesPerSample->GetSelection() + 1);
+	m_Settings.SetBitsPerSample(c_BitsPerSample->GetSelection() * 4 + 8);
 	m_Settings.SetConcurrency(c_Concurrency->GetSelection());
 	m_Settings.SetReleaseConcurrency(c_ReleaseConcurrency->GetSelection() + 1);
 	m_Settings.SetWaveFormatBytesPerSample(c_WaveFormat->GetSelection() + 1);

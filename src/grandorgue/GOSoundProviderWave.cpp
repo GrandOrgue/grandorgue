@@ -107,7 +107,7 @@ void GOSoundProviderWave::LoadFromFile
 	(wxString filename
 	,int fixed_amplitude
 	,wxString path
-	,unsigned bytes_per_sample
+	,unsigned bits_per_sample
 	,bool stereo
 	,bool compress
 	)
@@ -125,6 +125,14 @@ void GOSoundProviderWave::LoadFromFile
 	GOrgueWave wave;
 	wave.Open(temp);
 
+	unsigned bytes_per_sample;
+	if (bits_per_sample <= 8)
+		bytes_per_sample = 1;
+	else if (bits_per_sample <= 16)
+		bytes_per_sample = 2;
+	else
+		bytes_per_sample = 3;
+
 	/* allocate data to work with */
 	unsigned totalDataSize = wave.GetLength() * bytes_per_sample * wave.GetChannels();
 	char* data = (char*)malloc(totalDataSize);
@@ -140,19 +148,19 @@ void GOSoundProviderWave::LoadFromFile
 	if (!stereo)
 		channels = 1;
 
-	m_Attack.sample_frac_bits  = 8 * bytes_per_sample - 1;
+	m_Attack.sample_frac_bits  = bits_per_sample - 1;
 	m_Attack.stage             = GSS_ATTACK;
 	m_Attack.type              = GetAudioSectionType(bytes_per_sample, channels);
-	m_Loop.sample_frac_bits    = 8 * bytes_per_sample - 1;
+	m_Loop.sample_frac_bits    = bits_per_sample - 1;
 	m_Loop.stage               = GSS_LOOP;
 	m_Loop.type                = GetAudioSectionType(bytes_per_sample, channels);
-	m_Release.sample_frac_bits = 8 * bytes_per_sample - 1;
+	m_Release.sample_frac_bits = bits_per_sample - 1;
 	m_Release.stage            = GSS_RELEASE;
 	m_Release.type             = GetAudioSectionType(bytes_per_sample, channels);
 
 	try
 	{
-		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bytes_per_sample, m_SampleRate, channels);
+		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, m_SampleRate, channels);
 
 		if (channels < 1 || channels > 2)
 			throw (wxString)_("< More than 2 channels in");
