@@ -365,27 +365,39 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	wxString key, key2, error = wxT("!");
 
 	m_b_customized = false;
-    long cookie;
-    bool bCont = odf_ini_file.GetFirstGroup(key, cookie);
-    while (bCont)
-    {
-        if (key.StartsWith(wxT("_")))
-        {
-            m_b_customized = true;
-            odf_ini_file.SetPath(wxT('/') + key);
-            long cookie2;
-            bool bCont2 = odf_ini_file.GetFirstEntry(key2, cookie2);
-            while (bCont2)
-            {
-                odf_ini_file.Write(wxT('/') + key.Mid(1) + wxT('/') + key2, odf_ini_file.Read(key2));
-                bCont2 = odf_ini_file.GetNextEntry(key2, cookie2);
-            }
-            odf_ini_file.SetPath(wxT("/"));
-        }
-        bCont = odf_ini_file.GetNextGroup(key, cookie);
-    }
+	long cookie;
+	bool bCont = odf_ini_file.GetFirstGroup(key, cookie);
+	while (bCont)
+	{
+		if (key.StartsWith(wxT("_")))
+		{
+			m_b_customized = true;
+			odf_ini_file.SetPath(wxT('/') + key);
+			long cookie2;
+			bool bCont2 = odf_ini_file.GetFirstEntry(key2, cookie2);
+			while (bCont2)
+			{
+				odf_ini_file.Write(wxT('/') + key.Mid(1) + wxT('/') + key2, odf_ini_file.Read(key2));
+				bCont2 = odf_ini_file.GetNextEntry(key2, cookie2);
+			}
+			odf_ini_file.SetPath(wxT("/"));
+		}
+		bCont = odf_ini_file.GetNextGroup(key, cookie);
+	}
 
-	if (!file2.IsEmpty())
+	wxString setting_file = file2;
+
+	if (setting_file.IsEmpty())
+	{
+		wxString fn = file + wxT(".cmb");
+		if (wxFileExists(fn))
+		{
+			setting_file = fn;
+			m_b_customized = true;
+		}
+	}
+
+	if (!setting_file.IsEmpty())
 	{
 
 		// NOTICE: unfortunately, the format is not adhered to well at all.
@@ -395,7 +407,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 			(wxEmptyString
 			,wxEmptyString
 			,wxEmptyString
-			,file2
+			,setting_file
 			,wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS
 			,wxCSConv(wxT("ISO-8859-1"))
 			);
@@ -424,7 +436,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		{
 			if (!extra_odf_config.GetNumberOfGroups())
 			{
-				error.Printf(_("Unable to read '%s'"), file2.c_str());
+				error.Printf(_("Unable to read '%s'"), setting_file.c_str());
 				return error;
 			}
 			wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_odf_config.Read(key).c_str());
@@ -608,28 +620,33 @@ void GrandOrgueFile::Revert(wxFileConfig& cfg)
         cfg.DeleteGroup(to_drop[i]);
 }
 
+void GrandOrgueFile::DeleteSettings()
+{
+	wxString cache_filename = GetODFFilename() + wxT(".cmb");
+	wxRemoveFile(cache_filename);
+}
+
 void GrandOrgueFile::Save(const wxString& file)
 {
 
-	wxFileName fn(file);
+	wxString fn = file;
 	wxString buffer;
-	bool prefix = true;
+	bool prefix = false;
 
-	if (fn.GetExt().CmpNoCase(wxT("organ")))
+	if (fn == GetODFFilename())
+		fn = GetODFFilename() + wxT(".cmb");
+
+	if (::wxFileExists(fn) && !::wxRemoveFile(fn))
 	{
-		if (::wxFileExists(file) && !::wxRemoveFile(file))
-		{
-			wxLogError(_("Could not write to '%s'"), file.c_str());
-			return;
-		}
-		prefix = false;
+		wxLogError(_("Could not write to '%s'"), fn.c_str());
+		return;
 	}
 
 	wxLog::EnableLogging(false);
 	wxFileConfig cfg
 		(wxEmptyString
 		,wxEmptyString
-		,file
+		,fn
 		,wxEmptyString
 		,wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS
 		,wxCSConv(wxT("ISO-8859-1"))

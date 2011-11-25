@@ -109,6 +109,7 @@ public:
 	bool CachePresent();
 	bool UpdateCache(bool compress);
 	void DeleteCache();
+	void DeleteSettings();;
 	void Revert(wxFileConfig& cfg);
 	void Abort();
 	void PreparePlayback(GOSoundEngine* engine);
