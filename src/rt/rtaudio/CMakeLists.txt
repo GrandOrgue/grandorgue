@@ -71,6 +71,22 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
    target_link_libraries(RtAudio pthread)
 
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+   message(STATUS "  Building a Mac configuration")
+   message(STATUS "    Support for Jack          : ${RTAUDIO_USE_JACK}")
+   message(STATUS "    Support for CoreAudio     : ${RTAUDIO_USE_CORE}")
+
+   if (RTAUDIO_USE_JACK)
+      add_definitions(-D__UNIX_JACK__)
+      target_link_libraries(RtAudio jackmp)
+   endif ()
+
+   if (RTAUDIO_USE_CORE)
+      add_definitions(-D__MACOSX_CORE__)
+      target_link_libraries(RtAudio -framework\ CoreAudio -framework\ CoreFoundation)
+   endif ()
+
 else ()
 
    message(FATAL_ERROR "  Unknown/unsupported build configuration")

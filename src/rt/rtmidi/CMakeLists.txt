@@ -31,6 +31,20 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
       target_link_libraries(RtMidi asound)
    endif ()
 
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+   message(STATUS "  Building a Mac configuration")
+   message(STATUS "    Support for CoreMIDI      : ${RTMIDI_USE_CORE}")
+
+   if (RTMIDI_USE_CORE)
+      add_definitions(-D__MACOSX_CORE__)
+      target_link_libraries(RtMidi -framework\ CoreMIDI -framework\ CoreFoundation -framework\ CoreAudio)
+   endif ()
+
+else ()
+
+   message(FATAL_ERROR "  Unknown/unsupported build configuration")
+
 endif ()
 
 message(STATUS "============================================================================")
