@@ -92,7 +92,7 @@ private:
 		,double streamTime
 		,RtAudioStreamStatus status
 		,void *userData
-		);
+		) STACK_REALIGN;
 
 	void StopThreads();
 	void StartThreads(unsigned windchests);

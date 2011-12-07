@@ -30,4 +30,6 @@
 /* Value which is used to identify a valid cached organ data file. */
 #define GRANDORGUE_CACHE_MAGIC 0x12341234
 
+#define STACK_REALIGN  @REALIGN_ATTRIBUTE@
+
 #endif
