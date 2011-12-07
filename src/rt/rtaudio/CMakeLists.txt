@@ -35,7 +35,7 @@ if (WIN32)
       if (${DSOUND_H_EXISTS})
       else()
 	include_directories(../../../ext/rt/wine)
-	include_directories(../../../ext/rt/wine/include
+	include_directories(../../../ext/rt/wine/include)
       endif ()
       target_link_libraries(RtAudio dsound)
    endif ()
