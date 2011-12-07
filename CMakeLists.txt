@@ -58,6 +58,7 @@ endif ()
 
 # only use options supported by the compiler
 include(CheckCXXCompilerFlag)
+include(CheckCXXSourceCompiles)
 macro(add_option _option)
   set(_name "OPTION_${_option}")
   CHECK_CXX_COMPILER_FLAG("-${_option}" ${_name})
@@ -90,6 +91,13 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
    add_option(msse2)
    add_option(msse3)
    add_option(DNDEBUG)
+endif ()
+
+CHECK_CXX_SOURCE_COMPILES("int main() __attribute__((force_align_arg_pointer)); int main() { return 0; }" HAVE_REALIGN)
+if (HAVE_REALIGN)
+  set(REALIGN_ATTRIBUTE "__attribute__((force_align_arg_pointer))")
+else()
+  set(REALIGN_ATTRIBUTE "")
 endif ()
 
 # include RtAudio

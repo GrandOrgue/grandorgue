@@ -25,6 +25,7 @@
 
 #include <map>
 #include <wx/wx.h>
+#include "GrandOrgueDef.h"
 #include "ptrvector.h"
 
 class RtMidiIn;
@@ -57,7 +58,7 @@ private:
 
 	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device);
 
-	static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData);
+	static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData) STACK_REALIGN;
 
 public:
 
