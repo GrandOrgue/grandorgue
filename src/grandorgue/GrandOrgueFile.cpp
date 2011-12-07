@@ -54,6 +54,8 @@
 GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_doc(doc),
 	m_path(),
+	m_CacheFilename(),
+	m_SettingFilename(),
 	m_setter(0),
 	m_volume(0),
 	m_b_customized(false),
@@ -342,6 +344,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	m_path = file;
 	m_path.MakeAbsolute();
+	m_SettingFilename = GetODFFilename() + wxT(".cmb");
+	m_CacheFilename = GetODFFilename() + wxT(".cache");
 
 	// NOTICE: unfortunately, the format is not adhered to well at all. With
 	// logging enabled, most sample sets generate warnings.
@@ -389,10 +393,9 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	if (setting_file.IsEmpty())
 	{
-		wxString fn = file + wxT(".cmb");
-		if (wxFileExists(fn))
+		if (wxFileExists(m_SettingFilename))
 		{
-			setting_file = fn;
+			setting_file = m_SettingFilename;
 			m_b_customized = true;
 		}
 	}
@@ -458,14 +461,13 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	try
 	{
 
-		wxString cache_filename = file + wxT(".cache");
 		wxString load_error;
 		bool cache_ok = false;
 
-		if (wxFileExists(cache_filename))
+		if (wxFileExists(m_CacheFilename))
 		{
 
-			wxFile cache_file(file + wxT(".cache"));
+			wxFile cache_file(m_CacheFilename);
 			GOrgueCache reader(cache_file, m_pool);
 			cache_ok = cache_file.IsOpened();
 
@@ -524,13 +526,10 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 }
 bool GrandOrgueFile::CachePresent()
 {
-	wxString cache_filename = GetODFFilename() + wxT(".cache");
-	return wxFileExists(cache_filename);
+	return wxFileExists(m_CacheFilename);
 }
 bool GrandOrgueFile::UpdateCache(bool compress)
 {
-	wxString cache_filename = GetODFFilename() + wxT(".cache");
-
 	DeleteCache();
 	/* Figure out how many pipes there are */
 	unsigned nb_pipes = 0;
@@ -543,7 +542,7 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 	long last = wxGetUTCTime();
 	dlg.Update(0);
 
-	wxFileOutputStream file(cache_filename);
+	wxFileOutputStream file(m_CacheFilename);
 	GOrgueCacheWriter writer(file, compress);
 
 	/* Save pipes to cache */
@@ -589,8 +588,7 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 
 void GrandOrgueFile::DeleteCache()
 {
-	wxString cache_filename = GetODFFilename() + wxT(".cache");
-	wxRemoveFile(cache_filename);
+	wxRemoveFile(m_CacheFilename);
 }
 
 GrandOrgueFile::~GrandOrgueFile(void)
@@ -622,8 +620,7 @@ void GrandOrgueFile::Revert(wxFileConfig& cfg)
 
 void GrandOrgueFile::DeleteSettings()
 {
-	wxString cache_filename = GetODFFilename() + wxT(".cmb");
-	wxRemoveFile(cache_filename);
+	wxRemoveFile(m_SettingFilename);
 }
 
 void GrandOrgueFile::Save(const wxString& file)
@@ -634,7 +631,7 @@ void GrandOrgueFile::Save(const wxString& file)
 	bool prefix = false;
 
 	if (fn == GetODFFilename())
-		fn = GetODFFilename() + wxT(".cmb");
+		fn = m_SettingFilename;
 
 	if (::wxFileExists(fn) && !::wxRemoveFile(fn))
 	{
@@ -869,6 +866,16 @@ const wxString GrandOrgueFile::GetODFFilename()
 const wxString GrandOrgueFile::GetODFPath()
 {
 	return m_path.GetPath();
+}
+
+const wxString GrandOrgueFile::GetSettingFilename()
+{
+	return m_SettingFilename;
+}
+
+const wxString GrandOrgueFile::GetCacheFilename()
+{
+	return m_CacheFilename;
 }
 
 GOrgueMemoryPool& GrandOrgueFile::GetMemoryPool()
