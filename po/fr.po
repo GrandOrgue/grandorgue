@@ -1,23 +1,29 @@
-# Swedish translations for GrandOrgue package.
+# French translations for GrandOrgue package.
 # This file is put in the public domain.
-# Lars Palo <larspalo@yahoo.se>, 2011.
+# Jean-Luc Derouineau <jeanluc@derouineau.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2011-09-26 12:40+0200\n"
-"PO-Revision-Date: 2011-12-07 19:44+0100\n"
+"POT-Creation-Date: 2011-12-08 19:30+0100\n"
+"PO-Revision-Date: 2011-12-08 20:02+0100\n"
 "Last-Translator: Jean-Luc Derouineau <jeanluc@derouineau.com>\n"
-"Language-Team: Swedish\n"
-"Language: sv\n"
+"Language-Team: French <jeanluc@derouineau.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
 
 msgid " Out of memory loading"
 msgstr "Dépassement mémoire au chargement"
+
+#, c-format
+msgid "%.3f MB"
+msgstr "%.3f MB"
 
 #, c-format
 msgid "%d"
@@ -88,9 +94,6 @@ msgstr "&Enregister configuration jeux\tShift"
 msgid "&Open...\tCtrl+O"
 msgstr "&Ouvrir\tCtrl+O"
 
-msgid "&Organ"
-msgstr "&Orgue"
-
 msgid "&Panel"
 msgstr "&Commandes"
 
@@ -111,6 +114,9 @@ msgstr "&Sauvegarder configuration orgue\tCtrl+S"
 
 msgid "&Settings..."
 msgstr "&Paramètres"
+
+msgid "&Sound Engine"
+msgstr "&Moteur Audio"
 
 msgid "&Transpose"
 msgstr "&Transposer"
@@ -151,8 +157,19 @@ msgstr "-100"
 msgid "000"
 msgstr "000"
 
+msgid "16"
+msgstr "16"
+
+#, fuzzy
+msgid "16 Bit PCM"
+msgstr "16 bit PCM"
+
 msgid "16 bit PCM"
 msgstr "16 bit PCM"
+
+#, fuzzy
+msgid "24 Bit PCM"
+msgstr "24 bit PCM"
 
 msgid "24 bit PCM"
 msgstr "24 bit PCM"
@@ -163,6 +180,9 @@ msgstr "32 bit PCM"
 msgid "32 bit float"
 msgstr "32 bit float"
 
+msgid "4"
+msgstr "4"
+
 msgid "44100"
 msgstr "44100"
 
@@ -171,6 +191,13 @@ msgstr "48000"
 
 msgid "64 bit float"
 msgstr "64 bit float"
+
+msgid "8"
+msgstr "8"
+
+#, fuzzy
+msgid "8 Bit PCM"
+msgstr "8 bit PCM"
 
 msgid "8 bit PCM"
 msgstr "8 bit PCM"
@@ -283,6 +310,9 @@ msgstr "Controle actif de la polyphonie"
 msgid "Address"
 msgstr "Adresse"
 
+msgid "Allocated sample memory"
+msgstr "Mémoire échantilons orgue allouée"
+
 msgid "Alsa"
 msgstr "Alsa"
 
@@ -318,6 +348,9 @@ msgstr "Le moteur Audio nécessite un frame size de %u blocs qui est indivisible
 msgid "B"
 msgstr "B"
 
+msgid "BAS"
+msgstr "BAS"
+
 msgid "Build Date"
 msgstr "Date de Fabriquation"
 
@@ -336,9 +369,9 @@ msgstr "Changement contrôle Bx On"
 msgid "C"
 msgstr "C"
 
-#, c-format
-msgid "Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache."
-msgstr "Fichier cache érroné (devrait être %#.8x obtenu %#.8x)"
+#, fuzzy
+msgid "Cache file had bad magic bypassing cache."
+msgstr "Mauvais code de vérification (hash) du fichier cache."
 
 msgid "Cache file had diffent hash bypassing cache."
 msgstr "Mauvais code de vérification (hash) du fichier cache."
@@ -359,6 +392,9 @@ msgstr "Décalage canal:"
 msgid "Choose a file"
 msgstr "Choisir un fichier"
 
+msgid "Compress Cache"
+msgstr "Compression du cache"
+
 msgid "Concurreny Level:"
 msgstr "niveau de recouvrement boucle:"
 
@@ -368,6 +404,13 @@ msgstr "Coeur"
 #, c-format
 msgid "Could not write to '%s'"
 msgstr "Impossible d'écrire dans '%s'"
+
+msgid "Coupler"
+msgstr "Coupleur"
+
+#, c-format
+msgid "Coupler %s"
+msgstr "Coupleur %s"
 
 msgid "Creating sample cache"
 msgstr "Création du cache de l'orgue"
@@ -414,6 +457,9 @@ msgstr "Interfaces"
 msgid "DirectSound"
 msgstr "DirectSound"
 
+msgid "Divisionals"
+msgstr "Divisions"
+
 msgid "E&xit"
 msgstr "&Sortie"
 
@@ -455,6 +501,10 @@ msgid "Failed to open file '%s'\n"
 msgstr "Impossible d'ouvrir '%s'\n"
 
 #, c-format
+msgid "Failed to open the graphic '%s'"
+msgstr "Impossible d'ouvrir le graphique '%s'"
+
+#, c-format
 msgid "Failed to read %s from cache."
 msgstr "Impossible de lire %s du cache."
 
@@ -476,6 +526,9 @@ msgstr "Général"
 
 msgid "Help"
 msgstr "Aide"
+
+msgid "IEEE Float"
+msgstr "IEEE Float"
 
 msgid "Import Settings"
 msgstr "Importer paramètres"
@@ -564,6 +617,9 @@ msgstr "Compression sans perte"
 msgid "MB"
 msgstr "MB"
 
+msgid "MEL"
+msgstr "MEL"
+
 msgid "MIDI &input devices"
 msgstr "&Interface entrée MIDI"
 
@@ -590,6 +646,9 @@ msgstr "Manual 5 (Solo)"
 
 msgid "Manual 6 (Echo)"
 msgstr "Manual 6 (Echo)"
+
+msgid "Mapped memory of the cache"
+msgstr "Mémoire configurée du cache"
 
 msgid "Memory Level"
 msgstr "Position combinateur"
@@ -638,9 +697,6 @@ msgstr "Suite"
 msgid "Next Memory"
 msgstr "Mémoire suivante"
 
-msgid "No MIDI devices are selected for listening; neither MIDI input nor sound output will occur!"
-msgstr "Pas d'interface midi selectionée,aucun évènement MIDI ou sonorité ne sera généré!"
-
 msgid "No audio device is selected; neither MIDI input nor sound output will occur!"
 msgstr "Pas d'interface audio selectionée, aucun évènement MIDI ou sonorité ne sera généré!"
 
@@ -652,6 +708,9 @@ msgstr "Ouvrir"
 
 msgid "Open &Recent"
 msgstr "Ouvrir &Récent"
+
+msgid "Options"
+msgstr "Options"
 
 msgid "Organ"
 msgstr "Orgue"
@@ -711,8 +770,14 @@ msgstr "Recharger &L'orgue"
 msgid "Ready!"
 msgstr "Prêt!"
 
+msgid "Realloc of non-top element failed"
+msgstr "Réallocation d'un élément non en haut de pile a échoué"
+
 msgid "Record"
 msgstr "Enregistrer"
+
+msgid "Recorder WAV Format:"
+msgstr "Format WAV de l'enregistreur:"
 
 msgid "Recording Details"
 msgstr "Détails d'enregistrement"
@@ -723,9 +788,6 @@ msgstr "Normal"
 msgid "Release Concurreny Level:"
 msgstr "Niveau de recouvrement laché note:"
 
-msgid "Release sample phase alignment"
-msgstr "Alignement phase queue échantillon"
-
 msgid "Release sample scaling"
 msgstr "Ajustement niveau laché note"
 
@@ -735,11 +797,22 @@ msgstr "Recharger"
 msgid "Reset to &Defaults"
 msgstr "Recharger configuration par &Defaut"
 
+#, c-format
+msgid "RtAudio error: %s"
+msgstr "RtAudio erreur: %s"
+
+#, c-format
+msgid "RtMidi error: %s"
+msgstr "RtMidi erreur: %s"
+
 msgid "Sample Rate:"
 msgstr "Taux d'échantillonage:"
 
 msgid "Sample set definition files"
 msgstr "Fichier de définition de l'orgue"
+
+msgid "Sample size:"
+msgstr "Taille échantillons:"
 
 msgid "Save"
 msgstr "Sauver"
@@ -766,22 +839,21 @@ msgstr "Setter"
 msgid "Settings files (*.cmb)|*.cmb"
 msgstr "Fichier de configuration (*.cmb)|*.cmb"
 
+msgid ""
+"Some changed settings effect unless the sample set is reloaded.\n"
+"\n"
+"Would you like to reload the sample set now?"
+msgstr ""
+"La modification de configuration ne prend effet\n"
+"que lorsque l'orgue est rechargé.\n"
+"\n"
+"Recharger l'orgue maintenant?"
+
 msgid "Sound &output device"
 msgstr "Interface de S&ortie"
 
 msgid "Stereo"
 msgstr "Stéréo"
-
-msgid ""
-"Stereo mode and lossless compression won't take\n"
-"effect unless the sample set is reloaded.\n"
-"\n"
-"Would you like to reload the sample set now?"
-msgstr ""
-"Mode Stéréo et compression ne prendront effet\n"
-"que lorsque l'orgue est rechargé.\n"
-"\n"
-"Recharger l'orgue maintenant?"
 
 msgid "Stop Changes"
 msgstr "Changement de jeu"
@@ -806,6 +878,9 @@ msgstr "Titre"
 msgid "Transpose"
 msgstr "Transposer"
 
+msgid "U.O."
+msgstr "U.O."
+
 msgid "Unable to open file for writing"
 msgstr "Impossible d'ouvrir le fichier en écriture"
 
@@ -815,6 +890,9 @@ msgstr "Impossible de lire '%s'"
 
 msgid "Unknown"
 msgstr "Inconnu"
+
+msgid "Unsupported channel count"
+msgstr "Nombre de canaux non supporté"
 
 msgid "Unsupported format"
 msgstr "Format non supporté"
@@ -846,15 +924,20 @@ msgstr "__%d"
 msgid "bad format!"
 msgstr "mauvais format!"
 
+#, fuzzy
+msgid "bad return format!"
+msgstr "mauvais format!"
+
+#, c-format
+msgid "bitmap size does not match for '%s'"
+msgstr "Taille bitmap incorrecte pour '%s'"
+
 #, c-format
 msgid "caught exception: %s\n"
 msgstr "exception: %s\n"
 
 msgid "enclosure not found"
 msgstr "buffet non trouvé"
-
-msgid "g_sound has not been allocated"
-msgstr "g_sound n'a pas été alloué"
 
 msgid "ms"
 msgstr "ms"
@@ -872,23 +955,42 @@ msgstr "succès"
 msgid "unhandled exception: %s\n"
 msgstr "exception non prévue: %s\n"
 
-msgid "unimplemented"
-msgstr "pas encore implémenté"
-
 msgid "wave does not contain loops"
 msgstr "Le fichier WAVE ne contient pas de boucles"
 
+#~ msgid "&Organ"
+#~ msgstr "&Orgue"
+
+#~ msgid "Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache."
+#~ msgstr "Fichier cache érroné (devrait être %#.8x obtenu %#.8x) cache non utilisé"
+
 #~ msgid "Drawstop Trigger"
-#~ msgstr "Registerandragsutlösare"
+#~ msgstr "Déclenchement jeu"
 
 #~ msgid "Infinite recursive coupling detected!"
-#~ msgstr "Oändlig återkoppling upptäckt!"
+#~ msgstr "Détection d'un couplage récursif infini"
+
+#~ msgid ""
+#~ "No MIDI devices are selected for listening; neither MIDI input nor sound\n"
+#~ "output will occur!"
+#~ msgstr ""
+#~ "Pas d'interface midi selectionée,aucun évènement MIDI ou sonorité ne sera\n"
+#~ "généré!"
 
 #~ msgid "Pushbutton Trigger"
-#~ msgstr "Tryckknappsutlösare"
+#~ msgstr "Déclenchement poussoir"
+
+#~ msgid "Release sample phase alignment"
+#~ msgstr "Alignement phase laché note"
 
 #~ msgid "bad sampler->type"
-#~ msgstr "felaktig sampler->typ"
+#~ msgstr "mauvais sampler->typ"
+
+#~ msgid "g_sound has not been allocated"
+#~ msgstr "g_sound n'a pas été alloué"
 
 #~ msgid "regression - this should be impossible"
-#~ msgstr "återfall - detta borde vara omöjligt"
+#~ msgstr "regression - ceci devrait être impossible"
+
+#~ msgid "unimplemented"
+#~ msgstr "pas encore implémenté"
