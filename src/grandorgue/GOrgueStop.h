@@ -27,25 +27,23 @@
 #include "ptrvector.h"
 #include <wx/wx.h>
 #include "IniFileConfig.h"
+#include "GOrguePipeConfig.h"
 #include "GOrgueDrawStop.h"
 
 class GOrguePipe;
 
-class GOrgueStop : public GOrgueDrawstop
+class GOrgueStop : public GOrgueDrawstop, public GOrguePipeUpdateCallback
 {
 private:
 	ptr_vector<GOrguePipe> m_Pipes;
 	std::vector<unsigned> m_KeyState;
 	unsigned m_ManualNumber;
 	bool m_Percussive;
-	float m_AmplitudeLevel;
-	float m_DefaultAmplitude;
-	float m_Tuning;
-	float m_DefaultTuning;
 	unsigned m_FirstAccessiblePipeLogicalPipeNumber;
 	unsigned m_FirstAccessiblePipeLogicalKeyNumber;
 	unsigned m_NumberOfAccessiblePipes;
 	unsigned m_WindchestGroup;
+	GOrguePipeConfig m_PipeConfig;
 
 public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number);
@@ -58,18 +56,15 @@ public:
 	void Abort();
 	void PreparePlayback();
 	~GOrgueStop(void);
+	GOrguePipeConfig& GetPipeConfig();
 
 	unsigned GetFirstAccessiblePipeLogicalPipeNumber() const;
 	unsigned GetFirstAccessiblePipeLogicalKeyNumber() const;
 	unsigned GetNbAccessiblePipes() const;
 	unsigned IsAuto() const;
-	float GetAmplitude() const;
-	float GetDefaultAmplitude() const;
-	void SetAmplitude(float amp);
 
-	float GetTuning();
-	float GetDefaultTuning();
-	void SetTuning(float cnt);
+	void UpdateAmplitude();
+	void UpdateTuning();
 };
 
 #endif /* GORGUESTOP_H_ */

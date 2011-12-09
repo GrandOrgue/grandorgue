@@ -30,6 +30,7 @@
 #include <wx/filename.h>
 #include "GOrgueBitmapCache.h"
 #include "GOrgueMemoryPool.h"
+#include "GOrguePipeConfig.h"
 
 class wxProgressDialog;
 
@@ -51,7 +52,7 @@ class GOSoundProvider;
 class GOSoundEngine;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
-class GrandOrgueFile 
+class GrandOrgueFile : public GOrguePipeUpdateCallback
 {
 
 private:
@@ -100,6 +101,7 @@ private:
 
 	GOrgueMemoryPool m_pool;
 	GOrgueBitmapCache m_bitmaps;
+	GOrguePipeConfig m_PipeConfig;
 	GOrgueSettings& m_Settings;
 
 	void ReadOrganFile(wxFileConfig& odf_ini_file);
@@ -149,6 +151,7 @@ public:
 	GOrgueMemoryPool& GetMemoryPool();
 	GOrgueSettings& GetSettings();
 	GOrgueBitmapCache& GetBitmapCache();
+	GOrguePipeConfig& GetPipeConfig();
 
 	/* ODF general properties */
 	bool DivisionalsStoreIntermanualCouplers();
@@ -160,15 +163,8 @@ public:
 	void SetVolume(int volume);
 	int GetVolume();
 
-	/* Overal amplitude of the organ when played back (used to prevent
-	 * clipping, etc) */
-	float GetAmplitude();
-	float GetDefaultAmplitude();
-	void SetAmplitude(float amp);
-
-	float GetTuning();
-	float GetDefaultTuning();
-	void SetTuning(float cent);
+	void UpdateAmplitude();
+	void UpdateTuning();
 
 	/* TODO: can somebody figure out what this thing is */
 	bool IsCustomized();

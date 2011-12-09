@@ -34,6 +34,7 @@ class OrganTreeItemData : public wxTreeItemData
 public:
 	OrganTreeItemData(GOrgueStop* s)
 	{
+		config = &s->GetPipeConfig();
 		stop = s;
 		pipe = NULL;
 		organfile = NULL;
@@ -41,6 +42,7 @@ public:
 
 	OrganTreeItemData(GOrguePipe* p)
 	{
+		config = &p->GetPipeConfig();
 		stop = NULL;
 		pipe = p;
 		organfile = NULL;
@@ -48,11 +50,13 @@ public:
 		
 	OrganTreeItemData(GrandOrgueFile* o)
 	{
+		config = &o->GetPipeConfig();
 		stop = NULL;
 		pipe = NULL;
 		organfile = o;
 	}
-		
+
+	GOrguePipeConfig* config;
 	GOrgueStop* stop;
 	GOrguePipe* pipe;
 	GrandOrgueFile* organfile;
@@ -174,21 +178,9 @@ void OrganDialog::Load()
 	
 	float amplitude;
 	float tuning;
-	if (m_Last->stop)
-	{
-		amplitude = m_Last->stop->GetAmplitude();
-		tuning = m_Last->stop->GetTuning();
-	}
-	else if (m_Last->pipe)
-	{
-		amplitude = m_Last->pipe->GetAmplitude();
-		tuning = m_Last->pipe->GetTuning();
-	}
-	else
-	{
-		amplitude = m_Last->organfile->GetAmplitude();
-		tuning = m_Last->organfile->GetTuning();
-	}
+
+	amplitude = m_Last->config->GetAmplitude();
+	tuning = m_Last->config->GetTuning();
 
 	m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
 	m_AmplitudeSpin->SetValue(amplitude);
@@ -288,21 +280,8 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	for(unsigned i = 0; i < entries.size(); i++)
 	{
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
-		if (e->stop)
-		{
-			e->stop->SetAmplitude(amp);
-			e->stop->SetTuning(tuning);
-		}
-		else if (e->pipe)
-		{
-			e->pipe->SetAmplitude(amp);
-			e->pipe->SetTuning(tuning);
-		}
-		else
-		{
-			e->organfile->SetAmplitude(amp);
-			e->organfile->SetTuning(tuning);
-		}
+		e->config->SetAmplitude(amp);
+		e->config->SetTuning(tuning);
 	}
 
 	m_Last = NULL;
@@ -323,21 +302,8 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 	for(unsigned i = 0; i < entries.size(); i++)
 	{
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
-		if (e->stop)
-		{
-			e->stop->SetAmplitude(e->stop->GetDefaultAmplitude());
-			e->stop->SetTuning(e->stop->GetDefaultTuning());
-		}
-		else if (e->pipe)
-		{
-			e->pipe->SetAmplitude(e->pipe->GetDefaultAmplitude());
-			e->pipe->SetTuning(e->pipe->GetDefaultTuning());
-		}
-		else
-		{
-			e->organfile->SetAmplitude(e->organfile->GetDefaultAmplitude());
-			e->organfile->SetTuning(e->organfile->GetDefaultTuning());
-		}
+		e->config->SetAmplitude(e->config->GetDefaultAmplitude());
+		e->config->SetTuning(e->config->GetDefaultTuning());
 	}
 
 	m_Last = NULL;
