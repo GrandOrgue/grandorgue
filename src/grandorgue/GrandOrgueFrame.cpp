@@ -38,6 +38,7 @@
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
+#include "OrganDialog.h"
 #include "OrganDocument.h"
 #include "OrganView.h"
 #include "SettingsDialog.h"
@@ -60,6 +61,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(ID_FILE_EXPORT, GOrgueFrame::OnExport)
 	EVT_MENU(ID_FILE_CACHE, GOrgueFrame::OnCache)
 	EVT_MENU(ID_FILE_CACHE_DELETE, GOrgueFrame::OnCacheDelete)
+	EVT_MENU(ID_ORGAN_EDIT, GOrgueFrame::OnEditOrgan)
 	EVT_MENU(ID_AUDIO_PANIC, GOrgueFrame::OnAudioPanic)
 	EVT_MENU(ID_AUDIO_RECORD, GOrgueFrame::OnAudioRecord)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
@@ -162,6 +164,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	AddTool(audio_menu, ID_AUDIO_MEMSET, _("&Memory Set\tShift"), _("Memory Set"), GetImage_set(), wxITEM_CHECK);
 	audio_menu->AppendSeparator();
 	audio_menu->AppendSubMenu(preset_menu, _("Pr&eset"));
+	AddTool(audio_menu, ID_ORGAN_EDIT, _("&Organ settings"));
 	audio_menu->AppendSeparator();
 	AddTool(audio_menu, ID_AUDIO_PANIC, _("&Panic\tEscape"), _("Panic"), GetImage_panic());
 	AddTool(audio_menu, ID_AUDIO_SETTINGS, _("&Settings..."), _("Audio Settings"), GetImage_settings());
@@ -550,6 +553,15 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 	wxLogDebug(_("settingsdialog.."));
 	SettingsDialog dialog(this, m_Sound);
 	wxLogDebug(_("success"));
+	dialog.ShowModal();
+}
+
+void GOrgueFrame::OnEditOrgan(wxCommandEvent& event)
+{
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	if (!doc)
+		return;
+	OrganDialog dialog(this, doc->GetOrganFile());
 	dialog.ShowModal();
 }
 

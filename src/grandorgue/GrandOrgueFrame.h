@@ -66,6 +66,8 @@ public:
 	void OnRevert(wxCommandEvent& event);
 	void OnProperties(wxCommandEvent& event);
 
+	void OnEditOrgan(wxCommandEvent& event);
+
 	void OnAudioPanic(wxCommandEvent& event);
 	void OnAudioRecord(wxCommandEvent& event);
 	void OnAudioMemset(wxCommandEvent& event);
