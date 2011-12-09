@@ -1,5 +1,5 @@
 /*
- * GrandOrgue - a free pipe organ simulator based on MyOrgan
+ * GrandOrgue - a free pipe organ simulator
  *
  * MyOrgan 1.0.6 Codebase - Copyright 2006 Milan Digital Audio LLC
  * MyOrgan is a Trademark of Milan Digital Audio LLC
