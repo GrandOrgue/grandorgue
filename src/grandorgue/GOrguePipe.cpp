@@ -29,17 +29,21 @@
 
 GOrguePipe::GOrguePipe
 	(GrandOrgueFile* organfile
+	,GOrgueStop* stop
 	,bool percussive
 	,int sampler_group_id
-	,float amplitude
 	) :
 	m_OrganFile(organfile),
+	m_Stop(stop),
 	m_Sampler(NULL),
 	m_Instances(0),
 	m_SamplerGroupID(sampler_group_id),
 	m_Filename(),
+	m_Group(),
+	m_NamePrefix(),
 	m_Percussive(percussive),
-	m_Amplitude(amplitude),
+	m_Amplitude(0),
+	m_DefaultAmplitude(0),
 	m_Reference(NULL),
 	m_SoundProvider(organfile->GetMemoryPool())
 {
@@ -92,15 +96,51 @@ void GOrguePipe::Set(bool on)
 		SetOff();
 }
 
+bool GOrguePipe::IsReference()
+{
+	return m_Reference != NULL;
+}
+
+float GOrguePipe::GetAmplitude()
+{
+	return m_Amplitude;
+}
+
+float GOrguePipe::GetDefaultAmplitude()
+{
+	return m_DefaultAmplitude;
+}
+
+float GOrguePipe::GetEffectiveAmplitude()
+{
+	return m_Amplitude < 0 ? m_Stop->GetAmplitude() : m_Amplitude;
+}
+
+void GOrguePipe::UpdateAmplitude()
+{
+	m_SoundProvider.SetAmplitude(GetEffectiveAmplitude() * m_OrganFile->GetAmplitude());
+}
+
+void GOrguePipe::SetAmplitude(float amp)
+{
+	m_Amplitude = amp;
+	m_OrganFile->Modified();
+	UpdateAmplitude();
+}
+
 void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 {
+	m_Group = group;
+	m_NamePrefix = prefix;
 	m_Filename = cfg.ReadString(group, prefix);
-	m_LocalAmplitude = cfg.ReadFloat(group, prefix + wxT("AmplitudeLevel"), -1, 1000, false, -1);
-	m_SoundProvider.SetAmplitude(m_LocalAmplitude < 0 ? m_Amplitude : m_LocalAmplitude * m_OrganFile->GetAmplitude());
+	m_DefaultAmplitude = cfg.ReadFloat(group, prefix + wxT("AmplitudeLevel"), -1, 1000, false, -1);
+	m_Amplitude = cfg.ReadFloat(group, prefix + wxT("Amplitude"), -1, 1000, false, m_DefaultAmplitude);
+	UpdateAmplitude();
 }
 
 void GOrguePipe::Save(IniFileConfig& cfg, bool prefix)
 {
+	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
 }
 
 bool GOrguePipe::LoadCache(GOrgueCache& cache)
