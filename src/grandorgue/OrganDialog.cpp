@@ -94,21 +94,25 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 
 	wxBoxSizer* box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Settings"));
 
-	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 3, 5, 5);
+	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 5, 5);
 	box1->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Amplitude:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	wxBoxSizer* box2 = new wxBoxSizer(wxHORIZONTAL);
 	m_Amplitude = new wxTextCtrl(this, ID_EVENT_AMPLITUDE, wxEmptyString);
 	m_AmplitudeSpin = new wxSpinButton(this, ID_EVENT_AMPLITUDE_SPIN); 
-	grid->Add(m_Amplitude);
-	grid->Add(m_AmplitudeSpin);
+	box2->Add(m_Amplitude);
+	box2->Add(m_AmplitudeSpin);
+	grid->Add(box2);
 	m_AmplitudeSpin->SetRange(0, 1000);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Tuning (Cent):")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	box2 = new wxBoxSizer(wxHORIZONTAL);
 	m_Tuning = new wxTextCtrl(this, ID_EVENT_TUNING, wxEmptyString);
 	m_TuningSpin = new wxSpinButton(this, ID_EVENT_TUNING_SPIN); 
-	grid->Add(m_Tuning);
-	grid->Add(m_TuningSpin);
+	box2->Add(m_Tuning);
+	box2->Add(m_TuningSpin);
+	grid->Add(box2);
 	m_TuningSpin->SetRange(-1200, 1200);
 
 	wxBoxSizer* buttons = new wxBoxSizer(wxHORIZONTAL);
