@@ -248,7 +248,8 @@ void GOrgueFrameGeneral::Push()
 				if (!m_Stops[i])
 					continue;
 				unsigned k = abs(m_Stops[i]) - 1;
-				if (m_StopManual[i] > m_organfile->GetManualAndPedalCount() ||
+				if (m_StopManual[i] < m_organfile->GetFirstManualIndex() ||
+				    m_StopManual[i] > m_organfile->GetManualAndPedalCount() ||
 				    k >= m_organfile->GetManual(m_StopManual[i])->GetStopCount())
 					continue;
 				if (m_organfile->GetManual(m_StopManual[i])->GetStop(k)->IsEngaged())
@@ -263,7 +264,8 @@ void GOrgueFrameGeneral::Push()
 				if (!m_Couplers[i])
 					continue;
 				unsigned k = abs(m_Couplers[i]) - 1;
-				if (m_CouplerManual[i] > m_organfile->GetManualAndPedalCount() ||
+				if (m_CouplerManual[i] < m_organfile->GetFirstManualIndex() ||
+				    m_CouplerManual[i] > m_organfile->GetManualAndPedalCount() ||
 				    k >= m_organfile->GetManual(m_CouplerManual[i])->GetCouplerCount())
 					continue;
 				if (m_organfile->GetManual(m_CouplerManual[i])->GetCoupler(k)->IsEngaged())
@@ -311,7 +313,8 @@ void GOrgueFrameGeneral::Push()
 			if (!m_Stops[i])
 				continue;
 			unsigned k = abs(m_Stops[i]) - 1;
-			if (m_StopManual[i] > m_organfile->GetManualAndPedalCount() ||
+			if (m_StopManual[i] < m_organfile->GetFirstManualIndex() ||
+			    m_StopManual[i] > m_organfile->GetManualAndPedalCount() ||
 			    k >= m_organfile->GetManual(m_StopManual[i])->GetStopCount())
 				continue;
 			m_organfile->GetManual(m_StopManual[i])->GetStop(k)->Set(m_Stops[i] > 0);
@@ -323,7 +326,8 @@ void GOrgueFrameGeneral::Push()
 			if (!m_Couplers[i])
 				continue;
 			unsigned k = abs(m_Couplers[i]) - 1;
-			if (m_CouplerManual[i] > m_organfile->GetManualAndPedalCount() ||
+			if (m_CouplerManual[i] < m_organfile->GetFirstManualIndex() ||
+			    m_CouplerManual[i] > m_organfile->GetManualAndPedalCount() ||
 			    k >= m_organfile->GetManual(m_CouplerManual[i])->GetCouplerCount())
 				continue;
 			m_organfile->GetManual(m_CouplerManual[i])->GetCoupler(k)->Set(m_Couplers[i] > 0);
