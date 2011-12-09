@@ -134,6 +134,7 @@ Images.cpp
 IniFileConfig.cpp
 MIDIEventDialog.cpp
 MIDIListenDialog.cpp
+OrganDialog.cpp
 OrganDocument.cpp
 OrganView.cpp
 SettingsDialog.cpp
