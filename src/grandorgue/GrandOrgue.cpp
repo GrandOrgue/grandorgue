@@ -36,11 +36,22 @@
 #include <wx/fs_zip.h>
 #include <wx/splash.h>
 
+#ifdef __WXMAC__
+#include <ApplicationServices/ApplicationServices.h>
+#endif
+
 #ifdef __WIN32__
 #include <windows.h>
 #endif
 
 IMPLEMENT_APP(GOrgueApp)
+
+#ifdef __WXMAC__
+/* On Mac, filenames do not seem to work for server identifiers. */
+#define GO_SERVER_NAME wxT("4096")
+#else
+#define GO_SERVER_NAME wxT(APP_NAME)
+#endif
 
 class stConnection : public wxConnection
 {
@@ -111,32 +122,43 @@ GOrgueApp::GOrgueApp() :
 
 bool GOrgueApp::OnInit()
 {
-        m_locale.Init(wxLANGUAGE_DEFAULT);
-        m_locale.AddCatalog(wxT("GrandOrgue"));
+    m_locale.Init(wxLANGUAGE_DEFAULT);
+    m_locale.AddCatalog(wxT("GrandOrgue"));
 
-	single_instance = new wxSingleInstanceChecker(wxT(APP_NAME));
-	if (single_instance->IsAnotherRunning())
-	{
-	    wxLogNull logNull;
-	    stClient* client = new stClient;
-	    wxConnectionBase* connection = client->MakeConnection(wxT("localhost"), wxT(APP_NAME), wxT("open"));
-	    if (connection)
-	    {
-	        connection->Execute(argc > 1 ? argv[1] : wxT(""));
-	        connection->Disconnect();
-	        delete connection;
-	    }
-	    delete client;
-		return false;
-	}
-	else
-	{
-		m_server = new stServer;
-		if (!m_server->Create(wxT(APP_NAME)))
-		{
-			wxLogError(_("Failed to create IPC service."));
-		}
-	}
+#ifdef __WXMAC__
+    ProcessSerialNumber PSN;
+    GetCurrentProcess(&PSN);
+    TransformProcessType(&PSN, kProcessTransformToForegroundApplication);
+#endif
+
+    single_instance = new wxSingleInstanceChecker(GO_SERVER_NAME);
+    if (single_instance->IsAnotherRunning())
+    {
+        wxLogNull logNull;
+        stClient* client = new stClient;
+        wxConnectionBase* connection =
+            client->MakeConnection
+                (wxT("localhost")
+                ,GO_SERVER_NAME
+                ,wxT("open")
+                );
+        if (connection)
+        {
+            connection->Execute(argc > 1 ? argv[1] : wxT(""));
+            connection->Disconnect();
+            delete connection;
+        }
+        delete client;
+        return false;
+    }
+    else
+    {
+        m_server = new stServer;
+        if (!m_server->Create(GO_SERVER_NAME))
+        {
+            wxLogError(_("Failed to create IPC service."));
+        }
+    }
 
 	SetAppName(wxT(APP_NAME));
 	SetClassName(wxT(APP_NAME));
