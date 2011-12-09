@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include <wx/filepicker.h>
 #include <wx/spinctrl.h>
 #include <wx/tglbtn.h>
 #include <wx/bookctrl.h>
@@ -55,6 +56,8 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHECKBOX(ID_COMPRESS_CACHE, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_SCALE_RELEASE, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_RANDOMIZE, SettingsDialog::OnChanged)
+	EVT_CHECKBOX(ID_SETTINGS_DIR, SettingsDialog::OnChanged)
+	EVT_CHECKBOX(ID_CACHE_DIR, SettingsDialog::OnChanged)
 
 	EVT_LIST_ITEM_SELECTED(ID_MIDI_EVENTS, SettingsDialog::OnEventListClick)
 	EVT_LIST_ITEM_ACTIVATED(ID_MIDI_EVENTS, SettingsDialog::OnEventListDoubleClick)
@@ -308,6 +311,22 @@ wxPanel* SettingsDialog::CreateOptionsPage(wxWindow* parent)
 	c_Concurrency->Select(m_Settings.GetConcurrency());
 	c_ReleaseConcurrency->Select(m_Settings.GetReleaseConcurrency() - 1);
 	c_WaveFormat->Select(m_Settings.GetWaveFormatBytesPerSample() - 1);
+
+	grid = new wxFlexGridSizer(4, 1, 5, 5);
+	item6 = new wxStaticBoxSizer(wxVERTICAL, panel, _("&Paths"));
+	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Settings store:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(c_SettingsPath = new wxDirPickerCtrl(panel, ID_SETTINGS_DIR, wxEmptyString, _("Select directory for settings store"), wxDefaultPosition, wxDefaultSize, 
+						       wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
+
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Cache store:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(c_CachePath = new wxDirPickerCtrl(panel, ID_SETTINGS_DIR, wxEmptyString, _("Select directory for cache store"), wxDefaultPosition, wxDefaultSize, 
+						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
+	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+
+	c_SettingsPath->SetPath(m_Settings.GetUserSettingPath());
+	c_CachePath->SetPath(m_Settings.GetUserCachePath());
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
@@ -684,6 +703,8 @@ bool SettingsDialog::DoApply()
 	m_Settings.SetConcurrency(c_Concurrency->GetSelection());
 	m_Settings.SetReleaseConcurrency(c_ReleaseConcurrency->GetSelection() + 1);
 	m_Settings.SetWaveFormatBytesPerSample(c_WaveFormat->GetSelection() + 1);
+	m_Settings.SetUserSettingPath(c_SettingsPath->GetPath());
+	m_Settings.SetUserCachePath(c_CachePath->GetPath());
 
 	m_Sound.ResetSound();
 	UpdateSoundStatus();
