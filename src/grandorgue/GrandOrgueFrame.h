@@ -71,6 +71,7 @@ public:
 	void OnAudioMemset(wxCommandEvent& event);
 	void OnAudioSettings(wxCommandEvent& event);
 
+	void OnPreset(wxCommandEvent& event);
 	void OnHelp(wxCommandEvent& event);
 	void OnHelpAbout(wxCommandEvent& event);
 	void OnShowHelp(wxCommandEvent& event);

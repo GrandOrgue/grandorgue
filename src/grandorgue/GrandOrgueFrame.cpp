@@ -74,6 +74,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(ID_TRANSPOSE, GOrgueFrame::OnSettingsTranspose)
 	// End
 	EVT_MENU_RANGE(ID_PANEL_FIRST, ID_PANEL_LAST, GOrgueFrame::OnPanel)
+	EVT_MENU_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnPreset)
 	EVT_SIZE(GOrgueFrame::OnSize)
 	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
@@ -89,6 +90,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 
 	EVT_UPDATE_UI(wxID_SAVE, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
+	EVT_UPDATE_UI_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
 
 void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString)
@@ -153,9 +155,15 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	tb->AddSeparator();
 #endif
 
+	wxMenu *preset_menu = new wxMenu;
+	for(unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
+		preset_menu->Append(i,  wxString::Format(_("Preset %d"), i - ID_PRESET_0), wxEmptyString, wxITEM_CHECK);
+
 	wxMenu *audio_menu = new wxMenu;
 	AddTool(audio_menu, ID_AUDIO_RECORD, _("&Record...\tCtrl+R"), _("Record"), GetImage_record(), wxITEM_CHECK);
 	AddTool(audio_menu, ID_AUDIO_MEMSET, _("&Memory Set\tShift"), _("Memory Set"), GetImage_set(), wxITEM_CHECK);
+	audio_menu->AppendSeparator();
+	audio_menu->AppendSubMenu(preset_menu, _("Pr&eset"));
 	audio_menu->AppendSeparator();
 	AddTool(audio_menu, ID_AUDIO_PANIC, _("&Panic\tEscape"), _("Panic"), GetImage_panic());
 	AddTool(audio_menu, ID_AUDIO_SETTINGS, _("&Settings..."), _("Audio Settings"), GetImage_settings());
@@ -168,9 +176,8 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 #ifndef __WXMAC__
 	tb->AddSeparator();
 #endif
-	// Changed Text to Icons to reduce screen space - Graham Goode Nov 2009
-	wxMenu *settings_menu = new wxMenu;
 
+	wxMenu *settings_menu = new wxMenu;
 	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
 	m_Volume = new wxSpinCtrl(tb, ID_METER_AUDIO_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 100);
 	tb->AddControl(m_Volume);
@@ -353,6 +360,12 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 	if (m_docManager->GetCurrentDocument())
 		organfile = ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile();
 
+	if (ID_PRESET_0 <= event.GetId() && event.GetId() <= ID_PRESET_LAST)
+	{
+		event.Check(m_Settings.GetPreset() == (unsigned)(event.GetId() - ID_PRESET_0));
+		return;
+	}
+
 	if (event.GetId() == ID_AUDIO_RECORD)
 		event.Check(m_Sound.IsRecording());
 	else if (event.GetId() == ID_AUDIO_MEMSET)
@@ -362,6 +375,16 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		event.Enable(organfile && organfile->CachePresent());
 	else
 		event.Enable(organfile && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
+}
+
+void GOrgueFrame::OnPreset(wxCommandEvent& event)
+{
+	unsigned id = event.GetId() - ID_PRESET_0;
+	if (id == m_Settings.GetPreset())
+		return;
+	m_Settings.SetPreset(id);
+	if (m_docManager->GetCurrentDocument())
+		ProcessCommand(wxID_FILE1);
 }
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
