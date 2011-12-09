@@ -92,6 +92,10 @@ protected:
 	bool m_DispTrimBelowManuals;
 	bool m_DispTrimAboveExtraRows;
 	bool m_DispExtraDrawstopRowsAboveExtraButtonRows;
+	unsigned m_DrawStopWidth;
+	unsigned m_DrawStopHeight;
+	unsigned m_ButtonWidth;
+	unsigned m_ButtonHeight;
 
 	/* values computed on screen update */
 	int m_HackY;
