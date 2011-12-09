@@ -68,6 +68,8 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_FirstManual(0),
 	m_AmplitudeLevel(0),
 	m_Amplitude(0),
+	m_DefaultTuning(0),
+	m_Tuning(0),
 	m_HauptwerkOrganFileFormatVersion(),
 	m_ChurchName(),
 	m_ChurchAddress(),
@@ -237,6 +239,8 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	unsigned m_NumberOfPanels = ini.ReadInteger(group, wxT("NumberOfPanels"), 0, 100, false);
 	m_AmplitudeLevel = ini.ReadFloat(group, wxT("AmplitudeLevel"), 0, 1000);
 	m_Amplitude = ini.ReadFloat(group, wxT("Amplitude"), 0, 1000, false, m_AmplitudeLevel);
+	m_DefaultTuning = ini.ReadFloat(group, wxT("PitchTuning"), -1200, 1200, false, 0);
+	m_Tuning = ini.ReadFloat(group, wxT("Tuning"), -1200, 1200, false, m_Tuning);
 	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntermanualCouplers"));
 	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntramanualCouplers"));
 	m_DivisionalsStoreTremulants = ini.ReadBoolean(group, wxT("DivisionalsStoreTremulants"));
@@ -738,6 +742,7 @@ void GrandOrgueFile::Save(const wxString& file)
 		aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), m_volume);
 
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Amplitude"), m_Amplitude);
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Tuning"), m_Tuning);
 
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->Save(aIni, prefix);
@@ -944,6 +949,26 @@ void GrandOrgueFile::SetAmplitude(float amp)
 		for (unsigned j = 0; j < m_manual[i]->GetStopCount(); j++)
 			for (unsigned k = 0; k < m_manual[i]->GetStop(j)->GetPipeCount(); k++)
 				m_manual[i]->GetStop(j)->GetPipe(k)->UpdateAmplitude();
+}
+
+float GrandOrgueFile::GetTuning()
+{
+	return m_Tuning;
+}
+
+float GrandOrgueFile::GetDefaultTuning()
+{
+	return m_DefaultTuning;
+}
+
+void GrandOrgueFile::SetTuning(float cent)
+{
+	m_Tuning = cent;
+	Modified();
+	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
+		for (unsigned j = 0; j < m_manual[i]->GetStopCount(); j++)
+			for (unsigned k = 0; k < m_manual[i]->GetStop(j)->GetPipeCount(); k++)
+				m_manual[i]->GetStop(j)->GetPipe(k)->UpdateTuning();
 }
 
 bool GrandOrgueFile::IsCustomized()

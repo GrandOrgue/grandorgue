@@ -50,6 +50,8 @@ private:
 	bool m_Percussive;
 	float m_Amplitude;
 	float m_DefaultAmplitude;
+	float m_Tuning;
+	float m_DefaultTuning;
 	GOrguePipe* m_Reference;
 	GOSoundProviderWave m_SoundProvider;
 
@@ -73,6 +75,11 @@ public:
 	float GetEffectiveAmplitude();
 	void SetAmplitude(float amp);
 	void UpdateAmplitude();
+	float GetTuning();
+	float GetDefaultTuning();
+	float GetEffectiveTuning();
+	void SetTuning(float cent);
+	void UpdateTuning();
 };
 
 #endif
