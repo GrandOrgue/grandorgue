@@ -103,7 +103,7 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 		m_device->Append(*it);
 
 	m_channel->Append(_("Any channel"), (void*)-1);
-	for(unsigned int i = 1 ; i < 16; i++)
+	for(unsigned int i = 1 ; i <= 16; i++)
 	{
 		wxString str;
 		str.Printf(wxT("%d"),  i);
