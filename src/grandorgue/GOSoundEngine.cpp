@@ -445,7 +445,7 @@ void GOSoundEngine::ReadSamplerFrames
 					 * attack segment has completed so we now (re)enter the
 					 * loop. */
 					sampler->position -= currentBlockSize;
-					sampler->increment = sampler->pipe_section->sample_rate / (float) m_SampleRate;
+					sampler->increment = sampler->pipe->GetTuning() * sampler->pipe_section->sample_rate / (float) m_SampleRate;
 					sampler->ptr = NULL;
 				}
 			}
@@ -724,7 +724,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 	{
 		sampler->pipe = pipe;
 		sampler->pipe_section = pipe->GetAttack();
-		sampler->increment = sampler->pipe_section->sample_rate / (float) m_SampleRate;
+		sampler->increment = pipe->GetTuning() * sampler->pipe_section->sample_rate / (float) m_SampleRate;
 		sampler->position = 0;
 		memcpy
 			(sampler->history
@@ -768,7 +768,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->pipe         = this_pipe;
 			new_sampler->pipe_section = release_section;
 			new_sampler->position     = 0;
-			new_sampler->increment    = new_sampler->pipe_section->sample_rate / (float) m_SampleRate;
+			new_sampler->increment    = this_pipe->GetTuning() * new_sampler->pipe_section->sample_rate / (float) m_SampleRate;
 			new_sampler->time         = m_CurrentTime + 1;
 
 			int gain_decay_rate = 0;

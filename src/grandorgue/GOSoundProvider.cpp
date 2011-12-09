@@ -31,6 +31,7 @@
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
 GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
+	m_Tuning(1),
 	m_pool(pool)
 {
 	memset(&m_Attack, 0, sizeof(m_Attack));
@@ -220,4 +221,9 @@ void GOSoundProvider::ComputeReleaseAlignmentInfo()
 int GOSoundProvider::IsOneshot() const
 {
 	return (m_Loop.data == NULL);
+}
+
+void GOSoundProvider::SetTuning(float cent)
+{
+	m_Tuning = pow (pow(2, 1.0 / 1200.0), cent);
 }
