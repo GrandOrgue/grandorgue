@@ -508,7 +508,7 @@ class RtAudio
   #include <windows.h>
   #include <process.h>
 
-  typedef unsigned long ThreadHandle;
+  typedef ULONG_PTR ThreadHandle;
   typedef CRITICAL_SECTION StreamMutex;
 
 #elif defined(__LINUX_ALSA__) || defined(__UNIX_JACK__) || defined(__LINUX_OSS__) || defined(__MACOSX_CORE__)
