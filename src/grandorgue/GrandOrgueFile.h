@@ -102,6 +102,8 @@ private:
 	void ReadOrganFile(wxFileConfig& odf_ini_file);
 	bool TryLoad(GOrgueCache* cache, wxProgressDialog& dlg, wxString& error);
 	void GenerateCacheHash(unsigned char hash[20]);
+	wxString GenerateSettingFileName();
+	wxString GenerateCacheFileName();
 
 public:
 

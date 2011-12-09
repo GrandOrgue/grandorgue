@@ -330,6 +330,50 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_panels.push_back(m_setter->CreateSetterPanel(ini));
 }
 
+wxString GrandOrgueFile::GenerateSettingFileName()
+{
+	SHA_CTX ctx;
+	unsigned char hash[20];
+	wxFileName odf(m_path);
+	odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
+	wxString filename = odf.GetFullPath();
+
+	SHA1_Init(&ctx);
+	SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+	SHA1_Final(hash, &ctx);
+       
+	filename = wxEmptyString;
+	for(unsigned i = 0; i < 20; i++)
+		filename += wxDecToHex(hash[i]);
+
+	filename = m_Settings.GetUserSettingPath()  + wxFileName::GetPathSeparator() + 
+		filename + wxString::Format(wxT("-%d.cmb"), m_Settings.GetPreset());
+
+	return filename;
+}
+
+wxString GrandOrgueFile::GenerateCacheFileName()
+{
+	SHA_CTX ctx;
+	unsigned char hash[20];
+	wxFileName odf(m_path);
+	odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
+	wxString filename = odf.GetFullPath();
+
+	SHA1_Init(&ctx);
+	SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+	SHA1_Final(hash, &ctx);
+       
+	filename = wxEmptyString;
+	for(unsigned i = 0; i < 20; i++)
+		filename += wxDecToHex(hash[i]);
+
+	filename = m_Settings.GetUserCachePath()  + wxFileName::GetPathSeparator() + 
+		filename + wxString::Format(wxT("-%d.cache"), m_Settings.GetPreset());
+
+	return filename;
+}
+
 wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 {
 
@@ -344,8 +388,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	m_path = file;
 	m_path.MakeAbsolute();
-	m_SettingFilename = GetODFFilename() + wxT(".cmb");
-	m_CacheFilename = GetODFFilename() + wxT(".cache");
+	m_SettingFilename = GenerateSettingFileName();
+	m_CacheFilename = GenerateCacheFileName();
 
 	// NOTICE: unfortunately, the format is not adhered to well at all. With
 	// logging enabled, most sample sets generate warnings.
