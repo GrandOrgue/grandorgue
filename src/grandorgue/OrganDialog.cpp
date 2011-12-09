@@ -36,16 +36,26 @@ public:
 	{
 		stop = s;
 		pipe = NULL;
+		organfile = NULL;
 	}
 
 	OrganTreeItemData(GOrguePipe* p)
 	{
 		stop = NULL;
 		pipe = p;
+		organfile = NULL;
+	}
+		
+	OrganTreeItemData(GrandOrgueFile* o)
+	{
+		stop = NULL;
+		pipe = NULL;
+		organfile = o;
 	}
 		
 	GOrgueStop* stop;
 	GOrguePipe* pipe;
+	GrandOrgueFile* organfile;
 };
 
 IMPLEMENT_CLASS(OrganDialog, wxDialog)
@@ -153,9 +163,13 @@ void OrganDialog::Load()
 	{
 		amplitude = m_Last->stop->GetAmplitude();
 	}
-	else
+	else if (m_Last->pipe)
 	{
 		amplitude = m_Last->pipe->GetAmplitude();
+	}
+	else
+	{
+		amplitude = m_Last->organfile->GetAmplitude();
 	}
 
 	m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
@@ -193,7 +207,7 @@ void OrganDialog::Modified()
 
 void OrganDialog::FillTree()
 {
-	wxTreeItemId id_root = m_Tree->AddRoot(m_organfile->GetChurchName());
+	wxTreeItemId id_root = m_Tree->AddRoot(m_organfile->GetChurchName(), -1, -1, new OrganTreeItemData(m_organfile));
 	for (unsigned j = m_organfile->GetFirstManualIndex(); j <= m_organfile->GetManualAndPedalCount(); j++)
 	{
 		GOrgueManual* manual = m_organfile->GetManual(j);
@@ -232,9 +246,9 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		for(unsigned i = 0; i < entries.size(); i++)
 		{
 			OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
-			if (e->stop)
+			if (e->stop || e->organfile)
 			{
-				wxMessageBox(_("Amplitude of -1 invalid for a stop"), _("Error"), wxOK | wxICON_ERROR, NULL);
+				wxMessageBox(_("Amplitude of -1 invalid for a stop / organfile"), _("Error"), wxOK | wxICON_ERROR, NULL);
 				return;
 			}
 		}
@@ -244,8 +258,10 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
 		if (e->stop)
 			e->stop->SetAmplitude(amp);
-		else
+		else if (e->pipe)
 			e->pipe->SetAmplitude(amp);
+		else
+			e->organfile->SetAmplitude(amp);
 	}
 
 	m_Last = NULL;
@@ -268,8 +284,10 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
 		if (e->stop)
 			e->stop->SetAmplitude(e->stop->GetDefaultAmplitude());
-		else
+		else if (e->pipe)
 			e->pipe->SetAmplitude(e->pipe->GetDefaultAmplitude());
+		else
+			e->organfile->SetAmplitude(e->organfile->GetDefaultAmplitude());
 	}
 
 	m_Last = NULL;
