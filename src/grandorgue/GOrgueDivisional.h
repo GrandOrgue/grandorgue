@@ -44,6 +44,7 @@ public:
 
 	GOrgueDivisional(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name = wxT(""));
+	void LoadCombination(IniFileConfig& cfg);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Push();
 

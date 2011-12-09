@@ -71,6 +71,7 @@ public:
 
 	GOrgueManual(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, int manualNumber);
+	void LoadCombination(IniFileConfig& cfg);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
 	void Set(unsigned note, bool on);

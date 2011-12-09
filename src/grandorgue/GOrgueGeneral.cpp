@@ -34,6 +34,11 @@ void GOrgueGeneral::Load(IniFileConfig& cfg, wxString group)
 	GOrguePushbutton::Load(cfg, group);
 }
 
+void GOrgueGeneral::LoadCombination(IniFileConfig& cfg)
+{
+	m_general.LoadCombination(cfg);
+}
+
 void GOrgueGeneral::Save(IniFileConfig& cfg, bool prefix)
 {
 	GOrguePushbutton::Save(cfg, prefix);

@@ -111,6 +111,13 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
 	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
 }
 
+void GOrgueManual::LoadCombination(IniFileConfig& cfg)
+{
+	for (unsigned i = 0; i < m_divisionals.size(); i++)
+		m_divisionals[i]->LoadCombination(cfg);
+}
+
+
 void GOrgueManual::SetKey(unsigned note, int on, GOrgueCoupler* prev)
 {
 	if (note < 0 || note >= m_KeyState.size() || !on)

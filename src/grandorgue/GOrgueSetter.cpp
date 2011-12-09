@@ -37,6 +37,8 @@
 #include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
 
+#define FRAME_GENERALS 1000
+#define GENERALS 30
 #define CRESCENDO_STEPS 32
 
 enum {
@@ -610,10 +612,9 @@ GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(IniFileConfig& cfg)
 void GOrgueSetter::Load(IniFileConfig& cfg)
 {
 	wxString buffer;
-	unsigned m_NumberOfFrameGenerals = 1000;
 
 	m_framegeneral.resize(0);
-	for (unsigned i = 0; i < m_NumberOfFrameGenerals; i++)
+	for (unsigned i = 0; i < FRAME_GENERALS; i++)
 	{
 		m_framegeneral.push_back(new GOrgueFrameGeneral(m_organfile));
 		buffer.Printf(wxT("FrameGeneral%03d"), i + 1);
@@ -621,7 +622,7 @@ void GOrgueSetter::Load(IniFileConfig& cfg)
 	}
 
 	m_general.resize(0);
-	for (unsigned i = 0; i < m_NumberOfFrameGenerals; i++)
+	for (unsigned i = 0; i < GENERALS; i++)
 	{
 		m_general.push_back(new GOrgueFrameGeneral(m_organfile));
 		buffer.Printf(wxT("SetterGeneral%03d"), i + 1);
@@ -684,6 +685,18 @@ void GOrgueSetter::Load(IniFileConfig& cfg)
 		group.Printf(wxT("SetterGeneral%d"), i);
 		m_button[ID_SETTER_GENERAL00 + i]->Load(cfg, group, buffer);
 	}
+}
+
+void GOrgueSetter::LoadCombination(IniFileConfig& cfg)
+{
+	for (unsigned i = 0; i < m_framegeneral.size(); i++)
+		m_framegeneral[i]->LoadCombination(cfg);
+
+	for (unsigned i = 0; i < m_general.size(); i++)
+		m_general[i]->LoadCombination(cfg);
+
+	for (unsigned i = 0; i < m_crescendo.size(); i++)
+		m_crescendo[i]->LoadCombination(cfg);
 }
 
 void GOrgueSetter::Save(IniFileConfig& cfg, bool prefix)

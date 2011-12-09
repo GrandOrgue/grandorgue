@@ -45,6 +45,7 @@ private:
 public:
 	GOrgueFrameGeneral(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group);
+	void LoadCombination(IniFileConfig& cfg);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Copy(GOrgueFrameGeneral* general);
 	void Push();

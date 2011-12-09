@@ -524,10 +524,43 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	return wxEmptyString;
 
 }
+
+void GrandOrgueFile::LoadCombination(const wxString& file)
+{
+	try
+	{
+		wxFileConfig odf_ini_file(wxEmptyString, wxEmptyString, wxEmptyString, file, wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
+
+		if (!odf_ini_file.GetNumberOfGroups())
+			throw wxString::Format(_("Unable to read '%s'"), file.c_str());
+
+		IniFileConfig ini(odf_ini_file);
+
+		wxString church_name = ini.ReadString(wxT("Organ"), wxT("ChurchName"),  128);
+		if (church_name != m_ChurchName)
+			throw wxString::Format(_("File belongs to a different organ: %s"), church_name.c_str());
+
+		for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
+			m_manual[i]->LoadCombination(ini);
+
+		for (unsigned j = 0; j < m_general.size(); j++)
+			m_general[j]->LoadCombination(ini);
+
+		if (m_setter)
+			m_setter->LoadCombination(ini);
+	}
+	catch (wxString error)
+	{
+		wxLogError(wxT("%s\n"),error.c_str());
+		wxMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
+	}
+}
+
 bool GrandOrgueFile::CachePresent()
 {
 	return wxFileExists(m_CacheFilename);
 }
+
 bool GrandOrgueFile::UpdateCache(bool compress)
 {
 	DeleteCache();
