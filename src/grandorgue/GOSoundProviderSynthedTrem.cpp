@@ -28,6 +28,7 @@
 GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOrgueMemoryPool& pool) :
 	GOSoundProvider(pool)
 {
+	m_Gain = 1.0f;
 }
 
 short SynthTrem(double amp, double angle)
@@ -146,8 +147,6 @@ void GOSoundProviderSynthedTrem::Create
 		,&m_Release.data[m_Release.size-(releaseSamplesInMem * bytes_per_sample * channels - m_Release.size)]
 		,releaseSamplesInMem * bytes_per_sample * channels - m_Release.size
 		);
-
-	m_Gain = 1.0f;
 
 	ComputeReleaseAlignmentInfo();
 

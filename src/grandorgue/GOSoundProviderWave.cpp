@@ -31,6 +31,14 @@ GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool) :
 {
 }
 
+void GOSoundProviderWave::SetAmplitude(int fixed_amplitude)
+{
+	/* Amplitude is the combination of global amplitude volume and the stop
+	 * volume. 10000 would correspond to sample playback at normal volume.
+	 */
+	m_Gain                     = fixed_amplitude / 10000.0f;
+}
+
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
@@ -105,7 +113,6 @@ void GOSoundProviderWave::Compress(AUDIO_SECTION& section, bool format16)
 
 void GOSoundProviderWave::LoadFromFile
 	(wxString filename
-	,int fixed_amplitude
 	,wxString path
 	,unsigned bits_per_sample
 	,bool stereo
@@ -292,11 +299,6 @@ void GOSoundProviderWave::LoadFromFile
 
 		/* data is no longer needed */
 		FREE_AND_NULL(data);
-
-		/* Amplitude is the combination of global amplitude volume and the stop
-		 * volume. 10000 would correspond to sample playback at normal volume.
-		 */
-		m_Gain                     = fixed_amplitude / 10000.0f;
 
 		if (wave.HasReleaseMarker())
 			ComputeReleaseAlignmentInfo();

@@ -29,7 +29,6 @@
 
 GOrguePipe::GOrguePipe
 	(GrandOrgueFile* organfile
-	,wxString filename
 	,bool percussive
 	,int sampler_group_id
 	,int amplitude
@@ -38,7 +37,7 @@ GOrguePipe::GOrguePipe
 	m_Sampler(NULL),
 	m_Instances(0),
 	m_SamplerGroupID(sampler_group_id),
-	m_Filename(filename),
+	m_Filename(),
 	m_Percussive(percussive),
 	m_Amplitude(amplitude),
 	m_Reference(NULL),
@@ -93,6 +92,16 @@ void GOrguePipe::Set(bool on)
 		SetOff();
 }
 
+void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
+{
+	m_Filename = cfg.ReadString(group, prefix);
+	m_SoundProvider.SetAmplitude(m_Amplitude);
+}
+
+void GOrguePipe::Save(IniFileConfig& cfg, bool prefix)
+{
+}
+
 bool GOrguePipe::LoadCache(GOrgueCache& cache)
 {
 	if (m_Filename.StartsWith(wxT("REF:")))
@@ -131,7 +140,7 @@ void GOrguePipe::LoadData()
 		return;
 	}
 	m_Reference = NULL;
-	m_SoundProvider.LoadFromFile(m_Filename, m_Amplitude, m_OrganFile->GetODFPath(),
+	m_SoundProvider.LoadFromFile(m_Filename, m_OrganFile->GetODFPath(),
 				     m_OrganFile->GetSettings().GetBitsPerSample(), m_OrganFile->GetSettings().GetLoadInStereo(),
 				     m_OrganFile->GetSettings().GetLosslessCompression());
 }

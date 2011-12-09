@@ -87,16 +87,15 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 	{
 		wxString buffer;
 		buffer.Printf(wxT("Pipe%03u"), i + 1);
-		wxString filename = cfg.ReadString(group, buffer);
 		m_Pipes.push_back
 			(new GOrguePipe
 				(m_organfile
-				,filename
 				,m_Percussive
 				,m_WindchestGroup
 				,m_organfile->GetAmplitude() * m_AmplitudeLevel
 				)
 			);
+		m_Pipes[i]->Load(cfg, group, buffer);
 	}
 	m_KeyState.resize(m_NumberOfAccessiblePipes);
 	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
@@ -108,6 +107,8 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 void GOrgueStop::Save(IniFileConfig& cfg, bool prefix)
 {
 	GOrgueDrawstop::Save(cfg, prefix);
+	for(unsigned i = 0; i < m_Pipes.size(); i++)
+		m_Pipes[i]->Save(cfg, prefix);
 }
 
 void GOrgueStop::SetKey(unsigned note, int on)
