@@ -142,9 +142,10 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 SettingsDialog::~SettingsDialog()
 {
 	m_Sound.SetLogSoundErrorMessages(false);
-	if (b_stereo != m_Settings.GetLoadInStereo() || 
-	    b_squash != m_Settings.GetLosslessCompression() ||
-	    m_OldBitsPerSample != m_Settings.GetBitsPerSample())
+	if ((b_stereo != m_Settings.GetLoadInStereo() || 
+	     b_squash != m_Settings.GetLosslessCompression() ||
+	     m_OldBitsPerSample != m_Settings.GetBitsPerSample()) &&
+	    m_Sound.GetOrganFile() != NULL)
 	{
 		if (::wxMessageBox(_("Some changed settings effect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION) == wxYES)
 		{
