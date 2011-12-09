@@ -38,6 +38,7 @@ private:
 
 protected:
 	float          m_Gain;
+	float          m_Tuning;
 	unsigned int   m_SampleRate;
 	AUDIO_SECTION  m_Attack;
 	AUDIO_SECTION  m_Loop;
@@ -60,6 +61,8 @@ public:
 	float GetGain() const;
 	int IsOneshot() const;
 
+	float GetTuning() const;
+	void SetTuning(float cent);
 };
 
 inline
@@ -84,6 +87,12 @@ inline
 float GOSoundProvider::GetGain() const
 {
 	return m_Gain;
+}
+
+inline
+float GOSoundProvider::GetTuning() const
+{
+	return m_Tuning;
 }
 
 #endif /* GOSOUNDPROVIDER_H_ */
