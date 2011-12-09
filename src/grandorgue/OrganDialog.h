@@ -38,6 +38,8 @@ private:
 	wxTreeCtrl* m_Tree;
 	wxTextCtrl* m_Amplitude;
 	wxSpinButton* m_AmplitudeSpin;
+	wxTextCtrl* m_Tuning;
+	wxSpinButton* m_TuningSpin;
 	wxButton* m_Apply;
 	wxButton* m_Reset;
 	wxButton* m_Default;
@@ -56,6 +58,8 @@ public:
 	void OnTreeChanged(wxTreeEvent& e);
 	void OnAmplitudeSpinChanged(wxSpinEvent& e);
 	void OnAmplitudeChanged(wxCommandEvent &e);
+	void OnTuningSpinChanged(wxSpinEvent& e);
+	void OnTuningChanged(wxCommandEvent &e);
 	void OnEventApply(wxCommandEvent &e);
 	void OnEventReset(wxCommandEvent &e);
 	void OnEventDefault(wxCommandEvent &e);
@@ -72,6 +76,8 @@ protected:
 		ID_EVENT_DEFAULT,
 		ID_EVENT_AMPLITUDE,
 		ID_EVENT_AMPLITUDE_SPIN,
+		ID_EVENT_TUNING,
+		ID_EVENT_TUNING_SPIN,
 	};
 };
 
