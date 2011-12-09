@@ -69,6 +69,8 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, OrganDialog::OnTreeChanged)
 	EVT_TEXT(ID_EVENT_AMPLITUDE, OrganDialog::OnAmplitudeChanged)
 	EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, OrganDialog::OnAmplitudeSpinChanged)
+	EVT_TEXT(ID_EVENT_TUNING, OrganDialog::OnTuningChanged)
+	EVT_SPIN(ID_EVENT_TUNING_SPIN, OrganDialog::OnTuningSpinChanged)
 END_EVENT_TABLE()
 
 OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
@@ -97,6 +99,13 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	grid->Add(m_Amplitude);
 	grid->Add(m_AmplitudeSpin);
 	m_AmplitudeSpin->SetRange(-1, 1000);
+
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Tuning (Cent):")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	m_Tuning = new wxTextCtrl(this, ID_EVENT_TUNING, wxEmptyString);
+	m_TuningSpin = new wxSpinButton(this, ID_EVENT_TUNING_SPIN); 
+	grid->Add(m_Tuning);
+	grid->Add(m_TuningSpin);
+	m_TuningSpin->SetRange(-1200, 1200);
 
 	wxBoxSizer* buttons = new wxBoxSizer(wxHORIZONTAL);
 	m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
@@ -134,6 +143,9 @@ void OrganDialog::Load()
 		m_Amplitude->ChangeValue(wxEmptyString);
 		m_Amplitude->Disable();
 		m_AmplitudeSpin->Disable();
+		m_Tuning->ChangeValue(wxEmptyString);
+		m_Tuning->Disable();
+		m_TuningSpin->Disable();
 		m_Apply->Disable();
 		m_Reset->Disable();
 		m_Default->Disable();
@@ -155,25 +167,33 @@ void OrganDialog::Load()
 
 	m_Amplitude->Enable();
 	m_AmplitudeSpin->Enable();
+	m_Tuning->Enable();
+	m_TuningSpin->Enable();
 	m_Default->Enable();
 	m_Reset->Disable();
 	
 	float amplitude;
+	float tuning;
 	if (m_Last->stop)
 	{
 		amplitude = m_Last->stop->GetAmplitude();
+		tuning = m_Last->stop->GetTuning();
 	}
 	else if (m_Last->pipe)
 	{
 		amplitude = m_Last->pipe->GetAmplitude();
+		tuning = m_Last->pipe->GetTuning();
 	}
 	else
 	{
 		amplitude = m_Last->organfile->GetAmplitude();
+		tuning = m_Last->organfile->GetTuning();
 	}
 
 	m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
 	m_AmplitudeSpin->SetValue(amplitude);
+	m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
+	m_TuningSpin->SetValue(tuning);
 }
 
 void OrganDialog::OnAmplitudeSpinChanged(wxSpinEvent& e)
@@ -190,10 +210,26 @@ void OrganDialog::OnAmplitudeChanged(wxCommandEvent &e)
 	Modified();
 }
 
+void OrganDialog::OnTuningSpinChanged(wxSpinEvent& e)
+{
+	m_Tuning->ChangeValue(wxString::Format(wxT("%f"), (float)m_TuningSpin->GetValue()));
+	m_Tuning->MarkDirty();
+	Modified();
+}
+
+void OrganDialog::OnTuningChanged(wxCommandEvent &e)
+{
+	float tuning = wxAtof(m_Tuning->GetValue());
+	m_TuningSpin->SetValue(tuning);
+	Modified();
+}
+
 bool OrganDialog::Changed()
 {
 	bool changed = false;
 	if (m_Amplitude->IsModified())
+		changed = true;
+	if (m_Tuning->IsModified())
 		changed = true;
 
 	return changed;
@@ -232,6 +268,7 @@ void OrganDialog::FillTree()
 void OrganDialog::OnEventApply(wxCommandEvent &e)
 {
 	float amp = wxAtof(m_Amplitude->GetValue());
+	float tuning = wxAtof(m_Tuning->GetValue());
 
 	wxArrayTreeItemIds entries;
 	m_Tree->GetSelections(entries);
@@ -239,6 +276,12 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	if (amp < - 1 || amp > 1000)
 	{
 		wxMessageBox(_("Amplitude is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
+		return;
+	}
+
+	if (amp < - 1200 || amp > 1200)
+	{
+		wxMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
 		return;
 	}
 
@@ -257,11 +300,20 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	{
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
 		if (e->stop)
+		{
 			e->stop->SetAmplitude(amp);
+			e->stop->SetTuning(tuning);
+		}
 		else if (e->pipe)
+		{
 			e->pipe->SetAmplitude(amp);
+			e->pipe->SetTuning(tuning);
+		}
 		else
+		{
 			e->organfile->SetAmplitude(amp);
+			e->organfile->SetTuning(tuning);
+		}
 	}
 
 	m_Last = NULL;
@@ -283,11 +335,20 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 	{
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
 		if (e->stop)
+		{
 			e->stop->SetAmplitude(e->stop->GetDefaultAmplitude());
+			e->stop->SetTuning(e->stop->GetDefaultTuning());
+		}
 		else if (e->pipe)
+		{
 			e->pipe->SetAmplitude(e->pipe->GetDefaultAmplitude());
+			e->pipe->SetTuning(e->pipe->GetDefaultTuning());
+		}
 		else
+		{
 			e->organfile->SetAmplitude(e->organfile->GetDefaultAmplitude());
+			e->organfile->SetTuning(e->organfile->GetDefaultTuning());
+		}
 	}
 
 	m_Last = NULL;
