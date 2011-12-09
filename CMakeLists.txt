@@ -69,7 +69,7 @@ endmacro(add_option option)
 
 if(UNIX)
   install(FILES GrandOrgue.desktop DESTINATION share/applications)
-  install(FILES GrandOrgue-0.xpm DESTINATION share/pixmaps RENAME GrandOrgue.xpm)
+  install(FILES GrandOrgue.png DESTINATION share/pixmaps)
 endif()
 
 # setup compiler flags for debug vs release compiles
