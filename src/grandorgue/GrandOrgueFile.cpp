@@ -67,6 +67,7 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_HighestSampleFormat(0),
 	m_FirstManual(0),
 	m_AmplitudeLevel(0),
+	m_Amplitude(0),
 	m_HauptwerkOrganFileFormatVersion(),
 	m_ChurchName(),
 	m_ChurchAddress(),
@@ -235,6 +236,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	unsigned m_NumberOfDivisionalCouplers = ini.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, 8);
 	unsigned m_NumberOfPanels = ini.ReadInteger(group, wxT("NumberOfPanels"), 0, 100, false);
 	m_AmplitudeLevel = ini.ReadFloat(group, wxT("AmplitudeLevel"), 0, 1000);
+	m_Amplitude = ini.ReadFloat(group, wxT("Amplitude"), 0, 1000, false, m_AmplitudeLevel);
 	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntermanualCouplers"));
 	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntramanualCouplers"));
 	m_DivisionalsStoreTremulants = ini.ReadBoolean(group, wxT("DivisionalsStoreTremulants"));
@@ -735,6 +737,8 @@ void GrandOrgueFile::Save(const wxString& file)
 	if (m_volume >= 0)
 		aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), m_volume);
 
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Amplitude"), m_Amplitude);
+
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->Save(aIni, prefix);
 
@@ -924,7 +928,22 @@ unsigned GrandOrgueFile::GetEnclosureCount()
 
 float GrandOrgueFile::GetAmplitude()
 {
+	return m_Amplitude;
+}
+
+float GrandOrgueFile::GetDefaultAmplitude()
+{
 	return m_AmplitudeLevel;
+}
+
+void GrandOrgueFile::SetAmplitude(float amp)
+{
+	m_Amplitude = amp;
+	Modified();
+	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
+		for (unsigned j = 0; j < m_manual[i]->GetStopCount(); j++)
+			for (unsigned k = 0; k < m_manual[i]->GetStop(j)->GetPipeCount(); k++)
+				m_manual[i]->GetStop(j)->GetPipe(k)->UpdateAmplitude();
 }
 
 bool GrandOrgueFile::IsCustomized()
