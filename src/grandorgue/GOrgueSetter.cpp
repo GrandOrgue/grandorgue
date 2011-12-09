@@ -701,7 +701,7 @@ void GOrgueSetter::LoadCombination(IniFileConfig& cfg)
 
 void GOrgueSetter::Save(IniFileConfig& cfg, bool prefix)
 {
-	cfg.SaveHelper(prefix, wxT("Organ"), wxT("NumberOfFrameGenerals"), m_framegeneral.size());
+	cfg.SaveHelper(prefix, wxT("Organ"), wxT("NumberOfFrameGenerals"), (int)m_framegeneral.size());
 
 	for (unsigned j = 0; j < m_framegeneral.size(); j++)
 		m_framegeneral[j]->Save(cfg, prefix);
