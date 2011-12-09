@@ -115,12 +115,12 @@ float GOrguePipe::GetDefaultAmplitude()
 
 float GOrguePipe::GetEffectiveAmplitude()
 {
-	return m_Amplitude < 0 ? m_Stop->GetAmplitude() : m_Amplitude;
+	return m_Amplitude * m_Stop->GetAmplitude() * m_OrganFile->GetAmplitude();
 }
 
 void GOrguePipe::UpdateAmplitude()
 {
-	m_SoundProvider.SetAmplitude(GetEffectiveAmplitude() * m_OrganFile->GetAmplitude());
+	m_SoundProvider.SetAmplitude(GetEffectiveAmplitude());
 }
 
 void GOrguePipe::SetAmplitude(float amp)
@@ -162,8 +162,8 @@ void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	m_Group = group;
 	m_NamePrefix = prefix;
 	m_Filename = cfg.ReadString(group, prefix);
-	m_DefaultAmplitude = cfg.ReadFloat(group, prefix + wxT("AmplitudeLevel"), -1, 1000, false, -1);
-	m_Amplitude = cfg.ReadFloat(group, prefix + wxT("Amplitude"), -1, 1000, false, m_DefaultAmplitude);
+	m_DefaultAmplitude = cfg.ReadFloat(group, prefix + wxT("AmplitudeLevel"), 0, 1000, false, 100);
+	m_Amplitude = cfg.ReadFloat(group, prefix + wxT("Amplitude"), 0, 1000, false, m_DefaultAmplitude);
 	m_DefaultTuning = cfg.ReadFloat(group, prefix + wxT("PitchTuning"), -1200, 1200, false, 0);
 	m_Tuning = cfg.ReadFloat(group, prefix + wxT("Tuning"), -1200, 1200, false, m_DefaultTuning);
 	UpdateAmplitude();

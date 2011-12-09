@@ -34,9 +34,9 @@ GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool) :
 void GOSoundProviderWave::SetAmplitude(int fixed_amplitude)
 {
 	/* Amplitude is the combination of global amplitude volume and the stop
-	 * volume. 10000 would correspond to sample playback at normal volume.
+	 * volume. 1000000 would correspond to sample playback at normal volume.
 	 */
-	m_Gain                     = fixed_amplitude / 10000.0f;
+	m_Gain                     = fixed_amplitude / 1000000.0f;
 }
 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)

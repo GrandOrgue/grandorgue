@@ -98,7 +98,7 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	m_AmplitudeSpin = new wxSpinButton(this, ID_EVENT_AMPLITUDE_SPIN); 
 	grid->Add(m_Amplitude);
 	grid->Add(m_AmplitudeSpin);
-	m_AmplitudeSpin->SetRange(-1, 1000);
+	m_AmplitudeSpin->SetRange(0, 1000);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Tuning (Cent):")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	m_Tuning = new wxTextCtrl(this, ID_EVENT_TUNING, wxEmptyString);
@@ -273,7 +273,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	wxArrayTreeItemIds entries;
 	m_Tree->GetSelections(entries);
 
-	if (amp < - 1 || amp > 1000)
+	if (amp < 0 || amp > 1000)
 	{
 		wxMessageBox(_("Amplitude is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
 		return;
@@ -284,17 +284,6 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		wxMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
 		return;
 	}
-
-	if (amp < 0)
-		for(unsigned i = 0; i < entries.size(); i++)
-		{
-			OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
-			if (e->stop || e->organfile)
-			{
-				wxMessageBox(_("Amplitude of -1 invalid for a stop / organfile"), _("Error"), wxOK | wxICON_ERROR, NULL);
-				return;
-			}
-		}
 
 	for(unsigned i = 0; i < entries.size(); i++)
 	{
