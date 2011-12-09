@@ -34,7 +34,11 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
+#ifdef WIN64
+1                       RT_MANIFEST             "GrandOrgue.x86-64.manifest"
+#else
 1                       RT_MANIFEST             "GrandOrgue.manifest"
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
