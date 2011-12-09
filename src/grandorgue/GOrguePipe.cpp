@@ -31,7 +31,7 @@ GOrguePipe::GOrguePipe
 	(GrandOrgueFile* organfile
 	,bool percussive
 	,int sampler_group_id
-	,int amplitude
+	,float amplitude
 	) :
 	m_OrganFile(organfile),
 	m_Sampler(NULL),
@@ -95,7 +95,8 @@ void GOrguePipe::Set(bool on)
 void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 {
 	m_Filename = cfg.ReadString(group, prefix);
-	m_SoundProvider.SetAmplitude(m_Amplitude);
+	m_LocalAmplitude = cfg.ReadFloat(group, prefix + wxT("AmplitudeLevel"), -1, 1000, false, -1);
+	m_SoundProvider.SetAmplitude(m_LocalAmplitude < 0 ? m_Amplitude : m_LocalAmplitude * m_OrganFile->GetAmplitude());
 }
 
 void GOrguePipe::Save(IniFileConfig& cfg, bool prefix)
