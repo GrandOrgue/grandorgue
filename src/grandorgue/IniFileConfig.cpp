@@ -372,6 +372,12 @@ void IniFileConfig::SaveHelper( bool prefix, wxString group, wxString key, int v
 	SaveHelper(prefix, group, key, str);
 }
 
+void IniFileConfig::SaveHelper( bool prefix, wxString group, wxString key, float value)
+{
+	wxString str = wxString::Format(wxT("%f"), value);
+	SaveHelper(prefix, group, key, str);
+}
+
 void IniFileConfig::SaveHelper(bool prefix, wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count)
 {
 	for (unsigned i = 0; i < count; i++)
