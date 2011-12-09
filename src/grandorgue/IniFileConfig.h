@@ -63,6 +63,7 @@ public:
 	void SaveHelper(bool prefix, wxString group, wxString key, wxString value);
 	void SaveHelper( bool prefix, wxString group, wxString key, int value, bool sign = false, bool force = false);
 	void SaveHelper(bool prefix, wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count);
+	void SaveHelper(bool prefix, wxString group, wxString key, float value);
 
 };
 
