@@ -30,6 +30,7 @@ class wxButton;
 class wxCheckBox;
 class wxCheckListBox;
 class wxChoice;
+class wxDirPickerCtrl;
 class wxListEvent;
 class wxListView;
 class wxPanel;
@@ -109,6 +110,8 @@ protected:
 		ID_COMPRESS_CACHE,
 		ID_ENHANCE_SCALE_RELEASE,
 		ID_ENHANCE_RANDOMIZE,
+		ID_SETTINGS_DIR,
+		ID_CACHE_DIR,
 
 		ID_MIDI_EVENTS,
 		ID_EVENT_PROPERTIES,
@@ -134,6 +137,8 @@ protected:
 	wxChoice* c_ReleaseConcurrency;
 	wxChoice* c_WaveFormat;
 	wxCheckBox *c_squash, *c_limit, *c_CompressCache, *c_scale, *c_random;
+	wxDirPickerCtrl* c_SettingsPath;
+	wxDirPickerCtrl* c_CachePath;
 	bool b_squash, b_stereo;
 	unsigned m_OldBitsPerSample;
 

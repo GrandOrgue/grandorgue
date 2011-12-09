@@ -70,10 +70,13 @@ GOrgueSettings::GOrgueSettings() :
 	m_Volume(50),
 	m_PolyphonyLimit(2048),
 	m_DefaultAudioDevice(),
+	m_Preset(0),
 	m_OrganMidiEvents(),
 	m_WAVPath(),
 	m_OrganPath(),
 	m_SettingPath(),
+	m_UserSettingPath(),
+	m_UserCachePath(),
 	m_ManualEvents(),
 	m_EnclosureEvents(),
 	m_SetterEvents(),
@@ -127,6 +130,9 @@ void GOrgueSettings::Load()
 	m_WAVPath = m_Config.Read(wxT("wavPath"), GetStandardDocumentDirectory());
 	m_OrganPath = m_Config.Read(wxT("organPath"), GetStandardOrganDirectory());
 	m_SettingPath = m_Config.Read(wxT("cmbPath"), GetStandardOrganDirectory());
+	SetUserSettingPath (m_Config.Read(wxT("SettingPath"), wxEmptyString));
+	SetUserCachePath (m_Config.Read(wxT("CachePath"), wxEmptyString));
+	m_Preset = m_Config.Read(wxT("Preset"), 0L);
 
 	m_StopChangeEvent = m_Config.Read(wxString(wxT("MIDI/")) + m_StopChangeName, 0x9400);
 	for(unsigned i = 0; i < GetManualCount(); i++)
@@ -237,6 +243,11 @@ wxString GOrgueSettings::GetStandardOrganDirectory()
 	return GetStandardDocumentDirectory() + wxFileName::GetPathSeparator() + _("My Organs");
 }
 
+wxString GOrgueSettings::GetStandardDataDirectory()
+{
+	return wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData");
+}
+
 wxString GOrgueSettings::GetOrganPath()
 {
 	return m_OrganPath;
@@ -268,6 +279,57 @@ void GOrgueSettings::SetWAVPath(wxString path)
 {
 	m_WAVPath = path;
 	m_Config.Write(wxT("wavPath"), m_WAVPath);
+}
+
+wxString GOrgueSettings::GetUserSettingPath()
+{
+	return m_UserSettingPath;
+}
+
+void GOrgueSettings::SetUserSettingPath(wxString path)
+{
+	if (path == wxEmptyString)
+		path = GetStandardDataDirectory();
+	if (!wxFileName::DirExists(path))
+		path = GetStandardDataDirectory();
+	wxFileName file(path);
+	file.MakeAbsolute();
+	path = file.GetFullPath();
+	if (!wxFileName::DirExists(path))
+		wxFileName::Mkdir(path);
+	m_UserSettingPath = path;
+	m_Config.Write(wxT("SettingPath"), m_UserSettingPath);
+}
+
+wxString GOrgueSettings::GetUserCachePath()
+{
+	return m_UserCachePath;
+}
+
+void GOrgueSettings::SetUserCachePath(wxString path)
+{
+	if (path == wxEmptyString)
+		path = GetStandardDataDirectory();
+	if (!wxFileName::DirExists(path))
+		path = GetStandardDataDirectory();
+	wxFileName file(path);
+	file.MakeAbsolute();
+	path = file.GetFullPath();
+	if (!wxFileName::DirExists(path))
+		wxFileName::Mkdir(path);
+	m_UserCachePath = path;
+	m_Config.Write(wxT("CachePath"), m_UserCachePath);
+}
+
+unsigned  GOrgueSettings::GetPreset()
+{
+	return m_Preset;
+}
+
+void  GOrgueSettings::SetPreset(unsigned value)
+{
+	m_Preset = value;
+	m_Config.Write(wxT("Preset"), (long)m_Preset);
 }
 
 bool GOrgueSettings::GetLoadInStereo()

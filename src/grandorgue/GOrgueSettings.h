@@ -45,10 +45,13 @@ private:
 	unsigned m_Volume;
 	unsigned m_PolyphonyLimit;
 	wxString m_DefaultAudioDevice;
+	unsigned m_Preset;
 	std::map<long, wxString> m_OrganMidiEvents;
 	wxString m_WAVPath;
 	wxString m_OrganPath;
 	wxString m_SettingPath;
+	wxString m_UserSettingPath;
+	wxString m_UserCachePath;
 	int m_ManualEvents[6];
 	int m_EnclosureEvents[6];
 	int m_SetterEvents[3];
@@ -67,6 +70,7 @@ public:
 	wxConfigBase& GetConfig();
 	wxString GetStandardDocumentDirectory();
 	wxString GetStandardOrganDirectory();
+	wxString GetStandardDataDirectory();
 
 	unsigned GetManualCount();
 	wxString GetManualTitle(unsigned index);
@@ -93,6 +97,13 @@ public:
 	void SetSettingPath(wxString path);
 	wxString GetWAVPath();
 	void SetWAVPath(wxString path);
+
+	wxString GetUserSettingPath();
+	void SetUserSettingPath(wxString path);
+	wxString GetUserCachePath();
+	void SetUserCachePath(wxString path);
+	unsigned GetPreset();
+	void SetPreset(unsigned value);
 
 	bool GetLoadInStereo();
 	void SetLoadInStereo(bool stereo);
