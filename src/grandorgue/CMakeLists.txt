@@ -115,6 +115,7 @@ GOrgueMidi.cpp
 GOrgueMidiEvent.cpp
 GOrgueMidiReceiver.cpp
 GOrguePipe.cpp
+GOrguePipeConfig.cpp
 GOrguePiston.cpp
 GOrgueProperties.cpp
 GOrguePushbutton.cpp

@@ -25,129 +25,103 @@
 #include "GrandOrgueFile.h"
 
 GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number) :
-	GOrgueDrawstop(organfile),
-	m_Pipes(0),
-	m_KeyState(0),
-	m_ManualNumber(manual_number),
-	m_Percussive(false),
-	m_AmplitudeLevel(0),
-	m_DefaultAmplitude(0),
-	m_Tuning(0),
-	m_DefaultTuning(0),
-	m_FirstAccessiblePipeLogicalPipeNumber(0),
-	m_FirstAccessiblePipeLogicalKeyNumber(0),
-	m_NumberOfAccessiblePipes(0),
-	m_WindchestGroup(0)
+        GOrgueDrawstop(organfile),
+        m_Pipes(0),
+        m_KeyState(0),
+        m_ManualNumber(manual_number),
+        m_Percussive(false),
+        m_FirstAccessiblePipeLogicalPipeNumber(0),
+        m_FirstAccessiblePipeLogicalKeyNumber(0),
+        m_NumberOfAccessiblePipes(0),
+        m_WindchestGroup(0),
+        m_PipeConfig(organfile, this)
 {
 }
 
 unsigned GOrgueStop::GetFirstAccessiblePipeLogicalPipeNumber() const
 {
-	return m_FirstAccessiblePipeLogicalPipeNumber;
+        return m_FirstAccessiblePipeLogicalPipeNumber;
 }
 
 unsigned GOrgueStop::GetFirstAccessiblePipeLogicalKeyNumber() const
 {
-	return m_FirstAccessiblePipeLogicalKeyNumber;
+        return m_FirstAccessiblePipeLogicalKeyNumber;
 }
 
 unsigned GOrgueStop::GetNbAccessiblePipes() const
 {
-	return
-		IsAuto()
-		? 0 /* When there is only one logical pipe, the pipe plays whenever
-		     * the stop is on and we "fake" that the stop has no accessible
-		     * pipes. */
-		: m_NumberOfAccessiblePipes;
+        return
+                IsAuto()
+                ? 0 /* When there is only one logical pipe, the pipe plays whenever
+                     * the stop is on and we "fake" that the stop has no accessible
+                     * pipes. */
+                : m_NumberOfAccessiblePipes;
 }
 
 unsigned GOrgueStop::IsAuto() const
 {
-	/* m_auto seems to state that if a stop only has 1 note, the note isn't
-	 * actually controlled by a manual, but will be on if the stop is on and
-	 * off if the stop is off... */
-	return (m_Pipes.size() == 1);
+        /* m_auto seems to state that if a stop only has 1 note, the note isn't
+         * actually controlled by a manual, but will be on if the stop is on and
+         * off if the stop is off... */
+        return (m_Pipes.size() == 1);
 }
 
-float GOrgueStop::GetAmplitude() const
+GOrguePipeConfig& GOrgueStop::GetPipeConfig()
 {
-	return m_AmplitudeLevel;
+	return m_PipeConfig;
 }
 
-float GOrgueStop::GetDefaultAmplitude() const
+void GOrgueStop::UpdateAmplitude()
 {
-	return m_DefaultAmplitude;
+        for(unsigned i = 0; i < m_Pipes.size(); i++)
+                m_Pipes[i]->UpdateAmplitude();
 }
 
-void GOrgueStop::SetAmplitude(float amp)
+void GOrgueStop::UpdateTuning()
 {
-	m_AmplitudeLevel = amp;
-	m_organfile->Modified();
-	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->UpdateAmplitude();
-}
-
-float GOrgueStop::GetTuning()
-{
-	return m_Tuning;
-}
-
-float GOrgueStop::GetDefaultTuning()
-{
-	return m_DefaultTuning;
-}
-
-void GOrgueStop::SetTuning(float cent)
-{
-	m_Tuning = cent;
-	m_organfile->Modified();
-	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->UpdateTuning();
+        for(unsigned i = 0; i < m_Pipes.size(); i++)
+                m_Pipes[i]->UpdateTuning();
 }
 
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
 
-	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
-	m_DefaultAmplitude                     = cfg.ReadFloat(group, wxT("AmplitudeLevel"), 0, 1000);
-	m_AmplitudeLevel                       = cfg.ReadFloat(group, wxT("Amplitude"), 0, 1000, false, m_DefaultAmplitude);
-	m_DefaultTuning                        = cfg.ReadFloat(group, wxT("PitchTuning"), -1200, 1200, false, 0);
-	m_Tuning                               = cfg.ReadFloat(group, wxT("Tuning"), -1200, 1200, false, m_DefaultTuning);
-	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
-	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
-	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
-	m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, m_organfile->GetWinchestGroupCount());
-	m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
+        unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
+        m_PipeConfig.Load(cfg, group, wxEmptyString);
+        m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
+        m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
+        m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
+        m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, m_organfile->GetWinchestGroupCount());
+        m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
 
-	m_Pipes.clear();
-	for (unsigned i = 0; i < number_of_logical_pipes; i++)
-	{
-		wxString buffer;
-		buffer.Printf(wxT("Pipe%03u"), i + 1);
-		m_Pipes.push_back
-			(new GOrguePipe
-				(m_organfile
-				,this
-				,m_Percussive
-				,m_WindchestGroup
-				)
-			);
-		m_Pipes[i]->Load(cfg, group, buffer);
-	}
-	m_KeyState.resize(m_NumberOfAccessiblePipes);
-	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
+        m_Pipes.clear();
+        for (unsigned i = 0; i < number_of_logical_pipes; i++)
+        {
+                wxString buffer;
+                buffer.Printf(wxT("Pipe%03u"), i + 1);
+                m_Pipes.push_back
+                        (new GOrguePipe
+                                (m_organfile
+                                ,this
+                                ,m_Percussive
+                                ,m_WindchestGroup
+                                )
+                        );
+                m_Pipes[i]->Load(cfg, group, buffer);
+        }
+        m_KeyState.resize(m_NumberOfAccessiblePipes);
+        std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
 
-	GOrgueDrawstop::Load(cfg, group);
+        GOrgueDrawstop::Load(cfg, group);
 
 }
 
 void GOrgueStop::Save(IniFileConfig& cfg, bool prefix)
 {
-	GOrgueDrawstop::Save(cfg, prefix);
-	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->Save(cfg, prefix);
-	cfg.SaveHelper(prefix, m_group, wxT("Amplitude"), m_AmplitudeLevel);
-	cfg.SaveHelper(prefix, m_group, wxT("Tuning"), m_Tuning);
+        GOrgueDrawstop::Save(cfg, prefix);
+        for(unsigned i = 0; i < m_Pipes.size(); i++)
+                m_Pipes[i]->Save(cfg, prefix);
+        m_PipeConfig.Save(cfg, prefix);
 }
 
 void GOrgueStop::SetKey(unsigned note, int on)

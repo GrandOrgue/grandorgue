@@ -20,59 +20,45 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUEPIPE_H
-#define GORGUEPIPE_H
+#ifndef GORGUEPIPECONFIG_H
+#define GORGUEPIPECONFIG_H
 
 #include <wx/wx.h>
-#include "GOrguePipeConfig.h"
-#include "GOSoundProviderWave.h"
-
-class GrandOrgueFile;
-class GOrgueCache;
-class GOrgueCacheWriter;
-class GOrgueStop;
 class IniFileConfig;
-typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
+class GrandOrgueFile;
 
-class GOrguePipe : public GOrguePipeUpdateCallback
+class GOrguePipeUpdateCallback
 {
+public:
+	virtual void UpdateAmplitude() = 0;
+	virtual void UpdateTuning() = 0;
+};
 
+class GOrguePipeConfig
+{
 private:
 	GrandOrgueFile* m_OrganFile;
-	GOrgueStop* m_Stop;
-	SAMPLER_HANDLE  m_Sampler;
-	int m_Instances;
-
-	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
-	int m_SamplerGroupID;
-	wxString m_Filename;
-	bool m_Percussive;
-	GOrguePipe* m_Reference;
-	GOSoundProviderWave m_SoundProvider;
-	GOrguePipeConfig m_PipeConfig;
-
-	void SetOn();
-	void SetOff();
-	GOSoundProvider* GetSoundProvider();
+	GOrguePipeUpdateCallback* m_Callback;
+	wxString m_Group;
+	wxString m_NamePrefix;
+	float m_Amplitude;
+	float m_DefaultAmplitude;
+	float m_Tuning;
+	float m_DefaultTuning;
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, GOrgueStop* m_Stop, bool percussive, int sampler_group_id);
+	GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback);
+
 	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
 	void Save(IniFileConfig& cfg, bool prefix);
-	void Set(bool on);
-	void LoadData();
-	bool LoadCache(GOrgueCache& cache);
-	bool SaveCache(GOrgueCacheWriter& cache);
-	void FastAbort();
-	wxString GetFilename();
-	bool IsReference();
-	GOrguePipeConfig& GetPipeConfig();
 
-	float GetEffectiveAmplitude();
-	void UpdateAmplitude();
+	float GetAmplitude();
+	float GetDefaultAmplitude();
+	void SetAmplitude(float amp);
 
-	float GetEffectiveTuning();
-	void UpdateTuning();
+	float GetTuning();
+	float GetDefaultTuning();
+	void SetTuning(float cent);
 };
 
 #endif
