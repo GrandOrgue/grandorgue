@@ -161,7 +161,12 @@ void OrganDialog::Load()
 	}
 
 	if (entries.size() > 1)
-		m_Apply->Enable();
+	{
+		if (!m_Amplitude->IsModified())
+			m_Amplitude->ChangeValue(wxEmptyString);
+		if (!m_Tuning->IsModified())
+			m_Tuning->ChangeValue(wxEmptyString);
+	}
 	else
 		m_Apply->Disable();
 
@@ -186,9 +191,11 @@ void OrganDialog::Load()
 	amplitude = m_Last->config->GetAmplitude();
 	tuning = m_Last->config->GetTuning();
 
-	m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
+	if (entries.size() == 1)
+		m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
 	m_AmplitudeSpin->SetValue(amplitude);
-	m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
+	if (entries.size() == 1)
+		m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
 	m_TuningSpin->SetValue(tuning);
 }
 
@@ -269,13 +276,15 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	wxArrayTreeItemIds entries;
 	m_Tree->GetSelections(entries);
 
-	if (amp < 0 || amp > 1000)
+	if (m_Amplitude->IsModified() &&
+	    (amp < 0 || amp > 1000))
 	{
 		wxMessageBox(_("Amplitude is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
 		return;
 	}
 
-	if (amp < - 1200 || amp > 1200)
+	if (m_Tuning->IsModified() &&
+	    (tuning < - 1200 || tuning > 1200))
 	{
 		wxMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
 		return;
@@ -284,12 +293,18 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	for(unsigned i = 0; i < entries.size(); i++)
 	{
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
-		e->config->SetAmplitude(amp);
-		e->config->SetTuning(tuning);
+		if (m_Amplitude->IsModified())
+			e->config->SetAmplitude(amp);
+		if (m_Tuning->IsModified())
+			e->config->SetTuning(tuning);
 	}
 
-	m_Last = NULL;
-	Load();
+	m_Reset->Disable();
+	m_Apply->Disable();
+	if (m_Amplitude->IsModified())
+		m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amp));
+	if (m_Tuning->IsModified())
+		m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
 }
 
 void OrganDialog::OnEventReset(wxCommandEvent &e)
