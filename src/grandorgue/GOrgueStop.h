@@ -38,7 +38,8 @@ private:
 	std::vector<unsigned> m_KeyState;
 	unsigned m_ManualNumber;
 	bool m_Percussive;
-	unsigned m_AmplitudeLevel;
+	float m_AmplitudeLevel;
+	float m_DefaultAmplitude;
 	unsigned m_FirstAccessiblePipeLogicalPipeNumber;
 	unsigned m_FirstAccessiblePipeLogicalKeyNumber;
 	unsigned m_NumberOfAccessiblePipes;
@@ -60,7 +61,9 @@ public:
 	unsigned GetFirstAccessiblePipeLogicalKeyNumber() const;
 	unsigned GetNbAccessiblePipes() const;
 	unsigned IsAuto() const;
-	unsigned GetAmplitude() const;
+	float GetAmplitude() const;
+	float GetDefaultAmplitude() const;
+	void SetAmplitude(float amp);
 
 };
 

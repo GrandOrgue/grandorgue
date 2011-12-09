@@ -29,6 +29,7 @@
 class GrandOrgueFile;
 class GOrgueCache;
 class GOrgueCacheWriter;
+class GOrgueStop;
 class IniFileConfig;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
@@ -37,15 +38,18 @@ class GOrguePipe
 
 private:
 	GrandOrgueFile* m_OrganFile;
+	GOrgueStop* m_Stop;
 	SAMPLER_HANDLE  m_Sampler;
 	int m_Instances;
 
 	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
 	int m_SamplerGroupID;
 	wxString m_Filename;
+	wxString m_Group;
+	wxString m_NamePrefix;
 	bool m_Percussive;
-	float m_LocalAmplitude;
 	float m_Amplitude;
+	float m_DefaultAmplitude;
 	GOrguePipe* m_Reference;
 	GOSoundProviderWave m_SoundProvider;
 
@@ -54,7 +58,7 @@ private:
 	GOSoundProvider* GetSoundProvider();
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, bool percussive, int sampler_group_id, float amplitude);
+	GOrguePipe(GrandOrgueFile* organfile, GOrgueStop* m_Stop, bool percussive, int sampler_group_id);
 	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
@@ -63,7 +67,12 @@ public:
 	bool SaveCache(GOrgueCacheWriter& cache);
 	void FastAbort();
 	wxString GetFilename();
-
+	bool IsReference();
+	float GetAmplitude();
+	float GetDefaultAmplitude();
+	float GetEffectiveAmplitude();
+	void SetAmplitude(float amp);
+	void UpdateAmplitude();
 };
 
 #endif

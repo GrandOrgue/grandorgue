@@ -31,6 +31,7 @@ GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number) :
 	m_ManualNumber(manual_number),
 	m_Percussive(false),
 	m_AmplitudeLevel(0),
+	m_DefaultAmplitude(0),
 	m_FirstAccessiblePipeLogicalPipeNumber(0),
 	m_FirstAccessiblePipeLogicalKeyNumber(0),
 	m_NumberOfAccessiblePipes(0),
@@ -66,16 +67,30 @@ unsigned GOrgueStop::IsAuto() const
 	return (m_Pipes.size() == 1);
 }
 
-unsigned GOrgueStop::GetAmplitude() const
+float GOrgueStop::GetAmplitude() const
 {
 	return m_AmplitudeLevel;
+}
+
+float GOrgueStop::GetDefaultAmplitude() const
+{
+	return m_DefaultAmplitude;
+}
+
+void GOrgueStop::SetAmplitude(float amp)
+{
+	m_AmplitudeLevel = amp;
+	m_organfile->Modified();
+	for(unsigned i = 0; i < m_Pipes.size(); i++)
+		m_Pipes[i]->UpdateAmplitude();
 }
 
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
 
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
-	m_AmplitudeLevel                       = cfg.ReadFloat(group, wxT("AmplitudeLevel"), 0, 1000);
+	m_DefaultAmplitude                     = cfg.ReadFloat(group, wxT("AmplitudeLevel"), 0, 1000);
+	m_AmplitudeLevel                       = cfg.ReadFloat(group, wxT("Amplitude"), 0, 1000, false, m_DefaultAmplitude);
 	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
 	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
 	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
@@ -90,9 +105,9 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 		m_Pipes.push_back
 			(new GOrguePipe
 				(m_organfile
+				,this
 				,m_Percussive
 				,m_WindchestGroup
-				,m_organfile->GetAmplitude() * m_AmplitudeLevel
 				)
 			);
 		m_Pipes[i]->Load(cfg, group, buffer);
@@ -109,6 +124,7 @@ void GOrgueStop::Save(IniFileConfig& cfg, bool prefix)
 	GOrgueDrawstop::Save(cfg, prefix);
 	for(unsigned i = 0; i < m_Pipes.size(); i++)
 		m_Pipes[i]->Save(cfg, prefix);
+	cfg.SaveHelper(prefix, m_group, wxT("Amplitude"), m_AmplitudeLevel);
 }
 
 void GOrgueStop::SetKey(unsigned note, int on)
