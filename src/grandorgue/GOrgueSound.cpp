@@ -41,6 +41,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	m_nb_buffers(0),
 	meter_counter(0),
 	defaultAudio(wxT("")),
+	m_organfile(0),
 	m_Settings(settings)
 {
 
@@ -302,8 +303,10 @@ void GOrgueSound::CloseSound()
 	wxCriticalSectionLocker locker(m_lock);
 
 	if (m_organfile)
+	{
 		m_organfile->Abort();
-	m_organfile = NULL;
+		m_organfile = NULL;
+	}
 	ResetMeters();
 }
 

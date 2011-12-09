@@ -147,7 +147,9 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	AddTool(file_menu, ID_FILE_PROPERTIES, _("&Properties..."), _("Properties"), GetImage_properties());
 	file_menu->AppendSeparator();
 	AddTool(file_menu, wxID_EXIT, _("E&xit"));
+#ifndef __WXMAC__
 	tb->AddSeparator();
+#endif
 
 	wxMenu *audio_menu = new wxMenu;
 	AddTool(audio_menu, ID_AUDIO_RECORD, _("&Record...\tCtrl+R"), _("Record"), GetImage_record(), wxITEM_CHECK);
@@ -161,7 +163,9 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	//AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"), GetImage_help, sizeof(GetImage_help));
 	AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"));
 	AddTool(help_menu, wxID_ABOUT, _("&About"));
+#ifndef __WXMAC__
 	tb->AddSeparator();
+#endif
 	// Changed Text to Icons to reduce screen space - Graham Goode Nov 2009
 	wxMenu *settings_menu = new wxMenu;
 
