@@ -379,10 +379,10 @@ void GOrgueFrameGeneral::Push()
 
 void GOrgueFrameGeneral::Save(IniFileConfig& cfg, bool prefix)
 {
-	cfg.SaveHelper( prefix, m_group, wxT("NumberOfStops"), m_Stops.size());
-	cfg.SaveHelper( prefix, m_group, wxT("NumberOfCouplers"), m_Couplers.size());
-	cfg.SaveHelper( prefix, m_group, wxT("NumberOfTremulants"), m_Tremulants.size());
-	cfg.SaveHelper( prefix, m_group, wxT("NumberOfDivisionalCouplers"), m_DivisionalCouplers.size());
+	cfg.SaveHelper( prefix, m_group, wxT("NumberOfStops"), (int)m_Stops.size());
+	cfg.SaveHelper( prefix, m_group, wxT("NumberOfCouplers"), (int)m_Couplers.size());
+	cfg.SaveHelper( prefix, m_group, wxT("NumberOfTremulants"), (int)m_Tremulants.size());
+	cfg.SaveHelper( prefix, m_group, wxT("NumberOfDivisionalCouplers"), (int)m_DivisionalCouplers.size());
 
 	wxString buffer;
 

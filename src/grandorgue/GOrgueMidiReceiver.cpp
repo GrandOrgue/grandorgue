@@ -219,7 +219,7 @@ void GOrgueMidiReceiver::Save(IniFileConfig& cfg, bool prefix, wxString group)
 {
 	wxString buffer;
 
-	cfg.SaveHelper(prefix, group, wxT("NumberOfMIDIEvents"), m_events.size());
+	cfg.SaveHelper(prefix, group, wxT("NumberOfMIDIEvents"), (int)m_events.size());
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		buffer.Printf(wxT("MIDIDevice%03d"), i + 1);
