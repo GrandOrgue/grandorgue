@@ -55,8 +55,9 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(ID_FILE_RELOAD, GOrgueFrame::OnReload)
 	EVT_MENU(ID_FILE_REVERT, GOrgueFrame::OnRevert)
 	EVT_MENU(ID_FILE_PROPERTIES, GOrgueFrame::OnProperties)
-	EVT_MENU(ID_FILE_LOAD, GOrgueFrame::OnLoad)
-	EVT_MENU(ID_FILE_SAVE, GOrgueFrame::OnSave)
+	EVT_MENU(ID_FILE_IMPORT_SETTINGS, GOrgueFrame::OnImportSettings)
+	EVT_MENU(ID_FILE_IMPORT_COMBINATIONS, GOrgueFrame::OnImportCombinations)
+	EVT_MENU(ID_FILE_EXPORT, GOrgueFrame::OnExport)
 	EVT_MENU(ID_FILE_CACHE, GOrgueFrame::OnCache)
 	EVT_MENU(ID_FILE_CACHE_DELETE, GOrgueFrame::OnCacheDelete)
 	EVT_MENU(ID_AUDIO_PANIC, GOrgueFrame::OnAudioPanic)
@@ -136,8 +137,9 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	AddTool(file_menu, ID_FILE_RELOAD, _("Re&load"), _("Reload"), GetImage_reload());
 	AddTool(file_menu, ID_FILE_REVERT, _("Reset to &Defaults"));
 	file_menu->AppendSeparator();
-	AddTool(file_menu, ID_FILE_LOAD, _("&Import Settings..."));
-	AddTool(file_menu, ID_FILE_SAVE, _("&Export Settings..."));
+	AddTool(file_menu, ID_FILE_IMPORT_SETTINGS, _("&Import Settings..."));
+	AddTool(file_menu, ID_FILE_IMPORT_COMBINATIONS, _("Import &Combinations..."));
+	AddTool(file_menu, ID_FILE_EXPORT, _("&Export Settings/Combinations..."));
 	file_menu->AppendSeparator();
 	AddTool(file_menu, ID_FILE_CACHE, _("&Update Cache..."));
 	AddTool(file_menu, ID_FILE_CACHE_DELETE, _("Delete &Cache..."));
@@ -384,7 +386,7 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 		event.Skip();
 }
 
-void GOrgueFrame::OnLoad(wxCommandEvent& event)
+void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
@@ -399,7 +401,22 @@ void GOrgueFrame::OnLoad(wxCommandEvent& event)
 	}
 }
 
-void GOrgueFrame::OnSave(wxCommandEvent& event)
+void GOrgueFrame::OnImportCombinations(wxCommandEvent& event)
+{
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	if (!doc)
+		return;
+
+	wxFileDialog dlg(this, _("Import Combinations"), m_Settings.GetSettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	if (dlg.ShowModal() == wxID_OK)
+	{
+		m_Settings.SetSettingPath(dlg.GetDirectory());
+		doc->GetOrganFile()->LoadCombination(dlg.GetPath());
+		doc->Modify(true);
+	}
+}
+
+void GOrgueFrame::OnExport(wxCommandEvent& event)
 {
 	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)

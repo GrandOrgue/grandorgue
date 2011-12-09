@@ -57,8 +57,9 @@ public:
 
 	void OnLoadFile(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
-	void OnLoad(wxCommandEvent& event);
-	void OnSave(wxCommandEvent& event);
+	void OnImportSettings(wxCommandEvent& event);
+	void OnImportCombinations(wxCommandEvent& event);
+	void OnExport(wxCommandEvent& event);
 	void OnCache(wxCommandEvent& event);
 	void OnCacheDelete(wxCommandEvent& event);
 	void OnReload(wxCommandEvent& event);

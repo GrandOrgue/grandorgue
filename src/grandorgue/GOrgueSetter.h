@@ -79,6 +79,7 @@ public:
 
 	void Load(IniFileConfig& cfg);
 	void Save(IniFileConfig& cfg, bool prefix);
+	void LoadCombination(IniFileConfig& cfg);
 	void PreparePlayback();
 	void Change(GOrgueSetterButton* button);
 	void ProcessMidi(const GOrgueMidiEvent& event);

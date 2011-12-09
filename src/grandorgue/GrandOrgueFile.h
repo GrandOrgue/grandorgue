@@ -107,6 +107,7 @@ public:
 
 	GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings);
 	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);
+	void LoadCombination(const wxString& file);
 	void Save(const wxString& file);
 	bool CachePresent();
 	bool UpdateCache(bool compress);
