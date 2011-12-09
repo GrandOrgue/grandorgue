@@ -60,6 +60,10 @@ GOGUIDisplayMetrics::GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString gro
 	m_DispTrimBelowManuals(false),
 	m_DispTrimAboveExtraRows(false),
 	m_DispExtraDrawstopRowsAboveExtraButtonRows(false),
+	m_DrawStopWidth(78),
+	m_DrawStopHeight(69),
+	m_ButtonWidth(44),
+	m_ButtonHeight(40),
 	m_HackY(0),
 	m_EnclosureY(0),
 	m_CenterY(0),
@@ -173,30 +177,30 @@ int GOGUIDisplayMetrics::GetScreenHeight()
 
 int GOGUIDisplayMetrics::GetJambLeftRightHeight()
 {
-	return (m_DispDrawstopRows + 1) * 69;
+	return (m_DispDrawstopRows + 1) * m_DrawStopHeight;
 }
 
 int GOGUIDisplayMetrics::GetJambLeftRightY()
 {
-	return (m_DispScreenSizeVert - GetJambLeftRightHeight() - (m_DispDrawstopColsOffset ? 35 : 0)) >> 1;
+	return (m_DispScreenSizeVert - GetJambLeftRightHeight() - (m_DispDrawstopColsOffset ? (m_DrawStopHeight/2) : 0)) >> 1;
 }
 
 int GOGUIDisplayMetrics::GetJambLeftRightWidth()
 {
-	int jamblrw = m_DispDrawstopCols * 39;
+	int jamblrw = m_DispDrawstopCols * m_DrawStopWidth / 2;
 	if (m_DispPairDrawstopCols)
-		jamblrw += ((m_DispDrawstopCols >> 2) * 18) - 8;
+		jamblrw += ((m_DispDrawstopCols >> 2) * (m_DrawStopWidth / 4)) - 8;
 	return jamblrw;
 }
 
 int GOGUIDisplayMetrics::GetJambTopHeight()
 {
-	return m_DispExtraDrawstopRows * 69;
+	return m_DispExtraDrawstopRows * m_DrawStopHeight;
 }
 
 int GOGUIDisplayMetrics::GetJambTopWidth()
 {
-	return m_DispExtraDrawstopCols * 78;
+	return m_DispExtraDrawstopCols * m_DrawStopWidth;
 }
 
 int GOGUIDisplayMetrics::GetJambTopX()
@@ -206,12 +210,12 @@ int GOGUIDisplayMetrics::GetJambTopX()
 
 int GOGUIDisplayMetrics::GetPistonTopHeight()
 {
-	return m_DispExtraButtonRows * 40;
+	return m_DispExtraButtonRows * m_ButtonHeight;
 }
 
 int GOGUIDisplayMetrics::GetPistonWidth()
 {
-	return m_DispButtonCols * 44;
+	return m_DispButtonCols * m_ButtonWidth;
 }
 
 int GOGUIDisplayMetrics::GetPistonX()
@@ -312,14 +316,14 @@ void GOGUIDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const i
 	int i;
 	if (drawstopRow > 99)
 	{
-		*blitX = GetJambTopX() + (drawstopCol - 1) * 78 + 6;
+		*blitX = GetJambTopX() + (drawstopCol - 1) * m_DrawStopWidth + 6;
 		if (m_DispExtraDrawstopRowsAboveExtraButtonRows)
 		{
-		    *blitY = GetJambTopDrawstop() + (drawstopRow - 100) * 69 + 2;
+			*blitY = GetJambTopDrawstop() + (drawstopRow - 100) * m_DrawStopHeight + 2;
 		}
 		else
 		{
-            *blitY = GetJambTopDrawstop() + (drawstopRow - 100) * 69 + (m_DispExtraButtonRows * 40) + 2;
+			*blitY = GetJambTopDrawstop() + (drawstopRow - 100) * m_DrawStopHeight + (m_DispExtraButtonRows * m_ButtonHeight) + 2;
 		}
 	}
 	else
@@ -327,23 +331,23 @@ void GOGUIDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const i
 		i = m_DispDrawstopCols >> 1;
 		if (drawstopCol <= i)
 		{
-			*blitX = GetJambLeftX() + (drawstopCol - 1) * 78 + 6;
-			*blitY = GetJambLeftRightY() + (drawstopRow - 1) * 69 + 32;
+			*blitX = GetJambLeftX() + (drawstopCol - 1) * m_DrawStopWidth + 6;
+			*blitY = GetJambLeftRightY() + (drawstopRow - 1) * m_DrawStopHeight + 32;
 		}
 		else
 		{
-			*blitX = GetJambRightX() + (drawstopCol - 1 - i) * 78 + 6;
-			*blitY = GetJambLeftRightY() + (drawstopRow - 1) * 69 + 32;
+			*blitX = GetJambRightX() + (drawstopCol - 1 - i) * m_DrawStopWidth + 6;
+			*blitY = GetJambLeftRightY() + (drawstopRow - 1) * m_DrawStopHeight + 32;
 		}
 		if (m_DispPairDrawstopCols)
-			*blitX += (((drawstopCol - 1) % i) >> 1) * 18;
+			*blitX += (((drawstopCol - 1) % i) >> 1) * (m_DrawStopWidth / 4);
 
 		if (drawstopCol <= i)
 			i = drawstopCol;
 		else
 			i = m_DispDrawstopCols - drawstopCol + 1;
 		if (m_DispDrawstopColsOffset && (i & 1) ^ m_DispDrawstopOuterColOffsetUp)
-			*blitY += 35;
+			*blitY += m_DrawStopHeight / 2;
 
 	}
 }
@@ -351,16 +355,16 @@ void GOGUIDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const i
 void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY)
 {
 
-	*blitX = GetPistonX() + (buttonCol - 1) * 44 + 6;
+	*blitX = GetPistonX() + (buttonCol - 1) * m_ButtonWidth + 6;
 	if (buttonRow > 99)
 	{
-	    if (m_DispExtraDrawstopRowsAboveExtraButtonRows)
-	    {
-        *blitY = GetJambTopPiston() + (buttonRow - 100) * 40 + (m_DispExtraDrawstopRows * 69) + 5;
-	    }
+		if (m_DispExtraDrawstopRowsAboveExtraButtonRows)
+		{
+			*blitY = GetJambTopPiston() + (buttonRow - 100) * m_ButtonHeight + (m_DispExtraDrawstopRows * m_DrawStopHeight) + 5;
+		}
 		else
 		{
-		*blitY = GetJambTopPiston() + (buttonRow - 100) * 40 + 5;
+			*blitY = GetJambTopPiston() + (buttonRow - 100) * m_ButtonHeight + 5;
 		}
 	}
 	else
@@ -375,9 +379,9 @@ void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const i
 			*blitY = m_manual_info[i].render_info.piston_y + 5;
 
 		if (m_DispExtraPedalButtonRow && !buttonRow)
-			*blitY += 40;
+			*blitY += m_ButtonHeight;
 		if (m_DispExtraPedalButtonRowOffset && buttonRow == 99)
-			*blitX -= 22;
+			*blitX -= m_ButtonHeight / 2 + 2;
 	}
 
 }
@@ -404,7 +408,7 @@ void GOGUIDisplayMetrics::Update()
 			m_manual_info[0].render_info.keys_y = m_manual_info[0].render_info.y = m_CenterY;
 			m_CenterY -= 40;
 			if (m_DispExtraPedalButtonRow)
-				m_CenterY -= 40;
+				m_CenterY -= m_ButtonHeight;
 			m_manual_info[0].render_info.piston_y = m_CenterY;
 			m_CenterY -= 87;
 			m_CenterWidth = std::max(m_CenterWidth, GetEnclosureWidth());
@@ -423,7 +427,7 @@ void GOGUIDisplayMetrics::Update()
 		{
 			if (!m_DispButtonsAboveManuals)
 			{
-				m_CenterY -= 40;
+				m_CenterY -= m_ButtonHeight;
 				m_manual_info[i].render_info.piston_y = m_CenterY;
 			}
 			m_manual_info[i].render_info.height = 32;
@@ -441,7 +445,7 @@ void GOGUIDisplayMetrics::Update()
 			}
 			if (m_DispButtonsAboveManuals)
 			{
-				m_CenterY -= 40;
+				m_CenterY -= m_ButtonHeight;
 				m_manual_info[i].render_info.piston_y = m_CenterY;
 			}
 			m_manual_info[i].render_info.y = m_CenterY;
@@ -471,11 +475,6 @@ void GOGUIDisplayMetrics::Update()
 		if (m_manual_info[i].render_info.width > m_CenterWidth)
 			m_CenterWidth = m_manual_info[i].render_info.width;
 	}
-
-  /*
-	for (; i <= 6; i++)		// evil: for jpOtt
-	organfile->m_manual[i].m_PistonY = organfile->m_CenterY - 40;
-  */
 
 	m_HackY = m_CenterY;
 
