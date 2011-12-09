@@ -75,7 +75,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
 
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
-	m_AmplitudeLevel                       = cfg.ReadInteger(group, wxT("AmplitudeLevel"), 0, 1000);
+	m_AmplitudeLevel                       = cfg.ReadFloat(group, wxT("AmplitudeLevel"), 0, 1000);
 	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
 	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
 	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);

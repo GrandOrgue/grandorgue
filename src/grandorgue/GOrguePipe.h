@@ -44,7 +44,8 @@ private:
 	int m_SamplerGroupID;
 	wxString m_Filename;
 	bool m_Percussive;
-	int m_Amplitude;
+	float m_LocalAmplitude;
+	float m_Amplitude;
 	GOrguePipe* m_Reference;
 	GOSoundProviderWave m_SoundProvider;
 
@@ -53,7 +54,7 @@ private:
 	GOSoundProvider* GetSoundProvider();
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, bool percussive, int sampler_group_id, int amplitude);
+	GOrguePipe(GrandOrgueFile* organfile, bool percussive, int sampler_group_id, float amplitude);
 	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);

@@ -73,7 +73,7 @@ private:
 	wxInt16 m_HighestSampleFormat;
 	wxInt16 m_FirstManual;
 
-	wxInt16 m_AmplitudeLevel;
+	float m_AmplitudeLevel;
 
 	wxString m_HauptwerkOrganFileFormatVersion;
 	wxString m_ChurchName;
@@ -159,7 +159,7 @@ public:
 
 	/* Overal amplitude of the organ when played back (used to prevent
 	 * clipping, etc) */
-	int GetAmplitude();
+	float GetAmplitude();
 
 	/* TODO: can somebody figure out what this thing is */
 	bool IsCustomized();
