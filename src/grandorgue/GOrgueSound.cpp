@@ -329,6 +329,11 @@ GOrgueSettings& GOrgueSound::GetSettings()
 	return m_Settings;
 }
 
+GrandOrgueFile* GOrgueSound::GetOrganFile()
+{
+	return m_organfile;
+}
+
 bool GOrgueSound::IsRecording()
 {
 	return m_recorder.IsOpen();

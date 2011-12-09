@@ -115,6 +115,7 @@ public:
 	void StopRecording();
 
 	void PreparePlayback(GrandOrgueFile* organfile);
+	GrandOrgueFile* GetOrganFile();
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
 
