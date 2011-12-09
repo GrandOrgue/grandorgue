@@ -33,8 +33,8 @@ class GOSoundProviderWave : public GOSoundProvider
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
 
-	void LoadFromFile(wxString filename, int fixed_amplitude, wxString path, unsigned bits_per_sample, bool stereo, bool compress);
-
+	void LoadFromFile(wxString filename, wxString path, unsigned bits_per_sample, bool stereo, bool compress);
+	void SetAmplitude(int fixed_amplitude);
 };
 
 #endif /* GOSOUNDPROVIDERWAVE_H_ */

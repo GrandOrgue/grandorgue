@@ -29,6 +29,7 @@
 class GrandOrgueFile;
 class GOrgueCache;
 class GOrgueCacheWriter;
+class IniFileConfig;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
 class GOrguePipe
@@ -52,7 +53,9 @@ private:
 	GOSoundProvider* GetSoundProvider();
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, wxString filename, bool percussive, int sampler_group_id, int amplitude);
+	GOrguePipe(GrandOrgueFile* organfile, bool percussive, int sampler_group_id, int amplitude);
+	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
+	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
 	void LoadData();
 	bool LoadCache(GOrgueCache& cache);

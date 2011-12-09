@@ -94,9 +94,6 @@ bool GOSoundProvider::LoadCacheAudioSection
 bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 {
 
-	if (!cache.Read(&m_Gain, sizeof(m_Gain)))
-		return false;
-
 	if (!LoadCacheAudioSection(cache, &m_Attack, false))
 		return false;
 
@@ -139,9 +136,6 @@ bool GOSoundProvider::SaveCacheAudioSection
 
 bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 {
-
-	if (!cache.Write(&m_Gain, sizeof(m_Gain)))
-		return false;
 
 	if (!SaveCacheAudioSection(cache, &m_Attack, false))
 		return false;
