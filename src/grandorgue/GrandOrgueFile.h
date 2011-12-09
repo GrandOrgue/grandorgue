@@ -75,6 +75,8 @@ private:
 
 	float m_AmplitudeLevel;
 	float m_Amplitude;
+	float m_DefaultTuning;
+	float m_Tuning;
 
 	wxString m_HauptwerkOrganFileFormatVersion;
 	wxString m_ChurchName;
@@ -163,6 +165,10 @@ public:
 	float GetAmplitude();
 	float GetDefaultAmplitude();
 	void SetAmplitude(float amp);
+
+	float GetTuning();
+	float GetDefaultTuning();
+	void SetTuning(float cent);
 
 	/* TODO: can somebody figure out what this thing is */
 	bool IsCustomized();

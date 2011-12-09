@@ -32,6 +32,8 @@ GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number) :
 	m_Percussive(false),
 	m_AmplitudeLevel(0),
 	m_DefaultAmplitude(0),
+	m_Tuning(0),
+	m_DefaultTuning(0),
 	m_FirstAccessiblePipeLogicalPipeNumber(0),
 	m_FirstAccessiblePipeLogicalKeyNumber(0),
 	m_NumberOfAccessiblePipes(0),
@@ -85,12 +87,32 @@ void GOrgueStop::SetAmplitude(float amp)
 		m_Pipes[i]->UpdateAmplitude();
 }
 
+float GOrgueStop::GetTuning()
+{
+	return m_Tuning;
+}
+
+float GOrgueStop::GetDefaultTuning()
+{
+	return m_DefaultTuning;
+}
+
+void GOrgueStop::SetTuning(float cent)
+{
+	m_Tuning = cent;
+	m_organfile->Modified();
+	for(unsigned i = 0; i < m_Pipes.size(); i++)
+		m_Pipes[i]->UpdateTuning();
+}
+
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
 
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
 	m_DefaultAmplitude                     = cfg.ReadFloat(group, wxT("AmplitudeLevel"), 0, 1000);
 	m_AmplitudeLevel                       = cfg.ReadFloat(group, wxT("Amplitude"), 0, 1000, false, m_DefaultAmplitude);
+	m_DefaultTuning                        = cfg.ReadFloat(group, wxT("PitchTuning"), -1200, 1200, false, 0);
+	m_Tuning                               = cfg.ReadFloat(group, wxT("Tuning"), -1200, 1200, false, m_DefaultTuning);
 	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
 	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
 	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
@@ -125,6 +147,7 @@ void GOrgueStop::Save(IniFileConfig& cfg, bool prefix)
 	for(unsigned i = 0; i < m_Pipes.size(); i++)
 		m_Pipes[i]->Save(cfg, prefix);
 	cfg.SaveHelper(prefix, m_group, wxT("Amplitude"), m_AmplitudeLevel);
+	cfg.SaveHelper(prefix, m_group, wxT("Tuning"), m_Tuning);
 }
 
 void GOrgueStop::SetKey(unsigned note, int on)
