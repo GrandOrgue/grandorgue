@@ -151,9 +151,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	AddTool(file_menu, ID_FILE_PROPERTIES, _("&Properties..."), _("Properties"), GetImage_properties());
 	file_menu->AppendSeparator();
 	AddTool(file_menu, wxID_EXIT, _("E&xit"));
-#ifndef __WXMAC__
 	tb->AddSeparator();
-#endif
 
 	wxMenu *preset_menu = new wxMenu;
 	for(unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
@@ -173,9 +171,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	//AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"), GetImage_help, sizeof(GetImage_help));
 	AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"));
 	AddTool(help_menu, wxID_ABOUT, _("&About"));
-#ifndef __WXMAC__
 	tb->AddSeparator();
-#endif
 
 	wxMenu *settings_menu = new wxMenu;
 	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
