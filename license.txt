@@ -1,6 +1,6 @@
-GrandOrgue additions, Copyright 2009 by the GrandOrgue Team
-
+MyOrgan, Copyright 2006 Kloria Publishing LLC
 MyOrgan 1.06 Code base, Copyright 2006 Milan Digital Audio LLC
+Copyright 2009-2011 GrandOrgue contributors (see AUTHORS)
 
 
 
@@ -16,7 +16,7 @@ MyOrgan 1.06 Code base, Copyright 2006 Milan Digital Audio LLC
 
 
 
-  In addition, as a special exception, the GrandOrgue Team gives permission to combine GrandOrgue with any ASIO SDK and/or VST SDK produced by Steinberg Media Technologies GmbH and to distribute the linked executables. You must obey the GNU General Public License in all respects for all of the code used other than the ASIO SDK and/or VST SDK.
+  In addition, as a special exception, the Kloria Publishing LLC and GrandOrgue Team gives permission to combine GrandOrgue with any ASIO SDK and/or VST SDK produced by Steinberg Media Technologies GmbH and to distribute the linked executables. You must obey the GNU General Public License in all respects for all of the code used other than the ASIO SDK and/or VST SDK.
 
 
 
