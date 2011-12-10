@@ -211,7 +211,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	choices.push_back(_("Mono"));
 	choices.push_back(_("Stereo"));
 
-	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 5, 5);
+	wxFlexGridSizer* grid = new wxFlexGridSizer(6, 2, 5, 5);
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Output Resolution:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	grid->Add(c_format = new wxStaticText(panel, wxID_ANY, wxEmptyString));
 
