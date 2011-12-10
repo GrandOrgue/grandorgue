@@ -3947,6 +3947,7 @@ bool RtApiDs :: probeDeviceOpen( unsigned int device, StreamMode mode, unsigned 
 
     // Check channel information.
     if ( channels + firstChannel == 2 && !( outCaps.dwFlags & DSCAPS_PRIMARYSTEREO ) ) {
+      output->Release();
       errorStream_ << "RtApiDs::getDeviceInfo: the output device (" << dsDevices[ device ].name << ") does not support stereo playback.";
       errorText_ = errorStream_.str();
       return FAILURE;
@@ -4007,11 +4008,13 @@ bool RtApiDs :: probeDeviceOpen( unsigned int device, StreamMode mode, unsigned 
     // Set the primary DS buffer sound format.
     result = buffer->SetFormat( &waveFormat );
     if ( FAILED( result ) ) {
+      buffer->Release();
       output->Release();
       errorStream_ << "RtApiDs::probeDeviceOpen: error (" << getErrorString( result ) << ") setting primary buffer format (" << dsDevices[ device ].name << ")!";
       errorText_ = errorStream_.str();
       return FAILURE;
     }
+    buffer->Release();
 
     // Setup the secondary DS buffer description.
     ZeroMemory( &bufferDescription, sizeof( DSBUFFERDESC ) );
@@ -4105,6 +4108,7 @@ bool RtApiDs :: probeDeviceOpen( unsigned int device, StreamMode mode, unsigned 
 
     // Check channel information.
     if ( inCaps.dwChannels < channels + firstChannel ) {
+      input->Release();
       errorText_ = "RtApiDs::getDeviceInfo: the input device does not support requested input channels.";
       return FAILURE;
     }
@@ -4503,7 +4507,7 @@ void RtApiDs :: stopStream()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::stopStream: error (" << getErrorString( result ) << ") stopping output buffer!";
       errorText_ = errorStream_.str();
-      goto unlock;
+      error( RtError::WARNING );
     }
 
     // Lock the buffer and clear it so that if we start to play again,
@@ -4512,7 +4516,8 @@ void RtApiDs :: stopStream()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::stopStream: error (" << getErrorString( result ) << ") locking output buffer!";
       errorText_ = errorStream_.str();
-      goto unlock;
+      error( RtError::WARNING );
+      goto unlock_output;
     }
 
     // Zero the DS buffer
@@ -4523,9 +4528,9 @@ void RtApiDs :: stopStream()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::stopStream: error (" << getErrorString( result ) << ") unlocking output buffer!";
       errorText_ = errorStream_.str();
-      goto unlock;
+      error( RtError::WARNING );
     }
-
+  unlock_output:
     // If we start playing again, we must begin at beginning of buffer.
     handle->bufferPointer[0] = 0;
   }
@@ -4541,7 +4546,7 @@ void RtApiDs :: stopStream()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::stopStream: error (" << getErrorString( result ) << ") stopping input buffer!";
       errorText_ = errorStream_.str();
-      goto unlock;
+      error( RtError::WARNING );
     }
 
     // Lock the buffer and clear it so that if we start to play again,
@@ -4550,7 +4555,8 @@ void RtApiDs :: stopStream()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::stopStream: error (" << getErrorString( result ) << ") locking input buffer!";
       errorText_ = errorStream_.str();
-      goto unlock;
+      error( RtError::WARNING );
+      goto unlock_input;
     }
 
     // Zero the DS buffer
@@ -4561,18 +4567,15 @@ void RtApiDs :: stopStream()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::stopStream: error (" << getErrorString( result ) << ") unlocking input buffer!";
       errorText_ = errorStream_.str();
-      goto unlock;
+      error( RtError::WARNING );
     }
-
+  unlock_input:
     // If we start recording again, we must begin at beginning of buffer.
     handle->bufferPointer[1] = 0;
   }
 
- unlock:
   timeEndPeriod( 1 ); // revert to normal scheduler frequency on lesser windows.
   //  MUTEX_UNLOCK( &stream_.mutex );
-
-  if ( FAILED( result ) ) error( RtError::SYSTEM_ERROR );
 }
 
 void RtApiDs :: abortStream()
@@ -4690,28 +4693,56 @@ void RtApiDs :: callbackEvent()
       if ( FAILED( result ) ) {
         errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current write position!";
         errorText_ = errorStream_.str();
-        error( RtError::SYSTEM_ERROR );
+        goto abort_callback;
       }
       result = dsCaptureBuffer->GetCurrentPosition( NULL, &startSafeReadPointer );
       if ( FAILED( result ) ) {
         errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current read position!";
         errorText_ = errorStream_.str();
-        error( RtError::SYSTEM_ERROR );
+        goto abort_callback;
       }
       while ( true ) {
         result = dsWriteBuffer->GetCurrentPosition( NULL, &safeWritePointer );
         if ( FAILED( result ) ) {
           errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current write position!";
           errorText_ = errorStream_.str();
-          error( RtError::SYSTEM_ERROR );
+          goto abort_callback;
         }
         result = dsCaptureBuffer->GetCurrentPosition( NULL, &safeReadPointer );
         if ( FAILED( result ) ) {
           errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current read position!";
           errorText_ = errorStream_.str();
-          error( RtError::SYSTEM_ERROR );
+          goto abort_callback;
         }
         if ( safeWritePointer != startSafeWritePointer && safeReadPointer != startSafeReadPointer ) break;
+
+        DWORD info;
+
+        result = dsWriteBuffer->GetStatus(&info);
+        if ( FAILED( result ) ) {
+          errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current write status!";
+          errorText_ = errorStream_.str();
+          goto abort_callback;
+        }
+        if (! (info & DSBSTATUS_PLAYING)) {
+          errorStream_ << "RtApiDs::callbackEvent: error waiting on stopped write buffer!";
+          errorText_ = errorStream_.str();
+          goto abort_callback;
+        }
+
+        result = dsCaptureBuffer->GetStatus(&info);
+        if ( FAILED( result ) ) {
+          errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current read status!";
+          errorText_ = errorStream_.str();
+          goto abort_callback;
+        }
+        
+        if (! (info & DSBSTATUS_PLAYING)) {
+          errorStream_ << "RtApiDs::callbackEvent: error waiting on stopped read buffer!";
+          errorText_ = errorStream_.str();
+          goto abort_callback;
+        }
+
         Sleep( 1 );
       }
 
@@ -4729,7 +4760,7 @@ void RtApiDs :: callbackEvent()
       if ( FAILED( result ) ) {
         errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current write position!";
         errorText_ = errorStream_.str();
-        error( RtError::SYSTEM_ERROR );
+        goto abort_callback;
       }
       handle->bufferPointer[0] = safeWritePointer + handle->dsPointerLeadTime[0];
       if ( handle->bufferPointer[0] >= handle->dsBufferSize[0] ) handle->bufferPointer[0] -= handle->dsBufferSize[0];
@@ -4779,7 +4810,7 @@ void RtApiDs :: callbackEvent()
       if ( FAILED( result ) ) {
         errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current write position!";
         errorText_ = errorStream_.str();
-        error( RtError::SYSTEM_ERROR );
+        goto abort_callback;
       }
 
       // We will copy our output buffer into the region between
@@ -4793,6 +4824,19 @@ void RtApiDs :: callbackEvent()
 
       // Check whether the entire write region is behind the play pointer.
       if ( leadPointer >= endWrite ) break;
+
+      DWORD info;
+      result = dsBuffer->GetStatus(&info);
+      if ( FAILED( result ) ) {
+        errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current write status!";
+        errorText_ = errorStream_.str();
+        goto abort_callback;
+      }
+      if (! (info & DSBSTATUS_PLAYING)) {
+        errorStream_ << "RtApiDs::callbackEvent: error waiting on stopped write buffer!";
+        errorText_ = errorStream_.str();
+        goto abort_callback;
+      }
 
       // If we are here, then we must wait until the leadPointer advances
       // beyond the end of our next write region. We use the
@@ -4819,7 +4863,7 @@ void RtApiDs :: callbackEvent()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") locking buffer during playback!";
       errorText_ = errorStream_.str();
-      error( RtError::SYSTEM_ERROR );
+      goto abort_callback;
     }
 
     // Copy our buffer into the DS buffer
@@ -4831,7 +4875,7 @@ void RtApiDs :: callbackEvent()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") unlocking buffer during playback!";
       errorText_ = errorStream_.str();
-      error( RtError::SYSTEM_ERROR );
+      goto abort_callback;
     }
     nextWritePointer = ( nextWritePointer + bufferSize1 + bufferSize2 ) % dsBufferSize;
     handle->bufferPointer[0] = nextWritePointer;
@@ -4865,7 +4909,7 @@ void RtApiDs :: callbackEvent()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current read position!";
       errorText_ = errorStream_.str();
-      error( RtError::SYSTEM_ERROR );
+      goto abort_callback;
     }
 
     if ( safeReadPointer < (DWORD)nextReadPointer ) safeReadPointer += dsBufferSize; // unwrap offset
@@ -4925,10 +4969,23 @@ void RtApiDs :: callbackEvent()
         if ( FAILED( result ) ) {
           errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current read position!";
           errorText_ = errorStream_.str();
-          error( RtError::SYSTEM_ERROR );
+          goto abort_callback;
         }
       
         if ( safeReadPointer < (DWORD)nextReadPointer ) safeReadPointer += dsBufferSize; // unwrap offset
+
+        DWORD info;
+        result = dsBuffer->GetStatus(&info);
+        if ( FAILED( result ) ) {
+          errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") getting current write status!";
+          errorText_ = errorStream_.str();
+          goto abort_callback;
+        }
+        if (! (info & DSBSTATUS_PLAYING)) {
+          errorStream_ << "RtApiDs::callbackEvent: error waiting on stopped write buffer!";
+          errorText_ = errorStream_.str();
+          goto abort_callback;
+        }
       }
     }
 
@@ -4938,7 +4995,7 @@ void RtApiDs :: callbackEvent()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") locking capture buffer!";
       errorText_ = errorStream_.str();
-      error( RtError::SYSTEM_ERROR );
+      goto abort_callback;
     }
 
     if ( duplexPrerollBytes <= 0 ) {
@@ -4958,7 +5015,7 @@ void RtApiDs :: callbackEvent()
     if ( FAILED( result ) ) {
       errorStream_ << "RtApiDs::callbackEvent: error (" << getErrorString( result ) << ") unlocking capture buffer!";
       errorText_ = errorStream_.str();
-      error( RtError::SYSTEM_ERROR );
+      goto abort_callback;
     }
     handle->bufferPointer[1] = nextReadPointer;
 
@@ -4977,6 +5034,12 @@ void RtApiDs :: callbackEvent()
   //  MUTEX_UNLOCK( &stream_.mutex );
 
   RtApi::tickStreamTime();
+  return;
+
+ abort_callback:
+  error( RtError::WARNING );
+  SetEvent( handle->condition );
+  stream_.callbackInfo.isRunning = false;  
 }
 
 // Definitions for utility functions and callbacks
