@@ -51,7 +51,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_COMMAND(0, wxEVT_METERS, GOrgueFrame::OnMeters)
 	EVT_COMMAND(0, wxEVT_LOADFILE, GOrgueFrame::OnLoadFile)
 	EVT_MENU_OPEN(GOrgueFrame::OnMenuOpen)
-	EVT_MENU(ID_FILE_OPEN, GOrgueFrame::OnOpen)
+	EVT_MENU(wxID_OPEN, GOrgueFrame::OnOpen)
 	EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9, GOrgueFrame::OnOpen)
 	EVT_MENU(ID_FILE_RELOAD, GOrgueFrame::OnReload)
 	EVT_MENU(ID_FILE_REVERT, GOrgueFrame::OnRevert)
@@ -135,7 +135,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	wxToolBar* tb = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
 	tb->SetToolBitmapSize(wxSize(16, 16));
 
-	AddTool(file_menu, ID_FILE_OPEN, _("&Open...\tCtrl+O"), _("Open"), GetImage_open());
+	AddTool(file_menu, wxID_OPEN, _("&Open...\tCtrl+O"), _("Open"), GetImage_open());
 	file_menu->Append(wxID_ANY, _("Open &Recent"), recent_menu);
 	file_menu->AppendSeparator();
 	AddTool(file_menu, ID_FILE_RELOAD, _("Re&load"), _("Reload"), GetImage_reload());
@@ -153,7 +153,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	AddTool(file_menu, ID_FILE_PROPERTIES, _("&Properties..."), _("Properties"), GetImage_properties());
 	file_menu->AppendSeparator();
 	AddTool(file_menu, wxID_EXIT, _("E&xit"));
-	tb->AddSeparator();
+	//tb->AddSeparator(); /* Disabled due to wxMac incompatibility */
 
 	wxMenu *preset_menu = new wxMenu;
 	for(unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
@@ -174,7 +174,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	//AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"), GetImage_help, sizeof(GetImage_help));
 	AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"));
 	AddTool(help_menu, wxID_ABOUT, _("&About"));
-	tb->AddSeparator();
+	//tb->AddSeparator(); /* Disabled due to wxMac incompatibility */
 
 	wxMenu *settings_menu = new wxMenu;
 	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
@@ -395,7 +395,7 @@ void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 
 void GOrgueFrame::OnOpen(wxCommandEvent& event)
 {
-	if (event.GetId() == ID_FILE_OPEN)
+	if (event.GetId() == wxID_OPEN)
 	{
 		GetDocumentManager()->SetLastDirectory(m_Settings.GetOrganPath());
 		ProcessCommand(wxID_OPEN);
