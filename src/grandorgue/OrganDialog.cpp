@@ -260,7 +260,7 @@ void OrganDialog::FillTree()
 				GOrguePipe* pipe = stop->GetPipe(k);
 				if (pipe->IsReference())
 					continue;
-				wxTreeItemId id_pipe = m_Tree->AppendItem(id_stop, pipe->GetFilename(), -1, -1, new OrganTreeItemData(pipe));
+				m_Tree->AppendItem(id_stop, pipe->GetFilename(), -1, -1, new OrganTreeItemData(pipe));
 			}
 		}
 		m_Tree->Expand(id_manual);
