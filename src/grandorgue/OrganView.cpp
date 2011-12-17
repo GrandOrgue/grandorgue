@@ -64,7 +64,8 @@ bool OrganView::CreateWindow()
 	{
 		wxIcon icon;
 		icon.CopyFromBitmap(GetImage_GOIcon());
-		wxDocChildFrame* frame = new wxDocChildFrame(m_doc, this, NULL, -1, organfile->GetPanel(m_panelID)->GetName());
+		wxDocChildFrame* frame = new wxDocChildFrame(m_doc, this, NULL, -1, organfile->GetPanel(m_panelID)->GetName(), wxDefaultPosition, wxDefaultSize, 
+							     wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE);
 		frame->SetIcon(icon);
 		m_frame = frame;
 		m_container = new wxScrolledWindow(m_frame);
