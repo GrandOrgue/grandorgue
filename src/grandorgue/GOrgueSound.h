@@ -67,6 +67,7 @@ private:
 	METER_INFO meter_info;
 
 	wxString defaultAudio;
+	wxString defaultAudioDevice;
 
 	GOrgueMidi* m_midi;
 	GrandOrgueFile* m_organfile;

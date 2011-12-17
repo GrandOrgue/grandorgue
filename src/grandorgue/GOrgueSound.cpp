@@ -40,7 +40,8 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	m_SamplesPerBuffer(0),
 	m_nb_buffers(0),
 	meter_counter(0),
-	defaultAudio(wxT("")),
+	defaultAudio(),
+	defaultAudioDevice(),
 	m_organfile(0),
 	m_Settings(settings)
 {
@@ -67,7 +68,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 				wxString name = wxString(GOrgueRtHelpers::GetApiName(rtaudio_apis[k])) + wxString(wxT(": ")) + dev_name;
 
 				if (info.isDefaultOutput && defaultAudio.IsEmpty())
-					defaultAudio = name;
+					defaultAudioDevice = name;
 
 				unsigned sample_rate_index = info.sampleRates.size();
 
@@ -197,6 +198,12 @@ bool GOrgueSound::OpenSound()
 	{
 
 		m_midi->Open();
+
+		if (m_audioDevices.find(defaultAudio) == m_audioDevices.end())
+		{
+			defaultAudio = defaultAudioDevice;
+			m_Settings.SetDefaultAudioDevice(defaultAudio);
+		}
 
 		std::map<wxString, GO_SOUND_DEV_CONFIG>::iterator it;
 		it = m_audioDevices.find(defaultAudio);
