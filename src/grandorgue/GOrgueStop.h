@@ -38,6 +38,7 @@ private:
 	ptr_vector<GOrguePipe> m_Pipes;
 	std::vector<unsigned> m_KeyState;
 	unsigned m_ManualNumber;
+	unsigned m_FirstMidiNoteNumber;
 	bool m_Percussive;
 	unsigned m_FirstAccessiblePipeLogicalPipeNumber;
 	unsigned m_FirstAccessiblePipeLogicalKeyNumber;
@@ -46,7 +47,7 @@ private:
 	GOrguePipeConfig m_PipeConfig;
 
 public:
-	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number);
+	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number);
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
 	void Load(IniFileConfig& cfg, wxString group);

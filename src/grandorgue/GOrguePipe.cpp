@@ -32,6 +32,7 @@ GOrguePipe::GOrguePipe
 	,GOrgueStop* stop
 	,bool percussive
 	,int sampler_group_id
+	,unsigned midi_key_number
 	) :
 	m_OrganFile(organfile),
 	m_Stop(stop),
@@ -40,6 +41,7 @@ GOrguePipe::GOrguePipe
 	m_SamplerGroupID(sampler_group_id),
 	m_Filename(),
 	m_Percussive(percussive),
+	m_MidiKeyNumber(midi_key_number),
 	m_Reference(NULL),
 	m_SoundProvider(organfile->GetMemoryPool()),
 	m_PipeConfig(organfile, this)

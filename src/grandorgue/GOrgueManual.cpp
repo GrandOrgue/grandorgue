@@ -73,7 +73,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
 	m_stops.resize(0);
 	for (unsigned i = 0; i < m_nb_stops; i++)
 	{
-		m_stops.push_back(new GOrgueStop(m_organfile, m_manual_number));
+		m_stops.push_back(new GOrgueStop(m_organfile, m_manual_number, GetFirstLogicalKeyMIDINoteNumber()));
 		buffer.Printf(wxT("Stop%03d"), i + 1);
 		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(group, buffer, 1, 448));
 		m_stops[i]->Load(cfg, buffer);

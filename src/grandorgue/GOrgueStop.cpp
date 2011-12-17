@@ -24,17 +24,18 @@
 #include "GOrguePipe.h"
 #include "GrandOrgueFile.h"
 
-GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number) :
-        GOrgueDrawstop(organfile),
-        m_Pipes(0),
-        m_KeyState(0),
-        m_ManualNumber(manual_number),
-        m_Percussive(false),
-        m_FirstAccessiblePipeLogicalPipeNumber(0),
-        m_FirstAccessiblePipeLogicalKeyNumber(0),
-        m_NumberOfAccessiblePipes(0),
-        m_WindchestGroup(0),
-        m_PipeConfig(organfile, this)
+GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number) :
+	GOrgueDrawstop(organfile),
+	m_Pipes(0),
+	m_KeyState(0),
+	m_ManualNumber(manual_number),
+	m_FirstMidiNoteNumber(first_midi_note_number),
+	m_Percussive(false),
+	m_FirstAccessiblePipeLogicalPipeNumber(0),
+	m_FirstAccessiblePipeLogicalKeyNumber(0),
+	m_NumberOfAccessiblePipes(0),
+	m_WindchestGroup(0),
+	m_PipeConfig(organfile, this)
 {
 }
 
@@ -105,6 +106,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
                                 ,this
                                 ,m_Percussive
                                 ,m_WindchestGroup
+				,m_FirstMidiNoteNumber + m_FirstAccessiblePipeLogicalKeyNumber + i - 1
                                 )
                         );
                 m_Pipes[i]->Load(cfg, group, buffer);
