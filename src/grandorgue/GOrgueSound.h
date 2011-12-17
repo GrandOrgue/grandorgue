@@ -29,6 +29,7 @@
 #include <vector>
 #include "ptrvector.h"
 #include "RtAudio.h"
+#include "portaudio.h"
 #include "GrandOrgueDef.h"
 #include "GOSoundEngine.h"
 #include "GOSoundRecorder.h"
@@ -37,6 +38,8 @@ class GrandOrgueFile;
 class GOrgueMidi;
 class GOSoundThread;
 class GOrgueSettings;
+
+#define RTAPI_PORTAUDIO ((RtAudio::Api)(RtAudio::RTAUDIO_DUMMY + 1))
 
 class GOrgueSound
 {
@@ -58,6 +61,7 @@ private:
 	bool logSoundErrors;
 
 	std::map<wxString, GO_SOUND_DEV_CONFIG> m_audioDevices;
+	PaStream* audioStream;
 	RtAudio* audioDevice;
 
 	unsigned m_SamplesPerBuffer;
@@ -94,6 +98,8 @@ private:
 		,RtAudioStreamStatus status
 		,void *userData
 		) STACK_REALIGN;
+
+	static int PaAudioCallback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData) STACK_REALIGN;
 
 	void StopThreads();
 	void StartThreads(unsigned windchests);

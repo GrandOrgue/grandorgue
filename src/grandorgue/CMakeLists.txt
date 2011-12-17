@@ -1,4 +1,5 @@
 include_directories(../rt/include)
+include_directories(../portaudio/include)
 
 # include wxWidgets
 if (STATIC)
@@ -171,6 +172,7 @@ else ()
 endif ()
 
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} RtAudio RtMidi)
+target_link_libraries(${PROJECT_NAME} PortAudio)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
