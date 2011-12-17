@@ -76,7 +76,9 @@
 #include "pa_debugprint.h"
 
 #include <windows.h>
+#ifndef __GNUC__
 #include <winioctl.h>
+#endif
 #include <process.h>
 
 #ifdef __GNUC__

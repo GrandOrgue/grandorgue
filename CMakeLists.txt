@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-project(GrandOrgue CXX)
+project(GrandOrgue CXX C)
 
 # Build configuration options
 if (NOT DEFINED UNICODE)
@@ -23,6 +23,15 @@ if (NOT DEFINED RTAUDIO_USE_DSOUND)
 endif ()
 if (NOT DEFINED RTAUDIO_USE_ASIO)
   set(RTAUDIO_USE_ASIO ON)
+endif ()
+if (NOT DEFINED RTAUDIO_USE_WMME)
+  set(RTAUDIO_USE_WMME ON)
+endif ()
+if (NOT DEFINED RTAUDIO_USE_WDMKS)
+  set(RTAUDIO_USE_WDMKS ON)
+endif ()
+if (NOT DEFINED RTAUDIO_USE_WASAPI)
+  set(RTAUDIO_USE_WASAPI ON)
 endif ()
 if (NOT DEFINED RTMIDI_USE_CORE)
   set(RTMIDI_USE_CORE ON)
@@ -102,6 +111,7 @@ endif ()
 
 # include RtAudio
 add_subdirectory(src/rt lib/rt)
+add_subdirectory(src/portaudio lib/portaudio)
 add_subdirectory(src/grandorgue bin)
 add_subdirectory(po)
 add_subdirectory(help)

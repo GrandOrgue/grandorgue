@@ -118,7 +118,7 @@
         #define __MIDL_CONST const
     #endif
 
-    #ifdef WIN64
+    #if defined(WIN64) || defined(__GNUC__) || defined(__GNUG__)
         #include <wtypes.h>
         typedef LONG NTSTATUS;
         #define FASTCALL
