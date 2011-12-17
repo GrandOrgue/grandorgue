@@ -47,6 +47,7 @@ private:
 	int m_SamplerGroupID;
 	wxString m_Filename;
 	bool m_Percussive;
+	unsigned m_MidiKeyNumber;
 	GOrguePipe* m_Reference;
 	GOSoundProviderWave m_SoundProvider;
 	GOrguePipeConfig m_PipeConfig;
@@ -56,7 +57,7 @@ private:
 	GOSoundProvider* GetSoundProvider();
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, GOrgueStop* m_Stop, bool percussive, int sampler_group_id);
+	GOrguePipe(GrandOrgueFile* organfile, GOrgueStop* m_Stop, bool percussive, int sampler_group_id, unsigned midi_key_number);
 	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
