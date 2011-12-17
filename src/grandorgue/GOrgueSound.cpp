@@ -36,6 +36,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	format(0),
 	logSoundErrors(false),
 	m_audioDevices(),
+	audioStream(NULL),
 	audioDevice(NULL),
 	m_SamplesPerBuffer(0),
 	m_nb_buffers(0),
@@ -110,6 +111,22 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 		CloseSound();
 	}
 
+	Pa_Initialize();
+	
+	for(int i = 0; i < Pa_GetDeviceCount(); i++)
+	{
+		const PaDeviceInfo* info = Pa_GetDeviceInfo(i);
+		const PaHostApiInfo *api = Pa_GetHostApiInfo(info->hostApi);
+		if (info->maxOutputChannels < 2)
+			continue;
+		GO_SOUND_DEV_CONFIG cfg;
+		cfg.rt_api = RTAPI_PORTAUDIO;
+		cfg.rt_api_subindex = i;
+		wxString name = wxGetTranslation(wxString::FromAscii(api->name)) + wxString(wxT(": ")) + wxString::FromAscii(info->name);
+		m_audioDevices[name] = cfg;
+		if (Pa_GetDefaultOutputDevice() == i)
+			defaultAudioDevice = name;
+	}
 }
 
 GOrgueSound::~GOrgueSound()
@@ -133,6 +150,7 @@ GOrgueSound::~GOrgueSound()
 		wxLogError(_("RtAudio error: %s"), error.c_str());
 	}
 
+	Pa_Terminate ();
 }
 
 void GOrgueSound::StartThreads(unsigned windchests)
@@ -212,8 +230,36 @@ bool GOrgueSound::OpenSound()
 			GetEngine().SetSampleRate(sample_rate);
 			m_recorder.SetSampleRate(sample_rate);
 
+			m_SamplesPerBuffer = 256;
 			unsigned try_latency = m_Settings.GetAudioDeviceLatency(defaultAudio);
 
+			if (it->second.rt_api == RTAPI_PORTAUDIO)
+			{
+				format = RTAUDIO_FLOAT32;
+				PaStreamParameters stream_parameters;
+				stream_parameters.device = it->second.rt_api_subindex;
+				stream_parameters.channelCount = 2;
+				stream_parameters.sampleFormat = paFloat32;
+				stream_parameters.suggestedLatency = try_latency / 1000.0;
+				stream_parameters.hostApiSpecificStreamInfo = NULL;
+
+				PaError error;
+				error = Pa_OpenStream(&audioStream, NULL, &stream_parameters, sample_rate, m_SamplesPerBuffer,
+						      paNoFlag, &GOrgueSound:: PaAudioCallback, this);
+				if (error != paNoError)
+					throw (wxString)wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error)));
+				
+				error = Pa_StartStream(audioStream);
+				if (error != paNoError)
+					throw (wxString)wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error)));
+
+				const struct PaStreamInfo* info = Pa_GetStreamInfo(audioStream);
+				m_Settings.SetAudioDeviceActualLatency(defaultAudio, (int)(info->outputLatency * 1000));
+
+				GetEngine().SetSampleRate(sample_rate);
+				m_recorder.SetSampleRate(sample_rate);
+			}
+			else
 			{
 				audioDevice = new RtAudio(it->second.rt_api);
 
@@ -302,6 +348,12 @@ void GOrgueSound::CloseSound()
 			audioDevice->closeStream();
 			delete audioDevice;
 			audioDevice = 0;
+		}
+		if (audioStream)
+		{
+			Pa_AbortStream(audioStream);
+			Pa_CloseStream(audioStream);
+			audioStream = 0;
 		}
 	}
 	catch (RtError &e)
@@ -509,6 +561,33 @@ GOrgueSound::AudioCallback
 		,streamTime
 		);
 
+}
+
+int GOrgueSound::PaAudioCallback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
+{
+	assert(userData);
+
+	if (frameCount & (BLOCKS_PER_FRAME - 1))
+	{
+		wxString error;
+		error.Printf
+			(_("Audio callback of %u blocks requested. Must be divisible by %u.")
+			,frameCount
+			,BLOCKS_PER_FRAME
+			);
+		throw error;
+	}
+
+	int ret = static_cast<GOrgueSound*>(userData)->AudioCallbackLocal
+		(static_cast<float*>(output)
+		,frameCount
+		,0*timeInfo->currentTime
+		);
+
+	if (!ret)
+		return paContinue;
+	else
+		return paAbort;
 }
 
 GOSoundEngine& GOrgueSound::GetEngine()
