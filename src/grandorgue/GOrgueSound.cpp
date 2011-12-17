@@ -212,50 +212,53 @@ bool GOrgueSound::OpenSound()
 			GetEngine().SetSampleRate(sample_rate);
 			m_recorder.SetSampleRate(sample_rate);
 
-			audioDevice = new RtAudio(it->second.rt_api);
-
 			unsigned try_latency = m_Settings.GetAudioDeviceLatency(defaultAudio);
-			GOrgueRtHelpers::GetBufferConfig(it->second.rt_api, try_latency, sample_rate, &m_nb_buffers, &m_SamplesPerBuffer);
 
-			RtAudio::StreamParameters aOutputParam;
-			aOutputParam.deviceId = it->second.rt_api_subindex;
-			aOutputParam.nChannels = 2; //stereo
-
-			RtAudio::StreamOptions aOptions;
-			aOptions.numberOfBuffers = m_nb_buffers;
-
-			format = RTAUDIO_FLOAT32;
-			audioDevice->openStream
-				(&aOutputParam
-				,NULL
-				,format
-				,sample_rate
-				,&m_SamplesPerBuffer
-				,&GOrgueSound::AudioCallback
-				,this
-				,&aOptions
-				);
-
-			m_nb_buffers = aOptions.numberOfBuffers;
-
-			if (m_SamplesPerBuffer <= 1024)
 			{
-				audioDevice->startStream();
-				m_Settings.SetAudioDeviceActualLatency(defaultAudio, GetLatency());
-			}
-			else
-				throw (wxString)_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
+				audioDevice = new RtAudio(it->second.rt_api);
 
-			if (m_SamplesPerBuffer & (BLOCKS_PER_FRAME - 1))
-			{
-				wxLogWarning
-					(_("Audio engine wants frame size of %u blocks which is indivisible by %u.")
-					,m_SamplesPerBuffer
-					,BLOCKS_PER_FRAME
-					);
+				GOrgueRtHelpers::GetBufferConfig(it->second.rt_api, try_latency, sample_rate, &m_nb_buffers, &m_SamplesPerBuffer);
+
+				RtAudio::StreamParameters aOutputParam;
+				aOutputParam.deviceId = it->second.rt_api_subindex;
+				aOutputParam.nChannels = 2; //stereo
+
+				RtAudio::StreamOptions aOptions;
+				aOptions.numberOfBuffers = m_nb_buffers;
+
+				format = RTAUDIO_FLOAT32;
+				audioDevice->openStream
+					(&aOutputParam
+					 ,NULL
+					 ,format
+					 ,sample_rate
+					 ,&m_SamplesPerBuffer
+					 ,&GOrgueSound::AudioCallback
+					 ,this
+					 ,&aOptions
+					 );
+
+				m_nb_buffers = aOptions.numberOfBuffers;
+
+				if (m_SamplesPerBuffer <= 1024)
+				{
+					audioDevice->startStream();
+					m_Settings.SetAudioDeviceActualLatency(defaultAudio, GetLatency());
+				}
+				else
+					throw (wxString)_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
+
+				if (m_SamplesPerBuffer & (BLOCKS_PER_FRAME - 1))
+				{
+					wxLogWarning
+						(_("Audio engine wants frame size of %u blocks which is indivisible by %u.")
+						 ,m_SamplesPerBuffer
+						 ,BLOCKS_PER_FRAME
+						 );
+				}
+				GetEngine().SetSampleRate(audioDevice->getStreamSampleRate());
+				m_recorder.SetSampleRate(audioDevice->getStreamSampleRate());
 			}
-			GetEngine().SetSampleRate(audioDevice->getStreamSampleRate());
-			m_recorder.SetSampleRate(audioDevice->getStreamSampleRate());
 		}
 		else
 			throw (wxString)_("No audio device is selected; neither MIDI input nor sound output will occur!");
