@@ -268,14 +268,14 @@ bool GOrgueSound::OpenSound()
 		if (logSoundErrors)
 		{
 			wxString error = wxString::FromAscii(e.getMessage().c_str());
-			wxLogError(_("RtAudio error: %s"), error.c_str());
+			wxMessageBox(wxString::Format(_("RtAudio error: %s"), error.c_str()), _("Error"), wxOK | wxICON_ERROR, NULL);
 		}
 	}
 	catch (wxString &msg)
 	{
 		if (logSoundErrors)
 		{
-			wxLogError(wxT("%s"), msg.c_str());
+			wxMessageBox(msg, _("Error"), wxOK | wxICON_ERROR, NULL);
 		}
 	}
 
