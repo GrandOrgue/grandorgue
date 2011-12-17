@@ -70,3 +70,12 @@ result = _("Bad buffer pointer");
 result = _("Invalid error code (value greater than zero)"); 
 result = _("Invalid error code"); 
 
+name = _("ALSA");
+name = _("ASIO");
+name = _("Core Audio");
+name = _("Windows DirectSound");
+name = _("JACK Audio Connection Kit");
+name = _("OSS");
+name = _("Windows WASAPI");
+name = _("Windows WDM-KS");
+name = _("MME");
