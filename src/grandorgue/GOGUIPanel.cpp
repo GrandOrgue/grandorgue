@@ -121,8 +121,8 @@ void GOGUIPanel::Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString
 	m_controls.resize(0);
 	m_group = group;
 
-	int x = cfg.ReadInteger(m_group, wxT("WindowX"), 0, 10000, false, 0);
-	int y = cfg.ReadInteger(m_group, wxT("WindowY"), 0, 10000, false, 0);
+	int x = cfg.ReadInteger(m_group, wxT("WindowX"), -20, 10000, false, 0);
+	int y = cfg.ReadInteger(m_group, wxT("WindowY"), -20, 10000, false, 0);
 	int w = cfg.ReadInteger(m_group, wxT("WindowWidth"), 0, 10000, false, 0);
 	int h = cfg.ReadInteger(m_group, wxT("WindowHeight"), 0, 10000, false, 0);
 	m_size = wxRect(x, y, w, h);
@@ -432,8 +432,8 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 		}
 	}
 
-	int x = cfg.ReadInteger(m_group, wxT("WindowX"), 0, 10000, false, 0);
-	int y = cfg.ReadInteger(m_group, wxT("WindowY"), 0, 10000, false, 0);
+	int x = cfg.ReadInteger(m_group, wxT("WindowX"), -20, 10000, false, 0);
+	int y = cfg.ReadInteger(m_group, wxT("WindowY"), -20, 10000, false, 0);
 	int w = cfg.ReadInteger(m_group, wxT("WindowWidth"), 0, 10000, false, 0);
 	int h = cfg.ReadInteger(m_group, wxT("WindowHeight"), 0, 10000, false, 0);
 	m_size = wxRect(x, y, w, h);
@@ -511,8 +511,14 @@ void GOGUIPanel::Save(IniFileConfig& cfg, bool prefix)
 			parent = parent->GetParent();
 
 		wxRect size = parent->GetRect();
-		cfg.SaveHelper(prefix, m_group, wxT("WindowX"), size.GetLeft());
-		cfg.SaveHelper(prefix, m_group, wxT("WindowY"), size.GetTop());
+		int x = size.GetLeft();
+		int y = size.GetTop();
+		if (x < -20)
+			x = -20;
+		if (y < -20)
+			y = -20;
+		cfg.SaveHelper(prefix, m_group, wxT("WindowX"), x);
+		cfg.SaveHelper(prefix, m_group, wxT("WindowY"), y);
 		cfg.SaveHelper(prefix, m_group, wxT("WindowWidth"), size.GetWidth());
 		cfg.SaveHelper(prefix, m_group, wxT("WindowHeight"), size.GetHeight());
 	}
