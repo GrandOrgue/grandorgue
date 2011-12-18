@@ -230,8 +230,12 @@ bool GOrgueSound::OpenSound()
 			GetEngine().SetSampleRate(sample_rate);
 			m_recorder.SetSampleRate(sample_rate);
 
-			m_SamplesPerBuffer = 256;
 			unsigned try_latency = m_Settings.GetAudioDeviceLatency(defaultAudio);
+			m_SamplesPerBuffer = BLOCKS_PER_FRAME * ceil (sample_rate * try_latency / 1000.0 / BLOCKS_PER_FRAME);
+			if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
+				m_SamplesPerBuffer = MAX_FRAME_SIZE;
+			if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
+				m_SamplesPerBuffer = BLOCKS_PER_FRAME;
 
 			if (it->second.rt_api == RTAPI_PORTAUDIO)
 			{
