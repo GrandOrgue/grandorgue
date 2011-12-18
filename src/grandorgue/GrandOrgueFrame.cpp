@@ -36,6 +36,7 @@
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
+#include "GOrgueTemperament.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 #include "OrganDialog.h"
@@ -77,6 +78,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	// End
 	EVT_MENU_RANGE(ID_PANEL_FIRST, ID_PANEL_LAST, GOrgueFrame::OnPanel)
 	EVT_MENU_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnPreset)
+	EVT_MENU_RANGE(ID_TEMPERAMENT_0, ID_TEMPERAMENT_LAST, GOrgueFrame::OnTemperament)
 	EVT_SIZE(GOrgueFrame::OnSize)
 	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
@@ -93,6 +95,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_UPDATE_UI(wxID_SAVE, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnUpdateLoaded)
+	EVT_UPDATE_UI_RANGE(ID_TEMPERAMENT_0, ID_TEMPERAMENT_LAST, GOrgueFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
 
 void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString)
@@ -117,6 +120,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_Polyphony(NULL),
 	m_SetterPosition(NULL),
 	m_Volume(NULL),
+	m_TemperamentNames(),
 	m_Sound(sound),
 	m_Settings(sound.GetSettings())
 {
@@ -159,11 +163,17 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	for(unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
 		preset_menu->Append(i,  wxString::Format(_("Preset %d"), i - ID_PRESET_0), wxEmptyString, wxITEM_CHECK);
 
+	m_TemperamentNames = GOrgueTemperament::GetNames();
+	wxMenu *temperament_menu = new wxMenu;
+	for(unsigned i = 0; i < m_TemperamentNames.size(); i++)
+		temperament_menu->Append(ID_TEMPERAMENT_0 + i, wxGetTranslation(m_TemperamentNames[i]), wxEmptyString, wxITEM_CHECK);
+
 	wxMenu *audio_menu = new wxMenu;
 	AddTool(audio_menu, ID_AUDIO_RECORD, _("&Record...\tCtrl+R"), _("Record"), GetImage_record(), wxITEM_CHECK);
 	AddTool(audio_menu, ID_AUDIO_MEMSET, _("&Memory Set\tShift"), _("Memory Set"), GetImage_set(), wxITEM_CHECK);
 	audio_menu->AppendSeparator();
 	audio_menu->AppendSubMenu(preset_menu, _("Pr&eset"));
+	audio_menu->AppendSubMenu(temperament_menu, _("&Temperament"));
 	AddTool(audio_menu, ID_ORGAN_EDIT, _("&Organ settings"));
 	audio_menu->AppendSeparator();
 	AddTool(audio_menu, ID_AUDIO_PANIC, _("&Panic\tEscape"), _("Panic"), GetImage_panic());
@@ -367,6 +377,13 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		return;
 	}
 
+	if (ID_TEMPERAMENT_0 <= event.GetId() && event.GetId() <= ID_TEMPERAMENT_LAST)
+	{
+		event.Enable(organfile);
+		event.Check(organfile && m_TemperamentNames[event.GetId() - ID_TEMPERAMENT_0] == organfile->GetTemperament());
+		return;
+	}
+
 	if (event.GetId() == ID_AUDIO_RECORD)
 		event.Check(m_Sound.IsRecording());
 	else if (event.GetId() == ID_AUDIO_MEMSET)
@@ -386,6 +403,16 @@ void GOrgueFrame::OnPreset(wxCommandEvent& event)
 	m_Settings.SetPreset(id);
 	if (m_docManager->GetCurrentDocument())
 		ProcessCommand(wxID_FILE1);
+}
+
+void GOrgueFrame::OnTemperament(wxCommandEvent& event)
+{
+	unsigned id = event.GetId() - ID_TEMPERAMENT_0;
+	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	if (!doc)
+		return;
+
+	doc->GetOrganFile()->SetTemperament(m_TemperamentNames[id]);
 }
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
