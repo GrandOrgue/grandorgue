@@ -172,7 +172,7 @@ void stereoUncompressed
 	typedef T stereoSample[0][2];
 
 	// "borrow" the output buffer to compute release alignment info
-	stereoSample& input = (stereoSample&)*(T*)(sampler->pipe_section->data);
+	stereoSample& input = (stereoSample&)*(T*)(sampler->pipe_section->m_Data);
 
 	// copy the sample buffer
 	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; sampler->position += sampler->increment, output += 2, i++)
@@ -201,7 +201,7 @@ void monoUncompressed
 	)
 {
 	// copy the sample buffer
-	T* input = (T*)(sampler->pipe_section->data);
+	T* input = (T*)(sampler->pipe_section->m_Data);
 	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; i++, sampler->position += sampler->increment, output += 2)
 	{
 		unsigned pos = (unsigned)sampler->position;
@@ -234,7 +234,7 @@ void monoCompressed
 		sampler->last_value[0] = 0;
 		sampler->curr_value[0] = 0;
 		sampler->next_value[0] = 0;
-		sampler->ptr = sampler->pipe_section->data;
+		sampler->ptr = sampler->pipe_section->m_Data;
 	}
 	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; i++, sampler->position += sampler->increment, output += 2)
 	{
@@ -298,7 +298,7 @@ void stereoCompressed
 		sampler->curr_value[1] = 0;
 		sampler->next_value[0] = 0;
 		sampler->next_value[1] = 0;
-		sampler->ptr = sampler->pipe_section->data;
+		sampler->ptr = sampler->pipe_section->m_Data;
 	}
 
 	// copy the sample buffer
@@ -354,7 +354,7 @@ void GetNextFrame
 	)
 {
 
-	switch (sampler->pipe_section->type)
+	switch (sampler->pipe_section->m_Type)
 	{
 		case AC_UNCOMPRESSED8_MONO:
 			monoUncompressed<wxInt8>(sampler, buffer);
@@ -415,7 +415,7 @@ void GOSoundEngine::ReadSamplerFrames
 
 		GetNextFrame(sampler, decoded_sampler_audio_frame);
 
-		if (sampler->pipe_section->stage == GSS_RELEASE)
+		if (sampler->pipe_section->m_Stage == GSS_RELEASE)
 		{
 
 			/* If this is the end of the release, and there are no more
@@ -423,17 +423,17 @@ void GOSoundEngine::ReadSamplerFrames
 			 * We can set the pipe to NULL and break out of this loop.
 			 */
 			assert(sampler->pipe);
-			if (sampler->position >= sampler->pipe->GetRelease()->sample_count)
+			if (sampler->position >= sampler->pipe->GetRelease()->m_SampleCount)
 				sampler->pipe = NULL;
 
 		}
 		else
 		{
-			unsigned currentBlockSize = sampler->pipe_section->sample_count;
+			unsigned currentBlockSize = sampler->pipe_section->m_SampleCount;
 			if (sampler->position >= currentBlockSize)
 			{
 				sampler->pipe_section = sampler->pipe->GetLoop();
-				if (sampler->pipe_section->data == NULL)
+				if (sampler->pipe_section->m_Data == NULL)
 				{
 					/* the pipe is percussive and the attack has completed
 					 * so we are therefore finished with this sampler. */
@@ -445,7 +445,7 @@ void GOSoundEngine::ReadSamplerFrames
 					 * attack segment has completed so we now (re)enter the
 					 * loop. */
 					sampler->position -= currentBlockSize;
-					sampler->increment = sampler->pipe->GetTuning() * sampler->pipe_section->sample_rate / (float) m_SampleRate;
+					sampler->increment = sampler->pipe->GetTuning() * sampler->pipe_section->m_SampleRate / (float) m_SampleRate;
 					sampler->ptr = NULL;
 				}
 			}
@@ -483,7 +483,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			if  (
 					(m_PolyphonyLimiting) &&
 					(m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
-					(sampler->pipe_section->stage == GSS_RELEASE) &&
+					(sampler->pipe_section->m_Stage == GSS_RELEASE) &&
 					(m_CurrentTime - sampler->time > 172)
 				)
 				FaderStartDecay(&sampler->fader, -13); /* Approx 0.37s at 44.1kHz */
@@ -724,11 +724,11 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 	{
 		sampler->pipe = pipe;
 		sampler->pipe_section = pipe->GetAttack();
-		sampler->increment = pipe->GetTuning() * sampler->pipe_section->sample_rate / (float) m_SampleRate;
+		sampler->increment = pipe->GetTuning() * sampler->pipe_section->m_SampleRate / (float) m_SampleRate;
 		sampler->position = 0;
 		memcpy
 			(sampler->history
-			,pipe->GetAttack()->history
+			,pipe->GetAttack()->m_History
 			,sizeof(sampler->history)
 			);
 		//	else
@@ -737,7 +737,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 		//		if (g_sound->HasRandomPipeSpeech() && !g_sound->windchests[m_WindchestGroup])
 		//			sampler->position = rand() & 0x78;
 		//	}
-		const float playback_gain = scalbnf(pipe->GetGain(), -sampler->pipe_section->sample_frac_bits);
+		const float playback_gain = scalbnf(pipe->GetGain(), -sampler->pipe_section->m_SampleFracBits);
 		FaderNewConstant(&sampler->fader, playback_gain);
 		sampler->time = m_CurrentTime;
 		StartSampler(sampler, sampler_group_id);
@@ -768,13 +768,13 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->pipe         = this_pipe;
 			new_sampler->pipe_section = release_section;
 			new_sampler->position     = 0;
-			new_sampler->increment    = this_pipe->GetTuning() * new_sampler->pipe_section->sample_rate / (float) m_SampleRate;
+			new_sampler->increment    = this_pipe->GetTuning() * new_sampler->pipe_section->m_SampleRate / (float) m_SampleRate;
 			new_sampler->time         = m_CurrentTime + 1;
 
 			int gain_decay_rate = 0;
 			float gain_target =
 					scalbnf(this_pipe->GetGain()
-					       ,-release_section->sample_frac_bits
+					       ,-release_section->m_SampleFracBits
 					       );
 
 			const bool not_a_tremulant = (handle->sampler_group_id >= 0);
@@ -801,16 +801,16 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				FaderStartDecay(&new_sampler->fader, gain_decay_rate);
 
 			/* FIXME: this must be enabled again at some point soon */
-			if (m_ReleaseAlignmentEnabled && (release_section->release_aligner != NULL))
+			if (m_ReleaseAlignmentEnabled && (release_section->m_ReleaseAligner != NULL))
 			{
-				release_section->release_aligner->SetupRelease(*new_sampler, *handle);
+				release_section->m_ReleaseAligner->SetupRelease(*new_sampler, *handle);
 			}
 			else
 			{
 				new_sampler->position = 0; //m_release.offset;
 				memcpy
 					(new_sampler->history
-					,release_section->history
+					,release_section->m_History
 					,sizeof(new_sampler->history)
 					);
 			}

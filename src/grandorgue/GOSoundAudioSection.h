@@ -55,27 +55,27 @@ class GOAudioSection
 
 public:
 	/* Size of the section in BYTES */
-	unsigned                   size;
-	unsigned                   alloc_size;
-	unsigned                   sample_count;
-	unsigned                   sample_rate;
+	unsigned                   m_Size;
+	unsigned                   m_AllocSize;
+	unsigned                   m_SampleCount;
+	unsigned                   m_SampleRate;
 
 	/* Type of the data which is stored in the data pointer */
-	AUDIO_SECTION_TYPE         type;
-	AUDIO_SECTION_STAGE        stage; /*overflowing,*/
+	AUDIO_SECTION_TYPE         m_Type;
+	AUDIO_SECTION_STAGE        m_Stage; /*overflowing,*/
 
 	/* The starting sample and derivatives for each channel (used in the
 	 * compression and release-alignment schemes */
-	int                        history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
+	int                        m_History[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
 
 	/* Pointer to (size) bytes of data encoded in the format (type) */
-	unsigned char             *data;
+	unsigned char             *m_Data;
 
 	/* If this is a release section, it may contain an alignment table */
-	GOrgueReleaseAlignTable   *release_aligner;
+	GOrgueReleaseAlignTable   *m_ReleaseAligner;
 
 	/* Number of significant bits in the decoded sample data */
-	unsigned                   sample_frac_bits;
+	unsigned                   m_SampleFracBits;
 
 	unsigned GetChannels() const;
 	unsigned GetBytesPerSample() const;
@@ -85,7 +85,7 @@ public:
 inline
 unsigned GOAudioSection::GetChannels() const
 {
-	switch (type)
+	switch (m_Type)
 	{
 		case AC_COMPRESSED8_STEREO:
 		case AC_COMPRESSED16_STEREO:
@@ -108,7 +108,7 @@ unsigned GOAudioSection::GetChannels() const
 inline
 unsigned GOAudioSection::GetBytesPerSample() const
 {
-	switch (type)
+	switch (m_Type)
 	{
 		case AC_UNCOMPRESSED8_STEREO:
 		case AC_UNCOMPRESSED8_MONO:

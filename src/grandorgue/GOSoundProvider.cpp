@@ -48,10 +48,10 @@ GOSoundProvider::~GOSoundProvider()
 
 void GOSoundProvider::ClearData()
 {
-	m_pool.Free(m_Attack.data);
-	m_pool.Free(m_Loop.data);
-	m_pool.Free(m_Release.data);
-	DELETE_AND_NULL(m_Release.release_aligner);
+	m_pool.Free(m_Attack.m_Data);
+	m_pool.Free(m_Loop.m_Data);
+	m_pool.Free(m_Release.m_Data);
+	DELETE_AND_NULL(m_Release.m_ReleaseAligner);
 	memset(&m_Attack, 0, sizeof(m_Attack));
 	memset(&m_Loop, 0, sizeof(m_Loop));
 	memset(&m_Release, 0, sizeof(m_Release));
@@ -62,13 +62,13 @@ bool GOSoundProvider::LoadCacheAudioSection
 {
 
 	bool result = cache.Read(section, sizeof(GOAudioSection));
-	section->release_aligner = NULL;
-	section->data = NULL;
+	section->m_ReleaseAligner = NULL;
+	section->m_Data = NULL;
 	if (!result)
 		return false;
 
-	section->data = (unsigned char*)cache.ReadBlock(section->alloc_size);
-	if (section->data == NULL)
+	section->m_Data = (unsigned char*)cache.ReadBlock(section->m_AllocSize);
+	if (section->m_Data == NULL)
 		return false;
 
 	if (load_align_tracker)
@@ -81,8 +81,8 @@ bool GOSoundProvider::LoadCacheAudioSection
 
 		if (has_align_tracker)
 		{
-			section->release_aligner = new GOrgueReleaseAlignTable();
-			if (!section->release_aligner->Load(cache))
+			section->m_ReleaseAligner = new GOrgueReleaseAlignTable();
+			if (!section->m_ReleaseAligner->Load(cache))
 				return false;
 		}
 
@@ -115,18 +115,18 @@ bool GOSoundProvider::SaveCacheAudioSection
 	if (!cache.Write(section, sizeof(GOAudioSection)))
 		return false;
 
-	if (!cache.WriteBlock(section->data, section->alloc_size))
+	if (!cache.WriteBlock(section->m_Data, section->m_AllocSize))
 		return false;
 
 	if (save_align_tracker)
 	{
 
-		bool has_align_tracker = section->release_aligner != NULL;
+		bool has_align_tracker = section->m_ReleaseAligner != NULL;
 		if (!cache.Write(&has_align_tracker, sizeof(has_align_tracker)))
 			return false;
 
 		if (has_align_tracker)
-			if (!section->release_aligner->Save(cache))
+			if (!section->m_ReleaseAligner->Save(cache))
 				return false;
 
 	}
@@ -158,7 +158,7 @@ void GOSoundProvider::GetMaxAmplitudeAndDerivative
 	)
 {
 	DecompressionCache cache;
-	unsigned int sectionLen = section.sample_count;
+	unsigned int sectionLen = section.m_SampleCount;
 	unsigned channels = section.GetChannels();
 
 	InitDecompressionCache(cache);
@@ -194,7 +194,7 @@ void GOSoundProvider::GetMaxAmplitudeAndDerivative
 void GOSoundProvider::ComputeReleaseAlignmentInfo()
 {
 
-	DELETE_AND_NULL(m_Release.release_aligner);
+	DELETE_AND_NULL(m_Release.m_ReleaseAligner);
 
 	/* Find the maximum amplitude and derivative of the waveform */
 	int phase_align_max_amplitude = 0;
@@ -206,8 +206,8 @@ void GOSoundProvider::ComputeReleaseAlignmentInfo()
 	if ((phase_align_max_derivative != 0) && (phase_align_max_amplitude != 0))
 	{
 
-		m_Release.release_aligner = new GOrgueReleaseAlignTable();
-		m_Release.release_aligner->ComputeTable
+		m_Release.m_ReleaseAligner = new GOrgueReleaseAlignTable();
+		m_Release.m_ReleaseAligner->ComputeTable
 			(m_Release
 			,phase_align_max_amplitude
 			,phase_align_max_derivative
@@ -220,7 +220,7 @@ void GOSoundProvider::ComputeReleaseAlignmentInfo()
 
 int GOSoundProvider::IsOneshot() const
 {
-	return (m_Loop.data == NULL);
+	return (m_Loop.m_Data == NULL);
 }
 
 void GOSoundProvider::SetTuning(float cent)
