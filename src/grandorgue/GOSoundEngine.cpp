@@ -45,6 +45,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_PolyphonyLimiting(true),
 	m_ScaledReleases(true),
 	m_ReleaseAlignmentEnabled(true),
+	m_RandomizeSpeaking(true),
 	m_Volume(100),
 	m_SampleRate(0),
 	m_CurrentTime(0),
@@ -122,6 +123,22 @@ int GOSoundEngine::GetVolume() const
 void GOSoundEngine::SetScaledReleases(bool enable)
 {
 	m_ScaledReleases = enable;
+}
+
+void GOSoundEngine::SetRandomizeSpeaking(bool enable)
+{
+	m_RandomizeSpeaking = enable;
+}
+
+float GOSoundEngine::GetRandomFactor()
+{
+	if (m_RandomizeSpeaking)
+	{
+		const double factor = (pow(2, 2.0 / 1200.0) - 1) / (RAND_MAX / 2);
+		int num = rand() - RAND_MAX / 2;
+		return  1 + num * factor;
+	}
+	return 1;
 }
 
 void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
@@ -445,7 +462,7 @@ void GOSoundEngine::ReadSamplerFrames
 					 * attack segment has completed so we now (re)enter the
 					 * loop. */
 					sampler->position -= currentBlockSize;
-					sampler->increment = sampler->pipe->GetTuning() * sampler->pipe_section->m_SampleRate / (float) m_SampleRate;
+					sampler->increment = GetRandomFactor() * sampler->pipe->GetTuning() * sampler->pipe_section->m_SampleRate / (float) m_SampleRate;
 					sampler->ptr = NULL;
 				}
 			}
@@ -724,7 +741,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 	{
 		sampler->pipe = pipe;
 		sampler->pipe_section = pipe->GetAttack();
-		sampler->increment = pipe->GetTuning() * sampler->pipe_section->m_SampleRate / (float) m_SampleRate;
+		sampler->increment = GetRandomFactor() * pipe->GetTuning() * sampler->pipe_section->m_SampleRate / (float) m_SampleRate;
 		sampler->position = 0;
 		memcpy
 			(sampler->history
@@ -768,7 +785,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->pipe         = this_pipe;
 			new_sampler->pipe_section = release_section;
 			new_sampler->position     = 0;
-			new_sampler->increment    = this_pipe->GetTuning() * new_sampler->pipe_section->m_SampleRate / (float) m_SampleRate;
+			new_sampler->increment    = GetRandomFactor() * this_pipe->GetTuning() * new_sampler->pipe_section->m_SampleRate / (float) m_SampleRate;
 			new_sampler->time         = m_CurrentTime + 1;
 
 			int gain_decay_rate = 0;

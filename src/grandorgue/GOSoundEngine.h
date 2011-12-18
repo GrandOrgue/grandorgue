@@ -101,6 +101,7 @@ private:
 	bool                          m_PolyphonyLimiting;
 	bool                          m_ScaledReleases;
 	bool                          m_ReleaseAlignmentEnabled;
+	bool                          m_RandomizeSpeaking;
 	int                           m_Volume;
 	unsigned                      m_SampleRate;
 	unsigned long                 m_CurrentTime;
@@ -124,6 +125,7 @@ private:
 	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, float* decoded_sampler_audio_frame);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, float* output_buffer);
 	void ResetDoneFlags();
+	float GetRandomFactor();
 
 public:
 
@@ -138,6 +140,7 @@ public:
 	unsigned GetHardPolyphony() const;
 	int GetVolume() const;
 	void SetScaledReleases(bool enable);
+	void SetRandomizeSpeaking(bool enable);
 
 	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
