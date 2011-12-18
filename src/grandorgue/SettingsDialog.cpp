@@ -135,13 +135,10 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	page2list->SetColumnWidth(3, 100);
 
 	page2list->SetColumnWidth(1, page2list->GetClientSize().GetWidth() - page2list->GetColumnWidth(0) - 108);
-
-	m_Sound.SetLogSoundErrorMessages(true);
 }
 
 SettingsDialog::~SettingsDialog()
 {
-	m_Sound.SetLogSoundErrorMessages(false);
 	if ((b_stereo != m_Settings.GetLoadInStereo() || 
 	     b_squash != m_Settings.GetLosslessCompression() ||
 	     m_OldBitsPerSample != m_Settings.GetBitsPerSample()) &&

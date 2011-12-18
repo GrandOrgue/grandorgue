@@ -34,7 +34,7 @@ GOrgueSound* g_sound = 0;
 
 GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	format(0),
-	logSoundErrors(false),
+	logSoundErrors(true),
 	m_audioDevices(),
 	audioStream(NULL),
 	audioDevice(NULL),

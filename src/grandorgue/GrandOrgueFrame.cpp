@@ -241,7 +241,9 @@ void GOrgueFrame::Init()
 {
 	Show(true);
 
+	m_Sound.SetLogSoundErrorMessages(false);
 	bool open_sound = m_Sound.OpenSound();
+	m_Sound.SetLogSoundErrorMessages(true);
 	if (!open_sound || !m_Sound.GetMidi().HasActiveDevice())
 	{
 		wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_AUDIO_SETTINGS);
