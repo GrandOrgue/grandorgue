@@ -49,45 +49,45 @@ static inline AUDIO_SECTION_TYPE GetAudioSectionType(unsigned bytes_per_sample, 
 
 static inline int GetAudioSectionSample(const GOAudioSection& release, unsigned position, unsigned channel, DecompressionCache* cache = NULL)
 {
-	switch (release.type)
+	switch (release.m_Type)
 	{
 		case AC_UNCOMPRESSED8_STEREO:
 		{
 			typedef wxInt8 stereoSample[0][2];
 	
-			stereoSample& samples = (stereoSample&)*(wxInt8*)release.data; 
+			stereoSample& samples = (stereoSample&)*(wxInt8*)release.m_Data;
 			return samples[position][channel];
 		}
 
 		case AC_UNCOMPRESSED8_MONO:
 		{
-			wxInt8* samples = ((wxInt8*)release.data);
+			wxInt8* samples = ((wxInt8*)release.m_Data);
 			return samples[position];
 		}
 		case AC_UNCOMPRESSED16_STEREO:
 		{
 			typedef wxInt16 stereoSample[0][2];
 	
-			stereoSample& samples = (stereoSample&)*(wxInt16*)release.data; 
+			stereoSample& samples = (stereoSample&)*(wxInt16*)release.m_Data;
 			return samples[position][channel];
 		}
 
 		case AC_UNCOMPRESSED16_MONO:
 		{
-			wxInt16* samples = ((wxInt16*)release.data);
+			wxInt16* samples = ((wxInt16*)release.m_Data);
 			return samples[position];
 		}
 		case AC_UNCOMPRESSED24_STEREO:
 		{
 			typedef Int24 stereoSample[0][2];
 	
-			stereoSample& samples = (stereoSample&)*(Int24*)release.data; 
+			stereoSample& samples = (stereoSample&)*(Int24*)release.m_Data;
 			return samples[position][channel];
 		}
 
 		case AC_UNCOMPRESSED24_MONO:
 		{
-			Int24* samples = ((Int24*)release.data);
+			Int24* samples = ((Int24*)release.m_Data);
 			return samples[position];
 		}
 
@@ -99,7 +99,7 @@ static inline int GetAudioSectionSample(const GOAudioSection& release, unsigned 
 				cache = &tmp;
 				InitDecompressionCache(*cache);
 			}
-			DecompressTo(*cache, position, release.data, 1, false);
+			DecompressTo(*cache, position, release.m_Data, 1, false);
 			return cache->value[0];
 		}
 
@@ -111,7 +111,7 @@ static inline int GetAudioSectionSample(const GOAudioSection& release, unsigned 
 				cache = &tmp;
 				InitDecompressionCache(*cache);
 			}
-			DecompressTo(*cache, position, release.data, 2, false);
+			DecompressTo(*cache, position, release.m_Data, 2, false);
 			return cache->value[channel];
 		}
 
@@ -123,7 +123,7 @@ static inline int GetAudioSectionSample(const GOAudioSection& release, unsigned 
 				cache = &tmp;
 				InitDecompressionCache(*cache);
 			}
-			DecompressTo(*cache, position, release.data, 1, true);
+			DecompressTo(*cache, position, release.m_Data, 1, true);
 			return cache->value[0];
 		}
 
@@ -135,7 +135,7 @@ static inline int GetAudioSectionSample(const GOAudioSection& release, unsigned 
 				cache = &tmp;
 				InitDecompressionCache(*cache);
 			}
-			DecompressTo(*cache, position, release.data, 2, true);
+			DecompressTo(*cache, position, release.m_Data, 2, true);
 			return cache->value[channel];
 		}
 

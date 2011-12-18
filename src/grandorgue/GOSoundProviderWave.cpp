@@ -44,7 +44,7 @@ void GOSoundProviderWave::SetAmplitude(int fixed_amplitude)
 
 void GOSoundProviderWave::Compress(GOAudioSection& section, bool format16)
 {
-	unsigned char* data = (unsigned char*)malloc(section.alloc_size);
+	unsigned char* data = (unsigned char*)malloc(section.m_AllocSize);
 	unsigned output_len = 0;
 	if (!data)
 		return;
@@ -55,7 +55,7 @@ void GOSoundProviderWave::Compress(GOAudioSection& section, bool format16)
 	memset(last, 0, sizeof(last));
 
 	unsigned channels = section.GetChannels();
-	for(unsigned i = 0; i < section.sample_count + EXTRA_FRAMES; i++)
+	for(unsigned i = 0; i < section.m_SampleCount + EXTRA_FRAMES; i++)
 		for(unsigned j = 0; j < channels; j++)
 		{
 			int val = GetAudioSectionSample(section, i, j);
@@ -68,7 +68,7 @@ void GOSoundProviderWave::Compress(GOAudioSection& section, bool format16)
 			else
 				AudioWriteCompressed8(data, output_len, encode);
 
-			if (output_len + 10 >= section.alloc_size)
+			if (output_len + 10 >= section.m_AllocSize)
 			{
 				free(data);
 				return;
@@ -84,14 +84,14 @@ void GOSoundProviderWave::Compress(GOAudioSection& section, bool format16)
 	if (false) 	/* Verifcation of compression code */
 	{
 		GOAudioSection new_section = section;
-		new_section.data = data;
-		new_section.size = output_len;
-		new_section.alloc_size = output_len;
+		new_section.m_Data = data;
+		new_section.m_Size = output_len;
+		new_section.m_AllocSize = output_len;
 		DecompressionCache tmp;
 		InitDecompressionCache(tmp);
-		new_section.type = type;
+		new_section.m_Type = type;
 
-		for(unsigned i = 0; i < section.sample_count + EXTRA_FRAMES; i++)
+		for(unsigned i = 0; i < section.m_SampleCount + EXTRA_FRAMES; i++)
 			for(unsigned j = 0; j < channels; j++)
 			{
 				int old_value = GetAudioSectionSample(section, i, j);
@@ -100,14 +100,14 @@ void GOSoundProviderWave::Compress(GOAudioSection& section, bool format16)
 					wxLogError(wxT("%d %d: %d %d"), i, j, old_value, new_value);
 			}
 	
-		wxLogError(wxT("Compress: %d %d"), section.alloc_size, output_len);
+		wxLogError(wxT("Compress: %d %d"), section.m_AllocSize, output_len);
 	}
 
-	section.data = (unsigned char*)m_pool.Realloc(section.data, section.alloc_size, output_len);
-	memcpy(section.data, data, output_len);
-	section.size = output_len;
-	section.alloc_size = output_len;
-	section.type = type;
+	section.m_Data = (unsigned char*)m_pool.Realloc(section.m_Data, section.m_AllocSize, output_len);
+	memcpy(section.m_Data, data, output_len);
+	section.m_Size = output_len;
+	section.m_AllocSize = output_len;
+	section.m_Type = type;
 	free(data);
 }
 
@@ -155,15 +155,15 @@ void GOSoundProviderWave::LoadFromFile
 	if (!stereo)
 		channels = 1;
 
-	m_Attack.sample_frac_bits  = bits_per_sample - 1;
-	m_Attack.stage             = GSS_ATTACK;
-	m_Attack.type              = GetAudioSectionType(bytes_per_sample, channels);
-	m_Loop.sample_frac_bits    = bits_per_sample - 1;
-	m_Loop.stage               = GSS_LOOP;
-	m_Loop.type                = GetAudioSectionType(bytes_per_sample, channels);
-	m_Release.sample_frac_bits = bits_per_sample - 1;
-	m_Release.stage            = GSS_RELEASE;
-	m_Release.type             = GetAudioSectionType(bytes_per_sample, channels);
+	m_Attack.m_SampleFracBits    = bits_per_sample - 1;
+	m_Attack.m_Stage             = GSS_ATTACK;
+	m_Attack.m_Type              = GetAudioSectionType(bytes_per_sample, channels);
+	m_Loop.m_SampleFracBits      = bits_per_sample - 1;
+	m_Loop.m_Stage               = GSS_LOOP;
+	m_Loop.m_Type                = GetAudioSectionType(bytes_per_sample, channels);
+	m_Release.m_SampleFracBits   = bits_per_sample - 1;
+	m_Release.m_Stage            = GSS_RELEASE;
+	m_Release.m_Type             = GetAudioSectionType(bytes_per_sample, channels);
 
 	try
 	{
@@ -200,23 +200,23 @@ void GOSoundProviderWave::LoadFromFile
 			 * copy some slack samples from the beginning of the loop onto
 			 * the end to ensure correct operation of the sampler.
 			 */
-			m_Loop.size = loopSamples * bytes_per_sample * channels;
-			m_Loop.alloc_size = loopSamplesInMem * bytes_per_sample * channels;
-			m_Loop.data = (unsigned char*)m_pool.Alloc(m_Loop.alloc_size);
-			if (m_Loop.data == NULL)
+			m_Loop.m_Size = loopSamples * bytes_per_sample * channels;
+			m_Loop.m_AllocSize = loopSamplesInMem * bytes_per_sample * channels;
+			m_Loop.m_Data = (unsigned char*)m_pool.Alloc(m_Loop.m_AllocSize);
+			if (m_Loop.m_Data == NULL)
 				throw (wxString)_("< out of memory allocating loop");
-			m_Loop.sample_rate = m_SampleRate;
-			m_Loop.sample_count = loopSamples;
+			m_Loop.m_SampleRate = m_SampleRate;
+			m_Loop.m_SampleCount = loopSamples;
 
 			memcpy
-				(m_Loop.data
+				(m_Loop.m_Data
 				,data + bytes_per_sample * loopStart * channels
-				,m_Loop.size
+				,m_Loop.m_Size
 				);
 			memcpy
-				(&m_Loop.data[m_Loop.size]
+				(&m_Loop.m_Data[m_Loop.m_Size]
 				,data + bytes_per_sample * loopStart * channels
-				,loopSamplesInMem * bytes_per_sample * channels - m_Loop.size
+				,loopSamplesInMem * bytes_per_sample * channels - m_Loop.m_Size
 				);
 
 			if (compress && bytes_per_sample == 3)
@@ -233,23 +233,23 @@ void GOSoundProviderWave::LoadFromFile
 			 * pad the slack samples with zeroes to ensure correct operation
 			 * of the sampler.
 			 */
-			m_Release.size = releaseSamples * bytes_per_sample * channels;
-			m_Release.alloc_size = releaseSamplesInMem * bytes_per_sample * channels;
-			m_Release.data = (unsigned char*)m_pool.Alloc(m_Release.alloc_size);
-			if (m_Release.data == NULL)
+			m_Release.m_Size = releaseSamples * bytes_per_sample * channels;
+			m_Release.m_AllocSize = releaseSamplesInMem * bytes_per_sample * channels;
+			m_Release.m_Data = (unsigned char*)m_pool.Alloc(m_Release.m_AllocSize);
+			if (m_Release.m_Data == NULL)
 				throw (wxString)_("< out of memory allocating release");
-			m_Release.sample_rate = m_SampleRate;
-			m_Release.sample_count = releaseSamples;
+			m_Release.m_SampleRate = m_SampleRate;
+			m_Release.m_SampleCount = releaseSamples;
 
 			memcpy
-				(m_Release.data
+				(m_Release.m_Data
 				,data + bytes_per_sample * (wave.GetLength() - releaseSamples) * channels
-				,m_Release.size
+				,m_Release.m_Size
 				);
 			memset
-				(&m_Release.data[m_Release.size]
+				(&m_Release.m_Data[m_Release.m_Size]
 				,0
-				,releaseSamplesInMem * bytes_per_sample * channels - m_Release.size
+				,releaseSamplesInMem * bytes_per_sample * channels - m_Release.m_Size
 				);
 
 			if (compress && bytes_per_sample == 3)
@@ -261,19 +261,19 @@ void GOSoundProviderWave::LoadFromFile
 		/* Allocate memory for the attack. */
 		assert(attackSamples != 0);
 		unsigned attackSamplesInMem = attackSamples + EXTRA_FRAMES;
-		m_Attack.size = attackSamples * bytes_per_sample * channels;
-		m_Attack.alloc_size = attackSamplesInMem * bytes_per_sample * channels;
-		assert((unsigned)m_Attack.size <= totalDataSize); /* can be equal for percussive samples */
-		m_Attack.data = (unsigned char*)m_pool.Alloc(m_Attack.alloc_size);
-		if (m_Attack.data == NULL)
+		m_Attack.m_Size = attackSamples * bytes_per_sample * channels;
+		m_Attack.m_AllocSize = attackSamplesInMem * bytes_per_sample * channels;
+		assert((unsigned)m_Attack.m_Size <= totalDataSize); /* can be equal for percussive samples */
+		m_Attack.m_Data = (unsigned char*)m_pool.Alloc(m_Attack.m_AllocSize);
+		if (m_Attack.m_Data == NULL)
 			throw (wxString)_("< out of memory allocating attack");
-		m_Attack.sample_rate = m_SampleRate;
-		m_Attack.sample_count = attackSamples;
+		m_Attack.m_SampleRate = m_SampleRate;
+		m_Attack.m_SampleCount = attackSamples;
 
 		if (attackSamplesInMem <= wave.GetLength())
 		{
 			memcpy
-				(m_Attack.data
+				(m_Attack.m_Data
 				,data
 				,attackSamplesInMem * bytes_per_sample * channels
 				);
@@ -281,12 +281,12 @@ void GOSoundProviderWave::LoadFromFile
 		else
 		{
 			memset
-				(m_Attack.data
+				(m_Attack.m_Data
 				,0
 				,(attackSamplesInMem - wave.GetLength()) * bytes_per_sample * channels
 				);
 			memcpy
-				(&m_Attack.data[(attackSamplesInMem - wave.GetLength()) * bytes_per_sample * channels]
+				(&m_Attack.m_Data[(attackSamplesInMem - wave.GetLength()) * bytes_per_sample * channels]
 				,data
 				,totalDataSize
 				);
