@@ -35,6 +35,7 @@ GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsign
 	m_FirstAccessiblePipeLogicalKeyNumber(0),
 	m_NumberOfAccessiblePipes(0),
 	m_WindchestGroup(0),
+	m_HarmonicNumber(8),
 	m_PipeConfig(organfile, this)
 {
 }
@@ -86,14 +87,14 @@ void GOrgueStop::UpdateTuning()
 
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
-
-        unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
-        m_PipeConfig.Load(cfg, group, wxEmptyString);
-        m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
-        m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
-        m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
-        m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, m_organfile->GetWinchestGroupCount());
-        m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
+	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
+	m_PipeConfig.Load(cfg, group, wxEmptyString);
+	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
+	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
+	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
+	m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, m_organfile->GetWinchestGroupCount());
+	m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
+	m_HarmonicNumber                       = cfg.ReadInteger(group, wxT("HarmonicNumber"), 1, 1024, false, 8);
 
         m_Pipes.clear();
         for (unsigned i = 0; i < number_of_logical_pipes; i++)
@@ -107,6 +108,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
                                 ,m_Percussive
                                 ,m_WindchestGroup
 				,m_FirstMidiNoteNumber + i - m_FirstAccessiblePipeLogicalPipeNumber - m_FirstAccessiblePipeLogicalKeyNumber + 2
+				,m_HarmonicNumber
                                 )
                         );
                 m_Pipes[i]->Load(cfg, group, buffer);
