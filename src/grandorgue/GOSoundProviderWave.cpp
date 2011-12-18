@@ -54,7 +54,7 @@ void GOSoundProviderWave::Compress(GOAudioSection& section, bool format16)
 	memset(diff, 0, sizeof(diff));
 	memset(last, 0, sizeof(last));
 
-	unsigned channels = GetAudioSectionChannelCount(section);
+	unsigned channels = section.GetChannels();
 	for(unsigned i = 0; i < section.sample_count + EXTRA_FRAMES; i++)
 		for(unsigned j = 0; j < channels; j++)
 		{

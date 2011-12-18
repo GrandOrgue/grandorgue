@@ -84,7 +84,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 	DecompressionCache cache;
 	InitDecompressionCache(cache);
 
-	unsigned channels = GetAudioSectionChannelCount(release);
+	unsigned channels = release.GetChannels();
 	m_PhaseAlignMaxDerivative = phase_align_max_derivative;
 	m_PhaseAlignMaxAmplitude = phase_align_max_amplitude;
 
