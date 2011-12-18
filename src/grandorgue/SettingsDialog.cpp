@@ -231,8 +231,8 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	item1->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	choices.clear();
-	choices.push_back(_("44100"));
-	choices.push_back(_("48000"));
+	choices.push_back(wxT("44100"));
+	choices.push_back(wxT("48000"));
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(c_SampleRate = new wxChoice(panel, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
@@ -244,7 +244,10 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 
 	UpdateSoundStatus();
 	c_stereo->Select(m_Settings.GetLoadInStereo());
-	c_SampleRate->Select(m_Settings.GetSampleRate() == 48000 ? 1 : 0);
+	c_SampleRate->Select(0);
+	for(unsigned i = 0; i < c_SampleRate->GetCount(); i++)
+		if (wxString::Format(wxT("%d"), m_Settings.GetSampleRate()) == c_SampleRate->GetString(i))
+			c_SampleRate->Select(i);
 	c_BitsPerSample->Select((m_Settings.GetBitsPerSample() - 8) / 4);
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
@@ -699,7 +702,7 @@ bool SettingsDialog::DoApply()
 	m_Settings.SetCompressCache(c_CompressCache->IsChecked());
 	m_Settings.SetScaleRelease(c_scale->IsChecked());
 	m_Settings.SetRandomizeSpeaking(c_random->IsChecked());
-	m_Settings.SetSampleRate(c_SampleRate->GetSelection() ? 48000 : 44100);
+	m_Settings.SetSampleRate(wxAtoi(c_SampleRate->GetStringSelection()));
 	m_Settings.SetBitsPerSample(c_BitsPerSample->GetSelection() * 4 + 8);
 	m_Settings.SetConcurrency(c_Concurrency->GetSelection());
 	m_Settings.SetReleaseConcurrency(c_ReleaseConcurrency->GetSelection() + 1);
