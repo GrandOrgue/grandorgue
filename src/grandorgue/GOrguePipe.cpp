@@ -203,6 +203,7 @@ wxString GOrguePipe::GetFilename()
 
 void GOrguePipe::SetTemperament(const GOrgueTemperament& temperament)
 {
-	m_TemperamentOffset = 0;
+	m_TemperamentOffset = temperament.GetOffset(m_MidiKeyNumber, m_SoundProvider.GetMidiKeyNumber(), m_SoundProvider.GetMidiPitchFract(), m_HarmonicNumber, m_PitchCorrection,
+						    m_OrganFile->GetPipeConfig().GetDefaultTuning() + m_Stop->GetPipeConfig().GetDefaultTuning() + m_PipeConfig.GetDefaultTuning());
 	UpdateTuning();
 }
