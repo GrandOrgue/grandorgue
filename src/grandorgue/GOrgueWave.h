@@ -44,6 +44,8 @@ private:
 	unsigned release;
 	unsigned bytesPerSample;
 	unsigned sampleRate;
+	unsigned m_MidiNote;
+	float m_PitchFract;
 	bool hasFormat;
 
 	bool hasRelease;
@@ -106,7 +108,8 @@ public:
 
 
 	unsigned GetSampleRate() const;
-
+	unsigned GetMidiNote() const;
+	float GetPitchFract() const;
 
 
 };
