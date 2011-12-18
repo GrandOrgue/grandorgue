@@ -207,6 +207,7 @@ bool GOrgueSound::OpenSound()
 	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
 	m_SoundEngine.SetVolume(m_Settings.GetVolume());
 	m_SoundEngine.SetScaledReleases(m_Settings.GetScaleRelease());
+	m_SoundEngine.SetRandomizeSpeaking(m_Settings.GetRandomizeSpeaking());
 	unsigned sample_rate = m_Settings.GetSampleRate();
 	m_recorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
 
