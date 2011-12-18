@@ -46,6 +46,7 @@ private:
 	unsigned m_NumberOfAccessiblePipes;
 	unsigned m_WindchestGroup;
 	unsigned m_HarmonicNumber;
+	float m_PitchCorrection;
 	GOrguePipeConfig m_PipeConfig;
 
 public:

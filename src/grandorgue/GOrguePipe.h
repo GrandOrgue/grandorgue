@@ -51,6 +51,7 @@ private:
 	unsigned m_MidiKeyNumber;
 	float m_TemperamentOffset;
 	unsigned m_HarmonicNumber;
+	float m_PitchCorrection;
 	GOrguePipe* m_Reference;
 	GOSoundProviderWave m_SoundProvider;
 	GOrguePipeConfig m_PipeConfig;
@@ -60,7 +61,7 @@ private:
 	GOSoundProvider* GetSoundProvider();
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, GOrgueStop* m_Stop, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number);
+	GOrguePipe(GrandOrgueFile* organfile, GOrgueStop* m_Stop, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction);
 	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
