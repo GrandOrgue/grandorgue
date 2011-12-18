@@ -146,10 +146,6 @@ void GOSoundProviderWave::LoadFromFile
 	if (data == NULL)
 		throw (wxString)_("< out of memory allocating wave");
 
-	memset(&m_Loop, 0, sizeof(m_Loop));
-	memset(&m_Attack, 0, sizeof(m_Attack));
-	memset(&m_Release, 0, sizeof(m_Release));
-
 	m_SampleRate = wave.GetSampleRate();
 	unsigned channels = wave.GetChannels();
 	if (!stereo)

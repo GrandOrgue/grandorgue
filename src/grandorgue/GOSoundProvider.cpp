@@ -32,123 +32,52 @@
 
 GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
 	m_Tuning(1),
+	m_Attack(pool),
+	m_Loop(pool),
+	m_Release(pool),
 	m_pool(pool)
 {
-	memset(&m_Attack, 0, sizeof(m_Attack));
-	memset(&m_Loop, 0, sizeof(m_Loop));
-	memset(&m_Release, 0, sizeof(m_Release));
 	m_Gain = 0.0f;
 	m_SampleRate = 0;
 }
 
 GOSoundProvider::~GOSoundProvider()
 {
-	ClearData();
 }
 
 void GOSoundProvider::ClearData()
 {
-	m_pool.Free(m_Attack.m_Data);
-	m_pool.Free(m_Loop.m_Data);
-	m_pool.Free(m_Release.m_Data);
-	DELETE_AND_NULL(m_Release.m_ReleaseAligner);
-	memset(&m_Attack, 0, sizeof(m_Attack));
-	memset(&m_Loop, 0, sizeof(m_Loop));
-	memset(&m_Release, 0, sizeof(m_Release));
-}
-
-bool GOSoundProvider::LoadCacheAudioSection
-	(GOrgueCache& cache, GOAudioSection* section, bool load_align_tracker)
-{
-
-	bool result = cache.Read(section, sizeof(GOAudioSection));
-	section->m_ReleaseAligner = NULL;
-	section->m_Data = NULL;
-	if (!result)
-		return false;
-
-	section->m_Data = (unsigned char*)cache.ReadBlock(section->m_AllocSize);
-	if (section->m_Data == NULL)
-		return false;
-
-	if (load_align_tracker)
-	{
-
-		bool has_align_tracker;
-		if (!cache.Read(&has_align_tracker, sizeof(has_align_tracker)))
-			return false;
-
-
-		if (has_align_tracker)
-		{
-			section->m_ReleaseAligner = new GOrgueReleaseAlignTable();
-			if (!section->m_ReleaseAligner->Load(cache))
-				return false;
-		}
-
-	}
-
-	return true;
-
+	m_Attack.ClearData();
+	m_Loop.ClearData();
+	m_Release.ClearData();
 }
 
 bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 {
-
-	if (!LoadCacheAudioSection(cache, &m_Attack, false))
+	if (!m_Attack.LoadCache(cache))
 		return false;
 
-	if (!LoadCacheAudioSection(cache, &m_Loop, false))
+	if (!m_Loop.LoadCache(cache))
 		return false;
 
-	if (!LoadCacheAudioSection(cache, &m_Release, true))
+	if (!m_Release.LoadCache(cache))
 		return false;
 
 	return true;
-
-}
-
-bool GOSoundProvider::SaveCacheAudioSection
-	(GOrgueCacheWriter& cache, const GOAudioSection* section, bool save_align_tracker)
-{
-
-	if (!cache.Write(section, sizeof(GOAudioSection)))
-		return false;
-
-	if (!cache.WriteBlock(section->m_Data, section->m_AllocSize))
-		return false;
-
-	if (save_align_tracker)
-	{
-
-		bool has_align_tracker = section->m_ReleaseAligner != NULL;
-		if (!cache.Write(&has_align_tracker, sizeof(has_align_tracker)))
-			return false;
-
-		if (has_align_tracker)
-			if (!section->m_ReleaseAligner->Save(cache))
-				return false;
-
-	}
-
-	return true;
-
 }
 
 bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 {
-
-	if (!SaveCacheAudioSection(cache, &m_Attack, false))
+	if (!m_Attack.SaveCache(cache))
 		return false;
 
-	if (!SaveCacheAudioSection(cache, &m_Loop, false))
+	if (!m_Loop.SaveCache(cache))
 		return false;
 
-	if (!SaveCacheAudioSection(cache, &m_Release, true))
+	if (!m_Release.SaveCache(cache))
 		return false;
 
 	return true;
-
 }
 
 void GOSoundProvider::GetMaxAmplitudeAndDerivative
