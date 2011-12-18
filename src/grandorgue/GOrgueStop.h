@@ -31,6 +31,7 @@
 #include "GOrgueDrawStop.h"
 
 class GOrguePipe;
+class GOrgueTemperament;
 
 class GOrgueStop : public GOrgueDrawstop, public GOrguePipeUpdateCallback
 {
@@ -58,6 +59,7 @@ public:
 	void PreparePlayback();
 	~GOrgueStop(void);
 	GOrguePipeConfig& GetPipeConfig();
+	void SetTemperament(const GOrgueTemperament& temperament);
 
 	unsigned GetFirstAccessiblePipeLogicalPipeNumber() const;
 	unsigned GetFirstAccessiblePipeLogicalKeyNumber() const;

@@ -24,6 +24,7 @@
 #include "GOrgueStop.h"
 #include "GOrgueManual.h"
 #include "GOrgueSettings.h"
+#include "GOrgueTemperament.h"
 #include "GrandOrgueFile.h"
 #include "GOSoundProviderWave.h"
 
@@ -42,6 +43,7 @@ GOrguePipe::GOrguePipe
 	m_Filename(),
 	m_Percussive(percussive),
 	m_MidiKeyNumber(midi_key_number),
+	m_TemperamentOffset(0),
 	m_Reference(NULL),
 	m_SoundProvider(organfile->GetMemoryPool()),
 	m_PipeConfig(organfile, this)
@@ -117,7 +119,7 @@ void GOrguePipe::UpdateAmplitude()
 
 float GOrguePipe::GetEffectiveTuning()
 {
-	return m_OrganFile->GetPipeConfig().GetTuning() + m_Stop->GetPipeConfig().GetTuning() + m_PipeConfig.GetTuning();
+	return m_OrganFile->GetPipeConfig().GetTuning() + m_Stop->GetPipeConfig().GetTuning() + m_PipeConfig.GetTuning() + m_TemperamentOffset;
 }
 
 void GOrguePipe::UpdateTuning()
@@ -191,4 +193,10 @@ void GOrguePipe::FastAbort()
 wxString GOrguePipe::GetFilename()
 {
 	return m_Filename;
+}
+
+void GOrguePipe::SetTemperament(const GOrgueTemperament& temperament)
+{
+	m_TemperamentOffset = 0;
+	UpdateTuning();
 }

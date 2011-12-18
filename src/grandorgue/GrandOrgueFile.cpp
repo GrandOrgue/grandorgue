@@ -44,6 +44,7 @@
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
 #include "GOrgueStop.h"
+#include "GOrgueTemperament.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueWindchest.h"
 #include "OrganDocument.h"
@@ -241,6 +242,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_GeneralsStoreDivisionalCouplers = ini.ReadBoolean(group, wxT("GeneralsStoreDivisionalCouplers"));
 	m_CombinationsStoreNonDisplayedDrawstops = ini.ReadBoolean(group, wxT("CombinationsStoreNonDisplayedDrawstops"));
 	m_volume = ini.ReadInteger(group, wxT("Volume"), -1, 100, false, -1);
+	m_Temperament = ini.ReadString(group, wxT("Temperament"), 256, false);
 
 	wxString buffer;
 
@@ -554,6 +556,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		}
 		for (unsigned i = 0; i < m_tremulant.size(); i++)
 			m_tremulant[i]->InitSoundProvider();
+		SetTemperament(m_Temperament);
 	}
 	catch (wxString error_)
 	{
@@ -734,6 +737,8 @@ void GrandOrgueFile::Save(const wxString& file)
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
 	if (m_volume >= 0)
 		aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), m_volume);
+
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Temperament"), m_Temperament);
 
 	m_PipeConfig.Save(aIni, prefix);
 
@@ -1060,6 +1065,24 @@ void GrandOrgueFile::Reset()
         for (unsigned k = 0; k < GetGeneralCount(); k++)
 		GetGeneral(k)->Display(false);
 	m_setter->ResetDisplay();
+}
+
+void GrandOrgueFile::SetTemperament(const GOrgueTemperament& temperament)
+{
+        for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
+		GetManual(k)->SetTemperament(temperament);
+}
+
+void GrandOrgueFile::SetTemperament(wxString name)
+{
+	const GOrgueTemperament& temperament = GOrgueTemperament::GetTemperament(name);
+	m_Temperament = temperament.GetName();
+	SetTemperament(temperament);
+}
+
+wxString GrandOrgueFile::GetTemperament()
+{
+	return m_Temperament;
 }
 
 void GrandOrgueFile::ControlChanged(void* control)
