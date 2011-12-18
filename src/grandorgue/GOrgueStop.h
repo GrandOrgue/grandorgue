@@ -45,6 +45,7 @@ private:
 	unsigned m_FirstAccessiblePipeLogicalKeyNumber;
 	unsigned m_NumberOfAccessiblePipes;
 	unsigned m_WindchestGroup;
+	unsigned m_HarmonicNumber;
 	GOrguePipeConfig m_PipeConfig;
 
 public:
