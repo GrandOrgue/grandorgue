@@ -102,13 +102,9 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 	for(std::vector<wxString>::iterator it = device_names.begin(); it != device_names.end(); it++)
 		m_device->Append(*it);
 
-	m_channel->Append(_("Any channel"), (void*)-1);
+	m_channel->Append(_("Any channel"));
 	for(unsigned int i = 1 ; i <= 16; i++)
-	{
-		wxString str;
-		str.Printf(wxT("%d"),  i);
-		m_channel->Append(str, (void*)i);
-	}
+		m_channel->Append(wxString::Format(wxT("%d"), i));;
 
 	m_eventtype->Append(_("(none)"), (void*)MIDI_M_NONE);
 	if (m_midi.GetType() != MIDI_RECV_ENCLOSURE)
@@ -195,9 +191,10 @@ void MIDIEventDialog::LoadEvent()
 			m_device->SetSelection(i);
 
 	m_channel->SetSelection(0);
-	for(unsigned i = 0; i < m_channel->GetCount(); i++)
-		if ((void*)e.channel == m_channel->GetClientData(i))
-			m_channel->SetSelection(i);
+	if (e.channel == -1)
+		m_channel->SetSelection(0);
+	else
+		m_channel->SetSelection(e.channel);
 
 	m_data->SetValue(e.key);
 }
@@ -211,7 +208,10 @@ void MIDIEventDialog::StoreEvent()
 		e.device = m_device->GetStringSelection();
 
 	e.type = (midi_match_message_type)(intptr_t) m_eventtype->GetClientData(m_eventtype->GetSelection());
-	e.channel = (int)(intptr_t) m_channel->GetClientData(m_channel->GetSelection());
+	if (m_channel->GetSelection() == 0)
+		e.channel = -1;
+	else
+		e.channel = m_channel->GetSelection();
 
 	e.key = m_data->GetValue();
 }
