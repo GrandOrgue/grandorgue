@@ -33,6 +33,8 @@ void GOrgueWave::SetInvalid()
 	channels = 0;
 	bytesPerSample = 0;
 	sampleRate = 0;
+	m_MidiNote = 0;
+	m_PitchFract = 0;
 	hasFormat = false;
 	release = 0;
 	hasRelease = false;
@@ -133,6 +135,9 @@ void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
 		l.end_sample = wxUINT32_SWAP_ON_BE(loops[k].dwEnd);
 		this->loops.push_back(l);
 	}
+
+	m_MidiNote = wxUINT32_SWAP_ON_BE(sampler->dwMIDIUnityNote);
+	m_PitchFract = wxUINT32_SWAP_ON_BE(sampler->dwMIDIPitchFraction) / (double)UINT_MAX * 100.0;
 }
 
 void GOrgueWave::Open(const wxString& filename)
@@ -421,4 +426,14 @@ const GO_WAVE_LOOP& GOrgueWave::GetLoop(unsigned idx) const
 unsigned GOrgueWave::GetSampleRate() const
 {
 	return sampleRate;
+}
+
+unsigned GOrgueWave::GetMidiNote() const
+{
+	return m_MidiNote;
+}
+
+float GOrgueWave::GetPitchFract() const
+{
+	return m_PitchFract;
 }
