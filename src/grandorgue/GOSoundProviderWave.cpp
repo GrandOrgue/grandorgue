@@ -42,7 +42,7 @@ void GOSoundProviderWave::SetAmplitude(int fixed_amplitude)
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
-void GOSoundProviderWave::Compress(AUDIO_SECTION& section, bool format16)
+void GOSoundProviderWave::Compress(GOAudioSection& section, bool format16)
 {
 	unsigned char* data = (unsigned char*)malloc(section.alloc_size);
 	unsigned output_len = 0;
@@ -83,7 +83,7 @@ void GOSoundProviderWave::Compress(AUDIO_SECTION& section, bool format16)
 
 	if (false) 	/* Verifcation of compression code */
 	{
-		AUDIO_SECTION new_section = section;
+		GOAudioSection new_section = section;
 		new_section.data = data;
 		new_section.size = output_len;
 		new_section.alloc_size = output_len;

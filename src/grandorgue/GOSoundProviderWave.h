@@ -28,7 +28,7 @@
 
 class GOSoundProviderWave : public GOSoundProvider
 {
-	void Compress(AUDIO_SECTION& section, bool format16);
+	void Compress(GOAudioSection& section, bool format16);
 
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);

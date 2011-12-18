@@ -58,10 +58,10 @@ void GOSoundProvider::ClearData()
 }
 
 bool GOSoundProvider::LoadCacheAudioSection
-	(GOrgueCache& cache, AUDIO_SECTION* section, bool load_align_tracker)
+	(GOrgueCache& cache, GOAudioSection* section, bool load_align_tracker)
 {
 
-	bool result = cache.Read(section, sizeof(AUDIO_SECTION));
+	bool result = cache.Read(section, sizeof(GOAudioSection));
 	section->release_aligner = NULL;
 	section->data = NULL;
 	if (!result)
@@ -109,10 +109,10 @@ bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 }
 
 bool GOSoundProvider::SaveCacheAudioSection
-	(GOrgueCacheWriter& cache, const AUDIO_SECTION* section, bool save_align_tracker)
+	(GOrgueCacheWriter& cache, const GOAudioSection* section, bool save_align_tracker)
 {
 
-	if (!cache.Write(section, sizeof(AUDIO_SECTION)))
+	if (!cache.Write(section, sizeof(GOAudioSection)))
 		return false;
 
 	if (!cache.WriteBlock(section->data, section->alloc_size))
@@ -152,7 +152,7 @@ bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 }
 
 void GOSoundProvider::GetMaxAmplitudeAndDerivative
-	(AUDIO_SECTION& section
+	(GOAudioSection& section
 	,int& runningMaxAmplitude
 	,int& runningMaxDerivative
 	)

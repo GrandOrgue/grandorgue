@@ -47,7 +47,7 @@ static inline AUDIO_SECTION_TYPE GetAudioSectionType(unsigned bytes_per_sample, 
 	return AC_UNCOMPRESSED8_MONO;
 }
 
-static inline unsigned GetAudioSectionChannelCount(const AUDIO_SECTION& release)
+static inline unsigned GetAudioSectionChannelCount(const GOAudioSection& release)
 {
 	switch (release.type)
 	{
@@ -69,7 +69,7 @@ static inline unsigned GetAudioSectionChannelCount(const AUDIO_SECTION& release)
 	}
 }
 
-static inline unsigned GetAudioSectionBytesPerSample(const AUDIO_SECTION& release)
+static inline unsigned GetAudioSectionBytesPerSample(const GOAudioSection& release)
 {
 	switch (release.type)
 	{
@@ -95,7 +95,7 @@ static inline unsigned GetAudioSectionBytesPerSample(const AUDIO_SECTION& releas
 	}
 }
 
-static inline int GetAudioSectionSample(const AUDIO_SECTION& release, unsigned position, unsigned channel, DecompressionCache* cache = NULL)
+static inline int GetAudioSectionSample(const GOAudioSection& release, unsigned position, unsigned channel, DecompressionCache* cache = NULL)
 {
 	switch (release.type)
 	{

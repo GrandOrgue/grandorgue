@@ -27,15 +27,14 @@
 #include "GOSoundDefs.h"
 
 class GOSoundProvider;
-struct AUDIO_SECTION_T;
-typedef struct AUDIO_SECTION_T AUDIO_SECTION;
+class GOAudioSection;
 
 typedef struct GO_SAMPLER_T
 {
 	struct GO_SAMPLER_T       *next;
 	const GOSoundProvider     *pipe;
 	int                        sampler_group_id;
-	const AUDIO_SECTION       *pipe_section;
+	const GOAudioSection      *pipe_section;
 	GOSoundFader               fader;
 	int                        history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
 	unsigned                   time;

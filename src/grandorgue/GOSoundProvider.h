@@ -32,17 +32,17 @@ class GOSoundProvider
 {
 
 private:
-	void GetMaxAmplitudeAndDerivative(AUDIO_SECTION& section, int& runningMaxAmplitude, int& runningMaxDerivative);
-	static bool SaveCacheAudioSection(GOrgueCacheWriter& cache, const AUDIO_SECTION* section, bool save_align_tracker);
-	static bool LoadCacheAudioSection(GOrgueCache& cache, AUDIO_SECTION* section, bool load_align_tracker);
+	void GetMaxAmplitudeAndDerivative(GOAudioSection& section, int& runningMaxAmplitude, int& runningMaxDerivative);
+	static bool SaveCacheAudioSection(GOrgueCacheWriter& cache, const GOAudioSection* section, bool save_align_tracker);
+	static bool LoadCacheAudioSection(GOrgueCache& cache, GOAudioSection* section, bool load_align_tracker);
 
 protected:
 	float          m_Gain;
 	float          m_Tuning;
 	unsigned int   m_SampleRate;
-	AUDIO_SECTION  m_Attack;
-	AUDIO_SECTION  m_Loop;
-	AUDIO_SECTION  m_Release;
+	GOAudioSection  m_Attack;
+	GOAudioSection  m_Loop;
+	GOAudioSection  m_Release;
 	GOrgueMemoryPool& m_pool;
 	void ComputeReleaseAlignmentInfo();
 
@@ -55,9 +55,9 @@ public:
 	virtual bool LoadCache(GOrgueCache& cache);
 	virtual bool SaveCache(GOrgueCacheWriter& cache);
 
-	const AUDIO_SECTION* GetLoop() const;
-	const AUDIO_SECTION* GetRelease() const;
-	const AUDIO_SECTION* GetAttack() const;
+	const GOAudioSection* GetLoop() const;
+	const GOAudioSection* GetRelease() const;
+	const GOAudioSection* GetAttack() const;
 	float GetGain() const;
 	int IsOneshot() const;
 
@@ -66,19 +66,19 @@ public:
 };
 
 inline
-const AUDIO_SECTION* GOSoundProvider::GetLoop() const
+const GOAudioSection* GOSoundProvider::GetLoop() const
 {
 	return &m_Loop;
 }
 
 inline
-const AUDIO_SECTION* GOSoundProvider::GetRelease() const
+const GOAudioSection* GOSoundProvider::GetRelease() const
 {
 	return &m_Release;
 }
 
 inline
-const AUDIO_SECTION* GOSoundProvider::GetAttack() const
+const GOAudioSection* GOSoundProvider::GetAttack() const
 {
 	return &m_Attack;
 }
