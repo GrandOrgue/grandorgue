@@ -49,12 +49,16 @@ typedef enum {
 } AUDIO_SECTION_STAGE;
 
 class GOrgueReleaseAlignTable;
+class GOrgueCache;
+class GOrgueCacheWriter;
+class GOrgueMemoryPool;
 
 class GOAudioSection
 {
 
 public:
 	/* Size of the section in BYTES */
+	GOrgueMemoryPool          &m_Pool;
 	unsigned                   m_Size;
 	unsigned                   m_AllocSize;
 	unsigned                   m_SampleCount;
@@ -77,8 +81,13 @@ public:
 	/* Number of significant bits in the decoded sample data */
 	unsigned                   m_SampleFracBits;
 
+	GOAudioSection(GOrgueMemoryPool& pool);
+	~GOAudioSection();
+	void ClearData();
 	unsigned GetChannels() const;
 	unsigned GetBytesPerSample() const;
+	bool LoadCache(GOrgueCache& cache);
+	bool SaveCache(GOrgueCacheWriter& cache) const;
 
 };
 

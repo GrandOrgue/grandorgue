@@ -33,8 +33,6 @@ class GOSoundProvider
 
 private:
 	void GetMaxAmplitudeAndDerivative(GOAudioSection& section, int& runningMaxAmplitude, int& runningMaxDerivative);
-	static bool SaveCacheAudioSection(GOrgueCacheWriter& cache, const GOAudioSection* section, bool save_align_tracker);
-	static bool LoadCacheAudioSection(GOrgueCache& cache, GOAudioSection* section, bool load_align_tracker);
 
 protected:
 	float          m_Gain;

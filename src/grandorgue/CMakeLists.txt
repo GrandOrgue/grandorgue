@@ -88,6 +88,7 @@ GOGUIManual.cpp
 GOGUIManualBackground.cpp
 GOGUIPanel.cpp
 GOGUIPanelWidget.cpp
+GOSoundAudioSection.cpp
 GOSoundEngine.cpp
 GOSoundProvider.cpp
 GOSoundProviderSynthedTrem.cpp
