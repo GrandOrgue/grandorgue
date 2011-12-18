@@ -21,6 +21,7 @@
  */
 
 #include "GOrgueTemperament.h"
+#include "GOrgueTemperamentCent.h"
 
 GOrgueTemperament::GOrgueTemperament(wxString name) :
 	m_Name(name)
@@ -72,5 +73,6 @@ void GOrgueTemperament::InitTemperaments()
 		return;
 
 	m_Temperaments.push_back(new GOrgueTemperament(wxTRANSLATE("Original temperament")));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Equal temperament"), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 }
 

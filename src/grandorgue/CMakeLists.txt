@@ -128,6 +128,7 @@ GOrgueSettings.cpp
 GOrgueSound.cpp
 GOrgueStop.cpp
 GOrgueTemperament.cpp
+GOrgueTemperamentCent.cpp
 GOrgueTremulant.cpp
 GOrgueWindchest.cpp
 GrandOrgue.cpp
