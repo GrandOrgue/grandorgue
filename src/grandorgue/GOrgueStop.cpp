@@ -95,6 +95,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 	m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, m_organfile->GetWinchestGroupCount());
 	m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
 	m_HarmonicNumber                       = cfg.ReadInteger(group, wxT("HarmonicNumber"), 1, 1024, false, 8);
+	m_PitchCorrection                      = cfg.ReadFloat(group, wxT("PitchCorrection"), -1200, 1200, false, 0);
 
         m_Pipes.clear();
         for (unsigned i = 0; i < number_of_logical_pipes; i++)
@@ -109,6 +110,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
                                 ,m_WindchestGroup
 				,m_FirstMidiNoteNumber + i - m_FirstAccessiblePipeLogicalPipeNumber - m_FirstAccessiblePipeLogicalKeyNumber + 2
 				,m_HarmonicNumber
+				,m_PitchCorrection
                                 )
                         );
                 m_Pipes[i]->Load(cfg, group, buffer);

@@ -35,6 +35,7 @@ GOrguePipe::GOrguePipe
 	,int sampler_group_id
 	,unsigned midi_key_number
 	,unsigned harmonic_number
+	,float pitch_correction
 	) :
 	m_OrganFile(organfile),
 	m_Stop(stop),
@@ -46,6 +47,7 @@ GOrguePipe::GOrguePipe
 	m_MidiKeyNumber(midi_key_number),
 	m_TemperamentOffset(0),
 	m_HarmonicNumber(harmonic_number),
+	m_PitchCorrection(pitch_correction),
 	m_Reference(NULL),
 	m_SoundProvider(organfile->GetMemoryPool()),
 	m_PipeConfig(organfile, this)
@@ -134,6 +136,7 @@ void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	m_Filename = cfg.ReadString(group, prefix);
 	m_PipeConfig.Load(cfg, group, prefix);
 	m_HarmonicNumber = cfg.ReadInteger(group, prefix + wxT("HarmonicNumber"), 1, 1024, false, m_HarmonicNumber);
+	m_PitchCorrection = cfg.ReadInteger(group, prefix + wxT("PitchCorrection"), -1200, 1200, false, m_PitchCorrection);
 	UpdateAmplitude();
 }
 

@@ -32,7 +32,7 @@ GOrgueTemperament::~GOrgueTemperament()
 {
 }
 
-float GOrgueTemperament::GetOffset(unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float default_tuning) const
+float GOrgueTemperament::GetOffset(unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const
 {
 	return 0;
 }
