@@ -23,6 +23,7 @@
 #ifndef GRANDORGUEFRAME_H
 #define GRANDORGUEFRAME_H
 
+#include <vector>
 #include <wx/docview.h>
 #include <wx/dcmemory.h>
 
@@ -44,6 +45,7 @@ class GOrgueFrame: public wxDocParentFrame
 	wxSpinCtrl* m_Polyphony;
 	wxSpinCtrl* m_SetterPosition;
 	wxSpinCtrl* m_Volume;
+	std::vector<wxString> m_TemperamentNames;
 	GOrgueSound& m_Sound;
 	GOrgueSettings& m_Settings;
 
@@ -74,6 +76,7 @@ public:
 	void OnAudioSettings(wxCommandEvent& event);
 
 	void OnPreset(wxCommandEvent& event);
+	void OnTemperament(wxCommandEvent& event);
 	void OnHelp(wxCommandEvent& event);
 	void OnHelpAbout(wxCommandEvent& event);
 	void OnShowHelp(wxCommandEvent& event);
