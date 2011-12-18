@@ -106,7 +106,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
                                 ,this
                                 ,m_Percussive
                                 ,m_WindchestGroup
-				,m_FirstMidiNoteNumber + m_FirstAccessiblePipeLogicalKeyNumber + i - 1
+				,m_FirstMidiNoteNumber + i - m_FirstAccessiblePipeLogicalPipeNumber - m_FirstAccessiblePipeLogicalKeyNumber + 2
                                 )
                         );
                 m_Pipes[i]->Load(cfg, group, buffer);
