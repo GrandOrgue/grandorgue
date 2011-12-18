@@ -227,7 +227,7 @@ void monoCompressed
 	int history[BLOCK_HISTORY];
 	unsigned hist_ptr = 0;
 
-	if (!sampler->ptr || sampler->last_position > sampler->position + 1)
+	if (!sampler->ptr || sampler->last_position > sampler->position + 2)
 	{
 		sampler->last_position = 0;
 		sampler->diff_value[0] = 0;
@@ -287,7 +287,7 @@ void stereoCompressed
 	int history[BLOCK_HISTORY][2];
 	unsigned hist_ptr = 0;
 
-	if (!sampler->ptr || sampler->last_position > sampler->position + 1)
+	if (!sampler->ptr || sampler->last_position > sampler->position + 2)
 	{
 		sampler->last_position = 0;
 		sampler->diff_value[0] = 0;
