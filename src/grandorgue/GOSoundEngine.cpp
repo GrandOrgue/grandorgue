@@ -764,7 +764,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 		if (new_sampler != NULL)
 		{
 
-			const AUDIO_SECTION* release_section = this_pipe->GetRelease();
+			const GOAudioSection* release_section = this_pipe->GetRelease();
 			new_sampler->pipe         = this_pipe;
 			new_sampler->pipe_section = release_section;
 			new_sampler->position     = 0;

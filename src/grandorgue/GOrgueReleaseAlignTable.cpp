@@ -75,10 +75,10 @@ bool GOrgueReleaseAlignTable::Save(GOrgueCacheWriter& cache)
 }
 
 void GOrgueReleaseAlignTable::ComputeTable
-	(const AUDIO_SECTION& release
-	,const int phase_align_max_amplitude
-	,const int phase_align_max_derivative
-	,const unsigned int sample_rate
+	(const GOAudioSection &release
+	,int                   phase_align_max_amplitude
+	,int                   phase_align_max_derivative
+	,unsigned int          sample_rate
 	)
 {
 	DecompressionCache cache;

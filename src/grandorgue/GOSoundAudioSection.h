@@ -47,9 +47,10 @@ typedef enum {
 
 class GOrgueReleaseAlignTable;
 
-typedef struct AUDIO_SECTION_T
+class GOAudioSection
 {
 
+public:
 	/* Size of the section in BYTES */
 	unsigned                   size;
 	unsigned                   alloc_size;
@@ -73,6 +74,6 @@ typedef struct AUDIO_SECTION_T
 	/* Number of significant bits in the decoded sample data */
 	unsigned                   sample_frac_bits;
 
-} AUDIO_SECTION;
+};
 
 #endif /* GOSOUNDAUDIOSECTION_H_ */

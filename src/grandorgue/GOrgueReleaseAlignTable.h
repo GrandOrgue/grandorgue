@@ -51,10 +51,10 @@ public:
 	bool Save(GOrgueCacheWriter& cache);
 
 	void ComputeTable
-		(const AUDIO_SECTION_T& m_release
-		,const int phase_align_max_amplitude
-		,const int phase_align_max_derivative
-		,const unsigned int sample_rate
+		(const GOAudioSection &m_release
+		,int                   phase_align_max_amplitude
+		,int                   phase_align_max_derivative
+		,unsigned int          sample_rate
 		);
 
 	void SetupRelease
