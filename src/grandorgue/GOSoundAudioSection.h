@@ -24,6 +24,9 @@
 #define GOSOUNDAUDIOSECTION_H_
 
 #include "GOSoundDefs.h"
+#include "GOrgueInt24.h"
+#include <assert.h>
+#include <wx/wx.h>
 
 typedef enum
 {
@@ -74,6 +77,59 @@ public:
 	/* Number of significant bits in the decoded sample data */
 	unsigned                   sample_frac_bits;
 
+	unsigned GetChannels() const;
+	unsigned GetBytesPerSample() const;
+
 };
+
+inline
+unsigned GOAudioSection::GetChannels() const
+{
+	switch (type)
+	{
+		case AC_COMPRESSED8_STEREO:
+		case AC_COMPRESSED16_STEREO:
+		case AC_UNCOMPRESSED8_STEREO:
+		case AC_UNCOMPRESSED16_STEREO:
+		case AC_UNCOMPRESSED24_STEREO:
+			return 2;
+		case AC_COMPRESSED8_MONO:
+		case AC_COMPRESSED16_MONO:
+		case AC_UNCOMPRESSED8_MONO:
+		case AC_UNCOMPRESSED16_MONO:
+		case AC_UNCOMPRESSED24_MONO:
+			return 1;
+		default:
+			assert(0 && "broken sampler type");
+			return 1;
+	}
+}
+
+inline
+unsigned GOAudioSection::GetBytesPerSample() const
+{
+	switch (type)
+	{
+		case AC_UNCOMPRESSED8_STEREO:
+		case AC_UNCOMPRESSED8_MONO:
+			return sizeof(wxInt8);
+		case AC_UNCOMPRESSED16_STEREO:
+		case AC_UNCOMPRESSED16_MONO:
+			return sizeof(wxInt16);
+		case AC_UNCOMPRESSED24_STEREO:
+		case AC_UNCOMPRESSED24_MONO:
+			return sizeof(Int24);
+
+		case AC_COMPRESSED8_STEREO:
+		case AC_COMPRESSED8_MONO:
+		case AC_COMPRESSED16_STEREO:
+		case AC_COMPRESSED16_MONO:
+			return 0;
+
+		default:
+			assert(0 && "broken sampler type");
+			return 1;
+	}
+}
 
 #endif /* GOSOUNDAUDIOSECTION_H_ */

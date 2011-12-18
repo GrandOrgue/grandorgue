@@ -159,7 +159,7 @@ void GOSoundProvider::GetMaxAmplitudeAndDerivative
 {
 	DecompressionCache cache;
 	unsigned int sectionLen = section.sample_count;
-	unsigned channels = GetAudioSectionChannelCount(section);
+	unsigned channels = section.GetChannels();
 
 	InitDecompressionCache(cache);
 
