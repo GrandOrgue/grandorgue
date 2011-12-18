@@ -31,6 +31,7 @@ class GrandOrgueFile;
 class GOrgueCache;
 class GOrgueCacheWriter;
 class GOrgueStop;
+class GOrgueTemperament;
 class IniFileConfig;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
@@ -48,6 +49,7 @@ private:
 	wxString m_Filename;
 	bool m_Percussive;
 	unsigned m_MidiKeyNumber;
+	float m_TemperamentOffset;
 	GOrguePipe* m_Reference;
 	GOSoundProviderWave m_SoundProvider;
 	GOrguePipeConfig m_PipeConfig;
@@ -68,6 +70,7 @@ public:
 	wxString GetFilename();
 	bool IsReference();
 	GOrguePipeConfig& GetPipeConfig();
+	void SetTemperament(const GOrgueTemperament& temperament);
 
 	float GetEffectiveAmplitude();
 	void UpdateAmplitude();

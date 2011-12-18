@@ -189,3 +189,9 @@ void GOrgueStop::PreparePlayback()
 	if (IsAuto() && IsEngaged())
 		m_Pipes[0]->Set(true);
 }
+
+void GOrgueStop::SetTemperament(const GOrgueTemperament& temperament)
+{
+	for(unsigned j = 0; j < m_Pipes.size(); j++)
+		m_Pipes[j]->SetTemperament(temperament);
+}

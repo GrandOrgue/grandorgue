@@ -44,6 +44,7 @@ class GOrguePiston;
 class GOrguePushbutton;
 class GOrgueSetter;
 class GOrgueSettings;
+class GOrgueTemperament;
 class GOrgueTremulant;
 class GOrgueWindchest;
 class GOGUIPanel;
@@ -63,6 +64,7 @@ private:
 	wxString m_SettingFilename;
 	GOrgueSetter* m_setter;
 	int m_volume;
+	wxString m_Temperament;
 
 	bool m_b_customized : 1;
 	bool m_DivisionalsStoreIntermanualCouplers : 1;
@@ -109,6 +111,7 @@ private:
 	void GenerateCacheHash(unsigned char hash[20]);
 	wxString GenerateSettingFileName();
 	wxString GenerateCacheFileName();
+	void SetTemperament(const GOrgueTemperament& temperament);
 
 public:
 
@@ -152,6 +155,8 @@ public:
 	GOrgueSettings& GetSettings();
 	GOrgueBitmapCache& GetBitmapCache();
 	GOrguePipeConfig& GetPipeConfig();
+	void SetTemperament(wxString name);
+	wxString GetTemperament();
 
 	/* ODF general properties */
 	bool DivisionalsStoreIntermanualCouplers();
