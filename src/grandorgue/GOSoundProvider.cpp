@@ -31,6 +31,8 @@
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
 GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
+	m_MidiKeyNumber(0),
+	m_MidiPitchFract(0),
 	m_Tuning(1),
 	m_Attack(pool),
 	m_Loop(pool),
@@ -54,6 +56,11 @@ void GOSoundProvider::ClearData()
 
 bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 {
+	if (!cache.Read(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber)))
+		return false;
+	if (!cache.Read(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
+		return false;
+
 	if (!m_Attack.LoadCache(cache))
 		return false;
 
@@ -68,6 +75,11 @@ bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 
 bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 {
+	if (!cache.Write(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber)))
+		return false;
+	if (!cache.Write(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
+		return false;
+
 	if (!m_Attack.SaveCache(cache))
 		return false;
 
@@ -155,4 +167,14 @@ int GOSoundProvider::IsOneshot() const
 void GOSoundProvider::SetTuning(float cent)
 {
 	m_Tuning = pow (pow(2, 1.0 / 1200.0), cent);
+}
+
+unsigned GOSoundProvider::GetMidiKeyNumber() const
+{
+	return m_MidiKeyNumber;
+}
+
+float GOSoundProvider::GetMidiPitchFract() const
+{
+	return m_MidiPitchFract;
 }

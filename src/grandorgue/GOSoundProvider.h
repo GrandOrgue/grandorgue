@@ -35,6 +35,8 @@ private:
 	void GetMaxAmplitudeAndDerivative(GOAudioSection& section, int& runningMaxAmplitude, int& runningMaxDerivative);
 
 protected:
+ 	unsigned m_MidiKeyNumber;
+	float m_MidiPitchFract;
 	float          m_Gain;
 	float          m_Tuning;
 	unsigned int   m_SampleRate;
@@ -61,6 +63,9 @@ public:
 
 	float GetTuning() const;
 	void SetTuning(float cent);
+
+	unsigned GetMidiKeyNumber() const;
+	float GetMidiPitchFract() const;
 };
 
 inline
