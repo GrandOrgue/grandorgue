@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2011-12-10 17:25+0100\n"
-"PO-Revision-Date: 2011-12-10 18:06+0100\n"
+"POT-Creation-Date: 2011-12-20 17:22+0100\n"
+"PO-Revision-Date: 2011-12-20 17:36+0100\n"
 "Last-Translator: Lars Palo <lars.palo@yahoo.se>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -122,6 +122,9 @@ msgstr "&Inställningar..."
 msgid "&Sound Engine"
 msgstr "&Ljudmotor"
 
+msgid "&Temperament"
+msgstr "&Temperatur"
+
 msgid "&Transpose"
 msgstr "&Transponera"
 
@@ -184,12 +187,6 @@ msgstr "32 bit float"
 
 msgid "4"
 msgstr "4"
-
-msgid "44100"
-msgstr "44100"
-
-msgid "48000"
-msgstr "48000"
 
 msgid "64 bit float"
 msgstr "64 bit float"
@@ -296,6 +293,9 @@ msgstr ""
 msgid "A&dvanced..."
 msgstr "Avancera&de inställningar..."
 
+msgid "ALSA"
+msgstr "ALSA"
+
 msgid "ASIO"
 msgstr "ASIO"
 
@@ -360,6 +360,15 @@ msgstr "B"
 msgid "BAS"
 msgstr "BAS"
 
+msgid "Bad buffer pointer"
+msgstr "Felaktig bufferpekare"
+
+msgid "Buffer too big"
+msgstr "För stor buffer"
+
+msgid "Buffer too small"
+msgstr "För liten buffer"
+
 msgid "Build Date"
 msgstr "Byggnationsdatum"
 
@@ -391,6 +400,18 @@ msgstr "Laddning av cache misslyckades: %s"
 msgid "Cache store:"
 msgstr "Cache lagring:"
 
+msgid "Can't read from a callback stream"
+msgstr "Kan inte läsa från callback-strömmen"
+
+msgid "Can't read from an output only stream"
+msgstr "Kan inte läsa från en enbart utmatningsström"
+
+msgid "Can't write to a callback stream"
+msgstr "Kan inte skriva till callback-strömmen"
+
+msgid "Can't write to an input only stream"
+msgstr "Kan inte skriva till en enbart inmatningsström"
+
 msgid "Cannot use buffer size above 1024 samples; unacceptable quantization would occur."
 msgstr "Kan ej använda bufferstorlek större än 1024 samples;  oacceptabel kvantisering skulle inträffa. "
 
@@ -411,6 +432,9 @@ msgstr "Nivå av samtidighet:"
 
 msgid "Core"
 msgstr "Kärna"
+
+msgid "Core Audio"
+msgstr "Core Audio"
 
 #, c-format
 msgid "Could not write to '%s'"
@@ -465,6 +489,9 @@ msgstr "Önskad &Ljudförsening:"
 msgid "Device Settings"
 msgstr "Enhetsinställningar"
 
+msgid "Device unavailable"
+msgstr "Enheten är inte tillgänglig"
+
 msgid "Devices"
 msgstr "Enheter"
 
@@ -494,6 +521,9 @@ msgstr "Svällskåp 5"
 
 msgid "Enclosure 6"
 msgstr "Svällskåp 6"
+
+msgid "Equal temperament"
+msgstr "Liksvävig temperatur"
 
 msgid "Error"
 msgstr "Fel"
@@ -545,8 +575,14 @@ msgstr "Generals"
 msgid "Help"
 msgstr "Hjälp"
 
+msgid "Host API not found"
+msgstr "Värd-API hittades ej"
+
 msgid "IEEE Float"
 msgstr "IEEE Float"
+
+msgid "Illegal combination of I/O devices"
+msgstr "Ogiltig combination av I/O enheter"
 
 msgid "Import &Combinations..."
 msgstr "&Importera kombinationer..."
@@ -557,8 +593,23 @@ msgstr "Importera kombinationer"
 msgid "Import Settings"
 msgstr "Importera inställningar"
 
+msgid "Incompatible host API specific stream info"
+msgstr "Inkompatibel värd API specifik ström information"
+
+msgid "Incompatible stream host API"
+msgstr "Inkompatibel ström värd API"
+
+msgid "Input overflowed"
+msgstr "Inmatningen flödade över"
+
 msgid "Insert"
 msgstr "Infoga"
+
+msgid "Insufficient memory"
+msgstr "Ej tillräckligt minne"
+
+msgid "Internal PortAudio error"
+msgstr "Internt PortAudio fel"
 
 #, c-format
 msgid "Invalid boolean value '/%s/%s': %s"
@@ -568,6 +619,9 @@ msgstr "Felaktigt sanningsvärde '/%s/%s': %s"
 msgid "Invalid color '/%s/%s': %s"
 msgstr "Felaktig färg '/%s/%s': %s"
 
+msgid "Invalid device"
+msgstr "Felaktig enhet"
+
 #, c-format
 msgid "Invalid enum value '/%s/%s': %s"
 msgstr "Felaktigt uppräkningsvärde '/%s/%s': %s"
@@ -576,8 +630,17 @@ msgstr "Felaktigt uppräkningsvärde '/%s/%s': %s"
 msgid "Invalid enum value for /%s/%s: %d"
 msgstr "Felaktigt uppräkningsvärde för '/%s/%s': %d"
 
+msgid "Invalid error code"
+msgstr "Felaktig felkod"
+
+msgid "Invalid error code (value greater than zero)"
+msgstr "Felaktig felkod (värde större än noll)"
+
 msgid "Invalid event type"
 msgstr "Felaktig händelstyp"
+
+msgid "Invalid flag"
+msgstr "Ogiltig flagga"
 
 #, c-format
 msgid "Invalid float value '/%s/%s': %s"
@@ -587,16 +650,31 @@ msgstr "Felaktigt flyttalsvärde '/%s/%s': %s"
 msgid "Invalid font size '/%s/%s': %s"
 msgstr "Felaktig teckenstorlek '/%s/%s': %s"
 
+msgid "Invalid host API"
+msgstr "Felaktig värd API"
+
 #, c-format
 msgid "Invalid integer value '/%s/%s': %s"
 msgstr "Felaktigt heltalsvärde '/%s/%s': %s"
 
+msgid "Invalid number of channels"
+msgstr "Felaktigt antal kanaler"
+
 msgid "Invalid reference "
 msgstr "Otillåten referens"
+
+msgid "Invalid sample rate"
+msgstr "Felaktig samplingsfrekvens"
 
 #, c-format
 msgid "Invalid size '/%s/%s': %s"
 msgstr "Felaktig storlek '/%s/%s': %s"
+
+msgid "Invalid stream pointer"
+msgstr "Felaktig ström-pekare"
+
+msgid "JACK Audio Connection Kit"
+msgstr "JACK Audio Connection Kit"
 
 msgid "Jack"
 msgstr "Jack"
@@ -652,6 +730,9 @@ msgstr "MIDI-meddelanden"
 
 msgid "MIDI Settings"
 msgstr "MIDI-inställningar"
+
+msgid "MME"
+msgstr "MME"
 
 msgid "Manual 1 (Pedal)"
 msgstr "Manual 1 (Pedal)"
@@ -724,6 +805,9 @@ msgstr "Nästa kombination"
 msgid "No audio device is selected; neither MIDI input nor sound output will occur!"
 msgstr "Ingen ljudenhet är vald; varken MIDI-inmatning eller ljudutmatning kommer att ske!"
 
+msgid "No callback routine specified"
+msgstr "Ingen callback-rutin är angiven"
+
 msgid "OSS"
 msgstr "OSS"
 
@@ -754,6 +838,9 @@ msgstr "Orgelinställningar"
 msgid "Organs"
 msgstr "Orglar"
 
+msgid "Original temperament"
+msgstr "Ursprunglig temperatur"
+
 msgid "Other Comments"
 msgstr "Övriga kommentarer"
 
@@ -766,6 +853,9 @@ msgstr "Värde utanför tillåtna gränser '/%s/%s': %d"
 
 msgid "Output Resolution:"
 msgstr "Utgående upplösning:"
+
+msgid "Output underflowed"
+msgstr "Underström av utmatningen"
 
 msgid "P&roperties..."
 msgstr "Egenskape&r..."
@@ -781,6 +871,9 @@ msgstr "Vänligen verkställ ändringar först"
 
 msgid "Polyphony"
 msgstr "Polyfoni"
+
+msgid "PortAudio not initialized"
+msgstr "PortAudio ej initialiserad"
 
 msgid "Pr&eset"
 msgstr "&Förinställning"
@@ -848,6 +941,9 @@ msgstr "RtMidi fel: %s"
 msgid "Sample Rate:"
 msgstr "Samplingsfrekvens:"
 
+msgid "Sample format not supported"
+msgstr "Samplingsformated stöds ej"
+
 msgid "Sample set definition files"
 msgstr "Definitionsfil för samplingssamling"
 
@@ -909,6 +1005,15 @@ msgstr "Stereo"
 msgid "Stop Changes"
 msgstr "Registerförändringar"
 
+msgid "Stream is not stopped"
+msgstr "Strömmen är inte stannad"
+
+msgid "Stream is stopped"
+msgstr "Strömmen är stannad"
+
+msgid "Success"
+msgstr "Lyckades"
+
 msgid "TB"
 msgstr "TB"
 
@@ -945,6 +1050,9 @@ msgstr "Kunde inte öppna fil för skrivning"
 msgid "Unable to read '%s'"
 msgstr "Kunde ej läsa '%s'"
 
+msgid "Unanticipated host error"
+msgstr "Ej förutsett värd-fel"
+
 msgid "Unknown"
 msgstr "Okänd"
 
@@ -971,8 +1079,20 @@ msgstr "Volym"
 msgid "WAV files (*.wav)|*.wav"
 msgstr "WAV filer (*.wav)|*.wav"
 
+msgid "Wait timed out"
+msgstr "Väntetiden gick ut"
+
 msgid "Warning"
 msgstr "Varning"
+
+msgid "Windows DirectSound"
+msgstr "Windows DirectSound"
+
+msgid "Windows WASAPI"
+msgstr "Windows WASAPI"
+
+msgid "Windows WDM-KS"
+msgstr "Windows WDM_KS"
 
 #, c-format
 msgid "__%d"
@@ -1017,6 +1137,12 @@ msgstr "wave fil innehåller inga loopar"
 #~ msgid "&Organ"
 #~ msgstr "&Orgel"
 
+#~ msgid "44100"
+#~ msgstr "44100"
+
+#~ msgid "48000"
+#~ msgstr "48000"
+
 #~ msgid "Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache."
 #~ msgstr "Cache-fil hade dålig magi (förväntade %#.8x fann %#.8x)"
 
@@ -1038,9 +1164,6 @@ msgstr "wave fil innehåller inga loopar"
 
 #~ msgid "Release sample phase alignment"
 #~ msgstr "Fas-riktning av samplingars uppsäpp"
-
-#~ msgid "bad sampler->type"
-#~ msgstr "felaktig sampler->typ"
 
 #~ msgid "g_sound has not been allocated"
 #~ msgstr "g_sound har inte allokerats"
