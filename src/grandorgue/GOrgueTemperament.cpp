@@ -74,5 +74,10 @@ void GOrgueTemperament::InitTemperaments()
 
 	m_Temperaments.push_back(new GOrgueTemperament(wxTRANSLATE("Original temperament")));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Equal temperament"), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Pythagorean"), -5.87, 7.82, -1.96, -11.74, 1.95, -7.83, 5.86, -3.92, 9.77, 0, -9.78, 3.91));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("1/4 comma Mean tone"), 10.26, -13.69, 3.42, 20.52, -3.43, 13.68, -10.27, 6.84, -17.11, 0, 17.1, -6.85));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Werckmeister III"), 11.73, 1.95, 3.91, 5.87, 1.96, 9.78, 0, 7.82, 3.91, 0, 7.82, 3.91));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Kirnberger III"), 10.26, 0.44, 3.42, 4.39, -3.43, 8.3, 0.48, 6.84, 2.44, 0, 6.35, -1.47));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Valotti"), 6.13, -0.18, 2.04, 4.26, -2.05, 8.17, -2.14, 4.09, 2.31, 0, 6.22, -4.09));
 }
 
