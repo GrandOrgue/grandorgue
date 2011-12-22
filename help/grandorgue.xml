@@ -935,6 +935,19 @@ too.
       </para>
     </sect1>
     <sect1>
+      <title>Sample format</title>
+      <para>
+The samples are stored as WAV files according to the WAV file
+specification. The supported formats are: 8 bit, 16 bit and 24 bit
+PCM, either mono or stereo. The prefered sample rates are 44100 or
+48000 Hz - GO supports any sample rate between 22000 and 96000 Hz.  GO
+only supports a single data chunk. To play looped samples, they must
+include cue points (cue chunk) and loops (smpl chunk).
+dwMIDIUnityNote and dwMIDIPitchFraction of the smpl chunk are used for
+retuning an organ to other temperaments.
+      </para>
+    </sect1>
+    <sect1>
       <title>Organ section</title>
       <para>
 This section describes the whole organ including the main panel,
@@ -969,6 +982,24 @@ called <emphasis>SetterElement999</emphasis>.
 (integer 0-999, required) Number of labels on the panel. The section
 of the label GUI definitions are called
 <emphasis>Label999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>AmplitudeLevel</term>
+          <listitem>
+            <para>
+(float 0-1000, default: 100) Linear amplitude scale factor applied to
+the whole organ. 100 means no change.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PitchTuning</term>
+          <listitem>
+            <para>
+(float -1200-1200, default: 0) Retune the whole organ the specified
+number of cents.
 	    </para>
           </listitem>
         </varlistentry>
@@ -1320,6 +1351,24 @@ off.
 	    </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>StopControlMIDIKeyNumber</term>
+          <listitem>
+            <para>
+(integer 0-127, default: no MIDI event specified) Only used for building the initial configuration during
+the first load - provided just for HW1 compatibility.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MIDIProgramChangeNumber</term>
+          <listitem>
+            <para>
+(int 1-128, default: no MIDI event specified) Only used for building the initial configuration during
+the first load - provided just for HW1 compatibility. 
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
       <para>
 The GUI properties of button objects are:
@@ -1608,26 +1657,335 @@ rectangle
           <term>TextBreakWidth</term>
           <listitem>
             <para>
-(integer 0 - text rectangle width, default: a little bit smaller than Width) If 0, no text is
-displayed. Otherwise the value specified the maximum line length used
-for text breaking.
+(integer 0 - text rectangle width, default: a little bit smaller than
+Width) If 0, no text is displayed. Otherwise the value specified the
+maximum line length used for text breaking.
 	    </para>
           </listitem>
         </varlistentry>
       </variablelist>
       <para>
 Inside the button, the on/off bitmap (depending on the button state)
-is tiled. If a text width is set, a text label is displayed on it. Mouse events are only
-captured inside the mouse rectangle.
+is tiled. If a text width is set, a text label is displayed on
+it. Mouse events are only captured inside the mouse rectangle.
 </para>
+    </sect1>
+    <sect1>
+      <title>Drawstop objects</title>
+      <para>
+Drawstop objects are buttons with toogle functions. They contain these
+additional non-GUI properties:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>DefaultToEngaged</term>
+          <listitem>
+            <para>
+(boolean, required) State of the button after loading.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Stop objects</title>
+      <para>
+Stop are drawstop objects with the following additions attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>AmplitudeLevel</term>
+          <listitem>
+            <para>
+(float 0-1000, default: 100) Linear amplitude scale factor applied to
+the whole stop. 100 means no change.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PitchTuning</term>
+          <listitem>
+            <para>
+(float -1200-1200, default: 0) Retune the stop organ the specified
+number of cents.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>HarmonicNumber</term>
+          <listitem>
+            <para>
+(float 1-1024, default: 8) Harmonic number (= 64 / stop size), eg. 2
+2/3 =&gt; 64 / (2 2/3) = 24.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PitchCorrection</term>
+          <listitem>
+            <para>
+(float -1200-1200, default: 0) Correction factor in cent for the pitch
+specified in the sample. This setting is used for retuning to other
+temperaments.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfLogicalPipes</term>
+          <listitem>
+            <para>
+(integer 1-192, required) Number of pipes in this stop
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>FirstAccessiblePipeLogicalPipeNumber</term>
+          <listitem>
+            <para>
+(integer 1 - NumberOfLogicalPipes, required) The number of the first
+pipe accessible from the manual.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>irstAccessiblePipeLogicalKeyNumber</term>
+          <listitem>
+            <para>
+(integer 1-128, required) The key number on the manual of the first
+accessible pipe.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfAccessiblePipes</term>
+          <listitem>
+            <para>
+(integer 1 - NumberOfLogicalPipes, required) Number of pipes, that are
+playable from the manual starting from the first acessible pipe.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>WindchestGroup</term>
+          <listitem>
+            <para>
+(interger 1 - number of windchests, required) specify the windchest,
+on which the pipes of the are placed.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Percussive</term>
+          <listitem>
+            <para>
+(boolean, required) If false, the samples are played as is (without
+any loop/release handling)
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+The stop section contains the attributes of each of its pipes too.
+The attribute of each pipe are prefixed with
+<emphasis>Pipe999</emphasis> (number starting with 1). The supported
+attributes are:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Pipe999AmplitudeLevel</term>
+          <listitem>
+            <para>
+(float 0-1000, default: 100) Linear amplitude scale factor applied to
+the pipe (in addition to the organ/stop factor). 100 means no change.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999PitchTuning</term>
+          <listitem>
+            <para>
+(float -1200-1200, default: 0) Retune this pipe the specified
+number of cents (in addition to the organ/stop factor).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999</term>
+          <listitem>
+            <para>
+(string, required) Relative path to the sample WAV file.
+The contain may be REF:aa:bb:cc too. In that case, it means
+that this stop borrows from manual aa, stop bb the pipe cc.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999HarmonicNumber</term>
+          <listitem>
+            <para>
+(float 1-1024, default: 8) Harmonic number (= 64 / stop size), eg. 2
+2/3 =&gt; 64 / (2 2/3) = 24.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999PitchCorrection</term>
+          <listitem>
+            <para>
+(float -1200-1200, default: 0) Correction factor in cent for the pitch
+specified in the sample. This setting is used for retuning to other
+temperaments.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Pushbutton objects</title>
+      <para>
+Pushbuttons are buttons without any state. It is displayed as piston.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Piston objects</title>
+      <para>
+A piston is a pushbutton which trigger other elements. It contains the
+following additional attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>ObjecType</term>
+          <listitem>
+            <para>
+(string, required) Type of the element to trigger. Value can be STOP,
+COUPLER or TREMULANT.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ManualNumber</term>
+          <listitem>
+            <para>
+(integer first manual index - last manual index, required for stops
+and coupler) The manual, to which the referenced object belongs.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ObjectNumber</term>
+          <listitem>
+            <para>
+(integer, required) Determines the number of the object. Depending on
+the object it must be a valid stop/coupler number on the referenced
+manual or a valid global tremulant number.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Tremulant objects</title>
+      <para>
+Trelmulants are drawstop objects with the following additions attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Period</term>
+          <listitem>
+            <para>
+(integer 32-44100, required) Period of the tremulant in ms
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>StartRate</term>
+          <listitem>
+            <para>
+(integer 1-100, required) Determines the startup time of the tremulant.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>StopRate</term>
+          <listitem>
+            <para>
+(integer 1-100, required) Determines the startup time of the tremulant.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>AmpModDepth</term>
+          <listitem>
+            <para>
+(integer 1-100, required) Determines, how much the volume will be changed.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Windchest objects</title>
+      <para>
+Windchest objects represent a windchest, on which pipes of stops are placed.
+It has the following attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Comment</term>
+          <listitem>
+            <para>
+(string, default: empty string) Description of this windchest
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfEnclosures</term>
+          <listitem>
+            <para>
+(integer 0 - enclosure count, required) Number of enclosures, which
+influnce this windchest. The list is specifed by the
+<emphasis>Enclosure999</emphasis> entries in the windchest section.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfTremulants</term>
+          <listitem>
+            <para>
+(integer 0 - tremulant count, required) Number of tremulants, which
+influence this windchest. The list is specifed by the
+<emphasis>Tremulant999</emphasis> entries in the windchest section.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Enclosure999</term>
+          <listitem>
+            <para>
+(integer 1 - enclosure count, required) Number of an enclosure, which
+influence this windchest.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Tremulant999</term>
+          <listitem>
+            <para>
+(integer 1 - tremulant count, required) Number of an tremulant, which
+influence this windchest.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
     </sect1>
     <sect1>
       <title>Additional panels</title>
       <para>
 It is possible to define additional panels. The section is call
 <emphasis>Panel999</emphasis> with a number starting from 001.  All
-panels use the same layout engine as the main panel, therefore the section includes
-all display metrics attributes. Additionally it includes the following attributes:
+panels use the same layout engine as the main panel, therefore the
+section includes all display metrics attributes. Additionally it
+includes the following attributes:
 </para>
       <variablelist>
         <varlistentry>
