@@ -956,6 +956,199 @@ attributes. Additionally it includes the following attributes:
       </para>
       <variablelist>
         <varlistentry>
+          <term>HauptwerkOrganFileFormatVersion</term>
+          <listitem>
+            <para>
+(string, required) Version information - ignored by GrandOrgue
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ChurchName</term>
+          <listitem>
+            <para>
+(string, required) Name of the organ/church. This string should be
+unique, as setting files for organs with the same
+<emphasis>ChurchName</emphasis> are considered compatible.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ChurchAddress</term>
+          <listitem>
+            <para>
+(string, required) informational text displayed in the property dialog
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>OrganBuilder</term>
+          <listitem>
+            <para>
+(string, required) informational text displayed in the property dialog
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>OrganBuildDate</term>
+          <listitem>
+            <para>
+(string, required) informational text displayed in the property dialog
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>OrganComments</term>
+          <listitem>
+            <para>
+(string, required) informational text displayed in the property dialog
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>RecordingDetails</term>
+          <listitem>
+            <para>
+(string, required) informational text displayed in the property dialog
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>InfoFilename</term>
+          <listitem>
+            <para>
+(string, required) relative path to an html file with more information
+about the organ.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfManuals</term>
+          <listitem>
+            <para>
+(integer 1-6, required) number of manuals. The manual information is
+available in sections called <emphasis>Manual999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>HasPedals</term>
+          <listitem>
+            <para>
+(boolean, required) Determines, if the pedal
+(<emphasis>Manual000</emphasis>) is present.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfEnclosures</term>
+          <listitem>
+            <para>
+(integer 0-6, required) number of enclosures. The details are in a section called
+<emphasis>Enclosure999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfTremulants</term>
+          <listitem>
+            <para>
+(integer 0-10, required) number of tremulants. The details are in a section called
+<emphasis>Tremualant999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfWindchestGroups</term>
+          <listitem>
+            <para>
+(integer 1-12, required) number of windchests. The details are in a section called
+<emphasis>WindchestGroup999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfReversiblePistons</term>
+          <listitem>
+            <para>
+(integer 0-32, required) number of pistons. The details are in a section called
+<emphasis>ReversiblePiston999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfGenerals</term>
+          <listitem>
+            <para>
+(integer 0-99, required) number of generals. The details are in a section called
+<emphasis>General999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfDivisionalCouplers</term>
+          <listitem>
+            <para>
+(integer 0-8, required) number of divisional couplers. The details are in a section called
+<emphasis>DivisionalCoupler999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfPanels</term>
+          <listitem>
+            <para>
+(integer 0-100, required) number of additional panels. The details are
+in a section called <emphasis>Panel999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DivisionalsStoreIntermanualCouplers</term>
+          <listitem>
+            <para>
+(boolean, required) determines, if divisionals store/change the
+state of associated intramanual coupler.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DivisionalsStoreIntramanualCouplers</term>
+          <listitem>
+            <para>
+(boolean, required) determines, if divisionals store/change the
+state of associated intermanual coupler.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DivisionalsStoreTremulants</term>
+          <listitem>
+            <para>
+(boolean, required) determines, if divisionals store/change the
+state of associated tremulants.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>GeneralsStoreDivisionalCouplers</term>
+          <listitem>
+            <para>
+(boolean, required) determines, if divisionals store/change the
+state of divisional coupler.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CombinationsStoreNonDisplayedDrawstops</term>
+          <listitem>
+            <para>
+(boolean, required) determines, if the state of (on the main panel)
+invisible objects is stored in divisionals, generals and the setter.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>NumberOfImages</term>
           <listitem>
             <para>
@@ -1000,6 +1193,176 @@ the whole organ. 100 means no change.
             <para>
 (float -1200-1200, default: 0) Retune the whole organ the specified
 number of cents.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Manual objects</title>
+      <para>
+A manual is associated with a number of stops, tremulants, divisionals
+and coupler. The accessible range can be played via MIDI, the rest of
+the logical keys can only be triggered by (octave) coupler. It
+contains the following non-gui attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Name</term>
+          <listitem>
+            <para>
+(string, required) Name of the manual
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfLogicalKeys</term>
+          <listitem>
+            <para>
+(integer 1-192, required) Number of keys on this manuals (including
+non playable ones).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>FirstAccessibleKeyLogicalKeyNumber</term>
+          <listitem>
+            <para>
+(integer 1 - NumberOfLogicalKeys, required) number of the first
+useable key
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>FirstAccessibleKeyMIDINoteNumber</term>
+          <listitem>
+            <para>
+(integer 0 - 127, required) MIDI note number of the first MIDI acessible key.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfAccessibleKeys</term>
+          <listitem>
+            <para>
+(intger 0 - 85, required) number of MIDI accessible keys.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MIDIInputNumber</term>
+          <listitem>
+            <para>
+(integer 1-6, required) This number is used while building the initial
+MIDI configuration to map the manual to one midi setting from the global
+midi configuration dialog.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Displayed</term>
+          <listitem>
+            <para>
+(boolean, required) If true, the manual is visible on the main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfStops</term>
+          <listitem>
+            <para>
+(integer 0-64, required) Number of stops associated with this
+manual. Starting with 1, for each stop, there is a
+<emphasis>Stop999</emphasis> setting.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Stop999</term>
+          <listitem>
+            <para>
+(integer, required) Number of the <emphasis>Stop999</emphasis> section
+containg the stop details.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfCouplers</term>
+          <listitem>
+            <para>
+(integer 0-16, required) Number of couplers associated with this
+manual. Starting with 1, for each coupler, there is a
+<emphasis>Coupler999</emphasis> setting.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Coupler999</term>
+          <listitem>
+            <para>
+(integer, required) Number of the <emphasis>Coupler999</emphasis>
+section containg the coupler details.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfDivisionals</term>
+          <listitem>
+            <para>
+(integer 0-32, required) Number of divisionals associated with this
+manual. Starting with 1, for each divisional, there is a
+<emphasis>Divisional999</emphasis> setting.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Divisional999</term>
+          <listitem>
+            <para>
+(integer, required) Number of the <emphasis>Divisional999</emphasis>
+section containg the coupler details.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfTremulants</term>
+          <listitem>
+            <para>
+(integer 0-10, required) Number of tremulants associated with this
+manual. Starting with 1, for each tremulant, there is a
+<emphasis>Tremulant999</emphasis> setting.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Tremulant999</term>
+          <listitem>
+            <para>
+(integer, required) Number of the <emphasis>Tremulant999</emphasis>
+section containg the tremulant details.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+If the manual is display, it contains the following gui attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>DispKeyColourInverted</term>
+          <listitem>
+            <para>
+(boolean, required) True means, the <emphasis>black</emphasis> keys are drawn
+in a light color while the <emphasis>white</emphasis> keys are draw dark color.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispKeyColourWooden</term>
+          <listitem>
+            <para>
+(boolean, default: false) True means, that a wood background is used
+for the keys.
 	    </para>
           </listitem>
         </varlistentry>
@@ -1690,7 +2053,9 @@ additional non-GUI properties:
     <sect1>
       <title>Stop objects</title>
       <para>
-Stop are drawstop objects with the following additions attributes:
+Stop are drawstop objects. A stop consists of a number of pipes. Only
+the accessible pipes can be triggered from the manual. They have the
+following additions attributes:
       </para>
       <variablelist>
         <varlistentry>
