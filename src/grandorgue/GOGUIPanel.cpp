@@ -179,11 +179,11 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this));
 		}
 
-		for (unsigned i = 0; i < m_organfile->GetEnclosureCount(); i++)
+		for (unsigned no = 0, i = 0; i < m_organfile->GetEnclosureCount(); i++)
 			if (m_organfile->GetEnclosure(i)->IsDisplayed())
 			{
 				buffer.Printf(wxT("Enclosure%03d"), i + 1);
-				GOGUIControl* control = new GOGUIEnclosure(this, m_organfile->GetEnclosure(i), i);
+				GOGUIControl* control = new GOGUIEnclosure(this, m_organfile->GetEnclosure(i), no++);
 				control->Load(cfg, buffer);
 				AddControl(control);
 			}
