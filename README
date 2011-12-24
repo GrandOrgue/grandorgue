@@ -6,7 +6,7 @@ RtAudio and wxWidgets should be possible with some build system adjustments.
 Building on Windows:
 --------------------
 
-1) Install mingw 
+1) Install mingw-w64 (http://sourceforge.net/projects/mingw-w64) or TDM64 (http://sourceforge.net/projects/tdm-gcc).
 2) Install cmake (http://www.cmake.org/)
 3) Download a copy of wxMSW (wxWidgets for Windows) from http://www.wxwidgets.org/downloads/ (latest stable release while writing this guide - v2.8.12)
 4) Extract it somewhere easily accessible. Best use a short, simple path without spaces like c:\wxWidgets
@@ -111,7 +111,7 @@ rpmbuild -ba grandorgue.spec
 Cross-compiling for Windows:
 ----------------------------
 
-1) Install mingw (On debian, install the packages gcc-mingw32 and mingw32-runtime) and
+1) Install mingw-w64 (On Debian/Ubuntu, install the package mingw-w64) and
    all packages needed to build GO under Linux.
 2) Prepare 5 directores:
   * extracted wxWidgets sources (I used 2.8.12) to a directory (/wxsrc)
@@ -123,7 +123,7 @@ In the following, I use the short path from above - normally
 you would put them somewhere under $HOME and use something like /home/user/GO/wxsrc.
 3) Build wxWidgets
 cd /wxsrc
-./configure --host=i586-mingw32msvc --prefix=/inst --enable-unicode
+./configure --host=i686-w64-mingw32 --prefix=/inst --enable-unicode
 make
 make install 
 4) Build GO for linux
@@ -137,12 +137,12 @@ SET(CMAKE_SYSTEM_NAME Windows)
 SET(MSYS 1)
 
 # which compilers to use for C and C++
-SET(CMAKE_C_COMPILER i586-mingw32msvc-gcc)
-SET(CMAKE_CXX_COMPILER i586-mingw32msvc-g++)
-SET(CMAKE_RC_COMPILER i586-mingw32msvc-windres)
+SET(CMAKE_C_COMPILER i686-w64-mingw32-gcc)
+SET(CMAKE_CXX_COMPILER i686-w64-mingw32-g++)
+SET(CMAKE_RC_COMPILER i686-w64-mingw32-windres)
 
 # here is the target environment located
-SET(CMAKE_FIND_ROOT_PATH  /usr/i586-mingw32msvc /inst)
+SET(CMAKE_FIND_ROOT_PATH  /usr/i686-w64-mingw32 /inst)
 
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search 
@@ -163,3 +163,4 @@ make
 make package
 to create an installer
 
+If you want to build a 64bit version, replace everywhere in this instruction i686-w64-mingw32 with x86_64-w64-mingw32.
