@@ -40,6 +40,7 @@ private:
 	int m_MIDIInputNumber;
 	int m_MIDIValue;
 	wxString m_Name;
+	bool m_Displayed;
 
 public:
 
@@ -57,6 +58,7 @@ public:
 	float GetAttenuation();
 
 	void Scroll(bool scroll_up);
+	bool IsDisplayed();
 };
 
 #endif /* GORGUEENCLOSURE_H_ */

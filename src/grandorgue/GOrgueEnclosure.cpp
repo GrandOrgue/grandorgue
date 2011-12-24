@@ -32,7 +32,8 @@ GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
 	m_AmpMinimumLevel(0),
 	m_MIDIInputNumber(0),
 	m_MIDIValue(0),
-	m_Name()
+	m_Name(),
+	m_Displayed(false)
 {
 
 }
@@ -52,6 +53,7 @@ void GOrgueEnclosure::Load(IniFileConfig& cfg, wxString group, int enclosure_nb)
 {
 	m_group = group;
 	m_Name = cfg.ReadString(m_group, wxT("Name"), 64);
+	m_Displayed = cfg.ReadBoolean(m_group, wxT("Displayed"), false, true);
 	m_AmpMinimumLevel = cfg.ReadInteger(m_group, wxT("AmpMinimumLevel"), 0, 100);
 	m_MIDIInputNumber = cfg.ReadInteger(m_group, wxT("MIDIInputNumber"), 1, 6);
 	Set(127);	// default to full volume until we receive any messages
@@ -110,4 +112,9 @@ const wxString& GOrgueEnclosure::GetName()
 int GOrgueEnclosure::GetValue()
 {
 	return m_MIDIValue;
+}
+
+bool GOrgueEnclosure::IsDisplayed()
+{
+	return m_Displayed;
 }
