@@ -2332,6 +2332,113 @@ additional non-GUI properties:
       </variablelist>
     </sect1>
     <sect1>
+      <title>Coupler objects</title>
+      <para>
+Coupler are drawstop objects. The forward key pressed from one manual
+to other manuals/keys. They have the following additions attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>UnisonOff</term>
+          <listitem>
+            <para>
+(boolean, required) If true, this coupler decouples the manual from
+the stops (turn it into a floating manual).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DestinationManual</term>
+          <listitem>
+            <para>
+(integer manual number, required it not a unison off coupler) manual
+to forwared key presses too.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DestinationKeyshift</term>
+          <listitem>
+            <para>
+(integer -24 - 24, required if not a unsion off coupler) specifies the
+keyboard shift between source and destionan manual in term of absolute
+MIDI note numbers
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CoupleToSubsequentUnisonIntermanualCouplers</term>
+          <listitem>
+            <para>
+(boolean, required if not a unison off coupler) Triggers further
+inter-manual coupler with a destination key shif of zero.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CoupleToSubsequentUpwardIntermanualCouplers</term>
+          <listitem>
+            <para>
+(boolean, required if not a unison off coupler) Triggers further
+inter-manual coupler with a destination key shift greater than zero.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CoupleToSubsequentDownwardIntermanualCouplers</term>
+          <listitem>
+            <para>
+(boolean, required if not a unison off coupler) Triggers further
+inter-manual coupler with a destination key shift less than zero.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CoupleToSubsequentUpwardIntramanualCouplers</term>
+          <listitem>
+            <para>
+(boolean, required if not a unison off coupler) Triggers further
+intra-manual coupler with a destination key shift greater than zero.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CoupleToSubsequentDownwardIntramanualCouplers</term>
+          <listitem>
+            <para>
+(boolean, required if not a unison off coupler) Triggers further
+intra-manual coupler with a destination key shift less than zero.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CouplerType</term>
+          <listitem>
+            <para>
+(enumeration, default: Normal) Type of the coupler: Normal, Bass or Melody.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>FirstMIDINoteNumber</term>
+          <listitem>
+            <para>
+(integer 0-127, default: 0) first MIDI note number to forward
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfKeys</term>
+          <listitem>
+            <para>
+(integer 0-127, default: 0) number of keys to forward starting with
+FirstMIDINoteNumber.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
       <title>Stop objects</title>
       <para>
 Stop are drawstop objects. A stop consists of a number of pipes. Only
