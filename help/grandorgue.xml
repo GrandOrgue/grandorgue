@@ -1199,6 +1199,287 @@ number of cents.
       </variablelist>
     </sect1>
     <sect1>
+      <title>Enclosure objects</title>
+      <para>
+An enclosure represents a swell pedal. It consists of non-gui
+attributes describing its function.  It it is displayed, it contains
+additional gui attributes.
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Name</term>
+          <listitem>
+            <para>
+(string, required) Name of the control
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>AmpMinimumLevel</term>
+          <listitem>
+            <para>
+(integer 0-100, required) Minimum volume, if the enclosure is closed.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MIDIInputNumber</term>
+          <listitem>
+            <para>
+(integer 1-6, required) This number is used while building the initial
+MIDI configuration to map the enclosure to one midi setting from the global
+midi configuration dialog.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Displayed</term>
+          <listitem>
+            <para>
+(boolean, default: true) If true, the enclosure is visible on the main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+If the enclosure is display, it contains the following gui attributes:
+Currently no attributes implemented.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Combination data store</title>
+      <para>
+This object is used to store one combination It has the following attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Protected</term>
+          <listitem>
+            <para>
+(boolean, default: false) If true, the stored combination can not be
+changed.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfStops</term>
+          <listitem>
+            <para>
+(integer 0 - 999, required) Number of stop state stored in this
+combination. The entries are called <emphasis>StopNumber999</emphasis>
+and <emphasis>StopManual999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfCouplers</term>
+          <listitem>
+            <para>
+(integer 0 - 999, required) Number of coupler state stored in this
+combination. The entries are called
+<emphasis>CouplerNumber999</emphasis> and
+<emphasis>CouplerManual999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfTremulants</term>
+          <listitem>
+            <para>
+(integer 0 - 999, required) Number of tremulant state stored in this
+combination. The entries are called <emphasis>TremulantNumber999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfDivisionalCouplers</term>
+          <listitem>
+            <para>
+(integer 0 - divisional coupler count, required if storing of
+divisional coupler in the generals is enabled) Number of divisional coupler
+state stored in this combination. The entries are called
+<emphasis>DivisionalCouplerNumber999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>StopNumber999</term>
+          <listitem>
+            <para>
+(integer -manual stop count - manual stop count, required) Number of
+the stop on the manual. If the value is negative, it is turned off, else turned on.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>StopManual999</term>
+          <listitem>
+            <para>
+(integer manual number, required) Number of the manual, which contain the stop.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CouplerNumber999</term>
+          <listitem>
+            <para>
+(integer -999 - 999, required) Number of the coupler on the manual. If the value is
+negative, it is turned off, else turned on.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CouplerManual999</term>
+          <listitem>
+            <para>
+(integer manual number, required) Number of the manual, which contain the coupler.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TremulantNumber999</term>
+          <listitem>
+            <para>
+(integer -tremulant count - tremulant count, required)
+Number of the tremulant. If the value is negative, it is turned off,
+else turned on.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DivisionalCouplerNumber999</term>
+          <listitem>
+            <para>
+(integer -divisional coupler count - divisional coupler count,
+required) Number of the divisional coupler. If the value is negative,
+it is turned off, else turned on.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>General object</title>
+      <para>
+A general object consists of a push button and a combination data
+store.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Divisional coupler objects</title>
+      <para>
+A divisional coupler is a drawstop object. If enabled, it activing a
+divisional on one controlled manual will acctivate the corresponding
+divisional on all other manuals. Additionally, it has the following
+attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>BiDirectionalCoupling</term>
+          <listitem>
+            <para>
+(boolean, required) If false, the coupler only couples upward in the
+manual list of the coupler, else up and downward.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfManuals</term>
+          <listitem>
+            <para>
+(integer 1 - manual count, required) Number of manuals affected by
+this coupler. The list entries are stored in
+<emphasis>Manual999</emphasis> setting.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Manual999</term>
+          <listitem>
+            <para>
+(integer manual number, required) Manual affected by the coupler
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Divisional objects</title>
+      <para>
+A divisional is a pushbutton object. Additionally, it has the
+following attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Protected</term>
+          <listitem>
+            <para>
+(boolean, default: false) If true, the stored combination can not be
+changed.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfStops</term>
+          <listitem>
+            <para>
+(integer 0 - stop count of the manual, required) Number of stop state
+stored in this combination. The entries are called
+<emphasis>Stop999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfCouplers</term>
+          <listitem>
+            <para>
+(integer 0 - coupler count of the manual, required) Number of coupler
+state stored in this combination. The entries are called
+<emphasis>Coupler999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfTremulants</term>
+          <listitem>
+            <para>
+(integer 0 - tremulant count of the manual, required) Number of
+tremulant state stored in this combination. The entries are called
+<emphasis>Tremulant999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Stop999</term>
+          <listitem>
+            <para>
+(integer -manual stop count - manual stop count, required) Number of
+the stop. If the value is negative, it is turned off, else turned on.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Coupler999</term>
+          <listitem>
+            <para>
+(integer -999 - 999, required) Number of the coupler. If the value is
+negative, it is turned off, else turned on.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Tremulant999</term>
+          <listitem>
+            <para>
+(integer -manual tremulant count - manual tremulant count, required)
+Number of the tremulant. If the value is negative, it is turned off,
+else turned on.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
       <title>Manual objects</title>
       <para>
 A manual is associated with a number of stops, tremulants, divisionals
@@ -2410,7 +2691,7 @@ called <emphasis>Panel999Enclosure999</emphasis>.
           <term>Enclosure999</term>
           <listitem>
             <para>
-(valid enclosure number, required) Reference to the encolsure on the
+(valid enclosure number, required) Reference to the enclosure on the
 main panel.
 	    </para>
           </listitem>
