@@ -267,7 +267,7 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(IniFileConfig& cfg, wxString group,
 	if (element == ID_SETTER_CRESCENDO_SWELL)
 	{
 		GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell, panel->GetDisplayMetrics()->NewEnclosure());
-		enclosure->Load(cfg, wxT("SetterSwell"));
+		enclosure->Load(cfg, group);
 		return enclosure;
 	}
 
