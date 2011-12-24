@@ -215,6 +215,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_OrganComments = ini.ReadString(group, wxT("OrganComments"),  256, false);
 	m_RecordingDetails = ini.ReadString(group, wxT("RecordingDetails"),  256, false);
 	m_InfoFilename = ini.ReadString(group, wxT("InfoFilename"),  256, false);
+	m_InfoFilename.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
 	wxFileName fn = GetODFFilename();
 	if (m_InfoFilename.IsEmpty())
 		fn.SetExt(wxT(".html"));
