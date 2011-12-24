@@ -248,6 +248,11 @@ wxString GOrgueSettings::GetStandardDataDirectory()
 	return wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData");
 }
 
+wxString GOrgueSettings::GetStandardCacheDirectory()
+{
+	return wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueCache");
+}
+
 wxString GOrgueSettings::GetOrganPath()
 {
 	return m_OrganPath;
@@ -309,9 +314,9 @@ wxString GOrgueSettings::GetUserCachePath()
 void GOrgueSettings::SetUserCachePath(wxString path)
 {
 	if (path == wxEmptyString)
-		path = GetStandardDataDirectory();
+		path = GetStandardCacheDirectory();
 	if (!wxFileName::DirExists(path))
-		path = GetStandardDataDirectory();
+		path = GetStandardCacheDirectory();
 	wxFileName file(path);
 	file.MakeAbsolute();
 	path = file.GetFullPath();
