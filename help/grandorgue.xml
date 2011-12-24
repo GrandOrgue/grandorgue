@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <book lang="en">
+<!--
+ GrandOrgue - free pipe organ simulator
+ 
+ Copyright 2006 Milan Digital Audio LLC
+ Copyright 2009-2011 GrandOrgue contributors (see AUTHORS)
+ 
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License as
+ published by the Free Software Foundation; either version 2 of the
+ License, or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ MA 02111-1307, USA.
+-->
   <title>GrandOrgue Help</title>
   <titleabbrev>GrandOrgue</titleabbrev>
   <chapter>
@@ -917,16 +938,26 @@ Additionally, it supported the HTML syntax #RRGGBB
       <para>
 A font size can be one of the following values: SMALL, NORMAL, LARGE
 or a number bigger than 0.
-</para>
+      </para>
+      <para>
+A panel size can be one of the following values: SMALL, MEDIUM, MEDIUM LARGE, LARGE
+or a number bigger than 0.
+      </para>
       <para>
 The following image formats are supported: bmp, gif, jpg, ico, png
-</para>
+      </para>
+      <para>
+A bitmap number is a value between 1 to 64. It referes to a predefined
+(wood) background. An odd mumber and the following even number
+represent the same type of wood. The odd number has vertical grain,
+while the odd has horizontal grain.
+      </para>
       <para>
 Objects in GrandOrgue are eg. manuals, stops, generals, ... . Each
 object can consist of backend part representing the object an its
 configuration (eg. list of sample file names) and multiple GUI
 representations.
- </para>
+      </para>
       <para>
 The main section is called <emphasis>Organ</emphasis>. It defines the
 main panel too. Objects like stops only displayed on a non-main panel
@@ -1193,6 +1224,409 @@ the whole organ. 100 means no change.
             <para>
 (float -1200-1200, default: 0) Retune the whole organ the specified
 number of cents.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Setter elements</title>
+      <para>
+It is possible to display various setter elements on the panels.  The
+<emphasis>Type</emphasis> attribute describe the function - the other
+attributes depend on the function:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Swell</term>
+          <listitem>
+            <para>
+Represents the crescendo swell. The section must contain the GUI
+attributes of an enclosure.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CrescendoLabel</term>
+          <listitem>
+            <para>
+Represents a label with crescendo state. The section must contain the GUI
+attributes of a label.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Label</term>
+          <listitem>
+            <para>
+Represents the current number of the setter. The section must contain the GUI
+attributes of a label.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Prev, Next, Set</term>
+          <listitem>
+            <para>
+Prev/next/set button of the setter. The section must contain the GUI
+attributes of a button (displayed as button per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>M100, M10, M1, P1, P10, P100</term>
+          <listitem>
+            <para>
++/- 1/10/100 button of the setter. The section must contain the GUI
+attributes of a button (displayed as button per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Home</term>
+          <listitem>
+            <para>
+Move to 000 button of the setter. The section must contain the GUI
+attributes of a button (displayed as button per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Current</term>
+          <listitem>
+            <para>
+Recall current number button of the setter. The section must contain the GUI
+attributes of a button (displayed as button per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>GC</term>
+          <listitem>
+            <para>
+General cancel button of the setter. The section must contain the GUI
+attributes of a button (displayed as button per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>L0, L1, L2, L3, L4, L5, L6, L7, L8, L9</term>
+          <listitem>
+            <para>
+Recall combination with the specified digit as last digit button of
+the setter. The section must contain the GUI attributes of a button
+(displayed as button per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Regular, Scope, Scoped</term>
+          <listitem>
+            <para>
+Button to switch between the various setter modes. The section must
+contain the GUI attributes of a button (displayed as button per
+default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Full</term>
+          <listitem>
+            <para>
+Button to enable storing all elements in the setter (restrictions from
+the ODF are ignored). The section must contain the GUI attributes of a
+button (displayed as button per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Insert, Delete</term>
+          <listitem>
+            <para>
+Buttons to insert/remove a combination. The section must contain the
+GUI attributes of a button (displayed as button per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>General01 - General 30</term>
+          <listitem>
+            <para>
+Buttons for the setter generals. The section must contain the GUI
+attributes of a button (displayed as button per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CescendoA, CrescendoB, CrescendoC, CrescendoD</term>
+          <listitem>
+            <para>
+Buttons to switch between the various crescendo modes. The section
+must contain the GUI attributes of a button (displayed as button per
+default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>CrescendoPrev, CrescendoNext, CrescendoCurrent</term>
+          <listitem>
+            <para>
+Buttons for controling the crescendo combinations. The section must
+contain the GUI attributes of a button (displayed as button per
+default).
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Display metrics</title>
+      <para>
+The layout of any panel is described by a layout model. The available
+space is split vertically into three columns:
+The left and the right column contain a drawstops layouted via a mesh.
+The middle row is vertically divided:
+      </para>
+      <para>
+At the bottom, the pedal and its button are placed (if
+present). Above, an extra row of buttons may follow. The next row
+contains the enclosures. Then all manuals with their associated
+buttons follow. The two rows are a block of buttons and pistons. The
+exact order can be specified via an attribute.
+      </para>
+      <para>
+It has the following attributs:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>DispScreenSizeHoriz</term>
+          <listitem>
+            <para>
+(panel size, required) Height of the panel
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispScreenSizeVert</term>
+          <listitem>
+            <para>
+(panel size, required) Width of the panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopBackgroundImageNum</term>
+          <listitem>
+            <para>
+(bitmap number, required)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispConsoleBackgroundImageNum</term>
+          <listitem>
+            <para>
+(bitmap number, required)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispKeyHorizBackgroundImageNum</term>
+          <listitem>
+            <para>
+(bitmap number, required)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispKeyVertBackgroundImageNum</term>
+          <listitem>
+            <para>
+(bitmap number, required)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopInsetBackgroundImageNum</term>
+          <listitem>
+            <para>
+(bitmap number, required)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispControlLabelFont</term>
+          <listitem>
+            <para>
+(string, required) Name of the font for button labels.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispShortcutKeyLabelFont</term>
+          <listitem>
+            <para>
+(string, required) Name of the font for keyboard labels
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispShortcutKeyLabelColour</term>
+          <listitem>
+            <para>
+(color, required) Color for shortcut labels
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispGroupLabelFont</term>
+          <listitem>
+            <para>
+(string, required) font name for labels
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopCols</term>
+          <listitem>
+            <para>
+(integer 2-12, required) number of drawstop columns. Must be even.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopRows</term>
+          <listitem>
+            <para>
+(integer 1-20, required) Number of drawstop rows.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopColsOffset</term>
+          <listitem>
+            <para>
+(boolean, required) If true, each second row drawstops on the
+left/right is displayed shifted.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopOuterColOffsetUp</term>
+          <listitem>
+            <para>
+(boolean, required if DispDrawstopColsOffset is true)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispPairDrawstopCols</term>
+          <listitem>
+            <para>
+(boolean, required) group two drawstop rows together. Number of
+drawstop rows must be divideable by 4.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispExtraDrawstopRows</term>
+          <listitem>
+            <para>
+(integer 0-8, required) number of drawstop rows in the center block.
+The row number start with 100.
+	    </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>DispExtraDrawstopCols</term>
+          <listitem>
+            <para>
+(integer 0 - 40, required) number of drawstop cols in the center block
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispButtonCols</term>
+          <listitem>
+            <para>
+(integer 1-32, required) Number of colums for displaying pistons in the center block
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispExtraButtonRows</term>
+          <listitem>
+            <para>
+(integer 0-8, required) number of rows for displaying pistons in the center block.
+The row number start with 100.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispExtraPedalButtonRow</term>
+          <listitem>
+            <para>
+(boolean, required) display an extra piston row with row number 9.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispExtraPedalButtonRowOffset</term>
+          <listitem>
+            <para>
+(boolean, required if DispExtraPedalButtonRow is true) move extra
+pistons row a little bit to the left.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispExtraPedalButtonRowOffsetRight</term>
+          <listitem>
+            <para>
+(string, required if DispExtraPedalButtonRow is true)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispButtonsAboveManuals</term>
+          <listitem>
+            <para>
+(boolean, required) Display the pistons associated with the manual
+above (true) or below the manual (false).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispTrimAboveManuals</term>
+          <listitem>
+            <para>
+(boolean, required)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispTrimBelowManuals</term>
+          <listitem>
+            <para>
+(boolean, required)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispTrimAboveExtraRows</term>
+          <listitem>
+            <para>
+(boolean, required)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispExtraDrawstopRowsAboveExtraButtonRows</term>
+          <listitem>
+            <para>
+(boolean, required) Display extra drawstop block above or below the
+extra piston block.
 	    </para>
           </listitem>
         </varlistentry>
@@ -2093,7 +2527,7 @@ two for drawstops and two for pistons.
           <listitem>
             <para>
 (button row, default: 1) If displayed as piston, it contains the
-button row according to the layout modell.  Otherwise ignored.
+button row according to the layout model.  Otherwise ignored.
 	    </para>
           </listitem>
         </varlistentry>
@@ -2102,7 +2536,7 @@ button row according to the layout modell.  Otherwise ignored.
           <listitem>
             <para>
 (button column, default: 1) If displayed as piston, it contains the
-button column according to the layout modell.  Otherwise ignored.
+button column according to the layout model.  Otherwise ignored.
 	    </para>
           </listitem>
         </varlistentry>
@@ -2111,7 +2545,7 @@ button column according to the layout modell.  Otherwise ignored.
           <listitem>
             <para>
 (drawstop row, default: 1) If displayed as drawstop, it contains the
-drawstop row according to the layout modell.  Otherwise ignored.
+drawstop row according to the layout model.  Otherwise ignored.
 	    </para>
           </listitem>
         </varlistentry>
@@ -2120,7 +2554,7 @@ drawstop row according to the layout modell.  Otherwise ignored.
           <listitem>
             <para>
 (drawstop column, default: 1) If displayed as drawstop, it contains
-the drawstop column according to the layout modell.  Otherwise
+the drawstop column according to the layout model.  Otherwise
 ignored.
 	    </para>
           </listitem>
@@ -2168,7 +2602,7 @@ the off bitmap. If empty, no mask is added.
           <term>PositionX</term>
           <listitem>
             <para>
-(integer 0 - panel width, default: according to layout modell) Allow
+(integer 0 - panel width, default: according to layout model) Allow
 to override X position for button
 	    </para>
           </listitem>
@@ -2177,7 +2611,7 @@ to override X position for button
           <term>PositionY</term>
           <listitem>
             <para>
-(integer 0 - panel height, default: according to layout modell) Allow
+(integer 0 - panel height, default: according to layout model) Allow
 to override Y position for button
 	    </para>
           </listitem>
@@ -2415,7 +2849,8 @@ intra-manual coupler with a destination key shift less than zero.
           <term>CouplerType</term>
           <listitem>
             <para>
-(enumeration, default: Normal) Type of the coupler: Normal, Bass or Melody.
+(enumeration, default: Normal) Type of the coupler: Normal, Bass or
+Melody.
 	    </para>
           </listitem>
         </varlistentry>
