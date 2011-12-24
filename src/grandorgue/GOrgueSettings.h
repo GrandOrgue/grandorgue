@@ -71,6 +71,7 @@ public:
 	wxString GetStandardDocumentDirectory();
 	wxString GetStandardOrganDirectory();
 	wxString GetStandardDataDirectory();
+	wxString GetStandardCacheDirectory();
 
 	unsigned GetManualCount();
 	wxString GetManualTitle(unsigned index);
