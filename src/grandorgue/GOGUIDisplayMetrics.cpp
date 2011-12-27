@@ -64,6 +64,12 @@ GOGUIDisplayMetrics::GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString gro
 	m_DrawStopHeight(69),
 	m_ButtonWidth(44),
 	m_ButtonHeight(40),
+	m_EnclosureWidth(52),
+	m_EnclosureHeight(63),
+	m_PedalHeight(40),
+	m_PedalKeyWidth(7),
+	m_ManualHeight(32),
+	m_ManualKeyWidth(12),
 	m_HackY(0),
 	m_EnclosureY(0),
 	m_CenterY(0),
@@ -73,6 +79,26 @@ GOGUIDisplayMetrics::GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString gro
 
 GOGUIDisplayMetrics::~GOGUIDisplayMetrics()
 {
+}
+
+int GOGUIDisplayMetrics::GetDrawstopWidth()
+{
+	return m_DrawStopWidth;
+}
+
+int GOGUIDisplayMetrics::GetDrawstopHeight()
+{
+	return m_DrawStopHeight;
+}
+
+int GOGUIDisplayMetrics::GetButtonWidth()
+{
+	return m_ButtonWidth;
+}
+
+int GOGUIDisplayMetrics::GetButtonHeight()
+{
+	return m_ButtonHeight;
 }
 
 /*
@@ -244,7 +270,7 @@ int GOGUIDisplayMetrics::GetCenterY()
 
 int GOGUIDisplayMetrics::GetEnclosureWidth()
 {
-	return 52 * m_nb_enclosures;
+	return m_EnclosureWidth * m_nb_enclosures;
 }
 
 int GOGUIDisplayMetrics::GetEnclosureY()
@@ -262,7 +288,7 @@ int GOGUIDisplayMetrics::GetEnclosureX(const GOGUIEnclosure* enclosure)
 	{
 		if (enclosure->IsEnclosure(i))
 			return enclosure_x;
-		enclosure_x += 52;
+		enclosure_x += m_EnclosureWidth;
 	}
 
 	throw (wxString)_("enclosure not found");
@@ -374,14 +400,14 @@ void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const i
 			i = 0;
 
 		if (i > (int)m_nb_manuals)
-			*blitY = m_HackY - (i - (int)m_nb_manuals) * 72 + 32 + 5;
+			*blitY = m_HackY - (i - (int)m_nb_manuals) * (m_ManualHeight + m_ButtonHeight) + m_ManualHeight + 5;
 		else
 			*blitY = m_manual_info[i].render_info.piston_y + 5;
 
 		if (m_DispExtraPedalButtonRow && !buttonRow)
 			*blitY += m_ButtonHeight;
 		if (m_DispExtraPedalButtonRowOffset && buttonRow == 99)
-			*blitX -= m_ButtonHeight / 2 + 2;
+			*blitX -= m_ButtonWidth / 2 + 2;
 	}
 
 }
@@ -396,7 +422,7 @@ void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const i
 void GOGUIDisplayMetrics::Update()
 {
 
-	m_CenterY = m_DispScreenSizeVert - 40;
+	m_CenterY = m_DispScreenSizeVert - m_PedalHeight;
 	m_CenterWidth = std::max(GetJambTopWidth(), GetPistonWidth());
 
 	for (unsigned i = 0; i <= m_nb_manuals; i++)
@@ -404,20 +430,24 @@ void GOGUIDisplayMetrics::Update()
 
 		if (!i && m_nb_manuals >= m_first_manual)
 		{
-			m_manual_info[0].render_info.height = 40;
+			m_manual_info[0].render_info.height = m_PedalHeight;
 			m_manual_info[0].render_info.keys_y = m_manual_info[0].render_info.y = m_CenterY;
-			m_CenterY -= 40;
+			m_CenterY -= m_PedalHeight;
 			if (m_DispExtraPedalButtonRow)
 				m_CenterY -= m_ButtonHeight;
 			m_manual_info[0].render_info.piston_y = m_CenterY;
-			m_CenterY -= 87;
 			m_CenterWidth = std::max(m_CenterWidth, GetEnclosureWidth());
-			m_EnclosureY = m_CenterY + 12;
+			m_CenterY -= 12;
+			m_CenterY -= m_EnclosureHeight;
+			m_EnclosureY = m_CenterY;
+			m_CenterY -= 12;
 		}
 		if (!i && m_nb_manuals < m_first_manual && m_nb_enclosures)
 		{
-			m_CenterY -= 87;
-			m_EnclosureY = m_CenterY + 12;
+			m_CenterY -= 12;
+			m_CenterY -= m_EnclosureHeight;
+			m_EnclosureY = m_CenterY;
+			m_CenterY -= 12;
 		}
 
 		if (!m_manual_info[i].displayed || i < m_first_manual)
@@ -430,13 +460,13 @@ void GOGUIDisplayMetrics::Update()
 				m_CenterY -= m_ButtonHeight;
 				m_manual_info[i].render_info.piston_y = m_CenterY;
 			}
-			m_manual_info[i].render_info.height = 32;
+			m_manual_info[i].render_info.height = m_ManualHeight;
 			if (m_DispTrimBelowManuals && i == 1)
 			{
 				m_manual_info[i].render_info.height += 8;
 				m_CenterY -= 8;
 			}
-			m_CenterY -= 32;
+			m_CenterY -= m_ManualHeight;
 			m_manual_info[i].render_info.keys_y = m_CenterY;
 			if (m_DispTrimAboveManuals && i == m_nb_manuals)
 			{
@@ -457,17 +487,17 @@ void GOGUIDisplayMetrics::Update()
 			{
 				int k = (m_manual_info[i].first_accessible_key_midi_note_nb + j) % 12;
 				if ((k < 5 && !(k & 1)) || (k >= 5 && (k & 1)))
-					m_manual_info[i].render_info.width += 12;
+					m_manual_info[i].render_info.width += m_ManualKeyWidth;
 			}
 		}
 		else
 		{
 			for (unsigned j = 0; j < m_manual_info[i].nb_accessible_keys; j++)
 			{
-				m_manual_info[i].render_info.width += 7;
+				m_manual_info[i].render_info.width += m_PedalKeyWidth;
 				int k = (m_manual_info[i].first_accessible_key_midi_note_nb + j) % 12;
 				if (j && (!k || k == 5))
-					m_manual_info[i].render_info.width += 7;
+					m_manual_info[i].render_info.width += m_PedalKeyWidth;
 			}
 		}
 		m_manual_info[i].render_info.x = (m_DispScreenSizeHoriz - m_manual_info[i].render_info.width) >> 1;

@@ -96,6 +96,12 @@ protected:
 	int m_DrawStopHeight;
 	int m_ButtonWidth;
 	int m_ButtonHeight;
+	int m_EnclosureWidth;
+	int m_EnclosureHeight;
+	int m_PedalHeight;
+	int m_PedalKeyWidth;
+	int m_ManualHeight;
+	int m_ManualKeyWidth;
 
 	/* values computed on screen update */
 	int m_HackY;
@@ -161,6 +167,10 @@ public:
 
 	virtual const MANUAL_RENDER_INFO& GetManualRenderInfo(const unsigned manual_nb) const;
 
+	virtual int GetDrawstopWidth();
+	virtual int GetDrawstopHeight();
+	virtual int GetButtonWidth();
+	virtual int GetButtonHeight();
 };
 
 #endif
