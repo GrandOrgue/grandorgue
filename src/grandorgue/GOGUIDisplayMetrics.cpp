@@ -527,13 +527,6 @@ const GOGUIDisplayMetrics::MANUAL_RENDER_INFO& GOGUIDisplayMetrics::GetManualRen
 
 }
 
-wxBrush GOGUIDisplayMetrics::GetPedalBrush()
-{
-	wxBrush brush;
-	brush.SetColour(0xA0, 0x80, 0x40);
-	return brush;
-}
-
 unsigned GOGUIDisplayMetrics::NewEnclosure()
 {
 	unsigned no = m_nb_enclosures++;
