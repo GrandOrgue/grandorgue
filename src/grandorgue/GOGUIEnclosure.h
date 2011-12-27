@@ -23,6 +23,7 @@
 #ifndef GOGUIENCLOSURE_H
 #define GOGUIENCLOSURE_H
 
+#include <vector>
 #include "GOGUIControl.h"
 
 class GOrgueEnclosure;
@@ -32,6 +33,13 @@ class GOGUIEnclosure : public GOGUIControl
 private:
 	GOrgueEnclosure* m_enclosure;
 	unsigned m_enclosure_nb;
+	wxRect m_TextRect;
+	wxRect m_MouseRect;
+	int m_MouseAxisStart;
+	int m_MouseAxisEnd;
+	unsigned m_TileOffsetX;
+	unsigned m_TileOffsetY;
+	std::vector<wxBitmap*> m_Bitmaps;
 	
 public:
 	GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb);
