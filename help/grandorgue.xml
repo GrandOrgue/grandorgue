@@ -1630,6 +1630,86 @@ extra piston block.
 	    </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopWidth</term>
+          <listitem>
+            <para>
+(integer 1-150, default: 78) Drawstop width used for layout calculation 
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispDrawstopHeight</term>
+          <listitem>
+            <para>
+(integer 1-150, default: 69) Drawstop height used for layout calculation
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispPistonWidth</term>
+          <listitem>
+            <para>
+(integer 1-150, default: 44) Piston width used for layout calculation
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispPistonHeight</term>
+          <listitem>
+            <para>
+(integer 1-150, default: 40) Piston height used for layout calculation
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispEnclosureWidth</term>
+          <listitem>
+            <para>
+(integer 1-150, default: 52) Enclosure width used for layout calculation
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispEnclosureHeight</term>
+          <listitem>
+            <para>
+(integer 1-150, default: 63) Enclosure width used for layout calculation
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispPedalHeight</term>
+          <listitem>
+            <para>
+(integer 1-150, default: 40) Pedal height used for layout calculation
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispPedalKeyWidth</term>
+          <listitem>
+            <para>
+(integer 1-150, default: 7) Width of one pedal key used for layout calculation
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispManualHeight</term>
+          <listitem>
+            <para>
+(integer 1-150, default: 32) Manual height used for layout calculation
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispManualKeyWidth</term>
+          <listitem>
+            <para>
+(integer 1-150, default: 12) Width of one manual key used for layout calculation
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
