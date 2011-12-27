@@ -1757,8 +1757,224 @@ midi configuration dialog.
       </variablelist>
       <para>
 If the enclosure is display, it contains the following gui attributes:
-Currently no attributes implemented.
       </para>
+      <variablelist>
+        <varlistentry>
+          <term>DispLabelColour</term>
+          <listitem>
+            <para>
+(color, default: Dark Red) Color for the label text.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispLabelFontSize</term>
+          <listitem>
+            <para>
+(font size, default: 7) Size of the label font
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DisplLabelFontName</term>
+          <listitem>
+            <para>
+(string, default: empty) Font for the text. Empty means use the
+default font.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DispLabelText</term>
+          <listitem>
+            <para>
+(string, default: Name of the button) Content of the text label. You
+should set it, if you need to display a shorter string.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>BitmapCount</term>
+          <listitem>
+            <para>
+(integer 1 - 127, default: implementation dependend) Number of
+bitmaps/steps.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Bitmap999</term>
+          <listitem>
+            <para>
+(string, default: use internal bitmap) Specifiy the file name of an
+image to use as on bitmap for position 999.  If the bitmap contains a
+mask for transparency, it will be used. All bitmaps must have the same
+size.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Mask999</term>
+          <listitem>
+            <para>
+(string, default: empty) File name for a external mask for bitmap
+999. If empty, no mask is added.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PositionX</term>
+          <listitem>
+            <para>
+(integer 0 - panel width, default: according to layout model) Allow to
+override X position for enclosure.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PositionY</term>
+          <listitem>
+            <para>
+(integer 0 - panel height, default: according to layout model) Allow
+to override Y position for enclosure.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Width</term>
+          <listitem>
+            <para>
+(integer 0 - panel width, default: bitmap width) Width of the
+enclosure. If larger than the bitmap, the bitmap is tiled.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Height</term>
+          <listitem>
+            <para>
+(integer 0 - panel height, default: bitmap height) Height of the
+enclosure. If larger than the bitmap, the bitmap is tiled.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TileOffsetX</term>
+          <listitem>
+            <para>
+(integer 0 - bitmap width, default: 0) X position on the bitmap of the
+left pixel of the enclosure
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TileOffsetY</term>
+          <listitem>
+            <para>
+(integer 0 - bitmap width, default: 0) Y position on the bitmap of the
+top pixel of the enclosure
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseRectLeft</term>
+          <listitem>
+            <para>
+(integer 0 - Width, default: 0) relative X of left core of the mouse
+rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseRectTop</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: implemtation dependend) relative Y of
+left core of the mouse rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseRectWidth</term>
+          <listitem>
+            <para>
+(integer 0 - Width, default: Width) width of the mouse rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseRectHeight</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: implementation dependend) height of the
+mouse rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseAxisStart</term>
+          <listitem>
+            <para>
+(integer 0 - MouseRectHeight, default: implementation dependend) top Y
+coordinate of the axis
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MouseAxisEnd</term>
+          <listitem>
+            <para>
+(integer MouseAxisStart - MouseRectHeight, default: implementation
+dependend) bottom Y coordinate of the axis
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectLeft</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: 0) relative X of left core of the text
+rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectTop</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: implementation dependend) relative Y of
+left core of the text rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectWidth</term>
+          <listitem>
+            <para>
+(integer 0 - Width, default: Width) width of the text rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextRectHeight</term>
+          <listitem>
+            <para>
+(integer 0 - Height, default: implementation dependend) height of the
+text rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TextBreakWidth</term>
+          <listitem>
+            <para>
+(integer 0 - text rectangle width, default: TextWidth) If 0, no text
+is displayed. Otherwise the value specified the maximum line length
+used for text breaking.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
     </sect1>
     <sect1>
       <title>Combination data store</title>

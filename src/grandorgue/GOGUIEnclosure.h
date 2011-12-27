@@ -33,7 +33,12 @@ class GOGUIEnclosure : public GOGUIControl
 private:
 	GOrgueEnclosure* m_enclosure;
 	unsigned m_enclosure_nb;
+	unsigned m_FontSize;
+	wxString m_FontName;
+	wxColor m_TextColor;
+	wxString m_Text;
 	wxRect m_TextRect;
+	unsigned m_TextWidth;
 	wxRect m_MouseRect;
 	int m_MouseAxisStart;
 	int m_MouseAxisEnd;

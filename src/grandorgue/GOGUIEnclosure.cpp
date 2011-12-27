@@ -26,11 +26,17 @@
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "MIDIEventDialog.h"
+#include "IniFileConfig.h"
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb):
 	GOGUIControl(panel, control),
 	m_enclosure(control),
 	m_enclosure_nb(enclosure_nb),
+	m_FontSize(0),
+	m_FontName(),
+	m_TextColor(0,0,0),
+	m_Text(),
+	m_TextWidth(0),
 	m_MouseAxisStart(0),
 	m_MouseAxisEnd(0),
 	m_TileOffsetX(0),
@@ -48,16 +54,54 @@ void GOGUIEnclosure::Load(IniFileConfig& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 
-	for(int i = 0; i < 15; i++)
-		m_Bitmaps.push_back(m_panel->LoadBitmap(wxString::Format(wxT("GO:enclosure%d"), i), wxEmptyString));
+	unsigned bitmap_count = cfg.ReadInteger(group, wxT("BitmapCount"), 1, 127, false, 16);
 
-	int x = m_metrics->GetEnclosureX(this);
-	int y = m_metrics->GetEnclosureY();
-	m_BoundingRect = wxRect(x, y, 46, 61);
-	m_TextRect = wxRect(x, y, 46, 61);
-	m_MouseRect = wxRect(x, y + 13, 46, 45);
-	m_MouseAxisStart = 16;
-	m_MouseAxisEnd = 30;
+	for(unsigned i = 1; i < bitmap_count; i++)
+	{
+		wxString bitmap = cfg.ReadString(group, wxString::Format(wxT("Bitmap%03d"), i), 256, false, wxString::Format(wxT("GO:enclosure%d"), i - 1));
+		wxString mask = cfg.ReadString(group, wxString::Format(wxT("Mask%03d"), i), 256, false, wxEmptyString);
+		m_Bitmaps.push_back(m_panel->LoadBitmap(bitmap, mask));
+	}
+
+	for(unsigned i = 1; i < m_Bitmaps.size(); i++)
+		if (m_Bitmaps[0]->GetWidth() != m_Bitmaps[i]->GetWidth() || 
+		    m_Bitmaps[0]->GetHeight() != m_Bitmaps[i]->GetHeight())
+			throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
+
+	int x, y, w, h;
+
+	x = m_metrics->GetEnclosureX(this);
+	y = m_metrics->GetEnclosureY();
+
+	x = cfg.ReadInteger(group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
+	y = cfg.ReadInteger(group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
+	w = cfg.ReadInteger(group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmaps[0]->GetWidth());
+	h = cfg.ReadInteger(group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmaps[0]->GetHeight());
+	m_BoundingRect = wxRect(x, y, w, h);
+
+	m_TileOffsetX = cfg.ReadInteger(group, wxT("TileOffsetX"), 0, m_Bitmaps[0]->GetWidth() - 1, false, 0);
+	m_TileOffsetY = cfg.ReadInteger(group, wxT("TileOffsetY"), 0, m_Bitmaps[0]->GetHeight() - 1, false, 0);
+
+	m_TextColor = cfg.ReadColor(group, wxT("DispLabelColour"), false, wxT("White"));
+	m_FontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"), false, wxT("7"));
+	m_FontName = cfg.ReadString(group, wxT("DispLabelFontName"), 255, false, wxT(""));
+	m_Text = cfg.ReadString(group, wxT("DispLabelText"), 255, false, m_enclosure->GetName());
+
+	x = cfg.ReadInteger(group, wxT("TextRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 0);
+	y = cfg.ReadInteger(group, wxT("TextRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 0);
+	w = cfg.ReadInteger(group, wxT("TextRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
+	h = cfg.ReadInteger(group, wxT("TextRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y);
+	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_TextWidth = cfg.ReadInteger(group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth());
+
+	x = cfg.ReadInteger(group, wxT("MouseRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 0);
+	y = cfg.ReadInteger(group, wxT("MouseRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 13);
+	w = cfg.ReadInteger(group, wxT("MouseRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
+	h = cfg.ReadInteger(group, wxT("MouseRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y - 3);
+	m_MouseRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+
+	m_MouseAxisStart = cfg.ReadInteger(group, wxT("MouseRectHeight"), 0, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3);
+	m_MouseAxisEnd = cfg.ReadInteger(group, wxT("MouseRectHeight"), m_MouseAxisStart, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3 * 2);
 }
 
 void GOGUIEnclosure::Draw(wxDC* dc)
@@ -65,12 +109,17 @@ void GOGUIEnclosure::Draw(wxDC* dc)
 	wxBitmap* bmp = m_Bitmaps[((m_Bitmaps.size() - 1) * m_enclosure->GetValue()) / 127];
 	m_panel->TileBitmap(dc, bmp, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
 
-	wxFont font = *wxNORMAL_FONT;
-	font.SetPointSize(7);
-	dc->SetFont(font);
-	dc->SetTextForeground(*wxWHITE);
+	if (m_TextWidth)
+	{
+		wxFont font = *wxNORMAL_FONT;
+		font.SetPointSize(m_FontSize);
+		if (m_FontName != wxEmptyString)
+			font.SetFaceName(m_FontName);
+		dc->SetFont(font);
+		dc->SetTextForeground(m_TextColor);
 
-	dc->DrawLabel(m_enclosure->GetName(), m_TextRect, wxALIGN_CENTER_HORIZONTAL);
+		dc->DrawLabel(m_panel->WrapText(dc, m_Text, m_TextWidth), m_TextRect, wxALIGN_CENTER_HORIZONTAL);
+	}
 
 	GOGUIControl::Draw(dc);
 }
