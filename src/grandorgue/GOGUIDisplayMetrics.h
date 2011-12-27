@@ -121,7 +121,6 @@ public:
 	virtual int NumberOfDrawstopColsToDisplay();
 	virtual int NumberOfButtonCols();
 	virtual int NumberOfExtraButtonRows();
-	virtual wxBrush GetPedalBrush();
 
 	virtual void GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int* blitX, int* blitY);
 	virtual void GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY);
