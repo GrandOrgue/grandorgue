@@ -115,6 +115,21 @@ wxBitmap GetImage_Wood61();
 wxBitmap GetImage_Wood61_r();
 wxBitmap GetImage_Wood63();
 wxBitmap GetImage_Wood63_r();
+wxBitmap GetImage_Enclosure0();
+wxBitmap GetImage_Enclosure1();
+wxBitmap GetImage_Enclosure2();
+wxBitmap GetImage_Enclosure3();
+wxBitmap GetImage_Enclosure4();
+wxBitmap GetImage_Enclosure5();
+wxBitmap GetImage_Enclosure6();
+wxBitmap GetImage_Enclosure7();
+wxBitmap GetImage_Enclosure8();
+wxBitmap GetImage_Enclosure9();
+wxBitmap GetImage_Enclosure10();
+wxBitmap GetImage_Enclosure11();
+wxBitmap GetImage_Enclosure12();
+wxBitmap GetImage_Enclosure13();
+wxBitmap GetImage_Enclosure14();
 
 wxBitmap GetImage_GOIcon();
 
