@@ -100,6 +100,16 @@ GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(IniFileConfig& ini, GrandOrgueFil
 	m_DispTrimBelowManuals = ini.ReadBoolean(m_group, wxT("DispTrimBelowManuals"));
 	m_DispTrimAboveExtraRows = ini.ReadBoolean(m_group, wxT("DispTrimAboveExtraRows"));
 	m_DispExtraDrawstopRowsAboveExtraButtonRows = ini.ReadBoolean(m_group, wxT("DispExtraDrawstopRowsAboveExtraButtonRows"));
+	m_DrawStopWidth = ini.ReadInteger(m_group, wxT("DispDrawstopWidth"), 1, 150, false, 78),
+	m_DrawStopHeight = ini.ReadInteger(m_group, wxT("DispDrawstopHeight"), 1, 150, false, 69),
+	m_ButtonWidth = ini.ReadInteger(m_group, wxT("DispPistonWidth"), 1, 150, false, 44),
+	m_ButtonHeight = ini.ReadInteger(m_group, wxT("DispPistonHeight"), 1, 150, false, 40),
+	m_EnclosureWidth = ini.ReadInteger(m_group, wxT("DispEnclosureWidth"), 1, 150, false, 52),
+	m_EnclosureHeight = ini.ReadInteger(m_group, wxT("DispEnclosureHeight"), 1, 150, false, 63),
+	m_PedalHeight = ini.ReadInteger(m_group, wxT("DispPedalHeight"), 1, 150, false, 40),
+	m_PedalKeyWidth = ini.ReadInteger(m_group, wxT("DispPedalKeyWidth"), 1, 150, false, 7),
+	m_ManualHeight = ini.ReadInteger(m_group, wxT("DispManualHeight"), 1, 150, false, 32),
+	m_ManualKeyWidth = ini.ReadInteger(m_group, wxT("DispManualKeyWidth"), 1, 150, false, 12),
 
 	Update();
 }
