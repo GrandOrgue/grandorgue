@@ -30,7 +30,12 @@
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb):
 	GOGUIControl(panel, control),
 	m_enclosure(control),
-	m_enclosure_nb(enclosure_nb)
+	m_enclosure_nb(enclosure_nb),
+	m_MouseAxisStart(0),
+	m_MouseAxisEnd(0),
+	m_TileOffsetX(0),
+	m_TileOffsetY(0),
+	m_Bitmaps(0)
 {
 }
 
@@ -43,42 +48,30 @@ void GOGUIEnclosure::Load(IniFileConfig& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 
+	for(int i = 0; i < 15; i++)
+		m_Bitmaps.push_back(m_panel->LoadBitmap(wxString::Format(wxT("GO:enclosure%d"), i), wxEmptyString));
+
 	int x = m_metrics->GetEnclosureX(this);
 	int y = m_metrics->GetEnclosureY();
 	m_BoundingRect = wxRect(x, y, 46, 61);
+	m_TextRect = wxRect(x, y, 46, 61);
+	m_MouseRect = wxRect(x, y + 13, 46, 45);
+	m_MouseAxisStart = 16;
+	m_MouseAxisEnd = 30;
 }
 
 void GOGUIEnclosure::Draw(wxDC* dc)
 {
-	dc->SetPen(*wxTRANSPARENT_PEN);
-	dc->SetBrush(*wxBLACK_BRUSH);
-
-	wxRect rect(m_BoundingRect);
-	dc->DrawRectangle(rect.x, rect.y, rect.width, rect.height);
+	wxBitmap* bmp = m_Bitmaps[((m_Bitmaps.size() - 1) * m_enclosure->GetValue()) / 127];
+	m_panel->TileBitmap(dc, bmp, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
 
 	wxFont font = *wxNORMAL_FONT;
 	font.SetPointSize(7);
 	dc->SetFont(font);
 	dc->SetTextForeground(*wxWHITE);
 
-	dc->DrawLabel(m_enclosure->GetName(), rect, wxALIGN_CENTER_HORIZONTAL);
+	dc->DrawLabel(m_enclosure->GetName(), m_TextRect, wxALIGN_CENTER_HORIZONTAL);
 
-	int enclosure_x = m_BoundingRect.GetX();
-	int enclosure_y = m_BoundingRect.GetY();
-
-	dc->SetBrush(*wxBLACK_BRUSH);
-	dc->DrawRectangle(enclosure_x, enclosure_y + 13, 46, 44);
-	int dx = 1 + ( 3 * m_enclosure->GetValue()) / 127;
-	int dy = 1 + (13 * m_enclosure->GetValue()) / 127;
-	wxPoint points[4];
-	points[0].x = enclosure_x +  7 + dx;
-	points[1].x = enclosure_x + 38 - dx;
-	points[2].x = enclosure_x + 38 + dx;
-	points[3].x = enclosure_x +  7 - dx;
-	points[0].y = points[1].y = enclosure_y + 13 + dy;
-	points[2].y = points[3].y = enclosure_y + 56 - dy;
-	dc->SetBrush(m_metrics->GetPedalBrush());
-	dc->DrawPolygon(4, points);
 	GOGUIControl::Draw(dc);
 }
 
@@ -100,22 +93,23 @@ void GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState&
 	}
 	else
 	{
-		y -= m_BoundingRect.GetY() + 13;
-		if (y < 0 || y > 45)
+		unsigned value;
+		if (!m_MouseRect.Contains(x, y))
 			return;
-		if (y > 16 && y < 29 )
-			y = 16;
-		else if (y >= 30)
-			y = 45 - y;
-
-		unsigned value = y;
+		y -= m_MouseRect.GetY();
+		if (y <= m_MouseAxisStart)
+			value = (127 * y / m_MouseAxisStart);
+		else if (y >= m_MouseAxisEnd)
+			value = (m_MouseRect.GetHeight() - y) * 127 / (m_MouseRect.GetHeight() - m_MouseAxisEnd);
+		else
+			value = 127;
 
 		if (state.GetControl() == this && state.GetIndex() == value)
 			return;
 		state.SetControl(this);
 		state.SetIndex(value);
 
-		m_enclosure->Set(value * 8);
+		m_enclosure->Set(value);
 	}
 }
 
