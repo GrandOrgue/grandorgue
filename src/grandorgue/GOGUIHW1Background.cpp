@@ -40,10 +40,10 @@ void GOGUIHW1Background::Draw(wxDC* dc)
 	{
 		for (int i = 0; i < (m_metrics->NumberOfDrawstopColsToDisplay() >> 2); i++)
 		{
-			m_panel->TileWood(dc, m_metrics->GetDrawstopInsetBackgroundImageNum(), i * 174 + m_metrics->GetJambLeftX() - 5,
-				m_metrics->GetJambLeftRightY(), 166, m_metrics->GetJambLeftRightHeight());
-			m_panel->TileWood(dc, m_metrics->GetDrawstopInsetBackgroundImageNum(), i * 174 + m_metrics->GetJambRightX() - 5, 
-				 m_metrics->GetJambLeftRightY(), 166, m_metrics->GetJambLeftRightHeight());
+			m_panel->TileWood(dc, m_metrics->GetDrawstopInsetBackgroundImageNum(), i * (2 * m_metrics->GetDrawstopWidth() + 18) + m_metrics->GetJambLeftX() - 5,
+				m_metrics->GetJambLeftRightY(), 2 * m_metrics->GetDrawstopWidth() + 10, m_metrics->GetJambLeftRightHeight());
+			m_panel->TileWood(dc, m_metrics->GetDrawstopInsetBackgroundImageNum(), i * (2 * m_metrics->GetDrawstopWidth() + 18) + m_metrics->GetJambRightX() - 5, 
+					  m_metrics->GetJambLeftRightY(), 2 * m_metrics->GetDrawstopWidth() + 10, m_metrics->GetJambLeftRightHeight());
 		}
 	}
 

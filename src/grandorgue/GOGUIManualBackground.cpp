@@ -49,7 +49,7 @@ void GOGUIManualBackground::Draw(wxDC* dc)
 
 	m_panel->TileWood(dc, m_metrics->GetKeyHorizBackgroundImageNum(), m_metrics->GetCenterX(),
 			  mri.piston_y, m_metrics->GetCenterWidth(), 
-			  (!m_ManualNumber && m_metrics->HasExtraPedalButtonRow()) ? 80 : 40);
+			  (!m_ManualNumber && m_metrics->HasExtraPedalButtonRow()) ? 2 * m_metrics->GetButtonHeight() : m_metrics->GetButtonHeight());
 	GOGUIControl::Draw(dc);
 }
 
