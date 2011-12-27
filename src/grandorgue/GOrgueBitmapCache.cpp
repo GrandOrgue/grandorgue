@@ -43,6 +43,22 @@ GOrgueBitmapCache::GOrgueBitmapCache(GrandOrgueFile* organfile) :
 	RegisterBitmap(new wxBitmap(GetImage_fpiston2()), wxT("GO:piston02_on"));
 
 	RegisterBitmap(new wxBitmap(GetImage_label()), wxT("GO:label01"));
+
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure0()), wxT("GO:enclosure0"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure1()), wxT("GO:enclosure1"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure2()), wxT("GO:enclosure2"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure3()), wxT("GO:enclosure3"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure4()), wxT("GO:enclosure4"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure5()), wxT("GO:enclosure5"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure6()), wxT("GO:enclosure6"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure7()), wxT("GO:enclosure7"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure8()), wxT("GO:enclosure8"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure9()), wxT("GO:enclosure9"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure10()), wxT("GO:enclosure10"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure11()), wxT("GO:enclosure11"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure12()), wxT("GO:enclosure12"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure13()), wxT("GO:enclosure13"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure14()), wxT("GO:enclosure14"));
 }
 
 GOrgueBitmapCache::~GOrgueBitmapCache()
