@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2011-12-20 17:22+0100\n"
-"PO-Revision-Date: 2011-12-20 17:36+0100\n"
+"POT-Creation-Date: 2011-12-29 22:18+0100\n"
+"PO-Revision-Date: 2011-12-29 22:48+0100\n"
 "Last-Translator: Lars Palo <lars.palo@yahoo.se>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -163,6 +163,9 @@ msgstr "-100"
 
 msgid "000"
 msgstr "000"
+
+msgid "1/4 comma Mean tone"
+msgstr "1/4 komma medelton"
 
 msgid "16"
 msgstr "16"
@@ -682,6 +685,9 @@ msgstr "Jack"
 msgid "KB"
 msgstr "KB"
 
+msgid "Kirnberger III"
+msgstr "Kirnberger III"
+
 #, c-format
 msgid "LCD-1: %s"
 msgstr "LCD-1: %s"
@@ -891,6 +897,9 @@ msgstr "Föregående fria kombination"
 msgid "Properties"
 msgstr "Egenskaper"
 
+msgid "Pythagorean"
+msgstr "Pythagoreisk"
+
 msgid "Randomize pipe speaking"
 msgstr "Slumpmässiga ansatser"
 
@@ -1069,6 +1078,9 @@ msgstr "Användargränssnitt"
 msgid "Using helpfile %s (search path: %s)"
 msgstr "Använder hjälpfil %s (sökväg: %s)"
 
+msgid "Valotti"
+msgstr "Valotti"
+
 #, c-format
 msgid "Value too long: '/%s/%s': %s"
 msgstr "Värde för stort: '/%s/%s': %s"
@@ -1085,6 +1097,9 @@ msgstr "Väntetiden gick ut"
 msgid "Warning"
 msgstr "Varning"
 
+msgid "Werckmeister III"
+msgstr "Werckmeister III"
+
 msgid "Windows DirectSound"
 msgstr "Windows DirectSound"
 
@@ -1092,7 +1107,7 @@ msgid "Windows WASAPI"
 msgstr "Windows WASAPI"
 
 msgid "Windows WDM-KS"
-msgstr "Windows WDM_KS"
+msgstr "Windows WDM-KS"
 
 #, c-format
 msgid "__%d"
