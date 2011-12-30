@@ -95,6 +95,11 @@ wxBitmap* GOrgueBitmapCache::GetBitmap(wxString filename, wxString maskName)
 
 		if (!maskimage.LoadFile(temp, wxBITMAP_TYPE_ANY, -1))
 			throw wxString::Format(_("Failed to open the graphic '%s'"), maskName.c_str());
+
+		if (image.GetWidth() != maskimage.GetWidth() ||
+		    image.GetHeight() != maskimage.GetHeight())
+			throw wxString::Format(_("bitmap size of '%s' does not match mask '%s'"), filename.c_str(), maskName.c_str());
+
 		image.SetMaskFromImage(maskimage, 0xFF, 0xFF, 0xFF);
 	}
 	
