@@ -33,6 +33,11 @@ set(PortAudio_Win
   os/win/pa_win_util.c
   os/win/pa_win_waveformat.c)
 
+set(PortAudio_Mac
+  hostapi/coreaudio/pa_mac_core.c
+  hostapi/coreaudio/pa_mac_core_blocking.c
+  hostapi/coreaudio/pa_mac_core_utilities.c)
+
 set(PA_Libs)
 
 if (WIN32)
@@ -134,8 +139,8 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
    if (RTAUDIO_USE_CORE)
       add_definitions(-DPA_USE_COREAUDIO)
-      set(PortAudio_Sources ${PortAudio_Sources} hostapi/coreaudio/pa_mac_core.c hostapi/coreaudio/pa_mac_blocking.c hostapi/coreaudio/pa_mac_utilities.c)
-      set(PA_Libs ${PA_libs} -framework\ CoreAudio -framework\ CoreFoundation)
+      set(PortAudio_Sources ${PortAudio_Sources} ${PortAudio_Mac})
+      set(PA_Libs ${PA_libs} -framework\ CoreAudio -framework\ CoreFoundation -framework\ AudioUnit)
    endif ()
 
 else ()
