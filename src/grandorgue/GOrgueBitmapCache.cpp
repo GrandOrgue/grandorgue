@@ -59,6 +59,60 @@ GOrgueBitmapCache::GOrgueBitmapCache(GrandOrgueFile* organfile) :
 	RegisterBitmap(new wxBitmap(GetImage_Enclosure12()), wxT("GO:enclosure12"));
 	RegisterBitmap(new wxBitmap(GetImage_Enclosure13()), wxT("GO:enclosure13"));
 	RegisterBitmap(new wxBitmap(GetImage_Enclosure14()), wxT("GO:enclosure14"));
+
+	RegisterBitmap(new wxBitmap(GetImage_PedalNaturalWoodUp()), wxT("GO:PedalOff_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_PedalSharpBlackUp()), wxT("GO:PedalOff_Sharp"));
+	RegisterBitmap(new wxBitmap(GetImage_PedalNaturalWoodDown()), wxT("GO:PedalOn_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_PedalSharpBlackDown()), wxT("GO:PedalOn_Sharp"));
+
+	RegisterBitmap(new wxBitmap(GetImage_PedalNaturalBlackUp()), wxT("GO:PedalInvertedOff_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_PedalSharpWoodUp()), wxT("GO:PedalInvertedOff_Sharp"));
+	RegisterBitmap(new wxBitmap(GetImage_PedalNaturalBlackDown()), wxT("GO:PedalInvertedOn_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_PedalSharpWoodDown()), wxT("GO:PedalInvertedOn_Sharp"));
+
+	RegisterBitmap(new wxBitmap(GetImage_ManualCWhiteUp()), wxT("GO:ManualOff_C"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualDWhiteUp()), wxT("GO:ManualOff_D"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualEWhiteUp()), wxT("GO:ManualOff_E"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualNaturalWhiteUp()), wxT("GO:ManualOff_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualSharpBlackUp()), wxT("GO:ManualOff_Sharp"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualCWhiteDown()), wxT("GO:ManualOn_C"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualDWhiteDown()), wxT("GO:ManualOn_D"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualEWhiteDown()), wxT("GO:ManualOn_E"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualNaturalWhiteDown()), wxT("GO:ManualOn_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualSharpBlackDown()), wxT("GO:ManualOn_Sharp"));
+
+	RegisterBitmap(new wxBitmap(GetImage_ManualCBlackUp()), wxT("GO:ManualInvertedOff_C"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualDBlackUp()), wxT("GO:ManualInvertedOff_D"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualEBlackUp()), wxT("GO:ManualInvertedOff_E"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualNaturalBlackUp()), wxT("GO:ManualInvertedOff_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualSharpWhiteUp()), wxT("GO:ManualInvertedOff_Sharp"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualCBlackDown()), wxT("GO:ManualInvertedOn_C"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualDBlackDown()), wxT("GO:ManualInvertedOn_D"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualEBlackDown()), wxT("GO:ManualInvertedOn_E"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualNaturalBlackDown()), wxT("GO:ManualInvertedOn_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualSharpWhiteDown()), wxT("GO:ManualInvertedOn_Sharp"));
+
+	RegisterBitmap(new wxBitmap(GetImage_ManualCWoodUp()), wxT("GO:ManualWoodOff_C"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualDWoodUp()), wxT("GO:ManualWoodOff_D"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualEWoodUp()), wxT("GO:ManualWoodOff_E"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualNaturalWoodUp()), wxT("GO:ManualWoodOff_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualSharpBlackUp()), wxT("GO:ManualWoodOff_Sharp"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualCWoodDown()), wxT("GO:ManualWoodOn_C"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualDWoodDown()), wxT("GO:ManualWoodOn_D"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualEWoodDown()), wxT("GO:ManualWoodOn_E"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualNaturalWoodDown()), wxT("GO:ManualWoodOn_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualSharpBlackDown()), wxT("GO:ManualWoodOn_Sharp"));
+
+	RegisterBitmap(new wxBitmap(GetImage_ManualCBlackUp()), wxT("GO:ManualInvertedWoodOff_C"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualDBlackUp()), wxT("GO:ManualInvertedWoodOff_D"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualEBlackUp()), wxT("GO:ManualInvertedWoodOff_E"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualNaturalBlackUp()), wxT("GO:ManualInvertedWoodOff_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualSharpWoodUp()), wxT("GO:ManualInvertedWoodOff_Sharp"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualCBlackDown()), wxT("GO:ManualInvertedWoodOn_C"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualDBlackDown()), wxT("GO:ManualInvertedWoodOn_D"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualEBlackDown()), wxT("GO:ManualInvertedWoodOn_E"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualNaturalBlackDown()), wxT("GO:ManualInvertedWoodOn_Natural"));
+	RegisterBitmap(new wxBitmap(GetImage_ManualSharpWoodDown()), wxT("GO:ManualInvertedWoodOn_Sharp"));
 }
 
 GOrgueBitmapCache::~GOrgueBitmapCache()
