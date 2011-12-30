@@ -28,7 +28,7 @@
 #include "GOGUIHW1Background.h"
 #include "GOGUIImage.h"
 #include "GOGUILabel.h"
-#include "GOGUIManual.h"
+#include "GOGUIManualClassic.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
@@ -230,7 +230,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			group.Printf(wxT("Manual%03d"), i);
 			if (m_organfile->GetManual(i)->IsDisplayed())
 			{
-				GOGUIControl* control = new GOGUIManual(this, m_organfile->GetManual(i), i);
+				GOGUIControl* control = new GOGUIManualClassic(this, m_organfile->GetManual(i), i);
 				control->Load(cfg, group);
 				AddControl(control);
 			}
@@ -382,7 +382,7 @@ void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
 			buffer.Printf(wxT("Manual%03d"), i);
 			unsigned manual_nb  = cfg.ReadInteger(group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 			buffer.Printf(wxT("Manual%03d"), manual_nb);
-			GOGUIControl* control = new GOGUIManual(this, m_organfile->GetManual(manual_nb), i);
+			GOGUIControl* control = new GOGUIManualClassic(this, m_organfile->GetManual(manual_nb), i);
 			control->Load(cfg, group + buffer);
 			AddControl(control);
 		}
