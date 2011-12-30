@@ -131,6 +131,46 @@ wxBitmap GetImage_Enclosure12();
 wxBitmap GetImage_Enclosure13();
 wxBitmap GetImage_Enclosure14();
 
+wxBitmap GetImage_ManualCBlackDown();
+wxBitmap GetImage_ManualCBlackUp();
+wxBitmap GetImage_ManualCWhiteDown();
+wxBitmap GetImage_ManualCWhiteUp();
+wxBitmap GetImage_ManualCWoodDown();
+wxBitmap GetImage_ManualCWoodUp();
+wxBitmap GetImage_ManualDBlackDown();
+wxBitmap GetImage_ManualDBlackUp();
+wxBitmap GetImage_ManualDWhiteDown();
+wxBitmap GetImage_ManualDWhiteUp();
+wxBitmap GetImage_ManualDWoodDown();
+wxBitmap GetImage_ManualDWoodUp();
+wxBitmap GetImage_ManualEBlackDown();
+wxBitmap GetImage_ManualEBlackUp();
+wxBitmap GetImage_ManualEWhiteDown();
+wxBitmap GetImage_ManualEWhiteUp();
+wxBitmap GetImage_ManualEWoodDown();
+wxBitmap GetImage_ManualEWoodUp();
+wxBitmap GetImage_ManualNaturalBlackDown();
+wxBitmap GetImage_ManualNaturalBlackUp();
+wxBitmap GetImage_ManualNaturalWhiteDown();
+wxBitmap GetImage_ManualNaturalWhiteUp();
+wxBitmap GetImage_ManualNaturalWoodDown();
+wxBitmap GetImage_ManualNaturalWoodUp();
+wxBitmap GetImage_ManualSharpBlackDown();
+wxBitmap GetImage_ManualSharpBlackUp();
+wxBitmap GetImage_ManualSharpWhiteDown();
+wxBitmap GetImage_ManualSharpWhiteUp();
+wxBitmap GetImage_ManualSharpWoodDown();
+wxBitmap GetImage_ManualSharpWoodUp();
+wxBitmap GetImage_PedalNaturalBlackDown();
+wxBitmap GetImage_PedalNaturalBlackUp();
+wxBitmap GetImage_PedalNaturalWoodDown();
+wxBitmap GetImage_PedalNaturalWoodUp();
+wxBitmap GetImage_PedalSharpBlackDown();
+wxBitmap GetImage_PedalSharpBlackUp();
+wxBitmap GetImage_PedalSharpWoodDown();
+wxBitmap GetImage_PedalSharpWoodUp();
+
+
 wxBitmap GetImage_GOIcon();
 
 unsigned GetImageCount_Wood();
