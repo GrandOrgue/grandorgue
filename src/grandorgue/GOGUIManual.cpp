@@ -32,243 +32,164 @@ GOGUIManual::GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manua
 	GOGUIControl(panel, manual),
 	m_manual(manual),
 	m_ManualNumber(manual_number),
-	m_key_colour_inverted(false),
-	m_key_colour_wooden(false)
+	m_Keys()
 {
 }
 
 void GOGUIManual::Load(IniFileConfig& cfg, wxString group)
 {
+	const wxChar* keyNames[12] = { wxT("C"), wxT("Cis"), wxT("D"), wxT("Dis"), wxT("E"), wxT("F"), wxT("Fis"), wxT("G"),
+				       wxT("Gis"), wxT("A"), wxT("Ais"), wxT("B") };
+
 	GOGUIControl::Load(cfg, group);
-	m_key_colour_inverted               = cfg.ReadBoolean(group, wxT("DispKeyColourInverted"));
-	m_key_colour_wooden                 = cfg.ReadBoolean(group, wxT("DispKeyColourWooden"), false);
+	bool color_inverted = cfg.ReadBoolean(group, wxT("DispKeyColourInverted"), false, false);
+	bool color_wooden = cfg.ReadBoolean(group, wxT("DispKeyColourWooden"), false, false);
+	wxString type = m_ManualNumber ? wxT("Manual") : wxT("Pedal");
+	if (color_inverted)
+		type += wxT("Inverted");
+	if (color_wooden && m_ManualNumber)
+		type += wxT("Wood");
 
 	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
-	m_BoundingRect = wxRect(mri.x, mri.keys_y, mri.width, mri.height);
-}
+	unsigned x = 0, y = 0;
+	int width = 0, height = 1;
 
-void GOGUIManual::GetKeyDimensions(unsigned key_midi_nb, int &x, int &cx, int &cy, int &z)
-{
-	static const int addends[12] = {0, 9, 12, 21, 24, 36, 45, 48, 57, 60, 69, 72};
-
-	/* Key MIDI number must be valid for this manual */
-	assert
-		((key_midi_nb >= m_manual->GetFirstAccessibleKeyMIDINoteNumber()) &&
-		 (key_midi_nb < m_manual->GetNumberOfAccessibleKeys() + m_manual->GetFirstAccessibleKeyMIDINoteNumber()));
-
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
-
-	int is_natural = (((key_midi_nb % 12) < 5 && !(key_midi_nb & 1)) || ((key_midi_nb % 12) >= 5 && (key_midi_nb & 1))) ? 0 : 1;
-	int j;
-	if (m_ManualNumber)
+	m_Keys.resize(m_manual->GetNumberOfAccessibleKeys());
+	for(unsigned i = 0; i < m_Keys.size(); i++)
 	{
-		x  = mri.x + (key_midi_nb / 12) * 84;
-		x += addends[key_midi_nb % 12];
-		j  = m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		x -= (j / 12) * 84;
-		x -= addends[j % 12];
-		if (is_natural)
+		unsigned key_nb = i + m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+		m_Keys[i].MidiNumber = key_nb;
+		m_Keys[i].IsSharp = (((key_nb % 12) < 5 && !(key_nb & 1)) || ((key_nb % 12) >= 5 && (key_nb & 1))) ? false : true;
+
+		wxString off_mask_file, on_mask_file;
+		wxString on_file, off_file;
+		wxString bmp_type;
+		unsigned key_width;
+		int key_offset;
+		wxString base = keyNames[key_nb % 12];
+		if (!i)
+			base = wxT("First") + base;
+		else if (i + 1 == m_Keys.size())
+			base = wxT("Last") + base;
+
+		if (!m_ManualNumber)
 		{
-			cx = 7;
-			cy = 20;
+			bmp_type = m_Keys[i].IsSharp ? wxT("Sharp") : wxT("Natural");
 		}
 		else
 		{
-			cx = 13;
-			cy = 32;
+			if (m_Keys[i].IsSharp)
+				bmp_type = wxT("Sharp");
+			else if (i == 0)
+			{
+				switch(key_nb %12)
+				{
+				case 4:
+				case 11:
+					bmp_type = wxT("Natural");
+					break;
+				default:
+					bmp_type = wxT("C");
+				}
+			}
+			else if (i + 1 == m_Keys.size())
+			{
+				switch(key_nb %12)
+				{
+				case 0:
+				case 5:
+					bmp_type = wxT("Natural");
+					break;
+				default:
+					bmp_type = wxT("E");
+				}
+			}
+			else 
+			{
+				switch(key_nb %12)
+				{
+				case 0:
+				case 5:
+					bmp_type = wxT("C");
+					break;
+				case 4:
+				case 11:
+					bmp_type = wxT("E");
+					break;
+				default:
+					bmp_type = wxT("D");
+				}
+			}
 		}
-	}
-	else
-	{
-		cx = 8;
-		x  = mri.x + (key_midi_nb / 12) * 98;
-		x += (key_midi_nb % 12) * 7;
-		if ((key_midi_nb % 12) >= 5)
-			x += 7;
-		j  = m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		x -= (j / 12) * 98;
-		x -= (j % 12) * 7;
-		if ((j % 12) >= 5)
-			x -= 7;
-		if (is_natural)
+		off_file = wxT("GO:") + type + wxT("Off_") + bmp_type;
+		on_file = wxT("GO:") + type + wxT("On_") + bmp_type;
+
+		on_file = cfg.ReadString(group, wxT("ImageOn_") + base, 255, false, on_file);
+		off_file = cfg.ReadString(group, wxT("ImageOff_") + base, 255, false, off_file);
+		on_mask_file = cfg.ReadString(group, wxT("MaskOn_") + base, 255, false, wxEmptyString);
+		off_mask_file = cfg.ReadString(group, wxT("MaskOff_") + base, 255, false, on_mask_file);
+
+		on_file = cfg.ReadString(group, wxString::Format(wxT("Key%03dImageOn"), i + 1), 255, false, on_file);
+		off_file = cfg.ReadString(group, wxString::Format(wxT("Key%03dImageOff"), i + 1), 255, false, off_file);
+		on_mask_file = cfg.ReadString(group, wxString::Format(wxT("Key%03dMaskOn"), i + 1), 255, false, on_mask_file);
+		off_mask_file = cfg.ReadString(group, wxString::Format(wxT("Key%03dMaskOff"), i + 1), 255, false, off_mask_file);
+
+		m_Keys[i].OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
+		m_Keys[i].OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
+
+		if (m_Keys[i].OnBitmap->GetWidth() != m_Keys[i].OffBitmap->GetWidth() ||
+		    m_Keys[i].OnBitmap->GetHeight() != m_Keys[i].OffBitmap->GetHeight())
+			throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
+
+		key_width = m_Keys[i].OnBitmap->GetWidth();
+		key_offset = 0;
+		if (m_Keys[i].IsSharp && m_ManualNumber)
 		{
-			cy = 20;
-		}
-		else
+			key_width = 0;
+			key_offset = - m_Keys[i].OnBitmap->GetWidth() / 2;
+		} else if (!m_ManualNumber && ((i % 12) == 4 || (i % 12) == 11) && i)
 		{
-			cy = 40;
+			key_width += m_Keys[i - 1].Rect.GetWidth();
 		}
-	}
 
-	if (!m_ManualNumber || is_natural)
+		key_width = cfg.ReadInteger(group, wxT("Width_") + base, 0, 50, false, key_width);
+		key_offset = cfg.ReadInteger(group, wxT("Offset_") + base, -50, 50, false, key_offset);
+
+		key_width = cfg.ReadInteger(group, wxString::Format(wxT("Key%03dWidth"), i + 1), 0, 50, false, key_width);
+		key_offset = cfg.ReadInteger(group, wxString::Format(wxT("Key%03dOffset"), i + 1), -50, 50, false, key_offset);
+
+		m_Keys[i].Rect = wxRect(x + key_offset, y, m_Keys[i].OnBitmap->GetWidth(), m_Keys[i].OnBitmap->GetHeight());
+		if (height < m_Keys[i].OnBitmap->GetHeight())
+			height = m_Keys[i].OnBitmap->GetHeight();
+		x += key_width;
+	}
+	width = x;
+
+	x = mri.x;
+	y = mri.keys_y;
+
+	if (width < mri.width)
+		x += (mri.width - width) / 2;
+
+	x = cfg.ReadInteger(group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
+	y = cfg.ReadInteger(group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
+
+	for(unsigned i = 0; i < m_Keys.size(); i++)
 	{
-		z = -4;
-	}
-	else
-	{
-		z = 0;
-
-		int j = key_midi_nb % 12;
-		if (key_midi_nb > m_manual->GetFirstAccessibleKeyMIDINoteNumber() && j && j != 5)
-			z |= 2;
-		if (key_midi_nb < m_manual->GetFirstAccessibleKeyMIDINoteNumber() + m_manual->GetNumberOfAccessibleKeys() - 1 && j != 4 && j != 11)
-			z |= 1;
+		m_Keys[i].Rect.SetX(m_Keys[i].Rect.GetX() + x);
+		m_Keys[i].Rect.SetY(m_Keys[i].Rect.GetY() + y);
 	}
 
-
+	m_BoundingRect = wxRect(x, y, width, height);
 }
-
-wxRegion GOGUIManual::GetKeyRegion(unsigned key_nb)
-{
-
-	int x, cx, cy, z;
-	wxRegion reg;
-
-	assert((key_nb >= 0) && (key_nb < m_manual->GetNumberOfAccessibleKeys())); /* the index must be valid */
-
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
-
-	key_nb += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-	GetKeyDimensions(key_nb, x, cx, cy, z);
-
-	int is_sharp  = (((key_nb % 12) < 5 && !(key_nb & 1)) || ((key_nb % 12) >= 5 && (key_nb & 1))) ? 0 : 1;
-
-	if (!m_ManualNumber || is_sharp)
-	{
-		reg.Union(x, mri.keys_y, cx + 1, cy);
-	}
-	else
-	{
-		reg.Union(x + 3, mri.keys_y, 8, cy);
-		reg.Union(x, mri.keys_y + 18, 14, 14);
-
-		if (!(z & 2))
-			reg.Union(x, mri.keys_y, 3, 18);
-		if (!(z & 1))
-			reg.Union(x + 11, mri.keys_y, 3, 18);
-	}
-
-	return reg;
-}
-
-void GOGUIManual::DrawKey(wxDC* dc, unsigned key_nb)
-{
-
-	static wxPoint g_points[4][17] = {
-		{ wxPoint( 0, 0), wxPoint(13, 0), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0, 1), wxPoint(12, 1), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1, 1), },
-		{ wxPoint( 0, 0), wxPoint(10, 0), wxPoint(10,18), wxPoint(13,18), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0, 1), wxPoint( 9, 1), wxPoint( 9,19), wxPoint(12,19), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1, 1), },
-		{ wxPoint( 3, 0), wxPoint(13, 0), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0,18), wxPoint( 3,18), wxPoint( 3, 1), wxPoint(12, 1), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1,19), wxPoint( 4,19), wxPoint( 4, 1), },
-		{ wxPoint( 3, 0), wxPoint(10, 0), wxPoint(10,18), wxPoint(13,18), wxPoint(13,31), wxPoint( 0,31), wxPoint( 0,18), wxPoint( 3,18), wxPoint( 3, 1), wxPoint( 9, 1), wxPoint( 9,19), wxPoint(12,19), wxPoint(12,30), wxPoint( 1,30), wxPoint( 1,19), wxPoint( 4,19), wxPoint( 4, 1), },
-	};
-
-	assert(key_nb < m_manual->GetNumberOfAccessibleKeys()); /* the index must be valid */
-
-	int k = key_nb + m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-	int x, cx, cy, z;
-	GetKeyDimensions(k, x, cx, cy, z);
-
-	const wxPen* pen = m_manual->IsKeyDown(k) ? wxRED_PEN : wxGREY_PEN;
-	dc->SetPen(*pen);
-	wxRegion exclude;
-
-	if (!m_manual->IsKeyDown(k))
-	{
-
-		if ((k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) > 0 && m_manual->IsKeyDown(k - 1)) {
-			k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-			exclude.Union(GetKeyRegion(k - 1));
-			k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		}
-		if ((z & 2) && (k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) > 1 && m_manual->IsKeyDown(k - 2)) {
-			k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-			exclude.Union(GetKeyRegion(k - 2));
-			k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		}
-		if ((k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) < m_manual->GetNumberOfAccessibleKeys() - 1 && m_manual->IsKeyDown(k + 1)) {
-			k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-			exclude.Union(GetKeyRegion(k + 1));
-			k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		}
-		if ((z & 1) && (k - m_manual->GetFirstAccessibleKeyMIDINoteNumber()) < m_manual->GetNumberOfAccessibleKeys() - 2 && m_manual->IsKeyDown(k + 2)) {
-			k -= m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-			exclude.Union(GetKeyRegion(k + 2));
-			k += m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		}
-
-	}
-
-	wxRegion reg = GetKeyRegion(key_nb);
-
-	if (!exclude.IsEmpty())
-	{
-		reg.Subtract(exclude);
-		reg.Offset(dc->LogicalToDeviceX(0), dc->LogicalToDeviceY(0));
-		dc->SetClippingRegion(reg);
-	}
-
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
-
-	if (z < 0)
-	{
-		dc->SetBrush(*wxTRANSPARENT_BRUSH);
-		dc->DrawRectangle(x, mri.keys_y, cx + 1, cy);
-		dc->DrawRectangle(x + 1, mri.keys_y + 1, cx - 1, cy - 2);
-	}
-	else
-	{
-		dc->DrawPolygon(9 + (((z + 1) >> 1) << 2), g_points[z], x, mri.keys_y);
-	}
-
-	if (!exclude.IsEmpty())
-		dc->DestroyClippingRegion();
-}
-
 
 void GOGUIManual::Draw(wxDC* dc)
 {
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
-
-	wxRegion region;
-	for (unsigned j = 0; j < m_manual->GetNumberOfAccessibleKeys(); j++)
+	for (unsigned i = 0; i < m_Keys.size(); i++)
 	{
-		unsigned k = m_manual->GetFirstAccessibleKeyMIDINoteNumber() + j;
-		if ( (((k % 12) < 5 && !(k & 1)) || ((k % 12) >= 5 && (k & 1))))
-			region.Union(GetKeyRegion(j));
+		wxBitmap* bitmap = m_manual->IsKeyDown(m_Keys[i].MidiNumber) ? m_Keys[i].OnBitmap : m_Keys[i].OffBitmap;
+		dc->DrawBitmap(*bitmap, m_Keys[i].Rect.GetX(), m_Keys[i].Rect.GetY(), true);
 	}
-
-	if (!region.IsEmpty())
-	{
-
-		unsigned j = 31 + (m_key_colour_inverted << 1);
-		if (j == 31 && (m_key_colour_wooden || !m_ManualNumber))
-			j = 35;
-
-		dc->SetClippingRegion(region);
-		m_panel->TileWood(dc, j, m_metrics->GetCenterX(), mri.keys_y, m_metrics->GetCenterWidth(), mri.height);
-
-	}
-	region.Clear();
-
-	for (unsigned j = 0; j < m_manual->GetNumberOfAccessibleKeys(); j++)
-	{
-		unsigned k = m_manual->GetFirstAccessibleKeyMIDINoteNumber() + j;
-		if (!(((k % 12) < 5 && !(k & 1)) || ((k % 12) >= 5 && (k & 1))))
-			region.Union(GetKeyRegion(j));
-	}
-
-	if (!region.IsEmpty())
-	{
-		unsigned j = 33 - (m_key_colour_inverted << 1);
-		if (j == 31 && (m_key_colour_wooden || !m_ManualNumber))
-			j = (m_metrics->GetKeyVertBackgroundImageNum() % 10) == 1 && !m_ManualNumber ? 13 : 35;
-
-		dc->SetClippingRegion(region);
-		m_panel->TileWood(dc, j, m_metrics->GetCenterX(), mri.keys_y, m_metrics->GetCenterWidth(), mri.height);
-
-	}
-
-	for (unsigned j = 0; j < m_manual->GetNumberOfAccessibleKeys(); j++)
-		DrawKey(dc, j);
 	GOGUIControl::Draw(dc);
 }
 
@@ -291,18 +212,18 @@ void GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	}
 	else
 	{
-		wxRegion reg;
-		for(unsigned i = 0; i < m_manual->GetNumberOfAccessibleKeys(); i++)
+		for(unsigned i = 0; i < m_Keys.size(); i++)
 		{
-			reg = GetKeyRegion(i);
-			if (reg.Contains(x, y))
+			if (m_Keys[i].Rect.Contains(x, y))
 			{
+				if (i + 1 < m_Keys.size() && m_Keys[i + 1].IsSharp && m_Keys[i + 1].Rect.Contains(x, y))
+					continue;
 				if (state.GetControl() == this && state.GetIndex() == i)
 					return;
 				state.SetControl(this);
 				state.SetIndex(i);
 
-				m_manual->Set(i + m_manual->GetFirstAccessibleKeyMIDINoteNumber(), !m_manual->IsKeyDown(i + m_manual->GetFirstAccessibleKeyMIDINoteNumber()));
+				m_manual->Set(m_Keys[i].MidiNumber, !m_manual->IsKeyDown(m_Keys[i].MidiNumber));
 				return;
 			}
 		}
