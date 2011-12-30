@@ -23,6 +23,7 @@
 #ifndef GOGUIMANUAL_H
 #define GOGUIMANUAL_H
 
+#include <vector>
 #include "GOGUIControl.h"
 
 class GOrgueManual;
@@ -30,14 +31,17 @@ class GOrgueManual;
 class GOGUIManual : public GOGUIControl
 {
 private:
+	typedef struct {
+		unsigned MidiNumber;
+		bool IsSharp;
+		wxRect Rect;
+		wxBitmap* OnBitmap;
+		wxBitmap* OffBitmap;
+	} KeyInfo;
+
 	GOrgueManual* m_manual;
 	unsigned m_ManualNumber;
-	bool m_key_colour_inverted;
-	bool m_key_colour_wooden;
-
-	void GetKeyDimensions(unsigned key_midi_nb, int &x, int &cx, int &cy, int &z);
-	wxRegion GetKeyRegion(unsigned key_nb);
-	void DrawKey(wxDC* dc, unsigned key_nb);
+	std::vector<KeyInfo> m_Keys;
 
 public:
 	GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number);

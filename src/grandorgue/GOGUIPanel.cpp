@@ -28,6 +28,7 @@
 #include "GOGUIHW1Background.h"
 #include "GOGUIImage.h"
 #include "GOGUILabel.h"
+#include "GOGUIManual.h"
 #include "GOGUIManualClassic.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
