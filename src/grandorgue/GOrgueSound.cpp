@@ -212,6 +212,7 @@ bool GOrgueSound::OpenSound()
 	m_recorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
 
 	PreparePlayback(NULL);
+	CloseSound();
 
 	try
 	{
@@ -232,15 +233,15 @@ bool GOrgueSound::OpenSound()
 			m_recorder.SetSampleRate(sample_rate);
 
 			unsigned try_latency = m_Settings.GetAudioDeviceLatency(defaultAudio);
-			m_SamplesPerBuffer = BLOCKS_PER_FRAME * ceil (sample_rate * try_latency / 1000.0 / BLOCKS_PER_FRAME);
-			if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
-				m_SamplesPerBuffer = MAX_FRAME_SIZE;
-			if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
-				m_SamplesPerBuffer = BLOCKS_PER_FRAME;
-
 			if (it->second.rt_api == RTAPI_PORTAUDIO)
 			{
 				format = RTAUDIO_FLOAT32;
+				m_SamplesPerBuffer = BLOCKS_PER_FRAME * ceil(sample_rate * try_latency / 1000.0 / BLOCKS_PER_FRAME);
+				if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
+					m_SamplesPerBuffer = MAX_FRAME_SIZE;
+				if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
+					m_SamplesPerBuffer = BLOCKS_PER_FRAME;
+
 				PaStreamParameters stream_parameters;
 				stream_parameters.device = it->second.rt_api_subindex;
 				stream_parameters.channelCount = 2;
@@ -268,7 +269,13 @@ bool GOrgueSound::OpenSound()
 			{
 				audioDevice = new RtAudio(it->second.rt_api);
 
-				GOrgueRtHelpers::GetBufferConfig(it->second.rt_api, try_latency, sample_rate, &m_nb_buffers, &m_SamplesPerBuffer);
+				GOrgueRtHelpers::GetBufferConfig
+					(it->second.rt_api
+					,try_latency
+					,sample_rate
+					,&m_nb_buffers
+					,&m_SamplesPerBuffer
+					);
 
 				RtAudio::StreamParameters aOutputParam;
 				aOutputParam.deviceId = it->second.rt_api_subindex;
@@ -546,9 +553,7 @@ GOrgueSound::AudioCallback
 	,RtAudioStreamStatus status
 	,void *userData)
 {
-
 	assert(userData);
-
 	if (nFrames & (BLOCKS_PER_FRAME - 1))
 	{
 		wxString error;
@@ -565,13 +570,11 @@ GOrgueSound::AudioCallback
 		,nFrames
 		,streamTime
 		);
-
 }
 
 int GOrgueSound::PaAudioCallback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
 {
 	assert(userData);
-
 	if (frameCount & (BLOCKS_PER_FRAME - 1))
 	{
 		wxString error;
