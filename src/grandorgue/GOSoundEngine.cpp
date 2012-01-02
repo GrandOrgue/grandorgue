@@ -693,7 +693,7 @@ int GOSoundEngine::GetSamples
 
 	}
 
-	m_CurrentTime += 1;
+	m_CurrentTime += n_frames / BLOCKS_PER_FRAME;
 
 	/* Clamp the output */
 	static const float CLAMP_MIN = -1.0f;
@@ -797,9 +797,15 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			const bool not_a_tremulant = (handle->sampler_group_id >= 0);
 			if (not_a_tremulant)
 			{
+				/* Because this sampler is about to be moved to a detached
+				 * windchest, we must apply the gain of the existing windchest
+				 * to the gain target for this fader - otherwise the playback
+				 * volume on the detached chest will not match the volume on
+				 * the existing chest. */
 				gain_target *= vol;
 				if (m_ScaledReleases)
 				{
+					/* Note: "time" is in milliseconds. */
 					int time = ((m_CurrentTime - handle->time) * (10 * BLOCKS_PER_FRAME)) / (m_SampleRate / 100);
 					if (time < 256)
 						gain_target *= 0.5f + time * (1.0f / 512.0f);

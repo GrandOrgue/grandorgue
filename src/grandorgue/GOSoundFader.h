@@ -113,7 +113,7 @@ void FaderStartDecay
 	assert(duration_shift < 0);
 	fader_state->decay =
 			-scalbnf(fader_state->target
-			        ,duration_shift /* results in approx 0.37s maximum decay length */
+			        ,duration_shift
 			        );
 }
 
