@@ -199,7 +199,7 @@ void GOrgueSound::StopThreads()
 
 bool GOrgueSound::OpenSound()
 {
-
+	assert(audioDevice == NULL && audioStream == NULL);
 	bool opened_ok = false;
 
 	defaultAudio = m_Settings.GetDefaultAudioDevice();
@@ -212,7 +212,6 @@ bool GOrgueSound::OpenSound()
 	m_recorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
 
 	PreparePlayback(NULL);
-	CloseSound();
 
 	try
 	{
@@ -388,6 +387,9 @@ bool GOrgueSound::ResetSound()
 {
 	wxBusyCursor busy;
 	GrandOrgueFile* organfile = m_organfile;
+
+	if (audioDevice == NULL && audioStream == NULL)
+		return false;
 
 	CloseSound();
 	if (!OpenSound())
