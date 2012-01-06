@@ -99,7 +99,7 @@ void SettingsDialog::SetLatencySpinner(int latency)
 
 }
 
-#define SETTINGS_DLG_SIZE wxSize(603,600)
+#define SETTINGS_DLG_SIZE wxSize(680,600)
 
 SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, SETTINGS_DLG_SIZE),
