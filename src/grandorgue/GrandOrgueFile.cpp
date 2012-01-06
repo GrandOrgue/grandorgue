@@ -736,6 +736,7 @@ void GrandOrgueFile::Save(const wxString& file)
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchName"), m_ChurchName);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ODFPath"), GetODFFilename());
 	if (m_volume >= 0)
 		aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), m_volume);
 
