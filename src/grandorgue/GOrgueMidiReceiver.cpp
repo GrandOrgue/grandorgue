@@ -77,13 +77,17 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 			{
 				buffer.Printf(wxT("MIDIKeyShift%03d"), i + 1);
 				m_events[i].key = cfg.ReadInteger(group, buffer, -35, 35);
+				m_events[i].type = MIDI_M_NOTE;
 				continue;
 			}
 			buffer.Printf(wxT("MIDIKey%03d"), i + 1);
 			m_events[i].key = cfg.ReadInteger(group, buffer, 0, 0x200000);
 			
 			if (m_type == MIDI_RECV_ENCLOSURE)
+			{
+				m_events[i].type = MIDI_M_CTRL_CHANGE;
 				continue;
+			}
 			
 			buffer.Printf(wxT("MIDIEventType%03d"), i + 1);
 			m_events[i].type = (midi_match_message_type)cfg.ReadEnum(group, buffer, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
