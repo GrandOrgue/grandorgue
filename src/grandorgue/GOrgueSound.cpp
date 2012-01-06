@@ -122,7 +122,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 		GO_SOUND_DEV_CONFIG cfg;
 		cfg.rt_api = RTAPI_PORTAUDIO;
 		cfg.rt_api_subindex = i;
-		wxString name = wxGetTranslation(wxString::FromAscii(api->name)) + wxString(wxT(": ")) + wxString::FromAscii(info->name);
+		wxString name = wxGetTranslation(wxString::FromAscii(api->name)) + wxString(_(" (PA): ")) + wxString::FromAscii(info->name);
 		m_audioDevices[name] = cfg;
 		if (Pa_GetDefaultOutputDevice() == i)
 			defaultAudioDevice = name;
