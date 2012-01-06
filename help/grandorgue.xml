@@ -973,7 +973,8 @@ specification. The supported formats are: 8 bit, 16 bit and 24 bit
 PCM, either mono or stereo. The prefered sample rates are 44100 or
 48000 Hz - GO supports any sample rate between 22000 and 96000 Hz.  GO
 only supports a single data chunk. To play looped samples, they must
-include cue points (cue chunk) and loops (smpl chunk).
+include cue points (cue chunk) and loops (smpl chunk). If there are
+multiple loops, each loop should overlap another loop.
 dwMIDIUnityNote and dwMIDIPitchFraction of the smpl chunk are used for
 retuning an organ to other temperaments.
       </para>
