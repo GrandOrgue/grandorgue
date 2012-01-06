@@ -25,6 +25,7 @@
 
 #include "GOSoundFader.h"
 #include "GOSoundDefs.h"
+#include "GOSoundAudioSection.h"
 
 class GOSoundProvider;
 class GOAudioSection;
@@ -34,21 +35,11 @@ typedef struct GO_SAMPLER_T
 	struct GO_SAMPLER_T       *next;
 	const GOSoundProvider     *pipe;
 	int                        sampler_group_id;
-	const GOAudioSection      *pipe_section;
+	audio_section_stream       stream;
 	GOSoundFader               fader;
-	int                        history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
 	unsigned                   time;
 	/* current index of the current block into this sample */
-	float                      position;
-	float                      increment;
 	bool                       stop;
-	/* for decoding compressed format */
-	unsigned                   last_position;
-	const unsigned char*       ptr;
-	int                        last_value[MAX_OUTPUT_CHANNELS];
-	int                        diff_value[MAX_OUTPUT_CHANNELS];
-	int                        curr_value[MAX_OUTPUT_CHANNELS];
-	int                        next_value[MAX_OUTPUT_CHANNELS];
 } GO_SAMPLER;
 
 #endif /* GOSOUNDSAMPLER_H_ */

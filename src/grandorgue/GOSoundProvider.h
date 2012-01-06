@@ -31,19 +31,15 @@ class GOrgueCacheWriter;
 class GOSoundProvider
 {
 
-private:
-	void GetMaxAmplitudeAndDerivative(GOAudioSection& section, int& runningMaxAmplitude, int& runningMaxDerivative);
-
 protected:
  	unsigned m_MidiKeyNumber;
 	float m_MidiPitchFract;
-	float          m_Gain;
-	float          m_Tuning;
-	unsigned int   m_SampleRate;
-	GOAudioSection  m_Attack;
-	GOAudioSection  m_Loop;
-	GOAudioSection  m_Release;
-	GOrgueMemoryPool& m_pool;
+	float             m_Gain;
+	float             m_Tuning;
+	unsigned int      m_SampleRate;
+	GOAudioSection    m_Attack;
+	GOAudioSection    m_Release;
+	GOrgueMemoryPool &m_pool;
 	void ComputeReleaseAlignmentInfo();
 
 public:
@@ -55,7 +51,6 @@ public:
 	virtual bool LoadCache(GOrgueCache& cache);
 	virtual bool SaveCache(GOrgueCacheWriter& cache);
 
-	const GOAudioSection* GetLoop() const;
 	const GOAudioSection* GetRelease() const;
 	const GOAudioSection* GetAttack() const;
 	float GetGain() const;
@@ -67,12 +62,6 @@ public:
 	unsigned GetMidiKeyNumber() const;
 	float GetMidiPitchFract() const;
 };
-
-inline
-const GOAudioSection* GOSoundProvider::GetLoop() const
-{
-	return &m_Loop;
-}
 
 inline
 const GOAudioSection* GOSoundProvider::GetRelease() const

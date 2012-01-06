@@ -23,7 +23,7 @@
 #ifndef GORGUERELEASEALIGNTABLE_H_
 #define GORGUERELEASEALIGNTABLE_H_
 
-#include "GOSoundSampler.h"
+#include "GOSoundAudioSection.h"
 
 #define PHASE_ALIGN_DERIVATIVES    2
 #define PHASE_ALIGN_AMPLITUDES     32
@@ -58,8 +58,8 @@ public:
 		);
 
 	void SetupRelease
-		(GO_SAMPLER_T& release_sampler
-		,const GO_SAMPLER_T& old_sampler
+		(audio_section_stream       &release_sampler
+		,const audio_section_stream &old_sampler
 		) const;
 
 };
