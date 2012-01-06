@@ -20,7 +20,6 @@
  * MA 02111-1307, USA.
  */
 
-#include "GOSoundAudioSectionAccessor.h"
 #include "GOSoundProviderSynthedTrem.h"
 #include "GOrgueMemoryPool.h"
 #include <wx/wx.h>
@@ -31,13 +30,19 @@ GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOrgueMemoryPool& pool) :
 	m_Gain = 1.0f;
 }
 
+inline
 short SynthTrem(double amp, double angle)
 {
 	return (short)(amp * sin(angle));
 }
 
+inline
 short SynthTrem(double amp, double angle, double fade)
 {
+	if (fade > 1.0)
+		fade = 1.0;
+	if (fade < 0.0)
+		fade = 0.0;
 	return (short)(fade * amp * sin(angle));
 }
 
@@ -51,102 +56,93 @@ void GOSoundProviderSynthedTrem::Create
 
 	ClearData();
 
-	unsigned bytes_per_sample = sizeof(wxInt16);
+	const double trem_freq         = 1000.0 / period;
+	const int sample_freq          = 44100;
 
-	unsigned channels            = 1;
-	m_Attack.m_SampleFracBits    = 8 * bytes_per_sample - 1;
-	m_Attack.m_Stage             = GSS_ATTACK;
-	m_Attack.m_Type              = GetAudioSectionType(bytes_per_sample, channels);
-	m_Loop.m_SampleFracBits      = 8 * bytes_per_sample - 1;
-	m_Loop.m_Stage               = GSS_LOOP;
-	m_Loop.m_Type                = GetAudioSectionType(bytes_per_sample, channels);
-	m_Release.m_SampleFracBits   = 8 * bytes_per_sample - 1;
-	m_Release.m_Stage            = GSS_RELEASE;
-	m_Release.m_Type             = GetAudioSectionType(bytes_per_sample, channels);
+	const unsigned attack_samples  = sample_freq / start_rate;
+	const unsigned loop_samples    = sample_freq / trem_freq;
+	const unsigned release_samples = sample_freq / stop_rate;
+	const unsigned total_samples   = attack_samples + loop_samples + release_samples;
 
-	double trem_freq = 1000.0 / period;
-	int sample_freq = 44100;
+	/* Synthesize tremulant */
+	const double pi                = 3.14159265358979323846;
+	const double trem_amp          = (0x7FF0 * amp_mod_depth / 100);
+	const double trem_param        = 2 * pi  / loop_samples;
+	double trem_angle              = 0.0;
 
-	unsigned attackSamples  = sample_freq / start_rate;
-	unsigned attackSamplesInMem = attackSamples + EXTRA_FRAMES;
-	unsigned loopSamples  = sample_freq / trem_freq;
-	unsigned loopSamplesInMem = loopSamples + EXTRA_FRAMES;
-	unsigned releaseSamples  = sample_freq / stop_rate;
-	unsigned releaseSamplesInMem = releaseSamples + EXTRA_FRAMES;
+	wxInt16 *data = (wxInt16*)malloc(total_samples * sizeof(wxInt16));
+	if (!data)
+		throw (wxString)_("out of memory");
 
-	m_Attack.m_Size = attackSamples * bytes_per_sample * channels;
-	m_Attack.m_AllocSize = attackSamplesInMem * bytes_per_sample * channels;
-	m_Attack.m_Data = (unsigned char*)m_pool.Alloc(m_Attack.m_AllocSize);
-	if (m_Attack.m_Data == NULL)
-		throw (wxString)_("< out of memory allocating attack");
-	m_Attack.m_SampleRate = sample_freq;
-	m_Attack.m_SampleCount = attackSamples;
+	wxInt16 *write_iterator = data;
 
-	m_Loop.m_Size = loopSamples * bytes_per_sample * channels;
-	m_Loop.m_AllocSize = loopSamplesInMem * bytes_per_sample * channels;
-	m_Loop.m_Data = (unsigned char*)m_pool.Alloc(m_Loop.m_AllocSize);
-	if (m_Loop.m_Data == NULL)
-		throw (wxString)_("< out of memory allocating loop");
-	m_Loop.m_SampleRate = sample_freq;
-	m_Loop.m_SampleCount = loopSamples;
-
-	m_Release.m_Size = releaseSamples * bytes_per_sample * channels;
-	m_Release.m_AllocSize = releaseSamplesInMem * bytes_per_sample * channels;
-	m_Release.m_Data = (unsigned char*)m_pool.Alloc(m_Release.m_AllocSize);
-	if (m_Release.m_Data == NULL)
-		throw (wxString)_("< out of memory allocating release");
-	m_Release.m_SampleRate = sample_freq;
-	m_Release.m_SampleCount = releaseSamples;
-
-	double pi = 3.14159265358979323846;
-	double trem_amp   = (0x7FF0 * amp_mod_depth / 100);
-	double trem_param = 2 * pi  / loopSamples;
-	double trem_fade, trem_inc, trem_angle;
-	wxInt16 *ptr;
-	trem_inc = 1.0 / attackSamples;
-	trem_fade = trem_angle = 0.0;
-	ptr = (wxInt16*)m_Attack.m_Data;
-	for(unsigned i = 0; i < attackSamples; i++)
+	/* Synthesize attack */
+	double trem_fade = 0.0;
+	double trem_inc = 1.0 / attack_samples;
+	for (unsigned i = 0
+	    ;i < attack_samples
+	    ;i++
+	    ,write_iterator++
+	    )
 	{
-		ptr[i] = SynthTrem(trem_amp, trem_angle, trem_fade);
-		trem_angle += trem_param * trem_fade;
-		trem_fade += trem_inc;
+		*write_iterator  = SynthTrem(trem_amp, trem_angle, trem_fade);
+		trem_angle      += trem_param * trem_fade;
+		trem_fade       += trem_inc;
 	}
 
-	ptr = (wxInt16*)m_Loop.m_Data;
-	for(unsigned i = 0; i < loopSamples; i++)
+	/* Synthesize loop */
+	for (unsigned i = 0
+	    ;i < loop_samples
+	    ;i++
+	    ,write_iterator++
+	    )
 	{
-		ptr[i] = SynthTrem(trem_amp, trem_angle);
-		trem_angle += trem_param;
+		*write_iterator  = SynthTrem(trem_amp, trem_angle);
+		trem_angle      += trem_param;
 	}
 
-	trem_inc = 1.0 / (double)releaseSamples;
+	/* Synthesize release */
+	trem_inc = 1.0 / (double)release_samples;
 	trem_fade = 1.0 - trem_inc;
-	ptr = (wxInt16*)m_Release.m_Data;
-	for(unsigned i = 0; i < releaseSamples; i++)
+	for (unsigned i = 0
+	    ;i < release_samples
+	    ;i++
+	    ,write_iterator++
+	    )
 	{
-		ptr[i] = SynthTrem(trem_amp, trem_angle, trem_fade);
-		trem_angle += trem_param * trem_fade;
-		trem_fade -= trem_inc;
+		*write_iterator  = SynthTrem(trem_amp, trem_angle, trem_fade);
+		trem_angle      += trem_param * trem_fade;
+		trem_fade       -= trem_inc;
 	}
 
-	memcpy
-		(&m_Loop.m_Data[m_Loop.m_Size]
-		,&m_Loop.m_Data[0]
-		,loopSamplesInMem * bytes_per_sample * channels - m_Loop.m_Size
+	/* Attack sustain section */
+	GO_WAVE_LOOP trem_loop;
+	trem_loop.start_sample = attack_samples;
+	trem_loop.end_sample   = (attack_samples + loop_samples) - 1;
+	std::vector<GO_WAVE_LOOP> trem_loops;
+	trem_loops.push_back(trem_loop);
+	m_Attack.Setup
+		(data
+		,GOrgueWave::SF_SIGNEDSHORT_16
+		,1
+		,sample_freq
+		,trem_loop.end_sample
+		,&trem_loops
+		,false
 		);
 
-	memcpy
-		(&m_Attack.m_Data[m_Attack.m_Size]
-		,&m_Loop.m_Data[0]
-		,attackSamplesInMem * bytes_per_sample * channels - m_Attack.m_Size
+	/* Release section */
+	m_Release.Setup
+		(&data[attack_samples + loop_samples]
+		,GOrgueWave::SF_SIGNEDSHORT_16
+		,1
+		,sample_freq
+		,release_samples
+		,NULL
+		,false
 		);
 
-	memcpy
-		(&m_Release.m_Data[m_Release.m_Size]
-		,&m_Release.m_Data[m_Release.m_Size-(releaseSamplesInMem * bytes_per_sample * channels - m_Release.m_Size)]
-		,releaseSamplesInMem * bytes_per_sample * channels - m_Release.m_Size
-		);
+	free(data);
 
 	ComputeReleaseAlignmentInfo();
 

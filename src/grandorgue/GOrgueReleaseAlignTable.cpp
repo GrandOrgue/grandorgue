@@ -26,7 +26,6 @@
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
 #include "GOSoundAudioSection.h"
-#include "GOSoundAudioSectionAccessor.h"
 #include <stdlib.h>
 
 #ifndef NDEBUG
@@ -94,7 +93,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 	 * frequency pipe you would ever expect... if this length is greater
 	 * than the length of the release, truncate it */
 	unsigned required_search_len = sample_rate / PHASE_ALIGN_MIN_FREQUENCY;
-	unsigned release_len = release.m_SampleCount;
+	unsigned release_len = release.GetLength();
 	if (release_len < required_search_len + BLOCK_HISTORY)
 		return;
 	/* If number of samples in the release is not enough to fill the release
@@ -108,7 +107,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 
 	int f_p = 0;
 	for (unsigned int j = 0; j < channels; j++)
-		f_p += GetAudioSectionSample(release, (BLOCK_HISTORY - 1), j, &cache);
+		f_p += release.GetSample((BLOCK_HISTORY - 1), j, &cache);
 
 	for (unsigned i = BLOCK_HISTORY; i < required_search_len; i++)
 	{
@@ -116,7 +115,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 		/* Store previous values */
 		int f = 0;
 		for (unsigned int j = 0; j < channels; j++)
-			f += GetAudioSectionSample(release, i, j, &cache);
+			f += release.GetSample(i, j, &cache);
 
 		/* Bring v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
 		int v_mod = (f - f_p) + m_PhaseAlignMaxDerivative - 1;
@@ -137,7 +136,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 			for (unsigned j = 0; j < BLOCK_HISTORY; j++)
 				for (unsigned k = 0; k < MAX_OUTPUT_CHANNELS; k++)
 					m_HistoryEntries[derivIndex][ampIndex][j * MAX_OUTPUT_CHANNELS + k]
-						= (k < channels) ? GetAudioSectionSample(release, i + j - BLOCK_HISTORY, k, &cache) : 0;
+						= (k < channels) ? release.GetSample(i + j - BLOCK_HISTORY, k, &cache) : 0;
 			found[derivIndex][ampIndex] = true;
 		}
 
@@ -168,8 +167,8 @@ void GOrgueReleaseAlignTable::ComputeTable
 			if (!found[i][j])
 			{
 				bool foundsecond = false;
-				for (int l = 0; (l < PHASE_ALIGN_DERIVATIVES) && (!foundsecond); l++)
-					for (int k = 0; (k < PHASE_ALIGN_AMPLITUDES) && (!foundsecond); k++)
+				for (int l = 0; (l < 2 * PHASE_ALIGN_DERIVATIVES) && (!foundsecond); l++)
+					for (int k = 0; (k < 2 * PHASE_ALIGN_AMPLITUDES) && (!foundsecond); k++)
 					{
 						foundsecond = true;
 						int sl = (l + 1) / 2;
@@ -211,8 +210,8 @@ void GOrgueReleaseAlignTable::ComputeTable
 }
 
 void GOrgueReleaseAlignTable::SetupRelease
-	(GO_SAMPLER& release_sampler
-	,const GO_SAMPLER& old_sampler
+	(audio_section_stream       &release_sampler
+	,const audio_section_stream &old_sampler
 	) const
 {
 

@@ -20,7 +20,6 @@
  * MA 02111-1307, USA.
  */
 
-#include "GOSoundAudioSectionAccessor.h"
 #include "GOSoundProvider.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueCache.h"
@@ -35,7 +34,6 @@ GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
 	m_MidiPitchFract(0),
 	m_Tuning(1),
 	m_Attack(pool),
-	m_Loop(pool),
 	m_Release(pool),
 	m_pool(pool)
 {
@@ -50,7 +48,6 @@ GOSoundProvider::~GOSoundProvider()
 void GOSoundProvider::ClearData()
 {
 	m_Attack.ClearData();
-	m_Loop.ClearData();
 	m_Release.ClearData();
 }
 
@@ -64,14 +61,12 @@ bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 	if (!m_Attack.LoadCache(cache))
 		return false;
 
-	if (!m_Loop.LoadCache(cache))
-		return false;
-
 	if (!m_Release.LoadCache(cache))
 		return false;
 
 	return true;
 }
+
 
 bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 {
@@ -83,85 +78,22 @@ bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 	if (!m_Attack.SaveCache(cache))
 		return false;
 
-	if (!m_Loop.SaveCache(cache))
-		return false;
-
 	if (!m_Release.SaveCache(cache))
 		return false;
 
 	return true;
 }
 
-void GOSoundProvider::GetMaxAmplitudeAndDerivative
-	(GOAudioSection& section
-	,int& runningMaxAmplitude
-	,int& runningMaxDerivative
-	)
-{
-	DecompressionCache cache;
-	unsigned int sectionLen = section.m_SampleCount;
-	unsigned channels = section.GetChannels();
-
-	InitDecompressionCache(cache);
-
-	int f = 0; /* to avoid compiler warning */
-	for (unsigned int i = 0; i < sectionLen; i++)
-	{
-
-		/* Get sum of amplitudes in channels */
-		int f_p = f;
-		f = 0;
-		for (unsigned int j = 0; j < channels; j++)
-			f += GetAudioSectionSample(section, i, j, &cache);
-
-		if (abs(f) > runningMaxAmplitude)
-			runningMaxAmplitude = abs(f);
-
-		if (i == 0)
-			continue;
-
-		/* Get v */
-		int v = f - f_p;
-		if (abs(v) > runningMaxDerivative)
-			runningMaxDerivative = abs(v);
-
-	}
-
-}
-
-/* REGRESSION TODO: It would be good for somebody to do some rigorous
- * testing on this code before this comment is removed. It is designed
- * based on a dream. */
 void GOSoundProvider::ComputeReleaseAlignmentInfo()
 {
-
-	DELETE_AND_NULL(m_Release.m_ReleaseAligner);
-
-	/* Find the maximum amplitude and derivative of the waveform */
-	int phase_align_max_amplitude = 0;
-	int phase_align_max_derivative = 0;
-	GetMaxAmplitudeAndDerivative(m_Attack,  phase_align_max_amplitude, phase_align_max_derivative);
-	GetMaxAmplitudeAndDerivative(m_Loop,    phase_align_max_amplitude, phase_align_max_derivative);
-	GetMaxAmplitudeAndDerivative(m_Release, phase_align_max_amplitude, phase_align_max_derivative);
-
-	if ((phase_align_max_derivative != 0) && (phase_align_max_amplitude != 0))
-	{
-
-		m_Release.m_ReleaseAligner = new GOrgueReleaseAlignTable();
-		m_Release.m_ReleaseAligner->ComputeTable
-			(m_Release
-			,phase_align_max_amplitude
-			,phase_align_max_derivative
-			,m_SampleRate
-			);
-
-	}
-
+	std::vector<const GOAudioSection*> sections;
+	sections.push_back(&m_Attack);
+	m_Release.SetupStreamAlignment(sections);
 }
 
 int GOSoundProvider::IsOneshot() const
 {
-	return (m_Loop.m_Data == NULL);
+	return m_Attack.IsOneshot();
 }
 
 void GOSoundProvider::SetTuning(float cent)

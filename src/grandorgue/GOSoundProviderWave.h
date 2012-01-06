@@ -26,6 +26,24 @@
 #include "GOSoundProvider.h"
 #include <wx/wx.h>
 
+typedef enum
+{
+	/* Only the first loop with the earliest endpoint is loaded. This will
+	 * result in the minimal amount of memory being loaded for the sample.
+	 */
+	LOOP_LOAD_CONSERVATIVE,
+
+	/* Only the longest loop will be loaded. This only provides a benefit if
+	 * the longest loop is not the last loop found.
+	 */
+	LOOP_LOAD_LONGEST,
+
+	/* Stores all samples up to the very last loop end-point. Uses the most
+	 * memory and should achieve best realism.
+	 */
+	LOOP_LOAD_ALL
+} loop_load_type;
+
 class GOSoundProviderWave : public GOSoundProvider
 {
 	void Compress(GOAudioSection& section, bool format16);
@@ -33,7 +51,7 @@ class GOSoundProviderWave : public GOSoundProvider
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
 
-	void LoadFromFile(wxString filename, wxString path, unsigned bits_per_sample, bool stereo, bool compress);
+	void LoadFromFile(wxString filename, wxString path, unsigned bits_per_sample, bool stereo, bool compress, loop_load_type loop_mode);
 	void SetAmplitude(int fixed_amplitude);
 };
 

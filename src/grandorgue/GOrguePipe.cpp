@@ -183,9 +183,14 @@ void GOrguePipe::LoadData()
 		return;
 	}
 	m_Reference = NULL;
-	m_SoundProvider.LoadFromFile(m_Filename, m_OrganFile->GetODFPath(),
-				     m_OrganFile->GetSettings().GetBitsPerSample(), m_OrganFile->GetSettings().GetLoadInStereo(),
-				     m_OrganFile->GetSettings().GetLosslessCompression());
+	m_SoundProvider.LoadFromFile
+		(m_Filename
+		,m_OrganFile->GetODFPath()
+		,m_OrganFile->GetSettings().GetBitsPerSample()
+		,m_OrganFile->GetSettings().GetLoadInStereo()
+		,m_OrganFile->GetSettings().GetLosslessCompression()
+		,LOOP_LOAD_ALL
+		);
 }
 
 void GOrguePipe::FastAbort()
