@@ -86,7 +86,7 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
 	topSizer->Add(mainSizer, 0, wxALL, 6);
 
-	m_Tree = new wxTreeCtrl(this, ID_EVENT_TREE, wxDefaultPosition, wxSize(300, 400), wxTR_HAS_BUTTONS | wxTR_MULTIPLE | wxTR_EXTENDED);
+	m_Tree = new wxTreeCtrl(this, ID_EVENT_TREE, wxDefaultPosition, wxSize(300, 400), wxTR_HAS_BUTTONS | wxTR_MULTIPLE);
 	wxBoxSizer* Sizer1 = new wxBoxSizer(wxVERTICAL);
 	Sizer1->Add(m_Tree, wxALIGN_TOP | wxEXPAND);
 	mainSizer->Add(Sizer1, wxALIGN_LEFT | wxEXPAND);
