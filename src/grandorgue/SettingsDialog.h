@@ -105,6 +105,7 @@ protected:
 		ID_CONCURRENCY,
 		ID_RELEASE_CONCURRENCY,
 		ID_WAVE_FORMAT,
+		ID_LOOP_LOAD,
 		ID_ENHANCE_SQUASH,
 		ID_ENHANCE_MANAGE_POLYPHONY,
 		ID_COMPRESS_CACHE,
@@ -136,11 +137,13 @@ protected:
 	wxChoice* c_Concurrency;
 	wxChoice* c_ReleaseConcurrency;
 	wxChoice* c_WaveFormat;
+	wxChoice* c_LoopLoad;
 	wxCheckBox *c_squash, *c_limit, *c_CompressCache, *c_scale, *c_random;
 	wxDirPickerCtrl* c_SettingsPath;
 	wxDirPickerCtrl* c_CachePath;
 	bool b_squash, b_stereo;
 	unsigned m_OldBitsPerSample;
+	unsigned m_OldLoopLoad;
 
 	wxListView* page2list, *organlist;
 	wxButton* page2button, *addButton, *delButton, *propButton;

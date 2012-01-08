@@ -31,17 +31,17 @@ typedef enum
 	/* Only the first loop with the earliest endpoint is loaded. This will
 	 * result in the minimal amount of memory being loaded for the sample.
 	 */
-	LOOP_LOAD_CONSERVATIVE,
+	LOOP_LOAD_CONSERVATIVE = 0,
 
 	/* Only the longest loop will be loaded. This only provides a benefit if
 	 * the longest loop is not the last loop found.
 	 */
-	LOOP_LOAD_LONGEST,
+	LOOP_LOAD_LONGEST = 1,
 
 	/* Stores all samples up to the very last loop end-point. Uses the most
 	 * memory and should achieve best realism.
 	 */
-	LOOP_LOAD_ALL
+	LOOP_LOAD_ALL = 2
 } loop_load_type;
 
 class GOSoundProviderWave : public GOSoundProvider

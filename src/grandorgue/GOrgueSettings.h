@@ -42,6 +42,7 @@ private:
 	unsigned m_SampleRate;
 	unsigned m_BitsPerSample;
 	unsigned m_WaveFormat;
+	unsigned m_LoopLoad;
 	unsigned m_Volume;
 	unsigned m_PolyphonyLimit;
 	wxString m_DefaultAudioDevice;
@@ -130,6 +131,9 @@ public:
 	void SetWaveFormatBytesPerSample(unsigned bytes_per_sample);
 	unsigned GetBitsPerSample();
 	void SetBitsPerSample(unsigned bits_per_sample);
+
+	unsigned GetLoopLoad();
+	void SetLoopLoad(unsigned loop_load);
 
 	unsigned GetVolume();
 	void SetVolume(unsigned volume);

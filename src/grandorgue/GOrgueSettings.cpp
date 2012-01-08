@@ -67,6 +67,7 @@ GOrgueSettings::GOrgueSettings() :
 	m_SampleRate(44100),
 	m_BitsPerSample(16),
 	m_WaveFormat(4),
+	m_LoopLoad(0),
 	m_Volume(50),
 	m_PolyphonyLimit(2048),
 	m_DefaultAudioDevice(),
@@ -112,6 +113,9 @@ void GOrgueSettings::Load()
 	m_WaveFormat = m_Config.Read(wxT("WaveFormat"), 4);
 	if (m_WaveFormat < 1 || m_WaveFormat > 4)
 		m_WaveFormat = 4;
+	m_LoopLoad = m_Config.Read(wxT("LoopLoad"), 2);
+	if (m_LoopLoad < 0 || m_LoopLoad > 2)
+		m_LoopLoad = 2;
 	m_Volume = m_Config.Read(wxT("Volume"), 50);
 	if (m_Volume > 100)
 		m_Volume = 100;
@@ -465,6 +469,19 @@ void GOrgueSettings::SetWaveFormatBytesPerSample(unsigned bytes_per_sample)
 		bytes_per_sample = 4;
 	m_WaveFormat = bytes_per_sample;
 	m_Config.Write(wxT("WaveFormat"), (long)m_WaveFormat);
+}
+
+unsigned GOrgueSettings::GetLoopLoad()
+{
+	return m_LoopLoad;
+}
+
+void GOrgueSettings::SetLoopLoad(unsigned loop_load)
+{
+	if (loop_load > 2)
+		loop_load = 2;
+	m_LoopLoad = loop_load;
+	m_Config.Write(wxT("LoopLoad"), (long)m_LoopLoad);
 }
 
 unsigned GOrgueSettings::GetVolume()

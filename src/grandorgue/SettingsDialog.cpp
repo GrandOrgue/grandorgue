@@ -51,6 +51,7 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHOICE(ID_CONCURRENCY, SettingsDialog::OnChanged)
 	EVT_CHOICE(ID_RELEASE_CONCURRENCY, SettingsDialog::OnChanged)
 	EVT_CHOICE(ID_WAVE_FORMAT, SettingsDialog::OnChanged)
+	EVT_CHOICE(ID_LOOP_LOAD, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_SQUASH, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_MANAGE_POLYPHONY, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_COMPRESS_CACHE, SettingsDialog::OnChanged)
@@ -109,6 +110,7 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	b_stereo = m_Settings.GetLoadInStereo();
 	b_squash = m_Settings.GetLosslessCompression();
 	m_OldBitsPerSample = m_Settings.GetBitsPerSample();
+	m_OldLoopLoad = m_Settings.GetLoopLoad();
 
 	CreateButtons(wxOK | wxCANCEL | wxHELP);
 	//JB: wxAPPLY not available in recent versions of wxWidgets
@@ -141,6 +143,7 @@ SettingsDialog::~SettingsDialog()
 {
 	if ((b_stereo != m_Settings.GetLoadInStereo() || 
 	     b_squash != m_Settings.GetLosslessCompression() ||
+	     m_OldLoopLoad != m_Settings.GetLoopLoad() ||
 	     m_OldBitsPerSample != m_Settings.GetBitsPerSample()) &&
 	    m_Sound.GetOrganFile() != NULL)
 	{
@@ -239,6 +242,13 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Sample size:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(c_BitsPerSample = new wxChoice(panel, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
+	choices.clear();
+	choices.push_back(_("First loop"));
+	choices.push_back(_("Longest loop"));
+	choices.push_back(_("All loops"));
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Loop loading:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(c_LoopLoad = new wxChoice(panel, ID_LOOP_LOAD, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
 	UpdateSoundStatus();
 	c_stereo->Select(m_Settings.GetLoadInStereo());
 	c_SampleRate->Select(0);
@@ -246,6 +256,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 		if (wxString::Format(wxT("%d"), m_Settings.GetSampleRate()) == c_SampleRate->GetString(i))
 			c_SampleRate->Select(i);
 	c_BitsPerSample->Select((m_Settings.GetBitsPerSample() - 8) / 4);
+	c_LoopLoad->Select(m_Settings.GetLoopLoad());
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
@@ -704,6 +715,7 @@ bool SettingsDialog::DoApply()
 	m_Settings.SetConcurrency(c_Concurrency->GetSelection());
 	m_Settings.SetReleaseConcurrency(c_ReleaseConcurrency->GetSelection() + 1);
 	m_Settings.SetWaveFormatBytesPerSample(c_WaveFormat->GetSelection() + 1);
+	m_Settings.SetLoopLoad(c_LoopLoad->GetSelection());
 	m_Settings.SetUserSettingPath(c_SettingsPath->GetPath());
 	m_Settings.SetUserCachePath(c_CachePath->GetPath());
 

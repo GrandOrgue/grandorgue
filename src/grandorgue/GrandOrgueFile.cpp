@@ -111,6 +111,8 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 	SHA1_Update(&ctx, &bits_per_sample, sizeof(bits_per_sample));
 	bool compress = m_Settings.GetLosslessCompression();
 	SHA1_Update(&ctx, &compress, sizeof(compress));
+	unsigned val = m_Settings.GetLoopLoad();
+	SHA1_Update(&ctx, &val, sizeof(val));
 
 	len = sizeof(GOAudioSection);
 	SHA1_Update(&ctx, &len, sizeof(len));
