@@ -429,7 +429,7 @@ unsigned GOAudioSection::PickEndSegment(unsigned start_segment_index) const
 	{
 		const unsigned idx = (i + x) % m_EndSegments.size();
 		const audio_end_data_segment *end = &m_EndSegments[idx];
-		if (end->end_offset > m_StartSegments[start_segment_index].start_offset)
+		if (end->transition_offset >= m_StartSegments[start_segment_index].start_offset)
 			return idx;
 	}
 	assert(0 && "should always find suitable end segment");
@@ -467,7 +467,8 @@ bool GOAudioSection::ReadBlock
 					&stream->audio_section->m_EndSegments[next_end_segment_index];
 
 			/* TODO: this is also where we need to copy startup information to the stream */
-			stream->position -= stream->section_length;
+			while (stream->position >= stream->section_length)
+				stream->position -= stream->section_length;
 
 			/* Because we support linear interpolation, we can't assume that
 			 * the position after a seek-back will be within a single block. In
@@ -635,9 +636,9 @@ void GOAudioSection::Setup
 			end_seg.next_start_segment_index = i + 1;
 			end_seg.end_data                 = (unsigned char*)m_Pool.Alloc(4 * BLOCKS_PER_FRAME * bytes_per_sample_frame);
 			end_seg.transition_offset
-				= (end_seg.end_offset > 2 * BLOCKS_PER_FRAME)
+				= (end_seg.end_offset - start_seg.start_offset > 2 * BLOCKS_PER_FRAME)
 				? end_seg.end_offset - 2 * BLOCKS_PER_FRAME
-				: 0;
+				: start_seg.start_offset;
 
 			if (!end_seg.end_data)
 				throw (wxString)_("out of memory");
