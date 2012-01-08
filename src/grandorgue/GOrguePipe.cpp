@@ -189,7 +189,7 @@ void GOrguePipe::LoadData()
 		,m_OrganFile->GetSettings().GetBitsPerSample()
 		,m_OrganFile->GetSettings().GetLoadInStereo()
 		,m_OrganFile->GetSettings().GetLosslessCompression()
-		,LOOP_LOAD_ALL
+		,(loop_load_type)m_OrganFile->GetSettings().GetLoopLoad()
 		);
 }
 
