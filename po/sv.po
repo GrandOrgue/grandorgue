@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2011-12-29 22:18+0100\n"
-"PO-Revision-Date: 2011-12-29 22:48+0100\n"
+"POT-Creation-Date: 2012-01-08 22:08+0100\n"
+"PO-Revision-Date: 2012-01-08 22:17+0100\n"
 "Last-Translator: Lars Palo <lars.palo@yahoo.se>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -15,6 +15,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid " (PA): "
+msgstr "(PA):"
 
 msgid " Out of memory loading"
 msgstr "Slut på minne under inläsning"
@@ -254,12 +257,6 @@ msgstr "< Ingen RIFF fil"
 msgid "< out of memory allocating attack"
 msgstr "< slut på minne under attackallokering"
 
-msgid "< out of memory allocating loop"
-msgstr "< slut på minne uner loopallokering"
-
-msgid "< out of memory allocating release"
-msgstr "< slut på minne under uppsläppsallokering"
-
 msgid "< out of memory allocating samples"
 msgstr "< slut på minne under samplingsallokeringen"
 
@@ -313,6 +310,9 @@ msgstr "Aktiv polyfonihantering"
 
 msgid "Address"
 msgstr "Adress"
+
+msgid "All loops"
+msgstr "Samtliga loopar"
 
 msgid "Allocated sample memory"
 msgstr "Minne tilldelat samplingar"
@@ -563,6 +563,9 @@ msgstr "Misslyckades att läsa filen '%s'\n"
 msgid "File belongs to a different organ: %s"
 msgstr "Filen hör till en annan orgel: %s"
 
+msgid "First loop"
+msgstr "Första loopen"
+
 msgid "Full"
 msgstr "Hela"
 
@@ -718,6 +721,12 @@ msgstr "Laddar samplingssamling"
 
 msgid "Loading..."
 msgstr "Laddar..."
+
+msgid "Longest loop"
+msgstr "Längsta loopen"
+
+msgid "Loop loading:"
+msgstr "Inläsning av loopar:"
 
 msgid "Lossless compression"
 msgstr "Förlustfri komprimering"
@@ -1124,6 +1133,10 @@ msgid "bitmap size does not match for '%s'"
 msgstr "storleken på bitmappen matchar inte '%s'"
 
 #, c-format
+msgid "bitmap size of '%s' does not match mask '%s'"
+msgstr "storleken på bitmappen '%s' matchar inte masken '%s'"
+
+#, c-format
 msgid "caught exception: %s\n"
 msgstr "fångade undantag: %s\n"
 
@@ -1135,6 +1148,9 @@ msgstr "ms"
 
 msgid "none"
 msgstr "ingen"
+
+msgid "out of memory"
+msgstr "slut på minne"
 
 msgid "settingsdialog.."
 msgstr "inställningsdialog.."
@@ -1157,6 +1173,12 @@ msgstr "wave fil innehåller inga loopar"
 
 #~ msgid "48000"
 #~ msgstr "48000"
+
+#~ msgid "< out of memory allocating loop"
+#~ msgstr "< slut på minne uner loopallokering"
+
+#~ msgid "< out of memory allocating release"
+#~ msgstr "< slut på minne under uppsläppsallokering"
 
 #~ msgid "Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache."
 #~ msgstr "Cache-fil hade dålig magi (förväntade %#.8x fann %#.8x)"
