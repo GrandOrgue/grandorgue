@@ -930,7 +930,8 @@ extern "C" void *alsaMidiHandler( void *ptr )
       if (poll(poll_fds, poll_fd_count, -1) >= 0) {
 	if (poll_fds[0].revents & POLLIN) {
           bool dummy;
-          read(poll_fds[0].fd, &dummy, sizeof(dummy));
+          int res = read(poll_fds[0].fd, &dummy, sizeof(dummy));
+          (void) res;
 	}
       }
       continue;
@@ -1323,7 +1324,8 @@ void RtMidiIn :: closePort( void )
   // Stop thread to avoid triggering the callback, while the port is inteded to be closed
   if ( inputData_.doInput ) {
     inputData_.doInput = false;
-    write(data->trigger_fds[1], &inputData_.doInput, sizeof(inputData_.doInput));
+    int res = write(data->trigger_fds[1], &inputData_.doInput, sizeof(inputData_.doInput));
+    (void) res;
     if (!pthread_equal(data->thread, data->dummy_thread_id))
       pthread_join( data->thread, NULL );
   }
@@ -1338,7 +1340,8 @@ RtMidiIn :: ~RtMidiIn()
   AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
   if ( inputData_.doInput ) {
     inputData_.doInput = false;
-    write(data->trigger_fds[1], &inputData_.doInput, sizeof(inputData_.doInput));
+    int res = write(data->trigger_fds[1], &inputData_.doInput, sizeof(inputData_.doInput));
+    (void) res;
     if (!pthread_equal(data->thread, data->dummy_thread_id))
       pthread_join( data->thread, NULL );
   }
