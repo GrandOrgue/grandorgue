@@ -285,13 +285,13 @@ int GOAudioSection::GetSample
 			InitDecompressionCache(*cache);
 		}
 
-		assert(m_BitsPerSample >= 16);
+		assert(m_BitsPerSample >= 12);
 		DecompressTo
 			(*cache
 			,position
 			,m_Data
 			,m_Channels
-			,(m_BitsPerSample >= 24)
+			,(m_BitsPerSample >= 20)
 			);
 		return cache->value[channel];
 	}
