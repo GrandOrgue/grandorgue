@@ -138,7 +138,6 @@ GOGUIHW1Background.cpp
 GOGUIImage.cpp
 GOGUILabel.cpp
 GOGUIManual.cpp
-GOGUIManualClassic.cpp
 GOGUIManualBackground.cpp
 GOGUIPanel.cpp
 GOGUIPanelWidget.cpp
