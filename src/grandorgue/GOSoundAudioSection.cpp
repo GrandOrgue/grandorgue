@@ -680,6 +680,9 @@ void GOAudioSection::Setup
 
 		const unsigned copy_len = 1 + end_seg.end_offset - end_seg.transition_offset;
 
+		if (!end_seg.end_data)
+			throw (wxString)_("out of memory");
+
 		memcpy
 			(end_seg.end_data
 			,((const unsigned char*)pcm_data) + end_seg.transition_offset * bytes_per_sample_frame
