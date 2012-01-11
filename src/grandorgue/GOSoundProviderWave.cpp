@@ -81,7 +81,6 @@ void GOSoundProviderWave::LoadFromFile
 	m_MidiPitchFract = wave.GetPitchFract();
 
 	m_SampleRate = wave.GetSampleRate();
-	m_Gain = 1.0f;
 	unsigned channels = wave.GetChannels();
 	if (!stereo)
 		channels = 1;
