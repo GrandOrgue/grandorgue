@@ -128,6 +128,10 @@ void GOSoundProviderWave::LoadFromFile
 		{
 			const unsigned release_offset = wave.GetReleaseMarkerPosition();
 			const unsigned release_samples = wave.GetLength() - release_offset;
+			
+			if (release_offset >= wave.GetLength())
+				throw (wxString)_("Invalid release position");
+
 			m_Release.Setup
 				(data + release_offset * bytes_per_sample * channels
 				,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
