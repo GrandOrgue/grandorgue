@@ -233,8 +233,8 @@ void GOrgueWave::Open(const wxString& filename)
 		for (unsigned int i = 0; i < loops.size(); i++)
 		{
 			if ((loops[i].start_sample >= loops[i].end_sample) ||
-				(loops[i].start_sample >= dataSize) ||
-				(loops[i].end_sample >= dataSize) ||
+			    (loops[i].start_sample >= GetLength()) ||
+			    (loops[i].end_sample >= GetLength()) ||
 				(loops[i].end_sample == 0) ||
 				(release == 0))
 				loops.erase(loops.begin() + i);
