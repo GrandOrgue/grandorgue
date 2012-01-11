@@ -165,11 +165,8 @@ void GOGUIManual::Load(IniFileConfig& cfg, wxString group)
 	}
 	width = x;
 
-	x = mri.x;
+	x = mri.x + 1;
 	y = mri.keys_y;
-
-	if (width < mri.width)
-		x += (mri.width - width) / 2;
 
 	x = cfg.ReadInteger(group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
 	y = cfg.ReadInteger(group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
