@@ -200,6 +200,19 @@ SplashScreen.cpp
 wxGaugeAudio.cpp
 ${IMAGE_LIST})
 
+macro(add_linker_option _target _option)
+  set(_name "OPTION_LINK_${_option}")
+  CHECK_CXX_COMPILER_FLAG("-Wl,--${_option}" ${_name})
+  if(${_name})
+    set(new_flags "-Wl,--${_option}")
+    get_target_property(existing_flags ${_target} LINK_FLAGS)
+    if(existing_flags)
+      set(new_flags "${existing_flags} ${new_flags}")
+    endif()
+    set_target_properties(${_target} PROPERTIES LINK_FLAGS ${new_flags})
+  endif()
+endmacro()
+
 if (WIN32)
 
    if (MINGW)
@@ -220,6 +233,7 @@ if (WIN32)
    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.rc/GrandOrgue.rc)
    set(grandorgue_src ${grandorgue_src} ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.rc/GrandOrgue.rc)
    add_executable(${PROJECT_NAME} WIN32 ${grandorgue_src})
+   add_linker_option(${PROJECT_NAME} large-address-aware)
 
 else ()
 
