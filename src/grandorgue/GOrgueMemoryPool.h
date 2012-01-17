@@ -57,8 +57,9 @@ public:
 	bool SetCacheFile(wxFile& cache_file);
 	void FreeCacheFile();
 
-	unsigned long AllocSize();
-	unsigned long MappedSize();
+	unsigned long GetAllocSize();
+	unsigned long GetMappedSize();
+	unsigned long GetPoolSize();
 };
 
 
