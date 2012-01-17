@@ -145,14 +145,19 @@ void GOrgueMemoryPool::FreeCacheFile()
 	InitPool();
 }
 
-unsigned long GOrgueMemoryPool::AllocSize()
+unsigned long GOrgueMemoryPool::GetAllocSize()
 {
 	return m_PoolSize + m_MallocSize;
 }
 
-unsigned long GOrgueMemoryPool::MappedSize()
+unsigned long GOrgueMemoryPool::GetMappedSize()
 {
 	return m_CacheSize;
+}
+
+unsigned long GOrgueMemoryPool::GetPoolSize()
+{
+	return m_PoolLimit;
 }
 
 bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
