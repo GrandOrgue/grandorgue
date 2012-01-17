@@ -25,6 +25,9 @@
 #ifdef linux
 #include <sys/mman.h>
 #endif
+#ifdef __WIN32__
+#include <windows.h>
+#endif
 
 #include "GOrgueMemoryPool.h"
 
@@ -177,6 +180,22 @@ bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 		result = true;
 	
 #endif
+#ifdef __WIN32__
+	int last_error = 0;
+	HANDLE map = CreateFileMapping((HANDLE)_get_osfhandle(cache_file.fd()), NULL, PAGE_READONLY, 0, 0, NULL);
+	last_error = GetLastError();
+	if (map)
+	{
+		m_CacheSize = cache_file.Length();
+		m_CacheStart = (char*)MapViewOfFile(map, FILE_MAP_READ, 0, 0, m_CacheSize);
+		last_error = GetLastError();
+		if (!m_CacheStart)
+			m_CacheSize = 0;
+		CloseHandle(map);
+	}
+	if (!m_CacheStart)
+		wxLogError(_("Memory mapping of the cache file failed with error code %d"), last_error);
+#endif
 
 	InitPool();
 	return result;
@@ -224,6 +243,10 @@ void GOrgueMemoryPool::FreePool()
 		munmap(m_PoolStart, m_PoolLimit);
 	if (m_CacheSize)
 		munmap(m_CacheStart, m_CacheSize);
+#endif
+#ifdef __WIN32__
+	if (m_CacheSize)
+		UnmapViewOfFile(m_CacheStart);
 #endif
 	m_PoolStart = 0;
 	m_PoolSize = 0;
