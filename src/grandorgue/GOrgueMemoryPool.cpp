@@ -206,7 +206,10 @@ void GOrgueMemoryPool::InitPool()
 
 	m_PoolStart = (char*)mmap(NULL, m_PoolLimit, PROT_NONE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
 	if (m_PoolStart == MAP_FAILED)
+	{
 		m_PoolStart = 0;
+		wxLogWarning(wxT("Initialization of the memory pool failed"));
+	}
 #endif
 	m_PoolPtr = m_PoolStart;
 	m_PoolEnd = m_PoolStart + m_PoolSize;
@@ -214,6 +217,8 @@ void GOrgueMemoryPool::InitPool()
 
 void GOrgueMemoryPool::FreePool()
 {
+	if (m_PoolAllocs.size())
+		wxLogError(wxT("Freeing non-empty memory pool"));
 #ifdef linux
 	if (m_PoolStart)
 		munmap(m_PoolStart, m_PoolLimit);
