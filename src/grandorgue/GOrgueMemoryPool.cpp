@@ -230,6 +230,37 @@ void GOrgueMemoryPool::InitPool()
 		wxLogWarning(wxT("Initialization of the memory pool failed"));
 	}
 #endif
+#ifdef __WIN32__
+	SYSTEM_INFO info;
+	MEMORY_BASIC_INFORMATION mem_info;
+	MEMORYSTATUSEX mem_stat;
+	GetSystemInfo(&info);
+	m_PageSize = info.dwPageSize;
+
+	/* Search for largest block */
+	m_PoolLimit = 0;
+	for(char* ptr = 0; ptr < info.lpMaximumApplicationAddress; ptr += mem_info.RegionSize)
+	{
+		if (VirtualQuery(ptr, &mem_info, sizeof(mem_info)) <= 0)
+		    break;
+		if (mem_info.State == MEM_FREE)
+			if (m_PoolLimit < mem_info.RegionSize)
+				m_PoolLimit = mem_info.RegionSize;
+	}
+
+	if (GlobalMemoryStatusEx(&mem_stat))
+		if (m_PoolLimit + m_CacheSize > mem_stat.ullTotalPhys)
+		{
+			if (mem_stat.ullTotalPhys > m_CacheSize)
+				m_PoolLimit = mem_stat.ullTotalPhys - m_CacheSize;
+			else
+				m_PoolLimit = 0;
+		}
+
+	m_PoolStart = (char*)VirtualAlloc(NULL, m_PoolLimit, MEM_RESERVE, PAGE_NOACCESS);
+	if (!m_PoolStart && m_PoolLimit)
+		wxLogWarning(wxT("Initialization of the memory pool failed"));
+#endif
 	m_PoolPtr = m_PoolStart;
 	m_PoolEnd = m_PoolStart + m_PoolSize;
 }
@@ -245,6 +276,8 @@ void GOrgueMemoryPool::FreePool()
 		munmap(m_CacheStart, m_CacheSize);
 #endif
 #ifdef __WIN32__
+	if (m_PoolStart)
+		VirtualFree(m_PoolStart, 0, MEM_RELEASE);
 	if (m_CacheSize)
 		UnmapViewOfFile(m_CacheStart);
 #endif
@@ -266,6 +299,11 @@ void GOrgueMemoryPool::GrowPool(unsigned long length)
 		return;
 	m_PoolSize = new_size;
 #endif	
+#ifdef __WIN32__
+	if (!VirtualAlloc(m_PoolStart, new_size, MEM_COMMIT, PAGE_READWRITE))
+		return;
+	m_PoolSize = new_size;
+#endif
 	m_PoolEnd = m_PoolStart + m_PoolSize;
 }
 
