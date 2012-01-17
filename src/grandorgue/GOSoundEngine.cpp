@@ -322,6 +322,9 @@ void GOSoundEngine::Process(unsigned sampler_group_id, unsigned n_frames)
 	else
 		state = &m_Windchests[sampler_group_id - 1];
 
+	if (state->sampler == NULL && state->new_sampler == NULL)
+		return;
+
 	wxCriticalSectionLocker locker(state->mutex);
 
 	if (state->done)
@@ -373,15 +376,15 @@ int GOSoundEngine::GetSamples
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
 
-		if (m_Windchests[j].sampler == NULL && m_Windchests[j].new_sampler == NULL)
-			continue;
-
 		float* this_buff = m_Windchests[j].buff;
 
 		wxCriticalSectionLocker locker(m_Windchests[j].mutex);
 
 		if (!m_Windchests[j].done)
 		{
+			if (m_Windchests[j].sampler == NULL && m_Windchests[j].new_sampler == NULL)
+				continue;
+
 			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0.0f);
 			ProcessAudioSamplers(m_Windchests[j], n_frames, this_buff);
 		}
@@ -407,15 +410,15 @@ int GOSoundEngine::GetSamples
 
 	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
 	{
-		if (m_DetachedRelease[j].sampler == NULL && m_DetachedRelease[j].new_sampler == NULL)
-			continue;
-
 		float* this_buff = m_DetachedRelease[j].buff;
 
 		wxCriticalSectionLocker locker(m_DetachedRelease[j].mutex);
 
 		if (!m_DetachedRelease[j].done)
 		{
+			if (m_DetachedRelease[j].sampler == NULL && m_DetachedRelease[j].new_sampler == NULL)
+				continue;
+
 			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0.0f);
 			ProcessAudioSamplers(m_DetachedRelease[j], n_frames, this_buff);
 		}
