@@ -27,6 +27,7 @@
 #include <wx/wx.h>
 #include "IniFileConfig.h"
 
+class GOrgueRank;
 class GrandOrgueFile;
 
 class GOrgueWindchest
@@ -36,6 +37,7 @@ private:
 	GrandOrgueFile* m_organfile;
 	std::vector<unsigned> m_enclosure;
 	std::vector<unsigned> m_tremulant;
+	std::vector<GOrgueRank*> m_ranks;
 
 public:
 
@@ -44,7 +46,9 @@ public:
 	float GetVolume();
 	unsigned GetTremulantCount();
 	unsigned GetTremulantId(unsigned index);
-
+	unsigned GetRankCount();
+	GOrgueRank* GetRank(unsigned index);
+	void AddRank(GOrgueRank* rank);
 };
 
 #endif /* GORGUEWINDCHEST_H_ */
