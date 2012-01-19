@@ -184,6 +184,7 @@ GOrguePipeConfig.cpp
 GOrguePiston.cpp
 GOrgueProperties.cpp
 GOrguePushbutton.cpp
+GOrgueRank.cpp
 GOrgueReleaseAlignTable.cpp
 GOrgueRtHelpers.cpp
 GOrgueSetter.cpp

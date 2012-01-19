@@ -44,6 +44,7 @@
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
 #include "GOrgueStop.h"
+#include "GOrgueRank.h"
 #include "GOrgueTemperament.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueWindchest.h"
@@ -81,6 +82,7 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_piston(0),
 	m_general(0),
 	m_divisionalcoupler(0),
+	m_ranks(0),
 	m_manual(0),
 	m_panels(0),
 	m_soundengine(0),
@@ -678,6 +680,7 @@ GrandOrgueFile::~GrandOrgueFile(void)
 	// Just to be sure, that the sound providers are freed before the pool
 	m_manual.clear();
 	m_tremulant.clear();
+	m_ranks.clear();
 }
 
 void GrandOrgueFile::Revert(wxFileConfig& cfg)
@@ -806,6 +809,21 @@ unsigned GrandOrgueFile::GetTremulantCount()
 GOrgueTremulant* GrandOrgueFile::GetTremulant(unsigned index)
 {
 	return m_tremulant[index];
+}
+
+GOrgueRank* GrandOrgueFile::GetRank(unsigned index)
+{
+	return m_ranks[index];
+}
+
+unsigned GrandOrgueFile::GetRankCount()
+{
+	return m_ranks.size();
+}
+
+void GrandOrgueFile::AddRank(GOrgueRank* rank)
+{
+	m_ranks.push_back(rank);
 }
 
 bool GrandOrgueFile::DivisionalsStoreIntermanualCouplers()
