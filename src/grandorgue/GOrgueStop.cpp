@@ -21,9 +21,7 @@
  */
 
 #include "GOrgueStop.h"
-#include "GOrguePipe.h"
 #include "GOrgueRank.h"
-#include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
 
@@ -32,12 +30,9 @@ GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsign
 	m_KeyState(0),
 	m_ManualNumber(manual_number),
 	m_FirstMidiNoteNumber(first_midi_note_number),
-	m_Percussive(false),
 	m_FirstAccessiblePipeLogicalPipeNumber(0),
 	m_FirstAccessiblePipeLogicalKeyNumber(0),
-	m_NumberOfAccessiblePipes(0),
-	m_WindchestGroup(0),
-	m_HarmonicNumber(8)
+	m_NumberOfAccessiblePipes(0)
 {
 	m_Rank = new GOrgueRank(m_organfile);
 	m_organfile->AddRank(m_Rank);
@@ -53,37 +48,13 @@ unsigned GOrgueStop::IsAuto() const
 
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
-	m_Rank->Load(cfg, group);
-
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
 	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
 	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
 	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
-	m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, m_organfile->GetWinchestGroupCount());
-	m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
-	m_HarmonicNumber                       = cfg.ReadInteger(group, wxT("HarmonicNumber"), 1, 1024, false, 8);
-	m_PitchCorrection                      = cfg.ReadFloat(group, wxT("PitchCorrection"), -1200, 1200, false, 0);
 
-	m_organfile->GetWindchest(m_WindchestGroup - 1)->AddRank(m_Rank);
+	m_Rank->Load(cfg, group, m_FirstMidiNoteNumber - m_FirstAccessiblePipeLogicalPipeNumber + m_FirstAccessiblePipeLogicalKeyNumber);
 
-        for (unsigned i = 0; i < number_of_logical_pipes; i++)
-        {
-                wxString buffer;
-                buffer.Printf(wxT("Pipe%03u"), i + 1);
-		GOrguePipe* pipe = 
-                        (new GOrguePipe
-                                (m_organfile
-                                ,m_Rank
-                                ,m_Percussive
-                                ,m_WindchestGroup
-				,m_FirstMidiNoteNumber + i - m_FirstAccessiblePipeLogicalPipeNumber + m_FirstAccessiblePipeLogicalKeyNumber
-				,m_HarmonicNumber
-				,m_PitchCorrection
-                                )
-                        );
-		m_Rank->AddPipe(pipe);
-                pipe->Load(cfg, group, buffer);
-        }
         m_KeyState.resize(m_NumberOfAccessiblePipes);
         std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
 

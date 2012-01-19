@@ -36,13 +36,9 @@ private:
 	std::vector<unsigned> m_KeyState;
 	unsigned m_ManualNumber;
 	unsigned m_FirstMidiNoteNumber;
-	bool m_Percussive;
 	unsigned m_FirstAccessiblePipeLogicalPipeNumber;
 	unsigned m_FirstAccessiblePipeLogicalKeyNumber;
 	unsigned m_NumberOfAccessiblePipes;
-	unsigned m_WindchestGroup;
-	unsigned m_HarmonicNumber;
-	float m_PitchCorrection;
 
 public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number);
