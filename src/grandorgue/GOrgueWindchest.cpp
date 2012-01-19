@@ -27,7 +27,8 @@
 GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_enclosure(0),
-	m_tremulant(0)
+	m_tremulant(0),
+	m_ranks(0)
 {
 }
 
@@ -71,4 +72,19 @@ unsigned GOrgueWindchest::GetTremulantCount()
 unsigned GOrgueWindchest::GetTremulantId(unsigned no)
 {
 	return m_tremulant[no];
+}
+
+unsigned GOrgueWindchest::GetRankCount()
+{
+	return m_ranks.size();
+}
+
+GOrgueRank* GOrgueWindchest::GetRank(unsigned index)
+{
+	return m_ranks[index];
+}
+
+void GOrgueWindchest::AddRank(GOrgueRank* rank)
+{
+	m_ranks.push_back(rank);
 }
