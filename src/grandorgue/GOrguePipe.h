@@ -62,6 +62,7 @@ private:
 
 public:
 	GOrguePipe(GrandOrgueFile* organfile, GOrgueStop* m_Stop, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction);
+	~GOrguePipe();
 	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);

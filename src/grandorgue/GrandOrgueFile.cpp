@@ -958,16 +958,14 @@ GOrguePipeConfig& GrandOrgueFile::GetPipeConfig()
 
 void GrandOrgueFile::UpdateAmplitude()
 {
-	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		for (unsigned j = 0; j < m_manual[i]->GetStopCount(); j++)
-			m_manual[i]->GetStop(j)->UpdateAmplitude();
+	for (unsigned i = 0; i < m_ranks.size(); i++)
+		m_ranks[i]->UpdateAmplitude();
 }
 
 void GrandOrgueFile::UpdateTuning()
 {
-	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		for (unsigned j = 0; j < m_manual[i]->GetStopCount(); j++)
-			m_manual[i]->GetStop(j)->UpdateTuning();
+	for (unsigned i = 0; i < m_ranks.size(); i++)
+		m_ranks[i]->UpdateTuning();
 }
 
 bool GrandOrgueFile::IsCustomized()
@@ -1030,6 +1028,9 @@ void GrandOrgueFile::Abort()
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->Abort();
 
+	for (unsigned i = 0; i < m_ranks.size(); i++)
+		m_ranks[i]->Abort();
+
 	for (unsigned i = 0; i < m_tremulant.size(); i++)
 		m_tremulant[i]->Abort();
 }
@@ -1091,8 +1092,8 @@ void GrandOrgueFile::Reset()
 
 void GrandOrgueFile::SetTemperament(const GOrgueTemperament& temperament)
 {
-        for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
-		GetManual(k)->SetTemperament(temperament);
+        for (unsigned k = 0; k < m_ranks.size(); k++)
+		m_ranks[k]->SetTemperament(temperament);
 }
 
 void GrandOrgueFile::SetTemperament(wxString name)

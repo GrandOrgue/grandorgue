@@ -22,6 +22,7 @@
 
 #include "GOrgueStop.h"
 #include "GOrguePipe.h"
+#include "GOrgueRank.h"
 #include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
 
@@ -68,6 +69,8 @@ void GOrgueStop::UpdateTuning()
 
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
+	m_organfile->AddRank(new GOrgueRank(this, m_organfile));
+
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
 	m_PipeConfig.Load(cfg, group, wxEmptyString);
 	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);

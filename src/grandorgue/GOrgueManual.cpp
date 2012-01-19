@@ -374,9 +374,3 @@ void GOrgueManual::Reset()
 	for (unsigned j = 0; j < GetStopCount(); j++)
                 GetStop(j)->Set(false);
 }
-
-void GOrgueManual::SetTemperament(const GOrgueTemperament& temperament)
-{
-	for(unsigned j = 0; j < m_stops.size(); j++)
-		m_stops[j]->SetTemperament(temperament);
-}

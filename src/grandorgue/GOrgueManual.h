@@ -35,7 +35,6 @@ class GOrgueCoupler;
 class GOrgueDivisional;
 class GOrgueMidiEvent;
 class GOrgueStop;
-class GOrgueTemperament;
 class GOrgueTremulant;
 class GrandOrgueFile;
 class IniFileConfig;
@@ -81,7 +80,6 @@ public:
 	void PreparePlayback();
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
-	void SetTemperament(const GOrgueTemperament& temperament);
 	GOrgueMidiReceiver& GetMidiReceiver();
 	~GOrgueManual(void);
 

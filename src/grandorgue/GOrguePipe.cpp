@@ -55,6 +55,10 @@ GOrguePipe::GOrguePipe
 {
 }
 
+GOrguePipe::~GOrguePipe()
+{
+}
+
 GOSoundProvider* GOrguePipe::GetSoundProvider()
 {
 	if (m_Reference)
