@@ -35,6 +35,7 @@ class GOrgueWindchest
 
 private:
 	GrandOrgueFile* m_organfile;
+	wxString m_Name;
 	std::vector<unsigned> m_enclosure;
 	std::vector<unsigned> m_tremulant;
 	std::vector<GOrgueRank*> m_ranks;
@@ -42,13 +43,14 @@ private:
 public:
 
 	GOrgueWindchest(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(IniFileConfig& cfg, wxString group, unsigned index);
 	float GetVolume();
 	unsigned GetTremulantCount();
 	unsigned GetTremulantId(unsigned index);
 	unsigned GetRankCount();
 	GOrgueRank* GetRank(unsigned index);
 	void AddRank(GOrgueRank* rank);
+	const wxString& GetName();
 };
 
 #endif /* GORGUEWINDCHEST_H_ */

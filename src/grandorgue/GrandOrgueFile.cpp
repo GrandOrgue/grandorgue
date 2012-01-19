@@ -274,7 +274,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	for (unsigned  i = 0; i < m_NumberOfWindchestGroups; i++)
 	{
 		buffer.Printf(wxT("WindchestGroup%03d"), i + 1);
-		m_windchest[i]->Load(ini, buffer);
+		m_windchest[i]->Load(ini, buffer, i);
 	}
 
 	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)

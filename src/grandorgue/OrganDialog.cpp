@@ -250,7 +250,7 @@ void OrganDialog::FillTree()
 	for (unsigned j = 0; j < m_organfile->GetWinchestGroupCount(); j++)
 	{
 		GOrgueWindchest* windchest = m_organfile->GetWindchest(j);
-		wxTreeItemId id_windchest = m_Tree->AppendItem(id_root, wxString::Format(wxT("Windchest %d"), j + 1));
+		wxTreeItemId id_windchest = m_Tree->AppendItem(id_root, windchest->GetName());
 		for(unsigned i = 0; i < windchest->GetRankCount(); i++)
 		{
 			GOrgueRank* rank = windchest->GetRank(i);

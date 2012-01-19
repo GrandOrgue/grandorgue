@@ -3424,6 +3424,15 @@ It has the following attributes:
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Name</term>
+          <listitem>
+            <para>
+(string, default: implementation dependend) Display name of this
+windchest
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>NumberOfEnclosures</term>
           <listitem>
             <para>
