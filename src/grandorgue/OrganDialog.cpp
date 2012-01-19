@@ -25,17 +25,17 @@
 #include <wx/treectrl.h>
 #include "OrganDialog.h"
 #include "GrandOrgueFile.h"
-#include "GOrgueManual.h"
-#include "GOrgueStop.h"
+#include "GOrgueRank.h"
 #include "GOrguePipe.h"
+#include "GOrgueWindchest.h"
 
 class OrganTreeItemData : public wxTreeItemData
 {
 public:
-	OrganTreeItemData(GOrgueStop* s)
+	OrganTreeItemData(GOrgueRank* r)
 	{
-		config = &s->GetPipeConfig();
-		stop = s;
+		config = &r->GetPipeConfig();
+		rank = r;
 		pipe = NULL;
 		organfile = NULL;
 	}
@@ -43,7 +43,7 @@ public:
 	OrganTreeItemData(GOrguePipe* p)
 	{
 		config = &p->GetPipeConfig();
-		stop = NULL;
+		rank = NULL;
 		pipe = p;
 		organfile = NULL;
 	}
@@ -51,13 +51,13 @@ public:
 	OrganTreeItemData(GrandOrgueFile* o)
 	{
 		config = &o->GetPipeConfig();
-		stop = NULL;
+		rank = NULL;
 		pipe = NULL;
 		organfile = o;
 	}
 
 	GOrguePipeConfig* config;
-	GOrgueStop* stop;
+	GOrgueRank* rank;
 	GOrguePipe* pipe;
 	GrandOrgueFile* organfile;
 };
@@ -247,23 +247,23 @@ void OrganDialog::Modified()
 void OrganDialog::FillTree()
 {
 	wxTreeItemId id_root = m_Tree->AddRoot(m_organfile->GetChurchName(), -1, -1, new OrganTreeItemData(m_organfile));
-	for (unsigned j = m_organfile->GetFirstManualIndex(); j <= m_organfile->GetManualAndPedalCount(); j++)
+	for (unsigned j = 0; j < m_organfile->GetWinchestGroupCount(); j++)
 	{
-		GOrgueManual* manual = m_organfile->GetManual(j);
-		wxTreeItemId id_manual = m_Tree->AppendItem(id_root, manual->GetName());
-		for(unsigned i = 0; i < manual->GetStopCount(); i++)
+		GOrgueWindchest* windchest = m_organfile->GetWindchest(j);
+		wxTreeItemId id_windchest = m_Tree->AppendItem(id_root, wxString::Format(wxT("Windchest %d"), j + 1));
+		for(unsigned i = 0; i < windchest->GetRankCount(); i++)
 		{
-			GOrgueStop* stop = manual->GetStop(i);
-			wxTreeItemId id_stop = m_Tree->AppendItem(id_manual, stop->GetName(), -1, -1, new OrganTreeItemData(stop));
-			for(unsigned k = 0; k < stop->GetPipeCount(); k++)
+			GOrgueRank* rank = windchest->GetRank(i);
+			wxTreeItemId id_rank = m_Tree->AppendItem(id_windchest, rank->GetName(), -1, -1, new OrganTreeItemData(rank));
+			for(unsigned k = 0; k < rank->GetPipeCount(); k++)
 			{
-				GOrguePipe* pipe = stop->GetPipe(k);
+				GOrguePipe* pipe = rank->GetPipe(k);
 				if (pipe->IsReference())
 					continue;
-				m_Tree->AppendItem(id_stop, pipe->GetFilename(), -1, -1, new OrganTreeItemData(pipe));
+				m_Tree->AppendItem(id_rank, pipe->GetFilename(), -1, -1, new OrganTreeItemData(pipe));
 			}
 		}
-		m_Tree->Expand(id_manual);
+		m_Tree->Expand(id_windchest);
 	}
 	m_Tree->Expand(id_root);
 }
