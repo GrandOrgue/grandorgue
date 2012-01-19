@@ -69,7 +69,8 @@ void GOrgueStop::UpdateTuning()
 
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
-	m_organfile->AddRank(new GOrgueRank(this, m_organfile));
+	GOrgueRank* rank = new GOrgueRank(this, m_organfile);
+	m_organfile->AddRank(rank);
 
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
 	m_PipeConfig.Load(cfg, group, wxEmptyString);
@@ -89,7 +90,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
                 m_Pipes.push_back
                         (new GOrguePipe
                                 (m_organfile
-                                ,this
+                                ,rank
                                 ,m_Percussive
                                 ,m_WindchestGroup
 				,m_FirstMidiNoteNumber + i - m_FirstAccessiblePipeLogicalPipeNumber + m_FirstAccessiblePipeLogicalKeyNumber

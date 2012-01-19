@@ -21,6 +21,7 @@
  */
 
 #include "GOrguePipe.h"
+#include "GOrgueRank.h"
 #include "GOrgueStop.h"
 #include "GOrgueManual.h"
 #include "GOrgueSettings.h"
@@ -31,7 +32,7 @@
 
 GOrguePipe::GOrguePipe
 	(GrandOrgueFile* organfile
-	,GOrgueStop* stop
+	,GOrgueRank* rank
 	,bool percussive
 	,int sampler_group_id
 	,unsigned midi_key_number
@@ -39,7 +40,7 @@ GOrguePipe::GOrguePipe
 	,float pitch_correction
 	) :
 	m_OrganFile(organfile),
-	m_Stop(stop),
+	m_Rank(rank),
 	m_Sampler(NULL),
 	m_Instances(0),
 	m_SamplerGroupID(sampler_group_id),
@@ -118,7 +119,7 @@ GOrguePipeConfig& GOrguePipe::GetPipeConfig()
 
 float GOrguePipe::GetEffectiveAmplitude()
 {
-	return m_PipeConfig.GetAmplitude() * m_Stop->GetPipeConfig().GetAmplitude() * m_OrganFile->GetPipeConfig().GetAmplitude();
+	return m_PipeConfig.GetAmplitude() * m_Rank->GetPipeConfig().GetAmplitude() * m_OrganFile->GetPipeConfig().GetAmplitude();
 }
 
 void GOrguePipe::UpdateAmplitude()
@@ -128,7 +129,7 @@ void GOrguePipe::UpdateAmplitude()
 
 float GOrguePipe::GetEffectiveTuning()
 {
-	return m_OrganFile->GetPipeConfig().GetTuning() + m_Stop->GetPipeConfig().GetTuning() + m_PipeConfig.GetTuning() + m_TemperamentOffset;
+	return m_OrganFile->GetPipeConfig().GetTuning() + m_Rank->GetPipeConfig().GetTuning() + m_PipeConfig.GetTuning() + m_TemperamentOffset;
 }
 
 void GOrguePipe::UpdateTuning()
@@ -214,6 +215,6 @@ wxString GOrguePipe::GetFilename()
 void GOrguePipe::SetTemperament(const GOrgueTemperament& temperament)
 {
 	m_TemperamentOffset = temperament.GetOffset(m_MidiKeyNumber, m_SoundProvider.GetMidiKeyNumber(), m_SoundProvider.GetMidiPitchFract(), m_HarmonicNumber, m_PitchCorrection,
-						    m_OrganFile->GetPipeConfig().GetDefaultTuning() + m_Stop->GetPipeConfig().GetDefaultTuning() + m_PipeConfig.GetDefaultTuning());
+						    m_OrganFile->GetPipeConfig().GetDefaultTuning() + m_Rank->GetPipeConfig().GetDefaultTuning() + m_PipeConfig.GetDefaultTuning());
 	UpdateTuning();
 }

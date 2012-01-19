@@ -30,7 +30,7 @@
 class GrandOrgueFile;
 class GOrgueCache;
 class GOrgueCacheWriter;
-class GOrgueStop;
+class GOrgueRank;
 class GOrgueTemperament;
 class IniFileConfig;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
@@ -40,7 +40,7 @@ class GOrguePipe : public GOrguePipeUpdateCallback
 
 private:
 	GrandOrgueFile* m_OrganFile;
-	GOrgueStop* m_Stop;
+	GOrgueRank* m_Rank;
 	SAMPLER_HANDLE  m_Sampler;
 	int m_Instances;
 
@@ -61,7 +61,7 @@ private:
 	GOSoundProvider* GetSoundProvider();
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, GOrgueStop* m_Stop, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction);
+	GOrguePipe(GrandOrgueFile* organfile, GOrgueRank* m_Rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction);
 	~GOrguePipe();
 	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
 	void Save(IniFileConfig& cfg, bool prefix);
