@@ -23,11 +23,11 @@
 #ifndef GORGUERANK_H
 #define GORGUERANK_H
 
+#include "ptrvector.h"
 #include "GOrguePipeConfig.h"
 
 class GOrguePipe;
 class GOrgueTemperament;
-class GOrgueStop;
 class GrandOrgueFile;
 
 class GOrgueRank : public GOrguePipeUpdateCallback
@@ -36,13 +36,16 @@ private:
 	GrandOrgueFile* m_organfile;
 	wxString m_Name;
 	wxString m_Group;
-        GOrgueStop* m_Stop;
+	ptr_vector<GOrguePipe> m_Pipes;
+	GOrguePipeConfig m_PipeConfig;
 
 public:
-	GOrgueRank(GOrgueStop* stop, GrandOrgueFile* organfile);
+	GOrgueRank(GrandOrgueFile* organfile);
 	~GOrgueRank();
 	void Load(IniFileConfig& cfg, wxString group);
 	void Save(IniFileConfig& cfg, bool prefix);
+	void SetKey(int note, bool on);
+	void AddPipe(GOrguePipe* pipe);
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
 	void Abort();

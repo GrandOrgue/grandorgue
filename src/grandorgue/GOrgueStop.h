@@ -24,20 +24,15 @@
 #define GORGUESTOP_H
 
 #include <vector>
-#include "ptrvector.h"
 #include <wx/wx.h>
-#include "GOrguePipeConfig.h"
 #include "GOrgueDrawStop.h"
 
-class GOrguePipe;
-class GOrgueTemperament;
 class GOrgueRank;
 
-class GOrgueStop : public GOrgueDrawstop, public GOrguePipeUpdateCallback
+class GOrgueStop : public GOrgueDrawstop
 {
 private:
 	GOrgueRank* m_Rank;
-	ptr_vector<GOrguePipe> m_Pipes;
 	std::vector<unsigned> m_KeyState;
 	unsigned m_ManualNumber;
 	unsigned m_FirstMidiNoteNumber;
@@ -48,27 +43,18 @@ private:
 	unsigned m_WindchestGroup;
 	unsigned m_HarmonicNumber;
 	float m_PitchCorrection;
-	GOrguePipeConfig m_PipeConfig;
 
 public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number);
 	GOrgueRank* GetRank();
-	GOrguePipe* GetPipe(unsigned index);
-	unsigned GetPipeCount();
 	void Load(IniFileConfig& cfg, wxString group);
-	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
 	void SetKey(unsigned note, int on);
 	void Abort();
 	void PreparePlayback();
 	~GOrgueStop(void);
-	GOrguePipeConfig& GetPipeConfig();
-	void SetTemperament(const GOrgueTemperament& temperament);
 
 	unsigned IsAuto() const;
-
-	void UpdateAmplitude();
-	void UpdateTuning();
 };
 
 #endif /* GORGUESTOP_H_ */
