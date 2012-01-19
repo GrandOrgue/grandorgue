@@ -22,14 +22,27 @@
 
 #include "GOrgueRank.h"
 #include "GOrgueStop.h"
+#include "IniFileConfig.h"
 
 GOrgueRank::GOrgueRank(GOrgueStop* stop,GrandOrgueFile* organfile) :
 	m_organfile(organfile),
+	m_Name(),
+	m_Group(),
 	m_Stop(stop)
 {
 }
 
 GOrgueRank::~GOrgueRank()
+{
+}
+
+void GOrgueRank::Load(IniFileConfig& cfg, wxString group)
+{
+	m_Group = group;
+	m_Name = cfg.ReadString(group, wxT("Name"), 64, true);
+}
+
+void GOrgueRank::Save(IniFileConfig& cfg, bool prefix)
 {
 }
 
@@ -45,7 +58,7 @@ unsigned GOrgueRank::GetPipeCount()
 
 const wxString& GOrgueRank::GetName()
 {
-	return m_Stop->GetName();
+	return m_Name;
 }
 
 GOrguePipeConfig& GOrgueRank::GetPipeConfig()

@@ -742,6 +742,9 @@ void GrandOrgueFile::Save(const wxString& file)
 
 	m_PipeConfig.Save(aIni, prefix);
 
+	for (unsigned j = 0; j < m_ranks.size(); j++)
+		m_ranks[j]->Save(aIni, prefix);
+
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->Save(aIni, prefix);
 

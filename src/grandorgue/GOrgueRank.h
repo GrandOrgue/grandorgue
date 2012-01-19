@@ -34,11 +34,15 @@ class GOrgueRank : public GOrguePipeUpdateCallback
 {
 private:
 	GrandOrgueFile* m_organfile;
+	wxString m_Name;
+	wxString m_Group;
         GOrgueStop* m_Stop;
 
 public:
 	GOrgueRank(GOrgueStop* stop, GrandOrgueFile* organfile);
 	~GOrgueRank();
+	void Load(IniFileConfig& cfg, wxString group);
+	void Save(IniFileConfig& cfg, bool prefix);
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
 	void Abort();

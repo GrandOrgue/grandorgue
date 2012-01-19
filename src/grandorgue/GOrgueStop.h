@@ -31,10 +31,12 @@
 
 class GOrguePipe;
 class GOrgueTemperament;
+class GOrgueRank;
 
 class GOrgueStop : public GOrgueDrawstop, public GOrguePipeUpdateCallback
 {
 private:
+	GOrgueRank* m_Rank;
 	ptr_vector<GOrguePipe> m_Pipes;
 	std::vector<unsigned> m_KeyState;
 	unsigned m_ManualNumber;
@@ -50,6 +52,7 @@ private:
 
 public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number);
+	GOrgueRank* GetRank();
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
 	void Load(IniFileConfig& cfg, wxString group);
