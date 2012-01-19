@@ -37,15 +37,19 @@ private:
 	wxString m_Name;
 	wxString m_Group;
 	ptr_vector<GOrguePipe> m_Pipes;
+	unsigned m_FirstMidiNoteNumber;
+	bool m_Percussive;
+	unsigned m_WindchestGroup;
+	unsigned m_HarmonicNumber;
+	float m_PitchCorrection;
 	GOrguePipeConfig m_PipeConfig;
 
 public:
 	GOrgueRank(GrandOrgueFile* organfile);
 	~GOrgueRank();
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(IniFileConfig& cfg, wxString group, int first_midi_note_number);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void SetKey(int note, bool on);
-	void AddPipe(GOrguePipe* pipe);
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
 	void Abort();

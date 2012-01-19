@@ -22,12 +22,20 @@
 
 #include "GOrguePipe.h"
 #include "GOrgueRank.h"
+#include "GOrgueWindchest.h"
+#include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
 
 GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_Name(),
 	m_Group(),
+	m_Pipes(),
+	m_FirstMidiNoteNumber(0),
+	m_Percussive(false),
+	m_WindchestGroup(0),
+	m_HarmonicNumber(8),
+	m_PitchCorrection(0),
 	m_PipeConfig(organfile, this)
 {
 }
@@ -36,12 +44,39 @@ GOrgueRank::~GOrgueRank()
 {
 }
 
-void GOrgueRank::Load(IniFileConfig& cfg, wxString group)
+void GOrgueRank::Load(IniFileConfig& cfg, wxString group, int first_midi_note_number)
 {
+	m_FirstMidiNoteNumber = first_midi_note_number;
 	m_Group = group;
 	m_Name = cfg.ReadString(group, wxT("Name"), 64, true);
 
+	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
 	m_PipeConfig.Load(cfg, group, wxEmptyString);
+	m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, m_organfile->GetWinchestGroupCount());
+	m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
+	m_HarmonicNumber                       = cfg.ReadInteger(group, wxT("HarmonicNumber"), 1, 1024, false, 8);
+	m_PitchCorrection                      = cfg.ReadFloat(group, wxT("PitchCorrection"), -1200, 1200, false, 0);
+
+	m_organfile->GetWindchest(m_WindchestGroup - 1)->AddRank(this);
+
+	m_Pipes.clear();
+	for (unsigned i = 0; i < number_of_logical_pipes; i++)
+	{
+		wxString buffer;
+		buffer.Printf(wxT("Pipe%03u"), i + 1);
+		m_Pipes.push_back
+			  (new GOrguePipe
+			   (m_organfile
+			    ,this
+			    ,m_Percussive
+			    ,m_WindchestGroup
+			    ,m_FirstMidiNoteNumber + i
+			    ,m_HarmonicNumber
+			    ,m_PitchCorrection
+			    )
+			   );
+               m_Pipes[i]->Load(cfg, group, buffer);
+       }
 }
 
 void GOrgueRank::Save(IniFileConfig& cfg, bool prefix)
@@ -57,11 +92,6 @@ void GOrgueRank::SetKey(int note, bool on)
 		return;
 
 	m_Pipes[note]->Set(on);
-}
-
-void GOrgueRank::AddPipe(GOrguePipe* pipe)
-{
-	m_Pipes.push_back(pipe);
 }
 
 GOrguePipe* GOrgueRank::GetPipe(unsigned index)
