@@ -23,6 +23,7 @@
 #include "GOrgueStop.h"
 #include "GOrguePipe.h"
 #include "GrandOrgueFile.h"
+#include "IniFileConfig.h"
 
 GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number) :
 	GOrgueDrawstop(organfile),

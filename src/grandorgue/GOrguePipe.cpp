@@ -27,6 +27,7 @@
 #include "GOrgueTemperament.h"
 #include "GrandOrgueFile.h"
 #include "GOSoundProviderWave.h"
+#include "IniFileConfig.h"
 
 GOrguePipe::GOrguePipe
 	(GrandOrgueFile* organfile

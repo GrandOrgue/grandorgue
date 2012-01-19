@@ -26,7 +26,6 @@
 #include <vector>
 #include "ptrvector.h"
 #include <wx/wx.h>
-#include "IniFileConfig.h"
 #include "GOrguePipeConfig.h"
 #include "GOrgueDrawStop.h"
 
