@@ -92,17 +92,39 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 {
 }
 
+void GrandOrgueFile::GeneratePipeList(std::vector<GOrguePipe*>& pipes)
+{
+	pipes.clear();
+	for (unsigned i = 0; i < m_ranks.size(); i++)
+		for (unsigned k = 0; k < m_ranks[i]->GetPipeCount(); k++)
+		{
+			GOrguePipe* pipe = m_ranks[i]->GetPipe(k);
+			if (!pipe->IsReference())
+				pipes.push_back(pipe);
+		}
+}
+
+void GrandOrgueFile::ResolveReferences()
+{
+	std::vector<GOrguePipe*> pipes;
+	GeneratePipeList(pipes);
+	for(unsigned i = 0; i < pipes.size(); i++)
+		pipes[i]->InitializeReference();
+}
+
+
 void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 {
 	SHA_CTX ctx;
 	int len;
 	SHA1_Init(&ctx);
-	for (unsigned i = 0; i < m_ranks.size(); i++)
-		for (unsigned k = 0; k < m_ranks[i]->GetPipeCount(); k++)
-		{
-			wxString filename = m_ranks[i]->GetPipe(k)->GetFilename();
-			SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
-		}
+	std::vector<GOrguePipe*> pipes;
+	GeneratePipeList(pipes);
+	for (unsigned i = 0; i < pipes.size(); i++)
+	{
+		wxString filename = pipes[i]->GetFilename();
+		SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+	}
 
 	bool stereo = m_Settings.GetLoadInStereo();
 	SHA1_Update(&ctx, &stereo, sizeof(stereo));
@@ -142,53 +164,49 @@ bool GrandOrgueFile::TryLoad
 
 	try
 	{
-
-		/* Figure out how many pipes there are */
-		unsigned nb_pipes = 0;
-		for (unsigned i = 0; i < m_ranks.size(); i++)
-			nb_pipes += m_ranks[i]->GetPipeCount();
+		/* Figure out list of pipes to load */
+		std::vector<GOrguePipe*> pipes;
+		GeneratePipeList(pipes);
 
 		/* Load pipes */
 		unsigned nb_loaded_pipes = 0;
-		for (unsigned i = 0; i < m_ranks.size(); i++)
-			for (unsigned k = 0; k < m_ranks[i]->GetPipeCount(); k++)
+		for (unsigned i = 0; i < pipes.size(); i++)
+		{
+			GOrguePipe* pipe = pipes[i];
+			if (cache != NULL)
 			{
-				GOrguePipe* pipe = m_ranks[i]->GetPipe(k);
-				if (cache != NULL)
+				if (!pipe->LoadCache(*cache))
 				{
-					if (!pipe->LoadCache(*cache))
-					{
-						error = wxString::Format
-							(_("Failed to read %s from cache.")
-							 ,pipe->GetFilename().c_str()
-							 );
-						return false;
-					}
-				}
-				else
-				{
-					pipe->LoadData();
-				}
-				nb_loaded_pipes++;
-
-				if (last == wxGetUTCTime())
-					continue;
-
-				last = wxGetUTCTime();
-				if (!dlg.Update	((nb_loaded_pipes << 15) / (nb_pipes + 1), pipe->GetFilename()))
-				{
-					error = _("Load aborted by the user");
+					error = wxString::Format
+						(_("Failed to read %s from cache.")
+						 ,pipe->GetFilename().c_str()
+						 );
 					return false;
 				}
-				GOrgueLCD_WriteLineTwo
-					(wxString::Format
-					 (_("Loading %d%%")
-					  ,(nb_loaded_pipes * 100) / (nb_pipes + 1))
-					 );
 			}
+			else
+			{
+				pipe->LoadData();
+			}
+			nb_loaded_pipes++;
+
+			if (last == wxGetUTCTime())
+					continue;
+
+			last = wxGetUTCTime();
+			if (!dlg.Update	((nb_loaded_pipes << 15) / (pipes.size() + 1), pipe->GetFilename()))
+			{
+				error = _("Load aborted by the user");
+				return false;
+			}
+			GOrgueLCD_WriteLineTwo
+				(wxString::Format
+				 (_("Loading %d%%")
+				  ,(nb_loaded_pipes * 100) / (pipes.size() + 1))
+				 );
+		}
 
 		success = true;
-
 	}
 	catch (wxString msg)
 	{
@@ -507,6 +525,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		wxString load_error;
 		bool cache_ok = false;
 
+		ResolveReferences();
+
 		if (wxFileExists(m_CacheFilename))
 		{
 
@@ -608,11 +628,10 @@ bool GrandOrgueFile::CachePresent()
 bool GrandOrgueFile::UpdateCache(bool compress)
 {
 	DeleteCache();
-	/* Figure out how many pipes there are */
-	unsigned nb_pipes = 0;
+	/* Figure out the list of pipes to save */
 	unsigned nb_saved_pipes = 0;
-	for (unsigned i = 0; i < m_ranks.size(); i++)
-		nb_pipes += m_ranks[i]->GetPipeCount();
+	std::vector<GOrguePipe*> pipes;
+	GeneratePipeList(pipes);
 
 	wxProgressDialog dlg(_("Creating sample cache"), wxEmptyString, 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
 	long last = wxGetUTCTime();
@@ -629,28 +648,27 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 	if (!writer.Write(hash, sizeof(hash)))
 		cache_save_ok = false;
 
-	for (unsigned i = 0; cache_save_ok && i < m_ranks.size(); i++)
-		for (unsigned k = 0; cache_save_ok && k < m_ranks[i]->GetPipeCount(); k++)
+	for (unsigned i = 0; cache_save_ok && i < pipes.size(); i++)
+	{
+		GOrguePipe* pipe = pipes[i];
+		if (!pipe->SaveCache(writer))
 		{
-			GOrguePipe* pipe = m_ranks[i]->GetPipe(k);
-			if (!pipe->SaveCache(writer))
-			{
-				cache_save_ok = false;
-				wxLogError(_("Save of %s to the cache failed"), pipe->GetFilename().c_str());
-			}
-			nb_saved_pipes++;
-				
-			if (last == wxGetUTCTime())
-				continue;
-
-			last = wxGetUTCTime();
-			if (!dlg.Update ((nb_saved_pipes << 15) / (nb_pipes + 1), pipe->GetFilename()))
-			{
-				writer.Close();
-				DeleteCache();
-				return false;
-			}
+			cache_save_ok = false;
+			wxLogError(_("Save of %s to the cache failed"), pipe->GetFilename().c_str());
 		}
+		nb_saved_pipes++;
+				
+		if (last == wxGetUTCTime())
+			continue;
+
+		last = wxGetUTCTime();
+		if (!dlg.Update ((nb_saved_pipes << 15) / (pipes.size() + 1), pipe->GetFilename()))
+		{
+			writer.Close();
+			DeleteCache();
+			return false;
+		}
+	}
 
 	writer.Close();
 	if (!cache_save_ok)
