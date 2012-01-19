@@ -41,26 +41,6 @@ GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsign
 {
 }
 
-unsigned GOrgueStop::GetFirstAccessiblePipeLogicalPipeNumber() const
-{
-        return m_FirstAccessiblePipeLogicalPipeNumber;
-}
-
-unsigned GOrgueStop::GetFirstAccessiblePipeLogicalKeyNumber() const
-{
-        return m_FirstAccessiblePipeLogicalKeyNumber;
-}
-
-unsigned GOrgueStop::GetNbAccessiblePipes() const
-{
-        return
-                IsAuto()
-                ? 0 /* When there is only one logical pipe, the pipe plays whenever
-                     * the stop is on and we "fake" that the stop has no accessible
-                     * pipes. */
-                : m_NumberOfAccessiblePipes;
-}
-
 unsigned GOrgueStop::IsAuto() const
 {
         /* m_auto seems to state that if a stop only has 1 note, the note isn't
