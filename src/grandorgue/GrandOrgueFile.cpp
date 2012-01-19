@@ -1038,6 +1038,9 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine)
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->PreparePlayback();
 
+	for (unsigned i = 0; i < m_ranks.size(); i++)
+		m_ranks[i]->PreparePlayback();
+
 	for (unsigned j = 0; j < m_tremulant.size(); j++)
 		m_tremulant[j]->PreparePlayback();
 

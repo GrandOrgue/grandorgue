@@ -20,15 +20,15 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrguePipe.h"
 #include "GOrgueRank.h"
-#include "GOrgueStop.h"
 #include "IniFileConfig.h"
 
-GOrgueRank::GOrgueRank(GOrgueStop* stop,GrandOrgueFile* organfile) :
+GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_Name(),
 	m_Group(),
-	m_Stop(stop)
+	m_PipeConfig(organfile, this)
 {
 }
 
@@ -40,20 +40,38 @@ void GOrgueRank::Load(IniFileConfig& cfg, wxString group)
 {
 	m_Group = group;
 	m_Name = cfg.ReadString(group, wxT("Name"), 64, true);
+
+	m_PipeConfig.Load(cfg, group, wxEmptyString);
 }
 
 void GOrgueRank::Save(IniFileConfig& cfg, bool prefix)
 {
+	for(unsigned i = 0; i < m_Pipes.size(); i++)
+		m_Pipes[i]->Save(cfg, prefix);
+	m_PipeConfig.Save(cfg, prefix);
+}
+
+void GOrgueRank::SetKey(int note, bool on)
+{
+	if (note < 0 || note >= (int)m_Pipes.size())
+		return;
+
+	m_Pipes[note]->Set(on);
+}
+
+void GOrgueRank::AddPipe(GOrguePipe* pipe)
+{
+	m_Pipes.push_back(pipe);
 }
 
 GOrguePipe* GOrgueRank::GetPipe(unsigned index)
 {
-	return m_Stop->GetPipe(index);
+	return m_Pipes[index];
 }
 
 unsigned GOrgueRank::GetPipeCount()
 {
-	return m_Stop->GetPipeCount();
+	return m_Pipes.size();
 }
 
 const wxString& GOrgueRank::GetName()
@@ -63,27 +81,31 @@ const wxString& GOrgueRank::GetName()
 
 GOrguePipeConfig& GOrgueRank::GetPipeConfig()
 {
-	return m_Stop->GetPipeConfig();
+	return m_PipeConfig;
 }
 
 void GOrgueRank::UpdateAmplitude()
 {
-        m_Stop->UpdateAmplitude();
+	for(unsigned i = 0; i < m_Pipes.size(); i++)
+		m_Pipes[i]->UpdateAmplitude();
 }
 
 void GOrgueRank::UpdateTuning()
 {
-        m_Stop->UpdateTuning();
+	for(unsigned i = 0; i < m_Pipes.size(); i++)
+		m_Pipes[i]->UpdateTuning();
 }
 
 void GOrgueRank::SetTemperament(const GOrgueTemperament& temperament)
 {
-	m_Stop->SetTemperament(temperament);
+	for(unsigned j = 0; j < m_Pipes.size(); j++)
+		m_Pipes[j]->SetTemperament(temperament);
 }
 
 void GOrgueRank::Abort()
 {
-	m_Stop->Abort();
+	for(unsigned i = 0; i < m_Pipes.size(); i++)
+		m_Pipes[i]->FastAbort();
 }
 
 void GOrgueRank::PreparePlayback()
