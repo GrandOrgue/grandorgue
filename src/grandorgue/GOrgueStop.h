@@ -62,9 +62,6 @@ public:
 	GOrguePipeConfig& GetPipeConfig();
 	void SetTemperament(const GOrgueTemperament& temperament);
 
-	unsigned GetFirstAccessiblePipeLogicalPipeNumber() const;
-	unsigned GetFirstAccessiblePipeLogicalKeyNumber() const;
-	unsigned GetNbAccessiblePipes() const;
 	unsigned IsAuto() const;
 
 	void UpdateAmplitude();
