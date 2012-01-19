@@ -41,6 +41,8 @@ GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsign
 	m_HarmonicNumber(8),
 	m_PipeConfig(organfile, this)
 {
+	m_Rank = new GOrgueRank(this, m_organfile);
+	m_organfile->AddRank(m_Rank);
 }
 
 unsigned GOrgueStop::IsAuto() const
@@ -70,8 +72,7 @@ void GOrgueStop::UpdateTuning()
 
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
-	GOrgueRank* rank = new GOrgueRank(this, m_organfile);
-	m_organfile->AddRank(rank);
+	m_Rank->Load(cfg, group);
 
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
 	m_PipeConfig.Load(cfg, group, wxEmptyString);
@@ -83,7 +84,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 	m_HarmonicNumber                       = cfg.ReadInteger(group, wxT("HarmonicNumber"), 1, 1024, false, 8);
 	m_PitchCorrection                      = cfg.ReadFloat(group, wxT("PitchCorrection"), -1200, 1200, false, 0);
 
-	m_organfile->GetWindchest(m_WindchestGroup - 1)->AddRank(rank);
+	m_organfile->GetWindchest(m_WindchestGroup - 1)->AddRank(m_Rank);
 
         m_Pipes.clear();
         for (unsigned i = 0; i < number_of_logical_pipes; i++)
@@ -93,7 +94,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
                 m_Pipes.push_back
                         (new GOrguePipe
                                 (m_organfile
-                                ,rank
+                                ,m_Rank
                                 ,m_Percussive
                                 ,m_WindchestGroup
 				,m_FirstMidiNoteNumber + i - m_FirstAccessiblePipeLogicalPipeNumber + m_FirstAccessiblePipeLogicalKeyNumber
@@ -186,4 +187,9 @@ void GOrgueStop::SetTemperament(const GOrgueTemperament& temperament)
 {
 	for(unsigned j = 0; j < m_Pipes.size(); j++)
 		m_Pipes[j]->SetTemperament(temperament);
+}
+
+GOrgueRank* GOrgueStop::GetRank()
+{
+	return m_Rank;
 }

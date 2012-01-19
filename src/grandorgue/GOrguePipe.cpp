@@ -159,9 +159,9 @@ bool GOrguePipe::LoadCache(GOrgueCache& cache)
 		wxSscanf(m_Filename.Mid(4), wxT("%d:%d:%d"), &manual, &stop, &pipe);
 		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual > m_OrganFile->GetManualAndPedalCount()) ||
 			(stop <= 0) || (stop > m_OrganFile->GetManual(manual)->GetStopCount()) ||
-			(pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
+			(pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank()->GetPipeCount()))
 			throw (wxString)_("Invalid reference ") + m_Filename;
-		m_Reference = m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
+		m_Reference = m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank()->GetPipe(pipe-1);
 		return true;
 	}
 	m_Reference = NULL;
@@ -183,9 +183,9 @@ void GOrguePipe::LoadData()
 		wxSscanf(m_Filename.Mid(4), wxT("%d:%d:%d"), &manual, &stop, &pipe);
 		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual > m_OrganFile->GetManualAndPedalCount()) ||
 			(stop <= 0) || (stop > m_OrganFile->GetManual(manual)->GetStopCount()) ||
-			(pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetPipeCount()))
+			(pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank()->GetPipeCount()))
 			throw (wxString)_("Invalid reference ") + m_Filename;
-		m_Reference = m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetPipe(pipe-1);
+		m_Reference = m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank()->GetPipe(pipe-1);
 		return;
 	}
 	m_Reference = NULL;
