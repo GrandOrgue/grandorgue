@@ -26,6 +26,7 @@
 
 GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
+	m_Name(),
 	m_enclosure(0),
 	m_tremulant(0),
 	m_ranks(0)
@@ -33,7 +34,7 @@ GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 }
 
 
-void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group)
+void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group, unsigned index)
 {
 	unsigned NumberOfEnclosures = cfg.ReadInteger(group, wxT("NumberOfEnclosures"), 0, m_organfile->GetEnclosureCount());
 	unsigned NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount());
@@ -54,6 +55,7 @@ void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group)
 		m_tremulant.push_back(cfg.ReadInteger(group, buffer, 1, m_organfile->GetTremulantCount()) - 1);
 	}
 
+	m_Name = cfg.ReadString(group, wxT("Name"), 64, false, wxString::Format(wxT("Windchest %d"), index + 1));
 }
 
 float GOrgueWindchest::GetVolume()
@@ -87,4 +89,9 @@ GOrgueRank* GOrgueWindchest::GetRank(unsigned index)
 void GOrgueWindchest::AddRank(GOrgueRank* rank)
 {
 	m_ranks.push_back(rank);
+}
+
+const wxString& GOrgueWindchest::GetName()
+{
+	return m_Name;
 }
