@@ -151,7 +151,7 @@ void GOrguePipe::Save(IniFileConfig& cfg, bool prefix)
 	m_PipeConfig.Save(cfg, prefix);
 }
 
-bool GOrguePipe::LoadCache(GOrgueCache& cache)
+bool GOrguePipe::InitializeReference()
 {
 	if (m_Filename.StartsWith(wxT("REF:")))
 	{
@@ -164,6 +164,13 @@ bool GOrguePipe::LoadCache(GOrgueCache& cache)
 		m_Reference = m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank()->GetPipe(pipe-1);
 		return true;
 	}
+	return false;
+}
+
+bool GOrguePipe::LoadCache(GOrgueCache& cache)
+{
+	if (InitializeReference())
+		return true;
 	m_Reference = NULL;
 	return m_SoundProvider.LoadCache(cache);
 }
@@ -177,17 +184,8 @@ bool GOrguePipe::SaveCache(GOrgueCacheWriter& cache)
 
 void GOrguePipe::LoadData()
 {
-	if (m_Filename.StartsWith(wxT("REF:")))
-	{
-		unsigned manual, stop, pipe;
-		wxSscanf(m_Filename.Mid(4), wxT("%d:%d:%d"), &manual, &stop, &pipe);
-		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual > m_OrganFile->GetManualAndPedalCount()) ||
-			(stop <= 0) || (stop > m_OrganFile->GetManual(manual)->GetStopCount()) ||
-			(pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank()->GetPipeCount()))
-			throw (wxString)_("Invalid reference ") + m_Filename;
-		m_Reference = m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank()->GetPipe(pipe-1);
+	if (InitializeReference())
 		return;
-	}
 	m_Reference = NULL;
 	m_SoundProvider.LoadFromFile
 		(m_Filename

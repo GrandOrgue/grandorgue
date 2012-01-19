@@ -66,6 +66,7 @@ public:
 	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
+	bool InitializeReference();
 	void LoadData();
 	bool LoadCache(GOrgueCache& cache);
 	bool SaveCache(GOrgueCacheWriter& cache);
