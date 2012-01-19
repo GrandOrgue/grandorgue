@@ -31,6 +31,7 @@
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
+#include "IniFileConfig.h"
 
 GOrgueFrameGeneral::GOrgueFrameGeneral(GrandOrgueFile* organfile):
 	m_organfile(organfile),
