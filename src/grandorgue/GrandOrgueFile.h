@@ -43,6 +43,7 @@ class GOrgueMidiEvent;
 class GOrguePiston;
 class GOrguePushbutton;
 class GOrgueRank;
+class GOrguePipe;
 class GOrgueSetter;
 class GOrgueSettings;
 class GOrgueTemperament;
@@ -114,6 +115,8 @@ private:
 	wxString GenerateSettingFileName();
 	wxString GenerateCacheFileName();
 	void SetTemperament(const GOrgueTemperament& temperament);
+	void GeneratePipeList(std::vector<GOrguePipe*>& pipes);
+	void ResolveReferences();
 
 public:
 
