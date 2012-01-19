@@ -42,6 +42,7 @@ class GOrgueManual;
 class GOrgueMidiEvent;
 class GOrguePiston;
 class GOrguePushbutton;
+class GOrgueRank;
 class GOrgueSetter;
 class GOrgueSettings;
 class GOrgueTemperament;
@@ -96,6 +97,7 @@ private:
 	ptr_vector<GOrguePiston> m_piston;
 	ptr_vector<GOrgueGeneral> m_general;
 	ptr_vector<GOrgueDivisionalCoupler> m_divisionalcoupler;
+	ptr_vector<GOrgueRank> m_ranks;
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
 
@@ -137,6 +139,9 @@ public:
 	unsigned GetFirstManualIndex();
 	GOrgueManual* GetManual(unsigned index);
 	unsigned GetTremulantCount();
+	GOrgueRank* GetRank(unsigned index);
+	unsigned GetRankCount();
+	void AddRank(GOrgueRank* rank);
 	GOrgueTremulant* GetTremulant(unsigned index);
 	unsigned GetDivisionalCouplerCount();
 	GOrgueDivisionalCoupler* GetDivisionalCoupler(unsigned index);
