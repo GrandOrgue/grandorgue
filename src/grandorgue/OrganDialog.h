@@ -29,6 +29,7 @@ class GrandOrgueFile;
 class wxTreeCtrl;
 class wxSpinButton;
 class OrganTreeItemData;
+class wxCheckBox;
 
 class OrganDialog : public wxDialog
 {
@@ -43,6 +44,7 @@ private:
 	wxButton* m_Apply;
 	wxButton* m_Reset;
 	wxButton* m_Default;
+	wxCheckBox* m_IgnorePitch;
 	OrganTreeItemData* m_Last;
 
 	void FillTree();
@@ -64,7 +66,7 @@ public:
 	void OnEventReset(wxCommandEvent &e);
 	void OnEventDefault(wxCommandEvent &e);
 	void OnEventOK(wxCommandEvent &e);
-
+	void OnChanged(wxCommandEvent& event);
 	DECLARE_EVENT_TABLE()
 
 protected:
@@ -78,6 +80,7 @@ protected:
 		ID_EVENT_AMPLITUDE_SPIN,
 		ID_EVENT_TUNING,
 		ID_EVENT_TUNING_SPIN,
+		ID_EVENT_IGNORE_PITCH
 	};
 };
 

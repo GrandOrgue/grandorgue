@@ -60,6 +60,7 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_SettingFilename(),
 	m_setter(0),
 	m_volume(0),
+	m_IgnorePitch(false),
 	m_b_customized(false),
 	m_DivisionalsStoreIntermanualCouplers(false),
 	m_DivisionalsStoreIntramanualCouplers(false),
@@ -261,6 +262,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_CombinationsStoreNonDisplayedDrawstops = ini.ReadBoolean(group, wxT("CombinationsStoreNonDisplayedDrawstops"));
 	m_volume = ini.ReadInteger(group, wxT("Volume"), -1, 100, false, -1);
 	m_Temperament = ini.ReadString(group, wxT("Temperament"), 256, false);
+	m_IgnorePitch = ini.ReadBoolean(group, wxT("IgnorePitch"), false, false);
 
 	wxString buffer;
 
@@ -757,7 +759,7 @@ void GrandOrgueFile::Save(const wxString& file)
 		aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), m_volume);
 
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Temperament"), m_Temperament);
-
+	aIni.SaveHelper(prefix, wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch ? wxT("Y") : wxT("N"));
 	m_PipeConfig.Save(aIni, prefix);
 
 	for (unsigned j = 0; j < m_ranks.size(); j++)
@@ -797,6 +799,18 @@ int GrandOrgueFile::GetVolume()
 {
 	return m_volume;
 }
+
+void GrandOrgueFile::SetIgnorePitch(bool ignore)
+{
+	m_IgnorePitch = ignore;
+}
+
+bool GrandOrgueFile::GetIgnorePitch()
+{
+	return m_IgnorePitch;
+}
+
+
 
 unsigned GrandOrgueFile::GetFirstManualIndex()
 {
