@@ -99,6 +99,7 @@ bool OrganView::CreateWindow()
 		m_frame->SetSize(size);
 	else
 		m_frame->Center(wxBOTH);
+	m_container->SetPosition(wxPoint(0, 0));
 	m_frame->Show();
 
 	organfile->GetPanel(m_panelID)->SetParentWindow(GetFrame());
