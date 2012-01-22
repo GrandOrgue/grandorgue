@@ -32,7 +32,7 @@ GOrgueTemperament::~GOrgueTemperament()
 {
 }
 
-float GOrgueTemperament::GetOffset(unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const
+float GOrgueTemperament::GetOffset(bool ignorepitch, unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const
 {
 	return 0;
 }
@@ -79,5 +79,6 @@ void GOrgueTemperament::InitTemperaments()
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Werckmeister III"), 11.73, 1.95, 3.91, 5.87, 1.96, 9.78, 0, 7.82, 3.91, 0, 7.82, 3.91));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Kirnberger III"), 10.26, 0.44, 3.42, 4.39, -3.43, 8.3, 0.48, 6.84, 2.44, 0, 6.35, -1.47));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Valotti"), 6.13, -0.18, 2.04, 4.26, -2.05, 8.17, -2.14, 4.09, 2.31, 0, 6.22, -4.09));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Bach (Bradley Lehman)"),+5.9, +3.9, +2, +3.9, - 1.9, +7.9, +2, +3.9, +3.9, 0, +3.9, 0));
 }
 
