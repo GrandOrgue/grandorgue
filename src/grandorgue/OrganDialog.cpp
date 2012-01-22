@@ -75,6 +75,7 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, OrganDialog::OnAmplitudeSpinChanged)
 	EVT_TEXT(ID_EVENT_TUNING, OrganDialog::OnTuningChanged)
 	EVT_SPIN(ID_EVENT_TUNING_SPIN, OrganDialog::OnTuningSpinChanged)
+	EVT_CHECKBOX(ID_EVENT_IGNORE_PITCH, OrganDialog::OnChanged)
 END_EVENT_TABLE()
 
 OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
@@ -84,6 +85,7 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
+
 	topSizer->Add(mainSizer, 0, wxALL, 6);
 
 	m_Tree = new wxTreeCtrl(this, ID_EVENT_TREE, wxDefaultPosition, wxSize(300, 400), wxTR_HAS_BUTTONS | wxTR_MULTIPLE);
@@ -92,6 +94,7 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	mainSizer->Add(Sizer1, wxALIGN_LEFT | wxEXPAND);
 	mainSizer->AddSpacer(5);
 
+	wxBoxSizer* settingSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Settings"));
 
 	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 5, 5);
@@ -124,7 +127,14 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	buttons->Add(m_Apply);
 	box1->Add(buttons);
 
-	mainSizer->Add(box1, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxEXPAND);
+	wxBoxSizer* box3 = new wxStaticBoxSizer(wxVERTICAL, this, _("Tuning and Voicing"));
+	box3->Add(m_IgnorePitch = new wxCheckBox (this, ID_EVENT_IGNORE_PITCH, _("Ignore pitch info in organ samples wav files"       )), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	if (m_organfile->GetIgnorePitch())
+		m_IgnorePitch->SetValue(true);
+		
+	settingSizer->Add(box1, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxEXPAND);
+	settingSizer->Add(box3, 0, wxEXPAND | wxALL, 4);
+	mainSizer->Add(settingSizer, wxALIGN_RIGHT | wxEXPAND);	
 	
 	topSizer->Add(new wxStaticLine(this), 0, wxEXPAND | wxALL, 5);
 	topSizer->Add(CreateButtonSizer(wxOK | wxCANCEL), 0, wxALIGN_RIGHT | wxALL, 5);
@@ -357,3 +367,9 @@ void OrganDialog::OnEventOK(wxCommandEvent &e)
 		e.Skip();
 }
 
+void OrganDialog::OnChanged(wxCommandEvent& event)
+{
+		m_organfile->SetIgnorePitch(m_IgnorePitch->GetValue());
+		m_organfile->SetTemperament(m_organfile->GetTemperament());
+		m_organfile->Modified();
+}

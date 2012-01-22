@@ -39,11 +39,14 @@ GOrgueTemperamentCent::GOrgueTemperamentCent(wxString name, float i1, float i2, 
 	m_Tuning[11] = i12;
 }
 
-float GOrgueTemperamentCent::GetOffset(unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const
+float GOrgueTemperamentCent::GetOffset(bool ignorePitch, unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const
 {
-	double val = wav_pitch_fract + pitch_correction;
-	if (wav_midi_number)
-		val += 100.0 * wav_midi_number - 100.0 * midi_number + log(8.0 / harmonic_number) / log(2) * 1200;
-	return m_Tuning[midi_number % 12] - val - default_tuning;
+	double concert_pitch_correction = 0;
+
+	if (!ignorePitch && wav_midi_number)
+	{
+		concert_pitch_correction = (100.0 * wav_midi_number - 100.0 * midi_number + log(8.0 / harmonic_number) / log(2) * 1200) + wav_pitch_fract;
+	}
+	return m_Tuning[midi_number % 12] - default_tuning - concert_pitch_correction + pitch_correction;
 }
 

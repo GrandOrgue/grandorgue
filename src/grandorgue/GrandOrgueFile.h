@@ -66,6 +66,7 @@ private:
 	wxString m_SettingFilename;
 	GOrgueSetter* m_setter;
 	int m_volume;
+	bool m_IgnorePitch;
 	wxString m_Temperament;
 
 	bool m_b_customized : 1;
@@ -178,6 +179,10 @@ public:
 
 	void UpdateAmplitude();
 	void UpdateTuning();
+	
+	void SetIgnorePitch(bool ignorepitch);
+	bool GetIgnorePitch();
+	
 
 	/* TODO: can somebody figure out what this thing is */
 	bool IsCustomized();

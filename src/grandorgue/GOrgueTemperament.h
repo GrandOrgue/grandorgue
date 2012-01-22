@@ -39,7 +39,7 @@ public:
 	GOrgueTemperament(wxString name);
 	virtual ~GOrgueTemperament();
 
-	virtual float GetOffset(unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const;
+	virtual float GetOffset(bool ignorepitch, unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const;
 	wxString GetName() const;
 
 	static const GOrgueTemperament& GetTemperament(wxString Name);
