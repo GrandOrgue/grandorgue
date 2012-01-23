@@ -71,7 +71,7 @@ msgid "&Event:"
 msgstr "&Evènement MIDI:"
 
 msgid "&Export Settings/Combinations..."
-msgstr "&Exporter paramètres et combinateurs"
+msgstr "&Exporter paramètres et combinaisons"
 
 msgid "&File"
 msgstr "&Fichier"
@@ -113,7 +113,7 @@ msgid "&Polyphony"
 msgstr "&Polyphonie"
 
 msgid "&Properties..."
-msgstr "&Propriétées orgue"
+msgstr "&Propriétés orgue"
 
 msgid "&Record...\tCtrl+R"
 msgstr "&Enregistrer sortie audio\tCtrl+R"
@@ -266,7 +266,7 @@ msgid "< out of memory allocating samples"
 msgstr "< dépassement mémoire en allocation d'un échantillon"
 
 msgid "< out of memory allocating wave"
-msgstr "< dépassement mémoire en allocation d'un échantillon"
+msgstr "< dépassement mémoire en allocation d'un fichier wav"
 
 msgid "<Invalid SMPL chunk in"
 msgstr "< SMPL chunk in Invalide"
@@ -323,7 +323,7 @@ msgid "Allocated sample memory"
 msgstr "Mémoire échantilons orgue allouée"
 
 msgid "Alsa"
-msgstr "Alsa"
+msgstr "ALSA"
 
 msgid "Amplitude is invalid"
 msgstr "Amplitude non valide"
@@ -347,7 +347,7 @@ msgstr ""
 "Revenir à la définition de base et recharger?"
 
 msgid "Any device"
-msgstr "Toute interafce"
+msgstr "Toute interface"
 
 msgid "Apply"
 msgstr "Appliquer"
@@ -382,7 +382,7 @@ msgid "Buffer too small"
 msgstr "Tampon mémoire trop petit"
 
 msgid "Build Date"
-msgstr "Date de Fabriquation"
+msgstr "Date de Fabrication"
 
 msgid "Builder"
 msgstr "Facteur"
@@ -401,10 +401,10 @@ msgstr "C"
 
 #, fuzzy
 msgid "Cache file had bad magic bypassing cache."
-msgstr "Mauvais code de vérification (hash) du fichier cache."
+msgstr "Mauvais code de vérification cache. Cache hors circuit."
 
 msgid "Cache file had diffent hash bypassing cache."
-msgstr "Mauvais code de vérification (hash) du fichier cache."
+msgstr "Mauvais code de vérification (hash) du cache. Cache hors circuit."
 
 #, c-format
 msgid "Cache load failure: %s"
@@ -414,16 +414,16 @@ msgid "Cache store:"
 msgstr "Sauvegarde cache:"
 
 msgid "Can't read from a callback stream"
-msgstr "Impossible de lire d'un callback stream"
+msgstr "Lecture impossible d'un callback stream"
 
 msgid "Can't read from an output only stream"
-msgstr "Impossible de lire d'un output stream"
+msgstr "Lecture impossible d'un output stream"
 
 msgid "Can't write to a callback stream"
-msgstr "Impossible d'écrire dans un callback stream"
+msgstr "Ecriture impossible d'un callback stream"
 
 msgid "Can't write to an input only stream"
-msgstr "Impossible d'écrire dans un stream d'entée"
+msgstr "Ecriture impossible d'un stream d'entée"
 
 msgid "Cannot use buffer size above 1024 samples; unacceptable quantization would occur."
 msgstr "Impossible d'utiliser un tampon mémoire supérieur à 1024 échantillons; risque de défaut de quantification."
@@ -494,7 +494,7 @@ msgid "Delete"
 msgstr "Effacer"
 
 msgid "Delete &Cache..."
-msgstr "Effacer &Cache..."
+msgstr "Effacer &Cache"
 
 msgid "Desired &Latency:"
 msgstr "&Retard désiré:"
@@ -598,7 +598,7 @@ msgid "IEEE Float"
 msgstr "IEEE Float"
 
 msgid "Ignore pitch info in organ samples wav files"
-msgstr "Ignorer information de tonalité dans les fichiers d'échantillons"
+msgstr "Ignorer information d'accord dans les fichiers d'échantillons"
 
 msgid "Illegal combination of I/O devices"
 msgstr "Mauvaise combinaison d'interfaces "
@@ -622,7 +622,7 @@ msgid "Input overflowed"
 msgstr "Dépassement capacité entrée"
 
 msgid "Insert"
-msgstr "Isérer"
+msgstr "Insérer"
 
 msgid "Insufficient memory"
 msgstr "Mémoire insuffisante "
@@ -656,7 +656,7 @@ msgid "Invalid error code (value greater than zero)"
 msgstr "Code erreur invalide (valeur supérieure à zero)"
 
 msgid "Invalid event type"
-msgstr "Type d'event invalide"
+msgstr "Type d'évènement invalide"
 
 msgid "Invalid flag"
 msgstr "Flag non valide"
@@ -696,10 +696,10 @@ msgid "Invalid stream pointer"
 msgstr "Mauvais pointeur de stream"
 
 msgid "JACK Audio Connection Kit"
-msgstr "Kit de connexion "
+msgstr "Kit de connexion audio JACK"
 
 msgid "Jack"
-msgstr "Jack"
+msgstr "JACK"
 
 msgid "KB"
 msgstr "KB"
@@ -716,7 +716,7 @@ msgid "LCD-2: %s"
 msgstr "LCD-2: %s"
 
 msgid "Load &stereo samples in:"
-msgstr "Charger les échantillons stéréo en tant que:"
+msgstr "Charger les échantillons stéréo en:"
 
 msgid "Load aborted by the user"
 msgstr "Chargement arrêté par l'utilisateur"
@@ -896,16 +896,16 @@ msgid "Output underflowed"
 msgstr "Stream sortie sous alimenté"
 
 msgid "P&roperties..."
-msgstr "P&ropriétées..."
+msgstr "P&ropriétés..."
 
 msgid "Panic"
 msgstr "Panique"
 
 msgid "Parsing sample set definition file"
-msgstr "Traitement fhichier de définition de l'orgue"
+msgstr "Traitement fichier de définition de l'orgue"
 
 msgid "Please apply changes first"
-msgstr "Appliquer d'abord les changements"
+msgstr "Entrez des modifications avant de valider!"
 
 msgid "Polyphony"
 msgstr "Polyphonie"
@@ -914,11 +914,11 @@ msgid "PortAudio not initialized"
 msgstr "PortAudio non initialisé"
 
 msgid "Pr&eset"
-msgstr "Pr&éconfiguration orgue"
+msgstr "Disposition orgue"
 
 #, c-format
 msgid "Preset %d"
-msgstr "Préconfiguration %d"
+msgstr "Disposition numéro %d"
 
 msgid "Previous"
 msgstr "Précédent"
@@ -927,13 +927,13 @@ msgid "Previous Memory"
 msgstr "Position mémoire précédente"
 
 msgid "Properties"
-msgstr "Propriétées"
+msgstr "Propriétés"
 
 msgid "Pythagorean"
 msgstr "Pythagorean"
 
 msgid "Randomize pipe speaking"
-msgstr "Attaque aléatoire des tuyaux"
+msgstr "Attaque aléatoire des tuyaux (temps et accord)"
 
 msgid "Re&load"
 msgstr "Recharger &L'orgue"
@@ -969,7 +969,7 @@ msgid "Reset"
 msgstr "Reset"
 
 msgid "Reset to &Defaults"
-msgstr "Recharger configuration par &Defaut"
+msgstr "Recharger configuration par &défaut"
 
 #, c-format
 msgid "RtAudio error: %s"
@@ -1026,15 +1026,15 @@ msgid "Settings files (*.cmb)|*.cmb"
 msgstr "Fichiers de configuration (*.cmb)|*.cmb"
 
 msgid "Settings store:"
-msgstr "Sauvegarde paramètres"
+msgstr "Sauvegarde paramètres:"
 
 msgid ""
 "Some changed settings effect unless the sample set is reloaded.\n"
 "\n"
 "Would you like to reload the sample set now?"
 msgstr ""
-"La modification de configuration ne prend effet\n"
-"que lorsque l'orgue est rechargé.\n"
+"La modification de certains paramètres ne\n"
+"prend effet que lorsque l'orgue est rechargé.\n"
 "\n"
 "Recharger l'orgue maintenant?"
 
@@ -1202,10 +1202,10 @@ msgstr "Le fichier WAVE ne contient pas de boucles"
 #~ msgstr "48000"
 
 #~ msgid "< out of memory allocating loop"
-#~ msgstr "< dépassement mémoire en allocation d'une boucle"
+#~ msgstr "< dépassement mémoire lors de l'allocation d'une boucle"
 
 #~ msgid "< out of memory allocating release"
-#~ msgstr "< dépassement mémoire en allocation d'un laché"
+#~ msgstr "< dépassement mémoire lors de l'allocation d'un laché"
 
 #~ msgid "Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache."
 #~ msgstr ""
