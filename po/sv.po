@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-01-08 22:08+0100\n"
-"PO-Revision-Date: 2012-01-08 22:17+0100\n"
+"POT-Creation-Date: 2012-01-23 12:06+0100\n"
+"PO-Revision-Date: 2012-01-23 12:17+0100\n"
 "Last-Translator: Lars Palo <lars.palo@yahoo.se>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -363,6 +363,9 @@ msgstr "B"
 msgid "BAS"
 msgstr "BAS"
 
+msgid "Bach (Bradley Lehman)"
+msgstr "Bach (Bradley Lehman)"
+
 msgid "Bad buffer pointer"
 msgstr "Felaktig bufferpekare"
 
@@ -587,6 +590,9 @@ msgstr "Värd-API hittades ej"
 msgid "IEEE Float"
 msgstr "IEEE Float"
 
+msgid "Ignore pitch info in organ samples wav files"
+msgstr "Ignorera tonhöjdsinformation i ljudsamplingsfilerna"
+
 msgid "Illegal combination of I/O devices"
 msgstr "Ogiltig combination av I/O enheter"
 
@@ -668,6 +674,9 @@ msgstr "Felaktigt antal kanaler"
 
 msgid "Invalid reference "
 msgstr "Otillåten referens"
+
+msgid "Invalid release position"
+msgstr "Felaktig releasemarkörposition"
 
 msgid "Invalid sample rate"
 msgstr "Felaktig samplingsfrekvens"
@@ -770,11 +779,18 @@ msgstr "Manual 6 (Ekoverk)"
 msgid "Mapped memory of the cache"
 msgstr "Tilldelat minne hos cachen"
 
+msgid "Maximum memory pool size"
+msgstr "Maximal minnespoolstorlek"
+
 msgid "Memory Level"
 msgstr "Kombination"
 
 msgid "Memory Set"
 msgstr "Lagra kombination"
+
+#, c-format
+msgid "Memory mapping of the cache file failed with error code %d"
+msgstr "Minnesmappning av cachefilen misslyckades med felkod %d"
 
 msgid "Midi-Settings for Button - "
 msgstr "Midi-inställninar för knapp -"
@@ -1054,6 +1070,9 @@ msgstr "Transponera"
 
 msgid "Tuning (Cent):"
 msgstr "Stämning (Cent):"
+
+msgid "Tuning and Voicing"
+msgstr "Stämning och intonation"
 
 msgid "Tuning is invalid"
 msgstr "Stämningangivelsen är ogiltig"
