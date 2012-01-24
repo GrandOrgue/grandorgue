@@ -24,6 +24,7 @@
 #define GORGUEPIPE_H
 
 #include <wx/wx.h>
+#include "GOrgueCacheObject.h"
 #include "GOrguePipeConfig.h"
 #include "GOSoundProviderWave.h"
 
@@ -35,7 +36,7 @@ class GOrgueTemperament;
 class IniFileConfig;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
-class GOrguePipe : public GOrguePipeUpdateCallback
+class GOrguePipe : public GOrguePipeUpdateCallback, public GOrgueCacheObject
 {
 
 private:
@@ -70,8 +71,11 @@ public:
 	void LoadData();
 	bool LoadCache(GOrgueCache& cache);
 	bool SaveCache(GOrgueCacheWriter& cache);
+	void Initialize();
+	void UpdateHash(SHA_CTX& ctx);
 	void FastAbort();
 	wxString GetFilename();
+	wxString GetLoadTitle();
 	bool IsReference();
 	GOrguePipeConfig& GetPipeConfig();
 	void SetTemperament(const GOrgueTemperament& temperament);

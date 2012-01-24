@@ -35,6 +35,7 @@
 class wxProgressDialog;
 
 class GOrgueCache;
+class GOrgueCacheObject;
 class GOrgueDivisionalCoupler;
 class GOrgueEnclosure;
 class GOrgueGeneral;
@@ -43,7 +44,6 @@ class GOrgueMidiEvent;
 class GOrguePiston;
 class GOrguePushbutton;
 class GOrgueRank;
-class GOrguePipe;
 class GOrgueSetter;
 class GOrgueSettings;
 class GOrgueTemperament;
@@ -116,7 +116,7 @@ private:
 	wxString GenerateSettingFileName();
 	wxString GenerateCacheFileName();
 	void SetTemperament(const GOrgueTemperament& temperament);
-	void GeneratePipeList(std::vector<GOrguePipe*>& pipes);
+	void GenerateCacheObjectList(std::vector<GOrgueCacheObject*>& objects);
 	void ResolveReferences();
 
 public:
@@ -183,7 +183,6 @@ public:
 	void SetIgnorePitch(bool ignorepitch);
 	bool GetIgnorePitch();
 	
-
 	/* TODO: can somebody figure out what this thing is */
 	bool IsCustomized();
 

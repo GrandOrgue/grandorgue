@@ -227,6 +227,26 @@ bool GOrguePipe::SaveCache(GOrgueCacheWriter& cache)
 	return m_SoundProvider.SaveCache(cache);
 }
 
+void GOrguePipe::Initialize()
+{
+	InitializeReference();
+}
+
+void GOrguePipe::UpdateHash(SHA_CTX& ctx)
+{
+	unsigned value;
+	wxString filename = GetFilename();
+	SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+	value = GetEffectiveBitsPerSample();
+	SHA1_Update(&ctx, &value, sizeof(value));
+	value = GetEffectiveCompress();
+	SHA1_Update(&ctx, &value, sizeof(value));
+	value = GetEffectiveChannels();
+	SHA1_Update(&ctx, &value, sizeof(value));
+	value = GetEffectiveLoopLoad();
+	SHA1_Update(&ctx, &value, sizeof(value));
+}
+
 void GOrguePipe::LoadData()
 {
 	if (InitializeReference())
@@ -245,6 +265,11 @@ void GOrguePipe::FastAbort()
 }
 
 wxString GOrguePipe::GetFilename()
+{
+	return m_Filename;
+}
+
+wxString GOrguePipe::GetLoadTitle()
 {
 	return m_Filename;
 }
