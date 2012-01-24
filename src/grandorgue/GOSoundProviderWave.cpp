@@ -45,13 +45,15 @@ void GOSoundProviderWave::LoadFromFile
 	(wxString       filename
 	,wxString       path
 	,unsigned       bits_per_sample
-	,bool           stereo
+	,unsigned       load_channels
 	,bool           compress
 	,loop_load_type loop_mode
 	)
 {
 
 	ClearData();
+	if (!load_channels)
+		return;
 
 	wxLogDebug(_("Loading file %s"), filename.c_str());
 
@@ -82,7 +84,7 @@ void GOSoundProviderWave::LoadFromFile
 
 	m_SampleRate = wave.GetSampleRate();
 	unsigned channels = wave.GetChannels();
-	if (!stereo)
+	if (load_channels == 1)
 		channels = 1;
 
 	try

@@ -118,6 +118,7 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 {
 	SHA_CTX ctx;
 	int len;
+	unsigned value;
 	SHA1_Init(&ctx);
 	std::vector<GOrguePipe*> pipes;
 	GeneratePipeList(pipes);
@@ -125,16 +126,15 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 	{
 		wxString filename = pipes[i]->GetFilename();
 		SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+		value = pipes[i]->GetEffectiveBitsPerSample();
+		SHA1_Update(&ctx, &value, sizeof(value));
+		value = pipes[i]->GetEffectiveCompress();
+		SHA1_Update(&ctx, &value, sizeof(value));
+		value = pipes[i]->GetEffectiveChannels();
+		SHA1_Update(&ctx, &value, sizeof(value));
+		value = pipes[i]->GetEffectiveLoopLoad();
+		SHA1_Update(&ctx, &value, sizeof(value));
 	}
-
-	bool stereo = m_Settings.GetLoadInStereo();
-	SHA1_Update(&ctx, &stereo, sizeof(stereo));
-	unsigned bits_per_sample = m_Settings.GetBitsPerSample();
-	SHA1_Update(&ctx, &bits_per_sample, sizeof(bits_per_sample));
-	bool compress = m_Settings.GetLosslessCompression();
-	SHA1_Update(&ctx, &compress, sizeof(compress));
-	unsigned val = m_Settings.GetLoopLoad();
-	SHA1_Update(&ctx, &val, sizeof(val));
 
 	len = sizeof(GOAudioSection);
 	SHA1_Update(&ctx, &len, sizeof(len));

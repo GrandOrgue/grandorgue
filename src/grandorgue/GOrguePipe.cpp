@@ -231,14 +231,8 @@ void GOrguePipe::LoadData()
 	if (InitializeReference())
 		return;
 	m_Reference = NULL;
-	m_SoundProvider.LoadFromFile
-		(m_Filename
-		,m_OrganFile->GetODFPath()
-		,m_OrganFile->GetSettings().GetBitsPerSample()
-		,m_OrganFile->GetSettings().GetLoadInStereo()
-		,m_OrganFile->GetSettings().GetLosslessCompression()
-		,(loop_load_type)m_OrganFile->GetSettings().GetLoopLoad()
-		);
+	m_SoundProvider.LoadFromFile(m_Filename, m_OrganFile->GetODFPath(), GetEffectiveBitsPerSample(), GetEffectiveChannels(), 
+				     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad());
 }
 
 void GOrguePipe::FastAbort()
