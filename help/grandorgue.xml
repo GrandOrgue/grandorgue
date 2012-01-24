@@ -3323,6 +3323,15 @@ temperaments.
 	    </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>Pipe999WindchestGroup</term>
+          <listitem>
+            <para>
+(interger 1 - number of windchests, default: rank windchest) specify the windchest,
+on which this pipe is placed.
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
