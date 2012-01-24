@@ -32,7 +32,11 @@ GOrguePipeConfig::GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCa
 	m_Amplitude(0),
 	m_DefaultAmplitude(0),
 	m_Tuning(0),
-	m_DefaultTuning(0)
+	m_DefaultTuning(0),
+	m_BitsPerSample(-1),
+	m_Compress(-1),
+	m_Channels(-1),
+	m_LoopLoad(-1)
 {
 }
 
@@ -44,6 +48,12 @@ void GOrguePipeConfig::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	m_Amplitude = cfg.ReadFloat(group, prefix + wxT("Amplitude"), 0, 1000, false, m_DefaultAmplitude);
 	m_DefaultTuning = cfg.ReadFloat(group, prefix + wxT("PitchTuning"), -1200, 1200, false, 0);
 	m_Tuning = cfg.ReadFloat(group, prefix + wxT("Tuning"), -1200, 1200, false, m_DefaultTuning);
+	m_BitsPerSample = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("BitsPerSample"), -1, 24, false, -1);
+	if (m_BitsPerSample != 8 && m_BitsPerSample != 12 && m_BitsPerSample != 16 && m_BitsPerSample != 20 && m_BitsPerSample != 24)
+		m_BitsPerSample = -1;
+	m_Compress = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
+	m_Channels = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("Channels"), -1, 2, false, -1);
+	m_LoopLoad = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("LoopLoad"), -1, 2, false, -1);
 	m_Callback->UpdateAmplitude();
 	m_Callback->UpdateTuning();
 }
@@ -52,6 +62,10 @@ void GOrguePipeConfig::Save(IniFileConfig& cfg, bool prefix)
 {
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
+	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
+	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
+	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Channels"), m_Channels);
+	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("LoopLoad"), m_LoopLoad);
 }
 
 float GOrguePipeConfig::GetAmplitude()
@@ -86,4 +100,48 @@ void GOrguePipeConfig::SetTuning(float cent)
 	m_Tuning = cent;
 	m_OrganFile->Modified();
 	m_Callback->UpdateTuning();
+}
+
+int  GOrguePipeConfig::GetBitsPerSample()
+{
+	return m_BitsPerSample;
+}
+
+void  GOrguePipeConfig::SetBitsPerSample(int value)
+{
+	m_BitsPerSample = value;
+	m_OrganFile->Modified();
+}
+
+int  GOrguePipeConfig::GetCompress()
+{
+	return m_Compress;
+}
+
+void  GOrguePipeConfig::SetCompress(int value)
+{
+	m_Compress = value;
+	m_OrganFile->Modified();
+}
+
+int  GOrguePipeConfig::GetChannels()
+{
+	return m_Channels;
+}
+
+void  GOrguePipeConfig::SetChannels(int value)
+{
+	m_Channels = value;
+	m_OrganFile->Modified();
+}
+
+int  GOrguePipeConfig::GetLoopLoad()
+{
+	return m_LoopLoad;
+}
+
+void  GOrguePipeConfig::SetLoopLoad(int value)
+{
+	m_LoopLoad = value;
+	m_OrganFile->Modified();
 }

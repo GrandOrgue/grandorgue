@@ -45,6 +45,10 @@ private:
 	float m_DefaultAmplitude;
 	float m_Tuning;
 	float m_DefaultTuning;
+	int m_BitsPerSample;
+	int m_Compress;
+	int m_Channels;
+	int m_LoopLoad;
 
 public:
 	GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback);
@@ -59,6 +63,18 @@ public:
 	float GetTuning();
 	float GetDefaultTuning();
 	void SetTuning(float cent);
+
+	int GetBitsPerSample();
+	void SetBitsPerSample(int value);
+
+	int GetCompress();
+	void SetCompress(int value);
+
+	int GetChannels();
+	void SetChannels(int value);
+
+	int GetLoopLoad();
+	void SetLoopLoad(int value);
 };
 
 #endif
