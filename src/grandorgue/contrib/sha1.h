@@ -1,3 +1,5 @@
+#ifndef SHA1_H
+#define SHA1_H
 /* 
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
@@ -43,3 +45,5 @@ typedef struct {
 void SHA1_Init(SHA_CTX *ctx);
 void SHA1_Update(SHA_CTX *ctx, const void *dataIn, int len);
 void SHA1_Final(unsigned char hashout[20], SHA_CTX *ctx);
+
+#endif
