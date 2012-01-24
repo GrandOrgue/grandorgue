@@ -2,6 +2,7 @@ include(FindGettext)
 include(CMakeGetText.txt)
 
 file(GLOB_RECURSE SRC_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp ${CMAKE_SOURCE_DIR}/src/*.h)
+file(WRITE ${CMAKE_BINARY_DIR}/po/source_files.txt)
 foreach(FILENAME ${SRC_FILES})
 	file(APPEND ${CMAKE_BINARY_DIR}/po/source_files.txt "${FILENAME}\n")
 endforeach(FILENAME)
