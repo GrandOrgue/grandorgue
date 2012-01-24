@@ -24,13 +24,14 @@
 #define GORGUETREMULANT_H
 
 #include <wx/wx.h>
+#include "GOrgueCacheObject.h"
 #include "GOrgueDrawStop.h"
 #include "GOSoundProviderSynthedTrem.h"
 
 class IniFileConfig;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
-class GOrgueTremulant : public GOrgueDrawstop
+class GOrgueTremulant : public GOrgueDrawstop, public GOrgueCacheObject
 {
 
 private:
@@ -52,6 +53,12 @@ public:
 	void Abort();
 	void PreparePlayback();
 
+	void Initialize();
+	void LoadData();
+	bool LoadCache(GOrgueCache& cache);
+	bool SaveCache(GOrgueCacheWriter& cache);
+	void UpdateHash(SHA_CTX& ctx);
+	wxString GetLoadTitle();
 };
 
 #endif /* GORGUETREMULANT_H_ */

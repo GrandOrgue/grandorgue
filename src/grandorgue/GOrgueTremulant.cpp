@@ -40,6 +40,35 @@ GOrgueTremulant::~GOrgueTremulant()
 {
 }
 
+void GOrgueTremulant::Initialize()
+{
+}
+
+void GOrgueTremulant::LoadData()
+{
+	InitSoundProvider();
+}
+
+bool GOrgueTremulant::LoadCache(GOrgueCache& cache)
+{
+	InitSoundProvider();
+	return true;
+}
+
+bool GOrgueTremulant::SaveCache(GOrgueCacheWriter& cache)
+{
+	return true;
+}
+
+void GOrgueTremulant::UpdateHash(SHA_CTX& ctx)
+{
+}
+
+wxString GOrgueTremulant::GetLoadTitle()
+{
+	return m_Name;
+}
+
 void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, int sampler_group_id)
 {
 	m_Period            = cfg.ReadLong(group, wxT("Period"), 32, 441000);
