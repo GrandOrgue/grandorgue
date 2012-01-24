@@ -96,6 +96,9 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 void GrandOrgueFile::GenerateCacheObjectList(std::vector<GOrgueCacheObject*>& objects)
 {
 	objects.clear();
+	for (unsigned i = 0; i < m_tremulant.size(); i++)
+		objects.push_back(m_tremulant[i]);
+
 	for (unsigned i = 0; i < m_ranks.size(); i++)
 		for (unsigned k = 0; k < m_ranks[i]->GetPipeCount(); k++)
 		{
@@ -564,8 +567,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 			if (!TryLoad(NULL, dlg, load_error))
 				return load_error;
 		}
-		for (unsigned i = 0; i < m_tremulant.size(); i++)
-			m_tremulant[i]->InitSoundProvider();
 		SetTemperament(m_Temperament);
 	}
 	catch (wxString error_)
