@@ -473,6 +473,8 @@ int GOSoundEngine::GetSamples
 
 SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id)
 {
+	if (pipe->GetAttack()->GetChannels() == 0)
+		return NULL;
 	GO_SAMPLER* sampler = m_SamplerPool.GetSampler();
 	if (sampler)
 	{
