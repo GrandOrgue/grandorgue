@@ -76,6 +76,10 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_TEXT(ID_EVENT_TUNING, OrganDialog::OnTuningChanged)
 	EVT_SPIN(ID_EVENT_TUNING_SPIN, OrganDialog::OnTuningSpinChanged)
 	EVT_CHECKBOX(ID_EVENT_IGNORE_PITCH, OrganDialog::OnChanged)
+	EVT_CHOICE(ID_EVENT_BITS_PER_SAMPLE, OrganDialog::OnBitsPerSampleChanged)
+	EVT_CHOICE(ID_EVENT_COMPRESS, OrganDialog::OnCompressChanged)
+	EVT_CHOICE(ID_EVENT_CHANNELS, OrganDialog::OnChannelsChanged)
+	EVT_CHOICE(ID_EVENT_LOOP_LOAD, OrganDialog::OnLoopLoadChanged)
 END_EVENT_TABLE()
 
 OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
@@ -83,6 +87,8 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_Last(NULL)
 {
+	wxArrayString choices;
+
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -96,9 +102,9 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 
 	wxBoxSizer* settingSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Settings"));
-
 	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 5, 5);
 	box1->Add(grid, 0, wxEXPAND | wxALL, 5);
+	settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Amplitude:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	wxBoxSizer* box2 = new wxBoxSizer(wxHORIZONTAL);
@@ -118,6 +124,57 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	grid->Add(box2);
 	m_TuningSpin->SetRange(-1200, 1200);
 
+	box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sample Loading"));
+	grid = new wxFlexGridSizer(4, 2, 5, 5);
+	box1->Add(grid, 0, wxEXPAND | wxALL, 5);
+	settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
+
+	choices.clear();
+	choices.push_back(_("Parent default"));
+	choices.push_back(_("8 bits"));
+	choices.push_back(_("12 bits"));
+	choices.push_back(_("16 bits"));
+	choices.push_back(_("20 bits"));
+	choices.push_back(_("24 bits"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Sample Size:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	m_BitsPerSample = new wxChoice(this, ID_EVENT_BITS_PER_SAMPLE, wxDefaultPosition, wxDefaultSize, choices);
+	grid->Add(m_BitsPerSample);
+
+	choices.clear();
+	choices.push_back(_("Parent default"));
+	choices.push_back(_("Disabled"));
+	choices.push_back(_("Enabled"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Lossless compression:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	m_Compress = new wxChoice(this, ID_EVENT_COMPRESS, wxDefaultPosition, wxDefaultSize, choices);
+	grid->Add(m_Compress);
+
+	choices.clear();
+	choices.push_back(_("Parent default"));
+	choices.push_back(_("Don't load"));
+	choices.push_back(_("Mono"));
+	choices.push_back(_("Stereo"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Sample channels:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	m_Channels = new wxChoice(this, ID_EVENT_CHANNELS, wxDefaultPosition, wxDefaultSize, choices);
+	grid->Add(m_Channels);
+
+	choices.clear();
+	choices.push_back(_("Parent default"));
+	choices.push_back(_("First loop"));
+	choices.push_back(_("Longest loop"));
+	choices.push_back(_("All loops"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Loop loading:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	m_LoopLoad = new wxChoice(this, ID_EVENT_LOOP_LOAD, wxDefaultPosition, wxDefaultSize, choices);
+	grid->Add(m_LoopLoad);
+
+	m_BitsPerSample->SetSelection(wxNOT_FOUND);
+	m_LastBitsPerSample = m_BitsPerSample->GetSelection();
+	m_Compress->SetSelection(wxNOT_FOUND);
+	m_LastCompress = m_Compress->GetSelection();
+	m_Channels->SetSelection(wxNOT_FOUND);
+	m_LastChannels = m_Channels->GetSelection();
+	m_LoopLoad->SetSelection(wxNOT_FOUND);
+	m_LastLoopLoad = m_LoopLoad->GetSelection();
+
 	wxBoxSizer* buttons = new wxBoxSizer(wxHORIZONTAL);
 	m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
 	m_Reset = new wxButton(this, ID_EVENT_RESET, _("Reset"));
@@ -125,14 +182,13 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	buttons->Add(m_Default);
 	buttons->Add(m_Reset);
 	buttons->Add(m_Apply);
-	box1->Add(buttons);
+	settingSizer->Add(buttons);
 
 	wxBoxSizer* box3 = new wxStaticBoxSizer(wxVERTICAL, this, _("Tuning and Voicing"));
 	box3->Add(m_IgnorePitch = new wxCheckBox (this, ID_EVENT_IGNORE_PITCH, _("Ignore pitch info in organ samples wav files"       )), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	if (m_organfile->GetIgnorePitch())
 		m_IgnorePitch->SetValue(true);
 		
-	settingSizer->Add(box1, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxEXPAND);
 	settingSizer->Add(box3, 0, wxEXPAND | wxALL, 4);
 	mainSizer->Add(settingSizer, wxALIGN_RIGHT | wxEXPAND);	
 	
@@ -151,6 +207,23 @@ OrganDialog::~OrganDialog()
 {
 }
 
+void OrganDialog::SetEmpty(wxChoice* choice)
+{
+	int index = choice->FindString(wxEmptyString);
+	if (index == wxNOT_FOUND)
+		index = choice->Append(wxEmptyString);
+	choice->SetSelection(index);
+}
+
+void OrganDialog::RemoveEmpty(wxChoice* choice)
+{
+	int sel = choice->GetSelection();
+	int index = choice->FindString(wxEmptyString);
+	if (index != wxNOT_FOUND)
+		choice->Delete(index);
+	choice->SetSelection(sel);
+}
+
 void OrganDialog::Load()
 {
 	wxArrayTreeItemIds entries;
@@ -164,6 +237,10 @@ void OrganDialog::Load()
 		m_Tuning->ChangeValue(wxEmptyString);
 		m_Tuning->Disable();
 		m_TuningSpin->Disable();
+		m_BitsPerSample->Disable();
+		m_Compress->Disable();
+		m_Channels->Disable();
+		m_LoopLoad->Disable();
 		m_Apply->Disable();
 		m_Reset->Disable();
 		m_Default->Disable();
@@ -176,6 +253,26 @@ void OrganDialog::Load()
 			m_Amplitude->ChangeValue(wxEmptyString);
 		if (!m_Tuning->IsModified())
 			m_Tuning->ChangeValue(wxEmptyString);
+		if (m_BitsPerSample->GetSelection() == m_LastBitsPerSample)
+		{
+			SetEmpty(m_BitsPerSample);
+			m_LastBitsPerSample = m_BitsPerSample->GetSelection();
+		}
+		if (m_Compress->GetSelection() == m_LastCompress)
+		{
+			SetEmpty(m_Compress);
+			m_LastCompress = m_Compress->GetSelection();
+		}
+		if (m_Channels->GetSelection() == m_LastChannels)
+		{
+			SetEmpty(m_Channels);
+			m_LastChannels = m_Channels->GetSelection();
+		}
+		if (m_LoopLoad->GetSelection() == m_LastLoopLoad)
+		{
+			SetEmpty(m_LoopLoad);
+			m_LastLoopLoad = m_LoopLoad->GetSelection();
+		}
 	}
 	else
 		m_Apply->Disable();
@@ -192,6 +289,10 @@ void OrganDialog::Load()
 	m_AmplitudeSpin->Enable();
 	m_Tuning->Enable();
 	m_TuningSpin->Enable();
+	m_BitsPerSample->Enable();
+	m_Compress->Enable();
+	m_Channels->Enable();
+	m_LoopLoad->Enable();
 	m_Default->Enable();
 	m_Reset->Disable();
 	
@@ -207,6 +308,29 @@ void OrganDialog::Load()
 	if (entries.size() == 1)
 		m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
 	m_TuningSpin->SetValue(tuning);
+	if (entries.size() == 1)
+	{
+		int bits_per_sample = m_Last->config->GetBitsPerSample();
+		if (bits_per_sample == -1)
+			bits_per_sample = 0;
+		else
+			bits_per_sample = (bits_per_sample - 4) / 4;
+
+		RemoveEmpty(m_BitsPerSample);
+		RemoveEmpty(m_Compress);
+		RemoveEmpty(m_Channels);
+		RemoveEmpty(m_LoopLoad);
+
+		m_BitsPerSample->SetSelection(bits_per_sample);
+		m_Compress->SetSelection(m_Last->config->GetCompress() + 1);
+		m_Channels->SetSelection(m_Last->config->GetChannels() + 1);
+		m_LoopLoad->SetSelection(m_Last->config->GetLoopLoad() + 1);
+
+		m_LastBitsPerSample = m_BitsPerSample->GetSelection();
+		m_LastCompress = m_Compress->GetSelection();
+		m_LastChannels = m_Channels->GetSelection();
+		m_LastLoopLoad = m_LoopLoad->GetSelection();
+	}
 }
 
 void OrganDialog::OnAmplitudeSpinChanged(wxSpinEvent& e)
@@ -236,6 +360,29 @@ void OrganDialog::OnTuningChanged(wxCommandEvent &e)
 	m_TuningSpin->SetValue(tuning);
 	Modified();
 }
+void OrganDialog::OnBitsPerSampleChanged(wxCommandEvent &e)
+{
+	RemoveEmpty(m_BitsPerSample);
+	Modified();
+}
+
+void OrganDialog::OnCompressChanged(wxCommandEvent &e)
+{
+	RemoveEmpty(m_Compress);
+	Modified();
+}
+
+void OrganDialog::OnChannelsChanged(wxCommandEvent &e)
+{
+	RemoveEmpty(m_Channels);
+	Modified();
+}
+
+void OrganDialog::OnLoopLoadChanged(wxCommandEvent &e)
+{
+	RemoveEmpty(m_LoopLoad);
+	Modified();
+}
 
 bool OrganDialog::Changed()
 {
@@ -243,6 +390,14 @@ bool OrganDialog::Changed()
 	if (m_Amplitude->IsModified())
 		changed = true;
 	if (m_Tuning->IsModified())
+		changed = true;
+	if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
+		changed = true;
+	if (m_Compress->GetSelection() != m_LastCompress)
+		changed = true;
+	if (m_Channels->GetSelection() != m_LastChannels)
+		changed = true;
+	if (m_LoopLoad->GetSelection() != m_LastLoopLoad)
 		changed = true;
 
 	return changed;
@@ -307,6 +462,14 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 			e->config->SetAmplitude(amp);
 		if (m_Tuning->IsModified())
 			e->config->SetTuning(tuning);
+		if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
+			e->config->SetBitsPerSample(m_BitsPerSample->GetSelection() == 0 ? -1 : m_BitsPerSample->GetSelection() * 4 + 4);
+		if (m_Compress->GetSelection() != m_LastCompress)
+			e->config->SetCompress(m_Compress->GetSelection() - 1);
+		if (m_Channels->GetSelection() != m_LastChannels)
+			e->config->SetChannels(m_Channels->GetSelection() - 1);
+		if (m_LoopLoad->GetSelection() != m_LastLoopLoad)
+			e->config->SetLoopLoad(m_LoopLoad->GetSelection() - 1);
 	}
 
 	m_Reset->Disable();
@@ -315,6 +478,10 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amp));
 	if (m_Tuning->IsModified())
 		m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
+	m_LastBitsPerSample = m_BitsPerSample->GetSelection();
+	m_LastCompress = m_Compress->GetSelection();
+	m_LastChannels = m_Channels->GetSelection();
+	m_LastLoopLoad = m_LoopLoad->GetSelection();
 }
 
 void OrganDialog::OnEventReset(wxCommandEvent &e)
@@ -333,6 +500,10 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
 		e->config->SetAmplitude(e->config->GetDefaultAmplitude());
 		e->config->SetTuning(e->config->GetDefaultTuning());
+		e->config->SetBitsPerSample(-1);
+		e->config->SetCompress(-1);
+		e->config->SetChannels(-1);
+		e->config->SetLoopLoad(-1);
 	}
 
 	m_Last = NULL;

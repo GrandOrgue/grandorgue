@@ -41,6 +41,14 @@ private:
 	wxSpinButton* m_AmplitudeSpin;
 	wxTextCtrl* m_Tuning;
 	wxSpinButton* m_TuningSpin;
+	wxChoice* m_BitsPerSample;
+	int m_LastBitsPerSample;
+	wxChoice* m_Channels;
+	int m_LastChannels;
+	wxChoice* m_Compress;
+	int m_LastCompress;
+	wxChoice* m_LoopLoad;
+	int m_LastLoopLoad;
 	wxButton* m_Apply;
 	wxButton* m_Reset;
 	wxButton* m_Default;
@@ -51,6 +59,8 @@ private:
 	void Load();
 	bool Changed();
 	void Modified();
+	void SetEmpty(wxChoice* choice);
+	void RemoveEmpty(wxChoice* choice);
 
 public:
 	OrganDialog (wxWindow* parent, GrandOrgueFile* organfile);
@@ -62,6 +72,10 @@ public:
 	void OnAmplitudeChanged(wxCommandEvent &e);
 	void OnTuningSpinChanged(wxSpinEvent& e);
 	void OnTuningChanged(wxCommandEvent &e);
+	void OnBitsPerSampleChanged(wxCommandEvent &e);
+	void OnCompressChanged(wxCommandEvent &e);
+	void OnChannelsChanged(wxCommandEvent &e);
+	void OnLoopLoadChanged(wxCommandEvent &e);
 	void OnEventApply(wxCommandEvent &e);
 	void OnEventReset(wxCommandEvent &e);
 	void OnEventDefault(wxCommandEvent &e);
@@ -80,7 +94,11 @@ protected:
 		ID_EVENT_AMPLITUDE_SPIN,
 		ID_EVENT_TUNING,
 		ID_EVENT_TUNING_SPIN,
-		ID_EVENT_IGNORE_PITCH
+		ID_EVENT_IGNORE_PITCH,
+		ID_EVENT_LOOP_LOAD,
+		ID_EVENT_BITS_PER_SAMPLE,
+		ID_EVENT_CHANNELS,
+		ID_EVENT_COMPRESS
 	};
 };
 
