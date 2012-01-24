@@ -72,7 +72,7 @@ void GOSoundProviderSynthedTrem::Create
 
 	wxInt16 *data = (wxInt16*)malloc(total_samples * sizeof(wxInt16));
 	if (!data)
-		throw (wxString)_("out of memory");
+		throw GOrgueOutOfMemory();
 
 	wxInt16 *write_iterator = data;
 

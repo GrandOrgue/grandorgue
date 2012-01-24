@@ -200,6 +200,11 @@ bool GrandOrgueFile::TryLoad
 
 		success = true;
 	}
+	catch (GOrgueOutOfMemory e)
+	{
+		wxMessageBox(_("Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
+		return true;
+	}
 	catch (wxString msg)
 	{
 		error = msg;

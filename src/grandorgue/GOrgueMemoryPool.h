@@ -26,6 +26,9 @@
 #include <set>
 class wxFile;
 
+class GOrgueOutOfMemory {
+};
+
 class GOrgueMemoryPool {
 	std::set<void*> m_PoolAllocs;
 	char* m_PoolStart;

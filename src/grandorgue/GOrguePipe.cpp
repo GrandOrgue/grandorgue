@@ -217,7 +217,15 @@ bool GOrguePipe::LoadCache(GOrgueCache& cache)
 	if (InitializeReference())
 		return true;
 	m_Reference = NULL;
-	return m_SoundProvider.LoadCache(cache);
+	try
+	{
+		return m_SoundProvider.LoadCache(cache);
+	}
+	catch(GOrgueOutOfMemory e)
+	{
+		m_SoundProvider.ClearData();
+		throw GOrgueOutOfMemory();
+	}
 }
 
 bool GOrguePipe::SaveCache(GOrgueCacheWriter& cache)
@@ -252,8 +260,16 @@ void GOrguePipe::LoadData()
 	if (InitializeReference())
 		return;
 	m_Reference = NULL;
-	m_SoundProvider.LoadFromFile(m_Filename, m_OrganFile->GetODFPath(), GetEffectiveBitsPerSample(), GetEffectiveChannels(), 
-				     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad());
+	try
+	{
+		m_SoundProvider.LoadFromFile(m_Filename, m_OrganFile->GetODFPath(), GetEffectiveBitsPerSample(), GetEffectiveChannels(), 
+					     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad());
+	}
+	catch(GOrgueOutOfMemory e)
+	{
+		m_SoundProvider.ClearData();
+		throw GOrgueOutOfMemory();
+	}
 }
 
 void GOrguePipe::FastAbort()
