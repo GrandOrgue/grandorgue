@@ -137,6 +137,50 @@ void GOrguePipe::UpdateTuning()
 	m_SoundProvider.SetTuning(GetEffectiveTuning());
 }
 
+unsigned GOrguePipe::GetEffectiveBitsPerSample()
+{
+	if (m_PipeConfig.GetBitsPerSample() != -1)
+		return m_PipeConfig.GetBitsPerSample();
+	if (m_Rank->GetPipeConfig().GetBitsPerSample() != -1)
+		return m_Rank->GetPipeConfig().GetBitsPerSample();
+	if (m_OrganFile->GetPipeConfig().GetBitsPerSample() != -1)
+		return m_OrganFile->GetPipeConfig().GetBitsPerSample();
+	return m_OrganFile->GetSettings().GetBitsPerSample();
+}
+
+bool GOrguePipe::GetEffectiveCompress()
+{
+	if (m_PipeConfig.GetCompress() != -1)
+		return m_PipeConfig.GetCompress() ? true : false;
+	if (m_Rank->GetPipeConfig().GetCompress() != -1)
+		return m_Rank->GetPipeConfig().GetCompress() ? true : false;
+	if (m_OrganFile->GetPipeConfig().GetCompress() != -1)
+		return m_OrganFile->GetPipeConfig().GetCompress() ? true : false;
+	return m_OrganFile->GetSettings().GetLosslessCompression();
+}
+
+unsigned GOrguePipe::GetEffectiveLoopLoad()
+{
+	if (m_PipeConfig.GetLoopLoad() != -1)
+		return m_PipeConfig.GetLoopLoad();
+	if (m_Rank->GetPipeConfig().GetLoopLoad() != -1)
+		return m_Rank->GetPipeConfig().GetLoopLoad();
+	if (m_OrganFile->GetPipeConfig().GetLoopLoad() != -1)
+		return m_OrganFile->GetPipeConfig().GetLoopLoad();
+	return m_OrganFile->GetSettings().GetLoopLoad();
+}
+
+unsigned GOrguePipe::GetEffectiveChannels()
+{
+	if (m_PipeConfig.GetChannels() != -1)
+		return m_PipeConfig.GetChannels();
+	if (m_Rank->GetPipeConfig().GetChannels() != -1)
+		return m_Rank->GetPipeConfig().GetChannels();
+	if (m_OrganFile->GetPipeConfig().GetChannels() != -1)
+		return m_OrganFile->GetPipeConfig().GetChannels();
+	return m_OrganFile->GetSettings().GetLoadInStereo() ? 2 : 1;
+}
+
 void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 {
 	m_Filename = cfg.ReadString(group, prefix);

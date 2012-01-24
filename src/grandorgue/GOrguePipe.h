@@ -81,6 +81,11 @@ public:
 
 	float GetEffectiveTuning();
 	void UpdateTuning();
+
+	unsigned GetEffectiveBitsPerSample();
+	bool GetEffectiveCompress();
+	unsigned GetEffectiveLoopLoad();
+	unsigned GetEffectiveChannels();
 };
 
 #endif
