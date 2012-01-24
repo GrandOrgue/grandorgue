@@ -77,7 +77,7 @@ void GOSoundProviderWave::LoadFromFile
 	unsigned totalDataSize = wave.GetLength() * bytes_per_sample * wave.GetChannels();
 	char* data = (char*)malloc(totalDataSize);
 	if (data == NULL)
-		throw (wxString)_("< out of memory allocating wave");
+		throw GOrgueOutOfMemory();
 
 	m_MidiKeyNumber = wave.GetMidiNote();
 	m_MidiPitchFract = wave.GetPitchFract();

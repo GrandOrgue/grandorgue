@@ -116,7 +116,7 @@ void* GOrgueCache::ReadBlock(unsigned length)
 	}
 	void* data = m_pool.Alloc(length);
 	if (data == NULL)
-		throw (wxString)_("< out of memory allocating samples");
+		throw GOrgueOutOfMemory();
 
 	m_stream->Read(data, length);
 	if (m_stream->LastRead() != length)

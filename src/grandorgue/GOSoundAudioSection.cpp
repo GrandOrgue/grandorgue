@@ -118,6 +118,7 @@ bool GOAudioSection::LoadCache(GOrgueCache& cache)
 		s.end_data = (unsigned char*)cache.ReadBlock(4 * BLOCKS_PER_FRAME * bytes_per_sample_frame);
 		if (!s.end_data)
 			return false;
+
 		m_EndSegments.push_back(s);
 	}
 
@@ -641,7 +642,7 @@ void GOAudioSection::Setup
 				: start_seg.start_offset;
 
 			if (!end_seg.end_data)
-				throw (wxString)_("out of memory");
+				throw GOrgueOutOfMemory();
 
 			const unsigned copy_len = 1 + end_seg.end_offset - end_seg.transition_offset;
 			const unsigned loop_length = 1 + end_seg.end_offset - start_seg.start_offset;
@@ -681,7 +682,7 @@ void GOAudioSection::Setup
 		const unsigned copy_len = 1 + end_seg.end_offset - end_seg.transition_offset;
 
 		if (!end_seg.end_data)
-			throw (wxString)_("out of memory");
+			throw GOrgueOutOfMemory();
 
 		memcpy
 			(end_seg.end_data
@@ -700,7 +701,7 @@ void GOAudioSection::Setup
 	m_AllocSize = total_alloc_samples * bytes_per_sample_frame;
 	m_Data = (unsigned char*)m_Pool.Alloc(m_AllocSize);
 	if (m_Data == NULL)
-		throw (wxString)_("< out of memory allocating attack");
+		throw GOrgueOutOfMemory();
 	m_SampleRate     = pcm_data_sample_rate;
 	m_SampleCount    = total_alloc_samples;
 	m_BitsPerSample  = wave_bits_per_sample(pcm_data_format);

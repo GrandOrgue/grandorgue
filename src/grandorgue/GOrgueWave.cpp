@@ -22,6 +22,7 @@
 
 #include <wx/wx.h>
 #include <wx/file.h>
+#include "GOrgueMemoryPool.h"
 #include "GOrgueInt24.h"
 #include "GOrgueWave.h"
 #include "GOrgueWaveTypes.h"
@@ -61,7 +62,7 @@ void GOrgueWave::LoadDataChunk(char* ptr, unsigned long length)
 
 	data = (char*)malloc(length);
 	if (data == NULL)
-		throw (wxString)_("< Failed to allocate memory for wave data");
+		throw GOrgueOutOfMemory();
 
 	dataSize = length;
 	memcpy(data, ptr, dataSize);
