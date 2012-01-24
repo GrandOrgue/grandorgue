@@ -75,7 +75,7 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, OrganDialog::OnAmplitudeSpinChanged)
 	EVT_TEXT(ID_EVENT_TUNING, OrganDialog::OnTuningChanged)
 	EVT_SPIN(ID_EVENT_TUNING_SPIN, OrganDialog::OnTuningSpinChanged)
-	EVT_CHECKBOX(ID_EVENT_IGNORE_PITCH, OrganDialog::OnChanged)
+	EVT_BUTTON(wxID_OK, OrganDialog::OnOK)
 	EVT_CHOICE(ID_EVENT_BITS_PER_SAMPLE, OrganDialog::OnBitsPerSampleChanged)
 	EVT_CHOICE(ID_EVENT_COMPRESS, OrganDialog::OnCompressChanged)
 	EVT_CHOICE(ID_EVENT_CHANNELS, OrganDialog::OnChannelsChanged)
@@ -538,9 +538,10 @@ void OrganDialog::OnEventOK(wxCommandEvent &e)
 		e.Skip();
 }
 
-void OrganDialog::OnChanged(wxCommandEvent& event)
+void OrganDialog::OnOK(wxCommandEvent& event)
 {
-		m_organfile->SetIgnorePitch(m_IgnorePitch->GetValue());
-		m_organfile->SetTemperament(m_organfile->GetTemperament());
-		m_organfile->Modified();
+	m_organfile->SetIgnorePitch(m_IgnorePitch->GetValue());
+	m_organfile->SetTemperament(m_organfile->GetTemperament());
+	m_organfile->Modified();
+	event.Skip();
 }

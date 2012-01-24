@@ -80,7 +80,7 @@ public:
 	void OnEventReset(wxCommandEvent &e);
 	void OnEventDefault(wxCommandEvent &e);
 	void OnEventOK(wxCommandEvent &e);
-	void OnChanged(wxCommandEvent& event);
+	void OnOK(wxCommandEvent& event);
 	DECLARE_EVENT_TABLE()
 
 protected:
