@@ -57,7 +57,8 @@ the ext/rt/asio directory according to the various README files.
 If you don't want to use ASIO, add -DRTAUDIO_USE_ASIO=OFF to the cmake parameters.
 
 Running cmake will claim, that it can't find various tools (eg. xsltproc, zip, gettext, po4a, docbook-xsl) - 
-they are optional and used to build the help system and/or translations.
+they are optional and used to build the help system and/or translations. See below for details instructions
+how to build them.
 
 9) Build the project by running
 mingw32-make
@@ -164,3 +165,113 @@ make package
 to create an installer
 
 If you want to build a 64bit version, replace everywhere in this instruction i686-w64-mingw32 with x86_64-w64-mingw32.
+
+Building the help and translations on Windows:
+----------------------------------------------
+
+This is how one can build GrandOrgue help and translations on Windows.
+
+One needs docbook-xsl, gettext, libiconv, libxml2, libxslt, zlib, zip, perl and po4a.
+
+I) Downloads
+These packages can be downloaded from the following sites:
+docbook-xsl: docbook-xsl-1.76.1.tar.bz2
+	http://sourceforge.net/projects/docbook/files/docbook-xsl/1.76.1/docbook-xsl-1.76.1.tar.bz2/download
+
+gettext is made of 4 packages: gettext-runtime, gettext-tools, gettext-runtime-dev, gettext-tools-dev.
+All are mandatory to get gettext up and running:
+gettext-runtime-dev_0.18.1.1-2_win32.zip
+	http://ftp.acc.umu.se/pub/gnome/binaries/win32/dependencies/gettext-runtime-dev_0.18.1.1-2_win32.zip
+gettext-runtime_0.18.1.1-2_win32.zip
+	http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip
+gettext-tools-dev_0.18.1.1-2_win32.zip
+	http://ftp.acc.umu.se/pub/gnome/binaries/win32/dependencies/gettext-tools-dev_0.18.1.1-2_win32.zip
+gettext-tools_0.18.1.1-2_win32.zip
+	http://ftp.acc.umu.se/pub/gnome/binaries/win32/dependencies/gettext-tools_0.18.1.1-2_win32.zip
+
+iconv: iconv-1.9.2.win32.zip
+	ftp://ftp.zlatkovic.com/libxml/iconv-1.9.2.win32.zip
+
+libxml2: libxml2-2.7.8.win32.zip
+	ftp://ftp.zlatkovic.com/libxml/libxml2-2.7.8.win32.zip
+
+libxslt: libxslt-1.1.26.win32.zip
+	ftp://ftp.zlatkovic.com/libxml/libxslt-1.1.26.win32.zip
+
+zlib: zlib-1.2.5.win32.zip
+	ftp://ftp.zlatkovic.com/libxml/zlib-1.2.5.win32.zip
+
+zip: zip-3.0-setup.exe
+	http://sourceforge.net/projects/gnuwin32/files/zip/3.0/zip-3.0-setup.exe/download
+
+perl: perl must be newer than 5.8.2
+	http://www.activestate.com => 5.14.2
+	http://strawberryperl.com  => 5.12.3
+	Both work nicely
+
+po4a: po4a-0.41-1
+There exists a cygwin build "ready to install"
+	ftp://ftp.cygwinports.org/pub/cygwinports/release-2/po4a/po4a-0.41-1.tar.bz2
+
+II) Installations
+All packages can be installed in the same folder except docbook-xsl, perl and po4a
+
+II.1) Install gettext, libiconv, libxml2, libxslt, zlib
+Create a new folder (e.g. C:\GNUWin32). One recommends to use a folder name WITHOUT embedded whitespace.
+Unzip these packages in C:\GNUWin32.
+Note:
+zlib-1.2.5.win32.zip, libxslt-1.1.26.win32.zip, libxml2-2.7.8.win32.zip and iconv-1.9.2.win32.zip unzip in
+their own folder, so one needs to move the contents of each folder to the upper level C:\GNUWin32
+
+II.2) Install zip and Perl
+Run the installers.
+One recommends to install perl to C:\Perl (no embedded whitespace) and zip in C:\GNUWin32
+
+II.3) Install po4a
+Trouble is sought when trying to run perl scripts in Cygwin Perl from the windows command line, so
+po4a must be adapted to windows native Perl. This is easy, because po4a is pure perl.
+1) unzip po4a-0.41-1.tar.bz2 to a po4a-0.41-1 folder anywhere on the disk
+2) create a new po4a folder anywhere on the disk
+2.1) in po4a create folders: bin and site\lib
+2.2) copy po4a-0.41-1\usr\bin to po4a\bin
+2.3) run Perl's utility pl2bat.bat on
+	bin/po4a -> po4a.bat
+	bin/po4a-gettextize -> po4a-gettextize.bat
+	bin/po4a-normalize -> po4a-normalize.bat
+	bin/po4a-translate -> po4a-translate.bat
+	bin/po4a-updatepo -> po4a-updatepo.bat
+2.4) copy
+	po4a-0.41-1\usr\lib\perl5\vendor_perl\5.10\i686-cygwin\auto to po4a\site\lib\auto
+	po4a-0.41-1\usr\lib\perl5\vendor_perl\5.10\Locale to po4a\site\lib\Locale
+2.5) update Perl installation
+	copy po4a\bin contents to perl's bin folder
+	copy po4a\site contents to perl's site folder
+2.6) optional cleanup : remove po4a and po4a-0.14-1
+
+II.4) Install docbook-xsl
+Unzip docbook-xsl-1.76.1.tar.bz2 anywhere on the disk e.g. C:\docbook-xsl-1.76.1
+
+III) Building help
+Add GNUWin32 to the system PATH
+Check that the Perl bin folder is in the system PATH, since it should have been set by the installer.
+If not, add the Perl bin folder to the system PATH.
+
+Run cmake to configure the build:
+cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release|Debug -DUNICODE=0|1 -DSTATIC=0|1 -DwxWidgets_ROOT_DIR=drive:\path\to\wxWidgets -DDOCBOOK_DIR=drive:\path\to\docbook-xsl-1.76.1
+See the README file for further details on the Windows build
+
+There should not be any  of these complaints in the output:
+-- Could NOT find Gettext (missing:  GETTEXT_MSGMERGE_EXECUTABLE GETTEXT_MSGFMT_EXECUTABLE)
+-- gettext not found
+-- xgettext not found (package gettext)
+-- msgmerge not found (package gettext)
+-- msgfmt not found (package gettext)
+-- xsltproc not found
+-- zip not found
+-- po4a-gettext not found (package po4a)
+-- po4a-translate not found (package po4a)
+-- Not build help - some programs are missing
+-- Not building translations - some programs are missing
+
+Build GrandOrgue by running mingw32-make in the build directory.
+See README.translate for further details about adding or updating translations
