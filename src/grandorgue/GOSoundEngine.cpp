@@ -533,7 +533,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 					/* estimating attack duration from pipe midi pitch */
 					unsigned midikey_frequency = this_pipe->GetMidiKeyNumber();
 					/* if MidiKeyNumber is not within an organ 64 feet to 1 foot pipes, we assume average pipe (MIDI = 60)*/
-					if (midikey_frequency >133 || midikey_frequency = 0 )
+					if (midikey_frequency >133 || midikey_frequency == 0 )
 						midikey_frequency = 60;
 					/* attack duration is assumed 50 ms above MIDI 96, 800 ms below MIDI 24 and linear in between */	
 					float attack_duration = 50.0f; 
