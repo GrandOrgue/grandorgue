@@ -529,10 +529,34 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				{
 					/* Note: "time" is in milliseconds. */
 					int time = ((m_CurrentTime - handle->time) * (10 * BLOCKS_PER_FRAME)) / (m_SampleRate / 100);
-					if (time < 256)
-						gain_target *= 0.5f + time * (1.0f / 512.0f);
-					if (time < 1024)
-						gain_decay_rate = -15; /* results in approx 1.5 second maximum decay length */
+					/* TODO: below code should be replaced by a more accurate model of the attack to get a better estimate of the amplitude when playing very short notes */
+					/* estimating attack duration from pipe midi pitch */
+					unsigned midikey_frequency = this_pipe->GetMidiKeyNumber();
+					/* if MidiKeyNumber is not within an organ 64 feet to 1 foot pipes, we assume average pipe (MIDI = 60)*/
+					if (midikey_frequency >133 || midikey_frequency = 0 )
+						midikey_frequency = 60;
+					/* attack duration is assumed 50 ms above MIDI 96, 800 ms below MIDI 24 and linear in between */	
+					float attack_duration = 50.0f; 
+					if (midikey_frequency < 96 )
+					{
+						if (midikey_frequency < 24)
+							attack_duration = 800.0f;
+						else
+							attack_duration = 800.0f + ( ( 24.0f - (float)midikey_frequency ) * 10.4f );
+					}
+					/* calculate gain (gain_target) to apply to tail amplitude in function of when the note is released during the attack */ 
+					if (time < (int)attack_duration)
+					{
+						float attack_index = (float)time / attack_duration;
+						gain_target *= ( 0.1f + ( 0.9f * ( 2.0f * attack_index - (attack_index * attack_index) )));
+					}
+					/* calculate the volume decay to be applied to the release to take into account the fact reverb is not completely formed during staccato */
+					/* TODO time_to_full_reverb is a constant that should be replaced by an estimation of the time to full reverb which could be approximated by dividing release length (in ms) by fixed number e.g. 5 */
+					int time_to_full_reverb = 600; 
+					if (time < time_to_full_reverb)
+					{
+						gain_decay_rate = -14  + (int)( (-3.0f * (float)time / (float)time_to_full_reverb ) - 0.5f ); 
+					}
 				}
 			}
 
