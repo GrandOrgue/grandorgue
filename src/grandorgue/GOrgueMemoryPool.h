@@ -40,6 +40,7 @@ class GOrgueMemoryPool {
 	unsigned long m_PageSize;
 	unsigned long m_CacheSize;
 	unsigned long m_MallocSize;
+	unsigned m_AllocError;
 	char m_dummy;
 
 	void InitPool();
@@ -48,6 +49,9 @@ class GOrgueMemoryPool {
 	void* PoolAlloc(unsigned length);
 	void AddPoolAlloc(void* data);
 
+	void CalculatePageSize();
+	void CalculatePoolLimit();
+	bool AllocatePool();
 public:
 	GOrgueMemoryPool();
 	~GOrgueMemoryPool();

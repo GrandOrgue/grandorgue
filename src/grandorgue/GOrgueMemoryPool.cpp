@@ -28,6 +28,7 @@
 #ifdef __WIN32__
 #include <windows.h>
 #endif
+#include <errno.h>
 
 #include "GOrgueMemoryPool.h"
 
@@ -41,6 +42,7 @@ GOrgueMemoryPool::GOrgueMemoryPool() :
 	m_PageSize(4096),
 	m_CacheSize(0),
 	m_MallocSize(0),
+	m_AllocError(0),
 	m_dummy(0)
 {
 	InitPool();
@@ -111,6 +113,7 @@ void* GOrgueMemoryPool::PoolAlloc(unsigned length)
 	{
 		void* data = m_PoolPtr;
 		m_PoolPtr += length;
+		m_AllocError = 0;
 		return data;
 	}
 	GrowPool(length);
@@ -118,10 +121,12 @@ void* GOrgueMemoryPool::PoolAlloc(unsigned length)
 	{
 		void* data = m_PoolPtr;
 		m_PoolPtr += length;
+		m_AllocError = 0;
 		return data;
 	}
-	wxLogError(wxT("PoolAlloc failed: %d %d %08x %08x %08x"),
-		   length, m_PoolSize, m_PoolStart, m_PoolPtr, m_PoolEnd);
+	if (!m_AllocError++)
+		wxLogError(wxT("PoolAlloc failed: %d %d %08x %08x %08x"),
+			   length, m_PoolSize, m_PoolStart, m_PoolPtr, m_PoolEnd);
 	return NULL;
 }
 
@@ -175,6 +180,7 @@ bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 	{
 		m_CacheStart = 0;
 		m_CacheSize = 0;
+		wxLogError(_("Memory mapping of the cache file failed with error code %d"), errno);
 	}
 	else
 		result = true;
@@ -201,15 +207,23 @@ bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 	return result;
 }
 
-
-void GOrgueMemoryPool::InitPool()
+void GOrgueMemoryPool::CalculatePageSize()
 {
-	m_PoolStart = 0;
-	m_PoolSize = 0;
-	m_PoolLimit = 0;
-	
+	m_PageSize = 4096;
 #ifdef linux
 	m_PageSize = sysconf(_SC_PAGESIZE);
+#endif
+#ifdef __WIN32__
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+	m_PageSize = info.dwPageSize;
+#endif
+}
+
+void GOrgueMemoryPool::CalculatePoolLimit()
+{
+	m_PoolLimit = 0;
+#ifdef linux
 	/* We reserve virtual address and add backing memory only, if the 
 	   memory region is needed.
 	   
@@ -222,20 +236,12 @@ void GOrgueMemoryPool::InitPool()
 		m_PoolLimit = sysconf(_SC_PHYS_PAGES) * m_PageSize;
 
 	m_PoolLimit -= m_CacheSize;
-
-	m_PoolStart = (char*)mmap(NULL, m_PoolLimit, PROT_NONE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
-	if (m_PoolStart == MAP_FAILED)
-	{
-		m_PoolStart = 0;
-		wxLogWarning(wxT("Initialization of the memory pool failed"));
-	}
 #endif
 #ifdef __WIN32__
 	SYSTEM_INFO info;
 	MEMORY_BASIC_INFORMATION mem_info;
 	MEMORYSTATUSEX mem_stat;
 	GetSystemInfo(&info);
-	m_PageSize = info.dwPageSize;
 
 	/* Search for largest block */
 	m_PoolLimit = 0;
@@ -247,7 +253,7 @@ void GOrgueMemoryPool::InitPool()
 			if (m_PoolLimit < mem_info.RegionSize)
 				m_PoolLimit = mem_info.RegionSize;
 	}
-
+	/* Limit with the available system memory */
 	if (GlobalMemoryStatusEx(&mem_stat))
 		if (m_PoolLimit + m_CacheSize > mem_stat.ullTotalPhys)
 		{
@@ -256,11 +262,48 @@ void GOrgueMemoryPool::InitPool()
 			else
 				m_PoolLimit = 0;
 		}
-
-	m_PoolStart = (char*)VirtualAlloc(NULL, m_PoolLimit, MEM_RESERVE, PAGE_NOACCESS);
-	if (!m_PoolStart && m_PoolLimit)
-		wxLogWarning(wxT("Initialization of the memory pool failed"));
 #endif
+}
+
+bool GOrgueMemoryPool::AllocatePool()
+{
+#ifdef linux
+	m_PoolStart = (char*)mmap(NULL, m_PoolLimit, PROT_NONE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
+	if (m_PoolStart == MAP_FAILED)
+	{
+		m_PoolStart = 0;
+		return false;
+	}
+#endif
+#ifdef __WIN32__
+	m_PoolStart = (char*)VirtualAlloc(NULL, m_PoolLimit, MEM_RESERVE, PAGE_NOACCESS);
+	if (!m_PoolStart)
+		return false;
+#endif
+	return true;
+}
+
+void GOrgueMemoryPool::InitPool()
+{
+	m_AllocError = 0;
+	m_PoolStart = 0;
+	m_PoolSize = 0;
+	CalculatePageSize();
+	CalculatePoolLimit();
+	wxLogDebug(wxT("Memory pool limit: %d bytes (page size: %d)"), m_PoolLimit, m_PageSize);
+
+	while (m_PoolLimit)
+	{
+		if (AllocatePool())
+			break;
+		if (m_PoolLimit < 500 * 1024 * 1024)
+		{
+			wxLogWarning(wxT("Initialization of the memory pool failed (size: %d bytes)"), m_PoolLimit);
+			m_PoolLimit = 0;
+			break;
+		}
+		m_PoolLimit -= 1000 * m_PageSize;
+	}
 	m_PoolPtr = m_PoolStart;
 	m_PoolEnd = m_PoolStart + m_PoolSize;
 }
