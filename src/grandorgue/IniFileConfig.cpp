@@ -25,7 +25,9 @@
 #include <wx/fileconf.h>
 
 IniFileConfig::IniFileConfig(wxFileConfig& odf_ini_file) :
-	m_ODFIni (odf_ini_file)
+	m_ODFIni (odf_ini_file),
+	m_LastGroup(),
+	m_LastGroupExists(true)
 {
 
 }
@@ -34,8 +36,15 @@ wxString IniFileConfig::ReadString(wxString group, wxString key, unsigned nmax, 
 {
 	wxString value;
 
-	m_ODFIni.SetPath(wxT("/"));
-	if (!m_ODFIni.HasGroup(group))
+	if (group != m_LastGroup)
+	{
+		m_ODFIni.SetPath(wxT("/"));
+		m_LastGroupExists = m_ODFIni.HasGroup(group);
+		if (m_LastGroupExists)
+			m_ODFIni.SetPath(wxT("/") + group);
+		m_LastGroup = group;
+	}
+	if (!m_LastGroupExists)
 	{
 		if (group.length() >= 6 && !group.Mid(0, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
 			return defaultValue;
@@ -53,8 +62,6 @@ wxString IniFileConfig::ReadString(wxString group, wxString key, unsigned nmax, 
 			throw error;
 		}
 	}
-
-	m_ODFIni.SetPath(wxT("/") + group);
 
 	if (!m_ODFIni.Read(key, &value))
 	{
