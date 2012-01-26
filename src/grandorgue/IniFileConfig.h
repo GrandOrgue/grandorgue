@@ -39,6 +39,8 @@ class IniFileConfig
 
 private:
 	wxFileConfig& m_ODFIni;
+	wxString m_LastGroup;
+	bool m_LastGroupExists;
 
 public:
 	IniFileConfig(wxFileConfig& iCfg);

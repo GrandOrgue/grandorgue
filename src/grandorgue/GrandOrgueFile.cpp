@@ -483,16 +483,18 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 			while (bCont)
 			{
 				extra_odf_config.SetPath(wxT('/') + key);
+				odf_ini_file.SetPath(wxT('/') + key);
 				long cookie2;
 				bool bCont2 = extra_odf_config.GetFirstEntry(key2, cookie2);
 				while (bCont2)
 				{
-					odf_ini_file.Write(key + wxT('/') + key2, extra_odf_config.Read(key2));
+					odf_ini_file.Write(key2, extra_odf_config.Read(key2));
 					bCont2 = extra_odf_config.GetNextEntry(key2, cookie2);
 				}
 				extra_odf_config.SetPath(wxT("/"));
 				bCont = extra_odf_config.GetNextGroup(key, cookie);
 			}
+			odf_ini_file.SetPath(wxT('/'));
 		}
 		else
 		{
