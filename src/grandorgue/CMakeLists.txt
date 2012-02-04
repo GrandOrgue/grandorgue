@@ -157,6 +157,7 @@ GOSoundProvider.cpp
 GOSoundProviderSynthedTrem.cpp
 GOSoundProviderWave.cpp
 GOSoundRecorder.cpp
+GOSoundResample.cpp
 GOSoundSamplerPool.cpp
 GOSoundThread.cpp
 GOrgueWave.cpp
