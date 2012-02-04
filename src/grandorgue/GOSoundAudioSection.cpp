@@ -209,7 +209,82 @@ bool GOAudioSection::SaveCache(GOrgueCacheWriter& cache) const
 
 template<class T>
 inline
-void GOAudioSection::MonoUncompressed
+void GOAudioSection::MonoUncompressedLinear
+	(audio_section_stream *stream
+	,float                *output
+	)
+{
+	// copy the sample buffer
+	T* input = (T*)(stream->ptr);
+	for (unsigned int i = 0
+	    ;i < BLOCKS_PER_FRAME
+	    ;i++
+	    ,stream->position_fraction += stream->increment_fraction
+	    ,output += 2
+	    )
+	{
+		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
+		unsigned pos = stream->position_index;
+		float fract  = stream->position_fraction / (float)(UPSAMPLE_FACTOR);
+		output[0] = input[pos] * (1 - fract) + input[pos + 1] * fract;
+		output[1] = input[pos] * (1 - fract) + input[pos + 1] * fract;
+	}
+
+	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
+
+	// update sample history (for release alignment / compression)
+	unsigned pos = (unsigned)stream->position_index;
+	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
+	{
+		stream->history[i - 1][0] = input[pos - 1];
+	}
+}
+
+template<class T>
+inline
+void GOAudioSection::StereoUncompressedLinear
+	(audio_section_stream *stream
+	,float                *output
+	)
+{
+	typedef T stereoSample[0][2];
+
+	// "borrow" the output buffer to compute release alignment info
+	stereoSample& input = (stereoSample&)*(T*)(stream->ptr);
+
+	// copy the sample buffer
+	for (unsigned int i = 0
+	    ;i < BLOCKS_PER_FRAME
+	    ;stream->position_fraction += stream->increment_fraction
+	    ,output += 2
+	    ,i++
+	    )
+	{
+		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
+		unsigned pos = stream->position_index;
+		float fract  = stream->position_fraction / (float)UPSAMPLE_FACTOR;
+		output[0] = input[pos][0] * (1 - fract) + input[pos + 1][0] * fract;
+		output[1] = input[pos][1] * (1 - fract) + input[pos + 1][1] * fract;
+	}
+
+	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
+
+	// update sample history (for release alignment / compression)
+	unsigned pos = stream->position_index;
+	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
+	{
+		stream->history[i - 1][0] = input[pos - 1][0];
+		stream->history[i - 1][1] = input[pos - 1][1];
+	}
+}
+
+template<class T>
+inline
+void GOAudioSection::MonoUncompressedPolyphase
 	(audio_section_stream *stream
 	,float                *output
 	)
@@ -255,7 +330,7 @@ void GOAudioSection::MonoUncompressed
 
 template<class T>
 inline
-void GOAudioSection::StereoUncompressed
+void GOAudioSection::StereoUncompressedPolyphase
 	(audio_section_stream *stream
 	,float                *output
 	)
@@ -302,7 +377,7 @@ void GOAudioSection::StereoUncompressed
 
 template<bool format16>
 inline
-void GOAudioSection::MonoCompressed
+void GOAudioSection::MonoCompressedLinear
 	(audio_section_stream *stream
 	,float                *output
 	)
@@ -361,7 +436,7 @@ void GOAudioSection::MonoCompressed
 
 template<bool format16>
 inline
-void GOAudioSection::StereoCompressed
+void GOAudioSection::StereoCompressedLinear
 	(audio_section_stream *stream
 	,float                *output
 	)
@@ -427,38 +502,74 @@ DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction
 	(unsigned channels
 	,unsigned bits_per_sample
 	,bool     compressed
+	,bool     polyphase
 	)
 {
-	if ((channels == 1) && (bits_per_sample == 8) && (!compressed))
-		return MonoUncompressed<wxInt8>;
-	if ((channels == 1) && (bits_per_sample == 16) && (!compressed))
-		return MonoUncompressed<wxInt16>;
-	if ((channels == 1) && (bits_per_sample == 24) && (!compressed))
-		return MonoUncompressed<Int24>;
-
-	if ((channels == 2) && (bits_per_sample == 8) && (!compressed))
-		return StereoUncompressed<wxInt8>;
-	if ((channels == 2) && (bits_per_sample == 16) && (!compressed))
-		return StereoUncompressed<wxInt16>;
-	if ((channels == 2) && (bits_per_sample == 24) && (!compressed))
-		return StereoUncompressed<Int24>;
-
-	if ((channels == 1) && (compressed))
+	if (compressed)
 	{
-		if (bits_per_sample >= 20)
-			return MonoCompressed<true>;
+		/* TODO: Add support for polyphase compressed decoders. Fallback to
+		 * linear interpolation for now. */
+		if ((channels == 1))
+		{
+			if (bits_per_sample >= 20)
+				return MonoCompressedLinear<true>;
 
-		assert(bits_per_sample >= 12);
-		return MonoCompressed<false>;
+			assert(bits_per_sample >= 12);
+			return MonoCompressedLinear<false>;
+		}
+		else if ((channels == 2))
+		{
+			if (bits_per_sample >= 20)
+				return StereoCompressedLinear<true>;
+
+			assert(bits_per_sample >= 12);
+			return StereoCompressedLinear<false>;
+		}
 	}
-
-	if ((channels == 2) && (compressed))
+	else
 	{
-		if (bits_per_sample >= 20)
-			return StereoCompressed<true>;
-
-		assert(bits_per_sample >= 12);
-		return StereoCompressed<false>;
+		if (polyphase)
+		{
+			if (channels == 1)
+			{
+				if (bits_per_sample == 8)
+					return MonoUncompressedPolyphase<wxInt8>;
+				if (bits_per_sample == 16)
+					return MonoUncompressedPolyphase<wxInt16>;
+				if (bits_per_sample == 24)
+					return MonoUncompressedPolyphase<Int24>;
+			}
+			else if (channels == 2)
+			{
+				if (bits_per_sample == 8)
+					return StereoUncompressedPolyphase<wxInt8>;
+				if (bits_per_sample == 16)
+					return StereoUncompressedPolyphase<wxInt16>;
+				if (bits_per_sample == 24)
+					return StereoUncompressedPolyphase<Int24>;
+			}
+		}
+		else
+		{
+			if (channels == 1)
+			{
+				if (bits_per_sample == 8)
+					return MonoUncompressedLinear<wxInt8>;
+				if (bits_per_sample == 16)
+					return MonoUncompressedLinear<wxInt16>;
+				if (bits_per_sample == 24)
+					return MonoUncompressedLinear<Int24>;
+			}
+			else if (channels == 2)
+			{
+				if (bits_per_sample == 8)
+					return StereoUncompressedLinear<wxInt8>;
+				if (bits_per_sample == 16)
+					return StereoUncompressedLinear<wxInt16>;
+				if (bits_per_sample == 24)
+					return StereoUncompressedLinear<Int24>;
+			}
+		}
 	}
 
 	assert(0 && "unsupported decoder configuration");
@@ -913,8 +1024,8 @@ void GOAudioSection::InitStream
 	stream->position_index           = 0;
 	stream->filter_index             = 0;
 	stream->position_fraction        = 0;
-	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed);
-	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, false);
+	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, false);
+	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, false, false);
 	stream->last_position = 0;
 	memset(stream->curr_value, 0, sizeof(stream->curr_value));
 	memset(stream->next_value, 0, sizeof(stream->next_value));
@@ -949,8 +1060,8 @@ void GOAudioSection::InitAlignedStream
 	stream->increment_fraction       = roundf((((float)existing_stream->increment_fraction) / existing_stream->audio_section->m_SampleRate) * m_SampleRate);
 	stream->position_index           = 0;
 	stream->position_fraction        = existing_stream->position_fraction;
-	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed);
-	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, false);
+	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, false);
+	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, false, false);
 	stream->last_position = 0;
 	memset(stream->curr_value, 0, sizeof(stream->curr_value));
 	memset(stream->next_value, 0, sizeof(stream->next_value));

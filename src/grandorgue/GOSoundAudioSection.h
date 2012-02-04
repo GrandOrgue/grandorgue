@@ -133,15 +133,24 @@ class GOAudioSection
 
 private:
 	template<class T>
-	static void MonoUncompressed(audio_section_stream *stream, float *output);
+	static void MonoUncompressedLinear(audio_section_stream *stream, float *output);
 	template<class T>
-	static void StereoUncompressed(audio_section_stream *stream, float *output);
+	static void StereoUncompressedLinear(audio_section_stream *stream, float *output);
+	template<class T>
+	static void MonoUncompressedPolyphase(audio_section_stream *stream, float *output);
+	template<class T>
+	static void StereoUncompressedPolyphase(audio_section_stream *stream, float *output);
 	template<bool format16>
-	static void MonoCompressed(audio_section_stream *stream, float *output);
+	static void MonoCompressedLinear(audio_section_stream *stream, float *output);
 	template<bool format16>
-	static void StereoCompressed(audio_section_stream *stream, float *output);
+	static void StereoCompressedLinear(audio_section_stream *stream, float *output);
 
-	static DecodeBlockFunction GetDecodeBlockFunction(unsigned channels, unsigned bits_per_sample, bool compressed);
+	static DecodeBlockFunction GetDecodeBlockFunction
+		(unsigned channels
+		,unsigned bits_per_sample
+		,bool     compressed
+		,bool     polyphase
+		);
 
 	void Compress(bool format16);
 
