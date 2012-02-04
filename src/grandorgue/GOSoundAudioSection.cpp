@@ -307,21 +307,21 @@ void GOAudioSection::MonoCompressed
 	,float                *output
 	)
 {
-#if 0
 	int history[BLOCK_HISTORY];
 	unsigned hist_ptr = 0;
 
 	for (unsigned int i = 0
 	    ;i < BLOCKS_PER_FRAME
 	    ;i++
-	    ,stream->position += stream->increment
+	    ,stream->position_fraction += stream->increment_fraction
 	    ,output += 2
 	    )
 	{
-		unsigned pos = (unsigned)stream->position;
-		float fract = stream->position - pos;
+		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
+		float fract = stream->position_fraction / (float)UPSAMPLE_FACTOR;
 
-		while(stream->last_position <= pos + 1)
+		while (stream->last_position <= stream->position_index + 1)
 		{
 			int val;
 			if (format16)
@@ -345,6 +345,9 @@ void GOAudioSection::MonoCompressed
 		output[1] = stream->curr_value[0] * (1 - fract) + stream->next_value[0] * fract;
 	}
 
+	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
+
 	// update sample history (for release alignment / compression)
 	for (unsigned i = BLOCK_HISTORY; i > 0; i--)
 	{
@@ -354,7 +357,6 @@ void GOAudioSection::MonoCompressed
 			hist_ptr--;
 		stream->history[i - 1][0] = history[hist_ptr];
 	}
-#endif
 }
 
 template<bool format16>
@@ -364,18 +366,22 @@ void GOAudioSection::StereoCompressed
 	,float                *output
 	)
 {
-#if 0
 	int history[BLOCK_HISTORY][2];
 	unsigned hist_ptr = 0;
 
 	// copy the sample buffer
-	for (unsigned int i = 0; i < BLOCKS_PER_FRAME; stream->position += stream->increment, output += 2, i++)
+	for (unsigned int i = 0
+	    ;i < BLOCKS_PER_FRAME
+	    ;stream->position_fraction += stream->increment_fraction
+	    ,output += 2
+	    ,i++
+	    )
 	{
-		unsigned pos = (unsigned)stream->position;
-		float fract = stream->position - pos;
+		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
+		float fract = stream->position_fraction / (float)UPSAMPLE_FACTOR;
 
-
-		while(stream->last_position <= pos + 1)
+		while (stream->last_position <= stream->position_index + 1)
 		{
 			for(unsigned j = 0; j < 2; j++)
 			{
@@ -401,6 +407,9 @@ void GOAudioSection::StereoCompressed
 		output[1] = stream->curr_value[1] * (1 - fract) + stream->next_value[1] * fract;
 	}
 
+	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
+
 	// update sample history (for release alignment / compression)
 	for (unsigned i = BLOCK_HISTORY; i > 0; i--)
 	{
@@ -411,7 +420,6 @@ void GOAudioSection::StereoCompressed
 		stream->history[i - 1][0] = history[hist_ptr][0];
 		stream->history[i - 1][1] = history[hist_ptr][1];
 	}
-#endif
 }
 
 inline
