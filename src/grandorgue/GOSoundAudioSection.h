@@ -94,7 +94,8 @@ typedef struct audio_end_data_segment_s
 
 typedef struct audio_section_stream_s
 {
-	const GOAudioSection        *audio_section;
+	const GOAudioSection           *audio_section;
+	const struct resampler_coefs_s *resample_coefs;
 
 	/* Method used to decode stream */
 	DecodeBlockFunction          decode_call;
@@ -113,9 +114,11 @@ typedef struct audio_section_stream_s
 	unsigned                     section_length;
 	int                          next_start_segment_index;
 
+	unsigned                     filter_index;
+	unsigned                     position_index;
+	unsigned                     position_fraction;
+	unsigned                     increment_fraction;
 
-	float                        position;
-	float                        increment;
 	/* for decoding compressed format */
 	unsigned                     last_position;
 	int                          last_value[MAX_OUTPUT_CHANNELS];
@@ -190,14 +193,15 @@ public:
 	/* Initialize a stream to play this audio section and seek into it using
 	 * release alignment if available. */
 	void InitAlignedStream
-		(audio_section_stream       *stream
-		,const audio_section_stream *existing_stream
+		(audio_section_stream           *stream
+		,const audio_section_stream     *existing_stream
 		) const;
 
 	/* Initialize a stream to play this audio section */
 	void InitStream
-		(audio_section_stream    *stream
-		,float                    sample_rate_adjustment
+		(const struct resampler_coefs_s *resampler_coefs
+		,audio_section_stream           *stream
+		,float                           sample_rate_adjustment
 		) const;
 
 	/* Read an audio buffer from an audio section stream */

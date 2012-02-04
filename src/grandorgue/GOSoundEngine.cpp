@@ -53,6 +53,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_Windchests(),
 	m_Tremulants()
 {
+	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
 	m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
 	Reset();
@@ -91,6 +92,7 @@ void GOSoundEngine::SetVolume(int volume)
 void GOSoundEngine::SetSampleRate(unsigned sample_rate)
 {
 	m_SampleRate = sample_rate;
+	resampler_coefs_init(&m_ResamplerCoefs, m_SampleRate);
 }
 
 unsigned GOSoundEngine::GetSampleRate()
@@ -480,7 +482,8 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 	{
 		sampler->pipe = pipe;
 		pipe->GetAttack()->InitStream
-			(&sampler->stream
+			(&m_ResamplerCoefs
+			,&sampler->stream
 			,GetRandomFactor() * pipe->GetTuning() / (float)m_SampleRate
 			);
 		const float playback_gain = pipe->GetGain() * pipe->GetAttack()->GetNormGain();
@@ -579,7 +582,8 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			else
 			{
 				this_pipe->GetRelease()->InitStream
-					(&new_sampler->stream
+					(&m_ResamplerCoefs
+					,&new_sampler->stream
 					,this_pipe->GetTuning() / (float)m_SampleRate
 					);
 			}
