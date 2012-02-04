@@ -26,6 +26,7 @@
 #include "GOSoundDefs.h"
 #include "GOSoundSamplerPool.h"
 #include "GrandOrgueDef.h"
+#include "GOSoundResample.h"
 #include <vector>
 
 #define GO_SOUND_BUFFER_SIZE ((MAX_FRAME_SIZE) * (MAX_OUTPUT_CHANNELS))
@@ -113,6 +114,7 @@ private:
 	/* Per sampler decode buffers */
 	float                         m_FinalBuffer[GO_SOUND_BUFFER_SIZE];
 	float                         m_VolumeBuffer[GO_SOUND_BUFFER_SIZE];
+	struct resampler_coefs_s      m_ResamplerCoefs;
 
 	/* samplerGroupID:
 	   -1 .. -n Tremulants

@@ -26,6 +26,7 @@
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueMemoryPool.h"
 #include "GOSoundCompress.h"
+#include "GOSoundResample.h"
 
 GOAudioSection::GOAudioSection(GOrgueMemoryPool& pool)
 	: m_Data(NULL)
@@ -214,7 +215,44 @@ void GOAudioSection::MonoUncompressed
 	)
 {
 	// copy the sample buffer
-	T* input = (T*)(stream->ptr);
+	T* input                = ((T*)stream->ptr) + stream->position_index;
+	unsigned input_index    = stream->position_fraction;
+	unsigned filter_index   = stream->filter_index;
+	const float* coef       = stream->resample_coefs->coefs;
+	const unsigned out_rate = stream->increment_fraction;
+	for (unsigned i = 0; i < BLOCKS_PER_FRAME; ++i, output += 2)
+	{
+		float out1 = 0.0f;
+		float out2 = 0.0f;
+		float out3 = 0.0f;
+		float out4 = 0.0f;
+		const float* coef_set = &coef[filter_index << SUBFILTER_BITS];
+		T* in_set             = &input[input_index >> UPSAMPLE_BITS];
+		for (unsigned j = 0; j < SUBFILTER_TAPS; j += 4)
+		{
+			out1 += in_set[j]   * coef_set[j];
+			out2 += in_set[j+1] * coef_set[j+1];
+			out3 += in_set[j+2] * coef_set[j+2];
+			out4 += in_set[j+3] * coef_set[j+3];
+		}
+		input_index += out_rate;
+		filter_index = (filter_index + out_rate) & (UPSAMPLE_FACTOR - 1);
+		output[0] = out1 + out2 + out3 + out4;
+		output[1] = output[0];
+	}
+
+	unsigned pos = input_index >> UPSAMPLE_BITS;
+	stream->filter_index       = filter_index;
+	stream->position_index    += pos;
+	stream->position_fraction  = input_index & (UPSAMPLE_FACTOR - 1);
+
+	// update sample history (for release alignment / compression)
+	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
+		stream->history[i - 1][0] = input[pos];
+
+#if 0
+
+
 	for (unsigned int i = 0
 	    ;i < BLOCKS_PER_FRAME
 	    ;i++
@@ -232,6 +270,8 @@ void GOAudioSection::MonoUncompressed
 	unsigned pos = (unsigned)stream->position;
 	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
 		stream->history[i - 1][0] = input[pos];
+#endif
+
 }
 
 template<class T>
@@ -241,8 +281,47 @@ void GOAudioSection::StereoUncompressed
 	,float                *output
 	)
 {
-	typedef T stereoSample[0][2];
 
+	// copy the sample buffer
+	T* input                = ((T*)stream->ptr) + 2 * stream->position_index;
+	unsigned input_index    = stream->position_fraction;
+	unsigned filter_index   = stream->filter_index;
+	const float* coef       = stream->resample_coefs->coefs;
+	const unsigned out_rate = stream->increment_fraction;
+	for (unsigned i = 0; i < BLOCKS_PER_FRAME; ++i, output += 2)
+	{
+		float out1 = 0.0f;
+		float out2 = 0.0f;
+		float out3 = 0.0f;
+		float out4 = 0.0f;
+		const float* coef_set = &coef[filter_index << SUBFILTER_BITS];
+		T* in_set             = &input[2 * (input_index >> UPSAMPLE_BITS)];
+		for (unsigned j = 0; j < SUBFILTER_TAPS; j += 2)
+		{
+			out1 += in_set[j]   * coef_set[j];
+			out2 += in_set[j+1] * coef_set[j];
+			out3 += in_set[j+2] * coef_set[j+1];
+			out4 += in_set[j+3] * coef_set[j+1];
+		}
+		input_index  += out_rate;
+		filter_index  = (filter_index + out_rate) & (UPSAMPLE_FACTOR - 1);
+		output[0]     = out1 + out3;
+		output[1]     = out2 + out4;
+	}
+
+	unsigned pos               = input_index >> UPSAMPLE_BITS;
+	stream->position_index    += pos;
+	stream->filter_index       = filter_index;
+	stream->position_fraction  = input_index & (UPSAMPLE_FACTOR - 1);
+
+	// update sample history (for release alignment / compression)
+	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
+	{
+		stream->history[i - 1][0] = input[2*pos];
+		stream->history[i - 1][1] = input[2*pos+1];
+	}
+
+#if 0
 	// "borrow" the output buffer to compute release alignment info
 	stereoSample& input = (stereoSample&)*(T*)(stream->ptr);
 
@@ -267,6 +346,7 @@ void GOAudioSection::StereoUncompressed
 		stream->history[i - 1][0] = input[pos][0];
 		stream->history[i - 1][1] = input[pos][1];
 	}
+#endif
 }
 
 template<bool format16>
@@ -276,6 +356,7 @@ void GOAudioSection::MonoCompressed
 	,float                *output
 	)
 {
+#if 0
 	int history[BLOCK_HISTORY];
 	unsigned hist_ptr = 0;
 
@@ -322,6 +403,7 @@ void GOAudioSection::MonoCompressed
 			hist_ptr--;
 		stream->history[i - 1][0] = history[hist_ptr];
 	}
+#endif
 }
 
 template<bool format16>
@@ -331,6 +413,7 @@ void GOAudioSection::StereoCompressed
 	,float                *output
 	)
 {
+#if 0
 	int history[BLOCK_HISTORY][2];
 	unsigned hist_ptr = 0;
 
@@ -377,6 +460,7 @@ void GOAudioSection::StereoCompressed
 		stream->history[i - 1][0] = history[hist_ptr][0];
 		stream->history[i - 1][1] = history[hist_ptr][1];
 	}
+#endif
 }
 
 inline
@@ -442,18 +526,18 @@ bool GOAudioSection::ReadBlock
 	,float                *buffer
 	)
 {
-	if (stream->position >= stream->transition_position)
+	if (stream->position_index >= stream->transition_position)
 	{
 		assert(stream->end_decode_call);
 
 		/* Setup ptr and position required by the end-block */
-		stream->ptr         = stream->end_ptr;
-		stream->position   -= (float)stream->transition_position;
+		stream->ptr              = stream->end_ptr;
+		stream->position_index  -= (float)stream->transition_position;
 		stream->end_decode_call(stream, buffer);
 
 		/* Restore the existing position */
-		stream->position   += (float)stream->transition_position;
-		if (stream->position >= stream->section_length)
+		stream->position_index  += (float)stream->transition_position;
+		if (stream->position_index >= stream->section_length)
 		{
 			if (stream->next_start_segment_index < 0)
 				return 0;
@@ -468,15 +552,15 @@ bool GOAudioSection::ReadBlock
 					&stream->audio_section->m_EndSegments[next_end_segment_index];
 
 			/* TODO: this is also where we need to copy startup information to the stream */
-			while (stream->position >= stream->section_length)
-				stream->position -= stream->section_length;
+			while (stream->position_index >= stream->section_length)
+				stream->position_index -= stream->section_length;
 
 			/* Because we support linear interpolation, we can't assume that
 			 * the position after a seek-back will be within a single block. In
 			 * reality, this shouldn't ever be very much more than BLOCKS_PER_
 			 * FRAME, but including a case for 2 times the size allows for a
 			 * very large tuning. */
-			assert(stream->position < 2 * BLOCKS_PER_FRAME);
+			assert(stream->position_index < 2 * BLOCKS_PER_FRAME);
 			stream->ptr = stream->audio_section->m_Data + next->data_offset;
 			stream->last_position = 0;
 			stream->end_ptr = next_end->end_data;
@@ -497,7 +581,7 @@ bool GOAudioSection::ReadBlock
 	{
 		assert(stream->decode_call);
 		stream->decode_call(stream, buffer);
-		assert(stream->position < stream->section_length);
+		assert(stream->position_index < stream->section_length);
 	}
 
 	return 1;
@@ -850,8 +934,9 @@ void GOAudioSection::SetupStreamAlignment
 
 
 void GOAudioSection::InitStream
-	(audio_section_stream    *stream
-	,float                    sample_rate_adjustment
+	(const struct resampler_coefs_s *resampler_coefs
+	,audio_section_stream           *stream
+	,float                           sample_rate_adjustment
 	) const
 {
 	stream->audio_section = this;
@@ -859,14 +944,15 @@ void GOAudioSection::InitStream
 	const audio_start_data_segment &start = m_StartSegments[0];
 	const audio_end_data_segment &end     = m_EndSegments[PickEndSegment(0)];
 	assert(end.transition_offset > start.start_offset);
-
+	stream->resample_coefs           = resampler_coefs;
 	stream->ptr                      = stream->audio_section->m_Data + start.data_offset;
 	stream->transition_position      = end.transition_offset - start.start_offset;
 	stream->section_length           = 1 + end.end_offset - start.start_offset;
 	stream->next_start_segment_index = end.next_start_segment_index;
 	stream->end_ptr                  = end.end_data;
-	stream->increment                = sample_rate_adjustment * m_SampleRate;
-	stream->position                 = 0.0f;
+	stream->increment_fraction       = sample_rate_adjustment * m_SampleRate * UPSAMPLE_FACTOR;
+	stream->position_index           = 0;
+	stream->position_fraction        = 0;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, false);
 	stream->last_position = 0;
@@ -898,8 +984,10 @@ void GOAudioSection::InitAlignedStream
 	stream->next_start_segment_index = end.next_start_segment_index;
 	stream->end_ptr                  = end.end_data;
 	/* Translate increment in case of differing sample rates */
-	stream->increment                = (existing_stream->increment / existing_stream->audio_section->m_SampleRate) * m_SampleRate;
-	stream->position                 = 0.0f;
+	stream->resample_coefs           = existing_stream->resample_coefs;
+	stream->increment_fraction       = roundf((((float)existing_stream->increment_fraction) / existing_stream->audio_section->m_SampleRate) * m_SampleRate);
+	stream->position_index           = 0;
+	stream->position_fraction        = existing_stream->position_fraction;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, false);
 	stream->last_position = 0;

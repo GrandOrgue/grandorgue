@@ -243,7 +243,7 @@ void GOrgueReleaseAlignTable::SetupRelease
 	assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
 	derivIndex = (derivIndex < 0) ? 0 : ((derivIndex >= PHASE_ALIGN_DERIVATIVES) ? PHASE_ALIGN_DERIVATIVES-1 : derivIndex);
 	ampIndex = (ampIndex < 0) ? 0 : ((ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES-1 : ampIndex);
-	release_sampler.position  = m_PositionEntries[derivIndex][ampIndex];
+	release_sampler.position_index  = m_PositionEntries[derivIndex][ampIndex];
 	memcpy
 		(release_sampler.history
 		,m_HistoryEntries[derivIndex][ampIndex]
@@ -253,7 +253,7 @@ void GOrgueReleaseAlignTable::SetupRelease
 #ifndef NDEBUG
 #ifdef PALIGN_DEBUG
 	printf("setup release using alignment:\n");
-	printf("  pos:    %d\n", release_sampler.position);
+	printf("  pos:    %d\n", release_sampler.position_index);
 	printf("  derIdx: %d\n", derivIndex);
 	printf("  ampIdx: %d\n", ampIndex);
 #endif
