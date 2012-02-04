@@ -298,10 +298,10 @@ void GOAudioSection::StereoUncompressed
 		T* in_set             = &input[2 * (input_index >> UPSAMPLE_BITS)];
 		for (unsigned j = 0; j < SUBFILTER_TAPS; j += 2)
 		{
-			out1 += in_set[j]   * coef_set[j];
-			out2 += in_set[j+1] * coef_set[j];
-			out3 += in_set[j+2] * coef_set[j+1];
-			out4 += in_set[j+3] * coef_set[j+1];
+			out1 += in_set[2*j]   * coef_set[j];
+			out2 += in_set[2*j+1] * coef_set[j];
+			out3 += in_set[2*j+2] * coef_set[j+1];
+			out4 += in_set[2*j+3] * coef_set[j+1];
 		}
 		input_index  += out_rate;
 		filter_index  = (filter_index + out_rate) & (UPSAMPLE_FACTOR - 1);
