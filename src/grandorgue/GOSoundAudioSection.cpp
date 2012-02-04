@@ -243,35 +243,14 @@ void GOAudioSection::MonoUncompressed
 
 	unsigned pos = input_index >> UPSAMPLE_BITS;
 	stream->filter_index       = filter_index;
-	stream->position_index    += pos;
 	stream->position_fraction  = input_index & (UPSAMPLE_FACTOR - 1);
+	stream->position_index    += pos;
 
 	// update sample history (for release alignment / compression)
 	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
-		stream->history[i - 1][0] = input[pos];
-
-#if 0
-
-
-	for (unsigned int i = 0
-	    ;i < BLOCKS_PER_FRAME
-	    ;i++
-	    ,stream->position += stream->increment
-	    ,output += 2
-	    )
 	{
-		unsigned pos = (unsigned)stream->position;
-		float fract = stream->position - pos;
-		output[0] = input[pos] * (1 - fract) + input[pos + 1] * fract;
-		output[1] = input[pos] * (1 - fract) + input[pos + 1] * fract;
+		stream->history[i - 1][0] = input[pos-1];
 	}
-
-	// update sample history (for release alignment / compression)
-	unsigned pos = (unsigned)stream->position;
-	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
-		stream->history[i - 1][0] = input[pos];
-#endif
-
 }
 
 template<class T>
@@ -281,7 +260,6 @@ void GOAudioSection::StereoUncompressed
 	,float                *output
 	)
 {
-
 	// copy the sample buffer
 	T* input                = ((T*)stream->ptr) + 2 * stream->position_index;
 	unsigned input_index    = stream->position_fraction;
@@ -310,43 +288,16 @@ void GOAudioSection::StereoUncompressed
 	}
 
 	unsigned pos               = input_index >> UPSAMPLE_BITS;
-	stream->position_index    += pos;
 	stream->filter_index       = filter_index;
 	stream->position_fraction  = input_index & (UPSAMPLE_FACTOR - 1);
+	stream->position_index    += pos;
 
 	// update sample history (for release alignment / compression)
 	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
 	{
-		stream->history[i - 1][0] = input[2*pos];
-		stream->history[i - 1][1] = input[2*pos+1];
+		stream->history[i - 1][0] = input[2*pos-2];
+		stream->history[i - 1][1] = input[2*pos-1];
 	}
-
-#if 0
-	// "borrow" the output buffer to compute release alignment info
-	stereoSample& input = (stereoSample&)*(T*)(stream->ptr);
-
-	// copy the sample buffer
-	for (unsigned int i = 0
-	    ;i < BLOCKS_PER_FRAME
-	    ;stream->position += stream->increment
-	    ,output += 2
-	    ,i++
-	    )
-	{
-		unsigned pos = (unsigned)stream->position;
-		float fract = stream->position - pos;
-		output[0] = input[pos][0] * (1 - fract) + input[pos + 1][0] * fract;
-		output[1] = input[pos][1] * (1 - fract) + input[pos + 1][1] * fract;
-	}
-
-	// update sample history (for release alignment / compression)
-	unsigned pos = (unsigned)stream->position;
-	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
-	{
-		stream->history[i - 1][0] = input[pos][0];
-		stream->history[i - 1][1] = input[pos][1];
-	}
-#endif
 }
 
 template<bool format16>
@@ -952,6 +903,7 @@ void GOAudioSection::InitStream
 	stream->end_ptr                  = end.end_data;
 	stream->increment_fraction       = sample_rate_adjustment * m_SampleRate * UPSAMPLE_FACTOR;
 	stream->position_index           = 0;
+	stream->filter_index             = 0;
 	stream->position_fraction        = 0;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, false);
@@ -985,6 +937,7 @@ void GOAudioSection::InitAlignedStream
 	stream->end_ptr                  = end.end_data;
 	/* Translate increment in case of differing sample rates */
 	stream->resample_coefs           = existing_stream->resample_coefs;
+	stream->filter_index             = existing_stream->filter_index;
 	stream->increment_fraction       = roundf((((float)existing_stream->increment_fraction) / existing_stream->audio_section->m_SampleRate) * m_SampleRate);
 	stream->position_index           = 0;
 	stream->position_fraction        = existing_stream->position_fraction;
