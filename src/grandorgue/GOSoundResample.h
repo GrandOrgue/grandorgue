@@ -34,7 +34,7 @@
 #define M_PI 3.14159265358979323846264338327950288
 #endif
 
-#define SUBFILTER_BITS            (5U)
+#define SUBFILTER_BITS            (3U)
 #define SUBFILTER_TAPS            (1U << SUBFILTER_BITS)
 #define UPSAMPLE_BITS             (11U)
 #define UPSAMPLE_FACTOR           (1U << UPSAMPLE_BITS)
