@@ -197,7 +197,6 @@ GOrgueTemperament.cpp
 GOrgueTemperamentCent.cpp
 GOrgueTremulant.cpp
 GOrgueWindchest.cpp
-GrandOrgue.cpp
 GrandOrgueFile.cpp
 GrandOrgueFrame.cpp
 Images.cpp
@@ -245,12 +244,12 @@ if (WIN32)
 
    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.rc/GrandOrgue.rc)
    set(grandorgue_src ${grandorgue_src} ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.rc/GrandOrgue.rc)
-   add_executable(${PROJECT_NAME} WIN32 ${grandorgue_src})
+   add_executable(${PROJECT_NAME} WIN32 GrandOrgue.cpp ${grandorgue_src})
    add_linker_option(${PROJECT_NAME} large-address-aware)
 
 else ()
 
-   add_executable(${PROJECT_NAME} ${grandorgue_src})
+   add_executable(${PROJECT_NAME} GrandOrgue.cpp ${grandorgue_src})
 
 endif ()
 
@@ -263,3 +262,8 @@ if (INSTALL_DEPEND STREQUAL "ON")
   CopyWxTranslations()
   CopyDependencies(${PROJECT_NAME})
 endif()
+
+add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp ${grandorgue_src})
+target_link_libraries(perftest ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES})
+
+add_custom_target(test COMMAND perftest ${CMAKE_SOURCE_DIR}/tests DEPENDS perftest)
