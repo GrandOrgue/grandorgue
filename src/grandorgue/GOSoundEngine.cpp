@@ -197,11 +197,7 @@ void GOSoundEngine::ReadSamplerFrames
 
 		if (!sampler->pipe)
 		{
-			std::fill
-				(decoded_sampler_audio_frame
-				,decoded_sampler_audio_frame + (BLOCKS_PER_FRAME * 2)
-				,0.0f
-				);
+			GOVectorFill(decoded_sampler_audio_frame, 0, BLOCKS_PER_FRAME * 2);
 			continue;
 		}
 
@@ -235,7 +231,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 	assert((n_frames & (BLOCKS_PER_FRAME - 1)) == 0);
 	assert(n_frames > BLOCKS_PER_FRAME);
 	float* output_buffer = state.buff;
-	std::fill(output_buffer, output_buffer + n_frames * 2, tremulant ? 1.0f : 0.0f);
+	GOVectorFill(output_buffer, tremulant ? 1 : 0, n_frames * 2);
 	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
 	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
 	{
@@ -373,7 +369,7 @@ int GOSoundEngine::GetSamples
 {
 	/* initialise the output buffer */
 	float FinalBuffer[GO_SOUND_BUFFER_SIZE];
-	std::fill(FinalBuffer, FinalBuffer + n_frames * 2, 0.0f);
+	GOVectorFill(FinalBuffer, 0, n_frames * 2);
 
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 		ProcessAudioSamplers(m_Tremulants[j], n_frames, true);
@@ -398,8 +394,7 @@ int GOSoundEngine::GetSamples
 			if (m_Tremulants[tremulant_pos].done)
 			{
 				const float *ptr = m_Tremulants[tremulant_pos].buff;
-				for (unsigned int k = 0; k < n_frames * 2; k++)
-					this_buff[k] *= ptr[k];
+				GOVectorMul(this_buff, ptr, n_frames * 2);
 			}
 		}
 		GOVectorAdd(FinalBuffer, this_buff, n_frames * 2);
