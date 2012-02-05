@@ -100,6 +100,7 @@ void
 resampler_coefs_init
 	(struct resampler_coefs_s   *resampler_coefs
 	,const unsigned              input_sample_rate
+	,interpolation_type          interpolation
 	)
 {
 	static const double generalised_max_frequency = ((double)UPSAMPLE_FACTOR / (double)MAX_POSITIVE_FACTOR);
@@ -133,5 +134,6 @@ resampler_coefs_init
 			resampler_coefs->coefs[i * SUBFILTER_TAPS + ((SUBFILTER_TAPS - 1) - j)] = temp[j * UPSAMPLE_FACTOR + i];
 		}
 	}
+	resampler_coefs->interpolation = interpolation;
 }
 

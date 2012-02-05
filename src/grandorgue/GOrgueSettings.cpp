@@ -66,6 +66,7 @@ GOrgueSettings::GOrgueSettings() :
 	m_RandomizeSpeaking(true),
 	m_SampleRate(44100),
 	m_BitsPerSample(16),
+	m_InterpolationType(0),
 	m_WaveFormat(4),
 	m_LoopLoad(0),
 	m_Volume(50),
@@ -110,6 +111,9 @@ void GOrgueSettings::Load()
 	m_BitsPerSample = m_Config.Read(wxT("BitsPerSample"), 2);
 	if (m_BitsPerSample != 8 && m_BitsPerSample != 12 && m_BitsPerSample != 16 && m_BitsPerSample != 20 && m_BitsPerSample != 24)
 		m_BitsPerSample = 16;
+	m_InterpolationType = m_Config.Read(wxT("InterpolationType"), 1);
+	if (m_InterpolationType > 1)
+		m_InterpolationType = 0;
 	m_WaveFormat = m_Config.Read(wxT("WaveFormat"), 4);
 	if (m_WaveFormat < 1 || m_WaveFormat > 4)
 		m_WaveFormat = 4;
@@ -418,6 +422,19 @@ void GOrgueSettings::SetScaleRelease(bool scale_release)
 {
 	m_ScaleRelease = scale_release;
 	m_Config.Write(wxT("ScaleRelease"), m_ScaleRelease);
+}
+
+unsigned GOrgueSettings::GetInterpolationType()
+{
+	return m_InterpolationType;
+}
+
+void GOrgueSettings::SetInterpolationType(unsigned type)
+{
+	if (type > 1)
+		type = 0;
+	m_InterpolationType = type;
+	m_Config.Write(wxT("InterpolationType"), (long)m_InterpolationType);
 }
 
 bool GOrgueSettings::GetRandomizeSpeaking()

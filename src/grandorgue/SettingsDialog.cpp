@@ -59,6 +59,7 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHECKBOX(ID_ENHANCE_RANDOMIZE, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_SETTINGS_DIR, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_CACHE_DIR, SettingsDialog::OnChanged)
+	EVT_CHOICE(ID_INTERPOLATION, SettingsDialog::OnChanged)
 
 	EVT_LIST_ITEM_SELECTED(ID_MIDI_EVENTS, SettingsDialog::OnEventListClick)
 	EVT_LIST_ITEM_ACTIVATED(ID_MIDI_EVENTS, SettingsDialog::OnEventListDoubleClick)
@@ -249,6 +250,12 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Loop loading:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(c_LoopLoad = new wxChoice(panel, ID_LOOP_LOAD, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
+	choices.clear();
+	choices.push_back(_("Linear"));
+	choices.push_back(_("Polyphase"));
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Interpolation:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(c_Interpolation = new wxChoice(panel, ID_INTERPOLATION, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
 	UpdateSoundStatus();
 	c_stereo->Select(m_Settings.GetLoadInStereo());
 	c_SampleRate->Select(0);
@@ -257,6 +264,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 			c_SampleRate->Select(i);
 	c_BitsPerSample->Select((m_Settings.GetBitsPerSample() - 8) / 4);
 	c_LoopLoad->Select(m_Settings.GetLoopLoad());
+	c_Interpolation->Select(m_Settings.GetInterpolationType());
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
@@ -716,6 +724,7 @@ bool SettingsDialog::DoApply()
 	m_Settings.SetReleaseConcurrency(c_ReleaseConcurrency->GetSelection() + 1);
 	m_Settings.SetWaveFormatBytesPerSample(c_WaveFormat->GetSelection() + 1);
 	m_Settings.SetLoopLoad(c_LoopLoad->GetSelection());
+	m_Settings.SetInterpolationType(c_Interpolation->GetSelection());
 	m_Settings.SetUserSettingPath(c_SettingsPath->GetPath());
 	m_Settings.SetUserCachePath(c_CachePath->GetPath());
 

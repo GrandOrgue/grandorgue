@@ -35,15 +35,23 @@
  * greater than UPSAMPLE_FACTOR. */
 #define MAX_POSITIVE_FACTOR       (2300U)
 
+typedef enum
+{
+	GO_LINEAR_INTERPOLATION = 0,
+	GO_POLYPHASE_INTERPOLATION = 1,
+} interpolation_type;
+
 struct resampler_coefs_s
 {
 	float coefs[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
+	interpolation_type interpolation;
 };
 
 void
 resampler_coefs_init
 	(struct resampler_coefs_s   *resampler_coefs
 	,const unsigned              input_sample_rate
+	,interpolation_type          interpolation
 	);
 
 #endif /* GOSOUNDRESAMPLE_H_ */

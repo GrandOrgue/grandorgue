@@ -92,7 +92,12 @@ void GOSoundEngine::SetVolume(int volume)
 void GOSoundEngine::SetSampleRate(unsigned sample_rate)
 {
 	m_SampleRate = sample_rate;
-	resampler_coefs_init(&m_ResamplerCoefs, m_SampleRate);
+	resampler_coefs_init(&m_ResamplerCoefs, m_SampleRate, m_ResamplerCoefs.interpolation);
+}
+
+void GOSoundEngine::SetInterpolationType(unsigned type)
+{
+	m_ResamplerCoefs.interpolation = (interpolation_type) type;
 }
 
 unsigned GOSoundEngine::GetSampleRate()
