@@ -228,6 +228,9 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		}
 	}
 
+	if (state.sampler == NULL)
+		return;
+
 	assert((n_frames & (BLOCKS_PER_FRAME - 1)) == 0);
 	assert(n_frames > BLOCKS_PER_FRAME);
 	float* output_buffer = state.buff;
@@ -370,12 +373,7 @@ int GOSoundEngine::GetSamples
 	std::fill(m_FinalBuffer, m_FinalBuffer + GO_SOUND_BUFFER_SIZE, 0.0f);
 
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
-	{
-		if (m_Tremulants[j].sampler == NULL && m_Tremulants[j].new_sampler == NULL)
-			continue;
-
 		ProcessAudioSamplers(m_Tremulants[j], n_frames, true);
-	}
 
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
@@ -385,12 +383,10 @@ int GOSoundEngine::GetSamples
 		wxCriticalSectionLocker locker(m_Windchests[j].mutex);
 
 		if (!m_Windchests[j].done)
-		{
-			if (m_Windchests[j].sampler == NULL && m_Windchests[j].new_sampler == NULL)
-				continue;
-
 			ProcessAudioSamplers(m_Windchests[j], n_frames, false);
-		}
+
+		if (!m_Windchests[j].done)
+			continue;
 
 		GOrgueWindchest* current_windchest = m_Windchests[j].windchest;
 		float f = current_windchest->GetVolume() * (m_Volume * 0.01f);
@@ -398,7 +394,7 @@ int GOSoundEngine::GetSamples
 		for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
 		{
 			unsigned tremulant_pos = current_windchest->GetTremulantId(i);
-			if (m_Tremulants[tremulant_pos].sampler)
+			if (m_Tremulants[tremulant_pos].done)
 			{
 				const float *ptr = m_Tremulants[tremulant_pos].buff;
 				for (unsigned int k = 0; k < n_frames * 2; k++)
@@ -418,12 +414,10 @@ int GOSoundEngine::GetSamples
 		wxCriticalSectionLocker locker(m_DetachedRelease[j].mutex);
 
 		if (!m_DetachedRelease[j].done)
-		{
-			if (m_DetachedRelease[j].sampler == NULL && m_DetachedRelease[j].new_sampler == NULL)
-				continue;
-
 			ProcessAudioSamplers(m_DetachedRelease[j], n_frames, false);
-		}
+
+		if (!m_DetachedRelease[j].done)
+			continue;
 
 		float f = m_Volume * 0.01f;
 		std::fill(m_VolumeBuffer, m_VolumeBuffer + GO_SOUND_BUFFER_SIZE, f);
