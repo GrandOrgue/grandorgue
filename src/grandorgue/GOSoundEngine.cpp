@@ -213,7 +213,7 @@ void GOSoundEngine::ReadSamplerFrames
 
 }
 
-void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, float* output_buffer)
+void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, bool tremulant)
 {
 	{
 		wxCriticalSectionLocker locker(state.lock);
@@ -230,6 +230,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 
 	assert((n_frames & (BLOCKS_PER_FRAME - 1)) == 0);
 	assert(n_frames > BLOCKS_PER_FRAME);
+	float* output_buffer = state.buff;
 	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
 	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
 	{
@@ -339,8 +340,7 @@ void GOSoundEngine::Process(unsigned sampler_group_id, unsigned n_frames)
 
 	float* this_buff = state->buff;
 	std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0.0f);
-	ProcessAudioSamplers(*state, n_frames, this_buff);
-
+	ProcessAudioSamplers(*state, n_frames, false);
 }
 
 void GOSoundEngine::ResetDoneFlags()
@@ -377,7 +377,7 @@ int GOSoundEngine::GetSamples
 
 		float* this_buff = m_Tremulants[j].buff;
 		std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 1.0f);
-		ProcessAudioSamplers(m_Tremulants[j], n_frames, this_buff);
+		ProcessAudioSamplers(m_Tremulants[j], n_frames, true);
 	}
 
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
@@ -393,7 +393,7 @@ int GOSoundEngine::GetSamples
 				continue;
 
 			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0.0f);
-			ProcessAudioSamplers(m_Windchests[j], n_frames, this_buff);
+			ProcessAudioSamplers(m_Windchests[j], n_frames, false);
 		}
 
 		GOrgueWindchest* current_windchest = m_Windchests[j].windchest;
@@ -427,7 +427,7 @@ int GOSoundEngine::GetSamples
 				continue;
 
 			std::fill(this_buff, this_buff + GO_SOUND_BUFFER_SIZE, 0.0f);
-			ProcessAudioSamplers(m_DetachedRelease[j], n_frames, this_buff);
+			ProcessAudioSamplers(m_DetachedRelease[j], n_frames, false);
 		}
 
 		float f = m_Volume * 0.01f;
