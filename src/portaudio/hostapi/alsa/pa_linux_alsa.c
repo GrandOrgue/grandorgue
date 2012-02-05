@@ -233,12 +233,13 @@ _PA_DEFINE_FUNC(snd_output_stdio_attach);
 #ifndef PA_ALSA_PATHNAME
     #define PA_ALSA_PATHNAME "libasound.so"
 #endif
+
+#ifdef PA_ALSA_DYNAMIC
+
 static const char *g_AlsaLibName = PA_ALSA_PATHNAME;
 
 /* Handle to dynamically loaded library. */
 static void *g_AlsaLib = NULL;
-
-#ifdef PA_ALSA_DYNAMIC
 
 #define _PA_LOCAL_IMPL(x) __pa_local_##x
 
@@ -1478,7 +1479,6 @@ static PaSampleFormat GetAvailableFormats( snd_pcm_t *pcm )
 /* Output to console all formats supported by device */
 static void LogAllAvailableFormats( snd_pcm_t *pcm )
 {
-    PaSampleFormat available = 0;
     snd_pcm_hw_params_t *hwParams;
     alsa_snd_pcm_hw_params_alloca( &hwParams );
 
@@ -2136,16 +2136,6 @@ static int CalculatePollTimeout( const PaAlsaStream *stream, unsigned long frame
     assert( stream->streamRepresentation.streamInfo.sampleRate > 0.0 );
     /* Period in msecs, rounded up */
     return (int)ceil( 1000 * frames / stream->streamRepresentation.streamInfo.sampleRate );
-}
-
-/** Align value in backward direction.
- *
- * @param v: Value to align.
- * @param align: Alignment.
- */
-static unsigned long PaAlsa_AlignBackward(unsigned long v, unsigned long align)
-{
-	return ((v - (align ? v % align : 0)));
 }
 
 /** Align value in forward direction.
@@ -3626,7 +3616,7 @@ static PaError PaAlsaStream_GetAvailableFrames( PaAlsaStream *self, int queryCap
         *available, int *xrunOccurred )
 {
     PaError result = paNoError;
-    unsigned long captureFrames, playbackFrames;
+    unsigned long captureFrames = 0, playbackFrames = 0;
     *xrunOccurred = 0;
 
     assert( queryCapture || queryPlayback );
@@ -4510,7 +4500,7 @@ error:
 }
 
 PaError PaAlsa_GetStreamInputCard(PaStream* s, int* card) {
-    PaAlsaStream *stream;
+    PaAlsaStream *stream = NULL;
     PaError result = paNoError;
     snd_pcm_info_t* pcmInfo;
 
@@ -4528,7 +4518,7 @@ error:
 }
 
 PaError PaAlsa_GetStreamOutputCard(PaStream* s, int* card) {
-    PaAlsaStream *stream;
+    PaAlsaStream *stream = NULL;
     PaError result = paNoError;
     snd_pcm_info_t* pcmInfo;
 
