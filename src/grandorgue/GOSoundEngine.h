@@ -60,7 +60,6 @@ private:
 		GO_SAMPLER       *sampler;
 		GO_SAMPLER       *new_sampler;
 		float             buff[GO_SOUND_BUFFER_SIZE];
-		float             temp[GO_SOUND_BUFFER_SIZE];
 		/* access lock for sampler data */
 		wxCriticalSection lock;
 		/* access lock for data buffer */
