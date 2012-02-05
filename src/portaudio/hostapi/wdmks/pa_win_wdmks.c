@@ -388,7 +388,7 @@ static BOOL PinWrite(HANDLE h, DATAPACKET* p);
 static BOOL PinRead(HANDLE h, DATAPACKET* p);
 static void DuplicateFirstChannelInt16(void* buffer, int channels, int samples);
 static void DuplicateFirstChannelInt24(void* buffer, int channels, int samples);
-static DWORD WINAPI ProcessingThread(LPVOID pParam);
+static unsigned WINAPI ProcessingThread(LPVOID pParam);
 
 /* Function bodies */
 
@@ -1464,12 +1464,11 @@ static PaWinWdmPin* FilterFindViableRenderPin(PaWinWdmFilter* filter,
 static PaError FilterCanCreateRenderPin(PaWinWdmFilter* filter,
     const WAVEFORMATEX* wfex)
 {
-    PaWinWdmPin* pin;
     PaError result;
 
     assert ( filter );
 
-    pin = FilterFindViableRenderPin(filter,wfex,&result);
+    FilterFindViableRenderPin(filter,wfex,&result);
     /* result will be paNoError if pin found
      * or else an error code indicating what is wrong with the format
      **/
@@ -1557,12 +1556,11 @@ static PaWinWdmPin* FilterFindViableCapturePin(PaWinWdmFilter* filter,
 static PaError FilterCanCreateCapturePin(PaWinWdmFilter* filter,
     const WAVEFORMATEX* wfex)
 {
-    PaWinWdmPin* pin;
     PaError result;
 
     assert ( filter );
 
-    pin = FilterFindViableCapturePin(filter,wfex,&result);
+    FilterFindViableCapturePin(filter,wfex,&result);
     /* result will be paNoError if pin found
      * or else an error code indicating what is wrong with the format
      **/
@@ -1762,7 +1760,7 @@ PaError PaWinWdm_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
 {
     PaError result = paNoError;
     int i, deviceCount;
-    PaWinWdmHostApiRepresentation *wdmHostApi;
+    PaWinWdmHostApiRepresentation *wdmHostApi = NULL;
     PaWinWdmDeviceInfo *deviceInfoArray;
     PaWinWdmFilter* pFilter;
     PaWinWdmDeviceInfo *wdmDeviceInfo;
@@ -2724,7 +2722,7 @@ static void DuplicateFirstChannelInt32(void* buffer, int channels, int samples)
     }
 }
 
-static DWORD WINAPI ProcessingThread(LPVOID pParam)
+static unsigned WINAPI ProcessingThread(LPVOID pParam)
 {
     PaWinWdmStream *stream = (PaWinWdmStream*)pParam;
     PaStreamCallbackTimeInfo ti;
@@ -3037,6 +3035,7 @@ static DWORD WINAPI ProcessingThread(LPVOID pParam)
     }
 
     PA_LOGL_;
+    (void) result;
     EXIT_THREAD;
     return 0;
 }
@@ -3045,7 +3044,7 @@ static PaError StartStream( PaStream *s )
 {
     PaError result = paNoError;
     PaWinWdmStream *stream = (PaWinWdmStream*)s;
-    DWORD dwID;
+    unsigned dwID;
     BOOL ret;
     int size;
 
@@ -3081,6 +3080,7 @@ static PaError StartStream( PaStream *s )
     }
     ret = SetThreadPriority(stream->streamThread,THREAD_PRIORITY_TIME_CRITICAL);
     PA_DEBUG(("Priority ret = %d;",ret));
+    (void) ret;
     /* Make the stream active */
     stream->streamActive = 1;
 
