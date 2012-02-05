@@ -282,6 +282,8 @@ bool GOrgueManual::IsKeyDown(unsigned midiNoteNumber)
 		return false;
 	if (midiNoteNumber >= m_first_accessible_key_midi_note_nb + m_nb_accessible_keys)
 		return false;
+	if (midiNoteNumber - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1 >= m_KeyState.size())
+		return false;
 	return m_KeyState[midiNoteNumber - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1] > 0;
 }
 
