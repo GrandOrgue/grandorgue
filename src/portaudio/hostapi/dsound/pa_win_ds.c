@@ -279,7 +279,7 @@ typedef struct PaWinDsStream
     UINT                 inputBufferSizeBytes;
 
     
-    int              hostBufferSizeFrames; /* input and output host ringbuffers have the same number of frames */
+    unsigned long    hostBufferSizeFrames; /* input and output host ringbuffers have the same number of frames */
     double           framesWritten;
     double           secondsPerHostByte; /* Used to optimize latency calculation for outTime */
     double           pollingPeriodSeconds;
@@ -708,8 +708,8 @@ static void FindDevicePnpInterfaces( DSDeviceNamesAndGUIDs *deviceNamesAndGUIDs 
     are there more than two of them??
 */
 
-GUID IID_IRolandVSCEmulated1 = {0xc2ad1800, 0xb243, 0x11ce, 0xa8, 0xa4, 0x00, 0xaa, 0x00, 0x6c, 0x45, 0x01};
-GUID IID_IRolandVSCEmulated2 = {0xc2ad1800, 0xb243, 0x11ce, 0xa8, 0xa4, 0x00, 0xaa, 0x00, 0x6c, 0x45, 0x02};
+GUID IID_IRolandVSCEmulated1 = {0xc2ad1800, 0xb243, 0x11ce, { 0xa8, 0xa4, 0x00, 0xaa, 0x00, 0x6c, 0x45, 0x01 }};
+GUID IID_IRolandVSCEmulated2 = {0xc2ad1800, 0xb243, 0x11ce, { 0xa8, 0xa4, 0x00, 0xaa, 0x00, 0x6c, 0x45, 0x02 }};
 
 
 #define PA_DEFAULTSAMPLERATESEARCHORDER_COUNT_  (13) /* must match array length below */
@@ -1306,7 +1306,7 @@ error:
     TerminateDSDeviceNameAndGUIDVector( &deviceNamesAndGUIDs.inputNamesAndGUIDs );
     TerminateDSDeviceNameAndGUIDVector( &deviceNamesAndGUIDs.outputNamesAndGUIDs );
 
-    Terminate( winDsHostApi );
+    Terminate((PaUtilHostApiRepresentation*)winDsHostApi );
 
     return result;
 }
@@ -1365,7 +1365,6 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
     PaWinDsDeviceInfo *inputWinDsDeviceInfo, *outputWinDsDeviceInfo;
     PaDeviceInfo *inputDeviceInfo, *outputDeviceInfo;
     int inputChannelCount, outputChannelCount;
-    PaSampleFormat inputSampleFormat, outputSampleFormat;
     PaWinDirectSoundStreamInfo *inputStreamInfo, *outputStreamInfo;
 
     if( inputParameters )
@@ -1374,7 +1373,6 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
         inputDeviceInfo = &inputWinDsDeviceInfo->inheritedDeviceInfo;
 
         inputChannelCount = inputParameters->channelCount;
-        inputSampleFormat = inputParameters->sampleFormat;
 
         /* unless alternate device specification is supported, reject the use of
             paUseHostApiSpecificDeviceSpecification */
@@ -1403,7 +1401,6 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
         outputDeviceInfo = &outputWinDsDeviceInfo->inheritedDeviceInfo;
 
         outputChannelCount = outputParameters->channelCount;
-        outputSampleFormat = outputParameters->sampleFormat;
         
         /* unless alternate device specification is supported, reject the use of
             paUseHostApiSpecificDeviceSpecification */
@@ -1771,9 +1768,7 @@ static void CalculatePollingPeriodFrames( unsigned long hostBufferSizeFrames,
                                     unsigned long *pollingPeriodFrames,
                                     double sampleRate, unsigned long userFramesPerBuffer )
 {
-    unsigned long minimumPollingPeriodFrames = sampleRate * PA_DS_MINIMUM_POLLING_PERIOD_SECONDS;
     unsigned long maximumPollingPeriodFrames = sampleRate * PA_DS_MAXIMUM_POLLING_PERIOD_SECONDS;
-    unsigned long pollingJitterFrames = sampleRate * PA_DS_POLLING_JITTER_SECONDS;
 
     *pollingPeriodFrames = max( max(1, userFramesPerBuffer / 4), hostBufferSizeFrames / 16 );
 
@@ -1849,7 +1844,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     int userRequestedHostOutputBufferSizeFrames = 0;
     unsigned long suggestedInputLatencyFrames, suggestedOutputLatencyFrames;
     PaWinDirectSoundStreamInfo *inputStreamInfo, *outputStreamInfo;
-    PaWinWaveFormatChannelMask inputChannelMask, outputChannelMask;
+    PaWinWaveFormatChannelMask inputChannelMask = 0, outputChannelMask = 0;
     unsigned long pollingPeriodFrames = 0;
 
     if( inputParameters )
@@ -2422,7 +2417,7 @@ static int TimeSlice( PaWinDsStream *stream )
     long              numOutFramesReady = 0;
     long              bytesProcessed;
     HRESULT           hresult;
-    double            outputLatency = 0;
+    //double            outputLatency = 0;
     double            inputLatency = 0;
     PaStreamCallbackTimeInfo timeInfo = {0,0,0};
     
@@ -2480,7 +2475,7 @@ static int TimeSlice( PaWinDsStream *stream )
            plus the time it takes to play the non-empty bytes in the buffer,
            computed here:
         */
-        outputLatency = ((double)(stream->outputBufferSizeBytes - bytesEmpty)) * stream->secondsPerHostByte;
+        //outputLatency = ((double)(stream->outputBufferSizeBytes - bytesEmpty)) * stream->secondsPerHostByte;
     }
 
     /* if it's a full duplex stream, set framesToXfer to the minimum of input and output frames ready */
@@ -2724,8 +2719,6 @@ static void CALLBACK WaitableTimerAPCProc(
 PA_THREAD_FUNC ProcessingThreadProc( void *pArg )
 {
     PaWinDsStream *stream = (PaWinDsStream *)pArg;
-    MMRESULT mmResult;
-    HANDLE hWaitableTimer;
     LARGE_INTEGER dueTime;
     int timerPeriodMs;
 
@@ -2841,7 +2834,6 @@ static PaError CloseStream( PaStream* s )
 /***********************************************************************************/
 static HRESULT ClearOutputBuffer( PaWinDsStream *stream )
 {
-    PaError          result = paNoError;
     unsigned char*   pDSBuffData;
     DWORD            dwDataLen;
     HRESULT          hr;
@@ -2894,14 +2886,14 @@ static PaError StartStream( PaStream *s )
         if( stream->pDirectSoundInputBuffer != NULL ) // FIXME: not sure this check is necessary
         {
             hr = IDirectSoundCaptureBuffer_Start( stream->pDirectSoundInputBuffer, DSCBSTART_LOOPING );
-        }
 
-        DBUG(("StartStream: DSW_StartInput returned = 0x%X.\n", hr));
-        if( hr != DS_OK )
-        {
-            result = paUnanticipatedHostError;
-            PA_DS_SET_LAST_DIRECTSOUND_ERROR( hr );
-            goto error;
+            DBUG(("StartStream: DSW_StartInput returned = 0x%X.\n", hr));
+            if( hr != DS_OK )
+            {
+                result = paUnanticipatedHostError;
+                PA_DS_SET_LAST_DIRECTSOUND_ERROR( hr );
+                goto error;
+            }
         }
     }
 
@@ -3091,6 +3083,7 @@ static PaError StopStream( PaStream *s )
             stream->outputIsRunning = FALSE;
             // FIXME: what happens if IDirectSoundBuffer_Stop returns an error?
             hr = IDirectSoundBuffer_Stop( stream->pDirectSoundOutputBuffer );
+	    (void) hr;
 
             if( stream->pDirectSoundPrimaryBuffer )
                 IDirectSoundBuffer_Stop( stream->pDirectSoundPrimaryBuffer ); /* FIXME we never started the primary buffer so I'm not sure we need to stop it */
@@ -3104,6 +3097,7 @@ static PaError StopStream( PaStream *s )
         {
             // FIXME: what happens if IDirectSoundCaptureBuffer_Stop returns an error?
             hr = IDirectSoundCaptureBuffer_Stop( stream->pDirectSoundInputBuffer );
+	    (void) hr;
         }
     }
 
