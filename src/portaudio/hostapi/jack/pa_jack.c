@@ -115,6 +115,7 @@ static const char* clientName_ = "PortAudio";
 #define ASSERT_CALL(expr, success) \
     do { \
         int err = (expr); \
+        (void) err; \
         assert( err == success ); \
     } while( 0 )
 
