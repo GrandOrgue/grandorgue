@@ -110,8 +110,6 @@ private:
 	std::vector<GOSamplerEntry>   m_Windchests;
 	std::vector<GOSamplerEntry>   m_Tremulants;
 
-	/* Per sampler decode buffers */
-	float                         m_FinalBuffer[GO_SOUND_BUFFER_SIZE];
 	struct resampler_coefs_s      m_ResamplerCoefs;
 
 	/* samplerGroupID:

@@ -373,7 +373,8 @@ int GOSoundEngine::GetSamples
 	)
 {
 	/* initialise the output buffer */
-	std::fill(m_FinalBuffer, m_FinalBuffer + GO_SOUND_BUFFER_SIZE, 0.0f);
+	float FinalBuffer[GO_SOUND_BUFFER_SIZE];
+	std::fill(FinalBuffer, FinalBuffer + n_frames * 2, 0.0f);
 
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 		ProcessAudioSamplers(m_Tremulants[j], n_frames, true);
@@ -403,7 +404,7 @@ int GOSoundEngine::GetSamples
 			}
 		}
 		for (unsigned int k = 0; k < n_frames * 2; k++)
-			m_FinalBuffer[k] += this_buff[k];
+			FinalBuffer[k] += this_buff[k];
 	}
 
 	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
@@ -419,7 +420,7 @@ int GOSoundEngine::GetSamples
 			continue;
 
 		for (unsigned int k = 0; k < n_frames * 2; k++)
-			m_FinalBuffer[k] += this_buff[k];
+			FinalBuffer[k] += this_buff[k];
 	}
 
 	m_CurrentTime += n_frames / BLOCKS_PER_FRAME;
@@ -434,12 +435,12 @@ int GOSoundEngine::GetSamples
 			meter_info->current_polyphony = used_samplers;
 		for (unsigned int k = 0; k < n_frames * 2; k += 2)
 		{
-			float f = std::min(std::max(m_FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
+			float f = std::min(std::max(FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
 			output_buffer[k + 0] = f;
 			meter_info->meter_left  = (meter_info->meter_left > f)
 			                        ? meter_info->meter_left
 			                        : f;
-			f = std::min(std::max(m_FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
+			f = std::min(std::max(FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
 			output_buffer[k + 1] = f;
 			meter_info->meter_right = (meter_info->meter_right > f)
 			                        ? meter_info->meter_right
@@ -450,9 +451,9 @@ int GOSoundEngine::GetSamples
 	{
 		for (unsigned int k = 0; k < n_frames * 2; k += 2)
 		{
-			float f = std::min(std::max(m_FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
+			float f = std::min(std::max(FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
 			output_buffer[k + 0] = f;
-			f = std::min(std::max(m_FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
+			f = std::min(std::max(FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
 			output_buffer[k + 1] = f;
 		}
 	}
