@@ -238,6 +238,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
 	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
 	{
+		float temp[GO_SOUND_BUFFER_SIZE];
 
 		const bool process_sampler = (sampler->time <= m_CurrentTime);
 		if (process_sampler)
@@ -262,14 +263,21 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			ReadSamplerFrames
 				(sampler
 				,n_frames
-				,state.temp
+				,temp
 				);
 
 			FaderProcess
 				(&sampler->fader
 				,n_frames
-				,state.temp
+				,temp
 				);
+
+			/* Add these samples to the current output buffer shifting
+			 * right by the necessary amount to bring the sample gain back
+			 * to unity (this value is computed in GOrguePipe.cpp)
+			 */
+			for(unsigned i = 0; i < n_frames * 2; i++)
+				output_buffer[i] += temp[i];
 
 			if (sampler->stop)
 			{
@@ -284,21 +292,6 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				FaderStartDecay(&sampler->fader, -CROSSFADE_LEN_BITS);
 				sampler->stop = false;
 			}
-
-			/* Add these samples to the current output buffer shifting
-			 * right by the necessary amount to bring the sample gain back
-			 * to unity (this value is computed in GOrguePipe.cpp)
-			 */
-			float* write_iterator = output_buffer;
-			float* decode_pos = state.temp;
-			for(unsigned int i = 0; i < n_frames / 2; i++, write_iterator += 4, decode_pos += 4)
-			{
-				write_iterator[0] += decode_pos[0];
-				write_iterator[1] += decode_pos[1];
-				write_iterator[2] += decode_pos[2];
-				write_iterator[3] += decode_pos[3];
-			}
-
 		}
 
 		next_sampler = sampler->next;
