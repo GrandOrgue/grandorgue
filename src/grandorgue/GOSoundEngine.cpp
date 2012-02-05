@@ -320,6 +320,16 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			previous_sampler = sampler;
 
 	}
+
+	if (!tremulant)
+	{
+		float f = m_Volume * 0.01f;
+		if (state.windchest)
+			f *= state.windchest->GetVolume();
+		for (unsigned int i = 0; i < n_frames * 2; i++)
+			output_buffer[i] *= f;
+	}
+
 	state.done = true;
 }
 
@@ -389,8 +399,6 @@ int GOSoundEngine::GetSamples
 			continue;
 
 		GOrgueWindchest* current_windchest = m_Windchests[j].windchest;
-		float f = current_windchest->GetVolume() * (m_Volume * 0.01f);
-		std::fill(m_VolumeBuffer, m_VolumeBuffer + GO_SOUND_BUFFER_SIZE, f);
 		for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
 		{
 			unsigned tremulant_pos = current_windchest->GetTremulantId(i);
@@ -398,13 +406,11 @@ int GOSoundEngine::GetSamples
 			{
 				const float *ptr = m_Tremulants[tremulant_pos].buff;
 				for (unsigned int k = 0; k < n_frames * 2; k++)
-					m_VolumeBuffer[k] *= ptr[k];
+					this_buff[k] *= ptr[k];
 			}
 		}
-
 		for (unsigned int k = 0; k < n_frames * 2; k++)
-			m_FinalBuffer[k] += this_buff[k] * m_VolumeBuffer[k];
-
+			m_FinalBuffer[k] += this_buff[k];
 	}
 
 	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
@@ -419,11 +425,8 @@ int GOSoundEngine::GetSamples
 		if (!m_DetachedRelease[j].done)
 			continue;
 
-		float f = m_Volume * 0.01f;
-		std::fill(m_VolumeBuffer, m_VolumeBuffer + GO_SOUND_BUFFER_SIZE, f);
 		for (unsigned int k = 0; k < n_frames * 2; k++)
-			m_FinalBuffer[k] += this_buff[k] * m_VolumeBuffer[k];
-
+			m_FinalBuffer[k] += this_buff[k];
 	}
 
 	m_CurrentTime += n_frames / BLOCKS_PER_FRAME;

@@ -113,7 +113,6 @@ private:
 
 	/* Per sampler decode buffers */
 	float                         m_FinalBuffer[GO_SOUND_BUFFER_SIZE];
-	float                         m_VolumeBuffer[GO_SOUND_BUFFER_SIZE];
 	struct resampler_coefs_s      m_ResamplerCoefs;
 
 	/* samplerGroupID:
