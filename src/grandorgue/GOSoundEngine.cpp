@@ -27,6 +27,7 @@
 #include "GOrgueInt24.h"
 #include "GOrguePipe.h"
 #include "GOrgueReleaseAlignTable.h"
+#include "GOrgueVector.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 
@@ -276,8 +277,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			 * right by the necessary amount to bring the sample gain back
 			 * to unity (this value is computed in GOrguePipe.cpp)
 			 */
-			for(unsigned i = 0; i < n_frames * 2; i++)
-				output_buffer[i] += temp[i];
+			GOVectorAdd(output_buffer, temp, n_frames * 2);
 
 			if (sampler->stop)
 			{
@@ -403,8 +403,7 @@ int GOSoundEngine::GetSamples
 					this_buff[k] *= ptr[k];
 			}
 		}
-		for (unsigned int k = 0; k < n_frames * 2; k++)
-			FinalBuffer[k] += this_buff[k];
+		GOVectorAdd(FinalBuffer, this_buff, n_frames * 2);
 	}
 
 	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
@@ -419,8 +418,7 @@ int GOSoundEngine::GetSamples
 		if (!m_DetachedRelease[j].done)
 			continue;
 
-		for (unsigned int k = 0; k < n_frames * 2; k++)
-			FinalBuffer[k] += this_buff[k];
+		GOVectorAdd(FinalBuffer, this_buff, n_frames * 2);
 	}
 
 	m_CurrentTime += n_frames / BLOCKS_PER_FRAME;

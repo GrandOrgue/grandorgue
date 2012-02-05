@@ -40,4 +40,36 @@ static inline GOVector GOConstVector(float a)
 }
 #endif
 
+static inline void GOVectorFill(float* res, float val, unsigned elements)
+{
+	GOVector* result = (GOVector*)res;
+	const GOVector value = GOConstVector(val);
+	for(unsigned i = 0; i < elements / GO_VECTOR_SIZE; i++)
+		result[i] = value;
+}
+
+static inline void GOVectorAdd(float* res, const float* val, unsigned elements)
+{
+	GOVector* result = (GOVector*)res;
+	const GOVector* value = (const GOVector*) val;
+	for(unsigned i = 0; i < elements / GO_VECTOR_SIZE; i++)
+		result[i] += value[i];
+}
+
+static inline void GOVectorMul(float* res, const float* val, unsigned elements)
+{
+	GOVector* result = (GOVector*)res;
+	const GOVector* value = (const GOVector*) val;
+	for(unsigned i = 0; i < elements / GO_VECTOR_SIZE; i++)
+		result[i] *= value[i];
+}
+
+static inline void GOVectorMulConst(float* res, float val, unsigned elements)
+{
+	GOVector* result = (GOVector*)res;
+	const GOVector value = GOConstVector(val);
+	for(unsigned i = 0; i < elements / GO_VECTOR_SIZE; i++)
+		result[i] *= value;
+}
+
 #endif
