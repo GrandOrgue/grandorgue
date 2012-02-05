@@ -881,6 +881,7 @@ static UINT32 GetWindowsVersion()
 		// Get the build number
 		if (dwVersion < 0x80000000)
 			dwBuild = (DWORD)(HIWORD(dwVersion));
+                (void) dwBuild;
 
 		switch (dwMajorVersion)
 		{
@@ -1181,7 +1182,6 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
 
         for (i = 0; i < paWasapi->deviceCount; ++i)
 		{
-			DWORD state				  = 0;
             PaDeviceInfo *deviceInfo  = &deviceInfoArray[i];
             deviceInfo->structVersion = 2;
             deviceInfo->hostApi       = hostApiIndex;
@@ -1221,7 +1221,7 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
 
             if (paWasapi->devInfo[i].state != DEVICE_STATE_ACTIVE)
 			{
-                PRINT(("WASAPI device: %d is not currently available (state:%d)\n",i,state));
+                PRINT(("WASAPI device: %d is not currently available (state:%d)\n",i,paWasapi->devInfo[i].state));
             }
 
             {
@@ -1469,7 +1469,7 @@ static PaWasapiHostApiRepresentation *_GetHostApi(PaError *_error)
 // ------------------------------------------------------------------------------------------
 int PaWasapi_GetDeviceDefaultFormat( void *pFormat, unsigned int nFormatSize, PaDeviceIndex nDevice )
 {
-	PaError ret;
+	PaError ret = paNoError;
 	PaWasapiHostApiRepresentation *paWasapi;
 	UINT32 size;
 	PaDeviceIndex index;
@@ -1795,13 +1795,13 @@ static PaError GetClosestFormat(IAudioClient *myClient, double sampleRate,
 	if (sharedClosestMatch)
 	{
 		WORD bitsPerSample;
-        WAVEFORMATEXTENSIBLE *ext = (WAVEFORMATEXTENSIBLE*)sharedClosestMatch;
+        //WAVEFORMATEXTENSIBLE *ext = (WAVEFORMATEXTENSIBLE*)sharedClosestMatch;
 
-		GUID subf_guid = GUID_NULL;
+		//GUID subf_guid = GUID_NULL;
 		if (sharedClosestMatch->wFormatTag == WAVE_FORMAT_EXTENSIBLE)
 		{
 			memcpy(outWavex, sharedClosestMatch, sizeof(WAVEFORMATEXTENSIBLE));
-			subf_guid = ext->SubFormat;
+			//subf_guid = ext->SubFormat;
 		}
 		else
 			memcpy(outWavex, sharedClosestMatch, sizeof(WAVEFORMATEX));
@@ -1851,7 +1851,8 @@ static PaError GetClosestFormat(IAudioClient *myClient, double sampleRate,
 		// Try combination stereo and we will use built-in mono-stereo mixer then
 		if (params.channelCount == 1)
 		{
-			WAVEFORMATEXTENSIBLE stereo = { 0 };
+			WAVEFORMATEXTENSIBLE stereo;
+                        memset(&stereo, 0, sizeof(stereo));
 
 			PaStreamParameters stereo_params = params;
 			stereo_params.channelCount = 2;
@@ -1869,7 +1870,8 @@ static PaError GetClosestFormat(IAudioClient *myClient, double sampleRate,
 			// Try selecting suitable sample type
 			for (i = 0; i < STATIC_ARRAY_SIZE(BestToWorst); ++i)
 			{
-				WAVEFORMATEXTENSIBLE sample = { 0 };
+				WAVEFORMATEXTENSIBLE sample;
+                                memset(&sample, 0, sizeof(sample));
 
 				PaStreamParameters sample_params = stereo_params;
 				sample_params.sampleFormat = BestToWorst[i];
@@ -1889,7 +1891,8 @@ static PaError GetClosestFormat(IAudioClient *myClient, double sampleRate,
 		// Try selecting suitable sample type
 		for (i = 0; i < STATIC_ARRAY_SIZE(BestToWorst); ++i)
 		{
-			WAVEFORMATEXTENSIBLE spfmt = { 0 };
+			WAVEFORMATEXTENSIBLE spfmt;
+                        memset(&spfmt, 0, sizeof(spfmt));
 
 			PaStreamParameters spfmt_params = params;
 			spfmt_params.sampleFormat = BestToWorst[i];
@@ -2120,7 +2123,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 	const PaStreamParameters *params = &pSub->params.stream_params;
 	UINT32 framesPerLatency          = pSub->params.frames_per_buffer;
 	double sampleRate                = pSub->params.sample_rate;
-	BOOL blocking                    = pSub->params.blocking;
+	//BOOL blocking                    = pSub->params.blocking;
 	BOOL fullDuplex                  = pSub->params.full_duplex;
 
 	const UINT32 userFramesPerBuffer = framesPerLatency;
@@ -3888,9 +3891,11 @@ HANDLE MMCSS_activate(const char *name)
 
 	// debug
     {
-        int    cur_priority		  = GetThreadPriority(GetCurrentThread());
+        int    cur_priority = GetThreadPriority(GetCurrentThread());
         DWORD  cur_priority_class = GetPriorityClass(GetCurrentProcess());
-		PRINT(("WASAPI: thread[ priority-0x%X class-0x%X ]\n", cur_priority, cur_priority_class));
+        PRINT(("WASAPI: thread[ priority-0x%X class-0x%X ]\n", cur_priority, cur_priority_class));
+        (void) cur_priority;
+	(void) cur_priority_class;
     }
 
 	return hTask;
