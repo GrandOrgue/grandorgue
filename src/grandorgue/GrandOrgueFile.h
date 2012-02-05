@@ -154,6 +154,7 @@ public:
 	unsigned GetNumberOfReversiblePistons();
 	GOrguePiston* GetPiston(unsigned index);
 	GOrgueSetter* GetSetter();
+	unsigned AddWindchest(GOrgueWindchest* windchest);
 	GOrgueWindchest* GetWindchest(unsigned index);
 	unsigned GetWinchestGroupCount();
 	GOrgueEnclosure* GetEnclosure(unsigned index);

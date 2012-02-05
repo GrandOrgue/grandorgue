@@ -918,6 +918,12 @@ unsigned GrandOrgueFile::GetWinchestGroupCount()
 	return m_windchest.size();
 }
 
+unsigned GrandOrgueFile::AddWindchest(GOrgueWindchest* windchest)
+{
+	m_windchest.push_back(windchest);
+	return m_windchest.size();
+}
+
 GOGUIPanel* GrandOrgueFile::GetPanel(unsigned index)
 {
 	return m_panels[index];
