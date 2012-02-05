@@ -319,8 +319,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		float f = m_Volume * 0.01f;
 		if (state.windchest)
 			f *= state.windchest->GetVolume();
-		for (unsigned int i = 0; i < n_frames * 2; i++)
-			output_buffer[i] *= f;
+		GOVectorMulConst(output_buffer, f, n_frames * 2);
 	}
 
 	state.done = true;
