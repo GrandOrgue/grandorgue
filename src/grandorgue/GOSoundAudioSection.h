@@ -24,6 +24,7 @@
 #define GOSOUNDAUDIOSECTION_H_
 
 #include "GOSoundDefs.h"
+#include "GOSoundResample.h"
 #include "GOrgueInt24.h"
 #include "GOrgueWave.h"
 #include "GOSoundCompress.h"
@@ -149,7 +150,7 @@ private:
 		(unsigned channels
 		,unsigned bits_per_sample
 		,bool     compressed
-		,bool     polyphase
+		,interpolation_type interpolation
 		);
 
 	void Compress(bool format16);

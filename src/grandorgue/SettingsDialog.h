@@ -105,6 +105,7 @@ protected:
 		ID_CONCURRENCY,
 		ID_RELEASE_CONCURRENCY,
 		ID_WAVE_FORMAT,
+		ID_INTERPOLATION,
 		ID_LOOP_LOAD,
 		ID_ENHANCE_SQUASH,
 		ID_ENHANCE_MANAGE_POLYPHONY,
@@ -137,6 +138,7 @@ protected:
 	wxChoice* c_Concurrency;
 	wxChoice* c_ReleaseConcurrency;
 	wxChoice* c_WaveFormat;
+	wxChoice* c_Interpolation;
 	wxChoice* c_LoopLoad;
 	wxCheckBox *c_squash, *c_limit, *c_CompressCache, *c_scale, *c_random;
 	wxDirPickerCtrl* c_SettingsPath;

@@ -41,6 +41,7 @@ private:
 	bool m_RandomizeSpeaking;
 	unsigned m_SampleRate;
 	unsigned m_BitsPerSample;
+	unsigned m_InterpolationType;
 	unsigned m_WaveFormat;
 	unsigned m_LoopLoad;
 	unsigned m_Volume;
@@ -125,6 +126,8 @@ public:
 	void SetScaleRelease(bool scale_release);
 	bool GetRandomizeSpeaking();
 	void SetRandomizeSpeaking(bool randomize);
+	unsigned GetInterpolationType();
+	void SetInterpolationType(unsigned type);
 	unsigned GetSampleRate();
 	void SetSampleRate(unsigned sample_rate);
 	unsigned GetWaveFormatBytesPerSample();

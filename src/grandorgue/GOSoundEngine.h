@@ -136,6 +136,7 @@ public:
 	void Setup(GrandOrgueFile* organ_file, unsigned release_count = 1);
 	void SetVolume(int volume);
 	void SetSampleRate(unsigned sample_rate);
+	void SetInterpolationType(unsigned type);
 	unsigned GetSampleRate();
 	void SetHardPolyphony(unsigned polyphony);
 	void SetPolyphonyLimiting(bool limiting);
