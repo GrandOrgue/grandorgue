@@ -602,11 +602,11 @@ bool GOAudioSection::ReadBlock
 
 		/* Setup ptr and position required by the end-block */
 		stream->ptr              = stream->end_ptr;
-		stream->position_index  -= (float)stream->transition_position;
+		stream->position_index  -= stream->transition_position;
 		stream->end_decode_call(stream, buffer);
 
 		/* Restore the existing position */
-		stream->position_index  += (float)stream->transition_position;
+		stream->position_index  += stream->transition_position;
 		if (stream->position_index >= stream->section_length)
 		{
 			if (stream->next_start_segment_index < 0)
