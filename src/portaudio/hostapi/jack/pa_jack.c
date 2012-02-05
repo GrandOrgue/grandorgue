@@ -839,12 +839,10 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
                                   double sampleRate )
 {
     int inputChannelCount = 0, outputChannelCount = 0;
-    PaSampleFormat inputSampleFormat, outputSampleFormat;
 
     if( inputParameters )
     {
         inputChannelCount = inputParameters->channelCount;
-        inputSampleFormat = inputParameters->sampleFormat;
 
         /* unless alternate device specification is supported, reject the use of
             paUseHostApiSpecificDeviceSpecification */
@@ -868,7 +866,6 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
     if( outputParameters )
     {
         outputChannelCount = outputParameters->channelCount;
-        outputSampleFormat = outputParameters->sampleFormat;
 
         /* unless alternate device specification is supported, reject the use of
             paUseHostApiSpecificDeviceSpecification */
@@ -1506,6 +1503,7 @@ static int JackCallback( jack_nframes_t frames, void *userData )
     assert( hostApi );
 
     ENSURE_PA( UpdateQueue( hostApi ) );
+    (void) result; /* ignore a error */
 
     /* Process each stream */
     stream = hostApi->processQueue;

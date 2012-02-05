@@ -574,6 +574,7 @@ static void PaAlsa_CloseLibrary()
     	int __pa_assert_error_id;\
     	__pa_assert_error_id = (expr);\
 		assert( success == __pa_assert_error_id );\
+        (void) __pa_assert_error_id; \
 	} while (0)
 
 static int numPeriods_ = 4;
@@ -1763,7 +1764,6 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
                                   double sampleRate )
 {
     int inputChannelCount = 0, outputChannelCount = 0;
-    PaSampleFormat inputSampleFormat, outputSampleFormat;
     PaError result = paFormatIsSupported;
 
     if( inputParameters )
@@ -1771,7 +1771,6 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
         PA_ENSURE( ValidateParameters( inputParameters, hostApi, StreamDirection_In ) );
 
         inputChannelCount = inputParameters->channelCount;
-        inputSampleFormat = inputParameters->sampleFormat;
     }
 
     if( outputParameters )
@@ -1779,7 +1778,6 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
         PA_ENSURE( ValidateParameters( outputParameters, hostApi, StreamDirection_Out ) );
 
         outputChannelCount = outputParameters->channelCount;
-        outputSampleFormat = outputParameters->sampleFormat;
     }
 
     if( inputChannelCount )
@@ -3243,18 +3241,16 @@ static PaError ContinuePoll( const PaAlsaStream *stream, StreamDirection streamD
     PaError result = paNoError;
     snd_pcm_sframes_t delay, margin;
     int err;
-    const PaAlsaStreamComponent *component = NULL, *otherComponent = NULL;
+    const PaAlsaStreamComponent *otherComponent = NULL;
 
     *continuePoll = 1;
 
     if( StreamDirection_In == streamDir )
     {
-        component = &stream->capture;
         otherComponent = &stream->playback;
     }
     else
     {
-        component = &stream->playback;
         otherComponent = &stream->capture;
     }
 
@@ -4094,7 +4090,6 @@ static void *CallbackThreadFunc( void *userData )
     snd_pcm_sframes_t startThreshold = 0;
     int callbackResult = paContinue;
     PaStreamCallbackFlags cbFlags = 0;  /* We might want to keep state across iterations */
-    int streamStarted = 0;
 
     assert( stream );
 
@@ -4121,6 +4116,7 @@ static void *CallbackThreadFunc( void *userData )
         avail = alsa_snd_pcm_avail_update( stream->playback.pcm );
         startThreshold = avail - (avail % stream->playback.framesPerBuffer);
         assert( startThreshold >= stream->playback.framesPerBuffer );
+	(void) startThreshold;
     }
     else
     {
@@ -4128,8 +4124,6 @@ static void *CallbackThreadFunc( void *userData )
         /* Buffer will be zeroed */
         PA_ENSURE( AlsaStart( stream, 0 ) );
         PA_ENSURE( PaUnixThread_NotifyParent( &stream->thread ) );
-
-        streamStarted = 1;
     }
 
     while( 1 )
@@ -4488,6 +4482,7 @@ static PaError GetAlsaStreamPointer( PaStream* s, PaAlsaStream** stream )
 
     PA_ENSURE( PaUtil_ValidateStreamPointer( s ) );
     PA_ENSURE( PaUtil_GetHostApiRepresentation( &hostApi, paALSA ) );
+    (void) result; /* ignore errors */
     alsaHostApi = (PaAlsaHostApiRepresentation*)hostApi;
 
     PA_UNLESS( PA_STREAM_REP( s )->streamInterface == &alsaHostApi->callbackStreamInterface
