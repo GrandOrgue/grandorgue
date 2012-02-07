@@ -102,6 +102,7 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
    add_option(msse)
    add_option(msse2)
    add_option(msse3)
+   add_option(funroll-loops)
    add_option(DNDEBUG)
 endif ()
 
