@@ -27,7 +27,6 @@
 #include "GOrgueInt24.h"
 #include "GOrguePipe.h"
 #include "GOrgueReleaseAlignTable.h"
-#include "GOrgueVector.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 
@@ -197,7 +196,11 @@ void GOSoundEngine::ReadSamplerFrames
 
 		if (!sampler->pipe)
 		{
-			GOVectorFill(decoded_sampler_audio_frame, 0, BLOCKS_PER_FRAME * 2);
+			std::fill
+				(decoded_sampler_audio_frame
+				,decoded_sampler_audio_frame + (BLOCKS_PER_FRAME * 2)
+				,0.0f
+				);
 			continue;
 		}
 
@@ -231,7 +234,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 	assert((n_frames & (BLOCKS_PER_FRAME - 1)) == 0);
 	assert(n_frames > BLOCKS_PER_FRAME);
 	float* output_buffer = state.buff;
-	GOVectorFill(output_buffer, tremulant ? 1 : 0, n_frames * 2);
+	std::fill(output_buffer, output_buffer + n_frames * 2, tremulant ? 1.0f : 0.0f);
 	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
 	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
 	{
@@ -273,7 +276,8 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			 * right by the necessary amount to bring the sample gain back
 			 * to unity (this value is computed in GOrguePipe.cpp)
 			 */
-			GOVectorAdd(output_buffer, temp, n_frames * 2);
+			for(unsigned i = 0; i < n_frames * 2; i++)
+				output_buffer[i] += temp[i];
 
 			if (sampler->stop)
 			{
@@ -315,7 +319,8 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		float f = m_Volume * 0.01f;
 		if (state.windchest)
 			f *= state.windchest->GetVolume();
-		GOVectorMulConst(output_buffer, f, n_frames * 2);
+		for (unsigned int i = 0; i < n_frames * 2; i++)
+			output_buffer[i] *= f;
 	}
 
 	state.done = true;
@@ -369,7 +374,7 @@ int GOSoundEngine::GetSamples
 {
 	/* initialise the output buffer */
 	float FinalBuffer[GO_SOUND_BUFFER_SIZE];
-	GOVectorFill(FinalBuffer, 0, n_frames * 2);
+	std::fill(FinalBuffer, FinalBuffer + n_frames * 2, 0.0f);
 
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 		ProcessAudioSamplers(m_Tremulants[j], n_frames, true);
@@ -394,10 +399,12 @@ int GOSoundEngine::GetSamples
 			if (m_Tremulants[tremulant_pos].done)
 			{
 				const float *ptr = m_Tremulants[tremulant_pos].buff;
-				GOVectorMul(this_buff, ptr, n_frames * 2);
+				for (unsigned int k = 0; k < n_frames * 2; k++)
+					this_buff[k] *= ptr[k];
 			}
 		}
-		GOVectorAdd(FinalBuffer, this_buff, n_frames * 2);
+		for (unsigned int k = 0; k < n_frames * 2; k++)
+			FinalBuffer[k] += this_buff[k];
 	}
 
 	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
@@ -412,7 +419,8 @@ int GOSoundEngine::GetSamples
 		if (!m_DetachedRelease[j].done)
 			continue;
 
-		GOVectorAdd(FinalBuffer, this_buff, n_frames * 2);
+		for (unsigned int k = 0; k < n_frames * 2; k++)
+			FinalBuffer[k] += this_buff[k];
 	}
 
 	m_CurrentTime += n_frames / BLOCKS_PER_FRAME;

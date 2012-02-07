@@ -25,7 +25,6 @@
 
 #include <assert.h>
 #include <math.h>
-#include "GOrgueVector.h"
 
 typedef struct
 {
@@ -51,14 +50,17 @@ void FaderProcess
 	 */
 	float gain_delta = fader_state->attack + fader_state->decay;
 	float gain = fader_state->gain;
-	GOVector* frames = (GOVector*)decoded_sampler_audio_frame;
-	GOVector vec_gain = GOConstVector(gain);
-	for(unsigned i = 0; i < n_blocks * 2 / GO_VECTOR_SIZE; i++)
+	if (gain_delta)
 	{
-		frames[i] *= vec_gain;
 
-		if (gain_delta)
+		for(unsigned int i = 0; i < n_blocks / 2; i++, decoded_sampler_audio_frame += 4)
 		{
+
+			decoded_sampler_audio_frame[0] *= gain;
+			decoded_sampler_audio_frame[1] *= gain;
+			decoded_sampler_audio_frame[2] *= gain;
+			decoded_sampler_audio_frame[3] *= gain;
+
 			gain += gain_delta;
 			if (gain < 0.0f)
 			{
@@ -70,11 +72,26 @@ void FaderProcess
 				gain = fader_state->target;
 				fader_state->attack = 0.0f;
 			}
-			vec_gain = GOConstVector(gain);
-		}
-	}
 
-	fader_state->gain = gain;
+		}
+
+		fader_state->gain = gain;
+
+	}
+	else
+	{
+
+		for(unsigned int i = 0; i < n_blocks / 2; i++, decoded_sampler_audio_frame += 4)
+		{
+
+			decoded_sampler_audio_frame[0] *= gain;
+			decoded_sampler_audio_frame[1] *= gain;
+			decoded_sampler_audio_frame[2] *= gain;
+			decoded_sampler_audio_frame[3] *= gain;
+
+		}
+
+	}
 
 	if (fader_state->attack > 0.0f)
 	{
@@ -94,7 +111,10 @@ void FaderStartDecay
 	)
 {
 	assert(duration_shift < 0);
-	fader_state->decay = -scalbnf(fader_state->target, duration_shift) * GO_VECTOR_SIZE / 4;
+	fader_state->decay =
+			-scalbnf(fader_state->target
+			        ,duration_shift
+			        );
 }
 
 static
@@ -119,7 +139,10 @@ void FaderNewAttacking
 	fader_state->decay  = 0.0f;
 	fader_state->gain   = 0.0f;
 	fader_state->target = target_gain;
-	fader_state->attack = scalbnf(target_gain, duration_shift) * GO_VECTOR_SIZE / 4;
+	fader_state->attack =
+			scalbnf(target_gain
+			       ,duration_shift
+			       );
 }
 
 static
