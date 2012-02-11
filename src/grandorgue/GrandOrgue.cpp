@@ -217,6 +217,11 @@ void GOrgueApp::AsyncLoadFile(wxString what)
     m_Frame->GetEventHandler()->AddPendingEvent(event);
 }
 
+int GOrgueApp::OnRun()
+{
+	return wxApp::OnRun();
+}
+
 int GOrgueApp::OnExit()
 {
 	GOrgueLCD_Close();

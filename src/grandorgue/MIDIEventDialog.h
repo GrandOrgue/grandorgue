@@ -27,6 +27,7 @@
 #include <wx/tglbtn.h>
 #include <wx/spinctrl.h>
 #include "GOrgueMidiReceiver.h"
+#include "GrandOrgueDef.h"
 
 class MIDIEventDialog : public wxDialog
 {
@@ -52,6 +53,7 @@ public:
 
 	const GOrgueMidiReceiver& GetResult();
 
+	EVENT_HANDLER_REALIGN;
 	DECLARE_EVENT_TABLE()
 
 	void OnListenClick(wxCommandEvent& event);

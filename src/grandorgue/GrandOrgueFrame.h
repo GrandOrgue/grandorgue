@@ -26,6 +26,7 @@
 #include <vector>
 #include <wx/docview.h>
 #include <wx/dcmemory.h>
+#include "GrandOrgueDef.h"
 
 class wxHtmlHelpController;
 class wxGaugeAudio;
@@ -101,6 +102,7 @@ public:
 
 	void OnUpdateLoaded(wxUpdateUIEvent& event);
 
+	EVENT_HANDLER_REALIGN;
 	DECLARE_EVENT_TABLE()
 protected:
 	void UpdatePanelMenu();

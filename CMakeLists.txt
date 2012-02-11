@@ -108,8 +108,10 @@ endif ()
 
 CHECK_CXX_SOURCE_COMPILES("int main() __attribute__((force_align_arg_pointer)); int main() { return 0; }" HAVE_REALIGN)
 if (HAVE_REALIGN)
+  set(REALIGN_EVENTS 1)
   set(REALIGN_ATTRIBUTE "__attribute__((force_align_arg_pointer))")
 else()
+  set(REALIGN_EVENTS 0)
   set(REALIGN_ATTRIBUTE "")
 endif ()
 

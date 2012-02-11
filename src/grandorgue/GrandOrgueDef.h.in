@@ -31,5 +31,10 @@
 #define GRANDORGUE_CACHE_MAGIC 0x12341234
 
 #define STACK_REALIGN  @REALIGN_ATTRIBUTE@
+#if @REALIGN_EVENTS@
+#define EVENT_HANDLER_REALIGN bool ProcessEvent(wxEvent& event) STACK_REALIGN { return wxEvtHandler::ProcessEvent(event); }
+#else
+#define EVENT_HANDLER_REALIGN
+#endif
 
 #endif
