@@ -38,19 +38,21 @@ class GOrgueSettings;
 
 class GOrgueApp : public wxApp
 {
-public:
-  GOrgueApp();
-  bool OnInit();
-  int OnExit();
-  void AsyncLoadFile(wxString iFile);
 protected:
-  GOrgueFrame* m_Frame;
-  wxLocale m_locale;
-  stServer* m_server;
-  GOrgueSettings* m_Settings;
-  GOrgueSound* m_soundSystem;
-  wxDocManager* m_docManager;
-  wxSingleInstanceChecker* single_instance;
+	GOrgueFrame* m_Frame;
+	wxLocale m_locale;
+	stServer* m_server;
+	GOrgueSettings* m_Settings;
+	GOrgueSound* m_soundSystem;
+	wxDocManager* m_docManager;
+	wxSingleInstanceChecker* single_instance;
+
+public:
+	GOrgueApp();
+	bool OnInit() STACK_REALIGN;
+	int OnRun() STACK_REALIGN;
+	int OnExit() STACK_REALIGN;
+	void AsyncLoadFile(wxString iFile);
 };
 
 

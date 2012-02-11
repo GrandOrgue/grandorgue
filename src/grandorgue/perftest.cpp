@@ -32,8 +32,8 @@ class TestApp : public wxApp
 {
 public:
 	TestApp();
-	bool OnInit();
-	int OnRun();
+	bool OnInit() STACK_REALIGN;
+	int OnRun() STACK_REALIGN;
 	void RunTest(unsigned bits_per_sample, bool compress, unsigned sample_instances, unsigned sample_rate, unsigned interpolation, unsigned seconds, unsigned samples_per_frame);
 };
 

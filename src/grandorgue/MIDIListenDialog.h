@@ -26,6 +26,7 @@
 #include <wx/wx.h>
 #include <wx/tglbtn.h>
 #include <wx/spinctrl.h>
+#include "GrandOrgueDef.h"
 
 class GOrgueMidiEvent;
 
@@ -90,6 +91,7 @@ public:
 	void OnMidiEvent(GOrgueMidiEvent& event);
 	void OnHelp(wxCommandEvent& event);
 
+	EVENT_HANDLER_REALIGN;
 	DECLARE_EVENT_TABLE()
 
 
