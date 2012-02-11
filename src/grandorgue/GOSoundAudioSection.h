@@ -151,6 +151,7 @@ private:
 		,unsigned bits_per_sample
 		,bool     compressed
 		,interpolation_type interpolation
+		,bool     is_end
 		);
 
 	void Compress(bool format16);
