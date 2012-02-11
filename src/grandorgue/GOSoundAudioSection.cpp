@@ -507,9 +507,10 @@ DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction
 	,unsigned bits_per_sample
 	,bool     compressed
 	,interpolation_type interpolation
+	,bool     is_end
 	)
 {
-	if (compressed)
+	if (compressed && !is_end)
 	{
 		/* TODO: Add support for polyphase compressed decoders. Fallback to
 		 * linear interpolation for now. */
@@ -532,7 +533,7 @@ DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction
 	}
 	else
 	{
-		if (interpolation == GO_POLYPHASE_INTERPOLATION)
+		if (interpolation == GO_POLYPHASE_INTERPOLATION && !compressed)
 		{
 			if (channels == 1)
 			{
@@ -1028,8 +1029,8 @@ void GOAudioSection::InitStream
 	stream->position_index           = 0;
 	stream->filter_index             = 0;
 	stream->position_fraction        = 0;
-	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation);
-	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, false, stream->resample_coefs->interpolation);
+	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
+	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->last_position = 0;
 	memset(stream->curr_value, 0, sizeof(stream->curr_value));
 	memset(stream->next_value, 0, sizeof(stream->next_value));
@@ -1064,8 +1065,8 @@ void GOAudioSection::InitAlignedStream
 	stream->increment_fraction       = roundf((((float)existing_stream->increment_fraction) / existing_stream->audio_section->m_SampleRate) * m_SampleRate);
 	stream->position_index           = 0;
 	stream->position_fraction        = existing_stream->position_fraction;
-	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation);
-	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, false, stream->resample_coefs->interpolation);
+	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
+	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->last_position = 0;
 	memset(stream->curr_value, 0, sizeof(stream->curr_value));
 	memset(stream->next_value, 0, sizeof(stream->next_value));
