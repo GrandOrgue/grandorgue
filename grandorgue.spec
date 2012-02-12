@@ -18,7 +18,7 @@ URL:            http://sourceforge.net/projects/ourorgan/
 License:        GPLv2+
 Group:          Productivity/Multimedia/Sound/Midi
 Autoreqprov:    on
-Version:        0.3.0.3
+Version:        0.3.0.4
 Release:        1
 Epoch:          0
 Source:         grandorgue-%{version}.tar.gz
