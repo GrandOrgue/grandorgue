@@ -241,7 +241,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 		m_InfoFilename = wxEmptyString;
 
 	/* load basic organ information */
-	unsigned m_NumberOfManuals = ini.ReadInteger(group, wxT("NumberOfManuals"), 1, 6);
+	unsigned m_NumberOfManuals = ini.ReadInteger(group, wxT("NumberOfManuals"), 1, 16);
 	m_FirstManual = ini.ReadBoolean(group, wxT("HasPedals")) ? 0 : 1;
 	unsigned m_NumberOfEnclosures = ini.ReadInteger(group, wxT("NumberOfEnclosures"), 0, 6);
 	unsigned m_NumberOfTremulants = ini.ReadInteger(group, wxT("NumberOfTremulants"), 0, 10);

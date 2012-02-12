@@ -1058,7 +1058,7 @@ about the organ.
           <term>NumberOfManuals</term>
           <listitem>
             <para>
-(integer 1-6, required) number of manuals. The manual information is
+(integer 1-16, required) number of manuals. The manual information is
 available in sections called <emphasis>Manual999</emphasis>.
 	    </para>
           </listitem>
