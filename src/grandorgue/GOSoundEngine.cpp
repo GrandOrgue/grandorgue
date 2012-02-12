@@ -321,6 +321,27 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			f *= state.windchest->GetVolume();
 		for (unsigned int i = 0; i < n_frames * 2; i++)
 			output_buffer[i] *= f;
+
+		if (state.windchest)
+		{
+			GOrgueWindchest* current_windchest = state.windchest;
+			for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
+			{
+				unsigned tremulant_pos = current_windchest->GetTremulantId(i);
+				{
+					wxCriticalSectionLocker locker(m_Tremulants[tremulant_pos].mutex);
+					
+					if (!m_Tremulants[tremulant_pos].done)
+						ProcessAudioSamplers(m_Tremulants[tremulant_pos], n_frames, true);
+				}
+				if (m_Tremulants[tremulant_pos].done)
+				{
+					const float *ptr = m_Tremulants[tremulant_pos].buff;
+					for (unsigned int k = 0; k < n_frames * 2; k++)
+						output_buffer[k] *= ptr[k];
+				}
+			}
+		}
 	}
 
 	state.done = true;
@@ -350,6 +371,11 @@ void GOSoundEngine::Process(unsigned sampler_group_id, unsigned n_frames)
 
 void GOSoundEngine::ResetDoneFlags()
 {
+	for (unsigned j = 0; j < m_Tremulants.size(); j++)
+	{
+		wxCriticalSectionLocker locker(m_Tremulants[j].mutex);
+		m_Tremulants[j].done = false;
+	}
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
 		wxCriticalSectionLocker locker(m_Windchests[j].mutex);
@@ -377,7 +403,12 @@ int GOSoundEngine::GetSamples
 	std::fill(FinalBuffer, FinalBuffer + n_frames * 2, 0.0f);
 
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
-		ProcessAudioSamplers(m_Tremulants[j], n_frames, true);
+	{
+		wxCriticalSectionLocker locker(m_Tremulants[j].mutex);
+
+		if (!m_Tremulants[j].done)
+			ProcessAudioSamplers(m_Tremulants[j], n_frames, true);
+	}
 
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
@@ -392,17 +423,6 @@ int GOSoundEngine::GetSamples
 		if (!m_Windchests[j].done)
 			continue;
 
-		GOrgueWindchest* current_windchest = m_Windchests[j].windchest;
-		for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
-		{
-			unsigned tremulant_pos = current_windchest->GetTremulantId(i);
-			if (m_Tremulants[tremulant_pos].done)
-			{
-				const float *ptr = m_Tremulants[tremulant_pos].buff;
-				for (unsigned int k = 0; k < n_frames * 2; k++)
-					this_buff[k] *= ptr[k];
-			}
-		}
 		for (unsigned int k = 0; k < n_frames * 2; k++)
 			FinalBuffer[k] += this_buff[k];
 	}
