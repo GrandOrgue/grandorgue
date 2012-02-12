@@ -2,7 +2,16 @@
 
 Summary:        GrandOrgue - Virtual Pipe Organ Software
 Name:           grandorgue
-BuildRequires:  alsa-devel gcc-c++ jack-devel cmake wxWidgets-devel docbook-xsl-stylesheets xsltproc zip gettext-tools
+BuildRequires:  alsa-devel
+BuildRequires:  gcc-c++
+BuildRequires:  jack-devel
+BuildRequires:  cmake
+BuildRequires:  wxWidgets-devel
+BuildRequires:  wxWidgets-devel
+BuildRequires:  docbook-xsl-stylesheets 
+BuildRequires:  libxslt1
+BuildRequires:  zip
+BuildRequires:  gettext-tools
 # po5a not in the main repository (only http://download.opensuse.org/repositories/M17N/). To build without delete the po4a build requirement
 BuildRequires:  po4a
 URL:            http://sourceforge.net/projects/ourorgan/
