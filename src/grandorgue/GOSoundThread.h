@@ -40,7 +40,7 @@ private:
 	wxMutex m_Mutex;
 	wxCondition m_Condition;
 
-	void* Entry() STACK_REALIGN;
+	void* Entry();
 
 public:
 	GOSoundThread(GOSoundEngine* engine, int min_sampler_id, int max_sampler_id, unsigned n_frames);

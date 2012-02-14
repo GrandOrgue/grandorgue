@@ -102,7 +102,6 @@ public:
 
 	void OnUpdateLoaded(wxUpdateUIEvent& event);
 
-	EVENT_HANDLER_REALIGN;
 	DECLARE_EVENT_TABLE()
 protected:
 	void UpdatePanelMenu();

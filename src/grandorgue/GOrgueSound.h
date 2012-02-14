@@ -97,9 +97,9 @@ private:
 		,double streamTime
 		,RtAudioStreamStatus status
 		,void *userData
-		) STACK_REALIGN;
+		);
 
-	static int PaAudioCallback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData) STACK_REALIGN;
+	static int PaAudioCallback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData);
 
 	void StopThreads();
 	void StartThreads(unsigned windchests);

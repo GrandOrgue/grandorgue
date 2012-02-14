@@ -91,7 +91,6 @@ public:
 	void OnMidiEvent(GOrgueMidiEvent& event);
 	void OnHelp(wxCommandEvent& event);
 
-	EVENT_HANDLER_REALIGN;
 	DECLARE_EVENT_TABLE()
 
 

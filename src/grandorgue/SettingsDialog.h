@@ -91,7 +91,6 @@ public:
 
 	void OnLatencySpinnerChange(wxSpinEvent& event);
 
-	EVENT_HANDLER_REALIGN;
 	DECLARE_EVENT_TABLE()
 
 protected:

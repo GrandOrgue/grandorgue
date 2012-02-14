@@ -58,7 +58,7 @@ private:
 
 	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device);
 
-	static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData) STACK_REALIGN;
+	static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData);
 
 public:
 

@@ -53,7 +53,6 @@ public:
 
 	const GOrgueMidiReceiver& GetResult();
 
-	EVENT_HANDLER_REALIGN;
 	DECLARE_EVENT_TABLE()
 
 	void OnListenClick(wxCommandEvent& event);
