@@ -9,7 +9,7 @@ BuildRequires:  cmake
 BuildRequires:  wxWidgets-devel
 BuildRequires:  wxWidgets-devel
 BuildRequires:  docbook-xsl-stylesheets 
-BuildRequires:  libxslt1
+BuildRequires:  libxslt
 BuildRequires:  zip
 BuildRequires:  gettext-tools
 # po5a not in the main repository (only http://download.opensuse.org/repositories/M17N/). To build without delete the po4a build requirement
