@@ -82,7 +82,6 @@ public:
 	void OnEventDefault(wxCommandEvent &e);
 	void OnEventOK(wxCommandEvent &e);
 	void OnOK(wxCommandEvent& event);
-	EVENT_HANDLER_REALIGN;
 	DECLARE_EVENT_TABLE()
 
 protected:

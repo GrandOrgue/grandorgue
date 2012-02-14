@@ -58,7 +58,6 @@ public:
 	void OnMouseScroll(wxMouseEvent& event);
 	void OnKeyCommand(wxKeyEvent& event);
 
-	EVENT_HANDLER_REALIGN;
 	DECLARE_EVENT_TABLE();
 };
 

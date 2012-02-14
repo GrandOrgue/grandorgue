@@ -49,9 +49,9 @@ protected:
 
 public:
 	GOrgueApp();
-	bool OnInit() STACK_REALIGN;
-	int OnRun() STACK_REALIGN;
-	int OnExit() STACK_REALIGN;
+	bool OnInit();
+	int OnRun();
+	int OnExit();
 	void AsyncLoadFile(wxString iFile);
 };
 
