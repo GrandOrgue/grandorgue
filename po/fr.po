@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-01-23 12:06+0100\n"
-"PO-Revision-Date: 2012-01-23 20:40+0100\n"
+"POT-Creation-Date: 2012-02-15 12:04+0100\n"
+"PO-Revision-Date: 2012-02-15 12:08+0100\n"
 "Last-Translator: Jean-Luc Derouineau <jeanluc@derouineau.com>\n"
 "Language-Team: French <jeanluc@derouineau.com>\n"
 "Language: fr\n"
@@ -98,7 +98,7 @@ msgid "&Open...\tCtrl+O"
 msgstr "&Ouvrir\tCtrl+O"
 
 msgid "&Organ settings"
-msgstr "Paramètres orgue"
+msgstr "Paramètres orgue en cours d'utilisation"
 
 msgid "&Panel"
 msgstr "&Paneaux"
@@ -172,6 +172,9 @@ msgstr "000"
 msgid "1/4 comma Mean tone"
 msgstr "1/4 comma Mean tone"
 
+msgid "12 bits"
+msgstr "12 bits"
+
 msgid "16"
 msgstr "16"
 
@@ -183,10 +186,21 @@ msgid "16 bit PCM"
 msgstr "16 bit PCM"
 
 #, fuzzy
+msgid "16 bits"
+msgstr "16 bit PCM"
+
+msgid "20 bits"
+msgstr "20 bits"
+
+#, fuzzy
 msgid "24 Bit PCM"
 msgstr "24 bit PCM"
 
 msgid "24 bit PCM"
+msgstr "24 bit PCM"
+
+#, fuzzy
+msgid "24 bits"
 msgstr "24 bit PCM"
 
 msgid "32 bit PCM"
@@ -211,6 +225,10 @@ msgstr "8 bit PCM"
 msgid "8 bit PCM"
 msgstr "8 bit PCM"
 
+#, fuzzy
+msgid "8 bits"
+msgstr "8 bit PCM"
+
 msgid "9x Note"
 msgstr "9x Note"
 
@@ -228,9 +246,6 @@ msgstr "<"
 
 msgid "< Bits per sample must be a multiple of 8 in this implementation"
 msgstr "<Nombre de bits par échantillon doit être un multiple de 8"
-
-msgid "< Failed to allocate memory for wave data"
-msgstr "< Impossible d'allouer de la mémoire pour les échantillons"
 
 msgid "< Invalid CUE chunk in"
 msgstr "< format CUE chunk in Invalide"
@@ -258,15 +273,6 @@ msgstr "< Pas de données PCM en entrée"
 
 msgid "< Not a RIFF file"
 msgstr "< Pas un fichier RIFF"
-
-msgid "< out of memory allocating attack"
-msgstr "< dépassement mémoire en allocation d'une attaque"
-
-msgid "< out of memory allocating samples"
-msgstr "< dépassement mémoire en allocation d'un échantillon"
-
-msgid "< out of memory allocating wave"
-msgstr "< dépassement mémoire en allocation d'un fichier wav"
 
 msgid "<Invalid SMPL chunk in"
 msgstr "< SMPL chunk in Invalide"
@@ -511,11 +517,20 @@ msgstr "Interfaces"
 msgid "DirectSound"
 msgstr "DirectSound"
 
+msgid "Disabled"
+msgstr "Désactivé"
+
 msgid "Divisionals"
 msgstr "Divisions"
 
+msgid "Don't load"
+msgstr "Ne pas charger"
+
 msgid "E&xit"
 msgstr "&Sortie"
+
+msgid "Enabled"
+msgstr "Activé"
 
 msgid "Enclosure 1"
 msgstr "Buffet 1"
@@ -630,6 +645,9 @@ msgstr "Mémoire insuffisante "
 msgid "Internal PortAudio error"
 msgstr "Erreur interne PortAudio"
 
+msgid "Interpolation:"
+msgstr ""
+
 #, c-format
 msgid "Invalid boolean value '/%s/%s': %s"
 msgstr "Valeur booléén invalide '/%s/%s': %s"
@@ -715,6 +733,9 @@ msgstr "LCD-1: %s"
 msgid "LCD-2: %s"
 msgstr "LCD-2: %s"
 
+msgid "Linear"
+msgstr "Linéaire"
+
 msgid "Load &stereo samples in:"
 msgstr "Charger les échantillons stéréo en:"
 
@@ -745,6 +766,10 @@ msgid "Loop loading:"
 msgstr "Chargement boucle:"
 
 msgid "Lossless compression"
+msgstr "Compression sans perte"
+
+#, fuzzy
+msgid "Lossless compression:"
 msgstr "Compression sans perte"
 
 msgid "MB"
@@ -885,6 +910,9 @@ msgstr "Autres commentaires"
 msgid "Our Organ"
 msgstr "GrandOrgue"
 
+msgid "Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings."
+msgstr "Dépassement mémoire. L'orgue n'est pas complètement chargé. Réduire l'utilisation mémoire en changeant les paramètres de chargement des échantillons."
+
 #, c-format
 msgid "Out of range value '/%s/%s': %d"
 msgstr "Valeur hors limite '/%s/%s': %d"
@@ -901,11 +929,17 @@ msgstr "P&ropriétés..."
 msgid "Panic"
 msgstr "Panique"
 
+msgid "Parent default"
+msgstr "Défaut"
+
 msgid "Parsing sample set definition file"
 msgstr "Traitement fichier de définition de l'orgue"
 
 msgid "Please apply changes first"
 msgstr "Entrez des modifications avant de valider!"
+
+msgid "Polyphase"
+msgstr "Polyphase"
 
 msgid "Polyphony"
 msgstr "Polyphonie"
@@ -979,7 +1013,19 @@ msgstr "RtAudio erreur: %s"
 msgid "RtMidi error: %s"
 msgstr "RtMidi erreur: %s"
 
+#, fuzzy
+msgid "Sample Loading"
+msgstr "Taux d'échantillonage:"
+
 msgid "Sample Rate:"
+msgstr "Taux d'échantillonage:"
+
+#, fuzzy
+msgid "Sample Size:"
+msgstr "Taille échantillons:"
+
+#, fuzzy
+msgid "Sample channels:"
 msgstr "Taux d'échantillonage:"
 
 msgid "Sample format not supported"
@@ -1176,9 +1222,6 @@ msgstr "ms"
 msgid "none"
 msgstr "n/a"
 
-msgid "out of memory"
-msgstr "Dépassement mémoire"
-
 msgid "settingsdialog.."
 msgstr "dialogue paramètres.."
 
@@ -1201,11 +1244,23 @@ msgstr "Le fichier WAVE ne contient pas de boucles"
 #~ msgid "48000"
 #~ msgstr "48000"
 
+#~ msgid "< Failed to allocate memory for wave data"
+#~ msgstr "< Impossible d'allouer de la mémoire pour les échantillons"
+
+#~ msgid "< out of memory allocating attack"
+#~ msgstr "< dépassement mémoire en allocation d'une attaque"
+
 #~ msgid "< out of memory allocating loop"
 #~ msgstr "< dépassement mémoire lors de l'allocation d'une boucle"
 
 #~ msgid "< out of memory allocating release"
 #~ msgstr "< dépassement mémoire lors de l'allocation d'un laché"
+
+#~ msgid "< out of memory allocating samples"
+#~ msgstr "< dépassement mémoire en allocation d'un échantillon"
+
+#~ msgid "< out of memory allocating wave"
+#~ msgstr "< dépassement mémoire en allocation d'un fichier wav"
 
 #~ msgid "Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache."
 #~ msgstr ""
@@ -1233,6 +1288,9 @@ msgstr "Le fichier WAVE ne contient pas de boucles"
 
 #~ msgid "g_sound has not been allocated"
 #~ msgstr "g_sound n'a pas été alloué"
+
+#~ msgid "out of memory"
+#~ msgstr "Dépassement mémoire"
 
 #~ msgid "regression - this should be impossible"
 #~ msgstr "regression - ceci devrait être impossible"
