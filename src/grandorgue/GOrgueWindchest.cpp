@@ -55,7 +55,7 @@ void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group, unsigned index)
 		m_tremulant.push_back(cfg.ReadInteger(group, buffer, 1, m_organfile->GetTremulantCount()) - 1);
 	}
 
-	m_Name = cfg.ReadString(group, wxT("Name"), 64, false, wxString::Format(wxT("Windchest %d"), index + 1));
+	m_Name = cfg.ReadString(group, wxT("Name"), 64, false, wxString::Format(_("Windchest %d"), index + 1));
 }
 
 float GOrgueWindchest::GetVolume()
