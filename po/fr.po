@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-02-15 12:04+0100\n"
-"PO-Revision-Date: 2012-02-15 12:08+0100\n"
+"POT-Creation-Date: 2012-02-15 12:54+0100\n"
+"PO-Revision-Date: 2012-02-15 13:07+0100\n"
 "Last-Translator: Jean-Luc Derouineau <jeanluc@derouineau.com>\n"
 "Language-Team: French <jeanluc@derouineau.com>\n"
 "Language: fr\n"
@@ -405,7 +405,6 @@ msgstr "Changement contrôle Bx On"
 msgid "C"
 msgstr "C"
 
-#, fuzzy
 msgid "Cache file had bad magic bypassing cache."
 msgstr "Mauvais code de vérification cache. Cache hors circuit."
 
@@ -646,7 +645,7 @@ msgid "Internal PortAudio error"
 msgstr "Erreur interne PortAudio"
 
 msgid "Interpolation:"
-msgstr ""
+msgstr "Méthode interpolation:"
 
 #, c-format
 msgid "Invalid boolean value '/%s/%s': %s"
@@ -737,7 +736,7 @@ msgid "Linear"
 msgstr "Linéaire"
 
 msgid "Load &stereo samples in:"
-msgstr "Charger les échantillons stéréo en:"
+msgstr "Charger les échantillons en:"
 
 msgid "Load aborted by the user"
 msgstr "Chargement arrêté par l'utilisateur"
@@ -768,7 +767,6 @@ msgstr "Chargement boucle:"
 msgid "Lossless compression"
 msgstr "Compression sans perte"
 
-#, fuzzy
 msgid "Lossless compression:"
 msgstr "Compression sans perte"
 
@@ -1013,20 +1011,17 @@ msgstr "RtAudio erreur: %s"
 msgid "RtMidi error: %s"
 msgstr "RtMidi erreur: %s"
 
-#, fuzzy
 msgid "Sample Loading"
-msgstr "Taux d'échantillonage:"
+msgstr "Chargement échantillons:"
 
 msgid "Sample Rate:"
 msgstr "Taux d'échantillonage:"
 
-#, fuzzy
 msgid "Sample Size:"
 msgstr "Taille échantillons:"
 
-#, fuzzy
 msgid "Sample channels:"
-msgstr "Taux d'échantillonage:"
+msgstr "Charger échantillons en:"
 
 msgid "Sample format not supported"
 msgstr "Format échantillon non supporté"
@@ -1181,6 +1176,10 @@ msgstr "Attention"
 
 msgid "Werckmeister III"
 msgstr "Werckmeister III"
+
+#, c-format
+msgid "Windchest %d"
+msgstr "Sommier %d"
 
 msgid "Windows DirectSound"
 msgstr "Windows DirectSound"
