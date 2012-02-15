@@ -280,12 +280,12 @@ int GOAudioSection::GetSample
 			wxInt8* data = (wxInt8*)m_Data;
 			return data[position * m_Channels + channel];
 		}
-		if (m_BitsPerSample == 16)
+		if (m_BitsPerSample == 16 || m_BitsPerSample == 12)
 		{
 			wxInt16* data = (wxInt16*)m_Data;
 			return data[position * m_Channels + channel];
 		}
-		if (m_BitsPerSample == 24)
+		if (m_BitsPerSample == 24 || m_BitsPerSample == 20)
 		{
 			Int24* data = (Int24*)m_Data;
 			return data[position * m_Channels + channel];

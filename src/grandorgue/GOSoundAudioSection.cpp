@@ -945,7 +945,9 @@ void GOAudioSection::Compress(bool format16)
 	}
 
 #if 0
-	GOAudioSection new_section = *this;
+	GOAudioSection new_section(m_Pool);
+	new_section.m_BitsPerSample = m_BitsPerSample;
+	new_section.m_Channels = m_Channels;
 	new_section.m_Data = data;
 	new_section.m_AllocSize = output_len;
 	new_section.m_Compressed = true;
