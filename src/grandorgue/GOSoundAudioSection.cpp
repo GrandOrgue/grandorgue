@@ -539,18 +539,18 @@ DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction
 			{
 				if (bits_per_sample == 8)
 					return MonoUncompressedPolyphase<wxInt8>;
-				if (bits_per_sample == 16)
+				if (bits_per_sample == 16 || bits_per_sample == 12)
 					return MonoUncompressedPolyphase<wxInt16>;
-				if (bits_per_sample == 24)
+				if (bits_per_sample == 24 || bits_per_sample == 20)
 					return MonoUncompressedPolyphase<Int24>;
 			}
 			else if (channels == 2)
 			{
 				if (bits_per_sample == 8)
 					return StereoUncompressedPolyphase<wxInt8>;
-				if (bits_per_sample == 16)
+				if (bits_per_sample == 16 || bits_per_sample == 12)
 					return StereoUncompressedPolyphase<wxInt16>;
-				if (bits_per_sample == 24)
+				if (bits_per_sample == 24 || bits_per_sample == 20)
 					return StereoUncompressedPolyphase<Int24>;
 			}
 		}
@@ -560,18 +560,18 @@ DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction
 			{
 				if (bits_per_sample == 8)
 					return MonoUncompressedLinear<wxInt8>;
-				if (bits_per_sample == 16)
+				if (bits_per_sample == 16 || bits_per_sample == 12)
 					return MonoUncompressedLinear<wxInt16>;
-				if (bits_per_sample == 24)
+				if (bits_per_sample == 24 || bits_per_sample == 20)
 					return MonoUncompressedLinear<Int24>;
 			}
 			else if (channels == 2)
 			{
 				if (bits_per_sample == 8)
 					return StereoUncompressedLinear<wxInt8>;
-				if (bits_per_sample == 16)
+				if (bits_per_sample == 16 || bits_per_sample == 12)
 					return StereoUncompressedLinear<wxInt16>;
-				if (bits_per_sample == 24)
+				if (bits_per_sample == 24 || bits_per_sample == 20)
 					return StereoUncompressedLinear<Int24>;
 			}
 		}
