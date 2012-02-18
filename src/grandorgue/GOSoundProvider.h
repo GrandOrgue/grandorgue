@@ -34,10 +34,13 @@ typedef struct audio_section_stream_s audio_section_stream;
 
 typedef struct
 {
+	int sample_group;
 } attack_section_info;
 
 typedef struct
 {
+	int sample_group;
+	unsigned max_playback_time;
 } release_section_info;
 
 class GOSoundProvider
@@ -48,6 +51,7 @@ protected:
 	float m_MidiPitchFract;
 	float             m_Gain;
 	float             m_Tuning;
+	bool              m_SampleGroup;
 	ptr_vector<GOAudioSection> m_Attack;
 	std::vector<attack_section_info> m_AttackInfo;
 	ptr_vector<GOAudioSection> m_Release;
@@ -63,6 +67,8 @@ public:
 
 	virtual bool LoadCache(GOrgueCache& cache);
 	virtual bool SaveCache(GOrgueCacheWriter& cache);
+
+	void UseSampleGroup(unsigned sample_group);
 
 	const GOAudioSection* GetRelease(const audio_section_stream* handle, double playback_time) const;
 	const GOAudioSection* GetAttack() const;

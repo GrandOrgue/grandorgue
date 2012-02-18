@@ -44,6 +44,8 @@ private:
 	GOrgueRank* m_Rank;
 	SAMPLER_HANDLE  m_Sampler;
 	int m_Instances;
+	std::vector<attack_load_info> m_AttackInfo;
+	std::vector<release_load_info> m_ReleaseInfo;
 
 	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
 	int m_SamplerGroupID;
