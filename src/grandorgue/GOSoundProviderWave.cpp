@@ -48,6 +48,70 @@ unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample)
 		return 3;
 }
 
+void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive)
+{
+	std::vector<GO_WAVE_LOOP> loops;
+	if ((wave.GetNbLoops() > 0) && !percussive)
+	{
+		switch (loop_mode)
+		{
+		case LOOP_LOAD_ALL:
+			for (unsigned i = 0; i < wave.GetNbLoops(); i++)
+				loops.push_back(wave.GetLoop(i));
+			break;
+		case LOOP_LOAD_CONSERVATIVE:
+		{
+			unsigned cidx = 0;
+			for (unsigned i = 1; i < wave.GetNbLoops(); i++)
+				if (wave.GetLoop(i).end_sample < wave.GetLoop(cidx).end_sample)
+					cidx = i;
+			loops.push_back(wave.GetLoop(cidx));
+		}
+		break;
+		default:
+			assert(loop_mode == LOOP_LOAD_LONGEST);
+			loops.push_back(wave.GetLongestLoop());
+		}
+	}
+
+	attack_section_info attack_info;
+	m_AttackInfo.push_back(attack_info);
+	GOAudioSection* section = new GOAudioSection(m_pool);
+	m_Attack.push_back(section);
+	section->Setup
+		(data
+		 ,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
+		 ,channels
+		 ,wave.GetSampleRate()
+		 ,wave.GetLength()
+		 ,&loops
+		 ,compress
+		 );
+}
+
+void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, unsigned bits_per_sample, unsigned channels, bool compress)
+{
+	const unsigned release_offset = wave.HasReleaseMarker() ? wave.GetReleaseMarkerPosition() : 0;
+	const unsigned release_samples = wave.GetLength() - release_offset;
+			
+	if (release_offset >= wave.GetLength())
+		throw (wxString)_("Invalid release position");
+
+	release_section_info release_info;
+	m_ReleaseInfo.push_back(release_info);
+	GOAudioSection* section = new GOAudioSection(m_pool);
+	m_Release.push_back(section);
+	section->Setup
+		(data + release_offset * GetBytesPerSample(bits_per_sample) * channels
+		 ,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
+		 ,channels
+		 ,wave.GetSampleRate()
+		 ,release_samples
+		 ,NULL
+		 ,compress
+		 );
+}
+
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
@@ -92,64 +156,10 @@ void GOSoundProviderWave::LoadFromFile
 	{
 		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), channels);
 
-		std::vector<GO_WAVE_LOOP> loops;
-		if ((wave.GetNbLoops() > 0) && (wave.HasReleaseMarker()))
-		{
-			switch (loop_mode)
-			{
-			case LOOP_LOAD_ALL:
-				for (unsigned i = 0; i < wave.GetNbLoops(); i++)
-					loops.push_back(wave.GetLoop(i));
-				break;
-			case LOOP_LOAD_CONSERVATIVE:
-				{
-					unsigned cidx = 0;
-					for (unsigned i = 1; i < wave.GetNbLoops(); i++)
-						if (wave.GetLoop(i).end_sample < wave.GetLoop(cidx).end_sample)
-							cidx = i;
-					loops.push_back(wave.GetLoop(cidx));
-				}
-				break;
-			default:
-				assert(loop_mode == LOOP_LOAD_LONGEST);
-				loops.push_back(wave.GetLongestLoop());
-			}
-		}
+		CreateAttack(data, wave, bits_per_sample, channels, compress, loop_mode, !wave.HasReleaseMarker());
 
-		attack_section_info attack_info;
-		m_AttackInfo.push_back(attack_info);
-		m_Attack.push_back(new GOAudioSection(m_pool));
-		m_Attack[0]->Setup
-			(data
-			,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
-			,channels
-			,wave.GetSampleRate()
-			,wave.GetLength()
-			,&loops
-			,compress
-			);
-
-		if (wave.HasReleaseMarker() && loops.size())
-		{
-			const unsigned release_offset = wave.GetReleaseMarkerPosition();
-			const unsigned release_samples = wave.GetLength() - release_offset;
-			
-			if (release_offset >= wave.GetLength())
-				throw (wxString)_("Invalid release position");
-
-			release_section_info release_info;
-			m_ReleaseInfo.push_back(release_info);
-			m_Release.push_back(new GOAudioSection(m_pool));
-			m_Release[0]->Setup
-				(data + release_offset * GetBytesPerSample(bits_per_sample) * channels
-				,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
-				,channels
-				,wave.GetSampleRate()
-				,release_samples
-				,NULL
-				,compress
-				);
-		}
+		if (wave.HasReleaseMarker() && wave.GetNbLoops() > 0)
+			CreateRelease(data, wave, bits_per_sample, channels, compress);
 
 		/* data is no longer needed */
 		FREE_AND_NULL(data);
