@@ -26,6 +26,8 @@
 #include "GOSoundProvider.h"
 #include <wx/wx.h>
 
+class GOrgueWave;
+
 typedef enum
 {
 	/* Only the first loop with the earliest endpoint is loaded. This will
@@ -47,6 +49,9 @@ typedef enum
 class GOSoundProviderWave : public GOSoundProvider
 {
 	unsigned GetBytesPerSample(unsigned bits_per_sample);
+
+	void CreateAttack(const char* data, GOrgueWave& wave, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive);
+	void CreateRelease(const char* data, GOrgueWave& wave, unsigned bits_per_sample, unsigned channels, bool compress);
 
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
