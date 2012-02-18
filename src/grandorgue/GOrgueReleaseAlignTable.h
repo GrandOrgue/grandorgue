@@ -55,6 +55,7 @@ public:
 		,int                   phase_align_max_amplitude
 		,int                   phase_align_max_derivative
 		,unsigned int          sample_rate
+		,unsigned              start_position
 		);
 
 	void SetupRelease

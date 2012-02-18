@@ -168,6 +168,7 @@ private:
 
 	/* If this is a release section, it may contain an alignment table */
 	GOrgueReleaseAlignTable   *m_ReleaseAligner;
+	unsigned                   m_ReleaseStartSegment;
 
 	/* Number of significant bits in the decoded sample data */
 	unsigned                   m_SampleFracBits;
@@ -239,7 +240,7 @@ public:
 	float GetNormGain() const;
 	unsigned GetSampleRate() const;
 	bool SupportsStreamAlignment() const;
-	void SetupStreamAlignment(const std::vector<const GOAudioSection*> &joinables);
+	void SetupStreamAlignment(const std::vector<const GOAudioSection*> &joinables, unsigned start_index);
 
 };
 

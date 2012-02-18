@@ -78,10 +78,15 @@ void GOrgueReleaseAlignTable::ComputeTable
 	,int                   phase_align_max_amplitude
 	,int                   phase_align_max_derivative
 	,unsigned int          sample_rate
+	,unsigned              start_position
 	)
 {
 	DecompressionCache cache;
 	InitDecompressionCache(cache);
+
+	for(unsigned i = 0; i < PHASE_ALIGN_DERIVATIVES; i++)
+		for(unsigned j = 0; j < PHASE_ALIGN_AMPLITUDES; j++)
+			m_PositionEntries[i][j] = 0;
 
 	unsigned channels = release.GetChannels();
 	m_PhaseAlignMaxDerivative = phase_align_max_derivative;
@@ -107,7 +112,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 
 	int f_p = 0;
 	for (unsigned int j = 0; j < channels; j++)
-		f_p += release.GetSample((BLOCK_HISTORY - 1), j, &cache);
+		f_p += release.GetSample(start_position + (BLOCK_HISTORY - 1), j, &cache);
 
 	for (unsigned i = BLOCK_HISTORY; i < required_search_len; i++)
 	{
@@ -115,7 +120,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 		/* Store previous values */
 		int f = 0;
 		for (unsigned int j = 0; j < channels; j++)
-			f += release.GetSample(i, j, &cache);
+			f += release.GetSample(start_position + i, j, &cache);
 
 		/* Bring v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
 		int v_mod = (f - f_p) + m_PhaseAlignMaxDerivative - 1;
@@ -136,7 +141,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 			for (unsigned j = 0; j < BLOCK_HISTORY; j++)
 				for (unsigned k = 0; k < MAX_OUTPUT_CHANNELS; k++)
 					m_HistoryEntries[derivIndex][ampIndex][j * MAX_OUTPUT_CHANNELS + k]
-						= (k < channels) ? release.GetSample(i + j - BLOCK_HISTORY, k, &cache) : 0;
+						= (k < channels) ? release.GetSample(start_position + i + j - BLOCK_HISTORY, k, &cache) : 0;
 			found[derivIndex][ampIndex] = true;
 		}
 
