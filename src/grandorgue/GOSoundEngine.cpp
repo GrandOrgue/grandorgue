@@ -163,6 +163,8 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
 	wxCriticalSectionLocker locker(state->lock);
 	sampler->sampler_group_id = sampler_group_id;
 	sampler->next = state->new_sampler;
+	sampler->stop = false;
+	sampler->new_attack = false;
 	state->new_sampler = sampler;
 	state->count++;
 }
@@ -239,6 +241,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
 	{
 		float temp[GO_SOUND_BUFFER_SIZE];
+		bool changed_sampler = false;
 
 		const bool process_sampler = (sampler->time <= m_CurrentTime);
 		if (process_sampler)
@@ -290,7 +293,14 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				 * automatically be placed back in the pool when the fade restores to
 				 * zero. */
 				FaderStartDecay(&sampler->fader, -CROSSFADE_LEN_BITS);
+				sampler->is_release = true;
 				sampler->stop = false;
+			} 
+			else if (sampler->new_attack)
+			{
+				SwitchAttackSampler(sampler);
+				sampler->new_attack = false;
+				changed_sampler = true;
 			}
 		}
 
@@ -299,7 +309,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		 * zero, the sample is no longer required and can be removed from the
 		 * linked list. If it was still supplying audio, we must update the
 		 * previous valid sampler. */
-		if (!sampler->pipe || (FaderIsSilent(&sampler->fader) && process_sampler))
+		if (!sampler->pipe || (FaderIsSilent(&sampler->fader) && process_sampler && !changed_sampler))
 		{
 			/* sampler needs to be removed from the list */
 			if (sampler == state.sampler)
@@ -506,6 +516,48 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 	return sampler;
 }
 
+void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
+{
+	if (!handle->pipe)
+		return;
+
+	const GOSoundProvider* this_pipe = handle->pipe;
+	const GOAudioSection* section = this_pipe->GetAttack();
+	if (!section)
+		return;
+	if (handle->is_release)
+		return;
+
+	GO_SAMPLER* new_sampler = m_SamplerPool.GetSampler();
+	if (new_sampler != NULL)
+	{
+		GO_SAMPLER* next = handle->next;
+		*new_sampler = *handle;
+		new_sampler->next = 0;
+		
+		handle->next = next;
+		handle->pipe = this_pipe;
+		handle->time = m_CurrentTime + 1;
+
+		float gain_target = this_pipe->GetGain() * section->GetNormGain();
+
+		FaderNewAttacking
+			(&handle->fader
+			 ,gain_target
+			 ,-(CROSSFADE_LEN_BITS)
+			 ,1 << (CROSSFADE_LEN_BITS + 1)
+			 );
+
+		section->InitAlignedStream(&handle->stream, &new_sampler->stream);
+		handle->is_release = false;
+		new_sampler->is_release = true;
+
+		FaderStartDecay(&new_sampler->fader, -CROSSFADE_LEN_BITS);
+
+		StartSampler(new_sampler, new_sampler->sampler_group_id);
+	}
+}
+
 void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 {
 	if (!handle->pipe)
@@ -645,4 +697,20 @@ void GOSoundEngine::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handl
 		return;
 
 	handle->stop = true;
+}
+
+void GOSoundEngine::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle)
+{
+
+	assert(handle);
+	assert(pipe);
+
+	// The following condition could arise if a one-shot sample is played,
+	// decays away (and hence the sampler is discarded back into the pool), and
+	// then the user releases a key. If the sampler had already been reused
+	// with another pipe, that sample would erroneously be told to decay.
+	if (pipe != handle->pipe)
+		return;
+
+	handle->new_attack = true;
 }

@@ -120,6 +120,7 @@ private:
 	*/
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id);
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
+	void SwitchAttackSampler(GO_SAMPLER* sampler);
 	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, float* decoded_sampler_audio_frame);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, bool tremulant);
 	void ResetDoneFlags();
@@ -143,6 +144,7 @@ public:
 
 	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
+	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 
 	int GetSamples
 		(float      *output_buffer

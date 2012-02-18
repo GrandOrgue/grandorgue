@@ -1049,6 +1049,12 @@ void GrandOrgueFile::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE hand
 		m_soundengine->StopSample(pipe, handle);
 }
 
+void GrandOrgueFile::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle)
+{
+	if (m_soundengine)
+		m_soundengine->SwitchSample(pipe, handle);
+}
+
 void GrandOrgueFile::Abort()
 {
 	m_soundengine = NULL;
