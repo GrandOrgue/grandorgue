@@ -29,12 +29,16 @@
 #include "GOSoundProviderSynthedTrem.h"
 
 class IniFileConfig;
+struct IniFileEnumEntry;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
+
+typedef enum { GOSynthTrem, GOWavTrem } GOrgueTremulantType;
 
 class GOrgueTremulant : public GOrgueDrawstop, public GOrgueCacheObject
 {
-
 private:
+	static const struct IniFileEnumEntry m_tremulant_types[];
+	GOrgueTremulantType m_TremulantType;
 	int m_Period;
 	int m_StartRate;
 	int m_StopRate;
@@ -52,6 +56,7 @@ public:
 	void Set(bool on);
 	void Abort();
 	void PreparePlayback();
+	GOrgueTremulantType GetTremulantType();
 
 	void Initialize();
 	void LoadData();

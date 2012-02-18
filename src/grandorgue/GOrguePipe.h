@@ -44,6 +44,7 @@ private:
 	GOrgueRank* m_Rank;
 	SAMPLER_HANDLE  m_Sampler;
 	int m_Instances;
+	bool m_Tremulant;
 	std::vector<attack_load_info> m_AttackInfo;
 	std::vector<release_load_info> m_ReleaseInfo;
 
@@ -69,6 +70,7 @@ public:
 	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
 	void Save(IniFileConfig& cfg, bool prefix);
 	void Set(bool on);
+	void SetTremulant(bool on);
 	bool InitializeReference();
 	void LoadData();
 	bool LoadCache(GOrgueCache& cache);

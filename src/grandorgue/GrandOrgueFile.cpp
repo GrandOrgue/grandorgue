@@ -1153,6 +1153,8 @@ void GrandOrgueFile::ControlChanged(void* control)
 		m_panels[i]->ControlChanged(control);
 	for(unsigned i = 0; i < m_piston.size(); i++)
 		m_piston[i]->ControlChanged(control);
+	for(unsigned i = 0; i < m_windchest.size(); i++)
+		m_windchest[i]->ControlChanged(control);
 	m_setter->ControlChanged(control);
 }
 

@@ -44,6 +44,7 @@ GOrguePipe::GOrguePipe
 	m_Rank(rank),
 	m_Sampler(NULL),
 	m_Instances(0),
+	m_Tremulant(false),
 	m_AttackInfo(),
 	m_ReleaseInfo(),
 	m_SamplerGroupID(sampler_group_id),
@@ -110,6 +111,30 @@ void GOrguePipe::Set(bool on)
 		SetOn();
 	else
 		SetOff();
+}
+
+void GOrguePipe::SetTremulant(bool on)
+{
+	if (on)
+	{
+		if (!m_Tremulant)
+		{
+			m_Tremulant = true;
+			m_SoundProvider.UseSampleGroup(1);
+			if (m_Sampler)
+				m_OrganFile->SwitchSample(GetSoundProvider(), m_Sampler);
+		}
+	}
+	else
+	{
+		if (m_Tremulant)
+		{
+			m_Tremulant = false;
+			m_SoundProvider.UseSampleGroup(0);
+			if (m_Sampler)
+				m_OrganFile->SwitchSample(GetSoundProvider(), m_Sampler);
+		}
+	}
 }
 
 bool GOrguePipe::IsReference()
@@ -319,6 +344,7 @@ void GOrguePipe::FastAbort()
 	if (m_Reference)
 		m_Reference->FastAbort();
 	m_Instances = 0;
+	m_Tremulant = false;
 	m_Sampler = 0;
 	m_SoundProvider.UseSampleGroup(0);
 }

@@ -22,6 +22,8 @@
 
 #include "GOrgueWindchest.h"
 #include "GOrgueEnclosure.h"
+#include "GOrgueTremulant.h"
+#include "GOrguePipe.h"
 #include "GrandOrgueFile.h"
 
 GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
@@ -100,4 +102,19 @@ void GOrgueWindchest::AddPipe(GOrguePipe* pipe)
 const wxString& GOrgueWindchest::GetName()
 {
 	return m_Name;
+}
+
+void GOrgueWindchest::ControlChanged(void* control)
+{
+	for (unsigned i = 0; i < m_tremulant.size(); i++)
+		if (control == (GOrgueButton*) m_organfile->GetTremulant(m_tremulant[i]))
+		{
+			GOrgueTremulant* t = m_organfile->GetTremulant(m_tremulant[i]);
+			if (t->GetTremulantType() != GOWavTrem)
+				continue;
+			bool on = t->IsEngaged();
+			for(unsigned j = 0; j < m_pipes.size(); j++)
+				m_pipes[j]->SetTremulant(on);
+			return;
+		}
 }
