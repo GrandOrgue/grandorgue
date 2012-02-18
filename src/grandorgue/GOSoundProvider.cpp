@@ -131,7 +131,7 @@ void GOSoundProvider::ComputeReleaseAlignmentInfo()
 	for(unsigned i = 0; i < m_Attack.size(); i++)
 		sections.push_back(m_Attack[i]);
 	for(unsigned i = 0; i < m_Release.size(); i++)
-		m_Release[i]->SetupStreamAlignment(sections);
+		m_Release[i]->SetupStreamAlignment(sections, 0);
 }
 
 int GOSoundProvider::IsOneshot() const

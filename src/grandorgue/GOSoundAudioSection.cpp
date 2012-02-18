@@ -28,10 +28,11 @@
 #include "GOSoundCompress.h"
 #include "GOSoundResample.h"
 
-GOAudioSection::GOAudioSection(GOrgueMemoryPool& pool)
-	: m_Data(NULL)
-	, m_ReleaseAligner(NULL)
-	, m_Pool(pool)
+GOAudioSection::GOAudioSection(GOrgueMemoryPool& pool):
+	m_Data(NULL),
+	m_ReleaseAligner(NULL),
+	m_ReleaseStartSegment(0),
+	m_Pool(pool)
 {
 	ClearData();
 }
@@ -87,6 +88,8 @@ bool GOAudioSection::LoadCache(GOrgueCache& cache)
 	if (!cache.Read(&m_History, sizeof(m_History)))
 		return false;
 	if (!cache.Read(&m_SampleFracBits, sizeof(m_SampleFracBits)))
+		return false;
+	if (!cache.Read(&m_ReleaseStartSegment, sizeof(m_ReleaseStartSegment)))
 		return false;
 	m_Data = (unsigned char*)cache.ReadBlock(m_AllocSize);
 	if (!m_Data)
@@ -154,6 +157,8 @@ bool GOAudioSection::SaveCache(GOrgueCacheWriter& cache) const
 	if (!cache.Write(&m_History, sizeof(m_History)))
 		return false;
 	if (!cache.Write(&m_SampleFracBits, sizeof(m_SampleFracBits)))
+		return false;
+	if (!cache.Write(&m_ReleaseStartSegment, sizeof(m_ReleaseStartSegment)))
 		return false;
 	if (!cache.WriteBlock(m_Data, m_AllocSize))
 		return false;
@@ -983,9 +988,7 @@ void GOAudioSection::Compress(bool format16)
 	free(data);
 }
 
-void GOAudioSection::SetupStreamAlignment
-	(const std::vector<const GOAudioSection*> &joinables
-	)
+void GOAudioSection::SetupStreamAlignment(const std::vector<const GOAudioSection*> &joinables, unsigned start_index)
 {
 	if (m_ReleaseAligner)
 	{
@@ -1002,6 +1005,9 @@ void GOAudioSection::SetupStreamAlignment
 		if (joinables[i]->m_MaxAbsDerivative > max_derivative)
 			max_derivative = joinables[i]->m_MaxAbsDerivative;
 	}
+	m_ReleaseStartSegment = start_index;
+	if (m_ReleaseStartSegment >= m_StartSegments.size())
+		m_ReleaseStartSegment = 0;
 
 	if ((max_derivative != 0) && (max_amplitude != 0))
 	{
@@ -1011,6 +1017,7 @@ void GOAudioSection::SetupStreamAlignment
 			,max_amplitude
 			,max_derivative
 			,m_SampleRate
+			,m_StartSegments[m_ReleaseStartSegment].start_offset
 			);
 	}
 }
@@ -1058,8 +1065,8 @@ void GOAudioSection::InitAlignedStream
 {
 	stream->audio_section = this;
 
-	const audio_start_data_segment &start = m_StartSegments[0];
-	const audio_end_data_segment &end     = m_EndSegments[PickEndSegment(0)];
+	const audio_start_data_segment &start = m_StartSegments[m_ReleaseStartSegment];
+	const audio_end_data_segment &end     = m_EndSegments[PickEndSegment(m_ReleaseStartSegment)];
 	assert(end.transition_offset > start.start_offset);
 
 	stream->ptr                      = stream->audio_section->m_Data + start.data_offset;
