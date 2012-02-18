@@ -28,6 +28,7 @@
 #include "IniFileConfig.h"
 
 class GOrgueRank;
+class GOrguePipe;
 class GrandOrgueFile;
 
 class GOrgueWindchest
@@ -39,6 +40,7 @@ private:
 	std::vector<unsigned> m_enclosure;
 	std::vector<unsigned> m_tremulant;
 	std::vector<GOrgueRank*> m_ranks;
+	std::vector<GOrguePipe*> m_pipes;
 
 public:
 
@@ -50,6 +52,7 @@ public:
 	unsigned GetRankCount();
 	GOrgueRank* GetRank(unsigned index);
 	void AddRank(GOrgueRank* rank);
+	void AddPipe(GOrguePipe* pipe);
 	const wxString& GetName();
 };
 

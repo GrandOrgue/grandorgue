@@ -26,6 +26,7 @@
 #include "GOrgueManual.h"
 #include "GOrgueSettings.h"
 #include "GOrgueTemperament.h"
+#include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 #include "GOSoundProviderWave.h"
 #include "IniFileConfig.h"
@@ -189,6 +190,7 @@ void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	m_PitchCorrection = cfg.ReadInteger(group, prefix + wxT("PitchCorrection"), -1200, 1200, false, m_PitchCorrection);
 	m_SamplerGroupID = cfg.ReadInteger(group, prefix + wxT("WindchestGroup"), 1, m_OrganFile->GetWinchestGroupCount(), false, m_SamplerGroupID);
 	UpdateAmplitude();
+	m_OrganFile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 }
 
 void GOrguePipe::Save(IniFileConfig& cfg, bool prefix)
