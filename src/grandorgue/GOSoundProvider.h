@@ -28,6 +28,8 @@ class GOrgueMemoryPool;
 class GOrgueCache;
 class GOrgueCacheWriter;
 
+typedef struct audio_section_stream_s audio_section_stream;
+
 class GOSoundProvider
 {
 
@@ -51,7 +53,7 @@ public:
 	virtual bool LoadCache(GOrgueCache& cache);
 	virtual bool SaveCache(GOrgueCacheWriter& cache);
 
-	const GOAudioSection* GetRelease() const;
+	const GOAudioSection* GetRelease(const audio_section_stream* handle, double playback_time) const;
 	const GOAudioSection* GetAttack() const;
 	float GetGain() const;
 	int IsOneshot() const;
@@ -62,18 +64,6 @@ public:
 	unsigned GetMidiKeyNumber() const;
 	float GetMidiPitchFract() const;
 };
-
-inline
-const GOAudioSection* GOSoundProvider::GetRelease() const
-{
-	return &m_Release;
-}
-
-inline
-const GOAudioSection* GOSoundProvider::GetAttack() const
-{
-	return &m_Attack;
-}
 
 inline
 float GOSoundProvider::GetGain() const

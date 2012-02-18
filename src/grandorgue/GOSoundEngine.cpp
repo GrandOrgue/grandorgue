@@ -246,8 +246,8 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 
 			if  (
 					(m_PolyphonyLimiting) &&
+					(sampler->is_release) &&
 					(m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
-					(sampler->stream.audio_section == sampler->pipe->GetRelease()) &&
 					(m_CurrentTime - sampler->time > 172)
 				)
 				FaderStartDecay(&sampler->fader, -13); /* Approx 0.37s at 44.1kHz */
@@ -486,18 +486,19 @@ int GOSoundEngine::GetSamples
 
 SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id)
 {
-	if (pipe->GetAttack()->GetChannels() == 0)
+	const GOAudioSection* attack = pipe->GetAttack();
+	if (!attack || attack->GetChannels() == 0)
 		return NULL;
 	GO_SAMPLER* sampler = m_SamplerPool.GetSampler();
 	if (sampler)
 	{
 		sampler->pipe = pipe;
-		pipe->GetAttack()->InitStream
+		attack->InitStream
 			(&m_ResamplerCoefs
 			,&sampler->stream
 			,GetRandomFactor() * pipe->GetTuning() / (float)m_SampleRate
 			);
-		const float playback_gain = pipe->GetGain() * pipe->GetAttack()->GetNormGain();
+		const float playback_gain = pipe->GetGain() * attack->GetNormGain();
 		FaderNewConstant(&sampler->fader, playback_gain);
 		sampler->time = m_CurrentTime;
 		StartSampler(sampler, sampler_group_id);
@@ -520,11 +521,14 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 	// against a double. We should test against a minimum level.
 	if (vol)
 	{
+		const GOAudioSection* release_section = this_pipe->GetRelease(&handle->stream, ((double)(handle->time - m_CurrentTime) * BLOCKS_PER_FRAME) / m_SampleRate);
+		if (!release_section)
+			return;
+
 		GO_SAMPLER* new_sampler = m_SamplerPool.GetSampler();
 		if (new_sampler != NULL)
 		{
 
-			const GOAudioSection* release_section = this_pipe->GetRelease();
 			new_sampler->pipe = this_pipe;
 			new_sampler->time = m_CurrentTime + 1;
 
@@ -585,19 +589,20 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 
 			if (m_ReleaseAlignmentEnabled && release_section->SupportsStreamAlignment())
 			{
-				this_pipe->GetRelease()->InitAlignedStream
+				release_section->InitAlignedStream
 					(&new_sampler->stream
 					,&handle->stream
 					);
 			}
 			else
 			{
-				this_pipe->GetRelease()->InitStream
+				release_section->InitStream
 					(&m_ResamplerCoefs
 					,&new_sampler->stream
 					,this_pipe->GetTuning() / (float)m_SampleRate
 					);
 			}
+			new_sampler->is_release = true;
 
 			int windchest_index;
 			if (not_a_tremulant)

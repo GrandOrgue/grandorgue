@@ -40,6 +40,7 @@ typedef struct GO_SAMPLER_T
 	unsigned                   time;
 	/* current index of the current block into this sample */
 	bool                       stop;
+	bool                       is_release;
 } GO_SAMPLER;
 
 #endif /* GOSOUNDSAMPLER_H_ */
