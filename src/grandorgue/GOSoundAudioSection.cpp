@@ -1034,10 +1034,10 @@ void GOAudioSection::InitStream
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->last_position = 0;
-	memset(stream->curr_value, 0, sizeof(stream->curr_value));
-	memset(stream->next_value, 0, sizeof(stream->next_value));
-	memset(stream->diff_value, 0, sizeof(stream->diff_value));
-	memset(stream->last_value, 0, sizeof(stream->last_value));
+	memcpy(stream->last_value, start.last_value, sizeof(stream->last_value));
+	memcpy(stream->next_value, start.next_value, sizeof(stream->next_value));
+	memcpy(stream->diff_value, start.diff_value, sizeof(stream->diff_value));
+	memcpy(stream->curr_value, start.curr_value, sizeof(stream->curr_value));
 	memcpy
 		(stream->history
 		,m_History
@@ -1070,10 +1070,10 @@ void GOAudioSection::InitAlignedStream
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->last_position = 0;
-	memset(stream->curr_value, 0, sizeof(stream->curr_value));
-	memset(stream->next_value, 0, sizeof(stream->next_value));
-	memset(stream->diff_value, 0, sizeof(stream->diff_value));
-	memset(stream->last_value, 0, sizeof(stream->last_value));
+	memcpy(stream->last_value, start.last_value, sizeof(stream->last_value));
+	memcpy(stream->next_value, start.next_value, sizeof(stream->next_value));
+	memcpy(stream->diff_value, start.diff_value, sizeof(stream->diff_value));
+	memcpy(stream->curr_value, start.curr_value, sizeof(stream->curr_value));
 	memcpy
 		(stream->history
 		,m_History
