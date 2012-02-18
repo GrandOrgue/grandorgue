@@ -79,6 +79,8 @@ void GOrguePipe::SetOn()
 		m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID);
 		if ((m_Sampler) && (m_Instances == 0))
 			m_Instances++;
+		if (GetSoundProvider()->IsOneshot())
+			m_Sampler = 0;
 	}
 }
 
@@ -87,7 +89,7 @@ void GOrguePipe::SetOff()
 	if (m_Instances > 0)
 	{
 		m_Instances--;
-		if ((!GetSoundProvider()->IsOneshot()) && (m_Instances == 0))
+		if ((m_Sampler) && (m_Instances == 0))
 		{
 			m_OrganFile->StopSample(GetSoundProvider(), m_Sampler);
 			this->m_Sampler = 0;
