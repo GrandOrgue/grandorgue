@@ -237,6 +237,7 @@ public:
 		) const;
 
 	float GetNormGain() const;
+	unsigned GetSampleRate() const;
 	bool SupportsStreamAlignment() const;
 	void SetupStreamAlignment(const std::vector<const GOAudioSection*> &joinables);
 

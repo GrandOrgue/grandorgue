@@ -40,7 +40,6 @@ GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
 	m_pool(pool)
 {
 	m_Gain = 0.0f;
-	m_SampleRate = 0;
 }
 
 GOSoundProvider::~GOSoundProvider()
