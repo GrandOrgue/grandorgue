@@ -884,6 +884,9 @@ void GOAudioSection::Setup
 
 void GOAudioSection::Compress(bool format16)
 {
+	std::vector<unsigned> start_offsets;
+	start_offsets.resize(m_StartSegments.size());
+
 	unsigned char* data = (unsigned char*)malloc(m_AllocSize);
 	if (!data)
 		return;
@@ -907,7 +910,7 @@ void GOAudioSection::Compress(bool format16)
 		{
 			if (m_StartSegments[j].start_offset == i)
 			{
-				m_StartSegments[j].data_offset = output_len;
+				start_offsets[j] = output_len;
 				m_StartSegments[j].last_value[0] = last[0];
 				m_StartSegments[j].last_value[1] = last[1];
 				m_StartSegments[j].diff_value[0] = diff[0];
@@ -974,6 +977,9 @@ void GOAudioSection::Compress(bool format16)
 	memcpy(m_Data, data, output_len);
 	m_AllocSize = output_len;
 	m_Compressed = true;
+	for (unsigned j = 0; j < m_StartSegments.size(); j++)
+		m_StartSegments[j].data_offset = start_offsets[j];
+
 	free(data);
 }
 
