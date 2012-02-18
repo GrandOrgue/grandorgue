@@ -29,7 +29,8 @@ GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 	m_Name(),
 	m_enclosure(0),
 	m_tremulant(0),
-	m_ranks(0)
+	m_ranks(0),
+	m_pipes(0)
 {
 }
 
@@ -89,6 +90,11 @@ GOrgueRank* GOrgueWindchest::GetRank(unsigned index)
 void GOrgueWindchest::AddRank(GOrgueRank* rank)
 {
 	m_ranks.push_back(rank);
+}
+
+void GOrgueWindchest::AddPipe(GOrguePipe* pipe)
+{
+	m_pipes.push_back(pipe);
 }
 
 const wxString& GOrgueWindchest::GetName()
