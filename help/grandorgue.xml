@@ -3384,6 +3384,19 @@ Trelmulants are drawstop objects with the following additions attributes:
       </para>
       <variablelist>
         <varlistentry>
+          <term>TremulantType</term>
+          <listitem>
+            <para>
+(enumeration, default: Synth) Type of the tremulant. Valid values are: Synth (synthesised tremulant).
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+Synthesised tremulants have the following attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
           <term>Period</term>
           <listitem>
             <para>

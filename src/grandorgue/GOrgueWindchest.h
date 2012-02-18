@@ -46,6 +46,7 @@ public:
 
 	GOrgueWindchest(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, unsigned index);
+	void ControlChanged(void* control);
 	float GetVolume();
 	unsigned GetTremulantCount();
 	unsigned GetTremulantId(unsigned index);

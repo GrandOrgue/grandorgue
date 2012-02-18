@@ -24,8 +24,13 @@
 #include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
 
+const struct IniFileEnumEntry GOrgueTremulant::m_tremulant_types[]={
+	{ wxT("Synth"), GOSynthTrem },
+};
+
 GOrgueTremulant::GOrgueTremulant(GrandOrgueFile* organfile) :
 	GOrgueDrawstop(organfile),
+	m_TremulantType(GOSynthTrem),
 	m_Period(0),
 	m_StartRate(0),
 	m_StopRate(0),
@@ -71,19 +76,26 @@ wxString GOrgueTremulant::GetLoadTitle()
 
 void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, int sampler_group_id)
 {
-	m_Period            = cfg.ReadLong(group, wxT("Period"), 32, 441000);
-	m_StartRate         = cfg.ReadInteger(group, wxT("StartRate"), 1, 100);
-	m_StopRate          = cfg.ReadInteger(group, wxT("StopRate"), 1, 100);
-	m_AmpModDepth       = cfg.ReadInteger(group, wxT("AmpModDepth"), 1, 100);
-	m_SamplerGroupID    = sampler_group_id;
-	m_PlaybackHandle    = 0;
+	m_TremulantType = (GOrgueTremulantType)cfg.ReadEnum(group, wxT("TremulantType"), m_tremulant_types, sizeof(m_tremulant_types) / sizeof(m_tremulant_types[0]), false, GOSynthTrem);
+	if (m_TremulantType == GOSynthTrem)
+	{
+		m_Period            = cfg.ReadLong(group, wxT("Period"), 32, 441000);
+		m_StartRate         = cfg.ReadInteger(group, wxT("StartRate"), 1, 100);
+		m_StopRate          = cfg.ReadInteger(group, wxT("StopRate"), 1, 100);
+		m_AmpModDepth       = cfg.ReadInteger(group, wxT("AmpModDepth"), 1, 100);
+		m_SamplerGroupID    = sampler_group_id;
+		m_PlaybackHandle    = 0;
+	}
 	GOrgueDrawstop::Load(cfg, group);
 }
 
 void GOrgueTremulant::InitSoundProvider()
 {
-	m_TremProvider.Create(m_Period, m_StartRate, m_StopRate, m_AmpModDepth);
-	assert(!m_TremProvider.IsOneshot());
+	if (m_TremulantType == GOSynthTrem)
+	{
+		m_TremProvider.Create(m_Period, m_StartRate, m_StopRate, m_AmpModDepth);
+		assert(!m_TremProvider.IsOneshot());
+	}
 }
 
 void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix)
@@ -93,7 +105,7 @@ void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix)
 
 void GOrgueTremulant::Set(bool on)
 {
-	if (IsEngaged() != on)
+	if (IsEngaged() != on && m_TremulantType == GOSynthTrem)
 	{
 		if (on)
 		{
@@ -107,8 +119,8 @@ void GOrgueTremulant::Set(bool on)
 			m_organfile->StopSample(&m_TremProvider, m_PlaybackHandle);
 			m_PlaybackHandle = NULL;
 		}
-		GOrgueDrawstop::Set(on);
 	}
+	GOrgueDrawstop::Set(on);
 }
 
 void GOrgueTremulant::Abort()
@@ -118,9 +130,18 @@ void GOrgueTremulant::Abort()
 
 void GOrgueTremulant::PreparePlayback()
 {
-	if (IsEngaged())
+	if (IsEngaged() && m_TremulantType == GOSynthTrem)
 	{
 		assert(m_SamplerGroupID < 0);
 		m_PlaybackHandle = m_organfile->StartSample(&m_TremProvider, m_SamplerGroupID);
 	}
+	if (m_TremulantType == GOWavTrem)
+	{
+		m_organfile->ControlChanged((GOrgueButton*)this);
+	}
+}
+
+GOrgueTremulantType GOrgueTremulant::GetTremulantType()
+{
+	return m_TremulantType;
 }
