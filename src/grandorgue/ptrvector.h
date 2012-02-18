@@ -52,7 +52,17 @@ public:
 		return at(pos);
 	}
 
+	const T* operator[] (unsigned pos) const
+	{
+		return at(pos);
+	}
+
 	T*& at (unsigned pos)
+	{
+		return std::vector<T*>::at(pos);
+	}
+
+	const T* at (unsigned pos) const
 	{
 		return std::vector<T*>::at(pos);
 	}
