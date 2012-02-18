@@ -110,3 +110,13 @@ float GOSoundProvider::GetMidiPitchFract() const
 {
 	return m_MidiPitchFract;
 }
+
+const GOAudioSection* GOSoundProvider::GetAttack() const
+{
+	return &m_Attack;
+}
+
+const GOAudioSection* GOSoundProvider::GetRelease(const audio_section_stream* handle, double playback_time) const
+{
+	return &m_Release;
+}
