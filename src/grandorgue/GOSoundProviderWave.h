@@ -25,6 +25,7 @@
 
 #include "GOSoundProvider.h"
 #include <wx/wx.h>
+#include <vector>
 
 class GOrgueWave;
 
@@ -46,19 +47,35 @@ typedef enum
 	LOOP_LOAD_ALL = 2
 } loop_load_type;
 
+typedef struct
+{
+	wxString filename;
+	int sample_group;
+	bool load_release;
+	bool percussive;
+	int max_playback_time;
+} attack_load_info;
+
+typedef struct
+{
+	wxString filename;
+	int sample_group;
+	int max_playback_time;
+} release_load_info;
+
 class GOSoundProviderWave : public GOSoundProvider
 {
 	unsigned GetBytesPerSample(unsigned bits_per_sample);
-
-	void CreateAttack(const char* data, GOrgueWave& wave, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive);
-	void CreateRelease(const char* data, GOrgueWave& wave, unsigned bits_per_sample, unsigned channels, bool compress);
-	void ProcessFile(wxString filename, wxString path, bool is_attack, bool is_release, unsigned bits_per_sample,
+       
+	void CreateAttack(const char* data, GOrgueWave& wave, int sample_group, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive);
+	void CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, unsigned bits_per_sample, unsigned channels, bool compress);
+	void ProcessFile(wxString filename, wxString path, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, unsigned bits_per_sample, 
 			 unsigned load_channels, bool compress, loop_load_type loop_mode, bool percussive);
 
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
 
-	void LoadFromFile(wxString filename, wxString path, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode);
+	void LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, wxString path, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode);
 	void SetAmplitude(int fixed_amplitude);
 };
 

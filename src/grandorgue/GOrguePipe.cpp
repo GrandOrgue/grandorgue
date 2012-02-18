@@ -44,6 +44,8 @@ GOrguePipe::GOrguePipe
 	m_Rank(rank),
 	m_Sampler(NULL),
 	m_Instances(0),
+	m_AttackInfo(),
+	m_ReleaseInfo(),
 	m_SamplerGroupID(sampler_group_id),
 	m_Filename(),
 	m_Percussive(percussive),
@@ -193,6 +195,14 @@ void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	m_SamplerGroupID = cfg.ReadInteger(group, prefix + wxT("WindchestGroup"), 1, m_OrganFile->GetWinchestGroupCount(), false, m_SamplerGroupID);
 	UpdateAmplitude();
 	m_OrganFile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+
+	attack_load_info ainfo;
+	ainfo.filename = m_Filename;
+	ainfo.sample_group = -1;
+	ainfo.load_release = true;
+	ainfo.percussive = m_Percussive;
+	ainfo.max_playback_time = -1;
+	m_AttackInfo.push_back(ainfo);
 }
 
 void GOrguePipe::Save(IniFileConfig& cfg, bool prefix)
@@ -257,6 +267,34 @@ void GOrguePipe::UpdateHash(SHA_CTX& ctx)
 	SHA1_Update(&ctx, &value, sizeof(value));
 	value = GetEffectiveLoopLoad();
 	SHA1_Update(&ctx, &value, sizeof(value));
+
+	value = m_AttackInfo.size();
+	SHA1_Update(&ctx, &value, sizeof(value));
+	for(unsigned i = 0; i < m_AttackInfo.size(); i++)
+	{
+		filename = m_AttackInfo[i].filename;
+		SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+		value = m_AttackInfo[i].sample_group;
+		SHA1_Update(&ctx, &value, sizeof(value));
+		value = m_AttackInfo[i].max_playback_time;
+		SHA1_Update(&ctx, &value, sizeof(value));
+		value = m_AttackInfo[i].load_release;
+		SHA1_Update(&ctx, &value, sizeof(value));
+		value = m_AttackInfo[i].percussive;
+		SHA1_Update(&ctx, &value, sizeof(value));
+	}
+
+	value = m_ReleaseInfo.size();
+	SHA1_Update(&ctx, &value, sizeof(value));
+	for(unsigned i = 0; i < m_ReleaseInfo.size(); i++)
+	{
+		filename = m_ReleaseInfo[i].filename;
+		SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+		value = m_ReleaseInfo[i].sample_group;
+		SHA1_Update(&ctx, &value, sizeof(value));
+		value = m_ReleaseInfo[i].max_playback_time;
+		SHA1_Update(&ctx, &value, sizeof(value));
+	}
 }
 
 void GOrguePipe::LoadData()
@@ -266,7 +304,7 @@ void GOrguePipe::LoadData()
 	m_Reference = NULL;
 	try
 	{
-		m_SoundProvider.LoadFromFile(m_Filename, m_OrganFile->GetODFPath(), GetEffectiveBitsPerSample(), GetEffectiveChannels(), 
+		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_OrganFile->GetODFPath(), GetEffectiveBitsPerSample(), GetEffectiveChannels(), 
 					     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad());
 	}
 	catch(GOrgueOutOfMemory e)
@@ -282,6 +320,7 @@ void GOrguePipe::FastAbort()
 		m_Reference->FastAbort();
 	m_Instances = 0;
 	m_Sampler = 0;
+	m_SoundProvider.UseSampleGroup(0);
 }
 
 wxString GOrguePipe::GetFilename()

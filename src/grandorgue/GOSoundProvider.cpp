@@ -33,6 +33,7 @@ GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
 	m_MidiKeyNumber(0),
 	m_MidiPitchFract(0),
 	m_Tuning(1),
+	m_SampleGroup(0),
 	m_Attack(),
 	m_AttackInfo(),
 	m_Release(),
@@ -92,6 +93,10 @@ bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 	return true;
 }
 
+void GOSoundProvider::UseSampleGroup(unsigned sample_group)
+{
+	m_SampleGroup = sample_group;
+}
 
 bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 {
@@ -128,10 +133,24 @@ bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 void GOSoundProvider::ComputeReleaseAlignmentInfo()
 {
 	std::vector<const GOAudioSection*> sections;
-	for(unsigned i = 0; i < m_Attack.size(); i++)
-		sections.push_back(m_Attack[i]);
-	for(unsigned i = 0; i < m_Release.size(); i++)
-		m_Release[i]->SetupStreamAlignment(sections, 0);
+	for (int k = -1; k < 2; k++)
+	{
+		sections.clear();
+		for(unsigned i = 0; i < m_Attack.size(); i++)
+			if (m_AttackInfo[i].sample_group == k)
+				sections.push_back(m_Attack[i]);
+		for(unsigned i = 0; i < m_Release.size(); i++)
+			if (m_ReleaseInfo[i].sample_group == k)
+				m_Release[i]->SetupStreamAlignment(sections, 0);
+
+		sections.clear();
+		for(unsigned i = 0; i < m_Attack.size(); i++)
+			if (m_AttackInfo[i].sample_group != k)
+				sections.push_back(m_Attack[i]);
+		for(unsigned i = 0; i < m_Attack.size(); i++)
+			if (m_AttackInfo[i].sample_group == k)
+				m_Attack[i]->SetupStreamAlignment(sections, 1);
+	}
 }
 
 int GOSoundProvider::IsOneshot() const
@@ -162,16 +181,45 @@ float GOSoundProvider::GetMidiPitchFract() const
 
 const GOAudioSection* GOSoundProvider::GetAttack() const
 {
-	if (m_Attack.size() != 0)
-		return m_Attack[0];
-
+	const unsigned x = abs(rand());
+	for (unsigned i = 0; i < m_Attack.size(); i++)
+	{
+		const unsigned idx = (i + x) % m_Attack.size();
+		if (m_AttackInfo[idx].sample_group != -1 && 
+		    m_AttackInfo[idx].sample_group != m_SampleGroup)
+			continue;
+		return m_Attack[idx];
+	}
 	return NULL;
 }
 
 const GOAudioSection* GOSoundProvider::GetRelease(const audio_section_stream* handle, double playback_time) const
 {
-	if (m_Release.size() != 0)
-		return m_Release[0];
+	unsigned attack_idx = 0;
+	unsigned time = std::min(playback_time, 3600.0) * 1000;
+	for (unsigned i = 0; i < m_Attack.size(); i++)
+	{
+		if (handle->audio_section == m_Attack[i])
+			attack_idx = i;
+	}
+
+	const unsigned x = abs(rand());
+	int best_match = -1;
+	for (unsigned i = 0; i < m_Release.size(); i++)
+	{
+		const unsigned idx = (i + x) % m_Release.size();
+		if (m_ReleaseInfo[idx].sample_group != m_AttackInfo[attack_idx].sample_group)
+			continue;
+		if (m_ReleaseInfo[i].max_playback_time < time)
+			continue;
+		if (best_match == -1)
+			best_match = i;
+		else if (m_ReleaseInfo[best_match].max_playback_time > m_ReleaseInfo[i].max_playback_time)
+			best_match = i;
+	}
+
+	if (best_match != -1)
+		return m_Release[best_match];
 
 	return NULL;
 }
