@@ -121,6 +121,8 @@ void GOSoundProviderSynthedTrem::Create
 	trem_loop.end_sample   = (attack_samples + loop_samples) - 1;
 	std::vector<GO_WAVE_LOOP> trem_loops;
 	trem_loops.push_back(trem_loop);
+	attack_section_info attack_info;
+	m_AttackInfo.push_back(attack_info);
 	m_Attack.push_back(new GOAudioSection(m_pool));
 	m_Attack[0]->Setup
 		(data
@@ -133,6 +135,8 @@ void GOSoundProviderSynthedTrem::Create
 		);
 
 	/* Release section */
+	release_section_info release_info;
+	m_ReleaseInfo.push_back(release_info);
 	m_Release.push_back(new GOAudioSection(m_pool));
 	m_Release[0]->Setup
 		(&data[attack_samples + loop_samples]

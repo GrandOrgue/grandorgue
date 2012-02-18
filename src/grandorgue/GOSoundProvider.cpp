@@ -34,7 +34,9 @@ GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
 	m_MidiPitchFract(0),
 	m_Tuning(1),
 	m_Attack(),
+	m_AttackInfo(),
 	m_Release(),
+	m_ReleaseInfo(),
 	m_pool(pool)
 {
 	m_Gain = 0.0f;
@@ -48,7 +50,9 @@ GOSoundProvider::~GOSoundProvider()
 void GOSoundProvider::ClearData()
 {
 	m_Attack.clear();
+	m_AttackInfo.clear();
 	m_Release.clear();
+	m_ReleaseInfo.clear();
 }
 
 bool GOSoundProvider::LoadCache(GOrgueCache& cache)
@@ -63,6 +67,10 @@ bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 		return false;
 	for(unsigned i = 0; i < attacks; i++)
 	{
+		attack_section_info info;
+		if (!cache.Read(&info, sizeof(info)))
+			return false;
+		m_AttackInfo.push_back(info);
 		m_Attack.push_back(new GOAudioSection(m_pool));
 		if (!m_Attack[i]->LoadCache(cache))
 			return false;
@@ -73,6 +81,10 @@ bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 		return false;
 	for(unsigned i = 0; i < releases; i++)
 	{
+		release_section_info info;
+		if (!cache.Read(&info, sizeof(info)))
+			return false;
+		m_ReleaseInfo.push_back(info);
 		m_Release.push_back(new GOAudioSection(m_pool));
 		if (!m_Release[i]->LoadCache(cache))
 			return false;
@@ -93,15 +105,23 @@ bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 	if (!cache.Write(&attacks, sizeof(attacks)))
 		return false;
 	for(unsigned i = 0; i < m_Attack.size(); i++)
+	{
+		if (!cache.Write(&m_AttackInfo[i], sizeof(m_AttackInfo[i])))
+			return false;
 		if (!m_Attack[i]->SaveCache(cache))
 			return false;
+	}
 
 	unsigned releases = m_Release.size();
 	if (!cache.Write(&releases, sizeof(releases)))
 		return false;
 	for(unsigned i = 0; i < m_Release.size(); i++)
+	{
+		if (!cache.Write(&m_ReleaseInfo[i], sizeof(m_ReleaseInfo[i])))
+			return false;
 		if (!m_Release[i]->SaveCache(cache))
 			return false;
+	}
 
 	return true;
 }
