@@ -115,6 +115,8 @@ void GOSoundProviderWave::LoadFromFile
 			}
 		}
 
+		attack_section_info attack_info;
+		m_AttackInfo.push_back(attack_info);
 		m_Attack.push_back(new GOAudioSection(m_pool));
 		m_Attack[0]->Setup
 			(data
@@ -134,6 +136,8 @@ void GOSoundProviderWave::LoadFromFile
 			if (release_offset >= wave.GetLength())
 				throw (wxString)_("Invalid release position");
 
+			release_section_info release_info;
+			m_ReleaseInfo.push_back(release_info);
 			m_Release.push_back(new GOAudioSection(m_pool));
 			m_Release[0]->Setup
 				(data + release_offset * bytes_per_sample * channels

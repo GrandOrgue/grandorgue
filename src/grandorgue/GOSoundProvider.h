@@ -23,6 +23,7 @@
 #ifndef GOSOUNDPROVIDER_H_
 #define GOSOUNDPROVIDER_H_
 
+#include <vector>
 #include "GOSoundAudioSection.h"
 #include "ptrvector.h"
 class GOrgueMemoryPool;
@@ -30,6 +31,14 @@ class GOrgueCache;
 class GOrgueCacheWriter;
 
 typedef struct audio_section_stream_s audio_section_stream;
+
+typedef struct
+{
+} attack_section_info;
+
+typedef struct
+{
+} release_section_info;
 
 class GOSoundProvider
 {
@@ -41,7 +50,9 @@ protected:
 	float             m_Tuning;
 	unsigned int      m_SampleRate;
 	ptr_vector<GOAudioSection> m_Attack;
+	std::vector<attack_section_info> m_AttackInfo;
 	ptr_vector<GOAudioSection> m_Release;
+	std::vector<release_section_info> m_ReleaseInfo;
 	GOrgueMemoryPool &m_pool;
 	void ComputeReleaseAlignmentInfo();
 
