@@ -24,6 +24,7 @@
 #define GOSOUNDPROVIDER_H_
 
 #include "GOSoundAudioSection.h"
+#include "ptrvector.h"
 class GOrgueMemoryPool;
 class GOrgueCache;
 class GOrgueCacheWriter;
@@ -39,8 +40,8 @@ protected:
 	float             m_Gain;
 	float             m_Tuning;
 	unsigned int      m_SampleRate;
-	GOAudioSection    m_Attack;
-	GOAudioSection    m_Release;
+	ptr_vector<GOAudioSection> m_Attack;
+	ptr_vector<GOAudioSection> m_Release;
 	GOrgueMemoryPool &m_pool;
 	void ComputeReleaseAlignmentInfo();
 
