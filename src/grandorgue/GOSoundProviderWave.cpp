@@ -115,7 +115,8 @@ void GOSoundProviderWave::LoadFromFile
 			}
 		}
 
-		m_Attack.Setup
+		m_Attack.push_back(new GOAudioSection(m_pool));
+		m_Attack[0]->Setup
 			(data
 			,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
 			,channels
@@ -133,7 +134,8 @@ void GOSoundProviderWave::LoadFromFile
 			if (release_offset >= wave.GetLength())
 				throw (wxString)_("Invalid release position");
 
-			m_Release.Setup
+			m_Release.push_back(new GOAudioSection(m_pool));
+			m_Release[0]->Setup
 				(data + release_offset * bytes_per_sample * channels
 				,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
 				,channels

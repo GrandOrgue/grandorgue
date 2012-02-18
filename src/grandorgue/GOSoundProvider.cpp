@@ -33,8 +33,8 @@ GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
 	m_MidiKeyNumber(0),
 	m_MidiPitchFract(0),
 	m_Tuning(1),
-	m_Attack(pool),
-	m_Release(pool),
+	m_Attack(),
+	m_Release(),
 	m_pool(pool)
 {
 	m_Gain = 0.0f;
@@ -47,8 +47,8 @@ GOSoundProvider::~GOSoundProvider()
 
 void GOSoundProvider::ClearData()
 {
-	m_Attack.ClearData();
-	m_Release.ClearData();
+	m_Attack.clear();
+	m_Release.clear();
 }
 
 bool GOSoundProvider::LoadCache(GOrgueCache& cache)
@@ -58,11 +58,25 @@ bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 	if (!cache.Read(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
 		return false;
 
-	if (!m_Attack.LoadCache(cache))
+	unsigned attacks;
+	if (!cache.Read(&attacks, sizeof(attacks)))
 		return false;
+	for(unsigned i = 0; i < attacks; i++)
+	{
+		m_Attack.push_back(new GOAudioSection(m_pool));
+		if (!m_Attack[i]->LoadCache(cache))
+			return false;
+	}
 
-	if (!m_Release.LoadCache(cache))
+	unsigned releases;
+	if (!cache.Read(&releases, sizeof(releases)))
 		return false;
+	for(unsigned i = 0; i < releases; i++)
+	{
+		m_Release.push_back(new GOAudioSection(m_pool));
+		if (!m_Release[i]->LoadCache(cache))
+			return false;
+	}
 
 	return true;
 }
@@ -75,11 +89,19 @@ bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 	if (!cache.Write(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
 		return false;
 
-	if (!m_Attack.SaveCache(cache))
+	unsigned attacks = m_Attack.size();
+	if (!cache.Write(&attacks, sizeof(attacks)))
 		return false;
+	for(unsigned i = 0; i < m_Attack.size(); i++)
+		if (!m_Attack[i]->SaveCache(cache))
+			return false;
 
-	if (!m_Release.SaveCache(cache))
+	unsigned releases = m_Release.size();
+	if (!cache.Write(&releases, sizeof(releases)))
 		return false;
+	for(unsigned i = 0; i < m_Release.size(); i++)
+		if (!m_Release[i]->SaveCache(cache))
+			return false;
 
 	return true;
 }
@@ -87,13 +109,21 @@ bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 void GOSoundProvider::ComputeReleaseAlignmentInfo()
 {
 	std::vector<const GOAudioSection*> sections;
-	sections.push_back(&m_Attack);
-	m_Release.SetupStreamAlignment(sections);
+	for(unsigned i = 0; i < m_Attack.size(); i++)
+		sections.push_back(m_Attack[i]);
+	for(unsigned i = 0; i < m_Release.size(); i++)
+		m_Release[i]->SetupStreamAlignment(sections);
 }
 
 int GOSoundProvider::IsOneshot() const
 {
-	return m_Attack.IsOneshot();
+	if (!m_Attack.size())
+		return false;
+	for(unsigned i = 0; i < m_Attack.size(); i++)
+		if (!m_Attack[i]->IsOneshot())
+			return false;
+
+	return true;
 }
 
 void GOSoundProvider::SetTuning(float cent)
@@ -113,10 +143,16 @@ float GOSoundProvider::GetMidiPitchFract() const
 
 const GOAudioSection* GOSoundProvider::GetAttack() const
 {
-	return &m_Attack;
+	if (m_Attack.size() != 0)
+		return m_Attack[0];
+
+	return NULL;
 }
 
 const GOAudioSection* GOSoundProvider::GetRelease(const audio_section_stream* handle, double playback_time) const
 {
-	return &m_Release;
+	if (m_Release.size() != 0)
+		return m_Release[0];
+
+	return NULL;
 }
