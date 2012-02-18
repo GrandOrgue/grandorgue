@@ -1070,7 +1070,7 @@ void GOAudioSection::InitAlignedStream
 	/* Translate increment in case of differing sample rates */
 	stream->resample_coefs           = existing_stream->resample_coefs;
 	stream->filter_index             = existing_stream->filter_index;
-	stream->increment_fraction       = roundf((((float)existing_stream->increment_fraction) / existing_stream->audio_section->m_SampleRate) * m_SampleRate);
+	stream->increment_fraction       = roundf((((float)existing_stream->increment_fraction) / existing_stream->audio_section->GetSampleRate()) * m_SampleRate);
 	stream->position_index           = 0;
 	stream->position_fraction        = existing_stream->position_fraction;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
@@ -1092,4 +1092,8 @@ void GOAudioSection::InitAlignedStream
 	m_ReleaseAligner->SetupRelease(*stream, *existing_stream);
 }
 
+unsigned GOAudioSection::GetSampleRate() const
+{
+	return m_SampleRate;
+}
 

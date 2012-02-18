@@ -38,6 +38,16 @@ void GOSoundProviderWave::SetAmplitude(int fixed_amplitude)
 	m_Gain                     = fixed_amplitude / 1000000.0f;
 }
 
+unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample)
+{
+	if (bits_per_sample <= 8)
+		return 1;
+	else if (bits_per_sample <= 16)
+		return 2;
+	else
+		return 3;
+}
+
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
@@ -65,16 +75,8 @@ void GOSoundProviderWave::LoadFromFile
 	GOrgueWave wave;
 	wave.Open(temp);
 
-	unsigned bytes_per_sample;
-	if (bits_per_sample <= 8)
-		bytes_per_sample = 1;
-	else if (bits_per_sample <= 16)
-		bytes_per_sample = 2;
-	else
-		bytes_per_sample = 3;
-
 	/* allocate data to work with */
-	unsigned totalDataSize = wave.GetLength() * bytes_per_sample * wave.GetChannels();
+	unsigned totalDataSize = wave.GetLength() * GetBytesPerSample(bits_per_sample) * wave.GetChannels();
 	char* data = (char*)malloc(totalDataSize);
 	if (data == NULL)
 		throw GOrgueOutOfMemory();
@@ -82,14 +84,13 @@ void GOSoundProviderWave::LoadFromFile
 	m_MidiKeyNumber = wave.GetMidiNote();
 	m_MidiPitchFract = wave.GetPitchFract();
 
-	m_SampleRate = wave.GetSampleRate();
 	unsigned channels = wave.GetChannels();
 	if (load_channels == 1)
 		channels = 1;
 
 	try
 	{
-		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, m_SampleRate, channels);
+		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), channels);
 
 		std::vector<GO_WAVE_LOOP> loops;
 		if ((wave.GetNbLoops() > 0) && (wave.HasReleaseMarker()))
@@ -122,7 +123,7 @@ void GOSoundProviderWave::LoadFromFile
 			(data
 			,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
 			,channels
-			,m_SampleRate
+			,wave.GetSampleRate()
 			,wave.GetLength()
 			,&loops
 			,compress
@@ -140,10 +141,10 @@ void GOSoundProviderWave::LoadFromFile
 			m_ReleaseInfo.push_back(release_info);
 			m_Release.push_back(new GOAudioSection(m_pool));
 			m_Release[0]->Setup
-				(data + release_offset * bytes_per_sample * channels
+				(data + release_offset * GetBytesPerSample(bits_per_sample) * channels
 				,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
 				,channels
-				,m_SampleRate
+				,wave.GetSampleRate()
 				,release_samples
 				,NULL
 				,compress

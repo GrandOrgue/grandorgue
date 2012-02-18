@@ -46,7 +46,7 @@ typedef enum
 
 class GOSoundProviderWave : public GOSoundProvider
 {
-	void Compress(GOAudioSection& section, bool format16);
+	unsigned GetBytesPerSample(unsigned bits_per_sample);
 
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);

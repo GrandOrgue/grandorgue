@@ -48,7 +48,6 @@ protected:
 	float m_MidiPitchFract;
 	float             m_Gain;
 	float             m_Tuning;
-	unsigned int      m_SampleRate;
 	ptr_vector<GOAudioSection> m_Attack;
 	std::vector<attack_section_info> m_AttackInfo;
 	ptr_vector<GOAudioSection> m_Release;
