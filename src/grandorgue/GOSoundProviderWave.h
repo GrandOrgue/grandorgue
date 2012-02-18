@@ -52,6 +52,8 @@ class GOSoundProviderWave : public GOSoundProvider
 
 	void CreateAttack(const char* data, GOrgueWave& wave, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive);
 	void CreateRelease(const char* data, GOrgueWave& wave, unsigned bits_per_sample, unsigned channels, bool compress);
+	void ProcessFile(wxString filename, wxString path, bool is_attack, bool is_release, unsigned bits_per_sample,
+			 unsigned load_channels, bool compress, loop_load_type loop_mode, bool percussive);
 
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
