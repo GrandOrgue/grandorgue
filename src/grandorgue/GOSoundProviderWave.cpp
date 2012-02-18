@@ -115,20 +115,9 @@ void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, unsi
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
-void GOSoundProviderWave::LoadFromFile
-	(wxString       filename
-	,wxString       path
-	,unsigned       bits_per_sample
-	,unsigned       load_channels
-	,bool           compress
-	,loop_load_type loop_mode
-	)
+void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, bool is_attack, bool is_release, unsigned bits_per_sample, unsigned load_channels, 
+				      bool compress, loop_load_type loop_mode, bool percussive)
 {
-
-	ClearData();
-	if (!load_channels)
-		return;
-
 	wxLogDebug(_("Loading file %s"), filename.c_str());
 
 	/* Translate directory seperator from ODF(\) to native format */
@@ -156,28 +145,50 @@ void GOSoundProviderWave::LoadFromFile
 	{
 		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), channels);
 
-		CreateAttack(data, wave, bits_per_sample, channels, compress, loop_mode, !wave.HasReleaseMarker());
+		if (is_attack)
+			CreateAttack(data, wave, bits_per_sample, channels, compress, loop_mode, !wave.HasReleaseMarker());
 
-		if (wave.HasReleaseMarker() && wave.GetNbLoops() > 0)
+		if (is_release && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
 			CreateRelease(data, wave, bits_per_sample, channels, compress);
 
 		/* data is no longer needed */
 		FREE_AND_NULL(data);
+	}
+	catch (...)
+	{
+		FREE_AND_NULL(data);
+		throw;
+	}
+}
 
-		if (wave.HasReleaseMarker())
-			ComputeReleaseAlignmentInfo();
+void GOSoundProviderWave::LoadFromFile
+	(wxString       filename
+	,wxString       path
+	,unsigned       bits_per_sample
+	,unsigned       load_channels
+	,bool           compress
+	,loop_load_type loop_mode
+	)
+{
 
+	ClearData();
+	if (!load_channels)
+		return;
+
+	try
+	{
+		ProcessFile(filename, path, true, true, bits_per_sample, load_channels, compress, loop_mode, false);
+
+		ComputeReleaseAlignmentInfo();
 	}
 	catch (wxString error)
 	{
 		wxLogError(_("caught exception: %s\n"), error.c_str());
-		FREE_AND_NULL(data);
 		ClearData();
 		throw;
 	}
 	catch (...)
 	{
-		FREE_AND_NULL(data);
 		ClearData();
 		throw;
 	}
