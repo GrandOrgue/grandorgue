@@ -49,6 +49,8 @@ private:
 	int m_Compress;
 	int m_Channels;
 	int m_LoopLoad;
+	int m_AttackLoad;
+	int m_ReleaseLoad;
 
 public:
 	GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback);
@@ -75,6 +77,12 @@ public:
 
 	int GetLoopLoad();
 	void SetLoopLoad(int value);
+
+	int GetAttackLoad();
+	void SetAttackLoad(int value);
+
+	int GetReleaseLoad();
+	void SetReleaseLoad(int value);
 };
 
 #endif

@@ -200,6 +200,28 @@ unsigned GOrguePipe::GetEffectiveLoopLoad()
 	return m_OrganFile->GetSettings().GetLoopLoad();
 }
 
+unsigned GOrguePipe::GetEffectiveAttackLoad()
+{
+	if (m_PipeConfig.GetAttackLoad() != -1)
+		return m_PipeConfig.GetAttackLoad();
+	if (m_Rank->GetPipeConfig().GetAttackLoad() != -1)
+		return m_Rank->GetPipeConfig().GetAttackLoad();
+	if (m_OrganFile->GetPipeConfig().GetAttackLoad() != -1)
+		return m_OrganFile->GetPipeConfig().GetAttackLoad();
+	return m_OrganFile->GetSettings().GetAttackLoad();
+}
+
+unsigned GOrguePipe::GetEffectiveReleaseLoad()
+{
+	if (m_PipeConfig.GetReleaseLoad() != -1)
+		return m_PipeConfig.GetReleaseLoad();
+	if (m_Rank->GetPipeConfig().GetReleaseLoad() != -1)
+		return m_Rank->GetPipeConfig().GetReleaseLoad();
+	if (m_OrganFile->GetPipeConfig().GetReleaseLoad() != -1)
+		return m_OrganFile->GetPipeConfig().GetReleaseLoad();
+	return m_OrganFile->GetSettings().GetReleaseLoad();
+}
+
 unsigned GOrguePipe::GetEffectiveChannels()
 {
 	if (m_PipeConfig.GetChannels() != -1)

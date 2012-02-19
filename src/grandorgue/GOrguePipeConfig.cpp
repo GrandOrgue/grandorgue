@@ -36,7 +36,9 @@ GOrguePipeConfig::GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCa
 	m_BitsPerSample(-1),
 	m_Compress(-1),
 	m_Channels(-1),
-	m_LoopLoad(-1)
+	m_LoopLoad(-1),
+	m_AttackLoad(-1),
+	m_ReleaseLoad(-1)
 {
 }
 
@@ -54,6 +56,8 @@ void GOrguePipeConfig::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	m_Compress = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
 	m_Channels = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("Channels"), -1, 2, false, -1);
 	m_LoopLoad = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("LoopLoad"), -1, 2, false, -1);
+	m_AttackLoad = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("AttackLoad"), -1, 1, false, -1);
+	m_ReleaseLoad = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
 	m_Callback->UpdateAmplitude();
 	m_Callback->UpdateTuning();
 }
@@ -66,6 +70,8 @@ void GOrguePipeConfig::Save(IniFileConfig& cfg, bool prefix)
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Channels"), m_Channels);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("LoopLoad"), m_LoopLoad);
+	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("AttackLoad"), m_AttackLoad);
+	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
 }
 
 float GOrguePipeConfig::GetAmplitude()
@@ -143,5 +149,27 @@ int  GOrguePipeConfig::GetLoopLoad()
 void  GOrguePipeConfig::SetLoopLoad(int value)
 {
 	m_LoopLoad = value;
+	m_OrganFile->Modified();
+}
+
+int  GOrguePipeConfig::GetAttackLoad()
+{
+	return m_AttackLoad;
+}
+
+void  GOrguePipeConfig::SetAttackLoad(int value)
+{
+	m_AttackLoad = value;
+	m_OrganFile->Modified();
+}
+
+int  GOrguePipeConfig::GetReleaseLoad()
+{
+	return m_ReleaseLoad;
+}
+
+void  GOrguePipeConfig::SetReleaseLoad(int value)
+{
+	m_ReleaseLoad = value;
 	m_OrganFile->Modified();
 }

@@ -93,6 +93,8 @@ public:
 	unsigned GetEffectiveBitsPerSample();
 	bool GetEffectiveCompress();
 	unsigned GetEffectiveLoopLoad();
+	unsigned GetEffectiveAttackLoad();
+	unsigned GetEffectiveReleaseLoad();
 	unsigned GetEffectiveChannels();
 };
 

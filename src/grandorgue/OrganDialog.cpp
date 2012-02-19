@@ -80,6 +80,8 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_CHOICE(ID_EVENT_COMPRESS, OrganDialog::OnCompressChanged)
 	EVT_CHOICE(ID_EVENT_CHANNELS, OrganDialog::OnChannelsChanged)
 	EVT_CHOICE(ID_EVENT_LOOP_LOAD, OrganDialog::OnLoopLoadChanged)
+	EVT_CHOICE(ID_EVENT_ATTACK_LOAD, OrganDialog::OnAttackLoadChanged)
+	EVT_CHOICE(ID_EVENT_RELEASE_LOAD, OrganDialog::OnReleaseLoadChanged)
 END_EVENT_TABLE()
 
 OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
@@ -166,6 +168,22 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	m_LoopLoad = new wxChoice(this, ID_EVENT_LOOP_LOAD, wxDefaultPosition, wxDefaultSize, choices);
 	grid->Add(m_LoopLoad);
 
+	choices.clear();
+	choices.push_back(_("Parent default"));
+	choices.push_back(_("Single attack"));
+	choices.push_back(_("All"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Attack loading:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	m_AttackLoad = new wxChoice(this, ID_EVENT_ATTACK_LOAD, wxDefaultPosition, wxDefaultSize, choices);
+	grid->Add(m_AttackLoad);
+
+	choices.clear();
+	choices.push_back(_("Parent default"));
+	choices.push_back(_("Single release"));
+	choices.push_back(_("All"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Release loading:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	m_ReleaseLoad = new wxChoice(this, ID_EVENT_RELEASE_LOAD, wxDefaultPosition, wxDefaultSize, choices);
+	grid->Add(m_ReleaseLoad);
+
 	m_BitsPerSample->SetSelection(wxNOT_FOUND);
 	m_LastBitsPerSample = m_BitsPerSample->GetSelection();
 	m_Compress->SetSelection(wxNOT_FOUND);
@@ -174,6 +192,10 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	m_LastChannels = m_Channels->GetSelection();
 	m_LoopLoad->SetSelection(wxNOT_FOUND);
 	m_LastLoopLoad = m_LoopLoad->GetSelection();
+	m_AttackLoad->SetSelection(wxNOT_FOUND);
+	m_LastAttackLoad = m_AttackLoad->GetSelection();
+	m_ReleaseLoad->SetSelection(wxNOT_FOUND);
+	m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
 
 	wxBoxSizer* buttons = new wxBoxSizer(wxHORIZONTAL);
 	m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
@@ -241,6 +263,8 @@ void OrganDialog::Load()
 		m_Compress->Disable();
 		m_Channels->Disable();
 		m_LoopLoad->Disable();
+		m_AttackLoad->Disable();
+		m_ReleaseLoad->Disable();
 		m_Apply->Disable();
 		m_Reset->Disable();
 		m_Default->Disable();
@@ -273,6 +297,16 @@ void OrganDialog::Load()
 			SetEmpty(m_LoopLoad);
 			m_LastLoopLoad = m_LoopLoad->GetSelection();
 		}
+		if (m_AttackLoad->GetSelection() == m_LastAttackLoad)
+		{
+			SetEmpty(m_AttackLoad);
+			m_LastAttackLoad = m_AttackLoad->GetSelection();
+		}
+		if (m_ReleaseLoad->GetSelection() == m_LastReleaseLoad)
+		{
+			SetEmpty(m_ReleaseLoad);
+			m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
+		}
 	}
 	else
 		m_Apply->Disable();
@@ -293,6 +327,8 @@ void OrganDialog::Load()
 	m_Compress->Enable();
 	m_Channels->Enable();
 	m_LoopLoad->Enable();
+	m_AttackLoad->Enable();
+	m_ReleaseLoad->Enable();
 	m_Default->Enable();
 	m_Reset->Disable();
 	
@@ -320,16 +356,22 @@ void OrganDialog::Load()
 		RemoveEmpty(m_Compress);
 		RemoveEmpty(m_Channels);
 		RemoveEmpty(m_LoopLoad);
+		RemoveEmpty(m_AttackLoad);
+		RemoveEmpty(m_ReleaseLoad);
 
 		m_BitsPerSample->SetSelection(bits_per_sample);
 		m_Compress->SetSelection(m_Last->config->GetCompress() + 1);
 		m_Channels->SetSelection(m_Last->config->GetChannels() + 1);
 		m_LoopLoad->SetSelection(m_Last->config->GetLoopLoad() + 1);
+		m_AttackLoad->SetSelection(m_Last->config->GetAttackLoad() + 1);
+		m_ReleaseLoad->SetSelection(m_Last->config->GetReleaseLoad() + 1);
 
 		m_LastBitsPerSample = m_BitsPerSample->GetSelection();
 		m_LastCompress = m_Compress->GetSelection();
 		m_LastChannels = m_Channels->GetSelection();
 		m_LastLoopLoad = m_LoopLoad->GetSelection();
+		m_LastAttackLoad = m_AttackLoad->GetSelection();
+		m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
 	}
 }
 
@@ -384,6 +426,18 @@ void OrganDialog::OnLoopLoadChanged(wxCommandEvent &e)
 	Modified();
 }
 
+void OrganDialog::OnAttackLoadChanged(wxCommandEvent &e)
+{
+	RemoveEmpty(m_AttackLoad);
+	Modified();
+}
+
+void OrganDialog::OnReleaseLoadChanged(wxCommandEvent &e)
+{
+	RemoveEmpty(m_ReleaseLoad);
+	Modified();
+}
+
 bool OrganDialog::Changed()
 {
 	bool changed = false;
@@ -398,6 +452,10 @@ bool OrganDialog::Changed()
 	if (m_Channels->GetSelection() != m_LastChannels)
 		changed = true;
 	if (m_LoopLoad->GetSelection() != m_LastLoopLoad)
+		changed = true;
+	if (m_AttackLoad->GetSelection() != m_LastAttackLoad)
+		changed = true;
+	if (m_ReleaseLoad->GetSelection() != m_LastReleaseLoad)
 		changed = true;
 
 	return changed;
@@ -470,6 +528,10 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 			e->config->SetChannels(m_Channels->GetSelection() - 1);
 		if (m_LoopLoad->GetSelection() != m_LastLoopLoad)
 			e->config->SetLoopLoad(m_LoopLoad->GetSelection() - 1);
+		if (m_AttackLoad->GetSelection() != m_LastAttackLoad)
+			e->config->SetAttackLoad(m_AttackLoad->GetSelection() - 1);
+		if (m_ReleaseLoad->GetSelection() != m_LastReleaseLoad)
+			e->config->SetReleaseLoad(m_ReleaseLoad->GetSelection() - 1);
 	}
 
 	m_Reset->Disable();
@@ -482,6 +544,8 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	m_LastCompress = m_Compress->GetSelection();
 	m_LastChannels = m_Channels->GetSelection();
 	m_LastLoopLoad = m_LoopLoad->GetSelection();
+	m_LastAttackLoad = m_AttackLoad->GetSelection();
+	m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
 }
 
 void OrganDialog::OnEventReset(wxCommandEvent &e)
@@ -504,6 +568,8 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 		e->config->SetCompress(-1);
 		e->config->SetChannels(-1);
 		e->config->SetLoopLoad(-1);
+		e->config->SetAttackLoad(-1);
+		e->config->SetReleaseLoad(-1);
 	}
 
 	m_Last = NULL;

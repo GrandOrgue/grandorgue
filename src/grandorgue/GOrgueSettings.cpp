@@ -69,6 +69,8 @@ GOrgueSettings::GOrgueSettings() :
 	m_InterpolationType(0),
 	m_WaveFormat(4),
 	m_LoopLoad(0),
+	m_AttackLoad(0),
+	m_ReleaseLoad(0),
 	m_Volume(50),
 	m_PolyphonyLimit(2048),
 	m_DefaultAudioDevice(),
@@ -120,6 +122,12 @@ void GOrgueSettings::Load()
 	m_LoopLoad = m_Config.Read(wxT("LoopLoad"), 2);
 	if (m_LoopLoad < 0 || m_LoopLoad > 2)
 		m_LoopLoad = 2;
+	m_AttackLoad = m_Config.Read(wxT("AttackLoad"), 1);
+	if (m_AttackLoad < 0 || m_AttackLoad > 1)
+		m_AttackLoad = 1;
+	m_ReleaseLoad = m_Config.Read(wxT("ReleaseLoad"), 1);
+	if (m_ReleaseLoad < 0 || m_ReleaseLoad > 1)
+		m_ReleaseLoad = 1;
 	m_Volume = m_Config.Read(wxT("Volume"), 50);
 	if (m_Volume > 100)
 		m_Volume = 100;
@@ -499,6 +507,32 @@ void GOrgueSettings::SetLoopLoad(unsigned loop_load)
 		loop_load = 2;
 	m_LoopLoad = loop_load;
 	m_Config.Write(wxT("LoopLoad"), (long)m_LoopLoad);
+}
+
+unsigned GOrgueSettings::GetAttackLoad()
+{
+	return m_AttackLoad;
+}
+
+void GOrgueSettings::SetAttackLoad(unsigned attack_load)
+{
+	if (attack_load > 1)
+		attack_load = 1;
+	m_AttackLoad = attack_load;
+	m_Config.Write(wxT("AttackLoad"), (long)m_AttackLoad);
+}
+
+unsigned GOrgueSettings::GetReleaseLoad()
+{
+	return m_ReleaseLoad;
+}
+
+void GOrgueSettings::SetReleaseLoad(unsigned release_load)
+{
+	if (release_load > 1)
+		release_load = 1;
+	m_ReleaseLoad = release_load;
+	m_Config.Write(wxT("ReleaseLoad"), (long)m_ReleaseLoad);
 }
 
 unsigned GOrgueSettings::GetVolume()
