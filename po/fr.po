@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-02-15 12:54+0100\n"
-"PO-Revision-Date: 2012-02-15 13:07+0100\n"
+"POT-Creation-Date: 2012-02-19 23:34+0100\n"
+"PO-Revision-Date: 2012-02-19 23:43+0100\n"
 "Last-Translator: Jean-Luc Derouineau <jeanluc@derouineau.com>\n"
 "Language-Team: French <jeanluc@derouineau.com>\n"
 "Language: fr\n"
@@ -178,30 +178,26 @@ msgstr "12 bits"
 msgid "16"
 msgstr "16"
 
-#, fuzzy
 msgid "16 Bit PCM"
 msgstr "16 bit PCM"
 
 msgid "16 bit PCM"
 msgstr "16 bit PCM"
 
-#, fuzzy
 msgid "16 bits"
-msgstr "16 bit PCM"
+msgstr "16 bits"
 
 msgid "20 bits"
 msgstr "20 bits"
 
-#, fuzzy
 msgid "24 Bit PCM"
 msgstr "24 bit PCM"
 
 msgid "24 bit PCM"
 msgstr "24 bit PCM"
 
-#, fuzzy
 msgid "24 bits"
-msgstr "24 bit PCM"
+msgstr "24 bits"
 
 msgid "32 bit PCM"
 msgstr "32 bit PCM"
@@ -218,16 +214,14 @@ msgstr "64 bit float"
 msgid "8"
 msgstr "8"
 
-#, fuzzy
 msgid "8 Bit PCM"
-msgstr "8 bit PCM"
+msgstr "8 Bit PCM"
 
 msgid "8 bit PCM"
 msgstr "8 bit PCM"
 
-#, fuzzy
 msgid "8 bits"
-msgstr "8 bit PCM"
+msgstr "8 bits"
 
 msgid "9x Note"
 msgstr "9x Note"
@@ -322,6 +316,9 @@ msgstr "Controle actif de la polyphonie"
 msgid "Address"
 msgstr "Adresse"
 
+msgid "All"
+msgstr "Tout"
+
 msgid "All loops"
 msgstr "Toutes boucles"
 
@@ -357,6 +354,9 @@ msgstr "Toute interface"
 
 msgid "Apply"
 msgstr "Appliquer"
+
+msgid "Attack loading:"
+msgstr "Chargement attaques:"
 
 msgid "Audio Settings"
 msgstr "Paramètres audio"
@@ -991,6 +991,9 @@ msgstr "Normal"
 msgid "Release Concurreny Level:"
 msgstr "Nombre de tâches pour laché note:"
 
+msgid "Release loading:"
+msgstr "Chargement lachés note:"
+
 msgid "Release sample scaling"
 msgstr "Ajustement niveau laché note (staccato)"
 
@@ -1068,6 +1071,12 @@ msgstr "Fichiers de configuration (*.cmb)|*.cmb"
 
 msgid "Settings store:"
 msgstr "Sauvegarde paramètres:"
+
+msgid "Single attack"
+msgstr "Une attaque"
+
+msgid "Single release"
+msgstr "Un laché note"
 
 msgid ""
 "Some changed settings effect unless the sample set is reloaded.\n"
