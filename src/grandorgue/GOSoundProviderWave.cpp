@@ -172,12 +172,83 @@ void GOSoundProviderWave::LoadFromFile
 	,unsigned       load_channels
 	,bool           compress
 	,loop_load_type loop_mode
+	,unsigned attack_load
+	,unsigned release_load
 	)
 {
 
 	ClearData();
 	if (!load_channels)
 		return;
+
+	if (!release_load)
+		for(int k = -1; k < 2; k++)
+		{
+			unsigned longest = 0;
+			for(unsigned i = 0; i < attacks.size(); i++)
+				if (attacks[i].load_release && (unsigned)attacks[i].max_playback_time > longest && attacks[i].sample_group == k)
+					longest = attacks[i].max_playback_time;
+			for(unsigned i = 0; i < releases.size(); i++)
+				if ((unsigned)releases[i].max_playback_time > longest && releases[i].sample_group == k)
+					longest = releases[i].max_playback_time;
+
+			bool found = false;
+			for(unsigned i = 0; i < attacks.size(); i++)
+				if (attacks[i].load_release && attacks[i].sample_group == k)
+				{
+					if ((unsigned)attacks[i].max_playback_time == longest && !found)
+					{
+						found = true;
+						continue;
+					}
+					else
+						attacks[i].load_release = false;
+				}
+			for(unsigned i = 0; i < releases.size(); i++)
+				if (releases[i].sample_group == k)
+				{
+					if ((unsigned)releases[i].max_playback_time == longest && !found)
+					{
+						found = true;
+						continue;
+					}
+					else
+					{
+						releases[i] = releases[releases.size() - 1];
+						releases.resize(releases.size() - 1);
+						i--;
+					}
+				}
+		}
+
+	if (!attack_load)
+		for(int k = -1; k < 2; k++)
+		{
+			int best_idx = -1;
+			for(unsigned i = 0; i < attacks.size(); i++)
+			{
+				if (attacks[i].sample_group != k)
+					continue;
+				if (best_idx == -1)
+				{
+					best_idx = i;
+					continue;
+				}
+				if (attacks[i].load_release && !attacks[best_idx].load_release)
+					best_idx = i;
+			}
+			for(unsigned i = 0; i < attacks.size(); i++)
+			{
+				if (attacks[i].sample_group != k || best_idx == -1 || best_idx == (int)i)
+					continue;
+				for(unsigned j = i + 1; j < attacks.size(); j++)
+					attacks[j - 1] = attacks[j];
+				if ((int)i < best_idx)
+					best_idx --;
+				attacks.resize(attacks.size() - 1);
+				i--;
+			}
+		}
 
 	try
 	{

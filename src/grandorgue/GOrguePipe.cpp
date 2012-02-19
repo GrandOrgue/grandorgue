@@ -342,6 +342,10 @@ void GOrguePipe::UpdateHash(SHA_CTX& ctx)
 	SHA1_Update(&ctx, &value, sizeof(value));
 	value = GetEffectiveLoopLoad();
 	SHA1_Update(&ctx, &value, sizeof(value));
+	value = GetEffectiveAttackLoad();
+	SHA1_Update(&ctx, &value, sizeof(value));
+	value = GetEffectiveReleaseLoad();
+	SHA1_Update(&ctx, &value, sizeof(value));
 
 	value = m_AttackInfo.size();
 	SHA1_Update(&ctx, &value, sizeof(value));
@@ -380,7 +384,7 @@ void GOrguePipe::LoadData()
 	try
 	{
 		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_OrganFile->GetODFPath(), GetEffectiveBitsPerSample(), GetEffectiveChannels(), 
-					     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad());
+					     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad(), GetEffectiveAttackLoad(), GetEffectiveReleaseLoad());
 	}
 	catch(GOrgueOutOfMemory e)
 	{
