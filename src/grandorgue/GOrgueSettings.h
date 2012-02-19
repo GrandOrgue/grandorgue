@@ -44,6 +44,8 @@ private:
 	unsigned m_InterpolationType;
 	unsigned m_WaveFormat;
 	unsigned m_LoopLoad;
+	unsigned m_AttackLoad;
+	unsigned m_ReleaseLoad;
 	unsigned m_Volume;
 	unsigned m_PolyphonyLimit;
 	wxString m_DefaultAudioDevice;
@@ -137,6 +139,10 @@ public:
 
 	unsigned GetLoopLoad();
 	void SetLoopLoad(unsigned loop_load);
+	unsigned GetAttackLoad();
+	void SetAttackLoad(unsigned attack_load);
+	unsigned GetReleaseLoad();
+	void SetReleaseLoad(unsigned release_load);
 
 	unsigned GetVolume();
 	void SetVolume(unsigned volume);

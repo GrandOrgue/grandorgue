@@ -52,6 +52,8 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHOICE(ID_RELEASE_CONCURRENCY, SettingsDialog::OnChanged)
 	EVT_CHOICE(ID_WAVE_FORMAT, SettingsDialog::OnChanged)
 	EVT_CHOICE(ID_LOOP_LOAD, SettingsDialog::OnChanged)
+	EVT_CHOICE(ID_ATTACK_LOAD, SettingsDialog::OnChanged)
+	EVT_CHOICE(ID_RELEASE_LOAD, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_SQUASH, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_ENHANCE_MANAGE_POLYPHONY, SettingsDialog::OnChanged)
 	EVT_CHECKBOX(ID_COMPRESS_CACHE, SettingsDialog::OnChanged)
@@ -112,6 +114,8 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	b_squash = m_Settings.GetLosslessCompression();
 	m_OldBitsPerSample = m_Settings.GetBitsPerSample();
 	m_OldLoopLoad = m_Settings.GetLoopLoad();
+	m_OldAttackLoad = m_Settings.GetAttackLoad();
+	m_OldReleaseLoad = m_Settings.GetReleaseLoad();
 
 	CreateButtons(wxOK | wxCANCEL | wxHELP);
 	//JB: wxAPPLY not available in recent versions of wxWidgets
@@ -145,6 +149,8 @@ SettingsDialog::~SettingsDialog()
 	if ((b_stereo != m_Settings.GetLoadInStereo() || 
 	     b_squash != m_Settings.GetLosslessCompression() ||
 	     m_OldLoopLoad != m_Settings.GetLoopLoad() ||
+	     m_OldAttackLoad != m_Settings.GetAttackLoad() ||
+	     m_OldReleaseLoad != m_Settings.GetReleaseLoad() ||
 	     m_OldBitsPerSample != m_Settings.GetBitsPerSample()) &&
 	    m_Sound.GetOrganFile() != NULL)
 	{
@@ -251,6 +257,18 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(c_LoopLoad = new wxChoice(panel, ID_LOOP_LOAD, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
+	choices.push_back(_("Single attack"));
+	choices.push_back(_("All"));
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Attack loading:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(c_AttackLoad = new wxChoice(panel, ID_ATTACK_LOAD, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
+	choices.clear();
+	choices.push_back(_("Single release"));
+	choices.push_back(_("All"));
+	grid->Add(new wxStaticText(panel, wxID_ANY, _("Release loading:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(c_ReleaseLoad = new wxChoice(panel, ID_RELEASE_LOAD, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
+	choices.clear();
 	choices.push_back(_("Linear"));
 	choices.push_back(_("Polyphase"));
 	grid->Add(new wxStaticText(panel, wxID_ANY, _("Interpolation:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
@@ -264,6 +282,8 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 			c_SampleRate->Select(i);
 	c_BitsPerSample->Select((m_Settings.GetBitsPerSample() - 8) / 4);
 	c_LoopLoad->Select(m_Settings.GetLoopLoad());
+	c_AttackLoad->Select(m_Settings.GetAttackLoad());
+	c_ReleaseLoad->Select(m_Settings.GetReleaseLoad());
 	c_Interpolation->Select(m_Settings.GetInterpolationType());
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
@@ -724,6 +744,8 @@ bool SettingsDialog::DoApply()
 	m_Settings.SetReleaseConcurrency(c_ReleaseConcurrency->GetSelection() + 1);
 	m_Settings.SetWaveFormatBytesPerSample(c_WaveFormat->GetSelection() + 1);
 	m_Settings.SetLoopLoad(c_LoopLoad->GetSelection());
+	m_Settings.SetAttackLoad(c_AttackLoad->GetSelection());
+	m_Settings.SetReleaseLoad(c_ReleaseLoad->GetSelection());
 	m_Settings.SetInterpolationType(c_Interpolation->GetSelection());
 	m_Settings.SetUserSettingPath(c_SettingsPath->GetPath());
 	m_Settings.SetUserCachePath(c_CachePath->GetPath());

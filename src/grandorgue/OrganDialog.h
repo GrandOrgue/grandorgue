@@ -50,6 +50,10 @@ private:
 	int m_LastCompress;
 	wxChoice* m_LoopLoad;
 	int m_LastLoopLoad;
+	wxChoice* m_AttackLoad;
+	int m_LastAttackLoad;
+	wxChoice* m_ReleaseLoad;
+	int m_LastReleaseLoad;
 	wxButton* m_Apply;
 	wxButton* m_Reset;
 	wxButton* m_Default;
@@ -77,6 +81,8 @@ public:
 	void OnCompressChanged(wxCommandEvent &e);
 	void OnChannelsChanged(wxCommandEvent &e);
 	void OnLoopLoadChanged(wxCommandEvent &e);
+	void OnAttackLoadChanged(wxCommandEvent &e);
+	void OnReleaseLoadChanged(wxCommandEvent &e);
 	void OnEventApply(wxCommandEvent &e);
 	void OnEventReset(wxCommandEvent &e);
 	void OnEventDefault(wxCommandEvent &e);
@@ -97,6 +103,8 @@ protected:
 		ID_EVENT_TUNING_SPIN,
 		ID_EVENT_IGNORE_PITCH,
 		ID_EVENT_LOOP_LOAD,
+		ID_EVENT_ATTACK_LOAD,
+		ID_EVENT_RELEASE_LOAD,
 		ID_EVENT_BITS_PER_SAMPLE,
 		ID_EVENT_CHANNELS,
 		ID_EVENT_COMPRESS
