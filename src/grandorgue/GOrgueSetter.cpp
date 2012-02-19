@@ -308,10 +308,10 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(IniFileConfig& cfg, unsigned manual
 		panel->AddControl(control);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
-		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i), manual_nr != i ? _("8") : _("U.O."), manual_nr == i, false, 0, i, GOrgueCoupler::COUPLER_NORMAL);
+		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i), manual_nr != i ? _("8") : _("U.O."), manual_nr == i, false, 0, i, GOrgueCoupler::COUPLER_NORMAL);
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 3, 100 + i);
-		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i));
+		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i));
 		panel->AddControl(control);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
