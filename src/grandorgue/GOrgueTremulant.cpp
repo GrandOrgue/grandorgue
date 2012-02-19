@@ -26,6 +26,7 @@
 
 const struct IniFileEnumEntry GOrgueTremulant::m_tremulant_types[]={
 	{ wxT("Synth"), GOSynthTrem },
+	{ wxT("Wave"), GOWavTrem },
 };
 
 GOrgueTremulant::GOrgueTremulant(GrandOrgueFile* organfile) :

@@ -218,16 +218,44 @@ void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	m_HarmonicNumber = cfg.ReadInteger(group, prefix + wxT("HarmonicNumber"), 1, 1024, false, m_HarmonicNumber);
 	m_PitchCorrection = cfg.ReadInteger(group, prefix + wxT("PitchCorrection"), -1200, 1200, false, m_PitchCorrection);
 	m_SamplerGroupID = cfg.ReadInteger(group, prefix + wxT("WindchestGroup"), 1, m_OrganFile->GetWinchestGroupCount(), false, m_SamplerGroupID);
+	m_Percussive = cfg.ReadBoolean(group, prefix + wxT("Percussive"), false, m_Percussive);
 	UpdateAmplitude();
 	m_OrganFile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
 	attack_load_info ainfo;
 	ainfo.filename = m_Filename;
-	ainfo.sample_group = -1;
-	ainfo.load_release = true;
+	ainfo.sample_group = cfg.ReadInteger(group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
+	ainfo.load_release = cfg.ReadBoolean(group, prefix + wxT("LoadRelease"), false, !m_Percussive);;
 	ainfo.percussive = m_Percussive;
-	ainfo.max_playback_time = -1;
+	ainfo.max_playback_time = cfg.ReadInteger(group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
 	m_AttackInfo.push_back(ainfo);
+
+	unsigned attack_count = cfg.ReadInteger(group, prefix + wxT("AttackCount"), 0, 100, false, 0);
+	for(unsigned i = 0; i < attack_count; i++)
+	{
+		wxString p = prefix + wxString::Format(wxT("Attack%03d"), i + 1);
+
+		ainfo.filename = cfg.ReadString(group, p);
+		ainfo.sample_group = cfg.ReadInteger(group, p + wxT("IsTremulant"), -1, 1, false, -1);
+		ainfo.load_release = cfg.ReadBoolean(group, p + wxT("LoadRelease"), false, !m_Percussive);;
+		ainfo.percussive = m_Percussive;
+		ainfo.max_playback_time = cfg.ReadInteger(group, p + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
+		
+		m_AttackInfo.push_back(ainfo);
+	}
+
+	unsigned release_count = cfg.ReadInteger(group, prefix + wxT("ReleaseCount"), 0, 100, false, 0);
+	for(unsigned i = 0; i < release_count; i++)
+	{
+		release_load_info rinfo;
+		wxString p = prefix + wxString::Format(wxT("Release%03d"), i + 1);
+
+		rinfo.filename = cfg.ReadString(group, p);
+		rinfo.sample_group = cfg.ReadInteger(group, p + wxT("IsTremulant"), -1, 1, false, -1);
+		rinfo.max_playback_time = cfg.ReadInteger(group, p + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
+		
+		m_ReleaseInfo.push_back(rinfo);
+	}
 }
 
 void GOrguePipe::Save(IniFileConfig& cfg, bool prefix)

@@ -974,9 +974,12 @@ PCM, either mono or stereo. The prefered sample rates are 44100 or
 48000 Hz - GO supports any sample rate between 22000 and 96000 Hz.  GO
 only supports a single data chunk. To play looped samples, they must
 include cue points (cue chunk) and loops (smpl chunk). If there are
-multiple loops, each loop should overlap another loop.
-dwMIDIUnityNote and dwMIDIPitchFraction of the smpl chunk are used for
-retuning an organ to other temperaments.
+multiple loops, each loop should overlap another loop. Attack samples
+include the attack phase and the loops - they may contain a release
+too. If release samples include a cue point, the release is loaded
+starting with this position, else the whole file
+loaded. dwMIDIUnityNote and dwMIDIPitchFraction of the smpl chunk are
+used for retuning an organ to other temperaments.
       </para>
     </sect1>
     <sect1>
@@ -3277,6 +3280,15 @@ attributes are:
       </para>
       <variablelist>
         <varlistentry>
+          <term>Pipe999Percussive</term>
+          <listitem>
+            <para>
+(boolean, default: rank percussive setting) If false, the samples are
+played as is (without any loop/release handling)
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Pipe999AmplitudeLevel</term>
           <listitem>
             <para>
@@ -3298,9 +3310,38 @@ number of cents (in addition to the organ/stop factor).
           <term>Pipe999</term>
           <listitem>
             <para>
-(string, required) Relative path to the sample WAV file.
-The contain may be REF:aa:bb:cc too. In that case, it means
-that this stop borrows from manual aa, stop bb the pipe cc.
+(string, required) Relative path to the sample WAV file of the first
+attack. It contain may be REF:aa:bb:cc too. In that case, it means
+that this pipe is borrowed from manual aa, stop bb the pipe cc.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999LoadRelease</term>
+          <listitem>
+            <para>
+(boolean, default: revers of percussive setting) If true, the release
+part is loaded from the first attack sample.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999IsTremulant</term>
+          <listitem>
+            <para>
+(int -1 - 1, default: -1) 1 means, that is used, if the associated
+wave based tremulant is on.  0 means, that it is played, if the
+associated wave based tremulant is off. -1 means, that it not affected
+by a wave based tremulant.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999MaxKeyPressTime</term>
+          <listitem>
+            <para>
+(int -1 - 100000, default: -1) Up to this time value in ms, the
+release sample is choosen. -1 means infinite.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3308,8 +3349,8 @@ that this stop borrows from manual aa, stop bb the pipe cc.
           <term>Pipe999HarmonicNumber</term>
           <listitem>
             <para>
-(float 1-1024, default: 8) Harmonic number (= 64 / stop size), eg. 2
-2/3 =&gt; 64 / (2 2/3) = 24.
+(float 1-1024, default: rank harmonic number) Harmonic number (= 64 /
+stop size), eg. 2 2/3 =&gt; 64 / (2 2/3) = 24.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3327,8 +3368,89 @@ temperaments.
           <term>Pipe999WindchestGroup</term>
           <listitem>
             <para>
-(interger 1 - number of windchests, default: rank windchest) specify the windchest,
-on which this pipe is placed.
+(interger 1 - number of windchests, default: rank windchest) specify
+the windchest, on which this pipe is placed.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999AttackCount</term>
+          <listitem>
+            <para>
+(int 0 - 100, default: 0) Number of additional attack samples
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Attack999</term>
+          <listitem>
+            <para>
+(string, required) Relative path to the sample WAV file.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Attack999LoadRelease</term>
+          <listitem>
+            <para>
+(boolean, default: revers of percussive setting) If true, the release
+part is loaded.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Attack999IsTremulant</term>
+          <listitem>
+            <para>
+(int -1 - 1, default: -1) 1 means, that is used, if the associated
+wave based tremulant is on.  0 means, that it is played, if the
+associated wave based tremulant is off. -1 means, that it not affected
+by a wave based tremulant.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Attack999MaxKeyPressTime</term>
+          <listitem>
+            <para>
+(int -1 - 100000, default: -1) Up to this time value in ms, the
+release sample is choosen. -1 means infinite.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999ReleaseCount</term>
+          <listitem>
+            <para>
+(int 0 - 100, default: 0) Number of additional release samples
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Release999</term>
+          <listitem>
+            <para>
+(string, required) Relative path to the sample WAV file.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Release999IsTremulant</term>
+          <listitem>
+            <para>
+(int -1 - 1, default: -1) 1 means, that is used, if the associated
+wave based tremulant is on.  0 means, that it is played, if the
+associated wave based tremulant is off. -1 means, that it not affected
+by a wave based tremulant.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Release999MaxKeyPressTime</term>
+          <listitem>
+            <para>
+(int -1 - 100000, default: -1) Up to this time value in ms, the
+release sample is choosen. -1 means infinite.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3387,7 +3509,9 @@ Trelmulants are drawstop objects with the following additions attributes:
           <term>TremulantType</term>
           <listitem>
             <para>
-(enumeration, default: Synth) Type of the tremulant. Valid values are: Synth (synthesised tremulant).
+(enumeration, default: Synth) Type of the tremulant. Valid values are:
+Synth (synthesised tremulant) and Wave (tremulant based on different
+wave samples).
 	    </para>
           </listitem>
         </varlistentry>
