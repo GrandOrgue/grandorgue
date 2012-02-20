@@ -573,7 +573,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 	// against a double. We should test against a minimum level.
 	if (vol)
 	{
-		const GOAudioSection* release_section = this_pipe->GetRelease(&handle->stream, ((double)(handle->time - m_CurrentTime) * BLOCKS_PER_FRAME) / m_SampleRate);
+		const GOAudioSection* release_section = this_pipe->GetRelease(&handle->stream, ((double)(m_CurrentTime - handle->time) * BLOCKS_PER_FRAME) / m_SampleRate);
 		if (!release_section)
 			return;
 
