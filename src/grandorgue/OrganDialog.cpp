@@ -250,6 +250,16 @@ void OrganDialog::Load()
 {
 	wxArrayTreeItemIds entries;
 	m_Tree->GetSelections(entries);
+	for(unsigned i = 0; i < entries.size(); i++)
+	{
+		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
+		if (!e)
+		{
+			entries.RemoveAt(i, 1);
+			i--;
+		}
+	}
+
 	if (entries.size() == 0)
 	{
 		m_Last = NULL;
@@ -516,6 +526,8 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	for(unsigned i = 0; i < entries.size(); i++)
 	{
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
+		if (!e)
+			continue;
 		if (m_Amplitude->IsModified())
 			e->config->SetAmplitude(amp);
 		if (m_Tuning->IsModified())
@@ -562,6 +574,8 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 	for(unsigned i = 0; i < entries.size(); i++)
 	{
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
+		if (!e)
+			continue;
 		e->config->SetAmplitude(e->config->GetDefaultAmplitude());
 		e->config->SetTuning(e->config->GetDefaultTuning());
 		e->config->SetBitsPerSample(-1);
