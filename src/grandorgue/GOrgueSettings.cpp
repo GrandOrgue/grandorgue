@@ -71,7 +71,7 @@ GOrgueSettings::GOrgueSettings() :
 	m_LoopLoad(0),
 	m_AttackLoad(0),
 	m_ReleaseLoad(0),
-	m_Volume(50),
+	m_Volume(-15),
 	m_PolyphonyLimit(2048),
 	m_DefaultAudioDevice(),
 	m_Preset(0),
@@ -128,9 +128,9 @@ void GOrgueSettings::Load()
 	m_ReleaseLoad = m_Config.Read(wxT("ReleaseLoad"), 1);
 	if (m_ReleaseLoad < 0 || m_ReleaseLoad > 1)
 		m_ReleaseLoad = 1;
-	m_Volume = m_Config.Read(wxT("Volume"), 50);
-	if (m_Volume > 100)
-		m_Volume = 100;
+	m_Volume = m_Config.Read(wxT("Volume"), (long)-15);
+	if (m_Volume > 20)
+		m_Volume = -15;
 	m_PolyphonyLimit = m_Config.Read(wxT("PolyphonyLimit"), 2048);
 	m_DefaultAudioDevice = m_Config.Read(wxT("Devices/DefaultSound"), wxEmptyString);
 
@@ -535,15 +535,15 @@ void GOrgueSettings::SetReleaseLoad(unsigned release_load)
 	m_Config.Write(wxT("ReleaseLoad"), (long)m_ReleaseLoad);
 }
 
-unsigned GOrgueSettings::GetVolume()
+int GOrgueSettings::GetVolume()
 {
 	return m_Volume;
 }
 
-void GOrgueSettings::SetVolume(unsigned volume)
+void GOrgueSettings::SetVolume(int volume)
 {
-	if (volume > 100)
-		volume = 100;
+	if (volume > 20)
+		volume = -15;
 	m_Volume = volume;
 	m_Config.Write(wxT("Volume"), (long)m_Volume);
 }
