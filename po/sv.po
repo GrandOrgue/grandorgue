@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-01-23 12:06+0100\n"
-"PO-Revision-Date: 2012-01-23 12:17+0100\n"
+"POT-Creation-Date: 2012-02-23 22:29+0100\n"
+"PO-Revision-Date: 2012-02-23 23:03+0100\n"
 "Last-Translator: Lars Palo <lars.palo@yahoo.se>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -170,6 +170,9 @@ msgstr "000"
 msgid "1/4 comma Mean tone"
 msgstr "1/4 komma medelton"
 
+msgid "12 bits"
+msgstr "12 bitar"
+
 msgid "16"
 msgstr "16"
 
@@ -179,11 +182,20 @@ msgstr "16 Bit PCM"
 msgid "16 bit PCM"
 msgstr "16 bit PCM"
 
+msgid "16 bits"
+msgstr "16 bitar"
+
+msgid "20 bits"
+msgstr "20 bitar"
+
 msgid "24 Bit PCM"
 msgstr "24 Bit PCM"
 
 msgid "24 bit PCM"
 msgstr "24 bit PCM"
+
+msgid "24 bits"
+msgstr "24 bitar"
 
 msgid "32 bit PCM"
 msgstr "32 bit PCM"
@@ -206,6 +218,9 @@ msgstr "8 Bit PCM"
 msgid "8 bit PCM"
 msgstr "8 bit PCM"
 
+msgid "8 bits"
+msgstr "8 bitar"
+
 msgid "9x Note"
 msgstr "9x Note"
 
@@ -223,9 +238,6 @@ msgstr "<"
 
 msgid "< Bits per sample must be a multiple of 8 in this implementation"
 msgstr "< Bit-djup måste vara en multipel av 8 i denna version"
-
-msgid "< Failed to allocate memory for wave data"
-msgstr "< Misslyckades att allokera minne for wave data"
 
 msgid "< Invalid CUE chunk in"
 msgstr "< Ogiltig CUE chunk in"
@@ -253,15 +265,6 @@ msgstr "< Inte PCM data in"
 
 msgid "< Not a RIFF file"
 msgstr "< Ingen RIFF fil"
-
-msgid "< out of memory allocating attack"
-msgstr "< slut på minne under attackallokering"
-
-msgid "< out of memory allocating samples"
-msgstr "< slut på minne under samplingsallokeringen"
-
-msgid "< out of memory allocating wave"
-msgstr "< slut på minne under waveallokering"
 
 msgid "<Invalid SMPL chunk in"
 msgstr "< Ogiltig SMPL chunk in"
@@ -311,6 +314,9 @@ msgstr "Aktiv polyfonihantering"
 msgid "Address"
 msgstr "Adress"
 
+msgid "All"
+msgstr "Samtliga"
+
 msgid "All loops"
 msgstr "Samtliga loopar"
 
@@ -345,6 +351,9 @@ msgstr "Vilken som helst enhet"
 
 msgid "Apply"
 msgstr "Verkställ"
+
+msgid "Attack loading:"
+msgstr "Laddning av ansatser:"
 
 msgid "Audio Settings"
 msgstr "Ljudinställningar"
@@ -504,11 +513,20 @@ msgstr "Enheter"
 msgid "DirectSound"
 msgstr "DirectSound"
 
+msgid "Disabled"
+msgstr "Avaktiverad"
+
 msgid "Divisionals"
 msgstr "Divisionals"
 
+msgid "Don't load"
+msgstr "Ladda inte"
+
 msgid "E&xit"
 msgstr "A&vsluta"
+
+msgid "Enabled"
+msgstr "Aktiverad"
 
 msgid "Enclosure 1"
 msgstr "Svällskåp 1"
@@ -623,6 +641,9 @@ msgstr "Ej tillräckligt minne"
 msgid "Internal PortAudio error"
 msgstr "Internt PortAudio fel"
 
+msgid "Interpolation:"
+msgstr "Interpolation:"
+
 #, c-format
 msgid "Invalid boolean value '/%s/%s': %s"
 msgstr "Felaktigt sanningsvärde '/%s/%s': %s"
@@ -708,6 +729,9 @@ msgstr "LCD-1: %s"
 msgid "LCD-2: %s"
 msgstr "LCD-2: %s"
 
+msgid "Linear"
+msgstr "Linjär"
+
 msgid "Load &stereo samples in:"
 msgstr "Ladda &stereo samplingar som:"
 
@@ -739,6 +763,9 @@ msgstr "Inläsning av loopar:"
 
 msgid "Lossless compression"
 msgstr "Förlustfri komprimering"
+
+msgid "Lossless compression:"
+msgstr "Förlustfri komprimering:"
 
 msgid "MB"
 msgstr "MB"
@@ -878,6 +905,9 @@ msgstr "Övriga kommentarer"
 msgid "Our Organ"
 msgstr "GrandOrgue"
 
+msgid "Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings."
+msgstr "Slut på minne - endast delar av orgeln har laddats. Vänligen minska minnesavtrycket via inställningarna för samplingsladdning."
+
 #, c-format
 msgid "Out of range value '/%s/%s': %d"
 msgstr "Värde utanför tillåtna gränser '/%s/%s': %d"
@@ -894,11 +924,17 @@ msgstr "Egenskape&r..."
 msgid "Panic"
 msgstr "Panik"
 
+msgid "Parent default"
+msgstr "Förälders förval"
+
 msgid "Parsing sample set definition file"
 msgstr "Läser samplingssamlingens definitionsfil"
 
 msgid "Please apply changes first"
 msgstr "Vänligen verkställ ändringar först"
+
+msgid "Polyphase"
+msgstr "Polyfas"
 
 msgid "Polyphony"
 msgstr "Polyfoni"
@@ -952,6 +988,9 @@ msgstr "Vanlig"
 msgid "Release Concurreny Level:"
 msgstr "Samtidighetsnivå på uppsläpp:"
 
+msgid "Release loading:"
+msgstr "Laddning av uppsläpp:"
+
 msgid "Release sample scaling"
 msgstr "Skala uppsläpp"
 
@@ -972,8 +1011,17 @@ msgstr "RtAudio fel: %s"
 msgid "RtMidi error: %s"
 msgstr "RtMidi fel: %s"
 
+msgid "Sample Loading"
+msgstr "Laddning av samplingar"
+
 msgid "Sample Rate:"
 msgstr "Samplingsfrekvens:"
+
+msgid "Sample Size:"
+msgstr "Samplingsstorlek:"
+
+msgid "Sample channels:"
+msgstr "Samlingskanaler:"
 
 msgid "Sample format not supported"
 msgstr "Samplingsformated stöds ej"
@@ -1020,6 +1068,12 @@ msgstr "Kombinations filer (*.cmb)|*.cmb"
 
 msgid "Settings store:"
 msgstr "Lagring av inställningar:"
+
+msgid "Single attack"
+msgstr "En attack"
+
+msgid "Single release"
+msgstr "Ett uppsläpp"
 
 msgid ""
 "Some changed settings effect unless the sample set is reloaded.\n"
@@ -1128,6 +1182,10 @@ msgstr "Varning"
 msgid "Werckmeister III"
 msgstr "Werckmeister III"
 
+#, c-format
+msgid "Windchest %d"
+msgstr "Väderlåda %d"
+
 msgid "Windows DirectSound"
 msgstr "Windows DirectSound"
 
@@ -1168,9 +1226,6 @@ msgstr "ms"
 msgid "none"
 msgstr "ingen"
 
-msgid "out of memory"
-msgstr "slut på minne"
-
 msgid "settingsdialog.."
 msgstr "inställningsdialog.."
 
@@ -1193,11 +1248,23 @@ msgstr "wave fil innehåller inga loopar"
 #~ msgid "48000"
 #~ msgstr "48000"
 
+#~ msgid "< Failed to allocate memory for wave data"
+#~ msgstr "< Misslyckades att allokera minne for wave data"
+
+#~ msgid "< out of memory allocating attack"
+#~ msgstr "< slut på minne under attackallokering"
+
 #~ msgid "< out of memory allocating loop"
 #~ msgstr "< slut på minne uner loopallokering"
 
 #~ msgid "< out of memory allocating release"
 #~ msgstr "< slut på minne under uppsläppsallokering"
+
+#~ msgid "< out of memory allocating samples"
+#~ msgstr "< slut på minne under samplingsallokeringen"
+
+#~ msgid "< out of memory allocating wave"
+#~ msgstr "< slut på minne under waveallokering"
 
 #~ msgid "Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache."
 #~ msgstr "Cache-fil hade dålig magi (förväntade %#.8x fann %#.8x)"
@@ -1223,6 +1290,9 @@ msgstr "wave fil innehåller inga loopar"
 
 #~ msgid "g_sound has not been allocated"
 #~ msgstr "g_sound har inte allokerats"
+
+#~ msgid "out of memory"
+#~ msgstr "slut på minne"
 
 #~ msgid "regression - this should be impossible"
 #~ msgstr "återfall - detta borde vara omöjligt"
