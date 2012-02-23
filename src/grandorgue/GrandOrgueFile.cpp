@@ -43,7 +43,6 @@
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
-#include "GOrgueStop.h"
 #include "GOrgueRank.h"
 #include "GOrgueTemperament.h"
 #include "GOrgueTremulant.h"
