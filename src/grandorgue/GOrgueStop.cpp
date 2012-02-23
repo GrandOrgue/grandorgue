@@ -27,6 +27,7 @@
 
 GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number) :
 	GOrgueDrawstop(organfile),
+	m_RankInfo(0),
 	m_KeyState(0),
 	m_ManualNumber(manual_number),
 	m_FirstMidiNoteNumber(first_midi_note_number),
@@ -34,8 +35,6 @@ GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsign
 	m_FirstAccessiblePipeLogicalKeyNumber(0),
 	m_NumberOfAccessiblePipes(0)
 {
-	m_Rank = new GOrgueRank(m_organfile);
-	m_organfile->AddRank(m_Rank);
 }
 
 unsigned GOrgueStop::IsAuto() const
@@ -43,23 +42,35 @@ unsigned GOrgueStop::IsAuto() const
 	/* m_auto seems to state that if a stop only has 1 note, the note isn't
 	 * actually controlled by a manual, but will be on if the stop is on and
 	 * off if the stop is off... */
-	return (m_Rank->GetPipeCount() == 1);
+	return (m_RankInfo.size() == 1 && m_RankInfo[0].Rank->GetPipeCount() == 1);
 }
 
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
+	RankInfo info;
+	info.Rank = new GOrgueRank(m_organfile);
+	m_organfile->AddRank(info.Rank);
+
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
 	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
 	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
 	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
 
-	m_Rank->Load(cfg, group, m_FirstMidiNoteNumber - m_FirstAccessiblePipeLogicalPipeNumber + m_FirstAccessiblePipeLogicalKeyNumber);
+	info.Rank->Load(cfg, group, m_FirstMidiNoteNumber - m_FirstAccessiblePipeLogicalPipeNumber + m_FirstAccessiblePipeLogicalKeyNumber);
+	m_RankInfo.push_back(info);
 
         m_KeyState.resize(m_NumberOfAccessiblePipes);
         std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
 
         GOrgueDrawstop::Load(cfg, group);
+}
 
+void GOrgueStop::SetRankKey(unsigned key, bool on)
+{
+	for(unsigned j = 0; j < m_RankInfo.size(); j++)
+	{
+		m_RankInfo[j].Rank->SetKey(key + m_FirstAccessiblePipeLogicalPipeNumber - 1, on);
+	}
 }
 
 void GOrgueStop::SetKey(unsigned note, int on)
@@ -76,9 +87,10 @@ void GOrgueStop::SetKey(unsigned note, int on)
 	if (IsEngaged())
 	{
 		if (last > 0 && m_KeyState[note] == 0)
-			m_Rank->SetKey(note + m_FirstAccessiblePipeLogicalPipeNumber - 1, false);
+			SetRankKey(note, false);
+
 		if (last == 0 && m_KeyState[note] > 0)
-			m_Rank->SetKey(note + m_FirstAccessiblePipeLogicalPipeNumber - 1, true);
+			SetRankKey(note, true);
 	}
 }
 
@@ -89,12 +101,12 @@ void GOrgueStop::Set(bool on)
 		return;
 	for(unsigned i = 0; i < m_NumberOfAccessiblePipes; i++)
 		if (m_KeyState[i])
-			m_Rank->SetKey(i + m_FirstAccessiblePipeLogicalPipeNumber - 1, on);
+			SetRankKey(i, on);
 
 	GOrgueDrawstop::Set(on);
 
 	if (IsAuto())
-		m_Rank->SetKey(0, on);
+		SetRankKey(0, on);
 }
 
 GOrgueStop::~GOrgueStop(void)
@@ -113,10 +125,11 @@ void GOrgueStop::PreparePlayback()
 	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
 
 	if (IsAuto() && IsEngaged())
-		m_Rank->SetKey(0, true);
+		for(unsigned j = 0; j < m_RankInfo.size(); j++)
+			m_RankInfo[j].Rank->SetKey(0, true);
 }
 
-GOrgueRank* GOrgueStop::GetRank()
+GOrgueRank* GOrgueStop::GetRank(unsigned index)
 {
-	return m_Rank;
+	return m_RankInfo[index].Rank;
 }

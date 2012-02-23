@@ -32,7 +32,11 @@ class GOrgueRank;
 class GOrgueStop : public GOrgueDrawstop
 {
 private:
-	GOrgueRank* m_Rank;
+	typedef struct
+	{
+		GOrgueRank* Rank;
+	} RankInfo;
+	std::vector<RankInfo> m_RankInfo;
 	std::vector<unsigned> m_KeyState;
 	unsigned m_ManualNumber;
 	unsigned m_FirstMidiNoteNumber;
@@ -40,9 +44,11 @@ private:
 	unsigned m_FirstAccessiblePipeLogicalKeyNumber;
 	unsigned m_NumberOfAccessiblePipes;
 
+	void SetRankKey(unsigned key, bool on);
+
 public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number);
-	GOrgueRank* GetRank();
+	GOrgueRank* GetRank(unsigned index);
 	void Load(IniFileConfig& cfg, wxString group);
 	void Set(bool on);
 	void SetKey(unsigned note, int on);
