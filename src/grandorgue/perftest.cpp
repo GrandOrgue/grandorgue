@@ -58,7 +58,16 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 		{
 			GOSoundProviderWave* w = new GOSoundProviderWave(organfile->GetMemoryPool());
 			w->SetAmplitude(102);
-			w->LoadFromFile(wxString::Format(wxT("%02d.wav"), i % 3), argv[1], bits_per_sample, 2, compress, LOOP_LOAD_ALL);
+ 			std::vector<release_load_info> release;
+ 			std::vector<attack_load_info> attack;
+			attack_load_info ainfo;
+			ainfo.filename = wxString::Format(wxT("%02d.wav"), i % 3);
+			ainfo.sample_group = -1;
+			ainfo.load_release = true;
+			ainfo.percussive = false;
+			ainfo.max_playback_time = -1;
+			attack.push_back(ainfo);
+			w->LoadFromFile(attack, release, argv[1], bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1);
 			pipes.push_back(w);
 		}
 		engine->SetVolume(10);
