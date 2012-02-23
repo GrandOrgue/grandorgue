@@ -103,6 +103,7 @@ private:
 	bool                          m_ReleaseAlignmentEnabled;
 	bool                          m_RandomizeSpeaking;
 	int                           m_Volume;
+	float                         m_Gain;
 	unsigned                      m_SampleRate;
 	unsigned long                 m_CurrentTime;
 	GOSoundSamplerPool            m_SamplerPool;

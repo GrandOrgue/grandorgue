@@ -46,7 +46,7 @@ private:
 	unsigned m_LoopLoad;
 	unsigned m_AttackLoad;
 	unsigned m_ReleaseLoad;
-	unsigned m_Volume;
+	int m_Volume;
 	unsigned m_PolyphonyLimit;
 	wxString m_DefaultAudioDevice;
 	unsigned m_Preset;
@@ -144,8 +144,8 @@ public:
 	unsigned GetReleaseLoad();
 	void SetReleaseLoad(unsigned release_load);
 
-	unsigned GetVolume();
-	void SetVolume(unsigned volume);
+	int GetVolume();
+	void SetVolume(int volume);
 	unsigned GetPolyphonyLimit();
 	void SetPolyphonyLimit(unsigned polyphony_limit);
 

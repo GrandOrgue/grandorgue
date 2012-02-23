@@ -78,7 +78,7 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 		return false;
 	}
 	g_sound->PreparePlayback(m_organfile);
-	if (m_organfile->GetVolume() != -1)
+	if (m_organfile->GetVolume() != -121)
 	{
 		wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
 		event.SetInt(m_organfile->GetVolume());

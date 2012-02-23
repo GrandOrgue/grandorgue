@@ -255,7 +255,9 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_DivisionalsStoreTremulants = ini.ReadBoolean(group, wxT("DivisionalsStoreTremulants"));
 	m_GeneralsStoreDivisionalCouplers = ini.ReadBoolean(group, wxT("GeneralsStoreDivisionalCouplers"));
 	m_CombinationsStoreNonDisplayedDrawstops = ini.ReadBoolean(group, wxT("CombinationsStoreNonDisplayedDrawstops"));
-	m_volume = ini.ReadInteger(group, wxT("Volume"), -1, 100, false, -1);
+	m_volume = ini.ReadInteger(group, wxT("Volume"), -121, 100, false, -121);
+	if (m_volume > 20)
+		m_volume = -121;
 	m_Temperament = ini.ReadString(group, wxT("Temperament"), 256, false);
 	m_IgnorePitch = ini.ReadBoolean(group, wxT("IgnorePitch"), false, false);
 
@@ -750,7 +752,8 @@ void GrandOrgueFile::Save(const wxString& file)
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ODFPath"), GetODFFilename());
-	if (m_volume >= 0)
+
+	if (m_volume >= -120)
 		aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), m_volume);
 
 	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Temperament"), m_Temperament);

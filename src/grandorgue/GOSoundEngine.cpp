@@ -45,7 +45,8 @@ GOSoundEngine::GOSoundEngine() :
 	m_ScaledReleases(true),
 	m_ReleaseAlignmentEnabled(true),
 	m_RandomizeSpeaking(true),
-	m_Volume(100),
+	m_Volume(-15),
+	m_Gain(1),
 	m_SampleRate(0),
 	m_CurrentTime(0),
 	m_SamplerPool(),
@@ -86,7 +87,10 @@ void GOSoundEngine::Reset()
 
 void GOSoundEngine::SetVolume(int volume)
 {
+	if (volume > 20)
+		volume = -15;
 	m_Volume = volume;
+	m_Gain = powf(10.0f, m_Volume * 0.05f);
 }
 
 void GOSoundEngine::SetSampleRate(unsigned sample_rate)
@@ -326,7 +330,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 
 	if (!tremulant)
 	{
-		float f = m_Volume * 0.01f;
+		float f = m_Gain;
 		if (state.windchest)
 			f *= state.windchest->GetVolume();
 		for (unsigned int i = 0; i < n_frames * 2; i++)
