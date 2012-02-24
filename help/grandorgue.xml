@@ -952,6 +952,22 @@ A bitmap number is a value between 1 to 64. It referes to a predefined
 represent the same type of wood. The odd number has vertical grain,
 while the odd has horizontal grain.
       </para>
+      <figure>
+	<title>background bitmaps 1 to 30</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="background1to30.jpg"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
+      <figure>
+	<title>background bitmaps 31 to 64</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="background31to64.jpg"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
       <para>
 Objects in GrandOrgue are eg. manuals, stops, generals, ... . Each
 object can consist of backend part representing the object an its
@@ -1398,8 +1414,16 @@ contains the enclosures. Then all manuals with their associated
 buttons follow. The two rows are a block of buttons and pistons. The
 exact order can be specified via an attribute.
       </para>
+    <figure>
+      <title>background regions</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="background-usage.jpg"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
       <para>
-It has the following attributs:
+It has the following attributes:
       </para>
       <variablelist>
         <varlistentry>
@@ -1422,7 +1446,7 @@ It has the following attributs:
           <term>DispDrawstopBackgroundImageNum</term>
           <listitem>
             <para>
-(bitmap number, required)
+(bitmap number, required) shown as 01 in the above image.
 	    </para>
           </listitem>
         </varlistentry>
@@ -1430,7 +1454,7 @@ It has the following attributs:
           <term>DispConsoleBackgroundImageNum</term>
           <listitem>
             <para>
-(bitmap number, required)
+(bitmap number, required) shown as 05 in the above image.
 	    </para>
           </listitem>
         </varlistentry>
@@ -1438,7 +1462,7 @@ It has the following attributs:
           <term>DispKeyHorizBackgroundImageNum</term>
           <listitem>
             <para>
-(bitmap number, required)
+(bitmap number, required) shown as 13 in the above image
 	    </para>
           </listitem>
         </varlistentry>
@@ -1446,7 +1470,7 @@ It has the following attributs:
           <term>DispKeyVertBackgroundImageNum</term>
           <listitem>
             <para>
-(bitmap number, required)
+(bitmap number, required) shown as 20 in the above image
 	    </para>
           </listitem>
         </varlistentry>
@@ -2528,8 +2552,9 @@ for the keys.
     <sect1>
       <title>Label objects</title>
       <para>
-Lable object allow to display a text label. The background is an image.
-It is tiled, if the image is smaller than the label area. A label has the following attributes:
+Lable object allow to display a text label. The background is an
+image. It is tiled, if the image is smaller than the label area. A
+label has the following attributes:
       </para>
       <variablelist>
         <varlistentry>
