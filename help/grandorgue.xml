@@ -1760,7 +1760,8 @@ midi configuration dialog.
         </varlistentry>
       </variablelist>
       <para>
-If the enclosure is display, it contains the following gui attributes:
+If the enclosure is displayed, it contains the following gui
+attributes:
       </para>
       <variablelist>
         <varlistentry>
@@ -2360,15 +2361,156 @@ section containg the tremulant details.
         </varlistentry>
       </variablelist>
       <para>
-If the manual is display, it contains the following gui attributes:
+The various GUI manual attributes are specified for the different key
+types. They are named: C, Cis, D, Dis, E, F, Fis, G, Gis, A, Ais,
+B. If it is the first key on the manual, it is prefixed with First. If
+it is the last key on the manual, it is prefixed with Last. So valid
+values are eg. Gis, FirstDis, LastAis. In the following, these values
+will be marked as <emphasis>KEYTYPE</emphasis>.
+      </para>
+      <para>
+If the manual is displayed, it contains the following gui attributes:
       </para>
       <variablelist>
+        <varlistentry>
+          <term>PositionX</term>
+          <listitem>
+            <para>
+(integer 0 - panel width, default: according to layout model) Allow to
+override X position for manual.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PositionY</term>
+          <listitem>
+            <para>
+(integer 0 - panel height, default: according to layout model) Allow
+to override Y position for manual.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ImageOn_<emphasis>KEYTYPE</emphasis></term>
+          <listitem>
+            <para>
+(string, default: implementation dependend bitmap) Bitmap for the
+specified key type, if the key is pressed. The bitmap may contain a
+mask.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ImageOff_<emphasis>KEYTYPE</emphasis></term>
+          <listitem>
+            <para>
+(string, default: implementation dependend bitmap) Bitmap for the
+specified key type, if the key is not pressed. The bitmap may contain
+a mask.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MaskOn_<emphasis>KEYTYPE</emphasis></term>
+          <listitem>
+            <para>
+(string, default: empty string) Mask for the corresponding On
+bitmap. If empty, no external mask is loaded.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MaskOff_<emphasis>KEYTYPE</emphasis></term>
+          <listitem>
+            <para>
+(string, default: corresponding on mask) Mask for the corresponding
+Off bitmap. If empty, no external mask is loaded.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Width_<emphasis>KEYTYPE</emphasis></term>
+          <listitem>
+            <para>
+(integer 0 - 50, default: implementation dependend) This value is
+added to the x position of the current key to determine the position
+of the next key.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Offset_<emphasis>KEYTYPE</emphasis></term>
+          <listitem>
+            <para>
+(integer -50 - 50, default: implementation dependend) This value is
+can be used to adjust the display of the current key, eg. to place a
+sharp key overlapped with the previous key.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Key999ImageOn</term>
+          <listitem>
+            <para>
+(string, default: corresponding ImageOn_<emphasis>KEYTYPE</emphasis>)
+Allows to set the on bitmap for the 999 key.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Key999ImageOff</term>
+          <listitem>
+            <para>
+(string, default: corresponding ImageOff_<emphasis>KEYTYPE</emphasis>)
+Allows to set the off bitmap for the 999 key.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Key999MaskOn</term>
+          <listitem>
+            <para>
+(string, default: corresponding MaskOn_<emphasis>KEYTYPE</emphasis>)
+Allows to set the on mask for the 999 key.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Key999MaskOff</term>
+          <listitem>
+            <para>
+(string, default: corresponding MaskOff_<emphasis>KEYTYPE</emphasis>)
+Allows to set the off mask for the 999 key.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Key999Width</term>
+          <listitem>
+            <para>
+(integer 0 - 50, default: corresponding
+Width_<emphasis>KEYTYPE</emphasis>) Allows to set the width of the 999
+key.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Key999Offset</term>
+          <listitem>
+            <para>
+(integer -50 - 50, default: corresponding
+Offset_<emphasis>KEYTYPE</emphasis>) Allows to set the width of the
+999 key.
+	    </para>
+          </listitem>
+        </varlistentry>
         <varlistentry>
           <term>DispKeyColourInverted</term>
           <listitem>
             <para>
-(boolean, required) True means, the <emphasis>black</emphasis> keys are drawn
-in a light color while the <emphasis>white</emphasis> keys are draw dark color.
+(boolean, required) True means, the <emphasis>black</emphasis> keys
+are drawn in a light color while the <emphasis>white</emphasis> keys
+are draw dark color.
 	    </para>
           </listitem>
         </varlistentry>
