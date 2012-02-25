@@ -31,6 +31,8 @@ GOrguePipeConfig::GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCa
 	m_NamePrefix(),
 	m_Amplitude(0),
 	m_DefaultAmplitude(0),
+	m_Gain(0),
+	m_DefaultGain(0),
 	m_Tuning(0),
 	m_DefaultTuning(0),
 	m_BitsPerSample(-1),
@@ -48,6 +50,8 @@ void GOrguePipeConfig::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	m_NamePrefix = prefix;
 	m_DefaultAmplitude = cfg.ReadFloat(group, prefix + wxT("AmplitudeLevel"), 0, 1000, false, 100);
 	m_Amplitude = cfg.ReadFloat(group, prefix + wxT("Amplitude"), 0, 1000, false, m_DefaultAmplitude);
+	m_DefaultGain = cfg.ReadFloat(group, prefix + wxT("Gain"), -120, 40, false, 0);
+	m_Gain = cfg.ReadFloat(group, prefix + wxT("UserGain"), -120, 40, false, m_DefaultGain);
 	m_DefaultTuning = cfg.ReadFloat(group, prefix + wxT("PitchTuning"), -1200, 1200, false, 0);
 	m_Tuning = cfg.ReadFloat(group, prefix + wxT("Tuning"), -1200, 1200, false, m_DefaultTuning);
 	m_BitsPerSample = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("BitsPerSample"), -1, 24, false, -1);
@@ -65,6 +69,7 @@ void GOrguePipeConfig::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 void GOrguePipeConfig::Save(IniFileConfig& cfg, bool prefix)
 {
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
+	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
@@ -87,6 +92,23 @@ float GOrguePipeConfig::GetDefaultAmplitude()
 void GOrguePipeConfig::SetAmplitude(float amp)
 {
 	m_Amplitude = amp;
+	m_OrganFile->Modified();
+	m_Callback->UpdateAmplitude();
+}
+
+float GOrguePipeConfig::GetGain()
+{
+	return m_Gain;
+}
+
+float GOrguePipeConfig::GetDefaultGain()
+{
+	return m_DefaultGain;
+}
+
+void GOrguePipeConfig::SetGain(float gain)
+{
+	m_Gain = gain;
 	m_OrganFile->Modified();
 	m_Callback->UpdateAmplitude();
 }

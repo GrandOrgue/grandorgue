@@ -152,9 +152,14 @@ float GOrguePipe::GetEffectiveAmplitude()
 	return m_PipeConfig.GetAmplitude() * m_Rank->GetPipeConfig().GetAmplitude() * m_OrganFile->GetPipeConfig().GetAmplitude();
 }
 
+float GOrguePipe::GetEffectiveGain()
+{
+	return m_PipeConfig.GetGain() + m_Rank->GetPipeConfig().GetGain() + m_OrganFile->GetPipeConfig().GetGain();
+}
+
 void GOrguePipe::UpdateAmplitude()
 {
-	m_SoundProvider.SetAmplitude(GetEffectiveAmplitude());
+	m_SoundProvider.SetAmplitude(GetEffectiveAmplitude(), GetEffectiveGain());
 }
 
 float GOrguePipe::GetEffectiveTuning()

@@ -57,7 +57,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 		for(unsigned i = 0; i < sample_instances; i++)
 		{
 			GOSoundProviderWave* w = new GOSoundProviderWave(organfile->GetMemoryPool());
-			w->SetAmplitude(102);
+			w->SetAmplitude(102, 0);
  			std::vector<release_load_info> release;
  			std::vector<attack_load_info> attack;
 			attack_load_info ainfo;

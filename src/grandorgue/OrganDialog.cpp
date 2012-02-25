@@ -73,6 +73,8 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, OrganDialog::OnTreeChanged)
 	EVT_TEXT(ID_EVENT_AMPLITUDE, OrganDialog::OnAmplitudeChanged)
 	EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, OrganDialog::OnAmplitudeSpinChanged)
+	EVT_TEXT(ID_EVENT_GAIN, OrganDialog::OnGainChanged)
+	EVT_SPIN(ID_EVENT_GAIN_SPIN, OrganDialog::OnGainSpinChanged)
 	EVT_TEXT(ID_EVENT_TUNING, OrganDialog::OnTuningChanged)
 	EVT_SPIN(ID_EVENT_TUNING_SPIN, OrganDialog::OnTuningSpinChanged)
 	EVT_BUTTON(wxID_OK, OrganDialog::OnOK)
@@ -116,6 +118,15 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	box2->Add(m_AmplitudeSpin);
 	grid->Add(box2);
 	m_AmplitudeSpin->SetRange(0, 1000);
+
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Gain (dB):")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	box2 = new wxBoxSizer(wxHORIZONTAL);
+	m_Gain = new wxTextCtrl(this, ID_EVENT_GAIN, wxEmptyString);
+	m_GainSpin = new wxSpinButton(this, ID_EVENT_GAIN_SPIN); 
+	box2->Add(m_Gain);
+	box2->Add(m_GainSpin);
+	grid->Add(box2);
+	m_GainSpin->SetRange(-120, 40);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Tuning (Cent):")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	box2 = new wxBoxSizer(wxHORIZONTAL);
@@ -266,6 +277,9 @@ void OrganDialog::Load()
 		m_Amplitude->ChangeValue(wxEmptyString);
 		m_Amplitude->Disable();
 		m_AmplitudeSpin->Disable();
+		m_Gain->ChangeValue(wxEmptyString);
+		m_Gain->Disable();
+		m_GainSpin->Disable();
 		m_Tuning->ChangeValue(wxEmptyString);
 		m_Tuning->Disable();
 		m_TuningSpin->Disable();
@@ -285,6 +299,8 @@ void OrganDialog::Load()
 	{
 		if (!m_Amplitude->IsModified())
 			m_Amplitude->ChangeValue(wxEmptyString);
+		if (!m_Gain->IsModified())
+			m_Gain->ChangeValue(wxEmptyString);
 		if (!m_Tuning->IsModified())
 			m_Tuning->ChangeValue(wxEmptyString);
 		if (m_BitsPerSample->GetSelection() == m_LastBitsPerSample)
@@ -331,6 +347,8 @@ void OrganDialog::Load()
 
 	m_Amplitude->Enable();
 	m_AmplitudeSpin->Enable();
+	m_Gain->Enable();
+	m_GainSpin->Enable();
 	m_Tuning->Enable();
 	m_TuningSpin->Enable();
 	m_BitsPerSample->Enable();
@@ -342,15 +360,16 @@ void OrganDialog::Load()
 	m_Default->Enable();
 	m_Reset->Disable();
 	
-	float amplitude;
-	float tuning;
-
-	amplitude = m_Last->config->GetAmplitude();
-	tuning = m_Last->config->GetTuning();
+	float amplitude = m_Last->config->GetAmplitude();
+	float gain = m_Last->config->GetGain();
+	float tuning = m_Last->config->GetTuning();
 
 	if (entries.size() == 1)
 		m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
 	m_AmplitudeSpin->SetValue(amplitude);
+	if (entries.size() == 1)
+		m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
+	m_GainSpin->SetValue(gain);
 	if (entries.size() == 1)
 		m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
 	m_TuningSpin->SetValue(tuning);
@@ -396,6 +415,20 @@ void OrganDialog::OnAmplitudeChanged(wxCommandEvent &e)
 {
 	float amp = wxAtof(m_Amplitude->GetValue());
 	m_AmplitudeSpin->SetValue(amp);
+	Modified();
+}
+
+void OrganDialog::OnGainSpinChanged(wxSpinEvent& e)
+{
+	m_Gain->ChangeValue(wxString::Format(wxT("%f"), (float)m_GainSpin->GetValue()));
+	m_Gain->MarkDirty();
+	Modified();
+}
+
+void OrganDialog::OnGainChanged(wxCommandEvent &e)
+{
+	float gain = wxAtof(m_Gain->GetValue());
+	m_GainSpin->SetValue(gain);
 	Modified();
 }
 
@@ -453,6 +486,8 @@ bool OrganDialog::Changed()
 	bool changed = false;
 	if (m_Amplitude->IsModified())
 		changed = true;
+	if (m_Gain->IsModified())
+		changed = true;
 	if (m_Tuning->IsModified())
 		changed = true;
 	if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
@@ -504,6 +539,7 @@ void OrganDialog::FillTree()
 void OrganDialog::OnEventApply(wxCommandEvent &e)
 {
 	float amp = wxAtof(m_Amplitude->GetValue());
+	float gain = wxAtof(m_Gain->GetValue());
 	float tuning = wxAtof(m_Tuning->GetValue());
 
 	wxArrayTreeItemIds entries;
@@ -513,6 +549,13 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	    (amp < 0 || amp > 1000))
 	{
 		wxMessageBox(_("Amplitude is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
+		return;
+	}
+
+	if (m_Gain->IsModified() &&
+	    (gain < -120 || gain > 40))
+	{
+		wxMessageBox(_("Gain is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
 		return;
 	}
 
@@ -530,6 +573,8 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 			continue;
 		if (m_Amplitude->IsModified())
 			e->config->SetAmplitude(amp);
+		if (m_Gain->IsModified())
+			e->config->SetGain(gain);
 		if (m_Tuning->IsModified())
 			e->config->SetTuning(tuning);
 		if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
@@ -550,6 +595,8 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	m_Apply->Disable();
 	if (m_Amplitude->IsModified())
 		m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amp));
+	if (m_Gain->IsModified())
+		m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
 	if (m_Tuning->IsModified())
 		m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
 	m_LastBitsPerSample = m_BitsPerSample->GetSelection();
@@ -577,6 +624,7 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 		if (!e)
 			continue;
 		e->config->SetAmplitude(e->config->GetDefaultAmplitude());
+		e->config->SetGain(e->config->GetDefaultGain());
 		e->config->SetTuning(e->config->GetDefaultTuning());
 		e->config->SetBitsPerSample(-1);
 		e->config->SetCompress(-1);

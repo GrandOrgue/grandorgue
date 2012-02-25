@@ -85,6 +85,7 @@ public:
 	void SetTemperament(const GOrgueTemperament& temperament);
 
 	float GetEffectiveAmplitude();
+	float GetEffectiveGain();
 	void UpdateAmplitude();
 
 	float GetEffectiveTuning();

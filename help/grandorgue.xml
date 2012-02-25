@@ -1239,6 +1239,15 @@ the whole organ. 100 means no change.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Gain</term>
+          <listitem>
+            <para>
+(float -120 - 40, default: 0) Amplitude scale factor in dB applied to
+the whole organ. 0 means no change.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>PitchTuning</term>
           <listitem>
             <para>
@@ -3358,6 +3367,15 @@ the whole stop. 100 means no change.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Gain</term>
+          <listitem>
+            <para>
+(float -120 - 40, default: 0) Amplitude scale factor in dB applied to
+the whole stop. 0 means no change.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>PitchTuning</term>
           <listitem>
             <para>
@@ -3461,6 +3479,15 @@ played as is (without any loop/release handling)
             <para>
 (float 0-1000, default: 100) Linear amplitude scale factor applied to
 the pipe (in addition to the organ/stop factor). 100 means no change.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe9999Gain</term>
+          <listitem>
+            <para>
+(float -120 - 40, default: 0) Amplitude scale factor in dB applied to
+the pipe (in addition to the organ/stop factor). 0 means no change.
 	    </para>
           </listitem>
         </varlistentry>

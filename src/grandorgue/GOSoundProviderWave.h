@@ -77,7 +77,7 @@ public:
 
 	void LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, wxString path, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode,
 			  unsigned attack_load, unsigned release_load);
-	void SetAmplitude(int fixed_amplitude);
+	void SetAmplitude(float fixed_amplitude, float gain);
 };
 
 #endif /* GOSOUNDPROVIDERWAVE_H_ */
