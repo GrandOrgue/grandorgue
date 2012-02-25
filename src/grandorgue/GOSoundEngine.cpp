@@ -622,14 +622,15 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 					if (time < (int)attack_duration)
 					{
 						float attack_index = (float)time / attack_duration;
-						gain_target *= ( 0.1f + ( 0.9f * ( 2.0f * attack_index - (attack_index * attack_index) )));
+						float gain_delta = ( 0.05f + ( 0.95f * ( 2.0f * attack_index - (attack_index * attack_index) )));
+						gain_target *= gain_delta;
 					}
 					/* calculate the volume decay to be applied to the release to take into account the fact reverb is not completely formed during staccato */
 					/* time to full reverb is estimated in function of release length*/
-					int time_to_full_reverb = (1000 * release_section->GetLength() / release_section->GetSampleRate()) / 7;
+					int time_to_full_reverb = 100 * release_section->GetLength() / release_section->GetSampleRate();
 					if (time < time_to_full_reverb)
 					{
-						gain_decay_rate = -14  + (int)( (-3.0f * (float)time / (float)time_to_full_reverb ) - 0.5f ); 
+						gain_decay_rate = -14  + (int)( (-4.0f * (float)time / (float)time_to_full_reverb ) - 0.5f ); 
 					}
 				}
 			}
