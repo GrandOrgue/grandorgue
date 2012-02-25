@@ -1155,6 +1155,15 @@ in a section called <emphasis>Panel999</emphasis>.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>NumberOfRanks</term>
+          <listitem>
+            <para>
+(integer 0-400, default: 0) number of additional ranks. The details are
+in a section called <emphasis>Rank999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>DivisionalsStoreIntermanualCouplers</term>
           <listitem>
             <para>
@@ -2873,16 +2882,16 @@ top pixel of the button
       <para>
 Button objects are defined on the main panel. Their section name
 is based on their function. They share the following common properties:
-</para>
+      </para>
       <variablelist>
         <varlistentry>
           <term>Name</term>
           <listitem>
             <para>
-	    (string, required) Name of the object. The name may be
-	    presented the user in lists too, therefore it should be
-	    descriptive.  If a GUI representations requires a shorter
-	    name, please override this value locally.
+(string, required) Name of the object. The name may be presented the
+user in lists too, therefore it should be descriptive.  If a GUI
+representations requires a shorter name, please override this value
+locally.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3350,19 +3359,45 @@ FirstMIDINoteNumber.
       </variablelist>
     </sect1>
     <sect1>
-      <title>Stop objects</title>
+      <title>Rank objects</title>
       <para>
-Stop are drawstop objects. A stop consists of a number of pipes. Only
-the accessible pipes can be triggered from the manual. They have the
-following additions attributes:
+A rank represents a row of pipes. It can be either be part of a stop
+section or appear in its own section.
       </para>
       <variablelist>
+        <varlistentry>
+          <term>Name</term>
+          <listitem>
+            <para>
+(string, required) Name of the rank. The name may be presented the
+user in lists too, therefore it should be descriptive.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>FirstMidiNoteNumber</term>
+          <listitem>
+            <para>
+(integer 0-256, if the rank is part of a stop section, the default
+value is derived from the associated manuals else required) Midi note
+number of the first pipe
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfLogicalPipes</term>
+          <listitem>
+            <para>
+(integer 1-192, required) Number of pipes in this rank
+	    </para>
+          </listitem>
+        </varlistentry>
         <varlistentry>
           <term>AmplitudeLevel</term>
           <listitem>
             <para>
 (float 0-1000, default: 100) Linear amplitude scale factor applied to
-the whole stop. 100 means no change.
+the whole rank. 100 means no change.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3371,7 +3406,7 @@ the whole stop. 100 means no change.
           <listitem>
             <para>
 (float -120 - 40, default: 0) Amplitude scale factor in dB applied to
-the whole stop. 0 means no change.
+the whole rank. 0 means no change.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3379,8 +3414,8 @@ the whole stop. 0 means no change.
           <term>PitchTuning</term>
           <listitem>
             <para>
-(float -1200-1200, default: 0) Retune the stop organ the specified
-number of cents.
+(float -1200-1200, default: 0) Retune the rank by the specified number
+of cents.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3388,7 +3423,7 @@ number of cents.
           <term>HarmonicNumber</term>
           <listitem>
             <para>
-(float 1-1024, default: 8) Harmonic number (= 64 / stop size), eg. 2
+(float 1-1024, default: 8) Harmonic number (= 64 / rank size), eg. 2
 2/3 =&gt; 64 / (2 2/3) = 24.
 	    </para>
           </listitem>
@@ -3400,41 +3435,6 @@ number of cents.
 (float -1200-1200, default: 0) Correction factor in cent for the pitch
 specified in the sample. This setting is used for retuning to other
 temperaments.
-	    </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>NumberOfLogicalPipes</term>
-          <listitem>
-            <para>
-(integer 1-192, required) Number of pipes in this stop
-	    </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>FirstAccessiblePipeLogicalPipeNumber</term>
-          <listitem>
-            <para>
-(integer 1 - NumberOfLogicalPipes, required) The number of the first
-pipe accessible from the manual.
-	    </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>irstAccessiblePipeLogicalKeyNumber</term>
-          <listitem>
-            <para>
-(integer 1-128, required) The key number on the manual of the first
-accessible pipe.
-	    </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>NumberOfAccessiblePipes</term>
-          <listitem>
-            <para>
-(integer 1 - NumberOfLogicalPipes, required) Number of pipes, that are
-playable from the manual starting from the first acessible pipe.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3458,7 +3458,7 @@ any loop/release handling)
         </varlistentry>
       </variablelist>
       <para>
-The stop section contains the attributes of each of its pipes too.
+A rank section contains the attributes of each of its pipes too.
 The attribute of each pipe are prefixed with
 <emphasis>Pipe999</emphasis> (number starting with 1). The supported
 attributes are:
@@ -3478,7 +3478,7 @@ played as is (without any loop/release handling)
           <listitem>
             <para>
 (float 0-1000, default: 100) Linear amplitude scale factor applied to
-the pipe (in addition to the organ/stop factor). 100 means no change.
+the pipe (in addition to the organ/rank factor). 100 means no change.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3487,7 +3487,7 @@ the pipe (in addition to the organ/stop factor). 100 means no change.
           <listitem>
             <para>
 (float -120 - 40, default: 0) Amplitude scale factor in dB applied to
-the pipe (in addition to the organ/stop factor). 0 means no change.
+the pipe (in addition to the organ/rank factor). 0 means no change.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3496,7 +3496,7 @@ the pipe (in addition to the organ/stop factor). 0 means no change.
           <listitem>
             <para>
 (float -1200-1200, default: 0) Retune this pipe the specified
-number of cents (in addition to the organ/stop factor).
+number of cents (in addition to the organ/rank factor).
 	    </para>
           </listitem>
         </varlistentry>
@@ -3506,7 +3506,7 @@ number of cents (in addition to the organ/stop factor).
             <para>
 (string, required) Relative path to the sample WAV file of the first
 attack. It contain may be REF:aa:bb:cc too. In that case, it means
-that this pipe is borrowed from manual aa, stop bb the pipe cc.
+that this pipe is borrowed from manual aa, first rank of stop bb the pipe cc.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3544,7 +3544,7 @@ release sample is choosen. -1 means infinite.
           <listitem>
             <para>
 (float 1-1024, default: rank harmonic number) Harmonic number (= 64 /
-stop size), eg. 2 2/3 =&gt; 64 / (2 2/3) = 24.
+rank size), eg. 2 2/3 =&gt; 64 / (2 2/3) = 24.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3651,6 +3651,94 @@ release sample is choosen. -1 means infinite.
       </variablelist>
     </sect1>
     <sect1>
+      <title>Stop objects</title>
+      <para>
+Stop are drawstop objects. A stop consists of a number of ranks. If
+the number of ranks is set to zero, the stop contains one rank, which
+is defined in the stop section - else it references a list of ranks.
+Only the accessible pipes can be triggered from the manual. A stop has
+the following additions attributes:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>NumberOfRanks</term>
+          <listitem>
+            <para>
+(integer 0 - rank count specified in the organ section, default: 0)
+Number of referenced ranks.  If zero, one rank definition is included
+in the stop section. The lists of references is specified via the
+<emphasis>Rank999...</emphasis> settings.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>FirstAccessiblePipeLogicalKeyNumber</term>
+          <listitem>
+            <para>
+(integer 1-128, required) The key number on the manual of the first
+accessible pipe.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfAccessiblePipes</term>
+          <listitem>
+            <para>
+(integer 1 - 192, required) Number of pipes, that are
+playable from the manual starting from the first acessible pipe.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>FirstAccessiblePipeLogicalPipeNumber</term>
+          <listitem>
+            <para>
+(integer 1 - 192, required if NumberOfRanks=0) The number of the first
+pipe accessible from the manual. If NumberOfRanks is not 0, this
+setting is not necessary.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Rank999</term>
+          <listitem>
+            <para>
+(integer 0 - rank count specified in the organ section, required)
+Reference to a rank from the organ section.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Rank999FirstPipeNumber</term>
+          <listitem>
+            <para>
+(integer 1 - number of pipes in the rank, default: 1)
+Number of first mapped pipe from the rank
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Rank999PipeCount</term>
+          <listitem>
+            <para>
+(integer 0 - remaining number of pipes in the rank, default: remaining
+number of pipes in the rank) Number of pipes mapped from the rank.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Rank999FirstAccessibleKeyNumber</term>
+          <listitem>
+            <para>
+(integer 1 - NumberOfAccessiblePipes, default: 1) Key number offset
+(starting with FirstAccessiblePipeLogicalKeyNumber) for the pipe
+referenced by Rank999FirstPipeNumber.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
       <title>Pushbutton objects</title>
       <para>
 Pushbuttons are buttons without any state. It is displayed as piston.
@@ -3751,7 +3839,7 @@ Synthesised tremulants have the following attributes:
     <sect1>
       <title>Windchest objects</title>
       <para>
-Windchest objects represent a windchest, on which pipes of stops are placed.
+Windchest objects represent a windchest, on which pipes of ranks are placed.
 It has the following attributes:
       </para>
       <variablelist>
@@ -3870,8 +3958,8 @@ called <emphasis>Panel999SetterElement999</emphasis>.
           <listitem>
             <para>
 (integer 0 - number of defined enclosures, required) Number of
-enclosures on the panel. The section of the stops GUI definitions are
-called <emphasis>Panel999Enclosure999</emphasis>.
+enclosures on the panel. The section of the enclosures GUI definitions
+are called <emphasis>Panel999Enclosure999</emphasis>.
 	    </para>
           </listitem>
         </varlistentry>

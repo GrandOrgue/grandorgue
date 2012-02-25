@@ -249,6 +249,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	unsigned m_NumberOfGenerals = ini.ReadInteger(group, wxT("NumberOfGenerals"), 0, 99);
 	unsigned m_NumberOfDivisionalCouplers = ini.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, 8);
 	unsigned m_NumberOfPanels = ini.ReadInteger(group, wxT("NumberOfPanels"), 0, 100, false);
+	unsigned m_NumberOfRanks = ini.ReadInteger(group, wxT("NumberOfRanks"), 0, 400, false);
 	m_PipeConfig.Load(ini, group, wxEmptyString);
 	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntermanualCouplers"));
 	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntramanualCouplers"));
@@ -292,6 +293,13 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		buffer.Printf(wxT("WindchestGroup%03d"), i + 1);
 		m_windchest[i]->Load(ini, buffer, i);
+	}
+
+	for (unsigned  i = 0; i < m_NumberOfRanks; i++)
+	{
+		m_ranks.push_back(new GOrgueRank(this));
+		buffer.Printf(wxT("Rank%03d"), i + 1);
+		m_ranks[i]->Load(ini, buffer, -1);
 	}
 
 	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)

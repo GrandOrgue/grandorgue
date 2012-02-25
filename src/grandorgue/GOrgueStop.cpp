@@ -31,7 +31,6 @@ GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsign
 	m_KeyState(0),
 	m_ManualNumber(manual_number),
 	m_FirstMidiNoteNumber(first_midi_note_number),
-	m_FirstAccessiblePipeLogicalPipeNumber(0),
 	m_FirstAccessiblePipeLogicalKeyNumber(0),
 	m_NumberOfAccessiblePipes(0)
 {
@@ -47,17 +46,35 @@ unsigned GOrgueStop::IsAuto() const
 
 void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 {
-	RankInfo info;
-	info.Rank = new GOrgueRank(m_organfile);
-	m_organfile->AddRank(info.Rank);
+	unsigned number_of_ranks = cfg.ReadInteger(group, wxT("NumberOfRanks"), 0, m_organfile->GetRankCount(), false, 0);
 
-	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
-	m_FirstAccessiblePipeLogicalPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, number_of_logical_pipes);
 	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
-	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, number_of_logical_pipes);
+	m_NumberOfAccessiblePipes              = cfg.ReadInteger(group, wxT("NumberOfAccessiblePipes"), 1, 192);
 
-	info.Rank->Load(cfg, group, m_FirstMidiNoteNumber - m_FirstAccessiblePipeLogicalPipeNumber + m_FirstAccessiblePipeLogicalKeyNumber);
-	m_RankInfo.push_back(info);
+	if (number_of_ranks)
+        {
+		for(unsigned i = 0; i < number_of_ranks; i++)
+		{
+			RankInfo info;
+			unsigned no = cfg.ReadInteger(group, wxString::Format(wxT("Rank%03d"), i + 1), 1, m_organfile->GetRankCount());
+			info.Rank = m_organfile->GetRank(no - 1); 
+			info.FirstPipeNumber = cfg.ReadInteger(group, wxString::Format(wxT("Rank%03dFirstPipeNumber"), i + 1), 1, info.Rank->GetPipeCount(), false, 1);
+			info.PipeCount = cfg.ReadInteger(group, wxString::Format(wxT("Rank%03dPipeCount"), i + 1), 1, info.Rank->GetPipeCount() - info.FirstPipeNumber + 1, false, info.Rank->GetPipeCount() - info.FirstPipeNumber + 1);
+			info.FirstAccessibleKeyNumber = cfg.ReadInteger(group, wxString::Format(wxT("Rank%03dFirstAccessibleKeyNumber"), i + 1), 1, m_NumberOfAccessiblePipes, false, 1);
+			m_RankInfo.push_back(info);
+		}
+        }
+	else
+	{
+		RankInfo info;
+		info.Rank = new GOrgueRank(m_organfile);
+		m_organfile->AddRank(info.Rank);
+		info.FirstPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, 192);
+		info.FirstAccessibleKeyNumber = 1;
+		info.PipeCount = m_NumberOfAccessiblePipes;
+		info.Rank->Load(cfg, group, m_FirstMidiNoteNumber - info.FirstPipeNumber + info.FirstAccessibleKeyNumber);
+		m_RankInfo.push_back(info);
+	}
 
         m_KeyState.resize(m_NumberOfAccessiblePipes);
         std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
@@ -69,7 +86,9 @@ void GOrgueStop::SetRankKey(unsigned key, bool on)
 {
 	for(unsigned j = 0; j < m_RankInfo.size(); j++)
 	{
-		m_RankInfo[j].Rank->SetKey(key + m_FirstAccessiblePipeLogicalPipeNumber - 1, on);
+		if (key + 1 < m_RankInfo[j].FirstAccessibleKeyNumber || key >= m_RankInfo[j].FirstAccessibleKeyNumber + m_RankInfo[j].PipeCount)
+			continue;
+		m_RankInfo[j].Rank->SetKey(key + m_RankInfo[j].FirstPipeNumber - m_RankInfo[j].FirstAccessibleKeyNumber, on);
 	}
 }
 

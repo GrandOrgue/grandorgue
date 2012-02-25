@@ -46,7 +46,7 @@ GOrgueRank::~GOrgueRank()
 
 void GOrgueRank::Load(IniFileConfig& cfg, wxString group, int first_midi_note_number)
 {
-	m_FirstMidiNoteNumber = first_midi_note_number;
+	m_FirstMidiNoteNumber = cfg.ReadInteger(group, wxT("FirstMidiNoteNumber"), 0, 256, false, first_midi_note_number);
 	m_Group = group;
 	m_Name = cfg.ReadString(group, wxT("Name"), 64, true);
 
