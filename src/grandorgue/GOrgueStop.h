@@ -35,12 +35,14 @@ private:
 	typedef struct
 	{
 		GOrgueRank* Rank;
+		unsigned FirstAccessibleKeyNumber;
+		unsigned FirstPipeNumber;
+		unsigned PipeCount;
 	} RankInfo;
 	std::vector<RankInfo> m_RankInfo;
 	std::vector<unsigned> m_KeyState;
 	unsigned m_ManualNumber;
 	unsigned m_FirstMidiNoteNumber;
-	unsigned m_FirstAccessiblePipeLogicalPipeNumber;
 	unsigned m_FirstAccessiblePipeLogicalKeyNumber;
 	unsigned m_NumberOfAccessiblePipes;
 
