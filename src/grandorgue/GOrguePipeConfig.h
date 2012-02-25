@@ -43,6 +43,8 @@ private:
 	wxString m_NamePrefix;
 	float m_Amplitude;
 	float m_DefaultAmplitude;
+	float m_Gain;
+	float m_DefaultGain;
 	float m_Tuning;
 	float m_DefaultTuning;
 	int m_BitsPerSample;
@@ -61,6 +63,10 @@ public:
 	float GetAmplitude();
 	float GetDefaultAmplitude();
 	void SetAmplitude(float amp);
+
+	float GetGain();
+	float GetDefaultGain();
+	void SetGain(float gain);
 
 	float GetTuning();
 	float GetDefaultTuning();

@@ -30,12 +30,12 @@ GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool) :
 {
 }
 
-void GOSoundProviderWave::SetAmplitude(int fixed_amplitude)
+void GOSoundProviderWave::SetAmplitude(float fixed_amplitude, float gain)
 {
 	/* Amplitude is the combination of global amplitude volume and the stop
 	 * volume. 1000000 would correspond to sample playback at normal volume.
 	 */
-	m_Gain                     = fixed_amplitude / 1000000.0f;
+	m_Gain = fixed_amplitude / 1000000.0f * powf(10.0f, gain * 0.05f);
 }
 
 unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample)
