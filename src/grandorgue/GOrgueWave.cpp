@@ -79,8 +79,8 @@ void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
 
 	GO_WAVEFORMATPCMEX* format = (GO_WAVEFORMATPCMEX*)ptr;
 	unsigned formatCode = wxUINT16_SWAP_ON_BE(format->wf.wf.wFormatTag);
-	if (formatCode != 1)
-		throw (wxString)_("< Not PCM data in");
+	if (formatCode != 1 && formatCode != 3)
+		throw (wxString)_("< Unsupported PCM format");
 
 	/* get channels and ensure only mono or stereo */
 	channels = wxUINT16_SWAP_ON_BE(format->wf.wf.nChannels);
@@ -92,6 +92,11 @@ void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
 	if (bitsPerSample % 8)
 		throw (wxString)_("< Bits per sample must be a multiple of 8 in this implementation");
 	bytesPerSample = bitsPerSample / 8;
+
+	if (formatCode == 3 && bytesPerSample != 4)
+		throw (wxString)_("< Only 32bit IEEE float samples supported");
+	else if (formatCode == 1 && bytesPerSample > 3)
+		throw (wxString)_("< Unsupport PCM bit size");
 
 	hasFormat = true;
 }
@@ -338,7 +343,7 @@ void GOrgueWave::ReadSamples
 	if (sampleRate != sample_rate)
 		throw (wxString)_("bad format!");
 
-	if (bytesPerSample < 1 || bytesPerSample > 3)
+	if (bytesPerSample < 1 || bytesPerSample > 4)
 		throw (wxString)_("Unsupported format");
 
 	if (channels != return_channels && return_channels != 1)
@@ -370,6 +375,9 @@ void GOrgueWave::ReadSamples
 				break;
 			case 3:
 				val = GOInt24ToInt(*((GO_Int24*)input));
+				break;
+			case 4:
+				val = (*(float*)input) * (float)(1 << 23);
 				break;
 			default:
 				throw (wxString)_("bad format!");
