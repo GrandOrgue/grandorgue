@@ -208,7 +208,7 @@ MIDI interface device or loopback driver
       <title>GrandOrgue User Interface</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="GrandOrgue.jpg" scalefit="1" width="100%" contentdepth="100%" />
+          <imagedata fileref="GrandOrgue.jpg" scalefit="1" width="100%" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -558,7 +558,7 @@ program will jump directly to the appropriate topic.
       <title>MIDI Settings dialog</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="GrandOrgueMIDI.gif" scalefit="1" width="100%" contentdepth="100%" />
+          <imagedata fileref="GrandOrgueMIDI.gif" scalefit="1" width="100%" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -608,7 +608,7 @@ changes when you're done.
       <title>Device Settings dialog</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="GrandOrgueAudio.gif" scalefit="1" width="100%" contentdepth="100%" />
+          <imagedata fileref="GrandOrgueAudio.gif" scalefit="1" width="100%" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -956,7 +956,7 @@ while the odd has horizontal grain.
 	<title>background bitmaps 1 to 30</title>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="background1to30.jpg" scalefit="1" width="100%" contentdepth="100%" />
+	    <imagedata fileref="background1to30.jpg" scalefit="1" width="100%" />
 	  </imageobject>
 	</mediaobject>
       </figure>
@@ -964,7 +964,7 @@ while the odd has horizontal grain.
 	<title>background bitmaps 31 to 64</title>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="background31to64.jpg" scalefit="1" width="100%" contentdepth="100%" />
+	    <imagedata fileref="background31to64.jpg" scalefit="1" width="100%" />
 	  </imageobject>
 	</mediaobject>
       </figure>
@@ -1436,7 +1436,7 @@ exact order can be specified via an attribute.
       <title>background regions</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="background-usage.jpg" scalefit="1" width="100%" contentdepth="100%" />
+          <imagedata fileref="background-usage.jpg" scalefit="1" width="100%" />
         </imageobject>
       </mediaobject>
     </figure>
