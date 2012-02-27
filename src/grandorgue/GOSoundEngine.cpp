@@ -632,12 +632,19 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 					}
 					/* calculate the volume decay to be applied to the release to take into account the fact reverb is not completely formed during staccato */
 					/* time to full reverb is estimated in function of release length*/
-					int time_to_full_reverb = 50 + ( (50 * release_section->GetLength()) / release_section->GetSampleRate());
+					/* for an organ with a release length of 5 seconds or more, time_to_full_reverb is around 350 ms */
+					/* for an organ with a release length of 1 second or less, time_to_full_reverb is around 100 ms */
+					/* time_to_full_reverb is linear in between */
+					int time_to_full_reverb = ((60 * release_section->GetLength()) / release_section->GetSampleRate()) + 40;
+					if (time_to_full_reverb > 350 ) time_to_full_reverb = 350;
+					if (time_to_full_reverb < 100 ) time_to_full_reverb = 100;
 					if (time < time_to_full_reverb)
 					{
-						int reverb_mini = (time_to_full_reverb + 50) / 100;
-						if (reverb_mini > 4) reverb_mini = 4;
-						gain_decay_rate = -11  - reverb_mini - (int)(((float)(6 - reverb_mini) * (float)time / (float)time_to_full_reverb ) + 0.5f ); 
+						/* in function of note duration, fading happens between:
+						/* 200 ms and 6 s for release with little reverberation e.g. short release
+						/* 700 ms and 6 s for release with large reverberation e.g. long release */ 
+						int reverb_mini = time_to_full_reverb / 100;
+						gain_decay_rate = -11  - reverb_mini - ( ( ( ( (6 - reverb_mini) * time * 2 ) / time_to_full_reverb ) + 1 ) / 2 ); 
 					}
 				}
 			}
