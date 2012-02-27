@@ -76,6 +76,7 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_OrganComments(),
 	m_RecordingDetails(),
 	m_InfoFilename(),
+	m_RankCount(0),
 	m_enclosure(0),
 	m_tremulant(0),
 	m_windchest(0),
@@ -249,7 +250,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	unsigned m_NumberOfGenerals = ini.ReadInteger(group, wxT("NumberOfGenerals"), 0, 99);
 	unsigned m_NumberOfDivisionalCouplers = ini.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, 8);
 	unsigned m_NumberOfPanels = ini.ReadInteger(group, wxT("NumberOfPanels"), 0, 100, false);
-	unsigned m_NumberOfRanks = ini.ReadInteger(group, wxT("NumberOfRanks"), 0, 400, false);
+	m_RankCount = ini.ReadInteger(group, wxT("NumberOfRanks"), 0, 400, false);
 	m_PipeConfig.Load(ini, group, wxEmptyString);
 	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntermanualCouplers"));
 	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntramanualCouplers"));
@@ -295,7 +296,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 		m_windchest[i]->Load(ini, buffer, i);
 	}
 
-	for (unsigned  i = 0; i < m_NumberOfRanks; i++)
+	for (unsigned  i = 0; i < m_RankCount; i++)
 	{
 		m_ranks.push_back(new GOrgueRank(this));
 		buffer.Printf(wxT("Rank%03d"), i + 1);
@@ -850,7 +851,7 @@ GOrgueRank* GrandOrgueFile::GetRank(unsigned index)
 
 unsigned GrandOrgueFile::GetRankCount()
 {
-	return m_ranks.size();
+	return m_RankCount;
 }
 
 void GrandOrgueFile::AddRank(GOrgueRank* rank)
