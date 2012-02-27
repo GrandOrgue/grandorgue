@@ -92,8 +92,8 @@ void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, int s
 
 void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, unsigned bits_per_sample, unsigned channels, bool compress)
 {
-	/* force release_offset = 0 when wave has no release marker or when wave has no loops as it assumes wave is a release.*/
-	const unsigned release_offset = (wave.HasReleaseMarker() && wave.GetNbLoops()>0 ) ? wave.GetReleaseMarkerPosition() : 0;
+	/* force release_offset = 0 when wave has no release marker or an unexpected release marker close to the end of the wave. It assumes complete wave is a release */	
+	const unsigned release_offset = ( wave.HasReleaseMarker() && (abs(wave.GetLength() - wave.GetReleaseMarkerPosition() ) > 1000) )  ? wave.GetReleaseMarkerPosition() : 0; 	
 	const unsigned release_samples = wave.GetLength() - release_offset;
 			
 	if (release_offset >= wave.GetLength())
