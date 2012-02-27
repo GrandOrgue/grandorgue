@@ -92,6 +92,7 @@ private:
 	wxString m_OrganComments;
 	wxString m_RecordingDetails;
 	wxString m_InfoFilename;
+	unsigned m_RankCount;
 
 	ptr_vector<GOrgueEnclosure> m_enclosure;
 	ptr_vector<GOrgueTremulant> m_tremulant;
