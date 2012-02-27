@@ -40,7 +40,7 @@
  *   11   -4096 samples   (approx 92ms @ 44.1kHz)
  *   12   -9192 samples   (approx 184ms @ 44.1kHz)
  *   13  - 18384 samples  (approx 368ms @ 44.1kHz)
-  *  14  - 36768 samples  (approx 736ms @ 44.1kHz)
+ *   14  - 36768 samples  (approx 736ms @ 44.1kHz)
  *   15  - 73536 samples  (approx 1472ms @ 44.1kHz)
  */
 #define CROSSFADE_LEN_BITS (8)
@@ -608,8 +608,8 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				{
 					/* Note: "time" is in milliseconds. */
 					int time = ((m_CurrentTime - handle->time) * (10 * BLOCKS_PER_FRAME)) / (m_SampleRate / 100);
-					/* TODO: below code should be replaced by a more accurate model of the attack to get a better estimate of the amplitude when playing very short notes */
-					/* estimating attack duration from pipe midi pitch */
+					/* TODO: below code should be replaced by a more accurate model of the attack to get a better estimate of the amplitude when playing very short notes
+					* estimating attack duration from pipe midi pitch */
 					unsigned midikey_frequency = this_pipe->GetMidiKeyNumber();
 					/* if MidiKeyNumber is not within an organ 64 feet to 1 foot pipes, we assume average pipe (MIDI = 60)*/
 					if (midikey_frequency >133 || midikey_frequency == 0 )
@@ -630,19 +630,19 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 						float gain_delta = ( 0.05f + ( 0.95f * ( 2.0f * attack_index - (attack_index * attack_index) )));
 						gain_target *= gain_delta;
 					}
-					/* calculate the volume decay to be applied to the release to take into account the fact reverb is not completely formed during staccato */
-					/* time to full reverb is estimated in function of release length*/
-					/* for an organ with a release length of 5 seconds or more, time_to_full_reverb is around 350 ms */
-					/* for an organ with a release length of 1 second or less, time_to_full_reverb is around 100 ms */
-					/* time_to_full_reverb is linear in between */
+					/* calculate the volume decay to be applied to the release to take into account the fact reverb is not completely formed during staccato
+					* time to full reverb is estimated in function of release length
+					* for an organ with a release length of 5 seconds or more, time_to_full_reverb is around 350 ms 
+					* for an organ with a release length of 1 second or less, time_to_full_reverb is around 100 ms 
+					* time_to_full_reverb is linear in between */
 					int time_to_full_reverb = ((60 * release_section->GetLength()) / release_section->GetSampleRate()) + 40;
 					if (time_to_full_reverb > 350 ) time_to_full_reverb = 350;
 					if (time_to_full_reverb < 100 ) time_to_full_reverb = 100;
 					if (time < time_to_full_reverb)
 					{
-						/* in function of note duration, fading happens between:
-						/* 200 ms and 6 s for release with little reverberation e.g. short release
-						/* 700 ms and 6 s for release with large reverberation e.g. long release */ 
+						/* in function of note duration, fading happens between: 
+						* 200 ms and 6 s for release with little reverberation e.g. short release 
+						* 700 ms and 6 s for release with large reverberation e.g. long release */ 
 						int reverb_mini = time_to_full_reverb / 100;
 						gain_decay_rate = -11  - reverb_mini - ( ( ( ( (6 - reverb_mini) * time * 2 ) / time_to_full_reverb ) + 1 ) / 2 ); 
 					}
