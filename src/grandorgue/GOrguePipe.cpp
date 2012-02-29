@@ -318,6 +318,11 @@ bool GOrguePipe::LoadCache(GOrgueCache& cache)
 	{
 		return m_SoundProvider.LoadCache(cache);
 	}
+	catch(std::bad_alloc& ba)
+	{
+		m_SoundProvider.ClearData();
+		throw GOrgueOutOfMemory();
+	}
 	catch(GOrgueOutOfMemory e)
 	{
 		m_SoundProvider.ClearData();
@@ -397,6 +402,11 @@ void GOrguePipe::LoadData()
 	{
 		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_OrganFile->GetODFPath(), GetEffectiveBitsPerSample(), GetEffectiveChannels(), 
 					     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad(), GetEffectiveAttackLoad(), GetEffectiveReleaseLoad());
+	}
+	catch(std::bad_alloc& ba)
+	{
+		m_SoundProvider.ClearData();
+		throw GOrgueOutOfMemory();
 	}
 	catch(GOrgueOutOfMemory e)
 	{
