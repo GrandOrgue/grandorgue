@@ -3540,6 +3540,15 @@ release sample is choosen. -1 means infinite.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Pipe999CuePoint</term>
+          <listitem>
+            <para>
+(int -1 - 158760000, default: -1) Allows to override the cue point for
+the release. -1 means use from the wave file.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Pipe999HarmonicNumber</term>
           <listitem>
             <para>
@@ -3613,6 +3622,15 @@ release sample is choosen. -1 means infinite.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Pipe999Attack999CuePoint</term>
+          <listitem>
+            <para>
+(int -1 - 158760000, default: -1) Allows to override the cue point for
+the release. -1 means use from the wave file.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Pipe999ReleaseCount</term>
           <listitem>
             <para>
@@ -3645,6 +3663,15 @@ by a wave based tremulant.
             <para>
 (int -1 - 100000, default: -1) Up to this time value in ms, the
 release sample is choosen. -1 means infinite.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Release999CuePoint</term>
+          <listitem>
+            <para>
+(int -1 - 158760000, default: -1) Allows to override the cue point for
+the release. -1 means use from the wave file.
 	    </para>
           </listitem>
         </varlistentry>
