@@ -90,11 +90,12 @@ void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, int s
 		 );
 }
 
-void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, unsigned bits_per_sample, unsigned channels, bool compress)
+void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, unsigned channels, bool compress)
 {
-	/* force release_offset = 0 when wave has no release marker or an unexpected release marker close to the end of the wave. It assumes complete wave is a release */	
-	const unsigned release_offset = ( wave.HasReleaseMarker() && (abs(wave.GetLength() - wave.GetReleaseMarkerPosition() ) > 1000) )  ? wave.GetReleaseMarkerPosition() : 0; 	
-	const unsigned release_samples = wave.GetLength() - release_offset;
+	unsigned release_offset = wave.HasReleaseMarker() ? wave.GetReleaseMarkerPosition() : 0;
+	if (cue_point != -1)
+		release_offset = cue_point;
+	unsigned release_samples = wave.GetLength() - release_offset;
 			
 	if (release_offset >= wave.GetLength())
 		throw (wxString)_("Invalid release position");
@@ -119,7 +120,7 @@ void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
-void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, unsigned bits_per_sample, unsigned load_channels, 
+void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, unsigned load_channels, 
 				      bool compress, loop_load_type loop_mode, bool percussive)
 {
 	wxLogDebug(_("Loading file %s"), filename.c_str());
@@ -153,7 +154,7 @@ void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, bool is_
 			CreateAttack(data, wave, sample_group, bits_per_sample, channels, compress, loop_mode, percussive);
 
 		if (is_release && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
-			CreateRelease(data, wave, sample_group, max_playback_time, bits_per_sample, channels, compress);
+			CreateRelease(data, wave, sample_group, max_playback_time, cue_point, bits_per_sample, channels, compress);
 
 		/* data is no longer needed */
 		FREE_AND_NULL(data);
@@ -254,11 +255,12 @@ void GOSoundProviderWave::LoadFromFile
 	try
 	{
 		for(unsigned i = 0; i < attacks.size(); i++)
-			ProcessFile(attacks[i].filename, path, true, attacks[i].load_release, attacks[i].sample_group, attacks[i].max_playback_time, 
+			ProcessFile(attacks[i].filename, path, true, attacks[i].load_release, attacks[i].sample_group, attacks[i].max_playback_time, attacks[i].cue_point,
 				    bits_per_sample, load_channels, compress, loop_mode, attacks[i].percussive);
 
 		for(unsigned i = 0; i < releases.size(); i++)
-			ProcessFile(releases[i].filename, path, false, true, releases[i].sample_group, releases[i].max_playback_time, bits_per_sample, load_channels, compress, loop_mode, true);
+			ProcessFile(releases[i].filename, path, false, true, releases[i].sample_group, releases[i].max_playback_time, releases[i].cue_point, 
+				    bits_per_sample, load_channels, compress, loop_mode, true);
 
 		ComputeReleaseAlignmentInfo();
 	}

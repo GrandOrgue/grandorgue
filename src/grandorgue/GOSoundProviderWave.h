@@ -54,6 +54,7 @@ typedef struct
 	bool load_release;
 	bool percussive;
 	int max_playback_time;
+	int cue_point;
 } attack_load_info;
 
 typedef struct
@@ -61,6 +62,7 @@ typedef struct
 	wxString filename;
 	int sample_group;
 	int max_playback_time;
+	int cue_point;
 } release_load_info;
 
 class GOSoundProviderWave : public GOSoundProvider
@@ -68,8 +70,8 @@ class GOSoundProviderWave : public GOSoundProvider
 	unsigned GetBytesPerSample(unsigned bits_per_sample);
        
 	void CreateAttack(const char* data, GOrgueWave& wave, int sample_group, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive);
-	void CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, unsigned bits_per_sample, unsigned channels, bool compress);
-	void ProcessFile(wxString filename, wxString path, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, unsigned bits_per_sample, 
+	void CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, unsigned channels, bool compress);
+	void ProcessFile(wxString filename, wxString path, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, 
 			 unsigned load_channels, bool compress, loop_load_type loop_mode, bool percussive);
 
 public:
