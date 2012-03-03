@@ -72,7 +72,7 @@ void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
 		info.FirstPipeNumber = cfg.ReadInteger(group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, 192);
 		info.FirstAccessibleKeyNumber = 1;
 		info.PipeCount = m_NumberOfAccessiblePipes;
-		info.Rank->Load(cfg, group, m_FirstMidiNoteNumber - info.FirstPipeNumber + info.FirstAccessibleKeyNumber);
+		info.Rank->Load(cfg, group, m_FirstMidiNoteNumber - info.FirstPipeNumber + info.FirstAccessibleKeyNumber + m_FirstAccessiblePipeLogicalKeyNumber - 1);
 		m_RankInfo.push_back(info);
 	}
 
