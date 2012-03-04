@@ -1786,9 +1786,11 @@ additional gui attributes.
           <term>MIDIInputNumber</term>
           <listitem>
             <para>
-(integer 1-6, required) This number is used while building the initial
-MIDI configuration to map the enclosure to one midi setting from the global
-midi configuration dialog.
+(integer 0 - 200, default: 0) This number is used while building the
+initial MIDI configuration to map the enclosure to one midi setting
+from the global midi configuration dialog. 0 means no device
+associated. Please note, the the GUI only allows the association of
+the first few enclosures.
 	    </para>
           </listitem>
         </varlistentry>
@@ -2311,9 +2313,11 @@ useable key
           <term>MIDIInputNumber</term>
           <listitem>
             <para>
-(integer 1-6, required) This number is used while building the initial
-MIDI configuration to map the manual to one midi setting from the global
-midi configuration dialog.
+(integer 0 - 200, default: 0) This number is used while building the
+initial MIDI configuration to map the manual to one midi setting from
+the global midi configuration dialog. 0 means no device
+associated. Please note, the the GUI only allows the association of
+the first few manuals.
 	    </para>
           </listitem>
         </varlistentry>

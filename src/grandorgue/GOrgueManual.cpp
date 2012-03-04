@@ -39,7 +39,7 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_first_accessible_key_midi_note_nb(0),
 	m_nb_accessible_keys(0),
 	m_UnisonOff(0),
-	m_midi_input_number(0),
+	m_MIDIInputNumber(0),
 	m_tremulant_ids(0),
 	m_name(),
 	m_stops(0),
@@ -58,7 +58,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
 	m_first_accessible_logical_key_nb   = cfg.ReadInteger(group, wxT("FirstAccessibleKeyLogicalKeyNumber"), 1, m_nb_logical_keys);
 	m_first_accessible_key_midi_note_nb = cfg.ReadInteger(group, wxT("FirstAccessibleKeyMIDINoteNumber"), 0, 127);
 	m_nb_accessible_keys                = cfg.ReadInteger(group, wxT("NumberOfAccessibleKeys"), 0, 85);
-	m_midi_input_number                 = cfg.ReadInteger(group, wxT("MIDIInputNumber"), 1, 6);
+	m_MIDIInputNumber                   = cfg.ReadInteger(group, wxT("MIDIInputNumber"), 0, 200, false, 0);
 	m_displayed                         = cfg.ReadBoolean(group, wxT("Displayed"));
 	unsigned m_nb_stops                 = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, 64);
 	unsigned m_nb_couplers              = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, 16, false);
@@ -192,7 +192,7 @@ const wxString& GOrgueManual::GetName()
 
 int GOrgueManual::GetMIDIInputNumber()
 {
-	return m_midi_input_number;
+	return m_MIDIInputNumber;
 }
 
 unsigned GOrgueManual::GetLogicalKeyCount()

@@ -160,14 +160,15 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		if (m_type == MIDI_RECV_BUTTON)
 		{
 			m_events[0].type = MIDI_M_PGM_CHANGE;
-			if (m_Index >= (int) m_organfile->GetSettings().GetManualCount())
-			{
-				m_events.resize(0);
-				return;
-			}
 			if (m_Index != -1)
 			{
-				int what = m_organfile->GetSettings().GetManualEvent(m_organfile->GetManual(m_Index)->GetMIDIInputNumber() - 1);
+				unsigned midi_index = m_organfile->GetManual(m_Index)->GetMIDIInputNumber();
+				if (!midi_index || midi_index > m_organfile->GetSettings().GetManualCount())
+				{
+					m_events.resize(0);
+					return;
+				}
+				int what = m_organfile->GetSettings().GetManualEvent(midi_index - 1);
 				m_events[0].channel = ((what >> 8) & 0xF) + 1;
 				if ((what & 0xF000) == 0)
 				{
@@ -184,12 +185,18 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		}
 		if (m_type == MIDI_RECV_MANUAL)
 		{
-			if (m_Index >= (int) m_organfile->GetSettings().GetManualCount() || m_Index == -1)
+			if (m_Index == -1)
 			{
 				m_events.resize(0);
 				return;
 			}
-			int what = m_organfile->GetSettings().GetManualEvent(m_organfile->GetManual(m_Index)->GetMIDIInputNumber() - 1);
+			unsigned midi_index = m_organfile->GetManual(m_Index)->GetMIDIInputNumber();
+			if (!midi_index || midi_index > m_organfile->GetSettings().GetManualCount())
+			{
+				m_events.resize(0);
+				return;
+			}
+			int what = m_organfile->GetSettings().GetManualEvent(midi_index - 1);
 			if (!m_organfile->GetManual(m_Index)->IsDisplayed() || (what & 0xF000) == 0)
 			{
 				m_events.resize(0);
@@ -201,12 +208,18 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		}
 		if (m_type == MIDI_RECV_ENCLOSURE)
 		{
-			if (m_Index >= (int) m_organfile->GetSettings().GetEnclosureCount() || m_Index  == -1)
+			if (m_Index  == -1)
 			{
 				m_events.resize(0);
 				return;
 			}
-			int what = m_organfile->GetSettings().GetEnclosureEvent(m_organfile->GetEnclosure(m_Index)->GetMIDIInputNumber() - 1);
+			unsigned midi_index = m_organfile->GetEnclosure(m_Index)->GetMIDIInputNumber();
+			if (!midi_index || midi_index > m_organfile->GetSettings().GetEnclosureCount())
+			{
+				m_events.resize(0);
+				return;
+			}
+			int what = m_organfile->GetSettings().GetEnclosureEvent(midi_index - 1);
 			if ((what & 0xF000) == 0)
 			{
 				m_events.resize(0);

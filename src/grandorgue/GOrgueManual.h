@@ -56,7 +56,7 @@ private:
 	unsigned m_nb_accessible_keys;
 	unsigned m_UnisonOff;
 
-	int m_midi_input_number;
+	int m_MIDIInputNumber;
 
 	std::vector<unsigned> m_tremulant_ids;
 
