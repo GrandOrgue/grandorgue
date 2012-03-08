@@ -1604,7 +1604,7 @@ The row number start with 100.
           <term>DispExtraButtonRows</term>
           <listitem>
             <para>
-(integer 0-8, required) number of rows for displaying pistons in the center block.
+(integer 0-99, required) number of rows for displaying pistons in the center block.
 The row number start with 100.
 	    </para>
           </listitem>
