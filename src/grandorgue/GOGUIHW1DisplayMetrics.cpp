@@ -88,7 +88,7 @@ GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(IniFileConfig& ini, GrandOrgueFil
 	m_DispDrawstopColsOffset = ini.ReadBoolean(m_group, wxT("DispDrawstopColsOffset"));
 	m_DispDrawstopOuterColOffsetUp = ini.ReadBoolean(m_group, wxT("DispDrawstopOuterColOffsetUp"), m_DispDrawstopColsOffset);
 	m_DispPairDrawstopCols = ini.ReadBoolean(m_group, wxT("DispPairDrawstopCols"));
-	m_DispExtraDrawstopRows = ini.ReadInteger(m_group, wxT("DispExtraDrawstopRows"), 0, 8);
+	m_DispExtraDrawstopRows = ini.ReadInteger(m_group, wxT("DispExtraDrawstopRows"), 0, 99);
 	m_DispExtraDrawstopCols = ini.ReadInteger(m_group, wxT("DispExtraDrawstopCols"), 0, 40);
 	m_DispButtonCols = ini.ReadInteger(m_group, wxT("DispButtonCols"), 1, 32);
 	m_DispExtraButtonRows = ini.ReadInteger(m_group, wxT("DispExtraButtonRows"), 0, 8);

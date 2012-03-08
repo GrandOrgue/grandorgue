@@ -109,7 +109,7 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(IniFileConfig& ini, GrandOr
 	m_DispDrawstopColsOffset = ini.ReadBoolean(m_group, wxT("DispDrawstopColsOffset"), false, false);
 	m_DispDrawstopOuterColOffsetUp = ini.ReadBoolean(m_group, wxT("DispDrawstopOuterColOffsetUp"), false, false);
 	m_DispPairDrawstopCols = ini.ReadBoolean(m_group, wxT("DispPairDrawstopCols"), false, false);
-	m_DispExtraDrawstopRows = ini.ReadInteger(m_group, wxT("DispExtraDrawstopRows"), 0, 8, false, drawstop_rows);
+	m_DispExtraDrawstopRows = ini.ReadInteger(m_group, wxT("DispExtraDrawstopRows"), 0, 99, false, drawstop_rows);
 	m_DispExtraDrawstopCols = ini.ReadInteger(m_group, wxT("DispExtraDrawstopCols"), 0, 40, false, drawstop_cols);
 	m_DispButtonCols = ini.ReadInteger(m_group, wxT("DispButtonCols"), 1, 32, false, button_cols);
 	m_DispExtraButtonRows = ini.ReadInteger(m_group, wxT("DispExtraButtonRows"), 0, 8, false, button_rows);
