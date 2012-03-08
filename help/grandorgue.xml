@@ -1578,7 +1578,7 @@ drawstop rows must be divideable by 4.
           <term>DispExtraDrawstopRows</term>
           <listitem>
             <para>
-(integer 0-8, required) number of drawstop rows in the center block.
+(integer 0-99, required) number of drawstop rows in the center block.
 The row number start with 100.
 	    </para>
           </listitem>
