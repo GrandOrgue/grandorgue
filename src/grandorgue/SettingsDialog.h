@@ -25,6 +25,7 @@
 
 #include <vector>
 #include <wx/wx.h>
+#include <wx/listctrl.h>
 #include <wx/propdlg.h>
 
 class GOrgueSound;
