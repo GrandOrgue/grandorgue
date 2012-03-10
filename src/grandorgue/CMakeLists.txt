@@ -207,6 +207,9 @@ OrganDialog.cpp
 OrganDocument.cpp
 OrganView.cpp
 SettingsDialog.cpp
+SettingsMidiMessage.cpp
+SettingsOption.cpp
+SettingsOrgan.cpp
 SplashScreen.cpp
 wxGaugeAudio.cpp
 ${IMAGE_LIST})
