@@ -24,6 +24,7 @@
 #define SETTINGSMIDIMESSAGE_H
 
 #include <wx/wx.h>
+#include <wx/listctrl.h>
 #include "MIDIListenDialog.h"
 
 class GOrgueSettings;
