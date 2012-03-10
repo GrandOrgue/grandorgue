@@ -125,8 +125,10 @@ void* GOrgueMemoryPool::PoolAlloc(unsigned length)
 		return data;
 	}
 	if (!m_AllocError++)
+	{
 		wxLogError(wxT("PoolAlloc failed: %d %d %08x %08x %08x"),
 			   length, m_PoolSize, m_PoolStart, m_PoolPtr, m_PoolEnd);
+	}
 	return NULL;
 }
 
@@ -311,7 +313,9 @@ void GOrgueMemoryPool::InitPool()
 void GOrgueMemoryPool::FreePool()
 {
 	if (m_PoolAllocs.size())
+	{
 		wxLogError(wxT("Freeing non-empty memory pool"));
+	}
 #ifdef linux
 	if (m_PoolStart)
 		munmap(m_PoolStart, m_PoolLimit);
