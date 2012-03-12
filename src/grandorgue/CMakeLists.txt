@@ -241,7 +241,7 @@ if (WIN32)
          set(rc_debug_flag "-DNDEBUG")
       endif ()
 
-      set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> ${rc_debug_flag} -O coff -D_WIN32 -I${CMAKE_CURRENT_SOURCE_DIR}/resource -i <SOURCE> -o <OBJECT>")
+      set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> ${CMAKE_RC_FLAGS} ${rc_debug_flag} -O coff -D_WIN32 -I${CMAKE_CURRENT_SOURCE_DIR}/resource -i <SOURCE> -o <OBJECT>")
 
    endif ()
 
