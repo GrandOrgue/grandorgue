@@ -43,7 +43,27 @@ class GOrgueSettings;
 
 class GOrgueSound
 {
+	class GO_SOUND_OUTPUT
+	{
+	public:
+		GOrgueSound* sound;
 
+		GO_SOUND_OUTPUT()
+		{
+			sound = 0;
+		}
+
+		GO_SOUND_OUTPUT(const GO_SOUND_OUTPUT& old)
+		{
+			sound = old.sound;
+		}
+
+		const GO_SOUND_OUTPUT& operator=(const GO_SOUND_OUTPUT& old)
+		{
+			sound = old.sound;
+			return *this;
+		}
+	};
 public:
 
 	typedef struct
@@ -63,6 +83,7 @@ private:
 	std::map<wxString, GO_SOUND_DEV_CONFIG> m_audioDevices;
 	PaStream* audioStream;
 	RtAudio* audioDevice;
+	std::vector<GO_SOUND_OUTPUT> m_AudioOutputs;
 
 	unsigned m_SamplesPerBuffer;
 	unsigned m_nb_buffers;
@@ -82,22 +103,10 @@ private:
 
 	GOrgueSettings& m_Settings;
 
-	int AudioCallbackLocal
-		(float* outputBuffer
-		,unsigned int nFrames
-		,double streamTime
-		);
+	int AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* outputBuffer, unsigned int nFrames, double streamTime);
 
 	/* This is the callback issued by RtAudio */
-	static
-	int AudioCallback
-		(void *outputBuffer
-		,void *inputBuffer
-		,unsigned int nFrames
-		,double streamTime
-		,RtAudioStreamStatus status
-		,void *userData
-		);
+	static int AudioCallback(void *outputBuffer, void *inputBuffer, unsigned int nFrames, double streamTime, RtAudioStreamStatus status, void *userData);
 
 	static int PaAudioCallback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData);
 
