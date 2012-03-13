@@ -80,9 +80,9 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 
 	m_MidiDevicePage = new SettingsMidiDevices(m_Sound, notebook);
 	wxPanel* devices  = CreateDevicesPage(notebook);
-	m_OptionsPage = new SettingsOption(m_Settings, notebook);
-	m_OrganPage = new SettingsOrgan(m_Settings, notebook);
-	m_MidiMessagePage = new SettingsMidiMessage(m_Settings, notebook);
+	m_OptionsPage = new SettingsOption(m_Sound.GetSettings(), notebook);
+	m_OrganPage = new SettingsOrgan(m_Sound.GetSettings(), notebook);
+	m_MidiMessagePage = new SettingsMidiMessage(m_Sound.GetSettings(), notebook);
 
 	notebook->AddPage(m_MidiDevicePage,  _("MIDI Devices"));
 	notebook->AddPage(m_OptionsPage,  _("Options"));
