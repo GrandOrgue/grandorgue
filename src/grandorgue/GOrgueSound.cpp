@@ -146,34 +146,25 @@ GOrgueSound::~GOrgueSound()
 	Pa_Terminate ();
 }
 
-void GOrgueSound::StartThreads(unsigned windchests)
+void GOrgueSound::StartThreads()
 {
 	StopThreads();
 
 	int n_cpus = m_Settings.GetConcurrency();
+	unsigned tasks = GetEngine().GetGroupCount();
 
 	wxCriticalSectionLocker thread_locker(m_thread_lock);
-	for (unsigned i = 0; i < m_Settings.GetReleaseConcurrency() && n_cpus; i++)
-	{
-		int no = i;
-		if (i > 0)
-			no += windchests;
-		/* Detaches Releases get their own threads, as they can be the biggest number */
-		m_Threads.push_back(new GOSoundThread(&GetEngine(), no, no, m_SamplesPerBuffer));
-		n_cpus--;
-	}
-
-	float fact = windchests / (!n_cpus ? 1 : n_cpus);
+	float fact = tasks / (!n_cpus ? 1 : n_cpus);
 	unsigned no = 1;
 	/* We don't create extra thread for last cpu */
 	for(int i = 0; i < n_cpus; i++, no++)
 	{
-		if (no > windchests)
+		if (no > tasks)
 			break;
 		unsigned end = no + (fact + 0.5);
-		if (end > windchests)
-			end = windchests;
-		m_Threads.push_back(new GOSoundThread(&GetEngine(), no, end, m_SamplesPerBuffer));
+		if (end > tasks)
+			end = tasks;
+		m_Threads.push_back(new GOSoundThread(&GetEngine(), no - 1, end - 1, m_SamplesPerBuffer));
 		no = end;
 	}
 
@@ -463,7 +454,7 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 	{
 		m_SoundEngine.Setup(organfile, m_Settings.GetReleaseConcurrency());
 		organfile->PreparePlayback(&GetEngine());
-		StartThreads(organfile->GetWindchestGroupCount());
+		StartThreads();
 	}
 	else
 	{

@@ -372,16 +372,19 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 	state.done = 1;
 }
 
-void GOSoundEngine::Process(unsigned sampler_group_id, unsigned n_frames)
+unsigned GOSoundEngine::GetGroupCount()
+{
+	return (m_DetachedRelease.size() + m_Windchests.size());
+}
+
+void GOSoundEngine::Process(unsigned group_id, unsigned n_frames)
 {
 	GOSamplerEntry* state;
 
-	if (sampler_group_id == 0)
-		state = &m_DetachedRelease[0];
-	else if (sampler_group_id > m_Windchests.size())
-		state = &m_DetachedRelease[sampler_group_id - m_Windchests.size()];
+	if (group_id < m_DetachedRelease.size())
+		state = &m_DetachedRelease[group_id];
 	else
-		state = &m_Windchests[sampler_group_id - 1];
+		state = &m_Windchests[group_id - m_DetachedRelease.size()];
 
 	if (!state->done)
 		ProcessAudioSamplers(*state, n_frames);

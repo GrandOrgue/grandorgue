@@ -158,7 +158,8 @@ public:
 		,double      stream_time
 		,METER_INFO *meter_info
 		);
-	void Process(unsigned sampler_group_id, unsigned n_frames);
+	void Process(unsigned group_id, unsigned n_frames);
+	unsigned GetGroupCount();
 };
 
 #endif /* GOSOUNDENGINE_H_ */
