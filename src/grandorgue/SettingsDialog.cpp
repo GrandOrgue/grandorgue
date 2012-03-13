@@ -31,6 +31,7 @@
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GOrgueRtHelpers.h"
+#include "SettingsMidiDevices.h"
 #include "SettingsMidiMessage.h"
 #include "SettingsOption.h"
 #include "SettingsOrgan.h"
@@ -38,10 +39,6 @@
 IMPLEMENT_CLASS(SettingsDialog, wxPropertySheetDialog)
 
 BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
-	EVT_CHECKLISTBOX(ID_MIDI_DEVICES, SettingsDialog::OnChanged)
-	EVT_LISTBOX(ID_MIDI_DEVICES, SettingsDialog::OnDevicesMIDIClick)
-	EVT_LISTBOX_DCLICK(ID_MIDI_DEVICES, SettingsDialog::OnDevicesMIDIDoubleClick)
-	EVT_BUTTON(ID_MIDI_PROPERTIES, SettingsDialog::OnDevicesMIDIDoubleClick)
 	EVT_CHOICE(ID_SOUND_DEVICE, SettingsDialog::OnDevicesSoundChoice)
 	EVT_CHOICE(ID_SAMPLE_RATE, SettingsDialog::OnChanged)
 
@@ -73,10 +70,8 @@ void SettingsDialog::SetLatencySpinner(int latency)
 	c_actual_latency->SetLabel(lat_s);
 }
 
-#define SETTINGS_DLG_SIZE wxSize(680,600)
-
 SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
-	wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, SETTINGS_DLG_SIZE),
+	wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, wxSize(680,600)),
 	m_Sound(sound),
 	m_Settings(sound.GetSettings())
 {
@@ -85,13 +80,15 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 
 	wxBookCtrlBase* notebook = GetBookCtrl();
 
+	m_MidiDevicePage = new SettingsMidiDevices(m_Sound, notebook);
 	wxPanel* devices  = CreateDevicesPage(notebook);
 	m_OptionsPage = new SettingsOption(m_Settings, notebook);
 	m_OrganPage = new SettingsOrgan(m_Settings, notebook);
 	m_MidiMessagePage = new SettingsMidiMessage(m_Settings, notebook);
 
-	notebook->AddPage(devices,  _("Devices"));
+	notebook->AddPage(m_MidiDevicePage,  _("MIDI Devices"));
 	notebook->AddPage(m_OptionsPage,  _("Options"));
+	notebook->AddPage(devices,  _("Audio Output"));
 	notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Configuration"));
 	notebook->AddPage(m_OrganPage, _("Organs"));
 }
@@ -116,7 +113,6 @@ void SettingsDialog::UpdateSoundStatus()
 
 wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 {
-	int i;
 	std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>::iterator it1;
 	std::map<wxString, int>::iterator it2;
 
@@ -125,28 +121,6 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	wxBoxSizer* item0 = new wxBoxSizer(wxHORIZONTAL);
 
 	wxArrayString choices;
-
-	m_Sound.GetMidi().UpdateDevices();
-	for (it2 = m_Sound.GetMidi().GetDevices().begin(); it2 != m_Sound.GetMidi().GetDevices().end(); it2++)
-	{
-		choices.push_back(it2->first);
-		page1checklistdata.push_back(m_Settings.GetMidiDeviceChannelShift(it2->first));
-	}
-	wxBoxSizer* item3 = new wxStaticBoxSizer(wxVERTICAL, panel, _("MIDI &input devices"));
-	item0->Add(item3, 0, wxEXPAND | wxALL, 5);
-	page1checklist = new wxCheckListBox(panel, ID_MIDI_DEVICES, wxDefaultPosition, wxDefaultSize, choices);
-	for (i = 0; i < (int)page1checklistdata.size(); i++)
-	{
-        if (page1checklistdata[i] < 0)
-			page1checklistdata[i] = -page1checklistdata[i] - 1;
-		else
-			page1checklist->Check(i);
-	}
-	item3->Add(page1checklist, 1, wxEXPAND | wxALL, 5);
-	page1button = new wxButton(panel, ID_MIDI_PROPERTIES, _("A&dvanced..."));
-	page1button->Disable();
-	item3->Add(page1button, 0, wxALIGN_RIGHT | wxALL, 5);
-	choices.clear();
 
 	wxBoxSizer* item9 = new wxBoxSizer(wxVERTICAL);
 	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
@@ -210,23 +184,6 @@ void SettingsDialog::OnLatencySpinnerChange(wxSpinEvent& event)
 	SetLatencySpinner(event.GetPosition());
 }
 
-void SettingsDialog::OnDevicesMIDIClick(wxCommandEvent& event)
-{
-	page1button->Enable();
-}
-
-void SettingsDialog::OnDevicesMIDIDoubleClick(wxCommandEvent& event)
-{
-	page1button->Enable();
-	int index = page1checklist->GetSelection();
-	int result = ::wxGetNumberFromUser(_("A channel offset allows the use of two MIDI\ninterfaces with conflicting MIDI channels. For\nexample, applying a channel offset of 8 to\none of the MIDI interfaces would cause that\ninterface's channel 1 to appear as channel 9,\nchannel 2 to appear as channel 10, and so on."), _("Channel offset:"), page1checklist->GetString(index), page1checklistdata[index], 0, 15, this);
-	if (result >= 0 && result != page1checklistdata[index])
-	{
-		page1checklistdata[index] = result;
-		OnChanged(event);
-	}
-}
-
 void SettingsDialog::OnApply(wxCommandEvent& event)
 {
 	DoApply();
@@ -250,18 +207,10 @@ bool SettingsDialog::DoApply()
 	if (!(this->Validate()))
 		return false;
 
+	m_MidiDevicePage->Save();
 	m_OptionsPage->Save();
 	m_OrganPage->Save();
 
-	for (size_t i = 0; i < page1checklist->GetCount(); i++)
-	{
-		int j;
-
-		j = page1checklistdata[i];
-		if (!page1checklist->IsChecked(i))
-			j = -j - 1;
-		m_Settings.SetMidiDeviceChannelShift(page1checklist->GetString(i), j);
-	}
 	m_Settings.SetDefaultAudioDevice(c_sound->GetStringSelection());
 	m_Settings.SetAudioDeviceLatency(c_sound->GetStringSelection(), c_latency->GetValue());
 	m_Settings.SetSampleRate(wxAtoi(c_SampleRate->GetStringSelection()));
