@@ -305,7 +305,16 @@ bool GOrgueSound::OpenSound()
 				if (m_SamplesPerBuffer <= 1024)
 				{
 					m_AudioOutputs[0].audioDevice->startStream();
-					m_Settings.SetAudioDeviceActualLatency(defaultAudio, GetLatency());
+
+					int actual_latency = m_AudioOutputs[0].audioDevice->getStreamLatency();
+					
+					/* getStreamLatency returns zero if not supported by the API, in which
+					 * case we will make a best guess.
+					 */
+					if (actual_latency == 0)
+						actual_latency = m_SamplesPerBuffer * m_nb_buffers;
+
+					m_Settings.SetAudioDeviceActualLatency(defaultAudio, (actual_latency * 1000) / GetEngine().GetSampleRate());
 				}
 				else
 					throw (wxString)_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
@@ -470,24 +479,6 @@ void GOrgueSound::SetLogSoundErrorMessages(bool settingsDialogVisible)
 std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>& GOrgueSound::GetAudioDevices()
 {
 	return m_audioDevices;
-}
-
-const int GOrgueSound::GetLatency()
-{
-
-	if (!m_AudioOutputs[0].audioDevice)
-		return -1;
-
-	int actual_latency = m_AudioOutputs[0].audioDevice->getStreamLatency();
-
-	/* getStreamLatency returns zero if not supported by the API, in which
-	 * case we will make a best guess.
-	 */
-	if (actual_latency == 0)
-		actual_latency = m_SamplesPerBuffer * m_nb_buffers;
-
-	return (actual_latency * 1000) / GetEngine().GetSampleRate();
-
 }
 
 const wxString GOrgueSound::GetDefaultAudioDevice()
