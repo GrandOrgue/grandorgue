@@ -135,8 +135,8 @@ void GOrgueSettings::Load()
 	m_DefaultAudioDevice = m_Config.Read(wxT("Devices/DefaultSound"), wxEmptyString);
 
 	m_OrganMidiEvents.clear();
-	long count = m_Config.Read(wxT("OrganMIDI/Count"), 0L);
-	for (long i = 0; i < count; i++)
+	unsigned count = m_Config.Read(wxT("OrganMIDI/Count"), 0L);
+	for (unsigned i = 0; i < count; i++)
 	{
 		wxString itemstr = wxT("OrganMIDI/Organ") + wxString::Format(wxT("%ld"), i);
 		long j = m_Config.Read(itemstr + wxT(".midi"), 0L);
