@@ -25,12 +25,12 @@
 
 #include <vector>
 #include <wx/wx.h>
-#include <wx/listctrl.h>
 #include <wx/propdlg.h>
 
 class GOrgueSound;
 class GOrgueSettings;
 
+class SettingsMidiDevices;
 class SettingsMidiMessage;
 class SettingsOption;
 class SettingsOrgan;
@@ -41,6 +41,10 @@ DECLARE_CLASS(SettingsDialog)
 private:
 	GOrgueSound& m_Sound;
 	GOrgueSettings& m_Settings;
+	SettingsMidiDevices* m_MidiDevicePage;
+	SettingsOption* m_OptionsPage;
+	SettingsOrgan* m_OrganPage;
+	SettingsMidiMessage* m_MidiMessagePage;
 
 	void SetLatencySpinner(int latency);
 
@@ -56,10 +60,8 @@ public:
 
 	void OnChanged(wxCommandEvent& event);
 	void OnDevicesSoundChoice(wxCommandEvent& event);
-	void OnDevicesMIDIClick(wxCommandEvent& event);
-	void OnDevicesMIDIDoubleClick(wxCommandEvent& event);
-	virtual void OnApply(wxCommandEvent& event);
-	virtual void OnOK(wxCommandEvent& event);
+	void OnApply(wxCommandEvent& event);
+	void OnOK(wxCommandEvent& event);
 	void OnHelp(wxCommandEvent& event);
 
 	void OnLatencySpinnerChange(wxSpinEvent& event);
@@ -68,27 +70,16 @@ public:
 
 protected:
 	enum {
-		ID_MIDI_DEVICES = 100,
-		ID_MIDI_PROPERTIES,
-		ID_SOUND_DEVICE,
+		ID_SOUND_DEVICE = 100,
 		ID_LATENCY,
 		ID_SAMPLE_RATE,
 	};
-
-	wxCheckListBox* page1checklist;
-	std::vector<int> page1checklistdata;
-	wxButton* page1button;
 
 	wxChoice* c_sound;
 	wxStaticText* c_format;
 	wxSpinCtrl* c_latency;
 	wxStaticText* c_actual_latency;
-	wxSpinCtrl* c_polyphony;
 	wxChoice* c_SampleRate;
-
-	SettingsOption* m_OptionsPage;
-	SettingsOrgan* m_OrganPage;
-	SettingsMidiMessage* m_MidiMessagePage;
 };
 
 

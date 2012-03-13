@@ -207,6 +207,7 @@ OrganDialog.cpp
 OrganDocument.cpp
 OrganView.cpp
 SettingsDialog.cpp
+SettingsMidiDevices.cpp
 SettingsMidiMessage.cpp
 SettingsOption.cpp
 SettingsOrgan.cpp
