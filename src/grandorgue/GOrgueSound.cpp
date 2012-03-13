@@ -97,6 +97,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 				GO_SOUND_DEV_CONFIG cfg;
 				cfg.rt_api = rtaudio_apis[k];
 				cfg.rt_api_subindex = i;
+				cfg.channels = info.outputChannels;
 				m_audioDevices[name] = cfg;
 
 			}
@@ -125,6 +126,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 		GO_SOUND_DEV_CONFIG cfg;
 		cfg.rt_api = RTAPI_PORTAUDIO;
 		cfg.rt_api_subindex = i;
+		cfg.channels = info->maxOutputChannels;
 		wxString name = wxGetTranslation(wxString::FromAscii(api->name)) + wxString(_(" (PA): ")) + wxString::FromAscii(info->name);
 		m_audioDevices[name] = cfg;
 		if (Pa_GetDefaultOutputDevice() == i)
