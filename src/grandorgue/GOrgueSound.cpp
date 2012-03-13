@@ -533,46 +533,46 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 
 	wxCriticalSectionLocker locker(m_lock);
 
-	int r = m_SoundEngine.GetSamples
-		(output_buffer
-		,n_frames
-		,stream_time
-		,&meter_info
-		);
-
-	/* Write data to file if recording is enabled*/
-	m_recorder.Write(output_buffer, n_frames * 2);
-
-	/* Update meters */
-	meter_counter += n_frames;
-	if (meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
 	{
+		int r = m_SoundEngine.GetSamples
+			(output_buffer
+			 ,n_frames
+			 ,stream_time
+			 ,&meter_info
+			 );
 
-		// polyphony
-		int n = (33 * meter_info.current_polyphony) / m_SoundEngine.GetHardPolyphony();
-		n <<= 8;
-		// right channel
-		n |= lrint(32.50000000000001 * meter_info.meter_right);
-		n <<= 8;
-		// left  channel
-		n |= lrint(32.50000000000001 * meter_info.meter_left);
+		/* Write data to file if recording is enabled*/
+		m_recorder.Write(output_buffer, n_frames * 2);
 
-		wxCommandEvent event(wxEVT_METERS, 0);
-		event.SetInt(n);
-		if (wxTheApp->GetTopWindow())
-			wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+		/* Update meters */
+		meter_counter += n_frames;
+		if (meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
+		{
 
-		meter_counter = meter_info.current_polyphony = 0;
-		meter_info.meter_left = meter_info.meter_right = 0.0;
+			// polyphony
+			int n = (33 * meter_info.current_polyphony) / m_SoundEngine.GetHardPolyphony();
+			n <<= 8;
+			// right channel
+			n |= lrint(32.50000000000001 * meter_info.meter_right);
+			n <<= 8;
+			// left  channel
+			n |= lrint(32.50000000000001 * meter_info.meter_left);
 
+			wxCommandEvent event(wxEVT_METERS, 0);
+			event.SetInt(n);
+			if (wxTheApp->GetTopWindow())
+				wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+
+			meter_counter = meter_info.current_polyphony = 0;
+			meter_info.meter_left = meter_info.meter_right = 0.0;
+		}
+
+		wxCriticalSectionLocker thread_locker(m_thread_lock);
+		for(unsigned i = 0; i < m_Threads.size(); i++)
+			m_Threads[i]->Wakeup();
 	}
 
-	wxCriticalSectionLocker thread_locker(m_thread_lock);
-	for(unsigned i = 0; i < m_Threads.size(); i++)
-		m_Threads[i]->Wakeup();
-
 	return r;
-
 }
 
 int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer, unsigned int nFrames, double streamTime, RtAudioStreamStatus status, void *userData)
