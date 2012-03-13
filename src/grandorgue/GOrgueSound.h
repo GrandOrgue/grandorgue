@@ -116,8 +116,6 @@ private:
 	wxCriticalSection m_lock;
 	wxCriticalSection m_thread_lock;
 
-	RtAudioFormat format;
-
 	bool logSoundErrors;
 
 	std::map<wxString, GO_SOUND_DEV_CONFIG> m_audioDevices;
@@ -176,10 +174,7 @@ public:
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
 
-	const RtAudioFormat GetAudioFormat();
-
-	/* TODO: these should have const scope */
-	std::map<wxString, GO_SOUND_DEV_CONFIG>& GetAudioDevices();
+	const std::map<wxString, GO_SOUND_DEV_CONFIG>& GetAudioDevices();
 	const wxString GetDefaultAudioDevice();
 
 	GOrgueMidi& GetMidi();
