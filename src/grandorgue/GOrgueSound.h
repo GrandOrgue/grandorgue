@@ -110,6 +110,7 @@ public:
 	{
 		RtAudio::Api rt_api;
 		int rt_api_subindex;
+		unsigned channels;
 	} GO_SOUND_DEV_CONFIG;
 
 private:
