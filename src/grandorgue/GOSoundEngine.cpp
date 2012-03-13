@@ -180,7 +180,7 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
 
 void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 {
-	m_Windchests.resize(organ_file->GetWinchestGroupCount());
+	m_Windchests.resize(organ_file->GetWindchestGroupCount());
 	if (release_count < 1)
 		release_count = 1;
 	m_DetachedRelease.resize(release_count);

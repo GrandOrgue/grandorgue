@@ -924,7 +924,7 @@ GOrgueWindchest* GrandOrgueFile::GetWindchest(unsigned index)
 	return m_windchest[index];
 }
 
-unsigned GrandOrgueFile::GetWinchestGroupCount()
+unsigned GrandOrgueFile::GetWindchestGroupCount()
 {
 	return m_windchest.size();
 }
