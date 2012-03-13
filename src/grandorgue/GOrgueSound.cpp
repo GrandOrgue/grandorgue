@@ -38,6 +38,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	m_audioDevices(),
 	audioStream(NULL),
 	audioDevice(NULL),
+	m_AudioOutputs(),
 	m_SamplesPerBuffer(0),
 	m_nb_buffers(0),
 	meter_counter(0),
@@ -202,6 +203,12 @@ bool GOrgueSound::OpenSound()
 	assert(audioDevice == NULL && audioStream == NULL);
 	bool opened_ok = false;
 
+	m_AudioOutputs.resize(1);
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+	{
+		m_AudioOutputs[i].sound = this;
+	}
+
 	defaultAudio = m_Settings.GetDefaultAudioDevice();
 	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
 	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
@@ -251,7 +258,7 @@ bool GOrgueSound::OpenSound()
 
 				PaError error;
 				error = Pa_OpenStream(&audioStream, NULL, &stream_parameters, sample_rate, m_SamplesPerBuffer,
-						      paNoFlag, &GOrgueSound:: PaAudioCallback, this);
+						      paNoFlag, &GOrgueSound:: PaAudioCallback, &m_AudioOutputs[0]);
 				if (error != paNoError)
 					throw (wxString)wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error)));
 				
@@ -292,7 +299,7 @@ bool GOrgueSound::OpenSound()
 					 ,sample_rate
 					 ,&m_SamplesPerBuffer
 					 ,&GOrgueSound::AudioCallback
-					 ,this
+					 ,&m_AudioOutputs[0]
 					 ,&aOptions
 					 );
 
@@ -495,11 +502,7 @@ void GOrgueSound::ResetMeters()
 		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 }
 
-int GOrgueSound::AudioCallbackLocal
-	(float* output_buffer
-	,unsigned int n_frames
-	,double stream_time
-	)
+int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffer, unsigned int n_frames, double stream_time)
 {
 	assert(n_frames == m_SamplesPerBuffer);
 
@@ -547,16 +550,10 @@ int GOrgueSound::AudioCallbackLocal
 
 }
 
-int
-GOrgueSound::AudioCallback
-	(void *outputBuffer
-	,void *inputBuffer
-	,unsigned int nFrames
-	,double streamTime
-	,RtAudioStreamStatus status
-	,void *userData)
+int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer, unsigned int nFrames, double streamTime, RtAudioStreamStatus status, void *userData)
 {
 	assert(userData);
+	GO_SOUND_OUTPUT* sound = (GO_SOUND_OUTPUT*) userData;
 	if (nFrames & (BLOCKS_PER_FRAME - 1))
 	{
 		wxString error;
@@ -568,16 +565,13 @@ GOrgueSound::AudioCallback
 		throw error;
 	}
 
-	return static_cast<GOrgueSound*>(userData)->AudioCallbackLocal
-		(static_cast<float*>(outputBuffer)
-		,nFrames
-		,streamTime
-		);
+	return sound->sound->AudioCallbackLocal(sound, static_cast<float*>(outputBuffer), nFrames, streamTime);
 }
 
 int GOrgueSound::PaAudioCallback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
 {
 	assert(userData);
+	GO_SOUND_OUTPUT* sound = (GO_SOUND_OUTPUT*) userData;
 	if (frameCount & (BLOCKS_PER_FRAME - 1))
 	{
 		wxString error;
@@ -589,11 +583,7 @@ int GOrgueSound::PaAudioCallback (const void *input, void *output, unsigned long
 		throw error;
 	}
 
-	int ret = static_cast<GOrgueSound*>(userData)->AudioCallbackLocal
-		(static_cast<float*>(output)
-		,frameCount
-		,0*timeInfo->currentTime
-		);
+	int ret = sound->sound->AudioCallbackLocal(sound, static_cast<float*>(output), frameCount, 0*timeInfo->currentTime);
 
 	if (!ret)
 		return paContinue;
