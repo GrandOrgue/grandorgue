@@ -72,14 +72,7 @@ protected:
 		ID_MIDI_PROPERTIES,
 		ID_SOUND_DEVICE,
 		ID_LATENCY,
-		ID_POLYPHONY,
-		ID_MONO_STEREO,
-		ID_BITS_PER_SAMPLE,
 		ID_SAMPLE_RATE,
-		ID_INTERPOLATION,
-		ID_LOOP_LOAD,
-		ID_ATTACK_LOAD,
-		ID_RELEASE_LOAD,
 	};
 
 	wxCheckListBox* page1checklist;
@@ -91,18 +84,7 @@ protected:
 	wxSpinCtrl* c_latency;
 	wxStaticText* c_actual_latency;
 	wxSpinCtrl* c_polyphony;
-	wxChoice* c_stereo;
 	wxChoice* c_SampleRate;
-	wxChoice* c_BitsPerSample;
-	wxChoice* c_Interpolation;
-	wxChoice* c_LoopLoad;
-	wxChoice* c_AttackLoad;
-	wxChoice* c_ReleaseLoad;
-	bool b_stereo;
-	unsigned m_OldBitsPerSample;
-	unsigned m_OldLoopLoad;
-	unsigned m_OldAttackLoad;
-	unsigned m_OldReleaseLoad;
 
 	SettingsOption* m_OptionsPage;
 	SettingsOrgan* m_OrganPage;

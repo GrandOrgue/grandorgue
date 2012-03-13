@@ -34,27 +34,44 @@ class SettingsOption : public wxPanel
 		ID_WAVE_FORMAT = 200,
 		ID_CONCURRENCY,
 		ID_RELEASE_CONCURRENCY,
-		ID_ENHANCE_SQUASH,
-		ID_ENHANCE_MANAGE_POLYPHONY,
+		ID_LOSSLESS_COMPRESSION,
+		ID_MANAGE_POLYPHONY,
 		ID_COMPRESS_CACHE,
-		ID_ENHANCE_SCALE_RELEASE,
-		ID_ENHANCE_RANDOMIZE,
+		ID_SCALE_RELEASE,
+		ID_RANDOMIZE,
 		ID_SETTINGS_DIR,
 		ID_CACHE_DIR,
+		ID_BITS_PER_SAMPLE,
+		ID_LOOP_LOAD,
+		ID_ATTACK_LOAD,
+		ID_RELEASE_LOAD,
+		ID_MONO_STEREO,
+		ID_INTERPOLATION,
 	};
 private:
 	GOrgueSettings& m_Settings;
 	wxChoice* m_Concurrency;
 	wxChoice* m_ReleaseConcurrency;
 	wxChoice* m_WaveFormat;
-	wxCheckBox* m_Squash;
+	wxCheckBox* m_LosslessCompression;
 	wxCheckBox* m_Limit;
 	wxCheckBox* m_CompressCache;
 	wxCheckBox* m_Scale;
 	wxCheckBox* m_Random;
 	wxDirPickerCtrl* m_SettingsPath;
 	wxDirPickerCtrl* m_CachePath;
-	bool m_OldSquash;
+	wxChoice* m_BitsPerSample;
+	wxChoice* m_LoopLoad;
+	wxChoice* m_AttackLoad;
+	wxChoice* m_ReleaseLoad;
+	wxChoice* m_Stereo;
+	wxChoice* m_Interpolation;
+	bool m_OldStereo;
+	bool m_OldLosslessCompression;
+	unsigned m_OldBitsPerSample;
+	unsigned m_OldLoopLoad;
+	unsigned m_OldAttackLoad;
+	unsigned m_OldReleaseLoad;
 
 public:
 	SettingsOption(GOrgueSettings& settings, wxWindow* parent);

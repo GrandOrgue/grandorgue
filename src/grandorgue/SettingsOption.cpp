@@ -31,7 +31,12 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 {
 	wxArrayString choices;
 
-	m_OldSquash = m_Settings.GetLosslessCompression();
+	m_OldStereo = m_Settings.GetLoadInStereo();
+	m_OldLosslessCompression = m_Settings.GetLosslessCompression();
+	m_OldBitsPerSample = m_Settings.GetBitsPerSample();
+	m_OldLoopLoad = m_Settings.GetLoopLoad();
+	m_OldAttackLoad = m_Settings.GetAttackLoad();
+	m_OldReleaseLoad = m_Settings.GetReleaseLoad();
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* item0 = new wxBoxSizer(wxHORIZONTAL);
@@ -41,13 +46,10 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 
 	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Enhancements"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
-	item6->Add(m_Squash = new wxCheckBox(this, ID_ENHANCE_SQUASH,           _("Lossless compression")          ), 0, wxEXPAND | wxALL, 5);
-	item6->Add(m_Limit  = new wxCheckBox(this, ID_ENHANCE_MANAGE_POLYPHONY, _("Active polyphony management")   ), 0, wxEXPAND | wxALL, 5);
-	item6->Add(m_CompressCache  = new wxCheckBox(this, ID_COMPRESS_CACHE,    _("Compress Cache")), 0, wxEXPAND | wxALL, 5);
-	item6->Add(m_Scale  = new wxCheckBox(this, ID_ENHANCE_SCALE_RELEASE,    _("Release sample scaling"        )), 0, wxEXPAND | wxALL, 5);
-	item6->Add(m_Random = new wxCheckBox(this, ID_ENHANCE_RANDOMIZE,        _("Randomize pipe speaking"       )), 0, wxEXPAND | wxALL, 5);
-	if (m_Settings.GetLosslessCompression())
-		m_Squash->SetValue(true);
+	item6->Add(m_Limit = new wxCheckBox(this, ID_MANAGE_POLYPHONY, _("Active polyphony management")), 0, wxEXPAND | wxALL, 5);
+	item6->Add(m_CompressCache  = new wxCheckBox(this, ID_COMPRESS_CACHE, _("Compress Cache")), 0, wxEXPAND | wxALL, 5);
+	item6->Add(m_Scale = new wxCheckBox(this, ID_SCALE_RELEASE, _("Release sample scaling")), 0, wxEXPAND | wxALL, 5);
+	item6->Add(m_Random = new wxCheckBox(this, ID_RANDOMIZE, _("Randomize pipe speaking")), 0, wxEXPAND | wxALL, 5);
 	if (m_Settings.GetManagePolyphony())
 		m_Limit ->SetValue(true);
 	if (m_Settings.GetCompressCache())
@@ -57,10 +59,15 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	if (m_Settings.GetRandomizeSpeaking())
 		m_Random->SetValue(true);
 
-
 	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound Engine"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+
+	choices.clear();
+	choices.push_back(_("Linear"));
+	choices.push_back(_("Polyphase"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Interpolation:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_Interpolation = new wxChoice(this, ID_INTERPOLATION, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
 	for (unsigned i = 0; i < 128; i++)
@@ -83,6 +90,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(m_WaveFormat = new wxChoice(this, ID_WAVE_FORMAT, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
+	m_Interpolation->Select(m_Settings.GetInterpolationType());
 	m_Concurrency->Select(m_Settings.GetConcurrency());
 	m_ReleaseConcurrency->Select(m_Settings.GetReleaseConcurrency() - 1);
 	m_WaveFormat->Select(m_Settings.GetWaveFormatBytesPerSample() - 1);
@@ -103,6 +111,57 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_SettingsPath->SetPath(m_Settings.GetUserSettingPath());
 	m_CachePath->SetPath(m_Settings.GetUserCachePath());
 
+	item9 = new wxBoxSizer(wxVERTICAL);
+	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
+	
+	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sample loading"));
+	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+
+	item6->Add(m_LosslessCompression = new wxCheckBox(this, ID_LOSSLESS_COMPRESSION, _("Lossless compression")), 0, wxEXPAND | wxALL, 5);
+	if (m_Settings.GetLosslessCompression())
+		m_LosslessCompression->SetValue(true);
+
+	grid = new wxFlexGridSizer(4, 2, 5, 5);
+	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+
+	choices.clear();
+	choices.push_back(_("Mono"));
+	choices.push_back(_("Stereo"));	
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Load &stereo samples in:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_Stereo = new wxChoice(this, ID_MONO_STEREO, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
+	choices.clear();
+	for (unsigned i = 0; i < 5; i++)
+		choices.push_back(wxString::Format(wxT("%d bits"), 8 + i * 4));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Sample size:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_BitsPerSample = new wxChoice(this, ID_BITS_PER_SAMPLE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
+	choices.clear();
+	choices.push_back(_("First loop"));
+	choices.push_back(_("Longest loop"));
+	choices.push_back(_("All loops"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Loop loading:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_LoopLoad = new wxChoice(this, ID_LOOP_LOAD, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
+	choices.clear();
+	choices.push_back(_("Single attack"));
+	choices.push_back(_("All"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Attack loading:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_AttackLoad = new wxChoice(this, ID_ATTACK_LOAD, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
+	choices.clear();
+	choices.push_back(_("Single release"));
+	choices.push_back(_("All"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Release loading:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_ReleaseLoad = new wxChoice(this, ID_RELEASE_LOAD, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
+	m_Stereo->Select(m_Settings.GetLoadInStereo());
+	m_BitsPerSample->Select((m_Settings.GetBitsPerSample() - 8) / 4);
+	m_LoopLoad->Select(m_Settings.GetLoopLoad());
+	m_AttackLoad->Select(m_Settings.GetAttackLoad());
+	m_ReleaseLoad->Select(m_Settings.GetReleaseLoad());
+
+
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
@@ -111,7 +170,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 
 void SettingsOption::Save()
 {
-	m_Settings.SetLosslessCompression(m_Squash->IsChecked());
+	m_Settings.SetLosslessCompression(m_LosslessCompression->IsChecked());
 	m_Settings.SetManagePolyphony(m_Limit->IsChecked());
 	m_Settings.SetCompressCache(m_CompressCache->IsChecked());
 	m_Settings.SetScaleRelease(m_Scale->IsChecked());
@@ -121,9 +180,20 @@ void SettingsOption::Save()
 	m_Settings.SetWaveFormatBytesPerSample(m_WaveFormat->GetSelection() + 1);
 	m_Settings.SetUserSettingPath(m_SettingsPath->GetPath());
 	m_Settings.SetUserCachePath(m_CachePath->GetPath());
+	m_Settings.SetBitsPerSample(m_BitsPerSample->GetSelection() * 4 + 8);
+	m_Settings.SetLoopLoad(m_LoopLoad->GetSelection());
+	m_Settings.SetAttackLoad(m_AttackLoad->GetSelection());
+	m_Settings.SetReleaseLoad(m_ReleaseLoad->GetSelection());
+	m_Settings.SetLoadInStereo(m_Stereo->GetSelection());
+	m_Settings.SetInterpolationType(m_Interpolation->GetSelection());
 }
 
 bool SettingsOption::NeedReload()
 {
-	return m_OldSquash != m_Settings.GetLosslessCompression();
+	return m_OldLosslessCompression != m_Settings.GetLosslessCompression() ||
+		m_OldBitsPerSample != m_Settings.GetBitsPerSample() ||
+		m_OldLoopLoad != m_Settings.GetLoopLoad() || 
+		m_OldAttackLoad != m_Settings.GetAttackLoad() ||
+		m_OldReleaseLoad != m_Settings.GetReleaseLoad() ||
+		m_OldStereo != m_Settings.GetLoadInStereo();
 }
