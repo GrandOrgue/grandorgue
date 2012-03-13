@@ -192,7 +192,7 @@ void SettingsDialog::OnApply(wxCommandEvent& event)
 void SettingsDialog::OnHelp(wxCommandEvent& event)
 {
 	wxCommandEvent help(wxEVT_SHOWHELP, 0);
-	help.SetString(((wxNotebook*)GetBookCtrl())->GetSelection() ? _("MIDI Settings") : _("Device Settings"));
+	help.SetString(GetBookCtrl()->GetPageText(GetBookCtrl()->GetSelection()));
 	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(help);
 }
 
