@@ -515,7 +515,7 @@ void OrganDialog::Modified()
 void OrganDialog::FillTree()
 {
 	wxTreeItemId id_root = m_Tree->AddRoot(m_organfile->GetChurchName(), -1, -1, new OrganTreeItemData(m_organfile));
-	for (unsigned j = 0; j < m_organfile->GetWinchestGroupCount(); j++)
+	for (unsigned j = 0; j < m_organfile->GetWindchestGroupCount(); j++)
 	{
 		GOrgueWindchest* windchest = m_organfile->GetWindchest(j);
 		wxTreeItemId id_windchest = m_Tree->AppendItem(id_root, windchest->GetName());

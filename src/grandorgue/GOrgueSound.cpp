@@ -436,7 +436,7 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 	{
 		m_SoundEngine.Setup(organfile, m_Settings.GetReleaseConcurrency());
 		organfile->PreparePlayback(&GetEngine());
-		StartThreads(organfile->GetWinchestGroupCount());
+		StartThreads(organfile->GetWindchestGroupCount());
 	}
 	else
 	{

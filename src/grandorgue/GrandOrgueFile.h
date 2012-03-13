@@ -157,7 +157,7 @@ public:
 	GOrgueSetter* GetSetter();
 	unsigned AddWindchest(GOrgueWindchest* windchest);
 	GOrgueWindchest* GetWindchest(unsigned index);
-	unsigned GetWinchestGroupCount();
+	unsigned GetWindchestGroupCount();
 	GOrgueEnclosure* GetEnclosure(unsigned index);
 	unsigned GetEnclosureCount();
 	GOGUIPanel* GetPanel(unsigned index);
