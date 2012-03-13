@@ -48,12 +48,18 @@ class GOrgueSound
 	public:
 		GOrgueSound* sound;
 
+		wxString name;
+
+		unsigned nb_buffers;
+
 		PaStream* audioStream;
 		RtAudio* audioDevice;
 
 		GO_SOUND_OUTPUT()
 		{
 			sound = 0;
+			name = wxEmptyString;
+			nb_buffers = 0;
 			audioStream = 0;
 			audioDevice = 0;
 		}
@@ -61,6 +67,8 @@ class GOrgueSound
 		GO_SOUND_OUTPUT(const GO_SOUND_OUTPUT& old)
 		{
 			sound = old.sound;
+			name = old.name;
+			nb_buffers = old.nb_buffers;
 			audioStream = old.audioStream;
 			audioDevice = old.audioDevice;
 		}
@@ -68,6 +76,8 @@ class GOrgueSound
 		const GO_SOUND_OUTPUT& operator=(const GO_SOUND_OUTPUT& old)
 		{
 			sound = old.sound;
+			name = old.name;
+			nb_buffers = old.nb_buffers;
 			audioStream = old.audioStream;
 			audioDevice = old.audioDevice;
 			return *this;
@@ -123,6 +133,7 @@ private:
 	void ResetMeters();
 
 	void OpenMidi();
+	void StartStreams();
 
 public:
 
