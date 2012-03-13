@@ -39,7 +39,6 @@ IMPLEMENT_CLASS(SettingsDialog, wxPropertySheetDialog)
 
 BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_CHOICE(ID_SOUND_DEVICE, SettingsDialog::OnDevicesSoundChoice)
-	EVT_CHOICE(ID_SAMPLE_RATE, SettingsDialog::OnChanged)
 
 	EVT_BUTTON(wxID_APPLY, SettingsDialog::OnApply)
 	EVT_BUTTON(wxID_OK, SettingsDialog::OnOK)
@@ -148,17 +147,7 @@ wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 	grid->Add(c_actual_latency = new wxStaticText(panel, wxID_ANY, wxEmptyString));
 	item1->Add(grid, 0, wxEXPAND | wxALL, 5);
 
-	choices.clear();
-	choices.push_back(wxT("44100"));
-	choices.push_back(wxT("48000"));
-	grid->Add(new wxStaticText(panel, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
-	grid->Add(c_SampleRate = new wxChoice(panel, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
-
 	UpdateSoundStatus();
-	c_SampleRate->Select(0);
-	for(unsigned i = 0; i < c_SampleRate->GetCount(); i++)
-		if (wxString::Format(wxT("%d"), m_Settings.GetSampleRate()) == c_SampleRate->GetString(i))
-			c_SampleRate->Select(i);
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
@@ -211,7 +200,6 @@ bool SettingsDialog::DoApply()
 
 	m_Settings.SetDefaultAudioDevice(c_sound->GetStringSelection());
 	m_Settings.SetAudioDeviceLatency(c_sound->GetStringSelection(), c_latency->GetValue());
-	m_Settings.SetSampleRate(wxAtoi(c_SampleRate->GetStringSelection()));
 
 	m_Sound.ResetSound();
 	UpdateSoundStatus();

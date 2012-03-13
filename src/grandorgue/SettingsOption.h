@@ -47,6 +47,7 @@ class SettingsOption : public wxPanel
 		ID_RELEASE_LOAD,
 		ID_MONO_STEREO,
 		ID_INTERPOLATION,
+		ID_SAMPLE_RATE,
 	};
 private:
 	GOrgueSettings& m_Settings;
@@ -66,6 +67,7 @@ private:
 	wxChoice* m_ReleaseLoad;
 	wxChoice* m_Stereo;
 	wxChoice* m_Interpolation;
+	wxChoice* m_SampleRate;
 	bool m_OldStereo;
 	bool m_OldLosslessCompression;
 	unsigned m_OldBitsPerSample;
