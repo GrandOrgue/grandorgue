@@ -228,6 +228,7 @@ bool GOrgueSound::OpenSound()
 			defaultAudio = defaultAudioDevice;
 			m_Settings.SetDefaultAudioDevice(defaultAudio);
 		}
+		m_AudioOutputs[0].name = defaultAudio;
 
 		std::map<wxString, GO_SOUND_DEV_CONFIG>::iterator it;
 		it = m_audioDevices.find(defaultAudio);
@@ -258,16 +259,6 @@ bool GOrgueSound::OpenSound()
 						      paNoFlag, &GOrgueSound:: PaAudioCallback, &m_AudioOutputs[0]);
 				if (error != paNoError)
 					throw (wxString)wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error)));
-				
-				error = Pa_StartStream(m_AudioOutputs[0].audioStream);
-				if (error != paNoError)
-					throw (wxString)wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error)));
-
-				const struct PaStreamInfo* info = Pa_GetStreamInfo(m_AudioOutputs[0].audioStream);
-				m_Settings.SetAudioDeviceActualLatency(defaultAudio, (int)(info->outputLatency * 1000));
-
-				GetEngine().SetSampleRate(sample_rate);
-				m_recorder.SetSampleRate(sample_rate);
 			}
 			else
 			{
@@ -300,40 +291,13 @@ bool GOrgueSound::OpenSound()
 					 ,&aOptions
 					 );
 
-				m_nb_buffers = aOptions.numberOfBuffers;
-
-				if (m_SamplesPerBuffer <= 1024)
-				{
-					m_AudioOutputs[0].audioDevice->startStream();
-
-					int actual_latency = m_AudioOutputs[0].audioDevice->getStreamLatency();
-					
-					/* getStreamLatency returns zero if not supported by the API, in which
-					 * case we will make a best guess.
-					 */
-					if (actual_latency == 0)
-						actual_latency = m_SamplesPerBuffer * m_nb_buffers;
-
-					m_Settings.SetAudioDeviceActualLatency(defaultAudio, (actual_latency * 1000) / GetEngine().GetSampleRate());
-				}
-				else
-					throw (wxString)_("Cannot use buffer size above 1024 samples; unacceptable quantization would occur.");
-
-				if (m_SamplesPerBuffer & (BLOCKS_PER_FRAME - 1))
-				{
-					wxLogWarning
-						(_("Audio engine wants frame size of %u blocks which is indivisible by %u.")
-						 ,m_SamplesPerBuffer
-						 ,BLOCKS_PER_FRAME
-						 );
-				}
-				GetEngine().SetSampleRate(m_AudioOutputs[0].audioDevice->getStreamSampleRate());
-				m_recorder.SetSampleRate(m_AudioOutputs[0].audioDevice->getStreamSampleRate());
+				m_AudioOutputs[0].nb_buffers = aOptions.numberOfBuffers;
 			}
 		}
 		else
 			throw (wxString)_("No audio device is selected; neither MIDI input nor sound output will occur!");
 
+		StartStreams();
 		opened_ok = true;
 
 	}
@@ -358,6 +322,54 @@ bool GOrgueSound::OpenSound()
 
 	return opened_ok;
 
+}
+
+void GOrgueSound::StartStreams()
+{
+	if (m_SamplesPerBuffer & (BLOCKS_PER_FRAME - 1))
+		throw wxString::Format(_("Audio engine wants frame size of %u blocks which is indivisible by %u."), m_SamplesPerBuffer, BLOCKS_PER_FRAME);
+
+	if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
+		throw wxString::Format(_("Cannot use buffer size above %d samples; unacceptable quantization would occur."), MAX_FRAME_SIZE);
+
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+	{
+		if (m_AudioOutputs[i].audioDevice)
+		{
+			try
+			{
+				m_AudioOutputs[i].audioDevice->startStream();
+				int actual_latency = m_AudioOutputs[i].audioDevice->getStreamLatency();
+
+				/* getStreamLatency returns zero if not supported by the API, in which
+				 * case we will make a best guess.
+				 */
+				if (actual_latency == 0)
+					actual_latency = m_SamplesPerBuffer * m_AudioOutputs[i].nb_buffers;
+
+				m_Settings.SetAudioDeviceActualLatency(m_AudioOutputs[i].name, (actual_latency * 1000) / GetEngine().GetSampleRate());
+			}
+			catch (RtError &e)
+			{
+				wxString error = wxString::FromAscii(e.getMessage().c_str());
+				throw wxString::Format(_("RtAudio error: %s"), error.c_str());
+			}
+
+			if (m_AudioOutputs[i].audioDevice->getStreamSampleRate() != GetEngine().GetSampleRate())
+				throw wxString::Format(_("Sample rate of device %s changed"), m_AudioOutputs[i].name.c_str());
+		}
+		if (m_AudioOutputs[i].audioStream)
+		{
+			PaError error;
+			error = Pa_StartStream(m_AudioOutputs[i].audioStream);
+			if (error != paNoError)
+				throw wxString::Format(_("Start of audio stream of %s failed: %s"), m_AudioOutputs[i].name.c_str(),
+						       wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error))));
+
+			const struct PaStreamInfo* info = Pa_GetStreamInfo(m_AudioOutputs[i].audioStream);
+			m_Settings.SetAudioDeviceActualLatency(m_AudioOutputs[i].name, (int)(info->outputLatency * 1000));
+		}
+	}
 }
 
 void GOrgueSound::CloseSound()
