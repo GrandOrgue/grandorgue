@@ -187,6 +187,8 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
 		m_Windchests[i].windchest = organ_file->GetWindchest(i);
 	m_Tremulants.resize(organ_file->GetTremulantCount());
+	for (unsigned i = 0; i < m_Tremulants.size(); i++)
+		m_Tremulants[i].is_tremulant = true;
 	Reset();
 }
 
@@ -224,8 +226,12 @@ void GOSoundEngine::ReadSamplerFrames
 
 }
 
-void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, bool tremulant)
+void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames)
 {
+	wxCriticalSectionLocker locker(state.mutex);
+
+	if (state.done)
+		return;
 	{
 		wxCriticalSectionLocker locker(state.lock);
 		if (state.new_sampler)
@@ -240,12 +246,15 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 	}
 
 	if (state.sampler == NULL)
+	{
+		state.done = 2;
 		return;
+	}
 
 	assert((n_frames & (BLOCKS_PER_FRAME - 1)) == 0);
 	assert(n_frames > BLOCKS_PER_FRAME);
 	float* output_buffer = state.buff;
-	std::fill(output_buffer, output_buffer + n_frames * 2, tremulant ? 1.0f : 0.0f);
+	std::fill(output_buffer, output_buffer + n_frames * 2, state.is_tremulant ? 1.0f : 0.0f);
 	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
 	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
 	{
@@ -333,7 +342,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 
 	}
 
-	if (!tremulant)
+	if (!state.is_tremulant)
 	{
 		float f = m_Gain;
 		if (state.windchest)
@@ -347,13 +356,10 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
 			{
 				unsigned tremulant_pos = current_windchest->GetTremulantId(i);
-				{
-					wxCriticalSectionLocker locker(m_Tremulants[tremulant_pos].mutex);
-					
-					if (!m_Tremulants[tremulant_pos].done)
-						ProcessAudioSamplers(m_Tremulants[tremulant_pos], n_frames, true);
-				}
-				if (m_Tremulants[tremulant_pos].done)
+				if (!m_Tremulants[tremulant_pos].done)
+					ProcessAudioSamplers(m_Tremulants[tremulant_pos], n_frames);
+
+				if (m_Tremulants[tremulant_pos].done == 1)
 				{
 					const float *ptr = m_Tremulants[tremulant_pos].buff;
 					for (unsigned int k = 0; k < n_frames * 2; k++)
@@ -363,7 +369,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		}
 	}
 
-	state.done = true;
+	state.done = 1;
 }
 
 void GOSoundEngine::Process(unsigned sampler_group_id, unsigned n_frames)
@@ -377,15 +383,8 @@ void GOSoundEngine::Process(unsigned sampler_group_id, unsigned n_frames)
 	else
 		state = &m_Windchests[sampler_group_id - 1];
 
-	if (state->sampler == NULL && state->new_sampler == NULL)
-		return;
-
-	wxCriticalSectionLocker locker(state->mutex);
-
-	if (state->done)
-		return;
-
-	ProcessAudioSamplers(*state, n_frames, false);
+	if (!state->done)
+		ProcessAudioSamplers(*state, n_frames);
 }
 
 void GOSoundEngine::ResetDoneFlags()
@@ -393,18 +392,25 @@ void GOSoundEngine::ResetDoneFlags()
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 	{
 		wxCriticalSectionLocker locker(m_Tremulants[j].mutex);
-		m_Tremulants[j].done = false;
+		m_Tremulants[j].done = 0;
 	}
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
 		wxCriticalSectionLocker locker(m_Windchests[j].mutex);
-		m_Windchests[j].done = false;
+		m_Windchests[j].done = 0;
 	}
 	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
 	{
 		wxCriticalSectionLocker locker(m_DetachedRelease[j].mutex);
-		m_DetachedRelease[j].done = false;
+		m_DetachedRelease[j].done = 0;
 	}
+}
+
+void GOSoundEngine::ProcessTremulants(unsigned n_frames)
+{
+	for (unsigned j = 0; j < m_Tremulants.size(); j++)
+		if (!m_Tremulants[j].done)
+			ProcessAudioSamplers(m_Tremulants[j], n_frames);
 }
 
 // this callback will fill the buffer with bufferSize frame
@@ -421,25 +427,16 @@ int GOSoundEngine::GetSamples
 	float FinalBuffer[GO_SOUND_BUFFER_SIZE];
 	std::fill(FinalBuffer, FinalBuffer + n_frames * 2, 0.0f);
 
-	for (unsigned j = 0; j < m_Tremulants.size(); j++)
-	{
-		wxCriticalSectionLocker locker(m_Tremulants[j].mutex);
-
-		if (!m_Tremulants[j].done)
-			ProcessAudioSamplers(m_Tremulants[j], n_frames, true);
-	}
+	ProcessTremulants(n_frames);
 
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
-
 		float* this_buff = m_Windchests[j].buff;
 
-		wxCriticalSectionLocker locker(m_Windchests[j].mutex);
-
 		if (!m_Windchests[j].done)
-			ProcessAudioSamplers(m_Windchests[j], n_frames, false);
+			ProcessAudioSamplers(m_Windchests[j], n_frames);
 
-		if (!m_Windchests[j].done)
+		if (m_Windchests[j].done != 1)
 			continue;
 
 		for (unsigned int k = 0; k < n_frames * 2; k++)
@@ -450,12 +447,10 @@ int GOSoundEngine::GetSamples
 	{
 		float* this_buff = m_DetachedRelease[j].buff;
 
-		wxCriticalSectionLocker locker(m_DetachedRelease[j].mutex);
-
 		if (!m_DetachedRelease[j].done)
-			ProcessAudioSamplers(m_DetachedRelease[j], n_frames, false);
+			ProcessAudioSamplers(m_DetachedRelease[j], n_frames);
 
-		if (!m_DetachedRelease[j].done)
+		if (m_DetachedRelease[j].done != 1)
 			continue;
 
 		for (unsigned int k = 0; k < n_frames * 2; k++)
