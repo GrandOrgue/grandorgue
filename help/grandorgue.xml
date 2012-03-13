@@ -550,9 +550,9 @@ program will jump directly to the appropriate topic.
     </sect1>
   </chapter>
   <chapter id="midisettings">
-    <title>MIDI Settings</title>
+    <title>Initial MIDI Configuration</title>
     <indexterm>
-      <primary>MIDI Settings</primary>
+      <primary>Initial MIDI Configuration</primary>
     </indexterm>
     <figure>
       <title>MIDI Settings dialog</title>
@@ -600,9 +600,9 @@ changes when you're done.
     </sect1>
   </chapter>
   <chapter id="devicesettings">
-    <title>Device Settings</title>
+    <title>MIDI Devices</title>
     <indexterm>
-      <primary>Device Settings</primary>
+      <primary>MIDI Devices</primary>
     </indexterm>
     <figure>
       <title>Device Settings dialog</title>
@@ -892,6 +892,33 @@ more natural and less repetitive.
         </varlistentry>
       </variablelist>
     </sect1>
+  </chapter>
+  <chapter>
+    <title>GrandOrgue options</title>
+    <indexterm>
+      <primary>Options</primary>
+    </indexterm>
+    <para>
+Part of the setting dialog.
+    </para>
+  </chapter>
+  <chapter>
+    <title>Audio Output</title>
+    <indexterm>
+      <primary>Audio Output</primary>
+    </indexterm>
+    <para>
+Part of the setting dialog.
+    </para>
+  </chapter>
+  <chapter>
+    <title>Organs</title>
+    <indexterm>
+      <primary>Organs</primary>
+    </indexterm>
+    <para>
+Part of the setting dialog.
+    </para>
   </chapter>
   <chapter>
     <title>Frequently Asked Questions</title>
