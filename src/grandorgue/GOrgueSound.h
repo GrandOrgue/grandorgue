@@ -48,19 +48,28 @@ class GOrgueSound
 	public:
 		GOrgueSound* sound;
 
+		PaStream* audioStream;
+		RtAudio* audioDevice;
+
 		GO_SOUND_OUTPUT()
 		{
 			sound = 0;
+			audioStream = 0;
+			audioDevice = 0;
 		}
 
 		GO_SOUND_OUTPUT(const GO_SOUND_OUTPUT& old)
 		{
 			sound = old.sound;
+			audioStream = old.audioStream;
+			audioDevice = old.audioDevice;
 		}
 
 		const GO_SOUND_OUTPUT& operator=(const GO_SOUND_OUTPUT& old)
 		{
 			sound = old.sound;
+			audioStream = old.audioStream;
+			audioDevice = old.audioDevice;
 			return *this;
 		}
 	};
@@ -81,8 +90,6 @@ private:
 	bool logSoundErrors;
 
 	std::map<wxString, GO_SOUND_DEV_CONFIG> m_audioDevices;
-	PaStream* audioStream;
-	RtAudio* audioDevice;
 	std::vector<GO_SOUND_OUTPUT> m_AudioOutputs;
 
 	unsigned m_SamplesPerBuffer;
