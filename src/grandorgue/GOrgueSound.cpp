@@ -33,7 +33,6 @@
 GOrgueSound* g_sound = 0;
 
 GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
-	format(0),
 	logSoundErrors(true),
 	m_audioDevices(),
 	m_AudioOutputs(),
@@ -226,7 +225,6 @@ bool GOrgueSound::OpenSound()
 
 		if (m_AudioOutputs[0].rt_api == RTAPI_PORTAUDIO)
 		{
-			format = RTAUDIO_FLOAT32;
 			m_SamplesPerBuffer = BLOCKS_PER_FRAME * ceil(sample_rate * m_AudioOutputs[0].try_latency / 1000.0 / BLOCKS_PER_FRAME);
 			if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
 				m_SamplesPerBuffer = MAX_FRAME_SIZE;
@@ -235,7 +233,6 @@ bool GOrgueSound::OpenSound()
 		}
 		else
 		{
-			format = RTAUDIO_FLOAT32;
 			GOrgueRtHelpers::GetBufferConfig
 				(m_AudioOutputs[0].rt_api
 				 ,m_AudioOutputs[0].try_latency
@@ -505,7 +502,7 @@ void GOrgueSound::SetLogSoundErrorMessages(bool settingsDialogVisible)
 	logSoundErrors = settingsDialogVisible;
 }
 
-std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>& GOrgueSound::GetAudioDevices()
+const std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>& GOrgueSound::GetAudioDevices()
 {
 	return m_audioDevices;
 }
@@ -513,11 +510,6 @@ std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>& GOrgueSound::GetAudioDevic
 const wxString GOrgueSound::GetDefaultAudioDevice()
 {
 	return defaultAudioDevice;
-}
-
-const RtAudioFormat GOrgueSound::GetAudioFormat()
-{
-	return format;
 }
 
 GOrgueMidi& GOrgueSound::GetMidi()

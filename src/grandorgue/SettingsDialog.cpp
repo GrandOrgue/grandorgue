@@ -30,7 +30,6 @@
 #include "GOrgueMidi.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
-#include "GOrgueRtHelpers.h"
 #include "SettingsMidiDevices.h"
 #include "SettingsMidiMessage.h"
 #include "SettingsOption.h"
@@ -108,13 +107,12 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::UpdateSoundStatus()
 {
 	SetLatencySpinner(m_Settings.GetAudioDeviceLatency(c_sound->GetStringSelection()));
-	c_format->SetLabel(wxString(GOrgueRtHelpers::GetAudioFormatName(m_Sound.GetAudioFormat())));
+	c_format->SetLabel(_("32 bit float"));
 }
 
 wxPanel* SettingsDialog::CreateDevicesPage(wxWindow* parent)
 {
-	std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>::iterator it1;
-	std::map<wxString, int>::iterator it2;
+	std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>::const_iterator it1;
 
 	wxPanel* panel = new wxPanel(parent, wxID_ANY);
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
