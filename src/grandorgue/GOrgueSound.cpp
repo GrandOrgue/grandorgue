@@ -36,8 +36,6 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	format(0),
 	logSoundErrors(true),
 	m_audioDevices(),
-	audioStream(NULL),
-	audioDevice(NULL),
 	m_AudioOutputs(),
 	m_SamplesPerBuffer(0),
 	m_nb_buffers(0),
@@ -207,13 +205,15 @@ void GOrgueSound::OpenMidi()
 
 bool GOrgueSound::OpenSound()
 {
-	assert(audioDevice == NULL && audioStream == NULL);
+	assert(m_AudioOutputs.size() == 0);
 	bool opened_ok = false;
 
 	m_AudioOutputs.resize(1);
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 	{
 		m_AudioOutputs[i].sound = this;
+		m_AudioOutputs[i].audioDevice = 0;
+		m_AudioOutputs[i].audioStream = 0;
 	}
 
 	defaultAudio = m_Settings.GetDefaultAudioDevice();
@@ -263,16 +263,16 @@ bool GOrgueSound::OpenSound()
 				stream_parameters.hostApiSpecificStreamInfo = NULL;
 
 				PaError error;
-				error = Pa_OpenStream(&audioStream, NULL, &stream_parameters, sample_rate, m_SamplesPerBuffer,
+				error = Pa_OpenStream(&m_AudioOutputs[0].audioStream, NULL, &stream_parameters, sample_rate, m_SamplesPerBuffer,
 						      paNoFlag, &GOrgueSound:: PaAudioCallback, &m_AudioOutputs[0]);
 				if (error != paNoError)
 					throw (wxString)wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error)));
 				
-				error = Pa_StartStream(audioStream);
+				error = Pa_StartStream(m_AudioOutputs[0].audioStream);
 				if (error != paNoError)
 					throw (wxString)wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error)));
 
-				const struct PaStreamInfo* info = Pa_GetStreamInfo(audioStream);
+				const struct PaStreamInfo* info = Pa_GetStreamInfo(m_AudioOutputs[0].audioStream);
 				m_Settings.SetAudioDeviceActualLatency(defaultAudio, (int)(info->outputLatency * 1000));
 
 				GetEngine().SetSampleRate(sample_rate);
@@ -280,7 +280,7 @@ bool GOrgueSound::OpenSound()
 			}
 			else
 			{
-				audioDevice = new RtAudio(it->second.rt_api);
+				m_AudioOutputs[0].audioDevice = new RtAudio(it->second.rt_api);
 
 				GOrgueRtHelpers::GetBufferConfig
 					(it->second.rt_api
@@ -298,7 +298,7 @@ bool GOrgueSound::OpenSound()
 				aOptions.numberOfBuffers = m_nb_buffers;
 
 				format = RTAUDIO_FLOAT32;
-				audioDevice->openStream
+				m_AudioOutputs[0].audioDevice->openStream
 					(&aOutputParam
 					 ,NULL
 					 ,format
@@ -313,7 +313,7 @@ bool GOrgueSound::OpenSound()
 
 				if (m_SamplesPerBuffer <= 1024)
 				{
-					audioDevice->startStream();
+					m_AudioOutputs[0].audioDevice->startStream();
 					m_Settings.SetAudioDeviceActualLatency(defaultAudio, GetLatency());
 				}
 				else
@@ -327,8 +327,8 @@ bool GOrgueSound::OpenSound()
 						 ,BLOCKS_PER_FRAME
 						 );
 				}
-				GetEngine().SetSampleRate(audioDevice->getStreamSampleRate());
-				m_recorder.SetSampleRate(audioDevice->getStreamSampleRate());
+				GetEngine().SetSampleRate(m_AudioOutputs[0].audioDevice->getStreamSampleRate());
+				m_recorder.SetSampleRate(m_AudioOutputs[0].audioDevice->getStreamSampleRate());
 			}
 		}
 		else
@@ -365,26 +365,39 @@ void GOrgueSound::CloseSound()
 	StopThreads();
 	m_recorder.Close();
 
-	try
+	for(int i = m_AudioOutputs.size() - 1; i >= 0; i--)
 	{
-		if (audioDevice)
+		if (m_AudioOutputs[i].audioDevice)
 		{
-			audioDevice->abortStream();
-			audioDevice->closeStream();
-			delete audioDevice;
-			audioDevice = 0;
+			try
+			{
+				m_AudioOutputs[i].audioDevice->abortStream();
+				m_AudioOutputs[i].audioDevice->closeStream();
+			}
+			catch (RtError &e)
+			{
+				wxString error = wxString::FromAscii(e.getMessage().c_str());
+				wxLogError(_("RtAudio error: %s"), error.c_str());
+			}
+
+			try
+			{
+				delete m_AudioOutputs[i].audioDevice;
+			}
+			catch (RtError &e)
+			{
+				wxString error = wxString::FromAscii(e.getMessage().c_str());
+				wxLogError(_("RtAudio error: %s"), error.c_str());
+			}
+			m_AudioOutputs[i].audioDevice = 0;
 		}
-		if (audioStream)
+		if (m_AudioOutputs[i].audioStream)
 		{
-			Pa_AbortStream(audioStream);
-			Pa_CloseStream(audioStream);
-			audioStream = 0;
+			Pa_AbortStream(m_AudioOutputs[i].audioStream);
+			Pa_CloseStream(m_AudioOutputs[i].audioStream);
+			m_AudioOutputs[i].audioStream = 0;
 		}
-	}
-	catch (RtError &e)
-	{
-		wxString error = wxString::FromAscii(e.getMessage().c_str());
-		wxLogError(_("RtAudio error: %s"), error.c_str());
+
 	}
 
 	wxCriticalSectionLocker locker(m_lock);
@@ -395,6 +408,7 @@ void GOrgueSound::CloseSound()
 		m_organfile = NULL;
 	}
 	ResetMeters();
+	m_AudioOutputs.clear();
 }
 
 bool GOrgueSound::ResetSound()
@@ -402,7 +416,7 @@ bool GOrgueSound::ResetSound()
 	wxBusyCursor busy;
 	GrandOrgueFile* organfile = m_organfile;
 
-	if (audioDevice == NULL && audioStream == NULL)
+	if (!m_AudioOutputs.size())
 		return false;
 
 	CloseSound();
@@ -470,10 +484,10 @@ std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>& GOrgueSound::GetAudioDevic
 const int GOrgueSound::GetLatency()
 {
 
-	if (!audioDevice)
+	if (!m_AudioOutputs[0].audioDevice)
 		return -1;
 
-	int actual_latency = audioDevice->getStreamLatency();
+	int actual_latency = m_AudioOutputs[0].audioDevice->getStreamLatency();
 
 	/* getStreamLatency returns zero if not supported by the API, in which
 	 * case we will make a best guess.
