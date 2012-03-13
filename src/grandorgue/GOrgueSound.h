@@ -150,8 +150,6 @@ public:
 	std::map<wxString, GO_SOUND_DEV_CONFIG>& GetAudioDevices();
 	const wxString GetDefaultAudioDevice();
 
-	const int GetLatency();
-
 	GOrgueMidi& GetMidi();
 
 	GOSoundEngine& GetEngine();
