@@ -292,7 +292,7 @@ void GOrgueMemoryPool::InitPool()
 	m_PoolSize = 0;
 	CalculatePageSize();
 	CalculatePoolLimit();
-	wxLogDebug(wxT("Memory pool limit: %d bytes (page size: %d)"), m_PoolLimit, m_PageSize);
+	wxLogDebug(wxT("Memory pool limit: %ld bytes (page size: %d)"), m_PoolLimit, m_PageSize);
 
 	while (m_PoolLimit)
 	{
@@ -300,7 +300,7 @@ void GOrgueMemoryPool::InitPool()
 			break;
 		if (m_PoolLimit < 500 * 1024 * 1024)
 		{
-			wxLogWarning(wxT("Initialization of the memory pool failed (size: %d bytes)"), m_PoolLimit);
+			wxLogWarning(wxT("Initialization of the memory pool failed (size: %ld bytes)"), m_PoolLimit);
 			m_PoolLimit = 0;
 			break;
 		}
