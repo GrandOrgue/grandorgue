@@ -47,6 +47,7 @@ class GOrgueSound
 	{
 	public:
 		GOrgueSound* sound;
+		unsigned index;
 
 		wxString name;
 
@@ -63,6 +64,7 @@ class GOrgueSound
 		GO_SOUND_OUTPUT()
 		{
 			sound = 0;
+			index = 0;
 			name = wxEmptyString;
 			rt_api = RtAudio::RTAUDIO_DUMMY;
 			rt_api_subindex = 0;
@@ -76,6 +78,7 @@ class GOrgueSound
 		GO_SOUND_OUTPUT(const GO_SOUND_OUTPUT& old)
 		{
 			sound = old.sound;
+			index = old.index;
 			name = old.name;
 			rt_api = old.rt_api;
 			rt_api_subindex = old.rt_api_subindex;
@@ -89,6 +92,7 @@ class GOrgueSound
 		const GO_SOUND_OUTPUT& operator=(const GO_SOUND_OUTPUT& old)
 		{
 			sound = old.sound;
+			index = old.index;
 			name = old.name;
 			rt_api = old.rt_api;
 			rt_api_subindex = old.rt_api_subindex;
@@ -124,7 +128,6 @@ private:
 	short meter_counter;
 	METER_INFO meter_info;
 
-	wxString defaultAudio;
 	wxString defaultAudioDevice;
 
 	GOrgueMidi* m_midi;
@@ -149,6 +152,7 @@ private:
 	void ResetMeters();
 
 	void OpenMidi();
+	void InitStreams();
 	void OpenStreams();
 	void StartStreams();
 

@@ -39,7 +39,6 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	m_AudioOutputs(),
 	m_SamplesPerBuffer(0),
 	meter_counter(0),
-	defaultAudio(),
 	defaultAudioDevice(),
 	m_organfile(0),
 	m_Settings(settings)
@@ -201,12 +200,12 @@ bool GOrgueSound::OpenSound()
 	m_AudioOutputs.resize(1);
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 	{
-		m_AudioOutputs[i].sound = this;
-		m_AudioOutputs[i].audioDevice = 0;
 		m_AudioOutputs[i].audioStream = 0;
+		m_AudioOutputs[i].audioDevice = 0;
 	}
 
-	defaultAudio = m_Settings.GetDefaultAudioDevice();
+	m_AudioOutputs[0].name = m_Settings.GetDefaultAudioDevice();;
+	m_AudioOutputs[0].channels = 2;
 	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
 	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
 	m_SoundEngine.SetVolume(m_Settings.GetVolume());
@@ -215,56 +214,36 @@ bool GOrgueSound::OpenSound()
 	m_SoundEngine.SetInterpolationType(m_Settings.GetInterpolationType());
 	unsigned sample_rate = m_Settings.GetSampleRate();
 	m_recorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
+	GetEngine().SetSampleRate(sample_rate);
+	m_recorder.SetSampleRate(sample_rate);
 
 	PreparePlayback(NULL);
 
 	try
 	{
 		OpenMidi();
+		InitStreams();
 
-		if (m_audioDevices.find(defaultAudio) == m_audioDevices.end())
+		if (m_AudioOutputs[0].rt_api == RTAPI_PORTAUDIO)
 		{
-			defaultAudio = defaultAudioDevice;
-			m_Settings.SetDefaultAudioDevice(defaultAudio);
-		}
-		m_AudioOutputs[0].name = defaultAudio;
-
-		std::map<wxString, GO_SOUND_DEV_CONFIG>::iterator it;
-		it = m_audioDevices.find(defaultAudio);
-		if (it != m_audioDevices.end())
-		{
-			GetEngine().SetSampleRate(sample_rate);
-			m_recorder.SetSampleRate(sample_rate);
-
-			m_AudioOutputs[0].channels = 2;
-			m_AudioOutputs[0].rt_api = it->second.rt_api;
-			m_AudioOutputs[0].rt_api_subindex = it->second.rt_api_subindex;
-			m_AudioOutputs[0].try_latency = m_Settings.GetAudioDeviceLatency(defaultAudio);
-
-			unsigned try_latency = m_Settings.GetAudioDeviceLatency(defaultAudio);
-			if (it->second.rt_api == RTAPI_PORTAUDIO)
-			{
-				format = RTAUDIO_FLOAT32;
-				m_SamplesPerBuffer = BLOCKS_PER_FRAME * ceil(sample_rate * try_latency / 1000.0 / BLOCKS_PER_FRAME);
-				if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
-					m_SamplesPerBuffer = MAX_FRAME_SIZE;
-				if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
-					m_SamplesPerBuffer = BLOCKS_PER_FRAME;
-			}
-			else
-			{
-				format = RTAUDIO_FLOAT32;
-				GOrgueRtHelpers::GetBufferConfig
-					(it->second.rt_api
-					,try_latency
-					,sample_rate
-					,&m_AudioOutputs[0].nb_buffers
-					,&m_SamplesPerBuffer
-					);
-			}
+			format = RTAUDIO_FLOAT32;
+			m_SamplesPerBuffer = BLOCKS_PER_FRAME * ceil(sample_rate * m_AudioOutputs[0].try_latency / 1000.0 / BLOCKS_PER_FRAME);
+			if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
+				m_SamplesPerBuffer = MAX_FRAME_SIZE;
+			if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
+				m_SamplesPerBuffer = BLOCKS_PER_FRAME;
 		}
 		else
-			throw (wxString)_("No audio device is selected; neither MIDI input nor sound output will occur!");
+		{
+			format = RTAUDIO_FLOAT32;
+			GOrgueRtHelpers::GetBufferConfig
+				(m_AudioOutputs[0].rt_api
+				 ,m_AudioOutputs[0].try_latency
+				 ,sample_rate
+				 ,&m_AudioOutputs[0].nb_buffers
+				 ,&m_SamplesPerBuffer
+				 );
+		}
 
 		OpenStreams();
 		StartStreams();
@@ -284,6 +263,27 @@ bool GOrgueSound::OpenSound()
 
 	return opened_ok;
 
+}
+
+void GOrgueSound::InitStreams()
+{
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+	{
+		m_AudioOutputs[i].sound = this;
+		m_AudioOutputs[i].index = i;
+
+		if (m_AudioOutputs[i].name == wxEmptyString)
+			m_AudioOutputs[i].name = defaultAudioDevice;
+
+		std::map<wxString, GO_SOUND_DEV_CONFIG>::iterator it;
+		it = m_audioDevices.find(m_AudioOutputs[i].name);
+		if (it == m_audioDevices.end())
+			throw wxString::Format(_("Output device %s not found - no sound output will occure"), m_AudioOutputs[i].name.c_str());
+
+		m_AudioOutputs[i].rt_api = it->second.rt_api;
+		m_AudioOutputs[i].rt_api_subindex = it->second.rt_api_subindex;
+		m_AudioOutputs[i].try_latency = m_Settings.GetAudioDeviceLatency(m_AudioOutputs[i].name);
+	}
 }
 
 void GOrgueSound::OpenStreams()
