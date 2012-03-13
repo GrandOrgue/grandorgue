@@ -65,16 +65,18 @@ private:
 		/* access lock for data buffer */
 		wxCriticalSection mutex;
 		GOrgueWindchest  *windchest;
-		bool              done;
+		unsigned          done;
 		unsigned          count;
+		bool              is_tremulant;
 
 		GOSamplerEntry()
 		{
 			sampler = NULL;
 			new_sampler = NULL;
 			windchest = NULL;
-			done = false;
+			done = 0;
 			count = 0;
+			is_tremulant = false;
 		}
 
 		GOSamplerEntry(const GOSamplerEntry& entry)
@@ -82,8 +84,9 @@ private:
 			sampler = entry.sampler;
 			new_sampler = entry.new_sampler;
 			windchest = entry.windchest;
-			done = false;
+			done = 0;
 			count = entry.count;
+			is_tremulant = entry.is_tremulant;
 		}
 
 		const GOSamplerEntry& operator=(const GOSamplerEntry& entry)
@@ -92,7 +95,8 @@ private:
 			new_sampler = entry.new_sampler;
 			windchest = entry.windchest;
 			count = entry.count;
-			done = false;
+			is_tremulant = entry.is_tremulant;
+			done = 0;
 			return *this;
 		}
 	};
@@ -123,9 +127,10 @@ private:
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
 	void SwitchAttackSampler(GO_SAMPLER* sampler);
 	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, float* decoded_sampler_audio_frame);
-	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, bool tremulant);
+	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames);
 	void ResetDoneFlags();
 	float GetRandomFactor();
+	void ProcessTremulants(unsigned n_frames);
 
 public:
 
