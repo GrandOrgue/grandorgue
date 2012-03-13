@@ -115,6 +115,8 @@ private:
 
 	void ResetMeters();
 
+	void OpenMidi();
+
 public:
 
 	GOrgueSound(GOrgueSettings& settings);

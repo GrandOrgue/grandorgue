@@ -53,13 +53,22 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 
 	try
 	{
+		m_midi = new GOrgueMidi(m_Settings);
+	}
+	catch (RtError &e)
+	{
+		wxString error = wxString::FromAscii(e.getMessage().c_str());
+		wxLogError(_("RtMidi error: %s"), error.c_str());
+	}
 
+	RtAudio* audioDevice = 0;
+	try
+	{
 		std::vector<RtAudio::Api> rtaudio_apis;
 		RtAudio::getCompiledApi(rtaudio_apis);
 
 		for (unsigned k = 0; k < rtaudio_apis.size(); k++)
 		{
-
 			audioDevice = new RtAudio(rtaudio_apis[k]);
 			for (unsigned i = 0; i < audioDevice->getDeviceCount(); i++)
 			{
@@ -69,7 +78,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 				dev_name.Replace(wxT("\\"), wxT("|"));
 				wxString name = wxString(GOrgueRtHelpers::GetApiName(rtaudio_apis[k])) + wxString(wxT(": ")) + dev_name;
 
-				if (info.isDefaultOutput && defaultAudio.IsEmpty())
+				if (info.isDefaultOutput && defaultAudioDevice.IsEmpty())
 					defaultAudioDevice = name;
 
 				unsigned sample_rate_index = info.sampleRates.size();
@@ -101,15 +110,13 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 			audioDevice = 0;
 
 		}
-
-		m_midi = new GOrgueMidi(m_Settings);
-
 	}
 	catch (RtError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtAudio error: %s"), error.c_str());
-		CloseSound();
+		if (audioDevice)
+			delete audioDevice;
 	}
 
 	Pa_Initialize();
@@ -137,19 +144,6 @@ GOrgueSound::~GOrgueSound()
 
 	/* dispose of midi devices */
 	DELETE_AND_NULL(m_midi);
-
-	try
-	{
-
-		/* dispose of the audio playback device */
-		DELETE_AND_NULL(audioDevice);
-
-	}
-	catch (RtError &e)
-	{
-		wxString error = wxString::FromAscii(e.getMessage().c_str());
-		wxLogError(_("RtAudio error: %s"), error.c_str());
-	}
 
 	Pa_Terminate ();
 }
@@ -198,6 +192,19 @@ void GOrgueSound::StopThreads()
 	m_Threads.resize(0);
 }
 
+void GOrgueSound::OpenMidi()
+{
+	try
+	{
+		m_midi->Open();
+	}
+	catch (RtError &e)
+	{
+		wxString error = wxString::FromAscii(e.getMessage().c_str());
+		throw wxString::Format(_("RtMidi error: %s"), error.c_str());
+	}
+}
+
 bool GOrgueSound::OpenSound()
 {
 	assert(audioDevice == NULL && audioStream == NULL);
@@ -223,8 +230,7 @@ bool GOrgueSound::OpenSound()
 
 	try
 	{
-
-		m_midi->Open();
+		OpenMidi();
 
 		if (m_audioDevices.find(defaultAudio) == m_audioDevices.end())
 		{
@@ -481,7 +487,7 @@ const int GOrgueSound::GetLatency()
 
 const wxString GOrgueSound::GetDefaultAudioDevice()
 {
-	return defaultAudio;
+	return defaultAudioDevice;
 }
 
 const RtAudioFormat GOrgueSound::GetAudioFormat()
