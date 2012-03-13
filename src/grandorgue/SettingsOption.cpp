@@ -161,6 +161,21 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_AttackLoad->Select(m_Settings.GetAttackLoad());
 	m_ReleaseLoad->Select(m_Settings.GetReleaseLoad());
 
+	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
+	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+	grid = new wxFlexGridSizer(4, 2, 5, 5);
+	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+
+	choices.clear();
+	choices.push_back(wxT("44100"));
+	choices.push_back(wxT("48000"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_SampleRate = new wxChoice(this, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
+	m_SampleRate->Select(0);
+	for(unsigned i = 0; i < m_SampleRate->GetCount(); i++)
+		if (wxString::Format(wxT("%d"), m_Settings.GetSampleRate()) == m_SampleRate->GetString(i))
+			m_SampleRate->Select(i);
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
@@ -186,6 +201,7 @@ void SettingsOption::Save()
 	m_Settings.SetReleaseLoad(m_ReleaseLoad->GetSelection());
 	m_Settings.SetLoadInStereo(m_Stereo->GetSelection());
 	m_Settings.SetInterpolationType(m_Interpolation->GetSelection());
+	m_Settings.SetSampleRate(wxAtoi(m_SampleRate->GetStringSelection()));
 }
 
 bool SettingsOption::NeedReload()

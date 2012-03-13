@@ -72,14 +72,12 @@ protected:
 	enum {
 		ID_SOUND_DEVICE = 100,
 		ID_LATENCY,
-		ID_SAMPLE_RATE,
 	};
 
 	wxChoice* c_sound;
 	wxStaticText* c_format;
 	wxSpinCtrl* c_latency;
 	wxStaticText* c_actual_latency;
-	wxChoice* c_SampleRate;
 };
 
 
