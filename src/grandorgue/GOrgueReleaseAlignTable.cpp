@@ -99,7 +99,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 	 * than the length of the release, truncate it */
 	unsigned required_search_len = sample_rate / PHASE_ALIGN_MIN_FREQUENCY;
 	unsigned release_len = release.GetLength();
-	if (release_len < required_search_len + BLOCK_HISTORY)
+	if (release_len < required_search_len + BLOCK_HISTORY + start_position)
 		return;
 	/* If number of samples in the release is not enough to fill the release
 	 * table, abort - release alignment probably wont help. */
