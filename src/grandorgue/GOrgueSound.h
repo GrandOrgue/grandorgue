@@ -50,6 +50,11 @@ class GOrgueSound
 
 		wxString name;
 
+		RtAudio::Api rt_api;
+		int rt_api_subindex;
+		unsigned channels;
+
+		unsigned try_latency;
 		unsigned nb_buffers;
 
 		PaStream* audioStream;
@@ -59,6 +64,10 @@ class GOrgueSound
 		{
 			sound = 0;
 			name = wxEmptyString;
+			rt_api = RtAudio::RTAUDIO_DUMMY;
+			rt_api_subindex = 0;
+			channels = 0;
+			try_latency = 0;
 			nb_buffers = 0;
 			audioStream = 0;
 			audioDevice = 0;
@@ -68,6 +77,10 @@ class GOrgueSound
 		{
 			sound = old.sound;
 			name = old.name;
+			rt_api = old.rt_api;
+			rt_api_subindex = old.rt_api_subindex;
+			channels = old.channels;
+			try_latency = old.try_latency;
 			nb_buffers = old.nb_buffers;
 			audioStream = old.audioStream;
 			audioDevice = old.audioDevice;
@@ -77,6 +90,10 @@ class GOrgueSound
 		{
 			sound = old.sound;
 			name = old.name;
+			rt_api = old.rt_api;
+			rt_api_subindex = old.rt_api_subindex;
+			channels = old.channels;
+			try_latency = old.try_latency;
 			nb_buffers = old.nb_buffers;
 			audioStream = old.audioStream;
 			audioDevice = old.audioDevice;
@@ -103,7 +120,6 @@ private:
 	std::vector<GO_SOUND_OUTPUT> m_AudioOutputs;
 
 	unsigned m_SamplesPerBuffer;
-	unsigned m_nb_buffers;
 
 	short meter_counter;
 	METER_INFO meter_info;
@@ -133,6 +149,7 @@ private:
 	void ResetMeters();
 
 	void OpenMidi();
+	void OpenStreams();
 	void StartStreams();
 
 public:

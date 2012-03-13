@@ -38,7 +38,6 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	m_audioDevices(),
 	m_AudioOutputs(),
 	m_SamplesPerBuffer(0),
-	m_nb_buffers(0),
 	meter_counter(0),
 	defaultAudio(),
 	defaultAudioDevice(),
@@ -237,6 +236,11 @@ bool GOrgueSound::OpenSound()
 			GetEngine().SetSampleRate(sample_rate);
 			m_recorder.SetSampleRate(sample_rate);
 
+			m_AudioOutputs[0].channels = 2;
+			m_AudioOutputs[0].rt_api = it->second.rt_api;
+			m_AudioOutputs[0].rt_api_subindex = it->second.rt_api_subindex;
+			m_AudioOutputs[0].try_latency = m_Settings.GetAudioDeviceLatency(defaultAudio);
+
 			unsigned try_latency = m_Settings.GetAudioDeviceLatency(defaultAudio);
 			if (it->second.rt_api == RTAPI_PORTAUDIO)
 			{
@@ -246,68 +250,26 @@ bool GOrgueSound::OpenSound()
 					m_SamplesPerBuffer = MAX_FRAME_SIZE;
 				if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
 					m_SamplesPerBuffer = BLOCKS_PER_FRAME;
-
-				PaStreamParameters stream_parameters;
-				stream_parameters.device = it->second.rt_api_subindex;
-				stream_parameters.channelCount = 2;
-				stream_parameters.sampleFormat = paFloat32;
-				stream_parameters.suggestedLatency = try_latency / 1000.0;
-				stream_parameters.hostApiSpecificStreamInfo = NULL;
-
-				PaError error;
-				error = Pa_OpenStream(&m_AudioOutputs[0].audioStream, NULL, &stream_parameters, sample_rate, m_SamplesPerBuffer,
-						      paNoFlag, &GOrgueSound:: PaAudioCallback, &m_AudioOutputs[0]);
-				if (error != paNoError)
-					throw (wxString)wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error)));
 			}
 			else
 			{
-				m_AudioOutputs[0].audioDevice = new RtAudio(it->second.rt_api);
-
+				format = RTAUDIO_FLOAT32;
 				GOrgueRtHelpers::GetBufferConfig
 					(it->second.rt_api
 					,try_latency
 					,sample_rate
-					,&m_nb_buffers
+					,&m_AudioOutputs[0].nb_buffers
 					,&m_SamplesPerBuffer
 					);
-
-				RtAudio::StreamParameters aOutputParam;
-				aOutputParam.deviceId = it->second.rt_api_subindex;
-				aOutputParam.nChannels = 2; //stereo
-
-				RtAudio::StreamOptions aOptions;
-				aOptions.numberOfBuffers = m_nb_buffers;
-
-				format = RTAUDIO_FLOAT32;
-				m_AudioOutputs[0].audioDevice->openStream
-					(&aOutputParam
-					 ,NULL
-					 ,format
-					 ,sample_rate
-					 ,&m_SamplesPerBuffer
-					 ,&GOrgueSound::AudioCallback
-					 ,&m_AudioOutputs[0]
-					 ,&aOptions
-					 );
-
-				m_AudioOutputs[0].nb_buffers = aOptions.numberOfBuffers;
 			}
 		}
 		else
 			throw (wxString)_("No audio device is selected; neither MIDI input nor sound output will occur!");
 
+		OpenStreams();
 		StartStreams();
 		opened_ok = true;
 
-	}
-	catch (RtError &e)
-	{
-		if (logSoundErrors)
-		{
-			wxString error = wxString::FromAscii(e.getMessage().c_str());
-			wxMessageBox(wxString::Format(_("RtAudio error: %s"), error.c_str()), _("Error"), wxOK | wxICON_ERROR, NULL);
-		}
 	}
 	catch (wxString &msg)
 	{
@@ -322,6 +284,61 @@ bool GOrgueSound::OpenSound()
 
 	return opened_ok;
 
+}
+
+void GOrgueSound::OpenStreams()
+{
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+	{
+		if (m_AudioOutputs[i].rt_api == RTAPI_PORTAUDIO)
+		{
+			PaStreamParameters stream_parameters;
+			stream_parameters.device = m_AudioOutputs[i].rt_api_subindex;
+			stream_parameters.channelCount = m_AudioOutputs[i].channels;
+			stream_parameters.sampleFormat = paFloat32;
+			stream_parameters.suggestedLatency = m_AudioOutputs[i].try_latency / 1000.0;
+			stream_parameters.hostApiSpecificStreamInfo = NULL;
+
+			PaError error;
+			error = Pa_OpenStream(&m_AudioOutputs[i].audioStream, NULL, &stream_parameters, GetEngine().GetSampleRate(), m_SamplesPerBuffer,
+					      paNoFlag, &GOrgueSound:: PaAudioCallback, &m_AudioOutputs[i]);
+			if (error != paNoError)
+				throw wxString::Format(_("Open of the audio stream for %s failed: %s"), m_AudioOutputs[i].name.c_str(), wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error))));
+		}
+		else
+		{
+			try
+			{
+				m_AudioOutputs[i].audioDevice = new RtAudio(m_AudioOutputs[i].rt_api);
+
+				RtAudio::StreamParameters aOutputParam;
+				aOutputParam.deviceId = m_AudioOutputs[i].rt_api_subindex;
+				aOutputParam.nChannels = m_AudioOutputs[i].channels;
+
+				RtAudio::StreamOptions aOptions;
+				aOptions.numberOfBuffers = m_AudioOutputs[i].nb_buffers;
+
+				unsigned samples_per_buffer = m_SamplesPerBuffer;
+				m_AudioOutputs[i].audioDevice->openStream(&aOutputParam, NULL, RTAUDIO_FLOAT32, GetEngine().GetSampleRate(), &samples_per_buffer,
+									  &GOrgueSound::AudioCallback, &m_AudioOutputs[i], &aOptions);
+				m_AudioOutputs[i].nb_buffers = aOptions.numberOfBuffers;
+				if (samples_per_buffer != m_SamplesPerBuffer)
+				{
+					if (i == 0)
+					{
+						m_SamplesPerBuffer = samples_per_buffer;
+					}
+					else
+						throw wxString::Format(_("Device %s wants a different frame count: %d"), m_AudioOutputs[i].name.c_str(), samples_per_buffer);
+				}
+			}
+			catch (RtError &e)
+			{
+				wxString error = wxString::FromAscii(e.getMessage().c_str());
+				throw wxString::Format(_("RtAudio error: %s"), error.c_str());
+			}
+		}
+	}
 }
 
 void GOrgueSound::StartStreams()
