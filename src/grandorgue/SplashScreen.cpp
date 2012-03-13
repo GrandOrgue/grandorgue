@@ -39,10 +39,34 @@ wxSplashScreenModal::wxSplashScreenModal(const wxBitmap& bmp, long splashStyle, 
 	m_splashStyle = splashStyle;
 	m_milliseconds = milliseconds;
 
-	wxMemoryDC dc;
+	DrawText(bitmap);
+
+	m_window = new wxSplashScreenWindow(bitmap, this, wxID_ANY, pos, size, wxNO_BORDER);
+
+    SetClientSize(bitmap.GetWidth(), bitmap.GetHeight());
+
+    if (m_splashStyle & wxSPLASH_CENTRE_ON_PARENT)
+        CentreOnParent();
+    else if (m_splashStyle & wxSPLASH_CENTRE_ON_SCREEN)
+        CentreOnScreen();
+
+    if (m_splashStyle & wxSPLASH_TIMEOUT)
+    {
+        m_timer.SetOwner(this, wxSPLASH_TIMER_ID);
+        m_timer.Start(milliseconds, true);
+    }
+
+    Show(true);
+    m_window->SetFocus();
+    Update(); // Without this, you see a blank screen for an instant
+    wxYieldIfNeeded(); // Should eliminate this
+}
+
+void wxSplashScreenModal::DrawText(wxBitmap& bitmap)
+{
+	wxMemoryDC dc(bitmap);
 	wxFont font;
-	dc.SelectObject(bitmap);
-	
+
 	font = *wxNORMAL_FONT;
 	font.SetPointSize(14);
 	font.SetWeight(wxFONTWEIGHT_BOLD);
@@ -67,26 +91,6 @@ wxSplashScreenModal::wxSplashScreenModal(const wxBitmap& bmp, long splashStyle, 
 	dc.SetFont(font);
 	wxString msg = _("Copyright 2006 Milan Digital Audio LLC\nCopyright 2009-2012 GrandOrgue contributors\n\nThis software comes with no warranty.\n\nASIO Interface Technology by Steinberg Media Technologies GmbH,\nby use of the Steinberg ASIO SDK, Version 2.2.\nASIO is a trademark and software of Steinberg Media Technologies GmbH.");
 	dc.DrawLabel(msg, wxRect(60, 62, 370, 100), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
-
-    m_window = new wxSplashScreenWindow(bitmap, this, wxID_ANY, pos, size, wxNO_BORDER);
-
-    SetClientSize(bitmap.GetWidth(), bitmap.GetHeight());
-
-    if (m_splashStyle & wxSPLASH_CENTRE_ON_PARENT)
-        CentreOnParent();
-    else if (m_splashStyle & wxSPLASH_CENTRE_ON_SCREEN)
-        CentreOnScreen();
-
-    if (m_splashStyle & wxSPLASH_TIMEOUT)
-    {
-        m_timer.SetOwner(this, wxSPLASH_TIMER_ID);
-        m_timer.Start(milliseconds, true);
-    }
-
-    Show(true);
-    m_window->SetFocus();
-    Update(); // Without this, you see a blank screen for an instant
-    wxYieldIfNeeded(); // Should eliminate this
 }
 
 wxSplashScreenModal::~wxSplashScreenModal()

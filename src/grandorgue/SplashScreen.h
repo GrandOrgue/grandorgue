@@ -43,6 +43,7 @@ public:
     long GetSplashStyle() const { return m_splashStyle; }
     wxSplashScreenWindow* GetSplashWindow() const { return m_window; }
     int GetTimeout() const { return m_milliseconds; }
+    void DrawText(wxBitmap& bitmap);
 
 protected:
     wxSplashScreenWindow*   m_window;
