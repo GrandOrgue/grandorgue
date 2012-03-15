@@ -533,8 +533,10 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 
 	wxCriticalSectionLocker locker(m_lock);
 
+	int r;
+
 	{
-		int r = m_SoundEngine.GetSamples
+		r = m_SoundEngine.GetSamples
 			(output_buffer
 			 ,n_frames
 			 ,stream_time
