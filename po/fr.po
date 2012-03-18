@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-02-19 23:34+0100\n"
-"PO-Revision-Date: 2012-02-19 23:43+0100\n"
+"POT-Creation-Date: 2012-03-18 15:13+0100\n"
+"PO-Revision-Date: 2012-03-18 15:51+0100\n"
 "Last-Translator: Jean-Luc Derouineau <jeanluc@derouineau.com>\n"
 "Language-Team: French <jeanluc@derouineau.com>\n"
 "Language: fr\n"
@@ -118,6 +118,12 @@ msgstr "&Propriétés orgue"
 msgid "&Record...\tCtrl+R"
 msgstr "&Enregistrer sortie audio\tCtrl+R"
 
+msgid "&Reverb"
+msgstr "&Réverbération"
+
+msgid "&Sample loading"
+msgstr "&Chargement échantillons:"
+
 msgid "&Save\tCtrl+S"
 msgstr "&Sauvegarder paramètres orgue\tCtrl+S"
 
@@ -126,6 +132,9 @@ msgstr "&Paramètres GrandOrgue"
 
 msgid "&Sound Engine"
 msgstr "&Moteur Audio"
+
+msgid "&Sound output"
+msgstr "Interface de &Sortie"
 
 msgid "&Temperament"
 msgstr "&Tempérament orgue"
@@ -262,11 +271,17 @@ msgstr "< Format fichier WAVE invalide. Le FORMAT chunk doit précéder le DATA 
 msgid "< More than 2 channels in"
 msgstr "< Plus de 2 canaux en entrée"
 
-msgid "< Not PCM data in"
-msgstr "< Pas de données PCM en entrée"
-
 msgid "< Not a RIFF file"
 msgstr "< Pas un fichier RIFF"
+
+msgid "< Only 32bit IEEE float samples supported"
+msgstr "<Seul les échantillons 32bit IEEE flottant sont supportés "
+
+msgid "< Unsupport PCM bit size"
+msgstr "<Taille de bit non supportée pour PCM"
+
+msgid "< Unsupported PCM format"
+msgstr "<Format PCM non supporté"
 
 msgid "<Invalid SMPL chunk in"
 msgstr "< SMPL chunk in Invalide"
@@ -358,6 +373,9 @@ msgstr "Appliquer"
 msgid "Attack loading:"
 msgstr "Chargement attaques:"
 
+msgid "Audio Output"
+msgstr "Sortie audio"
+
 msgid "Audio Settings"
 msgstr "Paramètres audio"
 
@@ -430,8 +448,9 @@ msgstr "Ecriture impossible d'un callback stream"
 msgid "Can't write to an input only stream"
 msgstr "Ecriture impossible d'un stream d'entée"
 
-msgid "Cannot use buffer size above 1024 samples; unacceptable quantization would occur."
-msgstr "Impossible d'utiliser un tampon mémoire supérieur à 1024 échantillons; risque de défaut de quantification."
+#, c-format
+msgid "Cannot use buffer size above %d samples; unacceptable quantization would occur."
+msgstr "Impossible d'utiliser une taille de buffer supérieure à %d échantillons; risque de défaut de quantification."
 
 msgid "Channel"
 msgstr "Canal"
@@ -447,6 +466,25 @@ msgstr "Compression du cache"
 
 msgid "Concurreny Level:"
 msgstr "Nombre de tâches parallèles:"
+
+msgid ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2012 GrandOrgue contributors\n"
+"\n"
+"This software comes with no warranty.\n"
+"\n"
+"ASIO Interface Technology by Steinberg Media Technologies GmbH,\n"
+"by use of the Steinberg ASIO SDK, Version 2.2.\n"
+"ASIO is a trademark and software of Steinberg Media Technologies GmbH."
+msgstr ""
+"Droits d'auteur 2006 Milan Digital Audio LLC\n"
+"Droits d'auteurs 2009-2012 GrandOrgue contributors\n"
+"\n"
+"Ce logiciel est distribué sans garantie.\n"
+"\n"
+"Technologie d'interface ASIO par Steinberg Media Technologies GmbH,\n"
+"utilisant Steinberg ASIO SDK, Version 2.2.\n"
+"ASIO est une marque et un logiciel de Steinberg Media Technologies GmbH."
 
 msgid "Core"
 msgstr "Coeur"
@@ -504,14 +542,12 @@ msgstr "Effacer &Cache"
 msgid "Desired &Latency:"
 msgstr "&Retard désiré:"
 
-msgid "Device Settings"
-msgstr "Paramètres interfaces"
+#, c-format
+msgid "Device %s wants a different frame count: %d"
+msgstr "L'interface %s nécessite une taille de frame différente: %d"
 
 msgid "Device unavailable"
 msgstr "Interface non disponible"
-
-msgid "Devices"
-msgstr "Interfaces"
 
 msgid "DirectSound"
 msgstr "DirectSound"
@@ -532,22 +568,22 @@ msgid "Enabled"
 msgstr "Activé"
 
 msgid "Enclosure 1"
-msgstr "Buffet 1"
+msgstr "Boite d'expression 1"
 
 msgid "Enclosure 2"
-msgstr "Buffet 2"
+msgstr "Boite d'expression 2"
 
 msgid "Enclosure 3"
-msgstr "Buffet 3"
+msgstr "Boite d'expression 3"
 
 msgid "Enclosure 4"
-msgstr "Buffet 4"
+msgstr "Boite d'expression 4"
 
 msgid "Enclosure 5"
-msgstr "Buffet 5"
+msgstr "Boite d'expression 5"
 
 msgid "Enclosure 6"
-msgstr "Buffet 6"
+msgstr "Boite d'expression 6"
 
 msgid "Equal temperament"
 msgstr "Tempérament égal"
@@ -599,6 +635,12 @@ msgstr "G.C."
 msgid "GB"
 msgstr "GB"
 
+msgid "Gain (dB):"
+msgstr "Gain (dB):"
+
+msgid "Gain is invalid"
+msgstr "Gain invalide"
+
 msgid "Generals"
 msgstr "Général"
 
@@ -631,6 +673,9 @@ msgstr "Stream info incompatible avec l'hote API"
 
 msgid "Incompatible stream host API"
 msgstr "Stream incompatible avec l'hote API"
+
+msgid "Initial MIDI Configuration"
+msgstr "Configuration MIDI initiale"
 
 msgid "Input overflowed"
 msgstr "Dépassement capacité entrée"
@@ -779,11 +824,14 @@ msgstr "MEL"
 msgid "MIDI &input devices"
 msgstr "&Interface entrée MIDI"
 
+msgid "MIDI Devices"
+msgstr "Interfaces MIDI"
+
+msgid "MIDI Event"
+msgstr "Evènement MIDI"
+
 msgid "MIDI Messages"
 msgstr "Messages MIDI"
-
-msgid "MIDI Settings"
-msgstr "Configuration MIDI"
 
 msgid "MME"
 msgstr "MME"
@@ -863,9 +911,6 @@ msgstr "Suite"
 msgid "Next Memory"
 msgstr "Position mémoire suivante"
 
-msgid "No audio device is selected; neither MIDI input nor sound output will occur!"
-msgstr "Pas d'interface audio selectionée, aucun évènement MIDI ou sonorité ne sera généré!"
-
 msgid "No callback routine specified"
 msgstr "Pas de routine callback spécifièe"
 
@@ -877,6 +922,10 @@ msgstr "Ouvrir"
 
 msgid "Open &Recent"
 msgstr "Ouvrir &Récent"
+
+#, c-format
+msgid "Open of the audio stream for %s failed: %s"
+msgstr "L'ouverture du stream audio %s a échoué: %s"
 
 msgid "Options"
 msgstr "Options"
@@ -917,6 +966,10 @@ msgstr "Valeur hors limite '/%s/%s': %d"
 
 msgid "Output Resolution:"
 msgstr "Résolution audio:"
+
+#, c-format
+msgid "Output device %s not found - no sound output will occure"
+msgstr "Interface de sortie %s non trouvée - aucun son ne sera produit"
 
 msgid "Output underflowed"
 msgstr "Stream sortie sous alimenté"
@@ -1006,6 +1059,9 @@ msgstr "Reset"
 msgid "Reset to &Defaults"
 msgstr "Recharger configuration par &défaut"
 
+msgid "Reverb"
+msgstr "Réverbération"
+
 #, c-format
 msgid "RtAudio error: %s"
 msgstr "RtAudio erreur: %s"
@@ -1028,6 +1084,10 @@ msgstr "Charger échantillons en:"
 
 msgid "Sample format not supported"
 msgstr "Format échantillon non supporté"
+
+#, c-format
+msgid "Sample rate of device %s changed"
+msgstr "Le fréquence d'échantillonage de l'interface %s a changé"
 
 msgid "Sample set definition files"
 msgstr "Fichier de définition de l'orgue"
@@ -1090,6 +1150,10 @@ msgstr ""
 
 msgid "Sound &output device"
 msgstr "Interface de S&ortie"
+
+#, c-format
+msgid "Start of audio stream of %s failed: %s"
+msgstr "Le début du stream audio %s a échoué: %s"
 
 msgid "Stereo"
 msgstr "Stéréo"
@@ -1224,6 +1288,9 @@ msgstr "exception: %s\n"
 msgid "enclosure not found"
 msgstr "buffet non trouvé"
 
+msgid "licensed under the GNU GPLv2 (or later)"
+msgstr "License GNU GPLv2 (ou ultérieure)"
+
 msgid "ms"
 msgstr "ms"
 
@@ -1240,6 +1307,9 @@ msgstr "succès"
 msgid "unhandled exception: %s\n"
 msgstr "exception non prévue: %s\n"
 
+msgid "virtual pipe organ simulator"
+msgstr "Simulateur d'orgue à tuyaux"
+
 msgid "wave does not contain loops"
 msgstr "Le fichier WAVE ne contient pas de boucles"
 
@@ -1254,6 +1324,9 @@ msgstr "Le fichier WAVE ne contient pas de boucles"
 
 #~ msgid "< Failed to allocate memory for wave data"
 #~ msgstr "< Impossible d'allouer de la mémoire pour les échantillons"
+
+#~ msgid "< Not PCM data in"
+#~ msgstr "< Pas de données PCM en entrée"
 
 #~ msgid "< out of memory allocating attack"
 #~ msgstr "< dépassement mémoire en allocation d'une attaque"
@@ -1274,11 +1347,17 @@ msgstr "Le fichier WAVE ne contient pas de boucles"
 #~ msgstr ""
 #~ "Fichier cache érroné (devrait être %#.8x obtenu %#.8x) cache non utilisé"
 
+#~ msgid "Device Settings"
+#~ msgstr "Paramètres interfaces"
+
 #~ msgid "Drawstop Trigger"
 #~ msgstr "Déclenchement jeu"
 
 #~ msgid "Infinite recursive coupling detected!"
 #~ msgstr "Détection d'un couplage récursif infini"
+
+#~ msgid "MIDI Settings"
+#~ msgstr "Configuration MIDI"
 
 #~ msgid ""
 #~ "No MIDI devices are selected for listening; neither MIDI input nor sound\n"
