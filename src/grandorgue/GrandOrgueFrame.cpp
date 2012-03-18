@@ -546,7 +546,7 @@ void GOrgueFrame::OnProperties(wxCommandEvent& event)
 
 void GOrgueFrame::OnAudioPanic(wxCommandEvent& WXUNUSED(event))
 {
-	m_Sound.ResetSound();
+	m_Sound.ResetSound(true);
 }
 
 void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))

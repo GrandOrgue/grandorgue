@@ -439,17 +439,20 @@ void GOrgueSound::CloseSound()
 	m_AudioOutputs.clear();
 }
 
-bool GOrgueSound::ResetSound()
+bool GOrgueSound::ResetSound(bool force)
 {
 	wxBusyCursor busy;
 	GrandOrgueFile* organfile = m_organfile;
 
-	if (!m_AudioOutputs.size())
+	if (!m_AudioOutputs.size() && !force)
 		return false;
 
 	CloseSound();
 	if (!OpenSound())
+	{
+		m_organfile = organfile;
 		return false;
+	}
 	if (organfile)
 		PreparePlayback(organfile);
 

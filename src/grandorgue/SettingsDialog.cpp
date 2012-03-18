@@ -201,7 +201,7 @@ bool SettingsDialog::DoApply()
 	m_Settings.SetDefaultAudioDevice(c_sound->GetStringSelection());
 	m_Settings.SetAudioDeviceLatency(c_sound->GetStringSelection(), c_latency->GetValue());
 
-	m_Sound.ResetSound();
+	m_Sound.ResetSound(true);
 	UpdateSoundStatus();
 
 	return true;
