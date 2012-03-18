@@ -162,7 +162,7 @@ public:
 
 	bool OpenSound();
 	void CloseSound();
-	bool ResetSound();
+	bool ResetSound(bool force = false);
 
 	GOrgueSettings& GetSettings();
 
