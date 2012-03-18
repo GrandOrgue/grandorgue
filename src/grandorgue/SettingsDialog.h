@@ -30,6 +30,7 @@
 class GOrgueSound;
 class GOrgueSettings;
 
+class SettingsAudioGroup;
 class SettingsMidiDevices;
 class SettingsMidiMessage;
 class SettingsOption;
@@ -45,6 +46,7 @@ private:
 	SettingsOption* m_OptionsPage;
 	SettingsOrgan* m_OrganPage;
 	SettingsMidiMessage* m_MidiMessagePage;
+	SettingsAudioGroup* m_GroupPage;
 
 	void SetLatencySpinner(int latency);
 

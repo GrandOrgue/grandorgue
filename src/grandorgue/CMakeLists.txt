@@ -206,6 +206,7 @@ MIDIListenDialog.cpp
 OrganDialog.cpp
 OrganDocument.cpp
 OrganView.cpp
+SettingsAudioGroup.cpp
 SettingsDialog.cpp
 SettingsMidiDevices.cpp
 SettingsMidiMessage.cpp

@@ -81,6 +81,7 @@ GOrgueSettings::GOrgueSettings() :
 	m_SettingPath(),
 	m_UserSettingPath(),
 	m_UserCachePath(),
+	m_AudioGroups(),
 	m_ManualEvents(),
 	m_EnclosureEvents(),
 	m_SetterEvents(),
@@ -159,6 +160,13 @@ void GOrgueSettings::Load()
 
 	for(unsigned i = 0; i < GetSetterCount(); i++)
 		m_SetterEvents[i] = m_Config.Read(wxString(wxT("MIDI/")) + m_SetterNames[i], i < 2 ? (0xC400 + i) : 0x0000);
+
+	m_AudioGroups.clear();
+	count = m_Config.Read(wxT("AudioGroup/Count"), 0L);
+	for(unsigned i = 0; i < count; i++)
+		m_AudioGroups.push_back(m_Config.Read(wxString::Format(wxT("AudioGroup/Name%d"), i + 1), wxString::Format(_("Audio group %d"), i + 1)));
+	if (!m_AudioGroups.size())
+		m_AudioGroups.push_back(_("Default audio group"));
 }
 
 unsigned GOrgueSettings::GetManualCount()
@@ -634,6 +642,37 @@ std::vector<wxString> GOrgueSettings::GetMidiDeviceList()
 
 	m_Config.SetPath(wxT("/"));
 	return list;
+}
+
+const std::vector<wxString>& GOrgueSettings::GetAudioGroups()
+{
+	return m_AudioGroups;
+}
+
+void GOrgueSettings::SetAudioGroups(const std::vector<wxString>& audio_groups)
+{
+	if (!audio_groups.size())
+		return;
+	m_AudioGroups = audio_groups;
+	m_Config.Write(wxT("AudioGroup/Count"), (long)m_AudioGroups.size());
+	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
+		m_Config.Write(wxString::Format(wxT("AudioGroup/Name%d"), i + 1), m_AudioGroups[i]);
+}
+
+unsigned GOrgueSettings::GetAudioGroupId(const wxString& str)
+{
+	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
+		if (m_AudioGroups[i] == str)
+			return i;
+	return 0;
+}
+
+int GOrgueSettings::GetStrictAudioGroupId(const wxString& str)
+{
+	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
+		if (m_AudioGroups[i] == str)
+			return i;
+	return -1;
 }
 
 int GOrgueSettings::GetTranspose()

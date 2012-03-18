@@ -56,6 +56,7 @@ private:
 	wxString m_SettingPath;
 	wxString m_UserSettingPath;
 	wxString m_UserCachePath;
+	std::vector<wxString> m_AudioGroups;
 	int m_ManualEvents[6];
 	int m_EnclosureEvents[6];
 	int m_SetterEvents[3];
@@ -162,6 +163,11 @@ public:
 	int GetMidiDeviceChannelShift(wxString device);
 	void SetMidiDeviceChannelShift(wxString device, int shift);
 	std::vector<wxString> GetMidiDeviceList();
+
+	const std::vector<wxString>& GetAudioGroups();
+	void SetAudioGroups(const std::vector<wxString>& audio_groups);
+	unsigned GetAudioGroupId(const wxString& str);
+	int GetStrictAudioGroupId(const wxString& str);
 
 	int GetTranspose();
 	void SetTranspose(int transpose);
