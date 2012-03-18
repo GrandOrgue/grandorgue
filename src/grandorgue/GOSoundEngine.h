@@ -107,7 +107,7 @@ private:
 	bool                          m_ReleaseAlignmentEnabled;
 	bool                          m_RandomizeSpeaking;
 	int                           m_Volume;
-	int							  m_Reverb;
+	int                           m_Reverb;
 	float                         m_Gain;
 	unsigned                      m_SampleRate;
 	unsigned long                 m_CurrentTime;
@@ -115,7 +115,6 @@ private:
 	std::vector<GOSamplerEntry>   m_DetachedRelease;
 	std::vector<GOSamplerEntry>   m_Windchests;
 	std::vector<GOSamplerEntry>   m_Tremulants;
-
 
 	struct resampler_coefs_s      m_ResamplerCoefs;
 

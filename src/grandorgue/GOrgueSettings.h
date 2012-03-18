@@ -191,7 +191,7 @@ public:
 	int GetTranspose();
 	void SetTranspose(int transpose);
 	int GetReverb();
-	void SetReverb(int transpose);
+	void SetReverb(int reverb);
 };
 
 #endif
