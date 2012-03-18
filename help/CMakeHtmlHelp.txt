@@ -2,7 +2,7 @@ FIND_PROGRAM(XSLTPROC xsltproc)
 FIND_PROGRAM(ZIP zip)
 FIND_PROGRAM(PO4A_GETTEXT po4a-gettextize)
 FIND_PROGRAM(PO4A_TRANSLATE po4a-translate)
-FIND_PATH(DOCBOOK_PATH htmlhelp/htmlhelp.xsl ${DOCBOOK_DIR} /usr/share/xml/docbook/stylesheet/nwalsh /usr/share/xml/docbook/stylesheet/nwalsh/current CMAKE_FIND_ROOT_PATH_BOTH)
+FIND_PATH(DOCBOOK_PATH htmlhelp/htmlhelp.xsl ${DOCBOOK_DIR} /usr/share/xml/docbook/stylesheet/nwalsh /usr/share/xml/docbook/stylesheet/nwalsh/current /usr/share/sgml/docbook/xsl-stylesheets CMAKE_FIND_ROOT_PATH_BOTH)
 
 IF (NOT DOCBOOK_PATH)
    MESSAGE(STATUS "docbook-xsl stylesheets not found")
