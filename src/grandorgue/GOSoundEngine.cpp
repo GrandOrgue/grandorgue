@@ -51,6 +51,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_ReleaseAlignmentEnabled(true),
 	m_RandomizeSpeaking(true),
 	m_Volume(-15),
+	m_Reverb(0),
 	m_Gain(1),
 	m_SampleRate(0),
 	m_CurrentTime(0),
@@ -58,6 +59,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_DetachedRelease(1),
 	m_Windchests(),
 	m_Tremulants()
+
 {
 	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
@@ -118,6 +120,16 @@ void GOSoundEngine::SetHardPolyphony(unsigned polyphony)
 {
 	m_SamplerPool.SetUsageLimit(polyphony);
 	m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
+}
+
+int GOSoundEngine::GetReverb() const
+{
+	return m_Reverb;
+}
+
+void GOSoundEngine::SetReverb(int reverb)
+{
+	m_Reverb = reverb;
 }
 
 void GOSoundEngine::SetPolyphonyLimiting(bool limiting)
@@ -653,6 +665,14 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				,-(CROSSFADE_LEN_BITS)
 				,1 << (CROSSFADE_LEN_BITS + 1)
 				);
+
+			int reverb = GetReverb();
+			if ( reverb < 0 )
+			{				
+				if ( reverb > gain_decay_rate || gain_decay_rate == 0 )
+					gain_decay_rate = reverb;
+			}
+
 			if (gain_decay_rate < 0)
 				FaderStartDecay(&new_sampler->fader, gain_decay_rate);
 

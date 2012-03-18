@@ -87,7 +87,8 @@ GOrgueSettings::GOrgueSettings() :
 	m_EnclosureEvents(),
 	m_SetterEvents(),
 	m_StopChangeEvent(0),
-	m_Transpose(0)
+	m_Transpose(0),
+	m_Reverb(0)
 {
 	GetConfig().SetRecordDefaults();
 }
@@ -771,3 +772,12 @@ void GOrgueSettings::SetTranspose(int transpose)
 	m_Transpose = transpose;
 }
 
+int GOrgueSettings::GetReverb()
+{
+	return m_Reverb;
+}
+
+void GOrgueSettings::SetReverb(int reverb)
+{
+	m_Reverb = reverb;
+}
