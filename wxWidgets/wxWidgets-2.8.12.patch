@@ -1,0 +1,493 @@
+From 26dc25b5e0b4e2ed40d77e38bcf45b011cb360e1 Mon Sep 17 00:00:00 2001
+From: Martin Koegler <mkoegler@auto.tuwien.ac.at>
+Date: Sun, 4 Dec 2011 17:42:54 +0100
+Subject: [PATCH] 64 bit fixes
+
+---
+ configure.in             |    2 +-
+ src/aui/framemanager.cpp |    2 +-
+ src/common/utilscmn.cpp  |    2 +-
+ src/msw/dcprint.cpp      |    2 +-
+ src/msw/frame.cpp        |    4 ++--
+ src/msw/helpwin.cpp      |    2 +-
+ src/msw/mdi.cpp          |    6 +++---
+ src/msw/menu.cpp         |   16 ++++++++--------
+ src/msw/menuitem.cpp     |    2 +-
+ src/msw/pen.cpp          |    2 +-
+ src/msw/printdlg.cpp     |   28 ++++++++++++++--------------
+ src/msw/tbar95.cpp       |    8 ++++----
+ src/msw/thread.cpp       |   16 ++++++++++++----
+ src/msw/tooltip.cpp      |    2 +-
+ src/msw/window.cpp       |    8 ++++----
+ 15 files changed, 55 insertions(+), 47 deletions(-)
+
+Index: mingw-wxwidgets-2.8.12/wxWidgets/configure.in
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/configure.in	2011-12-06 16:42:39.994635647 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/configure.in	2011-12-06 16:42:50.000000000 +0100
+@@ -3295,7 +3295,7 @@
+     case "${host}" in
+ 	x86_64-*-mingw32* )
+             dnl --- For mingw-w64 lctl3d32's name has changed
+-            LIBS="$LIBS -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -lwctl3d32 -ladvapi32 -lwsock32 -lgdi32"
++            LIBS="$LIBS -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -ladvapi32 -lwsock32 -lgdi32"
+         ;;
+         * )
+             LIBS="$LIBS -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -lctl3d32 -ladvapi32 -lwsock32 -lgdi32"
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/aui/framemanager.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/aui/framemanager.cpp	2011-12-06 16:42:40.002633329 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/aui/framemanager.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -974,7 +974,7 @@
+     if (pinfo.name.empty() || already_exists)
+     {
+         pinfo.name.Printf(wxT("%08lx%08x%08x%08lx"),
+-             ((unsigned long)pinfo.window) & 0xffffffff,
++             ((ULONG_PTR)pinfo.window) & 0xffffffff,
+              (unsigned int)time(NULL),
+ #ifdef __WXWINCE__
+              (unsigned int)GetTickCount(),
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/common/utilscmn.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/common/utilscmn.cpp	2011-12-06 16:42:40.010635403 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/common/utilscmn.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -822,7 +822,7 @@
+     //hInstApp member is only valid if the function fails, in which case it
+     //receives one of the following error values, which are less than or
+     //equal to 32.
+-    const int nResult = (int) sei.hInstApp;
++    const UINT_PTR nResult = (UINT_PTR) sei.hInstApp;
+ 
+     // Firefox returns file not found for some reason, so make an exception
+     // for it
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/dcprint.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/dcprint.cpp	2011-12-06 16:42:40.014634995 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/dcprint.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -319,7 +319,7 @@
+     }
+ 
+ 
+-    HGLOBAL hDevMode = (HGLOBAL)(DWORD) data->GetDevMode();
++    HGLOBAL hDevMode = (HGLOBAL)(UINT_PTR) data->GetDevMode();
+ 
+     DEVMODE *lpDevMode = hDevMode ? (DEVMODE *)::GlobalLock(hDevMode) : NULL;
+ 
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/frame.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/frame.cpp	2011-12-06 16:42:40.018634893 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/frame.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -855,7 +855,7 @@
+             HDC hdc = ::BeginPaint(GetHwnd(), &ps);
+ 
+             // Erase background before painting or we get white background
+-            MSWDefWindowProc(WM_ICONERASEBKGND, (WORD)(LONG)ps.hdc, 0L);
++            MSWDefWindowProc(WM_ICONERASEBKGND, (WPARAM)(LPARAM)ps.hdc, 0L);
+ 
+             if ( hIcon )
+             {
+@@ -1085,7 +1085,7 @@
+                 const wxIcon& icon = GetIcon();
+                 HICON hIcon = icon.Ok() ? GetHiconOf(icon)
+                                         : (HICON)GetDefaultIcon();
+-                rc = (long)hIcon;
++                rc = (UINT_PTR)hIcon;
+                 processed = rc != 0;
+             }
+             break;
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/helpwin.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/helpwin.cpp	2011-12-06 16:42:40.026634400 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/helpwin.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -98,7 +98,7 @@
+ 
+     wxString str = GetValidFilename(m_helpFile);
+ 
+-    return (WinHelp(GetSuitableHWND(this), (const wxChar*) str, HELP_PARTIALKEY, (DWORD)(const wxChar*) k) != 0);
++    return (WinHelp(GetSuitableHWND(this), (const wxChar*) str, HELP_PARTIALKEY, (ULONG_PTR)(const wxChar*) k) != 0);
+ }
+ 
+ // Can't close the help window explicitly in WinHelp
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/mdi.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/mdi.cpp	2011-12-06 16:42:40.034634790 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/mdi.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -763,7 +763,7 @@
+   wxWindowCreationHook hook(this);
+ 
+   m_hWnd = (WXHWND)::SendMessage(GetWinHwnd(parent->GetClientWindow()),
+-                                 WM_MDICREATE, 0, (LONG)(LPSTR)&mcs);
++                                 WM_MDICREATE, 0, (LPARAM)(LPSTR)&mcs);
+ 
+   if ( !m_hWnd )
+   {
+@@ -1433,14 +1433,14 @@
+             {
+                 success = true;
+                 ::InsertMenu(hmenu, i, MF_BYPOSITION | MF_POPUP | MF_STRING,
+-                             (UINT)subMenu, _("&Window"));
++                             (UINT_PTR)subMenu, _("&Window"));
+                 break;
+             }
+         }
+ 
+         if ( !success )
+         {
+-            ::AppendMenu(hmenu, MF_POPUP, (UINT)subMenu, _("&Window"));
++            ::AppendMenu(hmenu, MF_POPUP, (UINT_PTR)subMenu, _("&Window"));
+         }
+     }
+ 
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/menu.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/menu.cpp	2011-12-06 16:42:40.038645584 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/menu.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -370,14 +370,14 @@
+ 
+     // id is the numeric id for normal menu items and HMENU for submenus as
+     // required by ::AppendMenu() API
+-    UINT id;
++    UINT_PTR id;
+     wxMenu *submenu = pItem->GetSubMenu();
+     if ( submenu != NULL ) {
+         wxASSERT_MSG( submenu->GetHMenu(), wxT("invalid submenu") );
+ 
+         submenu->SetParent(this);
+ 
+-        id = (UINT)submenu->GetHMenu();
++        id = (UINT_PTR)submenu->GetHMenu();
+ 
+         flags |= MF_POPUP;
+     }
+@@ -963,7 +963,7 @@
+         for ( i = 0, it = m_menus.begin(); i < count; i++, it++ )
+         {
+             if ( !::AppendMenu((HMENU)m_hMenu, MF_POPUP | MF_STRING,
+-                               (UINT)(*it)->GetHMenu(),
++                               (UINT_PTR)(*it)->GetHMenu(),
+                                m_titles[i]) )
+             {
+                 wxLogLastError(wxT("AppendMenu"));
+@@ -1035,7 +1035,7 @@
+ 
+     int mswpos = MSWPositionForWxMenu(GetMenu(pos),pos);
+ 
+-    UINT id;
++    UINT_PTR id;
+     UINT flagsOld = ::GetMenuState((HMENU)m_hMenu, mswpos, MF_BYPOSITION);
+     if ( flagsOld == 0xFFFFFFFF )
+     {
+@@ -1048,7 +1048,7 @@
+     {
+         // HIBYTE contains the number of items in the submenu in this case
+         flagsOld &= 0xff;
+-        id = (UINT)::GetSubMenu((HMENU)m_hMenu, mswpos);
++        id = (UINT_PTR)::GetSubMenu((HMENU)m_hMenu, mswpos);
+     }
+     else
+     {
+@@ -1124,7 +1124,7 @@
+ 
+         if ( !::InsertMenu(GetHmenu(), (UINT)mswpos,
+                            MF_BYPOSITION | MF_POPUP | MF_STRING,
+-                           (UINT)GetHmenuOf(menu), title) )
++                           (UINT_PTR)GetHmenuOf(menu), title) )
+         {
+             wxLogLastError(wxT("InsertMenu"));
+         }
+@@ -1191,7 +1191,7 @@
+ #else
+         if ( !::InsertMenu(GetHmenu(), mswpos,
+                            MF_BYPOSITION | MF_POPUP | MF_STRING,
+-                           (UINT)GetHmenuOf(menu), title) )
++                           (UINT_PTR)GetHmenuOf(menu), title) )
+         {
+             wxLogLastError(wxT("InsertMenu"));
+         }
+@@ -1250,7 +1250,7 @@
+         }
+ #else
+         if ( !::AppendMenu(GetHmenu(), MF_POPUP | MF_STRING,
+-                           (UINT)submenu, title) )
++                           (UINT_PTR)submenu, title) )
+         {
+             wxLogLastError(wxT("AppendMenu"));
+         }
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/menuitem.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/menuitem.cpp	2011-12-06 16:42:40.042634444 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/menuitem.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -188,7 +188,7 @@
+ // return the id for calling Win32 API functions
+ int wxMenuItem::GetRealId() const
+ {
+-    return m_subMenu ? (int)m_subMenu->GetHMenu() : GetId();
++    return m_subMenu ? (UINT_PTR)m_subMenu->GetHMenu() : GetId();
+ }
+ 
+ // get item state
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/pen.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/pen.cpp	2011-12-06 16:42:40.050634438 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/pen.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -172,7 +172,7 @@
+            case wxSTIPPLE:
+                logb.lbStyle = BS_PATTERN ;
+                if (M_PENDATA->m_stipple.Ok())
+-                   logb.lbHatch = (LONG)M_PENDATA->m_stipple.GetHBITMAP();
++                   logb.lbHatch = (ULONG_PTR)M_PENDATA->m_stipple.GetHBITMAP();
+                else
+                    logb.lbHatch = (LONG)0;
+                break;
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/printdlg.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/printdlg.cpp	2011-12-06 16:42:40.054634181 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/printdlg.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -175,10 +175,10 @@
+ 
+ wxWindowsPrintNativeData::~wxWindowsPrintNativeData()
+ {
+-    HGLOBAL hDevMode = (HGLOBAL)(DWORD) m_devMode;
++    HGLOBAL hDevMode = (HGLOBAL)(UINT_PTR) m_devMode;
+     if ( hDevMode )
+         GlobalFree(hDevMode);
+-    HGLOBAL hDevNames = (HGLOBAL)(DWORD) m_devNames;
++    HGLOBAL hDevNames = (HGLOBAL)(UINT_PTR) m_devNames;
+     if ( hDevNames )
+         GlobalFree(hDevNames);
+ }
+@@ -190,8 +190,8 @@
+ 
+ bool wxWindowsPrintNativeData::TransferTo( wxPrintData &data )
+ {
+-    HGLOBAL hDevMode = (HGLOBAL)(DWORD) m_devMode;
+-    HGLOBAL hDevNames = (HGLOBAL)(DWORD) m_devNames;
++    HGLOBAL hDevMode = (HGLOBAL)(UINT_PTR) m_devMode;
++    HGLOBAL hDevNames = (HGLOBAL)(UINT_PTR) m_devNames;
+ 
+     if (!hDevMode)
+     {
+@@ -396,8 +396,8 @@
+ 
+ bool wxWindowsPrintNativeData::TransferFrom( const wxPrintData &data )
+ {
+-    HGLOBAL hDevMode = (HGLOBAL)(DWORD) m_devMode;
+-    HGLOBAL hDevNames = (HGLOBAL)(DWORD) m_devNames;
++    HGLOBAL hDevMode = (HGLOBAL)(UINT_PTR) m_devMode;
++    HGLOBAL hDevNames = (HGLOBAL)(UINT_PTR) m_devNames;
+     WinPrinter printer;
+     LPTSTR szPrinterName = (LPTSTR)data.GetPrinterName().wx_str();
+ 
+@@ -493,7 +493,7 @@
+         else
+         {
+             hDevMode = pd.hDevMode;
+-            m_devMode = (void*)(long) hDevMode;
++            m_devMode = (void*)(UINT_PTR) hDevMode;
+             pd.hDevMode = NULL;
+ 
+             // We'll create a new DEVNAMEs structure below.
+@@ -688,7 +688,7 @@
+     }
+ 
+     // TODO: I hope it's OK to pass some empty strings to DEVNAMES.
+-    m_devNames = (void*) (long) wxCreateDevNames(wxEmptyString, data.GetPrinterName(), wxEmptyString);
++    m_devNames = (void*) (UINT_PTR) wxCreateDevNames(wxEmptyString, data.GetPrinterName(), wxEmptyString);
+ 
+     return true;
+ }
+@@ -820,13 +820,13 @@
+     if (pd->hDevNames)
+         GlobalFree(pd->hDevNames);
+ 
+-    pd->hDevMode = (HGLOBAL)(DWORD) native_data->GetDevMode();
++    pd->hDevMode = (HGLOBAL)(UINT_PTR) native_data->GetDevMode();
+     native_data->SetDevMode( (void*) NULL);
+ 
+     // Shouldn't assert; we should be able to test Ok-ness at a higher level
+     //wxASSERT_MSG( (pd->hDevMode), wxT("hDevMode must be non-NULL in ConvertToNative!"));
+ 
+-    pd->hDevNames = (HGLOBAL)(DWORD) native_data->GetDevNames();
++    pd->hDevNames = (HGLOBAL)(UINT_PTR) native_data->GetDevNames();
+     native_data->SetDevNames( (void*) NULL);
+ 
+ 
+@@ -897,9 +897,9 @@
+         if (native_data->GetDevMode())
+         {
+             // Make sure we don't leak memory
+-            GlobalFree( (HGLOBAL)(DWORD) native_data->GetDevMode() );
++            GlobalFree( (HGLOBAL)(UINT_PTR) native_data->GetDevMode() );
+         }
+-        native_data->SetDevMode( (void*)(long) pd->hDevMode );
++        native_data->SetDevMode( (void*)(UINT_PTR) pd->hDevMode );
+         pd->hDevMode = NULL;
+     }
+ 
+@@ -909,9 +909,9 @@
+         if (native_data->GetDevNames())
+         {
+             // Make sure we don't leak memory
+-            GlobalFree((HGLOBAL)(DWORD) native_data->GetDevNames());
++            GlobalFree((HGLOBAL)(UINT_PTR) native_data->GetDevNames());
+         }
+-        native_data->SetDevNames((void*)(long) pd->hDevNames);
++        native_data->SetDevNames((void*)(UINT_PTR) pd->hDevNames);
+         pd->hDevNames = NULL;
+     }
+ 
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/tbar95.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/tbar95.cpp	2011-12-06 16:42:40.062634851 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/tbar95.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -802,8 +802,8 @@
+                 TBREPLACEBITMAP replaceBitmap;
+                 replaceBitmap.hInstOld = NULL;
+                 replaceBitmap.hInstNew = NULL;
+-                replaceBitmap.nIDOld = (UINT) oldToolBarBitmap;
+-                replaceBitmap.nIDNew = (UINT) hBitmap;
++                replaceBitmap.nIDOld = (UINT_PTR) oldToolBarBitmap;
++                replaceBitmap.nIDNew = (UINT_PTR) hBitmap;
+                 replaceBitmap.nButtons = nButtons;
+                 if ( !::SendMessage(GetHwnd(), TB_REPLACEBITMAP,
+                                     0, (LPARAM) &replaceBitmap) )
+@@ -832,7 +832,7 @@
+         {
+             TBADDBITMAP addBitmap;
+             addBitmap.hInst = 0;
+-            addBitmap.nID = (UINT) hBitmap;
++            addBitmap.nID = (UINT_PTR) hBitmap;
+             if ( ::SendMessage(GetHwnd(), TB_ADDBITMAP,
+                                (WPARAM) nButtons, (LPARAM)&addBitmap) == -1 )
+             {
+@@ -912,7 +912,7 @@
+                 {
+                     const wxString& label = tool->GetLabel();
+                     if ( !label.empty() )
+-                        button.iString = (int)label.c_str();
++                        button.iString = (INT_PTR)label.c_str();
+                 }
+ 
+                 button.idCommand = tool->GetId();
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/thread.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/thread.cpp	2011-12-06 16:42:40.066634826 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/thread.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -76,7 +76,7 @@
+     #include <process.h>
+ 
+     // the return type of the thread function entry point
+-    typedef unsigned THREAD_RETVAL;
++    typedef UINT_PTR THREAD_RETVAL;
+ 
+     // the calling convention of the thread function entry point
+     #define THREAD_CALLCONV __stdcall
+@@ -445,7 +445,11 @@
+     DWORD  GetId() const { return m_tid; }
+ 
+     // the thread function forwarding to DoThreadStart
++#ifdef wxUSE_BEGIN_THREAD
++    static unsigned THREAD_CALLCONV WinThreadStart(void *thread);
++#else
+     static THREAD_RETVAL THREAD_CALLCONV WinThreadStart(void *thread);
++#endif
+ 
+     // really start the thread (if it's not already dead)
+     static THREAD_RETVAL DoThreadStart(wxThread *thread);
+@@ -530,7 +534,11 @@
+ }
+ 
+ /* static */
++#ifdef wxUSE_BEGIN_THREAD
++unsigned THREAD_CALLCONV wxThreadInternal::WinThreadStart(void *param)
++#else
+ THREAD_RETVAL THREAD_CALLCONV wxThreadInternal::WinThreadStart(void *param)
++#endif
+ {
+     THREAD_RETVAL rc = (THREAD_RETVAL)-1;
+ 
+@@ -842,7 +850,7 @@
+             break;
+         }
+ 
+-        if ( (DWORD)rc != STILL_ACTIVE )
++        if ( (ULONG_PTR)rc != STILL_ACTIVE )
+             break;
+ 
+         // give the other thread some time to terminate, otherwise we may be
+@@ -1162,9 +1170,9 @@
+     }
+ 
+ #ifdef wxUSE_BEGIN_THREAD
+-    _endthreadex((unsigned)status);
++    _endthreadex((UINT_PTR)status);
+ #else // !VC++
+-    ::ExitThread((DWORD)status);
++    ::ExitThread((ULONG_PTR)status);
+ #endif // VC++/!VC++
+ 
+     wxFAIL_MSG(wxT("Couldn't return from ExitThread()!"));
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/tooltip.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/tooltip.cpp	2011-12-06 16:42:40.074635084 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/tooltip.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -106,7 +106,7 @@
+             uFlags |= TTF_TRANSPARENT;
+         }
+ 
+-        uId = (UINT)hwndOwner;
++        uId = (UINT_PTR)hwndOwner;
+     }
+ };
+ 
+Index: mingw-wxwidgets-2.8.12/wxWidgets/src/msw/window.cpp
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/src/msw/window.cpp	2011-12-06 16:42:40.082635159 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/src/msw/window.cpp	2011-12-06 16:42:50.000000000 +0100
+@@ -3438,7 +3438,7 @@
+ 
+ wxWindow *wxFindWinFromHandle(WXHWND hWnd)
+ {
+-    return (wxWindow*)wxWinHandleHash->Get((long)hWnd);
++    return (wxWindow*)wxWinHandleHash->Get((ULONG_PTR)hWnd);
+ }
+ 
+ void wxAssociateWinWithHandle(HWND hWnd, wxWindowMSW *win)
+@@ -3459,13 +3459,13 @@
+ #endif // __WXDEBUG__
+     if (!oldWin)
+     {
+-        wxWinHandleHash->Put((long)hWnd, (wxWindow *)win);
++        wxWinHandleHash->Put((ULONG_PTR)hWnd, (wxWindow *)win);
+     }
+ }
+ 
+ void wxRemoveHandleAssociation(wxWindowMSW *win)
+ {
+-    wxWinHandleHash->Delete((long)win->GetHWND());
++    wxWinHandleHash->Delete((ULONG_PTR)win->GetHWND());
+ }
+ 
+ // ----------------------------------------------------------------------------
+@@ -3595,7 +3595,7 @@
+ 
+     // controlId is menu handle for the top level windows, so set it to 0
+     // unless we're creating a child window
+-    int controlId = style & WS_CHILD ? GetId() : 0;
++    UINT_PTR controlId = style & WS_CHILD ? GetId() : 0;
+ 
+     // for each class "Foo" we have we also have "FooNR" ("no repaint") class
+     // which is the same but without CS_[HV]REDRAW class styles so using it
+Index: mingw-wxwidgets-2.8.12/wxWidgets/configure
+===================================================================
+--- mingw-wxwidgets-2.8.12.orig/wxWidgets/configure	2011-12-06 16:45:36.250636049 +0100
++++ mingw-wxwidgets-2.8.12/wxWidgets/configure	2011-12-06 16:45:51.135134933 +0100
+@@ -27805,7 +27805,7 @@
+ 
+             case "${host}" in
+ 	x86_64-*-mingw32* )
+-                        LIBS="$LIBS -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -lwctl3d32 -ladvapi32 -lwsock32 -lgdi32"
++                        LIBS="$LIBS -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -ladvapi32 -lwsock32 -lgdi32"
+         ;;
+         * )
+             LIBS="$LIBS -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -lctl3d32 -ladvapi32 -lwsock32 -lgdi32"
