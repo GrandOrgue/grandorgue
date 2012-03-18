@@ -98,8 +98,8 @@ wxConfigBase& GOrgueSettings::GetConfig()
 void GOrgueSettings::Load()
 {
 	m_Stereo = m_Config.Read(wxT("StereoEnabled"), 1);
-	m_Concurrency = m_Config.Read(wxT("Concurrency"), 0L);
-	m_ReleaseConcurrency = m_Config.Read(wxT("ReleaseConcurrency"), 1L);
+	m_Concurrency = m_Config.Read(wxT("Concurrency"), 8L);
+	m_ReleaseConcurrency = m_Config.Read(wxT("ReleaseConcurrency"), 4L);
 	if (m_ReleaseConcurrency < 1)
 		m_ReleaseConcurrency = 1;
 	m_LosslessCompression = m_Config.Read(wxT("LosslessCompression"), 0L);
