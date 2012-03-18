@@ -59,7 +59,6 @@ GOSoundEngine::GOSoundEngine() :
 	m_DetachedRelease(1),
 	m_Windchests(),
 	m_Tremulants()
-
 {
 	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
@@ -668,7 +667,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 
 			int reverb = GetReverb();
 			if ( reverb < 0 )
-			{				
+			{
 				if ( reverb > gain_decay_rate || gain_decay_rate == 0 )
 					gain_decay_rate = reverb;
 			}
