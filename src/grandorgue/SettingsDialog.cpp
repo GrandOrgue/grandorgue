@@ -31,6 +31,7 @@
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "SettingsAudioGroup.h"
+#include "SettingsAudioOutput.h"
 #include "SettingsMidiDevices.h"
 #include "SettingsMidiMessage.h"
 #include "SettingsOption.h"
