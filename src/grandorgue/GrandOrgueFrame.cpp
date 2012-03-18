@@ -70,11 +70,12 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(wxID_HELP, GOrgueFrame::OnHelp)
 	EVT_MENU(wxID_ABOUT, GOrgueFrame::OnHelpAbout)
 	EVT_COMMAND(0, wxEVT_SHOWHELP, GOrgueFrame::OnShowHelp)
-	// New events for Volume, Polyphony, Memory Level, and Transpose
+	// New events for Volume, Polyphony, Memory Level, Transpose and Reverb
 	EVT_MENU(ID_VOLUME, GOrgueFrame::OnSettingsVolume)
 	EVT_MENU(ID_POLYPHONY, GOrgueFrame::OnSettingsPolyphony)
 	EVT_MENU(ID_MEMORY, GOrgueFrame::OnSettingsMemory)
 	EVT_MENU(ID_TRANSPOSE, GOrgueFrame::OnSettingsTranspose)
+	EVT_MENU(ID_REVERB, GOrgueFrame::OnSettingsReverb)	
 	// End
 	EVT_MENU_RANGE(ID_PANEL_FIRST, ID_PANEL_LAST, GOrgueFrame::OnPanel)
 	EVT_MENU_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnPreset)
@@ -82,6 +83,8 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_SIZE(GOrgueFrame::OnSize)
 	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
+	EVT_TEXT(ID_METER_REVERB_SPIN, GOrgueFrame::OnSettingsReverb)
+	EVT_TEXT_ENTER(ID_METER_REVERB_SPIN, GOrgueFrame::OnSettingsReverb)	
 	EVT_TEXT(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 	EVT_TEXT_ENTER(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueFrame::OnSettingsMemory)
@@ -117,6 +120,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_VolumeLeft(NULL),
 	m_VolumeRight(NULL),
 	m_Transpose(NULL),
+	m_Reverb(NULL),
 	m_Polyphony(NULL),
 	m_SetterPosition(NULL),
 	m_Volume(NULL),
@@ -221,10 +225,14 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	tb->AddControl(m_SetterPosition);
 	m_SetterPosition->SetValue(0);
 
-	AddTool(settings_menu, ID_TRANSPOSE, _("&Transpose"), _("Transpose"), GetImage_transpose());
+	AddTool(settings_menu, ID_TRANSPOSE, _("&Transpose"), _("Transpose"), GetImage_transpose());	
 	m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
 	tb->AddControl(m_Transpose);
 	m_Transpose->SetValue(0);
+	
+	AddTool(settings_menu, ID_REVERB, _("&Reverb"), _("Reverb"), GetImage_reverb());
+	m_Reverb = new wxSpinCtrl(tb, ID_METER_REVERB_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -5, 0);
+	tb->AddControl(m_Reverb);
 
 	m_panel_menu = new wxMenu();
 
@@ -637,6 +645,14 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 
 	m_Settings.SetTranspose(n);
 	m_Sound.ResetSound();
+}
+
+void GOrgueFrame::OnSettingsReverb(wxCommandEvent& event)
+{
+	long n = m_Reverb->GetValue();
+	if (n < 0)
+		n = - 17 - n;
+	m_Sound.GetEngine().SetReverb(n);
 }
 
 void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)

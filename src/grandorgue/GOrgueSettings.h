@@ -77,6 +77,7 @@ private:
 	int m_SetterEvents[3];
 	int m_StopChangeEvent;
 	int m_Transpose;
+	int m_Reverb;
 
 	static const wxString m_ManualNames[];
 	static const wxString m_EnclosureNames[];
@@ -189,6 +190,8 @@ public:
 
 	int GetTranspose();
 	void SetTranspose(int transpose);
+	int GetReverb();
+	void SetReverb(int transpose);
 };
 
 #endif

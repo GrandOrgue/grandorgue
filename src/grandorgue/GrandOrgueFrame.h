@@ -43,6 +43,7 @@ class GOrgueFrame: public wxDocParentFrame
 	wxGaugeAudio *m_SamplerUsage;
 	wxGaugeAudio *m_VolumeLeft, *m_VolumeRight;
 	wxSpinCtrl* m_Transpose;
+	wxSpinCtrl* m_Reverb;
 	wxSpinCtrl* m_Polyphony;
 	wxSpinCtrl* m_SetterPosition;
 	wxSpinCtrl* m_Volume;
@@ -86,7 +87,8 @@ public:
 	void OnSettingsPolyphony(wxCommandEvent& event);
 	void OnSettingsMemory(wxCommandEvent& event);
 	void OnSettingsTranspose(wxCommandEvent& event);
-
+	void OnSettingsReverb(wxCommandEvent& event);
+	
 	void OnKeyCommand(wxKeyEvent& event);
 	void OnChangeSetter(wxCommandEvent& event);
 	void OnChangeVolume(wxCommandEvent& event);

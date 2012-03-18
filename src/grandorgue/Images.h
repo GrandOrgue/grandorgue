@@ -50,6 +50,7 @@ wxBitmap GetImage_set();
 wxBitmap GetImage_settings();
 wxBitmap GetImage_Splash();
 wxBitmap GetImage_transpose();
+wxBitmap GetImage_reverb();
 wxBitmap GetImage_volume();
 wxBitmap GetImage_Wood01();
 wxBitmap GetImage_Wood01_r();
