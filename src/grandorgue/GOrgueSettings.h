@@ -28,6 +28,20 @@
 #include <vector>
 class wxConfigBase;
 
+typedef struct
+{
+	wxString name;
+	float left;
+	float right;
+} GOAudioGroupOutputConfig;
+
+typedef struct
+{
+	wxString name;
+	unsigned channels;
+	std::vector< std::vector<GOAudioGroupOutputConfig> > scale_factors;
+} GOAudioDeviceConfig;
+
 class GOrgueSettings {
 private:
 	wxConfigBase& m_Config;
@@ -57,6 +71,7 @@ private:
 	wxString m_UserSettingPath;
 	wxString m_UserCachePath;
 	std::vector<wxString> m_AudioGroups;
+	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 	int m_ManualEvents[6];
 	int m_EnclosureEvents[6];
 	int m_SetterEvents[3];
@@ -168,6 +183,9 @@ public:
 	void SetAudioGroups(const std::vector<wxString>& audio_groups);
 	unsigned GetAudioGroupId(const wxString& str);
 	int GetStrictAudioGroupId(const wxString& str);
+
+	const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();
+	void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
 
 	int GetTranspose();
 	void SetTranspose(int transpose);
