@@ -76,6 +76,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(ID_MEMORY, GOrgueFrame::OnSettingsMemory)
 	EVT_MENU(ID_TRANSPOSE, GOrgueFrame::OnSettingsTranspose)
 	EVT_MENU(ID_REVERB, GOrgueFrame::OnSettingsReverb)
+
 	// End
 	EVT_MENU_RANGE(ID_PANEL_FIRST, ID_PANEL_LAST, GOrgueFrame::OnPanel)
 	EVT_MENU_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnPreset)
@@ -83,8 +84,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_SIZE(GOrgueFrame::OnSize)
 	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
-	EVT_TEXT(ID_METER_REVERB_SPIN, GOrgueFrame::OnSettingsReverb)
-	EVT_TEXT_ENTER(ID_METER_REVERB_SPIN, GOrgueFrame::OnSettingsReverb)
+	EVT_CHOICE(ID_REVERB_SELECT, GOrgueFrame::OnSettingsReverb)
 	EVT_TEXT(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 	EVT_TEXT_ENTER(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueFrame::OnSettingsMemory)
@@ -133,6 +133,8 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	SetIcon(icon);
 
 	InitHelp();
+	
+	wxArrayString choices;
 
 	wxMenu *file_menu = new wxMenu;
 
@@ -229,11 +231,18 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
 	tb->AddControl(m_Transpose);
 	m_Transpose->SetValue(0);
-	
+
 	AddTool(settings_menu, ID_REVERB, _("&Reverb"), _("Reverb"), GetImage_reverb());
-	m_Reverb = new wxSpinCtrl(tb, ID_METER_REVERB_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -5, 0);
-	tb->AddControl(m_Reverb);
-	m_Reverb->SetValue(m_Settings.GetReverb());
+	choices.clear();
+	choices.push_back(_("Maximum"));
+	choices.push_back(_("2.8 s"));
+	choices.push_back(_("1.4 s"));
+	choices.push_back(_("700 ms"));
+	choices.push_back(_("350 ms"));
+	choices.push_back(_("175 ms"));
+	m_Reverb = new wxChoice(tb, ID_REVERB_SELECT, wxDefaultPosition, wxDefaultSize, choices);
+	tb->AddControl(m_Reverb);	
+    m_Reverb->SetSelection(m_Settings.GetReverb());
 
 	m_panel_menu = new wxMenu();
 
@@ -650,10 +659,10 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 
 void GOrgueFrame::OnSettingsReverb(wxCommandEvent& event)
 {
-	long n = m_Reverb->GetValue();
-	if (n < 0)
-		n = - 17 - n;
+	int n = m_Reverb->GetSelection();
 	m_Settings.SetReverb(n);
+	if (n > 0)
+	    n = -17 + n;
 	m_Sound.GetEngine().SetReverb(n);
 }
 
