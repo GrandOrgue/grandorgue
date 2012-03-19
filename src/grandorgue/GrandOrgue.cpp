@@ -30,8 +30,6 @@
 #include "GOrgueSound.h"
 #include "GrandOrgueFrame.h"
 
-#include <wx/ipc.h>
-#include <wx/snglinst.h>
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
 #include <wx/splash.h>
@@ -45,52 +43,6 @@
 #endif
 
 IMPLEMENT_APP(GOrgueApp)
-
-#ifdef __WXMAC__
-/* On Mac, filenames do not seem to work for server identifiers. */
-#define GO_SERVER_NAME wxT("4096")
-#else
-#define GO_SERVER_NAME wxT(APP_NAME)
-#endif
-
-class stConnection : public wxConnection
-{
-public:
-    stConnection() { }
-    ~stConnection() { }
-    bool OnExecute(const wxString& topic, wxChar* data, int size, wxIPCFormat format)
-    {
-        GOrgueApp* app = &::wxGetApp();
-
-        app->GetTopWindow()->Raise();
-        if (data[0])
-            app->AsyncLoadFile(data);
-
-        return true;
-    }
-};
-
-class stServer : public wxServer
-{
-public:
-    wxConnectionBase* OnAcceptConnection(const wxString& topic)
-    {
-        GOrgueApp* app = &::wxGetApp();
-        if (!app->GetTopWindow())
-            return false;
-
-        if (topic == wxT("open"))
-            return new stConnection();
-        return 0;
-    }
-};
-
-class stClient : public wxClient
-{
-public:
-    stClient() { }
-    wxConnectionBase* OnMakeConnection() { return new stConnection; }
-};
 
 class GOrgueDocManager : public wxDocManager
 {
@@ -112,11 +64,9 @@ void GOrgueDocManager::OnUpdateFileSave(wxUpdateUIEvent& event)
 GOrgueApp::GOrgueApp() :
    m_Frame(NULL),
    m_locale(),
-   m_server(NULL),
    m_Settings(NULL),
    m_soundSystem(NULL),
-   m_docManager(NULL),
-   single_instance(NULL)
+   m_docManager(NULL)
 {
 }
 
@@ -130,35 +80,6 @@ bool GOrgueApp::OnInit()
 	GetCurrentProcess(&PSN);
 	TransformProcessType(&PSN, kProcessTransformToForegroundApplication);
 #endif
-
-	single_instance = new wxSingleInstanceChecker(GO_SERVER_NAME);
-	if (single_instance->IsAnotherRunning())
-	{
-		wxLogNull logNull;
-		stClient* client = new stClient;
-		wxConnectionBase* connection =
-			client->MakeConnection
-				(wxT("localhost")
-				,GO_SERVER_NAME
-				,wxT("open")
-				);
-		if (connection)
-		{
-			connection->Execute(argc > 1 ? argv[1] : wxT(""));
-			connection->Disconnect();
-			delete connection;
-		}
-		delete client;
-		return false;
-	}
-	else
-	{
-		m_server = new stServer;
-		if (!m_server->Create(GO_SERVER_NAME))
-		{
-			wxLogError(_("Failed to create IPC service."));
-		}
-	}
 
 	SetAppName(wxT(APP_NAME));
 	SetClassName(wxT(APP_NAME));
@@ -231,8 +152,6 @@ int GOrgueApp::OnExit()
 		m_docManager->FileHistorySave(m_Settings->GetConfig());
 		delete m_docManager;
 	}
-	delete m_server;
-	delete single_instance;
 	delete m_Settings;
 
 	return wxApp::OnExit();

@@ -27,10 +27,8 @@
 
 #include <wx/wx.h>
 
-class wxSingleInstanceChecker;
 class wxSplashScreenWindow;
 class wxDocManager;
-class stServer;
 
 class GOrgueFrame;
 class GOrgueSound;
@@ -41,11 +39,9 @@ class GOrgueApp : public wxApp
 protected:
 	GOrgueFrame* m_Frame;
 	wxLocale m_locale;
-	stServer* m_server;
 	GOrgueSettings* m_Settings;
 	GOrgueSound* m_soundSystem;
 	wxDocManager* m_docManager;
-	wxSingleInstanceChecker* single_instance;
 
 public:
 	GOrgueApp();
