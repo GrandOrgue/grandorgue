@@ -34,6 +34,7 @@ class wxSpinCtrl;
 class GOrgueMidiEvent;
 class GOrgueSettings;
 class GOrgueSound;
+class wxChoice;
 
 class GOrgueFrame: public wxDocParentFrame
 {
@@ -43,7 +44,7 @@ class GOrgueFrame: public wxDocParentFrame
 	wxGaugeAudio *m_SamplerUsage;
 	wxGaugeAudio *m_VolumeLeft, *m_VolumeRight;
 	wxSpinCtrl* m_Transpose;
-	wxSpinCtrl* m_Reverb;
+	wxChoice* m_Reverb;
 	wxSpinCtrl* m_Polyphony;
 	wxSpinCtrl* m_SetterPosition;
 	wxSpinCtrl* m_Volume;
