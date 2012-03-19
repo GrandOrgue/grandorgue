@@ -1,0 +1,111 @@
+This HOWTO is for building both 32 bit and 64 bit static GrandOrgue exe (no DLL required) on a Windows 32bit system.
+Minor adjustment would be required to build from a native 64 bit system although the 32 bit environment shall work on 64 bit machines. 
+All the instructions below are for building GrandOrgue for release, in a single static exe file and using unicode.
+
+#1:
+Download a copy of the GrandOrgue sources (eg. c:\gosrc) 
+
+#2:
+Create TDM64 environment:
+	Install TDM64 at http://tdm-gcc.tdragon.net/download
+	Install wxWidgets-2.8.12 from http://www.wxwidgets.org/downloads/ in C:\TDM\wx32\wxWidgets-2.8.12 and C:\TDM\wx64\wxWidgets-2.8.12
+	Install all the tools for translation and help generation (see Building the help and translations on Windows in README). It is a good idea to copy all exe in the same directory and to add this directory to the Windows path (e.g. C:\TDM\tools\bin, C:\TDM\TDM\docbook-xsl-1.76.1 )
+	
+	Building for 32 bits
+		Wxwidgets:
+			mingw32-make -f makefile.gcc UNICODE=1 BUILD=release SHARED=0 CXXFLAGS="-m32" CFLAGS="-m32"
+		GO:
+			create a build directory (e.g. c:\TDM\GOTDM32)
+			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx32\wxWidgets-2.8.12 -DCMAKE_EXE_LINKER_FLAGS="-m32 -static-libgcc -static-libstdc++" -DCMAKE_CXX_FLAGS="-m32" -DCMAKE_C_FLAGS="-m32" -DCMAKE_RC_FLAGS="-F pe-i386 -U WIN64" -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1  -DRTAUDIO_USE_WASAPI=OFF
+
+	Building in 64 bits
+		Install msysgit from http://code.google.com/p/msysgit/downloads/detail?name=Git-1.7.8-preview20111206.exe&can=2&q=
+		apply wxWidgets-2.8.12.patch to c:\wx64\wxWidgets-2.8.12 (right clic on wxWidgets-2.8.12 directory to open git bash,  then type git apply /c/gosrc/trunk/wxWidgets/wxWidgets-2.8.12.patch)
+		Wxwidgets:
+			mingw32-make -f makefile.gcc BUILD=Release UNICODE=1 SHARED=0 CXXFLAGS=-DHAVE_VARIADIC_MACROS=1
+		GO:
+			create a build directory (e.g. c:\TDM\GOTDM64)
+			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx64\wxWidgets-2.8.12 -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DIMPORT_EXECUTABLES=c:\TDMGO32\ImportExecutables.cmake -DCMAKE_SYSTEM_NAME=Windows -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1 -DRTAUDIO_USE_WASAPI=OFF 
+
+ 
+ 
+#3:
+Create Cygwin environment:
+	Install Cygwin from http://cygwin.com/setup.exe
+	You need to select the following packages on top of the basic configuration:
+	git, g++, mingw64, make, cmake, getext, cmake, libgtk2-devel, docbook-xsl, xsltproc, zip, gettext and po4a. po4a can be obtained from http://sourceware.org/cygwinports/ which provides ports to Cygwin
+	Install wxWidgets-2.8.12 from http://www.wxwidgets.org/downloads/  in c:\cyg\wxsrc32 and c:\cyg\wxsrc64
+	create the following directories c/cyg/inst32, inst64, buildlinux32, buildwin32, buildlinux64
+	
+	Building in 32 bits
+		Create toolchain.def in inst32 with following content
+		# the name of the target operating system
+		SET(CMAKE_SYSTEM_NAME Windows)
+		SET(MSYS 1)
+
+		# which compilers to use for C and C++
+		SET(CMAKE_C_COMPILER i686-w64-mingw32-gcc)
+		SET(CMAKE_CXX_COMPILER i686-w64-mingw32-g++)
+		SET(CMAKE_RC_COMPILER i686-w64-mingw32-windres)
+
+		# here is the target environment located
+		SET(CMAKE_FIND_ROOT_PATH  /usr/i686-w64-mingw32 /cygdrive/c/cyg/inst32)
+
+		# adjust the default behaviour of the FIND_XXX() commands:
+		# search headers and libraries in the target environment, search 
+		# programs in the host environment
+		set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+		set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+		set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+		
+		Wxwidgets:
+			cd /cygdrive/c/cyg/wxsrc32
+			./configure --host=i686-w64-mingw32 --prefix=/cygdrive/c/cyg/inst32 --enable-unicode --disable-shared
+			make
+			make install 
+		GO:
+			Create enough of the "native linux" build to get the image converter and its import files created.
+				cd /cygdrive/C/cyg/buildlinux32
+				cmake -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -G "Unix Makefiles" /cygdrive/c/gosrc -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DCMAKE_LEGACY_CYGWIN_WIN32=1 -DCMAKE_CXX_FLAGS=-I/usr/include/w32api -DRTAUDIO_USE_WASAPI=OFF -DRTAUDIO_USE_WDMKS=OFF -DRTAUDIO_USE_ASIO=OFF -DRTAUDIO_USE_DSOUND=OFF -DRTAUDIO_USE_WMME=OFF
+				make
+			Create the 32 bit version of GO
+				cd /cygdrive/C/cyg/buildwin32
+				cmake -DCMAKE_TOOLCHAIN_FILE=/cygdrive/c/cyg/inst32/toolchain.def /cygdrive/c/gosrc -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DIMPORT_EXECUTABLES=/cygdrive/c/cyg/buildlinux32/ImportExecutables.cmake -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DRTAUDIO_USE_WASAPI=OFF 
+				make
+
+	Buiding in 64 bits
+		Create toolchain.def in inst64 with following content
+		# the name of the target operating system
+		SET(CMAKE_SYSTEM_NAME Windows)
+		SET(MSYS 1)
+
+		# which compilers to use for C and C++
+		SET(CMAKE_C_COMPILER x86_64-w64-mingw32-gcc)
+		SET(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
+		SET(CMAKE_RC_COMPILER x86_64-w64-mingw32-windres)
+
+		# here is the target environment located
+		SET(CMAKE_FIND_ROOT_PATH  /usr/x86_64-w64-mingw32 /cygdrive/c/cyg/inst64)
+
+		# adjust the default behaviour of the FIND_XXX() commands:
+		# search headers and libraries in the target environment, search 
+		# programs in the host environment
+		set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+		set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+		set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)	
+		
+		Wxwidgets:
+			cd /cygdrive/c/cyg/wxsrc64
+			git apply /cygdrive/.../trunk/wxWidgets/wxWidgets-2.8.12.patch
+			./configure CFLAGS=-m64 CPPFLAGS=-m64 LDFLAGS="-m64 --define WX_CPU_AMD64" --host=x86_64-w64-mingw32 --build=x86_64-pc-cygwin --prefix=/cygdrive/c/cyg/inst64 --enable-unicode --disable-shared
+			make
+			make install
+		GO:
+			Create enough of the "native linux" build to get the image converter and its import files created (unless already done in 32 bit build)
+				cd /cygdrive/C/cyg/buildlinux32
+				cmake -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -G "Unix Makefiles" /cygdrive/c/goscr -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DCMAKE_LEGACY_CYGWIN_WIN32=1 -DCMAKE_CXX_FLAGS=-I/usr/include/w32api -DRTAUDIO_USE_WASAPI=OFF -DRTAUDIO_USE_WDMKS=OFF -DRTAUDIO_USE_ASIO=OFF -DRTAUDIO_USE_DSOUND=OFF -DRTAUDIO_USE_WMME=OFF
+				make	
+			Create the 64 bit version of GO			
+				cd ./cygdrive/c/cyg/buildwin64
+				cmake -DCMAKE_TOOLCHAIN_FILE=/cygdrive/c/cyg/inst64/toolchain.def /cygdrive/c/gosrc -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst64 -DIMPORT_EXECUTABLES=/cygdrive/c/cyg/buildlinux32/ImportExecutables.cmake -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DRTAUDIO_USE_WASAPI=OFF 
+				make
