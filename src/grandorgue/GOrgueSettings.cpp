@@ -112,7 +112,7 @@ void GOrgueSettings::Load()
 	m_RandomizeSpeaking = m_Config.Read(wxT("RandomizeSpeaking"), 1);
 	m_SampleRate = m_Config.Read(wxT("SampleRate"), 44100);
 	m_Reverb = m_Config.Read(wxT("Reverb"), 0L);
-	if (m_Reverb < -5 || m_Reverb > 0)
+	if (m_Reverb > 5 || m_Reverb < 0)
 		m_Reverb = 0;
 	if (m_SampleRate < 1000)
 		m_SampleRate = 44100;
@@ -783,4 +783,5 @@ int GOrgueSettings::GetReverb()
 void GOrgueSettings::SetReverb(int reverb)
 {
 	m_Reverb = reverb;
+	m_Config.Write(wxT("Reverb"), reverb);
 }
