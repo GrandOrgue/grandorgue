@@ -109,7 +109,7 @@ void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxSt
 void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, const wxBitmap& toolbarImage, wxItemKind kind)
 {
 	menu->Append(id, item, wxEmptyString, kind);
-        GetToolBar()->AddTool(id, item, toolbarImage, helpString, kind);
+		GetToolBar()->AddTool(id, item, toolbarImage, helpString, kind);
 }
 
 GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound) :
@@ -242,7 +242,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	choices.push_back(_("175 ms"));
 	m_Reverb = new wxChoice(tb, ID_REVERB_SELECT, wxDefaultPosition, wxDefaultSize, choices);
 	tb->AddControl(m_Reverb);	
-    m_Reverb->SetSelection(m_Settings.GetReverb());
+	m_Reverb->SetSelection(m_Settings.GetReverb());
 
 	m_panel_menu = new wxMenu();
 
@@ -362,8 +362,8 @@ void GOrgueFrame::UpdatePanelMenu()
 void GOrgueFrame::OnSize(wxSizeEvent& event)
 {
 	wxWindow *child = (wxWindow *)NULL;
-        for ( wxWindowList::compatibility_iterator node = GetChildren().GetFirst(); node; node = node->GetNext() )
-        {
+	for ( wxWindowList::compatibility_iterator node = GetChildren().GetFirst(); node; node = node->GetNext() )
+	{
 		wxWindow *win = node->GetData();
 		if ( !win->IsTopLevel() && !IsOneOfBars(win) )
 		{
@@ -435,9 +435,9 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
-    if (!IsEnabled())
-        return;
-    m_docManager->CreateDocument(event.GetString(), wxDOC_SILENT);
+	if (!IsEnabled())
+		return;
+	m_docManager->CreateDocument(event.GetString(), wxDOC_SILENT);
 }
 
 void GOrgueFrame::OnOpen(wxCommandEvent& event)
@@ -502,16 +502,16 @@ void GOrgueFrame::OnExport(wxCommandEvent& event)
 
 wxString formatSize(wxLongLong& size)
 {
-    double n = (double)size.ToLong();
-    const wxString sizes[] = {wxTRANSLATE("KB"), wxTRANSLATE("MB"), wxTRANSLATE("GB"), wxTRANSLATE("TB")};
-    int i;
+	double n = (double)size.ToLong();
+	const wxString sizes[] = {wxTRANSLATE("KB"), wxTRANSLATE("MB"), wxTRANSLATE("GB"), wxTRANSLATE("TB")};
+	int i;
 
-    for (i = 0; i < 3; i++)
-    {
-        n /= 1024.0;
-        if (n < 1024.0)
-            break;
-    }
+	for (i = 0; i < 3; i++)
+	{
+		n /= 1024.0;
+		if (n < 1024.0)
+			break;
+	}
     return wxString::Format(wxT("%.2f %s"), n, wxGetTranslation(sizes[i]));
 }
 
@@ -662,7 +662,7 @@ void GOrgueFrame::OnSettingsReverb(wxCommandEvent& event)
 	int n = m_Reverb->GetSelection();
 	m_Settings.SetReverb(n);
 	if (n > 0)
-	    n = -17 + n;
+		n = -17 + n;
 	m_Sound.GetEngine().SetReverb(n);
 }
 
@@ -683,7 +683,7 @@ void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
 {
     DoMenuUpdates(event.GetMenu());
     if (event.GetMenu() == m_panel_menu)
-	    UpdatePanelMenu();
+		UpdatePanelMenu();
     event.Skip();
 }
 
