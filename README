@@ -3,77 +3,128 @@ GrandOrgue is a sample based pipe organ simulator.
 It currently supports Windows and Linux. Porting to other OS supported by RtMidi, 
 RtAudio and wxWidgets should be possible with some build system adjustments.
 
-Building on Windows:
+
+
+A) Building on Windows:
+----------------------
+
+The following build procedures works on a 32 or 64 bit windows build system. On a real 64 bit system, it is possible to build the 64 bit version directly without reusing parts from the 32 bit build. In that case -DIMPORT_EXECUTABLES and -DCMAKE_SYSTEM_NAME shall be removed.
+
+All the instructions below are for building GrandOrgue for release, in a single static exe file and using unicode.
+
+#1: Downloading GrandOrgue sources
+	Create a repository with the GrandOrgue sources (SVN : https://ourorgan.svn.sourceforge.net/svnroot/ourorgan)
+	In the following example the repository is created at c:\gosrc 
+
+#2: TDM64 environment
+	Install TDM64 from http://tdm-gcc.tdragon.net/download
+	Install wxWidgets-2.8.12 from http://www.wxwidgets.org/downloads/ in C:\TDM\wx32\wxWidgets-2.8.12 and C:\TDM\wx64\wxWidgets-2.8.12
+	Install all the tools for translation and help generation (see Building the help and translations on Windows in README C) ). It is a good idea to copy all exe in the same directory and to add this directory to the Windows path (e.g. C:\TDM\tools\bin, C:\TDM\TDM\docbook-xsl-1.76.1 )
+	
+	Building for 32 bits
+		Wxwidgets:
+			mingw32-make -f makefile.gcc UNICODE=1 BUILD=Release SHARED=0 CXXFLAGS="-m32" CFLAGS="-m32"
+		GO:
+			create a build directory (e.g. c:\TDM\GOTDM32)
+			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx32\wxWidgets-2.8.12 -DCMAKE_EXE_LINKER_FLAGS="-m32 -static-libgcc -static-libstdc++" -DCMAKE_CXX_FLAGS="-m32" -DCMAKE_C_FLAGS="-m32" -DCMAKE_RC_FLAGS="-F pe-i386 -U WIN64" -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1  -DRTAUDIO_USE_WASAPI=OFF
+
+	Building in 64 bits
+		Install msysgit from http://code.google.com/p/msysgit/downloads/detail?name=Git-1.7.8-preview20111206.exe&can=2&q=
+		apply wxWidgets-2.8.12.patch to c:\wx64\wxWidgets-2.8.12 (right clic on wxWidgets-2.8.12 directory to open git bash,  then type git apply /c/gosrc/trunk/wxWidgets/wxWidgets-2.8.12.patch)
+		Wxwidgets:
+			mingw32-make -f makefile.gcc BUILD=Release UNICODE=1 SHARED=0 CXXFLAGS=-DHAVE_VARIADIC_MACROS=1
+		GO:
+			create a build directory (e.g. c:\TDM\GOTDM64)
+			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx64\wxWidgets-2.8.12 -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DIMPORT_EXECUTABLES=c:\TDMGO32\ImportExecutables.cmake -DCMAKE_SYSTEM_NAME=Windows -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1 -DRTAUDIO_USE_WASAPI=OFF 
+
+#3: Cygwin environment:
+	Install Cygwin from http://cygwin.com/setup.exe
+	You need to select the following packages on top of the basic configuration:
+	git, g++, mingw64, make, cmake, getext, cmake, libgtk2-devel, docbook-xsl, xsltproc, zip, gettext and po4a. po4a can be obtained from http://sourceware.org/cygwinports/ which provides ports to Cygwin
+	Install wxWidgets-2.8.12 from http://www.wxwidgets.org/downloads/  in c:\cyg\wxsrc32 and c:\cyg\wxsrc64
+	create the following directories c/cyg/inst32, inst64, buildlinux32, buildwin32, buildlinux64
+	
+	Building in 32 bits
+		Create toolchain.def in inst32 with following content
+			------------------------------------------------------
+			# the name of the target operating system
+			SET(CMAKE_SYSTEM_NAME Windows)
+			SET(MSYS 1)
+
+			# which compilers to use for C and C++
+			SET(CMAKE_C_COMPILER i686-w64-mingw32-gcc)
+			SET(CMAKE_CXX_COMPILER i686-w64-mingw32-g++)
+			SET(CMAKE_RC_COMPILER i686-w64-mingw32-windres)
+
+			# here is the target environment located
+			SET(CMAKE_FIND_ROOT_PATH  /usr/i686-w64-mingw32 /cygdrive/c/cyg/inst32)
+
+			# adjust the default behaviour of the FIND_XXX() commands:
+			# search headers and libraries in the target environment, search 
+			# programs in the host environment
+			set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+			set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+			set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+			-------------------------------------------------------
+		
+		Wxwidgets:
+			cd /cygdrive/c/cyg/wxsrc32
+			./configure --host=i686-w64-mingw32 --prefix=/cygdrive/c/cyg/inst32 --enable-unicode --disable-shared
+			make
+			make install
+		GO:
+			Create enough of the "native linux" build to get the image converter and its import files created.
+				cd /cygdrive/C/cyg/buildlinux32
+				cmake -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -G "Unix Makefiles" /cygdrive/c/gosrc -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DCMAKE_LEGACY_CYGWIN_WIN32=1 -DCMAKE_CXX_FLAGS=-I/usr/include/w32api -DRTAUDIO_USE_WASAPI=OFF -DRTAUDIO_USE_WDMKS=OFF -DRTAUDIO_USE_ASIO=OFF -DRTAUDIO_USE_DSOUND=OFF -DRTAUDIO_USE_WMME=OFF
+				make
+			Create the 32 bit version of GO
+				cd /cygdrive/C/cyg/buildwin32
+				cmake -DCMAKE_TOOLCHAIN_FILE=/cygdrive/c/cyg/inst32/toolchain.def /cygdrive/c/gosrc -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DIMPORT_EXECUTABLES=/cygdrive/c/cyg/buildlinux32/ImportExecutables.cmake -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DRTAUDIO_USE_WASAPI=OFF 
+				make
+
+	Buiding in 64 bits
+		Create toolchain.def in inst64 with following content
+			------------------------------------------------------
+			# the name of the target operating system
+			SET(CMAKE_SYSTEM_NAME Windows)
+			SET(MSYS 1)
+
+			# which compilers to use for C and C++
+			SET(CMAKE_C_COMPILER x86_64-w64-mingw32-gcc)
+			SET(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
+			SET(CMAKE_RC_COMPILER x86_64-w64-mingw32-windres)
+
+			# here is the target environment located
+			SET(CMAKE_FIND_ROOT_PATH  /usr/x86_64-w64-mingw32 /cygdrive/c/cyg/inst64)
+
+			# adjust the default behaviour of the FIND_XXX() commands:
+			# search headers and libraries in the target environment, search 
+			# programs in the host environment
+			set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+			set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+			set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)	
+			------------------------------------------------------
+
+		Wxwidgets:
+			cd /cygdrive/c/cyg/wxsrc64
+			apply wxWidgets-2.8.12 patch using git apply /cygdrive/c/gosrc/trunk/wxWidgets/wxWidgets-2.8.12.patch
+			./configure CFLAGS=-m64 CPPFLAGS=-m64 LDFLAGS="-m64 --define WX_CPU_AMD64" --host=x86_64-w64-mingw32 --build=x86_64-pc-cygwin --prefix=/cygdrive/c/cyg/inst64 --enable-unicode --disable-shared
+			make
+			make install
+		GO:
+			Create enough of the "native linux" build to get the image converter and its import files created (unless already done in 32 bit build)
+				cd /cygdrive/C/cyg/buildlinux32
+				cmake -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -G "Unix Makefiles" /cygdrive/c/goscr -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DCMAKE_LEGACY_CYGWIN_WIN32=1 -DCMAKE_CXX_FLAGS=-I/usr/include/w32api -DRTAUDIO_USE_WASAPI=OFF -DRTAUDIO_USE_WDMKS=OFF -DRTAUDIO_USE_ASIO=OFF -DRTAUDIO_USE_DSOUND=OFF -DRTAUDIO_USE_WMME=OFF
+				make	
+			Create the 64 bit version of GO			
+				cd ./cygdrive/c/cyg/buildwin64
+				cmake -DCMAKE_TOOLCHAIN_FILE=/cygdrive/c/cyg/inst64/toolchain.def /cygdrive/c/gosrc -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst64 -DIMPORT_EXECUTABLES=/cygdrive/c/cyg/buildlinux32/ImportExecutables.cmake -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DRTAUDIO_USE_WASAPI=OFF 
+				make
+
+
+
+B) Building on Linux:
 --------------------
-
-1) Install mingw-w64 (http://sourceforge.net/projects/mingw-w64) or TDM64 (http://sourceforge.net/projects/tdm-gcc).
-2) Install cmake (http://www.cmake.org/)
-3) Download a copy of wxMSW (wxWidgets for Windows) from http://www.wxwidgets.org/downloads/ (latest stable release while writing this guide - v2.8.12)
-4) Extract it somewhere easily accessible. Best use a short, simple path without spaces like c:\wxWidgets
-5) Open the command interpreter (cmd.exe) and run:
-  cd C:\wxWidgets\build\msw
-  mingw32-make -f makefile.gcc BUILD=bbb UNICODE=uuu SHARED=sss
-
-Where bbb can equal:
-
-    * release - builds wxWidgets in an optimised release form without debugging information (default)
-    * debug - builds wxWidgets in debug mode with no optimisations 
-
-uuu can equal:
-
-    * 1 - builds a unicode version of wxWidgets
-    * 0 - builds an ANSI version of wxWidgets (default) 
-
-sss can equal:
-
-    * 1 - builds shared libraries (default)
-    * 0 - builds statically linked libraries 
-
-so eg:
-  mingw32-make -f makefile.gcc BUILD=release UNICODE=1 SHARED=0
-
-
-6) Extract a copy of the GrandOrgue sources somewhere (eg. c:\gosources) [this file is part of them]
-7) Create an empty build directory, eg. c:\gobuild
-8) open a command interpreter (cmd.exe) and run:
- cd c:\gobuild
- cmake <path to Grand Orgue sources> -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=bbb -DUNICODE=xxx -DwxWidgets_ROOT_DIR=<path to wxwidget>
-
-Where bbb is:
-  Release - release build
-  Debug - debug build
-
-xxx is:
-  1 - unicode build
-  0 - ansi build
-
-Both settings should match the wxWidget build.
-
- cmake c:\gosources -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1  -DwxWidgets_ROOT_DIR=c:\wxWidgets
-
-If you want to use ASIO, wou will need to get the ASIO SDK (http://www.steinberg.net/) and put it in 
-the ext/rt/asio directory according to the various README files.
-
-If you don't want to use ASIO, add -DRTAUDIO_USE_ASIO=OFF to the cmake parameters.
-
-Running cmake will claim, that it can't find various tools (eg. xsltproc, zip, gettext, po4a, docbook-xsl) - 
-they are optional and used to build the help system and/or translations. See below for details instructions
-how to build them.
-
-9) Build the project by running
-mingw32-make
-in the build directory.
-
-The resulting executeable could require some DLLs from the wxWidgets build directory or mingw.
-If you start it, Window will report each missing DLL. Simply copy them into the same directory as
-GrandOrgue.exe.
-
-If you install the NSIS installer (http://nsis.sourceforge.net/), you
-can create a simple installer with
-mingw32-make package
-
-Building on Linux:
-------------------
 
 1) Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack) and alsa (libasound) from your distribution
 2) Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
@@ -166,8 +217,10 @@ to create an installer
 
 If you want to build a 64bit version, replace everywhere in this instruction i686-w64-mingw32 with x86_64-w64-mingw32.
 
-Building the help and translations on Windows:
-----------------------------------------------
+
+
+C) Building the help and translations on Windows:
+-------------------------------------------------
 
 This is how one can build GrandOrgue help and translations on Windows.
 
