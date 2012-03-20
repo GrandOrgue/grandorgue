@@ -121,7 +121,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	if (m_Settings.GetLosslessCompression())
 		m_LosslessCompression->SetValue(true);
 
-	grid = new wxFlexGridSizer(4, 2, 5, 5);
+	grid = new wxFlexGridSizer(5, 2, 5, 5);
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	choices.clear();
