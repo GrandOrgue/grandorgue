@@ -7,7 +7,6 @@ BuildRequires:  gcc-c++
 BuildRequires:  jack-devel
 BuildRequires:  cmake
 BuildRequires:  wxWidgets-devel
-BuildRequires:  wxWidgets-devel
 BuildRequires:  docbook-xsl-stylesheets 
 BuildRequires:  libxslt
 BuildRequires:  zip
