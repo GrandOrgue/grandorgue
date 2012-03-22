@@ -1,4 +1,3 @@
-MyOrgan, Copyright 2006 Kloria Publishing LLC
 MyOrgan 1.06 Code base, Copyright 2006 Milan Digital Audio LLC
 Copyright 2009-2012 GrandOrgue contributors (see AUTHORS)
 
