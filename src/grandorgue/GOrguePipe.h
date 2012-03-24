@@ -50,6 +50,7 @@ private:
 
 	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
 	int m_SamplerGroupID;
+	unsigned m_AudioGroupID;
 	wxString m_Filename;
 	bool m_Percussive;
 	unsigned m_MidiKeyNumber;
@@ -90,6 +91,9 @@ public:
 
 	float GetEffectiveTuning();
 	void UpdateTuning();
+
+	wxString GetEffectiveAudioGroup();
+	void UpdateAudioGroup();
 
 	unsigned GetEffectiveBitsPerSample();
 	bool GetEffectiveCompress();

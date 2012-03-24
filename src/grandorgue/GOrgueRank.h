@@ -60,6 +60,7 @@ public:
 
 	void UpdateAmplitude();
 	void UpdateTuning();
+	void UpdateAudioGroup();
 };
 
 #endif

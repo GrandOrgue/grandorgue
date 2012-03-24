@@ -29,6 +29,7 @@ GOrguePipeConfig::GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCa
 	m_Callback(callback),
 	m_Group(),
 	m_NamePrefix(),
+	m_AudioGroup(),
 	m_Amplitude(0),
 	m_DefaultAmplitude(0),
 	m_Gain(0),
@@ -48,6 +49,7 @@ void GOrguePipeConfig::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 {
 	m_Group = group;
 	m_NamePrefix = prefix;
+	m_AudioGroup = cfg.ReadString(group, prefix + wxT("AudioGroup"), 256, false);
 	m_DefaultAmplitude = cfg.ReadFloat(group, prefix + wxT("AmplitudeLevel"), 0, 1000, false, 100);
 	m_Amplitude = cfg.ReadFloat(group, prefix + wxT("Amplitude"), 0, 1000, false, m_DefaultAmplitude);
 	m_DefaultGain = cfg.ReadFloat(group, prefix + wxT("Gain"), -120, 40, false, 0);
@@ -64,10 +66,12 @@ void GOrguePipeConfig::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	m_ReleaseLoad = cfg.ReadInteger(m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
 	m_Callback->UpdateAmplitude();
 	m_Callback->UpdateTuning();
+	m_Callback->UpdateAudioGroup();
 }
 
 void GOrguePipeConfig::Save(IniFileConfig& cfg, bool prefix)
 {
+	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("AudioGroup"), m_AudioGroup);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
@@ -77,6 +81,18 @@ void GOrguePipeConfig::Save(IniFileConfig& cfg, bool prefix)
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("LoopLoad"), m_LoopLoad);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("AttackLoad"), m_AttackLoad);
 	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
+}
+
+const wxString& GOrguePipeConfig::GetAudioGroup()
+{
+	return m_AudioGroup;
+}
+
+void GOrguePipeConfig::SetAudioGroup(const wxString& str)
+{
+	m_AudioGroup = str;
+	m_OrganFile->Modified();
+	m_Callback->UpdateAudioGroup();
 }
 
 float GOrguePipeConfig::GetAmplitude()

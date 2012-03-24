@@ -1007,6 +1007,12 @@ void GrandOrgueFile::UpdateTuning()
 		m_ranks[i]->UpdateTuning();
 }
 
+void GrandOrgueFile::UpdateAudioGroup()
+{
+	for (unsigned i = 0; i < m_ranks.size(); i++)
+		m_ranks[i]->UpdateAudioGroup();
+}
+
 bool GrandOrgueFile::IsCustomized()
 {
 	return m_b_customized;
