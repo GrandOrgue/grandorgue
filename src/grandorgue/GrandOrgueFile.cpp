@@ -1053,11 +1053,11 @@ GOrgueBitmapCache& GrandOrgueFile::GetBitmapCache()
 	return m_bitmaps;
 }
 
-SAMPLER_HANDLE GrandOrgueFile::StartSample(const GOSoundProvider *pipe, int sampler_group_id)
+SAMPLER_HANDLE GrandOrgueFile::StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group)
 {
 	if (!m_soundengine)
 		return NULL;
-	return m_soundengine->StartSample(pipe, sampler_group_id);
+	return m_soundengine->StartSample(pipe, sampler_group_id, audio_group);
 }
 
 void GrandOrgueFile::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle)

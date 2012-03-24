@@ -80,7 +80,7 @@ void GOrguePipe::SetOn()
 	}
 	else
 	{
-		m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID);
+		m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID);
 		if ((m_Sampler) && (m_Instances == 0))
 			m_Instances++;
 		if (GetSoundProvider()->IsOneshot())

@@ -124,7 +124,7 @@ private:
 	   1 .. n Windchests
 	   n+1 .. ? additional detached release processors
 	*/
-	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id);
+	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group);
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
 	void SwitchAttackSampler(GO_SAMPLER* sampler);
 	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, float* decoded_sampler_audio_frame);
@@ -151,7 +151,7 @@ public:
 	void SetReverb(int reverb);
 	int GetReverb() const;
 
-	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id);
+	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 

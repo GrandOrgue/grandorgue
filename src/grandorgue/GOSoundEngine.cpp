@@ -167,7 +167,7 @@ float GOSoundEngine::GetRandomFactor()
 	return 1;
 }
 
-void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
+void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group)
 {
 	GOSamplerEntry* state;
 
@@ -182,6 +182,7 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id)
 
 	wxCriticalSectionLocker locker(state->lock);
 	sampler->sampler_group_id = sampler_group_id;
+	sampler->audio_group_id = audio_group;
 	sampler->next = state->new_sampler;
 	sampler->stop = false;
 	sampler->new_attack = false;
@@ -512,7 +513,7 @@ int GOSoundEngine::GetSamples
 }
 
 
-SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id)
+SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id, unsigned audio_group)
 {
 	const GOAudioSection* attack = pipe->GetAttack();
 	if (!attack || attack->GetChannels() == 0)
@@ -529,7 +530,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 		const float playback_gain = pipe->GetGain() * attack->GetNormGain();
 		FaderNewConstant(&sampler->fader, playback_gain);
 		sampler->time = m_CurrentTime;
-		StartSampler(sampler, sampler_group_id);
+		StartSampler(sampler, sampler_group_id, audio_group);
 	}
 	return sampler;
 }
@@ -572,7 +573,7 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 
 		FaderStartDecay(&new_sampler->fader, -CROSSFADE_LEN_BITS);
 
-		StartSampler(new_sampler, new_sampler->sampler_group_id);
+		StartSampler(new_sampler, new_sampler->sampler_group_id, new_sampler->audio_group_id);
 	}
 }
 
@@ -712,7 +713,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				 * means it will still be affected by tremulants - yuck). */
 				windchest_index = handle->sampler_group_id;
 			}
-			StartSampler(new_sampler, windchest_index);
+			StartSampler(new_sampler, windchest_index, handle->audio_group_id);
 		}
 
 	}
