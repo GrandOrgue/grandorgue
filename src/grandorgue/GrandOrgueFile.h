@@ -204,7 +204,7 @@ public:
 	const wxString& GetRecordingDetails();
 	const wxString& GetInfoFilename();
 
-	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id);
+	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 };

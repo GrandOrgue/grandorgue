@@ -35,6 +35,7 @@ typedef struct GO_SAMPLER_T
 	struct GO_SAMPLER_T       *next;
 	const GOSoundProvider     *pipe;
 	int                        sampler_group_id;
+	unsigned                   audio_group_id;
 	audio_section_stream       stream;
 	GOSoundFader               fader;
 	unsigned                   time;
