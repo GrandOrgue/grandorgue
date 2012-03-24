@@ -995,6 +995,8 @@ void GOAudioSection::SetupStreamAlignment(const std::vector<const GOAudioSection
 		delete m_ReleaseAligner;
 		m_ReleaseAligner = NULL;
 	}
+	if (!joinables.size())
+		return;
 
 	int max_amplitude = m_MaxAbsAmplitude;
 	int max_derivative = m_MaxAbsDerivative;
