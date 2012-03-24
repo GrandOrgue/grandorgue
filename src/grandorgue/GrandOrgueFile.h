@@ -181,6 +181,7 @@ public:
 
 	void UpdateAmplitude();
 	void UpdateTuning();
+	void UpdateAudioGroup();
 	
 	void SetIgnorePitch(bool ignorepitch);
 	bool GetIgnorePitch();

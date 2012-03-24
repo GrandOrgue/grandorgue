@@ -126,6 +126,12 @@ void GOrgueRank::UpdateTuning()
 		m_Pipes[i]->UpdateTuning();
 }
 
+void GOrgueRank::UpdateAudioGroup()
+{
+	for(unsigned i = 0; i < m_Pipes.size(); i++)
+		m_Pipes[i]->UpdateAudioGroup();
+}
+
 void GOrgueRank::SetTemperament(const GOrgueTemperament& temperament)
 {
 	for(unsigned j = 0; j < m_Pipes.size(); j++)
@@ -140,5 +146,6 @@ void GOrgueRank::Abort()
 
 void GOrgueRank::PreparePlayback()
 {
+	UpdateAudioGroup();
 }
 

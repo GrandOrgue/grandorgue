@@ -32,6 +32,7 @@ class GOrguePipeUpdateCallback
 public:
 	virtual void UpdateAmplitude() = 0;
 	virtual void UpdateTuning() = 0;
+	virtual void UpdateAudioGroup() = 0;
 };
 
 class GOrguePipeConfig
@@ -41,6 +42,7 @@ private:
 	GOrguePipeUpdateCallback* m_Callback;
 	wxString m_Group;
 	wxString m_NamePrefix;
+	wxString m_AudioGroup;
 	float m_Amplitude;
 	float m_DefaultAmplitude;
 	float m_Gain;
@@ -71,6 +73,9 @@ public:
 	float GetTuning();
 	float GetDefaultTuning();
 	void SetTuning(float cent);
+
+	const wxString& GetAudioGroup();
+	void SetAudioGroup(const wxString& str);
 
 	int GetBitsPerSample();
 	void SetBitsPerSample(int value);

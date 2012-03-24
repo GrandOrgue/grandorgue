@@ -48,6 +48,7 @@ GOrguePipe::GOrguePipe
 	m_AttackInfo(),
 	m_ReleaseInfo(),
 	m_SamplerGroupID(sampler_group_id),
+	m_AudioGroupID(0),
 	m_Filename(),
 	m_Percussive(percussive),
 	m_MidiKeyNumber(midi_key_number),
@@ -170,6 +171,20 @@ float GOrguePipe::GetEffectiveTuning()
 void GOrguePipe::UpdateTuning()
 {
 	m_SoundProvider.SetTuning(GetEffectiveTuning());
+}
+
+wxString GOrguePipe::GetEffectiveAudioGroup()
+{
+	if (m_PipeConfig.GetAudioGroup() != wxEmptyString)
+		return m_PipeConfig.GetAudioGroup();
+	if (m_Rank->GetPipeConfig().GetAudioGroup() != wxEmptyString)
+		return m_Rank->GetPipeConfig().GetAudioGroup();
+	return m_OrganFile->GetPipeConfig().GetAudioGroup();
+}
+
+void GOrguePipe::UpdateAudioGroup()
+{
+	m_AudioGroupID = m_OrganFile->GetSettings().GetAudioGroupId(GetEffectiveAudioGroup());
 }
 
 unsigned GOrguePipe::GetEffectiveBitsPerSample()
