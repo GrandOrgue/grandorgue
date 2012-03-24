@@ -53,7 +53,7 @@ GOrgueMemoryPool::~GOrgueMemoryPool()
 	FreePool();
 }
 
-void *GOrgueMemoryPool::Alloc(unsigned length)
+void *GOrgueMemoryPool::Alloc(size_t length)
 {
 	void* data = PoolAlloc(length);
 	if (data)
@@ -78,7 +78,7 @@ void GOrgueMemoryPool::Free(void* data)
 	free(data);
 }
 
-void * GOrgueMemoryPool::Realloc(void* data, unsigned old_length, unsigned new_length)
+void * GOrgueMemoryPool::Realloc(void* data, size_t old_length, size_t new_length)
 {
 	if (m_PoolAllocs.count(data))
 	{
@@ -103,7 +103,7 @@ void GOrgueMemoryPool::AddPoolAlloc(void* data)
 	m_PoolAllocs.insert(data);
 }
 
-void* GOrgueMemoryPool::PoolAlloc(unsigned length)
+void* GOrgueMemoryPool::PoolAlloc(size_t length)
 {
 	if (!m_PoolStart)
 		return NULL;
@@ -126,13 +126,22 @@ void* GOrgueMemoryPool::PoolAlloc(unsigned length)
 	}
 	if (!m_AllocError++)
 	{
-		wxLogError(wxT("PoolAlloc failed: %d %d %08x %08x %08x"),
-			   length, m_PoolSize, m_PoolStart, m_PoolPtr, m_PoolEnd);
+		if (m_PoolSize + m_PageSize < m_PoolLimit)
+		{
+			wxLogError(wxT("PoolAlloc failed: %d %llu %llu %llu %p %p %p"),
+				   length, (unsigned long long)m_PoolSize, (unsigned long long)m_PoolLimit, 
+				   (unsigned long long)m_PoolIncrement, m_PoolStart, m_PoolPtr, m_PoolEnd);
+		}
+		else
+		{
+			wxLogError(_("Memory pool is full: %llu of %llu used"), 
+				   (unsigned long long)m_PoolSize, (unsigned long long)m_PoolLimit);
+		}
 	}
 	return NULL;
 }
 
-void *GOrgueMemoryPool::GetCacheData(unsigned long offset, unsigned length)
+void *GOrgueMemoryPool::GetCacheData(size_t offset, size_t length)
 {
 	if (!length)
 		return NULL;
@@ -155,17 +164,17 @@ void GOrgueMemoryPool::FreeCacheFile()
 	InitPool();
 }
 
-unsigned long GOrgueMemoryPool::GetAllocSize()
+size_t GOrgueMemoryPool::GetAllocSize()
 {
 	return m_PoolSize + m_MallocSize;
 }
 
-unsigned long GOrgueMemoryPool::GetMappedSize()
+size_t GOrgueMemoryPool::GetMappedSize()
 {
 	return m_CacheSize;
 }
 
-unsigned long GOrgueMemoryPool::GetPoolSize()
+size_t GOrgueMemoryPool::GetPoolSize()
 {
 	return m_PoolLimit;
 }
@@ -203,6 +212,8 @@ bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 	}
 	if (!m_CacheStart)
 		wxLogError(_("Memory mapping of the cache file failed with error code %d"), last_error);
+	else
+		result = true;
 #endif
 
 	InitPool();
@@ -243,6 +254,7 @@ void GOrgueMemoryPool::CalculatePoolLimit()
 	SYSTEM_INFO info;
 	MEMORY_BASIC_INFORMATION mem_info;
 	MEMORYSTATUSEX mem_stat;
+	mem_stat.dwLength = sizeof(mem_stat);
 	GetSystemInfo(&info);
 
 	/* Search for largest block */
@@ -257,6 +269,7 @@ void GOrgueMemoryPool::CalculatePoolLimit()
 	}
 	/* Limit with the available system memory */
 	if (GlobalMemoryStatusEx(&mem_stat))
+	{
 		if (m_PoolLimit + m_CacheSize > mem_stat.ullTotalPhys)
 		{
 			if (mem_stat.ullTotalPhys > m_CacheSize)
@@ -264,7 +277,9 @@ void GOrgueMemoryPool::CalculatePoolLimit()
 			else
 				m_PoolLimit = 0;
 		}
+	}
 #endif
+	m_PoolIncrement = 1000 * m_PageSize;
 }
 
 bool GOrgueMemoryPool::AllocatePool()
@@ -336,10 +351,14 @@ void GOrgueMemoryPool::FreePool()
 	m_CacheSize = 0;
 }
 
-void GOrgueMemoryPool::GrowPool(unsigned long length)
+void GOrgueMemoryPool::GrowPool(size_t length)
 {
-	unsigned long new_size = m_PoolSize + 1000 * m_PageSize;
+	unsigned long new_size = m_PoolSize + m_PoolIncrement;
+	while (new_size < m_PoolSize + length)
+		new_size += m_PageSize;
 	if (new_size > m_PoolLimit)
+		new_size = m_PoolLimit;
+	if (m_PoolSize >= m_PoolLimit)
 		return;
 #ifdef linux
 	if (mprotect(m_PoolStart, new_size, PROT_READ | PROT_WRITE) == -1)
