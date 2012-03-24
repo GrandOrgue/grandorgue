@@ -24,6 +24,7 @@
 #define GORGUEMEMORYPOOL_H_
 
 #include <set>
+#include <wx/wx.h>
 class wxFile;
 
 class GOrgueOutOfMemory {
@@ -35,18 +36,19 @@ class GOrgueMemoryPool {
 	char* m_PoolPtr;
 	char* m_PoolEnd;
 	char* m_CacheStart;
-	unsigned long m_PoolSize;
-	unsigned long m_PoolLimit;
-	unsigned long m_PageSize;
-	unsigned long m_CacheSize;
-	unsigned long m_MallocSize;
+	size_t m_PoolSize;
+	size_t m_PoolLimit;
+	size_t m_PoolIncrement;
+	size_t m_PageSize;
+	size_t m_CacheSize;
+	size_t m_MallocSize;
 	unsigned m_AllocError;
 	char m_dummy;
 
 	void InitPool();
-	void GrowPool(unsigned long size);
+	void GrowPool(size_t size);
 	void FreePool();
-	void* PoolAlloc(unsigned length);
+	void* PoolAlloc(size_t length);
 	void AddPoolAlloc(void* data);
 
 	void CalculatePageSize();
@@ -56,17 +58,17 @@ public:
 	GOrgueMemoryPool();
 	~GOrgueMemoryPool();
 
-	void *Alloc(unsigned length);
-	void *Realloc(void* data, unsigned old_length, unsigned new_length);
+	void *Alloc(size_t length);
+	void *Realloc(void* data, size_t old_length, size_t new_length);
 	void Free(void* data);
 
-	void *GetCacheData(unsigned long offset, unsigned length);
+	void *GetCacheData(size_t offset, size_t length);
 	bool SetCacheFile(wxFile& cache_file);
 	void FreeCacheFile();
 
-	unsigned long GetAllocSize();
-	unsigned long GetMappedSize();
-	unsigned long GetPoolSize();
+	size_t GetAllocSize();
+	size_t GetMappedSize();
+	size_t GetPoolSize();
 };
 
 
