@@ -24,6 +24,7 @@
 #define GOSOUNDTHREAD_H_
 
 #include <wx/wx.h>
+#include "GOLock.h"
 #include "GrandOrgueDef.h"
 
 class GOSoundEngine;
@@ -37,8 +38,8 @@ private:
 	unsigned m_FrameCount;
 	bool m_Stop;
 
-	wxMutex m_Mutex;
-	wxCondition m_Condition;
+	GOMutex m_Mutex;
+	GOCondition m_Condition;
 
 	void* Entry();
 

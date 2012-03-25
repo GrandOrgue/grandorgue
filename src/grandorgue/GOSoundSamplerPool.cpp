@@ -35,7 +35,7 @@ GOSoundSamplerPool::GOSoundSamplerPool() :
 
 void GOSoundSamplerPool::ReturnAll()
 {
-	wxCriticalSectionLocker locker(m_Lock);
+	GOMutexLocker locker(m_Lock);
 
 	m_SamplerCount = 0;
 
@@ -55,7 +55,7 @@ void GOSoundSamplerPool::SetUsageLimit(unsigned count)
 {
 	m_UsageLimit = count;
 
-	wxCriticalSectionLocker locker(m_Lock);
+	GOMutexLocker locker(m_Lock);
 	while(m_Samplers.size() < m_UsageLimit)
 	{
 		GO_SAMPLER* sampler = new GO_SAMPLER;
@@ -67,7 +67,7 @@ void GOSoundSamplerPool::SetUsageLimit(unsigned count)
 
 GO_SAMPLER* GOSoundSamplerPool::GetSampler()
 {
-	wxCriticalSectionLocker locker(m_Lock);
+	GOMutexLocker locker(m_Lock);
 
 	GO_SAMPLER* sampler = NULL;
 	if (m_SamplerCount < m_UsageLimit && m_AvailableSamplers)
@@ -82,7 +82,7 @@ GO_SAMPLER* GOSoundSamplerPool::GetSampler()
 
 void GOSoundSamplerPool::ReturnSampler(GO_SAMPLER* sampler)
 {
-	wxCriticalSectionLocker locker(m_Lock);
+	GOMutexLocker locker(m_Lock);
 
 	assert(m_SamplerCount > 0);
 	m_SamplerCount--;

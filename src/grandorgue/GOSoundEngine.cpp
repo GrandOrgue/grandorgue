@@ -180,7 +180,7 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsi
 	else
 		state = &m_Windchests[sampler_group_id - 1];
 
-	wxCriticalSectionLocker locker(state->lock);
+	GOMutexLocker locker(state->lock);
 	sampler->sampler_group_id = sampler_group_id;
 	sampler->audio_group_id = audio_group;
 	sampler->next = state->new_sampler;
@@ -240,12 +240,12 @@ void GOSoundEngine::ReadSamplerFrames
 
 void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames)
 {
-	wxCriticalSectionLocker locker(state.mutex);
+	GOMutexLocker locker(state.mutex);
 
 	if (state.done)
 		return;
 	{
-		wxCriticalSectionLocker locker(state.lock);
+		GOMutexLocker locker(state.lock);
 		if (state.new_sampler)
 		{
 			GO_SAMPLER* new_sampler = state.new_sampler;
@@ -406,17 +406,17 @@ void GOSoundEngine::ResetDoneFlags()
 {
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 	{
-		wxCriticalSectionLocker locker(m_Tremulants[j].mutex);
+		GOMutexLocker locker(m_Tremulants[j].mutex);
 		m_Tremulants[j].done = 0;
 	}
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
-		wxCriticalSectionLocker locker(m_Windchests[j].mutex);
+		GOMutexLocker locker(m_Windchests[j].mutex);
 		m_Windchests[j].done = 0;
 	}
 	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
 	{
-		wxCriticalSectionLocker locker(m_DetachedRelease[j].mutex);
+		GOMutexLocker locker(m_DetachedRelease[j].mutex);
 		m_DetachedRelease[j].done = 0;
 	}
 }

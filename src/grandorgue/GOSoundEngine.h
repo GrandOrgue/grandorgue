@@ -26,6 +26,7 @@
 #include "GOSoundDefs.h"
 #include "GOSoundSamplerPool.h"
 #include "GrandOrgueDef.h"
+#include "GOLock.h"
 #include "GOSoundResample.h"
 #include <vector>
 
@@ -53,7 +54,7 @@ private:
 
 	typedef int sound_buffer[GO_SOUND_BUFFER_SIZE];
 
-	/* This is inteded to be struct, but needs copy constructors to make wxCriticalSection work with std::vector */
+	/* This is inteded to be struct, but needs copy constructors to make GOMutex work with std::vector */
 	class GOSamplerEntry
 	{
 	public:
@@ -61,9 +62,9 @@ private:
 		GO_SAMPLER       *new_sampler;
 		float             buff[GO_SOUND_BUFFER_SIZE];
 		/* access lock for sampler data */
-		wxCriticalSection lock;
+		GOMutex           lock;
 		/* access lock for data buffer */
-		wxCriticalSection mutex;
+		GOMutex           mutex;
 		GOrgueWindchest  *windchest;
 		unsigned          done;
 		unsigned          count;

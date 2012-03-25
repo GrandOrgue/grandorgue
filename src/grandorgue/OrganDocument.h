@@ -25,6 +25,7 @@
 
 #include <wx/defs.h>
 #include <wx/docview.h>
+#include "GOLock.h"
 
 class GOrgueMidiEvent;
 class GrandOrgueFile;
@@ -32,7 +33,7 @@ class GrandOrgueFile;
 class OrganDocument : public wxDocument
 {
 private:
-	wxCriticalSection m_lock;
+	GOMutex m_lock;
 	bool m_OrganFileReady;
 	GrandOrgueFile* m_organfile;
 
