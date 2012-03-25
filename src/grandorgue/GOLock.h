@@ -30,6 +30,7 @@
 class GOMutex
 {
 private:
+#ifndef HAVE_ATOMIC
 	wxMutex m_Mutex;
 
 	void Init()
@@ -51,6 +52,47 @@ private:
 		return m_Mutex.TryLock() == wxMUTEX_NO_ERROR;
 	}
 	friend class GOCondition;
+#else
+	wxCriticalSection m_Mutex;
+	int m_Lock;
+
+	void Init()
+	{
+		m_Lock = 0;
+		m_Mutex.Enter();
+	}
+
+	void DoLock()
+	{
+		int value = __sync_fetch_and_add(&m_Lock, 1);
+		if (!value)
+		{
+			__sync_synchronize();
+			return;
+		}
+		m_Mutex.Enter();
+	}
+
+	void DoUnlock()
+	{
+		__sync_synchronize();
+		int value = __sync_fetch_and_add(&m_Lock, -1);
+		if (value > 1)
+			m_Mutex.Leave();
+	}
+
+	bool DoTryLock()
+	{
+		int value = __sync_fetch_and_add(&m_Lock, 1);
+		if (!value)
+		{
+			__sync_synchronize();
+			return true;
+		}
+		__sync_fetch_and_add(&m_Lock, -1);
+		return false;
+	}
+#endif
 
 	GOMutex(const GOMutex&);
 	const GOMutex& operator=(const GOMutex&);
@@ -84,6 +126,7 @@ public:
 class GOCondition
 {
 private:
+#ifndef HAVE_ATOMIC
 	wxCondition m_condition;
 
 	void Init()
@@ -99,13 +142,43 @@ private:
 	{
 		m_condition.Signal();
 	}
+#else
+	int m_Waiters;
+	wxCriticalSection m_Wait;
+
+	void Init()
+	{
+		m_Waiters = 0;
+		m_Wait.Enter();
+	}
+
+	void DoWait()
+	{
+		__sync_fetch_and_add(&m_Waiters, 1);
+		m_Mutex.Unlock();
+		m_Wait.Enter();
+		m_Mutex.Lock();
+	}
+
+	void DoSignal()
+	{
+		int waiters = __sync_fetch_and_add(&m_Waiters, -1);
+		if (waiters <= 0)
+			__sync_fetch_and_add(&m_Waiters, +1);
+		else
+			m_Wait.Leave();
+	}
+
+#endif
 	GOMutex& m_Mutex;
 
 	GOCondition(const GOCondition&);
 	const GOCondition& operator=(const GOCondition&);
 public:
 	GOCondition(GOMutex& mutex) :
+#ifndef HAVE_ATOMIC
 		m_condition(mutex.m_Mutex),
+#endif
 		m_Mutex(mutex)
 	{
 		Init();
