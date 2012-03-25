@@ -26,13 +26,14 @@
 #include <wx/wx.h>
 
 #include "GOSoundSampler.h"
+#include "GOLock.h"
 #include "ptrvector.h"
 
 class GOSoundSamplerPool
 {
 
 private:
-	wxCriticalSection       m_Lock;
+	GOMutex                 m_Lock;
 	unsigned                m_SamplerCount;
 	unsigned                m_UsageLimit;
 	GO_SAMPLER             *m_AvailableSamplers;

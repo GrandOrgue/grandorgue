@@ -25,11 +25,12 @@
 
 #include <wx/wx.h>
 #include <wx/file.h>
+#include "GOLock.h"
 
 class GOSoundRecorder {
 private:
 	wxFile m_file;
-	wxCriticalSection m_lock;
+	GOMutex m_lock;
 	unsigned m_SampleRate;
 	unsigned m_Channels;
 	unsigned m_BytesPerSample;

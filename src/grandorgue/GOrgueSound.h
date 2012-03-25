@@ -31,6 +31,7 @@
 #include "RtAudio.h"
 #include "portaudio.h"
 #include "GrandOrgueDef.h"
+#include "GOLock.h"
 #include "GOSoundEngine.h"
 #include "GOSoundRecorder.h"
 
@@ -114,8 +115,8 @@ public:
 	} GO_SOUND_DEV_CONFIG;
 
 private:
-	wxCriticalSection m_lock;
-	wxCriticalSection m_thread_lock;
+	GOMutex m_lock;
+	GOMutex m_thread_lock;
 
 	bool logSoundErrors;
 

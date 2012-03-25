@@ -78,7 +78,7 @@ void GOSoundRecorder::Open(wxString filename)
 
 	Close();
 
-	wxCriticalSectionLocker locker(m_lock);
+	GOMutexLocker locker(m_lock);
 
 	m_file.Create(filename, true);
 	if (!m_file.IsOpened())
@@ -96,7 +96,7 @@ bool GOSoundRecorder::IsOpen()
 
 void GOSoundRecorder::Close()
 {
-	wxCriticalSectionLocker locker(m_lock);
+	GOMutexLocker locker(m_lock);
 	struct_WAVE WAVE = {
 		{'R','I','F','F'}, 
 		wxUINT32_SWAP_ON_BE(0), 
@@ -147,7 +147,7 @@ inline int float_to_fixed(float f, unsigned fractional_bits)
 
 void GOSoundRecorder::Write(float* data, unsigned count)
 {
-	wxCriticalSectionLocker locker(m_lock);
+	GOMutexLocker locker(m_lock);
 	if (!m_file.IsOpened())
 		return;
 	if (m_BytesPerSample == 4)

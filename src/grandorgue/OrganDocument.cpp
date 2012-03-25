@@ -114,7 +114,7 @@ void OrganDocument::CloseOrgan()
 	g_sound->CloseSound();
 
 	m_OrganFileReady = false;
-	wxCriticalSectionLocker locker(m_lock);
+	GOMutexLocker locker(m_lock);
 	if (m_organfile)
 	{
 		delete m_organfile;
@@ -129,7 +129,7 @@ GrandOrgueFile* OrganDocument::GetOrganFile()
 
 void OrganDocument::OnMidiEvent(GOrgueMidiEvent& event)
 {
-	wxCriticalSectionLocker locker(m_lock);
+	GOMutexLocker locker(m_lock);
 
 	if (!m_OrganFileReady)
 		return;

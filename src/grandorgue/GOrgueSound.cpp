@@ -152,7 +152,7 @@ void GOrgueSound::StartThreads()
 	int n_cpus = m_Settings.GetConcurrency();
 	unsigned tasks = GetEngine().GetGroupCount();
 
-	wxCriticalSectionLocker thread_locker(m_thread_lock);
+	GOMutexLocker thread_locker(m_thread_lock);
 	float fact = tasks / (!n_cpus ? 1 : n_cpus);
 	unsigned no = 1;
 	/* We don't create extra thread for last cpu */
@@ -176,7 +176,7 @@ void GOrgueSound::StopThreads()
 	for(unsigned i = 0; i < m_Threads.size(); i++)
 		m_Threads[i]->Delete();
 
-	wxCriticalSectionLocker thread_locker(m_thread_lock);
+	GOMutexLocker thread_locker(m_thread_lock);
 	m_Threads.resize(0);
 }
 
@@ -428,7 +428,7 @@ void GOrgueSound::CloseSound()
 
 	}
 
-	wxCriticalSectionLocker locker(m_lock);
+	GOMutexLocker locker(m_lock);
 
 	if (m_organfile)
 	{
@@ -486,7 +486,7 @@ void GOrgueSound::StopRecording()
 
 void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 {
-	wxCriticalSectionLocker locker(m_lock);
+	GOMutexLocker locker(m_lock);
 
 	m_organfile = organfile;
 	StopThreads();
@@ -534,7 +534,7 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 {
 	assert(n_frames == m_SamplesPerBuffer);
 
-	wxCriticalSectionLocker locker(m_lock);
+	GOMutexLocker locker(m_lock);
 
 	int r;
 
@@ -572,7 +572,7 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 			meter_info.meter_left = meter_info.meter_right = 0.0;
 		}
 
-		wxCriticalSectionLocker thread_locker(m_thread_lock);
+		GOMutexLocker thread_locker(m_thread_lock);
 		for(unsigned i = 0; i < m_Threads.size(); i++)
 			m_Threads[i]->Wakeup();
 	}
