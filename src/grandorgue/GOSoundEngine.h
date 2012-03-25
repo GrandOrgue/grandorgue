@@ -60,6 +60,7 @@ private:
 	public:
 		GO_SAMPLER       *sampler;
 		GO_SAMPLER       *new_sampler;
+		GO_SAMPLER      **end_new_sampler;
 		float             buff[GO_SOUND_BUFFER_SIZE];
 		/* access lock for sampler data */
 		GOMutex           lock;
@@ -74,6 +75,7 @@ private:
 		{
 			sampler = NULL;
 			new_sampler = NULL;
+			end_new_sampler = NULL;
 			windchest = NULL;
 			done = 0;
 			count = 0;
@@ -84,6 +86,7 @@ private:
 		{
 			sampler = entry.sampler;
 			new_sampler = entry.new_sampler;
+			end_new_sampler = entry.end_new_sampler;
 			windchest = entry.windchest;
 			done = 0;
 			count = entry.count;
@@ -94,6 +97,7 @@ private:
 		{
 			sampler = entry.sampler;
 			new_sampler = entry.new_sampler;
+			end_new_sampler = entry.end_new_sampler;
 			windchest = entry.windchest;
 			count = entry.count;
 			is_tremulant = entry.is_tremulant;
