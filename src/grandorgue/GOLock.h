@@ -25,21 +25,78 @@
 
 #include <wx/wx.h>
 #include <vector>
+#include "GrandOrgueDef.h"
+
+class GOMutex
+{
+private:
+	wxMutex m_Mutex;
+
+	void Init()
+	{
+	}
+
+	void DoLock()
+	{
+		m_Mutex.Lock();
+	}
+
+	void DoUnlock()
+	{
+		m_Mutex.Unlock();
+	}
+
+	bool DoTryLock()
+	{
+		return m_Mutex.TryLock() == wxMUTEX_NO_ERROR;
+	}
+
+	GOMutex(const GOMutex&);
+	const GOMutex& operator=(const GOMutex&);
+
+public:
+	GOMutex()
+	{
+		Init();
+	}
+
+	~GOMutex()
+	{
+	}
+
+	void Lock()
+	{
+		DoLock();
+	}
+
+	void Unlock()
+	{
+		DoUnlock();
+	}
+
+	bool TryLock()
+	{
+		return DoTryLock();
+	}
+};
 
 class GOMutexLocker
 {
 private:
-	wxMutex& m_Mutex;
+	GOMutex& m_Mutex;
 	bool m_Locked;
 public:
-	GOMutexLocker(wxMutex& mutex, bool try_lock = false) :
+	GOMutexLocker(GOMutex& mutex, bool try_lock = false) :
 		m_Mutex(mutex),
 		m_Locked(false)
 	{
 		if (try_lock)
-			m_Locked = m_Mutex.TryLock() == wxMUTEX_NO_ERROR;
+			m_Locked = m_Mutex.TryLock();
 		else
-			m_Locked = m_Mutex.Lock() == wxMUTEX_NO_ERROR;
+		{
+			m_Mutex.Lock();
+			m_Locked = true;
+		}
 	}
 
 	~GOMutexLocker()
@@ -52,12 +109,19 @@ public:
 	{
 		return m_Locked;
 	}
+
+	void Unlock()
+	{
+		if (m_Locked)
+			m_Mutex.Unlock();
+		m_Locked = false;
+	}
 };
 
 class GOMultiMutexLocker
 {
 private:
-	std::vector<wxMutex*> m_Mutex;
+	std::vector<GOMutex*> m_Mutex;
 
 public:
 	GOMultiMutexLocker() :
@@ -74,7 +138,7 @@ public:
 		}
 	}
 
-	void Add(wxMutex& mutex)
+	void Add(GOMutex& mutex)
 	{
 		mutex.Lock();
 		m_Mutex.push_back(&mutex);
