@@ -61,6 +61,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
  			std::vector<release_load_info> release;
  			std::vector<attack_load_info> attack;
 			attack_load_info ainfo;
+			ainfo.cue_point = -1;
 			ainfo.filename = wxString::Format(wxT("%02d.wav"), i % 3);
 			ainfo.sample_group = -1;
 			ainfo.load_release = true;
