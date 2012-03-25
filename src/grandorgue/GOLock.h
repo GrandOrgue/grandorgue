@@ -50,6 +50,7 @@ private:
 	{
 		return m_Mutex.TryLock() == wxMUTEX_NO_ERROR;
 	}
+	friend class GOCondition;
 
 	GOMutex(const GOMutex&);
 	const GOMutex& operator=(const GOMutex&);
@@ -77,6 +78,47 @@ public:
 	bool TryLock()
 	{
 		return DoTryLock();
+	}
+};
+
+class GOCondition
+{
+private:
+	wxCondition m_condition;
+
+	void Init()
+	{
+	}
+
+	void DoWait()
+	{
+		m_condition.Wait();
+	}
+
+	void DoSignal()
+	{
+		m_condition.Signal();
+	}
+	GOMutex& m_Mutex;
+
+	GOCondition(const GOCondition&);
+	const GOCondition& operator=(const GOCondition&);
+public:
+	GOCondition(GOMutex& mutex) :
+		m_condition(mutex.m_Mutex),
+		m_Mutex(mutex)
+	{
+		Init();
+	}
+
+	void Wait()
+	{
+		DoWait();
+	}
+
+	void Signal()
+	{
+		DoSignal();
 	}
 };
 
