@@ -84,6 +84,9 @@ if(UNIX)
   install(FILES GrandOrgue.png DESTINATION share/pixmaps)
 endif()
 
+# check for GCC atomic support
+CHECK_CXX_SOURCE_COMPILES("int x; int main() { return __sync_fetch_and_add(&x, 1); }" HAVE_ATOMIC)
+
 # setup compiler flags for debug vs release compiles
 add_option(ffast-math)
 add_option(Wall)
