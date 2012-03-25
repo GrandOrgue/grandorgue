@@ -25,6 +25,7 @@
 #include "GOSoundSampler.h"
 #include "GOrgueEvent.h"
 #include "GOrgueInt24.h"
+#include "GOLock.h"
 #include "GOrguePipe.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueWindchest.h"
@@ -246,9 +247,12 @@ void GOSoundEngine::ReadSamplerFrames
 
 }
 
-void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames)
+void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, bool depend)
 {
-	GOMutexLocker locker(state.mutex);
+	GOMutexLocker locker(state.mutex, !depend);
+
+	if (!locker.IsLocked())
+		return;
 
 	if (state.done)
 		return;
@@ -405,7 +409,7 @@ void GOSoundEngine::Process(unsigned group_id, unsigned n_frames)
 		state = &m_Windchests[group_id - m_DetachedRelease.size()];
 
 	if (!state->done)
-		ProcessAudioSamplers(*state, n_frames);
+		ProcessAudioSamplers(*state, n_frames, false);
 }
 
 void GOSoundEngine::ResetDoneFlags()
