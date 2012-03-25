@@ -67,16 +67,20 @@ void GOSoundSamplerPool::SetUsageLimit(unsigned count)
 
 GO_SAMPLER* GOSoundSamplerPool::GetSampler()
 {
-	GOMutexLocker locker(m_Lock);
-
 	GO_SAMPLER* sampler = NULL;
-	if (m_SamplerCount < m_UsageLimit && m_AvailableSamplers)
+
+	if (m_SamplerCount < m_UsageLimit)
 	{
-		sampler = m_AvailableSamplers;
-		m_AvailableSamplers = m_AvailableSamplers->next;
-		m_SamplerCount++;
-		memset(sampler, 0, sizeof(GO_SAMPLER));
+		GOMutexLocker locker(m_Lock);
+		if (m_AvailableSamplers)
+		{
+			sampler = m_AvailableSamplers;
+			m_AvailableSamplers = m_AvailableSamplers->next;
+			m_SamplerCount++;
+		}
 	}
+	if (sampler)
+		memset(sampler, 0, sizeof(GO_SAMPLER));
 	return sampler;
 }
 
