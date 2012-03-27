@@ -241,8 +241,12 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	choices.push_back(_("350 ms"));
 	choices.push_back(_("175 ms"));
 	m_Reverb = new wxChoice(tb, ID_REVERB_SELECT, wxDefaultPosition, wxDefaultSize, choices);
-	tb->AddControl(m_Reverb);	
-	m_Reverb->SetSelection(m_Settings.GetReverb());
+	tb->AddControl(m_Reverb);
+	int n = m_Settings.GetReverb();
+	m_Reverb->SetSelection(n);
+		if (n > 0)
+		n = -17 + n;
+	m_Sound.GetEngine().SetReverb(n);
 
 	m_panel_menu = new wxMenu();
 
