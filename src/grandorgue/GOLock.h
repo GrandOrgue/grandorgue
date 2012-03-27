@@ -92,13 +92,11 @@ private:
 
 	bool DoTryLock()
 	{
-		int value = __sync_fetch_and_add(&m_Lock, 1);
-		if (!value)
+		if (__sync_bool_compare_and_swap(&m_Lock, 0, 1))
 		{
 			__sync_synchronize();
 			return true;
 		}
-		__sync_fetch_and_add(&m_Lock, -1);
 		return false;
 	}
 #endif
