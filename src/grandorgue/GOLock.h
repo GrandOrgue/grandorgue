@@ -37,6 +37,10 @@ private:
 	{
 	}
 
+	void Cleanup()
+	{
+	}
+
 	void DoLock()
 	{
 		m_Mutex.Lock();
@@ -60,6 +64,11 @@ private:
 	{
 		m_Lock = 0;
 		m_Mutex.Enter();
+	}
+
+	void Cleanup()
+	{
+		m_Mutex.Leave();
 	}
 
 	void DoLock()
@@ -105,6 +114,7 @@ public:
 
 	~GOMutex()
 	{
+		Cleanup();
 	}
 
 	void Lock()
@@ -133,6 +143,10 @@ private:
 	{
 	}
 
+	void Cleanup()
+	{
+	}
+
 	void DoWait()
 	{
 		m_condition.Wait();
@@ -150,6 +164,11 @@ private:
 	{
 		m_Waiters = 0;
 		m_Wait.Enter();
+	}
+
+	void Cleanup()
+	{
+		m_Wait.Leave();
 	}
 
 	void DoWait()
@@ -182,6 +201,11 @@ public:
 		m_Mutex(mutex)
 	{
 		Init();
+	}
+
+	~GOCondition()
+	{
+		Cleanup();
 	}
 
 	void Wait()
