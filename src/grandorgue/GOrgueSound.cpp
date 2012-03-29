@@ -328,6 +328,7 @@ void GOrgueSound::OpenStreams()
 					if (i == 0)
 					{
 						m_SamplesPerBuffer = samples_per_buffer;
+						m_Settings.SetSamplesPerBuffer(m_SamplesPerBuffer);
 					}
 					else
 						throw wxString::Format(_("Device %s wants a different frame count: %d"), m_AudioOutputs[i].name.c_str(), samples_per_buffer);

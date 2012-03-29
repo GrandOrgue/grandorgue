@@ -23,6 +23,7 @@
 #include <wx/filepicker.h>
 
 #include "SettingsOption.h"
+#include "GOSoundDefs.h"
 #include "GOrgueSettings.h"
 
 SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
@@ -172,10 +173,18 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_SampleRate = new wxChoice(this, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
+	choices.clear();
+	for(unsigned i = 0; i < MAX_FRAME_SIZE / BLOCKS_PER_FRAME; i++)
+		choices.push_back(wxString::Format(wxT("%d"), (i + 1) * BLOCKS_PER_FRAME));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Samples per buffer:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_SamplesPerBuffer = new wxChoice(this, ID_SAMPLES_PER_BUFFER, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
 	m_SampleRate->Select(0);
 	for(unsigned i = 0; i < m_SampleRate->GetCount(); i++)
 		if (wxString::Format(wxT("%d"), m_Settings.GetSampleRate()) == m_SampleRate->GetString(i))
 			m_SampleRate->Select(i);
+	m_SamplesPerBuffer->SetSelection(m_Settings.GetSamplesPerBuffer() / BLOCKS_PER_FRAME - 1);
+	m_SamplesPerBuffer->Disable();
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
@@ -202,6 +211,7 @@ void SettingsOption::Save()
 	m_Settings.SetLoadInStereo(m_Stereo->GetSelection());
 	m_Settings.SetInterpolationType(m_Interpolation->GetSelection());
 	m_Settings.SetSampleRate(wxAtoi(m_SampleRate->GetStringSelection()));
+	m_Settings.SetSamplesPerBuffer((m_SamplesPerBuffer->GetSelection() + 1) * BLOCKS_PER_FRAME);
 }
 
 bool SettingsOption::NeedReload()

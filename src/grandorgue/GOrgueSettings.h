@@ -53,6 +53,7 @@ private:
 	bool m_CompressCache;
 	bool m_ScaleRelease;
 	bool m_RandomizeSpeaking;
+	unsigned m_SamplesPerBuffer;
 	unsigned m_SampleRate;
 	unsigned m_BitsPerSample;
 	unsigned m_InterpolationType;
@@ -134,6 +135,9 @@ public:
 	void SetConcurrency(unsigned concurrency);
 	unsigned GetReleaseConcurrency();
 	void SetReleaseConcurrency(unsigned concurrency);
+
+	unsigned GetSamplesPerBuffer();
+	void SetSamplesPerBuffer(unsigned sampler_per_buffer);
 
 	bool GetLosslessCompression();
 	void SetLosslessCompression(bool lossless_compression);

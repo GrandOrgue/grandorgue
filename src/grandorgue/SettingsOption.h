@@ -48,6 +48,7 @@ class SettingsOption : public wxPanel
 		ID_MONO_STEREO,
 		ID_INTERPOLATION,
 		ID_SAMPLE_RATE,
+		ID_SAMPLES_PER_BUFFER,
 	};
 private:
 	GOrgueSettings& m_Settings;
@@ -68,6 +69,7 @@ private:
 	wxChoice* m_Stereo;
 	wxChoice* m_Interpolation;
 	wxChoice* m_SampleRate;
+	wxChoice* m_SamplesPerBuffer;
 	bool m_OldStereo;
 	bool m_OldLosslessCompression;
 	unsigned m_OldBitsPerSample;
