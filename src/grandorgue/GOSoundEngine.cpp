@@ -63,7 +63,8 @@ GOSoundEngine::GOSoundEngine() :
 	m_DetachedRelease(1),
 	m_Windchests(),
 	m_Tremulants(),
-	m_OutputGroups(1)
+	m_OutputGroups(1),
+	m_AudioOutputs()
 {
 	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
@@ -513,6 +514,65 @@ void GOSoundEngine::ProcessOutputGroup(unsigned audio_group, unsigned n_frames)
 	}
 	output.done = true;
 }
+
+void GOSoundEngine::SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs)
+{
+	m_AudioOutputs.resize(audio_outputs.size());
+	for(unsigned i = 0; i < audio_outputs.size(); i++)
+	{
+		m_AudioOutputs[i].channels = audio_outputs[i].channels;
+		m_AudioOutputs[i].scale_factors.resize(m_AudioGroupCount * audio_outputs[i].channels * 2);
+		std::fill(m_AudioOutputs[i].scale_factors.begin(), m_AudioOutputs[i].scale_factors.end(), 0.0f);
+		for(unsigned j = 0; j < audio_outputs[i].channels; j++)
+			for(unsigned k = 0; k < audio_outputs[i].scale_factors[j].size(); k++)
+			{
+				if (k >= m_AudioGroupCount * 2)
+					continue;
+				float factor = audio_outputs[i].scale_factors[j][k];
+				if (factor >= -120 && factor < 40)
+					factor = powf(10.0f, factor * 0.05f);
+				else
+					factor = 0;
+				m_AudioOutputs[i].scale_factors[j * m_AudioGroupCount * 2 + k] = factor;
+			}
+	}
+}
+
+int GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output)
+{
+	GOAudioOutput& output = m_AudioOutputs[audio_output];
+
+	/* initialise the output buffer */
+	std::fill(output_buffer, output_buffer + n_frames * output.channels, 0.0f);
+
+	for(unsigned i = 0; i < output.channels; i++)
+	{
+		for(unsigned j = 0; j < m_AudioGroupCount * 2; j++)
+		{
+			float factor = output.scale_factors[i * m_AudioGroupCount * 2 + j];
+			if (factor == 0)
+				continue;
+
+			float* this_buff = m_OutputGroups[j / 2].buff;
+			ProcessOutputGroup(j / 2, n_frames);
+
+			for (unsigned k = i, l = j % 2; k < n_frames * output.channels; k += output.channels, l+= 2)
+				output_buffer[k] += factor * this_buff[l];
+		}
+	}
+
+	/* Clamp the output */
+	static const float CLAMP_MIN = -1.0f;
+	static const float CLAMP_MAX = 1.0f;
+	for (unsigned k = 0; k < n_frames * output.channels; k++)
+	{
+		float f = std::min(std::max(output_buffer[k], CLAMP_MIN), CLAMP_MAX);
+		output_buffer[k] = f;
+	}
+
+	return 0;
+}
+
 
 // this callback will fill the buffer with bufferSize frame
 // audio is opened with 32 bit stereo, so one frame is 64bit (32bit for right 32bit for left)
