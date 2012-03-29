@@ -21,6 +21,7 @@
  */
 
 #include "GOrgueSettings.h"
+#include "GOSoundDefs.h"
 
 #include <wx/wx.h>
 #include <wx/stdpaths.h>
@@ -110,6 +111,7 @@ void GOrgueSettings::Load()
 	m_CompressCache = m_Config.Read(wxT("CompressCache"), 1);
 	m_ScaleRelease = m_Config.Read(wxT("ScaleRelease"), 1);
 	m_RandomizeSpeaking = m_Config.Read(wxT("RandomizeSpeaking"), 1);
+	SetSamplesPerBuffer(m_Config.Read(wxT("SamplesPerBuffer"), 1024));
 	m_SampleRate = m_Config.Read(wxT("SampleRate"), 44100);
 	m_Reverb = m_Config.Read(wxT("Reverb"), 0L);
 	if (m_Reverb > 5 || m_Reverb < 0)
@@ -430,6 +432,21 @@ void GOrgueSettings::SetLoadInStereo(bool stereo)
 {
 	m_Stereo = stereo;
 	m_Config.Write(wxT("StereoEnabled"), m_Stereo);
+}
+
+unsigned GOrgueSettings::GetSamplesPerBuffer()
+{
+	return m_SamplesPerBuffer;
+}
+
+void GOrgueSettings::SetSamplesPerBuffer(unsigned sampler_per_buffer)
+{
+	m_SamplesPerBuffer = BLOCKS_PER_FRAME * ceil(sampler_per_buffer / BLOCKS_PER_FRAME);
+	if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
+		m_SamplesPerBuffer = MAX_FRAME_SIZE;
+	if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
+		m_SamplesPerBuffer = BLOCKS_PER_FRAME;
+	m_Config.Write(wxT("SamplesPerBuffer"), (long)m_SamplesPerBuffer);
 }
 
 unsigned GOrgueSettings::GetConcurrency()
