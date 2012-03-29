@@ -43,6 +43,12 @@ typedef struct
 	double meter_right;
 } METER_INFO;
 
+typedef struct
+{
+	unsigned channels;
+	std::vector< std::vector<float> > scale_factors;
+} GOAudioOutputConfiguration;
+
 struct GO_SAMPLER_T;
 typedef struct GO_SAMPLER_T GO_SAMPLER;
 typedef GO_SAMPLER* SAMPLER_HANDLE;
@@ -130,6 +136,13 @@ private:
 		}
 	};
 
+	class GOAudioOutput
+	{
+	public:
+		unsigned channels;
+		std::vector<float> scale_factors;
+	};
+
 	unsigned                      m_PolyphonySoftLimit;
 	bool                          m_PolyphonyLimiting;
 	bool                          m_ScaledReleases;
@@ -148,6 +161,7 @@ private:
 	std::vector<GOSamplerEntry>   m_Windchests;
 	std::vector<GOSamplerEntry>   m_Tremulants;
 	std::vector<GOOutputGroup>    m_OutputGroups;
+	std::vector<GOAudioOutput>    m_AudioOutputs;
 
 	struct resampler_coefs_s      m_ResamplerCoefs;
 
@@ -172,6 +186,7 @@ public:
 	GOSoundEngine();
 	void Reset();
 	void Setup(GrandOrgueFile* organ_file, unsigned release_count = 1);
+	void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
 	void SetVolume(int volume);
 	void SetSampleRate(unsigned sample_rate);
 	void SetInterpolationType(unsigned type);
@@ -190,6 +205,8 @@ public:
 	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
+
+	int GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
 
 	int GetSamples
 		(float      *output_buffer
