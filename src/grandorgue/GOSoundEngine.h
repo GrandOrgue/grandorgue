@@ -106,6 +106,30 @@ private:
 		}
 	};
 
+	class GOOutputGroup
+	{
+	public:
+		float buff[GO_SOUND_BUFFER_SIZE];
+		GOMutex mutex;
+	        bool done;
+
+		GOOutputGroup()
+		{
+			done = false;
+		}
+
+		GOOutputGroup(const GOOutputGroup& entry)
+		{
+			done = false;
+		}
+
+		const GOOutputGroup& operator=(const GOOutputGroup& entry)
+		{
+			done = false;
+			return *this;
+		}
+	};
+
 	unsigned                      m_PolyphonySoftLimit;
 	bool                          m_PolyphonyLimiting;
 	bool                          m_ScaledReleases;
@@ -117,9 +141,13 @@ private:
 	unsigned                      m_SampleRate;
 	unsigned long                 m_CurrentTime;
 	GOSoundSamplerPool            m_SamplerPool;
+	unsigned                      m_AudioGroupCount;
+	unsigned                      m_WindchestCount;
+	unsigned                      m_DetachedReleaseCount;
 	std::vector<GOSamplerEntry>   m_DetachedRelease;
 	std::vector<GOSamplerEntry>   m_Windchests;
 	std::vector<GOSamplerEntry>   m_Tremulants;
+	std::vector<GOOutputGroup>    m_OutputGroups;
 
 	struct resampler_coefs_s      m_ResamplerCoefs;
 
@@ -137,6 +165,7 @@ private:
 	void ResetDoneFlags();
 	float GetRandomFactor();
 	void ProcessTremulants(unsigned n_frames);
+	void ProcessOutputGroup(unsigned audio_group, unsigned n_frames);
 
 public:
 
@@ -147,6 +176,8 @@ public:
 	void SetSampleRate(unsigned sample_rate);
 	void SetInterpolationType(unsigned type);
 	unsigned GetSampleRate();
+	void SetAudioGroupCount(unsigned groups);
+	unsigned GetAudioGroupCount();
 	void SetHardPolyphony(unsigned polyphony);
 	void SetPolyphonyLimiting(bool limiting);
 	unsigned GetHardPolyphony() const;

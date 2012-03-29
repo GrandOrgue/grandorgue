@@ -213,6 +213,7 @@ bool GOrgueSound::OpenSound()
 	m_SoundEngine.SetScaledReleases(m_Settings.GetScaleRelease());
 	m_SoundEngine.SetRandomizeSpeaking(m_Settings.GetRandomizeSpeaking());
 	m_SoundEngine.SetInterpolationType(m_Settings.GetInterpolationType());
+	m_SoundEngine.SetAudioGroupCount(1);
 	unsigned sample_rate = m_Settings.GetSampleRate();
 	m_recorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
 	GetEngine().SetSampleRate(sample_rate);
