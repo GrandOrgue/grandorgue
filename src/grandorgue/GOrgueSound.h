@@ -62,7 +62,13 @@ class GOrgueSound
 		PaStream* audioStream;
 		RtAudio* audioDevice;
 
-		GO_SOUND_OUTPUT()
+		GOMutex mutex;
+		GOCondition condition;
+		bool wait;
+		bool waiting;
+
+		GO_SOUND_OUTPUT() :
+			condition(mutex)
 		{
 			sound = 0;
 			index = 0;
@@ -74,9 +80,12 @@ class GOrgueSound
 			nb_buffers = 0;
 			audioStream = 0;
 			audioDevice = 0;
+			wait = false;
+			waiting = false;
 		}
 
-		GO_SOUND_OUTPUT(const GO_SOUND_OUTPUT& old)
+		GO_SOUND_OUTPUT(const GO_SOUND_OUTPUT& old) :
+			condition(mutex)
 		{
 			sound = old.sound;
 			index = old.index;
@@ -88,6 +97,8 @@ class GOrgueSound
 			nb_buffers = old.nb_buffers;
 			audioStream = old.audioStream;
 			audioDevice = old.audioDevice;
+			wait = old.wait;
+			waiting = old.waiting;
 		}
 
 		const GO_SOUND_OUTPUT& operator=(const GO_SOUND_OUTPUT& old)
@@ -102,6 +113,8 @@ class GOrgueSound
 			nb_buffers = old.nb_buffers;
 			audioStream = old.audioStream;
 			audioDevice = old.audioDevice;
+			wait = old.wait;
+			waiting = old.waiting;
 			return *this;
 		}
 	};
