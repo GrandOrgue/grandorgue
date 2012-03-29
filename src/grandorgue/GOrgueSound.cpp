@@ -24,6 +24,7 @@
 #include "GOSoundThread.h"
 #include "GrandOrgueFile.h"
 #include "GOrgueRtHelpers.h"
+#include "GOLock.h"
 #include "GOrgueMidi.h"
 #include "GOrgueSettings.h"
 #include "GOrgueEvent.h"
@@ -387,12 +388,30 @@ void GOrgueSound::StartStreams()
 			m_Settings.SetAudioDeviceActualLatency(m_AudioOutputs[i].name, (int)(info->outputLatency * 1000));
 		}
 	}
+
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+	{
+		GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
+		m_AudioOutputs[i].wait = true;
+	}
 }
 
 void GOrgueSound::CloseSound()
 {
 	StopThreads();
 	m_recorder.Close();
+
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+	{
+		m_AudioOutputs[i].wait = false;
+		m_AudioOutputs[i].condition.Signal();
+	}
+
+	for(unsigned i = 1; i < m_AudioOutputs.size(); i++)
+	{
+		GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
+		m_AudioOutputs[i].condition.Signal();
+	}
 
 	for(int i = m_AudioOutputs.size() - 1; i >= 0; i--)
 	{
@@ -429,14 +448,19 @@ void GOrgueSound::CloseSound()
 
 	}
 
-	GOMutexLocker locker(m_lock);
-
-	if (m_organfile)
 	{
-		m_organfile->Abort();
-		m_organfile = NULL;
+		GOMutexLocker locker(m_lock);
+		GOMultiMutexLocker multi;
+		for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+			multi.Add(m_AudioOutputs[i].mutex);
+
+		if (m_organfile)
+		{
+			m_organfile->Abort();
+			m_organfile = NULL;
+		}
+		ResetMeters();
 	}
-	ResetMeters();
 	m_AudioOutputs.clear();
 }
 
@@ -488,6 +512,9 @@ void GOrgueSound::StopRecording()
 void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 {
 	GOMutexLocker locker(m_lock);
+	GOMultiMutexLocker multi;
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+		multi.Add(m_AudioOutputs[i].mutex);
 
 	m_organfile = organfile;
 	StopThreads();
@@ -535,7 +562,7 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 {
 	assert(n_frames == m_SamplesPerBuffer);
 
-	GOMutexLocker locker(m_lock);
+	GOMutexLocker locker(device->mutex);
 
 	int r;
 
