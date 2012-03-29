@@ -67,12 +67,12 @@ void GOSoundRecorder::Open(wxString filename)
 		{'W','A','V','E'}, 
 		{'f','m','t',' '}, 
 		wxUINT32_SWAP_ON_BE(16), 
-		wxUINT16_SWAP_ON_BE(m_BytesPerSample == 4 ? 3 : 1), 
-		wxUINT16_SWAP_ON_BE(m_Channels), 
+		(wxUint16)wxUINT16_SWAP_ON_BE(m_BytesPerSample == 4 ? 3 : 1), 
+		(wxUint16)wxUINT16_SWAP_ON_BE(m_Channels), 
 		wxUINT32_SWAP_ON_BE(m_SampleRate), 
 		wxUINT32_SWAP_ON_BE(m_SampleRate * m_BytesPerSample * m_Channels), 
-		wxUINT16_SWAP_ON_BE(m_BytesPerSample * m_Channels), 
-		wxUINT16_SWAP_ON_BE(8 * m_BytesPerSample), 
+		(wxUint16)wxUINT16_SWAP_ON_BE(m_BytesPerSample * m_Channels), 
+		(wxUint16)wxUINT16_SWAP_ON_BE(8 * m_BytesPerSample), 
 		{'d','a','t','a'}, 
 		wxUINT32_SWAP_ON_BE(0)};
 
@@ -103,12 +103,12 @@ void GOSoundRecorder::Close()
 		{'W','A','V','E'}, 
 		{'f','m','t',' '}, 
 		wxUINT32_SWAP_ON_BE(16), 
-		wxUINT16_SWAP_ON_BE(m_BytesPerSample == 4 ? 3 : 1), 
-		wxUINT16_SWAP_ON_BE(m_Channels), 
+		(wxUint16)wxUINT16_SWAP_ON_BE(m_BytesPerSample == 4 ? 3 : 1), 
+		(wxUint16)wxUINT16_SWAP_ON_BE(m_Channels), 
 		wxUINT32_SWAP_ON_BE(m_SampleRate), 
 		wxUINT32_SWAP_ON_BE(m_SampleRate  * m_BytesPerSample * m_Channels), 
-		wxUINT16_SWAP_ON_BE(m_BytesPerSample * m_Channels), 
-		wxUINT16_SWAP_ON_BE(8 * m_BytesPerSample), 
+		(wxUint16)wxUINT16_SWAP_ON_BE(m_BytesPerSample * m_Channels), 
+		(wxUint16)wxUINT16_SWAP_ON_BE(8 * m_BytesPerSample), 
 		{'d','a','t','a'}, 
 		wxUINT32_SWAP_ON_BE(0)};
 
