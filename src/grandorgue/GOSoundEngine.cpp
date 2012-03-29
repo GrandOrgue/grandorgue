@@ -57,9 +57,13 @@ GOSoundEngine::GOSoundEngine() :
 	m_SampleRate(0),
 	m_CurrentTime(0),
 	m_SamplerPool(),
+	m_AudioGroupCount(1),
+	m_WindchestCount(0),
+	m_DetachedReleaseCount(1),
 	m_DetachedRelease(1),
 	m_Windchests(),
-	m_Tremulants()
+	m_Tremulants(),
+	m_OutputGroups(1)
 {
 	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
@@ -69,6 +73,9 @@ GOSoundEngine::GOSoundEngine() :
 
 void GOSoundEngine::Reset()
 {
+	m_DetachedRelease.resize(m_DetachedReleaseCount * m_AudioGroupCount);
+	m_Windchests.resize(m_WindchestCount * m_AudioGroupCount);
+	m_OutputGroups.resize(m_AudioGroupCount);
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
 	{
 		m_Windchests[i].new_sampler = 0;
@@ -145,6 +152,18 @@ unsigned GOSoundEngine::GetHardPolyphony() const
 	return m_SamplerPool.GetUsageLimit();
 }
 
+void GOSoundEngine::SetAudioGroupCount(unsigned groups)
+{
+	if (groups < 1)
+		groups = 1;
+	m_AudioGroupCount = groups;
+}
+
+unsigned GOSoundEngine::GetAudioGroupCount()
+{
+	return m_AudioGroupCount;
+}
+
 int GOSoundEngine::GetVolume() const
 {
 	return m_Volume;
@@ -175,14 +194,17 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsi
 {
 	GOSamplerEntry* state;
 
+	if (audio_group >= m_AudioGroupCount)
+		audio_group = 0;
+
 	if (sampler_group_id == 0)
-		state = &m_DetachedRelease[0];
+		state = &m_DetachedRelease[0 + audio_group * m_DetachedReleaseCount];
 	else if (sampler_group_id < 0)
 		state = &m_Tremulants[-1-sampler_group_id];
 	else if (sampler_group_id > (int) m_Windchests.size())
-		state = &m_DetachedRelease[sampler_group_id - m_Windchests.size()];
+		state = &m_DetachedRelease[sampler_group_id - m_Windchests.size() + audio_group * m_DetachedReleaseCount];
 	else
-		state = &m_Windchests[sampler_group_id - 1];
+		state = &m_Windchests[sampler_group_id - 1 + audio_group * m_WindchestCount];
 
 	sampler->sampler_group_id = sampler_group_id;
 	sampler->audio_group_id = audio_group;
@@ -201,12 +223,16 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsi
 
 void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 {
-	m_Windchests.resize(organ_file->GetWindchestGroupCount());
 	if (release_count < 1)
 		release_count = 1;
-	m_DetachedRelease.resize(release_count);
-	for (unsigned i = 0; i < m_Windchests.size(); i++)
-		m_Windchests[i].windchest = organ_file->GetWindchest(i);
+	m_DetachedReleaseCount = release_count;
+	m_WindchestCount = organ_file->GetWindchestGroupCount();
+	m_DetachedRelease.resize(m_DetachedReleaseCount * m_AudioGroupCount);
+	m_Windchests.resize(m_WindchestCount * m_AudioGroupCount);
+	m_OutputGroups.resize(m_AudioGroupCount);
+	for (unsigned i = 0; i < m_WindchestCount; i++)
+		for(unsigned j = 0; j < m_AudioGroupCount; j++)
+			m_Windchests[m_WindchestCount * j + i].windchest = organ_file->GetWindchest(i);
 	m_Tremulants.resize(organ_file->GetTremulantCount());
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 		m_Tremulants[i].is_tremulant = true;
@@ -396,17 +422,17 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 
 unsigned GOSoundEngine::GetGroupCount()
 {
-	return (m_DetachedRelease.size() + m_Windchests.size());
+	return (m_DetachedReleaseCount + m_WindchestCount) * m_AudioGroupCount;
 }
 
 void GOSoundEngine::Process(unsigned group_id, unsigned n_frames)
 {
 	GOSamplerEntry* state;
 
-	if (group_id < m_DetachedRelease.size())
+	if (group_id < m_DetachedReleaseCount * m_AudioGroupCount)
 		state = &m_DetachedRelease[group_id];
 	else
-		state = &m_Windchests[group_id - m_DetachedRelease.size()];
+		state = &m_Windchests[group_id - m_DetachedReleaseCount * m_AudioGroupCount];
 
 	if (!state->done)
 		ProcessAudioSamplers(*state, n_frames, false);
@@ -429,6 +455,11 @@ void GOSoundEngine::ResetDoneFlags()
 		GOMutexLocker locker(m_DetachedRelease[j].mutex);
 		m_DetachedRelease[j].done = 0;
 	}
+	for (unsigned j = 0; j < m_OutputGroups.size(); j++)
+	{
+		GOMutexLocker locker(m_OutputGroups[j].mutex);
+		m_OutputGroups[j].done = false;
+	}
 }
 
 void GOSoundEngine::ProcessTremulants(unsigned n_frames)
@@ -436,6 +467,51 @@ void GOSoundEngine::ProcessTremulants(unsigned n_frames)
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 		if (!m_Tremulants[j].done)
 			ProcessAudioSamplers(m_Tremulants[j], n_frames);
+}
+
+void GOSoundEngine::ProcessOutputGroup(unsigned audio_group, unsigned n_frames)
+{
+	GOOutputGroup& output = m_OutputGroups[audio_group];
+	if (output.done)
+		return;
+
+	GOMutexLocker locker(output.mutex);
+
+	if (output.done)
+		return;
+
+	std::fill(output.buff, output.buff + n_frames * 2, 0.0f);
+
+	unsigned groupidx = m_WindchestCount * audio_group;
+	for (unsigned j = 0; j < m_WindchestCount; j++)
+	{
+		float* this_buff = m_Windchests[j + groupidx].buff;
+
+		if (!m_Windchests[j].done)
+			ProcessAudioSamplers(m_Windchests[j + groupidx], n_frames);
+
+		if (m_Windchests[j + groupidx].done != 1)
+			continue;
+
+		for (unsigned int k = 0; k < n_frames * 2; k++)
+			output.buff[k] += this_buff[k];
+	}
+
+	groupidx = m_DetachedReleaseCount * audio_group;
+	for (unsigned j = 0; j < m_DetachedReleaseCount; j++)
+	{
+		float* this_buff = m_DetachedRelease[j + groupidx].buff;
+
+		if (!m_DetachedRelease[j + groupidx].done)
+			ProcessAudioSamplers(m_DetachedRelease[j + groupidx], n_frames);
+
+		if (m_DetachedRelease[j + groupidx].done != 1)
+			continue;
+
+		for (unsigned int k = 0; k < n_frames * 2; k++)
+			output.buff[k] += this_buff[k];
+	}
+	output.done = true;
 }
 
 // this callback will fill the buffer with bufferSize frame
@@ -454,29 +530,11 @@ int GOSoundEngine::GetSamples
 
 	ProcessTremulants(n_frames);
 
-	for (unsigned j = 0; j < m_Windchests.size(); j++)
+	for (unsigned j = 0; j < m_OutputGroups.size(); j++)
 	{
-		float* this_buff = m_Windchests[j].buff;
+		float* this_buff = m_OutputGroups[j].buff;
 
-		if (!m_Windchests[j].done)
-			ProcessAudioSamplers(m_Windchests[j], n_frames);
-
-		if (m_Windchests[j].done != 1)
-			continue;
-
-		for (unsigned int k = 0; k < n_frames * 2; k++)
-			FinalBuffer[k] += this_buff[k];
-	}
-
-	for (unsigned j = 0; j < m_DetachedRelease.size(); j++)
-	{
-		float* this_buff = m_DetachedRelease[j].buff;
-
-		if (!m_DetachedRelease[j].done)
-			ProcessAudioSamplers(m_DetachedRelease[j], n_frames);
-
-		if (m_DetachedRelease[j].done != 1)
-			continue;
+		ProcessOutputGroup(j, n_frames);
 
 		for (unsigned int k = 0; k < n_frames * 2; k++)
 			FinalBuffer[k] += this_buff[k];
@@ -709,8 +767,9 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				/* detached releases are enabled and the pipe was on a regular
 				 * windchest. Play the release on the detached windchest */
 				int detached_windchest_index = 0;
-				for(unsigned i = 1; i < m_DetachedRelease.size(); i++)
-					if (m_DetachedRelease[i].count < m_DetachedRelease[detached_windchest_index].count)
+				unsigned groupidx = handle->audio_group_id * m_DetachedReleaseCount;
+				for(unsigned i = 1; i < m_DetachedReleaseCount; i++)
+					if (m_DetachedRelease[i + groupidx].count < m_DetachedRelease[detached_windchest_index + groupidx].count)
 						detached_windchest_index = i;
 				if (detached_windchest_index)
 					detached_windchest_index += m_Windchests.size();
