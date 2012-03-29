@@ -49,7 +49,7 @@ int main(int ac, const char* ag[])
 	fprintf(out, "#include <wx/bitmap.h>\n");
 	fprintf(out, "#include <wx/image.h>\n");
 	fprintf(out, "#include <wx/mstream.h>\n");
-	fprintf(out, "static const char image_%s[] = {\n", ag[3]);
+	fprintf(out, "static const unsigned char image_%s[] = {\n", ag[3]);
 
 	while(fread(&c, 1, 1, in) == 1)
 	{
