@@ -180,7 +180,7 @@ wxFont GOGUIDisplayMetrics::GetControlLabelFont()
 wxFont GOGUIDisplayMetrics::GetGroupLabelFont()
 {
 	wxFont font = *wxNORMAL_FONT;
-#ifdef linux
+#ifdef __linux__
 	font.SetFamily(wxFONTFAMILY_SWISS);
 #endif
 	font.SetFaceName(m_DispGroupLabelFont);

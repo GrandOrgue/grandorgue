@@ -22,7 +22,7 @@
 
 #include <wx/wx.h>
 #include <wx/file.h>
-#ifdef linux
+#ifdef __linux__
 #include <sys/mman.h>
 #endif
 #ifdef __WIN32__
@@ -184,7 +184,7 @@ bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 	bool result = false;
 	FreePool();
 
-#ifdef linux
+#ifdef __linux__
 	m_CacheSize = cache_file.Length();
 	m_CacheStart = (char*)mmap(NULL, m_CacheSize, PROT_READ, MAP_SHARED, cache_file.fd(), 0);
 	if (m_CacheStart == MAP_FAILED)
@@ -223,7 +223,7 @@ bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 void GOrgueMemoryPool::CalculatePageSize()
 {
 	m_PageSize = 4096;
-#ifdef linux
+#ifdef __linux__
 	m_PageSize = sysconf(_SC_PAGESIZE);
 #endif
 #ifdef __WIN32__
@@ -236,7 +236,7 @@ void GOrgueMemoryPool::CalculatePageSize()
 void GOrgueMemoryPool::CalculatePoolLimit()
 {
 	m_PoolLimit = 0;
-#ifdef linux
+#ifdef __linux__
 	/* We reserve virtual address and add backing memory only, if the 
 	   memory region is needed.
 	   
@@ -284,7 +284,7 @@ void GOrgueMemoryPool::CalculatePoolLimit()
 
 bool GOrgueMemoryPool::AllocatePool()
 {
-#ifdef linux
+#ifdef __linux__
 	m_PoolStart = (char*)mmap(NULL, m_PoolLimit, PROT_NONE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
 	if (m_PoolStart == MAP_FAILED)
 	{
@@ -331,7 +331,7 @@ void GOrgueMemoryPool::FreePool()
 	{
 		wxLogError(wxT("Freeing non-empty memory pool"));
 	}
-#ifdef linux
+#ifdef __linux__
 	if (m_PoolStart)
 		munmap(m_PoolStart, m_PoolLimit);
 	if (m_CacheSize)
@@ -360,7 +360,7 @@ void GOrgueMemoryPool::GrowPool(size_t length)
 		new_size = m_PoolLimit;
 	if (m_PoolSize >= m_PoolLimit)
 		return;
-#ifdef linux
+#ifdef __linux__
 	if (mprotect(m_PoolStart, new_size, PROT_READ | PROT_WRITE) == -1)
 		return;
 	m_PoolSize = new_size;
