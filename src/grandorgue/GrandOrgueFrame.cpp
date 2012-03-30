@@ -234,7 +234,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 
 	AddTool(settings_menu, ID_REVERB, _("&Reverb"), _("Reverb"), GetImage_reverb());
 	choices.clear();
-	choices.push_back(_("Maximum"));
+	choices.push_back(_("Max"));
 	choices.push_back(_("2.8 s"));
 	choices.push_back(_("1.4 s"));
 	choices.push_back(_("700 ms"));
