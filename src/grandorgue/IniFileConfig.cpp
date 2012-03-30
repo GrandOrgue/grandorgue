@@ -265,7 +265,7 @@ unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bo
 
 unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bool required, wxString defaultValue)
 {
-	static const int sizes[2][4] = {{830, 1007, 1263, 1583}, {500, 663, 855, 1095}};
+	static const int sizes[2][4] = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
 
 	wxString value = ReadString(group, key, 255, required, defaultValue);
 
