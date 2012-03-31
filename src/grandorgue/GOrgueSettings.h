@@ -63,7 +63,6 @@ private:
 	unsigned m_ReleaseLoad;
 	int m_Volume;
 	unsigned m_PolyphonyLimit;
-	wxString m_DefaultAudioDevice;
 	unsigned m_Preset;
 	std::map<long, wxString> m_OrganMidiEvents;
 	wxString m_WAVPath;
@@ -170,8 +169,6 @@ public:
 	unsigned GetPolyphonyLimit();
 	void SetPolyphonyLimit(unsigned polyphony_limit);
 
-	const wxString& GetDefaultAudioDevice();
-	void SetDefaultAudioDevice(wxString device);
 	unsigned GetAudioDeviceLatency(wxString device);
 	void SetAudioDeviceLatency(wxString device, unsigned latency);
 	int GetAudioDeviceActualLatency(wxString device);
