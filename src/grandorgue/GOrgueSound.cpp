@@ -199,15 +199,44 @@ bool GOrgueSound::OpenSound()
 	assert(m_AudioOutputs.size() == 0);
 	bool opened_ok = false;
 
-	m_AudioOutputs.resize(1);
+	unsigned audio_group_count = m_Settings.GetAudioGroups().size();
+	std::vector<GOAudioDeviceConfig> audio_config = m_Settings.GetAudioDeviceConfig();
+	std::vector<GOAudioOutputConfiguration> engine_config;
+
+	m_AudioOutputs.resize(audio_config.size());
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 	{
+		m_AudioOutputs[i].name = audio_config[i].name;
 		m_AudioOutputs[i].audioStream = 0;
 		m_AudioOutputs[i].audioDevice = 0;
+		m_AudioOutputs[i].channels = audio_config[i].channels;
+	}
+	engine_config.resize(audio_config.size());
+	for(unsigned i = 0; i < engine_config.size(); i++)
+	{
+		engine_config[i].channels = audio_config[i].channels;
+		engine_config[i].scale_factors.resize(engine_config[i].channels);
+		for(unsigned j = 0; j <  engine_config[i].channels; j++)
+		{
+			engine_config[i].scale_factors[j].resize(audio_group_count * 2);
+			for(unsigned k = 0; k < audio_group_count * 2; k++)
+				engine_config[i].scale_factors[j][k] = -121;
+
+			if (j >= audio_config[i].scale_factors.size())
+				continue;
+			for(unsigned k = 0; k < audio_config[i].scale_factors[j].size(); k++)
+			{
+				int id = m_Settings.GetStrictAudioGroupId(audio_config[i].scale_factors[j][k].name);
+				if (id == -1)
+					continue;
+				if (audio_config[i].scale_factors[j][k].left >= -120)
+					engine_config[i].scale_factors[j][id * 2] = audio_config[i].scale_factors[j][k].left;
+				if (audio_config[i].scale_factors[j][k].right >= -120)
+					engine_config[i].scale_factors[j][id * 2 + 1] = audio_config[i].scale_factors[j][k].right;
+			}
+		}
 	}
 
-	m_AudioOutputs[0].name = m_Settings.GetDefaultAudioDevice();;
-	m_AudioOutputs[0].channels = 2;
 	m_SamplesPerBuffer = m_Settings.GetSamplesPerBuffer();
 	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
 	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
@@ -215,11 +244,12 @@ bool GOrgueSound::OpenSound()
 	m_SoundEngine.SetScaledReleases(m_Settings.GetScaleRelease());
 	m_SoundEngine.SetRandomizeSpeaking(m_Settings.GetRandomizeSpeaking());
 	m_SoundEngine.SetInterpolationType(m_Settings.GetInterpolationType());
-	m_SoundEngine.SetAudioGroupCount(1);
+	m_SoundEngine.SetAudioGroupCount(audio_group_count);
 	unsigned sample_rate = m_Settings.GetSampleRate();
 	m_recorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
 	GetEngine().SetSampleRate(sample_rate);
 	m_recorder.SetSampleRate(sample_rate);
+	m_SoundEngine.SetAudioOutput(engine_config);
 
 	PreparePlayback(NULL);
 
@@ -548,17 +578,20 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 	GOMutexLocker locker(device->mutex);
 
 	int r;
+	r = m_SoundEngine.GetAudioOutput(output_buffer, n_frames, device->index);
 
+	if (device->index == 0)
 	{
+		float buffer[GO_SOUND_BUFFER_SIZE];
 		r = m_SoundEngine.GetSamples
-			(output_buffer
+			(buffer
 			 ,n_frames
 			 ,stream_time
 			 ,&meter_info
 			 );
 
 		/* Write data to file if recording is enabled*/
-		m_recorder.Write(output_buffer, n_frames * 2);
+		m_recorder.Write(buffer, n_frames * 2);
 
 		/* Update meters */
 		meter_counter += n_frames;
@@ -586,6 +619,42 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 		GOMutexLocker thread_locker(m_thread_lock);
 		for(unsigned i = 0; i < m_Threads.size(); i++)
 			m_Threads[i]->Wakeup();
+
+		for(unsigned i = 1; i < m_AudioOutputs.size(); i++)
+		{
+			GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
+			if (m_AudioOutputs[i].wait)
+			{
+				if (m_AudioOutputs[i].waiting)
+				{
+					dev_lock.Unlock();
+					m_AudioOutputs[i].condition.Signal();
+				}
+				else
+				{
+					m_AudioOutputs[i].waiting = true;
+					m_AudioOutputs[i].condition.Wait();
+					m_AudioOutputs[i].waiting = false;
+				}
+			}
+		}
+	}
+	else
+	{
+		if (device->wait)
+		{
+			if (device->waiting)
+			{
+				locker.Unlock();
+				device->condition.Signal();
+			}
+			else
+			{
+				device->waiting = true;
+				device->condition.Wait();
+				device->waiting = false;
+			}
+		}
 	}
 
 	return r;
