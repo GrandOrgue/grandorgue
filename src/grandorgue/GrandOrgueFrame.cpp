@@ -101,15 +101,10 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_UPDATE_UI_RANGE(ID_TEMPERAMENT_0, ID_TEMPERAMENT_LAST, GOrgueFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
 
-void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString)
-{
-	menu->Append(id, item, wxEmptyString, wxITEM_NORMAL);
-}
-
 void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, const wxBitmap& toolbarImage, wxItemKind kind)
 {
 	menu->Append(id, item, wxEmptyString, kind);
-		GetToolBar()->AddTool(id, item, toolbarImage, helpString, kind);
+	GetToolBar()->AddTool(id, item, toolbarImage, helpString, kind);
 }
 
 GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound) :
@@ -149,20 +144,20 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	file_menu->Append(wxID_ANY, _("Open &Recent"), recent_menu);
 	file_menu->AppendSeparator();
 	AddTool(file_menu, ID_FILE_RELOAD, _("Re&load"), _("Reload"), GetImage_reload());
-	AddTool(file_menu, ID_FILE_REVERT, _("Reset to &Defaults"));
+	file_menu->Append(ID_FILE_REVERT, _("Reset to &Defaults"), wxEmptyString, wxITEM_NORMAL);
 	file_menu->AppendSeparator();
-	AddTool(file_menu, ID_FILE_IMPORT_SETTINGS, _("&Import Settings..."));
-	AddTool(file_menu, ID_FILE_IMPORT_COMBINATIONS, _("Import &Combinations..."));
-	AddTool(file_menu, ID_FILE_EXPORT, _("&Export Settings/Combinations..."));
+	file_menu->Append(ID_FILE_IMPORT_SETTINGS, _("&Import Settings..."), wxEmptyString, wxITEM_NORMAL);
+	file_menu->Append(ID_FILE_IMPORT_COMBINATIONS, _("Import &Combinations..."), wxEmptyString, wxITEM_NORMAL);
+	file_menu->Append(ID_FILE_EXPORT, _("&Export Settings/Combinations..."), wxEmptyString, wxITEM_NORMAL);
 	file_menu->AppendSeparator();
-	AddTool(file_menu, ID_FILE_CACHE, _("&Update Cache..."));
-	AddTool(file_menu, ID_FILE_CACHE_DELETE, _("Delete &Cache..."));
+	file_menu->Append(ID_FILE_CACHE, _("&Update Cache..."), wxEmptyString, wxITEM_NORMAL);
+	file_menu->Append(ID_FILE_CACHE_DELETE, _("Delete &Cache..."), wxEmptyString, wxITEM_NORMAL);
 	file_menu->AppendSeparator();
 	AddTool(file_menu, wxID_SAVE, _("&Save\tCtrl+S"), _("Save"), GetImage_save());
-	AddTool(file_menu, wxID_CLOSE, _("&Close"));
+	file_menu->Append(wxID_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
 	AddTool(file_menu, ID_FILE_PROPERTIES, _("&Properties..."), _("Properties"), GetImage_properties());
 	file_menu->AppendSeparator();
-	AddTool(file_menu, wxID_EXIT, _("E&xit"));
+	file_menu->Append(wxID_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
 	//tb->AddSeparator(); /* Disabled due to wxMac incompatibility */
 
 	wxMenu *preset_menu = new wxMenu;
@@ -180,16 +175,15 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	audio_menu->AppendSeparator();
 	audio_menu->AppendSubMenu(preset_menu, _("Pr&eset"));
 	audio_menu->AppendSubMenu(temperament_menu, _("&Temperament"));
-	AddTool(audio_menu, ID_ORGAN_EDIT, _("&Organ settings"));
+	audio_menu->Append(ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_NORMAL);
 	audio_menu->AppendSeparator();
 	AddTool(audio_menu, ID_AUDIO_PANIC, _("&Panic\tEscape"), _("Panic"), GetImage_panic());
 	AddTool(audio_menu, ID_AUDIO_SETTINGS, _("&Settings..."), _("Audio Settings"), GetImage_settings());
 	//tb->AddSeparator();
 
 	wxMenu *help_menu = new wxMenu;
-	//AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"), GetImage_help, sizeof(GetImage_help));
-	AddTool(help_menu, wxID_HELP, _("&Help\tF1"), _("Help"));
-	AddTool(help_menu, wxID_ABOUT, _("&About"));
+	help_menu->Append(wxID_HELP, _("&Help\tF1"), wxEmptyString, wxITEM_NORMAL);
+	help_menu->Append(wxID_ABOUT, _("&About"), wxEmptyString, wxITEM_NORMAL);
 	//tb->AddSeparator(); /* Disabled due to wxMac incompatibility */
 
 	wxMenu *settings_menu = new wxMenu;
