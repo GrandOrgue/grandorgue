@@ -184,7 +184,6 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 		if (wxString::Format(wxT("%d"), m_Settings.GetSampleRate()) == m_SampleRate->GetString(i))
 			m_SampleRate->Select(i);
 	m_SamplesPerBuffer->SetSelection(m_Settings.GetSamplesPerBuffer() / BLOCKS_PER_FRAME - 1);
-	m_SamplesPerBuffer->Disable();
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);

@@ -208,6 +208,7 @@ bool GOrgueSound::OpenSound()
 
 	m_AudioOutputs[0].name = m_Settings.GetDefaultAudioDevice();;
 	m_AudioOutputs[0].channels = 2;
+	m_SamplesPerBuffer = m_Settings.GetSamplesPerBuffer();
 	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
 	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
 	m_SoundEngine.SetVolume(m_Settings.GetVolume());
@@ -226,26 +227,6 @@ bool GOrgueSound::OpenSound()
 	{
 		OpenMidi();
 		InitStreams();
-
-		if (m_AudioOutputs[0].rt_api == RTAPI_PORTAUDIO)
-		{
-			m_SamplesPerBuffer = BLOCKS_PER_FRAME * ceil(sample_rate * m_AudioOutputs[0].try_latency / 1000.0 / BLOCKS_PER_FRAME);
-			if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
-				m_SamplesPerBuffer = MAX_FRAME_SIZE;
-			if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
-				m_SamplesPerBuffer = BLOCKS_PER_FRAME;
-		}
-		else
-		{
-			GOrgueRtHelpers::GetBufferConfig
-				(m_AudioOutputs[0].rt_api
-				 ,m_AudioOutputs[0].try_latency
-				 ,sample_rate
-				 ,&m_AudioOutputs[0].nb_buffers
-				 ,&m_SamplesPerBuffer
-				 );
-		}
-
 		OpenStreams();
 		StartStreams();
 		opened_ok = true;
@@ -317,7 +298,8 @@ void GOrgueSound::OpenStreams()
 				aOutputParam.nChannels = m_AudioOutputs[i].channels;
 
 				RtAudio::StreamOptions aOptions;
-				aOptions.numberOfBuffers = m_AudioOutputs[i].nb_buffers;
+				aOptions.flags = RTAUDIO_MINIMIZE_LATENCY;
+				aOptions.numberOfBuffers = 0;
 
 				unsigned samples_per_buffer = m_SamplesPerBuffer;
 				m_AudioOutputs[i].audioDevice->openStream(&aOutputParam, NULL, RTAUDIO_FLOAT32, GetEngine().GetSampleRate(), &samples_per_buffer,
