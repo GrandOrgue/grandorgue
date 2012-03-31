@@ -101,12 +101,6 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_UPDATE_UI_RANGE(ID_TEMPERAMENT_0, ID_TEMPERAMENT_LAST, GOrgueFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
 
-void GOrgueFrame::AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, const wxBitmap& toolbarImage, wxItemKind kind)
-{
-	menu->Append(id, item, wxEmptyString, kind);
-	GetToolBar()->AddTool(id, item, toolbarImage, helpString, kind);
-}
-
 GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound) :
 	wxDocParentFrame(manager, frame, id, title, pos, size, type),
 	m_panel_menu(NULL),
@@ -140,10 +134,10 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	wxToolBar* tb = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
 	tb->SetToolBitmapSize(wxSize(16, 16));
 
-	AddTool(file_menu, wxID_OPEN, _("&Open...\tCtrl+O"), _("Open"), GetImage_open());
+	file_menu->Append(wxID_OPEN, _("&Open...\tCtrl+O"), wxEmptyString, wxITEM_NORMAL);
 	file_menu->Append(wxID_ANY, _("Open &Recent"), recent_menu);
 	file_menu->AppendSeparator();
-	AddTool(file_menu, ID_FILE_RELOAD, _("Re&load"), _("Reload"), GetImage_reload());
+	file_menu->Append(ID_FILE_RELOAD, _("Re&load"), wxEmptyString, wxITEM_NORMAL);
 	file_menu->Append(ID_FILE_REVERT, _("Reset to &Defaults"), wxEmptyString, wxITEM_NORMAL);
 	file_menu->AppendSeparator();
 	file_menu->Append(ID_FILE_IMPORT_SETTINGS, _("&Import Settings..."), wxEmptyString, wxITEM_NORMAL);
@@ -153,12 +147,11 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	file_menu->Append(ID_FILE_CACHE, _("&Update Cache..."), wxEmptyString, wxITEM_NORMAL);
 	file_menu->Append(ID_FILE_CACHE_DELETE, _("Delete &Cache..."), wxEmptyString, wxITEM_NORMAL);
 	file_menu->AppendSeparator();
-	AddTool(file_menu, wxID_SAVE, _("&Save\tCtrl+S"), _("Save"), GetImage_save());
+	file_menu->Append(wxID_SAVE, _("&Save\tCtrl+S"), wxEmptyString, wxITEM_NORMAL);
 	file_menu->Append(wxID_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
-	AddTool(file_menu, ID_FILE_PROPERTIES, _("&Properties..."), _("Properties"), GetImage_properties());
+	file_menu->Append(ID_FILE_PROPERTIES, _("&Properties..."), wxEmptyString, wxITEM_NORMAL);
 	file_menu->AppendSeparator();
 	file_menu->Append(wxID_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
-	//tb->AddSeparator(); /* Disabled due to wxMac incompatibility */
 
 	wxMenu *preset_menu = new wxMenu;
 	for(unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
@@ -170,24 +163,30 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 		temperament_menu->Append(ID_TEMPERAMENT_0 + i, wxGetTranslation(m_TemperamentNames[i]), wxEmptyString, wxITEM_CHECK);
 
 	wxMenu *audio_menu = new wxMenu;
-	AddTool(audio_menu, ID_AUDIO_RECORD, _("&Record...\tCtrl+R"), _("Record"), GetImage_record(), wxITEM_CHECK);
-	AddTool(audio_menu, ID_AUDIO_MEMSET, _("&Memory Set\tShift"), _("Memory Set"), GetImage_set(), wxITEM_CHECK);
+	audio_menu->Append(ID_AUDIO_RECORD, _("&Record...\tCtrl+R"), wxEmptyString, wxITEM_CHECK);
+	audio_menu->Append(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), wxEmptyString, wxITEM_CHECK);
 	audio_menu->AppendSeparator();
 	audio_menu->AppendSubMenu(preset_menu, _("Pr&eset"));
 	audio_menu->AppendSubMenu(temperament_menu, _("&Temperament"));
 	audio_menu->Append(ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_NORMAL);
 	audio_menu->AppendSeparator();
-	AddTool(audio_menu, ID_AUDIO_PANIC, _("&Panic\tEscape"), _("Panic"), GetImage_panic());
-	AddTool(audio_menu, ID_AUDIO_SETTINGS, _("&Settings..."), _("Audio Settings"), GetImage_settings());
-	//tb->AddSeparator();
+	audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
+	audio_menu->Append(ID_AUDIO_SETTINGS, _("&Settings..."), wxEmptyString, wxITEM_NORMAL);
 
 	wxMenu *help_menu = new wxMenu;
 	help_menu->Append(wxID_HELP, _("&Help\tF1"), wxEmptyString, wxITEM_NORMAL);
 	help_menu->Append(wxID_ABOUT, _("&About"), wxEmptyString, wxITEM_NORMAL);
-	//tb->AddSeparator(); /* Disabled due to wxMac incompatibility */
 
-	wxMenu *settings_menu = new wxMenu;
-	AddTool(settings_menu, ID_VOLUME, _("&Volume"), _("Volume"), GetImage_volume());
+	tb->AddTool(wxID_OPEN, _("&Open...\tCtrl+O"), GetImage_open(), _("Open"), wxITEM_NORMAL);
+	tb->AddTool(ID_FILE_RELOAD, _("Re&load"),  GetImage_reload(),_("Reload"), wxITEM_NORMAL);
+	tb->AddTool(wxID_SAVE, _("&Save\tCtrl+S"), GetImage_save(), _("Save"), wxITEM_NORMAL);
+	tb->AddTool(ID_FILE_PROPERTIES, _("&Properties..."),  GetImage_properties(), _("Properties"), wxITEM_NORMAL);
+	tb->AddTool(ID_AUDIO_RECORD, _("&Record...\tCtrl+R"), GetImage_record(), _("Record"), wxITEM_CHECK);
+	tb->AddTool(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), GetImage_set(), _("Memory Set"), wxITEM_CHECK);
+	tb->AddTool(ID_AUDIO_PANIC, _("&Panic\tEscape"), GetImage_panic(), _("Panic"), wxITEM_NORMAL);
+	tb->AddTool(ID_AUDIO_SETTINGS, _("&Settings..."), GetImage_settings(), _("Audio Settings"), wxITEM_NORMAL);
+
+	tb->AddTool(ID_VOLUME, _("&Volume"), GetImage_volume(), _("Volume"), wxITEM_NORMAL);
 	m_Volume = new wxSpinCtrl(tb, ID_METER_AUDIO_SPIN, wxEmptyString, wxDefaultPosition, wxSize(50, wxDefaultCoord), wxSP_ARROW_KEYS, -120, 20);
 	tb->AddControl(m_Volume);
 	m_Volume->SetValue(m_Settings.GetVolume());
@@ -208,7 +207,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 		tb->AddControl(control);
 	}
 
-	AddTool(settings_menu, ID_POLYPHONY, _("&Polyphony"), _("Polyphony"), GetImage_polyphony());
+	tb->AddTool(ID_POLYPHONY, _("&Polyphony"), GetImage_polyphony(), _("Polyphony"), wxITEM_NORMAL);
 	m_Polyphony = new wxSpinCtrl(tb, ID_METER_POLY_SPIN, wxEmptyString, wxDefaultPosition, wxSize(56, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 4096);
 	tb->AddControl(m_Polyphony);
 	m_Polyphony->SetValue(m_Settings.GetPolyphonyLimit());
@@ -216,17 +215,17 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_SamplerUsage = new wxGaugeAudio(tb, wxID_ANY, wxDefaultPosition);
 	tb->AddControl(m_SamplerUsage);
 
-	AddTool(settings_menu, ID_MEMORY, _("&Memory Level"), _("Memory Level"), GetImage_memory());
+	tb->AddTool(ID_MEMORY, _("&Memory Level"), GetImage_memory(), _("Memory Level"), wxITEM_NORMAL);
 	m_SetterPosition = new wxSpinCtrl(tb, ID_METER_FRAME_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 999);
 	tb->AddControl(m_SetterPosition);
 	m_SetterPosition->SetValue(0);
 
-	AddTool(settings_menu, ID_TRANSPOSE, _("&Transpose"), _("Transpose"), GetImage_transpose());
+	tb->AddTool(ID_TRANSPOSE, _("&Transpose"), GetImage_transpose(), _("Transpose"), wxITEM_NORMAL);
 	m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
 	tb->AddControl(m_Transpose);
 	m_Transpose->SetValue(0);
 
-	AddTool(settings_menu, ID_REVERB, _("&Reverb"), _("Reverb"), GetImage_reverb());
+	tb->AddTool(ID_REVERB, _("&Reverb"), GetImage_reverb(), _("Reverb"), wxITEM_NORMAL);
 	choices.clear();
 	choices.push_back(_("Max"));
 	choices.push_back(_("2.8 s"));

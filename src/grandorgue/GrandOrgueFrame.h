@@ -108,7 +108,6 @@ public:
 	DECLARE_EVENT_TABLE()
 protected:
 	void UpdatePanelMenu();
-	void AddTool(wxMenu* menu, int id, const wxString& item, const wxString& helpString, const wxBitmap& toolbarImage, wxItemKind kind = wxITEM_NORMAL);
 	void InitHelp();
 };
 
