@@ -71,6 +71,7 @@ endif ()
 # only use options supported by the compiler
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
+include(CheckIncludeFileCXX)
 macro(add_option _option)
   set(_name "OPTION_${_option}")
   CHECK_CXX_COMPILER_FLAG("-${_option}" ${_name})
@@ -79,13 +80,25 @@ macro(add_option _option)
   endif()
 endmacro(add_option option)
 
+macro(add_cxx_option _option)
+  set(_name "OPTION_LINK_${_option}")
+  string(REGEX REPLACE "=" "-EQ" _name ${_name})
+  string(REGEX REPLACE "\\+" "-P" _name ${_name})
+  SET(CMAKE_REQUIRED_FLAGS "${_option}")
+  CHECK_CXX_COMPILER_FLAG("" ${_name})
+  if(${_name})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_option}")
+  endif()
+endmacro()
+
+add_cxx_option(-std=c++0x)
+CHECK_INCLUDE_FILE_CXX(cstdatomic HAVE_CSTDATOMIC)
+CHECK_INCLUDE_FILE_CXX(atomic HAVE_ATOMIC)
+
 if(UNIX)
   install(FILES GrandOrgue.desktop DESTINATION share/applications)
   install(FILES GrandOrgue.png DESTINATION share/pixmaps)
 endif()
-
-# check for GCC atomic support
-CHECK_CXX_SOURCE_COMPILES("int x; int main() { return __sync_fetch_and_add(&x, 1); }" HAVE_ATOMIC)
 
 # setup compiler flags for debug vs release compiles
 add_option(ffast-math)

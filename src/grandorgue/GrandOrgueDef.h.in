@@ -31,5 +31,6 @@
 #define GRANDORGUE_CACHE_MAGIC 0x12341234
 
 #cmakedefine HAVE_ATOMIC
+#cmakedefine HAVE_CSTDATOMIC
 
 #endif
