@@ -27,6 +27,7 @@
 #include "GrandOrgueFile.h"
 #include "GOrgueRank.h"
 #include "GOrguePipe.h"
+#include "GOrgueSettings.h"
 #include "GOrgueWindchest.h"
 
 class OrganTreeItemData : public wxTreeItemData
@@ -77,6 +78,7 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_SPIN(ID_EVENT_GAIN_SPIN, OrganDialog::OnGainSpinChanged)
 	EVT_TEXT(ID_EVENT_TUNING, OrganDialog::OnTuningChanged)
 	EVT_SPIN(ID_EVENT_TUNING_SPIN, OrganDialog::OnTuningSpinChanged)
+	EVT_TEXT(ID_EVENT_AUDIO_GROUP, OrganDialog::OnAudioGroupChanged)
 	EVT_BUTTON(wxID_OK, OrganDialog::OnOK)
 	EVT_CHOICE(ID_EVENT_BITS_PER_SAMPLE, OrganDialog::OnBitsPerSampleChanged)
 	EVT_CHOICE(ID_EVENT_COMPRESS, OrganDialog::OnCompressChanged)
@@ -136,6 +138,17 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	box2->Add(m_TuningSpin);
 	grid->Add(box2);
 	m_TuningSpin->SetRange(-1200, 1200);
+
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Audio group:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	m_AudioGroup = new wxComboBox(this, ID_EVENT_AUDIO_GROUP, wxEmptyString);
+	grid->Add(m_AudioGroup);
+	m_AudioGroup->Append(wxEmptyString);
+	std::vector<wxString> audio_groups = m_organfile->GetSettings().GetAudioGroups();
+	for(unsigned i = 0; i < audio_groups.size(); i++)
+		m_AudioGroup->Append(audio_groups[i]);
+
+	m_AudioGroup->SetValue(wxT(" "));
+	m_LastAudioGroup = m_AudioGroup->GetValue();
 
 	box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sample Loading"));
 	grid = new wxFlexGridSizer(4, 2, 5, 5);
@@ -283,6 +296,7 @@ void OrganDialog::Load()
 		m_Tuning->ChangeValue(wxEmptyString);
 		m_Tuning->Disable();
 		m_TuningSpin->Disable();
+		m_AudioGroup->Disable();
 		m_BitsPerSample->Disable();
 		m_Compress->Disable();
 		m_Channels->Disable();
@@ -303,6 +317,11 @@ void OrganDialog::Load()
 			m_Gain->ChangeValue(wxEmptyString);
 		if (!m_Tuning->IsModified())
 			m_Tuning->ChangeValue(wxEmptyString);
+		if (m_AudioGroup->GetValue() == m_LastAudioGroup)
+		{
+			m_AudioGroup->SetValue(wxT(" "));
+			m_LastAudioGroup = m_AudioGroup->GetValue();
+		}
 		if (m_BitsPerSample->GetSelection() == m_LastBitsPerSample)
 		{
 			SetEmpty(m_BitsPerSample);
@@ -351,6 +370,7 @@ void OrganDialog::Load()
 	m_GainSpin->Enable();
 	m_Tuning->Enable();
 	m_TuningSpin->Enable();
+	m_AudioGroup->Enable();
 	m_BitsPerSample->Enable();
 	m_Compress->Enable();
 	m_Channels->Enable();
@@ -375,6 +395,8 @@ void OrganDialog::Load()
 	m_TuningSpin->SetValue(tuning);
 	if (entries.size() == 1)
 	{
+		m_AudioGroup->SetValue(m_Last->config->GetAudioGroup());
+
 		int bits_per_sample = m_Last->config->GetBitsPerSample();
 		if (bits_per_sample == -1)
 			bits_per_sample = 0;
@@ -395,6 +417,7 @@ void OrganDialog::Load()
 		m_AttackLoad->SetSelection(m_Last->config->GetAttackLoad() + 1);
 		m_ReleaseLoad->SetSelection(m_Last->config->GetReleaseLoad() + 1);
 
+		m_LastAudioGroup = m_AudioGroup->GetValue();
 		m_LastBitsPerSample = m_BitsPerSample->GetSelection();
 		m_LastCompress = m_Compress->GetSelection();
 		m_LastChannels = m_Channels->GetSelection();
@@ -445,6 +468,12 @@ void OrganDialog::OnTuningChanged(wxCommandEvent &e)
 	m_TuningSpin->SetValue(tuning);
 	Modified();
 }
+
+void OrganDialog::OnAudioGroupChanged(wxCommandEvent &e)
+{
+	Modified();
+}
+
 void OrganDialog::OnBitsPerSampleChanged(wxCommandEvent &e)
 {
 	RemoveEmpty(m_BitsPerSample);
@@ -489,6 +518,8 @@ bool OrganDialog::Changed()
 	if (m_Gain->IsModified())
 		changed = true;
 	if (m_Tuning->IsModified())
+		changed = true;
+	if (m_AudioGroup->GetValue() != m_LastAudioGroup)
 		changed = true;
 	if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
 		changed = true;
@@ -577,6 +608,8 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 			e->config->SetGain(gain);
 		if (m_Tuning->IsModified())
 			e->config->SetTuning(tuning);
+		if (m_AudioGroup->GetValue() != m_LastAudioGroup)
+			e->config->SetAudioGroup(m_AudioGroup->GetValue().Trim());
 		if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
 			e->config->SetBitsPerSample(m_BitsPerSample->GetSelection() == 0 ? -1 : m_BitsPerSample->GetSelection() * 4 + 4);
 		if (m_Compress->GetSelection() != m_LastCompress)
@@ -599,6 +632,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
 	if (m_Tuning->IsModified())
 		m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
+	m_LastAudioGroup = m_AudioGroup->GetValue();
 	m_LastBitsPerSample = m_BitsPerSample->GetSelection();
 	m_LastCompress = m_Compress->GetSelection();
 	m_LastChannels = m_Channels->GetSelection();
@@ -626,6 +660,7 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 		e->config->SetAmplitude(e->config->GetDefaultAmplitude());
 		e->config->SetGain(e->config->GetDefaultGain());
 		e->config->SetTuning(e->config->GetDefaultTuning());
+		e->config->SetAudioGroup(wxEmptyString);
 		e->config->SetBitsPerSample(-1);
 		e->config->SetCompress(-1);
 		e->config->SetChannels(-1);
