@@ -28,7 +28,6 @@
 #include <wx/propdlg.h>
 
 class GOrgueSound;
-class GOrgueSettings;
 
 class SettingsAudioGroup;
 class SettingsAudioOutput;
@@ -42,7 +41,6 @@ class SettingsDialog : public wxPropertySheetDialog
 DECLARE_CLASS(SettingsDialog)
 private:
 	GOrgueSound& m_Sound;
-	GOrgueSettings& m_Settings;
 	SettingsMidiDevices* m_MidiDevicePage;
 	SettingsOption* m_OptionsPage;
 	SettingsOrgan* m_OrganPage;
@@ -50,38 +48,17 @@ private:
 	SettingsAudioGroup* m_GroupPage;
 	SettingsAudioOutput* m_OutputPage;
 
-	void SetLatencySpinner(int latency);
-
-	wxPanel* CreateDevicesPage(wxWindow* parent);
-
-	void UpdateSoundStatus();
-
 	bool DoApply();
 
 public:
 	SettingsDialog(wxWindow* parent, GOrgueSound& sound);
 	~SettingsDialog();
 
-	void OnChanged(wxCommandEvent& event);
-	void OnDevicesSoundChoice(wxCommandEvent& event);
 	void OnApply(wxCommandEvent& event);
 	void OnOK(wxCommandEvent& event);
 	void OnHelp(wxCommandEvent& event);
 
-	void OnLatencySpinnerChange(wxSpinEvent& event);
-
 	DECLARE_EVENT_TABLE()
-
-protected:
-	enum {
-		ID_SOUND_DEVICE = 100,
-		ID_LATENCY,
-	};
-
-	wxChoice* c_sound;
-	wxStaticText* c_format;
-	wxSpinCtrl* c_latency;
-	wxStaticText* c_actual_latency;
 };
 
 
