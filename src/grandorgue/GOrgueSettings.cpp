@@ -74,7 +74,6 @@ GOrgueSettings::GOrgueSettings() :
 	m_ReleaseLoad(0),
 	m_Volume(-15),
 	m_PolyphonyLimit(2048),
-	m_DefaultAudioDevice(),
 	m_Preset(0),
 	m_OrganMidiEvents(),
 	m_WAVPath(),
@@ -140,7 +139,6 @@ void GOrgueSettings::Load()
 	if (m_Volume > 20)
 		m_Volume = -15;
 	m_PolyphonyLimit = m_Config.Read(wxT("PolyphonyLimit"), 2048);
-	m_DefaultAudioDevice = m_Config.Read(wxT("Devices/DefaultSound"), wxEmptyString);
 
 	m_OrganMidiEvents.clear();
 	unsigned count = m_Config.Read(wxT("OrganMIDI/Count"), 0L);
@@ -643,17 +641,6 @@ void GOrgueSettings::SetPolyphonyLimit(unsigned polyphony_limit)
 {
 	m_PolyphonyLimit = polyphony_limit;
 	m_Config.Write(wxT("PolyphonyLimit"), (long)m_PolyphonyLimit);
-}
-
-const wxString& GOrgueSettings::GetDefaultAudioDevice()
-{
-	return m_DefaultAudioDevice;
-}
-
-void GOrgueSettings::SetDefaultAudioDevice(wxString device)
-{
-	m_DefaultAudioDevice = device;
-	m_Config.Write(wxT("Devices/DefaultSound"), m_DefaultAudioDevice);
 }
 
 unsigned GOrgueSettings::GetAudioDeviceLatency(wxString device)
