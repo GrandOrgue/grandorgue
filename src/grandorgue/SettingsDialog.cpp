@@ -85,10 +85,14 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	m_OptionsPage = new SettingsOption(m_Sound.GetSettings(), notebook);
 	m_OrganPage = new SettingsOrgan(m_Sound.GetSettings(), notebook);
 	m_MidiMessagePage = new SettingsMidiMessage(m_Sound.GetSettings(), notebook);
+	m_GroupPage = new SettingsAudioGroup(m_Sound.GetSettings(), notebook);
+	m_OutputPage = new SettingsAudioOutput(m_Sound, *m_GroupPage, notebook);
 
 	notebook->AddPage(m_MidiDevicePage,  _("MIDI Devices"));
 	notebook->AddPage(m_OptionsPage,  _("Options"));
 	notebook->AddPage(devices,  _("Audio Output"));
+	notebook->AddPage(m_OutputPage, _("Audio Output"));
+	notebook->AddPage(m_GroupPage, _("Audio Groups"));
 	notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Configuration"));
 	notebook->AddPage(m_OrganPage, _("Organs"));
 }
@@ -199,6 +203,8 @@ bool SettingsDialog::DoApply()
 	m_MidiDevicePage->Save();
 	m_OptionsPage->Save();
 	m_OrganPage->Save();
+	m_GroupPage->Save();
+	m_OutputPage->Save();
 
 	m_Settings.SetDefaultAudioDevice(c_sound->GetStringSelection());
 	m_Settings.SetAudioDeviceLatency(c_sound->GetStringSelection(), c_latency->GetValue());
