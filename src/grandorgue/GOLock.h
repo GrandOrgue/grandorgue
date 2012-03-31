@@ -26,6 +26,13 @@
 #include <wx/wx.h>
 #include <vector>
 #include "GrandOrgueDef.h"
+#ifdef HAVE_ATOMIC
+#include <atomic>
+#endif
+#ifdef HAVE_CSTDATOMIC
+#include <cstdatomic>
+#define HAVE_ATOMIC
+#endif
 
 class GOMutex
 {
@@ -58,7 +65,7 @@ private:
 	friend class GOCondition;
 #else
 	wxCriticalSection m_Mutex;
-	int m_Lock;
+	std::atomic_int m_Lock;
 
 	void Init()
 	{
@@ -73,7 +80,7 @@ private:
 
 	void DoLock()
 	{
-		int value = __sync_fetch_and_add(&m_Lock, 1);
+		int value = m_Lock.fetch_add(1);
 		if (!value)
 		{
 			__sync_synchronize();
@@ -85,14 +92,15 @@ private:
 	void DoUnlock()
 	{
 		__sync_synchronize();
-		int value = __sync_fetch_and_add(&m_Lock, -1);
+		int value = m_Lock.fetch_add(-1);
 		if (value > 1)
 			m_Mutex.Leave();
 	}
 
 	bool DoTryLock()
 	{
-		if (__sync_bool_compare_and_swap(&m_Lock, 0, 1))
+		int old = 0;
+		if (m_Lock.compare_exchange_strong(old, 1))
 		{
 			__sync_synchronize();
 			return true;
