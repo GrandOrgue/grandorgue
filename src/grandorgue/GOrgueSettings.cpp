@@ -229,6 +229,7 @@ void GOrgueSettings::Load()
 		}
 		m_AudioDeviceConfig.push_back(conf);
 	}
+	m_AudioDeviceConfig.resize(1);
 }
 
 unsigned GOrgueSettings::GetManualCount()

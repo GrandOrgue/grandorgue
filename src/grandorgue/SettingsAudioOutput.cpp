@@ -336,6 +336,7 @@ void SettingsAudioOutput::UpdateButtons()
 		else
 			m_Add->Disable();
 		m_Del->Disable();
+		m_Add->Disable();
 	}
 	else
 	{
