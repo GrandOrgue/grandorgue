@@ -163,7 +163,7 @@ private:
 		m_condition.Signal();
 	}
 #else
-	int m_Waiters;
+	std::atomic_int m_Waiters;
 	wxCriticalSection m_Wait;
 
 	void Init()
@@ -179,7 +179,7 @@ private:
 
 	void DoWait()
 	{
-		__sync_fetch_and_add(&m_Waiters, 1);
+		m_Waiters.fetch_add(1);
 		m_Mutex.Unlock();
 		m_Wait.Enter();
 		m_Mutex.Lock();
@@ -187,9 +187,9 @@ private:
 
 	void DoSignal()
 	{
-		int waiters = __sync_fetch_and_add(&m_Waiters, -1);
+		int waiters = m_Waiters.fetch_add(-1);
 		if (waiters <= 0)
-			__sync_fetch_and_add(&m_Waiters, +1);
+			m_Waiters.fetch_add(+1);
 		else
 			m_Wait.Leave();
 	}
