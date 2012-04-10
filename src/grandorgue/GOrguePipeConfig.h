@@ -30,6 +30,7 @@ class GrandOrgueFile;
 class GOrguePipeUpdateCallback
 {
 public:
+	virtual ~GOrguePipeUpdateCallback() { }
 	virtual void UpdateAmplitude() = 0;
 	virtual void UpdateTuning() = 0;
 	virtual void UpdateAudioGroup() = 0;
