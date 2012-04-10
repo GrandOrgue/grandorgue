@@ -307,7 +307,7 @@ void GOrgueMemoryPool::InitPool()
 	m_PoolSize = 0;
 	CalculatePageSize();
 	CalculatePoolLimit();
-	wxLogDebug(wxT("Memory pool limit: %ld bytes (page size: %d)"), m_PoolLimit, m_PageSize);
+	wxLogDebug(wxT("Memory pool limit: %ld bytes (page size: %d)"), (long int)m_PoolLimit, (int)m_PageSize);
 
 	while (m_PoolLimit)
 	{
