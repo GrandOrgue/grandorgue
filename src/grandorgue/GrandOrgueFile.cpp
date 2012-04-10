@@ -193,9 +193,10 @@ bool GrandOrgueFile::TryLoad
 			}
 			GOrgueLCD_WriteLineTwo
 				(wxString::Format
-				 (_("Loading %d%%")
-				  ,(nb_loaded_obj * 100) / (objects.size() + 1))
-				 );
+					(_("Loading %lu%%")
+					,(unsigned long)((nb_loaded_obj * 100) / (objects.size() + 1))
+					)
+				);
 		}
 
 		success = true;
