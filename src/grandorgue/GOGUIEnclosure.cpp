@@ -112,9 +112,13 @@ void GOGUIEnclosure::Draw(wxDC* dc)
 	if (m_TextWidth)
 	{
 		wxFont font = *wxNORMAL_FONT;
-		font.SetPointSize(m_FontSize);
 		if (m_FontName != wxEmptyString)
-			font.SetFaceName(m_FontName);
+		{
+			wxFont new_font = font;
+			if (new_font.SetFaceName(m_FontName))
+				font = new_font;
+		}
+		font.SetPointSize(m_FontSize);
 		dc->SetFont(font);
 		dc->SetTextForeground(m_TextColor);
 

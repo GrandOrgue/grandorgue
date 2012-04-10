@@ -173,7 +173,10 @@ bool GOGUIDisplayMetrics::HasExtraPedalButtonRow()
 wxFont GOGUIDisplayMetrics::GetControlLabelFont()
 {
 	wxFont font = *wxNORMAL_FONT;
-	font.SetFaceName(m_DispControlLabelFont);
+	if (!font.SetFaceName(m_DispControlLabelFont))
+	{
+		font = *wxNORMAL_FONT;
+	}
 	return font;
 }
 
@@ -183,7 +186,10 @@ wxFont GOGUIDisplayMetrics::GetGroupLabelFont()
 #ifdef __linux__
 	font.SetFamily(wxFONTFAMILY_SWISS);
 #endif
-	font.SetFaceName(m_DispGroupLabelFont);
+	if (!font.SetFaceName(m_DispGroupLabelFont))
+	{
+		font = *wxNORMAL_FONT;
+	}
 	return font;
 }
 
