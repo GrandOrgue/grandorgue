@@ -119,9 +119,13 @@ void GOGUILabel::Draw(wxDC* dc)
 	{
 		dc->SetTextForeground(m_TextColor);
 		wxFont font = m_metrics->GetGroupLabelFont();
-		font.SetPointSize(m_FontSize);
 		if (m_FontName != wxEmptyString)
-			font.SetFaceName(m_FontName);
+		{
+			wxFont new_font = font;
+			if (new_font.SetFaceName(m_FontName))
+				font = new_font;
+		}
+		font.SetPointSize(m_FontSize);
 		dc->SetFont(font);
 		dc->DrawLabel(m_panel->WrapText(dc, m_Text, m_TextWidth), m_TextRect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
 	}
