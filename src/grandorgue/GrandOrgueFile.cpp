@@ -188,8 +188,8 @@ bool GrandOrgueFile::TryLoad
 			last = wxGetUTCTime();
 			if (!dlg.Update	((nb_loaded_obj << 15) / (objects.size() + 1), obj->GetLoadTitle()))
 			{
-				error = _("Load aborted by the user");
-				return false;
+				wxMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
+				return true;
 			}
 			GOrgueLCD_WriteLineTwo
 				(wxString::Format
