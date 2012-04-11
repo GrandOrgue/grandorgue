@@ -240,11 +240,11 @@ void GOrgueMemoryPool::CalculatePoolLimit()
 	/* We reserve virtual address and add backing memory only, if the 
 	   memory region is needed.
 	   
-	   On 32 bit, limit to 2 GB address space (so 1 GB is left for the rest of GO)
+	   On 32 bit, limit to 2.5 GB address space (so 500 MB address space is left for the rest of GO)
 	   On 64 bit, we reserve the size of the physical memory
 	*/
 	if (sizeof(void*) == 4)
-		m_PoolLimit = 1l << 31;
+		m_PoolLimit = (1l << 31) + (1l << 29);
 	else
 		m_PoolLimit = sysconf(_SC_PHYS_PAGES) * m_PageSize;
 
@@ -307,7 +307,7 @@ void GOrgueMemoryPool::InitPool()
 	m_PoolSize = 0;
 	CalculatePageSize();
 	CalculatePoolLimit();
-	wxLogDebug(wxT("Memory pool limit: %ld bytes (page size: %d)"), (long int)m_PoolLimit, (int)m_PageSize);
+	wxLogDebug(wxT("Memory pool limit: %llu bytes (page size: %d)"), (unsigned long long)m_PoolLimit, (int)m_PageSize);
 
 	while (m_PoolLimit)
 	{
@@ -315,7 +315,7 @@ void GOrgueMemoryPool::InitPool()
 			break;
 		if (m_PoolLimit < 500 * 1024 * 1024)
 		{
-			wxLogWarning(wxT("Initialization of the memory pool failed (size: %ld bytes)"), m_PoolLimit);
+			wxLogWarning(wxT("Initialization of the memory pool failed (size: %llu bytes)"), (unsigned long long)m_PoolLimit);
 			m_PoolLimit = 0;
 			break;
 		}
@@ -353,7 +353,7 @@ void GOrgueMemoryPool::FreePool()
 
 void GOrgueMemoryPool::GrowPool(size_t length)
 {
-	unsigned long new_size = m_PoolSize + m_PoolIncrement;
+	size_t new_size = m_PoolSize + m_PoolIncrement;
 	while (new_size < m_PoolSize + length)
 		new_size += m_PageSize;
 	if (new_size > m_PoolLimit)
