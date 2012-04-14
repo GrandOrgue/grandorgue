@@ -296,4 +296,77 @@ public:
 	}
 };
 
+#ifndef HAVE_ATOMIC
+namespace std {
+	template<class T>
+	class atomic
+	{
+	private:
+		wxCriticalSection m_Lock;
+		T m_Value;
+	public:
+		atomic()
+		{
+		}
+	
+		atomic(const T& val)
+		{
+			m_Value = val;
+		}
+
+		atomic(const atomic<T>& val)
+		{
+			m_Value = val.m_Value;
+		}
+
+		T operator=(const T& val)
+		{
+			wxCriticalSectionLocker m_Locker(m_Lock);
+			m_Value = val;
+			return val;
+		}
+
+		operator T() const
+		{
+			return m_Value;
+		}
+
+		T exchange(const T& val)
+		{
+			wxCriticalSectionLocker m_Locker(m_Lock);
+			T current = m_Value;
+			m_Value = val;
+			return current;
+		}
+
+		bool compare_exchange_strong(T& expected, T new_value)
+		{
+			wxCriticalSectionLocker m_Locker(m_Lock);
+
+			if (m_Value == expected)
+			{
+				m_Value = new_value;
+				return true;
+			}
+			else
+			{
+				expected = m_Value;
+				return false;
+			}
+		}
+
+		T fetch_add(const T& value)
+		{
+			wxCriticalSectionLocker m_Locker(m_Lock);
+			T current = m_Value;
+			m_Value += value;
+			return current;
+		}
+
+	};
+
+	typedef atomic<unsigned> atomic_uint;
+}
+#endif
+
 #endif
