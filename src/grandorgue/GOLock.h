@@ -26,6 +26,12 @@
 #include <wx/wx.h>
 #include <vector>
 #include "GrandOrgueDef.h"
+
+#if 0  /* set to 1 to enable fallback code */
+#undef HAVE_CSTDATOMIC
+#undef HAvE_ATOMIC
+#endif
+
 #ifdef HAVE_ATOMIC
 #include <atomic>
 #endif
