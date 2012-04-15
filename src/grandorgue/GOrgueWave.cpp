@@ -162,12 +162,12 @@ void GOrgueWave::Open(const wxString& filename)
 	
 	// Allocate memory for wave and read it.
 	char* ptr = (char*)malloc(length);
-	if (!ptr)
-		throw (wxString)_(" Out of memory loading");
 
 	unsigned offset = 0;
 	try
 	{
+		if (!ptr)
+			throw GOrgueOutOfMemory();
 
 		if (length < 12)
 			throw (wxString)_("< Not a RIFF file");
@@ -254,7 +254,8 @@ void GOrgueWave::Open(const wxString& filename)
 		wxLogError(_("unhandled exception: %s\n"), msg.c_str());
 
 		/* Free the memory used to hold the file */
-		free(ptr);
+		if (ptr)
+			free(ptr);
 
 		/* Free any memory that was allocated by chunk loading procedures */
 		Close();
@@ -265,7 +266,8 @@ void GOrgueWave::Open(const wxString& filename)
 	catch (...)
 	{
 		/* Free the memory used to hold the file */
-		free(ptr);
+		if (ptr)
+			free(ptr);
 
 		/* Free any memory that was allocated by chunk loading procedures */
 		Close();
