@@ -40,6 +40,58 @@
 #define HAVE_ATOMIC
 #endif
 
+#ifdef __WIN32__
+class GOWaitQueue
+{
+private:
+	wxSemaphore m_Wait;
+public:
+	GOWaitQueue()
+	{
+	}
+
+	~GOWaitQueue()
+	{
+	}
+
+	void Wait()
+	{
+		m_Wait.Wait();
+	}
+
+	void Wakeup()
+	{
+		m_Wait.Post();
+	}
+};
+#else
+class GOWaitQueue
+{
+private:
+	wxMutex m_Wait;
+public:
+	GOWaitQueue()
+	{
+		m_Wait.Lock();
+	}
+
+	~GOWaitQueue()
+	{
+		m_Wait.Unlock();
+	}
+
+	void Wait()
+	{
+		m_Wait.Lock();
+	}
+
+	void Wakeup()
+	{
+		m_Wait.Unlock();
+	}
+};
+#endif
+
 class GOMutex
 {
 private:
@@ -70,18 +122,16 @@ private:
 	}
 	friend class GOCondition;
 #else
-	wxCriticalSection m_Mutex;
+	GOWaitQueue m_Wait;
 	std::atomic_int m_Lock;
 
 	void Init()
 	{
 		m_Lock = 0;
-		m_Mutex.Enter();
 	}
 
 	void Cleanup()
 	{
-		m_Mutex.Leave();
 	}
 
 	void DoLock()
@@ -92,7 +142,7 @@ private:
 			__sync_synchronize();
 			return;
 		}
-		m_Mutex.Enter();
+		m_Wait.Wait();
 	}
 
 	void DoUnlock()
@@ -100,7 +150,7 @@ private:
 		__sync_synchronize();
 		int value = m_Lock.fetch_add(-1);
 		if (value > 1)
-			m_Mutex.Leave();
+			m_Wait.Wakeup();
 	}
 
 	bool DoTryLock()
@@ -170,24 +220,24 @@ private:
 	}
 #else
 	std::atomic_int m_Waiters;
-	wxCriticalSection m_Wait;
+	GOWaitQueue m_Wait;
 
 	void Init()
 	{
 		m_Waiters = 0;
-		m_Wait.Enter();
 	}
 
 	void Cleanup()
 	{
-		m_Wait.Leave();
+		while(m_Waiters > 0)
+			Signal();
 	}
 
 	void DoWait()
 	{
 		m_Waiters.fetch_add(1);
 		m_Mutex.Unlock();
-		m_Wait.Enter();
+		m_Wait.Wait();
 		m_Mutex.Lock();
 	}
 
@@ -197,7 +247,7 @@ private:
 		if (waiters <= 0)
 			m_Waiters.fetch_add(+1);
 		else
-			m_Wait.Leave();
+			m_Wait.Wakeup();
 	}
 
 #endif
