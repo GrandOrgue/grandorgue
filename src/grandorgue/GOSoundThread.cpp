@@ -62,9 +62,9 @@ void GOSoundThread::Wakeup()
 
 void GOSoundThread::Delete()
 {
-	m_Stop = true;
 	{
 		GOMutexLocker lock(m_Mutex);
+		m_Stop = true;
 		m_Condition.Signal();
 	}
 	wxThread::Delete();
