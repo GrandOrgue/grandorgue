@@ -34,9 +34,9 @@ class GOSoundSamplerPool
 
 private:
 	GOMutex                 m_Lock;
-	unsigned                m_SamplerCount;
+	std::atomic_uint        m_SamplerCount;
 	unsigned                m_UsageLimit;
-	GO_SAMPLER             *m_AvailableSamplers;
+	std::atomic<GO_SAMPLER*> m_AvailableSamplers;
 	ptr_vector<GO_SAMPLER>  m_Samplers;
 
 public:
