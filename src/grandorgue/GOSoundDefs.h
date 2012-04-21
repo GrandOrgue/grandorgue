@@ -31,7 +31,7 @@
  * pairs which are decoded for each iteration of the audio engines main loop.
  * Setting this value too low will result in inefficiencies or certain
  * features (compression) failing to work. */
-#define BLOCKS_PER_FRAME       (64)
+#define BLOCKS_PER_FRAME       (16)
 
 /* Number of extra samples to avoid out of array accesses */
 #define EXTRA_FRAMES           (128)
