@@ -23,16 +23,14 @@
 #include "GOSoundThread.h"
 #include "GOSoundEngine.h"
 
-GOSoundThread::GOSoundThread(GOSoundEngine* engine, int min_sampler_id, int max_sampler_id, unsigned n_frames):
+GOSoundThread::GOSoundThread(GOSoundEngine* engine, unsigned n_frames):
 	wxThread(wxTHREAD_JOINABLE),
-	m_MinSamplerID(min_sampler_id),
-	m_MaxSamplerID(max_sampler_id),
 	m_Engine(engine),
 	m_FrameCount(n_frames),
 	m_Stop(false),
 	m_Condition(m_Mutex)
 {
-	wxLogDebug(wxT("Create Thread %d %d %d"), m_MinSamplerID, m_MaxSamplerID, m_FrameCount);
+	wxLogDebug(wxT("Create Thread %d"), m_FrameCount);
 	Create();
 	SetPriority(WXTHREAD_MAX_PRIORITY);
 }
@@ -41,10 +39,14 @@ void* GOSoundThread::Entry()
 {
 	while(!TestDestroy() && !m_Stop)
 	{
-		for(int i = m_MaxSamplerID; i >= m_MinSamplerID; i--)
+		int next;
+		do
 		{
-			m_Engine->Process(i, m_FrameCount);
+			next = m_Engine->GetNextGroup();
+			if (next >= 0)
+				m_Engine->Process(next, m_FrameCount);
 		}
+		while (next != -1);
 
 		GOMutexLocker lock(m_Mutex);
 		if (TestDestroy() || m_Stop)

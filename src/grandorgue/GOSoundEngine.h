@@ -163,6 +163,9 @@ private:
 	std::vector<GOOutputGroup>    m_OutputGroups;
 	std::vector<GOAudioOutput>    m_AudioOutputs;
 
+	std::vector<unsigned>         m_WorkItems;
+	std::atomic_uint              m_NextItem;
+
 	struct resampler_coefs_s      m_ResamplerCoefs;
 
 	/* samplerGroupID:
@@ -216,6 +219,7 @@ public:
 		);
 	void Process(unsigned group_id, unsigned n_frames);
 	unsigned GetGroupCount();
+	int GetNextGroup();
 };
 
 #endif /* GOSOUNDENGINE_H_ */

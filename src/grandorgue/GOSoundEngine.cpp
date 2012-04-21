@@ -64,7 +64,9 @@ GOSoundEngine::GOSoundEngine() :
 	m_Windchests(),
 	m_Tremulants(),
 	m_OutputGroups(1),
-	m_AudioOutputs()
+	m_AudioOutputs(),
+	m_WorkItems(),
+	m_NextItem(0)
 {
 	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
@@ -237,6 +239,7 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 	m_Tremulants.resize(organ_file->GetTremulantCount());
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 		m_Tremulants[i].is_tremulant = true;
+	m_WorkItems.resize(GetGroupCount());
 	Reset();
 }
 
@@ -426,9 +429,20 @@ unsigned GOSoundEngine::GetGroupCount()
 	return (m_DetachedReleaseCount + m_WindchestCount) * m_AudioGroupCount;
 }
 
+int GOSoundEngine::GetNextGroup()
+{
+	unsigned next = m_NextItem.fetch_add(1);
+	if (next >= m_WorkItems.size())
+		return -1;
+	return m_WorkItems[next];
+}
+
 void GOSoundEngine::Process(unsigned group_id, unsigned n_frames)
 {
 	GOSamplerEntry* state;
+
+	if (group_id >= GetGroupCount())
+		return;
 
 	if (group_id < m_DetachedReleaseCount * m_AudioGroupCount)
 		state = &m_DetachedRelease[group_id];
@@ -441,6 +455,42 @@ void GOSoundEngine::Process(unsigned group_id, unsigned n_frames)
 
 void GOSoundEngine::ResetDoneFlags()
 {
+	std::vector<unsigned> counts;
+	std::vector<unsigned> ids;
+	counts.reserve(GetGroupCount());
+	ids.reserve(GetGroupCount());
+
+	for(unsigned i = 0; i < m_DetachedRelease.size(); i++)
+	{
+		counts.push_back(0);
+		ids.push_back(0);
+		unsigned pos = counts.size();
+		while(pos > 1 && counts[pos - 2] < m_DetachedRelease[i].count)
+		{
+			counts[pos - 1] = counts[pos - 2];
+			ids[pos - 1] = ids[pos - 2];
+			pos--;
+		}
+		counts[pos - 1] = m_DetachedRelease[i].count;
+		ids[pos - 1] = i;
+	}
+	for(unsigned i = 0; i < m_Windchests.size(); i++)
+	{
+		counts.push_back(0);
+		ids.push_back(0);
+		unsigned pos = counts.size();
+		while(pos > 1 && counts[pos - 2] < m_Windchests[i].count)
+		{
+			counts[pos - 1] = counts[pos - 2];
+			ids[pos - 1] = ids[pos - 2];
+			pos--;
+		}
+		counts[pos - 1] = m_Windchests[i].count;
+		ids[pos - 1] = i + m_DetachedRelease.size();
+	}
+	for(unsigned i = 0; i < m_WorkItems.size(); i++)
+		m_WorkItems[i] = ids[i];
+
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 	{
 		GOMutexLocker locker(m_Tremulants[j].mutex);
@@ -461,6 +511,8 @@ void GOSoundEngine::ResetDoneFlags()
 		GOMutexLocker locker(m_OutputGroups[j].mutex);
 		m_OutputGroups[j].done = false;
 	}
+
+	m_NextItem.exchange(0);
 }
 
 void GOSoundEngine::ProcessTremulants(unsigned n_frames)

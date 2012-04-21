@@ -32,8 +32,6 @@ class GOSoundEngine;
 class GOSoundThread : public wxThread
 {
 private:
-	int m_MinSamplerID;
-	int m_MaxSamplerID;
 	GOSoundEngine* m_Engine;
 	unsigned m_FrameCount;
 	bool m_Stop;
@@ -44,7 +42,7 @@ private:
 	void* Entry();
 
 public:
-	GOSoundThread(GOSoundEngine* engine, int min_sampler_id, int max_sampler_id, unsigned n_frames);
+	GOSoundThread(GOSoundEngine* engine, unsigned n_frames);
 
 	void Delete();
 	void Wakeup();
