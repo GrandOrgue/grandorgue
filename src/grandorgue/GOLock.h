@@ -29,7 +29,7 @@
 
 #if 0  /* set to 1 to enable fallback code */
 #undef HAVE_CSTDATOMIC
-#undef HAvE_ATOMIC
+#undef HAVE_ATOMIC
 #endif
 
 #ifdef HAVE_ATOMIC
