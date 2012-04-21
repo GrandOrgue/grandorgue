@@ -143,6 +143,7 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 	SHA1_Final(hash, &ctx);
 }
 
+#define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 
 bool GrandOrgueFile::TryLoad
 	(GOrgueCache* cache
@@ -153,9 +154,14 @@ bool GrandOrgueFile::TryLoad
 
 	bool success = false;
 	long last = wxGetUTCTime();
+	void* dummy = NULL;
 
 	try
 	{
+		dummy = malloc(1024 * 1024 * 50);
+		if (!dummy)
+			throw GOrgueOutOfMemory();
+
 		/* Figure out list of pipes to load */
 		std::vector<GOrgueCacheObject*> objects;
 		GenerateCacheObjectList(objects);
@@ -169,6 +175,7 @@ bool GrandOrgueFile::TryLoad
 			{
 				if (!obj->LoadCache(*cache))
 				{
+					FREE_AND_NULL(dummy);
 					error = wxString::Format
 						(_("Failed to read %s from cache.")
 						 ,obj->GetLoadTitle().c_str()
@@ -188,6 +195,7 @@ bool GrandOrgueFile::TryLoad
 			last = wxGetUTCTime();
 			if (!dlg.Update	((nb_loaded_obj << 15) / (objects.size() + 1), obj->GetLoadTitle()))
 			{
+				FREE_AND_NULL(dummy);
 				wxMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
 				return true;
 			}
@@ -203,6 +211,7 @@ bool GrandOrgueFile::TryLoad
 	}
 	catch (GOrgueOutOfMemory e)
 	{
+		FREE_AND_NULL(dummy);
 		wxMessageBox(_("Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
 		return true;
 	}
@@ -210,6 +219,7 @@ bool GrandOrgueFile::TryLoad
 	{
 		error = msg;
 	}
+	FREE_AND_NULL(dummy);
 
 	return success;
 
