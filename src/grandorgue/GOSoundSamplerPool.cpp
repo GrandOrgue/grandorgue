@@ -43,9 +43,9 @@ void GOSoundSamplerPool::ReturnAll()
 		m_Samplers.resize(m_UsageLimit);
 
 	if (m_Samplers.size())
-		m_AvailableSamplers = m_Samplers[0];
+		m_AvailableSamplers.exchange(m_Samplers[0]);
 	else
-		m_AvailableSamplers = NULL;
+		m_AvailableSamplers.exchange(NULL);
 
 	for (unsigned i = 0; i < m_Samplers.size(); i++)
 		m_Samplers[i]->next = (i + 1 < m_Samplers.size() ? m_Samplers[i + 1] : NULL);
@@ -59,9 +59,9 @@ void GOSoundSamplerPool::SetUsageLimit(unsigned count)
 	while(m_Samplers.size() < m_UsageLimit)
 	{
 		GO_SAMPLER* sampler = new GO_SAMPLER;
-		sampler->next = m_AvailableSamplers;
-		m_AvailableSamplers = sampler;
+		m_SamplerCount.fetch_add(1);
 		m_Samplers.push_back(sampler);
+		ReturnSampler(sampler);
 	}
 }
 
@@ -71,13 +71,14 @@ GO_SAMPLER* GOSoundSamplerPool::GetSampler()
 
 	if (m_SamplerCount < m_UsageLimit)
 	{
-		GOMutexLocker locker(m_Lock);
-		if (m_AvailableSamplers)
+		sampler = m_AvailableSamplers;
+		while (sampler)
 		{
-			sampler = m_AvailableSamplers;
-			m_AvailableSamplers = m_AvailableSamplers->next;
-			m_SamplerCount++;
+			if (m_AvailableSamplers.compare_exchange_strong(sampler, sampler->next))
+				break;
 		}
+		if (sampler)
+			m_SamplerCount.fetch_add(1);
 	}
 	if (sampler)
 		memset(sampler, 0, sizeof(GO_SAMPLER));
@@ -86,11 +87,12 @@ GO_SAMPLER* GOSoundSamplerPool::GetSampler()
 
 void GOSoundSamplerPool::ReturnSampler(GO_SAMPLER* sampler)
 {
-	GOMutexLocker locker(m_Lock);
-
 	assert(m_SamplerCount > 0);
-	m_SamplerCount--;
-	sampler->next = m_AvailableSamplers;
-	m_AvailableSamplers = sampler;
+	m_SamplerCount.fetch_add(-1);
+	do
+	{
+		sampler->next = m_AvailableSamplers;
+	}
+	while(!m_AvailableSamplers.compare_exchange_strong(sampler->next, sampler));
 }
 
