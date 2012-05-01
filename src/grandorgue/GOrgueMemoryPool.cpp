@@ -134,8 +134,8 @@ void* GOrgueMemoryPool::PoolAlloc(size_t length)
 		}
 		else
 		{
-			wxLogError(_("Memory pool is full: %llu of %llu used"), 
-				   (unsigned long long)m_PoolSize, (unsigned long long)m_PoolLimit);
+			wxLogWarning(_("Memory pool is full: %llu of %llu used"), 
+				     (unsigned long long)m_PoolSize, (unsigned long long)m_PoolLimit);
 		}
 	}
 	return NULL;
