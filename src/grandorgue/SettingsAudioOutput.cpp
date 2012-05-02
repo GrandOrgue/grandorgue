@@ -336,7 +336,6 @@ void SettingsAudioOutput::UpdateButtons()
 		else
 			m_Add->Disable();
 		m_Del->Disable();
-		m_Add->Disable();
 	}
 	else
 	{
@@ -388,6 +387,7 @@ void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 		index = wxGetSingleChoiceIndex(_("Add new audio device"), _("New audio device"), devs, this);
 		if (index == -1)
 			return;
+		wxMessageBox(_("Using more than one audio interface is currently not supported.") , _("Warning"), wxOK | wxICON_WARNING, NULL);
 		AddDeviceNode(devices[index]);
 	}
 	UpdateButtons();
