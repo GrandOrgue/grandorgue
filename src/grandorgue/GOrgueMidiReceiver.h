@@ -65,6 +65,10 @@ typedef struct {
 	midi_match_message_type type;
 	int channel;
 	int key;
+	int low_key;
+	int high_key;
+	int low_velocity;
+	int high_velocity;
 } MIDI_MATCH_EVENT;
 
 class GOrgueMidiReceiver {

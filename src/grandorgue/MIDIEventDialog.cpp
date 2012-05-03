@@ -78,7 +78,7 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 		box->Add(new wxStaticText(this, wxID_ANY, _("&Transpose:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
 	else
 		box->Add(new wxStaticText(this, wxID_ANY, _("&Data:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
-	m_data = new wxSpinCtrl(this, ID_CHANNEL, wxEmptyString, wxDefaultPosition, wxSize(48, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 127);
+	m_data = new wxSpinCtrl(this, ID_CHANNEL, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 127);
 	box->Add(m_data, 0);
 
 	if (m_midi.GetType() == MIDI_RECV_MANUAL)
@@ -86,6 +86,23 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 	else
 		m_data->SetRange(0, 0x200000);
 
+	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Lowest key:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+	box = new wxBoxSizer(wxHORIZONTAL);
+	sizer->Add(box);
+	m_LowKey = new wxSpinCtrl(this, ID_LOW_KEY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
+	box->Add(m_LowKey, 0);
+	box->Add(new wxStaticText(this, wxID_ANY, _("&Highest key:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+	m_HighKey = new wxSpinCtrl(this, ID_HIGH_KEY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
+	box->Add(m_HighKey, 0);
+
+	sizer->Add(new wxStaticText(this, wxID_ANY, _("L&owest velocity:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+	box = new wxBoxSizer(wxHORIZONTAL);
+	sizer->Add(box);
+	m_LowVelocity = new wxSpinCtrl(this, ID_LOW_VELOCITY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
+	box->Add(m_LowVelocity, 0);
+	box->Add(new wxStaticText(this, wxID_ANY, _("H&ighest velocity:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+	m_HighVelocity = new wxSpinCtrl(this, ID_HIGH_VELOCITY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
+	box->Add(m_HighVelocity, 0);
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, wxEmptyString));
 	m_listen = new wxToggleButton(this, ID_LISTEN, _("&Listen for Event"));
@@ -123,6 +140,29 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 	}
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 		m_eventtype->Append(_("Cx Program Change"), (void*)MIDI_M_PGM_CHANGE);
+
+	if (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
+	{
+		m_LowVelocity->Enable();
+		m_HighVelocity->Enable();
+	}
+	else
+	{
+		m_LowVelocity->Disable();
+		m_HighVelocity->Disable();
+	}
+
+	if (m_midi.GetType() == MIDI_RECV_MANUAL)
+	{
+		m_LowKey->Enable();
+		m_HighKey->Enable();
+	}
+	else
+	{
+		m_LowKey->Disable();
+		m_HighKey->Disable();
+	}
+
 
 	m_current = 0;
 	if (!m_midi.GetEventCount())
@@ -197,6 +237,10 @@ void MIDIEventDialog::LoadEvent()
 		m_channel->SetSelection(e.channel);
 
 	m_data->SetValue(e.key);
+	m_LowKey->SetValue(e.low_key);
+	m_HighKey->SetValue(e.high_key);
+	m_LowVelocity->SetValue(e.low_velocity);
+	m_HighVelocity->SetValue(e.high_velocity);
 }
 
 void MIDIEventDialog::StoreEvent()
@@ -214,6 +258,10 @@ void MIDIEventDialog::StoreEvent()
 		e.channel = m_channel->GetSelection();
 
 	e.key = m_data->GetValue();
+	e.low_key = m_LowKey->GetValue();
+	e.high_key = m_HighKey->GetValue();
+	e.low_velocity = m_LowVelocity->GetValue();
+	e.high_velocity = m_HighVelocity->GetValue();
 }
 
 void MIDIEventDialog::OnNewClick(wxCommandEvent& event)
@@ -262,6 +310,10 @@ void MIDIEventDialog::OnMidiEvent(GOrgueMidiEvent& event)
 	e.channel = event.GetChannel();
 	if (m_midi.GetType() != MIDI_RECV_MANUAL)
 		e.key = event.GetKey();
+	e.low_key = 0;
+	e.high_key = 127;
+	e.low_velocity = m_midi.GetType() == MIDI_RECV_ENCLOSURE ? 0 : 1;
+	e.high_velocity = 127;
 
 	LoadEvent();
 

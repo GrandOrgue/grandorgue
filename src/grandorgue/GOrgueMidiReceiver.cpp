@@ -78,6 +78,10 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 				buffer.Printf(wxT("MIDIKeyShift%03d"), i + 1);
 				m_events[i].key = cfg.ReadInteger(group, buffer, -35, 35);
 				m_events[i].type = MIDI_M_NOTE;
+				m_events[i].low_key = cfg.ReadInteger(group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), 0, 127, false, 0);
+				m_events[i].high_key = cfg.ReadInteger(group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), 0, 127, false, 127);
+				m_events[i].low_velocity = cfg.ReadInteger(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 1);
+				m_events[i].high_velocity = cfg.ReadInteger(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127);
 				continue;
 			}
 			buffer.Printf(wxT("MIDIKey%03d"), i + 1);
@@ -86,6 +90,8 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 			if (m_type == MIDI_RECV_ENCLOSURE)
 			{
 				m_events[i].type = MIDI_M_CTRL_CHANGE;
+				m_events[i].low_velocity = cfg.ReadInteger(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 0);
+				m_events[i].high_velocity = cfg.ReadInteger(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127);
 				continue;
 			}
 			
@@ -205,6 +211,10 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 			m_events[0].type = MIDI_M_NOTE;
 			m_events[0].channel = ((what >> 8) & 0xF) + 1;
 			m_events[0].key = (what & 0xFF) < 0x7F ? (what & 0xFF) : ((what & 0xFF) - 140);
+			m_events[0].low_key = 0;
+			m_events[0].high_key = 127;
+			m_events[0].low_velocity = 1;
+			m_events[0].high_velocity = 127;
 		}
 		if (m_type == MIDI_RECV_ENCLOSURE)
 		{
@@ -228,6 +238,8 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 			m_events[0].type = MIDI_M_CTRL_CHANGE;
 			m_events[0].channel = ((what >> 8) & 0xF) + 1;
 			m_events[0].key = what & 0x7F;
+			m_events[0].low_velocity = 0;
+			m_events[0].high_velocity = 127;
 		}
 	}
 }
@@ -247,13 +259,21 @@ void GOrgueMidiReceiver::Save(IniFileConfig& cfg, bool prefix, wxString group)
 		{
 			buffer.Printf(wxT("MIDIKeyShift%03d"), i + 1);
 			cfg.SaveHelper(prefix, group, buffer, m_events[i].key);
+			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), m_events[i].low_key);
+			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), m_events[i].high_key);
+			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_velocity);
+			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
 			continue;
 		}
 		buffer.Printf(wxT("MIDIKey%03d"), i + 1);
 		cfg.SaveHelper(prefix, group, buffer, m_events[i].key);
 
 		if (m_type == MIDI_RECV_ENCLOSURE)
+		{
+			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_velocity);
+			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
 			continue;
+		}
 
 		buffer.Printf(wxT("MIDIEventType%03d"), i + 1);
 		cfg.SaveHelper(prefix, group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
@@ -279,11 +299,14 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& value)
 		{
 			if (e.GetMidiType() == MIDI_NOTE)
 			{
+				if (e.GetKey() < m_events[i].low_key || e.GetKey() > m_events[i].high_key)
+					continue;
 				value = e.GetKey() + m_organfile->GetSettings().GetTranspose() + m_events[i].key;
-				if (e.GetValue())
-					return MIDI_MATCH_ON;
-				else
+				if (e.GetValue() < m_events[i].low_velocity)
 					return MIDI_MATCH_OFF;
+				if (e.GetValue() <= m_events[i].high_velocity)
+					return MIDI_MATCH_ON;
+				continue;
 			}
 			if (e.GetMidiType() == MIDI_CTRL_CHANGE && 
 			    e.GetKey() == MIDI_CTRL_NOTES_OFF)
@@ -300,6 +323,12 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& value)
 			if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].key == e.GetKey())
 			{
 				value = e.GetValue();
+				value = value - m_events[i].low_velocity;
+				value *= 127 / (m_events[i].high_velocity - m_events[i].low_velocity + 0.00000001);
+				if (value < 0)
+					value = 0;
+				if (value > 127)
+					value = 127;
 				return MIDI_MATCH_CHANGE;
 			}
 			continue;
