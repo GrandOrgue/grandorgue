@@ -39,6 +39,10 @@ private:
 	GOrgueMidiReceiver m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
 	wxSpinCtrl *m_data;
+	wxSpinCtrl *m_LowKey;
+	wxSpinCtrl *m_HighKey;
+	wxSpinCtrl *m_LowVelocity;
+	wxSpinCtrl *m_HighVelocity;
 	wxToggleButton* m_listen;
 	wxButton* m_new, *m_delete;
 	int m_current;
@@ -72,6 +76,10 @@ protected:
 		ID_CHANNEL,
 		ID_DATA,
 		ID_LISTEN,
+		ID_LOW_KEY,
+		ID_HIGH_KEY,
+		ID_LOW_VELOCITY,
+		ID_HIGH_VELOCITY
 	};
 
 };
