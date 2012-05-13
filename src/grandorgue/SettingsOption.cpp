@@ -21,6 +21,7 @@
  */
 
 #include <wx/filepicker.h>
+#include <wx/spinctrl.h>
 
 #include "SettingsOption.h"
 #include "GOSoundDefs.h"
@@ -156,11 +157,16 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Release loading:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_ReleaseLoad = new wxChoice(this, ID_RELEASE_LOAD, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Memory Limit (MB):")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_MemoryLimit = new wxSpinCtrl(this, ID_MEMORY_LIMIT, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
+	m_MemoryLimit->SetRange(0, 1024 * 1024);
+
 	m_Stereo->Select(m_Settings.GetLoadInStereo());
 	m_BitsPerSample->Select((m_Settings.GetBitsPerSample() - 8) / 4);
 	m_LoopLoad->Select(m_Settings.GetLoopLoad());
 	m_AttackLoad->Select(m_Settings.GetAttackLoad());
 	m_ReleaseLoad->Select(m_Settings.GetReleaseLoad());
+	m_MemoryLimit->SetValue(m_Settings.GetMemoryLimit() / (1024.0 * 1024.0));
 
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
@@ -214,6 +220,7 @@ void SettingsOption::Save()
 	m_Settings.SetInterpolationType(m_Interpolation->GetSelection());
 	m_Settings.SetSampleRate(wxAtoi(m_SampleRate->GetStringSelection()));
 	m_Settings.SetSamplesPerBuffer((m_SamplesPerBuffer->GetSelection() + 1) * BLOCKS_PER_FRAME);
+	m_Settings.SetMemoryLimit(m_MemoryLimit->GetValue() * 1024.0 * 1024.0);
 }
 
 bool SettingsOption::NeedReload()

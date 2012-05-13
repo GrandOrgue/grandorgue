@@ -57,6 +57,7 @@ const wxString GOrgueSettings::m_StopChangeName = wxTRANSLATE("Stop Changes");
 
 GOrgueSettings::GOrgueSettings() :
 	m_Config(*wxConfigBase::Get()),
+	m_MemoryLimit(0),
 	m_Stereo(false),
 	m_Concurrency(0),
 	m_ReleaseConcurrency(1),
@@ -227,6 +228,20 @@ void GOrgueSettings::Load()
 		}
 		m_AudioDeviceConfig.push_back(conf);
 	}
+	double tmp;
+	m_Config.Read(wxT("MemoryLimit"), &tmp, 0.0);
+	m_MemoryLimit = tmp * (1024.0 * 1024.0);
+}
+
+size_t GOrgueSettings::GetMemoryLimit()
+{
+	return m_MemoryLimit;
+}
+
+void GOrgueSettings::SetMemoryLimit(size_t limit)
+{
+	m_MemoryLimit = limit;
+	m_Config.Write(wxT("MemoryLimit"), (double)m_MemoryLimit / (1024.0 * 1024.0));
 }
 
 unsigned GOrgueSettings::GetManualCount()

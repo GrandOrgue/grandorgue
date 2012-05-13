@@ -42,6 +42,7 @@ GOrgueMemoryPool::GOrgueMemoryPool() :
 	m_PageSize(4096),
 	m_CacheSize(0),
 	m_MallocSize(0),
+	m_MemoryLimit(0),
 	m_AllocError(0),
 	m_dummy(0)
 {
@@ -55,6 +56,8 @@ GOrgueMemoryPool::~GOrgueMemoryPool()
 
 void *GOrgueMemoryPool::Alloc(size_t length)
 {
+	if (m_MemoryLimit && m_CacheSize + m_PoolSize + m_MallocSize > m_MemoryLimit)
+		return NULL;
 	void* data = PoolAlloc(length);
 	if (data)
 	{
@@ -182,6 +185,16 @@ size_t GOrgueMemoryPool::GetPoolSize()
 size_t GOrgueMemoryPool::GetPoolUsage()
 {
 	return m_PoolSize;
+}
+
+size_t GOrgueMemoryPool::GetMemoryLimit()
+{
+	return m_MemoryLimit;
+}
+
+void GOrgueMemoryPool::SetMemoryLimit(size_t limit)
+{
+	m_MemoryLimit = limit;
 }
 
 bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)

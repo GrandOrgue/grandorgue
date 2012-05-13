@@ -49,6 +49,7 @@ class SettingsOption : public wxPanel
 		ID_INTERPOLATION,
 		ID_SAMPLE_RATE,
 		ID_SAMPLES_PER_BUFFER,
+		ID_MEMORY_LIMIT,
 	};
 private:
 	GOrgueSettings& m_Settings;
@@ -70,6 +71,7 @@ private:
 	wxChoice* m_Interpolation;
 	wxChoice* m_SampleRate;
 	wxChoice* m_SamplesPerBuffer;
+	wxSpinCtrl* m_MemoryLimit;
 	bool m_OldStereo;
 	bool m_OldLosslessCompression;
 	unsigned m_OldBitsPerSample;

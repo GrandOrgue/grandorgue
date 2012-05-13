@@ -91,6 +91,7 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_PipeConfig(this, this),
 	m_Settings(settings)
 {
+	m_pool.SetMemoryLimit(m_Settings.GetMemoryLimit());
 }
 
 void GrandOrgueFile::GenerateCacheObjectList(std::vector<GOrgueCacheObject*>& objects)
