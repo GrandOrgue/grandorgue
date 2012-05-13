@@ -42,6 +42,7 @@ class GOrgueMemoryPool {
 	size_t m_PageSize;
 	size_t m_CacheSize;
 	size_t m_MallocSize;
+	size_t m_MemoryLimit;
 	unsigned m_AllocError;
 	char m_dummy;
 
@@ -57,6 +58,7 @@ class GOrgueMemoryPool {
 public:
 	GOrgueMemoryPool();
 	~GOrgueMemoryPool();
+	void SetMemoryLimit(size_t limit);
 
 	void *Alloc(size_t length);
 	void *Realloc(void* data, size_t old_length, size_t new_length);
@@ -70,6 +72,7 @@ public:
 	size_t GetMappedSize();
 	size_t GetPoolSize();
 	size_t GetPoolUsage();
+	size_t GetMemoryLimit();
 };
 
 

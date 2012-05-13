@@ -45,6 +45,7 @@ typedef struct
 class GOrgueSettings {
 private:
 	wxConfigBase& m_Config;
+	size_t m_MemoryLimit;
 	bool m_Stereo;
 	unsigned m_Concurrency;
 	unsigned m_ReleaseConcurrency;
@@ -93,6 +94,9 @@ public:
 	wxString GetStandardOrganDirectory();
 	wxString GetStandardDataDirectory();
 	wxString GetStandardCacheDirectory();
+
+	size_t GetMemoryLimit();
+	void SetMemoryLimit(size_t limit);
 
 	unsigned GetManualCount();
 	wxString GetManualTitle(unsigned index);
