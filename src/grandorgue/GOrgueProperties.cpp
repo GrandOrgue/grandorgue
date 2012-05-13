@@ -110,7 +110,7 @@ GOrgueProperties::GOrgueProperties(GrandOrgueFile* organfile, wxWindow* win) :
 	topSizer->Add(CreateButtonSizer(wxOK), 0, wxALL | wxEXPAND, 10);
 
 	sizer->Add(GOrguePropertiesText(this, 0,  _("Allocated sample memory")), 0, wxTOP, 5);
-	float size;
+	float size, size1;
 	size = m_organfile->GetMemoryPool().GetAllocSize() / (1024.0 * 1024.0);
 	sizer->Add(GOrguePropertiesText(this, 0,  wxString::Format(_("%.3f MB"), size)), 0, wxTOP, 5);
 
@@ -118,9 +118,10 @@ GOrgueProperties::GOrgueProperties(GrandOrgueFile* organfile, wxWindow* win) :
 	size = m_organfile->GetMemoryPool().GetMappedSize() / (1024.0 * 1024.0);
 	sizer->Add(GOrguePropertiesText(this, 0,  wxString::Format(_("%.3f MB"), size)), 0, wxTOP, 5);
 
-	sizer->Add(GOrguePropertiesText(this, 0,  _("Maximum memory pool size")), 0, wxTOP, 5);
+	sizer->Add(GOrguePropertiesText(this, 0,  _("Memory pool size")), 0, wxTOP, 5);
+	size1 = m_organfile->GetMemoryPool().GetPoolUsage() / (1024.0 * 1024.0);
 	size = m_organfile->GetMemoryPool().GetPoolSize() / (1024.0 * 1024.0);
-	sizer->Add(GOrguePropertiesText(this, 0,  wxString::Format(_("%.3f MB"), size)), 0, wxTOP, 5);
+	sizer->Add(GOrguePropertiesText(this, 0,  wxString::Format(_("%.3f MB of %.3f MB"), size1, size)), 0, wxTOP, 5);
 
 	SetSizer(topSizer);
 	topSizer->Fit(this);
