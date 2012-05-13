@@ -179,6 +179,11 @@ size_t GOrgueMemoryPool::GetPoolSize()
 	return m_PoolLimit;
 }
 
+size_t GOrgueMemoryPool::GetPoolUsage()
+{
+	return m_PoolSize;
+}
+
 bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 {
 	bool result = false;

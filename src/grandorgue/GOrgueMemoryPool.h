@@ -69,6 +69,7 @@ public:
 	size_t GetAllocSize();
 	size_t GetMappedSize();
 	size_t GetPoolSize();
+	size_t GetPoolUsage();
 };
 
 
