@@ -26,7 +26,7 @@ All the instructions below are for building GrandOrgue for release, in a single 
 			mingw32-make -f makefile.gcc UNICODE=1 BUILD=Release SHARED=0 CXXFLAGS="-m32" CFLAGS="-m32"
 		GO:
 			create a build directory (e.g. c:\TDM\GOTDM32)
-			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx32\wxWidgets-2.8.12 -DCMAKE_EXE_LINKER_FLAGS="-m32 -static-libgcc -static-libstdc++" -DCMAKE_CXX_FLAGS="-m32" -DCMAKE_C_FLAGS="-m32" -DCMAKE_RC_FLAGS="-F pe-i386 -U WIN64" -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1  -DRTAUDIO_USE_WASAPI=OFF
+			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx32\wxWidgets-2.8.12 -DCMAKE_EXE_LINKER_FLAGS="-m32 -static-libgcc" -DCMAKE_CXX_FLAGS="-m32" -DCMAKE_C_FLAGS="-m32" -DCMAKE_RC_FLAGS="-F pe-i386 -U WIN64" -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1  -DRTAUDIO_USE_WASAPI=OFF
 
 	Building in 64 bits
 		Install msysgit from http://code.google.com/p/msysgit/downloads/detail?name=Git-1.7.8-preview20111206.exe&can=2&q=
@@ -35,12 +35,12 @@ All the instructions below are for building GrandOrgue for release, in a single 
 			mingw32-make -f makefile.gcc BUILD=Release UNICODE=1 SHARED=0 CXXFLAGS=-DHAVE_VARIADIC_MACROS=1
 		GO:
 			create a build directory (e.g. c:\TDM\GOTDM64)
-			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx64\wxWidgets-2.8.12 -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DIMPORT_EXECUTABLES=c:\TDMGO32\ImportExecutables.cmake -DCMAKE_SYSTEM_NAME=Windows -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1 -DRTAUDIO_USE_WASAPI=OFF 
+			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx64\wxWidgets-2.8.12 -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc" -DIMPORT_EXECUTABLES=c:\TDMGO32\ImportExecutables.cmake -DCMAKE_SYSTEM_NAME=Windows -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1 -DRTAUDIO_USE_WASAPI=OFF 
 
 #3: Cygwin environment:
 	Install Cygwin from http://cygwin.com/setup.exe
-	You need to select the following packages on top of the basic configuration:
-	git, g++, mingw64, make, cmake, getext, cmake, libgtk2-devel, docbook-xsl, xsltproc, zip, gettext and po4a. po4a can be obtained from http://sourceware.org/cygwinports/ which provides ports to Cygwin
+	You need to select the following packages which are probably not in the basic configuration:
+	git (core files), mingw64 (from dev everything except Ada and fortran), make (in Devel GNU utility), cmake (in Devel cross platform build manager), libgtk2-devel (in X11 runtime), docbook-xsl (in text stylesheets), xsltproc (in text libxslt), zip (in Utils utilities), gettext (in Devel library and core utilisties) and po4a. po4a can be obtained from http://sourceware.org/cygwinports/ which provides ports to Cygwin
 	Install wxWidgets-2.8.12 from http://www.wxwidgets.org/downloads/  in c:\cyg\wxsrc32 and c:\cyg\wxsrc64
 	create the following directories c/cyg/inst32, inst64, buildlinux32, buildwin32, buildlinux64
 	
