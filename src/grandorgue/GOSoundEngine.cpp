@@ -809,15 +809,15 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 					if (midikey_frequency < 96 )
 					{
 						if (midikey_frequency < 24)
-							attack_duration = 800.0f;
+							attack_duration = 500.0f;
 						else
-							attack_duration = 800.0f + ( ( 24.0f - (float)midikey_frequency ) * 10.4f );
+							attack_duration = 500.0f + ( ( 24.0f - (float)midikey_frequency ) * 6.25f );
 					}
 					/* calculate gain (gain_target) to apply to tail amplitude in function of when the note is released during the attack */ 
 					if (time < (int)attack_duration)
 					{
 						float attack_index = (float)time / attack_duration;
-						float gain_delta = ( 0.05f + ( 0.95f * ( 2.0f * attack_index - (attack_index * attack_index) )));
+						float gain_delta = ( 0.2f + ( 0.8f * ( 2.0f * attack_index - (attack_index * attack_index) )));
 						gain_target *= gain_delta;
 					}
 					/* calculate the volume decay to be applied to the release to take into account the fact reverb is not completely formed during staccato
@@ -833,7 +833,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 						/* in function of note duration, fading happens between: 
 						* 200 ms and 6 s for release with little reverberation e.g. short release 
 						* 700 ms and 6 s for release with large reverberation e.g. long release */ 
-						int reverb_mini = time_to_full_reverb / 100;
+						int reverb_mini = time_to_full_reverb / 80;
 						gain_decay_rate = -11  - reverb_mini - ( ( ( ( (6 - reverb_mini) * time * 2 ) / time_to_full_reverb ) + 1 ) / 2 ); 
 					}
 				}
