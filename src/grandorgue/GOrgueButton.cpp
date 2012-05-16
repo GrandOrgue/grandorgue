@@ -49,9 +49,9 @@ void GOrgueButton::Load(IniFileConfig& cfg, wxString group, wxString name)
 	m_midi.Load(cfg, group);
 }
 
-void GOrgueButton::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueButton::Save(GOrgueConfigWriter& cfg)
 {
-	m_midi.Save(cfg, prefix, m_group);
+	m_midi.Save(cfg, m_group);
 }
 
 bool GOrgueButton::IsDisplayed()

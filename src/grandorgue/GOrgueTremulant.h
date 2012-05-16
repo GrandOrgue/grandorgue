@@ -28,6 +28,7 @@
 #include "GOrgueDrawStop.h"
 #include "GOSoundProviderSynthedTrem.h"
 
+class GOrgueConfigWriter;
 class IniFileConfig;
 struct IniFileEnumEntry;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
@@ -51,7 +52,7 @@ public:
 	GOrgueTremulant(GrandOrgueFile* organfile);
 	~GOrgueTremulant();
 	void Load(IniFileConfig& cfg, wxString group, int sampler_group_id);
-	void Save(IniFileConfig& cfg, bool prefix);
+	void Save(GOrgueConfigWriter& cfg);
 	void InitSoundProvider();
 	void Set(bool on);
 	void Abort();

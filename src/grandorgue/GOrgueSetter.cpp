@@ -26,6 +26,7 @@
 #include "GOGUIHW1Background.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueEvent.h"
@@ -699,23 +700,23 @@ void GOrgueSetter::LoadCombination(IniFileConfig& cfg)
 		m_crescendo[i]->LoadCombination(cfg);
 }
 
-void GOrgueSetter::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueSetter::Save(GOrgueConfigWriter& cfg)
 {
-	cfg.SaveHelper(prefix, wxT("Organ"), wxT("NumberOfFrameGenerals"), (int)m_framegeneral.size());
+	cfg.Write(wxT("Organ"), wxT("NumberOfFrameGenerals"), (int)m_framegeneral.size());
 
 	for (unsigned j = 0; j < m_framegeneral.size(); j++)
-		m_framegeneral[j]->Save(cfg, prefix);
+		m_framegeneral[j]->Save(cfg);
 
 	for (unsigned j = 0; j < m_general.size(); j++)
-		m_general[j]->Save(cfg, prefix);
+		m_general[j]->Save(cfg);
 
 	for (unsigned j = 0; j < m_crescendo.size(); j++)
-		m_crescendo[j]->Save(cfg, prefix);
+		m_crescendo[j]->Save(cfg);
 
 	for (unsigned j = 0; j < m_button.size(); j++)
-		m_button[j]->Save(cfg, prefix);
+		m_button[j]->Save(cfg);
 
-	m_swell.Save(cfg, prefix);
+	m_swell.Save(cfg);
 }
 
 void GOrgueSetter::ProcessMidi(const GOrgueMidiEvent& event)

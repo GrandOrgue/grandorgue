@@ -26,13 +26,14 @@
 #include <wx/wx.h>
 #include "ptrvector.h"
 
-class GOrgueButton;
-class GOGUIDisplayMetrics;
-class GrandOrgueFile;
 class GOGUIControl;
-class GOGUIPanelWidget;
-class IniFileConfig;
+class GOGUIDisplayMetrics;
 class GOGUIMouseState;
+class GOGUIPanelWidget;
+class GOrgueConfigWriter;
+class GOrgueButton;
+class GrandOrgueFile;
+class IniFileConfig;
 
 class GOGUIPanel {
 protected:
@@ -53,7 +54,7 @@ public:
 	virtual ~GOGUIPanel();
 	void Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name=wxT(""));
 	void Load(IniFileConfig& cfg, wxString group);
-	void Save(IniFileConfig& cfg, bool prefix);
+	void Save(GOrgueConfigWriter& cfg);
 
 	GOGUIPanelWidget* GetWindow();
 	void SetWindow(GOGUIPanelWidget* window);

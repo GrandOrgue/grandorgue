@@ -39,10 +39,10 @@ void GOrgueGeneral::LoadCombination(IniFileConfig& cfg)
 	m_general.LoadCombination(cfg);
 }
 
-void GOrgueGeneral::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueGeneral::Save(GOrgueConfigWriter& cfg)
 {
-	GOrguePushbutton::Save(cfg, prefix);
-	m_general.Save(cfg, prefix);
+	GOrguePushbutton::Save(cfg);
+	m_general.Save(cfg);
 }
 
 void GOrgueGeneral::Push()

@@ -22,6 +22,7 @@
 
 #include "GOrgueFrameGeneral.h"
 
+#include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
@@ -378,41 +379,41 @@ void GOrgueFrameGeneral::Push()
 	m_organfile->GetSetter()->ResetDisplay();
 }
 
-void GOrgueFrameGeneral::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueFrameGeneral::Save(GOrgueConfigWriter& cfg)
 {
-	cfg.SaveHelper( prefix, m_group, wxT("NumberOfStops"), (int)m_Stops.size());
-	cfg.SaveHelper( prefix, m_group, wxT("NumberOfCouplers"), (int)m_Couplers.size());
-	cfg.SaveHelper( prefix, m_group, wxT("NumberOfTremulants"), (int)m_Tremulants.size());
-	cfg.SaveHelper( prefix, m_group, wxT("NumberOfDivisionalCouplers"), (int)m_DivisionalCouplers.size());
+	cfg.Write(m_group, wxT("NumberOfStops"), (int)m_Stops.size());
+	cfg.Write(m_group, wxT("NumberOfCouplers"), (int)m_Couplers.size());
+	cfg.Write(m_group, wxT("NumberOfTremulants"), (int)m_Tremulants.size());
+	cfg.Write(m_group, wxT("NumberOfDivisionalCouplers"), (int)m_DivisionalCouplers.size());
 
 	wxString buffer;
 
 	for (unsigned i = 0; i < m_Stops.size(); i++)
 	{
 		buffer.Printf(wxT("StopManual%03d"), i + 1);
-		cfg.SaveHelper( prefix, m_group, buffer, m_StopManual[i], true, true);
+		cfg.Write(m_group, buffer, m_StopManual[i], true, true);
 		buffer.Printf(wxT("StopNumber%03d"), i + 1);
-		cfg.SaveHelper( prefix, m_group, buffer, m_Stops[i], true);
+		cfg.Write(m_group, buffer, m_Stops[i], true);
 	}
 
 	for (unsigned i = 0; i < m_Couplers.size(); i++)
 	{
 		buffer.Printf(wxT("CouplerManual%03d"), i + 1);
-		cfg.SaveHelper( prefix, m_group, buffer, m_CouplerManual[i], true, true);
+		cfg.Write(m_group, buffer, m_CouplerManual[i], true, true);
 		buffer.Printf(wxT("CouplerNumber%03d"), i + 1);
-		cfg.SaveHelper( prefix, m_group, buffer, m_Couplers[i], true);
+		cfg.Write(m_group, buffer, m_Couplers[i], true);
 	}
 
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 	{
 		buffer.Printf(wxT("TremulantNumber%03d"), i + 1);
-		cfg.SaveHelper( prefix, m_group, buffer, m_Tremulants[i], true);
+		cfg.Write(m_group, buffer, m_Tremulants[i], true);
 	}
 
 	for (unsigned i = 0; i < m_DivisionalCouplers.size(); i++)
 	{
 		buffer.Printf(wxT("DivisionalCouplerNumber%03d"), i + 1);
-		cfg.SaveHelper( prefix, m_group, buffer, m_DivisionalCouplers[i], true);
+		cfg.Write(m_group, buffer, m_DivisionalCouplers[i], true);
 	}
 }
 

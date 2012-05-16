@@ -36,7 +36,7 @@ private:
 public:
 	GOrgueDivisionalCoupler(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group);
-	void Save(IniFileConfig& cfg, bool prefix);
+	void Save(GOrgueConfigWriter& cfg);
 	void Set(bool on);
 
 	unsigned GetNumberOfManuals();

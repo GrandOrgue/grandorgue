@@ -31,6 +31,7 @@
 
 class wxProgressDialog;
 
+class GOrgueConfigWriter;
 class GOrgueCoupler;
 class GOrgueDivisional;
 class GOrgueMidiEvent;
@@ -72,7 +73,7 @@ public:
 	GOrgueManual(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group, int manualNumber);
 	void LoadCombination(IniFileConfig& cfg);
-	void Save(IniFileConfig& cfg, bool prefix);
+	void Save(GOrgueConfigWriter& cfg);
 	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
 	void Set(unsigned note, bool on);
 	void SetUnisonOff(bool on);

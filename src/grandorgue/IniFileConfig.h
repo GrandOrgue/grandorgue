@@ -64,11 +64,6 @@ public:
 	unsigned ReadFontSize(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue);
 	int ReadEnum(GOSettingType type, wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required = true);
 	int ReadEnum(GOSettingType type, wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required, int defaultValue);
-	void SaveHelper(bool prefix, wxString group, wxString key, wxString value);
-	void SaveHelper( bool prefix, wxString group, wxString key, int value, bool sign = false, bool force = false);
-	void SaveHelper(bool prefix, wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count);
-	void SaveHelper(bool prefix, wxString group, wxString key, float value);
-
 };
 
 #endif

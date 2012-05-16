@@ -292,20 +292,18 @@ bool GOrgueManual::IsDisplayed()
 	return m_displayed;
 }
 
-void GOrgueManual::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueManual::Save(GOrgueConfigWriter& cfg)
 {
-	wxString buffer;
-
 	for (unsigned i = 0; i < m_stops.size(); i++)
-		m_stops[i]->Save(cfg, prefix);
+		m_stops[i]->Save(cfg);
 
 	for (unsigned i = 0; i < m_couplers.size(); i++)
-		m_couplers[i]->Save(cfg, prefix);
+		m_couplers[i]->Save(cfg);
 
 	for (unsigned i = 0; i < m_divisionals.size(); i++)
-		m_divisionals[i]->Save(cfg, prefix);
+		m_divisionals[i]->Save(cfg);
 
-	m_midi.Save(cfg, prefix, m_group);
+	m_midi.Save(cfg, m_group);
 }
 
 void GOrgueManual::Abort()

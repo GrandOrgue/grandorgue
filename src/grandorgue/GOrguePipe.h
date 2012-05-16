@@ -28,11 +28,12 @@
 #include "GOrguePipeConfig.h"
 #include "GOSoundProviderWave.h"
 
-class GrandOrgueFile;
 class GOrgueCache;
 class GOrgueCacheWriter;
+class GOrgueConfigWriter;
 class GOrgueRank;
 class GOrgueTemperament;
+class GrandOrgueFile;
 class IniFileConfig;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
@@ -69,7 +70,7 @@ public:
 	GOrguePipe(GrandOrgueFile* organfile, GOrgueRank* m_Rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction);
 	~GOrguePipe();
 	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
-	void Save(IniFileConfig& cfg, bool prefix);
+	void Save(GOrgueConfigWriter& cfg);
 	void Set(bool on);
 	void SetTremulant(bool on);
 	bool InitializeReference();

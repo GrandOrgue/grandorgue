@@ -303,9 +303,9 @@ void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	}
 }
 
-void GOrguePipe::Save(IniFileConfig& cfg, bool prefix)
+void GOrguePipe::Save(GOrgueConfigWriter& cfg)
 {
-	m_PipeConfig.Save(cfg, prefix);
+	m_PipeConfig.Save(cfg);
 }
 
 bool GOrguePipe::InitializeReference()

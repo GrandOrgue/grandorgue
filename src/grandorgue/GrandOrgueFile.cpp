@@ -30,6 +30,7 @@
 #include "IniFileConfig.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
+#include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
@@ -754,7 +755,7 @@ void GrandOrgueFile::Save(const wxString& file)
 	}
 
 	wxLog::EnableLogging(false);
-	wxFileConfig cfg
+	wxFileConfig cfg_file
 		(wxEmptyString
 		,wxEmptyString
 		,fn
@@ -765,48 +766,48 @@ void GrandOrgueFile::Save(const wxString& file)
 	wxLog::EnableLogging(true);
 
 	if (prefix)
-		Revert(cfg);
+		Revert(cfg_file);
 	m_b_customized = true;
 
-	IniFileConfig aIni(cfg);
-	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchName"), m_ChurchName);
-	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
-	aIni.SaveHelper(prefix, wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
-	aIni.SaveHelper(prefix, wxT("Organ"), wxT("ODFPath"), GetODFFilename());
+	GOrgueConfigWriter cfg(cfg_file, prefix);
+	cfg.Write(wxT("Organ"), wxT("ChurchName"), m_ChurchName);
+	cfg.Write(wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
+	cfg.Write(wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
+	cfg.Write(wxT("Organ"), wxT("ODFPath"), GetODFFilename());
 
 	if (m_volume >= -120)
-		aIni.SaveHelper(prefix, wxT("Organ"), wxT("Volume"), m_volume);
+		cfg.Write(wxT("Organ"), wxT("Volume"), m_volume);
 
-	aIni.SaveHelper(prefix, wxT("Organ"), wxT("Temperament"), m_Temperament);
-	aIni.SaveHelper(prefix, wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch ? wxT("Y") : wxT("N"));
-	m_PipeConfig.Save(aIni, prefix);
+	cfg.Write(wxT("Organ"), wxT("Temperament"), m_Temperament);
+	cfg.Write(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch ? wxT("Y") : wxT("N"));
+	m_PipeConfig.Save(cfg);
 
 	for (unsigned j = 0; j < m_ranks.size(); j++)
-		m_ranks[j]->Save(aIni, prefix);
+		m_ranks[j]->Save(cfg);
 
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		m_manual[i]->Save(aIni, prefix);
+		m_manual[i]->Save(cfg);
 
 	for (unsigned j = 0; j < m_tremulant.size(); j++)
-		m_tremulant[j]->Save(aIni, prefix);
+		m_tremulant[j]->Save(cfg);
 
 	for (unsigned j = 0; j < m_divisionalcoupler.size(); j++)
-		m_divisionalcoupler[j]->Save(aIni, prefix);
+		m_divisionalcoupler[j]->Save(cfg);
 
 	for (unsigned j = 0; j < m_general.size(); j++)
-		m_general[j]->Save(aIni, prefix);
+		m_general[j]->Save(cfg);
 
 	if (m_setter)
-		m_setter->Save(aIni, prefix);
+		m_setter->Save(cfg);
 
 	for (unsigned j = 0; j < m_piston.size(); j++)
-		m_piston[j]->Save(aIni, prefix);
+		m_piston[j]->Save(cfg);
 
 	for (unsigned j = 0; j < m_enclosure.size(); j++)
-		m_enclosure[j]->Save(aIni, prefix);
+		m_enclosure[j]->Save(cfg);
 
 	for(unsigned i = 0; i < m_panels.size(); i++)
-		m_panels[i]->Save(aIni, prefix);
+		m_panels[i]->Save(cfg);
 }
 
 void GrandOrgueFile::SetVolume(int volume)

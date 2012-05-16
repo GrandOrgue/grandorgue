@@ -25,10 +25,11 @@
 
 #include <wx/wx.h>
 
-class GOGUIPanel;
 class GOGUIDisplayMetrics;
-class IniFileConfig;
 class GOGUIMouseState;
+class GOGUIPanel;
+class GOrgueConfigWriter;
+class IniFileConfig;
 
 class GOGUIControl {
 protected:
@@ -44,7 +45,7 @@ public:
 	virtual ~GOGUIControl();
 
 	virtual void Load(IniFileConfig& cfg, wxString group);
-	virtual void Save(IniFileConfig& cfg, bool prefix);
+	virtual void Save(GOrgueConfigWriter& cfg);
 
 	virtual void ControlChanged(void* control);
 	virtual void Draw(wxDC* dc);

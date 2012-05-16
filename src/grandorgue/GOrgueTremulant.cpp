@@ -99,9 +99,9 @@ void GOrgueTremulant::InitSoundProvider()
 	}
 }
 
-void GOrgueTremulant::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueTremulant::Save(GOrgueConfigWriter& cfg)
 {
-	GOrgueDrawstop::Save(cfg, prefix);
+	GOrgueDrawstop::Save(cfg);
 }
 
 void GOrgueTremulant::Set(bool on)
