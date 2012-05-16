@@ -20,44 +20,28 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef GORGUEBUTTON_H
-#define GORGUEBUTTON_H
+#ifndef GORGUECONFIGWRITER_H
+#define GORGUECONFIGWRITER_H
 
 #include <wx/wx.h>
-#include "GOrgueMidiReceiver.h"
 
-class GOrgueConfigWriter;
-class GOrgueMidiEvent;
-class GrandOrgueFile;
-class IniFileConfig;
+class wxFileConfig;
 
-class GOrgueButton 
+struct IniFileEnumEntry;
+
+class GOrgueConfigWriter
 {
-protected:
-	GrandOrgueFile* m_organfile;
-	GOrgueMidiReceiver m_midi;
-	bool m_Pushbutton;
-	wxString m_group;
-	bool m_Displayed;
-	wxString m_Name;
-	bool m_Engaged;
-	bool m_DisplayInInvertedState;
+private:
+	wxFileConfig& m_ConfigFile;
+	bool m_Prefix;
 
 public:
-	GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton);
-	virtual ~GOrgueButton();
-	void Load(IniFileConfig& cfg, wxString group, wxString name = wxT(""));
-	virtual void Save(GOrgueConfigWriter& cfg);
-	bool IsDisplayed();
-	const wxString& GetName();
-	GOrgueMidiReceiver& GetMidiReceiver();
+	GOrgueConfigWriter(wxFileConfig& cfg, bool prefix);
 
-	virtual void ProcessMidi(const GOrgueMidiEvent& event);
-	virtual void Push();
-	virtual void Set(bool on);
-	virtual void Display(bool onoff);
-	bool IsEngaged() const;
-	bool DisplayInverted() const;
+	void Write(wxString group, wxString key, wxString value);
+	void Write(wxString group, wxString key, int value, bool sign = false, bool force = false);
+	void Write(wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count);
+	void Write(wxString group, wxString key, float value);
 };
 
 #endif

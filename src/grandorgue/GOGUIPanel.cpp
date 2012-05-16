@@ -32,6 +32,7 @@
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
+#include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
@@ -497,12 +498,12 @@ void GOGUIPanel::Draw(wxDC* dc)
 		m_controls[i]->Draw(dc);
 }
 
-void GOGUIPanel::Save(IniFileConfig& cfg, bool prefix)
+void GOGUIPanel::Save(GOrgueConfigWriter& cfg)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)
-		m_controls[i]->Save(cfg, prefix);
+		m_controls[i]->Save(cfg);
 
-	cfg.SaveHelper(prefix, m_group, wxT("WindowDisplayed"), m_parent != NULL ? wxT("Y") : wxT("N"));
+	cfg.Write(m_group, wxT("WindowDisplayed"), m_parent != NULL ? wxT("Y") : wxT("N"));
 	if (m_parent)
 	{
 		wxWindow* parent = m_parent;
@@ -518,10 +519,10 @@ void GOGUIPanel::Save(IniFileConfig& cfg, bool prefix)
 			x = -20;
 		if (y < -20)
 			y = -20;
-		cfg.SaveHelper(prefix, m_group, wxT("WindowX"), x);
-		cfg.SaveHelper(prefix, m_group, wxT("WindowY"), y);
-		cfg.SaveHelper(prefix, m_group, wxT("WindowWidth"), size.GetWidth());
-		cfg.SaveHelper(prefix, m_group, wxT("WindowHeight"), size.GetHeight());
+		cfg.Write(m_group, wxT("WindowX"), x);
+		cfg.Write(m_group, wxT("WindowY"), y);
+		cfg.Write(m_group, wxT("WindowWidth"), size.GetWidth());
+		cfg.Write(m_group, wxT("WindowHeight"), size.GetHeight());
 	}
 }
 

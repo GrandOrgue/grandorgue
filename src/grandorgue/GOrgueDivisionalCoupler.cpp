@@ -49,9 +49,9 @@ void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, wxString group)
 
 }
 
-void GOrgueDivisionalCoupler::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueDivisionalCoupler::Save(GOrgueConfigWriter& cfg)
 {
-	GOrgueDrawstop::Save(cfg, prefix);
+	GOrgueDrawstop::Save(cfg);
 }
 
 void GOrgueDivisionalCoupler::Set(bool on)

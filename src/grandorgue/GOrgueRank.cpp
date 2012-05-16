@@ -79,11 +79,11 @@ void GOrgueRank::Load(IniFileConfig& cfg, wxString group, int first_midi_note_nu
        }
 }
 
-void GOrgueRank::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueRank::Save(GOrgueConfigWriter& cfg)
 {
 	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->Save(cfg, prefix);
-	m_PipeConfig.Save(cfg, prefix);
+		m_Pipes[i]->Save(cfg);
+	m_PipeConfig.Save(cfg);
 }
 
 void GOrgueRank::SetKey(int note, bool on)

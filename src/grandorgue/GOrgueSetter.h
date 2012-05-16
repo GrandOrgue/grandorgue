@@ -30,6 +30,7 @@
 class GOGUIPanel;
 class GOGUILabel;
 class GOGUIControl;
+class GOrgueConfigWriter;
 class GOrgueFrameGeneral;
 class GOrgueMidiEvent;
 class GOrgueSetterButton;
@@ -78,7 +79,7 @@ public:
 	GOGUIControl* CreateGUIElement(IniFileConfig& cfg, wxString group, GOGUIPanel* panel);
 
 	void Load(IniFileConfig& cfg);
-	void Save(IniFileConfig& cfg, bool prefix);
+	void Save(GOrgueConfigWriter& cfg);
 	void LoadCombination(IniFileConfig& cfg);
 	void PreparePlayback();
 	void Change(GOrgueSetterButton* button);

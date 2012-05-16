@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigWriter.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueManual.h"
@@ -244,39 +245,39 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 	}
 }
 
-void GOrgueMidiReceiver::Save(IniFileConfig& cfg, bool prefix, wxString group)
+void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
 {
 	wxString buffer;
 
-	cfg.SaveHelper(prefix, group, wxT("NumberOfMIDIEvents"), (int)m_events.size());
+	cfg.Write(group, wxT("NumberOfMIDIEvents"), (int)m_events.size());
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		buffer.Printf(wxT("MIDIDevice%03d"), i + 1);
-		cfg.SaveHelper(prefix, group, buffer, m_events[i].device);
+		cfg.Write(group, buffer, m_events[i].device);
 		buffer.Printf(wxT("MIDIChannel%03d"), i + 1);
-		cfg.SaveHelper(prefix, group, buffer, m_events[i].channel);
+		cfg.Write(group, buffer, m_events[i].channel);
 		if (m_type == MIDI_RECV_MANUAL)
 		{
 			buffer.Printf(wxT("MIDIKeyShift%03d"), i + 1);
-			cfg.SaveHelper(prefix, group, buffer, m_events[i].key);
-			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), m_events[i].low_key);
-			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), m_events[i].high_key);
-			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_velocity);
-			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
+			cfg.Write(group, buffer, m_events[i].key);
+			cfg.Write(group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), m_events[i].low_key);
+			cfg.Write(group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), m_events[i].high_key);
+			cfg.Write(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_velocity);
+			cfg.Write(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
 			continue;
 		}
 		buffer.Printf(wxT("MIDIKey%03d"), i + 1);
-		cfg.SaveHelper(prefix, group, buffer, m_events[i].key);
+		cfg.Write(group, buffer, m_events[i].key);
 
 		if (m_type == MIDI_RECV_ENCLOSURE)
 		{
-			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_velocity);
-			cfg.SaveHelper(prefix, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
+			cfg.Write(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_velocity);
+			cfg.Write(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
 			continue;
 		}
 
 		buffer.Printf(wxT("MIDIEventType%03d"), i + 1);
-		cfg.SaveHelper(prefix, group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
+		cfg.Write(group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 	}
 }
 

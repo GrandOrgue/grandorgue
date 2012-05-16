@@ -61,9 +61,9 @@ void GOrgueEnclosure::Load(IniFileConfig& cfg, wxString group, int enclosure_nb)
 	m_midi.Load(cfg, m_group);
 }
 
-void GOrgueEnclosure::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueEnclosure::Save(GOrgueConfigWriter& cfg)
 {
-	m_midi.Save(cfg, prefix, m_group);
+	m_midi.Save(cfg, m_group);
 }
 
 void GOrgueEnclosure::Set(int n)

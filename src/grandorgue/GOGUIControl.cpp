@@ -43,7 +43,7 @@ void GOGUIControl::Load(IniFileConfig& cfg, wxString group)
 	m_group = group;
 }
 
-void GOGUIControl::Save(IniFileConfig& cfg, bool prefix)
+void GOGUIControl::Save(GOrgueConfigWriter& cfg)
 {
 }
 

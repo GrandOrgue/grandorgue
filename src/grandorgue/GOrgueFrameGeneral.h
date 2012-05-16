@@ -26,6 +26,7 @@
 #include <wx/wx.h>
 #include <vector>
 
+class GOrgueConfigWriter;
 class GrandOrgueFile;
 class IniFileConfig;
 
@@ -46,7 +47,7 @@ public:
 	GOrgueFrameGeneral(GrandOrgueFile* organfile);
 	void Load(IniFileConfig& cfg, wxString group);
 	void LoadCombination(IniFileConfig& cfg);
-	void Save(IniFileConfig& cfg, bool prefix);
+	void Save(GOrgueConfigWriter& cfg);
 	void Copy(GOrgueFrameGeneral* general);
 	void Push();
 

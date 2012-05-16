@@ -70,9 +70,9 @@ void GOrguePiston::ControlChanged(void* control)
 		Display(drawstop->IsEngaged() ^ drawstop->DisplayInverted());
 }
 
-void GOrguePiston::Save(IniFileConfig& cfg, bool prefix)
+void GOrguePiston::Save(GOrgueConfigWriter& cfg)
 {
-	GOrguePushbutton::Save(cfg, prefix);
+	GOrguePushbutton::Save(cfg);
 }
 
 void GOrguePiston::Push()

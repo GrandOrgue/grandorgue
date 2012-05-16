@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigWriter.h"
 #include "GOrguePipeConfig.h"
 #include "GrandOrgueFile.h"
 #include "IniFileConfig.h"
@@ -69,18 +70,18 @@ void GOrguePipeConfig::Load(IniFileConfig& cfg, wxString group, wxString prefix)
 	m_Callback->UpdateAudioGroup();
 }
 
-void GOrguePipeConfig::Save(IniFileConfig& cfg, bool prefix)
+void GOrguePipeConfig::Save(GOrgueConfigWriter& cfg)
 {
-	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("AudioGroup"), m_AudioGroup);
-	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
-	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
-	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
-	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
-	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
-	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("Channels"), m_Channels);
-	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("LoopLoad"), m_LoopLoad);
-	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("AttackLoad"), m_AttackLoad);
-	cfg.SaveHelper(prefix, m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
+	cfg.Write(m_Group, m_NamePrefix + wxT("AudioGroup"), m_AudioGroup);
+	cfg.Write(m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
+	cfg.Write(m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
+	cfg.Write(m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
+	cfg.Write(m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
+	cfg.Write(m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
+	cfg.Write(m_Group, m_NamePrefix + wxT("Channels"), m_Channels);
+	cfg.Write(m_Group, m_NamePrefix + wxT("LoopLoad"), m_LoopLoad);
+	cfg.Write(m_Group, m_NamePrefix + wxT("AttackLoad"), m_AttackLoad);
+	cfg.Write(m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
 }
 
 const wxString& GOrguePipeConfig::GetAudioGroup()

@@ -96,9 +96,9 @@ void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, wxString name, bool
 	m_NumberOfKeys = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfKeys"), 0, 127, false, 127);
 }
 
-void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueCoupler::Save(GOrgueConfigWriter& cfg)
 {
-	GOrgueDrawstop::Save(cfg, prefix);
+	GOrgueDrawstop::Save(cfg);
 }
 
 void GOrgueCoupler::SetOut(int noteNumber, int on)

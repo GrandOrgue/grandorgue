@@ -26,6 +26,7 @@
 #include "GOrgueMidiReceiver.h"
 #include <wx/wx.h>
 
+class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 class IniFileConfig;
@@ -48,7 +49,7 @@ public:
 	virtual ~GOrgueEnclosure();
 	void Init(IniFileConfig& cfg, wxString group, wxString Name);
 	void Load(IniFileConfig& cfg, wxString group, int enclosure_nb);
-	void Save(IniFileConfig& cfg, bool prefix);
+	void Save(GOrgueConfigWriter& cfg);
 	void Set(int n);
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	GOrgueMidiReceiver& GetMidiReceiver();

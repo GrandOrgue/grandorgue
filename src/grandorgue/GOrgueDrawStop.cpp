@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigWriter.h"
 #include "GOrgueDrawStop.h"
 #include "GOrgueLCD.h"
 #include "IniFileConfig.h"
@@ -35,10 +36,10 @@ void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, wxString name)
 	GOrgueButton::Load(cfg, group, name);
 }
 
-void GOrgueDrawstop::Save(IniFileConfig& cfg, bool prefix)
+void GOrgueDrawstop::Save(GOrgueConfigWriter& cfg)
 {
-	cfg.SaveHelper(prefix, m_group, wxT("DefaultToEngaged"), IsEngaged() ? wxT("Y") : wxT("N"));
-	GOrgueButton::Save(cfg, prefix);
+	cfg.Write(m_group, wxT("DefaultToEngaged"), IsEngaged() ? wxT("Y") : wxT("N"));
+	GOrgueButton::Save(cfg);
 }
 
 void GOrgueDrawstop::Set(bool on)
