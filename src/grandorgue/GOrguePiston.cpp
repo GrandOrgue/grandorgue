@@ -39,24 +39,24 @@ void GOrguePiston::Load(IniFileConfig& cfg, wxString group)
 {
 
 	int i, j;
-	wxString type = cfg.ReadString(group, wxT("ObjectType"));
+	wxString type = cfg.ReadString(ODFSetting, group, wxT("ObjectType"));
 	type.MakeUpper();
 
 	if (type == wxT("STOP"))
 	{
-		i = cfg.ReadInteger(group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
-		j = cfg.ReadInteger(group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetStopCount()) - 1;
+		i = cfg.ReadInteger(ODFSetting, group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetStopCount()) - 1;
 		drawstop = m_organfile->GetManual(i)->GetStop(j);
 	}
 	if (type == wxT("COUPLER"))
 	{
-		i = cfg.ReadInteger(group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
-		j = cfg.ReadInteger(group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetCouplerCount()) - 1;
+		i = cfg.ReadInteger(ODFSetting, group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetCouplerCount()) - 1;
 		drawstop = m_organfile->GetManual(i)->GetCoupler(j);
 	}
 	if (type == wxT("TREMULANT"))
 	{
-		j = cfg.ReadInteger(group, wxT("ObjectNumber"), 1, m_organfile->GetTremulantCount()) - 1;
+		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetTremulantCount()) - 1;
 		drawstop = m_organfile->GetTremulant(j);
 	}
 

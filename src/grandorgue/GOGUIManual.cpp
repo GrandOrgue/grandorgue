@@ -42,8 +42,8 @@ void GOGUIManual::Load(IniFileConfig& cfg, wxString group)
 				       wxT("Gis"), wxT("A"), wxT("Ais"), wxT("B") };
 
 	GOGUIControl::Load(cfg, group);
-	bool color_inverted = cfg.ReadBoolean(group, wxT("DispKeyColourInverted"), false, false);
-	bool color_wooden = cfg.ReadBoolean(group, wxT("DispKeyColourWooden"), false, false);
+	bool color_inverted = cfg.ReadBoolean(ODFSetting, group, wxT("DispKeyColourInverted"), false, false);
+	bool color_wooden = cfg.ReadBoolean(ODFSetting, group, wxT("DispKeyColourWooden"), false, false);
 	wxString type = m_ManualNumber ? wxT("Manual") : wxT("Pedal");
 	if (color_inverted)
 		type += wxT("Inverted");
@@ -124,15 +124,15 @@ void GOGUIManual::Load(IniFileConfig& cfg, wxString group)
 		off_file = wxT("GO:") + type + wxT("Off_") + bmp_type;
 		on_file = wxT("GO:") + type + wxT("On_") + bmp_type;
 
-		on_file = cfg.ReadString(group, wxT("ImageOn_") + base, 255, false, on_file);
-		off_file = cfg.ReadString(group, wxT("ImageOff_") + base, 255, false, off_file);
-		on_mask_file = cfg.ReadString(group, wxT("MaskOn_") + base, 255, false, wxEmptyString);
-		off_mask_file = cfg.ReadString(group, wxT("MaskOff_") + base, 255, false, on_mask_file);
+		on_file = cfg.ReadString(ODFSetting, group, wxT("ImageOn_") + base, 255, false, on_file);
+		off_file = cfg.ReadString(ODFSetting, group, wxT("ImageOff_") + base, 255, false, off_file);
+		on_mask_file = cfg.ReadString(ODFSetting, group, wxT("MaskOn_") + base, 255, false, wxEmptyString);
+		off_mask_file = cfg.ReadString(ODFSetting, group, wxT("MaskOff_") + base, 255, false, on_mask_file);
 
-		on_file = cfg.ReadString(group, wxString::Format(wxT("Key%03dImageOn"), i + 1), 255, false, on_file);
-		off_file = cfg.ReadString(group, wxString::Format(wxT("Key%03dImageOff"), i + 1), 255, false, off_file);
-		on_mask_file = cfg.ReadString(group, wxString::Format(wxT("Key%03dMaskOn"), i + 1), 255, false, on_mask_file);
-		off_mask_file = cfg.ReadString(group, wxString::Format(wxT("Key%03dMaskOff"), i + 1), 255, false, off_mask_file);
+		on_file = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Key%03dImageOn"), i + 1), 255, false, on_file);
+		off_file = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Key%03dImageOff"), i + 1), 255, false, off_file);
+		on_mask_file = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Key%03dMaskOn"), i + 1), 255, false, on_mask_file);
+		off_mask_file = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Key%03dMaskOff"), i + 1), 255, false, off_mask_file);
 
 		m_Keys[i].OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
 		m_Keys[i].OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
@@ -152,11 +152,11 @@ void GOGUIManual::Load(IniFileConfig& cfg, wxString group)
 			key_width += m_Keys[i - 1].Rect.GetWidth();
 		}
 
-		key_width = cfg.ReadInteger(group, wxT("Width_") + base, 0, 50, false, key_width);
-		key_offset = cfg.ReadInteger(group, wxT("Offset_") + base, -50, 50, false, key_offset);
+		key_width = cfg.ReadInteger(ODFSetting, group, wxT("Width_") + base, 0, 50, false, key_width);
+		key_offset = cfg.ReadInteger(ODFSetting, group, wxT("Offset_") + base, -50, 50, false, key_offset);
 
-		key_width = cfg.ReadInteger(group, wxString::Format(wxT("Key%03dWidth"), i + 1), 0, 50, false, key_width);
-		key_offset = cfg.ReadInteger(group, wxString::Format(wxT("Key%03dOffset"), i + 1), -50, 50, false, key_offset);
+		key_width = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dWidth"), i + 1), 0, 50, false, key_width);
+		key_offset = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dOffset"), i + 1), -50, 50, false, key_offset);
 
 		m_Keys[i].Rect = wxRect(x + key_offset, y, m_Keys[i].OnBitmap->GetWidth(), m_Keys[i].OnBitmap->GetHeight());
 		if (height < m_Keys[i].OnBitmap->GetHeight())
@@ -168,8 +168,8 @@ void GOGUIManual::Load(IniFileConfig& cfg, wxString group)
 	x = mri.x + 1;
 	y = mri.keys_y;
 
-	x = cfg.ReadInteger(group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
-	y = cfg.ReadInteger(group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
+	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
+	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
 
 	for(unsigned i = 0; i < m_Keys.size(); i++)
 	{

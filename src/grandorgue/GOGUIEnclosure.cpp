@@ -54,12 +54,12 @@ void GOGUIEnclosure::Load(IniFileConfig& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 
-	unsigned bitmap_count = cfg.ReadInteger(group, wxT("BitmapCount"), 1, 127, false, 16);
+	unsigned bitmap_count = cfg.ReadInteger(ODFSetting, group, wxT("BitmapCount"), 1, 127, false, 16);
 
 	for(unsigned i = 1; i < bitmap_count; i++)
 	{
-		wxString bitmap = cfg.ReadString(group, wxString::Format(wxT("Bitmap%03d"), i), 256, false, wxString::Format(wxT("GO:enclosure%d"), i - 1));
-		wxString mask = cfg.ReadString(group, wxString::Format(wxT("Mask%03d"), i), 256, false, wxEmptyString);
+		wxString bitmap = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Bitmap%03d"), i), 256, false, wxString::Format(wxT("GO:enclosure%d"), i - 1));
+		wxString mask = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Mask%03d"), i), 256, false, wxEmptyString);
 		m_Bitmaps.push_back(m_panel->LoadBitmap(bitmap, mask));
 	}
 
@@ -73,35 +73,35 @@ void GOGUIEnclosure::Load(IniFileConfig& cfg, wxString group)
 	x = m_metrics->GetEnclosureX(this);
 	y = m_metrics->GetEnclosureY();
 
-	x = cfg.ReadInteger(group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
-	y = cfg.ReadInteger(group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
-	w = cfg.ReadInteger(group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmaps[0]->GetWidth());
-	h = cfg.ReadInteger(group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmaps[0]->GetHeight());
+	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
+	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
+	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmaps[0]->GetWidth());
+	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmaps[0]->GetHeight());
 	m_BoundingRect = wxRect(x, y, w, h);
 
-	m_TileOffsetX = cfg.ReadInteger(group, wxT("TileOffsetX"), 0, m_Bitmaps[0]->GetWidth() - 1, false, 0);
-	m_TileOffsetY = cfg.ReadInteger(group, wxT("TileOffsetY"), 0, m_Bitmaps[0]->GetHeight() - 1, false, 0);
+	m_TileOffsetX = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetX"), 0, m_Bitmaps[0]->GetWidth() - 1, false, 0);
+	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_Bitmaps[0]->GetHeight() - 1, false, 0);
 
-	m_TextColor = cfg.ReadColor(group, wxT("DispLabelColour"), false, wxT("White"));
-	m_FontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"), false, wxT("7"));
-	m_FontName = cfg.ReadString(group, wxT("DispLabelFontName"), 255, false, wxT(""));
-	m_Text = cfg.ReadString(group, wxT("DispLabelText"), 255, false, m_enclosure->GetName());
+	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("White"));
+	m_FontSize = cfg.ReadFontSize(ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("7"));
+	m_FontName = cfg.ReadString(ODFSetting, group, wxT("DispLabelFontName"), 255, false, wxT(""));
+	m_Text = cfg.ReadString(ODFSetting, group, wxT("DispLabelText"), 255, false, m_enclosure->GetName());
 
-	x = cfg.ReadInteger(group, wxT("TextRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 0);
-	y = cfg.ReadInteger(group, wxT("TextRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 0);
-	w = cfg.ReadInteger(group, wxT("TextRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
-	h = cfg.ReadInteger(group, wxT("TextRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y);
+	x = cfg.ReadInteger(ODFSetting, group, wxT("TextRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 0);
+	y = cfg.ReadInteger(ODFSetting, group, wxT("TextRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 0);
+	w = cfg.ReadInteger(ODFSetting, group, wxT("TextRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
+	h = cfg.ReadInteger(ODFSetting, group, wxT("TextRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y);
 	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
-	m_TextWidth = cfg.ReadInteger(group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth());
+	m_TextWidth = cfg.ReadInteger(ODFSetting, group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth());
 
-	x = cfg.ReadInteger(group, wxT("MouseRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 0);
-	y = cfg.ReadInteger(group, wxT("MouseRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 13);
-	w = cfg.ReadInteger(group, wxT("MouseRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
-	h = cfg.ReadInteger(group, wxT("MouseRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y - 3);
+	x = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 0);
+	y = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 13);
+	w = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
+	h = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y - 3);
 	m_MouseRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
 
-	m_MouseAxisStart = cfg.ReadInteger(group, wxT("MouseRectHeight"), 0, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3);
-	m_MouseAxisEnd = cfg.ReadInteger(group, wxT("MouseRectHeight"), m_MouseAxisStart, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3 * 2);
+	m_MouseAxisStart = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectHeight"), 0, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3);
+	m_MouseAxisEnd = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectHeight"), m_MouseAxisStart, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3 * 2);
 }
 
 void GOGUIEnclosure::Draw(wxDC* dc)

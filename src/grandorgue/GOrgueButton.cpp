@@ -43,9 +43,9 @@ GOrgueButton::~GOrgueButton()
 void GOrgueButton::Load(IniFileConfig& cfg, wxString group, wxString name)
 {
 	m_group = group;
-	m_Name = cfg.ReadString(group, wxT("Name"), 64, true, name);
-	m_Displayed = cfg.ReadBoolean(group, wxT("Displayed"), true, false);
-	m_DisplayInInvertedState = cfg.ReadBoolean(group, wxT("DisplayInInvertedState"), false, false);
+	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, true, name);
+	m_Displayed = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), true, false);
+	m_DisplayInInvertedState = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
 	m_midi.Load(cfg, group);
 }
 

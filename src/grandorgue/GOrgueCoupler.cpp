@@ -81,19 +81,19 @@ const struct IniFileEnumEntry GOrgueCoupler::m_coupler_types[]={
 void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, wxString name, bool unison_off, bool recursive, int keyshift, int dest_manual, GOrgueCouplerType coupler_type)
 {
 
-	m_UnisonOff                                     = cfg.ReadBoolean(group, wxT("UnisonOff"), true, unison_off);
-	m_DestinationManual                             = cfg.ReadInteger(group, wxT("DestinationManual"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount(), !m_UnisonOff, dest_manual);
-	m_DestinationKeyshift                           = cfg.ReadInteger(group, wxT("DestinationKeyshift"), -24, 24, !m_UnisonOff, keyshift);
-	m_CoupleToSubsequentUnisonIntermanualCouplers   = cfg.ReadBoolean(group, wxT("CoupleToSubsequentUnisonIntermanualCouplers"), !m_UnisonOff, recursive);
-	m_CoupleToSubsequentUpwardIntermanualCouplers   = cfg.ReadBoolean(group, wxT("CoupleToSubsequentUpwardIntermanualCouplers"), !m_UnisonOff, recursive);
-	m_CoupleToSubsequentDownwardIntermanualCouplers = cfg.ReadBoolean(group, wxT("CoupleToSubsequentDownwardIntermanualCouplers"), !m_UnisonOff, recursive);
-	m_CoupleToSubsequentUpwardIntramanualCouplers   = cfg.ReadBoolean(group, wxT("CoupleToSubsequentUpwardIntramanualCouplers"), !m_UnisonOff, recursive);
-	m_CoupleToSubsequentDownwardIntramanualCouplers = cfg.ReadBoolean(group, wxT("CoupleToSubsequentDownwardIntramanualCouplers"), !m_UnisonOff, recursive);
+	m_UnisonOff                                     = cfg.ReadBoolean(ODFSetting, group, wxT("UnisonOff"), true, unison_off);
+	m_DestinationManual                             = cfg.ReadInteger(ODFSetting, group, wxT("DestinationManual"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount(), !m_UnisonOff, dest_manual);
+	m_DestinationKeyshift                           = cfg.ReadInteger(ODFSetting, group, wxT("DestinationKeyshift"), -24, 24, !m_UnisonOff, keyshift);
+	m_CoupleToSubsequentUnisonIntermanualCouplers   = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUnisonIntermanualCouplers"), !m_UnisonOff, recursive);
+	m_CoupleToSubsequentUpwardIntermanualCouplers   = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUpwardIntermanualCouplers"), !m_UnisonOff, recursive);
+	m_CoupleToSubsequentDownwardIntermanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentDownwardIntermanualCouplers"), !m_UnisonOff, recursive);
+	m_CoupleToSubsequentUpwardIntramanualCouplers   = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUpwardIntramanualCouplers"), !m_UnisonOff, recursive);
+	m_CoupleToSubsequentDownwardIntramanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentDownwardIntramanualCouplers"), !m_UnisonOff, recursive);
 	GOrgueDrawstop::Load(cfg, group, name);
 
-	m_CouplerType = (GOrgueCouplerType)cfg.ReadEnum(group, wxT("CouplerType"), m_coupler_types, sizeof(m_coupler_types) / sizeof(m_coupler_types[0]), false, coupler_type);
-	m_FirstMidiNote = cfg.ReadInteger(group, wxT("FirstMIDINoteNumber"), 0, 127, false, 0); 
-	m_NumberOfKeys = cfg.ReadInteger(group, wxT("NumberOfKeys"), 0, 127, false, 127);
+	m_CouplerType = (GOrgueCouplerType)cfg.ReadEnum(ODFSetting, group, wxT("CouplerType"), m_coupler_types, sizeof(m_coupler_types) / sizeof(m_coupler_types[0]), false, coupler_type);
+	m_FirstMidiNote = cfg.ReadInteger(ODFSetting, group, wxT("FirstMIDINoteNumber"), 0, 127, false, 0); 
+	m_NumberOfKeys = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfKeys"), 0, 127, false, 127);
 }
 
 void GOrgueCoupler::Save(IniFileConfig& cfg, bool prefix)

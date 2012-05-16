@@ -77,13 +77,13 @@ wxString GOrgueTremulant::GetLoadTitle()
 
 void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, int sampler_group_id)
 {
-	m_TremulantType = (GOrgueTremulantType)cfg.ReadEnum(group, wxT("TremulantType"), m_tremulant_types, sizeof(m_tremulant_types) / sizeof(m_tremulant_types[0]), false, GOSynthTrem);
+	m_TremulantType = (GOrgueTremulantType)cfg.ReadEnum(ODFSetting, group, wxT("TremulantType"), m_tremulant_types, sizeof(m_tremulant_types) / sizeof(m_tremulant_types[0]), false, GOSynthTrem);
 	if (m_TremulantType == GOSynthTrem)
 	{
-		m_Period            = cfg.ReadLong(group, wxT("Period"), 32, 441000);
-		m_StartRate         = cfg.ReadInteger(group, wxT("StartRate"), 1, 100);
-		m_StopRate          = cfg.ReadInteger(group, wxT("StopRate"), 1, 100);
-		m_AmpModDepth       = cfg.ReadInteger(group, wxT("AmpModDepth"), 1, 100);
+		m_Period            = cfg.ReadLong(ODFSetting, group, wxT("Period"), 32, 441000);
+		m_StartRate         = cfg.ReadInteger(ODFSetting, group, wxT("StartRate"), 1, 100);
+		m_StopRate          = cfg.ReadInteger(ODFSetting, group, wxT("StopRate"), 1, 100);
+		m_AmpModDepth       = cfg.ReadInteger(ODFSetting, group, wxT("AmpModDepth"), 1, 100);
 		m_SamplerGroupID    = sampler_group_id;
 		m_PlaybackHandle    = 0;
 	}

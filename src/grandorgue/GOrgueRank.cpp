@@ -46,16 +46,16 @@ GOrgueRank::~GOrgueRank()
 
 void GOrgueRank::Load(IniFileConfig& cfg, wxString group, int first_midi_note_number)
 {
-	m_FirstMidiNoteNumber = cfg.ReadInteger(group, wxT("FirstMidiNoteNumber"), 0, 256, false, first_midi_note_number);
+	m_FirstMidiNoteNumber = cfg.ReadInteger(ODFSetting, group, wxT("FirstMidiNoteNumber"), 0, 256, false, first_midi_note_number);
 	m_Group = group;
-	m_Name = cfg.ReadString(group, wxT("Name"), 64, true);
+	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, true);
 
-	unsigned number_of_logical_pipes       = cfg.ReadInteger(group, wxT("NumberOfLogicalPipes"), 1, 192);
+	unsigned number_of_logical_pipes       = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalPipes"), 1, 192);
 	m_PipeConfig.Load(cfg, group, wxEmptyString);
-	m_WindchestGroup                       = cfg.ReadInteger(group, wxT("WindchestGroup"), 1, m_organfile->GetWindchestGroupCount());
-	m_Percussive                           = cfg.ReadBoolean(group, wxT("Percussive"));
-	m_HarmonicNumber                       = cfg.ReadInteger(group, wxT("HarmonicNumber"), 1, 1024, false, 8);
-	m_PitchCorrection                      = cfg.ReadFloat(group, wxT("PitchCorrection"), -1200, 1200, false, 0);
+	m_WindchestGroup                       = cfg.ReadInteger(ODFSetting, group, wxT("WindchestGroup"), 1, m_organfile->GetWindchestGroupCount());
+	m_Percussive                           = cfg.ReadBoolean(ODFSetting, group, wxT("Percussive"));
+	m_HarmonicNumber                       = cfg.ReadInteger(ODFSetting, group, wxT("HarmonicNumber"), 1, 1024, false, 8);
+	m_PitchCorrection                      = cfg.ReadFloat(ODFSetting, group, wxT("PitchCorrection"), -1200, 1200, false, 0);
 
 	m_organfile->GetWindchest(m_WindchestGroup - 1)->AddRank(this);
 

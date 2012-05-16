@@ -39,15 +39,15 @@ GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 
 void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group, unsigned index)
 {
-	unsigned NumberOfEnclosures = cfg.ReadInteger(group, wxT("NumberOfEnclosures"), 0, m_organfile->GetEnclosureCount());
-	unsigned NumberOfTremulants = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount());
+	unsigned NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, m_organfile->GetEnclosureCount());
+	unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount());
 
 	m_enclosure.resize(0);
 	for (unsigned i = 0; i < NumberOfEnclosures; i++)
 	{
 		wxString buffer;
 		buffer.Printf(wxT("Enclosure%03d"), i + 1);
-		m_enclosure.push_back(cfg.ReadInteger(group, buffer, 1, m_organfile->GetEnclosureCount()) - 1);
+		m_enclosure.push_back(cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetEnclosureCount()) - 1);
 	}
 
 	m_tremulant.resize(0);
@@ -55,10 +55,10 @@ void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group, unsigned index)
 	{
 		wxString buffer;
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		m_tremulant.push_back(cfg.ReadInteger(group, buffer, 1, m_organfile->GetTremulantCount()) - 1);
+		m_tremulant.push_back(cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount()) - 1);
 	}
 
-	m_Name = cfg.ReadString(group, wxT("Name"), 64, false, wxString::Format(_("Windchest %d"), index + 1));
+	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, false, wxString::Format(_("Windchest %d"), index + 1));
 }
 
 float GOrgueWindchest::GetVolume()

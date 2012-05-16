@@ -251,7 +251,7 @@ GOrgueSetter::~GOrgueSetter()
 
 GOGUIControl* GOrgueSetter::CreateGUIElement(IniFileConfig& cfg, wxString group, GOGUIPanel* panel)
 {
-	unsigned element  = cfg.ReadEnum(group, wxT("Type"), m_setter_element_types, sizeof(m_setter_element_types) / sizeof(m_setter_element_types[0]), true);
+	unsigned element  = cfg.ReadEnum(ODFSetting, group, wxT("Type"), m_setter_element_types, sizeof(m_setter_element_types) / sizeof(m_setter_element_types[0]), true);
 	if (element == ID_SETTER_LABEL)
 	{
 		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay, 350, 10);
