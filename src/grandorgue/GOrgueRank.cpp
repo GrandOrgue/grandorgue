@@ -20,11 +20,11 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigReader.h"
 #include "GOrguePipe.h"
 #include "GOrgueRank.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
@@ -44,7 +44,7 @@ GOrgueRank::~GOrgueRank()
 {
 }
 
-void GOrgueRank::Load(IniFileConfig& cfg, wxString group, int first_midi_note_number)
+void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_note_number)
 {
 	m_FirstMidiNoteNumber = cfg.ReadInteger(ODFSetting, group, wxT("FirstMidiNoteNumber"), 0, 256, false, first_midi_note_number);
 	m_Group = group;

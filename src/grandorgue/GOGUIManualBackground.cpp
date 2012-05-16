@@ -20,10 +20,10 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOGUIDisplayMetrics.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
-#include "IniFileConfig.h"
-#include "GOGUIDisplayMetrics.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueManual.h"
 
 GOGUIManualBackground::GOGUIManualBackground(GOGUIPanel* panel, unsigned manual_number):
@@ -32,7 +32,7 @@ GOGUIManualBackground::GOGUIManualBackground(GOGUIPanel* panel, unsigned manual_
 {
 }
 
-void GOGUIManualBackground::Load(IniFileConfig& cfg, wxString group)
+void GOGUIManualBackground::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 

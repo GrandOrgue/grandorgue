@@ -30,12 +30,12 @@
 class GOGUIPanel;
 class GOGUILabel;
 class GOGUIControl;
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueFrameGeneral;
 class GOrgueMidiEvent;
 class GOrgueSetterButton;
 class GrandOrgueFile;
-class IniFileConfig;
 struct IniFileEnumEntry;
 
 typedef enum 
@@ -71,16 +71,16 @@ public:
 	GOrgueSetter(GrandOrgueFile* organfile);
 	virtual ~GOrgueSetter();
 
-	GOGUIPanel* CreateCouplerPanel(IniFileConfig& cfg, unsigned manual);
-	GOGUIPanel* CreateGeneralsPanel(IniFileConfig& cfg);
-	GOGUIPanel* CreateSetterPanel(IniFileConfig& cfg);
-	GOGUIPanel* CreateCrescendoPanel(IniFileConfig& cfg);
-	GOGUIPanel* CreateDivisionalPanel(IniFileConfig& cfg);
-	GOGUIControl* CreateGUIElement(IniFileConfig& cfg, wxString group, GOGUIPanel* panel);
+	GOGUIPanel* CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned manual);
+	GOGUIPanel* CreateGeneralsPanel(GOrgueConfigReader& cfg);
+	GOGUIPanel* CreateSetterPanel(GOrgueConfigReader& cfg);
+	GOGUIPanel* CreateCrescendoPanel(GOrgueConfigReader& cfg);
+	GOGUIPanel* CreateDivisionalPanel(GOrgueConfigReader& cfg);
+	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
 
-	void Load(IniFileConfig& cfg);
+	void Load(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
-	void LoadCombination(IniFileConfig& cfg);
+	void LoadCombination(GOrgueConfigReader& cfg);
 	void PreparePlayback();
 	void Change(GOrgueSetterButton* button);
 	void ProcessMidi(const GOrgueMidiEvent& event);

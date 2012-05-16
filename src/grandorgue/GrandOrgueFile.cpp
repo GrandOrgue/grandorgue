@@ -30,6 +30,7 @@
 #include "IniFileConfig.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
@@ -231,17 +232,18 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 {
 
 	IniFileConfig ini(odf_ini_file);
+	GOrgueConfigReader cfg(ini);
 	wxString group = wxT("Organ");
 
 	/* load church info */
-	m_HauptwerkOrganFileFormatVersion = ini.ReadString(ODFSetting, group, wxT("HauptwerkOrganFileFormatVersion"),  256, false);
-	m_ChurchName = ini.ReadString(ODFSetting, group, wxT("ChurchName"),  128);
-	m_ChurchAddress = ini.ReadString(ODFSetting, group, wxT("ChurchAddress"),  128);
-	m_OrganBuilder = ini.ReadString(ODFSetting, group, wxT("OrganBuilder"),  128, false);
-	m_OrganBuildDate = ini.ReadString(ODFSetting, group, wxT("OrganBuildDate"),  128, false);
-	m_OrganComments = ini.ReadString(ODFSetting, group, wxT("OrganComments"),  256, false);
-	m_RecordingDetails = ini.ReadString(ODFSetting, group, wxT("RecordingDetails"),  256, false);
-	m_InfoFilename = ini.ReadString(ODFSetting, group, wxT("InfoFilename"),  256, false);
+	m_HauptwerkOrganFileFormatVersion = cfg.ReadString(ODFSetting, group, wxT("HauptwerkOrganFileFormatVersion"),  256, false);
+	m_ChurchName = cfg.ReadString(ODFSetting, group, wxT("ChurchName"),  128);
+	m_ChurchAddress = cfg.ReadString(ODFSetting, group, wxT("ChurchAddress"),  128);
+	m_OrganBuilder = cfg.ReadString(ODFSetting, group, wxT("OrganBuilder"),  128, false);
+	m_OrganBuildDate = cfg.ReadString(ODFSetting, group, wxT("OrganBuildDate"),  128, false);
+	m_OrganComments = cfg.ReadString(ODFSetting, group, wxT("OrganComments"),  256, false);
+	m_RecordingDetails = cfg.ReadString(ODFSetting, group, wxT("RecordingDetails"),  256, false);
+	m_InfoFilename = cfg.ReadString(ODFSetting, group, wxT("InfoFilename"),  256, false);
 	m_InfoFilename.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
 	wxFileName fn = GetODFFilename();
 	if (m_InfoFilename.IsEmpty())
@@ -254,27 +256,27 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 		m_InfoFilename = wxEmptyString;
 
 	/* load basic organ information */
-	unsigned m_NumberOfManuals = ini.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 1, 16);
-	m_FirstManual = ini.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
-	unsigned m_NumberOfEnclosures = ini.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 6);
-	unsigned m_NumberOfTremulants = ini.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10);
-	unsigned m_NumberOfWindchestGroups = ini.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 12);
-	unsigned m_NumberOfReversiblePistons = ini.ReadInteger(ODFSetting, group, wxT("NumberOfReversiblePistons"), 0, 32);
-	unsigned m_NumberOfGenerals = ini.ReadInteger(ODFSetting, group, wxT("NumberOfGenerals"), 0, 99);
-	unsigned m_NumberOfDivisionalCouplers = ini.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionalCouplers"), 0, 8);
-	unsigned m_NumberOfPanels = ini.ReadInteger(ODFSetting, group, wxT("NumberOfPanels"), 0, 100, false);
-	m_RankCount = ini.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, 400, false);
-	m_PipeConfig.Load(ini, group, wxEmptyString);
-	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntermanualCouplers"));
-	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntramanualCouplers"));
-	m_DivisionalsStoreTremulants = ini.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreTremulants"));
-	m_GeneralsStoreDivisionalCouplers = ini.ReadBoolean(ODFSetting, group, wxT("GeneralsStoreDivisionalCouplers"));
-	m_CombinationsStoreNonDisplayedDrawstops = ini.ReadBoolean(ODFSetting, group, wxT("CombinationsStoreNonDisplayedDrawstops"));
-	m_volume = ini.ReadInteger(CMBSetting, group, wxT("Volume"), -121, 100, false, -121);
+	unsigned m_NumberOfManuals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 1, 16);
+	m_FirstManual = cfg.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
+	unsigned m_NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 6);
+	unsigned m_NumberOfTremulants = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10);
+	unsigned m_NumberOfWindchestGroups = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 12);
+	unsigned m_NumberOfReversiblePistons = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfReversiblePistons"), 0, 32);
+	unsigned m_NumberOfGenerals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfGenerals"), 0, 99);
+	unsigned m_NumberOfDivisionalCouplers = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionalCouplers"), 0, 8);
+	unsigned m_NumberOfPanels = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfPanels"), 0, 100, false);
+	m_RankCount = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, 400, false);
+	m_PipeConfig.Load(cfg, group, wxEmptyString);
+	m_DivisionalsStoreIntermanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntermanualCouplers"));
+	m_DivisionalsStoreIntramanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntramanualCouplers"));
+	m_DivisionalsStoreTremulants = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreTremulants"));
+	m_GeneralsStoreDivisionalCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("GeneralsStoreDivisionalCouplers"));
+	m_CombinationsStoreNonDisplayedDrawstops = cfg.ReadBoolean(ODFSetting, group, wxT("CombinationsStoreNonDisplayedDrawstops"));
+	m_volume = cfg.ReadInteger(CMBSetting, group, wxT("Volume"), -121, 100, false, -121);
 	if (m_volume > 20)
 		m_volume = -121;
-	m_Temperament = ini.ReadString(CMBSetting, group, wxT("Temperament"), 256, false);
-	m_IgnorePitch = ini.ReadBoolean(CMBSetting, group, wxT("IgnorePitch"), false, false);
+	m_Temperament = cfg.ReadString(CMBSetting, group, wxT("Temperament"), 256, false);
+	m_IgnorePitch = cfg.ReadBoolean(CMBSetting, group, wxT("IgnorePitch"), false, false);
 
 	wxString buffer;
 
@@ -292,7 +294,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_enclosure.push_back(new GOrgueEnclosure(this));
 		buffer.Printf(wxT("Enclosure%03u"), i + 1);
-		m_enclosure[i]->Load(ini, buffer, i);
+		m_enclosure[i]->Load(cfg, buffer, i);
 	}
 
 	m_tremulant.resize(0);
@@ -300,26 +302,26 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_tremulant.push_back(new GOrgueTremulant(this));
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		m_tremulant[i]->Load(ini, buffer, -((int)(i + 1)));
+		m_tremulant[i]->Load(cfg, buffer, -((int)(i + 1)));
 	}
 
 	for (unsigned  i = 0; i < m_NumberOfWindchestGroups; i++)
 	{
 		buffer.Printf(wxT("WindchestGroup%03d"), i + 1);
-		m_windchest[i]->Load(ini, buffer, i);
+		m_windchest[i]->Load(cfg, buffer, i);
 	}
 
 	for (unsigned  i = 0; i < m_RankCount; i++)
 	{
 		m_ranks.push_back(new GOrgueRank(this));
 		buffer.Printf(wxT("Rank%03d"), i + 1);
-		m_ranks[i]->Load(ini, buffer, -1);
+		m_ranks[i]->Load(cfg, buffer, -1);
 	}
 
 	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
 	{
 		buffer.Printf(wxT("Manual%03d"), i);
-		m_manual[i]->Load(ini, buffer, i);
+		m_manual[i]->Load(cfg, buffer, i);
 	}
 
 	m_piston.resize(0);
@@ -327,7 +329,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_piston.push_back(new GOrguePiston(this));
 		buffer.Printf(wxT("ReversiblePiston%03d"), i + 1);
-		m_piston[i]->Load(ini, buffer);
+		m_piston[i]->Load(cfg, buffer);
 	}
 
 	m_divisionalcoupler.resize(0);
@@ -335,7 +337,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_divisionalcoupler.push_back(new GOrgueDivisionalCoupler(this));
 		buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
-		m_divisionalcoupler[i]->Load(ini, buffer);
+		m_divisionalcoupler[i]->Load(cfg, buffer);
 	}
 
 	m_general.resize(0);
@@ -343,29 +345,29 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	{
 		m_general.push_back(new GOrgueGeneral(this));
 		buffer.Printf(wxT("General%03d"), i + 1);
-		m_general[i]->Load(ini, buffer);
+		m_general[i]->Load(cfg, buffer);
 	}
 
 	m_setter = new GOrgueSetter(this);
-	m_setter->Load(ini);
+	m_setter->Load(cfg);
 
 	m_panels.resize(0);
 	m_panels.push_back(new GOGUIPanel(this));
-	m_panels[0]->Load(ini, wxT(""));
+	m_panels[0]->Load(cfg, wxT(""));
 
 	for (unsigned i = 0; i < m_NumberOfPanels; i++)
 	{
 		buffer.Printf(wxT("Panel%03d"), i + 1);
 		m_panels.push_back(new GOGUIPanel(this));
-		m_panels[i + 1]->Load(ini, buffer);
+		m_panels[i + 1]->Load(cfg, buffer);
 	}
 
 	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
-		m_panels.push_back(m_setter->CreateCouplerPanel(ini, i));
-	m_panels.push_back(m_setter->CreateCrescendoPanel(ini));
-	m_panels.push_back(m_setter->CreateDivisionalPanel(ini));
-	m_panels.push_back(m_setter->CreateGeneralsPanel(ini));
-	m_panels.push_back(m_setter->CreateSetterPanel(ini));
+		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
+	m_panels.push_back(m_setter->CreateCrescendoPanel(cfg));
+	m_panels.push_back(m_setter->CreateDivisionalPanel(cfg));
+	m_panels.push_back(m_setter->CreateGeneralsPanel(cfg));
+	m_panels.push_back(m_setter->CreateSetterPanel(cfg));
 }
 
 wxString GrandOrgueFile::GenerateSettingFileName()
@@ -620,19 +622,20 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 			throw wxString::Format(_("Unable to read '%s'"), file.c_str());
 
 		IniFileConfig ini(odf_ini_file);
+		GOrgueConfigReader cfg(ini);
 
-		wxString church_name = ini.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"),  128);
+		wxString church_name = cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"),  128);
 		if (church_name != m_ChurchName)
 			throw wxString::Format(_("File belongs to a different organ: %s"), church_name.c_str());
 
 		for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-			m_manual[i]->LoadCombination(ini);
+			m_manual[i]->LoadCombination(cfg);
 
 		for (unsigned j = 0; j < m_general.size(); j++)
-			m_general[j]->LoadCombination(ini);
+			m_general[j]->LoadCombination(cfg);
 
 		if (m_setter)
-			m_setter->LoadCombination(ini);
+			m_setter->LoadCombination(cfg);
 	}
 	catch (wxString error)
 	{

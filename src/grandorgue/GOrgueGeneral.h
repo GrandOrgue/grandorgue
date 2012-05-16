@@ -26,8 +26,8 @@
 #include "GOrguePushbutton.h"
 #include "GOrgueFrameGeneral.h"
 
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
-class IniFileConfig;
 
 class GOrgueGeneral : public GOrguePushbutton
 {
@@ -36,8 +36,8 @@ private:
 
 public:
 	GOrgueGeneral(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group);
-	void LoadCombination(IniFileConfig& cfg);
+	void Load(GOrgueConfigReader& cfg, wxString group);
+	void LoadCombination(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
 	void Push();
 	GOrgueFrameGeneral& GetGeneral();

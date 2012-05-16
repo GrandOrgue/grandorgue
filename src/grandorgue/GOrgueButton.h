@@ -26,10 +26,10 @@
 #include <wx/wx.h>
 #include "GOrgueMidiReceiver.h"
 
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
-class IniFileConfig;
 
 class GOrgueButton 
 {
@@ -46,7 +46,7 @@ protected:
 public:
 	GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton);
 	virtual ~GOrgueButton();
-	void Load(IniFileConfig& cfg, wxString group, wxString name = wxT(""));
+	void Load(GOrgueConfigReader& cfg, wxString group, wxString name = wxT(""));
 	virtual void Save(GOrgueConfigWriter& cfg);
 	bool IsDisplayed();
 	const wxString& GetName();

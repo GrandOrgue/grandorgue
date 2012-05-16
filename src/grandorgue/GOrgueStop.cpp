@@ -20,10 +20,10 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigReader.h"
 #include "GOrgueStop.h"
 #include "GOrgueRank.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number) :
 	GOrgueDrawstop(organfile),
@@ -44,7 +44,7 @@ unsigned GOrgueStop::IsAuto() const
 	return (m_RankInfo.size() == 1 && m_RankInfo[0].Rank->GetPipeCount() == 1);
 }
 
-void GOrgueStop::Load(IniFileConfig& cfg, wxString group)
+void GOrgueStop::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	unsigned number_of_ranks = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, m_organfile->GetRankCount(), false, 0);
 

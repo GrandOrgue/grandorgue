@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiEvent.h"
@@ -27,7 +28,6 @@
 #include "GOrgueEnclosure.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 GOrgueMidiReceiver::GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type):
 	m_organfile(organfile),
@@ -58,7 +58,7 @@ const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
 	{ wxT("NoteOff"), MIDI_M_NOTE_OFF },
 };
 
-void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
+void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_events.resize(0);
 

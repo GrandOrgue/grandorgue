@@ -20,6 +20,7 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigReader.h"
 #include "GOrguePipe.h"
 #include "GOrgueRank.h"
 #include "GOrgueStop.h"
@@ -29,7 +30,6 @@
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 #include "GOSoundProviderWave.h"
-#include "IniFileConfig.h"
 
 GOrguePipe::GOrguePipe
 	(GrandOrgueFile* organfile
@@ -253,7 +253,7 @@ unsigned GOrguePipe::GetEffectiveChannels()
 	return m_OrganFile->GetSettings().GetLoadInStereo() ? 2 : 1;
 }
 
-void GOrguePipe::Load(IniFileConfig& cfg, wxString group, wxString prefix)
+void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	m_Filename = cfg.ReadString(ODFSetting, group, prefix);
 	m_PipeConfig.Load(cfg, group, prefix);

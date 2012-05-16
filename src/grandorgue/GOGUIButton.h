@@ -52,7 +52,7 @@ protected:
 public:
 	GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston = false, unsigned x_pos = 1, unsigned y_pos = 1);
 
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(GOrgueConfigReader& cfg, wxString group);
 
 	void HandleKey(int key);
 	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);

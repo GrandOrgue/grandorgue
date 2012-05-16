@@ -22,6 +22,7 @@
 
 #include "GOrgueFrameGeneral.h"
 
+#include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
@@ -32,7 +33,6 @@
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 GOrgueFrameGeneral::GOrgueFrameGeneral(GrandOrgueFile* organfile):
 	m_organfile(organfile),
@@ -59,7 +59,7 @@ void GOrgueFrameGeneral::Copy(GOrgueFrameGeneral* general)
 }
 
 
-void GOrgueFrameGeneral::Load(IniFileConfig& cfg, wxString group)
+void GOrgueFrameGeneral::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_group = group;
 
@@ -68,7 +68,7 @@ void GOrgueFrameGeneral::Load(IniFileConfig& cfg, wxString group)
 	LoadCombination(cfg);
 }
 
-void GOrgueFrameGeneral::LoadCombination(IniFileConfig& cfg)
+void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 {
 	wxString buffer;
 	unsigned NumberOfStops = cfg.ReadInteger(UserSetting, m_group, wxT("NumberOfStops"), 0, 999);

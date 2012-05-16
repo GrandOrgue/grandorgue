@@ -21,9 +21,10 @@
  */
 
 #include "GOrgueWindchest.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueEnclosure.h"
-#include "GOrgueTremulant.h"
 #include "GOrguePipe.h"
+#include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
 
 GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
@@ -37,7 +38,7 @@ GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 }
 
 
-void GOrgueWindchest::Load(IniFileConfig& cfg, wxString group, unsigned index)
+void GOrgueWindchest::Load(GOrgueConfigReader& cfg, wxString group, unsigned index)
 {
 	unsigned NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, m_organfile->GetEnclosureCount());
 	unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount());

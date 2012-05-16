@@ -21,11 +21,11 @@
  */
 #include "GOrgueManual.h"
 
+#include "GOrgueConfigReader.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueStop.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_group(wxT("---")),
@@ -50,7 +50,7 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 
 }
 
-void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
+void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumber)
 {
 	m_group = group;
 	m_name                              = cfg.ReadString (ODFSetting, group, wxT("Name"), 32);
@@ -111,7 +111,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
 	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
 }
 
-void GOrgueManual::LoadCombination(IniFileConfig& cfg)
+void GOrgueManual::LoadCombination(GOrgueConfigReader& cfg)
 {
 	for (unsigned i = 0; i < m_divisionals.size(); i++)
 		m_divisionals[i]->LoadCombination(cfg);

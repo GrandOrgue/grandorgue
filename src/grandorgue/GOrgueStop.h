@@ -51,7 +51,7 @@ private:
 public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number);
 	GOrgueRank* GetRank(unsigned index);
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Set(bool on);
 	void SetKey(unsigned note, int on);
 	void Abort();

@@ -20,11 +20,11 @@
  * MA 02111-1307, USA.
  */
 
-#include "GOGUIManual.h"
-#include "GOGUIPanel.h"
-#include "GOGUIMouseState.h"
-#include "IniFileConfig.h"
 #include "GOGUIDisplayMetrics.h"
+#include "GOGUIManual.h"
+#include "GOGUIMouseState.h"
+#include "GOGUIPanel.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueManual.h"
 #include "MIDIEventDialog.h"
 
@@ -36,7 +36,7 @@ GOGUIManual::GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manua
 {
 }
 
-void GOGUIManual::Load(IniFileConfig& cfg, wxString group)
+void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	const wxChar* keyNames[12] = { wxT("C"), wxT("Cis"), wxT("D"), wxT("Dis"), wxT("E"), wxT("F"), wxT("Fis"), wxT("G"),
 				       wxT("Gis"), wxT("A"), wxT("Ais"), wxT("B") };

@@ -23,7 +23,7 @@
 #include "GOGUIImage.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIPanel.h"
-#include "IniFileConfig.h"
+#include "GOrgueConfigReader.h"
 
 GOGUIImage::GOGUIImage(GOGUIPanel* panel) :
 	GOGUIControl(panel, NULL),
@@ -32,7 +32,7 @@ GOGUIImage::GOGUIImage(GOGUIPanel* panel) :
 {
 }
 
-void GOGUIImage::Load(IniFileConfig& cfg, wxString group)
+void GOGUIImage::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 	int x, y, w, h;

@@ -20,9 +20,9 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigReader.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 GOrgueDivisionalCoupler::GOrgueDivisionalCoupler(GrandOrgueFile* organfile) :
 	GOrgueDrawstop(organfile),
@@ -32,7 +32,7 @@ GOrgueDivisionalCoupler::GOrgueDivisionalCoupler(GrandOrgueFile* organfile) :
 }
 
 
-void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, wxString group)
+void GOrgueDivisionalCoupler::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	wxString buffer;
 

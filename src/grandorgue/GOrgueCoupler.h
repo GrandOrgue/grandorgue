@@ -26,9 +26,9 @@
 #include <vector>
 #include "GOrgueDrawStop.h"
 
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GrandOrgueFile;
-class IniFileConfig;
 struct IniFileEnumEntry;
 
 class GOrgueCoupler : public GOrgueDrawstop
@@ -66,7 +66,7 @@ private:
 public:
 
 	GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual);
-	void Load(IniFileConfig& cfg, wxString group, wxString name = wxT(""), bool unison_off = false, bool recursive = false, int keyshift = 0, int dest_manual = 0, GOrgueCouplerType coupler_type = COUPLER_NORMAL);
+	void Load(GOrgueConfigReader& cfg, wxString group, wxString name = wxT(""), bool unison_off = false, bool recursive = false, int keyshift = 0, int dest_manual = 0, GOrgueCouplerType coupler_type = COUPLER_NORMAL);
 	void Save(GOrgueConfigWriter& cfg);
 	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
 	void Set(bool on);

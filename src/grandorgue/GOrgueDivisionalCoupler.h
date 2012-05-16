@@ -35,7 +35,7 @@ private:
 
 public:
 	GOrgueDivisionalCoupler(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 	void Set(bool on);
 

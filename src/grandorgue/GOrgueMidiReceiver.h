@@ -27,10 +27,10 @@
 #include <vector>
 #include "GOrgueMidiEvent.h"
 
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueSettings;
 class GrandOrgueFile;
-class IniFileConfig;
 struct IniFileEnumEntry;
 
 typedef enum {
@@ -84,7 +84,7 @@ private:
 public:
 	GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type);
 
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg, wxString group);
 
 	MIDI_RECEIVER_TYPE GetType() const;

@@ -21,8 +21,8 @@
  */
 
 #include "GOrgueButton.h"
+#include "GOrgueConfigReader.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton) :
 	m_organfile(organfile),
@@ -40,7 +40,7 @@ GOrgueButton::~GOrgueButton()
 {
 }
 
-void GOrgueButton::Load(IniFileConfig& cfg, wxString group, wxString name)
+void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group, wxString name)
 {
 	m_group = group;
 	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, true, name);

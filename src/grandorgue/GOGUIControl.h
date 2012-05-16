@@ -28,8 +28,8 @@
 class GOGUIDisplayMetrics;
 class GOGUIMouseState;
 class GOGUIPanel;
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
-class IniFileConfig;
 
 class GOGUIControl {
 protected:
@@ -44,7 +44,7 @@ public:
 	GOGUIControl(GOGUIPanel* panel, void* control);
 	virtual ~GOGUIControl();
 
-	virtual void Load(IniFileConfig& cfg, wxString group);
+	virtual void Load(GOrgueConfigReader& cfg, wxString group);
 	virtual void Save(GOrgueConfigWriter& cfg);
 
 	virtual void ControlChanged(void* control);
