@@ -32,7 +32,7 @@ IniFileConfig::IniFileConfig(wxFileConfig& odf_ini_file) :
 
 }
 
-wxString IniFileConfig::ReadString(wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue)
+wxString IniFileConfig::ReadString(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue)
 {
 	wxString value;
 
@@ -92,14 +92,14 @@ wxString IniFileConfig::ReadString(wxString group, wxString key, unsigned nmax, 
 	return value;
 }
 
-bool IniFileConfig::ReadBoolean(wxString group, wxString key, bool required)
+bool IniFileConfig::ReadBoolean(GOSettingType type, wxString group, wxString key, bool required)
 {
-	return ReadBoolean(group, key, required, false);
+	return ReadBoolean(type, group, key, required, false);
 }
 
-bool IniFileConfig::ReadBoolean(wxString group, wxString key, bool required, bool defaultValue)
+bool IniFileConfig::ReadBoolean(GOSettingType type, wxString group, wxString key, bool required, bool defaultValue)
 {
-	wxString value = ReadString(group, key, 255, required, defaultValue ? wxT("Y") : wxT("N"));
+	wxString value = ReadString(type, group, key, 255, required, defaultValue ? wxT("Y") : wxT("N"));
 	value.MakeUpper();
 	value.Trim();
 
@@ -113,14 +113,14 @@ bool IniFileConfig::ReadBoolean(wxString group, wxString key, bool required, boo
 	throw error;
 }
 
-wxColour IniFileConfig::ReadColor(wxString group, wxString key, bool required)
+wxColour IniFileConfig::ReadColor(GOSettingType type, wxString group, wxString key, bool required)
 {
-	return ReadColor(group, key, required, wxT("BLACK"));
+	return ReadColor(type, group, key, required, wxT("BLACK"));
 }
 
-wxColour IniFileConfig::ReadColor(wxString group, wxString key, bool required, wxString defaultValue)
+wxColour IniFileConfig::ReadColor(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue)
 {
-	wxString value = ReadString(group, key, 255, required, defaultValue);
+	wxString value = ReadString(type, group, key, 255, required, defaultValue);
 
 	value.MakeUpper();
 	value.Trim();
@@ -167,19 +167,19 @@ wxColour IniFileConfig::ReadColor(wxString group, wxString key, bool required, w
 	throw error;
 }
 
-wxString IniFileConfig::ReadString(wxString group, wxString key, unsigned nmax, bool required)
+wxString IniFileConfig::ReadString(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required)
 {
-	return ReadString(group, key, nmax, required, wxT(""));
+	return ReadString(type, group, key, nmax, required, wxT(""));
 }
 
-int IniFileConfig::ReadInteger(wxString group, wxString key, int nmin, int nmax, bool required)
+int IniFileConfig::ReadInteger(GOSettingType type, wxString group, wxString key, int nmin, int nmax, bool required)
 {
-	return ReadInteger(group, key, nmin, nmax, required, nmin);
+	return ReadInteger(type, group, key, nmin, nmax, required, nmin);
 }
 
-int IniFileConfig::ReadInteger(wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue)
+int IniFileConfig::ReadInteger(GOSettingType type, wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue)
 {
-	wxString value = ReadString(group, key, 255, required, wxString::Format(wxT("%d"), defaultValue));
+	wxString value = ReadString(type, group, key, 255, required, wxString::Format(wxT("%d"), defaultValue));
 
 	if (value.IsEmpty())
 	{
@@ -210,24 +210,24 @@ int IniFileConfig::ReadInteger(wxString group, wxString key, int nmin, int nmax,
 	throw error;
 }
 
-int IniFileConfig::ReadLong(wxString group, wxString key, int nmin, int nmax, bool required)
+int IniFileConfig::ReadLong(GOSettingType type, wxString group, wxString key, int nmin, int nmax, bool required)
 {
-	return ReadInteger(group, key, nmin, nmax, required);
+	return ReadInteger(type, group, key, nmin, nmax, required);
 }
 
-int IniFileConfig::ReadLong(wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue)
+int IniFileConfig::ReadLong(GOSettingType type, wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue)
 {
-	return ReadInteger(group, key, nmin, nmax, required, defaultValue);
+	return ReadInteger(type, group, key, nmin, nmax, required, defaultValue);
 }
 
-double IniFileConfig::ReadFloat(wxString group, wxString key, double nmin, double nmax, bool required)
+double IniFileConfig::ReadFloat(GOSettingType type, wxString group, wxString key, double nmin, double nmax, bool required)
 {
-	return ReadFloat(group, key, nmin, nmax, required, nmin);
+	return ReadFloat(type, group, key, nmin, nmax, required, nmin);
 }
 
-double IniFileConfig::ReadFloat(wxString group, wxString key, double nmin, double nmax, bool required, double defaultValue)
+double IniFileConfig::ReadFloat(GOSettingType type, wxString group, wxString key, double nmin, double nmax, bool required, double defaultValue)
 {
-	wxString value = ReadString(group, key, 255, required, wxString::Format(wxT("%e"), defaultValue));
+	wxString value = ReadString(type, group, key, 255, required, wxString::Format(wxT("%e"), defaultValue));
 
 	if (value.IsEmpty())
 	{
@@ -258,16 +258,16 @@ double IniFileConfig::ReadFloat(wxString group, wxString key, double nmin, doubl
 	throw error;
 }
 
-unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bool required)
+unsigned IniFileConfig::ReadSize(GOSettingType type, wxString group, wxString key, unsigned size_type, bool required)
 {
-	return ReadSize(group, key, type, required, wxT("SMALL"));
+	return ReadSize(type, group, key, size_type, required, wxT("SMALL"));
 }
 
-unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bool required, wxString defaultValue)
+unsigned IniFileConfig::ReadSize(GOSettingType type, wxString group, wxString key, unsigned size_type, bool required, wxString defaultValue)
 {
 	static const int sizes[2][4] = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
 
-	wxString value = ReadString(group, key, 255, required, defaultValue);
+	wxString value = ReadString(type, group, key, 255, required, defaultValue);
 
 	value.MakeUpper();
 	value.Trim();
@@ -276,13 +276,13 @@ unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bo
 		value = defaultValue;
 
 	if (value == wxT("SMALL"))
-		return sizes[type][0];
+		return sizes[size_type][0];
 	else if (value == wxT("MEDIUM"))
-		return sizes[type][1];
+		return sizes[size_type][1];
 	else if (value == wxT("MEDIUM LARGE"))
-		return sizes[type][2];
+		return sizes[size_type][2];
 	else if (value == wxT("LARGE"))
-		return sizes[type][3];
+		return sizes[size_type][3];
 
 	if (::wxIsdigit(value[0]))
 	{
@@ -296,14 +296,14 @@ unsigned IniFileConfig::ReadSize(wxString group, wxString key, unsigned type, bo
 	throw error;
 }
 
-unsigned IniFileConfig::ReadFontSize(wxString group, wxString key, bool required)
+unsigned IniFileConfig::ReadFontSize(GOSettingType type, wxString group, wxString key, bool required)
 {
-	return ReadFontSize(group, key, required, wxT("NORMAL"));
+	return ReadFontSize(type, group, key, required, wxT("NORMAL"));
 }
 
-unsigned IniFileConfig::ReadFontSize(wxString group, wxString key, bool required, wxString defaultValue)
+unsigned IniFileConfig::ReadFontSize(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue)
 {
-	wxString value = ReadString(group, key, 255, required, defaultValue);
+	wxString value = ReadString(type, group, key, 255, required, defaultValue);
 
 	value.MakeUpper();
 	value.Trim();
@@ -327,9 +327,9 @@ unsigned IniFileConfig::ReadFontSize(wxString group, wxString key, bool required
 	throw error;
 }
 
-int IniFileConfig::ReadEnum(wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required, int defaultValue)
+int IniFileConfig::ReadEnum(GOSettingType type, wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required, int defaultValue)
 {
-	wxString value = ReadString(group, key, 255, required);
+	wxString value = ReadString(type, group, key, 255, required);
 	for (unsigned i = 0; i < count; i++)
 		if (entry[i].name == value)
 			return entry[i].value;
@@ -342,9 +342,9 @@ int IniFileConfig::ReadEnum(wxString group, wxString key, const struct IniFileEn
 	return defaultValue;
 }
 
-int IniFileConfig::ReadEnum(wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required)
+int IniFileConfig::ReadEnum(GOSettingType type, wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required)
 {
-	return ReadEnum(group, key, entry, count, required, entry[0].value);
+	return ReadEnum(type, group, key, entry, count, required, entry[0].value);
 }
 
 

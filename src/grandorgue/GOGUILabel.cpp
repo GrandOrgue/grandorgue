@@ -45,13 +45,13 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, un
 
 void GOGUILabel::Load(IniFileConfig& cfg, wxString group)
 {
-	bool FreeXPlacement = cfg.ReadBoolean(group, wxT("FreeXPlacement"), false, true);
-	bool FreeYPlacement = cfg.ReadBoolean(group, wxT("FreeYPlacement"), false, true);
+	bool FreeXPlacement = cfg.ReadBoolean(ODFSetting, group, wxT("FreeXPlacement"), false, true);
+	bool FreeYPlacement = cfg.ReadBoolean(ODFSetting, group, wxT("FreeYPlacement"), false, true);
 
 	if (!FreeXPlacement)
 	{
-		int DispDrawstopCol = cfg.ReadInteger(group, wxT("DispDrawstopCol"), 1, m_metrics->NumberOfDrawstopColsToDisplay(), true, 1);
-		bool DispSpanDrawstopColToRight = cfg.ReadBoolean(group, wxT("DispSpanDrawstopColToRight"), true, false);
+		int DispDrawstopCol = cfg.ReadInteger(ODFSetting, group, wxT("DispDrawstopCol"), 1, m_metrics->NumberOfDrawstopColsToDisplay(), true, 1);
+		bool DispSpanDrawstopColToRight = cfg.ReadBoolean(ODFSetting, group, wxT("DispSpanDrawstopColToRight"), true, false);
 
 		int i = m_metrics->NumberOfDrawstopColsToDisplay() >> 1;
 		if (DispDrawstopCol <= i)
@@ -63,12 +63,12 @@ void GOGUILabel::Load(IniFileConfig& cfg, wxString group)
 	}
 	else
 	{
-		m_DispXpos = cfg.ReadInteger(group, wxT("DispXpos"), 0, m_metrics->GetScreenWidth(), false, m_DispXpos);
+		m_DispXpos = cfg.ReadInteger(ODFSetting, group, wxT("DispXpos"), 0, m_metrics->GetScreenWidth(), false, m_DispXpos);
 	}
 
 	if (!FreeYPlacement)
 	{
-		bool DispAtTopOfDrawstopCol = cfg.ReadBoolean(group, wxT("DispAtTopOfDrawstopCol"), true, false);
+		bool DispAtTopOfDrawstopCol = cfg.ReadBoolean(ODFSetting, group, wxT("DispAtTopOfDrawstopCol"), true, false);
 
 		m_DispYpos = m_metrics->GetJambLeftRightY() + 1;
 		if (!DispAtTopOfDrawstopCol)
@@ -76,37 +76,37 @@ void GOGUILabel::Load(IniFileConfig& cfg, wxString group)
 	}
 	else
 	{
-		m_DispYpos = cfg.ReadInteger(group, wxT("DispYpos"), 0, m_metrics->GetScreenHeight(), false, m_DispYpos);
+		m_DispYpos = cfg.ReadInteger(ODFSetting, group, wxT("DispYpos"), 0, m_metrics->GetScreenHeight(), false, m_DispYpos);
 	}
 
-	m_TextColor = cfg.ReadColor(group, wxT("DispLabelColour"), false, wxT("BLACK"));
-	m_FontSize = cfg.ReadFontSize(group, wxT("DispLabelFontSize"), false, wxT("normal"));
-	m_FontName = cfg.ReadString(group, wxT("DispLabelFontName"), 255, false, wxT(""));
-	m_Text = cfg.ReadString(group, wxT("Name"), 64, false, m_Text);
+	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("BLACK"));
+	m_FontSize = cfg.ReadFontSize(ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
+	m_FontName = cfg.ReadString(ODFSetting, group, wxT("DispLabelFontName"), 255, false, wxT(""));
+	m_Text = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, false, m_Text);
 
-	unsigned DispImageNum = cfg.ReadInteger(group, wxT("DispImageNum"), 1, 1, false, 1);
+	unsigned DispImageNum = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 1, false, 1);
 
-	wxString image_file = cfg.ReadString(group, wxT("Image"), 255, false, wxString::Format(wxT("GO:label%02d"), DispImageNum));
-	wxString image_mask_file = cfg.ReadString(group, wxT("Mask"), 255, false, wxEmptyString);
+	wxString image_file = cfg.ReadString(ODFSetting, group, wxT("Image"), 255, false, wxString::Format(wxT("GO:label%02d"), DispImageNum));
+	wxString image_mask_file = cfg.ReadString(ODFSetting, group, wxT("Mask"), 255, false, wxEmptyString);
 
 	m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);
 
 	int x, y, w, h;
-	x = cfg.ReadInteger(group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, m_DispXpos);
-	y = cfg.ReadInteger(group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, m_DispYpos);
-	w = cfg.ReadInteger(group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmap->GetWidth());
-	h = cfg.ReadInteger(group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmap->GetHeight());
+	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, m_DispXpos);
+	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, m_DispYpos);
+	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmap->GetWidth());
+	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmap->GetHeight());
 	m_BoundingRect = wxRect(x, y, w, h);
 
-	m_TileOffsetX = cfg.ReadInteger(group, wxT("TileOffsetX"), 0, m_Bitmap->GetWidth() - 1, false, 0);
-	m_TileOffsetY = cfg.ReadInteger(group, wxT("TileOffsetY"), 0, m_Bitmap->GetHeight() - 1, false, 0);
+	m_TileOffsetX = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetX"), 0, m_Bitmap->GetWidth() - 1, false, 0);
+	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_Bitmap->GetHeight() - 1, false, 0);
 
-	x = cfg.ReadInteger(group, wxT("TextRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 1);
-	y = cfg.ReadInteger(group, wxT("TextRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 1);
-	w = cfg.ReadInteger(group, wxT("TextRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
-	h = cfg.ReadInteger(group, wxT("TextRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y);
+	x = cfg.ReadInteger(ODFSetting, group, wxT("TextRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 1);
+	y = cfg.ReadInteger(ODFSetting, group, wxT("TextRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 1);
+	w = cfg.ReadInteger(ODFSetting, group, wxT("TextRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
+	h = cfg.ReadInteger(ODFSetting, group, wxT("TextRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y);
 	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
-	m_TextWidth = cfg.ReadInteger(group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth());
+	m_TextWidth = cfg.ReadInteger(ODFSetting, group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth());
 }
 
 void GOGUILabel::Draw(wxDC* dc)

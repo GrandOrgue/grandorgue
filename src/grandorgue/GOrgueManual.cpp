@@ -53,17 +53,17 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
 {
 	m_group = group;
-	m_name                              = cfg.ReadString (group, wxT("Name"), 32);
-	m_nb_logical_keys                   = cfg.ReadInteger(group, wxT("NumberOfLogicalKeys"), 1, 192);
-	m_first_accessible_logical_key_nb   = cfg.ReadInteger(group, wxT("FirstAccessibleKeyLogicalKeyNumber"), 1, m_nb_logical_keys);
-	m_first_accessible_key_midi_note_nb = cfg.ReadInteger(group, wxT("FirstAccessibleKeyMIDINoteNumber"), 0, 127);
-	m_nb_accessible_keys                = cfg.ReadInteger(group, wxT("NumberOfAccessibleKeys"), 0, 85);
-	m_MIDIInputNumber                   = cfg.ReadInteger(group, wxT("MIDIInputNumber"), 0, 200, false, 0);
-	m_displayed                         = cfg.ReadBoolean(group, wxT("Displayed"));
-	unsigned m_nb_stops                 = cfg.ReadInteger(group, wxT("NumberOfStops"), 0, 64);
-	unsigned m_nb_couplers              = cfg.ReadInteger(group, wxT("NumberOfCouplers"), 0, 16, false);
-	unsigned m_nb_divisionals           = cfg.ReadInteger(group, wxT("NumberOfDivisionals"), 0, 32, false);
-	unsigned m_nb_tremulants            = cfg.ReadInteger(group, wxT("NumberOfTremulants"), 0, 10, false);
+	m_name                              = cfg.ReadString (ODFSetting, group, wxT("Name"), 32);
+	m_nb_logical_keys                   = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalKeys"), 1, 192);
+	m_first_accessible_logical_key_nb   = cfg.ReadInteger(ODFSetting, group, wxT("FirstAccessibleKeyLogicalKeyNumber"), 1, m_nb_logical_keys);
+	m_first_accessible_key_midi_note_nb = cfg.ReadInteger(ODFSetting, group, wxT("FirstAccessibleKeyMIDINoteNumber"), 0, 127);
+	m_nb_accessible_keys                = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfAccessibleKeys"), 0, 85);
+	m_MIDIInputNumber                   = cfg.ReadInteger(ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
+	m_displayed                         = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"));
+	unsigned m_nb_stops                 = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfStops"), 0, 64);
+	unsigned m_nb_couplers              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfCouplers"), 0, 16, false);
+	unsigned m_nb_divisionals           = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionals"), 0, 32, false);
+	unsigned m_nb_tremulants            = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10, false);
 	m_manual_number = manualNumber;
 
 	m_midi.SetIndex(manualNumber);
@@ -75,7 +75,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
 	{
 		m_stops.push_back(new GOrgueStop(m_organfile, m_manual_number, GetFirstLogicalKeyMIDINoteNumber()));
 		buffer.Printf(wxT("Stop%03d"), i + 1);
-		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(group, buffer, 1, 448));
+		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 448));
 		m_stops[i]->Load(cfg, buffer);
 	}
 
@@ -84,7 +84,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
 	{
 		m_couplers.push_back(new GOrgueCoupler(m_organfile, m_manual_number));
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
-		buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(group, buffer, 1, 64));
+		buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 64));
 		m_couplers[i]->Load(cfg, buffer);
 	}
 
@@ -92,7 +92,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
 	for (unsigned i = 0; i < m_nb_tremulants; i++)
 	{
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		m_tremulant_ids.push_back(cfg.ReadInteger(group, buffer, 1, m_organfile->GetTremulantCount()));
+		m_tremulant_ids.push_back(cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount()));
 	}
 
 	m_divisionals.resize(0);
@@ -100,7 +100,7 @@ void GOrgueManual::Load(IniFileConfig& cfg, wxString group, int manualNumber)
 	{
 		m_divisionals.push_back(new GOrgueDivisional(m_organfile));
 		buffer.Printf(wxT("Divisional%03d"), i + 1);
-		buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(group, buffer, 1, 224));
+		buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 224));
 		m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
 	}
 	m_midi.Load(cfg, group);

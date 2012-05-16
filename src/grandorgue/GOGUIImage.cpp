@@ -39,19 +39,19 @@ void GOGUIImage::Load(IniFileConfig& cfg, wxString group)
 	wxString image_mask_file;
 	wxString image_file;
 
-	image_file = cfg.ReadString(group, wxT("Image"), 255, true);
-	image_mask_file = cfg.ReadString(group, wxT("Mask"), 255, false, wxEmptyString);
+	image_file = cfg.ReadString(ODFSetting, group, wxT("Image"), 255, true);
+	image_mask_file = cfg.ReadString(ODFSetting, group, wxT("Mask"), 255, false, wxEmptyString);
 
 	m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);
 
-	x = cfg.ReadInteger(group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, 0);
-	y = cfg.ReadInteger(group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, 0);
-	w = cfg.ReadInteger(group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmap->GetWidth());
-	h = cfg.ReadInteger(group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmap->GetHeight());
+	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, 0);
+	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, 0);
+	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmap->GetWidth());
+	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmap->GetHeight());
 	m_BoundingRect = wxRect(x, y, w, h);
 
-	m_TileOffsetX = cfg.ReadInteger(group, wxT("TileOffsetX"), 0, m_Bitmap->GetWidth() - 1, false, 0);
-	m_TileOffsetY = cfg.ReadInteger(group, wxT("TileOffsetY"), 0, m_Bitmap->GetHeight() - 1, false, 0);
+	m_TileOffsetX = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetX"), 0, m_Bitmap->GetWidth() - 1, false, 0);
+	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_Bitmap->GetHeight() - 1, false, 0);
 }
 
 void GOGUIImage::Draw(wxDC* dc)

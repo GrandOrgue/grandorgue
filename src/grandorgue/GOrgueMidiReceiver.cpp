@@ -61,7 +61,7 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 {
 	m_events.resize(0);
 
-	int event_cnt = cfg.ReadInteger(group, wxT("NumberOfMIDIEvents"), -1, 255, false);
+	int event_cnt = cfg.ReadInteger(CMBSetting, group, wxT("NumberOfMIDIEvents"), -1, 255, false);
 	if (event_cnt >= 0)
 	{
 		wxString buffer;
@@ -70,33 +70,33 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		for(unsigned i = 0; i < m_events.size(); i++)
 		{
 			buffer.Printf(wxT("MIDIDevice%03d"), i + 1);
-			m_events[i].device = cfg.ReadString(group, buffer, 100, false);
+			m_events[i].device = cfg.ReadString(CMBSetting, group, buffer, 100, false);
 			buffer.Printf(wxT("MIDIChannel%03d"), i + 1);
-			m_events[i].channel = cfg.ReadInteger(group, buffer, -1, 16);
+			m_events[i].channel = cfg.ReadInteger(CMBSetting, group, buffer, -1, 16);
 			if (m_type == MIDI_RECV_MANUAL)
 			{
 				buffer.Printf(wxT("MIDIKeyShift%03d"), i + 1);
-				m_events[i].key = cfg.ReadInteger(group, buffer, -35, 35);
+				m_events[i].key = cfg.ReadInteger(CMBSetting, group, buffer, -35, 35);
 				m_events[i].type = MIDI_M_NOTE;
-				m_events[i].low_key = cfg.ReadInteger(group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), 0, 127, false, 0);
-				m_events[i].high_key = cfg.ReadInteger(group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), 0, 127, false, 127);
-				m_events[i].low_velocity = cfg.ReadInteger(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 1);
-				m_events[i].high_velocity = cfg.ReadInteger(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127);
+				m_events[i].low_key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), 0, 127, false, 0);
+				m_events[i].high_key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), 0, 127, false, 127);
+				m_events[i].low_velocity = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 1);
+				m_events[i].high_velocity = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127);
 				continue;
 			}
 			buffer.Printf(wxT("MIDIKey%03d"), i + 1);
-			m_events[i].key = cfg.ReadInteger(group, buffer, 0, 0x200000);
+			m_events[i].key = cfg.ReadInteger(CMBSetting, group, buffer, 0, 0x200000);
 			
 			if (m_type == MIDI_RECV_ENCLOSURE)
 			{
 				m_events[i].type = MIDI_M_CTRL_CHANGE;
-				m_events[i].low_velocity = cfg.ReadInteger(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 0);
-				m_events[i].high_velocity = cfg.ReadInteger(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127);
+				m_events[i].low_velocity = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 0);
+				m_events[i].high_velocity = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127);
 				continue;
 			}
 			
 			buffer.Printf(wxT("MIDIEventType%03d"), i + 1);
-			m_events[i].type = (midi_match_message_type)cfg.ReadEnum(group, buffer, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
+			m_events[i].type = (midi_match_message_type)cfg.ReadEnum(CMBSetting, group, buffer, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 		}
 	}
 	else
@@ -139,7 +139,7 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 		{
 			int what = m_organfile->GetSettings().GetStopChangeEvent();
 			m_events[0].channel = ((what >> 8) & 0xF) + 1;
-			m_events[0].key = cfg.ReadInteger(group, wxT("StopControlMIDIKeyNumber"), -1, 127, false);
+			m_events[0].key = cfg.ReadInteger(UserSetting, group, wxT("StopControlMIDIKeyNumber"), -1, 127, false);
 			if (m_events[0].key == -1)
 			{
 				m_events.resize(0);
@@ -182,7 +182,7 @@ void GOrgueMidiReceiver::Load(IniFileConfig& cfg, wxString group)
 					return;
 				}
 			}
-			m_events[0].key = cfg.ReadInteger(group, wxT("MIDIProgramChangeNumber"), 0, 128, false);
+			m_events[0].key = cfg.ReadInteger(UserSetting, group, wxT("MIDIProgramChangeNumber"), 0, 128, false);
 			if (!m_events[0].key)
 			{
 				m_events.resize(0);

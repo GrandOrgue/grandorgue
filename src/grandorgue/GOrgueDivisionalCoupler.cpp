@@ -36,14 +36,14 @@ void GOrgueDivisionalCoupler::Load(IniFileConfig& cfg, wxString group)
 {
 	wxString buffer;
 
-	m_BiDirectionalCoupling=cfg.ReadBoolean( group,wxT("BiDirectionalCoupling"));
-	unsigned NumberOfManuals=cfg.ReadInteger( group,wxT("NumberOfManuals"),  1, m_organfile->GetManualAndPedalCount() - m_organfile->GetFirstManualIndex() + 1);
+	m_BiDirectionalCoupling=cfg.ReadBoolean(ODFSetting, group,wxT("BiDirectionalCoupling"));
+	unsigned NumberOfManuals=cfg.ReadInteger(ODFSetting, group,wxT("NumberOfManuals"),  1, m_organfile->GetManualAndPedalCount() - m_organfile->GetFirstManualIndex() + 1);
 
 	m_manuals.resize(0);
 	for (unsigned i = 0; i < NumberOfManuals; i++)
 	{
 		buffer.Printf(wxT("Manual%03d"), i + 1);
-		m_manuals.push_back(cfg.ReadInteger(group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount()));
+		m_manuals.push_back(cfg.ReadInteger(ODFSetting, group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount()));
 	}
 	GOrgueDrawstop::Load(cfg, group);
 

@@ -233,14 +233,14 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	wxString group = wxT("Organ");
 
 	/* load church info */
-	m_HauptwerkOrganFileFormatVersion = ini.ReadString(group, wxT("HauptwerkOrganFileFormatVersion"),  256, false);
-	m_ChurchName = ini.ReadString(group, wxT("ChurchName"),  128);
-	m_ChurchAddress = ini.ReadString(group, wxT("ChurchAddress"),  128);
-	m_OrganBuilder = ini.ReadString(group, wxT("OrganBuilder"),  128, false);
-	m_OrganBuildDate = ini.ReadString(group, wxT("OrganBuildDate"),  128, false);
-	m_OrganComments = ini.ReadString(group, wxT("OrganComments"),  256, false);
-	m_RecordingDetails = ini.ReadString(group, wxT("RecordingDetails"),  256, false);
-	m_InfoFilename = ini.ReadString(group, wxT("InfoFilename"),  256, false);
+	m_HauptwerkOrganFileFormatVersion = ini.ReadString(ODFSetting, group, wxT("HauptwerkOrganFileFormatVersion"),  256, false);
+	m_ChurchName = ini.ReadString(ODFSetting, group, wxT("ChurchName"),  128);
+	m_ChurchAddress = ini.ReadString(ODFSetting, group, wxT("ChurchAddress"),  128);
+	m_OrganBuilder = ini.ReadString(ODFSetting, group, wxT("OrganBuilder"),  128, false);
+	m_OrganBuildDate = ini.ReadString(ODFSetting, group, wxT("OrganBuildDate"),  128, false);
+	m_OrganComments = ini.ReadString(ODFSetting, group, wxT("OrganComments"),  256, false);
+	m_RecordingDetails = ini.ReadString(ODFSetting, group, wxT("RecordingDetails"),  256, false);
+	m_InfoFilename = ini.ReadString(ODFSetting, group, wxT("InfoFilename"),  256, false);
 	m_InfoFilename.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
 	wxFileName fn = GetODFFilename();
 	if (m_InfoFilename.IsEmpty())
@@ -253,27 +253,27 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 		m_InfoFilename = wxEmptyString;
 
 	/* load basic organ information */
-	unsigned m_NumberOfManuals = ini.ReadInteger(group, wxT("NumberOfManuals"), 1, 16);
-	m_FirstManual = ini.ReadBoolean(group, wxT("HasPedals")) ? 0 : 1;
-	unsigned m_NumberOfEnclosures = ini.ReadInteger(group, wxT("NumberOfEnclosures"), 0, 6);
-	unsigned m_NumberOfTremulants = ini.ReadInteger(group, wxT("NumberOfTremulants"), 0, 10);
-	unsigned m_NumberOfWindchestGroups = ini.ReadInteger(group, wxT("NumberOfWindchestGroups"), 1, 12);
-	unsigned m_NumberOfReversiblePistons = ini.ReadInteger(group, wxT("NumberOfReversiblePistons"), 0, 32);
-	unsigned m_NumberOfGenerals = ini.ReadInteger(group, wxT("NumberOfGenerals"), 0, 99);
-	unsigned m_NumberOfDivisionalCouplers = ini.ReadInteger(group, wxT("NumberOfDivisionalCouplers"), 0, 8);
-	unsigned m_NumberOfPanels = ini.ReadInteger(group, wxT("NumberOfPanels"), 0, 100, false);
-	m_RankCount = ini.ReadInteger(group, wxT("NumberOfRanks"), 0, 400, false);
+	unsigned m_NumberOfManuals = ini.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 1, 16);
+	m_FirstManual = ini.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
+	unsigned m_NumberOfEnclosures = ini.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 6);
+	unsigned m_NumberOfTremulants = ini.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10);
+	unsigned m_NumberOfWindchestGroups = ini.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 12);
+	unsigned m_NumberOfReversiblePistons = ini.ReadInteger(ODFSetting, group, wxT("NumberOfReversiblePistons"), 0, 32);
+	unsigned m_NumberOfGenerals = ini.ReadInteger(ODFSetting, group, wxT("NumberOfGenerals"), 0, 99);
+	unsigned m_NumberOfDivisionalCouplers = ini.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionalCouplers"), 0, 8);
+	unsigned m_NumberOfPanels = ini.ReadInteger(ODFSetting, group, wxT("NumberOfPanels"), 0, 100, false);
+	m_RankCount = ini.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, 400, false);
 	m_PipeConfig.Load(ini, group, wxEmptyString);
-	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntermanualCouplers"));
-	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(group, wxT("DivisionalsStoreIntramanualCouplers"));
-	m_DivisionalsStoreTremulants = ini.ReadBoolean(group, wxT("DivisionalsStoreTremulants"));
-	m_GeneralsStoreDivisionalCouplers = ini.ReadBoolean(group, wxT("GeneralsStoreDivisionalCouplers"));
-	m_CombinationsStoreNonDisplayedDrawstops = ini.ReadBoolean(group, wxT("CombinationsStoreNonDisplayedDrawstops"));
-	m_volume = ini.ReadInteger(group, wxT("Volume"), -121, 100, false, -121);
+	m_DivisionalsStoreIntermanualCouplers = ini.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntermanualCouplers"));
+	m_DivisionalsStoreIntramanualCouplers = ini.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntramanualCouplers"));
+	m_DivisionalsStoreTremulants = ini.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreTremulants"));
+	m_GeneralsStoreDivisionalCouplers = ini.ReadBoolean(ODFSetting, group, wxT("GeneralsStoreDivisionalCouplers"));
+	m_CombinationsStoreNonDisplayedDrawstops = ini.ReadBoolean(ODFSetting, group, wxT("CombinationsStoreNonDisplayedDrawstops"));
+	m_volume = ini.ReadInteger(CMBSetting, group, wxT("Volume"), -121, 100, false, -121);
 	if (m_volume > 20)
 		m_volume = -121;
-	m_Temperament = ini.ReadString(group, wxT("Temperament"), 256, false);
-	m_IgnorePitch = ini.ReadBoolean(group, wxT("IgnorePitch"), false, false);
+	m_Temperament = ini.ReadString(CMBSetting, group, wxT("Temperament"), 256, false);
+	m_IgnorePitch = ini.ReadBoolean(CMBSetting, group, wxT("IgnorePitch"), false, false);
 
 	wxString buffer;
 
@@ -620,7 +620,7 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 
 		IniFileConfig ini(odf_ini_file);
 
-		wxString church_name = ini.ReadString(wxT("Organ"), wxT("ChurchName"),  128);
+		wxString church_name = ini.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"),  128);
 		if (church_name != m_ChurchName)
 			throw wxString::Format(_("File belongs to a different organ: %s"), church_name.c_str());
 

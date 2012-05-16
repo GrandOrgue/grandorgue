@@ -44,7 +44,7 @@ GOrgueEnclosure::~GOrgueEnclosure()
 void GOrgueEnclosure::Init(IniFileConfig& cfg, wxString group, wxString Name)
 {
 	m_group = group;
-	m_Name = cfg.ReadString(m_group, wxT("Name"), 64, false, Name);
+	m_Name = cfg.ReadString(ODFSetting, m_group, wxT("Name"), 64, false, Name);
 	Set(0);	// default to down
 	m_midi.Load(cfg, m_group);
 }
@@ -52,10 +52,10 @@ void GOrgueEnclosure::Init(IniFileConfig& cfg, wxString group, wxString Name)
 void GOrgueEnclosure::Load(IniFileConfig& cfg, wxString group, int enclosure_nb)
 {
 	m_group = group;
-	m_Name = cfg.ReadString(m_group, wxT("Name"), 64);
-	m_Displayed = cfg.ReadBoolean(m_group, wxT("Displayed"), false, true);
-	m_AmpMinimumLevel = cfg.ReadInteger(m_group, wxT("AmpMinimumLevel"), 0, 100);
-	m_MIDIInputNumber = cfg.ReadInteger(m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
+	m_Name = cfg.ReadString(ODFSetting, m_group, wxT("Name"), 64);
+	m_Displayed = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);
+	m_AmpMinimumLevel = cfg.ReadInteger(ODFSetting, m_group, wxT("AmpMinimumLevel"), 0, 100);
+	m_MIDIInputNumber = cfg.ReadInteger(ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
 	Set(127);	// default to full volume until we receive any messages
 	m_midi.SetIndex(enclosure_nb);
 	m_midi.Load(cfg, m_group);
