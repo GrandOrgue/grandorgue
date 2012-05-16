@@ -953,6 +953,7 @@ Comment lines are started with <emphasis>;</emphasis>.  Empty lines are ignored.
 Various settings are grouped in block. Each block is started with a
 line starting with <emphasis>[</emphasis>, followed by the section name and ended with <emphasis>]</emphasis>.
 Each block consists of list of name-values pairs seperated by <emphasis>=</emphasis>.
+Each setting may only occure once. The content is case sensitive.
  </para>
       <para>
 File paths in this format are relative to the location of the organ
