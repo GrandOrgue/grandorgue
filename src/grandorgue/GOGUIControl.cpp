@@ -22,7 +22,7 @@
 
 #include "GOGUIControl.h"
 #include "GOGUIPanel.h"
-#include "IniFileConfig.h"
+#include "GOrgueConfigReader.h"
 
 GOGUIControl::GOGUIControl(GOGUIPanel* panel,void* control) :
 	m_panel(panel),
@@ -38,7 +38,7 @@ GOGUIControl::~GOGUIControl()
 {
 }
 
-void GOGUIControl::Load(IniFileConfig& cfg, wxString group)
+void GOGUIControl::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_group = group;
 }

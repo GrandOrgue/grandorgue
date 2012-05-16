@@ -36,7 +36,7 @@ protected:
 public:
 	GOGUIImage(GOGUIPanel* panel);
 
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(GOrgueConfigReader& cfg, wxString group);
 
 	void Draw(wxDC* dc);
 };

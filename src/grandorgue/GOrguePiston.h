@@ -26,8 +26,8 @@
 #include "GOrguePushbutton.h"
 
 class GOrgueButton;
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
-class IniFileConfig;
 
 class GOrguePiston : public GOrguePushbutton
 {
@@ -37,7 +37,7 @@ public:
 	GOrgueButton* drawstop;
 
 	GOrguePiston(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 	void Push();
 	void ControlChanged(void* control);

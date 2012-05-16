@@ -21,8 +21,8 @@
  */
 
 #include <wx/fileconf.h>
+#include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
-#include "IniFileConfig.h"
 
 GOrgueConfigWriter::GOrgueConfigWriter(wxFileConfig& cfg, bool prefix) :
 	m_ConfigFile(cfg),

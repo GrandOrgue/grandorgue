@@ -21,12 +21,12 @@
  */
 
 #include "GOGUIEnclosure.h"
-#include "GOrgueEnclosure.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
+#include "GOrgueConfigReader.h"
+#include "GOrgueEnclosure.h"
 #include "MIDIEventDialog.h"
-#include "IniFileConfig.h"
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb):
 	GOGUIControl(panel, control),
@@ -50,7 +50,7 @@ bool GOGUIEnclosure::IsEnclosure(const unsigned nb) const
 	return (m_enclosure_nb == nb);
 }
 
-void GOGUIEnclosure::Load(IniFileConfig& cfg, wxString group)
+void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 

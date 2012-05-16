@@ -20,17 +20,17 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueDrawStop.h"
 #include "GOrgueLCD.h"
-#include "IniFileConfig.h"
 
 GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
 	GOrgueButton(organfile, MIDI_RECV_DRAWSTOP, false)
 {
 }
 
-void GOrgueDrawstop::Load(IniFileConfig& cfg, wxString group, wxString name)
+void GOrgueDrawstop::Load(GOrgueConfigReader& cfg, wxString group, wxString name)
 {
 	m_Engaged = cfg.ReadBoolean(UserSetting, group, wxT("DefaultToEngaged"));
 	GOrgueButton::Load(cfg, group, name);

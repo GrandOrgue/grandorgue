@@ -46,7 +46,7 @@ private:
 public:
 	GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number);
 
-	void Load(IniFileConfig& cfg, wxString group);
+	void Load(GOrgueConfigReader& cfg, wxString group);
 
 	void Draw(wxDC* dc);
 	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);

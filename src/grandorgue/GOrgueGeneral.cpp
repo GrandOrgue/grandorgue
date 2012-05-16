@@ -28,13 +28,13 @@ GOrgueGeneral::GOrgueGeneral(GrandOrgueFile* organfile):
 {
 }
 
-void GOrgueGeneral::Load(IniFileConfig& cfg, wxString group)
+void GOrgueGeneral::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_general.Load(cfg, group);
 	GOrguePushbutton::Load(cfg, group);
 }
 
-void GOrgueGeneral::LoadCombination(IniFileConfig& cfg)
+void GOrgueGeneral::LoadCombination(GOrgueConfigReader& cfg)
 {
 	m_general.LoadCombination(cfg);
 }

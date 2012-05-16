@@ -30,7 +30,7 @@ class GOrgueDrawstop : public GOrgueButton
 {
 public:
 	GOrgueDrawstop(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, wxString name = wxT(""));
+	void Load(GOrgueConfigReader& cfg, wxString group, wxString name = wxT(""));
 	void Save(GOrgueConfigWriter& cfg);
 	virtual void Set(bool on);
 };

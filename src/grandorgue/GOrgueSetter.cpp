@@ -26,6 +26,7 @@
 #include "GOGUIHW1Background.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
@@ -36,7 +37,6 @@
 #include "GOrgueSetterButton.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 #define FRAME_GENERALS 1000
 #define GENERALS 30
@@ -250,7 +250,7 @@ GOrgueSetter::~GOrgueSetter()
 }
 
 
-GOGUIControl* GOrgueSetter::CreateGUIElement(IniFileConfig& cfg, wxString group, GOGUIPanel* panel)
+GOGUIControl* GOrgueSetter::CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel)
 {
 	unsigned element  = cfg.ReadEnum(ODFSetting, group, wxT("Type"), m_setter_element_types, sizeof(m_setter_element_types) / sizeof(m_setter_element_types[0]), true);
 	if (element == ID_SETTER_LABEL)
@@ -277,7 +277,7 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(IniFileConfig& cfg, wxString group,
 	return button;
 }
 
-GOGUIPanel* GOrgueSetter::CreateCouplerPanel(IniFileConfig& cfg, unsigned manual_nr)
+GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned manual_nr)
 {
 	GOGUIControl* control;
 	GOrgueManual* manual = m_organfile->GetManual(manual_nr);
@@ -341,7 +341,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(IniFileConfig& cfg, unsigned manual
 }
 
 
-GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(IniFileConfig& cfg)
+GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(GOrgueConfigReader& cfg)
 {
 	GOGUIControl* control;
 	GOGUIButton* button;
@@ -399,7 +399,7 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(IniFileConfig& cfg)
 	return panel;
 }
 
-GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(IniFileConfig& cfg)
+GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(GOrgueConfigReader& cfg)
 {
 	GOGUIControl* control;
 	GOGUIButton* button;
@@ -441,7 +441,7 @@ GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(IniFileConfig& cfg)
 	return panel;
 }
 
-GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
+GOGUIPanel* GOrgueSetter::CreateSetterPanel(GOrgueConfigReader& cfg)
 {
 	GOGUIControl* control;
 	GOGUIButton* button;
@@ -539,7 +539,7 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(IniFileConfig& cfg)
 	return panel;
 }
 
-GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(IniFileConfig& cfg)
+GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(GOrgueConfigReader& cfg)
 {
 	GOGUIControl* control;
 	GOGUIButton* button;
@@ -610,7 +610,7 @@ GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(IniFileConfig& cfg)
 	return panel;
 }
 
-void GOrgueSetter::Load(IniFileConfig& cfg)
+void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 {
 	wxString buffer;
 
@@ -688,7 +688,7 @@ void GOrgueSetter::Load(IniFileConfig& cfg)
 	}
 }
 
-void GOrgueSetter::LoadCombination(IniFileConfig& cfg)
+void GOrgueSetter::LoadCombination(GOrgueConfigReader& cfg)
 {
 	for (unsigned i = 0; i < m_framegeneral.size(); i++)
 		m_framegeneral[i]->LoadCombination(cfg);

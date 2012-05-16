@@ -20,8 +20,8 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigReader.h"
 #include "GOrgueCoupler.h"
-#include "IniFileConfig.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
 
@@ -78,7 +78,7 @@ const struct IniFileEnumEntry GOrgueCoupler::m_coupler_types[]={
 };
 
 
-void GOrgueCoupler::Load(IniFileConfig& cfg, wxString group, wxString name, bool unison_off, bool recursive, int keyshift, int dest_manual, GOrgueCouplerType coupler_type)
+void GOrgueCoupler::Load(GOrgueConfigReader& cfg, wxString group, wxString name, bool unison_off, bool recursive, int keyshift, int dest_manual, GOrgueCouplerType coupler_type)
 {
 
 	m_UnisonOff                                     = cfg.ReadBoolean(ODFSetting, group, wxT("UnisonOff"), true, unison_off);

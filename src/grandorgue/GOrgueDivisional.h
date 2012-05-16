@@ -26,8 +26,8 @@
 #include <vector>
 #include "GOrguePushbutton.h"
 
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
-class IniFileConfig;
 
 class GOrgueDivisional : public GOrguePushbutton
 {
@@ -44,8 +44,8 @@ public:
 	bool m_Protected;
 
 	GOrgueDivisional(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name = wxT(""));
-	void LoadCombination(IniFileConfig& cfg);
+	void Load(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name = wxT(""));
+	void LoadCombination(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
 	void Push();
 

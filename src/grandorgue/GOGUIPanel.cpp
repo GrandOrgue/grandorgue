@@ -32,6 +32,7 @@
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
@@ -45,7 +46,6 @@
 #include "GrandOrgueFile.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIHW1DisplayMetrics.h"
-#include "IniFileConfig.h"
 #include "Images.h"
 
 GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
@@ -114,7 +114,7 @@ void GOGUIPanel::SetWindow(GOGUIPanelWidget* window)
 }
 
 
-void GOGUIPanel::Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name)
+void GOGUIPanel::Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name)
 {
 	m_metrics = metrics;
 	m_Name = name;
@@ -132,7 +132,7 @@ void GOGUIPanel::Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString
 }
 
 
-void GOGUIPanel::Load(IniFileConfig& cfg, wxString group)
+void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_metrics = new GOGUIHW1DisplayMetrics(cfg, m_organfile, group);
 	m_group = group;

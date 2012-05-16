@@ -21,12 +21,12 @@
  */
 
 #include "GOGUIHW1DisplayMetrics.h"
-#include "IniFileConfig.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
 
-GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(IniFileConfig& ini, GrandOrgueFile* organfile, wxString group) :
+GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, wxString group) :
 	GOGUIDisplayMetrics(organfile, group)
 {
 	bool IsMainPanel = false;

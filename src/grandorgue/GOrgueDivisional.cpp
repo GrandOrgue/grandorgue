@@ -22,7 +22,7 @@
 
 #include "GOrgueDivisional.h"
 
-#include "IniFileConfig.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisionalCoupler.h"
@@ -42,7 +42,7 @@ GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile) :
 {
 }
 
-void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name)
+void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name)
 {
 	m_DivisionalNumber = divisionalNumber;
 	m_ManualNumber = manualNumber;
@@ -55,7 +55,7 @@ void GOrgueDivisional::Load(IniFileConfig& cfg, wxString group, int manualNumber
 	LoadCombination(cfg);
 }
 
-void GOrgueDivisional::LoadCombination(IniFileConfig& cfg)
+void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 {
 	wxString buffer;
 	GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);

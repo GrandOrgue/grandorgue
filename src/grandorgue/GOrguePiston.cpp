@@ -20,14 +20,14 @@
  * MA 02111-1307, USA.
  */
 
-#include "GOrguePiston.h"
-#include "GrandOrgueFile.h"
-#include "GOrgueDrawStop.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueCoupler.h"
-#include "GOrgueStop.h"
+#include "GOrgueDrawStop.h"
 #include "GOrgueManual.h"
+#include "GOrguePiston.h"
+#include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
-#include "IniFileConfig.h"
+#include "GrandOrgueFile.h"
 
 GOrguePiston::GOrguePiston(GrandOrgueFile* organfile) :
 	GOrguePushbutton(organfile),
@@ -35,7 +35,7 @@ GOrguePiston::GOrguePiston(GrandOrgueFile* organfile) :
 {
 }
 
-void GOrguePiston::Load(IniFileConfig& cfg, wxString group)
+void GOrguePiston::Load(GOrgueConfigReader& cfg, wxString group)
 {
 
 	int i, j;

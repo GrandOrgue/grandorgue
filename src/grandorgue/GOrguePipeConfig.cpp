@@ -20,10 +20,10 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrguePipeConfig.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 GOrguePipeConfig::GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback) :
 	m_OrganFile(organfile),
@@ -46,7 +46,7 @@ GOrguePipeConfig::GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCa
 {
 }
 
-void GOrguePipeConfig::Load(IniFileConfig& cfg, wxString group, wxString prefix)
+void GOrguePipeConfig::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	m_Group = group;
 	m_NamePrefix = prefix;

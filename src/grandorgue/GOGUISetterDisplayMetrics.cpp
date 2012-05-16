@@ -21,10 +21,10 @@
  */
 
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOrgueConfigReader.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
-GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(IniFileConfig& ini, GrandOrgueFile* organfile, wxString group, GOGUISetterType type) :
+GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, wxString group, GOGUISetterType type) :
 	GOGUIDisplayMetrics(organfile, group)
 {
 	wxString x_size, y_size;

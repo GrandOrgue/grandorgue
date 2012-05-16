@@ -23,8 +23,8 @@
 #include "GOGUILabel.h"
 #include "GOGUIPanel.h"
 #include "GOGUIDisplayMetrics.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueLabel.h"
-#include "IniFileConfig.h"
 
 GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, unsigned y_pos, wxString name) :
 	GOGUIControl(panel, label),
@@ -43,7 +43,7 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, un
 {
 }
 
-void GOGUILabel::Load(IniFileConfig& cfg, wxString group)
+void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	bool FreeXPlacement = cfg.ReadBoolean(ODFSetting, group, wxT("FreeXPlacement"), false, true);
 	bool FreeYPlacement = cfg.ReadBoolean(ODFSetting, group, wxT("FreeYPlacement"), false, true);

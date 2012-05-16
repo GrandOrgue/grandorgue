@@ -26,9 +26,8 @@
 #include <wx/wx.h>
 #include <vector>
 
-class IniFileConfig;
-class GrandOrgueFile;
 class GOGUIEnclosure;
+class GrandOrgueFile;
 
 class GOGUIDisplayMetrics
 {

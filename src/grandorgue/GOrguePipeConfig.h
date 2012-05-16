@@ -24,9 +24,9 @@
 #define GORGUEPIPECONFIG_H
 
 #include <wx/wx.h>
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GrandOrgueFile;
-class IniFileConfig;
 
 class GOrguePipeUpdateCallback
 {
@@ -61,7 +61,7 @@ private:
 public:
 	GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback);
 
-	void Load(IniFileConfig& cfg, wxString group, wxString prefix);
+	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void Save(GOrgueConfigWriter& cfg);
 
 	float GetAmplitude();

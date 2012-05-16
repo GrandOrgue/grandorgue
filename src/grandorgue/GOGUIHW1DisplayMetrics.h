@@ -25,11 +25,12 @@
 
 #include "GOGUIDisplayMetrics.h"
 
+class GOrgueConfigReader;
+
 class GOGUIHW1DisplayMetrics : public GOGUIDisplayMetrics
 {
 public:
-
-	GOGUIHW1DisplayMetrics(IniFileConfig& ini, GrandOrgueFile* organfile, wxString group);
+	GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, wxString group);
 };
 
 #endif

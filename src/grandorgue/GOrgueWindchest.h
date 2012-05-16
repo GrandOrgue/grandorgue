@@ -25,15 +25,14 @@
 
 #include <vector>
 #include <wx/wx.h>
-#include "IniFileConfig.h"
 
+class GOrgueConfigReader;
 class GOrgueRank;
 class GOrguePipe;
 class GrandOrgueFile;
 
 class GOrgueWindchest
 {
-
 private:
 	GrandOrgueFile* m_organfile;
 	wxString m_Name;
@@ -45,7 +44,7 @@ private:
 public:
 
 	GOrgueWindchest(GrandOrgueFile* organfile);
-	void Load(IniFileConfig& cfg, wxString group, unsigned index);
+	void Load(GOrgueConfigReader& cfg, wxString group, unsigned index);
 	void ControlChanged(void* control);
 	float GetVolume();
 	unsigned GetTremulantCount();

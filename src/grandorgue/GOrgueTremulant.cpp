@@ -20,9 +20,9 @@
  * MA 02111-1307, USA.
  */
 
+#include "GOrgueConfigReader.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 const struct IniFileEnumEntry GOrgueTremulant::m_tremulant_types[]={
 	{ wxT("Synth"), GOSynthTrem },
@@ -75,7 +75,7 @@ wxString GOrgueTremulant::GetLoadTitle()
 	return m_Name;
 }
 
-void GOrgueTremulant::Load(IniFileConfig& cfg, wxString group, int sampler_group_id)
+void GOrgueTremulant::Load(GOrgueConfigReader& cfg, wxString group, int sampler_group_id)
 {
 	m_TremulantType = (GOrgueTremulantType)cfg.ReadEnum(ODFSetting, group, wxT("TremulantType"), m_tremulant_types, sizeof(m_tremulant_types) / sizeof(m_tremulant_types[0]), false, GOSynthTrem);
 	if (m_TremulantType == GOSynthTrem)

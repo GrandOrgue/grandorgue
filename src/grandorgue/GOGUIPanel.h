@@ -30,10 +30,10 @@ class GOGUIControl;
 class GOGUIDisplayMetrics;
 class GOGUIMouseState;
 class GOGUIPanelWidget;
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueButton;
 class GrandOrgueFile;
-class IniFileConfig;
 
 class GOGUIPanel {
 protected:
@@ -52,8 +52,8 @@ protected:
 public:
 	GOGUIPanel(GrandOrgueFile* organfile);
 	virtual ~GOGUIPanel();
-	void Init(IniFileConfig& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name=wxT(""));
-	void Load(IniFileConfig& cfg, wxString group);
+	void Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name=wxT(""));
+	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 
 	GOGUIPanelWidget* GetWindow();

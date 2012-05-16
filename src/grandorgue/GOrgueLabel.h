@@ -25,7 +25,6 @@
 
 #include <wx/wx.h>
 
-class IniFileConfig;
 class GrandOrgueFile;
 
 class GOrgueLabel 

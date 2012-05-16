@@ -25,7 +25,7 @@
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOrgueButton.h"
-#include "IniFileConfig.h"
+#include "GOrgueConfigReader.h"
 #include "MIDIEventDialog.h"
 
 GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston, unsigned x_pos, unsigned y_pos) :
@@ -48,7 +48,7 @@ GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_pisto
 {
 }
 
-void GOGUIButton::Load(IniFileConfig& cfg, wxString group)
+void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 	m_IsPiston = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayAsPiston"), false, m_IsPiston);

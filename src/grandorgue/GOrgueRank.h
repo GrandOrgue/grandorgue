@@ -47,7 +47,7 @@ private:
 public:
 	GOrgueRank(GrandOrgueFile* organfile);
 	~GOrgueRank();
-	void Load(IniFileConfig& cfg, wxString group, int first_midi_note_number);
+	void Load(GOrgueConfigReader& cfg, wxString group, int first_midi_note_number);
 	void Save(GOrgueConfigWriter& cfg);
 	void SetKey(int note, bool on);
 	GOrguePipe* GetPipe(unsigned index);

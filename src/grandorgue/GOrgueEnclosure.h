@@ -26,10 +26,10 @@
 #include "GOrgueMidiReceiver.h"
 #include <wx/wx.h>
 
+class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
-class IniFileConfig;
 
 class GOrgueEnclosure
 {
@@ -47,8 +47,8 @@ public:
 
 	GOrgueEnclosure(GrandOrgueFile* organfile);
 	virtual ~GOrgueEnclosure();
-	void Init(IniFileConfig& cfg, wxString group, wxString Name);
-	void Load(IniFileConfig& cfg, wxString group, int enclosure_nb);
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString Name);
+	void Load(GOrgueConfigReader& cfg, wxString group, int enclosure_nb);
 	void Save(GOrgueConfigWriter& cfg);
 	void Set(int n);
 	void ProcessMidi(const GOrgueMidiEvent& event);

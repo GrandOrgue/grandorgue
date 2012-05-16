@@ -20,10 +20,9 @@
  * MA 02111-1307, USA.
  */
 
-#include <wx/app.h>
+#include "GOrgueConfigReader.h"
 #include "GOrgueEnclosure.h"
 #include "GrandOrgueFile.h"
-#include "IniFileConfig.h"
 
 GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
 	m_group(wxT("---")),
@@ -41,7 +40,7 @@ GOrgueEnclosure::~GOrgueEnclosure()
 {
 }
 
-void GOrgueEnclosure::Init(IniFileConfig& cfg, wxString group, wxString Name)
+void GOrgueEnclosure::Init(GOrgueConfigReader& cfg, wxString group, wxString Name)
 {
 	m_group = group;
 	m_Name = cfg.ReadString(ODFSetting, m_group, wxT("Name"), 64, false, Name);
@@ -49,7 +48,7 @@ void GOrgueEnclosure::Init(IniFileConfig& cfg, wxString group, wxString Name)
 	m_midi.Load(cfg, m_group);
 }
 
-void GOrgueEnclosure::Load(IniFileConfig& cfg, wxString group, int enclosure_nb)
+void GOrgueEnclosure::Load(GOrgueConfigReader& cfg, wxString group, int enclosure_nb)
 {
 	m_group = group;
 	m_Name = cfg.ReadString(ODFSetting, m_group, wxT("Name"), 64);
