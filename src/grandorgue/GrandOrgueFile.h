@@ -26,12 +26,11 @@
 #include <vector>
 #include "ptrvector.h"
 #include <wx/wx.h>
-#include <wx/fileconf.h>
-#include <wx/filename.h>
 #include "GOrgueBitmapCache.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrguePipeConfig.h"
 
+class wxFileConfig;
 class wxProgressDialog;
 
 class GOrgueCache;
@@ -61,7 +60,8 @@ class GrandOrgueFile : public GOrguePipeUpdateCallback
 private:
 
 	OrganDocument* m_doc;
-	wxFileName m_path;
+	wxString m_odf;
+	wxString m_path;
 	wxString m_CacheFilename;
 	wxString m_SettingFilename;
 	GOrgueSetter* m_setter;

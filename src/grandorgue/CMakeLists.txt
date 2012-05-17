@@ -183,6 +183,7 @@ GOrgueMemoryPool.cpp
 GOrgueMidi.cpp
 GOrgueMidiEvent.cpp
 GOrgueMidiReceiver.cpp
+GOrguePath.cpp
 GOrguePipe.cpp
 GOrguePipeConfig.cpp
 GOrguePiston.cpp

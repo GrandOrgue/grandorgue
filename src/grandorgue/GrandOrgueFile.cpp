@@ -23,6 +23,8 @@
 #include "GrandOrgueFile.h"
 
 #include <math.h>
+#include <wx/fileconf.h>
+#include <wx/filename.h>
 #include <wx/progdlg.h>
 #include <wx/stream.h>
 #include <wx/wfstream.h>
@@ -39,6 +41,7 @@
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
 #include "GOrgueManual.h"
+#include "GOrguePath.h"
 #include "GOrguePipe.h"
 #include "GOrguePiston.h"
 #include "GOrguePushbutton.h"
@@ -56,6 +59,7 @@
 
 GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_doc(doc),
+	m_odf(),
 	m_path(),
 	m_CacheFilename(),
 	m_SettingFilename(),
@@ -374,7 +378,7 @@ wxString GrandOrgueFile::GenerateSettingFileName()
 {
 	SHA_CTX ctx;
 	unsigned char hash[20];
-	wxFileName odf(m_path);
+	wxFileName odf(m_odf);
 	odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
 	wxString filename = odf.GetFullPath();
 
@@ -396,7 +400,7 @@ wxString GrandOrgueFile::GenerateCacheFileName()
 {
 	SHA_CTX ctx;
 	unsigned char hash[20];
-	wxFileName odf(m_path);
+	wxFileName odf(m_odf);
 	odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
 	wxString filename = odf.GetFullPath();
 
@@ -426,8 +430,8 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		);
 	dlg.Update (0);
 
-	m_path = file;
-	m_path.MakeAbsolute();
+	m_odf = GONormalizePath(file);
+	m_path = GOGetPath(m_odf);
 	m_SettingFilename = GenerateSettingFileName();
 	m_CacheFilename = GenerateCacheFileName();
 
@@ -1036,12 +1040,12 @@ bool GrandOrgueFile::IsCustomized()
 
 const wxString GrandOrgueFile::GetODFFilename()
 {
-	return m_path.GetFullPath();
+	return m_odf;
 }
 
 const wxString GrandOrgueFile::GetODFPath()
 {
-	return m_path.GetPath();
+	return m_path;
 }
 
 const wxString GrandOrgueFile::GetSettingFilename()

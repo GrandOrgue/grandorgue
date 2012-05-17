@@ -22,6 +22,7 @@
 
 #include "GOrgueSettings.h"
 #include "GOSoundDefs.h"
+#include "GOrguePath.h"
 
 #include <wx/wx.h>
 #include <wx/stdpaths.h>
@@ -399,8 +400,7 @@ void GOrgueSettings::SetUserSettingPath(wxString path)
 	wxFileName file(path);
 	file.MakeAbsolute();
 	path = file.GetFullPath();
-	if (!wxFileName::DirExists(path))
-		wxFileName::Mkdir(path);
+	GOCreateDirectory(path);
 	m_UserSettingPath = path;
 	m_Config.Write(wxT("SettingPath"), m_UserSettingPath);
 }
@@ -419,8 +419,7 @@ void GOrgueSettings::SetUserCachePath(wxString path)
 	wxFileName file(path);
 	file.MakeAbsolute();
 	path = file.GetFullPath();
-	if (!wxFileName::DirExists(path))
-		wxFileName::Mkdir(path);
+	GOCreateDirectory(path);
 	m_UserCachePath = path;
 	m_Config.Write(wxT("CachePath"), m_UserCachePath);
 }
