@@ -39,7 +39,7 @@ private:
 public:
 	IniFileConfig(wxFileConfig& iCfg);
 
-	wxString ReadString(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue);
+	bool GetString(GOSettingType type, wxString group, wxString key, wxString& value);
 };
 
 #endif

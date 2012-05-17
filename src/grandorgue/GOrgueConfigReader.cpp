@@ -30,7 +30,39 @@ GOrgueConfigReader::GOrgueConfigReader(IniFileConfig& cfg) :
 
 wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue)
 {
-	return m_Config.ReadString(type, group, key, nmax, required, defaultValue);
+	wxString value;
+	bool found = false;
+
+	if (group.length() >= 6 && !group.Mid(0, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
+		required = false;
+	if (group.length() >= 5 && !group.Mid(0, 5).CmpNoCase(wxT("Panel")))
+		if (group.length() >= 14 && !group.Mid(8, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
+			required = false;
+	if (group.length() >= 12 && !group.Mid(0, 12).CmpNoCase(wxT("FrameGeneral")))	// FrameGeneral groups aren't required.
+		required = false;
+
+	found = m_Config.GetString(type, group, key, value);
+
+	if (!found)
+	{
+		if (required)
+		{
+			wxString error;
+			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
+			throw error;
+		}
+		else
+			value = defaultValue;
+	}
+
+	value.Trim();
+	if (value.length() > nmax)
+	{
+		wxString error;
+		error.Printf(_("Value too long: '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		throw error;
+	}
+	return value;
 }
 
 wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required)
