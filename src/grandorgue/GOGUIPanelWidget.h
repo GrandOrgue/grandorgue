@@ -57,6 +57,7 @@ public:
 	void OnMouseRightDown(wxMouseEvent& event);
 	void OnMouseScroll(wxMouseEvent& event);
 	void OnKeyCommand(wxKeyEvent& event);
+	void OnKeyUp(wxKeyEvent& event);
 
 	DECLARE_EVENT_TABLE();
 };

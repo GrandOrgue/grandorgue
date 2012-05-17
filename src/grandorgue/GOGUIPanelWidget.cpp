@@ -39,6 +39,7 @@ BEGIN_EVENT_TABLE(GOGUIPanelWidget, wxPanel)
 	EVT_RIGHT_DCLICK(GOGUIPanelWidget::OnMouseRightDown)
 	EVT_MOUSEWHEEL(GOGUIPanelWidget::OnMouseScroll)
 	EVT_KEY_DOWN(GOGUIPanelWidget::OnKeyCommand)
+	EVT_KEY_UP(GOGUIPanelWidget::OnKeyUp)
 END_EVENT_TABLE()
 
 GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, OrganView* view, wxWindowID id) :
@@ -149,7 +150,7 @@ void GOGUIPanelWidget::OnKeyCommand(wxKeyEvent& event)
 	{
 		if (!event.ShiftDown())
 			m_panel->HandleKey(259); /* Disable setter */
-		if (event.ShiftDown())
+		if (event.ShiftDown() || event.GetKeyCode() == WXK_SHIFT)
 			m_panel->HandleKey(260); /* Enable setter */
 
 		k = WXKtoVK(k);
@@ -160,4 +161,12 @@ void GOGUIPanelWidget::OnKeyCommand(wxKeyEvent& event)
 	event.Skip();
 }
 
-
+void GOGUIPanelWidget::OnKeyUp(wxKeyEvent& event)
+{
+	int k = event.GetKeyCode();
+	if (k == WXK_SHIFT)
+		m_panel->HandleKey(259); /* Disable setter */
+	event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+	event.Skip();
+}
+	
