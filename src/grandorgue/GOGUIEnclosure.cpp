@@ -100,8 +100,8 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 	h = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y - 3);
 	m_MouseRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
 
-	m_MouseAxisStart = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectHeight"), 0, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3);
-	m_MouseAxisEnd = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectHeight"), m_MouseAxisStart, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3 * 2);
+	m_MouseAxisStart = cfg.ReadInteger(ODFSetting, group, wxT("MouseAxisStart"), 0, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3);
+	m_MouseAxisEnd = cfg.ReadInteger(ODFSetting, group, wxT("MouseAxisEnd"), m_MouseAxisStart, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3 * 2);
 }
 
 void GOGUIEnclosure::Draw(wxDC* dc)
