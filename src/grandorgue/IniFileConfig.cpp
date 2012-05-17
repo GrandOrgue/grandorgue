@@ -32,10 +32,8 @@ IniFileConfig::IniFileConfig(wxFileConfig& odf_ini_file) :
 
 }
 
-wxString IniFileConfig::ReadString(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue)
+bool IniFileConfig::GetString(GOSettingType type, wxString group, wxString key, wxString& value)
 {
-	wxString value;
-
 	if (group != m_LastGroup)
 	{
 		m_ODFIni.SetPath(wxT("/"));
@@ -45,49 +43,11 @@ wxString IniFileConfig::ReadString(GOSettingType type, wxString group, wxString 
 		m_LastGroup = group;
 	}
 	if (!m_LastGroupExists)
-	{
-		if (group.length() >= 6 && !group.Mid(0, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
-			return defaultValue;
-		if (group.length() >= 5 && !group.Mid(0, 5).CmpNoCase(wxT("Panel")))
-			if (group.length() >= 14 && !group.Mid(8, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
-				return defaultValue;
-
-		if (group.length() >= 12 && !group.Mid(0, 12).CmpNoCase(wxT("FrameGeneral")))	// FrameGeneral groups aren't required.
-			return defaultValue;
-
-		if (required)
-		{
-			wxString error;
-			error.Printf(_("Missing required group '/%s'"), group.c_str());
-			throw error;
-		}
-	}
+		return false;
 
 	if (!m_ODFIni.Read(key, &value))
 	{
-		if (required)
-		{
-			if (group.length() >= 6 && !group.Mid(0, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
-				return defaultValue;
-			if (group.length() >= 5 && !group.Mid(0, 5).CmpNoCase(wxT("Panel")))
-				if (group.length() >= 14 && !group.Mid(8, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
-					return defaultValue;
-
-			wxString error;
-			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
-			throw error;
-		}
-		else
-			return defaultValue;
+		return false;
 	}
-
-	value.Trim();
-	if (value.length() > nmax)
-	{
-		wxString error;
-		error.Printf(_("Value too long: '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
-		throw error;
-	}
-
-	return value;
+	return true;
 }
