@@ -20,9 +20,9 @@
  * MA 02111-1307, USA.
  */
 
-#include <wx/filename.h>
 #include "Images.h"
 #include "GOrgueBitmapCache.h"
+#include "GOrguePath.h"
 #include "GrandOrgueFile.h"
 
 
@@ -133,21 +133,13 @@ wxBitmap* GOrgueBitmapCache::GetBitmap(wxString filename, wxString maskName)
 			return m_Bitmaps[i];
 
 	wxImage image, maskimage;
-	/* Translate directory seperator from ODF(\) to native format */
-	wxString temp = filename;
-	temp.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
-	temp = m_organfile->GetODFPath() + wxFileName::GetPathSeparator() + temp;
 	
-	if (!image.LoadFile(temp, wxBITMAP_TYPE_ANY, -1))
+	if (!image.LoadFile(GOCreateFilename(m_organfile->GetODFPath(), filename), wxBITMAP_TYPE_ANY, -1))
 		throw wxString::Format(_("Failed to open the graphic '%s'"), filename.c_str());
 
 	if (maskName != wxEmptyString)
 	{
-		temp = maskName;
-		temp.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
-		temp = m_organfile->GetODFPath() + wxFileName::GetPathSeparator() + temp;
-
-		if (!maskimage.LoadFile(temp, wxBITMAP_TYPE_ANY, -1))
+		if (!maskimage.LoadFile(GOCreateFilename(m_organfile->GetODFPath(), maskName), wxBITMAP_TYPE_ANY, -1))
 			throw wxString::Format(_("Failed to open the graphic '%s'"), maskName.c_str());
 
 		if (image.GetWidth() != maskimage.GetWidth() ||

@@ -22,8 +22,8 @@
 
 #include "GOSoundProviderWave.h"
 #include "GOrgueMemoryPool.h"
+#include "GOrguePath.h"
 #include "GOrgueWave.h"
-#include <wx/filename.h>
 
 GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool) :
 	GOSoundProvider(pool)
@@ -125,13 +125,8 @@ void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, bool is_
 {
 	wxLogDebug(_("Loading file %s"), filename.c_str());
 
-	/* Translate directory seperator from ODF(\) to native format */
-	wxString temp = filename;
-	temp.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
-	temp = path + wxFileName::GetPathSeparator() + temp;
-
 	GOrgueWave wave;
-	wave.Open(temp);
+	wave.Open(GOCreateFilename(path, filename));
 
 	/* allocate data to work with */
 	unsigned totalDataSize = wave.GetLength() * GetBytesPerSample(bits_per_sample) * wave.GetChannels();

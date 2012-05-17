@@ -23,6 +23,7 @@
 #include "GrandOrgueFrame.h"
 
 #include <algorithm>
+#include <wx/fileconf.h>
 #include <wx/stdpaths.h>
 #include <wx/html/helpctrl.h>
 #include <wx/splash.h>
