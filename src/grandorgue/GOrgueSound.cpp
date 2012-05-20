@@ -559,7 +559,7 @@ GOrgueMidi& GOrgueSound::GetMidi()
 void GOrgueSound::ResetMeters()
 {
 	wxCommandEvent event(wxEVT_METERS, 0);
-	event.SetInt(0);
+	event.SetInt(0xf0000000);
 	if (wxTheApp->GetTopWindow())
 		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 }
@@ -592,13 +592,13 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 		{
 
 			// polyphony
-			int n = (33 * meter_info.current_polyphony) / m_SoundEngine.GetHardPolyphony();
+			int n = 0xff & ((33 * meter_info.current_polyphony) / m_SoundEngine.GetHardPolyphony());
 			n <<= 8;
 			// right channel
-			n |= lrint(32.50000000000001 * meter_info.meter_right);
+			n |= 0xff & (lrint(32.50000000000001 * meter_info.meter_right));
 			n <<= 8;
 			// left  channel
-			n |= lrint(32.50000000000001 * meter_info.meter_left);
+			n |= 0xff & (lrint(32.50000000000001 * meter_info.meter_left));
 
 			wxCommandEvent event(wxEVT_METERS, 0);
 			event.SetInt(n);

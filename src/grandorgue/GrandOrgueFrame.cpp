@@ -379,6 +379,12 @@ void GOrgueFrame::OnMeters(wxCommandEvent& event)
 	m_VolumeLeft->SetValue (n & 0xFF);
 	m_VolumeRight->SetValue((n >> 8) & 0xFF);
 	m_SamplerUsage->SetValue((n >> 16) & 0xFF);
+	if (((n >> 24) & 0xff) == 0xF0)
+	{
+		m_VolumeLeft->ResetClip();
+		m_VolumeRight->ResetClip();
+		m_SamplerUsage->ResetClip();
+	}
 }
 
 void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
