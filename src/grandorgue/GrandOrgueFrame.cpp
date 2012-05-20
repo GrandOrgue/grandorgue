@@ -433,8 +433,6 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
-	if (!IsEnabled())
-		return;
 	m_docManager->CreateDocument(event.GetString(), wxDOC_SILENT);
 }
 
