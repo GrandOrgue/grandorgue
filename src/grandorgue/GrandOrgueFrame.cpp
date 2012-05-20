@@ -632,6 +632,8 @@ void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)
 
 	m_Settings.SetVolume(n);
 	m_Sound.GetEngine().SetVolume(n);
+	m_VolumeLeft->ResetClip();
+	m_VolumeRight->ResetClip();
 }
 
 void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
@@ -640,6 +642,7 @@ void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
 
 	m_Settings.SetPolyphonyLimit(n);
 	m_Sound.GetEngine().SetHardPolyphony(n);
+	m_SamplerUsage->ResetClip();
 }
 
 void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
