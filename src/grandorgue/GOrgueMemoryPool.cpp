@@ -108,19 +108,26 @@ void GOrgueMemoryPool::AddPoolAlloc(void* data)
 
 void* GOrgueMemoryPool::PoolAlloc(size_t length)
 {
+	char* new_ptr;
+
 	if (!m_PoolStart)
 		return NULL;
 	if (!length)
 		length++;
-	if (m_PoolPtr + length < m_PoolEnd)
+
+	new_ptr = m_PoolPtr + length;
+	if (m_PoolPtr <= new_ptr && new_ptr < m_PoolEnd)
 	{
 		void* data = m_PoolPtr;
 		m_PoolPtr += length;
 		m_AllocError = 0;
 		return data;
 	}
+
 	GrowPool(length);
-	if (m_PoolPtr + length < m_PoolEnd)
+
+	new_ptr = m_PoolPtr + length;
+	if (m_PoolPtr <= new_ptr && new_ptr < m_PoolEnd)
 	{
 		void* data = m_PoolPtr;
 		m_PoolPtr += length;
@@ -374,7 +381,7 @@ void GOrgueMemoryPool::GrowPool(size_t length)
 	size_t new_size = m_PoolSize + m_PoolIncrement;
 	while (new_size < m_PoolSize + length)
 		new_size += m_PageSize;
-	if (new_size > m_PoolLimit)
+	if (new_size > m_PoolLimit || new_size < m_PoolSize)
 		new_size = m_PoolLimit;
 	if (m_PoolSize >= m_PoolLimit)
 		return;
@@ -384,7 +391,7 @@ void GOrgueMemoryPool::GrowPool(size_t length)
 	m_PoolSize = new_size;
 #endif	
 #ifdef __WIN32__
-	if (!VirtualAlloc(m_PoolStart, new_size, MEM_COMMIT, PAGE_READWRITE))
+	if (!VirtualAlloc(m_PoolStart + m_PoolSize, new_size - m_PoolSize, MEM_COMMIT, PAGE_READWRITE))
 		return;
 	m_PoolSize = new_size;
 #endif
