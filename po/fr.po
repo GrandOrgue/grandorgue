@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-03-18 15:13+0100\n"
-"PO-Revision-Date: 2012-03-18 15:51+0100\n"
+"POT-Creation-Date: 2012-05-21 23:52+0200\n"
+"PO-Revision-Date: 2012-05-22 00:26+0100\n"
 "Last-Translator: Jean-Luc Derouineau <jeanluc@derouineau.com>\n"
 "Language-Team: French <jeanluc@derouineau.com>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Language: French\n"
 "X-Poedit-Country: FRANCE\n"
@@ -21,12 +21,13 @@ msgstr ""
 msgid " (PA): "
 msgstr " (PA): "
 
-msgid " Out of memory loading"
-msgstr "Dépassement mémoire au chargement"
-
 #, c-format
 msgid "%.3f MB"
 msgstr "%.3f MB"
+
+#, c-format
+msgid "%.3f MB of %.3f MB"
+msgstr "%.3f MB of %.3f MB"
 
 #, c-format
 msgid "%d"
@@ -37,8 +38,20 @@ msgid "%d (%s)"
 msgstr "%d (%s)"
 
 #, c-format
-msgid "%ld ms"
-msgstr "%ld ms"
+msgid "%s - left"
+msgstr "%s - gauche"
+
+#, c-format
+msgid "%s - right"
+msgstr "%s - doite"
+
+#, c-format
+msgid "%s: %f dB"
+msgstr "%s: %f dB"
+
+#, c-format
+msgid "%s: mute"
+msgstr "%s: muet"
 
 msgid "&About"
 msgstr "&Au sujet"
@@ -46,8 +59,8 @@ msgstr "&Au sujet"
 msgid "&Add"
 msgstr "&Ajouter"
 
-msgid "&Audio"
-msgstr "&Audio"
+msgid "&Audio/Midi"
+msgstr "&Audio/Midi"
 
 msgid "&Channel:"
 msgstr "&Canal:"
@@ -70,7 +83,8 @@ msgstr "&Améliorations"
 msgid "&Event:"
 msgstr "&Evènement MIDI:"
 
-msgid "&Export Settings/Combinations..."
+#, fuzzy
+msgid "&Export Settings/Combinations"
 msgstr "&Exporter paramètres et combinaisons"
 
 msgid "&File"
@@ -82,11 +96,18 @@ msgstr "&Aide"
 msgid "&Help\tF1"
 msgstr "&Aide\tF1"
 
-msgid "&Import Settings..."
-msgstr "&Importer paramètres orgue"
+msgid "&Highest key:"
+msgstr "&Note la plus Haute:"
+
+#, fuzzy
+msgid "&Import Settings"
+msgstr "Importer paramètres"
 
 msgid "&Listen for Event"
 msgstr "&Ecouter évènement MIDI"
+
+msgid "&Lowest key:"
+msgstr "&Note la plus basse:"
 
 msgid "&Memory Level"
 msgstr "&Position Mémoire"
@@ -94,7 +115,8 @@ msgstr "&Position Mémoire"
 msgid "&Memory Set\tShift"
 msgstr "&Enregister configuration combinateur\tShift"
 
-msgid "&Open...\tCtrl+O"
+#, fuzzy
+msgid "&Open\tCtrl+O"
 msgstr "&Ouvrir\tCtrl+O"
 
 msgid "&Organ settings"
@@ -112,10 +134,8 @@ msgstr "&Chemins"
 msgid "&Polyphony"
 msgstr "&Polyphonie"
 
-msgid "&Properties..."
-msgstr "&Propriétés orgue"
-
-msgid "&Record...\tCtrl+R"
+#, fuzzy
+msgid "&Record\tCtrl+R"
 msgstr "&Enregistrer sortie audio\tCtrl+R"
 
 msgid "&Reverb"
@@ -126,9 +146,6 @@ msgstr "&Chargement échantillons:"
 
 msgid "&Save\tCtrl+S"
 msgstr "&Sauvegarder paramètres orgue\tCtrl+S"
-
-msgid "&Settings..."
-msgstr "&Paramètres GrandOrgue"
 
 msgid "&Sound Engine"
 msgstr "&Moteur Audio"
@@ -178,6 +195,9 @@ msgstr "-100"
 msgid "000"
 msgstr "000"
 
+msgid "1.4 s"
+msgstr "1.4 s"
+
 msgid "1/4 comma Mean tone"
 msgstr "1/4 comma Mean tone"
 
@@ -195,6 +215,12 @@ msgstr "16 bit PCM"
 
 msgid "16 bits"
 msgstr "16 bits"
+
+msgid "175 ms"
+msgstr "175 ms"
+
+msgid "2.8 s"
+msgstr "2.8 s"
 
 msgid "20 bits"
 msgstr "20 bits"
@@ -214,11 +240,17 @@ msgstr "32 bit PCM"
 msgid "32 bit float"
 msgstr "32 bit float"
 
+msgid "350 ms"
+msgstr "350 ms"
+
 msgid "4"
 msgstr "4"
 
 msgid "64 bit float"
 msgstr "64 bit float"
+
+msgid "700 ms"
+msgstr "700 ms"
 
 msgid "8"
 msgstr "8"
@@ -319,14 +351,17 @@ msgstr "ALSA"
 msgid "ASIO"
 msgstr "ASIO"
 
-msgid "Achieved Latency:"
-msgstr "Retard obtenu:"
-
 msgid "Action"
 msgstr "Action"
 
 msgid "Active polyphony management"
 msgstr "Controle actif de la polyphonie"
+
+msgid "Add new audio device"
+msgstr "Ajouter interface audio"
+
+msgid "Add new audio group"
+msgstr "Ajouter nouveau groupe audio"
 
 msgid "Address"
 msgstr "Adresse"
@@ -373,19 +408,38 @@ msgstr "Appliquer"
 msgid "Attack loading:"
 msgstr "Chargement attaques:"
 
+msgid "Audio Groups"
+msgstr "Groupe Audio"
+
 msgid "Audio Output"
 msgstr "Sortie audio"
-
-msgid "Audio Settings"
-msgstr "Paramètres audio"
 
 #, c-format
 msgid "Audio callback of %u blocks requested. Must be divisible by %u."
 msgstr "%u blocs demandés par l'Audio callback. Il faut un multiple de %u."
 
+msgid "Audio device settings"
+msgstr "Paramètres interface audio"
+
 #, c-format
 msgid "Audio engine wants frame size of %u blocks which is indivisible by %u."
 msgstr "Le moteur Audio nécessite un frame size de %u blocs qui est indivisible par %u."
+
+#, c-format
+msgid "Audio group %d"
+msgstr "Groupe audio: %d"
+
+msgid "Audio group name"
+msgstr "Nom groupe audio"
+
+msgid "Audio group:"
+msgstr "Groupe audio"
+
+msgid "Audio groups"
+msgstr "Groupes audio"
+
+msgid "Audio/Midi &Settings"
+msgstr "&Paramètres Audio/Midi"
 
 msgid "B"
 msgstr "B"
@@ -452,8 +506,21 @@ msgstr "Ecriture impossible d'un stream d'entée"
 msgid "Cannot use buffer size above %d samples; unacceptable quantization would occur."
 msgstr "Impossible d'utiliser une taille de buffer supérieure à %d échantillons; risque de défaut de quantification."
 
+msgid "Change"
+msgstr "Changer"
+
+msgid "Change audio device"
+msgstr "Changer interface audio"
+
+msgid "Change audio group"
+msgstr "Changer groupe audio"
+
 msgid "Channel"
 msgstr "Canal"
+
+#, c-format
+msgid "Channel %d"
+msgstr "Canal %d"
 
 msgid "Channel offset:"
 msgstr "Décalage canal:"
@@ -533,14 +600,20 @@ msgstr "Donnée/Transposition"
 msgid "Default"
 msgstr "Défaut"
 
+msgid "Default audio group"
+msgstr "Groupe audio par défaut"
+
 msgid "Delete"
 msgstr "Effacer"
 
 msgid "Delete &Cache..."
 msgstr "Effacer &Cache"
 
-msgid "Desired &Latency:"
-msgstr "&Retard désiré:"
+msgid "Desired latency:"
+msgstr "Retard désiré:"
+
+msgid "Desired output latency"
+msgstr "Retard sortie désiré:"
 
 #, c-format
 msgid "Device %s wants a different frame count: %d"
@@ -548,6 +621,14 @@ msgstr "L'interface %s nécessite une taille de frame différente: %d"
 
 msgid "Device unavailable"
 msgstr "Interface non disponible"
+
+#, c-format
+msgid "Device: %s"
+msgstr "Interface: %s"
+
+#, c-format
+msgid "Device: %s (%d ms)"
+msgstr "Interface: %s (%d ms)"
 
 msgid "DirectSound"
 msgstr "DirectSound"
@@ -600,8 +681,9 @@ msgstr "Evènement-&Numéro"
 msgid "Export Settings"
 msgstr "Exporter paramètres"
 
-msgid "Failed to create IPC service."
-msgstr "Impossible de créer un service IPC."
+#, c-format
+msgid "Failed to create directory '%s"
+msgstr "Impossible de créer le répertoire '%s"
 
 #, c-format
 msgid "Failed to open file '%s'\n"
@@ -622,6 +704,10 @@ msgstr "Impossible de lire le fichier '%s'\n"
 #, c-format
 msgid "File belongs to a different organ: %s"
 msgstr "Fichier provient d'un autre orgue: %s"
+
+#, c-format
+msgid "Filename '%s' not compatible with case sensitive systems"
+msgstr "Nom de fichier '%s' incompatible avec les systèmes sensibles à la différence majuscule/minuscule"
 
 msgid "First loop"
 msgstr "Première boucle"
@@ -644,8 +730,8 @@ msgstr "Gain invalide"
 msgid "Generals"
 msgstr "Général"
 
-msgid "Help"
-msgstr "Aide"
+msgid "H&ighest velocity:"
+msgstr "Vélocité h&aute:"
 
 msgid "Host API not found"
 msgstr "Hote API non trouvé"
@@ -659,7 +745,7 @@ msgstr "Ignorer information d'accord dans les fichiers d'échantillons"
 msgid "Illegal combination of I/O devices"
 msgstr "Mauvaise combinaison d'interfaces "
 
-msgid "Import &Combinations..."
+msgid "Import &Combinations"
 msgstr "Importer &Combinateurs"
 
 msgid "Import Combinations"
@@ -769,6 +855,9 @@ msgstr "KB"
 msgid "Kirnberger III"
 msgstr "Kirnberger III"
 
+msgid "L&owest velocity:"
+msgstr "Vélocité B&asse:"
+
 #, c-format
 msgid "LCD-1: %s"
 msgstr "LCD-1: %s"
@@ -783,15 +872,15 @@ msgstr "Linéaire"
 msgid "Load &stereo samples in:"
 msgstr "Charger les échantillons en:"
 
-msgid "Load aborted by the user"
-msgstr "Chargement arrêté par l'utilisateur"
+msgid "Load aborted by the user - only parts of the organ are loaded."
+msgstr "Chargement arrêté par utilisateur - orgue incomplètement chargé"
 
 msgid "Load error"
 msgstr "Erreur de chargement"
 
 #, c-format
-msgid "Loading %d%%"
-msgstr "Chargement %d%%"
+msgid "Loading %lu%%"
+msgstr "Chargement %lu%%"
 
 #, c-format
 msgid "Loading file %s"
@@ -857,11 +946,14 @@ msgstr "Manual 6 (Echo)"
 msgid "Mapped memory of the cache"
 msgstr "Mémoire configurée du cache"
 
-msgid "Maximum memory pool size"
-msgstr "Taille maximum mémoire pool"
+msgid "Max"
+msgstr "Max"
 
 msgid "Memory Level"
 msgstr "Position combinateur"
+
+msgid "Memory Limit (MB):"
+msgstr "Limite mémoire (MB):"
 
 msgid "Memory Set"
 msgstr "Enregistrer configuration dans combinateur"
@@ -869,6 +961,16 @@ msgstr "Enregistrer configuration dans combinateur"
 #, c-format
 msgid "Memory mapping of the cache file failed with error code %d"
 msgstr "Faute mappage mémoire du cache avec erreur: %d"
+
+#, c-format
+msgid "Memory pool is full: %llu of %llu used"
+msgstr "Mémoire pool pleine: %llu of %llu utilisé"
+
+msgid "Memory pool size"
+msgstr "Taille mémoire pool"
+
+msgid "Midi & Audio Settings"
+msgstr "Paramètres Midi & Audio"
 
 msgid "Midi-Settings for Button - "
 msgstr "Configuration MIDI pour bouton -"
@@ -886,10 +988,6 @@ msgid "Midi-Settings for Pushbutton - "
 msgstr "Configuration MIDI pour poussoir -"
 
 #, c-format
-msgid "Missing required group '/%s'"
-msgstr "Manque groupe '/%s'"
-
-#, c-format
 msgid "Missing required value '/%s/%s'"
 msgstr "Manque valeur '/%s/%s'"
 
@@ -905,6 +1003,15 @@ msgstr "Mes Orgues"
 msgid "New"
 msgstr "Nouveau"
 
+msgid "New audio device"
+msgstr "Nouvelle interface audio"
+
+msgid "New audio group"
+msgstr "Nouveau groupe audio"
+
+msgid "New audio group name"
+msgstr "Nouveau nom de groupe audio"
+
 msgid "Next"
 msgstr "Suite"
 
@@ -916,9 +1023,6 @@ msgstr "Pas de routine callback spécifièe"
 
 msgid "OSS"
 msgstr "OSS"
-
-msgid "Open"
-msgstr "Ouvrir"
 
 msgid "Open &Recent"
 msgstr "Ouvrir &Récent"
@@ -932,6 +1036,9 @@ msgstr "Options"
 
 msgid "Organ"
 msgstr "Orgue"
+
+msgid "Organ &Properties"
+msgstr "&Propriétés orgue"
 
 msgid "Organ Doc"
 msgstr "Documentation orgue"
@@ -964,9 +1071,6 @@ msgstr "Dépassement mémoire. L'orgue n'est pas complètement chargé. Réduire
 msgid "Out of range value '/%s/%s': %d"
 msgstr "Valeur hors limite '/%s/%s': %d"
 
-msgid "Output Resolution:"
-msgstr "Résolution audio:"
-
 #, c-format
 msgid "Output device %s not found - no sound output will occure"
 msgstr "Interface de sortie %s non trouvée - aucun son ne sera produit"
@@ -989,8 +1093,14 @@ msgstr "Traitement fichier de définition de l'orgue"
 msgid "Please apply changes first"
 msgstr "Entrez des modifications avant de valider!"
 
+msgid "Please enter new volume in dB:"
+msgstr "Entrez le nouveau volume en dB:"
+
 msgid "Polyphase"
 msgstr "Polyphase"
+
+msgid "Polyphase is not supported with lossless compression - falling back to linear."
+msgstr "Poluphase pas supporté avec la compression sans perte - Changement pour Linéaire"
 
 msgid "Polyphony"
 msgstr "Polyphonie"
@@ -1029,9 +1139,6 @@ msgstr "Prêt!"
 msgid "Realloc of non-top element failed"
 msgstr "Réallocation d'un élément non en haut de pile a échoué"
 
-msgid "Record"
-msgstr "Enregistrer"
-
 msgid "Recorder WAV Format:"
 msgstr "Format WAV de l'enregistreur:"
 
@@ -1050,8 +1157,8 @@ msgstr "Chargement lachés note:"
 msgid "Release sample scaling"
 msgstr "Ajustement niveau laché note (staccato)"
 
-msgid "Reload"
-msgstr "Recharger"
+msgid "Rename"
+msgstr "Renomer"
 
 msgid "Reset"
 msgstr "Reset"
@@ -1095,8 +1202,8 @@ msgstr "Fichier de définition de l'orgue"
 msgid "Sample size:"
 msgstr "Taille échantillons:"
 
-msgid "Save"
-msgstr "Sauver"
+msgid "Samples per buffer:"
+msgstr "Echantillions par buffer:"
 
 msgid "Save as"
 msgstr "Sauver en tant que"
@@ -1147,9 +1254,6 @@ msgstr ""
 "prend effet que lorsque l'orgue est rechargé.\n"
 "\n"
 "Recharger l'orgue maintenant?"
-
-msgid "Sound &output device"
-msgstr "Interface de S&ortie"
 
 #, c-format
 msgid "Start of audio stream of %s failed: %s"
@@ -1228,6 +1332,9 @@ msgstr "Interface Utilisateur"
 msgid "Using helpfile %s (search path: %s)"
 msgstr "Utilisation fichier d'aide %s (recherche: %s)"
 
+msgid "Using more than one audio interface is currently not supported."
+msgstr "Using more than one audio interface is currently not supported."
+
 msgid "Valotti"
 msgstr "Valotti"
 
@@ -1291,9 +1398,6 @@ msgstr "buffet non trouvé"
 msgid "licensed under the GNU GPLv2 (or later)"
 msgstr "License GNU GPLv2 (ou ultérieure)"
 
-msgid "ms"
-msgstr "ms"
-
 msgid "none"
 msgstr "n/a"
 
@@ -1313,8 +1417,23 @@ msgstr "Simulateur d'orgue à tuyaux"
 msgid "wave does not contain loops"
 msgstr "Le fichier WAVE ne contient pas de boucles"
 
+#~ msgid " Out of memory loading"
+#~ msgstr "Dépassement mémoire au chargement"
+
+#~ msgid "%ld ms"
+#~ msgstr "%ld ms"
+
+#~ msgid "&Import Settings..."
+#~ msgstr "&Importer paramètres orgue"
+
 #~ msgid "&Organ"
 #~ msgstr "&Orgue"
+
+#~ msgid "&Properties..."
+#~ msgstr "&Propriétés orgue"
+
+#~ msgid "&Settings..."
+#~ msgstr "&Paramètres GrandOrgue"
 
 #~ msgid "44100"
 #~ msgstr "44100"
@@ -1343,6 +1462,9 @@ msgstr "Le fichier WAVE ne contient pas de boucles"
 #~ msgid "< out of memory allocating wave"
 #~ msgstr "< dépassement mémoire en allocation d'un fichier wav"
 
+#~ msgid "Achieved Latency:"
+#~ msgstr "Retard obtenu:"
+
 #~ msgid "Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache."
 #~ msgstr ""
 #~ "Fichier cache érroné (devrait être %#.8x obtenu %#.8x) cache non utilisé"
@@ -1353,11 +1475,26 @@ msgstr "Le fichier WAVE ne contient pas de boucles"
 #~ msgid "Drawstop Trigger"
 #~ msgstr "Déclenchement jeu"
 
+#~ msgid "Failed to create IPC service."
+#~ msgstr "Impossible de créer un service IPC."
+
+#~ msgid "Help"
+#~ msgstr "Aide"
+
+#~ msgid "Import &Combinations..."
+#~ msgstr "Importer &Combinateurs"
+
 #~ msgid "Infinite recursive coupling detected!"
 #~ msgstr "Détection d'un couplage récursif infini"
 
+#~ msgid "Load aborted by the user"
+#~ msgstr "Chargement arrêté par l'utilisateur"
+
 #~ msgid "MIDI Settings"
 #~ msgstr "Configuration MIDI"
+
+#~ msgid "Missing required group '/%s'"
+#~ msgstr "Manque groupe '/%s'"
 
 #~ msgid ""
 #~ "No MIDI devices are selected for listening; neither MIDI input nor sound\n"
@@ -1367,14 +1504,35 @@ msgstr "Le fichier WAVE ne contient pas de boucles"
 #~ "sera\n"
 #~ "généré!"
 
+#~ msgid "Open"
+#~ msgstr "Ouvrir"
+
+#~ msgid "Output Resolution:"
+#~ msgstr "Résolution audio:"
+
 #~ msgid "Pushbutton Trigger"
 #~ msgstr "Déclenchement poussoir"
+
+#~ msgid "Record"
+#~ msgstr "Enregistrer"
 
 #~ msgid "Release sample phase alignment"
 #~ msgstr "Alignement phase laché note"
 
+#~ msgid "Reload"
+#~ msgstr "Recharger"
+
+#~ msgid "Save"
+#~ msgstr "Sauver"
+
+#~ msgid "Sound &output device"
+#~ msgstr "Interface de S&ortie"
+
 #~ msgid "g_sound has not been allocated"
 #~ msgstr "g_sound n'a pas été alloué"
+
+#~ msgid "ms"
+#~ msgstr "ms"
 
 #~ msgid "out of memory"
 #~ msgstr "Dépassement mémoire"
