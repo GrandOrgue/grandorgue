@@ -190,7 +190,6 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	tb->AddTool(ID_VOLUME, _("&Volume"), GetImage_volume(), _("Volume"), wxITEM_NORMAL);
 	m_Volume = new wxSpinCtrl(tb, ID_METER_AUDIO_SPIN, wxEmptyString, wxDefaultPosition, wxSize(50, wxDefaultCoord), wxSP_ARROW_KEYS, -120, 20);
 	tb->AddControl(m_Volume);
-	m_Volume->SetValue(m_Settings.GetVolume());
 
 	{
 		wxControl* control = new wxControl(tb, wxID_ANY);
@@ -207,14 +206,15 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 
 		tb->AddControl(control);
 	}
+	m_Volume->SetValue(m_Settings.GetVolume());
 
 	tb->AddTool(ID_POLYPHONY, _("&Polyphony"), GetImage_polyphony(), _("Polyphony"), wxITEM_NORMAL);
 	m_Polyphony = new wxSpinCtrl(tb, ID_METER_POLY_SPIN, wxEmptyString, wxDefaultPosition, wxSize(56, wxDefaultCoord), wxSP_ARROW_KEYS, 1, 4096);
 	tb->AddControl(m_Polyphony);
-	m_Polyphony->SetValue(m_Settings.GetPolyphonyLimit());
 
 	m_SamplerUsage = new wxGaugeAudio(tb, wxID_ANY, wxDefaultPosition);
 	tb->AddControl(m_SamplerUsage);
+	m_Polyphony->SetValue(m_Settings.GetPolyphonyLimit());
 
 	tb->AddTool(ID_MEMORY, _("&Memory Level"), GetImage_memory(), _("Memory Level"), wxITEM_NORMAL);
 	m_SetterPosition = new wxSpinCtrl(tb, ID_METER_FRAME_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 999);
