@@ -43,7 +43,7 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 END_EVENT_TABLE()
 
 SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
-	wxPropertySheetDialog(win, wxID_ANY, _("Audio Settings"), wxDefaultPosition, wxSize(680,600)),
+	wxPropertySheetDialog(win, wxID_ANY, _("Midi & Audio Settings"), wxDefaultPosition, wxSize(680,600)),
 	m_Sound(sound)
 {
 	CreateButtons(wxOK | wxCANCEL | wxHELP);
@@ -57,12 +57,13 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	m_GroupPage = new SettingsAudioGroup(m_Sound.GetSettings(), notebook);
 	m_OutputPage = new SettingsAudioOutput(m_Sound, *m_GroupPage, notebook);
 
-	notebook->AddPage(m_MidiDevicePage,  _("MIDI Devices"));
 	notebook->AddPage(m_OptionsPage,  _("Options"));
 	notebook->AddPage(m_OutputPage, _("Audio Output"));
 	notebook->AddPage(m_GroupPage, _("Audio Groups"));
-	notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Configuration"));
 	notebook->AddPage(m_OrganPage, _("Organs"));
+	notebook->AddPage(m_MidiDevicePage,  _("MIDI Devices"));
+	notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Configuration"));
+
 }
 
 SettingsDialog::~SettingsDialog()
