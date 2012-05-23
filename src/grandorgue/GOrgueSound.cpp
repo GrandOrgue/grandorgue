@@ -358,12 +358,14 @@ void GOrgueSound::StartStreams()
 
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 	{
+		double latency = 0;
+
 		if (m_AudioOutputs[i].audioDevice)
 		{
 			try
 			{
 				m_AudioOutputs[i].audioDevice->startStream();
-				int actual_latency = m_AudioOutputs[i].audioDevice->getStreamLatency();
+				double actual_latency = m_AudioOutputs[i].audioDevice->getStreamLatency();
 
 				/* getStreamLatency returns zero if not supported by the API, in which
 				 * case we will make a best guess.
@@ -371,7 +373,7 @@ void GOrgueSound::StartStreams()
 				if (actual_latency == 0)
 					actual_latency = m_SamplesPerBuffer * m_AudioOutputs[i].nb_buffers;
 
-				m_Settings.SetAudioDeviceActualLatency(m_AudioOutputs[i].name, (actual_latency * 1000) / GetEngine().GetSampleRate());
+				latency = actual_latency / GetEngine().GetSampleRate();
 			}
 			catch (RtError &e)
 			{
@@ -391,8 +393,13 @@ void GOrgueSound::StartStreams()
 						       wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error))));
 
 			const struct PaStreamInfo* info = Pa_GetStreamInfo(m_AudioOutputs[i].audioStream);
-			m_Settings.SetAudioDeviceActualLatency(m_AudioOutputs[i].name, (int)(info->outputLatency * 1000));
+			latency = info->outputLatency;
 		}
+		if (latency < m_SamplesPerBuffer / GetEngine().GetSampleRate())
+			latency = m_SamplesPerBuffer / GetEngine().GetSampleRate();
+		if (latency < 2 * m_SamplesPerBuffer / GetEngine().GetSampleRate())
+			latency += m_SamplesPerBuffer / GetEngine().GetSampleRate();
+		m_Settings.SetAudioDeviceActualLatency(m_AudioOutputs[i].name, (int)(latency * 1000));
 	}
 
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
