@@ -13,7 +13,7 @@
 	<key>CFBundleVersion</key>
 	<string>@APPLE_VERSION_STR@</string>
 	<key>CFBundleGetInfoString</key>
-	<string>@PROJECT_NAME@ Copyright 2009-2012 GrandOrgue contributors</string>
+	<string>@PROJECT_NAME@ Copyright 2006 Milan Digital Audio LLC, Copyright 2009-2012 GrandOrgue contributors</string>
 	<key>CFBundleIconFile</key>
 	<string>@PROJECT_NAME@.icns</string>
 	<key>CFBundleName</key>
@@ -29,6 +29,6 @@
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright 2009-2012 GrandOrgue contributors</string>
+	<string>Copyright 2006 Milan Digital Audio LLC, Copyright 2009-2012 GrandOrgue contributors</string>
 </dict>
 </plist>
