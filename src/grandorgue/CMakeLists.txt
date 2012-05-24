@@ -257,6 +257,10 @@ if (WIN32)
    add_executable(${PROJECT_NAME} WIN32 GrandOrgue.cpp ${grandorgue_src})
    add_linker_option(${PROJECT_NAME} large-address-aware)
 
+elseif (APPLE)
+
+   add_executable(${PROJECT_NAME} MACOSX_BUNDLE GrandOrgue.cpp ${grandorgue_src})
+
 else ()
 
    add_executable(${PROJECT_NAME} GrandOrgue.cpp ${grandorgue_src})
@@ -266,7 +270,11 @@ endif ()
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} RtAudio RtMidi)
 target_link_libraries(${PROJECT_NAME} ${PORTAUDIO_LIBRARIES})
 
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+if (APPLE)
+   install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ../../.. COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
+else (APPLE)
+   install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+endif ()
 
 if (INSTALL_DEPEND STREQUAL "ON")
   CopyWxTranslations()
