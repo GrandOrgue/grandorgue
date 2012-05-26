@@ -259,7 +259,11 @@ if (WIN32)
 
 elseif (APPLE)
 
+   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resource/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/temp.plist)
+   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.icns ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/${PROJECT_NAME}.icns COPYONLY)
    add_executable(${PROJECT_NAME} MACOSX_BUNDLE GrandOrgue.cpp ${grandorgue_src})
+   set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+   set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/temp.plist)
 
 else ()
 
