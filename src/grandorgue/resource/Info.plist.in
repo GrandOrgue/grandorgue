@@ -30,5 +30,26 @@
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright 2006 Milan Digital Audio LLC, Copyright 2009-2012 GrandOrgue contributors</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>organ</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>@PROJECT_NAME@.icns</string>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>text/plain</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>@PROJECT_NAME@ Organ Definition File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>NSDocumentClass</key>
+			<string>@PROJECT_NAME@ Organ Definition File</string>
+		</dict>
+	</array>
 </dict>
 </plist>
