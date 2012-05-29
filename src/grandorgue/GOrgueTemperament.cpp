@@ -74,11 +74,16 @@ void GOrgueTemperament::InitTemperaments()
 
 	m_Temperaments.push_back(new GOrgueTemperament(wxTRANSLATE("Original temperament")));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Equal temperament"), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
-	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Pythagorean"), -5.87, 7.82, -1.96, -11.74, 1.95, -7.83, 5.86, -3.92, 9.77, 0, -9.78, 3.91));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("1/4 comma Mean tone"), 10.26, -13.69, 3.42, 20.52, -3.43, 13.68, -10.27, 6.84, -17.11, 0, 17.1, -6.85));
-	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Werckmeister III"), 11.73, 1.95, 3.91, 5.87, 1.96, 9.78, 0, 7.82, 3.91, 0, 7.82, 3.91));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Bach (Bradley Lehman)"), +5.9, +3.9, +2, +3.9, -1.9, +7.9, +2, +3.9, +3.9, 0, +3.9, 0));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Chaumont"), 10.265, -13.686, 3.422, 1.174, -3.421, 13.687, -10.264, 6.843, -17.108, 0, 7.43, -6.843));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Corrette (1753)"), 11.73001, -15.64, 3.91001, 7.82001, -3.909996923, 15.64001, -11.73, 7.82001, -11.73, 0, 11.73001, -7.82));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Couperin"), 10.26471, -13.68629, 3.42157, 7.36758, -3.42129, 13.68628, -10.26472, 6.84314, -6.35472, 0, 17.10785, -6.84315));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Kirnberger III"), 10.26, 0.44, 3.42, 4.39, -3.43, 8.3, 0.48, 6.84, 2.44, 0, 6.35, -1.47));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Norden"), 8.211, -6.25601, 2.737, 2.346, -2.737, 10.948, -8.21101, 5.474, -4.30101, 0, 8.993, -5.104));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Pythagorean"), -5.87, 7.82, -1.96, -11.74, 1.95, -7.83, 5.86, -3.92, 9.77, 0, -9.78, 3.91));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Stade"), 10.26471, -8.30972, 3.42157, 0, -3.42129, 8.30971, -10.26472, 6.84314, -6.35472, 0, 6.35471, -6.84315));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Valotti"), 6.13, -0.18, 2.04, 4.26, -2.05, 8.17, -2.14, 4.09, 2.31, 0, 6.22, -4.09));
-	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Bach (Bradley Lehman)"),+5.9, +3.9, +2, +3.9, - 1.9, +7.9, +2, +3.9, +3.9, 0, +3.9, 0));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Werckmeister III"), 11.73, 1.95, 3.91, 5.87, 1.96, 9.78, 0, 7.82, 3.91, 0, 7.82, 3.91));
 }
 
