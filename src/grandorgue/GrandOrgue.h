@@ -36,6 +36,9 @@ class GOrgueSettings;
 
 class GOrgueApp : public wxApp
 {
+private:
+	virtual void MacOpenFile(const wxString &fileName);
+
 protected:
 	GOrgueFrame* m_Frame;
 	wxLocale m_locale;
