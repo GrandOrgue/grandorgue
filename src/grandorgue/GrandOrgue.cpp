@@ -126,16 +126,21 @@ bool GOrgueApp::OnInit()
 	return true;
 }
 
+void GOrgueApp::MacOpenFile(const wxString &filename)
+{
+	AsyncLoadFile(filename);
+}
+
 void GOrgueApp::AsyncLoadFile(wxString what)
 {
-    if (!m_Frame || !m_docManager)
-        return;
-
-    wxFileName fn(what);
-    fn.Normalize();
-    wxCommandEvent event(wxEVT_LOADFILE, 0);
-    event.SetString(fn.GetFullPath());
-    m_Frame->GetEventHandler()->AddPendingEvent(event);
+	if (m_Frame && m_docManager)
+	{
+		wxFileName fn(what);
+		fn.Normalize();
+		wxCommandEvent event(wxEVT_LOADFILE, 0);
+		event.SetString(fn.GetFullPath());
+		m_Frame->GetEventHandler()->AddPendingEvent(event);
+	}
 }
 
 int GOrgueApp::OnRun()
