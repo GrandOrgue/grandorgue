@@ -43,7 +43,7 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 END_EVENT_TABLE()
 
 SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
-	wxPropertySheetDialog(win, wxID_ANY, _("Midi & Audio Settings"), wxDefaultPosition, wxSize(680,600)),
+	wxPropertySheetDialog(win, wxID_ANY, _("Midi & Audio Settings"), wxDefaultPosition, wxSize(740,600)),
 	m_Sound(sound)
 {
 	CreateButtons(wxOK | wxCANCEL | wxHELP);
