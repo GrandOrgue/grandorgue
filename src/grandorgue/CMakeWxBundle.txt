@@ -99,8 +99,13 @@ macro(CopyDependencies target)
    endforeach()
   list(REMOVE_DUPLICATES searchdirs)
 
-  set(DESTINATION_DIR bin)
-  set(BUILD_DIR ${CMAKE_BINARY_DIR}/bin)
+  if (APPLE)
+    set(BUILD_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks)
+    set(DESTINATION_DIR ../Frameworks)
+  else ()
+    set(BUILD_DIR ${CMAKE_BINARY_DIR}/bin)
+    set(DESTINATION_DIR bin)
+  endif ()
 
   get_target_property(targetfile ${target} LOCATION)
 
