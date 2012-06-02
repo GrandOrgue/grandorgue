@@ -124,6 +124,23 @@ endif ()
 
 add_option(mstackrealign)
 
+if (APPLE)
+   # see the following URL for information about these variables
+   # https://developer.apple.com/library/mac/#documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+   set(BUNDLE_CFBundleShortVersionString ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
+   set(BUNDLE_CFBundleVersion ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION})
+   if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+      set(BUNDLE_CFBundleDisplayName "${PROJECT_NAME} ${BUNDLE_CFBundleVersion} Debug")
+   else ()
+      set(BUNDLE_CFBundleDisplayName "${PROJECT_NAME} ${BUNDLE_CFBundleVersion}")
+   endif ()
+
+   set(CPACK_BUNDLE_PLIST ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist)
+   set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
+   set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/src/grandorgue/resource/GrandOrgue.icns)
+   set(CPACK_PACKAGE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/src/grandorgue/resource/GrandOrgue.icns)
+endif ()
+
 # include RtAudio
 add_subdirectory(src/rt lib/rt)
 # include portaudio
@@ -133,18 +150,6 @@ endif()
 add_subdirectory(src/grandorgue bin)
 add_subdirectory(po)
 add_subdirectory(help)
-
-if (APPLE)
-   if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-      set(APPLE_VERSION_STR ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION} Debug)
-   else ()
-      set(APPLE_VERSION_STR ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION})
-   endif ()
-   set(CPACK_BUNDLE_PLIST ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist)
-   set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
-   set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/src/grandorgue/resource/GrandOrgue.icns)
-   set(CPACK_PACKAGE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/src/grandorgue/resource/GrandOrgue.icns)
-endif ()
 
 set(CPACK_PACKAGE_NAME "GrandOrgue")
 set(CPACK_PACKAGE_VENDOR "Our Organ")
