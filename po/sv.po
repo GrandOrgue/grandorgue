@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-05-25 22:21+0200\n"
-"PO-Revision-Date: 2012-05-25 22:54+0100\n"
+"POT-Creation-Date: 2012-06-02 23:51+0200\n"
+"PO-Revision-Date: 2012-06-02 23:53+0100\n"
 "Last-Translator: Lars Palo <lars.palo@yahoo.se>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -518,6 +518,9 @@ msgstr "Kanal %d"
 msgid "Channel offset:"
 msgstr "Kanalförskjutning:"
 
+msgid "Chaumont"
+msgstr "Chaumont"
+
 msgid "Choose a file"
 msgstr "Valj en fil"
 
@@ -552,9 +555,15 @@ msgstr "Kärna"
 msgid "Core Audio"
 msgstr "Core Audio"
 
+msgid "Corrette (1753)"
+msgstr "Corrette (1753)"
+
 #, c-format
 msgid "Could not write to '%s'"
 msgstr "Kunde inte skriva till '%s'"
+
+msgid "Couperin"
+msgstr "Couperin"
 
 msgid "Coupler"
 msgstr "Koppel"
@@ -1014,6 +1023,9 @@ msgstr "Nästa kombination"
 msgid "No callback routine specified"
 msgstr "Ingen callback-rutin är angiven"
 
+msgid "Norden"
+msgstr "Norden"
+
 msgid "OSS"
 msgstr "OSS"
 
@@ -1246,6 +1258,9 @@ msgstr ""
 "Några inställningar kan inte verkställas om inte samplingssamlingen laddas om.\n"
 "\n"
 "Vill du ladda om samplingssamlingen nu?"
+
+msgid "Stade"
+msgstr "Stade"
 
 #, c-format
 msgid "Start of audio stream of %s failed: %s"
