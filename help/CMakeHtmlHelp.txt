@@ -67,12 +67,20 @@ MACRO(BUILD_HELPFILE target target_default xmlfile VARIANT)
     ARGS --filesync ${HELPDIR}/GrandOrgue${VARIANT}.htb * WORKING_DIRECTORY ${BUILDDIR}
     DEPENDS ${_ImgList} ${BUILDDIR}/GrandOrgue.hhp)
 
+  IF (NOT TARGET ${target})
+    IF (${target_default} STREQUAL "YES")
+      ADD_CUSTOM_TARGET(${target} ALL)
+    ELSE()
+      ADD_CUSTOM_TARGET(${target})
+    ENDIF()
+  ENDIF ()
+
   IF (${target_default} STREQUAL "YES")
     INSTALL(FILES ${HELPDIR}/GrandOrgue${VARIANT}.htb DESTINATION ${HELPINSTDIR})
-    ADD_CUSTOM_TARGET(${target} ALL DEPENDS ${HELPDIR}/GrandOrgue${VARIANT}.htb)
-  ELSE()
-    ADD_CUSTOM_TARGET(${target} DEPENDS ${HELPDIR}/GrandOrgue${VARIANT}.htb)
   ENDIF()
+  ADD_CUSTOM_TARGET(build-helpfile${VARIANT} DEPENDS ${HELPDIR}/GrandOrgue${VARIANT}.htb)
+
+  ADD_DEPENDENCIES(${target} build-helpfile${VARIANT})
 ENDMACRO()
 
 MACRO(PO4A_UPDATE_POT target _potFile xmlfile)
