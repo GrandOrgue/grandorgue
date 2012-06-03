@@ -20,51 +20,54 @@
  * MA 02111-1307, USA.
  */
 
-#include <wx/splash.h>
 #include "SplashScreen.h"
 #include "GrandOrgueDef.h"
+#include "Images.h"
 
-#define wxSPLASH_TIMER_ID 9999
+#define GORGUE_SPLASH_TIMER_ID       (9999)
+#define GORGUE_SPLASH_TIMEOUT_LENGTH (3000)
 
-BEGIN_EVENT_TABLE(wxSplashScreenModal, wxDialog)
-    EVT_TIMER(wxSPLASH_TIMER_ID, wxSplashScreenModal::OnNotify)
-    EVT_CLOSE(wxSplashScreenModal::OnCloseWindow)
+BEGIN_EVENT_TABLE(GOrgueSplash, wxDialog)
+	EVT_LEFT_DOWN(GOrgueSplash::OnClick)
+	EVT_PAINT(GOrgueSplash::OnPaint)
+	EVT_TIMER(GORGUE_SPLASH_TIMER_ID, GOrgueSplash::OnNotify)
+	EVT_CLOSE(GOrgueSplash::OnCloseWindow)
 END_EVENT_TABLE()
 
-wxSplashScreenModal::wxSplashScreenModal(const wxBitmap& bmp, long splashStyle, int milliseconds, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style):
-    wxDialog(parent, id, wxEmptyString, wxPoint(0,0), wxSize(100, 100), style)
+void GOrgueSplash::OnPaint(wxPaintEvent& event)
 {
-	wxBitmap bitmap = bmp;
-	m_window = NULL;
-	m_splashStyle = splashStyle;
-	m_milliseconds = milliseconds;
-
-	DrawText(bitmap);
-
-	m_window = new wxSplashScreenWindow(bitmap, this, wxID_ANY, pos, size, wxNO_BORDER);
-
-    SetClientSize(bitmap.GetWidth(), bitmap.GetHeight());
-
-    if (m_splashStyle & wxSPLASH_CENTRE_ON_PARENT)
-        CentreOnParent();
-    else if (m_splashStyle & wxSPLASH_CENTRE_ON_SCREEN)
-        CentreOnScreen();
-
-    if (m_splashStyle & wxSPLASH_TIMEOUT)
-    {
-        m_timer.SetOwner(this, wxSPLASH_TIMER_ID);
-        m_timer.Start(milliseconds, true);
-    }
-
-    Show(true);
-    m_window->SetFocus();
-    Update(); // Without this, you see a blank screen for an instant
-    wxYieldIfNeeded(); // Should eliminate this
+	wxPaintDC dc(this);
+	dc.DrawBitmap(m_Bitmap, 0, 0);
 }
 
-void wxSplashScreenModal::DrawText(wxBitmap& bitmap)
+GOrgueSplash::GOrgueSplash
+	(int                has_timeout
+	,wxWindow          *parent
+	,wxWindowID         id
+	) :
+	wxDialog(parent, id, wxEmptyString, wxPoint(0, 0), wxSize(100, 100), wxSIMPLE_BORDER | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP)
 {
-	wxMemoryDC dc(bitmap);
+	m_Bitmap = GetImage_Splash();
+	DrawText();
+	SetClientSize(m_Bitmap.GetWidth(), m_Bitmap.GetHeight());
+	CentreOnScreen();
+	if (has_timeout)
+	{
+		m_Timer.SetOwner(this, GORGUE_SPLASH_TIMER_ID);
+		m_Timer.Start(GORGUE_SPLASH_TIMEOUT_LENGTH, true);
+		Show(true);
+	}
+	SetFocus();
+	Update();
+	if (!has_timeout)
+	{
+		ShowWindowModal();
+	}
+}
+
+void GOrgueSplash::DrawText()
+{
+	wxMemoryDC dc(m_Bitmap);
 	wxFont font;
 
 	font = *wxNORMAL_FONT;
@@ -93,18 +96,24 @@ void wxSplashScreenModal::DrawText(wxBitmap& bitmap)
 	dc.DrawLabel(msg, wxRect(60, 62, 370, 100), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
 }
 
-wxSplashScreenModal::~wxSplashScreenModal()
+GOrgueSplash::~GOrgueSplash()
 {
-    m_timer.Stop();
+	m_Timer.Stop();
 }
 
-void wxSplashScreenModal::OnNotify(wxTimerEvent& WXUNUSED(event))
+void GOrgueSplash::OnNotify(wxTimerEvent& WXUNUSED(event))
 {
-    Close(true);
+	Close(true);
 }
 
-void wxSplashScreenModal::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
+void GOrgueSplash::OnClick(wxMouseEvent& WXUNUSED(event))
 {
-    m_timer.Stop();
-    this->Destroy();
+	EndModal(0);
 }
+
+void GOrgueSplash::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
+{
+	m_Timer.Stop();
+	this->Destroy();
+}
+
