@@ -677,9 +677,11 @@ void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)
 
 void GOrgueFrame::DoSplash(bool timeout)
 {
-	wxSplashScreenModal* splash = new wxSplashScreenModal(GetImage_Splash(), timeout ? wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_TIMEOUT : wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT, 3000, this, wxID_ANY);
-	if (!timeout)
-		splash->ShowModal();
+	new GOrgueSplash
+		(timeout
+		,this
+		,wxID_ANY
+		);
 }
 
 

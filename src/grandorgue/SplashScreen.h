@@ -25,34 +25,30 @@
 
 #include <wx/wx.h>
 
-class wxSplashScreenWindow;
-
-class wxSplashScreenModal : public wxDialog
+class GOrgueSplash : private wxDialog
 {
+private:
+	wxBitmap m_Bitmap;
+	wxTimer  m_Timer;
+
+	void OnPaint(wxPaintEvent& event);
+	void OnCloseWindow(wxCloseEvent& event);
+	void OnNotify(wxTimerEvent& event);
+	void OnClick(wxMouseEvent& event);
+
+	void DrawText();
+
+	DECLARE_EVENT_TABLE()
+	DECLARE_NO_COPY_CLASS(GOrgueSplash)
+
 public:
-    wxSplashScreenModal(const wxBitmap& bitmap, long splashStyle, int milliseconds,
-                   wxWindow* parent, wxWindowID id,
-                   const wxPoint& pos = wxDefaultPosition,
-                   const wxSize& size = wxDefaultSize,
-                   long style = wxSIMPLE_BORDER|wxFRAME_NO_TASKBAR|wxSTAY_ON_TOP);
-    ~wxSplashScreenModal();
+	GOrgueSplash
+		(int                has_timeout
+		,wxWindow          *parent
+		,wxWindowID         id
+		);
+	~GOrgueSplash();
 
-    void OnCloseWindow(wxCloseEvent& event);
-    void OnNotify(wxTimerEvent& event);
-
-    long GetSplashStyle() const { return m_splashStyle; }
-    wxSplashScreenWindow* GetSplashWindow() const { return m_window; }
-    int GetTimeout() const { return m_milliseconds; }
-    void DrawText(wxBitmap& bitmap);
-
-protected:
-    wxSplashScreenWindow*   m_window;
-    long                    m_splashStyle;
-    int                     m_milliseconds;
-    wxTimer                 m_timer;
-
-    DECLARE_EVENT_TABLE()
-    DECLARE_NO_COPY_CLASS(wxSplashScreenModal)
 };
 
 #endif
