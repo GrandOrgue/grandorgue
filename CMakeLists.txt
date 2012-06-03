@@ -164,6 +164,20 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/license.txt)
 set(CPACK_PACKAGE_CONTACT "ourorgan-developers@lists.sourceforge.net")
 set(CPACK_STRIP_FILES true)
 set(CPACK_PACKAGE_EXECUTABLES "GrandOrgue" "GrandOrgue")
+SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+  WriteRegStr HKCR \\\".organ\\\" \\\"\\\" \\\"GrandOrgue.odf\\\"
+  WriteRegStr HKCR \\\"GrandOrgue.odf\\\" \\\"\\\" \\\"GrandOrgue organ definition file\\\"
+  WriteRegStr HKCR \\\"GrandOrgue.odf\\\\DefaultIcon\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\GrandOrgue.exe,0\\\"
+  WriteRegStr HKCR \\\"GrandOrgue.odf\\\\shell\\\" \\\"\\\" \\\"open\\\"
+  WriteRegStr HKCR \\\"GrandOrgue.odf\\\\shell\\\\open\\\\command\\\" \\\"\\\" '$INSTDIR\\\\bin\\\\GrandOrgue.exe \\\"%1\\\"'
+")
+SET(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
+  ReadRegStr $R0 HKCR \\\".organ\\\" \\\"\\\"
+  StrCmp $R0 \\\"GrandOrgue.odf\\\" 0 +2
+    DeleteRegKey HKCR \\\".organ\\\"
+
+  DeleteRegKey HKCR \\\"GrandOrgue.odf\\\"
+")
 include(CPack)
 
 message(STATUS "  Project                     : ${PROJECT_NAME}")
