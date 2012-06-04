@@ -61,7 +61,7 @@ GOrgueSplash::GOrgueSplash
 	Update();
 	if (!has_timeout)
 	{
-		ShowWindowModal();
+		ShowModal();
 	}
 }
 
