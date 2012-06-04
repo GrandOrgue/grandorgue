@@ -114,7 +114,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_Polyphony(NULL),
 	m_SetterPosition(NULL),
 	m_Volume(NULL),
-	m_TemperamentNames(),
+	m_Temperaments(),
 	m_Sound(sound),
 	m_Settings(sound.GetSettings())
 {
@@ -160,12 +160,31 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	file_menu->Append(wxID_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
 	file_menu->Append(wxID_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
 	
-	
-	m_TemperamentNames = GOrgueTemperament::GetNames();
+	m_Temperaments = GOrgueTemperament::GetTemperaments();
 	wxMenu *temperament_menu = new wxMenu;
-	for(unsigned i = 0; i < m_TemperamentNames.size(); i++)
-		temperament_menu->Append(ID_TEMPERAMENT_0 + i, wxGetTranslation(m_TemperamentNames[i]), wxEmptyString, wxITEM_CHECK);
-	
+	for(unsigned i = 0; i < m_Temperaments.size(); i++)
+	{
+		wxMenu *menu;
+		wxString group = m_Temperaments[i]->GetGroup();
+		if (group == wxEmptyString)
+			menu = temperament_menu;
+		else
+		{
+			menu = NULL;
+			for(unsigned j = 0; j < temperament_menu->GetMenuItemCount(); j++)
+			{
+				wxMenuItem* it = temperament_menu->FindItemByPosition(j);
+				if (it->GetItemLabel() == group && it->GetSubMenu())
+					menu = it->GetSubMenu();
+			}
+			if (!menu)
+			{
+				menu = new wxMenu();
+				temperament_menu->AppendSubMenu(menu, group);
+			}
+		}
+		menu->Append(ID_TEMPERAMENT_0 + i, wxGetTranslation(m_Temperaments[i]->GetName()), wxEmptyString, wxITEM_CHECK);
+	}
 	
 	wxMenu *audio_menu = new wxMenu;
 	audio_menu->AppendSubMenu(temperament_menu, _("&Temperament"));
@@ -401,7 +420,7 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 	if (ID_TEMPERAMENT_0 <= event.GetId() && event.GetId() <= ID_TEMPERAMENT_LAST)
 	{
 		event.Enable(organfile);
-		event.Check(organfile && m_TemperamentNames[event.GetId() - ID_TEMPERAMENT_0] == organfile->GetTemperament());
+		event.Check(organfile && m_Temperaments[event.GetId() - ID_TEMPERAMENT_0]->GetName() == organfile->GetTemperament());
 		return;
 	}
 
@@ -433,7 +452,7 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 	if (!doc)
 		return;
 
-	doc->GetOrganFile()->SetTemperament(m_TemperamentNames[id]);
+	doc->GetOrganFile()->SetTemperament(m_Temperaments[id]->GetName());
 }
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
