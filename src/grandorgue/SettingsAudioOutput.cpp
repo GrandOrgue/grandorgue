@@ -316,7 +316,12 @@ void SettingsAudioOutput::UpdateButtons()
 		else
 			m_Add->Disable();
 		if (m_AudioOutput->GetLastChild(m_AudioOutput->GetItemParent(selection)) == selection)
-			m_Del->Enable();
+		{
+			if (data->channel > 0)
+				m_Del->Enable();
+			else
+				m_Del->Disable();
+		}
 		else
 			m_Del->Disable();
 	}
@@ -388,7 +393,8 @@ void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 		if (index == -1)
 			return;
 		wxMessageBox(_("Using more than one audio interface is currently not supported.") , _("Warning"), wxOK | wxICON_WARNING, NULL);
-		AddDeviceNode(devices[index]);
+		wxTreeItemId audio = AddDeviceNode(devices[index]);
+		AddChannelNode(audio, 0);
 	}
 	UpdateButtons();
 }
