@@ -34,6 +34,7 @@ class wxSpinCtrl;
 class GOrgueMidiEvent;
 class GOrgueSettings;
 class GOrgueSound;
+class GOrgueTemperament;
 class wxChoice;
 
 class GOrgueFrame: public wxDocParentFrame
@@ -48,7 +49,7 @@ class GOrgueFrame: public wxDocParentFrame
 	wxSpinCtrl* m_Polyphony;
 	wxSpinCtrl* m_SetterPosition;
 	wxSpinCtrl* m_Volume;
-	std::vector<wxString> m_TemperamentNames;
+	std::vector<GOrgueTemperament*> m_Temperaments;
 	GOrgueSound& m_Sound;
 	GOrgueSettings& m_Settings;
 

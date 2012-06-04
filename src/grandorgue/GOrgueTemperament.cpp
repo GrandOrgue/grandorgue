@@ -23,7 +23,8 @@
 #include "GOrgueTemperament.h"
 #include "GOrgueTemperamentCent.h"
 
-GOrgueTemperament::GOrgueTemperament(wxString name) :
+GOrgueTemperament::GOrgueTemperament(wxString name, wxString group) :
+	m_Group(group),
 	m_Name(name)
 {
 }
@@ -42,13 +43,18 @@ wxString GOrgueTemperament::GetName() const
 	return m_Name;
 }
 
-std::vector<wxString> GOrgueTemperament::GetNames()
+wxString GOrgueTemperament::GetGroup() const
+{
+	return m_Group;
+}
+
+std::vector<GOrgueTemperament*> GOrgueTemperament::GetTemperaments()
 {
 	InitTemperaments();
 
-	std::vector<wxString> names;
+	std::vector<GOrgueTemperament*> names;
 	for(unsigned i = 0; i < m_Temperaments.size(); i++)
-		names.push_back(m_Temperaments[i]->GetName());
+		names.push_back(m_Temperaments[i]);
 
 	return names;
 }

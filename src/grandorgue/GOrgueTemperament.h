@@ -30,20 +30,22 @@ class GOrgueTemperament
 {
 	DECLARE_NO_COPY_CLASS(GOrgueTemperament)
 protected:
+	wxString m_Group;
 	wxString m_Name;
 
 	static ptr_vector<GOrgueTemperament> m_Temperaments;
 	static void InitTemperaments();
 
 public:
-	GOrgueTemperament(wxString name);
+	GOrgueTemperament(wxString name, wxString group = wxEmptyString);
 	virtual ~GOrgueTemperament();
 
 	virtual float GetOffset(bool ignorepitch, unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const;
 	wxString GetName() const;
+	wxString GetGroup() const;
 
 	static const GOrgueTemperament& GetTemperament(wxString Name);
-	static std::vector<wxString> GetNames();
+	static std::vector<GOrgueTemperament*> GetTemperaments();
 };
 
 #endif
