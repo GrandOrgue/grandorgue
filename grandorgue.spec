@@ -23,6 +23,9 @@ Epoch:          0
 Source:         grandorgue-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
+Requires(post):    shared-mime-info desktop-file-utils
+Requires(postun):  shared-mime-info desktop-file-utils
+
 %description
  GrandOrgue is a virtual pipe organ sample player application supporting
  a HW1 compatible file format.
@@ -56,8 +59,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/GrandOrgue
 %{_datadir}/applications/*
 %{_datadir}/pixmaps/*
+%{_datadir}/mime/packages/*
 %{_datadir}/locale/*/LC_MESSAGES/*
 
+%post
+%mime_database_post
+%desktop_database_post
+
+%postun
+%mime_database_postun
+%desktop_database_postun
 
 %changelog
 * Tue Nov 15 2011 - martin.koegler@chello.at

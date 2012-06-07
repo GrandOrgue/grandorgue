@@ -98,6 +98,7 @@ CHECK_INCLUDE_FILE_CXX(atomic HAVE_ATOMIC)
 if(UNIX AND NOT APPLE)
   install(FILES GrandOrgue.desktop DESTINATION share/applications)
   install(FILES GrandOrgue.png DESTINATION share/pixmaps)
+  install(FILES grandorgue.xml DESTINATION share/mime/packages)
 endif()
 
 # setup compiler flags for debug vs release compiles
