@@ -10,6 +10,7 @@ BuildRequires:  cmake
 BuildRequires:  wxWidgets-devel
 BuildRequires:  gettext-tools
 BuildRequires:  docbook-xsl-stylesheets 
+BuildRequires:  update-desktop-files
 %else
 BuildRequires:  wxGTK-devel
 BuildRequires:  gettext
