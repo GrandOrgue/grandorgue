@@ -61,6 +61,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/*
 %{_datadir}/mime/packages/*
 %{_datadir}/locale/*/LC_MESSAGES/*
+%{_mandir}/man1/*
 
 %post
 %mime_database_post
