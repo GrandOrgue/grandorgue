@@ -23,6 +23,36 @@
 -->
   <title>GrandOrgue Help</title>
   <titleabbrev>GrandOrgue</titleabbrev>
+  <bookinfo>
+    <copyright>
+      <year>2006</year>
+      <holder>Milan Digital Audio LLC</holder>
+    </copyright>
+    <copyright>
+      <year>2009-2012</year>
+      <holder>GrandOrgue contributors (see AUTHORS)</holder>
+    </copyright>
+    <legalnotice>
+      <title>License</title>
+      <para>
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+      </para>
+      <para>
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+      </para>
+      <para>
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+      </para>
+    </legalnotice>
+  </bookinfo>
   <chapter>
     <title>Welcome</title>
     <para>
@@ -4264,32 +4294,5 @@ Initial release of this new branch of virtual pipe organ based on
         </listitem>
       </itemizedlist>
     </sect1>
-  </chapter>
-  <chapter>
-    <title>License</title>
-    <para>
-GrandOrgue - free pipe organ simulator
-    </para>
-    <para>
-Copyright 2006 Milan Digital Audio LLC
-Copyright 2009-2012 GrandOrgue contributors (see AUTHORS)
-    </para>
-    <para>
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
-    </para>
-    <para>
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-    </para>
-    <para>
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-    </para>
   </chapter>
 </book>
