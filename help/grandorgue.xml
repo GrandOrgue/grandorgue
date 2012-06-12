@@ -3619,6 +3619,34 @@ the release. -1 means use from the wave file.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Pipe999LoopCount</term>
+          <listitem>
+            <para>
+(int 0 - 100, default: 0) Allows to override the loops in the WAV file.
+0 means use loops from the wave file.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Loop999Start</term>
+          <listitem>
+            <para>
+(int 0 - 158760000, default: 0) Start sample of the loop.  The value
+must be within the WAV file.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Loop999End</term>
+          <listitem>
+            <para>
+(int Pipe999Loop999Start + 1 - 158760000, required if Pipe999LoopCount
+is not zero) End sample of the loop.  The value must be within the WAV
+file.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Pipe999HarmonicNumber</term>
           <listitem>
             <para>
@@ -3697,6 +3725,34 @@ release sample is choosen. -1 means infinite.
             <para>
 (int -1 - 158760000, default: -1) Allows to override the cue point for
 the release. -1 means use from the wave file.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Attack999LoopCount</term>
+          <listitem>
+            <para>
+(int 0 - 100, default: 0) Allows to override the loops in the WAV file.
+0 means use loops from the wave file.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Attack999Loop999Start</term>
+          <listitem>
+            <para>
+(int 0 - 158760000, default: 0) Start sample of the loop.  The value
+must be within the WAV file.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Attack999Loop999End</term>
+          <listitem>
+            <para>
+(int Pipe999Loop999Start + 1 - 158760000, required if Pipe999LoopCount
+is not zero) End sample of the loop.  The value must be within the WAV
+file.
 	    </para>
           </listitem>
         </varlistentry>
