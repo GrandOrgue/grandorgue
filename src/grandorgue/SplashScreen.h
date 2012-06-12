@@ -24,18 +24,30 @@
 
 #include <wx/wx.h>
 
-class GOrgueSplash : private wxDialog
+class GOrgueSplashBitmap : public wxControl
 {
 private:
 	wxBitmap m_Bitmap;
-	wxTimer  m_Timer;
 
 	void OnPaint(wxPaintEvent& event);
+	void OnClick(wxMouseEvent& event);
+	void OnKey(wxKeyEvent& event);
+	DECLARE_EVENT_TABLE()
+
+public:
+	GOrgueSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap);
+};
+
+class GOrgueSplash : private wxDialog
+{
+private:
+	GOrgueSplashBitmap* m_Image;
+	wxTimer  m_Timer;
+
 	void OnCloseWindow(wxCloseEvent& event);
 	void OnNotify(wxTimerEvent& event);
-	void OnClick(wxMouseEvent& event);
 
-	void DrawText();
+	void DrawText(wxBitmap& bitmap);
 
 	DECLARE_EVENT_TABLE()
 	DECLARE_NO_COPY_CLASS(GOrgueSplash)
