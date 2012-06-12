@@ -23,32 +23,54 @@
 #include "GrandOrgueDef.h"
 #include "Images.h"
 
-#define GORGUE_SPLASH_TIMER_ID       (9999)
-#define GORGUE_SPLASH_TIMEOUT_LENGTH (3000)
-
-BEGIN_EVENT_TABLE(GOrgueSplash, wxDialog)
-	EVT_LEFT_DOWN(GOrgueSplash::OnClick)
-	EVT_PAINT(GOrgueSplash::OnPaint)
-	EVT_TIMER(GORGUE_SPLASH_TIMER_ID, GOrgueSplash::OnNotify)
-	EVT_CLOSE(GOrgueSplash::OnCloseWindow)
+BEGIN_EVENT_TABLE(GOrgueSplashBitmap, wxControl)
+	EVT_PAINT(GOrgueSplashBitmap::OnPaint)
+	EVT_LEFT_DOWN(GOrgueSplashBitmap::OnClick)
+	EVT_KEY_DOWN(GOrgueSplashBitmap::OnKey)
 END_EVENT_TABLE()
 
-void GOrgueSplash::OnPaint(wxPaintEvent& event)
+
+GOrgueSplashBitmap::GOrgueSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap) :
+wxControl(parent, id, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE),
+	m_Bitmap(bitmap)
+{
+}
+
+void GOrgueSplashBitmap::OnPaint(wxPaintEvent& event)
 {
 	wxPaintDC dc(this);
 	dc.DrawBitmap(m_Bitmap, 0, 0);
 }
+
+void GOrgueSplashBitmap::OnClick(wxMouseEvent& event)
+{
+	GetParent()->Close(true);
+}
+
+void GOrgueSplashBitmap::OnKey(wxKeyEvent& event)
+{
+	GetParent()->Close(true);
+}
+
+#define GORGUE_SPLASH_TIMER_ID       (9999)
+#define GORGUE_SPLASH_TIMEOUT_LENGTH (3000)
+
+BEGIN_EVENT_TABLE(GOrgueSplash, wxDialog)
+	EVT_TIMER(GORGUE_SPLASH_TIMER_ID, GOrgueSplash::OnNotify)
+	EVT_CLOSE(GOrgueSplash::OnCloseWindow)
+END_EVENT_TABLE()
 
 GOrgueSplash::GOrgueSplash
 	(int                has_timeout
 	,wxWindow          *parent
 	,wxWindowID         id
 	) :
-	wxDialog(parent, id, wxEmptyString, wxPoint(0, 0), wxSize(100, 100), wxSIMPLE_BORDER | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP)
+	wxDialog(parent, id, wxEmptyString, wxPoint(0, 0), wxSize(100, 100), wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP)
 {
-	m_Bitmap = GetImage_Splash();
-	DrawText();
-	SetClientSize(m_Bitmap.GetWidth(), m_Bitmap.GetHeight());
+	wxBitmap bitmap = GetImage_Splash();
+	DrawText(bitmap);
+	m_Image = new GOrgueSplashBitmap(this, wxID_ANY, bitmap);
+	SetClientSize(bitmap.GetWidth(), bitmap.GetHeight());
 	CentreOnScreen();
 	if (has_timeout)
 	{
@@ -56,7 +78,7 @@ GOrgueSplash::GOrgueSplash
 		m_Timer.Start(GORGUE_SPLASH_TIMEOUT_LENGTH, true);
 		Show(true);
 	}
-	SetFocus();
+	m_Image->SetFocus();
 	Update();
 	if (!has_timeout)
 	{
@@ -64,9 +86,9 @@ GOrgueSplash::GOrgueSplash
 	}
 }
 
-void GOrgueSplash::DrawText()
+void GOrgueSplash::DrawText(wxBitmap& bitmap)
 {
-	wxMemoryDC dc(m_Bitmap);
+	wxMemoryDC dc(bitmap);
 	wxFont font;
 
 	font = *wxNORMAL_FONT;
@@ -103,11 +125,6 @@ GOrgueSplash::~GOrgueSplash()
 void GOrgueSplash::OnNotify(wxTimerEvent& WXUNUSED(event))
 {
 	Close(true);
-}
-
-void GOrgueSplash::OnClick(wxMouseEvent& WXUNUSED(event))
-{
-	EndModal(0);
 }
 
 void GOrgueSplash::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
