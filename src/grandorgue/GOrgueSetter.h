@@ -75,6 +75,7 @@ public:
 	GOGUIPanel* CreateSetterPanel(GOrgueConfigReader& cfg);
 	GOGUIPanel* CreateCrescendoPanel(GOrgueConfigReader& cfg);
 	GOGUIPanel* CreateDivisionalPanel(GOrgueConfigReader& cfg);
+	GOGUIPanel* CreateFloatingPanel(GOrgueConfigReader& cfg);
 	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
 
 	void Load(GOrgueConfigReader& cfg);

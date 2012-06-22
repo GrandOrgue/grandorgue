@@ -293,6 +293,8 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
 		m_manual.push_back(new GOrgueManual(this));
 	m_ODFManualCount = m_NumberOfManuals + 1;
+	for(unsigned int i = 0; i < 4; i++)
+		m_manual.push_back(new GOrgueManual(this));
 
 	m_enclosure.resize(0);
 	for (unsigned i = 0; i < m_NumberOfEnclosures; i++)
@@ -328,6 +330,18 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 		buffer.Printf(wxT("Manual%03d"), i);
 		m_manual[i]->Load(cfg, buffer, i);
 	}
+
+	unsigned min_key = 0xff, max_key = 0;
+	for(unsigned i = GetFirstManualIndex(); i < GetODFManualCount(); i++)
+	{
+		GOrgueManual* manual = GetManual(i);
+		if ((unsigned)manual->GetFirstLogicalKeyMIDINoteNumber() < min_key)
+			min_key = manual->GetFirstLogicalKeyMIDINoteNumber();
+		if (manual->GetFirstLogicalKeyMIDINoteNumber() + manual->GetLogicalKeyCount() > max_key)
+			max_key = manual->GetFirstLogicalKeyMIDINoteNumber() + manual->GetLogicalKeyCount();
+	}
+	for (unsigned i = GetODFManualCount(); i <= GetManualAndPedalCount(); i++)
+		GetManual(i)->Init(cfg, wxString::Format(wxT("SetterFloating%03d"), i - GetODFManualCount() + 1), i, min_key, max_key - min_key);
 
 	m_piston.resize(0);
 	for (unsigned i = 0; i < m_NumberOfReversiblePistons; i++)
@@ -367,12 +381,16 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 		m_panels[i + 1]->Load(cfg, buffer);
 	}
 
-	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+	for (unsigned i = m_FirstManual; i <= m_NumberOfManuals; i++)
 		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
 	m_panels.push_back(m_setter->CreateCrescendoPanel(cfg));
 	m_panels.push_back(m_setter->CreateDivisionalPanel(cfg));
 	m_panels.push_back(m_setter->CreateGeneralsPanel(cfg));
 	m_panels.push_back(m_setter->CreateSetterPanel(cfg));
+
+	for (unsigned i = m_ODFManualCount; i < m_manual.size(); i++)
+		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
+	m_panels.push_back(m_setter->CreateFloatingPanel(cfg));
 }
 
 wxString GrandOrgueFile::GenerateSettingFileName()

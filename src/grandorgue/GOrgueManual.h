@@ -70,6 +70,7 @@ private:
 public:
 
 	GOrgueManual(GrandOrgueFile* organfile);
+	void Init(GOrgueConfigReader& cfg, wxString group, int manualNumber, unsigned first_midi, unsigned keys);
 	void Load(GOrgueConfigReader& cfg, wxString group, int manualNumber);
 	void LoadCombination(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);

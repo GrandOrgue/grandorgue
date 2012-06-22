@@ -49,6 +49,30 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 
 }
 
+void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumber, unsigned first_midi, unsigned keys)
+{
+	m_group = group;
+	m_name = wxString::Format(_("Floating %d"), manualNumber - m_organfile->GetODFManualCount() + 1);
+	m_nb_logical_keys = keys;
+	m_first_accessible_logical_key_nb  = 1;
+	m_first_accessible_key_midi_note_nb = first_midi;
+	m_nb_accessible_keys = keys;
+	m_MIDIInputNumber = 0;
+	m_displayed = false;
+	m_manual_number = manualNumber;
+
+	m_stops.resize(0);
+	m_couplers.resize(0);
+	m_tremulant_ids.resize(0);
+	m_divisionals.resize(0);
+	m_midi.Load(cfg, group);
+
+	m_KeyState.resize(m_nb_logical_keys);
+	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
+	m_KeyPressed.resize(m_nb_accessible_keys);
+	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
+}
+
 void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumber)
 {
 	m_group = group;

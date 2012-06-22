@@ -22,6 +22,8 @@
 #include "GOGUIButton.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUILabel.h"
+#include "GOGUIManual.h"
+#include "GOGUIManualBackground.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
@@ -274,6 +276,45 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(GOrgueConfigReader& cfg, wxString g
 	GOGUIButton* button = new GOGUIButton(panel, m_button[element], false, 1, 1);
 	button->Load(cfg, group);
 	return button;
+}
+
+GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
+{
+	GOGUIControl* control;
+
+	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterFloating"), GOGUI_SETTER_FLOATING);
+	panel->Init(cfg, metrics, _("Floating manuals"), wxT("SetterFloating"), _(""));
+
+	control = new GOGUIHW1Background(panel);
+	panel->AddControl(control);
+
+	for (unsigned i = m_organfile->GetODFManualCount(); i <= m_organfile->GetManualAndPedalCount(); i++)
+	{
+		wxString group;
+		group.Printf(wxT("SetterFloating%03d"), i - m_organfile->GetODFManualCount() + 1);
+		control = new GOGUIManualBackground(panel, i - m_organfile->GetODFManualCount());
+		control->Load(cfg, group);
+		panel->AddControl(control);
+
+		control = new GOGUIManual(panel, m_organfile->GetManual(i), i - m_organfile->GetODFManualCount());
+		control->Load(cfg, group);
+		panel->AddControl(control);
+
+		for(unsigned j = 0; j < 10; j++)
+		{
+			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile);
+			divisional->Load(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
+			m_organfile->GetManual(i)->AddDivisional(divisional);
+
+			control = new GOGUIButton(panel, divisional, true, j + 1, i - m_organfile->GetODFManualCount());
+			control->Load(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100));
+			panel->AddControl(control);
+		}
+
+	}
+
+	return panel;
 }
 
 GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned manual_nr)
