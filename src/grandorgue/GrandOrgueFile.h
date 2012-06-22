@@ -92,6 +92,7 @@ private:
 	wxString m_RecordingDetails;
 	wxString m_InfoFilename;
 	unsigned m_RankCount;
+	unsigned m_ODFManualCount;
 
 	ptr_vector<GOrgueEnclosure> m_enclosure;
 	ptr_vector<GOrgueTremulant> m_tremulant;
@@ -140,6 +141,7 @@ public:
 
 	/* Access to internal ODF objects */
 	unsigned GetManualAndPedalCount();
+	unsigned GetODFManualCount();
 	unsigned GetFirstManualIndex();
 	GOrgueManual* GetManual(unsigned index);
 	unsigned GetTremulantCount();

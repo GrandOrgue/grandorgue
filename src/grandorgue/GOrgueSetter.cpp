@@ -288,7 +288,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 	control = new GOGUIHW1Background(panel);
 	panel->AddControl(control);
 
-	for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
+	for (unsigned int i = m_organfile->GetFirstManualIndex(); i < m_organfile->GetODFManualCount(); i++)
 	{
 		int x, y;
 		GOrgueManual* dest_manual = m_organfile->GetManual(i);
@@ -372,7 +372,7 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(GOrgueConfigReader& cfg)
 	button->Load(cfg, wxT("SetterGeneralsFull"));
 	panel->AddControl(button);
 
-	for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
+	for (unsigned int i = m_organfile->GetFirstManualIndex(); i < m_organfile->GetODFManualCount(); i++)
 	{
 		int x, y;
 		GOrgueManual* manual = m_organfile->GetManual(i);

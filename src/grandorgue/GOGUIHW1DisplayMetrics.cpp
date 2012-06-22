@@ -45,7 +45,7 @@ GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, GrandOrg
 			if (organfile->GetEnclosure(i)->IsDisplayed())
 				m_nb_enclosures++;
 	}
-	m_nb_manuals    = ini.ReadInteger(ODFSetting, m_group, wxT("NumberOfManuals"), IsMainPanel ? 1 : 0, organfile->GetManualAndPedalCount());
+	m_nb_manuals    = ini.ReadInteger(ODFSetting, m_group, wxT("NumberOfManuals"), IsMainPanel ? 1 : 0, organfile->GetODFManualCount() - 1);
 	m_first_manual  = ini.ReadBoolean(ODFSetting, m_group, wxT("HasPedals")) ? 0 : 1;
 	if (m_first_manual < organfile->GetFirstManualIndex())
 		m_first_manual = organfile->GetFirstManualIndex();
@@ -63,7 +63,7 @@ GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, GrandOrg
 			{
 				wxString Buffer;
 				buffer.Printf(wxT("Manual%03d"), i);
-				manual_nb  = ini.ReadInteger(ODFSetting, m_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+				manual_nb  = ini.ReadInteger(ODFSetting, m_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetODFManualCount() - 1);
 			}
 			man.first_accessible_key_midi_note_nb = m_organfile->GetManual(manual_nb)->GetFirstAccessibleKeyMIDINoteNumber();
 			man.nb_accessible_keys                = m_organfile->GetManual(manual_nb)->GetNumberOfAccessibleKeys();
