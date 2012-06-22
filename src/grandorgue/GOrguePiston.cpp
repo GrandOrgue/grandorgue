@@ -43,13 +43,13 @@ void GOrguePiston::Load(GOrgueConfigReader& cfg, wxString group)
 
 	if (type == wxT("STOP"))
 	{
-		i = cfg.ReadInteger(ODFSetting, group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+		i = cfg.ReadInteger(ODFSetting, group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetODFManualCount() - 1);
 		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetStopCount()) - 1;
 		drawstop = m_organfile->GetManual(i)->GetStop(j);
 	}
 	if (type == wxT("COUPLER"))
 	{
-		i = cfg.ReadInteger(ODFSetting, group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+		i = cfg.ReadInteger(ODFSetting, group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetODFManualCount() - 1);
 		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetCouplerCount()) - 1;
 		drawstop = m_organfile->GetManual(i)->GetCoupler(j);
 	}

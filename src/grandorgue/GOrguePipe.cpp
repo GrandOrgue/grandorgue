@@ -332,7 +332,7 @@ bool GOrguePipe::InitializeReference()
 	{
 		unsigned manual, stop, pipe;
 		wxSscanf(m_Filename.Mid(4), wxT("%d:%d:%d"), &manual, &stop, &pipe);
-		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual > m_OrganFile->GetManualAndPedalCount()) ||
+		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual >= m_OrganFile->GetODFManualCount()) ||
 			(stop <= 0) || (stop > m_OrganFile->GetManual(manual)->GetStopCount()) ||
 		    (pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank(0)->GetPipeCount()))
 			throw (wxString)_("Invalid reference ") + m_Filename;

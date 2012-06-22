@@ -82,6 +82,7 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_RecordingDetails(),
 	m_InfoFilename(),
 	m_RankCount(0),
+	m_ODFManualCount(0),
 	m_enclosure(0),
 	m_tremulant(0),
 	m_windchest(0),
@@ -291,6 +292,7 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_manual.resize(m_FirstManual); // Add empty slot for pedal, if necessary
 	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
 		m_manual.push_back(new GOrgueManual(this));
+	m_ODFManualCount = m_NumberOfManuals + 1;
 
 	m_enclosure.resize(0);
 	for (unsigned i = 0; i < m_NumberOfEnclosures; i++)
@@ -839,6 +841,11 @@ bool GrandOrgueFile::GetIgnorePitch()
 unsigned GrandOrgueFile::GetFirstManualIndex()
 {
 	return m_FirstManual;
+}
+
+unsigned GrandOrgueFile::GetODFManualCount()
+{
+	return m_ODFManualCount;
 }
 
 unsigned GrandOrgueFile::GetManualAndPedalCount()

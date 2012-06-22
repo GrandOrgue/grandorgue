@@ -52,17 +52,17 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 
 	case GOGUI_SETTER_DIVISIONALS:
 		x_size = wxT("600");
-		y_size = wxString::Format(wxT("%d"), 40 * (organfile->GetManualAndPedalCount() + 1) + 140);
+		y_size = wxString::Format(wxT("%d"), 40 * organfile->GetODFManualCount() + 140);
 		drawstop_rows = 1;
 		drawstop_cols = 7;
 		button_cols = 13;
-		button_rows = organfile->GetManualAndPedalCount() + 1;
+		button_rows = organfile->GetODFManualCount();
 		break;
 
 	case GOGUI_SETTER_COUPLER:
 		x_size = wxT("500");
-		y_size = wxString::Format(wxT("%d"), 20 + 80 * (organfile->GetManualAndPedalCount() + 1));;
-		drawstop_rows = organfile->GetManualAndPedalCount() + 1;
+		y_size = wxString::Format(wxT("%d"), 20 + 80 * organfile->GetODFManualCount());
+		drawstop_rows = organfile->GetODFManualCount();
 		drawstop_cols = 6;
 		button_cols = 10;
 		button_rows = 0;
