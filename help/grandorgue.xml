@@ -1794,7 +1794,7 @@ extra piston block.
           <term>DispPedalHeight</term>
           <listitem>
             <para>
-(integer 1-150, default: 40) Pedal height used for layout calculation
+(integer 1-500, default: 40) Pedal height used for layout calculation
 	    </para>
           </listitem>
         </varlistentry>
@@ -1802,7 +1802,7 @@ extra piston block.
           <term>DispPedalKeyWidth</term>
           <listitem>
             <para>
-(integer 1-150, default: 7) Width of one pedal key used for layout calculation
+(integer 1-500, default: 7) Width of one pedal key used for layout calculation
 	    </para>
           </listitem>
         </varlistentry>
@@ -1810,7 +1810,7 @@ extra piston block.
           <term>DispManualHeight</term>
           <listitem>
             <para>
-(integer 1-150, default: 32) Manual height used for layout calculation
+(integer 1-500, default: 32) Manual height used for layout calculation
 	    </para>
           </listitem>
         </varlistentry>
@@ -1818,7 +1818,7 @@ extra piston block.
           <term>DispManualKeyWidth</term>
           <listitem>
             <para>
-(integer 1-150, default: 12) Width of one manual key used for layout calculation
+(integer 1-500, default: 12) Width of one manual key used for layout calculation
 	    </para>
           </listitem>
         </varlistentry>
@@ -2544,7 +2544,7 @@ Off bitmap. If empty, no external mask is loaded.
           <term>Width_<emphasis>KEYTYPE</emphasis></term>
           <listitem>
             <para>
-(integer 0 - 50, default: implementation dependend) This value is
+(integer 0 - 500, default: implementation dependend) This value is
 added to the x position of the current key to determine the position
 of the next key.
 	    </para>
@@ -2554,7 +2554,7 @@ of the next key.
           <term>Offset_<emphasis>KEYTYPE</emphasis></term>
           <listitem>
             <para>
-(integer -50 - 50, default: implementation dependend) This value is
+(integer -500 - 500, default: implementation dependend) This value is
 can be used to adjust the display of the current key, eg. to place a
 sharp key overlapped with the previous key.
 	    </para>
@@ -2600,7 +2600,7 @@ Allows to set the off mask for the 999 key.
           <term>Key999Width</term>
           <listitem>
             <para>
-(integer 0 - 50, default: corresponding
+(integer 0 - 500, default: corresponding
 Width_<emphasis>KEYTYPE</emphasis>) Allows to set the width of the 999
 key.
 	    </para>
@@ -2610,7 +2610,7 @@ key.
           <term>Key999Offset</term>
           <listitem>
             <para>
-(integer -50 - 50, default: corresponding
+(integer -500 - 500, default: corresponding
 Offset_<emphasis>KEYTYPE</emphasis>) Allows to set the width of the
 999 key.
 	    </para>
