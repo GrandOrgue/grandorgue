@@ -105,10 +105,10 @@ GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, GrandOrg
 	m_ButtonHeight = ini.ReadInteger(ODFSetting, m_group, wxT("DispPistonHeight"), 1, 150, false, 40),
 	m_EnclosureWidth = ini.ReadInteger(ODFSetting, m_group, wxT("DispEnclosureWidth"), 1, 150, false, 52),
 	m_EnclosureHeight = ini.ReadInteger(ODFSetting, m_group, wxT("DispEnclosureHeight"), 1, 150, false, 63),
-	m_PedalHeight = ini.ReadInteger(ODFSetting, m_group, wxT("DispPedalHeight"), 1, 150, false, 40),
-	m_PedalKeyWidth = ini.ReadInteger(ODFSetting, m_group, wxT("DispPedalKeyWidth"), 1, 150, false, 7),
-	m_ManualHeight = ini.ReadInteger(ODFSetting, m_group, wxT("DispManualHeight"), 1, 150, false, 32),
-	m_ManualKeyWidth = ini.ReadInteger(ODFSetting, m_group, wxT("DispManualKeyWidth"), 1, 150, false, 12),
+	m_PedalHeight = ini.ReadInteger(ODFSetting, m_group, wxT("DispPedalHeight"), 1, 500, false, 40),
+	m_PedalKeyWidth = ini.ReadInteger(ODFSetting, m_group, wxT("DispPedalKeyWidth"), 1, 500, false, 7),
+	m_ManualHeight = ini.ReadInteger(ODFSetting, m_group, wxT("DispManualHeight"), 1, 500, false, 32),
+	m_ManualKeyWidth = ini.ReadInteger(ODFSetting, m_group, wxT("DispManualKeyWidth"), 1, 500, false, 12),
 
 	Update();
 }

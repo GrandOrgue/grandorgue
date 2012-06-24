@@ -151,11 +151,11 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 			key_width += m_Keys[i - 1].Rect.GetWidth();
 		}
 
-		key_width = cfg.ReadInteger(ODFSetting, group, wxT("Width_") + base, 0, 50, false, key_width);
-		key_offset = cfg.ReadInteger(ODFSetting, group, wxT("Offset_") + base, -50, 50, false, key_offset);
+		key_width = cfg.ReadInteger(ODFSetting, group, wxT("Width_") + base, 0, 500, false, key_width);
+		key_offset = cfg.ReadInteger(ODFSetting, group, wxT("Offset_") + base, -500, 500, false, key_offset);
 
-		key_width = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dWidth"), i + 1), 0, 50, false, key_width);
-		key_offset = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dOffset"), i + 1), -50, 50, false, key_offset);
+		key_width = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dWidth"), i + 1), 0, 500, false, key_width);
+		key_offset = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dOffset"), i + 1), -500, 500, false, key_offset);
 
 		m_Keys[i].Rect = wxRect(x + key_offset, y, m_Keys[i].OnBitmap->GetWidth(), m_Keys[i].OnBitmap->GetHeight());
 		if (height < m_Keys[i].OnBitmap->GetHeight())
