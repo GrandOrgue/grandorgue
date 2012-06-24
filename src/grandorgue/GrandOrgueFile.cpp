@@ -248,12 +248,15 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	m_OrganComments = cfg.ReadString(ODFSetting, group, wxT("OrganComments"),  256, false);
 	m_RecordingDetails = cfg.ReadString(ODFSetting, group, wxT("RecordingDetails"),  256, false);
 	m_InfoFilename = cfg.ReadString(ODFSetting, group, wxT("InfoFilename"),  256, false);
-	m_InfoFilename.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
-	wxFileName fn = GetODFFilename();
+	wxFileName fn;
 	if (m_InfoFilename.IsEmpty())
+	{
+		/* Resolve organ file path */
+		fn = GetODFFilename();
 		fn.SetExt(wxT(".html"));
+	}
 	else
-		fn.SetFullName(m_InfoFilename);
+		fn = GOCreateFilename(m_path, m_InfoFilename);
 	if (fn.FileExists())
 		m_InfoFilename = fn.GetFullPath();
 	else
