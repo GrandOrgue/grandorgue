@@ -1995,7 +1995,7 @@ top pixel of the enclosure
           <term>MouseRectLeft</term>
           <listitem>
             <para>
-(integer 0 - Width, default: 0) relative X of left core of the mouse
+(integer 0 - Width, default: 0) relative X of left border of the mouse
 rectangle
 	    </para>
           </listitem>
@@ -2005,7 +2005,7 @@ rectangle
           <listitem>
             <para>
 (integer 0 - Height, default: implemtation dependend) relative Y of
-left core of the mouse rectangle
+top border of the mouse rectangle
 	    </para>
           </listitem>
         </varlistentry>
@@ -2048,7 +2048,7 @@ dependend) bottom Y coordinate of the axis
           <term>TextRectLeft</term>
           <listitem>
             <para>
-(integer 0 - Height, default: 0) relative X of left core of the text
+(integer 0 - Height, default: 0) relative X of left border of the text
 rectangle
 	    </para>
           </listitem>
@@ -2058,7 +2058,7 @@ rectangle
           <listitem>
             <para>
 (integer 0 - Height, default: implementation dependend) relative Y of
-left core of the text rectangle
+top border of the text rectangle
 	    </para>
           </listitem>
         </varlistentry>
@@ -2617,6 +2617,41 @@ Offset_<emphasis>KEYTYPE</emphasis>) Allows to set the width of the
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Key999MouseRectLeft</term>
+          <listitem>
+            <para>
+(integer 0 - key bitmap width - 1 , default: 0) relative X of left border of the mouse
+rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Key999MouseRectTop</term>
+          <listitem>
+            <para>
+(integer 0 - key bitmap height - 1, default: 0) relative Y of top border
+of the mouse rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Key999MouseRectWidth</term>
+          <listitem>
+            <para>
+(integer 0 - key bitmap width, default: key bitmap width) width of the mouse rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Key999MouseRectHeight</term>
+          <listitem>
+            <para>
+(integer 0 - key bitmap height, default: key bitmap height) height of the
+mouse rectangle
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>DispKeyColourInverted</term>
           <listitem>
             <para>
@@ -2824,7 +2859,7 @@ top pixel of the button
           <term>TextRectLeft</term>
           <listitem>
             <para>
-(integer 0 - Height, default: 0) relative X of left core of the text
+(integer 0 - Height, default: 0) relative X of left border of the text
 rectangle
 	    </para>
           </listitem>
@@ -2833,7 +2868,7 @@ rectangle
           <term>TextRectTop</term>
           <listitem>
             <para>
-(integer 0 - Height, default: 0) relative Y of left core of the text
+(integer 0 - Height, default: 0) relative Y of top border of the text
 rectangle
 	    </para>
           </listitem>
@@ -3211,7 +3246,7 @@ top pixel of the button
           <term>MouseRectLeft</term>
           <listitem>
             <para>
-(integer 0 - Width, default: 0) relative X of left core of the mouse
+(integer 0 - Width, default: 0) relative X of left border of the mouse
 rectangle
 	    </para>
           </listitem>
@@ -3220,7 +3255,7 @@ rectangle
           <term>MouseRectTop</term>
           <listitem>
             <para>
-(integer 0 - Height, default: 0) relative Y of left core of the mouse
+(integer 0 - Height, default: 0) relative Y of top border of the mouse
 rectangle
 	    </para>
           </listitem>
@@ -3256,7 +3291,7 @@ circle of the specified size too.
           <term>TextRectLeft</term>
           <listitem>
             <para>
-(integer 0 - Height, default: 0) relative X of left core of the text
+(integer 0 - Height, default: 0) relative X of left border of the text
 rectangle
 	    </para>
           </listitem>
@@ -3265,7 +3300,7 @@ rectangle
           <term>TextRectTop</term>
           <listitem>
             <para>
-(integer 0 - Height, default: 0) relative Y of left core of the text
+(integer 0 - Height, default: 0) relative Y of top border of the text
 rectangle
 	    </para>
           </listitem>

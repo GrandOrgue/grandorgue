@@ -158,6 +158,13 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		key_offset = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dOffset"), i + 1), -500, 500, false, key_offset);
 
 		m_Keys[i].Rect = wxRect(x + key_offset, y, m_Keys[i].OnBitmap->GetWidth(), m_Keys[i].OnBitmap->GetHeight());
+
+		unsigned mouse_x = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dMouseRectLeft"), i + 1), 0, m_Keys[i].Rect.GetWidth() - 1, false, 0);
+		unsigned mouse_y = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dMouseRectTop"), i + 1),  0, m_Keys[i].Rect.GetHeight() - 1, false, 0);
+		unsigned mouse_w = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dMouseRectWidth"), i + 1),  1, m_Keys[i].Rect.GetWidth() - mouse_x, false, m_Keys[i].Rect.GetWidth() - mouse_x);
+		unsigned mouse_h = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dMouseRectHeight"), i + 1),  1, m_Keys[i].Rect.GetHeight() - mouse_y, false, m_Keys[i].Rect.GetHeight() - mouse_y);
+		m_Keys[i].MouseRect = wxRect(m_Keys[i].Rect.GetX() + mouse_x, m_Keys[i].Rect.GetY() + mouse_y, mouse_w, mouse_h);
+
 		if (height < m_Keys[i].OnBitmap->GetHeight())
 			height = m_Keys[i].OnBitmap->GetHeight();
 		x += key_width;
@@ -174,6 +181,8 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 	{
 		m_Keys[i].Rect.SetX(m_Keys[i].Rect.GetX() + x);
 		m_Keys[i].Rect.SetY(m_Keys[i].Rect.GetY() + y);
+		m_Keys[i].MouseRect.SetX(m_Keys[i].MouseRect.GetX() + x);
+		m_Keys[i].MouseRect.SetY(m_Keys[i].MouseRect.GetY() + y);
 	}
 
 	m_BoundingRect = wxRect(x, y, width, height);
@@ -210,9 +219,9 @@ void GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	{
 		for(unsigned i = 0; i < m_Keys.size(); i++)
 		{
-			if (m_Keys[i].Rect.Contains(x, y))
+			if (m_Keys[i].MouseRect.Contains(x, y))
 			{
-				if (i + 1 < m_Keys.size() && m_Keys[i + 1].IsSharp && m_Keys[i + 1].Rect.Contains(x, y))
+				if (i + 1 < m_Keys.size() && m_Keys[i + 1].IsSharp && m_Keys[i + 1].MouseRect.Contains(x, y))
 					continue;
 				if (state.GetControl() == this && state.GetIndex() == i)
 					return;
