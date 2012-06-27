@@ -3353,6 +3353,15 @@ additional non-GUI properties:
 	    </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>GCState</term>
+          <listitem>
+            <para>
+(integer -1 - 1, default: implementation defined) State of the button
+after pressing GC. -1 means don't change, 0 off and 1 on.
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>

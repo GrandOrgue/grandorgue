@@ -27,11 +27,13 @@
 
 class GOrgueDrawstop : public GOrgueButton
 {
+	int m_GCState;
 public:
 	GOrgueDrawstop(GrandOrgueFile* organfile);
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString name = wxT(""));
 	void Save(GOrgueConfigWriter& cfg);
 	virtual void Set(bool on);
+	void Reset();
 };
 
 #endif

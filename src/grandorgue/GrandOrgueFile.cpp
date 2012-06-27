@@ -1183,9 +1183,9 @@ void GrandOrgueFile::Reset()
         for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
 		GetManual(k)->Reset();
         for (unsigned l = 0; l < GetTremulantCount(); l++)
-		GetTremulant(l)->Set(false);
+		GetTremulant(l)->Reset();
         for (unsigned j = 0; j < GetDivisionalCouplerCount(); j++)
-		     GetDivisionalCoupler(j)->Set(false);
+		GetDivisionalCoupler(j)->Reset();
         for (unsigned k = 0; k < GetGeneralCount(); k++)
 		GetGeneral(k)->Display(false);
 	m_setter->ResetDisplay();
