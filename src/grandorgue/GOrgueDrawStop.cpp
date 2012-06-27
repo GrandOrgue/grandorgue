@@ -25,13 +25,15 @@
 #include "GOrgueLCD.h"
 
 GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
-	GOrgueButton(organfile, MIDI_RECV_DRAWSTOP, false)
+	GOrgueButton(organfile, MIDI_RECV_DRAWSTOP, false),
+	m_GCState(0)
 {
 }
 
 void GOrgueDrawstop::Load(GOrgueConfigReader& cfg, wxString group, wxString name)
 {
 	m_Engaged = cfg.ReadBoolean(UserSetting, group, wxT("DefaultToEngaged"));
+	m_GCState = cfg.ReadInteger(ODFSetting, group, wxT("GCState"), -1, 1, false, 0);
 	GOrgueButton::Load(cfg, group, name);
 }
 
@@ -49,3 +51,9 @@ void GOrgueDrawstop::Set(bool on)
 	GOrgueLCD_WriteLineTwo(GetName(), 2000);
 }
 
+void GOrgueDrawstop::Reset()
+{
+	if (m_GCState < 0)
+		return;
+	Set(m_GCState > 0 ? true : false);
+}
