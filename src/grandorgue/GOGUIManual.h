@@ -34,6 +34,7 @@ private:
 		unsigned MidiNumber;
 		bool IsSharp;
 		wxRect Rect;
+		wxRect MouseRect;
 		wxBitmap* OnBitmap;
 		wxBitmap* OffBitmap;
 	} KeyInfo;
