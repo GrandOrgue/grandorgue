@@ -23,30 +23,85 @@
 #include "IniFileConfig.h"
 #include <wx/fileconf.h>
 
-IniFileConfig::IniFileConfig(wxFileConfig& odf_ini_file) :
-	m_ODFIni (odf_ini_file),
-	m_LastGroup(),
-	m_LastGroupExists(true)
+IniFileConfig::IniFileConfig()
 {
-
 }
+
+bool IniFileConfig::ReadData(wxFileConfig& ODF, GOSettingType type, bool handle_prefix)
+{
+	wxString group;
+	long group_it;
+	bool group_cont = ODF.GetFirstGroup(group, group_it);
+	bool changed = false;
+	while (group_cont)
+	{
+		if (!handle_prefix || group.StartsWith(wxT("_")))
+		{
+			ODF.SetPath(wxT('/') + group);
+			if (handle_prefix)
+				group = group.Mid(1);
+			wxString key;
+			long key_it;
+			bool key_cont = ODF.GetFirstEntry(key, key_it);
+			while (key_cont)
+			{
+				if (type == ODFSetting)
+				{
+					AddEntry(m_ODF, group + wxT('/') + key, ODF.Read(key));
+					AddEntry(m_ODF_LC, (group + wxT('/') + key).Lower(), ODF.Read(key));
+				}
+				else
+					AddEntry(m_CMB, group + wxT('/') + key, ODF.Read(key));
+				changed = true;
+				key_cont = ODF.GetNextEntry(key, key_it);
+			}
+			ODF.SetPath(wxT("/"));
+		}
+		group_cont = ODF.GetNextGroup(group, group_it);
+	}
+	ODF.SetPath(wxT('/'));
+	return changed;
+}
+
+void IniFileConfig::AddEntry(GOStringHashMap& hash, wxString key, wxString value)
+{
+	GOStringHashMap::iterator i = hash.find(key);
+	if (i != hash.end())
+		wxLogWarning(_("Dupplicate entry: %s"), key.c_str());
+	hash[key] = value;
+}
+
 
 bool IniFileConfig::GetString(GOSettingType type, wxString group, wxString key, wxString& value)
 {
-	if (group != m_LastGroup)
+	if (type == UserSetting || type == CMBSetting)
 	{
-		m_ODFIni.SetPath(wxT("/"));
-		m_LastGroupExists = m_ODFIni.HasGroup(group);
-		if (m_LastGroupExists)
-			m_ODFIni.SetPath(wxT("/") + group);
-		m_LastGroup = group;
+		GOStringHashMap::iterator i = m_CMB.find(group + wxT("/") + key);
+		if (i != m_CMB.end())
+		{
+			value = i->second;
+			return true;
+		}
 	}
-	if (!m_LastGroupExists)
-		return false;
 
-	if (!m_ODFIni.Read(key, &value))
+	if (type == UserSetting || type == ODFSetting)
 	{
-		return false;
+		GOStringHashMap::iterator i = m_ODF.find(group + wxT("/") + key);
+		if (i != m_ODF.end())
+		{
+			value = i->second;
+			return true;
+		}
 	}
-	return true;
+	if (type == UserSetting || type == ODFSetting)
+	{
+		GOStringHashMap::iterator i = m_ODF_LC.find((group + wxT("/") + key).Lower());
+		if (i != m_ODF.end())
+		{
+			wxLogWarning(_("Incorrect case for '/%s/%s'"), group.c_str(), key.c_str());
+			value = i->second;
+			return true;
+		}
+	}
+	return false;
 }

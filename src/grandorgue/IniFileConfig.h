@@ -31,12 +31,17 @@ class wxFileConfig;
 class IniFileConfig
 {
 private:
-	wxFileConfig& m_ODFIni;
-	wxString m_LastGroup;
-	bool m_LastGroupExists;
+	WX_DECLARE_STRING_HASH_MAP( wxString, GOStringHashMap );
+
+	GOStringHashMap m_ODF;
+	GOStringHashMap m_ODF_LC;
+	GOStringHashMap m_CMB;
+
+	void AddEntry(GOStringHashMap& hash, wxString key, wxString value);
 
 public:
-	IniFileConfig(wxFileConfig& iCfg);
+	IniFileConfig();
+	bool ReadData(wxFileConfig& ODF, GOSettingType type, bool handle_prefix);
 
 	bool GetString(GOSettingType type, wxString group, wxString key, wxString& value);
 };
