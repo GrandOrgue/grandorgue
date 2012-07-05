@@ -1003,11 +1003,11 @@ Additionally, it supported the HTML syntax #RRGGBB
 </para>
       <para>
 A font size can be one of the following values: SMALL, NORMAL, LARGE
-or a number bigger than 0.
+or a integer number between 1 and 50..
       </para>
       <para>
 A panel size can be one of the following values: SMALL, MEDIUM, MEDIUM LARGE, LARGE
-or a number bigger than 0.
+or a integer number between 100 and 4000.
       </para>
       <para>
 The following image formats are supported: bmp, gif, jpg, ico, png

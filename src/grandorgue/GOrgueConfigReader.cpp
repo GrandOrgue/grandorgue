@@ -244,9 +244,6 @@ unsigned GOrgueConfigReader::ReadSize(GOSettingType type, wxString group, wxStri
 	value.MakeUpper();
 	value.Trim();
 
-	if (value.IsEmpty() && !required)
-		value = defaultValue;
-
 	if (value == wxT("SMALL"))
 		return sizes[size_type][0];
 	else if (value == wxT("MEDIUM"))
@@ -256,12 +253,9 @@ unsigned GOrgueConfigReader::ReadSize(GOSettingType type, wxString group, wxStri
 	else if (value == wxT("LARGE"))
 		return sizes[size_type][3];
 
-	if (::wxIsdigit(value[0]))
-	{
-		int size = wxAtoi(value);
-		if (100 <= size && size <= 4000)
-			return size;
-	}
+	unsigned long size;
+	if (value.ToULong(&size) && 100 <= size && size <= 4000)
+		return size;
 	
 	wxString error;
 	error.Printf(_("Invalid size '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
@@ -280,9 +274,6 @@ unsigned GOrgueConfigReader::ReadFontSize(GOSettingType type, wxString group, wx
 	value.MakeUpper();
 	value.Trim();
 
-	if (value.IsEmpty() && !required)
-		value = defaultValue;
-
 	if (value == wxT("SMALL"))
 		return 6;
 	else if (value == wxT("NORMAL"))
@@ -290,9 +281,9 @@ unsigned GOrgueConfigReader::ReadFontSize(GOSettingType type, wxString group, wx
 	else if (value == wxT("LARGE"))
 		return 10;
 
-	int val = wxAtoi(value);
-	if (val > 1)
-		return val;
+	unsigned long size;
+	if (value.ToULong(&size) && 1 <= size && size <= 50)
+		return size;
 
 	wxString error;
 	error.Printf(_("Invalid font size '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
