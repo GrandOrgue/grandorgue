@@ -488,28 +488,11 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		error.Printf(_("Unable to read '%s'"), file.c_str());
 		return error;
 	}
-	wxString key, key2, error = wxT("!");
 
+	wxString error = wxT("!");
 	m_b_customized = false;
-	long cookie;
-	bool bCont = odf_ini_file.GetFirstGroup(key, cookie);
-	while (bCont)
-	{
-		if (key.StartsWith(wxT("_")))
-		{
-			m_b_customized = true;
-			odf_ini_file.SetPath(wxT('/') + key);
-			long cookie2;
-			bool bCont2 = odf_ini_file.GetFirstEntry(key2, cookie2);
-			while (bCont2)
-			{
-				odf_ini_file.Write(wxT('/') + key.Mid(1) + wxT('/') + key2, odf_ini_file.Read(key2));
-				bCont2 = odf_ini_file.GetNextEntry(key2, cookie2);
-			}
-			odf_ini_file.SetPath(wxT("/"));
-		}
-		bCont = odf_ini_file.GetNextGroup(key, cookie);
-	}
+	IniFileConfig ini;
+	ini.ReadData(odf_ini_file, ODFSetting, false);
 
 	wxString setting_file = file2;
 
@@ -524,10 +507,6 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	if (!setting_file.IsEmpty())
 	{
-
-		// NOTICE: unfortunately, the format is not adhered to well at all.
-		// with logging enabled, most sample sets generate warnings.
-		wxLog::EnableLogging(false);
 		wxFileConfig extra_odf_config
 			(wxEmptyString
 			,wxEmptyString
@@ -536,28 +515,11 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 			,wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS
 			,wxCSConv(wxT("ISO-8859-1"))
 			);
-		wxLog::EnableLogging(true);
 
-		key = wxT("/Organ/ChurchName");
+		wxString key = wxT("/Organ/ChurchName");
 		if (odf_ini_file.Read(key).Trim() == extra_odf_config.Read(key).Trim())
 		{
-			long cookie;
-			bool bCont = extra_odf_config.GetFirstGroup(key, cookie);
-			while (bCont)
-			{
-				extra_odf_config.SetPath(wxT('/') + key);
-				odf_ini_file.SetPath(wxT('/') + key);
-				long cookie2;
-				bool bCont2 = extra_odf_config.GetFirstEntry(key2, cookie2);
-				while (bCont2)
-				{
-					odf_ini_file.Write(key2, extra_odf_config.Read(key2));
-					bCont2 = extra_odf_config.GetNextEntry(key2, cookie2);
-				}
-				extra_odf_config.SetPath(wxT("/"));
-				bCont = extra_odf_config.GetNextGroup(key, cookie);
-			}
-			odf_ini_file.SetPath(wxT('/'));
+			ini.ReadData(extra_odf_config, CMBSetting, false);
 		}
 		else
 		{
@@ -569,10 +531,11 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 			wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_odf_config.Read(key).c_str());
 		}
 	}
+	else
+		m_b_customized = ini.ReadData(odf_ini_file, CMBSetting, true);
 
 	try
 	{
-		IniFileConfig ini(odf_ini_file);
 		GOrgueConfigReader cfg(ini);
 		ReadOrganFile(cfg);
 	}
@@ -661,7 +624,8 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 		if (!odf_ini_file.GetNumberOfGroups())
 			throw wxString::Format(_("Unable to read '%s'"), file.c_str());
 
-		IniFileConfig ini(odf_ini_file);
+		IniFileConfig ini;
+		ini.ReadData(odf_ini_file, CMBSetting, false);
 		GOrgueConfigReader cfg(ini);
 
 		wxString church_name = cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"),  128);
