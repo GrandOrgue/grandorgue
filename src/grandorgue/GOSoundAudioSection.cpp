@@ -1034,7 +1034,7 @@ void GOAudioSection::InitStream
 
 	const audio_start_data_segment &start = m_StartSegments[0];
 	const audio_end_data_segment &end     = m_EndSegments[PickEndSegment(0)];
-	assert(end.transition_offset > start.start_offset);
+	assert(end.transition_offset >= start.start_offset);
 	stream->resample_coefs           = resampler_coefs;
 	stream->ptr                      = stream->audio_section->m_Data + start.data_offset;
 	stream->transition_position      = end.transition_offset - start.start_offset;
@@ -1068,7 +1068,7 @@ void GOAudioSection::InitAlignedStream
 
 	const audio_start_data_segment &start = m_StartSegments[m_ReleaseStartSegment];
 	const audio_end_data_segment &end     = m_EndSegments[PickEndSegment(m_ReleaseStartSegment)];
-	assert(end.transition_offset > start.start_offset);
+	assert(end.transition_offset >= start.start_offset);
 
 	stream->ptr                      = stream->audio_section->m_Data + start.data_offset;
 	stream->transition_position      = end.transition_offset - start.start_offset;
