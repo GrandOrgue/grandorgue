@@ -70,6 +70,7 @@ All the instructions below are for building GrandOrgue for release, in a single 
 		Wxwidgets:
 			cd /cygdrive/c/cyg/wxsrc32
 			./configure --host=i686-w64-mingw32 --prefix=/cygdrive/c/cyg/inst32 --enable-unicode --disable-shared
+			(cd locale && make allmo)
 			make
 			make install
 		GO:
@@ -109,6 +110,7 @@ All the instructions below are for building GrandOrgue for release, in a single 
 			cd /cygdrive/c/cyg/wxsrc64
 			apply wxWidgets-2.8.12 patch using git apply /cygdrive/c/gosrc/trunk/wxWidgets/wxWidgets-2.8.12.patch
 			./configure CFLAGS=-m64 CPPFLAGS=-m64 LDFLAGS="-m64 --define WX_CPU_AMD64" --host=x86_64-w64-mingw32 --build=x86_64-pc-cygwin --prefix=/cygdrive/c/cyg/inst64 --enable-unicode --disable-shared
+			(cd locale && make allmo)
 			make
 			make install
 		GO:
@@ -176,6 +178,7 @@ you would put them somewhere under $HOME and use something like /home/user/GO/wx
 3) Build wxWidgets
 cd /wxsrc
 ./configure --host=i686-w64-mingw32 --prefix=/inst --enable-unicode
+(cd locale && make allmo)
 make
 make install 
 4) Build GO for linux
