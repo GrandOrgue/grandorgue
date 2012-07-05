@@ -480,7 +480,13 @@ void SettingsAudioOutput::OnOutputProperties(wxCommandEvent& event)
 		current = wxGetTextFromUser(_("Please enter new volume in dB:"), _("Change audio group"), current);
 		if (current == wxEmptyString)
 			return;
-		data->volume = wxAtof(current);
+		double volume;
+		if (!current.ToDouble(&volume) || volume < -120.0 || volume > 40.0)
+		{
+			wxMessageBox(_("Please enter a volume between -120 and 40 dB") , _("Error"), wxOK | wxICON_ERROR, NULL);
+			return;
+		}
+		data->volume = volume;
 		UpdateVolume(selection, data->volume);
 	}
 	UpdateButtons();

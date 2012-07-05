@@ -217,7 +217,11 @@ void SettingsOption::Save()
 	m_Settings.SetReleaseLoad(m_ReleaseLoad->GetSelection());
 	m_Settings.SetLoadInStereo(m_Stereo->GetSelection());
 	m_Settings.SetInterpolationType(m_Interpolation->GetSelection());
-	m_Settings.SetSampleRate(wxAtoi(m_SampleRate->GetStringSelection()));
+	unsigned long sample_rate;
+	if (m_SampleRate->GetStringSelection().ToULong(&sample_rate))
+		m_Settings.SetSampleRate(sample_rate);
+	else
+		wxLogError(_("Invalid sample rate"));
 	m_Settings.SetSamplesPerBuffer((m_SamplesPerBuffer->GetSelection() + 1) * BLOCKS_PER_FRAME);
 	m_Settings.SetMemoryLimit(m_MemoryLimit->GetValue() * 1024.0 * 1024.0);
 }
