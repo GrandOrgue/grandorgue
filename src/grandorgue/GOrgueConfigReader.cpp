@@ -32,12 +32,12 @@ wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxSt
 	wxString value;
 	bool found = false;
 
-	if (group.length() >= 6 && !group.Mid(0, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
+	if (group.length() >= 6 && group.Mid(0, 6) == wxT("Setter"))	// Setter groups aren't required.
 		required = false;
-	if (group.length() >= 5 && !group.Mid(0, 5).CmpNoCase(wxT("Panel")))
-		if (group.length() >= 14 && !group.Mid(8, 6).CmpNoCase(wxT("Setter")))	// Setter groups aren't required.
+	if (group.length() >= 5 && group.Mid(0, 5) == wxT("Panel"))
+		if (group.length() >= 14 && group.Mid(8, 6) == wxT("Setter"))	// Setter groups aren't required.
 			required = false;
-	if (group.length() >= 12 && !group.Mid(0, 12).CmpNoCase(wxT("FrameGeneral")))	// FrameGeneral groups aren't required.
+	if (group.length() >= 12 && group.Mid(0, 12) == wxT("FrameGeneral"))	// FrameGeneral groups aren't required.
 		required = false;
 
 	found = m_Config.GetString(type, group, key, value);
