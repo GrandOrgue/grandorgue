@@ -63,8 +63,6 @@ void GOrgueFrameGeneral::Load(GOrgueConfigReader& cfg, wxString group)
 	m_group = group;
 
 	m_Protected = cfg.ReadBoolean(ODFSetting, group, wxT("Protected"), false, false);
-
-	LoadCombination(cfg);
 }
 
 void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)

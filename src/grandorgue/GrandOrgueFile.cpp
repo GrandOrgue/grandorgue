@@ -232,11 +232,8 @@ bool GrandOrgueFile::TryLoad
 
 }
 
-void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
+void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 {
-
-	IniFileConfig ini(odf_ini_file);
-	GOrgueConfigReader cfg(ini);
 	wxString group = wxT("Organ");
 
 	/* load church info */
@@ -394,6 +391,20 @@ void GrandOrgueFile::ReadOrganFile(wxFileConfig& odf_ini_file)
 	for (unsigned i = m_ODFManualCount; i < m_manual.size(); i++)
 		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
 	m_panels.push_back(m_setter->CreateFloatingPanel(cfg));
+
+	ReadCombinations(cfg);
+}
+
+void GrandOrgueFile::ReadCombinations(GOrgueConfigReader& cfg)
+{
+	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
+		m_manual[i]->LoadCombination(cfg);
+
+	for (unsigned j = 0; j < m_general.size(); j++)
+		m_general[j]->LoadCombination(cfg);
+
+	if (m_setter)
+		m_setter->LoadCombination(cfg);
 }
 
 wxString GrandOrgueFile::GenerateSettingFileName()
@@ -560,7 +571,9 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	try
 	{
-		ReadOrganFile(odf_ini_file);
+		IniFileConfig ini(odf_ini_file);
+		GOrgueConfigReader cfg(ini);
+		ReadOrganFile(cfg);
 	}
 	catch (wxString error_)
 	{
@@ -654,14 +667,7 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 		if (church_name != m_ChurchName)
 			throw wxString::Format(_("File belongs to a different organ: %s"), church_name.c_str());
 
-		for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-			m_manual[i]->LoadCombination(cfg);
-
-		for (unsigned j = 0; j < m_general.size(); j++)
-			m_general[j]->LoadCombination(cfg);
-
-		if (m_setter)
-			m_setter->LoadCombination(cfg);
+		ReadCombinations(cfg);
 	}
 	catch (wxString error)
 	{

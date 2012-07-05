@@ -51,7 +51,6 @@ void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualN
 	m_Protected = cfg.ReadBoolean(ODFSetting, group, wxT("Protected"), false, false);
 
 	GOrguePushbutton::Load(cfg, group, name);
-	LoadCombination(cfg);
 }
 
 void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
