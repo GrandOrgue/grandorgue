@@ -292,17 +292,24 @@ unsigned GOrgueConfigReader::ReadFontSize(GOSettingType type, wxString group, wx
 
 int GOrgueConfigReader::ReadEnum(GOSettingType type, wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required, int defaultValue)
 {
-	wxString value = ReadString(type, group, key, 255, required);
+	int defaultEntry = -1;
+	for (unsigned i = 0; i < count; i++)
+		if (entry[i].value == defaultValue)
+			defaultEntry = i;
+	if (defaultEntry == -1)
+	{
+		wxLogError(_("Invalid enum default value"));
+		defaultEntry = 0;
+	}
+
+	wxString value = ReadString(type, group, key, 255, required, entry[defaultEntry].name);
 	for (unsigned i = 0; i < count; i++)
 		if (entry[i].name == value)
 			return entry[i].value;
-	if (required || !value.IsEmpty())
-	{
-		wxString error;
-		error.Printf(_("Invalid enum value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
-		throw error;
-	}
-	return defaultValue;
+
+	wxString error;
+	error.Printf(_("Invalid enum value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	throw error;
 }
 
 int GOrgueConfigReader::ReadEnum(GOSettingType type, wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required)
