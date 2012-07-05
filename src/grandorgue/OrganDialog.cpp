@@ -435,8 +435,9 @@ void OrganDialog::OnAmplitudeSpinChanged(wxSpinEvent& e)
 
 void OrganDialog::OnAmplitudeChanged(wxCommandEvent &e)
 {
-	float amp = wxAtof(m_Amplitude->GetValue());
-	m_AmplitudeSpin->SetValue(amp);
+	double amp;
+	if (m_Amplitude->GetValue().ToDouble(&amp))
+		m_AmplitudeSpin->SetValue(amp);
 	Modified();
 }
 
@@ -449,8 +450,9 @@ void OrganDialog::OnGainSpinChanged(wxSpinEvent& e)
 
 void OrganDialog::OnGainChanged(wxCommandEvent &e)
 {
-	float gain = wxAtof(m_Gain->GetValue());
-	m_GainSpin->SetValue(gain);
+	double gain;
+	if (m_Gain->GetValue().ToDouble(&gain))
+		m_GainSpin->SetValue(gain);
 	Modified();
 }
 
@@ -463,8 +465,9 @@ void OrganDialog::OnTuningSpinChanged(wxSpinEvent& e)
 
 void OrganDialog::OnTuningChanged(wxCommandEvent &e)
 {
-	float tuning = wxAtof(m_Tuning->GetValue());
-	m_TuningSpin->SetValue(tuning);
+	double tuning;
+	if (m_Tuning->GetValue().ToDouble(&tuning))
+		m_TuningSpin->SetValue(tuning);
 	Modified();
 }
 
@@ -568,29 +571,30 @@ void OrganDialog::FillTree()
 
 void OrganDialog::OnEventApply(wxCommandEvent &e)
 {
-	float amp = wxAtof(m_Amplitude->GetValue());
-	float gain = wxAtof(m_Gain->GetValue());
-	float tuning = wxAtof(m_Tuning->GetValue());
+	double amp, gain, tuning;
 
 	wxArrayTreeItemIds entries;
 	m_Tree->GetSelections(entries);
 
-	if (m_Amplitude->IsModified() &&
-	    (amp < 0 || amp > 1000))
+	if (!m_Amplitude->GetValue().ToDouble(&amp) ||
+	    (m_Amplitude->IsModified() &&
+	     (amp < 0 || amp > 1000)))
 	{
 		wxMessageBox(_("Amplitude is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
 		return;
 	}
 
-	if (m_Gain->IsModified() &&
-	    (gain < -120 || gain > 40))
+	if (!m_Gain->GetValue().ToDouble(&gain) ||
+	    (m_Gain->IsModified() &&
+	     (gain < -120 || gain > 40)))
 	{
 		wxMessageBox(_("Gain is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
 		return;
 	}
 
-	if (m_Tuning->IsModified() &&
-	    (tuning < - 1200 || tuning > 1200))
+	if (!m_Tuning->GetValue().ToDouble(&tuning) ||
+	    (m_Tuning->IsModified() &&
+	     (tuning < - 1200 || tuning > 1200)))
 	{
 		wxMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
 		return;
