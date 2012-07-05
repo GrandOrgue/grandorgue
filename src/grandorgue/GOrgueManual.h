@@ -27,6 +27,7 @@
 #include "ptrvector.h"
 
 #include "GOrgueMidiReceiver.h"
+#include "GOrgueCombinationDefinition.h"
 
 class wxProgressDialog;
 
@@ -66,6 +67,7 @@ private:
 	ptr_vector<GOrgueCoupler> m_couplers;
 	ptr_vector<GOrgueDivisional> m_divisionals;
 	bool m_displayed;
+	GOrgueCombinationDefinition m_DivisionalTemplate;
 
 public:
 
@@ -103,6 +105,7 @@ public:
 	unsigned GetTremulantCount();
 	GOrgueTremulant* GetTremulant(unsigned index);
 
+	GOrgueCombinationDefinition& GetDivisionalTemplate();
 	const wxString& GetName();
 	bool IsDisplayed();
 

@@ -44,7 +44,8 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_stops(0),
 	m_couplers(0),
 	m_divisionals(0),
-	m_displayed(false)
+	m_displayed(false),
+	m_DivisionalTemplate(organfile)
 {
 
 }
@@ -121,7 +122,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_divisionals.resize(0);
 	for (unsigned i = 0; i < m_nb_divisionals; i++)
 	{
-		m_divisionals.push_back(new GOrgueDivisional(m_organfile));
+		m_divisionals.push_back(new GOrgueDivisional(m_organfile, GetDivisionalTemplate()));
 		buffer.Printf(wxT("Divisional%03d"), i + 1);
 		buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 224));
 		m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
@@ -280,6 +281,11 @@ GOrgueDivisional* GOrgueManual::GetDivisional(unsigned index)
 void GOrgueManual::AddDivisional(GOrgueDivisional* divisional)
 {
 	m_divisionals.push_back(divisional);
+}
+
+GOrgueCombinationDefinition& GOrgueManual::GetDivisionalTemplate()
+{
+	return m_DivisionalTemplate;
 }
 
 unsigned GOrgueManual::GetTremulantCount()

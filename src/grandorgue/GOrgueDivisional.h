@@ -24,11 +24,12 @@
 
 #include <vector>
 #include "GOrguePushbutton.h"
+#include "GOrgueCombination.h"
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 
-class GOrgueDivisional : public GOrguePushbutton
+class GOrgueDivisional : public GOrguePushbutton, public GOrgueCombination
 {
 protected:
 	void PushLocal();
@@ -42,7 +43,7 @@ public:
 	std::vector<int> m_Tremulants;
 	bool m_Protected;
 
-	GOrgueDivisional(GrandOrgueFile* organfile);
+	GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationDefinition& divisional_template);
 	void Load(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name = wxT(""));
 	void LoadCombination(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);

@@ -164,6 +164,8 @@ GOSoundThread.cpp
 GOrgueWave.cpp
 GOrgueCache.cpp
 GOrgueCacheWriter.cpp
+GOrgueCombinationDefinition.cpp
+GOrgueCombination.cpp
 GOrgueConfigReader.cpp
 GOrgueConfigWriter.cpp
 GOrgueBitmapCache.cpp

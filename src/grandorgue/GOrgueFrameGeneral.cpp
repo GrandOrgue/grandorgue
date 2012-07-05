@@ -33,7 +33,8 @@
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
 
-GOrgueFrameGeneral::GOrgueFrameGeneral(GrandOrgueFile* organfile):
+GOrgueFrameGeneral::GOrgueFrameGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile):
+	GOrgueCombination(general_template, organfile),
 	m_organfile(organfile),
 	m_group(),
 	m_Stops(),

@@ -19,38 +19,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEFRAMEGENERAL_H
-#define GORGUEFRAMEGENERAL_H
-
-#include <wx/wx.h>
-#include <vector>
 #include "GOrgueCombination.h"
+#include "GOrgueCombinationDefinition.h"
+#include "GrandOrgueFile.h"
 
-class GOrgueConfigReader;
-class GOrgueConfigWriter;
-class GrandOrgueFile;
-
-class GOrgueFrameGeneral : public GOrgueCombination
+GOrgueCombination::GOrgueCombination(GOrgueCombinationDefinition& combination_template, GrandOrgueFile* organfile) :
+	m_OrganFile(organfile),
+	m_Template(combination_template)
 {
-private:
-	GrandOrgueFile* m_organfile;
-	wxString m_group;
-	std::vector<int> m_Stops;
-	std::vector<unsigned> m_StopManual;
-	std::vector<int> m_Couplers;
-	std::vector<unsigned> m_CouplerManual;
-	std::vector<int> m_Tremulants;
-	std::vector<int> m_DivisionalCouplers;
-	bool m_Protected;
+}
 
-public:
-	GOrgueFrameGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile);
-	void Load(GOrgueConfigReader& cfg, wxString group);
-	void LoadCombination(GOrgueConfigReader& cfg);
-	void Save(GOrgueConfigWriter& cfg);
-	void Copy(GOrgueFrameGeneral* general);
-	void Push();
+GOrgueCombination::~GOrgueCombination()
+{
+}
 
-};
-
-#endif /* GORGUEFRAMEGENERAL_H */
+GOrgueCombinationDefinition* GOrgueCombination::GetTemplate()
+{
+	return &m_Template;
+}
