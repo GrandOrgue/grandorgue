@@ -68,12 +68,12 @@ private:
 	bool m_IgnorePitch;
 	wxString m_Temperament;
 
-	bool m_b_customized : 1;
-	bool m_DivisionalsStoreIntermanualCouplers : 1;
-	bool m_DivisionalsStoreIntramanualCouplers : 1;
-	bool m_DivisionalsStoreTremulants : 1;
-	bool m_GeneralsStoreDivisionalCouplers : 1;
-	bool m_CombinationsStoreNonDisplayedDrawstops : 1;
+	bool m_b_customized;
+	bool m_DivisionalsStoreIntermanualCouplers;
+	bool m_DivisionalsStoreIntramanualCouplers;
+	bool m_DivisionalsStoreTremulants;
+	bool m_GeneralsStoreDivisionalCouplers;
+	bool m_CombinationsStoreNonDisplayedDrawstops;
 
 	wxInt16 m_HighestSampleFormat;
 	wxInt16 m_FirstManual;
@@ -111,7 +111,8 @@ private:
 	GOrguePipeConfig m_PipeConfig;
 	GOrgueSettings& m_Settings;
 
-	void ReadOrganFile(wxFileConfig& odf_ini_file);
+	void ReadOrganFile(GOrgueConfigReader& cfg);
+	void ReadCombinations(GOrgueConfigReader& cfg);
 	bool TryLoad(GOrgueCache* cache, wxProgressDialog& dlg, wxString& error);
 	void GenerateCacheHash(unsigned char hash[20]);
 	wxString GenerateSettingFileName();
