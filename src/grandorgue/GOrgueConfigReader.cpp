@@ -80,6 +80,11 @@ bool GOrgueConfigReader::ReadBoolean(GOSettingType type, wxString group, wxStrin
 	value.MakeUpper();
 	value.Trim();
 
+	if (value == wxT("Y"))
+		return true;
+	if (value == wxT("N"))
+		return false;
+	wxLogWarning(_("Strange boolean value for '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	if (value.Length() && value[0] == wxT('Y'))
 		return true;
 	else if (value.Length() && value[0] == wxT('N'))
