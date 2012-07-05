@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <wx/tokenzr.h>
 #include "GOrgueConfigReader.h"
 #include "GOrguePipe.h"
 #include "GOrgueRank.h"
@@ -330,8 +331,13 @@ bool GOrguePipe::InitializeReference()
 {
 	if (m_Filename.StartsWith(wxT("REF:")))
 	{
-		unsigned manual, stop, pipe;
-		wxSscanf(m_Filename.Mid(4), wxT("%d:%d:%d"), &manual, &stop, &pipe);
+		unsigned long manual, stop, pipe;
+		wxArrayString strs = wxStringTokenize(m_Filename.Mid(4), wxT(":"), wxTOKEN_RET_EMPTY_ALL);
+		if (strs.GetCount() != 3 ||
+		    !strs[0].ToULong(&manual) ||
+		    !strs[1].ToULong(&stop) ||
+		    !strs[2].ToULong(&pipe))
+			throw (wxString)_("Invalid reference ") + m_Filename;
 		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual >= m_OrganFile->GetODFManualCount()) ||
 			(stop <= 0) || (stop > m_OrganFile->GetManual(manual)->GetStopCount()) ||
 		    (pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank(0)->GetPipeCount()))
