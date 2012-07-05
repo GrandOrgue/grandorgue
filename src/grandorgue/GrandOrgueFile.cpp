@@ -95,7 +95,8 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_soundengine(0),
 	m_bitmaps(this),
 	m_PipeConfig(this, this),
-	m_Settings(settings)
+	m_Settings(settings),
+	m_GeneralTemplate(this)
 {
 	m_pool.SetMemoryLimit(m_Settings.GetMemoryLimit());
 }
@@ -362,7 +363,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_general.resize(0);
 	for (unsigned i = 0; i < m_NumberOfGenerals; i++)
 	{
-		m_general.push_back(new GOrgueGeneral(this));
+		m_general.push_back(new GOrgueGeneral(this->GetGeneralTemplate(), this));
 		buffer.Printf(wxT("General%03d"), i + 1);
 		m_general[i]->Load(cfg, buffer);
 	}
@@ -1231,4 +1232,9 @@ void GrandOrgueFile::ControlChanged(void* control)
 void GrandOrgueFile::Modified()
 {
 	m_doc->Modify(true);
+}
+
+GOrgueCombinationDefinition& GrandOrgueFile::GetGeneralTemplate()
+{
+	return m_GeneralTemplate;
 }

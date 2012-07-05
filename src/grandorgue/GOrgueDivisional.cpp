@@ -31,8 +31,9 @@
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
 
-GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile) :
+GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationDefinition& divisional_template) :
 	GOrguePushbutton(organfile),
+	GOrgueCombination(divisional_template, organfile),
 	m_DivisionalNumber(0),
 	m_Stops(),
 	m_Couplers(),

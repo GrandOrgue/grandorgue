@@ -26,6 +26,7 @@
 #include "ptrvector.h"
 #include <wx/wx.h>
 #include "GOrgueBitmapCache.h"
+#include "GOrgueCombinationDefinition.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrguePipeConfig.h"
 
@@ -110,6 +111,7 @@ private:
 	GOrgueBitmapCache m_bitmaps;
 	GOrguePipeConfig m_PipeConfig;
 	GOrgueSettings& m_Settings;
+	GOrgueCombinationDefinition m_GeneralTemplate;
 
 	void ReadOrganFile(GOrgueConfigReader& cfg);
 	void ReadCombinations(GOrgueConfigReader& cfg);
@@ -170,6 +172,8 @@ public:
 	GOrguePipeConfig& GetPipeConfig();
 	void SetTemperament(wxString name);
 	wxString GetTemperament();
+
+	GOrgueCombinationDefinition& GetGeneralTemplate();
 
 	/* ODF general properties */
 	bool DivisionalsStoreIntermanualCouplers();

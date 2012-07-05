@@ -19,38 +19,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEFRAMEGENERAL_H
-#define GORGUEFRAMEGENERAL_H
+#ifndef GORGUECOMBINATIONDEFINITION_H
+#define GORGUECOMBINATIONDEFINITION_H
 
 #include <wx/wx.h>
 #include <vector>
-#include "GOrgueCombination.h"
-
-class GOrgueConfigReader;
-class GOrgueConfigWriter;
 class GrandOrgueFile;
 
-class GOrgueFrameGeneral : public GOrgueCombination
+class GOrgueCombinationDefinition
 {
 private:
 	GrandOrgueFile* m_organfile;
-	wxString m_group;
-	std::vector<int> m_Stops;
-	std::vector<unsigned> m_StopManual;
-	std::vector<int> m_Couplers;
-	std::vector<unsigned> m_CouplerManual;
-	std::vector<int> m_Tremulants;
-	std::vector<int> m_DivisionalCouplers;
-	bool m_Protected;
 
 public:
-	GOrgueFrameGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile);
-	void Load(GOrgueConfigReader& cfg, wxString group);
-	void LoadCombination(GOrgueConfigReader& cfg);
-	void Save(GOrgueConfigWriter& cfg);
-	void Copy(GOrgueFrameGeneral* general);
-	void Push();
-
+	GOrgueCombinationDefinition(GrandOrgueFile* organfile);
+	~GOrgueCombinationDefinition();
 };
 
-#endif /* GORGUEFRAMEGENERAL_H */
+#endif
