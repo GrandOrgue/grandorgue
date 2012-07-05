@@ -23,6 +23,7 @@
 #define GOLOCK_H
 
 #include <wx/wx.h>
+#include <wx/stackwalk.h>
 #include <vector>
 #include "GrandOrgueDef.h"
 
@@ -37,6 +38,28 @@
 #ifdef HAVE_CSTDATOMIC
 #include <cstdatomic>
 #define HAVE_ATOMIC
+#endif
+
+#define GO_PRINTCONTENTION 0
+
+#if wxUSE_STACKWALKER
+class GOStackPrinter : public wxStackWalker
+{
+	void* m_ptr;
+public:	
+	GOStackPrinter(void* p)
+	{
+		m_ptr = p;
+	}
+
+	void OnStackFrame(const wxStackFrame& frame)
+	{
+		wxLogWarning(wxT("%p: [%2d] %s(%p)\t%s:%d"), m_ptr, frame.GetLevel(), frame.GetName().c_str(), frame.GetAddress(), frame.GetFileName().c_str(), frame.GetLine());
+	}
+};
+#else
+#undef GO_PRINTCONTENTION
+#define GO_PRINTCONTENTION 0
 #endif
 
 #ifdef __WIN32__
@@ -141,7 +164,16 @@ private:
 			__sync_synchronize();
 			return;
 		}
+#if GO_PRINTCONTENTION
+		wxLogWarning(wxT("Mutex::wait %p"), this);
+		GOStackPrinter print(this);
+		print.Walk();
+#endif
+
 		m_Wait.Wait();
+#if GO_PRINTCONTENTION
+		wxLogWarning(wxT("Mutex::end_wait %p"), this);
+#endif
 	}
 
 	void DoUnlock()
