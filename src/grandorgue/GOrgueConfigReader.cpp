@@ -201,32 +201,19 @@ double GOrgueConfigReader::ReadFloat(GOSettingType type, wxString group, wxStrin
 {
 	wxString value = ReadString(type, group, key, 255, required, wxString::Format(wxT("%e"), defaultValue));
 
-	if (value.IsEmpty())
-	{
-		if (required)
-		{
-			wxString error;
-			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
-			throw error;
-		}
-		else
-			return defaultValue;
-	}
-
-	if (!::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")))
+	double retval;
+	if (!value.ToDouble(&retval))
 	{
 		wxString error;
 		error.Printf(_("Invalid float value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
 		throw error;
 	}
 
-	double retval = wxAtof(value);
-
 	if (nmin <= retval && retval <= nmax)
 		return retval;
 
 	wxString error;
-	error.Printf(_("Out of range value '/%s/%s': %d"), group.c_str(), key.c_str(), retval);
+	error.Printf(_("Out of range value '/%s/%s': %f"), group.c_str(), key.c_str(), retval);
 	throw error;
 }
 
