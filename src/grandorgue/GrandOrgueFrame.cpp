@@ -567,7 +567,6 @@ void GOrgueFrame::OnRevert(wxCommandEvent& event)
 		{
 			wxFileConfig cfg(wxEmptyString, wxEmptyString, doc->GetOrganFile()->GetODFFilename(), wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
 			m_docManager->GetCurrentDocument()->Modify(false);
-			doc->GetOrganFile()->Revert(cfg);
 			doc->GetOrganFile()->DeleteSettings();
 		}
 		ProcessCommand(wxID_FILE1);

@@ -30,7 +30,6 @@
 #include "GOrgueMemoryPool.h"
 #include "GOrguePipeConfig.h"
 
-class wxFileConfig;
 class wxProgressDialog;
 
 class GOrgueCache;
@@ -133,7 +132,6 @@ public:
 	bool UpdateCache(bool compress);
 	void DeleteCache();
 	void DeleteSettings();;
-	void Revert(wxFileConfig& cfg);
 	void Abort();
 	void PreparePlayback(GOSoundEngine* engine);
 	void Reset();

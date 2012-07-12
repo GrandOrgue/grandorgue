@@ -63,6 +63,11 @@ bool IniFileConfig::ReadData(wxFileConfig& ODF, GOSettingType type, bool handle_
 	return changed;
 }
 
+void IniFileConfig::ClearCMB()
+{
+	m_CMB.clear();
+}
+
 void IniFileConfig::AddEntry(GOStringHashMap& hash, wxString key, wxString value)
 {
 	GOStringHashMap::iterator i = hash.find(key);

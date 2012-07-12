@@ -41,6 +41,7 @@ private:
 
 public:
 	IniFileConfig();
+	void ClearCMB();
 	bool ReadData(wxFileConfig& ODF, GOSettingType type, bool handle_prefix);
 
 	bool GetString(GOSettingType type, wxString group, wxString key, wxString& value);
