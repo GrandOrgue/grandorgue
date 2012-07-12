@@ -972,7 +972,7 @@ This section will be populated once questions become frequently asked.
     <sect1>
       <title>General information</title>
       <para>
-It is an INI file in ISO-8859-1 encoding. The standard extension is
+It is an text file in ISO-8859-1 encoding. The standard extension is
 <emphasis>.organ</emphasis>.
  </para>
       <para>
@@ -983,6 +983,7 @@ Various settings are grouped in block. Each block is started with a
 line starting with <emphasis>[</emphasis>, followed by the section name and ended with <emphasis>]</emphasis>.
 Each block consists of list of name-values pairs seperated by <emphasis>=</emphasis>.
 Each setting may only occure once. The content is case sensitive.
+No other elements are allowed in the file.
  </para>
       <para>
 File paths in this format are relative to the location of the organ
