@@ -24,16 +24,37 @@
 
 #include <wx/wx.h>
 #include <vector>
+class GOrgueDrawstop;
+class GOrgueManual;
 class GrandOrgueFile;
 
 class GOrgueCombinationDefinition
 {
+public:
+	typedef enum { COMBINATION_STOP = 0, COMBINATION_COUPLER = 1, COMBINATION_TREMULANT = 2, COMBINATION_DIVISIONALCOUPLER = 3 } CombinationType;
+	typedef struct
+	{
+		CombinationType type;
+		int manual;
+		unsigned index;
+		bool store_unconditional;
+		wxString group;
+		GOrgueDrawstop* control;
+	} CombinationSlot;
 private:
 	GrandOrgueFile* m_organfile;
+	std::vector<CombinationSlot> m_Content;
 
 public:
 	GOrgueCombinationDefinition(GrandOrgueFile* organfile);
 	~GOrgueCombinationDefinition();
+
+	void InitGeneral();
+	void InitDivisional(unsigned manual_number);
+
+	int findEntry(CombinationType type, int manual, unsigned index);
+
+	const std::vector<CombinationSlot>& GetCombinationElements();
 };
 
 #endif
