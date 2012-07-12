@@ -532,7 +532,14 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		}
 	}
 	else
-		m_b_customized = ini.ReadData(odf_ini_file, CMBSetting, true);
+	{
+		bool old_go_settings = ini.ReadData(odf_ini_file, CMBSetting, true);
+		if (old_go_settings)
+			if (wxMessageBox(_("The ODF contains GrandOrgue 0.2 styled saved settings. Should they be imported?"), _("Import"), wxYES_NO, NULL) == wxNO)
+			{
+				ini.ClearCMB();
+			}
+	}
 
 	try
 	{
@@ -715,24 +722,6 @@ GrandOrgueFile::~GrandOrgueFile(void)
 	m_ranks.clear();
 }
 
-void GrandOrgueFile::Revert(wxFileConfig& cfg)
-{
-    if (!m_b_customized)
-        return;
-    long cookie;
-    wxString key;
-    bool bCont = cfg.GetFirstGroup(key, cookie);
-    wxArrayString to_drop;
-    while (bCont)
-    {
-        if (key.StartsWith(wxT("_")))
-            to_drop.Add(key);
-        bCont = cfg.GetNextGroup(key, cookie);
-    }
-    for (unsigned i = 0; i < to_drop.Count(); i++)
-        cfg.DeleteGroup(to_drop[i]);
-}
-
 void GrandOrgueFile::DeleteSettings()
 {
 	wxRemoveFile(m_SettingFilename);
@@ -765,8 +754,6 @@ void GrandOrgueFile::Save(const wxString& file)
 		);
 	wxLog::EnableLogging(true);
 
-	if (prefix)
-		Revert(cfg_file);
 	m_b_customized = true;
 
 	GOrgueConfigWriter cfg(cfg_file, prefix);
