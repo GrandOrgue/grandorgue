@@ -158,26 +158,19 @@ int GOrgueConfigReader::ReadInteger(GOSettingType type, wxString group, wxString
 {
 	wxString value = ReadString(type, group, key, 255, required, wxString::Format(wxT("%d"), defaultValue));
 
-	if (value.IsEmpty())
+	long retval;
+	if (!value.ToLong(&retval))
 	{
-		if (required)
+		if (!::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")) && !value.IsEmpty())
 		{
 			wxString error;
-			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
+			error.Printf(_("Invalid integer value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
 			throw error;
 		}
-		else
-			return defaultValue;
-	}
 
-	if (!::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")))
-	{
-		wxString error;
-		error.Printf(_("Invalid integer value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
-		throw error;
+		retval = wxAtoi(value);
+		wxLogWarning(_("Invalid integer value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	}
-
-	int retval = wxAtoi(value);
 
 	if (nmin <= retval && retval <= nmax)
 		return retval;
