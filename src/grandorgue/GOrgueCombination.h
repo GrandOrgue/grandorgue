@@ -32,10 +32,17 @@ private:
 	GrandOrgueFile* m_OrganFile;
 protected:
 	GOrgueCombinationDefinition& m_Template;
+	std::vector<int> m_State;
+	bool m_Protected;
 
+	void UpdateState();
 public:
 	GOrgueCombination(GOrgueCombinationDefinition& combination_template, GrandOrgueFile* organfile);
 	virtual ~GOrgueCombination();
+	int GetState(unsigned no);
+	void SetState(unsigned no, int value);
+	void Copy(GOrgueCombination* combination);
+	void Clear();
 	GOrgueCombinationDefinition* GetTemplate();
 };
 

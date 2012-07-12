@@ -41,7 +41,6 @@ public:
 	std::vector<int> m_Stops;
 	std::vector<int> m_Couplers;
 	std::vector<int> m_Tremulants;
-	bool m_Protected;
 
 	GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationDefinition& divisional_template);
 	void Load(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name = wxT(""));
