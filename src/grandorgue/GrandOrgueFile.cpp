@@ -393,6 +393,10 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
 	m_panels.push_back(m_setter->CreateFloatingPanel(cfg));
 
+	m_GeneralTemplate.InitGeneral();
+	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
+		m_manual[i]->GetDivisionalTemplate().InitDivisional(i);
+
 	ReadCombinations(cfg);
 }
 

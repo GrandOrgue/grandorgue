@@ -22,10 +22,36 @@
 #include "GOrgueCombinationDefinition.h"
 
 GOrgueCombinationDefinition::GOrgueCombinationDefinition(GrandOrgueFile* organfile) :
-	m_organfile(organfile)
+	m_organfile(organfile),
+	m_Content(0)
 {
 }
 
 GOrgueCombinationDefinition::~GOrgueCombinationDefinition()
 {
+}
+
+void GOrgueCombinationDefinition::InitGeneral()
+{
+	m_Content.resize(0);
+}
+
+void GOrgueCombinationDefinition::InitDivisional(unsigned manual_number)
+{
+	m_Content.resize(0);
+}
+
+const std::vector<GOrgueCombinationDefinition::CombinationSlot>& GOrgueCombinationDefinition::GetCombinationElements()
+{
+	return m_Content;
+}
+
+int GOrgueCombinationDefinition::findEntry(CombinationType type, int manual, unsigned index)
+{
+	for(unsigned i = 0; i < m_Content.size(); i++)
+	{
+		if (m_Content[i].type == type && m_Content[i].manual == manual && m_Content[i].index == index)
+			return i;
+	}
+	return -1;
 }
