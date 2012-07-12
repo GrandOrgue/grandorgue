@@ -25,12 +25,53 @@
 
 GOrgueCombination::GOrgueCombination(GOrgueCombinationDefinition& combination_template, GrandOrgueFile* organfile) :
 	m_OrganFile(organfile),
-	m_Template(combination_template)
+	m_Template(combination_template),
+	m_State(0),
+	m_Protected(false)
 {
 }
 
 GOrgueCombination::~GOrgueCombination()
 {
+}
+
+void GOrgueCombination::Clear()
+{
+	UpdateState();
+	for(unsigned i = 0; i < m_State.size(); i++)
+		m_State[i] = -1;
+}
+
+void GOrgueCombination::Copy(GOrgueCombination* combination)
+{
+	assert(GetTemplate() == combination->GetTemplate());
+	m_State = combination->m_State;
+	UpdateState();
+	m_OrganFile->Modified();
+}
+
+int GOrgueCombination::GetState(unsigned no)
+{
+	return m_State[no];
+}
+
+void GOrgueCombination::SetState(unsigned no, int value)
+{
+	m_State[no] = value;
+}
+
+void GOrgueCombination::UpdateState()
+{
+	const std::vector<GOrgueCombinationDefinition::CombinationSlot>& elements = m_Template.GetCombinationElements();
+	if (m_State.size() > elements.size())
+		m_State.resize(elements.size());
+	else if (m_State.size() < elements.size())
+	{
+		unsigned current = m_State.size();
+		m_State.resize(elements.size());
+		while(current < elements.size())
+			m_State[current++] = -1;
+	}
 }
 
 GOrgueCombinationDefinition* GOrgueCombination::GetTemplate()

@@ -42,8 +42,7 @@ GOrgueFrameGeneral::GOrgueFrameGeneral(GOrgueCombinationDefinition& general_temp
 	m_Couplers(),
 	m_CouplerManual(),
 	m_Tremulants(),
-	m_DivisionalCouplers(),
-	m_Protected(false)
+	m_DivisionalCouplers()
 {
 }
 

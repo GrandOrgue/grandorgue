@@ -37,8 +37,7 @@ GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationD
 	m_DivisionalNumber(0),
 	m_Stops(),
 	m_Couplers(),
-	m_Tremulants(),
-	m_Protected(false)
+	m_Tremulants()
 {
 }
 
