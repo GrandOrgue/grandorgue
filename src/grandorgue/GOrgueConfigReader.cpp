@@ -161,7 +161,7 @@ int GOrgueConfigReader::ReadInteger(GOSettingType type, wxString group, wxString
 	long retval;
 	if (!value.ToLong(&retval))
 	{
-		if (!::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")) && !value.IsEmpty())
+		if (value.Length() && !::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")) && !value.IsEmpty())
 		{
 			wxString error;
 			error.Printf(_("Invalid integer value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
