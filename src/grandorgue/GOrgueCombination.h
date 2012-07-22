@@ -36,6 +36,7 @@ protected:
 	bool m_Protected;
 
 	void UpdateState();
+	virtual bool PushLocal();
 public:
 	GOrgueCombination(GOrgueCombinationDefinition& combination_template, GrandOrgueFile* organfile);
 	virtual ~GOrgueCombination();
