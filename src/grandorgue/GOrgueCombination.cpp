@@ -21,6 +21,8 @@
 
 #include "GOrgueCombination.h"
 #include "GOrgueCombinationDefinition.h"
+#include "GOrgueDrawStop.h"
+#include "GOrgueSetter.h"
 #include "GrandOrgueFile.h"
 
 GOrgueCombination::GOrgueCombination(GOrgueCombinationDefinition& combination_template, GrandOrgueFile* organfile) :
@@ -77,4 +79,80 @@ void GOrgueCombination::UpdateState()
 GOrgueCombinationDefinition* GOrgueCombination::GetTemplate()
 {
 	return &m_Template;
+}
+
+bool GOrgueCombination::PushLocal()
+{
+	bool used = false;
+	const std::vector<GOrgueCombinationDefinition::CombinationSlot>& elements = m_Template.GetCombinationElements();
+	UpdateState();
+
+	if (m_OrganFile->GetSetter()->IsSetterActive())
+	{
+		if (m_Protected)
+			return false;
+		if (m_OrganFile->GetSetter()->GetSetterType() == SETTER_REGULAR)
+		{
+			for(unsigned i = 0; i < elements.size(); i++)
+			{
+				if (!m_OrganFile->GetSetter()->StoreInvisibleObjects() &&
+				    !elements[i].store_unconditional)
+					m_State[i] = -1;
+				else if (elements[i].control->IsEngaged())
+				{
+					m_State[i] = 1;
+					used |= 1;
+				}
+				else
+					m_State[i] = 0;
+			}
+			m_OrganFile->Modified();
+		}
+		if (m_OrganFile->GetSetter()->GetSetterType() == SETTER_SCOPE)
+		{
+			for(unsigned i = 0; i < elements.size(); i++)
+			{
+				if (!m_OrganFile->GetSetter()->StoreInvisibleObjects() &&
+				    !elements[i].store_unconditional)
+					m_State[i] = -1;
+				else if (elements[i].control->IsEngaged())
+				{
+					m_State[i] = 1;
+					used |= 1;
+				}
+				else
+					m_State[i] = -1;
+			}
+			m_OrganFile->Modified();
+		}
+		if (m_OrganFile->GetSetter()->GetSetterType() == SETTER_SCOPED)
+		{
+			for(unsigned i = 0; i < elements.size(); i++)
+			{
+				if (m_State[i] != -1)
+				{
+					if (elements[i].control->IsEngaged())
+					{
+						m_State[i] = 1;
+						used |= 1;
+					}
+					else
+						m_State[i] = 0;
+				}
+			}
+		}
+	}
+	else
+	{
+		for(unsigned i = 0; i < elements.size(); i++)
+		{
+			if (m_State[i] != -1)
+			{
+				elements[i].control->Set(m_State[i] == 1);
+				used |= m_State[i] == 1;
+			}
+		}
+	}
+
+	return used;
 }

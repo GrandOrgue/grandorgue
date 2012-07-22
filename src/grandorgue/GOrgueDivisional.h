@@ -22,7 +22,6 @@
 #ifndef GORGUEDIVISIONAL_H
 #define GORGUEDIVISIONAL_H
 
-#include <vector>
 #include "GOrguePushbutton.h"
 #include "GOrgueCombination.h"
 
@@ -32,22 +31,16 @@ class GOrgueConfigWriter;
 class GOrgueDivisional : public GOrguePushbutton, public GOrgueCombination
 {
 protected:
-	void PushLocal();
-
-public:
-
 	int m_DivisionalNumber;
 	unsigned m_ManualNumber;
-	std::vector<int> m_Stops;
-	std::vector<int> m_Couplers;
-	std::vector<int> m_Tremulants;
 
+	bool PushLocal();
+public:
 	GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationDefinition& divisional_template);
 	void Load(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name = wxT(""));
 	void LoadCombination(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
 	void Push();
-
 };
 
 #endif
