@@ -52,6 +52,7 @@ public:
 	GOrgueRank* GetRank(unsigned index);
 	void AddRank(GOrgueRank* rank);
 	void AddPipe(GOrguePipe* pipe);
+	void AddEnclosure(unsigned index);
 	const wxString& GetName();
 };
 
