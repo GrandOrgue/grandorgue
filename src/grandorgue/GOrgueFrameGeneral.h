@@ -23,7 +23,6 @@
 #define GORGUEFRAMEGENERAL_H
 
 #include <wx/wx.h>
-#include <vector>
 #include "GOrgueCombination.h"
 
 class GOrgueConfigReader;
@@ -35,21 +34,13 @@ class GOrgueFrameGeneral : public GOrgueCombination
 private:
 	GrandOrgueFile* m_organfile;
 	wxString m_group;
-	std::vector<int> m_Stops;
-	std::vector<unsigned> m_StopManual;
-	std::vector<int> m_Couplers;
-	std::vector<unsigned> m_CouplerManual;
-	std::vector<int> m_Tremulants;
-	std::vector<int> m_DivisionalCouplers;
 
 public:
 	GOrgueFrameGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void LoadCombination(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
-	void Copy(GOrgueFrameGeneral* general);
 	void Push();
-
 };
 
 #endif /* GORGUEFRAMEGENERAL_H */
