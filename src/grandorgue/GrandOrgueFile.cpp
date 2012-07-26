@@ -999,6 +999,12 @@ unsigned GrandOrgueFile::GetEnclosureCount()
 	return m_enclosure.size();
 }
 
+unsigned GrandOrgueFile::AddEnclosure(GOrgueEnclosure* enclosure)
+{
+	m_enclosure.push_back(enclosure);
+	return m_enclosure.size() - 1;
+}
+
 GOrguePipeConfig& GrandOrgueFile::GetPipeConfig()
 {
 	return m_PipeConfig;

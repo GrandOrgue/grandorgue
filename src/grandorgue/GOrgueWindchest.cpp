@@ -99,6 +99,11 @@ void GOrgueWindchest::AddPipe(GOrguePipe* pipe)
 	m_pipes.push_back(pipe);
 }
 
+void GOrgueWindchest::AddEnclosure(unsigned index)
+{
+	m_enclosure.push_back(index);
+}
+
 const wxString& GOrgueWindchest::GetName()
 {
 	return m_Name;

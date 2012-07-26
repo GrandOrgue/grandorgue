@@ -162,6 +162,7 @@ public:
 	unsigned GetWindchestGroupCount();
 	GOrgueEnclosure* GetEnclosure(unsigned index);
 	unsigned GetEnclosureCount();
+	unsigned AddEnclosure(GOrgueEnclosure* enclosure);
 	GOGUIPanel* GetPanel(unsigned index);
 	unsigned GetPanelCount();
 	GOrgueMemoryPool& GetMemoryPool();
