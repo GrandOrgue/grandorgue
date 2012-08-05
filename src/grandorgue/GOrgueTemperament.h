@@ -45,6 +45,9 @@ public:
 
 	static const GOrgueTemperament& GetTemperament(wxString Name);
 	static std::vector<GOrgueTemperament*> GetTemperaments();
+	static unsigned GetTemperamentIndex(wxString name);
+	static const wxString GetTemperamentName(unsigned index);
+	static unsigned GetTemperamentCount();
 };
 
 #endif

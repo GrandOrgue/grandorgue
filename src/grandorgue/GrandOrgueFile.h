@@ -27,6 +27,7 @@
 #include <wx/wx.h>
 #include "GOrgueBitmapCache.h"
 #include "GOrgueCombinationDefinition.h"
+#include "GOrgueLabel.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrguePipeConfig.h"
 
@@ -111,6 +112,8 @@ private:
 	GOrguePipeConfig m_PipeConfig;
 	GOrgueSettings& m_Settings;
 	GOrgueCombinationDefinition m_GeneralTemplate;
+	GOrgueLabel m_PitchLabel;
+	GOrgueLabel m_TemperamentLabel;
 
 	void ReadOrganFile(GOrgueConfigReader& cfg);
 	void ReadCombinations(GOrgueConfigReader& cfg);
@@ -173,6 +176,8 @@ public:
 	wxString GetTemperament();
 
 	GOrgueCombinationDefinition& GetGeneralTemplate();
+	GOrgueLabel* GetPitchLabel();
+	GOrgueLabel* GetTemperamentLabel();
 
 	/* ODF general properties */
 	bool DivisionalsStoreIntermanualCouplers();

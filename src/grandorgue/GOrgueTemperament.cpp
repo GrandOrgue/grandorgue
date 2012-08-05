@@ -70,6 +70,30 @@ const GOrgueTemperament& GOrgueTemperament::GetTemperament(wxString Name)
 	return *m_Temperaments[0];
 }
 
+unsigned GOrgueTemperament::GetTemperamentIndex(wxString name)
+{
+	InitTemperaments();
+
+	for(unsigned i = 0; i < m_Temperaments.size(); i++)
+		if (m_Temperaments[i]->GetName() == name)
+			return i;
+	return 0;
+}
+
+const wxString GOrgueTemperament::GetTemperamentName(unsigned index)
+{
+	InitTemperaments();
+
+	return m_Temperaments[index]->GetName();
+}
+
+unsigned GOrgueTemperament::GetTemperamentCount()
+{
+	InitTemperaments();
+
+	return m_Temperaments.size();
+}
+
 ptr_vector<GOrgueTemperament> GOrgueTemperament::m_Temperaments;
 
 void GOrgueTemperament::InitTemperaments()

@@ -36,6 +36,7 @@
 #include "GOrgueManual.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSetterButton.h"
+#include "GOrgueTemperament.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
@@ -113,9 +114,18 @@ enum {
 	ID_SETTER_CRESCENDO_C,
 	ID_SETTER_CRESCENDO_D,
 
+	ID_SETTER_TEMPERAMENT_PREV,
+	ID_SETTER_TEMPERAMENT_NEXT,
+	ID_SETTER_PITCH_M1,
+	ID_SETTER_PITCH_M10,
+	ID_SETTER_PITCH_P1,
+	ID_SETTER_PITCH_P10,
+
 	ID_SETTER_LABEL, /* Must be the last elements */
 	ID_SETTER_CRESCENDO_LABEL,
-	ID_SETTER_CRESCENDO_SWELL
+	ID_SETTER_TEMPERAMENT_LABEL,
+	ID_SETTER_PITCH_LABEL,
+	ID_SETTER_CRESCENDO_SWELL,
 };
 
 const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
@@ -179,6 +189,13 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("General29"), ID_SETTER_GENERAL28 },
 	{ wxT("General30"), ID_SETTER_GENERAL29 },
 
+	{ wxT("PitchP1"), ID_SETTER_PITCH_P1 },
+	{ wxT("PitchP10"), ID_SETTER_PITCH_P10 },
+	{ wxT("PitchM1"), ID_SETTER_PITCH_M1 },
+	{ wxT("PitchM10"), ID_SETTER_PITCH_M10 },
+	{ wxT("TemperamentPrev"), ID_SETTER_TEMPERAMENT_PREV },
+	{ wxT("TemperamentNext"), ID_SETTER_TEMPERAMENT_NEXT },
+
 	{ wxT("CrescendoA"), ID_SETTER_CRESCENDO_A },
 	{ wxT("CrescendoB"), ID_SETTER_CRESCENDO_B },
 	{ wxT("CrescendoC"), ID_SETTER_CRESCENDO_C },
@@ -188,6 +205,8 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("CrescendoNext"), ID_SETTER_CRESCENDO_NEXT },
 	{ wxT("Swell"), ID_SETTER_CRESCENDO_SWELL },
 	{ wxT("CrescendoLabel"), ID_SETTER_CRESCENDO_LABEL },
+	{ wxT("PitchLabel"), ID_SETTER_PITCH_LABEL },
+	{ wxT("TemperamentLabel"), ID_SETTER_TEMPERAMENT_LABEL },
 
 };
 
@@ -239,6 +258,13 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+
 	m_button[ID_SETTER_PREV]->GetMidiReceiver().SetIndex(0);
 	m_button[ID_SETTER_NEXT]->GetMidiReceiver().SetIndex(1);
 	m_button[ID_SETTER_SET]->GetMidiReceiver().SetIndex(2);
@@ -267,6 +293,18 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(GOrgueConfigReader& cfg, wxString g
 		PosDisplay->Load(cfg, group);
 		return PosDisplay;
 	}
+	if (element == ID_SETTER_PITCH_LABEL)
+	{
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel(), 350, 10);
+		PosDisplay->Load(cfg, group);
+		return PosDisplay;
+	}
+	if (element == ID_SETTER_TEMPERAMENT_LABEL)
+	{
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel(), 350, 10);
+		PosDisplay->Load(cfg, group);
+		return PosDisplay;
+	}
 	if (element == ID_SETTER_CRESCENDO_SWELL)
 	{
 		GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell, panel->GetDisplayMetrics()->NewEnclosure());
@@ -277,6 +315,53 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(GOrgueConfigReader& cfg, wxString g
 	GOGUIButton* button = new GOGUIButton(panel, m_button[element], false, 1, 1);
 	button->Load(cfg, group);
 	return button;
+}
+
+GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
+{
+	GOGUIControl* control;
+	GOGUIButton* button;
+
+	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterMaster"), GOGUI_SETTER_MASTER);
+	panel->Init(cfg, metrics, _("Master Controls"), wxT("SetterMaster"), _(""));
+
+	control = new GOGUIHW1Background(panel);
+	panel->AddControl(control);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M10], false, 1, 100);
+	button->Load(cfg, wxT("SetterMasterPitchM10"));
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M1], false, 2, 100);
+	button->Load(cfg, wxT("SetterMasterPitchM1"));
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_P1], false, 4, 100);
+	button->Load(cfg, wxT("SetterMasterPitchP1"));
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_P10], false, 5, 100);
+	button->Load(cfg, wxT("SetterMasterPitchP10"));
+	panel->AddControl(button);
+
+	GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetPitchLabel(), 160, 10);
+	PosDisplay->Load(cfg, wxT("SetterMasterPitch"));
+	panel->AddControl(PosDisplay);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_TEMPERAMENT_PREV], false, 1, 101);
+	button->Load(cfg, wxT("SetterMasterTemperamentPrev"));
+	panel->AddControl(button);
+
+	PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel(), 80, 80);
+	PosDisplay->Load(cfg, wxT("SetterMasterTemperament"));
+	panel->AddControl(PosDisplay);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_TEMPERAMENT_NEXT], false, 3, 101);
+	button->Load(cfg, wxT("SetterMasterTemperamentNext"));
+	panel->AddControl(button);
+
+	return panel;
 }
 
 GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
@@ -734,6 +819,13 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_button[ID_SETTER_CRESCENDO_C]->Load(cfg, wxT("SetterCrescendoC"), _("C"));
 	m_button[ID_SETTER_CRESCENDO_D]->Load(cfg, wxT("SetterCrescendoD"), _("D"));
 
+	m_button[ID_SETTER_PITCH_M1]->Load(cfg, wxT("SetterPitchM1"), _("-1"));
+	m_button[ID_SETTER_PITCH_M10]->Load(cfg, wxT("SetterPitchM10"), _("-10"));
+	m_button[ID_SETTER_PITCH_P1]->Load(cfg, wxT("SetterPitchP1"), _("+1"));
+	m_button[ID_SETTER_PITCH_P10]->Load(cfg, wxT("SetterPitchP10"), _("+10"));
+	m_button[ID_SETTER_TEMPERAMENT_PREV]->Load(cfg, wxT("SetterTemperamentPrev"), _("<"));
+	m_button[ID_SETTER_TEMPERAMENT_NEXT]->Load(cfg, wxT("SetterTemperamentNext"), _(">"));
+
 	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"));
 
 	for(unsigned i = 0; i < 10; i++)
@@ -917,6 +1009,34 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 			case ID_SETTER_CRESCENDO_CURRENT:
 				m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
 				break;
+
+			case ID_SETTER_PITCH_M1:
+				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() - 1);
+				break;
+			case ID_SETTER_PITCH_M10:
+				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() - 10);
+				break;
+			case ID_SETTER_PITCH_P1:
+				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() + 1);
+				break;
+			case ID_SETTER_PITCH_P10:
+				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() + 10);
+				break;
+
+			case ID_SETTER_TEMPERAMENT_NEXT:
+			case ID_SETTER_TEMPERAMENT_PREV:
+				{
+					unsigned index = GOrgueTemperament::GetTemperamentIndex(m_organfile->GetTemperament());
+					index += GOrgueTemperament::GetTemperamentCount();
+					if (i == ID_SETTER_TEMPERAMENT_NEXT)
+						index++;
+					else
+						index--;
+					index = index % GOrgueTemperament::GetTemperamentCount();
+					m_organfile->SetTemperament(GOrgueTemperament::GetTemperamentName(index));
+				}
+				break;
+
 			}
 }
 

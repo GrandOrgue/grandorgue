@@ -141,6 +141,10 @@ float GOrguePipeConfig::GetDefaultTuning()
 
 void GOrguePipeConfig::SetTuning(float cent)
 {
+	if (cent < -1200)
+		cent = -1200;
+	if (cent > 1200)
+		cent = 1200;
 	m_Tuning = cent;
 	m_OrganFile->Modified();
 	m_Callback->UpdateTuning();

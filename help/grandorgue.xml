@@ -1882,6 +1882,38 @@ default).
 	    </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>PitchP1, PitchP10, PitchM1, PitchM10</term>
+          <listitem>
+            <para>
+Buttons for controlling the organ pitch (+1, +10, -1, -10 cent).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PitchLabel</term>
+          <listitem>
+            <para>
+Label displaying the current pitch shift of the organ.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TemperamentPrev, TemperamentNext</term>
+          <listitem>
+            <para>
+Buttons for switching temperaments.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TemperamentLabel</term>
+          <listitem>
+            <para>
+Label displaying the current temperament of the organ.
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
