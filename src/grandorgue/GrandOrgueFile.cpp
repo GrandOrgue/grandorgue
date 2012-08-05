@@ -96,7 +96,9 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_bitmaps(this),
 	m_PipeConfig(this, this),
 	m_Settings(settings),
-	m_GeneralTemplate(this)
+	m_GeneralTemplate(this),
+	m_PitchLabel(this),
+	m_TemperamentLabel(this)
 {
 	m_pool.SetMemoryLimit(m_Settings.GetMemoryLimit());
 }
@@ -392,6 +394,8 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	for (unsigned i = m_ODFManualCount; i < m_manual.size(); i++)
 		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
 	m_panels.push_back(m_setter->CreateFloatingPanel(cfg));
+
+	m_panels.push_back(m_setter->CreateMasterPanel(cfg));
 
 	m_GeneralTemplate.InitGeneral();
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
@@ -1018,6 +1022,7 @@ void GrandOrgueFile::UpdateAmplitude()
 
 void GrandOrgueFile::UpdateTuning()
 {
+	m_PitchLabel.SetName(wxString::Format(_("%f cent"), m_PipeConfig.GetTuning()));
 	for (unsigned i = 0; i < m_ranks.size(); i++)
 		m_ranks[i]->UpdateTuning();
 }
@@ -1161,6 +1166,7 @@ void GrandOrgueFile::Reset()
 
 void GrandOrgueFile::SetTemperament(const GOrgueTemperament& temperament)
 {
+	m_TemperamentLabel.SetName(wxGetTranslation(temperament.GetName()));
         for (unsigned k = 0; k < m_ranks.size(); k++)
 		m_ranks[k]->SetTemperament(temperament);
 }
@@ -1198,4 +1204,14 @@ void GrandOrgueFile::Modified()
 GOrgueCombinationDefinition& GrandOrgueFile::GetGeneralTemplate()
 {
 	return m_GeneralTemplate;
+}
+
+GOrgueLabel* GrandOrgueFile::GetPitchLabel()
+{
+	return &m_PitchLabel;
+}
+
+GOrgueLabel* GrandOrgueFile::GetTemperamentLabel()
+{
+	return &m_TemperamentLabel;
 }
