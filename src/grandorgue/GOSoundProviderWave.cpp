@@ -191,6 +191,7 @@ void GOSoundProviderWave::LoadFromFile
 	,loop_load_type loop_mode
 	,unsigned attack_load
 	,unsigned release_load
+	,int midi_key_number
 	)
 {
 
@@ -291,6 +292,11 @@ void GOSoundProviderWave::LoadFromFile
 		}
 
 		ComputeReleaseAlignmentInfo();
+		if (midi_key_number != -1)
+		{
+			m_MidiKeyNumber = midi_key_number;
+			m_MidiPitchFract = 0;
+		}
 	}
 	catch (wxString error)
 	{

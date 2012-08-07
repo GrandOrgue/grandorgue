@@ -57,6 +57,7 @@ private:
 	float m_TemperamentOffset;
 	unsigned m_HarmonicNumber;
 	float m_PitchCorrection;
+	int m_SampleMidiKeyNumber;
 	GOrguePipe* m_Reference;
 	GOSoundProviderWave m_SoundProvider;
 	GOrguePipeConfig m_PipeConfig;

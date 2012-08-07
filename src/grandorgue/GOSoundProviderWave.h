@@ -84,7 +84,7 @@ public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
 
 	void LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, wxString path, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode,
-			  unsigned attack_load, unsigned release_load);
+			  unsigned attack_load, unsigned release_load, int midi_key_number);
 	void SetAmplitude(float fixed_amplitude, float gain);
 };
 

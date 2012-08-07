@@ -55,6 +55,7 @@ GOrguePipe::GOrguePipe
 	m_TemperamentOffset(0),
 	m_HarmonicNumber(harmonic_number),
 	m_PitchCorrection(pitch_correction),
+	m_SampleMidiKeyNumber(-1),
 	m_Reference(NULL),
 	m_SoundProvider(organfile->GetMemoryPool()),
 	m_PipeConfig(organfile, this)
@@ -261,6 +262,7 @@ void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 	m_PitchCorrection = cfg.ReadInteger(ODFSetting, group, prefix + wxT("PitchCorrection"), -1200, 1200, false, m_PitchCorrection);
 	m_SamplerGroupID = cfg.ReadInteger(ODFSetting, group, prefix + wxT("WindchestGroup"), 1, m_OrganFile->GetWindchestGroupCount(), false, m_SamplerGroupID);
 	m_Percussive = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("Percussive"), false, m_Percussive);
+	m_SampleMidiKeyNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MIDIKeyNumber"), false, -1, 127, -1);
 	UpdateAmplitude();
 	m_OrganFile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
@@ -398,6 +400,8 @@ void GOrguePipe::UpdateHash(SHA_CTX& ctx)
 	SHA1_Update(&ctx, &value, sizeof(value));
 	value = GetEffectiveReleaseLoad();
 	SHA1_Update(&ctx, &value, sizeof(value));
+	value = m_SampleMidiKeyNumber;
+	SHA1_Update(&ctx, &value, sizeof(value));
 
 	value = m_AttackInfo.size();
 	SHA1_Update(&ctx, &value, sizeof(value));
@@ -449,7 +453,8 @@ void GOrguePipe::LoadData()
 	try
 	{
 		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_OrganFile->GetODFPath(), GetEffectiveBitsPerSample(), GetEffectiveChannels(), 
-					     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad(), GetEffectiveAttackLoad(), GetEffectiveReleaseLoad());
+					     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad(), GetEffectiveAttackLoad(), GetEffectiveReleaseLoad(),
+					     m_SampleMidiKeyNumber);
 	}
 	catch(std::bad_alloc& ba)
 	{
