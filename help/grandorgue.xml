@@ -3989,7 +3989,7 @@ temperaments.
           <term>WindchestGroup</term>
           <listitem>
             <para>
-(interger 1 - number of windchests, required) specify the windchest,
+(integer 1 - number of windchests, required) specify the windchest,
 on which the pipes of the are placed.
 	    </para>
           </listitem>
@@ -4129,6 +4129,17 @@ file.
             <para>
 (float 1-1024, default: rank harmonic number) Harmonic number (= 64 /
 rank size), eg. 2 2/3 =&gt; 64 / (2 2/3) = 24.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999MIDIKeyNumber</term>
+          <listitem>
+            <para>
+(integer -1 - 127, default: -1) If -1, use pitch information from the
+Pipe999 sample, else override the information in the sample with this
+midi note number (Pipe999PitchCorrection is used for specifing the
+fraction).
 	    </para>
           </listitem>
         </varlistentry>
