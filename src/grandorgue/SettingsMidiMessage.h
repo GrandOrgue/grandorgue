@@ -37,6 +37,7 @@ class SettingsMidiMessage : public wxPanel
 
 private:
 	GOrgueSettings& m_Settings;
+	GOrgueMidi& m_midi;
 	wxListView* m_Events;
 	wxButton* m_Properties;
 
@@ -48,7 +49,7 @@ private:
 	void UpdateMessages(unsigned i);
 
 public:
-	SettingsMidiMessage(GOrgueSettings& settings, wxWindow* parent);
+	SettingsMidiMessage(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent);
 
 	void OnEventsClick(wxListEvent& event);
 	void OnEventsDoubleClick(wxListEvent& event);

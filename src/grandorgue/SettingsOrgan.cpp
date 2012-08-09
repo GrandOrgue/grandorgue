@@ -30,9 +30,10 @@ BEGIN_EVENT_TABLE(SettingsOrgan, wxPanel)
 	EVT_BUTTON(ID_PROPERTIES, SettingsOrgan::OnProperties)
 END_EVENT_TABLE()
 
-SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, wxWindow* parent) :
+SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings)
+	m_Settings(settings),
+	m_midi(midi)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
@@ -116,6 +117,7 @@ void SettingsOrgan::OnProperties(wxCommandEvent& event)
 	MIDIListenDialog dlg
 		(this
 		,m_Events->GetItemText(index)
+		,m_midi
 		,MIDIListenDialog::LSTN_SETTINGSDLG_MEMORY_OR_ORGAN
 		,m_Events->GetItemData(index)
 		);

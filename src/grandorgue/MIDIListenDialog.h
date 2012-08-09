@@ -27,6 +27,7 @@
 #include <wx/spinctrl.h>
 #include "GrandOrgueDef.h"
 
+class GOrgueMidi;
 class GOrgueMidiEvent;
 
 class MIDIListenDialog : public wxDialog
@@ -63,16 +64,18 @@ private:
 
 	static const LISTEN_DIALOG_EVENTS GetEventFromType(const LISTEN_DIALOG_TYPE type);
 	LISTEN_DIALOG_TYPE m_type;
-    int event;
+	int event;
 	wxChoice* m_event;
 	wxSpinCtrl *m_channel, *m_data;
 	wxToggleButton* m_listen;
+	GOrgueMidi& m_midi;
 
 public:
 
 	MIDIListenDialog
 		(wxWindow* parent
 		,wxString title
+		,GOrgueMidi& midi
 		,const LISTEN_DIALOG_TYPE type
 		,const int event_id
 		);
