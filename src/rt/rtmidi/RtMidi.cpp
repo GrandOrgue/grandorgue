@@ -1426,6 +1426,8 @@ std::string RtMidiOut :: getPortName( unsigned int portNumber )
     snd_seq_get_any_client_info( data->seq, cnum, cinfo );
     std::ostringstream os;
     os << snd_seq_client_info_get_name(cinfo);
+    os << " ";                                    // GO: These lines added to make sure devices are listed
+    os << snd_seq_port_info_get_client( pinfo );  // GO: with full portnames added to ensure individual device names
     os << ":";
     os << snd_seq_port_info_get_port(pinfo);
     stringName = os.str();
@@ -2366,6 +2368,14 @@ std::string RtMidiOut :: getPortName( unsigned int portNumber )
 #else
   stringName = std::string( deviceCaps.szPname );
 #endif
+
+  // GO: Next lines added to add the portNumber to the name so that 
+  // GO: the device's names are sure to be listed with individual names
+  // GO: even when they have the same brand name
+  std::ostringstream os;
+  os << " ";
+  os << portNumber;
+  stringName += os.str();
 
   return stringName;
 }
