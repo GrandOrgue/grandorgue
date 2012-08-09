@@ -46,16 +46,16 @@ private:
 		unsigned bank_lsb[16];
 		unsigned bank_msb[16];
 		GOrgueMidi* midi;
-	} MIDI_DEVICE;
+	} MIDI_IN_DEVICE;
 
 	GOrgueSettings& m_Settings;
-	std::map<wxString, int> m_midi_device_map;
-	ptr_vector<MIDI_DEVICE> m_midi_devices;
+	std::map<wxString, int> m_midi_in_device_map;
+	ptr_vector<MIDI_IN_DEVICE> m_midi_in_devices;
 	int m_transpose;
 	bool m_listening;
 	wxEvtHandler* m_listen_evthandler;
 
-	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device);
+	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE* device);
 
 	static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData);
 
@@ -69,7 +69,7 @@ public:
 
 	bool HasListener();
 	void SetListener(wxEvtHandler* event_handler);
-	std::map<wxString, int>& GetDevices();
+	std::map<wxString, int>& GetInDevices();
 	bool HasActiveDevice();
 	int GetTranspose();
 	void SetTranspose(int transpose);

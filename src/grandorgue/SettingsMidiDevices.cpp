@@ -39,7 +39,8 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	m_Sound.GetMidi().UpdateDevices();
 
 	wxArrayString choices;
-	for (std::map<wxString, int>::iterator it2 = m_Sound.GetMidi().GetDevices().begin(); it2 != m_Sound.GetMidi().GetDevices().end(); it2++)
+	std::map<wxString, int> list = m_Sound.GetMidi().GetInDevices();
+	for (std::map<wxString, int>::iterator it2 = list.begin(); it2 != list.end(); it2++)
 	{
 		choices.push_back(it2->first);
 		m_DeviceData.push_back(m_Sound.GetSettings().GetMidiInDeviceChannelShift(it2->first));
