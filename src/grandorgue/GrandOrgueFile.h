@@ -39,6 +39,7 @@ class GOrgueDivisionalCoupler;
 class GOrgueEnclosure;
 class GOrgueGeneral;
 class GOrgueManual;
+class GOrgueMidi;
 class GOrgueMidiEvent;
 class GOrguePiston;
 class GOrguePushbutton;
@@ -106,6 +107,7 @@ private:
 	ptr_vector<GOGUIPanel> m_panels;
 
 	GOSoundEngine* m_soundengine;
+	GOrgueMidi* m_midi;
 
 	GOrgueMemoryPool m_pool;
 	GOrgueBitmapCache m_bitmaps;
@@ -136,7 +138,7 @@ public:
 	void DeleteCache();
 	void DeleteSettings();;
 	void Abort();
-	void PreparePlayback(GOSoundEngine* engine);
+	void PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi);
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void ControlChanged(void* control);
@@ -217,6 +219,8 @@ public:
 	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
+
+	void SetMidiListener(wxEvtHandler* event_handler);
 };
 
 #endif

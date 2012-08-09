@@ -40,6 +40,7 @@
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
 #include "GOrgueManual.h"
+#include "GOrgueMidi.h"
 #include "GOrguePath.h"
 #include "GOrguePipe.h"
 #include "GOrguePiston.h"
@@ -93,6 +94,7 @@ GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
 	m_manual(0),
 	m_panels(0),
 	m_soundengine(0),
+	m_midi(0),
 	m_bitmaps(this),
 	m_PipeConfig(this, this),
 	m_Settings(settings),
@@ -1092,6 +1094,12 @@ void GrandOrgueFile::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE ha
 		m_soundengine->SwitchSample(pipe, handle);
 }
 
+void GrandOrgueFile::SetMidiListener(wxEvtHandler* event_handler)
+{
+	if (m_midi)
+		m_midi->SetListener(event_handler);
+}
+
 void GrandOrgueFile::Abort()
 {
 	m_soundengine = NULL;
@@ -1104,11 +1112,14 @@ void GrandOrgueFile::Abort()
 
 	for (unsigned i = 0; i < m_tremulant.size(); i++)
 		m_tremulant[i]->Abort();
+	
+	m_midi = NULL;
 }
 
-void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine)
+void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 {
 	m_soundengine = engine;
+	m_midi = midi;
 
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->PreparePlayback();

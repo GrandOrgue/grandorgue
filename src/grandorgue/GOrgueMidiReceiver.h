@@ -99,6 +99,7 @@ public:
 	void DeleteEvent(unsigned index);
 
 	GOrgueSettings& GetSettings();
+	GrandOrgueFile* GetOrganfile();
 };
 
 #endif

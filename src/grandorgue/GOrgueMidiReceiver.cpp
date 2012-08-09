@@ -391,3 +391,8 @@ GOrgueSettings& GOrgueMidiReceiver::GetSettings()
 {
 	return m_organfile->GetSettings();
 }
+
+GrandOrgueFile* GOrgueMidiReceiver::GetOrganfile()
+{
+	return m_organfile;
+}
