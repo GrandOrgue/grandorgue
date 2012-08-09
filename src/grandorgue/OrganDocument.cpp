@@ -32,7 +32,8 @@ extern GOrgueSound* g_sound;
 
 OrganDocument::OrganDocument() :
 	m_OrganFileReady(false),
-	m_organfile(NULL)
+	m_organfile(NULL),
+	m_sound(*g_sound)
 {
 }
 
@@ -56,13 +57,13 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	wxBusyCursor busy;
 
 	CloseOrgan();
-	bool open_sound = g_sound->OpenSound();
+	bool open_sound = m_sound.OpenSound();
 
 	/* abort if we failed to open the sound device */
 	if (!open_sound)
 		return false;
 
-	m_organfile = new GrandOrgueFile(this, g_sound->GetSettings());
+	m_organfile = new GrandOrgueFile(this, m_sound.GetSettings());
 	wxString error = m_organfile->Load(file, file2);
 	if (!error.IsEmpty())
 	{
@@ -76,14 +77,14 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 			DeleteAllViews();
 		return false;
 	}
-	g_sound->PreparePlayback(m_organfile);
+	m_sound.PreparePlayback(m_organfile);
 	if (m_organfile->GetVolume() != -121)
 	{
 		wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
 		event.SetInt(m_organfile->GetVolume());
 		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 
-		g_sound->GetEngine().SetVolume(m_organfile->GetVolume());
+		m_sound.GetEngine().SetVolume(m_organfile->GetVolume());
 	}
 	m_OrganFileReady = true;
 
@@ -103,14 +104,14 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 
 bool OrganDocument::DoSaveDocument(const wxString& file)
 {
-	m_organfile->SetVolume(g_sound->GetEngine().GetVolume());
+	m_organfile->SetVolume(m_sound.GetEngine().GetVolume());
 	m_organfile->Save(file);
 	return true;
 }
 
 void OrganDocument::CloseOrgan()
 {
-	g_sound->CloseSound();
+	m_sound.CloseSound();
 
 	m_OrganFileReady = false;
 	GOMutexLocker locker(m_lock);
