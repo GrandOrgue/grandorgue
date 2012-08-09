@@ -28,6 +28,7 @@
 
 class GOrgueMidiEvent;
 class GrandOrgueFile;
+class GOrgueSound;
 
 class OrganDocument : public wxDocument
 {
@@ -35,6 +36,7 @@ private:
 	GOMutex m_lock;
 	bool m_OrganFileReady;
 	GrandOrgueFile* m_organfile;
+	GOrgueSound& m_sound;
 
 	void CloseOrgan();
 
