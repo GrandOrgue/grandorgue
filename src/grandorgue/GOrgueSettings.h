@@ -66,6 +66,7 @@ private:
 	unsigned m_Preset;
 	std::map<long, wxString> m_OrganMidiEvents;
 	std::map<wxString, int> m_MidiIn;
+	std::map<wxString, bool> m_MidiOut;
 	wxString m_WAVPath;
 	wxString m_OrganPath;
 	wxString m_SettingPath;
@@ -184,6 +185,10 @@ public:
 	int GetMidiInDeviceChannelShift(wxString device);
 	void SetMidiInDeviceChannelShift(wxString device, int shift);
 	std::vector<wxString> GetMidiInDeviceList();
+
+	int GetMidiOutState(wxString device);
+	void SetMidiOutState(wxString device, bool enabled);
+	std::vector<wxString> GetMidiOutDeviceList();
 
 	const std::vector<wxString>& GetAudioGroups();
 	void SetAudioGroups(const std::vector<wxString>& audio_groups);

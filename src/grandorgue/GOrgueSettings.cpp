@@ -242,6 +242,15 @@ void GOrgueSettings::Load()
 		}
 		while (m_Config.GetNextEntry(str, no));
 	m_Config.SetPath(wxT("/"));
+
+	m_Config.SetPath(wxT("/Devices/MIDIOut"));
+	if (m_Config.GetFirstEntry(str, no))
+		do
+		{
+			m_MidiOut[str] = m_Config.Read(str, 0L) == 1 ? true : false;
+		}
+		while (m_Config.GetNextEntry(str, no));
+	m_Config.SetPath(wxT("/"));
 }
 
 size_t GOrgueSettings::GetMemoryLimit()
@@ -723,6 +732,29 @@ std::vector<wxString> GOrgueSettings::GetMidiInDeviceList()
 {
 	std::vector<wxString> list;
 	for (std::map<wxString, int>::iterator it = m_MidiIn.begin(); it != m_MidiIn.end(); it++)
+		list.push_back(it->first);
+	return list;
+}
+
+int GOrgueSettings::GetMidiOutState(wxString device)
+{
+	std::map<wxString, bool>::iterator it = m_MidiOut.find(device);
+	if (it == m_MidiOut.end())
+		return false;
+	else
+		return it->second;
+}
+
+void GOrgueSettings::SetMidiOutState(wxString device, bool enabled)
+{
+	m_Config.Write(wxT("Devices/MIDIOut/") + device, enabled ? 1 : -1);
+	m_MidiOut[device] = enabled;
+}
+
+std::vector<wxString> GOrgueSettings::GetMidiOutDeviceList()
+{
+	std::vector<wxString> list;
+	for (std::map<wxString, bool>::iterator it = m_MidiOut.begin(); it != m_MidiOut.end(); it++)
 		list.push_back(it->first);
 	return list;
 }
