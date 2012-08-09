@@ -42,7 +42,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	for (std::map<wxString, int>::iterator it2 = m_Sound.GetMidi().GetDevices().begin(); it2 != m_Sound.GetMidi().GetDevices().end(); it2++)
 	{
 		choices.push_back(it2->first);
-		m_DeviceData.push_back(m_Sound.GetSettings().GetMidiDeviceChannelShift(it2->first));
+		m_DeviceData.push_back(m_Sound.GetSettings().GetMidiInDeviceChannelShift(it2->first));
 	}
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -91,6 +91,6 @@ void SettingsMidiDevices::Save()
 		j = m_DeviceData[i];
 		if (!m_Devices->IsChecked(i))
 			j = -j - 1;
-		m_Sound.GetSettings().SetMidiDeviceChannelShift(m_Devices->GetString(i), j);
+		m_Sound.GetSettings().SetMidiInDeviceChannelShift(m_Devices->GetString(i), j);
 	}
 }

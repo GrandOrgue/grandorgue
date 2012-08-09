@@ -231,6 +231,17 @@ void GOrgueSettings::Load()
 	double tmp;
 	m_Config.Read(wxT("MemoryLimit"), &tmp, 0.0);
 	m_MemoryLimit = tmp * (1024.0 * 1024.0);
+
+	wxString str;
+	long no;
+	m_Config.SetPath(wxT("/Devices/MIDI"));
+	if (m_Config.GetFirstEntry(str, no))
+		do
+		{
+			m_MidiIn[str] = m_Config.Read(str, 0L);
+		}
+		while (m_Config.GetNextEntry(str, no));
+	m_Config.SetPath(wxT("/"));
 }
 
 size_t GOrgueSettings::GetMemoryLimit()
@@ -693,31 +704,26 @@ void GOrgueSettings::SetOrganList(std::map<long, wxString> list)
 	m_Config.Write(wxT("OrganMIDI/Count"), (long)count);
 }
 
-int GOrgueSettings::GetMidiDeviceChannelShift(wxString device)
+int GOrgueSettings::GetMidiInDeviceChannelShift(wxString device)
 {
-	return m_Config.Read(wxT("Devices/MIDI/") + device, 0L);
+	std::map<wxString, int>::iterator it = m_MidiIn.find(device);
+	if (it == m_MidiIn.end())
+		return 0;
+	else
+		return it->second;
 }
 
-void GOrgueSettings::SetMidiDeviceChannelShift(wxString device, int shift)
+void GOrgueSettings::SetMidiInDeviceChannelShift(wxString device, int shift)
 {
 	m_Config.Write(wxT("Devices/MIDI/") + device, shift);
+	m_MidiIn[device] = shift;
 }
 
-std::vector<wxString> GOrgueSettings::GetMidiDeviceList()
+std::vector<wxString> GOrgueSettings::GetMidiInDeviceList()
 {
 	std::vector<wxString> list;
-	wxString str;
-	long no;
-
-	m_Config.SetPath(wxT("/Devices/MIDI"));
-	if (m_Config.GetFirstEntry(str, no))
-		do
-		{
-			list.push_back(str);
-		}
-		while (m_Config.GetNextEntry(str, no));
-
-	m_Config.SetPath(wxT("/"));
+	for (std::map<wxString, int>::iterator it = m_MidiIn.begin(); it != m_MidiIn.end(); it++)
+		list.push_back(it->first);
 	return list;
 }
 

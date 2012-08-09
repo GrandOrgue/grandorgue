@@ -65,6 +65,7 @@ private:
 	unsigned m_PolyphonyLimit;
 	unsigned m_Preset;
 	std::map<long, wxString> m_OrganMidiEvents;
+	std::map<wxString, int> m_MidiIn;
 	wxString m_WAVPath;
 	wxString m_OrganPath;
 	wxString m_SettingPath;
@@ -180,9 +181,9 @@ public:
 	const std::map<long, wxString>& GetOrganList();
 	void SetOrganList(std::map<long, wxString> list);
 
-	int GetMidiDeviceChannelShift(wxString device);
-	void SetMidiDeviceChannelShift(wxString device, int shift);
-	std::vector<wxString> GetMidiDeviceList();
+	int GetMidiInDeviceChannelShift(wxString device);
+	void SetMidiInDeviceChannelShift(wxString device, int shift);
+	std::vector<wxString> GetMidiInDeviceList();
 
 	const std::vector<wxString>& GetAudioGroups();
 	void SetAudioGroups(const std::vector<wxString>& audio_groups);
