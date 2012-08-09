@@ -30,8 +30,8 @@
 
 GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_Settings(settings),
-	m_midi_device_map(),
-	m_midi_devices(),
+	m_midi_in_device_map(),
+	m_midi_in_devices(),
 	m_listening(false),
 	m_listen_evthandler(NULL)
 {
@@ -46,9 +46,9 @@ void GOrgueMidi::UpdateDevices()
 		for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
 		{
 			wxString name = wxString::FromAscii(midi_dev.getPortName(i).c_str());
-			if (!m_midi_device_map.count(name))
+			if (!m_midi_in_device_map.count(name))
 			{
-				MIDI_DEVICE *t = new MIDI_DEVICE;
+				MIDI_IN_DEVICE *t = new MIDI_IN_DEVICE;
 				t->midi_in = new RtMidiIn();
 				t->channel_shift = 0;
 				t->midi = this;
@@ -56,13 +56,13 @@ void GOrgueMidi::UpdateDevices()
 				t->active = false;
 				t->name = name;
 				t->midi_in->setCallback(&MIDICallback, t);
-				m_midi_devices.push_back(t);
+				m_midi_in_devices.push_back(t);
 			
 				name.Replace(wxT("\\"), wxT("|"));
-				m_midi_device_map[name] = m_midi_devices.size() - 1;
+				m_midi_in_device_map[name] = m_midi_in_devices.size() - 1;
 			}
 			else
-				m_midi_devices[m_midi_device_map[name]]->rtmidi_port_no = i;
+				m_midi_in_devices[m_midi_in_device_map[name]]->rtmidi_port_no = i;
 		}
 	}
 	catch (RtError &e)
@@ -78,13 +78,13 @@ GOrgueMidi::~GOrgueMidi()
 	try
 	{
 		/* dispose of all midi devices */
-		for (unsigned i = 0; i < m_midi_devices.size(); i++)
+		for (unsigned i = 0; i < m_midi_in_devices.size(); i++)
 		{
-			m_midi_devices[i]->active = false;
+			m_midi_in_devices[i]->active = false;
 
-			if (m_midi_devices[i]->midi_in)
-				m_midi_devices[i]->midi_in->closePort();
-			DELETE_AND_NULL(m_midi_devices[i]->midi_in);
+			if (m_midi_in_devices[i]->midi_in)
+				m_midi_in_devices[i]->midi_in->closePort();
+			DELETE_AND_NULL(m_midi_in_devices[i]->midi_in);
 		}
 	}
 	catch (RtError &e)
@@ -99,9 +99,9 @@ void GOrgueMidi::Open()
 {
 	UpdateDevices();
 
-	for (unsigned i = 0; i < m_midi_devices.size(); i++)
+	for (unsigned i = 0; i < m_midi_in_devices.size(); i++)
 	{
-		MIDI_DEVICE& this_dev = *m_midi_devices[i];
+		MIDI_IN_DEVICE& this_dev = *m_midi_in_devices[i];
 		memset(this_dev.bank_msb, 0, sizeof(this_dev.bank_msb));
 		memset(this_dev.bank_lsb, 0, sizeof(this_dev.bank_lsb));
 		int channel_shift = m_Settings.GetMidiInDeviceChannelShift(this_dev.name);
@@ -134,21 +134,21 @@ void GOrgueMidi::Open()
 
 }
 
-std::map<wxString, int>& GOrgueMidi::GetDevices()
+std::map<wxString, int>& GOrgueMidi::GetInDevices()
 {
-	return m_midi_device_map;
+	return m_midi_in_device_map;
 }
 
 bool GOrgueMidi::HasActiveDevice()
 {
-	for (unsigned i = 0; i < m_midi_devices.size(); i++)
-		if (m_midi_devices[i]->active)
+	for (unsigned i = 0; i < m_midi_in_devices.size(); i++)
+		if (m_midi_in_devices[i]->active)
 			return true;
 
 	return false;
 }
 
-void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_DEVICE* device)
+void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE* device)
 {
 	if (!device->active)
 		return;
@@ -197,6 +197,6 @@ void GOrgueMidi::SetListener(wxEvtHandler* event_handler)
 
 void GOrgueMidi::MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData)
 {
-	MIDI_DEVICE* m_dev = (MIDI_DEVICE*)userData;
+	MIDI_IN_DEVICE* m_dev = (MIDI_IN_DEVICE*)userData;
 	m_dev->midi->ProcessMessage(*msg, m_dev);
 }
