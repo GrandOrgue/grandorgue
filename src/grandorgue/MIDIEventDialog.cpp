@@ -21,11 +21,8 @@
 
 #include <wx/statline.h>
 #include "MIDIEventDialog.h"
-#include "GOrgueMidi.h"
 #include "GOrgueSettings.h"
-#include "GOrgueSound.h"
-
-extern GOrgueSound* g_sound;
+#include "GrandOrgueFile.h"
 
 IMPLEMENT_CLASS(MIDIEventDialog, wxDialog)
 
@@ -174,7 +171,7 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 
 MIDIEventDialog::~MIDIEventDialog()
 {
-	g_sound->GetMidi().SetListener(NULL);
+	m_midi.GetOrganfile()->SetMidiListener(NULL);
 }
 
 const GOrgueMidiReceiver& MIDIEventDialog::GetResult()
@@ -289,11 +286,11 @@ void MIDIEventDialog::OnListenClick(wxCommandEvent& event)
 	if (m_listen->GetValue())
 	{
 		this->SetCursor(wxCursor(wxCURSOR_WAIT));
-		g_sound->GetMidi().SetListener(GetEventHandler());
+		m_midi.GetOrganfile()->SetMidiListener(GetEventHandler());
 	}
 	else
 	{
-		g_sound->GetMidi().SetListener(NULL);
+		m_midi.GetOrganfile()->SetMidiListener(NULL);
 		this->SetCursor(wxCursor(wxCURSOR_ARROW));
 	}
 }
@@ -317,6 +314,6 @@ void MIDIEventDialog::OnMidiEvent(GOrgueMidiEvent& event)
 	LoadEvent();
 
 	m_listen->SetValue(false);
-	g_sound->GetMidi().SetListener(NULL);
+	m_midi.GetOrganfile()->SetMidiListener(NULL);
 	this->SetCursor(wxCursor(wxCURSOR_ARROW));
 }
