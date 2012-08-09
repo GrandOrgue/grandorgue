@@ -51,8 +51,8 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 
 	m_MidiDevicePage = new SettingsMidiDevices(m_Sound, notebook);
 	m_OptionsPage = new SettingsOption(m_Sound.GetSettings(), notebook);
-	m_OrganPage = new SettingsOrgan(m_Sound.GetSettings(), notebook);
-	m_MidiMessagePage = new SettingsMidiMessage(m_Sound.GetSettings(), notebook);
+	m_OrganPage = new SettingsOrgan(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
+	m_MidiMessagePage = new SettingsMidiMessage(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
 	m_GroupPage = new SettingsAudioGroup(m_Sound.GetSettings(), notebook);
 	m_OutputPage = new SettingsAudioOutput(m_Sound, *m_GroupPage, notebook);
 

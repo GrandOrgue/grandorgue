@@ -24,10 +24,6 @@
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
-#include "GOrgueSound.h"
-
-/* TODO: This should not be... */
-extern GOrgueSound* g_sound;
 
 IMPLEMENT_CLASS(MIDIListenDialog, wxDialog)
 
@@ -130,12 +126,14 @@ wxString MIDIListenDialog::GetEventChannelString(int what)
 MIDIListenDialog::MIDIListenDialog
 	(wxWindow* win
 	,wxString title
+	,GOrgueMidi& midi
 	,const LISTEN_DIALOG_TYPE type
 	,const int event_id
 	)
 	:
 	wxDialog(win, wxID_ANY, title),
-	m_type(type)
+	m_type(type),
+	m_midi(midi)
 {
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -186,14 +184,14 @@ MIDIListenDialog::MIDIListenDialog
 	PutEvent(event_id);
 
 	m_listen->Disable();
-	if (g_sound->GetMidi().HasActiveDevice())
+	if (m_midi.HasActiveDevice())
 		m_listen->Enable();
 
 }
 
 MIDIListenDialog::~MIDIListenDialog()
 {
-	g_sound->GetMidi().SetListener(NULL);
+	m_midi.SetListener(NULL);
 }
 
 int MIDIListenDialog::GetEvent()
@@ -293,11 +291,11 @@ void MIDIListenDialog::OnListenClick(wxCommandEvent &event)
 	if (m_listen->GetValue())
 	{
 		this->SetCursor(wxCursor(wxCURSOR_WAIT));
-		g_sound->GetMidi().SetListener(GetEventHandler());
+		m_midi.SetListener(GetEventHandler());
 	}
 	else
 	{
-		g_sound->GetMidi().SetListener(NULL);
+		m_midi.SetListener(NULL);
 		this->SetCursor(wxCursor(wxCURSOR_ARROW));
 	}
 }
@@ -310,7 +308,7 @@ void MIDIListenDialog::OnMidiEvent(GOrgueMidiEvent& event)
 	if (PutEvent(what))
 	{
 		m_listen->SetValue(false);
-		g_sound->GetMidi().SetListener(NULL);
+		m_midi.SetListener(NULL);
 		this->SetCursor(wxCursor(wxCURSOR_ARROW));
 	}
 }

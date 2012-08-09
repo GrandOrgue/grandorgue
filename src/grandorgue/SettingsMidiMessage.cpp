@@ -28,9 +28,10 @@ BEGIN_EVENT_TABLE(SettingsMidiMessage, wxPanel)
 	EVT_BUTTON(ID_PROPERTIES, SettingsMidiMessage::OnProperties)
 END_EVENT_TABLE()
 
-SettingsMidiMessage::SettingsMidiMessage(GOrgueSettings& settings, wxWindow* parent) :
+SettingsMidiMessage::SettingsMidiMessage(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings)
+	m_Settings(settings),
+	m_midi(midi)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
@@ -176,7 +177,7 @@ void SettingsMidiMessage::OnEventsDoubleClick(wxListEvent& event)
 	m_Properties->Enable();
 	int index = m_Events->GetFirstSelected();
 
-	MIDIListenDialog dlg(this, m_Events->GetItemText(index), GetEventType(index), m_Events->GetItemData(index));
+	MIDIListenDialog dlg(this, m_Events->GetItemText(index), m_midi, GetEventType(index), m_Events->GetItemData(index));
 
 	if (dlg.ShowModal() == wxID_OK)
 	{

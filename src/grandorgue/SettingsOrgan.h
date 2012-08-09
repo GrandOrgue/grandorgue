@@ -25,6 +25,7 @@
 #include <wx/wx.h>
 #include <wx/listctrl.h>
 
+class GOrgueMidi;
 class GOrgueSettings;
 
 class SettingsOrgan : public wxPanel
@@ -37,6 +38,7 @@ class SettingsOrgan : public wxPanel
 	};
 private:
 	GOrgueSettings& m_Settings;
+	GOrgueMidi& m_midi;
 	wxListView* m_Events;
 	wxButton* m_Add;
 	wxButton* m_Del;
@@ -50,7 +52,7 @@ private:
 	void UpdateOrganMessages(int i);
 
 public:
-	SettingsOrgan(GOrgueSettings& settings, wxWindow* parent);
+	SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent);
 
 	void Save();
 	
