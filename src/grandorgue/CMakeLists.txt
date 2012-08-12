@@ -184,6 +184,7 @@ GOrgueManual.cpp
 GOrgueMemoryPool.cpp
 GOrgueMidi.cpp
 GOrgueMidiEvent.cpp
+GOrgueMidiSender.cpp
 GOrgueMidiReceiver.cpp
 GOrguePath.cpp
 GOrguePipe.cpp

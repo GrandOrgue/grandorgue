@@ -29,6 +29,7 @@
 GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_group(wxT("---")),
 	m_midi(organfile, MIDI_RECV_MANUAL),
+	m_sender(organfile, MIDI_SEND_MANUAL),
 	m_organfile(organfile),
 	m_KeyPressed(0),
 	m_KeyState(0),
@@ -67,6 +68,7 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_tremulant_ids.resize(0);
 	m_divisionals.resize(0);
 	m_midi.Load(cfg, group);
+	m_sender.Load(cfg, group);
 
 	m_KeyState.resize(m_nb_logical_keys);
 	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
@@ -128,6 +130,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 		m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
 	}
 	m_midi.Load(cfg, group);
+	m_sender.Load(cfg, group);
 
 	m_KeyState.resize(m_nb_logical_keys);
 	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
@@ -176,6 +179,7 @@ void GOrgueManual::Set(unsigned note, bool on)
 	if (m_KeyPressed[note - m_first_accessible_key_midi_note_nb] == on)
 		return;
 	m_KeyPressed[note - m_first_accessible_key_midi_note_nb] = on;
+	m_sender.SetKey(note, on);
 	SetKey(note - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1, on ? TRIGGER_LEVEL : -(TRIGGER_LEVEL), NULL);
 }
 
@@ -333,6 +337,7 @@ void GOrgueManual::Save(GOrgueConfigWriter& cfg)
 		m_divisionals[i]->Save(cfg);
 
 	m_midi.Save(cfg, m_group);
+	m_sender.Save(cfg, m_group);
 }
 
 void GOrgueManual::Abort()

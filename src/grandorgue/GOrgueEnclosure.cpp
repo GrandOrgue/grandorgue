@@ -26,6 +26,7 @@
 GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
 	m_group(wxT("---")),
 	m_midi(organfile, MIDI_RECV_ENCLOSURE),
+	m_sender(organfile, MIDI_SEND_ENCLOSURE),
 	m_organfile(organfile),
 	m_AmpMinimumLevel(0),
 	m_MIDIInputNumber(0),
@@ -58,11 +59,13 @@ void GOrgueEnclosure::Load(GOrgueConfigReader& cfg, wxString group, int enclosur
 	Set(127);	// default to full volume until we receive any messages
 	m_midi.SetIndex(enclosure_nb);
 	m_midi.Load(cfg, m_group);
+	m_sender.Load(cfg, m_group);
 }
 
 void GOrgueEnclosure::Save(GOrgueConfigWriter& cfg)
 {
 	m_midi.Save(cfg, m_group);
+	m_sender.Save(cfg, m_group);
 }
 
 void GOrgueEnclosure::Set(int n)
@@ -72,6 +75,7 @@ void GOrgueEnclosure::Set(int n)
 	if (n > 127)
 		n = 127;
 	m_MIDIValue = n;
+	m_sender.SetValue(m_MIDIValue);
 	m_organfile->ControlChanged(this);
 }
 
@@ -103,6 +107,11 @@ GOrgueMidiReceiver& GOrgueEnclosure::GetMidiReceiver()
 	return m_midi;
 }
 
+GOrgueMidiSender& GOrgueEnclosure::GetMidiSender()
+{
+	return m_sender;
+}
+
 const wxString& GOrgueEnclosure::GetName()
 {
 	return m_Name;
@@ -121,8 +130,10 @@ bool GOrgueEnclosure::IsDisplayed()
 
 void GOrgueEnclosure::Abort()
 {
+	m_sender.SetValue(0);
 }
 
 void GOrgueEnclosure::PreparePlayback()
 {
+	m_sender.SetValue(m_MIDIValue);
 }

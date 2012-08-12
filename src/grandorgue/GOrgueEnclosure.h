@@ -23,6 +23,7 @@
 #define GORGUEENCLOSURE_H_
 
 #include "GOrgueMidiReceiver.h"
+#include "GOrgueMidiSender.h"
 #include <wx/wx.h>
 
 class GOrgueConfigReader;
@@ -35,6 +36,7 @@ class GOrgueEnclosure
 private:
 	wxString m_group;
 	GOrgueMidiReceiver m_midi;
+	GOrgueMidiSender m_sender;
 	GrandOrgueFile* m_organfile;
 	int m_AmpMinimumLevel;
 	int m_MIDIInputNumber;
@@ -52,6 +54,7 @@ public:
 	void Set(int n);
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	GOrgueMidiReceiver& GetMidiReceiver();
+	GOrgueMidiSender& GetMidiSender();
 	const wxString& GetName();
 	int GetValue();
 	int GetMIDIInputNumber();

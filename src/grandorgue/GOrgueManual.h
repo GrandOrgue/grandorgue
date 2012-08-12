@@ -27,6 +27,7 @@
 #include "ptrvector.h"
 
 #include "GOrgueMidiReceiver.h"
+#include "GOrgueMidiSender.h"
 #include "GOrgueCombinationDefinition.h"
 
 class wxProgressDialog;
@@ -45,6 +46,7 @@ class GOrgueManual
 private:
 	wxString m_group;
 	GOrgueMidiReceiver m_midi;
+	GOrgueMidiSender m_sender;
 	GrandOrgueFile* m_organfile;
 	/* Keyboard state */
 	std::vector<bool> m_KeyPressed;
@@ -84,6 +86,7 @@ public:
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	GOrgueMidiReceiver& GetMidiReceiver();
+	GOrgueMidiSender& GetMidiSender();
 	~GOrgueManual(void);
 
 	unsigned GetNumberOfAccessibleKeys();

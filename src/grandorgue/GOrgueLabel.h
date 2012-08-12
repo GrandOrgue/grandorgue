@@ -23,6 +23,7 @@
 #define GORGUELABEL_H
 
 #include <wx/wx.h>
+#include "GOrgueMidiSender.h"
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
@@ -34,6 +35,7 @@ protected:
 	wxString m_Name;
 	wxString m_group;
 	GrandOrgueFile* m_organfile;
+	GOrgueMidiSender m_sender;
 
 public:
 	GOrgueLabel(GrandOrgueFile* organfile);
@@ -42,6 +44,7 @@ public:
 	virtual void Save(GOrgueConfigWriter& cfg);
 	const wxString& GetName();
 	void SetName(wxString name);
+	GOrgueMidiSender& GetMidiSender();
 	virtual void Abort();
 	virtual void PreparePlayback();
 };

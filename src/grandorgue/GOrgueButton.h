@@ -24,6 +24,7 @@
 
 #include <wx/wx.h>
 #include "GOrgueMidiReceiver.h"
+#include "GOrgueMidiSender.h"
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
@@ -35,6 +36,7 @@ class GOrgueButton
 protected:
 	GrandOrgueFile* m_organfile;
 	GOrgueMidiReceiver m_midi;
+	GOrgueMidiSender m_sender;
 	bool m_Pushbutton;
 	wxString m_group;
 	bool m_Displayed;
@@ -50,6 +52,7 @@ public:
 	bool IsDisplayed();
 	const wxString& GetName();
 	GOrgueMidiReceiver& GetMidiReceiver();
+	GOrgueMidiSender& GetMidiSender();
 
 	virtual void ProcessMidi(const GOrgueMidiEvent& event);
 	virtual void Push();

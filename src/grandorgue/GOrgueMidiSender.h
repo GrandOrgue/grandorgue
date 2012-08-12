@@ -19,55 +19,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueLabel.h"
-#include "GrandOrgueFile.h"
+#ifndef GORGUEMIDISENDER_H
+#define GORGUEMIDISENDER_H
 
-GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
-	m_Name(),
-	m_group(),
-	m_organfile(organfile),
-	m_sender(organfile, MIDI_SEND_LABEL)
-{
-}
+#include <wx/wx.h>
+#include <vector>
+#include "GOrgueMidiEvent.h"
 
-GOrgueLabel::~GOrgueLabel()
-{
-}
+class GOrgueConfigReader;
+class GOrgueConfigWriter;
+class GrandOrgueFile;
 
-void GOrgueLabel::Load(GOrgueConfigReader& cfg, wxString group)
-{
-	m_group = group;
-	m_sender.Load(cfg, m_group);
-}
+typedef enum {
+	MIDI_SEND_BUTTON,
+	MIDI_SEND_LABEL,
+	MIDI_SEND_ENCLOSURE,
+	MIDI_SEND_MANUAL,
+} MIDI_SENDER_TYPE;
 
-void GOrgueLabel::Save(GOrgueConfigWriter& cfg)
+class GOrgueMidiSender
 {
-	m_sender.Save(cfg, m_group);
-}
+private:
+	GrandOrgueFile* m_organfile;
+	MIDI_SENDER_TYPE m_type;
 
-const wxString& GOrgueLabel::GetName()
-{
-	return m_Name;
-}
+public:
+	GOrgueMidiSender(GrandOrgueFile* organfile, MIDI_SENDER_TYPE type);
+	~GOrgueMidiSender();
 
-void GOrgueLabel::SetName(wxString name)
-{
-	m_Name = name;
-	m_sender.SetLabel(m_Name);
-	m_organfile->ControlChanged(this);
-}
+	void Load(GOrgueConfigReader& cfg, wxString group);
+	void Save(GOrgueConfigWriter& cfg, wxString group);
 
-void GOrgueLabel::Abort()
-{
-	m_sender.SetLabel(wxEmptyString);
-}
+	void SetDisplay(bool state);
+	void SetKey(unsigned key, bool state);
+	void SetValue(unsigned value);
+	void SetLabel(wxString text);
+};
 
-void GOrgueLabel::PreparePlayback()
-{
-	m_sender.SetLabel(m_Name);
-}
-
-GOrgueMidiSender& GOrgueLabel::GetMidiSender()
-{
-	return m_sender;
-}
+#endif
