@@ -23,64 +23,25 @@
 #define MIDIEVENTDIALOG_H_
 
 #include <wx/wx.h>
-#include <wx/tglbtn.h>
-#include <wx/spinctrl.h>
-#include "GOrgueMidiReceiver.h"
+#include <wx/propdlg.h>
 #include "GrandOrgueDef.h"
 
-class MIDIEventDialog : public wxDialog
+class GOrgueMidiReceiver;
+class MIDIEventRecvDialog;
+
+class MIDIEventDialog : public wxPropertySheetDialog
 {
-
-DECLARE_CLASS(MIDIEventDialog)
-
+	DECLARE_CLASS(MIDIEventDialog)
 private:
-
-	GOrgueMidiReceiver m_midi;
-	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
-	wxSpinCtrl *m_data;
-	wxSpinCtrl *m_LowKey;
-	wxSpinCtrl *m_HighKey;
-	wxSpinCtrl *m_LowVelocity;
-	wxSpinCtrl *m_HighVelocity;
-	wxToggleButton* m_listen;
-	wxButton* m_new, *m_delete;
-	int m_current;
-
-	void StoreEvent();
-	void LoadEvent();
+	MIDIEventRecvDialog* m_recvPage;
 
 public:
-
-	MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver& event);
+	MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event);
 	~MIDIEventDialog();
 
 	const GOrgueMidiReceiver& GetResult();
 
 	DECLARE_EVENT_TABLE()
-
-	void OnListenClick(wxCommandEvent& event);
-	void OnNewClick(wxCommandEvent& event);
-	void OnDeleteClick(wxCommandEvent& event);
-	void OnEventChange(wxCommandEvent& event);
-	void OnMidiEvent(GOrgueMidiEvent& event);
-
-protected:
-
-	enum {
-		ID_EVENT_NO = 200,
-		ID_EVENT_NEW,
-		ID_EVENT_DELETE,
-		ID_DEVICE,
-		ID_EVENT,
-		ID_CHANNEL,
-		ID_DATA,
-		ID_LISTEN,
-		ID_LOW_KEY,
-		ID_HIGH_KEY,
-		ID_LOW_VELOCITY,
-		ID_HIGH_VELOCITY
-	};
-
 };
 
 #endif /* MIDIEVENTDIALOG_H_ */
