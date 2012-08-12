@@ -77,6 +77,14 @@ void GOrgueButton::Set(bool on)
 {
 }
 
+void GOrgueButton::Abort()
+{
+}
+
+void GOrgueButton::PreparePlayback()
+{
+}
+
 void GOrgueButton::ProcessMidi(const GOrgueMidiEvent& event)
 {
 	switch(m_midi.Match(event))

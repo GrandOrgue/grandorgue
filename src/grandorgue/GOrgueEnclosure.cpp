@@ -117,3 +117,12 @@ bool GOrgueEnclosure::IsDisplayed()
 {
 	return m_Displayed;
 }
+
+
+void GOrgueEnclosure::Abort()
+{
+}
+
+void GOrgueEnclosure::PreparePlayback()
+{
+}

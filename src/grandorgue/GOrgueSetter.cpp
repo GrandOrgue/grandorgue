@@ -1040,11 +1040,19 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 			}
 }
 
+void GOrgueSetter::Abort()
+{
+	m_PosDisplay.Abort();
+	m_CrescendoDisplay.Abort();
+	m_swell.Abort();
+}
+
 void GOrgueSetter::PreparePlayback()
 {
 	wxString buffer;
 	buffer.Printf(wxT("%03d"), m_pos);
 	m_PosDisplay.SetName(buffer);
+	m_PosDisplay.PreparePlayback();
 
 	wxCommandEvent event(wxEVT_SETVALUE, ID_METER_FRAME_SPIN);
 	event.SetInt(m_pos);
@@ -1052,6 +1060,9 @@ void GOrgueSetter::PreparePlayback()
 
 	buffer.Printf(wxT("%d"), m_crescendopos + 1);
 	m_CrescendoDisplay.SetName(buffer);
+	m_CrescendoDisplay.PreparePlayback();
+
+	m_swell.PreparePlayback();
 }
 
 bool GOrgueSetter::IsSetterActive()

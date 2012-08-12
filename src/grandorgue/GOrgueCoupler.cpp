@@ -68,6 +68,7 @@ void GOrgueCoupler::PreparePlayback()
 		m_FirstLogicalKey = m_FirstMidiNote - src->GetFirstLogicalKeyMIDINoteNumber();
 	else
 		m_FirstLogicalKey = 0;
+	GOrgueButton::PreparePlayback();
 }
 
 const struct IniFileEnumEntry GOrgueCoupler::m_coupler_types[]={

@@ -341,6 +341,12 @@ void GOrgueManual::Abort()
 
 	for (unsigned i = 0; i < m_stops.size(); i++)
 		m_stops[i]->Abort();
+
+	for (unsigned i = 0; i < m_couplers.size(); i++)
+		m_couplers[i]->Abort();
+
+	for (unsigned i = 0; i < m_divisionals.size(); i++)
+		m_divisionals[i]->Abort();
 }
 
 void GOrgueManual::PreparePlayback()
@@ -356,6 +362,9 @@ void GOrgueManual::PreparePlayback()
 
 	for (unsigned i = 0; i < m_couplers.size(); i++)
 		m_couplers[i]->PreparePlayback();
+
+	for (unsigned i = 0; i < m_divisionals.size(); i++)
+		m_divisionals[i]->PreparePlayback();
 }
 
 void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
