@@ -42,3 +42,11 @@ void GOrgueLabel::SetName(wxString name)
 	m_Name = name;
 	m_organfile->ControlChanged(this);
 }
+
+void GOrgueLabel::Abort()
+{
+}
+
+void GOrgueLabel::PreparePlayback()
+{
+}

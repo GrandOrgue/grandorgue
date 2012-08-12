@@ -135,6 +135,7 @@ void GOrgueStop::Abort()
 {
 	if (IsAuto())
 		Set(false);
+	GOrgueButton::Abort();
 }
 
 void GOrgueStop::PreparePlayback()
@@ -145,6 +146,7 @@ void GOrgueStop::PreparePlayback()
 	if (IsAuto() && IsEngaged())
 		for(unsigned j = 0; j < m_RankInfo.size(); j++)
 			m_RankInfo[j].Rank->SetKey(0, true);
+	GOrgueButton::PreparePlayback();
 }
 
 GOrgueRank* GOrgueStop::GetRank(unsigned index)

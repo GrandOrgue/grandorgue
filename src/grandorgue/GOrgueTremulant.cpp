@@ -126,6 +126,7 @@ void GOrgueTremulant::Set(bool on)
 void GOrgueTremulant::Abort()
 {
 	m_PlaybackHandle = NULL;
+	GOrgueButton::Abort();
 }
 
 void GOrgueTremulant::PreparePlayback()
@@ -139,6 +140,7 @@ void GOrgueTremulant::PreparePlayback()
 	{
 		m_organfile->ControlChanged((GOrgueButton*)this);
 	}
+	GOrgueButton::PreparePlayback();
 }
 
 GOrgueTremulantType GOrgueTremulant::GetTremulantType()

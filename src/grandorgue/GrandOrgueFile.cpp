@@ -1107,12 +1107,31 @@ void GrandOrgueFile::Abort()
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->Abort();
 
+	for (unsigned i = 0; i < m_enclosure.size(); i++)
+		m_enclosure[i]->Abort();
+
+	for (unsigned i = 0; i < m_tremulant.size(); i++)
+		m_tremulant[i]->Abort();
+
+	for (unsigned i = 0; i < m_piston.size(); i++)
+		m_piston[i]->Abort();
+
+	for (unsigned i = 0; i < m_general.size(); i++)
+		m_general[i]->Abort();
+
+	for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
+		m_divisionalcoupler[i]->Abort();
+
 	for (unsigned i = 0; i < m_ranks.size(); i++)
 		m_ranks[i]->Abort();
 
 	for (unsigned i = 0; i < m_tremulant.size(); i++)
 		m_tremulant[i]->Abort();
 	
+	m_setter->Abort();
+	m_PitchLabel.Abort();
+	m_TemperamentLabel.Abort();
+
 	m_midi = NULL;
 }
 
@@ -1124,13 +1143,27 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->PreparePlayback();
 
+	for (unsigned i = 0; i < m_enclosure.size(); i++)
+		m_enclosure[i]->PreparePlayback();
+
+	for (unsigned i = 0; i < m_tremulant.size(); i++)
+		m_tremulant[i]->PreparePlayback();
+
+	for (unsigned i = 0; i < m_piston.size(); i++)
+		m_piston[i]->PreparePlayback();
+
+	for (unsigned i = 0; i < m_general.size(); i++)
+		m_general[i]->PreparePlayback();
+
+	for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
+		m_divisionalcoupler[i]->PreparePlayback();
+
 	for (unsigned i = 0; i < m_ranks.size(); i++)
 		m_ranks[i]->PreparePlayback();
 
-	for (unsigned j = 0; j < m_tremulant.size(); j++)
-		m_tremulant[j]->PreparePlayback();
-
 	m_setter->PreparePlayback();
+	m_PitchLabel.PreparePlayback();
+	m_TemperamentLabel.PreparePlayback();
 }
 
 void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)

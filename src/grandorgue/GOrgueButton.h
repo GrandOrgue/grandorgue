@@ -57,6 +57,8 @@ public:
 	virtual void Display(bool onoff);
 	bool IsEngaged() const;
 	bool DisplayInverted() const;
+	virtual void Abort();
+	virtual void PreparePlayback();
 };
 
 #endif

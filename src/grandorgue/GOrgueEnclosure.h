@@ -59,6 +59,8 @@ public:
 
 	void Scroll(bool scroll_up);
 	bool IsDisplayed();
+	virtual void Abort();
+	virtual void PreparePlayback();
 };
 
 #endif /* GORGUEENCLOSURE_H_ */

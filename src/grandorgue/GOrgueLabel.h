@@ -37,6 +37,8 @@ public:
 	virtual ~GOrgueLabel();
 	const wxString& GetName();
 	void SetName(wxString name);
+	virtual void Abort();
+	virtual void PreparePlayback();
 };
 
 #endif
