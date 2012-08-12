@@ -375,6 +375,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_setter = new GOrgueSetter(this);
 	m_setter->Load(cfg);
 
+	m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"));
+	m_TemperamentLabel.Load(cfg, wxT("SetterMasterTemperament"));
+
 	m_panels.resize(0);
 	m_panels.push_back(new GOGUIPanel(this));
 	m_panels[0]->Load(cfg, wxT(""));
@@ -805,6 +808,9 @@ void GrandOrgueFile::Save(const wxString& file)
 
 	for(unsigned i = 0; i < m_panels.size(); i++)
 		m_panels[i]->Save(cfg);
+
+	m_PitchLabel.Save(cfg);
+	m_TemperamentLabel.Save(cfg);
 }
 
 void GrandOrgueFile::SetVolume(int volume)
