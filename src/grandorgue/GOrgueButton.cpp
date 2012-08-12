@@ -26,6 +26,7 @@
 GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton) :
 	m_organfile(organfile),
 	m_midi(organfile, midi_type),
+	m_sender(organfile, MIDI_SEND_BUTTON),
 	m_Pushbutton(pushbutton),
 	m_group(wxT("---")),
 	m_Displayed(false),
@@ -46,11 +47,13 @@ void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group, wxString name)
 	m_Displayed = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), true, false);
 	m_DisplayInInvertedState = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
 	m_midi.Load(cfg, group);
+	m_sender.Load(cfg, group);
 }
 
 void GOrgueButton::Save(GOrgueConfigWriter& cfg)
 {
 	m_midi.Save(cfg, m_group);
+	m_sender.Save(cfg, m_group);
 }
 
 bool GOrgueButton::IsDisplayed()
@@ -68,6 +71,11 @@ GOrgueMidiReceiver& GOrgueButton::GetMidiReceiver()
 	return m_midi;
 }
 
+GOrgueMidiSender& GOrgueButton::GetMidiSender()
+{
+	return m_sender;
+}
+
 void GOrgueButton::Push()
 {
 	Set(m_Engaged ^ true);
@@ -79,10 +87,12 @@ void GOrgueButton::Set(bool on)
 
 void GOrgueButton::Abort()
 {
+	m_sender.SetDisplay(false);
 }
 
 void GOrgueButton::PreparePlayback()
 {
+	m_sender.SetDisplay(m_Engaged);
 }
 
 void GOrgueButton::ProcessMidi(const GOrgueMidiEvent& event)
@@ -114,6 +124,7 @@ void GOrgueButton::Display(bool onoff)
 {
 	if (m_Engaged == onoff)
 		return;
+	m_sender.SetDisplay(onoff);
 	m_Engaged = onoff;
 	m_organfile->ControlChanged(this);
 }
