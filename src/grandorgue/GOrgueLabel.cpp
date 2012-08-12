@@ -24,11 +24,21 @@
 
 GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
 	m_Name(),
+	m_group(),
 	m_organfile(organfile)
 {
 }
 
 GOrgueLabel::~GOrgueLabel()
+{
+}
+
+void GOrgueLabel::Load(GOrgueConfigReader& cfg, wxString group)
+{
+	m_group = group;
+}
+
+void GOrgueLabel::Save(GOrgueConfigWriter& cfg)
 {
 }
 

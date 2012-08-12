@@ -24,17 +24,22 @@
 
 #include <wx/wx.h>
 
+class GOrgueConfigReader;
+class GOrgueConfigWriter;
 class GrandOrgueFile;
 
 class GOrgueLabel 
 {
 protected:
 	wxString m_Name;
+	wxString m_group;
 	GrandOrgueFile* m_organfile;
 
 public:
 	GOrgueLabel(GrandOrgueFile* organfile);
 	virtual ~GOrgueLabel();
+	void Load(GOrgueConfigReader& cfg, wxString group);
+	virtual void Save(GOrgueConfigWriter& cfg);
 	const wxString& GetName();
 	void SetName(wxString name);
 	virtual void Abort();

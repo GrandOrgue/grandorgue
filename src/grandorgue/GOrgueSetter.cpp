@@ -828,6 +828,9 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 
 	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"));
 
+	m_PosDisplay.Load(cfg, wxT("SetterCurrentPosition"));
+	m_CrescendoDisplay.Load(cfg, wxT("SetterCrescendoPosition"));
+
 	for(unsigned i = 0; i < 10; i++)
 	{
 		wxString group;
@@ -876,6 +879,9 @@ void GOrgueSetter::Save(GOrgueConfigWriter& cfg)
 		m_button[j]->Save(cfg);
 
 	m_swell.Save(cfg);
+
+	m_PosDisplay.Save(cfg);
+	m_CrescendoDisplay.Save(cfg);
 }
 
 void GOrgueSetter::ProcessMidi(const GOrgueMidiEvent& event)
