@@ -206,7 +206,7 @@ void GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	if (right)
 	{
 		GOrgueMidiReceiver& m_midi = m_manual->GetMidiReceiver();
-		MIDIEventDialog dlg (m_panel->GetParentWindow(), _("Midi-Settings for Manual - ") + m_manual->GetName(), m_midi);
+		MIDIEventDialog dlg (m_panel->GetParentWindow(), _("Midi-Settings for Manual - ") + m_manual->GetName(), &m_midi);
 
 		if (dlg.ShowModal() == wxID_OK)
 		{

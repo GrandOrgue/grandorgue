@@ -209,6 +209,7 @@ GrandOrgueFrame.cpp
 Images.cpp
 IniFileConfig.cpp
 MIDIEventDialog.cpp
+MIDIEventRecvDialog.cpp
 MIDIListenDialog.cpp
 OrganDialog.cpp
 OrganDocument.cpp

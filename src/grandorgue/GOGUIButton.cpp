@@ -155,7 +155,7 @@ void GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 			title = _("Midi-Settings for Button - ") + m_Button->GetName();
 		}
 
-		MIDIEventDialog dlg (m_panel->GetParentWindow(), title, m_midi);
+		MIDIEventDialog dlg (m_panel->GetParentWindow(), title, &m_midi);
 		
 		if (dlg.ShowModal() == wxID_OK)
 		{

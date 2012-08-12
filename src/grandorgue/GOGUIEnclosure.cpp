@@ -135,7 +135,7 @@ void GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState&
 	if (right)
 	{
 		GOrgueMidiReceiver& m_midi = m_enclosure->GetMidiReceiver();
-		MIDIEventDialog dlg (m_panel->GetParentWindow(), _("Midi-Settings for Enclosure - ") + m_enclosure->GetName(), m_midi);
+		MIDIEventDialog dlg (m_panel->GetParentWindow(), _("Midi-Settings for Enclosure - ") + m_enclosure->GetName(), &m_midi);
 		
 		if (dlg.ShowModal() == wxID_OK)
 		{
