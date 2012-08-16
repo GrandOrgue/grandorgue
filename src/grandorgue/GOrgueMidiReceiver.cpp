@@ -31,7 +31,6 @@
 GOrgueMidiReceiver::GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type):
 	m_organfile(organfile),
 	m_type(type),
-	m_Key(-1),
 	m_Index(-1),
 	m_events(0)
 {
