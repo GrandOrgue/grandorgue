@@ -95,6 +95,7 @@ public:
 
 	void FromMidi(const std::vector<unsigned char>& msg);
 	int GetEventCode();
+	void ToMidi(std::vector<std::vector<unsigned char>>& msg);
 
  private:
 	midi_message_type m_miditype;

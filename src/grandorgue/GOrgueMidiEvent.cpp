@@ -124,3 +124,63 @@ int GOrgueMidiEvent::GetEventCode()
 		return -1;
 	}
 }
+
+void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg)
+{
+	msg.resize(0);
+	std::vector<unsigned char> m;
+	switch(GetMidiType())
+	{
+	case MIDI_NOTE:
+		if (GetChannel() == -1)
+			return;
+		m.resize(3);
+		if (GetValue() == 0)
+			m[0] = 0x80;
+		else
+			m[0] = 0x90;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = GetKey() & 0x7F;
+		m[2] = GetValue() & 0x7F;
+		msg.push_back(m);
+		break;
+	case MIDI_CTRL_CHANGE:
+		if (GetChannel() == -1)
+			return;
+		m.resize(3);
+		m[0] = 0xB0;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = GetKey() & 0x7F;
+		m[2] = GetValue() & 0x7F;
+		msg.push_back(m);
+		return;
+		
+	case MIDI_PGM_CHANGE:
+		if (GetChannel() == -1)
+			return;
+		m.resize(3);
+		m[0] = 0xB0;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = MIDI_CTRL_BANK_SELECT_MSB & 0x7F;
+		m[2] = ((GetKey() - 1  )>> 14) & 0x7F;
+		msg.push_back(m);
+
+		m.resize(3);
+		m[0] = 0xB0;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = MIDI_CTRL_BANK_SELECT_LSB & 0x7F;
+		m[2] = ((GetKey() - 1 ) >> 7) & 0x7F;
+		msg.push_back(m);
+
+		m.resize(2);
+		m[0] = 0xC0;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = ((GetKey() - 1 ) >> 0) & 0x7F;
+		msg.push_back(m);
+		return;
+
+	case MIDI_NONE:
+	case MIDI_RESET:
+		return;
+	}	
+}
