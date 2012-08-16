@@ -27,9 +27,9 @@
 #include "GOrgueSettings.h"
 
 BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
-	EVT_LISTBOX(ID_DEVICES, SettingsMidiDevices::OnDevicesClick)
-	EVT_LISTBOX_DCLICK(ID_DEVICES, SettingsMidiDevices::OnDevicesDoubleClick)
-	EVT_BUTTON(ID_PROPERTIES, SettingsMidiDevices::OnDevicesDoubleClick)
+	EVT_LISTBOX(ID_INDEVICES, SettingsMidiDevices::OnInDevicesClick)
+	EVT_LISTBOX_DCLICK(ID_INDEVICES, SettingsMidiDevices::OnInDevicesDoubleClick)
+	EVT_BUTTON(ID_INPROPERTIES, SettingsMidiDevices::OnInDevicesDoubleClick)
 END_EVENT_TABLE()
 
 SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
@@ -43,55 +43,78 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	for (std::map<wxString, int>::iterator it2 = list.begin(); it2 != list.end(); it2++)
 	{
 		choices.push_back(it2->first);
-		m_DeviceData.push_back(m_Sound.GetSettings().GetMidiInDeviceChannelShift(it2->first));
+		m_InDeviceData.push_back(m_Sound.GetSettings().GetMidiInDeviceChannelShift(it2->first));
 	}
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &input devices"));
-	m_Devices = new wxCheckListBox(this, ID_DEVICES, wxDefaultPosition, wxDefaultSize, choices);
-	for (unsigned i = 0; i < m_DeviceData.size(); i++)
+	m_InDevices = new wxCheckListBox(this, ID_INDEVICES, wxDefaultPosition, wxDefaultSize, choices);
+	for (unsigned i = 0; i < m_InDeviceData.size(); i++)
 	{
-		if (m_DeviceData[i] < 0)
-			m_DeviceData[i] = -m_DeviceData[i] - 1;
+		if (m_InDeviceData[i] < 0)
+			m_InDeviceData[i] = -m_InDeviceData[i] - 1;
 		else
-			m_Devices->Check(i);
+			m_InDevices->Check(i);
 	}
-	item3->Add(m_Devices, 1, wxEXPAND | wxALL, 5);
-	m_Properties = new wxButton(this, ID_PROPERTIES, _("A&dvanced..."));
-	m_Properties->Disable();
-	item3->Add(m_Properties, 0, wxALIGN_RIGHT | wxALL, 5);
-
+	item3->Add(m_InDevices, 1, wxEXPAND | wxALL, 5);
+	m_InProperties = new wxButton(this, ID_INPROPERTIES, _("A&dvanced..."));
+	m_InProperties->Disable();
+	item3->Add(m_InProperties, 0, wxALIGN_RIGHT | wxALL, 5);
 	topSizer->Add(item3, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
+
+	choices.clear();
+	std::vector<bool> out_state;
+	list = m_Sound.GetMidi().GetOutDevices();
+	for (std::map<wxString, int>::iterator it2 = list.begin(); it2 != list.end(); it2++)
+	{
+		choices.push_back(it2->first);
+		out_state.push_back(m_Sound.GetSettings().GetMidiOutState(it2->first) == 1);
+	}
+
+	item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &output devices"));
+	m_OutDevices = new wxCheckListBox(this, ID_OUTDEVICES, wxDefaultPosition, wxDefaultSize, choices);
+	for (unsigned i = 0; i < out_state.size(); i++)
+		if (out_state[i])
+			m_OutDevices->Check(i);
+
+	item3->Add(m_OutDevices, 1, wxEXPAND | wxALL, 5);
+	topSizer->Add(item3, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
+
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
 	topSizer->Fit(this);
 }
 
-void SettingsMidiDevices::OnDevicesClick(wxCommandEvent& event)
+void SettingsMidiDevices::OnInDevicesClick(wxCommandEvent& event)
 {
-	m_Properties->Enable();
+	m_InProperties->Enable();
 }
 
-void SettingsMidiDevices::OnDevicesDoubleClick(wxCommandEvent& event)
+void SettingsMidiDevices::OnInDevicesDoubleClick(wxCommandEvent& event)
 {
-	m_Properties->Enable();
-	int index = m_Devices->GetSelection();
+	m_InProperties->Enable();
+	int index = m_InDevices->GetSelection();
 	int result = ::wxGetNumberFromUser(_("A channel offset allows the use of two MIDI\ninterfaces with conflicting MIDI channels. For\nexample, applying a channel offset of 8 to\none of the MIDI interfaces would cause that\ninterface's channel 1 to appear as channel 9,\nchannel 2 to appear as channel 10, and so on."), _("Channel offset:"), 
-					   m_Devices->GetString(index), m_DeviceData[index], 0, 15, this);
+					   m_InDevices->GetString(index), m_InDeviceData[index], 0, 15, this);
 
 	if (result >= 0)
-		m_DeviceData[index] = result;
+		m_InDeviceData[index] = result;
 }
 
 void SettingsMidiDevices::Save()
 {
-	for (unsigned i = 0; i < m_Devices->GetCount(); i++)
+	for (unsigned i = 0; i < m_InDevices->GetCount(); i++)
 	{
 		int j;
 
-		j = m_DeviceData[i];
-		if (!m_Devices->IsChecked(i))
+		j = m_InDeviceData[i];
+		if (!m_InDevices->IsChecked(i))
 			j = -j - 1;
-		m_Sound.GetSettings().SetMidiInDeviceChannelShift(m_Devices->GetString(i), j);
+		m_Sound.GetSettings().SetMidiInDeviceChannelShift(m_InDevices->GetString(i), j);
+	}
+
+	for (unsigned i = 0; i < m_OutDevices->GetCount(); i++)
+	{
+		m_Sound.GetSettings().SetMidiOutState(m_OutDevices->GetString(i), m_OutDevices->IsChecked(i));
 	}
 }
