@@ -206,11 +206,13 @@ void GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	if (right)
 	{
 		GOrgueMidiReceiver& m_midi = m_manual->GetMidiReceiver();
-		MIDIEventDialog dlg (m_panel->GetParentWindow(), _("Midi-Settings for Manual - ") + m_manual->GetName(), &m_midi);
+		GOrgueMidiSender& m_sender = m_manual->GetMidiSender();
+		MIDIEventDialog dlg (m_panel->GetParentWindow(), _("Midi-Settings for Manual - ") + m_manual->GetName(), &m_midi, &m_sender);
 
 		if (dlg.ShowModal() == wxID_OK)
 		{
 			m_midi = dlg.GetResult();
+			m_sender = dlg.GetSender();
 			m_panel->Modified();
 			m_manual->AllNotesOff();
 		}

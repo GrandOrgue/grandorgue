@@ -19,33 +19,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MIDIEVENTDIALOG_H_
-#define MIDIEVENTDIALOG_H_
+#ifndef MIDIEVENTSENDDIALOG_H_
+#define MIDIEVENTSENDDIALOG_H_
 
 #include <wx/wx.h>
-#include <wx/propdlg.h>
-#include "GrandOrgueDef.h"
+#include <wx/spinctrl.h>
+#include "GOrgueMidiSender.h"
 
-class GOrgueMidiReceiver;
-class GOrgueMidiSender;
-class MIDIEventRecvDialog;
-class MIDIEventSendDialog;
-
-class MIDIEventDialog : public wxPropertySheetDialog
+class MIDIEventSendDialog : public wxPanel
 {
-	DECLARE_CLASS(MIDIEventDialog)
+DECLARE_CLASS(MIDIEventSendDialog)
+
 private:
-	MIDIEventRecvDialog* m_recvPage;
-	MIDIEventSendDialog* m_sendPage;
+	GOrgueMidiSender m_midi;
+	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
+	wxSpinCtrl *m_key;
+	wxSpinCtrl *m_LowValue;
+	wxSpinCtrl *m_HighValue;
+	wxButton* m_new, *m_delete;
+	int m_current;
+
+	void StoreEvent();
+	void LoadEvent();
 
 public:
-	MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event, const GOrgueMidiSender* sender);
-	~MIDIEventDialog();
+	MIDIEventSendDialog (wxWindow* parent, const GOrgueMidiSender& event);
+	~MIDIEventSendDialog();
 
-	const GOrgueMidiReceiver& GetResult();
-	const GOrgueMidiSender& GetSender();
+	const GOrgueMidiSender& GetResult();
+
+	void OnNewClick(wxCommandEvent& event);
+	void OnDeleteClick(wxCommandEvent& event);
+	void OnEventChange(wxCommandEvent& event);
 
 	DECLARE_EVENT_TABLE()
+
+protected:
+	enum {
+		ID_EVENT_NO = 200,
+		ID_EVENT_NEW,
+		ID_EVENT_DELETE,
+		ID_DEVICE,
+		ID_EVENT,
+		ID_CHANNEL,
+		ID_KEY,
+		ID_LOW_VALUE,
+		ID_HIGH_VALUE
+	};
 };
 
-#endif /* MIDIEVENTDIALOG_H_ */
+#endif
