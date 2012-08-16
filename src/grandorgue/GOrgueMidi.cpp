@@ -32,6 +32,8 @@ GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_Settings(settings),
 	m_midi_in_device_map(),
 	m_midi_in_devices(),
+	m_midi_out_device_map(),
+	m_midi_out_devices(),
 	m_listening(false),
 	m_listen_evthandler(NULL)
 {
@@ -70,6 +72,34 @@ void GOrgueMidi::UpdateDevices()
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtMidi error: %s"), error.c_str());
 	}
+
+	try
+	{
+		RtMidiOut midi_dev;
+		for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
+		{
+			wxString name = wxString::FromAscii(midi_dev.getPortName(i).c_str());
+			if (!m_midi_out_device_map.count(name))
+			{
+				MIDI_OUT_DEVICE *t = new MIDI_OUT_DEVICE;
+				t->midi_out = new RtMidiOut();
+				t->rtmidi_port_no = i;
+				t->active = false;
+				t->name = name;
+				m_midi_out_devices.push_back(t);
+			
+				name.Replace(wxT("\\"), wxT("|"));
+				m_midi_out_device_map[name] = m_midi_out_devices.size() - 1;
+			}
+			else
+				m_midi_out_devices[m_midi_out_device_map[name]]->rtmidi_port_no = i;
+		}
+	}
+	catch (RtError &e)
+	{
+		wxString error = wxString::FromAscii(e.getMessage().c_str());
+		wxLogError(_("RtMidi error: %s"), error.c_str());
+	}
 }
 
 
@@ -85,6 +115,15 @@ GOrgueMidi::~GOrgueMidi()
 			if (m_midi_in_devices[i]->midi_in)
 				m_midi_in_devices[i]->midi_in->closePort();
 			DELETE_AND_NULL(m_midi_in_devices[i]->midi_in);
+		}
+
+		for (unsigned i = 0; i < m_midi_out_devices.size(); i++)
+		{
+			m_midi_out_devices[i]->active = false;
+
+			if (m_midi_out_devices[i]->midi_out)
+				m_midi_out_devices[i]->midi_out->closePort();
+			DELETE_AND_NULL(m_midi_out_devices[i]->midi_out);
 		}
 	}
 	catch (RtError &e)
@@ -132,11 +171,42 @@ void GOrgueMidi::Open()
 
 	}
 
+	for (unsigned i = 0; i < m_midi_out_devices.size(); i++)
+	{
+		MIDI_OUT_DEVICE& this_dev = *m_midi_out_devices[i];
+		if (m_Settings.GetMidiOutState(this_dev.name))
+		{
+			try
+			{
+				this_dev.active = false;
+
+				assert(this_dev.midi_out);
+				this_dev.midi_out->closePort();
+				this_dev.midi_out->openPort(this_dev.rtmidi_port_no);
+				this_dev.active = true;
+			}
+			catch (RtError &e)
+			{
+				wxString error = wxString::FromAscii(e.getMessage().c_str());
+				wxLogError(_("RtMidi error: %s"), error.c_str());
+			}
+		}
+		else if (this_dev.active)
+		{
+			this_dev.active = false;
+			this_dev.midi_out->closePort();
+		}
+	}
 }
 
 std::map<wxString, int>& GOrgueMidi::GetInDevices()
 {
 	return m_midi_in_device_map;
+}
+
+std::map<wxString, int>& GOrgueMidi::GetOutDevices()
+{
+	return m_midi_out_device_map;
 }
 
 bool GOrgueMidi::HasActiveDevice()
@@ -183,6 +253,22 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE*
 		m_listen_evthandler->AddPendingEvent(e);
 }
 
+void GOrgueMidi::Send(GOrgueMidiEvent& e)
+{
+	std::vector<std::vector<unsigned char>> msg;
+	e.ToMidi(msg);
+	for(unsigned i = 0; i < msg.size(); i++)
+	{
+		for(unsigned j = 0; j < m_midi_out_devices.size(); j++)
+		{
+			MIDI_OUT_DEVICE& this_dev = *m_midi_out_devices[j];
+			if (!this_dev.active)
+				continue;
+			if (this_dev.name == e.GetDevice() || e.GetDevice() == wxEmptyString)
+				this_dev.midi_out->sendMessage(&msg[i]);
+		}
+	}
+}
 
 bool GOrgueMidi::HasListener()
 {
