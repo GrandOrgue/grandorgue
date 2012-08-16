@@ -56,3 +56,8 @@ void GOrgueMidiSender::SetLabel(wxString text)
 {
 }
 
+GOrgueSettings& GOrgueMidiSender::GetSettings()
+{
+	return m_organfile->GetSettings();
+}
+

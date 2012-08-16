@@ -28,6 +28,7 @@
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
+class GOrgueSettings;
 class GrandOrgueFile;
 
 typedef enum {
@@ -54,6 +55,8 @@ public:
 	void SetKey(unsigned key, bool state);
 	void SetValue(unsigned value);
 	void SetLabel(wxString text);
+
+	GOrgueSettings& GetSettings();
 };
 
 #endif
