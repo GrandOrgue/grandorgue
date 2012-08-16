@@ -1100,6 +1100,10 @@ void GrandOrgueFile::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE ha
 		m_soundengine->SwitchSample(pipe, handle);
 }
 
+void GrandOrgueFile::SendMidiMessage(GOrgueMidiEvent& e)
+{
+}
+
 void GrandOrgueFile::SetMidiListener(wxEvtHandler* event_handler)
 {
 	if (m_midi)
