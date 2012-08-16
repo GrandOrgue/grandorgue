@@ -26,15 +26,12 @@
 #include <wx/tglbtn.h>
 #include <wx/spinctrl.h>
 #include "GOrgueMidiReceiver.h"
-#include "GrandOrgueDef.h"
 
 class MIDIEventRecvDialog : public wxPanel
 {
-
 DECLARE_CLASS(MIDIEventRecvDialog)
 
 private:
-
 	GOrgueMidiReceiver m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
 	wxSpinCtrl *m_data;
@@ -50,7 +47,6 @@ private:
 	void LoadEvent();
 
 public:
-
 	MIDIEventRecvDialog (wxWindow* parent, const GOrgueMidiReceiver& event);
 	~MIDIEventRecvDialog();
 
@@ -65,7 +61,6 @@ public:
 	void OnMidiEvent(GOrgueMidiEvent& event);
 
 protected:
-
 	enum {
 		ID_EVENT_NO = 200,
 		ID_EVENT_NEW,
@@ -80,7 +75,6 @@ protected:
 		ID_LOW_VELOCITY,
 		ID_HIGH_VELOCITY
 	};
-
 };
 
 #endif /* MIDIEVENTDIALOG_H_ */

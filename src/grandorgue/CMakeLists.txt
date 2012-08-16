@@ -210,6 +210,7 @@ Images.cpp
 IniFileConfig.cpp
 MIDIEventDialog.cpp
 MIDIEventRecvDialog.cpp
+MIDIEventSendDialog.cpp
 MIDIListenDialog.cpp
 OrganDialog.cpp
 OrganDocument.cpp

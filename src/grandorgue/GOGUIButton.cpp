@@ -140,6 +140,7 @@ void GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	if (right)
 	{
 		GOrgueMidiReceiver& m_midi = m_Button->GetMidiReceiver();
+		GOrgueMidiSender& m_sender = m_Button->GetMidiSender();
 		wxString title;
 		switch(m_midi.GetType())
 		{
@@ -155,11 +156,12 @@ void GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 			title = _("Midi-Settings for Button - ") + m_Button->GetName();
 		}
 
-		MIDIEventDialog dlg (m_panel->GetParentWindow(), title, &m_midi);
+		MIDIEventDialog dlg (m_panel->GetParentWindow(), title, &m_midi, &m_sender);
 		
 		if (dlg.ShowModal() == wxID_OK)
 		{
 			m_midi = dlg.GetResult();
+			m_sender = dlg.GetSender();
 			m_panel->Modified();
 		}
 	}

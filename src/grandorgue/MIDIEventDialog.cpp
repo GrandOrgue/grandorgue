@@ -22,6 +22,7 @@
 #include <wx/bookctrl.h>
 #include "MIDIEventDialog.h"
 #include "MIDIEventRecvDialog.h"
+#include "MIDIEventSendDialog.h"
 
 IMPLEMENT_CLASS(MIDIEventDialog, wxPropertySheetDialog)
 
@@ -29,9 +30,10 @@ BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
 END_EVENT_TABLE()
 
 
-MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event):
+MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event, const GOrgueMidiSender* sender):
 	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(450,330)),
-	m_recvPage(NULL)
+	m_recvPage(NULL),
+	m_sendPage(NULL)
 {
 	CreateButtons(wxOK | wxCANCEL);
 
@@ -42,6 +44,11 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 		m_recvPage = new MIDIEventRecvDialog(notebook, *event);
 		notebook->AddPage(m_recvPage,  _("Receive"));
 	}
+	if (sender)
+	{
+		m_sendPage = new MIDIEventSendDialog(notebook, *sender);
+		notebook->AddPage(m_sendPage,  _("Send"));
+	}
 }
 
 MIDIEventDialog::~MIDIEventDialog()
@@ -51,5 +58,10 @@ MIDIEventDialog::~MIDIEventDialog()
 const GOrgueMidiReceiver& MIDIEventDialog::GetResult()
 {
 	return m_recvPage->GetResult();
+}
+
+const GOrgueMidiSender& MIDIEventDialog::GetSender()
+{
+	return m_sendPage->GetResult();
 }
 
