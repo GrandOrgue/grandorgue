@@ -30,20 +30,22 @@ class GOrgueSound;
 class SettingsMidiDevices : public wxPanel
 {
 	enum {
-		ID_DEVICES = 200,
-		ID_PROPERTIES,
+		ID_INDEVICES = 200,
+		ID_INPROPERTIES,
+		ID_OUTDEVICES,
 	};
 private:
 	GOrgueSound& m_Sound;
-	wxCheckListBox* m_Devices;
-	std::vector<int> m_DeviceData;
-	wxButton* m_Properties;
+	wxCheckListBox* m_InDevices;
+	wxCheckListBox* m_OutDevices;
+	std::vector<int> m_InDeviceData;
+	wxButton* m_InProperties;
 
 public:
 	SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent);
 
-	void OnDevicesClick(wxCommandEvent& event);
-	void OnDevicesDoubleClick(wxCommandEvent& event);
+	void OnInDevicesClick(wxCommandEvent& event);
+	void OnInDevicesDoubleClick(wxCommandEvent& event);
 
 	void Save();
 
