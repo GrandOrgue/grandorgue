@@ -213,6 +213,11 @@ GOrgueMidiReceiver& GOrgueManual::GetMidiReceiver()
 	return m_midi;
 }
 
+GOrgueMidiSender& GOrgueManual::GetMidiSender()
+{
+	return m_sender;
+}
+
 const wxString& GOrgueManual::GetName()
 {
 	return m_name;
