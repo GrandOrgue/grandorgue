@@ -220,6 +220,7 @@ public:
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 
+	void SendMidiMessage(GOrgueMidiEvent& e);
 	void SetMidiListener(wxEvtHandler* event_handler);
 };
 
