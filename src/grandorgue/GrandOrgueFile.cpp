@@ -1102,6 +1102,8 @@ void GrandOrgueFile::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE ha
 
 void GrandOrgueFile::SendMidiMessage(GOrgueMidiEvent& e)
 {
+	if (m_midi)
+		m_midi->Send(e);
 }
 
 void GrandOrgueFile::SetMidiListener(wxEvtHandler* event_handler)

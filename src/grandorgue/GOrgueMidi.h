@@ -28,9 +28,11 @@
 #include "ptrvector.h"
 
 class RtMidiIn;
+class RtMidiOut;
 
 class GOrgueSettings;
 class GrandOrgueFile;
+class GOrgueMidiEvent;
 
 class GOrgueMidi
 {
@@ -48,9 +50,18 @@ private:
 		GOrgueMidi* midi;
 	} MIDI_IN_DEVICE;
 
+	typedef struct {
+		RtMidiOut* midi_out;
+		wxString name;
+		bool active;
+		int rtmidi_port_no;
+	} MIDI_OUT_DEVICE;
+
 	GOrgueSettings& m_Settings;
 	std::map<wxString, int> m_midi_in_device_map;
 	ptr_vector<MIDI_IN_DEVICE> m_midi_in_devices;
+	std::map<wxString, int> m_midi_out_device_map;
+	ptr_vector<MIDI_OUT_DEVICE> m_midi_out_devices;
 	int m_transpose;
 	bool m_listening;
 	wxEvtHandler* m_listen_evthandler;
@@ -67,9 +78,12 @@ public:
 	void Open();
 	void UpdateDevices();
 
+	void Send(GOrgueMidiEvent& e);
+
 	bool HasListener();
 	void SetListener(wxEvtHandler* event_handler);
 	std::map<wxString, int>& GetInDevices();
+	std::map<wxString, int>& GetOutDevices();
 	bool HasActiveDevice();
 	int GetTranspose();
 	void SetTranspose(int transpose);
