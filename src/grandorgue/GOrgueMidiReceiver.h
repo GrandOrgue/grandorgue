@@ -76,7 +76,6 @@ private:
 	GrandOrgueFile* m_organfile;
 	static const struct IniFileEnumEntry m_MidiTypes[];
 	MIDI_RECEIVER_TYPE m_type;
-	int m_Key;
 	int m_Index;
 	std::vector<MIDI_MATCH_EVENT> m_events;
 
