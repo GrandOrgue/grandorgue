@@ -121,6 +121,8 @@ enum {
 	ID_SETTER_PITCH_P1,
 	ID_SETTER_PITCH_P10,
 
+	ID_SETTER_SAVE,
+
 	ID_SETTER_LABEL, /* Must be the last elements */
 	ID_SETTER_CRESCENDO_LABEL,
 	ID_SETTER_TEMPERAMENT_LABEL,
@@ -196,6 +198,8 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("TemperamentPrev"), ID_SETTER_TEMPERAMENT_PREV },
 	{ wxT("TemperamentNext"), ID_SETTER_TEMPERAMENT_NEXT },
 
+	{ wxT("Save"), ID_SETTER_SAVE },
+
 	{ wxT("CrescendoA"), ID_SETTER_CRESCENDO_A },
 	{ wxT("CrescendoB"), ID_SETTER_CRESCENDO_B },
 	{ wxT("CrescendoC"), ID_SETTER_CRESCENDO_C },
@@ -263,6 +267,8 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
 	m_button[ID_SETTER_PREV]->GetMidiReceiver().SetIndex(0);
@@ -359,6 +365,10 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_TEMPERAMENT_NEXT], false, 3, 101);
 	button->Load(cfg, wxT("SetterMasterTemperamentNext"));
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SAVE], false, 5, 101);
+	button->Load(cfg, wxT("SetterSave"));
 	panel->AddControl(button);
 
 	return panel;
@@ -826,6 +836,8 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_button[ID_SETTER_TEMPERAMENT_PREV]->Load(cfg, wxT("SetterTemperamentPrev"), _("<"));
 	m_button[ID_SETTER_TEMPERAMENT_NEXT]->Load(cfg, wxT("SetterTemperamentNext"), _(">"));
 
+	m_button[ID_SETTER_SAVE]->Load(cfg, wxT("SetterSave"), _("Save"));
+
 	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"));
 
 	m_PosDisplay.Load(cfg, wxT("SetterCurrentPosition"));
@@ -1027,6 +1039,9 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 				break;
 			case ID_SETTER_PITCH_P10:
 				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() + 10);
+				break;
+			case ID_SETTER_SAVE:
+				m_organfile->Save(m_organfile->GetODFFilename());
 				break;
 
 			case ID_SETTER_TEMPERAMENT_NEXT:
