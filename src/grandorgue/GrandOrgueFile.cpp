@@ -756,7 +756,6 @@ void GrandOrgueFile::Save(const wxString& file)
 		return;
 	}
 
-	wxLog::EnableLogging(false);
 	wxFileConfig cfg_file
 		(wxEmptyString
 		,wxEmptyString
@@ -765,7 +764,6 @@ void GrandOrgueFile::Save(const wxString& file)
 		,wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS
 		,wxCSConv(wxT("ISO-8859-1"))
 		);
-	wxLog::EnableLogging(true);
 
 	m_b_customized = true;
 
@@ -811,6 +809,8 @@ void GrandOrgueFile::Save(const wxString& file)
 
 	m_PitchLabel.Save(cfg);
 	m_TemperamentLabel.Save(cfg);
+	if (fn == m_SettingFilename)
+		m_doc->Modify(false);
 }
 
 void GrandOrgueFile::SetVolume(int volume)
