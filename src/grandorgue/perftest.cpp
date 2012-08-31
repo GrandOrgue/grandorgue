@@ -67,7 +67,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 			ainfo.percussive = false;
 			ainfo.max_playback_time = -1;
 			attack.push_back(ainfo);
-			w->LoadFromFile(attack, release, argv[1], bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1);
+			w->LoadFromFile(attack, release, argv[1], bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1);
 			pipes.push_back(w);
 		}
 		engine->SetVolume(10);
