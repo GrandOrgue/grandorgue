@@ -27,8 +27,15 @@
 #include "GrandOrgueFile.h"
 #include "ptrvector.h"
 
+#ifdef __linux__
+#include <sys/time.h>
+#include <sys/resource.h>
+#endif
+
 class TestApp : public wxApp
 {
+        wxMilliClock_t getCPUTime();
+
 public:
 	TestApp();
 	bool OnInit();
@@ -41,6 +48,21 @@ IMPLEMENT_APP_CONSOLE(TestApp)
 
 TestApp::TestApp()
 {
+}
+
+wxMilliClock_t TestApp::getCPUTime()
+{
+#ifdef __linux__
+	struct rusage usage;
+	if (!getrusage(RUSAGE_SELF, &usage))
+	{
+		wxMilliClock_t t = usage.ru_utime.tv_sec;
+		t *= 1000; 
+		t += usage.ru_utime.tv_usec / 1000;
+		return t;
+	}
+#endif
+	return wxGetLocalTimeMillis();
 }
 
 void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_instances, unsigned sample_rate, unsigned interpolation, unsigned seconds, unsigned samples_per_frame)
@@ -89,13 +111,13 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 				handles.push_back(handle);
 		}
 
-		wxMilliClock_t start = wxGetLocalTimeMillis();
+		wxMilliClock_t start = getCPUTime();
 		unsigned blocks = seconds * engine->GetSampleRate() / samples_per_frame;
 		for(unsigned i = 0; i < blocks; i++)
 		{
 			engine->GetSamples(output_buffer, samples_per_frame, 0, &info);
 		}
-		wxMilliClock_t end = wxGetLocalTimeMillis();
+		wxMilliClock_t end = getCPUTime();
 		wxMilliClock_t diff = end - start;
 
 		float playback_time = blocks * (double)samples_per_frame / engine->GetSampleRate();
