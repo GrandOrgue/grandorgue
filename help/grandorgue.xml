@@ -1914,6 +1914,14 @@ Label displaying the current temperament of the organ.
 	    </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>Save</term>
+          <listitem>
+            <para>
+Save button.
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
