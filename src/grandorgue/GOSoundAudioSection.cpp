@@ -294,19 +294,18 @@ void GOAudioSection::MonoUncompressedPolyphase
 	)
 {
 	// copy the sample buffer
-	T* input                = ((T*)stream->ptr) + stream->position_index;
-	unsigned input_index    = stream->position_fraction;
-	unsigned filter_index   = stream->filter_index;
+	T* input                = ((T*)stream->ptr);
 	const float* coef       = stream->resample_coefs->coefs;
-	const unsigned out_rate = stream->increment_fraction;
-	for (unsigned i = 0; i < BLOCKS_PER_FRAME; ++i, output += 2)
+	for (unsigned i = 0; i < BLOCKS_PER_FRAME; ++i, output += 2, stream->position_fraction += stream->increment_fraction)
 	{
+		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
 		float out1 = 0.0f;
 		float out2 = 0.0f;
 		float out3 = 0.0f;
 		float out4 = 0.0f;
-		const float* coef_set = &coef[filter_index << SUBFILTER_BITS];
-		T* in_set             = &input[input_index >> UPSAMPLE_BITS];
+		const float* coef_set = &coef[stream->position_fraction << SUBFILTER_BITS];
+		T* in_set             = &input[stream->position_index];
 		for (unsigned j = 0; j < SUBFILTER_TAPS; j += 4)
 		{
 			out1 += in_set[j]   * coef_set[j];
@@ -314,16 +313,14 @@ void GOAudioSection::MonoUncompressedPolyphase
 			out3 += in_set[j+2] * coef_set[j+2];
 			out4 += in_set[j+3] * coef_set[j+3];
 		}
-		input_index += out_rate;
-		filter_index = (filter_index + out_rate) & (UPSAMPLE_FACTOR - 1);
 		output[0] = out1 + out2 + out3 + out4;
 		output[1] = output[0];
 	}
 
-	unsigned pos = input_index >> UPSAMPLE_BITS;
-	stream->filter_index       = filter_index;
-	stream->position_fraction  = input_index & (UPSAMPLE_FACTOR - 1);
-	stream->position_index    += pos;
+	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
+
+	unsigned pos = stream->position_index;
 
 	// update sample history (for release alignment / compression)
 	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
@@ -339,20 +336,21 @@ void GOAudioSection::StereoUncompressedPolyphase
 	,float                *output
 	)
 {
+	typedef T stereoSample[0][2];
+
 	// copy the sample buffer
-	T* input                = ((T*)stream->ptr) + 2 * stream->position_index;
-	unsigned input_index    = stream->position_fraction;
-	unsigned filter_index   = stream->filter_index;
+	stereoSample& input                = (stereoSample&)*(T*)(stream->ptr);
 	const float* coef       = stream->resample_coefs->coefs;
-	const unsigned out_rate = stream->increment_fraction;
-	for (unsigned i = 0; i < BLOCKS_PER_FRAME; ++i, output += 2)
+	for (unsigned i = 0; i < BLOCKS_PER_FRAME; ++i, output += 2, stream->position_fraction += stream->increment_fraction)
 	{
+		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
 		float out1 = 0.0f;
 		float out2 = 0.0f;
 		float out3 = 0.0f;
 		float out4 = 0.0f;
-		const float* coef_set = &coef[filter_index << SUBFILTER_BITS];
-		T* in_set             = &input[2 * (input_index >> UPSAMPLE_BITS)];
+		const float* coef_set = &coef[stream->position_fraction << SUBFILTER_BITS];
+		T* in_set             = (T*)&input[stream->position_index][0];
 		for (unsigned j = 0; j < SUBFILTER_TAPS; j+=4)
 		{
 			out1 += in_set[2*j]   * coef_set[j];
@@ -364,22 +362,20 @@ void GOAudioSection::StereoUncompressedPolyphase
 			out3 += in_set[2*j+6] * coef_set[j+3];
 			out4 += in_set[2*j+7] * coef_set[j+3];
 		}
-		input_index  += out_rate;
-		filter_index  = (filter_index + out_rate) & (UPSAMPLE_FACTOR - 1);
 		output[0]     = out1 + out3;
 		output[1]     = out2 + out4;
 	}
 
-	unsigned pos               = input_index >> UPSAMPLE_BITS;
-	stream->filter_index       = filter_index;
-	stream->position_fraction  = input_index & (UPSAMPLE_FACTOR - 1);
-	stream->position_index    += pos;
+	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
+	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
+
+	unsigned pos               = stream->position_index;
 
 	// update sample history (for release alignment / compression)
 	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
 	{
-		stream->history[i - 1][0] = input[2*pos-2];
-		stream->history[i - 1][1] = input[2*pos-1];
+		stream->history[i - 1][0] = input[pos-1][0];
+		stream->history[i - 1][1] = input[pos-1][1];
 	}
 }
 
@@ -1043,7 +1039,6 @@ void GOAudioSection::InitStream
 	stream->end_ptr                  = end.end_data;
 	stream->increment_fraction       = sample_rate_adjustment * m_SampleRate * UPSAMPLE_FACTOR;
 	stream->position_index           = 0;
-	stream->filter_index             = 0;
 	stream->position_fraction        = 0;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
@@ -1077,7 +1072,6 @@ void GOAudioSection::InitAlignedStream
 	stream->end_ptr                  = end.end_data;
 	/* Translate increment in case of differing sample rates */
 	stream->resample_coefs           = existing_stream->resample_coefs;
-	stream->filter_index             = existing_stream->filter_index;
 	stream->increment_fraction       = roundf((((float)existing_stream->increment_fraction) / existing_stream->audio_section->GetSampleRate()) * m_SampleRate);
 	stream->position_index           = 0;
 	stream->position_fraction        = existing_stream->position_fraction;
