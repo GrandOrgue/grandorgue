@@ -114,7 +114,6 @@ typedef struct audio_section_stream_s
 	unsigned                     section_length;
 	int                          next_start_segment_index;
 
-	unsigned                     filter_index;
 	unsigned                     position_index;
 	unsigned                     position_fraction;
 	unsigned                     increment_fraction;
