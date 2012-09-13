@@ -42,6 +42,7 @@ typedef enum
 struct resampler_coefs_s
 {
 	float coefs[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
+	float linear[UPSAMPLE_FACTOR][2];
 	interpolation_type interpolation;
 };
 
