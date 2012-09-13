@@ -133,6 +133,11 @@ resampler_coefs_init
 			resampler_coefs->coefs[i * SUBFILTER_TAPS + ((SUBFILTER_TAPS - 1) - j)] = temp[j * UPSAMPLE_FACTOR + i];
 		}
 	}
+	for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++)
+	{
+		resampler_coefs->linear[i][0] = i /  (float)UPSAMPLE_FACTOR;
+		resampler_coefs->linear[i][1] = 1 - (i /  (float)UPSAMPLE_FACTOR);
+	}
 	resampler_coefs->interpolation = interpolation;
 }
 

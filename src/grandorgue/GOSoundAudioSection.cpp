@@ -230,9 +230,8 @@ void GOAudioSection::MonoUncompressedLinear
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
 		unsigned pos = stream->position_index;
-		float fract  = stream->position_fraction / (float)(UPSAMPLE_FACTOR);
-		output[0] = input[pos] * (1 - fract) + input[pos + 1] * fract;
-		output[1] = input[pos] * (1 - fract) + input[pos + 1] * fract;
+		output[0] = input[pos] * stream->resample_coefs->linear[stream->position_fraction][1] + input[pos + 1] * stream->resample_coefs->linear[stream->position_fraction][0];
+		output[1] = output[0];
 	}
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
@@ -269,9 +268,8 @@ void GOAudioSection::StereoUncompressedLinear
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
 		unsigned pos = stream->position_index;
-		float fract  = stream->position_fraction / (float)UPSAMPLE_FACTOR;
-		output[0] = input[pos][0] * (1 - fract) + input[pos + 1][0] * fract;
-		output[1] = input[pos][1] * (1 - fract) + input[pos + 1][1] * fract;
+		output[0] = input[pos][0] * stream->resample_coefs->linear[stream->position_fraction][1] + input[pos + 1][0] * stream->resample_coefs->linear[stream->position_fraction][0];
+		output[1] = input[pos][1] * stream->resample_coefs->linear[stream->position_fraction][1] + input[pos + 1][1] * stream->resample_coefs->linear[stream->position_fraction][0];
 	}
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
@@ -398,7 +396,6 @@ void GOAudioSection::MonoCompressedLinear
 	{
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
-		float fract = stream->position_fraction / (float)UPSAMPLE_FACTOR;
 
 		while (stream->last_position <= stream->position_index + 1)
 		{
@@ -420,8 +417,8 @@ void GOAudioSection::MonoCompressedLinear
 				hist_ptr = 0;
 		}
 
-		output[0] = stream->curr_value[0] * (1 - fract) + stream->next_value[0] * fract;
-		output[1] = stream->curr_value[0] * (1 - fract) + stream->next_value[0] * fract;
+		output[0] = stream->curr_value[0] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->next_value[0] * stream->resample_coefs->linear[stream->position_fraction][0];
+		output[1] = output[0];
 	}
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
@@ -458,7 +455,6 @@ void GOAudioSection::StereoCompressedLinear
 	{
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
-		float fract = stream->position_fraction / (float)UPSAMPLE_FACTOR;
 
 		while (stream->last_position <= stream->position_index + 1)
 		{
@@ -482,8 +478,8 @@ void GOAudioSection::StereoCompressedLinear
 				hist_ptr = 0;
 		}
 
-		output[0] = stream->curr_value[0] * (1 - fract) + stream->next_value[0] * fract;
-		output[1] = stream->curr_value[1] * (1 - fract) + stream->next_value[1] * fract;
+		output[0] = stream->curr_value[0] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->next_value[0] * stream->resample_coefs->linear[stream->position_fraction][0];
+		output[1] = stream->curr_value[1] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->next_value[1] * stream->resample_coefs->linear[stream->position_fraction][0];
 	}
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
