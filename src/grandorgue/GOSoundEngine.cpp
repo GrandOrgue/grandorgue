@@ -322,7 +322,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 					(m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
 					(m_CurrentTime - sampler->time > 172)
 				)
-				FaderStartDecay(&sampler->fader, -13); /* Approx 0.37s at 44.1kHz */
+				sampler->fader.StartDecay(-13); /* Approx 0.37s at 44.1kHz */
 
 			/* The decoded sampler frame will contain values containing
 			 * sampler->pipe_section->sample_bits worth of significant bits.
@@ -338,11 +338,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				,temp
 				);
 
-			FaderProcess
-				(&sampler->fader
-				,n_frames
-				,temp
-				);
+			sampler->fader.Process(n_frames, temp);
 
 			/* Add these samples to the current output buffer shifting
 			 * right by the necessary amount to bring the sample gain back
@@ -361,7 +357,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				 * which will decay this portion of the pipe. The sampler will
 				 * automatically be placed back in the pool when the fade restores to
 				 * zero. */
-				FaderStartDecay(&sampler->fader, -CROSSFADE_LEN_BITS);
+				sampler->fader.StartDecay(-CROSSFADE_LEN_BITS);
 				sampler->is_release = true;
 				sampler->stop = false;
 			} 
@@ -378,7 +374,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		 * zero, the sample is no longer required and can be removed from the
 		 * linked list. If it was still supplying audio, we must update the
 		 * previous valid sampler. */
-		if (!sampler->pipe || (FaderIsSilent(&sampler->fader) && process_sampler && !changed_sampler))
+		if (!sampler->pipe || (sampler->fader.IsSilent() && process_sampler && !changed_sampler))
 		{
 			/* sampler needs to be removed from the list */
 			if (sampler == state.sampler)
@@ -707,7 +703,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 			,GetRandomFactor() * pipe->GetTuning() / (float)m_SampleRate
 			);
 		const float playback_gain = pipe->GetGain() * attack->GetNormGain();
-		FaderNewConstant(&sampler->fader, playback_gain);
+		sampler->fader.NewConstant(playback_gain);
 		sampler->time = m_CurrentTime;
 		StartSampler(sampler, sampler_group_id, audio_group);
 	}
@@ -739,18 +735,13 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 
 		float gain_target = this_pipe->GetGain() * section->GetNormGain();
 
-		FaderNewAttacking
-			(&handle->fader
-			 ,gain_target
-			 ,-(CROSSFADE_LEN_BITS)
-			 ,1 << (CROSSFADE_LEN_BITS + 1)
-			 );
+		handle->fader.NewAttacking(gain_target, -(CROSSFADE_LEN_BITS), 1 << (CROSSFADE_LEN_BITS + 1));
 
 		section->InitAlignedStream(&handle->stream, &new_sampler->stream);
 		handle->is_release = false;
 		new_sampler->is_release = true;
 
-		FaderStartDecay(&new_sampler->fader, -CROSSFADE_LEN_BITS);
+		new_sampler->fader.StartDecay(-CROSSFADE_LEN_BITS);
 
 		StartSampler(new_sampler, new_sampler->sampler_group_id, new_sampler->audio_group_id);
 	}
@@ -838,12 +829,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				}
 			}
 
-			FaderNewAttacking
-				(&new_sampler->fader
-				,gain_target
-				,-(CROSSFADE_LEN_BITS)
-				,1 << (CROSSFADE_LEN_BITS + 1)
-				);
+			new_sampler->fader.NewAttacking(gain_target, -(CROSSFADE_LEN_BITS), 1 << (CROSSFADE_LEN_BITS + 1));
 
 			int reverb = GetReverb();
 			if ( reverb < 0 )
@@ -853,7 +839,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			}
 
 			if (gain_decay_rate < 0)
-				FaderStartDecay(&new_sampler->fader, gain_decay_rate);
+				new_sampler->fader.StartDecay(gain_decay_rate);
 
 			if (m_ReleaseAlignmentEnabled && release_section->SupportsStreamAlignment())
 			{
