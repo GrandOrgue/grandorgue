@@ -25,30 +25,34 @@
 #include <assert.h>
 #include <math.h>
 
-typedef struct
+class GOSoundFader
 {
-	float       gain;
-	float       attack;
-	float       decay;
-	float       target;
-	unsigned    nb_attack_frames_left;
-} GOSoundFader;
+private:
+	float       m_gain;
+	float       m_attack;
+	float       m_decay;
+	float       m_target;
+	unsigned    m_nb_attack_frames_left;
 
-static
+public:
+	void NewAttacking(float target_gain, int duration_shift, int max_fadein_frames);
+	void NewConstant(float gain);
+	void StartDecay(int duration_shift);
+	bool IsSilent();
+
+	void Process(unsigned n_blocks, float *decoded_sampler_audio_frame);
+};
+
 inline
-void FaderProcess
-	(GOSoundFader    *fader_state
-	,unsigned int     n_blocks
-	,float           *decoded_sampler_audio_frame
-	)
+void GOSoundFader::Process(unsigned n_blocks, float *decoded_sampler_audio_frame)
 {
 
 	/* Multiply each of the buffer samples by the fade factor - note:
 	 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero.
 	 * Note: this for loop has been split by an if to aide the vectorizer.
 	 */
-	float gain_delta = fader_state->attack + fader_state->decay;
-	float gain = fader_state->gain;
+	float gain_delta = m_attack + m_decay;
+	float gain = m_gain;
 	if (gain_delta)
 	{
 
@@ -64,18 +68,17 @@ void FaderProcess
 			if (gain < 0.0f)
 			{
 				gain = 0.0f;
-				fader_state->decay = 0.0f;
+				m_decay = 0.0f;
 			}
-			else if (gain > fader_state->target)
+			else if (gain > m_target)
 			{
-				gain = fader_state->target;
-				fader_state->attack = 0.0f;
+				gain = m_target;
+				m_attack = 0.0f;
 			}
 
 		}
 
-		fader_state->gain = gain;
-
+		m_gain = gain;
 	}
 	else
 	{
@@ -92,68 +95,46 @@ void FaderProcess
 
 	}
 
-	if (fader_state->attack > 0.0f)
+	if (m_attack > 0.0f)
 	{
-		if (fader_state->nb_attack_frames_left >= n_blocks)
-			fader_state->nb_attack_frames_left -= n_blocks;
+		if (m_nb_attack_frames_left >= n_blocks)
+			m_nb_attack_frames_left -= n_blocks;
 		else
-			fader_state->attack = 0.0f;
+			m_attack = 0.0f;
 	}
 
 }
 
-static
 inline
-void FaderStartDecay
-	(GOSoundFader    *fader_state
-	,int              duration_shift
-	)
+void GOSoundFader::StartDecay(int duration_shift)
 {
 	assert(duration_shift < 0);
-	fader_state->decay =
-			-scalbnf(fader_state->target
-			        ,duration_shift
-			        );
+	m_decay = -scalbnf(m_target, duration_shift);
 }
 
-static
 inline
-bool FaderIsSilent
-	(GOSoundFader    *fader_state)
+bool GOSoundFader::IsSilent()
 {
-	return (fader_state->gain <= 0.0f);
+	return (m_gain <= 0.0f);
 }
 
-static
 inline
-void FaderNewAttacking
-	(GOSoundFader    *fader_state
-	,float            target_gain
-	,int              duration_shift
-	,int              max_fadein_frames
-	)
+void GOSoundFader::NewAttacking(float target_gain, int duration_shift, int max_fadein_frames)
 {
 	assert(duration_shift < 0);
-	fader_state->nb_attack_frames_left = max_fadein_frames;
-	fader_state->decay  = 0.0f;
-	fader_state->gain   = 0.0f;
-	fader_state->target = target_gain;
-	fader_state->attack =
-			scalbnf(target_gain
-			       ,duration_shift
-			       );
+	m_nb_attack_frames_left = max_fadein_frames;
+	m_decay  = 0.0f;
+	m_gain   = 0.0f;
+	m_target = target_gain;
+	m_attack = scalbnf(target_gain, duration_shift);
 }
 
-static
 inline
-void FaderNewConstant
-	(GOSoundFader    *fader_state
-	,float            gain
-	)
+void GOSoundFader::NewConstant(float gain)
 {
-	fader_state->nb_attack_frames_left = 0;
-	fader_state->attack = fader_state->decay = 0.0f;
-	fader_state->gain = fader_state->target = gain;
+	m_nb_attack_frames_left = 0;
+	m_attack = m_decay = 0.0f;
+	m_gain = m_target = gain;
 }
 
 #endif /* GOSOUNDFADER_H_ */
