@@ -198,7 +198,7 @@ void GOrgueManual::SetUnisonOff(bool on)
 	for(unsigned i = 0; i < m_KeyPressed.size(); i++)
 	{
 		int note = i + m_first_accessible_logical_key_nb - 1;
-		if (m_KeyPressed[note])
+		if (m_KeyPressed[i])
 			for (unsigned j = 0; j < m_stops.size(); j++)
 				m_stops[j]->SetKey(note + 1, on ? -TRIGGER_LEVEL : TRIGGER_LEVEL);
 	}
