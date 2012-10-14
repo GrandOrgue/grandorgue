@@ -1,5 +1,5 @@
 /*
- * GrandOrgue - a free pipe organ simulator
+ * GrandOrgue - free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
  * Copyright 2009-2012 GrandOrgue contributors (see AUTHORS)
@@ -19,43 +19,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GRANDORGUE_H
-#define GRANDORGUE_H
-
-#include "GrandOrgueDef.h"
+#ifndef GORGUELOGWINDOW_H
+#define GORGUELOGWINDOW_H
 
 #include <wx/wx.h>
 
-class wxSplashScreenWindow;
-class wxDocManager;
+class wxListCtrl;
 
-class GOrgueFrame;
-class GOrgueLog;
-class GOrgueSound;
-class GOrgueSettings;
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_ADD_LOG_MESSAGE, -1)
 
-class GOrgueApp : public wxApp
+class GOrgueLogWindow : public wxFrame
 {
 private:
-	virtual void MacOpenFile(const wxString &fileName);
+	wxListCtrl* m_List;
 
-protected:
-	GOrgueFrame* m_Frame;
-	wxLocale m_locale;
-	GOrgueSettings* m_Settings;
-	GOrgueSound* m_soundSystem;
-	wxDocManager* m_docManager;
-	GOrgueLog* m_Log;
+	void OnLog(wxCommandEvent& event);
+	void OnCloseWindow(wxCloseEvent& event);
+
+	DECLARE_EVENT_TABLE()
 
 public:
-	GOrgueApp();
-	bool OnInit();
-	int OnRun();
-	int OnExit();
-	void AsyncLoadFile(wxString iFile);
+	GOrgueLogWindow(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_FRAME_STYLE);
+	~GOrgueLogWindow();
+
+	void LogMsg(wxLogLevel level, const wxString& msg, time_t time);
 };
-
-
-DECLARE_APP(GOrgueApp)
 
 #endif

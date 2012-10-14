@@ -1,5 +1,5 @@
 /*
- * GrandOrgue - a free pipe organ simulator
+ * GrandOrgue - free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
  * Copyright 2009-2012 GrandOrgue contributors (see AUTHORS)
@@ -19,43 +19,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GRANDORGUE_H
-#define GRANDORGUE_H
+#include "GOrgueLog.h"
+#include "GOrgueLogWindow.h"
 
-#include "GrandOrgueDef.h"
-
-#include <wx/wx.h>
-
-class wxSplashScreenWindow;
-class wxDocManager;
-
-class GOrgueFrame;
-class GOrgueLog;
-class GOrgueSound;
-class GOrgueSettings;
-
-class GOrgueApp : public wxApp
+GOrgueLog::GOrgueLog(wxWindow* parent) :
+	m_LogWindow(NULL)
 {
-private:
-	virtual void MacOpenFile(const wxString &fileName);
+	m_LogWindow = new GOrgueLogWindow(parent, wxID_ANY, _("Log messages"));
+}
 
-protected:
-	GOrgueFrame* m_Frame;
-	wxLocale m_locale;
-	GOrgueSettings* m_Settings;
-	GOrgueSound* m_soundSystem;
-	wxDocManager* m_docManager;
-	GOrgueLog* m_Log;
+GOrgueLog::~GOrgueLog()
+{
+	if (m_LogWindow)
+	{
+		m_LogWindow = NULL;
+	}
+}
 
-public:
-	GOrgueApp();
-	bool OnInit();
-	int OnRun();
-	int OnExit();
-	void AsyncLoadFile(wxString iFile);
-};
+void 
+GOrgueLog::DoLog(wxLogLevel level, const wxChar *msg, time_t timestamp)
+{
+	if (m_LogWindow)
+		m_LogWindow->LogMsg(level, msg, timestamp);
+}
 
-
-DECLARE_APP(GOrgueApp)
-
-#endif
+void 
+GOrgueLog::DoLogTextAtLevel (wxLogLevel level, const wxString &msg)
+{
+	if (m_LogWindow)
+		m_LogWindow->LogMsg(level, msg, time(0));
+}
