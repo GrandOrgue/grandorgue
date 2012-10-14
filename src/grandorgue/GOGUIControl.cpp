@@ -61,10 +61,6 @@ void GOGUIControl::Draw(wxDC* dc)
 	m_DrawPending = false;
 }
 
-void GOGUIControl::HandleKey(int key)
-{
-}
-
 void GOGUIControl::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 }

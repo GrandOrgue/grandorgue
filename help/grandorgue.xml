@@ -3478,6 +3478,15 @@ the first load - provided just for HW1 compatibility.
 	    </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>ShortcutKey</term>
+          <listitem>
+            <para>
+(integer 0-255, default: 0) 0 means no shortcut, else it specifies the
+key code of the shortcut key.
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
       <para>
 The GUI properties of button objects are:
@@ -3489,15 +3498,6 @@ The GUI properties of button objects are:
             <para>
 (boolean, default: true for divisionals, generals and pistons, else
 false) True means to display as button, false as drawstop
-	    </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>ShortcutKey</term>
-          <listitem>
-            <para>
-(integer 0-255, default: 0) 0 means no shortcut, else it specifies the
-key code of the shortcut key.
 	    </para>
           </listitem>
         </varlistentry>

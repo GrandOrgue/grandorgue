@@ -409,6 +409,18 @@ void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
 	}
 }
 
+void GOrgueManual::HandleKey(int key)
+{
+	for(unsigned i = 0; i < m_stops.size(); i++)
+		m_stops[i]->HandleKey(key);
+
+	for(unsigned i = 0; i < m_couplers.size(); i++)
+		m_couplers[i]->HandleKey(key);
+
+	for(unsigned i = 0; i < m_divisionals.size(); i++)
+		m_divisionals[i]->HandleKey(key);
+}
+
 void GOrgueManual::Reset()
 {
 	for (unsigned j = 0; j < GetCouplerCount(); j++)

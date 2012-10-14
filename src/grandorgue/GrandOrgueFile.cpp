@@ -1207,6 +1207,26 @@ void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)
 	m_setter->ProcessMidi(event);
 }
 
+void GrandOrgueFile::HandleKey(int key)
+{
+	for(unsigned i = 0; i < m_tremulant.size(); i++)
+		m_tremulant[i]->HandleKey(key);
+
+	for(unsigned i = 0; i < m_piston.size(); i++)
+		m_piston[i]->HandleKey(key);
+
+	for(unsigned i = 0; i < m_general.size(); i++)
+		m_general[i]->HandleKey(key);
+
+	for(unsigned i = 0; i < m_divisionalcoupler.size(); i++)
+		m_divisionalcoupler[i]->HandleKey(key);
+
+	for(unsigned i = m_FirstManual; i < m_manual.size(); i++)
+		m_manual[i]->HandleKey(key);
+	
+	m_setter->HandleKey(key);
+}
+
 void GrandOrgueFile::Reset()
 {
         for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)

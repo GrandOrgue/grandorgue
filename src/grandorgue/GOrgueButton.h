@@ -37,6 +37,7 @@ protected:
 	GrandOrgueFile* m_organfile;
 	GOrgueMidiReceiver m_midi;
 	GOrgueMidiSender m_sender;
+	int m_ShortcutKey;
 	bool m_Pushbutton;
 	wxString m_group;
 	bool m_Displayed;
@@ -58,6 +59,7 @@ public:
 	virtual void Push();
 	virtual void Set(bool on);
 	virtual void Display(bool onoff);
+	void HandleKey(int key);
 	bool IsEngaged() const;
 	bool DisplayInverted() const;
 	virtual void Abort();

@@ -27,6 +27,7 @@ GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_ty
 	m_organfile(organfile),
 	m_midi(organfile, midi_type),
 	m_sender(organfile, MIDI_SEND_BUTTON),
+	m_ShortcutKey(0),
 	m_Pushbutton(pushbutton),
 	m_group(wxT("---")),
 	m_Displayed(false),
@@ -44,6 +45,7 @@ void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group, wxString name)
 {
 	m_group = group;
 	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, true, name);
+	m_ShortcutKey = cfg.ReadInteger(ODFSetting, group, wxT("ShortcutKey"), 0, 255, false, 0);
 	m_Displayed = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), true, false);
 	m_DisplayInInvertedState = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
 	m_midi.Load(cfg, group);
@@ -74,6 +76,12 @@ GOrgueMidiReceiver& GOrgueButton::GetMidiReceiver()
 GOrgueMidiSender& GOrgueButton::GetMidiSender()
 {
 	return m_sender;
+}
+
+void GOrgueButton::HandleKey(int key)
+{
+	if (key == m_ShortcutKey)
+		Push();
 }
 
 void GOrgueButton::Push()
