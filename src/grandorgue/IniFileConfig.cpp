@@ -72,7 +72,9 @@ void IniFileConfig::AddEntry(GOStringHashMap& hash, wxString key, wxString value
 {
 	GOStringHashMap::iterator i = hash.find(key);
 	if (i != hash.end())
+	{
 		wxLogWarning(_("Dupplicate entry: %s"), key.c_str());
+	}
 	hash[key] = value;
 }
 

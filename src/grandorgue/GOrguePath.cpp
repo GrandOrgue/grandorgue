@@ -32,7 +32,9 @@ wxString GOCreateFilename(wxString path, wxString file)
 	wxFileName path_name(temp);
 	path_name.Normalize(wxPATH_NORM_DOTS);
 	if (path_name.GetLongPath() != path_name.GetFullPath())
+	{
 		wxLogWarning(_("Filename '%s' not compatible with case sensitive systems"), file.c_str());
+	}
 
 	return temp;
 }
@@ -42,7 +44,9 @@ void GOCreateDirectory(wxString path)
 	if (wxFileName::DirExists(path))
 		return;
 	if(!wxFileName::Mkdir(path, 0777, wxPATH_MKDIR_FULL))
+	{
 		wxLogError(_("Failed to create directory '%s"), path.c_str());
+	}
 }
 
 wxString GONormalizePath(wxString path)
