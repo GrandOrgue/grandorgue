@@ -101,9 +101,12 @@ wxConfigBase& GOrgueSettings::GetConfig()
 
 void GOrgueSettings::Load()
 {
+	long cpus = wxThread::GetCPUCount();
+	if (cpus == -1)
+		cpus = 4;
 	m_Stereo = m_Config.Read(wxT("StereoEnabled"), 1);
-	m_Concurrency = m_Config.Read(wxT("Concurrency"), 8L);
-	m_ReleaseConcurrency = m_Config.Read(wxT("ReleaseConcurrency"), 4L);
+	m_Concurrency = m_Config.Read(wxT("Concurrency"), cpus);
+	m_ReleaseConcurrency = m_Config.Read(wxT("ReleaseConcurrency"), cpus);
 	if (m_ReleaseConcurrency < 1)
 		m_ReleaseConcurrency = 1;
 	m_LosslessCompression = m_Config.Read(wxT("LosslessCompression"), 0L);
