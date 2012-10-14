@@ -85,6 +85,7 @@ public:
 	void PreparePlayback();
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
+	void HandleKey(int key);
 	GOrgueMidiReceiver& GetMidiReceiver();
 	GOrgueMidiSender& GetMidiSender();
 	~GOrgueManual(void);

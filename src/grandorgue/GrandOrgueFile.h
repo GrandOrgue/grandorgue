@@ -141,6 +141,7 @@ public:
 	void PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi);
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
+	void HandleKey(int key);
 	void ControlChanged(void* control);
 	void Modified();
 	~GrandOrgueFile(void);

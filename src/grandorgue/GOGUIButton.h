@@ -32,7 +32,6 @@ class GOGUIButton : public GOGUIControl
 protected:
 	bool m_IsPiston;
 	GOrgueButton* m_Button;
-	int m_ShortcutKey;
 	wxRect m_MouseRect;
 	unsigned m_Radius;
 	wxBitmap* m_OnBitmap;
@@ -53,7 +52,6 @@ public:
 
 	void Load(GOrgueConfigReader& cfg, wxString group);
 
-	void HandleKey(int key);
 	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	void Draw(wxDC* dc);
 };

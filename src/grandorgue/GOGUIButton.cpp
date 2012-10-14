@@ -31,7 +31,6 @@ GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_pisto
 	GOGUIControl(panel, control),
 	m_IsPiston(is_piston),
 	m_Button(control),
-	m_ShortcutKey(0),
 	m_MouseRect(),
 	m_Radius(0),
 	m_FontSize(0),
@@ -52,7 +51,6 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 	GOGUIControl::Load(cfg, group);
 	m_IsPiston = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayAsPiston"), false, m_IsPiston);
 
-	m_ShortcutKey = cfg.ReadInteger(ODFSetting, group, wxT("ShortcutKey"), 0, 255, false, 0);
 	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("Dark Red"));
 	m_FontSize = cfg.ReadFontSize(ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
 	m_FontName = cfg.ReadString(ODFSetting, group, wxT("DispLabelFontName"), 255, false, wxT(""));
@@ -120,12 +118,6 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 	h = cfg.ReadInteger(ODFSetting, group, wxT("TextRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y);
 	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
 	m_TextWidth = cfg.ReadInteger(ODFSetting, group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth() - (m_TextRect.GetWidth() < 50 ? 4 : 14));
-}
-
-void GOGUIButton::HandleKey(int key)
-{
-	if (key == m_ShortcutKey)
-		m_Button->Push();
 }
 
 void GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)

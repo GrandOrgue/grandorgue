@@ -86,6 +86,7 @@ public:
 	void PreparePlayback();
 	void Change(GOrgueSetterButton* button);
 	void ProcessMidi(const GOrgueMidiEvent& event);
+	void HandleKey(int key);
 	void ControlChanged(void* control);
 
 	bool StoreInvisibleObjects();

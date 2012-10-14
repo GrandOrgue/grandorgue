@@ -49,7 +49,6 @@ public:
 	virtual void ControlChanged(void* control);
 	virtual void Draw(wxDC* dc);
 	virtual const wxRect& GetBoundingRect();
-	virtual void HandleKey(int key);
 	virtual void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	virtual void HandleMouseScroll(int x, int y, int amount);
 };

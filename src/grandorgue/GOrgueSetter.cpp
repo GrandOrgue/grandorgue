@@ -904,6 +904,12 @@ void GOrgueSetter::ProcessMidi(const GOrgueMidiEvent& event)
 	m_swell.ProcessMidi(event);
 }
 
+void GOrgueSetter::HandleKey(int key)
+{
+	for(unsigned i = 0; i < m_button.size(); i++)
+		m_button[i]->HandleKey(key);
+}
+
 void GOrgueSetter::Change(GOrgueSetterButton* button)
 {
 	for(unsigned i = 0; i < m_button.size(); i++)

@@ -560,8 +560,7 @@ void GOGUIPanel::HandleKey(int key)
 		break;
 	}
 	
-	for(unsigned i = 0; i < m_controls.size(); i++)
-		m_controls[i]->HandleKey(key);
+	m_organfile->HandleKey(key);
 }
 
 void GOGUIPanel::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
