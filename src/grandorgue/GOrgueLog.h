@@ -1,5 +1,5 @@
 /*
- * GrandOrgue - a free pipe organ simulator
+ * GrandOrgue - free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
  * Copyright 2009-2012 GrandOrgue contributors (see AUTHORS)
@@ -19,43 +19,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GRANDORGUE_H
-#define GRANDORGUE_H
-
-#include "GrandOrgueDef.h"
+#ifndef GORGUELOG_H
+#define GORGUELOG_H
 
 #include <wx/wx.h>
 
-class wxSplashScreenWindow;
-class wxDocManager;
+class GOrgueLogWindow;
 
-class GOrgueFrame;
-class GOrgueLog;
-class GOrgueSound;
-class GOrgueSettings;
-
-class GOrgueApp : public wxApp
+class GOrgueLog : public wxLog
 {
 private:
-	virtual void MacOpenFile(const wxString &fileName);
+	GOrgueLogWindow* m_LogWindow;
 
 protected:
-	GOrgueFrame* m_Frame;
-	wxLocale m_locale;
-	GOrgueSettings* m_Settings;
-	GOrgueSound* m_soundSystem;
-	wxDocManager* m_docManager;
-	GOrgueLog* m_Log;
+	void DoLog(wxLogLevel level, const wxChar *msg, time_t timestamp);
+	void DoLogTextAtLevel (wxLogLevel level, const wxString &msg);
 
 public:
-	GOrgueApp();
-	bool OnInit();
-	int OnRun();
-	int OnExit();
-	void AsyncLoadFile(wxString iFile);
+	GOrgueLog(wxWindow* parent);
+	virtual ~GOrgueLog();
 };
-
-
-DECLARE_APP(GOrgueApp)
 
 #endif

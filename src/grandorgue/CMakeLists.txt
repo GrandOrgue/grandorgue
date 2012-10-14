@@ -180,6 +180,8 @@ GOrgueFrameGeneral.cpp
 GOrgueGeneral.cpp
 GOrgueLabel.cpp
 GOrgueLCD.cpp
+GOrgueLog.cpp
+GOrgueLogWindow.cpp
 GOrgueManual.cpp
 GOrgueMemoryPool.cpp
 GOrgueMidi.cpp

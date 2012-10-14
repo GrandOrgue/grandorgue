@@ -25,6 +25,7 @@
 #include "OrganDocument.h"
 #include "GOrgueEvent.h"
 #include "GOrgueLCD.h"
+#include "GOrgueLog.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueFrame.h"
@@ -99,10 +100,7 @@ bool GOrgueApp::OnInit()
 #ifdef __WIN32__
 	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
 #endif
-#ifdef __linux__
-	wxLog *logger=new wxLogStream(&std::cout);
-	wxLog::SetActiveTarget(logger);
-#endif
+
 	m_docManager = new GOrgueDocManager;
 	new wxDocTemplate(m_docManager, _("Sample set definition files"), _("*.organ"), wxEmptyString, wxT("organ"), _("Organ Doc"), _("Organ View"), CLASSINFO(OrganDocument), CLASSINFO(OrganView));
 	m_docManager->SetMaxDocsOpen(1);
@@ -111,6 +109,8 @@ bool GOrgueApp::OnInit()
 	m_Frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_TITLE), wxDefaultPosition, wxDefaultSize, 
 				  wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE, *m_soundSystem);
 	SetTopWindow(m_Frame);
+	m_Log = new GOrgueLog(m_Frame);
+	wxLog::SetActiveTarget(m_Log);
 	m_Frame->DoSplash();
 	m_Frame->Init();
 
@@ -157,6 +157,8 @@ int GOrgueApp::OnExit()
 		delete m_docManager;
 	}
 	delete m_Settings;
+	wxLog::SetActiveTarget(NULL);
+	delete m_Log;
 
 	return wxApp::OnExit();
 }
