@@ -31,5 +31,6 @@
 
 #cmakedefine HAVE_ATOMIC
 #cmakedefine HAVE_CSTDATOMIC
+#cmakedefine HAVE_MUTEX
 
 #endif

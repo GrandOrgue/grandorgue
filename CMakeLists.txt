@@ -94,6 +94,7 @@ endmacro()
 add_cxx_option(-std=c++0x)
 CHECK_INCLUDE_FILE_CXX(cstdatomic HAVE_CSTDATOMIC)
 CHECK_INCLUDE_FILE_CXX(atomic HAVE_ATOMIC)
+CHECK_INCLUDE_FILE_CXX(mutex HAVE_MUTEX)
 
 if(UNIX AND NOT APPLE)
   install(FILES GrandOrgue.desktop DESTINATION share/applications)
