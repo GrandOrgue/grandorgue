@@ -62,6 +62,8 @@ public:
 #define GO_PRINTCONTENTION 0
 #endif
 
+#include <mutex>
+
 #ifdef __WIN32__
 class GOWaitQueue
 {
@@ -87,6 +89,33 @@ public:
 	}
 };
 #else
+#ifdef HAVE_MUTEX
+class GOWaitQueue
+{
+private:
+	std::mutex m_Wait;
+public:
+	GOWaitQueue()
+	{
+		m_Wait.lock();
+	}
+
+	~GOWaitQueue()
+	{
+		m_Wait.unlock();
+	}
+
+	void Wait()
+	{
+		m_Wait.lock();
+	}
+
+	void Wakeup()
+	{
+		m_Wait.unlock();
+	}
+};
+#else
 class GOWaitQueue
 {
 private:
@@ -104,7 +133,9 @@ public:
 
 	void Wait()
 	{
-		m_Wait.Lock();
+		wxMutexError error = m_Wait.Lock();
+		assert(error == wxMUTEX_NO_ERROR);
+		(void)error;
 	}
 
 	void Wakeup()
@@ -112,6 +143,7 @@ public:
 		m_Wait.Unlock();
 	}
 };
+#endif
 #endif
 
 class GOMutex
