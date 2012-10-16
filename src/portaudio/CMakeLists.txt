@@ -62,7 +62,7 @@ if (WIN32)
    endif ()
 
    if (RTAUDIO_USE_ASIO)
-      add_definitions(-DPA_USE_ASIO)
+      add_definitions(-DPA_USE_ASIO -D_WIN32_WINNT=0x0501 -DWINVER=0x0501)
       include_directories(../../ext/rt/asio)
       include_directories(../../ext/rt/asio/include)
       set(PortAudio_Sources ${PortAudio_Sources} hostapi/asio/iasiothiscallresolver.cpp hostapi/asio/pa_asio.cpp)
