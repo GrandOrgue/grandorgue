@@ -21,7 +21,7 @@ BuildRequires:  zip
 # po5a not in the main repository (only http://download.opensuse.org/repositories/M17N/). To build without delete the po4a build requirement
 BuildRequires:  po4a
 URL:            http://sourceforge.net/projects/ourorgan/
-License:        GPL-2+
+License:        GPL-2.0+
 Group:          Productivity/Multimedia/Sound/Midi
 Autoreqprov:    on
 Version:        0.3.0.6
