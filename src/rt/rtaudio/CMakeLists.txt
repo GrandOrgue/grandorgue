@@ -41,7 +41,7 @@ if (WIN32)
    endif ()
 
    if (RTAUDIO_USE_ASIO)
-      add_definitions(-D__WINDOWS_ASIO__)
+      add_definitions(-D__WINDOWS_ASIO__ -D_WIN32_WINNT=0x0501 -DWINVER=0x0501)
       include_directories(../../../ext/rt/asio)
       include_directories(../../../ext/rt/asio/include)
       include_directories(asiohelpers)

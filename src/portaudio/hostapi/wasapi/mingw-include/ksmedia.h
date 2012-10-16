@@ -413,6 +413,12 @@ DEFINE_GUIDSTRUCT("6994AD04-93EF-11D0-A3CC-00A0C9223196",KSCATEGORY_AUDIO);
 DEFINE_GUIDSTRUCT("6994AD05-93EF-11D0-A3CC-00A0C9223196",KSCATEGORY_VIDEO);
 #define KSCATEGORY_VIDEO DEFINE_GUIDNAMED(KSCATEGORY_VIDEO)
 
+/* Added for Vista and later */
+#define STATIC_KSCATEGORY_REALTIME \
+    0xEB115FFCL, 0x10C8, 0x4964, 0x83, 0x1D, 0x6D, 0xCB, 0x02, 0xE6, 0xF2, 0x3F
+DEFINE_GUIDSTRUCT("EB115FFC-10C8-4964-831D-6DCB02E6F23F", KSCATEGORY_REALTIME);
+#define KSCATEGORY_REALTIME DEFINE_GUIDNAMED(KSCATEGORY_REALTIME)
+
 #define STATIC_KSCATEGORY_TEXT						\
 	0x6994AD06L,0x93EF,0x11D0,0xA3,0xCC,0x00,0xA0,0xC9,0x22,0x31,0x96
 DEFINE_GUIDSTRUCT("6994AD06-93EF-11D0-A3CC-00A0C9223196",KSCATEGORY_TEXT);
@@ -967,7 +973,15 @@ DEFINE_GUIDSTRUCT("A855A48C-2F78-4729-9051-1968746B9EEF",KSPROPSETID_RtAudio);
 #define KSPROPSETID_RtAudio DEFINE_GUIDNAMED(KSPROPSETID_RtAudio)
 
 typedef enum {
-  KSPROPERTY_RTAUDIO_GETPOSITIONFUNCTION
+  KSPROPERTY_RTAUDIO_GETPOSITIONFUNCTION,
+  /* Added for Vista and later */
+  KSPROPERTY_RTAUDIO_BUFFER,
+  KSPROPERTY_RTAUDIO_HWLATENCY,
+  KSPROPERTY_RTAUDIO_POSITIONREGISTER,
+  KSPROPERTY_RTAUDIO_CLOCKREGISTER,
+  KSPROPERTY_RTAUDIO_BUFFER_WITH_NOTIFICATION,
+  KSPROPERTY_RTAUDIO_REGISTER_NOTIFICATION_EVENT,
+  KSPROPERTY_RTAUDIO_UNREGISTER_NOTIFICATION_EVENT
 } KSPROPERTY_RTAUDIO;
 
 #define STATIC_KSPROPSETID_DrmAudioStream				\
@@ -1071,7 +1085,7 @@ typedef struct {
 #endif  /* _SPEAKER_POSITIONS_ */
 
 #define KSAUDIO_SPEAKER_DIRECTOUT	0
-#define KSAUDIO_SPEAKER_MONO		(SPEAKER_FRONT_CENTER)
+#define X_KSAUDIO_SPEAKER_MONO		(SPEAKER_FRONT_CENTER)
 #define KSAUDIO_SPEAKER_STEREO		(SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT)
 #define KSAUDIO_SPEAKER_QUAD		(SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT |		\
 					 SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT)
@@ -1080,14 +1094,14 @@ typedef struct {
 #define KSAUDIO_SPEAKER_5POINT1		(SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT |		\
 					 SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY |		\
 					 SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT)
-#define KSAUDIO_SPEAKER_7POINT1		(SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT |		\
+#define X_KSAUDIO_SPEAKER_7POINT1		(SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT |		\
 					 SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY |		\
 					 SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT |		\
 					 SPEAKER_FRONT_LEFT_OF_CENTER | SPEAKER_FRONT_RIGHT_OF_CENTER)
 #define KSAUDIO_SPEAKER_5POINT1_SURROUND (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT |		\
 					  SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY |	\
 					  SPEAKER_SIDE_LEFT | SPEAKER_SIDE_RIGHT)
-#define KSAUDIO_SPEAKER_7POINT1_SURROUND (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT |		\
+#define X_KSAUDIO_SPEAKER_7POINT1_SURROUND (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT |		\
 					  SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY |	\
 					  SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT |		\
 					  SPEAKER_SIDE_LEFT | SPEAKER_SIDE_RIGHT)
@@ -4431,6 +4445,156 @@ typedef enum {
   VariableBitRatePeak
 } VIDEOENCODER_BITRATE_MODE;
 #endif /* __ENCODER_API_DEFINES__ */
+
+#define STATIC_KSPROPSETID_Jack\
+    0x4509f757, 0x2d46, 0x4637, 0x8e, 0x62, 0xce, 0x7d, 0xb9, 0x44, 0xf5, 0x7b
+DEFINE_GUIDSTRUCT("4509F757-2D46-4637-8E62-CE7DB944F57B", KSPROPSETID_Jack);
+#define KSPROPSETID_Jack DEFINE_GUIDNAMED(KSPROPSETID_Jack)
+
+typedef enum {
+    KSPROPERTY_JACK_DESCRIPTION = 1,
+    KSPROPERTY_JACK_DESCRIPTION2,
+    KSPROPERTY_JACK_SINK_INFO
+} KSPROPERTY_JACK;
+/*
+typedef enum
+{
+    eConnTypeUnknown,
+    eConnType3Point5mm,
+    eConnTypeQuarter,
+    eConnTypeAtapiInternal,
+    eConnTypeRCA,
+    eConnTypeOptical,
+    eConnTypeOtherDigital,
+    eConnTypeOtherAnalog,
+    eConnTypeMultichannelAnalogDIN,
+    eConnTypeXlrProfessional,
+    eConnTypeRJ11Modem,
+    eConnTypeCombination
+} EPcxConnectionType;
+
+typedef enum
+{
+    eGeoLocRear = 0x1,
+    eGeoLocFront,
+    eGeoLocLeft,
+    eGeoLocRight,
+    eGeoLocTop,
+    eGeoLocBottom,
+    eGeoLocRearPanel,
+    eGeoLocRiser,
+    eGeoLocInsideMobileLid,
+    eGeoLocDrivebay,
+    eGeoLocHDMI,
+    eGeoLocOutsideMobileLid,
+    eGeoLocATAPI,
+    eGeoLocReserved5,
+    eGeoLocReserved6,
+    EPcxGeoLocation_enum_count
+} EPcxGeoLocation;
+
+typedef enum
+{
+    eGenLocPrimaryBox = 0,
+    eGenLocInternal,
+    eGenLocSeparate,
+    eGenLocOther,
+    EPcxGenLocation_enum_count
+} EPcxGenLocation;
+
+typedef enum
+{
+    ePortConnJack = 0,
+    ePortConnIntegratedDevice,
+    ePortConnBothIntegratedAndJack,
+    ePortConnUnknown
+} EPxcPortConnection;
+
+typedef struct 
+{
+    DWORD                 ChannelMapping;
+    COLORREF              Color;
+    EPcxConnectionType    ConnectionType;
+    EPcxGeoLocation       GeoLocation;
+    EPcxGenLocation       GenLocation;
+    EPxcPortConnection    PortConnection;
+    BOOL                  IsConnected;
+} KSJACK_DESCRIPTION, *PKSJACK_DESCRIPTION;
+
+typedef enum 
+{
+    KSJACK_SINK_CONNECTIONTYPE_HDMI = 0,           
+    KSJACK_SINK_CONNECTIONTYPE_DISPLAYPORT,         
+} KSJACK_SINK_CONNECTIONTYPE;
+
+#define MAX_SINK_DESCRIPTION_NAME_LENGTH 32
+typedef struct _tagKSJACK_SINK_INFORMATION
+{
+  KSJACK_SINK_CONNECTIONTYPE ConnType;              
+  WORD  ManufacturerId;                            
+  WORD  ProductId;                                  
+  WORD  AudioLatency;                               
+  BOOL  HDCPCapable;                                
+  BOOL  AICapable;                                  
+  UCHAR SinkDescriptionLength;                      
+  WCHAR SinkDescription[MAX_SINK_DESCRIPTION_NAME_LENGTH];
+  LUID  PortId;                                 
+}  KSJACK_SINK_INFORMATION, *PKSJACK_SINK_INFORMATION;
+
+#define JACKDESC2_PRESENCE_DETECT_CAPABILITY       0x00000001 
+#define JACKDESC2_DYNAMIC_FORMAT_CHANGE_CAPABILITY 0x00000002
+
+typedef struct _tagKSJACK_DESCRIPTION2
+{
+  DWORD              DeviceStateInfo;
+  DWORD              JackCapabilities;
+} KSJACK_DESCRIPTION2, *PKSJACK_DESCRIPTION2;
+*/
+
+/* Additional structs for Windows Vista and later */
+typedef struct _tagKSRTAUDIO_BUFFER_PROPERTY {
+    KSPROPERTY  Property;
+    PVOID       BaseAddress;
+    ULONG       RequestedBufferSize;
+} KSRTAUDIO_BUFFER_PROPERTY, *PKSRTAUDIO_BUFFER_PROPERTY;
+
+typedef struct _tagKSRTAUDIO_BUFFER_PROPERTY_WITH_NOTIFICATION {
+    KSPROPERTY  Property;
+    PVOID       BaseAddress;
+    ULONG       RequestedBufferSize;
+    ULONG       NotificationCount;
+} KSRTAUDIO_BUFFER_PROPERTY_WITH_NOTIFICATION, *PKSRTAUDIO_BUFFER_PROPERTY_WITH_NOTIFICATION;
+
+typedef struct _tagKSRTAUDIO_BUFFER {
+    PVOID   BufferAddress;
+    ULONG   ActualBufferSize;
+    BOOL    CallMemoryBarrier;
+} KSRTAUDIO_BUFFER, *PKSRTAUDIO_BUFFER;
+
+typedef struct _tagKSRTAUDIO_HWLATENCY {
+    ULONG   FifoSize;
+    ULONG   ChipsetDelay;
+    ULONG   CodecDelay;
+} KSRTAUDIO_HWLATENCY, *PKSRTAUDIO_HWLATENCY;
+
+typedef struct _tagKSRTAUDIO_HWREGISTER_PROPERTY {
+    KSPROPERTY  Property;
+    PVOID       BaseAddress;
+} KSRTAUDIO_HWREGISTER_PROPERTY, *PKSRTAUDIO_HWREGISTER_PROPERTY;
+
+typedef struct _tagKSRTAUDIO_HWREGISTER {
+    PVOID       Register;
+    ULONG       Width;
+    ULONGLONG   Numerator;
+    ULONGLONG   Denominator;
+    ULONG       Accuracy;
+} KSRTAUDIO_HWREGISTER, *PKSRTAUDIO_HWREGISTER;
+
+typedef struct _tagKSRTAUDIO_NOTIFICATION_EVENT_PROPERTY {
+    KSPROPERTY  Property;
+    HANDLE      NotificationEvent;
+} KSRTAUDIO_NOTIFICATION_EVENT_PROPERTY, *PKSRTAUDIO_NOTIFICATION_EVENT_PROPERTY;
+
 
 #endif /* _KSMEDIA_ */
 
