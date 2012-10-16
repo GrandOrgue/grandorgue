@@ -27,7 +27,7 @@
 #include "GOGUIMouseState.h"
 #include "GrandOrgueDef.h"
 
-class OrganView;
+class GOrgueView;
 class GOGUIPanel;
 
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL, -1)
@@ -37,13 +37,13 @@ class GOGUIPanelWidget : public wxPanel
 private:
 	GOGUIPanel* m_panel;
 	wxBitmap m_ClientBitmap;
-	OrganView* m_View;
+	GOrgueView* m_View;
 	GOGUIMouseState m_leftstate;
 
 	void CopyToScreen(wxDC* mdc, const wxRect& rect);
 
 public:
-	GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, OrganView* view, wxWindowID id = wxID_ANY);
+	GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, GOrgueView* view, wxWindowID id = wxID_ANY);
 	~GOGUIPanelWidget();
 
 	void OnUpdate();

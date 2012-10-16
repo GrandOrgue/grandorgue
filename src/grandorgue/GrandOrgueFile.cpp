@@ -52,12 +52,12 @@
 #include "GOrgueTemperament.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueWindchest.h"
-#include "OrganDocument.h"
+#include "GOrgueDocument.h"
 #include "GOGUIPanel.h"
 #include "GOSoundEngine.h"
 #include "contrib/sha1.h"
 
-GrandOrgueFile::GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings) :
+GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_doc(doc),
 	m_odf(),
 	m_path(),

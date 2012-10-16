@@ -20,39 +20,39 @@
  */
 
 #include "GOGUIPanel.h"
-#include "OrganDocument.h"
+#include "GOrgueDocument.h"
 #include "GOrgueEvent.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 
-IMPLEMENT_DYNAMIC_CLASS(OrganDocument, wxDocument)
+IMPLEMENT_DYNAMIC_CLASS(GOrgueDocument, wxDocument)
 
 extern GOrgueSound* g_sound;
 
-OrganDocument::OrganDocument() :
+GOrgueDocument::GOrgueDocument() :
 	m_OrganFileReady(false),
 	m_organfile(NULL),
 	m_sound(*g_sound)
 {
 }
 
-OrganDocument::~OrganDocument()
+GOrgueDocument::~GOrgueDocument()
 {
 	CloseOrgan();
 }
 
-bool OrganDocument::OnCloseDocument()
+bool GOrgueDocument::OnCloseDocument()
 {
     return wxDocument::OnCloseDocument();
 }
 
-bool OrganDocument::DoOpenDocument(const wxString& file)
+bool GOrgueDocument::DoOpenDocument(const wxString& file)
 {
 	return DoOpenDocument(file, wxEmptyString);
 }
 
-bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
+bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 {
 	wxBusyCursor busy;
 
@@ -102,14 +102,14 @@ bool OrganDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	return true;
 }
 
-bool OrganDocument::DoSaveDocument(const wxString& file)
+bool GOrgueDocument::DoSaveDocument(const wxString& file)
 {
 	m_organfile->SetVolume(m_sound.GetEngine().GetVolume());
 	m_organfile->Save(file);
 	return true;
 }
 
-void OrganDocument::CloseOrgan()
+void GOrgueDocument::CloseOrgan()
 {
 	m_sound.CloseSound();
 
@@ -122,12 +122,12 @@ void OrganDocument::CloseOrgan()
 	}
 }
 
-GrandOrgueFile* OrganDocument::GetOrganFile()
+GrandOrgueFile* GOrgueDocument::GetOrganFile()
 {
 	return m_organfile;
 }
 
-void OrganDocument::OnMidiEvent(GOrgueMidiEvent& event)
+void GOrgueDocument::OnMidiEvent(GOrgueMidiEvent& event)
 {
 	GOMutexLocker locker(m_lock);
 

@@ -21,8 +21,8 @@
 
 
 #include "GrandOrgue.h"
-#include "OrganView.h"
-#include "OrganDocument.h"
+#include "GOrgueView.h"
+#include "GOrgueDocument.h"
 #include "GOrgueEvent.h"
 #include "GOrgueLCD.h"
 #include "GOrgueLog.h"
@@ -102,7 +102,7 @@ bool GOrgueApp::OnInit()
 #endif
 
 	m_docManager = new GOrgueDocManager;
-	new wxDocTemplate(m_docManager, _("Sample set definition files"), _("*.organ"), wxEmptyString, wxT("organ"), _("Organ Doc"), _("Organ View"), CLASSINFO(OrganDocument), CLASSINFO(OrganView));
+	new wxDocTemplate(m_docManager, _("Sample set definition files"), _("*.organ"), wxEmptyString, wxT("organ"), _("Organ Doc"), _("Organ View"), CLASSINFO(GOrgueDocument), CLASSINFO(GOrgueView));
 	m_docManager->SetMaxDocsOpen(1);
 
 	m_soundSystem = new GOrgueSound(*m_Settings);

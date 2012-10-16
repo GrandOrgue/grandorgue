@@ -50,7 +50,7 @@ class GOrgueTemperament;
 class GOrgueTremulant;
 class GOrgueWindchest;
 class GOGUIPanel;
-class OrganDocument;
+class GOrgueDocument;
 class GOSoundProvider;
 class GOSoundEngine;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
@@ -60,7 +60,7 @@ class GrandOrgueFile : public GOrguePipeUpdateCallback
 
 private:
 
-	OrganDocument* m_doc;
+	GOrgueDocument* m_doc;
 	wxString m_odf;
 	wxString m_path;
 	wxString m_CacheFilename;
@@ -129,7 +129,7 @@ private:
 
 public:
 
-	GrandOrgueFile(OrganDocument* doc, GOrgueSettings& settings);
+	GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings);
 	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);
 	void LoadCombination(const wxString& file);
 	void Save(const wxString& file);
