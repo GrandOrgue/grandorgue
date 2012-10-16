@@ -77,6 +77,8 @@
 
 #include "pa_win_coinitialize.h"
 
+#undef NTDDI_VERSION
+#define PROPERTYKEY_DEFINED
 #ifndef NTDDI_VERSION
  
     #undef WINVER
