@@ -556,7 +556,13 @@ void GOrgueFrame::OnCacheDelete(wxCommandEvent& event)
 
 void GOrgueFrame::OnReload(wxCommandEvent& event)
 {
-	ProcessCommand(wxID_FILE1);
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
+	if (!doc)
+		return;
+	wxString filename = doc->GetFilename();
+	if (!m_docManager->CloseDocument(doc))
+		return;
+	m_docManager->CreateDocument(filename, wxDOC_SILENT);
 }
 
 void GOrgueFrame::OnRevert(wxCommandEvent& event)
