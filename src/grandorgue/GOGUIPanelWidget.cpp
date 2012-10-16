@@ -22,7 +22,7 @@
 #include "GOGUIControl.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
-#include "OrganView.h"
+#include "GOrgueView.h"
 #include "KeyConvert.h"
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL)
@@ -41,7 +41,7 @@ BEGIN_EVENT_TABLE(GOGUIPanelWidget, wxPanel)
 	EVT_KEY_UP(GOGUIPanelWidget::OnKeyUp)
 END_EVENT_TABLE()
 
-GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, OrganView* view, wxWindowID id) :
+GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, GOrgueView* view, wxWindowID id) :
 	wxPanel(parent, id),
 	m_panel(panel),
 	m_View(view)

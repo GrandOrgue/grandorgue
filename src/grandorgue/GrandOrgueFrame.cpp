@@ -40,8 +40,8 @@
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 #include "OrganDialog.h"
-#include "OrganDocument.h"
-#include "OrganView.h"
+#include "GOrgueDocument.h"
+#include "GOrgueView.h"
 #include "SettingsDialog.h"
 #include "SplashScreen.h"
 
@@ -320,7 +320,7 @@ void GOrgueFrame::InitHelp()
 
 void GOrgueFrame::OnPanel(wxCommandEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
 	unsigned no = event.GetId() - ID_PANEL_FIRST + 1;
 	if (!organfile || organfile->GetPanelCount() <= no)
@@ -333,7 +333,7 @@ void GOrgueFrame::OnPanel(wxCommandEvent& event)
 	}
 	else
 	{
-		OrganView* view = new OrganView(no);
+		GOrgueView* view = new GOrgueView(no);
 		view->SetDocument(doc);
 		view->OnCreate(doc, 0);
 	}
@@ -341,7 +341,7 @@ void GOrgueFrame::OnPanel(wxCommandEvent& event)
 
 void GOrgueFrame::UpdatePanelMenu()
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
 	unsigned panelcount = std::min (organfile ? organfile->GetPanelCount() - 1 : 0, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
 
@@ -408,7 +408,7 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 {
 	GrandOrgueFile* organfile = NULL;
 	if (m_docManager->GetCurrentDocument())
-		organfile = ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile();
+		organfile = ((GOrgueDocument*)m_docManager->GetCurrentDocument())->GetOrganFile();
 
 	if (ID_PRESET_0 <= event.GetId() && event.GetId() <= ID_PRESET_LAST)
 	{
@@ -447,7 +447,7 @@ void GOrgueFrame::OnPreset(wxCommandEvent& event)
 void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_TEMPERAMENT_0;
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
 
@@ -465,7 +465,7 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 	{
 		GetDocumentManager()->SetLastDirectory(m_Settings.GetOrganPath());
 		ProcessCommand(wxID_OPEN);
-		if (m_docManager->GetCurrentDocument() && ((OrganDocument*)m_docManager->GetCurrentDocument())->GetOrganFile())
+		if (m_docManager->GetCurrentDocument() && ((GOrgueDocument*)m_docManager->GetCurrentDocument())->GetOrganFile())
 		{
 			m_Settings.SetOrganPath(GetDocumentManager()->GetLastDirectory());
 		}
@@ -476,7 +476,7 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 
 void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
 
@@ -491,7 +491,7 @@ void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 
 void GOrgueFrame::OnImportCombinations(wxCommandEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
 
@@ -506,7 +506,7 @@ void GOrgueFrame::OnImportCombinations(wxCommandEvent& event)
 
 void GOrgueFrame::OnExport(wxCommandEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
 
@@ -536,7 +536,7 @@ wxString formatSize(wxLongLong& size)
 
 void GOrgueFrame::OnCache(wxCommandEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
 	if (!doc->GetOrganFile()->UpdateCache(m_Settings.GetCompressCache()))
@@ -548,7 +548,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 
 void GOrgueFrame::OnCacheDelete(wxCommandEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
 	doc->GetOrganFile()->DeleteCache();
@@ -567,7 +567,7 @@ void GOrgueFrame::OnReload(wxCommandEvent& event)
 
 void GOrgueFrame::OnRevert(wxCommandEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (doc && doc->GetOrganFile() && ::wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), wxT(APP_NAME), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
 	{
 		{
@@ -581,7 +581,7 @@ void GOrgueFrame::OnRevert(wxCommandEvent& event)
 
 void GOrgueFrame::OnProperties(wxCommandEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	GOrgueProperties dlg(doc->GetOrganFile(), this);
 	dlg.ShowModal();
 }
@@ -613,7 +613,7 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
 	doc->GetOrganFile()->GetSetter()->ToggleSetter();
@@ -629,7 +629,7 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnEditOrgan(wxCommandEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
 	OrganDialog dialog(this, doc->GetOrganFile());
@@ -671,7 +671,7 @@ void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
 {
 	long n = m_SetterPosition->GetValue();
 
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (doc && doc->GetOrganFile())
 		doc->GetOrganFile()->GetSetter()->SetPosition(n);
 }
@@ -746,7 +746,7 @@ void GOrgueFrame::OnKeyCommand(wxKeyEvent& event)
 
 void GOrgueFrame::OnMidiEvent(GOrgueMidiEvent& event)
 {
-	OrganDocument* doc = (OrganDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (doc)
 		doc->OnMidiEvent(event);
 

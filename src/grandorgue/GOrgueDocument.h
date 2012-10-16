@@ -19,36 +19,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef ORGANVIEW_H
-#define ORGANVIEW_H
+#ifndef GORGUEDOCUMENT_H
+#define GORGUEDOCUMENT_H
 
+#include <wx/defs.h>
 #include <wx/docview.h>
+#include "GOLock.h"
 
-class GOGUIPanelWidget;
-class OrganDocument;
+class GOrgueMidiEvent;
+class GrandOrgueFile;
+class GOrgueSound;
 
-class OrganView : public wxView
+class GOrgueDocument : public wxDocument
 {
 private:
-	GOGUIPanelWidget* m_panel;
-	wxScrolledWindow* m_container;
-	wxWindow* m_frame;
-	OrganDocument* m_doc;
-	unsigned m_panelID;
+	GOMutex m_lock;
+	bool m_OrganFileReady;
+	GrandOrgueFile* m_organfile;
+	GOrgueSound& m_sound;
 
-	bool CreateWindow();
+	void CloseOrgan();
+
 public:
-	OrganView(unsigned m_panelID = 0);
-	~OrganView();
+	GOrgueDocument();
+	~GOrgueDocument();
 
-	void OnWindowClosed();
-	bool OnCreate(wxDocument *doc, long flags);
-	bool OnClose(bool deleteWindow = true);
-	void OnDraw(wxDC*);
-	void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
+	bool OnCloseDocument();
+	bool DoOpenDocument(const wxString& file, const wxString& file2);
+	bool DoOpenDocument(const wxString& file);
+	bool DoSaveDocument(const wxString& file);
+
+	bool Save() { return OnSaveDocument(m_documentFile); }
+
+	GrandOrgueFile* GetOrganFile();
+
+	void OnMidiEvent(GOrgueMidiEvent& event);
 
 private:
-	DECLARE_DYNAMIC_CLASS(OrganView);
+
+	DECLARE_DYNAMIC_CLASS(GOrgueDocument)
 };
 
 #endif

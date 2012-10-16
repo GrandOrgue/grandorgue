@@ -19,17 +19,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "OrganView.h"
+#include "GOrgueView.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
-#include "OrganDocument.h"
+#include "GOrgueDocument.h"
 #include "GrandOrgueFile.h"
 #include "Images.h"
 
-IMPLEMENT_DYNAMIC_CLASS(OrganView, wxView)
+IMPLEMENT_DYNAMIC_CLASS(GOrgueView, wxView)
 
 
-OrganView::OrganView(unsigned panelID) :
+GOrgueView::GOrgueView(unsigned panelID) :
 	m_panel(NULL),
 	m_container(NULL),
 	m_frame(NULL),
@@ -38,7 +38,7 @@ OrganView::OrganView(unsigned panelID) :
 {
 }
 
-OrganView::~OrganView()
+GOrgueView::~GOrgueView()
 {
 	if (m_container)
 	{
@@ -47,7 +47,7 @@ OrganView::~OrganView()
 	}
 }
 
-bool OrganView::CreateWindow()
+bool GOrgueView::CreateWindow()
 {
 	if (!m_doc)
 		return false;
@@ -105,15 +105,15 @@ bool OrganView::CreateWindow()
 	return true;
 }
 
-bool OrganView::OnCreate(wxDocument *doc, long flags)
+bool GOrgueView::OnCreate(wxDocument *doc, long flags)
 {
-	m_doc = (OrganDocument*)doc;
+	m_doc = (GOrgueDocument*)doc;
 	CreateWindow();
 	return true;
 
 }
 
-void OrganView::OnUpdate(wxView *sender, wxObject *hint)
+void GOrgueView::OnUpdate(wxView *sender, wxObject *hint)
 {
 	if (m_panel)
 		m_panel->OnUpdate();
@@ -121,11 +121,11 @@ void OrganView::OnUpdate(wxView *sender, wxObject *hint)
 		Close(true);
 }
 
-void OrganView::OnDraw(wxDC*)
+void GOrgueView::OnDraw(wxDC*)
 {
 }
 
-bool OrganView::OnClose(bool deleteWindow)
+bool GOrgueView::OnClose(bool deleteWindow)
 {
 	if (GetFrame() && deleteWindow)
 	{
@@ -139,7 +139,7 @@ bool OrganView::OnClose(bool deleteWindow)
 	return wxView::OnClose(deleteWindow);
 }
 
-void OrganView::OnWindowClosed()
+void GOrgueView::OnWindowClosed()
 {
 	m_panel = NULL;
 	SetFrame(0);

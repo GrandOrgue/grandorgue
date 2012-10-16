@@ -215,8 +215,8 @@ MIDIEventRecvDialog.cpp
 MIDIEventSendDialog.cpp
 MIDIListenDialog.cpp
 OrganDialog.cpp
-OrganDocument.cpp
-OrganView.cpp
+GOrgueDocument.cpp
+GOrgueView.cpp
 SettingsAudioGroup.cpp
 SettingsAudioOutput.cpp
 SettingsDialog.cpp
