@@ -26,14 +26,12 @@
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 
-IMPLEMENT_DYNAMIC_CLASS(GOrgueDocument, wxDocument)
+IMPLEMENT_CLASS(GOrgueDocument, wxDocument)
 
-extern GOrgueSound* g_sound;
-
-GOrgueDocument::GOrgueDocument() :
+GOrgueDocument::GOrgueDocument(GOrgueSound* sound) :
 	m_OrganFileReady(false),
 	m_organfile(NULL),
-	m_sound(*g_sound)
+	m_sound(*sound)
 {
 }
 

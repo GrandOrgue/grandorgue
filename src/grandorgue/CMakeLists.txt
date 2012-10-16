@@ -215,6 +215,7 @@ MIDIEventRecvDialog.cpp
 MIDIEventSendDialog.cpp
 MIDIListenDialog.cpp
 OrganDialog.cpp
+GOrgueDocTemplate.cpp
 GOrgueDocument.cpp
 GOrgueView.cpp
 SettingsAudioGroup.cpp

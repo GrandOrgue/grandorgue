@@ -21,8 +21,7 @@
 
 
 #include "GrandOrgue.h"
-#include "GOrgueView.h"
-#include "GOrgueDocument.h"
+#include "GOrgueDocTemplate.h"
 #include "GOrgueEvent.h"
 #include "GOrgueLCD.h"
 #include "GOrgueLog.h"
@@ -101,11 +100,11 @@ bool GOrgueApp::OnInit()
 	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
 #endif
 
+	m_soundSystem = new GOrgueSound(*m_Settings);
 	m_docManager = new GOrgueDocManager;
-	new wxDocTemplate(m_docManager, _("Sample set definition files"), _("*.organ"), wxEmptyString, wxT("organ"), _("Organ Doc"), _("Organ View"), CLASSINFO(GOrgueDocument), CLASSINFO(GOrgueView));
+	new GOrgueDocTemplate(m_soundSystem, m_docManager, _("Sample set definition files"), _("*.organ"), wxEmptyString, wxT("organ"));
 	m_docManager->SetMaxDocsOpen(1);
 
-	m_soundSystem = new GOrgueSound(*m_Settings);
 	m_Frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_TITLE), wxDefaultPosition, wxDefaultSize, 
 				  wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE, *m_soundSystem);
 	SetTopWindow(m_Frame);
