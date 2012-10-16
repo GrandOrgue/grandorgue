@@ -441,7 +441,7 @@ void GOrgueFrame::OnPreset(wxCommandEvent& event)
 		return;
 	m_Settings.SetPreset(id);
 	if (m_docManager->GetCurrentDocument())
-		ProcessCommand(wxID_FILE1);
+		ProcessCommand(ID_FILE_RELOAD);
 }
 
 void GOrgueFrame::OnTemperament(wxCommandEvent& event)
@@ -569,7 +569,7 @@ void GOrgueFrame::OnRevert(wxCommandEvent& event)
 			m_docManager->GetCurrentDocument()->Modify(false);
 			doc->GetOrganFile()->DeleteSettings();
 		}
-		ProcessCommand(wxID_FILE1);
+		ProcessCommand(ID_FILE_RELOAD);
 	}
 }
 
