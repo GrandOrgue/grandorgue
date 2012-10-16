@@ -1,5 +1,5 @@
 /*
- * $Id: pa_win_ds.c 1794 2011-11-24 18:11:33Z rossb $
+ * $Id: pa_win_ds.c 1859 2012-09-01 00:10:13Z philburk $
  * Portable Audio I/O Library DirectSound implementation
  *
  * Authors: Phil Burk, Robert Marsanyi & Ross Bencina
@@ -480,7 +480,7 @@ static PaError ExpandDSDeviceNameAndGUIDVector( DSDeviceNameAndGUIDVector *guidV
             else
             {
                 newItems[i].lpGUID = &newItems[i].guid;
-                memcpy( &newItems[i].guid, guidVector->items[i].lpGUID, sizeof(GUID) );;
+                memcpy( &newItems[i].guid, guidVector->items[i].lpGUID, sizeof(GUID) );
             }
             newItems[i].pnpInterface = guidVector->items[i].pnpInterface;
         }
@@ -1167,6 +1167,8 @@ PaError PaWinDs_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInde
         goto error;
     }
 
+    memset( winDsHostApi, 0, sizeof(PaWinDsHostApiRepresentation) ); /* ensure all fields are zeroed. especially winDsHostApi->allocations */
+
     result = PaWinUtil_CoInitialize( paDirectSound, &winDsHostApi->comInitializationResult );
     if( result != paNoError )
     {
@@ -1306,7 +1308,7 @@ error:
     TerminateDSDeviceNameAndGUIDVector( &deviceNamesAndGUIDs.inputNamesAndGUIDs );
     TerminateDSDeviceNameAndGUIDVector( &deviceNamesAndGUIDs.outputNamesAndGUIDs );
 
-    Terminate((PaUtilHostApiRepresentation*)winDsHostApi );
+    Terminate( (struct PaUtilHostApiRepresentation *)winDsHostApi );
 
     return result;
 }
@@ -1700,9 +1702,9 @@ static void CalculateBufferSettings( unsigned long *hostBufferSizeFrames,
                                     unsigned long suggestedOutputLatencyFrames,
                                     double sampleRate, unsigned long userFramesPerBuffer )
 {
-    unsigned long minimumPollingPeriodFrames = sampleRate * PA_DS_MINIMUM_POLLING_PERIOD_SECONDS;
-    unsigned long maximumPollingPeriodFrames = sampleRate * PA_DS_MAXIMUM_POLLING_PERIOD_SECONDS;
-    unsigned long pollingJitterFrames = sampleRate * PA_DS_POLLING_JITTER_SECONDS;
+    unsigned long minimumPollingPeriodFrames = (unsigned long)(sampleRate * PA_DS_MINIMUM_POLLING_PERIOD_SECONDS);
+    unsigned long maximumPollingPeriodFrames = (unsigned long)(sampleRate * PA_DS_MAXIMUM_POLLING_PERIOD_SECONDS);
+    unsigned long pollingJitterFrames = (unsigned long)(sampleRate * PA_DS_POLLING_JITTER_SECONDS);
     
     if( userFramesPerBuffer == paFramesPerBufferUnspecified )
     {
@@ -1768,7 +1770,7 @@ static void CalculatePollingPeriodFrames( unsigned long hostBufferSizeFrames,
                                     unsigned long *pollingPeriodFrames,
                                     double sampleRate, unsigned long userFramesPerBuffer )
 {
-    unsigned long maximumPollingPeriodFrames = sampleRate * PA_DS_MAXIMUM_POLLING_PERIOD_SECONDS;
+    unsigned long maximumPollingPeriodFrames = (unsigned long)(sampleRate * PA_DS_MAXIMUM_POLLING_PERIOD_SECONDS);
 
     *pollingPeriodFrames = max( max(1, userFramesPerBuffer / 4), hostBufferSizeFrames / 16 );
 
@@ -2466,6 +2468,8 @@ static int TimeSlice( PaWinDsStream *stream )
         framesToXfer = numOutFramesReady = bytesEmpty / stream->outputFrameSizeBytes;
 
         /* Check for underflow */
+		/* FIXME QueryOutputSpace should not adjust underflow count as a side effect. 
+			A query function should be a const operator on the stream and return a flag on underflow. */
         if( stream->outputUnderflowCount != previousUnderflowCount )
             stream->callbackFlags |= paOutputUnderflow;
 
@@ -2531,7 +2535,7 @@ static int TimeSlice( PaWinDsStream *stream )
         {
             /*
 			We don't currently add outputLatency here because it appears to produce worse
-			results than non adding it. Need to do more testing to verify this.
+			results than not adding it. Need to do more testing to verify this.
             */
             /* timeInfo.outputBufferDacTime = timeInfo.currentTime + outputLatency; */
             timeInfo.outputBufferDacTime = timeInfo.currentTime;
@@ -2722,7 +2726,7 @@ PA_THREAD_FUNC ProcessingThreadProc( void *pArg )
     LARGE_INTEGER dueTime;
     int timerPeriodMs;
 
-    timerPeriodMs = stream->pollingPeriodSeconds * MSECS_PER_SECOND;
+    timerPeriodMs = (int)(stream->pollingPeriodSeconds * MSECS_PER_SECOND);
     if( timerPeriodMs < 1 )
         timerPeriodMs = 1;
 
@@ -2945,7 +2949,7 @@ static PaError StartStream( PaStream *s )
     if( stream->streamRepresentation.streamCallback )
     {
         TIMECAPS timecaps;
-        int timerPeriodMs = stream->pollingPeriodSeconds * MSECS_PER_SECOND;
+        int timerPeriodMs = (int)(stream->pollingPeriodSeconds * MSECS_PER_SECOND);
         if( timerPeriodMs < 1 )
             timerPeriodMs = 1;
 
@@ -2956,10 +2960,10 @@ static PaError StartStream( PaStream *s )
            we're using an MM timer callback via timeSetEvent or not.
         */
         assert( stream->systemTimerResolutionPeriodMs == 0 );
-        if( timeGetDevCaps( &timecaps, sizeof(TIMECAPS) == MMSYSERR_NOERROR && timecaps.wPeriodMin > 0 ) )
+        if( timeGetDevCaps( &timecaps, sizeof(TIMECAPS) ) == MMSYSERR_NOERROR && timecaps.wPeriodMin > 0 )
         {
             /* aim for resolution 4 times higher than polling rate */
-            stream->systemTimerResolutionPeriodMs = (stream->pollingPeriodSeconds * MSECS_PER_SECOND) / 4;
+            stream->systemTimerResolutionPeriodMs = (UINT)((stream->pollingPeriodSeconds * MSECS_PER_SECOND) * .25);
             if( stream->systemTimerResolutionPeriodMs < timecaps.wPeriodMin )
                 stream->systemTimerResolutionPeriodMs = timecaps.wPeriodMin;
             if( stream->systemTimerResolutionPeriodMs > timecaps.wPeriodMax )

@@ -257,7 +257,7 @@ typedef void (*MixMonoToStereoF) (void *__to, void *__from, UINT32 count);
 typedef BOOL   (WINAPI *FAvRtCreateThreadOrderingGroup)  (PHANDLE,PLARGE_INTEGER,GUID*,PLARGE_INTEGER);
 typedef BOOL   (WINAPI *FAvRtDeleteThreadOrderingGroup)  (HANDLE);
 typedef BOOL   (WINAPI *FAvRtWaitOnThreadOrderingGroup)  (HANDLE);
-typedef HANDLE (WINAPI *FAvSetMmThreadCharacteristics)   (LPCTSTR,LPDWORD);
+typedef HANDLE (WINAPI *FAvSetMmThreadCharacteristics)   (LPCSTR,LPDWORD);
 typedef BOOL   (WINAPI *FAvRevertMmThreadCharacteristics)(HANDLE);
 typedef BOOL   (WINAPI *FAvSetMmThreadPriority)          (HANDLE,AVRT_PRIORITY);
 
@@ -830,7 +830,7 @@ static BOOL IsWow64()
     // and GetProcAddress to get a pointer to the function if available.
 
     fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
-        GetModuleHandle(TEXT("kernel32")), TEXT("IsWow64Process"));
+        GetModuleHandleA("kernel32"), "IsWow64Process");
 
     if (fnIsWow64Process == NULL)
 		return FALSE;
@@ -868,7 +868,7 @@ static UINT32 GetWindowsVersion()
 		typedef DWORD (WINAPI *LPFN_GETVERSION)(VOID);
 		LPFN_GETVERSION fnGetVersion;
 
-		fnGetVersion = (LPFN_GETVERSION) GetProcAddress(GetModuleHandle(TEXT("kernel32")), TEXT("GetVersion"));
+		fnGetVersion = (LPFN_GETVERSION) GetProcAddress(GetModuleHandleA("kernel32"), "GetVersion");
 		if (fnGetVersion == NULL)
 			return WINDOWS_UNKNOWN;
 
@@ -1066,6 +1066,8 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
         result = paInsufficientMemory;
         goto error;
     }
+	
+    memset( paWasapi, 0, sizeof(PaWasapiHostApiRepresentation) ); /* ensure all fields are zeroed. especially paWasapi->allocations */
 
     result = PaWinUtil_CoInitialize( paWASAPI, &paWasapi->comInitializationResult );
     if( result != paNoError )
@@ -2129,16 +2131,26 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 	const UINT32 userFramesPerBuffer = framesPerLatency;
     IAudioClient *audioClient	     = NULL;
 
+	// Assume default failure due to some reason
+	(*pa_error) = paInvalidDevice;
+
 	// Validate parameters
     if (!pSub || !pInfo || !params)
+	{
+		(*pa_error) = paBadStreamPtr;
         return E_POINTER;
+	}
 	if ((UINT32)sampleRate == 0)
+	{
+		(*pa_error) = paInvalidSampleRate;
         return E_INVALIDARG;
+	}
 
     // Get the audio client
     hr = IMMDevice_Activate(pInfo->device, &pa_IID_IAudioClient, CLSCTX_ALL, NULL, (void **)&audioClient);
 	if (hr != S_OK)
 	{
+		(*pa_error) = paInsufficientMemory;
 		LogHostError(hr);
 		goto done;
 	}
@@ -2146,9 +2158,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 	// Get closest format
 	if ((error = GetClosestFormat(audioClient, sampleRate, params, pSub->shareMode, &pSub->wavex, output)) != paFormatIsSupported)
 	{
-		if (pa_error)
-			(*pa_error) = error;
-
+		(*pa_error) = error;
 		LogHostError(hr = AUDCLNT_E_UNSUPPORTED_FORMAT);
 		goto done; // fail, format not supported
 	}
@@ -2166,6 +2176,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 		pSub->monoMixer = _GetMonoToStereoMixer(WaveToPaFormat(&pSub->wavex), (pInfo->flow == eRender ? MIX_DIR__1TO2 : MIX_DIR__2TO1_L));
 		if (pSub->monoMixer == NULL)
 		{
+			(*pa_error) = paInvalidChannelCount;
 			LogHostError(hr = AUDCLNT_E_UNSUPPORTED_FORMAT);
 			goto done; // fail, no mixer for format
 		}
@@ -2321,6 +2332,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
         hr = IMMDevice_Activate(pInfo->device, &pa_IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&audioClient);
     	if (hr != S_OK)
 		{
+			(*pa_error) = paInsufficientMemory;
 			LogHostError(hr);
 			goto done;
 		}
@@ -2351,6 +2363,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
         hr = IMMDevice_Activate(pInfo->device, &pa_IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&audioClient);
     	if (hr != S_OK)
 		{
+			(*pa_error) = paInsufficientMemory;
 			LogHostError(hr);
 			goto done;
 		}
@@ -2376,6 +2389,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
         hr = IAudioClient_GetBufferSize(audioClient, &frames);
 		if (hr != S_OK)
 		{
+			(*pa_error) = paInvalidDevice;
 			LogHostError(hr);
 			goto done;
 		}
@@ -2389,6 +2403,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
         hr = IMMDevice_Activate(pInfo->device, &pa_IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&audioClient);
     	if (hr != S_OK)
 		{
+			(*pa_error) = paInsufficientMemory;
 			LogHostError(hr);
 			goto done;
 		}
@@ -2396,9 +2411,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 		// Get closest format
 		if ((error = GetClosestFormat(audioClient, sampleRate, params, pSub->shareMode, &pSub->wavex, output)) != paFormatIsSupported)
 		{
-			if (pa_error)
-				(*pa_error) = error;
-
+			(*pa_error) = error;
 			LogHostError(hr = AUDCLNT_E_UNSUPPORTED_FORMAT); // fail, format not supported
 			goto done;
 		}
@@ -2416,6 +2429,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 			pSub->monoMixer = _GetMonoToStereoMixer(WaveToPaFormat(&pSub->wavex), (pInfo->flow == eRender ? MIX_DIR__1TO2 : MIX_DIR__2TO1_L));
 			if (pSub->monoMixer == NULL)
 			{
+				(*pa_error) = paInvalidChannelCount;
 				LogHostError(hr = AUDCLNT_E_UNSUPPORTED_FORMAT);
 				goto done; // fail, no mixer for format
 			}
@@ -2434,6 +2448,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
             NULL);
     	if (hr != S_OK)
 		{
+			(*pa_error) = paInvalidDevice;
 			LogHostError(hr);
 			goto done;
 		}
@@ -2441,6 +2456,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
     else
 	if (hr != S_OK)
     {
+		(*pa_error) = paInvalidDevice;
 		LogHostError(hr);
 		goto done;
     }
@@ -2454,6 +2470,9 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 		userFramesPerBuffer,
 		MakeFramesFromHns(pSub->period, pSub->wavex.Format.nSamplesPerSec),
 		fullDuplex);
+
+	// No error, client is succesfully created
+	(*pa_error) = paNoError;
 
 done:
 
@@ -2476,7 +2495,7 @@ static PaError ActivateAudioClientOutput(PaWasapiStream *stream)
 	hr = CreateAudioClient(stream, &stream->out, TRUE, &result);
     if (hr != S_OK)
 	{
-		LogPaError(result = paInvalidDevice);
+		LogPaError(result);
 		goto error;
     }
 	LogWAVEFORMATEXTENSIBLE(&stream->out.wavex);
@@ -2548,7 +2567,7 @@ static PaError ActivateAudioClientInput(PaWasapiStream *stream)
 	hr = CreateAudioClient(stream, &stream->in, FALSE, &result);
     if (hr != S_OK)
 	{
-		LogPaError(result = paInvalidDevice);
+		LogPaError(result);
 		goto error;
     }
 	LogWAVEFORMATEXTENSIBLE(&stream->in.wavex);
