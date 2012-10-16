@@ -19,45 +19,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEDOCUMENT_H
-#define GORGUEDOCUMENT_H
+#ifndef GORGUEDOCTEMPLATE_H
+#define GORGUEDOCTEMPLATE_H
 
-#include <wx/defs.h>
 #include <wx/docview.h>
-#include "GOLock.h"
 
-class GOrgueMidiEvent;
-class GrandOrgueFile;
 class GOrgueSound;
 
-class GOrgueDocument : public wxDocument
+class GOrgueDocTemplate : public wxDocTemplate
 {
-private:
-	GOMutex m_lock;
-	bool m_OrganFileReady;
-	GrandOrgueFile* m_organfile;
-	GOrgueSound& m_sound;
+protected:
+	GOrgueSound* m_Sound;
 
-	void CloseOrgan();
+	wxDocument *DoCreateDocument();
+	wxView *DoCreateView();
 
 public:
-	GOrgueDocument(GOrgueSound* sound);
-	~GOrgueDocument();
-
-	bool OnCloseDocument();
-	bool DoOpenDocument(const wxString& file, const wxString& file2);
-	bool DoOpenDocument(const wxString& file);
-	bool DoSaveDocument(const wxString& file);
-
-	bool Save() { return OnSaveDocument(m_documentFile); }
-
-	GrandOrgueFile* GetOrganFile();
-
-	void OnMidiEvent(GOrgueMidiEvent& event);
-
-private:
-
-	DECLARE_CLASS(GOrgueDocument)
+	GOrgueDocTemplate(GOrgueSound* sound, wxDocManager* manager, const wxString& descr, const wxString& filter, const wxString& dir, const wxString& ext, long flags = wxDEFAULT_TEMPLATE_FLAGS);
 };
 
 #endif

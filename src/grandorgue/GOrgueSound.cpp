@@ -30,8 +30,6 @@
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
-GOrgueSound* g_sound = 0;
-
 GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	logSoundErrors(true),
 	m_audioDevices(),
@@ -42,8 +40,6 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	m_organfile(0),
 	m_Settings(settings)
 {
-
-	g_sound = this;
 	memset(&meter_info, 0, sizeof(meter_info));
 
 	try

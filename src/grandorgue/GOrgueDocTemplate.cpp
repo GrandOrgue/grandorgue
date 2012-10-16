@@ -19,45 +19,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEDOCUMENT_H
-#define GORGUEDOCUMENT_H
+#include "GOrgueDocTemplate.h"
+#include "GOrgueDocument.h"
+#include "GOrgueView.h"
 
-#include <wx/defs.h>
-#include <wx/docview.h>
-#include "GOLock.h"
-
-class GOrgueMidiEvent;
-class GrandOrgueFile;
-class GOrgueSound;
-
-class GOrgueDocument : public wxDocument
+GOrgueDocTemplate::GOrgueDocTemplate(GOrgueSound* sound, wxDocManager* manager, const wxString& descr, const wxString& filter, const wxString& dir, const wxString& ext, long flags) :
+	wxDocTemplate(manager, descr, filter, dir, ext, _("Organ Doc"), _("Organ View"), CLASSINFO(GOrgueDocument), CLASSINFO(GOrgueView), flags),
+	m_Sound(sound)
 {
-private:
-	GOMutex m_lock;
-	bool m_OrganFileReady;
-	GrandOrgueFile* m_organfile;
-	GOrgueSound& m_sound;
+}
 
-	void CloseOrgan();
+wxDocument *
+GOrgueDocTemplate::DoCreateDocument()
+{
+	return new GOrgueDocument(m_Sound);
+}
 
-public:
-	GOrgueDocument(GOrgueSound* sound);
-	~GOrgueDocument();
+wxView *GOrgueDocTemplate::DoCreateView()
+{
+	return new GOrgueView();
+}
 
-	bool OnCloseDocument();
-	bool DoOpenDocument(const wxString& file, const wxString& file2);
-	bool DoOpenDocument(const wxString& file);
-	bool DoSaveDocument(const wxString& file);
-
-	bool Save() { return OnSaveDocument(m_documentFile); }
-
-	GrandOrgueFile* GetOrganFile();
-
-	void OnMidiEvent(GOrgueMidiEvent& event);
-
-private:
-
-	DECLARE_CLASS(GOrgueDocument)
-};
-
-#endif
