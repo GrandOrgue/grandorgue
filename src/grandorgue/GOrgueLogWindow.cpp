@@ -63,13 +63,15 @@ void GOrgueLogWindow::OnLog(wxCommandEvent& event)
 
 	m_List->SetColumnWidth(0, wxLIST_AUTOSIZE);
 	m_List->SetColumnWidth(1, wxLIST_AUTOSIZE);
-	
-	Show();
+
+	if (!IsShown())
+		Show();
 }
 
 void GOrgueLogWindow::OnCloseWindow(wxCloseEvent& event)
 {
 	Show(false);
+	m_List->DeleteAllItems();
 }
 
 void GOrgueLogWindow::LogMsg(wxLogLevel level, const wxString& msg, time_t timestamp)
