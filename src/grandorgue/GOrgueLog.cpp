@@ -36,15 +36,13 @@ GOrgueLog::~GOrgueLog()
 	}
 }
 
-void 
-GOrgueLog::DoLog(wxLogLevel level, const wxChar *msg, time_t timestamp)
+void GOrgueLog::DoLog(wxLogLevel level, const wxChar *msg, time_t timestamp)
 {
 	if (m_LogWindow)
 		m_LogWindow->LogMsg(level, msg, timestamp);
 }
 
-void 
-GOrgueLog::DoLogTextAtLevel (wxLogLevel level, const wxString &msg)
+void GOrgueLog::DoLogTextAtLevel (wxLogLevel level, const wxString &msg)
 {
 	if (m_LogWindow)
 		m_LogWindow->LogMsg(level, msg, time(0));
