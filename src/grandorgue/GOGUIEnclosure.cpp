@@ -134,14 +134,14 @@ void GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState&
 		return;
 	if (right)
 	{
-		GOrgueMidiReceiver& m_midi = m_enclosure->GetMidiReceiver();
-		GOrgueMidiSender& m_sender = m_enclosure->GetMidiSender();
-		MIDIEventDialog dlg (m_panel->GetParentWindow(), _("Midi-Settings for Enclosure - ") + m_enclosure->GetName(), &m_midi, &m_sender);
+		GOrgueMidiReceiver& midi = m_enclosure->GetMidiReceiver();
+		GOrgueMidiSender& sender = m_enclosure->GetMidiSender();
+		MIDIEventDialog dlg (m_panel->GetParentWindow(), _("Midi-Settings for Enclosure - ") + m_enclosure->GetName(), &midi, &sender, NULL);
 		
 		if (dlg.ShowModal() == wxID_OK)
 		{
-			m_midi = dlg.GetResult();
-			m_sender = dlg.GetSender();
+			midi = dlg.GetResult();
+			sender = dlg.GetSender();
 			m_panel->Modified();
 		}
 	}

@@ -19,37 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MIDIEVENTDIALOG_H_
-#define MIDIEVENTDIALOG_H_
+#ifndef GORGUEKEYCONVERT_H
+#define GORGUEKEYCONVERT_H
 
 #include <wx/wx.h>
-#include <wx/propdlg.h>
-#include "GrandOrgueDef.h"
 
-class GOrgueMidiReceiver;
-class GOrgueMidiSender;
-class GOrgueKeyReceiver;
-class MIDIEventRecvDialog;
-class MIDIEventSendDialog;
-class MIDIEventKeyDialog;
+typedef struct {
+	wxString name;
+	unsigned key_code;
+} GOShortcutKey;
 
-class MIDIEventDialog : public wxPropertySheetDialog
-{
-	DECLARE_CLASS(MIDIEventDialog)
-private:
-	MIDIEventRecvDialog* m_recvPage;
-	MIDIEventSendDialog* m_sendPage;
-	MIDIEventKeyDialog* m_keyPage;
+unsigned GetShortcutKeyCount();
+const GOShortcutKey* GetShortcutKeys();
 
-public:
-	MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event, const GOrgueMidiSender* sender, const GOrgueKeyReceiver* key);
-	~MIDIEventDialog();
+int WXKtoVK(int what);
 
-	const GOrgueMidiReceiver& GetResult();
-	const GOrgueMidiSender& GetSender();
-	const GOrgueKeyReceiver& GetKey();
-
-	DECLARE_EVENT_TABLE()
-};
-
-#endif /* MIDIEVENTDIALOG_H_ */
+#endif

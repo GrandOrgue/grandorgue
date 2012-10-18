@@ -23,6 +23,7 @@
 #define GORGUEBUTTON_H
 
 #include <wx/wx.h>
+#include "GOrgueKeyReceiver.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
 
@@ -37,7 +38,7 @@ protected:
 	GrandOrgueFile* m_organfile;
 	GOrgueMidiReceiver m_midi;
 	GOrgueMidiSender m_sender;
-	int m_ShortcutKey;
+	GOrgueKeyReceiver m_shortcut;
 	bool m_Pushbutton;
 	wxString m_group;
 	bool m_Displayed;
@@ -54,6 +55,7 @@ public:
 	const wxString& GetName();
 	GOrgueMidiReceiver& GetMidiReceiver();
 	GOrgueMidiSender& GetMidiSender();
+	GOrgueKeyReceiver& GetKeyReceiver();
 
 	virtual void ProcessMidi(const GOrgueMidiEvent& event);
 	virtual void Push();

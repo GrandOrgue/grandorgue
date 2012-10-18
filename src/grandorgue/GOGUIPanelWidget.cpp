@@ -23,7 +23,7 @@
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
 #include "GOrgueView.h"
-#include "KeyConvert.h"
+#include "GOrgueKeyConvert.h"
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL)
 
