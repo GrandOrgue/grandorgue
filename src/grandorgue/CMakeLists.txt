@@ -178,6 +178,8 @@ GOrgueEnclosure.cpp
 GOrgueEvent.cpp
 GOrgueFrameGeneral.cpp
 GOrgueGeneral.cpp
+GOrgueKeyConvert.cpp
+GOrgueKeyReceiver.cpp
 GOrgueLabel.cpp
 GOrgueLCD.cpp
 GOrgueLog.cpp
@@ -213,6 +215,7 @@ IniFileConfig.cpp
 MIDIEventDialog.cpp
 MIDIEventRecvDialog.cpp
 MIDIEventSendDialog.cpp
+MIDIEventKeyDialog.cpp
 MIDIListenDialog.cpp
 OrganDialog.cpp
 GOrgueDocTemplate.cpp

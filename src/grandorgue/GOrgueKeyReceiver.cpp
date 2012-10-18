@@ -19,37 +19,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MIDIEVENTDIALOG_H_
-#define MIDIEVENTDIALOG_H_
+#include "GOrgueKeyReceiver.h"
+#include "GOrgueConfigReader.h"
+#include "GOrgueConfigWriter.h"
 
-#include <wx/wx.h>
-#include <wx/propdlg.h>
-#include "GrandOrgueDef.h"
-
-class GOrgueMidiReceiver;
-class GOrgueMidiSender;
-class GOrgueKeyReceiver;
-class MIDIEventRecvDialog;
-class MIDIEventSendDialog;
-class MIDIEventKeyDialog;
-
-class MIDIEventDialog : public wxPropertySheetDialog
+GOrgueKeyReceiver::GOrgueKeyReceiver() :
+	m_ShortcutKey(0)
 {
-	DECLARE_CLASS(MIDIEventDialog)
-private:
-	MIDIEventRecvDialog* m_recvPage;
-	MIDIEventSendDialog* m_sendPage;
-	MIDIEventKeyDialog* m_keyPage;
+}
 
-public:
-	MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event, const GOrgueMidiSender* sender, const GOrgueKeyReceiver* key);
-	~MIDIEventDialog();
+void GOrgueKeyReceiver::Load(GOrgueConfigReader& cfg, wxString group)
+{
+	m_ShortcutKey = cfg.ReadInteger(UserSetting, group, wxT("ShortcutKey"), 0, 255, false, m_ShortcutKey);
+}
 
-	const GOrgueMidiReceiver& GetResult();
-	const GOrgueMidiSender& GetSender();
-	const GOrgueKeyReceiver& GetKey();
+void GOrgueKeyReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
+{
+	cfg.Write(group, wxT("ShortcutKey"), (int)m_ShortcutKey);
+}
 
-	DECLARE_EVENT_TABLE()
-};
+bool GOrgueKeyReceiver::Match(unsigned key)
+{
+	if (m_ShortcutKey == key)
+		return true;
+	return false;
+}
 
-#endif /* MIDIEVENTDIALOG_H_ */
+unsigned GOrgueKeyReceiver::GetShortcut()
+{
+	return m_ShortcutKey;
+}
+
+void GOrgueKeyReceiver::SetShortcut(unsigned key)
+{
+	m_ShortcutKey = key;
+}

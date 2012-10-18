@@ -539,18 +539,6 @@ void GOGUIPanel::HandleKey(int key)
 {
 	switch(key)
 	{
-	case 256: /* Left */
-		m_organfile->GetSetter()->Prev();
-		break;
-
-	case 257: /* right */
-		m_organfile->GetSetter()->Next();
-		break;
-
-	case 258: /* down */
-		m_organfile->GetSetter()->Push();
-		break;
-
 	case 259: /* Shift not down */
 		m_organfile->GetSetter()->SetterActive(false);
 		break;

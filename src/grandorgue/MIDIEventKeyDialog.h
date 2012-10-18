@@ -19,37 +19,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MIDIEVENTDIALOG_H_
-#define MIDIEVENTDIALOG_H_
+#ifndef MIDIEVENTKEYDIALOG_H_
+#define MIDIEVENTKEYDIALOG_H_
 
 #include <wx/wx.h>
-#include <wx/propdlg.h>
-#include "GrandOrgueDef.h"
+#include "GOrgueKeyReceiver.h"
 
-class GOrgueMidiReceiver;
-class GOrgueMidiSender;
-class GOrgueKeyReceiver;
-class MIDIEventRecvDialog;
-class MIDIEventSendDialog;
-class MIDIEventKeyDialog;
+class wxToggleButton;
 
-class MIDIEventDialog : public wxPropertySheetDialog
+class MIDIEventKeyDialog : public wxPanel
 {
-	DECLARE_CLASS(MIDIEventDialog)
+DECLARE_CLASS(MIDIEventKeyDialog)
+
 private:
-	MIDIEventRecvDialog* m_recvPage;
-	MIDIEventSendDialog* m_sendPage;
-	MIDIEventKeyDialog* m_keyPage;
+	GOrgueKeyReceiver m_key;
+	wxChoice *m_keyselect;
+	wxToggleButton* m_listen;
+
+	void OnKeyDown(wxKeyEvent& event);
+	void OnListenClick(wxCommandEvent& event);
 
 public:
-	MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event, const GOrgueMidiSender* sender, const GOrgueKeyReceiver* key);
-	~MIDIEventDialog();
+	MIDIEventKeyDialog (wxWindow* parent, const GOrgueKeyReceiver& event);
+	~MIDIEventKeyDialog();
 
-	const GOrgueMidiReceiver& GetResult();
-	const GOrgueMidiSender& GetSender();
-	const GOrgueKeyReceiver& GetKey();
+	const GOrgueKeyReceiver& GetResult();
 
 	DECLARE_EVENT_TABLE()
+
+protected:
+	enum {
+		ID_KEY_SELECT = 200,
+		ID_LISTEN,
+	};
 };
 
-#endif /* MIDIEVENTDIALOG_H_ */
+#endif

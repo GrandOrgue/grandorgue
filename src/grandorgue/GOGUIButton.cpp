@@ -131,10 +131,11 @@ void GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	}
 	if (right)
 	{
-		GOrgueMidiReceiver& m_midi = m_Button->GetMidiReceiver();
-		GOrgueMidiSender& m_sender = m_Button->GetMidiSender();
+		GOrgueMidiReceiver& midi = m_Button->GetMidiReceiver();
+		GOrgueMidiSender& sender = m_Button->GetMidiSender();
+		GOrgueKeyReceiver& key = m_Button->GetKeyReceiver();
 		wxString title;
-		switch(m_midi.GetType())
+		switch(midi.GetType())
 		{
 		case MIDI_RECV_DRAWSTOP:
 			title = _("Midi-Settings for Drawstop - ") + m_Button->GetName();
@@ -148,12 +149,13 @@ void GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 			title = _("Midi-Settings for Button - ") + m_Button->GetName();
 		}
 
-		MIDIEventDialog dlg (m_panel->GetParentWindow(), title, &m_midi, &m_sender);
+		MIDIEventDialog dlg (m_panel->GetParentWindow(), title, &midi, &sender, &key);
 		
 		if (dlg.ShowModal() == wxID_OK)
 		{
-			m_midi = dlg.GetResult();
-			m_sender = dlg.GetSender();
+			midi = dlg.GetResult();
+			sender = dlg.GetSender();
+			key = dlg.GetKey();
 			m_panel->Modified();
 		}
 	}

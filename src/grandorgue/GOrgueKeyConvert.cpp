@@ -19,8 +19,138 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef KEYCONVERT_H
-#define KEYCONVERT_H
+#include "GOrgueKeyConvert.h"
+
+static GOShortcutKey shortcuts[] = {
+	{ wxTRANSLATE("back"), 8 },
+	{ wxTRANSLATE("tab"), 9 },
+	{ wxTRANSLATE("return"), 13 },
+	{ wxTRANSLATE("alt"), 17 },
+	{ wxTRANSLATE("control"), 18 },
+	{ wxTRANSLATE("menu"), 19 },
+	{ wxTRANSLATE("pause"), 20 },
+	{ wxTRANSLATE("capital"), 21 },
+	{ wxTRANSLATE("escape"), 27 },
+	{ wxTRANSLATE("space"), 32 },
+	{ wxTRANSLATE("pageup"), 33 },
+	{ wxTRANSLATE("pagedown"), 34 },
+	{ wxTRANSLATE("end"), 35 },
+	{ wxTRANSLATE("home"), 36 },
+	{ wxTRANSLATE("left"), 37 },
+	{ wxTRANSLATE("up"), 38 },
+	{ wxTRANSLATE("right"), 39 },
+	{ wxTRANSLATE("down"), 40 },
+	{ wxTRANSLATE("select"), 41 },
+	{ wxTRANSLATE("print"), 42 },
+	{ wxTRANSLATE("execute"), 43 },
+	{ wxTRANSLATE("snapshot"), 44 },
+	{ wxTRANSLATE("insert"), 45 },
+	{ wxTRANSLATE("delete"), 46 },
+	{ wxTRANSLATE("help"), 47 },
+	{ wxTRANSLATE("0"), 48 },
+	{ wxTRANSLATE("1"), 49 },
+	{ wxTRANSLATE("2"), 50 },
+	{ wxTRANSLATE("3"), 51 },
+	{ wxTRANSLATE("4"), 52 },
+	{ wxTRANSLATE("5"), 53 },
+	{ wxTRANSLATE("6"), 54 },
+	{ wxTRANSLATE("7"), 55 },
+	{ wxTRANSLATE("8"), 56 },
+	{ wxTRANSLATE("9"), 57 },
+	{ wxTRANSLATE("A"), 65 },
+	{ wxTRANSLATE("B"), 66 },
+	{ wxTRANSLATE("C"), 67 },
+	{ wxTRANSLATE("D"), 68 },
+	{ wxTRANSLATE("E"), 69 },
+	{ wxTRANSLATE("F"), 70 },
+	{ wxTRANSLATE("G"), 71 },
+	{ wxTRANSLATE("H"), 72 },
+	{ wxTRANSLATE("I"), 73 },
+	{ wxTRANSLATE("J"), 74 },
+	{ wxTRANSLATE("K"), 75 },
+	{ wxTRANSLATE("L"), 76 },
+	{ wxTRANSLATE("M"), 77 },
+	{ wxTRANSLATE("N"), 78 },
+	{ wxTRANSLATE("O"), 79 },
+	{ wxTRANSLATE("P"), 80 },
+	{ wxTRANSLATE("Q"), 81 },
+	{ wxTRANSLATE("R"), 82 },
+	{ wxTRANSLATE("S"), 83 },
+	{ wxTRANSLATE("T"), 84 },
+	{ wxTRANSLATE("U"), 85 },
+	{ wxTRANSLATE("V"), 86 },
+	{ wxTRANSLATE("W"), 87 },
+	{ wxTRANSLATE("X"), 88 },
+	{ wxTRANSLATE("Y"), 89 },
+	{ wxTRANSLATE("Z"), 90 },
+	{ wxTRANSLATE("Windows left"), 91 },
+	{ wxTRANSLATE("Windows right"), 92 },
+	{ wxTRANSLATE("Windows menu"), 93 },
+	{ wxTRANSLATE("numpad 0"), 96 },
+	{ wxTRANSLATE("numpad 1"), 97 },
+	{ wxTRANSLATE("numpad 2"), 98 },
+	{ wxTRANSLATE("numpad 3"), 99 },
+	{ wxTRANSLATE("numpad 4"), 100 },
+	{ wxTRANSLATE("numpad 5"), 101 },
+	{ wxTRANSLATE("numpad 6"), 102 },
+	{ wxTRANSLATE("numpad 7"), 103 },
+	{ wxTRANSLATE("numpad 8"), 104 },
+	{ wxTRANSLATE("numpad 9"), 105 },
+	{ wxTRANSLATE("multiply"), 106 },
+	{ wxTRANSLATE("add"), 107 },
+	{ wxTRANSLATE("seperator"), 108 },
+	{ wxTRANSLATE("subtract"), 109 },
+	{ wxTRANSLATE("decimal"), 110 },
+	{ wxTRANSLATE("divide"), 111 },
+	{ wxTRANSLATE("F1"), 112 },
+	{ wxTRANSLATE("F2"), 113 },
+	{ wxTRANSLATE("F3"), 114 },
+	{ wxTRANSLATE("F4"), 115 },
+	{ wxTRANSLATE("F5"), 116 },
+	{ wxTRANSLATE("F6"), 117 },
+	{ wxTRANSLATE("F7"), 118 },
+	{ wxTRANSLATE("F8"), 119 },
+	{ wxTRANSLATE("F9"), 120 },
+	{ wxTRANSLATE("F10"), 121 },
+	{ wxTRANSLATE("F11"), 122 },
+	{ wxTRANSLATE("F12"), 123 },
+	{ wxTRANSLATE("F13"), 124 },
+	{ wxTRANSLATE("F14"), 125 },
+	{ wxTRANSLATE("F15"), 126 },
+	{ wxTRANSLATE("F16"), 127 },
+	{ wxTRANSLATE("F17"), 128 },
+	{ wxTRANSLATE("F18"), 129 },
+	{ wxTRANSLATE("F19"), 130 },
+	{ wxTRANSLATE("F20"), 131 },
+	{ wxTRANSLATE("F21"), 132 },
+	{ wxTRANSLATE("F22"), 133 },
+	{ wxTRANSLATE("F23"), 134 },
+	{ wxTRANSLATE("F24"), 135 },
+	{ wxTRANSLATE("numlock"), 144 },
+	{ wxTRANSLATE("scroll"), 145 },
+	{ wxTRANSLATE(":"), 186 },
+	{ wxTRANSLATE("numpad equal"), 187 },
+	{ wxTRANSLATE(","), 188 },
+	{ wxTRANSLATE("_"), 189 },
+	{ wxTRANSLATE("."), 190 },
+	{ wxTRANSLATE("?"), 191 },
+	{ wxTRANSLATE("\""), 192 },
+	{ wxTRANSLATE("{"), 219 },
+	{ wxTRANSLATE("|"), 220 },
+	{ wxTRANSLATE("}"), 221 },
+	{ wxTRANSLATE("#"), 222 },
+	{ wxTRANSLATE("`"), 223 },
+};
+
+unsigned GetShortcutKeyCount()
+{
+	return sizeof(shortcuts)/sizeof(shortcuts[0]);
+}
+
+const GOShortcutKey* GetShortcutKeys()
+{
+	return shortcuts;
+}
 
 int WXKtoVK(int what)
 {
@@ -34,8 +164,6 @@ int WXKtoVK(int what)
 	case WXK_RETURN:
 	case WXK_NUMPAD_ENTER:
 		return 13;
-	case WXK_SHIFT:
-		return 16;
 	case WXK_ALT:
 		return 17;
 	case WXK_CONTROL:
@@ -63,13 +191,16 @@ int WXKtoVK(int what)
 	case WXK_HOME:
 	case WXK_NUMPAD_HOME:
 		return 36;
+	case WXK_LEFT:
 	case WXK_NUMPAD_LEFT:
 		return 37;
 	case WXK_UP:
 	case WXK_NUMPAD_UP:
 		return 38;
+	case WXK_RIGHT:
 	case WXK_NUMPAD_RIGHT:
 		return 39;
+	case WXK_DOWN:
 	case WXK_NUMPAD_DOWN:
 		return 40;
 	case WXK_SELECT:
@@ -284,17 +415,7 @@ int WXKtoVK(int what)
 	case '`':
 		return 223;
 
-	/* Reserved by GO - not to be used in any ODF */
-	case WXK_LEFT:
-		return 256;
-	case WXK_RIGHT:
-		return 257;
-	case WXK_DOWN:
-		return 258;
-
 	default:
 		return 0;
 	}
 }
-
-#endif
