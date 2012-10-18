@@ -29,8 +29,7 @@ GOrgueDocTemplate::GOrgueDocTemplate(GOrgueSound* sound, wxDocManager* manager, 
 {
 }
 
-wxDocument *
-GOrgueDocTemplate::DoCreateDocument()
+wxDocument *GOrgueDocTemplate::DoCreateDocument()
 {
 	return new GOrgueDocument(m_Sound);
 }
