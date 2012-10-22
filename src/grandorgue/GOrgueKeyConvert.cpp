@@ -214,6 +214,7 @@ int WXKtoVK(int what)
 	case WXK_INSERT:
 	case WXK_NUMPAD_INSERT:
 		return 45;
+	case WXK_DELETE:
 	case WXK_NUMPAD_DELETE:
 		return 46;
 	case WXK_HELP:
