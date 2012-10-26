@@ -31,7 +31,8 @@
 
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
-#include <wx/splash.h>
+#include <wx/config.h>
+#include <wx/regex.h>
 
 #ifdef __WXMAC__
 #include <ApplicationServices/ApplicationServices.h>
@@ -65,12 +66,49 @@ GOrgueApp::GOrgueApp() :
    m_locale(),
    m_Settings(NULL),
    m_soundSystem(NULL),
-   m_docManager(NULL)
+   m_docManager(NULL),
+   m_Log(NULL),
+   m_FileName(),
+   m_InstanceName()
 {
+}
+
+const wxCmdLineEntryDesc GOrgueApp::m_cmdLineDesc [] = {
+	{ wxCMD_LINE_SWITCH, wxT("h"), wxT("help"), wxT("displays help on the command line parameters"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+	{ wxCMD_LINE_OPTION, wxT("i"), wxT("instance"), wxT("specifiy GrandOrgue instance name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL  },
+	{ wxCMD_LINE_PARAM,  NULL, NULL, wxT("organ file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+	{ wxCMD_LINE_NONE }
+};
+
+void GOrgueApp::OnInitCmdLine(wxCmdLineParser& parser)
+{
+	parser.SetLogo(_("GrandOrgue - Virtual Pipe Organ Software"));
+	parser.SetDesc (m_cmdLineDesc);
+}
+
+bool GOrgueApp::OnCmdLineParsed(wxCmdLineParser& parser)
+{
+	wxString str;
+	if (parser.Found(wxT("i"), &str))
+	{
+		wxRegEx r(wxT("^[A-Za-z0-9]+$"), wxRE_ADVANCED);
+		if (!r.Matches(str))
+		{
+			wxMessageOutput::Get()->Printf(_("Invalid instance name"));
+			return false;
+		}
+		m_InstanceName = wxT("-") + str;
+	}
+	for (unsigned i = 0; i < parser.GetParamCount(); i++)
+		m_FileName = parser.GetParam(i);
+	return true;
 }
 
 bool GOrgueApp::OnInit()
 {
+	/* wxMessageOutputStderr break wxLogStderr (fwide), therefore use MessageBox everywhere */
+	wxMessageOutput::Set(new wxMessageOutputMessageBox());
+
 	m_locale.Init(wxLANGUAGE_DEFAULT);
 	m_locale.AddCatalog(wxT("GrandOrgue"));
 
@@ -83,9 +121,6 @@ bool GOrgueApp::OnInit()
 	SetAppName(wxT(APP_NAME));
 	SetClassName(wxT(APP_NAME));
 	SetVendorName(_("Our Organ"));
-
-	m_Settings = new GOrgueSettings();
-	m_Settings->Load();
 
 	wxIdleEvent::SetMode(wxIDLE_PROCESS_SPECIFIED);
 	wxFileSystem::AddHandler(new wxZipFSHandler);
@@ -100,6 +135,14 @@ bool GOrgueApp::OnInit()
 	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
 #endif
 
+	if (!wxApp::OnInit())
+		return false;
+
+	wxConfigBase::Set(new wxConfig(GetAppName() + m_InstanceName));
+
+	m_Settings = new GOrgueSettings(m_InstanceName);
+	m_Settings->Load();
+
 	m_soundSystem = new GOrgueSound(*m_Settings);
 	m_docManager = new GOrgueDocManager;
 	new GOrgueDocTemplate(m_soundSystem, m_docManager, _("Sample set definition files"), _("*.organ"), wxEmptyString, wxT("organ"));
@@ -113,11 +156,9 @@ bool GOrgueApp::OnInit()
 	m_Frame->DoSplash();
 	m_Frame->Init();
 
-	if (argc > 1 && argv[1][0])
+	if (!m_FileName.IsEmpty())
 	{
-		AsyncLoadFile(argv[1]);
-		argv[1][0] = 0;
-		argc = 1;
+		AsyncLoadFile(m_FileName);
 	}
 	GOrgueLCD_Open();
 
