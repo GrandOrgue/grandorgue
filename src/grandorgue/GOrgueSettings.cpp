@@ -55,8 +55,9 @@ const wxString GOrgueSettings::m_SetterNames[] = {
 const wxString GOrgueSettings::m_StopChangeName = wxTRANSLATE("Stop Changes");
 
 
-GOrgueSettings::GOrgueSettings() :
+GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_Config(*wxConfigBase::Get()),
+	m_InstanceName(instance),
 	m_MemoryLimit(0),
 	m_Stereo(false),
 	m_Concurrency(0),
@@ -367,12 +368,12 @@ wxString GOrgueSettings::GetStandardOrganDirectory()
 
 wxString GOrgueSettings::GetStandardDataDirectory()
 {
-	return wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData");
+	return wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData") + m_InstanceName;
 }
 
 wxString GOrgueSettings::GetStandardCacheDirectory()
 {
-	return wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueCache");
+	return wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueCache") + m_InstanceName;
 }
 
 wxString GOrgueSettings::GetOrganPath()

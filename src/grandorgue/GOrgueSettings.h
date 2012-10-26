@@ -44,6 +44,7 @@ typedef struct
 class GOrgueSettings {
 private:
 	wxConfigBase& m_Config;
+	wxString m_InstanceName;
 	size_t m_MemoryLimit;
 	bool m_Stereo;
 	unsigned m_Concurrency;
@@ -87,7 +88,7 @@ private:
 	static const wxString m_StopChangeName;
 
 public:
-	GOrgueSettings();
+	GOrgueSettings(wxString instance);
 
 	void Load();
 	wxConfigBase& GetConfig();

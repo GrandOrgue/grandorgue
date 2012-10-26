@@ -25,6 +25,7 @@
 #include "GrandOrgueDef.h"
 
 #include <wx/wx.h>
+#include <wx/cmdline.h>
 
 class wxSplashScreenWindow;
 class wxDocManager;
@@ -46,6 +47,10 @@ protected:
 	GOrgueSound* m_soundSystem;
 	wxDocManager* m_docManager;
 	GOrgueLog* m_Log;
+	wxString m_FileName;
+	wxString m_InstanceName;
+
+	static const wxCmdLineEntryDesc m_cmdLineDesc [];
 
 public:
 	GOrgueApp();
@@ -53,6 +58,8 @@ public:
 	int OnRun();
 	int OnExit();
 	void AsyncLoadFile(wxString iFile);
+	void OnInitCmdLine(wxCmdLineParser& parser);
+	bool OnCmdLineParsed(wxCmdLineParser& parser);
 };
 
 
