@@ -74,9 +74,9 @@ GOrgueApp::GOrgueApp() :
 }
 
 const wxCmdLineEntryDesc GOrgueApp::m_cmdLineDesc [] = {
-	{ wxCMD_LINE_SWITCH, wxT("h"), wxT("help"), wxT("displays help on the command line parameters"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-	{ wxCMD_LINE_OPTION, wxT("i"), wxT("instance"), wxT("specifiy GrandOrgue instance name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL  },
-	{ wxCMD_LINE_PARAM,  NULL, NULL, wxT("organ file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+	{ wxCMD_LINE_SWITCH, wxTRANSLATE("h"), wxTRANSLATE("help"), wxTRANSLATE("displays help on the command line parameters"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+	{ wxCMD_LINE_OPTION, wxTRANSLATE("i"), wxTRANSLATE("instance"), wxTRANSLATE("specifiy GrandOrgue instance name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL  },
+	{ wxCMD_LINE_PARAM,  NULL, NULL, wxTRANSLATE("organ file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 	{ wxCMD_LINE_NONE }
 };
 
