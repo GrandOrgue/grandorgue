@@ -24,7 +24,7 @@ URL:            http://sourceforge.net/projects/ourorgan/
 License:        GPL-2.0+
 Group:          Productivity/Multimedia/Sound/Midi
 Autoreqprov:    on
-Version:        0.3.0.6
+Version:        0.3.1.0
 Release:        1
 Epoch:          0
 Source:         grandorgue-%{version}.tar.gz
@@ -47,7 +47,8 @@ cmake -DUNICODE=1 \
       -DDOC_INSTALL_DIR=%{_docdir} \
       -DLIB=%{_lib} \
       -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_SKIP_RPATH=1
+      -DCMAKE_SKIP_RPATH=1 \
+      -DVERSION="`echo %{version}|cut -d. -f4`"
 make %{?_smp_mflags} VERBOSE=1
 
 %install

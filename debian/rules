@@ -4,4 +4,6 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/cmake.mk
 include /usr/share/cdbs/1/rules/utils.mk
 
-DEB_CMAKE_EXTRA_FLAGS := -DUNICODE=1
+VERSION=$(shell head -1 debian/changelog  |cut -d'(' -f2  |cut -d')' -f1 |cut -d. -f4 | cut -d- -f1)
+
+DEB_CMAKE_EXTRA_FLAGS := -DUNICODE=1 -DVERSION_REVISION=$(VERSION)

@@ -82,7 +82,7 @@ const wxCmdLineEntryDesc GOrgueApp::m_cmdLineDesc [] = {
 
 void GOrgueApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
-	parser.SetLogo(_("GrandOrgue - Virtual Pipe Organ Software"));
+	parser.SetLogo(wxString(wxT(APP_TITLE)) + _(" - Virtual Pipe Organ Software"));
 	parser.SetDesc (m_cmdLineDesc);
 }
 
