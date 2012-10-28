@@ -48,7 +48,7 @@ cmake -DUNICODE=1 \
       -DLIB=%{_lib} \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_SKIP_RPATH=1 \
-      -DVERSION="`echo %{version}|cut -d. -f4`"
+      -DVERSION_REVISION="`echo %{version}|cut -d. -f4`"
 make %{?_smp_mflags} VERBOSE=1
 
 %install
