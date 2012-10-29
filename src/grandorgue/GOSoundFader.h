@@ -32,6 +32,8 @@ private:
 	float       m_attack;
 	float       m_decay;
 	float       m_target;
+	float       m_real_target;
+	float       m_last_volume;
 	unsigned    m_nb_attack_frames_left;
 
 public:
@@ -40,12 +42,18 @@ public:
 	void StartDecay(int duration_shift);
 	bool IsSilent();
 
-	void Process(unsigned n_blocks, float *decoded_sampler_audio_frame);
+	void Process(unsigned n_blocks, float *decoded_sampler_audio_frame, float volume);
 };
 
 inline
-void GOSoundFader::Process(unsigned n_blocks, float *decoded_sampler_audio_frame)
+void GOSoundFader::Process(unsigned n_blocks, float *decoded_sampler_audio_frame, float volume)
 {
+	if (m_last_volume < 0)
+	{
+		m_last_volume = volume;
+		m_real_target = m_target * volume;
+		m_gain *= volume;
+	}
 
 	/* Multiply each of the buffer samples by the fade factor - note:
 	 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero.
@@ -53,6 +61,25 @@ void GOSoundFader::Process(unsigned n_blocks, float *decoded_sampler_audio_frame
 	 */
 	float gain_delta = m_attack + m_decay;
 	float gain = m_gain;
+	float target = m_real_target;
+	if (volume != m_last_volume)
+	{
+		gain_delta *= volume;
+		gain_delta += m_target * (volume - m_last_volume) / 1024;
+		float new_last_volume = m_last_volume + ((volume - m_last_volume) * n_blocks) / 1024;
+		if (volume > m_last_volume)
+		{
+			target = m_target * volume;
+			m_real_target = target;
+		}
+		else
+		{
+			target = m_target * new_last_volume;
+		}
+		m_last_volume = new_last_volume;
+	}
+	else
+		gain_delta *= volume;
 	if (gain_delta)
 	{
 
@@ -70,15 +97,16 @@ void GOSoundFader::Process(unsigned n_blocks, float *decoded_sampler_audio_frame
 				gain = 0.0f;
 				m_decay = 0.0f;
 			}
-			else if (gain > m_target)
+			else if (gain > m_real_target)
 			{
-				gain = m_target;
+				gain = m_real_target;
 				m_attack = 0.0f;
 			}
 
 		}
 
 		m_gain = gain;
+		m_real_target = target;
 	}
 	else
 	{
@@ -126,6 +154,7 @@ void GOSoundFader::NewAttacking(float target_gain, int duration_shift, int max_f
 	m_decay  = 0.0f;
 	m_gain   = 0.0f;
 	m_target = target_gain;
+	m_last_volume = -1;
 	m_attack = scalbnf(target_gain, duration_shift);
 }
 
@@ -135,6 +164,7 @@ void GOSoundFader::NewConstant(float gain)
 	m_nb_attack_frames_left = 0;
 	m_attack = m_decay = 0.0f;
 	m_gain = m_target = gain;
+	m_last_volume = -1;
 }
 
 #endif /* GOSOUNDFADER_H_ */

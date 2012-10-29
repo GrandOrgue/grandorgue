@@ -302,6 +302,14 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		return;
 	}
 
+	float volume = 1;
+	if (!state.is_tremulant)
+	{
+		volume = m_Gain;
+		if (state.windchest)
+			volume *= state.windchest->GetVolume();
+	}
+
 	assert((n_frames & (BLOCKS_PER_FRAME - 1)) == 0);
 	assert(n_frames > BLOCKS_PER_FRAME);
 	float* output_buffer = state.buff;
@@ -338,7 +346,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				,temp
 				);
 
-			sampler->fader.Process(n_frames, temp);
+			sampler->fader.Process(n_frames, temp, volume);
 
 			/* Add these samples to the current output buffer shifting
 			 * right by the necessary amount to bring the sample gain back
@@ -391,12 +399,6 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 
 	if (!state.is_tremulant)
 	{
-		float f = m_Gain;
-		if (state.windchest)
-			f *= state.windchest->GetVolume();
-		for (unsigned int i = 0; i < n_frames * 2; i++)
-			output_buffer[i] *= f;
-
 		if (state.windchest)
 		{
 			GOrgueWindchest* current_windchest = state.windchest;
