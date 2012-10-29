@@ -59,8 +59,12 @@ private:
 	float m_PitchCorrection;
 	int m_SampleMidiKeyNumber;
 	GOrguePipe* m_Reference;
+	unsigned m_ReferenceID;
 	GOSoundProviderWave m_SoundProvider;
 	GOrguePipeConfig m_PipeConfig;
+
+	unsigned m_Velocity;
+	std::vector<unsigned> m_Velocities;
 
 	void SetOn();
 	void SetOff();
@@ -71,15 +75,17 @@ public:
 	~GOrguePipe();
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void Save(GOrgueConfigWriter& cfg);
-	void Set(bool on);
+	void Set(unsigned velocity, unsigned referenceID = 0);
 	void SetTremulant(bool on);
 	bool InitializeReference();
+	unsigned RegisterReference(GOrguePipe* pipe);
 	void LoadData();
 	bool LoadCache(GOrgueCache& cache);
 	bool SaveCache(GOrgueCacheWriter& cache);
 	void Initialize();
 	void UpdateHash(SHA_CTX& ctx);
-	void FastAbort();
+	void Abort();
+	void PreparePlayback();
 	wxString GetFilename();
 	wxString GetLoadTitle();
 	bool IsReference();

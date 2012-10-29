@@ -90,7 +90,7 @@ void GOrgueRank::SetKey(int note, bool on)
 	if (note < 0 || note >= (int)m_Pipes.size())
 		return;
 
-	m_Pipes[note]->Set(on);
+	m_Pipes[note]->Set(on ? 0x7f : 0x00);
 }
 
 GOrguePipe* GOrgueRank::GetPipe(unsigned index)
@@ -140,11 +140,13 @@ void GOrgueRank::SetTemperament(const GOrgueTemperament& temperament)
 void GOrgueRank::Abort()
 {
 	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->FastAbort();
+		m_Pipes[i]->Abort();
 }
 
 void GOrgueRank::PreparePlayback()
 {
 	UpdateAudioGroup();
+	for(unsigned i = 0; i < m_Pipes.size(); i++)
+		m_Pipes[i]->PreparePlayback();
 }
 

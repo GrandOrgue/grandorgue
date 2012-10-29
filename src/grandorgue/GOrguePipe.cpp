@@ -57,8 +57,11 @@ GOrguePipe::GOrguePipe
 	m_PitchCorrection(pitch_correction),
 	m_SampleMidiKeyNumber(-1),
 	m_Reference(NULL),
+	m_ReferenceID(0),
 	m_SoundProvider(organfile->GetMemoryPool()),
-	m_PipeConfig(organfile, this)
+	m_PipeConfig(organfile, this),
+	m_Velocity(0),
+	m_Velocities(1)
 {
 }
 
@@ -75,43 +78,53 @@ GOSoundProvider* GOrguePipe::GetSoundProvider()
 
 void GOrguePipe::SetOn()
 {
-	if (m_Instances > 0)
-	{
+	m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID);
+	if (m_Sampler)
 		m_Instances++;
-	}
-	else
-	{
-		m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID);
-		if ((m_Sampler) && (m_Instances == 0))
-			m_Instances++;
-		if (GetSoundProvider()->IsOneshot())
-			m_Sampler = 0;
-	}
+	if (GetSoundProvider()->IsOneshot())
+		m_Sampler = 0;
 }
 
 void GOrguePipe::SetOff()
 {
-	if (m_Instances > 0)
+	m_Instances--;
+	if (m_Sampler)
 	{
-		m_Instances--;
-		if ((m_Sampler) && (m_Instances == 0))
-		{
-			m_OrganFile->StopSample(GetSoundProvider(), m_Sampler);
-			this->m_Sampler = 0;
-		}
+		m_OrganFile->StopSample(GetSoundProvider(), m_Sampler);
+		this->m_Sampler = 0;
 	}
 }
 
-void GOrguePipe::Set(bool on)
+void GOrguePipe::Set(unsigned velocity, unsigned referenceID)
 {
-	if (m_Reference)
+	if (m_Velocities[referenceID] <= velocity && velocity <= m_Velocity)
 	{
-		m_Reference->Set(on);
+		m_Velocities[referenceID] = velocity;
 		return;
 	}
-	if (on)
-		SetOn();
+	if (velocity >= m_Velocity)
+	{
+		m_Velocities[referenceID] = velocity;
+		m_Velocity = velocity;
+	}
 	else
+	{
+		m_Velocities[referenceID] = velocity;
+		m_Velocity = m_Velocities[0];
+		for(unsigned i = 1; i < m_Velocities.size(); i++)
+			if (m_Velocity < m_Velocities[i])
+				m_Velocity = m_Velocities[i];
+	}
+
+	if (m_Reference)
+	{
+		m_Reference->Set(m_Velocity, m_ReferenceID);
+		return;
+	}
+
+	if (!m_Instances && m_Velocity)
+		SetOn();
+	else if (m_Instances && !m_Velocity)
 		SetOff();
 }
 
@@ -345,9 +358,17 @@ bool GOrguePipe::InitializeReference()
 		    (pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank(0)->GetPipeCount()))
 			throw (wxString)_("Invalid reference ") + m_Filename;
 		m_Reference = m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank(0)->GetPipe(pipe-1);
+		m_ReferenceID = m_Reference->RegisterReference(this);
 		return true;
 	}
 	return false;
+}
+
+unsigned GOrguePipe::RegisterReference(GOrguePipe* pipe)
+{
+	unsigned id = m_Velocities.size();
+	m_Velocities.resize(id + 1);
+	return id;
 }
 
 bool GOrguePipe::LoadCache(GOrgueCache& cache)
@@ -468,14 +489,23 @@ void GOrguePipe::LoadData()
 	}
 }
 
-void GOrguePipe::FastAbort()
+void GOrguePipe::Abort()
 {
 	if (m_Reference)
-		m_Reference->FastAbort();
+		m_Reference->Abort();
 	m_Instances = 0;
 	m_Tremulant = false;
 	m_Sampler = 0;
 	m_SoundProvider.UseSampleGroup(0);
+}
+
+void GOrguePipe::PreparePlayback()
+{
+	if (m_Reference)
+		m_Reference->PreparePlayback();
+	m_Velocity = 0;
+	for(unsigned i = 0; i < m_Velocities.size(); i++)
+		m_Velocities[i] = 0;
 }
 
 wxString GOrguePipe::GetFilename()
