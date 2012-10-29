@@ -78,7 +78,7 @@ GOSoundProvider* GOrguePipe::GetSoundProvider()
 
 void GOrguePipe::SetOn()
 {
-	m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID);
+	m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, m_Velocity);
 	if (m_Sampler)
 		m_Instances++;
 	if (GetSoundProvider()->IsOneshot())
@@ -267,6 +267,29 @@ unsigned GOrguePipe::GetEffectiveChannels()
 	return m_OrganFile->GetSettings().GetLoadInStereo() ? 2 : 1;
 }
 
+void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix)
+{
+	attack_load_info ainfo;
+	ainfo.filename = m_Filename;
+	ainfo.sample_group = cfg.ReadInteger(ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
+	ainfo.load_release = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("LoadRelease"), false, !m_Percussive);;
+	ainfo.percussive = m_Percussive;
+	ainfo.max_playback_time = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
+	ainfo.cue_point = cfg.ReadInteger(ODFSetting, group, prefix + wxT("CuePoint"), -1, 158760000, false, -1);
+	ainfo.min_attack_velocity = 0;
+
+	unsigned loop_cnt = cfg.ReadInteger(ODFSetting, group, prefix + wxT("LoopCount"), 0, 100, false, 0);
+	for(unsigned j = 0; j < loop_cnt; j++)
+	{
+		loop_load_info linfo;
+		linfo.loop_start = cfg.ReadInteger(ODFSetting, group, prefix + wxString::Format(wxT("Loop%03dStart"), j + 1), 0, 158760000, false, 0);
+		linfo.loop_end = cfg.ReadInteger(ODFSetting, group, prefix + wxString::Format(wxT("Loop%03dEnd"), j + 1), linfo.loop_start + 1, 158760000, true);
+		ainfo.loops.push_back(linfo);
+	}
+
+	m_AttackInfo.push_back(ainfo);
+}
+
 void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	m_Filename = cfg.ReadString(ODFSetting, group, prefix);
@@ -279,48 +302,11 @@ void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 	UpdateAmplitude();
 	m_OrganFile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
-	attack_load_info ainfo;
-	ainfo.filename = m_Filename;
-	ainfo.sample_group = cfg.ReadInteger(ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
-	ainfo.load_release = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("LoadRelease"), false, !m_Percussive);;
-	ainfo.percussive = m_Percussive;
-	ainfo.max_playback_time = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
-	ainfo.cue_point = cfg.ReadInteger(ODFSetting, group, prefix + wxT("CuePoint"), -1, 158760000, false, -1);
-
-	unsigned loop_cnt = cfg.ReadInteger(ODFSetting, group, prefix + wxT("LoopCount"), 0, 100, false, 0);
-	for(unsigned j = 0; j < loop_cnt; j++)
-	{
-		loop_load_info linfo;
-		linfo.loop_start = cfg.ReadInteger(ODFSetting, group, prefix + wxString::Format(wxT("Loop%03dStart"), j + 1), 0, 158760000, false, 0);
-		linfo.loop_end = cfg.ReadInteger(ODFSetting, group, prefix + wxString::Format(wxT("Loop%03dEnd"), j + 1), linfo.loop_start + 1, 158760000, true);
-		ainfo.loops.push_back(linfo);
-	}
-
-	m_AttackInfo.push_back(ainfo);
+	LoadAttack(cfg, group, prefix);
 
 	unsigned attack_count = cfg.ReadInteger(ODFSetting, group, prefix + wxT("AttackCount"), 0, 100, false, 0);
 	for(unsigned i = 0; i < attack_count; i++)
-	{
-		wxString p = prefix + wxString::Format(wxT("Attack%03d"), i + 1);
-
-		ainfo.filename = cfg.ReadString(ODFSetting, group, p);
-		ainfo.sample_group = cfg.ReadInteger(ODFSetting, group, p + wxT("IsTremulant"), -1, 1, false, -1);
-		ainfo.load_release = cfg.ReadBoolean(ODFSetting, group, p + wxT("LoadRelease"), false, !m_Percussive);;
-		ainfo.percussive = m_Percussive;
-		ainfo.max_playback_time = cfg.ReadInteger(ODFSetting, group, p + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
-		ainfo.cue_point = cfg.ReadInteger(ODFSetting, group, p + wxT("CuePoint"), -1, 158760000, false, -1);
-
-		unsigned loop_cnt = cfg.ReadInteger(ODFSetting, group, p + wxT("LoopCount"), 0, 100, false, 0);
-		for(unsigned j = 0; j < loop_cnt; j++)
-		{
-			loop_load_info linfo;
-			linfo.loop_start = cfg.ReadInteger(ODFSetting, group, p + wxString::Format(wxT("Loop%03dStart"), j + 1), 0, 158760000, false, 0);
-			linfo.loop_end = cfg.ReadInteger(ODFSetting, group, p + wxString::Format(wxT("Loop%03dEnd"), j + 1), linfo.loop_start + 1, 158760000, true);
-			ainfo.loops.push_back(linfo);
-		}
-
-		m_AttackInfo.push_back(ainfo);
-	}
+		LoadAttack(cfg, group, prefix + wxString::Format(wxT("Attack%03d"), i + 1));
 
 	unsigned release_count = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseCount"), 0, 100, false, 0);
 	for(unsigned i = 0; i < release_count; i++)

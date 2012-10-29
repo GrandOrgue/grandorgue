@@ -204,7 +204,7 @@ public:
 	void SetReverb(int reverb);
 	int GetReverb() const;
 
-	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group);
+	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 

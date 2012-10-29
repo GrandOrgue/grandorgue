@@ -122,6 +122,7 @@ void GOSoundProviderSynthedTrem::Create
 	trem_loops.push_back(trem_loop);
 	attack_section_info attack_info;
 	attack_info.sample_group = -1;
+	attack_info.min_attack_velocity = 0;
 	m_AttackInfo.push_back(attack_info);
 	m_Attack.push_back(new GOAudioSection(m_pool));
 	m_Attack[0]->Setup

@@ -47,7 +47,8 @@ unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample)
 		return 3;
 }
 
-void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive)
+void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, 
+				       bool percussive, unsigned min_attack_velocity)
 {
 	std::vector<GO_WAVE_LOOP> loops;
 	if (loop_list.size() == 0)
@@ -96,6 +97,7 @@ void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, std::
 
 	attack_section_info attack_info;
 	attack_info.sample_group = sample_group;
+	attack_info.min_attack_velocity = min_attack_velocity;
 	m_AttackInfo.push_back(attack_info);
 	GOAudioSection* section = new GOAudioSection(m_pool);
 	m_Attack.push_back(section);
@@ -141,7 +143,7 @@ void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
 void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, 
-				      int cue_point, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive)
+				      int cue_point, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity)
 {
 	wxLogDebug(_("Loading file %s"), filename.c_str());
 
@@ -172,7 +174,7 @@ void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, std::vec
 		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), wave_channels);
 
 		if (is_attack)
-			CreateAttack(data, wave, loops, sample_group, bits_per_sample, channels, compress, loop_mode, percussive);
+			CreateAttack(data, wave, loops, sample_group, bits_per_sample, channels, compress, loop_mode, percussive, min_attack_velocity);
 
 		if (is_release && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
 			CreateRelease(data, wave, sample_group, max_playback_time, cue_point, bits_per_sample, channels, compress);
@@ -249,10 +251,13 @@ void GOSoundProviderWave::LoadFromFile
 		for(int k = -1; k < 2; k++)
 		{
 			int best_idx = -1;
+			unsigned min_velocity = 0xff;
 			for(unsigned i = 0; i < attacks.size(); i++)
 			{
 				if (attacks[i].sample_group != k)
 					continue;
+				if (attacks[i].min_attack_velocity < min_velocity)
+					min_velocity = attacks[i].min_attack_velocity;
 				if (best_idx == -1)
 				{
 					best_idx = i;
@@ -263,6 +268,7 @@ void GOSoundProviderWave::LoadFromFile
 			}
 			for(unsigned i = 0; i < attacks.size(); i++)
 			{
+				attacks[i].min_attack_velocity = min_velocity;
 				if (attacks[i].sample_group != k || best_idx == -1 || best_idx == (int)i)
 					continue;
 				for(unsigned j = i + 1; j < attacks.size(); j++)
@@ -287,14 +293,14 @@ void GOSoundProviderWave::LoadFromFile
 				loops.push_back(loop);
 			}
 			ProcessFile(attacks[i].filename, path, loops, true, attacks[i].load_release, attacks[i].sample_group, attacks[i].max_playback_time, attacks[i].cue_point,
-				    bits_per_sample, load_channels, compress, loop_mode, attacks[i].percussive);
+				    bits_per_sample, load_channels, compress, loop_mode, attacks[i].percussive, attacks[i].min_attack_velocity);
 		}
 
 		for(unsigned i = 0; i < releases.size(); i++)
 		{
 			std::vector<GO_WAVE_LOOP> loops;
 			ProcessFile(releases[i].filename, path, loops, false, true, releases[i].sample_group, releases[i].max_playback_time, releases[i].cue_point, 
-				    bits_per_sample, load_channels, compress, loop_mode, true);
+				    bits_per_sample, load_channels, compress, loop_mode, true, 0);
 		}
 
 		ComputeReleaseAlignmentInfo();

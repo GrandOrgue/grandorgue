@@ -69,6 +69,7 @@ private:
 	void SetOn();
 	void SetOff();
 	GOSoundProvider* GetSoundProvider();
+	void LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 
 public:
 	GOrguePipe(GrandOrgueFile* organfile, GOrgueRank* m_Rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction);

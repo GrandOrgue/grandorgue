@@ -34,6 +34,7 @@ typedef struct audio_section_stream_s audio_section_stream;
 typedef struct
 {
 	int sample_group;
+	unsigned min_attack_velocity;
 } attack_section_info;
 
 typedef struct
@@ -70,7 +71,7 @@ public:
 	void UseSampleGroup(unsigned sample_group);
 
 	const GOAudioSection* GetRelease(const audio_section_stream* handle, double playback_time) const;
-	const GOAudioSection* GetAttack() const;
+	const GOAudioSection* GetAttack(unsigned velocity) const;
 	float GetGain() const;
 	int IsOneshot() const;
 

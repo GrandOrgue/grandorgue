@@ -58,6 +58,7 @@ typedef struct
 	int sample_group;
 	bool load_release;
 	bool percussive;
+	unsigned min_attack_velocity;
 	int max_playback_time;
 	int cue_point;
 	std::vector<loop_load_info> loops;
@@ -75,10 +76,11 @@ class GOSoundProviderWave : public GOSoundProvider
 {
 	unsigned GetBytesPerSample(unsigned bits_per_sample);
        
-	void CreateAttack(const char* data, GOrgueWave& wave, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive);
+	void CreateAttack(const char* data, GOrgueWave& wave, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive,
+			  unsigned min_attack_velocity);
 	void CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, unsigned channels, bool compress);
 	void ProcessFile(wxString filename, wxString path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, 
-			 int load_channels, bool compress, loop_load_type loop_mode, bool percussive);
+			 int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity);
 
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
