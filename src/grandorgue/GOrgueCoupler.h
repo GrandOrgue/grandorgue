@@ -44,30 +44,31 @@ private:
 	bool m_CoupleToSubsequentDownwardIntramanualCouplers;
 	GOrgueCouplerType m_CouplerType;
 	unsigned m_SourceManual;
+	unsigned m_CouplerID;
 	unsigned m_DestinationManual;
 	int m_DestinationKeyshift;
 	int m_Keyshift;
 	/* Input state to the coupler */
-	std::vector<unsigned> m_KeyState;
+	std::vector<unsigned> m_KeyVelocity;
 	/* Intended output state always assuming the coupler is ON */
-	std::vector<unsigned> m_InternalState;
+	std::vector<unsigned> m_InternalVelocity;
 	/* Current ouput state */
-	std::vector<unsigned> m_OutState;
+	std::vector<unsigned> m_OutVelocity;
 	int m_CurrentTone;
 	int m_LastTone;
 	int m_FirstMidiNote;
 	unsigned m_FirstLogicalKey;
 	unsigned m_NumberOfKeys;
 
-	void ChangeKey(int note, int on);
-	void SetOut(int note, int on);
+	void ChangeKey(int note, unsigned velocity);
+	void SetOut(int note, unsigned velocity);
 	unsigned GetInternalState(int note);
 public:
 
 	GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual);
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString name = wxT(""), bool unison_off = false, bool recursive = false, int keyshift = 0, int dest_manual = 0, GOrgueCouplerType coupler_type = COUPLER_NORMAL);
 	void Save(GOrgueConfigWriter& cfg);
-	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
+	void SetKey(unsigned note, const std::vector<unsigned>& velocities, const std::vector<GOrgueCoupler*>& couplers);
 	void Set(bool on);
 	void PreparePlayback();
 	bool IsIntermanual();

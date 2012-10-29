@@ -27,7 +27,7 @@
 GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number) :
 	GOrgueDrawstop(organfile),
 	m_RankInfo(0),
-	m_KeyState(0),
+	m_KeyVelocity(0),
 	m_ManualNumber(manual_number),
 	m_FirstMidiNoteNumber(first_midi_note_number),
 	m_FirstAccessiblePipeLogicalKeyNumber(0),
@@ -77,23 +77,23 @@ void GOrgueStop::Load(GOrgueConfigReader& cfg, wxString group)
 		m_RankInfo.push_back(info);
 	}
 
-        m_KeyState.resize(m_NumberOfAccessiblePipes);
-        std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
+        m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
+        std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
 
         GOrgueDrawstop::Load(cfg, group);
 }
 
-void GOrgueStop::SetRankKey(unsigned key, bool on)
+void GOrgueStop::SetRankKey(unsigned key, unsigned velocity)
 {
 	for(unsigned j = 0; j < m_RankInfo.size(); j++)
 	{
 		if (key + 1 < m_RankInfo[j].FirstAccessibleKeyNumber || key >= m_RankInfo[j].FirstAccessibleKeyNumber + m_RankInfo[j].PipeCount)
 			continue;
-		m_RankInfo[j].Rank->SetKey(key + m_RankInfo[j].FirstPipeNumber - m_RankInfo[j].FirstAccessibleKeyNumber, on ? 0x7f : 0x00, m_RankInfo[j].StopID);
+		m_RankInfo[j].Rank->SetKey(key + m_RankInfo[j].FirstPipeNumber - m_RankInfo[j].FirstAccessibleKeyNumber, velocity, m_RankInfo[j].StopID);
 	}
 }
 
-void GOrgueStop::SetKey(unsigned note, int on)
+void GOrgueStop::SetKey(unsigned note, unsigned velocity)
 {
 	if (note < m_FirstAccessiblePipeLogicalKeyNumber || note >= m_FirstAccessiblePipeLogicalKeyNumber + m_NumberOfAccessiblePipes)
 		return;
@@ -101,32 +101,29 @@ void GOrgueStop::SetKey(unsigned note, int on)
 		return;
 	note -= m_FirstAccessiblePipeLogicalKeyNumber;
 	
-	unsigned last = m_KeyState[note];
-	m_KeyState[note] += on;
-
+	if (m_KeyVelocity[note] == velocity)
+		return;
+	m_KeyVelocity[note] = velocity;
 	if (IsEngaged())
-	{
-		if (last > 0 && m_KeyState[note] == 0)
-			SetRankKey(note, false);
-
-		if (last == 0 && m_KeyState[note] > 0)
-			SetRankKey(note, true);
-	}
+		SetRankKey(note, m_KeyVelocity[note]);
 }
-
 
 void GOrgueStop::Set(bool on)
 {
 	if (IsEngaged() == on)
 		return;
-	for(unsigned i = 0; i < m_NumberOfAccessiblePipes; i++)
-		if (m_KeyState[i])
-			SetRankKey(i, on);
-
 	GOrgueDrawstop::Set(on);
 
 	if (IsAuto())
-		SetRankKey(0, on);
+	{
+		SetRankKey(0, on ? 0x7f : 0x00);
+	}
+	else
+	{
+		for(unsigned i = 0; i < m_NumberOfAccessiblePipes; i++)
+			SetRankKey(i, on ? m_KeyVelocity[i] : 0);
+	}
+
 }
 
 GOrgueStop::~GOrgueStop(void)
@@ -142,11 +139,11 @@ void GOrgueStop::Abort()
 
 void GOrgueStop::PreparePlayback()
 {
-	m_KeyState.resize(m_NumberOfAccessiblePipes);
-	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
+	m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
+	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
 
 	if (IsAuto() && IsEngaged())
-		SetRankKey(0, true);
+		SetRankKey(0, 0x7f);
 
 	GOrgueButton::PreparePlayback();
 }

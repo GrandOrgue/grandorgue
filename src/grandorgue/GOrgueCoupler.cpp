@@ -34,12 +34,13 @@ GOrgueCoupler::GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual) :
 	m_CoupleToSubsequentDownwardIntramanualCouplers(false),
 	m_CouplerType(COUPLER_NORMAL),
 	m_SourceManual(sourceManual),
+	m_CouplerID(0),
 	m_DestinationManual(0),
 	m_DestinationKeyshift(0),
 	m_Keyshift(0),
-	m_KeyState(0),
-	m_InternalState(0),
-	m_OutState(0),
+	m_KeyVelocity(0),
+	m_InternalVelocity(0),
+	m_OutVelocity(0),
 	m_CurrentTone(-1),
 	m_LastTone(-1),
 	m_FirstMidiNote(0),
@@ -53,12 +54,12 @@ void GOrgueCoupler::PreparePlayback()
 	GOrgueManual* src = m_organfile->GetManual(m_SourceManual);
 	GOrgueManual* dest = m_organfile->GetManual(m_DestinationManual);
 
-	m_KeyState.resize(src->GetLogicalKeyCount());
-	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
-	m_InternalState.resize(dest->GetLogicalKeyCount());
-	std::fill(m_InternalState.begin(), m_InternalState.end(), 0);
-	m_OutState.resize(dest->GetLogicalKeyCount());
-	std::fill(m_OutState.begin(), m_OutState.end(), 0);
+	m_KeyVelocity.resize(src->GetLogicalKeyCount());
+	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
+	m_InternalVelocity.resize(dest->GetLogicalKeyCount());
+	std::fill(m_InternalVelocity.begin(), m_InternalVelocity.end(), 0);
+	m_OutVelocity.resize(dest->GetLogicalKeyCount());
+	std::fill(m_OutVelocity.begin(), m_OutVelocity.end(), 0);
 
 	if (m_UnisonOff && IsEngaged())
 		src->SetUnisonOff(true);
@@ -94,6 +95,9 @@ void GOrgueCoupler::Load(GOrgueConfigReader& cfg, wxString group, wxString name,
 	m_CouplerType = (GOrgueCouplerType)cfg.ReadEnum(ODFSetting, group, wxT("CouplerType"), m_coupler_types, sizeof(m_coupler_types) / sizeof(m_coupler_types[0]), false, coupler_type);
 	m_FirstMidiNote = cfg.ReadInteger(ODFSetting, group, wxT("FirstMIDINoteNumber"), 0, 127, false, 0); 
 	m_NumberOfKeys = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfKeys"), 0, 127, false, 127);
+
+	if (!m_UnisonOff)
+		m_CouplerID = m_organfile->GetManual(m_DestinationManual)->RegisterCoupler(this);
 }
 
 void GOrgueCoupler::Save(GOrgueConfigWriter& cfg)
@@ -101,22 +105,25 @@ void GOrgueCoupler::Save(GOrgueConfigWriter& cfg)
 	GOrgueDrawstop::Save(cfg);
 }
 
-void GOrgueCoupler::SetOut(int noteNumber, int on)
+void GOrgueCoupler::SetOut(int noteNumber, unsigned velocity)
 {
 	if (noteNumber < 0)
 		return;
 	unsigned note = noteNumber;
-	if (note >= m_InternalState.size())
+	if (note >= m_InternalVelocity.size())
 		return;
-	m_InternalState[note]+=on;
+	if (m_InternalVelocity[note] == velocity)
+		return;
+	m_InternalVelocity[note] = velocity;
 
 	if (!IsEngaged())
 		return;
-	unsigned newstate = (m_InternalState[note] / 2);
-	int change = newstate - m_OutState[note];
+	unsigned newstate = m_InternalVelocity[note];
+	if (newstate)
+		newstate--;
 	GOrgueManual* dest = m_organfile->GetManual(m_DestinationManual);
-	m_OutState[note] += change;
-	dest->SetKey(note, change, this);
+	m_OutVelocity[note] = newstate;
+	dest->SetKey(note, m_OutVelocity[note], this, m_CouplerID);
 }
 
 unsigned GOrgueCoupler::GetInternalState(int noteNumber)
@@ -124,13 +131,12 @@ unsigned GOrgueCoupler::GetInternalState(int noteNumber)
 	if (noteNumber < 0)
 		return 0;
 	unsigned note = noteNumber;
-	if (note >= m_InternalState.size())
+	if (note >= m_InternalVelocity.size())
 		return 0;
-	return m_InternalState[note];
+	return m_InternalVelocity[note];
 }
 
-
-void GOrgueCoupler::ChangeKey(int note, int on)
+void GOrgueCoupler::ChangeKey(int note, unsigned velocity)
 {
 	if (m_UnisonOff)
 		return;
@@ -139,60 +145,70 @@ void GOrgueCoupler::ChangeKey(int note, int on)
 		int nextNote = -1;
 		if (m_CouplerType == COUPLER_BASS)
 		{
-			for(nextNote = 0; nextNote< (int)m_KeyState.size(); nextNote++)
-				if (m_KeyState[nextNote] > 1)
+			for(nextNote = 0; nextNote < (int)m_KeyVelocity.size(); nextNote++)
+				if (m_KeyVelocity[nextNote] > 0)
 					break;
-			if (nextNote == (int)m_KeyState.size())
+			if (nextNote == (int)m_KeyVelocity.size())
 				nextNote = -1;
 		}
 		else
 		{
-			for(nextNote=m_KeyState.size() - 1; nextNote >= 0; nextNote--)
-				if (m_KeyState[nextNote] > 1)
+			for(nextNote = m_KeyVelocity.size() - 1; nextNote >= 0; nextNote--)
+				if (m_KeyVelocity[nextNote] > 0)
 					break;
 		}
 
 		if (m_CurrentTone != -1 && nextNote != m_CurrentTone)
 			{
-				SetOut(m_CurrentTone +  m_Keyshift, -GetInternalState(m_CurrentTone +  m_Keyshift));
+				SetOut(m_CurrentTone +  m_Keyshift, 0);
 				m_CurrentTone = -1;
 			}
 
-		if (((on > 1 && nextNote == note) || (on < 0 && nextNote == m_LastTone)))
+		if (((velocity > 0 && nextNote == note) || (velocity == 0 && nextNote == m_LastTone)))
 			m_CurrentTone = nextNote;
 
 		if (m_CurrentTone != -1)
-			SetOut(m_CurrentTone +  m_Keyshift, m_KeyState[m_CurrentTone] - GetInternalState(m_CurrentTone + m_Keyshift));
+			SetOut(m_CurrentTone +  m_Keyshift, velocity);
 
-		if (on > 1)
+		if (velocity > 0)
 			m_LastTone = note;
 		else
 			m_LastTone = -1;
 		return;
 	}
-	SetOut(note + m_Keyshift, on);
+	SetOut(note + m_Keyshift, velocity);
 }
 
-
-void GOrgueCoupler::SetKey(unsigned note, int on, GOrgueCoupler* prev)
+void GOrgueCoupler::SetKey(unsigned note, const std::vector<unsigned>& velocities, const std::vector<GOrgueCoupler*>& couplers)
 {
-	if (prev)
-	{
-		if ((prev->m_CoupleToSubsequentUnisonIntermanualCouplers && m_DestinationKeyshift == 0) ||
-		    (prev->m_CoupleToSubsequentDownwardIntramanualCouplers && m_DestinationKeyshift < 0 && !IsIntermanual()) ||
-		    (prev->m_CoupleToSubsequentUpwardIntramanualCouplers && m_DestinationKeyshift > 0 && !IsIntermanual()) ||
-		    (prev->m_CoupleToSubsequentDownwardIntermanualCouplers &&m_DestinationKeyshift < 0 && IsIntermanual()) ||
-		    (prev->m_CoupleToSubsequentUpwardIntermanualCouplers && m_DestinationKeyshift > 0 && IsIntermanual()))
-			;
-		else
-			return;
-	}
-	if (note < 0 || note >= m_KeyState.size() || !on)
+	if (note < 0 || note >= m_KeyVelocity.size())
 		return;
 	if (note < m_FirstLogicalKey || note >= m_FirstLogicalKey + m_NumberOfKeys)
 		return;
-	m_KeyState[note]+=on;
-	ChangeKey(note, on);
+
+	assert(velocities.size() == couplers.size());
+	unsigned velocity = 0;
+	for(unsigned i = 0; i < velocities.size(); i++)
+	{
+		GOrgueCoupler* prev = couplers[i];
+		if (prev)
+		{
+			if ((prev->m_CoupleToSubsequentUnisonIntermanualCouplers && m_DestinationKeyshift == 0) ||
+			    (prev->m_CoupleToSubsequentDownwardIntramanualCouplers && m_DestinationKeyshift < 0 && !IsIntermanual()) ||
+			    (prev->m_CoupleToSubsequentUpwardIntramanualCouplers && m_DestinationKeyshift > 0 && !IsIntermanual()) ||
+			    (prev->m_CoupleToSubsequentDownwardIntermanualCouplers &&m_DestinationKeyshift < 0 && IsIntermanual()) ||
+			    (prev->m_CoupleToSubsequentUpwardIntermanualCouplers && m_DestinationKeyshift > 0 && IsIntermanual()))
+				;
+			else
+				continue;
+		}
+		if (velocities[i] > velocity)
+			velocity = velocities[i];
+	}
+	if (m_KeyVelocity[note] == velocity)
+		return;
+	m_KeyVelocity[note] = velocity;
+	ChangeKey(note, velocity);
 }
 
 void GOrgueCoupler::Set(bool on)
@@ -205,16 +221,20 @@ void GOrgueCoupler::Set(bool on)
 	GOrgueManual* dest = m_organfile->GetManual(m_DestinationManual);
 
 	if (m_UnisonOff)
-		m_organfile->GetManual(m_SourceManual)->SetUnisonOff(on);
-
-	for(unsigned i = 0; i < m_InternalState.size(); i++)
 	{
-		unsigned newstate = on ? (m_InternalState[i] / 2) : 0;
-		if (m_OutState[i] != newstate)
+		m_organfile->GetManual(m_SourceManual)->SetUnisonOff(on);
+		return;
+	}
+
+	for(unsigned i = 0; i < m_InternalVelocity.size(); i++)
+	{
+		unsigned newstate = on ? m_InternalVelocity[i] : 0;
+		if (newstate > 0)
+			newstate--;
+		if (m_OutVelocity[i] != newstate)
 		{
-			int change = newstate - m_OutState[i];
-			m_OutState[i] += change;
-			dest->SetKey(i, change, this);
+			m_OutVelocity[i] = newstate;
+			dest->SetKey(i, m_OutVelocity[i], this, m_CouplerID);
 		}
 	}
 }

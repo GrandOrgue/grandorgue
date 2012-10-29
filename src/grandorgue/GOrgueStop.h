@@ -40,20 +40,20 @@ private:
 		unsigned PipeCount;
 	} RankInfo;
 	std::vector<RankInfo> m_RankInfo;
-	std::vector<unsigned> m_KeyState;
+	std::vector<unsigned> m_KeyVelocity;
 	unsigned m_ManualNumber;
 	unsigned m_FirstMidiNoteNumber;
 	unsigned m_FirstAccessiblePipeLogicalKeyNumber;
 	unsigned m_NumberOfAccessiblePipes;
 
-	void SetRankKey(unsigned key, bool on);
+	void SetRankKey(unsigned key, unsigned velocity);
 
 public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number);
 	GOrgueRank* GetRank(unsigned index);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Set(bool on);
-	void SetKey(unsigned note, int on);
+	void SetKey(unsigned note, unsigned velocity);
 	void Abort();
 	void PreparePlayback();
 	~GOrgueStop(void);
