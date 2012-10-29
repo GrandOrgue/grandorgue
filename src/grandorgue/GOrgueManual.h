@@ -48,10 +48,13 @@ private:
 	GOrgueMidiReceiver m_midi;
 	GOrgueMidiSender m_sender;
 	GrandOrgueFile* m_organfile;
+	std::vector<GOrgueCoupler*> m_InputCouplers;
 	/* Keyboard state */
 	std::vector<bool> m_KeyPressed;
 	/* Internal state affected by couplers */
-	std::vector<unsigned> m_KeyState;
+	std::vector<unsigned> m_RemoteVelocity;
+	std::vector<unsigned> m_Velocity;
+	std::vector<std::vector<unsigned> > m_Velocities;
 	unsigned m_manual_number;
 	unsigned m_first_accessible_logical_key_nb;
 	unsigned m_nb_logical_keys;
@@ -71,6 +74,8 @@ private:
 	bool m_displayed;
 	GOrgueCombinationDefinition m_DivisionalTemplate;
 
+	void Resize();
+
 public:
 
 	GOrgueManual(GrandOrgueFile* organfile);
@@ -78,7 +83,8 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group, int manualNumber);
 	void LoadCombination(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
-	void SetKey(unsigned note, int on, GOrgueCoupler* prev);
+	unsigned RegisterCoupler(GOrgueCoupler* coupler);
+	void SetKey(unsigned note, unsigned velocity, GOrgueCoupler* prev, unsigned couplerID);
 	void Set(unsigned note, bool on);
 	void SetUnisonOff(bool on);
 	void Abort();

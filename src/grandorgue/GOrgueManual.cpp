@@ -31,8 +31,11 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_midi(organfile, MIDI_RECV_MANUAL),
 	m_sender(organfile, MIDI_SEND_MANUAL),
 	m_organfile(organfile),
+	m_InputCouplers(),
 	m_KeyPressed(0),
-	m_KeyState(0),
+	m_RemoteVelocity(),
+	m_Velocity(),
+	m_Velocities(),
 	m_manual_number(0),
 	m_first_accessible_logical_key_nb(0),
 	m_nb_logical_keys(0),
@@ -48,7 +51,23 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_displayed(false),
 	m_DivisionalTemplate(organfile)
 {
+	m_InputCouplers.push_back(NULL);
+}
 
+unsigned GOrgueManual::RegisterCoupler(GOrgueCoupler* coupler)
+{
+	m_InputCouplers.push_back(coupler);
+	Resize();
+	return m_InputCouplers.size() - 1;
+}
+
+void GOrgueManual::Resize()
+{
+	m_Velocity.resize(m_nb_logical_keys);
+	m_RemoteVelocity.resize(m_nb_logical_keys);
+	m_Velocities.resize(m_nb_logical_keys);
+	for(unsigned i = 0; i < m_Velocities.size(); i++)
+		m_Velocities[i].resize(m_InputCouplers.size());
 }
 
 void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumber, unsigned first_midi, unsigned keys)
@@ -70,8 +89,7 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_midi.Load(cfg, group);
 	m_sender.Load(cfg, group);
 
-	m_KeyState.resize(m_nb_logical_keys);
-	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
+	Resize();
 	m_KeyPressed.resize(m_nb_accessible_keys);
 	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
 }
@@ -132,8 +150,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_midi.Load(cfg, group);
 	m_sender.Load(cfg, group);
 
-	m_KeyState.resize(m_nb_logical_keys);
-	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
+	Resize();
 	m_KeyPressed.resize(m_nb_accessible_keys);
 	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
 }
@@ -145,32 +162,34 @@ void GOrgueManual::LoadCombination(GOrgueConfigReader& cfg)
 }
 
 
-void GOrgueManual::SetKey(unsigned note, int on, GOrgueCoupler* prev)
+void GOrgueManual::SetKey(unsigned note, unsigned velocity, GOrgueCoupler* prev, unsigned couplerID)
 {
-	if (note < 0 || note >= m_KeyState.size() || !on)
+	if (note < 0 || note >= m_Velocity.size())
 		return;
 
-	m_KeyState[note] += on;
+	if (m_Velocities[note][couplerID] == velocity)
+		return;
 
-	bool unisonoff = false;
+	m_Velocities[note][couplerID] = velocity;
+	m_Velocity[note] = m_Velocities[note][0];
+	m_RemoteVelocity[note] = 0;
+	for(unsigned i = 1; i < m_Velocities[note].size(); i++)
+	{
+		if (m_Velocity[note] < m_Velocities[note][i])
+			m_Velocity[note] = m_Velocities[note][i];
+		if (m_RemoteVelocity[note] < m_Velocities[note][i])
+			m_RemoteVelocity[note] = m_Velocities[note][i];
+	}
+
 	for (unsigned i = 0; i < m_couplers.size(); i++)
-	{
-		if (m_couplers[i]->IsUnisonOff() && !prev && m_couplers[i]->IsEngaged())
-			unisonoff = true;
-		m_couplers[i]->SetKey(note, on, prev);
-	}
+		m_couplers[i]->SetKey(note, m_Velocities[note], m_InputCouplers);
 
-	if (!unisonoff)
-	{
-		for (unsigned i = 0; i < m_stops.size(); i++)
-			m_stops[i]->SetKey(note + 1, on);
-	}
+	for (unsigned i = 0; i < m_stops.size(); i++)
+		m_stops[i]->SetKey(note + 1, m_UnisonOff > 0 ? m_RemoteVelocity[note] : m_Velocity[note]);
 
 	if (m_first_accessible_logical_key_nb <= note + 1 && note <= m_first_accessible_logical_key_nb + m_nb_accessible_keys)
 		m_organfile->ControlChanged(this);
 }
-
-#define TRIGGER_LEVEL (2<<9)
 
 void GOrgueManual::Set(unsigned note, bool on)
 {
@@ -180,7 +199,7 @@ void GOrgueManual::Set(unsigned note, bool on)
 		return;
 	m_KeyPressed[note - m_first_accessible_key_midi_note_nb] = on;
 	m_sender.SetKey(note, on);
-	SetKey(note - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1, on ? TRIGGER_LEVEL : -(TRIGGER_LEVEL), NULL);
+	SetKey(note - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1, on ? 0x7f : 0x00, NULL, 0);
 }
 
 void GOrgueManual::SetUnisonOff(bool on)
@@ -195,13 +214,9 @@ void GOrgueManual::SetUnisonOff(bool on)
 		if (--m_UnisonOff)
 			return;
 	}
-	for(unsigned i = 0; i < m_KeyPressed.size(); i++)
-	{
-		int note = i + m_first_accessible_logical_key_nb - 1;
-		if (m_KeyPressed[i])
-			for (unsigned j = 0; j < m_stops.size(); j++)
-				m_stops[j]->SetKey(note + 1, on ? -TRIGGER_LEVEL : TRIGGER_LEVEL);
-	}
+	for(unsigned note = 0; note < m_Velocity.size(); note++)
+		for (unsigned j = 0; j < m_stops.size(); j++)
+			m_stops[j]->SetKey(note + 1, on ? m_RemoteVelocity[note] : m_Velocity[note]);
 }
 
 GOrgueManual::~GOrgueManual(void)
@@ -320,9 +335,9 @@ bool GOrgueManual::IsKeyDown(unsigned midiNoteNumber)
 		return false;
 	if (midiNoteNumber >= m_first_accessible_key_midi_note_nb + m_nb_accessible_keys)
 		return false;
-	if (midiNoteNumber - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1 >= m_KeyState.size())
+	if (midiNoteNumber - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1 >= m_Velocity.size())
 		return false;
-	return m_KeyState[midiNoteNumber - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1] > 0;
+	return m_Velocity[midiNoteNumber - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1] > 0;
 }
 
 bool GOrgueManual::IsDisplayed()
@@ -361,11 +376,16 @@ void GOrgueManual::Abort()
 
 void GOrgueManual::PreparePlayback()
 {
-	m_KeyState.resize(m_nb_logical_keys);
-	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
 	m_KeyPressed.resize(m_nb_accessible_keys);
 	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
 	m_UnisonOff = 0;
+	for(unsigned i = 0; i < m_Velocity.size(); i++)
+		m_Velocity[i] = 0;
+	for(unsigned i = 0; i < m_RemoteVelocity.size(); i++)
+		m_RemoteVelocity[i] = 0;
+	for(unsigned i = 0; i < m_Velocities.size(); i++)
+		for(unsigned j = 0; j < m_Velocities[i].size(); j++)
+			m_Velocities[i][j] = 0;
 
 	for (unsigned i = 0; i < m_stops.size(); i++)
 		m_stops[i]->PreparePlayback();
