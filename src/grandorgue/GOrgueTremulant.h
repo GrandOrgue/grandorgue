@@ -25,10 +25,10 @@
 #include <wx/wx.h>
 #include "GOrgueCacheObject.h"
 #include "GOrgueDrawStop.h"
-#include "GOSoundProviderSynthedTrem.h"
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
+class GOSoundProvider;
 struct IniFileEnumEntry;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
@@ -43,16 +43,16 @@ private:
 	int m_StartRate;
 	int m_StopRate;
 	int m_AmpModDepth;
-	GOSoundProviderSynthedTrem m_TremProvider;
+	GOSoundProvider* m_TremProvider;
 	SAMPLER_HANDLE m_PlaybackHandle;
 	int m_SamplerGroupID;
 
+	void InitSoundProvider();
 public:
 	GOrgueTremulant(GrandOrgueFile* organfile);
 	~GOrgueTremulant();
 	void Load(GOrgueConfigReader& cfg, wxString group, int sampler_group_id);
 	void Save(GOrgueConfigWriter& cfg);
-	void InitSoundProvider();
 	void Set(bool on);
 	void Abort();
 	void PreparePlayback();
