@@ -178,7 +178,7 @@ float GOSoundProvider::GetMidiPitchFract() const
 	return m_MidiPitchFract;
 }
 
-const GOAudioSection* GOSoundProvider::GetAttack() const
+const GOAudioSection* GOSoundProvider::GetAttack(unsigned velocity) const
 {
 	const unsigned x = abs(rand());
 	for (unsigned i = 0; i < m_Attack.size(); i++)

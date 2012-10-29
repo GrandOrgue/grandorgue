@@ -690,15 +690,16 @@ int GOSoundEngine::GetSamples
 }
 
 
-SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id, unsigned audio_group)
+SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id, unsigned audio_group, unsigned velocity)
 {
-	const GOAudioSection* attack = pipe->GetAttack();
+	const GOAudioSection* attack = pipe->GetAttack(velocity);
 	if (!attack || attack->GetChannels() == 0)
 		return NULL;
 	GO_SAMPLER* sampler = m_SamplerPool.GetSampler();
 	if (sampler)
 	{
 		sampler->pipe = pipe;
+		sampler->velocity = velocity;
 		attack->InitStream
 			(&m_ResamplerCoefs
 			,&sampler->stream
@@ -718,7 +719,7 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 		return;
 
 	const GOSoundProvider* this_pipe = handle->pipe;
-	const GOAudioSection* section = this_pipe->GetAttack();
+	const GOAudioSection* section = this_pipe->GetAttack(handle->velocity);
 	if (!section)
 		return;
 	if (handle->is_release)
@@ -774,6 +775,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 
 			new_sampler->pipe = this_pipe;
 			new_sampler->time = m_CurrentTime + 1;
+			new_sampler->velocity = handle->velocity;
 
 			int gain_decay_rate = 0;
 			float gain_target = this_pipe->GetGain() * release_section->GetNormGain();

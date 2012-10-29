@@ -38,6 +38,7 @@ typedef struct GO_SAMPLER_T
 	audio_section_stream       stream;
 	GOSoundFader               fader;
 	unsigned                   time;
+	unsigned                   velocity;
 	/* current index of the current block into this sample */
 	volatile bool              stop;
 	volatile bool              new_attack;
