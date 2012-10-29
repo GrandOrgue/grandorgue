@@ -30,6 +30,9 @@ GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_Name(),
 	m_Group(),
 	m_Pipes(),
+	m_StopCount(0),
+	m_Velocity(),
+	m_Velocities(),
 	m_FirstMidiNoteNumber(0),
 	m_Percussive(false),
 	m_WindchestGroup(0),
@@ -41,6 +44,14 @@ GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 
 GOrgueRank::~GOrgueRank()
 {
+}
+
+void GOrgueRank::Resize()
+{
+	m_Velocity.resize(m_Pipes.size());
+	m_Velocities.resize(m_Pipes.size());
+	for(unsigned i = 0; i < m_Velocities.size(); i++)
+		m_Velocities[i].resize(m_StopCount);
 }
 
 void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_note_number)
@@ -76,6 +87,14 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 			   );
                m_Pipes[i]->Load(cfg, group, buffer);
        }
+	Resize();
+}
+
+unsigned GOrgueRank::RegisterStop(GOrgueStop* stop)
+{
+	unsigned id = m_StopCount++;
+	Resize();
+	return id;
 }
 
 void GOrgueRank::Save(GOrgueConfigWriter& cfg)
@@ -85,12 +104,30 @@ void GOrgueRank::Save(GOrgueConfigWriter& cfg)
 	m_PipeConfig.Save(cfg);
 }
 
-void GOrgueRank::SetKey(int note, bool on)
+void GOrgueRank::SetKey(int note, unsigned velocity, unsigned stopID)
 {
 	if (note < 0 || note >= (int)m_Pipes.size())
 		return;
 
-	m_Pipes[note]->Set(on ? 0x7f : 0x00);
+	if (m_Velocities[note][stopID] <= velocity && velocity <= m_Velocity[note])
+	{
+		m_Velocities[note][stopID] = velocity;
+		return;
+	}
+	if (velocity >= m_Velocity[note])
+	{
+		m_Velocities[note][stopID] = velocity;
+		m_Velocity[note] = velocity;
+	}
+	else
+	{
+		m_Velocities[note][stopID] = velocity;
+		m_Velocity[note] = m_Velocities[note][0];
+		for(unsigned i = 1; i < m_Velocities[note].size(); i++)
+			if (m_Velocity[note] < m_Velocities[note][i])
+				m_Velocity[note] = m_Velocities[note][i];
+	}
+	m_Pipes[note]->Set(m_Velocity[note]);
 }
 
 GOrguePipe* GOrgueRank::GetPipe(unsigned index)
@@ -148,5 +185,10 @@ void GOrgueRank::PreparePlayback()
 	UpdateAudioGroup();
 	for(unsigned i = 0; i < m_Pipes.size(); i++)
 		m_Pipes[i]->PreparePlayback();
+	for(unsigned i = 0; i < m_Velocity.size(); i++)
+		m_Velocity[i] = 0;
+	for(unsigned i = 0; i < m_Velocities.size(); i++)
+		for(unsigned j = 0; j < m_Velocities[i].size(); j++)
+			m_Velocities[i][j] = 0;
 }
 
