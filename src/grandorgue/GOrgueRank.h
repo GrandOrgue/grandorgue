@@ -26,6 +26,7 @@
 #include "GOrguePipeConfig.h"
 
 class GOrguePipe;
+class GOrgueStop;
 class GOrgueTemperament;
 class GrandOrgueFile;
 
@@ -36,6 +37,9 @@ private:
 	wxString m_Name;
 	wxString m_Group;
 	ptr_vector<GOrguePipe> m_Pipes;
+	unsigned m_StopCount;
+	std::vector<unsigned> m_Velocity;
+	std::vector<std::vector<unsigned> > m_Velocities;
 	unsigned m_FirstMidiNoteNumber;
 	bool m_Percussive;
 	unsigned m_WindchestGroup;
@@ -43,12 +47,15 @@ private:
 	float m_PitchCorrection;
 	GOrguePipeConfig m_PipeConfig;
 
+	void Resize();
+
 public:
 	GOrgueRank(GrandOrgueFile* organfile);
 	~GOrgueRank();
 	void Load(GOrgueConfigReader& cfg, wxString group, int first_midi_note_number);
 	void Save(GOrgueConfigWriter& cfg);
-	void SetKey(int note, bool on);
+	unsigned RegisterStop(GOrgueStop* stop);
+	void SetKey(int note, unsigned velocity, unsigned stopID);
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
 	void Abort();

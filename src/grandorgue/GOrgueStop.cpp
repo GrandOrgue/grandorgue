@@ -60,6 +60,7 @@ void GOrgueStop::Load(GOrgueConfigReader& cfg, wxString group)
 			info.FirstPipeNumber = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Rank%03dFirstPipeNumber"), i + 1), 1, info.Rank->GetPipeCount(), false, 1);
 			info.PipeCount = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Rank%03dPipeCount"), i + 1), 1, info.Rank->GetPipeCount() - info.FirstPipeNumber + 1, false, info.Rank->GetPipeCount() - info.FirstPipeNumber + 1);
 			info.FirstAccessibleKeyNumber = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Rank%03dFirstAccessibleKeyNumber"), i + 1), 1, m_NumberOfAccessiblePipes, false, 1);
+			info.StopID = info.Rank->RegisterStop(this);
 			m_RankInfo.push_back(info);
 		}
         }
@@ -72,6 +73,7 @@ void GOrgueStop::Load(GOrgueConfigReader& cfg, wxString group)
 		info.FirstAccessibleKeyNumber = 1;
 		info.PipeCount = m_NumberOfAccessiblePipes;
 		info.Rank->Load(cfg, group, m_FirstMidiNoteNumber - info.FirstPipeNumber + info.FirstAccessibleKeyNumber + m_FirstAccessiblePipeLogicalKeyNumber - 1);
+		info.StopID = info.Rank->RegisterStop(this);
 		m_RankInfo.push_back(info);
 	}
 
@@ -87,7 +89,7 @@ void GOrgueStop::SetRankKey(unsigned key, bool on)
 	{
 		if (key + 1 < m_RankInfo[j].FirstAccessibleKeyNumber || key >= m_RankInfo[j].FirstAccessibleKeyNumber + m_RankInfo[j].PipeCount)
 			continue;
-		m_RankInfo[j].Rank->SetKey(key + m_RankInfo[j].FirstPipeNumber - m_RankInfo[j].FirstAccessibleKeyNumber, on);
+		m_RankInfo[j].Rank->SetKey(key + m_RankInfo[j].FirstPipeNumber - m_RankInfo[j].FirstAccessibleKeyNumber, on ? 0x7f : 0x00, m_RankInfo[j].StopID);
 	}
 }
 
@@ -144,8 +146,8 @@ void GOrgueStop::PreparePlayback()
 	std::fill(m_KeyState.begin(), m_KeyState.end(), 0);
 
 	if (IsAuto() && IsEngaged())
-		for(unsigned j = 0; j < m_RankInfo.size(); j++)
-			m_RankInfo[j].Rank->SetKey(0, true);
+		SetRankKey(0, true);
+
 	GOrgueButton::PreparePlayback();
 }
 

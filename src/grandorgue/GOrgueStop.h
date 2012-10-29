@@ -34,6 +34,7 @@ private:
 	typedef struct
 	{
 		GOrgueRank* Rank;
+		unsigned StopID;
 		unsigned FirstAccessibleKeyNumber;
 		unsigned FirstPipeNumber;
 		unsigned PipeCount;
