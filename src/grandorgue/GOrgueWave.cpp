@@ -337,7 +337,7 @@ void GOrgueWave::ReadSamples
 	(void* dest_buffer                        /** Pointer to received sample data */
 	,GOrgueWave::SAMPLE_FORMAT read_format    /** Format of the above buffer */
 	,unsigned sample_rate                     /** Sample rate to read data at */
-	,unsigned return_channels                 /** number of channels to return */
+	,int return_channels                      /** number of channels to return or if negative, specific channel as mono*/
 	) const
 {
 	if (sampleRate != sample_rate)
@@ -346,12 +346,19 @@ void GOrgueWave::ReadSamples
 	if (bytesPerSample < 1 || bytesPerSample > 4)
 		throw (wxString)_("Unsupported format");
 
-	if (channels != return_channels && return_channels != 1)
+	unsigned select_channel = 0;
+	if (return_channels < 0)
+	{
+		if ((unsigned)-return_channels > channels)
+			throw (wxString)_("Unsupported channel number");
+		select_channel = -return_channels;
+	}
+	else if (channels != (unsigned)return_channels && return_channels != 1)
 		throw (wxString)_("Unsupported channel count");
 
 	unsigned merge_count = 1;
 	/* need reduce stereo to mono ? */
-	if (channels != return_channels && return_channels == 1)
+	if (channels != (unsigned)return_channels && return_channels == 1)
 		merge_count = channels;
 
 	char* input  = (char*)data;
@@ -386,6 +393,8 @@ void GOrgueWave::ReadSamples
 
 			value += val;
 		}
+		if (select_channel && select_channel != i + 1)
+			continue;
 		if (merge_count > 1)
 			value = value / merge_count;
 

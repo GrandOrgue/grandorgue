@@ -140,8 +140,8 @@ void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
-void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, unsigned load_channels, 
-				      bool compress, loop_load_type loop_mode, bool percussive)
+void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, 
+				      int cue_point, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive)
 {
 	wxLogDebug(_("Loading file %s"), filename.c_str());
 
@@ -160,10 +160,16 @@ void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, std::vec
 	unsigned channels = wave.GetChannels();
 	if (load_channels == 1)
 		channels = 1;
+	unsigned wave_channels = channels;
+	if (load_channels < 0 && (unsigned)-load_channels <= wave.GetChannels())
+	{
+		wave_channels = load_channels;
+		channels = 1;
+	}
 
 	try
 	{
-		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), channels);
+		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), wave_channels);
 
 		if (is_attack)
 			CreateAttack(data, wave, loops, sample_group, bits_per_sample, channels, compress, loop_mode, percussive);
@@ -186,7 +192,7 @@ void GOSoundProviderWave::LoadFromFile
 	,std::vector<release_load_info> releases
 	,wxString       path
 	,unsigned       bits_per_sample
-	,unsigned       load_channels
+	,int            load_channels
 	,bool           compress
 	,loop_load_type loop_mode
 	,unsigned attack_load

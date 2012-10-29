@@ -78,12 +78,12 @@ class GOSoundProviderWave : public GOSoundProvider
 	void CreateAttack(const char* data, GOrgueWave& wave, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive);
 	void CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, unsigned channels, bool compress);
 	void ProcessFile(wxString filename, wxString path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, 
-			 unsigned load_channels, bool compress, loop_load_type loop_mode, bool percussive);
+			 int load_channels, bool compress, loop_load_type loop_mode, bool percussive);
 
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
 
-	void LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, wxString path, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode,
+	void LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, wxString path, unsigned bits_per_sample, int channels, bool compress, loop_load_type loop_mode,
 			  unsigned attack_load, unsigned release_load, int midi_key_number);
 	void SetAmplitude(float fixed_amplitude, float gain);
 };
