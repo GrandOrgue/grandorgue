@@ -32,7 +32,7 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_sender(organfile, MIDI_SEND_MANUAL),
 	m_organfile(organfile),
 	m_InputCouplers(),
-	m_KeyPressed(0),
+	m_KeyVelocity(0),
 	m_RemoteVelocity(),
 	m_Velocity(),
 	m_Velocities(),
@@ -90,8 +90,8 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_sender.Load(cfg, group);
 
 	Resize();
-	m_KeyPressed.resize(m_nb_accessible_keys);
-	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
+	m_KeyVelocity.resize(m_nb_accessible_keys);
+	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
 }
 
 void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumber)
@@ -151,8 +151,8 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_sender.Load(cfg, group);
 
 	Resize();
-	m_KeyPressed.resize(m_nb_accessible_keys);
-	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
+	m_KeyVelocity.resize(m_nb_accessible_keys);
+	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
 }
 
 void GOrgueManual::LoadCombination(GOrgueConfigReader& cfg)
@@ -191,15 +191,15 @@ void GOrgueManual::SetKey(unsigned note, unsigned velocity, GOrgueCoupler* prev,
 		m_organfile->ControlChanged(this);
 }
 
-void GOrgueManual::Set(unsigned note, bool on)
+void GOrgueManual::Set(unsigned note, unsigned velocity)
 {
-	if (note < m_first_accessible_key_midi_note_nb || note >= m_first_accessible_key_midi_note_nb + m_KeyPressed.size())
+	if (note < m_first_accessible_key_midi_note_nb || note >= m_first_accessible_key_midi_note_nb + m_KeyVelocity.size())
 		return;
-	if (m_KeyPressed[note - m_first_accessible_key_midi_note_nb] == on)
+	if (m_KeyVelocity[note - m_first_accessible_key_midi_note_nb] == velocity)
 		return;
-	m_KeyPressed[note - m_first_accessible_key_midi_note_nb] = on;
-	m_sender.SetKey(note, on);
-	SetKey(note - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1, on ? 0x7f : 0x00, NULL, 0);
+	m_KeyVelocity[note - m_first_accessible_key_midi_note_nb] = velocity;
+	m_sender.SetKey(note, velocity);
+	SetKey(note - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1, velocity, NULL, 0);
 }
 
 void GOrgueManual::SetUnisonOff(bool on)
@@ -326,7 +326,7 @@ GOrgueTremulant* GOrgueManual::GetTremulant(unsigned index)
 void GOrgueManual::AllNotesOff()
 {
 	for (unsigned j = 0; j < m_nb_accessible_keys; j++)
-		Set(m_first_accessible_key_midi_note_nb + j, false);
+		Set(m_first_accessible_key_midi_note_nb + j, 0x00);
 }
 
 bool GOrgueManual::IsKeyDown(unsigned midiNoteNumber)
@@ -376,8 +376,8 @@ void GOrgueManual::Abort()
 
 void GOrgueManual::PreparePlayback()
 {
-	m_KeyPressed.resize(m_nb_accessible_keys);
-	std::fill(m_KeyPressed.begin(), m_KeyPressed.end(), false);
+	m_KeyVelocity.resize(m_nb_accessible_keys);
+	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
 	m_UnisonOff = 0;
 	for(unsigned i = 0; i < m_Velocity.size(); i++)
 		m_Velocity[i] = 0;
@@ -399,7 +399,7 @@ void GOrgueManual::PreparePlayback()
 
 void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
 {
-	int key;
+	int key, value;
 
 	for(unsigned i = 0; i < m_stops.size(); i++)
 		m_stops[i]->ProcessMidi(event);
@@ -410,14 +410,16 @@ void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
 	for(unsigned i = 0; i < m_divisionals.size(); i++)
 		m_divisionals[i]->ProcessMidi(event);
 
-	switch(m_midi.Match(event, key))
+	switch(m_midi.Match(event, key, value))
 	{
 	case MIDI_MATCH_ON:
-		Set(key, true);
+		if (value <= 0)
+			value = 1;
+		Set(key, value);
 		break;
 
 	case MIDI_MATCH_OFF:
-		Set(key, false);
+		Set(key, 0x00);
 		break;
 		
 	case MIDI_MATCH_RESET:

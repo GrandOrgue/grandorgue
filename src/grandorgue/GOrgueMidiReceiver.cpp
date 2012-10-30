@@ -287,6 +287,12 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e)
 
 MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& value)
 {
+	int tmp;
+	return Match(e, tmp, value);
+}
+
+MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& key, int& value)
+{
 	value = 0;
 	for(unsigned i = 0; i < m_events.size();i++)
 	{
@@ -300,7 +306,13 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& value)
 			{
 				if (e.GetKey() < m_events[i].low_key || e.GetKey() > m_events[i].high_key)
 					continue;
-				value = e.GetKey() + m_organfile->GetSettings().GetTranspose() + m_events[i].key;
+				key = e.GetKey() + m_organfile->GetSettings().GetTranspose() + m_events[i].key;
+				value = e.GetValue() - m_events[i].low_velocity;
+				value *= 127 / (m_events[i].high_velocity - m_events[i].low_velocity + 0.00000001);
+				if (value < 0)
+					value = 0;
+				if (value > 127)
+					value = 127;
 				if (e.GetValue() < m_events[i].low_velocity)
 					return MIDI_MATCH_OFF;
 				if (e.GetValue() <= m_events[i].high_velocity)

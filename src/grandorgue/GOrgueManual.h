@@ -50,7 +50,7 @@ private:
 	GrandOrgueFile* m_organfile;
 	std::vector<GOrgueCoupler*> m_InputCouplers;
 	/* Keyboard state */
-	std::vector<bool> m_KeyPressed;
+	std::vector<unsigned> m_KeyVelocity;
 	/* Internal state affected by couplers */
 	std::vector<unsigned> m_RemoteVelocity;
 	std::vector<unsigned> m_Velocity;
@@ -85,7 +85,7 @@ public:
 	void Save(GOrgueConfigWriter& cfg);
 	unsigned RegisterCoupler(GOrgueCoupler* coupler);
 	void SetKey(unsigned note, unsigned velocity, GOrgueCoupler* prev, unsigned couplerID);
-	void Set(unsigned note, bool on);
+	void Set(unsigned note, unsigned velocity);
 	void SetUnisonOff(bool on);
 	void Abort();
 	void PreparePlayback();

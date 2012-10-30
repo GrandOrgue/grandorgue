@@ -91,6 +91,7 @@ public:
 
 	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e);
  	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e, int& value);
+ 	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e, int& key, int& value);
 
 	unsigned GetEventCount() const;
 	MIDI_MATCH_EVENT& GetEvent(unsigned index);
