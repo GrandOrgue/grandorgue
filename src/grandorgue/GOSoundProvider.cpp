@@ -181,14 +181,24 @@ float GOSoundProvider::GetMidiPitchFract() const
 const GOAudioSection* GOSoundProvider::GetAttack(unsigned velocity) const
 {
 	const unsigned x = abs(rand());
+	int best_match = -1;
 	for (unsigned i = 0; i < m_Attack.size(); i++)
 	{
 		const unsigned idx = (i + x) % m_Attack.size();
 		if (m_AttackInfo[idx].sample_group != -1 && 
 		    m_AttackInfo[idx].sample_group != m_SampleGroup)
 			continue;
-		return m_Attack[idx];
+		if (m_AttackInfo[idx].min_attack_velocity > velocity)
+			continue;
+		if (best_match == -1)
+			best_match = i;
+		else if (m_AttackInfo[best_match].min_attack_velocity < m_AttackInfo[i].min_attack_velocity)
+			best_match = i;
+		best_match = idx;
 	}
+
+	if (best_match != -1)
+		return m_Attack[best_match];
 	return NULL;
 }
 

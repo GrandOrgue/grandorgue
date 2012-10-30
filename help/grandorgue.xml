@@ -4075,6 +4075,14 @@ part is loaded from the first attack sample.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Pipe999AttackVelocity</term>
+          <listitem>
+            <para>
+(int 0 - 127, default: 0) minium velocity to use this attack sample.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Pipe999IsTremulant</term>
           <listitem>
             <para>
@@ -4192,6 +4200,14 @@ the windchest, on which this pipe is placed.
             <para>
 (boolean, default: revers of percussive setting) If true, the release
 part is loaded.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Attack999AttackVelocity</term>
+          <listitem>
+            <para>
+(int 0 - 127, default: 0) minium velocity to use this attack sample.
 	    </para>
           </listitem>
         </varlistentry>
