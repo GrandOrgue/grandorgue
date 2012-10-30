@@ -230,7 +230,7 @@ void GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 				state.SetControl(this);
 				state.SetIndex(i);
 
-				m_manual->Set(m_Keys[i].MidiNumber, !m_manual->IsKeyDown(m_Keys[i].MidiNumber));
+				m_manual->Set(m_Keys[i].MidiNumber, m_manual->IsKeyDown(m_Keys[i].MidiNumber) ? 0 : 0x7f);
 				return;
 			}
 		}
