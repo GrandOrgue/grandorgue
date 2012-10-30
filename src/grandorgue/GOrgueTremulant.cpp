@@ -99,7 +99,7 @@ void GOrgueTremulant::InitSoundProvider()
 	if (m_TremulantType == GOSynthTrem)
 	{
 		((GOSoundProviderSynthedTrem*)m_TremProvider)->Create(m_Period, m_StartRate, m_StopRate, m_AmpModDepth);
-		assert(!m_TremProvider.IsOneshot());
+		assert(!m_TremProvider->IsOneshot());
 	}
 }
 
