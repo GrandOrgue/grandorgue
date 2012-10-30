@@ -270,7 +270,7 @@ unsigned GOrguePipe::GetEffectiveChannels()
 void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	attack_load_info ainfo;
-	ainfo.filename = m_Filename;
+	ainfo.filename = cfg.ReadString(ODFSetting, group, prefix);
 	ainfo.sample_group = cfg.ReadInteger(ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
 	ainfo.load_release = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("LoadRelease"), false, !m_Percussive);;
 	ainfo.percussive = m_Percussive;
