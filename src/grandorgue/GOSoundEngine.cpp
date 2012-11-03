@@ -708,6 +708,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 		const float playback_gain = pipe->GetGain() * attack->GetNormGain();
 		sampler->fader.NewConstant(playback_gain);
 		sampler->time = m_CurrentTime;
+		sampler->fader.SetVelocityVolume(sampler->pipe->GetVelocityVolume(sampler->velocity));
 		StartSampler(sampler, sampler_group_id, audio_group);
 	}
 	return sampler;
@@ -745,6 +746,7 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 		new_sampler->is_release = true;
 
 		new_sampler->fader.StartDecay(-CROSSFADE_LEN_BITS);
+		new_sampler->fader.SetVelocityVolume(new_sampler->pipe->GetVelocityVolume(new_sampler->velocity));
 
 		StartSampler(new_sampler, new_sampler->sampler_group_id, new_sampler->audio_group_id);
 	}
@@ -883,6 +885,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				 * means it will still be affected by tremulants - yuck). */
 				windchest_index = handle->sampler_group_id;
 			}
+			new_sampler->fader.SetVelocityVolume(new_sampler->pipe->GetVelocityVolume(new_sampler->velocity));
 			StartSampler(new_sampler, windchest_index, handle->audio_group_id);
 		}
 

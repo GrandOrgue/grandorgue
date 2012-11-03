@@ -57,6 +57,8 @@ private:
 	float m_TemperamentOffset;
 	unsigned m_HarmonicNumber;
 	float m_PitchCorrection;
+	float m_MinVolume;
+	float m_MaxVolume;
 	int m_SampleMidiKeyNumber;
 	GOrguePipe* m_Reference;
 	unsigned m_ReferenceID;
@@ -72,7 +74,7 @@ private:
 	void LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, GOrgueRank* m_Rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction);
+	GOrguePipe(GrandOrgueFile* organfile, GOrgueRank* m_Rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume);
 	~GOrguePipe();
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void Save(GOrgueConfigWriter& cfg);

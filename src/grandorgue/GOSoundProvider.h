@@ -58,6 +58,8 @@ protected:
 	std::vector<release_section_info> m_ReleaseInfo;
 	GOrgueMemoryPool &m_pool;
 	void ComputeReleaseAlignmentInfo();
+	float m_VelocityVolumeBase;
+	float m_VelocityVolumeIncrement;
 
 public:
 	GOSoundProvider(GOrgueMemoryPool& pool);
@@ -69,6 +71,7 @@ public:
 	virtual bool SaveCache(GOrgueCacheWriter& cache);
 
 	void UseSampleGroup(unsigned sample_group);
+	void SetVelocityParameter(float min_volume, float max_volume);
 
 	const GOAudioSection* GetRelease(const audio_section_stream* handle, double playback_time) const;
 	const GOAudioSection* GetAttack(unsigned velocity) const;
@@ -80,6 +83,8 @@ public:
 
 	unsigned GetMidiKeyNumber() const;
 	float GetMidiPitchFract() const;
+
+	float GetVelocityVolume(unsigned velocity) const;
 };
 
 inline
