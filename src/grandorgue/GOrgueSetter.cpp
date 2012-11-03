@@ -614,7 +614,7 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(GOrgueConfigReader& cfg)
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("Setter"), GOGUI_SETTER_SETTER);
-	panel->Init(cfg, metrics, _("Setter"), wxT("SetterPanel"));
+	panel->Init(cfg, metrics, _("Combination Setter"), wxT("SetterPanel"));
 
 	control = new GOGUIHW1Background(panel);
 	panel->AddControl(control);
@@ -712,7 +712,7 @@ GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(GOrgueConfigReader& cfg)
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterCrescendo"), GOGUI_SETTER_CRESCENDO);
-	panel->Init(cfg, metrics, _("Crescendo Swell"), wxT("SetterCrescendoPanel"));
+	panel->Init(cfg, metrics, _("Crescendo Pedal"), wxT("SetterCrescendoPanel"));
 
 	control = new GOGUIHW1Background(panel);
 	panel->AddControl(control);
