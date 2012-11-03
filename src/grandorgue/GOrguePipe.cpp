@@ -96,6 +96,7 @@ void GOrguePipe::Set(unsigned velocity, unsigned referenceID)
 		m_Velocities[referenceID] = velocity;
 		return;
 	}
+	unsigned last_velocity = m_Velocity;
 	if (velocity >= m_Velocity)
 	{
 		m_Velocities[referenceID] = velocity;
@@ -120,6 +121,8 @@ void GOrguePipe::Set(unsigned velocity, unsigned referenceID)
 		SetOn();
 	else if (m_Instances && !m_Velocity)
 		SetOff();
+	else if (m_Sampler && last_velocity != m_Velocity)
+		m_OrganFile->UpdateVelocity(m_Sampler, m_Velocity);
 }
 
 void GOrguePipe::SetTremulant(bool on)

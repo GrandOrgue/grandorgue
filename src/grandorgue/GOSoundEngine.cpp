@@ -924,3 +924,11 @@ void GOSoundEngine::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE han
 
 	handle->new_attack = true;
 }
+
+void GOSoundEngine::UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity)
+{
+	assert(handle);
+	handle->velocity = velocity;
+	/* Concurrent update possible, as it just update a float */
+	handle->fader.SetVelocityVolume(handle->pipe->GetVelocityVolume(handle->velocity));
+}
