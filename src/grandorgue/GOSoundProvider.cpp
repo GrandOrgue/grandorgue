@@ -37,7 +37,9 @@ GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
 	m_AttackInfo(),
 	m_Release(),
 	m_ReleaseInfo(),
-	m_pool(pool)
+	m_pool(pool),
+	m_VelocityVolumeBase(1),
+	m_VelocityVolumeIncrement(0)
 {
 	m_Gain = 0.0f;
 }
@@ -176,6 +178,26 @@ unsigned GOSoundProvider::GetMidiKeyNumber() const
 float GOSoundProvider::GetMidiPitchFract() const
 {
 	return m_MidiPitchFract;
+}
+
+void GOSoundProvider::SetVelocityParameter(float min_volume, float max_volume)
+{
+	if (min_volume == max_volume)
+	{
+		m_VelocityVolumeBase = min_volume / 100;
+		m_VelocityVolumeIncrement = 0;
+	}
+	else
+	{
+		m_VelocityVolumeBase = min_volume / 100;
+		m_VelocityVolumeIncrement = (max_volume - min_volume) / 12700.0;
+	}
+}
+
+
+float GOSoundProvider::GetVelocityVolume(unsigned velocity) const
+{
+	return m_VelocityVolumeBase + (velocity * m_VelocityVolumeIncrement);
 }
 
 const GOAudioSection* GOSoundProvider::GetAttack(unsigned velocity) const

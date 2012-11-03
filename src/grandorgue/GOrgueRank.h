@@ -45,6 +45,8 @@ private:
 	unsigned m_WindchestGroup;
 	unsigned m_HarmonicNumber;
 	float m_PitchCorrection;
+	float m_MinVolume;
+	float m_MaxVolume;
 	GOrguePipeConfig m_PipeConfig;
 
 	void Resize();

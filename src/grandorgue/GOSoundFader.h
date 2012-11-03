@@ -32,6 +32,7 @@ private:
 	float       m_attack;
 	float       m_decay;
 	float       m_target;
+	float       m_VelocityVolume;
 	float       m_real_target;
 	float       m_last_volume;
 	unsigned    m_nb_attack_frames_left;
@@ -41,6 +42,7 @@ public:
 	void NewConstant(float gain);
 	void StartDecay(int duration_shift);
 	bool IsSilent();
+	void SetVelocityVolume(float volume);
 
 	void Process(unsigned n_blocks, float *decoded_sampler_audio_frame, float volume);
 };
@@ -48,6 +50,8 @@ public:
 inline
 void GOSoundFader::Process(unsigned n_blocks, float *decoded_sampler_audio_frame, float volume)
 {
+	volume *= m_VelocityVolume;
+
 	if (m_last_volume < 0)
 	{
 		m_last_volume = volume;
@@ -155,6 +159,8 @@ void GOSoundFader::NewAttacking(float target_gain, int duration_shift, int max_f
 	m_gain   = 0.0f;
 	m_target = target_gain;
 	m_last_volume = -1;
+	m_VelocityVolume = 1;
+	
 	m_attack = scalbnf(target_gain, duration_shift);
 }
 
@@ -165,6 +171,13 @@ void GOSoundFader::NewConstant(float gain)
 	m_attack = m_decay = 0.0f;
 	m_gain = m_target = gain;
 	m_last_volume = -1;
+	m_VelocityVolume = 1;
+}
+
+inline
+void GOSoundFader::SetVelocityVolume(float volume)
+{
+	m_VelocityVolume = volume;
 }
 
 #endif /* GOSOUNDFADER_H_ */

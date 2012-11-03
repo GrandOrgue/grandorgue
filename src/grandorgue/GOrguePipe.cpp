@@ -31,15 +31,7 @@
 #include "GrandOrgueFile.h"
 #include "GOSoundProviderWave.h"
 
-GOrguePipe::GOrguePipe
-	(GrandOrgueFile* organfile
-	,GOrgueRank* rank
-	,bool percussive
-	,int sampler_group_id
-	,unsigned midi_key_number
-	,unsigned harmonic_number
-	,float pitch_correction
-	) :
+GOrguePipe::GOrguePipe (GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume) :
 	m_OrganFile(organfile),
 	m_Rank(rank),
 	m_Sampler(NULL),
@@ -55,6 +47,8 @@ GOrguePipe::GOrguePipe
 	m_TemperamentOffset(0),
 	m_HarmonicNumber(harmonic_number),
 	m_PitchCorrection(pitch_correction),
+	m_MinVolume(min_volume),
+	m_MaxVolume(max_volume),
 	m_SampleMidiKeyNumber(-1),
 	m_Reference(NULL),
 	m_ReferenceID(0),
@@ -321,6 +315,10 @@ void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 		
 		m_ReleaseInfo.push_back(rinfo);
 	}
+
+	m_MinVolume = cfg.ReadFloat(ODFSetting, group, wxT("MinVelocityVolume"), 0, 1000, false, m_MinVolume);
+	m_MaxVolume = cfg.ReadFloat(ODFSetting, group, wxT("MaxVelocityVolume"), 0, 1000, false, m_MaxVolume);
+	m_SoundProvider.SetVelocityParameter(m_MinVolume, m_MaxVolume);
 }
 
 void GOrguePipe::Save(GOrgueConfigWriter& cfg)
