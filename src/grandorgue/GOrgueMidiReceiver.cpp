@@ -302,7 +302,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& key, in
 			continue;
 		if (m_type == MIDI_RECV_MANUAL)
 		{
-			if (e.GetMidiType() == MIDI_NOTE)
+			if (e.GetMidiType() == MIDI_NOTE || e.GetMidiType() == MIDI_AFTERTOUCH)
 			{
 				if (e.GetKey() < m_events[i].low_key || e.GetKey() > m_events[i].high_key)
 					continue;

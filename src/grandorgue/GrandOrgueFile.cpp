@@ -1100,6 +1100,12 @@ void GrandOrgueFile::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE ha
 		m_soundengine->SwitchSample(pipe, handle);
 }
 
+void GrandOrgueFile::UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity)
+{
+	if (m_soundengine)
+		m_soundengine->UpdateVelocity(handle, velocity);
+}
+
 void GrandOrgueFile::SendMidiMessage(GOrgueMidiEvent& e)
 {
 	if (m_midi)

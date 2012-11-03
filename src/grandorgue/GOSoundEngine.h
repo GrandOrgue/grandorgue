@@ -207,6 +207,7 @@ public:
 	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
+	void UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity);
 
 	int GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
 

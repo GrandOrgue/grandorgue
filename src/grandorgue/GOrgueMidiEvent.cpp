@@ -76,6 +76,14 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg)
 		SetKey(msg[1] & 0x7F);
 		SetValue(msg[2] & 0x7F);
 		break;
+	case 0xA0:
+		if (msg.size() != 3)
+			return;
+		SetMidiType(MIDI_AFTERTOUCH);
+		SetChannel((msg[0] & 0x0F) + 1);
+		SetKey(msg[1] & 0x7F);
+		SetValue(msg[2] & 0x7F);
+		break;
 	case 0xB0:
 		if (msg.size() != 3)
 			return;
@@ -179,6 +187,7 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg)
 		msg.push_back(m);
 		return;
 
+	case MIDI_AFTERTOUCH:
 	case MIDI_NONE:
 	case MIDI_RESET:
 		return;

@@ -29,6 +29,7 @@ typedef enum {
 	MIDI_NONE,
 	MIDI_RESET,
 	MIDI_NOTE,
+	MIDI_AFTERTOUCH,
 	MIDI_CTRL_CHANGE,
 	MIDI_PGM_CHANGE,
 } midi_message_type;
