@@ -4011,6 +4011,24 @@ any loop/release handling)
 	    </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>MinVelocityVolume</term>
+          <listitem>
+            <para>
+(float 0-1000, default: 100) Linear amplitude scale factor at low
+velocity applied to the whole rank. 100 means no change.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MaxVelocityVolume</term>
+          <listitem>
+            <para>
+(float 0-1000, default: 100) Linear amplitude scale factor at high
+velocity applied to the whole rank. 100 means no change.
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
       <para>
 A rank section contains the attributes of each of its pipes too.
@@ -4175,6 +4193,25 @@ temperaments.
             <para>
 (interger 1 - number of windchests, default: rank windchest) specify
 the windchest, on which this pipe is placed.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999MinVelocityVolume</term>
+          <listitem>
+            <para>
+(float 0-1000, default: corresponding rank setting) Linear amplitude
+scale factor at low velocity applied to the pipe. 100 means no change.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999MaxVelocityVolume</term>
+          <listitem>
+            <para>
+(float 0-1000, default: corresponding rank setting) Linear amplitude
+scale factor at high velocity applied to the pipe. 100 means no
+change.
 	    </para>
           </listitem>
         </varlistentry>
