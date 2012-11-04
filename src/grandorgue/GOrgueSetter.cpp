@@ -1167,6 +1167,12 @@ void GOrgueSetter::ResetDisplay()
 		m_button[ID_SETTER_GENERAL00 + i]->Display(false);
 }
 
+void GOrgueSetter::UpdatePosition(int pos)
+{
+	if (pos != (int)m_pos)
+		SetPosition(pos);
+}
+
 void GOrgueSetter::SetPosition(int pos, bool push)
 {
 	wxString buffer;

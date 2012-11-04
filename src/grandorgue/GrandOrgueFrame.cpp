@@ -73,7 +73,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	// New events for Volume, Polyphony, Memory Level, Transpose and Reverb
 	EVT_MENU(ID_VOLUME, GOrgueFrame::OnSettingsVolume)
 	EVT_MENU(ID_POLYPHONY, GOrgueFrame::OnSettingsPolyphony)
-	EVT_MENU(ID_MEMORY, GOrgueFrame::OnSettingsMemory)
+	EVT_MENU(ID_MEMORY, GOrgueFrame::OnSettingsMemoryEnter)
 	EVT_MENU(ID_TRANSPOSE, GOrgueFrame::OnSettingsTranspose)
 	EVT_MENU(ID_REVERB, GOrgueFrame::OnSettingsReverb)
 
@@ -88,7 +88,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_TEXT(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 	EVT_TEXT_ENTER(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueFrame::OnSettingsMemory)
-	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN, GOrgueFrame::OnSettingsMemory)
+	EVT_TEXT_ENTER(ID_METER_FRAME_SPIN, GOrgueFrame::OnSettingsMemoryEnter)
 	EVT_COMMAND(ID_METER_FRAME_SPIN, wxEVT_SETVALUE, GOrgueFrame::OnChangeSetter)
 	EVT_SLIDER(ID_METER_FRAME_SPIN, GOrgueFrame::OnChangeSetter)
 	EVT_TEXT(ID_METER_AUDIO_SPIN, GOrgueFrame::OnSettingsVolume)
@@ -667,13 +667,22 @@ void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
 	m_SamplerUsage->ResetClip();
 }
 
-void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
+void GOrgueFrame::OnSettingsMemoryEnter(wxCommandEvent& event)
 {
 	long n = m_SetterPosition->GetValue();
 
 	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (doc && doc->GetOrganFile())
 		doc->GetOrganFile()->GetSetter()->SetPosition(n);
+}
+
+void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
+{
+	long n = m_SetterPosition->GetValue();
+
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
+	if (doc && doc->GetOrganFile())
+		doc->GetOrganFile()->GetSetter()->UpdatePosition(n);
 }
 
 void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)

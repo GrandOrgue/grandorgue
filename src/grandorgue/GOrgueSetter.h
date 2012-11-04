@@ -99,6 +99,7 @@ public:
 	void Prev();
 	void Push();
 	unsigned GetPosition();
+	void UpdatePosition(int pos);
 	void SetPosition(int pos, bool push = true);
 	void ResetDisplay();
 };

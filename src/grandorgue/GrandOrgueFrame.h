@@ -87,6 +87,7 @@ public:
 	void OnSettingsVolume(wxCommandEvent& event);
 	void OnSettingsPolyphony(wxCommandEvent& event);
 	void OnSettingsMemory(wxCommandEvent& event);
+	void OnSettingsMemoryEnter(wxCommandEvent& event);
 	void OnSettingsTranspose(wxCommandEvent& event);
 	void OnSettingsReverb(wxCommandEvent& event);
 
