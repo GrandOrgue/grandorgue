@@ -42,7 +42,8 @@
 #include "GrandOrgueFile.h"
 
 #define FRAME_GENERALS 1000
-#define GENERALS 30
+#define GENERAL_BANKS 10
+#define GENERALS 50
 #define CRESCENDO_STEPS 32
 
 enum {
@@ -105,6 +106,28 @@ enum {
 	ID_SETTER_GENERAL27,
 	ID_SETTER_GENERAL28,
 	ID_SETTER_GENERAL29,
+	ID_SETTER_GENERAL30,
+	ID_SETTER_GENERAL31,
+	ID_SETTER_GENERAL32,
+	ID_SETTER_GENERAL33,
+	ID_SETTER_GENERAL34,
+	ID_SETTER_GENERAL35,
+	ID_SETTER_GENERAL36,
+	ID_SETTER_GENERAL37,
+	ID_SETTER_GENERAL38,
+	ID_SETTER_GENERAL39,
+	ID_SETTER_GENERAL40,
+	ID_SETTER_GENERAL41,
+	ID_SETTER_GENERAL42,
+	ID_SETTER_GENERAL43,
+	ID_SETTER_GENERAL44,
+	ID_SETTER_GENERAL45,
+	ID_SETTER_GENERAL46,
+	ID_SETTER_GENERAL47,
+	ID_SETTER_GENERAL48,
+	ID_SETTER_GENERAL49,
+	ID_SETTER_GENERAL_PREV,
+	ID_SETTER_GENERAL_NEXT,
 
 	ID_SETTER_CRESCENDO_PREV,
 	ID_SETTER_CRESCENDO_CURRENT,
@@ -124,6 +147,7 @@ enum {
 	ID_SETTER_SAVE,
 
 	ID_SETTER_LABEL, /* Must be the last elements */
+	ID_SETTER_GENERAL_LABEL,
 	ID_SETTER_CRESCENDO_LABEL,
 	ID_SETTER_TEMPERAMENT_LABEL,
 	ID_SETTER_PITCH_LABEL,
@@ -190,6 +214,29 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("General28"), ID_SETTER_GENERAL27 },
 	{ wxT("General29"), ID_SETTER_GENERAL28 },
 	{ wxT("General30"), ID_SETTER_GENERAL29 },
+	{ wxT("General31"), ID_SETTER_GENERAL30 },
+	{ wxT("General32"), ID_SETTER_GENERAL31 },
+	{ wxT("General33"), ID_SETTER_GENERAL32 },
+	{ wxT("General34"), ID_SETTER_GENERAL33 },
+	{ wxT("General35"), ID_SETTER_GENERAL34 },
+	{ wxT("General36"), ID_SETTER_GENERAL35 },
+	{ wxT("General37"), ID_SETTER_GENERAL36 },
+	{ wxT("General38"), ID_SETTER_GENERAL37 },
+	{ wxT("General39"), ID_SETTER_GENERAL38 },
+	{ wxT("General40"), ID_SETTER_GENERAL39 },
+	{ wxT("General41"), ID_SETTER_GENERAL40 },
+	{ wxT("General42"), ID_SETTER_GENERAL41 },
+	{ wxT("General43"), ID_SETTER_GENERAL42 },
+	{ wxT("General44"), ID_SETTER_GENERAL43 },
+	{ wxT("General45"), ID_SETTER_GENERAL44 },
+	{ wxT("General46"), ID_SETTER_GENERAL45 },
+	{ wxT("General47"), ID_SETTER_GENERAL46 },
+	{ wxT("General48"), ID_SETTER_GENERAL47 },
+	{ wxT("General49"), ID_SETTER_GENERAL48 },
+	{ wxT("General50"), ID_SETTER_GENERAL49 },
+
+	{ wxT("GeneralNext"), ID_SETTER_GENERAL_PREV },
+	{ wxT("GeneralPrev"), ID_SETTER_GENERAL_NEXT },
 
 	{ wxT("PitchP1"), ID_SETTER_PITCH_P1 },
 	{ wxT("PitchP10"), ID_SETTER_PITCH_P10 },
@@ -210,6 +257,7 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("Swell"), ID_SETTER_CRESCENDO_SWELL },
 	{ wxT("CrescendoLabel"), ID_SETTER_CRESCENDO_LABEL },
 	{ wxT("PitchLabel"), ID_SETTER_PITCH_LABEL },
+	{ wxT("GeneralLabel"), ID_SETTER_GENERAL_LABEL },
 	{ wxT("TemperamentLabel"), ID_SETTER_TEMPERAMENT_LABEL },
 
 };
@@ -217,6 +265,7 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_pos(0),
+	m_bank(0),
 	m_crescendopos(0),
 	m_crescendobank(0),
 	m_framegeneral(0),
@@ -224,6 +273,7 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_crescendo(0),
 	m_button(0),
 	m_PosDisplay(organfile),
+	m_BankDisplay(organfile),
 	m_CrescendoDisplay(organfile),
 	m_swell(organfile),
 	m_SetterType(SETTER_REGULAR)
@@ -251,8 +301,10 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
-	for(unsigned i = 0; i < 30; i++)
+	for(unsigned i = 0; i < GENERALS; i++)
 		m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
@@ -300,6 +352,12 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(GOrgueConfigReader& cfg, wxString g
 	if (element == ID_SETTER_CRESCENDO_LABEL)
 	{
 		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay, 350, 10);
+		PosDisplay->Load(cfg, group);
+		return PosDisplay;
+	}
+	if (element == ID_SETTER_GENERAL_LABEL)
+	{
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_BankDisplay, 350, 10);
 		PosDisplay->Load(cfg, group);
 		return PosDisplay;
 	}
@@ -577,27 +635,39 @@ GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(GOrgueConfigReader& cfg)
 	control = new GOGUIHW1Background(panel);
 	panel->AddControl(control);
 
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false, 1, 100);
+	GOGUILabel* BankDisplay=new GOGUILabel(panel, &m_BankDisplay, 260, 20);
+	BankDisplay->Load(cfg, wxT("SetterGeneralBank"));
+	panel->AddControl(BankDisplay);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_GENERAL_PREV], false, 3, 100);
+	button->Load(cfg, wxT("SetterGerneralsPrev"));
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_GENERAL_NEXT], false, 5, 100);
+	button->Load(cfg, wxT("SetterGerneralsNext"));
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false, 1, 101);
 	button->Load(cfg, wxT("SetterGeneralsSet"));
 	panel->AddControl(button);
 
-	button = new GOGUIButton(panel, m_button[ID_SETTER_REGULAR], false, 3, 100);
+	button = new GOGUIButton(panel, m_button[ID_SETTER_REGULAR], false, 3, 101);
 	button->Load(cfg, wxT("SetterGerneralsRegular"));
 	panel->AddControl(button);
 
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPE], false, 4, 100);
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPE], false, 4, 101);
 	button->Load(cfg, wxT("SetterGeneralsScope"));
 	panel->AddControl(button);
 
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPED], false, 5, 100);
+	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPED], false, 5, 101);
 	button->Load(cfg, wxT("SetterGeneralsScoped"));
 	panel->AddControl(button);
 
-	button = new GOGUIButton(panel, m_button[ID_SETTER_FULL], false, 7, 100);
+	button = new GOGUIButton(panel, m_button[ID_SETTER_FULL], false, 7, 101);
 	button->Load(cfg, wxT("SetterGeneralsFull"));
 	panel->AddControl(button);
 
-	for(unsigned i = 0; i < 30; i++)
+	for(unsigned i = 0; i < GENERALS; i++)
 	{
 		button = new GOGUIButton(panel, m_button[ID_SETTER_GENERAL00 + i], true, (i % 10) + 1, 100 + i / 10);
 		button->Load(cfg, wxString::Format(wxT("SetterGeneral%d"), i + 1));
@@ -789,7 +859,7 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	}
 
 	m_general.resize(0);
-	for (unsigned i = 0; i < GENERALS; i++)
+	for (unsigned i = 0; i < GENERALS * GENERAL_BANKS; i++)
 	{
 		m_general.push_back(new GOrgueFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile));
 		buffer.Printf(wxT("SetterGeneral%03d"), i + 1);
@@ -845,6 +915,7 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"));
 
 	m_PosDisplay.Load(cfg, wxT("SetterCurrentPosition"));
+	m_BankDisplay.Load(cfg, wxT("SetterGeneralBank"));
 	m_CrescendoDisplay.Load(cfg, wxT("SetterCrescendoPosition"));
 
 	for(unsigned i = 0; i < 10; i++)
@@ -856,7 +927,7 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 		m_button[ID_SETTER_L0 + i]->Load(cfg, group, buffer);
 	}
 
-	for(unsigned i = 0; i < 30; i++)
+	for(unsigned i = 0; i < GENERALS; i++)
 	{
 		wxString group;
 		wxString buffer;
@@ -864,6 +935,8 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 		group.Printf(wxT("SetterGeneral%d"), i);
 		m_button[ID_SETTER_GENERAL00 + i]->Load(cfg, group, buffer);
 	}
+	m_button[ID_SETTER_GENERAL_PREV]->Load(cfg, wxT("SetterGeneralPrev"), _("Prev"));
+	m_button[ID_SETTER_GENERAL_NEXT]->Load(cfg, wxT("SetterGeneralNext"), _("Next"));
 }
 
 void GOrgueSetter::LoadCombination(GOrgueConfigReader& cfg)
@@ -897,6 +970,7 @@ void GOrgueSetter::Save(GOrgueConfigWriter& cfg)
 	m_swell.Save(cfg);
 
 	m_PosDisplay.Save(cfg);
+	m_BankDisplay.Save(cfg);
 	m_CrescendoDisplay.Save(cfg);
 }
 
@@ -1008,10 +1082,40 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 			case ID_SETTER_GENERAL27:
 			case ID_SETTER_GENERAL28:
 			case ID_SETTER_GENERAL29:
-				m_general[i - ID_SETTER_GENERAL00]->Push();
+			case ID_SETTER_GENERAL30:
+			case ID_SETTER_GENERAL31:
+			case ID_SETTER_GENERAL32:
+			case ID_SETTER_GENERAL33:
+			case ID_SETTER_GENERAL34:
+			case ID_SETTER_GENERAL35:
+			case ID_SETTER_GENERAL36:
+			case ID_SETTER_GENERAL37:
+			case ID_SETTER_GENERAL38:
+			case ID_SETTER_GENERAL39:
+			case ID_SETTER_GENERAL40:
+			case ID_SETTER_GENERAL41:
+			case ID_SETTER_GENERAL42:
+			case ID_SETTER_GENERAL43:
+			case ID_SETTER_GENERAL44:
+			case ID_SETTER_GENERAL45:
+			case ID_SETTER_GENERAL46:
+			case ID_SETTER_GENERAL47:
+			case ID_SETTER_GENERAL48:
+			case ID_SETTER_GENERAL49:
+				m_general[i - ID_SETTER_GENERAL00 + m_bank * GENERALS ]->Push();
 				ResetDisplay();
 				m_button[i]->Display(true);
 				break;
+			case ID_SETTER_GENERAL_PREV:
+			case ID_SETTER_GENERAL_NEXT:
+				if (i == ID_SETTER_GENERAL_PREV && m_bank > 0)
+					m_bank--;
+				if (i == ID_SETTER_GENERAL_NEXT && m_bank < GENERAL_BANKS - 1)
+					m_bank++;
+
+				m_BankDisplay.SetName(wxString::Format(wxT("%d"), m_bank + 1));
+				break;
+
 			case ID_SETTER_REGULAR:
 				SetSetterType(SETTER_REGULAR);
 				break;
@@ -1093,6 +1197,10 @@ void GOrgueSetter::PreparePlayback()
 	m_CrescendoDisplay.SetName(buffer);
 	m_CrescendoDisplay.PreparePlayback();
 
+	buffer.Printf(wxT("%d"), m_bank + 1);
+	m_BankDisplay.SetName(buffer);
+	m_BankDisplay.PreparePlayback();
+
 	m_swell.PreparePlayback();
 }
 
@@ -1163,7 +1271,7 @@ void GOrgueSetter::ResetDisplay()
 	m_button[ID_SETTER_HOME]->Display(false);
 	for(unsigned i = 0; i < 10; i++)
 		m_button[ID_SETTER_L0 + i]->Display(false);
-	for(unsigned i = 0; i < 30; i++)
+	for(unsigned i = 0; i < GENERALS; i++)
 		m_button[ID_SETTER_GENERAL00 + i]->Display(false);
 }
 
@@ -1189,7 +1297,7 @@ void GOrgueSetter::SetPosition(int pos, bool push)
 		m_button[ID_SETTER_HOME]->Display(m_pos == 0);
 		for(unsigned i = 0; i < 10; i++)
 			m_button[ID_SETTER_L0 + i]->Display((m_pos % 10) == i);
-		for(unsigned i = 0; i < 30; i++)
+		for(unsigned i = 0; i < GENERALS; i++)
 			m_button[ID_SETTER_GENERAL00 + i]->Display(false);
 	}
 

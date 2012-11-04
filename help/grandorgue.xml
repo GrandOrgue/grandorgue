@@ -1854,11 +1854,30 @@ GUI attributes of a button (displayed as button per default).
           </listitem>
         </varlistentry>
         <varlistentry>
-          <term>General01 - General 30</term>
+          <term>General01 - General50</term>
           <listitem>
             <para>
 Buttons for the setter generals. The section must contain the GUI
 attributes of a button (displayed as button per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>GeneralPrev, GeneralNext</term>
+          <listitem>
+            <para>
+Buttons for switching banks of the setter generals. The section must
+contain the GUI attributes of a button (displayed as button per
+default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>GeneralLabel</term>
+          <listitem>
+            <para>
+Represents a label with the general bank number. The section must contain the GUI
+attributes of a label.
 	    </para>
           </listitem>
         </varlistentry>
