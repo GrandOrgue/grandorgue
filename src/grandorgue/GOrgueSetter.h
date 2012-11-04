@@ -49,6 +49,7 @@ class GOrgueSetter
 private:
 	GrandOrgueFile* m_organfile;
 	unsigned m_pos;
+	unsigned m_bank;
 	unsigned m_crescendopos;
 	unsigned m_crescendobank;
 	ptr_vector<GOrgueFrameGeneral> m_framegeneral;
@@ -56,6 +57,7 @@ private:
 	ptr_vector<GOrgueFrameGeneral> m_crescendo;
 	ptr_vector<GOrgueSetterButton> m_button;
 	GOrgueLabel m_PosDisplay;
+	GOrgueLabel m_BankDisplay;
 	GOrgueLabel m_CrescendoDisplay;
 	GOrgueEnclosure m_swell;
 	SetterType m_SetterType;
