@@ -213,10 +213,9 @@ const GOAudioSection* GOSoundProvider::GetAttack(unsigned velocity) const
 		if (m_AttackInfo[idx].min_attack_velocity > velocity)
 			continue;
 		if (best_match == -1)
-			best_match = i;
-		else if (m_AttackInfo[best_match].min_attack_velocity < m_AttackInfo[i].min_attack_velocity)
-			best_match = i;
-		best_match = idx;
+			best_match = idx;
+		else if (m_AttackInfo[best_match].min_attack_velocity < m_AttackInfo[idx].min_attack_velocity)
+			best_match = idx;
 	}
 
 	if (best_match != -1)
