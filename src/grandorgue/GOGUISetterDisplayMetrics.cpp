@@ -23,6 +23,7 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
+#include <algorithm>
 
 GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, wxString group, GOGUISetterType type) :
 	GOGUIDisplayMetrics(organfile, group)
@@ -70,7 +71,7 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 		break;
 
 	case GOGUI_SETTER_FLOATING:
-		x_size = wxString::Format(wxT("%d"), 40 + 10 * organfile->GetManual(organfile->GetODFManualCount())->GetLogicalKeyCount());
+		x_size = wxString::Format(wxT("%d"), 40 + std::max(10 * organfile->GetManual(organfile->GetODFManualCount())->GetLogicalKeyCount(), (unsigned)10 * 40));
 		y_size = wxString::Format(wxT("%d"), (organfile->GetManualAndPedalCount() - organfile->GetODFManualCount() + 1) * 60 + 160);
 		drawstop_rows = 0;
 		drawstop_cols = 0;
