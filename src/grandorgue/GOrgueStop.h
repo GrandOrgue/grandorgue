@@ -47,12 +47,12 @@ private:
 	unsigned m_NumberOfAccessiblePipes;
 
 	void SetRankKey(unsigned key, unsigned velocity);
+	void ChangeState(bool on);
 
 public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number);
 	GOrgueRank* GetRank(unsigned index);
 	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Set(bool on);
 	void SetKey(unsigned note, unsigned velocity);
 	void Abort();
 	void PreparePlayback();

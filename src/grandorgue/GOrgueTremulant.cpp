@@ -108,9 +108,9 @@ void GOrgueTremulant::Save(GOrgueConfigWriter& cfg)
 	GOrgueDrawstop::Save(cfg);
 }
 
-void GOrgueTremulant::Set(bool on)
+void GOrgueTremulant::ChangeState(bool on)
 {
-	if (IsEngaged() != on && m_TremulantType == GOSynthTrem)
+	if (m_TremulantType == GOSynthTrem)
 	{
 		if (on)
 		{
@@ -125,7 +125,6 @@ void GOrgueTremulant::Set(bool on)
 			m_PlaybackHandle = NULL;
 		}
 	}
-	GOrgueDrawstop::Set(on);
 }
 
 void GOrgueTremulant::Abort()
@@ -136,7 +135,9 @@ void GOrgueTremulant::Abort()
 
 void GOrgueTremulant::PreparePlayback()
 {
-	if (IsEngaged() && m_TremulantType == GOSynthTrem)
+	GOrgueDrawstop::PreparePlayback();
+
+	if (IsActive() && m_TremulantType == GOSynthTrem)
 	{
 		assert(m_SamplerGroupID < 0);
 		m_PlaybackHandle = m_organfile->StartSample(m_TremProvider, m_SamplerGroupID, 0, 0x7f);
@@ -145,7 +146,6 @@ void GOrgueTremulant::PreparePlayback()
 	{
 		m_organfile->ControlChanged((GOrgueButton*)this);
 	}
-	GOrgueButton::PreparePlayback();
 }
 
 GOrgueTremulantType GOrgueTremulant::GetTremulantType()

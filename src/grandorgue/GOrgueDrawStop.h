@@ -27,13 +27,23 @@
 
 class GOrgueDrawstop : public GOrgueButton
 {
+private:
 	int m_GCState;
+	bool m_ActiveState;
+
+protected:
+	void SetState(bool on);
+	virtual void ChangeState(bool on) = 0;
+
 public:
 	GOrgueDrawstop(GrandOrgueFile* organfile);
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString name = wxT(""));
 	void Save(GOrgueConfigWriter& cfg);
 	virtual void Set(bool on);
+	virtual void PreparePlayback();
 	void Reset();
+
+	bool IsActive() const;
 };
 
 #endif
