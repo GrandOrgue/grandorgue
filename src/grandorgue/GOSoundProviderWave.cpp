@@ -268,7 +268,8 @@ void GOSoundProviderWave::LoadFromFile
 			}
 			for(unsigned i = 0; i < attacks.size(); i++)
 			{
-				attacks[i].min_attack_velocity = min_velocity;
+				if (attacks[i].sample_group == k)
+					attacks[i].min_attack_velocity = min_velocity;
 				if (attacks[i].sample_group != k || best_idx == -1 || best_idx == (int)i)
 					continue;
 				for(unsigned j = i + 1; j < attacks.size(); j++)
