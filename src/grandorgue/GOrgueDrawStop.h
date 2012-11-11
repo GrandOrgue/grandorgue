@@ -30,6 +30,7 @@ class GOrgueDrawstop : public GOrgueButton
 private:
 	int m_GCState;
 	bool m_ActiveState;
+	bool m_CombinationState;
 
 protected:
 	void SetState(bool on);
@@ -42,6 +43,7 @@ public:
 	virtual void Set(bool on);
 	virtual void PreparePlayback();
 	void Reset();
+	void SetCombination(bool on);
 
 	bool IsActive() const;
 };

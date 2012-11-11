@@ -148,7 +148,7 @@ bool GOrgueCombination::PushLocal()
 		{
 			if (m_State[i] != -1)
 			{
-				elements[i].control->Set(m_State[i] == 1);
+				elements[i].control->SetCombination(m_State[i] == 1);
 				used |= m_State[i] == 1;
 			}
 		}
