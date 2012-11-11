@@ -72,3 +72,9 @@ void GOrgueConfigWriter::Write(wxString group, wxString key, int value, const st
 		}
 	wxLogError(_("Invalid enum value for /%s/%s: %d"), group.c_str(), key.c_str(), value);
 }
+
+void GOrgueConfigWriter::Write(wxString group, wxString key, bool value)
+{
+	wxString str = value ? wxT("Y") : wxT("N");
+	Write(group, key, str);
+}
