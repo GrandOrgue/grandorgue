@@ -27,7 +27,8 @@
 GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
 	GOrgueButton(organfile, MIDI_RECV_DRAWSTOP, false),
 	m_GCState(0),
-	m_ActiveState(false)
+	m_ActiveState(false),
+	m_CombinationState(false)
 {
 }
 
@@ -66,6 +67,12 @@ void GOrgueDrawstop::SetState(bool on)
 		return;
 	ChangeState(on);
 	m_ActiveState = on;
+}
+
+void GOrgueDrawstop::SetCombination(bool on)
+{
+	m_CombinationState = on;
+	Set(on);
 }
 
 bool GOrgueDrawstop::IsActive() const
