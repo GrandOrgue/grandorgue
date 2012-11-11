@@ -166,6 +166,7 @@ GOrgueCache.cpp
 GOrgueCacheWriter.cpp
 GOrgueCombinationDefinition.cpp
 GOrgueCombination.cpp
+GOrgueConfigFileWriter.cpp
 GOrgueConfigReader.cpp
 GOrgueConfigWriter.cpp
 GOrgueBitmapCache.cpp
