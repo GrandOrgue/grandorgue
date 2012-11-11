@@ -89,6 +89,7 @@ public:
 	void SetUnisonOff(bool on);
 	void Abort();
 	void PreparePlayback();
+	void Update();
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);

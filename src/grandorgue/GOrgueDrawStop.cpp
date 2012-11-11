@@ -83,6 +83,10 @@ bool GOrgueDrawstop::IsActive() const
 void GOrgueDrawstop::PreparePlayback()
 {
 	GOrgueButton::PreparePlayback();
+	Update();
+}
 
+void GOrgueDrawstop::Update()
+{
 	SetState(IsEngaged());
 }
