@@ -1202,6 +1202,9 @@ void GOrgueSetter::PreparePlayback()
 	m_BankDisplay.PreparePlayback();
 
 	m_swell.PreparePlayback();
+
+	for(unsigned i = 0; i < m_button.size(); i++)
+		m_button[i]->PreparePlayback();
 }
 
 bool GOrgueSetter::IsSetterActive()
