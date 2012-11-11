@@ -31,6 +31,7 @@
 #include "IniFileConfig.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
+#include "GOrgueConfigFileWriter.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
@@ -742,29 +743,21 @@ void GrandOrgueFile::DeleteSettings()
 
 void GrandOrgueFile::Save(const wxString& file)
 {
-
 	wxString fn = file;
+	wxString tmp_name = fn + wxT(".new");
 	wxString buffer;
 	bool prefix = false;
 
 	if (fn == GetODFFilename())
 		fn = m_SettingFilename;
 
-	if (::wxFileExists(fn) && !::wxRemoveFile(fn))
+	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
-		wxLogError(_("Could not write to '%s'"), fn.c_str());
+		wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
 		return;
 	}
 
-	wxFileConfig cfg_file
-		(wxEmptyString
-		,wxEmptyString
-		,fn
-		,wxEmptyString
-		,wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS
-		,wxCSConv(wxT("ISO-8859-1"))
-		);
-
+	GOrgueConfigFileWriter cfg_file;
 	m_b_customized = true;
 
 	GOrgueConfigWriter cfg(cfg_file, prefix);
@@ -811,6 +804,23 @@ void GrandOrgueFile::Save(const wxString& file)
 	m_TemperamentLabel.Save(cfg);
 	if (fn == m_SettingFilename)
 		m_doc->Modify(false);
+
+	if (!cfg_file.Save(tmp_name))
+	{
+		wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
+		return;
+	}
+
+	if (::wxFileExists(fn) && !::wxRemoveFile(fn))
+	{
+		wxLogError(_("Could not write to '%s'"), fn.c_str());
+		return;
+	}
+	if (!wxRenameFile(tmp_name, fn))
+	{
+		wxLogError(_("Could not write to '%s'"), fn.c_str());
+		return;
+	}
 }
 
 void GrandOrgueFile::SetVolume(int volume)

@@ -19,11 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/fileconf.h>
+#include "GOrgueConfigFileWriter.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 
-GOrgueConfigWriter::GOrgueConfigWriter(wxFileConfig& cfg, bool prefix) :
+GOrgueConfigWriter::GOrgueConfigWriter(GOrgueConfigFileWriter& cfg, bool prefix) :
 	m_ConfigFile(cfg),
 	m_Prefix(prefix)
 {
@@ -31,12 +31,10 @@ GOrgueConfigWriter::GOrgueConfigWriter(wxFileConfig& cfg, bool prefix) :
 
 void GOrgueConfigWriter::Write(wxString group, wxString key, wxString value)
 {
-	wxString str = group + wxT('/') + key;
-
 	if (m_Prefix)
-		m_ConfigFile.Write(wxT('_') + str, value);
+		m_ConfigFile.AddEntry(wxT('_') + group, key, value);
 	else
-		m_ConfigFile.Write(str, value);
+		m_ConfigFile.AddEntry(group, key, value);
 }
 
 void GOrgueConfigWriter::Write(wxString group, wxString key, int value, bool sign, bool force)

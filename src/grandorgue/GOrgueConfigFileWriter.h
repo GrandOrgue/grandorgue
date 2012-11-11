@@ -19,29 +19,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUECONFIGWRITER_H
-#define GORGUECONFIGWRITER_H
+#ifndef GORGUECONFIGFILEWRITER_H
+#define GORGUECONFIGFILEWRITER_H
 
 #include <wx/wx.h>
+#include <map>
 
-class GOrgueConfigFileWriter;
-
-struct IniFileEnumEntry;
-
-class GOrgueConfigWriter
+class GOrgueConfigFileWriter
 {
 private:
-	GOrgueConfigFileWriter& m_ConfigFile;
-	bool m_Prefix;
+	std::map<wxString, std::map<wxString, wxString> > m_Entries;
 
 public:
-	GOrgueConfigWriter(GOrgueConfigFileWriter& cfg, bool prefix);
-
-	void Write(wxString group, wxString key, wxString value);
-	void Write(wxString group, wxString key, int value, bool sign = false, bool force = false);
-	void Write(wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count);
-	void Write(wxString group, wxString key, float value);
-	void Write(wxString group, wxString key, bool value);
+	GOrgueConfigFileWriter();
+	
+	void AddEntry(wxString group, wxString name, wxString value);
+	bool Save(wxString filename);
 };
 
 #endif
