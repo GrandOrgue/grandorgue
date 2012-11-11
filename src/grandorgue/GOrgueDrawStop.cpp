@@ -39,7 +39,7 @@ void GOrgueDrawstop::Load(GOrgueConfigReader& cfg, wxString group, wxString name
 
 void GOrgueDrawstop::Save(GOrgueConfigWriter& cfg)
 {
-	cfg.Write(m_group, wxT("DefaultToEngaged"), IsEngaged() ? wxT("Y") : wxT("N"));
+	cfg.Write(m_group, wxT("DefaultToEngaged"), IsEngaged());
 	GOrgueButton::Save(cfg);
 }
 

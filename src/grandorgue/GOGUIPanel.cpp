@@ -502,7 +502,7 @@ void GOGUIPanel::Save(GOrgueConfigWriter& cfg)
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->Save(cfg);
 
-	cfg.Write(m_group, wxT("WindowDisplayed"), m_parent != NULL ? wxT("Y") : wxT("N"));
+	cfg.Write(m_group, wxT("WindowDisplayed"), m_parent != NULL);
 	if (m_parent)
 	{
 		wxWindow* parent = m_parent;
