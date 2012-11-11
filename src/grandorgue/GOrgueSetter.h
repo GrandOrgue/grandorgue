@@ -86,6 +86,7 @@ public:
 	void LoadCombination(GOrgueConfigReader& cfg);
 	void Abort();
 	void PreparePlayback();
+	void Update();
 	void Change(GOrgueSetterButton* button);
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);

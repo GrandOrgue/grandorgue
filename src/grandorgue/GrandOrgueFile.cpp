@@ -1194,6 +1194,20 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 	m_TemperamentLabel.PreparePlayback();
 }
 
+void GrandOrgueFile::Update()
+{
+	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
+		m_manual[i]->Update();
+
+	for (unsigned i = 0; i < m_tremulant.size(); i++)
+		m_tremulant[i]->Update();
+
+	for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
+		m_divisionalcoupler[i]->PreparePlayback();
+
+	m_setter->Update();
+}
+
 void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)
 {
 	if (event.GetMidiType() == MIDI_RESET)

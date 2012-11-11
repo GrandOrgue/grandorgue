@@ -42,6 +42,7 @@ public:
 	void Save(GOrgueConfigWriter& cfg);
 	virtual void Set(bool on);
 	virtual void PreparePlayback();
+	virtual void Update();
 	void Reset();
 	void SetCombination(bool on);
 

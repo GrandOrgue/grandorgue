@@ -139,6 +139,7 @@ public:
 	void DeleteSettings();;
 	void Abort();
 	void PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi);
+	void Update();
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);

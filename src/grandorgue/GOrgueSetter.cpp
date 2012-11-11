@@ -1207,6 +1207,10 @@ void GOrgueSetter::PreparePlayback()
 		m_button[i]->PreparePlayback();
 }
 
+void GOrgueSetter::Update()
+{
+}
+
 bool GOrgueSetter::IsSetterActive()
 {
 	return m_button[ID_SETTER_SET]->IsEngaged();
