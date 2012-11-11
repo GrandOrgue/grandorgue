@@ -51,6 +51,8 @@ GOrgueCoupler::GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual) :
 
 void GOrgueCoupler::PreparePlayback()
 {
+	GOrgueDrawstop::PreparePlayback();
+
 	GOrgueManual* src = m_organfile->GetManual(m_SourceManual);
 	GOrgueManual* dest = m_organfile->GetManual(m_DestinationManual);
 
@@ -61,7 +63,7 @@ void GOrgueCoupler::PreparePlayback()
 	m_OutVelocity.resize(dest->GetLogicalKeyCount());
 	std::fill(m_OutVelocity.begin(), m_OutVelocity.end(), 0);
 
-	if (m_UnisonOff && IsEngaged())
+	if (m_UnisonOff && IsActive())
 		src->SetUnisonOff(true);
 
 	m_Keyshift = m_DestinationKeyshift + src->GetFirstLogicalKeyMIDINoteNumber() - dest->GetFirstLogicalKeyMIDINoteNumber();
@@ -69,7 +71,6 @@ void GOrgueCoupler::PreparePlayback()
 		m_FirstLogicalKey = m_FirstMidiNote - src->GetFirstLogicalKeyMIDINoteNumber();
 	else
 		m_FirstLogicalKey = 0;
-	GOrgueButton::PreparePlayback();
 }
 
 const struct IniFileEnumEntry GOrgueCoupler::m_coupler_types[]={
@@ -116,7 +117,7 @@ void GOrgueCoupler::SetOut(int noteNumber, unsigned velocity)
 		return;
 	m_InternalVelocity[note] = velocity;
 
-	if (!IsEngaged())
+	if (!IsActive())
 		return;
 	unsigned newstate = m_InternalVelocity[note];
 	if (newstate)
@@ -211,13 +212,8 @@ void GOrgueCoupler::SetKey(unsigned note, const std::vector<unsigned>& velocitie
 	ChangeKey(note, velocity);
 }
 
-void GOrgueCoupler::Set(bool on)
+void GOrgueCoupler::ChangeState(bool on)
 {
-	if (IsEngaged() == on)
-		return;
-
-	GOrgueDrawstop::Set(on);
-
 	GOrgueManual* dest = m_organfile->GetManual(m_DestinationManual);
 
 	if (m_UnisonOff)

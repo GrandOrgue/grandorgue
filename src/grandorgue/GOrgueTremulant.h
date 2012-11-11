@@ -48,12 +48,12 @@ private:
 	int m_SamplerGroupID;
 
 	void InitSoundProvider();
+	void ChangeState(bool on);
 public:
 	GOrgueTremulant(GrandOrgueFile* organfile);
 	~GOrgueTremulant();
 	void Load(GOrgueConfigReader& cfg, wxString group, int sampler_group_id);
 	void Save(GOrgueConfigWriter& cfg);
-	void Set(bool on);
 	void Abort();
 	void PreparePlayback();
 	GOrgueTremulantType GetTremulantType();

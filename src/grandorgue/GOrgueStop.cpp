@@ -104,16 +104,12 @@ void GOrgueStop::SetKey(unsigned note, unsigned velocity)
 	if (m_KeyVelocity[note] == velocity)
 		return;
 	m_KeyVelocity[note] = velocity;
-	if (IsEngaged())
+	if (IsActive())
 		SetRankKey(note, m_KeyVelocity[note]);
 }
 
-void GOrgueStop::Set(bool on)
+void GOrgueStop::ChangeState(bool on)
 {
-	if (IsEngaged() == on)
-		return;
-	GOrgueDrawstop::Set(on);
-
 	if (IsAuto())
 	{
 		SetRankKey(0, on ? 0x7f : 0x00);
@@ -139,13 +135,13 @@ void GOrgueStop::Abort()
 
 void GOrgueStop::PreparePlayback()
 {
+	GOrgueDrawstop::PreparePlayback();
+
 	m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
 	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
 
-	if (IsAuto() && IsEngaged())
+	if (IsAuto() && IsActive())
 		SetRankKey(0, 0x7f);
-
-	GOrgueButton::PreparePlayback();
 }
 
 GOrgueRank* GOrgueStop::GetRank(unsigned index)

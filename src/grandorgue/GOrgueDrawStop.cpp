@@ -26,7 +26,8 @@
 
 GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
 	GOrgueButton(organfile, MIDI_RECV_DRAWSTOP, false),
-	m_GCState(0)
+	m_GCState(0),
+	m_ActiveState(false)
 {
 }
 
@@ -49,6 +50,7 @@ void GOrgueDrawstop::Set(bool on)
 		return;
 	Display(on);
 	GOrgueLCD_WriteLineTwo(GetName(), 2000);
+	SetState(on);
 }
 
 void GOrgueDrawstop::Reset()
@@ -56,4 +58,24 @@ void GOrgueDrawstop::Reset()
 	if (m_GCState < 0)
 		return;
 	Set(m_GCState > 0 ? true : false);
+}
+
+void GOrgueDrawstop::SetState(bool on)
+{
+	if (IsActive() == on)
+		return;
+	ChangeState(on);
+	m_ActiveState = on;
+}
+
+bool GOrgueDrawstop::IsActive() const
+{
+	return m_ActiveState;
+}
+
+void GOrgueDrawstop::PreparePlayback()
+{
+	GOrgueButton::PreparePlayback();
+
+	SetState(IsEngaged());
 }

@@ -117,7 +117,7 @@ void GOrgueWindchest::ControlChanged(void* control)
 			GOrgueTremulant* t = m_organfile->GetTremulant(m_tremulant[i]);
 			if (t->GetTremulantType() != GOWavTrem)
 				continue;
-			bool on = t->IsEngaged();
+			bool on = t->IsActive();
 			for(unsigned j = 0; j < m_pipes.size(); j++)
 				m_pipes[j]->SetTremulant(on);
 			return;

@@ -53,9 +53,8 @@ void GOrgueDivisionalCoupler::Save(GOrgueConfigWriter& cfg)
 	GOrgueDrawstop::Save(cfg);
 }
 
-void GOrgueDivisionalCoupler::Set(bool on)
+void GOrgueDivisionalCoupler::ChangeState(bool on)
 {
-	GOrgueDrawstop::Set(on);
 }
 
 unsigned GOrgueDivisionalCoupler::GetNumberOfManuals()

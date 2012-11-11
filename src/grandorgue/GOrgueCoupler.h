@@ -63,13 +63,13 @@ private:
 	void ChangeKey(int note, unsigned velocity);
 	void SetOut(int note, unsigned velocity);
 	unsigned GetInternalState(int note);
+	void ChangeState(bool on);
 public:
 
 	GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual);
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString name = wxT(""), bool unison_off = false, bool recursive = false, int keyshift = 0, int dest_manual = 0, GOrgueCouplerType coupler_type = COUPLER_NORMAL);
 	void Save(GOrgueConfigWriter& cfg);
 	void SetKey(unsigned note, const std::vector<unsigned>& velocities, const std::vector<GOrgueCoupler*>& couplers);
-	void Set(bool on);
 	void PreparePlayback();
 	bool IsIntermanual();
 	bool IsUnisonOff();
