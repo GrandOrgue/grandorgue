@@ -75,7 +75,7 @@ MACRO(BUILD_HELPFILE target target_default xmlfile VARIANT)
     ENDIF()
   ENDIF ()
 
-  IF (${target_default} STREQUAL "YES")
+  IF (${target_default} STREQUAL "YES" AND NOT APPLE)
     INSTALL(FILES ${HELPDIR}/GrandOrgue${VARIANT}.htb DESTINATION ${HELPINSTDIR})
   ENDIF()
   ADD_CUSTOM_TARGET(build-helpfile${VARIANT} DEPENDS ${HELPDIR}/GrandOrgue${VARIANT}.htb)
