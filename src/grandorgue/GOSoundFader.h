@@ -69,7 +69,7 @@ void GOSoundFader::Process(unsigned n_blocks, float *decoded_sampler_audio_frame
 	if (volume != m_last_volume)
 	{
 		gain_delta *= volume;
-		gain_delta += m_target * (volume - m_last_volume) / 1024;
+		gain_delta += m_target * (volume - m_last_volume) / (1024 / 2);
 		float new_last_volume = m_last_volume + ((volume - m_last_volume) * n_blocks) / 1024;
 		if (volume > m_last_volume)
 		{
