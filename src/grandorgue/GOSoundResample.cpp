@@ -52,7 +52,7 @@ create_sinc_filter
 {
 	for (unsigned i = 0; i < filter_buffer_length; i++)
 	{
-		double t = ((double)i - ((filter_buffer_length - 1) * 0.5)) / sample_rate;
+		double t = ((double)i - (filter_buffer_length * 0.5)) / sample_rate;
 		filter_buffer[i] = gain * (float)(2.0 * band_width * cos(2.0 * M_PI * f0 * t) * sinc(band_width * t) / sample_rate);
 	}
 }
@@ -111,7 +111,7 @@ resampler_coefs_init
 		,cutoff_frequency / 2
 		,cutoff_frequency
 		,input_sample_rate * UPSAMPLE_FACTOR
-		,UPSAMPLE_FACTOR / 2
+		,UPSAMPLE_FACTOR
 		);
 #ifndef RESAMPLE_USE_LANCZOS
 	apply_gaussian_window
