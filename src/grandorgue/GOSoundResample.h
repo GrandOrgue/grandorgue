@@ -22,8 +22,6 @@
 #ifndef GOSOUNDRESAMPLE_H_
 #define GOSOUNDRESAMPLE_H_
 
-#define RESAMPLE_USE_LANCZOS      (1)
-
 #define SUBFILTER_BITS            (3U)
 #define SUBFILTER_TAPS            (1U << SUBFILTER_BITS)
 #define UPSAMPLE_BITS             (11U)
