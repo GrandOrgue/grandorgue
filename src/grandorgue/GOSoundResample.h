@@ -30,8 +30,16 @@
 #define UPSAMPLE_FACTOR           (1U << UPSAMPLE_BITS)
 
 /* This factor must not be exceeded in the downsampler and it MUST be
- * greater than UPSAMPLE_FACTOR. */
-#define MAX_POSITIVE_FACTOR       (2300U)
+ * greater than UPSAMPLE_FACTOR.
+ *
+ * The value of 2663 was tuned analytically and results in a filter power
+ * ripple of less than 0.00002 dB when the sub filter taps is 8 and the
+ * upsample factor is 2048.
+ *
+ * The roll off characteristic starts at:
+ *  (UPSAMPLE_FACTOR * sample_rate) / (MAX_POSITIVE_FACTOR * 2) ~ 18kHz at
+ * 48 kHz. */
+#define MAX_POSITIVE_FACTOR       (2663U)
 
 typedef enum
 {
