@@ -57,27 +57,6 @@ create_sinc_filter
 	}
 }
 
-#ifndef RESAMPLE_USE_LANCZOS
-
-static
-inline
-void
-apply_gaussian_window
-	(float          *buffer
-	,const unsigned  length
-	)
-{
-	static const double gauss_sigma = 0.4;
-	const double ldec_2 = (length - 1) / 2.0;
-	for (unsigned i = 0; i < length; i++)
-	{
-		const double fac = (i - ldec_2) / (gauss_sigma * ldec_2);
-		buffer[i] *= exp(-(fac * fac) / 2.0);
-	}
-}
-
-#else
-
 static
 inline
 void
@@ -92,8 +71,6 @@ apply_lanczos_window
 		buffer[i] *= sinc((2 * i - ldec) / (double)ldec);
 	}
 }
-
-#endif
 
 void
 resampler_coefs_init
@@ -113,17 +90,12 @@ resampler_coefs_init
 		,input_sample_rate * UPSAMPLE_FACTOR
 		,UPSAMPLE_FACTOR
 		);
-#ifndef RESAMPLE_USE_LANCZOS
-	apply_gaussian_window
-		(temp
-		,UPSAMPLE_FACTOR * SUBFILTER_TAPS
-		);
-#else
+
 	apply_lanczos_window
 		(temp
 		,UPSAMPLE_FACTOR * SUBFILTER_TAPS
 		);
-#endif
+
 	/* Split up the filter into the sub-filters and reverse the coefficient
 	 * arrays. */
 	for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++)
