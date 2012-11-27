@@ -69,7 +69,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 {
 	try
 	{
-		GOrgueSettings settings;
+		GOrgueSettings settings(wxT("perftest"));
 		GrandOrgueFile* organfile = new GrandOrgueFile(NULL, settings);
 		organfile->AddWindchest(new GOrgueWindchest(organfile));
 		GOSoundEngine* engine = new GOSoundEngine();
@@ -106,7 +106,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 
 		for(unsigned i = 0; i < pipes.size(); i++)
 		{
-			SAMPLER_HANDLE handle = engine->StartSample(pipes[i], 1, 0);
+			SAMPLER_HANDLE handle = engine->StartSample(pipes[i], 1, 0, 127);
 			if (handle)
 				handles.push_back(handle);
 		}
