@@ -154,7 +154,7 @@ void GOrgueWave::Open(const wxString& filename)
 	if (!file.Open(filename, wxFile::read))
 	{
 		wxString message;
-		message.Printf(_("Failed to open file '%s'\n"), filename.c_str());
+		message.Printf(_("Failed to open file '%s'"), filename.c_str());
 		throw message;
 	}
 	wxFileOffset length = file.Length();
@@ -360,6 +360,8 @@ void GOrgueWave::ReadSamples
 	/* need reduce stereo to mono ? */
 	if (channels != (unsigned)return_channels && return_channels == 1)
 		merge_count = channels;
+	if (select_channel != 0)
+		merge_count = channels;
 
 	char* input  = (char*)data;
 	char* output = (char*)dest_buffer;
@@ -391,12 +393,12 @@ void GOrgueWave::ReadSamples
 			}
 			input += bytesPerSample;
 
+			if (select_channel && select_channel != j + 1)
+				continue;
 			value += val;
 		}
-		if (select_channel && select_channel != i + 1)
-			continue;
-		if (merge_count > 1)
-			value = value / merge_count;
+		if (select_channel == 0 && merge_count > 1)
+			value = value / (int)merge_count;
 
 		switch (read_format)
 		{
