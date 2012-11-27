@@ -1168,6 +1168,9 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 	m_soundengine = engine;
 	m_midi = midi;
 
+	for (unsigned i = 0; i < m_ranks.size(); i++)
+		m_ranks[i]->PreparePlayback();
+
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->PreparePlayback();
 
@@ -1185,9 +1188,6 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 
 	for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
 		m_divisionalcoupler[i]->PreparePlayback();
-
-	for (unsigned i = 0; i < m_ranks.size(); i++)
-		m_ranks[i]->PreparePlayback();
 
 	m_setter->PreparePlayback();
 	m_PitchLabel.PreparePlayback();
