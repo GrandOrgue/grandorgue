@@ -238,6 +238,7 @@ bool GOrgueSound::OpenSound()
 	GetEngine().SetSampleRate(sample_rate);
 	m_recorder.SetSampleRate(sample_rate);
 	m_SoundEngine.SetAudioOutput(engine_config);
+	m_SoundEngine.SetupReverb(m_Settings);
 
 	PreparePlayback(NULL);
 
