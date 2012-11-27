@@ -33,7 +33,9 @@
 
 class GOrgueWindchest;
 class GOSoundProvider;
+class GOSoundReverb;
 class GrandOrgueFile;
+class GOrgueSettings;
 
 typedef struct
 {
@@ -160,6 +162,7 @@ private:
 	std::vector<GOSamplerEntry>   m_Windchests;
 	std::vector<GOSamplerEntry>   m_Tremulants;
 	std::vector<GOOutputGroup>    m_OutputGroups;
+	ptr_vector<GOSoundReverb>     m_ReverbEngine;
 	std::vector<GOAudioOutput>    m_AudioOutputs;
 
 	std::vector<unsigned>         m_WorkItems;
@@ -186,9 +189,11 @@ private:
 public:
 
 	GOSoundEngine();
+	~GOSoundEngine();
 	void Reset();
 	void Setup(GrandOrgueFile* organ_file, unsigned release_count = 1);
 	void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
+	void SetupReverb(GOrgueSettings& settings);
 	void SetVolume(int volume);
 	void SetSampleRate(unsigned sample_rate);
 	void SetInterpolationType(unsigned type);

@@ -21,6 +21,7 @@
 
 #include "GOSoundEngine.h"
 #include "GOSoundProvider.h"
+#include "GOSoundReverb.h"
 #include "GOSoundSampler.h"
 #include "GOrgueEvent.h"
 #include "GOrgueInt24.h"
@@ -70,7 +71,12 @@ GOSoundEngine::GOSoundEngine() :
 	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
 	m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
+	m_ReverbEngine.push_back(new GOSoundReverb(2));
 	Reset();
+}
+
+GOSoundEngine::~GOSoundEngine()
+{
 }
 
 void GOSoundEngine::Reset()
@@ -99,6 +105,9 @@ void GOSoundEngine::Reset()
 		m_DetachedRelease[i].sampler = 0;
 		m_DetachedRelease[i].count = 0;
 	}
+	for (unsigned i = 0; i < m_ReverbEngine.size(); i++)
+		m_ReverbEngine[i]->Reset();
+
 	m_SamplerPool.ReturnAll();
 	m_CurrentTime = 0;
 	ResetDoneFlags();
@@ -566,6 +575,8 @@ void GOSoundEngine::ProcessOutputGroup(unsigned audio_group, unsigned n_frames)
 
 void GOSoundEngine::SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs)
 {
+	m_ReverbEngine.clear();
+	m_ReverbEngine.push_back(new GOSoundReverb(2));
 	m_AudioOutputs.resize(audio_outputs.size());
 	for(unsigned i = 0; i < audio_outputs.size(); i++)
 	{
@@ -584,7 +595,14 @@ void GOSoundEngine::SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio
 					factor = 0;
 				m_AudioOutputs[i].scale_factors[j * m_AudioGroupCount * 2 + k] = factor;
 			}
+		m_ReverbEngine.push_back(new GOSoundReverb(m_AudioOutputs[i].channels));
 	}
+}
+
+void GOSoundEngine::SetupReverb(GOrgueSettings& settings)
+{
+	for(unsigned i = 0; i < m_ReverbEngine.size(); i++)
+		m_ReverbEngine[i]->Setup(settings);
 }
 
 int GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output)
@@ -609,6 +627,8 @@ int GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsig
 				output_buffer[k] += factor * this_buff[l];
 		}
 	}
+
+	m_ReverbEngine[audio_output + 1]->Process(output_buffer, n_frames);
 
 	/* Clamp the output */
 	static const float CLAMP_MIN = -1.0f;
@@ -648,6 +668,8 @@ int GOSoundEngine::GetSamples
 		for (unsigned int k = 0; k < n_frames * 2; k++)
 			FinalBuffer[k] += this_buff[k];
 	}
+
+	m_ReverbEngine[0]->Process(FinalBuffer, n_frames);
 
 	m_CurrentTime += n_frames / BLOCKS_PER_FRAME;
 
