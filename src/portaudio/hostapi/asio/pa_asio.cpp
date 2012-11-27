@@ -1,5 +1,5 @@
 /*
- * $Id: pa_asio.cpp 1825 2012-04-02 07:58:04Z rbencina $
+ * $Id: pa_asio.cpp 1878 2012-11-11 13:27:22Z rbencina $
  * Portable Audio I/O Library for ASIO Drivers
  *
  * Author: Stephane Letz
@@ -1751,7 +1751,7 @@ static unsigned long SelectHostBufferSizeForSpecifiedUserFramesPerBuffer(
 		do {
 			if( (x % userFramesPerBuffer) == 0 )
 			{
-                /* any power-of-two multiple of userFramesPerBuffer is acceptable */
+                /* any multiple of userFramesPerBuffer is acceptable */
 				result = x;
 				if( result >= targetBufferingLatencyFrames )
 					break; /* stop. a value >= to targetBufferingLatencyFrames is ideal. */
@@ -1774,7 +1774,7 @@ static unsigned long SelectHostBufferSizeForSpecifiedUserFramesPerBuffer(
 		do {
 			if( (x % userFramesPerBuffer) == 0 )
 			{
-                /* any power-of-two multiple of userFramesPerBuffer is acceptable */
+                /* any multiple of userFramesPerBuffer is acceptable */
 				result = x;
 				if( result >= targetBufferingLatencyFrames )
 					break; /* stop. a value >= to targetBufferingLatencyFrames is ideal. */
