@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+<title>Installation and Customization - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Upgrading-from-FFTW-version-2.html#Upgrading-from-FFTW-version-2" title="Upgrading from FFTW version 2">
+<link rel="next" href="Acknowledgments.html#Acknowledgments" title="Acknowledgments">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Installation-and-Customization"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Acknowledgments.html#Acknowledgments">Acknowledgments</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Upgrading-from-FFTW-version-2.html#Upgrading-from-FFTW-version-2">Upgrading from FFTW version 2</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<h2 class="chapter">10 Installation and Customization</h2>
+
+<p><a name="index-installation-603"></a>
+This chapter describes the installation and customization of FFTW, the
+latest version of which may be downloaded from
+<a href="http://www.fftw.org">the FFTW home page</a>.
+
+   <p>In principle, FFTW should work on any system with an ANSI C compiler
+(<code>gcc</code> is fine).  However, planner time is drastically reduced if
+FFTW can exploit a hardware cycle counter; FFTW comes with cycle-counter
+support for all modern general-purpose CPUs, but you may need to add a
+couple of lines of code if your compiler is not yet supported
+(see <a href="Cycle-Counters.html#Cycle-Counters">Cycle Counters</a>).  (On Unix, there will be a warning at the end
+of the <code>configure</code> output if no cycle counter is found.) 
+<a name="index-cycle-counter-604"></a><a name="index-compiler-605"></a><a name="index-portability-606"></a>
+
+   <p>Installation of FFTW is simplest if you have a Unix or a GNU system,
+such as GNU/Linux, and we describe this case in the first section below,
+including the use of special configuration options to e.g. install
+different precisions or exploit optimizations for particular
+architectures (e.g. SIMD).  Compilation on non-Unix systems is a more
+manual process, but we outline the procedure in the second section.  It
+is also likely that pre-compiled binaries will be available for popular
+systems.
+
+   <p>Finally, we describe how you can customize FFTW for particular needs by
+generating <em>codelets</em> for fast transforms of sizes not supported
+efficiently by the standard FFTW distribution. 
+<a name="index-codelet-607"></a>
+
+<ul class="menu">
+<li><a accesskey="1" href="Installation-on-Unix.html#Installation-on-Unix">Installation on Unix</a>
+<li><a accesskey="2" href="Installation-on-non_002dUnix-systems.html#Installation-on-non_002dUnix-systems">Installation on non-Unix systems</a>
+<li><a accesskey="3" href="Cycle-Counters.html#Cycle-Counters">Cycle Counters</a>
+<li><a accesskey="4" href="Generating-your-own-code.html#Generating-your-own-code">Generating your own code</a>
+</ul>
+
+<!--  -->
+   </body></html>
+

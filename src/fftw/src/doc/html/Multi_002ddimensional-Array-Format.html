@@ -1,0 +1,75 @@
+<html lang="en">
+<head>
+<title>Multi-dimensional Array Format - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Other-Important-Topics.html#Other-Important-Topics" title="Other Important Topics">
+<link rel="prev" href="SIMD-alignment-and-fftw_005fmalloc.html#SIMD-alignment-and-fftw_005fmalloc" title="SIMD alignment and fftw_malloc">
+<link rel="next" href="Words-of-Wisdom_002dSaving-Plans.html#Words-of-Wisdom_002dSaving-Plans" title="Words of Wisdom-Saving Plans">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Multi-dimensional-Array-Format"></a>
+<a name="Multi_002ddimensional-Array-Format"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Words-of-Wisdom_002dSaving-Plans.html#Words-of-Wisdom_002dSaving-Plans">Words of Wisdom-Saving Plans</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="SIMD-alignment-and-fftw_005fmalloc.html#SIMD-alignment-and-fftw_005fmalloc">SIMD alignment and fftw_malloc</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Other-Important-Topics.html#Other-Important-Topics">Other Important Topics</a>
+<hr>
+</div>
+
+<h3 class="section">3.2 Multi-dimensional Array Format</h3>
+
+<p>This section describes the format in which multi-dimensional arrays
+are stored in FFTW.  We felt that a detailed discussion of this topic
+was necessary.  Since several different formats are common, this topic
+is often a source of confusion.
+
+<ul class="menu">
+<li><a accesskey="1" href="Row_002dmajor-Format.html#Row_002dmajor-Format">Row-major Format</a>
+<li><a accesskey="2" href="Column_002dmajor-Format.html#Column_002dmajor-Format">Column-major Format</a>
+<li><a accesskey="3" href="Fixed_002dsize-Arrays-in-C.html#Fixed_002dsize-Arrays-in-C">Fixed-size Arrays in C</a>
+<li><a accesskey="4" href="Dynamic-Arrays-in-C.html#Dynamic-Arrays-in-C">Dynamic Arrays in C</a>
+<li><a accesskey="5" href="Dynamic-Arrays-in-C_002dThe-Wrong-Way.html#Dynamic-Arrays-in-C_002dThe-Wrong-Way">Dynamic Arrays in C-The Wrong Way</a>
+</ul>
+
+<!-- =========> -->
+   </body></html>
+

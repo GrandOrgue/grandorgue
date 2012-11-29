@@ -1,0 +1,132 @@
+<html lang="en">
+<head>
+<title>Reversing array dimensions - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Calling-FFTW-from-Modern-Fortran.html#Calling-FFTW-from-Modern-Fortran" title="Calling FFTW from Modern Fortran">
+<link rel="prev" href="Overview-of-Fortran-interface.html#Overview-of-Fortran-interface" title="Overview of Fortran interface">
+<link rel="next" href="FFTW-Fortran-type-reference.html#FFTW-Fortran-type-reference" title="FFTW Fortran type reference">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Reversing-array-dimensions"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="FFTW-Fortran-type-reference.html#FFTW-Fortran-type-reference">FFTW Fortran type reference</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Overview-of-Fortran-interface.html#Overview-of-Fortran-interface">Overview of Fortran interface</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Calling-FFTW-from-Modern-Fortran.html#Calling-FFTW-from-Modern-Fortran">Calling FFTW from Modern Fortran</a>
+<hr>
+</div>
+
+<h3 class="section">7.2 Reversing array dimensions</h3>
+
+<p><a name="index-row_002dmajor-517"></a><a name="index-column_002dmajor-518"></a>A minor annoyance in calling FFTW from Fortran is that FFTW's array
+dimensions are defined in the C convention (row-major order), while
+Fortran's array dimensions are the opposite convention (column-major
+order). See <a href="Multi_002ddimensional-Array-Format.html#Multi_002ddimensional-Array-Format">Multi-dimensional Array Format</a>.  This is just a
+bookkeeping difference, with no effect on performance.  The only
+consequence of this is that, whenever you create an FFTW plan for a
+multi-dimensional transform, you must always <em>reverse the
+ordering of the dimensions</em>.
+
+   <p>For example, consider the three-dimensional (L&nbsp;&times;&nbsp;M&nbsp;&times;&nbsp;N) arrays:
+
+<pre class="example">       complex(C_DOUBLE_COMPLEX), dimension(L,M,N) :: in, out
+</pre>
+   <p>To plan a DFT for these arrays using <code>fftw_plan_dft_3d</code>, you could do:
+
+   <p><a name="index-fftw_005fplan_005fdft_005f3d-519"></a>
+<pre class="example">       plan = fftw_plan_dft_3d(N,M,L, in,out, FFTW_FORWARD,FFTW_ESTIMATE)
+</pre>
+   <p>That is, from FFTW's perspective this is a N&nbsp;&times;&nbsp;M&nbsp;&times;&nbsp;L array. 
+<em>No data transposition need occur</em>, as this is <em>only
+notation</em>.  Similarly, to use the more generic routine
+<code>fftw_plan_dft</code> with the same arrays, you could do:
+
+<pre class="example">       integer(C_INT), dimension(3) :: n = [N,M,L]
+       plan = fftw_plan_dft_3d(3, n, in,out, FFTW_FORWARD,FFTW_ESTIMATE)
+</pre>
+   <p>Note, by the way, that this is different from the legacy Fortran
+interface (see <a href="Fortran_002dinterface-routines.html#Fortran_002dinterface-routines">Fortran-interface routines</a>), which automatically
+reverses the order of the array dimension for you.  Here, you are
+calling the C interface directly, so there is no &ldquo;translation&rdquo; layer.
+
+   <p><a name="index-r2c_002fc2r-multi_002ddimensional-array-format-520"></a>An important thing to keep in mind is the implication of this for
+multidimensional real-to-complex transforms (see <a href="Multi_002dDimensional-DFTs-of-Real-Data.html#Multi_002dDimensional-DFTs-of-Real-Data">Multi-Dimensional DFTs of Real Data</a>).  In C, a multidimensional real-to-complex DFT
+chops the last dimension roughly in half (N&nbsp;&times;&nbsp;M&nbsp;&times;&nbsp;L real input
+goes to N&nbsp;&times;&nbsp;M&nbsp;&times;&nbsp;L/2+1 complex output).  In Fortran, because
+the array dimension notation is reversed, the <em>first</em> dimension of
+the complex data is chopped roughly in half.  For example consider the
+&lsquo;<samp><span class="samp">r2c</span></samp>&rsquo; transform of L&nbsp;&times;&nbsp;M&nbsp;&times;&nbsp;N real input in Fortran:
+
+   <p><a name="index-fftw_005fplan_005fdft_005fr2c_005f3d-521"></a><a name="index-fftw_005fexecute_005fdft_005fr2c-522"></a>
+<pre class="example">       type(C_PTR) :: plan
+       real(C_DOUBLE), dimension(L,M,N) :: in
+       complex(C_DOUBLE_COMPLEX), dimension(L/2+1,M,N) :: out
+       plan = fftw_plan_dft_r2c_3d(N,M,L, in,out, FFTW_ESTIMATE)
+       ...
+       call fftw_execute_dft_r2c(plan, in, out)
+</pre>
+   <p><a name="index-in_002dplace-523"></a><a name="index-padding-524"></a>Alternatively, for an in-place r2c transform, as described in the C
+documentation we must <em>pad</em> the <em>first</em> dimension of the
+real input with an extra two entries (which are ignored by FFTW) so as
+to leave enough space for the complex output. The input is
+<em>allocated</em> as a 2[L/2+1]&nbsp;&times;&nbsp;M&nbsp;&times;&nbsp;N array, even though only
+L&nbsp;&times;&nbsp;M&nbsp;&times;&nbsp;N of it is actually used.  In this example, we will
+allocate the array as a pointer type, using &lsquo;<samp><span class="samp">fftw_alloc</span></samp>&rsquo; to
+ensure aligned memory for maximum performance (see <a href="Allocating-aligned-memory-in-Fortran.html#Allocating-aligned-memory-in-Fortran">Allocating aligned memory in Fortran</a>); this also makes it easy to reference the
+same memory as both a real array and a complex array.
+
+   <p><a name="index-fftw_005falloc_005fcomplex-525"></a><a name="index-c_005ff_005fpointer-526"></a>
+<pre class="example">       real(C_DOUBLE), pointer :: in(:,:,:)
+       complex(C_DOUBLE_COMPLEX), pointer :: out(:,:,:)
+       type(C_PTR) :: plan, data
+       data = fftw_alloc_complex(int((L/2+1) * M * N, C_SIZE_T))
+       call c_f_pointer(data, in, [2*(L/2+1),M,N])
+       call c_f_pointer(data, out, [L/2+1,M,N])
+       plan = fftw_plan_dft_r2c_3d(N,M,L, in,out, FFTW_ESTIMATE)
+       ...
+       call fftw_execute_dft_r2c(plan, in, out)
+       ...
+       call fftw_destroy_plan(plan)
+       call fftw_free(data)
+</pre>
+   <!--  -->
+   </body></html>
+

@@ -1,0 +1,101 @@
+<html lang="en">
+<head>
+<title>Wisdom Import - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Wisdom.html#Wisdom" title="Wisdom">
+<link rel="prev" href="Wisdom-Export.html#Wisdom-Export" title="Wisdom Export">
+<link rel="next" href="Forgetting-Wisdom.html#Forgetting-Wisdom" title="Forgetting Wisdom">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Wisdom-Import"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Forgetting-Wisdom.html#Forgetting-Wisdom">Forgetting Wisdom</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Wisdom-Export.html#Wisdom-Export">Wisdom Export</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Wisdom.html#Wisdom">Wisdom</a>
+<hr>
+</div>
+
+<h4 class="subsection">4.7.2 Wisdom Import</h4>
+
+<pre class="example">     int fftw_import_system_wisdom(void);
+     int fftw_import_wisdom_from_filename(const char *filename);
+     int fftw_import_wisdom_from_string(const char *input_string);
+     int fftw_import_wisdom(int (*read_char)(void *), void *data);
+</pre>
+   <p><a name="index-fftw_005fimport_005fwisdom-282"></a><a name="index-fftw_005fimport_005fsystem_005fwisdom-283"></a><a name="index-fftw_005fimport_005fwisdom_005ffrom_005ffilename-284"></a><a name="index-fftw_005fimport_005fwisdom_005ffrom_005ffile-285"></a><a name="index-fftw_005fimport_005fwisdom_005ffrom_005fstring-286"></a>
+These functions import wisdom into a program from data stored by the
+<code>fftw_export_wisdom</code> functions above. (See <a href="Words-of-Wisdom_002dSaving-Plans.html#Words-of-Wisdom_002dSaving-Plans">Words of Wisdom-Saving Plans</a>.)  The imported wisdom replaces any wisdom
+already accumulated by the running program.
+
+   <p><code>fftw_import_wisdom</code> imports wisdom from any input medium, as
+specified by the callback function <code>read_char</code>. <code>read_char</code> is
+a <code>getc</code>-like function that returns the next character in the
+input; its parameter is the <code>data</code> pointer passed to
+<code>fftw_import_wisdom</code>. If the end of the input data is reached
+(which should never happen for valid data), <code>read_char</code> should
+return <code>EOF</code> (as defined in <code>&lt;stdio.h&gt;</code>).  For convenience,
+the following three &ldquo;wrapper&rdquo; routines are provided:
+
+   <p><code>fftw_import_wisdom_from_filename</code> reads wisdom from a file named
+<code>filename</code>.  A lower-level function, which requires you to open
+and close the file yourself (e.g. if you want to read wisdom from a
+portion of a larger file) is <code>fftw_import_wisdom_from_file</code>. This
+reads wisdom from the current position in <code>input_file</code> (which
+should be open with read permission); upon exit, the file remains
+open, but the position of the read pointer is unspecified.
+
+   <p><code>fftw_import_wisdom_from_string</code> reads wisdom from the
+<code>NULL</code>-terminated string <code>input_string</code>.
+
+   <p><code>fftw_import_system_wisdom</code> reads wisdom from an
+implementation-defined standard file (<code>/etc/fftw/wisdom</code> on Unix
+and GNU systems). 
+<a name="index-wisdom_002c-system_002dwide-287"></a>
+
+   <p>The return value of these import routines is <code>1</code> if the wisdom was
+read successfully and <code>0</code> otherwise. Note that, in all of these
+functions, any data in the input stream past the end of the wisdom data
+is simply ignored.
+
+<!-- =========> -->
+   </body></html>
+

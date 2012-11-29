@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+<title>MPI Wisdom Communication - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="FFTW-MPI-Reference.html#FFTW-MPI-Reference" title="FFTW MPI Reference">
+<link rel="prev" href="MPI-Plan-Creation.html#MPI-Plan-Creation" title="MPI Plan Creation">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="MPI-Wisdom-Communication"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="MPI-Plan-Creation.html#MPI-Plan-Creation">MPI Plan Creation</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="FFTW-MPI-Reference.html#FFTW-MPI-Reference">FFTW MPI Reference</a>
+<hr>
+</div>
+
+<h4 class="subsection">6.12.6 MPI Wisdom Communication</h4>
+
+<p>To facilitate synchronizing wisdom among the different MPI processes,
+we provide two functions:
+
+   <p><a name="index-fftw_005fmpi_005fgather_005fwisdom-492"></a><a name="index-fftw_005fmpi_005fbroadcast_005fwisdom-493"></a>
+<pre class="example">     void fftw_mpi_gather_wisdom(MPI_Comm comm);
+     void fftw_mpi_broadcast_wisdom(MPI_Comm comm);
+</pre>
+   <p>The <code>fftw_mpi_gather_wisdom</code> function gathers all wisdom in the
+given communicator <code>comm</code> to the process of rank 0 in the
+communicator: that process obtains the union of all wisdom on all the
+processes.  As a side effect, some other processes will gain
+additional wisdom from other processes, but only process 0 will gain
+the complete union.
+
+   <p>The <code>fftw_mpi_broadcast_wisdom</code> does the reverse: it exports
+wisdom from process 0 in <code>comm</code> to all other processes in the
+communicator, replacing any wisdom they currently have.
+
+   <p>See <a href="FFTW-MPI-Wisdom.html#FFTW-MPI-Wisdom">FFTW MPI Wisdom</a>.
+
+<!--  -->
+   </body></html>
+

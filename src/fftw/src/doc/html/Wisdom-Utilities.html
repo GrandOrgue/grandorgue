@@ -1,0 +1,83 @@
+<html lang="en">
+<head>
+<title>Wisdom Utilities - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Wisdom.html#Wisdom" title="Wisdom">
+<link rel="prev" href="Forgetting-Wisdom.html#Forgetting-Wisdom" title="Forgetting Wisdom">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Wisdom-Utilities"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Forgetting-Wisdom.html#Forgetting-Wisdom">Forgetting Wisdom</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Wisdom.html#Wisdom">Wisdom</a>
+<hr>
+</div>
+
+<h4 class="subsection">4.7.4 Wisdom Utilities</h4>
+
+<p>FFTW includes two standalone utility programs that deal with wisdom.  We
+merely summarize them here, since they come with their own <code>man</code>
+pages for Unix and GNU systems (with HTML versions on our web site).
+
+   <p>The first program is <code>fftw-wisdom</code> (or <code>fftwf-wisdom</code> in
+single precision, etcetera), which can be used to create a wisdom file
+containing plans for any of the transform sizes and types supported by
+FFTW.  It is preferable to create wisdom directly from your executable
+(see <a href="Caveats-in-Using-Wisdom.html#Caveats-in-Using-Wisdom">Caveats in Using Wisdom</a>), but this program is useful for
+creating global wisdom files for <code>fftw_import_system_wisdom</code>. 
+<a name="index-fftw_002dwisdom-utility-289"></a>
+
+   <p>The second program is <code>fftw-wisdom-to-conf</code>, which takes a wisdom
+file as input and produces a <dfn>configuration routine</dfn> as output.  The
+latter is a C subroutine that you can compile and link into your
+program, replacing a routine of the same name in the FFTW library, that
+determines which parts of FFTW are callable by your program. 
+<code>fftw-wisdom-to-conf</code> produces a configuration routine that links
+to only those parts of FFTW needed by the saved plans in the wisdom,
+greatly reducing the size of statically linked executables (which should
+only attempt to create plans corresponding to those in the wisdom,
+however). 
+<a name="index-fftw_002dwisdom_002dto_002dconf-utility-290"></a><a name="index-configuration-routines-291"></a>
+<!--  -->
+
+   </body></html>
+

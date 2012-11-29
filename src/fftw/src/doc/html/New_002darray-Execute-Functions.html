@@ -1,0 +1,152 @@
+<html lang="en">
+<head>
+<title>New-array Execute Functions - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="FFTW-Reference.html#FFTW-Reference" title="FFTW Reference">
+<link rel="prev" href="Guru-Interface.html#Guru-Interface" title="Guru Interface">
+<link rel="next" href="Wisdom.html#Wisdom" title="Wisdom">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="New-array-Execute-Functions"></a>
+<a name="New_002darray-Execute-Functions"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Wisdom.html#Wisdom">Wisdom</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Guru-Interface.html#Guru-Interface">Guru Interface</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="FFTW-Reference.html#FFTW-Reference">FFTW Reference</a>
+<hr>
+</div>
+
+<h3 class="section">4.6 New-array Execute Functions</h3>
+
+<p><a name="index-execute-264"></a><a name="index-new_002darray-execution-265"></a>
+Normally, one executes a plan for the arrays with which the plan was
+created, by calling <code>fftw_execute(plan)</code> as described in <a href="Using-Plans.html#Using-Plans">Using Plans</a>. 
+<a name="index-fftw_005fexecute-266"></a>However, it is possible for sophisticated users to apply a given plan
+to a <em>different</em> array using the &ldquo;new-array execute&rdquo; functions
+detailed below, provided that the following conditions are met:
+
+     <ul>
+<li>The array size, strides, etcetera are the same (since those are set by
+the plan).
+
+     <li>The input and output arrays are the same (in-place) or different
+(out-of-place) if the plan was originally created to be in-place or
+out-of-place, respectively.
+
+     <li>For split arrays, the separations between the real and imaginary
+parts, <code>ii-ri</code> and <code>io-ro</code>, are the same as they were for
+the input and output arrays when the plan was created.  (This
+condition is automatically satisfied for interleaved arrays.)
+
+     <li>The <dfn>alignment</dfn> of the new input/output arrays is the same as that
+of the input/output arrays when the plan was created, unless the plan
+was created with the <code>FFTW_UNALIGNED</code> flag. 
+<a name="index-FFTW_005fUNALIGNED-267"></a>Here, the alignment is a platform-dependent quantity (for example, it is
+the address modulo 16 if SSE SIMD instructions are used, but the address
+modulo 4 for non-SIMD single-precision FFTW on the same machine).  In
+general, only arrays allocated with <code>fftw_malloc</code> are guaranteed to
+be equally aligned (see <a href="SIMD-alignment-and-fftw_005fmalloc.html#SIMD-alignment-and-fftw_005fmalloc">SIMD alignment and fftw_malloc</a>).
+
+   </ul>
+
+   <p><a name="index-alignment-268"></a>The alignment issue is especially critical, because if you don't use
+<code>fftw_malloc</code> then you may have little control over the alignment
+of arrays in memory.  For example, neither the C++ <code>new</code> function
+nor the Fortran <code>allocate</code> statement provide strong enough
+guarantees about data alignment.  If you don't use <code>fftw_malloc</code>,
+therefore, you probably have to use <code>FFTW_UNALIGNED</code> (which
+disables most SIMD support).  If possible, it is probably better for
+you to simply create multiple plans (creating a new plan is quick once
+one exists for a given size), or better yet re-use the same array for
+your transforms.
+
+   <p>If you are tempted to use the new-array execute interface because you
+want to transform a known bunch of arrays of the same size, you should
+probably go use the advanced interface instead (see <a href="Advanced-Interface.html#Advanced-Interface">Advanced Interface</a>)).
+
+   <p>The new-array execute functions are:
+
+<pre class="example">     void fftw_execute_dft(
+          const fftw_plan p,
+          fftw_complex *in, fftw_complex *out);
+     
+     void fftw_execute_split_dft(
+          const fftw_plan p,
+          double *ri, double *ii, double *ro, double *io);
+     
+     void fftw_execute_dft_r2c(
+          const fftw_plan p,
+          double *in, fftw_complex *out);
+     
+     void fftw_execute_split_dft_r2c(
+          const fftw_plan p,
+          double *in, double *ro, double *io);
+     
+     void fftw_execute_dft_c2r(
+          const fftw_plan p,
+          fftw_complex *in, double *out);
+     
+     void fftw_execute_split_dft_c2r(
+          const fftw_plan p,
+          double *ri, double *ii, double *out);
+     
+     void fftw_execute_r2r(
+          const fftw_plan p,
+          double *in, double *out);
+</pre>
+   <p><a name="index-fftw_005fexecute_005fdft-269"></a><a name="index-fftw_005fexecute_005fsplit_005fdft-270"></a><a name="index-fftw_005fexecute_005fdft_005fr2c-271"></a><a name="index-fftw_005fexecute_005fsplit_005fdft_005fr2c-272"></a><a name="index-fftw_005fexecute_005fdft_005fc2r-273"></a><a name="index-fftw_005fexecute_005fsplit_005fdft_005fc2r-274"></a><a name="index-fftw_005fexecute_005fr2r-275"></a>
+These execute the <code>plan</code> to compute the corresponding transform on
+the input/output arrays specified by the subsequent arguments.  The
+input/output array arguments have the same meanings as the ones passed
+to the guru planner routines in the preceding sections.  The <code>plan</code>
+is not modified, and these routines can be called as many times as
+desired, or intermixed with calls to the ordinary <code>fftw_execute</code>.
+
+   <p>The <code>plan</code> <em>must</em> have been created for the transform type
+corresponding to the execute function, e.g. it must be a complex-DFT
+plan for <code>fftw_execute_dft</code>.  Any of the planner routines for that
+transform type, from the basic to the guru interface, could have been
+used to create the plan, however.
+
+<!--  -->
+   </body></html>
+

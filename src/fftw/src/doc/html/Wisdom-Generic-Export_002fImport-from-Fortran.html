@@ -1,0 +1,112 @@
+<html lang="en">
+<head>
+<title>Wisdom Generic Export/Import from Fortran - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Accessing-the-wisdom-API-from-Fortran.html#Accessing-the-wisdom-API-from-Fortran" title="Accessing the wisdom API from Fortran">
+<link rel="prev" href="Wisdom-String-Export_002fImport-from-Fortran.html#Wisdom-String-Export_002fImport-from-Fortran" title="Wisdom String Export/Import from Fortran">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Wisdom-Generic-Export%2fImport-from-Fortran"></a>
+<a name="Wisdom-Generic-Export_002fImport-from-Fortran"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Wisdom-String-Export_002fImport-from-Fortran.html#Wisdom-String-Export_002fImport-from-Fortran">Wisdom String Export/Import from Fortran</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Accessing-the-wisdom-API-from-Fortran.html#Accessing-the-wisdom-API-from-Fortran">Accessing the wisdom API from Fortran</a>
+<hr>
+</div>
+
+<h4 class="subsection">7.6.3 Wisdom Generic Export/Import from Fortran</h4>
+
+<p>The most generic wisdom export/import functions allow you to provide
+an arbitrary callback function to read/write one character at a time
+in any way you want.  However, your callback function must be written
+in a special way, using the <code>bind(C)</code> attribute to be passed to a
+C interface.
+
+   <p><a name="index-fftw_005fexport_005fwisdom-572"></a>In particular, to call the generic wisdom export function
+<code>fftw_export_wisdom</code>, you would write a callback subroutine of the form:
+
+<pre class="example">       subroutine my_write_char(c, p) bind(C)
+         use, intrinsic :: iso_c_binding
+         character(C_CHAR), value :: c
+         type(C_PTR), value :: p
+         <em>...write c...</em>
+       end subroutine my_write_char
+</pre>
+   <p>Given such a subroutine (along with the corresponding interface definition), you could then export wisdom using:
+
+   <p><a name="index-c_005ffunloc-573"></a>
+<pre class="example">       call fftw_export_wisdom(c_funloc(my_write_char), p)
+</pre>
+   <p><a name="index-c_005floc-574"></a><a name="index-c_005ff_005fpointer-575"></a>The standard <code>c_funloc</code> intrinsic converts a Fortran
+<code>bind(C)</code> subroutine into a C function pointer.  The parameter
+<code>p</code> is a <code>type(C_PTR)</code> to any arbitrary data that you want
+to pass to <code>my_write_char</code> (or <code>C_NULL_PTR</code> if none).  (Note
+that you can get a C pointer to Fortran data using the intrinsic
+<code>c_loc</code>, and convert it back to a Fortran pointer in
+<code>my_write_char</code> using <code>c_f_pointer</code>.)
+
+   <p>Similarly, to use the generic <code>fftw_import_wisdom</code>, you would
+define a callback function of the form:
+
+   <p><a name="index-fftw_005fimport_005fwisdom-576"></a>
+<pre class="example">       integer(C_INT) function my_read_char(p) bind(C)
+         use, intrinsic :: iso_c_binding
+         type(C_PTR), value :: p
+         character :: c
+         <em>...read a character c...</em>
+         my_read_char = ichar(c, C_INT)
+       end function my_read_char
+     
+       ....
+     
+       integer(C_INT) :: ret
+       ret = fftw_import_wisdom(c_funloc(my_read_char), p)
+       if (ret .eq. 0) stop 'error importing wisdom'
+</pre>
+   <p>Your function can return <code>-1</code> if the end of the input is reached. 
+Again, <code>p</code> is an arbitrary <code>type(C_PTR</code> that is passed
+through to your function.  <code>fftw_import_wisdom</code> returns <code>0</code>
+if an error occurred and nonzero otherwise.
+
+<!--  -->
+   </body></html>
+

@@ -1,0 +1,135 @@
+<html lang="en">
+<head>
+<title>Combining MPI and Threads - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Distributed_002dmemory-FFTW-with-MPI.html#Distributed_002dmemory-FFTW-with-MPI" title="Distributed-memory FFTW with MPI">
+<link rel="prev" href="FFTW-MPI-Performance-Tips.html#FFTW-MPI-Performance-Tips" title="FFTW MPI Performance Tips">
+<link rel="next" href="FFTW-MPI-Reference.html#FFTW-MPI-Reference" title="FFTW MPI Reference">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Combining-MPI-and-Threads"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="FFTW-MPI-Reference.html#FFTW-MPI-Reference">FFTW MPI Reference</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="FFTW-MPI-Performance-Tips.html#FFTW-MPI-Performance-Tips">FFTW MPI Performance Tips</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Distributed_002dmemory-FFTW-with-MPI.html#Distributed_002dmemory-FFTW-with-MPI">Distributed-memory FFTW with MPI</a>
+<hr>
+</div>
+
+<h3 class="section">6.11 Combining MPI and Threads</h3>
+
+<p><a name="index-threads-427"></a>
+In certain cases, it may be advantageous to combine MPI
+(distributed-memory) and threads (shared-memory) parallelization. 
+FFTW supports this, with certain caveats.  For example, if you have a
+cluster of 4-processor shared-memory nodes, you may want to use
+threads within the nodes and MPI between the nodes, instead of MPI for
+all parallelization.
+
+   <p>In particular, it is possible to seamlessly combine the MPI FFTW
+routines with the multi-threaded FFTW routines (see <a href="Multi_002dthreaded-FFTW.html#Multi_002dthreaded-FFTW">Multi-threaded FFTW</a>). However, some care must be taken in the initialization code,
+which should look something like this:
+
+<pre class="example">     int threads_ok;
+     
+     int main(int argc, char **argv)
+     {
+         int provided;
+         MPI_Init_thread(&amp;argc, &amp;argv, MPI_THREAD_FUNNELED, &amp;provided);
+         threads_ok = provided &gt;= MPI_THREAD_FUNNELED;
+     
+         if (threads_ok) threads_ok = fftw_init_threads();
+         fftw_mpi_init();
+     
+         ...
+         if (threads_ok) fftw_plan_with_nthreads(...);
+         ...
+     
+         MPI_Finalize();
+     }
+</pre>
+   <p><a name="index-fftw_005fmpi_005finit-428"></a><a name="index-fftw_005finit_005fthreads-429"></a><a name="index-fftw_005fplan_005fwith_005fnthreads-430"></a>
+First, note that instead of calling <code>MPI_Init</code>, you should call
+<code>MPI_Init_threads</code>, which is the initialization routine defined
+by the MPI-2 standard to indicate to MPI that your program will be
+multithreaded.  We pass <code>MPI_THREAD_FUNNELED</code>, which indicates
+that we will only call MPI routines from the main thread.  (FFTW will
+launch additional threads internally, but the extra threads will not
+call MPI code.)  (You may also pass <code>MPI_THREAD_SERIALIZED</code> or
+<code>MPI_THREAD_MULTIPLE</code>, which requests additional multithreading
+support from the MPI implementation, but this is not required by
+FFTW.)  The <code>provided</code> parameter returns what level of threads
+support is actually supported by your MPI implementation; this
+<em>must</em> be at least <code>MPI_THREAD_FUNNELED</code> if you want to call
+the FFTW threads routines, so we define a global variable
+<code>threads_ok</code> to record this.  You should only call
+<code>fftw_init_threads</code> or <code>fftw_plan_with_nthreads</code> if
+<code>threads_ok</code> is true.  For more information on thread safety in
+MPI, see the
+<a href="http://www.mpi-forum.org/docs/mpi-20-html/node162.htm">MPI and Threads</a> section of the MPI-2 standard. 
+<a name="index-thread-safety-431"></a>
+
+   <p>Second, we must call <code>fftw_init_threads</code> <em>before</em>
+<code>fftw_mpi_init</code>.  This is critical for technical reasons having
+to do with how FFTW initializes its list of algorithms.
+
+   <p>Then, if you call <code>fftw_plan_with_nthreads(N)</code>, <em>every</em> MPI
+process will launch (up to) <code>N</code> threads to parallelize its transforms.
+
+   <p>For example, in the hypothetical cluster of 4-processor nodes, you
+might wish to launch only a single MPI process per node, and then call
+<code>fftw_plan_with_nthreads(4)</code> on each process to use all
+processors in the nodes.
+
+   <p>This may or may not be faster than simply using as many MPI processes
+as you have processors, however.  On the one hand, using threads
+within a node eliminates the need for explicit message passing within
+the node.  On the other hand, FFTW's transpose routines are not
+multi-threaded, and this means that the communications that do take
+place will not benefit from parallelization within the node. 
+Moreover, many MPI implementations already have optimizations to
+exploit shared memory when it is available, so adding the
+multithreaded FFTW on top of this may be superfluous. 
+<a name="index-transpose-432"></a>
+<!--  -->
+
+   </body></html>
+

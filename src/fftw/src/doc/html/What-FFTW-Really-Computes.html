@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+<title>What FFTW Really Computes - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="FFTW-Reference.html#FFTW-Reference" title="FFTW Reference">
+<link rel="prev" href="Wisdom.html#Wisdom" title="Wisdom">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="What-FFTW-Really-Computes"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Wisdom.html#Wisdom">Wisdom</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="FFTW-Reference.html#FFTW-Reference">FFTW Reference</a>
+<hr>
+</div>
+
+<h3 class="section">4.8 What FFTW Really Computes</h3>
+
+<p>In this section, we provide precise mathematical definitions for the
+transforms that FFTW computes.  These transform definitions are fairly
+standard, but some authors follow slightly different conventions for the
+normalization of the transform (the constant factor in front) and the
+sign of the complex exponent.  We begin by presenting the
+one-dimensional (1d) transform definitions, and then give the
+straightforward extension to multi-dimensional transforms.
+
+<ul class="menu">
+<li><a accesskey="1" href="The-1d-Discrete-Fourier-Transform-_0028DFT_0029.html#The-1d-Discrete-Fourier-Transform-_0028DFT_0029">The 1d Discrete Fourier Transform (DFT)</a>
+<li><a accesskey="2" href="The-1d-Real_002ddata-DFT.html#The-1d-Real_002ddata-DFT">The 1d Real-data DFT</a>
+<li><a accesskey="3" href="1d-Real_002deven-DFTs-_0028DCTs_0029.html#g_t1d-Real_002deven-DFTs-_0028DCTs_0029">1d Real-even DFTs (DCTs)</a>
+<li><a accesskey="4" href="1d-Real_002dodd-DFTs-_0028DSTs_0029.html#g_t1d-Real_002dodd-DFTs-_0028DSTs_0029">1d Real-odd DFTs (DSTs)</a>
+<li><a accesskey="5" href="1d-Discrete-Hartley-Transforms-_0028DHTs_0029.html#g_t1d-Discrete-Hartley-Transforms-_0028DHTs_0029">1d Discrete Hartley Transforms (DHTs)</a>
+<li><a accesskey="6" href="Multi_002ddimensional-Transforms.html#Multi_002ddimensional-Transforms">Multi-dimensional Transforms</a>
+</ul>
+
+<!-- =========> -->
+   </body></html>
+

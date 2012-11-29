@@ -1,0 +1,106 @@
+<html lang="en">
+<head>
+<title>Wisdom String Export/Import from Fortran - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Accessing-the-wisdom-API-from-Fortran.html#Accessing-the-wisdom-API-from-Fortran" title="Accessing the wisdom API from Fortran">
+<link rel="prev" href="Wisdom-File-Export_002fImport-from-Fortran.html#Wisdom-File-Export_002fImport-from-Fortran" title="Wisdom File Export/Import from Fortran">
+<link rel="next" href="Wisdom-Generic-Export_002fImport-from-Fortran.html#Wisdom-Generic-Export_002fImport-from-Fortran" title="Wisdom Generic Export/Import from Fortran">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Wisdom-String-Export%2fImport-from-Fortran"></a>
+<a name="Wisdom-String-Export_002fImport-from-Fortran"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Wisdom-Generic-Export_002fImport-from-Fortran.html#Wisdom-Generic-Export_002fImport-from-Fortran">Wisdom Generic Export/Import from Fortran</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Wisdom-File-Export_002fImport-from-Fortran.html#Wisdom-File-Export_002fImport-from-Fortran">Wisdom File Export/Import from Fortran</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Accessing-the-wisdom-API-from-Fortran.html#Accessing-the-wisdom-API-from-Fortran">Accessing the wisdom API from Fortran</a>
+<hr>
+</div>
+
+<h4 class="subsection">7.6.2 Wisdom String Export/Import from Fortran</h4>
+
+<p><a name="index-fftw_005fexport_005fwisdom_005fto_005fstring-568"></a>Dealing with FFTW's C string export/import is a bit more painful.  In
+particular, the <code>fftw_export_wisdom_to_string</code> function requires
+you to deal with a dynamically allocated C string.  To get its length,
+you must define an interface to the C <code>strlen</code> function, and to
+deallocate it you must define an interface to C <code>free</code>:
+
+<pre class="example">       use, intrinsic :: iso_c_binding
+       interface
+         integer(C_INT) function strlen(s) bind(C, name='strlen')
+           import
+           type(C_PTR), value :: s
+         end function strlen
+         subroutine free(p) bind(C, name='free')
+           import
+           type(C_PTR), value :: p
+         end subroutine free
+       end interface
+</pre>
+   <p>Given these definitions, you can then export wisdom to a Fortran
+character array:
+
+<pre class="example">       character(C_CHAR), pointer :: s(:)
+       integer(C_SIZE_T) :: slen
+       type(C_PTR) :: p
+       p = fftw_export_wisdom_to_string()
+       if (.not. c_associated(p)) stop 'error exporting wisdom'
+       slen = strlen(p)
+       call c_f_pointer(p, s, [slen+1])
+       ...
+       call free(p)
+</pre>
+   <p><a name="index-c_005fassociated-569"></a><a name="index-c_005ff_005fpointer-570"></a>
+Note that <code>slen</code> is the length of the C string, but the length of
+the array is <code>slen+1</code> because it includes the terminating null
+character.  (You can omit the &lsquo;<samp><span class="samp">+1</span></samp>&rsquo; if you don't want Fortran to
+know about the null character.) The standard <code>c_associated</code> function
+checks whether <code>p</code> is a null pointer, which is returned by
+<code>fftw_export_wisdom_to_string</code> if there was an error.
+
+   <p><a name="index-fftw_005fimport_005fwisdom_005ffrom_005fstring-571"></a>To import wisdom from a string, use
+<code>fftw_import_wisdom_from_string</code> as usual; note that the argument
+of this function must be a <code>character(C_CHAR)</code> that is terminated
+by the <code>C_NULL_CHAR</code> character, like the <code>s</code> array above.
+
+<!-- =========> -->
+   </body></html>
+

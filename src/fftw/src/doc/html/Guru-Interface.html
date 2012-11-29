@@ -1,0 +1,83 @@
+<html lang="en">
+<head>
+<title>Guru Interface - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="FFTW-Reference.html#FFTW-Reference" title="FFTW Reference">
+<link rel="prev" href="Advanced-Interface.html#Advanced-Interface" title="Advanced Interface">
+<link rel="next" href="New_002darray-Execute-Functions.html#New_002darray-Execute-Functions" title="New-array Execute Functions">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Guru-Interface"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="New_002darray-Execute-Functions.html#New_002darray-Execute-Functions">New-array Execute Functions</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Advanced-Interface.html#Advanced-Interface">Advanced Interface</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="FFTW-Reference.html#FFTW-Reference">FFTW Reference</a>
+<hr>
+</div>
+
+<h3 class="section">4.5 Guru Interface</h3>
+
+<p><a name="index-guru-interface-239"></a>
+The &ldquo;guru&rdquo; interface to FFTW is intended to expose as much as possible
+of the flexibility in the underlying FFTW architecture.  It allows one
+to compute multi-dimensional &ldquo;vectors&rdquo; (loops) of multi-dimensional
+transforms, where each vector/transform dimension has an independent
+size and stride. 
+<a name="index-vector-240"></a>One can also use more general complex-number formats, e.g. separate real
+and imaginary arrays.
+
+   <p>For those users who require the flexibility of the guru interface, it is
+important that they pay special attention to the documentation lest they
+shoot themselves in the foot.
+
+<ul class="menu">
+<li><a accesskey="1" href="Interleaved-and-split-arrays.html#Interleaved-and-split-arrays">Interleaved and split arrays</a>
+<li><a accesskey="2" href="Guru-vector-and-transform-sizes.html#Guru-vector-and-transform-sizes">Guru vector and transform sizes</a>
+<li><a accesskey="3" href="Guru-Complex-DFTs.html#Guru-Complex-DFTs">Guru Complex DFTs</a>
+<li><a accesskey="4" href="Guru-Real_002ddata-DFTs.html#Guru-Real_002ddata-DFTs">Guru Real-data DFTs</a>
+<li><a accesskey="5" href="Guru-Real_002dto_002dreal-Transforms.html#Guru-Real_002dto_002dreal-Transforms">Guru Real-to-real Transforms</a>
+<li><a accesskey="6" href="64_002dbit-Guru-Interface.html#g_t64_002dbit-Guru-Interface">64-bit Guru Interface</a>
+</ul>
+
+<!-- =========> -->
+   </body></html>
+

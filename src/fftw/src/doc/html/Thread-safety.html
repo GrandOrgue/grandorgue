@@ -1,0 +1,93 @@
+<html lang="en">
+<head>
+<title>Thread safety - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Multi_002dthreaded-FFTW.html#Multi_002dthreaded-FFTW" title="Multi-threaded FFTW">
+<link rel="prev" href="How-Many-Threads-to-Use_003f.html#How-Many-Threads-to-Use_003f" title="How Many Threads to Use?">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Thread-safety"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="How-Many-Threads-to-Use_003f.html#How-Many-Threads-to-Use_003f">How Many Threads to Use?</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Multi_002dthreaded-FFTW.html#Multi_002dthreaded-FFTW">Multi-threaded FFTW</a>
+<hr>
+</div>
+
+<h3 class="section">5.4 Thread safety</h3>
+
+<p><a name="index-threads-341"></a><a name="index-OpenMP-342"></a><a name="index-thread-safety-343"></a>Users writing multi-threaded programs (including OpenMP) must concern
+themselves with the <dfn>thread safety</dfn> of the libraries they
+use&mdash;that is, whether it is safe to call routines in parallel from
+multiple threads.  FFTW can be used in such an environment, but some
+care must be taken because the planner routines share data
+(e.g. wisdom and trigonometric tables) between calls and plans.
+
+   <p>The upshot is that the only thread-safe (re-entrant) routine in FFTW is
+<code>fftw_execute</code> (and the new-array variants thereof).  All other routines
+(e.g. the planner) should only be called from one thread at a time.  So,
+for example, you can wrap a semaphore lock around any calls to the
+planner; even more simply, you can just create all of your plans from
+one thread.  We do not think this should be an important restriction
+(FFTW is designed for the situation where the only performance-sensitive
+code is the actual execution of the transform), and the benefits of
+shared data between plans are great.
+
+   <p>Note also that, since the plan is not modified by <code>fftw_execute</code>,
+it is safe to execute the <em>same plan</em> in parallel by multiple
+threads.  However, since a given plan operates by default on a fixed
+array, you need to use one of the new-array execute functions (see <a href="New_002darray-Execute-Functions.html#New_002darray-Execute-Functions">New-array Execute Functions</a>) so that different threads compute the transform of different data.
+
+   <p>(Users should note that these comments only apply to programs using
+shared-memory threads or OpenMP.  Parallelism using MPI or forked processes
+involves a separate address-space and global variables for each process,
+and is not susceptible to problems of this sort.)
+
+   <p>If you are configured FFTW with the <code>--enable-debug</code> or
+<code>--enable-debug-malloc</code> flags (see <a href="Installation-on-Unix.html#Installation-on-Unix">Installation on Unix</a>),
+then <code>fftw_execute</code> is not thread-safe.  These flags are not
+documented because they are intended only for developing
+and debugging FFTW, but if you must use <code>--enable-debug</code> then you
+should also specifically pass <code>--disable-debug-malloc</code> for
+<code>fftw_execute</code> to be thread-safe.
+
+   </body></html>
+
