@@ -1,0 +1,87 @@
+<html lang="en">
+<head>
+<title>Guru Real-to-real Transforms - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Guru-Interface.html#Guru-Interface" title="Guru Interface">
+<link rel="prev" href="Guru-Real_002ddata-DFTs.html#Guru-Real_002ddata-DFTs" title="Guru Real-data DFTs">
+<link rel="next" href="64_002dbit-Guru-Interface.html#g_t64_002dbit-Guru-Interface" title="64-bit Guru Interface">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Guru-Real-to-real-Transforms"></a>
+<a name="Guru-Real_002dto_002dreal-Transforms"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="64_002dbit-Guru-Interface.html#g_t64_002dbit-Guru-Interface">64-bit Guru Interface</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Guru-Real_002ddata-DFTs.html#Guru-Real_002ddata-DFTs">Guru Real-data DFTs</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Guru-Interface.html#Guru-Interface">Guru Interface</a>
+<hr>
+</div>
+
+<h4 class="subsection">4.5.5 Guru Real-to-real Transforms</h4>
+
+<pre class="example">     fftw_plan fftw_plan_guru_r2r(int rank, const fftw_iodim *dims,
+                                  int howmany_rank,
+                                  const fftw_iodim *howmany_dims,
+                                  double *in, double *out,
+                                  const fftw_r2r_kind *kind,
+                                  unsigned flags);
+</pre>
+   <p><a name="index-fftw_005fplan_005fguru_005fr2r-258"></a>
+Plan a real-to-real (r2r) multi-dimensional <code>FFTW_FORWARD</code>
+transform with transform dimensions given by (<code>rank</code>, <code>dims</code>)
+over a multi-dimensional vector (loop) of dimensions
+(<code>howmany_rank</code>, <code>howmany_dims</code>).  <code>dims</code> and
+<code>howmany_dims</code> should point to <code>fftw_iodim</code> arrays of length
+<code>rank</code> and <code>howmany_rank</code>, respectively.
+
+   <p>The transform kind of each dimension is given by the <code>kind</code>
+parameter, which should point to an array of length <code>rank</code>.  Valid
+<code>fftw_r2r_kind</code> constants are given in <a href="Real_002dto_002dReal-Transform-Kinds.html#Real_002dto_002dReal-Transform-Kinds">Real-to-Real Transform Kinds</a>.
+
+   <p><code>in</code> and <code>out</code> point to the real input and output arrays; they
+may be the same, indicating an in-place transform.
+
+   <p><a name="index-flags-259"></a><code>flags</code> is a bitwise OR (&lsquo;<samp><span class="samp">|</span></samp>&rsquo;) of zero or more planner flags,
+as defined in <a href="Planner-Flags.html#Planner-Flags">Planner Flags</a>.
+
+<!-- =========> -->
+   </body></html>
+

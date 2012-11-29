@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+<title>Installation and Supported Hardware/Software - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Multi_002dthreaded-FFTW.html#Multi_002dthreaded-FFTW" title="Multi-threaded FFTW">
+<link rel="prev" href="Multi_002dthreaded-FFTW.html#Multi_002dthreaded-FFTW" title="Multi-threaded FFTW">
+<link rel="next" href="Usage-of-Multi_002dthreaded-FFTW.html#Usage-of-Multi_002dthreaded-FFTW" title="Usage of Multi-threaded FFTW">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Installation-and-Supported-Hardware%2fSoftware"></a>
+<a name="Installation-and-Supported-Hardware_002fSoftware"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Usage-of-Multi_002dthreaded-FFTW.html#Usage-of-Multi_002dthreaded-FFTW">Usage of Multi-threaded FFTW</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Multi_002dthreaded-FFTW.html#Multi_002dthreaded-FFTW">Multi-threaded FFTW</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Multi_002dthreaded-FFTW.html#Multi_002dthreaded-FFTW">Multi-threaded FFTW</a>
+<hr>
+</div>
+
+<h3 class="section">5.1 Installation and Supported Hardware/Software</h3>
+
+<p>All of the FFTW threads code is located in the <code>threads</code>
+subdirectory of the FFTW package.  On Unix systems, the FFTW threads
+libraries and header files can be automatically configured, compiled,
+and installed along with the uniprocessor FFTW libraries simply by
+including <code>--enable-threads</code> in the flags to the <code>configure</code>
+script (see <a href="Installation-on-Unix.html#Installation-on-Unix">Installation on Unix</a>), or <code>--enable-openmp</code> to use
+<a href="http://www.openmp.org">OpenMP</a> threads. 
+<a name="index-configure-329"></a>
+
+   <p><a name="index-portability-330"></a><a name="index-OpenMP-331"></a>The threads routines require your operating system to have some sort
+of shared-memory threads support.  Specifically, the FFTW threads
+package works with POSIX threads (available on most Unix variants,
+from GNU/Linux to MacOS X) and Win32 threads.  OpenMP threads, which
+are supported in many common compilers (e.g. gcc) are also supported,
+and may give better performance on some systems.  (OpenMP threads are
+also useful if you are employing OpenMP in your own code, in order to
+minimize conflicts between threading models.)  If you have a
+shared-memory machine that uses a different threads API, it should be
+a simple matter of programming to include support for it; see the file
+<code>threads/threads.c</code> for more detail.
+
+   <p>You can compile FFTW with <em>both</em> <code>--enable-threads</code> and
+<code>--enable-openmp</code> at the same time, since they install libraries
+with different names (&lsquo;<samp><span class="samp">fftw3_threads</span></samp>&rsquo; and &lsquo;<samp><span class="samp">fftw3_omp</span></samp>&rsquo;, as
+described below).  However, your programs may only link to <em>one</em>
+of these two libraries at a time.
+
+   <p>Ideally, of course, you should also have multiple processors in order to
+get any benefit from the threaded transforms.
+
+<!--  -->
+   </body></html>
+

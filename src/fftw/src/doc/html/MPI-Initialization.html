@@ -1,0 +1,83 @@
+<html lang="en">
+<head>
+<title>MPI Initialization - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="FFTW-MPI-Reference.html#FFTW-MPI-Reference" title="FFTW MPI Reference">
+<link rel="prev" href="MPI-Files-and-Data-Types.html#MPI-Files-and-Data-Types" title="MPI Files and Data Types">
+<link rel="next" href="Using-MPI-Plans.html#Using-MPI-Plans" title="Using MPI Plans">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="MPI-Initialization"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Using-MPI-Plans.html#Using-MPI-Plans">Using MPI Plans</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="MPI-Files-and-Data-Types.html#MPI-Files-and-Data-Types">MPI Files and Data Types</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="FFTW-MPI-Reference.html#FFTW-MPI-Reference">FFTW MPI Reference</a>
+<hr>
+</div>
+
+<h4 class="subsection">6.12.2 MPI Initialization</h4>
+
+<p>Before calling any other FFTW MPI (&lsquo;<samp><span class="samp">fftw_mpi_</span></samp>&rsquo;) function, and
+before importing any wisdom for MPI problems, you must call:
+
+   <p><a name="index-fftw_005fmpi_005finit-434"></a>
+<pre class="example">     void fftw_mpi_init(void);
+</pre>
+   <p><a name="index-fftw_005finit_005fthreads-435"></a>If FFTW threads support is used, however, <code>fftw_mpi_init</code> should
+be called <em>after</em> <code>fftw_init_threads</code> (see <a href="Combining-MPI-and-Threads.html#Combining-MPI-and-Threads">Combining MPI and Threads</a>).  Calling <code>fftw_mpi_init</code> additional times (before
+<code>fftw_mpi_cleanup</code>) has no effect.
+
+   <p>If you want to deallocate all persistent data and reset FFTW to the
+pristine state it was in when you started your program, you can call:
+
+   <p><a name="index-fftw_005fmpi_005fcleanup-436"></a>
+<pre class="example">     void fftw_mpi_cleanup(void);
+</pre>
+   <p><a name="index-fftw_005fcleanup-437"></a>(This calls <code>fftw_cleanup</code>, so you need not call the serial
+cleanup routine too, although it is safe to do so.)  After calling
+<code>fftw_mpi_cleanup</code>, all existing plans become undefined, and you
+should not attempt to execute or destroy them.  You must call
+<code>fftw_mpi_init</code> again after <code>fftw_mpi_cleanup</code> if you want
+to resume using the MPI FFTW routines.
+
+   </body></html>
+

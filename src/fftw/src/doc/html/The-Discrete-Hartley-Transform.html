@@ -1,0 +1,104 @@
+<html lang="en">
+<head>
+<title>The Discrete Hartley Transform - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="More-DFTs-of-Real-Data.html#More-DFTs-of-Real-Data" title="More DFTs of Real Data">
+<link rel="prev" href="Real-even_002fodd-DFTs-_0028cosine_002fsine-transforms_0029.html#Real-even_002fodd-DFTs-_0028cosine_002fsine-transforms_0029" title="Real even/odd DFTs (cosine/sine transforms)">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="The-Discrete-Hartley-Transform"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Real-even_002fodd-DFTs-_0028cosine_002fsine-transforms_0029.html#Real-even_002fodd-DFTs-_0028cosine_002fsine-transforms_0029">Real even/odd DFTs (cosine/sine transforms)</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="More-DFTs-of-Real-Data.html#More-DFTs-of-Real-Data">More DFTs of Real Data</a>
+<hr>
+</div>
+
+<h4 class="subsection">2.5.3 The Discrete Hartley Transform</h4>
+
+<p>If you are planning to use the DHT because you've heard that it is
+&ldquo;faster&rdquo; than the DFT (FFT), <strong>stop here</strong>.  The DHT is not
+faster than the DFT.  That story is an old but enduring misconception
+that was debunked in 1987.
+
+   <p>The discrete Hartley transform (DHT) is an invertible linear transform
+closely related to the DFT.  In the DFT, one multiplies each input by
+cos - i * sin (a complex exponential), whereas in the DHT each
+input is multiplied by simply cos + sin.  Thus, the DHT
+transforms <code>n</code> real numbers to <code>n</code> real numbers, and has the
+convenient property of being its own inverse.  In FFTW, a DHT (of any
+positive <code>n</code>) can be specified by an r2r kind of <code>FFTW_DHT</code>. 
+<a name="index-FFTW_005fDHT-98"></a><a name="index-discrete-Hartley-transform-99"></a><a name="index-DHT-100"></a>
+Like the DFT, in FFTW the DHT is unnormalized, so computing a DHT of
+size <code>n</code> followed by another DHT of the same size will result in
+the original array multiplied by <code>n</code>. 
+<a name="index-normalization-101"></a>
+The DHT was originally proposed as a more efficient alternative to the
+DFT for real data, but it was subsequently shown that a specialized DFT
+(such as FFTW's r2hc or r2c transforms) could be just as fast.  In FFTW,
+the DHT is actually computed by post-processing an r2hc transform, so
+there is ordinarily no reason to prefer it from a performance
+perspective.<a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>
+However, we have heard rumors that the DHT might be the most appropriate
+transform in its own right for certain applications, and we would be
+very interested to hear from anyone who finds it useful.
+
+   <p>If <code>FFTW_DHT</code> is specified for multiple dimensions of a
+multi-dimensional transform, FFTW computes the separable product of 1d
+DHTs along each dimension.  Unfortunately, this is not quite the same
+thing as a true multi-dimensional DHT; you can compute the latter, if
+necessary, with at most <code>rank-1</code> post-processing passes
+[see e.g. H. Hao and R. N. Bracewell, <i>Proc. IEEE</i> <b>75</b>, 264&ndash;266 (1987)].
+
+   <p>For the precise mathematical definition of the DHT as used by FFTW, see
+<a href="What-FFTW-Really-Computes.html#What-FFTW-Really-Computes">What FFTW Really Computes</a>.
+
+   <div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> We provide the DHT mainly as a byproduct of some
+internal algorithms. FFTW computes a real input/output DFT of
+<em>prime</em> size by re-expressing it as a DHT plus post/pre-processing
+and then using Rader's prime-DFT algorithm adapted to the DHT.</p>
+
+   <hr></div>
+
+   </body></html>
+

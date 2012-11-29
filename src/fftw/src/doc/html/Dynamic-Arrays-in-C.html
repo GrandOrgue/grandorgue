@@ -1,0 +1,91 @@
+<html lang="en">
+<head>
+<title>Dynamic Arrays in C - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Multi_002ddimensional-Array-Format.html#Multi_002ddimensional-Array-Format" title="Multi-dimensional Array Format">
+<link rel="prev" href="Fixed_002dsize-Arrays-in-C.html#Fixed_002dsize-Arrays-in-C" title="Fixed-size Arrays in C">
+<link rel="next" href="Dynamic-Arrays-in-C_002dThe-Wrong-Way.html#Dynamic-Arrays-in-C_002dThe-Wrong-Way" title="Dynamic Arrays in C-The Wrong Way">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Dynamic-Arrays-in-C"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Dynamic-Arrays-in-C_002dThe-Wrong-Way.html#Dynamic-Arrays-in-C_002dThe-Wrong-Way">Dynamic Arrays in C-The Wrong Way</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Fixed_002dsize-Arrays-in-C.html#Fixed_002dsize-Arrays-in-C">Fixed-size Arrays in C</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Multi_002ddimensional-Array-Format.html#Multi_002ddimensional-Array-Format">Multi-dimensional Array Format</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.2.4 Dynamic Arrays in C</h4>
+
+<p>We recommend allocating most arrays dynamically, with
+<code>fftw_malloc</code>.  This isn't too hard to do, although it is not as
+straightforward for multi-dimensional arrays as it is for
+one-dimensional arrays.
+
+   <p>Creating the array is simple: using a dynamic-allocation routine like
+<code>fftw_malloc</code>, allocate an array big enough to store N
+<code>fftw_complex</code> values (for a complex DFT), where N is the product
+of the sizes of the array dimensions (i.e. the total number of complex
+values in the array).  For example, here is code to allocate a
+5&nbsp;&times;&nbsp;12&nbsp;&times;&nbsp;27 rank-3 array:
+<a name="index-fftw_005fmalloc-121"></a>
+<pre class="example">     fftw_complex *an_array;
+     an_array = (fftw_complex*) fftw_malloc(5*12*27 * sizeof(fftw_complex));
+</pre>
+   <p>Accessing the array elements, however, is more tricky&mdash;you can't
+simply use multiple applications of the &lsquo;<samp><span class="samp">[]</span></samp>&rsquo; operator like you
+could for fixed-size arrays.  Instead, you have to explicitly compute
+the offset into the array using the formula given earlier for
+row-major arrays.  For example, to reference the (i,j,k)-th
+element of the array allocated above, you would use the expression
+<code>an_array[k + 27 * (j + 12 * i)]</code>.
+
+   <p>This pain can be alleviated somewhat by defining appropriate macros,
+or, in C++, creating a class and overloading the &lsquo;<samp><span class="samp">()</span></samp>&rsquo; operator. 
+The recent C99 standard provides a way to reinterpret the dynamic
+array as a &ldquo;variable-length&rdquo; multi-dimensional array amenable to
+&lsquo;<samp><span class="samp">[]</span></samp>&rsquo;, but this feature is not yet widely supported by compilers. 
+<a name="index-C99-122"></a><a name="index-C_002b_002b-123"></a>
+<!-- =========> -->
+
+   </body></html>
+

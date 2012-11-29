@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+<title>Calling FFTW from Legacy Fortran - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Calling-FFTW-from-Modern-Fortran.html#Calling-FFTW-from-Modern-Fortran" title="Calling FFTW from Modern Fortran">
+<link rel="next" href="Upgrading-from-FFTW-version-2.html#Upgrading-from-FFTW-version-2" title="Upgrading from FFTW version 2">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Calling-FFTW-from-Legacy-Fortran"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Upgrading-from-FFTW-version-2.html#Upgrading-from-FFTW-version-2">Upgrading from FFTW version 2</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Calling-FFTW-from-Modern-Fortran.html#Calling-FFTW-from-Modern-Fortran">Calling FFTW from Modern Fortran</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<h2 class="chapter">8 Calling FFTW from Legacy Fortran</h2>
+
+<p><a name="index-Fortran-interface-577"></a>
+This chapter describes the interface to FFTW callable by Fortran code
+in older compilers not supporting the Fortran 2003 C interoperability
+features (see <a href="Calling-FFTW-from-Modern-Fortran.html#Calling-FFTW-from-Modern-Fortran">Calling FFTW from Modern Fortran</a>).  This interface
+has the major disadvantage that it is not type-checked, so if you
+mistake the argument types or ordering then your program will not have
+any compiler errors, and will likely crash at runtime.  So, greater
+care is needed.  Also, technically interfacing older Fortran versions
+to C is nonstandard, but in practice we have found that the techniques
+used in this chapter have worked with all known Fortran compilers for
+many years.
+
+   <p>The legacy Fortran interface differs from the C interface only in the
+prefix (&lsquo;<samp><span class="samp">dfftw_</span></samp>&rsquo; instead of &lsquo;<samp><span class="samp">fftw_</span></samp>&rsquo; in double precision) and
+a few other minor details.  This Fortran interface is included in the
+FFTW libraries by default, unless a Fortran compiler isn't found on
+your system or <code>--disable-fortran</code> is included in the
+<code>configure</code> flags.  We assume here that the reader is already
+familiar with the usage of FFTW in C, as described elsewhere in this
+manual.
+
+   <p>The MPI parallel interface to FFTW is <em>not</em> currently available
+to legacy Fortran.
+
+<ul class="menu">
+<li><a accesskey="1" href="Fortran_002dinterface-routines.html#Fortran_002dinterface-routines">Fortran-interface routines</a>
+<li><a accesskey="2" href="FFTW-Constants-in-Fortran.html#FFTW-Constants-in-Fortran">FFTW Constants in Fortran</a>
+<li><a accesskey="3" href="FFTW-Execution-in-Fortran.html#FFTW-Execution-in-Fortran">FFTW Execution in Fortran</a>
+<li><a accesskey="4" href="Fortran-Examples.html#Fortran-Examples">Fortran Examples</a>
+<li><a accesskey="5" href="Wisdom-of-Fortran_003f.html#Wisdom-of-Fortran_003f">Wisdom of Fortran?</a>
+</ul>
+
+<!--  -->
+   </body></html>
+

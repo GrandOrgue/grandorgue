@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+<title>Installation on non-Unix systems - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Installation-and-Customization.html#Installation-and-Customization" title="Installation and Customization">
+<link rel="prev" href="Installation-on-Unix.html#Installation-on-Unix" title="Installation on Unix">
+<link rel="next" href="Cycle-Counters.html#Cycle-Counters" title="Cycle Counters">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Installation-on-non-Unix-systems"></a>
+<a name="Installation-on-non_002dUnix-systems"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Cycle-Counters.html#Cycle-Counters">Cycle Counters</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Installation-on-Unix.html#Installation-on-Unix">Installation on Unix</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Installation-and-Customization.html#Installation-and-Customization">Installation and Customization</a>
+<hr>
+</div>
+
+<h3 class="section">10.2 Installation on non-Unix systems</h3>
+
+<p>It should be relatively straightforward to compile FFTW even on non-Unix
+systems lacking the niceties of a <code>configure</code> script.  Basically,
+you need to edit the <code>config.h</code> header (copy it from
+<code>config.h.in</code>) to <code>#define</code> the various options and compiler
+characteristics, and then compile all the &lsquo;<samp><span class="samp">.c</span></samp>&rsquo; files in the
+relevant directories.
+
+   <p>The <code>config.h</code> header contains about 100 options to set, each one
+initially an <code>#undef</code>, each documented with a comment, and most of
+them fairly obvious.  For most of the options, you should simply
+<code>#define</code> them to <code>1</code> if they are applicable, although a few
+options require a particular value (e.g. <code>SIZEOF_LONG_LONG</code> should
+be defined to the size of the <code>long long</code> type, in bytes, or zero
+if it is not supported).  We will likely post some sample
+<code>config.h</code> files for various operating systems and compilers for
+you to use (at least as a starting point).  Please let us know if you
+have to hand-create a configuration file (and/or a pre-compiled binary)
+that you want to share.
+
+   <p>To create the FFTW library, you will then need to compile all of the
+&lsquo;<samp><span class="samp">.c</span></samp>&rsquo; files in the <code>kernel</code>, <code>dft</code>, <code>dft/scalar</code>,
+<code>dft/scalar/codelets</code>, <code>rdft</code>, <code>rdft/scalar</code>,
+<code>rdft/scalar/r2cf</code>, <code>rdft/scalar/r2cb</code>,
+<code>rdft/scalar/r2r</code>, <code>reodft</code>, and <code>api</code> directories. 
+If you are compiling with SIMD support (e.g. you defined
+<code>HAVE_SSE2</code> in <code>config.h</code>), then you also need to compile
+the <code>.c</code> files in the <code>simd-support</code>,
+<code>{dft,rdft}/simd</code>, <code>{dft,rdft}/simd/*</code> directories.
+
+   <p>Once these files are all compiled, link them into a library, or a shared
+library, or directly into your program.
+
+   <p>To compile the FFTW test program, additionally compile the code in the
+<code>libbench2/</code> directory, and link it into a library.  Then compile
+the code in the <code>tests/</code> directory and link it to the
+<code>libbench2</code> and FFTW libraries.  To compile the <code>fftw-wisdom</code>
+(command-line) tool (see <a href="Wisdom-Utilities.html#Wisdom-Utilities">Wisdom Utilities</a>), compile
+<code>tools/fftw-wisdom.c</code> and link it to the <code>libbench2</code> and FFTW
+libraries
+
+<!--  -->
+   </body></html>
+

@@ -1,0 +1,147 @@
+<html lang="en">
+<head>
+<title>Using Plans - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="FFTW-Reference.html#FFTW-Reference" title="FFTW Reference">
+<link rel="prev" href="Data-Types-and-Files.html#Data-Types-and-Files" title="Data Types and Files">
+<link rel="next" href="Basic-Interface.html#Basic-Interface" title="Basic Interface">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Using-Plans"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Basic-Interface.html#Basic-Interface">Basic Interface</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Data-Types-and-Files.html#Data-Types-and-Files">Data Types and Files</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="FFTW-Reference.html#FFTW-Reference">FFTW Reference</a>
+<hr>
+</div>
+
+<h3 class="section">4.2 Using Plans</h3>
+
+<p>Plans for all transform types in FFTW are stored as type
+<code>fftw_plan</code> (an opaque pointer type), and are created by one of the
+various planning routines described in the following sections. 
+<a name="index-fftw_005fplan-152"></a>An <code>fftw_plan</code> contains all information necessary to compute the
+transform, including the pointers to the input and output arrays.
+
+<pre class="example">     void fftw_execute(const fftw_plan plan);
+</pre>
+   <p><a name="index-fftw_005fexecute-153"></a>
+This executes the <code>plan</code>, to compute the corresponding transform on
+the arrays for which it was planned (which must still exist).  The plan
+is not modified, and <code>fftw_execute</code> can be called as many times as
+desired.
+
+   <p>To apply a given plan to a different array, you can use the new-array execute
+interface.  See <a href="New_002darray-Execute-Functions.html#New_002darray-Execute-Functions">New-array Execute Functions</a>.
+
+   <p><code>fftw_execute</code> (and equivalents) is the only function in FFTW
+guaranteed to be thread-safe; see <a href="Thread-safety.html#Thread-safety">Thread safety</a>.
+
+   <p>This function:
+<pre class="example">     void fftw_destroy_plan(fftw_plan plan);
+</pre>
+   <p><a name="index-fftw_005fdestroy_005fplan-154"></a>deallocates the <code>plan</code> and all its associated data.
+
+   <p>FFTW's planner saves some other persistent data, such as the
+accumulated wisdom and a list of algorithms available in the current
+configuration.  If you want to deallocate all of that and reset FFTW
+to the pristine state it was in when you started your program, you can
+call:
+
+<pre class="example">     void fftw_cleanup(void);
+</pre>
+   <p><a name="index-fftw_005fcleanup-155"></a>
+After calling <code>fftw_cleanup</code>, all existing plans become undefined,
+and you should not attempt to execute them nor to destroy them.  You can
+however create and execute/destroy new plans, in which case FFTW starts
+accumulating wisdom information again.
+
+   <p><code>fftw_cleanup</code> does not deallocate your plans, however.  To prevent
+memory leaks, you must still call <code>fftw_destroy_plan</code> before
+executing <code>fftw_cleanup</code>.
+
+   <p>Occasionally, it may useful to know FFTW's internal &ldquo;cost&rdquo; metric
+that it uses to compare plans to one another; this cost is
+proportional to an execution time of the plan, in undocumented units,
+if the plan was created with the <code>FFTW_MEASURE</code> or other
+timing-based options, or alternatively is a heuristic cost function
+for <code>FFTW_ESTIMATE</code> plans.  (The cost values of measured and
+estimated plans are not comparable, being in different units.  Also,
+costs from different FFTW versions or the same version compiled
+differently may not be in the same units.  Plans created from wisdom
+have a cost of 0 since no timing measurement is performed for them. 
+Finally, certain problems for which only one top-level algorithm was
+possible may have required no measurements of the cost of the whole
+plan, in which case <code>fftw_cost</code> will also return 0.)  The cost
+metric for a given plan is returned by:
+
+<pre class="example">     double fftw_cost(const fftw_plan plan);
+</pre>
+   <p><a name="index-fftw_005fcost-156"></a>
+The following two routines are provided purely for academic purposes
+(that is, for entertainment).
+
+<pre class="example">     void fftw_flops(const fftw_plan plan,
+                     double *add, double *mul, double *fma);
+</pre>
+   <p><a name="index-fftw_005fflops-157"></a>
+Given a <code>plan</code>, set <code>add</code>, <code>mul</code>, and <code>fma</code> to an
+exact count of the number of floating-point additions, multiplications,
+and fused multiply-add operations involved in the plan's execution.  The
+total number of floating-point operations (flops) is <code>add + mul +
+2*fma</code>, or <code>add + mul + fma</code> if the hardware supports fused
+multiply-add instructions (although the number of FMA operations is only
+approximate because of compiler voodoo).  (The number of operations
+should be an integer, but we use <code>double</code> to avoid overflowing
+<code>int</code> for large transforms; the arguments are of type <code>double</code>
+even for single and long-double precision versions of FFTW.)
+
+<pre class="example">     void fftw_fprint_plan(const fftw_plan plan, FILE *output_file);
+     void fftw_print_plan(const fftw_plan plan);
+</pre>
+   <p><a name="index-fftw_005ffprint_005fplan-158"></a><a name="index-fftw_005fprint_005fplan-159"></a>
+This outputs a &ldquo;nerd-readable&rdquo; representation of the <code>plan</code> to
+the given file or to <code>stdout</code>, respectively.
+
+<!--  -->
+   </body></html>
+

@@ -1,0 +1,113 @@
+<html lang="en">
+<head>
+<title>64-bit Guru Interface - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Guru-Interface.html#Guru-Interface" title="Guru Interface">
+<link rel="prev" href="Guru-Real_002dto_002dreal-Transforms.html#Guru-Real_002dto_002dreal-Transforms" title="Guru Real-to-real Transforms">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="64-bit-Guru-Interface"></a>
+<a name="g_t64_002dbit-Guru-Interface"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Guru-Real_002dto_002dreal-Transforms.html#Guru-Real_002dto_002dreal-Transforms">Guru Real-to-real Transforms</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Guru-Interface.html#Guru-Interface">Guru Interface</a>
+<hr>
+</div>
+
+<h4 class="subsection">4.5.6 64-bit Guru Interface</h4>
+
+<p><a name="index-g_t64_002dbit-architecture-260"></a>
+When compiled in 64-bit mode on a 64-bit architecture (where addresses
+are 64 bits wide), FFTW uses 64-bit quantities internally for all
+transform sizes, strides, and so on&mdash;you don't have to do anything
+special to exploit this.  However, in the ordinary FFTW interfaces,
+you specify the transform size by an <code>int</code> quantity, which is
+normally only 32 bits wide.  This means that, even though FFTW is
+using 64-bit sizes internally, you cannot specify a single transform
+dimension larger than
+2<sup><small>31</small></sup>&minus;1numbers.
+
+   <p>We expect that few users will require transforms larger than this, but,
+for those who do, we provide a 64-bit version of the guru interface in
+which all sizes are specified as integers of type <code>ptrdiff_t</code>
+instead of <code>int</code>.  (<code>ptrdiff_t</code> is a signed integer type
+defined by the C standard to be wide enough to represent address
+differences, and thus must be at least 64 bits wide on a 64-bit
+machine.)  We stress that there is <em>no performance advantage</em> to
+using this interface&mdash;the same internal FFTW code is employed
+regardless&mdash;and it is only necessary if you want to specify very
+large transform sizes. 
+<a name="index-ptrdiff_005ft-261"></a>
+
+   <p>In particular, the 64-bit guru interface is a set of planner routines
+that are exactly the same as the guru planner routines, except that
+they are named with &lsquo;<samp><span class="samp">guru64</span></samp>&rsquo; instead of &lsquo;<samp><span class="samp">guru</span></samp>&rsquo; and they take
+arguments of type <code>fftw_iodim64</code> instead of <code>fftw_iodim</code>. 
+For example, instead of <code>fftw_plan_guru_dft</code>, we have
+<code>fftw_plan_guru64_dft</code>.
+
+<pre class="example">     fftw_plan fftw_plan_guru64_dft(
+          int rank, const fftw_iodim64 *dims,
+          int howmany_rank, const fftw_iodim64 *howmany_dims,
+          fftw_complex *in, fftw_complex *out,
+          int sign, unsigned flags);
+</pre>
+   <p><a name="index-fftw_005fplan_005fguru64_005fdft-262"></a>
+The <code>fftw_iodim64</code> type is similar to <code>fftw_iodim</code>, with the
+same interpretation, except that it uses type <code>ptrdiff_t</code> instead
+of type <code>int</code>.
+
+<pre class="example">     typedef struct {
+          ptrdiff_t n;
+          ptrdiff_t is;
+          ptrdiff_t os;
+     } fftw_iodim64;
+</pre>
+   <p><a name="index-fftw_005fiodim64-263"></a>
+Every other &lsquo;<samp><span class="samp">fftw_plan_guru</span></samp>&rsquo; function also has a
+&lsquo;<samp><span class="samp">fftw_plan_guru64</span></samp>&rsquo; equivalent, but we do not repeat their
+documentation here since they are identical to the 32-bit versions
+except as noted above.
+
+<!--  -->
+   </body></html>
+

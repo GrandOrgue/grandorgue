@@ -1,0 +1,101 @@
+<html lang="en">
+<head>
+<title>Caveats in Using Wisdom - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Other-Important-Topics.html#Other-Important-Topics" title="Other Important Topics">
+<link rel="prev" href="Words-of-Wisdom_002dSaving-Plans.html#Words-of-Wisdom_002dSaving-Plans" title="Words of Wisdom-Saving Plans">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Caveats-in-Using-Wisdom"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Words-of-Wisdom_002dSaving-Plans.html#Words-of-Wisdom_002dSaving-Plans">Words of Wisdom-Saving Plans</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Other-Important-Topics.html#Other-Important-Topics">Other Important Topics</a>
+<hr>
+</div>
+
+<h3 class="section">3.4 Caveats in Using Wisdom</h3>
+
+<p><a name="index-wisdom_002c-problems-with-133"></a>
+<blockquote>
+<i>For in much wisdom is much grief, and he that increaseth knowledge
+increaseth sorrow. 
+</i>[Ecclesiastes 1:18]
+<a name="index-Ecclesiastes-134"></a></blockquote>
+
+   <p><a name="index-portability-135"></a>There are pitfalls to using wisdom, in that it can negate FFTW's
+ability to adapt to changing hardware and other conditions. For
+example, it would be perfectly possible to export wisdom from a
+program running on one processor and import it into a program running
+on another processor.  Doing so, however, would mean that the second
+program would use plans optimized for the first processor, instead of
+the one it is running on.
+
+   <p>It should be safe to reuse wisdom as long as the hardware and program
+binaries remain unchanged. (Actually, the optimal plan may change even
+between runs of the same binary on identical hardware, due to
+differences in the virtual memory environment, etcetera.  Users
+seriously interested in performance should worry about this problem,
+too.)  It is likely that, if the same wisdom is used for two
+different program binaries, even running on the same machine, the
+plans may be sub-optimal because of differing code alignments.  It is
+therefore wise to recreate wisdom every time an application is
+recompiled.  The more the underlying hardware and software changes
+between the creation of wisdom and its use, the greater grows
+the risk of sub-optimal plans.
+
+   <p>Nevertheless, if the choice is between using <code>FFTW_ESTIMATE</code> or
+using possibly-suboptimal wisdom (created on the same machine, but for a
+different binary), the wisdom is likely to be better.  For this reason,
+we provide a function to import wisdom from a standard system-wide
+location (<code>/etc/fftw/wisdom</code> on Unix):
+<a name="index-wisdom_002c-system_002dwide-136"></a>
+<pre class="example">     int fftw_import_system_wisdom(void);
+</pre>
+   <p><a name="index-fftw_005fimport_005fsystem_005fwisdom-137"></a>
+FFTW also provides a standalone program, <code>fftw-wisdom</code> (described
+by its own <code>man</code> page on Unix) with which users can create wisdom,
+e.g. for a canonical set of sizes to store in the system wisdom file. 
+See <a href="Wisdom-Utilities.html#Wisdom-Utilities">Wisdom Utilities</a>. 
+<a name="index-fftw_002dwisdom-utility-138"></a>
+
+   </body></html>
+

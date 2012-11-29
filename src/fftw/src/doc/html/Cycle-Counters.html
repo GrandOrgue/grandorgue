@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+<title>Cycle Counters - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Installation-and-Customization.html#Installation-and-Customization" title="Installation and Customization">
+<link rel="prev" href="Installation-on-non_002dUnix-systems.html#Installation-on-non_002dUnix-systems" title="Installation on non-Unix systems">
+<link rel="next" href="Generating-your-own-code.html#Generating-your-own-code" title="Generating your own code">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Cycle-Counters"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Generating-your-own-code.html#Generating-your-own-code">Generating your own code</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Installation-on-non_002dUnix-systems.html#Installation-on-non_002dUnix-systems">Installation on non-Unix systems</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Installation-and-Customization.html#Installation-and-Customization">Installation and Customization</a>
+<hr>
+</div>
+
+<h3 class="section">10.3 Cycle Counters</h3>
+
+<p><a name="index-cycle-counter-619"></a>
+FFTW's planner actually executes and times different possible FFT
+algorithms in order to pick the fastest plan for a given n.  In
+order to do this in as short a time as possible, however, the timer must
+have a very high resolution, and to accomplish this we employ the
+hardware <dfn>cycle counters</dfn> that are available on most CPUs. 
+Currently, FFTW supports the cycle counters on x86, PowerPC/POWER, Alpha,
+UltraSPARC (SPARC v9), IA64, PA-RISC, and MIPS processors.
+
+   <p><a name="index-compiler-620"></a>Access to the cycle counters, unfortunately, is a compiler and/or
+operating-system dependent task, often requiring inline assembly
+language, and it may be that your compiler is not supported.  If you are
+<em>not</em> supported, FFTW will by default fall back on its estimator
+(effectively using <code>FFTW_ESTIMATE</code> for all plans). 
+<a name="index-FFTW_005fESTIMATE-621"></a>
+You can add support by editing the file <code>kernel/cycle.h</code>; normally,
+this will involve adapting one of the examples already present in order
+to use the inline-assembler syntax for your C compiler, and will only
+require a couple of lines of code.  Anyone adding support for a new
+system to <code>cycle.h</code> is encouraged to email us at <a href="mailto:fftw@fftw.org">fftw@fftw.org</a>.
+
+   <p>If a cycle counter is not available on your system (e.g. some embedded
+processor), and you don't want to use estimated plans, as a last resort
+you can use the <code>--with-slow-timer</code> option to <code>configure</code> (on
+Unix) or <code>#define WITH_SLOW_TIMER</code> in <code>config.h</code> (elsewhere). 
+This will use the much lower-resolution <code>gettimeofday</code> function, or even
+<code>clock</code> if the former is unavailable, and planning will be
+extremely slow.
+
+<!--  -->
+   </body></html>
+

@@ -1,0 +1,98 @@
+<html lang="en">
+<head>
+<title>Memory Allocation - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Data-Types-and-Files.html#Data-Types-and-Files" title="Data Types and Files">
+<link rel="prev" href="Precision.html#Precision" title="Precision">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Memory-Allocation"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Precision.html#Precision">Precision</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Data-Types-and-Files.html#Data-Types-and-Files">Data Types and Files</a>
+<hr>
+</div>
+
+<h4 class="subsection">4.1.3 Memory Allocation</h4>
+
+<pre class="example">     void *fftw_malloc(size_t n);
+     void fftw_free(void *p);
+</pre>
+   <p><a name="index-fftw_005fmalloc-145"></a><a name="index-fftw_005ffree-146"></a>
+These are functions that behave identically to <code>malloc</code> and
+<code>free</code>, except that they guarantee that the returned pointer obeys
+any special alignment restrictions imposed by any algorithm in FFTW
+(e.g. for SIMD acceleration).  See <a href="SIMD-alignment-and-fftw_005fmalloc.html#SIMD-alignment-and-fftw_005fmalloc">SIMD alignment and fftw_malloc</a>. 
+<a name="index-alignment-147"></a>
+
+   <p>Data allocated by <code>fftw_malloc</code> <em>must</em> be deallocated by
+<code>fftw_free</code> and not by the ordinary <code>free</code>.
+
+   <p>These routines simply call through to your operating system's
+<code>malloc</code> or, if necessary, its aligned equivalent
+(e.g. <code>memalign</code>), so you normally need not worry about any
+significant time or space overhead.  You are <em>not required</em> to use
+them to allocate your data, but we strongly recommend it.
+
+   <p>Note: in C++, just as with ordinary <code>malloc</code>, you must typecast
+the output of <code>fftw_malloc</code> to whatever pointer type you are
+allocating. 
+<a name="index-C_002b_002b-148"></a>
+
+   <p>We also provide the following two convenience functions to allocate
+real and complex arrays with <code>n</code> elements, which are equivalent
+to <code>(double *) fftw_malloc(sizeof(double) * n)</code> and
+<code>(fftw_complex *) fftw_malloc(sizeof(fftw_complex) * n)</code>,
+respectively:
+
+<pre class="example">     double *fftw_alloc_real(size_t n);
+     fftw_complex *fftw_alloc_complex(size_t n);
+</pre>
+   <p><a name="index-fftw_005falloc_005freal-149"></a><a name="index-fftw_005falloc_005fcomplex-150"></a>
+The equivalent functions in other precisions allocate arrays of <code>n</code>
+elements in that precision.  e.g. <code>fftwf_alloc_real(n)</code> is
+equivalent to <code>(float *) fftwf_malloc(sizeof(float) * n)</code>. 
+<a name="index-precision-151"></a>
+<!--  -->
+
+   </body></html>
+

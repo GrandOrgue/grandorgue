@@ -1,0 +1,113 @@
+<html lang="en">
+<head>
+<title>Words of Wisdom-Saving Plans - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Other-Important-Topics.html#Other-Important-Topics" title="Other Important Topics">
+<link rel="prev" href="Multi_002ddimensional-Array-Format.html#Multi_002ddimensional-Array-Format" title="Multi-dimensional Array Format">
+<link rel="next" href="Caveats-in-Using-Wisdom.html#Caveats-in-Using-Wisdom" title="Caveats in Using Wisdom">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Words-of-Wisdom-Saving-Plans"></a>
+<a name="Words-of-Wisdom_002dSaving-Plans"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Caveats-in-Using-Wisdom.html#Caveats-in-Using-Wisdom">Caveats in Using Wisdom</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Multi_002ddimensional-Array-Format.html#Multi_002ddimensional-Array-Format">Multi-dimensional Array Format</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Other-Important-Topics.html#Other-Important-Topics">Other Important Topics</a>
+<hr>
+</div>
+
+<h3 class="section">3.3 Words of Wisdom&mdash;Saving Plans</h3>
+
+<p><a name="index-wisdom-124"></a><a name="index-saving-plans-to-disk-125"></a>
+FFTW implements a method for saving plans to disk and restoring them. 
+In fact, what FFTW does is more general than just saving and loading
+plans.  The mechanism is called <dfn>wisdom</dfn>.  Here, we describe
+this feature at a high level. See <a href="FFTW-Reference.html#FFTW-Reference">FFTW Reference</a>, for a less casual
+but more complete discussion of how to use wisdom in FFTW.
+
+   <p>Plans created with the <code>FFTW_MEASURE</code>, <code>FFTW_PATIENT</code>, or
+<code>FFTW_EXHAUSTIVE</code> options produce near-optimal FFT performance,
+but may require a long time to compute because FFTW must measure the
+runtime of many possible plans and select the best one.  This setup is
+designed for the situations where so many transforms of the same size
+must be computed that the start-up time is irrelevant.  For short
+initialization times, but slower transforms, we have provided
+<code>FFTW_ESTIMATE</code>.  The <code>wisdom</code> mechanism is a way to get the
+best of both worlds: you compute a good plan once, save it to
+disk, and later reload it as many times as necessary.  The wisdom
+mechanism can actually save and reload many plans at once, not just
+one. 
+<a name="index-FFTW_005fMEASURE-126"></a><a name="index-FFTW_005fPATIENT-127"></a><a name="index-FFTW_005fEXHAUSTIVE-128"></a><a name="index-FFTW_005fESTIMATE-129"></a>
+
+   <p>Whenever you create a plan, the FFTW planner accumulates wisdom, which
+is information sufficient to reconstruct the plan.  After planning,
+you can save this information to disk by means of the function:
+<pre class="example">     int fftw_export_wisdom_to_filename(const char *filename);
+</pre>
+   <p><a name="index-fftw_005fexport_005fwisdom_005fto_005ffilename-130"></a>(This function returns non-zero on success.)
+
+   <p>The next time you run the program, you can restore the wisdom with
+<code>fftw_import_wisdom_from_filename</code> (which also returns non-zero on success),
+and then recreate the plan using the same flags as before.
+<pre class="example">     int fftw_import_wisdom_from_filename(const char *filename);
+</pre>
+   <p><a name="index-fftw_005fimport_005fwisdom_005ffrom_005ffilename-131"></a>
+Wisdom is automatically used for any size to which it is applicable, as
+long as the planner flags are not more &ldquo;patient&rdquo; than those with which
+the wisdom was created.  For example, wisdom created with
+<code>FFTW_MEASURE</code> can be used if you later plan with
+<code>FFTW_ESTIMATE</code> or <code>FFTW_MEASURE</code>, but not with
+<code>FFTW_PATIENT</code>.
+
+   <p>The <code>wisdom</code> is cumulative, and is stored in a global, private
+data structure managed internally by FFTW.  The storage space required
+is minimal, proportional to the logarithm of the sizes the wisdom was
+generated from.  If memory usage is a concern, however, the wisdom can
+be forgotten and its associated memory freed by calling:
+<pre class="example">     void fftw_forget_wisdom(void);
+</pre>
+   <p><a name="index-fftw_005fforget_005fwisdom-132"></a>
+Wisdom can be exported to a file, a string, or any other medium. 
+For details, see <a href="Wisdom.html#Wisdom">Wisdom</a>.
+
+   </body></html>
+

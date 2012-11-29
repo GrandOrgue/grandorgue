@@ -1,0 +1,113 @@
+<html lang="en">
+<head>
+<title>MPI Data Distribution - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Distributed_002dmemory-FFTW-with-MPI.html#Distributed_002dmemory-FFTW-with-MPI" title="Distributed-memory FFTW with MPI">
+<link rel="prev" href="2d-MPI-example.html#g_t2d-MPI-example" title="2d MPI example">
+<link rel="next" href="Multi_002ddimensional-MPI-DFTs-of-Real-Data.html#Multi_002ddimensional-MPI-DFTs-of-Real-Data" title="Multi-dimensional MPI DFTs of Real Data">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="MPI-Data-Distribution"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Multi_002ddimensional-MPI-DFTs-of-Real-Data.html#Multi_002ddimensional-MPI-DFTs-of-Real-Data">Multi-dimensional MPI DFTs of Real Data</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="2d-MPI-example.html#g_t2d-MPI-example">2d MPI example</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Distributed_002dmemory-FFTW-with-MPI.html#Distributed_002dmemory-FFTW-with-MPI">Distributed-memory FFTW with MPI</a>
+<hr>
+</div>
+
+<h3 class="section">6.4 MPI Data Distribution</h3>
+
+<p><a name="index-data-distribution-368"></a>
+The most important concept to understand in using FFTW's MPI interface
+is the data distribution.  With a serial or multithreaded FFT, all of
+the inputs and outputs are stored as a single contiguous chunk of
+memory.  With a distributed-memory FFT, the inputs and outputs are
+broken into disjoint blocks, one per process.
+
+   <p>In particular, FFTW uses a <em>1d block distribution</em> of the data,
+distributed along the <em>first dimension</em>.  For example, if you
+want to perform a 100&nbsp;&times;&nbsp;200 complex DFT, distributed over 4
+processes, each process will get a 25&nbsp;&times;&nbsp;200 slice of the data. 
+That is, process 0 will get rows 0 through 24, process 1 will get rows
+25 through 49, process 2 will get rows 50 through 74, and process 3
+will get rows 75 through 99.  If you take the same array but
+distribute it over 3 processes, then it is not evenly divisible so the
+different processes will have unequal chunks.  FFTW's default choice
+in this case is to assign 34 rows to processes 0 and 1, and 32 rows to
+process 2. 
+<a name="index-block-distribution-369"></a>
+
+   <p>FFTW provides several &lsquo;<samp><span class="samp">fftw_mpi_local_size</span></samp>&rsquo; routines that you can
+call to find out what portion of an array is stored on the current
+process.  In most cases, you should use the default block sizes picked
+by FFTW, but it is also possible to specify your own block size.  For
+example, with a 100&nbsp;&times;&nbsp;200 array on three processes, you can
+tell FFTW to use a block size of 40, which would assign 40 rows to
+processes 0 and 1, and 20 rows to process 2.  FFTW's default is to
+divide the data equally among the processes if possible, and as best
+it can otherwise.  The rows are always assigned in &ldquo;rank order,&rdquo;
+i.e. process 0 gets the first block of rows, then process 1, and so
+on.  (You can change this by using <code>MPI_Comm_split</code> to create a
+new communicator with re-ordered processes.)  However, you should
+always call the &lsquo;<samp><span class="samp">fftw_mpi_local_size</span></samp>&rsquo; routines, if possible,
+rather than trying to predict FFTW's distribution choices.
+
+   <p>In particular, it is critical that you allocate the storage size that
+is returned by &lsquo;<samp><span class="samp">fftw_mpi_local_size</span></samp>&rsquo;, which is <em>not</em>
+necessarily the size of the local slice of the array.  The reason is
+that intermediate steps of FFTW's algorithms involve transposing the
+array and redistributing the data, so at these intermediate steps FFTW
+may require more local storage space (albeit always proportional to
+the total size divided by the number of processes).  The
+&lsquo;<samp><span class="samp">fftw_mpi_local_size</span></samp>&rsquo; functions know how much storage is required
+for these intermediate steps and tell you the correct amount to
+allocate.
+
+<ul class="menu">
+<li><a accesskey="1" href="Basic-and-advanced-distribution-interfaces.html#Basic-and-advanced-distribution-interfaces">Basic and advanced distribution interfaces</a>
+<li><a accesskey="2" href="Load-balancing.html#Load-balancing">Load balancing</a>
+<li><a accesskey="3" href="Transposed-distributions.html#Transposed-distributions">Transposed distributions</a>
+<li><a accesskey="4" href="One_002ddimensional-distributions.html#One_002ddimensional-distributions">One-dimensional distributions</a>
+</ul>
+
+   </body></html>
+

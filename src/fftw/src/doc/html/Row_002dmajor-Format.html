@@ -1,0 +1,93 @@
+<html lang="en">
+<head>
+<title>Row-major Format - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Multi_002ddimensional-Array-Format.html#Multi_002ddimensional-Array-Format" title="Multi-dimensional Array Format">
+<link rel="prev" href="Multi_002ddimensional-Array-Format.html#Multi_002ddimensional-Array-Format" title="Multi-dimensional Array Format">
+<link rel="next" href="Column_002dmajor-Format.html#Column_002dmajor-Format" title="Column-major Format">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Row-major-Format"></a>
+<a name="Row_002dmajor-Format"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Column_002dmajor-Format.html#Column_002dmajor-Format">Column-major Format</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Multi_002ddimensional-Array-Format.html#Multi_002ddimensional-Array-Format">Multi-dimensional Array Format</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Multi_002ddimensional-Array-Format.html#Multi_002ddimensional-Array-Format">Multi-dimensional Array Format</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.2.1 Row-major Format</h4>
+
+<p><a name="index-row_002dmajor-115"></a>
+The multi-dimensional arrays passed to <code>fftw_plan_dft</code> etcetera
+are expected to be stored as a single contiguous block in
+<dfn>row-major</dfn> order (sometimes called &ldquo;C order&rdquo;).  Basically, this
+means that as you step through adjacent memory locations, the first
+dimension's index varies most slowly and the last dimension's index
+varies most quickly.
+
+   <p>To be more explicit, let us consider an array of rank d whose
+dimensions are n<sub>0</sub>&nbsp;&times;&nbsp;n<sub>1</sub>&nbsp;&times;&nbsp;n<sub>2</sub>&nbsp;&times;&nbsp;&hellip;&nbsp;&times;&nbsp;n<sub>d-1</sub>. Now, we specify a location in the array by a
+sequence of d (zero-based) indices, one for each dimension:
+(i<sub>0</sub>, i<sub>1</sub>, i<sub>2</sub>,..., i<sub>d-1</sub>). If the array is stored in row-major
+order, then this element is located at the position
+i<sub>d-1</sub> + n<sub>d-1</sub> * (i<sub>d-2</sub> + n<sub>d-2</sub> * (... + n<sub>1</sub> * i<sub>0</sub>)).
+
+   <p>Note that, for the ordinary complex DFT, each element of the array
+must be of type <code>fftw_complex</code>; i.e. a (real, imaginary) pair of
+(double-precision) numbers.
+
+   <p>In the advanced FFTW interface, the physical dimensions n from
+which the indices are computed can be different from (larger than)
+the logical dimensions of the transform to be computed, in order to
+transform a subset of a larger array. 
+<a name="index-advanced-interface-116"></a>Note also that, in the advanced interface, the expression above is
+multiplied by a <dfn>stride</dfn> to get the actual array index&mdash;this is
+useful in situations where each element of the multi-dimensional array
+is actually a data structure (or another array), and you just want to
+transform a single field. In the basic interface, however, the stride
+is 1. 
+<a name="index-stride-117"></a>
+<!-- =========> -->
+
+   </body></html>
+

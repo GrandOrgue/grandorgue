@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+<title>FFTW MPI Installation - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Distributed_002dmemory-FFTW-with-MPI.html#Distributed_002dmemory-FFTW-with-MPI" title="Distributed-memory FFTW with MPI">
+<link rel="prev" href="Distributed_002dmemory-FFTW-with-MPI.html#Distributed_002dmemory-FFTW-with-MPI" title="Distributed-memory FFTW with MPI">
+<link rel="next" href="Linking-and-Initializing-MPI-FFTW.html#Linking-and-Initializing-MPI-FFTW" title="Linking and Initializing MPI FFTW">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="FFTW-MPI-Installation"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Linking-and-Initializing-MPI-FFTW.html#Linking-and-Initializing-MPI-FFTW">Linking and Initializing MPI FFTW</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Distributed_002dmemory-FFTW-with-MPI.html#Distributed_002dmemory-FFTW-with-MPI">Distributed-memory FFTW with MPI</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Distributed_002dmemory-FFTW-with-MPI.html#Distributed_002dmemory-FFTW-with-MPI">Distributed-memory FFTW with MPI</a>
+<hr>
+</div>
+
+<h3 class="section">6.1 FFTW MPI Installation</h3>
+
+<p>All of the FFTW MPI code is located in the <code>mpi</code> subdirectory of
+the FFTW package.  On Unix systems, the FFTW MPI libraries and header
+files are automatically configured, compiled, and installed along with
+the uniprocessor FFTW libraries simply by including
+<code>--enable-mpi</code> in the flags to the <code>configure</code> script
+(see <a href="Installation-on-Unix.html#Installation-on-Unix">Installation on Unix</a>). 
+<a name="index-configure-349"></a>
+
+   <p>Any implementation of the MPI standard, version 1 or later, should
+work with FFTW.  The <code>configure</code> script will attempt to
+automatically detect how to compile and link code using your MPI
+implementation.  In some cases, especially if you have multiple
+different MPI implementations installed or have an unusual MPI
+software package, you may need to provide this information explicitly.
+
+   <p>Most commonly, one compiles MPI code by invoking a special compiler
+command, typically <code>mpicc</code> for C code.  The <code>configure</code>
+script knows the most common names for this command, but you can
+specify the MPI compilation command explicitly by setting the
+<code>MPICC</code> variable, as in &lsquo;<samp><span class="samp">./configure MPICC=mpicc ...</span></samp>&rsquo;. 
+<a name="index-mpicc-350"></a>
+
+   <p>If, instead of a special compiler command, you need to link a certain
+library, you can specify the link command via the <code>MPILIBS</code>
+variable, as in &lsquo;<samp><span class="samp">./configure MPILIBS=-lmpi ...</span></samp>&rsquo;.  Note that if
+your MPI library is installed in a non-standard location (one the
+compiler does not know about by default), you may also have to specify
+the location of the library and header files via <code>LDFLAGS</code> and
+<code>CPPFLAGS</code> variables, respectively, as in &lsquo;<samp><span class="samp">./configure
+LDFLAGS=-L/path/to/mpi/libs CPPFLAGS=-I/path/to/mpi/include ...</span></samp>&rsquo;.
+
+<!--  -->
+   </body></html>
+

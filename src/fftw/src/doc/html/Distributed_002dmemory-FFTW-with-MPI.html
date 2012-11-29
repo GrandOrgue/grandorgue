@@ -1,0 +1,115 @@
+<html lang="en">
+<head>
+<title>Distributed-memory FFTW with MPI - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Multi_002dthreaded-FFTW.html#Multi_002dthreaded-FFTW" title="Multi-threaded FFTW">
+<link rel="next" href="Calling-FFTW-from-Modern-Fortran.html#Calling-FFTW-from-Modern-Fortran" title="Calling FFTW from Modern Fortran">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Distributed-memory-FFTW-with-MPI"></a>
+<a name="Distributed_002dmemory-FFTW-with-MPI"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Calling-FFTW-from-Modern-Fortran.html#Calling-FFTW-from-Modern-Fortran">Calling FFTW from Modern Fortran</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Multi_002dthreaded-FFTW.html#Multi_002dthreaded-FFTW">Multi-threaded FFTW</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<h2 class="chapter">6 Distributed-memory FFTW with MPI</h2>
+
+<p><a name="index-MPI-344"></a>
+<a name="index-parallel-transform-345"></a>In this chapter we document the parallel FFTW routines for parallel
+systems supporting the MPI message-passing interface.  Unlike the
+shared-memory threads described in the previous chapter, MPI allows
+you to use <em>distributed-memory</em> parallelism, where each CPU has
+its own separate memory, and which can scale up to clusters of many
+thousands of processors.  This capability comes at a price, however:
+each process only stores a <em>portion</em> of the data to be
+transformed, which means that the data structures and
+programming-interface are quite different from the serial or threads
+versions of FFTW. 
+<a name="index-data-distribution-346"></a>
+
+   <p>Distributed-memory parallelism is especially useful when you are
+transforming arrays so large that they do not fit into the memory of a
+single processor.  The storage per-process required by FFTW's MPI
+routines is proportional to the total array size divided by the number
+of processes.  Conversely, distributed-memory parallelism can easily
+pose an unacceptably high communications overhead for small problems;
+the threshold problem size for which parallelism becomes advantageous
+will depend on the precise problem you are interested in, your
+hardware, and your MPI implementation.
+
+   <p>A note on terminology: in MPI, you divide the data among a set of
+&ldquo;processes&rdquo; which each run in their own memory address space. 
+Generally, each process runs on a different physical processor, but
+this is not required.  A set of processes in MPI is described by an
+opaque data structure called a &ldquo;communicator,&rdquo; the most common of
+which is the predefined communicator <code>MPI_COMM_WORLD</code> which
+refers to <em>all</em> processes.  For more information on these and
+other concepts common to all MPI programs, we refer the reader to the
+documentation at <a href="http://www.mcs.anl.gov/research/projects/mpi/">the MPI home page</a>. 
+<a name="index-MPI-communicator-347"></a><a name="index-MPI_005fCOMM_005fWORLD-348"></a>
+
+   <p>We assume in this chapter that the reader is familiar with the usage
+of the serial (uniprocessor) FFTW, and focus only on the concepts new
+to the MPI interface.
+
+<ul class="menu">
+<li><a accesskey="1" href="FFTW-MPI-Installation.html#FFTW-MPI-Installation">FFTW MPI Installation</a>
+<li><a accesskey="2" href="Linking-and-Initializing-MPI-FFTW.html#Linking-and-Initializing-MPI-FFTW">Linking and Initializing MPI FFTW</a>
+<li><a accesskey="3" href="2d-MPI-example.html#g_t2d-MPI-example">2d MPI example</a>
+<li><a accesskey="4" href="MPI-Data-Distribution.html#MPI-Data-Distribution">MPI Data Distribution</a>
+<li><a accesskey="5" href="Multi_002ddimensional-MPI-DFTs-of-Real-Data.html#Multi_002ddimensional-MPI-DFTs-of-Real-Data">Multi-dimensional MPI DFTs of Real Data</a>
+<li><a accesskey="6" href="Other-Multi_002ddimensional-Real_002ddata-MPI-Transforms.html#Other-Multi_002ddimensional-Real_002ddata-MPI-Transforms">Other Multi-dimensional Real-data MPI Transforms</a>
+<li><a accesskey="7" href="FFTW-MPI-Transposes.html#FFTW-MPI-Transposes">FFTW MPI Transposes</a>
+<li><a accesskey="8" href="FFTW-MPI-Wisdom.html#FFTW-MPI-Wisdom">FFTW MPI Wisdom</a>
+<li><a accesskey="9" href="Avoiding-MPI-Deadlocks.html#Avoiding-MPI-Deadlocks">Avoiding MPI Deadlocks</a>
+<li><a href="FFTW-MPI-Performance-Tips.html#FFTW-MPI-Performance-Tips">FFTW MPI Performance Tips</a>
+<li><a href="Combining-MPI-and-Threads.html#Combining-MPI-and-Threads">Combining MPI and Threads</a>
+<li><a href="FFTW-MPI-Reference.html#FFTW-MPI-Reference">FFTW MPI Reference</a>
+<li><a href="FFTW-MPI-Fortran-Interface.html#FFTW-MPI-Fortran-Interface">FFTW MPI Fortran Interface</a>
+</ul>
+
+<!--  -->
+   </body></html>
+

@@ -1,0 +1,142 @@
+<html lang="en">
+<head>
+<title>Acknowledgments - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Installation-and-Customization.html#Installation-and-Customization" title="Installation and Customization">
+<link rel="next" href="License-and-Copyright.html#License-and-Copyright" title="License and Copyright">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Acknowledgments"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="License-and-Copyright.html#License-and-Copyright">License and Copyright</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Installation-and-Customization.html#Installation-and-Customization">Installation and Customization</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<h2 class="chapter">11 Acknowledgments</h2>
+
+<p>Matteo Frigo was supported in part by the Special Research Program SFB
+F011 &ldquo;AURORA&rdquo; of the Austrian Science Fund FWF and by MIT Lincoln
+Laboratory.  For previous versions of FFTW, he was supported in part by the
+Defense Advanced Research Projects Agency (DARPA), under Grants
+N00014-94-1-0985 and F30602-97-1-0270, and by a Digital Equipment
+Corporation Fellowship.
+
+   <p>Steven G. Johnson was supported in part by a Dept. of Defense NDSEG
+Fellowship, an MIT Karl Taylor Compton Fellowship, and by the Materials
+Research Science and Engineering Center program of the National Science
+Foundation under award DMR-9400334.
+
+   <p>Code for the Cell Broadband Engine was graciously donated to the FFTW
+project by the IBM Austin Research Lab and included in fftw-3.2.  (This
+code was removed in fftw-3.3.)
+
+   <p>Code for the MIPS paired-single SIMD support was graciously donated to
+the FFTW project by CodeSourcery, Inc.
+
+   <p>We are grateful to Sun Microsystems Inc. for its donation of a
+cluster of 9 8-processor Ultra HPC 5000 SMPs (24 Gflops peak). These
+machines served as the primary platform for the development of early
+versions of FFTW.
+
+   <p>We thank Intel Corporation for donating a four-processor Pentium Pro
+machine.  We thank the GNU/Linux community for giving us a decent OS to
+run on that machine.
+
+   <p>We are thankful to the AMD corporation for donating an AMD Athlon XP 1700+
+computer to the FFTW project.
+
+   <p>We thank the Compaq/HP testdrive program and VA Software Corporation
+(SourceForge.net) for providing remote access to machines that were used
+to test FFTW.
+
+   <p>The <code>genfft</code> suite of code generators was written using Objective
+Caml, a dialect of ML.  Objective Caml is a small and elegant language
+developed by Xavier Leroy.  The implementation is available from
+<a href="http://caml.inria.fr/"><code>http://caml.inria.fr/</code></a>.  In previous
+releases of FFTW, <code>genfft</code> was written in Caml Light, by the same
+authors.  An even earlier implementation of <code>genfft</code> was written in
+Scheme, but Caml is definitely better for this kind of application. 
+<a name="index-Caml-627"></a><a name="index-LISP-628"></a>
+
+   <p>FFTW uses many tools from the GNU project, including <code>automake</code>,
+<code>texinfo</code>, and <code>libtool</code>.
+
+   <p>Prof. Charles E. Leiserson of MIT provided continuous support and
+encouragement.  This program would not exist without him.  Charles also
+proposed the name &ldquo;codelets&rdquo; for the basic FFT blocks. 
+<a name="index-codelet-629"></a>
+
+   <p>Prof. John D. Joannopoulos of MIT demonstrated continuing tolerance of
+Steven's &ldquo;extra-curricular&rdquo; computer-science activities, as well as
+remarkable creativity in working them into his grant proposals. 
+Steven's physics degree would not exist without him.
+
+   <p>Franz Franchetti wrote SIMD extensions to FFTW 2, which eventually
+led to the SIMD support in FFTW 3.
+
+   <p>Stefan Kral wrote most of the K7 code generator distributed with FFTW
+3.0.x and 3.1.x.
+
+   <p>Andrew Sterian contributed the Windows timing code in FFTW 2.
+
+   <p>Didier Miras reported a bug in the test procedure used in FFTW 1.2.  We
+now use a completely different test algorithm by Funda Ergun that does
+not require a separate FFT program to compare against.
+
+   <p>Wolfgang Reimer contributed the Pentium cycle counter and a few fixes
+that help portability.
+
+   <p>Ming-Chang Liu uncovered a well-hidden bug in the complex transforms of
+FFTW 2.0 and supplied a patch to correct it.
+
+   <p>The FFTW FAQ was written in <code>bfnn</code> (Bizarre Format With No Name)
+and formatted using the tools developed by Ian Jackson for the Linux
+FAQ.
+
+   <p><em>We are especially thankful to all of our users for their
+continuing support, feedback, and interest during our development of
+FFTW.</em>
+
+   </body></html>
+

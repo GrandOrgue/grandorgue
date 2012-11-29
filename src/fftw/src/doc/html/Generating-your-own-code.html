@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+<title>Generating your own code - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Installation-and-Customization.html#Installation-and-Customization" title="Installation and Customization">
+<link rel="prev" href="Cycle-Counters.html#Cycle-Counters" title="Cycle Counters">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Generating-your-own-code"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Cycle-Counters.html#Cycle-Counters">Cycle Counters</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Installation-and-Customization.html#Installation-and-Customization">Installation and Customization</a>
+<hr>
+</div>
+
+<h3 class="section">10.4 Generating your own code</h3>
+
+<p><a name="index-code-generator-622"></a>
+The directory <code>genfft</code> contains the programs that were used to
+generate FFTW's &ldquo;codelets,&rdquo; which are hard-coded transforms of small
+sizes. 
+<a name="index-codelet-623"></a>We do not expect casual users to employ the generator, which is a rather
+sophisticated program that generates directed acyclic graphs of FFT
+algorithms and performs algebraic simplifications on them.  It was
+written in Objective Caml, a dialect of ML, which is available at
+<a href="http://caml.inria.fr/ocaml/index.en.html">http://caml.inria.fr/ocaml/index.en.html</a>. 
+<a name="index-Caml-624"></a>
+
+   <p>If you have Objective Caml installed (along with recent versions of
+GNU <code>autoconf</code>, <code>automake</code>, and <code>libtool</code>), then you
+can change the set of codelets that are generated or play with the
+generation options.  The set of generated codelets is specified by the
+<code>{dft,rdft}/{codelets,simd}/*/Makefile.am</code> files.  For example, you can add
+efficient REDFT codelets of small sizes by modifying
+<code>rdft/codelets/r2r/Makefile.am</code>. 
+<a name="index-REDFT-625"></a>After you modify any <code>Makefile.am</code> files, you can type <code>sh
+bootstrap.sh</code> in the top-level directory followed by <code>make</code> to
+re-generate the files.
+
+   <p>We do not provide more details about the code-generation process, since
+we do not expect that most users will need to generate their own code. 
+However, feel free to contact us at <a href="mailto:fftw@fftw.org">fftw@fftw.org</a> if
+you are interested in the subject.
+
+   <p><a name="index-monadic-programming-626"></a>You might find it interesting to learn Caml and/or some modern
+programming techniques that we used in the generator (including monadic
+programming), especially if you heard the rumor that Java and
+object-oriented programming are the latest advancement in the field. 
+The internal operation of the codelet generator is described in the
+paper, &ldquo;A Fast Fourier Transform Compiler,&rdquo; by M. Frigo, which is
+available from the <a href="http://www.fftw.org">FFTW home page</a> and also
+appeared in the <cite>Proceedings of the 1999 ACM SIGPLAN Conference on
+Programming Language Design and Implementation (PLDI)</cite>.
+
+   </body></html>
+

@@ -1,0 +1,127 @@
+<html lang="en">
+<head>
+<title>1d Real-even DFTs (DCTs) - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="What-FFTW-Really-Computes.html#What-FFTW-Really-Computes" title="What FFTW Really Computes">
+<link rel="prev" href="The-1d-Real_002ddata-DFT.html#The-1d-Real_002ddata-DFT" title="The 1d Real-data DFT">
+<link rel="next" href="1d-Real_002dodd-DFTs-_0028DSTs_0029.html#g_t1d-Real_002dodd-DFTs-_0028DSTs_0029" title="1d Real-odd DFTs (DSTs)">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="1d-Real-even-DFTs-(DCTs)"></a>
+<a name="g_t1d-Real_002deven-DFTs-_0028DCTs_0029"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="1d-Real_002dodd-DFTs-_0028DSTs_0029.html#g_t1d-Real_002dodd-DFTs-_0028DSTs_0029">1d Real-odd DFTs (DSTs)</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="The-1d-Real_002ddata-DFT.html#The-1d-Real_002ddata-DFT">The 1d Real-data DFT</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="What-FFTW-Really-Computes.html#What-FFTW-Really-Computes">What FFTW Really Computes</a>
+<hr>
+</div>
+
+<h4 class="subsection">4.8.3 1d Real-even DFTs (DCTs)</h4>
+
+<p>The Real-even symmetry DFTs in FFTW are exactly equivalent to the unnormalized
+forward (and backward) DFTs as defined above, where the input array
+X of length N is purely real and is also <dfn>even</dfn> symmetry.  In
+this case, the output array is likewise real and even symmetry. 
+<a name="index-real_002deven-DFT-301"></a><a name="index-REDFT-302"></a>
+
+   <p><a name="index-REDFT00-303"></a>For the case of <code>REDFT00</code>, this even symmetry means that
+<i>X<sub>j</sub> = X<sub>N-j</sub></i>,where we take X to be periodic so that
+<i>X<sub>N</sub> = X</i><sub>0</sub>. Because of this redundancy, only the first n real numbers are
+actually stored, where N = 2(n-1).
+
+   <p>The proper definition of even symmetry for <code>REDFT10</code>,
+<code>REDFT01</code>, and <code>REDFT11</code> transforms is somewhat more intricate
+because of the shifts by 1/2 of the input and/or output, although
+the corresponding boundary conditions are given in <a href="Real-even_002fodd-DFTs-_0028cosine_002fsine-transforms_0029.html#Real-even_002fodd-DFTs-_0028cosine_002fsine-transforms_0029">Real even/odd DFTs (cosine/sine transforms)</a>.  Because of the even symmetry, however,
+the sine terms in the DFT all cancel and the remaining cosine terms are
+written explicitly below.  This formulation often leads people to call
+such a transform a <dfn>discrete cosine transform</dfn> (DCT), although it is
+really just a special case of the DFT. 
+<a name="index-discrete-cosine-transform-304"></a><a name="index-DCT-305"></a>
+
+   <p>In each of the definitions below, we transform a real array X of
+length n to a real array Y of length n:
+
+<h5 class="subsubheading">REDFT00 (DCT-I)</h5>
+
+<p><a name="index-REDFT00-306"></a>An <code>REDFT00</code> transform (type-I DCT) in FFTW is defined by:
+<center><img src="equation-redft00.png" align="top">.</center>Note that this transform is not defined for n=1.  For n=2,
+the summation term above is dropped as you might expect.
+
+<h5 class="subsubheading">REDFT10 (DCT-II)</h5>
+
+<p><a name="index-REDFT10-307"></a>An <code>REDFT10</code> transform (type-II DCT, sometimes called &ldquo;the&rdquo; DCT) in FFTW is defined by:
+<center><img src="equation-redft10.png" align="top">.</center>
+
+<h5 class="subsubheading">REDFT01 (DCT-III)</h5>
+
+<p><a name="index-REDFT01-308"></a>An <code>REDFT01</code> transform (type-III DCT) in FFTW is defined by:
+<center><img src="equation-redft01.png" align="top">.</center>In the case of n=1, this reduces to
+<i>Y</i><sub>0</sub> = <i>X</i><sub>0</sub>. Up to a scale factor (see below), this is the inverse of <code>REDFT10</code> (&ldquo;the&rdquo; DCT), and so the <code>REDFT01</code> (DCT-III) is sometimes called the &ldquo;IDCT&rdquo;. 
+<a name="index-IDCT-309"></a>
+
+<h5 class="subsubheading">REDFT11 (DCT-IV)</h5>
+
+<p><a name="index-REDFT11-310"></a>An <code>REDFT11</code> transform (type-IV DCT) in FFTW is defined by:
+<center><img src="equation-redft11.png" align="top">.</center>
+
+<h5 class="subsubheading">Inverses and Normalization</h5>
+
+<p>These definitions correspond directly to the unnormalized DFTs used
+elsewhere in FFTW (hence the factors of 2 in front of the
+summations).  The unnormalized inverse of <code>REDFT00</code> is
+<code>REDFT00</code>, of <code>REDFT10</code> is <code>REDFT01</code> and vice versa, and
+of <code>REDFT11</code> is <code>REDFT11</code>.  Each unnormalized inverse results
+in the original array multiplied by N, where N is the
+<em>logical</em> DFT size.  For <code>REDFT00</code>, N=2(n-1) (note that
+n=1 is not defined); otherwise, N=2n. 
+<a name="index-normalization-311"></a>
+
+   <p>In defining the discrete cosine transform, some authors also include
+additional factors of
+&radic;2(or its inverse) multiplying selected inputs and/or outputs.  This is a
+mostly cosmetic change that makes the transform orthogonal, but
+sacrifices the direct equivalence to a symmetric DFT.
+
+<!-- =========> -->
+   </body></html>
+

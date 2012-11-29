@@ -1,0 +1,111 @@
+<html lang="en">
+<head>
+<title>The Halfcomplex-format DFT - FFTW 3.3.2</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="FFTW 3.3.2">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="More-DFTs-of-Real-Data.html#More-DFTs-of-Real-Data" title="More DFTs of Real Data">
+<link rel="prev" href="More-DFTs-of-Real-Data.html#More-DFTs-of-Real-Data" title="More DFTs of Real Data">
+<link rel="next" href="Real-even_002fodd-DFTs-_0028cosine_002fsine-transforms_0029.html#Real-even_002fodd-DFTs-_0028cosine_002fsine-transforms_0029" title="Real even/odd DFTs (cosine/sine transforms)">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for FFTW
+(version 3.3.2, 28 April 2012).
+
+Copyright (C) 2003 Matteo Frigo.
+
+Copyright (C) 2003 Massachusetts Institute of Technology.
+
+     Permission is granted to make and distribute verbatim copies of
+     this manual provided the copyright notice and this permission
+     notice are preserved on all copies.
+
+     Permission is granted to copy and distribute modified versions of
+     this manual under the conditions for verbatim copying, provided
+     that the entire resulting derived work is distributed under the
+     terms of a permission notice identical to this one.
+
+     Permission is granted to copy and distribute translations of this
+     manual into another language, under the above conditions for
+     modified versions, except that this permission notice may be
+     stated in a translation approved by the Free Software Foundation.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="The-Halfcomplex-format-DFT"></a>
+<a name="The-Halfcomplex_002dformat-DFT"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Real-even_002fodd-DFTs-_0028cosine_002fsine-transforms_0029.html#Real-even_002fodd-DFTs-_0028cosine_002fsine-transforms_0029">Real even/odd DFTs (cosine/sine transforms)</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="More-DFTs-of-Real-Data.html#More-DFTs-of-Real-Data">More DFTs of Real Data</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="More-DFTs-of-Real-Data.html#More-DFTs-of-Real-Data">More DFTs of Real Data</a>
+<hr>
+</div>
+
+<h4 class="subsection">2.5.1 The Halfcomplex-format DFT</h4>
+
+<p>An r2r kind of <code>FFTW_R2HC</code> (<dfn>r2hc</dfn>) corresponds to an r2c DFT
+<a name="index-FFTW_005fR2HC-72"></a><a name="index-r2c-73"></a><a name="index-r2hc-74"></a>(see <a href="One_002dDimensional-DFTs-of-Real-Data.html#One_002dDimensional-DFTs-of-Real-Data">One-Dimensional DFTs of Real Data</a>) but with &ldquo;halfcomplex&rdquo;
+format output, and may sometimes be faster and/or more convenient than
+the latter. 
+<a name="index-halfcomplex-format-75"></a>The inverse <dfn>hc2r</dfn> transform is of kind <code>FFTW_HC2R</code>. 
+<a name="index-FFTW_005fHC2R-76"></a><a name="index-hc2r-77"></a>This consists of the non-redundant half of the complex output for a 1d
+real-input DFT of size <code>n</code>, stored as a sequence of <code>n</code> real
+numbers (<code>double</code>) in the format:
+
+   <p><p align=center>
+r<sub>0</sub>, r<sub>1</sub>, r<sub>2</sub>, ..., r<sub>n/2</sub>, i<sub>(n+1)/2-1</sub>, ..., i<sub>2</sub>, i<sub>1</sub>
+</p>
+
+   <p>Here,
+r<sub>k</sub>is the real part of the kth output, and
+i<sub>k</sub>is the imaginary part.  (Division by 2 is rounded down.) For a
+halfcomplex array <code>hc[n]</code>, the kth component thus has its
+real part in <code>hc[k]</code> and its imaginary part in <code>hc[n-k]</code>, with
+the exception of <code>k</code> <code>==</code> <code>0</code> or <code>n/2</code> (the latter
+only if <code>n</code> is even)&mdash;in these two cases, the imaginary part is
+zero due to symmetries of the real-input DFT, and is not stored. 
+Thus, the r2hc transform of <code>n</code> real values is a halfcomplex array of
+length <code>n</code>, and vice versa for hc2r. 
+<a name="index-normalization-78"></a>
+
+   <p>Aside from the differing format, the output of
+<code>FFTW_R2HC</code>/<code>FFTW_HC2R</code> is otherwise exactly the same as for
+the corresponding 1d r2c/c2r transform
+(i.e. <code>FFTW_FORWARD</code>/<code>FFTW_BACKWARD</code> transforms, respectively). 
+Recall that these transforms are unnormalized, so r2hc followed by hc2r
+will result in the original data multiplied by <code>n</code>.  Furthermore,
+like the c2r transform, an out-of-place hc2r transform will
+<em>destroy its input</em> array.
+
+   <p>Although these halfcomplex transforms can be used with the
+multi-dimensional r2r interface, the interpretation of such a separable
+product of transforms along each dimension is problematic.  For example,
+consider a two-dimensional <code>n0</code> by <code>n1</code>, r2hc by r2hc
+transform planned by <code>fftw_plan_r2r_2d(n0, n1, in, out, FFTW_R2HC,
+FFTW_R2HC, FFTW_MEASURE)</code>.  Conceptually, FFTW first transforms the rows
+(of size <code>n1</code>) to produce halfcomplex rows, and then transforms the
+columns (of size <code>n0</code>).  Half of these column transforms, however,
+are of imaginary parts, and should therefore be multiplied by i
+and combined with the r2hc transforms of the real columns to produce the
+2d DFT amplitudes; FFTW's r2r transform does <em>not</em> perform this
+combination for you.  Thus, if a multi-dimensional real-input/output DFT
+is required, we recommend using the ordinary r2c/c2r
+interface (see <a href="Multi_002dDimensional-DFTs-of-Real-Data.html#Multi_002dDimensional-DFTs-of-Real-Data">Multi-Dimensional DFTs of Real Data</a>).
+
+<!-- =========> -->
+   </body></html>
+
