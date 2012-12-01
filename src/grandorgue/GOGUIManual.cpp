@@ -167,9 +167,10 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 
 		if (height < m_Keys[i].OnBitmap->GetHeight())
 			height = m_Keys[i].OnBitmap->GetHeight();
+		if (width < m_Keys[i].Rect.GetRight())
+			width = m_Keys[i].Rect.GetRight();
 		x += key_width;
 	}
-	width = x;
 
 	x = mri.x + 1;
 	y = mri.keys_y;
