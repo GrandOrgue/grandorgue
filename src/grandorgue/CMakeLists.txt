@@ -10,6 +10,17 @@ else()
     set(PORTAUDIO_LIBRARIES portaudio)
   endif()
 endif()
+if (USE_INTERNAL_FFTW)
+  include_directories(${CMAKE_BINARY_DIR}/lib/fftw/)
+  set(FFTW_LIBRARIES fftw)
+else()
+  if(DEFINED FFTW_INCLUDE_DIRS)
+    include_directories(${FFTW_INCLUDE_DIRS})
+  endif()
+  if(NOT DEFINED FFTW_LIBRARIES)
+    set(FFTW_LIBRARIES fftw3f)
+  endif()
+endif()
 
 # include wxWidgets
 if (STATIC)
@@ -287,6 +298,7 @@ endif ()
 
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} RtAudio RtMidi)
 target_link_libraries(${PROJECT_NAME} ${PORTAUDIO_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${FFTW_LIBRARIES})
 
 if (APPLE)
    install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
@@ -300,6 +312,6 @@ if (INSTALL_DEPEND STREQUAL "ON")
 endif()
 
 add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp ${grandorgue_src})
-target_link_libraries(perftest ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES})
+target_link_libraries(perftest ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES})
 
 add_custom_target(test COMMAND perftest ${CMAKE_SOURCE_DIR}/tests DEPENDS perftest)
