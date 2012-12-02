@@ -34,6 +34,7 @@ class SettingsMidiDevices;
 class SettingsMidiMessage;
 class SettingsOption;
 class SettingsOrgan;
+class SettingsReverb;
 
 class SettingsDialog : public wxPropertySheetDialog
 {
@@ -46,6 +47,7 @@ private:
 	SettingsMidiMessage* m_MidiMessagePage;
 	SettingsAudioGroup* m_GroupPage;
 	SettingsAudioOutput* m_OutputPage;
+	SettingsReverb* m_ReverbPage;
 
 	bool DoApply();
 

@@ -32,6 +32,7 @@
 #include "SettingsMidiMessage.h"
 #include "SettingsOption.h"
 #include "SettingsOrgan.h"
+#include "SettingsReverb.h"
 
 IMPLEMENT_CLASS(SettingsDialog, wxPropertySheetDialog)
 
@@ -55,9 +56,11 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	m_MidiMessagePage = new SettingsMidiMessage(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
 	m_GroupPage = new SettingsAudioGroup(m_Sound.GetSettings(), notebook);
 	m_OutputPage = new SettingsAudioOutput(m_Sound, *m_GroupPage, notebook);
+	m_ReverbPage = new SettingsReverb(m_Sound.GetSettings(), notebook);
 
 	notebook->AddPage(m_OptionsPage,  _("Options"));
 	notebook->AddPage(m_OutputPage, _("Audio Output"));
+	notebook->AddPage(m_ReverbPage, _("Reverb"));
 	notebook->AddPage(m_GroupPage, _("Audio Groups"));
 	notebook->AddPage(m_OrganPage, _("Organs"));
 	notebook->AddPage(m_MidiDevicePage,  _("MIDI Devices"));
@@ -105,6 +108,7 @@ bool SettingsDialog::DoApply()
 	m_OrganPage->Save();
 	m_GroupPage->Save();
 	m_OutputPage->Save();
+	m_ReverbPage->Save();
 
 	m_Sound.ResetSound(true);
 
