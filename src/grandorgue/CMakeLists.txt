@@ -34,7 +34,7 @@ include(CMakeImages.txt)
 include(CMakeWxBundle.txt)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgueDef.h.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h/GrandOrgueDef.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib)
 
 CONVERTIMAGE(gauge.gif)
 CONVERTIMAGE(draw1off.png)
@@ -150,6 +150,8 @@ CONVERTIMAGE(PedalSharpWoodUp.png)
 
 set(grandorgue_src
 contrib/sha1.cpp
+contrib/zita-convolver.cpp
+
 GOGUIButton.cpp
 GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
