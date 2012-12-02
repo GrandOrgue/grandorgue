@@ -230,6 +230,7 @@ SettingsMidiDevices.cpp
 SettingsMidiMessage.cpp
 SettingsOption.cpp
 SettingsOrgan.cpp
+SettingsReverb.cpp
 SplashScreen.cpp
 wxGaugeAudio.cpp
 ${IMAGE_LIST})
