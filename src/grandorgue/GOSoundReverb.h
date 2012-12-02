@@ -22,12 +22,14 @@
 #ifndef GOSOUNDREVERB_H
 #define GOSOUNDREVERB_H
 
+class Convproc;
 class GOrgueSettings;
 
 class GOSoundReverb
 {
 private:
 	unsigned m_channels;
+	Convproc* m_engine;
 
 	void Cleanup();
 
