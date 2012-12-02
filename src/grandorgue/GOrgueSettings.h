@@ -81,6 +81,13 @@ private:
 	int m_StopChangeEvent;
 	int m_Transpose;
 	int m_Reverb;
+	bool m_ReverbEnabled;
+	bool m_ReverbDirect;
+	int m_ReverbChannel;
+	unsigned m_ReverbStartOffset;
+	unsigned m_ReverbLen;
+	float m_ReverbGain;
+	wxString m_ReverbFile;
 
 	static const wxString m_ManualNames[];
 	static const wxString m_EnclosureNames[];
@@ -203,6 +210,21 @@ public:
 	void SetTranspose(int transpose);
 	int GetReverb();
 	void SetReverb(int reverb);
+
+	bool GetReverbEnabled();
+	void SetReverbEnabled(bool on);
+	bool GetReverbDirect();
+	void SetReverbDirect(bool on);
+	wxString GetReverbFile();
+	void SetReverbFile(wxString file);
+	unsigned GetReverbStartOffset();
+	void SetReverbStartOffset(unsigned offset);
+	unsigned GetReverbLen();
+	void SetReverbLen(unsigned length);
+	float GetReverbGain();
+	void SetReverbGain(float gain);
+	int GetReverbChannel();
+	void SetReverbChannel(int channel);
 };
 
 #endif

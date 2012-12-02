@@ -90,7 +90,14 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_SetterEvents(),
 	m_StopChangeEvent(0),
 	m_Transpose(0),
-	m_Reverb(0)
+	m_Reverb(0),
+	m_ReverbEnabled(false),
+	m_ReverbDirect(true),
+	m_ReverbChannel(1),
+	m_ReverbStartOffset(0),
+	m_ReverbLen(0),
+	m_ReverbGain(1),
+	m_ReverbFile()
 {
 	GetConfig().SetRecordDefaults();
 }
@@ -160,6 +167,17 @@ void GOrgueSettings::Load()
 	SetUserSettingPath (m_Config.Read(wxT("SettingPath"), wxEmptyString));
 	SetUserCachePath (m_Config.Read(wxT("CachePath"), wxEmptyString));
 	m_Preset = m_Config.Read(wxT("Preset"), 0L);
+
+	m_ReverbEnabled = m_Config.Read(wxT("ReverbEnabled"), 0L);
+	m_ReverbDirect = m_Config.Read(wxT("ReverbDirect"), 1L);
+	m_ReverbChannel = m_Config.Read(wxT("ReverbChannel"), 1);
+	m_ReverbStartOffset = m_Config.Read(wxT("ReverbStartOffset"), 0L);
+	m_ReverbLen = m_Config.Read(wxT("ReverbLen"), 0L);
+	double gain;
+	m_Config.Read(wxT("ReverbGain"), &gain, 1.0f);
+	m_ReverbGain = gain;
+	m_ReverbFile = m_Config.Read(wxT("ReverbFile"), wxEmptyString);
+
 
 	m_StopChangeEvent = m_Config.Read(wxString(wxT("MIDI/")) + m_StopChangeName, 0x9400);
 	for(unsigned i = 0; i < GetManualCount(); i++)
@@ -843,4 +861,81 @@ void GOrgueSettings::SetReverb(int reverb)
 {
 	m_Reverb = reverb;
 	m_Config.Write(wxT("Reverb"), reverb);
+}
+
+bool GOrgueSettings::GetReverbEnabled()
+{
+	return m_ReverbEnabled;
+}
+
+void GOrgueSettings::SetReverbEnabled(bool on)
+{
+	m_ReverbEnabled = on;
+	m_Config.Write(wxT("ReverbEnabled"), (long)m_ReverbEnabled);
+}
+
+bool GOrgueSettings::GetReverbDirect()
+{
+	return m_ReverbDirect;
+}
+
+void GOrgueSettings::SetReverbDirect(bool on)
+{
+	m_ReverbDirect = on;
+	m_Config.Write(wxT("ReverbDirect"), (long)m_ReverbDirect);
+}
+
+wxString GOrgueSettings::GetReverbFile()
+{
+	return m_ReverbFile;
+}
+
+void GOrgueSettings::SetReverbFile(wxString file)
+{
+	m_ReverbFile = file;
+	m_Config.Write(wxT("ReverbFile"), m_ReverbFile);
+}
+
+unsigned GOrgueSettings::GetReverbStartOffset()
+{
+	return m_ReverbStartOffset;
+}
+
+void GOrgueSettings::SetReverbStartOffset(unsigned offset)
+{
+	m_ReverbStartOffset = offset;
+	m_Config.Write(wxT("ReverbStartOffset"), (long)m_ReverbStartOffset);
+}
+
+unsigned GOrgueSettings::GetReverbLen()
+{
+	return m_ReverbLen;
+}
+
+void GOrgueSettings::SetReverbLen(unsigned length)
+{
+	m_ReverbLen = length;
+	m_Config.Write(wxT("ReverbLen"), (long)m_ReverbLen);
+}
+
+float GOrgueSettings::GetReverbGain()
+{
+	return m_ReverbGain;
+}
+
+void GOrgueSettings::SetReverbGain(float gain)
+{
+	m_ReverbGain = gain;
+	m_Config.Write(wxT("ReverbGain"), m_ReverbGain);
+}
+
+int GOrgueSettings::GetReverbChannel()
+{
+	return m_ReverbChannel;
+}
+
+void GOrgueSettings::SetReverbChannel(int channel)
+{
+	m_ReverbChannel = channel;
+	m_Config.Write(wxT("ReverbChannel"), m_ReverbChannel);
 }
