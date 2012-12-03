@@ -78,7 +78,6 @@
 #include "pa_win_coinitialize.h"
 
 #undef NTDDI_VERSION
-#define PROPERTYKEY_DEFINED
 #ifndef NTDDI_VERSION
  
     #undef WINVER
@@ -105,7 +104,7 @@
 		typedef const GUID *LPCGUID;
 	#endif
 
-    #ifndef PROPERTYKEY_DEFINED
+    #ifdef XXX_PROPERTYKEY_DEFINED
         #define PROPERTYKEY_DEFINED
         typedef struct _tagpropertykey
         {
