@@ -26,8 +26,9 @@
 #include <wx/wx.h>
 
 class GOrgueConfigReader;
-class GOrgueRank;
 class GOrguePipe;
+class GOrgueRank;
+class GOrgueTremulant;
 class GrandOrgueFile;
 
 class GOrgueWindchest
@@ -44,7 +45,7 @@ public:
 
 	GOrgueWindchest(GrandOrgueFile* organfile);
 	void Load(GOrgueConfigReader& cfg, wxString group, unsigned index);
-	void ControlChanged(void* control);
+	void UpdateTremulant(GOrgueTremulant* tremulant);
 	float GetVolume();
 	unsigned GetTremulantCount();
 	unsigned GetTremulantId(unsigned index);

@@ -144,6 +144,7 @@ public:
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);
 	void ControlChanged(void* control);
+	void UpdateTremulant(GOrgueTremulant* tremulant);
 	void Modified();
 	~GrandOrgueFile(void);
 

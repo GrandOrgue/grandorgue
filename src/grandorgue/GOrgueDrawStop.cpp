@@ -65,8 +65,8 @@ void GOrgueDrawstop::SetState(bool on)
 {
 	if (IsActive() == on)
 		return;
-	ChangeState(on);
 	m_ActiveState = on;
+	ChangeState(on);
 }
 
 void GOrgueDrawstop::SetCombination(bool on)

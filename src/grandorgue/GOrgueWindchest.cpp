@@ -109,10 +109,10 @@ const wxString& GOrgueWindchest::GetName()
 	return m_Name;
 }
 
-void GOrgueWindchest::ControlChanged(void* control)
+void GOrgueWindchest::UpdateTremulant(GOrgueTremulant* tremulant)
 {
 	for (unsigned i = 0; i < m_tremulant.size(); i++)
-		if (control == (GOrgueButton*) m_organfile->GetTremulant(m_tremulant[i]))
+		if (tremulant == m_organfile->GetTremulant(m_tremulant[i]))
 		{
 			GOrgueTremulant* t = m_organfile->GetTremulant(m_tremulant[i]);
 			if (t->GetTremulantType() != GOWavTrem)
