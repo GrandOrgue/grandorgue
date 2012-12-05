@@ -125,6 +125,10 @@ void GOrgueTremulant::ChangeState(bool on)
 			m_PlaybackHandle = NULL;
 		}
 	}
+	if (m_TremulantType == GOWavTrem)
+	{
+		m_organfile->UpdateTremulant(this);
+	}
 }
 
 void GOrgueTremulant::Abort()
@@ -144,7 +148,7 @@ void GOrgueTremulant::PreparePlayback()
 	}
 	if (m_TremulantType == GOWavTrem)
 	{
-		m_organfile->ControlChanged((GOrgueButton*)this);
+		m_organfile->UpdateTremulant(this);
 	}
 }
 
