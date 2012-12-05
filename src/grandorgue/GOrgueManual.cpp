@@ -199,6 +199,8 @@ void GOrgueManual::Set(unsigned note, unsigned velocity)
 		return;
 	m_KeyVelocity[note - m_first_accessible_key_midi_note_nb] = velocity;
 	m_sender.SetKey(note, velocity);
+	if (velocity)
+		velocity = (velocity << 2) + 3;
 	SetKey(note - m_first_accessible_key_midi_note_nb + m_first_accessible_logical_key_nb - 1, velocity, NULL, 0);
 }
 
