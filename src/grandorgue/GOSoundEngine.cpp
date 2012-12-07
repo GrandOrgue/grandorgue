@@ -287,6 +287,7 @@ void GOSoundEngine::ReadSamplerFrames
 
 void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, bool depend)
 {
+	unsigned block_time = n_frames / BLOCKS_PER_FRAME;
 	GOMutexLocker locker(state.mutex, !depend);
 
 	if (!locker.IsLocked())
@@ -340,6 +341,9 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 					(m_CurrentTime - sampler->time > 172)
 				)
 				sampler->fader.StartDecay(-13); /* Approx 0.37s at 44.1kHz */
+
+			if (sampler->stop && m_CurrentTime - sampler->time <= block_time)
+				sampler->pipe = NULL;
 
 			/* The decoded sampler frame will contain values containing
 			 * sampler->pipe_section->sample_bits worth of significant bits.
