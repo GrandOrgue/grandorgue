@@ -52,6 +52,9 @@ SettingsReverb::SettingsReverb(GOrgueSettings& settings, wxWindow* parent) :
 	box2->Add(m_FileName);
 	grid->Add(box2);
 
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Delay (ms):")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_Delay = new wxSpinCtrl(this, ID_DELAY, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
+
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Start offset:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_StartOffset = new wxSpinCtrl(this, ID_START_OFFSET, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
 
@@ -78,6 +81,7 @@ SettingsReverb::SettingsReverb(GOrgueSettings& settings, wxWindow* parent) :
 	this->SetSizer(topSizer);
 
 	m_GainSpin->SetRange(1, 1000);
+	m_Delay->SetRange(0, 10000);
 
 	m_Enabled->SetValue(m_Settings.GetReverbEnabled());
 	UpdateEnabled();
@@ -95,6 +99,7 @@ SettingsReverb::SettingsReverb(GOrgueSettings& settings, wxWindow* parent) :
 	m_Length->SetValue(m_Settings.GetReverbLen());
 	m_Channel->SetSelection(m_Settings.GetReverbChannel() - 1);
 	m_Direct->SetValue(m_Settings.GetReverbDirect());
+	m_Delay->SetValue(m_Settings.GetReverbDelay());
 
 	topSizer->Fit(this);
 }
@@ -146,6 +151,7 @@ void SettingsReverb::UpdateEnabled()
 		m_Channel->Enable();
 		m_StartOffset->Enable();
 		m_Length->Enable();
+		m_Delay->Enable();
 		m_Gain->Enable();
 		m_GainSpin->Enable();
 		UpdateLimits();
@@ -157,6 +163,7 @@ void SettingsReverb::UpdateEnabled()
 		m_Channel->Disable();
 		m_StartOffset->Disable();
 		m_Length->Disable();
+		m_Delay->Disable();
 		m_Gain->Disable();
 		m_GainSpin->Disable();
 	}
@@ -193,6 +200,7 @@ void SettingsReverb::Save()
 	m_Settings.SetReverbDirect(m_Direct->IsChecked());
 	m_Settings.SetReverbFile(m_File->GetPath());
 	m_Settings.SetReverbLen(m_Length->GetValue());
+	m_Settings.SetReverbDelay(m_Delay->GetValue());
 	m_Settings.SetReverbStartOffset(m_StartOffset->GetValue());
 	m_Settings.SetReverbChannel(m_Channel->GetSelection() + 1);
 	double gain;

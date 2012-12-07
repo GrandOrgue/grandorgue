@@ -86,6 +86,7 @@ private:
 	int m_ReverbChannel;
 	unsigned m_ReverbStartOffset;
 	unsigned m_ReverbLen;
+	unsigned m_ReverbDelay;
 	float m_ReverbGain;
 	wxString m_ReverbFile;
 
@@ -225,6 +226,8 @@ public:
 	void SetReverbGain(float gain);
 	int GetReverbChannel();
 	void SetReverbChannel(int channel);
+	unsigned GetReverbDelay();
+	void SetReverbDelay(unsigned delay);
 };
 
 #endif
