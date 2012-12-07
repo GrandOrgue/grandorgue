@@ -81,6 +81,7 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 			data[i] *= gain;
 		if (len >= offset + settings.GetReverbLen() && settings.GetReverbLen())
 			len = offset + settings.GetReverbLen();
+		unsigned delay = (settings.GetSampleRate() * settings.GetReverbDelay()) / 1000;
 		for(unsigned i = 0; i < m_channels; i++)
 		{
 			float* d = data + offset;
@@ -90,7 +91,7 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 				m_engine->impdata_create(i, i, 0, &g, 0, 1);
 			for(unsigned j = 0; j < l; j+= block)
 			{
-				m_engine->impdata_create(i, i, 0, d + j, j, j + std::min(l - j, block));
+				m_engine->impdata_create(i, i, 0, d + j, delay + j, delay + j + std::min(l - j, block));
 			}
 		}
 		wav.Close();

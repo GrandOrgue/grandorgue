@@ -38,6 +38,7 @@ class SettingsReverb : public wxPanel
 		ID_CHANNEL,
 		ID_START_OFFSET,
 		ID_LENGTH,
+		ID_DELAY,
 		ID_GAIN,
 		ID_GAIN_SPIN,
 	};
@@ -50,6 +51,7 @@ private:
 	wxChoice* m_Channel;
 	wxSpinCtrl* m_StartOffset;
 	wxSpinCtrl* m_Length;
+	wxSpinCtrl* m_Delay;
 	wxTextCtrl* m_Gain;
 	wxSpinButton* m_GainSpin;
 

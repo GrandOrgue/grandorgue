@@ -96,6 +96,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_ReverbChannel(1),
 	m_ReverbStartOffset(0),
 	m_ReverbLen(0),
+	m_ReverbDelay(0),
 	m_ReverbGain(1),
 	m_ReverbFile()
 {
@@ -173,6 +174,7 @@ void GOrgueSettings::Load()
 	m_ReverbChannel = m_Config.Read(wxT("ReverbChannel"), 1);
 	m_ReverbStartOffset = m_Config.Read(wxT("ReverbStartOffset"), 0L);
 	m_ReverbLen = m_Config.Read(wxT("ReverbLen"), 0L);
+	m_ReverbDelay = m_Config.Read(wxT("ReverbDelay"), 0L);
 	double gain;
 	m_Config.Read(wxT("ReverbGain"), &gain, 1.0f);
 	m_ReverbGain = gain;
@@ -938,4 +940,15 @@ void GOrgueSettings::SetReverbChannel(int channel)
 {
 	m_ReverbChannel = channel;
 	m_Config.Write(wxT("ReverbChannel"), m_ReverbChannel);
+}
+
+unsigned GOrgueSettings::GetReverbDelay()
+{
+	return m_ReverbDelay;
+}
+
+void GOrgueSettings::SetReverbDelay(unsigned delay)
+{
+	m_ReverbDelay = delay;
+	m_Config.Write(wxT("ReverbDelay"), (long)m_ReverbDelay);
 }
