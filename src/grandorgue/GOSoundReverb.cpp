@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "GOSoundResample.h"
 #include "GOSoundReverb.h"
 #include "GOrgueSettings.h"
 #include "GOrgueWave.h"
@@ -81,6 +82,15 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 			data[i] *= gain;
 		if (len >= offset + settings.GetReverbLen() && settings.GetReverbLen())
 			len = offset + settings.GetReverbLen();
+		if (wav.GetSampleRate() != settings.GetSampleRate())
+		{
+			float* new_data = resample_block(data, len, wav.GetSampleRate(), settings.GetSampleRate());
+			if (!new_data)
+				throw (wxString)_("Resampling failed");
+			free(data);
+			data = new_data;
+			offset = (offset * settings.GetSampleRate()) / (float)wav.GetSampleRate();
+		}
 		unsigned delay = (settings.GetSampleRate() * settings.GetReverbDelay()) / 1000;
 		for(unsigned i = 0; i < m_channels; i++)
 		{

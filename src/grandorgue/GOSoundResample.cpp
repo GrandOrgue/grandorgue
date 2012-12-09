@@ -113,3 +113,40 @@ resampler_coefs_init
 	resampler_coefs->interpolation = interpolation;
 }
 
+float* 
+resample_block(float* data, unsigned& len, unsigned from_samplerate, unsigned to_samplerate)
+{
+	struct resampler_coefs_s coefs;
+	float factor = ((float)from_samplerate) / to_samplerate;
+	resampler_coefs_init(&coefs, to_samplerate, GO_POLYPHASE_INTERPOLATION);
+	const float* coef   = coefs.coefs;
+	unsigned new_len = ceil(len / factor);
+	unsigned position_index = 0;
+	unsigned position_fraction = 0;
+	unsigned increment_fraction = factor * UPSAMPLE_FACTOR;
+	if (!new_len)
+		return 0;
+	float* out = new float[new_len];
+
+	for (unsigned i = 0; i < new_len; ++i, position_fraction += increment_fraction)
+	{
+		position_index += position_fraction >> UPSAMPLE_BITS;
+		position_fraction = position_fraction & (UPSAMPLE_FACTOR - 1);
+		float out1 = 0.0f;
+		float out2 = 0.0f;
+		float out3 = 0.0f;
+		float out4 = 0.0f;
+		const float* coef_set = &coef[position_fraction << SUBFILTER_BITS];
+		float* in_set = &data[position_index];
+		for (unsigned j = 0; j < SUBFILTER_TAPS; j += 4)
+		{
+			out1 += in_set[j]   * coef_set[j];
+			out2 += in_set[j+1] * coef_set[j+1];
+			out3 += in_set[j+2] * coef_set[j+2];
+			out4 += in_set[j+3] * coef_set[j+3];
+		}
+		out[i] = out1 + out2 + out3 + out4;
+	}
+	len = new_len;
+	return out;
+}

@@ -59,4 +59,6 @@ resampler_coefs_init
 	,interpolation_type          interpolation
 	);
 
+float* resample_block(float* data, unsigned& len, unsigned from_samplerate, unsigned to_samplerate);
+
 #endif /* GOSOUNDRESAMPLE_H_ */
