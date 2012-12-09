@@ -169,7 +169,7 @@ void GOrgueCoupler::ChangeKey(int note, unsigned velocity)
 			m_CurrentTone = nextNote;
 
 		if (m_CurrentTone != -1)
-			SetOut(m_CurrentTone +  m_Keyshift, velocity);
+			SetOut(m_CurrentTone +  m_Keyshift, m_KeyVelocity[m_CurrentTone]);
 
 		if (velocity > 0)
 			m_LastTone = note;
