@@ -101,7 +101,7 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 				m_engine->impdata_create(i, i, 0, &g, 0, 1);
 			for(unsigned j = 0; j < l; j+= block)
 			{
-				m_engine->impdata_create(i, i, 0, d + j, delay + j, delay + j + std::min(l - j, block));
+				m_engine->impdata_create(i, i, 1, d + j, delay + j, delay + j + std::min(l - j, block));
 			}
 		}
 		wav.Close();
