@@ -125,6 +125,7 @@ void SettingsReverb::UpdateLimits()
 		m_Channel->Clear();
 		for(unsigned i = 1; i <= wav.GetChannels(); i++)
 			m_Channel->Append(wxString::Format(wxT("%d"), i));
+		m_Channel->SetSelection(0);
 		m_StartOffset->SetRange(0, wav.GetLength());
 		m_Length->SetRange(0, wav.GetLength());
 	}
