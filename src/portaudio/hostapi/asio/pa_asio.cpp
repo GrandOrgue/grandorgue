@@ -1,5 +1,5 @@
 /*
- * $Id: pa_asio.cpp 1878 2012-11-11 13:27:22Z rbencina $
+ * $Id: pa_asio.cpp 1879 2012-12-04 14:45:31Z rbencina $
  * Portable Audio I/O Library for ASIO Drivers
  *
  * Author: Stephane Letz
@@ -2454,10 +2454,10 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
         result = PaUtil_InitializeBufferProcessor( &stream->bufferProcessor               ,
                                                     inputChannelCount                     ,
                                                     inputSampleFormat & ~paNonInterleaved , /* Ring buffer. */
-                                                    hostInputSampleFormat                 , /* Host format. */
+                                                    (hostInputSampleFormat | paNonInterleaved), /* Host format. */
                                                     outputChannelCount                    ,
                                                     outputSampleFormat & ~paNonInterleaved, /* Ring buffer. */
-                                                    hostOutputSampleFormat                , /* Host format. */
+                                                    (hostOutputSampleFormat | paNonInterleaved), /* Host format. */
                                                     sampleRate                            ,
                                                     streamFlags                           ,
                                                     framesPerBuffer                       , /* Frames per ring buffer block. */
