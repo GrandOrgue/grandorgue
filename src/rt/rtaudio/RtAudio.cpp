@@ -5919,6 +5919,7 @@ bool RtApiAlsa :: probeDeviceOpen( unsigned int device, StreamMode mode, unsigne
     stream_.deviceBuffer = 0;
   }
 
+  stream_.state = STREAM_CLOSED;
   return FAILURE;
 }
 
