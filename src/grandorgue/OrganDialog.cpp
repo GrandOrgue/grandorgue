@@ -576,7 +576,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	wxArrayTreeItemIds entries;
 	m_Tree->GetSelections(entries);
 
-	if (!m_Amplitude->GetValue().ToDouble(&amp) ||
+	if (!m_Amplitude->GetValue().ToDouble(&amp) &&
 	    (m_Amplitude->IsModified() &&
 	     (amp < 0 || amp > 1000)))
 	{
@@ -584,7 +584,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		return;
 	}
 
-	if (!m_Gain->GetValue().ToDouble(&gain) ||
+	if (!m_Gain->GetValue().ToDouble(&gain) &&
 	    (m_Gain->IsModified() &&
 	     (gain < -120 || gain > 40)))
 	{
@@ -592,7 +592,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		return;
 	}
 
-	if (!m_Tuning->GetValue().ToDouble(&tuning) ||
+	if (!m_Tuning->GetValue().ToDouble(&tuning) &&
 	    (m_Tuning->IsModified() &&
 	     (tuning < - 1200 || tuning > 1200)))
 	{
