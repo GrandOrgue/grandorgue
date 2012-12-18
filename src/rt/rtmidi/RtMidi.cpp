@@ -36,7 +36,7 @@
 */
 /**********************************************************************/
 
-// RtMidi: Version 1.0.15
+// RtMidi: Version 2.0.1
 
 #include "RtMidi.h"
 #include <sstream>
@@ -160,6 +160,7 @@ RtMidiIn :: ~RtMidiIn() throw()
   if ( rtapi_ )
     delete rtapi_;
 }
+
 
 //*********************************************************************//
 //  RtMidiOut Definitions
@@ -392,9 +393,11 @@ void midiInputCallback( const MIDIPacketList *list, void *procRef, void *srcRef 
     if ( nBytes == 0 ) continue;
 
     // Calculate time stamp.
-    message.timeStamp = 0.0;
-    if ( data->firstMessage )
+
+    if ( data->firstMessage ) {
+      message.timeStamp = 0.0;
       data->firstMessage = false;
+    }
     else {
       time = packet->timeStamp;
       if ( time == 0 ) { // this happens when receiving asynchronous sysex messages
@@ -402,7 +405,8 @@ void midiInputCallback( const MIDIPacketList *list, void *procRef, void *srcRef 
       }
       time -= apiData->lastTime;
       time = AudioConvertHostTimeToNanos( time );
-      message.timeStamp = time * 0.000000001;
+      if ( !continueSysex )
+        message.timeStamp = time * 0.000000001;
     }
     apiData->lastTime = packet->timeStamp;
     if ( apiData->lastTime == 0 ) { // this happens when receiving asynchronous sysex messages
@@ -422,7 +426,7 @@ void midiInputCallback( const MIDIPacketList *list, void *procRef, void *srcRef 
 
       if ( !continueSysex ) {
         // If not a continuing sysex message, invoke the user callback function or queue the message.
-        if ( data->usingCallback && message.bytes.size() > 0 ) {
+        if ( data->usingCallback ) {
           RtMidiIn::RtMidiCallback callback = (RtMidiIn::RtMidiCallback) data->userCallback;
           callback( message.timeStamp, &message.bytes, data->userData );
         }
@@ -1049,6 +1053,7 @@ void MidiOutCore :: sendMessage( std::vector<unsigned char> *message )
 // implementation.
 struct AlsaMidiData {
   snd_seq_t *seq;
+  unsigned int portNum;
   int vport;
   snd_seq_port_subscribe_t *subscription;
   snd_midi_event_t *coder;
@@ -1101,9 +1106,9 @@ extern "C" void *alsaMidiHandler( void *ptr )
   snd_midi_event_init( apiData->coder );
   snd_midi_event_no_status( apiData->coder, 1 ); // suppress running status messages
 
-  poll_fd_count = snd_seq_poll_descriptors_count(apiData->seq, POLLIN) + 1;
-  poll_fds = (struct pollfd*)alloca(poll_fd_count * sizeof(struct pollfd));
-  snd_seq_poll_descriptors(apiData->seq, poll_fds + 1, poll_fd_count - 1, POLLIN);
+  poll_fd_count = snd_seq_poll_descriptors_count( apiData->seq, POLLIN ) + 1;
+  poll_fds = (struct pollfd*)alloca( poll_fd_count * sizeof( struct pollfd ));
+  snd_seq_poll_descriptors( apiData->seq, poll_fds + 1, poll_fd_count - 1, POLLIN );
   poll_fds[0].fd = apiData->trigger_fds[0];
   poll_fds[0].events = POLLIN;
 
@@ -1111,12 +1116,12 @@ extern "C" void *alsaMidiHandler( void *ptr )
 
     if ( snd_seq_event_input_pending( apiData->seq, 1 ) == 0 ) {
       // No data pending
-      if (poll(poll_fds, poll_fd_count, -1) >= 0) {
-	if (poll_fds[0].revents & POLLIN) {
+      if ( poll( poll_fds, poll_fd_count, -1) >= 0 ) {
+        if ( poll_fds[0].revents & POLLIN ) {
           bool dummy;
-          int res = read(poll_fds[0].fd, &dummy, sizeof(dummy));
+          int res = read( poll_fds[0].fd, &dummy, sizeof(dummy) );
           (void) res;
-	}
+        }
       }
       continue;
     }
@@ -1229,9 +1234,9 @@ extern "C" void *alsaMidiHandler( void *ptr )
     }
 
     snd_seq_free_event( ev );
-    if ( message.bytes.size() == 0 ) continue;
+    if ( message.bytes.size() == 0 || continueSysex ) continue;
 
-    if ( data->usingCallback && !continueSysex ) {
+    if ( data->usingCallback ) {
       RtMidiIn::RtMidiCallback callback = (RtMidiIn::RtMidiCallback) data->userCallback;
       callback( message.timeStamp, &message.bytes, data->userData );
     }
@@ -1269,15 +1274,15 @@ MidiInAlsa :: ~MidiInAlsa()
   AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
   if ( inputData_.doInput ) {
     inputData_.doInput = false;
-    int res = write(data->trigger_fds[1], &inputData_.doInput, sizeof(inputData_.doInput));
+    int res = write( data->trigger_fds[1], &inputData_.doInput, sizeof(inputData_.doInput) );
     (void) res;
-    if (!pthread_equal(data->thread, data->dummy_thread_id))
+    if ( !pthread_equal(data->thread, data->dummy_thread_id) )
       pthread_join( data->thread, NULL );
   }
 
   // Cleanup.
-  close (data->trigger_fds[0]);
-  close (data->trigger_fds[1]);
+  close ( data->trigger_fds[0] );
+  close ( data->trigger_fds[1] );
   if ( data->vport >= 0 ) snd_seq_delete_port( data->seq, data->vport );
 #ifndef AVOID_TIMESTAMPING
   snd_seq_free_queue( data->seq, data->queue_id );
@@ -1292,9 +1297,9 @@ void MidiInAlsa :: initialize( const std::string& clientName )
   snd_seq_t *seq;
   int result = snd_seq_open(&seq, "default", SND_SEQ_OPEN_DUPLEX, SND_SEQ_NONBLOCK);
   if ( result < 0 ) {
-    errorString_ = "RtMidiIn::initialize: error creating ALSA sequencer input client object.";
+    errorString_ = "MidiInAlsa::initialize: error creating ALSA sequencer client object.";
     RtMidi::error( RtError::DRIVER_ERROR, errorString_ );
-	}
+  }
 
   // Set client name.
   snd_seq_set_client_name( seq, clientName.c_str() );
@@ -1302,6 +1307,7 @@ void MidiInAlsa :: initialize( const std::string& clientName )
   // Save our api-specific connection information.
   AlsaMidiData *data = (AlsaMidiData *) new AlsaMidiData;
   data->seq = seq;
+  data->portNum = -1;
   data->vport = -1;
   data->subscription = 0;
   data->dummy_thread_id = pthread_self();
@@ -1332,27 +1338,27 @@ void MidiInAlsa :: initialize( const std::string& clientName )
 // This function is used to count or get the pinfo structure for a given port number.
 unsigned int portInfo( snd_seq_t *seq, snd_seq_port_info_t *pinfo, unsigned int type, int portNumber )
 {
-	snd_seq_client_info_t *cinfo;
+  snd_seq_client_info_t *cinfo;
   int client;
   int count = 0;
-	snd_seq_client_info_alloca( &cinfo );
+  snd_seq_client_info_alloca( &cinfo );
 
-	snd_seq_client_info_set_client( cinfo, -1 );
-	while ( snd_seq_query_next_client( seq, cinfo ) >= 0 ) {
+  snd_seq_client_info_set_client( cinfo, -1 );
+  while ( snd_seq_query_next_client( seq, cinfo ) >= 0 ) {
     client = snd_seq_client_info_get_client( cinfo );
     if ( client == 0 ) continue;
-		// Reset query info
-		snd_seq_port_info_set_client( pinfo, client );
-		snd_seq_port_info_set_port( pinfo, -1 );
-		while ( snd_seq_query_next_port( seq, pinfo ) >= 0 ) {
+    // Reset query info
+    snd_seq_port_info_set_client( pinfo, client );
+    snd_seq_port_info_set_port( pinfo, -1 );
+    while ( snd_seq_query_next_port( seq, pinfo ) >= 0 ) {
       unsigned int atyp = snd_seq_port_info_get_type( pinfo );
       if ( ( atyp & SND_SEQ_PORT_TYPE_MIDI_GENERIC ) == 0 ) continue;
       unsigned int caps = snd_seq_port_info_get_capability( pinfo );
       if ( ( caps & type ) != type ) continue;
       if ( count == portNumber ) return 1;
       ++count;
-		}
-	}
+    }
+  }
 
   // If a negative portNumber was used, return the port count.
   if ( portNumber < 0 ) return count;
@@ -1361,8 +1367,8 @@ unsigned int portInfo( snd_seq_t *seq, snd_seq_port_info_t *pinfo, unsigned int 
 
 unsigned int MidiInAlsa :: getPortCount()
 {
-	snd_seq_port_info_t *pinfo;
-	snd_seq_port_info_alloca( &pinfo );
+  snd_seq_port_info_t *pinfo;
+  snd_seq_port_info_alloca( &pinfo );
 
   AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
   return portInfo( data->seq, pinfo, SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ, -1 );
@@ -1411,8 +1417,8 @@ void MidiInAlsa :: openPort( unsigned int portNumber, const std::string portName
     RtMidi::error( RtError::NO_DEVICES_FOUND, errorString_ );
   }
 
-	snd_seq_port_info_t *pinfo;
-	snd_seq_port_info_alloca( &pinfo );
+  snd_seq_port_info_t *pinfo;
+  snd_seq_port_info_alloca( &pinfo );
   std::ostringstream ost;
   AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
   if ( portInfo( data->seq, pinfo, SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ, (int) portNumber ) == 0 ) {
@@ -1576,7 +1582,7 @@ void MidiInAlsa :: closePort( void )
   // Stop thread to avoid triggering the callback, while the port is intended to be closed
   if ( inputData_.doInput ) {
     inputData_.doInput = false;
-    int res = write(data->trigger_fds[1], &inputData_.doInput, sizeof(inputData_.doInput));
+    int res = write( data->trigger_fds[1], &inputData_.doInput, sizeof(inputData_.doInput) );
     (void) res;
     if ( !pthread_equal(data->thread, data->dummy_thread_id) )
       pthread_join( data->thread, NULL );
@@ -1611,9 +1617,9 @@ void MidiOutAlsa :: initialize( const std::string& clientName )
 {
   // Set up the ALSA sequencer client.
   snd_seq_t *seq;
-  int result = snd_seq_open( &seq, "default", SND_SEQ_OPEN_OUTPUT, SND_SEQ_NONBLOCK );
-  if ( result < 0 ) {
-    errorString_ = "MidiAlsaOut::initialize: error creating ALSA sequencer client object.";
+  int result1 = snd_seq_open( &seq, "default", SND_SEQ_OPEN_OUTPUT, SND_SEQ_NONBLOCK );
+  if ( result1 < 0 ) {
+    errorString_ = "MidiOutAlsa::initialize: error creating ALSA sequencer client object.";
     RtMidi::error( RtError::DRIVER_ERROR, errorString_ );
 	}
 
@@ -1623,20 +1629,21 @@ void MidiOutAlsa :: initialize( const std::string& clientName )
   // Save our api-specific connection information.
   AlsaMidiData *data = (AlsaMidiData *) new AlsaMidiData;
   data->seq = seq;
+  data->portNum = -1;
   data->vport = -1;
   data->bufferSize = 32;
   data->coder = 0;
   data->buffer = 0;
-  result = snd_midi_event_new( data->bufferSize, &data->coder );
+  int result = snd_midi_event_new( data->bufferSize, &data->coder );
   if ( result < 0 ) {
     delete data;
-    errorString_ = "MidiAlsaOut::initialize: error initializing MIDI event parser!\n\n";
+    errorString_ = "MidiOutAlsa::initialize: error initializing MIDI event parser!\n\n";
     RtMidi::error( RtError::DRIVER_ERROR, errorString_ );
   }
   data->buffer = (unsigned char *) malloc( data->bufferSize );
   if ( data->buffer == NULL ) {
     delete data;
-    errorString_ = "MidiAlsaOut::initialize: error allocating buffer memory!\n\n";
+    errorString_ = "MidiOutAlsa::initialize: error allocating buffer memory!\n\n";
     RtMidi::error( RtError::MEMORY_ERROR, errorString_ );
   }
   snd_midi_event_init( data->coder );
@@ -1856,13 +1863,15 @@ static void CALLBACK midiInputCallback( HMIDIIN hmin,
 {
   if ( inputStatus != MIM_DATA && inputStatus != MIM_LONGDATA && inputStatus != MIM_LONGERROR ) return;
 
-  //MidiInAPi::RtMidiInData *data = static_cast<MidiInApi::RtMidiInData *> (instancePtr);
+  //MidiInApi::RtMidiInData *data = static_cast<MidiInApi::RtMidiInData *> (instancePtr);
   MidiInApi::RtMidiInData *data = (MidiInApi::RtMidiInData *)instancePtr;
   WinMidiData *apiData = static_cast<WinMidiData *> (data->apiData);
 
   // Calculate time stamp.
-  apiData->message.timeStamp = 0.0;
-  if ( data->firstMessage == true ) data->firstMessage = false;
+  if ( data->firstMessage == true ) {
+    apiData->message.timeStamp = 0.0;
+    data->firstMessage = false;
+  }
   else apiData->message.timeStamp = (double) ( timestamp - apiData->lastTime ) * 0.001;
   apiData->lastTime = timestamp;
 
@@ -3364,10 +3373,6 @@ struct JackMidiData {
   jack_ringbuffer_t *buffSize;
   jack_ringbuffer_t *buffMessage;
   jack_time_t lastTime;
-  };
-
-struct Arguments {
-  JackMidiData *jackData;
   MidiInApi :: RtMidiInData *rtMidiIn;
   };
 
@@ -3378,8 +3383,8 @@ struct Arguments {
 
 int jackProcessIn( jack_nframes_t nframes, void *arg )
 {
-  JackMidiData *jData = ( (Arguments *) arg )->jackData;
-  MidiInApi:: RtMidiInData *rtData = ( (Arguments *) arg )->rtMidiIn;
+  JackMidiData *jData = (JackMidiData *) arg;
+  MidiInApi :: RtMidiInData *rtData = jData->rtMidiIn;
   jack_midi_event_t event;
   jack_time_t long long time;
 
@@ -3407,20 +3412,22 @@ int jackProcessIn( jack_nframes_t nframes, void *arg )
 
     jData->lastTime = time;
 
-    if ( rtData->usingCallback && !rtData->continueSysex ) {
-      RtMidiIn::RtMidiCallback callback = (RtMidiIn::RtMidiCallback) rtData->userCallback;
-      callback( message.timeStamp, &message.bytes, rtData->userData );
-    }
-    else {
-      // As long as we haven't reached our queue size limit, push the message.
-      if ( rtData->queue.size < rtData->queue.ringSize ) {
-        rtData->queue.ring[rtData->queue.back++] = message;
-        if ( rtData->queue.back == rtData->queue.ringSize )
-          rtData->queue.back = 0;
-        rtData->queue.size++;
+    if ( !rtData->continueSysex ) {
+      if ( rtData->usingCallback ) {
+        RtMidiIn::RtMidiCallback callback = (RtMidiIn::RtMidiCallback) rtData->userCallback;
+        callback( message.timeStamp, &message.bytes, rtData->userData );
       }
-      else
-        std::cerr << "\nRtMidiIn: message queue limit reached!!\n\n";
+      else {
+        // As long as we haven't reached our queue size limit, push the message.
+        if ( rtData->queue.size < rtData->queue.ringSize ) {
+          rtData->queue.ring[rtData->queue.back++] = message;
+          if ( rtData->queue.back == rtData->queue.ringSize )
+            rtData->queue.back = 0;
+          rtData->queue.size++;
+        }
+        else
+          std::cerr << "\nMidiInJack: message queue limit reached!!\n\n";
+      }
     }
   }
 
@@ -3435,6 +3442,7 @@ MidiInJack :: MidiInJack( const std::string clientName, unsigned int queueSizeLi
 void MidiInJack :: initialize( const std::string& clientName )
 {
   JackMidiData *data = new JackMidiData;
+  apiData_ = (void *) data;
 
   // Initialize JACK client
   if (( data->client = jack_client_open( clientName.c_str(), JackNullOption, NULL )) == 0) {
@@ -3443,15 +3451,11 @@ void MidiInJack :: initialize( const std::string& clientName )
     return;
   }
 
-  Arguments *arg = new Arguments;
-  arg->jackData = data;
-
-  arg->rtMidiIn = &inputData_;
-  jack_set_process_callback( data->client, jackProcessIn, arg );
+  data->rtMidiIn = &inputData_;
   data->port = NULL;
-  jack_activate( data->client );
 
-  apiData_ = (void *) data;
+  jack_set_process_callback( data->client, jackProcessIn, data );
+  jack_activate( data->client );
 }
 
 MidiInJack :: ~MidiInJack()
@@ -3460,8 +3464,6 @@ MidiInJack :: ~MidiInJack()
   closePort();
 
   jack_client_close( data->client );
-
-  delete data;
 }
 
 void MidiInJack :: openPort( unsigned int portNumber, const std::string portName )
