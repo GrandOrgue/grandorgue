@@ -871,6 +871,7 @@ public:
   bool coInitialized_;
   bool buffersRolling;
   long duplexPrerollBytes;
+  std::vector<struct DsDevice> dsDevices;
   bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels, 
                         unsigned int firstChannel, unsigned int sampleRate,
                         RtAudioFormat format, unsigned int *bufferSize,
