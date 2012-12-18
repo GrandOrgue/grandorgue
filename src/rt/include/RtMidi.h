@@ -62,16 +62,13 @@ class RtMidi
   //! Pure virtual closePort() function.
   virtual void closePort( void ) = 0;
 
+  //! A basic error reporting function for RtMidi classes.
+  static void error( RtError::Type type, std::string errorString );
+
  protected:
 
   RtMidi();
   virtual ~RtMidi() {};
-
-  // A basic error reporting function for internal use in the RtMidi
-  // subclasses.  The behavior of this function can be modified to
-  // suit specific needs.
-  void error( RtError::Type type );
-
   void *apiData_;
   bool connected_;
   std::string errorString_;
