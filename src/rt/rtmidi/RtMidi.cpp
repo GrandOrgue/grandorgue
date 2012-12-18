@@ -365,7 +365,7 @@ struct CoreMidiData {
 //  Class Definitions: MidiInCore
 //*********************************************************************//
 
-void midiInputCallback( const MIDIPacketList *list, void *procRef, void *srcRef )
+static void midiInputCallback( const MIDIPacketList *list, void *procRef, void *srcRef )
 {
   MidiInApi::RtMidiInData *data = static_cast<MidiInApi::RtMidiInData *> (procRef);
   CoreMidiData *apiData = static_cast<CoreMidiData *> (data->apiData);
@@ -934,9 +934,9 @@ void MidiOutCore :: openVirtualPort( std::string portName )
   data->endpoint = endpoint;
 }
 
-char *sysexBuffer = 0;
+static char *sysexBuffer = 0;
 
-void sysexCompletionProc( MIDISysexSendRequest * sreq )
+static void sysexCompletionProc( MIDISysexSendRequest * sreq )
 {
   //std::cout << "Completed SysEx send\n";
  delete sysexBuffer;
@@ -1073,7 +1073,7 @@ struct AlsaMidiData {
 //  Class Definitions: MidiInAlsa
 //*********************************************************************//
 
-extern "C" void *alsaMidiHandler( void *ptr )
+static void *alsaMidiHandler( void *ptr )
 {
   MidiInApi::RtMidiInData *data = static_cast<MidiInApi::RtMidiInData *> (ptr);
   AlsaMidiData *apiData = static_cast<AlsaMidiData *> (data->apiData);
@@ -3025,7 +3025,7 @@ struct WindowsKsData
 // Class Definitions: MidiInWinKS
 // *********************************************************************//
 
-DWORD WINAPI midiKsInputThread(VOID* pUser)
+static DWORD WINAPI midiKsInputThread(VOID* pUser)
 {
   MidiInApi::RtMidiInData* data = static_cast<MidiInApi::RtMidiInData*>(pUser);
   WindowsKsData* apiData = static_cast<WindowsKsData*>(data->apiData);
@@ -3381,7 +3381,7 @@ struct JackMidiData {
 //  Class Definitions: MidiInJack
 //*********************************************************************//
 
-int jackProcessIn( jack_nframes_t nframes, void *arg )
+static int jackProcessIn( jack_nframes_t nframes, void *arg )
 {
   JackMidiData *jData = (JackMidiData *) arg;
   MidiInApi :: RtMidiInData *rtData = jData->rtMidiIn;
@@ -3560,7 +3560,7 @@ void MidiInJack :: closePort()
 //*********************************************************************//
 
 // Jack process callback
-int jackProcessOut( jack_nframes_t nframes, void *arg )
+static int jackProcessOut( jack_nframes_t nframes, void *arg )
 {
   JackMidiData *data = (JackMidiData *) arg;
   jack_midi_data_t *midiData;
