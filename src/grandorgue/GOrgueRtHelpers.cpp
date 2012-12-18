@@ -94,14 +94,14 @@ void GOrgueRtHelpers::GetUnknownSoundConfig(const int latency, unsigned sample_r
 
 const wxChar* GOrgueRtHelpers::GetApiName(const RtAudio::Api api)
 {
-
 	switch (api)
 	{
-
 	case RtAudio::LINUX_ALSA:
 		return _("Alsa");
 	case RtAudio::LINUX_OSS:
 		return _("OSS");
+	case RtAudio::LINUX_PULSE:
+		return _("PulseAudio");
 	case RtAudio::MACOSX_CORE:
 		return _("Core");
 	case RtAudio::UNIX_JACK:
@@ -113,10 +113,29 @@ const wxChar* GOrgueRtHelpers::GetApiName(const RtAudio::Api api)
 	case RtAudio::UNSPECIFIED:
 	default:
 		return _("Unknown");
-
 	}
-
 }
+
+const wxChar* 
+GOrgueRtHelpers::GetMidiApiPrefix(const RtMidi::Api api)
+{
+	switch (api)
+	{
+	case RtMidi::LINUX_ALSA:
+	case RtMidi::MACOSX_CORE:
+	case RtMidi::WINDOWS_MM:
+		/* Old APIs include no prefix to stay backward compatible */
+		return wxEmptyString;
+	case RtMidi::UNIX_JACK:
+		return _("Jack: ");
+	case RtMidi::WINDOWS_KS:
+		return _("KSAPI: ");
+	case RtMidi::UNSPECIFIED:
+	default:
+		return _("Unknown: ");
+	}
+}
+
 
 void GOrgueRtHelpers::GetBufferConfig
 	(const RtAudio::Api rt_api

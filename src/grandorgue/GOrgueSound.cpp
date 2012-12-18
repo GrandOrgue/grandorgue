@@ -319,6 +319,7 @@ void GOrgueSound::OpenStreams()
 				RtAudio::StreamOptions aOptions;
 				aOptions.flags = RTAUDIO_MINIMIZE_LATENCY;
 				aOptions.numberOfBuffers = 0;
+				aOptions.streamName = "GrandOrgue";
 
 				unsigned samples_per_buffer = m_SamplesPerBuffer;
 				m_AudioOutputs[i].audioDevice->openStream(&aOutputParam, NULL, RTAUDIO_FLOAT32, GetEngine().GetSampleRate(), &samples_per_buffer,
