@@ -24,6 +24,7 @@
 
 #include <wx/wx.h>
 #include "RtAudio.h"
+#include "RtMidi.h"
 
 class GOrgueRtHelpers
 {
@@ -47,6 +48,7 @@ public:
 
 	static const wxChar* GetApiName(const RtAudio::Api api);
 	static const wxChar* GetAudioFormatName(const int rt_audio_format);
+	static const wxChar* GetMidiApiPrefix(const RtMidi::Api api);
 
 };
 

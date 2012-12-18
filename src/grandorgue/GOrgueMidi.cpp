@@ -22,6 +22,7 @@
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrgueRtHelpers.h"
 #include "GOrgueSettings.h"
 #include "RtMidi.h"
 #include <vector>
@@ -42,29 +43,36 @@ GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 
 void GOrgueMidi::UpdateDevices()
 {
+	std::vector<RtMidi::Api> apis;
+	RtMidi::getCompiledApi(apis);
+
 	try
 	{
-		RtMidiIn midi_dev;
-		for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
+
+		for(unsigned j = 0; j < apis.size(); j++)
 		{
-			wxString name = wxString::FromAscii(midi_dev.getPortName(i).c_str());
-			if (!m_midi_in_device_map.count(name))
+			RtMidiIn midi_dev(apis[j], "GrandOrgue");
+			for (unsigned i = 0; i < midi_dev.getPortCount(); i++)
 			{
-				MIDI_IN_DEVICE *t = new MIDI_IN_DEVICE;
-				t->midi_in = new RtMidiIn();
-				t->channel_shift = 0;
-				t->midi = this;
-				t->rtmidi_port_no = i;
-				t->active = false;
-				t->name = name;
-				t->midi_in->setCallback(&MIDICallback, t);
-				m_midi_in_devices.push_back(t);
+				wxString name = GOrgueRtHelpers::GetMidiApiPrefix(apis[j]) + wxString::FromAscii(midi_dev.getPortName(i).c_str());
+				if (!m_midi_in_device_map.count(name))
+				{
+					MIDI_IN_DEVICE *t = new MIDI_IN_DEVICE;
+					t->midi_in = new RtMidiIn(apis[j], "GrandOrgue");
+					t->channel_shift = 0;
+					t->midi = this;
+					t->rtmidi_port_no = i;
+					t->active = false;
+					t->name = name;
+					t->midi_in->setCallback(&MIDICallback, t);
+					m_midi_in_devices.push_back(t);
 			
-				name.Replace(wxT("\\"), wxT("|"));
-				m_midi_in_device_map[name] = m_midi_in_devices.size() - 1;
+					name.Replace(wxT("\\"), wxT("|"));
+					m_midi_in_device_map[name] = m_midi_in_devices.size() - 1;
+				}
+				else
+					m_midi_in_devices[m_midi_in_device_map[name]]->rtmidi_port_no = i;
 			}
-			else
-				m_midi_in_devices[m_midi_in_device_map[name]]->rtmidi_port_no = i;
 		}
 	}
 	catch (RtError &e)
@@ -75,24 +83,27 @@ void GOrgueMidi::UpdateDevices()
 
 	try
 	{
-		RtMidiOut midi_dev;
-		for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
+		for(unsigned j = 0; j < apis.size(); j++)
 		{
-			wxString name = wxString::FromAscii(midi_dev.getPortName(i).c_str());
-			if (!m_midi_out_device_map.count(name))
+			RtMidiOut midi_dev(apis[j], "GrandOrgue");
+			for (unsigned i = 0; i <  midi_dev.getPortCount(); i++)
 			{
-				MIDI_OUT_DEVICE *t = new MIDI_OUT_DEVICE;
-				t->midi_out = new RtMidiOut();
-				t->rtmidi_port_no = i;
-				t->active = false;
-				t->name = name;
-				m_midi_out_devices.push_back(t);
+				wxString name = GOrgueRtHelpers::GetMidiApiPrefix(apis[j]) + wxString::FromAscii(midi_dev.getPortName(i).c_str());
+				if (!m_midi_out_device_map.count(name))
+				{
+					MIDI_OUT_DEVICE *t = new MIDI_OUT_DEVICE;
+					t->midi_out = new RtMidiOut(apis[j], "GrandOrgue");
+					t->rtmidi_port_no = i;
+					t->active = false;
+					t->name = name;
+					m_midi_out_devices.push_back(t);
 			
-				name.Replace(wxT("\\"), wxT("|"));
-				m_midi_out_device_map[name] = m_midi_out_devices.size() - 1;
+					name.Replace(wxT("\\"), wxT("|"));
+					m_midi_out_device_map[name] = m_midi_out_devices.size() - 1;
+				}
+				else
+					m_midi_out_devices[m_midi_out_device_map[name]]->rtmidi_port_no = i;
 			}
-			else
-				m_midi_out_devices[m_midi_out_device_map[name]]->rtmidi_port_no = i;
 		}
 	}
 	catch (RtError &e)
@@ -140,6 +151,7 @@ void GOrgueMidi::Open()
 
 	for (unsigned i = 0; i < m_midi_in_devices.size(); i++)
 	{
+		const wxString name = _("GrandOrgue Input");
 		MIDI_IN_DEVICE& this_dev = *m_midi_in_devices[i];
 		memset(this_dev.bank_msb, 0, sizeof(this_dev.bank_msb));
 		memset(this_dev.bank_lsb, 0, sizeof(this_dev.bank_lsb));
@@ -153,7 +165,7 @@ void GOrgueMidi::Open()
 				assert(this_dev.midi_in);
 				this_dev.channel_shift = channel_shift;
 				this_dev.midi_in->closePort();
-				this_dev.midi_in->openPort(this_dev.rtmidi_port_no);
+				this_dev.midi_in->openPort(this_dev.rtmidi_port_no, (const char*)name.fn_str());
 				this_dev.active = true;
 			}
 			catch (RtError &e)
@@ -173,6 +185,7 @@ void GOrgueMidi::Open()
 
 	for (unsigned i = 0; i < m_midi_out_devices.size(); i++)
 	{
+		const wxString name = _("GrandOrgue Output");
 		MIDI_OUT_DEVICE& this_dev = *m_midi_out_devices[i];
 		if (m_Settings.GetMidiOutState(this_dev.name))
 		{
@@ -182,7 +195,7 @@ void GOrgueMidi::Open()
 
 				assert(this_dev.midi_out);
 				this_dev.midi_out->closePort();
-				this_dev.midi_out->openPort(this_dev.rtmidi_port_no);
+				this_dev.midi_out->openPort(this_dev.rtmidi_port_no, (const char*)name.fn_str());
 				this_dev.active = true;
 			}
 			catch (RtError &e)
