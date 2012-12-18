@@ -45,9 +45,30 @@
 //  RtMidi Definitions
 //*********************************************************************//
 
-RtMidi :: RtMidi()
-  : apiData_( 0 ), connected_( false )
+void RtMidi :: getCompiledApi( std::vector<RtMidi::Api> &apis ) throw()
 {
+  apis.clear();
+
+  // The order here will control the order of RtMidi's API search in
+  // the constructor.
+#if defined(__MACOSX_CORE__)
+  apis.push_back( MACOSX_CORE );
+#endif
+#if defined(__LINUX_ALSA__)
+  apis.push_back( LINUX_ALSA );
+#endif
+#if defined(__UNIX_JACK__)
+  apis.push_back( UNIX_JACK );
+#endif
+#if defined(__WINDOWS_MM__)
+  apis.push_back( WINDOWS_MM );
+#endif
+#if defined(__WINDOWS_KS__)
+  apis.push_back( WINDOWS_KS );
+#endif
+#if defined(__RTMIDI_DUMMY__)
+  apis.push_back( RTMIDI_DUMMY );
+#endif
 }
 
 void RtMidi :: error( RtError::Type type, std::string errorString )
@@ -66,21 +87,171 @@ void RtMidi :: error( RtError::Type type, std::string errorString )
   }
 }
 
+//*********************************************************************//
+//  RtMidiIn Definitions
+//*********************************************************************//
+
+void RtMidiIn :: openMidiApi( RtMidi::Api api, const std::string clientName, unsigned int queueSizeLimit )
+{
+  if ( rtapi_ )
+    delete rtapi_;
+  rtapi_ = 0;
+
+#if defined(__UNIX_JACK__)
+  if ( api == UNIX_JACK )
+    rtapi_ = new MidiInJack( clientName, queueSizeLimit );
+#endif
+#if defined(__LINUX_ALSA__)
+  if ( api == LINUX_ALSA )
+    rtapi_ = new MidiInAlsa( clientName, queueSizeLimit );
+#endif
+#if defined(__WINDOWS_MM__)
+  if ( api == WINDOWS_MM )
+    rtapi_ = new MidiInWinMM( clientName, queueSizeLimit );
+#endif
+#if defined(__WINDOWS_KS__)
+  if ( api == WINDOWS_KS )
+    rtapi_ = new MidiInWinKS( clientName, queueSizeLimit );
+#endif
+#if defined(__MACOSX_CORE__)
+  if ( api == MACOSX_CORE )
+    rtapi_ = new MidiInCore( clientName, queueSizeLimit );
+#endif
+#if defined(__RTMIDI_DUMMY__)
+  if ( api == RTMIDI_DUMMY )
+    rtapi_ = new MidiInDummy( clientName, queueSizeLimit );
+#endif
+}
+
+RtMidiIn :: RtMidiIn( RtMidi::Api api, const std::string clientName, unsigned int queueSizeLimit )
+{
+  rtapi_ = 0;
+
+  if ( api != UNSPECIFIED ) {
+    // Attempt to open the specified API.
+    openMidiApi( api, clientName, queueSizeLimit );
+    if ( rtapi_ ) return;
+
+    // No compiled support for specified API value.  Issue a debug
+    // warning and continue as if no API was specified.
+    RtMidi::error( RtError::WARNING, "RtMidiIn: no compiled support for specified API argument!" );
+  }
+
+  // Iterate through the compiled APIs and return as soon as we find
+  // one with at least one port or we reach the end of the list.
+  std::vector< RtMidi::Api > apis;
+  getCompiledApi( apis );
+  for ( unsigned int i=0; i<apis.size(); i++ ) {
+    openMidiApi( apis[i], clientName, queueSizeLimit );
+    if ( rtapi_->getPortCount() ) break;
+  }
+
+  if ( rtapi_ ) return;
+
+  // It should not be possible to get here because the preprocessor
+  // definition __RTMIDI_DUMMY__ is automatically defined if no
+  // API-specific definitions are passed to the compiler. But just in
+  // case something weird happens, we'll print out an error message.
+  RtMidi::error( RtError::UNSPECIFIED, "RtMidiIn: no compiled API support found ... critical error!!" );
+}
+
+RtMidiIn :: ~RtMidiIn() throw()
+{
+  if ( rtapi_ )
+    delete rtapi_;
+}
 
 //*********************************************************************//
 //  RtMidiOut Definitions
 //*********************************************************************//
 
-#define MidiInApi RtMidiIn
-
-MidiInApi :: MidiInApi( const std::string clientName, unsigned int queueSizeLimit ) : RtMidi()
+void RtMidiOut :: openMidiApi( RtMidi::Api api, const std::string clientName )
 {
-  this->initialize( clientName );
+  if ( rtapi_ )
+    delete rtapi_;
+  rtapi_ = 0;
 
+#if defined(__UNIX_JACK__)
+  if ( api == UNIX_JACK )
+    rtapi_ = new MidiOutJack( clientName );
+#endif
+#if defined(__LINUX_ALSA__)
+  if ( api == LINUX_ALSA )
+    rtapi_ = new MidiOutAlsa( clientName );
+#endif
+#if defined(__WINDOWS_MM__)
+  if ( api == WINDOWS_MM )
+    rtapi_ = new MidiOutWinMM( clientName );
+#endif
+#if defined(__WINDOWS_KS__)
+  if ( api == WINDOWS_KS )
+    rtapi_ = new MidiOutWinKS( clientName );
+#endif
+#if defined(__MACOSX_CORE__)
+  if ( api == MACOSX_CORE )
+    rtapi_ = new MidiOutCore( clientName );
+#endif
+#if defined(__RTMIDI_DUMMY__)
+  if ( api == RTMIDI_DUMMY )
+    rtapi_ = new MidiOutDummy( clientName );
+#endif
+}
+
+RtMidiOut :: RtMidiOut( RtMidi::Api api, const std::string clientName )
+{
+  rtapi_ = 0;
+
+  if ( api != UNSPECIFIED ) {
+    // Attempt to open the specified API.
+    openMidiApi( api, clientName );
+    if ( rtapi_ ) return;
+
+    // No compiled support for specified API value.  Issue a debug
+    // warning and continue as if no API was specified.
+    RtMidi::error( RtError::WARNING, "RtMidiOut: no compiled support for specified API argument!" );
+  }
+
+  // Iterate through the compiled APIs and return as soon as we find
+  // one with at least one port or we reach the end of the list.
+  std::vector< RtMidi::Api > apis;
+  getCompiledApi( apis );
+  for ( unsigned int i=0; i<apis.size(); i++ ) {
+    openMidiApi( apis[i], clientName );
+    if ( rtapi_->getPortCount() ) break;
+  }
+
+  if ( rtapi_ ) return;
+
+  // It should not be possible to get here because the preprocessor
+  // definition __RTMIDI_DUMMY__ is automatically defined if no
+  // API-specific definitions are passed to the compiler. But just in
+  // case something weird happens, we'll print out an error message.
+  RtMidi::error( RtError::UNSPECIFIED, "RtMidiOut: no compiled API support found ... critical error!!" );
+}
+
+RtMidiOut :: ~RtMidiOut() throw()
+{
+  if ( rtapi_ )
+    delete rtapi_;
+}
+
+//*********************************************************************//
+//  Common MidiInApi Definitions
+//*********************************************************************//
+
+MidiInApi :: MidiInApi( unsigned int queueSizeLimit )
+  : apiData_( 0 ), connected_( false )
+{
   // Allocate the MIDI queue.
   inputData_.queue.ringSize = queueSizeLimit;
   if ( inputData_.queue.ringSize > 0 )
     inputData_.queue.ring = new MidiMessage[ inputData_.queue.ringSize ];
+}
+
+MidiInApi :: ~MidiInApi( void )
+{
+  // Delete the MIDI queue.
+  if ( inputData_.queue.ringSize > 0 ) delete [] inputData_.queue.ring;
 }
 
 void MidiInApi :: setCallback( RtMidiIn::RtMidiCallback callback, void *userData )
@@ -151,11 +322,13 @@ double MidiInApi :: getMessage( std::vector<unsigned char> *message )
 //  Common MidiOutApi Definitions
 //*********************************************************************//
 
-#define MidiOutApi RtMidiOut
-
-MidiOutApi :: MidiOutApi( const std::string clientName ) : RtMidi()
+MidiOutApi :: MidiOutApi( void )
+  : apiData_( 0 ), connected_( false )
 {
-  this->initialize( clientName );
+}
+
+MidiOutApi :: ~MidiOutApi( void )
+{
 }
 
 // *************************************************** //
@@ -190,8 +363,6 @@ struct CoreMidiData {
 //  API: OS-X
 //  Class Definitions: MidiInCore
 //*********************************************************************//
-
-#define MidiInCore RtMidiIn
 
 void midiInputCallback( const MIDIPacketList *list, void *procRef, void *srcRef )
 {
@@ -340,6 +511,11 @@ void midiInputCallback( const MIDIPacketList *list, void *procRef, void *srcRef 
   }
 }
 
+MidiInCore :: MidiInCore( const std::string clientName, unsigned int queueSizeLimit ) : MidiInApi( queueSizeLimit )
+{
+  initialize( clientName );
+}
+
 MidiInCore :: ~MidiInCore( void )
 {
   // Close a connection if it exists.
@@ -350,9 +526,6 @@ MidiInCore :: ~MidiInCore( void )
   MIDIClientDispose( data->client );
   if ( data->endpoint ) MIDIEndpointDispose( data->endpoint );
   delete data;
-
-  // Delete the MIDI queue.
-  if ( inputData_.queue.ringSize > 0 ) delete [] inputData_.queue.ring;
 }
 
 void MidiInCore :: initialize( const std::string& clientName )
@@ -614,7 +787,10 @@ std::string MidiInCore :: getPortName( unsigned int portNumber )
 //  Class Definitions: MidiOutCore
 //*********************************************************************//
 
-#define MidiOutCore RtMidiOut
+MidiOutCore :: MidiOutCore( const std::string clientName ) : MidiOutApi()
+{
+  initialize( clientName );
+}
 
 MidiOutCore :: ~MidiOutCore( void )
 {
@@ -851,7 +1027,7 @@ void MidiOutCore :: sendMessage( std::vector<unsigned char> *message )
 // API information found at:
 //   - http://www.alsa-project.org/documentation.php#Library
 
-#if defined(__LINUX_ALSASEQ__)
+#if defined(__LINUX_ALSA__)
 
 // The ALSA Sequencer API is based on the use of a callback function for
 // MIDI input.
@@ -891,8 +1067,6 @@ struct AlsaMidiData {
 //  API: LINUX ALSA
 //  Class Definitions: MidiInAlsa
 //*********************************************************************//
-
-#define MidiInAlsa RtMidiIn
 
 extern "C" void *alsaMidiHandler( void *ptr )
 {
@@ -1081,6 +1255,11 @@ extern "C" void *alsaMidiHandler( void *ptr )
   return 0;
 }
 
+MidiInAlsa :: MidiInAlsa( const std::string clientName, unsigned int queueSizeLimit ) : MidiInApi( queueSizeLimit )
+{
+  initialize( clientName );
+}
+
 MidiInAlsa :: ~MidiInAlsa()
 {
   // Close a connection if it exists.
@@ -1105,9 +1284,6 @@ MidiInAlsa :: ~MidiInAlsa()
 #endif
   snd_seq_close( data->seq );
   delete data;
-
-  // Delete the MIDI queue.
-  if ( inputData_.queue.ringSize > 0 ) delete [] inputData_.queue.ring;
 }
 
 void MidiInAlsa :: initialize( const std::string& clientName )
@@ -1412,7 +1588,10 @@ void MidiInAlsa :: closePort( void )
 //  Class Definitions: MidiOutAlsa
 //*********************************************************************//
 
-#define MidiOutAlsa RtMidiOut
+MidiOutAlsa :: MidiOutAlsa( const std::string clientName ) : MidiOutApi()
+{
+  initialize( clientName );
+}
 
 MidiOutAlsa :: ~MidiOutAlsa()
 {
@@ -1669,8 +1848,6 @@ struct WinMidiData {
 //  Class Definitions: MidiInWinMM
 //*********************************************************************//
 
-#define MidiInWinMM RtMidiIn
-
 static void CALLBACK midiInputCallback( HMIDIIN hmin,
                                         UINT inputStatus, 
                                         DWORD_PTR instancePtr,
@@ -1766,6 +1943,11 @@ static void CALLBACK midiInputCallback( HMIDIIN hmin,
   apiData->message.bytes.clear();
 }
 
+MidiInWinMM :: MidiInWinMM( const std::string clientName, unsigned int queueSizeLimit ) : MidiInApi( queueSizeLimit )
+{
+  initialize( clientName );
+}
+
 MidiInWinMM :: ~MidiInWinMM()
 {
   // Close a connection if it exists.
@@ -1774,9 +1956,6 @@ MidiInWinMM :: ~MidiInWinMM()
   // Cleanup.
   WinMidiData *data = static_cast<WinMidiData *> (apiData_);
   delete data;
-
-  // Delete the MIDI queue.
-  if ( inputData_.queue.ringSize > 0 ) delete [] inputData_.queue.ring;
 }
 
 void MidiInWinMM :: initialize( const std::string& /*clientName*/ )
@@ -1937,7 +2116,10 @@ std::string MidiInWinMM :: getPortName( unsigned int portNumber )
 //  Class Definitions: MidiOutWinMM
 //*********************************************************************//
 
-#define MidiOutWinMM RtMidiOut
+MidiOutWinMM :: MidiOutWinMM( const std::string clientName ) : MidiOutApi()
+{
+  initialize( clientName );
+}
 
 MidiOutWinMM :: ~MidiOutWinMM()
 {
@@ -3167,9 +3349,7 @@ void MidiOutWinKS :: sendMessage(std::vector<unsigned char>* pMessage)
 //
 //  *********************************************************************//
 
-#if defined(__LINUX_JACK__)
-
-#define RtMidiIn MidiInJack
+#if defined(__UNIX_JACK__)
 
 // JACK header files
 #include <jack/jack.h>
@@ -3247,6 +3427,11 @@ int jackProcessIn( jack_nframes_t nframes, void *arg )
   return 0;
 }
 
+MidiInJack :: MidiInJack( const std::string clientName, unsigned int queueSizeLimit ) : MidiInApi( queueSizeLimit )
+{
+  initialize( clientName );
+}
+
 void MidiInJack :: initialize( const std::string& clientName )
 {
   JackMidiData *data = new JackMidiData;
@@ -3277,8 +3462,6 @@ MidiInJack :: ~MidiInJack()
   jack_client_close( data->client );
 
   delete data;
-  // Delete the MIDI queue.
-  if ( inputData_.queue.ringSize > 0 ) delete [] inputData_.queue.ring;
 }
 
 void MidiInJack :: openPort( unsigned int portNumber, const std::string portName )
@@ -3374,8 +3557,6 @@ void MidiInJack :: closePort()
 //  Class Definitions: MidiOutJack
 //*********************************************************************//
 
-#define MidiOutJack RtMidiOut
-
 // Jack process callback
 int jackProcessOut( jack_nframes_t nframes, void *arg )
 {
@@ -3397,6 +3578,11 @@ int jackProcessOut( jack_nframes_t nframes, void *arg )
   }
 
   return 0;
+}
+
+MidiOutJack :: MidiOutJack( const std::string clientName ) : MidiOutApi()
+{
+  initialize( clientName );
 }
 
 void MidiOutJack :: initialize( const std::string& clientName )
