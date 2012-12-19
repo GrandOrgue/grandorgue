@@ -61,12 +61,13 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 		val = Convproc::MINPART;
 	if (val > Convproc::MAXPART)
 		val = Convproc::MAXPART;
-	m_engine->configure(m_channels, m_channels, 1000000, settings.GetSamplesPerBuffer(), val, Convproc::MAXPART);
-
 	float* data = NULL;
 	unsigned len = 0;
 	try
 	{
+		if (m_engine->configure(m_channels, m_channels, 1000000, settings.GetSamplesPerBuffer(), val, Convproc::MAXPART))
+			throw (wxString)_("Invalid reverb configuration (samples per buffer)");
+
 		GOrgueWave wav;
 		unsigned block = 0x4000;
 		unsigned offset = settings.GetReverbStartOffset();
@@ -87,7 +88,7 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 			float* new_data = resample_block(data, len, wav.GetSampleRate(), settings.GetSampleRate());
 			if (!new_data)
 				throw (wxString)_("Resampling failed");
-			free(data);
+			delete[] data;
 			data = new_data;
 			offset = (offset * settings.GetSampleRate()) / (float)wav.GetSampleRate();
 		}
