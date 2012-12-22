@@ -1306,6 +1306,12 @@ void GrandOrgueFile::UpdateTremulant(GOrgueTremulant* tremulant)
 		m_windchest[i]->UpdateTremulant(tremulant);
 }
 
+void GrandOrgueFile::AllNotesOff()
+{
+        for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
+		GetManual(k)->AllNotesOff();
+}
+
 void GrandOrgueFile::Modified()
 {
 	m_doc->Modify(true);
