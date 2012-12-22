@@ -131,6 +131,11 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, const GOrgueMidiRece
 	}
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 		m_eventtype->Append(_("Cx Program Change"), (void*)MIDI_M_PGM_CHANGE);
+	if (m_midi.GetType() == MIDI_RECV_MANUAL)
+	{
+		m_eventtype->Append(_("9x Note without Velocity"), (void*)MIDI_M_NOTE_NO_VELOCITY);
+		m_eventtype->Append(_("9x Note short octave at low key"), (void*)MIDI_M_NOTE_SHORT_OCTAVE);
+	}
 
 	if (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
 	{

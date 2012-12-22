@@ -54,6 +54,8 @@ const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
 	{ wxT("ControlChangeOff"), MIDI_M_CTRL_CHANGE_OFF },
 	{ wxT("NoteOn"), MIDI_M_NOTE_ON },
 	{ wxT("NoteOff"), MIDI_M_NOTE_OFF },
+	{ wxT("NoteNoVelocity"), MIDI_M_NOTE_NO_VELOCITY },
+	{ wxT("NoteShortOctave"), MIDI_M_NOTE_SHORT_OCTAVE },
 };
 
 void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
@@ -76,7 +78,8 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 			{
 				buffer.Printf(wxT("MIDIKeyShift%03d"), i + 1);
 				m_events[i].key = cfg.ReadInteger(CMBSetting, group, buffer, -35, 35);
-				m_events[i].type = MIDI_M_NOTE;
+				m_events[i].type = (midi_match_message_type)cfg.ReadEnum(CMBSetting, group, wxString::Format(wxT("MIDIEventType%03d"), i + 1), 
+											 m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]), false, MIDI_M_NOTE);
 				m_events[i].low_key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), 0, 127, false, 0);
 				m_events[i].high_key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), 0, 127, false, 127);
 				m_events[i].low_velocity = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 1);
@@ -254,6 +257,8 @@ void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
 		cfg.Write(group, buffer, m_events[i].device);
 		buffer.Printf(wxT("MIDIChannel%03d"), i + 1);
 		cfg.Write(group, buffer, m_events[i].channel);
+		buffer.Printf(wxT("MIDIEventType%03d"), i + 1);
+		cfg.Write(group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 		if (m_type == MIDI_RECV_MANUAL)
 		{
 			buffer.Printf(wxT("MIDIKeyShift%03d"), i + 1);
@@ -273,9 +278,6 @@ void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
 			cfg.Write(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
 			continue;
 		}
-
-		buffer.Printf(wxT("MIDIEventType%03d"), i + 1);
-		cfg.Write(group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 	}
 }
 
@@ -302,13 +304,32 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& key, in
 			continue;
 		if (m_type == MIDI_RECV_MANUAL)
 		{
+			if (m_events[i].type != MIDI_M_NOTE && m_events[i].type != MIDI_M_NOTE_NO_VELOCITY &&
+			    m_events[i].type != MIDI_M_NOTE_SHORT_OCTAVE)
+				continue;
 			if (e.GetMidiType() == MIDI_NOTE || e.GetMidiType() == MIDI_AFTERTOUCH)
 			{
 				if (e.GetKey() < m_events[i].low_key || e.GetKey() > m_events[i].high_key)
 					continue;
-				key = e.GetKey() + m_organfile->GetSettings().GetTranspose() + m_events[i].key;
-				value = e.GetValue() - m_events[i].low_velocity;
-				value *= 127 / (m_events[i].high_velocity - m_events[i].low_velocity + 0.00000001);
+				key = e.GetKey();
+				if (m_events[i].type == MIDI_M_NOTE_SHORT_OCTAVE)
+				{
+					int no = e.GetKey() - m_events[i].low_key;
+					if (no <= 3)
+						continue;
+					if (no == 4 || no == 6 || no == 8)
+						key -= 4;
+				}
+				key = key + m_organfile->GetSettings().GetTranspose() + m_events[i].key;
+				if (m_events[i].type == MIDI_M_NOTE_NO_VELOCITY)
+				{
+					value = e.GetValue() ? 127 : 0;
+				}
+				else
+				{
+					value = e.GetValue() - m_events[i].low_velocity;
+					value *= 127 / (m_events[i].high_velocity - m_events[i].low_velocity + 0.00000001);
+				}
 				if (value < 0)
 					value = 0;
 				if (value > 127)
@@ -331,6 +352,8 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& key, in
 		}
 		if (m_type == MIDI_RECV_ENCLOSURE)
 		{
+			if (m_events[i].type != MIDI_M_CTRL_CHANGE)
+				continue;
 			if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].key == e.GetKey())
 			{
 				value = e.GetValue();
