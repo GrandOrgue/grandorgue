@@ -58,6 +58,8 @@ typedef enum {
 	MIDI_M_NOTE_OFF,
 	MIDI_M_CTRL_CHANGE_ON,
 	MIDI_M_CTRL_CHANGE_OFF,
+	MIDI_M_NOTE_NO_VELOCITY,
+	MIDI_M_NOTE_SHORT_OCTAVE,
 } midi_match_message_type;
 
 typedef struct {
