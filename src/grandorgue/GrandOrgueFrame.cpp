@@ -690,7 +690,9 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 	long n = m_Transpose->GetValue();
 
 	m_Settings.SetTranspose(n);
-	m_Sound.ResetSound();
+	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
+	if (doc && doc->GetOrganFile())
+		doc->GetOrganFile()->AllNotesOff();
 }
 
 void GOrgueFrame::OnSettingsReverb(wxCommandEvent& event)
