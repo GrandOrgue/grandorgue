@@ -227,7 +227,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	}
 	m_Volume->SetValue(m_Settings.GetVolume());
 	
-	tb->AddTool(ID_REVERB, _("&Reverb"), GetImage_reverb(), _("Reverb"), wxITEM_NORMAL);
+	tb->AddTool(ID_REVERB, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
 	choices.clear();
 	choices.push_back(_("Max"));
 	choices.push_back(_("2.8 s"));
