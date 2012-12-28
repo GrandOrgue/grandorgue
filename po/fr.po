@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-12-02 23:36+0100\n"
-"PO-Revision-Date: 2012-12-28 10:02+0100\n"
+"POT-Creation-Date: 2012-12-28 14:52+0100\n"
+"PO-Revision-Date: 2012-12-28 15:09+0100\n"
 "Last-Translator: Jean-Luc Derouineau <jeanluc@derouineau.com>\n"
 "Language-Team: French <jeanluc@derouineau.com>\n"
 "MIME-Version: 1.0\n"
@@ -158,8 +158,8 @@ msgstr "&Polyphonie"
 msgid "&Record\tCtrl+R"
 msgstr "&Enregistrer\tCtrl+R"
 
-msgid "&Reverb"
-msgstr "&Réverbération"
+msgid "&Release tail length"
+msgstr "&Longueuréchantillon après laché note"
 
 msgid "&Sample loading"
 msgstr "&Chargement échantillons:"
@@ -370,6 +370,12 @@ msgstr "9x Note On"
 
 msgid "9x Note On Toogle"
 msgstr "9x Note On changement"
+
+msgid "9x Note short octave at low key"
+msgstr "9x Note octave courte sur note inférieure"
+
+msgid "9x Note without Velocity"
+msgstr "9x Note sans vélocité"
 
 msgid ":"
 msgstr ""
@@ -670,7 +676,7 @@ msgid "Choose a file"
 msgstr "Choisir un fichier"
 
 msgid "Combination Setter"
-msgstr ""
+msgstr "Combinateur"
 
 msgid "Compress Cache"
 msgstr "Compression du cache"
@@ -761,6 +767,9 @@ msgstr "Défaut"
 
 msgid "Default audio group"
 msgstr "Groupe audio par défaut"
+
+msgid "Delay (ms):"
+msgstr "Retard (ms)"
 
 msgid "Delete"
 msgstr "Effacer"
@@ -1019,6 +1028,12 @@ msgstr ""
 msgid "Grammateus (1518)"
 msgstr ""
 
+msgid "GrandOrgue Input"
+msgstr "GrandOrgue entrée"
+
+msgid "GrandOrgue Output"
+msgstr "GrandOrgue Sortie"
+
 msgid "H"
 msgstr ""
 
@@ -1165,6 +1180,9 @@ msgstr "Référence invalide "
 msgid "Invalid release position"
 msgstr "Mauvaise position pointeur laché note"
 
+msgid "Invalid reverb configuration (samples per buffer)"
+msgstr "Configuration reverberation invalide (samples par buffer)"
+
 msgid "Invalid reverb start offset"
 msgstr "Mauvais pointeur de début reverb"
 
@@ -1187,11 +1205,17 @@ msgstr "Kit de connexion audio JACK"
 msgid "Jack"
 msgstr "JACK"
 
+msgid "Jack: "
+msgstr "Jack: "
+
 msgid "K"
 msgstr "K"
 
 msgid "KB"
 msgstr "KB"
+
+msgid "KSAPI: "
+msgstr ""
 
 msgid "Keller (Gottfried) 1707"
 msgstr ""
@@ -1605,6 +1629,9 @@ msgstr "Position mémoire précédente"
 msgid "Properties"
 msgstr "Propriétés"
 
+msgid "PulseAudio"
+msgstr "PulseAudio"
+
 msgid "Pure Major"
 msgstr ""
 
@@ -1668,8 +1695,14 @@ msgstr "Chargement lachés note:"
 msgid "Release sample scaling"
 msgstr "Ajustement niveau laché note (staccato)"
 
+msgid "Release tail length"
+msgstr "Longueuréchantillon après laché note"
+
 msgid "Rename"
 msgstr "Renomer"
+
+msgid "Resampling failed"
+msgstr "Rééchantillonage  échoué"
 
 msgid "Reset"
 msgstr "Reset"
@@ -1915,6 +1948,9 @@ msgstr "Erreur hote inconnue"
 
 msgid "Unknown"
 msgstr "Inconnu"
+
+msgid "Unknown: "
+msgstr "Inconnu:"
 
 msgid "Unsupported channel count"
 msgstr "Nombre de canaux non supporté"
@@ -2262,6 +2298,9 @@ msgstr ""
 
 #~ msgid "&Properties..."
 #~ msgstr "&Propriétés orgue"
+
+#~ msgid "&Reverb"
+#~ msgstr "&Réverbération"
 
 #~ msgid "&Settings..."
 #~ msgstr "&Paramètres GrandOrgue"
