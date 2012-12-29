@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef INIFILECONFIG_H
-#define INIFILECONFIG_H
+#ifndef GORGUECONFIGREADERDB_H
+#define GORGUECONFIGREADERDB_H
 
 #include <wx/wx.h>
 
@@ -28,7 +28,7 @@ class wxFileConfig;
 
 #include "GOrgueConfigReader.h"
 
-class IniFileConfig
+class GOrgueConfigReaderDB
 {
 private:
 	WX_DECLARE_STRING_HASH_MAP( wxString, GOStringHashMap );
@@ -40,7 +40,8 @@ private:
 	void AddEntry(GOStringHashMap& hash, wxString key, wxString value);
 
 public:
-	IniFileConfig();
+	GOrgueConfigReaderDB();
+	~GOrgueConfigReaderDB();
 	void ClearCMB();
 	bool ReadData(wxFileConfig& ODF, GOSettingType type, bool handle_prefix);
 

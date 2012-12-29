@@ -19,15 +19,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
-#include "IniFileConfig.h"
+#include "GOrgueConfigReaderDB.h"
 #include <wx/fileconf.h>
 
-IniFileConfig::IniFileConfig()
+GOrgueConfigReaderDB::GOrgueConfigReaderDB()
 {
 }
 
-bool IniFileConfig::ReadData(wxFileConfig& ODF, GOSettingType type, bool handle_prefix)
+GOrgueConfigReaderDB::~GOrgueConfigReaderDB()
+{
+}
+
+bool GOrgueConfigReaderDB::ReadData(wxFileConfig& ODF, GOSettingType type, bool handle_prefix)
 {
 	wxString group;
 	long group_it;
@@ -63,12 +66,12 @@ bool IniFileConfig::ReadData(wxFileConfig& ODF, GOSettingType type, bool handle_
 	return changed;
 }
 
-void IniFileConfig::ClearCMB()
+void GOrgueConfigReaderDB::ClearCMB()
 {
 	m_CMB.clear();
 }
 
-void IniFileConfig::AddEntry(GOStringHashMap& hash, wxString key, wxString value)
+void GOrgueConfigReaderDB::AddEntry(GOStringHashMap& hash, wxString key, wxString value)
 {
 	GOStringHashMap::iterator i = hash.find(key);
 	if (i != hash.end())
@@ -79,7 +82,7 @@ void IniFileConfig::AddEntry(GOStringHashMap& hash, wxString key, wxString value
 }
 
 
-bool IniFileConfig::GetString(GOSettingType type, wxString group, wxString key, wxString& value)
+bool GOrgueConfigReaderDB::GetString(GOSettingType type, wxString group, wxString key, wxString& value)
 {
 	if (type == UserSetting || type == CMBSetting)
 	{

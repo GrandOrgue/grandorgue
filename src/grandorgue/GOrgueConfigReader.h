@@ -24,7 +24,7 @@
 
 #include <wx/wx.h>
 
-class IniFileConfig;
+class GOrgueConfigReaderDB;
 
 struct IniFileEnumEntry {
 	wxString name;
@@ -36,10 +36,10 @@ typedef enum { ODFSetting, UserSetting, CMBSetting } GOSettingType;
 class GOrgueConfigReader
 {
 private:
-	IniFileConfig& m_Config;
+	GOrgueConfigReaderDB& m_Config;
 
 public:
-	GOrgueConfigReader(IniFileConfig& cfg);
+	GOrgueConfigReader(GOrgueConfigReaderDB& cfg);
 
 	bool ReadBoolean(GOSettingType type, wxString group, wxString key, bool required = true);
 	bool ReadBoolean(GOSettingType type, wxString group, wxString key, bool required, bool defaultValue);

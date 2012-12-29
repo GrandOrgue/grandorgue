@@ -182,6 +182,7 @@ GOrgueCombinationDefinition.cpp
 GOrgueCombination.cpp
 GOrgueConfigFileWriter.cpp
 GOrgueConfigReader.cpp
+GOrgueConfigReaderDB.cpp
 GOrgueConfigWriter.cpp
 GOrgueBitmapCache.cpp
 GOrgueButton.cpp
@@ -226,7 +227,6 @@ GOrgueWindchest.cpp
 GrandOrgueFile.cpp
 GrandOrgueFrame.cpp
 Images.cpp
-IniFileConfig.cpp
 MIDIEventDialog.cpp
 MIDIEventRecvDialog.cpp
 MIDIEventSendDialog.cpp
