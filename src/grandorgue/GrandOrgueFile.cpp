@@ -28,11 +28,11 @@
 #include <wx/stream.h>
 #include <wx/wfstream.h>
 
-#include "IniFileConfig.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
 #include "GOrgueConfigFileWriter.h"
 #include "GOrgueConfigReader.h"
+#include "GOrgueConfigReaderDB.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
@@ -505,7 +505,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	wxString error = wxT("!");
 	m_b_customized = false;
-	IniFileConfig ini;
+	GOrgueConfigReaderDB ini;
 	ini.ReadData(odf_ini_file, ODFSetting, false);
 
 	wxString setting_file = file2;
@@ -645,7 +645,7 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 		if (!odf_ini_file.GetNumberOfGroups())
 			throw wxString::Format(_("Unable to read '%s'"), file.c_str());
 
-		IniFileConfig ini;
+		GOrgueConfigReaderDB ini;
 		ini.ReadData(odf_ini_file, CMBSetting, false);
 		GOrgueConfigReader cfg(ini);
 

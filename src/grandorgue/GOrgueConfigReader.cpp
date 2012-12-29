@@ -20,9 +20,9 @@
  */
 
 #include "GOrgueConfigReader.h"
-#include "IniFileConfig.h"
+#include "GOrgueConfigReaderDB.h"
 
-GOrgueConfigReader::GOrgueConfigReader(IniFileConfig& cfg) :
+GOrgueConfigReader::GOrgueConfigReader(GOrgueConfigReaderDB& cfg) :
 	m_Config(cfg)
 {
 }
