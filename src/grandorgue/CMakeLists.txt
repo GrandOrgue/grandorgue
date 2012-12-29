@@ -172,6 +172,8 @@ GOSoundProviderSynthedTrem.cpp
 GOSoundProviderWave.cpp
 GOSoundRecorder.cpp
 GOSoundReverb.cpp
+GOSoundReverbEngine.cpp
+GOSoundReverbPartition.cpp
 GOSoundResample.cpp
 GOSoundSamplerPool.cpp
 GOSoundThread.cpp
