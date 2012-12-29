@@ -985,7 +985,7 @@ It is an text file in ISO-8859-1 encoding. The standard extension is
 <emphasis>.organ</emphasis>.
  </para>
       <para>
-Comment lines are started with <emphasis>;</emphasis>.  Empty lines are ignored.
+Comment lines are started with <emphasis>;</emphasis> in the first column. Empty lines are ignored.
  </para>
       <para>
 Various settings are grouped in block. Each block is started with a
