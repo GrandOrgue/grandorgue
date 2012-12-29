@@ -180,6 +180,7 @@ GOrgueCache.cpp
 GOrgueCacheWriter.cpp
 GOrgueCombinationDefinition.cpp
 GOrgueCombination.cpp
+GOrgueConfigFileReader.cpp
 GOrgueConfigFileWriter.cpp
 GOrgueConfigReader.cpp
 GOrgueConfigReaderDB.cpp
