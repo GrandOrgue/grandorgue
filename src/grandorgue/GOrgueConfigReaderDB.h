@@ -24,7 +24,7 @@
 
 #include <wx/wx.h>
 
-class wxFileConfig;
+class GOrgueConfigFileReader;
 
 #include "GOrgueConfigReader.h"
 
@@ -43,7 +43,7 @@ public:
 	GOrgueConfigReaderDB();
 	~GOrgueConfigReaderDB();
 	void ClearCMB();
-	bool ReadData(wxFileConfig& ODF, GOSettingType type, bool handle_prefix);
+	bool ReadData(GOrgueConfigFileReader& ODF, GOSettingType type, bool handle_prefix);
 
 	bool GetString(GOSettingType type, wxString group, wxString key, wxString& value);
 };

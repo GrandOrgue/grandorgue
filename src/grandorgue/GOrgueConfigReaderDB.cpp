@@ -20,7 +20,7 @@
  */
 
 #include "GOrgueConfigReaderDB.h"
-#include <wx/fileconf.h>
+#include "GOrgueConfigFileReader.h"
 
 GOrgueConfigReaderDB::GOrgueConfigReaderDB()
 {
@@ -30,39 +30,38 @@ GOrgueConfigReaderDB::~GOrgueConfigReaderDB()
 {
 }
 
-bool GOrgueConfigReaderDB::ReadData(wxFileConfig& ODF, GOSettingType type, bool handle_prefix)
+bool GOrgueConfigReaderDB::ReadData(GOrgueConfigFileReader& ODF, GOSettingType type, bool handle_prefix)
 {
-	wxString group;
-	long group_it;
-	bool group_cont = ODF.GetFirstGroup(group, group_it);
+	const std::map<wxString, std::map<wxString, wxString> >& entries = ODF.GetContent();
 	bool changed = false;
-	while (group_cont)
+
+	for(std::map<wxString, std::map<wxString, wxString> >::const_iterator i = entries.begin(); i != entries.end(); i++)
 	{
+		const std::map<wxString, wxString>& g = i->second;
+		wxString group = i->first;
+
 		if (!handle_prefix || group.StartsWith(wxT("_")))
 		{
-			ODF.SetPath(wxT('/') + group);
 			if (handle_prefix)
 				group = group.Mid(1);
-			wxString key;
-			long key_it;
-			bool key_cont = ODF.GetFirstEntry(key, key_it);
-			while (key_cont)
+
+			for(std::map<wxString, wxString>::const_iterator j = g.begin(); j != g.end(); j++)
 			{
+				const wxString& key = j->first;
+				const wxString& value = j->second;
+
 				if (type == ODFSetting)
 				{
-					AddEntry(m_ODF, group + wxT('/') + key, ODF.Read(key));
-					AddEntry(m_ODF_LC, (group + wxT('/') + key).Lower(), ODF.Read(key));
+					AddEntry(m_ODF, group + wxT('/') + key, value);
+					AddEntry(m_ODF_LC, (group + wxT('/') + key).Lower(), value);
 				}
 				else
-					AddEntry(m_CMB, group + wxT('/') + key, ODF.Read(key));
+					AddEntry(m_CMB, group + wxT('/') + key, value);
 				changed = true;
-				key_cont = ODF.GetNextEntry(key, key_it);
 			}
-			ODF.SetPath(wxT("/"));
 		}
-		group_cont = ODF.GetNextGroup(group, group_it);
 	}
-	ODF.SetPath(wxT('/'));
+	
 	return changed;
 }
 

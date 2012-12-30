@@ -22,7 +22,6 @@
 #include "GrandOrgueFile.h"
 
 #include <math.h>
-#include <wx/fileconf.h>
 #include <wx/filename.h>
 #include <wx/progdlg.h>
 #include <wx/stream.h>
@@ -30,6 +29,7 @@
 
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
+#include "GOrgueConfigFileReader.h"
 #include "GOrgueConfigFileWriter.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigReaderDB.h"
@@ -483,20 +483,9 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	m_SettingFilename = GenerateSettingFileName();
 	m_CacheFilename = GenerateCacheFileName();
 
-	// NOTICE: unfortunately, the format is not adhered to well at all. With
-	// logging enabled, most sample sets generate warnings.
-	wxLog::EnableLogging(false);
-	wxFileConfig odf_ini_file
-		(wxEmptyString
-		,wxEmptyString
-		,wxEmptyString
-		,file
-		,wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS
-		,wxCSConv(wxT("ISO-8859-1"))
-		);
-	wxLog::EnableLogging(true);
+	GOrgueConfigFileReader odf_ini_file;
 
-	if (!odf_ini_file.GetNumberOfGroups())
+	if (!odf_ini_file.Read(file))
 	{
 		wxString error;
 		error.Printf(_("Unable to read '%s'"), file.c_str());
@@ -521,28 +510,20 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 	if (!setting_file.IsEmpty())
 	{
-		wxFileConfig extra_odf_config
-			(wxEmptyString
-			,wxEmptyString
-			,wxEmptyString
-			,setting_file
-			,wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS
-			,wxCSConv(wxT("ISO-8859-1"))
-			);
+		GOrgueConfigFileReader extra_odf_config;
+		if (!extra_odf_config.Read(setting_file))
+		{
+			error.Printf(_("Unable to read '%s'"), setting_file.c_str());
+			return error;
+		}
 
-		wxString key = wxT("/Organ/ChurchName");
-		if (odf_ini_file.Read(key).Trim() == extra_odf_config.Read(key).Trim())
+		if (odf_ini_file.getEntry(wxT("Organ"), wxT("ChurchName")).Trim() == extra_odf_config.getEntry(wxT("Organ"), wxT("ChurchName")).Trim())
 		{
 			ini.ReadData(extra_odf_config, CMBSetting, false);
 		}
 		else
 		{
-			if (!extra_odf_config.GetNumberOfGroups())
-			{
-				error.Printf(_("Unable to read '%s'"), setting_file.c_str());
-				return error;
-			}
-			wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_odf_config.Read(key).c_str());
+			wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_odf_config.getEntry(wxT("Organ"), wxT("ChurchName")).c_str());
 		}
 	}
 	else
@@ -640,9 +621,9 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 {
 	try
 	{
-		wxFileConfig odf_ini_file(wxEmptyString, wxEmptyString, wxEmptyString, file, wxCONFIG_USE_GLOBAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
+		GOrgueConfigFileReader odf_ini_file;
 
-		if (!odf_ini_file.GetNumberOfGroups())
+		if (!odf_ini_file.Read(file))
 			throw wxString::Format(_("Unable to read '%s'"), file.c_str());
 
 		GOrgueConfigReaderDB ini;
