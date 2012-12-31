@@ -32,7 +32,7 @@ END_EVENT_TABLE()
 
 
 MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event, const GOrgueMidiSender* sender, const GOrgueKeyReceiver* key):
-	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(450,330)),
+	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize),
 	m_recvPage(NULL),
 	m_sendPage(NULL),
 	m_keyPage(NULL)
@@ -56,6 +56,8 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 		m_keyPage = new MIDIEventKeyDialog(notebook, *key);
 		notebook->AddPage(m_keyPage,  _("Shortcut"));
 	}
+
+	LayoutDialog();
 }
 
 MIDIEventDialog::~MIDIEventDialog()
