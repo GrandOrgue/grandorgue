@@ -953,8 +953,6 @@ void GOrgueSetter::LoadCombination(GOrgueConfigReader& cfg)
 
 void GOrgueSetter::Save(GOrgueConfigWriter& cfg)
 {
-	cfg.Write(wxT("Organ"), wxT("NumberOfFrameGenerals"), (int)m_framegeneral.size());
-
 	for (unsigned j = 0; j < m_framegeneral.size(); j++)
 		m_framegeneral[j]->Save(cfg);
 
