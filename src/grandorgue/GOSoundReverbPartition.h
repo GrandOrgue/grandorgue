@@ -37,6 +37,7 @@ private:
 	float* m_Input;
 	float* m_Output;
 	unsigned m_InputPos;
+	unsigned m_InputStartPos;
 	unsigned m_OutputPos;
 	ptr_vector<fftwf_complex> m_InputHistory;
 	ptr_vector<fftwf_complex> m_IRData;
@@ -45,7 +46,7 @@ private:
 	void ZeroComplex(fftwf_complex* data, unsigned len);
 
 public:
-	GOSoundReverbPartition(unsigned size, unsigned cnt);
+	GOSoundReverbPartition(unsigned size, unsigned cnt, unsigned start_pos);
 	~GOSoundReverbPartition();
 
 	void Reset();

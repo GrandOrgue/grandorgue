@@ -23,7 +23,7 @@
 #include <assert.h>
 #include "GOSoundReverbPartition.h"
 
-GOSoundReverbPartition::GOSoundReverbPartition(unsigned size, unsigned cnt) :
+GOSoundReverbPartition::GOSoundReverbPartition(unsigned size, unsigned cnt, unsigned start_pos) :
 	m_PartitionSize(size),
 	m_PartitionCount(cnt),
 	m_fftwTmpReal(0),
@@ -32,7 +32,8 @@ GOSoundReverbPartition::GOSoundReverbPartition(unsigned size, unsigned cnt) :
 	m_FreqToTime(0),
 	m_Input(0),
 	m_Output(0),
-	m_InputPos(0),
+	m_InputPos(start_pos),
+	m_InputStartPos(start_pos),
 	m_OutputPos(0),
 	m_InputHistory(),
 	m_IRData(),
@@ -76,8 +77,9 @@ GOSoundReverbPartition::~GOSoundReverbPartition()
 
 void GOSoundReverbPartition::Reset()
 {
+	std::fill(m_Input, m_Input + m_PartitionSize, 0);
 	std::fill(m_Output, m_Output + 2 * m_PartitionSize, 0);
-	m_InputPos = 0;
+	m_InputPos = m_InputStartPos;
 	m_OutputPos = 0;
 	m_InputHistoryPos = 0;
 
