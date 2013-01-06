@@ -41,6 +41,7 @@ class SettingsAudioOutput : public wxPanel
 		ID_OUTPUT_DEL,
 		ID_OUTPUT_CHANGE,
 		ID_OUTPUT_PROPERTIES,
+		ID_OUTPUT_DEFAULT,
 	};
 
 private:
@@ -51,6 +52,7 @@ private:
 	wxButton* m_Del;
 	wxButton* m_Change;
 	wxButton* m_Properties;
+	wxButton* m_Default;
 
 	AudioItemData* GetObject(const wxTreeItemId& id);
 	wxTreeItemId GetDeviceNode(const wxString& name);
@@ -74,6 +76,7 @@ public:
 	void OnOutputDel(wxCommandEvent& event);
 	void OnOutputChange(wxCommandEvent& event);
 	void OnOutputProperties(wxCommandEvent& event);
+	void OnOutputDefault(wxCommandEvent& event);
 
 	void Save();
 

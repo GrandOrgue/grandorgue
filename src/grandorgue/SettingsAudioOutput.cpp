@@ -80,6 +80,7 @@ BEGIN_EVENT_TABLE(SettingsAudioOutput, wxPanel)
 	EVT_BUTTON(ID_OUTPUT_DEL, SettingsAudioOutput::OnOutputDel)
 	EVT_BUTTON(ID_OUTPUT_CHANGE, SettingsAudioOutput::OnOutputChange)
 	EVT_BUTTON(ID_OUTPUT_PROPERTIES, SettingsAudioOutput::OnOutputProperties)
+	EVT_BUTTON(ID_OUTPUT_DEFAULT, SettingsAudioOutput::OnOutputDefault)
 END_EVENT_TABLE()
 
 
@@ -101,11 +102,13 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	m_Add = new wxButton(this, ID_OUTPUT_ADD, _("&Add"));
 	m_Del = new wxButton(this, ID_OUTPUT_DEL, _("&Delete"));
 	m_Properties = new wxButton(this, ID_OUTPUT_PROPERTIES, _("Properties"));
+	m_Default = new wxButton(this, ID_OUTPUT_DEFAULT, _("Revert to Default"));
 
 	buttonSizer->Add(m_Add, 0, wxALIGN_LEFT | wxALL, 5);
 	buttonSizer->Add(m_Del, 0, wxALIGN_LEFT | wxALL, 5);
 	buttonSizer->Add(m_Change, 0, wxALIGN_RIGHT | wxALL, 5);
 	buttonSizer->Add(m_Properties, 0, wxALIGN_RIGHT | wxALL, 5);
+	buttonSizer->Add(m_Default, 0, wxALIGN_RIGHT | wxALL, 5);
 	topSizer->Add(buttonSizer, 0, wxALL, 5);
 
 	m_AudioOutput->AddRoot(_("Audio Output"), -1, -1, new AudioItemData());
@@ -489,6 +492,46 @@ void SettingsAudioOutput::OnOutputProperties(wxCommandEvent& event)
 		data->volume = volume;
 		UpdateVolume(selection, data->volume);
 	}
+	UpdateButtons();
+}
+
+void SettingsAudioOutput::OnOutputDefault(wxCommandEvent& event)
+{
+	if (wxMessageBox(_("Should the audio config be reverted to the default stereo configuration?"), _("Revert"), wxYES_NO, NULL) == wxNO)
+		return;
+	wxTreeItemId root = m_AudioOutput->GetRootItem();
+	wxTreeItemId audio, channel, group;
+	wxTreeItemIdValue i;
+	wxString dev_name = wxEmptyString;
+	audio = m_AudioOutput->GetFirstChild(root, i);
+	while(audio.IsOk())
+	{
+		if (dev_name == wxEmptyString)
+			dev_name = ((AudioItemData*)m_AudioOutput->GetItemData(audio))->name;
+		audio = m_AudioOutput->GetNextChild(root, i);
+	}
+	m_AudioOutput->DeleteChildren(root);
+
+	std::vector<wxString> groups = m_GroupCallback.GetGroups();
+
+	audio = AddDeviceNode(dev_name);
+	channel = AddChannelNode(audio, 0);
+
+	for(unsigned i = 0; i < groups.size(); i++)
+	{
+		group = AddGroupNode(channel, groups[i], true);
+		UpdateVolume(group, 0);
+	}
+
+	channel = AddChannelNode(audio, 1);
+
+	for(unsigned i = 0; i < groups.size(); i++)
+	{
+		group = AddGroupNode(channel, groups[i], false);
+		UpdateVolume(group, 0);
+	}
+
+	m_AudioOutput->ExpandAll();
 	UpdateButtons();
 }
 
