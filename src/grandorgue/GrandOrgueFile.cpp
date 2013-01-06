@@ -539,6 +539,10 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	try
 	{
 		GOrgueConfigReader cfg(ini);
+		/* skip informational items */
+		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"), 4096, false);
+		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), 4096, false);
+		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), 4096, false);
 		ReadOrganFile(cfg);
 	}
 	catch (wxString error_)
@@ -633,6 +637,9 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 		wxString church_name = cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"),  128);
 		if (church_name != m_ChurchName)
 			throw wxString::Format(_("File belongs to a different organ: %s"), church_name.c_str());
+		/* skip informational items */
+		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), 4096, false);
+		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), 4096, false);
 
 		ReadCombinations(cfg);
 	}
