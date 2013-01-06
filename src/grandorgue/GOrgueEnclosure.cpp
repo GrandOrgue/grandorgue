@@ -46,6 +46,7 @@ void GOrgueEnclosure::Init(GOrgueConfigReader& cfg, wxString group, wxString Nam
 	m_Name = cfg.ReadString(ODFSetting, m_group, wxT("Name"), 64, false, Name);
 	Set(0);	// default to down
 	m_midi.Load(cfg, m_group);
+	m_sender.Load(cfg, m_group);
 	m_AmpMinimumLevel = 0;
 }
 
