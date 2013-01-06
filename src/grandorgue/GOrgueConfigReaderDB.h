@@ -32,10 +32,13 @@ class GOrgueConfigReaderDB
 {
 private:
 	WX_DECLARE_STRING_HASH_MAP( wxString, GOStringHashMap );
+	WX_DECLARE_STRING_HASH_MAP( bool, GOBoolHashMap );
 
 	GOStringHashMap m_ODF;
 	GOStringHashMap m_ODF_LC;
 	GOStringHashMap m_CMB;
+	GOBoolHashMap m_ODFUsed;
+	GOBoolHashMap m_CMBUsed;
 
 	void AddEntry(GOStringHashMap& hash, wxString key, wxString value);
 

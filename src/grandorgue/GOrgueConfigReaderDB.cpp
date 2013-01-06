@@ -54,9 +54,13 @@ bool GOrgueConfigReaderDB::ReadData(GOrgueConfigFileReader& ODF, GOSettingType t
 				{
 					AddEntry(m_ODF, group + wxT('/') + key, value);
 					AddEntry(m_ODF_LC, (group + wxT('/') + key).Lower(), value);
+					m_ODFUsed[group + wxT('/') + key] = false;
 				}
 				else
+				{
 					AddEntry(m_CMB, group + wxT('/') + key, value);
+					m_CMBUsed[group + wxT('/') + key] = false;
+				}
 				changed = true;
 			}
 		}
@@ -68,6 +72,7 @@ bool GOrgueConfigReaderDB::ReadData(GOrgueConfigFileReader& ODF, GOSettingType t
 void GOrgueConfigReaderDB::ClearCMB()
 {
 	m_CMB.clear();
+	m_CMBUsed.clear();
 }
 
 void GOrgueConfigReaderDB::AddEntry(GOStringHashMap& hash, wxString key, wxString value)
@@ -83,11 +88,15 @@ void GOrgueConfigReaderDB::AddEntry(GOStringHashMap& hash, wxString key, wxStrin
 
 bool GOrgueConfigReaderDB::GetString(GOSettingType type, wxString group, wxString key, wxString& value)
 {
+	wxString index = group + wxT("/") + key;
 	if (type == UserSetting || type == CMBSetting)
 	{
-		GOStringHashMap::iterator i = m_CMB.find(group + wxT("/") + key);
+		m_CMBUsed[index] = true;
+		GOStringHashMap::iterator i = m_CMB.find(index);
 		if (i != m_CMB.end())
 		{
+			if (type == UserSetting)
+				m_ODFUsed[index] = true;
 			value = i->second;
 			return true;
 		}
@@ -95,7 +104,8 @@ bool GOrgueConfigReaderDB::GetString(GOSettingType type, wxString group, wxStrin
 
 	if (type == UserSetting || type == ODFSetting)
 	{
-		GOStringHashMap::iterator i = m_ODF.find(group + wxT("/") + key);
+		m_ODFUsed[index] = true;
+		GOStringHashMap::iterator i = m_ODF.find(index);
 		if (i != m_ODF.end())
 		{
 			value = i->second;
@@ -104,7 +114,7 @@ bool GOrgueConfigReaderDB::GetString(GOSettingType type, wxString group, wxStrin
 	}
 	if (type == UserSetting || type == ODFSetting)
 	{
-		GOStringHashMap::iterator i = m_ODF_LC.find((group + wxT("/") + key).Lower());
+		GOStringHashMap::iterator i = m_ODF_LC.find(index.Lower());
 		if (i != m_ODF.end())
 		{
 			wxLogWarning(_("Incorrect case for section '%s' entry '%s'"), group.c_str(), key.c_str());
