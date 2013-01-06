@@ -744,7 +744,6 @@ void GrandOrgueFile::Save(const wxString& file)
 	GOrgueConfigWriter cfg(cfg_file, prefix);
 	cfg.Write(wxT("Organ"), wxT("ChurchName"), m_ChurchName);
 	cfg.Write(wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
-	cfg.Write(wxT("Organ"), wxT("HauptwerkOrganFileFormatVersion"), m_HauptwerkOrganFileFormatVersion);
 	cfg.Write(wxT("Organ"), wxT("ODFPath"), GetODFFilename());
 
 	if (m_volume >= -120)
