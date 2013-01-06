@@ -26,29 +26,40 @@
 GOSoundReverbEngine::GOSoundReverbEngine(unsigned samples_per_buffer) :
 	m_Partitions()
 {
-	if (samples_per_buffer < 1024)
+	if (samples_per_buffer < 128)
 	{
-		if (samples_per_buffer < 128)
-		{
-			m_Partitions.push_back(new GOSoundReverbPartition(64, 3));
-			m_Partitions.push_back(new GOSoundReverbPartition(128, 6));
-		}
-		else if (samples_per_buffer < 256)
-		{
-			m_Partitions.push_back(new GOSoundReverbPartition(128, 7));
-		}
-		else if (samples_per_buffer < 512)
-		{
-			m_Partitions.push_back(new GOSoundReverbPartition(256, 3));
-		}
-
+		m_Partitions.push_back(new GOSoundReverbPartition(64, 3));
+		m_Partitions.push_back(new GOSoundReverbPartition(128, 6));
 		m_Partitions.push_back(new GOSoundReverbPartition(512, 6));
+		m_Partitions.push_back(new GOSoundReverbPartition(2048, 6));
+		m_Partitions.push_back(new GOSoundReverbPartition(8192, 121));
+	}
+	else if (samples_per_buffer < 256)
+	{
+		m_Partitions.push_back(new GOSoundReverbPartition(128, 7));
+		m_Partitions.push_back(new GOSoundReverbPartition(512, 6));
+		m_Partitions.push_back(new GOSoundReverbPartition(2048, 6));
+		m_Partitions.push_back(new GOSoundReverbPartition(8192, 121));
+	}
+	else if (samples_per_buffer < 512)
+	{
+		m_Partitions.push_back(new GOSoundReverbPartition(256, 3));
+		m_Partitions.push_back(new GOSoundReverbPartition(512, 6));
+		m_Partitions.push_back(new GOSoundReverbPartition(2048, 6));
+		m_Partitions.push_back(new GOSoundReverbPartition(8192, 121));
+	}
+	else if (samples_per_buffer < 1024)
+	{
+		m_Partitions.push_back(new GOSoundReverbPartition(512, 7));
+		m_Partitions.push_back(new GOSoundReverbPartition(2048, 6));
+		m_Partitions.push_back(new GOSoundReverbPartition(8192, 121));
 	}
 	else
+	{
 		m_Partitions.push_back(new GOSoundReverbPartition(1024, 3));
-
-	m_Partitions.push_back(new GOSoundReverbPartition(2048, 6));
-	m_Partitions.push_back(new GOSoundReverbPartition(8192, 121));
+		m_Partitions.push_back(new GOSoundReverbPartition(2048, 6));
+		m_Partitions.push_back(new GOSoundReverbPartition(8192, 121));
+	}
 }
 
 GOSoundReverbEngine::~GOSoundReverbEngine()
