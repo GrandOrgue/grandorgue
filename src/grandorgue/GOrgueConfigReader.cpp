@@ -47,7 +47,7 @@ wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxSt
 		if (required)
 		{
 			wxString error;
-			error.Printf(_("Missing required value '/%s/%s'"), group.c_str(), key.c_str());
+			error.Printf(_("Missing required value section '%s' entry '%s'"), group.c_str(), key.c_str());
 			throw error;
 		}
 		else
@@ -58,7 +58,7 @@ wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxSt
 	if (value.length() > nmax)
 	{
 		wxString error;
-		error.Printf(_("Value too long: '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		error.Printf(_("Value too long: section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 		throw error;
 	}
 	return value;
@@ -84,14 +84,14 @@ bool GOrgueConfigReader::ReadBoolean(GOSettingType type, wxString group, wxStrin
 		return true;
 	if (value == wxT("N"))
 		return false;
-	wxLogWarning(_("Strange boolean value for '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	wxLogWarning(_("Strange boolean value for section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	if (value.Length() && value[0] == wxT('Y'))
 		return true;
 	else if (value.Length() && value[0] == wxT('N'))
 		return false;
 
 	wxString error;
-	error.Printf(_("Invalid boolean value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	error.Printf(_("Invalid boolean value at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	throw error;
 }
 
@@ -145,7 +145,7 @@ wxColour GOrgueConfigReader::ReadColor(GOSettingType type, wxString group, wxStr
 		return colour;
 	
 	wxString error;
-	error.Printf(_("Invalid color '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	error.Printf(_("Invalid color at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	throw error;
 }
 
@@ -164,19 +164,19 @@ int GOrgueConfigReader::ReadInteger(GOSettingType type, wxString group, wxString
 		if (value.Length() && !::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")) && !value.IsEmpty())
 		{
 			wxString error;
-			error.Printf(_("Invalid integer value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+			error.Printf(_("Invalid integer value at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 			throw error;
 		}
 
 		retval = wxAtoi(value);
-		wxLogWarning(_("Invalid integer value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		wxLogWarning(_("Invalid integer value at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	}
 
 	if (nmin <= retval && retval <= nmax)
 		return retval;
 
 	wxString error;
-	error.Printf(_("Out of range value '/%s/%s': %d"), group.c_str(), key.c_str(), retval);
+	error.Printf(_("Out of range value at section '%s' entry '%s': %d"), group.c_str(), key.c_str(), retval);
 	throw error;
 }
 
@@ -203,7 +203,7 @@ double GOrgueConfigReader::ReadFloat(GOSettingType type, wxString group, wxStrin
 	if (!value.ToDouble(&retval))
 	{
 		wxString error;
-		error.Printf(_("Invalid float value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		error.Printf(_("Invalid float value at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 		throw error;
 	}
 
@@ -211,7 +211,7 @@ double GOrgueConfigReader::ReadFloat(GOSettingType type, wxString group, wxStrin
 		return retval;
 
 	wxString error;
-	error.Printf(_("Out of range value '/%s/%s': %f"), group.c_str(), key.c_str(), retval);
+	error.Printf(_("Out of range value at section '%s' entry '%s': %f"), group.c_str(), key.c_str(), retval);
 	throw error;
 }
 
@@ -243,7 +243,7 @@ unsigned GOrgueConfigReader::ReadSize(GOSettingType type, wxString group, wxStri
 		return size;
 	
 	wxString error;
-	error.Printf(_("Invalid size '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	error.Printf(_("Invalid size at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	throw error;
 }
 
@@ -271,7 +271,7 @@ unsigned GOrgueConfigReader::ReadFontSize(GOSettingType type, wxString group, wx
 		return size;
 
 	wxString error;
-	error.Printf(_("Invalid font size '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	error.Printf(_("Invalid font size at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	throw error;
 }
 
@@ -293,7 +293,7 @@ int GOrgueConfigReader::ReadEnum(GOSettingType type, wxString group, wxString ke
 			return entry[i].value;
 
 	wxString error;
-	error.Printf(_("Invalid enum value '/%s/%s': %s"), group.c_str(), key.c_str(), value.c_str());
+	error.Printf(_("Invalid enum value at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	throw error;
 }
 

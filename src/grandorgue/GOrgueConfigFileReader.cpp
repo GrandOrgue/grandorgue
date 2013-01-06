@@ -99,7 +99,7 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 			group = line.Mid(1, line.Len() - 2);
 			if (m_Entries.find(group) != m_Entries.end())
 			{
-				wxLogWarning(_("Dupplicate group at line %d: %s"), lineno, group.c_str());
+				wxLogWarning(_("Duplicate group at line %d: %s"), lineno, group.c_str());
 			}
 			grp = &m_Entries[group];
 		}
@@ -119,7 +119,7 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 			wxString name = line.Mid(0, datapos);
 			if (grp->find(name) != grp->end())
 			{
-				wxLogWarning(_("Dupplicate entry at line %d: %s"), lineno, name.c_str());
+				wxLogWarning(_("Duplicate entry in section %s at line %d: %s"), group.c_str(), lineno, name.c_str());
 			}
 			(*grp)[name] = line.Mid(datapos + 1);
 		}

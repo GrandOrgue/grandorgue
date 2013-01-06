@@ -75,7 +75,7 @@ void GOrgueConfigReaderDB::AddEntry(GOStringHashMap& hash, wxString key, wxStrin
 	GOStringHashMap::iterator i = hash.find(key);
 	if (i != hash.end())
 	{
-		wxLogWarning(_("Dupplicate entry: %s"), key.c_str());
+		wxLogWarning(_("Duplicate entry: %s"), key.c_str());
 	}
 	hash[key] = value;
 }
@@ -107,7 +107,7 @@ bool GOrgueConfigReaderDB::GetString(GOSettingType type, wxString group, wxStrin
 		GOStringHashMap::iterator i = m_ODF_LC.find((group + wxT("/") + key).Lower());
 		if (i != m_ODF.end())
 		{
-			wxLogWarning(_("Incorrect case for '/%s/%s'"), group.c_str(), key.c_str());
+			wxLogWarning(_("Incorrect case for section '%s' entry '%s'"), group.c_str(), key.c_str());
 			value = i->second;
 			return true;
 		}
