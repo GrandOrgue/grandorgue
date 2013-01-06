@@ -278,6 +278,22 @@ void OrganDialog::Load()
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
 		if (!e)
 		{
+			wxTreeItemIdValue it;
+			wxTreeItemId child = m_Tree->GetFirstChild(entries[i], it);
+			while(child.IsOk())
+			{
+				bool found = false;
+				for(unsigned j = 0; j < entries.size(); j++)
+					if (entries[j] == child)
+						found = true;
+				if (!found)
+				{
+					entries.Add(child);
+					m_Tree->SelectItem(child, true);
+				}
+				child = m_Tree->GetNextChild(entries[i], it);
+			}
+			m_Tree->SelectItem(entries[i], false);
 			entries.RemoveAt(i, 1);
 			i--;
 		}
@@ -679,11 +695,6 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 
 void OrganDialog::OnTreeChanging(wxTreeEvent& e)
 {
-	if (!m_Tree->GetItemData(e.GetItem()))
-	{
-		e.Veto();
-		return;
-	}
 	if (Changed())
 	{
 		wxMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, NULL);
