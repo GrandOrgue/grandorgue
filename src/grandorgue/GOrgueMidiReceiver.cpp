@@ -65,6 +65,12 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 	int event_cnt = cfg.ReadInteger(CMBSetting, group, wxT("NumberOfMIDIEvents"), -1, 255, false);
 	if (event_cnt >= 0)
 	{
+		/* Skip old style entries */
+		if (m_type == MIDI_RECV_DRAWSTOP)
+			cfg.ReadInteger(ODFSetting, group, wxT("StopControlMIDIKeyNumber"), -1, 127, false);
+		if (m_type == MIDI_RECV_BUTTON)
+			cfg.ReadInteger(ODFSetting, group, wxT("MIDIProgramChangeNumber"), 0, 128, false);
+
 		wxString buffer;
 
 		m_events.resize(event_cnt);
@@ -91,7 +97,8 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 			
 			if (m_type == MIDI_RECV_ENCLOSURE)
 			{
-				m_events[i].type = MIDI_M_CTRL_CHANGE;
+				m_events[i].type = (midi_match_message_type)cfg.ReadEnum(CMBSetting, group, wxString::Format(wxT("MIDIEventType%03d"), i + 1), 
+											 m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]), false, MIDI_M_CTRL_CHANGE);
 				m_events[i].low_velocity = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 0);
 				m_events[i].high_velocity = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127);
 				continue;
@@ -168,6 +175,7 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 		if (m_type == MIDI_RECV_BUTTON)
 		{
 			m_events[0].type = MIDI_M_PGM_CHANGE;
+			m_events[0].key = cfg.ReadInteger(UserSetting, group, wxT("MIDIProgramChangeNumber"), 0, 128, false);
 			if (m_Index != -1)
 			{
 				unsigned midi_index = m_organfile->GetManual(m_Index)->GetMIDIInputNumber();
@@ -184,7 +192,6 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 					return;
 				}
 			}
-			m_events[0].key = cfg.ReadInteger(UserSetting, group, wxT("MIDIProgramChangeNumber"), 0, 128, false);
 			if (!m_events[0].key)
 			{
 				m_events.resize(0);
