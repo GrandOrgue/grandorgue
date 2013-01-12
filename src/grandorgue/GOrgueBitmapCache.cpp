@@ -58,6 +58,7 @@ GOrgueBitmapCache::GOrgueBitmapCache(GrandOrgueFile* organfile) :
 	RegisterBitmap(new wxBitmap(GetImage_Enclosure12()), wxT("GO:enclosure12"));
 	RegisterBitmap(new wxBitmap(GetImage_Enclosure13()), wxT("GO:enclosure13"));
 	RegisterBitmap(new wxBitmap(GetImage_Enclosure14()), wxT("GO:enclosure14"));
+	RegisterBitmap(new wxBitmap(GetImage_Enclosure15()), wxT("GO:enclosure15"));
 
 	RegisterBitmap(new wxBitmap(GetImage_PedalNaturalWoodUp()), wxT("GO:PedalOff_Natural"));
 	RegisterBitmap(new wxBitmap(GetImage_PedalSharpBlackUp()), wxT("GO:PedalOff_Sharp"));

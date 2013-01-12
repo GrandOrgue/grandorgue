@@ -130,6 +130,7 @@ wxBitmap GetImage_Enclosure11();
 wxBitmap GetImage_Enclosure12();
 wxBitmap GetImage_Enclosure13();
 wxBitmap GetImage_Enclosure14();
+wxBitmap GetImage_Enclosure15();
 
 wxBitmap GetImage_ManualCBlackDown();
 wxBitmap GetImage_ManualCBlackUp();
