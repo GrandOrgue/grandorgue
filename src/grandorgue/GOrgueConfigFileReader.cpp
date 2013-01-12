@@ -83,7 +83,7 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 	unsigned pos = 0;
 	wxString group;
 	std::map<wxString, wxString>* grp = NULL;
-	unsigned lineno = 1;
+	unsigned lineno = 0;
 	
 	while(pos < input.Len())
 	{
@@ -110,7 +110,7 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 				wxLogError(_("Config entry without any group at line %d"), lineno);
 				continue;
 			}
-			unsigned datapos = line.find(wxT("="), 0);
+			int datapos = line.find(wxT("="), 0);
 			if (datapos <= 0)
 			{
 				wxLogError(_("Invalid Config entry at line %d: %s"), lineno, line.c_str());
