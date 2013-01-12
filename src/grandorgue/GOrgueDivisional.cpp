@@ -85,6 +85,29 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 		if (pos >= 0)
 			m_State[pos] = (s > 0) ? 1 : 0;
 	}
+
+	/* skip ODF settings */
+	NumberOfStops = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount(), true, 0);
+	NumberOfCouplers = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers(), 0);
+	NumberOfTremulants = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), m_organfile->DivisionalsStoreTremulants(), 0);
+
+	for (unsigned i = 0; i < NumberOfStops; i++)
+	{
+		buffer.Printf(wxT("Stop%03d"), i + 1);
+		cfg.ReadInteger(ODFSetting, m_group, buffer, -associatedManual->GetStopCount(), associatedManual->GetStopCount());
+	}
+
+	for (unsigned i = 0; i < NumberOfCouplers; i++)
+	{
+		buffer.Printf(wxT("Coupler%03d"), i + 1);
+		cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999);
+	}
+
+	for (unsigned i = 0; i < NumberOfTremulants; i++)
+	{
+		buffer.Printf(wxT("Tremulant%03d"), i + 1);
+		cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999, false, 0);
+	}
 }
 
 void GOrgueDivisional::Save(GOrgueConfigWriter& cfg)
