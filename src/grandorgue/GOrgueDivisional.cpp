@@ -65,7 +65,11 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -associatedManual->GetStopCount(), associatedManual->GetStopCount());
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m_ManualNumber, abs(s));
 		if (pos >= 0)
+		{
+			if (m_State[pos] != -1)
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 			m_State[pos] = (s > 0) ? 1 : 0;
+		}
 		else
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
@@ -76,7 +80,11 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -999, 999);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_COUPLER, m_ManualNumber, abs(s));
 		if (pos >= 0)
+		{
+			if (m_State[pos] != -1)
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 			m_State[pos] = (s > 0) ? 1 : 0;
+		}
 		else
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
@@ -87,7 +95,11 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -999, 999, false, 0);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_TREMULANT, m_ManualNumber, abs(s));
 		if (pos >= 0)
+		{
+			if (m_State[pos] != -1)
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 			m_State[pos] = (s > 0) ? 1 : 0;
+		}
 		else
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
