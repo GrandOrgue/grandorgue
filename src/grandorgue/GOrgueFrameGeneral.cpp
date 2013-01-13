@@ -64,7 +64,11 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -m_organfile->GetManual(m)->GetStopCount(), m_organfile->GetManual(m)->GetStopCount());
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m, abs(s));
 		if (pos >= 0)
+		{
+			if (m_State[pos] != -1)
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 			m_State[pos] = (s > 0) ? 1 : 0;
+		}
 		else
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
@@ -77,7 +81,11 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -999, 999);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_COUPLER, m, abs(s));
 		if (pos >= 0)
+		{
+			if (m_State[pos] != -1)
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 			m_State[pos] = (s > 0) ? 1 : 0;
+		}
 		else
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
@@ -88,7 +96,11 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -m_organfile->GetTremulantCount(), m_organfile->GetTremulantCount());
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_TREMULANT, -1, abs(s));
 		if (pos >= 0)
+		{
+			if (m_State[pos] != -1)
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 			m_State[pos] = (s > 0) ? 1 : 0;
+		}
 		else
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
@@ -99,7 +111,11 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -m_organfile->GetDivisionalCouplerCount(), m_organfile->GetDivisionalCouplerCount());
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_DIVISIONALCOUPLER, -1, abs(s));
 		if (pos >= 0)
+		{
+			if (m_State[pos] != -1)
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 			m_State[pos] = (s > 0) ? 1 : 0;
+		}
 		else
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
