@@ -66,6 +66,8 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m_ManualNumber, abs(s));
 		if (pos >= 0)
 			m_State[pos] = (s > 0) ? 1 : 0;
+		else
+			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
 
 	for (unsigned i = 0; i < NumberOfCouplers; i++)
@@ -75,6 +77,8 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_COUPLER, m_ManualNumber, abs(s));
 		if (pos >= 0)
 			m_State[pos] = (s > 0) ? 1 : 0;
+		else
+			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
 
 	for (unsigned i = 0; i < NumberOfTremulants; i++)
@@ -84,6 +88,8 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_TREMULANT, m_ManualNumber, abs(s));
 		if (pos >= 0)
 			m_State[pos] = (s > 0) ? 1 : 0;
+		else
+			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
 
 	/* skip ODF settings */
@@ -94,19 +100,34 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 	for (unsigned i = 0; i < NumberOfStops; i++)
 	{
 		buffer.Printf(wxT("Stop%03d"), i + 1);
-		cfg.ReadInteger(ODFSetting, m_group, buffer, -associatedManual->GetStopCount(), associatedManual->GetStopCount());
+		int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -associatedManual->GetStopCount(), associatedManual->GetStopCount());
+		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m_ManualNumber, abs(s));
+		if (pos >= 0)
+			;
+		else
+			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
 
 	for (unsigned i = 0; i < NumberOfCouplers; i++)
 	{
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
-		cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999);
+		int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999);
+		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_COUPLER, m_ManualNumber, abs(s));
+		if (pos >= 0)
+			;
+		else
+			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
 
 	for (unsigned i = 0; i < NumberOfTremulants; i++)
 	{
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999, false, 0);
+		int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999, false, 0);
+		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_TREMULANT, m_ManualNumber, abs(s));
+		if (pos >= 0)
+			;
+		else
+			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
 }
 
