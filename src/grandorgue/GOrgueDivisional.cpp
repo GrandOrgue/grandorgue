@@ -105,6 +105,7 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 	}
 
 	/* skip ODF settings */
+	std::vector<bool> used(m_State.size());
 	NumberOfStops = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount(), true, 0);
 	NumberOfCouplers = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers(), 0);
 	NumberOfTremulants = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), m_organfile->DivisionalsStoreTremulants(), 0);
@@ -115,7 +116,11 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 		int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -associatedManual->GetStopCount(), associatedManual->GetStopCount());
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m_ManualNumber, abs(s));
 		if (pos >= 0)
-			;
+		{
+			if (used[pos])
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			used[pos] = true;
+		}
 		else
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
@@ -126,7 +131,11 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 		int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_COUPLER, m_ManualNumber, abs(s));
 		if (pos >= 0)
-			;
+		{
+			if (used[pos])
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			used[pos] = true;
+		}
 		else
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
@@ -137,7 +146,11 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 		int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999, false, 0);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_TREMULANT, m_ManualNumber, abs(s));
 		if (pos >= 0)
-			;
+		{
+			if (used[pos])
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			used[pos] = true;
+		}
 		else
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 	}
