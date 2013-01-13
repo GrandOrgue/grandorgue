@@ -28,6 +28,10 @@ GOrgueConfigReaderDB::GOrgueConfigReaderDB()
 
 GOrgueConfigReaderDB::~GOrgueConfigReaderDB()
 {
+}
+
+void GOrgueConfigReaderDB::ReportUnused()
+{
 	for(GOBoolHashMap::iterator i = m_CMBUsed.begin(); i != m_CMBUsed.end(); i++)
 	{
 		if (!i->second)

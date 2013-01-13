@@ -549,6 +549,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	{
 		return error_;
 	}
+	ini.ReportUnused();
 
 	GOrgueLCD_WriteLineOne(m_ChurchName + wxT(" ") + m_OrganBuilder);
 	GOrgueLCD_WriteLineTwo(_("Loading..."));
@@ -642,6 +643,7 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), 4096, false);
 
 		ReadCombinations(cfg);
+		ini.ReportUnused();
 	}
 	catch (wxString error)
 	{

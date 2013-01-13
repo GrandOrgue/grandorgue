@@ -45,6 +45,7 @@ private:
 public:
 	GOrgueConfigReaderDB();
 	~GOrgueConfigReaderDB();
+	void ReportUnused();
 	void ClearCMB();
 	bool ReadData(GOrgueConfigFileReader& ODF, GOSettingType type, bool handle_prefix);
 
