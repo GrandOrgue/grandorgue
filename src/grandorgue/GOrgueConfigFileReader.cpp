@@ -38,7 +38,9 @@ const std::map<wxString, std::map<wxString, wxString> >& GOrgueConfigFileReader:
 
 wxString GOrgueConfigFileReader::GetNextLine(const wxString& buffer, unsigned &pos)
 {
-	unsigned newpos = buffer.find(wxT("\n"), pos);
+	int newpos = buffer.find(wxT("\n"), pos);
+	if (newpos < (int)pos)
+		newpos = buffer.Len();
 	wxString line = buffer.Mid(pos, newpos - pos);
 	pos = newpos + 1;
 	if (line.Len() > 0 && line[line.Len() - 1] == wxT('\r'))
