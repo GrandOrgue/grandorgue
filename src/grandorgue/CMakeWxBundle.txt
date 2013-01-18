@@ -53,7 +53,7 @@ endmacro(InstallWxTranslations)
 
 macro(CopyWxTranslations)
   set(searchdirs)
-  if(${wxWidgets_ROOT_DIR})
+  if(DEFINED wxWidgets_ROOT_DIR)
     get_filename_component(_dir ${wxWidgets_ROOT_DIR} REALPATH)
     if(IS_DIRECTORY ${_dir})
       list(APPEND searchdirs ${_dir})
