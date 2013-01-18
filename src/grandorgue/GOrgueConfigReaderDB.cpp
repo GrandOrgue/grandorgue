@@ -35,7 +35,9 @@ void GOrgueConfigReaderDB::ReportUnused()
 	for(GOBoolHashMap::iterator i = m_CMBUsed.begin(); i != m_CMBUsed.end(); i++)
 	{
 		if (!i->second)
+		{
 			wxLogWarning(_("Unused CMB entry '%s'"), i->first.c_str());
+		}
 	}
 	bool warn_old = false;
 	for(GOBoolHashMap::iterator i = m_ODFUsed.begin(); i != m_ODFUsed.end(); i++)
@@ -45,11 +47,15 @@ void GOrgueConfigReaderDB::ReportUnused()
 			if (i->first.StartsWith(wxT("_")))
 			{
 				if (!warn_old)
+				{
 					wxLogWarning(_("Old GO 0.2 styled setting in ODF"));
+				}
 				warn_old = true;
 			}
 			else
+			{
 				wxLogWarning(_("Unused ODF entry '%s'"), i->first.c_str());
+			}
 		}
 	}
 }

@@ -66,11 +66,15 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		if (pos >= 0)
 		{
 			if (m_State[pos] != -1)
+			{
 				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
 			m_State[pos] = (s > 0) ? 1 : 0;
 		}
 		else
+		{
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+		}
 	}
 
 	for (unsigned i = 0; i < NumberOfCouplers; i++)
@@ -83,11 +87,15 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		if (pos >= 0)
 		{
 			if (m_State[pos] != -1)
+			{
 				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
 			m_State[pos] = (s > 0) ? 1 : 0;
 		}
 		else
+		{
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+		}
 	}
 
 	for (unsigned i = 0; i < NumberOfTremulants; i++)
@@ -98,11 +106,15 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		if (pos >= 0)
 		{
 			if (m_State[pos] != -1)
+			{
 				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
 			m_State[pos] = (s > 0) ? 1 : 0;
 		}
 		else
+		{
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+		}
 	}
 
 	for (unsigned i = 0; i < NumberOfDivisionalCouplers; i++)
@@ -113,11 +125,15 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		if (pos >= 0)
 		{
 			if (m_State[pos] != -1)
+			{
 				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
 			m_State[pos] = (s > 0) ? 1 : 0;
 		}
 		else
+		{
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+		}
 	}
 
 	/* skip ODF settings */
@@ -137,11 +153,15 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		if (pos >= 0)
 		{
 			if (used[pos])
+			{
 				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
 			used[pos] = true;
 		}
 		else
+		{
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+		}
 	}
 
 	for (unsigned i = 0; i < NumberOfCouplers; i++)
@@ -154,11 +174,15 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		if (pos >= 0)
 		{
 			if (used[pos])
+			{
 				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
 			used[pos] = true;
 		}
 		else
+		{
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+		}
 	}
 
 	for (unsigned i = 0; i < NumberOfTremulants; i++)
@@ -169,11 +193,15 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		if (pos >= 0)
 		{
 			if (used[pos])
+			{
 				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
 			used[pos] = true;
 		}
 		else
+		{
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+		}
 	}
 
 	for (unsigned i = 0; i < NumberOfDivisionalCouplers; i++)
@@ -184,11 +212,15 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		if (pos >= 0)
 		{
 			if (used[pos])
+			{
 				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
 			used[pos] = true;
 		}
 		else
+		{
 			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+		}
 	}
 
 }
