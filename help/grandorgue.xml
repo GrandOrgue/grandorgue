@@ -1483,14 +1483,6 @@ attributes. Additionally it includes the following attributes:
       </para>
       <variablelist>
         <varlistentry>
-          <term>HauptwerkOrganFileFormatVersion</term>
-          <listitem>
-            <para>
-(string, required) Version information - ignored by GrandOrgue
-	    </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
           <term>ChurchName</term>
           <listitem>
             <para>
