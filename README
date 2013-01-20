@@ -118,6 +118,10 @@ All the instructions below are for building GrandOrgue for release, in a single 
 				cd /cygdrive/C/cyg/buildlinux32
 				cmake -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -G "Unix Makefiles" /cygdrive/c/goscr -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DCMAKE_LEGACY_CYGWIN_WIN32=1 -DCMAKE_CXX_FLAGS=-I/usr/include/w32api -DRTAUDIO_USE_WASAPI=OFF -DRTAUDIO_USE_WDMKS=OFF -DRTAUDIO_USE_ASIO=OFF -DRTAUDIO_USE_DSOUND=OFF -DRTAUDIO_USE_WMME=OFF
 				make	
+		        or create only the build tools:
+				cd /cygdrive/C/cyg/buildlinux32
+				cmake -G "Unix Makefiles" /cygdrive/c/goscr/src/build -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DCMAKE_LEGACY_CYGWIN_WIN32=1
+				make	
 			Create the 64 bit version of GO			
 				cd ./cygdrive/c/cyg/buildwin64
 				cmake -DCMAKE_TOOLCHAIN_FILE=/cygdrive/c/cyg/inst64/toolchain.def /cygdrive/c/gosrc -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst64 -DIMPORT_EXECUTABLES=/cygdrive/c/cyg/buildlinux32/ImportExecutables.cmake -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DRTAUDIO_USE_WASAPI=OFF 
@@ -182,8 +186,13 @@ cd /wxsrc
 make
 make install 
 4) Build GO for linux
+a)
 cd /buildlinux
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release /gosrc  -DUNICODE=1
+make
+b) or instead of 4 just build the build tools:
+cd /buildlinux
+cmake -G "Unix Makefiles" /gosrc/src/build
 make
 5) Create toolchain definition for windows, file /inst/toolchain.def:
 ---------------------------------------------------------------------
