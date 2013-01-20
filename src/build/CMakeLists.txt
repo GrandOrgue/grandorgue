@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 2.6)
+
+IF(NOT CMAKE_CROSSCOMPILING)
+   ADD_EXECUTABLE(imageconverter imageconverter.cpp)
+ENDIF(NOT CMAKE_CROSSCOMPILING)
+
+IF(NOT CMAKE_CROSSCOMPILING) 
+  EXPORT(TARGETS imageconverter FILE ${CMAKE_BINARY_DIR}/ImportExecutables.cmake )
+ENDIF(NOT CMAKE_CROSSCOMPILING) 
+
