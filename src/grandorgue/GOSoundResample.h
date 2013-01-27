@@ -2,7 +2,7 @@
  * GrandOrgue - free pipe organ simulator based on MyOrgan
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2012 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2013 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
