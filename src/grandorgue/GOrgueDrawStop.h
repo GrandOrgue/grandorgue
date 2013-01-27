@@ -38,7 +38,8 @@ protected:
 
 public:
 	GOrgueDrawstop(GrandOrgueFile* organfile);
-	void Load(GOrgueConfigReader& cfg, wxString group, wxString name = wxT(""));
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString name);
+	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 	virtual void Set(bool on);
 	virtual void PreparePlayback();

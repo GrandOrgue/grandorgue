@@ -462,7 +462,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 		for(unsigned j = 0; j < 10; j++)
 		{
 			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile, m_organfile->GetManual(i)->GetDivisionalTemplate());
-			divisional->Load(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
+			divisional->Init(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
 			m_organfile->GetManual(i)->AddDivisional(divisional);
 
 			control = new GOGUIButton(panel, divisional, true, j + 1, i - m_organfile->GetODFManualCount());
@@ -527,35 +527,35 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 		panel->AddControl(PosDisplay);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
-		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i), _("16"), false, false, -12, i, GOrgueCoupler::COUPLER_NORMAL);
+		coupler->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i), _("16"), false, false, -12, i, GOrgueCoupler::COUPLER_NORMAL);
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 2, 100 + i);
 		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i));
 		panel->AddControl(control);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
-		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i), manual_nr != i ? _("8") : _("U.O."), manual_nr == i, false, 0, i, GOrgueCoupler::COUPLER_NORMAL);
+		coupler->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i), manual_nr != i ? _("8") : _("U.O."), manual_nr == i, false, 0, i, GOrgueCoupler::COUPLER_NORMAL);
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 3, 100 + i);
 		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i));
 		panel->AddControl(control);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
-		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i), _("4"), false, false, 12, i, GOrgueCoupler::COUPLER_NORMAL);
+		coupler->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i), _("4"), false, false, 12, i, GOrgueCoupler::COUPLER_NORMAL);
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 4, 100 + i);
 		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i));
 		panel->AddControl(control);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
-		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i), _("BAS"), false, false, 0, i, GOrgueCoupler::COUPLER_BASS);
+		coupler->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i), _("BAS"), false, false, 0, i, GOrgueCoupler::COUPLER_BASS);
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 5, 100 + i);
 		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i));
 		panel->AddControl(control);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
-		coupler->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i), _("MEL"), false, false, 0, i, GOrgueCoupler::COUPLER_MELODY);
+		coupler->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i), _("MEL"), false, false, 0, i, GOrgueCoupler::COUPLER_MELODY);
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 6, 100 + i);
 		control->Load(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i));
@@ -612,7 +612,7 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(GOrgueConfigReader& cfg)
 		for(unsigned j = 0; j < 10; j++)
 		{
 			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile, manual->GetDivisionalTemplate());
-			divisional->Load(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
+			divisional->Init(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
 			manual->AddDivisional(divisional);
 
 			control = new GOGUIButton(panel, divisional, true, j + 3, 100 + i);
@@ -874,43 +874,43 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 		m_crescendo[i]->Load(cfg, buffer);
 	}
 
-	m_button[ID_SETTER_PREV]->Load(cfg, wxT("SetterPrev"), _("Previous"));
-	m_button[ID_SETTER_NEXT]->Load(cfg, wxT("SetterNext"), _("Next"));
-	m_button[ID_SETTER_SET]->Load(cfg, wxT("SetterSet"), _("Set"));
-	m_button[ID_SETTER_M1]->Load(cfg, wxT("SetterM1"), _("-1"));
-	m_button[ID_SETTER_M10]->Load(cfg, wxT("SetterM10"), _("-10"));
-	m_button[ID_SETTER_M100]->Load(cfg, wxT("SetterM100"), _("-100"));
-	m_button[ID_SETTER_P1]->Load(cfg, wxT("SetterP1"), _("+1"));
-	m_button[ID_SETTER_P10]->Load(cfg, wxT("SetterP10"), _("+10"));
-	m_button[ID_SETTER_P100]->Load(cfg, wxT("SetterP100"), _("+100"));
-	m_button[ID_SETTER_CURRENT]->Load(cfg, wxT("SetterCurrent"), _("Current"));
-	m_button[ID_SETTER_HOME]->Load(cfg, wxT("SetterHome"), _("000"));
-	m_button[ID_SETTER_GC]->Load(cfg, wxT("SetterGC"), _("G.C."));
+	m_button[ID_SETTER_PREV]->Init(cfg, wxT("SetterPrev"), _("Previous"));
+	m_button[ID_SETTER_NEXT]->Init(cfg, wxT("SetterNext"), _("Next"));
+	m_button[ID_SETTER_SET]->Init(cfg, wxT("SetterSet"), _("Set"));
+	m_button[ID_SETTER_M1]->Init(cfg, wxT("SetterM1"), _("-1"));
+	m_button[ID_SETTER_M10]->Init(cfg, wxT("SetterM10"), _("-10"));
+	m_button[ID_SETTER_M100]->Init(cfg, wxT("SetterM100"), _("-100"));
+	m_button[ID_SETTER_P1]->Init(cfg, wxT("SetterP1"), _("+1"));
+	m_button[ID_SETTER_P10]->Init(cfg, wxT("SetterP10"), _("+10"));
+	m_button[ID_SETTER_P100]->Init(cfg, wxT("SetterP100"), _("+100"));
+	m_button[ID_SETTER_CURRENT]->Init(cfg, wxT("SetterCurrent"), _("Current"));
+	m_button[ID_SETTER_HOME]->Init(cfg, wxT("SetterHome"), _("000"));
+	m_button[ID_SETTER_GC]->Init(cfg, wxT("SetterGC"), _("G.C."));
 
-	m_button[ID_SETTER_REGULAR]->Load(cfg, wxT("SetterRegular"), _("Regular"));
-	m_button[ID_SETTER_SCOPE]->Load(cfg, wxT("SetterScope"), _("Scope"));
-	m_button[ID_SETTER_SCOPED]->Load(cfg, wxT("SetterScoped"), _("Scoped"));
-	m_button[ID_SETTER_FULL]->Load(cfg, wxT("SetterFull"), _("Full"));
+	m_button[ID_SETTER_REGULAR]->Init(cfg, wxT("SetterRegular"), _("Regular"));
+	m_button[ID_SETTER_SCOPE]->Init(cfg, wxT("SetterScope"), _("Scope"));
+	m_button[ID_SETTER_SCOPED]->Init(cfg, wxT("SetterScoped"), _("Scoped"));
+	m_button[ID_SETTER_FULL]->Init(cfg, wxT("SetterFull"), _("Full"));
 
-	m_button[ID_SETTER_INSERT]->Load(cfg, wxT("SetterInsert"), _("Insert"));
-	m_button[ID_SETTER_DELETE]->Load(cfg, wxT("SetterDelete"), _("Delete"));
+	m_button[ID_SETTER_INSERT]->Init(cfg, wxT("SetterInsert"), _("Insert"));
+	m_button[ID_SETTER_DELETE]->Init(cfg, wxT("SetterDelete"), _("Delete"));
 
-	m_button[ID_SETTER_CRESCENDO_PREV]->Load(cfg, wxT("SetterCrescendoPrev"), _("<"));
-	m_button[ID_SETTER_CRESCENDO_NEXT]->Load(cfg, wxT("SetterCrescendoNext"), _(">"));
-	m_button[ID_SETTER_CRESCENDO_CURRENT]->Load(cfg, wxT("SetterCrescendoCurrent"), _("Current"));
-	m_button[ID_SETTER_CRESCENDO_A]->Load(cfg, wxT("SetterCrescendoA"), _("A"));
-	m_button[ID_SETTER_CRESCENDO_B]->Load(cfg, wxT("SetterCrescendoB"), _("B"));
-	m_button[ID_SETTER_CRESCENDO_C]->Load(cfg, wxT("SetterCrescendoC"), _("C"));
-	m_button[ID_SETTER_CRESCENDO_D]->Load(cfg, wxT("SetterCrescendoD"), _("D"));
+	m_button[ID_SETTER_CRESCENDO_PREV]->Init(cfg, wxT("SetterCrescendoPrev"), _("<"));
+	m_button[ID_SETTER_CRESCENDO_NEXT]->Init(cfg, wxT("SetterCrescendoNext"), _(">"));
+	m_button[ID_SETTER_CRESCENDO_CURRENT]->Init(cfg, wxT("SetterCrescendoCurrent"), _("Current"));
+	m_button[ID_SETTER_CRESCENDO_A]->Init(cfg, wxT("SetterCrescendoA"), _("A"));
+	m_button[ID_SETTER_CRESCENDO_B]->Init(cfg, wxT("SetterCrescendoB"), _("B"));
+	m_button[ID_SETTER_CRESCENDO_C]->Init(cfg, wxT("SetterCrescendoC"), _("C"));
+	m_button[ID_SETTER_CRESCENDO_D]->Init(cfg, wxT("SetterCrescendoD"), _("D"));
 
-	m_button[ID_SETTER_PITCH_M1]->Load(cfg, wxT("SetterPitchM1"), _("-1"));
-	m_button[ID_SETTER_PITCH_M10]->Load(cfg, wxT("SetterPitchM10"), _("-10"));
-	m_button[ID_SETTER_PITCH_P1]->Load(cfg, wxT("SetterPitchP1"), _("+1"));
-	m_button[ID_SETTER_PITCH_P10]->Load(cfg, wxT("SetterPitchP10"), _("+10"));
-	m_button[ID_SETTER_TEMPERAMENT_PREV]->Load(cfg, wxT("SetterTemperamentPrev"), _("<"));
-	m_button[ID_SETTER_TEMPERAMENT_NEXT]->Load(cfg, wxT("SetterTemperamentNext"), _(">"));
+	m_button[ID_SETTER_PITCH_M1]->Init(cfg, wxT("SetterPitchM1"), _("-1"));
+	m_button[ID_SETTER_PITCH_M10]->Init(cfg, wxT("SetterPitchM10"), _("-10"));
+	m_button[ID_SETTER_PITCH_P1]->Init(cfg, wxT("SetterPitchP1"), _("+1"));
+	m_button[ID_SETTER_PITCH_P10]->Init(cfg, wxT("SetterPitchP10"), _("+10"));
+	m_button[ID_SETTER_TEMPERAMENT_PREV]->Init(cfg, wxT("SetterTemperamentPrev"), _("<"));
+	m_button[ID_SETTER_TEMPERAMENT_NEXT]->Init(cfg, wxT("SetterTemperamentNext"), _(">"));
 
-	m_button[ID_SETTER_SAVE]->Load(cfg, wxT("SetterSave"), _("Save"));
+	m_button[ID_SETTER_SAVE]->Init(cfg, wxT("SetterSave"), _("Save"));
 
 	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"));
 
@@ -924,7 +924,7 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 		wxString buffer;
 		buffer.Printf(_("__%d"), i);
 		group.Printf(wxT("SetterL%d"), i);
-		m_button[ID_SETTER_L0 + i]->Load(cfg, group, buffer);
+		m_button[ID_SETTER_L0 + i]->Init(cfg, group, buffer);
 	}
 
 	for(unsigned i = 0; i < GENERALS; i++)
@@ -933,10 +933,10 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 		wxString buffer;
 		buffer.Printf(_("%d"), i+1);
 		group.Printf(wxT("SetterGeneral%d"), i);
-		m_button[ID_SETTER_GENERAL00 + i]->Load(cfg, group, buffer);
+		m_button[ID_SETTER_GENERAL00 + i]->Init(cfg, group, buffer);
 	}
-	m_button[ID_SETTER_GENERAL_PREV]->Load(cfg, wxT("SetterGeneralPrev"), _("Prev"));
-	m_button[ID_SETTER_GENERAL_NEXT]->Load(cfg, wxT("SetterGeneralNext"), _("Next"));
+	m_button[ID_SETTER_GENERAL_PREV]->Init(cfg, wxT("SetterGeneralPrev"), _("Prev"));
+	m_button[ID_SETTER_GENERAL_NEXT]->Init(cfg, wxT("SetterGeneralNext"), _("Next"));
 }
 
 void GOrgueSetter::LoadCombination(GOrgueConfigReader& cfg)

@@ -67,7 +67,8 @@ private:
 public:
 
 	GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual);
-	void Load(GOrgueConfigReader& cfg, wxString group, wxString name = wxT(""), bool unison_off = false, bool recursive = false, int keyshift = 0, int dest_manual = 0, GOrgueCouplerType coupler_type = COUPLER_NORMAL);
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString name, bool unison_off, bool recursive, int keyshift, int dest_manual, GOrgueCouplerType coupler_type);
+	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 	void SetKey(unsigned note, const std::vector<unsigned>& velocities, const std::vector<GOrgueCoupler*>& couplers);
 	void PreparePlayback();

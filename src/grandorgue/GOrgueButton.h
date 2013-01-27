@@ -49,7 +49,8 @@ protected:
 public:
 	GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton);
 	virtual ~GOrgueButton();
-	void Load(GOrgueConfigReader& cfg, wxString group, wxString name = wxT(""));
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString name);
+	void Load(GOrgueConfigReader& cfg, wxString group);
 	virtual void Save(GOrgueConfigWriter& cfg);
 	bool IsDisplayed();
 	const wxString& GetName();
