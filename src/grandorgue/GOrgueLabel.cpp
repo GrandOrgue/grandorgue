@@ -34,6 +34,12 @@ GOrgueLabel::~GOrgueLabel()
 {
 }
 
+void GOrgueLabel::Init(GOrgueConfigReader& cfg, wxString group)
+{
+	m_group = group;
+	m_sender.Load(cfg, m_group);
+}
+
 void GOrgueLabel::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_group = group;
