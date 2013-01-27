@@ -36,7 +36,19 @@ GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationD
 {
 }
 
-void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name)
+void GOrgueDivisional::Init(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name)
+{
+	m_DivisionalNumber = divisionalNumber;
+	m_ManualNumber = manualNumber;
+
+	m_midi.SetIndex(manualNumber);
+
+	m_Protected = false;
+
+	GOrguePushbutton::Init(cfg, group, name);
+}
+
+void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber)
 {
 	m_DivisionalNumber = divisionalNumber;
 	m_ManualNumber = manualNumber;
@@ -45,7 +57,7 @@ void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualN
 
 	m_Protected = cfg.ReadBoolean(ODFSetting, group, wxT("Protected"), false, false);
 
-	GOrguePushbutton::Load(cfg, group, name);
+	GOrguePushbutton::Load(cfg, group);
 }
 
 void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)

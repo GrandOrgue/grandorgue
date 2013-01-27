@@ -37,7 +37,8 @@ protected:
 	bool PushLocal();
 public:
 	GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationDefinition& divisional_template);
-	void Load(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name = wxT(""));
+	void Init(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name);
+	void Load(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber);
 	void LoadCombination(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
 	void Push();

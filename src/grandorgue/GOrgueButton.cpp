@@ -41,10 +41,21 @@ GOrgueButton::~GOrgueButton()
 {
 }
 
-void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group, wxString name)
+void GOrgueButton::Init(GOrgueConfigReader& cfg, wxString group, wxString name)
 {
 	m_group = group;
-	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, true, name);
+	m_Name = name;
+	m_Displayed = false;
+	m_DisplayInInvertedState = false;
+	m_midi.Load(cfg, group);
+	m_sender.Load(cfg, group);
+	m_shortcut.Load(cfg, group);
+}
+
+void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group)
+{
+	m_group = group;
+	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, true);
 	m_Displayed = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), true, false);
 	m_DisplayInInvertedState = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
 	m_midi.Load(cfg, group);
