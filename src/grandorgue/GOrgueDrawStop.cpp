@@ -42,6 +42,7 @@ void GOrgueDrawstop::Init(GOrgueConfigReader& cfg, wxString group, wxString name
 void GOrgueDrawstop::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_Engaged = cfg.ReadBoolean(UserSetting, group, wxT("DefaultToEngaged"));
+	cfg.ReadBoolean(ODFSetting, group, wxT("DefaultToEngaged"));
 	m_GCState = cfg.ReadInteger(ODFSetting, group, wxT("GCState"), -1, 1, false, 0);
 	GOrgueButton::Load(cfg, group);
 }
