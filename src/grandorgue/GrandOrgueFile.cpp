@@ -64,6 +64,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_path(),
 	m_CacheFilename(),
 	m_SettingFilename(),
+	m_Cacheable(false),
 	m_setter(0),
 	m_volume(0),
 	m_IgnorePitch(false),
@@ -104,6 +105,11 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_TemperamentLabel(this)
 {
 	m_pool.SetMemoryLimit(m_Settings.GetMemoryLimit());
+}
+
+bool GrandOrgueFile::IsCacheable()
+{
+	return m_Cacheable;
 }
 
 void GrandOrgueFile::GenerateCacheObjectList(std::vector<GOrgueCacheObject*>& objects)
@@ -164,8 +170,6 @@ bool GrandOrgueFile::TryLoad
 	,wxString& error
 	)
 {
-
-	bool success = false;
 	long last = wxGetUTCTime();
 	void* dummy = NULL;
 
@@ -219,8 +223,6 @@ bool GrandOrgueFile::TryLoad
 					)
 				);
 		}
-
-		success = true;
 	}
 	catch (GOrgueOutOfMemory e)
 	{
@@ -231,11 +233,13 @@ bool GrandOrgueFile::TryLoad
 	catch (wxString msg)
 	{
 		error = msg;
+		FREE_AND_NULL(dummy);
+		return false;
 	}
 	FREE_AND_NULL(dummy);
 
-	return success;
-
+	m_Cacheable = true;
+	return true;
 }
 
 void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
@@ -482,6 +486,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 	m_path = GOGetPath(m_odf);
 	m_SettingFilename = GenerateSettingFileName();
 	m_CacheFilename = GenerateCacheFileName();
+	m_Cacheable = false;
 
 	GOrgueConfigFileReader odf_ini_file;
 
