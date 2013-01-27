@@ -40,6 +40,7 @@ protected:
 public:
 	GOrgueLabel(GrandOrgueFile* organfile);
 	virtual ~GOrgueLabel();
+	void Init(GOrgueConfigReader& cfg, wxString group);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	virtual void Save(GOrgueConfigWriter& cfg);
 	const wxString& GetName();

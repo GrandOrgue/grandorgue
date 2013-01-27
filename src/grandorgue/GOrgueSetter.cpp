@@ -914,9 +914,9 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 
 	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"));
 
-	m_PosDisplay.Load(cfg, wxT("SetterCurrentPosition"));
-	m_BankDisplay.Load(cfg, wxT("SetterGeneralBank"));
-	m_CrescendoDisplay.Load(cfg, wxT("SetterCrescendoPosition"));
+	m_PosDisplay.Init(cfg, wxT("SetterCurrentPosition"));
+	m_BankDisplay.Init(cfg, wxT("SetterGeneralBank"));
+	m_CrescendoDisplay.Init(cfg, wxT("SetterCrescendoPosition"));
 
 	for(unsigned i = 0; i < 10; i++)
 	{
