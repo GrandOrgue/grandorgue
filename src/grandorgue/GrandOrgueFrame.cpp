@@ -430,6 +430,8 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 
 	if (event.GetId() == ID_FILE_CACHE_DELETE)
 		event.Enable(organfile && organfile->CachePresent());
+	else if (event.GetId() == ID_FILE_CACHE)
+		event.Enable(organfile && organfile->IsCacheable());
 	else
 		event.Enable(organfile && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
 }

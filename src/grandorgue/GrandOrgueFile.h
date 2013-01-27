@@ -65,6 +65,7 @@ private:
 	wxString m_path;
 	wxString m_CacheFilename;
 	wxString m_SettingFilename;
+	bool m_Cacheable;
 	GOrgueSetter* m_setter;
 	int m_volume;
 	bool m_IgnorePitch;
@@ -134,6 +135,7 @@ public:
 	void LoadCombination(const wxString& file);
 	void Save(const wxString& file);
 	bool CachePresent();
+	bool IsCacheable();
 	bool UpdateCache(bool compress);
 	void DeleteCache();
 	void DeleteSettings();;
