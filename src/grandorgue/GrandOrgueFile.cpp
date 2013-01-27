@@ -643,7 +643,6 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), 4096, false);
 
 		ReadCombinations(cfg);
-		ini.ReportUnused();
 	}
 	catch (wxString error)
 	{
