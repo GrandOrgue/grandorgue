@@ -31,6 +31,7 @@ GOrgueKeyReceiver::GOrgueKeyReceiver() :
 void GOrgueKeyReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_ShortcutKey = cfg.ReadInteger(UserSetting, group, wxT("ShortcutKey"), 0, 255, false, m_ShortcutKey);
+	cfg.ReadInteger(ODFSetting, group, wxT("ShortcutKey"), 0, 255, false, m_ShortcutKey);
 }
 
 void GOrgueKeyReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
