@@ -370,6 +370,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	}
 
 	m_general.resize(0);
+	m_GeneralTemplate.InitGeneral();
 	for (unsigned i = 0; i < m_NumberOfGenerals; i++)
 	{
 		m_general.push_back(new GOrgueGeneral(this->GetGeneralTemplate(), this));

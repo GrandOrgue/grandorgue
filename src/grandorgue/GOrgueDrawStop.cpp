@@ -34,7 +34,8 @@ GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
 
 void GOrgueDrawstop::Init(GOrgueConfigReader& cfg, wxString group, wxString name)
 {
-	m_Engaged = false;
+	m_Engaged = cfg.ReadBoolean(UserSetting, group, wxT("DefaultToEngaged"));
+	cfg.ReadBoolean(ODFSetting, group, wxT("DefaultToEngaged"));
 	m_GCState = 0;
 	GOrgueButton::Init(cfg, group, name);
 }

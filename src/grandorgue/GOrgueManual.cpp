@@ -139,6 +139,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 		m_tremulant_ids.push_back(cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount()));
 	}
 
+	GetDivisionalTemplate().InitDivisional(m_manual_number);
 	m_divisionals.resize(0);
 	for (unsigned i = 0; i < m_nb_divisionals; i++)
 	{
