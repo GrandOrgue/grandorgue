@@ -48,6 +48,7 @@ private:
 public:
 	GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb);
 
+	void Init(GOrgueConfigReader& cfg, wxString group);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 
 	void Draw(wxDC* dc);

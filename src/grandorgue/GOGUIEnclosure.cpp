@@ -49,6 +49,58 @@ bool GOGUIEnclosure::IsEnclosure(const unsigned nb) const
 	return (m_enclosure_nb == nb);
 }
 
+void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
+{
+	GOGUIControl::Init(cfg, group);
+
+	unsigned bitmap_count = 16;
+
+	for(unsigned i = 1; i <= bitmap_count; i++)
+	{
+		wxString bitmap = wxString::Format(wxT("GO:enclosure%d"), i - 1);
+		wxString mask = wxEmptyString;
+		m_Bitmaps.push_back(m_panel->LoadBitmap(bitmap, mask));
+	}
+
+	for(unsigned i = 1; i < m_Bitmaps.size(); i++)
+		if (m_Bitmaps[0]->GetWidth() != m_Bitmaps[i]->GetWidth() || 
+		    m_Bitmaps[0]->GetHeight() != m_Bitmaps[i]->GetHeight())
+			throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
+
+	int x, y, w, h;
+
+	x = m_metrics->GetEnclosureX(this);
+	y = m_metrics->GetEnclosureY();
+
+	w = m_Bitmaps[0]->GetWidth();
+	h = m_Bitmaps[0]->GetHeight();
+	m_BoundingRect = wxRect(x, y, w, h);
+
+	m_TileOffsetX = 0;
+	m_TileOffsetY = 0;
+
+	m_TextColor = wxColour(0xFF, 0xFF, 0xFF);
+	m_FontSize = 7;
+	m_FontName = wxT("");
+	m_Text = m_enclosure->GetName();
+
+	x = 0;
+	y = 0;
+	w = m_BoundingRect.GetWidth() - x;
+	h = m_BoundingRect.GetHeight() - y;
+	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_TextWidth = m_TextRect.GetWidth();
+
+	x = 0;
+	y = 13;
+	w = m_BoundingRect.GetWidth() - x;
+	h = m_BoundingRect.GetHeight() - y - 3;
+	m_MouseRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+
+	m_MouseAxisStart = m_MouseRect.GetHeight() / 3;
+	m_MouseAxisEnd = m_MouseRect.GetHeight() / 3 * 2;
+}
+
 void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
