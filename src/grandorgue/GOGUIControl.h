@@ -43,6 +43,7 @@ public:
 	GOGUIControl(GOGUIPanel* panel, void* control);
 	virtual ~GOGUIControl();
 
+	virtual void Init(GOrgueConfigReader& cfg, wxString group);
 	virtual void Load(GOrgueConfigReader& cfg, wxString group);
 	virtual void Save(GOrgueConfigWriter& cfg);
 
