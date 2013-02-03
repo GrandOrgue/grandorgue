@@ -28,15 +28,15 @@
 GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, wxString group, GOGUISetterType type) :
 	GOGUIDisplayMetrics(organfile, group)
 {
-	wxString x_size, y_size;
+	unsigned x_size, y_size;
 	int drawstop_rows, drawstop_cols;
 	int button_rows, button_cols;
 
 	switch (type)
 	{
 	case GOGUI_SETTER_SETTER:
-		x_size = wxT("800");
-		y_size = wxT("300");
+		x_size = 800;
+		y_size = 300;
 		drawstop_rows = 3;
 		drawstop_cols = 10;
 		button_cols = 10;
@@ -44,8 +44,8 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 		break;
 
 	case GOGUI_SETTER_CRESCENDO:
-		x_size = wxT("700");
-		y_size = wxT("300");
+		x_size = 700;
+		y_size = 300;
 		drawstop_rows = 2;
 		drawstop_cols = 8;
 		button_cols = 10;
@@ -53,8 +53,8 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 		break;
 
 	case GOGUI_SETTER_DIVISIONALS:
-		x_size = wxT("600");
-		y_size = wxString::Format(wxT("%d"), 40 * organfile->GetODFManualCount() + 140);
+		x_size = 600;
+		y_size = 40 * organfile->GetODFManualCount() + 140;
 		drawstop_rows = 1;
 		drawstop_cols = 7;
 		button_cols = 13;
@@ -62,8 +62,8 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 		break;
 
 	case GOGUI_SETTER_COUPLER:
-		x_size = wxT("500");
-		y_size = wxString::Format(wxT("%d"), 20 + 80 * organfile->GetODFManualCount());
+		x_size = 500;
+		y_size = 20 + 80 * organfile->GetODFManualCount();
 		drawstop_rows = organfile->GetODFManualCount();
 		drawstop_cols = 6;
 		button_cols = 10;
@@ -71,8 +71,8 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 		break;
 
 	case GOGUI_SETTER_FLOATING:
-		x_size = wxString::Format(wxT("%d"), 40 + std::max(10 * organfile->GetManual(organfile->GetODFManualCount())->GetLogicalKeyCount(), (unsigned)10 * 40));
-		y_size = wxString::Format(wxT("%d"), (organfile->GetManualAndPedalCount() - organfile->GetODFManualCount() + 1) * 60 + 160);
+		x_size = 40 + std::max(10 * organfile->GetManual(organfile->GetODFManualCount())->GetLogicalKeyCount(), (unsigned)10 * 40);
+		y_size = (organfile->GetManualAndPedalCount() - organfile->GetODFManualCount() + 1) * 60 + 160;
 		drawstop_rows = 0;
 		drawstop_cols = 0;
 		button_cols = 10;
@@ -80,8 +80,8 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 		break;
 
 	case GOGUI_SETTER_MASTER:
-		x_size = wxT("400");
-		y_size = wxT("180");
+		x_size = 400;
+		y_size = 180;
 		drawstop_rows = 2;
 		drawstop_cols = 5;
 		button_cols = 10;
@@ -90,8 +90,8 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 
 	case GOGUI_SETTER_GENERALS:
 	default:
-		x_size = wxT("600");
-		y_size = wxT("400");
+		x_size = 600;
+		y_size = 400;
 		drawstop_rows = 2;
 		drawstop_cols = 7;
 		button_cols = 10;
@@ -122,34 +122,34 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 	int horiz_img = ini.ReadInteger(ODFSetting, wxT("Organ"), wxT("DispKeyHorizBackgroundImageNum"), 1, 64, false, 22);
 	int vert_img = ini.ReadInteger(ODFSetting, wxT("Organ"), wxT("DispKeyVertBackgroundImageNum"), 1, 64, false, 19);
 
-	m_DispScreenSizeHoriz = ini.ReadSize(ODFSetting, m_group, wxT("DispScreenSizeHoriz"), 0, false, x_size);
-	m_DispScreenSizeVert = ini.ReadSize(ODFSetting, m_group, wxT("DispScreenSizeVert"), 1, false, y_size);
-	m_DispDrawstopBackgroundImageNum = ini.ReadInteger(ODFSetting, m_group, wxT("DispDrawstopBackgroundImageNum"), 1, 64, false, background_img);
-	m_DispConsoleBackgroundImageNum = ini.ReadInteger(ODFSetting, m_group, wxT("DispConsoleBackgroundImageNum"), 1, 64, false, background_img);
-	m_DispKeyHorizBackgroundImageNum = ini.ReadInteger(ODFSetting, m_group, wxT("DispKeyHorizBackgroundImageNum"), 1, 64, false, type == GOGUI_SETTER_FLOATING ? horiz_img : background_img);
-	m_DispKeyVertBackgroundImageNum = ini.ReadInteger(ODFSetting, m_group, wxT("DispKeyVertBackgroundImageNum"), 1, 64, false, type == GOGUI_SETTER_FLOATING ? vert_img : background_img);
-	m_DispDrawstopInsetBackgroundImageNum = ini.ReadInteger(ODFSetting, m_group, wxT("DispDrawstopInsetBackgroundImageNum"), 1, 64, false, background_img);
-	m_DispControlLabelFont = ini.ReadString(ODFSetting, m_group, wxT("DispControlLabelFont"), 255, false, wxT("Times New Roman"));
-	m_DispShortcutKeyLabelFont = ini.ReadString(ODFSetting, m_group, wxT("DispShortcutKeyLabelFont"), 255, false, wxT("Times New Roman"));
-	m_DispShortcutKeyLabelColour = ini.ReadColor(ODFSetting, m_group, wxT("DispShortcutKeyLabelColour"), false, wxT("Yellow"));
-	m_DispGroupLabelFont = ini.ReadString(ODFSetting, m_group, wxT("DispGroupLabelFont"), 255, false, wxT("Times New Roman"));
-	m_DispDrawstopCols = ini.ReadInteger(ODFSetting, m_group, wxT("DispDrawstopCols"), 0, 12, false, 0);
-	m_DispDrawstopRows = ini.ReadInteger(ODFSetting, m_group, wxT("DispDrawstopRows"), 0, 20, false, 0);
-	m_DispDrawstopColsOffset = ini.ReadBoolean(ODFSetting, m_group, wxT("DispDrawstopColsOffset"), false, false);
-	m_DispDrawstopOuterColOffsetUp = ini.ReadBoolean(ODFSetting, m_group, wxT("DispDrawstopOuterColOffsetUp"), false, false);
-	m_DispPairDrawstopCols = ini.ReadBoolean(ODFSetting, m_group, wxT("DispPairDrawstopCols"), false, false);
-	m_DispExtraDrawstopRows = ini.ReadInteger(ODFSetting, m_group, wxT("DispExtraDrawstopRows"), 0, 99, false, drawstop_rows);
-	m_DispExtraDrawstopCols = ini.ReadInteger(ODFSetting, m_group, wxT("DispExtraDrawstopCols"), 0, 40, false, drawstop_cols);
-	m_DispButtonCols = ini.ReadInteger(ODFSetting, m_group, wxT("DispButtonCols"), 1, 32, false, button_cols);
-	m_DispExtraButtonRows = ini.ReadInteger(ODFSetting, m_group, wxT("DispExtraButtonRows"), 0, 99, false, button_rows);
-	m_DispExtraPedalButtonRow = ini.ReadBoolean(ODFSetting, m_group, wxT("DispExtraPedalButtonRow"), false, false);
-	m_DispExtraPedalButtonRowOffset = ini.ReadBoolean(ODFSetting, m_group, wxT("DispExtraPedalButtonRowOffset"), false, false);
-	m_DispExtraPedalButtonRowOffsetRight = ini.ReadBoolean(ODFSetting, m_group, wxT("DispExtraPedalButtonRowOffsetRight"), false, false);
-	m_DispButtonsAboveManuals = ini.ReadBoolean(ODFSetting, m_group, wxT("DispButtonsAboveManuals"), false, true);
-	m_DispTrimAboveManuals = ini.ReadBoolean(ODFSetting, m_group, wxT("DispTrimAboveManuals"), false, true);
-	m_DispTrimBelowManuals = ini.ReadBoolean(ODFSetting, m_group, wxT("DispTrimBelowManuals"), false, true);
-	m_DispTrimAboveExtraRows = ini.ReadBoolean(ODFSetting, m_group, wxT("DispTrimAboveExtraRows"), false, true);
-	m_DispExtraDrawstopRowsAboveExtraButtonRows = ini.ReadBoolean(ODFSetting, m_group, wxT("DispExtraDrawstopRowsAboveExtraButtonRows"), false, true);
+	m_DispScreenSizeHoriz = x_size;
+	m_DispScreenSizeVert = y_size;
+	m_DispDrawstopBackgroundImageNum = background_img;
+	m_DispConsoleBackgroundImageNum = background_img;
+	m_DispKeyHorizBackgroundImageNum = type == GOGUI_SETTER_FLOATING ? horiz_img : background_img;
+	m_DispKeyVertBackgroundImageNum = type == GOGUI_SETTER_FLOATING ? vert_img : background_img;
+	m_DispDrawstopInsetBackgroundImageNum = background_img;
+	m_DispControlLabelFont = wxT("Times New Roman");
+	m_DispShortcutKeyLabelFont = wxT("Times New Roman");
+	m_DispShortcutKeyLabelColour = wxColour(0xFF, 0xFF, 0x00);
+	m_DispGroupLabelFont = wxT("Times New Roman");
+	m_DispDrawstopCols = 0;
+	m_DispDrawstopRows = 0;
+	m_DispDrawstopColsOffset = false;
+	m_DispDrawstopOuterColOffsetUp = false;
+	m_DispPairDrawstopCols = false;
+	m_DispExtraDrawstopRows = drawstop_rows;
+	m_DispExtraDrawstopCols = drawstop_cols;
+	m_DispButtonCols = button_cols;
+	m_DispExtraButtonRows = button_rows;
+	m_DispExtraPedalButtonRow = false;
+	m_DispExtraPedalButtonRowOffset = false;
+	m_DispExtraPedalButtonRowOffsetRight = false;
+	m_DispButtonsAboveManuals = true;
+	m_DispTrimAboveManuals = true;
+	m_DispTrimBelowManuals = true;
+	m_DispTrimAboveExtraRows = true;
+	m_DispExtraDrawstopRowsAboveExtraButtonRows = true;
 
 	Update();
 }
