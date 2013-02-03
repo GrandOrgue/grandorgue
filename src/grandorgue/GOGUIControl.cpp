@@ -37,6 +37,11 @@ GOGUIControl::~GOGUIControl()
 {
 }
 
+void GOGUIControl::Init(GOrgueConfigReader& cfg, wxString group)
+{
+	m_group = group;
+}
+
 void GOGUIControl::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_group = group;

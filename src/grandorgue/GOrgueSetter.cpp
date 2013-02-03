@@ -395,6 +395,7 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 	panel->Init(cfg, metrics, _("Master Controls"), wxT("SetterMaster"), _(""));
 
 	control = new GOGUIHW1Background(panel);
+	control->Init(cfg, wxT("SetterMaster"));
 	panel->AddControl(control);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M10], false, 1, 100);
@@ -445,6 +446,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 	panel->Init(cfg, metrics, _("Floating manuals"), wxT("SetterFloating"), _(""));
 
 	control = new GOGUIHW1Background(panel);
+	control->Init(cfg, wxT("SetterFloating"));
 	panel->AddControl(control);
 
 	for (unsigned i = m_organfile->GetODFManualCount(); i <= m_organfile->GetManualAndPedalCount(); i++)
@@ -512,6 +514,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 	panel->Init(cfg, metrics, wxString::Format(_("Coupler %s"), manual->GetName().c_str()), wxString::Format(wxT("SetterCouplers%03d"), manual_nr), _("Coupler"));
 
 	control = new GOGUIHW1Background(panel);
+	control->Init(cfg, wxString::Format(wxT("SetterCouplers%03d"), manual_nr));
 	panel->AddControl(control);
 
 	for (unsigned int i = m_organfile->GetFirstManualIndex(); i < m_organfile->GetODFManualCount(); i++)
@@ -576,6 +579,7 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(GOrgueConfigReader& cfg)
 	panel->Init(cfg, metrics, _("Divisionals"), wxT("SetterDivisionalPanel"));
 
 	control = new GOGUIHW1Background(panel);
+	control->Init(cfg, wxT("SetterDivisionals"));
 	panel->AddControl(control);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false, 1, 100);
@@ -633,6 +637,7 @@ GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(GOrgueConfigReader& cfg)
 	panel->Init(cfg, metrics, _("Generals"), wxT("SetterGeneralsPanel"));
 
 	control = new GOGUIHW1Background(panel);
+	control->Init(cfg, wxT("SetterGenerals"));
 	panel->AddControl(control);
 
 	GOGUILabel* BankDisplay=new GOGUILabel(panel, &m_BankDisplay, 260, 20);
@@ -687,6 +692,7 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(GOrgueConfigReader& cfg)
 	panel->Init(cfg, metrics, _("Combination Setter"), wxT("SetterPanel"));
 
 	control = new GOGUIHW1Background(panel);
+	control->Init(cfg, wxT("Setter"));
 	panel->AddControl(control);
 
 	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay, 350, 10);
@@ -785,6 +791,7 @@ GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(GOrgueConfigReader& cfg)
 	panel->Init(cfg, metrics, _("Crescendo Pedal"), wxT("SetterCrescendoPanel"));
 
 	control = new GOGUIHW1Background(panel);
+	control->Init(cfg, wxT("SetterCrescendo"));
 	panel->AddControl(control);
 
 	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell, panel->GetDisplayMetrics()->NewEnclosure());
