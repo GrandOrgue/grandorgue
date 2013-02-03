@@ -483,7 +483,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 	unsigned master = m_organfile->AddEnclosure(master_enc);
 
 	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, master_enc, 0);
-	enclosure->Load(cfg, wxT("SetterMasterVolume"));
+	enclosure->Init(cfg, wxT("SetterMasterVolume"));
 	panel->AddControl(enclosure);
 
 	for(unsigned i = 0; i < m_organfile->GetWindchestGroupCount(); i++)
@@ -497,7 +497,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 		windchest->AddEnclosure(m_organfile->AddEnclosure(enc));
 
 		enclosure = new GOGUIEnclosure(panel, enc, i + 1);
-		enclosure->Load(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1));
+		enclosure->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1));
 		panel->AddControl(enclosure);
 	}
 
@@ -795,7 +795,7 @@ GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(GOrgueConfigReader& cfg)
 	panel->AddControl(control);
 
 	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell, panel->GetDisplayMetrics()->NewEnclosure());
-	enclosure->Load(cfg, wxT("SetterSwell"));
+	enclosure->Init(cfg, wxT("SetterSwell"));
 	panel->AddControl(enclosure);
 
 	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay, 350, 10);
