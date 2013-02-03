@@ -42,6 +42,39 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, un
 {
 }
 
+void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group)
+{
+	GOGUIControl::Init(cfg, group);
+
+	m_TextColor = wxColour(0x00, 0x00, 0x00);
+	m_FontSize = 7;
+	m_FontName = wxT("");
+
+	unsigned DispImageNum = 1;
+
+	wxString image_file = wxString::Format(wxT("GO:label%02d"), DispImageNum);
+	wxString image_mask_file = wxEmptyString;
+
+	m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);
+
+	int x, y, w, h;
+	x = m_DispXpos;
+	y = m_DispYpos;
+	w = m_Bitmap->GetWidth();
+	h = m_Bitmap->GetHeight();
+	m_BoundingRect = wxRect(x, y, w, h);
+
+	m_TileOffsetX = 0;
+	m_TileOffsetY = 0;
+
+	x = 1;
+	y = 1;
+	w = m_BoundingRect.GetWidth() - x;
+	h = m_BoundingRect.GetHeight() - y;
+	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_TextWidth = m_TextRect.GetWidth();
+}
+
 void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
