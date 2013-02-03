@@ -96,8 +96,18 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 			continue;
 		if (line.Len() > 1 && line[0] == wxT(';'))
 			continue;
-		if (line.Len() > 1 && line[0] == wxT('[') && line[line.Len() - 1] == wxT(']'))
+		if (line.Len() > 1 && line[0] == wxT('['))
 		{
+			if (line[line.Len() - 1] != wxT(']'))
+			{
+				line = line.Trim();
+				if (line[line.Len() - 1] != wxT(']'))
+				{
+					wxLogError(_("Invalid Config entry at line %d: %s"), lineno, line.c_str());
+					continue;
+				}
+				wxLogError(_("Invalid section start at line %d: %s"), lineno, line.c_str());
+			}
 			group = line.Mid(1, line.Len() - 2);
 			if (m_Entries.find(group) != m_Entries.end())
 			{
