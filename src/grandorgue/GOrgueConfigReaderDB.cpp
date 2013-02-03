@@ -125,8 +125,6 @@ bool GOrgueConfigReaderDB::GetString(GOSettingType type, wxString group, wxStrin
 		GOStringHashMap::iterator i = m_CMB.find(index);
 		if (i != m_CMB.end())
 		{
-			if (type == UserSetting)
-				m_ODFUsed[index] = true;
 			value = i->second;
 			return true;
 		}
