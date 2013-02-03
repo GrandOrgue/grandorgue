@@ -44,6 +44,8 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, un
 
 void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 {
+	GOGUIControl::Load(cfg, group);
+
 	bool FreeXPlacement = cfg.ReadBoolean(ODFSetting, group, wxT("FreeXPlacement"), false, true);
 	bool FreeYPlacement = cfg.ReadBoolean(ODFSetting, group, wxT("FreeYPlacement"), false, true);
 
