@@ -46,6 +46,7 @@ private:
 public:
 	GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number);
 
+	void Init(GOrgueConfigReader& cfg, wxString group);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 
 	void Draw(wxDC* dc);
