@@ -31,6 +31,14 @@ GOGUIManualBackground::GOGUIManualBackground(GOGUIPanel* panel, unsigned manual_
 {
 }
 
+void GOGUIManualBackground::Init(GOrgueConfigReader& cfg, wxString group)
+{
+	GOGUIControl::Init(cfg, group);
+
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
+	m_BoundingRect = wxRect(mri.x, mri.y, mri.width, mri.height);
+}
+
 void GOGUIManualBackground::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);

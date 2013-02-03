@@ -35,6 +35,138 @@ GOGUIManual::GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manua
 {
 }
 
+void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
+{
+	const wxChar* keyNames[12] = { wxT("C"), wxT("Cis"), wxT("D"), wxT("Dis"), wxT("E"), wxT("F"), wxT("Fis"), wxT("G"),
+				       wxT("Gis"), wxT("A"), wxT("Ais"), wxT("B") };
+
+	GOGUIControl::Init(cfg, group);
+	wxString type = m_ManualNumber ? wxT("Manual") : wxT("Pedal");
+
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
+	unsigned x = 0, y = 0;
+	int width = 0, height = 1;
+
+	m_Keys.resize(m_manual->GetNumberOfAccessibleKeys());
+	for(unsigned i = 0; i < m_Keys.size(); i++)
+	{
+		unsigned key_nb = i + m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+		m_Keys[i].MidiNumber = key_nb;
+		m_Keys[i].IsSharp = (((key_nb % 12) < 5 && !(key_nb & 1)) || ((key_nb % 12) >= 5 && (key_nb & 1))) ? false : true;
+
+		wxString off_mask_file, on_mask_file;
+		wxString on_file, off_file;
+		wxString bmp_type;
+		unsigned key_width;
+		int key_offset;
+		wxString base = keyNames[key_nb % 12];
+		if (!i)
+			base = wxT("First") + base;
+		else if (i + 1 == m_Keys.size())
+			base = wxT("Last") + base;
+
+		if (!m_ManualNumber)
+		{
+			bmp_type = m_Keys[i].IsSharp ? wxT("Sharp") : wxT("Natural");
+		}
+		else
+		{
+			if (m_Keys[i].IsSharp)
+				bmp_type = wxT("Sharp");
+			else if (i == 0)
+			{
+				switch(key_nb %12)
+				{
+				case 4:
+				case 11:
+					bmp_type = wxT("Natural");
+					break;
+				default:
+					bmp_type = wxT("C");
+				}
+			}
+			else if (i + 1 == m_Keys.size())
+			{
+				switch(key_nb %12)
+				{
+				case 0:
+				case 5:
+					bmp_type = wxT("Natural");
+					break;
+				default:
+					bmp_type = wxT("E");
+				}
+			}
+			else 
+			{
+				switch(key_nb %12)
+				{
+				case 0:
+				case 5:
+					bmp_type = wxT("C");
+					break;
+				case 4:
+				case 11:
+					bmp_type = wxT("E");
+					break;
+				default:
+					bmp_type = wxT("D");
+				}
+			}
+		}
+		off_file = wxT("GO:") + type + wxT("Off_") + bmp_type;
+		on_file = wxT("GO:") + type + wxT("On_") + bmp_type;
+
+		on_mask_file = wxEmptyString;
+		off_mask_file = on_mask_file;
+
+		m_Keys[i].OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
+		m_Keys[i].OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
+
+		if (m_Keys[i].OnBitmap->GetWidth() != m_Keys[i].OffBitmap->GetWidth() ||
+		    m_Keys[i].OnBitmap->GetHeight() != m_Keys[i].OffBitmap->GetHeight())
+			throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
+
+		key_width = m_Keys[i].OnBitmap->GetWidth();
+		key_offset = 0;
+		if (m_Keys[i].IsSharp && m_ManualNumber)
+		{
+			key_width = 0;
+			key_offset = - m_Keys[i].OnBitmap->GetWidth() / 2;
+		} else if (!m_ManualNumber && ((i % 12) == 4 || (i % 12) == 11) && i)
+		{
+			key_width += m_Keys[i - 1].Rect.GetWidth();
+		}
+
+		m_Keys[i].Rect = wxRect(x + key_offset, y, m_Keys[i].OnBitmap->GetWidth(), m_Keys[i].OnBitmap->GetHeight());
+
+		unsigned mouse_x = 0;
+		unsigned mouse_y = 0;
+		unsigned mouse_w = m_Keys[i].Rect.GetWidth() - mouse_x;
+		unsigned mouse_h = m_Keys[i].Rect.GetHeight() - mouse_y;
+		m_Keys[i].MouseRect = wxRect(m_Keys[i].Rect.GetX() + mouse_x, m_Keys[i].Rect.GetY() + mouse_y, mouse_w, mouse_h);
+
+		if (height < m_Keys[i].OnBitmap->GetHeight())
+			height = m_Keys[i].OnBitmap->GetHeight();
+		if (width < m_Keys[i].Rect.GetRight())
+			width = m_Keys[i].Rect.GetRight();
+		x += key_width;
+	}
+
+	x = mri.x + 1;
+	y = mri.keys_y;
+
+	for(unsigned i = 0; i < m_Keys.size(); i++)
+	{
+		m_Keys[i].Rect.SetX(m_Keys[i].Rect.GetX() + x);
+		m_Keys[i].Rect.SetY(m_Keys[i].Rect.GetY() + y);
+		m_Keys[i].MouseRect.SetX(m_Keys[i].MouseRect.GetX() + x);
+		m_Keys[i].MouseRect.SetY(m_Keys[i].MouseRect.GetY() + y);
+	}
+
+	m_BoundingRect = wxRect(x, y, width, height);
+}
+
 void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	const wxChar* keyNames[12] = { wxT("C"), wxT("Cis"), wxT("D"), wxT("Dis"), wxT("E"), wxT("F"), wxT("Fis"), wxT("G"),

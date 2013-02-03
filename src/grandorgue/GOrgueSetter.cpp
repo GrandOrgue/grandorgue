@@ -454,11 +454,11 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 		wxString group;
 		group.Printf(wxT("SetterFloating%03d"), i - m_organfile->GetODFManualCount() + 1);
 		control = new GOGUIManualBackground(panel, i - m_organfile->GetODFManualCount());
-		control->Load(cfg, group);
+		control->Init(cfg, group);
 		panel->AddControl(control);
 
 		control = new GOGUIManual(panel, m_organfile->GetManual(i), i - m_organfile->GetODFManualCount());
-		control->Load(cfg, group);
+		control->Init(cfg, group);
 		panel->AddControl(control);
 
 		for(unsigned j = 0; j < 10; j++)
