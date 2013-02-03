@@ -415,7 +415,7 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 	panel->AddControl(button);
 
 	GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetPitchLabel(), 160, 10);
-	PosDisplay->Load(cfg, wxT("SetterMasterPitch"));
+	PosDisplay->Init(cfg, wxT("SetterMasterPitch"));
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_TEMPERAMENT_PREV], false, 1, 101);
@@ -423,7 +423,7 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 	panel->AddControl(button);
 
 	PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel(), 80, 80);
-	PosDisplay->Load(cfg, wxT("SetterMasterTemperament"));
+	PosDisplay->Init(cfg, wxT("SetterMasterTemperament"));
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_TEMPERAMENT_NEXT], false, 3, 101);
@@ -526,7 +526,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 		metrics->GetDrawstopBlitPosition(100 + i, 1, &x, &y);
 
 		GOGUILabel* PosDisplay=new GOGUILabel(panel, NULL, x, y, dest_manual->GetName());
-		PosDisplay->Load(cfg, wxString::Format(wxT("SetterCoupler%03dLabel%03d"), manual_nr, i));
+		PosDisplay->Init(cfg, wxString::Format(wxT("SetterCoupler%03dLabel%03d"), manual_nr, i));
 		panel->AddControl(PosDisplay);
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
@@ -610,7 +610,7 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(GOrgueConfigReader& cfg)
 		metrics->GetPushbuttonBlitPosition(100 + i, 1, &x, &y);
 
 		GOGUILabel* PosDisplay=new GOGUILabel(panel, NULL, x, y, manual->GetName());
-		PosDisplay->Load(cfg, wxString::Format(wxT("SetterDivisionalLabel%03d"), i));
+		PosDisplay->Init(cfg, wxString::Format(wxT("SetterDivisionalLabel%03d"), i));
 		panel->AddControl(PosDisplay);
 
 		for(unsigned j = 0; j < 10; j++)
@@ -641,7 +641,7 @@ GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(GOrgueConfigReader& cfg)
 	panel->AddControl(control);
 
 	GOGUILabel* BankDisplay=new GOGUILabel(panel, &m_BankDisplay, 260, 20);
-	BankDisplay->Load(cfg, wxT("SetterGeneralBank"));
+	BankDisplay->Init(cfg, wxT("SetterGeneralBank"));
 	panel->AddControl(BankDisplay);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_GENERAL_PREV], false, 3, 100);
@@ -696,7 +696,7 @@ GOGUIPanel* GOrgueSetter::CreateSetterPanel(GOrgueConfigReader& cfg)
 	panel->AddControl(control);
 
 	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay, 350, 10);
-	PosDisplay->Load(cfg, wxT("SetterCurrentPosition"));
+	PosDisplay->Init(cfg, wxT("SetterCurrentPosition"));
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_CURRENT], false, 1, 100);
@@ -799,7 +799,7 @@ GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(GOrgueConfigReader& cfg)
 	panel->AddControl(enclosure);
 
 	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay, 350, 10);
-	PosDisplay->Load(cfg, wxT("SetterCrescendoPosition"));
+	PosDisplay->Init(cfg, wxT("SetterCrescendoPosition"));
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false, 1, 100);
