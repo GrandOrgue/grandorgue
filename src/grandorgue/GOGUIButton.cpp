@@ -46,6 +46,71 @@ GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_pisto
 {
 }
 
+void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group)
+{
+	GOGUIControl::Init(cfg, group);
+
+	m_TextColor = wxColour(0x80, 0x00, 0x00);
+	m_FontSize = 7;
+	m_FontName = wxT("");
+	m_Text = m_Button->GetName();
+
+	int x, y, w, h;
+
+	bool DispKeyLabelOnLeft = true;
+	int DispImageNum = 1;
+
+	wxString off_mask_file, on_mask_file;
+	wxString on_file, off_file;
+	if (m_IsPiston)
+	{
+		off_file = wxString::Format(wxT("GO:piston%02d_off"), DispImageNum);
+		on_file = wxString::Format(wxT("GO:piston%02d_on"), DispImageNum);
+		
+		m_metrics->GetPushbuttonBlitPosition(m_DispRow, m_DispCol, &x, &y);
+		if (!DispKeyLabelOnLeft)
+			x -= 13;
+	}
+	else
+	{
+		off_file = wxString::Format(wxT("GO:drawstop%02d_off"), DispImageNum);
+		on_file = wxString::Format(wxT("GO:drawstop%02d_on"), DispImageNum);
+
+		m_metrics->GetDrawstopBlitPosition(m_DispRow, m_DispCol, &x, &y);
+	}
+
+	on_mask_file = wxEmptyString;
+	off_mask_file = on_mask_file;
+
+	m_OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
+	m_OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
+
+	w = m_OnBitmap->GetWidth();
+	h = m_OnBitmap->GetHeight();
+	m_BoundingRect = wxRect(x, y, w, h);
+
+	if (m_OnBitmap->GetWidth() != m_OffBitmap->GetWidth() ||
+	    m_OnBitmap->GetHeight() != m_OffBitmap->GetHeight())
+		throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
+
+	m_TileOffsetX = 0;
+	m_TileOffsetY = 0;
+
+	x = 0;
+	y = 0;
+	w = m_BoundingRect.GetWidth() - x;
+	h = m_BoundingRect.GetHeight() - y;
+	m_MouseRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_Radius = std::min(w/2, h/2);
+
+	x = 1;
+	y = 1;
+	w = m_BoundingRect.GetWidth() - x;
+	h = m_BoundingRect.GetHeight() - y;
+	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_TextWidth = m_TextRect.GetWidth() - (m_TextRect.GetWidth() < 50 ? 4 : 14);
+}
+
 void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
