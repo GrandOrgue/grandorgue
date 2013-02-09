@@ -76,6 +76,7 @@ void GOrgueLogWindow::OnCloseWindow(wxCloseEvent& event)
 
 void GOrgueLogWindow::LogMsg(wxLogLevel level, const wxString& msg, time_t timestamp)
 {
+	static unsigned count = 0;
 	int l;
 	switch(level)
 	{
@@ -94,4 +95,7 @@ void GOrgueLogWindow::LogMsg(wxLogLevel level, const wxString& msg, time_t times
 	e.SetInt(l);
 	e.SetTimestamp(timestamp);
 	GetEventHandler()->AddPendingEvent(e);
+	count++;
+	if ((count % 100)==0)
+		wxTheApp->Yield(true);
 }
