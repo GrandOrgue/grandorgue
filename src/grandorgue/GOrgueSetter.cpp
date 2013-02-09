@@ -235,8 +235,8 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("General49"), ID_SETTER_GENERAL48 },
 	{ wxT("General50"), ID_SETTER_GENERAL49 },
 
-	{ wxT("GeneralNext"), ID_SETTER_GENERAL_PREV },
-	{ wxT("GeneralPrev"), ID_SETTER_GENERAL_NEXT },
+	{ wxT("GeneralPrev"), ID_SETTER_GENERAL_PREV },
+	{ wxT("GeneralNext"), ID_SETTER_GENERAL_NEXT },
 
 	{ wxT("PitchP1"), ID_SETTER_PITCH_P1 },
 	{ wxT("PitchP10"), ID_SETTER_PITCH_P10 },
