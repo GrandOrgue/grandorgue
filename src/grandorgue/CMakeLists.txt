@@ -230,6 +230,7 @@ GOrgueTremulant.cpp
 GOrgueWindchest.cpp
 GrandOrgueFile.cpp
 GrandOrgueFrame.cpp
+GOrgueUtil.cpp
 Images.cpp
 MIDIEventDialog.cpp
 MIDIEventRecvDialog.cpp

@@ -21,6 +21,7 @@
 
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigReaderDB.h"
+#include "GOrgueUtil.h"
 
 GOrgueConfigReader::GOrgueConfigReader(GOrgueConfigReaderDB& cfg) :
 	m_Config(cfg)
@@ -197,10 +198,16 @@ double GOrgueConfigReader::ReadFloat(GOSettingType type, wxString group, wxStrin
 
 double GOrgueConfigReader::ReadFloat(GOSettingType type, wxString group, wxString key, double nmin, double nmax, bool required, double defaultValue)
 {
-	wxString value = ReadString(type, group, key, 255, required, wxString::Format(wxT("%e"), defaultValue));
+	wxString value = ReadString(type, group, key, 255, required, formatCDDouble(defaultValue));
 
 	double retval;
-	if (!value.ToDouble(&retval))
+	int pos = value.find(wxT(","), 0);
+	if (pos >= 0)
+	{
+		wxLogWarning(_("Number %s contains locale dependend sign"), value.c_str());
+		value[pos] = wxT('.');
+	}
+	if (!parseCDouble(retval, value))
 	{
 		wxString error;
 		error.Printf(_("Invalid float value at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
