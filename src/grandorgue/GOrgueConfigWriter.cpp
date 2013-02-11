@@ -22,6 +22,7 @@
 #include "GOrgueConfigFileWriter.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
+#include "GOrgueUtil.h"
 
 GOrgueConfigWriter::GOrgueConfigWriter(GOrgueConfigFileWriter& cfg, bool prefix) :
 	m_ConfigFile(cfg),
@@ -56,7 +57,7 @@ void GOrgueConfigWriter::Write(wxString group, wxString key, int value, bool sig
 
 void GOrgueConfigWriter::Write(wxString group, wxString key, float value)
 {
-	wxString str = wxString::Format(wxT("%f"), value);
+	wxString str = formatCDDouble(value);
 	Write(group, key, str);
 }
 

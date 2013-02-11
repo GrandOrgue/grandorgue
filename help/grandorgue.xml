@@ -986,14 +986,14 @@ It is an text file in ISO-8859-1 encoding. The standard extension is
  </para>
       <para>
 Comment lines are started with <emphasis>;</emphasis> in the first column. Empty lines are ignored.
- </para>
+      </para>
       <para>
 Various settings are grouped in block. Each block is started with a
 line starting with <emphasis>[</emphasis>, followed by the section name and ended with <emphasis>]</emphasis>.
 Each block consists of list of name-values pairs seperated by <emphasis>=</emphasis>.
 Each setting may only occure once. The content is case sensitive.
 No other elements are allowed in the file.
- </para>
+      </para>
       <para>
 File paths in this format are relative to the location of the organ
 file.  The directory seperator in this paths must be <emphasis>\</emphasis>. The paths
@@ -1003,14 +1003,14 @@ even if it is not enforced on all plattforms.
       <para>
  Boolean values are represented as <emphasis>Y</emphasis> for true and
  <emphasis>N</emphasis> for false.
- </para>
+      </para>
       <para>
 A color can be one of the following colors (not case sensitive):
 BLACK, BLUE, DARK BLUE, GREEN, DARK GREEN, CYAN, DARK CYAN, RED, DARK
 RED, MAGENTA, DARK MAGENTA, YELLOW, DARK YELLOW, LIGHT GREY, DARK
 GREY, WHITE
 Additionally, it supported the HTML syntax #RRGGBB
-</para>
+      </para>
       <para>
 A font size can be one of the following values: SMALL, NORMAL, LARGE
 or a integer number between 1 and 50..
@@ -1027,6 +1027,12 @@ A bitmap number is a value between 1 to 64. It referes to a predefined
 (wood) background. An odd mumber and the following even number
 represent the same type of wood. The odd number has vertical grain,
 while the odd has horizontal grain.
+      </para>
+      <para>
+Floating point number use the following format:
+<emphasis>-?[0-9]+(.[0-9]*)?</emphasis> That means: a optional minus
+sign, followd by at least one digit. The decimal seperator is a
+period.
       </para>
       <figure>
 	<title>background bitmaps 1 to 30</title>
