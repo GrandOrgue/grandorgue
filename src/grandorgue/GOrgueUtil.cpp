@@ -32,7 +32,6 @@ wxString formatCDDouble(double value)
 		result = wxT('-');
 		value = -value;
 	}
-	value += 0.00000005;
 	while (value >= 10.0)
 	{
 		vk++;
@@ -43,14 +42,30 @@ wxString formatCDDouble(double value)
 		unsigned val = (unsigned) value;
 		result += digits[val];
 		value = (value - val) * 10;
-	}		
+	}
 	result += wxT(".");
-	for(unsigned i = 0; i < 8 - vk; i++)
+	for(unsigned i = 0; i < 6; i++)
 	{		
 		unsigned val = (unsigned) value;
 		result += digits[val];
 		value = (value - val) * 10;
-	}		
+	}
+	if (value >= 5)
+	{
+		int pos = result.length() - 1;
+		while(pos >= 0 && (result[pos] == wxT('9') || result[pos] == wxT('.')))
+		{
+			if (result[pos] == wxT('9'))
+				result[pos] = wxT('0');
+			pos--;
+		}
+		if (pos < 0)
+			result = wxT("1") + result;
+		else if (pos == 0 && result[pos] == wxT('-'))
+			result = wxT("-1") + result.Mid(1);
+		else
+			result[pos] = result[pos] + 1;
+	}
 	return result;
 }
 
