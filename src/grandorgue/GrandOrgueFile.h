@@ -57,9 +57,9 @@ typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
 class GrandOrgueFile : public GOrguePipeUpdateCallback
 {
+	WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
 private:
-
 	GOrgueDocument* m_doc;
 	wxString m_odf;
 	wxString m_path;
@@ -106,6 +106,7 @@ private:
 	ptr_vector<GOrgueRank> m_ranks;
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
+	GOStringBoolMap m_UsedSections;
 
 	GOSoundEngine* m_soundengine;
 	GOrgueMidi* m_midi;
@@ -182,6 +183,7 @@ public:
 	GOrguePipeConfig& GetPipeConfig();
 	void SetTemperament(wxString name);
 	wxString GetTemperament();
+	void MarkSectionInUse(wxString name);
 
 	GOrgueCombinationDefinition& GetGeneralTemplate();
 	GOrgueLabel* GetPitchLabel();

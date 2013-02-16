@@ -120,6 +120,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 		m_stops.push_back(new GOrgueStop(m_organfile, m_manual_number, GetFirstLogicalKeyMIDINoteNumber()));
 		buffer.Printf(wxT("Stop%03d"), i + 1);
 		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 448));
+		m_organfile->MarkSectionInUse(buffer);
 		m_stops[i]->Load(cfg, buffer);
 	}
 
@@ -129,6 +130,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 		m_couplers.push_back(new GOrgueCoupler(m_organfile, m_manual_number));
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
 		buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 64));
+		m_organfile->MarkSectionInUse(buffer);
 		m_couplers[i]->Load(cfg, buffer);
 	}
 
@@ -136,7 +138,11 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	for (unsigned i = 0; i < m_nb_tremulants; i++)
 	{
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		m_tremulant_ids.push_back(cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount()));
+		unsigned new_id = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount());
+		for(unsigned j = 0; j < m_tremulant_ids.size(); j++)
+			if (m_tremulant_ids[j] == new_id)
+				throw wxString::Format(_("Mnaual %d: Tremulant%03d already in use"), m_manual_number, new_id);
+		m_tremulant_ids.push_back(new_id);
 	}
 
 	GetDivisionalTemplate().InitDivisional(m_manual_number);
@@ -146,6 +152,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 		m_divisionals.push_back(new GOrgueDivisional(m_organfile, GetDivisionalTemplate()));
 		buffer.Printf(wxT("Divisional%03d"), i + 1);
 		buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 224));
+		m_organfile->MarkSectionInUse(buffer);
 		m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
 	}
 	m_midi.Load(cfg, group);
