@@ -139,11 +139,12 @@ void GOrgueFrameGeneral::Load(GOrgueConfigReader& cfg, wxString group)
 
 void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 {
+	GOSettingType type = m_IsSetter ? CMBSetting : UserSetting;
 	wxString buffer;
-	unsigned NumberOfStops = cfg.ReadInteger(UserSetting, m_group, wxT("NumberOfStops"), 0, 999);
-	unsigned NumberOfCouplers = cfg.ReadInteger(UserSetting, m_group, wxT("NumberOfCouplers"), 0, 999);
-	unsigned NumberOfTremulants = cfg.ReadInteger(UserSetting, m_group, wxT("NumberOfTremulants"), 0, 999);
-	unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(UserSetting, m_group, wxT("NumberOfDivisionalCouplers"), 0, 999, m_organfile->GeneralsStoreDivisionalCouplers());
+	unsigned NumberOfStops = cfg.ReadInteger(type, m_group, wxT("NumberOfStops"), 0, 999);
+	unsigned NumberOfCouplers = cfg.ReadInteger(type, m_group, wxT("NumberOfCouplers"), 0, 999);
+	unsigned NumberOfTremulants = cfg.ReadInteger(type, m_group, wxT("NumberOfTremulants"), 0, 999);
+	unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(type, m_group, wxT("NumberOfDivisionalCouplers"), 0, 999, m_organfile->GeneralsStoreDivisionalCouplers());
 
 	int pos;
 	UpdateState();
@@ -153,9 +154,9 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 	for (unsigned i = 0; i < NumberOfStops; i++)
 	{
 		buffer.Printf(wxT("StopManual%03d"), i + 1);
-		unsigned m = cfg.ReadInteger(UserSetting, m_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+		unsigned m = cfg.ReadInteger(type, m_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 		buffer.Printf(wxT("StopNumber%03d"), i + 1);
-		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -m_organfile->GetManual(m)->GetStopCount(), m_organfile->GetManual(m)->GetStopCount());
+		int s = cfg.ReadInteger(type, m_group, buffer, -m_organfile->GetManual(m)->GetStopCount(), m_organfile->GetManual(m)->GetStopCount());
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m, abs(s));
 		if (pos >= 0)
 		{
@@ -174,9 +175,9 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 	for (unsigned i = 0; i < NumberOfCouplers; i++)
 	{
 		buffer.Printf(wxT("CouplerManual%03d"), i + 1);
-		unsigned m = cfg.ReadInteger(UserSetting, m_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+		unsigned m = cfg.ReadInteger(type, m_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 		buffer.Printf(wxT("CouplerNumber%03d"), i + 1);
-		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -999, 999);
+		int s = cfg.ReadInteger(type, m_group, buffer, -999, 999);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_COUPLER, m, abs(s));
 		if (pos >= 0)
 		{
@@ -195,7 +196,7 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 	for (unsigned i = 0; i < NumberOfTremulants; i++)
 	{
 		buffer.Printf(wxT("TremulantNumber%03d"), i + 1);
-		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -m_organfile->GetTremulantCount(), m_organfile->GetTremulantCount());
+		int s = cfg.ReadInteger(type, m_group, buffer, -m_organfile->GetTremulantCount(), m_organfile->GetTremulantCount());
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_TREMULANT, -1, abs(s));
 		if (pos >= 0)
 		{
@@ -214,7 +215,7 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 	for (unsigned i = 0; i < NumberOfDivisionalCouplers; i++)
 	{
 		buffer.Printf(wxT("DivisionalCouplerNumber%03d"), i + 1);
-		int s = cfg.ReadInteger(UserSetting, m_group, buffer, -m_organfile->GetDivisionalCouplerCount(), m_organfile->GetDivisionalCouplerCount());
+		int s = cfg.ReadInteger(type, m_group, buffer, -m_organfile->GetDivisionalCouplerCount(), m_organfile->GetDivisionalCouplerCount());
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_DIVISIONALCOUPLER, -1, abs(s));
 		if (pos >= 0)
 		{
