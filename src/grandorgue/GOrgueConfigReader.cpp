@@ -204,7 +204,7 @@ double GOrgueConfigReader::ReadFloat(GOSettingType type, wxString group, wxStrin
 	int pos = value.find(wxT(","), 0);
 	if (pos >= 0)
 	{
-		wxLogWarning(_("Number %s contains locale dependend sign"), value.c_str());
+		wxLogWarning(_("Number %s contains locale dependent floating point"), value.c_str());
 		value[pos] = wxT('.');
 	}
 	if (!parseCDouble(retval, value))

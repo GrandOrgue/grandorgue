@@ -45,7 +45,7 @@ void GOCreateDirectory(wxString path)
 		return;
 	if(!wxFileName::Mkdir(path, 0777, wxPATH_MKDIR_FULL))
 	{
-		wxLogError(_("Failed to create directory '%s"), path.c_str());
+		wxLogError(_("Failed to create directory '%s'"), path.c_str());
 	}
 }
 
