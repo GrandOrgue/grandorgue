@@ -95,6 +95,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_ranks(0),
 	m_manual(0),
 	m_panels(0),
+	m_UsedSections(),
 	m_soundengine(0),
 	m_midi(0),
 	m_bitmaps(this),
@@ -1324,4 +1325,11 @@ GOrgueLabel* GrandOrgueFile::GetPitchLabel()
 GOrgueLabel* GrandOrgueFile::GetTemperamentLabel()
 {
 	return &m_TemperamentLabel;
+}
+
+void GrandOrgueFile::MarkSectionInUse(wxString name)
+{
+	if (m_UsedSections[name])
+		throw wxString::Format(_("Section %s already assigned to a manual"), name.c_str());
+	m_UsedSections[name] = true;
 }
