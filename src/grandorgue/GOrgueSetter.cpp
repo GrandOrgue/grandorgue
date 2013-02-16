@@ -392,7 +392,7 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterMaster"), GOGUI_SETTER_MASTER);
-	panel->Init(cfg, metrics, _("Master Controls"), wxT("SetterMaster"), _(""));
+	panel->Init(cfg, metrics, _("Master Controls"), wxT("SetterMaster"), wxT(""));
 
 	control = new GOGUIHW1Background(panel);
 	control->Init(cfg, wxT("SetterMaster"));
@@ -443,7 +443,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, wxT("SetterFloating"), GOGUI_SETTER_FLOATING);
-	panel->Init(cfg, metrics, _("Floating manuals"), wxT("SetterFloating"), _(""));
+	panel->Init(cfg, metrics, _("Floating manuals"), wxT("SetterFloating"), wxT(""));
 
 	control = new GOGUIHW1Background(panel);
 	control->Init(cfg, wxT("SetterFloating"));
