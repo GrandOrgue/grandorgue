@@ -34,7 +34,7 @@ private:
 	GOrgueFrameGeneral m_general;
 
 public:
-	GOrgueGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile);
+	GOrgueGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile, bool is_setter);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void LoadCombination(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);

@@ -33,10 +33,11 @@ class GOrgueDivisional : public GOrguePushbutton, public GOrgueCombination
 protected:
 	int m_DivisionalNumber;
 	unsigned m_ManualNumber;
+	bool m_IsSetter;
 
 	bool PushLocal();
 public:
-	GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationDefinition& divisional_template);
+	GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationDefinition& divisional_template, bool is_setter);
 	void Init(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber, wxString name);
 	void Load(GOrgueConfigReader& cfg, wxString group, int manualNumber, int divisionalNumber);
 	void LoadCombination(GOrgueConfigReader& cfg);

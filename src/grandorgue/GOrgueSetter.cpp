@@ -463,7 +463,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 
 		for(unsigned j = 0; j < 10; j++)
 		{
-			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile, m_organfile->GetManual(i)->GetDivisionalTemplate());
+			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile, m_organfile->GetManual(i)->GetDivisionalTemplate(), true);
 			divisional->Init(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
 			m_organfile->GetManual(i)->AddDivisional(divisional);
 
@@ -615,7 +615,7 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(GOrgueConfigReader& cfg)
 
 		for(unsigned j = 0; j < 10; j++)
 		{
-			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile, manual->GetDivisionalTemplate());
+			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile, manual->GetDivisionalTemplate(), true);
 			divisional->Init(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
 			manual->AddDivisional(divisional);
 
@@ -860,7 +860,7 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_framegeneral.resize(0);
 	for (unsigned i = 0; i < FRAME_GENERALS; i++)
 	{
-		m_framegeneral.push_back(new GOrgueFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile));
+		m_framegeneral.push_back(new GOrgueFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile, true));
 		buffer.Printf(wxT("FrameGeneral%03d"), i + 1);
 		m_framegeneral[i]->Load(cfg, buffer);
 	}
@@ -868,7 +868,7 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_general.resize(0);
 	for (unsigned i = 0; i < GENERALS * GENERAL_BANKS; i++)
 	{
-		m_general.push_back(new GOrgueFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile));
+		m_general.push_back(new GOrgueFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile, true));
 		buffer.Printf(wxT("SetterGeneral%03d"), i + 1);
 		m_general[i]->Load(cfg, buffer);
 	}
@@ -876,7 +876,7 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_crescendo.resize(0);
 	for (unsigned i = 0; i < 4 * CRESCENDO_STEPS; i++)
 	{
-		m_crescendo.push_back(new GOrgueFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile));
+		m_crescendo.push_back(new GOrgueFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile, true));
 		buffer.Printf(wxT("SetterCrescendo%d_%03d"), (i / CRESCENDO_STEPS) + 1, (i % CRESCENDO_STEPS)+ 1);
 		m_crescendo[i]->Load(cfg, buffer);
 	}

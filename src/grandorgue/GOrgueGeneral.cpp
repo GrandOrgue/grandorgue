@@ -21,9 +21,9 @@
 
 #include "GOrgueGeneral.h"
 
-GOrgueGeneral::GOrgueGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile):
+GOrgueGeneral::GOrgueGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile, bool is_setter):
 	GOrguePushbutton(organfile),
-	m_general(general_template, organfile)
+	m_general(general_template, organfile, is_setter)
 {
 }
 
