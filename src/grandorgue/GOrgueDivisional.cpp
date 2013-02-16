@@ -28,11 +28,12 @@
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
 
-GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationDefinition& divisional_template) :
+GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationDefinition& divisional_template, bool is_setter) :
 	GOrguePushbutton(organfile),
 	GOrgueCombination(divisional_template, organfile),
 	m_DivisionalNumber(0),
-	m_ManualNumber(1)
+	m_ManualNumber(1),
+	m_IsSetter(is_setter)
 {
 }
 
@@ -59,70 +60,73 @@ void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualN
 
 	GOrguePushbutton::Load(cfg, group);
 
-	/* skip ODF settings */
-	UpdateState();
-	wxString buffer;
-	int pos;
-	std::vector<bool> used(m_State.size());
-	GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
-	unsigned NumberOfStops = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount(), true, 0);
-	unsigned NumberOfCouplers = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers(), 0);
-	unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), m_organfile->DivisionalsStoreTremulants(), 0);
-
-	for (unsigned i = 0; i < NumberOfStops; i++)
+	if (!m_IsSetter)
 	{
-		buffer.Printf(wxT("Stop%03d"), i + 1);
-		int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -associatedManual->GetStopCount(), associatedManual->GetStopCount());
-		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m_ManualNumber, abs(s));
-		if (pos >= 0)
+		/* skip ODF settings */
+		UpdateState();
+		wxString buffer;
+		int pos;
+		std::vector<bool> used(m_State.size());
+		GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
+		unsigned NumberOfStops = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount(), true, 0);
+		unsigned NumberOfCouplers = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers(), 0);
+		unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), m_organfile->DivisionalsStoreTremulants(), 0);
+		
+		for (unsigned i = 0; i < NumberOfStops; i++)
 		{
-			if (used[pos])
+			buffer.Printf(wxT("Stop%03d"), i + 1);
+			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -associatedManual->GetStopCount(), associatedManual->GetStopCount());
+			pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m_ManualNumber, abs(s));
+			if (pos >= 0)
 			{
-				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+				if (used[pos])
+				{
+					wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+				}
+				used[pos] = true;
 			}
-			used[pos] = true;
-		}
-		else
-		{
-			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
-		}
-	}
-
-	for (unsigned i = 0; i < NumberOfCouplers; i++)
-	{
-		buffer.Printf(wxT("Coupler%03d"), i + 1);
-		int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999);
-		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_COUPLER, m_ManualNumber, abs(s));
-		if (pos >= 0)
-		{
-			if (used[pos])
+			else
 			{
-				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+				wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
 			}
-			used[pos] = true;
 		}
-		else
+		
+		for (unsigned i = 0; i < NumberOfCouplers; i++)
 		{
-			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
-		}
-	}
-
-	for (unsigned i = 0; i < NumberOfTremulants; i++)
-	{
-		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999, false, 0);
-		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_TREMULANT, m_ManualNumber, abs(s));
-		if (pos >= 0)
-		{
-			if (used[pos])
+			buffer.Printf(wxT("Coupler%03d"), i + 1);
+			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999);
+			pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_COUPLER, m_ManualNumber, abs(s));
+			if (pos >= 0)
 			{
-				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+				if (used[pos])
+				{
+					wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+				}
+				used[pos] = true;
 			}
-			used[pos] = true;
+			else
+			{
+				wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
 		}
-		else
+		
+		for (unsigned i = 0; i < NumberOfTremulants; i++)
 		{
-			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			buffer.Printf(wxT("Tremulant%03d"), i + 1);
+			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999, false, 0);
+			pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_TREMULANT, m_ManualNumber, abs(s));
+			if (pos >= 0)
+			{
+				if (used[pos])
+				{
+					wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+				}
+				used[pos] = true;
+			}
+			else
+			{
+				wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
 		}
 	}
 }

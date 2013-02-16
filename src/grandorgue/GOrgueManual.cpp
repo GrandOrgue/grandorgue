@@ -149,7 +149,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_divisionals.resize(0);
 	for (unsigned i = 0; i < m_nb_divisionals; i++)
 	{
-		m_divisionals.push_back(new GOrgueDivisional(m_organfile, GetDivisionalTemplate()));
+		m_divisionals.push_back(new GOrgueDivisional(m_organfile, GetDivisionalTemplate(), false));
 		buffer.Printf(wxT("Divisional%03d"), i + 1);
 		buffer.Printf(wxT("Divisional%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 224));
 		m_organfile->MarkSectionInUse(buffer);

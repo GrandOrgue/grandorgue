@@ -374,7 +374,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_GeneralTemplate.InitGeneral();
 	for (unsigned i = 0; i < m_NumberOfGenerals; i++)
 	{
-		m_general.push_back(new GOrgueGeneral(this->GetGeneralTemplate(), this));
+		m_general.push_back(new GOrgueGeneral(this->GetGeneralTemplate(), this, false));
 		buffer.Printf(wxT("General%03d"), i + 1);
 		m_general[i]->Load(cfg, buffer);
 	}
