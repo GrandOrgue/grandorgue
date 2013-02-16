@@ -1,21 +1,747 @@
 # German translations for GrandOrgue package.
-# This file is put in the public domain.
+# This file is published under the project license.
 # Martin Koegler
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2011-08-03 14:12+0200\n"
-"PO-Revision-Date: 2011-08-03 14:12+0200\n"
+"POT-Creation-Date: 2013-02-15 22:52+0100\n"
+"PO-Revision-Date: 2013-02-16 10:37+0100\n"
 "Last-Translator: Martin Koegler\n"
 "Language-Team: German\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid " (PA): "
+msgstr " (PA): "
+
+msgid " - Virtual Pipe Organ Software"
+msgstr " - Virtuelle Pfeifenorgel"
+
+msgid "\""
+msgstr "\""
+
+msgid "#"
+msgstr "#"
+
+#, c-format
+msgid "%.3f MB"
+msgstr "%.3f MB"
+
+#, c-format
+msgid "%.3f MB of %.3f MB"
+msgstr "%.3f MB von %.3f MB"
+
+#, c-format
+msgid "%d"
+msgstr "%d"
+
+#, c-format
+msgid "%d (%s)"
+msgstr "%d (%s)"
+
+#, c-format
+msgid "%s - left"
+msgstr "%s - links"
+
+#, c-format
+msgid "%s - right"
+msgstr "%s - rechts"
+
+#, c-format
+msgid "%s: %f dB"
+msgstr "%s: %f dB"
+
+#, c-format
+msgid "%s: mute"
+msgstr "%s: stumm"
+
+msgid "&About"
+msgstr "Ü&ber"
+
+msgid "&Add"
+msgstr "&Hinzufügen"
+
+msgid "&Channel:"
+msgstr "&Kanal:"
+
+msgid "&Close"
+msgstr "&Schließen"
+
+msgid "&Convolution reverb"
+msgstr "&Faltungshall"
+
+msgid "&Delete"
+msgstr "&Löschen"
+
+msgid "&Device:"
+msgstr "&Gerät:"
+
+msgid "&File"
+msgstr "&Datei"
+
+msgid "&Help"
+msgstr "&Hilfe"
+
+msgid "&Help\tF1"
+msgstr "&Hilfe\tF1"
+
+msgid "&Import Settings"
+msgstr "&Einstellungen importieren"
+
+msgid "&Open\tCtrl+O"
+msgstr "Ö&ffnen\tCtrl+O"
+
+msgid "&Record\tCtrl+R"
+msgstr "&Aufnehmen\tCtrl+R"
+
+msgid "&Save\tCtrl+S"
+msgstr "&Speichern\tCtrl+S"
+
+msgid "&Update Cache..."
+msgstr "Cache &aktualisieren"
+
+msgid "(none)"
+msgstr "(keines)"
+
+msgid "*.organ"
+msgstr "*.organ"
+
+msgid "*.wav"
+msgstr "*.wav"
+
+msgid "+1"
+msgstr "+1"
+
+msgid "+10"
+msgstr "+10"
+
+msgid "+100"
+msgstr "+100"
+
+msgid ","
+msgstr ","
+
+msgid "-1"
+msgstr "-1"
+
+msgid "-10"
+msgstr "-10"
+
+msgid "-100"
+msgstr "-100"
+
+msgid "."
+msgstr "."
+
+msgid "0"
+msgstr "0"
+
+msgid "000"
+msgstr "000"
+
+msgid "1"
+msgstr "1"
+
+msgid "1.4 s"
+msgstr "1.4 s"
+
+msgid "12 bits"
+msgstr "12 bits"
+
+msgid "16"
+msgstr "16"
+
+msgid "16 Bit PCM"
+msgstr "16 Bit PCM"
+
+msgid "16 bit PCM"
+msgstr "16 bit PCM"
+
+msgid "16 bits"
+msgstr "16 bits"
+
+msgid "175 ms"
+msgstr "175 ms"
+
+msgid "2"
+msgstr "2"
+
+msgid "2.8 s"
+msgstr "2.8 s"
+
+msgid "20 bits"
+msgstr "20 bits"
+
+msgid "24 Bit PCM"
+msgstr "24 Bit PCM"
+
+msgid "24 bit PCM"
+msgstr "24 bit PCM"
+
+msgid "24 bits"
+msgstr "24 bits"
+
+msgid "3"
+msgstr "3"
+
+msgid "32 bit PCM"
+msgstr "32 bit PCM"
+
+msgid "350 ms"
+msgstr "350 ms"
+
+msgid "4"
+msgstr "4"
+
+msgid "5"
+msgstr "5"
+
+msgid "6"
+msgstr "6"
+
+msgid "7"
+msgstr "7"
+
+msgid "700 ms"
+msgstr "700 ms"
+
+msgid "8"
+msgstr "8"
+
+msgid "8 Bit PCM"
+msgstr "8 Bit PCM"
+
+msgid "8 bit PCM"
+msgstr "8 bit PCM"
+
+msgid "8 bits"
+msgstr "8 bits"
+
+msgid "9"
+msgstr "9"
+
+msgid "9x Note"
+msgstr "9x Note"
+
+msgid "9x Note Off"
+msgstr "9x Note Off"
+
+msgid "9x Note Off Toggle"
+msgstr "9x Note Off - Umschalten"
+
+msgid "9x Note On"
+msgstr "9x Note On"
+
+msgid "9x Note On Toogle"
+msgstr "9x Note On - Umschalten"
+
+msgid "9x Note short octave at low key"
+msgstr "9x Note mit kurzer Oktave an der unteren Grenze"
+
+msgid "9x Note without Velocity"
+msgstr "9x Note ohne Anschlagsdynamik"
+
+msgid ":"
+msgstr ":"
+
+msgid "<"
+msgstr "<"
+
+msgid "< Unsupported PCM format"
+msgstr "< Nicht unterstützes PCM Format"
+
+msgid ">"
+msgstr ">"
+
+msgid "?"
+msgstr "?"
+
+msgid "A"
+msgstr "A"
+
+msgid "ALSA"
+msgstr "ALSA"
+
+msgid "ASIO"
+msgstr "ASIO"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "Alsa"
+msgstr "Alsa"
+
+msgid "Any channel"
+msgstr "Jeder Kanal"
+
+msgid "Any device"
+msgstr "Jedes Gerät"
+
+msgid "Apply"
+msgstr "Anwenden"
+
+msgid "B"
+msgstr "B"
+
+msgid "BAS"
+msgstr "BAS"
+
+msgid "Builder"
+msgstr "Orgelbauer"
+
+msgid "Bx Controller"
+msgstr "Bx Controller"
+
+msgid "Bx Controller Off"
+msgstr "Bx Controller Off"
+
+msgid "Bx Controller Off Toogle"
+msgstr "Bx Controller Off Umschalten"
+
+msgid "Bx Controller On"
+msgstr "Bx Controller On"
+
+msgid "Bx Controller On Toogle"
+msgstr "Bx Controller On Umschalten"
+
+msgid "C"
+msgstr "C"
+
+msgid "Cache file had bad magic bypassing cache."
+msgstr "Cachedatei hat eine falsche Kennung. Cache wird nicht verwendet."
+
+msgid "Cache file had diffent hash bypassing cache."
+msgstr "Cachedatei hat eine falsche Prüfsumme. Cache wird ignoriert."
+
+#, c-format
+msgid "Cache load failure: %s"
+msgstr "Cache Ladefehler: %s"
+
+msgid "Cache store:"
+msgstr "Cache abspeichern:"
+
+msgid "Change"
+msgstr "Ändern"
+
+msgid "Channel"
+msgstr "Kanal"
+
+#, c-format
+msgid "Channel %d"
+msgstr "Kanal %d"
+
+msgid "Channel offset:"
+msgstr "Kanal Offset:"
+
+msgid "Channel:"
+msgstr "Kanal:"
+
+msgid "Choose a file"
+msgstr "Datei auswählen"
+
+msgid "Compress Cache"
+msgstr "Cache komprimieren"
+
+#, c-format
+msgid "Config entry without any group at line %d"
+msgstr "Konfigurationseintrag ohne zugehörige Gruppe auf Zeile %d"
+
+msgid ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2013 GrandOrgue contributors\n"
+"\n"
+"This software comes with no warranty.\n"
+"\n"
+"ASIO Interface Technology by Steinberg Media Technologies GmbH,\n"
+"by use of the Steinberg ASIO SDK, Version 2.2.\n"
+"ASIO is a trademark and software of Steinberg Media Technologies GmbH."
+msgstr ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2013 GrandOrgue contributors\n"
+"\n"
+"Für dieses Programm besteht keinerlei Garantie.\n"
+"\n"
+"ASIO Interface Technology von Steinberg Media Technologies GmbH,\n"
+"unter Verwendung von Steinberg ASIO SDK, Version 2.2.\n"
+"ASIO ist eine Trademark und Software von Steinberg Media Technologies GmbH."
+
+msgid "Core"
+msgstr "Core"
+
+msgid "Core Audio"
+msgstr "Core Audio"
+
+msgid "D"
+msgstr "D"
+
+msgid "Delete"
+msgstr "Löschen"
+
+msgid "Delete &Cache..."
+msgstr "&Cache löschen"
+
+msgid "Disabled"
+msgstr "Deaktviert"
+
+msgid "Don't load"
+msgstr "Nicht laden"
+
+msgid "E"
+msgstr "E"
+
+msgid "E&xit"
+msgstr "Be&enden"
+
+msgid "Enabled"
+msgstr "Aktviert"
+
+msgid "F"
+msgstr "F"
+
+msgid "F1"
+msgstr "F1"
+
+msgid "F10"
+msgstr "F10"
+
+msgid "F11"
+msgstr "F11"
+
+msgid "F12"
+msgstr "F12"
+
+msgid "F13"
+msgstr "F13"
+
+msgid "F14"
+msgstr "F14"
+
+msgid "F15"
+msgstr "F15"
+
+msgid "F16"
+msgstr "F16"
+
+msgid "F17"
+msgstr "F17"
+
+msgid "F18"
+msgstr "F18"
+
+msgid "F19"
+msgstr "F19"
+
+msgid "F2"
+msgstr "F2"
+
+msgid "F20"
+msgstr "F20"
+
+msgid "F21"
+msgstr "F21"
+
+msgid "F22"
+msgstr "F22"
+
+msgid "F23"
+msgstr "F23"
+
+msgid "F24"
+msgstr "F24"
+
+msgid "F3"
+msgstr "F3"
+
+msgid "F4"
+msgstr "F4"
+
+msgid "F5"
+msgstr "F5"
+
+msgid "F6"
+msgstr "F6"
+
+msgid "F7"
+msgstr "F7"
+
+msgid "F8"
+msgstr "F8"
+
+msgid "F9"
+msgstr "F9"
+
+msgid "G"
+msgstr "G"
+
+msgid "G.C."
+msgstr "G.C."
+
+msgid "GB"
+msgstr "GB"
+
+msgid "H"
+msgstr "H"
+
+msgid "I"
+msgstr "I"
+
+msgid "Initial MIDI Configuration"
+msgstr "Initiale MIDI Konfiguration"
+
+msgid "Insert"
+msgstr "Einfügen"
+
+msgid "J"
+msgstr "J"
+
+msgid "Jack"
+msgstr "Jack"
+
+msgid "Jack: "
+msgstr "Jack: "
+
+msgid "K"
+msgstr "K"
+
+msgid "KB"
+msgstr "KB"
+
+msgid "L"
+msgstr "L"
+
+msgid "Length:"
+msgstr "Länge:"
+
+msgid "M"
+msgstr "M"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "MEL"
+msgstr "MEL"
+
 msgid "MIDI &input devices"
-msgstr "MIDI E&ingabeger�te"
+msgstr "MIDI E&ingabegeräte"
+
+msgid "MIDI &output devices"
+msgstr "MIDI &Ausgabegeräte"
+
+msgid "MIDI Devices"
+msgstr "MIDI Geräte"
+
+msgid "MME"
+msgstr "MME"
+
+msgid "Max"
+msgstr "Max"
+
+msgid "Mono"
+msgstr "Mono"
+
+msgid "My Organs"
+msgstr "Meine Orgeln"
+
+msgid "N"
+msgstr "N"
+
+msgid "New"
+msgstr "Neu"
+
+msgid "Next"
+msgstr "Nächster"
+
+msgid "None"
+msgstr "Keiner"
+
+msgid "O"
+msgstr "O"
+
+msgid "OSS"
+msgstr "OSS"
+
+msgid "Options"
+msgstr "Einstellungen"
+
+msgid "Organ"
+msgstr "Orgel"
+
+msgid "Organ &Properties"
+msgstr "Orgel &Eigenschaften..."
+
+msgid "Organ settings"
+msgstr "Orgel-Einstellungen"
+
+msgid "Organs"
+msgstr "Orgeln"
+
+msgid "P"
+msgstr "P"
+
+msgid "P&roperties..."
+msgstr "E&igenschaften..."
+
+msgid "Prev"
+msgstr "Vorheriger"
+
+msgid "Properties"
+msgstr "Eigenschaften"
+
+msgid "PulseAudio"
+msgstr "PluseAudio"
+
+msgid "Q"
+msgstr "Q"
+
+msgid "R"
+msgstr "R"
+
+msgid "Ready!"
+msgstr "Bereit!"
+
+msgid "Rename"
+msgstr "Umbennen"
+
+#, c-format
+msgid "RtAudio error: %s"
+msgstr "RtAudio Fehler: %s"
+
+#, c-format
+msgid "RtMidi error: %s"
+msgstr "RtMidi Fehler: %s"
+
+msgid "S"
+msgstr "S"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Save as"
+msgstr "Speichern als"
+
+msgid "Stereo"
+msgstr "Stereo"
+
+msgid "Success"
+msgstr "Erfolgreich"
+
+msgid "T"
+msgstr "T"
+
+msgid "TB"
+msgstr "TB"
+
+msgid "The cache for this organ is outdated. Please update or delete it."
+msgstr ""
+"Der Cache für diese Orgel ist veraltet. Bitte den Cache aktualisieren oder "
+"löschen."
+
+msgid "This feature is currently not supported."
+msgstr "Diese Funktion wird im Moment nicht unterstützt."
+
+msgid "U"
+msgstr "U"
+
+msgid "U.O."
+msgstr "U.O."
+
+msgid "Unknown"
+msgstr "Unbekannt"
+
+msgid "Unknown: "
+msgstr "Unbekannt: "
+
+#, c-format
+msgid "Unused CMB entry '%s'"
+msgstr "Nicht verwendeter CMB Eintrag '%s'"
+
+#, c-format
+msgid "Unused ODF entry '%s'"
+msgstr "Nicht verwendeter ODF Eintrag '%s'"
+
+msgid "V"
+msgstr "V"
+
+msgid "Volume"
+msgstr "Lautstärke"
+
+msgid "W"
+msgstr "W"
+
+msgid "WAV files (*.wav)|*.wav"
+msgstr "WAV Dateien (*.wav)|*.wav"
+
+msgid "Warning"
+msgstr "Warnung"
+
+#, c-format
+msgid "Windchest %d"
+msgstr "Windlade %d"
+
+msgid "Windows DirectSound"
+msgstr "Windows DirectSound"
+
+msgid "Windows WASAPI"
+msgstr "Windows WASAPI"
+
+msgid "Windows WDM-KS"
+msgstr "Windows WDM-KS"
+
+msgid "X"
+msgstr "X"
+
+msgid "Y"
+msgstr "Y"
+
+msgid "Z"
+msgstr "Z"
+
+msgid "_"
+msgstr "_"
+
+#, c-format
+msgid "__%d"
+msgstr "__%d"
+
+msgid "`"
+msgstr "`"
+
+msgid "end"
+msgstr "Ende"
+
+msgid "h"
+msgstr "h"
+
+msgid "i"
+msgstr "i"
+
+msgid "insert"
+msgstr "einfügen"
+
+msgid "left"
+msgstr "links"
+
+msgid "licensed under the GNU GPLv2 (or later)"
+msgstr "lizenziert unter der GNU GPLv2 (oder spätere Versionen)"
+
+msgid "space"
+msgstr "Leerzeichen"
+
+msgid "virtual pipe organ simulator"
+msgstr "virtueller Pfeifenorgen Simulator"
+
+msgid "{"
+msgstr "{"
+
+msgid "|"
+msgstr "|"
+
+msgid "}"
+msgstr "}"
+
 
