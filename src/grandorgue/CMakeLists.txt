@@ -238,6 +238,7 @@ MIDIEventSendDialog.cpp
 MIDIEventKeyDialog.cpp
 MIDIListenDialog.cpp
 OrganDialog.cpp
+GOrgueDocManager.cpp
 GOrgueDocTemplate.cpp
 GOrgueDocument.cpp
 GOrgueView.cpp

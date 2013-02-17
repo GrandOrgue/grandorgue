@@ -21,6 +21,7 @@
 
 
 #include "GrandOrgue.h"
+#include "GOrgueDocManager.h"
 #include "GOrgueDocTemplate.h"
 #include "GOrgueEvent.h"
 #include "GOrgueLCD.h"
@@ -43,23 +44,6 @@
 #endif
 
 IMPLEMENT_APP(GOrgueApp)
-
-class GOrgueDocManager : public wxDocManager
-{
-public:
-    void OnUpdateFileSave(wxUpdateUIEvent& event);
-    DECLARE_EVENT_TABLE()
-};
-
-BEGIN_EVENT_TABLE(GOrgueDocManager, wxDocManager)
-    EVT_UPDATE_UI(wxID_SAVE, GOrgueDocManager::OnUpdateFileSave)
-END_EVENT_TABLE();
-
-void GOrgueDocManager::OnUpdateFileSave(wxUpdateUIEvent& event)
-{
-    wxDocument *doc = GetCurrentDocument();
-    event.Enable( doc );
-}
 
 GOrgueApp::GOrgueApp() :
    m_Frame(NULL),
