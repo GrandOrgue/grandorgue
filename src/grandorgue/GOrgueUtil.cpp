@@ -64,7 +64,7 @@ wxString formatCDDouble(double value)
 		else if (pos == 0 && result[pos] == wxT('-'))
 			result = wxT("-1") + result.Mid(1);
 		else
-			result[pos] = result[pos] + 1;
+			result[pos] = ((wxChar)result[pos]) + 1;
 	}
 	return result;
 }
