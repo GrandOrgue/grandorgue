@@ -133,9 +133,9 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 		{
 			key_width = 0;
 			key_offset = - m_Keys[i].OnBitmap->GetWidth() / 2;
-		} else if (!m_ManualNumber && ((i % 12) == 4 || (i % 12) == 11) && i)
+		} else if (!m_ManualNumber && ((key_nb % 12) == 4 || (key_nb % 12) == 11))
 		{
-			key_width += m_Keys[i - 1].Rect.GetWidth();
+			key_width *= 2;
 		}
 
 		m_Keys[i].Rect = wxRect(x + key_offset, y, m_Keys[i].OnBitmap->GetWidth(), m_Keys[i].OnBitmap->GetHeight());
@@ -278,9 +278,9 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		{
 			key_width = 0;
 			key_offset = - m_Keys[i].OnBitmap->GetWidth() / 2;
-		} else if (!m_ManualNumber && ((i % 12) == 4 || (i % 12) == 11) && i)
+		} else if (!m_ManualNumber && ((key_nb % 12) == 4 || (key_nb % 12) == 11))
 		{
-			key_width += m_Keys[i - 1].Rect.GetWidth();
+			key_width *= 2;
 		}
 
 		key_width = cfg.ReadInteger(ODFSetting, group, wxT("Width_") + base, 0, 500, false, key_width);
