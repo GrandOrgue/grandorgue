@@ -84,6 +84,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_SIZE(GOrgueFrame::OnSize)
 	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
+	EVT_COMMAND(ID_METER_TRANSPOSE_SPIN, wxEVT_SETVALUE, GOrgueFrame::OnChangeTranspose)
 	EVT_CHOICE(ID_REVERB_SELECT, GOrgueFrame::OnSettingsReverb)
 	EVT_TEXT(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 	EVT_TEXT_ENTER(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
@@ -694,7 +695,7 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 	m_Settings.SetTranspose(n);
 	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (doc && doc->GetOrganFile())
-		doc->GetOrganFile()->AllNotesOff();
+		doc->GetOrganFile()->GetSetter()->SetTranspose(n);
 }
 
 void GOrgueFrame::OnSettingsReverb(wxCommandEvent& event)
@@ -727,6 +728,11 @@ void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
     if (event.GetMenu() == m_panel_menu)
 		UpdatePanelMenu();
     event.Skip();
+}
+
+void GOrgueFrame::OnChangeTranspose(wxCommandEvent& event)
+{
+	m_Transpose->SetValue(event.GetInt());
 }
 
 void GOrgueFrame::OnChangeSetter(wxCommandEvent& event)

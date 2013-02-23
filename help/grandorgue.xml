@@ -1941,6 +1941,22 @@ Label displaying the current temperament of the organ.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>TransposeDown, TransposeUp</term>
+          <listitem>
+            <para>
+Buttons for transposing.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>TransposeLabel</term>
+          <listitem>
+            <para>
+Label displaying the current transpose setting.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Save</term>
           <listitem>
             <para>

@@ -36,6 +36,7 @@
 #include "GOrgueManual.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSetterButton.h"
+#include "GOrgueSettings.h"
 #include "GOrgueTemperament.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueID.h"
@@ -143,6 +144,8 @@ enum {
 	ID_SETTER_PITCH_M10,
 	ID_SETTER_PITCH_P1,
 	ID_SETTER_PITCH_P10,
+	ID_SETTER_TRANSPOSE_DOWN,
+	ID_SETTER_TRANSPOSE_UP,
 
 	ID_SETTER_SAVE,
 
@@ -151,6 +154,7 @@ enum {
 	ID_SETTER_CRESCENDO_LABEL,
 	ID_SETTER_TEMPERAMENT_LABEL,
 	ID_SETTER_PITCH_LABEL,
+	ID_SETTER_TRANSPOSE_LABEL,
 	ID_SETTER_CRESCENDO_SWELL,
 };
 
@@ -244,6 +248,8 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("PitchM10"), ID_SETTER_PITCH_M10 },
 	{ wxT("TemperamentPrev"), ID_SETTER_TEMPERAMENT_PREV },
 	{ wxT("TemperamentNext"), ID_SETTER_TEMPERAMENT_NEXT },
+	{ wxT("TransposeDown"), ID_SETTER_TRANSPOSE_DOWN },
+	{ wxT("TransposeUp"), ID_SETTER_TRANSPOSE_UP },
 
 	{ wxT("Save"), ID_SETTER_SAVE },
 
@@ -259,6 +265,7 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("PitchLabel"), ID_SETTER_PITCH_LABEL },
 	{ wxT("GeneralLabel"), ID_SETTER_GENERAL_LABEL },
 	{ wxT("TemperamentLabel"), ID_SETTER_TEMPERAMENT_LABEL },
+	{ wxT("TransposeLabel"), ID_SETTER_TRANSPOSE_LABEL },
 
 };
 
@@ -275,6 +282,7 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_PosDisplay(organfile),
 	m_BankDisplay(organfile),
 	m_CrescendoDisplay(organfile),
+	m_TransposeDisplay(organfile),
 	m_swell(organfile),
 	m_SetterType(SETTER_REGULAR)
 {
@@ -320,6 +328,8 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
@@ -345,31 +355,37 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(GOrgueConfigReader& cfg, wxString g
 	unsigned element  = cfg.ReadEnum(ODFSetting, group, wxT("Type"), m_setter_element_types, sizeof(m_setter_element_types) / sizeof(m_setter_element_types[0]), true);
 	if (element == ID_SETTER_LABEL)
 	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay, 350, 10);
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay);
 		PosDisplay->Load(cfg, group);
 		return PosDisplay;
 	}
 	if (element == ID_SETTER_CRESCENDO_LABEL)
 	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay, 350, 10);
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay);
 		PosDisplay->Load(cfg, group);
 		return PosDisplay;
 	}
 	if (element == ID_SETTER_GENERAL_LABEL)
 	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_BankDisplay, 350, 10);
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_BankDisplay);
 		PosDisplay->Load(cfg, group);
 		return PosDisplay;
 	}
 	if (element == ID_SETTER_PITCH_LABEL)
 	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel(), 350, 10);
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel());
 		PosDisplay->Load(cfg, group);
 		return PosDisplay;
 	}
 	if (element == ID_SETTER_TEMPERAMENT_LABEL)
 	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel(), 350, 10);
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel());
+		PosDisplay->Load(cfg, group);
+		return PosDisplay;
+	}
+	if (element == ID_SETTER_TRANSPOSE_LABEL)
+	{
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_TransposeDisplay);
 		PosDisplay->Load(cfg, group);
 		return PosDisplay;
 	}
@@ -414,7 +430,7 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 	button->Init(cfg, wxT("SetterMasterPitchP10"));
 	panel->AddControl(button);
 
-	GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetPitchLabel(), 160, 10);
+	GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetPitchLabel(), 160, 25);
 	PosDisplay->Init(cfg, wxT("SetterMasterPitch"));
 	panel->AddControl(PosDisplay);
 
@@ -422,7 +438,7 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 	button->Init(cfg, wxT("SetterMasterTemperamentPrev"));
 	panel->AddControl(button);
 
-	PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel(), 80, 80);
+	PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel(), 80, 95);
 	PosDisplay->Init(cfg, wxT("SetterMasterTemperament"));
 	panel->AddControl(PosDisplay);
 
@@ -432,6 +448,18 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_SAVE], false, 5, 101);
 	button->Init(cfg, wxT("SetterSave"));
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_TRANSPOSE_DOWN], false, 1, 102);
+	button->Init(cfg, wxT("SetterMasterTransposeDown"));
+	panel->AddControl(button);
+
+	PosDisplay=new GOGUILabel(panel, &m_TransposeDisplay, 80, 165);
+	PosDisplay->Init(cfg, wxT("SetterMasterTranspose"));
+	panel->AddControl(PosDisplay);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_TRANSPOSE_UP], false, 3, 102);
+	button->Init(cfg, wxT("SetterMasterTransposeUp"));
 	panel->AddControl(button);
 
 	return panel;
@@ -916,6 +944,8 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_button[ID_SETTER_PITCH_P10]->Init(cfg, wxT("SetterPitchP10"), _("+10"));
 	m_button[ID_SETTER_TEMPERAMENT_PREV]->Init(cfg, wxT("SetterTemperamentPrev"), _("<"));
 	m_button[ID_SETTER_TEMPERAMENT_NEXT]->Init(cfg, wxT("SetterTemperamentNext"), _(">"));
+	m_button[ID_SETTER_TRANSPOSE_DOWN]->Init(cfg, wxT("SetterTransposeDown"), _("-"));
+	m_button[ID_SETTER_TRANSPOSE_UP]->Init(cfg, wxT("SetterTransposeUp"), _("+"));
 
 	m_button[ID_SETTER_SAVE]->Init(cfg, wxT("SetterSave"), _("Save"));
 
@@ -924,6 +954,7 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_PosDisplay.Init(cfg, wxT("SetterCurrentPosition"));
 	m_BankDisplay.Init(cfg, wxT("SetterGeneralBank"));
 	m_CrescendoDisplay.Init(cfg, wxT("SetterCrescendoPosition"));
+	m_TransposeDisplay.Init(cfg, wxT("SetterTranspose"));
 
 	for(unsigned i = 0; i < 10; i++)
 	{
@@ -977,6 +1008,7 @@ void GOrgueSetter::Save(GOrgueConfigWriter& cfg)
 	m_PosDisplay.Save(cfg);
 	m_BankDisplay.Save(cfg);
 	m_CrescendoDisplay.Save(cfg);
+	m_TransposeDisplay.Save(cfg);
 }
 
 void GOrgueSetter::ProcessMidi(const GOrgueMidiEvent& event)
@@ -1177,6 +1209,17 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 				}
 				break;
 
+			case ID_SETTER_TRANSPOSE_DOWN:
+			case ID_SETTER_TRANSPOSE_UP:
+				{
+					int value = m_organfile->GetSettings().GetTranspose();
+					if (i == ID_SETTER_TRANSPOSE_UP)
+						value++;
+					else
+						value--;
+					SetTranspose(value);
+				}
+				break;
 			}
 }
 
@@ -1205,6 +1248,9 @@ void GOrgueSetter::PreparePlayback()
 	buffer.Printf(wxT("%d"), m_bank + 1);
 	m_BankDisplay.SetName(buffer);
 	m_BankDisplay.PreparePlayback();
+
+	UpdateTranspose();
+	m_TransposeDisplay.PreparePlayback();
 
 	m_swell.PreparePlayback();
 
@@ -1357,3 +1403,24 @@ void GOrgueSetter::ControlChanged(void* control)
 		Crescendo(m_swell.GetValue() * CRESCENDO_STEPS / 128);
 }
 
+void GOrgueSetter::UpdateTranspose()
+{
+	m_TransposeDisplay.SetName(wxString::Format(wxT("%d"), m_organfile->GetSettings().GetTranspose()));
+}
+
+void GOrgueSetter::SetTranspose(int value)
+{
+	if (value <= -11)
+		value = -11;
+	if (value >= 11)
+		value = 11;
+	if (m_organfile->GetSettings().GetTranspose() != value)
+	{
+		wxCommandEvent event(wxEVT_SETVALUE, ID_METER_TRANSPOSE_SPIN);
+		event.SetInt(value);
+		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+	}
+	m_organfile->GetSettings().SetTranspose(value);
+	m_organfile->AllNotesOff();
+	UpdateTranspose();
+}
