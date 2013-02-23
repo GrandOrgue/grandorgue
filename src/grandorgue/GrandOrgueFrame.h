@@ -92,6 +92,7 @@ public:
 	void OnSettingsReverb(wxCommandEvent& event);
 
 	void OnKeyCommand(wxKeyEvent& event);
+	void OnChangeTranspose(wxCommandEvent& event);
 	void OnChangeSetter(wxCommandEvent& event);
 	void OnChangeVolume(wxCommandEvent& event);
 	void OnPanel(wxCommandEvent& event);

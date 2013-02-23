@@ -59,6 +59,7 @@ private:
 	GOrgueLabel m_PosDisplay;
 	GOrgueLabel m_BankDisplay;
 	GOrgueLabel m_CrescendoDisplay;
+	GOrgueLabel m_TransposeDisplay;
 	GOrgueEnclosure m_swell;
 	SetterType m_SetterType;
 
@@ -105,6 +106,8 @@ public:
 	void UpdatePosition(int pos);
 	void SetPosition(int pos, bool push = true);
 	void ResetDisplay();
+	void SetTranspose(int value);
+	void UpdateTranspose();
 };
 
 #endif
