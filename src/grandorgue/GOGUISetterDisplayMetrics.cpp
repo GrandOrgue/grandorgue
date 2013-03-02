@@ -80,10 +80,10 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 		break;
 
 	case GOGUI_SETTER_MASTER:
-		x_size = 400;
+		x_size = 550;
 		y_size = 250;
 		drawstop_rows = 3;
-		drawstop_cols = 5;
+		drawstop_cols = 7;
 		button_cols = 10;
 		button_rows = 0;
 		break;
