@@ -142,8 +142,10 @@ enum {
 	ID_SETTER_TEMPERAMENT_NEXT,
 	ID_SETTER_PITCH_M1,
 	ID_SETTER_PITCH_M10,
+	ID_SETTER_PITCH_M100,
 	ID_SETTER_PITCH_P1,
 	ID_SETTER_PITCH_P10,
+	ID_SETTER_PITCH_P100,
 	ID_SETTER_TRANSPOSE_DOWN,
 	ID_SETTER_TRANSPOSE_UP,
 
@@ -244,8 +246,10 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 
 	{ wxT("PitchP1"), ID_SETTER_PITCH_P1 },
 	{ wxT("PitchP10"), ID_SETTER_PITCH_P10 },
+	{ wxT("PitchP100"), ID_SETTER_PITCH_P100 },
 	{ wxT("PitchM1"), ID_SETTER_PITCH_M1 },
 	{ wxT("PitchM10"), ID_SETTER_PITCH_M10 },
+	{ wxT("PitchM100"), ID_SETTER_PITCH_M100 },
 	{ wxT("TemperamentPrev"), ID_SETTER_TEMPERAMENT_PREV },
 	{ wxT("TemperamentNext"), ID_SETTER_TEMPERAMENT_NEXT },
 	{ wxT("TransposeDown"), ID_SETTER_TRANSPOSE_DOWN },
@@ -309,11 +313,13 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
+	/* Generals */
 	for(unsigned i = 0; i < GENERALS; i++)
 		m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
+	/* Crescendo */
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
@@ -321,7 +327,9 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-
+	/* Pitch */
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
@@ -414,23 +422,31 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 	control->Init(cfg, wxT("SetterMaster"));
 	panel->AddControl(control);
 
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M10], false, 1, 100);
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M100], false, 1, 100);
+	button->Init(cfg, wxT("SetterMasterPitchM100"));
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M10], false, 2, 100);
 	button->Init(cfg, wxT("SetterMasterPitchM10"));
 	panel->AddControl(button);
 
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M1], false, 2, 100);
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M1], false, 3, 100);
 	button->Init(cfg, wxT("SetterMasterPitchM1"));
 	panel->AddControl(button);
 
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_P1], false, 4, 100);
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_P1], false, 5, 100);
 	button->Init(cfg, wxT("SetterMasterPitchP1"));
 	panel->AddControl(button);
 
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_P10], false, 5, 100);
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_P10], false, 6, 100);
 	button->Init(cfg, wxT("SetterMasterPitchP10"));
 	panel->AddControl(button);
 
-	GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetPitchLabel(), 160, 25);
+	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_P100], false, 7, 100);
+	button->Init(cfg, wxT("SetterMasterPitchP10"));
+	panel->AddControl(button);
+
+	GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetPitchLabel(), 230, 25);
 	PosDisplay->Init(cfg, wxT("SetterMasterPitch"));
 	panel->AddControl(PosDisplay);
 
@@ -940,8 +956,10 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 
 	m_button[ID_SETTER_PITCH_M1]->Init(cfg, wxT("SetterPitchM1"), _("-1"));
 	m_button[ID_SETTER_PITCH_M10]->Init(cfg, wxT("SetterPitchM10"), _("-10"));
+	m_button[ID_SETTER_PITCH_M100]->Init(cfg, wxT("SetterPitchM100"), _("-100"));
 	m_button[ID_SETTER_PITCH_P1]->Init(cfg, wxT("SetterPitchP1"), _("+1"));
 	m_button[ID_SETTER_PITCH_P10]->Init(cfg, wxT("SetterPitchP10"), _("+10"));
+	m_button[ID_SETTER_PITCH_P100]->Init(cfg, wxT("SetterPitchP100"), _("+100"));
 	m_button[ID_SETTER_TEMPERAMENT_PREV]->Init(cfg, wxT("SetterTemperamentPrev"), _("<"));
 	m_button[ID_SETTER_TEMPERAMENT_NEXT]->Init(cfg, wxT("SetterTemperamentNext"), _(">"));
 	m_button[ID_SETTER_TRANSPOSE_DOWN]->Init(cfg, wxT("SetterTransposeDown"), _("-"));
@@ -1185,11 +1203,17 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 			case ID_SETTER_PITCH_M10:
 				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() - 10);
 				break;
+			case ID_SETTER_PITCH_M100:
+				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() - 100);
+				break;
 			case ID_SETTER_PITCH_P1:
 				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() + 1);
 				break;
 			case ID_SETTER_PITCH_P10:
 				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() + 10);
+				break;
+			case ID_SETTER_PITCH_P100:
+				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() + 100);
 				break;
 			case ID_SETTER_SAVE:
 				m_organfile->Save(m_organfile->GetODFFilename());

@@ -1909,10 +1909,11 @@ default).
           </listitem>
         </varlistentry>
         <varlistentry>
-          <term>PitchP1, PitchP10, PitchM1, PitchM10</term>
+          <term>PitchP1, PitchP10, PitchP100, PitchM1, PitchM10, PitchM100</term>
           <listitem>
             <para>
-Buttons for controlling the organ pitch (+1, +10, -1, -10 cent).
+Buttons for controlling the organ pitch (+1, +10, +100, -1, -10, -100
+cent).
 	    </para>
           </listitem>
         </varlistentry>
@@ -4566,7 +4567,7 @@ Synthesised tremulants have the following attributes:
           <term>StopRate</term>
           <listitem>
             <para>
-(integer 1-100, required) Determines the startup time of the tremulant.
+(integer 1-100, required) Determines the stop time of the tremulant.
 	    </para>
           </listitem>
         </varlistentry>
