@@ -2955,6 +2955,17 @@ section containg the tremulant details.
 	    </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>MIDIKey000 - MIDIKey127</term>
+          <listitem>
+            <para>
+(integer 0-127, default: same MIDI key number) Allows to map the MIDI
+note in <emphasis>MIDIKey999</emphasis> to a different number. This
+mapping is used by the default manual MIDI matching type - other may
+or may not use this mapping table.
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
       <para>
 The various GUI manual attributes are specified for the different key

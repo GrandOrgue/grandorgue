@@ -112,6 +112,9 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 
 	m_midi.SetIndex(manualNumber);
 
+	for(unsigned i = 0; i < 128; i++)
+		m_MidiMap[i] = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("MIDIKey%03d"), i), 0, 127, false, i);
+
 	wxString buffer;
 
 	m_stops.resize(0);
@@ -429,7 +432,7 @@ void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
 	for(unsigned i = 0; i < m_divisionals.size(); i++)
 		m_divisionals[i]->ProcessMidi(event);
 
-	switch(m_midi.Match(event, key, value))
+	switch(m_midi.Match(event, m_MidiMap, key, value))
 	{
 	case MIDI_MATCH_ON:
 		if (value <= 0)

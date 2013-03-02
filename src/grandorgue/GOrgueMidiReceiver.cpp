@@ -297,10 +297,10 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e)
 MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& value)
 {
 	int tmp;
-	return Match(e, tmp, value);
+	return Match(e, NULL, tmp, value);
 }
 
-MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& key, int& value)
+MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsigned midi_map[128], int& key, int& value)
 {
 	value = 0;
 	for(unsigned i = 0; i < m_events.size();i++)
@@ -328,6 +328,12 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& key, in
 						key -= 4;
 				}
 				key = key + m_organfile->GetSettings().GetTranspose() + m_events[i].key;
+				if (key < 0)
+					continue;
+				if (key > 127)
+					continue;
+				if (midi_map && m_events[i].type != MIDI_M_NOTE_SHORT_OCTAVE)
+					key = midi_map[key];
 				if (m_events[i].type == MIDI_M_NOTE_NO_VELOCITY)
 				{
 					value = e.GetValue() ? 127 : 0;
