@@ -55,6 +55,7 @@ private:
 	std::vector<unsigned> m_RemoteVelocity;
 	std::vector<unsigned> m_Velocity;
 	std::vector<std::vector<unsigned> > m_Velocities;
+	unsigned m_MidiMap[128];
 	unsigned m_manual_number;
 	unsigned m_first_accessible_logical_key_nb;
 	unsigned m_nb_logical_keys;
