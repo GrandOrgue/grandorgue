@@ -3165,6 +3165,36 @@ for the keys.
 	    </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>DisplayFirstNote</term>
+          <listitem>
+            <para>
+(integer 0 - 127, default: FirstAccessibleKeyMIDINoteNumber) Display
+the first key as the following note.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DisplayKeys</term>
+          <listitem>
+            <para>
+(integer 1 - NumberOfAccessibleKeys, default: NumberOfAccessibleKeys) number of keys
+to displays.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DisplayKey999</term>
+          <listitem>
+            <para>
+(integer 0 - 127, default: FirstAccessibleKeyMIDINoteNumber +
+<emphasis>999</emphasis>) The number in the key
+(<emphasis>999</emphasis>) is between 1 and
+<emphasis>DisplayKeys</emphasis>. It contains the midi number of the
+backend key, that it connected to this GUI key.
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
