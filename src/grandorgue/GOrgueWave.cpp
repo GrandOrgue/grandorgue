@@ -163,6 +163,7 @@ void GOrgueWave::Open(const wxString& filename)
 	char* ptr = (char*)malloc(length);
 
 	unsigned offset = 0;
+	unsigned start = 0;
 	try
 	{
 		if (!ptr)
@@ -190,7 +191,9 @@ void GOrgueWave::Open(const wxString& filename)
 
 		/* Pribac compatibility */
 		if (!CompareFourCC(riffHeader->fccChunk, "RIFF"))
+		{
 			throw (wxString)_("< Invalid RIFF file");
+		}
 		offset += sizeof(GO_WAVECHUNKHEADER);
 
 		/* Make sure this is a RIFF/WAVE file */
@@ -203,7 +206,7 @@ void GOrgueWave::Open(const wxString& filename)
 		 * truncate the usable size of the file if the size on disk is larger
 		 * than the size of the RIFF chunk */
 		if ((unsigned long)length > riffChunkSize + 8)
-			length = riffChunkSize + 8;
+			length = riffChunkSize + 8 + start;
 
 		/* Find required chunks... */
 		for (; offset + 8 <= length;)

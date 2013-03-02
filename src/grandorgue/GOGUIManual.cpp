@@ -42,6 +42,7 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 
 	GOGUIControl::Init(cfg, group);
 	wxString type = m_ManualNumber ? wxT("Manual") : wxT("Pedal");
+	unsigned first_midi_note = m_manual->GetFirstAccessibleKeyMIDINoteNumber();
 
 	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
 	unsigned x = 0, y = 0;
@@ -50,7 +51,7 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 	m_Keys.resize(m_manual->GetNumberOfAccessibleKeys());
 	for(unsigned i = 0; i < m_Keys.size(); i++)
 	{
-		unsigned key_nb = i + m_manual->GetFirstAccessibleKeyMIDINoteNumber();
+		unsigned key_nb = i + first_midi_note;
 		m_Keys[i].MidiNumber = key_nb;
 		m_Keys[i].IsSharp = (((key_nb % 12) < 5 && !(key_nb & 1)) || ((key_nb % 12) >= 5 && (key_nb & 1))) ? false : true;
 
@@ -180,16 +181,17 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		type += wxT("Inverted");
 	if (color_wooden && m_ManualNumber)
 		type += wxT("Wood");
+	unsigned first_midi_note = cfg.ReadInteger(ODFSetting, group, wxT("DisplayFirstNote"), 0, 127, false, m_manual->GetFirstAccessibleKeyMIDINoteNumber());
 
 	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
 	unsigned x = 0, y = 0;
 	int width = 0, height = 1;
 
-	m_Keys.resize(m_manual->GetNumberOfAccessibleKeys());
+	m_Keys.resize(cfg.ReadInteger(ODFSetting, group, wxT("DisplayKeys"), 1, m_manual->GetNumberOfAccessibleKeys(), false, m_manual->GetNumberOfAccessibleKeys()));
 	for(unsigned i = 0; i < m_Keys.size(); i++)
 	{
-		unsigned key_nb = i + m_manual->GetFirstAccessibleKeyMIDINoteNumber();
-		m_Keys[i].MidiNumber = key_nb;
+		unsigned key_nb = i + first_midi_note;
+		m_Keys[i].MidiNumber = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("DisplayKey%03d"), i + 1), 0, 127, false, key_nb);
 		m_Keys[i].IsSharp = (((key_nb % 12) < 5 && !(key_nb & 1)) || ((key_nb % 12) >= 5 && (key_nb & 1))) ? false : true;
 
 		wxString off_mask_file, on_mask_file;

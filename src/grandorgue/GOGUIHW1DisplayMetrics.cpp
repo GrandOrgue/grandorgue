@@ -57,16 +57,19 @@ GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, GrandOrg
 		memset(&man, 0, sizeof(man));
 		if (i >= m_first_manual)
 		{
-			man.displayed                         = !IsMainPanel || m_organfile->GetManual(i)->IsDisplayed();
 			unsigned manual_nb = i;
+			wxString g;
+			g.Printf(wxT("Manual%03d"), i);
 			if (!IsMainPanel)
 			{
 				wxString Buffer;
 				buffer.Printf(wxT("Manual%03d"), i);
 				manual_nb  = ini.ReadInteger(ODFSetting, m_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetODFManualCount() - 1);
+				g = m_group + g;
 			}
-			man.first_accessible_key_midi_note_nb = m_organfile->GetManual(manual_nb)->GetFirstAccessibleKeyMIDINoteNumber();
-			man.nb_accessible_keys                = m_organfile->GetManual(manual_nb)->GetNumberOfAccessibleKeys();
+			man.first_accessible_key_midi_note_nb = ini.ReadInteger(ODFSetting, g, wxT("DisplayFirstNote"), 0, 127, false, m_organfile->GetManual(manual_nb)->GetFirstAccessibleKeyMIDINoteNumber());
+			man.nb_accessible_keys = ini.ReadInteger(ODFSetting, g, wxT("DisplayKeys"), 1, m_organfile->GetManual(manual_nb)->GetNumberOfAccessibleKeys(), false, m_organfile->GetManual(manual_nb)->GetNumberOfAccessibleKeys());
+			man.displayed = !IsMainPanel || m_organfile->GetManual(i)->IsDisplayed();
 		}
 		m_manual_info.push_back(man);
 	}
