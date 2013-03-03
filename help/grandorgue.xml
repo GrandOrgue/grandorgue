@@ -100,15 +100,16 @@ sounds and organ behaviours to simulate a variety of pipe organs.
       </indexterm>
       <para>
 GrandOrgue is capable of loading and faithfully reproducing a variety
-of sample sets. Through extensive testing, it appears highly
-compatible with definition files that have worked in Hauptwerk&#8482;
-version 1. Other types of sample sets may also be compatible, and
-other formats may soon be available. As such, you won't be able to do
-anything at all with GrandOrgue without at least one sample
-set. Sample sets generally come packaged or with installers. By
-default, the software loads organs from "My Organs" in your documents
-folder, but you may store sample sets wherever is convenient and space
-permits.
+of sample sets. The sample set format is described later in this
+manual. The format is backward compatible to Hauptwerk&#8482; version
+1 samplesets. As such, you won't be able to do anything at all with
+GrandOrgue without at least one sample set. Sample sets generally come
+packaged or with installers. By default, the software loads organs
+from "My Organs" in your documents folder, but you may store sample
+sets wherever is convenient and space permits.
+
+Please look at https://sourceforge.net/p/ourorgan/samplesets/ for
+more information.
       </para>
     </sect1>
     <sect1>
@@ -120,11 +121,6 @@ permits.
         <listitem>
           <para>
 High definition output with supporting hardware
-	  </para>
-        </listitem>
-        <listitem>
-          <para>
-Optimized MMX® core for extraordinary polyphony
 	  </para>
         </listitem>
         <listitem>
@@ -184,7 +180,7 @@ Save settings per sample set or export to settings files
         <itemizedlist mark="bullet">
           <listitem>
             <para>
-Pentium® II equivalent, or better
+SSE3 capable processor
 	    </para>
             <para>
               <emphasis>NOTE: A newer, faster processor will permit a higher
@@ -193,35 +189,14 @@ polyphony</emphasis>
           </listitem>
           <listitem>
             <para>
-Sufficient RAM to fully load the largest sample set you wish to use
+Sufficient RAM to fully load the largest sample set you wish to use. A
+64 bit OS is recommended to support larger sample set sizes.
 	    </para>
           </listitem>
           <listitem>
             <para>
-A hard disk (or other storage) with enough free space to store sample sets
-	    </para>
-          </listitem>
-        </itemizedlist>
-      </sect2>
-      <sect2>
-        <title>Microsoft® Windows®</title>
-        <itemizedlist mark="bullet">
-          <listitem>
-            <para>
-Windows® 2000, XP, or later
-	    </para>
-            <para>
-              <emphasis>&gt;NOTE: Older versions are not supported, although the software may function properly</emphasis>
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-Sound card supporting DirectSound® and/or ASIO&#8482; (recommended)
-	    </para>
-          </listitem>
-          <listitem>
-            <para>
-MIDI interface device or loopback driver
+A hard disk (or other storage) with enough free space to store sample sets.
+The use of the cache increases the necessary disk space.
 	    </para>
           </listitem>
         </itemizedlist>
@@ -237,7 +212,7 @@ MIDI interface device or loopback driver
       <title>GrandOrgue User Interface</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="GrandOrgue.jpg" scalefit="1" width="100%" />
+          <imagedata fileref="Burea_funeral_extend_main.png" scalefit="1" width="100%" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -247,13 +222,10 @@ MIDI interface device or loopback driver
         <primary>Volume Control</primary>
       </indexterm>
       <para>
-The volume control sets the volume control <emphasis>as a
-percentage</emphasis> of full volume. Note that this is percentage of
-voltage, and therefore every half corresponds to -6dB. That is, 50% is
--6dB, 25% is -12dB, etc. To the right of the spinner are the left and
-right audio monitors, respectively. The clip indicator at the far
-right will turn red if clipping occurs, and will stay red until the
-volume is adjusted.
+The volume control sets the volume control <emphasis>in dB</emphasis>
+To the right of the spinner are the left and right audio monitors,
+respectively. The clip indicator at the far right will turn red if
+clipping occurs, and will stay red until the volume is adjusted.
 </para>
     </sect1>
     <sect1>
@@ -287,7 +259,7 @@ and will stay red until the polyphony is adjusted.
       <para>
 The spinner sets the current program number. This might be termed a
 "sequencer" on modern computerized organs. It is possible to store up
-to 512 organ states and access them sequentially via the predefined
+to 1000 organ states and access them sequentially via the predefined
 MIDI events, or access any setting directly through the spinner. You
 may also use the left and right keys on the keyboard to scroll through
 the programs, and down to reactivate the current program (if you have
@@ -295,7 +267,11 @@ changed the stops since last activating it, for example). Note also
 that when memory set is engaged, the target program wil be stored to,
 i.e. if you push Shift + Right then the program would be advanced and
 the current settings would be saved to this same next program.
-</para>
+      </para>
+      <para>
+More options are available on the <emphasis>Combination
+Setter</emphasis> panel.
+      </para>
     </sect1>
     <sect1>
       <title>Manuals</title>
@@ -336,8 +312,7 @@ manual. Other drawstops may perform actions such as coupling one
 manual to another. This deals with the functionality of pipe organs
 and is beyond the scope of this documentation. Right clicking on a
 drawstop will open its corresponding MIDI Event Editor. Any changes
-made there may be saved in the organ definition file or settings
-files.
+made there may be saved or exported into a settings files.
 </para>
     </sect1>
     <sect1>
@@ -351,8 +326,19 @@ on/off toggle, although some pistons may toggle in this way. Pistons
 often recall drawstop combinations, and when used in combination with
 the Memory Set, you can store your own combinations in the
 pistons. Right clicking on a piston will open its corresponding MIDI
-Event Editor. Any changes made there may be saved in the organ
-definition file or settings files.
+Event Editor. Any changes made there may be saved or exported into a
+settings files.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Panels</title>
+      <indexterm>
+        <primary>Panels</primary>
+      </indexterm>
+      <para>
+GrandOrgue provides additional panel. Some are predefined and contain
+fixed functions (crescendo, couplers). The organ definition can also
+ship organ specific panels.
       </para>
     </sect1>
   </chapter>
@@ -4970,18 +4956,7 @@ please visit the project pages on sourceforge.
     </indexterm>
     <para>
 GrandOrgue is a project based on a previous GNU GPL project with a
-very similar that that has been discontinued.
+very similar name that that has been discontinued.
     </para>
-    <sect1>
-      <title>0.1.0 (2009-06-7)</title>
-      <itemizedlist mark="bullet">
-        <listitem>
-          <para>
-Initial release of this new branch of virtual pipe organ based on
-<emphasis>..Organ</emphasis>.
-	  </para>
-        </listitem>
-      </itemizedlist>
-    </sect1>
   </chapter>
 </book>
