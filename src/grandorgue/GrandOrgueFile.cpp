@@ -1330,6 +1330,6 @@ GOrgueLabel* GrandOrgueFile::GetTemperamentLabel()
 void GrandOrgueFile::MarkSectionInUse(wxString name)
 {
 	if (m_UsedSections[name])
-		throw wxString::Format(_("Section %s already assigned to a manual"), name.c_str());
+		throw wxString::Format(_("Section %s already in use"), name.c_str());
 	m_UsedSections[name] = true;
 }
