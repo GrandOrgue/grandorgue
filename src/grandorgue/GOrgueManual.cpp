@@ -104,10 +104,10 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_nb_accessible_keys                = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfAccessibleKeys"), 0, 85);
 	m_MIDIInputNumber                   = cfg.ReadInteger(ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
 	m_displayed                         = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"));
-	unsigned m_nb_stops                 = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfStops"), 0, 64);
-	unsigned m_nb_couplers              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfCouplers"), 0, 16, false);
-	unsigned m_nb_divisionals           = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionals"), 0, 32, false);
-	unsigned m_nb_tremulants            = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10, false);
+	unsigned nb_stops                 = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfStops"), 0, 64);
+	unsigned nb_couplers              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfCouplers"), 0, 16, false);
+	unsigned nb_divisionals           = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionals"), 0, 32, false);
+	unsigned nb_tremulants            = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10, false);
 	m_manual_number = manualNumber;
 
 	m_midi.SetIndex(manualNumber);
@@ -118,7 +118,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	wxString buffer;
 
 	m_stops.resize(0);
-	for (unsigned i = 0; i < m_nb_stops; i++)
+	for (unsigned i = 0; i < nb_stops; i++)
 	{
 		m_stops.push_back(new GOrgueStop(m_organfile, m_manual_number, GetFirstLogicalKeyMIDINoteNumber()));
 		buffer.Printf(wxT("Stop%03d"), i + 1);
@@ -128,7 +128,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	}
 
 	m_couplers.resize(0);
-	for (unsigned i = 0; i < m_nb_couplers; i++)
+	for (unsigned i = 0; i < nb_couplers; i++)
 	{
 		m_couplers.push_back(new GOrgueCoupler(m_organfile, m_manual_number));
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
@@ -138,7 +138,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	}
 
 	m_tremulant_ids.resize(0);
-	for (unsigned i = 0; i < m_nb_tremulants; i++)
+	for (unsigned i = 0; i < nb_tremulants; i++)
 	{
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
 		unsigned new_id = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount());
@@ -150,7 +150,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 
 	GetDivisionalTemplate().InitDivisional(m_manual_number);
 	m_divisionals.resize(0);
-	for (unsigned i = 0; i < m_nb_divisionals; i++)
+	for (unsigned i = 0; i < nb_divisionals; i++)
 	{
 		m_divisionals.push_back(new GOrgueDivisional(m_organfile, GetDivisionalTemplate(), false));
 		buffer.Printf(wxT("Divisional%03d"), i + 1);
