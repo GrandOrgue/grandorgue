@@ -557,8 +557,10 @@ bool OrganDialog::Changed()
 
 void OrganDialog::Modified()
 {
-	m_Reset->Enable();
-	m_Apply->Enable();
+	if (m_Reset)
+		m_Reset->Enable();
+	if (m_Apply)
+		m_Apply->Enable();
 }
 
 void OrganDialog::FillTree()
