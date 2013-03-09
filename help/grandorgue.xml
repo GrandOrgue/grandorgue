@@ -1020,6 +1020,11 @@ Floating point number use the following format:
 sign, followd by at least one digit. The decimal seperator is a
 period.
       </para>
+      <para>
+The unit "samples" count the number of samples from the start of the
+WAV file.  On sample includes the values of all channels, eg: for a
+stereo WAV file at 44.1 kHz, 1 second is equivalent to 441000 samples.
+      </para>
       <figure>
 	<title>background bitmaps 1 to 30</title>
 	<mediaobject>
@@ -4195,7 +4200,8 @@ release sample is choosen. -1 means infinite.
           <listitem>
             <para>
 (int -1 - 158760000, default: -1) Allows to override the cue point for
-the release. -1 means use from the wave file.
+the release. -1 means use from the wave file. This option is specified
+in samples.
 	    </para>
           </listitem>
         </varlistentry>
@@ -4213,7 +4219,7 @@ the release. -1 means use from the wave file.
           <listitem>
             <para>
 (int 0 - 158760000, default: 0) Start sample of the loop.  The value
-must be within the WAV file.
+must be within the WAV file. This option is specified in samples.
 	    </para>
           </listitem>
         </varlistentry>
@@ -4222,8 +4228,8 @@ must be within the WAV file.
           <listitem>
             <para>
 (int Pipe999Loop999Start + 1 - 158760000, required if Pipe999LoopCount
-is not zero) End sample of the loop.  The value must be within the WAV
-file.
+is not zero) End sample of the loop. The value must be within the WAV
+file. This option is specified in samples.
 	    </para>
           </listitem>
         </varlistentry>
@@ -4343,7 +4349,8 @@ release sample is choosen. -1 means infinite.
           <listitem>
             <para>
 (int -1 - 158760000, default: -1) Allows to override the cue point for
-the release. -1 means use from the wave file.
+the release. -1 means use from the wave file. This option is specified
+in samples.
 	    </para>
           </listitem>
         </varlistentry>
@@ -4361,7 +4368,7 @@ the release. -1 means use from the wave file.
           <listitem>
             <para>
 (int 0 - 158760000, default: 0) Start sample of the loop.  The value
-must be within the WAV file.
+must be within the WAV file. This option is specified in samples.
 	    </para>
           </listitem>
         </varlistentry>
@@ -4371,7 +4378,7 @@ must be within the WAV file.
             <para>
 (int Pipe999Loop999Start + 1 - 158760000, required if Pipe999LoopCount
 is not zero) End sample of the loop.  The value must be within the WAV
-file.
+file. This option is specified in samples.
 	    </para>
           </listitem>
         </varlistentry>
