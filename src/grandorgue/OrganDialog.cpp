@@ -80,6 +80,7 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_SPIN(ID_EVENT_TUNING_SPIN, OrganDialog::OnTuningSpinChanged)
 	EVT_TEXT(ID_EVENT_AUDIO_GROUP, OrganDialog::OnAudioGroupChanged)
 	EVT_BUTTON(wxID_OK, OrganDialog::OnOK)
+	EVT_BUTTON(ID_EVENT_AUDIO_GROUP_ASSISTANT, OrganDialog::OnAudioGroupAssitant)
 	EVT_CHOICE(ID_EVENT_BITS_PER_SAMPLE, OrganDialog::OnBitsPerSampleChanged)
 	EVT_CHOICE(ID_EVENT_COMPRESS, OrganDialog::OnCompressChanged)
 	EVT_CHOICE(ID_EVENT_CHANNELS, OrganDialog::OnChannelsChanged)
@@ -104,6 +105,10 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	m_Tree = new wxTreeCtrl(this, ID_EVENT_TREE, wxDefaultPosition, wxSize(300, 400), wxTR_HAS_BUTTONS | wxTR_MULTIPLE);
 	wxBoxSizer* Sizer1 = new wxBoxSizer(wxVERTICAL);
 	Sizer1->Add(m_Tree, wxALIGN_TOP | wxEXPAND);
+
+	m_AudioGroupAssistant = new wxButton(this, ID_EVENT_AUDIO_GROUP_ASSISTANT, _("Distribute audio groups"));
+	Sizer1->Add(m_AudioGroupAssistant, wxALIGN_CENTER);
+
 	mainSizer->Add(Sizer1, wxALIGN_LEFT | wxEXPAND);
 	mainSizer->AddSpacer(5);
 
@@ -308,8 +313,11 @@ void OrganDialog::Load()
 		m_Apply->Disable();
 		m_Reset->Disable();
 		m_Default->Disable();
+		m_AudioGroupAssistant->Disable();
 		return;
 	}
+
+	m_AudioGroupAssistant->Enable();
 
 	if (entries.size() > 1)
 	{
@@ -752,4 +760,54 @@ void OrganDialog::OnOK(wxCommandEvent& event)
 	m_organfile->SetTemperament(m_organfile->GetTemperament());
 	m_organfile->Modified();
 	event.Skip();
+}
+
+void OrganDialog::UpdateAudioGroup(std::vector<wxString> audio_group, unsigned& pos, wxTreeItemId item)
+{
+	OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(item);
+	if (e)
+	{
+		e->config->SetAudioGroup(audio_group[pos]);
+		pos++;
+		if (pos >= audio_group.size())
+			pos = 0;
+	}
+
+	wxTreeItemIdValue it;
+	wxTreeItemId child = m_Tree->GetFirstChild(item, it);
+	while(child.IsOk())
+	{
+		UpdateAudioGroup(audio_group, pos, child);
+		child = m_Tree->GetNextChild(item, it);
+	}
+}
+
+
+void OrganDialog::OnAudioGroupAssitant(wxCommandEvent &e)
+{
+	if (Changed())
+	{
+		wxMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, NULL);
+		return;
+	}
+	wxArrayInt sel;
+	wxArrayString strs;
+	std::vector<wxString> group_list = m_organfile->GetSettings().GetAudioGroups();
+	for(unsigned i = 0; i < group_list.size(); i++)
+		strs.Add(group_list[i]);
+	
+	if (wxGetMultipleChoices(sel, _("Select audio groups to distribute:"), _("Organ dialog"), strs, this) == 0)
+	{
+		wxMessageBox(_("No audio group selected"), _("Error"), wxOK | wxICON_ERROR, NULL);
+		return;
+	}
+	group_list.clear();
+	for(unsigned i = 0; i < sel.Count(); i++)
+		group_list.push_back(strs[sel[i]]);
+
+	wxArrayTreeItemIds entries;
+	m_Tree->GetSelections(entries);
+	unsigned pos = 0;
+	for(unsigned i = 0; i < entries.size(); i++)
+		UpdateAudioGroup(group_list, pos, entries[i]);
 }
