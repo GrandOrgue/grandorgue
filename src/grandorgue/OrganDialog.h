@@ -62,6 +62,7 @@ private:
 	wxButton* m_Default;
 	wxCheckBox* m_IgnorePitch;
 	OrganTreeItemData* m_Last;
+	unsigned m_LoadChangeCnt;
 
 	void FillTree();
 	void Load();
@@ -76,6 +77,7 @@ public:
 
 	void OnTreeChanging(wxTreeEvent& e);
 	void OnTreeChanged(wxTreeEvent& e);
+	void OnTreeUpdated(wxCommandEvent& e);
 	void OnAmplitudeSpinChanged(wxSpinEvent& e);
 	void OnAmplitudeChanged(wxCommandEvent &e);
 	void OnGainSpinChanged(wxSpinEvent& e);
