@@ -27,7 +27,6 @@
 
 class GOrgueTemperament
 {
-	DECLARE_NO_COPY_CLASS(GOrgueTemperament)
 protected:
 	wxString m_Group;
 	wxString m_Name;

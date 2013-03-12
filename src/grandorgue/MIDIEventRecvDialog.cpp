@@ -23,8 +23,6 @@
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 
-IMPLEMENT_CLASS(MIDIEventRecvDialog, wxPanel)
-
 BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
 	EVT_TOGGLEBUTTON(ID_LISTEN, MIDIEventRecvDialog::OnListenClick)
 	EVT_BUTTON(ID_EVENT_NEW, MIDIEventRecvDialog::OnNewClick)

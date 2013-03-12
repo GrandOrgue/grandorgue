@@ -45,7 +45,6 @@
 #include "SettingsDialog.h"
 #include "SplashScreen.h"
 
-IMPLEMENT_CLASS(GOrgueFrame, wxDocParentFrame)
 BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MIDI(GOrgueFrame::OnMidiEvent)
 	EVT_KEY_DOWN(GOrgueFrame::OnKeyCommand)

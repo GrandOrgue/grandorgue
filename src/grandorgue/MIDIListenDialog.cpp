@@ -25,8 +25,6 @@
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 
-IMPLEMENT_CLASS(MIDIListenDialog, wxDialog)
-
 BEGIN_EVENT_TABLE(MIDIListenDialog, wxDialog)
 	EVT_CHOICE(ID_EVENT, MIDIListenDialog::OnEvent)
 	EVT_TOGGLEBUTTON(ID_LISTEN, MIDIListenDialog::OnListenClick)

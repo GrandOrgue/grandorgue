@@ -35,7 +35,6 @@ class MIDIEventKeyDialog;
 
 class MIDIEventDialog : public wxPropertySheetDialog
 {
-	DECLARE_CLASS(MIDIEventDialog)
 private:
 	MIDIEventRecvDialog* m_recvPage;
 	MIDIEventSendDialog* m_sendPage;

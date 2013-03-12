@@ -29,8 +29,6 @@
 
 class MIDIEventRecvDialog : public wxPanel
 {
-DECLARE_CLASS(MIDIEventRecvDialog)
-
 private:
 	GOrgueMidiReceiver m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
@@ -45,14 +43,6 @@ private:
 
 	void StoreEvent();
 	void LoadEvent();
-
-public:
-	MIDIEventRecvDialog (wxWindow* parent, const GOrgueMidiReceiver& event);
-	~MIDIEventRecvDialog();
-
-	const GOrgueMidiReceiver& GetResult();
-
-	DECLARE_EVENT_TABLE()
 
 	void OnListenClick(wxCommandEvent& event);
 	void OnNewClick(wxCommandEvent& event);
@@ -75,6 +65,14 @@ protected:
 		ID_LOW_VELOCITY,
 		ID_HIGH_VELOCITY
 	};
+
+public:
+	MIDIEventRecvDialog (wxWindow* parent, const GOrgueMidiReceiver& event);
+	~MIDIEventRecvDialog();
+
+	const GOrgueMidiReceiver& GetResult();
+
+	DECLARE_EVENT_TABLE()
 };
 
 #endif /* MIDIEVENTDIALOG_H_ */

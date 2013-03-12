@@ -49,15 +49,15 @@ private:
 	wxButton* m_Del;
 	wxButton* m_Change;
 
-public:
-	SettingsAudioGroup(GOrgueSettings& settings, wxWindow* parent);
-
-	std::vector<wxString> GetGroups();
-
 	void OnGroup(wxCommandEvent& event);
 	void OnGroupAdd(wxCommandEvent& event);
 	void OnGroupDel(wxCommandEvent& event);
 	void OnGroupChange(wxCommandEvent& event);
+
+public:
+	SettingsAudioGroup(GOrgueSettings& settings, wxWindow* parent);
+
+	std::vector<wxString> GetGroups();
 
 	void Save();
 

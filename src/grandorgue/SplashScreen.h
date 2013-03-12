@@ -32,10 +32,11 @@ private:
 	void OnPaint(wxPaintEvent& event);
 	void OnClick(wxMouseEvent& event);
 	void OnKey(wxKeyEvent& event);
-	DECLARE_EVENT_TABLE()
 
 public:
 	GOrgueSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap);
+
+	DECLARE_EVENT_TABLE()
 };
 
 class GOrgueSplash : private wxDialog
@@ -49,9 +50,6 @@ private:
 
 	void DrawText(wxBitmap& bitmap);
 
-	DECLARE_EVENT_TABLE()
-	DECLARE_NO_COPY_CLASS(GOrgueSplash)
-
 public:
 	GOrgueSplash
 		(int                has_timeout
@@ -60,6 +58,7 @@ public:
 		);
 	~GOrgueSplash();
 
+	DECLARE_EVENT_TABLE()
 };
 
 #endif

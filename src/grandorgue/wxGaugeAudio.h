@@ -26,21 +26,22 @@
 
 class wxGaugeAudio : public wxControl
 {
+private:
+	int m_value;
+	bool m_clip;
+	wxMemoryDC m_gaugedc;
+	wxBitmap m_gauge;
+
+	void OnErase(wxEraseEvent& event);
+
 public:
 	wxGaugeAudio(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition);
 	~wxGaugeAudio(void);
-
-	void OnErase(wxEraseEvent& event);
 
 	void SetValue(int what);
 	void ResetClip();
 
 	DECLARE_EVENT_TABLE()
-protected:
-	int m_value;
-	bool m_clip;
-	wxMemoryDC m_gaugedc;
-	wxBitmap m_gauge;
 };
 
 #endif

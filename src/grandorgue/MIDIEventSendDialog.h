@@ -28,8 +28,6 @@
 
 class MIDIEventSendDialog : public wxPanel
 {
-DECLARE_CLASS(MIDIEventSendDialog)
-
 private:
 	GOrgueMidiSender m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
@@ -42,17 +40,9 @@ private:
 	void StoreEvent();
 	void LoadEvent();
 
-public:
-	MIDIEventSendDialog (wxWindow* parent, const GOrgueMidiSender& event);
-	~MIDIEventSendDialog();
-
-	const GOrgueMidiSender& GetResult();
-
 	void OnNewClick(wxCommandEvent& event);
 	void OnDeleteClick(wxCommandEvent& event);
 	void OnEventChange(wxCommandEvent& event);
-
-	DECLARE_EVENT_TABLE()
 
 protected:
 	enum {
@@ -66,6 +56,14 @@ protected:
 		ID_LOW_VALUE,
 		ID_HIGH_VALUE
 	};
+
+public:
+	MIDIEventSendDialog (wxWindow* parent, const GOrgueMidiSender& event);
+	~MIDIEventSendDialog();
+
+	const GOrgueMidiSender& GetResult();
+
+	DECLARE_EVENT_TABLE()
 };
 
 #endif

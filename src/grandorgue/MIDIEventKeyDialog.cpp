@@ -23,8 +23,6 @@
 #include "GOrgueKeyConvert.h"
 #include <wx/tglbtn.h>
 
-IMPLEMENT_CLASS(MIDIEventKeyDialog, wxPanel)
-
 BEGIN_EVENT_TABLE(MIDIEventKeyDialog, wxPanel)
 	EVT_TOGGLEBUTTON(ID_LISTEN, MIDIEventKeyDialog::OnListenClick)
 END_EVENT_TABLE()

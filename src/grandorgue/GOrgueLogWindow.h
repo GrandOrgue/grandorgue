@@ -36,13 +36,13 @@ private:
 	void OnLog(wxCommandEvent& event);
 	void OnCloseWindow(wxCloseEvent& event);
 
-	DECLARE_EVENT_TABLE()
-
 public:
 	GOrgueLogWindow(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_FRAME_STYLE);
 	~GOrgueLogWindow();
 
 	void LogMsg(wxLogLevel level, const wxString& msg, time_t time);
+
+	DECLARE_EVENT_TABLE()
 };
 
 #endif

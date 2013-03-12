@@ -38,7 +38,7 @@ class wxChoice;
 
 class GOrgueFrame: public wxDocParentFrame
 {
-	DECLARE_CLASS(GOrgueFrame)
+private:
 	wxMenu* m_panel_menu;
 	wxHtmlHelpController* m_Help;
 	wxGaugeAudio *m_SamplerUsage;
@@ -52,11 +52,8 @@ class GOrgueFrame: public wxDocParentFrame
 	GOrgueSound& m_Sound;
 	GOrgueSettings& m_Settings;
 
-public:
-	GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
-	~GOrgueFrame(void);
-
-	void Init();
+	void InitHelp();
+	void UpdatePanelMenu();
 
 	void OnMeters(wxCommandEvent& event);
 
@@ -103,14 +100,17 @@ public:
 
 	void OnMidiEvent(GOrgueMidiEvent& event);
 
-	void DoSplash(bool timeout = true);
-
 	void OnUpdateLoaded(wxUpdateUIEvent& event);
 
+public:
+	GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
+	~GOrgueFrame(void);
+
+	void Init();
+
+	void DoSplash(bool timeout = true);
+
 	DECLARE_EVENT_TABLE()
-protected:
-	void UpdatePanelMenu();
-	void InitHelp();
 };
 
 #endif

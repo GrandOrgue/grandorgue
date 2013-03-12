@@ -34,8 +34,6 @@
 #include "SettingsOrgan.h"
 #include "SettingsReverb.h"
 
-IMPLEMENT_CLASS(SettingsDialog, wxPropertySheetDialog)
-
 BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_BUTTON(wxID_APPLY, SettingsDialog::OnApply)
 	EVT_BUTTON(wxID_OK, SettingsDialog::OnOK)

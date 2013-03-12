@@ -28,12 +28,14 @@ class GrandOrgueFile;
 
 class wxStaticLink : public wxStaticText
 {
+private:
+	wxString m_url;
+
+	void OnClick(wxMouseEvent& event);
+
 public:
 	wxStaticLink(wxWindow* parent, const wxString& label, const wxString& url);
-	void OnClick(wxMouseEvent& event);
 	DECLARE_EVENT_TABLE()
-protected:
-	wxString m_url;
 };
 
 class GOrgueProperties : public wxDialog
