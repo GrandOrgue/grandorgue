@@ -62,6 +62,8 @@ public:
 	GrandOrgueFile* organfile;
 };
 
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_TREE_UPDATED)
+
 IMPLEMENT_CLASS(OrganDialog, wxDialog)
 
 BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
@@ -71,6 +73,7 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_BUTTON(wxID_OK, OrganDialog::OnEventOK)
 	EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, OrganDialog::OnTreeChanging)
 	EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, OrganDialog::OnTreeChanged)
+	EVT_COMMAND(ID_EVENT_TREE, wxEVT_TREE_UPDATED, OrganDialog::OnTreeUpdated)
 	EVT_TEXT(ID_EVENT_AMPLITUDE, OrganDialog::OnAmplitudeChanged)
 	EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, OrganDialog::OnAmplitudeSpinChanged)
 	EVT_TEXT(ID_EVENT_GAIN, OrganDialog::OnGainChanged)
@@ -90,7 +93,8 @@ END_EVENT_TABLE()
 OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	wxDialog(parent, wxID_ANY, _("Organ settings"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE),
 	m_organfile(organfile),
-	m_Last(NULL)
+	m_Last(NULL),
+	m_LoadChangeCnt(0)
 {
 	wxArrayString choices;
 
@@ -272,28 +276,13 @@ void OrganDialog::RemoveEmpty(wxChoice* choice)
 void OrganDialog::Load()
 {
 	wxArrayTreeItemIds entries;
+
 	m_Tree->GetSelections(entries);
 	for(unsigned i = 0; i < entries.size(); i++)
 	{
-		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
-		if (!e)
+		if (!m_Tree->GetItemData(entries[i]))
 		{
-			wxTreeItemIdValue it;
-			wxTreeItemId child = m_Tree->GetFirstChild(entries[i], it);
-			while(child.IsOk())
-			{
-				bool found = false;
-				for(unsigned j = 0; j < entries.size(); j++)
-					if (entries[j] == child)
-						found = true;
-				if (!found)
-				{
-					entries.Add(child);
-					m_Tree->SelectItem(child, true);
-				}
-				child = m_Tree->GetNextChild(entries[i], it);
-			}
-			m_Tree->SelectItem(entries[i], false);
+			wxLogError(_("Invalid item selected: %s"), m_Tree->GetItemText(entries[i]).c_str());
 			entries.RemoveAt(i, 1);
 			i--;
 		}
@@ -378,6 +367,7 @@ void OrganDialog::Load()
 	m_Last = 0;
 	for(unsigned i = 0; i < entries.size() && !m_Last; i++)
 		m_Last = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
+
 
 	m_Amplitude->Enable();
 	m_AmplitudeSpin->Enable();
@@ -705,6 +695,47 @@ void OrganDialog::OnTreeChanging(wxTreeEvent& e)
 }
 
 void OrganDialog::OnTreeChanged(wxTreeEvent& e)
+{
+	wxArrayTreeItemIds entries;
+	if (m_LoadChangeCnt)
+		return;
+	m_LoadChangeCnt++;
+	do
+	{
+		bool rescan = false;
+		m_Tree->GetSelections(entries);
+		for(unsigned i = 0; i < entries.size(); i++)
+		{
+			OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
+			if (!e)
+			{
+				wxTreeItemIdValue it;
+				wxTreeItemId child = m_Tree->GetFirstChild(entries[i], it);
+				while(child.IsOk())
+				{
+					bool found = false;
+					for(unsigned j = 0; j < entries.size(); j++)
+						if (entries[j] == child)
+							found = true;
+					if (!found)
+							m_Tree->SelectItem(child, true);
+					child = m_Tree->GetNextChild(entries[i], it);
+				}
+				rescan = true;
+				m_Tree->SelectItem(entries[i], false);
+			}
+		}
+		if (rescan)
+			continue;
+	}
+	while(false);
+	m_LoadChangeCnt--;
+
+	wxCommandEvent event(wxEVT_TREE_UPDATED, ID_EVENT_TREE);
+	GetEventHandler()->AddPendingEvent(event);
+}
+
+void OrganDialog::OnTreeUpdated(wxCommandEvent& e)
 {
 	Load();
 }
