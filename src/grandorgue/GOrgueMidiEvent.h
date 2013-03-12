@@ -42,6 +42,11 @@ typedef enum {
 DECLARE_LOCAL_EVENT_TYPE( wxEVT_MIDI_ACTION, -1 )
 
 class GOrgueMidiEvent : public wxEvent {
+private:
+	midi_message_type m_miditype;
+	int m_channel, m_key, m_value;
+	wxString m_device;
+
 public:
 	GOrgueMidiEvent(wxEventType type = wxEVT_MIDI_ACTION, int id = 0);
 	GOrgueMidiEvent(const GOrgueMidiEvent& e);
@@ -97,11 +102,6 @@ public:
 	void FromMidi(const std::vector<unsigned char>& msg);
 	int GetEventCode();
 	void ToMidi(std::vector<std::vector<unsigned char>>& msg);
-
- private:
-	midi_message_type m_miditype;
-	int m_channel, m_key, m_value;
-	wxString m_device;
 
 	DECLARE_DYNAMIC_CLASS(GOrgueMidiEvent)
 };

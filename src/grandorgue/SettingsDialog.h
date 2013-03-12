@@ -38,7 +38,6 @@ class SettingsReverb;
 
 class SettingsDialog : public wxPropertySheetDialog
 {
-DECLARE_CLASS(SettingsDialog)
 private:
 	GOrgueSound& m_Sound;
 	SettingsMidiDevices* m_MidiDevicePage;
@@ -51,13 +50,13 @@ private:
 
 	bool DoApply();
 
-public:
-	SettingsDialog(wxWindow* parent, GOrgueSound& sound);
-	~SettingsDialog();
-
 	void OnApply(wxCommandEvent& event);
 	void OnOK(wxCommandEvent& event);
 	void OnHelp(wxCommandEvent& event);
+
+public:
+	SettingsDialog(wxWindow* parent, GOrgueSound& sound);
+	~SettingsDialog();
 
 	DECLARE_EVENT_TABLE()
 };

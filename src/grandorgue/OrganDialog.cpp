@@ -64,8 +64,6 @@ public:
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_TREE_UPDATED)
 
-IMPLEMENT_CLASS(OrganDialog, wxDialog)
-
 BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_BUTTON(ID_EVENT_APPLY, OrganDialog::OnEventApply)
 	EVT_BUTTON(ID_EVENT_RESET, OrganDialog::OnEventReset)

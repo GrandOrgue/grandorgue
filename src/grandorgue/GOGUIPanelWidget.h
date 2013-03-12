@@ -42,11 +42,6 @@ private:
 
 	void CopyToScreen(wxDC* mdc, const wxRect& rect);
 
-public:
-	GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, GOrgueView* view, wxWindowID id = wxID_ANY);
-	~GOGUIPanelWidget();
-
-	void OnUpdate();
 	void OnDraw(wxDC* dc);
 	void OnErase(wxEraseEvent& event);
 	void OnPaint(wxPaintEvent& event);
@@ -57,6 +52,12 @@ public:
 	void OnMouseScroll(wxMouseEvent& event);
 	void OnKeyCommand(wxKeyEvent& event);
 	void OnKeyUp(wxKeyEvent& event);
+
+public:
+	GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, GOrgueView* view, wxWindowID id = wxID_ANY);
+	~GOGUIPanelWidget();
+
+	void OnUpdate();
 
 	DECLARE_EVENT_TABLE();
 };

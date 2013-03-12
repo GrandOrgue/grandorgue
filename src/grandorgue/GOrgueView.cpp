@@ -26,9 +26,6 @@
 #include "GrandOrgueFile.h"
 #include "Images.h"
 
-IMPLEMENT_DYNAMIC_CLASS(GOrgueView, wxView)
-
-
 GOrgueView::GOrgueView(unsigned panelID) :
 	m_panel(NULL),
 	m_container(NULL),

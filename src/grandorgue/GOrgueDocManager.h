@@ -26,11 +26,12 @@
 
 class GOrgueDocManager : public wxDocManager
 {
-public:
-    GOrgueDocManager();
-
+private:
     void OnUpdateFileSave(wxUpdateUIEvent& event);
     wxFileHistory *OnCreateFileHistory();
+
+public:
+    GOrgueDocManager();
 
     DECLARE_EVENT_TABLE()
 };

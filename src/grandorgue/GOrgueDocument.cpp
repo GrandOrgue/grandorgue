@@ -26,8 +26,6 @@
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 
-IMPLEMENT_CLASS(GOrgueDocument, wxDocument)
-
 GOrgueDocument::GOrgueDocument(GOrgueSound* sound) :
 	m_OrganFileReady(false),
 	m_organfile(NULL),

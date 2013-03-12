@@ -32,12 +32,7 @@ class GOrgueMidiEvent;
 
 class MIDIListenDialog : public wxDialog
 {
-
-DECLARE_CLASS(MIDIListenDialog)
-
-
 public:
-
 	typedef enum
 	{
 		LSTN_ENCLOSURE = 0,
@@ -70,6 +65,21 @@ private:
 	wxToggleButton* m_listen;
 	GOrgueMidi& m_midi;
 
+	bool PutEvent(int what);
+
+	void OnEvent(wxCommandEvent& event);
+	void OnListenClick(wxCommandEvent& event);
+	void OnMidiEvent(GOrgueMidiEvent& event);
+	void OnHelp(wxCommandEvent& event);
+
+protected:
+
+	enum {
+		ID_EVENT = 200,
+		ID_CHANNEL,
+		ID_LISTEN,
+	};
+
 public:
 
 	MIDIListenDialog
@@ -87,23 +97,8 @@ public:
 	static wxString GetEventChannelString(int what);
 
 	int GetEvent();
-	bool PutEvent(int what);
-	void OnEvent(wxCommandEvent& event);
-	void OnListenClick(wxCommandEvent& event);
-	void OnMidiEvent(GOrgueMidiEvent& event);
-	void OnHelp(wxCommandEvent& event);
 
 	DECLARE_EVENT_TABLE()
-
-
-protected:
-
-	enum {
-		ID_EVENT = 200,
-		ID_CHANNEL,
-		ID_LISTEN,
-	};
-
 };
 
 #endif /* MIDILISTENDIALOG_H_ */

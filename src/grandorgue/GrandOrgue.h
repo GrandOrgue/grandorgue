@@ -39,6 +39,12 @@ class GOrgueApp : public wxApp
 {
 private:
 	virtual void MacOpenFile(const wxString &fileName);
+	bool OnInit();
+	int OnRun();
+	int OnExit();
+	void AsyncLoadFile(wxString iFile);
+	void OnInitCmdLine(wxCmdLineParser& parser);
+	bool OnCmdLineParsed(wxCmdLineParser& parser);
 
 protected:
 	GOrgueFrame* m_Frame;
@@ -54,12 +60,6 @@ protected:
 
 public:
 	GOrgueApp();
-	bool OnInit();
-	int OnRun();
-	int OnExit();
-	void AsyncLoadFile(wxString iFile);
-	void OnInitCmdLine(wxCmdLineParser& parser);
-	bool OnCmdLineParsed(wxCmdLineParser& parser);
 };
 
 

@@ -41,11 +41,11 @@ private:
 	std::vector<int> m_InDeviceData;
 	wxButton* m_InProperties;
 
-public:
-	SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent);
-
 	void OnInDevicesClick(wxCommandEvent& event);
 	void OnInDevicesDoubleClick(wxCommandEvent& event);
+
+public:
+	SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent);
 
 	void Save();
 

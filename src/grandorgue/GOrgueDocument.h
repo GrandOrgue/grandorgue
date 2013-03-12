@@ -40,24 +40,21 @@ private:
 
 	void CloseOrgan();
 
+	bool OnCloseDocument();
+	bool DoOpenDocument(const wxString& file);
+
 public:
 	GOrgueDocument(GOrgueSound* sound);
 	~GOrgueDocument();
 
-	bool OnCloseDocument();
 	bool DoOpenDocument(const wxString& file, const wxString& file2);
-	bool DoOpenDocument(const wxString& file);
 	bool DoSaveDocument(const wxString& file);
+
+	void OnMidiEvent(GOrgueMidiEvent& event);
 
 	bool Save() { return OnSaveDocument(m_documentFile); }
 
 	GrandOrgueFile* GetOrganFile();
-
-	void OnMidiEvent(GOrgueMidiEvent& event);
-
-private:
-
-	DECLARE_CLASS(GOrgueDocument)
 };
 
 #endif

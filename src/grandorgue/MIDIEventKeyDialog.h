@@ -29,7 +29,6 @@ class wxToggleButton;
 
 class MIDIEventKeyDialog : public wxPanel
 {
-DECLARE_CLASS(MIDIEventKeyDialog)
 
 private:
 	GOrgueKeyReceiver m_key;
@@ -39,6 +38,11 @@ private:
 	void OnKeyDown(wxKeyEvent& event);
 	void OnListenClick(wxCommandEvent& event);
 
+protected:
+	enum {
+		ID_KEY_SELECT = 200,
+		ID_LISTEN,
+	};
 public:
 	MIDIEventKeyDialog (wxWindow* parent, const GOrgueKeyReceiver& event);
 	~MIDIEventKeyDialog();
@@ -46,12 +50,6 @@ public:
 	const GOrgueKeyReceiver& GetResult();
 
 	DECLARE_EVENT_TABLE()
-
-protected:
-	enum {
-		ID_KEY_SELECT = 200,
-		ID_LISTEN,
-	};
 };
 
 #endif

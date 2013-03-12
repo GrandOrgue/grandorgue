@@ -36,6 +36,6 @@ wxDocument *GOrgueDocTemplate::DoCreateDocument()
 
 wxView *GOrgueDocTemplate::DoCreateView()
 {
-	return new GOrgueView();
+	return new GOrgueView(0);
 }
 

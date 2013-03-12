@@ -68,15 +68,15 @@ private:
 	std::vector<wxString> GetRemainingAudioDevices();
 	std::vector<std::pair<wxString, bool> > GetRemainingAudioGroups(const wxTreeItemId& channel);
 
-public:
-	SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallback& callback, wxWindow* parent);
-
 	void OnOutputChanged(wxTreeEvent& event);
 	void OnOutputAdd(wxCommandEvent& event);
 	void OnOutputDel(wxCommandEvent& event);
 	void OnOutputChange(wxCommandEvent& event);
 	void OnOutputProperties(wxCommandEvent& event);
 	void OnOutputDefault(wxCommandEvent& event);
+
+public:
+	SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallback& callback, wxWindow* parent);
 
 	void Save();
 

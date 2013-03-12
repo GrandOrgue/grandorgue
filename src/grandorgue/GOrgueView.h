@@ -37,18 +37,17 @@ private:
 	unsigned m_panelID;
 
 	bool CreateWindow();
-public:
-	GOrgueView(unsigned m_panelID = 0);
-	~GOrgueView();
 
-	void OnWindowClosed();
-	bool OnCreate(wxDocument *doc, long flags);
 	bool OnClose(bool deleteWindow = true);
 	void OnDraw(wxDC*);
 	void OnUpdate(wxView *sender, wxObject *hint = (wxObject *) NULL);
 
-private:
-	DECLARE_DYNAMIC_CLASS(GOrgueView);
+public:
+	GOrgueView(unsigned m_panelID);
+	~GOrgueView();
+
+	void OnWindowClosed();
+	bool OnCreate(wxDocument *doc, long flags);
 };
 
 #endif

@@ -48,12 +48,12 @@ private:
 	void SetEventData(unsigned index, int event);
 	void UpdateMessages(unsigned i);
 
-public:
-	SettingsMidiMessage(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent);
-
 	void OnEventsClick(wxListEvent& event);
 	void OnEventsDoubleClick(wxListEvent& event);
 	void OnProperties(wxCommandEvent& event);
+
+public:
+	SettingsMidiMessage(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent);
 
 	DECLARE_EVENT_TABLE()
 };

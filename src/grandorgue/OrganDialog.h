@@ -33,7 +33,6 @@ class wxCheckBox;
 
 class OrganDialog : public wxDialog
 {
-	DECLARE_CLASS(OrganDialog)
 private:
 	GrandOrgueFile* m_organfile;
 	wxTreeCtrl* m_Tree;
@@ -71,10 +70,6 @@ private:
 	void SetEmpty(wxChoice* choice);
 	void RemoveEmpty(wxChoice* choice);
 
-public:
-	OrganDialog (wxWindow* parent, GrandOrgueFile* organfile);
-	~OrganDialog();
-
 	void OnTreeChanging(wxTreeEvent& e);
 	void OnTreeChanged(wxTreeEvent& e);
 	void OnTreeUpdated(wxCommandEvent& e);
@@ -96,7 +91,6 @@ public:
 	void OnEventDefault(wxCommandEvent &e);
 	void OnEventOK(wxCommandEvent &e);
 	void OnOK(wxCommandEvent& event);
-	DECLARE_EVENT_TABLE()
 
 protected:
 
@@ -120,6 +114,12 @@ protected:
 		ID_EVENT_CHANNELS,
 		ID_EVENT_COMPRESS
 	};
+
+public:
+	OrganDialog (wxWindow* parent, GrandOrgueFile* organfile);
+	~OrganDialog();
+
+	DECLARE_EVENT_TABLE()
 };
 
 #endif

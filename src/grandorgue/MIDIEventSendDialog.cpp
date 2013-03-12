@@ -22,8 +22,6 @@
 #include "MIDIEventSendDialog.h"
 #include "GOrgueSettings.h"
 
-IMPLEMENT_CLASS(MIDIEventSendDialog, wxPanel)
-
 BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
 	EVT_BUTTON(ID_EVENT_NEW, MIDIEventSendDialog::OnNewClick)
 	EVT_BUTTON(ID_EVENT_DELETE, MIDIEventSendDialog::OnDeleteClick)

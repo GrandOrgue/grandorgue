@@ -25,11 +25,8 @@
 #include "MIDIEventSendDialog.h"
 #include "MIDIEventKeyDialog.h"
 
-IMPLEMENT_CLASS(MIDIEventDialog, wxPropertySheetDialog)
-
 BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
 END_EVENT_TABLE()
-
 
 MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event, const GOrgueMidiSender* sender, const GOrgueKeyReceiver* key):
 	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize),
