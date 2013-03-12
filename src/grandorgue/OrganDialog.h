@@ -23,10 +23,12 @@
 #define ORGANDIALOG_H_
 
 #include <wx/wx.h>
+#include <vector>
 #include "GrandOrgueDef.h"
 
 class GrandOrgueFile;
 class wxTreeCtrl;
+class wxTreeItemId;
 class wxSpinButton;
 class OrganTreeItemData;
 class wxCheckBox;
@@ -59,6 +61,7 @@ private:
 	wxButton* m_Apply;
 	wxButton* m_Reset;
 	wxButton* m_Default;
+	wxButton* m_AudioGroupAssistant;
 	wxCheckBox* m_IgnorePitch;
 	OrganTreeItemData* m_Last;
 	unsigned m_LoadChangeCnt;
@@ -69,6 +72,7 @@ private:
 	void Modified();
 	void SetEmpty(wxChoice* choice);
 	void RemoveEmpty(wxChoice* choice);
+	void UpdateAudioGroup(std::vector<wxString> audio_group, unsigned& pos, wxTreeItemId item);
 
 	void OnTreeChanging(wxTreeEvent& e);
 	void OnTreeChanged(wxTreeEvent& e);
@@ -91,6 +95,7 @@ private:
 	void OnEventDefault(wxCommandEvent &e);
 	void OnEventOK(wxCommandEvent &e);
 	void OnOK(wxCommandEvent& event);
+	void OnAudioGroupAssitant(wxCommandEvent &e);
 
 protected:
 
@@ -98,6 +103,7 @@ protected:
 		ID_EVENT_TREE = 200,
 		ID_EVENT_APPLY,
 		ID_EVENT_RESET,
+		ID_EVENT_AUDIO_GROUP_ASSISTANT,
 		ID_EVENT_DEFAULT,
 		ID_EVENT_AMPLITUDE,
 		ID_EVENT_AMPLITUDE_SPIN,
