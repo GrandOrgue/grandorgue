@@ -52,8 +52,8 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group);
 
 	void Draw(wxDC* dc);
-	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
-	void HandleMouseScroll(int x, int y, int amount);
+	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
+	bool HandleMouseScroll(int x, int y, int amount);
 
 	bool IsEnclosure(const unsigned nb) const;
 };

@@ -66,12 +66,14 @@ void GOGUIControl::Draw(wxDC* dc)
 	m_DrawPending = false;
 }
 
-void GOGUIControl::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
+bool GOGUIControl::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
+	return false;
 }
 
-void GOGUIControl::HandleMouseScroll(int x, int y, int amount)
+bool GOGUIControl::HandleMouseScroll(int x, int y, int amount)
 {
+	return false;
 }
 
 const wxRect& GOGUIControl::GetBoundingRect()
