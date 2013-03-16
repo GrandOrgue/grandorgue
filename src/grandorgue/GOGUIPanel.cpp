@@ -563,13 +563,15 @@ void GOGUIPanel::HandleKey(int key)
 void GOGUIPanel::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)
-		m_controls[i]->HandleMousePress(x, y, right, state);
+		if (m_controls[i]->HandleMousePress(x, y, right, state))
+			return;
 }
 
 void GOGUIPanel::HandleMouseScroll(int x, int y, int amount)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)
-		m_controls[i]->HandleMouseScroll(x, y, amount);
+		if (m_controls[i]->HandleMouseScroll(x, y, amount))
+			return;
 }
 
 void GOGUIPanel::TileBitmap(wxDC* dc, wxBitmap* bitmap, wxRect target, int xo, int yo)

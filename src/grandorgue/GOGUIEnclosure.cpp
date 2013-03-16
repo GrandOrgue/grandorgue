@@ -180,10 +180,10 @@ void GOGUIEnclosure::Draw(wxDC* dc)
 }
 
 
-void GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
+bool GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	if (!m_BoundingRect.Contains(x, y))
-		return;
+		return false;
 	if (right)
 	{
 		GOrgueMidiReceiver& midi = m_enclosure->GetMidiReceiver();
@@ -196,12 +196,13 @@ void GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState&
 			sender = dlg.GetSender();
 			m_panel->Modified();
 		}
+		return true;
 	}
 	else
 	{
 		unsigned value;
 		if (!m_MouseRect.Contains(x, y))
-			return;
+			return false;
 		y -= m_MouseRect.GetY();
 		if (y <= m_MouseAxisStart)
 			value = (127 * y / m_MouseAxisStart);
@@ -211,17 +212,19 @@ void GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState&
 			value = 127;
 
 		if (state.GetControl() == this && state.GetIndex() == value)
-			return;
+			return true;
 		state.SetControl(this);
 		state.SetIndex(value);
 
 		m_enclosure->Set(value);
+		return true;
 	}
 }
 
-void GOGUIEnclosure::HandleMouseScroll(int x, int y, int amount)
+bool GOGUIEnclosure::HandleMouseScroll(int x, int y, int amount)
 {
 	if (!m_BoundingRect.Contains(x, y) || !amount)
-		return;
+		return false;
 	m_enclosure->Scroll(amount > 0);
+	return true;
 }

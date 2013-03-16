@@ -53,7 +53,7 @@ public:
 	void Init(GOrgueConfigReader& cfg, wxString group);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 
-	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
+	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	void Draw(wxDC* dc);
 };
 

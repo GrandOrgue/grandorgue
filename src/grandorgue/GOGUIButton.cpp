@@ -185,14 +185,14 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 	m_TextWidth = cfg.ReadInteger(ODFSetting, group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth() - (m_TextRect.GetWidth() < 50 ? 4 : 14));
 }
 
-void GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
+bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	if (!m_MouseRect.Contains(x, y))
-		return;
+		return false;
 	if (m_Radius)
 	{
 		if ((m_MouseRect.GetX() + m_Radius - x) * (m_MouseRect.GetX() + m_Radius - x) + (m_MouseRect.GetY() + m_Radius - y) * (m_MouseRect.GetY() + m_Radius - y) > m_Radius * m_Radius)
-			return;
+			return false;
 	}
 	if (right)
 	{
@@ -223,14 +223,16 @@ void GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 			key = dlg.GetKey();
 			m_panel->Modified();
 		}
+		return true;
 	}
 	else
 	{
 		if (state.GetControl() == this)
-			return;
+			return true;
 		state.SetControl(this);
 
 		m_Button->Push();
+		return true;
 	}
 }
 

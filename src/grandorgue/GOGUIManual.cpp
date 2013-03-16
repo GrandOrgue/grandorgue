@@ -333,10 +333,10 @@ void GOGUIManual::Draw(wxDC* dc)
 	GOGUIControl::Draw(dc);
 }
 
-void GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
+bool GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	if (!m_BoundingRect.Contains(x, y))
-		return;
+		return false;
 
 	if (right)
 	{
@@ -351,6 +351,7 @@ void GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 			m_panel->Modified();
 			m_manual->AllNotesOff();
 		}
+		return true;
 	}
 	else
 	{
@@ -361,14 +362,15 @@ void GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 				if (i + 1 < m_Keys.size() && m_Keys[i + 1].IsSharp && m_Keys[i + 1].MouseRect.Contains(x, y))
 					continue;
 				if (state.GetControl() == this && state.GetIndex() == i)
-					return;
+					return true;
 				state.SetControl(this);
 				state.SetIndex(i);
 
 				m_manual->Set(m_Keys[i].MidiNumber, m_manual->IsKeyDown(m_Keys[i].MidiNumber) ? 0 : 0x7f);
-				return;
+				return true;
 			}
 		}
+		return false;
 	}
 }
 
