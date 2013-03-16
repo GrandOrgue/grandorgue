@@ -19,37 +19,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEDRAWSTOP_H
-#define GORGUEDRAWSTOP_H
+#ifndef GORGUECOMBINATIONELEMENT_H
+#define GORGUECOMBINATIONELEMENT_H
 
-#include <wx/wx.h>
-#include "GOrgueButton.h"
-#include "GOrgueCombinationElement.h"
-
-class GOrgueDrawstop : public GOrgueButton, public GOrgueCombinationElement
+class GOrgueCombinationElement
 {
-private:
-	int m_GCState;
-	bool m_ActiveState;
-	bool m_CombinationState;
-
-protected:
-	void SetState(bool on);
-	virtual void ChangeState(bool on) = 0;
-
 public:
-	GOrgueDrawstop(GrandOrgueFile* organfile);
-	void Init(GOrgueConfigReader& cfg, wxString group, wxString name);
-	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Save(GOrgueConfigWriter& cfg);
-	virtual void Set(bool on);
-	virtual void PreparePlayback();
-	virtual void Update();
-	void Reset();
-	void SetCombination(bool on);
+	virtual ~GOrgueCombinationElement()
+	{
+	}
 
-	bool IsActive() const;
-	bool GetCombinationState() const;
+	virtual bool GetCombinationState() const = 0;
+	virtual void SetCombination(bool on) = 0;
 };
 
 #endif

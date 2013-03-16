@@ -21,6 +21,7 @@
 
 #include "GOrgueCombination.h"
 #include "GOrgueCombinationDefinition.h"
+#include "GOrgueCombinationElement.h"
 #include "GOrgueDrawStop.h"
 #include "GOrgueSetter.h"
 #include "GrandOrgueFile.h"
@@ -98,7 +99,7 @@ bool GOrgueCombination::PushLocal()
 				if (!m_OrganFile->GetSetter()->StoreInvisibleObjects() &&
 				    !elements[i].store_unconditional)
 					m_State[i] = -1;
-				else if (elements[i].control->IsEngaged())
+				else if (elements[i].control->GetCombinationState())
 				{
 					m_State[i] = 1;
 					used |= 1;
@@ -115,7 +116,7 @@ bool GOrgueCombination::PushLocal()
 				if (!m_OrganFile->GetSetter()->StoreInvisibleObjects() &&
 				    !elements[i].store_unconditional)
 					m_State[i] = -1;
-				else if (elements[i].control->IsEngaged())
+				else if (elements[i].control->GetCombinationState())
 				{
 					m_State[i] = 1;
 					used |= 1;
@@ -131,7 +132,7 @@ bool GOrgueCombination::PushLocal()
 			{
 				if (m_State[i] != -1)
 				{
-					if (elements[i].control->IsEngaged())
+					if (elements[i].control->GetCombinationState())
 					{
 						m_State[i] = 1;
 						used |= 1;
