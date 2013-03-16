@@ -98,3 +98,8 @@ void GOrgueDrawstop::Update()
 {
 	SetState(IsEngaged());
 }
+
+bool GOrgueDrawstop::GetCombinationState() const
+{
+	return IsEngaged();
+}

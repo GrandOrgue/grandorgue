@@ -24,7 +24,7 @@
 
 #include <wx/wx.h>
 #include <vector>
-class GOrgueDrawstop;
+class GOrgueCombinationElement;
 class GOrgueManual;
 class GrandOrgueFile;
 
@@ -39,7 +39,7 @@ public:
 		unsigned index;
 		bool store_unconditional;
 		wxString group;
-		GOrgueDrawstop* control;
+		GOrgueCombinationElement* control;
 	} CombinationSlot;
 private:
 	GrandOrgueFile* m_organfile;
