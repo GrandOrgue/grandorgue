@@ -107,6 +107,7 @@ public:
 
 
 	unsigned GetSampleRate() const;
+	unsigned GetBitsPerSample() const;
 	unsigned GetMidiNote() const;
 	float GetPitchFract() const;
 

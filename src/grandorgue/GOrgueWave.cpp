@@ -293,6 +293,11 @@ void GOrgueWave::Close()
 	SetInvalid();
 }
 
+unsigned GOrgueWave::GetBitsPerSample() const
+{
+	return bytesPerSample * 8;
+}
+
 unsigned GOrgueWave::GetChannels() const
 {
 	return channels;
