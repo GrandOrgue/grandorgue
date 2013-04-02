@@ -141,9 +141,10 @@ bool GOrgueApp::OnInit()
 	m_Frame->Init();
 
 	if (!m_FileName.IsEmpty())
-	{
 		AsyncLoadFile(m_FileName);
-	}
+	else if (m_Settings->GetLoadLastFile() && m_Settings->GetLastFile() != wxEmptyString)
+		AsyncLoadFile(m_Settings->GetLastFile());
+
 	GOrgueLCD_Open();
 
 	return true;

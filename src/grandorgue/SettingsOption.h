@@ -36,7 +36,9 @@ class SettingsOption : public wxPanel
 		ID_LOSSLESS_COMPRESSION,
 		ID_MANAGE_POLYPHONY,
 		ID_COMPRESS_CACHE,
+		ID_MANAGE_CACHE,
 		ID_SCALE_RELEASE,
+		ID_LOAD_LAST_FILE,
 		ID_RANDOMIZE,
 		ID_SETTINGS_DIR,
 		ID_CACHE_DIR,
@@ -58,6 +60,8 @@ private:
 	wxCheckBox* m_LosslessCompression;
 	wxCheckBox* m_Limit;
 	wxCheckBox* m_CompressCache;
+	wxCheckBox* m_ManageCache;
+	wxCheckBox* m_LoadLastFile;
 	wxCheckBox* m_Scale;
 	wxCheckBox* m_Random;
 	wxDirPickerCtrl* m_SettingsPath;

@@ -603,7 +603,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 				}
 			}
 
-			if (!cache_ok)
+			if (!cache_ok && !m_Settings.GetManageCache())
 			{
 				wxMessageBox(_("The cache for this organ is outdated. Please update or delete it."), _("Warning"), wxOK | wxICON_WARNING, NULL);
 			}
@@ -615,6 +615,9 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		{
 			if (!TryLoad(NULL, dlg, load_error))
 				return load_error;
+
+			if (m_Settings.GetManageCache() && m_Cacheable)
+				UpdateCache(m_Settings.GetCompressCache());
 		}
 		SetTemperament(m_Temperament);
 	}

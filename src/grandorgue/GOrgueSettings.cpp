@@ -64,9 +64,11 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_ReleaseConcurrency(1),
 	m_LosslessCompression(true),
 	m_ManagePolyphony(true),
-	m_CompressCache(true),
+	m_ManageCache(true),
+	m_CompressCache(false),
 	m_ScaleRelease(true),
 	m_RandomizeSpeaking(true),
+	m_LoadLastFile(true),
 	m_SampleRate(44100),
 	m_BitsPerSample(24),
 	m_InterpolationType(0),
@@ -83,6 +85,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_SettingPath(),
 	m_UserSettingPath(),
 	m_UserCachePath(),
+	m_LastFile(),
 	m_AudioGroups(),
 	m_AudioDeviceConfig(),
 	m_ManualEvents(),
@@ -120,9 +123,11 @@ void GOrgueSettings::Load()
 		m_ReleaseConcurrency = 1;
 	m_LosslessCompression = m_Config.Read(wxT("LosslessCompression"), 0L);
 	m_ManagePolyphony = m_Config.Read(wxT("ManagePolyphony"), 1);
-	m_CompressCache = m_Config.Read(wxT("CompressCache"), 1);
+	m_ManageCache = m_Config.Read(wxT("ManageCache"), 1);
+	m_CompressCache = m_Config.Read(wxT("CompressCache"), 0L);
 	m_ScaleRelease = m_Config.Read(wxT("ScaleRelease"), 1);
 	m_RandomizeSpeaking = m_Config.Read(wxT("RandomizeSpeaking"), 1);
+	m_LoadLastFile = m_Config.Read(wxT("LoadLastFile"), 1);
 	SetSamplesPerBuffer(m_Config.Read(wxT("SamplesPerBuffer"), 1024));
 	m_SampleRate = m_Config.Read(wxT("SampleRate"), 44100);
 	m_Reverb = m_Config.Read(wxT("Reverb"), 0L);
@@ -167,6 +172,7 @@ void GOrgueSettings::Load()
 	m_SettingPath = m_Config.Read(wxT("cmbPath"), GetStandardOrganDirectory());
 	SetUserSettingPath (m_Config.Read(wxT("SettingPath"), wxEmptyString));
 	SetUserCachePath (m_Config.Read(wxT("CachePath"), wxEmptyString));
+	m_LastFile = m_Config.Read(wxT("LastFile"), wxEmptyString);
 	m_Preset = m_Config.Read(wxT("Preset"), 0L);
 
 	m_ReverbEnabled = m_Config.Read(wxT("ReverbEnabled"), 0L);
@@ -467,6 +473,20 @@ void GOrgueSettings::SetUserCachePath(wxString path)
 	m_Config.Write(wxT("CachePath"), m_UserCachePath);
 }
 
+wxString GOrgueSettings::GetLastFile()
+{
+	return m_LastFile;
+}
+
+void GOrgueSettings::SetLastFile(wxString path)
+{
+	wxFileName file(path);
+	file.MakeAbsolute();
+	path = file.GetFullPath();
+	m_LastFile = path;
+	m_Config.Write(wxT("LastFile"), m_LastFile);
+}
+
 unsigned  GOrgueSettings::GetPreset()
 {
 	return m_Preset;
@@ -550,6 +570,17 @@ void GOrgueSettings::SetManagePolyphony(bool manage_polyphony)
 	m_Config.Write(wxT("ManagePolyphony"), m_ManagePolyphony);
 }
 
+bool GOrgueSettings::GetManageCache()
+{
+	return m_ManageCache;
+}
+
+void GOrgueSettings::SetManageCache(bool manage)
+{
+	m_ManageCache = manage;
+	m_Config.Write(wxT("ManageCache"), m_ManageCache);
+}
+
 bool GOrgueSettings::GetCompressCache()
 {
 	return m_CompressCache;
@@ -570,6 +601,17 @@ void GOrgueSettings::SetScaleRelease(bool scale_release)
 {
 	m_ScaleRelease = scale_release;
 	m_Config.Write(wxT("ScaleRelease"), m_ScaleRelease);
+}
+
+bool GOrgueSettings::GetLoadLastFile()
+{
+	return m_LoadLastFile;
+}
+
+void GOrgueSettings::SetLoadLastFile(bool last_file)
+{
+	m_LoadLastFile = last_file;
+	m_Config.Write(wxT("LoadLastFile"), m_LoadLastFile);
 }
 
 unsigned GOrgueSettings::GetInterpolationType()
