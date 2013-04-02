@@ -810,4 +810,6 @@ void OrganDialog::OnAudioGroupAssitant(wxCommandEvent &e)
 	unsigned pos = 0;
 	for(unsigned i = 0; i < entries.size(); i++)
 		UpdateAudioGroup(group_list, pos, entries[i]);
+	m_Last = NULL;
+	Load();
 }
