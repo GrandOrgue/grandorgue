@@ -22,6 +22,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueDocument.h"
 #include "GOrgueEvent.h"
+#include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
@@ -85,6 +86,7 @@ bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	m_OrganFileReady = true;
 
 	SetTitle(m_organfile->GetChurchName());
+	m_sound.GetSettings().SetLastFile(m_organfile->GetODFFilename());
 
 	UpdateAllViews();
 

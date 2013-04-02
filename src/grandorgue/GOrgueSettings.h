@@ -51,9 +51,11 @@ private:
 	unsigned m_ReleaseConcurrency;
 	bool m_LosslessCompression;
 	bool m_ManagePolyphony;
+	bool m_ManageCache;
 	bool m_CompressCache;
 	bool m_ScaleRelease;
 	bool m_RandomizeSpeaking;
+	bool m_LoadLastFile;
 	unsigned m_SamplesPerBuffer;
 	unsigned m_SampleRate;
 	unsigned m_BitsPerSample;
@@ -73,6 +75,7 @@ private:
 	wxString m_SettingPath;
 	wxString m_UserSettingPath;
 	wxString m_UserCachePath;
+	wxString m_LastFile;
 	std::vector<wxString> m_AudioGroups;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 	int m_ManualEvents[6];
@@ -138,6 +141,8 @@ public:
 	void SetUserSettingPath(wxString path);
 	wxString GetUserCachePath();
 	void SetUserCachePath(wxString path);
+	wxString GetLastFile();
+	void SetLastFile(wxString path);
 	unsigned GetPreset();
 	void SetPreset(unsigned value);
 
@@ -156,12 +161,16 @@ public:
 	void SetLosslessCompression(bool lossless_compression);
 	bool GetManagePolyphony();
 	void SetManagePolyphony(bool manage_polyphony);
+	bool GetManageCache();
+	void SetManageCache(bool manage);
 	bool GetCompressCache();
 	void SetCompressCache(bool compress);
 	bool GetScaleRelease();
 	void SetScaleRelease(bool scale_release);
 	bool GetRandomizeSpeaking();
 	void SetRandomizeSpeaking(bool randomize);
+	bool GetLoadLastFile();
+	void SetLoadLastFile(bool last_file);
 	unsigned GetInterpolationType();
 	void SetInterpolationType(unsigned type);
 	unsigned GetSampleRate();

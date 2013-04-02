@@ -48,15 +48,15 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Enhancements"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_Limit = new wxCheckBox(this, ID_MANAGE_POLYPHONY, _("Active polyphony management")), 0, wxEXPAND | wxALL, 5);
-	item6->Add(m_CompressCache  = new wxCheckBox(this, ID_COMPRESS_CACHE, _("Compress Cache")), 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_Scale = new wxCheckBox(this, ID_SCALE_RELEASE, _("Release sample scaling")), 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_Random = new wxCheckBox(this, ID_RANDOMIZE, _("Randomize pipe speaking")), 0, wxEXPAND | wxALL, 5);
+	item6->Add(m_LoadLastFile  = new wxCheckBox(this, ID_LOAD_LAST_FILE, _("Load last file at startup")), 0, wxEXPAND | wxALL, 5);
 	if (m_Settings.GetManagePolyphony())
-		m_Limit ->SetValue(true);
-	if (m_Settings.GetCompressCache())
-		m_CompressCache ->SetValue(true);
+		m_Limit->SetValue(true);
+	if (m_Settings.GetLoadLastFile())
+		m_LoadLastFile->SetValue(true);
 	if (m_Settings.GetScaleRelease())
-		m_Scale ->SetValue(true);
+		m_Scale->SetValue(true);
 	if (m_Settings.GetRandomizeSpeaking())
 		m_Random->SetValue(true);
 
@@ -190,6 +190,15 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 			m_SampleRate->Select(i);
 	m_SamplesPerBuffer->SetSelection(m_Settings.GetSamplesPerBuffer() / BLOCKS_PER_FRAME - 1);
 
+	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Cache"));
+	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+	item6->Add(m_CompressCache  = new wxCheckBox(this, ID_COMPRESS_CACHE, _("Compress cache")), 0, wxEXPAND | wxALL, 5);
+	item6->Add(m_ManageCache  = new wxCheckBox(this, ID_MANAGE_CACHE, _("Automatically manage cache")), 0, wxEXPAND | wxALL, 5);
+	if (m_Settings.GetCompressCache())
+		m_CompressCache->SetValue(true);
+	if (m_Settings.GetManageCache())
+		m_ManageCache->SetValue(true);
+
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
@@ -204,6 +213,8 @@ void SettingsOption::Save()
 	m_Settings.SetLosslessCompression(m_LosslessCompression->IsChecked());
 	m_Settings.SetManagePolyphony(m_Limit->IsChecked());
 	m_Settings.SetCompressCache(m_CompressCache->IsChecked());
+	m_Settings.SetManageCache(m_ManageCache->IsChecked());
+	m_Settings.SetLoadLastFile(m_LoadLastFile->IsChecked());
 	m_Settings.SetScaleRelease(m_Scale->IsChecked());
 	m_Settings.SetRandomizeSpeaking(m_Random->IsChecked());
 	m_Settings.SetConcurrency(m_Concurrency->GetSelection());
