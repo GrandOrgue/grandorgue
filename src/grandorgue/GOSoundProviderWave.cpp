@@ -168,6 +168,8 @@ void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, std::vec
 		wave_channels = load_channels;
 		channels = 1;
 	}
+	if (bits_per_sample > wave.GetBitsPerSample())
+		bits_per_sample = wave.GetBitsPerSample();
 
 	try
 	{
