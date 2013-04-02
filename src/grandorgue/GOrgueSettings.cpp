@@ -68,7 +68,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_ScaleRelease(true),
 	m_RandomizeSpeaking(true),
 	m_SampleRate(44100),
-	m_BitsPerSample(16),
+	m_BitsPerSample(24),
 	m_InterpolationType(0),
 	m_WaveFormat(4),
 	m_LoopLoad(0),
@@ -130,9 +130,9 @@ void GOrgueSettings::Load()
 		m_Reverb = 0;
 	if (m_SampleRate < 1000)
 		m_SampleRate = 44100;
-	m_BitsPerSample = m_Config.Read(wxT("BitsPerSample"), 2);
+	m_BitsPerSample = m_Config.Read(wxT("BitsPerSample"), 24);
 	if (m_BitsPerSample != 8 && m_BitsPerSample != 12 && m_BitsPerSample != 16 && m_BitsPerSample != 20 && m_BitsPerSample != 24)
-		m_BitsPerSample = 16;
+		m_BitsPerSample = 24;
 	m_InterpolationType = m_Config.Read(wxT("InterpolationType"), 1);
 	if (m_InterpolationType > 1)
 		m_InterpolationType = 0;
@@ -617,7 +617,7 @@ unsigned GOrgueSettings::GetBitsPerSample()
 void GOrgueSettings::SetBitsPerSample(unsigned bits_per_sample)
 {
 	if (bits_per_sample != 8 && bits_per_sample != 12 && bits_per_sample != 16 && bits_per_sample != 20 && bits_per_sample != 24)
-		bits_per_sample = 16;
+		bits_per_sample = 24;
 	m_BitsPerSample = bits_per_sample;
 	m_Config.Write(wxT("BitsPerSample"), (long)m_BitsPerSample);
 }
