@@ -1,6 +1,7 @@
 message(STATUS "PortAudio build Configuration")
 
 INCLUDE (CheckIncludeFile)
+INCLUDE (CheckCXXSourceCompiles)
 
 include_directories(include)
 include_directories(common)
@@ -74,9 +75,14 @@ if (WIN32)
    endif ()
 
    check_include_file_cxx(rpcsal.h HAVE_RPCSAL_H)
-   if (${HAVE_RPCSAL_H})
+   check_cxx_source_compiles("#include <ksmedia.h>
+   KSRTAUDIO_HWREGISTER_PROPERTY x;" HAVE_KSRT)
+   if (${HAVE_KSRT})
    else()
      include_directories(hostapi/wasapi/mingw-include)
+   endif ()
+   if (${HAVE_RPCSAL_H})
+   else()
      include_directories(hostapi/wasapi/wine-include)
    endif ()
 
