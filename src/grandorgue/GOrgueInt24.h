@@ -29,7 +29,7 @@
 /* GCC generates for int x:24 an extra sign extend compared to the following */ 
 
 typedef struct {
-	uint16_t lo, ;
+	uint16_t lo;
 	int8_t hi;
 
 	void operator= (int value)
