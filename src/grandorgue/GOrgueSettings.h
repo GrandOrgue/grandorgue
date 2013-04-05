@@ -237,6 +237,8 @@ public:
 	void SetReverbChannel(int channel);
 	unsigned GetReverbDelay();
 	void SetReverbDelay(unsigned delay);
+
+	void Flush();
 };
 
 #endif

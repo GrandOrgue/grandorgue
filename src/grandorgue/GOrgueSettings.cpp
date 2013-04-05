@@ -485,6 +485,7 @@ void GOrgueSettings::SetLastFile(wxString path)
 	path = file.GetFullPath();
 	m_LastFile = path;
 	m_Config.Write(wxT("LastFile"), m_LastFile);
+	m_Config.Flush();
 }
 
 unsigned  GOrgueSettings::GetPreset()
@@ -993,4 +994,9 @@ void GOrgueSettings::SetReverbDelay(unsigned delay)
 {
 	m_ReverbDelay = delay;
 	m_Config.Write(wxT("ReverbDelay"), (long)m_ReverbDelay);
+}
+
+void GOrgueSettings::Flush()
+{
+	m_Config.Flush();
 }

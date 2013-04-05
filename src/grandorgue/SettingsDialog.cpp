@@ -109,6 +109,7 @@ bool SettingsDialog::DoApply()
 	m_ReverbPage->Save();
 
 	m_Sound.ResetSound(true);
+	m_Sound.GetSettings().Flush();
 
 	return true;
 }
