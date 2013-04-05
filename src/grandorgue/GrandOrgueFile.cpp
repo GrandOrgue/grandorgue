@@ -271,15 +271,15 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		m_InfoFilename = wxEmptyString;
 
 	/* load basic organ information */
-	unsigned m_NumberOfManuals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 1, 16);
+	unsigned NumberOfManuals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 1, 16);
 	m_FirstManual = cfg.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
-	unsigned m_NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 6);
-	unsigned m_NumberOfTremulants = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10);
-	unsigned m_NumberOfWindchestGroups = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 12);
-	unsigned m_NumberOfReversiblePistons = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfReversiblePistons"), 0, 32);
-	unsigned m_NumberOfGenerals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfGenerals"), 0, 99);
-	unsigned m_NumberOfDivisionalCouplers = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionalCouplers"), 0, 8);
-	unsigned m_NumberOfPanels = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfPanels"), 0, 100, false);
+	unsigned NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 6);
+	unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10);
+	unsigned NumberOfWindchestGroups = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 12);
+	unsigned NumberOfReversiblePistons = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfReversiblePistons"), 0, 32);
+	unsigned NumberOfGenerals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfGenerals"), 0, 99);
+	unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionalCouplers"), 0, 8);
+	unsigned NumberOfPanels = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfPanels"), 0, 100, false);
 	m_RankCount = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, 400, false);
 	m_PipeConfig.Load(cfg, group, wxEmptyString);
 	m_DivisionalsStoreIntermanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntermanualCouplers"));
@@ -296,19 +296,19 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	wxString buffer;
 
 	m_windchest.resize(0);
-	for (unsigned i = 0; i < m_NumberOfWindchestGroups; i++)
+	for (unsigned i = 0; i < NumberOfWindchestGroups; i++)
 		m_windchest.push_back(new GOrgueWindchest(this));
 
 	m_manual.resize(0);
 	m_manual.resize(m_FirstManual); // Add empty slot for pedal, if necessary
-	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+	for (unsigned int i = m_FirstManual; i <= NumberOfManuals; i++)
 		m_manual.push_back(new GOrgueManual(this));
-	m_ODFManualCount = m_NumberOfManuals + 1;
+	m_ODFManualCount = NumberOfManuals + 1;
 	for(unsigned int i = 0; i < 4; i++)
 		m_manual.push_back(new GOrgueManual(this));
 
 	m_enclosure.resize(0);
-	for (unsigned i = 0; i < m_NumberOfEnclosures; i++)
+	for (unsigned i = 0; i < NumberOfEnclosures; i++)
 	{
 		m_enclosure.push_back(new GOrgueEnclosure(this));
 		buffer.Printf(wxT("Enclosure%03u"), i + 1);
@@ -316,14 +316,14 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	}
 
 	m_tremulant.resize(0);
-	for (unsigned i = 0; i < m_NumberOfTremulants; i++)
+	for (unsigned i = 0; i < NumberOfTremulants; i++)
 	{
 		m_tremulant.push_back(new GOrgueTremulant(this));
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
 		m_tremulant[i]->Load(cfg, buffer, -((int)(i + 1)));
 	}
 
-	for (unsigned  i = 0; i < m_NumberOfWindchestGroups; i++)
+	for (unsigned  i = 0; i < NumberOfWindchestGroups; i++)
 	{
 		buffer.Printf(wxT("WindchestGroup%03d"), i + 1);
 		m_windchest[i]->Load(cfg, buffer, i);
@@ -336,7 +336,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		m_ranks[i]->Load(cfg, buffer, -1);
 	}
 
-	for (unsigned int i = m_FirstManual; i <= m_NumberOfManuals; i++)
+	for (unsigned int i = m_FirstManual; i <= NumberOfManuals; i++)
 	{
 		buffer.Printf(wxT("Manual%03d"), i);
 		m_manual[i]->Load(cfg, buffer, i);
@@ -355,7 +355,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		GetManual(i)->Init(cfg, wxString::Format(wxT("SetterFloating%03d"), i - GetODFManualCount() + 1), i, min_key, max_key - min_key);
 
 	m_piston.resize(0);
-	for (unsigned i = 0; i < m_NumberOfReversiblePistons; i++)
+	for (unsigned i = 0; i < NumberOfReversiblePistons; i++)
 	{
 		m_piston.push_back(new GOrguePiston(this));
 		buffer.Printf(wxT("ReversiblePiston%03d"), i + 1);
@@ -363,7 +363,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	}
 
 	m_divisionalcoupler.resize(0);
-	for (unsigned i = 0; i < m_NumberOfDivisionalCouplers; i++)
+	for (unsigned i = 0; i < NumberOfDivisionalCouplers; i++)
 	{
 		m_divisionalcoupler.push_back(new GOrgueDivisionalCoupler(this));
 		buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
@@ -372,7 +372,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 	m_general.resize(0);
 	m_GeneralTemplate.InitGeneral();
-	for (unsigned i = 0; i < m_NumberOfGenerals; i++)
+	for (unsigned i = 0; i < NumberOfGenerals; i++)
 	{
 		m_general.push_back(new GOrgueGeneral(this->GetGeneralTemplate(), this, false));
 		buffer.Printf(wxT("General%03d"), i + 1);
@@ -389,14 +389,14 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_panels.push_back(new GOGUIPanel(this));
 	m_panels[0]->Load(cfg, wxT(""));
 
-	for (unsigned i = 0; i < m_NumberOfPanels; i++)
+	for (unsigned i = 0; i < NumberOfPanels; i++)
 	{
 		buffer.Printf(wxT("Panel%03d"), i + 1);
 		m_panels.push_back(new GOGUIPanel(this));
 		m_panels[i + 1]->Load(cfg, buffer);
 	}
 
-	for (unsigned i = m_FirstManual; i <= m_NumberOfManuals; i++)
+	for (unsigned i = m_FirstManual; i <= NumberOfManuals; i++)
 		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
 	m_panels.push_back(m_setter->CreateCrescendoPanel(cfg));
 	m_panels.push_back(m_setter->CreateDivisionalPanel(cfg));
