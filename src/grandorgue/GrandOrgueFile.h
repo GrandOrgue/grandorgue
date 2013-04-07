@@ -46,6 +46,7 @@ class GOrguePushbutton;
 class GOrgueRank;
 class GOrgueSetter;
 class GOrgueSettings;
+class GOrgueSwitch;
 class GOrgueTemperament;
 class GOrgueTremulant;
 class GOrgueWindchest;
@@ -103,6 +104,7 @@ private:
 	ptr_vector<GOrguePiston> m_piston;
 	ptr_vector<GOrgueGeneral> m_general;
 	ptr_vector<GOrgueDivisionalCoupler> m_divisionalcoupler;
+	ptr_vector<GOrgueSwitch> m_switches;
 	ptr_vector<GOrgueRank> m_ranks;
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
@@ -166,6 +168,8 @@ public:
 	GOrgueDivisionalCoupler* GetDivisionalCoupler(unsigned index);
 	unsigned GetGeneralCount();
 	GOrgueGeneral* GetGeneral(unsigned index);
+	unsigned GetSwitchCount();
+	GOrgueSwitch* GetSwitch(unsigned index);
 	unsigned GetNumberOfReversiblePistons();
 	GOrguePiston* GetPiston(unsigned index);
 	GOrgueSetter* GetSetter();

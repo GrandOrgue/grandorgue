@@ -49,6 +49,7 @@
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
+#include "GOrgueSwitch.h"
 #include "GOrgueRank.h"
 #include "GOrgueTemperament.h"
 #include "GOrgueTremulant.h"
@@ -92,6 +93,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_piston(0),
 	m_general(0),
 	m_divisionalcoupler(0),
+	m_switches(0),
 	m_ranks(0),
 	m_manual(0),
 	m_panels(0),
@@ -873,6 +875,16 @@ GOrgueTremulant* GrandOrgueFile::GetTremulant(unsigned index)
 	return m_tremulant[index];
 }
 
+unsigned GrandOrgueFile::GetSwitchCount()
+{
+	return m_switches.size();
+}
+
+GOrgueSwitch* GrandOrgueFile::GetSwitch(unsigned index)
+{
+	return m_switches[index];
+}
+
 GOrgueRank* GrandOrgueFile::GetRank(unsigned index)
 {
 	return m_ranks[index];
@@ -1201,7 +1213,7 @@ void GrandOrgueFile::Update()
 		m_tremulant[i]->Update();
 
 	for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
-		m_divisionalcoupler[i]->PreparePlayback();
+		m_divisionalcoupler[i]->Update();
 
 	m_setter->Update();
 }

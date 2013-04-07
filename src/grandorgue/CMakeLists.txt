@@ -228,6 +228,7 @@ GOrgueTemperament.cpp
 GOrgueTemperamentCent.cpp
 GOrgueTremulant.cpp
 GOrgueWindchest.cpp
+GOrgueSwitch.cpp
 GrandOrgueFile.cpp
 GrandOrgueFrame.cpp
 GOrgueUtil.cpp
