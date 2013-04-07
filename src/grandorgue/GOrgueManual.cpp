@@ -44,6 +44,7 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_UnisonOff(0),
 	m_MIDIInputNumber(0),
 	m_tremulant_ids(0),
+	m_switch_ids(0),
 	m_name(),
 	m_stops(0),
 	m_couplers(0),
@@ -85,6 +86,7 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_stops.resize(0);
 	m_couplers.resize(0);
 	m_tremulant_ids.resize(0);
+	m_switch_ids.resize(0);
 	m_divisionals.resize(0);
 	m_midi.Load(cfg, group);
 	m_sender.Load(cfg, group);
@@ -107,7 +109,8 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	unsigned nb_stops                 = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfStops"), 0, 64);
 	unsigned nb_couplers              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfCouplers"), 0, 16, false);
 	unsigned nb_divisionals           = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionals"), 0, 32, false);
-	unsigned nb_tremulants            = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10, false);
+	unsigned nb_tremulants            = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), false);
+	unsigned nb_switches              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSwitches"), 0, m_organfile->GetSwitchCount(), false);
 	m_manual_number = manualNumber;
 
 	m_midi.SetIndex(manualNumber);
@@ -144,8 +147,19 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 		unsigned new_id = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount());
 		for(unsigned j = 0; j < m_tremulant_ids.size(); j++)
 			if (m_tremulant_ids[j] == new_id)
-				throw wxString::Format(_("Mnaual %d: Tremulant%03d already in use"), m_manual_number, new_id);
+				throw wxString::Format(_("Manual %d: Tremulant%03d already in use"), m_manual_number, new_id);
 		m_tremulant_ids.push_back(new_id);
+	}
+
+	m_switch_ids.resize(0);
+	for (unsigned i = 0; i < nb_switches; i++)
+	{
+		buffer.Printf(wxT("Switch%03d"), i + 1);
+		unsigned new_id = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetSwitchCount());
+		for(unsigned j = 0; j < m_switch_ids.size(); j++)
+			if (m_switch_ids[j] == new_id)
+				throw wxString::Format(_("Manual %d: Switch%03d already in use"), m_manual_number, new_id);
+		m_switch_ids.push_back(new_id);
 	}
 
 	GetDivisionalTemplate().InitDivisional(m_manual_number);
@@ -334,6 +348,17 @@ GOrgueTremulant* GOrgueManual::GetTremulant(unsigned index)
 {
 	assert(index < m_tremulant_ids.size());
 	return m_organfile->GetTremulant(m_tremulant_ids[index] - 1);
+}
+
+unsigned GOrgueManual::GetSwitchCount()
+{
+	return m_switch_ids.size();
+}
+
+GOrgueSwitch* GOrgueManual::GetSwitch(unsigned index)
+{
+	assert(index < m_switch_ids.size());
+	return m_organfile->GetSwitch(m_switch_ids[index] - 1);
 }
 
 void GOrgueManual::AllNotesOff()

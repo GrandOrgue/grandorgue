@@ -38,6 +38,7 @@ class GOrgueCoupler;
 class GOrgueDivisional;
 class GOrgueMidiEvent;
 class GOrgueStop;
+class GOrgueSwitch;
 class GOrgueTremulant;
 class GrandOrgueFile;
 
@@ -66,6 +67,7 @@ private:
 	int m_MIDIInputNumber;
 
 	std::vector<unsigned> m_tremulant_ids;
+	std::vector<unsigned> m_switch_ids;
 
 	wxString m_name;
 
@@ -116,6 +118,8 @@ public:
  	void AddDivisional(GOrgueDivisional* divisional);
 	unsigned GetTremulantCount();
 	GOrgueTremulant* GetTremulant(unsigned index);
+	unsigned GetSwitchCount();
+	GOrgueSwitch* GetSwitch(unsigned index);
 
 	GOrgueCombinationDefinition& GetDivisionalTemplate();
 	const wxString& GetName();

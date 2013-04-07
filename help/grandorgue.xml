@@ -2893,7 +2893,7 @@ containg the stop details.
           <term>NumberOfCouplers</term>
           <listitem>
             <para>
-(integer 0-16, required) Number of couplers associated with this
+(integer 0-16, default: 0) Number of couplers associated with this
 manual. Starting with 1, for each coupler, there is a
 <emphasis>Coupler999</emphasis> setting.
 	    </para>
@@ -2912,7 +2912,7 @@ section containg the coupler details.
           <term>NumberOfDivisionals</term>
           <listitem>
             <para>
-(integer 0-32, required) Number of divisionals associated with this
+(integer 0-32, default: 0) Number of divisionals associated with this
 manual. Starting with 1, for each divisional, there is a
 <emphasis>Divisional999</emphasis> setting.
 	    </para>
@@ -2931,7 +2931,7 @@ section containg the coupler details.
           <term>NumberOfTremulants</term>
           <listitem>
             <para>
-(integer 0-10, required) Number of tremulants associated with this
+(integer 0 - number of tremulants, default: 0) Number of tremulants associated with this
 manual. Starting with 1, for each tremulant, there is a
 <emphasis>Tremulant999</emphasis> setting.
 	    </para>
@@ -2943,6 +2943,25 @@ manual. Starting with 1, for each tremulant, there is a
             <para>
 (integer, required) Number of the <emphasis>Tremulant999</emphasis>
 section containg the tremulant details.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfSwitches</term>
+          <listitem>
+            <para>
+(integer 0 - number of switches, default: 0) Number of switches associated with this
+manual. Starting with 1, for each switch, there is a
+<emphasis>Switch999</emphasis> setting.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Switch999</term>
+          <listitem>
+            <para>
+(integer, required) Number of the <emphasis>Switch999</emphasis>
+section containg the switch details.
 	    </para>
           </listitem>
         </varlistentry>
