@@ -33,7 +33,8 @@ GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_ty
 	m_Displayed(false),
 	m_Name(),
 	m_Engaged(false),
-	m_DisplayInInvertedState(false)
+	m_DisplayInInvertedState(false),
+	m_ReadOnly(false)
 {
 }
 
@@ -73,6 +74,11 @@ void GOrgueButton::Save(GOrgueConfigWriter& cfg)
 bool GOrgueButton::IsDisplayed()
 {
 	return m_Displayed;
+}
+
+bool GOrgueButton::IsReadOnly()
+{
+	return m_ReadOnly;
 }
 
 const wxString& GOrgueButton::GetName()
