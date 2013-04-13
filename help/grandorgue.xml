@@ -2612,6 +2612,15 @@ combination. The entries are called <emphasis>TremulantNumber999</emphasis>.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>NumberOfSwitches</term>
+          <listitem>
+            <para>
+(integer 0 - 999, default: 0) Number of switch state stored in this
+combination. The entries are called <emphasis>SwitchNumber999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>NumberOfDivisionalCouplers</term>
           <listitem>
             <para>
@@ -2662,6 +2671,16 @@ negative, it is turned off, else turned on.
             <para>
 (integer -tremulant count - tremulant count, required)
 Number of the tremulant. If the value is negative, it is turned off,
+else turned on.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>SwitchNumber999</term>
+          <listitem>
+            <para>
+(integer -switch count - switch count, required)
+Number of the switch. If the value is negative, it is turned off,
 else turned on.
 	    </para>
           </listitem>
@@ -2770,6 +2789,16 @@ tremulant state stored in this combination. The entries are called
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>NumberOfSwitches</term>
+          <listitem>
+            <para>
+(integer 0 - switch count of the manual, default) Number of
+switch state stored in this combination. The entries are called
+<emphasis>Switch999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Stop999</term>
           <listitem>
             <para>
@@ -2793,6 +2822,16 @@ negative, it is turned off, else turned on.
             <para>
 (integer -manual tremulant count - manual tremulant count, required)
 Number of the tremulant. If the value is negative, it is turned off,
+else turned on.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Switch999</term>
+          <listitem>
+            <para>
+(integer -manual switch count - manual switch count, required)
+Number of the switch. If the value is negative, it is turned off,
 else turned on.
 	    </para>
           </listitem>
