@@ -53,6 +53,7 @@ void GOrgueFrameGeneral::Load(GOrgueConfigReader& cfg, wxString group)
 		unsigned NumberOfStops = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfStops"), 0, 999);
 		unsigned NumberOfCouplers = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfCouplers"), 0, 999);
 		unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfTremulants"), 0, 999);
+		unsigned NumberOfSwitches = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfSwitches"), 0, 999, false, 0);
 		unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfDivisionalCouplers"), 0, 999, m_organfile->GeneralsStoreDivisionalCouplers());
 		
 		for (unsigned i = 0; i < NumberOfStops; i++)
@@ -116,6 +117,25 @@ void GOrgueFrameGeneral::Load(GOrgueConfigReader& cfg, wxString group)
 			}
 		}
 		
+		for (unsigned i = 0; i < NumberOfSwitches; i++)
+		{
+			buffer.Printf(wxT("SwitchNumber%03d"), i + 1);
+			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -m_organfile->GetSwitchCount(), m_organfile->GetSwitchCount());
+			pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_SWITCH, -1, abs(s));
+			if (pos >= 0)
+			{
+				if (used[pos])
+				{
+					wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+				}
+				used[pos] = true;
+			}
+			else
+			{
+				wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
+		}
+		
 		for (unsigned i = 0; i < NumberOfDivisionalCouplers; i++)
 		{
 			buffer.Printf(wxT("DivisionalCouplerNumber%03d"), i + 1);
@@ -144,6 +164,7 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 	unsigned NumberOfStops = cfg.ReadInteger(type, m_group, wxT("NumberOfStops"), 0, 999);
 	unsigned NumberOfCouplers = cfg.ReadInteger(type, m_group, wxT("NumberOfCouplers"), 0, 999);
 	unsigned NumberOfTremulants = cfg.ReadInteger(type, m_group, wxT("NumberOfTremulants"), 0, 999);
+	unsigned NumberOfSwitches = cfg.ReadInteger(type, m_group, wxT("NumberOfSwitches"), 0, 999, false, 0);
 	unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(type, m_group, wxT("NumberOfDivisionalCouplers"), 0, 999, m_organfile->GeneralsStoreDivisionalCouplers());
 
 	int pos;
@@ -212,6 +233,25 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		}
 	}
 
+	for (unsigned i = 0; i < NumberOfSwitches; i++)
+	{
+		buffer.Printf(wxT("SwitchNumber%03d"), i + 1);
+		int s = cfg.ReadInteger(type, m_group, buffer, -m_organfile->GetSwitchCount(), m_organfile->GetSwitchCount());
+		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_SWITCH, -1, abs(s));
+		if (pos >= 0)
+		{
+			if (m_State[pos] != -1)
+			{
+				wxLogError(_("Duplicate combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+			}
+			m_State[pos] = (s > 0) ? 1 : 0;
+		}
+		else
+		{
+			wxLogError(_("Invalid combination entry %s in %s"), buffer.c_str(), m_group.c_str());
+		}
+	}
+
 	for (unsigned i = 0; i < NumberOfDivisionalCouplers; i++)
 	{
 		buffer.Printf(wxT("DivisionalCouplerNumber%03d"), i + 1);
@@ -260,6 +300,7 @@ void GOrgueFrameGeneral::Save(GOrgueConfigWriter& cfg)
 	unsigned stop_count = 0;
 	unsigned coupler_count = 0;
 	unsigned tremulant_count = 0;
+	unsigned switch_count = 0;
 	unsigned divisional_coupler_count = 0;
 
 	for(unsigned i = 0; i < elements.size(); i++)
@@ -291,6 +332,12 @@ void GOrgueFrameGeneral::Save(GOrgueConfigWriter& cfg)
 			cfg.Write(m_group, buffer, value, true);
 			break;
 
+		case GOrgueCombinationDefinition::COMBINATION_SWITCH:
+			switch_count++;
+			buffer.Printf(wxT("SwitchNumber%03d"), tremulant_count);
+			cfg.Write(m_group, buffer, value, true);
+			break;
+
 		case GOrgueCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
 			divisional_coupler_count++;
 			buffer.Printf(wxT("DivisionalCouplerNumber%03d"), divisional_coupler_count);
@@ -302,5 +349,6 @@ void GOrgueFrameGeneral::Save(GOrgueConfigWriter& cfg)
 	cfg.Write(m_group, wxT("NumberOfStops"), (int)stop_count);
 	cfg.Write(m_group, wxT("NumberOfCouplers"), (int)coupler_count);
 	cfg.Write(m_group, wxT("NumberOfTremulants"), (int)tremulant_count);
+	cfg.Write(m_group, wxT("NumberOfSwitches"), (int)switch_count);
 	cfg.Write(m_group, wxT("NumberOfDivisionalCouplers"), (int)divisional_coupler_count);
 }

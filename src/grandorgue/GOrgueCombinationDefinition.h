@@ -31,7 +31,7 @@ class GrandOrgueFile;
 class GOrgueCombinationDefinition
 {
 public:
-	typedef enum { COMBINATION_STOP = 0, COMBINATION_COUPLER = 1, COMBINATION_TREMULANT = 2, COMBINATION_DIVISIONALCOUPLER = 3 } CombinationType;
+	typedef enum { COMBINATION_STOP = 0, COMBINATION_COUPLER = 1, COMBINATION_TREMULANT = 2, COMBINATION_DIVISIONALCOUPLER = 3, COMBINATION_SWITCH = 4 } CombinationType;
 	typedef struct
 	{
 		CombinationType type;
