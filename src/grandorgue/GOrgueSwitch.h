@@ -22,13 +22,12 @@
 #ifndef GORGUESWITCH_H
 #define GORGUESWITCH_H
 
-#include "GOrgueCombinationElement.h"
+#include "GOrgueDrawStop.h"
 
-class GrandOrgueFile;
-
-class GOrgueSwitch : public GOrgueCombinationElement
+class GOrgueSwitch : public GOrgueDrawstop
 {
-private:
+protected:
+	void ChangeState(bool);
 
 public:
 	GOrgueSwitch(GrandOrgueFile* organfile);

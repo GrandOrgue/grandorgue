@@ -21,11 +21,16 @@
 
 #include "GOrgueSwitch.h"
 
-GOrgueSwitch::GOrgueSwitch(GrandOrgueFile* organfile)
+GOrgueSwitch::GOrgueSwitch(GrandOrgueFile* organfile) :
+	GOrgueDrawstop(organfile)
 {
 }
 
 GOrgueSwitch::~GOrgueSwitch()
+{
+}
+
+void GOrgueSwitch::ChangeState(bool on)
 {
 }
 
