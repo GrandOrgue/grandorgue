@@ -24,6 +24,7 @@
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueManual.h"
 #include "GOrgueStop.h"
+#include "GOrgueSwitch.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
 
@@ -82,6 +83,17 @@ void GOrgueCombinationDefinition::InitGeneral()
 		m_Content.push_back(def);
 	}
 
+	for (unsigned i = 0; i < m_organfile->GetSwitchCount(); i++)
+	{
+		CombinationSlot def;
+		def.type = COMBINATION_SWITCH;
+		def.manual = -1;
+		def.index = i + 1;
+		def.store_unconditional = m_organfile->CombinationsStoreNonDisplayedDrawstops() || m_organfile->GetSwitch(i)->IsDisplayed();
+		def.control = m_organfile->GetSwitch(i);
+		m_Content.push_back(def);
+	}
+
 	for (unsigned i = 0; i < m_organfile->GetDivisionalCouplerCount(); i++)
 	{
 		CombinationSlot def;
@@ -132,6 +144,17 @@ void GOrgueCombinationDefinition::InitDivisional(unsigned manual_number)
 		def.store_unconditional = m_organfile->DivisionalsStoreTremulants() && (m_organfile->CombinationsStoreNonDisplayedDrawstops() || associatedManual->GetTremulant(i)->IsDisplayed());
 		def.group = associatedManual->GetName();
 		def.control = associatedManual->GetTremulant(i);
+		m_Content.push_back(def);
+	}
+	for (unsigned i = 0; i < associatedManual->GetSwitchCount(); i++)
+	{
+		CombinationSlot def;
+		def.type = COMBINATION_SWITCH;
+		def.manual = manual_number;
+		def.index = i + 1;
+		def.store_unconditional = m_organfile->CombinationsStoreNonDisplayedDrawstops() || associatedManual->GetSwitch(i)->IsDisplayed();
+		def.group = associatedManual->GetName();
+		def.control = associatedManual->GetSwitch(i);
 		m_Content.push_back(def);
 	}
 }
