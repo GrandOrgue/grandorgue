@@ -25,6 +25,7 @@
 #include "GOrgueManual.h"
 #include "GOrguePiston.h"
 #include "GOrgueStop.h"
+#include "GOrgueSwitch.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
 
@@ -47,17 +48,24 @@ void GOrguePiston::Load(GOrgueConfigReader& cfg, wxString group)
 		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetStopCount()) - 1;
 		drawstop = m_organfile->GetManual(i)->GetStop(j);
 	}
-	if (type == wxT("COUPLER"))
+	else if (type == wxT("COUPLER"))
 	{
 		i = cfg.ReadInteger(ODFSetting, group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetODFManualCount() - 1);
 		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetCouplerCount()) - 1;
 		drawstop = m_organfile->GetManual(i)->GetCoupler(j);
 	}
-	if (type == wxT("TREMULANT"))
+	else if (type == wxT("TREMULANT"))
 	{
 		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetTremulantCount()) - 1;
 		drawstop = m_organfile->GetTremulant(j);
 	}
+	else if (type == wxT("SWITCH"))
+	{
+		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetSwitchCount()) - 1;
+		drawstop = m_organfile->GetSwitch(j);
+	}
+	else
+	  throw wxString::Format(_("Invalid object type for reversible piston"));
 
 	GOrguePushbutton::Load(cfg, group);
 	ControlChanged(drawstop);
