@@ -45,6 +45,7 @@ protected:
 	wxString m_Name;
 	bool m_Engaged;
 	bool m_DisplayInInvertedState;
+	bool m_ReadOnly;
 
 public:
 	GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton);
@@ -53,6 +54,7 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	virtual void Save(GOrgueConfigWriter& cfg);
 	bool IsDisplayed();
+	bool IsReadOnly();
 	const wxString& GetName();
 	GOrgueMidiReceiver& GetMidiReceiver();
 	GOrgueMidiSender& GetMidiSender();

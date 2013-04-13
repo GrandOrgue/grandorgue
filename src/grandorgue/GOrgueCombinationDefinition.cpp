@@ -46,6 +46,8 @@ void GOrgueCombinationDefinition::InitGeneral()
 	{
 		for (unsigned i = 0; i < m_organfile->GetManual(j)->GetStopCount(); i++)
 		{
+			if (m_organfile->GetManual(j)->GetStop(i)->IsReadOnly())
+				continue;
 			CombinationSlot def;
 			def.type = COMBINATION_STOP;
 			def.manual = j;
@@ -61,6 +63,8 @@ void GOrgueCombinationDefinition::InitGeneral()
 	{
 		for (unsigned i = 0; i < m_organfile->GetManual(j)->GetCouplerCount(); i++)
 		{
+			if (m_organfile->GetManual(j)->GetCoupler(i)->IsReadOnly())
+				continue;
 			CombinationSlot def;
 			def.type = COMBINATION_COUPLER;
 			def.manual = j;
@@ -74,6 +78,8 @@ void GOrgueCombinationDefinition::InitGeneral()
 
 	for (unsigned i = 0; i < m_organfile->GetTremulantCount(); i++)
 	{
+		if (m_organfile->GetTremulant(i)->IsReadOnly())
+			continue;
 		CombinationSlot def;
 		def.type = COMBINATION_TREMULANT;
 		def.manual = -1;
@@ -85,6 +91,8 @@ void GOrgueCombinationDefinition::InitGeneral()
 
 	for (unsigned i = 0; i < m_organfile->GetSwitchCount(); i++)
 	{
+		if (m_organfile->GetSwitch(i)->IsReadOnly())
+			continue;
 		CombinationSlot def;
 		def.type = COMBINATION_SWITCH;
 		def.manual = -1;
@@ -96,6 +104,8 @@ void GOrgueCombinationDefinition::InitGeneral()
 
 	for (unsigned i = 0; i < m_organfile->GetDivisionalCouplerCount(); i++)
 	{
+		if (m_organfile->GetDivisionalCoupler(i)->IsReadOnly())
+			continue;
 		CombinationSlot def;
 		def.type = COMBINATION_DIVISIONALCOUPLER;
 		def.manual = -1;
@@ -113,6 +123,8 @@ void GOrgueCombinationDefinition::InitDivisional(unsigned manual_number)
 
 	for (unsigned i = 0; i < associatedManual->GetStopCount(); i++)
 	{
+		if (associatedManual->GetStop(i)->IsReadOnly())
+			continue;
 		CombinationSlot def;
 		def.type = COMBINATION_STOP;
 		def.manual = manual_number;
@@ -124,6 +136,8 @@ void GOrgueCombinationDefinition::InitDivisional(unsigned manual_number)
 	}
 	for (unsigned i = 0; i < associatedManual->GetCouplerCount(); i++)
 	{
+		if (associatedManual->GetCoupler(i)->IsReadOnly())
+			continue;
 		CombinationSlot def;
 		def.type = COMBINATION_COUPLER;
 		def.manual = manual_number;
@@ -137,6 +151,8 @@ void GOrgueCombinationDefinition::InitDivisional(unsigned manual_number)
 	}
 	for (unsigned i = 0; i < associatedManual->GetTremulantCount(); i++)
 	{
+		if (associatedManual->GetTremulant(i)->IsReadOnly())
+			continue;
 		CombinationSlot def;
 		def.type = COMBINATION_TREMULANT;
 		def.manual = manual_number;
@@ -148,6 +164,8 @@ void GOrgueCombinationDefinition::InitDivisional(unsigned manual_number)
 	}
 	for (unsigned i = 0; i < associatedManual->GetSwitchCount(); i++)
 	{
+		if (associatedManual->GetSwitch(i)->IsReadOnly())
+			continue;
 		CombinationSlot def;
 		def.type = COMBINATION_SWITCH;
 		def.manual = manual_number;
