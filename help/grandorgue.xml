@@ -4593,7 +4593,7 @@ following additional attributes:
           <listitem>
             <para>
 (string, required) Type of the element to trigger. Value can be STOP,
-COUPLER or TREMULANT.
+COUPLER, SWITCH or TREMULANT.
 	    </para>
           </listitem>
         </varlistentry>
@@ -4611,8 +4611,8 @@ and coupler) The manual, to which the referenced object belongs.
           <listitem>
             <para>
 (integer, required) Determines the number of the object. Depending on
-the object it must be a valid stop/coupler number on the referenced
-manual or a valid global tremulant number.
+the object it must be a valid stop/coupler/switch number on the
+referenced manual or a valid global tremulant number.
 	    </para>
           </listitem>
         </varlistentry>
