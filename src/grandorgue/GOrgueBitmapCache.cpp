@@ -35,13 +35,38 @@ GOrgueBitmapCache::GOrgueBitmapCache(GrandOrgueFile* organfile) :
 	RegisterBitmap(new wxBitmap(GetImage_draw1on()), wxT("GO:drawstop01_on"));
 	RegisterBitmap(new wxBitmap(GetImage_draw2off()), wxT("GO:drawstop02_off"));
 	RegisterBitmap(new wxBitmap(GetImage_draw2on()), wxT("GO:drawstop02_on"));
+	RegisterBitmap(new wxBitmap(GetImage_draw3off()), wxT("GO:drawstop03_off"));
+	RegisterBitmap(new wxBitmap(GetImage_draw3on()), wxT("GO:drawstop03_on"));
+	RegisterBitmap(new wxBitmap(GetImage_draw3off()), wxT("GO:drawstop04_off"));
+	RegisterBitmap(new wxBitmap(GetImage_draw4on()), wxT("GO:drawstop04_on"));
+	RegisterBitmap(new wxBitmap(GetImage_draw5off()), wxT("GO:drawstop05_off"));
+	RegisterBitmap(new wxBitmap(GetImage_draw5on()), wxT("GO:drawstop05_on"));
+	RegisterBitmap(new wxBitmap(GetImage_draw6off()), wxT("GO:drawstop06_off"));
+	RegisterBitmap(new wxBitmap(GetImage_draw6on()), wxT("GO:drawstop06_on"));
 
 	RegisterBitmap(new wxBitmap(GetImage_hpiston()), wxT("GO:piston01_off"));
 	RegisterBitmap(new wxBitmap(GetImage_hpiston2()), wxT("GO:piston01_on"));
 	RegisterBitmap(new wxBitmap(GetImage_fpiston()), wxT("GO:piston02_off"));
 	RegisterBitmap(new wxBitmap(GetImage_fpiston2()), wxT("GO:piston02_on"));
+	RegisterBitmap(new wxBitmap(GetImage_piston3off()), wxT("GO:piston03_off"));
+	RegisterBitmap(new wxBitmap(GetImage_piston3on()), wxT("GO:piston03_on"));
+	RegisterBitmap(new wxBitmap(GetImage_piston4off()), wxT("GO:piston04_off"));
+	RegisterBitmap(new wxBitmap(GetImage_piston4on()), wxT("GO:piston04_on"));
+	RegisterBitmap(new wxBitmap(GetImage_piston5off()), wxT("GO:piston05_off"));
+	RegisterBitmap(new wxBitmap(GetImage_piston5on()), wxT("GO:piston05_on"));
 
 	RegisterBitmap(new wxBitmap(GetImage_label()), wxT("GO:label01"));
+	RegisterBitmap(new wxBitmap(GetImage_label2()), wxT("GO:label02"));
+	RegisterBitmap(new wxBitmap(GetImage_label3()), wxT("GO:label03"));
+	RegisterBitmap(new wxBitmap(GetImage_label4()), wxT("GO:label04"));
+	RegisterBitmap(new wxBitmap(GetImage_label5()), wxT("GO:label05"));
+	RegisterBitmap(new wxBitmap(GetImage_label6()), wxT("GO:label06"));
+	RegisterBitmap(new wxBitmap(GetImage_label7()), wxT("GO:label07"));
+	RegisterBitmap(new wxBitmap(GetImage_label8()), wxT("GO:label08"));
+	RegisterBitmap(new wxBitmap(GetImage_label9()), wxT("GO:label09"));
+	RegisterBitmap(new wxBitmap(GetImage_label10()), wxT("GO:label10"));
+	RegisterBitmap(new wxBitmap(GetImage_label11()), wxT("GO:label11"));
+	RegisterBitmap(new wxBitmap(GetImage_label12()), wxT("GO:label12"));
 
 	RegisterBitmap(new wxBitmap(GetImage_Enclosure0()), wxT("GO:enclosure0"));
 	RegisterBitmap(new wxBitmap(GetImage_Enclosure1()), wxT("GO:enclosure1"));
