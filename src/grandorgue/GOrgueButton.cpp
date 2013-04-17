@@ -48,9 +48,12 @@ void GOrgueButton::Init(GOrgueConfigReader& cfg, wxString group, wxString name)
 	m_Name = name;
 	m_Displayed = false;
 	m_DisplayInInvertedState = false;
-	m_midi.Load(cfg, group);
+	if (!m_ReadOnly)
+	{
+		m_midi.Load(cfg, group);
+		m_shortcut.Load(cfg, group);
+	}
 	m_sender.Load(cfg, group);
-	m_shortcut.Load(cfg, group);
 }
 
 void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group)
@@ -59,16 +62,22 @@ void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group)
 	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, true);
 	m_Displayed = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), true, false);
 	m_DisplayInInvertedState = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
-	m_midi.Load(cfg, group);
+	if (!m_ReadOnly)
+	{
+		m_midi.Load(cfg, group);
+		m_shortcut.Load(cfg, group);
+	}
 	m_sender.Load(cfg, group);
-	m_shortcut.Load(cfg, group);
 }
 
 void GOrgueButton::Save(GOrgueConfigWriter& cfg)
 {
-	m_midi.Save(cfg, m_group);
+	if (!m_ReadOnly)
+	{
+		m_midi.Save(cfg, m_group);
+		m_shortcut.Save(cfg, m_group);
+	}
 	m_sender.Save(cfg, m_group);
-	m_shortcut.Save(cfg, m_group);
 }
 
 bool GOrgueButton::IsDisplayed()
@@ -103,12 +112,16 @@ GOrgueKeyReceiver& GOrgueButton::GetKeyReceiver()
 
 void GOrgueButton::HandleKey(int key)
 {
+	if (m_ReadOnly)
+		return;
 	if (m_shortcut.Match(key))
 		Push();
 }
 
 void GOrgueButton::Push()
 {
+	if (m_ReadOnly)
+		return;
 	Set(m_Engaged ^ true);
 }
 
@@ -128,6 +141,8 @@ void GOrgueButton::PreparePlayback()
 
 void GOrgueButton::ProcessMidi(const GOrgueMidiEvent& event)
 {
+	if (m_ReadOnly)
+		return;
 	switch(m_midi.Match(event))
 	{
 	case MIDI_MATCH_CHANGE:
