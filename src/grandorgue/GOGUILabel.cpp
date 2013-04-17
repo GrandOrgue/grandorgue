@@ -42,15 +42,13 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, un
 {
 }
 
-void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group)
+void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned DispImageNum)
 {
 	GOGUIControl::Init(cfg, group);
 
 	m_TextColor = wxColour(0x00, 0x00, 0x00);
 	m_FontSize = 7;
 	m_FontName = wxT("");
-
-	unsigned DispImageNum = 1;
 
 	wxString image_file = wxString::Format(wxT("GO:label%02d"), DispImageNum);
 	wxString image_mask_file = wxEmptyString;
@@ -118,7 +116,7 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 	m_FontName = cfg.ReadString(ODFSetting, group, wxT("DispLabelFontName"), 255, false, wxT(""));
 	m_Text = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, false, m_Text);
 
-	unsigned DispImageNum = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 1, false, 1);
+	unsigned DispImageNum = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 12, false, 1);
 
 	wxString image_file = cfg.ReadString(ODFSetting, group, wxT("Image"), 255, false, wxString::Format(wxT("GO:label%02d"), DispImageNum));
 	wxString image_mask_file = cfg.ReadString(ODFSetting, group, wxT("Mask"), 255, false, wxEmptyString);

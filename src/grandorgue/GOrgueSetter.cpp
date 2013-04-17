@@ -454,8 +454,8 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 	button->Init(cfg, wxT("SetterMasterTemperamentPrev"));
 	panel->AddControl(button);
 
-	PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel(), 80, 95);
-	PosDisplay->Init(cfg, wxT("SetterMasterTemperament"));
+	PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel(), 80, 80);
+	PosDisplay->Init(cfg, wxT("SetterMasterTemperament"), 2);
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_TEMPERAMENT_NEXT], false, 3, 101);
