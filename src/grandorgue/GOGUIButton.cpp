@@ -58,12 +58,12 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group)
 	int x, y, w, h;
 
 	bool DispKeyLabelOnLeft = true;
-	int DispImageNum = 1;
 
 	wxString off_mask_file, on_mask_file;
 	wxString on_file, off_file;
 	if (m_IsPiston)
 	{
+		int DispImageNum = m_Button->IsReadOnly() ? 3 : 1;
 		off_file = wxString::Format(wxT("GO:piston%02d_off"), DispImageNum);
 		on_file = wxString::Format(wxT("GO:piston%02d_on"), DispImageNum);
 		
@@ -73,6 +73,7 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group)
 	}
 	else
 	{
+		int DispImageNum = m_Button->IsReadOnly() ? 4 : 1;
 		off_file = wxString::Format(wxT("GO:drawstop%02d_off"), DispImageNum);
 		on_file = wxString::Format(wxT("GO:drawstop%02d_on"), DispImageNum);
 
@@ -124,12 +125,12 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 	int x, y, w, h;
 
 	bool DispKeyLabelOnLeft = cfg.ReadBoolean(ODFSetting, group, wxT("DispKeyLabelOnLeft"), false, true);
-	int DispImageNum = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 2, false, 1);
 
 	wxString off_mask_file, on_mask_file;
 	wxString on_file, off_file;
 	if (m_IsPiston)
 	{
+		int DispImageNum = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 5, false, m_Button->IsReadOnly() ? 3 : 1);
 		off_file = wxString::Format(wxT("GO:piston%02d_off"), DispImageNum);
 		on_file = wxString::Format(wxT("GO:piston%02d_on"), DispImageNum);
 		
@@ -141,6 +142,7 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 	}
 	else
 	{
+		int DispImageNum = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 6, false, m_Button->IsReadOnly() ? 4 : 1);
 		off_file = wxString::Format(wxT("GO:drawstop%02d_off"), DispImageNum);
 		on_file = wxString::Format(wxT("GO:drawstop%02d_on"), DispImageNum);
 

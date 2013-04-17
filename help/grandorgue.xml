@@ -3352,7 +3352,7 @@ group label font of the panel.
           <term>DispImageNum</term>
           <listitem>
             <para>
-(integer 1-1, default: 1) Builtin bitmap set to use.
+(integer 1-12, default: 1) Builtin bitmap set to use.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3681,8 +3681,10 @@ is false, move it a little bit left.  Otherwise ignored.
           <term>DispImageNum</term>
           <listitem>
             <para>
-(integer 1-2, default: 1) Builtin bitmap set to use. GrandOrgue has
-two for drawstops and two for pistons.
+(integer 1- type dependend, default: see below) Builtin bitmap set to
+use. GrandOrgue has 6 for drawstops and 5 for pistons. The default is
+3 (piston) or 4 (drawstops) for read-only buttons, otherwise the
+default is 1.
 	    </para>
           </listitem>
         </varlistentry>
