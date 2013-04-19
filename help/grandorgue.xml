@@ -3,20 +3,20 @@
 <book lang="en">
 <!--
  GrandOrgue - free pipe organ simulator
- 
+
  Copyright 2006 Milan Digital Audio LLC
  Copyright 2009-2013 GrandOrgue contributors (see AUTHORS)
- 
+
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License as
  published by the Free Software Foundation; either version 2 of the
  License, or (at your option) any later version.
- 
+
  This program is distributed in the hope that it will be useful, but
  WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -63,17 +63,17 @@ Welcome to the manual for GrandOrgue.
         <para>
 Click the Contents tab to display a list of important topics about the
 program.
-	</para>
+        </para>
       </listitem>
       <listitem>
         <para>
 Click the Index tab to display an alphabetical listing of topics.
-	</para>
+        </para>
       </listitem>
       <listitem>
         <para>
 Click the Search tab to search for a specific word in the help system.
-	</para>
+        </para>
       </listitem>
     </itemizedlist>
   </chapter>
@@ -90,7 +90,7 @@ Click the Search tab to search for a specific word in the help system.
       <para>
 GrandOrgue allows the user to load and play virtual pipe organs.
 Using sample sets, GrandOrgue is able to combine the individual pipe
-sounds and organ behaviours to simulate a variety of pipe organs.
+sounds and organ behaviors to simulate a variety of pipe organs.
       </para>
     </sect1>
     <sect1>
@@ -102,10 +102,10 @@ sounds and organ behaviours to simulate a variety of pipe organs.
 GrandOrgue is capable of loading and faithfully reproducing a variety
 of sample sets. The sample set format is described later in this
 manual. The format is backward compatible to Hauptwerk&#8482; version
-1 samplesets. As such, you won't be able to do anything at all with
+1 samplesets. As such, you won&apos;t be able to do anything at all with
 GrandOrgue without at least one sample set. Sample sets generally come
 packaged or with installers. By default, the software loads organs
-from "My Organs" in your documents folder, but you may store sample
+from &quot;My Organs&quot; in your documents folder, but you may store sample
 sets wherever is convenient and space permits.
 
 Please look at https://sourceforge.net/p/ourorgan/samplesets/ for
@@ -121,52 +121,57 @@ more information.
         <listitem>
           <para>
 High definition output with supporting hardware
-	  </para>
+          </para>
         </listitem>
         <listitem>
           <para>
 High precision internal processing for optimal sound quality
-	  </para>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+Integrated software reverberation
+          </para>
         </listitem>
         <listitem>
           <para>
 Polyphony management to avoid CPU overload
-	  </para>
+          </para>
         </listitem>
         <listitem>
           <para>
 Low latency output with proper hardware support
-	  </para>
+          </para>
         </listitem>
         <listitem>
           <para>
-Quick and easy MIDI setup, including "Listen for Event"
-	  </para>
+Quick and easy MIDI setup, including &quot;Listen for Event&quot;
+          </para>
         </listitem>
         <listitem>
           <para>
 Lossless compression reduces RAM requirements by up to 40%
-	  </para>
+          </para>
         </listitem>
         <listitem>
           <para>
 Release sample enhancements for realistic sound
-	  </para>
+          </para>
         </listitem>
         <listitem>
           <para>
 All features and enhancements configurable
-	  </para>
+          </para>
         </listitem>
         <listitem>
           <para>
 High speed loading and caching of sample sets
-	  </para>
+          </para>
         </listitem>
         <listitem>
           <para>
 Save settings per sample set or export to settings files
-	  </para>
+          </para>
         </listitem>
       </itemizedlist>
     </sect1>
@@ -181,7 +186,7 @@ Save settings per sample set or export to settings files
           <listitem>
             <para>
 SSE3 capable processor
-	    </para>
+            </para>
             <para>
               <emphasis>NOTE: A newer, faster processor will permit a higher
 polyphony</emphasis>
@@ -191,13 +196,13 @@ polyphony</emphasis>
             <para>
 Sufficient RAM to fully load the largest sample set you wish to use. A
 64 bit OS is recommended to support larger sample set sizes.
-	    </para>
+            </para>
           </listitem>
           <listitem>
             <para>
 A hard disk (or other storage) with enough free space to store sample sets.
 The use of the cache increases the necessary disk space.
-	    </para>
+            </para>
           </listitem>
         </itemizedlist>
       </sect2>
@@ -208,33 +213,209 @@ The use of the cache increases the necessary disk space.
     <indexterm>
       <primary>User Interface</primary>
     </indexterm>
+    <para>The user interface has a menu bar, a tool bar and a console section where the organ console is displayed.</para>
     <figure>
       <title>GrandOrgue User Interface</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="Burea_funeral_extend_main.png" scalefit="1" width="100%" />
+          <imagedata width="100%" scalefit="1" fileref="Burea_funeral_extend_main.png"/>
         </imageobject>
       </mediaobject>
     </figure>
+    <sect1>
+      <title>Menu bar</title>
+      <para>The menu bar has 4 menus:</para>
+      <itemizedlist>
+        <listitem>
+          <para>File: file operations, exit</para>
+        </listitem>
+        <listitem>
+          <para>Audio/Midi: manage settings</para>
+        </listitem>
+        <listitem>
+          <para>Panel: manage additional panels</para>
+        </listitem>
+        <listitem>
+          <para>Help: display on-line help</para>
+        </listitem>
+      </itemizedlist>
+    </sect1>
+    <sect1>
+      <title>Tool bar</title>
+      <para>The tool bar provides a number of controls which can be accessed easily while playing the organ.</para>
+    </sect1>
+    <sect1>
+      <title>Console Section</title>
+      <para>
+The console section displays the organ console and all its bells and whistles as provided by the sample set creator.</para>
+      <para>Note: the figure above shows the &quot;classical&quot; church organ disposition. It is possible to design any kind of disposition, since all display elements are freely placeable anywhere on the console panel.
+      </para>
+      <sect2>
+        <title>Manuals</title>
+        <indexterm>
+          <primary>Manuals</primary>
+        </indexterm>
+        <para>
+ Each manual as well as the pedalboard is displayed in the center of
+ the screen. The keys are outlined when messages are received, and
+ can be engaged by clicking the mouse. Right clicking on a manual will
+ open its corresponding MIDI Event Editor.
+ </para>
+      </sect2>
+      <sect2>
+        <title>Expression Shoes</title>
+        <indexterm>
+          <primary>Expression Shoes</primary>
+        </indexterm>
+        <para>Expression shoes are displayed directly above the pedalboard, sometimes
+ referred to as &quot;swell pedals&quot;, although they may control any of the
+ manuals (Great, Swell, Wonderful, etc). On a pipe organ, swell
+ shutters dampen the sound, and this is simulated in GrandOrgue by
+ adjusting the volume of the enclosed pipes. While the mouse is over a
+ pedal, you may
+ </para>
+        <itemizedlist>
+          <listitem>
+            <para>use the mouse wheel to adjust its position, </para>
+          </listitem>
+          <listitem>
+            <para>left click and drag the shoe to the desired position</para>
+          </listitem>
+          <listitem>
+            <para>right  click to open its corresponding MIDI Event Editor.</para>
+          </listitem>
+        </itemizedlist>
+        <para>The sample set creator can also provide a crescendo shoe.     </para>
+      </sect2>
+      <sect2>
+        <title>Drawstops</title>
+        <indexterm>
+          <primary>Drawstops</primary>
+        </indexterm>
+        <para>
+The drawstops engage or disengage various components of the organ when
+clicked - generally new ranks of pipes which are applied to each
+manual. Other drawstops may perform actions such as coupling one
+manual to another. This deals with the functionality of pipe organs
+and is beyond the scope of this documentation. Right clicking on a
+drawstop will open its corresponding MIDI Event Editor. Any changes
+made there may be saved or exported into a settings file.
+        </para>
+        <para>Note: Keep the left button pressed and sweep the mouse over the stop jamb to pull or push multiple drawstops in a single movement.</para>
+        <para>Note: The &quot;sweep&quot; feature is usable on  all clickable display elements, and should be very useful with touch screens.</para>
+      </sect2>
+      <sect2>
+        <title>Pistons</title>
+        <indexterm>
+          <primary>Pistons</primary>
+        </indexterm>
+        <para>
+ Pistons generally perform an action when clicked and do not have an
+ on/off toggle, although some pistons may toggle in this way. Pistons
+ often recall drawstop combinations, and when used in combination with
+ the Memory Set, you can store your own combinations in the
+ pistons. Right clicking on a piston will open its corresponding MIDI
+ Event Editor. Any changes made there may be saved or exported into a
+ settings file.
+       </para>
+      </sect2>
+      <sect2>
+        <title>Panels</title>
+        <indexterm>
+          <primary>Panels</primary>
+        </indexterm>
+        <para>GrandOrgue provides additional panels. These panels work as console extensions and are not displayed by default. They can be accessed via the <link linkend="panel">Panels</link> menu.</para>
+      </sect2>
+    </sect1>
+  </chapter>
+  <chapter>
+    <title>Tool Bar</title>
+    <sect1>
+      <title>Memory Set</title>
+      <indexterm>
+        <primary>Memory Set</primary>
+      </indexterm>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="memory_set.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>
+This &quot;button&quot; is a shortcut to <link linkend="memoryset">Memory Set</link> in the <emphasis>Audio/Midi menu</emphasis>.</para>
+      <para>The <emphasis>Shift</emphasis> key on the computer keyboard is a fugitive shortcut to this button: when the user clicks on a piston while holding the <emphasis>Shift</emphasis> key, the currently pulled drawstops are stored in the piston memory.</para>
+    </sect1>
+    <sect1>
+      <title>Program Changes</title>
+      <indexterm>
+        <primary>Program Changes</primary>
+      </indexterm>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="sequencer_control.png" arch=""/>
+        </imageobject>
+      </mediaobject>
+      <para>
+The spinner sets the current program number. This might be termed a
+&quot;sequencer&quot; on modern computerized organs. It is possible to store up
+to 1000 organ states and access them sequentially via the predefined
+MIDI events, or access any setting directly through the spinner. You
+may also use the left and right keys on the computer keyboard to scroll through
+the programs, and down to reactivate the current program (if you have
+changed the stops since last activating it, for example). Note also
+that when memory set is engaged, the target program will be stored to,
+i.e. if you push Shift + Right then the program would be advanced and
+the current settings would be saved to this same next program.
+      </para>
+      <para>More options are available on the <emphasis>Combination Setter</emphasis> panel.
+      </para>
+    </sect1>
     <sect1>
       <title>Volume Control</title>
       <indexterm>
         <primary>Volume Control</primary>
       </indexterm>
       <para>
-The volume control sets the volume control <emphasis>in dB</emphasis>
-To the right of the spinner are the left and right audio monitors,
-respectively. The clip indicator at the far right will turn red if
-clipping occurs, and will stay red until the volume is adjusted.
-</para>
+         <mediaobject>
+          <imageobject>
+            <imagedata fileref="volume_control.png"/>
+          </imageobject>
+        </mediaobject>The volume control sets the volume control <emphasis>in dB</emphasis>.
+Left and right audio monitors are displayed next to the spinner. The clip indicator at the far right will turn red if
+clipping occurs, and will stay red until the volume is adjusted.</para>
+    </sect1>
+    <sect1>
+      <title>Release Tail Length</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="release_control.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>
+The release tail length control sets the duration the sound engine uses to play the release section of the sample. The values are: Max, 2.8 s, 1.4 s, 700 ms, 350 ms, 175 ms.</para>
+      <para>The <emphasis>Max</emphasis> value makes the sound engine play the complete release section as provided by the sample set creator.</para>
+      <para>The other values are used by the sound engine as the fade out duration of the sample release section.</para>
+    </sect1>
+    <sect1>
+      <title>Transposer</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="transposer_control.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>The transposer control shifts the notes up or down by semitone steps. The allowed range is {-11, +11} semitones.</para>
+      <para>Note that the samples are <emphasis>not</emphasis> retuned. This transposer works like the mechanical transposer on genuine pipe organs or reed organs: the <emphasis>keyboard</emphasis>  is shifted up or down, and if the targeted  note is missing (i.e. no sample) there is no sound.</para>
     </sect1>
     <sect1>
       <title>Polyphony Control</title>
       <indexterm>
         <primary>Polyphony Control</primary>
       </indexterm>
-      <para>
-The polyphony control sets the maximum polyphony before GrandOrgue
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="polyphony_control.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>The polyphony control sets the maximum polyphony before GrandOrgue
 will refuse to play any additional samples. To oversimplify, polyphony
 is the number of pipes that may sound simultaneously; but polyphony
 may also be consumed when a key is released. It is recommended to
@@ -242,104 +423,30 @@ experiment with this setting initially, but leave it once you find an
 acceptable setting. Your setting should balance between too little
 polyphony (where you might not be able to play many notes on large
 sample sets) and too much polyphony (where the CPU will overload and
-artifacts will appear in the sound). Note that "wet" sample sets
+artifacts will appear in the sound). Note that &quot;wet&quot; sample sets
 (those with considerable reverberation) will consume polyphony many
 seconds after the note is actually released. The default setting of
-1024 should provide a reasonable starting point on a 1GHz CPU. To the
-right of the spinner is the polyphony monitor. The clip indicator at
+2048 should provide a reasonable starting point on a 1GHz CPU. The polyphony monitor is displayed next to the spinner. The clip indicator at
 the far right will turn red if the polyphony limit has been reached,
 and will stay red until the polyphony is adjusted.
 </para>
     </sect1>
     <sect1>
-      <title>Program Changes</title>
+      <title>Panic Button</title>
       <indexterm>
-        <primary>Program Changes</primary>
+        <primary>Panic Button</primary>
       </indexterm>
-      <para>
-The spinner sets the current program number. This might be termed a
-"sequencer" on modern computerized organs. It is possible to store up
-to 1000 organ states and access them sequentially via the predefined
-MIDI events, or access any setting directly through the spinner. You
-may also use the left and right keys on the keyboard to scroll through
-the programs, and down to reactivate the current program (if you have
-changed the stops since last activating it, for example). Note also
-that when memory set is engaged, the target program wil be stored to,
-i.e. if you push Shift + Right then the program would be advanced and
-the current settings would be saved to this same next program.
-      </para>
-      <para>
-More options are available on the <emphasis>Combination
-Setter</emphasis> panel.
-      </para>
-    </sect1>
-    <sect1>
-      <title>Manuals</title>
-      <indexterm>
-        <primary>Manuals</primary>
-      </indexterm>
-      <para>
-Each manual as well as the pedalboard is displayed in the center of
-the screen. The keys are outlined when messages are received, but may
-not be engaged by clicking the mouse. Right clicking on a manual will
-open its corresponding MIDI Event Editor.
-</para>
-    </sect1>
-    <sect1>
-      <title>Expression Pedals</title>
-      <indexterm>
-        <primary>Expression Pedals</primary>
-      </indexterm>
-      <para>
-Directly above the pedalboard are displayed the pedals, sometimes
-referred to as "swell pedals", although they may control any of the
-manuals (Great, Swell, Wonderful, etc). On a pipe organ, swell
-shutters dampen the sound, and this is simulated in GrandOrgue by
-adjusting the volume of the enclosed pipes. While the mouse is over a
-pedal, you may use the mouse wheel to adjust its position, or right
-click to open its corresponding MIDI Event Editor.
-      </para>
-    </sect1>
-    <sect1>
-      <title>Drawstops</title>
-      <indexterm>
-        <primary>Drawstops</primary>
-      </indexterm>
-      <para>
-The drawstops engage or disengage various components of the organ when
-clicked - generally new ranks of pipes which are applied to each
-manual. Other drawstops may perform actions such as coupling one
-manual to another. This deals with the functionality of pipe organs
-and is beyond the scope of this documentation. Right clicking on a
-drawstop will open its corresponding MIDI Event Editor. Any changes
-made there may be saved or exported into a settings files.
-</para>
-    </sect1>
-    <sect1>
-      <title>Pistons</title>
-      <indexterm>
-        <primary>Pistons</primary>
-      </indexterm>
-      <para>
-Pistons generally perform an action when clicked and do not have an
-on/off toggle, although some pistons may toggle in this way. Pistons
-often recall drawstop combinations, and when used in combination with
-the Memory Set, you can store your own combinations in the
-pistons. Right clicking on a piston will open its corresponding MIDI
-Event Editor. Any changes made there may be saved or exported into a
-settings files.
-      </para>
-    </sect1>
-    <sect1>
-      <title>Panels</title>
-      <indexterm>
-        <primary>Panels</primary>
-      </indexterm>
-      <para>
-GrandOrgue provides additional panel. Some are predefined and contain
-fixed functions (crescendo, couplers). The organ definition can also
-ship organ specific panels.
-      </para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="panic_button.png"/>
+        </imageobject>
+      </mediaobject>
+      <para>The effect of the panic button is to reset the sound, stopping all
+sound and turning off all notes. It may also be quickly accessed on
+the toolbar or via the <emphasis>Escape</emphasis> key. This should be generally
+unnecessary, although it may be useful if you need to quickly stop the
+sound output, or if the sound is breaking up due to CPU overload.
+        </para>
     </sect1>
   </chapter>
   <chapter>
@@ -359,59 +466,64 @@ saving of sample sets.
       <para>
 Import a sample set stored in a definition file. The location will be
 remembered for the next open operation. The most recently used sample
-sets are also remembered and available in the "Import Recent"
-popup. Loading sample sets takes some time; a progress window will
-display indicating estimated time remaining and other indicators. If
-you open a new sample set which shares samples with the previously
-loaded sample set, those files are cached and will not be reloaded
-from disk.
+sets are also remembered and available in the &quot;Open Recent&quot;
+menu item. Loading sample sets takes some time; a progress window will
+display indicating estimated time remaining and other indicators.
+ </para>
+    </sect1>
+    <sect1>
+      <title>Open Recent</title>
+      <indexterm>
+        <primary>Open Recent</primary>
+        <secondary>Open</secondary>
+      </indexterm>
+      <para>
+The last 30 used definition files are remembered and displayed as a sub menu.
+If the selected file is not found, an error message is displayed and the sub menu
+item is <emphasis>removed</emphasis>.
+     </para>
+    </sect1>
+    <sect1>
+      <title>Organ Properties</title>
+      <indexterm>
+        <primary>Organ Properties</primary>
+      </indexterm>
+      <para>
+Open a window which displays various characteristics of the loaded sample set
+as provided by the sample set producer. If available, there is also a
+link to &quot;More Information&quot; which will display additional information in
+another application.
       </para>
     </sect1>
     <sect1>
-      <title>Reload</title>
+      <title>Preset</title>
       <indexterm>
-        <primary>Reload</primary>
+        <primary>Preset</primary>
       </indexterm>
       <para>
-Reload the currently loaded sample set from disk. This may be used to
-quickly restore a sample set to its saved status, for example if a
-settings file has been applied.
+Select the settings file number. A single sample set can create and use up to 10 different settings files.
+     </para>
+      <para>
+Selecting the preset number triggers a reload of the sample set, using the presets stored in the selected file.
+If the preset file does not exist, the sample set is reloaded from the organ definition file as provided by the
+ sample set creator.
+     </para>
+      <para>
+A new settings file is created whenever the <link linkend="save">Save</link> menu item is selected.
+The file is stored in the directory currently designated by the <!--link linkend="settingsstore"-->Settings Store<!--/link-->  parameter in the <emphasis>Options</emphasis> tab,
+and the file name is meaningless (as in: not related to the sample set/organ/church name) for the user.
       </para>
     </sect1>
-    <sect1 id="resettodefaults">
-      <title>Reset to Defaults</title>
+    <sect1 id="save">
+      <title>Save</title>
       <indexterm>
-        <primary>Reset to Defaults</primary>
+        <primary>Save</primary>
       </indexterm>
       <para>
-Reset the currently loaded sample set to the settings as originally
-supplied by the sample set provider. You will be asked to verify that
-you wish to discard your modifications. Note that these settings are
-stored at the end of the definition file and could be easily removed
-with a text editor as well if necessary.
-      </para>
-    </sect1>
-    <sect1>
-      <title>Import Settings</title>
-      <indexterm>
-        <primary>Import Settings</primary>
-      </indexterm>
-      <para>
-Apply a settings file to the currently loaded sample set. Note that
-settings may only be applied to a matching sample set, and you will
-receive a warning if you try to do otherwise. The location will be
-remembered for the next time, independently of other saved locations.
-</para>
-    </sect1>
-    <sect1>
-      <title>Export Settings</title>
-      <indexterm>
-        <primary>Export Settings</primary>
-      </indexterm>
-      <para>
-Save a settings file including the stop and piston MIDI messages; stop
-engaged states; divisional, general, and program combinations; and the
-volume.
+Save to the settings file currently in use; create a new file if none in use. The settings consist of the stop and piston MIDI messages; stop
+engaged states; divisional, general, and program combinations;
+volume spinner value; temperament setting; fine tuning data. Note that this is completely reversible using the <link linkend="resettodefaults">Reset to Defaults</link> option, and is the
+recommended method for most users.
       </para>
     </sect1>
     <sect1>
@@ -420,34 +532,81 @@ volume.
         <primary>Update Cache</primary>
       </indexterm>
       <para>
-Save the loaded and processed samples to the hard disk. Doing so
-decreases loading time at the expense of hard disk space. Selecting
-this option displays a message indicating how much space is required
-and confirming that you would like to proceed. If compression is
-disabled, load speed only increases by 10 to 15%. However, with
-compression enabled, the load time when using the sample cache may be
-cut by 40% or more.
+Save the loaded and processed samples to hard disk. Doing so
+decreases loading time at the expense of hard disk space.</para>
+      <para>The cache file is stored in the directory currently designated by the <!--link linkend="settingsstore"-->Cache Store<!--/link-->  parameter in the <emphasis>Options</emphasis> tab, and the file name is meaningless (as in: not related to the sample set/organ/church name) for the user.</para>
+      <para>Creating or updating the cache takes some time; a progress window will
+display indicating estimated time remaining and other indicators.
       </para>
       <para>
-Note that different load settings or tunings each require their own
-cache file. For example, stereo compressed samples and mono
-uncompressed samples each need their own cache. It is therefore
-recommended that you limit your cache updates to one particular load
-type (preferably stereo compressed, as this is the recommended
-setting).
-</para>
+Note that each different preset uses its own cache. The <!--link linkend="managecache"-->Manage cache<!--/link--> system option manages automatic creation/update of the current cache.      </para>
     </sect1>
     <sect1>
-      <title>Save</title>
+      <title>Delete Cache</title>
       <indexterm>
-        <primary>Save</primary>
+        <primary>Delete Cache</primary>
       </indexterm>
-      <para>
-Save to the definition file: the stop and piston MIDI messages; stop
-engaged states; divisional, general, and program combinations; and the
-volume. Note that this is completely reversible using the <link linkend="resettodefaults">Reset to Defaults</link> option, and is the
-recommend method for most users.
+      <para>Delete the current cache from hard disk.
+     </para>
+    </sect1>
+    <sect1>
+      <title>Reload</title>
+      <indexterm>
+        <primary>Reload</primary>
+      </indexterm>
+      <para>Reload the currently loaded sample set from disk. This may be used to
+quickly restore a sample set to its saved status. The currently selected preset file is reapplied if it exists on disk.
       </para>
+    </sect1>
+    <sect1 id="resettodefaults">
+      <title>Reset to Defaults</title>
+      <indexterm>
+        <primary>Reset to Defaults</primary>
+      </indexterm>
+      <para>Reset the currently loaded sample set to the settings as originally
+supplied by the sample set provider. You will be asked to verify that
+you wish to discard your modifications. Note that the settings file
+currently in use is <emphasis>deleted</emphasis>.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Import Settings</title>
+      <indexterm>
+        <primary>Import Settings</primary>
+      </indexterm>
+      <para>Apply a  previously exported settings file to the currently loaded
+sample set. All current settings and combinations are overwritten.</para>
+      <para>Note that settings may only be applied to a matching sample
+set, and you will receive a warning if you try to do otherwise. The
+location where the settings were imported from will be remembered for the next time.  </para>
+      <para>
+A settings file matches a sample set when the <emphasis>ChurchName</emphasis> property of the settings file
+matches the <emphasis>ChurchName</emphasis> property of the definition file.
+  </para>
+    </sect1>
+    <sect1>
+      <title>Import Combinations</title>
+      <indexterm>
+        <primary>Import Combinations</primary>
+      </indexterm>
+      <para>Apply only the combination settings from a  previously exported settings file to the currently loaded
+sample set. All other settings that might have previously been changed are preserved.</para>
+      <para>Note that settings may only be applied to a matching sample
+set, and you will receive a warning if you try to do otherwise. The
+location where the combinations were imported from will be remembered for the next time.</para>
+      <para>A settings file matches a sample set when the <emphasis>ChurchName</emphasis> property of the settings file
+matches the <emphasis>ChurchName</emphasis> property of the definition file.</para>
+    </sect1>
+    <sect1>
+      <title>Export Settings/Combinations</title>
+      <indexterm>
+        <primary>Export Settings</primary>
+      </indexterm>
+      <para>Save a settings file including the stop and piston MIDI messages; stop
+engaged states; divisional, general, and program combinations;
+volume spinner value; temperament setting; fine tuning data.
+      </para>
+      <para><emphasis>Export Settings/Combinations</emphasis> allows the user to choose a specific file name and folder. The latest location where settings were exported to will be remembered for the next time.      </para>
     </sect1>
     <sect1>
       <title>Close</title>
@@ -461,49 +620,81 @@ sample set closes. Note that this will also unload the sample set and
 free the RAM it required.
 </para>
     </sect1>
-    <sect1>
-      <title>Properties</title>
-      <indexterm>
-        <primary>Properties</primary>
-      </indexterm>
-      <para>
-This window displays various characteristics of the loaded sample set
-as provided by the sample set producer. If available, there is also a
-link to "More Information" which will open additional information in
-another application.
-      </para>
-    </sect1>
   </chapter>
   <chapter>
-    <title>Audio Menu</title>
+    <title>Audio/Midi Menu</title>
     <indexterm>
       <primary>Audio Menu</primary>
     </indexterm>
     <para>
-The Audio menu contains commands for dealing with loaded organs and
+The Audio/Midi menu contains commands for dealing with loaded organs and
 associated settings.
     </para>
+    <sect1>
+      <title>Temperament</title>
+      <indexterm>
+        <primary>Temperament</primary>
+      </indexterm>
+      <para>
+Opens
+a bunch of menus and sub menus allowing to select a new tuning temperament.</para>
+      <figure>
+        <title>Temperaments</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata width="75%" scalefit="1" fileref="temperaments_menus.png" security=""/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>The first menu item is always <emphasis>Original temperament</emphasis>, which allows the user to return to the tuning provided by the sample set creator.</para>
+      <para>The samples are retuned on the fly when playing. No additional disk storage is required.</para>
+    </sect1>
+    <sect1>
+      <title>Organ Settings</title>
+      <indexterm>
+        <primary>Organ Settings</primary>
+      </indexterm>
+      <para>Displays a dialog which allows to set audio settings (amplitude, gain, tuning, etc.) at every level of the sample set from the whole organ level down to the individual pipe. See <!--link linkend="organsettings"-->Organ Settings<!--/link--> for detailed information on this topic.</para>
+    </sect1>
+    <sect1>
+      <title>Audio/Midi Settings</title>
+      <indexterm>
+        <primary>Audio/Midi Settings</primary>
+      </indexterm>
+      <para>
+Displays a tabbed dialog containing the various settings.
+      </para>
+    </sect1>
     <sect1>
       <title>Record</title>
       <indexterm>
         <primary>Record</primary>
       </indexterm>
-      <para>
-Opens a dialog prompting where to save the recorded WAV file. The
-location will be remembered for the next time, independently of other
-saved locations. Upon clicking selecting a file name, recording
-commences and continues until the Record menu option or toolbar button
-is selected again.  A checkmark appears next to the menu item, and the
-toolbar button remains pushed, to indicate when recording is active.
-      </para>
+      <para>Opens a dialog prompting where to save the recorded WAV file. The
+location chosen in this dialog will be remembered for the next time. Upon clicking to select a file name, recording
+commences and continues until the Record menu option is selected again.  A check mark appears next to the menu item to indicate when recording is active.
+</para>
+      <para>The <emphasis role="bold">Record</emphasis> function can also be invoked by the computer keyboard shortcut <emphasis>Ctrl-R</emphasis>.    </para>
     </sect1>
     <sect1>
+      <title>Panic</title>
+      <indexterm>
+        <primary>Panic</primary>
+      </indexterm>
+      <para>
+The effect of the panic menu item is to reset the sound, stopping all
+sound and turning off all notes. It may also be quickly accessed on
+the toolbar or via the <emphasis>Escape</emphasis> key on the computer keyboard. This should be generally
+unnecessary, although it may be useful if you need to quickly stop the
+sound output, or if the sound is breaking up due to CPU overload.
+      </para>
+    </sect1>
+    <sect1 id="memoryset">
       <title>Memory Set</title>
       <indexterm>
         <primary>Memory Set</primary>
       </indexterm>
-      <para>
-Enters memory set mode until the Memory Set menu option or toolbar
+      <para>Enters memory set mode until the <emphasis role="bold">Memory Set</emphasis> menu option or toolbar
 button is selected again. While the memory set is engaged, whenever
 you push a divisional or general piston or activate a program change,
 the organ will store the current settings to that piston or program
@@ -515,31 +706,14 @@ next to the menu item, and the toolbar button remains pushed, to
 indicate when memory set is active.
       </para>
     </sect1>
-    <sect1>
-      <title>Panic</title>
-      <indexterm>
-        <primary>Panic</primary>
-      </indexterm>
-      <para>
-The effect of the panic button is to reset the sound, stopping all
-sound and turning off all notes. It may also be quickly accessed on
-the toolbar or via the Escape key. This should be generally
-unnecessary, although it may be useful if you need to quickly stop the
-sound output, or if the sound is breaking up due to CPU overload.
-      </para>
-    </sect1>
-    <sect1>
-      <title>Settings</title>
-      <indexterm>
-        <primary>Settings</primary>
-      </indexterm>
-      <para>
-Displays a tabbed dialog containg the audio settings. For more
-information, refer to the <link linkend="devicesettings">Device
-Settings</link> and <link linkend="midisettings">MIDI Settings</link>
-sections.
-      </para>
-    </sect1>
+  </chapter>
+  <chapter id="panel">
+    <title>Panel Menu</title>
+    <indexterm>
+      <primary>Panel</primary>
+    </indexterm>
+    <para>
+GrandOrgue provides additional panels. Some are predefined and contain fixed functions (crescendo, couplers, generals and divisionals). The organ definition can also ship organ specific panels.     </para>
   </chapter>
   <chapter>
     <title>Help Menu</title>
@@ -573,7 +747,7 @@ program will jump directly to the appropriate topic.
       <title>MIDI Settings dialog</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="GrandOrgueMIDI.gif" scalefit="1" width="100%" />
+          <imagedata width="100%" scalefit="1" fileref="GrandOrgueMIDI.gif"/>
         </imageobject>
       </mediaobject>
     </figure>
@@ -584,12 +758,12 @@ program will jump directly to the appropriate topic.
       </indexterm>
       <para>
 This screen lists all of the MIDI actions which GrandOrgue can respond
-to. The "Action" column describes the action; the "Event" column shows
-the MIDI event it is currently tied to; the "Channel" column indicates
-which channel the action will listen on, if any; the "Data" column
+to. The &quot;Action&quot; column describes the action; the &quot;Event&quot; column shows
+the MIDI event it is currently tied to; the &quot;Channel&quot; column indicates
+which channel the action will listen on, if any; the &quot;Data&quot; column
 indicates the specific data which will trigger the action - for
 example, a controller number or a program change number. These actions
-may be modified by selecting the action and clicking "Properties", or
+may be modified by selecting the action and clicking &quot;Properties&quot;, or
 by double-clicking on the action.
 </para>
     </sect1>
@@ -601,16 +775,16 @@ by double-clicking on the action.
       <para>
 This displays the MIDI event editor dialog. You may select an event
 from the drop-down box (only available events will be shown), or you
-may select "(none)" to disable the action. The channel spinner sets
+may select &quot;(none)&quot; to disable the action. The channel spinner sets
 the channel tied ot the MIDI message, and the data spinner (when
 applicable) selects the data tied to the MIDI message. For easy
-configuration, click "Listen for Event" and then perform the desired
+configuration, click &quot;Listen for Event&quot; and then perform the desired
 MIDI action (i.e. push a note on the appropriate keyboard, do a
 program change, flip a MIDI switch, etc). If the performed MIDI event
-is allowed for this action, its data is filled in and the "Listen for
-Event" button is deactivated. You may also manually deactivate the
+is allowed for this action, its data is filled in and the &quot;Listen for
+Event&quot; button is deactivated. You may also manually deactivate the
 listener by clicking on it again. Be sure to select OK to save your
-changes when you're done.
+changes when you&apos;re done.
       </para>
     </sect1>
   </chapter>
@@ -623,7 +797,7 @@ changes when you're done.
       <title>Device Settings dialog</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="GrandOrgueAudio.gif" scalefit="1" width="100%" />
+          <imagedata width="100%" scalefit="1" fileref="GrandOrgueAudio.gif"/>
         </imageobject>
       </mediaobject>
     </figure>
@@ -650,7 +824,7 @@ Either select a device and click Advanced, or double click on the
 device. This brings up a window that allows the setting of a channel
 offset. A channel offset allows the use of two MIDI interfaces with
 conflicting MIDI channels. For example, applying a channel offset of 8
-to one of the MIDI interfaces would cause that interface's channel 1
+to one of the MIDI interfaces would cause that interface&apos;s channel 1
 to appear as channel 9, channel 2 to appear as channel 10, and so
 on. This may be useful if you have multiple keyboards that are
 configured to use the same channel.
@@ -664,7 +838,7 @@ configured to use the same channel.
       <para>
 Provides a list of available sound output devices. Note that only one
 device may be used for sound output at a time. Devices are prefixed by
-their type, e.g. "ASIO", "DirectSound", etc.
+their type, e.g. &quot;ASIO&quot;, &quot;DirectSound&quot;, etc.
       </para>
       <para><emphasis>NOTE:</emphasis> If an ASIO device does not appear, it may
 be set to an incompatible format. The control panel for the ASIO
@@ -681,9 +855,7 @@ This allows you to set a <emphasis>requested</emphasis> latency, and
 after you click OK or Apply, the sound system will determine tne
 closest feasible latency and change the value to this
 <emphasis>estimated</emphasis> latency. Note that the estimate is
-based on numbers provided by the hardware and may vary. <emphasis>Many
-ASIO devices do not allow you to change their latency except in their
-control panel when the device is not in use.</emphasis> Refer to your
+based on numbers provided by the hardware and may vary. <emphasis>Many ASIO devices do not allow you to change their latency except in their control panel when the device is not in use.</emphasis> Refer to your
 sound card documentation for more information. Note that use of third
 party drivers, such as ASIO4All, may function properly but is not
 supported.
@@ -851,9 +1023,9 @@ recommended to leave this option engaged.
         <primary>Release Sample Scaling</primary>
       </indexterm>
       <para>
-For those sample sets with long reverberation tails ("wet"), enabling
+For those sample sets with long reverberation tails (&quot;wet&quot;), enabling
 this option will fade out the release sample if the note is played
-staccato. It will have little to no effect on "dry" sample sets.
+staccato. It will have little to no effect on &quot;dry&quot; sample sets.
       </para>
       <variablelist>
         <varlistentry>
@@ -1021,25 +1193,25 @@ sign, followd by at least one digit. The decimal seperator is a
 period.
       </para>
       <para>
-The unit "samples" count the number of samples from the start of the
+The unit &quot;samples&quot; count the number of samples from the start of the
 WAV file.  On sample includes the values of all channels, eg: for a
 stereo WAV file at 44.1 kHz, 1 second is equivalent to 441000 samples.
       </para>
       <figure>
-	<title>background bitmaps 1 to 30</title>
-	<mediaobject>
-	  <imageobject>
-	    <imagedata fileref="background1to30.jpg" scalefit="1" width="100%" />
-	  </imageobject>
-	</mediaobject>
+        <title>background bitmaps 1 to 30</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata width="100%" scalefit="1" fileref="background1to30.jpg"/>
+          </imageobject>
+        </mediaobject>
       </figure>
       <figure>
-	<title>background bitmaps 31 to 64</title>
-	<mediaobject>
-	  <imageobject>
-	    <imagedata fileref="background31to64.jpg" scalefit="1" width="100%" />
-	  </imageobject>
-	</mediaobject>
+        <title>background bitmaps 31 to 64</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata width="100%" scalefit="1" fileref="background31to64.jpg"/>
+          </imageobject>
+        </mediaobject>
       </figure>
       <para>
 Objects in GrandOrgue are eg. manuals, stops, generals, ... . Each
@@ -1477,7 +1649,7 @@ F12 key
 This section describes the whole organ including the main panel,
 therefore the section includes all display metrics
 attributes. Additionally it includes the following attributes:
-      </para>
+	     </para>
       <variablelist>
         <varlistentry>
           <term>ChurchName</term>
@@ -1738,7 +1910,7 @@ number of cents.
 It is possible to display various setter elements on the panels.  The
 <emphasis>Type</emphasis> attribute describe the function - the other
 attributes depend on the function:
-      </para>
+     </para>
       <variablelist>
         <varlistentry>
           <term>Swell</term>
@@ -1973,14 +2145,14 @@ contains the enclosures. Then all manuals with their associated
 buttons follow. The two rows are a block of buttons and pistons. The
 exact order can be specified via an attribute.
       </para>
-    <figure>
-      <title>background regions</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="background-usage.jpg" scalefit="1" width="100%" />
-        </imageobject>
-      </mediaobject>
-    </figure>
+      <figure>
+        <title>background regions</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata width="100%" scalefit="1" fileref="background-usage.jpg"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
       <para>
 It has the following attributes:
       </para>
@@ -2124,7 +2296,6 @@ The row number start with 100.
 	    </para>
           </listitem>
         </varlistentry>
-
         <varlistentry>
           <term>DispExtraDrawstopCols</term>
           <listitem>
@@ -2221,7 +2392,7 @@ extra piston block.
           <term>DispDrawstopWidth</term>
           <listitem>
             <para>
-(integer 1-150, default: 78) Drawstop width used for layout calculation 
+(integer 1-150, default: 78) Drawstop width used for layout calculation
 	    </para>
           </listitem>
         </varlistentry>
@@ -2845,7 +3016,7 @@ A manual is associated with a number of stops, tremulants, divisionals
 and coupler. The accessible range can be played via MIDI, the rest of
 the logical keys can only be triggered by (octave) coupler. It
 contains the following non-gui attributes:
-      </para>
+	     </para>
       <variablelist>
         <varlistentry>
           <term>Name</term>
@@ -3344,7 +3515,7 @@ group label font of the panel.
           <term>Name</term>
           <listitem>
             <para>
-	    (string, default: empty) The text to display on this object
+     (string, default: empty) The text to display on this object
 	    </para>
           </listitem>
         </varlistentry>
@@ -3607,7 +3778,7 @@ the first load - provided just for HW1 compatibility.
           <listitem>
             <para>
 (int 1-128, default: no MIDI event specified) Only used for building the initial configuration during
-the first load - provided just for HW1 compatibility. 
+the first load - provided just for HW1 compatibility.
 	    </para>
           </listitem>
         </varlistentry>
@@ -3934,7 +4105,7 @@ additional non-GUI properties:
           <listitem>
             <para>
 (integer -1 - 1, default: implementation defined) State of the button
-after pressing GC. -1 means don't change, 0 off and 1 on.
+after pressing GC. -1 means don&apos;t change, 0 off and 1 on.
 	    </para>
           </listitem>
         </varlistentry>
