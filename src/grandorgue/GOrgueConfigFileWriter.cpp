@@ -58,6 +58,7 @@ bool GOrgueConfigFileWriter::Save(wxString filename)
 				return false;
 		}
 	}
+	out.Flush();
 	out.Close();
 	return true;
 }
