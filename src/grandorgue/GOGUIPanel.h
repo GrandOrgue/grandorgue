@@ -43,7 +43,6 @@ protected:
 	wxString m_Name;
 	wxString m_GroupName;
 	GOGUIDisplayMetrics* m_metrics;
-	GOGUIPanelWidget* m_window;
 	GOrgueView* m_view;
 	wxString m_group;
 	wxRect m_size;
@@ -56,8 +55,6 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 
-	GOGUIPanelWidget* GetWindow();
-	void SetWindow(GOGUIPanelWidget* window);
 	GOrgueView* GetView();
 	void SetView(GOrgueView* view);
 

@@ -142,3 +142,11 @@ void GOrgueView::OnWindowClosed()
 	SetFrame(0);
 }
 
+void GOrgueView::AddEvent(GOGUIControl* control)
+{
+	wxCommandEvent event(wxEVT_GOCONTROL, 0);
+	event.SetClientData(control);
+	if (m_panel)
+		m_panel->GetEventHandler()->AddPendingEvent(event);
+}
+
