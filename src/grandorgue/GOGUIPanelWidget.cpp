@@ -22,7 +22,6 @@
 #include "GOGUIControl.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
-#include "GOrgueView.h"
 #include "GOrgueKeyConvert.h"
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL)
@@ -41,10 +40,9 @@ BEGIN_EVENT_TABLE(GOGUIPanelWidget, wxPanel)
 	EVT_KEY_UP(GOGUIPanelWidget::OnKeyUp)
 END_EVENT_TABLE()
 
-GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, GOrgueView* view, wxWindowID id) :
+GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindowID id) :
 	wxPanel(parent, id),
-	m_panel(panel),
-	m_View(view)
+	m_panel(panel)
 {
 	SetLabel(m_panel->GetName());
 	m_ClientBitmap.Create(m_panel->GetWidth(), m_panel->GetHeight());
@@ -54,8 +52,6 @@ GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, GOrgueVi
 
 GOGUIPanelWidget::~GOGUIPanelWidget()
 {
-	if (m_View)
-		m_View->OnWindowClosed();
 }
 
 void GOGUIPanelWidget::OnDraw(wxDC* dc)
