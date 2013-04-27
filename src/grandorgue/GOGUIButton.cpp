@@ -25,6 +25,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueButton.h"
 #include "GOrgueConfigReader.h"
+#include "GOrgueView.h"
 #include "MIDIEventDialog.h"
 
 GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston, unsigned x_pos, unsigned y_pos) :
@@ -222,7 +223,7 @@ bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 			key = NULL;
 		}
 
-		MIDIEventDialog dlg (m_panel->GetParentWindow(), title, midi, sender, key);
+		MIDIEventDialog dlg (m_panel->GetView()->GetFrame(), title, midi, sender, key);
 		
 		if (dlg.ShowModal() == wxID_OK)
 		{

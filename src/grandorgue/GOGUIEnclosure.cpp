@@ -25,6 +25,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueEnclosure.h"
+#include "GOrgueView.h"
 #include "MIDIEventDialog.h"
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb):
@@ -188,7 +189,7 @@ bool GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState&
 	{
 		GOrgueMidiReceiver& midi = m_enclosure->GetMidiReceiver();
 		GOrgueMidiSender& sender = m_enclosure->GetMidiSender();
-		MIDIEventDialog dlg (m_panel->GetParentWindow(), _("Midi-Settings for Enclosure - ") + m_enclosure->GetName(), &midi, &sender, NULL);
+		MIDIEventDialog dlg (m_panel->GetView()->GetFrame(), _("Midi-Settings for Enclosure - ") + m_enclosure->GetName(), &midi, &sender, NULL);
 		
 		if (dlg.ShowModal() == wxID_OK)
 		{

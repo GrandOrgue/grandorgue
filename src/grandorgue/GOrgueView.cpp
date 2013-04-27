@@ -40,7 +40,7 @@ GOrgueView::~GOrgueView()
 	if (m_container)
 	{
 		GrandOrgueFile* organfile = m_doc->GetOrganFile();
-		organfile->GetPanel(m_panelID)->SetParentWindow(NULL);
+		organfile->GetPanel(m_panelID)->SetView(NULL);
 	}
 }
 
@@ -53,7 +53,7 @@ bool GOrgueView::CreateWindow()
 		return false;
 	if (organfile->GetPanelCount() <= m_panelID)
 		return false;
-	if (organfile->GetPanel(m_panelID)->GetWindow())
+	if (organfile->GetPanel(m_panelID)->GetView())
 		return false;
 
 	if (m_panelID)
@@ -98,7 +98,7 @@ bool GOrgueView::CreateWindow()
 	m_container->SetPosition(wxPoint(0, 0));
 	m_frame->Show();
 
-	organfile->GetPanel(m_panelID)->SetParentWindow(GetFrame());
+	organfile->GetPanel(m_panelID)->SetView(this);
 	return true;
 }
 
