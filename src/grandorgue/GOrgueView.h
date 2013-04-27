@@ -47,7 +47,6 @@ public:
 	GOrgueView(unsigned m_panelID);
 	~GOrgueView();
 
-	void OnWindowClosed();
 	bool OnCreate(wxDocument *doc, long flags);
 	void AddEvent(GOGUIControl* control);
 };

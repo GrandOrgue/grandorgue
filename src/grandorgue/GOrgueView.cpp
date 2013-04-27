@@ -73,7 +73,7 @@ bool GOrgueView::CreateWindow()
 		m_container = new wxScrolledWindow(m_frame);
 		SetFrame(m_container);
 	}
-	m_panel = new GOGUIPanelWidget(organfile->GetPanel(m_panelID), m_container, this);
+	m_panel = new GOGUIPanelWidget(organfile->GetPanel(m_panelID), m_container);
 
 	/* Calculate scrollbar size */
 	m_container->SetSize(50, 50);
@@ -127,6 +127,7 @@ bool GOrgueView::OnClose(bool deleteWindow)
 	if (GetFrame() && deleteWindow)
 	{
 		GetFrame()->Destroy();
+		m_panel = NULL;
 		SetFrame(0);
 	}
 	Activate(false);
@@ -134,12 +135,6 @@ bool GOrgueView::OnClose(bool deleteWindow)
 		return true;
 
 	return wxView::OnClose(deleteWindow);
-}
-
-void GOrgueView::OnWindowClosed()
-{
-	m_panel = NULL;
-	SetFrame(0);
 }
 
 void GOrgueView::AddEvent(GOGUIControl* control)
