@@ -32,6 +32,7 @@ class GOGUIPanelWidget;
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueButton;
+class GOrgueView;
 class GrandOrgueFile;
 
 class GOGUIPanel {
@@ -43,7 +44,7 @@ protected:
 	wxString m_GroupName;
 	GOGUIDisplayMetrics* m_metrics;
 	GOGUIPanelWidget* m_window;
-	wxWindow* m_parent;
+	GOrgueView* m_view;
 	wxString m_group;
 	wxRect m_size;
 	bool m_InitialOpenWindow;
@@ -57,6 +58,8 @@ public:
 
 	GOGUIPanelWidget* GetWindow();
 	void SetWindow(GOGUIPanelWidget* window);
+	GOrgueView* GetView();
+	void SetView(GOrgueView* view);
 
 	GrandOrgueFile* GetOrganFile();
 	const wxString& GetName();
@@ -80,8 +83,6 @@ public:
 	unsigned GetHeight();
 	bool InitialOpenWindow();
 
-	wxWindow* GetParentWindow();
-	void SetParentWindow(wxWindow* win);
 	wxRect GetWindowSize();
 };
 

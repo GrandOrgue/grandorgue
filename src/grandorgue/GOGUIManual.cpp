@@ -25,6 +25,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueManual.h"
+#include "GOrgueView.h"
 #include "MIDIEventDialog.h"
 
 GOGUIManual::GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number):
@@ -342,7 +343,7 @@ bool GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	{
 		GOrgueMidiReceiver& midi = m_manual->GetMidiReceiver();
 		GOrgueMidiSender& sender = m_manual->GetMidiSender();
-		MIDIEventDialog dlg (m_panel->GetParentWindow(), _("Midi-Settings for Manual - ") + m_manual->GetName(), &midi, &sender, NULL);
+		MIDIEventDialog dlg (m_panel->GetView()->GetFrame(), _("Midi-Settings for Manual - ") + m_manual->GetName(), &midi, &sender, NULL);
 
 		if (dlg.ShowModal() == wxID_OK)
 		{

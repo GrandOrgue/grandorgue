@@ -42,6 +42,7 @@
 #include "GOrgueSetter.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
+#include "GOrgueView.h"
 #include "GrandOrgueFile.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIHW1DisplayMetrics.h"
@@ -55,7 +56,7 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_GroupName(),
 	m_metrics(0),
 	m_window(0),
-	m_parent(0),
+	m_view(0),
 	m_group(),
 	m_size(0, 0, 0, 0),
 	m_InitialOpenWindow(false)
@@ -71,8 +72,8 @@ GOGUIPanel::~GOGUIPanel()
 {
 	if (m_metrics)
 		delete m_metrics;
-	if (m_parent)
-		m_parent->Destroy();
+	if (m_view)
+		m_view->Close();
 	if (m_window)
 		m_window->Destroy();
 }
@@ -112,6 +113,15 @@ void GOGUIPanel::SetWindow(GOGUIPanelWidget* window)
 	m_window = window;
 }
 
+GOrgueView* GOGUIPanel::GetView()
+{
+	return m_view;
+}
+
+void GOGUIPanel::SetView(GOrgueView* view)
+{
+	m_view = view;
+}
 
 void GOGUIPanel::Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name)
 {
@@ -461,16 +471,6 @@ unsigned GOGUIPanel::GetHeight()
 	return m_metrics->GetScreenHeight();
 }
 
-wxWindow* GOGUIPanel::GetParentWindow()
-{
-	return m_parent;
-}
-
-void GOGUIPanel::SetParentWindow(wxWindow* win)
-{
-	m_parent = win;
-}
-
 wxRect GOGUIPanel::GetWindowSize()
 {
 	return m_size;
@@ -511,10 +511,10 @@ void GOGUIPanel::Save(GOrgueConfigWriter& cfg)
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->Save(cfg);
 
-	cfg.Write(m_group, wxT("WindowDisplayed"), m_parent != NULL);
-	if (m_parent)
+	cfg.Write(m_group, wxT("WindowDisplayed"), m_view != NULL);
+	if (m_view)
 	{
-		wxWindow* parent = m_parent;
+		wxWindow* parent = m_view->GetFrame();
 
 		if (parent->IsKindOf(CLASSINFO(wxScrolledWindow)))
 			/* parent for Main panel is not the main window */

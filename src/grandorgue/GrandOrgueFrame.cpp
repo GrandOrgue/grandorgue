@@ -325,9 +325,10 @@ void GOrgueFrame::OnPanel(wxCommandEvent& event)
 	unsigned no = event.GetId() - ID_PANEL_FIRST + 1;
 	if (!organfile || organfile->GetPanelCount() <= no)
 		return;
-	wxWindow* win = organfile->GetPanel(no)->GetParentWindow();
-	if (win)
+	GOrgueView* view = organfile->GetPanel(no)->GetView();
+	if (view)
 	{
+		wxWindow* win = view->GetFrame();
 		win->Raise();
 		win->SetFocus();
 	}
@@ -370,7 +371,7 @@ void GOrgueFrame::UpdatePanelMenu()
 		}
 		wxMenuItem* item = menu->AppendCheckItem(ID_PANEL_FIRST + i, wxT("_"));
 		item->SetItemLabel(panel->GetName());
-		item->Check(panel->GetParentWindow() ? true : false);
+		item->Check(panel->GetView() ? true : false);
 	}
 }
 
