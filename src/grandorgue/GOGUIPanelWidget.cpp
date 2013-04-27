@@ -46,7 +46,6 @@ GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, GOrgueVi
 	m_panel(panel),
 	m_View(view)
 {
-	m_panel->SetWindow(this);
 	SetLabel(m_panel->GetName());
 	m_ClientBitmap.Create(m_panel->GetWidth(), m_panel->GetHeight());
 	OnUpdate();
@@ -57,8 +56,6 @@ GOGUIPanelWidget::~GOGUIPanelWidget()
 {
 	if (m_View)
 		m_View->OnWindowClosed();
-
-	m_panel->SetWindow(NULL);
 }
 
 void GOGUIPanelWidget::OnDraw(wxDC* dc)

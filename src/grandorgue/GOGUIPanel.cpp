@@ -55,7 +55,6 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_Name(),
 	m_GroupName(),
 	m_metrics(0),
-	m_window(0),
 	m_view(0),
 	m_group(),
 	m_size(0, 0, 0, 0),
@@ -74,8 +73,6 @@ GOGUIPanel::~GOGUIPanel()
 		delete m_metrics;
 	if (m_view)
 		m_view->Close();
-	if (m_window)
-		m_window->Destroy();
 }
 
 bool GOGUIPanel::InitialOpenWindow()
@@ -98,19 +95,9 @@ const wxString& GOGUIPanel::GetGroupName()
 	return m_GroupName;
 }
 
-GOGUIPanelWidget* GOGUIPanel::GetWindow()
-{
-	return m_window;
-}
-
 wxBitmap* GOGUIPanel::LoadBitmap(wxString filename, wxString maskname)
 {
 	return m_organfile->GetBitmapCache().GetBitmap(filename, maskname);
-}
-
-void GOGUIPanel::SetWindow(GOGUIPanelWidget* window)
-{
-	m_window = window;
 }
 
 GOrgueView* GOGUIPanel::GetView()
@@ -478,10 +465,8 @@ wxRect GOGUIPanel::GetWindowSize()
 
 void GOGUIPanel::AddEvent(GOGUIControl* control)
 {
-	wxCommandEvent event(wxEVT_GOCONTROL, 0);
-	event.SetClientData(control);
-	if (m_window)
-		m_window->GetEventHandler()->AddPendingEvent(event);
+	if (m_view)
+		m_view->AddEvent(control);
 }
 
 void GOGUIPanel::AddControl(GOGUIControl* control)

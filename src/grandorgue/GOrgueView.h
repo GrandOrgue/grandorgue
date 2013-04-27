@@ -24,6 +24,7 @@
 
 #include <wx/docview.h>
 
+class GOGUIControl;
 class GOGUIPanelWidget;
 class GOrgueDocument;
 
@@ -48,6 +49,7 @@ public:
 
 	void OnWindowClosed();
 	bool OnCreate(wxDocument *doc, long flags);
+	void AddEvent(GOGUIControl* control);
 };
 
 #endif
