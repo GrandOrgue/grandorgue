@@ -104,7 +104,7 @@ bool GOrgueApp::OnInit()
 
 	SetAppName(wxT(APP_NAME));
 	SetClassName(wxT(APP_NAME));
-	SetVendorName(_("Our Organ"));
+	SetVendorName(wxT("Our Organ"));
 
 	wxIdleEvent::SetMode(wxIDLE_PROCESS_SPECIFIED);
 	wxFileSystem::AddHandler(new wxZipFSHandler);
