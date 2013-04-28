@@ -51,6 +51,8 @@ private:
 	std::vector<GOrgueTemperament*> m_Temperaments;
 	GOrgueSound& m_Sound;
 	GOrgueSettings& m_Settings;
+	wxString m_Title;
+	wxString m_Label;
 
 	void InitHelp();
 	void UpdatePanelMenu();
@@ -109,6 +111,7 @@ public:
 	void Init();
 
 	void DoSplash(bool timeout = true);
+	void SetLabel(const wxString& label);
 
 	DECLARE_EVENT_TABLE()
 };

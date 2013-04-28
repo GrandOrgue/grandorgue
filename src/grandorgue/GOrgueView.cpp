@@ -37,11 +37,20 @@ GOrgueView::GOrgueView(unsigned panelID) :
 
 GOrgueView::~GOrgueView()
 {
+	if (m_panelID == 0)
+		wxTheApp->GetTopWindow()->SetLabel(wxEmptyString);
 	if (m_container)
 	{
 		GrandOrgueFile* organfile = m_doc->GetOrganFile();
 		organfile->GetPanel(m_panelID)->SetView(NULL);
 	}
+}
+
+void GOrgueView::OnChangeFilename()
+{
+	wxView::OnChangeFilename();
+	if (m_panelID == 0 && m_doc)
+		wxTheApp->GetTopWindow()->SetLabel(m_doc->GetUserReadableName());
 }
 
 bool GOrgueView::CreateWindow()
