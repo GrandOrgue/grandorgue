@@ -4229,6 +4229,13 @@ FirstMIDINoteNumber.
       </variablelist>
     </sect1>
     <sect1>
+      <title>Switch objects</title>
+      <para>
+A switch object is a drawstop objects without any additional
+attributes.
+      </para>
+    </sect1>
+    <sect1>
       <title>Rank objects</title>
       <para>
 A rank represents a row of pipes. It can be either be part of a stop
@@ -5027,6 +5034,25 @@ GUI definitions are called
             <para>
 (valid reversible piston number, required) Reference to the reversible
 piston on the main panel.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfSwitches</term>
+          <listitem>
+            <para>
+(integer 0 - number of defined switches, default: 0) Number of
+switches on the panel. The section of the switches GUI definitions are
+called <emphasis>Panel999Switchn999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Switch999</term>
+          <listitem>
+            <para>
+(valid switch number, required) Reference to the switch on the main
+panel.
 	    </para>
           </listitem>
         </varlistentry>

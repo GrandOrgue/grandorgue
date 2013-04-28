@@ -40,6 +40,7 @@
 #include "GOrgueManual.h"
 #include "GOrguePiston.h"
 #include "GOrgueSetter.h"
+#include "GOrgueSwitch.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueView.h"
@@ -221,6 +222,15 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 				AddControl(control);
 			}	
 
+		for (unsigned i = 0; i < m_organfile->GetSwitchCount(); i++)
+			if (m_organfile->GetSwitch(i)->IsDisplayed())
+			{
+				buffer.Printf(wxT("Switch%03d"), i + 1);
+				GOGUIControl* control = new GOGUIButton(this, m_organfile->GetSwitch(i), false);
+				control->Load(cfg, buffer);
+				AddControl(control);
+			}	
+
 		for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
 		{
 			wxString group;
@@ -281,6 +291,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		unsigned first_manual  = cfg.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
 		unsigned NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, m_organfile->GetEnclosureCount());
 		unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount());
+		unsigned NumberOfSwitches = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSwitches"), 0, m_organfile->GetSwitchCount(), false, 0);
 		unsigned NumberOfReversiblePistons = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfReversiblePistons"), 0, m_organfile->GetNumberOfReversiblePistons());
 		unsigned NumberOfGenerals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfGenerals"), 0, m_organfile->GetGeneralCount());
 		unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionalCouplers"), 0, m_organfile->GetDivisionalCouplerCount());
@@ -374,6 +385,17 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			unsigned piston_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetNumberOfReversiblePistons());
 			buffer.Printf(wxT("ReversiblePiston%03d"), piston_nb);
 			GOGUIControl* control = new GOGUIButton(this, m_organfile->GetPiston(piston_nb - 1), true);
+			m_organfile->MarkSectionInUse(group + buffer);
+			control->Load(cfg, group + buffer);
+			AddControl(control);
+		}	
+
+		for (unsigned i = 0; i < NumberOfSwitches; i++)
+		{
+			buffer.Printf(wxT("Switch%03d"), i + 1);
+			unsigned switch_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetSwitchCount());
+			buffer.Printf(wxT("Switch%03d"), switch_nb);
+			GOGUIControl* control = new GOGUIButton(this, m_organfile->GetSwitch(switch_nb - 1), false);
 			m_organfile->MarkSectionInUse(group + buffer);
 			control->Load(cfg, group + buffer);
 			AddControl(control);
