@@ -28,10 +28,16 @@
 
 class GOrgueDrawstop : public GOrgueButton, public GOrgueCombinationElement
 {
+ public:
+	typedef enum { FUNCTION_INPUT } GOrgueFunctionType;
 private:
+	static const struct IniFileEnumEntry m_function_types[];
+	GOrgueFunctionType m_Type;
 	int m_GCState;
 	bool m_ActiveState;
 	bool m_CombinationState;
+	std::vector<GOrgueDrawstop*> m_ControlledDrawstops;
+	std::vector<GOrgueDrawstop*> m_ControllingDrawstops;
 
 protected:
 	void SetState(bool on);
@@ -42,6 +48,7 @@ public:
 	void Init(GOrgueConfigReader& cfg, wxString group, wxString name);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
+	void RegisterControlled(GOrgueDrawstop* sw);
 	virtual void Set(bool on);
 	virtual void PreparePlayback();
 	virtual void Update();

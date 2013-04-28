@@ -4093,6 +4093,15 @@ additional non-GUI properties:
       </para>
       <variablelist>
         <varlistentry>
+          <term>Function</term>
+          <listitem>
+            <para>
+(enumeration, default: Input) Logical function of the drawstop. If the
+value is input, it is a normal user controllable drawstop.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>DefaultToEngaged</term>
           <listitem>
             <para>
