@@ -28,6 +28,9 @@
 
 const struct IniFileEnumEntry GOrgueDrawstop::m_function_types[] = {
 	{ wxT("Input"), FUNCTION_INPUT},
+	{ wxT("And"), FUNCTION_AND},
+	{ wxT("Or"), FUNCTION_OR},
+	{ wxT("Not"), FUNCTION_NOT},
 };
 
 GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
@@ -69,6 +72,12 @@ void GOrgueDrawstop::Load(GOrgueConfigReader& cfg, wxString group)
 		m_ReadOnly = true;
 		unsigned cnt = 0;
 		bool unique = true;
+		if (m_Type == FUNCTION_NOT)
+			cnt = 1;
+		else if (m_Type == FUNCTION_AND || m_Type == FUNCTION_OR)
+		{
+			cnt = cfg.ReadInteger(ODFSetting, group, wxT("SwitchCount"), 1, m_organfile->GetSwitchCount(), true, 1);
+		}
 		for(unsigned i = 0; i < cnt; i++)
 		{
 			unsigned no = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Switch%03d"), i + 1), 1, m_organfile->GetSwitchCount(), true, 1);
@@ -147,10 +156,30 @@ void GOrgueDrawstop::PreparePlayback()
 
 void GOrgueDrawstop::Update()
 {
+	bool state;
 	switch(m_Type)
 	{
 	case FUNCTION_INPUT:
 		SetState(IsEngaged());
+		break;
+
+	case FUNCTION_AND:
+		state = true;
+		for(unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
+			state = state && m_ControllingDrawstops[i]->IsActive();
+		SetState(state);
+		break;
+
+	case FUNCTION_OR:
+		state = false;
+		for(unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
+			state = state || m_ControllingDrawstops[i]->IsActive();
+		SetState(state);
+		break;
+
+	case FUNCTION_NOT:
+		state = m_ControllingDrawstops[0]->IsActive();
+		SetState(!state);
 		break;
 	}
 }
