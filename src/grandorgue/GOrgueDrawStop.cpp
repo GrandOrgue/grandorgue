@@ -23,6 +23,8 @@
 #include "GOrgueConfigWriter.h"
 #include "GOrgueDrawStop.h"
 #include "GOrgueLCD.h"
+#include "GOrgueSwitch.h"
+#include "GrandOrgueFile.h"
 
 const struct IniFileEnumEntry GOrgueDrawstop::m_function_types[] = {
 	{ wxT("Input"), FUNCTION_INPUT},
@@ -65,6 +67,20 @@ void GOrgueDrawstop::Load(GOrgueConfigReader& cfg, wxString group)
 	else
 	{
 		m_ReadOnly = true;
+		unsigned cnt = 0;
+		bool unique = true;
+		for(unsigned i = 0; i < cnt; i++)
+		{
+			unsigned no = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Switch%03d"), i + 1), 1, m_organfile->GetSwitchCount(), true, 1);
+			GOrgueDrawstop* s = m_organfile->GetSwitch(no - 1);
+			for(unsigned j = 0; j < m_ControllingDrawstops.size(); j++)
+				if (unique && m_ControllingDrawstops[j] == s)
+					throw wxString::Format(_("Switch %d already assigned to %s"), no, group.c_str());
+			if (s == (GOrgueDrawstop*)this)
+				throw wxString::Format(_("Drawstop %s can't reference to itself"), group.c_str());
+			s->RegisterControlled(this);
+			m_ControllingDrawstops.push_back(s);
+		}
 	}
 
 	GOrgueButton::Load(cfg, group);
