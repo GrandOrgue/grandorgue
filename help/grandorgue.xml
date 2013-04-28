@@ -4106,7 +4106,19 @@ additional non-GUI properties:
           <listitem>
             <para>
 (enumeration, default: Input) Logical function of the drawstop. If the
-value is input, it is a normal user controllable drawstop.
+value is input, it is a normal user controllable drawstop and has no
+input switches.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Switch999</term>
+          <listitem>
+            <para>
+(integer 1 - switch count, required) Lists the input switches of the
+logical function of the drawstop. If the drawstop is a switch, it can
+only reference switches with a lower number. The number of this
+settings depends on the function.
 	    </para>
           </listitem>
         </varlistentry>
