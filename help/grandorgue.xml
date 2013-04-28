@@ -4106,8 +4106,22 @@ additional non-GUI properties:
           <listitem>
             <para>
 (enumeration, default: Input) Logical function of the drawstop. If the
-value is input, it is a normal user controllable drawstop and has no
-input switches.
+value is <emphasis>Input</emphasis>, it is a normal user controllable
+drawstop and has no input switches. <emphasis>Not</emphasis> has one
+only input and negates the state of the input
+switch. <emphasis>And</emphasis> as well as <emphasis>Or</emphasis>
+has a variable number of inputs.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>SwitchCount</term>
+          <listitem>
+            <para>
+(integer 1 - switch count, required) Contains the number of input
+ports, if the logical function allows a variable number number of
+input. <emphasis>Switch999</emphasis> contains the referenced
+switches.
 	    </para>
           </listitem>
         </varlistentry>
