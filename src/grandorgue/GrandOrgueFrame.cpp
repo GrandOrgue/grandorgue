@@ -115,7 +115,9 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_Volume(NULL),
 	m_Temperaments(),
 	m_Sound(sound),
-	m_Settings(sound.GetSettings())
+	m_Settings(sound.GetSettings()),
+	m_Title(title),
+	m_Label()
 {
 	wxIcon icon;
 	icon.CopyFromBitmap(GetImage_GOIcon());
@@ -780,4 +782,13 @@ void GOrgueFrame::OnMidiEvent(GOrgueMidiEvent& event)
 		evt.SetString(it->second);
 		GetEventHandler()->AddPendingEvent(evt);
 	}
+}
+
+void GOrgueFrame::SetLabel(const wxString& label)
+{
+	m_Label = label;
+	if (m_Label == wxEmptyString)
+		SetTitle(m_Title);
+	else
+		SetTitle(m_Title + _(" - ") + m_Label);
 }
