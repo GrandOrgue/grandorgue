@@ -334,7 +334,7 @@ void GOrgueFrameGeneral::Save(GOrgueConfigWriter& cfg)
 
 		case GOrgueCombinationDefinition::COMBINATION_SWITCH:
 			switch_count++;
-			buffer.Printf(wxT("SwitchNumber%03d"), tremulant_count);
+			buffer.Printf(wxT("SwitchNumber%03d"), switch_count);
 			cfg.Write(m_group, buffer, value, true);
 			break;
 
