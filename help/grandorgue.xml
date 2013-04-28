@@ -1792,6 +1792,15 @@ in a section called <emphasis>Panel999</emphasis>.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>NumberOfSwitches</term>
+          <listitem>
+            <para>
+(integer 0-0, default: 0) number of switches. The details are in a section called
+<emphasis>Switch999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>NumberOfRanks</term>
           <listitem>
             <para>
