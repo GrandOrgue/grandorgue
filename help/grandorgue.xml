@@ -4109,8 +4109,9 @@ additional non-GUI properties:
 value is <emphasis>Input</emphasis>, it is a normal user controllable
 drawstop and has no input switches. <emphasis>Not</emphasis> has one
 only input and negates the state of the input
-switch. <emphasis>And</emphasis> as well as <emphasis>Or</emphasis>
-has a variable number of inputs.
+switch. <emphasis>And</emphasis>, <emphasis>Xor</emphasis>,
+<emphasis>Nand</emphasis>, <emphasis>Nor</emphasis> as well as
+<emphasis>Or</emphasis> has a variable number of inputs.
 	    </para>
           </listitem>
         </varlistentry>
