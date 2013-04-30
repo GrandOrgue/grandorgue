@@ -29,7 +29,7 @@
 class GOrgueDrawstop : public GOrgueButton, public GOrgueCombinationElement
 {
  public:
-	typedef enum { FUNCTION_INPUT, FUNCTION_AND, FUNCTION_OR, FUNCTION_NOT } GOrgueFunctionType;
+	typedef enum { FUNCTION_INPUT, FUNCTION_AND, FUNCTION_OR, FUNCTION_NOT, FUNCTION_XOR, FUNCTION_NAND, FUNCTION_NOR } GOrgueFunctionType;
 private:
 	static const struct IniFileEnumEntry m_function_types[];
 	GOrgueFunctionType m_Type;
