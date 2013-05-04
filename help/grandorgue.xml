@@ -1795,7 +1795,7 @@ in a section called <emphasis>Panel999</emphasis>.
           <term>NumberOfSwitches</term>
           <listitem>
             <para>
-(integer 0-0, default: 0) number of switches. The details are in a section called
+(integer 0-999, default: 0) number of switches. The details are in a section called
 <emphasis>Switch999</emphasis>.
 	    </para>
           </listitem>
