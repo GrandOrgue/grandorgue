@@ -34,6 +34,7 @@
 #include <wx/fs_zip.h>
 #include <wx/config.h>
 #include <wx/regex.h>
+#include <wx/stdpaths.h>
 
 #ifdef __WXMAC__
 #include <ApplicationServices/ApplicationServices.h>
@@ -144,6 +145,12 @@ bool GOrgueApp::OnInit()
 		AsyncLoadFile(m_FileName);
 	else if (m_Settings->GetLoadLastFile() && m_Settings->GetLastFile() != wxEmptyString)
 		AsyncLoadFile(m_Settings->GetLastFile());
+	else if (m_Settings->GetLoadLastFile())
+	{
+		wxString name = wxStandardPaths::Get().GetResourcesDir() + wxFILE_SEP_PATH + wxT("demo") + wxFILE_SEP_PATH + wxT("demo.organ");
+		if (wxFileExists(name))
+			AsyncLoadFile(name);
+	}
 
 	GOrgueLCD_Open();
 
