@@ -128,6 +128,7 @@ add_subdirectory(src/build)
 add_subdirectory(src/grandorgue bin)
 add_subdirectory(po)
 add_subdirectory(help)
+add_subdirectory(demo)
 
 set(CPACK_PACKAGE_NAME "GrandOrgue")
 set(CPACK_PACKAGE_VENDOR "Our Organ")
