@@ -12,6 +12,8 @@ The following build procedures works on a 32 or 64 bit windows build system. On 
 
 All the instructions below are for building GrandOrgue for release, in a single static exe file and using unicode.
 
+As a prerequisite, you need to install CMAKE (http://www.cmake.org)and NSIS (http://nsis.sourceforge.net/Download)
+
 #1: Downloading GrandOrgue sources
 	Create a repository with the GrandOrgue sources (SVN : https://ourorgan.svn.sourceforge.net/svnroot/ourorgan)
 	In the following example the repository is created at c:\gosrc 
@@ -23,6 +25,7 @@ All the instructions below are for building GrandOrgue for release, in a single 
 	
 	Building for 32 bits
 		Wxwidgets:
+			change directory to C:\TDM\wx32\wxWidgets-2.8.12\build\msw
 			mingw32-make -f makefile.gcc UNICODE=1 BUILD=Release SHARED=0 CXXFLAGS="-m32" CFLAGS="-m32"
 		GO:
 			create a build directory (e.g. c:\TDM\GOTDM32)
