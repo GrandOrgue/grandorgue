@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "GOrgueEvent.h"
 #include "GOrgueView.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
@@ -38,7 +39,11 @@ GOrgueView::GOrgueView(unsigned panelID) :
 GOrgueView::~GOrgueView()
 {
 	if (m_panelID == 0)
-		wxTheApp->GetTopWindow()->SetLabel(wxEmptyString);
+	{
+		wxCommandEvent event(wxEVT_WINTITLE, 0);
+		event.SetString(wxEmptyString);
+		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+	}
 	if (m_container)
 	{
 		GrandOrgueFile* organfile = m_doc->GetOrganFile();
@@ -50,7 +55,11 @@ void GOrgueView::OnChangeFilename()
 {
 	wxView::OnChangeFilename();
 	if (m_panelID == 0 && m_doc)
-		wxTheApp->GetTopWindow()->SetLabel(m_doc->GetUserReadableName());
+	{
+		wxCommandEvent event(wxEVT_WINTITLE, 0);
+		event.SetString(m_doc->GetUserReadableName());
+		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+	}
 }
 
 bool GOrgueView::CreateWindow()
