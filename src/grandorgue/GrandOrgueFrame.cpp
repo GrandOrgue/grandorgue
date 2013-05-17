@@ -69,6 +69,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(wxID_HELP, GOrgueFrame::OnHelp)
 	EVT_MENU(wxID_ABOUT, GOrgueFrame::OnHelpAbout)
 	EVT_COMMAND(0, wxEVT_SHOWHELP, GOrgueFrame::OnShowHelp)
+	EVT_COMMAND(0, wxEVT_WINTITLE, GOrgueFrame::OnSetTitle)
 	// New events for Volume, Polyphony, Memory Level, Transpose and Reverb
 	EVT_MENU(ID_VOLUME, GOrgueFrame::OnSettingsVolume)
 	EVT_MENU(ID_POLYPHONY, GOrgueFrame::OnSettingsPolyphony)
@@ -784,9 +785,9 @@ void GOrgueFrame::OnMidiEvent(GOrgueMidiEvent& event)
 	}
 }
 
-void GOrgueFrame::SetLabel(const wxString& label)
+void GOrgueFrame::OnSetTitle(wxCommandEvent& event)
 {
-	m_Label = label;
+	m_Label = event.GetString();
 	if (m_Label == wxEmptyString)
 		SetTitle(m_Title);
 	else

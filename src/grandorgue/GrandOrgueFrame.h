@@ -103,6 +103,7 @@ private:
 	void OnMidiEvent(GOrgueMidiEvent& event);
 
 	void OnUpdateLoaded(wxUpdateUIEvent& event);
+	void OnSetTitle(wxCommandEvent& event);
 
 public:
 	GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
@@ -111,7 +112,6 @@ public:
 	void Init();
 
 	void DoSplash(bool timeout = true);
-	void SetLabel(const wxString& label);
 
 	DECLARE_EVENT_TABLE()
 };
