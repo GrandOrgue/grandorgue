@@ -66,6 +66,7 @@ private:
 	wxString m_path;
 	wxString m_CacheFilename;
 	wxString m_SettingFilename;
+	wxString m_ODFHash;
 	bool m_Cacheable;
 	GOrgueSetter* m_setter;
 	int m_volume;

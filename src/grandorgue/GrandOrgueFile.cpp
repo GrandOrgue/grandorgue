@@ -65,6 +65,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_path(),
 	m_CacheFilename(),
 	m_SettingFilename(),
+	m_ODFHash(),
 	m_Cacheable(false),
 	m_setter(0),
 	m_volume(0),
@@ -510,6 +511,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		return error;
 	}
 
+	m_ODFHash = odf_ini_file.GetHash();
 	wxString error = wxT("!");
 	m_b_customized = false;
 	GOrgueConfigReaderDB ini;
@@ -543,6 +545,15 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		{
 			wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_odf_config.getEntry(wxT("Organ"), wxT("ChurchName")).c_str());
 		}
+		wxString hash = extra_odf_config.getEntry(wxT("Organ"), wxT("ODFHash"));
+		if (hash != wxEmptyString)
+			if (hash != m_ODFHash)
+			{
+				if (wxMessageBox(_("The ODF does not match the combination file. Importing it can cause various problems. Should they really be imported?"), _("Import"), wxYES_NO, NULL) == wxNO)
+				{
+						ini.ClearCMB();
+				}
+			}
 	}
 	else
 	{
@@ -659,6 +670,12 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 		wxString church_name = cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"),  128);
 		if (church_name != m_ChurchName)
 			throw wxString::Format(_("File belongs to a different organ: %s"), church_name.c_str());
+		wxString hash = odf_ini_file.getEntry(wxT("Organ"), wxT("ODFHash"));
+		if (hash != wxEmptyString)
+			if (hash != m_ODFHash)
+			{
+				wxLogError(_("The ODF does not match the combination file."));
+			}
 		/* skip informational items */
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), 4096, false);
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), 4096, false);
@@ -771,6 +788,7 @@ void GrandOrgueFile::Save(const wxString& file)
 	m_b_customized = true;
 
 	GOrgueConfigWriter cfg(cfg_file, prefix);
+	cfg.Write(wxT("Organ"), wxT("ODFHash"), m_ODFHash);
 	cfg.Write(wxT("Organ"), wxT("ChurchName"), m_ChurchName);
 	cfg.Write(wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
 	cfg.Write(wxT("Organ"), wxT("ODFPath"), GetODFFilename());
