@@ -21,14 +21,21 @@
 
 #include "GOrgueConfigFileReader.h"
 #include <wx/file.h>
+#include "contrib/sha1.h"
 
 GOrgueConfigFileReader::GOrgueConfigFileReader() :
-	m_Entries()
+	m_Entries(),
+	m_Hash()
 {
 }
 
 GOrgueConfigFileReader::~GOrgueConfigFileReader()
 {
+}
+
+wxString GOrgueConfigFileReader::GetHash()
+{
+	return m_Hash;
 }
 
 const std::map<wxString, std::map<wxString, wxString> >& GOrgueConfigFileReader::GetContent()
@@ -63,6 +70,8 @@ wxString GOrgueConfigFileReader::getEntry(wxString group, wxString name)
 
 bool GOrgueConfigFileReader::Read(wxString filename)
 {
+	SHA_CTX ctx;
+	unsigned char hash[20];
 	wxFile file;
 	m_Entries.clear();
 	
@@ -79,6 +88,13 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 		wxLogError(_("Failed to read file '%s'"), filename.c_str());
 		return false;
 	}
+	SHA1_Init(&ctx);
+	SHA1_Update(&ctx, data, length);
+	SHA1_Final(hash, &ctx);
+	m_Hash = wxEmptyString;
+	for(unsigned i = 0; i < 20; i++)
+		m_Hash += wxDecToHex(hash[i]);
+	
 	wxString input(data, wxCSConv(wxT("ISO-8859-1")), length);
 	delete[] data;
 	

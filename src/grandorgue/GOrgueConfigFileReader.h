@@ -29,6 +29,7 @@ class GOrgueConfigFileReader
 {
 private:
 	std::map<wxString, std::map<wxString, wxString> > m_Entries;
+	wxString m_Hash;
 
 	wxString GetNextLine(const wxString& buffer, unsigned &pos);
 public:
@@ -36,6 +37,7 @@ public:
 	~GOrgueConfigFileReader();
 	
 	bool Read(wxString filename);
+	wxString GetHash();
 
 	const std::map<wxString, std::map<wxString, wxString> >& GetContent();
 	wxString getEntry(wxString group, wxString name);
