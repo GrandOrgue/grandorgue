@@ -8,6 +8,15 @@ Standards-Version: 3.9.1
 Package: grandorgue
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: grandorgue-demo
 Description: Virtual Pipe Organ Software
  GrandOrgue is a virtual pipe organ sample player application supporting
  a HW1 compatible file format.
+
+Package: grandorgue-demo
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: GrandOrgue demo sampleset
+ This package contains the demo sampleset for GrandOrgue
+
+

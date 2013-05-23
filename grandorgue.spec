@@ -33,10 +33,19 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires(post):    shared-mime-info desktop-file-utils
 Requires(postun):  shared-mime-info desktop-file-utils
 
+%package demo
+Summary:        GrandOrgue demo sampleset
+License:        GPL-2.0+
+Group:          Productivity/Multimedia/Sound/Midi
+Recommends:     grandorgue-demo
+BuildArch:      noarch
+
 %description
  GrandOrgue is a virtual pipe organ sample player application supporting
  a HW1 compatible file format.
 
+%description demo
+This package contains the demo sampleset for GrandOrgue
 
 %prep
 %setup -q
@@ -68,11 +77,14 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{_bindir}/*
 %doc %{_docdir}/%{name}
-%{_datadir}/GrandOrgue
+%{_datadir}/GrandOrgue/help
 %{_datadir}/applications/*
 %{_datadir}/pixmaps/*
 %{_datadir}/mime/packages/*
 %{_mandir}/man1/*
+
+%files demo
+%{_datadir}/GrandOrgue/demo
 
 %post
 %if 0%{?suse_version} >= 1140 
