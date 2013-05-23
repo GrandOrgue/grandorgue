@@ -29,6 +29,11 @@ Release:        1
 Epoch:          0
 Source:         grandorgue-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+%if 0%?suse_version >= 1010
+Recommends:     grandorgue-demo
+%else
+Requires:        grandorgue-demo
+%endif
 
 Requires(post):    shared-mime-info desktop-file-utils
 Requires(postun):  shared-mime-info desktop-file-utils
@@ -37,7 +42,6 @@ Requires(postun):  shared-mime-info desktop-file-utils
 Summary:        GrandOrgue demo sampleset
 License:        GPL-2.0+
 Group:          Productivity/Multimedia/Sound/Midi
-Recommends:     grandorgue-demo
 BuildArch:      noarch
 
 %description
@@ -78,12 +82,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 %doc %{_docdir}/%{name}
 %{_datadir}/GrandOrgue/help
+%dir %{_datadir}/GrandOrgue
 %{_datadir}/applications/*
 %{_datadir}/pixmaps/*
 %{_datadir}/mime/packages/*
 %{_mandir}/man1/*
 
 %files demo
+%defattr(-,root,root)
 %{_datadir}/GrandOrgue/demo
 
 %post
