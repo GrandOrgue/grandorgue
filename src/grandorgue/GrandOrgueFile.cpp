@@ -572,6 +572,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"), 4096, false);
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), 4096, false);
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), 4096, false);
+		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFHash"), 4096, false);
 		ReadOrganFile(cfg);
 	}
 	catch (wxString error_)
