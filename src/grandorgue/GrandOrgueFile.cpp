@@ -276,9 +276,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	/* load basic organ information */
 	unsigned NumberOfManuals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 1, 16);
 	m_FirstManual = cfg.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
-	unsigned NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 6);
+	unsigned NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 50);
 	unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10);
-	unsigned NumberOfWindchestGroups = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 12);
+	unsigned NumberOfWindchestGroups = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 50);
 	unsigned NumberOfReversiblePistons = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfReversiblePistons"), 0, 32);
 	unsigned NumberOfGenerals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfGenerals"), 0, 99);
 	unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionalCouplers"), 0, 8);
