@@ -175,6 +175,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	choices.clear();
 	choices.push_back(wxT("44100"));
 	choices.push_back(wxT("48000"));
+	choices.push_back(wxT("96000"));
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_SampleRate = new wxChoice(this, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 

@@ -80,6 +80,8 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 						sample_rate_index = j;
 					if (info.sampleRates[j] == 48000)
 						sample_rate_index = j;
+					if (info.sampleRates[j] == 96000)
+						sample_rate_index = j;
 				}
 
 				if (
