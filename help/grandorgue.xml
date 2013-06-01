@@ -1728,7 +1728,7 @@ available in sections called <emphasis>Manual999</emphasis>.
           <term>NumberOfEnclosures</term>
           <listitem>
             <para>
-(integer 0-6, required) number of enclosures. The details are in a section called
+(integer 0-50, required) number of enclosures. The details are in a section called
 <emphasis>Enclosure999</emphasis>.
 	    </para>
           </listitem>
@@ -1746,7 +1746,7 @@ available in sections called <emphasis>Manual999</emphasis>.
           <term>NumberOfWindchestGroups</term>
           <listitem>
             <para>
-(integer 1-12, required) number of windchests. The details are in a section called
+(integer 1-50, required) number of windchests. The details are in a section called
 <emphasis>WindchestGroup999</emphasis>.
 	    </para>
           </listitem>
