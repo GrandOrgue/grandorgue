@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version='1.0' encoding='ISO-8859-1'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <book lang="en">
 <!--
@@ -20,7 +20,7 @@
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
--->
+--> 
   <title>GrandOrgue Help</title>
   <titleabbrev>GrandOrgue</titleabbrev>
   <bookinfo>
@@ -299,7 +299,7 @@ sample set creator.
 </para>
           <para>
 A new settings file is created whenever the <link linkend="save">Save</link> menu item is selected.
-The file is stored in the directory currently designated by the <!--link linkend="settingsstore"-->Settings Store<!--/link-->  parameter in the <emphasis>Options</emphasis> tab,
+The file is stored in the directory currently designated by the <link linkend="settingsstore">Settings Store</link>  parameter in the <emphasis>Options</emphasis> tab,
 and the file name is meaningless (as in: not related to the sample set/organ/church name) for the user.
 </para>
         </sect3>
@@ -323,12 +323,12 @@ recommended method for most users.
           <para>
 Save the loaded and processed samples to hard disk. Doing so
 decreases loading time at the expense of hard disk space.</para>
-          <para>The cache file is stored in the directory currently designated by the <!--link linkend="cachestore"-->Cache Store<!--/link-->  parameter in the <emphasis>Options</emphasis> tab, and the file name is meaningless (as in: not related to the sample set/organ/church name) for the user.</para>
+          <para>The cache file is stored in the directory currently designated by the <link linkend="cachestore">Cache Store</link>  parameter in the <emphasis>Options</emphasis> tab, and the file name is meaningless (as in: not related to the sample set/organ/church name) for the user.</para>
           <para>Creating or updating the cache takes some time; a progress window will
 display indicating estimated time remaining and other indicators.
 </para>
           <para>
-Note that each different preset uses its own cache. The <!--link linkend="managecache"-->Manage cache<!--/link--> system option manages automatic creation/update of the current cache.      </para>
+Note that each different preset uses its own cache. The <link linkend="managecache">Manage cache</link> system option manages automatic creation/update of the current cache.      </para>
         </sect3>
         <sect3>
           <title>Delete Cache</title>
@@ -452,7 +452,7 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
           </indexterm>
           <para>
 Displays a tabbed dialog containing the various settings.
- See <link linkend="audiomidisettings">Audio &amp; Midi Settings</link> for detailed information on this topic.</para>
+ See <link linkend="settingstab">Audio &amp; Midi Settings</link> for detailed information on this topic.</para>
         </sect3>
         <sect3 id="record">
           <title>Record</title>
@@ -734,6 +734,685 @@ settings file.
       </sect2>
     </sect1>
   </chapter>
+  <chapter id="settingstab">
+    <title>Midi &amp; Audio settings</title>
+    <indexterm>
+      <primary>Midi &amp; Audio Settings</primary>
+    </indexterm>
+    <para>This tabbed dialog is displayed when the <emphasis>Audio/Midi Settings</emphasis> menu item is chosen in the <emphasis>Audio/Midi</emphasis> menu.</para>
+    <sect1>
+      <title>Options tab</title>
+      <indexterm>
+        <primary>Options</primary>
+      </indexterm>
+      <figure>
+        <title>Midi &amp; Audio Settings / Options</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata width="75%" scalefit="1" fileref="options_tab.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>The <emphasis>Options</emphasis> tab manages &quot;system-wide&quot;   GrandOrgue options. In other terms, these options apply to any loaded sampleset.</para>
+      <para>These options are located at different places according to the platform.</para>
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colname="c1" colwidth="100" colsep="no" rowsep="no"/>
+          <colspec colname="c2" colsep="no" rowsep="no"/>
+          <tbody>
+            <row>
+              <entry>Windows:</entry>
+              <entry>registry key HKEY_CURRENT_USER\Software\Our Organ\GrandOrgue</entry>
+            </row>
+            <row>
+              <entry>Linux:</entry>
+              <entry>$HOME/.GrandOrgue</entry>
+            </row>
+            <row>
+              <entry>Mac:</entry>
+              <entry>Library/Preferences/.GrandOrgue</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>The user can reset  settings to default values by deleting the &quot;options file&quot; according to the platform.</para>
+      <sect2>
+        <title>Enhancements frame</title>
+        <sect3>
+          <title>Active polyphony management</title>
+          <indexterm>
+            <primary>Active Polyphony Management</primary>
+          </indexterm>
+          <para>
+When polyphony reaches 3/4 of the current maximum value, release
+samples (reverberation tails) are faded out in order to conserve
+polyphony.
+</para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>Conserved</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Release Sample Scaling</title>
+          <indexterm>
+            <primary>Release Sample Scaling</primary>
+          </indexterm>
+          <para>
+For those sample sets with long reverberation tails (&quot;wet&quot;), enabling
+this option will fade out the release sample if the note is played
+staccato. It will have little to no effect on &quot;dry&quot; sample sets.
+          </para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Randomize Pipe Speaking</title>
+          <indexterm>
+            <primary>Randomize Pipe Speaking</primary>
+          </indexterm>
+          <para>
+This will apply a very small random detuning before each pipe begins to speak.
+The detuning is small enough so that the ear can't appreciate the tuning difference and large enough so that it approximates the tiny interferences (due to physical location) that occur when playing multiple real pipes in an organ.
+          </para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Load last file at startup</title>
+          <indexterm>
+            <primary>Load last file at startup</primary>
+          </indexterm>
+          <para>This will trigger the automatic load of the last used sample set.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+      </sect2>
+      <sect2>
+        <title>Sound engine frame</title>
+        <sect3>
+          <title>Interpolation</title>
+          <indexterm>
+            <primary>Interpolation</primary>
+          </indexterm>
+          <para>This dropdown controls the method used to interpolate the waveform when resampling the samples.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Polyphase</term>
+              <listitem>
+                <para>This method gives better audio results at the expense of higher CPU load.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Linear</term>
+              <listitem>
+                <para>This method  lowers CPU load at he expense of audio quality. It is the only usable option when <link linkend="losslesscompression">lossless compression</link> is enabled, as polyphase interpolation is not yet implemented with lossless compression.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+          <para>The assertions about audio quality should be used as guidelines only. As a rule of thumb, polyphase gets better treble, linear gets better bass, and this is most noticeable in sample sets that use interpolation extensively (e.g. retuning a detuned organ).  Audio quality is highly subjective, so the user is strongly encouraged to listen for himself and retain the setting that suits him better.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>Linear gives more polyphony</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3 id="concurrencylevel">
+          <title>Concurrency Level</title>
+          <indexterm>
+            <primary>Concurrency level</primary>
+          </indexterm>
+          <para>This number states how many threads GrandOrgue creates to spread the load. Cores number is the recommended choice for computers without Hyperthreading. Less doesn&apos;t use the whole computer. More wastes resources while managing overhead.</para>
+          <para>With Hyperthreading enabled, the CPU load seems more evenly spread among virtual cores.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>Raising the number of cores raises the polyphony attained before the sound starts to break.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Release Concurrency Level</title>
+          <indexterm>
+            <primary>Release concurrency level</primary>
+          </indexterm>
+          <para>This setting has the same role as <link linkend="concurrencylevel">Concurrency Level</link>, and is dedicated to release processing. It  works around some limitations in the current code, and may be removed in a future release. The same value as concurrency is recommended.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>Same as concurrency</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>Same as concurrency</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>Same as concurrency</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Recorder WAV format</title>
+          <indexterm>
+            <primary>Recorder WAV format</primary>
+          </indexterm>
+          <para>This selects the format used by the recorder invoked by selecting <link linkend="record">Record</link>. The supported formats are: 8 bit, 16 bit, 24 bit PCM and 32 bit IEEE float.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+      </sect2>
+      <sect2>
+        <title>Paths frame</title>
+        <sect3 id="settingsstore">
+          <title>Settings store</title>
+          <indexterm>
+            <primary>Settings store</primary>
+          </indexterm>
+          <para>This selects the directory where preset settings files are stored. The <emphasis>Browse</emphasis> button opens a file browser where the desired directory can be chosen.</para>
+        </sect3>
+        <sect3 id="cachestore">
+          <title>Cache store</title>
+          <indexterm>
+            <primary>Cache store</primary>
+          </indexterm>
+          <para>This selects the directory where cache files are stored. The <emphasis>Browse</emphasis> button opens a file browser where the desired directory can be chosen.</para>
+        </sect3>
+      </sect2>
+      <sect2>
+        <title>Sample loading frame</title>
+        <sect3 id="losslesscompression">
+          <title>Lossless compression</title>
+          <indexterm>
+            <primary>Lossless compression</primary>
+          </indexterm>
+          <para>
+Uses a lossless algorithm (i.e. the original samples can be perfectly
+reconstructed) so that RAM requirements are lessened. Particularly
+useful for large sample sets.
+</para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>Variable savings up to 40%</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>Approx. 10% lower</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>Approx. 20% slower. Only affects load without cache - as the compressed data is cached.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Load stereo samples</title>
+          <indexterm>
+            <primary>Load stereo samples</primary>
+          </indexterm>
+          <para>Selects whether stereo samples are loaded in Mono or Stereo</para>
+          <para>
+If set to Mono, all samples are loaded in Mono. When compression is disabled, this will save 50%, but when compression is enabled, much less will be saved because the compression is much less effective on monoaural inputs.
+   </para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>
+Variable savings up to 50%
+   </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>Slight impact, as loading in Mono saves a few calculations per sample.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Sample size</title>
+          <indexterm>
+            <primary>Sample size</primary>
+          </indexterm>
+          <para>Selects whether the samples are loaded with 8 or 12 or 16 or 24  bits precision.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>High impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>The polyphony will increase with lower bit sizes and decrease with higher bit sizes.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>Slight impact</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3 id="looploading">
+          <title>Loop loading</title>
+          <indexterm>
+            <primary>Loop loading</primary>
+          </indexterm>
+          <para>Selects which loop(s) are loaded if the samples have multiple loops.</para>
+          <variablelist>
+            <varlistentry>
+              <term>First loop</term>
+              <listitem>
+                <para>Load only the first loop.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Longest loop</term>
+              <listitem>
+                <para>Load only the longest loop found in the sample.</para>
+                <para>Longer loops usually feel more lively.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>All loops</term>
+              <listitem>
+                <para>Load all loops found in the sample. While playing, the loops are cycled using a round-robin scheme.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para><emphasis>First loop</emphasis> less than <emphasis>Longest loop</emphasis> less than <emphasis>All loops</emphasis></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>Increases with the amount of data loaded</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Attack loading</title>
+          <indexterm>
+            <primary>Attack loading</primary>
+          </indexterm>
+          <para>The sample set creator can provide multiple separate attack files.This selects which attack(s) are loaded.</para>
+          <variablelist>
+            <varlistentry>
+              <term>All</term>
+              <listitem>
+                <para>Load all attack files.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry id="attackloading">
+              <term>Single attack</term>
+              <listitem>
+                <para>Load only the &quot;best&quot; provided file.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para><emphasis>Single attack</emphasis> less than <emphasis>All</emphasis></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>Increases with the amount of data loaded</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Release loading</title>
+          <indexterm>
+            <primary>Release loading</primary>
+          </indexterm>
+          <para>The sample set creator can provide multiple separate release files.This selects which release(s) are loaded.</para>
+          <variablelist>
+            <varlistentry>
+              <term>All</term>
+              <listitem>
+                <para>Load all release files. The sound engine selects which release to play according to how much time the sustain sample was held. For example, it usually selects the shortest release sample while playing staccato.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Single release</term>
+              <listitem>
+                <para>Load only the &quot;best&quot; provided release file.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>Same as <link linkend="attackloading">Attack loading</link></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>Same as Attack loading</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Memory limit</title>
+          <indexterm>
+            <primary>Memory limit</primary>
+          </indexterm>
+          <para>Chooses the size of the memory cache where samples are loaded. This is especially useful when running the 32 bits Windows build on 64 bits platforms to avoid a crash while loading a big sample set.</para>
+          <para>If this parameter is not set, it defaults to the amount of available memory in the system.</para>
+        </sect3>
+      </sect2>
+      <sect2>
+        <title>Sound output frame</title>
+        <sect3>
+          <title>Sample rate</title>
+          <indexterm>
+            <primary>Sample rate</primary>
+          </indexterm>
+          <para>Selects the output sample rate. Allowed values are 44100, 48000 and 96000 Hz.</para>
+          <para>The samplerate should match both the configured samplerate in the audio interface and the samplerate of the recorded samples  to avoid  resampling. If not, resampling can occur in all layers of the audio stack, and audio quality can suffer.</para>
+        </sect3>
+        <sect3>
+          <title>Samples per buffer</title>
+          <indexterm>
+            <primary>Samples per buffer</primary>
+          </indexterm>
+          <para>Allowed values range from 16 to 1024 by increment of 16.</para>
+          <para>This parameter sets the output buffer size. Larger values usually reduce sound artifacts at the expense of latency.</para>
+        </sect3>
+      </sect2>
+      <sect2>
+        <title>Cache frame</title>
+        <sect3>
+          <title>Compress cache</title>
+          <indexterm>
+            <primary>Compress cache</primary>
+          </indexterm>
+          <para>Selects whether the disk cache must be compressed when created or updated.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <para>No impact</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <para>Loading from an uncompressed cache is I/O bound, while loading from a compressed cache requires more CPU. With a slow disk + fast CPU, compressed might be better.</para>
+                <para>This feature is closely related to the hardware capacities, so the user is encouraged to test for himself and retain the best setting for his computer.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3 id="managecache">
+          <title>Automatically manage cache</title>
+          <indexterm>
+            <primary>Automatically manage cache</primary>
+          </indexterm>
+          <para>Selects whether the cache must be automatically created or updated when the sample set is loaded.</para>
+        </sect3>
+      </sect2>
+    </sect1>
+    <sect1>
+      <title>Audio Output tab</title>
+      <indexterm>
+        <primary>Audio Output</primary>
+      </indexterm>
+      <figure>
+        <title>Audio Output options</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="audio_output_tab.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </sect1>
+    <sect1>
+      <title>Reverb tab</title>
+      <indexterm>
+        <primary>Reverberation</primary>
+        <secondary>Reverb</secondary>
+      </indexterm>
+      <figure>
+        <title>Reverberation options</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="reverb_tab.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </sect1>
+    <sect1>
+      <title>Audio Groups tab</title>
+      <indexterm>
+        <primary>Audio Groups</primary>
+      </indexterm>
+      <figure>
+        <title>Audio Groups options</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="audio_groups_tab.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </sect1>
+    <sect1>
+      <title>Organs tab</title>
+      <indexterm>
+        <primary>Organs</primary>
+        <secondary>Predefined Organs list</secondary>
+      </indexterm>
+      <figure>
+        <title>Organs tab</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="organs_tab.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </sect1>
+    <sect1>
+      <title>Midi Devices tab</title>
+      <indexterm>
+        <primary>Midi Devices</primary>
+      </indexterm>
+      <figure>
+        <title>Midi devices options</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="midi_devices_tab.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </sect1>
+    <sect1>
+      <title>Initial Midi Configuration tab</title>
+      <indexterm>
+        <primary>Initial Midi Configuration</primary>
+      </indexterm>
+      <figure>
+        <title>Initial Midi Configuration options</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="initial_midi_tab.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </sect1>
+  </chapter>
+<!--Planned to be discarded
   <chapter id="midisettings">
     <title>Initial MIDI Configuration</title>
     <indexterm>
@@ -890,37 +1569,6 @@ monoaural inputs.
       </variablelist>
     </sect1>
     <sect1>
-      <title>Lossless Compression</title>
-      <indexterm>
-        <primary>Lossless Compression</primary>
-      </indexterm>
-      <para>
-Uses a lossless algorithm (i.e. the original samples can be perfectly
-reconstructed) so that RAM requirements are lessened. Particularly
-useful for large sample sets.
-      </para>
-      <variablelist>
-        <varlistentry>
-          <term>Memory</term>
-          <listitem>
-            <para>Variable savings up to 40%</para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Polyphony</term>
-          <listitem>
-            <para>Approx. 10% lower</para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Load time</term>
-          <listitem>
-            <para>Approx. 20% slower</para>
-          </listitem>
-        </varlistentry>
-      </variablelist>
-    </sect1>
-    <sect1>
       <title>Active Polyphony Management</title>
       <indexterm>
         <primary>Active Polyphony Management</primary>
@@ -1013,115 +1661,8 @@ recommended to leave this option engaged.
         </varlistentry>
       </variablelist>
     </sect1>
-    <sect1>
-      <title>Release Sample Scaling</title>
-      <indexterm>
-        <primary>Release Sample Scaling</primary>
-      </indexterm>
-      <para>
-For those sample sets with long reverberation tails (&quot;wet&quot;), enabling
-this option will fade out the release sample if the note is played
-staccato. It will have little to no effect on &quot;dry&quot; sample sets.
-      </para>
-      <variablelist>
-        <varlistentry>
-          <term>Memory</term>
-          <listitem>
-            <para>No impact</para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Polyphony</term>
-          <listitem>
-            <para>Slight impact</para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Load time</term>
-          <listitem>
-            <para>No impact</para>
-          </listitem>
-        </varlistentry>
-      </variablelist>
-    </sect1>
-    <sect1>
-      <title>Randomize Pipe Speaking</title>
-      <indexterm>
-        <primary>Randomize Pipe Speaking</primary>
-      </indexterm>
-      <para>
-This will apply a very small (less than 1ms) random delay before each
-pipe begins to speak. This may help combinations of stops to sound
-more natural and less repetitive.
-      </para>
-      <variablelist>
-        <varlistentry>
-          <term>Memory</term>
-          <listitem>
-            <para>No impact</para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Polyphony</term>
-          <listitem>
-            <para>No impact</para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Load time</term>
-          <listitem>
-            <para>No impact</para>
-          </listitem>
-        </varlistentry>
-      </variablelist>
-    </sect1>
   </chapter>
-  <chapter>
-    <title>GrandOrgue options</title>
-    <indexterm>
-      <primary>Options</primary>
-    </indexterm>
-    <para>
-Part of the setting dialog.
-    </para>
-  </chapter>
-  <chapter>
-    <title>Audio Output</title>
-    <indexterm>
-      <primary>Audio Output</primary>
-    </indexterm>
-    <para>
-Part of the setting dialog.
-    </para>
-  </chapter>
-  <chapter>
-    <title>Reverb</title>
-    <indexterm>
-      <primary>Reverb</primary>
-    </indexterm>
-    <para>
-Part of the setting dialog.
-    </para>
-  </chapter>
-  <chapter>
-    <title>Audio Groups</title>
-    <indexterm>
-      <primary>Audio Groups</primary>
-    </indexterm>
-    <para>
-Part of the setting dialog.
-    </para>
-  </chapter>
-  <chapter>
-    <title>Organs</title>
-    <indexterm>
-      <primary>Organs</primary>
-    </indexterm>
-    <para>
-Part of the setting dialog.
-    </para>
-  </chapter>
-  <chapter>
+-->  <chapter>
     <title>Frequently Asked Questions</title>
     <indexterm>
       <primary>Frequently Asked Questions</primary>
@@ -1137,7 +1678,7 @@ This section will be populated once questions become frequently asked.
       <para>
 It is an text file in ISO-8859-1 encoding. The standard extension is
 <emphasis>.organ</emphasis>.
- </para>
+      </para>
       <para>
 Comment lines are started with <emphasis>;</emphasis> in the first column. Empty lines are ignored.
       </para>
@@ -1153,7 +1694,7 @@ File paths in this format are relative to the location of the organ
 file.  The directory seperator in this paths must be <emphasis>\</emphasis>. The paths
 should not contain <emphasis>/</emphasis>. The paths should be considered case sensitiv,
 even if it is not enforced on all plattforms.
- </para>
+      </para>
       <para>
 Boolean values are represented as <emphasis>Y</emphasis> for true and
 <emphasis>N</emphasis> for false.
@@ -1250,7 +1791,7 @@ The following key codes for shortcut keys are supported by GO:
           <listitem>
             <para>
 Backspace key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1258,7 +1799,7 @@ Backspace key
           <listitem>
             <para>
 0 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1266,7 +1807,7 @@ Backspace key
           <listitem>
             <para>
 1 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1274,7 +1815,7 @@ Backspace key
           <listitem>
             <para>
 2 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1282,7 +1823,7 @@ Backspace key
           <listitem>
             <para>
 3 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1290,7 +1831,7 @@ Backspace key
           <listitem>
             <para>
 4 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1298,7 +1839,7 @@ Backspace key
           <listitem>
             <para>
 5 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1306,7 +1847,7 @@ Backspace key
           <listitem>
             <para>
 5 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1314,7 +1855,7 @@ Backspace key
           <listitem>
             <para>
 6 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1322,7 +1863,7 @@ Backspace key
           <listitem>
             <para>
 8 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1330,7 +1871,7 @@ Backspace key
           <listitem>
             <para>
 9 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1338,7 +1879,7 @@ Backspace key
           <listitem>
             <para>
 A key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1346,7 +1887,7 @@ A key
           <listitem>
             <para>
 B key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1354,7 +1895,7 @@ B key
           <listitem>
             <para>
 C key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1362,7 +1903,7 @@ C key
           <listitem>
             <para>
 D key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1370,7 +1911,7 @@ D key
           <listitem>
             <para>
 E key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1378,7 +1919,7 @@ E key
           <listitem>
             <para>
 F key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1386,7 +1927,7 @@ F key
           <listitem>
             <para>
 G key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1394,7 +1935,7 @@ G key
           <listitem>
             <para>
 H key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1402,7 +1943,7 @@ H key
           <listitem>
             <para>
 I key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1410,7 +1951,7 @@ I key
           <listitem>
             <para>
 J key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1418,7 +1959,7 @@ J key
           <listitem>
             <para>
 K key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1426,7 +1967,7 @@ K key
           <listitem>
             <para>
 L key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1434,7 +1975,7 @@ L key
           <listitem>
             <para>
 M key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1442,7 +1983,7 @@ M key
           <listitem>
             <para>
 N key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1450,7 +1991,7 @@ N key
           <listitem>
             <para>
 O key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1458,7 +1999,7 @@ O key
           <listitem>
             <para>
 P key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1466,7 +2007,7 @@ P key
           <listitem>
             <para>
 Q key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1474,7 +2015,7 @@ Q key
           <listitem>
             <para>
 R key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1482,7 +2023,7 @@ R key
           <listitem>
             <para>
 S key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1490,7 +2031,7 @@ S key
           <listitem>
             <para>
 T key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1498,7 +2039,7 @@ T key
           <listitem>
             <para>
 U key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1506,7 +2047,7 @@ U key
           <listitem>
             <para>
 V key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1514,7 +2055,7 @@ V key
           <listitem>
             <para>
 W key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1522,7 +2063,7 @@ W key
           <listitem>
             <para>
 X key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1530,7 +2071,7 @@ X key
           <listitem>
             <para>
 Y key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1538,7 +2079,7 @@ Y key
           <listitem>
             <para>
 Z key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1546,7 +2087,7 @@ Z key
           <listitem>
             <para>
 F1 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1554,7 +2095,7 @@ F1 key
           <listitem>
             <para>
 F2 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1562,7 +2103,7 @@ F2 key
           <listitem>
             <para>
 F3 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1570,7 +2111,7 @@ F3 key
           <listitem>
             <para>
 F4 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1578,7 +2119,7 @@ F4 key
           <listitem>
             <para>
 F5 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1586,7 +2127,7 @@ F5 key
           <listitem>
             <para>
 F6 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1594,7 +2135,7 @@ F6 key
           <listitem>
             <para>
 F7 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1602,7 +2143,7 @@ F7 key
           <listitem>
             <para>
 F8 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1610,7 +2151,7 @@ F8 key
           <listitem>
             <para>
 F9 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1618,7 +2159,7 @@ F9 key
           <listitem>
             <para>
 F10 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1626,7 +2167,7 @@ F10 key
           <listitem>
             <para>
 F11 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1634,7 +2175,7 @@ F11 key
           <listitem>
             <para>
 F12 key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -1645,7 +2186,7 @@ F12 key
 This section describes the whole organ including the main panel,
 therefore the section includes all display metrics
 attributes. Additionally it includes the following attributes:
-	     </para>
+     </para>
       <variablelist>
         <varlistentry>
           <term>ChurchName</term>
@@ -1654,7 +2195,7 @@ attributes. Additionally it includes the following attributes:
 (string, required) Name of the organ/church. This string should be
 unique, as setting files for organs with the same
 <emphasis>ChurchName</emphasis> are considered compatible.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1662,7 +2203,7 @@ unique, as setting files for organs with the same
           <listitem>
             <para>
 (string, required) informational text displayed in the property dialog
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1670,7 +2211,7 @@ unique, as setting files for organs with the same
           <listitem>
             <para>
 (string, required) informational text displayed in the property dialog
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1678,7 +2219,7 @@ unique, as setting files for organs with the same
           <listitem>
             <para>
 (string, required) informational text displayed in the property dialog
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1686,7 +2227,7 @@ unique, as setting files for organs with the same
           <listitem>
             <para>
 (string, required) informational text displayed in the property dialog
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1694,7 +2235,7 @@ unique, as setting files for organs with the same
           <listitem>
             <para>
 (string, required) informational text displayed in the property dialog
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1703,7 +2244,7 @@ unique, as setting files for organs with the same
             <para>
 (string, required) relative path to an html file with more information
 about the organ.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1712,7 +2253,7 @@ about the organ.
             <para>
 (integer 1-16, required) number of manuals. The manual information is
 available in sections called <emphasis>Manual999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1721,7 +2262,7 @@ available in sections called <emphasis>Manual999</emphasis>.
             <para>
 (boolean, required) Determines, if the pedal
 (<emphasis>Manual000</emphasis>) is present.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1730,7 +2271,7 @@ available in sections called <emphasis>Manual999</emphasis>.
             <para>
 (integer 0-50, required) number of enclosures. The details are in a section called
 <emphasis>Enclosure999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1739,7 +2280,7 @@ available in sections called <emphasis>Manual999</emphasis>.
             <para>
 (integer 0-10, required) number of tremulants. The details are in a section called
 <emphasis>Tremualant999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1748,7 +2289,7 @@ available in sections called <emphasis>Manual999</emphasis>.
             <para>
 (integer 1-50, required) number of windchests. The details are in a section called
 <emphasis>WindchestGroup999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1757,7 +2298,7 @@ available in sections called <emphasis>Manual999</emphasis>.
             <para>
 (integer 0-32, required) number of pistons. The details are in a section called
 <emphasis>ReversiblePiston999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1766,7 +2307,7 @@ available in sections called <emphasis>Manual999</emphasis>.
             <para>
 (integer 0-99, required) number of generals. The details are in a section called
 <emphasis>General999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1775,7 +2316,7 @@ available in sections called <emphasis>Manual999</emphasis>.
             <para>
 (integer 0-8, required) number of divisional couplers. The details are in a section called
 <emphasis>DivisionalCoupler999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1784,7 +2325,7 @@ available in sections called <emphasis>Manual999</emphasis>.
             <para>
 (integer 0-100, required) number of additional panels. The details are
 in a section called <emphasis>Panel999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1793,7 +2334,7 @@ in a section called <emphasis>Panel999</emphasis>.
             <para>
 (integer 0-999, default: 0) number of switches. The details are in a section called
 <emphasis>Switch999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1802,7 +2343,7 @@ in a section called <emphasis>Panel999</emphasis>.
             <para>
 (integer 0-400, default: 0) number of additional ranks. The details are
 in a section called <emphasis>Rank999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1811,7 +2352,7 @@ in a section called <emphasis>Rank999</emphasis>.
             <para>
 (boolean, required) determines, if divisionals store/change the
 state of associated intramanual coupler.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1820,7 +2361,7 @@ state of associated intramanual coupler.
             <para>
 (boolean, required) determines, if divisionals store/change the
 state of associated intermanual coupler.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1829,7 +2370,7 @@ state of associated intermanual coupler.
             <para>
 (boolean, required) determines, if divisionals store/change the
 state of associated tremulants.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1838,7 +2379,7 @@ state of associated tremulants.
             <para>
 (boolean, required) determines, if divisionals store/change the
 state of divisional coupler.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1847,7 +2388,7 @@ state of divisional coupler.
             <para>
 (boolean, required) determines, if the state of (on the main panel)
 invisible objects is stored in divisionals, generals and the setter.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1857,7 +2398,7 @@ invisible objects is stored in divisionals, generals and the setter.
 (integer 0-999, default: 0) Number of images on the panel. The section
 of the label GUI definitions are called
 <emphasis>Image999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1867,7 +2408,7 @@ of the label GUI definitions are called
 (integer 0-999, default: 0) Number of
 setter elements on the panel. The section of the GUI definitions are
 called <emphasis>SetterElement999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1877,7 +2418,7 @@ called <emphasis>SetterElement999</emphasis>.
 (integer 0-999, required) Number of labels on the panel. The section
 of the label GUI definitions are called
 <emphasis>Label999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1886,7 +2427,7 @@ of the label GUI definitions are called
             <para>
 (float 0-1000, default: 100) Linear amplitude scale factor applied to
 the whole organ. 100 means no change.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1895,7 +2436,7 @@ the whole organ. 100 means no change.
             <para>
 (float -120 - 40, default: 0) Amplitude scale factor in dB applied to
 the whole organ. 0 means no change.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1904,7 +2445,7 @@ the whole organ. 0 means no change.
             <para>
 (float -1200-1200, default: 0) Retune the whole organ the specified
 number of cents.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -1923,7 +2464,7 @@ attributes depend on the function:
             <para>
 Represents the crescendo swell. The section must contain the GUI
 attributes of an enclosure.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1932,7 +2473,7 @@ attributes of an enclosure.
             <para>
 Represents a label with crescendo state. The section must contain the GUI
 attributes of a label.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1941,7 +2482,7 @@ attributes of a label.
             <para>
 Represents the current number of the setter. The section must contain the GUI
 attributes of a label.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1950,7 +2491,7 @@ attributes of a label.
             <para>
 Prev/next/set button of the setter. The section must contain the GUI
 attributes of a button (displayed as button per default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1959,7 +2500,7 @@ attributes of a button (displayed as button per default).
             <para>
 +/- 1/10/100 button of the setter. The section must contain the GUI
 attributes of a button (displayed as button per default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1968,7 +2509,7 @@ attributes of a button (displayed as button per default).
             <para>
 Move to 000 button of the setter. The section must contain the GUI
 attributes of a button (displayed as button per default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1977,7 +2518,7 @@ attributes of a button (displayed as button per default).
             <para>
 Recall current number button of the setter. The section must contain the GUI
 attributes of a button (displayed as button per default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1986,7 +2527,7 @@ attributes of a button (displayed as button per default).
             <para>
 General cancel button of the setter. The section must contain the GUI
 attributes of a button (displayed as button per default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -1996,7 +2537,7 @@ attributes of a button (displayed as button per default).
 Recall combination with the specified digit as last digit button of
 the setter. The section must contain the GUI attributes of a button
 (displayed as button per default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2006,7 +2547,7 @@ the setter. The section must contain the GUI attributes of a button
 Button to switch between the various setter modes. The section must
 contain the GUI attributes of a button (displayed as button per
 default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2016,7 +2557,7 @@ default).
 Button to enable storing all elements in the setter (restrictions from
 the ODF are ignored). The section must contain the GUI attributes of a
 button (displayed as button per default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2025,7 +2566,7 @@ button (displayed as button per default).
             <para>
 Buttons to insert/remove a combination. The section must contain the
 GUI attributes of a button (displayed as button per default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2034,7 +2575,7 @@ GUI attributes of a button (displayed as button per default).
             <para>
 Buttons for the setter generals. The section must contain the GUI
 attributes of a button (displayed as button per default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2044,7 +2585,7 @@ attributes of a button (displayed as button per default).
 Buttons for switching banks of the setter generals. The section must
 contain the GUI attributes of a button (displayed as button per
 default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2053,7 +2594,7 @@ default).
             <para>
 Represents a label with the general bank number. The section must contain the GUI
 attributes of a label.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2063,7 +2604,7 @@ attributes of a label.
 Buttons to switch between the various crescendo modes. The section
 must contain the GUI attributes of a button (displayed as button per
 default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2073,7 +2614,7 @@ default).
 Buttons for controling the crescendo combinations. The section must
 contain the GUI attributes of a button (displayed as button per
 default).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2082,7 +2623,7 @@ default).
             <para>
 Buttons for controlling the organ pitch (+1, +10, +100, -1, -10, -100
 cent).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2090,7 +2631,7 @@ cent).
           <listitem>
             <para>
 Label displaying the current pitch shift of the organ.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2098,7 +2639,7 @@ Label displaying the current pitch shift of the organ.
           <listitem>
             <para>
 Buttons for switching temperaments.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2106,7 +2647,7 @@ Buttons for switching temperaments.
           <listitem>
             <para>
 Label displaying the current temperament of the organ.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2114,7 +2655,7 @@ Label displaying the current temperament of the organ.
           <listitem>
             <para>
 Buttons for transposing.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2122,7 +2663,7 @@ Buttons for transposing.
           <listitem>
             <para>
 Label displaying the current transpose setting.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2130,7 +2671,7 @@ Label displaying the current transpose setting.
           <listitem>
             <para>
 Save button.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -2167,7 +2708,7 @@ It has the following attributes:
           <listitem>
             <para>
 (panel size, required) Height of the panel
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2175,7 +2716,7 @@ It has the following attributes:
           <listitem>
             <para>
 (panel size, required) Width of the panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2183,7 +2724,7 @@ It has the following attributes:
           <listitem>
             <para>
 (bitmap number, required) shown as 01 in the above image.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2191,7 +2732,7 @@ It has the following attributes:
           <listitem>
             <para>
 (bitmap number, required) shown as 05 in the above image.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2199,7 +2740,7 @@ It has the following attributes:
           <listitem>
             <para>
 (bitmap number, required) shown as 13 in the above image
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2207,7 +2748,7 @@ It has the following attributes:
           <listitem>
             <para>
 (bitmap number, required) shown as 20 in the above image
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2215,7 +2756,7 @@ It has the following attributes:
           <listitem>
             <para>
 (bitmap number, required)
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2223,7 +2764,7 @@ It has the following attributes:
           <listitem>
             <para>
 (string, required) Name of the font for button labels.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2231,7 +2772,7 @@ It has the following attributes:
           <listitem>
             <para>
 (string, required) Name of the font for keyboard labels
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2239,7 +2780,7 @@ It has the following attributes:
           <listitem>
             <para>
 (color, required) Color for shortcut labels
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2247,7 +2788,7 @@ It has the following attributes:
           <listitem>
             <para>
 (string, required) font name for labels
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2255,7 +2796,7 @@ It has the following attributes:
           <listitem>
             <para>
 (integer 2-12, required) number of drawstop columns. Must be even.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2263,7 +2804,7 @@ It has the following attributes:
           <listitem>
             <para>
 (integer 1-20, required) Number of drawstop rows.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2272,7 +2813,7 @@ It has the following attributes:
             <para>
 (boolean, required) If true, each second row drawstops on the
 left/right is displayed shifted.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2280,7 +2821,7 @@ left/right is displayed shifted.
           <listitem>
             <para>
 (boolean, required if DispDrawstopColsOffset is true)
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2289,7 +2830,7 @@ left/right is displayed shifted.
             <para>
 (boolean, required) group two drawstop rows together. Number of
 drawstop rows must be divideable by 4.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2298,7 +2839,7 @@ drawstop rows must be divideable by 4.
             <para>
 (integer 0-99, required) number of drawstop rows in the center block.
 The row number start with 100.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2306,7 +2847,7 @@ The row number start with 100.
           <listitem>
             <para>
 (integer 0 - 40, required) number of drawstop cols in the center block
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2314,7 +2855,7 @@ The row number start with 100.
           <listitem>
             <para>
 (integer 1-32, required) Number of colums for displaying pistons in the center block
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2323,7 +2864,7 @@ The row number start with 100.
             <para>
 (integer 0-99, required) number of rows for displaying pistons in the center block.
 The row number start with 100.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2331,7 +2872,7 @@ The row number start with 100.
           <listitem>
             <para>
 (boolean, required) display an extra piston row with row number 9.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2340,7 +2881,7 @@ The row number start with 100.
             <para>
 (boolean, required if DispExtraPedalButtonRow is true) move extra
 pistons row a little bit to the left.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2348,7 +2889,7 @@ pistons row a little bit to the left.
           <listitem>
             <para>
 (string, required if DispExtraPedalButtonRow is true)
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2357,7 +2898,7 @@ pistons row a little bit to the left.
             <para>
 (boolean, required) Display the pistons associated with the manual
 above (true) or below the manual (false).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2365,7 +2906,7 @@ above (true) or below the manual (false).
           <listitem>
             <para>
 (boolean, required)
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2373,7 +2914,7 @@ above (true) or below the manual (false).
           <listitem>
             <para>
 (boolean, required)
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2381,7 +2922,7 @@ above (true) or below the manual (false).
           <listitem>
             <para>
 (boolean, required)
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2390,7 +2931,7 @@ above (true) or below the manual (false).
             <para>
 (boolean, required) Display extra drawstop block above or below the
 extra piston block.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2398,7 +2939,7 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-150, default: 78) Drawstop width used for layout calculation
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2406,7 +2947,7 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-150, default: 69) Drawstop height used for layout calculation
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2414,7 +2955,7 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-150, default: 44) Piston width used for layout calculation
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2422,7 +2963,7 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-150, default: 40) Piston height used for layout calculation
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2430,7 +2971,7 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-150, default: 52) Enclosure width used for layout calculation
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2438,7 +2979,7 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-150, default: 63) Enclosure width used for layout calculation
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2446,7 +2987,7 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-500, default: 40) Pedal height used for layout calculation
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2454,7 +2995,7 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-500, default: 7) Width of one pedal key used for layout calculation
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2462,7 +3003,7 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-500, default: 32) Manual height used for layout calculation
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2470,7 +3011,7 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-500, default: 12) Width of one manual key used for layout calculation
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -2488,7 +3029,7 @@ additional gui attributes.
           <listitem>
             <para>
 (string, required) Name of the control
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2496,7 +3037,7 @@ additional gui attributes.
           <listitem>
             <para>
 (integer 0-100, required) Minimum volume, if the enclosure is closed.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2508,7 +3049,7 @@ initial MIDI configuration to map the enclosure to one midi setting
 from the global midi configuration dialog. 0 means no device
 associated. Please note, the the GUI only allows the association of
 the first few enclosures.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2516,7 +3057,7 @@ the first few enclosures.
           <listitem>
             <para>
 (boolean, default: true) If true, the enclosure is visible on the main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -2530,7 +3071,7 @@ attributes:
           <listitem>
             <para>
 (color, default: Dark Red) Color for the label text.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2538,7 +3079,7 @@ attributes:
           <listitem>
             <para>
 (font size, default: 7) Size of the label font
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2547,7 +3088,7 @@ attributes:
             <para>
 (string, default: empty) Font for the text. Empty means use the
 default font.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2556,7 +3097,7 @@ default font.
             <para>
 (string, default: Name of the button) Content of the text label. You
 should set it, if you need to display a shorter string.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2565,7 +3106,7 @@ should set it, if you need to display a shorter string.
             <para>
 (integer 1 - 127, default: implementation dependend) Number of
 bitmaps/steps.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2576,7 +3117,7 @@ bitmaps/steps.
 image to use as on bitmap for position 999.  If the bitmap contains a
 mask for transparency, it will be used. All bitmaps must have the same
 size.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2585,7 +3126,7 @@ size.
             <para>
 (string, default: empty) File name for a external mask for bitmap
 999. If empty, no mask is added.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2594,7 +3135,7 @@ size.
             <para>
 (integer 0 - panel width, default: according to layout model) Allow to
 override X position for enclosure.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2603,7 +3144,7 @@ override X position for enclosure.
             <para>
 (integer 0 - panel height, default: according to layout model) Allow
 to override Y position for enclosure.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2612,7 +3153,7 @@ to override Y position for enclosure.
             <para>
 (integer 0 - panel width, default: bitmap width) Width of the
 enclosure. If larger than the bitmap, the bitmap is tiled.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2621,7 +3162,7 @@ enclosure. If larger than the bitmap, the bitmap is tiled.
             <para>
 (integer 0 - panel height, default: bitmap height) Height of the
 enclosure. If larger than the bitmap, the bitmap is tiled.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2630,7 +3171,7 @@ enclosure. If larger than the bitmap, the bitmap is tiled.
             <para>
 (integer 0 - bitmap width, default: 0) X position on the bitmap of the
 left pixel of the enclosure
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2639,7 +3180,7 @@ left pixel of the enclosure
             <para>
 (integer 0 - bitmap width, default: 0) Y position on the bitmap of the
 top pixel of the enclosure
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2648,7 +3189,7 @@ top pixel of the enclosure
             <para>
 (integer 0 - Width, default: 0) relative X of left border of the mouse
 rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2657,7 +3198,7 @@ rectangle
             <para>
 (integer 0 - Height, default: implemtation dependend) relative Y of
 top border of the mouse rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2665,7 +3206,7 @@ top border of the mouse rectangle
           <listitem>
             <para>
 (integer 0 - Width, default: Width) width of the mouse rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2674,7 +3215,7 @@ top border of the mouse rectangle
             <para>
 (integer 0 - Height, default: implementation dependend) height of the
 mouse rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2683,7 +3224,7 @@ mouse rectangle
             <para>
 (integer 0 - MouseRectHeight, default: implementation dependend) top Y
 coordinate of the axis
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2692,7 +3233,7 @@ coordinate of the axis
             <para>
 (integer MouseAxisStart - MouseRectHeight, default: implementation
 dependend) bottom Y coordinate of the axis
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2701,7 +3242,7 @@ dependend) bottom Y coordinate of the axis
             <para>
 (integer 0 - Height, default: 0) relative X of left border of the text
 rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2710,7 +3251,7 @@ rectangle
             <para>
 (integer 0 - Height, default: implementation dependend) relative Y of
 top border of the text rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2718,7 +3259,7 @@ top border of the text rectangle
           <listitem>
             <para>
 (integer 0 - Width, default: Width) width of the text rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2727,7 +3268,7 @@ top border of the text rectangle
             <para>
 (integer 0 - Height, default: implementation dependend) height of the
 text rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2737,7 +3278,7 @@ text rectangle
 (integer 0 - text rectangle width, default: TextWidth) If 0, no text
 is displayed. Otherwise the value specified the maximum line length
 used for text breaking.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -2754,7 +3295,7 @@ This object is used to store one combination It has the following attributes:
             <para>
 (boolean, default: false) If true, the stored combination can not be
 changed.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2764,7 +3305,7 @@ changed.
 (integer 0 - 999, required) Number of stop state stored in this
 combination. The entries are called <emphasis>StopNumber999</emphasis>
 and <emphasis>StopManual999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2775,7 +3316,7 @@ and <emphasis>StopManual999</emphasis>.
 combination. The entries are called
 <emphasis>CouplerNumber999</emphasis> and
 <emphasis>CouplerManual999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2784,7 +3325,7 @@ combination. The entries are called
             <para>
 (integer 0 - 999, required) Number of tremulant state stored in this
 combination. The entries are called <emphasis>TremulantNumber999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2793,7 +3334,7 @@ combination. The entries are called <emphasis>TremulantNumber999</emphasis>.
             <para>
 (integer 0 - 999, default: 0) Number of switch state stored in this
 combination. The entries are called <emphasis>SwitchNumber999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2804,7 +3345,7 @@ combination. The entries are called <emphasis>SwitchNumber999</emphasis>.
 divisional coupler in the generals is enabled) Number of divisional coupler
 state stored in this combination. The entries are called
 <emphasis>DivisionalCouplerNumber999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2813,7 +3354,7 @@ state stored in this combination. The entries are called
             <para>
 (integer -manual stop count - manual stop count, required) Number of
 the stop on the manual. If the value is negative, it is turned off, else turned on.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2821,7 +3362,7 @@ the stop on the manual. If the value is negative, it is turned off, else turned 
           <listitem>
             <para>
 (integer manual number, required) Number of the manual, which contain the stop.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2830,7 +3371,7 @@ the stop on the manual. If the value is negative, it is turned off, else turned 
             <para>
 (integer -999 - 999, required) Number of the coupler on the manual. If the value is
 negative, it is turned off, else turned on.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2838,7 +3379,7 @@ negative, it is turned off, else turned on.
           <listitem>
             <para>
 (integer manual number, required) Number of the manual, which contain the coupler.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2848,7 +3389,7 @@ negative, it is turned off, else turned on.
 (integer -tremulant count - tremulant count, required)
 Number of the tremulant. If the value is negative, it is turned off,
 else turned on.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2858,7 +3399,7 @@ else turned on.
 (integer -switch count - switch count, required)
 Number of the switch. If the value is negative, it is turned off,
 else turned on.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2868,7 +3409,7 @@ else turned on.
 (integer -divisional coupler count - divisional coupler count,
 required) Number of the divisional coupler. If the value is negative,
 it is turned off, else turned on.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -2895,7 +3436,7 @@ attributes:
             <para>
 (boolean, required) If false, the coupler only couples upward in the
 manual list of the coupler, else up and downward.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2905,7 +3446,7 @@ manual list of the coupler, else up and downward.
 (integer 1 - manual count, required) Number of manuals affected by
 this coupler. The list entries are stored in
 <emphasis>Manual999</emphasis> setting.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2913,7 +3454,7 @@ this coupler. The list entries are stored in
           <listitem>
             <para>
 (integer manual number, required) Manual affected by the coupler
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -2931,7 +3472,7 @@ following attributes:
             <para>
 (boolean, default: false) If true, the stored combination can not be
 changed.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2941,7 +3482,7 @@ changed.
 (integer 0 - stop count of the manual, required) Number of stop state
 stored in this combination. The entries are called
 <emphasis>Stop999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2951,7 +3492,7 @@ stored in this combination. The entries are called
 (integer 0 - coupler count of the manual, required) Number of coupler
 state stored in this combination. The entries are called
 <emphasis>Coupler999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2961,7 +3502,7 @@ state stored in this combination. The entries are called
 (integer 0 - tremulant count of the manual, required) Number of
 tremulant state stored in this combination. The entries are called
 <emphasis>Tremulant999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2971,7 +3512,7 @@ tremulant state stored in this combination. The entries are called
 (integer 0 - switch count of the manual, default) Number of
 switch state stored in this combination. The entries are called
 <emphasis>Switch999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2980,7 +3521,7 @@ switch state stored in this combination. The entries are called
             <para>
 (integer -manual stop count - manual stop count, required) Number of
 the stop. If the value is negative, it is turned off, else turned on.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2989,7 +3530,7 @@ the stop. If the value is negative, it is turned off, else turned on.
             <para>
 (integer -999 - 999, required) Number of the coupler. If the value is
 negative, it is turned off, else turned on.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2999,7 +3540,7 @@ negative, it is turned off, else turned on.
 (integer -manual tremulant count - manual tremulant count, required)
 Number of the tremulant. If the value is negative, it is turned off,
 else turned on.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3009,7 +3550,7 @@ else turned on.
 (integer -manual switch count - manual switch count, required)
 Number of the switch. If the value is negative, it is turned off,
 else turned on.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -3021,14 +3562,14 @@ A manual is associated with a number of stops, tremulants, divisionals
 and coupler. The accessible range can be played via MIDI, the rest of
 the logical keys can only be triggered by (octave) coupler. It
 contains the following non-gui attributes:
-	     </para>
+      </para>
       <variablelist>
         <varlistentry>
           <term>Name</term>
           <listitem>
             <para>
 (string, required) Name of the manual
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3037,7 +3578,7 @@ contains the following non-gui attributes:
             <para>
 (integer 1-192, required) Number of keys on this manuals (including
 non playable ones).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3046,7 +3587,7 @@ non playable ones).
             <para>
 (integer 1 - NumberOfLogicalKeys, required) number of the first
 useable key
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3054,7 +3595,7 @@ useable key
           <listitem>
             <para>
 (integer 0 - 127, required) MIDI note number of the first MIDI acessible key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3062,7 +3603,7 @@ useable key
           <listitem>
             <para>
 (intger 0 - 85, required) number of MIDI accessible keys.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3074,7 +3615,7 @@ initial MIDI configuration to map the manual to one midi setting from
 the global midi configuration dialog. 0 means no device
 associated. Please note, the the GUI only allows the association of
 the first few manuals.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3082,7 +3623,7 @@ the first few manuals.
           <listitem>
             <para>
 (boolean, required) If true, the manual is visible on the main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3092,7 +3633,7 @@ the first few manuals.
 (integer 0-64, required) Number of stops associated with this
 manual. Starting with 1, for each stop, there is a
 <emphasis>Stop999</emphasis> setting.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3101,7 +3642,7 @@ manual. Starting with 1, for each stop, there is a
             <para>
 (integer, required) Number of the <emphasis>Stop999</emphasis> section
 containg the stop details.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3111,7 +3652,7 @@ containg the stop details.
 (integer 0-16, default: 0) Number of couplers associated with this
 manual. Starting with 1, for each coupler, there is a
 <emphasis>Coupler999</emphasis> setting.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3120,7 +3661,7 @@ manual. Starting with 1, for each coupler, there is a
             <para>
 (integer, required) Number of the <emphasis>Coupler999</emphasis>
 section containg the coupler details.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3130,7 +3671,7 @@ section containg the coupler details.
 (integer 0-32, default: 0) Number of divisionals associated with this
 manual. Starting with 1, for each divisional, there is a
 <emphasis>Divisional999</emphasis> setting.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3139,7 +3680,7 @@ manual. Starting with 1, for each divisional, there is a
             <para>
 (integer, required) Number of the <emphasis>Divisional999</emphasis>
 section containg the coupler details.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3149,7 +3690,7 @@ section containg the coupler details.
 (integer 0 - number of tremulants, default: 0) Number of tremulants associated with this
 manual. Starting with 1, for each tremulant, there is a
 <emphasis>Tremulant999</emphasis> setting.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3158,7 +3699,7 @@ manual. Starting with 1, for each tremulant, there is a
             <para>
 (integer, required) Number of the <emphasis>Tremulant999</emphasis>
 section containg the tremulant details.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3168,7 +3709,7 @@ section containg the tremulant details.
 (integer 0 - number of switches, default: 0) Number of switches associated with this
 manual. Starting with 1, for each switch, there is a
 <emphasis>Switch999</emphasis> setting.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3177,7 +3718,7 @@ manual. Starting with 1, for each switch, there is a
             <para>
 (integer, required) Number of the <emphasis>Switch999</emphasis>
 section containg the switch details.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3188,7 +3729,7 @@ section containg the switch details.
 note in <emphasis>MIDIKey999</emphasis> to a different number. This
 mapping is used by the default manual MIDI matching type - other may
 or may not use this mapping table.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -3210,7 +3751,7 @@ If the manual is displayed, it contains the following gui attributes:
             <para>
 (integer 0 - panel width, default: according to layout model) Allow to
 override X position for manual.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3219,7 +3760,7 @@ override X position for manual.
             <para>
 (integer 0 - panel height, default: according to layout model) Allow
 to override Y position for manual.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3229,7 +3770,7 @@ to override Y position for manual.
 (string, default: implementation dependend bitmap) Bitmap for the
 specified key type, if the key is pressed. The bitmap may contain a
 mask.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3239,7 +3780,7 @@ mask.
 (string, default: implementation dependend bitmap) Bitmap for the
 specified key type, if the key is not pressed. The bitmap may contain
 a mask.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3248,7 +3789,7 @@ a mask.
             <para>
 (string, default: empty string) Mask for the corresponding On
 bitmap. If empty, no external mask is loaded.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3257,7 +3798,7 @@ bitmap. If empty, no external mask is loaded.
             <para>
 (string, default: corresponding on mask) Mask for the corresponding
 Off bitmap. If empty, no external mask is loaded.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3267,7 +3808,7 @@ Off bitmap. If empty, no external mask is loaded.
 (integer 0 - 500, default: implementation dependend) This value is
 added to the x position of the current key to determine the position
 of the next key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3277,7 +3818,7 @@ of the next key.
 (integer -500 - 500, default: implementation dependend) This value is
 can be used to adjust the display of the current key, eg. to place a
 sharp key overlapped with the previous key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3286,7 +3827,7 @@ sharp key overlapped with the previous key.
             <para>
 (string, default: corresponding ImageOn_<emphasis>KEYTYPE</emphasis>)
 Allows to set the on bitmap for the 999 key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3295,7 +3836,7 @@ Allows to set the on bitmap for the 999 key.
             <para>
 (string, default: corresponding ImageOff_<emphasis>KEYTYPE</emphasis>)
 Allows to set the off bitmap for the 999 key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3304,7 +3845,7 @@ Allows to set the off bitmap for the 999 key.
             <para>
 (string, default: corresponding MaskOn_<emphasis>KEYTYPE</emphasis>)
 Allows to set the on mask for the 999 key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3313,7 +3854,7 @@ Allows to set the on mask for the 999 key.
             <para>
 (string, default: corresponding MaskOff_<emphasis>KEYTYPE</emphasis>)
 Allows to set the off mask for the 999 key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3323,7 +3864,7 @@ Allows to set the off mask for the 999 key.
 (integer 0 - 500, default: corresponding
 Width_<emphasis>KEYTYPE</emphasis>) Allows to set the width of the 999
 key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3333,7 +3874,7 @@ key.
 (integer -500 - 500, default: corresponding
 Offset_<emphasis>KEYTYPE</emphasis>) Allows to set the width of the
 999 key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3342,7 +3883,7 @@ Offset_<emphasis>KEYTYPE</emphasis>) Allows to set the width of the
             <para>
 (integer 0 - key bitmap width - 1 , default: 0) relative X of left border of the mouse
 rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3351,7 +3892,7 @@ rectangle
             <para>
 (integer 0 - key bitmap height - 1, default: 0) relative Y of top border
 of the mouse rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3359,7 +3900,7 @@ of the mouse rectangle
           <listitem>
             <para>
 (integer 0 - key bitmap width, default: key bitmap width) width of the mouse rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3368,7 +3909,7 @@ of the mouse rectangle
             <para>
 (integer 0 - key bitmap height, default: key bitmap height) height of the
 mouse rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3378,7 +3919,7 @@ mouse rectangle
 (boolean, required) True means, the <emphasis>black</emphasis> keys
 are drawn in a light color while the <emphasis>white</emphasis> keys
 are draw dark color.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3387,7 +3928,7 @@ are draw dark color.
             <para>
 (boolean, default: false) True means, that a wood background is used
 for the keys.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3396,7 +3937,7 @@ for the keys.
             <para>
 (integer 0 - 127, default: FirstAccessibleKeyMIDINoteNumber) Display
 the first key as the following note.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3405,7 +3946,7 @@ the first key as the following note.
             <para>
 (integer 1 - NumberOfAccessibleKeys, default: NumberOfAccessibleKeys) number of keys
 to displays.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3417,7 +3958,7 @@ to displays.
 (<emphasis>999</emphasis>) is between 1 and
 <emphasis>DisplayKeys</emphasis>. It contains the midi number of the
 backend key, that it connected to this GUI key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -3436,7 +3977,7 @@ label has the following attributes:
             <para>
 (boolean, default: true) True means, that the X position is determined
 by DispXpos, else by DispDrawstopCol and DispSpanDrawstopColToRight.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3445,7 +3986,7 @@ by DispXpos, else by DispDrawstopCol and DispSpanDrawstopColToRight.
             <para>
 (boolean, default: true) True means, that the Y position is determined
 by DispYpos, else by DispAtTopOfDrawstopCol.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3453,7 +3994,7 @@ by DispYpos, else by DispAtTopOfDrawstopCol.
           <listitem>
             <para>
 (integer 0-panel width, default: 0) absolute X position
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3461,7 +4002,7 @@ by DispYpos, else by DispAtTopOfDrawstopCol.
           <listitem>
             <para>
 (integer 0-panel height, default: 0) absolute Y position
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3470,7 +4011,7 @@ by DispYpos, else by DispAtTopOfDrawstopCol.
             <para>
 (boolean, required if FreeYPlacement is true) If true, the lable is
 display above the drawstop, else below.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3479,7 +4020,7 @@ display above the drawstop, else below.
             <para>
 (integer 1- number of drawstop columns, required if FreeXPlacement is
 false) Position label at the specified drawstop column.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3488,7 +4029,7 @@ false) Position label at the specified drawstop column.
             <para>
 (boolean, required if FreeXPlacement is false) If true, move label half of the drawstop
 with right.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3496,7 +4037,7 @@ with right.
           <listitem>
             <para>
 (color, default: black) Color for the label text.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3504,7 +4045,7 @@ with right.
           <listitem>
             <para>
 (font size, default: normal) Size of the label font
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3513,15 +4054,15 @@ with right.
             <para>
 (string, default: empty) Font for the text. Empty means use the
 group label font of the panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
           <term>Name</term>
           <listitem>
             <para>
-     (string, default: empty) The text to display on this object
-	    </para>
+(string, default: empty) The text to display on this object
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3529,7 +4070,7 @@ group label font of the panel.
           <listitem>
             <para>
 (integer 1-12, default: 1) Builtin bitmap set to use.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3539,7 +4080,7 @@ group label font of the panel.
 (string, default: use internal bitmap according to DispImageNum)
 Specifiy the file name of an image to use as bitmap.  If the bitmap
 contains a mask for transparency, it will be used.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3548,7 +4089,7 @@ contains a mask for transparency, it will be used.
             <para>
 (string, default: empty) File name for a external mask for the
 bitmap. If empty, no mask is added.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3557,7 +4098,7 @@ bitmap. If empty, no mask is added.
             <para>
 (integer 0 - panel width, default: according to the definitions above) Allow
 to override X position for button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3566,7 +4107,7 @@ to override X position for button
             <para>
 (integer 0 - panel height, default: according to defintions above) Allow
 to override Y position for button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3575,7 +4116,7 @@ to override Y position for button
             <para>
 (integer 0 - panel width, default: bitmap width) Width of the
 button. If larger than the bitmap, the bitmap is tiled.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3584,7 +4125,7 @@ button. If larger than the bitmap, the bitmap is tiled.
             <para>
 (integer 0 - panel height, default: bitmap height) Height of the
 button. If larger than the bitmap, the bitmap is tiled.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3593,7 +4134,7 @@ button. If larger than the bitmap, the bitmap is tiled.
             <para>
 (integer 0 - bitmap width, default: 0) X position on the bitmap of the
 left pixel of the button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3602,7 +4143,7 @@ left pixel of the button
             <para>
 (integer 0 - bitmap width, default: 0) Y position on the bitmap of the
 top pixel of the button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3611,7 +4152,7 @@ top pixel of the button
             <para>
 (integer 0 - Height, default: 0) relative X of left border of the text
 rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3620,7 +4161,7 @@ rectangle
             <para>
 (integer 0 - Height, default: 0) relative Y of top border of the text
 rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3628,7 +4169,7 @@ rectangle
           <listitem>
             <para>
 (integer 0 - Width, default: Width) width of the text rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3636,7 +4177,7 @@ rectangle
           <listitem>
             <para>
 (integer 0 - Height, default: Height) height of the text rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3646,7 +4187,7 @@ rectangle
 (integer 0 - text rectangle width, default: Width) If 0, no text is
 displayed. Otherwise the value specified the maximum line length used
 for text breaking.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -3665,7 +4206,7 @@ if it is bigger then image size. It has the following attributes:
 (string, required) Specifiy the file name of an image to use as on
 bitmap. If the bitmap contains a mask for transparency, it will be
 used.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3674,7 +4215,7 @@ used.
             <para>
 (string, default: empty) File name for a external mask for the
 bitmap. If empty, no mask is added.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3683,7 +4224,7 @@ bitmap. If empty, no mask is added.
             <para>
 (integer 0 - panel width, default: 0) X coordinate of the left side.
 to override X position for button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3691,7 +4232,7 @@ to override X position for button
           <listitem>
             <para>
 (integer 0 - panel height, default: 0) Y coordinate of the left side.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3700,7 +4241,7 @@ to override X position for button
             <para>
 (integer 0 - panel width, default: bitmap width) Width of the
 button. If larger than the bitmap, the bitmap is tiled.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3709,7 +4250,7 @@ button. If larger than the bitmap, the bitmap is tiled.
             <para>
 (integer 0 - panel height, default: bitmap height) Height of the
 button. If larger than the bitmap, the bitmap is tiled.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3718,7 +4259,7 @@ button. If larger than the bitmap, the bitmap is tiled.
             <para>
 (integer 0 - bitmap width, default: 0) X position on the bitmap of the
 left pixel of the button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3727,7 +4268,7 @@ left pixel of the button
             <para>
 (integer 0 - bitmap width, default: 0) Y position on the bitmap of the
 top pixel of the button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -3747,7 +4288,7 @@ is based on their function. They share the following common properties:
 user in lists too, therefore it should be descriptive.  If a GUI
 representations requires a shorter name, please override this value
 locally.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3757,7 +4298,7 @@ locally.
 (boolean, required) If true, the sections also includes the GUI
 properties for the main panel. Otherwise it is not displayed on the
 main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3766,7 +4307,7 @@ main panel.
             <para>
 (boolean, default: false) If true, off is displayed as on and on as
 off.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3775,7 +4316,7 @@ off.
             <para>
 (integer 0-127, default: no MIDI event specified) Only used for building the initial configuration during
 the first load - provided just for HW1 compatibility.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3784,7 +4325,7 @@ the first load - provided just for HW1 compatibility.
             <para>
 (int 1-128, default: no MIDI event specified) Only used for building the initial configuration during
 the first load - provided just for HW1 compatibility.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3793,7 +4334,7 @@ the first load - provided just for HW1 compatibility.
             <para>
 (integer 0-255, default: 0) 0 means no shortcut, else it specifies the
 key code of the shortcut key.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -3807,7 +4348,7 @@ The GUI properties of button objects are:
             <para>
 (boolean, default: true for divisionals, generals and pistons, else
 false) True means to display as button, false as drawstop
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3815,7 +4356,7 @@ false) True means to display as button, false as drawstop
           <listitem>
             <para>
 (color, default: Dark Red) Color for the label text.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3823,7 +4364,7 @@ false) True means to display as button, false as drawstop
           <listitem>
             <para>
 (font size, default: normal) Size of the label font
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3832,7 +4373,7 @@ false) True means to display as button, false as drawstop
             <para>
 (string, default: empty) Font for the text. Empty means use the
 control label font of the panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3841,7 +4382,7 @@ control label font of the panel.
             <para>
 (string, default: Name of the button) Content of the text label. You
 should set it, if you need to display a shorter string on the label.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3850,7 +4391,7 @@ should set it, if you need to display a shorter string on the label.
             <para>
 (boolean, default: true) If displayed as a piston and this attribute
 is false, move it a little bit left.  Otherwise ignored.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3861,7 +4402,7 @@ is false, move it a little bit left.  Otherwise ignored.
 use. GrandOrgue has 6 for drawstops and 5 for pistons. The default is
 3 (piston) or 4 (drawstops) for read-only buttons, otherwise the
 default is 1.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3870,7 +4411,7 @@ default is 1.
             <para>
 (button row, default: 1) If displayed as piston, it contains the
 button row according to the layout model.  Otherwise ignored.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3879,7 +4420,7 @@ button row according to the layout model.  Otherwise ignored.
             <para>
 (button column, default: 1) If displayed as piston, it contains the
 button column according to the layout model.  Otherwise ignored.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3888,7 +4429,7 @@ button column according to the layout model.  Otherwise ignored.
             <para>
 (drawstop row, default: 1) If displayed as drawstop, it contains the
 drawstop row according to the layout model.  Otherwise ignored.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3898,7 +4439,7 @@ drawstop row according to the layout model.  Otherwise ignored.
 (drawstop column, default: 1) If displayed as drawstop, it contains
 the drawstop column according to the layout model.  Otherwise
 ignored.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3908,7 +4449,7 @@ ignored.
 (string, default: use internal bitmap according to DispImageNum)
 Specifiy the file name of an image to use as on bitmap.  If the bitmap
 contains a mask for transparency, it will be used.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3919,7 +4460,7 @@ contains a mask for transparency, it will be used.
 Specifiy the file name of an image to use as off bitmap. If the bitmap
 contains a mask for transparency, it will be used. The size must match
 the on bitmap.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3928,7 +4469,7 @@ the on bitmap.
             <para>
 (string, default: empty) File name for a external mask for the on
 bitmap. If empty, no mask is added.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3937,7 +4478,7 @@ bitmap. If empty, no mask is added.
             <para>
 (string, default: value of MaskOn) File name for a external mask for
 the off bitmap. If empty, no mask is added.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3946,7 +4487,7 @@ the off bitmap. If empty, no mask is added.
             <para>
 (integer 0 - panel width, default: according to layout model) Allow
 to override X position for button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3955,7 +4496,7 @@ to override X position for button
             <para>
 (integer 0 - panel height, default: according to layout model) Allow
 to override Y position for button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3964,7 +4505,7 @@ to override Y position for button
             <para>
 (integer 0 - panel width, default: bitmap width) Width of the
 button. If larger than the bitmap, the bitmap is tiled.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3973,7 +4514,7 @@ button. If larger than the bitmap, the bitmap is tiled.
             <para>
 (integer 0 - panel height, default: bitmap height) Height of the
 button. If larger than the bitmap, the bitmap is tiled.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3982,7 +4523,7 @@ button. If larger than the bitmap, the bitmap is tiled.
             <para>
 (integer 0 - bitmap width, default: 0) X position on the bitmap of the
 left pixel of the button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -3991,7 +4532,7 @@ left pixel of the button
             <para>
 (integer 0 - bitmap width, default: 0) Y position on the bitmap of the
 top pixel of the button
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4000,7 +4541,7 @@ top pixel of the button
             <para>
 (integer 0 - Width, default: 0) relative X of left border of the mouse
 rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4009,7 +4550,7 @@ rectangle
             <para>
 (integer 0 - Height, default: 0) relative Y of top border of the mouse
 rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4017,7 +4558,7 @@ rectangle
           <listitem>
             <para>
 (integer 0 - Width, default: Width) width of the mouse rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4025,7 +4566,7 @@ rectangle
           <listitem>
             <para>
 (integer 0 - Height, default: Height) height of the mouse rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4036,7 +4577,7 @@ rectangle
 max(MouseRectHeight, MouseRectWidth) / 2) If 0, the mouse events are
 captured inside the mouse rectangle. Otherwise they must be inside a
 circle of the specified size too.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4045,7 +4586,7 @@ circle of the specified size too.
             <para>
 (integer 0 - Height, default: 0) relative X of left border of the text
 rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4054,7 +4595,7 @@ rectangle
             <para>
 (integer 0 - Height, default: 0) relative Y of top border of the text
 rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4062,7 +4603,7 @@ rectangle
           <listitem>
             <para>
 (integer 0 - Width, default: Width) width of the text rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4070,7 +4611,7 @@ rectangle
           <listitem>
             <para>
 (integer 0 - Height, default: Height) height of the text rectangle
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4080,7 +4621,7 @@ rectangle
 (integer 0 - text rectangle width, default: a little bit smaller than
 Width) If 0, no text is displayed. Otherwise the value specified the
 maximum line length used for text breaking.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -4108,7 +4649,7 @@ only input and negates the state of the input
 switch. <emphasis>And</emphasis>, <emphasis>Xor</emphasis>,
 <emphasis>Nand</emphasis>, <emphasis>Nor</emphasis> as well as
 <emphasis>Or</emphasis> has a variable number of inputs.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4119,7 +4660,7 @@ switch. <emphasis>And</emphasis>, <emphasis>Xor</emphasis>,
 ports, if the logical function allows a variable number number of
 input. <emphasis>Switch999</emphasis> contains the referenced
 switches.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4130,7 +4671,7 @@ switches.
 logical function of the drawstop. If the drawstop is a switch, it can
 only reference switches with a lower number. The number of this
 settings depends on the function.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4138,7 +4679,7 @@ settings depends on the function.
           <listitem>
             <para>
 (boolean, required) State of the button after loading.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4147,7 +4688,7 @@ settings depends on the function.
             <para>
 (integer -1 - 1, default: implementation defined) State of the button
 after pressing GC. -1 means don&apos;t change, 0 off and 1 on.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -4165,7 +4706,7 @@ to other manuals/keys. They have the following additions attributes:
             <para>
 (boolean, required) If true, this coupler decouples the manual from
 the stops (turn it into a floating manual).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4174,7 +4715,7 @@ the stops (turn it into a floating manual).
             <para>
 (integer manual number, required it not a unison off coupler) manual
 to forwared key presses too.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4184,7 +4725,7 @@ to forwared key presses too.
 (integer -24 - 24, required if not a unsion off coupler) specifies the
 keyboard shift between source and destionan manual in term of absolute
 MIDI note numbers
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4193,7 +4734,7 @@ MIDI note numbers
             <para>
 (boolean, required if not a unison off coupler) Triggers further
 inter-manual coupler with a destination key shif of zero.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4202,7 +4743,7 @@ inter-manual coupler with a destination key shif of zero.
             <para>
 (boolean, required if not a unison off coupler) Triggers further
 inter-manual coupler with a destination key shift greater than zero.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4211,7 +4752,7 @@ inter-manual coupler with a destination key shift greater than zero.
             <para>
 (boolean, required if not a unison off coupler) Triggers further
 inter-manual coupler with a destination key shift less than zero.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4220,7 +4761,7 @@ inter-manual coupler with a destination key shift less than zero.
             <para>
 (boolean, required if not a unison off coupler) Triggers further
 intra-manual coupler with a destination key shift greater than zero.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4229,7 +4770,7 @@ intra-manual coupler with a destination key shift greater than zero.
             <para>
 (boolean, required if not a unison off coupler) Triggers further
 intra-manual coupler with a destination key shift less than zero.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4238,7 +4779,7 @@ intra-manual coupler with a destination key shift less than zero.
             <para>
 (enumeration, default: Normal) Type of the coupler: Normal, Bass or
 Melody.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4246,7 +4787,7 @@ Melody.
           <listitem>
             <para>
 (integer 0-127, default: 0) first MIDI note number to forward
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4255,7 +4796,7 @@ Melody.
             <para>
 (integer 0-127, default: 0) number of keys to forward starting with
 FirstMIDINoteNumber.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -4280,7 +4821,7 @@ section or appear in its own section.
             <para>
 (string, required) Name of the rank. The name may be presented the
 user in lists too, therefore it should be descriptive.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4290,7 +4831,7 @@ user in lists too, therefore it should be descriptive.
 (integer 0-256, if the rank is part of a stop section, the default
 value is derived from the associated manuals else required) Midi note
 number of the first pipe
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4298,7 +4839,7 @@ number of the first pipe
           <listitem>
             <para>
 (integer 1-192, required) Number of pipes in this rank
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4307,7 +4848,7 @@ number of the first pipe
             <para>
 (float 0-1000, default: 100) Linear amplitude scale factor applied to
 the whole rank. 100 means no change.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4316,7 +4857,7 @@ the whole rank. 100 means no change.
             <para>
 (float -120 - 40, default: 0) Amplitude scale factor in dB applied to
 the whole rank. 0 means no change.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4325,7 +4866,7 @@ the whole rank. 0 means no change.
             <para>
 (float -1200-1200, default: 0) Retune the rank by the specified number
 of cents.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4334,7 +4875,7 @@ of cents.
             <para>
 (float 1-1024, default: 8) Harmonic number (= 64 / rank size), eg. 2
 2/3 =&gt; 64 / (2 2/3) = 24.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4344,7 +4885,7 @@ of cents.
 (float -1200-1200, default: 0) Correction factor in cent for the pitch
 specified in the sample. This setting is used for retuning to other
 temperaments.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4353,7 +4894,7 @@ temperaments.
             <para>
 (integer 1 - number of windchests, required) specify the windchest,
 on which the pipes of the are placed.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4362,7 +4903,7 @@ on which the pipes of the are placed.
             <para>
 (boolean, required) If false, the samples are played as is (without
 any loop/release handling)
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4371,7 +4912,7 @@ any loop/release handling)
             <para>
 (float 0-1000, default: 100) Linear amplitude scale factor at low
 velocity applied to the whole rank. 100 means no change.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4380,7 +4921,7 @@ velocity applied to the whole rank. 100 means no change.
             <para>
 (float 0-1000, default: 100) Linear amplitude scale factor at high
 velocity applied to the whole rank. 100 means no change.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -4397,7 +4938,7 @@ attributes are:
             <para>
 (boolean, default: rank percussive setting) If false, the samples are
 played as is (without any loop/release handling)
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4406,7 +4947,7 @@ played as is (without any loop/release handling)
             <para>
 (float 0-1000, default: 100) Linear amplitude scale factor applied to
 the pipe (in addition to the organ/rank factor). 100 means no change.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4415,7 +4956,7 @@ the pipe (in addition to the organ/rank factor). 100 means no change.
             <para>
 (float -120 - 40, default: 0) Amplitude scale factor in dB applied to
 the pipe (in addition to the organ/rank factor). 0 means no change.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4424,7 +4965,7 @@ the pipe (in addition to the organ/rank factor). 0 means no change.
             <para>
 (float -1200-1200, default: 0) Retune this pipe the specified
 number of cents (in addition to the organ/rank factor).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4434,7 +4975,7 @@ number of cents (in addition to the organ/rank factor).
 (string, required) Relative path to the sample WAV file of the first
 attack. It contain may be REF:aa:bb:cc too. In that case, it means
 that this pipe is borrowed from manual aa, first rank of stop bb the pipe cc.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4443,7 +4984,7 @@ that this pipe is borrowed from manual aa, first rank of stop bb the pipe cc.
             <para>
 (boolean, default: revers of percussive setting) If true, the release
 part is loaded from the first attack sample.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4451,7 +4992,7 @@ part is loaded from the first attack sample.
           <listitem>
             <para>
 (int 0 - 127, default: 0) minium velocity to use this attack sample.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4462,7 +5003,7 @@ part is loaded from the first attack sample.
 wave based tremulant is on.  0 means, that it is played, if the
 associated wave based tremulant is off. -1 means, that it not affected
 by a wave based tremulant.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4471,7 +5012,7 @@ by a wave based tremulant.
             <para>
 (int -1 - 100000, default: -1) Up to this time value in ms, the
 release sample is choosen. -1 means infinite.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4481,7 +5022,7 @@ release sample is choosen. -1 means infinite.
 (int -1 - 158760000, default: -1) Allows to override the cue point for
 the release. -1 means use from the wave file. This option is specified
 in samples.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4490,7 +5031,7 @@ in samples.
             <para>
 (int 0 - 100, default: 0) Allows to override the loops in the WAV file.
 0 means use loops from the wave file.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4499,7 +5040,7 @@ in samples.
             <para>
 (int 0 - 158760000, default: 0) Start sample of the loop.  The value
 must be within the WAV file. This option is specified in samples.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4509,7 +5050,7 @@ must be within the WAV file. This option is specified in samples.
 (int Pipe999Loop999Start + 1 - 158760000, required if Pipe999LoopCount
 is not zero) End sample of the loop. The value must be within the WAV
 file. This option is specified in samples.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4518,7 +5059,7 @@ file. This option is specified in samples.
             <para>
 (float 1-1024, default: rank harmonic number) Harmonic number (= 64 /
 rank size), eg. 2 2/3 =&gt; 64 / (2 2/3) = 24.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4529,7 +5070,7 @@ rank size), eg. 2 2/3 =&gt; 64 / (2 2/3) = 24.
 Pipe999 sample, else override the information in the sample with this
 midi note number (Pipe999PitchCorrection is used for specifing the
 fraction).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4539,7 +5080,7 @@ fraction).
 (float -1200-1200, default: 0) Correction factor in cent for the pitch
 specified in the sample. This setting is used for retuning to other
 temperaments.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4548,7 +5089,7 @@ temperaments.
             <para>
 (interger 1 - number of windchests, default: rank windchest) specify
 the windchest, on which this pipe is placed.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4557,7 +5098,7 @@ the windchest, on which this pipe is placed.
             <para>
 (float 0-1000, default: corresponding rank setting) Linear amplitude
 scale factor at low velocity applied to the pipe. 100 means no change.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4567,7 +5108,7 @@ scale factor at low velocity applied to the pipe. 100 means no change.
 (float 0-1000, default: corresponding rank setting) Linear amplitude
 scale factor at high velocity applied to the pipe. 100 means no
 change.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4575,7 +5116,7 @@ change.
           <listitem>
             <para>
 (int 0 - 100, default: 0) Number of additional attack samples
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4583,7 +5124,7 @@ change.
           <listitem>
             <para>
 (string, required) Relative path to the sample WAV file.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4592,7 +5133,7 @@ change.
             <para>
 (boolean, default: revers of percussive setting) If true, the release
 part is loaded.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4600,7 +5141,7 @@ part is loaded.
           <listitem>
             <para>
 (int 0 - 127, default: 0) minium velocity to use this attack sample.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4611,7 +5152,7 @@ part is loaded.
 wave based tremulant is on.  0 means, that it is played, if the
 associated wave based tremulant is off. -1 means, that it not affected
 by a wave based tremulant.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4620,7 +5161,7 @@ by a wave based tremulant.
             <para>
 (int -1 - 100000, default: -1) Up to this time value in ms, the
 release sample is choosen. -1 means infinite.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4630,7 +5171,7 @@ release sample is choosen. -1 means infinite.
 (int -1 - 158760000, default: -1) Allows to override the cue point for
 the release. -1 means use from the wave file. This option is specified
 in samples.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4639,7 +5180,7 @@ in samples.
             <para>
 (int 0 - 100, default: 0) Allows to override the loops in the WAV file.
 0 means use loops from the wave file.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4648,7 +5189,7 @@ in samples.
             <para>
 (int 0 - 158760000, default: 0) Start sample of the loop.  The value
 must be within the WAV file. This option is specified in samples.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4658,7 +5199,7 @@ must be within the WAV file. This option is specified in samples.
 (int Pipe999Loop999Start + 1 - 158760000, required if Pipe999LoopCount
 is not zero) End sample of the loop.  The value must be within the WAV
 file. This option is specified in samples.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4666,7 +5207,7 @@ file. This option is specified in samples.
           <listitem>
             <para>
 (int 0 - 100, default: 0) Number of additional release samples
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4674,7 +5215,7 @@ file. This option is specified in samples.
           <listitem>
             <para>
 (string, required) Relative path to the sample WAV file.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4685,7 +5226,7 @@ file. This option is specified in samples.
 wave based tremulant is on.  0 means, that it is played, if the
 associated wave based tremulant is off. -1 means, that it not affected
 by a wave based tremulant.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4694,7 +5235,7 @@ by a wave based tremulant.
             <para>
 (int -1 - 100000, default: -1) Up to this time value in ms, the
 release sample is choosen. -1 means infinite.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4703,7 +5244,7 @@ release sample is choosen. -1 means infinite.
             <para>
 (int -1 - 158760000, default: -1) Allows to override the cue point for
 the release. -1 means use from the wave file.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -4726,7 +5267,7 @@ the following additions attributes:
 Number of referenced ranks.  If zero, one rank definition is included
 in the stop section. The lists of references is specified via the
 <emphasis>Rank999...</emphasis> settings.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4735,7 +5276,7 @@ in the stop section. The lists of references is specified via the
             <para>
 (integer 1-128, required) The key number on the manual of the first
 accessible pipe.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4744,7 +5285,7 @@ accessible pipe.
             <para>
 (integer 1 - 192, required) Number of pipes, that are
 playable from the manual starting from the first acessible pipe.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4754,7 +5295,7 @@ playable from the manual starting from the first acessible pipe.
 (integer 1 - 192, required if NumberOfRanks=0) The number of the first
 pipe accessible from the manual. If NumberOfRanks is not 0, this
 setting is not necessary.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4763,7 +5304,7 @@ setting is not necessary.
             <para>
 (integer 0 - rank count specified in the organ section, required)
 Reference to a rank from the organ section.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4772,7 +5313,7 @@ Reference to a rank from the organ section.
             <para>
 (integer 1 - number of pipes in the rank, default: 1)
 Number of first mapped pipe from the rank
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4781,7 +5322,7 @@ Number of first mapped pipe from the rank
             <para>
 (integer 0 - remaining number of pipes in the rank, default: remaining
 number of pipes in the rank) Number of pipes mapped from the rank.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4791,7 +5332,7 @@ number of pipes in the rank) Number of pipes mapped from the rank.
 (integer 1 - NumberOfAccessiblePipes, default: 1) Key number offset
 (starting with FirstAccessiblePipeLogicalKeyNumber) for the pipe
 referenced by Rank999FirstPipeNumber.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -4815,7 +5356,7 @@ following additional attributes:
             <para>
 (string, required) Type of the element to trigger. Value can be STOP,
 COUPLER, SWITCH or TREMULANT.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4824,7 +5365,7 @@ COUPLER, SWITCH or TREMULANT.
             <para>
 (integer first manual index - last manual index, required for stops
 and coupler) The manual, to which the referenced object belongs.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4834,7 +5375,7 @@ and coupler) The manual, to which the referenced object belongs.
 (integer, required) Determines the number of the object. Depending on
 the object it must be a valid stop/coupler/switch number on the
 referenced manual or a valid global tremulant number.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -4852,7 +5393,7 @@ Trelmulants are drawstop objects with the following additions attributes:
 (enumeration, default: Synth) Type of the tremulant. Valid values are:
 Synth (synthesised tremulant) and Wave (tremulant based on different
 wave samples).
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -4865,7 +5406,7 @@ Synthesised tremulants have the following attributes:
           <listitem>
             <para>
 (integer 32-44100, required) Period of the tremulant in ms
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4873,7 +5414,7 @@ Synthesised tremulants have the following attributes:
           <listitem>
             <para>
 (integer 1-100, required) Determines the startup time of the tremulant.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4881,7 +5422,7 @@ Synthesised tremulants have the following attributes:
           <listitem>
             <para>
 (integer 1-100, required) Determines the stop time of the tremulant.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4889,7 +5430,7 @@ Synthesised tremulants have the following attributes:
           <listitem>
             <para>
 (integer 1-100, required) Determines, how much the volume will be changed.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -4906,7 +5447,7 @@ It has the following attributes:
           <listitem>
             <para>
 (string, default: empty string) Description of this windchest
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4915,7 +5456,7 @@ It has the following attributes:
             <para>
 (string, default: implementation dependend) Display name of this
 windchest
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4925,7 +5466,7 @@ windchest
 (integer 0 - enclosure count, required) Number of enclosures, which
 influnce this windchest. The list is specifed by the
 <emphasis>Enclosure999</emphasis> entries in the windchest section.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4935,7 +5476,7 @@ influnce this windchest. The list is specifed by the
 (integer 0 - tremulant count, required) Number of tremulants, which
 influence this windchest. The list is specifed by the
 <emphasis>Tremulant999</emphasis> entries in the windchest section.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4944,7 +5485,7 @@ influence this windchest. The list is specifed by the
             <para>
 (integer 1 - enclosure count, required) Number of an enclosure, which
 influence this windchest.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4953,7 +5494,7 @@ influence this windchest.
             <para>
 (integer 1 - tremulant count, required) Number of an tremulant, which
 influence this windchest.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -4973,7 +5514,7 @@ includes the following attributes:
           <listitem>
             <para>
 (string, required) Name of the panel
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4982,7 +5523,7 @@ includes the following attributes:
             <para>
 (string, default: empty) If not empty, place it in the submenu with
 the specified name, else directly in the panel menu.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4990,7 +5531,7 @@ the specified name, else directly in the panel menu.
           <listitem>
             <para>
 (integer 1 - number of defined manuals) number of manuals to display on this panel
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4998,7 +5539,7 @@ the specified name, else directly in the panel menu.
           <listitem>
             <para>
 (boolean, required) Includes a manual displayed as pedal
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5008,7 +5549,7 @@ the specified name, else directly in the panel menu.
 (integer 0-999, default: 0) Number of
 setter elements on the panel. The section of the GUI definitions are
 called <emphasis>Panel999SetterElement999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5018,7 +5559,7 @@ called <emphasis>Panel999SetterElement999</emphasis>.
 (integer 0 - number of defined enclosures, required) Number of
 enclosures on the panel. The section of the enclosures GUI definitions
 are called <emphasis>Panel999Enclosure999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5027,7 +5568,7 @@ are called <emphasis>Panel999Enclosure999</emphasis>.
             <para>
 (valid enclosure number, required) Reference to the enclosure on the
 main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5037,7 +5578,7 @@ main panel.
 (integer 0 - number of defined tremulants, required) Number of
 tremulant on the panel. The section of the tremulants GUI definitions
 are called <emphasis>Panel999Tremulant999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5046,7 +5587,7 @@ are called <emphasis>Panel999Tremulant999</emphasis>.
             <para>
 (valid tremulant number, required) Reference to the tremulant on the
 main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5057,7 +5598,7 @@ main panel.
 reversible pistons on the panel. The section of the reversible pistons
 GUI definitions are called
 <emphasis>Panel999ReversiblePiston999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5066,7 +5607,7 @@ GUI definitions are called
             <para>
 (valid reversible piston number, required) Reference to the reversible
 piston on the main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5076,7 +5617,7 @@ piston on the main panel.
 (integer 0 - number of defined switches, default: 0) Number of
 switches on the panel. The section of the switches GUI definitions are
 called <emphasis>Panel999Switchn999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5085,7 +5626,7 @@ called <emphasis>Panel999Switchn999</emphasis>.
             <para>
 (valid switch number, required) Reference to the switch on the main
 panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5095,7 +5636,7 @@ panel.
 (integer 0 - number of defined generals, required) Number of generals
 on the panel. The section of the generals GUI definitions are called
 <emphasis>Panel999General999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5104,7 +5645,7 @@ on the panel. The section of the generals GUI definitions are called
             <para>
 (valid general number, required) Reference to the general on the main
 panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5115,7 +5656,7 @@ panel.
 of divisional couplers on the panel. The section of the divisional
 coupler GUI definitions are called
 <emphasis>Panel999DivisionalCoupler999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5124,7 +5665,7 @@ coupler GUI definitions are called
             <para>
 (valid divisional coupler number, required) Reference to the divisional coupler on the
 main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5133,7 +5674,7 @@ main panel.
             <para>
 (valid manual number, required) Number of the manual to use a
 specified manual on the panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5143,7 +5684,7 @@ specified manual on the panel.
 (integer 0-999, required) Number of stops on the panel. The
 section of the stops GUI definitions are called
 <emphasis>Panel999Stop999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5152,7 +5693,7 @@ section of the stops GUI definitions are called
             <para>
 (valid manual number, required) Reference to the manual of the
 stop on the main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5161,7 +5702,7 @@ stop on the main panel.
             <para>
 (valid stop number, required) Reference to the stop on the
 main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5171,7 +5712,7 @@ main panel.
 (integer 0-999, required) Number of couplers on the panel. The
 section of the couplers GUI definitions are called
 <emphasis>Panel999Coupler999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5180,7 +5721,7 @@ section of the couplers GUI definitions are called
             <para>
 (valid manual number, required) Reference to the manual of the
 coupler on the main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5189,7 +5730,7 @@ coupler on the main panel.
             <para>
 (valid coupler number, required) Reference to the divisional on the
 main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5199,7 +5740,7 @@ main panel.
 (integer 0-999, required) Number of divisionals on the panel. The
 section of the divisionals GUI definitions are called
 <emphasis>Panel999Divisional999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5208,7 +5749,7 @@ section of the divisionals GUI definitions are called
             <para>
 (valid manual number, required) Reference to the manual of the
 divisional on the main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5217,7 +5758,7 @@ divisional on the main panel.
             <para>
 (valid divisional number, required) Reference to the divisional on the
 main panel.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5227,7 +5768,7 @@ main panel.
 (integer 0-999, required) Number of labels on the panel. The section
 of the label GUI definitions are called
 <emphasis>Panel999Label999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5237,7 +5778,7 @@ of the label GUI definitions are called
 (integer 0-999, required) Number of images on the panel. The section
 of the label GUI definitions are called
 <emphasis>Panel999Image999</emphasis>.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
       </variablelist>
