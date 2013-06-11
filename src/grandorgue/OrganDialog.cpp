@@ -575,7 +575,8 @@ void OrganDialog::FillTree()
 				GOrguePipe* pipe = rank->GetPipe(k);
 				if (pipe->IsReference())
 					continue;
-				m_Tree->AppendItem(id_rank, pipe->GetFilename(), -1, -1, new OrganTreeItemData(pipe));
+				m_Tree->AppendItem(id_rank, wxString::Format(_("%d: %s"), pipe->GetMidiKeyNumber(), pipe->GetFilename().c_str()), 
+						   -1, -1, new OrganTreeItemData(pipe));
 			}
 		}
 		m_Tree->Expand(id_windchest);

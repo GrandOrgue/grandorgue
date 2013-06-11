@@ -512,3 +512,8 @@ void GOrguePipe::SetTemperament(const GOrgueTemperament& temperament)
 						    m_OrganFile->GetPipeConfig().GetDefaultTuning() + m_Rank->GetPipeConfig().GetDefaultTuning() + m_PipeConfig.GetDefaultTuning());
 	UpdateTuning();
 }
+
+unsigned GOrguePipe::GetMidiKeyNumber()
+{
+	return m_MidiKeyNumber;
+}

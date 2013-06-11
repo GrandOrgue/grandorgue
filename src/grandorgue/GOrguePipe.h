@@ -94,6 +94,7 @@ public:
 	bool IsReference();
 	GOrguePipeConfig& GetPipeConfig();
 	void SetTemperament(const GOrgueTemperament& temperament);
+	unsigned GetMidiKeyNumber();
 
 	float GetEffectiveAmplitude();
 	float GetEffectiveGain();
