@@ -110,7 +110,7 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 		
 		if (line == wxEmptyString)
 			continue;
-		if (line.Len() > 1 && line[0] == wxT(';'))
+		if (line.Len() >= 1 && line[0] == wxT(';'))
 			continue;
 		if (line.Len() > 1 && line[0] == wxT('['))
 		{
