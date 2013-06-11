@@ -115,6 +115,8 @@ bool GOrgueView::CreateWindow()
 		m_frame->Center(wxBOTH);
 	m_container->SetPosition(wxPoint(0, 0));
 	m_frame->Show();
+	m_frame->Update();
+	m_container->SetPosition(wxPoint(0, 0));
 
 	organfile->GetPanel(m_panelID)->SetView(this);
 	return true;
