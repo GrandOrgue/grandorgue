@@ -395,7 +395,7 @@ void GOrguePipe::UpdateHash(SHA_CTX& ctx)
 {
 	unsigned value;
 	wxString filename = GetFilename();
-	SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+	SHA1_Update(&ctx, (const wxChar*)filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
 	value = GetEffectiveBitsPerSample();
 	SHA1_Update(&ctx, &value, sizeof(value));
 	value = GetEffectiveCompress();
@@ -416,7 +416,7 @@ void GOrguePipe::UpdateHash(SHA_CTX& ctx)
 	for(unsigned i = 0; i < m_AttackInfo.size(); i++)
 	{
 		filename = m_AttackInfo[i].filename;
-		SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+		SHA1_Update(&ctx, (const wxChar*)filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
 		value = m_AttackInfo[i].sample_group;
 		SHA1_Update(&ctx, &value, sizeof(value));
 		value = m_AttackInfo[i].max_playback_time;
@@ -443,7 +443,7 @@ void GOrguePipe::UpdateHash(SHA_CTX& ctx)
 	for(unsigned i = 0; i < m_ReleaseInfo.size(); i++)
 	{
 		filename = m_ReleaseInfo[i].filename;
-		SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+		SHA1_Update(&ctx, (const wxChar*)filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
 		value = m_ReleaseInfo[i].sample_group;
 		SHA1_Update(&ctx, &value, sizeof(value));
 		value = m_ReleaseInfo[i].max_playback_time;
