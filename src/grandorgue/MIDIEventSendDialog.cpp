@@ -33,7 +33,7 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, const GOrgueMidiSend
 	m_midi(event)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
-	wxFlexGridSizer* sizer = new wxFlexGridSizer(5, 2, 5, 5);
+	wxFlexGridSizer* sizer = new wxFlexGridSizer(6, 2, 5, 5);
 	topSizer->Add(sizer, 0, wxALL, 6);
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("Event-&No")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);

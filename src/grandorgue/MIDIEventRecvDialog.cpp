@@ -38,7 +38,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, const GOrgueMidiRece
 {
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
-	wxFlexGridSizer* sizer = new wxFlexGridSizer(5, 2, 5, 5);
+	wxFlexGridSizer* sizer = new wxFlexGridSizer(7, 2, 5, 5);
 	topSizer->Add(sizer, 0, wxALL, 6);
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("Event-&No")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
