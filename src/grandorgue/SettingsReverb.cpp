@@ -40,7 +40,7 @@ SettingsReverb::SettingsReverb(GOrgueSettings& settings, wxWindow* parent) :
 
 	topSizer->Add(m_Enabled = new wxCheckBox(this, ID_ENABLED, _("Enable Convolution Reverb"), wxDefaultPosition, wxDefaultSize));
 
-	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 5, 5);
+	wxFlexGridSizer* grid = new wxFlexGridSizer(7, 2, 5, 5);
 	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Convolution reverb"));
 	topSizer->Add(item6, 0, wxEXPAND | wxALL, 5);
 
