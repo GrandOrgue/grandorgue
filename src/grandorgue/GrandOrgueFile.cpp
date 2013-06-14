@@ -170,12 +170,19 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 
 bool GrandOrgueFile::TryLoad
 	(GOrgueCache* cache
-	,wxProgressDialog& dlg
 	,wxString& error
 	)
 {
 	long last = wxGetUTCTime();
 	void* dummy = NULL;
+	wxProgressDialog dlg
+		(_("Loading sample set")
+		,_("Parsing sample set definition file")
+		,32768
+		,0
+		,wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME
+		);
+	dlg.Update(0);
 
 	try
 	{
@@ -486,16 +493,6 @@ wxString GrandOrgueFile::GenerateCacheFileName()
 
 wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 {
-
-	wxProgressDialog dlg
-		(_("Loading sample set")
-		,_("Parsing sample set definition file")
-		,32768
-		,0
-		,wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME
-		);
-	dlg.Update (0);
-
 	m_odf = GONormalizePath(file);
 	m_path = GOGetPath(m_odf);
 	m_SettingFilename = GenerateSettingFileName();
@@ -619,7 +616,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 			if (cache_ok)
 			{
-				if (!TryLoad(&reader, dlg, load_error))
+				if (!TryLoad(&reader, load_error))
 				{
 					cache_ok = false;
 					wxLogError(_("Cache load failure: %s"), load_error.c_str());
@@ -636,7 +633,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 		if (!cache_ok)
 		{
-			if (!TryLoad(NULL, dlg, load_error))
+			if (!TryLoad(NULL, load_error))
 				return load_error;
 
 			if (m_Settings.GetManageCache() && m_Cacheable)
