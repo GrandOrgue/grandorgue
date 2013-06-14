@@ -29,7 +29,6 @@
 #endif
 
 static
-inline
 double
 sinc
 	(const double arg
@@ -38,8 +37,8 @@ sinc
 	return (arg == 0) ? 1.0 : sin(M_PI * arg) / (M_PI * arg);
 }
 
+#if 0
 static
-inline
 void
 create_sinc_filter
 	(float          *filter_buffer
@@ -56,9 +55,9 @@ create_sinc_filter
 		filter_buffer[i] = gain * (float)(2.0 * band_width * cos(2.0 * M_PI * f0 * t) * sinc(band_width * t) / sample_rate);
 	}
 }
+#endif
 
 static
-inline
 void
 apply_lanczos_window
 	(float          *buffer
@@ -72,6 +71,27 @@ apply_lanczos_window
 	}
 }
 
+static
+void
+create_nyquist_filter
+	(float        *output
+	,unsigned      subfilter_taps
+	,unsigned      nb_subfilters
+	)
+{
+	int i;
+	const int filter_length = (int)(subfilter_taps * nb_subfilters);
+	const double inv_taps = 1.0 / nb_subfilters;
+	for (i = 0; i < filter_length; i++)
+	{
+		double a = (i - filter_length / 2) * inv_taps * M_PI;
+		double f = (i - filter_length / 2) ? (sin(a) / a) : 1.0;
+		output[i] = f;
+	}
+}
+
+#include <stdio.h>
+
 void
 resampler_coefs_init
 	(struct resampler_coefs_s   *resampler_coefs
@@ -79,9 +99,17 @@ resampler_coefs_init
 	,interpolation_type          interpolation
 	)
 {
-	static const double generalised_max_frequency = ((double)UPSAMPLE_FACTOR / (double)MAX_POSITIVE_FACTOR);
-	double cutoff_frequency = ((double)input_sample_rate / 2.0) * generalised_max_frequency;
 	float temp[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
+
+#if 1
+	create_nyquist_filter
+		(temp
+		,SUBFILTER_TAPS
+		,UPSAMPLE_FACTOR
+		);
+#else
+	static const double generalised_max_frequency = ((double)UPSAMPLE_FACTOR / (double)MAX_POSITIVE_FACTOR);
+	const double cutoff_frequency = ((double)input_sample_rate / 2.0) * generalised_max_frequency;
 	create_sinc_filter
 		(temp
 		,UPSAMPLE_FACTOR * SUBFILTER_TAPS
@@ -90,6 +118,7 @@ resampler_coefs_init
 		,input_sample_rate * UPSAMPLE_FACTOR
 		,UPSAMPLE_FACTOR
 		);
+#endif
 
 	apply_lanczos_window
 		(temp
@@ -150,3 +179,4 @@ resample_block(float* data, unsigned& len, unsigned from_samplerate, unsigned to
 	len = new_len;
 	return out;
 }
+
