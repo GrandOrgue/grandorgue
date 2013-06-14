@@ -92,6 +92,8 @@ END_EVENT_TABLE()
 OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	wxDialog(parent, wxID_ANY, _("Organ settings"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE),
 	m_organfile(organfile),
+	m_Apply(NULL),
+	m_Reset(NULL),
 	m_Last(NULL),
 	m_LoadChangeCnt(0)
 {
@@ -157,7 +159,7 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	m_LastAudioGroup = m_AudioGroup->GetValue();
 
 	box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sample Loading"));
-	grid = new wxFlexGridSizer(4, 2, 5, 5);
+	grid = new wxFlexGridSizer(6, 2, 5, 5);
 	box1->Add(grid, 0, wxEXPAND | wxALL, 5);
 	settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
 
