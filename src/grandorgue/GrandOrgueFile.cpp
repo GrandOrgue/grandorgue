@@ -456,7 +456,7 @@ wxString GrandOrgueFile::GenerateSettingFileName()
 	wxString filename = odf.GetFullPath();
 
 	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+	SHA1_Update(&ctx, (const wxChar*)filename.wc_str(), (filename.Length() + 1) * sizeof(wxChar));
 	SHA1_Final(hash, &ctx);
        
 	filename = wxEmptyString;
@@ -478,9 +478,9 @@ wxString GrandOrgueFile::GenerateCacheFileName()
 	wxString filename = odf.GetFullPath();
 
 	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
+	SHA1_Update(&ctx, (const wxChar*)filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
 	SHA1_Final(hash, &ctx);
-       
+
 	filename = wxEmptyString;
 	for(unsigned i = 0; i < 20; i++)
 		filename += wxDecToHex(hash[i]);
