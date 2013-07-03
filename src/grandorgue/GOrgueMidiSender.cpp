@@ -20,24 +20,19 @@
  */
 
 #include "GOrgueMidiSender.h"
+#include "GOrgueMidiEvent.h"
 #include "GrandOrgueFile.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 
 GOrgueMidiSender::GOrgueMidiSender(GrandOrgueFile* organfile, MIDI_SENDER_TYPE type) :
-	m_organfile(organfile),
-	m_type(type),
-	m_events()
+	GOrgueMidiSenderData(type),
+	m_organfile(organfile)
 {
 }
 
 GOrgueMidiSender::~GOrgueMidiSender()
 {
-}
-
-MIDI_SENDER_TYPE GOrgueMidiSender::GetType() const
-{
-	return m_type;
 }
 
 const struct IniFileEnumEntry GOrgueMidiSender::m_MidiTypes[] = {
@@ -130,28 +125,6 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group)
 			cfg.Write(group, buffer, (int)m_events[i].high_value);
 		}
 	}
-}
-
-unsigned GOrgueMidiSender::GetEventCount() const
-{
-	return m_events.size();
-}
-
-MIDI_SEND_EVENT& GOrgueMidiSender::GetEvent(unsigned index)
-{
-	return m_events[index];
-}
-
-unsigned GOrgueMidiSender::AddNewEvent()
-{
-	MIDI_SEND_EVENT m = { wxT(""), MIDI_S_NONE, 1, 1, 0, 127};
-	m_events.push_back(m);
-	return m_events.size() - 1;
-}
-
-void GOrgueMidiSender::DeleteEvent(unsigned index)
-{
-	m_events.erase(m_events.begin() + index);
 }
 
 void GOrgueMidiSender::SetDisplay(bool state)
@@ -287,3 +260,8 @@ GOrgueSettings& GOrgueMidiSender::GetSettings()
 	return m_organfile->GetSettings();
 }
 
+void GOrgueMidiSender::Assign(const GOrgueMidiSenderData& data)
+{
+	*(GOrgueMidiSenderData*)this = data;
+	m_organfile->Modified();
+}

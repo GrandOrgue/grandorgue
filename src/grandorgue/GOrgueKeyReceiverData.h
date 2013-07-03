@@ -19,38 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MIDIEVENTKEYDIALOG_H_
-#define MIDIEVENTKEYDIALOG_H_
+#ifndef GORGUEKEYRECEIVERDATA_H
+#define GORGUEKEYRECEIVERDATA_H
 
-#include <wx/wx.h>
-#include "GOrgueKeyReceiver.h"
-
-class wxToggleButton;
-
-class MIDIEventKeyDialog : public wxPanel
-{
-
-private:
-	GOrgueKeyReceiver* m_original;
-	GOrgueKeyReceiverData m_key;
-	wxChoice *m_keyselect;
-	wxToggleButton* m_listen;
-
-	void OnKeyDown(wxKeyEvent& event);
-	void OnListenClick(wxCommandEvent& event);
-
+class GOrgueKeyReceiverData {
 protected:
-	enum {
-		ID_KEY_SELECT = 200,
-		ID_LISTEN,
-	};
+	unsigned m_ShortcutKey;
+
 public:
-	MIDIEventKeyDialog (wxWindow* parent, GOrgueKeyReceiver* event);
-	~MIDIEventKeyDialog();
+	GOrgueKeyReceiverData();
+	virtual ~GOrgueKeyReceiverData();
 
-	void DoApply();
-
-	DECLARE_EVENT_TABLE()
+	unsigned GetShortcut();
+	void SetShortcut(unsigned key);
 };
 
 #endif

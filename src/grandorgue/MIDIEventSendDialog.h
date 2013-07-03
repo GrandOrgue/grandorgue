@@ -30,7 +30,7 @@ class MIDIEventSendDialog : public wxPanel
 {
 private:
 	GOrgueMidiSender* m_original;
-	GOrgueMidiSender m_midi;
+	GOrgueMidiSenderData m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
 	wxSpinCtrl *m_key;
 	wxSpinCtrl *m_LowValue;

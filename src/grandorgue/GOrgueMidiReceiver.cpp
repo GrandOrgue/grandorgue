@@ -29,16 +29,10 @@
 #include "GrandOrgueFile.h"
 
 GOrgueMidiReceiver::GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type):
+	GOrgueMidiReceiverData(type),
 	m_organfile(organfile),
-	m_type(type),
-	m_Index(-1),
-	m_events(0)
+	m_Index(-1)
 {
-}
-
-MIDI_RECEIVER_TYPE GOrgueMidiReceiver::GetType() const
-{
-	return m_type;
 }
 
 void GOrgueMidiReceiver::SetIndex(int index)
@@ -412,28 +406,6 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 	return MIDI_MATCH_NONE;
 }
 
-unsigned GOrgueMidiReceiver::GetEventCount() const
-{
-	return m_events.size();
-}
-
-MIDI_MATCH_EVENT& GOrgueMidiReceiver::GetEvent(unsigned index)
-{
-	return m_events[index];
-}
-
-unsigned GOrgueMidiReceiver::AddNewEvent()
-{
-	MIDI_MATCH_EVENT m = { wxT(""), MIDI_M_NONE, -1, 0 };
-	m_events.push_back(m);
-	return m_events.size() - 1;
-}
-
-void GOrgueMidiReceiver::DeleteEvent(unsigned index)
-{
-	m_events.erase(m_events.begin() + index);
-}
-
 GOrgueSettings& GOrgueMidiReceiver::GetSettings()
 {
 	return m_organfile->GetSettings();
@@ -442,4 +414,10 @@ GOrgueSettings& GOrgueMidiReceiver::GetSettings()
 GrandOrgueFile* GOrgueMidiReceiver::GetOrganfile()
 {
 	return m_organfile;
+}
+
+void GOrgueMidiReceiver::Assign(const GOrgueMidiReceiverData& data)
+{
+	*(GOrgueMidiReceiverData*)this = data;
+	m_organfile->Modified();
 }

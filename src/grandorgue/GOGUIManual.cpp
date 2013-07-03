@@ -343,13 +343,10 @@ bool GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	{
 		GOrgueMidiReceiver* midi = &m_manual->GetMidiReceiver();
 		GOrgueMidiSender* sender = &m_manual->GetMidiSender();
-		MIDIEventDialog dlg (m_panel->GetView()->GetFrame(), _("Midi-Settings for Manual - ") + m_manual->GetName(), midi, sender, NULL);
 
-		if (dlg.ShowModal() == wxID_OK)
-		{
-			m_panel->Modified();
-			m_manual->AllNotesOff();
-		}
+		MIDIEventDialog dlg (m_panel->GetView()->GetFrame(), _("Midi-Settings for Manual - ") + m_manual->GetName(), midi, sender, NULL);
+		dlg.ShowModal();
+
 		return true;
 	}
 	else

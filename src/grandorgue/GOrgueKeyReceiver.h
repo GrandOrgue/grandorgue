@@ -23,23 +23,24 @@
 #define GORGUEKEYRECEIVER_H
 
 #include <wx/wx.h>
+#include "GOrgueKeyReceiverData.h"
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
+class GrandOrgueFile;
 
-class GOrgueKeyReceiver {
+class GOrgueKeyReceiver : public GOrgueKeyReceiverData {
 private:
-	unsigned m_ShortcutKey;
+	GrandOrgueFile* m_organfile;
 
 public:
-	GOrgueKeyReceiver();
+	GOrgueKeyReceiver(GrandOrgueFile* organfile);
 
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg, wxString group);
 
 	bool Match(unsigned key);
 
-	unsigned GetShortcut();
-	void SetShortcut(unsigned key);
+	void Assign(const GOrgueKeyReceiverData& data);
 };
 
 #endif

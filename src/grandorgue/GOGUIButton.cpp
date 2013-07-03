@@ -224,9 +224,7 @@ bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 		}
 
 		MIDIEventDialog dlg (m_panel->GetView()->GetFrame(), title, midi, sender, key);
-		
-		if (dlg.ShowModal() == wxID_OK)
-			m_panel->Modified();
+		dlg.ShowModal();
 
 		return true;
 	}
