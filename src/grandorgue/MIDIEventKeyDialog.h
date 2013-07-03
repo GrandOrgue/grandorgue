@@ -31,6 +31,7 @@ class MIDIEventKeyDialog : public wxPanel
 {
 
 private:
+	GOrgueKeyReceiver* m_original;
 	GOrgueKeyReceiver m_key;
 	wxChoice *m_keyselect;
 	wxToggleButton* m_listen;
@@ -44,10 +45,10 @@ protected:
 		ID_LISTEN,
 	};
 public:
-	MIDIEventKeyDialog (wxWindow* parent, const GOrgueKeyReceiver& event);
+	MIDIEventKeyDialog (wxWindow* parent, GOrgueKeyReceiver* event);
 	~MIDIEventKeyDialog();
 
-	const GOrgueKeyReceiver& GetResult();
+	void DoApply();
 
 	DECLARE_EVENT_TABLE()
 };

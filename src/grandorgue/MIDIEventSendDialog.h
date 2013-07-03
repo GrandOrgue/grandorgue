@@ -29,6 +29,7 @@
 class MIDIEventSendDialog : public wxPanel
 {
 private:
+	GOrgueMidiSender* m_original;
 	GOrgueMidiSender m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
 	wxSpinCtrl *m_key;
@@ -58,10 +59,10 @@ protected:
 	};
 
 public:
-	MIDIEventSendDialog (wxWindow* parent, const GOrgueMidiSender& event);
+	MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event);
 	~MIDIEventSendDialog();
 
-	const GOrgueMidiSender& GetResult();
+	void DoApply();
 
 	DECLARE_EVENT_TABLE()
 };

@@ -40,13 +40,14 @@ private:
 	MIDIEventSendDialog* m_sendPage;
 	MIDIEventKeyDialog* m_keyPage;
 
-public:
-	MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event, const GOrgueMidiSender* sender, const GOrgueKeyReceiver* key);
-	~MIDIEventDialog();
+	void DoApply();
 
-	const GOrgueMidiReceiver& GetResult();
-	const GOrgueMidiSender& GetSender();
-	const GOrgueKeyReceiver& GetKey();
+	void OnApply(wxCommandEvent& event);
+	void OnOK(wxCommandEvent& event);
+
+public:
+	MIDIEventDialog (wxWindow* parent, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
+	~MIDIEventDialog();
 
 	DECLARE_EVENT_TABLE()
 };

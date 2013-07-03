@@ -27,9 +27,10 @@ BEGIN_EVENT_TABLE(MIDIEventKeyDialog, wxPanel)
 	EVT_TOGGLEBUTTON(ID_LISTEN, MIDIEventKeyDialog::OnListenClick)
 END_EVENT_TABLE()
 
-MIDIEventKeyDialog::MIDIEventKeyDialog(wxWindow* parent, const GOrgueKeyReceiver& event) :
+MIDIEventKeyDialog::MIDIEventKeyDialog(wxWindow* parent, GOrgueKeyReceiver* event) :
 	wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
-	m_key(event)
+	m_original(event),
+	m_key(*event)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxFlexGridSizer* sizer = new wxFlexGridSizer(5, 2, 5, 5);
@@ -63,14 +64,14 @@ MIDIEventKeyDialog::~MIDIEventKeyDialog()
 {
 }
 
-const GOrgueKeyReceiver& MIDIEventKeyDialog::GetResult()
+void MIDIEventKeyDialog::DoApply()
 {
 	const GOShortcutKey* key = (const GOShortcutKey*) m_keyselect->GetClientData(m_keyselect->GetSelection());
 	if (!key)
 		m_key.SetShortcut(0);
 	else
 		m_key.SetShortcut(key->key_code);
-	return m_key;
+	*m_original = m_key;
 }
 
 void MIDIEventKeyDialog::OnKeyDown(wxKeyEvent& event)

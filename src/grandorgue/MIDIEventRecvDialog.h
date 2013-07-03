@@ -30,6 +30,7 @@
 class MIDIEventRecvDialog : public wxPanel
 {
 private:
+	GOrgueMidiReceiver* m_original;
 	GOrgueMidiReceiver m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
 	wxSpinCtrl *m_data;
@@ -67,10 +68,10 @@ protected:
 	};
 
 public:
-	MIDIEventRecvDialog (wxWindow* parent, const GOrgueMidiReceiver& event);
+	MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* event);
 	~MIDIEventRecvDialog();
 
-	const GOrgueMidiReceiver& GetResult();
+	void DoApply();
 
 	DECLARE_EVENT_TABLE()
 };
