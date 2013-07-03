@@ -52,6 +52,9 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_COMMAND(0, wxEVT_LOADFILE, GOrgueFrame::OnLoadFile)
 	EVT_MENU_OPEN(GOrgueFrame::OnMenuOpen)
 	EVT_MENU(wxID_OPEN, GOrgueFrame::OnOpen)
+#ifndef WXWIN_COMPATIBILITY_2_8
+	EVT_MENU_RANGE(wxID_FILE1, wxID_FILE1 + 49, wxDocParentFrame::OnMRUFile)
+#endif
 	EVT_MENU(ID_FILE_RELOAD, GOrgueFrame::OnReload)
 	EVT_MENU(ID_FILE_REVERT, GOrgueFrame::OnRevert)
 	EVT_MENU(ID_FILE_PROPERTIES, GOrgueFrame::OnProperties)

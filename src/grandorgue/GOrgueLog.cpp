@@ -44,6 +44,8 @@ void GOrgueLog::DoLog(wxLogLevel level, const wxChar *msg, time_t timestamp)
 
 void GOrgueLog::DoLogTextAtLevel (wxLogLevel level, const wxString &msg)
 {
+#ifndef WXWIN_COMPATIBILITY_2_8
 	if (m_LogWindow)
 		m_LogWindow->LogMsg(level, msg, time(0));
+#endif
 }
