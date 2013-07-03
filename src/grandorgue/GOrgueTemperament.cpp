@@ -206,6 +206,7 @@ void GOrgueTemperament::InitTemperaments()
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Sorge, 1758"), group, 5.87, 1.96, 1.96, 3.91, 0, 3.91, 1.96, 3.91, 3.91, 0, 3.91, 1.95));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Thomas/Philpott 1829/1881 organ, St. Jansklooster"), group, -7.82, 14.66, -1.95, 7.82, 4.89, -2.93, 13.69, -7.82, 14.66, 0, 1.94, 11.73));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Valotti"), group, 6.13, -0.18, 2.04, 4.26, -2.05, 8.17, -2.14, 4.09, 2.31, 0, 6.22, -4.09));
+	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Wegscheider 20 note"), group, 10.26, 3.81, 3.42, 7.39, 0.95, 9.3, 2.86, 6.84, 4.77, 0, 8.35, 1.91));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Werckmeister III"), group, 11.73, 1.95, 3.91, 5.87, 1.96, 9.78, 0, 7.82, 3.91, 0, 7.82, 3.91));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Werckmeister 4 (1691)"), group, 9.77, -7.82, 5.86, 3.91, 1.95, 7.82, -1.96, 3.91, -5.86, 0, 13.68, -3.91));
 	m_Temperaments.push_back(new GOrgueTemperamentCent(wxTRANSLATE("Werckmeister 5 (1691)"), group, 0, -3.91, 3.91, 0, -3.91, 3.91, 0, 1.96, -7.82, 0, 1.96, -1.95));
