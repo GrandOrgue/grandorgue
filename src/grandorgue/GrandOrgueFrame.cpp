@@ -470,7 +470,7 @@ void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 void GOrgueFrame::OnOpen(wxCommandEvent& event)
 {
 	GetDocumentManager()->SetLastDirectory(m_Settings.GetOrganPath());
-	ProcessCommand(wxID_OPEN);
+	GetDocumentManager()->OnFileOpen(event);
 	if (m_docManager->GetCurrentDocument() && ((GOrgueDocument*)m_docManager->GetCurrentDocument())->GetOrganFile())
 	{
 		m_Settings.SetOrganPath(GetDocumentManager()->GetLastDirectory());
