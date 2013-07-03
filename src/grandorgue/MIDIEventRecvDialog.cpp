@@ -32,9 +32,10 @@ BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
 END_EVENT_TABLE()
 
 
-MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, const GOrgueMidiReceiver& event):
+MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* event):
 	wxPanel(parent, wxID_ANY),
-	m_midi(event)
+	m_original(event),
+	m_midi(*event)
 {
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -172,7 +173,7 @@ MIDIEventRecvDialog::~MIDIEventRecvDialog()
 	m_midi.GetOrganfile()->SetMidiListener(NULL);
 }
 
-const GOrgueMidiReceiver& MIDIEventRecvDialog::GetResult()
+void MIDIEventRecvDialog::DoApply()
 {
 	StoreEvent();
 
@@ -189,7 +190,7 @@ const GOrgueMidiReceiver& MIDIEventRecvDialog::GetResult()
 	}
 	while(empty_event);
 
-	return m_midi;
+	*m_original = m_midi;
 }
 
 void MIDIEventRecvDialog::LoadEvent()

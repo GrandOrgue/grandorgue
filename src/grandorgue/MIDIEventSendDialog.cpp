@@ -28,9 +28,10 @@ BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
 	EVT_CHOICE(ID_EVENT_NO, MIDIEventSendDialog::OnEventChange)
 END_EVENT_TABLE()
 
-MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, const GOrgueMidiSender& event):
+MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event):
 	wxPanel(parent, wxID_ANY),
-	m_midi(event)
+	m_original(event),
+	m_midi(*event)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxFlexGridSizer* sizer = new wxFlexGridSizer(6, 2, 5, 5);
@@ -124,7 +125,7 @@ MIDIEventSendDialog::~MIDIEventSendDialog()
 {
 }
 
-const GOrgueMidiSender& MIDIEventSendDialog::GetResult()
+void MIDIEventSendDialog::DoApply()
 {
 	StoreEvent();
 
@@ -141,7 +142,7 @@ const GOrgueMidiSender& MIDIEventSendDialog::GetResult()
 	}
 	while(empty_event);
 
-	return m_midi;
+	*m_original =  m_midi;
 }
 
 void MIDIEventSendDialog::LoadEvent()

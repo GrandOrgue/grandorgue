@@ -26,9 +26,11 @@
 #include "MIDIEventKeyDialog.h"
 
 BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
+	EVT_BUTTON(wxID_APPLY, MIDIEventDialog::OnApply)
+	EVT_BUTTON(wxID_OK, MIDIEventDialog::OnOK)
 END_EVENT_TABLE()
 
-MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgueMidiReceiver* event, const GOrgueMidiSender* sender, const GOrgueKeyReceiver* key):
+MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key):
 	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize),
 	m_recvPage(NULL),
 	m_sendPage(NULL),
@@ -40,17 +42,17 @@ MIDIEventDialog::MIDIEventDialog (wxWindow* parent, wxString title, const GOrgue
 
 	if (event)
 	{
-		m_recvPage = new MIDIEventRecvDialog(notebook, *event);
+		m_recvPage = new MIDIEventRecvDialog(notebook, event);
 		notebook->AddPage(m_recvPage,  _("Receive"));
 	}
 	if (sender)
 	{
-		m_sendPage = new MIDIEventSendDialog(notebook, *sender);
+		m_sendPage = new MIDIEventSendDialog(notebook, sender);
 		notebook->AddPage(m_sendPage,  _("Send"));
 	}
 	if (key)
 	{
-		m_keyPage = new MIDIEventKeyDialog(notebook, *key);
+		m_keyPage = new MIDIEventKeyDialog(notebook, key);
 		notebook->AddPage(m_keyPage,  _("Shortcut"));
 	}
 
@@ -61,18 +63,23 @@ MIDIEventDialog::~MIDIEventDialog()
 {
 }
 
-const GOrgueMidiReceiver& MIDIEventDialog::GetResult()
+void MIDIEventDialog::OnApply(wxCommandEvent& event)
 {
-	return m_recvPage->GetResult();
+	DoApply();
 }
 
-const GOrgueMidiSender& MIDIEventDialog::GetSender()
+void MIDIEventDialog::OnOK(wxCommandEvent& event)
 {
-	return m_sendPage->GetResult();
+	DoApply();
+	event.Skip();
 }
 
-const GOrgueKeyReceiver& MIDIEventDialog::GetKey()
+void MIDIEventDialog::DoApply()
 {
-	return m_keyPage->GetResult();
+	if (m_recvPage)
+		m_recvPage->DoApply();
+	if (m_sendPage)
+		m_sendPage->DoApply();
+	if (m_keyPage)
+		m_keyPage->DoApply();
 }
-
