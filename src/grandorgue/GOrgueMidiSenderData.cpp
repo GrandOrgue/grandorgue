@@ -19,38 +19,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MIDIEVENTKEYDIALOG_H_
-#define MIDIEVENTKEYDIALOG_H_
+#include "GOrgueMidiSenderData.h"
 
-#include <wx/wx.h>
-#include "GOrgueKeyReceiver.h"
-
-class wxToggleButton;
-
-class MIDIEventKeyDialog : public wxPanel
+GOrgueMidiSenderData::GOrgueMidiSenderData(MIDI_SENDER_TYPE type) :
+	m_type(type),
+	m_events()
 {
+}
 
-private:
-	GOrgueKeyReceiver* m_original;
-	GOrgueKeyReceiverData m_key;
-	wxChoice *m_keyselect;
-	wxToggleButton* m_listen;
+GOrgueMidiSenderData::~GOrgueMidiSenderData()
+{
+}
 
-	void OnKeyDown(wxKeyEvent& event);
-	void OnListenClick(wxCommandEvent& event);
+MIDI_SENDER_TYPE GOrgueMidiSenderData::GetType() const
+{
+	return m_type;
+}
 
-protected:
-	enum {
-		ID_KEY_SELECT = 200,
-		ID_LISTEN,
-	};
-public:
-	MIDIEventKeyDialog (wxWindow* parent, GOrgueKeyReceiver* event);
-	~MIDIEventKeyDialog();
+unsigned GOrgueMidiSenderData::GetEventCount() const
+{
+	return m_events.size();
+}
 
-	void DoApply();
+MIDI_SEND_EVENT& GOrgueMidiSenderData::GetEvent(unsigned index)
+{
+	return m_events[index];
+}
 
-	DECLARE_EVENT_TABLE()
-};
+unsigned GOrgueMidiSenderData::AddNewEvent()
+{
+	MIDI_SEND_EVENT m = { wxT(""), MIDI_S_NONE, 1, 1, 0, 127};
+	m_events.push_back(m);
+	return m_events.size() - 1;
+}
 
-#endif
+void GOrgueMidiSenderData::DeleteEvent(unsigned index)
+{
+	m_events.erase(m_events.begin() + index);
+}

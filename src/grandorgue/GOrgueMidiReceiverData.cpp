@@ -19,38 +19,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MIDIEVENTKEYDIALOG_H_
-#define MIDIEVENTKEYDIALOG_H_
+#include "GOrgueMidiReceiverData.h"
 
-#include <wx/wx.h>
-#include "GOrgueKeyReceiver.h"
-
-class wxToggleButton;
-
-class MIDIEventKeyDialog : public wxPanel
+GOrgueMidiReceiverData::GOrgueMidiReceiverData(MIDI_RECEIVER_TYPE type):
+	m_type(type),
+	m_events(0)
 {
+}
 
-private:
-	GOrgueKeyReceiver* m_original;
-	GOrgueKeyReceiverData m_key;
-	wxChoice *m_keyselect;
-	wxToggleButton* m_listen;
+GOrgueMidiReceiverData::~GOrgueMidiReceiverData()
+{
+}
 
-	void OnKeyDown(wxKeyEvent& event);
-	void OnListenClick(wxCommandEvent& event);
+MIDI_RECEIVER_TYPE GOrgueMidiReceiverData::GetType() const
+{
+	return m_type;
+}
 
-protected:
-	enum {
-		ID_KEY_SELECT = 200,
-		ID_LISTEN,
-	};
-public:
-	MIDIEventKeyDialog (wxWindow* parent, GOrgueKeyReceiver* event);
-	~MIDIEventKeyDialog();
+unsigned GOrgueMidiReceiverData::GetEventCount() const
+{
+	return m_events.size();
+}
 
-	void DoApply();
+MIDI_MATCH_EVENT& GOrgueMidiReceiverData::GetEvent(unsigned index)
+{
+	return m_events[index];
+}
 
-	DECLARE_EVENT_TABLE()
-};
+unsigned GOrgueMidiReceiverData::AddNewEvent()
+{
+	MIDI_MATCH_EVENT m = { wxT(""), MIDI_M_NONE, -1, 0 };
+	m_events.push_back(m);
+	return m_events.size() - 1;
+}
 
-#endif
+void GOrgueMidiReceiverData::DeleteEvent(unsigned index)
+{
+	m_events.erase(m_events.begin() + index);
+}

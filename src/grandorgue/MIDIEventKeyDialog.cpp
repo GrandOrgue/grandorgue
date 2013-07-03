@@ -71,7 +71,7 @@ void MIDIEventKeyDialog::DoApply()
 		m_key.SetShortcut(0);
 	else
 		m_key.SetShortcut(key->key_code);
-	*m_original = m_key;
+	m_original->Assign(m_key);
 }
 
 void MIDIEventKeyDialog::OnKeyDown(wxKeyEvent& event)

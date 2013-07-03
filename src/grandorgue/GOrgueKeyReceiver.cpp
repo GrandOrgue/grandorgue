@@ -22,9 +22,11 @@
 #include "GOrgueKeyReceiver.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
+#include "GrandOrgueFile.h"
 
-GOrgueKeyReceiver::GOrgueKeyReceiver() :
-	m_ShortcutKey(0)
+GOrgueKeyReceiver::GOrgueKeyReceiver(GrandOrgueFile* organfile) :
+	GOrgueKeyReceiverData(),
+	m_organfile(organfile)
 {
 }
 
@@ -46,12 +48,8 @@ bool GOrgueKeyReceiver::Match(unsigned key)
 	return false;
 }
 
-unsigned GOrgueKeyReceiver::GetShortcut()
+void GOrgueKeyReceiver::Assign(const GOrgueKeyReceiverData& data)
 {
-	return m_ShortcutKey;
-}
-
-void GOrgueKeyReceiver::SetShortcut(unsigned key)
-{
-	m_ShortcutKey = key;
+	*(GOrgueKeyReceiverData*)this = data;
+	m_organfile->Modified();
 }

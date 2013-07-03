@@ -19,38 +19,56 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MIDIEVENTKEYDIALOG_H_
-#define MIDIEVENTKEYDIALOG_H_
+#ifndef GORGUEMIDISENDERDATA_H
+#define GORGUEMIDISENDERDATA_H
 
 #include <wx/wx.h>
-#include "GOrgueKeyReceiver.h"
+#include <vector>
 
-class wxToggleButton;
+typedef enum {
+	MIDI_SEND_BUTTON,
+	MIDI_SEND_LABEL,
+	MIDI_SEND_ENCLOSURE,
+	MIDI_SEND_MANUAL,
+} MIDI_SENDER_TYPE;
 
-class MIDIEventKeyDialog : public wxPanel
+typedef enum {
+	MIDI_S_NONE,
+	MIDI_S_NOTE,
+	MIDI_S_CTRL,
+	MIDI_S_PGM_ON,
+	MIDI_S_PGM_OFF,
+	MIDI_S_NOTE_ON,
+	MIDI_S_NOTE_OFF,
+	MIDI_S_CTRL_ON,
+	MIDI_S_CTRL_OFF,
+} midi_send_message_type;
+
+typedef struct {
+	wxString device;
+	midi_send_message_type type;
+	unsigned channel;
+	unsigned key;
+	unsigned low_value;
+	unsigned high_value;
+} MIDI_SEND_EVENT;
+
+class GOrgueMidiSenderData
 {
-
-private:
-	GOrgueKeyReceiver* m_original;
-	GOrgueKeyReceiverData m_key;
-	wxChoice *m_keyselect;
-	wxToggleButton* m_listen;
-
-	void OnKeyDown(wxKeyEvent& event);
-	void OnListenClick(wxCommandEvent& event);
-
 protected:
-	enum {
-		ID_KEY_SELECT = 200,
-		ID_LISTEN,
-	};
+	MIDI_SENDER_TYPE m_type;
+	std::vector<MIDI_SEND_EVENT> m_events;
+
 public:
-	MIDIEventKeyDialog (wxWindow* parent, GOrgueKeyReceiver* event);
-	~MIDIEventKeyDialog();
+	GOrgueMidiSenderData(MIDI_SENDER_TYPE type);
+	virtual ~GOrgueMidiSenderData();
 
-	void DoApply();
+	MIDI_SENDER_TYPE GetType() const;
 
-	DECLARE_EVENT_TABLE()
+	unsigned GetEventCount() const;
+	MIDI_SEND_EVENT& GetEvent(unsigned index);
+	unsigned AddNewEvent();
+	void DeleteEvent(unsigned index);
 };
 
 #endif

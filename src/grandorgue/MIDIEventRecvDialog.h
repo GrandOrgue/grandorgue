@@ -31,7 +31,7 @@ class MIDIEventRecvDialog : public wxPanel
 {
 private:
 	GOrgueMidiReceiver* m_original;
-	GOrgueMidiReceiver m_midi;
+	GOrgueMidiReceiverData m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
 	wxSpinCtrl *m_data;
 	wxSpinCtrl *m_LowKey;

@@ -105,7 +105,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 
 	m_device->Append(_("Any device"));
 
-	std::vector<wxString> device_names = m_midi.GetSettings().GetMidiInDeviceList();
+	std::vector<wxString> device_names = m_original->GetSettings().GetMidiInDeviceList();
 	for(std::vector<wxString>::iterator it = device_names.begin(); it != device_names.end(); it++)
 		m_device->Append(*it);
 
@@ -170,7 +170,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 
 MIDIEventRecvDialog::~MIDIEventRecvDialog()
 {
-	m_midi.GetOrganfile()->SetMidiListener(NULL);
+	m_original->GetOrganfile()->SetMidiListener(NULL);
 }
 
 void MIDIEventRecvDialog::DoApply()
@@ -190,7 +190,7 @@ void MIDIEventRecvDialog::DoApply()
 	}
 	while(empty_event);
 
-	*m_original = m_midi;
+	m_original->Assign(m_midi);
 }
 
 void MIDIEventRecvDialog::LoadEvent()
@@ -285,11 +285,11 @@ void MIDIEventRecvDialog::OnListenClick(wxCommandEvent& event)
 	if (m_listen->GetValue())
 	{
 		this->SetCursor(wxCursor(wxCURSOR_WAIT));
-		m_midi.GetOrganfile()->SetMidiListener(GetEventHandler());
+		m_original->GetOrganfile()->SetMidiListener(GetEventHandler());
 	}
 	else
 	{
-		m_midi.GetOrganfile()->SetMidiListener(NULL);
+		m_original->GetOrganfile()->SetMidiListener(NULL);
 		this->SetCursor(wxCursor(wxCURSOR_ARROW));
 	}
 }
@@ -313,6 +313,6 @@ void MIDIEventRecvDialog::OnMidiEvent(GOrgueMidiEvent& event)
 	LoadEvent();
 
 	m_listen->SetValue(false);
-	m_midi.GetOrganfile()->SetMidiListener(NULL);
+	m_original->GetOrganfile()->SetMidiListener(NULL);
 	this->SetCursor(wxCursor(wxCURSOR_ARROW));
 }

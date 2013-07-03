@@ -189,10 +189,9 @@ bool GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState&
 	{
 		GOrgueMidiReceiver* midi = &m_enclosure->GetMidiReceiver();
 		GOrgueMidiSender* sender = &m_enclosure->GetMidiSender();
+
 		MIDIEventDialog dlg (m_panel->GetView()->GetFrame(), _("Midi-Settings for Enclosure - ") + m_enclosure->GetName(), midi, sender, NULL);
-		
-		if (dlg.ShowModal() == wxID_OK)
-			m_panel->Modified();
+		dlg.ShowModal();
 
 		return true;
 	}

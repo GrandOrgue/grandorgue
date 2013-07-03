@@ -225,6 +225,7 @@ GOrgueFrameGeneral.cpp
 GOrgueGeneral.cpp
 GOrgueKeyConvert.cpp
 GOrgueKeyReceiver.cpp
+GOrgueKeyReceiverData.cpp
 GOrgueLabel.cpp
 GOrgueLCD.cpp
 GOrgueLog.cpp
@@ -234,7 +235,9 @@ GOrgueMemoryPool.cpp
 GOrgueMidi.cpp
 GOrgueMidiEvent.cpp
 GOrgueMidiSender.cpp
+GOrgueMidiSenderData.cpp
 GOrgueMidiReceiver.cpp
+GOrgueMidiReceiverData.cpp
 GOrguePath.cpp
 GOrguePipe.cpp
 GOrguePipeConfig.cpp
