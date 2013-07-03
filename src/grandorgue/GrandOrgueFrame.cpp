@@ -782,6 +782,7 @@ void GOrgueFrame::OnMidiEvent(GOrgueMidiEvent& event)
 		wxCommandEvent evt(wxEVT_LOADFILE, 0);
 		evt.SetString(it->second);
 		GetEventHandler()->AddPendingEvent(evt);
+		return;
 	}
 }
 
