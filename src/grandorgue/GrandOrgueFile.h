@@ -31,8 +31,6 @@
 #include "GOrgueMemoryPool.h"
 #include "GOrguePipeConfig.h"
 
-class wxProgressDialog;
-
 class GOrgueCache;
 class GOrgueCacheObject;
 class GOrgueDivisionalCoupler;
