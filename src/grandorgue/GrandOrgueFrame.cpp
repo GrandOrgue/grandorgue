@@ -52,7 +52,6 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_COMMAND(0, wxEVT_LOADFILE, GOrgueFrame::OnLoadFile)
 	EVT_MENU_OPEN(GOrgueFrame::OnMenuOpen)
 	EVT_MENU(wxID_OPEN, GOrgueFrame::OnOpen)
-	EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9, GOrgueFrame::OnOpen)
 	EVT_MENU(ID_FILE_RELOAD, GOrgueFrame::OnReload)
 	EVT_MENU(ID_FILE_REVERT, GOrgueFrame::OnRevert)
 	EVT_MENU(ID_FILE_PROPERTIES, GOrgueFrame::OnProperties)
@@ -467,17 +466,12 @@ void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 
 void GOrgueFrame::OnOpen(wxCommandEvent& event)
 {
-	if (event.GetId() == wxID_OPEN)
+	GetDocumentManager()->SetLastDirectory(m_Settings.GetOrganPath());
+	ProcessCommand(wxID_OPEN);
+	if (m_docManager->GetCurrentDocument() && ((GOrgueDocument*)m_docManager->GetCurrentDocument())->GetOrganFile())
 	{
-		GetDocumentManager()->SetLastDirectory(m_Settings.GetOrganPath());
-		ProcessCommand(wxID_OPEN);
-		if (m_docManager->GetCurrentDocument() && ((GOrgueDocument*)m_docManager->GetCurrentDocument())->GetOrganFile())
-		{
-			m_Settings.SetOrganPath(GetDocumentManager()->GetLastDirectory());
-		}
+		m_Settings.SetOrganPath(GetDocumentManager()->GetLastDirectory());
 	}
-	else
-		event.Skip();
 }
 
 void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
