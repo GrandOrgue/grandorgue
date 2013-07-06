@@ -326,20 +326,20 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		m_enclosure[i]->Load(cfg, buffer, i);
 	}
 
-	m_tremulant.resize(0);
-	for (unsigned i = 0; i < NumberOfTremulants; i++)
-	{
-		m_tremulant.push_back(new GOrgueTremulant(this));
-		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		m_tremulant[i]->Load(cfg, buffer, -((int)(i + 1)));
-	}
-
 	m_switches.resize(0);
 	for (unsigned i = 0; i < NumberOfSwitches; i++)
 	{
 		m_switches.push_back(new GOrgueSwitch(this));
 		buffer.Printf(wxT("Switch%03d"), i + 1);
 		m_switches[i]->Load(cfg, buffer);
+	}
+
+	m_tremulant.resize(0);
+	for (unsigned i = 0; i < NumberOfTremulants; i++)
+	{
+		m_tremulant.push_back(new GOrgueTremulant(this));
+		buffer.Printf(wxT("Tremulant%03d"), i + 1);
+		m_tremulant[i]->Load(cfg, buffer, -((int)(i + 1)));
 	}
 
 	for (unsigned  i = 0; i < NumberOfWindchestGroups; i++)
