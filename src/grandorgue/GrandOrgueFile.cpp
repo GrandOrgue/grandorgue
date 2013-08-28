@@ -1209,6 +1209,8 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 	m_soundengine = engine;
 	m_midi = midi;
 
+	UpdateAudioGroup();
+
 	for (unsigned i = 0; i < m_ranks.size(); i++)
 		m_ranks[i]->PreparePlayback();
 
