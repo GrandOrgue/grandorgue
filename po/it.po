@@ -86,15 +86,15 @@ msgstr "Nome del file '%s' non compatibile con i sistemi delicati"
 
 #, c-format
 msgid "Failed to create directory '%s'"
-msgstr "Impossibile creare la directory '% s'"
+msgstr "Impossibile creare la directory '%s'"
 
 #, c-format
 msgid "Could not remove '%s'"
-msgstr "Impossibile rimuovere '% s'"
+msgstr "Impossibile rimuovere '%s'"
 
 #, c-format
 msgid "Could not write to '%s'"
-msgstr "Impossibile scrivere su '% s'"
+msgstr "Impossibile scrivere su '%s'"
 
 msgid "Realloc of non-top element failed"
 msgstr "Fallito il Realloc di un elemento non-superiore"
