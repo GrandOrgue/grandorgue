@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-08-10 11:23+0200\n"
-"PO-Revision-Date: 2013-08-30 17:56+0100\n"
+"PO-Revision-Date: 2013-08-31 16:56+0100\n"
 "Last-Translator: Emiliano Rainoldi <emiliano_rainoldi@yahoo.it>\n"
 "Language-Team: Italian <emiliano_rainoldi@yahoo.it>\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #, c-format
 msgid "bitmap size does not match for '%s'"
-msgstr "Formato bitmap non corrisponde per '%s'"
+msgstr "formato bitmap non corrisponde perr '%s'"
 
 msgid "Midi-Settings for Enclosure - "
 msgstr "Midi-Settings perr Enclosure - "
@@ -57,7 +57,7 @@ msgid "KSAPI: "
 msgstr "KSAPI: "
 
 msgid "Unknown: "
-msgstr "Sconosciuto:"
+msgstr "Sconosciuto: "
 
 msgid "8 bit PCM"
 msgstr "8 bit PCM"
@@ -78,7 +78,7 @@ msgid "64 bit float"
 msgstr "64 bit float"
 
 msgid "none"
-msgstr "Niente"
+msgstr "niente"
 
 #, c-format
 msgid "Filename '%s' not compatible with case sensitive systems"
@@ -97,7 +97,7 @@ msgid "Could not write to '%s'"
 msgstr "Impossibile scrivere su '%s'"
 
 msgid "Realloc of non-top element failed"
-msgstr "Fallito il Realloc di un elemento non-superiore"
+msgstr "Fallito il realloc di un elemento non-superiore"
 
 #, c-format
 msgid "Memory pool is full: %llu of %llu used"
@@ -115,7 +115,7 @@ msgstr "Impossibile aprire l'immagine '%s'"
 
 #, c-format
 msgid "bitmap size of '%s' does not match mask '%s'"
-msgstr "Formato bitmap di '%s' non corrisponde maschera '%s'"
+msgstr "il formato bitmap di '%s' non corrisponde alla maschera '%s'"
 
 #, c-format
 msgid "LCD-1: %s"
@@ -447,7 +447,7 @@ msgid "Fisk-Vogel: Memorial Church at Stanford"
 msgstr "Fisk-Vogel: Memorial Church at Stanford"
 
 msgid "Mersenne's Improved Meantone 1"
-msgstr "Versione migliorata del tono medio di Mersenne"
+msgstr "Versione migliorata del tono medio di Mersenne 1"
 
 msgid "Rameau bemols"
 msgstr "Rameau bemols"
@@ -606,7 +606,7 @@ msgid "Koenig, Balthasar Organ Nederehe 1714"
 msgstr "Koenig, Balthasar Organ Nederehe 1714"
 
 msgid "Mercadier's well-temperament"
-msgstr "Ben temperato di Mercadier's"
+msgstr "Ben temperato di Mercadier"
 
 msgid "Malerbi's well-temperament nr 1 (1794)"
 msgstr "Ben temperato nr 1 di Malerbi (1794)"
@@ -819,7 +819,7 @@ msgid "Unable to open file for writing"
 msgstr "Impossibile aprire il file per la scrittura"
 
 msgid "Invalid reference "
-msgstr "Riferimento non valido"
+msgstr "Riferimento non valido "
 
 #, c-format
 msgid "RtAudio error: %s"
@@ -935,14 +935,14 @@ msgstr ""
 "essere importati?"
 
 msgid "Loading..."
-msgstr "Caricamento in corso ..."
+msgstr "Caricamento in corso..."
 
 msgid "Cache file had bad magic bypassing cache."
-msgstr "Il file di cache è pericoloso per l'esclusione della cache"
+msgstr "Il file di cache è pericoloso per l'esclusione della cache."
 
 msgid "Cache file had diffent hash bypassing cache."
 msgstr ""
-"Il file di cache ha frammentato differentemente l'esclusione della cache"
+"Il file di cache ha frammentato differentemente l'esclusione della cache."
 
 #, c-format
 msgid "Cache load failure: %s"
@@ -1131,7 +1131,7 @@ msgid "Enable Convolution Reverb"
 msgstr "Abilitazione dell'effetto di riverbero convulazione"
 
 msgid "&Convolution reverb"
-msgstr "&effetto di riverbero convulazione"
+msgstr "&Effetto di riverbero convulazione"
 
 msgid "Select an impulse file"
 msgstr "Selezionare un file di impulso"
@@ -1231,7 +1231,7 @@ msgid "help"
 msgstr "aiuto"
 
 msgid "displays help on the command line parameters"
-msgstr "Visualizza la Guida relativa ai parametri della riga di comando"
+msgstr "visualizza la Guida relativa ai parametri della riga di comando"
 
 msgid "i"
 msgstr "i"
@@ -1240,13 +1240,13 @@ msgid "instance"
 msgstr "istanza"
 
 msgid "specifiy GrandOrgue instance name"
-msgstr "Definizione del nome dell'istanza di GrandOrgue"
+msgstr "definizione del nome dell'istanza di GrandOrgue"
 
 msgid "organ file"
-msgstr "File di organo"
+msgstr "file di organo"
 
 msgid " - Virtual Pipe Organ Software"
-msgstr " - Software per Organo a canne Virtuale "
+msgstr " - Software per Organo a canne Virtuale"
 
 msgid "Invalid instance name"
 msgstr "Nome di istanza non valido"
@@ -1401,7 +1401,7 @@ msgid "Settings files (*.cmb)|*.cmb"
 msgstr "I file delle impostazioni (*.cmb)|*.cmb"
 
 msgid "Import Combinations"
-msgstr "importazione delle combinazioini"
+msgstr "Importazione delle combinazioini"
 
 msgid "Export Settings"
 msgstr "Esportazione delle impostazioni"
@@ -1439,7 +1439,7 @@ msgid "WAV files (*.wav)|*.wav"
 msgstr "WAV files (*.wav)|*.wav"
 
 msgid "settingsdialog.."
-msgstr "finstra di dialogo delle impostazioni..."
+msgstr "finstra di dialogo delle impostazioni.."
 
 msgid "success"
 msgstr "riuscito"
@@ -1590,7 +1590,7 @@ msgid "Reverb"
 msgstr "Riverbero"
 
 msgid "Audio Groups"
-msgstr "Audio Gruppi"
+msgstr "Gruppi audio"
 
 msgid "Organs"
 msgstr "Organi"
@@ -1649,7 +1649,7 @@ msgid "pause"
 msgstr "pausa"
 
 msgid "capital"
-msgstr "Maiuscolo"
+msgstr "maiuscolo"
 
 msgid "escape"
 msgstr "escape"
@@ -1658,10 +1658,10 @@ msgid "space"
 msgstr "spazio"
 
 msgid "pageup"
-msgstr "PaginaSu"
+msgstr "paginasu"
 
 msgid "pagedown"
-msgstr "Paginagiù"
+msgstr "paginagiù"
 
 msgid "end"
 msgstr "fine"
@@ -2161,7 +2161,7 @@ msgid "Audio groups"
 msgstr "Gruppi Audio"
 
 msgid "Audio group name"
-msgstr "Nome del gruppo Audio"
+msgstr "Nome del gruppo audio"
 
 #, c-format
 msgid "Failed to read file '%s'"
@@ -2310,7 +2310,7 @@ msgstr ""
 "esempio, applicando ad uncanale un offset di 8\n"
 "ad una delle interfacce MIDI che causerebbe\n"
 "al canale di interfaccia 1 di apparire come canale 9,\n"
-"al canale 2 di apparire come canale 10, e così via.."
+"al canale 2 di apparire come canale 10, e così via."
 
 msgid "Channel offset:"
 msgstr "Canale offset:"

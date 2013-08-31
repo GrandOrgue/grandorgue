@@ -1999,7 +1999,7 @@ msgstr "Bitmap Größe passt nicht zu '%s'"
 
 #, c-format
 msgid "bitmap size of '%s' does not match mask '%s'"
-msgstr "Bitmap Größe passt nicht zur Maske '%s'"
+msgstr "Bitmap Größe von '%s' passt nicht zur Maske '%s'"
 
 #, c-format
 msgid "caught exception: %s\n"
