@@ -22,8 +22,8 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    message(STATUS "    Support for Alsa          : ${RTMIDI_USE_ALSA}")
 
    if (RTMIDI_USE_JACK)
-#      add_definitions(-D__UNIX_JACK__)
-#      target_link_libraries(RtMidi jack)
+      add_definitions(-D__UNIX_JACK__)
+      target_link_libraries(RtMidi jack)
    endif ()
 
    if (RTMIDI_USE_ALSA)
