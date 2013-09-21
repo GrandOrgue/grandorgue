@@ -20,7 +20,7 @@
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
---> 
+-->
   <title>GrandOrgue Help</title>
   <titleabbrev>GrandOrgue</titleabbrev>
   <bookinfo>
@@ -217,7 +217,7 @@ The use of the cache increases the necessary disk space.
       <title>GrandOrgue User Interface</title>
       <mediaobject>
         <imageobject>
-          <imagedata width="100%" scalefit="1" fileref="Burea_funeral_extend_main.png"/>
+          <imagedata fileref="Burea_funeral_extend_main.png"/>
         </imageobject>
       </mediaobject>
     </figure>
@@ -749,7 +749,7 @@ settings file.
         <title>Midi &amp; Audio Settings / Options</title>
         <mediaobject>
           <imageobject>
-            <imagedata width="75%" scalefit="1" fileref="options_tab.png"/>
+            <imagedata fileref="options_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -847,7 +847,7 @@ staccato. It will have little to no effect on &quot;dry&quot; sample sets.
           </indexterm>
           <para>
 This will apply a very small random detuning before each pipe begins to speak.
-The detuning is small enough so that the ear can't appreciate the tuning difference and large enough so that it approximates the tiny interferences (due to physical location) that occur when playing multiple real pipes in an organ.
+The detuning is small enough so that the ear can&apos;t appreciate the tuning difference and large enough so that it approximates the tiny interferences (due to physical location) that occur when playing multiple real pipes in an organ.
           </para>
           <variablelist>
             <varlistentry>
@@ -1277,7 +1277,7 @@ Variable savings up to 50%
           <para>Selects the output sample rate. Allowed values are 44100, 48000 and 96000 Hz.</para>
           <para>The samplerate should match both the configured samplerate in the audio interface and the samplerate of the recorded samples  to avoid  resampling. If not, resampling can occur in all layers of the audio stack, and audio quality can suffer.</para>
         </sect3>
-        <sect3>
+        <sect3 id="samplesperbuffer">
           <title>Samples per buffer</title>
           <indexterm>
             <primary>Samples per buffer</primary>
@@ -1331,13 +1331,201 @@ Variable savings up to 50%
         <primary>Audio Output</primary>
       </indexterm>
       <figure>
-        <title>Audio Output options</title>
+        <title>Audio Output tab</title>
         <mediaobject>
           <imageobject>
             <imagedata fileref="audio_output_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
+      <para>This dialog selects the audio output device and defines which channels and <link linkend="audiogroupstab">audio groups</link> the audio output is dispatched to.</para>
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colname="c1" colsep="no" rowsep="no" colwidth="90px"/>
+          <colspec colname="c2" colsep="no" rowsep="no"/>
+          <tbody>
+            <row>
+              <entry>Channel:</entry>
+              <entry>a real-world channel of the audio device (e.g. left and right for a stereo board). GrandOrgue channel names are always <emphasis role="bold">Channel 1</emphasis> to <emphasis role="bold">Channel n</emphasis>, <emphasis>n</emphasis> being the number of channels available on the audio device (stereo:2, surround 4.0: 4, and so on). Only trial and error can determine which GrandOrgue channel is linked to which audio device physical channel.</entry>
+            </row>
+            <row>
+              <entry>Audio&#160;group:</entry>
+              <entry>a name holder used to fine tune the routing of audio output from the individual pipe to a particular channel of the audio device. See <!--link linkend="organsettings"-->Organ Settings<!--/link--> for more information.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <sect2>
+        <title>Managing devices</title>
+        <indexterm>
+          <primary>Audio devices</primary>
+        </indexterm>
+        <sect3>
+          <title>Add device</title>
+          <indexterm>
+            <primary>Add audio device</primary>
+          </indexterm>
+          <para>This feature is available when the <emphasis role="bold">&lt;Audio Output&gt;</emphasis> node is selected. The <emphasis>Add</emphasis> button is active. This node is where it is technically possible to add multiple audio devices.<caution>
+              <para>Multiple audio devices are currently <emphasis role="bold">NOT</emphasis> supported. Setting multiple audio devices leads to unpredictable results. A warning is displayed and if acknowledged, a new audio device is set in the list.</para>
+            </caution></para>
+          <para>The <emphasis>Add</emphasis> button opens a pick list with all audio devices found in the system.<mediaobject id="audiodevicepicklist">
+              <imageobject>
+                <imagedata fileref="audio_devices_picklist.png"/>
+              </imageobject>
+            </mediaobject></para>
+          <para>Each audio device is prefixed by its type (ASIO, DirectSound, ALSA, JACK, etc.)</para>
+          <para>The <emphasis role="bold">(PA)</emphasis> indicator shows which devices are driven using the <emphasis>Portaudio</emphasis> backend. All other devices are driven using the legacy <emphasis>RtAudio</emphasis> backend.</para>
+          <para>Select the desired audio device. The devices list is updated with the new device which is initialized with a single channel.<mediaobject>
+              <imageobject>
+                <imagedata fileref="audio_devices_updated.png"/>
+              </imageobject>
+            </mediaobject></para>
+          <para>The new device needs further configuration to be usable. See <link linkend="audiochannels">Managing Channels</link> for more information.</para>
+          <caution>
+            <para>Multi-device configuration is <emphasis role="bold">NOT</emphasis> supported.</para>
+          </caution>
+        </sect3>
+        <sect3>
+          <title>Change device</title>
+          <indexterm>
+            <primary>Change audio device</primary>
+          </indexterm>
+          <para>This feature is available when a <emphasis role="bold">Device:</emphasis> node is selected in the tree. The <emphasis>Change</emphasis> button is active. It opens the <link linkend="audiodevicepicklist">same</link> pick list as for adding a device.</para>
+          <para>Select the desired device. The  devices list is updated with the new device, while the channel configuration is retained.</para>
+        </sect3>
+        <sect3>
+          <title>Delete device</title>
+          <indexterm>
+            <primary>Delete audio device</primary>
+          </indexterm>
+          <para>This feature is available when a <emphasis role="bold">Device:</emphasis> node is selected in the tree. The <emphasis>Delete</emphasis> button is active <emphasis>only if there are at least two devices in the tree</emphasis>.</para>
+          <para>Select the device to delete. Push the <emphasis>Delete</emphasis> button.The device is removed from the tree.</para>
+        </sect3>
+        <sect3>
+          <title>Device properties</title>
+          <indexterm>
+            <primary>Audio device properties</primary>
+          </indexterm>
+          <para>The <emphasis>Properties</emphasis> button becomes active  when an audio device is selected in the tree. It opens a dialog which allows  to set a <emphasis>requested</emphasis> latency.<mediaobject>
+              <imageobject>
+                <imagedata fileref="audio_device_latency_dialog.png"/>
+              </imageobject>
+            </mediaobject></para>
+          <note>
+            <para>This feature is closely related to the <link linkend="samplesperbuffer">samples per buffer</link> setting in the <emphasis>Options</emphasis> tab. Its behavior differs according to the chosen backend.</para>
+            <informaltable frame="none">
+              <tgroup cols="2">
+                <colspec colname="c1" colwidth="80" colsep="no" rowsep="no"/>
+                <colspec colname="c2" colsep="no" rowsep="no"/>
+                <tbody>
+                  <row>
+                    <entry>
+                      <emphasis>RtAudio</emphasis>
+                    </entry>
+                    <entry>ignores the desired latency setting, because it uses the provided &quot;samples per buffer&quot; setting, <emphasis role="bold">and that value must be supported by the soundcard/driver</emphasis>, otherwise sound rendering will break.</entry>
+                  </row>
+                  <row>
+                    <entry>
+                      <emphasis>PortAudio</emphasis>
+                    </entry>
+                    <entry>uses the desired latency setting, the &quot;samples per buffer&quot; setting and the capabilities of the soundcard/driver to determine the operational settings it will use. It then displays the <emphasis>closest feasible</emphasis> latency. Note that the estimate can be based on numbers provided by the hardware and may vary.</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </note>
+        </sect3>
+        <sect3>
+          <title>Revert to default</title>
+          <indexterm>
+            <primary>Revert audio configuration</primary>
+          </indexterm>
+          <para>This button discards all audio configuration settings and creates a stereo configuration for the current device:</para>
+          <informaltable frame="none">
+            <tgroup cols="2">
+              <colspec colname="c1" colwidth="70" colsep="no" rowsep="no"/>
+              <colspec colname="c2" colsep="no" rowsep="no"/>
+              <tbody>
+                <row>
+                  <entry>Channel 1:</entry>
+                  <entry>one &apos;left&apos; entry for each defined audio group, gain set to 0 db</entry>
+                </row>
+                <row>
+                  <entry>Channel 2:</entry>
+                  <entry>one &apos;right&apos; entry for each defined audio group, gain set to 0 db</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+        </sect3>
+      </sect2>
+      <sect2 id="audiochannels">
+        <title>Managing Channels</title>
+        <indexterm>
+          <primary>Audio device channels</primary>
+        </indexterm>
+        <sect3>
+          <title>Add channel</title>
+          <indexterm>
+            <primary>Add audio channel</primary>
+          </indexterm>
+          <para>This feature is available when a <emphasis role="bold">Device:</emphasis> node is selected in the tree. The <emphasis>Add</emphasis> button becomes active only if the number of channels currently defined for that device is less than the device&apos;s maximum number of channels.</para>
+          <para>The <emphasis>Add</emphasis> button adds a new channel which is numbered with the next channel number. The new channel needs further configuration (audio groups) to be usable. See <link linkend="audiogroups" os="">Managing Audio Groups</link> for further information on that topic.</para>
+          <note>
+            <para>Only trial and error can determine which GrandOrgue channel is linked to each real-world audio channel.</para>
+          </note>
+        </sect3>
+        <sect3>
+          <title>Delete channel</title>
+          <indexterm>
+            <primary>Delete audio channel</primary>
+          </indexterm>
+          <para>This feature is available when a <emphasis role="bold">Channel n</emphasis> node is selected in the tree. The <emphasis>Delete</emphasis> button is active only if there are at least two channels defined for the device. Push the <emphasis>Delete</emphasis> button. The selected channel is deleted with its configuration.</para>
+        </sect3>
+      </sect2>
+      <sect2 id="audiogroups">
+        <title>Managing audio groups</title>
+        <indexterm>
+          <primary>Audio groups</primary>
+        </indexterm>
+        <sect3>
+          <title>Add audio group</title>
+          <indexterm>
+            <primary>Add audio group</primary>
+          </indexterm>
+          <para>This feature is available when a <emphasis role="bold">Channel n</emphasis> node is selected in the tree. The <emphasis>Add</emphasis> button opens a pick list which allows to choose one or more audio group channels.<mediaobject>
+              <imageobject>
+                <imagedata fileref="audiogroup_picklist.png"/>
+              </imageobject>
+            </mediaobject></para>
+          <para>The <emphasis>Add</emphasis> button becomes unavailable when all audio group channels are used and the pick list is empty.</para>
+          <note>
+            <para>An audio group always contains a left an a right channel. These channel names can&apos;t be changed.</para>
+          </note>
+        </sect3>
+        <sect3>
+          <title>Delete audio group</title>
+          <indexterm>
+            <primary>Delete audio group</primary>
+          </indexterm>
+          <para>This feature is available when an <link linkend="audiogroups">
+              <emphasis role="bold">audio group</emphasis>
+            </link> node is selected in the tree. Every audio group channel (left/right) can be deleted from its parent GrandOrgue channel. Push the <emphasis>Delete</emphasis> button. The selected audio group channel  is deleted.</para>
+        </sect3>
+        <sect3>
+          <title>Group properties</title>
+          <indexterm>
+            <primary>Audio group properties</primary>
+          </indexterm>
+          <para>This feature is available when an <link linkend="audiogroups">
+              <emphasis role="bold">audio group</emphasis>
+            </link> node is selected in the tree. The <emphasis>Properties</emphasis> button opens the property dialog which allows to set a gain value (in db). 0 means &quot;original volume&quot;. A positive value makes the audio group louder than original, a negative value makes the audio group softer.<mediaobject>
+              <imageobject>
+                <imagedata fileref="audiogroup_volume.png"/>
+              </imageobject>
+            </mediaobject></para>
+        </sect3>
+      </sect2>
     </sect1>
     <sect1>
       <title>Reverb tab</title>
@@ -1354,7 +1542,7 @@ Variable savings up to 50%
         </mediaobject>
       </figure>
     </sect1>
-    <sect1>
+    <sect1 id="audiogroupstab">
       <title>Audio Groups tab</title>
       <indexterm>
         <primary>Audio Groups</primary>
@@ -5778,7 +5966,7 @@ of the label GUI definitions are called
 (integer 0-999, required) Number of images on the panel. The section
 of the label GUI definitions are called
 <emphasis>Panel999Image999</emphasis>.
-     </para>
+            </para>
           </listitem>
         </varlistentry>
       </variablelist>
