@@ -15,4 +15,5 @@
   <xsl:param name="htmlhelp.show.favorites" select="1"/>
   <xsl:param name="htmlhelp.show.advanced.search" select="1"/>
   <xsl:param name="htmlhelp.show.menu" select="1"/>
+  <xsl:param name="variablelist.as.table" select="1"/>
 </xsl:stylesheet>
