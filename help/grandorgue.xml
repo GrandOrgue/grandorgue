@@ -1486,12 +1486,12 @@ Variable savings up to 50%
       <sect2 id="audiogroups">
         <title>Managing audio groups</title>
         <indexterm>
-          <primary>Audio groups</primary>
+          <primary>Manage audio groups</primary>
         </indexterm>
         <sect3>
           <title>Add audio group</title>
           <indexterm>
-            <primary>Add audio group</primary>
+            <primary>Add audio group to audio configuration</primary>
           </indexterm>
           <para>This feature is available when a <emphasis role="bold">Channel n</emphasis> node is selected in the tree. The <emphasis>Add</emphasis> button opens a pick list which allows to choose one or more audio group channels.<mediaobject>
               <imageobject>
@@ -1506,7 +1506,7 @@ Variable savings up to 50%
         <sect3>
           <title>Delete audio group</title>
           <indexterm>
-            <primary>Delete audio group</primary>
+            <primary>Remove audio group from audio configuration</primary>
           </indexterm>
           <para>This feature is available when an <link linkend="audiogroups">
               <emphasis role="bold">audio group</emphasis>
@@ -1548,13 +1548,46 @@ Variable savings up to 50%
         <primary>Audio Groups</primary>
       </indexterm>
       <figure>
-        <title>Audio Groups options</title>
+        <title>Audio Groups tab</title>
         <mediaobject>
           <imageobject>
             <imagedata fileref="audio_groups_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
+      <para>This dialog allows to manage audio groups. As  said above, audio groups are name holders that are used to map the audio output of the individual pipe to definite parts of the audio system. See <!--link linkend="organsettings"-->Organ Settings<!--/link--> for more information.</para>
+      <para>The system requires at least one audio group, and is initialized with a default audio group named <emphasis>Default audio group</emphasis>.</para>
+      <sect2 id="addaudiogroup">
+        <title>Add</title>
+        <indexterm>
+          <primary>New audio group</primary>
+        </indexterm>
+        <para>The <emphasis>Add</emphasis> button opens a dialog where one can type the new audio group name.<mediaobject>
+            <imageobject>
+              <imagedata fileref="new_audio_group.png"/>
+            </imageobject>
+          </mediaobject></para>
+      </sect2>
+      <sect2>
+        <title>Delete</title>
+        <indexterm>
+          <primary>Delete audio group</primary>
+        </indexterm>
+        <para>This feature is available when an audio group name is selected in the list. The <emphasis>Delete</emphasis> button is active. Push the button, the selected audio group is deleted.</para>
+        <caution>
+          <para>If the deleted audio group is in use in the audio output tab or the <!--link linkend="organsettings"-->Organ Settings<!--/link-->  dialog, all pipes routed to this audio group will be <emphasis role="bold">muted</emphasis> until proper configuration is established again.</para>
+        </caution>
+      </sect2>
+      <sect2>
+        <title>Rename</title>
+        <indexterm>
+          <primary>Rename audio group</primary>
+        </indexterm>
+        <para>This feature is available when an audio group name is selected in the list. The <emphasis>Rename</emphasis> button is active. It opens the same dialog as in <link linkend="addaudiogroup">Add</link>, where the audio group&apos;s name can be changed.</para>
+        <caution>
+          <para>If the renamed audio group is in use in the audio output tab or the <!--link linkend="organsettings"-->Organ Settings<!--/link-->  dialog, all pipes routed to this audio group will be <emphasis role="bold">muted</emphasis> until proper configuration is established again.</para>
+        </caution>
+      </sect2>
     </sect1>
     <sect1>
       <title>Organs tab</title>
