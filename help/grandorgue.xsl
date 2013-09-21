@@ -16,4 +16,21 @@
   <xsl:param name="htmlhelp.show.advanced.search" select="1"/>
   <xsl:param name="htmlhelp.show.menu" select="1"/>
   <xsl:param name="variablelist.as.table" select="1"/>
+  <xsl:param name="make.clean.html" select="1"/>
+  <xsl:template name="pi.dbhtml_term-presentation">
+  <xsl:param name="node" select="."/>
+  <xsl:variable name="presentation">
+  <xsl:call-template name="dbhtml-attribute">
+  <xsl:with-param name="pis" select="$node/processing-instruction('dbhtml')"/>
+  <xsl:with-param name="attribute" select="'term-presentation'"/>
+  </xsl:call-template>
+  </xsl:variable>
+  <xsl:choose>
+  <xsl:when test="$presentation = ''">bold</xsl:when>
+  <xsl:otherwise>
+  <xsl:value-of select="$presentation"/>
+  </xsl:otherwise>
+  </xsl:choose>
+  </xsl:template>
+
 </xsl:stylesheet>
