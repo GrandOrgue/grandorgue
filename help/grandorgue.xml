@@ -734,6 +734,86 @@ settings file.
       </sect2>
     </sect1>
   </chapter>
+  <chapter>
+    <title>Audio and Organ settings overview</title>
+    <indexterm>
+    <primary>Audio overview</primary>
+    </indexterm>
+    <indexterm>
+    <primary>Organ settings overview</primary>
+    </indexterm>
+    <figure>
+    <title>Audio &amp; Organ settings overview</title>
+    <mediaobject>
+    <imageobject>
+    <imagedata fileref="audio_big_picture.png"/>
+    </imageobject>
+    </mediaobject>
+    </figure>
+    <para>
+This schema describes the close relations that exist between the real-world audio hardware capablities and the sample set disposition as provided by the sample set designer.
+It is built over some assumptions about a totally hypothetical sampleset and an equally hypothetical computer.
+    </para>
+    <itemizedlist mark="bullet">
+    <listitem><simpara>The organ has a main case and a separate choir (RückPositiv) case in the oragnist's back</simpara></listitem>
+    <listitem><simpara>The console is embedded facing the main case, therefore the main case sounds "front" and the choir case sounds "rear"</simpara></listitem>
+    <listitem><simpara>The organ has 2 pedal turrets on the far left and right sides of the main case</simpara></listitem>
+    <listitem><simpara>The organ has an echo keyboard in the basement of the main case</simpara></listitem>
+    <listitem><simpara>The computer's audio device is 4.0 surround (front left and right speakers, rear left and right speakers)</simpara></listitem>
+    </itemizedlist>
+    <para>
+    Settings in the <link linkend="settingstab">Midi &amp; Audio Settings</link> tab describe the physical environment, while settings in the <!--link linkend="organsettings"--> Organ settings<!--/link--> dialog describe how the different parts of the virtual organ map to the real-world audio outputs.
+    </para>
+  <table frame="none">
+      <title>Definitions</title>
+      <tgroup cols="2">
+        <colspec colname="c1" colsep="no" rowsep="no" colwidth="90px"/>
+        <colspec colname="c2" colsep="no" rowsep="no"/>
+        <tbody>
+          <row>
+            <entry>Channel:</entry>
+            <entry>a real-world channel of the audio device (e.g. left and right for a stereo board). GrandOrgue channel names are always <emphasis role="bold">Channel 1</emphasis> to <emphasis role="bold">Channel n</emphasis>, <emphasis>n</emphasis> being the number of channels available on the audio device (stereo:2, surround 4.0:4, and so on). Only trial and error can determine which GrandOrgue channel is linked to which audio device physical channel.</entry>
+          </row>
+          <row>
+            <entry>Audio&#160;group:</entry>
+            <entry>a name holder used to design logical blocks within the audio system (e.g. "front speakers", "rear speakers", "subwoofer", ...). It is possible to create as many audio groups as needed. An audiogroup unused in the loaded sample set is ignored.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+    <para>In this example, the decision was made to</para>
+    <itemizedlist mark="circle">
+      <listitem>
+        <simpara>
+          sound the Choir through the rear speakers, full volume
+        </simpara>
+      </listitem>
+      <listitem>
+        <simpara>
+          sound the Great through the front speakers, full volume
+        </simpara>
+      </listitem>
+      <listitem>
+        <simpara>
+          sound the Echo through the front speakers, softened
+          volume
+        </simpara>
+      </listitem>
+      <listitem>
+        <simpara>
+          sound the C side of the Pedal through the left front
+          speaker
+        </simpara>
+      </listitem>
+      <listitem>
+        <simpara>
+          sound the C# side of the Pedal through the right front
+          speaker
+        </simpara>
+      </listitem>
+    </itemizedlist>
+    <para>This is done by linking audio groups to channels in the <link linkend="settingstab">Midi &amp; Audio Settings</link> dialog and spreading pipes over the audio groups in the <!--link linkend="organsettings"-->Organ Settings<!--/link--> dialog.</para>
+  </chapter>
   <chapter id="settingstab">
     <title>Midi &amp; Audio settings</title>
     <indexterm>
@@ -1339,7 +1419,8 @@ Variable savings up to 50%
         </mediaobject>
       </figure>
       <para>This dialog selects the audio output device and defines which channels and <link linkend="audiogroupstab">audio groups</link> the audio output is dispatched to.</para>
-      <informaltable frame="none">
+      <table frame="none">
+        <title>Reminder</title>
         <tgroup cols="2">
           <colspec colname="c1" colsep="no" rowsep="no" colwidth="90px"/>
           <colspec colname="c2" colsep="no" rowsep="no"/>
@@ -1354,7 +1435,7 @@ Variable savings up to 50%
             </row>
           </tbody>
         </tgroup>
-      </informaltable>
+      </table>
       <sect2>
         <title>Managing devices</title>
         <indexterm>
