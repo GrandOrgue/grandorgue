@@ -217,7 +217,7 @@ The use of the cache increases the necessary disk space.
       <title>GrandOrgue User Interface</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="Burea_funeral_extend_main.png"/>
+          <imagedata scalefit="1" width="100%" fileref="Burea_funeral_extend_main.png"/>
         </imageobject>
       </mediaobject>
     </figure>
@@ -264,7 +264,6 @@ display indicating estimated time remaining and other indicators.
           <title>Open Recent</title>
           <indexterm>
             <primary>Open Recent</primary>
-            <secondary>Open</secondary>
           </indexterm>
           <para>
 The last 30 used definition files are remembered and displayed as a sub menu.
@@ -431,7 +430,7 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
             <title>Temperaments</title>
             <mediaobject>
               <imageobject>
-                <imagedata width="75%" scalefit="1" fileref="temperaments_menus.png" security=""/>
+                <imagedata scalefit="1" width="100%" fileref="temperaments_menus.png" security=""/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -575,12 +574,13 @@ the current settings would be saved to this same next program.
         <indexterm>
           <primary>Volume Control</primary>
         </indexterm>
-        <para>
-<mediaobject>
+        <mediaobject>
             <imageobject>
               <imagedata fileref="volume_control.png"/>
             </imageobject>
-          </mediaobject>The volume control sets the volume control <emphasis>in dB</emphasis>.
+        </mediaobject>
+	<para>
+The volume control sets the volume control <emphasis>in dB</emphasis>.
 Left and right audio monitors are displayed next to the spinner. The clip indicator at the far right will turn red if
 clipping occurs, and will stay red until the volume is adjusted.</para>
       </sect2>
@@ -747,7 +747,7 @@ GrandOrgue provides additional panels. These panels work as console extensions a
     <title>Audio &amp; Organ settings overview</title>
     <mediaobject>
     <imageobject>
-    <imagedata fileref="audio_big_picture.png"/>
+    <imagedata scalefit="1" width="100%" fileref="audio_big_picture.png"/>
     </imageobject>
     </mediaobject>
     </figure>
@@ -766,11 +766,10 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
     <para>
     Settings in the <link linkend="settingstab">Midi &amp; Audio Settings</link> tab describe the physical environment, while settings in the <link linkend="organsettings">Organ settings</link> dialog describe how the different parts of the virtual organ map to the real-world audio outputs.
     </para>
-  <table frame="none">
-      <title>Definitions</title>
+  <informaltable frame="none">
       <tgroup cols="2">
-        <colspec colname="c1" colsep="no" rowsep="no" colwidth="90px"/>
-        <colspec colname="c2" colsep="no" rowsep="no"/>
+        <colspec colname="c1" colsep="0" rowsep="0" colwidth="90px"/>
+        <colspec colname="c2" colsep="0" rowsep="0"/>
         <tbody>
           <row valign="top">
             <entry>Channel:</entry>
@@ -778,11 +777,13 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
           </row>
           <row valign="top">
             <entry>Audio&#160;group:</entry>
-            <entry>a name holder used to design logical blocks within the audio system (e.g. "front speakers", "rear speakers", "subwoofer", ...). It is possible to create as many audio groups as needed. If an audiogroup is not used in the loaded sample set, it is ignored and has no impact on GrandOrgue performances.</entry>
+            <entry>a name holder used to design logical blocks within the audio system (e.g. "front speakers", "rear speakers", "subwoofer", ...). It is possible to create as many audio groups as needed.
+		    <caution><para>If an audiogroup is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</para></caution>
+	    </entry>
           </row>
         </tbody>
       </tgroup>
-    </table>
+    </informaltable>
     <para>In this example, the decision was made to</para>
     <itemizedlist>
       <listitem>
@@ -824,11 +825,11 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
       <indexterm>
         <primary>Options</primary>
       </indexterm>
-      <figure>
+      <figure id="optionstab">
         <title>Midi &amp; Audio Settings / Options</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="options_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="options_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -839,8 +840,8 @@ these options apply to any loaded sampleset.
       <para>These options are located at different places according to the platform.</para>
       <informaltable frame="none">
         <tgroup cols="2">
-          <colspec colname="c1" colwidth="100" colsep="no" rowsep="no"/>
-          <colspec colname="c2" colsep="no" rowsep="no"/>
+          <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
+          <colspec colname="c2" colsep="0" rowsep="0"/>
           <tbody>
             <row>
               <entry>Windows:</entry>
@@ -871,7 +872,6 @@ samples (reverberation tails) are faded out in order to conserve
 polyphony.
 </para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -903,7 +903,6 @@ this option will fade out the release sample if the note is played
 staccato. It will have little to no effect on "dry" sample sets.
           </para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -934,7 +933,6 @@ This will apply a very small random detuning before each pipe begins to speak.
 The detuning is small enough so that the ear can't appreciate the tuning difference and large enough so that it approximates the tiny interferences (due to physical location) that occur when playing multiple real pipes in an organ.
           </para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -962,7 +960,6 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           </indexterm>
           <para>This will trigger the automatic load of the last used sample set.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -993,7 +990,6 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           </indexterm>
           <para>This dropdown controls the method used to interpolate the waveform when resampling the samples.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Polyphase</term>
               <listitem>
@@ -1009,7 +1005,6 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           </variablelist>
           <para>The assertions about audio quality should be used as guidelines only. As a rule of thumb, polyphase gets better treble, linear gets better bass, and this is most noticeable in sample sets that use interpolation extensively (e.g. retuning a detuned organ).  Audio quality is highly subjective, so the user is strongly encouraged to listen for himself and retain the setting that suits him better.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -1038,7 +1033,6 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           <para>This number states how many threads GrandOrgue creates to spread the load. Cores number is the recommended choice for computers without Hyperthreading. Less doesn't use the whole computer. More wastes resources while managing overhead.</para>
           <para>With Hyperthreading enabled, the CPU load seems more evenly spread among virtual cores.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -1066,7 +1060,6 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           </indexterm>
           <para>This setting has the same role as <link linkend="concurrencylevel">Concurrency Level</link>, and is dedicated to release processing. It  works around some limitations in the current code, and may be removed in a future release. The same value as concurrency is recommended.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -1094,7 +1087,6 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           </indexterm>
           <para>This selects the format used by the recorder invoked by selecting <link linkend="record">Record</link>. The supported formats are: 8 bit, 16 bit, 24 bit PCM and 32 bit IEEE float.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -1146,7 +1138,6 @@ reconstructed) so that RAM requirements are lessened. Particularly
 useful for large sample sets.
 </para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -1177,7 +1168,6 @@ useful for large sample sets.
 If set to Mono, all samples are loaded in Mono. When compression is disabled, this will save 50%, but when compression is enabled, much less will be saved because the compression is much less effective on monoaural inputs.
    </para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -1207,7 +1197,6 @@ Variable savings up to 50%
           </indexterm>
           <para>Selects whether the samples are loaded with 8 or 12 or 16 or 24  bits precision.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -1235,7 +1224,6 @@ Variable savings up to 50%
           </indexterm>
           <para>Selects which loop(s) are loaded if the samples have multiple loops.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>First loop</term>
               <listitem>
@@ -1281,7 +1269,6 @@ Variable savings up to 50%
           </indexterm>
           <para>The sample set creator can provide multiple separate attack files.This selects which attack(s) are loaded.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>All</term>
               <listitem>
@@ -1321,7 +1308,6 @@ Variable savings up to 50%
           </indexterm>
           <para>The sample set creator can provide multiple separate release files.This selects which release(s) are loaded.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>All</term>
               <listitem>
@@ -1391,7 +1377,6 @@ Variable savings up to 50%
           </indexterm>
           <para>Selects whether the disk cache must be compressed when created or updated.</para>
           <variablelist>
-          <?dbhtml term-presentation="bold" ?>
             <varlistentry>
               <term>Memory</term>
               <listitem>
@@ -1431,16 +1416,15 @@ Variable savings up to 50%
         <title>Audio Output tab</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="audio_output_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="audio_output_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
       <para>This dialog selects the audio output device and defines which channels and <link linkend="audiogroupstab">audio groups</link> the audio output is dispatched to.</para>
-      <table frame="none">
-        <title>Reminder</title>
+      <informaltable frame="none">
         <tgroup cols="2">
-          <colspec colname="c1" colsep="no" rowsep="no" colwidth="90px"/>
-          <colspec colname="c2" colsep="no" rowsep="no"/>
+          <colspec colname="c1" colsep="0" rowsep="0" colwidth="90px"/>
+          <colspec colname="c2" colsep="0" rowsep="0"/>
           <tbody>
             <row  valign="top">
               <entry>Channel:</entry>
@@ -1452,7 +1436,7 @@ Variable savings up to 50%
             </row>
           </tbody>
         </tgroup>
-      </table>
+      </informaltable>
       <sect2>
         <title>Managing devices</title>
         <indexterm>
@@ -1467,18 +1451,20 @@ Variable savings up to 50%
           <caution>
           <para>Multiple audio devices are currently <emphasis role="bold">NOT</emphasis> supported. Setting multiple audio devices leads to unpredictable results. A warning is displayed and if acknowledged, a new audio device is set in the list.</para>
           </caution>
-          <para>The <emphasis>Add</emphasis> button opens a pick list with all audio devices found in the system.<mediaobject id="audiodevicepicklist">
-              <imageobject>
-                <imagedata fileref="audio_devices_picklist.png"/>
-              </imageobject>
-            </mediaobject></para>
+	  <para>The <emphasis>Add</emphasis> button opens a pick list with all audio devices found in the system.</para>
+	  <mediaobject id="audiodevicepicklist">
+            <imageobject>
+              <imagedata fileref="audio_devices_picklist.png"/>
+            </imageobject>
+          </mediaobject>
           <para>Each audio device is prefixed by its type (ASIO, DirectSound, ALSA, JACK, etc.)</para>
           <para>The <emphasis role="bold">(PA)</emphasis> indicator shows which devices are driven using the <emphasis>Portaudio</emphasis> backend. All other devices are driven using the legacy <emphasis>RtAudio</emphasis> backend.</para>
-          <para>Select the desired audio device. The devices list is updated with the new device which is initialized with a single channel.<mediaobject>
-              <imageobject>
-                <imagedata fileref="audio_devices_updated.png"/>
-              </imageobject>
-            </mediaobject></para>
+	  <para>Select the desired audio device. The devices list is updated with the new device which is initialized with a single channel.</para>
+	  <mediaobject>
+            <imageobject>
+              <imagedata scalefit="1" width="100%" fileref="audio_devices_updated.png"/>
+            </imageobject>
+          </mediaobject>
           <para>The new device needs further configuration to be usable. See <link linkend="audiochannels">Managing Channels</link> for more information.</para>
           <caution><title>Reminder</title>
             <para>Multi-device configuration is <emphasis role="bold">NOT</emphasis> supported.</para>
@@ -1505,17 +1491,18 @@ Variable savings up to 50%
           <indexterm>
             <primary>Audio device properties</primary>
           </indexterm>
-          <para>The <emphasis>Properties</emphasis> button becomes active  when an audio device is selected in the tree. It opens a dialog which allows  to set a <emphasis>requested</emphasis> latency.<mediaobject>
-              <imageobject>
-                <imagedata fileref="audio_device_latency_dialog.png"/>
-              </imageobject>
-            </mediaobject></para>
+	  <para>The <emphasis>Properties</emphasis> button becomes active  when an audio device is selected in the tree. It opens a dialog which allows  to set a <emphasis>requested</emphasis> latency.</para>
+	  <mediaobject>
+            <imageobject>
+              <imagedata fileref="audio_device_latency_dialog.png"/>
+            </imageobject>
+          </mediaobject>
           <note>
             <para>This feature is closely related to the <link linkend="samplesperbuffer">samples per buffer</link> setting in the <emphasis>Options</emphasis> tab. Its behavior differs according to the chosen backend.</para>
             <informaltable frame="none">
               <tgroup cols="2">
-                <colspec colname="c1" colwidth="80" colsep="no" rowsep="no"/>
-                <colspec colname="c2" colsep="no" rowsep="no"/>
+                <colspec colname="c1" colwidth="80px" colsep="0" rowsep="0"/>
+                <colspec colname="c2" colsep="0" rowsep="0"/>
                 <tbody>
                   <row  valign="top">
                     <entry>
@@ -1542,8 +1529,8 @@ Variable savings up to 50%
           <para>This button discards all audio configuration settings and creates a stereo configuration for the current device:</para>
           <informaltable frame="none">
             <tgroup cols="2">
-              <colspec colname="c1" colwidth="70" colsep="no" rowsep="no"/>
-              <colspec colname="c2" colsep="no" rowsep="no"/>
+              <colspec colname="c1" colwidth="70px" colsep="0" rowsep="0"/>
+              <colspec colname="c2" colsep="0" rowsep="0"/>
               <tbody>
                 <row>
                   <entry>Channel 1:</entry>
@@ -1592,11 +1579,12 @@ Variable savings up to 50%
           <indexterm>
             <primary>Add audio group to audio configuration</primary>
           </indexterm>
-          <para>This feature is available when a <emphasis role="bold">Channel n</emphasis> node is selected in the tree. The <emphasis>Add</emphasis> button opens a pick list which allows to choose one or more audio group channels.<mediaobject>
-              <imageobject>
-                <imagedata fileref="audiogroup_picklist.png"/>
-              </imageobject>
-            </mediaobject></para>
+	  <para>This feature is available when a <emphasis role="bold">Channel n</emphasis> node is selected in the tree. The <emphasis>Add</emphasis> button opens a pick list which allows to choose one or more audio group channels.</para>
+	  <mediaobject>
+            <imageobject>
+              <imagedata scalefit="1" width="100%" fileref="audiogroup_picklist.png"/>
+            </imageobject>
+          </mediaobject>
           <para>The <emphasis>Add</emphasis> button becomes unavailable when all audio group channels are used and the pick list is empty.</para>
           <note>
             <para>An audio group always contains a left an a right channel. These channel names can't be changed.</para>
@@ -1608,17 +1596,21 @@ Variable savings up to 50%
             <primary>Remove audio group from audio configuration</primary>
           </indexterm>
           <para>This feature is available when an <emphasis role="bold">audio group</emphasis> node is selected in the tree. Every audio group channel (left/right) can be deleted from its parent GrandOrgue channel. Push the <emphasis>Delete</emphasis> button. The selected audio group channel  is deleted.</para>
+          <caution>
+            <para>When an audio group is not assigned to at least one audio channel (i.e. it is not used), all pipes assigned to this audio group in the <link linkend="organsettings">Organ Settings</link> dialog are <emphasis role="bold">muted</emphasis></para>
+          </caution>
         </sect3>
         <sect3>
           <title>Group properties</title>
           <indexterm>
             <primary>Audio group properties</primary>
           </indexterm>
-          <para>This feature is available when an <emphasis role="bold">audio group</emphasis> node is selected in the tree. The <emphasis>Properties</emphasis> button opens the property dialog which allows to set a gain value (in db). 0 means "original volume". A positive value makes the audio group louder than original, a negative value makes the audio group softer.<mediaobject>
-              <imageobject>
-                <imagedata fileref="audiogroup_volume.png"/>
-              </imageobject>
-            </mediaobject></para>
+	  <para>This feature is available when an <emphasis role="bold">audio group</emphasis> node is selected in the tree. The <emphasis>Properties</emphasis> button opens the property dialog which allows to set a gain value (in db). 0 means "original volume". A positive value makes the audio group louder than original, a negative value makes the audio group softer.</para>
+	  <mediaobject>
+            <imageobject>
+              <imagedata fileref="audiogroup_volume.png"/>
+            </imageobject>
+          </mediaobject>
         </sect3>
       </sect2>
     </sect1>
@@ -1626,13 +1618,15 @@ Variable savings up to 50%
       <title>Reverb tab</title>
       <indexterm>
         <primary>Reverberation</primary>
-        <secondary>Reverb</secondary>
+      </indexterm>
+      <indexterm>
+      <primary>Reverb</primary>
       </indexterm>
       <figure>
         <title>Reverberation options</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="reverb_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="reverb_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -1646,22 +1640,25 @@ Variable savings up to 50%
         <title>Audio Groups tab</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="audio_groups_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="audio_groups_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
       <para>This dialog allows to manage audio groups. As  said above, audio groups are name holders that are used to map the audio output of the individual pipe to definite parts of the audio system. See <link linkend="organsettings">Organ Settings</link> for more information.</para>
       <para>The system requires at least one audio group, and is initialized with a default audio group named <emphasis>Default audio group</emphasis>.</para>
+      <para>The <emphasis>Default audio group</emphasis> is <emphasis role="bold">always</emphasis> the first audio group in the list, so the <emphasis>Default audio group</emphasis> name can be changd at any time.</para>
       <sect2 id="addaudiogroup">
         <title>Add</title>
         <indexterm>
           <primary>New audio group</primary>
         </indexterm>
-        <para>The <emphasis>Add</emphasis> button opens a dialog where one can type the new audio group name.<mediaobject>
-            <imageobject>
-              <imagedata fileref="new_audio_group.png"/>
-            </imageobject>
-          </mediaobject></para>
+	<para>The <emphasis>Add</emphasis> button opens a dialog where one can type the new audio group name.</para>
+	<mediaobject>
+          <imageobject>
+            <imagedata fileref="new_audio_group.png"/>
+          </imageobject>
+        </mediaobject>
+	<caution><para>If an audiogroup is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</para></caution>
       </sect2>
       <sect2>
         <title>Delete</title>
@@ -1670,7 +1667,7 @@ Variable savings up to 50%
         </indexterm>
         <para>This feature is available when an audio group name is selected in the list. The <emphasis>Delete</emphasis> button is active. Push the button, the selected audio group is deleted.</para>
         <caution>
-          <para>If the deleted audio group is in use in the audio output tab or the <link linkend="organsettings">Organ Settings</link>  dialog, all pipes routed to this audio group will be <emphasis role="bold">muted</emphasis> until proper configuration is established again.</para>
+          <para>If the deleted audio group is assigned to an organ element (<link linkend="organsettings">Organ Settings</link> dialog), all pipes routed to this audio group will be automatically routed to the default audio group.</para>
         </caution>
       </sect2>
       <sect2>
@@ -1680,7 +1677,7 @@ Variable savings up to 50%
         </indexterm>
         <para>This feature is available when an audio group name is selected in the list. The <emphasis>Rename</emphasis> button is active. It opens the same dialog as in <link linkend="addaudiogroup">Add</link>, where the audio group's name can be changed.</para>
         <caution>
-          <para>If the renamed audio group is in use in the audio output tab or the <link linkend="organsettings">Organ Settings</link>  dialog, all pipes routed to this audio group will be <emphasis role="bold">muted</emphasis> until proper configuration is established again.</para>
+          <para>If the renamed audio group is assigned to an organ element (<link linkend="organsettings">Organ Settings</link> dialog), all pipes routed to this audio group will be automatically routed to the default audio group.</para>
         </caution>
       </sect2>
     </sect1>
@@ -1688,13 +1685,15 @@ Variable savings up to 50%
       <title>Organs tab</title>
       <indexterm>
         <primary>Organs</primary>
-        <secondary>Predefined Organs list</secondary>
+      </indexterm>
+      <indexterm>
+      <primary>Predefined Organs list</primary>
       </indexterm>
       <figure>
         <title>Organs tab</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="organs_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="organs_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -1708,7 +1707,7 @@ Variable savings up to 50%
         <title>Midi devices options</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="midi_devices_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="midi_devices_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -1722,7 +1721,7 @@ Variable savings up to 50%
         <title>Initial Midi Configuration options</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="initial_midi_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="initial_midi_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -1732,61 +1731,66 @@ Variable savings up to 50%
     <title>Organ settings</title>
     <indexterm><primary>Organ settings</primary></indexterm>
     <para>This dialog allows to customize settings for the currently loaded sample set.</para>
-    <para>Initial values come  from the current settings file, or from the organ definition file if the settings file does not exist.</para>
+    <para>Initial values come  from the current settings file or from the organ definition file if the settings file does not exist.</para>
     <para>Modified settings are saved in the current settings file.</para>
     <figure>
       <title>Organ Settings dialog</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="organ_settings.png"/>
+          <imagedata scalefit="1" width="100%" fileref="organ_settings.png"/>
         </imageobject>
       </mediaobject>
     </figure>
-    <para>In its left box, this dialog displays all stops found in the definition file grouped by windchest. The tree can unfold down to the individual pipe level. Within  windchests, the stops are ordered as found in the definition file.</para>
+    <para>In its left box, this dialog displays all ranks found in the definition file grouped by windchest. The tree can unfold down to the individual pipe level. Within  windchests, the ranks are ordered as found in the definition file.</para>
     <para>When the tree is unfolded down to the pipe level, the dialog displays the MIDI number assigned to the sample file, along with the file's path.</para>
-    <para>The right frames display controls which allow to fine set features at the stop or pipe level.</para>
-    <para>Settings can be modified at the organ, stop and individual pipe level. The windchest level is only a placeholder, and any settings modified at that level are ignored.</para>
-    <para>At load time, the customized settings are applied using these precedence rules:</para>
+    <para>The right frames display controls which allow to fine set features at the rank or pipe level.</para>
+    <para>Settings can be modified at the organ, rank and individual pipe level. The windchest level is only used as logical grouping, and any settings modified at that level are ignored.</para>
+    <para>Some setting are cumulative from the organ level down to the pipe level: the effective setting value applied to the individual pipe is calculated from values at all levels.</para>
+    <para>For the other (non cumulative) settings, the effective setting value is applied to the individual pipe using these precedence rules:</para>
     <itemizedlist>
       <listitem>
-        <para>Organ-level settings are applied first. If there are no customized settings at lower levels, organ-level settings are inherited by all lower levels.</para>
+        <para>If a pipe-level value is defined, use it</para>
       </listitem>
       <listitem>
-        <para>Stop-level settings  overwrite their organ-level counterpart. Likewise, if there are no customized settings at individual pipe level, all pipes within a stop inherit the stop-level settings.</para>
+        <para>Else if a rank-level value is defined, use it</para>
       </listitem>
       <listitem>
-        <para>Pipe-level settings overwrite their organ-level or stop-level settings, allowing the user to tweak the individual pipe to taste.</para>
+        <para>Else if an organ-level value is defined, use it</para>
+      </listitem>
+      <listitem>
+	<para>Else use the value defined in the Midi &amp; Audio Settings dialog <link linkend="optionstab">Options</link> tab if any.</para>
       </listitem>
     </itemizedlist>
     <note>
     <para>Select the element you wish to customize. The right frames are populated with values picked from the organ definition file or the current settings file if the latter exists.</para>
+    <para>It is possible to select multiple elements at once, to e.g. update one setting of multiple elements to the same value in a single operation.</para>
     <para>
-      <emphasis>To the sample set designer</emphasis>: Fine customizations to the sample set are <emphasis role="bold">NOT</emphasis> copied to the organ definition file. They need to be manually merged from the settings file to the organ definition file.
+      <emphasis>To the sample set designer</emphasis>: Fine customizations to the sample set, when made in the <emphasis>Organ Settings</emphasis> dialog, are <emphasis role="bold">NOT</emphasis> copied to the organ definition file. If they were designed to be integral part of the sample set, these customizations need to be manually merged from the settings file to the organ definition file.
     </para>
     </note>
     <sect1>
       <title>Settings frame</title>
       <sect2>
         <title>Amplitude</title>
-        <para>Linear amplitude scale factor applied to the element</para>
+	<para>Linear amplitude scale factor applied to the element. The allowed range is {0, +1000}. Amplitude is cumulative from organ level down to pipe level.</para>
         <para>
-        <emphasis>Note</emphasis>: A 100 value means that this setting value is inherited from the upper level.
-		</para>
+        <emphasis>Note</emphasis>: A 100 value means that this setting value has no effect on the effective amplitude.
+	</para>
       </sect2>
       <sect2>
         <title>Gain</title>
-        <para>Amplitude scale factor in dB applied to the selected element</para>
-        <para><emphasis>Note</emphasis>: A 0 value means that this setting value is inherited from the upper level.</para>
+	<para>Amplitude scale factor in dB applied to the selected element. The allowed range is {-120, +40}. Gain is cumulative from organ level down to pipe level.</para>
+        <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective gain.</para>
       </sect2>
       <sect2>
         <title>Tuning</title>
-        <para>This spinner allows to fine tune the pitch of the element. The unit is 1/100th of a semitone, and the allowed range is {-1200, +1200}.</para>
-        <para><emphasis>Note</emphasis>: A 0 value means that this setting value is inherited from the upper level.</para>
+        <para>This spinner allows to fine tune the pitch of the element. The unit is 1/100th of a semitone, and the allowed range is {-1200, +1200}. Tuning is cumulative from organ level down to pipe level.</para>
+        <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective tuning.</para>
       </sect2>
       <sect2>
         <title>Audio Group</title>
         <para>This dropdown selects which audio group the sound from the selected element is routed to</para>
-		<para><emphasis>Note</emphasis>: A blank value means that this setting value is inherited from the upper level.</para>
+	<para><emphasis>Note</emphasis>: A blank value means that this setting value is fetched from the upper level. If the effective audio group is still blank, the pipe is routed to the default audio group.</para>
       </sect2>
     </sect1>
     <sect1>
@@ -1794,18 +1798,17 @@ Variable savings up to 50%
       <sect2>
         <title>Sample size</title>
         <para>This dropdown list allows to overwrite its counterpart at the parent level.</para>
-        <para>The <emphasis>Parent default</emphasis> value means that the value is inherited from the parent level.</para>
+        <para>The <emphasis>Parent default</emphasis> value means that the value is fetched from the parent level.</para>
         <para>See <link linkend="samplesize">Sample size</link> in the <emphasis>Midi &amp; Audio Settings</emphasis> dialog for further detail on this topic.</para>
       </sect2>
       <sect2>
         <title>Lossless Compression</title>
         <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
         <variablelist>
-        <?dbhtml term-presentation="bold" ?>
           <varlistentry>
             <term>Parent default</term>
             <listitem>
-              <para>Means that the value is inherited from the parent level.</para>
+              <para>Means that the value is fetched from the parent level.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -1827,11 +1830,10 @@ Variable savings up to 50%
         <title>Sample channels</title>
         <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
         <variablelist>
-        <?dbhtml term-presentation="bold" ?>
           <varlistentry>
             <term>Parent default</term>
             <listitem>
-              <para>Means that the value is inherited from the parent level.</para>
+              <para>Means that the value is fetched from the parent level.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -1859,11 +1861,10 @@ Variable savings up to 50%
         <title>Loop loading</title>
         <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
         <variablelist>
-        <?dbhtml term-presentation="bold" ?>
           <varlistentry>
             <term>Parent default</term>
             <listitem>
-              <para>Means that the value is inherited from the parent level.</para>
+              <para>Means that the value is fetched from the parent level.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -1891,11 +1892,10 @@ Variable savings up to 50%
         <title>Attack loading</title>
         <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
         <variablelist>
-        <?dbhtml term-presentation="bold" ?>
           <varlistentry>
             <term>Parent default</term>
             <listitem>
-              <para>Means that the value is inherited from the parent level.</para>
+              <para>Means that the value is fetched from the parent level.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -1917,11 +1917,10 @@ Variable savings up to 50%
         <title>Release loading</title>
         <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
         <variablelist>
-        <?dbhtml term-presentation="bold" ?>
           <varlistentry>
             <term>Parent default</term>
             <listitem>
-              <para>Means that the value is inherited from the parent level.</para>
+              <para>Means that the value is fetched from the parent level.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -1944,7 +1943,6 @@ Variable savings up to 50%
       <title>Buttons row</title>
       <para>These buttons are used to drive the dialog and always act on the selected element.</para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Default</term>
           <listitem>
@@ -1972,14 +1970,14 @@ or closing the dialog with the <emphasis role="bold">OK</emphasis> button.
     <sect1>
       <title>Tuning and Voicing frame</title>
       <para>This frame displays a single check box labeled <emphasis>Ignore pitch info in organ samples wav files</emphasis>.</para>
-      <para>This feature is closely related to the temperament feature which assumes, when the samples are dynamically retuned after a new temperament is applied, that pitch information was embedded in each sample file. If the sample set designer has <emphasis role="bold">NOT</emphasis> embedded pitch information in each sample file, the result is weird and unpredictable.</para>
-      <para>When checked, this box instructs GrandOrgue to ignore any pitch information found is sample files while retuning the organ to another temperament than the original. This way the retuned sample set behaves as expected.</para>
+      <para>This feature is closely related to the temperament feature which assumes, when the samples are dynamically retuned after a new temperament is applied, that pitch information was embedded in each sample file <emphasis>or in the pipe entry within the Organ Definition File</emphasis>. If the sample set designer has <emphasis role="bold">NOT</emphasis> embedded pitch information, the result is weird and unpredictable.</para>
+      <para>When checked, this box instructs GrandOrgue to ignore any pitch information found is sample files while retuning the organ to another temperament than the original. This way the retuned sample set behaves as expected. In this case, GrandOrgue assumes that the samples are tuned to equal temperament.</para>
     </sect1>
     <sect1>
       <title>Distribute audio groups button</title>
       <para>This button allows to spread the selected elements over selected audio groups. The elements are spread over audio groups using a round-robin scheme.</para>
       <para>Select the elements to spread, click the button. A dialog opens where the desired audio groups can be selected by checking their box.
-      <mediaobject><imageobject><imagedata fileref="distribute_audio_groups.png"/></imageobject></mediaobject>
+      <mediaobject><imageobject><imagedata scalefit="1" width="100%" fileref="distribute_audio_groups.png"/></imageobject></mediaobject>
       Push the <emphasis role="bold">OK</emphasis> button. The modification is applied.
       </para>
       <caution>
@@ -2127,7 +2125,6 @@ less will be saved because the compression is much less effective on
 monoaural inputs.
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Memory</term>
           <listitem>
@@ -2159,7 +2156,6 @@ samples (reverberation tails) are faded out in order to conserve
 polyphony.
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Memory</term>
           <listitem>
@@ -2191,7 +2187,6 @@ sample cross fades in. Selecting this option will make a best effort
 to phase align the release sample to help minimize this effect.
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Memory</term>
           <listitem>
@@ -2223,7 +2218,6 @@ normally affect the reverberation, and therefore it is highly
 recommended to leave this option engaged.
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Memory</term>
           <listitem>
@@ -2369,7 +2363,6 @@ used for retuning an organ to other temperaments.
 The following key codes for shortcut keys are supported by GO:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>8</term>
           <listitem>
@@ -2772,7 +2765,6 @@ therefore the section includes all display metrics
 attributes. Additionally it includes the following attributes:
      </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>ChurchName</term>
           <listitem>
@@ -3043,7 +3035,6 @@ It is possible to display various setter elements on the panels.  The
 attributes depend on the function:
      </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Swell</term>
           <listitem>
@@ -3289,7 +3280,6 @@ exact order can be specified via an attribute.
 It has the following attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>DispScreenSizeHoriz</term>
           <listitem>
@@ -3611,7 +3601,6 @@ attributes describing its function.  It it is displayed, it contains
 additional gui attributes.
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Name</term>
           <listitem>
@@ -3654,7 +3643,6 @@ If the enclosure is displayed, it contains the following gui
 attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>DispLabelColour</term>
           <listitem>
@@ -3878,7 +3866,6 @@ used for text breaking.
 This object is used to store one combination It has the following attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Protected</term>
           <listitem>
@@ -4020,7 +4007,6 @@ divisional on all other manuals. Additionally, it has the following
 attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>BiDirectionalCoupling</term>
           <listitem>
@@ -4057,7 +4043,6 @@ A divisional is a pushbutton object. Additionally, it has the
 following attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Protected</term>
           <listitem>
@@ -4156,7 +4141,6 @@ the logical keys can only be triggered by (octave) coupler. It
 contains the following non-gui attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Name</term>
           <listitem>
@@ -4338,7 +4322,6 @@ will be marked as <emphasis>KEYTYPE</emphasis>.
 If the manual is displayed, it contains the following gui attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>PositionX</term>
           <listitem>
@@ -4565,7 +4548,6 @@ image. It is tiled, if the image is smaller than the label area. A
 label has the following attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>FreeXPlacement</term>
           <listitem>
@@ -4794,7 +4776,6 @@ Images objects allow to display an image on a panel. They tile the images,
 if it is bigger then image size. It has the following attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Image</term>
           <listitem>
@@ -4876,7 +4857,6 @@ Button objects are defined on the main panel. Their section name
 is based on their function. They share the following common properties:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Name</term>
           <listitem>
@@ -4939,7 +4919,6 @@ key code of the shortcut key.
 The GUI properties of button objects are:
 </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>DisplayAsPiston</term>
           <listitem>
@@ -5236,7 +5215,6 @@ Drawstop objects are buttons with toogle functions. They contain these
 additional non-GUI properties:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Function</term>
           <listitem>
@@ -5299,7 +5277,6 @@ Coupler are drawstop objects. The forward key pressed from one manual
 to other manuals/keys. They have the following additions attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>UnisonOff</term>
           <listitem>
@@ -5415,7 +5392,6 @@ A rank represents a row of pipes. It can be either be part of a stop
 section or appear in its own section.
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Name</term>
           <listitem>
@@ -5533,7 +5509,6 @@ The attribute of each pipe are prefixed with
 attributes are:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Pipe999Percussive</term>
           <listitem>
@@ -5861,7 +5836,6 @@ Only the accessible pipes can be triggered from the manual. A stop has
 the following additions attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>NumberOfRanks</term>
           <listitem>
@@ -5953,7 +5927,6 @@ A piston is a pushbutton which trigger other elements. It contains the
 following additional attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>ObjecType</term>
           <listitem>
@@ -5990,7 +5963,6 @@ referenced manual or a valid global tremulant number.
 Trelmulants are drawstop objects with the following additions attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>TremulantType</term>
           <listitem>
@@ -6006,7 +5978,6 @@ wave samples).
 Synthesised tremulants have the following attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Period</term>
           <listitem>
@@ -6048,7 +6019,6 @@ Windchest objects represent a windchest, on which pipes of ranks are placed.
 It has the following attributes:
       </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Comment</term>
           <listitem>
@@ -6116,7 +6086,6 @@ section includes all display metrics attributes. Additionally it
 includes the following attributes:
 </para>
       <variablelist>
-      <?dbhtml term-presentation="bold" ?>
         <varlistentry>
           <term>Name</term>
           <listitem>
