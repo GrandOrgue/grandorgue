@@ -72,7 +72,7 @@ GOSoundProvider* GOrguePipe::GetSoundProvider()
 
 void GOrguePipe::SetOn()
 {
-	m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, m_Velocity);
+	m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, m_Velocity, 0);
 	if (m_Sampler)
 		m_Instances++;
 	if (GetSoundProvider()->IsOneshot())

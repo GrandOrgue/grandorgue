@@ -115,7 +115,7 @@ void GOrgueTremulant::ChangeState(bool on)
 		if (on)
 		{
 			assert(m_SamplerGroupID < 0);
-			m_PlaybackHandle = m_organfile->StartSample(m_TremProvider, m_SamplerGroupID, 0, 0x7f);
+			m_PlaybackHandle = m_organfile->StartSample(m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0);
 			on = (m_PlaybackHandle != NULL);
 		}
 		else
@@ -144,7 +144,7 @@ void GOrgueTremulant::PreparePlayback()
 	if (IsActive() && m_TremulantType == GOSynthTrem)
 	{
 		assert(m_SamplerGroupID < 0);
-		m_PlaybackHandle = m_organfile->StartSample(m_TremProvider, m_SamplerGroupID, 0, 0x7f);
+		m_PlaybackHandle = m_organfile->StartSample(m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0);
 	}
 	if (m_TremulantType == GOWavTrem)
 	{

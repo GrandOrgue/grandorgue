@@ -55,7 +55,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_Reverb(0),
 	m_Gain(1),
 	m_SampleRate(0),
-	m_CurrentTime(0),
+	m_CurrentTime(1),
 	m_SamplerPool(),
 	m_AudioGroupCount(1),
 	m_WindchestCount(0),
@@ -109,7 +109,7 @@ void GOSoundEngine::Reset()
 		m_ReverbEngine[i]->Reset();
 
 	m_SamplerPool.ReturnAll();
-	m_CurrentTime = 0;
+	m_CurrentTime = 1;
 	ResetDoneFlags();
 }
 
@@ -219,8 +219,8 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsi
 
 	sampler->sampler_group_id = sampler_group_id;
 	sampler->audio_group_id = audio_group;
-	sampler->stop = false;
-	sampler->new_attack = false;
+	sampler->stop = 0;
+	sampler->new_attack = 0;
 
 	{
 		GOMutexLocker locker(state->lock);
@@ -342,7 +342,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				)
 				sampler->fader.StartDecay(-13); /* Approx 0.37s at 44.1kHz */
 
-			if (sampler->stop && m_CurrentTime - sampler->time <= block_time)
+			if (sampler->stop && sampler->stop <= m_CurrentTime && sampler->stop - sampler->time <= block_time)
 				sampler->pipe = NULL;
 
 			/* The decoded sampler frame will contain values containing
@@ -368,7 +368,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			for(unsigned i = 0; i < n_frames * 2; i++)
 				output_buffer[i] += temp[i];
 
-			if (sampler->stop)
+			if (sampler->stop && sampler->stop <= m_CurrentTime)
 			{
 				CreateReleaseSampler(sampler);
 
@@ -380,12 +380,12 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				 * zero. */
 				sampler->fader.StartDecay(-CROSSFADE_LEN_BITS);
 				sampler->is_release = true;
-				sampler->stop = false;
+				sampler->stop = 0;
 			} 
-			else if (sampler->new_attack)
+			else if (sampler->new_attack && sampler->new_attack <= m_CurrentTime)
 			{
 				SwitchAttackSampler(sampler);
-				sampler->new_attack = false;
+				sampler->new_attack = 0;
 				changed_sampler = true;
 			}
 		}
@@ -716,7 +716,7 @@ int GOSoundEngine::GetSamples
 }
 
 
-SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id, unsigned audio_group, unsigned velocity)
+SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay)
 {
 	const GOAudioSection* attack = pipe->GetAttack(velocity);
 	if (!attack || attack->GetChannels() == 0)
@@ -733,7 +733,8 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 			);
 		const float playback_gain = pipe->GetGain() * attack->GetNormGain();
 		sampler->fader.NewConstant(playback_gain);
-		sampler->time = m_CurrentTime;
+		sampler->delay = (delay * m_SampleRate) / (1000 * BLOCKS_PER_FRAME);
+		sampler->time = m_CurrentTime + sampler->delay;
 		sampler->fader.SetVelocityVolume(sampler->pipe->GetVelocityVolume(sampler->velocity));
 		StartSampler(sampler, sampler_group_id, audio_group);
 	}
@@ -932,7 +933,7 @@ void GOSoundEngine::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handl
 	if (pipe != handle->pipe)
 		return;
 
-	handle->stop = true;
+	handle->stop = m_CurrentTime + handle->delay;
 }
 
 void GOSoundEngine::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle)
@@ -948,7 +949,7 @@ void GOSoundEngine::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE han
 	if (pipe != handle->pipe)
 		return;
 
-	handle->new_attack = true;
+	handle->new_attack = m_CurrentTime + handle->delay;
 }
 
 void GOSoundEngine::UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity)

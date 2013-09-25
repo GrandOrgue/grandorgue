@@ -39,9 +39,10 @@ typedef struct GO_SAMPLER_T
 	GOSoundFader               fader;
 	unsigned                   time;
 	unsigned                   velocity;
+	unsigned                   delay;
 	/* current index of the current block into this sample */
-	volatile bool              stop;
-	volatile bool              new_attack;
+	volatile unsigned long     stop;
+	volatile unsigned long     new_attack;
 	bool                       is_release;
 } GO_SAMPLER;
 
