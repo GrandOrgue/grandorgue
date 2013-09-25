@@ -5,7 +5,7 @@ project(GrandOrgue CXX C)
 # Build configuration options
 option(UNICODE                "Build a Unicode configuration" OFF)
 option(RTAUDIO_USE_CORE       "Enable RtAudio support for Core Audio (Rt and PortAudio - OS X only)" ON)
-option(RTAUDIO_USE_JACK       "Enable RtAudio support for Jack (Rt and PortAudio - Linux and OS X only)" ON)
+option(RTAUDIO_USE_JACK       "Enable RtAudio support for Jack (Rt and PortAudio)" ON)
 option(RTAUDIO_USE_OSS        "Enable RtAudio support for OSS (Rt and PortAudio - Linux only)" OFF)
 option(RTAUDIO_USE_ALSA       "Enable RtAudio support for ALSA (Rt and PortAudio - Linux only)" ON)
 option(RTAUDIO_USE_DSOUND     "Enable RtAudio support for DirectSound (Rt and PortAudio - Windows only)" ON)
