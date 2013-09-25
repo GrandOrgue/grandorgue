@@ -14,7 +14,7 @@ option(RTAUDIO_USE_WMME       "Enable RtAudio support for WMME (PortAudio only -
 option(RTAUDIO_USE_WDMKS      "Enable RtAudio support for WDMKS (PortAudio only - Windows only)" ON)
 option(RTAUDIO_USE_WASAPI     "Enable RtAudio support for WASAPI (PortAudio only - Windows only)" ON)
 option(RTMIDI_USE_CORE        "Enable RtMidi support for Core Audio (OS X only)" ON)
-option(RTMIDI_USE_JACK        "Enable RtMidi support for Jack (Linux only)" ON)
+option(RTMIDI_USE_JACK        "Enable RtMidi support for Jack" ON)
 option(RTMIDI_USE_ALSA        "Enable RtMidi support for ALSA (Linux only)" ON)
 option(RTMIDI_USE_MM          "Enable RtMidi support for MM (Windows only)" ON)
 option(INSTALL_DEMO           "Install demo sampleset" ON)

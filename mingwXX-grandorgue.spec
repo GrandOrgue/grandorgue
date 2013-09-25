@@ -35,6 +35,8 @@ BuildRequires:  mingw%{_mingw_bitsize}-cross-gcc-c++
 BuildRequires:  mingw%{_mingw_bitsize}-cross-binutils
 BuildRequires:  mingw32-cross-nsis
 BuildRequires:  mingw%{_mingw_bitsize}-wxwidgets-devel
+BuildRequires:  mingw%{_mingw_bitsize}-jack
+BuildRequires:  mingw%{_mingw_bitsize}-jack-devel
 URL:            http://sourceforge.net/projects/ourorgan/
 License:        GPL-2.0+
 Group:          Productivity/Multimedia/Sound/Midi
