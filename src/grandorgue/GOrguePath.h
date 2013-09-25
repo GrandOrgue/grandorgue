@@ -29,4 +29,7 @@ void GOCreateDirectory(wxString path);
 wxString GONormalizePath(wxString path);
 wxString GOGetPath(wxString path);
 
+void GOSyncDirectory(wxString path);
+bool GORenameFile(wxString from, wxString to);
+
 #endif

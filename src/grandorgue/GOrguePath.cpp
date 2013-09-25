@@ -21,6 +21,7 @@
 
 #include "GOrguePath.h"
 #include <wx/filename.h>
+#include <wx/file.h>
 
 wxString GOCreateFilename(wxString path, wxString file)
 {
@@ -60,4 +61,27 @@ wxString GOGetPath(wxString path)
 {
 	wxFileName name(GONormalizePath(path));
 	return name.GetPath();
+}
+
+void GOSyncDirectory(wxString path)
+{
+	wxFile dir(path, wxFile::read);
+	wxFsync(dir.fd());
+}
+
+bool GORenameFile(wxString from, wxString to)
+{
+	wxFileName name(to);
+	if (::wxFileExists(to) && !::wxRemoveFile(to))
+	{
+		wxLogError(_("Could not remove '%s'"), to.c_str());
+		return false;
+	}
+	if (!wxRenameFile(from, to))
+	{
+		wxLogError(_("Could not write to '%s'"), to.c_str());
+		return false;
+	}
+	GOSyncDirectory(name.GetPath());
+	return true;
 }
