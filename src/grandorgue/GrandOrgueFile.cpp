@@ -839,16 +839,8 @@ void GrandOrgueFile::Save(const wxString& file)
 		return;
 	}
 
-	if (::wxFileExists(fn) && !::wxRemoveFile(fn))
-	{
-		wxLogError(_("Could not write to '%s'"), fn.c_str());
+	if (!GORenameFile(tmp_name, fn))
 		return;
-	}
-	if (!wxRenameFile(tmp_name, fn))
-	{
-		wxLogError(_("Could not write to '%s'"), fn.c_str());
-		return;
-	}
 }
 
 void GrandOrgueFile::SetVolume(int volume)
