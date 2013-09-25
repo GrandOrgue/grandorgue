@@ -36,6 +36,8 @@ GOrguePipeConfig::GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCa
 	m_DefaultGain(0),
 	m_Tuning(0),
 	m_DefaultTuning(0),
+	m_Delay(0),
+	m_DefaultDelay(0),
 	m_BitsPerSample(-1),
 	m_Compress(-1),
 	m_Channels(-1),
@@ -56,6 +58,8 @@ void GOrguePipeConfig::Load(GOrgueConfigReader& cfg, wxString group, wxString pr
 	m_Gain = cfg.ReadFloat(CMBSetting, group, prefix + wxT("UserGain"), -120, 40, false, m_DefaultGain);
 	m_DefaultTuning = cfg.ReadFloat(ODFSetting, group, prefix + wxT("PitchTuning"), -1200, 1200, false, 0);
 	m_Tuning = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Tuning"), -1200, 1200, false, m_DefaultTuning);
+	m_DefaultDelay = cfg.ReadInteger(ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
+	m_Delay = cfg.ReadInteger(CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
 	m_BitsPerSample = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("BitsPerSample"), -1, 24, false, -1);
 	if (m_BitsPerSample != 8 && m_BitsPerSample != 12 && m_BitsPerSample != 16 && m_BitsPerSample != 20 && m_BitsPerSample != 24)
 		m_BitsPerSample = -1;
@@ -75,6 +79,7 @@ void GOrguePipeConfig::Save(GOrgueConfigWriter& cfg)
 	cfg.Write(m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
 	cfg.Write(m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
 	cfg.Write(m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
+	cfg.Write(m_Group, m_NamePrefix + wxT("Delay"), (int)m_Delay);
 	cfg.Write(m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
 	cfg.Write(m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
 	cfg.Write(m_Group, m_NamePrefix + wxT("Channels"), m_Channels);
@@ -148,6 +153,22 @@ void GOrguePipeConfig::SetTuning(float cent)
 	m_Tuning = cent;
 	m_OrganFile->Modified();
 	m_Callback->UpdateTuning();
+}
+
+unsigned GOrguePipeConfig::GetDelay()
+{
+	return m_Delay;
+}
+
+unsigned GOrguePipeConfig::GetDefaultDelay()
+{
+	return m_DefaultDelay;
+}
+
+void GOrguePipeConfig::SetDelay(unsigned delay)
+{
+	m_Delay = delay;
+	m_OrganFile->Modified();
 }
 
 int  GOrguePipeConfig::GetBitsPerSample()

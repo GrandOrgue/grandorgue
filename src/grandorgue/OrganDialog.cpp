@@ -78,6 +78,8 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_SPIN(ID_EVENT_GAIN_SPIN, OrganDialog::OnGainSpinChanged)
 	EVT_TEXT(ID_EVENT_TUNING, OrganDialog::OnTuningChanged)
 	EVT_SPIN(ID_EVENT_TUNING_SPIN, OrganDialog::OnTuningSpinChanged)
+	EVT_TEXT(ID_EVENT_DELAY, OrganDialog::OnDelayChanged)
+	EVT_SPIN(ID_EVENT_DELAY_SPIN, OrganDialog::OnDelaySpinChanged)
 	EVT_TEXT(ID_EVENT_AUDIO_GROUP, OrganDialog::OnAudioGroupChanged)
 	EVT_BUTTON(wxID_OK, OrganDialog::OnOK)
 	EVT_BUTTON(ID_EVENT_AUDIO_GROUP_ASSISTANT, OrganDialog::OnAudioGroupAssitant)
@@ -146,6 +148,15 @@ OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
 	box2->Add(m_TuningSpin);
 	grid->Add(box2);
 	m_TuningSpin->SetRange(-1200, 1200);
+
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Tracker (ms):")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	box2 = new wxBoxSizer(wxHORIZONTAL);
+	m_Delay = new wxTextCtrl(this, ID_EVENT_DELAY, wxEmptyString);
+	m_DelaySpin = new wxSpinButton(this, ID_EVENT_DELAY_SPIN); 
+	box2->Add(m_Delay);
+	box2->Add(m_DelaySpin);
+	grid->Add(box2);
+	m_DelaySpin->SetRange(0, 10000);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Audio group:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	m_AudioGroup = new wxComboBox(this, ID_EVENT_AUDIO_GROUP, wxEmptyString);
@@ -305,6 +316,9 @@ void OrganDialog::Load()
 		m_Tuning->ChangeValue(wxEmptyString);
 		m_Tuning->Disable();
 		m_TuningSpin->Disable();
+		m_Delay->ChangeValue(wxEmptyString);
+		m_Delay->Disable();
+		m_DelaySpin->Disable();
 		m_AudioGroup->Disable();
 		m_BitsPerSample->Disable();
 		m_Compress->Disable();
@@ -329,6 +343,8 @@ void OrganDialog::Load()
 			m_Gain->ChangeValue(wxEmptyString);
 		if (!m_Tuning->IsModified())
 			m_Tuning->ChangeValue(wxEmptyString);
+		if (!m_Delay->IsModified())
+			m_Delay->ChangeValue(wxEmptyString);
 		if (m_AudioGroup->GetValue() == m_LastAudioGroup)
 		{
 			m_AudioGroup->SetValue(wxT(" "));
@@ -383,6 +399,8 @@ void OrganDialog::Load()
 	m_GainSpin->Enable();
 	m_Tuning->Enable();
 	m_TuningSpin->Enable();
+	m_Delay->Enable();
+	m_DelaySpin->Enable();
 	m_AudioGroup->Enable();
 	m_BitsPerSample->Enable();
 	m_Compress->Enable();
@@ -396,6 +414,7 @@ void OrganDialog::Load()
 	float amplitude = m_Last->config->GetAmplitude();
 	float gain = m_Last->config->GetGain();
 	float tuning = m_Last->config->GetTuning();
+	unsigned delay = m_Last->config->GetDelay();
 
 	if (entries.size() == 1)
 		m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
@@ -406,6 +425,9 @@ void OrganDialog::Load()
 	if (entries.size() == 1)
 		m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
 	m_TuningSpin->SetValue(tuning);
+	if (entries.size() == 1)
+		m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
+	m_DelaySpin->SetValue(delay);
 	if (entries.size() == 1)
 	{
 		m_AudioGroup->SetValue(m_Last->config->GetAudioGroup());
@@ -485,6 +507,21 @@ void OrganDialog::OnTuningChanged(wxCommandEvent &e)
 	Modified();
 }
 
+void OrganDialog::OnDelaySpinChanged(wxSpinEvent& e)
+{
+	m_Delay->ChangeValue(wxString::Format(wxT("%u"), (unsigned)m_DelaySpin->GetValue()));
+	m_Delay->MarkDirty();
+	Modified();
+}
+
+void OrganDialog::OnDelayChanged(wxCommandEvent &e)
+{
+	long delay;
+	if (m_Delay->GetValue().ToLong(&delay))
+		m_DelaySpin->SetValue(delay);
+	Modified();
+}
+
 void OrganDialog::OnAudioGroupChanged(wxCommandEvent &e)
 {
 	Modified();
@@ -534,6 +571,8 @@ bool OrganDialog::Changed()
 	if (m_Gain->IsModified())
 		changed = true;
 	if (m_Tuning->IsModified())
+		changed = true;
+	if (m_Delay->IsModified())
 		changed = true;
 	if (m_AudioGroup->GetValue() != m_LastAudioGroup)
 		changed = true;
@@ -589,6 +628,7 @@ void OrganDialog::FillTree()
 void OrganDialog::OnEventApply(wxCommandEvent &e)
 {
 	double amp, gain, tuning;
+	long delay;
 
 	wxArrayTreeItemIds entries;
 	m_Tree->GetSelections(entries);
@@ -617,6 +657,14 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		return;
 	}
 
+	if (!m_Delay->GetValue().ToLong(&delay) &&
+	    (m_Delay->IsModified() &&
+	     (delay < 0 || delay > 10000)))
+	{
+		wxMessageBox(_("Tracker delay is invalid"), _("Error"), wxOK | wxICON_ERROR, NULL);
+		return;
+	}
+
 	for(unsigned i = 0; i < entries.size(); i++)
 	{
 		OrganTreeItemData* e = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
@@ -628,6 +676,8 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 			e->config->SetGain(gain);
 		if (m_Tuning->IsModified())
 			e->config->SetTuning(tuning);
+		if (m_Delay->IsModified())
+			e->config->SetDelay(delay);
 		if (m_AudioGroup->GetValue() != m_LastAudioGroup)
 			e->config->SetAudioGroup(m_AudioGroup->GetValue().Trim());
 		if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
@@ -652,6 +702,8 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
 	if (m_Tuning->IsModified())
 		m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
+	if (m_Delay->IsModified())
+		m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
 	m_LastAudioGroup = m_AudioGroup->GetValue();
 	m_LastBitsPerSample = m_BitsPerSample->GetSelection();
 	m_LastCompress = m_Compress->GetSelection();
@@ -680,6 +732,7 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 		e->config->SetAmplitude(e->config->GetDefaultAmplitude());
 		e->config->SetGain(e->config->GetDefaultGain());
 		e->config->SetTuning(e->config->GetDefaultTuning());
+		e->config->SetDelay(e->config->GetDefaultDelay());
 		e->config->SetAudioGroup(wxEmptyString);
 		e->config->SetBitsPerSample(-1);
 		e->config->SetCompress(-1);

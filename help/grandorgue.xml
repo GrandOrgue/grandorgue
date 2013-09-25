@@ -3591,6 +3591,15 @@ extra piston block.
      </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>TrackerDelay</term>
+          <listitem>
+            <para>
+(integer 0 - 10000, default: 0) Delay introduced by the Tracker applied to
+the whole organ.
+     </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
@@ -5447,6 +5456,15 @@ of cents.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>TrackerDelay</term>
+          <listitem>
+            <para>
+(integer 0 - 10000, default: 0) Delay introduced by the Tracker for
+that rank.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>HarmonicNumber</term>
           <listitem>
             <para>
@@ -5542,6 +5560,15 @@ the pipe (in addition to the organ/rank factor). 0 means no change.
             <para>
 (float -1200-1200, default: 0) Retune this pipe the specified
 number of cents (in addition to the organ/rank factor).
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999TrackerDelay</term>
+          <listitem>
+            <para>
+(integer 0 - 10000, default: 0) Delay introduced by the Tracker for
+that pipe.
      </para>
           </listitem>
         </varlistentry>

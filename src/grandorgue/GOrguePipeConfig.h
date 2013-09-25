@@ -50,6 +50,8 @@ private:
 	float m_DefaultGain;
 	float m_Tuning;
 	float m_DefaultTuning;
+	unsigned m_Delay;
+	unsigned m_DefaultDelay;
 	int m_BitsPerSample;
 	int m_Compress;
 	int m_Channels;
@@ -74,6 +76,10 @@ public:
 	float GetTuning();
 	float GetDefaultTuning();
 	void SetTuning(float cent);
+
+	unsigned GetDelay();
+	unsigned GetDefaultDelay();
+	void SetDelay(unsigned delay);
 
 	const wxString& GetAudioGroup();
 	void SetAudioGroup(const wxString& str);
