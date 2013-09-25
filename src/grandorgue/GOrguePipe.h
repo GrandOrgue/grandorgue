@@ -103,6 +103,8 @@ public:
 	float GetEffectiveTuning();
 	void UpdateTuning();
 
+	unsigned GetEffectiveDelay();
+
 	wxString GetEffectiveAudioGroup();
 	void UpdateAudioGroup();
 

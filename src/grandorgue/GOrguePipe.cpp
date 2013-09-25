@@ -72,7 +72,7 @@ GOSoundProvider* GOrguePipe::GetSoundProvider()
 
 void GOrguePipe::SetOn()
 {
-	m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, m_Velocity, 0);
+	m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, m_Velocity, GetEffectiveDelay());
 	if (m_Sampler)
 		m_Instances++;
 	if (GetSoundProvider()->IsOneshot())
@@ -182,6 +182,11 @@ float GOrguePipe::GetEffectiveTuning()
 void GOrguePipe::UpdateTuning()
 {
 	m_SoundProvider.SetTuning(GetEffectiveTuning());
+}
+
+unsigned GOrguePipe::GetEffectiveDelay()
+{
+	return m_OrganFile->GetPipeConfig().GetDelay() + m_Rank->GetPipeConfig().GetDelay() + m_PipeConfig.GetDelay();
 }
 
 wxString GOrguePipe::GetEffectiveAudioGroup()
