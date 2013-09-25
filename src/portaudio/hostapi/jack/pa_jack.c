@@ -52,6 +52,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <pthread.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <errno.h>  /* EBUSY */
@@ -84,7 +85,7 @@ static const char* clientName_ = "PortAudio";
         PaError paErr; \
         if( (paErr = (expr)) < paNoError ) \
         { \
-            if( (paErr) == paUnanticipatedHostError && pthread_self() == mainThread_ ) \
+            if( (paErr) == paUnanticipatedHostError && pthread_equal( pthread_self(), mainThread_ )) \
             { \
                 const char *err = jackErr_; \
                 if (! err ) err = "unknown error"; \
@@ -100,7 +101,7 @@ static const char* clientName_ = "PortAudio";
     do { \
         if( (expr) == 0 ) \
         { \
-            if( (code) == paUnanticipatedHostError && pthread_self() == mainThread_ ) \
+            if( (code) == paUnanticipatedHostError && pthread_equal( pthread_self(), mainThread_ )) \
             { \
                 const char *err = jackErr_; \
                 if (!err) err = "unknown error"; \
@@ -648,7 +649,7 @@ static void UpdateSampleRate( PaJackStream *stream, double sampleRate )
 
 static void JackErrorCallback( const char *msg )
 {
-    if( pthread_self() == mainThread_ )
+    if( pthread_equal( pthread_self(), mainThread_ ))
     {
         assert( msg );
         jackErr_ = realloc( jackErr_, strlen( msg ) + 1 );
