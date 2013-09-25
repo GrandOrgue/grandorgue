@@ -39,6 +39,8 @@ BuildRequires:  mingw%{_mingw_bitsize}-jack
 BuildRequires:  mingw%{_mingw_bitsize}-jack-devel
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx-devel
+BuildRequires:  mingw%{_mingw_bitsize}-pthreads
+BuildRequires:  mingw%{_mingw_bitsize}-pthreads-devel
 URL:            http://sourceforge.net/projects/ourorgan/
 License:        GPL-2.0+
 Group:          Productivity/Multimedia/Sound/Midi
