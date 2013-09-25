@@ -3025,6 +3025,15 @@ number of cents.
      </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>TrackerDelay</term>
+          <listitem>
+            <para>
+(integer 0 - 10000, default: 0) Delay introduced by the tracker applied to
+the whole organ.
+     </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
@@ -3588,15 +3597,6 @@ extra piston block.
           <listitem>
             <para>
 (integer 1-500, default: 12) Width of one manual key used for layout calculation
-     </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>TrackerDelay</term>
-          <listitem>
-            <para>
-(integer 0 - 10000, default: 0) Delay introduced by the Tracker applied to
-the whole organ.
      </para>
           </listitem>
         </varlistentry>
@@ -5459,7 +5459,7 @@ of cents.
           <term>TrackerDelay</term>
           <listitem>
             <para>
-(integer 0 - 10000, default: 0) Delay introduced by the Tracker for
+(integer 0 - 10000, default: 0) Delay introduced by the tracker for
 that rank.
      </para>
           </listitem>
@@ -5567,7 +5567,7 @@ number of cents (in addition to the organ/rank factor).
           <term>Pipe999TrackerDelay</term>
           <listitem>
             <para>
-(integer 0 - 10000, default: 0) Delay introduced by the Tracker for
+(integer 0 - 10000, default: 0) Delay introduced by the tracker for
 that pipe.
      </para>
           </listitem>
