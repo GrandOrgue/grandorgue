@@ -8,6 +8,12 @@ if (WIN32)
 
    message(STATUS "  Building a Windows configuration")
    message(STATUS "    Support for MM            : ${RTMIDI_USE_MM}")
+   message(STATUS "    Support for Jack          : ${RTMIDI_USE_JACK}")
+
+   if (RTMIDI_USE_JACK)
+      add_definitions(-D__UNIX_JACK__)
+      target_link_libraries(RtMidi jack)
+   endif ()
 
    if (RTMIDI_USE_MM)
       add_definitions(-D__WINDOWS_MM__)
@@ -35,6 +41,12 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
    message(STATUS "  Building a Mac configuration")
    message(STATUS "    Support for CoreMIDI      : ${RTMIDI_USE_CORE}")
+   message(STATUS "    Support for Jack          : ${RTMIDI_USE_JACK}")
+
+   if (RTMIDI_USE_JACK)
+      add_definitions(-D__UNIX_JACK__)
+      target_link_libraries(RtMidi jackmp)
+   endif ()
 
    if (RTMIDI_USE_CORE)
       add_definitions(-D__MACOSX_CORE__)
