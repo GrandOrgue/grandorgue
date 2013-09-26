@@ -381,7 +381,7 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(GOrgueConfigReader& cfg, wxString g
 	}
 	if (element == ID_SETTER_PITCH_LABEL)
 	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel());
+		GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetPitchLabel());
 		PosDisplay->Load(cfg, group);
 		return PosDisplay;
 	}
