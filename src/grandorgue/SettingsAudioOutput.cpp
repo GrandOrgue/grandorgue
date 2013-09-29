@@ -436,6 +436,14 @@ void SettingsAudioOutput::OnOutputChange(wxCommandEvent& event)
 		index = wxGetSingleChoiceIndex(_("Change audio device"), _("Change audio device"), devs, this);
 		if (index == -1 || index == 0)
 			return;
+		std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG> audiodevs = m_Sound.GetAudioDevices();
+		std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>::iterator it = audiodevs.find(devs[index]);
+		unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
+		if (it != audiodevs.end() && channels > it->second.channels)
+		{
+			wxMessageBox(_("Too many audio channels configured for the new audio interface") , _("Error"), wxOK | wxICON_ERROR, NULL);
+			return;
+		}
 		data->name = devs[index];
 
 		wxString text;
