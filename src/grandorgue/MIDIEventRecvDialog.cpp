@@ -28,14 +28,14 @@ BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
 	EVT_BUTTON(ID_EVENT_NEW, MIDIEventRecvDialog::OnNewClick)
 	EVT_BUTTON(ID_EVENT_DELETE, MIDIEventRecvDialog::OnDeleteClick)
 	EVT_CHOICE(ID_EVENT_NO, MIDIEventRecvDialog::OnEventChange)
-	EVT_MIDI(MIDIEventRecvDialog::OnMidiEvent)
 END_EVENT_TABLE()
 
 
 MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* event):
 	wxPanel(parent, wxID_ANY),
 	m_original(event),
-	m_midi(*event)
+	m_midi(*event),
+	m_listener()
 {
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -166,11 +166,12 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	LoadEvent();
 
 	topSizer->Fit(this);
+	m_original->GetOrganfile()->AddMidiListener(&m_listener);
 }
 
 MIDIEventRecvDialog::~MIDIEventRecvDialog()
 {
-	m_original->GetOrganfile()->SetMidiListener(NULL);
+	m_listener.SetCallback(NULL);
 }
 
 void MIDIEventRecvDialog::DoApply()
@@ -285,16 +286,16 @@ void MIDIEventRecvDialog::OnListenClick(wxCommandEvent& event)
 	if (m_listen->GetValue())
 	{
 		this->SetCursor(wxCursor(wxCURSOR_WAIT));
-		m_original->GetOrganfile()->SetMidiListener(GetEventHandler());
+		m_listener.SetCallback(this);
 	}
 	else
 	{
-		m_original->GetOrganfile()->SetMidiListener(NULL);
+		m_listener.SetCallback(NULL);
 		this->SetCursor(wxCursor(wxCURSOR_ARROW));
 	}
 }
 
-void MIDIEventRecvDialog::OnMidiEvent(GOrgueMidiEvent& event)
+void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 {
 	if (event.GetMidiType() == MIDI_NONE)
 		return;
@@ -313,6 +314,6 @@ void MIDIEventRecvDialog::OnMidiEvent(GOrgueMidiEvent& event)
 	LoadEvent();
 
 	m_listen->SetValue(false);
-	m_original->GetOrganfile()->SetMidiListener(NULL);
+	m_listener.SetCallback(NULL);
 	this->SetCursor(wxCursor(wxCURSOR_ARROW));
 }

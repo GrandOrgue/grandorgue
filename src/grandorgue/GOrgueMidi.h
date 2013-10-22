@@ -30,13 +30,13 @@
 class RtMidiIn;
 class RtMidiOut;
 
+class GOrgueMidiListener;
 class GOrgueSettings;
 class GrandOrgueFile;
 class GOrgueMidiEvent;
 
-class GOrgueMidi
+class GOrgueMidi : public wxEvtHandler
 {
-
 private:
 
 	typedef struct {
@@ -63,12 +63,12 @@ private:
 	std::map<wxString, int> m_midi_out_device_map;
 	ptr_vector<MIDI_OUT_DEVICE> m_midi_out_devices;
 	int m_transpose;
-	bool m_listening;
-	wxEvtHandler* m_listen_evthandler;
+	std::vector<GOrgueMidiListener*> m_Listeners;
 
 	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE* device);
 
 	static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData);
+	void OnMidiEvent(GOrgueMidiEvent& event);
 
 public:
 
@@ -80,13 +80,15 @@ public:
 
 	void Send(GOrgueMidiEvent& e);
 
-	bool HasListener();
-	void SetListener(wxEvtHandler* event_handler);
 	std::map<wxString, int>& GetInDevices();
 	std::map<wxString, int>& GetOutDevices();
 	bool HasActiveDevice();
 	int GetTranspose();
 	void SetTranspose(int transpose);
+	void Register(GOrgueMidiListener* listener);
+	void Unregister(GOrgueMidiListener* listener);
+
+	DECLARE_EVENT_TABLE()
 };
 
 #endif /* GORGUEMIDI_H */

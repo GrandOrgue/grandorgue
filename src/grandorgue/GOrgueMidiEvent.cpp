@@ -111,7 +111,7 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg)
 	}
 }
 
-int GOrgueMidiEvent::GetEventCode()
+int GOrgueMidiEvent::GetEventCode() const
 {
 	switch(GetMidiType())
 	{

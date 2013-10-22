@@ -19,44 +19,46 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEDOCUMENT_H
-#define GORGUEDOCUMENT_H
-
-#include <wx/defs.h>
-#include <wx/docview.h>
-#include "GOLock.h"
 #include "GOrgueMidiListener.h"
+#include "GOrgueMidi.h"
+#include "GOrgueMidiEvent.h"
 
-class GOrgueMidiEvent;
-class GrandOrgueFile;
-class GOrgueSound;
-
-class GOrgueDocument : public wxDocument, protected GOrgueMidiCallback
+GOrgueMidiListener::GOrgueMidiListener() :
+	m_Callback(NULL),
+	m_midi(NULL)
 {
-private:
-	GOMutex m_lock;
-	bool m_OrganFileReady;
-	GrandOrgueFile* m_organfile;
-	GOrgueSound& m_sound;
-	GOrgueMidiListener m_listener;
+}
 
-	void OnMidiEvent(const GOrgueMidiEvent& event);
+GOrgueMidiListener::~GOrgueMidiListener()
+{
+	Unregister();
+}
 
-	void CloseOrgan();
+void GOrgueMidiListener::SetCallback(GOrgueMidiCallback* callback)
+{
+	m_Callback = callback;
+}
 
-	bool OnCloseDocument();
-	bool DoOpenDocument(const wxString& file);
+void GOrgueMidiListener::Register(GOrgueMidi* midi)
+{
+	Unregister();
+	if (midi)
+	{
+		m_midi = midi;
+		m_midi->Register(this);
+	}
+}
 
-public:
-	GOrgueDocument(GOrgueSound* sound);
-	~GOrgueDocument();
+void GOrgueMidiListener::Unregister()
+{
+	if (m_midi)
+		m_midi->Unregister(this);
+	m_midi = NULL;
+}
 
-	bool DoOpenDocument(const wxString& file, const wxString& file2);
-	bool DoSaveDocument(const wxString& file);
+void GOrgueMidiListener::Send(const GOrgueMidiEvent& event)
+{
+	if (m_Callback)
+		m_Callback->OnMidiEvent(event);
+}
 
-	bool Save() { return OnSaveDocument(m_documentFile); }
-
-	GrandOrgueFile* GetOrganFile();
-};
-
-#endif

@@ -29,7 +29,6 @@ BEGIN_EVENT_TABLE(MIDIListenDialog, wxDialog)
 	EVT_CHOICE(ID_EVENT, MIDIListenDialog::OnEvent)
 	EVT_TOGGLEBUTTON(ID_LISTEN, MIDIListenDialog::OnListenClick)
 	EVT_BUTTON(wxID_HELP, MIDIListenDialog::OnHelp)
-	EVT_MIDI(MIDIListenDialog::OnMidiEvent)
 END_EVENT_TABLE()
 
 const MIDIListenDialog::LISTEN_DIALOG_EVENTS MIDIListenDialog::GetEventFromType(const LISTEN_DIALOG_TYPE type)
@@ -131,7 +130,8 @@ MIDIListenDialog::MIDIListenDialog
 	:
 	wxDialog(win, wxID_ANY, title),
 	m_type(type),
-	m_midi(midi)
+	m_midi(midi),
+	m_listener()
 {
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -185,11 +185,12 @@ MIDIListenDialog::MIDIListenDialog
 	if (m_midi.HasActiveDevice())
 		m_listen->Enable();
 
+	m_listener.Register(&m_midi);
 }
 
 MIDIListenDialog::~MIDIListenDialog()
 {
-	m_midi.SetListener(NULL);
+	m_listener.SetCallback(NULL);
 }
 
 int MIDIListenDialog::GetEvent()
@@ -289,16 +290,16 @@ void MIDIListenDialog::OnListenClick(wxCommandEvent &event)
 	if (m_listen->GetValue())
 	{
 		this->SetCursor(wxCursor(wxCURSOR_WAIT));
-		m_midi.SetListener(GetEventHandler());
+		m_listener.SetCallback(this);
 	}
 	else
 	{
-		m_midi.SetListener(NULL);
+		m_listener.SetCallback(NULL);
 		this->SetCursor(wxCursor(wxCURSOR_ARROW));
 	}
 }
 
-void MIDIListenDialog::OnMidiEvent(GOrgueMidiEvent& event)
+void MIDIListenDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 {
 	int what = event.GetEventCode();
 	if (what == -1)
@@ -306,7 +307,7 @@ void MIDIListenDialog::OnMidiEvent(GOrgueMidiEvent& event)
 	if (PutEvent(what))
 	{
 		m_listen->SetValue(false);
-		m_midi.SetListener(NULL);
+		m_listener.SetCallback(NULL);
 		this->SetCursor(wxCursor(wxCURSOR_ARROW));
 	}
 }
