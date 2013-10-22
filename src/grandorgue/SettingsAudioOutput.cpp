@@ -394,7 +394,7 @@ void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 		index = wxGetSingleChoiceIndex(_("Add new audio device"), _("New audio device"), devs, this);
 		if (index == -1)
 			return;
-		wxMessageBox(_("Using more than one audio interface is currently not supported.") , _("Warning"), wxOK | wxICON_WARNING, NULL);
+		wxMessageBox(_("Using more than one audio interface is currently not supported.") , _("Warning"), wxOK | wxICON_WARNING, this);
 		wxTreeItemId audio = AddDeviceNode(devices[index]);
 		AddChannelNode(audio, 0);
 	}
@@ -441,7 +441,7 @@ void SettingsAudioOutput::OnOutputChange(wxCommandEvent& event)
 		unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
 		if (it != audiodevs.end() && channels > it->second.channels)
 		{
-			wxMessageBox(_("Too many audio channels configured for the new audio interface") , _("Error"), wxOK | wxICON_ERROR, NULL);
+			wxMessageBox(_("Too many audio channels configured for the new audio interface") , _("Error"), wxOK | wxICON_ERROR, this);
 			return;
 		}
 		data->name = devs[index];
@@ -494,7 +494,7 @@ void SettingsAudioOutput::OnOutputProperties(wxCommandEvent& event)
 		double volume;
 		if (!current.ToDouble(&volume) || volume < -120.0 || volume > 40.0)
 		{
-			wxMessageBox(_("Please enter a volume between -120 and 40 dB") , _("Error"), wxOK | wxICON_ERROR, NULL);
+			wxMessageBox(_("Please enter a volume between -120 and 40 dB") , _("Error"), wxOK | wxICON_ERROR, this);
 			return;
 		}
 		data->volume = volume;
@@ -505,7 +505,7 @@ void SettingsAudioOutput::OnOutputProperties(wxCommandEvent& event)
 
 void SettingsAudioOutput::OnOutputDefault(wxCommandEvent& event)
 {
-	if (wxMessageBox(_("Should the audio config be reverted to the default stereo configuration?"), _("Revert"), wxYES_NO, NULL) == wxNO)
+	if (wxMessageBox(_("Should the audio config be reverted to the default stereo configuration?"), _("Revert"), wxYES_NO, this) == wxNO)
 		return;
 	wxTreeItemId root = m_AudioOutput->GetRootItem();
 	wxTreeItemId audio, channel, group;

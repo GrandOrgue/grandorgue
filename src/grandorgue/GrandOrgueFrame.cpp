@@ -545,7 +545,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	if (!doc->GetOrganFile()->UpdateCache(m_Settings.GetCompressCache()))
 	{
 		wxLogError(_("Creating the cache failed"));
-		wxMessageBox(_("Creating the cache failed"), _("Error"), wxOK | wxICON_ERROR, NULL);
+		wxMessageBox(_("Creating the cache failed"), _("Error"), wxOK | wxICON_ERROR, this);
 	}
 }
 

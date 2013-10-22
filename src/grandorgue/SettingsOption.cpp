@@ -209,7 +209,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 void SettingsOption::Save()
 {
 	if (m_Interpolation->GetSelection() == 1 && m_LosslessCompression->IsChecked())
-		wxMessageBox(_("Polyphase is not supported with lossless compression - falling back to linear.") , _("Warning"), wxOK | wxICON_WARNING, NULL);
+		wxMessageBox(_("Polyphase is not supported with lossless compression - falling back to linear.") , _("Warning"), wxOK | wxICON_WARNING, this);
 
 	m_Settings.SetLosslessCompression(m_LosslessCompression->IsChecked());
 	m_Settings.SetManagePolyphony(m_Limit->IsChecked());

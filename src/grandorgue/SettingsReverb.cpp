@@ -131,7 +131,7 @@ void SettingsReverb::UpdateLimits()
 	}
 	catch(wxString error)
 	{
-		wxMessageBox(error , _("Error"), wxOK | wxICON_ERROR, NULL);
+		wxMessageBox(error , _("Error"), wxOK | wxICON_ERROR, this);
 	}
 }
 
@@ -174,7 +174,7 @@ void SettingsReverb::UpdateEnabled()
 void SettingsReverb::OnEnabled(wxCommandEvent& event)
 {
 	if (m_Enabled->GetValue())
-		wxMessageBox(_("This feature is currently not supported.") , _("Warning"), wxOK | wxICON_WARNING, NULL);
+		wxMessageBox(_("This feature is currently not supported.") , _("Warning"), wxOK | wxICON_WARNING, this);
 	UpdateEnabled();
 }
 
