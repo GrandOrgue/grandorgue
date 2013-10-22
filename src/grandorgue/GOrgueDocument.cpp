@@ -22,6 +22,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueDocument.h"
 #include "GOrgueEvent.h"
+#include "GOrgueMidiEvent.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
@@ -30,12 +31,15 @@
 GOrgueDocument::GOrgueDocument(GOrgueSound* sound) :
 	m_OrganFileReady(false),
 	m_organfile(NULL),
-	m_sound(*sound)
+	m_sound(*sound),
+	m_listener()
 {
+	m_listener.Register(&m_sound.GetMidi());
 }
 
 GOrgueDocument::~GOrgueDocument()
 {
+	m_listener.SetCallback(NULL);
 	CloseOrgan();
 }
 
@@ -97,6 +101,7 @@ bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 			wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 		}
 
+	m_listener.SetCallback(this);
 	return true;
 }
 
@@ -109,6 +114,7 @@ bool GOrgueDocument::DoSaveDocument(const wxString& file)
 
 void GOrgueDocument::CloseOrgan()
 {
+	m_listener.SetCallback(NULL);
 	m_sound.CloseSound();
 
 	m_OrganFileReady = false;
@@ -125,7 +131,7 @@ GrandOrgueFile* GOrgueDocument::GetOrganFile()
 	return m_organfile;
 }
 
-void GOrgueDocument::OnMidiEvent(GOrgueMidiEvent& event)
+void GOrgueDocument::OnMidiEvent(const GOrgueMidiEvent& event)
 {
 	GOMutexLocker locker(m_lock);
 

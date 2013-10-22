@@ -234,6 +234,7 @@ GOrgueManual.cpp
 GOrgueMemoryPool.cpp
 GOrgueMidi.cpp
 GOrgueMidiEvent.cpp
+GOrgueMidiListener.cpp
 GOrgueMidiSender.cpp
 GOrgueMidiSenderData.cpp
 GOrgueMidiReceiver.cpp

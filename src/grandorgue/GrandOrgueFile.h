@@ -39,6 +39,7 @@ class GOrgueGeneral;
 class GOrgueManual;
 class GOrgueMidi;
 class GOrgueMidiEvent;
+class GOrgueMidiListener;
 class GOrguePiston;
 class GOrguePushbutton;
 class GOrgueRank;
@@ -233,7 +234,7 @@ public:
 	void UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity);
 
 	void SendMidiMessage(GOrgueMidiEvent& e);
-	void SetMidiListener(wxEvtHandler* event_handler);
+	void AddMidiListener(GOrgueMidiListener* listener);
 };
 
 #endif

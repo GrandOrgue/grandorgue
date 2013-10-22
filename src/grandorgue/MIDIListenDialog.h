@@ -26,11 +26,12 @@
 #include <wx/tglbtn.h>
 #include <wx/spinctrl.h>
 #include "GrandOrgueDef.h"
+#include "GOrgueMidiListener.h"
 
 class GOrgueMidi;
 class GOrgueMidiEvent;
 
-class MIDIListenDialog : public wxDialog
+class MIDIListenDialog : public wxDialog, protected GOrgueMidiCallback
 {
 public:
 	typedef enum
@@ -64,12 +65,13 @@ private:
 	wxSpinCtrl *m_channel, *m_data;
 	wxToggleButton* m_listen;
 	GOrgueMidi& m_midi;
+	GOrgueMidiListener m_listener;
 
 	bool PutEvent(int what);
 
 	void OnEvent(wxCommandEvent& event);
 	void OnListenClick(wxCommandEvent& event);
-	void OnMidiEvent(GOrgueMidiEvent& event);
+	void OnMidiEvent(const GOrgueMidiEvent& event);
 	void OnHelp(wxCommandEvent& event);
 
 protected:

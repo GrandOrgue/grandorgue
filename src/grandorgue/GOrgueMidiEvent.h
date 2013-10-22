@@ -100,7 +100,7 @@ public:
 	wxEvent* Clone() const;
 
 	void FromMidi(const std::vector<unsigned char>& msg);
-	int GetEventCode();
+	int GetEventCode() const;
 	void ToMidi(std::vector<std::vector<unsigned char>>& msg);
 
 	DECLARE_DYNAMIC_CLASS(GOrgueMidiEvent)

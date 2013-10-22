@@ -1152,10 +1152,10 @@ void GrandOrgueFile::SendMidiMessage(GOrgueMidiEvent& e)
 		m_midi->Send(e);
 }
 
-void GrandOrgueFile::SetMidiListener(wxEvtHandler* event_handler)
+void GrandOrgueFile::AddMidiListener(GOrgueMidiListener* listener)
 {
 	if (m_midi)
-		m_midi->SetListener(event_handler);
+		listener->Register(m_midi);
 }
 
 void GrandOrgueFile::Abort()

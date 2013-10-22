@@ -22,6 +22,7 @@
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrgueMidiListener.h"
 #include "GOrgueRtHelpers.h"
 #include "GOrgueSettings.h"
 #include "RtMidi.h"
@@ -29,14 +30,17 @@
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
+BEGIN_EVENT_TABLE(GOrgueMidi, wxEvtHandler)
+	EVT_MIDI(GOrgueMidi::OnMidiEvent)
+END_EVENT_TABLE()
+
 GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_Settings(settings),
 	m_midi_in_device_map(),
 	m_midi_in_devices(),
 	m_midi_out_device_map(),
 	m_midi_out_devices(),
-	m_listening(false),
-	m_listen_evthandler(NULL)
+	m_Listeners()
 {
 	UpdateDevices();
 }
@@ -259,11 +263,14 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE*
 	if (e.GetChannel() != -1)
 		e.SetChannel(((e.GetChannel() - 1 + device->channel_shift) & 0x0F) + 1);
 
-	if (wxTheApp->GetTopWindow())
-		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(e);
+	AddPendingEvent(e);
+}
 
-	if (m_listening)
-		m_listen_evthandler->AddPendingEvent(e);
+void GOrgueMidi::OnMidiEvent(GOrgueMidiEvent& event)
+{
+	for(unsigned i = 0; i < m_Listeners.size(); i++)
+		if (m_Listeners[i])
+			m_Listeners[i]->Send(event);
 }
 
 void GOrgueMidi::Send(GOrgueMidiEvent& e)
@@ -283,15 +290,28 @@ void GOrgueMidi::Send(GOrgueMidiEvent& e)
 	}
 }
 
-bool GOrgueMidi::HasListener()
+void GOrgueMidi::Register(GOrgueMidiListener* listener)
 {
-	return (m_listen_evthandler) && (m_listening);
+	for(unsigned i = 0; i < m_Listeners.size(); i++)
+		if (m_Listeners[i] == listener)
+			return;
+	for(unsigned i = 0; i < m_Listeners.size(); i++)
+		if (!m_Listeners[i])
+		{
+			m_Listeners[i] = listener;
+			return;
+		}
+	m_Listeners.push_back(listener);
 }
 
-void GOrgueMidi::SetListener(wxEvtHandler* event_handler)
+void GOrgueMidi::Unregister(GOrgueMidiListener* listener)
 {
-	m_listening = (event_handler != NULL);
-	m_listen_evthandler = event_handler;
+	for(unsigned i = 0; i < m_Listeners.size(); i++)
+		if (m_Listeners[i] == listener)
+		{
+			m_Listeners[i] = NULL;
+		}
+
 }
 
 void GOrgueMidi::MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData)

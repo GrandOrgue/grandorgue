@@ -25,13 +25,15 @@
 #include <wx/wx.h>
 #include <wx/tglbtn.h>
 #include <wx/spinctrl.h>
+#include "GOrgueMidiListener.h"
 #include "GOrgueMidiReceiver.h"
 
-class MIDIEventRecvDialog : public wxPanel
+class MIDIEventRecvDialog : public wxPanel, protected GOrgueMidiCallback
 {
 private:
 	GOrgueMidiReceiver* m_original;
 	GOrgueMidiReceiverData m_midi;
+	GOrgueMidiListener m_listener;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
 	wxSpinCtrl *m_data;
 	wxSpinCtrl *m_LowKey;
@@ -49,7 +51,7 @@ private:
 	void OnNewClick(wxCommandEvent& event);
 	void OnDeleteClick(wxCommandEvent& event);
 	void OnEventChange(wxCommandEvent& event);
-	void OnMidiEvent(GOrgueMidiEvent& event);
+	void OnMidiEvent(const GOrgueMidiEvent& event);
 
 protected:
 	enum {

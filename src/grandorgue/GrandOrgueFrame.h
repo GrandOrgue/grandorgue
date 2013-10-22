@@ -26,6 +26,7 @@
 #include <wx/docview.h>
 #include <wx/dcmemory.h>
 #include "GrandOrgueDef.h"
+#include "GOrgueMidiListener.h"
 
 class wxHtmlHelpController;
 class wxGaugeAudio;
@@ -36,7 +37,7 @@ class GOrgueSound;
 class GOrgueTemperament;
 class wxChoice;
 
-class GOrgueFrame: public wxDocParentFrame
+class GOrgueFrame: public wxDocParentFrame, protected GOrgueMidiCallback
 {
 private:
 	wxMenu* m_panel_menu;
@@ -51,6 +52,7 @@ private:
 	std::vector<GOrgueTemperament*> m_Temperaments;
 	GOrgueSound& m_Sound;
 	GOrgueSettings& m_Settings;
+	GOrgueMidiListener m_listener;
 	wxString m_Title;
 	wxString m_Label;
 
@@ -100,7 +102,7 @@ private:
 
 	void OnMenuOpen(wxMenuEvent& event);
 
-	void OnMidiEvent(GOrgueMidiEvent& event);
+	void OnMidiEvent(const GOrgueMidiEvent& event);
 
 	void OnUpdateLoaded(wxUpdateUIEvent& event);
 	void OnSetTitle(wxCommandEvent& event);
