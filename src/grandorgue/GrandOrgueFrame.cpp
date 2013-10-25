@@ -192,7 +192,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	
 	wxMenu *audio_menu = new wxMenu;
 	audio_menu->AppendSubMenu(temperament_menu, _("&Temperament"));
-	audio_menu->Append(ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_NORMAL);
+	audio_menu->Append(ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_CHECK);
 	audio_menu->AppendSeparator();
 	audio_menu->Append(ID_AUDIO_SETTINGS, _("Audio/Midi &Settings"), wxEmptyString, wxITEM_NORMAL);
 	audio_menu->AppendSeparator();
@@ -416,8 +416,12 @@ void GOrgueFrame::OnMeters(wxCommandEvent& event)
 void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 {
 	GrandOrgueFile* organfile = NULL;
+	GOrgueDocument* doc = NULL;
 	if (m_docManager->GetCurrentDocument())
-		organfile = ((GOrgueDocument*)m_docManager->GetCurrentDocument())->GetOrganFile();
+	{
+		doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
+		organfile = doc->GetOrganFile();
+	}
 
 	if (ID_PRESET_0 <= event.GetId() && event.GetId() <= ID_PRESET_LAST)
 	{
@@ -436,6 +440,8 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		event.Check(m_Sound.IsRecording());
 	else if (event.GetId() == ID_AUDIO_MEMSET)
 		event.Check(organfile && organfile->GetSetter() && organfile->GetSetter()->IsSetterActive());
+	else if (event.GetId() == ID_ORGAN_EDIT)
+		event.Check(doc && doc->WindowExists(GOrgueDocument::ORGAN_DIALOG, NULL));
 
 	if (event.GetId() == ID_FILE_CACHE_DELETE)
 		event.Enable(organfile && organfile->CachePresent());
@@ -638,8 +644,12 @@ void GOrgueFrame::OnEditOrgan(wxCommandEvent& event)
 	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
-	OrganDialog dialog(this, doc->GetOrganFile());
-	dialog.ShowModal();
+
+	if (!doc->showWindow(GOrgueDocument::ORGAN_DIALOG, NULL))
+	{
+		doc->registerWindow(GOrgueDocument::ORGAN_DIALOG, NULL,
+				    new OrganDialog(doc, this, doc->GetOrganFile()));
+	}
 }
 
 void GOrgueFrame::OnHelp(wxCommandEvent& event)

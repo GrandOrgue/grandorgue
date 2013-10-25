@@ -25,6 +25,7 @@
 #include <wx/wx.h>
 #include <vector>
 #include "GrandOrgueDef.h"
+#include "GOrgueDialogView.h"
 
 class GrandOrgueFile;
 class wxTreeCtrl;
@@ -33,7 +34,7 @@ class wxSpinButton;
 class OrganTreeItemData;
 class wxCheckBox;
 
-class OrganDialog : public wxDialog
+class OrganDialog : public wxDialog, public GOrgueDialogView
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -99,6 +100,7 @@ private:
 	void OnEventDefault(wxCommandEvent &e);
 	void OnEventOK(wxCommandEvent &e);
 	void OnOK(wxCommandEvent& event);
+	void OnCancel(wxCommandEvent& event);
 	void OnAudioGroupAssitant(wxCommandEvent &e);
 
 protected:
@@ -128,7 +130,7 @@ protected:
 	};
 
 public:
-	OrganDialog (wxWindow* parent, GrandOrgueFile* organfile);
+	OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile* organfile);
 	~OrganDialog();
 
 	DECLARE_EVENT_TABLE()

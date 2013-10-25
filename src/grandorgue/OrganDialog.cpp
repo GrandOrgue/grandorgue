@@ -69,6 +69,7 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_BUTTON(ID_EVENT_RESET, OrganDialog::OnEventReset)
 	EVT_BUTTON(ID_EVENT_DEFAULT, OrganDialog::OnEventDefault)
 	EVT_BUTTON(wxID_OK, OrganDialog::OnEventOK)
+	EVT_BUTTON(wxID_CANCEL, OrganDialog::OnCancel)
 	EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, OrganDialog::OnTreeChanging)
 	EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, OrganDialog::OnTreeChanged)
 	EVT_COMMAND(ID_EVENT_TREE, wxEVT_TREE_UPDATED, OrganDialog::OnTreeUpdated)
@@ -91,8 +92,9 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_CHOICE(ID_EVENT_RELEASE_LOAD, OrganDialog::OnReleaseLoadChanged)
 END_EVENT_TABLE()
 
-OrganDialog::OrganDialog (wxWindow* parent, GrandOrgueFile* organfile) :
+OrganDialog::OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile* organfile) :
 	wxDialog(parent, wxID_ANY, _("Organ settings"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE),
+	GOrgueDialogView(doc, this),
 	m_organfile(organfile),
 	m_Apply(NULL),
 	m_Reset(NULL),
@@ -815,7 +817,12 @@ void OrganDialog::OnOK(wxCommandEvent& event)
 	m_organfile->SetIgnorePitch(m_IgnorePitch->GetValue());
 	m_organfile->SetTemperament(m_organfile->GetTemperament());
 	m_organfile->Modified();
-	event.Skip();
+	Destroy();
+}
+
+void OrganDialog::OnCancel(wxCommandEvent& event)
+{
+	Destroy();
 }
 
 void OrganDialog::UpdateAudioGroup(std::vector<wxString> audio_group, unsigned& pos, wxTreeItemId item)

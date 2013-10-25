@@ -50,6 +50,8 @@ public:
 	bool OnCreate(wxDocument *doc, long flags);
 	void AddEvent(GOGUIControl* control);
 	void OnChangeFilename();
+
+	GOrgueDocument* getDocument();
 };
 
 #endif

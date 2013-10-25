@@ -25,6 +25,7 @@
 #include "GOrgueMidiEvent.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
+#include "GOrgueDialogView.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 
@@ -32,7 +33,8 @@ GOrgueDocument::GOrgueDocument(GOrgueSound* sound) :
 	m_OrganFileReady(false),
 	m_organfile(NULL),
 	m_sound(*sound),
-	m_listener()
+	m_listener(),
+	m_Windows()
 {
 	m_listener.Register(&m_sound.GetMidi());
 }
@@ -116,6 +118,12 @@ void GOrgueDocument::CloseOrgan()
 {
 	m_listener.SetCallback(NULL);
 	m_sound.CloseSound();
+	while(m_Windows.size() > 0)
+	{
+		GOrgueDialogView* wnd = m_Windows[0].window;
+		m_Windows.erase(m_Windows.begin());
+		wnd->RemoveView();
+	}
 
 	m_OrganFileReady = false;
 	GOMutexLocker locker(m_lock);
@@ -140,4 +148,43 @@ void GOrgueDocument::OnMidiEvent(const GOrgueMidiEvent& event)
 
 	if (m_organfile)
 		m_organfile->ProcessMidi(event);
+}
+
+bool GOrgueDocument::WindowExists(WindowType type, void* data)
+{
+	for(unsigned i = 0; i < m_Windows.size(); i++)
+		if (m_Windows[i].type == type && m_Windows[i].data == data)
+			return true;
+	return false;
+}
+
+bool GOrgueDocument::showWindow(WindowType type, void* data)
+{
+	for(unsigned i = 0; i < m_Windows.size(); i++)
+		if (m_Windows[i].type == type && m_Windows[i].data == data)
+		{
+			m_Windows[i].window->ShowView();
+			return true;
+		}
+	return false;
+}
+
+void GOrgueDocument::registerWindow(WindowType type, void* data, GOrgueDialogView *window)
+{
+	WindowInfo info;
+	info.type = type;
+	info.data = data;
+	info.window = window;
+	m_Windows.push_back(info);
+	window->ShowView();
+}
+
+void GOrgueDocument::unregisterWindow(GOrgueDialogView* window)
+{
+	for(unsigned i = 0; i < m_Windows.size(); i++)
+		if (m_Windows[i].window == window)
+		{
+			m_Windows.erase(m_Windows.begin() + i);
+			return;
+		}
 }

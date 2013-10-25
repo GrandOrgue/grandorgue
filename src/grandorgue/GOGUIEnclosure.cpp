@@ -25,6 +25,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueEnclosure.h"
+#include "GOrgueDocument.h"
 #include "GOrgueView.h"
 #include "MIDIEventDialog.h"
 
@@ -190,9 +191,12 @@ bool GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState&
 		GOrgueMidiReceiver* midi = &m_enclosure->GetMidiReceiver();
 		GOrgueMidiSender* sender = &m_enclosure->GetMidiSender();
 
-		MIDIEventDialog dlg (m_panel->GetView()->GetFrame(), _("Midi-Settings for Enclosure - ") + m_enclosure->GetName(), midi, sender, NULL);
-		dlg.ShowModal();
-
+		GOrgueDocument* doc = m_panel->GetView()->getDocument();
+		if (!doc->showWindow(GOrgueDocument::MIDI_EVENT, &m_enclosure))
+		{
+			doc->registerWindow(GOrgueDocument::MIDI_EVENT, &m_enclosure, 
+					    new MIDIEventDialog (doc, m_panel->GetView()->GetFrame(), _("Midi-Settings for Enclosure - ") + m_enclosure->GetName(), midi, sender, NULL));
+		}
 		return true;
 	}
 	else

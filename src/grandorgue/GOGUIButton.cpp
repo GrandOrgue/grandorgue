@@ -25,6 +25,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueButton.h"
 #include "GOrgueConfigReader.h"
+#include "GOrgueDocument.h"
 #include "GOrgueView.h"
 #include "MIDIEventDialog.h"
 
@@ -223,9 +224,12 @@ bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 			key = NULL;
 		}
 
-		MIDIEventDialog dlg (m_panel->GetView()->GetFrame(), title, midi, sender, key);
-		dlg.ShowModal();
-
+		GOrgueDocument* doc = m_panel->GetView()->getDocument();
+		if (!doc->showWindow(GOrgueDocument::MIDI_EVENT, &m_Button))
+		{
+			doc->registerWindow(GOrgueDocument::MIDI_EVENT, &m_Button,
+					    new MIDIEventDialog (doc, m_panel->GetView()->GetFrame(), title, midi, sender, key));
+		}
 		return true;
 	}
 	else

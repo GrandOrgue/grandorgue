@@ -165,3 +165,7 @@ void GOrgueView::AddEvent(GOGUIControl* control)
 		m_panel->GetEventHandler()->AddPendingEvent(event);
 }
 
+GOrgueDocument* GOrgueView::getDocument()
+{
+	return m_doc;
+}

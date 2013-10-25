@@ -216,6 +216,7 @@ GOrgueConfigWriter.cpp
 GOrgueBitmapCache.cpp
 GOrgueButton.cpp
 GOrgueCoupler.cpp
+GOrgueDialogView.cpp
 GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp
 GOrgueDrawStop.cpp
