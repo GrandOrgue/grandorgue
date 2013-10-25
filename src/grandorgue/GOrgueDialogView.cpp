@@ -19,39 +19,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MIDIEVENTDIALOG_H_
-#define MIDIEVENTDIALOG_H_
-
-#include <wx/wx.h>
-#include <wx/propdlg.h>
-#include "GrandOrgueDef.h"
 #include "GOrgueDialogView.h"
+#include "GOrgueDocument.h"
 
-class GOrgueMidiReceiver;
-class GOrgueMidiSender;
-class GOrgueKeyReceiver;
-class MIDIEventRecvDialog;
-class MIDIEventSendDialog;
-class MIDIEventKeyDialog;
-
-class MIDIEventDialog : public wxPropertySheetDialog, public GOrgueDialogView
+GOrgueDialogView::GOrgueDialogView(GOrgueDocument* doc, wxWindow* wnd) :
+	m_doc(doc),
+	m_wnd(wnd)
 {
-private:
-	MIDIEventRecvDialog* m_recvPage;
-	MIDIEventSendDialog* m_sendPage;
-	MIDIEventKeyDialog* m_keyPage;
+}
 
-	void DoApply();
+GOrgueDialogView::~GOrgueDialogView()
+{
+	if (m_doc)
+		m_doc->unregisterWindow(this);
+	m_doc = NULL;
+}
 
-	void OnApply(wxCommandEvent& event);
-	void OnOK(wxCommandEvent& event);
-	void OnCancel(wxCommandEvent& event);
+void GOrgueDialogView::RemoveView()
+{
+	m_doc = NULL;
+	m_wnd->Destroy();
+}
 
-public:
-	MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
-	~MIDIEventDialog();
+void GOrgueDialogView::ShowView()
+{
+	m_wnd->Show();
+	m_wnd->Raise();
+}
 
-	DECLARE_EVENT_TABLE()
-};
-
-#endif /* MIDIEVENTDIALOG_H_ */

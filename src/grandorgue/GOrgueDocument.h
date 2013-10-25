@@ -30,15 +30,25 @@
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 class GOrgueSound;
+class GOrgueDialogView;
 
 class GOrgueDocument : public wxDocument, protected GOrgueMidiCallback
 {
+public:
+	typedef enum { ORGAN_DIALOG, MIDI_EVENT } WindowType;
 private:
+	typedef struct {
+		WindowType type;
+		void* data;
+		GOrgueDialogView* window;
+	} WindowInfo;
+
 	GOMutex m_lock;
 	bool m_OrganFileReady;
 	GrandOrgueFile* m_organfile;
 	GOrgueSound& m_sound;
 	GOrgueMidiListener m_listener;
+	std::vector<WindowInfo> m_Windows;
 
 	void OnMidiEvent(const GOrgueMidiEvent& event);
 
@@ -55,6 +65,11 @@ public:
 	bool DoSaveDocument(const wxString& file);
 
 	bool Save() { return OnSaveDocument(m_documentFile); }
+
+	bool WindowExists(WindowType type, void* data);
+	bool showWindow(WindowType type, void* data);
+	void registerWindow(WindowType type, void* data, GOrgueDialogView *window);
+	void unregisterWindow(GOrgueDialogView* window);
 
 	GrandOrgueFile* GetOrganFile();
 };
