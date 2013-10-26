@@ -68,7 +68,10 @@ private:
 	wxCheckBox* m_IgnorePitch;
 	OrganTreeItemData* m_Last;
 	unsigned m_LoadChangeCnt;
+	wxDialog* m_ModalDialog;
+	bool m_DestroyPending;
 
+	bool CloseModal();
 	void FillTree();
 	void Load();
 	bool Changed();
@@ -132,6 +135,8 @@ protected:
 public:
 	OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile* organfile);
 	~OrganDialog();
+
+	bool Destroy();
 
 	DECLARE_EVENT_TABLE()
 };
