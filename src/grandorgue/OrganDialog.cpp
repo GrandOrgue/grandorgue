@@ -24,6 +24,7 @@
 #include <wx/treectrl.h>
 #include "OrganDialog.h"
 #include "GrandOrgueFile.h"
+#include "GOrgueEvent.h"
 #include "GOrgueRank.h"
 #include "GOrguePipe.h"
 #include "GOrgueSettings.h"
@@ -639,7 +640,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	    (m_Amplitude->IsModified() &&
 	     (amp < 0 || amp > 1000)))
 	{
-		wxMessageBox(_("Amplitude is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
+		GOMessageBox(_("Amplitude is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
 		return;
 	}
 
@@ -647,7 +648,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	    (m_Gain->IsModified() &&
 	     (gain < -120 || gain > 40)))
 	{
-		wxMessageBox(_("Gain is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
+		GOMessageBox(_("Gain is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
 		return;
 	}
 
@@ -655,7 +656,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	    (m_Tuning->IsModified() &&
 	     (tuning < - 1200 || tuning > 1200)))
 	{
-		wxMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
+		GOMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
 		return;
 	}
 
@@ -663,7 +664,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	    (m_Delay->IsModified() &&
 	     (delay < 0 || delay > 10000)))
 	{
-		wxMessageBox(_("Tracker delay is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
+		GOMessageBox(_("Tracker delay is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
 		return;
 	}
 
@@ -753,7 +754,7 @@ void OrganDialog::OnTreeChanging(wxTreeEvent& e)
 {
 	if (Changed())
 	{
-		wxMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
+		GOMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
 		e.Veto();
 	}
 }
@@ -807,7 +808,7 @@ void OrganDialog::OnTreeUpdated(wxCommandEvent& e)
 void OrganDialog::OnEventOK(wxCommandEvent &e)
 {
 	if (Changed())
-		wxMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
+		GOMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
 	else
 		e.Skip();
 }
@@ -850,7 +851,7 @@ void OrganDialog::OnAudioGroupAssitant(wxCommandEvent &e)
 {
 	if (Changed())
 	{
-		wxMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
+		GOMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
 		return;
 	}
 	wxArrayInt sel;
@@ -861,7 +862,7 @@ void OrganDialog::OnAudioGroupAssitant(wxCommandEvent &e)
 	
 	if (wxGetMultipleChoices(sel, _("Select audio groups to distribute:"), _("Organ dialog"), strs, this) == 0)
 	{
-		wxMessageBox(_("No audio group selected"), _("Error"), wxOK | wxICON_ERROR, this);
+		GOMessageBox(_("No audio group selected"), _("Error"), wxOK | wxICON_ERROR, this);
 		return;
 	}
 	group_list.clear();

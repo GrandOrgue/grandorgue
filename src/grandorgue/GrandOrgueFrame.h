@@ -26,6 +26,7 @@
 #include <wx/docview.h>
 #include <wx/dcmemory.h>
 #include "GrandOrgueDef.h"
+#include "GOrgueEvent.h"
 #include "GOrgueMidiListener.h"
 
 class wxHtmlHelpController;
@@ -106,6 +107,7 @@ private:
 
 	void OnUpdateLoaded(wxUpdateUIEvent& event);
 	void OnSetTitle(wxCommandEvent& event);
+	void OnMsgBox(wxMsgBoxEvent& event);
 
 public:
 	GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);

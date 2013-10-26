@@ -26,3 +26,48 @@ DEFINE_LOCAL_EVENT_TYPE(wxEVT_LOADFILE)
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_SHOWHELP)
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_SETVALUE)
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_WINTITLE)
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_SHOWMSG)
+
+wxMsgBoxEvent::wxMsgBoxEvent(const wxString& title, const wxString& text, long style) :
+	wxEvent(0, wxEVT_SHOWMSG),
+	m_Title(title),
+	m_Text(text),
+	m_Style(style)
+{
+}
+
+wxMsgBoxEvent::wxMsgBoxEvent(const wxMsgBoxEvent& e) :
+	wxEvent(e),
+	m_Title(e.m_Title),
+	m_Text(e.m_Text),
+	m_Style(e.m_Style)
+{
+}
+
+wxEvent* wxMsgBoxEvent::Clone() const
+{
+	return new wxMsgBoxEvent(*this);
+}
+
+const wxString& wxMsgBoxEvent::getTitle()
+{
+	return m_Title;
+}
+
+const wxString& wxMsgBoxEvent::getText()
+{
+	return m_Text;
+}
+
+long wxMsgBoxEvent::getStyle()
+{
+	return m_Style;
+}
+
+IMPLEMENT_DYNAMIC_CLASS(wxMsgBoxEvent, wxEvent)
+
+void GOMessageBox(const wxString& text, const wxString title, long style, wxWindow* parent)
+{
+	wxMsgBoxEvent event(title, text, style);
+	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+}

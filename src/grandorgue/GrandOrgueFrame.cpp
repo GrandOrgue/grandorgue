@@ -46,6 +46,7 @@
 #include "SplashScreen.h"
 
 BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
+	EVT_MSGBOX(GOrgueFrame::OnMsgBox)
 	EVT_KEY_DOWN(GOrgueFrame::OnKeyCommand)
 	EVT_COMMAND(0, wxEVT_METERS, GOrgueFrame::OnMeters)
 	EVT_COMMAND(0, wxEVT_LOADFILE, GOrgueFrame::OnLoadFile)
@@ -799,4 +800,9 @@ void GOrgueFrame::OnSetTitle(wxCommandEvent& event)
 		SetTitle(m_Title);
 	else
 		SetTitle(m_Title + _(" - ") + m_Label);
+}
+
+void GOrgueFrame::OnMsgBox(wxMsgBoxEvent& event)
+{
+	wxMessageBox(event.getText(), event.getTitle(), event.getStyle(), this);
 }
