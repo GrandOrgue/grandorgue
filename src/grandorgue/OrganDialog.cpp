@@ -100,7 +100,9 @@ OrganDialog::OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile*
 	m_Apply(NULL),
 	m_Reset(NULL),
 	m_Last(NULL),
-	m_LoadChangeCnt(0)
+	m_LoadChangeCnt(0),
+	m_ModalDialog(NULL),
+	m_DestroyPending(false)
 {
 	wxArrayString choices;
 
@@ -274,6 +276,33 @@ OrganDialog::OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile*
 OrganDialog::~OrganDialog()
 {
 }
+
+bool OrganDialog::CloseModal()
+{
+	if (m_DestroyPending)
+	{
+		wxDialog::Destroy();
+		return true;
+	}
+	if (m_ModalDialog)
+	{
+		wxDialog* dlg = m_ModalDialog;
+		m_ModalDialog = NULL;
+		dlg->EndModal(wxID_CANCEL);
+		m_DestroyPending = true;
+		return true;
+	}
+	return false;
+}
+
+bool OrganDialog::Destroy()
+{
+	Hide();
+	if (CloseModal())
+		return true;
+	return wxDialog::Destroy();
+}
+
 
 void OrganDialog::SetEmpty(wxChoice* choice)
 {
@@ -854,13 +883,21 @@ void OrganDialog::OnAudioGroupAssitant(wxCommandEvent &e)
 		GOMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
 		return;
 	}
-	wxArrayInt sel;
 	wxArrayString strs;
 	std::vector<wxString> group_list = m_organfile->GetSettings().GetAudioGroups();
 	for(unsigned i = 0; i < group_list.size(); i++)
 		strs.Add(group_list[i]);
 	
-	if (wxGetMultipleChoices(sel, _("Select audio groups to distribute:"), _("Organ dialog"), strs, this) == 0)
+	wxMultiChoiceDialog dlg(this, _("Select audio groups to distribute:"), _("Organ dialog"), strs);
+	m_ModalDialog = &dlg;
+	if (dlg.ShowModal() != wxID_OK)
+	{
+		CloseModal();
+		return;
+	}
+	wxArrayInt sel = dlg.GetSelections();
+	CloseModal();
+	if (sel.Count() == 0)
 	{
 		GOMessageBox(_("No audio group selected"), _("Error"), wxOK | wxICON_ERROR, this);
 		return;
