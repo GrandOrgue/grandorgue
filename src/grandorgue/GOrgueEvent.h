@@ -29,5 +29,33 @@ DECLARE_LOCAL_EVENT_TYPE(wxEVT_LOADFILE, -1)
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_SHOWHELP, -1)
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_SETVALUE, -1)
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_WINTITLE, -1)
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_SHOWMSG, -1)
+
+class wxMsgBoxEvent : public wxEvent {
+private:
+	wxString m_Title;
+	wxString m_Text;
+	long m_Style;
+
+public:
+	wxMsgBoxEvent(const wxString& title = wxEmptyString, const wxString& text = wxEmptyString, long style = 0);
+	wxMsgBoxEvent(const wxMsgBoxEvent& e);
+
+	const wxString& getTitle();
+	const wxString& getText();
+	long getStyle();
+
+	wxEvent* Clone() const;
+	DECLARE_DYNAMIC_CLASS(wxMsgBoxEvent)
+};
+
+typedef void (wxEvtHandler::*wxMsgBoxFunction)(wxMsgBoxEvent&);
+
+#define EVT_MSGBOX(fn) \
+    DECLARE_EVENT_TABLE_ENTRY( wxEVT_SHOWMSG, wxID_ANY, wxID_ANY, \
+    (wxObjectEventFunction) (wxEventFunction) \
+    wxStaticCastEvent( wxMsgBoxFunction, & fn ), (wxObject *) NULL ),
+
+void GOMessageBox(const wxString& text, const wxString title, long style, wxWindow* parent = NULL);
 
 #endif
