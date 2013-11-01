@@ -80,6 +80,7 @@ bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 			DeleteAllViews();
 		return false;
 	}
+	m_sound.GetSettings().AddOrgan(new GOrgueOrgan(m_organfile->GetODFFilename(), m_organfile->GetChurchName(), m_organfile->GetOrganBuilder(), m_organfile->GetRecordingDetails()));
 	m_sound.PreparePlayback(m_organfile);
 	if (m_organfile->GetVolume() != -121)
 	{
