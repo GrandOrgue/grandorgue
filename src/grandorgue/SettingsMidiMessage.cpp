@@ -35,6 +35,8 @@ SettingsMidiMessage::SettingsMidiMessage(GOrgueSettings& settings, GOrgueMidi& m
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
+	topSizer->Add(new wxStaticText(this, wxID_ANY, _("Attention:\nThese initial midi settings only affect the first load of a organ.\nRight-click on manuals, stops, ... to do further changes.")), 0, wxALL);
+	topSizer->AddSpacer(5);
 
 	m_Events = new wxListView(this, ID_EVENTS, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
 	m_Events->InsertColumn(0, _("Action"));
