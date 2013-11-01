@@ -25,6 +25,8 @@
 #include <wx/wx.h>
 #include <map>
 #include <vector>
+#include "ptrvector.h"
+#include "GOrgueOrgan.h"
 class wxConfigBase;
 
 typedef struct
@@ -68,7 +70,7 @@ private:
 	int m_Volume;
 	unsigned m_PolyphonyLimit;
 	unsigned m_Preset;
-	std::map<long, wxString> m_OrganMidiEvents;
+	ptr_vector<GOrgueOrgan> m_OrganList;
 	std::map<wxString, int> m_MidiIn;
 	std::map<wxString, bool> m_MidiOut;
 	wxString m_WAVPath;
@@ -199,9 +201,6 @@ public:
 	int GetAudioDeviceActualLatency(wxString device);
 	void SetAudioDeviceActualLatency(wxString device, unsigned latency);
 
-	const std::map<long, wxString>& GetOrganList();
-	void SetOrganList(std::map<long, wxString> list);
-
 	int GetMidiInDeviceChannelShift(wxString device);
 	void SetMidiInDeviceChannelShift(wxString device, int shift);
 	std::vector<wxString> GetMidiInDeviceList();
@@ -239,6 +238,9 @@ public:
 	void SetReverbChannel(int channel);
 	unsigned GetReverbDelay();
 	void SetReverbDelay(unsigned delay);
+
+	void AddOrgan(GOrgueOrgan* organ);
+	ptr_vector<GOrgueOrgan>& GetOrganList();
 
 	void Flush();
 };

@@ -779,18 +779,15 @@ void GOrgueFrame::OnKeyCommand(wxKeyEvent& event)
 
 void GOrgueFrame::OnMidiEvent(const GOrgueMidiEvent& event)
 {
-	int j = event.GetEventCode();
-	if (j == -1)
-		return;
-	// MIDI for different organ??
-	std::map<long, wxString>::const_iterator it = m_Settings.GetOrganList().find(j);
-	if (it != m_Settings.GetOrganList().end())
-	{
-		wxCommandEvent evt(wxEVT_LOADFILE, 0);
-		evt.SetString(it->second);
-		GetEventHandler()->AddPendingEvent(evt);
-		return;
-	}
+	ptr_vector<GOrgueOrgan>& organs = m_Settings.GetOrganList();
+	for(unsigned i = 0; i < organs.size(); i++)
+		if (organs[i]->Match(event))
+		{
+			wxCommandEvent evt(wxEVT_LOADFILE, 0);
+			evt.SetString(organs[i]->GetODFPath());
+			GetEventHandler()->AddPendingEvent(evt);
+			return;
+		}
 }
 
 void GOrgueFrame::OnSetTitle(wxCommandEvent& event)

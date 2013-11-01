@@ -33,23 +33,29 @@ class SettingsOrgan : public wxPanel
 	enum {
 		ID_ORGANS,
 		ID_DEL,
-		ID_ADD,
+		ID_UP,
+		ID_DOWN,
+		ID_TOP,
 		ID_PROPERTIES,
 	};
 private:
 	GOrgueSettings& m_Settings;
 	GOrgueMidi& m_midi;
-	wxListView* m_Events;
-	wxButton* m_Add;
+	wxListView* m_Organs;
+	wxButton* m_Up;
+	wxButton* m_Down;
+	wxButton* m_Top;
 	wxButton* m_Del;
 	wxButton* m_Properties;
 
-	void OnEventsClick(wxListEvent& event);
-	void OnAdd(wxCommandEvent& event);
+	void OnOrganSelected(wxListEvent& event);
+	void OnUp(wxCommandEvent& event);
+	void OnDown(wxCommandEvent& event);
+	void OnTop(wxCommandEvent& event);
 	void OnDel(wxCommandEvent& event);
 	void OnProperties(wxCommandEvent& event);
 
-	void UpdateOrganMessages(int i);
+	void MoveOrgan(long from, long to);
 
 public:
 	SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent);

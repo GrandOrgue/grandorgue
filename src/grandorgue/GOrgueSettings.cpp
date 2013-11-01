@@ -84,7 +84,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_Volume(-15),
 	m_PolyphonyLimit(2048),
 	m_Preset(0),
-	m_OrganMidiEvents(),
+	m_OrganList(),
 	m_WAVPath(),
 	m_OrganPath(),
 	m_SettingPath(),
@@ -135,6 +135,11 @@ void GOrgueSettings::Load()
 			GOrgueConfigReaderDB cfg_db;
 			cfg_db.ReadData(cfg_file, CMBSetting, false);
 			GOrgueConfigReader cfg(cfg_db);
+			
+			m_OrganList.clear();
+			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
+			for(unsigned i = 0; i < organ_count; i++)
+				m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1)));
 		}
 		catch (wxString error)
 		{
@@ -187,15 +192,6 @@ void GOrgueSettings::Load()
 		m_Volume = -15;
 	m_PolyphonyLimit = m_Config.Read(wxT("PolyphonyLimit"), 2048);
 
-	m_OrganMidiEvents.clear();
-	unsigned count = m_Config.Read(wxT("OrganMIDI/Count"), 0L);
-	for (unsigned i = 0; i < count; i++)
-	{
-		wxString itemstr = wxT("OrganMIDI/Organ") + wxString::Format(wxT("%ld"), i);
-		long j = m_Config.Read(itemstr + wxT(".midi"), 0L);
-		wxString file = m_Config.Read(itemstr + wxT(".file"));
-		m_OrganMidiEvents.insert(std::pair<long, wxString>(j, file));
-	}
 	m_WAVPath = m_Config.Read(wxT("wavPath"), GetStandardDocumentDirectory());
 	m_OrganPath = m_Config.Read(wxT("organPath"), GetStandardOrganDirectory());
 	m_SettingPath = m_Config.Read(wxT("cmbPath"), GetStandardOrganDirectory());
@@ -227,7 +223,7 @@ void GOrgueSettings::Load()
 		m_SetterEvents[i] = m_Config.Read(wxString(wxT("MIDI/")) + m_SetterNames[i], i < 2 ? (0xC400 + i) : 0x0000);
 
 	m_AudioGroups.clear();
-	count = m_Config.Read(wxT("AudioGroup/Count"), 0L);
+	unsigned count = m_Config.Read(wxT("AudioGroup/Count"), 0L);
 	for(unsigned i = 0; i < count; i++)
 		m_AudioGroups.push_back(m_Config.Read(wxString::Format(wxT("AudioGroup/Name%d"), i + 1), wxString::Format(_("Audio group %d"), i + 1)));
 	if (!m_AudioGroups.size())
@@ -791,22 +787,21 @@ void GOrgueSettings::SetAudioDeviceActualLatency(wxString device, unsigned laten
 	m_Config.Write(wxT("Devices/Sound/ActualLatency/") + device, (long) latency);
 }
 
-const std::map<long, wxString>& GOrgueSettings::GetOrganList()
+ptr_vector<GOrgueOrgan>& GOrgueSettings::GetOrganList()
 {
-	return m_OrganMidiEvents;
+	return m_OrganList;
 }
 
-void GOrgueSettings::SetOrganList(std::map<long, wxString> list)
+void GOrgueSettings::AddOrgan(GOrgueOrgan* organ)
 {
-	m_OrganMidiEvents = list;
-	unsigned count = 0;
-	for(std::map<long, wxString>::iterator it = m_OrganMidiEvents.begin(); it != m_OrganMidiEvents.end(); it++, count++)
-	{ 
-		wxString itemstr = wxString::Format(wxT("OrganMIDI/Organ%d"), count);
-		m_Config.Write(itemstr+wxT(".file"), it->second);
-		m_Config.Write(itemstr+wxT(".midi"), it->first);
-	}
-	m_Config.Write(wxT("OrganMIDI/Count"), (long)count);
+	for(unsigned i = 0; i < m_OrganList.size(); i++)
+		if (organ->GetODFPath() == m_OrganList[i]->GetODFPath())
+		{
+			m_OrganList[i]->Update(organ);
+			delete organ;
+			return;
+		}
+	m_OrganList.push_back(organ);
 }
 
 int GOrgueSettings::GetMidiInDeviceChannelShift(wxString device)
@@ -1030,6 +1025,10 @@ void GOrgueSettings::Flush()
 	wxString tmp_name = m_ConfigFileName + wxT(".new");
 	GOrgueConfigFileWriter cfg_file;
 	GOrgueConfigWriter cfg(cfg_file, false);
+
+	cfg.Write(wxT("General"), wxT("OrganCount"), (int)m_OrganList.size());
+	for(unsigned i = 0; i < m_OrganList.size(); i++)
+		m_OrganList[i]->Save(cfg, wxString::Format(wxT("Organ%03d"), i + 1));
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
