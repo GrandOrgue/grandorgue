@@ -1,4 +1,5 @@
 %define _mingw_bitsize XX (32 or 64)
+%define with_asio 0
 
 %if %{_mingw_bitsize} == 32
 %define __strip %{_mingw32_strip}
@@ -48,7 +49,22 @@ Autoreqprov:    on
 Version:        0.3.1.0
 Release:        1
 Epoch:          0
+%if %{with_asio}
+Source10:       asio.cpp
+Source11:       asio.h
+Source12:       asiodrivers.cpp
+Source13:       asiodrivers.h
+Source14:       asiodrvr.h
+Source15:       asiolist.cpp
+Source16:       asiolist.h
+Source17:       asiosys.h
+Source18:       combase.h
+Source19:       ginclude.h
+Source20:       iasiodrv.h
+%endif
+
 Source:         grandorgue-%{version}.tar.gz
+
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Recommends:     mingw%{_mingw_bitsize}-grandorgue-demo
@@ -78,6 +94,22 @@ Group:          Productivity/Multimedia/Sound/Midi
 
 %prep
 %setup -q -n grandorgue-%{version}
+%if %{with_asio}
+cp %{S:10} ext/rt/asio/include
+cp %{S:11} ext/rt/asio/include
+cp %{S:12} ext/rt/asio/include
+cp %{S:13} ext/rt/asio/include
+cp %{S:14} ext/rt/asio/include
+cp %{S:15} ext/rt/asio/include
+cp %{S:16} ext/rt/asio/include
+cp %{S:17} ext/rt/asio/include
+cp %{S:18} ext/rt/asio/include
+cp %{S:19} ext/rt/asio/include
+cp %{S:20} ext/rt/asio/include
+%define ASIO    ON
+%else
+%define ASIO    OFF
+%endif
 
 %build
 %{__mkdir} build-tools
@@ -85,7 +117,7 @@ cd build-tools
 cmake ../src/build
 make
 cd ..
-%define gooptions -DUNICODE=1 -DRTAUDIO_USE_ASIO=OFF  -DIMPORT_EXECUTABLES=../build-tools/ImportExecutables.cmake -DVERSION_REVISION="`echo %{version}|cut -d. -f4`" -DMSYS=1 -DSTATIC=1
+%define gooptions -DUNICODE=1 -DRTAUDIO_USE_ASIO=%ASIO  -DIMPORT_EXECUTABLES=../build-tools/ImportExecutables.cmake -DVERSION_REVISION="`echo %{version}|cut -d. -f4`" -DMSYS=1 -DSTATIC=1
 %define goinstall GrandOrgue-%{version}-win%{_mingw_bitsize}.exe
 %{__mkdir} build-mingw
 cd build-mingw
