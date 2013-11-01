@@ -20,6 +20,11 @@
  */
 
 #include "GOrgueSettings.h"
+#include "GOrgueConfigFileReader.h"
+#include "GOrgueConfigReader.h"
+#include "GOrgueConfigReaderDB.h"
+#include "GOrgueConfigFileWriter.h"
+#include "GOrgueConfigWriter.h"
 #include "GOSoundDefs.h"
 #include "GOrguePath.h"
 
@@ -104,6 +109,12 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_ReverbFile()
 {
 	GetConfig().SetRecordDefaults();
+	m_ConfigFileName = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
+}
+
+GOrgueSettings::~GOrgueSettings()
+{
+	Flush();
 }
 
 wxConfigBase& GOrgueSettings::GetConfig()
@@ -113,6 +124,24 @@ wxConfigBase& GOrgueSettings::GetConfig()
 
 void GOrgueSettings::Load()
 {
+	if (wxFileExists(m_ConfigFileName))
+	{
+		try
+		{
+			GOrgueConfigFileReader cfg_file;
+			if (!cfg_file.Read(m_ConfigFileName))
+				throw wxString::Format(_("Unable to read '%s'"), m_ConfigFileName.c_str());
+
+			GOrgueConfigReaderDB cfg_db;
+			cfg_db.ReadData(cfg_file, CMBSetting, false);
+			GOrgueConfigReader cfg(cfg_db);
+		}
+		catch (wxString error)
+		{
+			wxLogError(wxT("%s\n"),error.c_str());
+		}
+	}
+
 	long cpus = wxThread::GetCPUCount();
 	if (cpus == -1)
 		cpus = 4;
@@ -998,5 +1027,22 @@ void GOrgueSettings::SetReverbDelay(unsigned delay)
 
 void GOrgueSettings::Flush()
 {
+	wxString tmp_name = m_ConfigFileName + wxT(".new");
+	GOrgueConfigFileWriter cfg_file;
+	GOrgueConfigWriter cfg(cfg_file, false);
+
+	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
+	{
+		wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
+		return;
+	}
+	if (!cfg_file.Save(tmp_name))
+	{
+		wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
+		return;
+	}
+	if (!GORenameFile(tmp_name, m_ConfigFileName))
+		return;
+
 	m_Config.Flush();
 }

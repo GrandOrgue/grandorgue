@@ -104,6 +104,7 @@ bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 		}
 
 	m_listener.SetCallback(this);
+	m_sound.GetSettings().Flush();
 	return true;
 }
 
