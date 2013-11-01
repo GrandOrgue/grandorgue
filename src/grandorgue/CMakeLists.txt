@@ -240,6 +240,7 @@ GOrgueMidiSender.cpp
 GOrgueMidiSenderData.cpp
 GOrgueMidiReceiver.cpp
 GOrgueMidiReceiverData.cpp
+GOrgueOrgan.cpp
 GOrguePath.cpp
 GOrguePipe.cpp
 GOrguePipeConfig.cpp
