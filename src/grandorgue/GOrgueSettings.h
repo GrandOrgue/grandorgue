@@ -45,6 +45,7 @@ class GOrgueSettings {
 private:
 	wxConfigBase& m_Config;
 	wxString m_InstanceName;
+	wxString m_ConfigFileName;
 	size_t m_MemoryLimit;
 	bool m_Stereo;
 	unsigned m_Concurrency;
@@ -100,6 +101,7 @@ private:
 
 public:
 	GOrgueSettings(wxString instance);
+	~GOrgueSettings();
 
 	void Load();
 	wxConfigBase& GetConfig();
