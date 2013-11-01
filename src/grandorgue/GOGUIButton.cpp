@@ -27,6 +27,7 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueDocument.h"
 #include "GOrgueView.h"
+#include "GrandOrgueFile.h"
 #include "MIDIEventDialog.h"
 
 GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston, unsigned x_pos, unsigned y_pos) :
@@ -228,7 +229,8 @@ bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 		if (!doc->showWindow(GOrgueDocument::MIDI_EVENT, &m_Button))
 		{
 			doc->registerWindow(GOrgueDocument::MIDI_EVENT, &m_Button,
-					    new MIDIEventDialog (doc, m_panel->GetView()->GetFrame(), title, midi, sender, key));
+					    new MIDIEventDialog (doc, m_panel->GetView()->GetFrame(), title, 
+								 midi->GetOrganfile()->GetSettings(), midi, sender, key));
 		}
 		return true;
 	}

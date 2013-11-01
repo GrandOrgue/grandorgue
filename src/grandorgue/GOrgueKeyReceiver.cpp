@@ -51,5 +51,6 @@ bool GOrgueKeyReceiver::Match(unsigned key)
 void GOrgueKeyReceiver::Assign(const GOrgueKeyReceiverData& data)
 {
 	*(GOrgueKeyReceiverData*)this = data;
-	m_organfile->Modified();
+	if (m_organfile)
+		m_organfile->Modified();
 }

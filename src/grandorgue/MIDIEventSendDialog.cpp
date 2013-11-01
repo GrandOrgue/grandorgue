@@ -28,8 +28,9 @@ BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
 	EVT_CHOICE(ID_EVENT_NO, MIDIEventSendDialog::OnEventChange)
 END_EVENT_TABLE()
 
-MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event):
+MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event, GOrgueSettings& settings):
 	wxPanel(parent, wxID_ANY),
+	m_Settings(settings),
 	m_original(event),
 	m_midi(*event)
 {
@@ -79,7 +80,7 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 
 	m_device->Append(_("Any device"));
 
-	std::vector<wxString> device_names = m_original->GetSettings().GetMidiOutDeviceList();
+	std::vector<wxString> device_names = m_Settings.GetMidiOutDeviceList();
 	for(std::vector<wxString>::iterator it = device_names.begin(); it != device_names.end(); it++)
 		m_device->Append(*it);
 

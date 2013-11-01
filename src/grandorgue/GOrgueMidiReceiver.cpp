@@ -406,11 +406,6 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 	return MIDI_MATCH_NONE;
 }
 
-GOrgueSettings& GOrgueMidiReceiver::GetSettings()
-{
-	return m_organfile->GetSettings();
-}
-
 GrandOrgueFile* GOrgueMidiReceiver::GetOrganfile()
 {
 	return m_organfile;
@@ -419,5 +414,6 @@ GrandOrgueFile* GOrgueMidiReceiver::GetOrganfile()
 void GOrgueMidiReceiver::Assign(const GOrgueMidiReceiverData& data)
 {
 	*(GOrgueMidiReceiverData*)this = data;
-	m_organfile->Modified();
+	if (m_organfile)
+		m_organfile->Modified();
 }

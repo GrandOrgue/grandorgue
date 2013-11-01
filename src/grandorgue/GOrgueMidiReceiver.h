@@ -26,7 +26,6 @@
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
-class GOrgueSettings;
 class GrandOrgueFile;
 struct IniFileEnumEntry;
 
@@ -51,7 +50,6 @@ public:
 
 	void Assign(const GOrgueMidiReceiverData& data);
 
-	GOrgueSettings& GetSettings();
 	GrandOrgueFile* GetOrganfile();
 };
 

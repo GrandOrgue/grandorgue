@@ -255,13 +255,9 @@ void GOrgueMidiSender::SetLabel(wxString text)
 {
 }
 
-GOrgueSettings& GOrgueMidiSender::GetSettings()
-{
-	return m_organfile->GetSettings();
-}
-
 void GOrgueMidiSender::Assign(const GOrgueMidiSenderData& data)
 {
 	*(GOrgueMidiSenderData*)this = data;
-	m_organfile->Modified();
+	if (m_organfile)
+		m_organfile->Modified();
 }

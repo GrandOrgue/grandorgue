@@ -28,9 +28,12 @@
 #include "GOrgueMidiListener.h"
 #include "GOrgueMidiReceiver.h"
 
+class GOrgueSettings;
+
 class MIDIEventRecvDialog : public wxPanel, protected GOrgueMidiCallback
 {
 private:
+	GOrgueSettings& m_Settings;
 	GOrgueMidiReceiver* m_original;
 	GOrgueMidiReceiverData m_midi;
 	GOrgueMidiListener m_listener;
@@ -70,8 +73,9 @@ protected:
 	};
 
 public:
-	MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* event);
+	MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* event, GOrgueSettings& settings);
 	~MIDIEventRecvDialog();
+	void RegisterMIDIListener(GOrgueMidi* midi);
 
 	void DoApply();
 

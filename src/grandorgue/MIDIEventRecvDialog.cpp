@@ -31,8 +31,9 @@ BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
 END_EVENT_TABLE()
 
 
-MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* event):
+MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* event, GOrgueSettings& settings):
 	wxPanel(parent, wxID_ANY),
+	m_Settings(settings),
 	m_original(event),
 	m_midi(*event),
 	m_listener()
@@ -105,7 +106,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 
 	m_device->Append(_("Any device"));
 
-	std::vector<wxString> device_names = m_original->GetSettings().GetMidiInDeviceList();
+	std::vector<wxString> device_names = m_Settings.GetMidiInDeviceList();
 	for(std::vector<wxString>::iterator it = device_names.begin(); it != device_names.end(); it++)
 		m_device->Append(*it);
 
@@ -166,12 +167,19 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	LoadEvent();
 
 	topSizer->Fit(this);
-	m_original->GetOrganfile()->AddMidiListener(&m_listener);
+	if (m_original->GetOrganfile())
+		m_original->GetOrganfile()->AddMidiListener(&m_listener);
 }
 
 MIDIEventRecvDialog::~MIDIEventRecvDialog()
 {
 	m_listener.SetCallback(NULL);
+}
+
+void MIDIEventRecvDialog::RegisterMIDIListener(GOrgueMidi* midi)
+{
+	if (midi)
+		m_listener.Register(midi);
 }
 
 void MIDIEventRecvDialog::DoApply()
