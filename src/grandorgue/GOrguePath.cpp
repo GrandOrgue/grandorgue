@@ -72,15 +72,18 @@ void GOSyncDirectory(wxString path)
 bool GORenameFile(wxString from, wxString to)
 {
 	wxFileName name(to);
-	if (::wxFileExists(to) && !::wxRemoveFile(to))
-	{
-		wxLogError(_("Could not remove '%s'"), to.c_str());
-		return false;
-	}
 	if (!wxRenameFile(from, to))
 	{
-		wxLogError(_("Could not write to '%s'"), to.c_str());
-		return false;
+		if (::wxFileExists(to) && !::wxRemoveFile(to))
+		{
+			wxLogError(_("Could not remove '%s'"), to.c_str());
+			return false;
+		}
+		if (!wxRenameFile(from, to))
+		{
+			wxLogError(_("Could not write to '%s'"), to.c_str());
+			return false;
+		}
 	}
 	GOSyncDirectory(name.GetPath());
 	return true;

@@ -776,12 +776,6 @@ void GrandOrgueFile::Save(const wxString& file)
 	if (fn == GetODFFilename())
 		fn = m_SettingFilename;
 
-	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
-	{
-		wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
-		return;
-	}
-
 	GOrgueConfigFileWriter cfg_file;
 	m_b_customized = true;
 
@@ -830,17 +824,22 @@ void GrandOrgueFile::Save(const wxString& file)
 
 	m_PitchLabel.Save(cfg);
 	m_TemperamentLabel.Save(cfg);
-	if (fn == m_SettingFilename)
-		m_doc->Modify(false);
 
+	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
+	{
+		wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
+		return;
+	}
 	if (!cfg_file.Save(tmp_name))
 	{
 		wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
 		return;
 	}
-
 	if (!GORenameFile(tmp_name, fn))
 		return;
+
+	if (fn == m_SettingFilename)
+		m_doc->Modify(false);
 }
 
 void GrandOrgueFile::SetVolume(int volume)
