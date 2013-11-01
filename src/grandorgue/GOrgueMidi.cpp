@@ -292,6 +292,8 @@ void GOrgueMidi::Send(GOrgueMidiEvent& e)
 
 void GOrgueMidi::Register(GOrgueMidiListener* listener)
 {
+	if (!listener)
+		return;
 	for(unsigned i = 0; i < m_Listeners.size(); i++)
 		if (m_Listeners[i] == listener)
 			return;

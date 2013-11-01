@@ -26,9 +26,12 @@
 #include <wx/spinctrl.h>
 #include "GOrgueMidiSender.h"
 
+class GOrgueSettings;
+
 class MIDIEventSendDialog : public wxPanel
 {
 private:
+	GOrgueSettings& m_Settings;
 	GOrgueMidiSender* m_original;
 	GOrgueMidiSenderData m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
@@ -59,7 +62,7 @@ protected:
 	};
 
 public:
-	MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event);
+	MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event, GOrgueSettings& settings);
 	~MIDIEventSendDialog();
 
 	void DoApply();

@@ -27,9 +27,11 @@
 #include "GrandOrgueDef.h"
 #include "GOrgueDialogView.h"
 
+class GOrgueMidi;
 class GOrgueMidiReceiver;
 class GOrgueMidiSender;
 class GOrgueKeyReceiver;
+class GOrgueSettings;
 class MIDIEventRecvDialog;
 class MIDIEventSendDialog;
 class MIDIEventKeyDialog;
@@ -48,8 +50,10 @@ private:
 	void OnCancel(wxCommandEvent& event);
 
 public:
-	MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
+	MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
 	~MIDIEventDialog();
+
+	void RegisterMIDIListener(GOrgueMidi* midi);
 
 	DECLARE_EVENT_TABLE()
 };

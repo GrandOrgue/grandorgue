@@ -31,7 +31,7 @@ BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
 	EVT_BUTTON(wxID_CANCEL, MIDIEventDialog::OnCancel)
 END_EVENT_TABLE()
 
-MIDIEventDialog::MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key):
+MIDIEventDialog::MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key):
 	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize),
 	GOrgueDialogView(doc, this),
 	m_recvPage(NULL),
@@ -44,12 +44,12 @@ MIDIEventDialog::MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxStrin
 
 	if (event)
 	{
-		m_recvPage = new MIDIEventRecvDialog(notebook, event);
+		m_recvPage = new MIDIEventRecvDialog(notebook, event, settings);
 		notebook->AddPage(m_recvPage,  _("Receive"));
 	}
 	if (sender)
 	{
-		m_sendPage = new MIDIEventSendDialog(notebook, sender);
+		m_sendPage = new MIDIEventSendDialog(notebook, sender, settings);
 		notebook->AddPage(m_sendPage,  _("Send"));
 	}
 	if (key)
@@ -63,6 +63,12 @@ MIDIEventDialog::MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxStrin
 
 MIDIEventDialog::~MIDIEventDialog()
 {
+}
+
+void MIDIEventDialog::RegisterMIDIListener(GOrgueMidi* midi)
+{
+	if (m_recvPage)
+		m_recvPage->RegisterMIDIListener(midi);
 }
 
 void MIDIEventDialog::OnApply(wxCommandEvent& event)

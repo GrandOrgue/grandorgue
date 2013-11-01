@@ -26,7 +26,6 @@
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
-class GOrgueSettings;
 class GrandOrgueFile;
 struct IniFileEnumEntry;
 
@@ -49,8 +48,6 @@ public:
 	void SetLabel(wxString text);
 
 	void Assign(const GOrgueMidiSenderData& data);
-
-	GOrgueSettings& GetSettings();
 };
 
 #endif
