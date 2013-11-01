@@ -9,13 +9,9 @@ set(RtAudio_Sources RtAudio.cpp)
 if (WIN32)
    if (RTAUDIO_USE_ASIO)
       set(RtAudio_Sources ${RtAudio_Sources}
-         ../../../ext/rt/asio/include/register.cpp
          ../../../ext/rt/asio/include/asiodrivers.cpp
          ../../../ext/rt/asio/include/asiolist.cpp
          ../../../ext/rt/asio/include/asio.cpp
-         ../../../ext/rt/asio/include/combase.cpp
-         ../../../ext/rt/asio/include/debugmessage.cpp
-         ../../../ext/rt/asio/include/dllentry.cpp
          asiohelpers/include/iasiothiscallresolver.cpp)
    endif ()
 endif ()
