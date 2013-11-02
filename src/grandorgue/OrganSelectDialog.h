@@ -1,5 +1,5 @@
 /*
- * GrandOrgue - a free pipe organ simulator
+ * GrandOrgue - free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
  * Copyright 2009-2013 GrandOrgue contributors (see AUTHORS)
@@ -19,56 +19,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GRANDORGUEID_H
-#define GRANDORGUEID_H
+#ifndef ORGANSELECTDIALOG_H_
+#define ORGANSELECTDIALOG_H_
 
 #include <wx/wx.h>
 
-enum
+class GOrgueOrgan;
+class GOrgueSettings;
+
+class OrganSelectDialog : public wxDialog
 {
-	ID_GOrgueFIRSTMENU = wxID_HIGHEST,
+private:
+	GOrgueSettings& m_Settings;
+	wxListView* m_Organs;
 
-	ID_FILE_LOAD,
+	enum {
+		ID_ORGANS = 200
+	};
 
-	ID_FILE_RELOAD,
-	ID_FILE_REVERT,
-	ID_FILE_IMPORT_SETTINGS,
-	ID_FILE_IMPORT_COMBINATIONS,
-	ID_FILE_EXPORT,
-	ID_FILE_CACHE,
-	ID_FILE_CACHE_DELETE,
-	ID_FILE_PROPERTIES,
+	void OnOK(wxCommandEvent& event);
 
-	ID_ORGAN_EDIT,
+public:
+	OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSettings& settings);
 
-	ID_AUDIO_RECORD,
-	ID_AUDIO_MEMSET,
-	ID_AUDIO_PANIC,
-	ID_AUDIO_SETTINGS,
+	GOrgueOrgan* GetSelection();
 
-	ID_PRESET_0,
-	ID_PRESET_LAST = ID_PRESET_0 + 10, 
-
-	ID_TEMPERAMENT_0,
-	ID_TEMPERAMENT_LAST = ID_TEMPERAMENT_0 + 100,
-
-	ID_VOLUME,
-	ID_POLYPHONY,
-	ID_MEMORY,
-	ID_TRANSPOSE,
-	ID_REVERB,
-	ID_REVERB_SELECT,
-
-	ID_METER_AUDIO_SPIN,
-	ID_METER_AUDIO_LEFT,
-	ID_METER_AUDIO_RIGHT,
-	ID_METER_POLY_SPIN,
-	ID_METER_POLY_GAUGE,
-	ID_METER_FRAME_SPIN,
-	ID_METER_TRANSPOSE_SPIN,
-	ID_PANEL_MENU,
-	ID_PANEL_FIRST,
-	ID_PANEL_LAST = ID_PANEL_FIRST + 200,
+	DECLARE_EVENT_TABLE()
 };
 
 #endif
