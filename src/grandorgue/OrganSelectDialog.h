@@ -23,6 +23,7 @@
 #define ORGANSELECTDIALOG_H_
 
 #include <wx/wx.h>
+#include <wx/listctrl.h>
 
 class GOrgueOrgan;
 class GOrgueSettings;
