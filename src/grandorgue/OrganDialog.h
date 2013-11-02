@@ -101,7 +101,6 @@ private:
 	void OnEventApply(wxCommandEvent &e);
 	void OnEventReset(wxCommandEvent &e);
 	void OnEventDefault(wxCommandEvent &e);
-	void OnEventOK(wxCommandEvent &e);
 	void OnOK(wxCommandEvent& event);
 	void OnCancel(wxCommandEvent& event);
 	void OnAudioGroupAssitant(wxCommandEvent &e);

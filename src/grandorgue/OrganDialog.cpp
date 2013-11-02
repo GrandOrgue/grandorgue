@@ -69,7 +69,7 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_BUTTON(ID_EVENT_APPLY, OrganDialog::OnEventApply)
 	EVT_BUTTON(ID_EVENT_RESET, OrganDialog::OnEventReset)
 	EVT_BUTTON(ID_EVENT_DEFAULT, OrganDialog::OnEventDefault)
-	EVT_BUTTON(wxID_OK, OrganDialog::OnEventOK)
+	EVT_BUTTON(wxID_OK, OrganDialog::OnOK)
 	EVT_BUTTON(wxID_CANCEL, OrganDialog::OnCancel)
 	EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, OrganDialog::OnTreeChanging)
 	EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, OrganDialog::OnTreeChanged)
@@ -83,7 +83,6 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_TEXT(ID_EVENT_DELAY, OrganDialog::OnDelayChanged)
 	EVT_SPIN(ID_EVENT_DELAY_SPIN, OrganDialog::OnDelaySpinChanged)
 	EVT_TEXT(ID_EVENT_AUDIO_GROUP, OrganDialog::OnAudioGroupChanged)
-	EVT_BUTTON(wxID_OK, OrganDialog::OnOK)
 	EVT_BUTTON(ID_EVENT_AUDIO_GROUP_ASSISTANT, OrganDialog::OnAudioGroupAssitant)
 	EVT_CHOICE(ID_EVENT_BITS_PER_SAMPLE, OrganDialog::OnBitsPerSampleChanged)
 	EVT_CHOICE(ID_EVENT_COMPRESS, OrganDialog::OnCompressChanged)
@@ -834,16 +833,13 @@ void OrganDialog::OnTreeUpdated(wxCommandEvent& e)
 	Load();
 }
 
-void OrganDialog::OnEventOK(wxCommandEvent &e)
-{
-	if (Changed())
-		GOMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
-	else
-		e.Skip();
-}
-
 void OrganDialog::OnOK(wxCommandEvent& event)
 {
+	if (Changed())
+	{
+		GOMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
+		return;
+	}
 	m_organfile->SetIgnorePitch(m_IgnorePitch->GetValue());
 	m_organfile->SetTemperament(m_organfile->GetTemperament());
 	m_organfile->Modified();
