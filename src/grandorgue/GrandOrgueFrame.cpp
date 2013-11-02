@@ -40,6 +40,7 @@
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 #include "OrganDialog.h"
+#include "OrganSelectDialog.h"
 #include "GOrgueDocument.h"
 #include "GOrgueView.h"
 #include "SettingsDialog.h"
@@ -55,6 +56,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 #ifndef WXWIN_COMPATIBILITY_2_8
 	EVT_MENU_RANGE(wxID_FILE1, wxID_FILE1 + 49, wxDocParentFrame::OnMRUFile)
 #endif
+	EVT_MENU(ID_FILE_LOAD, GOrgueFrame::OnLoad)
 	EVT_MENU(ID_FILE_RELOAD, GOrgueFrame::OnReload)
 	EVT_MENU(ID_FILE_REVERT, GOrgueFrame::OnRevert)
 	EVT_MENU(ID_FILE_PROPERTIES, GOrgueFrame::OnProperties)
@@ -144,6 +146,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	for(unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
 		preset_menu->Append(i,  wxString::Format(_("Preset %d"), i - ID_PRESET_0), wxEmptyString, wxITEM_CHECK);
 	
+	file_menu->Append(ID_FILE_LOAD, _("&Load\tCtrl+L"), wxEmptyString, wxITEM_NORMAL);
 	file_menu->Append(wxID_OPEN, _("&Open\tCtrl+O"), wxEmptyString, wxITEM_NORMAL);
 	file_menu->Append(wxID_ANY, _("Open &Recent"), recent_menu);
 	file_menu->AppendSeparator();
@@ -475,6 +478,14 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
 	m_docManager->CreateDocument(event.GetString(), wxDOC_SILENT);
+}
+
+void GOrgueFrame::OnLoad(wxCommandEvent& event)
+{
+	OrganSelectDialog dlg(this, _("Select organ to load"), m_Settings);
+	if (dlg.ShowModal() != wxID_OK)
+		return;
+	m_docManager->CreateDocument(dlg.GetSelection()->GetODFPath(), wxDOC_SILENT);
 }
 
 void GOrgueFrame::OnOpen(wxCommandEvent& event)

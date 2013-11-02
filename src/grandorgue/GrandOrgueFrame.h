@@ -63,6 +63,7 @@ private:
 	void OnMeters(wxCommandEvent& event);
 
 	void OnLoadFile(wxCommandEvent& event);
+	void OnLoad(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
 	void OnImportSettings(wxCommandEvent& event);
 	void OnImportCombinations(wxCommandEvent& event);
