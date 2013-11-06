@@ -65,8 +65,11 @@ wxString GOGetPath(wxString path)
 
 void GOSyncDirectory(wxString path)
 {
-	wxFile dir(path, wxFile::read);
-	wxFsync(dir.fd());
+	int fd = wxOpen(path.c_str(), O_RDONLY, 0);
+	if (fd == -1)
+		return;
+	wxFsync(fd);
+	wxClose(fd);
 }
 
 bool GORenameFile(wxString from, wxString to)
