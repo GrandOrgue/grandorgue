@@ -6,19 +6,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-12-28 14:52+0100\n"
-"PO-Revision-Date: 2012-12-28 15:09+0100\n"
+"POT-Creation-Date: 2013-11-08 23:53+0100\n"
+"PO-Revision-Date: 2013-11-09 01:20+0100\n"
 "Last-Translator: Jean-Luc Derouineau <jeanluc@derouineau.com>\n"
 "Language-Team: French <jeanluc@derouineau.com>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.5.7\n"
 
 msgid " (PA): "
 msgstr " (PA): "
+
+msgid " - "
+msgstr ""
 
 msgid " - Virtual Pipe Organ Software"
 msgstr "Simulateur d'orgue à tuyaux"
@@ -34,6 +37,10 @@ msgid "%.3f MB"
 msgstr "%.3f MB"
 
 #, c-format
+msgid "%.3f MB (not limited)"
+msgstr "%.3f MB (pas limié)"
+
+#, c-format
 msgid "%.3f MB of %.3f MB"
 msgstr "%.3f MB of %.3f MB"
 
@@ -44,6 +51,10 @@ msgstr "%d"
 #, c-format
 msgid "%d (%s)"
 msgstr "%d (%s)"
+
+#, c-format
+msgid "%d: %s"
+msgstr ""
 
 #, c-format
 msgid "%f cent"
@@ -77,6 +88,9 @@ msgstr "&Audio/Midi"
 msgid "&CTRL/PGM:"
 msgstr ""
 
+msgid "&Cache"
+msgstr ""
+
 msgid "&Channel:"
 msgstr "&Canal:"
 
@@ -94,6 +108,9 @@ msgstr "&Effacer"
 
 msgid "&Device:"
 msgstr "&Interface:"
+
+msgid "&Down"
+msgstr ""
 
 msgid "&Enhancements"
 msgstr "&Améliorations"
@@ -121,6 +138,9 @@ msgstr "&Importer paramètres"
 
 msgid "&Listen for Event"
 msgstr "&Ecouter évènement MIDI"
+
+msgid "&Load\tCtrl+L"
+msgstr "&Chargement Orgue disponible\tCtrl+L"
 
 msgid "&Lowest key:"
 msgstr "&Note la plus basse:"
@@ -179,11 +199,17 @@ msgstr "Interface de &Sortie"
 msgid "&Temperament"
 msgstr "&Tempérament orgue"
 
+msgid "&Top"
+msgstr ""
+
 msgid "&Transpose"
 msgstr "&Transposer"
 
 msgid "&Transpose:"
 msgstr "&Transposer:"
+
+msgid "&Up"
+msgstr ""
 
 msgid "&Update Cache..."
 msgstr "&Mise à jour cache..."
@@ -200,6 +226,9 @@ msgstr "*.organ"
 msgid "*.wav"
 msgstr ""
 
+msgid "+"
+msgstr "+"
+
 msgid "+1"
 msgstr "+1"
 
@@ -211,6 +240,9 @@ msgstr "+100"
 
 msgid ","
 msgstr ""
+
+msgid "-"
+msgstr "-"
 
 msgid "-1"
 msgstr "-1"
@@ -525,6 +557,16 @@ msgstr "Appliquer"
 msgid "Attack loading:"
 msgstr "Chargement attaques:"
 
+msgid ""
+"Attention:\n"
+"These initial midi settings only affect the first load of a organ.\n"
+"Right-click on manuals, stops, ... to do further changes."
+msgstr ""
+"Attention:\n"
+"Cette configuration MIDI n'affecte que le premier chargement de l'orgue.\n"
+"Clickez à droite sur les claviers et jeux ... pour effectuer les changements "
+"MIDI"
+
 msgid "Audio Groups"
 msgstr "Groupe Audio"
 
@@ -559,6 +601,9 @@ msgstr "Groupes audio"
 
 msgid "Audio/Midi &Settings"
 msgstr "&Paramètres Audio/Midi"
+
+msgid "Automatically manage cache"
+msgstr "Gérer automatiquement le cache de l'orgue lors du chargement"
 
 msgid "B"
 msgstr "B"
@@ -672,17 +717,21 @@ msgstr "Canal:"
 msgid "Chaumont"
 msgstr ""
 
-msgid "Choose a file"
-msgstr "Choisir un fichier"
+msgid "Church"
+msgstr "Eglise"
 
 msgid "Combination Setter"
 msgstr "Combinateur"
 
-msgid "Compress Cache"
+msgid "Compress cache"
 msgstr "Compression du cache"
 
-msgid "Concurreny Level:"
+msgid "Concurrency Level:"
 msgstr "Nombre de tâches parallèles:"
+
+#, c-format
+msgid "Config entry without any group at line %d"
+msgstr "Elément de configuration sans groupe à la ligne %d"
 
 msgid ""
 "Copyright 2006 Milan Digital Audio LLC\n"
@@ -711,6 +760,10 @@ msgstr "Coeur audio"
 
 msgid "Corrette (1753)"
 msgstr ""
+
+#, c-format
+msgid "Could not remove '%s'"
+msgstr "Impossible d'enlever '%s'"
 
 #, c-format
 msgid "Could not write to '%s'"
@@ -752,9 +805,6 @@ msgstr "Changement Program Cx On"
 
 msgid "D"
 msgstr "D"
-
-msgid "Data"
-msgstr "Donnée"
 
 msgid "Data/Offset"
 msgstr "Donnée/Transposition"
@@ -807,15 +857,38 @@ msgstr "DirectSound"
 msgid "Disabled"
 msgstr "Désactivé"
 
+msgid "Distribute audio groups"
+msgstr "Répartir les groupes audio"
+
 msgid "Divisionals"
 msgstr "Divisions"
+
+#, c-format
+msgid "Do you want to remove %s?"
+msgstr "Voulez vous enlever %s?"
 
 msgid "Don't load"
 msgstr "Ne pas charger"
 
 #, c-format
-msgid "Dupplicate entry: %s"
-msgstr "Double entrée: %s"
+msgid "Drawstop %s can't reference to itself"
+msgstr "Commande de jeu %s ne peut pas s'auto référencer"
+
+#, c-format
+msgid "Duplicate combination entry %s in %s"
+msgstr "Doublon dans commande combinaision %s à %s"
+
+#, c-format
+msgid "Duplicate entry in section %s at line %d: %s"
+msgstr "Doublon dans la section %s à la ligne %d: %s"
+
+#, c-format
+msgid "Duplicate entry: %s"
+msgstr "Doublon: %s"
+
+#, c-format
+msgid "Duplicate group at line %d: %s"
+msgstr "Doublon groupe à la ligne %d: %s"
 
 msgid "E"
 msgstr ""
@@ -855,9 +928,6 @@ msgstr "Tempérament égal"
 
 msgid "Error"
 msgstr "Erreur"
-
-msgid "Event"
-msgstr "Evènement"
 
 msgid "Event-&No"
 msgstr "Evènement-&Numéro"
@@ -941,7 +1011,7 @@ msgid "F9"
 msgstr ""
 
 #, c-format
-msgid "Failed to create directory '%s"
+msgid "Failed to create directory '%s'"
 msgstr "Impossible de créer le répertoire '%s"
 
 #, c-format
@@ -955,6 +1025,10 @@ msgstr "Impossible d'ouvrir le graphique '%s'"
 #, c-format
 msgid "Failed to read %s from cache."
 msgstr "Impossible de lire %s du cache."
+
+#, c-format
+msgid "Failed to read file '%s'"
+msgstr "Impossible de lire le fichier  '%s'"
 
 #, c-format
 msgid "Failed to read file '%s'\n"
@@ -1095,8 +1169,8 @@ msgid "Incompatible stream host API"
 msgstr "Stream incompatible avec l'hote API"
 
 #, c-format
-msgid "Incorrect case for '/%s/%s'"
-msgstr "Cas incorrect pour '/%s/%s'"
+msgid "Incorrect case for section '%s' entry '%s'"
+msgstr "Cas incorrect pour la section '%s' entry '%s'"
 
 msgid "Initial MIDI Configuration"
 msgstr "Configuration MIDI initiale"
@@ -1117,12 +1191,20 @@ msgid "Interpolation:"
 msgstr "Méthode interpolation:"
 
 #, c-format
-msgid "Invalid boolean value '/%s/%s': %s"
-msgstr "Valeur booléén invalide '/%s/%s': %s"
+msgid "Invalid Config entry at line %d: %s"
+msgstr "Mauvaise commande de configuration %d: %s"
 
 #, c-format
-msgid "Invalid color '/%s/%s': %s"
-msgstr "Couleur invalide '/%s/%s': %s"
+msgid "Invalid boolean value at section '%s' entry '%s': %s"
+msgstr "Valeur booléén invalide à la section '%s' entry '%s': %s"
+
+#, c-format
+msgid "Invalid color at section '%s' entry '%s': %s"
+msgstr "Couleur invalide à la section '%s' entry '%s': %s"
+
+#, c-format
+msgid "Invalid combination entry %s in %s"
+msgstr "Combinaison invalide en  %s in %s"
 
 msgid "Invalid device"
 msgstr "Interface invalide"
@@ -1131,8 +1213,8 @@ msgid "Invalid enum default value"
 msgstr "Valeur enum par défaut invalide"
 
 #, c-format
-msgid "Invalid enum value '/%s/%s': %s"
-msgstr "Valeur enum invalide '/%s/%s': %s"
+msgid "Invalid enum value at section '%s' entry '%s': %s"
+msgstr "Valeur enum invalide à la section '%s' entry '%s': %s"
 
 #, c-format
 msgid "Invalid enum value for /%s/%s: %d"
@@ -1151,12 +1233,12 @@ msgid "Invalid flag"
 msgstr "Flag non valide"
 
 #, c-format
-msgid "Invalid float value '/%s/%s': %s"
-msgstr "Valeur float invalide '/%s/%s': %s"
+msgid "Invalid float value at section '%s' entry '%s': %s"
+msgstr "Valeur float invalide à la section '%s' entry '%s': %s"
 
 #, c-format
-msgid "Invalid font size '/%s/%s': %s"
-msgstr "Taille font invalide '/%s/%s': %s"
+msgid "Invalid font size at section '%s' entry '%s': %s"
+msgstr "Taille font invalide section '%s' entry '%s': %s"
 
 msgid "Invalid host API"
 msgstr "Hote API invalide"
@@ -1165,14 +1247,21 @@ msgid "Invalid instance name"
 msgstr "Mauvais nom d'instance"
 
 #, c-format
-msgid "Invalid integer value '/%s/%s': %s"
-msgstr "Valeur entier invalide '/%s/%s': %s"
+msgid "Invalid integer value at section '%s' entry '%s': %s"
+msgstr "Valeur entier invalide section '%s' entry '%s': %s"
+
+#, c-format
+msgid "Invalid item selected: %s"
+msgstr "Elément sélectioné invalide %s"
 
 msgid "Invalid loop defintion"
 msgstr "Mauvaise définition de boucle"
 
 msgid "Invalid number of channels"
 msgstr "Nombre de canaux invalide"
+
+msgid "Invalid object type for reversible piston"
+msgstr "Type d'objet invalide pour piston reversible"
 
 msgid "Invalid reference "
 msgstr "Référence invalide "
@@ -1190,8 +1279,12 @@ msgid "Invalid sample rate"
 msgstr "Mauvais taux d'échantillonage"
 
 #, c-format
-msgid "Invalid size '/%s/%s': %s"
-msgstr "Taille invalide '/%s/%s': %s"
+msgid "Invalid section start at line %d: %s"
+msgstr "Section invalide débute à la ligne %d: %s"
+
+#, c-format
+msgid "Invalid size at section '%s' entry '%s': %s"
+msgstr "Taille invalide section '%s' entry '%s': %s"
 
 msgid "Invalid stream pointer"
 msgstr "Mauvais pointeur de stream"
@@ -1268,6 +1361,9 @@ msgstr "Erreur de chargement"
 msgid "Load error: %s"
 msgstr "Erreur de chargement: %s"
 
+msgid "Load last file at startup"
+msgstr "Charger dernier orgue utilisé lors du démarrage"
+
 #, c-format
 msgid "Loading %lu%%"
 msgstr "Chargement %lu%%"
@@ -1306,6 +1402,9 @@ msgstr "MB"
 msgid "MEL"
 msgstr "MEL"
 
+msgid "MIDI"
+msgstr ""
+
 msgid "MIDI &input devices"
 msgstr "&Interface entrée MIDI"
 
@@ -1321,29 +1420,41 @@ msgstr "Evènement MIDI"
 msgid "MIDI Messages"
 msgstr "Messages MIDI"
 
+#, c-format
+msgid "MIDI settings for organ %s"
+msgstr "Configuration MIDI pour orgue %s"
+
 msgid "MME"
 msgstr "MME"
 
 msgid "Malerbi's well-temperament nr 1 (1794)"
 msgstr ""
 
+#, c-format
+msgid "Manual %d: Switch%03d already in use"
+msgstr "Clavier %d: commande %03d déjà utilisé"
+
+#, c-format
+msgid "Manual %d: Tremulant%03d already in use"
+msgstr "Clavier %d: Trémulant %03d déja utilisé"
+
 msgid "Manual 1 (Pedal)"
-msgstr "Manual 1 (Pedalierl)"
+msgstr "Clavier 1 (Pedalierl)"
 
 msgid "Manual 2 (Great)"
-msgstr "Manual 2 (Grand orgue)"
+msgstr "Clavier 2 (Grand orgue)"
 
 msgid "Manual 3 (Swell)"
-msgstr "Manual 3 (Récit)"
+msgstr "Clavier 3 (Récit)"
 
 msgid "Manual 4 (Choir)"
-msgstr "Manual 4 (Positif)"
+msgstr "Clavierl 4 (Positif)"
 
 msgid "Manual 5 (Solo)"
-msgstr "Manual 5 (Solo)"
+msgstr "Clavier 5 (Solo)"
 
 msgid "Manual 6 (Echo)"
-msgstr "Manual 6 (Echo)"
+msgstr "Clavierl 6 (Echo)"
 
 msgid "Mapped memory of the cache"
 msgstr "Mémoire configurée du cache"
@@ -1441,8 +1552,8 @@ msgid "Midi-Settings for Pushbutton - "
 msgstr "Configuration MIDI pour poussoir -"
 
 #, c-format
-msgid "Missing required value '/%s/%s'"
-msgstr "Manque valeur '/%s/%s'"
+msgid "Missing required value section '%s' entry '%s'"
+msgstr "Manque valeur à la section '%s' élément '%s'"
 
 msgid "Mod. Silbermann nr 2"
 msgstr ""
@@ -1486,6 +1597,12 @@ msgstr "Suite"
 msgid "Next Memory"
 msgstr "Position mémoire suivante"
 
+msgid "No"
+msgstr "Non"
+
+msgid "No audio group selected"
+msgstr "Pas de groupe audio sélectionné"
+
 msgid "No callback routine specified"
 msgstr "Pas de routine callback spécifièe"
 
@@ -1495,11 +1612,21 @@ msgstr "Aucun"
 msgid "Norden"
 msgstr "Norden"
 
+#, c-format
+msgid "Number %s contains locale dependent floating point"
+msgstr "Le nombre %s contient des dépendance locales en notation exponentielle"
+
 msgid "O"
 msgstr ""
 
+msgid "ODF Path"
+msgstr "Chemin pour ODF"
+
 msgid "OSS"
 msgstr "OSS"
+
+msgid "Old GO 0.2 styled setting in ODF"
+msgstr "Défnition type GO 0.2 dans l'ODF"
 
 msgid "Open &Recent"
 msgstr "Ouvrir &Récent"
@@ -1510,9 +1637,6 @@ msgstr "L'ouverture du stream audio %s a échoué: %s"
 
 msgid "Options"
 msgstr "Options"
-
-msgid "Organ"
-msgstr "Orgue"
 
 msgid "Organ &Properties"
 msgstr "&Propriétés orgue"
@@ -1525,6 +1649,9 @@ msgstr "Propriétés orgue"
 
 msgid "Organ View"
 msgstr "Vue de l'orgue"
+
+msgid "Organ dialog"
+msgstr "Paramètres orgue"
 
 msgid "Organ settings"
 msgstr "Paramètres orgue"
@@ -1541,9 +1668,6 @@ msgstr "Autres commentaires"
 msgid "Other just"
 msgstr ""
 
-msgid "Our Organ"
-msgstr "GrandOrgue"
-
 msgid ""
 "Out of memory - only parts of the organ are loaded. Please reduce memory "
 "footprint via the sample loading settings."
@@ -1553,12 +1677,12 @@ msgstr ""
 "échantillons."
 
 #, c-format
-msgid "Out of range value '/%s/%s': %d"
-msgstr "Valeur hors limite '/%s/%s': %d"
+msgid "Out of range value at section '%s' entry '%s': %d"
+msgstr "Valeur hors limite section '%s' entry '%s': %d"
 
 #, c-format
-msgid "Out of range value '/%s/%s': %f"
-msgstr "Valeur hors limite '/%s/%s': %f"
+msgid "Out of range value at section '%s' entry '%s': %f"
+msgstr "Valeur hors limite section '%s' entry '%s': %f"
 
 #, c-format
 msgid "Output device %s not found - no sound output will occure"
@@ -1590,6 +1714,9 @@ msgstr "Entrez un volume entre -120 et 40 dB"
 
 msgid "Please enter new volume in dB:"
 msgstr "Entrez le nouveau volume en dB:"
+
+msgid "Please select an organ"
+msgstr "Choisissez un Orgue"
 
 msgid "Polyphase"
 msgstr "Polyphase"
@@ -1680,13 +1807,16 @@ msgstr "Reçoie"
 msgid "Recorder WAV Format:"
 msgstr "Format WAV de l'enregistreur:"
 
+msgid "Recording"
+msgstr "Enregistrement"
+
 msgid "Recording Details"
 msgstr "Détails d'enregistrement"
 
 msgid "Regular"
 msgstr "Normal"
 
-msgid "Release Concurreny Level:"
+msgid "Release Concurrency Level:"
 msgstr "Nombre de tâches pour laché note:"
 
 msgid "Release loading:"
@@ -1712,6 +1842,12 @@ msgstr "Recharger configuration par &défaut"
 
 msgid "Reverb"
 msgstr "Réverbération"
+
+msgid "Revert"
+msgstr "Revenir"
+
+msgid "Revert to Default"
+msgstr "Revenir à valeur par défautt"
 
 msgid "Rousseau's temperament (1768)"
 msgstr "Rousseau's temperament (1768)"
@@ -1795,14 +1931,24 @@ msgstr "Limiter"
 msgid "Scoped"
 msgstr "Limité"
 
+#, c-format
+msgid "Section %s already in use"
+msgstr "Section %s déjà utilisée"
+
 msgid "Select an impulse file"
 msgstr "Selectioner un fichier d'impulsion"
+
+msgid "Select audio groups to distribute:"
+msgstr "Choisissez les groupes audio à répartir"
 
 msgid "Select directory for cache store"
 msgstr "Choisir le répertoire pour la sauvegarde cache"
 
 msgid "Select directory for settings store"
 msgstr "Choisir le répertoire pour la sauvegarde paramètres"
+
+msgid "Select organ to load"
+msgstr "Choisissez un Orgue à charger"
 
 msgid "Send"
 msgstr "Envoie"
@@ -1821,6 +1967,10 @@ msgstr "Sauvegarde paramètres:"
 
 msgid "Shortcut"
 msgstr "Raccourci"
+
+msgid ""
+"Should the audio config be reverted to the default stereo configuration?"
+msgstr "Est ce que la configuration audio devrait être restaurée en stéréo?"
 
 msgid "Single attack"
 msgstr "Une attaque"
@@ -1873,8 +2023,8 @@ msgid "Stop Changes"
 msgstr "Changement de jeu"
 
 #, c-format
-msgid "Strange boolean value for '/%s/%s': %s"
-msgstr "Valeur booléén invalide '/%s/%s': %s"
+msgid "Strange boolean value for section '%s' entry '%s': %s"
+msgstr "Valeur booléén invalide section '%s' entry '%s': %s"
 
 msgid "Stream is not stopped"
 msgstr "Stream non arrêté"
@@ -1884,6 +2034,10 @@ msgstr "Stream arrêté"
 
 msgid "Success"
 msgstr "Succès"
+
+#, c-format
+msgid "Switch %d already assigned to %s"
+msgstr "Commande %d déjà assignée à %s"
 
 msgid "T"
 msgstr "T"
@@ -1897,6 +2051,16 @@ msgid ""
 msgstr ""
 "Le fichier ODF contient des paramètres sauvegardés de GrandOrgue 0.2. "
 "Doivent ils être importés?"
+
+msgid "The ODF does not match the combination file."
+msgstr "L'ODF ne correspond pas au fichier de combinaison"
+
+msgid ""
+"The ODF does not match the combination file. Importing it can cause various "
+"problems. Should they really be imported?"
+msgstr ""
+"L'ODF ne correspond pas au fichier de combinaison. L'importer peut causer "
+"des problèmes. Voulez vous vraiment l'importer?"
 
 msgid "The cache for this organ is outdated. Please update or delete it."
 msgstr "Le cache de cet orgue n'est pas à jour. Mettre à jour ou effacer."
@@ -1917,6 +2081,15 @@ msgstr ""
 
 msgid "Title"
 msgstr "Titre"
+
+msgid "Too many audio channels configured for the new audio interface"
+msgstr "Trop de canaux audio configurés pour la nouvelle interface audio"
+
+msgid "Tracker (ms):"
+msgstr "Séquenceur (ms):"
+
+msgid "Tracker delay is invalid"
+msgstr "Delay séquenceur invalide"
 
 msgid "Transpose"
 msgstr "Transposer"
@@ -1961,6 +2134,14 @@ msgstr "Numéro de canal non supporté"
 msgid "Unsupported format"
 msgstr "Format non supporté"
 
+#, c-format
+msgid "Unused CMB entry '%s'"
+msgstr "Element CMB non utilisé '%s'"
+
+#, c-format
+msgid "Unused ODF entry '%s'"
+msgstr "Elément ODF non utilisé '%s'"
+
 msgid "User Interface"
 msgstr "Interface Utilisateur"
 
@@ -1978,8 +2159,8 @@ msgid "Valotti"
 msgstr "Valotti"
 
 #, c-format
-msgid "Value too long: '/%s/%s': %s"
-msgstr "Valeur trop longue: '/%s/%s': %s"
+msgid "Value too long: section '%s' entry '%s': %s"
+msgstr "Valeur trop longue: section '%s' entry '%s': %s"
 
 msgid "Variable meantone 1"
 msgstr ""
@@ -2013,6 +2194,9 @@ msgstr "Dépassement temps attente"
 
 msgid "Warning"
 msgstr "Attention"
+
+msgid "Wegscheider 20 note"
+msgstr ""
 
 msgid "Well tempered"
 msgstr "Well tempered"
@@ -2058,6 +2242,9 @@ msgid "X"
 msgstr ""
 
 msgid "Y"
+msgstr ""
+
+msgid "Yes"
 msgstr ""
 
 msgid "Z"
@@ -2339,11 +2526,20 @@ msgstr ""
 #~ msgstr ""
 #~ "Fichier cache érroné (devrait être %#.8x obtenu %#.8x) cache non utilisé"
 
+#~ msgid "Choose a file"
+#~ msgstr "Choisir un fichier"
+
+#~ msgid "Data"
+#~ msgstr "Donnée"
+
 #~ msgid "Device Settings"
 #~ msgstr "Paramètres interfaces"
 
 #~ msgid "Drawstop Trigger"
 #~ msgstr "Déclenchement jeu"
+
+#~ msgid "Event"
+#~ msgstr "Evènement"
 
 #~ msgid "Failed to create IPC service."
 #~ msgstr "Impossible de créer un service IPC."
@@ -2356,9 +2552,6 @@ msgstr ""
 
 #~ msgid "Load aborted by the user"
 #~ msgstr "Chargement arrêté par l'utilisateur"
-
-#~ msgid "MIDI Settings"
-#~ msgstr "Configuration MIDI"
 
 #~ msgid "Missing required group '/%s'"
 #~ msgstr "Manque groupe '/%s'"
@@ -2374,14 +2567,17 @@ msgstr ""
 #~ msgid "Open"
 #~ msgstr "Ouvrir"
 
+#~ msgid "Organ"
+#~ msgstr "Orgue"
+
+#~ msgid "Our Organ"
+#~ msgstr "GrandOrgue"
+
 #~ msgid "Output Resolution:"
 #~ msgstr "Résolution audio:"
 
 #~ msgid "Pushbutton Trigger"
 #~ msgstr "Déclenchement poussoir"
-
-#~ msgid "Record"
-#~ msgstr "Enregistrer"
 
 #~ msgid "Release sample phase alignment"
 #~ msgstr "Alignement phase laché note"
