@@ -31,21 +31,6 @@
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 
-/* This parameter determines the cross fade length. The length in samples
- * will be:
- *                    2 ^ (CROSSFADE_LEN_BITS + 1)
- * Reasonable durations
- *   8   - 512 samples    (approx 12ms @ 44.1kHz)
- *   9   - 1024 samples   (approx 23ms @ 44.1kHz)
- *   10  - 2048 samples   (approx 46ms @ 44.1kHz)
- *   11   -4096 samples   (approx 92ms @ 44.1kHz)
- *   12   -9192 samples   (approx 184ms @ 44.1kHz)
- *   13  - 18384 samples  (approx 368ms @ 44.1kHz)
- *   14  - 36768 samples  (approx 736ms @ 44.1kHz)
- *   15  - 73536 samples  (approx 1472ms @ 44.1kHz)
- */
-#define CROSSFADE_LEN_BITS (8)
-
 GOSoundEngine::GOSoundEngine() :
 	m_PolyphonyLimiting(true),
 	m_ScaledReleases(true),
@@ -199,6 +184,33 @@ float GOSoundEngine::GetRandomFactor()
 		return  1 + num * factor;
 	}
 	return 1;
+}
+
+/* This function determines the cross fade length. The length in samples
+ * will be:
+ *                    2 ^ (CROSSFADE_LEN_BITS + 1)
+ * Reasonable durations
+ *   8   - 512 samples    (approx 12ms @ 44.1kHz)
+ *   9   - 1024 samples   (approx 23ms @ 44.1kHz)
+ *   10  - 2048 samples   (approx 46ms @ 44.1kHz)
+ *   11   -4096 samples   (approx 92ms @ 44.1kHz)
+ *   12   -9192 samples   (approx 184ms @ 44.1kHz)
+ *   13  - 18384 samples  (approx 368ms @ 44.1kHz)
+ *   14  - 36768 samples  (approx 736ms @ 44.1kHz)
+ *   15  - 73536 samples  (approx 1472ms @ 44.1kHz)
+ */
+unsigned GOSoundEngine::GetFaderLength(unsigned MidiKeyNumber)
+{
+	unsigned fade_length = 10;
+	if (MidiKeyNumber > 0 && MidiKeyNumber < 133 )
+	{
+		fade_length = 12 - (int)((((float)MidiKeyNumber - 42.0f) / 44.0f) * 5.0f);
+		if (MidiKeyNumber < 42 )
+			fade_length = 12;
+		if (MidiKeyNumber > 86 )
+			fade_length = 7;
+	}
+	return fade_length;
 }
 
 void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group)
@@ -378,7 +390,8 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 				 * which will decay this portion of the pipe. The sampler will
 				 * automatically be placed back in the pool when the fade restores to
 				 * zero. */
-				sampler->fader.StartDecay(-CROSSFADE_LEN_BITS);
+				unsigned CrossFadeLenBits = sampler->pipe ? GetFaderLength(sampler->pipe->GetMidiKeyNumber()) : 10;
+				sampler->fader.StartDecay(-CrossFadeLenBits);
 				sampler->is_release = true;
 				sampler->stop = 0;
 			} 
@@ -765,14 +778,13 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 		handle->time = m_CurrentTime + 1;
 
 		float gain_target = this_pipe->GetGain() * section->GetNormGain();
-
-		handle->fader.NewAttacking(gain_target, -(CROSSFADE_LEN_BITS), 1 << (CROSSFADE_LEN_BITS + 1));
+		unsigned CrossFadeLenBits = GetFaderLength(this_pipe->GetMidiKeyNumber());
+		handle->fader.NewAttacking(gain_target, -CrossFadeLenBits, 1 << (CrossFadeLenBits + 1));
 
 		section->InitAlignedStream(&handle->stream, &new_sampler->stream);
 		handle->is_release = false;
 		new_sampler->is_release = true;
-
-		new_sampler->fader.StartDecay(-CROSSFADE_LEN_BITS);
+		new_sampler->fader.StartDecay(-CrossFadeLenBits);
 		new_sampler->fader.SetVelocityVolume(new_sampler->pipe->GetVelocityVolume(new_sampler->velocity));
 
 		StartSampler(new_sampler, new_sampler->sampler_group_id, new_sampler->audio_group_id);
@@ -861,8 +873,8 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 					}
 				}
 			}
-
-			new_sampler->fader.NewAttacking(gain_target, -(CROSSFADE_LEN_BITS), 1 << (CROSSFADE_LEN_BITS + 1));
+			unsigned CrossFadeLenBits = GetFaderLength(this_pipe->GetMidiKeyNumber());
+			new_sampler->fader.NewAttacking(gain_target, -CrossFadeLenBits, 1 << (CrossFadeLenBits + 1));
 
 			int reverb = GetReverb();
 			if ( reverb < 0 )

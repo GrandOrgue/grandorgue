@@ -182,6 +182,7 @@ private:
 	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, float* decoded_sampler_audio_frame);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, bool depend = true);
 	void ResetDoneFlags();
+	unsigned GetFaderLength(unsigned MidiKeyNumber);
 	float GetRandomFactor();
 	void ProcessTremulants(unsigned n_frames);
 	void ProcessOutputGroup(unsigned audio_group, unsigned n_frames);
