@@ -44,6 +44,7 @@ const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
 	{ wxT("ControlChange"), MIDI_M_CTRL_CHANGE },
 	{ wxT("Note"), MIDI_M_NOTE },
 	{ wxT("ProgramChange"), MIDI_M_PGM_CHANGE },
+	{ wxT("SysExJohannus"), MIDI_M_SYSEX_JOHANNUS },
 	{ wxT("ControlChangeOn"), MIDI_M_CTRL_CHANGE_ON },
 	{ wxT("ControlChangeOff"), MIDI_M_CTRL_CHANGE_OFF },
 	{ wxT("NoteOn"), MIDI_M_NOTE_ON },
@@ -399,6 +400,10 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 			return MIDI_MATCH_CHANGE;
 
 		if (e.GetMidiType() == MIDI_PGM_CHANGE && m_events[i].type == MIDI_M_PGM_CHANGE && m_events[i].key == e.GetKey())
+		{
+			return MIDI_MATCH_CHANGE;
+		}
+		if (e.GetMidiType() == MIDI_SYSEX_JOHANNUS && m_events[i].type == MIDI_M_SYSEX_JOHANNUS && m_events[i].key == e.GetKey())
 		{
 			return MIDI_MATCH_CHANGE;
 		}

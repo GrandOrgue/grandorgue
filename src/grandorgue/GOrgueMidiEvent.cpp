@@ -105,6 +105,11 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg)
 			SetMidiType(MIDI_RESET);
 			break;
 		}
+		if (msg.size() == 9 && msg[0] == 0xF0 && msg[1] == 0x00 && msg[2] == 0x4A && msg[3] == 0x4F && msg[4] == 0x48 && msg[5] == 0x41 && msg[6] == 0x53 && msg[8] == 0xF7)
+		{
+			SetKey(msg[7]);
+			SetMidiType(MIDI_SYSEX_JOHANNUS);
+		}
 		return;
 	default:
 		return;
@@ -187,6 +192,7 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg)
 		msg.push_back(m);
 		return;
 
+	case MIDI_SYSEX_JOHANNUS:
 	case MIDI_AFTERTOUCH:
 	case MIDI_NONE:
 	case MIDI_RESET:

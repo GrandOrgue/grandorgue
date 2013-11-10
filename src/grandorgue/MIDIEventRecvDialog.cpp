@@ -137,6 +137,9 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 		m_eventtype->Append(_("9x Note short octave at low key"), (void*)MIDI_M_NOTE_SHORT_OCTAVE);
 	}
 
+	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
+		m_eventtype->Append(_("Sys Ex Johannus"), (void*)MIDI_M_SYSEX_JOHANNUS);
+
 	if (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
 	{
 		m_LowVelocity->Enable();
