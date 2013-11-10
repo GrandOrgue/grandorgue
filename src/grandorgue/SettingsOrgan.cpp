@@ -76,7 +76,7 @@ SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindo
 		m_Organs->SetColumnWidth(0, 150);
 		m_Organs->SetColumnWidth(1, 150);
 		m_Organs->SetColumnWidth(2, 250);
-		m_Organs->SetColumnWidth(3, 50);
+		m_Organs->SetColumnWidth(3, wxLIST_AUTOSIZE_USEHEADER);
 		m_Organs->SetColumnWidth(4, wxLIST_AUTOSIZE);
 	}
 	m_Up->Disable();
@@ -168,6 +168,7 @@ void SettingsOrgan::OnProperties(wxCommandEvent& event)
 	MIDIEventDialog dlg(NULL, this, wxString::Format(_("MIDI settings for organ %s"), o->GetChurchName().c_str()), m_Settings, &o->GetMIDIReceiver(), NULL, NULL);
 	dlg.RegisterMIDIListener(&m_midi);
 	dlg.ShowModal();
+	m_Organs->SetItem(m_Organs->GetFirstSelected(), 3, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No") );
 }
 
 void SettingsOrgan::Save()
