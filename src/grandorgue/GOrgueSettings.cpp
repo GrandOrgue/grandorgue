@@ -212,15 +212,15 @@ void GOrgueSettings::Load()
 	m_ReverbFile = m_Config.Read(wxT("ReverbFile"), wxEmptyString);
 
 
-	m_StopChangeEvent = m_Config.Read(wxString(wxT("MIDI/")) + m_StopChangeName, 0x9400);
+	m_StopChangeEvent = m_Config.Read(wxString(wxT("MIDI/")) + m_StopChangeName, 0x0000L);
 	for(unsigned i = 0; i < GetManualCount(); i++)
-		m_ManualEvents[i] = m_Config.Read(wxString(wxT("MIDI/")) + m_ManualNames[i], 0x9000 + (((i < 4 ? i : i + 1) << 8) & 0x0F00));
+		m_ManualEvents[i] = m_Config.Read(wxString(wxT("MIDI/")) + m_ManualNames[i], 0x0000L);
 
 	for(unsigned i = 0; i < GetEnclosureCount(); i++)
 		m_EnclosureEvents[i] = m_Config.Read(wxString(wxT("MIDI/")) + m_EnclosureNames[i], 0x0000L);
 
 	for(unsigned i = 0; i < GetSetterCount(); i++)
-		m_SetterEvents[i] = m_Config.Read(wxString(wxT("MIDI/")) + m_SetterNames[i], i < 2 ? (0xC400 + i) : 0x0000);
+		m_SetterEvents[i] = m_Config.Read(wxString(wxT("MIDI/")) + m_SetterNames[i], 0x0000L);
 
 	m_AudioGroups.clear();
 	unsigned count = m_Config.Read(wxT("AudioGroup/Count"), 0L);
