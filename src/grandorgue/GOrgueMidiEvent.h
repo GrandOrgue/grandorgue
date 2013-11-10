@@ -32,6 +32,7 @@ typedef enum {
 	MIDI_AFTERTOUCH,
 	MIDI_CTRL_CHANGE,
 	MIDI_PGM_CHANGE,
+	MIDI_SYSEX_JOHANNUS,
 } midi_message_type;
 
 #define MIDI_CTRL_BANK_SELECT_MSB 0
