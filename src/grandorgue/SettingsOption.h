@@ -24,6 +24,7 @@
 
 #include <wx/wx.h>
 class wxDirPickerCtrl;
+class wxSpinCtrl;
 
 class GOrgueSettings;
 
