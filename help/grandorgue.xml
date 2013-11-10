@@ -5673,7 +5673,8 @@ rank size), eg. 2 2/3 =&gt; 64 / (2 2/3) = 24.
 (integer -1 - 127, default: -1) If -1, use pitch information from the
 Pipe999 sample, else override the information in the sample with this
 midi note number (Pipe999PitchCorrection is used for specifing the
-fraction).
+fraction). Specifing the midi note number also reset the pitch
+fraction in the sample to 0.
      </para>
           </listitem>
         </varlistentry>
