@@ -81,10 +81,6 @@ private:
 	wxString m_LastFile;
 	std::vector<wxString> m_AudioGroups;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
-	int m_ManualEvents[6];
-	int m_EnclosureEvents[6];
-	int m_SetterEvents[3];
-	int m_StopChangeEvent;
 	int m_Transpose;
 	int m_Reverb;
 	bool m_ReverbEnabled;
@@ -96,10 +92,6 @@ private:
 	float m_ReverbGain;
 	wxString m_ReverbFile;
 
-	static const wxString m_ManualNames[];
-	static const wxString m_EnclosureNames[];
-	static const wxString m_SetterNames[];
-	static const wxString m_StopChangeName;
 
 public:
 	GOrgueSettings(wxString instance);
@@ -114,25 +106,6 @@ public:
 
 	size_t GetMemoryLimit();
 	void SetMemoryLimit(size_t limit);
-
-	unsigned GetManualCount();
-	wxString GetManualTitle(unsigned index);
-	int GetManualEvent(unsigned index);
-	void SetManualEvent(unsigned index, int event);
-
-	unsigned GetEnclosureCount();
-	wxString GetEnclosureTitle(unsigned index);
-	int GetEnclosureEvent(unsigned index);
-	void SetEnclosureEvent(unsigned index, int event);
-
-	unsigned GetSetterCount();
-	wxString GetSetterTitle(unsigned index);
-	int GetSetterEvent(unsigned index);
-	void SetSetterEvent(unsigned index, int event);
-	
-	wxString GetStopChangeTitle();
-	int GetStopChangeEvent();
-	void SetStopChangeEvent(int event);
 
 	wxString GetOrganPath();
 	void SetOrganPath(wxString path);

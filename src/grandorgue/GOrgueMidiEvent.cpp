@@ -116,28 +116,6 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg)
 	}
 }
 
-int GOrgueMidiEvent::GetEventCode() const
-{
-	switch(GetMidiType())
-	{
-	case MIDI_NOTE:
-		if (!GetValue())
-			return -1;
-		return 0x9000 | ((GetChannel() - 1) & 0x0F) << 8 | (GetKey() & 0x7F);
-
-	case MIDI_CTRL_CHANGE:
-		if (!GetValue())
-			return -1;
-		return 0xB000 | ((GetChannel() - 1) & 0x0F) << 8 | (GetKey() & 0x7F);
-		
-	case MIDI_PGM_CHANGE:
-		return 0xC000 | ((GetChannel() - 1) & 0x0F) << 8 | ((GetKey() - 1) & 0x7F);
-
-	default:
-		return -1;
-	}
-}
-
 void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg)
 {
 	msg.resize(0);

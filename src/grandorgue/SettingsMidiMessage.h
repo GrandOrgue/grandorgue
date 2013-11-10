@@ -24,8 +24,8 @@
 
 #include <wx/wx.h>
 #include <wx/listctrl.h>
-#include "MIDIListenDialog.h"
 
+class GOrgueMidi;
 class GOrgueSettings;
 
 class SettingsMidiMessage : public wxPanel
@@ -40,13 +40,6 @@ private:
 	GOrgueMidi& m_midi;
 	wxListView* m_Events;
 	wxButton* m_Properties;
-
-	unsigned GetEventCount();
-	MIDIListenDialog::LISTEN_DIALOG_TYPE GetEventType(unsigned index);
-	wxString GetEventName(unsigned index);
-	int GetEventData(unsigned index);
-	void SetEventData(unsigned index, int event);
-	void UpdateMessages(unsigned i);
 
 	void OnEventsClick(wxListEvent& event);
 	void OnEventsDoubleClick(wxListEvent& event);
