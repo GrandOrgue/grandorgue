@@ -26,6 +26,7 @@
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GOrgueDialogView.h"
+#include "GOrguePanelView.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
 #include "MIDIEventDialog.h"
@@ -99,21 +100,35 @@ bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 
 	UpdateAllViews();
 
+	ShowPanel(0);
 	for (unsigned i = 1; i < m_organfile->GetPanelCount(); i++)
 		if (m_organfile->GetPanel(i)->InitialOpenWindow())
-		{
-			wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_FIRST + i - 1);
-			wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-		}
+			ShowPanel(i);
 
 	m_listener.SetCallback(this);
 	m_sound.GetSettings().Flush();
 	return true;
 }
 
+void GOrgueDocument::ShowPanel(unsigned id)
+{
+	GOGUIPanel* panel = m_organfile->GetPanel(id);
+
+	if (!showWindow(GOrgueDocument::PANEL, panel))
+	{
+		registerWindow(GOrgueDocument::PANEL, panel,
+			       GOrguePanelView::createWindow(this, panel, id == 0 ? wxTheApp->GetTopWindow() : NULL));
+	}
+}
+
 bool GOrgueDocument::DoSaveDocument(const wxString& file)
 {
 	m_organfile->SetVolume(m_sound.GetEngine().GetVolume());
+	for (unsigned i = 0; i < m_organfile->GetPanelCount(); i++)
+		m_organfile->GetPanel(i)->SetInitialOpenWindow(false);
+	for(unsigned i = 0; i < m_Windows.size(); i++)
+		if (m_Windows[i].type == PANEL && m_Windows[i].data)
+			((GOrguePanelView*)m_Windows[i].window)->SyncState();
 	m_organfile->Save(file);
 	return true;
 }

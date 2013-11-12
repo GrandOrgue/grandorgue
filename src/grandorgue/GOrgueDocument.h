@@ -38,7 +38,7 @@ class GOrgueDialogView;
 class GOrgueDocument : public wxDocument, protected GOrgueMidiCallback
 {
 public:
-	typedef enum { ORGAN_DIALOG, MIDI_EVENT } WindowType;
+	typedef enum { ORGAN_DIALOG, MIDI_EVENT, PANEL } WindowType;
 private:
 	typedef struct {
 		WindowType type;
@@ -67,6 +67,7 @@ public:
 	bool DoOpenDocument(const wxString& file, const wxString& file2);
 	bool DoSaveDocument(const wxString& file);
 
+	void ShowPanel(unsigned id);
 	void ShowOrganDialog();
 	void ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
 
