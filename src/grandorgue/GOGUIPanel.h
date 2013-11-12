@@ -32,7 +32,7 @@ class GOGUIPanelWidget;
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueButton;
-class GOrgueView;
+class GOrguePanelView;
 class GrandOrgueFile;
 
 class GOGUIPanel {
@@ -43,7 +43,7 @@ protected:
 	wxString m_Name;
 	wxString m_GroupName;
 	GOGUIDisplayMetrics* m_metrics;
-	GOrgueView* m_view;
+	GOrguePanelView* m_view;
 	wxString m_group;
 	wxRect m_size;
 	bool m_InitialOpenWindow;
@@ -55,8 +55,7 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 
-	GOrgueView* GetView();
-	void SetView(GOrgueView* view);
+	void SetView(GOrguePanelView* view);
 
 	GrandOrgueFile* GetOrganFile();
 	const wxString& GetName();
@@ -81,6 +80,8 @@ public:
 	bool InitialOpenWindow();
 
 	wxRect GetWindowSize();
+	void SetWindowSize(wxRect rect);
+	void SetInitialOpenWindow(bool open);
 };
 
 

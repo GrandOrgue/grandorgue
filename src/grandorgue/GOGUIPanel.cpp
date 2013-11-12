@@ -38,12 +38,12 @@
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueManual.h"
+#include "GOrguePanelView.h"
 #include "GOrguePiston.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSwitch.h"
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
-#include "GOrgueView.h"
 #include "GrandOrgueFile.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIHW1DisplayMetrics.h"
@@ -72,8 +72,6 @@ GOGUIPanel::~GOGUIPanel()
 {
 	if (m_metrics)
 		delete m_metrics;
-	if (m_view)
-		m_view->Close();
 }
 
 bool GOGUIPanel::InitialOpenWindow()
@@ -101,12 +99,7 @@ wxBitmap* GOGUIPanel::LoadBitmap(wxString filename, wxString maskname)
 	return m_organfile->GetBitmapCache().GetBitmap(filename, maskname);
 }
 
-GOrgueView* GOGUIPanel::GetView()
-{
-	return m_view;
-}
-
-void GOGUIPanel::SetView(GOrgueView* view)
+void GOGUIPanel::SetView(GOrguePanelView* view)
 {
 	m_view = view;
 }
@@ -485,6 +478,16 @@ wxRect GOGUIPanel::GetWindowSize()
 	return m_size;
 }
 
+void GOGUIPanel::SetWindowSize(wxRect rect)
+{
+	m_size = rect;
+}
+
+void GOGUIPanel::SetInitialOpenWindow(bool open)
+{
+	m_InitialOpenWindow = open;
+}
+
 void GOGUIPanel::AddEvent(GOGUIControl* control)
 {
 	if (m_view)
@@ -518,27 +521,18 @@ void GOGUIPanel::Save(GOrgueConfigWriter& cfg)
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->Save(cfg);
 
-	cfg.Write(m_group, wxT("WindowDisplayed"), m_view != NULL);
-	if (m_view)
-	{
-		wxWindow* parent = m_view->GetFrame();
-
-		if (parent->IsKindOf(CLASSINFO(wxScrolledWindow)))
-			/* parent for Main panel is not the main window */
-			parent = parent->GetParent();
-
-		wxRect size = parent->GetRect();
-		int x = size.GetLeft();
-		int y = size.GetTop();
-		if (x < -20)
-			x = -20;
-		if (y < -20)
-			y = -20;
-		cfg.Write(m_group, wxT("WindowX"), x);
-		cfg.Write(m_group, wxT("WindowY"), y);
-		cfg.Write(m_group, wxT("WindowWidth"), size.GetWidth());
-		cfg.Write(m_group, wxT("WindowHeight"), size.GetHeight());
-	}
+	cfg.Write(m_group, wxT("WindowDisplayed"), m_InitialOpenWindow);
+	wxRect size = m_size;
+	int x = size.GetLeft();
+	int y = size.GetTop();
+	if (x < -20)
+		x = -20;
+	if (y < -20)
+		y = -20;
+	cfg.Write(m_group, wxT("WindowX"), x);
+	cfg.Write(m_group, wxT("WindowY"), y);
+	cfg.Write(m_group, wxT("WindowWidth"), size.GetWidth());
+	cfg.Write(m_group, wxT("WindowHeight"), size.GetHeight());
 }
 
 void GOGUIPanel::Modified()

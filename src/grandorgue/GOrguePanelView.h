@@ -19,28 +19,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEVIEW_H
-#define GORGUEVIEW_H
+#ifndef GORGUEPANELVIEW_H
+#define GORGUEPANELVIEW_H
 
-#include <wx/docview.h>
+#include <wx/wx.h>
+#include "GOrgueDialogView.h"
 
+class GOGUIControl;
+class GOGUIPanel;
 class GOGUIPanelWidget;
-class GOrgueDocument;
 
-class GOrgueView : public wxView
+class GOrguePanelView : public wxScrolledWindow, public GOrgueDialogView
 {
 private:
-	GOrgueDocument* m_doc;
-
-	bool OnClose(bool deleteWindow = true);
-	void OnDraw(wxDC*);
+	GOGUIPanelWidget* m_panelwidget;
+	GOGUIPanel* m_panel;
 
 public:
-	GOrgueView();
-	~GOrgueView();
+	GOrguePanelView(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent, bool main_panel);
+	~GOrguePanelView();
 
-	bool OnCreate(wxDocument *doc, long flags);
-	void OnChangeFilename();
+	void AddEvent(GOGUIControl* control);
+
+	static GOrguePanelView* createWindow(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent);
+	void SyncState();
+
+	bool Destroy();
 };
 
 #endif
