@@ -28,6 +28,8 @@
 #include "GOrgueDialogView.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
+#include "MIDIEventDialog.h"
+#include "OrganDialog.h"
 
 GOrgueDocument::GOrgueDocument(GOrgueSound* sound) :
 	m_OrganFileReady(false),
@@ -189,4 +191,22 @@ void GOrgueDocument::unregisterWindow(GOrgueDialogView* window)
 			m_Windows.erase(m_Windows.begin() + i);
 			return;
 		}
+}
+
+void GOrgueDocument::ShowOrganDialog()
+{
+	if (!showWindow(GOrgueDocument::ORGAN_DIALOG, NULL) && m_organfile)
+	{
+		registerWindow(GOrgueDocument::ORGAN_DIALOG, NULL,
+			       new OrganDialog(this, NULL, m_organfile));
+	}
+}
+
+void GOrgueDocument::ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key)
+{
+	if (!showWindow(GOrgueDocument::MIDI_EVENT, element) && m_organfile)
+	{
+		registerWindow(GOrgueDocument::MIDI_EVENT, element,
+			       new MIDIEventDialog (this, NULL, title, m_organfile->GetSettings(), event, sender, key));
+	}
 }

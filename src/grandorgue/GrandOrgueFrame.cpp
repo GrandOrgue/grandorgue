@@ -39,7 +39,6 @@
 #include "GOrgueTemperament.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
-#include "OrganDialog.h"
 #include "OrganSelectDialog.h"
 #include "GOrgueDocument.h"
 #include "GOrgueView.h"
@@ -656,12 +655,7 @@ void GOrgueFrame::OnEditOrgan(wxCommandEvent& event)
 	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
 	if (!doc)
 		return;
-
-	if (!doc->showWindow(GOrgueDocument::ORGAN_DIALOG, NULL))
-	{
-		doc->registerWindow(GOrgueDocument::ORGAN_DIALOG, NULL,
-				    new OrganDialog(doc, this, doc->GetOrganFile()));
-	}
+	doc->ShowOrganDialog();
 }
 
 void GOrgueFrame::OnHelp(wxCommandEvent& event)

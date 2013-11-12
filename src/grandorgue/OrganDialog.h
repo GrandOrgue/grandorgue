@@ -33,6 +33,7 @@ class wxTreeItemId;
 class wxSpinButton;
 class OrganTreeItemData;
 class wxCheckBox;
+class wxSpinEvent;
 
 class OrganDialog : public wxDialog, public GOrgueDialogView
 {
