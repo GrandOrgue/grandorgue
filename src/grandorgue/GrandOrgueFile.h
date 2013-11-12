@@ -152,6 +152,7 @@ public:
 	void ControlChanged(void* control);
 	void UpdateTremulant(GOrgueTremulant* tremulant);
 	void Modified();
+	GOrgueDocument* GetDocument();
 	~GrandOrgueFile(void);
 
 	/* Access to internal ODF objects */

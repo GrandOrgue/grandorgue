@@ -26,9 +26,7 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueDocument.h"
 #include "GOrgueManual.h"
-#include "GOrgueView.h"
 #include "GrandOrgueFile.h"
-#include "MIDIEventDialog.h"
 
 GOGUIManual::GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number):
 	GOGUIControl(panel, manual),
@@ -346,13 +344,8 @@ bool GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 		GOrgueMidiReceiver* midi = &m_manual->GetMidiReceiver();
 		GOrgueMidiSender* sender = &m_manual->GetMidiSender();
 
-		GOrgueDocument* doc = m_panel->GetView()->getDocument();
-		if (!doc->showWindow(GOrgueDocument::MIDI_EVENT, &m_manual))
-		{
-			doc->registerWindow(GOrgueDocument::MIDI_EVENT, &m_manual, 
-					    new MIDIEventDialog (doc, m_panel->GetView()->GetFrame(), _("Midi-Settings for Manual - ") + m_manual->GetName(), 
-								 midi->GetOrganfile()->GetSettings(), midi, sender, NULL));
-		}
+		GOrgueDocument* doc = m_panel->GetOrganFile()->GetDocument();
+		doc->ShowMIDIEventDialog(&m_manual, _("Midi-Settings for Manual - ") + m_manual->GetName(), midi, sender, NULL);
 		return true;
 	}
 	else

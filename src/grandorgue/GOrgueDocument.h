@@ -27,7 +27,10 @@
 #include "GOLock.h"
 #include "GOrgueMidiListener.h"
 
+class GOrgueKeyReceiver;
 class GOrgueMidiEvent;
+class GOrgueMidiReceiver;
+class GOrgueMidiSender;
 class GrandOrgueFile;
 class GOrgueSound;
 class GOrgueDialogView;
@@ -63,6 +66,9 @@ public:
 
 	bool DoOpenDocument(const wxString& file, const wxString& file2);
 	bool DoSaveDocument(const wxString& file);
+
+	void ShowOrganDialog();
+	void ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
 
 	bool Save() { return OnSaveDocument(m_documentFile); }
 

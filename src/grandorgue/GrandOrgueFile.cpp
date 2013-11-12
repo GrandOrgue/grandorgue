@@ -842,6 +842,11 @@ void GrandOrgueFile::Save(const wxString& file)
 		m_doc->Modify(false);
 }
 
+GOrgueDocument* GrandOrgueFile::GetDocument()
+{
+	return m_doc;
+}
+
 void GrandOrgueFile::SetVolume(int volume)
 {
 	m_volume = volume;

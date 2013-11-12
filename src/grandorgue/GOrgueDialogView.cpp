@@ -38,6 +38,7 @@ GOrgueDialogView::~GOrgueDialogView()
 void GOrgueDialogView::RemoveView()
 {
 	m_doc = NULL;
+	m_wnd->Hide();
 	m_wnd->Destroy();
 }
 
