@@ -29,6 +29,7 @@
 
 class GrandOrgueFile;
 class wxTreeCtrl;
+class wxTreeEvent;
 class wxTreeItemId;
 class wxSpinButton;
 class OrganTreeItemData;
