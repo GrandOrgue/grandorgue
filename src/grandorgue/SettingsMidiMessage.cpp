@@ -21,6 +21,7 @@
 
 #include "SettingsMidiMessage.h"
 #include "GOrgueSettings.h"
+#include "MIDIEventDialog.h"
 
 BEGIN_EVENT_TABLE(SettingsMidiMessage, wxPanel)
 	EVT_LIST_ITEM_SELECTED(ID_EVENTS, SettingsMidiMessage::OnEventsClick)
@@ -39,23 +40,30 @@ SettingsMidiMessage::SettingsMidiMessage(GOrgueSettings& settings, GOrgueMidi& m
 	topSizer->AddSpacer(5);
 
 	m_Events = new wxListView(this, ID_EVENTS, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
-	m_Events->InsertColumn(0, _("Action"));
-	m_Events->InsertColumn(1, _("MIDI Event"));
-	m_Events->InsertColumn(2, _("Channel"));
-	m_Events->InsertColumn(3, _("Data/Offset"));
+	m_Events->InsertColumn(0, _("Group"));
+	m_Events->InsertColumn(1, _("Element"));
+	m_Events->InsertColumn(2, _("MIDI Event"));
 	topSizer->Add(m_Events, 1, wxEXPAND | wxALL, 5);
 	m_Properties = new wxButton(this, ID_PROPERTIES, _("P&roperties..."));
 	m_Properties->Disable();
 	topSizer->Add(m_Properties, 0, wxALIGN_RIGHT | wxALL, 5);
 
+	for (unsigned i = 0; i < m_Settings.GetEventCount(); i++)
+	{
+		GOrgueMidiReceiver* recv = m_Settings.GetMidiEvent(i);
+		m_Events->InsertItem(i, m_Settings.GetEventGroup(i));
+		m_Events->SetItemPtrData(i, (wxUIntPtr)recv);
+		m_Events->SetItem(i, 1, m_Settings.GetEventTitle(i));
+		m_Events->SetItem(i, 2, recv->GetEventCount() > 0 ? _("Yes") : _("No") );
+	}
+
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
 	topSizer->Fit(this);
 
-	m_Events->SetColumnWidth(0, 150);
-	m_Events->SetColumnWidth(1, 300);
-	m_Events->SetColumnWidth(2, 62);
-	m_Events->SetColumnWidth(3, 100);
+	m_Events->SetColumnWidth(0, wxLIST_AUTOSIZE);
+	m_Events->SetColumnWidth(1, wxLIST_AUTOSIZE);
+	m_Events->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
 }
 
 void SettingsMidiMessage::OnEventsClick(wxListEvent& event)
@@ -68,6 +76,11 @@ void SettingsMidiMessage::OnEventsDoubleClick(wxListEvent& event)
 	m_Properties->Enable();
 	int index = m_Events->GetFirstSelected();
 
+	GOrgueMidiReceiver* recv = (GOrgueMidiReceiver*)m_Events->GetItemData(m_Events->GetFirstSelected());
+	MIDIEventDialog dlg(NULL, this, wxString::Format(_("Initial MIDI settings for %s"), m_Settings.GetEventTitle(index).c_str()), m_Settings, recv, NULL, NULL);
+	dlg.RegisterMIDIListener(&m_midi);
+	dlg.ShowModal();
+	m_Events->SetItem(index, 2, recv->GetEventCount() > 0 ? _("Yes") : _("No") );
 }
 
 void SettingsMidiMessage::OnProperties(wxCommandEvent& event)
