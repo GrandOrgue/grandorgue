@@ -106,6 +106,15 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 	else
 	{
 		m_events.resize(0);
+		if (!m_organfile)
+			return;
+		unsigned index = 0;
+
+		GOrgueMidiReceiver* recv = m_organfile->GetSettings().FindMidiEvent(m_type, index);
+		if (!recv)
+			return;
+		
+		m_events = recv->m_events;
 	}
 }
 

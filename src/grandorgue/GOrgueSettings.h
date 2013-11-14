@@ -43,6 +43,14 @@ typedef struct
 	std::vector< std::vector<GOAudioGroupOutputConfig> > scale_factors;
 } GOAudioDeviceConfig;
 
+typedef struct
+{
+	MIDI_RECEIVER_TYPE type;
+	unsigned index;
+	const wxChar* group;
+	const wxChar* name;
+} GOMidiSetting;
+
 class GOrgueSettings {
 private:
 	wxConfigBase& m_Config;
@@ -91,7 +99,11 @@ private:
 	unsigned m_ReverbDelay;
 	float m_ReverbGain;
 	wxString m_ReverbFile;
+	ptr_vector<GOrgueMidiReceiver> m_MIDIEvents;
 
+	static const GOMidiSetting m_MIDISettings[];
+
+	wxString GetEventSection(unsigned index);
 
 public:
 	GOrgueSettings(wxString instance);
@@ -107,6 +119,12 @@ public:
 	size_t GetMemoryLimit();
 	void SetMemoryLimit(size_t limit);
 
+	unsigned GetEventCount();
+	wxString GetEventGroup(unsigned index);
+	wxString GetEventTitle(unsigned index);
+	GOrgueMidiReceiver* GetMidiEvent(unsigned index);
+	GOrgueMidiReceiver* FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
+	
 	wxString GetOrganPath();
 	void SetOrganPath(wxString path);
 	wxString GetSettingPath();

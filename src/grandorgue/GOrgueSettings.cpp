@@ -33,6 +33,8 @@
 #include <wx/filename.h>
 #include <wx/confbase.h>
 
+const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
+};
 
 GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_Config(*wxConfigBase::Get()),
@@ -76,10 +78,13 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_ReverbLen(0),
 	m_ReverbDelay(0),
 	m_ReverbGain(1),
-	m_ReverbFile()
+	m_ReverbFile(),
+	m_MIDIEvents()
 {
 	GetConfig().SetRecordDefaults();
 	m_ConfigFileName = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
+	for(unsigned i = 0; i < GetEventCount(); i++)
+		m_MIDIEvents.push_back(new GOrgueMidiReceiver(NULL, m_MIDISettings[i].type));
 }
 
 GOrgueSettings::~GOrgueSettings()
@@ -110,6 +115,9 @@ void GOrgueSettings::Load()
 			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
 			for(unsigned i = 0; i < organ_count; i++)
 				m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1)));
+
+			for(unsigned i = 0; i < GetEventCount(); i++)
+				m_MIDIEvents[i]->Load(cfg, GetEventSection(i));
 		}
 		catch (wxString error)
 		{
@@ -266,6 +274,49 @@ void GOrgueSettings::Load()
 		}
 		while (m_Config.GetNextEntry(str, no));
 	m_Config.SetPath(wxT("/"));
+}
+
+unsigned GOrgueSettings::GetEventCount()
+{
+	return sizeof(m_MIDISettings) / sizeof(m_MIDISettings[0]);
+}
+
+wxString GOrgueSettings::GetEventSection(unsigned index)
+{
+	assert(index < GetEventCount());
+	switch(m_MIDISettings[index].type)
+	{
+		
+	default:
+	assert(false);
+	return wxEmptyString;
+	}
+}
+
+wxString GOrgueSettings::GetEventGroup(unsigned index)
+{
+	assert(index < GetEventCount());
+	return wxGetTranslation(m_MIDISettings[index].group);
+}
+
+wxString GOrgueSettings::GetEventTitle(unsigned index)
+{
+	assert(index < GetEventCount());
+	return wxGetTranslation(m_MIDISettings[index].name);
+}
+
+GOrgueMidiReceiver* GOrgueSettings::GetMidiEvent(unsigned index)
+{
+	assert(index < GetEventCount());
+	return m_MIDIEvents[index];
+}
+
+GOrgueMidiReceiver* GOrgueSettings::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index)
+{
+	for(unsigned i = 0; i < GetEventCount(); i++)
+		if (m_MIDISettings[i].type == type && m_MIDISettings[i].index == index)
+			return m_MIDIEvents[i];
+	return NULL;
 }
 
 size_t GOrgueSettings::GetMemoryLimit()
@@ -901,6 +952,9 @@ void GOrgueSettings::Flush()
 	cfg.Write(wxT("General"), wxT("OrganCount"), (int)m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
 		m_OrganList[i]->Save(cfg, wxString::Format(wxT("Organ%03d"), i + 1));
+
+	for(unsigned i = 0; i < GetEventCount(); i++)
+		m_MIDIEvents[i]->Save(cfg, GetEventSection(i));
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
