@@ -110,6 +110,10 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 			return;
 		unsigned index = 0;
 
+		if (m_type == MIDI_RECV_SETTER)
+		{
+			index = m_Index;
+		}
 		if (m_type == MIDI_RECV_MANUAL)
 		{
 			if (m_Index == -1)
