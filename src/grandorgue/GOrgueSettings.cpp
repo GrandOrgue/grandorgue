@@ -46,6 +46,31 @@ const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
 	{ MIDI_RECV_ENCLOSURE, 4, wxTRANSLATE("Enclosures"), wxTRANSLATE("Enclosure 4") },
 	{ MIDI_RECV_ENCLOSURE, 5, wxTRANSLATE("Enclosures"), wxTRANSLATE("Enclosure 5") },
 	{ MIDI_RECV_ENCLOSURE, 6, wxTRANSLATE("Enclosures"), wxTRANSLATE("Enclosure 6") },
+	{ MIDI_RECV_SETTER, 0, wxTRANSLATE("Sequencer"), wxTRANSLATE("Previous Memory") },
+	{ MIDI_RECV_SETTER, 1, wxTRANSLATE("Sequencer"), wxTRANSLATE("Next Memory") },
+	{ MIDI_RECV_SETTER, 2, wxTRANSLATE("Sequencer"), wxTRANSLATE("Memory Set") },
+	{ MIDI_RECV_SETTER, 3, wxTRANSLATE("Sequencer"), wxTRANSLATE("Current") },
+	{ MIDI_RECV_SETTER, 4, wxTRANSLATE("Sequencer"), wxTRANSLATE("G.C.") },
+	{ MIDI_RECV_SETTER, 5, wxTRANSLATE("Sequencer"), wxTRANSLATE("-10") },
+	{ MIDI_RECV_SETTER, 6, wxTRANSLATE("Sequencer"), wxTRANSLATE("+10") },
+	{ MIDI_RECV_SETTER, 7, wxTRANSLATE("Sequencer"), wxTRANSLATE("__0") },
+	{ MIDI_RECV_SETTER, 8, wxTRANSLATE("Sequencer"), wxTRANSLATE("__1") },
+	{ MIDI_RECV_SETTER, 9, wxTRANSLATE("Sequencer"), wxTRANSLATE("__2") },
+	{ MIDI_RECV_SETTER, 10, wxTRANSLATE("Sequencer"), wxTRANSLATE("__3") },
+	{ MIDI_RECV_SETTER, 11, wxTRANSLATE("Sequencer"), wxTRANSLATE("__4") },
+	{ MIDI_RECV_SETTER, 12, wxTRANSLATE("Sequencer"), wxTRANSLATE("__5") },
+	{ MIDI_RECV_SETTER, 13, wxTRANSLATE("Sequencer"), wxTRANSLATE("__6") },
+	{ MIDI_RECV_SETTER, 14, wxTRANSLATE("Sequencer"), wxTRANSLATE("__7") },
+	{ MIDI_RECV_SETTER, 15, wxTRANSLATE("Sequencer"), wxTRANSLATE("__8") },
+	{ MIDI_RECV_SETTER, 16, wxTRANSLATE("Sequencer"), wxTRANSLATE("__9") },
+	{ MIDI_RECV_SETTER, 17, wxTRANSLATE("Sequencer"), wxTRANSLATE("-1 Cent") },
+	{ MIDI_RECV_SETTER, 18, wxTRANSLATE("Sequencer"), wxTRANSLATE("+1 Cent") },
+	{ MIDI_RECV_SETTER, 19, wxTRANSLATE("Sequencer"), wxTRANSLATE("-100 Cent") },
+	{ MIDI_RECV_SETTER, 20, wxTRANSLATE("Sequencer"), wxTRANSLATE("+100 Cent") },
+	{ MIDI_RECV_SETTER, 21, wxTRANSLATE("Sequencer"), wxTRANSLATE("Prev temperament") },
+	{ MIDI_RECV_SETTER, 22, wxTRANSLATE("Sequencer"), wxTRANSLATE("Next temperament") },
+	{ MIDI_RECV_SETTER, 23, wxTRANSLATE("Sequencer"), wxTRANSLATE("Transpose -") },
+	{ MIDI_RECV_SETTER, 24, wxTRANSLATE("Sequencer"), wxTRANSLATE("Transpose +") },
 };
 
 GOrgueSettings::GOrgueSettings(wxString instance) :
@@ -306,6 +331,9 @@ wxString GOrgueSettings::GetEventSection(unsigned index)
 	case MIDI_RECV_MANUAL:
 		return wxString::Format(wxT("Manual%03d"), index);
 
+	case MIDI_RECV_SETTER:
+		return wxString::Format(wxT("Setter%03d"), index);
+		
 	default:
 	assert(false);
 	return wxEmptyString;
