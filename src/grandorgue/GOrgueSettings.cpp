@@ -34,6 +34,12 @@
 #include <wx/confbase.h>
 
 const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
+	{ MIDI_RECV_MANUAL, 1, wxTRANSLATE("Manuals"), wxTRANSLATE("Pedal") },
+	{ MIDI_RECV_MANUAL, 2, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 1") },
+	{ MIDI_RECV_MANUAL, 3, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 2") },
+	{ MIDI_RECV_MANUAL, 4, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 3") },
+	{ MIDI_RECV_MANUAL, 5, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 4") },
+	{ MIDI_RECV_MANUAL, 6, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 5") },
 };
 
 GOrgueSettings::GOrgueSettings(wxString instance) :
@@ -288,7 +294,9 @@ wxString GOrgueSettings::GetEventSection(unsigned index)
 	assert(index < GetEventCount());
 	switch(m_MIDISettings[index].type)
 	{
-		
+	case MIDI_RECV_MANUAL:
+		return wxString::Format(wxT("Manual%03d"), index);
+
 	default:
 	assert(false);
 	return wxEmptyString;

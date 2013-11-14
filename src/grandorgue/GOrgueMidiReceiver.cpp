@@ -110,6 +110,13 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 			return;
 		unsigned index = 0;
 
+		if (m_type == MIDI_RECV_MANUAL)
+		{
+			if (m_Index == -1)
+				return;
+
+			index = m_organfile->GetManual(m_Index)->GetMIDIInputNumber();
+		}
 		GOrgueMidiReceiver* recv = m_organfile->GetSettings().FindMidiEvent(m_type, index);
 		if (!recv)
 			return;
