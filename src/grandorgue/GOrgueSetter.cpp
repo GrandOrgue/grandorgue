@@ -344,6 +344,28 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button[ID_SETTER_PREV]->GetMidiReceiver().SetIndex(0);
 	m_button[ID_SETTER_NEXT]->GetMidiReceiver().SetIndex(1);
 	m_button[ID_SETTER_SET]->GetMidiReceiver().SetIndex(2);
+	m_button[ID_SETTER_CURRENT]->GetMidiReceiver().SetIndex(3);
+	m_button[ID_SETTER_GC]->GetMidiReceiver().SetIndex(4);
+	m_button[ID_SETTER_M10]->GetMidiReceiver().SetIndex(5);
+	m_button[ID_SETTER_P10]->GetMidiReceiver().SetIndex(6);
+	m_button[ID_SETTER_L0]->GetMidiReceiver().SetIndex(7);
+	m_button[ID_SETTER_L1]->GetMidiReceiver().SetIndex(8);
+	m_button[ID_SETTER_L2]->GetMidiReceiver().SetIndex(9);
+	m_button[ID_SETTER_L3]->GetMidiReceiver().SetIndex(10);
+	m_button[ID_SETTER_L4]->GetMidiReceiver().SetIndex(11);
+	m_button[ID_SETTER_L5]->GetMidiReceiver().SetIndex(12);
+	m_button[ID_SETTER_L6]->GetMidiReceiver().SetIndex(13);
+	m_button[ID_SETTER_L7]->GetMidiReceiver().SetIndex(14);
+	m_button[ID_SETTER_L8]->GetMidiReceiver().SetIndex(15);
+	m_button[ID_SETTER_L9]->GetMidiReceiver().SetIndex(16);
+	m_button[ID_SETTER_PITCH_M1]->GetMidiReceiver().SetIndex(17);
+	m_button[ID_SETTER_PITCH_P1]->GetMidiReceiver().SetIndex(18);
+	m_button[ID_SETTER_PITCH_M100]->GetMidiReceiver().SetIndex(19);
+	m_button[ID_SETTER_PITCH_P100]->GetMidiReceiver().SetIndex(20);
+	m_button[ID_SETTER_TEMPERAMENT_PREV]->GetMidiReceiver().SetIndex(21);
+	m_button[ID_SETTER_TEMPERAMENT_NEXT]->GetMidiReceiver().SetIndex(22);
+	m_button[ID_SETTER_TRANSPOSE_DOWN]->GetMidiReceiver().SetIndex(23);
+	m_button[ID_SETTER_TRANSPOSE_UP]->GetMidiReceiver().SetIndex(24);
 
 	m_button[ID_SETTER_PREV]->GetKeyReceiver().SetShortcut(37);
 	m_button[ID_SETTER_NEXT]->GetKeyReceiver().SetShortcut(39);
