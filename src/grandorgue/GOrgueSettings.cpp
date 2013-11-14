@@ -118,6 +118,8 @@ void GOrgueSettings::Load()
 
 			for(unsigned i = 0; i < GetEventCount(); i++)
 				m_MIDIEvents[i]->Load(cfg, GetEventSection(i));
+
+			wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
 		}
 		catch (wxString error)
 		{
