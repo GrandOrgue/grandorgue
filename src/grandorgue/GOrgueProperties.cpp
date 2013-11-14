@@ -126,6 +126,9 @@ GOrgueProperties::GOrgueProperties(GrandOrgueFile* organfile, wxWindow* win) :
 	size = m_organfile->GetMemoryPool().GetPoolSize() / (1024.0 * 1024.0);
 	sizer->Add(GOrguePropertiesText(this, 0,  wxString::Format(_("%.3f MB of %.3f MB"), size1, size)), 0, wxTOP, 5);
 
+	sizer->Add(GOrguePropertiesText(this, 0,  _("ODF Path")), 0, wxTOP, 5);
+	sizer->Add(GOrguePropertiesText(this, 300, m_organfile->GetODFFilename()), 0, wxLEFT, 10);
+
 	SetSizer(topSizer);
 	topSizer->Fit(this);
 }
