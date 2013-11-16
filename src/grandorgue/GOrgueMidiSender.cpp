@@ -67,23 +67,23 @@ void GOrgueMidiSender::Load(GOrgueConfigReader& cfg, wxString group)
 			buffer.Printf(wxT("MIDISendKey%03d"), i + 1);
 			m_events[i].key = cfg.ReadInteger(CMBSetting, group, buffer, 0, 0x200000);
 		}
-		if (m_events[i].type == MIDI_S_NOTE_ON ||
-		    m_events[i].type == MIDI_S_CTRL_ON ||
-		    m_events[i].type == MIDI_S_PGM_ON ||
-		    m_events[i].type == MIDI_S_NOTE ||
-		    m_events[i].type == MIDI_S_CTRL)
-		{
-			buffer.Printf(wxT("MIDISendLowValue%03d"), i + 1);
-			m_events[i].low_value = cfg.ReadInteger(CMBSetting, group, buffer, 0, 0x7f);
-		}
 		if (m_events[i].type == MIDI_S_NOTE_OFF ||
 		    m_events[i].type == MIDI_S_CTRL_OFF ||
 		    m_events[i].type == MIDI_S_PGM_OFF ||
 		    m_events[i].type == MIDI_S_NOTE ||
 		    m_events[i].type == MIDI_S_CTRL)
 		{
+			buffer.Printf(wxT("MIDISendLowValue%03d"), i + 1);
+			m_events[i].low_value = cfg.ReadInteger(CMBSetting, group, buffer, 0, 0x7f, false, 0);
+		}
+		if (m_events[i].type == MIDI_S_NOTE_ON ||
+		    m_events[i].type == MIDI_S_CTRL_ON ||
+		    m_events[i].type == MIDI_S_PGM_ON ||
+		    m_events[i].type == MIDI_S_NOTE ||
+		    m_events[i].type == MIDI_S_CTRL)
+		{
 			buffer.Printf(wxT("MIDISendHighValue%03d"), i + 1);
-			m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, buffer, 0, 0x7f);
+			m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, buffer, 0, 0x7f, false, 0x7f);
 		}
 	}
 }
@@ -106,18 +106,18 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group)
 			buffer.Printf(wxT("MIDISendKey%03d"), i + 1);
 			cfg.Write(group, buffer, (int)m_events[i].key);
 		}
-		if (m_events[i].type == MIDI_S_NOTE_ON ||
-		    m_events[i].type == MIDI_S_CTRL_ON ||
-		    m_events[i].type == MIDI_S_PGM_ON ||
+		if (m_events[i].type == MIDI_S_NOTE_OFF ||
+		    m_events[i].type == MIDI_S_CTRL_OFF ||
+		    m_events[i].type == MIDI_S_PGM_OFF ||
 		    m_events[i].type == MIDI_S_NOTE ||
 		    m_events[i].type == MIDI_S_CTRL)
 		{
 			buffer.Printf(wxT("MIDISendLowValue%03d"), i + 1);
 			cfg.Write(group, buffer, (int)m_events[i].low_value);
 		}
-		if (m_events[i].type == MIDI_S_NOTE_OFF ||
-		    m_events[i].type == MIDI_S_CTRL_OFF ||
-		    m_events[i].type == MIDI_S_PGM_OFF ||
+		if (m_events[i].type == MIDI_S_NOTE_ON ||
+		    m_events[i].type == MIDI_S_CTRL_ON ||
+		    m_events[i].type == MIDI_S_PGM_ON ||
 		    m_events[i].type == MIDI_S_NOTE ||
 		    m_events[i].type == MIDI_S_CTRL)
 		{
@@ -176,7 +176,7 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			e.SetMidiType(MIDI_NOTE);
 			e.SetChannel(m_events[i].channel);
 			e.SetKey(m_events[i].key);
-			e.SetValue(m_events[i].low_value);
+			e.SetValue(m_events[i].high_value);
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_NOTE_OFF && !state)
@@ -186,7 +186,7 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			e.SetMidiType(MIDI_NOTE);
 			e.SetChannel(m_events[i].channel);
 			e.SetKey(m_events[i].key);
-			e.SetValue(m_events[i].high_value);
+			e.SetValue(m_events[i].low_value);
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_CTRL_ON && state)
@@ -196,7 +196,7 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			e.SetMidiType(MIDI_CTRL_CHANGE);
 			e.SetChannel(m_events[i].channel);
 			e.SetKey(m_events[i].key);
-			e.SetValue(m_events[i].low_value);
+			e.SetValue(m_events[i].high_value);
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_CTRL_OFF && !state)
@@ -206,7 +206,7 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			e.SetMidiType(MIDI_CTRL_CHANGE);
 			e.SetChannel(m_events[i].channel);
 			e.SetKey(m_events[i].key);
-			e.SetValue(m_events[i].high_value);
+			e.SetValue(m_events[i].low_value);
 			m_organfile->SendMidiMessage(e);
 		}
 	}
