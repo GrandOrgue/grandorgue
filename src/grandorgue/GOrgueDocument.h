@@ -55,23 +55,26 @@ private:
 
 	void OnMidiEvent(const GOrgueMidiEvent& event);
 
+	void SyncState();
 	void CloseOrgan();
 
 	bool OnCloseDocument();
 	bool DoOpenDocument(const wxString& file);
+	bool DoSaveDocument(const wxString& file);
 
 public:
 	GOrgueDocument(GOrgueSound* sound);
 	~GOrgueDocument();
 
-	bool DoOpenDocument(const wxString& file, const wxString& file2);
-	bool DoSaveDocument(const wxString& file);
-
 	void ShowPanel(unsigned id);
 	void ShowOrganDialog();
 	void ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
 
-	bool Save() { return OnSaveDocument(m_documentFile); }
+	bool Load(const wxString& odf);
+	bool Save();
+	bool Export(const wxString& cmb);
+	bool Import(const wxString& odf, const wxString& cmb);
+	bool ImportCombination(const wxString& cmb);
 
 	bool WindowExists(WindowType type, void* data);
 	bool showWindow(WindowType type, void* data);

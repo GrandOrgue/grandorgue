@@ -134,9 +134,10 @@ private:
 public:
 
 	GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings);
-	wxString Load(const wxString& file, const wxString& file2 = wxEmptyString);
-	void LoadCombination(const wxString& file);
-	void Save(const wxString& file);
+	wxString Load(const wxString& odf, const wxString& cmb = wxEmptyString);
+	void LoadCombination(const wxString& cmb);
+	void Save();
+	void Export(const wxString& cmb);
 	bool CachePresent();
 	bool IsCacheable();
 	bool UpdateCache(bool compress);

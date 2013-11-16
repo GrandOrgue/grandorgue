@@ -1238,7 +1238,7 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() + 100);
 				break;
 			case ID_SETTER_SAVE:
-				m_organfile->Save(m_organfile->GetODFFilename());
+				m_organfile->Save();
 				break;
 
 			case ID_SETTER_TEMPERAMENT_NEXT:

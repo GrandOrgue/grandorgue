@@ -495,7 +495,7 @@ void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 	{
 		m_Settings.SetSettingPath(dlg.GetDirectory());
 		wxString file = doc->GetOrganFile()->GetODFFilename();
-		doc->DoOpenDocument(file, dlg.GetPath());
+		doc->Import(file, dlg.GetPath());
 	}
 }
 
@@ -509,8 +509,7 @@ void GOrgueFrame::OnImportCombinations(wxCommandEvent& event)
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		m_Settings.SetSettingPath(dlg.GetDirectory());
-		doc->GetOrganFile()->LoadCombination(dlg.GetPath());
-		doc->Modify(true);
+		doc->ImportCombination(dlg.GetPath());
 	}
 }
 
@@ -524,8 +523,7 @@ void GOrgueFrame::OnExport(wxCommandEvent& event)
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		m_Settings.SetSettingPath(dlg.GetDirectory());
-		doc->DoSaveDocument(dlg.GetPath());
-		doc->Modify(false);
+		doc->Export(dlg.GetPath());
 	}
 }
 
