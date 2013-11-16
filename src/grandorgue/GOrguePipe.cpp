@@ -297,7 +297,7 @@ void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 	m_Filename = cfg.ReadString(ODFSetting, group, prefix);
 	m_PipeConfig.Load(cfg, group, prefix);
 	m_HarmonicNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("HarmonicNumber"), 1, 1024, false, m_HarmonicNumber);
-	m_PitchCorrection = cfg.ReadInteger(ODFSetting, group, prefix + wxT("PitchCorrection"), -1200, 1200, false, m_PitchCorrection);
+	m_PitchCorrection = cfg.ReadFloat(ODFSetting, group, prefix + wxT("PitchCorrection"), -1200, 1200, false, m_PitchCorrection);
 	m_SamplerGroupID = cfg.ReadInteger(ODFSetting, group, prefix + wxT("WindchestGroup"), 1, m_OrganFile->GetWindchestGroupCount(), false, m_SamplerGroupID);
 	m_Percussive = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("Percussive"), false, m_Percussive);
 	m_SampleMidiKeyNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MIDIKeyNumber"), -1, 127, false, -1);
