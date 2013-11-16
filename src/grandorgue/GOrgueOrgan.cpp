@@ -78,6 +78,11 @@ GOrgueMidiReceiver& GOrgueOrgan::GetMIDIReceiver()
 	return m_midi;
 }
 
+const wxString GOrgueOrgan::GetUITitle()
+{
+	return wxString::Format(_("%s, %s"), m_ChurchName.c_str(), m_OrganBuilder.c_str());
+}
+
 void GOrgueOrgan::Save(GOrgueConfigWriter& cfg, wxString group)
 {
 	cfg.Write(group, wxT("ODFPath"), m_ODF);

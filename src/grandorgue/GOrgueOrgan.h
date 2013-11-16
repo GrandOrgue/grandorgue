@@ -50,6 +50,7 @@ public:
 	const wxString& GetChurchName();
 	const wxString& GetOrganBuilder();
 	const wxString& GetRecordingDetail();
+	const wxString GetUITitle();
 	GOrgueMidiReceiver& GetMIDIReceiver();
 	bool Match(const GOrgueMidiEvent& e);
 };

@@ -55,6 +55,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU_RANGE(wxID_FILE1, wxID_FILE1 + 49, wxDocParentFrame::OnMRUFile)
 #endif
 	EVT_MENU(ID_FILE_LOAD, GOrgueFrame::OnLoad)
+	EVT_MENU_RANGE(ID_LOAD_FAV_FIRST, ID_LOAD_FAV_LAST, GOrgueFrame::OnLoadFavorite)
 	EVT_MENU(ID_FILE_RELOAD, GOrgueFrame::OnReload)
 	EVT_MENU(ID_FILE_REVERT, GOrgueFrame::OnRevert)
 	EVT_MENU(ID_FILE_PROPERTIES, GOrgueFrame::OnProperties)
@@ -131,7 +132,9 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	
 	wxArrayString choices;
 	
-	wxMenu *file_menu = new wxMenu;
+	m_file_menu = new wxMenu;
+       
+	m_favorites_menu = new wxMenu;
 	
 	wxMenu *recent_menu = new wxMenu;
 	m_docManager->FileHistoryUseMenu(recent_menu);
@@ -144,27 +147,28 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	for(unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
 		preset_menu->Append(i,  wxString::Format(_("Preset %d"), i - ID_PRESET_0), wxEmptyString, wxITEM_CHECK);
 	
-	file_menu->Append(ID_FILE_LOAD, _("&Load\tCtrl+L"), wxEmptyString, wxITEM_NORMAL);
-	file_menu->Append(wxID_OPEN, _("&Open\tCtrl+O"), wxEmptyString, wxITEM_NORMAL);
-	file_menu->Append(wxID_ANY, _("Open &Recent"), recent_menu);
-	file_menu->AppendSeparator();
-	file_menu->Append(ID_FILE_PROPERTIES, _("Organ &Properties"), wxEmptyString, wxITEM_NORMAL);
-	file_menu->AppendSeparator();
-	file_menu->AppendSubMenu(preset_menu, _("Pr&eset"));
-	file_menu->AppendSeparator();
-	file_menu->Append(wxID_SAVE, _("&Save\tCtrl+S"), wxEmptyString, wxITEM_NORMAL);
-	file_menu->Append(ID_FILE_CACHE, _("&Update Cache..."), wxEmptyString, wxITEM_NORMAL);
-	file_menu->Append(ID_FILE_CACHE_DELETE, _("Delete &Cache..."), wxEmptyString, wxITEM_NORMAL);
-	file_menu->AppendSeparator();
-	file_menu->Append(ID_FILE_RELOAD, _("Re&load"), wxEmptyString, wxITEM_NORMAL);
-	file_menu->Append(ID_FILE_REVERT, _("Reset to &Defaults"), wxEmptyString, wxITEM_NORMAL);
-	file_menu->AppendSeparator();
-	file_menu->Append(ID_FILE_IMPORT_SETTINGS, _("&Import Settings"), wxEmptyString, wxITEM_NORMAL);
-	file_menu->Append(ID_FILE_IMPORT_COMBINATIONS, _("Import &Combinations"), wxEmptyString, wxITEM_NORMAL);
-	file_menu->Append(ID_FILE_EXPORT, _("&Export Settings/Combinations"), wxEmptyString, wxITEM_NORMAL);
-	file_menu->AppendSeparator();
-	file_menu->Append(wxID_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
-	file_menu->Append(wxID_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_FILE_LOAD, _("&Load\tCtrl+L"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(wxID_ANY, _("&Favorites"), m_favorites_menu);
+	m_file_menu->Append(wxID_OPEN, _("&Open\tCtrl+O"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(wxID_ANY, _("Open &Recent"), recent_menu);
+	m_file_menu->AppendSeparator();
+	m_file_menu->Append(ID_FILE_PROPERTIES, _("Organ &Properties"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->AppendSeparator();
+	m_file_menu->AppendSubMenu(preset_menu, _("Pr&eset"));
+	m_file_menu->AppendSeparator();
+	m_file_menu->Append(wxID_SAVE, _("&Save\tCtrl+S"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_FILE_CACHE, _("&Update Cache..."), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_FILE_CACHE_DELETE, _("Delete &Cache..."), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->AppendSeparator();
+	m_file_menu->Append(ID_FILE_RELOAD, _("Re&load"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_FILE_REVERT, _("Reset to &Defaults"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->AppendSeparator();
+	m_file_menu->Append(ID_FILE_IMPORT_SETTINGS, _("&Import Settings"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_FILE_IMPORT_COMBINATIONS, _("Import &Combinations"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_FILE_EXPORT, _("&Export Settings/Combinations"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->AppendSeparator();
+	m_file_menu->Append(wxID_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(wxID_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
 	
 	m_Temperaments = GOrgueTemperament::GetTemperaments();
 	wxMenu *temperament_menu = new wxMenu;
@@ -269,7 +273,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_panel_menu = new wxMenu();
 	
 	wxMenuBar *menu_bar = new wxMenuBar;
-	menu_bar->Append(file_menu, _("&File"));
+	menu_bar->Append(m_file_menu, _("&File"));
 	menu_bar->Append(audio_menu, _("&Audio/Midi"));
 	menu_bar->Append(m_panel_menu, _("&Panel"));
 	menu_bar->Append(help_menu, _("&Help"));
@@ -373,6 +377,18 @@ void GOrgueFrame::UpdatePanelMenu()
 	}
 }
 
+void GOrgueFrame::UpdateFavoritesMenu()
+{
+	while (m_favorites_menu->GetMenuItemCount() > 0)
+		m_favorites_menu->Destroy(m_favorites_menu->FindItemByPosition(m_favorites_menu->GetMenuItemCount() - 1));
+
+	ptr_vector<GOrgueOrgan>& organs = m_Settings.GetOrganList();
+	for(unsigned i = 0; i < organs.size() && i <= ID_LOAD_FAV_LAST - ID_LOAD_FAV_FIRST; i++)
+	{
+		m_favorites_menu->AppendCheckItem(ID_LOAD_FAV_FIRST + i, wxString::Format(_("&%d: %s"), (i + 1) % 10, organs[i]->GetUITitle().c_str()));
+	}
+}
+
 void GOrgueFrame::OnSize(wxSizeEvent& event)
 {
 	wxWindow *child = (wxWindow *)NULL;
@@ -464,6 +480,13 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
 	m_docManager->CreateDocument(event.GetString(), wxDOC_SILENT);
+}
+
+void GOrgueFrame::OnLoadFavorite(wxCommandEvent& event)
+{
+	unsigned id = event.GetId() - ID_LOAD_FAV_FIRST;
+	GOrgueOrgan* organ = m_Settings.GetOrganList()[id];
+	m_docManager->CreateDocument(organ->GetODFPath(), wxDOC_SILENT);
 }
 
 void GOrgueFrame::OnLoad(wxCommandEvent& event)
@@ -731,6 +754,8 @@ void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
     DoMenuUpdates(event.GetMenu());
     if (event.GetMenu() == m_panel_menu)
 		UpdatePanelMenu();
+    if (event.GetMenu() == m_file_menu)
+		UpdateFavoritesMenu();
     event.Skip();
 }
 
