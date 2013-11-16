@@ -47,8 +47,8 @@ typedef struct
 {
 	MIDI_RECEIVER_TYPE type;
 	unsigned index;
-	const wxChar* group;
-	const wxChar* name;
+	const wxString group;
+	const wxString name;
 } GOMidiSetting;
 
 class GOrgueSettings {
