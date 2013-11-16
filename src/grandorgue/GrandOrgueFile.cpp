@@ -766,9 +766,14 @@ void GrandOrgueFile::DeleteSettings()
 	wxRemoveFile(m_SettingFilename);
 }
 
-void GrandOrgueFile::Save(const wxString& file)
+void GrandOrgueFile::Save()
 {
-	wxString fn = file;
+	Export(m_SettingFilename);
+}
+
+void GrandOrgueFile::Export(const wxString& cmb)
+{
+	wxString fn = cmb;
 	wxString tmp_name = fn + wxT(".new");
 	wxString buffer;
 	bool prefix = false;

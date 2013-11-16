@@ -55,10 +55,21 @@ bool GOrgueDocument::OnCloseDocument()
 
 bool GOrgueDocument::DoOpenDocument(const wxString& file)
 {
-	return DoOpenDocument(file, wxEmptyString);
+	return Load(file);
 }
 
-bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
+bool GOrgueDocument::DoSaveDocument(const wxString& file)
+{
+	Save();
+	return true;
+}
+
+bool GOrgueDocument::Load(const wxString& odf)
+{
+	return Import(odf, wxEmptyString);
+}
+
+bool GOrgueDocument::Import(const wxString& odf, const wxString& cmb)
 {
 	wxBusyCursor busy;
 
@@ -70,7 +81,7 @@ bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 		return false;
 
 	m_organfile = new GrandOrgueFile(this, m_sound.GetSettings());
-	wxString error = m_organfile->Load(file, file2);
+	wxString error = m_organfile->Load(odf, cmb);
 	if (!error.IsEmpty())
 	{
 		if (error != wxT("!"))
@@ -79,7 +90,7 @@ bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 			wxMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
 		}
 		CloseOrgan();
-		if (!file2.IsEmpty())
+		if (!cmb.IsEmpty())
 			DeleteAllViews();
 		return false;
 	}
@@ -98,8 +109,6 @@ bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 	SetTitle(m_organfile->GetChurchName());
 	m_sound.GetSettings().SetLastFile(m_organfile->GetODFFilename());
 
-	UpdateAllViews();
-
 	ShowPanel(0);
 	for (unsigned i = 1; i < m_organfile->GetPanelCount(); i++)
 		if (m_organfile->GetPanel(i)->InitialOpenWindow())
@@ -107,6 +116,13 @@ bool GOrgueDocument::DoOpenDocument(const wxString& file, const wxString& file2)
 
 	m_listener.SetCallback(this);
 	m_sound.GetSettings().Flush();
+	return true;
+}
+
+bool GOrgueDocument::ImportCombination(const wxString& cmb)
+{
+	m_organfile->LoadCombination(cmb);
+	m_organfile->Modified();
 	return true;
 }
 
@@ -121,7 +137,7 @@ void GOrgueDocument::ShowPanel(unsigned id)
 	}
 }
 
-bool GOrgueDocument::DoSaveDocument(const wxString& file)
+void GOrgueDocument::SyncState()
 {
 	m_organfile->SetVolume(m_sound.GetEngine().GetVolume());
 	for (unsigned i = 0; i < m_organfile->GetPanelCount(); i++)
@@ -129,7 +145,19 @@ bool GOrgueDocument::DoSaveDocument(const wxString& file)
 	for(unsigned i = 0; i < m_Windows.size(); i++)
 		if (m_Windows[i].type == PANEL && m_Windows[i].data)
 			((GOrguePanelView*)m_Windows[i].window)->SyncState();
-	m_organfile->Save(file);
+}
+
+bool GOrgueDocument::Save()
+{
+	SyncState();
+	m_organfile->Save();
+	return true;
+}
+
+bool GOrgueDocument::Export(const wxString& cmb)
+{
+	SyncState();
+	m_organfile->Export(cmb);
 	return true;
 }
 
