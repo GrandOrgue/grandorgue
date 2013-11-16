@@ -41,7 +41,9 @@ class wxChoice;
 class GOrgueFrame: public wxDocParentFrame, protected GOrgueMidiCallback
 {
 private:
+	wxMenu* m_file_menu;
 	wxMenu* m_panel_menu;
+	wxMenu* m_favorites_menu;
 	wxHtmlHelpController* m_Help;
 	wxGaugeAudio *m_SamplerUsage;
 	wxGaugeAudio *m_VolumeLeft, *m_VolumeRight;
@@ -59,11 +61,13 @@ private:
 
 	void InitHelp();
 	void UpdatePanelMenu();
+	void UpdateFavoritesMenu();
 
 	void OnMeters(wxCommandEvent& event);
 
 	void OnLoadFile(wxCommandEvent& event);
 	void OnLoad(wxCommandEvent& event);
+	void OnLoadFavorite(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
 	void OnImportSettings(wxCommandEvent& event);
 	void OnImportCombinations(wxCommandEvent& event);
