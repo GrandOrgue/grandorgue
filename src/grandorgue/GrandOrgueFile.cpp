@@ -785,15 +785,15 @@ void GrandOrgueFile::Export(const wxString& cmb)
 	m_b_customized = true;
 
 	GOrgueConfigWriter cfg(cfg_file, prefix);
-	cfg.Write(wxT("Organ"), wxT("ODFHash"), m_ODFHash);
-	cfg.Write(wxT("Organ"), wxT("ChurchName"), m_ChurchName);
-	cfg.Write(wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
-	cfg.Write(wxT("Organ"), wxT("ODFPath"), GetODFFilename());
+	cfg.WriteString(wxT("Organ"), wxT("ODFHash"), m_ODFHash);
+	cfg.WriteString(wxT("Organ"), wxT("ChurchName"), m_ChurchName);
+	cfg.WriteString(wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
+	cfg.WriteString(wxT("Organ"), wxT("ODFPath"), GetODFFilename());
 
 	if (m_volume >= -120)
 		cfg.Write(wxT("Organ"), wxT("Volume"), m_volume);
 
-	cfg.Write(wxT("Organ"), wxT("Temperament"), m_Temperament);
+	cfg.WriteString(wxT("Organ"), wxT("Temperament"), m_Temperament);
 	cfg.WriteBoolean(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch);
 	m_PipeConfig.Save(cfg);
 
