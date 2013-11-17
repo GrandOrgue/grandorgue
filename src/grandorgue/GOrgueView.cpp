@@ -19,48 +19,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueEvent.h"
 #include "GOrgueView.h"
-#include "GOrgueDocument.h"
-#include "GrandOrgueFile.h"
-#include "Images.h"
 
-GOrgueView::GOrgueView() :
-	m_doc(NULL)
+GOrgueView::GOrgueView()
 {
 }
 
 GOrgueView::~GOrgueView()
 {
-	wxCommandEvent event(wxEVT_WINTITLE, 0);
-	event.SetString(wxEmptyString);
-	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-}
-
-void GOrgueView::OnChangeFilename()
-{
-	wxView::OnChangeFilename();
-	if (m_doc)
-	{
-		wxCommandEvent event(wxEVT_WINTITLE, 0);
-		event.SetString(m_doc->GetUserReadableName());
-		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-	}
-}
-
-bool GOrgueView::OnCreate(wxDocument *doc, long flags)
-{
-	m_doc = (GOrgueDocument*)doc;
-	return true;
-
 }
 
 void GOrgueView::OnDraw(wxDC*)
 {
-}
-
-bool GOrgueView::OnClose(bool deleteWindow)
-{
-	Activate(false);
-	return wxView::OnClose(deleteWindow);
 }

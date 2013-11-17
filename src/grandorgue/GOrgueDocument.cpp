@@ -109,6 +109,10 @@ bool GOrgueDocument::Import(const wxString& odf, const wxString& cmb)
 	SetTitle(m_organfile->GetChurchName());
 	m_sound.GetSettings().SetLastFile(m_organfile->GetODFFilename());
 
+	wxCommandEvent event(wxEVT_WINTITLE, 0);
+	event.SetString(m_organfile->GetChurchName());
+	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+
 	ShowPanel(0);
 	for (unsigned i = 1; i < m_organfile->GetPanelCount(); i++)
 		if (m_organfile->GetPanel(i)->InitialOpenWindow())
@@ -179,6 +183,10 @@ void GOrgueDocument::CloseOrgan()
 		delete m_organfile;
 		m_organfile = 0;
 	}
+
+	wxCommandEvent event(wxEVT_WINTITLE, 0);
+	event.SetString(wxEmptyString);
+	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 }
 
 GrandOrgueFile* GOrgueDocument::GetOrganFile()
