@@ -28,7 +28,6 @@ class GOrgueDocManager : public wxDocManager
 {
 private:
     void OnUpdateFileSave(wxUpdateUIEvent& event);
-    wxFileHistory *OnCreateFileHistory();
 
 public:
     GOrgueDocManager();
