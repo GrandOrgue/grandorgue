@@ -147,6 +147,12 @@ void GOrgueSettings::Load()
 			GOrgueConfigReaderDB cfg_db;
 			cfg_db.ReadData(cfg_file, CMBSetting, false);
 			GOrgueConfigReader cfg(cfg_db);
+
+			m_InterpolationType = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("InterpolationType"), 0, 1, false, 1);
+			m_WaveFormat = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("WaveFormat"), 1, 4, false, 4);
+			m_AttackLoad = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("AttackLoad"), 0, 1, false, 1);
+			m_LoopLoad = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoopLoad"), 0, 2, false, 2);
+			m_ReleaseLoad = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLoad"), 0, 1, false, 1);
 			
 			m_OrganList.clear();
 			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
@@ -221,21 +227,6 @@ void GOrgueSettings::Load()
 	m_BitsPerSample = m_Config.Read(wxT("BitsPerSample"), 24);
 	if (m_BitsPerSample != 8 && m_BitsPerSample != 12 && m_BitsPerSample != 16 && m_BitsPerSample != 20 && m_BitsPerSample != 24)
 		m_BitsPerSample = 24;
-	m_InterpolationType = m_Config.Read(wxT("InterpolationType"), 1);
-	if (m_InterpolationType > 1)
-		m_InterpolationType = 0;
-	m_WaveFormat = m_Config.Read(wxT("WaveFormat"), 4);
-	if (m_WaveFormat < 1 || m_WaveFormat > 4)
-		m_WaveFormat = 4;
-	m_LoopLoad = m_Config.Read(wxT("LoopLoad"), 2);
-	if (m_LoopLoad < 0 || m_LoopLoad > 2)
-		m_LoopLoad = 2;
-	m_AttackLoad = m_Config.Read(wxT("AttackLoad"), 1);
-	if (m_AttackLoad < 0 || m_AttackLoad > 1)
-		m_AttackLoad = 1;
-	m_ReleaseLoad = m_Config.Read(wxT("ReleaseLoad"), 1);
-	if (m_ReleaseLoad < 0 || m_ReleaseLoad > 1)
-		m_ReleaseLoad = 1;
 	m_Volume = m_Config.Read(wxT("Volume"), (long)-15);
 	if (m_Volume > 20)
 		m_Volume = -15;
@@ -656,7 +647,6 @@ void GOrgueSettings::SetInterpolationType(unsigned type)
 	if (type > 1)
 		type = 0;
 	m_InterpolationType = type;
-	m_Config.Write(wxT("InterpolationType"), (long)m_InterpolationType);
 }
 
 bool GOrgueSettings::GetRandomizeSpeaking()
@@ -707,7 +697,6 @@ void GOrgueSettings::SetWaveFormatBytesPerSample(unsigned bytes_per_sample)
 	if (bytes_per_sample > 4)
 		bytes_per_sample = 4;
 	m_WaveFormat = bytes_per_sample;
-	m_Config.Write(wxT("WaveFormat"), (long)m_WaveFormat);
 }
 
 unsigned GOrgueSettings::GetLoopLoad()
@@ -720,7 +709,6 @@ void GOrgueSettings::SetLoopLoad(unsigned loop_load)
 	if (loop_load > 2)
 		loop_load = 2;
 	m_LoopLoad = loop_load;
-	m_Config.Write(wxT("LoopLoad"), (long)m_LoopLoad);
 }
 
 unsigned GOrgueSettings::GetAttackLoad()
@@ -733,7 +721,6 @@ void GOrgueSettings::SetAttackLoad(unsigned attack_load)
 	if (attack_load > 1)
 		attack_load = 1;
 	m_AttackLoad = attack_load;
-	m_Config.Write(wxT("AttackLoad"), (long)m_AttackLoad);
 }
 
 unsigned GOrgueSettings::GetReleaseLoad()
@@ -746,7 +733,6 @@ void GOrgueSettings::SetReleaseLoad(unsigned release_load)
 	if (release_load > 1)
 		release_load = 1;
 	m_ReleaseLoad = release_load;
-	m_Config.Write(wxT("ReleaseLoad"), (long)m_ReleaseLoad);
 }
 
 int GOrgueSettings::GetVolume()
@@ -1010,6 +996,12 @@ void GOrgueSettings::Flush()
 	wxString tmp_name = m_ConfigFileName + wxT(".new");
 	GOrgueConfigFileWriter cfg_file;
 	GOrgueConfigWriter cfg(cfg_file, false);
+
+	cfg.WriteInteger(wxT("General"), wxT("InterpolationType"), m_InterpolationType);
+	cfg.WriteInteger(wxT("General"), wxT("WaveFormat"), m_WaveFormat);
+	cfg.WriteInteger(wxT("General"), wxT("AttackLoad"), m_AttackLoad);
+	cfg.WriteInteger(wxT("General"), wxT("LoopLoad"), m_LoopLoad);
+	cfg.WriteInteger(wxT("General"), wxT("ReleaseLoad"), m_ReleaseLoad);
 
 	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
