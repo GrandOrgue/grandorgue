@@ -85,10 +85,10 @@ const wxString GOrgueOrgan::GetUITitle()
 
 void GOrgueOrgan::Save(GOrgueConfigWriter& cfg, wxString group)
 {
-	cfg.Write(group, wxT("ODFPath"), m_ODF);
-	cfg.Write(group, wxT("ChurchName"), m_ChurchName);
-	cfg.Write(group, wxT("OrganBuilder"), m_OrganBuilder);
-	cfg.Write(group, wxT("RecordingDetail"), m_RecordingDetail);
+	cfg.WriteString(group, wxT("ODFPath"), m_ODF);
+	cfg.WriteString(group, wxT("ChurchName"), m_ChurchName);
+	cfg.WriteString(group, wxT("OrganBuilder"), m_OrganBuilder);
+	cfg.WriteString(group, wxT("RecordingDetail"), m_RecordingDetail);
 	m_midi.Save(cfg, group);
 }
 

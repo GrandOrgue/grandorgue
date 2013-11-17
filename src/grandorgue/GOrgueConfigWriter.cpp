@@ -85,11 +85,6 @@ void GOrgueConfigWriter::WriteBoolean(wxString group, wxString key, bool value)
 	WriteString(group, key, str);
 }
 
-void GOrgueConfigWriter::Write(wxString group, wxString key, wxString value)
-{
-	WriteString(group, key, value);
-}
-
 void GOrgueConfigWriter::Write(wxString group, wxString key, float value)
 {
 	WriteFloat(group, key, value);

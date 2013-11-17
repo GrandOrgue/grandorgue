@@ -37,7 +37,6 @@ private:
 public:
 	GOrgueConfigWriter(GOrgueConfigFileWriter& cfg, bool prefix);
 
-	void Write(wxString group, wxString key, wxString value);
 	void Write(wxString group, wxString key, int value, bool sign = false, bool force = false);
 	void Write(wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count);
 	void Write(wxString group, wxString key, float value);

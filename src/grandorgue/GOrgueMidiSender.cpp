@@ -96,7 +96,7 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group)
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		buffer.Printf(wxT("MIDISendDevice%03d"), i + 1);
-		cfg.Write(group, buffer, m_events[i].device);
+		cfg.WriteString(group, buffer, m_events[i].device);
 		buffer.Printf(wxT("MIDISendChannel%03d"), i + 1);
 		cfg.Write(group, buffer, (int)m_events[i].channel);
 		buffer.Printf(wxT("MIDISendEventType%03d"), i + 1);
