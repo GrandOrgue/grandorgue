@@ -79,13 +79,13 @@ void GOrguePipeConfig::Save(GOrgueConfigWriter& cfg)
 	cfg.WriteFloat(m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
 	cfg.WriteFloat(m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
 	cfg.WriteFloat(m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
-	cfg.Write(m_Group, m_NamePrefix + wxT("Delay"), (int)m_Delay);
-	cfg.Write(m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
-	cfg.Write(m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
-	cfg.Write(m_Group, m_NamePrefix + wxT("Channels"), m_Channels);
-	cfg.Write(m_Group, m_NamePrefix + wxT("LoopLoad"), m_LoopLoad);
-	cfg.Write(m_Group, m_NamePrefix + wxT("AttackLoad"), m_AttackLoad);
-	cfg.Write(m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
+	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Delay"), m_Delay);
+	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
+	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
+	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Channels"), m_Channels);
+	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("LoopLoad"), m_LoopLoad);
+	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("AttackLoad"), m_AttackLoad);
+	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
 }
 
 const wxString& GOrguePipeConfig::GetAudioGroup()

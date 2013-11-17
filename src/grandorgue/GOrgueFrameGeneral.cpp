@@ -313,42 +313,42 @@ void GOrgueFrameGeneral::Save(GOrgueConfigWriter& cfg)
 		case GOrgueCombinationDefinition::COMBINATION_STOP:
 			stop_count++;
 			buffer.Printf(wxT("StopManual%03d"), stop_count);
-			cfg.Write(m_group, buffer, elements[i].manual, true, true);
+			cfg.WriteInteger(m_group, buffer, elements[i].manual);
 			buffer.Printf(wxT("StopNumber%03d"), stop_count);
-			cfg.Write(m_group, buffer, value, true);
+			cfg.WriteInteger(m_group, buffer, value);
 			break;
 
 		case GOrgueCombinationDefinition::COMBINATION_COUPLER:
 			coupler_count++;
 			buffer.Printf(wxT("CouplerManual%03d"), coupler_count);
-			cfg.Write(m_group, buffer, elements[i].manual, true, true);
+			cfg.WriteInteger(m_group, buffer, elements[i].manual);
 			buffer.Printf(wxT("CouplerNumber%03d"), coupler_count);
-			cfg.Write(m_group, buffer, value, true);
+			cfg.WriteInteger(m_group, buffer, value);
 			break;
 
 		case GOrgueCombinationDefinition::COMBINATION_TREMULANT:
 			tremulant_count++;
 			buffer.Printf(wxT("TremulantNumber%03d"), tremulant_count);
-			cfg.Write(m_group, buffer, value, true);
+			cfg.WriteInteger(m_group, buffer, value);
 			break;
 
 		case GOrgueCombinationDefinition::COMBINATION_SWITCH:
 			switch_count++;
 			buffer.Printf(wxT("SwitchNumber%03d"), switch_count);
-			cfg.Write(m_group, buffer, value, true);
+			cfg.WriteInteger(m_group, buffer, value);
 			break;
 
 		case GOrgueCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
 			divisional_coupler_count++;
 			buffer.Printf(wxT("DivisionalCouplerNumber%03d"), divisional_coupler_count);
-			cfg.Write(m_group, buffer, value, true);
+			cfg.WriteInteger(m_group, buffer, value);
 			break;
 		}
 	}
 
-	cfg.Write(m_group, wxT("NumberOfStops"), (int)stop_count);
-	cfg.Write(m_group, wxT("NumberOfCouplers"), (int)coupler_count);
-	cfg.Write(m_group, wxT("NumberOfTremulants"), (int)tremulant_count);
-	cfg.Write(m_group, wxT("NumberOfSwitches"), (int)switch_count);
-	cfg.Write(m_group, wxT("NumberOfDivisionalCouplers"), (int)divisional_coupler_count);
+	cfg.WriteInteger(m_group, wxT("NumberOfStops"), stop_count);
+	cfg.WriteInteger(m_group, wxT("NumberOfCouplers"), coupler_count);
+	cfg.WriteInteger(m_group, wxT("NumberOfTremulants"), tremulant_count);
+	cfg.WriteInteger(m_group, wxT("NumberOfSwitches"), switch_count);
+	cfg.WriteInteger(m_group, wxT("NumberOfDivisionalCouplers"), divisional_coupler_count);
 }

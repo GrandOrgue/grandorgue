@@ -264,25 +264,25 @@ void GOrgueDivisional::Save(GOrgueConfigWriter& cfg)
 		case GOrgueCombinationDefinition::COMBINATION_STOP:
 			stop_count++;
 			buffer.Printf(wxT("Stop%03d"), stop_count);
-			cfg.Write(m_group, buffer, value, true);
+			cfg.WriteInteger(m_group, buffer, value);
 			break;
 
 		case GOrgueCombinationDefinition::COMBINATION_COUPLER:
 			coupler_count++;
 			buffer.Printf(wxT("Coupler%03d"), coupler_count);
-			cfg.Write(m_group, buffer, value, true);
+			cfg.WriteInteger(m_group, buffer, value);
 			break;
 
 		case GOrgueCombinationDefinition::COMBINATION_TREMULANT:
 			tremulant_count++;
 			buffer.Printf(wxT("Tremulant%03d"), tremulant_count);
-			cfg.Write(m_group, buffer, value, true);
+			cfg.WriteInteger(m_group, buffer, value);
 			break;
 
 		case GOrgueCombinationDefinition::COMBINATION_SWITCH:
 			switch_count++;
 			buffer.Printf(wxT("Switch%03d"), switch_count);
-			cfg.Write(m_group, buffer, value, true);
+			cfg.WriteInteger(m_group, buffer, value);
 			break;
 
 		case GOrgueCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
@@ -290,10 +290,10 @@ void GOrgueDivisional::Save(GOrgueConfigWriter& cfg)
 		}
 	}
 
-	cfg.Write(m_group, wxT("NumberOfStops"), (int)stop_count);
-	cfg.Write(m_group, wxT("NumberOfCouplers"), (int)coupler_count);
-	cfg.Write(m_group, wxT("NumberOfTremulants"), (int)tremulant_count);
-	cfg.Write(m_group, wxT("NumberOfSwitches"), (int)switch_count);
+	cfg.WriteInteger(m_group, wxT("NumberOfStops"), stop_count);
+	cfg.WriteInteger(m_group, wxT("NumberOfCouplers"), coupler_count);
+	cfg.WriteInteger(m_group, wxT("NumberOfTremulants"), tremulant_count);
+	cfg.WriteInteger(m_group, wxT("NumberOfSwitches"), switch_count);
 }
 
 bool GOrgueDivisional::PushLocal()

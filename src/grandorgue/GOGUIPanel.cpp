@@ -529,10 +529,10 @@ void GOGUIPanel::Save(GOrgueConfigWriter& cfg)
 		x = -20;
 	if (y < -20)
 		y = -20;
-	cfg.Write(m_group, wxT("WindowX"), x);
-	cfg.Write(m_group, wxT("WindowY"), y);
-	cfg.Write(m_group, wxT("WindowWidth"), size.GetWidth());
-	cfg.Write(m_group, wxT("WindowHeight"), size.GetHeight());
+	cfg.WriteInteger(m_group, wxT("WindowX"), x);
+	cfg.WriteInteger(m_group, wxT("WindowY"), y);
+	cfg.WriteInteger(m_group, wxT("WindowWidth"), size.GetWidth());
+	cfg.WriteInteger(m_group, wxT("WindowHeight"), size.GetHeight());
 }
 
 void GOGUIPanel::Modified()
