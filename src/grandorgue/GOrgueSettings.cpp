@@ -28,6 +28,7 @@
 #include "GOSoundDefs.h"
 #include "GOrguePath.h"
 
+#include <algorithm>
 #include <wx/wx.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
@@ -782,6 +783,20 @@ void GOrgueSettings::SetAudioDeviceActualLatency(wxString device, unsigned laten
 ptr_vector<GOrgueOrgan>& GOrgueSettings::GetOrganList()
 {
 	return m_OrganList;
+}
+
+static bool LRUCompare(GOrgueOrgan* a, GOrgueOrgan* b)
+{
+	return a->GetLastUse() >= b->GetLastUse();
+}
+
+std::vector<GOrgueOrgan*> GOrgueSettings::GetLRUOrganList()
+{
+	std::vector<GOrgueOrgan*> lru;
+	for(unsigned i = 0; i < m_OrganList.size(); i++)
+		lru.push_back(m_OrganList[i]);
+	std::sort(lru.begin(), lru.end(), LRUCompare);
+	return lru;
 }
 
 void GOrgueSettings::AddOrgan(GOrgueOrgan* organ)

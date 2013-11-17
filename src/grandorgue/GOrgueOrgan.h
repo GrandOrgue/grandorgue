@@ -35,6 +35,7 @@ private:
 	wxString m_ChurchName;
 	wxString m_OrganBuilder;
 	wxString m_RecordingDetail;
+	long m_LastUse;
 	GOrgueMidiReceiver m_midi;
 
 public:
@@ -50,6 +51,7 @@ public:
 	const wxString& GetChurchName();
 	const wxString& GetOrganBuilder();
 	const wxString& GetRecordingDetail();
+	long GetLastUse();
 	const wxString GetUITitle();
 	GOrgueMidiReceiver& GetMIDIReceiver();
 	bool Match(const GOrgueMidiEvent& e);

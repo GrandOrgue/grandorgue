@@ -232,6 +232,7 @@ public:
 
 	void AddOrgan(GOrgueOrgan* organ);
 	ptr_vector<GOrgueOrgan>& GetOrganList();
+	std::vector<GOrgueOrgan*> GetLRUOrganList();
 
 	void Flush();
 };
