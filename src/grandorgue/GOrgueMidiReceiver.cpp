@@ -148,7 +148,7 @@ void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
 		buffer.Printf(wxT("MIDIChannel%03d"), i + 1);
 		cfg.Write(group, buffer, m_events[i].channel);
 		buffer.Printf(wxT("MIDIEventType%03d"), i + 1);
-		cfg.Write(group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
+		cfg.WriteEnum(group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 		if (m_type == MIDI_RECV_MANUAL)
 		{
 			buffer.Printf(wxT("MIDIKeyShift%03d"), i + 1);

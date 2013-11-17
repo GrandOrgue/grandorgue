@@ -100,7 +100,7 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group)
 		buffer.Printf(wxT("MIDISendChannel%03d"), i + 1);
 		cfg.Write(group, buffer, (int)m_events[i].channel);
 		buffer.Printf(wxT("MIDISendEventType%03d"), i + 1);
-		cfg.Write(group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
+		cfg.WriteEnum(group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 		if (m_type != MIDI_SEND_MANUAL)
 		{
 			buffer.Printf(wxT("MIDISendKey%03d"), i + 1);
