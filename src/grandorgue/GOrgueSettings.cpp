@@ -156,6 +156,11 @@ void GOrgueSettings::Load()
 			for(unsigned i = 0; i < GetEventCount(); i++)
 				m_MIDIEvents[i]->Load(cfg, GetEventSection(i));
 
+			m_AudioGroups.clear();
+			unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), wxT("Count"), 0, 200, false, 0);
+			for(unsigned i = 0; i < count; i++)
+				m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), 4096, false, wxString::Format(_("Audio group %d"), i + 1)));
+
 			wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
 		}
 		catch (wxString error)
@@ -229,15 +234,17 @@ void GOrgueSettings::Load()
 	m_ReverbFile = m_Config.Read(wxT("ReverbFile"), wxEmptyString);
 
 
-	m_AudioGroups.clear();
-	unsigned count = m_Config.Read(wxT("AudioGroup/Count"), 0L);
-	for(unsigned i = 0; i < count; i++)
-		m_AudioGroups.push_back(m_Config.Read(wxString::Format(wxT("AudioGroup/Name%d"), i + 1), wxString::Format(_("Audio group %d"), i + 1)));
-	if (!m_AudioGroups.size())
-		m_AudioGroups.push_back(_("Default audio group"));
+	if (m_AudioGroups.size() == 0)
+	{
+		unsigned count = m_Config.Read(wxT("AudioGroup/Count"), 0L);
+		for(unsigned i = 0; i < count; i++)
+			m_AudioGroups.push_back(m_Config.Read(wxString::Format(wxT("AudioGroup/Name%d"), i + 1), wxString::Format(_("Audio group %d"), i + 1)));
+		if (!m_AudioGroups.size())
+			m_AudioGroups.push_back(_("Default audio group"));
+	}
 
 	m_AudioDeviceConfig.clear();
-	count = m_Config.Read(wxT("AudioDevices/Count"), 0L);
+	unsigned count = m_Config.Read(wxT("AudioDevices/Count"), 0L);
 	for(unsigned i = 0; i < count; i++)
 	{
 		GOAudioDeviceConfig conf;
@@ -830,9 +837,6 @@ void GOrgueSettings::SetAudioGroups(const std::vector<wxString>& audio_groups)
 	if (!audio_groups.size())
 		return;
 	m_AudioGroups = audio_groups;
-	m_Config.Write(wxT("AudioGroup/Count"), (long)m_AudioGroups.size());
-	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
-		m_Config.Write(wxString::Format(wxT("AudioGroup/Name%d"), i + 1), m_AudioGroups[i]);
 }
 
 unsigned GOrgueSettings::GetAudioGroupId(const wxString& str)
@@ -1002,6 +1006,10 @@ void GOrgueSettings::Flush()
 
 	for(unsigned i = 0; i < GetEventCount(); i++)
 		m_MIDIEvents[i]->Save(cfg, GetEventSection(i));
+
+	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
+		cfg.WriteString(wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), m_AudioGroups[i]);
+	cfg.WriteInteger(wxT("AudioGroups"), wxT("Count"), m_AudioGroups.size());
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
