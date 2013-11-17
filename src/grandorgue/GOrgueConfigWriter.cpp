@@ -89,8 +89,3 @@ void GOrgueConfigWriter::Write(wxString group, wxString key, float value)
 {
 	WriteFloat(group, key, value);
 }
-
-void GOrgueConfigWriter::Write(wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count)
-{
-	WriteEnum(group, key, value, entry, count);
-}
