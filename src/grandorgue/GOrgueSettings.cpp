@@ -161,6 +161,33 @@ void GOrgueSettings::Load()
 			for(unsigned i = 0; i < count; i++)
 				m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), 4096, false, wxString::Format(_("Audio group %d"), i + 1)));
 
+			m_AudioDeviceConfig.clear();
+			count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxT("Count"), 0, 200, false, 0);
+			for(unsigned i = 0; i < count; i++)
+			{
+				GOAudioDeviceConfig conf;
+				conf.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dName"), i + 1));
+				conf.channels = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dChannelCount"), i + 1), 0, 200);
+				conf.scale_factors.resize(conf.channels);
+				for(unsigned j = 0; j < conf.channels; j++)
+				{
+					wxString prefix = wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);
+					unsigned group_count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), prefix + wxT("GroupCount"), 0, 200);
+					for(unsigned k = 0; k < group_count; k++)
+					{
+						GOAudioGroupOutputConfig group;
+						wxString p = prefix + wxString::Format(wxT("Group%03d"), k + 1);
+
+						group.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), p + wxT("Name"));
+						group.left = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"), p + wxT("Left"), -121.0, 40);
+						group.right = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"), p + wxT("Right"), -121.0, 40);
+
+						conf.scale_factors[j].push_back(group);
+					}
+				}
+				m_AudioDeviceConfig.push_back(conf);
+			}
+
 			wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
 		}
 		catch (wxString error)
@@ -243,38 +270,40 @@ void GOrgueSettings::Load()
 			m_AudioGroups.push_back(_("Default audio group"));
 	}
 
-	m_AudioDeviceConfig.clear();
-	unsigned count = m_Config.Read(wxT("AudioDevices/Count"), 0L);
-	for(unsigned i = 0; i < count; i++)
+	if (!m_AudioDeviceConfig.size())
 	{
-		GOAudioDeviceConfig conf;
-		conf.name = m_Config.Read(wxString::Format(wxT("AudioDevice/Device%d/Name"), i + 1), wxEmptyString);
-		conf.channels = m_Config.Read(wxString::Format(wxT("AudioDevice/Device%d/Channels"), i + 1), 2L);
-		conf.scale_factors.resize(conf.channels);
-		for(unsigned j = 0; j < conf.channels; j++)
+		unsigned count = m_Config.Read(wxT("AudioDevices/Count"), 0L);
+		for(unsigned i = 0; i < count; i++)
 		{
-			wxString prefix = wxString::Format(wxT("AudioDevice/Device%d/Channel%d/"), i + 1, j + 1);
-			unsigned group_count = m_Config.Read(prefix + wxT("GroupCount"), 0L);
-			for(unsigned k = 0; k < group_count; k++)
+			GOAudioDeviceConfig conf;
+			conf.name = m_Config.Read(wxString::Format(wxT("AudioDevice/Device%d/Name"), i + 1), wxEmptyString);
+			conf.channels = m_Config.Read(wxString::Format(wxT("AudioDevice/Device%d/Channels"), i + 1), 2L);
+			conf.scale_factors.resize(conf.channels);
+			for(unsigned j = 0; j < conf.channels; j++)
 			{
-				GOAudioGroupOutputConfig group;
-				wxString p = prefix + wxString::Format(wxT("Group%d/"), k + 1);
+				wxString prefix = wxString::Format(wxT("AudioDevice/Device%d/Channel%d/"), i + 1, j + 1);
+				unsigned group_count = m_Config.Read(prefix + wxT("GroupCount"), 0L);
+				for(unsigned k = 0; k < group_count; k++)
+				{
+					GOAudioGroupOutputConfig group;
+					wxString p = prefix + wxString::Format(wxT("Group%d/"), k + 1);
 
-				group.name = m_Config.Read(p + wxT("Name"), wxEmptyString);
-				double tmp;
-				m_Config.Read(p + wxT("Left"), &tmp, -121.0f);
-				if (tmp > 40.0 || tmp < -121.0)
-					tmp = 0;
-				group.left = tmp;
-				m_Config.Read(p + wxT("Right"), &tmp, -121.0f);
-				if (tmp > 40.0 || tmp < -121.0)
-					tmp = 0;
-				group.right = tmp;
+					group.name = m_Config.Read(p + wxT("Name"), wxEmptyString);
+					double tmp;
+					m_Config.Read(p + wxT("Left"), &tmp, -121.0f);
+					if (tmp > 40.0 || tmp < -121.0)
+						tmp = 0;
+					group.left = tmp;
+					m_Config.Read(p + wxT("Right"), &tmp, -121.0f);
+					if (tmp > 40.0 || tmp < -121.0)
+						tmp = 0;
+					group.right = tmp;
 
-				conf.scale_factors[j].push_back(group);
+					conf.scale_factors[j].push_back(group);
+				}
 			}
+			m_AudioDeviceConfig.push_back(conf);
 		}
-		m_AudioDeviceConfig.push_back(conf);
 	}
 	if (!m_AudioDeviceConfig.size())
 	{
@@ -865,24 +894,6 @@ void GOrgueSettings::SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>
 	if (!config.size())
 		return;
 	m_AudioDeviceConfig = config;
-	m_Config.Write(wxT("AudioDevices/Count"), (long)m_AudioDeviceConfig.size());
-	for(unsigned i = 0; i < m_AudioDeviceConfig.size(); i++)
-	{
-		m_Config.Write(wxString::Format(wxT("AudioDevice/Device%d/Name"), i + 1), m_AudioDeviceConfig[i].name);
-		m_Config.Write(wxString::Format(wxT("AudioDevice/Device%d/Channels"), i + 1), (long)m_AudioDeviceConfig[i].channels);
-		for(unsigned j = 0; j < m_AudioDeviceConfig[i].channels; j++)
-		{
-			wxString prefix = wxString::Format(wxT("AudioDevice/Device%d/Channel%d/"), i + 1, j + 1);
-			m_Config.Write(prefix + wxT("GroupCount"), (long)m_AudioDeviceConfig[i].scale_factors[j].size());
-			for(unsigned k = 0; k < m_AudioDeviceConfig[i].scale_factors[j].size(); k++)
-			{
-				wxString p = prefix + wxString::Format(wxT("Group%d/"), k + 1);
-				m_Config.Write(p + wxT("Name"), m_AudioDeviceConfig[i].scale_factors[j][k].name);
-				m_Config.Write(p + wxT("Left"), m_AudioDeviceConfig[i].scale_factors[j][k].left);
-				m_Config.Write(p + wxT("Right"), m_AudioDeviceConfig[i].scale_factors[j][k].right);
-			}
-		}
-	}
 }
 
 int GOrgueSettings::GetTranspose()
@@ -1010,6 +1021,25 @@ void GOrgueSettings::Flush()
 	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
 		cfg.WriteString(wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), m_AudioGroups[i]);
 	cfg.WriteInteger(wxT("AudioGroups"), wxT("Count"), m_AudioGroups.size());
+
+	for(unsigned i = 0; i < m_AudioDeviceConfig.size(); i++)
+	{
+		cfg.WriteString(wxT("AudioDevices"), wxString::Format(wxT("Device%03dName"), i + 1), m_AudioDeviceConfig[i].name);
+		cfg.WriteInteger(wxT("AudioDevices"), wxString::Format(wxT("Device%03dChannelCount"), i + 1), m_AudioDeviceConfig[i].channels);
+		for(unsigned j = 0; j < m_AudioDeviceConfig[i].channels; j++)
+		{
+			wxString prefix = wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);
+			cfg.WriteInteger(wxT("AudioDevices"), prefix + wxT("GroupCount"), m_AudioDeviceConfig[i].scale_factors[j].size());
+			for(unsigned k = 0; k < m_AudioDeviceConfig[i].scale_factors[j].size(); k++)
+			{
+				wxString p = prefix + wxString::Format(wxT("Group%03d"), k + 1);
+				cfg.WriteString(wxT("AudioDevices"), p + wxT("Name"), m_AudioDeviceConfig[i].scale_factors[j][k].name);
+				cfg.WriteFloat(wxT("AudioDevices"), p + wxT("Left"), m_AudioDeviceConfig[i].scale_factors[j][k].left);
+				cfg.WriteFloat(wxT("AudioDevices"), p + wxT("Right"), m_AudioDeviceConfig[i].scale_factors[j][k].right);
+			}
+		}
+	}
+	cfg.WriteInteger(wxT("AudioDevices"), wxT("Count"), m_AudioDeviceConfig.size());
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
