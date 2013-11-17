@@ -521,7 +521,7 @@ void GOGUIPanel::Save(GOrgueConfigWriter& cfg)
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->Save(cfg);
 
-	cfg.Write(m_group, wxT("WindowDisplayed"), m_InitialOpenWindow);
+	cfg.WriteBoolean(m_group, wxT("WindowDisplayed"), m_InitialOpenWindow);
 	wxRect size = m_size;
 	int x = size.GetLeft();
 	int y = size.GetTop();

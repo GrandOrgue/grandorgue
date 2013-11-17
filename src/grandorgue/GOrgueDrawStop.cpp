@@ -101,7 +101,7 @@ void GOrgueDrawstop::Load(GOrgueConfigReader& cfg, wxString group)
 void GOrgueDrawstop::Save(GOrgueConfigWriter& cfg)
 {
 	if (!IsReadOnly())
-		cfg.Write(m_group, wxT("DefaultToEngaged"), IsEngaged());
+		cfg.WriteBoolean(m_group, wxT("DefaultToEngaged"), IsEngaged());
 	GOrgueButton::Save(cfg);
 }
 

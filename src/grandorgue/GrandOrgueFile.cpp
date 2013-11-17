@@ -794,7 +794,7 @@ void GrandOrgueFile::Export(const wxString& cmb)
 		cfg.Write(wxT("Organ"), wxT("Volume"), m_volume);
 
 	cfg.Write(wxT("Organ"), wxT("Temperament"), m_Temperament);
-	cfg.Write(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch);
+	cfg.WriteBoolean(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch);
 	m_PipeConfig.Save(cfg);
 
 	for (unsigned j = 0; j < m_ranks.size(); j++)

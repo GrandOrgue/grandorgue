@@ -99,8 +99,3 @@ void GOrgueConfigWriter::Write(wxString group, wxString key, int value, const st
 {
 	WriteEnum(group, key, value, entry, count);
 }
-
-void GOrgueConfigWriter::Write(wxString group, wxString key, bool value)
-{
-	WriteBoolean(group, key, value);
-}
