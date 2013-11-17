@@ -30,12 +30,19 @@ GOrgueConfigWriter::GOrgueConfigWriter(GOrgueConfigFileWriter& cfg, bool prefix)
 {
 }
 
-void GOrgueConfigWriter::Write(wxString group, wxString key, wxString value)
+void GOrgueConfigWriter::WriteString(wxString group, wxString key, wxString value)
 {
 	if (m_Prefix)
 		m_ConfigFile.AddEntry(wxT('_') + group, key, value);
 	else
 		m_ConfigFile.AddEntry(group, key, value);
+}
+
+void GOrgueConfigWriter::WriteInteger(wxString group, wxString key, int value)
+{
+	wxString str;
+	str.Printf(wxT("%d"), value);
+	WriteString(group, key, str);
 }
 
 void GOrgueConfigWriter::Write(wxString group, wxString key, int value, bool sign, bool force)
@@ -52,28 +59,48 @@ void GOrgueConfigWriter::Write(wxString group, wxString key, int value, bool sig
 	}
 	else
 		str.Printf(wxT("%d"), value);
-	Write(group, key, str);
+	WriteString(group, key, str);
 }
 
-void GOrgueConfigWriter::Write(wxString group, wxString key, float value)
+void GOrgueConfigWriter::WriteFloat(wxString group, wxString key, float value)
 {
 	wxString str = formatCDDouble(value);
-	Write(group, key, str);
+	WriteString(group, key, str);
 }
 
-void GOrgueConfigWriter::Write(wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count)
+void GOrgueConfigWriter::WriteEnum(wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count)
 {
 	for (unsigned i = 0; i < count; i++)
 		if (entry[i].value == value)
 		{
-			Write(group, key, entry[i].name);
+			WriteString(group, key, entry[i].name);
 			return;
 		}
 	wxLogError(_("Invalid enum value for /%s/%s: %d"), group.c_str(), key.c_str(), value);
 }
 
-void GOrgueConfigWriter::Write(wxString group, wxString key, bool value)
+void GOrgueConfigWriter::WriteBoolean(wxString group, wxString key, bool value)
 {
 	wxString str = value ? wxT("Y") : wxT("N");
-	Write(group, key, str);
+	WriteString(group, key, str);
+}
+
+void GOrgueConfigWriter::Write(wxString group, wxString key, wxString value)
+{
+	WriteString(group, key, value);
+}
+
+void GOrgueConfigWriter::Write(wxString group, wxString key, float value)
+{
+	WriteFloat(group, key, value);
+}
+
+void GOrgueConfigWriter::Write(wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count)
+{
+	WriteEnum(group, key, value, entry, count);
+}
+
+void GOrgueConfigWriter::Write(wxString group, wxString key, bool value)
+{
+	WriteBoolean(group, key, value);
 }
