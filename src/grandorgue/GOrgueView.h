@@ -24,23 +24,14 @@
 
 #include <wx/docview.h>
 
-class GOGUIPanelWidget;
-class GOrgueDocument;
-
 class GOrgueView : public wxView
 {
 private:
-	GOrgueDocument* m_doc;
-
-	bool OnClose(bool deleteWindow = true);
 	void OnDraw(wxDC*);
 
 public:
 	GOrgueView();
 	~GOrgueView();
-
-	bool OnCreate(wxDocument *doc, long flags);
-	void OnChangeFilename();
 };
 
 #endif
