@@ -45,6 +45,12 @@ const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
 	{ wxT("Note"), MIDI_M_NOTE },
 	{ wxT("ProgramChange"), MIDI_M_PGM_CHANGE },
 	{ wxT("SysExJohannus"), MIDI_M_SYSEX_JOHANNUS },
+	{ wxT("RPN"), MIDI_M_RPN },
+	{ wxT("NRPN"), MIDI_M_NRPN },
+	{ wxT("RPNOn"), MIDI_M_RPN_ON },
+	{ wxT("RPNOff"), MIDI_M_RPN_OFF },
+	{ wxT("NRPNOn"), MIDI_M_NRPN_ON },
+	{ wxT("NRPNOff"), MIDI_M_NRPN_OFF },
 	{ wxT("ControlChangeOn"), MIDI_M_CTRL_CHANGE_ON },
 	{ wxT("ControlChangeOff"), MIDI_M_CTRL_CHANGE_OFF },
 	{ wxT("NoteOn"), MIDI_M_NOTE_ON },
@@ -248,9 +254,29 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 		}
 		if (m_type == MIDI_RECV_ENCLOSURE)
 		{
-			if (m_events[i].type != MIDI_M_CTRL_CHANGE)
-				continue;
-			if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].key == e.GetKey())
+			if (m_events[i].type == MIDI_M_CTRL_CHANGE && e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].key == e.GetKey())
+			{
+				value = e.GetValue();
+				value = value - m_events[i].low_velocity;
+				value *= 127 / (m_events[i].high_velocity - m_events[i].low_velocity + 0.00000001);
+				if (value < 0)
+					value = 0;
+				if (value > 127)
+					value = 127;
+				return MIDI_MATCH_CHANGE;
+			}
+			if (m_events[i].type == MIDI_M_RPN && e.GetMidiType() == MIDI_RPN && m_events[i].key == e.GetKey())
+			{
+				value = e.GetValue();
+				value = value - m_events[i].low_velocity;
+				value *= 127 / (m_events[i].high_velocity - m_events[i].low_velocity + 0.00000001);
+				if (value < 0)
+					value = 0;
+				if (value > 127)
+					value = 127;
+				return MIDI_MATCH_CHANGE;
+			}
+			if (m_events[i].type == MIDI_M_NRPN && e.GetMidiType() == MIDI_NRPN && m_events[i].key == e.GetKey())
 			{
 				value = e.GetValue();
 				value = value - m_events[i].low_velocity;
@@ -285,6 +311,30 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 		if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].type == MIDI_M_CTRL_CHANGE_ON && m_events[i].key == e.GetKey() && e.GetValue())
 			return MIDI_MATCH_CHANGE;
 		if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].type == MIDI_M_CTRL_CHANGE_OFF && m_events[i].key == e.GetKey() && !e.GetValue())
+			return MIDI_MATCH_CHANGE;
+
+		if (e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN && m_events[i].key == e.GetKey())
+		{
+			if (e.GetValue())
+				return MIDI_MATCH_ON;
+			else
+				return MIDI_MATCH_OFF;
+		}
+		if (e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_ON && m_events[i].key == e.GetKey() && e.GetValue())
+			return MIDI_MATCH_CHANGE;
+		if (e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_OFF && m_events[i].key == e.GetKey() && !e.GetValue())
+			return MIDI_MATCH_CHANGE;
+
+		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN && m_events[i].key == e.GetKey())
+		{
+			if (e.GetValue())
+				return MIDI_MATCH_ON;
+			else
+				return MIDI_MATCH_OFF;
+		}
+		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_ON && m_events[i].key == e.GetKey() && e.GetValue())
+			return MIDI_MATCH_CHANGE;
+		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_OFF && m_events[i].key == e.GetKey() && !e.GetValue())
 			return MIDI_MATCH_CHANGE;
 
 		if (e.GetMidiType() == MIDI_PGM_CHANGE && m_events[i].type == MIDI_M_PGM_CHANGE && m_events[i].key == e.GetKey())

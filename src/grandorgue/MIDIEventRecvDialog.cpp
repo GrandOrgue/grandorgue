@@ -137,6 +137,19 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 		m_eventtype->Append(_("9x Note short octave at low key"), (void*)MIDI_M_NOTE_SHORT_OCTAVE);
 	}
 
+	if (m_midi.GetType() != MIDI_RECV_MANUAL)
+	{
+		m_eventtype->Append(_("RPN"), (void*)MIDI_M_RPN);
+		m_eventtype->Append(_("NRPN"), (void*)MIDI_M_NRPN);
+	}
+	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
+	{
+		m_eventtype->Append(_("RPN Toogle"), (void*)MIDI_M_RPN_ON);
+		m_eventtype->Append(_("RPN Toogle"), (void*)MIDI_M_RPN_OFF);
+		m_eventtype->Append(_("NRPN Toogle"), (void*)MIDI_M_NRPN_ON);
+		m_eventtype->Append(_("NRPN Toogle"), (void*)MIDI_M_NRPN_OFF);
+	}
+
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 		m_eventtype->Append(_("Sys Ex Johannus"), (void*)MIDI_M_SYSEX_JOHANNUS);
 
@@ -322,6 +335,12 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 		break;
 	case MIDI_PGM_CHANGE:
 		e.type = MIDI_M_PGM_CHANGE;
+		break;
+	case MIDI_RPN:
+		e.type = MIDI_M_RPN;
+		break;
+	case MIDI_NRPN:
+		e.type = MIDI_M_NRPN;
 		break;
 	case MIDI_SYSEX_JOHANNUS:
 		e.type = MIDI_M_SYSEX_JOHANNUS;
