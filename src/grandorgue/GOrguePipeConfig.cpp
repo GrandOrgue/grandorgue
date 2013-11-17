@@ -76,9 +76,9 @@ void GOrguePipeConfig::Load(GOrgueConfigReader& cfg, wxString group, wxString pr
 void GOrguePipeConfig::Save(GOrgueConfigWriter& cfg)
 {
 	cfg.WriteString(m_Group, m_NamePrefix + wxT("AudioGroup"), m_AudioGroup);
-	cfg.Write(m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
-	cfg.Write(m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
-	cfg.Write(m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
+	cfg.WriteFloat(m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
+	cfg.WriteFloat(m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
+	cfg.WriteFloat(m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
 	cfg.Write(m_Group, m_NamePrefix + wxT("Delay"), (int)m_Delay);
 	cfg.Write(m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
 	cfg.Write(m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
