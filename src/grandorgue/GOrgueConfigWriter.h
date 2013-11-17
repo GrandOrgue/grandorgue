@@ -42,6 +42,11 @@ public:
 	void Write(wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count);
 	void Write(wxString group, wxString key, float value);
 	void Write(wxString group, wxString key, bool value);
+	void WriteString(wxString group, wxString key, wxString value);
+	void WriteInteger(wxString group, wxString key, int value);
+	void WriteEnum(wxString group, wxString key, int value, const struct IniFileEnumEntry* entry, unsigned count);
+	void WriteFloat(wxString group, wxString key, float value);
+	void WriteBoolean(wxString group, wxString key, bool value);
 };
 
 #endif
