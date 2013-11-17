@@ -312,7 +312,24 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 		return;
 
 	MIDI_MATCH_EVENT& e=m_midi.GetEvent(m_current);
-	e.type = (midi_match_message_type)event.GetMidiType();
+	switch(event.GetMidiType())
+	{
+	case MIDI_NOTE:
+		e.type = MIDI_M_NOTE;
+		break;
+	case MIDI_CTRL_CHANGE:
+		e.type = MIDI_M_CTRL_CHANGE;
+		break;
+	case MIDI_PGM_CHANGE:
+		e.type = MIDI_M_PGM_CHANGE;
+		break;
+	case MIDI_SYSEX_JOHANNUS:
+		e.type = MIDI_M_SYSEX_JOHANNUS;
+		break;
+
+	default:
+		return;
+	}
 	e.device = event.GetDevice();
 	e.channel = event.GetChannel();
 	if (m_midi.GetType() != MIDI_RECV_MANUAL)
