@@ -107,6 +107,18 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 		m_eventtype->Append(_("Cx Program Change On"), (void*)MIDI_S_PGM_ON);
 		m_eventtype->Append(_("Cx Program Change Off"), (void*)MIDI_S_PGM_OFF);
 	}
+	if (m_midi.GetType() == MIDI_SEND_ENCLOSURE || m_midi.GetType() == MIDI_SEND_BUTTON)
+	{
+		m_eventtype->Append(_("RPN"), (void*)MIDI_S_RPN);
+		m_eventtype->Append(_("NRPN"), (void*)MIDI_S_NRPN);
+	}
+	if (m_midi.GetType() == MIDI_SEND_BUTTON)
+	{
+		m_eventtype->Append(_("RPN On"), (void*)MIDI_S_RPN_ON);
+		m_eventtype->Append(_("RPN Off"), (void*)MIDI_S_RPN_OFF);
+		m_eventtype->Append(_("NRPN On"), (void*)MIDI_S_NRPN_ON);
+		m_eventtype->Append(_("NRPN Off"), (void*)MIDI_S_NRPN_OFF);
+	}
 
 	if (m_midi.GetType() == MIDI_SEND_MANUAL)
 		m_key->Disable();

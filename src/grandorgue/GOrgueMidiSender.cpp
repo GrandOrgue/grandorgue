@@ -38,12 +38,18 @@ GOrgueMidiSender::~GOrgueMidiSender()
 const struct IniFileEnumEntry GOrgueMidiSender::m_MidiTypes[] = {
 	{ wxT("Note"), MIDI_S_NOTE },
 	{ wxT("ControlChange"), MIDI_S_CTRL },
+	{ wxT("RPN"), MIDI_S_RPN },
+	{ wxT("NRPN"), MIDI_S_NRPN },
 	{ wxT("ProgramOn"), MIDI_S_PGM_ON },
 	{ wxT("ProgramOff"), MIDI_S_PGM_OFF },
 	{ wxT("NoteOn"), MIDI_S_NOTE_ON },
 	{ wxT("NoteOff"), MIDI_S_NOTE_OFF },
 	{ wxT("ControlOn"), MIDI_S_CTRL_ON },
 	{ wxT("ControlOff"), MIDI_S_CTRL_OFF },
+	{ wxT("RPNOn"), MIDI_S_RPN_ON },
+	{ wxT("RPNOff"), MIDI_S_RPN_OFF },
+	{ wxT("NRPNOn"), MIDI_S_NRPN_ON },
+	{ wxT("NRPNOff"), MIDI_S_NRPN_OFF },
 };
 
 void GOrgueMidiSender::Load(GOrgueConfigReader& cfg, wxString group)
@@ -69,8 +75,12 @@ void GOrgueMidiSender::Load(GOrgueConfigReader& cfg, wxString group)
 		}
 		if (m_events[i].type == MIDI_S_NOTE_OFF ||
 		    m_events[i].type == MIDI_S_CTRL_OFF ||
+		    m_events[i].type == MIDI_S_RPN_OFF ||
+		    m_events[i].type == MIDI_S_NRPN_OFF ||
 		    m_events[i].type == MIDI_S_PGM_OFF ||
 		    m_events[i].type == MIDI_S_NOTE ||
+		    m_events[i].type == MIDI_S_RPN ||
+		    m_events[i].type == MIDI_S_NRPN ||
 		    m_events[i].type == MIDI_S_CTRL)
 		{
 			buffer.Printf(wxT("MIDISendLowValue%03d"), i + 1);
@@ -78,8 +88,12 @@ void GOrgueMidiSender::Load(GOrgueConfigReader& cfg, wxString group)
 		}
 		if (m_events[i].type == MIDI_S_NOTE_ON ||
 		    m_events[i].type == MIDI_S_CTRL_ON ||
+		    m_events[i].type == MIDI_S_RPN_ON ||
+		    m_events[i].type == MIDI_S_NRPN_ON ||
 		    m_events[i].type == MIDI_S_PGM_ON ||
 		    m_events[i].type == MIDI_S_NOTE ||
+		    m_events[i].type == MIDI_S_RPN ||
+		    m_events[i].type == MIDI_S_NRPN ||
 		    m_events[i].type == MIDI_S_CTRL)
 		{
 			buffer.Printf(wxT("MIDISendHighValue%03d"), i + 1);
@@ -108,8 +122,12 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group)
 		}
 		if (m_events[i].type == MIDI_S_NOTE_OFF ||
 		    m_events[i].type == MIDI_S_CTRL_OFF ||
+		    m_events[i].type == MIDI_S_RPN_OFF ||
+		    m_events[i].type == MIDI_S_NRPN_OFF ||
 		    m_events[i].type == MIDI_S_PGM_OFF ||
 		    m_events[i].type == MIDI_S_NOTE ||
+		    m_events[i].type == MIDI_S_RPN ||
+		    m_events[i].type == MIDI_S_NRPN ||
 		    m_events[i].type == MIDI_S_CTRL)
 		{
 			buffer.Printf(wxT("MIDISendLowValue%03d"), i + 1);
@@ -117,8 +135,12 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group)
 		}
 		if (m_events[i].type == MIDI_S_NOTE_ON ||
 		    m_events[i].type == MIDI_S_CTRL_ON ||
+		    m_events[i].type == MIDI_S_RPN_ON ||
+		    m_events[i].type == MIDI_S_NRPN_ON ||
 		    m_events[i].type == MIDI_S_PGM_ON ||
 		    m_events[i].type == MIDI_S_NOTE ||
+		    m_events[i].type == MIDI_S_RPN ||
+		    m_events[i].type == MIDI_S_NRPN ||
 		    m_events[i].type == MIDI_S_CTRL)
 		{
 			buffer.Printf(wxT("MIDISendHighValue%03d"), i + 1);
@@ -146,6 +168,26 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			GOrgueMidiEvent e;
 			e.SetDevice(m_events[i].device);
 			e.SetMidiType(MIDI_CTRL_CHANGE);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(m_events[i].key);
+			e.SetValue(state ? m_events[i].high_value : m_events[i].low_value);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_RPN)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_RPN);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(m_events[i].key);
+			e.SetValue(state ? m_events[i].high_value : m_events[i].low_value);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_NRPN)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_NRPN);
 			e.SetChannel(m_events[i].channel);
 			e.SetKey(m_events[i].key);
 			e.SetValue(state ? m_events[i].high_value : m_events[i].low_value);
@@ -209,6 +251,46 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			e.SetValue(m_events[i].low_value);
 			m_organfile->SendMidiMessage(e);
 		}
+		if (m_events[i].type == MIDI_S_RPN_ON && state)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_RPN);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(m_events[i].key);
+			e.SetValue(m_events[i].high_value);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_RPN_OFF && !state)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_RPN);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(m_events[i].key);
+			e.SetValue(m_events[i].low_value);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_NRPN_ON && state)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_NRPN);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(m_events[i].key);
+			e.SetValue(m_events[i].high_value);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_NRPN_OFF && !state)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_NRPN);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(m_events[i].key);
+			e.SetValue(m_events[i].low_value);
+			m_organfile->SendMidiMessage(e);
+		}
 	}
 }
 
@@ -238,6 +320,36 @@ void GOrgueMidiSender::SetValue(unsigned value)
 			GOrgueMidiEvent e;
 			e.SetDevice(m_events[i].device);
 			e.SetMidiType(MIDI_CTRL_CHANGE);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(m_events[i].key);
+			unsigned val = m_events[i].low_value + ((m_events[i].high_value - m_events[i].low_value) * value) / 0x7f;
+			if (val < 0)
+				val = 0;
+			if (val > 0x7f)
+				val = 0x7f;
+			e.SetValue(val);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_RPN)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_RPN);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(m_events[i].key);
+			unsigned val = m_events[i].low_value + ((m_events[i].high_value - m_events[i].low_value) * value) / 0x7f;
+			if (val < 0)
+				val = 0;
+			if (val > 0x7f)
+				val = 0x7f;
+			e.SetValue(val);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_NRPN)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_NRPN);
 			e.SetChannel(m_events[i].channel);
 			e.SetKey(m_events[i].key);
 			unsigned val = m_events[i].low_value + ((m_events[i].high_value - m_events[i].low_value) * value) / 0x7f;
