@@ -36,8 +36,3 @@ void GOrgueDocManager::OnUpdateFileSave(wxUpdateUIEvent& event)
     wxDocument *doc = GetCurrentDocument();
     event.Enable( doc );
 }
-
-wxFileHistory* GOrgueDocManager::OnCreateFileHistory()
-{
-	return new wxFileHistory(30, wxID_FILE1);
-}

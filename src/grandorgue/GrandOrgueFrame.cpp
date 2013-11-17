@@ -56,6 +56,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 #endif
 	EVT_MENU(ID_FILE_LOAD, GOrgueFrame::OnLoad)
 	EVT_MENU_RANGE(ID_LOAD_FAV_FIRST, ID_LOAD_FAV_LAST, GOrgueFrame::OnLoadFavorite)
+	EVT_MENU_RANGE(ID_LOAD_LRU_FIRST, ID_LOAD_LRU_LAST, GOrgueFrame::OnLoadRecent)
 	EVT_MENU(ID_FILE_RELOAD, GOrgueFrame::OnReload)
 	EVT_MENU(ID_FILE_REVERT, GOrgueFrame::OnRevert)
 	EVT_MENU(ID_FILE_PROPERTIES, GOrgueFrame::OnProperties)
@@ -136,9 +137,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
        
 	m_favorites_menu = new wxMenu;
 	
-	wxMenu *recent_menu = new wxMenu;
-	m_docManager->FileHistoryUseMenu(recent_menu);
-	m_docManager->FileHistoryLoad(m_Settings.GetConfig());
+	m_recent_menu = new wxMenu;
 	
 	wxToolBar* tb = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
 	tb->SetToolBitmapSize(wxSize(16, 16));
@@ -150,7 +149,7 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_file_menu->Append(ID_FILE_LOAD, _("&Load\tCtrl+L"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->Append(wxID_ANY, _("&Favorites"), m_favorites_menu);
 	m_file_menu->Append(wxID_OPEN, _("&Open\tCtrl+O"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->Append(wxID_ANY, _("Open &Recent"), recent_menu);
+	m_file_menu->Append(wxID_ANY, _("Open &Recent"), m_recent_menu);
 	m_file_menu->AppendSeparator();
 	m_file_menu->Append(ID_FILE_PROPERTIES, _("Organ &Properties"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->AppendSeparator();
@@ -389,6 +388,18 @@ void GOrgueFrame::UpdateFavoritesMenu()
 	}
 }
 
+void GOrgueFrame::UpdateRecentMenu()
+{
+	while (m_recent_menu->GetMenuItemCount() > 0)
+		m_recent_menu->Destroy(m_recent_menu->FindItemByPosition(m_recent_menu->GetMenuItemCount() - 1));
+
+	std::vector<GOrgueOrgan*> organs = m_Settings.GetLRUOrganList();
+	for(unsigned i = 0; i < organs.size() && i <= ID_LOAD_LRU_LAST - ID_LOAD_LRU_FIRST; i++)
+	{
+		m_recent_menu->AppendCheckItem(ID_LOAD_LRU_FIRST + i, wxString::Format(_("&%d: %s"), (i + 1) % 10, organs[i]->GetUITitle().c_str()));
+	}
+}
+
 void GOrgueFrame::OnSize(wxSizeEvent& event)
 {
 	wxWindow *child = (wxWindow *)NULL;
@@ -486,6 +497,13 @@ void GOrgueFrame::OnLoadFavorite(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_LOAD_FAV_FIRST;
 	GOrgueOrgan* organ = m_Settings.GetOrganList()[id];
+	m_docManager->CreateDocument(organ->GetODFPath(), wxDOC_SILENT);
+}
+
+void GOrgueFrame::OnLoadRecent(wxCommandEvent& event)
+{
+	unsigned id = event.GetId() - ID_LOAD_LRU_FIRST;
+	GOrgueOrgan* organ = m_Settings.GetLRUOrganList()[id];
 	m_docManager->CreateDocument(organ->GetODFPath(), wxDOC_SILENT);
 }
 
@@ -756,6 +774,8 @@ void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
 		UpdatePanelMenu();
     if (event.GetMenu() == m_file_menu)
 		UpdateFavoritesMenu();
+    if (event.GetMenu() == m_file_menu)
+		UpdateRecentMenu();
     event.Skip();
 }
 

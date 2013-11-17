@@ -44,6 +44,7 @@ private:
 	wxMenu* m_file_menu;
 	wxMenu* m_panel_menu;
 	wxMenu* m_favorites_menu;
+	wxMenu* m_recent_menu;
 	wxHtmlHelpController* m_Help;
 	wxGaugeAudio *m_SamplerUsage;
 	wxGaugeAudio *m_VolumeLeft, *m_VolumeRight;
@@ -62,12 +63,14 @@ private:
 	void InitHelp();
 	void UpdatePanelMenu();
 	void UpdateFavoritesMenu();
+	void UpdateRecentMenu();
 
 	void OnMeters(wxCommandEvent& event);
 
 	void OnLoadFile(wxCommandEvent& event);
 	void OnLoad(wxCommandEvent& event);
 	void OnLoadFavorite(wxCommandEvent& event);
+	void OnLoadRecent(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
 	void OnImportSettings(wxCommandEvent& event);
 	void OnImportCombinations(wxCommandEvent& event);
