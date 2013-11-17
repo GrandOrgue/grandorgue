@@ -47,6 +47,11 @@ private:
 		int rtmidi_port_no;
 		unsigned bank_lsb[16];
 		unsigned bank_msb[16];
+		bool rpn;
+		unsigned rpn_lsb[16];
+		unsigned rpn_msb[16];
+		unsigned nrpn_lsb[16];
+		unsigned nrpn_msb[16];
 		GOrgueMidi* midi;
 	} MIDI_IN_DEVICE;
 
