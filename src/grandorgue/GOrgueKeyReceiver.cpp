@@ -38,7 +38,7 @@ void GOrgueKeyReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 
 void GOrgueKeyReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
 {
-	cfg.Write(group, wxT("ShortcutKey"), (int)m_ShortcutKey);
+	cfg.WriteInteger(group, wxT("ShortcutKey"), m_ShortcutKey);
 }
 
 bool GOrgueKeyReceiver::Match(unsigned key)

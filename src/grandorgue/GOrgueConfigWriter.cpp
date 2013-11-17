@@ -45,23 +45,6 @@ void GOrgueConfigWriter::WriteInteger(wxString group, wxString key, int value)
 	WriteString(group, key, str);
 }
 
-void GOrgueConfigWriter::Write(wxString group, wxString key, int value, bool sign, bool force)
-{
-	wxString str;
-	if (force)
-		str.Printf(wxT("%03d"), value);
-	else if (sign)
-	{
-		if (value >= 0)
-			str.Printf(wxT("+%03d"), value);
-		else
-			str.Printf(wxT("-%03d"), -value);
-	}
-	else
-		str.Printf(wxT("%d"), value);
-	WriteString(group, key, str);
-}
-
 void GOrgueConfigWriter::WriteFloat(wxString group, wxString key, float value)
 {
 	wxString str = formatCDDouble(value);

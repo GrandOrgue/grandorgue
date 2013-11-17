@@ -996,7 +996,7 @@ void GOrgueSettings::Flush()
 	GOrgueConfigFileWriter cfg_file;
 	GOrgueConfigWriter cfg(cfg_file, false);
 
-	cfg.Write(wxT("General"), wxT("OrganCount"), (int)m_OrganList.size());
+	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
 		m_OrganList[i]->Save(cfg, wxString::Format(wxT("Organ%03d"), i + 1));
 

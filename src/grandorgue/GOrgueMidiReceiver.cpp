@@ -140,32 +140,32 @@ void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
 {
 	wxString buffer;
 
-	cfg.Write(group, wxT("NumberOfMIDIEvents"), (int)m_events.size());
+	cfg.WriteInteger(group, wxT("NumberOfMIDIEvents"), m_events.size());
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		buffer.Printf(wxT("MIDIDevice%03d"), i + 1);
 		cfg.WriteString(group, buffer, m_events[i].device);
 		buffer.Printf(wxT("MIDIChannel%03d"), i + 1);
-		cfg.Write(group, buffer, m_events[i].channel);
+		cfg.WriteInteger(group, buffer, m_events[i].channel);
 		buffer.Printf(wxT("MIDIEventType%03d"), i + 1);
 		cfg.WriteEnum(group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 		if (m_type == MIDI_RECV_MANUAL)
 		{
 			buffer.Printf(wxT("MIDIKeyShift%03d"), i + 1);
-			cfg.Write(group, buffer, m_events[i].key);
-			cfg.Write(group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), m_events[i].low_key);
-			cfg.Write(group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), m_events[i].high_key);
-			cfg.Write(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_velocity);
-			cfg.Write(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
+			cfg.WriteInteger(group, buffer, m_events[i].key);
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), m_events[i].low_key);
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), m_events[i].high_key);
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_velocity);
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
 			continue;
 		}
 		buffer.Printf(wxT("MIDIKey%03d"), i + 1);
-		cfg.Write(group, buffer, m_events[i].key);
+		cfg.WriteInteger(group, buffer, m_events[i].key);
 
 		if (m_type == MIDI_RECV_ENCLOSURE)
 		{
-			cfg.Write(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_velocity);
-			cfg.Write(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_velocity);
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_velocity);
 			continue;
 		}
 	}

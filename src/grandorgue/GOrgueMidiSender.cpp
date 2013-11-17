@@ -92,19 +92,19 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group)
 {
 	wxString buffer;
 
-	cfg.Write(group, wxT("NumberOfMIDISendEvents"), (int)m_events.size());
+	cfg.WriteInteger(group, wxT("NumberOfMIDISendEvents"), m_events.size());
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		buffer.Printf(wxT("MIDISendDevice%03d"), i + 1);
 		cfg.WriteString(group, buffer, m_events[i].device);
 		buffer.Printf(wxT("MIDISendChannel%03d"), i + 1);
-		cfg.Write(group, buffer, (int)m_events[i].channel);
+		cfg.WriteInteger(group, buffer, m_events[i].channel);
 		buffer.Printf(wxT("MIDISendEventType%03d"), i + 1);
 		cfg.WriteEnum(group, buffer, m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 		if (m_type != MIDI_SEND_MANUAL)
 		{
 			buffer.Printf(wxT("MIDISendKey%03d"), i + 1);
-			cfg.Write(group, buffer, (int)m_events[i].key);
+			cfg.WriteInteger(group, buffer, m_events[i].key);
 		}
 		if (m_events[i].type == MIDI_S_NOTE_OFF ||
 		    m_events[i].type == MIDI_S_CTRL_OFF ||
@@ -113,7 +113,7 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group)
 		    m_events[i].type == MIDI_S_CTRL)
 		{
 			buffer.Printf(wxT("MIDISendLowValue%03d"), i + 1);
-			cfg.Write(group, buffer, (int)m_events[i].low_value);
+			cfg.WriteInteger(group, buffer, m_events[i].low_value);
 		}
 		if (m_events[i].type == MIDI_S_NOTE_ON ||
 		    m_events[i].type == MIDI_S_CTRL_ON ||
@@ -122,7 +122,7 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group)
 		    m_events[i].type == MIDI_S_CTRL)
 		{
 			buffer.Printf(wxT("MIDISendHighValue%03d"), i + 1);
-			cfg.Write(group, buffer, (int)m_events[i].high_value);
+			cfg.WriteInteger(group, buffer, m_events[i].high_value);
 		}
 	}
 }

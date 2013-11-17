@@ -791,7 +791,7 @@ void GrandOrgueFile::Export(const wxString& cmb)
 	cfg.WriteString(wxT("Organ"), wxT("ODFPath"), GetODFFilename());
 
 	if (m_volume >= -120)
-		cfg.Write(wxT("Organ"), wxT("Volume"), m_volume);
+		cfg.WriteInteger(wxT("Organ"), wxT("Volume"), m_volume);
 
 	cfg.WriteString(wxT("Organ"), wxT("Temperament"), m_Temperament);
 	cfg.WriteBoolean(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch);
