@@ -36,12 +36,18 @@ typedef enum {
 	MIDI_S_NONE,
 	MIDI_S_NOTE,
 	MIDI_S_CTRL,
+	MIDI_S_RPN,
+	MIDI_S_NRPN,
 	MIDI_S_PGM_ON,
 	MIDI_S_PGM_OFF,
 	MIDI_S_NOTE_ON,
 	MIDI_S_NOTE_OFF,
 	MIDI_S_CTRL_ON,
 	MIDI_S_CTRL_OFF,
+	MIDI_S_RPN_ON,
+	MIDI_S_RPN_OFF,
+	MIDI_S_NRPN_ON,
+	MIDI_S_NRPN_OFF,
 } midi_send_message_type;
 
 typedef struct {
