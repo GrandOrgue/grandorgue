@@ -159,6 +159,11 @@ void GOrgueMidi::Open()
 		MIDI_IN_DEVICE& this_dev = *m_midi_in_devices[i];
 		memset(this_dev.bank_msb, 0, sizeof(this_dev.bank_msb));
 		memset(this_dev.bank_lsb, 0, sizeof(this_dev.bank_lsb));
+		memset(this_dev.rpn_msb, 0, sizeof(this_dev.rpn_msb));
+		memset(this_dev.rpn_lsb, 0, sizeof(this_dev.rpn_lsb));
+		memset(this_dev.nrpn_msb, 0, sizeof(this_dev.nrpn_msb));
+		memset(this_dev.nrpn_lsb, 0, sizeof(this_dev.nrpn_lsb));
+		this_dev.rpn = false;
 		int channel_shift = m_Settings.GetMidiInDeviceChannelShift(this_dev.name);
 		if (channel_shift >= 0)
 		{
@@ -256,8 +261,46 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE*
 		device->bank_lsb[e.GetChannel() - 1] = e.GetValue();
 		return;
 	}
+	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_RPN_LSB)
+	{
+		device->rpn_lsb[e.GetChannel() - 1] = e.GetValue();
+		device->rpn = true;
+		return;
+	}
+	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_RPN_MSB)
+	{
+		device->rpn_msb[e.GetChannel() - 1] = e.GetValue();
+		device->rpn = true;
+		return;
+	}
+	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_NRPN_LSB)
+	{
+		device->nrpn_lsb[e.GetChannel() - 1] = e.GetValue();
+		device->rpn = false;
+		return;
+	}
+	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_NRPN_LSB)
+	{
+		device->nrpn_lsb[e.GetChannel() - 1] = e.GetValue();
+		device->rpn = false;
+		return;
+	}
 	if (e.GetMidiType() == MIDI_PGM_CHANGE)
 		e.SetKey(((e.GetKey() - 1) | (device->bank_lsb[e.GetChannel() - 1] << 7) | (device->bank_msb[e.GetChannel() - 1] << 14)) + 1);
+
+	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_DATA_ENTRY)
+	{
+		if (device->rpn)
+		{
+			e.SetMidiType(MIDI_RPN);
+			e.SetKey((device->rpn_lsb[e.GetChannel() - 1] << 0) | (device->rpn_msb[e.GetChannel() - 1] << 7));
+		}
+		else
+		{
+			e.SetMidiType(MIDI_NRPN);
+			e.SetKey((device->nrpn_lsb[e.GetChannel() - 1] << 0) | (device->nrpn_msb[e.GetChannel() - 1] << 7));
+		}
+	}
 
 	/* Compat stuff */
 	if (e.GetChannel() != -1)

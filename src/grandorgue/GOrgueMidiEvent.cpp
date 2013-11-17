@@ -170,6 +170,58 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg)
 		msg.push_back(m);
 		return;
 
+	case MIDI_RPN:
+		if (GetChannel() == -1)
+			return;
+		m.resize(3);
+		m[0] = 0xB0;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = MIDI_CTRL_RPN_MSB & 0x7F;
+		m[2] = (GetKey() >> 7) & 0x7F;
+		msg.push_back(m);
+
+		m.resize(3);
+		m[0] = 0xB0;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = MIDI_CTRL_RPN_LSB & 0x7F;
+		m[2] = (GetKey() >> 0) & 0x7F;
+		msg.push_back(m);
+
+		m.resize(3);
+		m[0] = 0xB0;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = MIDI_CTRL_DATA_ENTRY & 0x7F;
+		m[2] = (GetValue() >> 0) & 0x7F;
+		msg.push_back(m);
+
+		return;
+
+	case MIDI_NRPN:
+		if (GetChannel() == -1)
+			return;
+		m.resize(3);
+		m[0] = 0xB0;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = MIDI_CTRL_NRPN_MSB & 0x7F;
+		m[2] = (GetKey() >> 7) & 0x7F;
+		msg.push_back(m);
+
+		m.resize(3);
+		m[0] = 0xB0;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = MIDI_CTRL_NRPN_LSB & 0x7F;
+		m[2] = (GetKey() >> 0) & 0x7F;
+		msg.push_back(m);
+
+		m.resize(3);
+		m[0] = 0xB0;
+		m[0] |= (GetChannel() - 1) & 0x0F;
+		m[1] = MIDI_CTRL_DATA_ENTRY & 0x7F;
+		m[2] = (GetValue() >> 0) & 0x7F;
+		msg.push_back(m);
+
+		return;
+
 	case MIDI_SYSEX_JOHANNUS:
 	case MIDI_AFTERTOUCH:
 	case MIDI_NONE:
