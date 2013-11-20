@@ -787,7 +787,7 @@ ptr_vector<GOrgueOrgan>& GOrgueSettings::GetOrganList()
 
 static bool LRUCompare(GOrgueOrgan* a, GOrgueOrgan* b)
 {
-	return a->GetLastUse() >= b->GetLastUse();
+	return a->GetLastUse() > b->GetLastUse();
 }
 
 std::vector<GOrgueOrgan*> GOrgueSettings::GetLRUOrganList()
