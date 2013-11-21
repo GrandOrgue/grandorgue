@@ -90,14 +90,20 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	m_HighKey = new wxSpinCtrl(this, ID_HIGH_KEY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
 	box->Add(m_HighKey, 0);
 
-	sizer->Add(new wxStaticText(this, wxID_ANY, _("L&owest velocity:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+	if (m_midi.GetType() == MIDI_RECV_MANUAL)
+		sizer->Add(new wxStaticText(this, wxID_ANY, _("L&owest velocity:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+	else
+		sizer->Add(new wxStaticText(this, wxID_ANY, _("L&ower limit:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 	box = new wxBoxSizer(wxHORIZONTAL);
 	sizer->Add(box);
-	m_LowVelocity = new wxSpinCtrl(this, ID_LOW_VELOCITY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
-	box->Add(m_LowVelocity, 0);
-	box->Add(new wxStaticText(this, wxID_ANY, _("H&ighest velocity:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
-	m_HighVelocity = new wxSpinCtrl(this, ID_HIGH_VELOCITY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
-	box->Add(m_HighVelocity, 0);
+	m_LowValue = new wxSpinCtrl(this, ID_LOW_VALUE, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
+	box->Add(m_LowValue, 0);
+	if (m_midi.GetType() == MIDI_RECV_MANUAL)
+		box->Add(new wxStaticText(this, wxID_ANY, _("H&ighest velocity:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+	else
+		box->Add(new wxStaticText(this, wxID_ANY, _("&Upper limit:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+	m_HighValue = new wxSpinCtrl(this, ID_HIGH_VALUE, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
+	box->Add(m_HighValue, 0);
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, wxEmptyString));
 	m_listen = new wxToggleButton(this, ID_LISTEN, _("&Listen for Event"));
@@ -155,13 +161,13 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 
 	if (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
 	{
-		m_LowVelocity->Enable();
-		m_HighVelocity->Enable();
+		m_LowValue->Enable();
+		m_HighValue->Enable();
 	}
 	else
 	{
-		m_LowVelocity->Disable();
-		m_HighVelocity->Disable();
+		m_LowValue->Disable();
+		m_HighValue->Disable();
 	}
 
 	if (m_midi.GetType() == MIDI_RECV_MANUAL)
@@ -259,8 +265,8 @@ void MIDIEventRecvDialog::LoadEvent()
 	m_data->SetValue(e.key);
 	m_LowKey->SetValue(e.low_key);
 	m_HighKey->SetValue(e.high_key);
-	m_LowVelocity->SetValue(e.low_velocity);
-	m_HighVelocity->SetValue(e.high_velocity);
+	m_LowValue->SetValue(e.low_value);
+	m_HighValue->SetValue(e.high_value);
 }
 
 void MIDIEventRecvDialog::StoreEvent()
@@ -280,8 +286,8 @@ void MIDIEventRecvDialog::StoreEvent()
 	e.key = m_data->GetValue();
 	e.low_key = m_LowKey->GetValue();
 	e.high_key = m_HighKey->GetValue();
-	e.low_velocity = m_LowVelocity->GetValue();
-	e.high_velocity = m_HighVelocity->GetValue();
+	e.low_value = m_LowValue->GetValue();
+	e.high_value = m_HighValue->GetValue();
 }
 
 void MIDIEventRecvDialog::OnNewClick(wxCommandEvent& event)
@@ -355,8 +361,8 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 		e.key = event.GetKey();
 	e.low_key = 0;
 	e.high_key = 127;
-	e.low_velocity = m_midi.GetType() == MIDI_RECV_ENCLOSURE ? 0 : 1;
-	e.high_velocity = 127;
+	e.low_value = m_midi.GetType() == MIDI_RECV_ENCLOSURE ? 0 : 1;
+	e.high_value = 127;
 
 	LoadEvent();
 
