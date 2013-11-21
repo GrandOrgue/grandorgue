@@ -70,8 +70,8 @@ typedef struct {
 	int key;
 	int low_key;
 	int high_key;
-	int low_velocity;
-	int high_velocity;
+	int low_value;
+	int high_value;
 } MIDI_MATCH_EVENT;
 
 class GOrgueMidiReceiverData

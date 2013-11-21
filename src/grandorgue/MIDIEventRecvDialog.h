@@ -41,8 +41,8 @@ private:
 	wxSpinCtrl *m_data;
 	wxSpinCtrl *m_LowKey;
 	wxSpinCtrl *m_HighKey;
-	wxSpinCtrl *m_LowVelocity;
-	wxSpinCtrl *m_HighVelocity;
+	wxSpinCtrl *m_LowValue;
+	wxSpinCtrl *m_HighValue;
 	wxToggleButton* m_listen;
 	wxButton* m_new, *m_delete;
 	int m_current;
@@ -68,8 +68,8 @@ protected:
 		ID_LISTEN,
 		ID_LOW_KEY,
 		ID_HIGH_KEY,
-		ID_LOW_VELOCITY,
-		ID_HIGH_VELOCITY
+		ID_LOW_VALUE,
+		ID_HIGH_VALUE
 	};
 
 public:
