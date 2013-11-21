@@ -106,9 +106,9 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_nb_accessible_keys                = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfAccessibleKeys"), 0, 85);
 	m_MIDIInputNumber                   = cfg.ReadInteger(ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
 	m_displayed                         = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"));
-	unsigned nb_stops                 = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfStops"), 0, 64);
-	unsigned nb_couplers              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfCouplers"), 0, 16, false);
-	unsigned nb_divisionals           = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionals"), 0, 32, false);
+	unsigned nb_stops                 = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfStops"), 0, 999);
+	unsigned nb_couplers              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfCouplers"), 0, 999, false);
+	unsigned nb_divisionals           = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionals"), 0, 999, false);
 	unsigned nb_tremulants            = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), false);
 	unsigned nb_switches              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSwitches"), 0, m_organfile->GetSwitchCount(), false);
 	m_manual_number = manualNumber;
