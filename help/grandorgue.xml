@@ -4216,7 +4216,7 @@ the first few manuals.
           <term>NumberOfStops</term>
           <listitem>
             <para>
-(integer 0-64, required) Number of stops associated with this
+(integer 0-999, required) Number of stops associated with this
 manual. Starting with 1, for each stop, there is a
 <emphasis>Stop999</emphasis> setting.
      </para>
@@ -4235,7 +4235,7 @@ containg the stop details.
           <term>NumberOfCouplers</term>
           <listitem>
             <para>
-(integer 0-16, default: 0) Number of couplers associated with this
+(integer 0-999, default: 0) Number of couplers associated with this
 manual. Starting with 1, for each coupler, there is a
 <emphasis>Coupler999</emphasis> setting.
      </para>
@@ -4254,7 +4254,7 @@ section containg the coupler details.
           <term>NumberOfDivisionals</term>
           <listitem>
             <para>
-(integer 0-32, default: 0) Number of divisionals associated with this
+(integer 0-999, default: 0) Number of divisionals associated with this
 manual. Starting with 1, for each divisional, there is a
 <emphasis>Divisional999</emphasis> setting.
      </para>
