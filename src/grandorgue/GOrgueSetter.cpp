@@ -1190,7 +1190,7 @@ void GOrgueSetter::Change(GOrgueSetterButton* button)
 				if (i == ID_SETTER_GENERAL_NEXT && m_bank < GENERAL_BANKS - 1)
 					m_bank++;
 
-				m_BankDisplay.SetName(wxString::Format(wxT("%d"), m_bank + 1));
+				m_BankDisplay.SetName(wxString::Format(wxT("%c"), m_bank + wxT('A')));
 				break;
 
 			case ID_SETTER_REGULAR:
@@ -1291,7 +1291,7 @@ void GOrgueSetter::PreparePlayback()
 	m_CrescendoDisplay.SetName(buffer);
 	m_CrescendoDisplay.PreparePlayback();
 
-	buffer.Printf(wxT("%d"), m_bank + 1);
+	buffer.Printf(wxT("%c"), m_bank + wxT('A'));
 	m_BankDisplay.SetName(buffer);
 	m_BankDisplay.PreparePlayback();
 
