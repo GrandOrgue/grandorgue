@@ -208,10 +208,10 @@ bool GOrgueMidiReceiver::HasLowerLimit(midi_match_message_type type)
 	    type == MIDI_M_CTRL_CHANGE ||
 	    type == MIDI_M_RPN ||
 	    type == MIDI_M_NRPN ||
-	    type == MIDI_M_NOTE_ON ||
-	    type == MIDI_M_CTRL_CHANGE_ON ||
-	    type == MIDI_M_RPN_ON ||
-	    type == MIDI_M_NRPN_ON)
+	    type == MIDI_M_NOTE_OFF ||
+	    type == MIDI_M_CTRL_CHANGE_OFF ||
+	    type == MIDI_M_RPN_OFF ||
+	    type == MIDI_M_NRPN_OFF)
 		return true;
 	return false;
 }
@@ -226,10 +226,10 @@ bool GOrgueMidiReceiver::HasUpperLimit(midi_match_message_type type)
 	    type == MIDI_M_CTRL_CHANGE ||
 	    type == MIDI_M_RPN ||
 	    type == MIDI_M_NRPN ||
-	    type == MIDI_M_NOTE_OFF ||
-	    type == MIDI_M_CTRL_CHANGE_OFF ||
-	    type == MIDI_M_RPN_OFF ||
-	    type == MIDI_M_NRPN_OFF)
+	    type == MIDI_M_NOTE_ON ||
+	    type == MIDI_M_CTRL_CHANGE_ON ||
+	    type == MIDI_M_RPN_ON ||
+	    type == MIDI_M_NRPN_ON)
 		return true;
 	return false;
 }
