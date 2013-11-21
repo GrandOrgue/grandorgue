@@ -26,6 +26,7 @@ BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
 	EVT_BUTTON(ID_EVENT_NEW, MIDIEventSendDialog::OnNewClick)
 	EVT_BUTTON(ID_EVENT_DELETE, MIDIEventSendDialog::OnDeleteClick)
 	EVT_CHOICE(ID_EVENT_NO, MIDIEventSendDialog::OnEventChange)
+	EVT_CHOICE(ID_EVENT, MIDIEventSendDialog::OnTypeChange)
 END_EVENT_TABLE()
 
 MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event, GOrgueSettings& settings):
@@ -158,6 +159,19 @@ void MIDIEventSendDialog::DoApply()
 	m_original->Assign(m_midi);
 }
 
+void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
+{
+	midi_send_message_type type = (midi_send_message_type)(intptr_t)m_eventtype->GetClientData(m_eventtype->GetSelection());
+	if (m_original->HasLowValue(type))
+		m_LowValue->Enable();
+	else
+		m_LowValue->Disable();
+	if (m_original->HasHighValue(type))
+		m_HighValue->Enable();
+	else
+		m_HighValue->Disable();
+}
+
 void MIDIEventSendDialog::LoadEvent()
 {
 	m_eventno->Clear();
@@ -194,6 +208,9 @@ void MIDIEventSendDialog::LoadEvent()
 	m_key->SetValue(e.key);
 	m_LowValue->SetValue(e.low_value);
 	m_HighValue->SetValue(e.high_value);
+
+	wxCommandEvent event;
+	OnTypeChange(event);
 }
 
 void MIDIEventSendDialog::StoreEvent()

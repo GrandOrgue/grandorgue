@@ -54,6 +54,7 @@ private:
 	void OnNewClick(wxCommandEvent& event);
 	void OnDeleteClick(wxCommandEvent& event);
 	void OnEventChange(wxCommandEvent& event);
+	void OnTypeChange(wxCommandEvent& event);
 	void OnMidiEvent(const GOrgueMidiEvent& event);
 
 protected:

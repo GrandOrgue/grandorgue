@@ -48,6 +48,9 @@ public:
  	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e, int& value);
  	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e, const unsigned midi_map[128], int& key, int& value);
 
+	bool HasLowerLimit(midi_match_message_type type);
+	bool HasUpperLimit(midi_match_message_type type);
+
 	void Assign(const GOrgueMidiReceiverData& data);
 
 	GrandOrgueFile* GetOrganfile();

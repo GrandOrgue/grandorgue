@@ -47,6 +47,9 @@ public:
 	void SetValue(unsigned value);
 	void SetLabel(wxString text);
 
+	bool HasLowValue(midi_send_message_type type);
+	bool HasHighValue(midi_send_message_type type);
+
 	void Assign(const GOrgueMidiSenderData& data);
 };
 
