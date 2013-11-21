@@ -106,6 +106,12 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	m_HighValue = new wxSpinCtrl(this, ID_HIGH_VALUE, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
 	box->Add(m_HighValue, 0);
 
+	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Debounce time(ms):")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+	box = new wxBoxSizer(wxHORIZONTAL);
+	sizer->Add(box);
+	m_Debounce = new wxSpinCtrl(this, ID_DEBOUNCE, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 3000);
+	box->Add(m_Debounce, 0);
+
 	sizer->Add(new wxStaticText(this, wxID_ANY, wxEmptyString));
 	m_listen = new wxToggleButton(this, ID_LISTEN, _("&Listen for Event"));
 	sizer->Add(m_listen, 0, wxTOP, 5);
@@ -171,7 +177,6 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 		m_HighKey->Disable();
 	}
 
-
 	m_current = 0;
 	if (!m_midi.GetEventCount())
 		m_midi.AddNewEvent();
@@ -217,6 +222,10 @@ void MIDIEventRecvDialog::DoApply()
 void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 {
 	midi_match_message_type type = (midi_match_message_type)(intptr_t)m_eventtype->GetClientData(m_eventtype->GetSelection());
+	if (m_original->HasDebounce(type))
+		m_Debounce->Enable();
+	else
+		m_Debounce->Disable();
 	if (m_original->HasLowerLimit(type) || m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
 		m_LowValue->Enable();
 	else
@@ -270,6 +279,7 @@ void MIDIEventRecvDialog::LoadEvent()
 	m_HighKey->SetValue(e.high_key);
 	m_LowValue->SetValue(e.low_value);
 	m_HighValue->SetValue(e.high_value);
+	m_Debounce->SetValue(e.debounce_time);
 	wxCommandEvent event;
 	OnTypeChange(event);
 }
@@ -293,6 +303,7 @@ void MIDIEventRecvDialog::StoreEvent()
 	e.high_key = m_HighKey->GetValue();
 	e.low_value = m_LowValue->GetValue();
 	e.high_value = m_HighValue->GetValue();
+	e.debounce_time = m_Debounce->GetValue();
 }
 
 void MIDIEventRecvDialog::OnNewClick(wxCommandEvent& event)
@@ -368,6 +379,7 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 	e.high_key = 127;
 	e.low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
 	e.high_value = (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE) ? 127 : 1;
+	e.debounce_time = 0;
 
 	LoadEvent();
 

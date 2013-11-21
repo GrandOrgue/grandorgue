@@ -250,6 +250,7 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE*
 	if (e.GetMidiType() == MIDI_NONE)
 		return;
 	e.SetDevice(device->name);
+	e.SetTime(wxGetLocalTimeMillis());
 
 	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_BANK_SELECT_MSB)
 	{

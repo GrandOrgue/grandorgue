@@ -49,11 +49,14 @@ typedef enum {
 
 DECLARE_LOCAL_EVENT_TYPE( wxEVT_MIDI_ACTION, -1 )
 
+typedef wxLongLong GOTime;
+
 class GOrgueMidiEvent : public wxEvent {
 private:
 	midi_message_type m_miditype;
 	int m_channel, m_key, m_value;
 	wxString m_device;
+	GOTime m_time;
 
 public:
 	GOrgueMidiEvent(wxEventType type = wxEVT_MIDI_ACTION, int id = 0);
@@ -103,6 +106,15 @@ public:
 	void SetValue(int v)
 	{
 		m_value = v;
+	}
+
+	GOTime GetTime() const
+	{
+		return m_time;
+	}
+	void SetTime(GOTime t)
+	{
+		m_time = t;
 	}
 
 	wxEvent* Clone() const;

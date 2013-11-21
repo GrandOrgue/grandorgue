@@ -72,6 +72,7 @@ typedef struct {
 	int high_key;
 	int low_value;
 	int high_value;
+	unsigned debounce_time;
 } MIDI_MATCH_EVENT;
 
 class GOrgueMidiReceiverData
