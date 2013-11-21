@@ -35,6 +35,9 @@ private:
 	GrandOrgueFile* m_organfile;
 	static const struct IniFileEnumEntry m_MidiTypes[];
 	int m_Index;
+	std::vector<GOTime> m_last;
+
+	MIDI_MATCH_TYPE debounce(const GOrgueMidiEvent& e, MIDI_MATCH_TYPE event, unsigned index);
 
 public:
 	GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type);
@@ -48,6 +51,7 @@ public:
  	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e, int& value);
  	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e, const unsigned midi_map[128], int& key, int& value);
 
+	bool HasDebounce(midi_match_message_type type);
 	bool HasLowerLimit(midi_match_message_type type);
 	bool HasUpperLimit(midi_match_message_type type);
 

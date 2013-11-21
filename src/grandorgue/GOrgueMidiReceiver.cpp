@@ -31,7 +31,8 @@
 GOrgueMidiReceiver::GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type):
 	GOrgueMidiReceiverData(type),
 	m_organfile(organfile),
-	m_Index(-1)
+	m_Index(-1),
+	m_last()
 {
 }
 
@@ -77,6 +78,8 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 		{
 			m_events[i].device = cfg.ReadString(CMBSetting, group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), 100, false);
 			m_events[i].channel = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), -1, 16);
+			if (HasDebounce(m_events[i].type))
+				m_events[i].debounce_time = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIDebounce%03d"), i + 1), 0, 3000, false, 0);
 
 			if (m_type == MIDI_RECV_MANUAL)
 			{
@@ -148,6 +151,8 @@ void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
 		cfg.WriteString(group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), m_events[i].device);
 		cfg.WriteInteger(group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), m_events[i].channel);
 		cfg.WriteEnum(group, wxString::Format(wxT("MIDIEventType%03d"), i + 1), m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
+		if (HasDebounce(m_events[i].type))
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDIDebounce%03d"), i + 1), m_events[i].debounce_time);
 
 		if (m_type == MIDI_RECV_MANUAL)
 		{
@@ -171,6 +176,26 @@ void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
 		if (HasUpperLimit(m_events[i].type))
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1), m_events[i].high_value);
 	}
+}
+
+bool GOrgueMidiReceiver::HasDebounce(midi_match_message_type type)
+{
+	if (m_type == MIDI_RECV_MANUAL)
+		return false;
+	if (m_type == MIDI_RECV_ENCLOSURE)
+		return false;
+	if (type == MIDI_M_PGM_CHANGE ||
+	    type == MIDI_M_NOTE_OFF ||
+	    type == MIDI_M_CTRL_CHANGE_OFF ||
+	    type == MIDI_M_RPN_OFF ||
+	    type == MIDI_M_NRPN_OFF ||
+	    type == MIDI_M_NOTE_ON ||
+	    type == MIDI_M_CTRL_CHANGE_ON ||
+	    type == MIDI_M_RPN_ON ||
+	    type == MIDI_M_NRPN_ON ||
+	    type == MIDI_M_SYSEX_JOHANNUS)
+		return true;
+	return false;
 }
 
 bool GOrgueMidiReceiver::HasLowerLimit(midi_match_message_type type)
@@ -207,6 +232,16 @@ bool GOrgueMidiReceiver::HasUpperLimit(midi_match_message_type type)
 	    type == MIDI_M_NRPN_OFF)
 		return true;
 	return false;
+}
+
+MIDI_MATCH_TYPE GOrgueMidiReceiver::debounce(const GOrgueMidiEvent& e, MIDI_MATCH_TYPE event, unsigned index)
+{
+	if (m_events.size() != m_last.size())
+		m_last.resize(m_events.size());
+	if (e.GetTime() < m_last[index] + m_events[index].debounce_time)
+		return MIDI_MATCH_NONE;
+	m_last[index] = e.GetTime();
+	return event;
 }
 
 MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e)
@@ -330,9 +365,9 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 			continue;
 		}
 		if (e.GetMidiType() == MIDI_NOTE && m_events[i].type == MIDI_M_NOTE_ON && m_events[i].key == e.GetKey() && e.GetValue() >= m_events[i].high_value)
-			return MIDI_MATCH_CHANGE;
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 		if (e.GetMidiType() == MIDI_NOTE && m_events[i].type == MIDI_M_NOTE_OFF && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
-			return MIDI_MATCH_CHANGE;
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 
 		if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].type == MIDI_M_CTRL_CHANGE && m_events[i].key == e.GetKey())
 		{
@@ -343,9 +378,9 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 			continue;
 		}
 		if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].type == MIDI_M_CTRL_CHANGE_ON && m_events[i].key == e.GetKey() && e.GetValue() >= m_events[i].high_value)
-			return MIDI_MATCH_CHANGE;
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 		if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].type == MIDI_M_CTRL_CHANGE_OFF && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
-			return MIDI_MATCH_CHANGE;
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 
 		if (e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN && m_events[i].key == e.GetKey())
 		{
@@ -356,9 +391,9 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 			continue;
 		}
 		if (e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_ON && m_events[i].key == e.GetKey() && e.GetValue() >= m_events[i].high_value)
-			return MIDI_MATCH_CHANGE;
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 		if (e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_OFF && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
-			return MIDI_MATCH_CHANGE;
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 
 		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN && m_events[i].key == e.GetKey())
 		{
@@ -369,17 +404,17 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 			continue;
 		}
 		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_ON && m_events[i].key == e.GetKey() && e.GetValue() >= m_events[i].high_value)
-			return MIDI_MATCH_CHANGE;
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_OFF && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
-			return MIDI_MATCH_CHANGE;
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 
 		if (e.GetMidiType() == MIDI_PGM_CHANGE && m_events[i].type == MIDI_M_PGM_CHANGE && m_events[i].key == e.GetKey())
 		{
-			return MIDI_MATCH_CHANGE;
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 		}
 		if (e.GetMidiType() == MIDI_SYSEX_JOHANNUS && m_events[i].type == MIDI_M_SYSEX_JOHANNUS && m_events[i].key == e.GetKey())
 		{
-			return MIDI_MATCH_CHANGE;
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 		}
 	}
 	return MIDI_MATCH_NONE;

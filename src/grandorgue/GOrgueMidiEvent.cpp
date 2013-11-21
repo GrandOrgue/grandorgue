@@ -30,7 +30,8 @@ GOrgueMidiEvent::GOrgueMidiEvent(wxEventType type, int id) :
 	m_miditype(MIDI_NONE),
 	m_channel(-1),
 	m_key(-1),
-	m_value(-1)
+	m_value(-1),
+	m_time(0)
 {
 }
 
@@ -40,7 +41,8 @@ GOrgueMidiEvent::GOrgueMidiEvent(const GOrgueMidiEvent& e) :
 	m_channel(e.m_channel),
 	m_key(e.m_key),
 	m_value(e.m_value),
-	m_device(e.m_device)
+	m_device(e.m_device),
+	m_time(e.m_time)
 {
 }
 
