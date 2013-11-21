@@ -28,6 +28,7 @@ BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
 	EVT_BUTTON(ID_EVENT_NEW, MIDIEventRecvDialog::OnNewClick)
 	EVT_BUTTON(ID_EVENT_DELETE, MIDIEventRecvDialog::OnDeleteClick)
 	EVT_CHOICE(ID_EVENT_NO, MIDIEventRecvDialog::OnEventChange)
+	EVT_CHOICE(ID_EVENT, MIDIEventRecvDialog::OnTypeChange)
 END_EVENT_TABLE()
 
 
@@ -159,17 +160,6 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 		m_eventtype->Append(_("Sys Ex Johannus"), (void*)MIDI_M_SYSEX_JOHANNUS);
 
-	if (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
-	{
-		m_LowValue->Enable();
-		m_HighValue->Enable();
-	}
-	else
-	{
-		m_LowValue->Disable();
-		m_HighValue->Disable();
-	}
-
 	if (m_midi.GetType() == MIDI_RECV_MANUAL)
 	{
 		m_LowKey->Enable();
@@ -224,6 +214,19 @@ void MIDIEventRecvDialog::DoApply()
 	m_original->Assign(m_midi);
 }
 
+void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
+{
+	midi_match_message_type type = (midi_match_message_type)(intptr_t)m_eventtype->GetClientData(m_eventtype->GetSelection());
+	if (m_original->HasLowerLimit(type) || m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
+		m_LowValue->Enable();
+	else
+		m_LowValue->Disable();
+	if (m_original->HasUpperLimit(type) || m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
+		m_HighValue->Enable();
+	else
+               m_HighValue->Disable();
+}
+
 void MIDIEventRecvDialog::LoadEvent()
 {
 	m_eventno->Clear();
@@ -267,6 +270,8 @@ void MIDIEventRecvDialog::LoadEvent()
 	m_HighKey->SetValue(e.high_key);
 	m_LowValue->SetValue(e.low_value);
 	m_HighValue->SetValue(e.high_value);
+	wxCommandEvent event;
+	OnTypeChange(event);
 }
 
 void MIDIEventRecvDialog::StoreEvent()
