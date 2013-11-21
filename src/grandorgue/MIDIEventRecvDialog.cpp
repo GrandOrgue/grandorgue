@@ -366,8 +366,8 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 		e.key = event.GetKey();
 	e.low_key = 0;
 	e.high_key = 127;
-	e.low_value = m_midi.GetType() == MIDI_RECV_ENCLOSURE ? 0 : 1;
-	e.high_value = 127;
+	e.low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
+	e.high_value = (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE) ? 127 : 1;
 
 	LoadEvent();
 
