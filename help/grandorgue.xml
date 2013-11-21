@@ -4901,7 +4901,7 @@ off.
           <listitem>
             <para>
 (integer 0-127, default: no MIDI event specified) Only used for building the initial configuration during
-the first load - provided just for HW1 compatibility.
+the first load - provided just for HW1 compatibility. DEPRECATED.
      </para>
           </listitem>
         </varlistentry>
@@ -4910,7 +4910,7 @@ the first load - provided just for HW1 compatibility.
           <listitem>
             <para>
 (int 1-128, default: no MIDI event specified) Only used for building the initial configuration during
-the first load - provided just for HW1 compatibility.
+the first load - provided just for HW1 compatibility. DEPRECATED.
      </para>
           </listitem>
         </varlistentry>
@@ -5682,9 +5682,9 @@ fraction in the sample to 0.
           <term>Pipe999PitchCorrection</term>
           <listitem>
             <para>
-(float -1200-1200, default: 0) Correction factor in cent for the pitch
-specified in the sample. This setting is used for retuning to other
-temperaments.
+(float -1200-1200, default: rank pitch correction) Correction factor
+in cent for the pitch specified in the sample. This setting is used
+for retuning to other temperaments.
      </para>
           </listitem>
         </varlistentry>
