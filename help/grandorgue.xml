@@ -579,7 +579,7 @@ the current settings would be saved to this same next program.
               <imagedata fileref="volume_control.png"/>
             </imageobject>
         </mediaobject>
-	<para>
+        <para>
 The volume control sets the volume control <emphasis>in dB</emphasis>.
 Left and right audio monitors are displayed next to the spinner. The clip indicator at the far right will turn red if
 clipping occurs, and will stay red until the volume is adjusted.</para>
@@ -820,6 +820,29 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
       <primary>Midi &amp; Audio Settings</primary>
     </indexterm>
     <para>This tabbed dialog is displayed when the <emphasis>Audio/Midi Settings</emphasis> menu item is chosen in the <emphasis>Audio/Midi</emphasis> menu.</para>
+    <para>It manages "system-wide" GrandOrgue options. In other terms, these options apply to any loaded sampleset.</para>
+    <para>These options are located at different places according to the platform.</para>
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
+        <colspec colname="c2" colsep="0" rowsep="0"/>
+        <tbody>
+          <row>
+            <entry>Windows:</entry>
+            <entry>registry key HKEY_CURRENT_USER\Software\Our Organ\GrandOrgue</entry>
+          </row>
+          <row>
+            <entry>Linux:</entry>
+            <entry>$HOME/.GrandOrgue</entry>
+          </row>
+          <row>
+            <entry>Mac:</entry>
+            <entry>Library/Preferences/.GrandOrgue</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para>The user can reset  settings to default values by deleting the "options file" according to the platform.</para>
     <sect1>
       <title>Options tab</title>
       <indexterm>
@@ -833,32 +856,6 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
           </imageobject>
         </mediaobject>
       </figure>
-      <para>
-The <emphasis>Options</emphasis> tab manages "system-wide" GrandOrgue options. In other terms,
-these options apply to any loaded sampleset.
-      </para>
-      <para>These options are located at different places according to the platform.</para>
-      <informaltable frame="none">
-        <tgroup cols="2">
-          <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
-          <colspec colname="c2" colsep="0" rowsep="0"/>
-          <tbody>
-            <row>
-              <entry>Windows:</entry>
-              <entry>registry key HKEY_CURRENT_USER\Software\Our Organ\GrandOrgue</entry>
-            </row>
-            <row>
-              <entry>Linux:</entry>
-              <entry>$HOME/.GrandOrgue</entry>
-            </row>
-            <row>
-              <entry>Mac:</entry>
-              <entry>Library/Preferences/.GrandOrgue</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
-      <para>The user can reset  settings to default values by deleting the "options file" according to the platform.</para>
       <sect2>
         <title>Enhancements frame</title>
         <sect3>
@@ -1655,7 +1652,7 @@ Variable savings up to 50%
 	<para>The <emphasis>Add</emphasis> button opens a dialog where one can type the new audio group name.</para>
 	<mediaobject>
           <imageobject>
-            <imagedata fileref="new_audio_group.png"/>
+            <imagedata scalefit="1" width="100%" fileref="new_audio_group.png"/>
           </imageobject>
         </mediaobject>
 	<caution><para>If an audiogroup is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</para></caution>
@@ -1699,18 +1696,49 @@ Variable savings up to 50%
       </figure>
     </sect1>
     <sect1>
-      <title>Midi Devices tab</title>
+      <title>MIDI Devices tab</title>
       <indexterm>
-        <primary>Midi Devices</primary>
+        <primary>MIDI Devices</primary>
       </indexterm>
       <figure>
-        <title>Midi devices options</title>
+        <title>MIDI devices options</title>
         <mediaobject>
           <imageobject>
             <imagedata scalefit="1" width="100%" fileref="midi_devices_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
+      <para>This tab shows all available MIDI devices.</para>
+      <para>
+The upper  frame shows a list of all available MIDI input interfaces. Selecting
+a device means that GrandOrgue will listen for incoming MIDI messages through
+that interface. This allows to listen to more than one device at a time; for
+example, to listen to both a controller and a sequencer or loopback device.
+      </para>
+      <para>
+The lower frame shows a list of all available MIDI output interfaces. Selecting
+a device means that GrandOrgue will write MIDI information to external
+hardware. Possible uses are SAM or LED drivers for stop control feedback, or
+physical pipes drivers when digitally expanding a genuine pipe organ.
+      </para>
+      <para>The <indexterm><secondary>Advanced properties</secondary></indexterm> <emphasis>Advanced</emphasis> button is grayed out unless an input channel is selected. It opens a dialog to set advanced properties of the selected input channel.</para>
+      <figure>
+        <title>MIDI input channel advanced properties</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="midi_input_device_advanced_properties.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>
+This allows the setting of a channel offset. A channel offset allows the use of
+two MIDI interfaces with conflicting MIDI channels. For example, applying a
+channel offset of 8 to one of the MIDI interfaces would cause that interface's
+channel 1 to appear as channel 9, channel 2 to appear as channel 10, and so on.
+This may be useful if you have multiple keyboards that are configured to use
+the same channel.
+      </para>
+      <note><para>The devices list is refreshed whenever the <emphasis>Audio &amp; Midi Settings</emphasis> dialog is displayed.</para></note>
     </sect1>
     <sect1>
       <title>Initial Midi Configuration tab</title>
@@ -1775,7 +1803,7 @@ Variable savings up to 50%
 	<para>Linear amplitude scale factor applied to the element. The allowed range is {0, +1000}. Amplitude is cumulative from organ level down to pipe level.</para>
         <para>
         <emphasis>Note</emphasis>: A 100 value means that this setting value has no effect on the effective amplitude.
-	</para>
+        </para>
       </sect2>
       <sect2>
         <title>Gain</title>
