@@ -38,6 +38,8 @@ class GOrgueConfigReader
 private:
 	GOrgueConfigReaderDB& m_Config;
 
+	bool Read(GOSettingType type, wxString group, wxString key, bool required, wxString& value);
+
 public:
 	GOrgueConfigReader(GOrgueConfigReaderDB& cfg);
 
