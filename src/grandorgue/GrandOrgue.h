@@ -28,7 +28,6 @@
 #include <wx/cmdline.h>
 
 class wxSplashScreenWindow;
-class wxDocManager;
 
 class GOrgueFrame;
 class GOrgueLog;
@@ -51,7 +50,6 @@ protected:
 	wxLocale m_locale;
 	GOrgueSettings* m_Settings;
 	GOrgueSound* m_soundSystem;
-	wxDocManager* m_docManager;
 	GOrgueLog* m_Log;
 	wxString m_FileName;
 	wxString m_InstanceName;

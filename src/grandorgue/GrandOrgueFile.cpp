@@ -38,6 +38,7 @@
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueEnclosure.h"
+#include "GOrgueEvent.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
 #include "GOrgueManual.h"
@@ -224,7 +225,7 @@ bool GrandOrgueFile::TryLoad
 			if (!dlg.Update	((nb_loaded_obj << 15) / (objects.size() + 1), obj->GetLoadTitle()))
 			{
 				FREE_AND_NULL(dummy);
-				wxMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
+				GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
 				return true;
 			}
 			GOrgueLCD_WriteLineTwo
@@ -238,7 +239,7 @@ bool GrandOrgueFile::TryLoad
 	catch (GOrgueOutOfMemory e)
 	{
 		FREE_AND_NULL(dummy);
-		wxMessageBox(_("Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
+		GOMessageBox(_("Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
 		return true;
 	}
 	catch (wxString msg)
@@ -625,7 +626,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 			if (!cache_ok && !m_Settings.GetManageCache())
 			{
-				wxMessageBox(_("The cache for this organ is outdated. Please update or delete it."), _("Warning"), wxOK | wxICON_WARNING, NULL);
+				GOMessageBox(_("The cache for this organ is outdated. Please update or delete it."), _("Warning"), wxOK | wxICON_WARNING, NULL);
 			}
 
 			reader.Close();
@@ -683,7 +684,7 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 	catch (wxString error)
 	{
 		wxLogError(wxT("%s\n"),error.c_str());
-		wxMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
+		GOMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
 	}
 }
 
@@ -766,20 +767,20 @@ void GrandOrgueFile::DeleteSettings()
 	wxRemoveFile(m_SettingFilename);
 }
 
-void GrandOrgueFile::Save()
+bool GrandOrgueFile::Save()
 {
-	Export(m_SettingFilename);
+	if (!Export(m_SettingFilename))
+		return false;
+	m_doc->Modify(false);
+	return true;
 }
 
-void GrandOrgueFile::Export(const wxString& cmb)
+bool GrandOrgueFile::Export(const wxString& cmb)
 {
 	wxString fn = cmb;
 	wxString tmp_name = fn + wxT(".new");
 	wxString buffer;
 	bool prefix = false;
-
-	if (fn == GetODFFilename())
-		fn = m_SettingFilename;
 
 	GOrgueConfigFileWriter cfg_file;
 	m_b_customized = true;
@@ -833,18 +834,16 @@ void GrandOrgueFile::Export(const wxString& cmb)
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
 		wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
-		return;
+		return false;
 	}
 	if (!cfg_file.Save(tmp_name))
 	{
 		wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
-		return;
+		return false;
 	}
 	if (!GORenameFile(tmp_name, fn))
-		return;
-
-	if (fn == m_SettingFilename)
-		m_doc->Modify(false);
+		return false;
+	return true;
 }
 
 GOrgueDocument* GrandOrgueFile::GetDocument()

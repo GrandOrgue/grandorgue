@@ -23,11 +23,11 @@
 #define GRANDORGUEFRAME_H
 
 #include <vector>
-#include <wx/docview.h>
 #include <wx/dcmemory.h>
 #include "GrandOrgueDef.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidiListener.h"
+#include "GOLock.h"
 
 class wxHtmlHelpController;
 class wxGaugeAudio;
@@ -39,13 +39,15 @@ class GOrgueSound;
 class GOrgueTemperament;
 class wxChoice;
 
-class GOrgueFrame: public wxDocParentFrame, protected GOrgueMidiCallback
+class GOrgueFrame: public wxFrame, protected GOrgueMidiCallback
 {
 private:
+	GOMutex m_mutex;
 	wxMenu* m_file_menu;
 	wxMenu* m_panel_menu;
 	wxMenu* m_favorites_menu;
 	wxMenu* m_recent_menu;
+	GOrgueDocument* m_doc;
 	wxHtmlHelpController* m_Help;
 	wxGaugeAudio *m_SamplerUsage;
 	wxGaugeAudio *m_VolumeLeft, *m_VolumeRight;
@@ -75,6 +77,9 @@ private:
 	void OnLoadFavorite(wxCommandEvent& event);
 	void OnLoadRecent(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
+	void OnSave(wxCommandEvent& event);
+	void OnClose(wxCommandEvent& event);
+	void OnExit(wxCommandEvent& event);
 	void OnImportSettings(wxCommandEvent& event);
 	void OnImportCombinations(wxCommandEvent& event);
 	void OnExport(wxCommandEvent& event);
@@ -120,11 +125,15 @@ private:
 	void OnSetTitle(wxCommandEvent& event);
 	void OnMsgBox(wxMsgBoxEvent& event);
 
+	bool DoClose();
+	void Open(wxString file);
+
 public:
-	GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
+	GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
 	~GOrgueFrame(void);
 
 	void Init();
+	bool Close(bool force = false);
 
 	void DoSplash(bool timeout = true);
 

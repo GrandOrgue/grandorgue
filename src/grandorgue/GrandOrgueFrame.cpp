@@ -44,19 +44,19 @@
 #include "SettingsDialog.h"
 #include "SplashScreen.h"
 
-BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
+BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MSGBOX(GOrgueFrame::OnMsgBox)
 	EVT_KEY_DOWN(GOrgueFrame::OnKeyCommand)
 	EVT_COMMAND(0, wxEVT_METERS, GOrgueFrame::OnMeters)
 	EVT_COMMAND(0, wxEVT_LOADFILE, GOrgueFrame::OnLoadFile)
 	EVT_MENU_OPEN(GOrgueFrame::OnMenuOpen)
-	EVT_MENU(wxID_OPEN, GOrgueFrame::OnOpen)
-#ifndef WXWIN_COMPATIBILITY_2_8
-	EVT_MENU_RANGE(wxID_FILE1, wxID_FILE1 + 49, wxDocParentFrame::OnMRUFile)
-#endif
+	EVT_MENU(ID_FILE_OPEN, GOrgueFrame::OnOpen)
 	EVT_MENU(ID_FILE_LOAD, GOrgueFrame::OnLoad)
 	EVT_MENU_RANGE(ID_LOAD_FAV_FIRST, ID_LOAD_FAV_LAST, GOrgueFrame::OnLoadFavorite)
 	EVT_MENU_RANGE(ID_LOAD_LRU_FIRST, ID_LOAD_LRU_LAST, GOrgueFrame::OnLoadRecent)
+	EVT_MENU(ID_FILE_SAVE, GOrgueFrame::OnSave)
+	EVT_MENU(ID_FILE_CLOSE, GOrgueFrame::OnClose)
+	EVT_MENU(ID_FILE_EXIT, GOrgueFrame::OnExit)
 	EVT_MENU(ID_FILE_RELOAD, GOrgueFrame::OnReload)
 	EVT_MENU(ID_FILE_REVERT, GOrgueFrame::OnRevert)
 	EVT_MENU(ID_FILE_PROPERTIES, GOrgueFrame::OnProperties)
@@ -74,14 +74,11 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_MENU(wxID_ABOUT, GOrgueFrame::OnHelpAbout)
 	EVT_COMMAND(0, wxEVT_SHOWHELP, GOrgueFrame::OnShowHelp)
 	EVT_COMMAND(0, wxEVT_WINTITLE, GOrgueFrame::OnSetTitle)
-	// New events for Volume, Polyphony, Memory Level, Transpose and Reverb
 	EVT_MENU(ID_VOLUME, GOrgueFrame::OnSettingsVolume)
 	EVT_MENU(ID_POLYPHONY, GOrgueFrame::OnSettingsPolyphony)
 	EVT_MENU(ID_MEMORY, GOrgueFrame::OnSettingsMemoryEnter)
 	EVT_MENU(ID_TRANSPOSE, GOrgueFrame::OnSettingsTranspose)
 	EVT_MENU(ID_REVERB, GOrgueFrame::OnSettingsReverb)
-
-	// End
 	EVT_MENU_RANGE(ID_PANEL_FIRST, ID_PANEL_LAST, GOrgueFrame::OnPanel)
 	EVT_MENU_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnPreset)
 	EVT_MENU_RANGE(ID_TEMPERAMENT_0, ID_TEMPERAMENT_LAST, GOrgueFrame::OnTemperament)
@@ -100,15 +97,18 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxDocParentFrame)
 	EVT_TEXT_ENTER(ID_METER_AUDIO_SPIN, GOrgueFrame::OnSettingsVolume)
 	EVT_COMMAND(ID_METER_AUDIO_SPIN, wxEVT_SETVALUE, GOrgueFrame::OnChangeVolume)
 
-	EVT_UPDATE_UI(wxID_SAVE, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_TEMPERAMENT_0, ID_TEMPERAMENT_LAST, GOrgueFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
 
-GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound) :
-	wxDocParentFrame(manager, frame, id, title, pos, size, type),
+GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound) :
+	wxFrame(frame, id, title, pos, size, type),
+	m_file_menu(NULL),
 	m_panel_menu(NULL),
+	m_favorites_menu(NULL),
+	m_recent_menu(NULL),
+	m_doc(NULL),
 	m_Help(NULL),
 	m_SamplerUsage(NULL),
 	m_VolumeLeft(NULL),
@@ -148,14 +148,14 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	
 	m_file_menu->Append(ID_FILE_LOAD, _("&Load\tCtrl+L"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->Append(wxID_ANY, _("&Favorites"), m_favorites_menu);
-	m_file_menu->Append(wxID_OPEN, _("&Open\tCtrl+O"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_FILE_OPEN, _("&Open\tCtrl+O"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->Append(wxID_ANY, _("Open &Recent"), m_recent_menu);
 	m_file_menu->AppendSeparator();
 	m_file_menu->Append(ID_FILE_PROPERTIES, _("Organ &Properties"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->AppendSeparator();
 	m_file_menu->AppendSubMenu(preset_menu, _("Pr&eset"));
 	m_file_menu->AppendSeparator();
-	m_file_menu->Append(wxID_SAVE, _("&Save\tCtrl+S"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_FILE_SAVE, _("&Save\tCtrl+S"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->Append(ID_FILE_CACHE, _("&Update Cache..."), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->Append(ID_FILE_CACHE_DELETE, _("Delete &Cache..."), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->AppendSeparator();
@@ -166,8 +166,8 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 	m_file_menu->Append(ID_FILE_IMPORT_COMBINATIONS, _("Import &Combinations"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->Append(ID_FILE_EXPORT, _("&Export Settings/Combinations"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->AppendSeparator();
-	m_file_menu->Append(wxID_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->Append(wxID_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_FILE_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_FILE_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
 	
 	m_Temperaments = GOrgueTemperament::GetTemperaments();
 	wxMenu *temperament_menu = new wxMenu;
@@ -287,6 +287,8 @@ GOrgueFrame::GOrgueFrame(wxDocManager *manager, wxFrame *frame, wxWindowID id, c
 
 GOrgueFrame::~GOrgueFrame()
 {
+	if (m_doc)
+		delete m_doc;
 	m_listener.SetCallback(NULL);
 	if (m_Help)
 		delete m_Help;
@@ -331,9 +333,40 @@ void GOrgueFrame::InitHelp()
         m_Help->AddBook(result);
 }
 
+bool GOrgueFrame::DoClose()
+{
+	if (!m_doc)
+		return true;
+	GOMutexLocker m_locker(m_mutex, true);
+	if(!m_locker.IsLocked())
+		return false;
+	if (m_doc->IsModified())
+	{
+		int res = wxMessageBox(_("The organ settings have been modified. Do you want to save the changes?"), m_doc->GetTitle(), wxYES_NO|wxCANCEL|wxICON_QUESTION, this);
+		if (res == wxCANCEL)
+			return false;
+		if (res == wxYES)
+			m_doc->Save();
+	}
+	delete m_doc;
+	m_doc = NULL;
+	return true;
+}
+
+void GOrgueFrame::Open(wxString file)
+{
+	if (!DoClose())
+		return;
+	GOMutexLocker m_locker(m_mutex, true);
+	if(!m_locker.IsLocked())
+		return;
+	m_doc = new GOrgueDocument(&m_Sound);
+	m_doc->Load(file);
+}
+
 GOrgueDocument* GOrgueFrame::GetDocument()
 {
-	return (GOrgueDocument*)m_docManager->GetCurrentDocument();
+	return m_doc;
 }
 
 void GOrgueFrame::OnPanel(wxCommandEvent& event)
@@ -486,21 +519,21 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
-	m_docManager->CreateDocument(event.GetString(), wxDOC_SILENT);
+	Open(event.GetString());
 }
 
 void GOrgueFrame::OnLoadFavorite(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_LOAD_FAV_FIRST;
 	GOrgueOrgan* organ = m_Settings.GetOrganList()[id];
-	m_docManager->CreateDocument(organ->GetODFPath(), wxDOC_SILENT);
+	Open(organ->GetODFPath());
 }
 
 void GOrgueFrame::OnLoadRecent(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_LOAD_LRU_FIRST;
 	GOrgueOrgan* organ = m_Settings.GetLRUOrganList()[id];
-	m_docManager->CreateDocument(organ->GetODFPath(), wxDOC_SILENT);
+	Open(organ->GetODFPath());
 }
 
 void GOrgueFrame::OnLoad(wxCommandEvent& event)
@@ -508,17 +541,16 @@ void GOrgueFrame::OnLoad(wxCommandEvent& event)
 	OrganSelectDialog dlg(this, _("Select organ to load"), m_Settings);
 	if (dlg.ShowModal() != wxID_OK)
 		return;
-	m_docManager->CreateDocument(dlg.GetSelection()->GetODFPath(), wxDOC_SILENT);
+	Open(dlg.GetSelection()->GetODFPath());
 }
 
 void GOrgueFrame::OnOpen(wxCommandEvent& event)
 {
-	GetDocumentManager()->SetLastDirectory(m_Settings.GetOrganPath());
-	GetDocumentManager()->OnFileOpen(event);
-	GOrgueDocument* doc = GetDocument();
-	if (doc && doc->GetOrganFile())
+	wxFileDialog dlg(this, _("Open organ"), m_Settings.GetOrganPath(), wxEmptyString, _("Sample set definition files (*.organ)|*.organ"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	if (dlg.ShowModal() == wxID_OK)
 	{
-		m_Settings.SetOrganPath(GetDocumentManager()->GetLastDirectory());
+		m_Settings.SetOrganPath(dlg.GetDirectory());
+		Open(dlg.GetPath());
 	}
 }
 
@@ -561,8 +593,18 @@ void GOrgueFrame::OnExport(wxCommandEvent& event)
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		m_Settings.SetSettingPath(dlg.GetDirectory());
-		doc->Export(dlg.GetPath());
+		if (!doc->Export(dlg.GetPath()))
+			wxMessageBox(wxString::Format(_("Failed to export settings to '%s'"), dlg.GetPath().c_str()), _("Error"), wxOK | wxICON_ERROR, this);
 	}
+}
+
+void GOrgueFrame::OnSave(wxCommandEvent& event)
+{
+	GOrgueDocument* doc = GetDocument();
+	if (!doc || !doc->GetOrganFile())
+		return;
+	if (!doc->Save())
+		wxMessageBox(_("Failed to save the organ setting"), _("Error"), wxOK | wxICON_ERROR, this);
 }
 
 wxString formatSize(wxLongLong& size)
@@ -584,6 +626,9 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 {
 	bool res = true;
 	GOrgueDocument* doc = GetDocument();
+	GOMutexLocker m_locker(m_mutex, true);
+	if (!m_locker.IsLocked())
+		return;
 	if (doc && doc->GetOrganFile())
 		res = doc->GetOrganFile()->UpdateCache(m_Settings.GetCompressCache());
 	if (!res)
@@ -606,22 +651,40 @@ void GOrgueFrame::OnReload(wxCommandEvent& event)
 	if (!doc)
 		return;
 	wxString filename = doc->GetFilename();
-	if (!m_docManager->CloseDocument(doc))
+	if (!DoClose());
 		return;
-	m_docManager->CreateDocument(filename, wxDOC_SILENT);
+	Open(filename);
 }
+
+void GOrgueFrame::OnClose(wxCommandEvent& event)
+{
+	GOrgueDocument* doc = GetDocument();
+	if (!doc)
+		return;
+	DoClose();
+}
+
+void GOrgueFrame::OnExit(wxCommandEvent& event)
+{
+	Close();
+}
+
+bool GOrgueFrame::Close(bool force)
+{
+	if (!force && !DoClose())
+		return false;
+	Destroy();
+	return true;
+}
+
 
 void GOrgueFrame::OnRevert(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = GetDocument();
-	if (doc && doc->GetOrganFile())
+	if (wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), wxT(APP_NAME), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
 	{
-		if (wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), wxT(APP_NAME), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
-		{
-			doc->GetOrganFile()->DeleteSettings();
-			doc->Modify(false);
-		}
-		ProcessCommand(ID_FILE_RELOAD);
+		GOrgueDocument* doc = GetDocument();
+		if (doc)
+			doc->Revert();
 	}
 }
 

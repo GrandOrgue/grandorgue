@@ -75,6 +75,7 @@ public:
 	bool Export(const wxString& cmb);
 	bool Import(const wxString& odf, const wxString& cmb);
 	bool ImportCombination(const wxString& cmb);
+	bool Revert();
 
 	bool WindowExists(WindowType type, void* data);
 	bool showWindow(WindowType type, void* data);
