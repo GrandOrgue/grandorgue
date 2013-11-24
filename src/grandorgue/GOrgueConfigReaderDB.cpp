@@ -22,7 +22,10 @@
 #include "GOrgueConfigReaderDB.h"
 #include "GOrgueConfigFileReader.h"
 
-GOrgueConfigReaderDB::GOrgueConfigReaderDB()
+GOrgueConfigReaderDB::GOrgueConfigReaderDB() :
+	m_ODF(1000),
+	m_ODF_LC(1000),
+	m_CMB(100)
 {
 }
 
@@ -79,17 +82,18 @@ bool GOrgueConfigReaderDB::ReadData(GOrgueConfigFileReader& ODF, GOSettingType t
 			{
 				const wxString& key = j->first;
 				const wxString& value = j->second;
+				wxString k = group + wxT('/') + key;
 
 				if (type == ODFSetting)
 				{
-					AddEntry(m_ODF, group + wxT('/') + key, value);
-					AddEntry(m_ODF_LC, (group + wxT('/') + key).Lower(), value);
-					m_ODFUsed[group + wxT('/') + key] = false;
+					AddEntry(m_ODF, k, value);
+					AddEntry(m_ODF_LC, k.Lower(), value);
+					m_ODFUsed[k] = false;
 				}
 				else
 				{
-					AddEntry(m_CMB, group + wxT('/') + key, value);
-					m_CMBUsed[group + wxT('/') + key] = false;
+					AddEntry(m_CMB, k, value);
+					m_CMBUsed[k] = false;
 				}
 				changed = true;
 			}

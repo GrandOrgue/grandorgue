@@ -28,18 +28,22 @@ GOrgueConfigReader::GOrgueConfigReader(GOrgueConfigReaderDB& cfg) :
 {
 }
 
-wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue)
+bool GOrgueConfigReader::Read(GOSettingType type, wxString group, wxString key, bool required, wxString& value)
 {
-	wxString value;
 	bool found = false;
 
-	if (group.length() >= 6 && group.Mid(0, 6) == wxT("Setter"))	// Setter groups aren't required.
-		required = false;
-	if (group.length() >= 5 && group.Mid(0, 5) == wxT("Panel"))
-		if (group.length() >= 14 && group.Mid(8, 6) == wxT("Setter"))	// Setter groups aren't required.
+	if (required)
+	{
+		if (group.length() >= 6 && group.Mid(0, 6) == wxT("Setter"))	// Setter groups aren't required.
 			required = false;
-	if (group.length() >= 12 && group.Mid(0, 12) == wxT("FrameGeneral"))	// FrameGeneral groups aren't required.
-		required = false;
+		else if (group.length() >= 5 && group.Mid(0, 5) == wxT("Panel"))
+		{
+			if (group.length() >= 14 && group.Mid(8, 6) == wxT("Setter"))	// Setter groups aren't required.
+				required = false;
+		}
+		else if (group.length() >= 12 && group.Mid(0, 12) == wxT("FrameGeneral"))	// FrameGeneral groups aren't required.
+			required = false;
+	}
 
 	found = m_Config.GetString(type, group, key, value);
 
@@ -52,10 +56,20 @@ wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxSt
 			throw error;
 		}
 		else
-			value = defaultValue;
+			return false;
 	}
-
 	value.Trim();
+	return true;
+}
+
+wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue)
+{
+	wxString value;
+	bool found = Read(type, group, key, required, value);
+
+	if (!found)
+			value = defaultValue;
+
 	if (value.length() > nmax)
 	{
 		wxString error;
@@ -77,14 +91,15 @@ bool GOrgueConfigReader::ReadBoolean(GOSettingType type, wxString group, wxStrin
 
 bool GOrgueConfigReader::ReadBoolean(GOSettingType type, wxString group, wxString key, bool required, bool defaultValue)
 {
-	wxString value = ReadString(type, group, key, 255, required, defaultValue ? wxT("Y") : wxT("N"));
-	value.MakeUpper();
-	value.Trim();
+	wxString value;
+	if (!Read(type, group, key, required, value))
+		return defaultValue;
 
-	if (value == wxT("Y"))
+	if (value == wxT("Y") || value == wxT("y"))
 		return true;
-	if (value == wxT("N"))
+	if (value == wxT("N") || value == wxT("n"))
 		return false;
+	value.MakeUpper();
 	wxLogWarning(_("Strange boolean value for section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 	if (value.Length() && value[0] == wxT('Y'))
 		return true;
@@ -103,10 +118,11 @@ wxColour GOrgueConfigReader::ReadColor(GOSettingType type, wxString group, wxStr
 
 wxColour GOrgueConfigReader::ReadColor(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue)
 {
-	wxString value = ReadString(type, group, key, 255, required, defaultValue);
+	wxString value;
+	if (!Read(type, group, key, required, value))
+		value = defaultValue;
 
 	value.MakeUpper();
-	value.Trim();
 
 	if (value == wxT("BLACK"))
 		return wxColour(0x00, 0x00, 0x00);
@@ -157,7 +173,9 @@ int GOrgueConfigReader::ReadInteger(GOSettingType type, wxString group, wxString
 
 int GOrgueConfigReader::ReadInteger(GOSettingType type, wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue)
 {
-	wxString value = ReadString(type, group, key, 255, required, wxString::Format(wxT("%d"), defaultValue));
+	wxString value;
+	if (!Read(type, group, key, required, value))
+		return defaultValue;
 
 	long retval;
 	if (!value.ToLong(&retval))
@@ -198,7 +216,9 @@ double GOrgueConfigReader::ReadFloat(GOSettingType type, wxString group, wxStrin
 
 double GOrgueConfigReader::ReadFloat(GOSettingType type, wxString group, wxString key, double nmin, double nmax, bool required, double defaultValue)
 {
-	wxString value = ReadString(type, group, key, 255, required, formatCDDouble(defaultValue));
+	wxString value;
+	if (!Read(type, group, key, required, value))
+		return defaultValue;
 
 	double retval;
 	int pos = value.find(wxT(","), 0);
@@ -230,11 +250,12 @@ unsigned GOrgueConfigReader::ReadSize(GOSettingType type, wxString group, wxStri
 unsigned GOrgueConfigReader::ReadSize(GOSettingType type, wxString group, wxString key, unsigned size_type, bool required, wxString defaultValue)
 {
 	static const int sizes[2][4] = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
+	wxString value;
 
-	wxString value = ReadString(type, group, key, 255, required, defaultValue);
+	if (!Read(type, group, key, required, value))
+		value = defaultValue;
 
 	value.MakeUpper();
-	value.Trim();
 
 	if (value == wxT("SMALL"))
 		return sizes[size_type][0];
@@ -261,10 +282,11 @@ unsigned GOrgueConfigReader::ReadFontSize(GOSettingType type, wxString group, wx
 
 unsigned GOrgueConfigReader::ReadFontSize(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue)
 {
-	wxString value = ReadString(type, group, key, 255, required, defaultValue);
+	wxString value;
+	if (!Read(type, group, key, required, value))
+		value = defaultValue;
 
 	value.MakeUpper();
-	value.Trim();
 
 	if (value == wxT("SMALL"))
 		return 6;
@@ -285,6 +307,7 @@ unsigned GOrgueConfigReader::ReadFontSize(GOSettingType type, wxString group, wx
 int GOrgueConfigReader::ReadEnum(GOSettingType type, wxString group, wxString key, const struct IniFileEnumEntry* entry, unsigned count, bool required, int defaultValue)
 {
 	int defaultEntry = -1;
+	wxString value;
 	for (unsigned i = 0; i < count; i++)
 		if (entry[i].value == defaultValue)
 			defaultEntry = i;
@@ -294,7 +317,9 @@ int GOrgueConfigReader::ReadEnum(GOSettingType type, wxString group, wxString ke
 		defaultEntry = 0;
 	}
 
-	wxString value = ReadString(type, group, key, 255, required, entry[defaultEntry].name);
+	if (!Read(type, group, key, required, value))
+	    return entry[defaultEntry].value;
+
 	for (unsigned i = 0; i < count; i++)
 		if (entry[i].name == value)
 			return entry[i].value;
