@@ -60,8 +60,7 @@ bool GOrgueDocument::DoOpenDocument(const wxString& file)
 
 bool GOrgueDocument::DoSaveDocument(const wxString& file)
 {
-	Save();
-	return true;
+	return Save();
 }
 
 bool GOrgueDocument::Load(const wxString& odf)
@@ -74,6 +73,7 @@ bool GOrgueDocument::Import(const wxString& odf, const wxString& cmb)
 	wxBusyCursor busy;
 
 	CloseOrgan();
+	Modify(false);
 	bool open_sound = m_sound.OpenSound();
 
 	/* abort if we failed to open the sound device */
@@ -87,7 +87,7 @@ bool GOrgueDocument::Import(const wxString& odf, const wxString& cmb)
 		if (error != wxT("!"))
 		{
 			wxLogError(wxT("%s\n"),error.c_str());
-			wxMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
+			GOMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
 		}
 		CloseOrgan();
 		if (!cmb.IsEmpty())
@@ -120,6 +120,7 @@ bool GOrgueDocument::Import(const wxString& odf, const wxString& cmb)
 
 	m_listener.SetCallback(this);
 	m_sound.GetSettings().Flush();
+	Modify(!cmb.IsEmpty());
 	return true;
 }
 
@@ -151,18 +152,24 @@ void GOrgueDocument::SyncState()
 			((GOrguePanelView*)m_Windows[i].window)->SyncState();
 }
 
+bool GOrgueDocument::Revert()
+{
+	if (m_organfile)
+		m_organfile->DeleteSettings();
+	Modify(false);
+	return Load(GetFilename());
+}
+
 bool GOrgueDocument::Save()
 {
 	SyncState();
-	m_organfile->Save();
-	return true;
+	return m_organfile->Save();
 }
 
 bool GOrgueDocument::Export(const wxString& cmb)
 {
 	SyncState();
-	m_organfile->Export(cmb);
-	return true;
+	return m_organfile->Export(cmb);
 }
 
 void GOrgueDocument::CloseOrgan()

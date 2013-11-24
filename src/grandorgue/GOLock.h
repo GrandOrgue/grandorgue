@@ -369,6 +369,13 @@ public:
 			m_Mutex.Unlock();
 	}
 
+	bool TryLock()
+	{
+		if (!m_Locked)
+			m_Locked = m_Mutex.TryLock();
+		return m_Locked;
+	}
+
 	bool IsLocked() const
 	{
 		return m_Locked;

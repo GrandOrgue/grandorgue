@@ -270,11 +270,8 @@ MIDIEventSendDialog.cpp
 MIDIEventKeyDialog.cpp
 OrganDialog.cpp
 OrganSelectDialog.cpp
-GOrgueDocManager.cpp
-GOrgueDocTemplate.cpp
 GOrgueDocument.cpp
 GOrguePanelView.cpp
-GOrgueView.cpp
 SettingsAudioGroup.cpp
 SettingsAudioOutput.cpp
 SettingsDialog.cpp

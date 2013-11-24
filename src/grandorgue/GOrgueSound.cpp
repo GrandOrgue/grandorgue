@@ -257,7 +257,7 @@ bool GOrgueSound::OpenSound()
 	{
 		if (logSoundErrors)
 		{
-			wxMessageBox(msg, _("Error"), wxOK | wxICON_ERROR, NULL);
+			GOMessageBox(msg, _("Error"), wxOK | wxICON_ERROR, NULL);
 		}
 	}
 

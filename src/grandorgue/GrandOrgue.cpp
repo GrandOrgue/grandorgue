@@ -21,8 +21,6 @@
 
 
 #include "GrandOrgue.h"
-#include "GOrgueDocManager.h"
-#include "GOrgueDocTemplate.h"
 #include "GOrgueEvent.h"
 #include "GOrgueLCD.h"
 #include "GOrgueLog.h"
@@ -51,7 +49,6 @@ GOrgueApp::GOrgueApp() :
    m_locale(),
    m_Settings(NULL),
    m_soundSystem(NULL),
-   m_docManager(NULL),
    m_Log(NULL),
    m_FileName(),
    m_InstanceName()
@@ -129,11 +126,8 @@ bool GOrgueApp::OnInit()
 	m_Settings->Load();
 
 	m_soundSystem = new GOrgueSound(*m_Settings);
-	m_docManager = new GOrgueDocManager;
-	new GOrgueDocTemplate(m_soundSystem, m_docManager, _("Sample set definition files"), _("*.organ"), wxEmptyString, wxT("organ"));
-	m_docManager->SetMaxDocsOpen(1);
 
-	m_Frame = new GOrgueFrame(m_docManager, (wxFrame*)NULL, wxID_ANY, wxT(APP_TITLE), wxDefaultPosition, wxDefaultSize, 
+	m_Frame = new GOrgueFrame(NULL, wxID_ANY, wxT(APP_TITLE), wxDefaultPosition, wxDefaultSize, 
 				  wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE, *m_soundSystem);
 	SetTopWindow(m_Frame);
 	m_Log = new GOrgueLog(m_Frame);
@@ -164,7 +158,7 @@ void GOrgueApp::MacOpenFile(const wxString &filename)
 
 void GOrgueApp::AsyncLoadFile(wxString what)
 {
-	if (m_Frame && m_docManager)
+	if (m_Frame)
 	{
 		wxFileName fn(what);
 		fn.Normalize();
@@ -183,11 +177,6 @@ int GOrgueApp::OnExit()
 {
 	GOrgueLCD_Close();
 	delete m_soundSystem;
-	if (m_docManager)
-	{
-		m_docManager->FileHistorySave(m_Settings->GetConfig());
-		delete m_docManager;
-	}
 	delete m_Settings;
 	wxLog::SetActiveTarget(NULL);
 	delete m_Log;
