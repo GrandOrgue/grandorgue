@@ -33,6 +33,7 @@ class wxHtmlHelpController;
 class wxGaugeAudio;
 class wxSpinCtrl;
 class GOrgueMidiEvent;
+class GOrgueDocument;
 class GOrgueSettings;
 class GOrgueSound;
 class GOrgueTemperament;
@@ -64,6 +65,8 @@ private:
 	void UpdatePanelMenu();
 	void UpdateFavoritesMenu();
 	void UpdateRecentMenu();
+
+	GOrgueDocument* GetDocument();
 
 	void OnMeters(wxCommandEvent& event);
 

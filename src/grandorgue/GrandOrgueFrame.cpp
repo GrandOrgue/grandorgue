@@ -331,19 +331,22 @@ void GOrgueFrame::InitHelp()
         m_Help->AddBook(result);
 }
 
+GOrgueDocument* GOrgueFrame::GetDocument()
+{
+	return (GOrgueDocument*)m_docManager->GetCurrentDocument();
+}
+
 void GOrgueFrame::OnPanel(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
+	GOrgueDocument* doc = GetDocument();
 	unsigned no = event.GetId() - ID_PANEL_FIRST + 1;
-	if (!organfile || organfile->GetPanelCount() <= no)
-		return;
-	doc->ShowPanel(no);
+	if (doc && doc->GetOrganFile() && no < doc->GetOrganFile()->GetPanelCount())
+		doc->ShowPanel(no);
 }
 
 void GOrgueFrame::UpdatePanelMenu()
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = GetDocument();
 	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
 	unsigned panelcount = std::min (organfile ? organfile->GetPanelCount() - 1 : 0, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
 
@@ -432,13 +435,8 @@ void GOrgueFrame::OnMeters(wxCommandEvent& event)
 
 void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 {
-	GrandOrgueFile* organfile = NULL;
-	GOrgueDocument* doc = NULL;
-	if (m_docManager->GetCurrentDocument())
-	{
-		doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-		organfile = doc->GetOrganFile();
-	}
+	GOrgueDocument* doc = GetDocument();
+	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
 
 	if (ID_PRESET_0 <= event.GetId() && event.GetId() <= ID_PRESET_LAST)
 	{
@@ -474,18 +472,16 @@ void GOrgueFrame::OnPreset(wxCommandEvent& event)
 	if (id == m_Settings.GetPreset())
 		return;
 	m_Settings.SetPreset(id);
-	if (m_docManager->GetCurrentDocument())
+	if (GetDocument())
 		ProcessCommand(ID_FILE_RELOAD);
 }
 
 void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_TEMPERAMENT_0;
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-	if (!doc)
-		return;
-
-	doc->GetOrganFile()->SetTemperament(m_Temperaments[id]->GetName());
+	GOrgueDocument* doc = GetDocument();
+	if (doc && doc->GetOrganFile())
+		doc->GetOrganFile()->SetTemperament(m_Temperaments[id]->GetName());
 }
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
@@ -519,7 +515,8 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 {
 	GetDocumentManager()->SetLastDirectory(m_Settings.GetOrganPath());
 	GetDocumentManager()->OnFileOpen(event);
-	if (m_docManager->GetCurrentDocument() && ((GOrgueDocument*)m_docManager->GetCurrentDocument())->GetOrganFile())
+	GOrgueDocument* doc = GetDocument();
+	if (doc && doc->GetOrganFile())
 	{
 		m_Settings.SetOrganPath(GetDocumentManager()->GetLastDirectory());
 	}
@@ -527,7 +524,7 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 
 void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = GetDocument();
 	if (!doc)
 		return;
 
@@ -542,8 +539,8 @@ void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 
 void GOrgueFrame::OnImportCombinations(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-	if (!doc)
+	GOrgueDocument* doc = GetDocument();
+	if (!doc || !doc->GetOrganFile())
 		return;
 
 	wxFileDialog dlg(this, _("Import Combinations"), m_Settings.GetSettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -556,8 +553,8 @@ void GOrgueFrame::OnImportCombinations(wxCommandEvent& event)
 
 void GOrgueFrame::OnExport(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-	if (!doc)
+	GOrgueDocument* doc = GetDocument();
+	if (!doc || !doc->GetOrganFile())
 		return;
 
 	wxFileDialog dlg(this, _("Export Settings"), m_Settings.GetSettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
@@ -585,10 +582,11 @@ wxString formatSize(wxLongLong& size)
 
 void GOrgueFrame::OnCache(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-	if (!doc)
-		return;
-	if (!doc->GetOrganFile()->UpdateCache(m_Settings.GetCompressCache()))
+	bool res = true;
+	GOrgueDocument* doc = GetDocument();
+	if (doc && doc->GetOrganFile())
+		res = doc->GetOrganFile()->UpdateCache(m_Settings.GetCompressCache());
+	if (!res)
 	{
 		wxLogError(_("Creating the cache failed"));
 		wxMessageBox(_("Creating the cache failed"), _("Error"), wxOK | wxICON_ERROR, this);
@@ -597,15 +595,14 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 
 void GOrgueFrame::OnCacheDelete(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-	if (!doc)
-		return;
-	doc->GetOrganFile()->DeleteCache();
+	GOrgueDocument* doc = GetDocument();
+	if (doc && doc->GetOrganFile())
+		doc->GetOrganFile()->DeleteCache();
 }
 
 void GOrgueFrame::OnReload(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = GetDocument();
 	if (!doc)
 		return;
 	wxString filename = doc->GetFilename();
@@ -616,13 +613,13 @@ void GOrgueFrame::OnReload(wxCommandEvent& event)
 
 void GOrgueFrame::OnRevert(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-	if (doc && doc->GetOrganFile() && ::wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), wxT(APP_NAME), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
+	GOrgueDocument* doc = GetDocument();
+	if (doc && doc->GetOrganFile())
 	{
+		if (wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), wxT(APP_NAME), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
 		{
-			wxFileConfig cfg(wxEmptyString, wxEmptyString, doc->GetOrganFile()->GetODFFilename(), wxEmptyString, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_NO_ESCAPE_CHARACTERS, wxCSConv(wxT("ISO-8859-1")));
-			m_docManager->GetCurrentDocument()->Modify(false);
 			doc->GetOrganFile()->DeleteSettings();
+			doc->Modify(false);
 		}
 		ProcessCommand(ID_FILE_RELOAD);
 	}
@@ -630,9 +627,12 @@ void GOrgueFrame::OnRevert(wxCommandEvent& event)
 
 void GOrgueFrame::OnProperties(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-	GOrgueProperties dlg(doc->GetOrganFile(), this);
-	dlg.ShowModal();
+	GOrgueDocument* doc = GetDocument();
+	if (doc && doc->GetOrganFile())
+	{
+		GOrgueProperties dlg(doc->GetOrganFile(), this);
+		dlg.ShowModal();
+	}
 }
 
 void GOrgueFrame::OnAudioPanic(wxCommandEvent& WXUNUSED(event))
@@ -662,10 +662,9 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-	if (!doc)
-		return;
-	doc->GetOrganFile()->GetSetter()->ToggleSetter();
+	GOrgueDocument* doc = GetDocument();
+	if (doc && doc->GetOrganFile())
+		doc->GetOrganFile()->GetSetter()->ToggleSetter();
 }
 
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
@@ -678,10 +677,9 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnEditOrgan(wxCommandEvent& event)
 {
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
-	if (!doc)
-		return;
-	doc->ShowOrganDialog();
+	GOrgueDocument* doc = GetDocument();
+	if (doc && doc->GetOrganFile())
+		doc->ShowOrganDialog();
 }
 
 void GOrgueFrame::OnHelp(wxCommandEvent& event)
@@ -719,7 +717,7 @@ void GOrgueFrame::OnSettingsMemoryEnter(wxCommandEvent& event)
 {
 	long n = m_SetterPosition->GetValue();
 
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = GetDocument();
 	if (doc && doc->GetOrganFile())
 		doc->GetOrganFile()->GetSetter()->SetPosition(n);
 }
@@ -728,7 +726,7 @@ void GOrgueFrame::OnSettingsMemory(wxCommandEvent& event)
 {
 	long n = m_SetterPosition->GetValue();
 
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = GetDocument();
 	if (doc && doc->GetOrganFile())
 		doc->GetOrganFile()->GetSetter()->UpdatePosition(n);
 }
@@ -738,7 +736,7 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 	long n = m_Transpose->GetValue();
 
 	m_Settings.SetTranspose(n);
-	GOrgueDocument* doc = (GOrgueDocument*)m_docManager->GetCurrentDocument();
+	GOrgueDocument* doc = GetDocument();
 	if (doc && doc->GetOrganFile())
 		doc->GetOrganFile()->GetSetter()->SetTranspose(n);
 }
@@ -759,11 +757,7 @@ void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)
 
 void GOrgueFrame::DoSplash(bool timeout)
 {
-	new GOrgueSplash
-		(timeout
-		,this
-		,wxID_ANY
-		);
+	new GOrgueSplash (timeout, this, wxID_ANY);
 }
 
 
