@@ -34,6 +34,8 @@ private:
 	wxListCtrl* m_List;
 
 	void OnLog(wxCommandEvent& event);
+	void OnCopy(wxCommandEvent& event);
+	void OnPopup(wxContextMenuEvent& event);
 	void OnCloseWindow(wxCloseEvent& event);
 
 public:

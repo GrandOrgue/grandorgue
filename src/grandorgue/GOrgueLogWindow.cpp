@@ -23,12 +23,16 @@
 #include <wx/artprov.h>
 #include <wx/imaglist.h>
 #include <wx/listctrl.h>
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_ADD_LOG_MESSAGE)
 
 BEGIN_EVENT_TABLE(GOrgueLogWindow, wxFrame)
-        EVT_COMMAND(0, wxEVT_ADD_LOG_MESSAGE, GOrgueLogWindow::OnLog)
-        EVT_CLOSE(GOrgueLogWindow::OnCloseWindow)
+	EVT_COMMAND(0, wxEVT_ADD_LOG_MESSAGE, GOrgueLogWindow::OnLog)
+	EVT_CLOSE(GOrgueLogWindow::OnCloseWindow)
+	EVT_CONTEXT_MENU(GOrgueLogWindow::OnPopup)
+	EVT_MENU(wxID_COPY, GOrgueLogWindow::OnCopy)
 END_EVENT_TABLE()
 
 GOrgueLogWindow::GOrgueLogWindow(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) :
@@ -51,6 +55,35 @@ GOrgueLogWindow::GOrgueLogWindow(wxWindow* parent, wxWindowID id, const wxString
 
 GOrgueLogWindow::~GOrgueLogWindow()
 {
+}
+
+void GOrgueLogWindow::OnCopy(wxCommandEvent& event)
+{
+	wxString text;
+	for(long i = m_List->GetItemCount(); i > 0; i--)
+	{
+		wxListItem i1, i2;
+		i1.SetId(i);
+		i1.SetColumn(1);
+		i2.SetId(i);
+		i2.SetColumn(0);
+		m_List->GetItem(i1);
+		m_List->GetItem(i2);
+		text += wxString::Format(_("%s: %s\n"), i1.GetText().c_str(), i2.GetText().c_str());
+	}
+
+	if (wxTheClipboard->Open())
+	{
+		wxTheClipboard->SetData(new wxTextDataObject(text));
+		wxTheClipboard->Close();
+	}
+}
+
+void GOrgueLogWindow::OnPopup(wxContextMenuEvent& event)
+{
+	wxMenu popup;
+	popup.Append(wxID_COPY, _("C&opy"), wxEmptyString, wxITEM_NORMAL);
+	PopupMenu(&popup);
 }
 
 void GOrgueLogWindow::OnLog(wxCommandEvent& event)
