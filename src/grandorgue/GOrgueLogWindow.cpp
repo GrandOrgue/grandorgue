@@ -60,13 +60,15 @@ GOrgueLogWindow::~GOrgueLogWindow()
 void GOrgueLogWindow::OnCopy(wxCommandEvent& event)
 {
 	wxString text;
-	for(long i = m_List->GetItemCount(); i > 0; i--)
+	for(long i = m_List->GetItemCount() - 1; i >= 0; i--)
 	{
 		wxListItem i1, i2;
 		i1.SetId(i);
 		i1.SetColumn(1);
 		i2.SetId(i);
 		i2.SetColumn(0);
+		i1.SetMask(wxLIST_MASK_TEXT);
+		i2.SetMask(wxLIST_MASK_TEXT);
 		m_List->GetItem(i1);
 		m_List->GetItem(i2);
 		text += wxString::Format(_("%s: %s\n"), i1.GetText().c_str(), i2.GetText().c_str());
