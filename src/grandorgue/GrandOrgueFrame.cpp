@@ -340,9 +340,9 @@ bool GOrgueFrame::DoClose()
 	GOMutexLocker m_locker(m_mutex, true);
 	if(!m_locker.IsLocked())
 		return false;
-	if (m_doc->IsModified())
+	if (m_doc->IsModified() && m_doc->GetOrganFile())
 	{
-		int res = wxMessageBox(_("The organ settings have been modified. Do you want to save the changes?"), m_doc->GetTitle(), wxYES_NO|wxCANCEL|wxICON_QUESTION, this);
+		int res = wxMessageBox(_("The organ settings have been modified. Do you want to save the changes?"), m_doc->GetOrganFile()->GetChurchName(), wxYES_NO|wxCANCEL|wxICON_QUESTION, this);
 		if (res == wxCANCEL)
 			return false;
 		if (res == wxYES)
@@ -557,7 +557,7 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 {
 	GOrgueDocument* doc = GetDocument();
-	if (!doc)
+	if (!doc || !doc->GetOrganFile())
 		return;
 
 	wxFileDialog dlg(this, _("Import Settings"), m_Settings.GetSettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -648,9 +648,9 @@ void GOrgueFrame::OnCacheDelete(wxCommandEvent& event)
 void GOrgueFrame::OnReload(wxCommandEvent& event)
 {
 	GOrgueDocument* doc = GetDocument();
-	if (!doc)
+	if (!doc || !doc->GetOrganFile())
 		return;
-	wxString filename = doc->GetFilename();
+	wxString filename = doc->GetOrganFile()->GetODFFilename();
 	if (!DoClose())
 		return;
 	Open(filename);

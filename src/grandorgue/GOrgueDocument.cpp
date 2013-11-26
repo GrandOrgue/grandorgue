@@ -37,7 +37,8 @@ GOrgueDocument::GOrgueDocument(GOrgueSound* sound) :
 	m_organfile(NULL),
 	m_sound(*sound),
 	m_listener(),
-	m_Windows()
+	m_Windows(),
+	m_modified(false)
 {
 	m_listener.Register(&m_sound.GetMidi());
 }
@@ -48,19 +49,14 @@ GOrgueDocument::~GOrgueDocument()
 	CloseOrgan();
 }
 
-bool GOrgueDocument::OnCloseDocument()
+bool GOrgueDocument::IsModified()
 {
-    return wxDocument::OnCloseDocument();
+	return m_modified;
 }
 
-bool GOrgueDocument::DoOpenDocument(const wxString& file)
+void GOrgueDocument::Modify(bool modified)
 {
-	return Load(file);
-}
-
-bool GOrgueDocument::DoSaveDocument(const wxString& file)
-{
-	return Save();
+	m_modified = modified;
 }
 
 bool GOrgueDocument::Load(const wxString& odf)
@@ -90,8 +86,6 @@ bool GOrgueDocument::Import(const wxString& odf, const wxString& cmb)
 			GOMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
 		}
 		CloseOrgan();
-		if (!cmb.IsEmpty())
-			DeleteAllViews();
 		return false;
 	}
 	m_sound.GetSettings().AddOrgan(new GOrgueOrgan(m_organfile->GetODFFilename(), m_organfile->GetChurchName(), m_organfile->GetOrganBuilder(), m_organfile->GetRecordingDetails()));
@@ -106,7 +100,6 @@ bool GOrgueDocument::Import(const wxString& odf, const wxString& cmb)
 	}
 	m_OrganFileReady = true;
 
-	SetTitle(m_organfile->GetChurchName());
 	m_sound.GetSettings().SetLastFile(m_organfile->GetODFFilename());
 
 	wxCommandEvent event(wxEVT_WINTITLE, 0);
@@ -157,7 +150,7 @@ bool GOrgueDocument::Revert()
 	if (m_organfile)
 		m_organfile->DeleteSettings();
 	Modify(false);
-	return Load(GetFilename());
+	return Load(m_organfile->GetODFFilename());
 }
 
 bool GOrgueDocument::Save()
