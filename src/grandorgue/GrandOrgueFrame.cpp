@@ -651,7 +651,7 @@ void GOrgueFrame::OnReload(wxCommandEvent& event)
 	if (!doc)
 		return;
 	wxString filename = doc->GetFilename();
-	if (!DoClose());
+	if (!DoClose())
 		return;
 	Open(filename);
 }
