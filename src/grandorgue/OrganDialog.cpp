@@ -94,7 +94,7 @@ END_EVENT_TABLE()
 
 OrganDialog::OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile* organfile) :
 	wxDialog(parent, wxID_ANY, _("Organ settings"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE),
-	GOrgueDialogView(doc, this),
+	GOrgueView(doc, this),
 	m_organfile(organfile),
 	m_Apply(NULL),
 	m_Reset(NULL),

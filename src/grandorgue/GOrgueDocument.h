@@ -33,7 +33,7 @@ class GOrgueMidiReceiver;
 class GOrgueMidiSender;
 class GrandOrgueFile;
 class GOrgueSound;
-class GOrgueDialogView;
+class GOrgueView;
 
 class GOrgueDocument : public wxDocument, protected GOrgueMidiCallback
 {
@@ -43,7 +43,7 @@ private:
 	typedef struct {
 		WindowType type;
 		void* data;
-		GOrgueDialogView* window;
+		GOrgueView* window;
 	} WindowInfo;
 
 	GOMutex m_lock;
@@ -79,8 +79,8 @@ public:
 
 	bool WindowExists(WindowType type, void* data);
 	bool showWindow(WindowType type, void* data);
-	void registerWindow(WindowType type, void* data, GOrgueDialogView *window);
-	void unregisterWindow(GOrgueDialogView* window);
+	void registerWindow(WindowType type, void* data, GOrgueView *window);
+	void unregisterWindow(GOrgueView* window);
 
 	GrandOrgueFile* GetOrganFile();
 };

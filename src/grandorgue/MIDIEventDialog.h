@@ -25,7 +25,7 @@
 #include <wx/wx.h>
 #include <wx/propdlg.h>
 #include "GrandOrgueDef.h"
-#include "GOrgueDialogView.h"
+#include "GOrgueView.h"
 
 class GOrgueMidi;
 class GOrgueMidiReceiver;
@@ -36,7 +36,7 @@ class MIDIEventRecvDialog;
 class MIDIEventSendDialog;
 class MIDIEventKeyDialog;
 
-class MIDIEventDialog : public wxPropertySheetDialog, public GOrgueDialogView
+class MIDIEventDialog : public wxPropertySheetDialog, public GOrgueView
 {
 private:
 	MIDIEventRecvDialog* m_recvPage;

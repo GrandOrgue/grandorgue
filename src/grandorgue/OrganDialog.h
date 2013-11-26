@@ -25,7 +25,7 @@
 #include <wx/wx.h>
 #include <vector>
 #include "GrandOrgueDef.h"
-#include "GOrgueDialogView.h"
+#include "GOrgueView.h"
 
 class GrandOrgueFile;
 class wxTreeCtrl;
@@ -36,7 +36,7 @@ class OrganTreeItemData;
 class wxCheckBox;
 class wxSpinEvent;
 
-class OrganDialog : public wxDialog, public GOrgueDialogView
+class OrganDialog : public wxDialog, public GOrgueView
 {
 private:
 	GrandOrgueFile* m_organfile;

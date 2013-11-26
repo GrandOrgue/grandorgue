@@ -23,13 +23,13 @@
 #define GORGUEPANELVIEW_H
 
 #include <wx/wx.h>
-#include "GOrgueDialogView.h"
+#include "GOrgueView.h"
 
 class GOGUIControl;
 class GOGUIPanel;
 class GOGUIPanelWidget;
 
-class GOrguePanelView : public wxScrolledWindow, public GOrgueDialogView
+class GOrguePanelView : public wxScrolledWindow, public GOrgueView
 {
 private:
 	GOGUIPanelWidget* m_panelwidget;
