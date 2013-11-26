@@ -26,15 +26,15 @@
 
 class GOrgueDocument;
 
-class GOrgueDialogView
+class GOrgueView
 {
 private:
 	GOrgueDocument* m_doc;
 	wxWindow* m_wnd;
 
 public:
-	GOrgueDialogView(GOrgueDocument* doc, wxWindow* wnd);
-	virtual ~GOrgueDialogView();
+	GOrgueView(GOrgueDocument* doc, wxWindow* wnd);
+	virtual ~GOrgueView();
 
 	void RemoveView();
 	void ShowView();

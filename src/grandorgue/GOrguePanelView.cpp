@@ -42,7 +42,7 @@ GOrguePanelView* GOrguePanelView::createWindow(GOrgueDocument* doc, GOGUIPanel* 
 
 GOrguePanelView::GOrguePanelView(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent, bool main_panel) :
 	wxScrolledWindow(parent),
-	GOrgueDialogView(doc, main_panel ? this : parent),
+	GOrgueView(doc, main_panel ? this : parent),
 	m_panelwidget(NULL),
 	m_panel(panel)
 {

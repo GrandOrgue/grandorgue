@@ -19,30 +19,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueDialogView.h"
+#include "GOrgueView.h"
 #include "GOrgueDocument.h"
 
-GOrgueDialogView::GOrgueDialogView(GOrgueDocument* doc, wxWindow* wnd) :
+GOrgueView::GOrgueView(GOrgueDocument* doc, wxWindow* wnd) :
 	m_doc(doc),
 	m_wnd(wnd)
 {
 }
 
-GOrgueDialogView::~GOrgueDialogView()
+GOrgueView::~GOrgueView()
 {
 	if (m_doc)
 		m_doc->unregisterWindow(this);
 	m_doc = NULL;
 }
 
-void GOrgueDialogView::RemoveView()
+void GOrgueView::RemoveView()
 {
 	m_doc = NULL;
 	m_wnd->Hide();
 	m_wnd->Destroy();
 }
 
-void GOrgueDialogView::ShowView()
+void GOrgueView::ShowView()
 {
 	m_wnd->Show();
 	m_wnd->Raise();

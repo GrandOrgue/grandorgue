@@ -25,7 +25,7 @@
 #include "GOrgueMidiEvent.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
-#include "GOrgueDialogView.h"
+#include "GOrgueView.h"
 #include "GOrguePanelView.h"
 #include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
@@ -178,7 +178,7 @@ void GOrgueDocument::CloseOrgan()
 	m_sound.CloseSound();
 	while(m_Windows.size() > 0)
 	{
-		GOrgueDialogView* wnd = m_Windows[0].window;
+		GOrgueView* wnd = m_Windows[0].window;
 		m_Windows.erase(m_Windows.begin());
 		wnd->RemoveView();
 	}
@@ -231,7 +231,7 @@ bool GOrgueDocument::showWindow(WindowType type, void* data)
 	return false;
 }
 
-void GOrgueDocument::registerWindow(WindowType type, void* data, GOrgueDialogView *window)
+void GOrgueDocument::registerWindow(WindowType type, void* data, GOrgueView *window)
 {
 	WindowInfo info;
 	info.type = type;
@@ -241,7 +241,7 @@ void GOrgueDocument::registerWindow(WindowType type, void* data, GOrgueDialogVie
 	window->ShowView();
 }
 
-void GOrgueDocument::unregisterWindow(GOrgueDialogView* window)
+void GOrgueDocument::unregisterWindow(GOrgueView* window)
 {
 	for(unsigned i = 0; i < m_Windows.size(); i++)
 		if (m_Windows[i].window == window)
