@@ -31,7 +31,7 @@ struct IniFileEnumEntry {
 	int value;
 };
 
-typedef enum { ODFSetting, UserSetting, CMBSetting } GOSettingType;
+typedef enum { ODFSetting, CMBSetting } GOSettingType;
 
 class GOrgueConfigReader
 {

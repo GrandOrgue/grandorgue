@@ -159,7 +159,10 @@ void GOrgueFrameGeneral::Load(GOrgueConfigReader& cfg, wxString group)
 
 void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 {
-	GOSettingType type = m_IsSetter ? CMBSetting : UserSetting;
+	GOSettingType type = CMBSetting;
+	if (!m_IsSetter)
+		if (cfg.ReadInteger(CMBSetting, m_group, wxT("NumberOfStops"), -1, 999, false, -1) == -1)
+			type = ODFSetting;
 	wxString buffer;
 	unsigned NumberOfStops = cfg.ReadInteger(type, m_group, wxT("NumberOfStops"), 0, 999);
 	unsigned NumberOfCouplers = cfg.ReadInteger(type, m_group, wxT("NumberOfCouplers"), 0, 999);

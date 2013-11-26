@@ -66,8 +66,8 @@ void GOrgueDrawstop::Load(GOrgueConfigReader& cfg, wxString group)
 
 	if (m_Type == FUNCTION_INPUT)
 	{
-		m_Engaged = cfg.ReadBoolean(UserSetting, group, wxT("DefaultToEngaged"));
-		cfg.ReadBoolean(ODFSetting, group, wxT("DefaultToEngaged"));
+		m_Engaged = cfg.ReadBoolean(ODFSetting, group, wxT("DefaultToEngaged"));
+		m_Engaged = cfg.ReadBoolean(CMBSetting, group, wxT("DefaultToEngaged"), false, m_Engaged);
 		m_GCState = cfg.ReadInteger(ODFSetting, group, wxT("GCState"), -1, 1, false, 0);
 	}
 	else
