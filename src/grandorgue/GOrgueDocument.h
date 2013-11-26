@@ -23,7 +23,6 @@
 #define GORGUEDOCUMENT_H
 
 #include <wx/defs.h>
-#include <wx/docview.h>
 #include "GOLock.h"
 #include "GOrgueMidiListener.h"
 
@@ -35,7 +34,7 @@ class GrandOrgueFile;
 class GOrgueSound;
 class GOrgueView;
 
-class GOrgueDocument : public wxDocument, protected GOrgueMidiCallback
+class GOrgueDocument : protected GOrgueMidiCallback
 {
 public:
 	typedef enum { ORGAN_DIALOG, MIDI_EVENT, PANEL } WindowType;
@@ -52,19 +51,19 @@ private:
 	GOrgueSound& m_sound;
 	GOrgueMidiListener m_listener;
 	std::vector<WindowInfo> m_Windows;
+	bool m_modified;
 
 	void OnMidiEvent(const GOrgueMidiEvent& event);
 
 	void SyncState();
 	void CloseOrgan();
 
-	bool OnCloseDocument();
-	bool DoOpenDocument(const wxString& file);
-	bool DoSaveDocument(const wxString& file);
-
 public:
 	GOrgueDocument(GOrgueSound* sound);
 	~GOrgueDocument();
+
+	bool IsModified();
+	void Modify(bool modified);
 
 	void ShowPanel(unsigned id);
 	void ShowOrganDialog();
