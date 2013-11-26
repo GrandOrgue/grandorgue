@@ -123,7 +123,7 @@ void GOrgueConfigReaderDB::AddEntry(GOStringHashMap& hash, wxString key, wxStrin
 bool GOrgueConfigReaderDB::GetString(GOSettingType type, wxString group, wxString key, wxString& value)
 {
 	wxString index = group + wxT("/") + key;
-	if (type == UserSetting || type == CMBSetting)
+	if (type == CMBSetting)
 	{
 		m_CMBUsed[index] = true;
 		GOStringHashMap::iterator i = m_CMB.find(index);
@@ -133,8 +133,7 @@ bool GOrgueConfigReaderDB::GetString(GOSettingType type, wxString group, wxStrin
 			return true;
 		}
 	}
-
-	if (type == UserSetting || type == ODFSetting)
+	if (type == ODFSetting)
 	{
 		m_ODFUsed[index] = true;
 		GOStringHashMap::iterator i = m_ODF.find(index);
@@ -144,7 +143,7 @@ bool GOrgueConfigReaderDB::GetString(GOSettingType type, wxString group, wxStrin
 			return true;
 		}
 	}
-	if (type == UserSetting || type == ODFSetting)
+	if (type == ODFSetting)
 	{
 		GOStringHashMap::iterator i = m_ODF_LC.find(index.Lower());
 		if (i != m_ODF.end())

@@ -153,7 +153,10 @@ void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualN
 
 void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 {
-	GOSettingType type = m_IsSetter ? CMBSetting : UserSetting;
+	GOSettingType type = CMBSetting;
+	if (!m_IsSetter)
+		if (cfg.ReadInteger(CMBSetting, m_group, wxT("NumberOfStops"), -1, 999, false, -1) == -1)
+			type = ODFSetting;
 	wxString buffer;
 	GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
 	unsigned NumberOfStops = cfg.ReadInteger(type, m_group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount(), true, 0);
