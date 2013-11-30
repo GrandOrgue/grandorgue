@@ -66,7 +66,7 @@ GOrguePipe::~GOrguePipe()
 GOSoundProvider* GOrguePipe::GetSoundProvider()
 {
 	if (m_Reference)
-		return m_Reference->GetSoundProvider();
+		return NULL;
 	return &m_SoundProvider;
 }
 
@@ -295,6 +295,8 @@ void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString pr
 void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	m_Filename = cfg.ReadString(ODFSetting, group, prefix);
+	if (m_Filename.StartsWith(wxT("REF:")))
+		return;
 	m_PipeConfig.Load(cfg, group, prefix);
 	m_HarmonicNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("HarmonicNumber"), 1, 1024, false, m_HarmonicNumber);
 	m_PitchCorrection = cfg.ReadFloat(ODFSetting, group, prefix + wxT("PitchCorrection"), -1200, 1200, false, m_PitchCorrection);
@@ -331,6 +333,8 @@ void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 
 void GOrguePipe::Save(GOrgueConfigWriter& cfg)
 {
+	if (IsReference())
+		return;
 	m_PipeConfig.Save(cfg);
 }
 
