@@ -53,10 +53,12 @@ GOrgueMemoryPool::~GOrgueMemoryPool()
 	FreePool();
 }
 
-void *GOrgueMemoryPool::Alloc(size_t length)
+void *GOrgueMemoryPool::Alloc(size_t length, bool final)
 {
 	if (m_MemoryLimit && m_CacheSize + m_PoolSize + m_MallocSize > m_MemoryLimit)
 		return NULL;
+	if (!final)
+		return malloc(length);
 	void* data = PoolAlloc(length);
 	if (data)
 	{
@@ -80,25 +82,23 @@ void GOrgueMemoryPool::Free(void* data)
 	free(data);
 }
 
-void * GOrgueMemoryPool::Realloc(void* data, size_t old_length, size_t new_length)
+void *GOrgueMemoryPool::MoveToPool(void* data, size_t length)
 {
 	if (m_PoolAllocs.count(data))
 	{
-		if (m_PoolPtr - old_length != data)
-		{
-			wxLogWarning(_("Realloc of non-top element failed"));
-			return data;
-		}
-		m_PoolPtr = m_PoolPtr - old_length + new_length;
+		wxLogWarning(_("Element already in the pool"));
 		return data;
 	}
-	m_MallocSize = m_MallocSize + new_length - old_length;
-	void* new_data = realloc(data, new_length);
-	if (new_data)
-		return new_data;
-	return data;
+	void* new_data = Alloc(length, true);
+	if (!new_data)
+	{
+		Free(data);
+		return NULL;
+	}
+	memcpy(new_data, data, length);
+	Free(data);
+	return new_data;
 }
-
 
 void GOrgueMemoryPool::AddPoolAlloc(void* data)
 {

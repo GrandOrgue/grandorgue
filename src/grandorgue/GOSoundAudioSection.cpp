@@ -752,11 +752,13 @@ void GOAudioSection::Setup
 	,const unsigned                   pcm_data_sample_rate
 	,const unsigned                   pcm_data_nb_samples
 	,const std::vector<GO_WAVE_LOOP> *loop_points
-	,const bool                       compress
+	,bool                       compress
 	)
 {
 	if (pcm_data_channels < 1 || pcm_data_channels > 2)
 		throw (wxString)_("< More than 2 channels in");
+
+	compress = (compress) && (m_BitsPerSample >= 12);
 
 	assert(pcm_data_nb_samples > 0);
 
@@ -790,7 +792,7 @@ void GOAudioSection::Setup
 			start_seg.data_offset            = loop.start_sample * bytes_per_sample_frame;
 			end_seg.end_offset               = loop.end_sample;
 			end_seg.next_start_segment_index = i + 1;
-			end_seg.end_data                 = (unsigned char*)m_Pool.Alloc(4 * BLOCKS_PER_FRAME * bytes_per_sample_frame);
+			end_seg.end_data                 = (unsigned char*)m_Pool.Alloc(4 * BLOCKS_PER_FRAME * bytes_per_sample_frame, true);
 			end_seg.transition_offset
 				= (end_seg.end_offset - start_seg.start_offset > 2 * BLOCKS_PER_FRAME)
 				? end_seg.end_offset - 2 * BLOCKS_PER_FRAME
@@ -828,7 +830,7 @@ void GOAudioSection::Setup
 		audio_end_data_segment end_seg;
 		end_seg.end_offset               = pcm_data_nb_samples - 1;
 		end_seg.next_start_segment_index = -1;
-		end_seg.end_data                 = (unsigned char*)m_Pool.Alloc(4 * BLOCKS_PER_FRAME * bytes_per_sample_frame);
+		end_seg.end_data                 = (unsigned char*)m_Pool.Alloc(4 * BLOCKS_PER_FRAME * bytes_per_sample_frame, true);
 		end_seg.transition_offset
 			= (end_seg.end_offset > 2 * BLOCKS_PER_FRAME)
 			? end_seg.end_offset - 2 * BLOCKS_PER_FRAME
@@ -854,7 +856,7 @@ void GOAudioSection::Setup
 	}
 
 	m_AllocSize = total_alloc_samples * bytes_per_sample_frame;
-	m_Data = (unsigned char*)m_Pool.Alloc(m_AllocSize);
+	m_Data = (unsigned char*)m_Pool.Alloc(m_AllocSize, !compress);
 	if (m_Data == NULL)
 		throw GOrgueOutOfMemory();
 	m_SampleRate     = pcm_data_sample_rate;
@@ -873,7 +875,7 @@ void GOAudioSection::Setup
 
 	GetMaxAmplitudeAndDerivative();
 
-	if ((compress) && (m_BitsPerSample >= 12))
+	if (compress)
 		Compress(m_BitsPerSample >= 20);
 
 }
@@ -883,9 +885,9 @@ void GOAudioSection::Compress(bool format16)
 	std::vector<unsigned> start_offsets;
 	start_offsets.resize(m_StartSegments.size());
 
-	unsigned char* data = (unsigned char*)malloc(m_AllocSize);
-	if (!data)
-		return;
+	unsigned char* data = (unsigned char*)m_Pool.Alloc(m_AllocSize, false);
+	if (data == NULL)
+		throw GOrgueOutOfMemory();
 
 	unsigned output_len = 0;
 	int diff[MAX_OUTPUT_CHANNELS];
@@ -937,7 +939,10 @@ void GOAudioSection::Compress(bool format16)
 			 * uncompressed data. */
 			if (output_len + 10 >= m_AllocSize)
 			{
-				free(data);
+				m_Pool.Free(data);
+				m_Data = (unsigned char*)m_Pool.MoveToPool(m_Data, m_AllocSize);
+				if (m_Data == NULL)
+					throw GOrgueOutOfMemory();
 				return;
 			}
 		}
@@ -969,14 +974,16 @@ void GOAudioSection::Compress(bool format16)
 	wxLogError(wxT("Compress: %d %d"), m_AllocSize, output_len);
 #endif
 
-	m_Data = (unsigned char*)m_Pool.Realloc(m_Data, m_AllocSize, output_len);
-	memcpy(m_Data, data, output_len);
+	m_Pool.Free(m_Data);
+	m_Data = data;
 	m_AllocSize = output_len;
 	m_Compressed = true;
 	for (unsigned j = 0; j < m_StartSegments.size(); j++)
 		m_StartSegments[j].data_offset = start_offsets[j];
 
-	free(data);
+	m_Data = (unsigned char*)m_Pool.MoveToPool(m_Data, m_AllocSize);
+	if (m_Data == NULL)
+		throw GOrgueOutOfMemory();
 }
 
 void GOAudioSection::SetupStreamAlignment(const std::vector<const GOAudioSection*> &joinables, unsigned start_index)

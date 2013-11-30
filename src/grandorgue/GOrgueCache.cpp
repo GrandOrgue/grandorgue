@@ -113,7 +113,7 @@ void* GOrgueCache::ReadBlock(unsigned length)
 			return data;
 		}
 	}
-	void* data = m_pool.Alloc(length);
+	void* data = m_pool.Alloc(length, true);
 	if (data == NULL)
 		throw GOrgueOutOfMemory();
 

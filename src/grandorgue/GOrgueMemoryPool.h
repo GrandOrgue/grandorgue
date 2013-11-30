@@ -59,8 +59,8 @@ public:
 	~GOrgueMemoryPool();
 	void SetMemoryLimit(size_t limit);
 
-	void *Alloc(size_t length);
-	void *Realloc(void* data, size_t old_length, size_t new_length);
+	void *Alloc(size_t length, bool final);
+	void *MoveToPool(void* data, size_t length);
 	void Free(void* data);
 
 	void *GetCacheData(size_t offset, size_t length);
