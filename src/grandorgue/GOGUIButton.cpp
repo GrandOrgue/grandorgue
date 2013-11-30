@@ -87,12 +87,12 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group)
 	m_OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
 	m_OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
 
-	w = m_OnBitmap->GetWidth();
-	h = m_OnBitmap->GetHeight();
+	w = m_OnBitmap.GetWidth();
+	h = m_OnBitmap.GetHeight();
 	m_BoundingRect = wxRect(x, y, w, h);
 
-	if (m_OnBitmap->GetWidth() != m_OffBitmap->GetWidth() ||
-	    m_OnBitmap->GetHeight() != m_OffBitmap->GetHeight())
+	if (m_OnBitmap.GetWidth() != m_OffBitmap.GetWidth() ||
+	    m_OnBitmap.GetHeight() != m_OffBitmap.GetHeight())
 		throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
 
 	m_TileOffsetX = 0;
@@ -162,16 +162,16 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 
 	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
 	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
-	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_OnBitmap->GetWidth());
-	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_OnBitmap->GetHeight());
+	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_OnBitmap.GetWidth());
+	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_OnBitmap.GetHeight());
 	m_BoundingRect = wxRect(x, y, w, h);
 
-	if (m_OnBitmap->GetWidth() != m_OffBitmap->GetWidth() ||
-	    m_OnBitmap->GetHeight() != m_OffBitmap->GetHeight())
+	if (m_OnBitmap.GetWidth() != m_OffBitmap.GetWidth() ||
+	    m_OnBitmap.GetHeight() != m_OffBitmap.GetHeight())
 		throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
 
-	m_TileOffsetX = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetX"), 0, m_OnBitmap->GetWidth() - 1, false, 0);
-	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_OnBitmap->GetHeight() - 1, false, 0);
+	m_TileOffsetX = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetX"), 0, m_OnBitmap.GetWidth() - 1, false, 0);
+	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_OnBitmap.GetHeight() - 1, false, 0);
 
 	x = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 0);
 	y = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 0);
@@ -242,7 +242,7 @@ bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 
 void GOGUIButton::Draw(wxDC* dc)
 {
-	wxBitmap* bmp = m_Button->DisplayInverted() ^ m_Button->IsEngaged() ? m_OnBitmap : m_OffBitmap;
+	GOrgueBitmap& bmp = m_Button->DisplayInverted() ^ m_Button->IsEngaged() ? m_OnBitmap : m_OffBitmap;
 	m_panel->TileBitmap(dc, bmp, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
 	if (m_TextWidth)
 	{

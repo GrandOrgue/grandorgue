@@ -217,11 +217,11 @@ void GOrgueBitmapCache::RegisterBitmap(wxBitmap* bitmap, wxString filename, wxSt
 	m_Masknames.push_back(maskname);
 }
 
-wxBitmap* GOrgueBitmapCache::GetBitmap(wxString filename, wxString maskName)
+GOrgueBitmap GOrgueBitmapCache::GetBitmap(wxString filename, wxString maskName)
 {
 	for(unsigned i = 0; i < m_Filenames.size(); i++)
 		if (m_Filenames[i] == filename && m_Masknames[i] == maskName)
-			return m_Bitmaps[i];
+			return GOrgueBitmap(m_Bitmaps[i]);
 
 	wxImage image, maskimage;
 	
@@ -242,5 +242,5 @@ wxBitmap* GOrgueBitmapCache::GetBitmap(wxString filename, wxString maskName)
 	
 	wxBitmap *bitmap = new wxBitmap(image, -1);
 	RegisterBitmap(bitmap, filename, maskName);
-	return bitmap;
+	return GOrgueBitmap(bitmap);
 }

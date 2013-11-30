@@ -24,6 +24,7 @@
 
 #include <wx/wx.h>
 #include "ptrvector.h"
+#include "GOrgueBitmap.h"
 
 class GrandOrgueFile;
 
@@ -40,7 +41,7 @@ public:
 	virtual ~GOrgueBitmapCache();
 
 	void RegisterBitmap(wxBitmap* bitmap, wxString filename, wxString maskname = wxEmptyString);
-	wxBitmap* GetBitmap(wxString filename, wxString maskName = wxEmptyString);
+	GOrgueBitmap GetBitmap(wxString filename, wxString maskName = wxEmptyString);
 };
 
 #endif

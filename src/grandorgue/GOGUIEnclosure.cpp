@@ -64,8 +64,8 @@ void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
 	}
 
 	for(unsigned i = 1; i < m_Bitmaps.size(); i++)
-		if (m_Bitmaps[0]->GetWidth() != m_Bitmaps[i]->GetWidth() || 
-		    m_Bitmaps[0]->GetHeight() != m_Bitmaps[i]->GetHeight())
+		if (m_Bitmaps[0].GetWidth() != m_Bitmaps[i].GetWidth() || 
+		    m_Bitmaps[0].GetHeight() != m_Bitmaps[i].GetHeight())
 			throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
 
 	int x, y, w, h;
@@ -73,8 +73,8 @@ void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
 	x = m_metrics->GetEnclosureX(this);
 	y = m_metrics->GetEnclosureY();
 
-	w = m_Bitmaps[0]->GetWidth();
-	h = m_Bitmaps[0]->GetHeight();
+	w = m_Bitmaps[0].GetWidth();
+	h = m_Bitmaps[0].GetHeight();
 	m_BoundingRect = wxRect(x, y, w, h);
 
 	m_TileOffsetX = 0;
@@ -116,8 +116,8 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 	}
 
 	for(unsigned i = 1; i < m_Bitmaps.size(); i++)
-		if (m_Bitmaps[0]->GetWidth() != m_Bitmaps[i]->GetWidth() || 
-		    m_Bitmaps[0]->GetHeight() != m_Bitmaps[i]->GetHeight())
+		if (m_Bitmaps[0].GetWidth() != m_Bitmaps[i].GetWidth() || 
+		    m_Bitmaps[0].GetHeight() != m_Bitmaps[i].GetHeight())
 			throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
 
 	int x, y, w, h;
@@ -127,12 +127,12 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 
 	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
 	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
-	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmaps[0]->GetWidth());
-	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmaps[0]->GetHeight());
+	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmaps[0].GetWidth());
+	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmaps[0].GetHeight());
 	m_BoundingRect = wxRect(x, y, w, h);
 
-	m_TileOffsetX = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetX"), 0, m_Bitmaps[0]->GetWidth() - 1, false, 0);
-	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_Bitmaps[0]->GetHeight() - 1, false, 0);
+	m_TileOffsetX = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetX"), 0, m_Bitmaps[0].GetWidth() - 1, false, 0);
+	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_Bitmaps[0].GetHeight() - 1, false, 0);
 
 	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("White"));
 	m_FontSize = cfg.ReadFontSize(ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("7"));
@@ -158,7 +158,7 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 
 void GOGUIEnclosure::Draw(wxDC* dc)
 {
-	wxBitmap* bmp = m_Bitmaps[((m_Bitmaps.size() - 1) * m_enclosure->GetValue()) / 127];
+	GOrgueBitmap& bmp = m_Bitmaps[((m_Bitmaps.size() - 1) * m_enclosure->GetValue()) / 127];
 	m_panel->TileBitmap(dc, bmp, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
 
 	if (m_TextWidth)

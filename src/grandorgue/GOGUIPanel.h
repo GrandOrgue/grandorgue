@@ -24,6 +24,7 @@
 
 #include <wx/wx.h>
 #include "ptrvector.h"
+#include "GOrgueBitmap.h"
 
 class GOGUIControl;
 class GOGUIDisplayMetrics;
@@ -39,7 +40,7 @@ class GOGUIPanel {
 protected:
 	GrandOrgueFile* m_organfile;
 	ptr_vector<GOGUIControl> m_controls;
-	std::vector<wxBitmap*> m_WoodImages;
+	std::vector<GOrgueBitmap> m_WoodImages;
 	wxString m_Name;
 	wxString m_GroupName;
 	GOGUIDisplayMetrics* m_metrics;
@@ -66,10 +67,9 @@ public:
 	void ControlChanged(void* control);
 	void Draw(wxDC* dc);
 	wxString WrapText(wxDC* dc, const wxString& string, int width);
-	void TileBitmap(wxDC* dc, wxBitmap* bitmap, wxRect target, int xo, int yo);
-	void TileWood(wxDC* dc, int which, int sx, int sy, int cx, int cy);
-	wxBitmap* GetWoodImage(unsigned index);
-	wxBitmap* LoadBitmap(wxString filename, wxString maskname);
+	void TileBitmap(wxDC* dc, GOrgueBitmap& bitmap, wxRect target, int xo, int yo);
+	void TileWood(wxDC* dc, unsigned which, int sx, int sy, int cx, int cy);
+	GOrgueBitmap LoadBitmap(wxString filename, wxString maskname);
 	void HandleKey(int key);
 	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	void HandleMouseScroll(int x, int y, int amount);

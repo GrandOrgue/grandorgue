@@ -24,11 +24,12 @@
 
 #include <wx/wx.h>
 #include "GOGUIControl.h"
+#include "GOrgueBitmap.h"
 
 class GOGUIImage : public GOGUIControl
 {
 protected:
-	wxBitmap* m_Bitmap;
+	GOrgueBitmap m_Bitmap;
 	unsigned m_TileOffsetX;
 	unsigned m_TileOffsetY;
 

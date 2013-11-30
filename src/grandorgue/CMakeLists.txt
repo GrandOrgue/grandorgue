@@ -204,6 +204,7 @@ GOSoundResample.cpp
 GOSoundSamplerPool.cpp
 GOSoundThread.cpp
 GOrgueWave.cpp
+GOrgueBitmap.cpp
 GOrgueCache.cpp
 GOrgueCacheWriter.cpp
 GOrgueCombinationDefinition.cpp

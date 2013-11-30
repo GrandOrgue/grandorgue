@@ -91,7 +91,7 @@ const wxString& GOGUIPanel::GetGroupName()
 	return m_GroupName;
 }
 
-wxBitmap* GOGUIPanel::LoadBitmap(wxString filename, wxString maskname)
+GOrgueBitmap GOGUIPanel::LoadBitmap(wxString filename, wxString maskname)
 {
 	return m_organfile->GetBitmapCache().GetBitmap(filename, maskname);
 }
@@ -537,11 +537,6 @@ void GOGUIPanel::Modified()
 	m_organfile->Modified();
 }
 
-wxBitmap* GOGUIPanel::GetWoodImage(unsigned index)
-{
-	return m_WoodImages[index];
-}
-
 void GOGUIPanel::HandleKey(int key)
 {
 	switch(key)
@@ -572,24 +567,18 @@ void GOGUIPanel::HandleMouseScroll(int x, int y, int amount)
 			return;
 }
 
-void GOGUIPanel::TileBitmap(wxDC* dc, wxBitmap* bitmap, wxRect target, int xo, int yo)
+void GOGUIPanel::TileBitmap(wxDC* dc, GOrgueBitmap& bitmap, wxRect target, int xo, int yo)
 {
 	dc->SetClippingRegion(target);
-	for (int y = target.GetY() - yo; y < target.GetBottom(); y += bitmap->GetHeight())
-		for (int x = target.GetX() - xo; x < target.GetRight(); x += bitmap->GetWidth())
-			dc->DrawBitmap(*bitmap, x, y, true);
+	for (int y = target.GetY() - yo; y < target.GetBottom(); y += bitmap.GetHeight())
+		for (int x = target.GetX() - xo; x < target.GetRight(); x += bitmap.GetWidth())
+			dc->DrawBitmap(bitmap.GetData(), x, y, true);
 	dc->DestroyClippingRegion();
 }
 
-void GOGUIPanel::TileWood(wxDC* dc, int which, int sx, int sy, int cx, int cy)
+void GOGUIPanel::TileWood(wxDC* dc, unsigned index, int sx, int sy, int cx, int cy)
 {
-	int x, y;
-	wxBitmap *bmp = GetWoodImage(which - 1);
-	dc->SetClippingRegion(sx, sy, cx, cy);
-	for (y = sy & 0xFFFFFF00; y < sy + cy; y += 256)
-		for (x = sx & 0xFFFFFF00; x < sx + cx; x += 256)
-			dc->DrawBitmap(*bmp, x, y, false);
-	dc->DestroyClippingRegion();
+	TileBitmap(dc, m_WoodImages[index], wxRect(sx, sy, cx, cy), 0, 0);
 }
 
 wxString GOGUIPanel::WrapText(wxDC* dc, const wxString& string, int width)

@@ -19,39 +19,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOGUIMANUAL_H
-#define GOGUIMANUAL_H
-
-#include <vector>
-#include "GOGUIControl.h"
 #include "GOrgueBitmap.h"
+#include <wx/wx.h>
 
-class GOrgueManual;
-
-class GOGUIManual : public GOGUIControl
+GOrgueBitmap::GOrgueBitmap() :
+	m_bmp(NULL)
 {
-private:
-	typedef struct {
-		unsigned MidiNumber;
-		bool IsSharp;
-		wxRect Rect;
-		wxRect MouseRect;
-		GOrgueBitmap OnBitmap;
-		GOrgueBitmap OffBitmap;
-	} KeyInfo;
+}
 
-	GOrgueManual* m_manual;
-	unsigned m_ManualNumber;
-	std::vector<KeyInfo> m_Keys;
+GOrgueBitmap::GOrgueBitmap(wxBitmap* bmp) :
+	m_bmp(bmp)
+{
+}
 
-public:
-	GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number);
+const wxBitmap& GOrgueBitmap::GetData()
+{
+	return *m_bmp;
+}
 
-	void Init(GOrgueConfigReader& cfg, wxString group);
-	void Load(GOrgueConfigReader& cfg, wxString group);
+unsigned GOrgueBitmap::GetWidth()
+{
+	return m_bmp->GetWidth();
+}
 
-	void Draw(wxDC* dc);
-	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
-};
-
-#endif
+unsigned GOrgueBitmap::GetHeight()
+{
+	return m_bmp->GetHeight();
+}
