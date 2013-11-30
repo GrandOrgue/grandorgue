@@ -39,7 +39,7 @@ class GOGUIPanel {
 protected:
 	GrandOrgueFile* m_organfile;
 	ptr_vector<GOGUIControl> m_controls;
-	ptr_vector<wxBitmap> m_WoodImages;
+	std::vector<wxBitmap*> m_WoodImages;
 	wxString m_Name;
 	wxString m_GroupName;
 	GOGUIDisplayMetrics* m_metrics;

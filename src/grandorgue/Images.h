@@ -24,8 +24,6 @@
 
 #include <wx/bitmap.h>
 
-typedef wxBitmap (*GetImage_Func)();
-
 wxBitmap GetImage_draw1off();
 wxBitmap GetImage_draw1on();
 wxBitmap GetImage_draw2off();
@@ -196,10 +194,6 @@ wxBitmap GetImage_PedalSharpBlackUp();
 wxBitmap GetImage_PedalSharpWoodDown();
 wxBitmap GetImage_PedalSharpWoodUp();
 
-
 wxBitmap GetImage_GOIcon();
-
-unsigned GetImageCount_Wood();
-wxBitmap GetImage_Wood(unsigned index);
 
 #endif
