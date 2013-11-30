@@ -58,8 +58,8 @@ void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned DispImag
 	int x, y, w, h;
 	x = m_DispXpos;
 	y = m_DispYpos;
-	w = m_Bitmap->GetWidth();
-	h = m_Bitmap->GetHeight();
+	w = m_Bitmap.GetWidth();
+	h = m_Bitmap.GetHeight();
 	m_BoundingRect = wxRect(x, y, w, h);
 
 	m_TileOffsetX = 0;
@@ -126,12 +126,12 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 	int x, y, w, h;
 	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, m_DispXpos);
 	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, m_DispYpos);
-	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmap->GetWidth());
-	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmap->GetHeight());
+	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmap.GetWidth());
+	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmap.GetHeight());
 	m_BoundingRect = wxRect(x, y, w, h);
 
-	m_TileOffsetX = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetX"), 0, m_Bitmap->GetWidth() - 1, false, 0);
-	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_Bitmap->GetHeight() - 1, false, 0);
+	m_TileOffsetX = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetX"), 0, m_Bitmap.GetWidth() - 1, false, 0);
+	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_Bitmap.GetHeight() - 1, false, 0);
 
 	x = cfg.ReadInteger(ODFSetting, group, wxT("TextRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 1);
 	y = cfg.ReadInteger(ODFSetting, group, wxT("TextRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 1);

@@ -24,6 +24,7 @@
 
 #include <wx/wx.h>
 #include "GOGUIControl.h"
+#include "GOrgueBitmap.h"
 
 class GOrgueButton;
 
@@ -34,8 +35,8 @@ protected:
 	GOrgueButton* m_Button;
 	wxRect m_MouseRect;
 	unsigned m_Radius;
-	wxBitmap* m_OnBitmap;
-	wxBitmap* m_OffBitmap;
+	GOrgueBitmap m_OnBitmap;
+	GOrgueBitmap m_OffBitmap;
 	unsigned m_FontSize;
 	wxString m_FontName;
 	wxColor m_TextColor;

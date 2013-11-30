@@ -23,6 +23,7 @@
 #define GOGUILABEL_H
 
 #include "GOGUIControl.h"
+#include "GOrgueBitmap.h"
 
 class GOrgueLabel;
 
@@ -32,7 +33,7 @@ private:
 	unsigned m_DispXpos;
 	unsigned m_DispYpos;
 	GOrgueLabel* m_Label;
-	wxBitmap* m_Bitmap;
+	GOrgueBitmap m_Bitmap;
 	unsigned m_FontSize;
 	wxString m_FontName;
 	wxString m_Text;

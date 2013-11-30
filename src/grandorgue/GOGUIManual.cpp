@@ -47,7 +47,8 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 
 	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
 	unsigned x = 0, y = 0;
-	int width = 0, height = 1;
+	int width = 0;
+	unsigned height = 1;
 
 	m_Keys.resize(m_manual->GetNumberOfAccessibleKeys());
 	for(unsigned i = 0; i < m_Keys.size(); i++)
@@ -125,22 +126,22 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 		m_Keys[i].OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
 		m_Keys[i].OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
 
-		if (m_Keys[i].OnBitmap->GetWidth() != m_Keys[i].OffBitmap->GetWidth() ||
-		    m_Keys[i].OnBitmap->GetHeight() != m_Keys[i].OffBitmap->GetHeight())
+		if (m_Keys[i].OnBitmap.GetWidth() != m_Keys[i].OffBitmap.GetWidth() ||
+		    m_Keys[i].OnBitmap.GetHeight() != m_Keys[i].OffBitmap.GetHeight())
 			throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
 
-		key_width = m_Keys[i].OnBitmap->GetWidth();
+		key_width = m_Keys[i].OnBitmap.GetWidth();
 		key_offset = 0;
 		if (m_Keys[i].IsSharp && m_ManualNumber)
 		{
 			key_width = 0;
-			key_offset = - m_Keys[i].OnBitmap->GetWidth() / 2;
+			key_offset = - m_Keys[i].OnBitmap.GetWidth() / 2;
 		} else if (!m_ManualNumber && ((key_nb % 12) == 4 || (key_nb % 12) == 11))
 		{
 			key_width *= 2;
 		}
 
-		m_Keys[i].Rect = wxRect(x + key_offset, y, m_Keys[i].OnBitmap->GetWidth(), m_Keys[i].OnBitmap->GetHeight());
+		m_Keys[i].Rect = wxRect(x + key_offset, y, m_Keys[i].OnBitmap.GetWidth(), m_Keys[i].OnBitmap.GetHeight());
 
 		unsigned mouse_x = 0;
 		unsigned mouse_y = 0;
@@ -148,8 +149,8 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 		unsigned mouse_h = m_Keys[i].Rect.GetHeight() - mouse_y;
 		m_Keys[i].MouseRect = wxRect(m_Keys[i].Rect.GetX() + mouse_x, m_Keys[i].Rect.GetY() + mouse_y, mouse_w, mouse_h);
 
-		if (height < m_Keys[i].OnBitmap->GetHeight())
-			height = m_Keys[i].OnBitmap->GetHeight();
+		if (height < m_Keys[i].OnBitmap.GetHeight())
+			height = m_Keys[i].OnBitmap.GetHeight();
 		if (width < m_Keys[i].Rect.GetRight())
 			width = m_Keys[i].Rect.GetRight();
 		x += key_width;
@@ -186,7 +187,8 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 
 	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
 	unsigned x = 0, y = 0;
-	int width = 0, height = 1;
+	int width = 0;
+	unsigned height = 1;
 
 	m_Keys.resize(cfg.ReadInteger(ODFSetting, group, wxT("DisplayKeys"), 1, m_manual->GetNumberOfAccessibleKeys(), false, m_manual->GetNumberOfAccessibleKeys()));
 	for(unsigned i = 0; i < m_Keys.size(); i++)
@@ -271,16 +273,16 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		m_Keys[i].OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
 		m_Keys[i].OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
 
-		if (m_Keys[i].OnBitmap->GetWidth() != m_Keys[i].OffBitmap->GetWidth() ||
-		    m_Keys[i].OnBitmap->GetHeight() != m_Keys[i].OffBitmap->GetHeight())
+		if (m_Keys[i].OnBitmap.GetWidth() != m_Keys[i].OffBitmap.GetWidth() ||
+		    m_Keys[i].OnBitmap.GetHeight() != m_Keys[i].OffBitmap.GetHeight())
 			throw wxString::Format(_("bitmap size does not match for '%s'"), group.c_str());
 
-		key_width = m_Keys[i].OnBitmap->GetWidth();
+		key_width = m_Keys[i].OnBitmap.GetWidth();
 		key_offset = 0;
 		if (m_Keys[i].IsSharp && m_ManualNumber)
 		{
 			key_width = 0;
-			key_offset = - m_Keys[i].OnBitmap->GetWidth() / 2;
+			key_offset = - m_Keys[i].OnBitmap.GetWidth() / 2;
 		} else if (!m_ManualNumber && ((key_nb % 12) == 4 || (key_nb % 12) == 11))
 		{
 			key_width *= 2;
@@ -292,7 +294,7 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		key_width = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dWidth"), i + 1), 0, 500, false, key_width);
 		key_offset = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dOffset"), i + 1), -500, 500, false, key_offset);
 
-		m_Keys[i].Rect = wxRect(x + key_offset, y, m_Keys[i].OnBitmap->GetWidth(), m_Keys[i].OnBitmap->GetHeight());
+		m_Keys[i].Rect = wxRect(x + key_offset, y, m_Keys[i].OnBitmap.GetWidth(), m_Keys[i].OnBitmap.GetHeight());
 
 		unsigned mouse_x = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dMouseRectLeft"), i + 1), 0, m_Keys[i].Rect.GetWidth() - 1, false, 0);
 		unsigned mouse_y = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dMouseRectTop"), i + 1),  0, m_Keys[i].Rect.GetHeight() - 1, false, 0);
@@ -300,8 +302,8 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		unsigned mouse_h = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Key%03dMouseRectHeight"), i + 1),  1, m_Keys[i].Rect.GetHeight() - mouse_y, false, m_Keys[i].Rect.GetHeight() - mouse_y);
 		m_Keys[i].MouseRect = wxRect(m_Keys[i].Rect.GetX() + mouse_x, m_Keys[i].Rect.GetY() + mouse_y, mouse_w, mouse_h);
 
-		if (height < m_Keys[i].OnBitmap->GetHeight())
-			height = m_Keys[i].OnBitmap->GetHeight();
+		if (height < m_Keys[i].OnBitmap.GetHeight())
+			height = m_Keys[i].OnBitmap.GetHeight();
 		if (width < m_Keys[i].Rect.GetRight())
 			width = m_Keys[i].Rect.GetRight();
 		x += key_width;
@@ -328,8 +330,8 @@ void GOGUIManual::Draw(wxDC* dc)
 {
 	for (unsigned i = 0; i < m_Keys.size(); i++)
 	{
-		wxBitmap* bitmap = m_manual->IsKeyDown(m_Keys[i].MidiNumber) ? m_Keys[i].OnBitmap : m_Keys[i].OffBitmap;
-		dc->DrawBitmap(*bitmap, m_Keys[i].Rect.GetX(), m_Keys[i].Rect.GetY(), true);
+		GOrgueBitmap& bitmap = m_manual->IsKeyDown(m_Keys[i].MidiNumber) ? m_Keys[i].OnBitmap : m_Keys[i].OffBitmap;
+		dc->DrawBitmap(bitmap.GetData(), m_Keys[i].Rect.GetX(), m_Keys[i].Rect.GetY(), true);
 	}
 	GOGUIControl::Draw(dc);
 }

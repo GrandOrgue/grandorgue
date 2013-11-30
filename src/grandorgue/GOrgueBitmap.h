@@ -19,39 +19,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOGUIMANUAL_H
-#define GOGUIMANUAL_H
+#ifndef GORGUEBITMAP_H
+#define GORGUEBITMAP_H
 
-#include <vector>
-#include "GOGUIControl.h"
-#include "GOrgueBitmap.h"
+class wxBitmap;
 
-class GOrgueManual;
-
-class GOGUIManual : public GOGUIControl
+class GOrgueBitmap
 {
 private:
-	typedef struct {
-		unsigned MidiNumber;
-		bool IsSharp;
-		wxRect Rect;
-		wxRect MouseRect;
-		GOrgueBitmap OnBitmap;
-		GOrgueBitmap OffBitmap;
-	} KeyInfo;
-
-	GOrgueManual* m_manual;
-	unsigned m_ManualNumber;
-	std::vector<KeyInfo> m_Keys;
+	wxBitmap* m_bmp;
 
 public:
-	GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number);
+	GOrgueBitmap();
+	GOrgueBitmap(wxBitmap* bmp);
 
-	void Init(GOrgueConfigReader& cfg, wxString group);
-	void Load(GOrgueConfigReader& cfg, wxString group);
+	unsigned GetWidth();
+	unsigned GetHeight();
 
-	void Draw(wxDC* dc);
-	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
+	const wxBitmap& GetData();
 };
 
 #endif

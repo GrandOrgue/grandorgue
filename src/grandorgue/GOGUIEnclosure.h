@@ -24,6 +24,7 @@
 
 #include <vector>
 #include "GOGUIControl.h"
+#include "GOrgueBitmap.h"
 
 class GOrgueEnclosure;
 
@@ -43,7 +44,7 @@ private:
 	int m_MouseAxisEnd;
 	unsigned m_TileOffsetX;
 	unsigned m_TileOffsetY;
-	std::vector<wxBitmap*> m_Bitmaps;
+	std::vector<GOrgueBitmap> m_Bitmaps;
 	
 public:
 	GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb);
