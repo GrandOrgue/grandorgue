@@ -23,7 +23,6 @@
 
 #include <math.h>
 #include <wx/filename.h>
-#include <wx/progdlg.h>
 #include <wx/stream.h>
 #include <wx/wfstream.h>
 
@@ -46,6 +45,7 @@
 #include "GOrguePath.h"
 #include "GOrguePipe.h"
 #include "GOrguePiston.h"
+#include "GOrgueProgressDialog.h"
 #include "GOrguePushbutton.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueSetter.h"
@@ -169,21 +169,9 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 
-bool GrandOrgueFile::TryLoad
-	(GOrgueCache* cache
-	,wxString& error
-	)
+bool GrandOrgueFile::TryLoad(GOrgueProgressDialog* dlg, GOrgueCache* cache, wxString& error)
 {
-	long last = wxGetUTCTime();
 	void* dummy = NULL;
-	wxProgressDialog dlg
-		(_("Loading sample set")
-		,_("Parsing sample set definition file")
-		,32768
-		,0
-		,wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME
-		);
-	dlg.Update(0);
 
 	try
 	{
@@ -194,6 +182,7 @@ bool GrandOrgueFile::TryLoad
 		/* Figure out list of pipes to load */
 		std::vector<GOrgueCacheObject*> objects;
 		GenerateCacheObjectList(objects);
+		dlg->Reset(objects.size());
 
 		/* Load pipes */
 		unsigned nb_loaded_obj = 0;
@@ -218,11 +207,7 @@ bool GrandOrgueFile::TryLoad
 			}
 			nb_loaded_obj++;
 
-			if (last == wxGetUTCTime())
-					continue;
-
-			last = wxGetUTCTime();
-			if (!dlg.Update	((nb_loaded_obj << 15) / (objects.size() + 1), obj->GetLoadTitle()))
+			if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
 			{
 				FREE_AND_NULL(dummy);
 				GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
@@ -492,8 +477,9 @@ wxString GrandOrgueFile::GenerateCacheFileName()
 	return filename;
 }
 
-wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
+wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, const wxString& file2)
 {
+	dlg->Setup(1, _("Loading sample set") ,_("Parsing sample set definition file"));
 	m_odf = GONormalizePath(file);
 	m_path = GOGetPath(m_odf);
 	m_SettingFilename = GenerateSettingFileName();
@@ -617,7 +603,7 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 			if (cache_ok)
 			{
-				if (!TryLoad(&reader, load_error))
+				if (!TryLoad(dlg, &reader, load_error))
 				{
 					cache_ok = false;
 					wxLogError(_("Cache load failure: %s"), load_error.c_str());
@@ -634,11 +620,11 @@ wxString GrandOrgueFile::Load(const wxString& file, const wxString& file2)
 
 		if (!cache_ok)
 		{
-			if (!TryLoad(NULL, load_error))
+			if (!TryLoad(dlg, NULL, load_error))
 				return load_error;
 
 			if (m_Settings.GetManageCache() && m_Cacheable)
-				UpdateCache(m_Settings.GetCompressCache());
+				UpdateCache(dlg, m_Settings.GetCompressCache());
 		}
 		SetTemperament(m_Temperament);
 	}
@@ -693,7 +679,7 @@ bool GrandOrgueFile::CachePresent()
 	return wxFileExists(m_CacheFilename);
 }
 
-bool GrandOrgueFile::UpdateCache(bool compress)
+bool GrandOrgueFile::UpdateCache(GOrgueProgressDialog* dlg, bool compress)
 {
 	DeleteCache();
 	/* Figure out the list of pipes to save */
@@ -701,9 +687,7 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 	std::vector<GOrgueCacheObject*> objects;
 	GenerateCacheObjectList(objects);
 
-	wxProgressDialog dlg(_("Creating sample cache"), wxEmptyString, 32768, 0, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
-	long last = wxGetUTCTime();
-	dlg.Update(0);
+	dlg->Setup(objects.size(), _("Creating sample cache"));
 
 	wxFileOutputStream file(m_CacheFilename);
 	GOrgueCacheWriter writer(file, compress);
@@ -725,12 +709,8 @@ bool GrandOrgueFile::UpdateCache(bool compress)
 			wxLogError(_("Save of %s to the cache failed"), obj->GetLoadTitle().c_str());
 		}
 		nb_saved_objs++;
-				
-		if (last == wxGetUTCTime())
-			continue;
 
-		last = wxGetUTCTime();
-		if (!dlg.Update ((nb_saved_objs << 15) / (objects.size() + 1), obj->GetLoadTitle()))
+		if (!dlg->Update (nb_saved_objs, obj->GetLoadTitle()))
 		{
 			writer.Close();
 			DeleteCache();

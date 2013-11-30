@@ -90,7 +90,7 @@ public:
 	void Abort();
 	void PreparePlayback();
 	wxString GetFilename();
-	wxString GetLoadTitle();
+	const wxString& GetLoadTitle();
 	bool IsReference();
 	GOrguePipeConfig& GetPipeConfig();
 	void SetTemperament(const GOrgueTemperament& temperament);

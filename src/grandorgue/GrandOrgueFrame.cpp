@@ -32,6 +32,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
+#include "GOrgueProgressDialog.h"
 #include "GOrgueProperties.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
@@ -360,8 +361,9 @@ void GOrgueFrame::Open(wxString file)
 	GOMutexLocker m_locker(m_mutex, true);
 	if(!m_locker.IsLocked())
 		return;
+	GOrgueProgressDialog dlg;
 	m_doc = new GOrgueDocument(&m_Sound);
-	m_doc->Load(file);
+	m_doc->Load(&dlg, file);
 }
 
 GOrgueDocument* GOrgueFrame::GetDocument()
@@ -563,9 +565,10 @@ void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 	wxFileDialog dlg(this, _("Import Settings"), m_Settings.GetSettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (dlg.ShowModal() == wxID_OK)
 	{
+		GOrgueProgressDialog pdlg;
 		m_Settings.SetSettingPath(dlg.GetDirectory());
 		wxString file = doc->GetOrganFile()->GetODFFilename();
-		doc->Import(file, dlg.GetPath());
+		doc->Import(&pdlg, file, dlg.GetPath());
 	}
 }
 
@@ -630,7 +633,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	if (!m_locker.IsLocked())
 		return;
 	if (doc && doc->GetOrganFile())
-		res = doc->GetOrganFile()->UpdateCache(m_Settings.GetCompressCache());
+		res = doc->GetOrganFile()->UpdateCache(NULL, m_Settings.GetCompressCache());
 	if (!res)
 	{
 		wxLogError(_("Creating the cache failed"));
@@ -683,8 +686,9 @@ void GOrgueFrame::OnRevert(wxCommandEvent& event)
 	if (wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), wxT(APP_NAME), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
 	{
 		GOrgueDocument* doc = GetDocument();
+		GOrgueProgressDialog dlg;
 		if (doc)
-			doc->Revert();
+			doc->Revert(&dlg);
 	}
 }
 

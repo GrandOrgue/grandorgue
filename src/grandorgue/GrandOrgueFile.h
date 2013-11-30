@@ -41,6 +41,7 @@ class GOrgueMidi;
 class GOrgueMidiEvent;
 class GOrgueMidiListener;
 class GOrguePiston;
+class GOrgueProgressDialog;
 class GOrguePushbutton;
 class GOrgueRank;
 class GOrgueSetter;
@@ -123,7 +124,7 @@ private:
 
 	void ReadOrganFile(GOrgueConfigReader& cfg);
 	void ReadCombinations(GOrgueConfigReader& cfg);
-	bool TryLoad(GOrgueCache* cache, wxString& error);
+	bool TryLoad(GOrgueProgressDialog* dlg, GOrgueCache* cache, wxString& error);
 	void GenerateCacheHash(unsigned char hash[20]);
 	wxString GenerateSettingFileName();
 	wxString GenerateCacheFileName();
@@ -134,13 +135,13 @@ private:
 public:
 
 	GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings);
-	wxString Load(const wxString& odf, const wxString& cmb = wxEmptyString);
+	wxString Load(GOrgueProgressDialog* dlg, const wxString& odf, const wxString& cmb = wxEmptyString);
 	void LoadCombination(const wxString& cmb);
 	bool Save();
 	bool Export(const wxString& cmb);
 	bool CachePresent();
 	bool IsCacheable();
-	bool UpdateCache(bool compress);
+	bool UpdateCache(GOrgueProgressDialog* dlg, bool compress);
 	void DeleteCache();
 	void DeleteSettings();;
 	void Abort();

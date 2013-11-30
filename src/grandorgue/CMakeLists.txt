@@ -244,6 +244,7 @@ GOrguePath.cpp
 GOrguePipe.cpp
 GOrguePipeConfig.cpp
 GOrguePiston.cpp
+GOrgueProgressDialog.cpp
 GOrgueProperties.cpp
 GOrguePushbutton.cpp
 GOrgueRank.cpp
