@@ -59,12 +59,12 @@ void GOrgueDocument::Modify(bool modified)
 	m_modified = modified;
 }
 
-bool GOrgueDocument::Load(const wxString& odf)
+bool GOrgueDocument::Load(GOrgueProgressDialog* dlg, const wxString& odf)
 {
-	return Import(odf, wxEmptyString);
+	return Import(dlg, odf, wxEmptyString);
 }
 
-bool GOrgueDocument::Import(const wxString& odf, const wxString& cmb)
+bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const wxString& odf, const wxString& cmb)
 {
 	wxBusyCursor busy;
 
@@ -77,7 +77,7 @@ bool GOrgueDocument::Import(const wxString& odf, const wxString& cmb)
 		return false;
 
 	m_organfile = new GrandOrgueFile(this, m_sound.GetSettings());
-	wxString error = m_organfile->Load(odf, cmb);
+	wxString error = m_organfile->Load(dlg, odf, cmb);
 	if (!error.IsEmpty())
 	{
 		if (error != wxT("!"))
@@ -119,9 +119,18 @@ bool GOrgueDocument::Import(const wxString& odf, const wxString& cmb)
 
 bool GOrgueDocument::ImportCombination(const wxString& cmb)
 {
+	if (!m_organfile)
+		return false;
 	m_organfile->LoadCombination(cmb);
 	m_organfile->Modified();
 	return true;
+}
+
+bool GOrgueDocument::UpdateCache(GOrgueProgressDialog* dlg, bool compress)
+{
+	if (!m_organfile)
+		return false;
+	return m_organfile->UpdateCache(dlg, compress);
 }
 
 void GOrgueDocument::ShowPanel(unsigned id)
@@ -145,12 +154,12 @@ void GOrgueDocument::SyncState()
 			((GOrguePanelView*)m_Windows[i].window)->SyncState();
 }
 
-bool GOrgueDocument::Revert()
+bool GOrgueDocument::Revert(GOrgueProgressDialog* dlg)
 {
 	if (m_organfile)
 		m_organfile->DeleteSettings();
 	Modify(false);
-	return Load(m_organfile->GetODFFilename());
+	return Load(dlg, m_organfile->GetODFFilename());
 }
 
 bool GOrgueDocument::Save()

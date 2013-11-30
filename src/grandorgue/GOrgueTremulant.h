@@ -63,7 +63,7 @@ public:
 	bool LoadCache(GOrgueCache& cache);
 	bool SaveCache(GOrgueCacheWriter& cache);
 	void UpdateHash(SHA_CTX& ctx);
-	wxString GetLoadTitle();
+	const wxString& GetLoadTitle();
 };
 
 #endif /* GORGUETREMULANT_H_ */

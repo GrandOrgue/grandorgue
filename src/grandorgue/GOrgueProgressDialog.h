@@ -1,5 +1,5 @@
 /*
- * GrandOrgue - free pipe organ simulator
+ * GrandOrgue - a free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
  * Copyright 2009-2013 GrandOrgue contributors (see AUTHORS)
@@ -19,23 +19,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUECACHEOBJECT_H
-#define GORGUECACHEOBJECT_H
+#ifndef GRANDORGUEPROGRESSDIALOG_H
+#define GRANDORGUEPROGRESSDIALOG_H
 
 #include <wx/wx.h>
-#include "contrib/sha1.h"
-class GOrgueCache;
-class GOrgueCacheWriter;
+class wxProgressDialog;
 
-class GOrgueCacheObject
+class GOrgueProgressDialog
 {
+private:
+	wxProgressDialog* m_dlg;
+	long m_last;
+	long m_const;
+	long m_value;
+	long m_max;
+
 public:
-	virtual void Initialize() = 0;
-	virtual void LoadData() = 0;
-	virtual bool LoadCache(GOrgueCache& cache) = 0;
-	virtual bool SaveCache(GOrgueCacheWriter& cache) = 0;
-	virtual void UpdateHash(SHA_CTX& ctx) = 0;
-	virtual const wxString& GetLoadTitle() = 0;
+	GOrgueProgressDialog();
+	~GOrgueProgressDialog();
+
+	void Setup(long max, const wxString& title, const wxString& msg = wxEmptyString);
+	void Reset(long max, const wxString& msg = wxEmptyString);
+
+	bool Update(unsigned value, const wxString& msg);
 };
 
 #endif

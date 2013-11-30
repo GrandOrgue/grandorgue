@@ -73,7 +73,7 @@ void GOrgueTremulant::UpdateHash(SHA_CTX& ctx)
 {
 }
 
-wxString GOrgueTremulant::GetLoadTitle()
+const wxString& GOrgueTremulant::GetLoadTitle()
 {
 	return m_Name;
 }

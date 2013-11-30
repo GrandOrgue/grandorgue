@@ -30,6 +30,7 @@ class GOrgueKeyReceiver;
 class GOrgueMidiEvent;
 class GOrgueMidiReceiver;
 class GOrgueMidiSender;
+class GOrgueProgressDialog;
 class GrandOrgueFile;
 class GOrgueSound;
 class GOrgueView;
@@ -69,12 +70,13 @@ public:
 	void ShowOrganDialog();
 	void ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
 
-	bool Load(const wxString& odf);
+	bool Load(GOrgueProgressDialog* dlg, const wxString& odf);
 	bool Save();
 	bool Export(const wxString& cmb);
-	bool Import(const wxString& odf, const wxString& cmb);
+	bool Import(GOrgueProgressDialog* dlg, const wxString& odf, const wxString& cmb);
 	bool ImportCombination(const wxString& cmb);
-	bool Revert();
+	bool Revert(GOrgueProgressDialog* dlg);
+	bool UpdateCache(GOrgueProgressDialog* dlg, bool compress);
 
 	bool WindowExists(WindowType type, void* data);
 	bool showWindow(WindowType type, void* data);

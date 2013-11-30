@@ -509,7 +509,7 @@ wxString GOrguePipe::GetFilename()
 	return m_Filename;
 }
 
-wxString GOrguePipe::GetLoadTitle()
+const wxString& GOrguePipe::GetLoadTitle()
 {
 	return m_Filename;
 }
