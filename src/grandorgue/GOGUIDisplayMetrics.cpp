@@ -80,22 +80,22 @@ GOGUIDisplayMetrics::~GOGUIDisplayMetrics()
 {
 }
 
-int GOGUIDisplayMetrics::GetDrawstopWidth()
+unsigned GOGUIDisplayMetrics::GetDrawstopWidth()
 {
 	return m_DrawStopWidth;
 }
 
-int GOGUIDisplayMetrics::GetDrawstopHeight()
+unsigned GOGUIDisplayMetrics::GetDrawstopHeight()
 {
 	return m_DrawStopHeight;
 }
 
-int GOGUIDisplayMetrics::GetButtonWidth()
+unsigned GOGUIDisplayMetrics::GetButtonWidth()
 {
 	return m_ButtonWidth;
 }
 
-int GOGUIDisplayMetrics::GetButtonHeight()
+unsigned GOGUIDisplayMetrics::GetButtonHeight()
 {
 	return m_ButtonHeight;
 }
@@ -104,52 +104,52 @@ int GOGUIDisplayMetrics::GetButtonHeight()
  * BASIC EXPORTS STRAIGHT FROM ODF
  */
 
-int GOGUIDisplayMetrics::NumberOfExtraDrawstopRowsToDisplay()
+unsigned GOGUIDisplayMetrics::NumberOfExtraDrawstopRowsToDisplay()
 {
 	return m_DispExtraDrawstopRows;
 }
 
-int GOGUIDisplayMetrics::NumberOfExtraDrawstopColsToDisplay()
+unsigned GOGUIDisplayMetrics::NumberOfExtraDrawstopColsToDisplay()
 {
 	return m_DispExtraDrawstopCols;
 }
 
-int GOGUIDisplayMetrics::NumberOfDrawstopColsToDisplay()
+unsigned GOGUIDisplayMetrics::NumberOfDrawstopColsToDisplay()
 {
 	return m_DispDrawstopCols;
 }
 
-int GOGUIDisplayMetrics::NumberOfButtonCols()
+unsigned GOGUIDisplayMetrics::NumberOfButtonCols()
 {
 	return m_DispButtonCols;
 }
 
-int GOGUIDisplayMetrics::NumberOfExtraButtonRows()
+unsigned GOGUIDisplayMetrics::NumberOfExtraButtonRows()
 {
 	return m_DispExtraButtonRows;
 }
 
-int GOGUIDisplayMetrics::GetDrawstopBackgroundImageNum()
+unsigned GOGUIDisplayMetrics::GetDrawstopBackgroundImageNum()
 {
 	return m_DispDrawstopBackgroundImageNum;
 }
 
-int GOGUIDisplayMetrics::GetConsoleBackgroundImageNum()
+unsigned GOGUIDisplayMetrics::GetConsoleBackgroundImageNum()
 {
 	return m_DispConsoleBackgroundImageNum;
 }
 
-int GOGUIDisplayMetrics::GetDrawstopInsetBackgroundImageNum()
+unsigned GOGUIDisplayMetrics::GetDrawstopInsetBackgroundImageNum()
 {
 	return m_DispDrawstopInsetBackgroundImageNum;
 }
 
-int GOGUIDisplayMetrics::GetKeyVertBackgroundImageNum()
+unsigned GOGUIDisplayMetrics::GetKeyVertBackgroundImageNum()
 {
 	return m_DispKeyVertBackgroundImageNum;
 }
 
-int GOGUIDisplayMetrics::GetKeyHorizBackgroundImageNum()
+unsigned GOGUIDisplayMetrics::GetKeyHorizBackgroundImageNum()
 {
 	return m_DispKeyHorizBackgroundImageNum;
 }
@@ -192,12 +192,12 @@ wxFont GOGUIDisplayMetrics::GetGroupLabelFont()
 	return font;
 }
 
-int GOGUIDisplayMetrics::GetScreenWidth()
+unsigned GOGUIDisplayMetrics::GetScreenWidth()
 {
 	return m_DispScreenSizeHoriz;
 }
 
-int GOGUIDisplayMetrics::GetScreenHeight()
+unsigned GOGUIDisplayMetrics::GetScreenHeight()
 {
 	return m_DispScreenSizeVert;
 }
@@ -206,7 +206,7 @@ int GOGUIDisplayMetrics::GetScreenHeight()
  * COMPUTED VALUES FROM ODF PARAMETERS
  */
 
-int GOGUIDisplayMetrics::GetJambLeftRightHeight()
+unsigned GOGUIDisplayMetrics::GetJambLeftRightHeight()
 {
 	return (m_DispDrawstopRows + 1) * m_DrawStopHeight;
 }
@@ -224,12 +224,12 @@ int GOGUIDisplayMetrics::GetJambLeftRightWidth()
 	return jamblrw;
 }
 
-int GOGUIDisplayMetrics::GetJambTopHeight()
+unsigned GOGUIDisplayMetrics::GetJambTopHeight()
 {
 	return m_DispExtraDrawstopRows * m_DrawStopHeight;
 }
 
-int GOGUIDisplayMetrics::GetJambTopWidth()
+unsigned GOGUIDisplayMetrics::GetJambTopWidth()
 {
 	return m_DispExtraDrawstopCols * m_DrawStopWidth;
 }
@@ -239,12 +239,12 @@ int GOGUIDisplayMetrics::GetJambTopX()
 	return (m_DispScreenSizeHoriz - GetJambTopWidth()) >> 1;
 }
 
-int GOGUIDisplayMetrics::GetPistonTopHeight()
+unsigned GOGUIDisplayMetrics::GetPistonTopHeight()
 {
 	return m_DispExtraButtonRows * m_ButtonHeight;
 }
 
-int GOGUIDisplayMetrics::GetPistonWidth()
+unsigned GOGUIDisplayMetrics::GetPistonWidth()
 {
 	return m_DispButtonCols * m_ButtonWidth;
 }
@@ -273,7 +273,7 @@ int GOGUIDisplayMetrics::GetCenterY()
 	return m_CenterY;
 }
 
-int GOGUIDisplayMetrics::GetEnclosureWidth()
+unsigned GOGUIDisplayMetrics::GetEnclosureWidth()
 {
 	return m_EnclosureWidth * m_nb_enclosures;
 }
@@ -441,7 +441,7 @@ void GOGUIDisplayMetrics::Update()
 			if (m_DispExtraPedalButtonRow)
 				m_CenterY -= m_ButtonHeight;
 			m_manual_info[0].render_info.piston_y = m_CenterY;
-			m_CenterWidth = std::max(m_CenterWidth, GetEnclosureWidth());
+			m_CenterWidth = std::max(m_CenterWidth, (int)GetEnclosureWidth());
 			m_CenterY -= 12;
 			m_CenterY -= m_EnclosureHeight;
 			m_EnclosureY = m_CenterY;
@@ -507,13 +507,13 @@ void GOGUIDisplayMetrics::Update()
 		}
 		m_manual_info[i].render_info.x = (m_DispScreenSizeHoriz - m_manual_info[i].render_info.width) >> 1;
 		m_manual_info[i].render_info.width += 16;
-		if (m_manual_info[i].render_info.width > m_CenterWidth)
+		if ((int)m_manual_info[i].render_info.width > m_CenterWidth)
 			m_CenterWidth = m_manual_info[i].render_info.width;
 	}
 
 	m_HackY = m_CenterY;
 
-	if (m_CenterWidth + GetJambLeftRightWidth() * 2 < m_DispScreenSizeHoriz)
+	if (m_CenterWidth + GetJambLeftRightWidth() * 2 < (int)m_DispScreenSizeHoriz)
 		m_CenterWidth += (m_DispScreenSizeHoriz - m_CenterWidth - GetJambLeftRightWidth() * 2) / 3;
 
 	m_CenterY -= GetPistonTopHeight();
