@@ -35,8 +35,8 @@ public:
 
 	typedef struct
 	{
-		int width;
-		int height;
+		unsigned width;
+		unsigned height;
 		int y;
 		int x;
 		int keys_y;
@@ -62,26 +62,26 @@ protected:
 	std::vector<MANUAL_INFO> m_manual_info;
 
 	/* Values loaded from ODF */
-	int m_DispScreenSizeHoriz;
-	int m_DispScreenSizeVert;
-	int m_DispDrawstopBackgroundImageNum;
-	int m_DispConsoleBackgroundImageNum;
-	int m_DispKeyHorizBackgroundImageNum;
-	int m_DispKeyVertBackgroundImageNum;
-	int m_DispDrawstopInsetBackgroundImageNum;
+	unsigned m_DispScreenSizeHoriz;
+	unsigned m_DispScreenSizeVert;
+	unsigned m_DispDrawstopBackgroundImageNum;
+	unsigned m_DispConsoleBackgroundImageNum;
+	unsigned m_DispKeyHorizBackgroundImageNum;
+	unsigned m_DispKeyVertBackgroundImageNum;
+	unsigned m_DispDrawstopInsetBackgroundImageNum;
 	wxString m_DispControlLabelFont;
 	wxString m_DispShortcutKeyLabelFont;
 	wxColour m_DispShortcutKeyLabelColour;
 	wxString m_DispGroupLabelFont;
-	int m_DispDrawstopCols;
-	int m_DispDrawstopRows;
+	unsigned m_DispDrawstopCols;
+	unsigned m_DispDrawstopRows;
 	bool m_DispDrawstopColsOffset;
 	bool m_DispDrawstopOuterColOffsetUp;
 	bool m_DispPairDrawstopCols;
-	int m_DispExtraDrawstopRows;
-	int m_DispExtraDrawstopCols;
-	int m_DispButtonCols;
-	int m_DispExtraButtonRows;
+	unsigned m_DispExtraDrawstopRows;
+	unsigned m_DispExtraDrawstopCols;
+	unsigned m_DispButtonCols;
+	unsigned m_DispExtraButtonRows;
 	bool m_DispExtraPedalButtonRow;
 	bool m_DispExtraPedalButtonRowOffset;
 	bool m_DispExtraPedalButtonRowOffsetRight;
@@ -90,16 +90,16 @@ protected:
 	bool m_DispTrimBelowManuals;
 	bool m_DispTrimAboveExtraRows;
 	bool m_DispExtraDrawstopRowsAboveExtraButtonRows;
-	int m_DrawStopWidth;
-	int m_DrawStopHeight;
-	int m_ButtonWidth;
-	int m_ButtonHeight;
-	int m_EnclosureWidth;
-	int m_EnclosureHeight;
-	int m_PedalHeight;
-	int m_PedalKeyWidth;
-	int m_ManualHeight;
-	int m_ManualKeyWidth;
+	unsigned m_DrawStopWidth;
+	unsigned m_DrawStopHeight;
+	unsigned m_ButtonWidth;
+	unsigned m_ButtonHeight;
+	unsigned m_EnclosureWidth;
+	unsigned m_EnclosureHeight;
+	unsigned m_PedalHeight;
+	unsigned m_PedalKeyWidth;
+	unsigned m_ManualHeight;
+	unsigned m_ManualKeyWidth;
 
 	/* values computed on screen update */
 	int m_HackY;
@@ -114,47 +114,47 @@ public:
 	GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString group);
 	virtual ~GOGUIDisplayMetrics();
 
-	virtual int NumberOfExtraDrawstopRowsToDisplay();
-	virtual int NumberOfExtraDrawstopColsToDisplay();
-	virtual int NumberOfDrawstopColsToDisplay();
-	virtual int NumberOfButtonCols();
-	virtual int NumberOfExtraButtonRows();
+	virtual unsigned NumberOfExtraDrawstopRowsToDisplay();
+	virtual unsigned NumberOfExtraDrawstopColsToDisplay();
+	virtual unsigned NumberOfDrawstopColsToDisplay();
+	virtual unsigned NumberOfButtonCols();
+	virtual unsigned NumberOfExtraButtonRows();
 
 	virtual void GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int* blitX, int* blitY);
 	virtual void GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY);
 	virtual wxFont GetControlLabelFont();
 	virtual wxFont GetGroupLabelFont();
 
-	virtual int GetEnclosureWidth();
+	virtual unsigned GetEnclosureWidth();
 	virtual int GetEnclosureY();
 	virtual int GetEnclosureX(const GOGUIEnclosure* enclosure);
 
-	virtual int GetScreenWidth();
-	virtual int GetScreenHeight();
+	virtual unsigned GetScreenWidth();
+	virtual unsigned GetScreenHeight();
 
 	virtual int GetJambLeftRightWidth();
-	virtual int GetJambLeftRightHeight();
+	virtual unsigned GetJambLeftRightHeight();
 	virtual int GetJambLeftRightY();
 	virtual int GetJambLeftX();
 	virtual int GetJambRightX();
 	virtual int GetJambTopDrawstop();
 	virtual int GetJambTopPiston();
-	virtual int GetJambTopHeight();
-	virtual int GetJambTopWidth();
+	virtual unsigned GetJambTopHeight();
+	virtual unsigned GetJambTopWidth();
 	virtual int GetJambTopX();
 	virtual int GetJambTopY();
-	virtual int GetPistonTopHeight();
-	virtual int GetPistonWidth();
+	virtual unsigned GetPistonTopHeight();
+	virtual unsigned GetPistonWidth();
 	virtual int GetPistonX();
 	virtual int GetCenterWidth();
 	virtual int GetCenterY();
 	virtual int GetCenterX();
 
-	virtual int GetDrawstopBackgroundImageNum();
-	virtual int GetConsoleBackgroundImageNum();
-	virtual int GetDrawstopInsetBackgroundImageNum();
-	virtual int GetKeyVertBackgroundImageNum();
-	virtual int GetKeyHorizBackgroundImageNum();
+	virtual unsigned GetDrawstopBackgroundImageNum();
+	virtual unsigned GetConsoleBackgroundImageNum();
+	virtual unsigned GetDrawstopInsetBackgroundImageNum();
+	virtual unsigned GetKeyVertBackgroundImageNum();
+	virtual unsigned GetKeyHorizBackgroundImageNum();
 
 	virtual bool HasPairDrawstopCols();
 	virtual bool HasTrimAboveExtraRows();
@@ -164,10 +164,10 @@ public:
 
 	virtual const MANUAL_RENDER_INFO& GetManualRenderInfo(const unsigned manual_nb) const;
 
-	virtual int GetDrawstopWidth();
-	virtual int GetDrawstopHeight();
-	virtual int GetButtonWidth();
-	virtual int GetButtonHeight();
+	virtual unsigned GetDrawstopWidth();
+	virtual unsigned GetDrawstopHeight();
+	virtual unsigned GetButtonWidth();
+	virtual unsigned GetButtonHeight();
 };
 
 #endif
