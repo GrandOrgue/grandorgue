@@ -3635,7 +3635,9 @@ extra piston block.
       <para>
 An enclosure represents a swell pedal. It consists of non-gui
 attributes describing its function.  It it is displayed, it contains
-additional gui attributes.
+additional gui attributes. Best practise is to specify enclosures in
+natural layout order (leftmost first) and give them incremental values
+of MIDIInputNumber to make initial configurations easy for the user.
       </para>
       <variablelist>
         <varlistentry>
@@ -3659,10 +3661,11 @@ additional gui attributes.
           <listitem>
             <para>
 (integer 0 - 200, default: 0) This number is used while building the
-initial MIDI configuration to map the enclosure to one midi setting
-from the global midi configuration dialog. 0 means no device
-associated. Please note, the the GUI only allows the association of
-the first few enclosures.
+initial MIDI configuration to map the enclosure object to one MIDI 
+device the user can specify for respective enclosure. A value of 0 
+means no association, 1 means enclosure 1, 2 is enclosure 2 etc. 
+Please note, the the GUI only allows the association of the first few 
+enclosures.
      </para>
           </listitem>
         </varlistentry>
@@ -4172,10 +4175,13 @@ else turned on.
     <sect1>
       <title>Manual objects</title>
       <para>
-A manual is associated with a number of stops, tremulants, divisionals
-and coupler. The accessible range can be played via MIDI, the rest of
-the logical keys can only be triggered by (octave) coupler. It
-contains the following non-gui attributes:
+A manual is associated with a number of stops, tremulants, divisionals 
+and coupler. The accessible range can be played via MIDI, the rest of 
+the logical keys can only be triggered by (octave) coupler. Best practise 
+is to specify the visible manuals in the order of appearance, lowest go 
+first. Invisible manuals and those used for special effects should be 
+specified after the visible ones. Manual objects contains the following 
+non-gui attributes:
       </para>
       <variablelist>
         <varlistentry>
@@ -4225,10 +4231,12 @@ useable key
           <listitem>
             <para>
 (integer 0 - 200, default: 0) This number is used while building the
-initial MIDI configuration to map the manual to one midi setting from
-the global midi configuration dialog. 0 means no device
-associated. Please note, the the GUI only allows the association of
-the first few manuals.
+initial MIDI configuration to map the manual object to what MIDI
+device the the user has set for respective pedal/manual. 0 means no 
+association. 1 maps to pedal, 2 to first manual, 3 to second manual etc. 
+Please note, that the GUI only allows the association of the first few manuals.
+Second touch manuals can be set to the same number as the main manual as the
+user then only has to configure the low velocity to make it work.
      </para>
           </listitem>
         </varlistentry>
