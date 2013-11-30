@@ -263,7 +263,6 @@ GOrgueSwitch.cpp
 GrandOrgueFile.cpp
 GrandOrgueFrame.cpp
 GOrgueUtil.cpp
-Images.cpp
 MIDIEventDialog.cpp
 MIDIEventRecvDialog.cpp
 MIDIEventSendDialog.cpp
