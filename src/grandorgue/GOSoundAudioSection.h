@@ -224,7 +224,7 @@ public:
 		,unsigned                         pcm_data_sample_rate
 		,unsigned                         pcm_data_nb_samples
 		,const std::vector<GO_WAVE_LOOP> *loop_points
-		,const bool                       compress
+		,bool                       compress
 		);
 
 	bool IsOneshot() const;
