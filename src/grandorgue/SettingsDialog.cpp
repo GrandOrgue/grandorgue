@@ -70,7 +70,7 @@ SettingsDialog::~SettingsDialog()
 {
 	if (m_OptionsPage->NeedReload() &&  m_Sound.GetOrganFile() != NULL)
 	{
-		if (wxMessageBox(_("Some changed settings effect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), wxT(APP_NAME), wxYES_NO | wxICON_QUESTION, this) == wxYES)
+		if (wxMessageBox(_("Some changed settings effect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), _("GrandOrgue"), wxYES_NO | wxICON_QUESTION, this) == wxYES)
 		{
 			wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
 			wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
