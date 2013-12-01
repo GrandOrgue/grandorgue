@@ -19,12 +19,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/wx.h>
-#include <wx/file.h>
+#include "GOrgueWave.h"
+
 #include "GOrgueMemoryPool.h"
 #include "GOrgueInt24.h"
-#include "GOrgueWave.h"
 #include "GOrgueWaveTypes.h"
+#include <wx/file.h>
+#include <wx/intl.h>
+
+bool inline CompareFourCC(GO_FOURCC fcc, const char* text)
+{
+	assert(text != NULL);
+	assert(strlen(text) == 4);
+	return ((fcc[0] == text[0]) &&
+			(fcc[1] == text[1]) &&
+			(fcc[2] == text[2]) &&
+			(fcc[3] == text[3]));
+}
 
 void GOrgueWave::SetInvalid()
 {
