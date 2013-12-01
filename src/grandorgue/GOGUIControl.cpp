@@ -61,7 +61,7 @@ void GOGUIControl::ControlChanged(void* control)
 		}
 }
 
-void GOGUIControl::Draw(wxDC* dc)
+void GOGUIControl::Draw(GOrgueDC& dc)
 {
 	m_DrawPending = false;
 }

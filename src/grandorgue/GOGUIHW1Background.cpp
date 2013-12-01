@@ -28,7 +28,7 @@ GOGUIHW1Background::GOGUIHW1Background(GOGUIPanel* panel):
 {
 }
 
-void GOGUIHW1Background::Draw(wxDC* dc)
+void GOGUIHW1Background::Draw(GOrgueDC& dc)
 {
 	m_panel->TileWood(dc, m_metrics->GetDrawstopBackgroundImageNum(), 0, 0, m_metrics->GetCenterX(), m_metrics->GetScreenHeight());
 	m_panel->TileWood(dc, m_metrics->GetDrawstopBackgroundImageNum(), m_metrics->GetCenterX() + m_metrics->GetCenterWidth(), 

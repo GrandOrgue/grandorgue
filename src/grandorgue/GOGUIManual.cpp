@@ -24,6 +24,7 @@
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
+#include "GOrgueDC.h"
 #include "GOrgueDocument.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
@@ -326,12 +327,12 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 	m_BoundingRect = wxRect(x, y, width, height);
 }
 
-void GOGUIManual::Draw(wxDC* dc)
+void GOGUIManual::Draw(GOrgueDC& dc)
 {
 	for (unsigned i = 0; i < m_Keys.size(); i++)
 	{
 		GOrgueBitmap& bitmap = m_manual->IsKeyDown(m_Keys[i].MidiNumber) ? m_Keys[i].OnBitmap : m_Keys[i].OffBitmap;
-		dc->DrawBitmap(bitmap.GetData(), m_Keys[i].Rect.GetX(), m_Keys[i].Rect.GetY(), true);
+		dc.DrawBitmap(bitmap, m_Keys[i].Rect.GetX(), m_Keys[i].Rect.GetY());
 	}
 	GOGUIControl::Draw(dc);
 }

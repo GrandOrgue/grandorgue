@@ -34,6 +34,7 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
+#include "GOrgueDC.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueGeneral.h"
@@ -507,7 +508,7 @@ void GOGUIPanel::ControlChanged(void* control)
 		m_controls[i]->ControlChanged(control);
 }
 
-void GOGUIPanel::Draw(wxDC* dc)
+void GOGUIPanel::Draw(GOrgueDC& dc)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->Draw(dc);
@@ -567,71 +568,7 @@ void GOGUIPanel::HandleMouseScroll(int x, int y, int amount)
 			return;
 }
 
-void GOGUIPanel::TileBitmap(wxDC* dc, GOrgueBitmap& bitmap, wxRect target, int xo, int yo)
+void GOGUIPanel::TileWood(GOrgueDC& dc, unsigned index, int sx, int sy, int cx, int cy)
 {
-	dc->SetClippingRegion(target);
-	for (int y = target.GetY() - yo; y < target.GetBottom(); y += bitmap.GetHeight())
-		for (int x = target.GetX() - xo; x < target.GetRight(); x += bitmap.GetWidth())
-			dc->DrawBitmap(bitmap.GetData(), x, y, true);
-	dc->DestroyClippingRegion();
-}
-
-void GOGUIPanel::TileWood(wxDC* dc, unsigned index, int sx, int sy, int cx, int cy)
-{
-	TileBitmap(dc, m_WoodImages[index], wxRect(sx, sy, cx, cy), 0, 0);
-}
-
-wxString GOGUIPanel::WrapText(wxDC* dc, const wxString& string, int width)
-{
-	wxString str, line, work;
-	wxCoord cx, cy;
-
-	/* string.Length() + 1 iterations */
-	for(unsigned i = 0; i <= string.Length(); i++)
-	{
-		bool maybreak = false;
-		if (string[i] == wxT(' ') || string[i] == wxT('\n'))
-		{
-			if (work.length() < 2)
-				maybreak = false;
-			else
-				maybreak = true;
-		}
-		if (maybreak || i == string.Length())
-		{
-			if (!work.Length())
-				continue;
-			dc->GetTextExtent(line + wxT(' ') + work, &cx, &cy);
-			if (cx > width)
-			{
-				if (!str.Length())
-					str = line;
-				else
-					str = str + wxT('\n') + line;
-				line = wxT("");
-			}
-
-			if (!line.Length())
-				line = work;
-			else
-				line = line + wxT(' ') + work;
-
-			work = wxT("");
-		}
-		else
-		{
-			if (string[i] == wxT(' ') || string[i] == wxT('\n'))
-			{
-				if (work.Length() && work[work.Length()-1] != wxT(' '))
-					work += wxT(' ');
-			}	
-			else
-				work += string[i];
-		}
-	}
-	if (!str.Length())
-		str = line;
-	else
-		str = str + wxT('\n') + line;
-	return str;
+	dc.TileBitmap(m_WoodImages[index], wxRect(sx, sy, cx, cy), 0, 0);
 }

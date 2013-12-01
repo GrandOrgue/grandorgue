@@ -48,7 +48,7 @@ public:
 	void Init(GOrgueConfigReader& cfg, wxString group, unsigned imageno = 1);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 
-	void Draw(wxDC* dc);
+	void Draw(GOrgueDC& dc);
 };
 
 #endif

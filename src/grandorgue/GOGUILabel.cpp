@@ -23,6 +23,7 @@
 #include "GOGUIPanel.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOrgueConfigReader.h"
+#include "GOrgueDC.h"
 #include "GOrgueLabel.h"
 
 GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, unsigned y_pos, wxString name) :
@@ -141,15 +142,14 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 	m_TextWidth = cfg.ReadInteger(ODFSetting, group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth());
 }
 
-void GOGUILabel::Draw(wxDC* dc)
+void GOGUILabel::Draw(GOrgueDC& dc)
 {
 	if (m_Label)
 		m_Text = m_Label->GetName();
 
-	m_panel->TileBitmap(dc, m_Bitmap, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
+	dc.TileBitmap(m_Bitmap, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
 	if (m_TextWidth)
 	{
-		dc->SetTextForeground(m_TextColor);
 		wxFont font = m_metrics->GetGroupLabelFont();
 		if (m_FontName != wxEmptyString)
 		{
@@ -158,8 +158,7 @@ void GOGUILabel::Draw(wxDC* dc)
 				font = new_font;
 		}
 		font.SetPointSize(m_FontSize);
-		dc->SetFont(font);
-		dc->DrawLabel(m_panel->WrapText(dc, m_Text, m_TextWidth), m_TextRect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+		dc.DrawText(m_Text, m_TextRect, m_TextColor, font, m_TextWidth);
 	}
 	GOGUIControl::Draw(dc);
 }

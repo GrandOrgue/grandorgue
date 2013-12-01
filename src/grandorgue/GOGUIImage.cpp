@@ -23,6 +23,7 @@
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
+#include "GOrgueDC.h"
 
 GOGUIImage::GOGUIImage(GOGUIPanel* panel) :
 	GOGUIControl(panel, NULL),
@@ -53,8 +54,8 @@ void GOGUIImage::Load(GOrgueConfigReader& cfg, wxString group)
 	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_Bitmap.GetHeight() - 1, false, 0);
 }
 
-void GOGUIImage::Draw(wxDC* dc)
+void GOGUIImage::Draw(GOrgueDC& dc)
 {
-	m_panel->TileBitmap(dc, m_Bitmap, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
+	dc.TileBitmap(m_Bitmap, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
 	GOGUIControl::Draw(dc);
 }
