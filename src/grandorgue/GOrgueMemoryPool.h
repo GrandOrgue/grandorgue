@@ -31,6 +31,7 @@ class GOrgueOutOfMemory {
 };
 
 class GOrgueMemoryPool {
+	GOMutex m_mutex;
 	std::set<void*> m_PoolAllocs;
 	char* m_PoolStart;
 	char* m_PoolPtr;

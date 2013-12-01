@@ -59,6 +59,7 @@ void *GOrgueMemoryPool::Alloc(size_t length, bool final)
 		return NULL;
 	if (!final)
 		return malloc(length);
+	GOMutexLocker locker(m_mutex);
 	void* data = PoolAlloc(length);
 	if (data)
 	{
@@ -73,6 +74,7 @@ void GOrgueMemoryPool::Free(void* data)
 {
 	if (!data)
 		return;
+	GOMutexLocker locker(m_mutex);
 	if (m_PoolAllocs.count(data))
 	{
 		/* Pool memory is not individually freed */
