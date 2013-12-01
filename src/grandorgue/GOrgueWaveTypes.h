@@ -22,7 +22,7 @@
 #ifndef GORGUEWAVETYPES_H
 #define GORGUEWAVETYPES_H
 
-#include <wx/wx.h>
+#include <stdint.h>
 
 #pragma pack(push, 1)
 
@@ -31,77 +31,67 @@ typedef char GO_FOURCC[4];
 typedef struct
 {
 	GO_FOURCC fccChunk;
-	wxUint32 dwSize;
+	uint32_t dwSize;
 } GO_WAVECHUNKHEADER;
 
 typedef struct
 {
-	wxUint16 wFormatTag;
-	wxUint16 nChannels;
-	wxUint32 nSamplesPerSec;
-	wxUint32 nAvgBytesPerSec;
-	wxUint16 nBlockAlign;
+	uint16_t wFormatTag;
+	uint16_t nChannels;
+	uint32_t nSamplesPerSec;
+	uint32_t nAvgBytesPerSec;
+	uint16_t nBlockAlign;
 } GO_WAVEFORMAT;
 
 typedef struct
 {
 	GO_WAVEFORMAT wf;
-	wxUint16 wBitsPerSample;
+	uint16_t wBitsPerSample;
 } GO_WAVEFORMATPCM;
 
 typedef struct
 {
 	GO_WAVEFORMATPCM wf;
-	wxUint16 cbSize;
+	uint16_t cbSize;
 } GO_WAVEFORMATPCMEX;
 
 typedef struct
 {
-	wxUint32 dwName;
-	wxUint32 dwPosition;
+	uint32_t dwName;
+	uint32_t dwPosition;
 	GO_FOURCC fccChunk;
-	wxUint32 dwChunkStart;
-	wxUint32 dwBlockStart;
-	wxUint32 dwSampleOffset;
+	uint32_t dwChunkStart;
+	uint32_t dwBlockStart;
+	uint32_t dwSampleOffset;
 } GO_WAVECUEPOINT;
 
 typedef struct
 {
-	wxUint32 dwCuePoints;
+	uint32_t dwCuePoints;
 } GO_WAVECUECHUNK;
 
 typedef struct
 {
-	wxUint32 dwIdentifier;
-	wxUint32 dwType;
-	wxUint32 dwStart;
-	wxUint32 dwEnd;
-	wxUint32 dwFraction;
-	wxUint32 dwPlayCount;
+	uint32_t dwIdentifier;
+	uint32_t dwType;
+	uint32_t dwStart;
+	uint32_t dwEnd;
+	uint32_t dwFraction;
+	uint32_t dwPlayCount;
 } GO_WAVESAMPLERLOOP;
 
 typedef struct
 {
-	wxUint32 dwManufacturer;
-	wxUint32 dwProduct;
-	wxUint32 dwSamplePeriod;
-	wxUint32 dwMIDIUnityNote;
-	wxUint32 dwMIDIPitchFraction;
-	wxUint32 dwSMPTEFormat;
-	wxUint32 dwSMPTEOffset;
-	wxUint32 cSampleLoops;
-	wxUint32 cbSamplerData;
+	uint32_t dwManufacturer;
+	uint32_t dwProduct;
+	uint32_t dwSamplePeriod;
+	uint32_t dwMIDIUnityNote;
+	uint32_t dwMIDIPitchFraction;
+	uint32_t dwSMPTEFormat;
+	uint32_t dwSMPTEOffset;
+	uint32_t cSampleLoops;
+	uint32_t cbSamplerData;
 } GO_WAVESAMPLERCHUNK;
-
-bool inline CompareFourCC(GO_FOURCC fcc, const char* text)
-{
-	assert(text != NULL);
-	assert(strlen(text) == 4);
-	return ((fcc[0] == text[0]) &&
-			(fcc[1] == text[1]) &&
-			(fcc[2] == text[2]) &&
-			(fcc[3] == text[3]));
-}
 
 typedef struct {
 	unsigned char lo, mi;

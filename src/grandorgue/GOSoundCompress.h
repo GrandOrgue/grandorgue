@@ -22,11 +22,12 @@
 #ifndef GOSOUNDCOMPRESS_H_
 #define GOSOUNDCOMPRESS_H_
 
-#include <wx/wx.h>
+#include <stddef.h>
+#include <stdint.h>
 
 static inline int AudioReadCompressed8(const unsigned char*& ptr)
 {
-	int val = *(const wxInt8*)ptr;
+	int val = *(const int8_t*)ptr;
 	if (val & 0x01)
 	{
 		val >>= 1;
@@ -35,17 +36,17 @@ static inline int AudioReadCompressed8(const unsigned char*& ptr)
 	else if (val & 0x02)
 	{
 		/* remaining bits are high byte */
-		val = ( (val & ~3) << (8 - 2)) | (*(const wxUint8*) (ptr + 1));
+		val = ( (val & ~3) << (8 - 2)) | (*(const uint8_t*) (ptr + 1));
 		ptr += 2;
 	}
 	else if (val & 0x04)
 	{
-		val = ( (val & ~7) << (16 - 3)) | (*(const wxUint16*) (ptr + 1));
+		val = ( (val & ~7) << (16 - 3)) | (*(const uint16_t*) (ptr + 1));
 		ptr+= 3;
 	}
 	else
 	{
-		val = ( (val & ~7) << (24 - 3)) | ((*(const wxUint8*)(ptr + 1)) << 16) | (*(const wxUint16*)(ptr + 2));
+		val = ( (val & ~7) << (24 - 3)) | ((*(const uint8_t*)(ptr + 1)) << 16) | (*(const uint16_t*)(ptr + 2));
 		ptr+= 4;
 	}
 	return val;
@@ -53,7 +54,7 @@ static inline int AudioReadCompressed8(const unsigned char*& ptr)
 
 static inline int AudioReadCompressed16(const unsigned char*& ptr)
 {
-	int val = *(const wxInt16*)ptr;
+	int val = *(const int16_t*)ptr;
 	if (val & 0x01)
 	{
 		val >>= 1;
@@ -62,12 +63,12 @@ static inline int AudioReadCompressed16(const unsigned char*& ptr)
 	else if (val & 0x02)
 	{
 		/* remaining bits are high byte */
-		val = ( (val & ~3) << (8 - 2)) | (*(const wxUint8*) (ptr + 2));
+		val = ( (val & ~3) << (8 - 2)) | (*(const uint8_t*) (ptr + 2));
 		ptr += 3;
 	}
 	else
 	{
-		val = ( (val & ~3) << (16 - 2)) | (*(const wxUint16*) (ptr + 2));
+		val = ( (val & ~3) << (16 - 2)) | (*(const uint16_t*) (ptr + 2));
 		ptr+= 4;
 	}
 	return val;
@@ -77,26 +78,26 @@ static inline void AudioWriteCompressed8(unsigned char* data, unsigned& output_l
 {
 	if (-64 <= encode && encode <= 63)
 	{
-		*((wxInt8*)(data + output_len)) = ((encode) << 1) | 0x01;
+		*((int8_t*)(data + output_len)) = ((encode) << 1) | 0x01;
 		output_len ++;
 	}
 	else if (-8192 <= encode && encode <= 8191)
 	{
-		*((wxInt8*)(data + output_len)) = ((encode >> 8) << 2) | 0x02;
-		*((wxUint8*)(data + output_len + 1)) = encode & 0xFF;
+		*((int8_t*)(data + output_len)) = ((encode >> 8) << 2) | 0x02;
+		*((uint8_t*)(data + output_len + 1)) = encode & 0xFF;
 		output_len += 2;
 	}
 	else if (-1048576 <= encode && encode <= 1048575)
 	{
-		*((wxInt8*)(data + output_len)) = ((encode >> 16) << 3) | 0x04;
-		*((wxUint16*)(data + output_len + 1)) = encode & 0xFFFF;
+		*((int8_t*)(data + output_len)) = ((encode >> 16) << 3) | 0x04;
+		*((uint16_t*)(data + output_len + 1)) = encode & 0xFFFF;
 		output_len += 3;
 	}
 	else
 	{
-		*((wxInt8*)(data + output_len)) = ((encode >> 24) << 3) | 0x00;
-		*((wxUint8*)(data + output_len + 1)) = (encode >> 16) & 0xFF;
-		*((wxUint16*)(data + output_len + 2)) = encode & 0xFFFF;
+		*((int8_t*)(data + output_len)) = ((encode >> 24) << 3) | 0x00;
+		*((uint8_t*)(data + output_len + 1)) = (encode >> 16) & 0xFF;
+		*((uint16_t*)(data + output_len + 2)) = encode & 0xFFFF;
 		output_len += 4;
 	}
 }
@@ -105,19 +106,19 @@ static inline void AudioWriteCompressed16(unsigned char* data, unsigned& output_
 {
 	if (-16384 <= encode && encode <= 16383)
 	{
-		*((wxInt16*)(data + output_len)) = ((encode) << 1) | 0x01;
+		*((int16_t*)(data + output_len)) = ((encode) << 1) | 0x01;
 		output_len += 2;
 	}
 	else if (-2097152 <= encode && encode <= 2097151)
 	{
-		*((wxInt16*)(data + output_len)) = ((encode >> 8) << 2) | 0x02;
-		*((wxUint8*)(data + output_len + 2)) = encode & 0xFF;
+		*((int16_t*)(data + output_len)) = ((encode >> 8) << 2) | 0x02;
+		*((uint8_t*)(data + output_len + 2)) = encode & 0xFF;
 		output_len += 3;
 	}
 	else
 	{
-		*((wxInt16*)(data + output_len)) = ((encode >> 16) << 2) | 0x00;
-		*((wxUint16*)(data + output_len + 2)) = encode & 0xFFFF;
+		*((int16_t*)(data + output_len)) = ((encode >> 16) << 2) | 0x00;
+		*((uint16_t*)(data + output_len + 2)) = encode & 0xFFFF;
 		output_len += 4;
 	}
 }
