@@ -33,6 +33,7 @@ class GOGUIPanelWidget;
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueButton;
+class GOrgueDC;
 class GOrguePanelView;
 class GrandOrgueFile;
 
@@ -65,10 +66,8 @@ public:
 	void AddControl(GOGUIControl* control);
 	GOGUIDisplayMetrics* GetDisplayMetrics();
 	void ControlChanged(void* control);
-	void Draw(wxDC* dc);
-	wxString WrapText(wxDC* dc, const wxString& string, int width);
-	void TileBitmap(wxDC* dc, GOrgueBitmap& bitmap, wxRect target, int xo, int yo);
-	void TileWood(wxDC* dc, unsigned which, int sx, int sy, int cx, int cy);
+	void Draw(GOrgueDC& dc);
+	void TileWood(GOrgueDC& dc, unsigned which, int sx, int sy, int cx, int cy);
 	GOrgueBitmap LoadBitmap(wxString filename, wxString maskname);
 	void HandleKey(int key);
 	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);

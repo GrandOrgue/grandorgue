@@ -24,6 +24,7 @@
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
+#include "GOrgueDC.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueDocument.h"
 #include "GrandOrgueFile.h"
@@ -156,10 +157,10 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 	m_MouseAxisEnd = cfg.ReadInteger(ODFSetting, group, wxT("MouseAxisEnd"), m_MouseAxisStart, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3 * 2);
 }
 
-void GOGUIEnclosure::Draw(wxDC* dc)
+void GOGUIEnclosure::Draw(GOrgueDC& dc)
 {
 	GOrgueBitmap& bmp = m_Bitmaps[((m_Bitmaps.size() - 1) * m_enclosure->GetValue()) / 127];
-	m_panel->TileBitmap(dc, bmp, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
+	dc.TileBitmap(bmp, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
 
 	if (m_TextWidth)
 	{
@@ -171,10 +172,8 @@ void GOGUIEnclosure::Draw(wxDC* dc)
 				font = new_font;
 		}
 		font.SetPointSize(m_FontSize);
-		dc->SetFont(font);
-		dc->SetTextForeground(m_TextColor);
 
-		dc->DrawLabel(m_panel->WrapText(dc, m_Text, m_TextWidth), m_TextRect, wxALIGN_CENTER_HORIZONTAL);
+		dc.DrawText(m_Text, m_TextRect, m_TextColor, font, m_TextWidth, true);
 	}
 
 	GOGUIControl::Draw(dc);

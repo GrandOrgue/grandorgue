@@ -22,6 +22,7 @@
 #include "GOGUIControl.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
+#include "GOrgueDC.h"
 #include "GOrgueKeyConvert.h"
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL)
@@ -76,8 +77,9 @@ void GOGUIPanelWidget::OnUpdate()
 	m_ClientBitmap = wxBitmap(m_panel->GetWidth(), m_panel->GetHeight());
 	wxMemoryDC dc;
 	dc.SelectObject(m_ClientBitmap);
+	GOrgueDC DC(&dc);
 
-	m_panel->Draw(&dc);
+	m_panel->Draw(DC);
 	SetSize(m_panel->GetWidth(), m_panel->GetHeight());
 }
 
@@ -94,8 +96,9 @@ void GOGUIPanelWidget::OnGOControl(wxCommandEvent& event)
 
 	wxMemoryDC mdc;
 	mdc.SelectObject(m_ClientBitmap);
+	GOrgueDC DC(&mdc);
 
-	control->Draw(&mdc);
+	control->Draw(DC);
 	CopyToScreen(&mdc, control->GetBoundingRect());
 	event.Skip();
 }

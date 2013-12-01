@@ -19,40 +19,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOGUICONTROL_H
-#define GOGUICONTROL_H
+#ifndef GORGUEDC_H
+#define GORGUEDC_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
+class wxDC;
+class wxFont;
+class wxColour;
+class wxRect;
+class GOrgueBitmap;
 
-class GOGUIDisplayMetrics;
-class GOGUIMouseState;
-class GOGUIPanel;
-class GOrgueConfigReader;
-class GOrgueConfigWriter;
-class GOrgueDC;
+class GOrgueDC
+{
+private:
+	wxDC* m_DC;
 
-class GOGUIControl {
-protected:
-	GOGUIPanel* m_panel;
-	wxString m_group;
-	GOGUIDisplayMetrics* m_metrics;
-	void* m_control;
-	wxRect m_BoundingRect;
-	bool m_DrawPending;
+	wxString WrapText(const wxString& string, unsigned width);
 
 public:
-	GOGUIControl(GOGUIPanel* panel, void* control);
-	virtual ~GOGUIControl();
+	GOrgueDC(wxDC* dc);
 
-	virtual void Init(GOrgueConfigReader& cfg, wxString group);
-	virtual void Load(GOrgueConfigReader& cfg, wxString group);
-	virtual void Save(GOrgueConfigWriter& cfg);
-
-	virtual void ControlChanged(void* control);
-	virtual void Draw(GOrgueDC& dc);
-	virtual const wxRect& GetBoundingRect();
-	virtual bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
-	virtual bool HandleMouseScroll(int x, int y, int amount);
+	void DrawBitmap(GOrgueBitmap& bitmap, int x, int y);
+	void TileBitmap(GOrgueBitmap& bitmap, const wxRect& target, int xo, int yo);
+	void DrawText(const wxString& text, const wxRect& rect, const wxColour& color, const wxFont& font, unsigned text_width, bool top = false);
 };
 
 #endif

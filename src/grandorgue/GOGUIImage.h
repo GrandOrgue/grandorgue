@@ -38,7 +38,7 @@ public:
 
 	void Load(GOrgueConfigReader& cfg, wxString group);
 
-	void Draw(wxDC* dc);
+	void Draw(GOrgueDC& dc);
 };
 
 #endif

@@ -29,7 +29,7 @@ class GOGUIHW1Background : public GOGUIControl
 public:
 	GOGUIHW1Background(GOGUIPanel* panel);
 
-	void Draw(wxDC* dc);
+	void Draw(GOrgueDC& dc);
 };
 
 #endif
