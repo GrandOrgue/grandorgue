@@ -22,15 +22,17 @@
 #ifndef GRANDORGUEFILE_H
 #define GRANDORGUEFILE_H
 
-#include <vector>
 #include "ptrvector.h"
-#include <wx/wx.h>
 #include "GOrgueBitmapCache.h"
 #include "GOrgueCombinationDefinition.h"
 #include "GOrgueLabel.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrguePipeConfig.h"
+#include <wx/hashmap.h>
+#include <wx/string.h>
+#include <vector>
 
+class GOGUIPanel;
 class GOrgueCache;
 class GOrgueCacheObject;
 class GOrgueDivisionalCoupler;
@@ -50,10 +52,10 @@ class GOrgueSwitch;
 class GOrgueTemperament;
 class GOrgueTremulant;
 class GOrgueWindchest;
-class GOGUIPanel;
 class GOrgueDocument;
-class GOSoundProvider;
 class GOSoundEngine;
+class GOSoundProvider;
+
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
 class GrandOrgueFile : public GOrguePipeUpdateCallback

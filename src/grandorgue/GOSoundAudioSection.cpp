@@ -20,12 +20,14 @@
  */
 
 #include "GOSoundAudioSection.h"
-#include "GOrgueCache.h"
-#include "GOrgueCacheWriter.h"
-#include "GOrgueReleaseAlignTable.h"
-#include "GOrgueMemoryPool.h"
+
 #include "GOSoundCompress.h"
 #include "GOSoundResample.h"
+#include "GOrgueCache.h"
+#include "GOrgueCacheWriter.h"
+#include "GOrgueMemoryPool.h"
+#include "GOrgueReleaseAlignTable.h"
+#include <wx/intl.h>
 
 GOAudioSection::GOAudioSection(GOrgueMemoryPool& pool):
 	m_Data(NULL),

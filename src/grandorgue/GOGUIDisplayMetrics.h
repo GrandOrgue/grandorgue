@@ -22,11 +22,14 @@
 #ifndef GOGUIDISPLAYMETRICS_H
 #define GOGUIDISPLAYMETRICS_H
 
-#include <wx/wx.h>
+#include <wx/colour.h>
+#include <wx/string.h>
 #include <vector>
 
 class GOGUIEnclosure;
 class GrandOrgueFile;
+
+class wxFont;
 
 class GOGUIDisplayMetrics
 {

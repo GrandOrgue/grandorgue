@@ -19,12 +19,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/filepicker.h>
-#include <wx/spinctrl.h>
-
 #include "SettingsOption.h"
+
 #include "GOSoundDefs.h"
 #include "GOrgueSettings.h"
+#include <wx/checkbox.h>
+#include <wx/choice.h>
+#include <wx/filepicker.h>
+#include <wx/log.h>
+#include <wx/msgdlg.h>
+#include <wx/spinctrl.h>
+#include <wx/stattext.h>
 
 SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),

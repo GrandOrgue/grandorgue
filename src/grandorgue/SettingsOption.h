@@ -22,11 +22,13 @@
 #ifndef SETTINGSOPTION_H
 #define SETTINGSOPTION_H
 
-#include <wx/wx.h>
-class wxDirPickerCtrl;
-class wxSpinCtrl;
+#include <wx/panel.h>
 
 class GOrgueSettings;
+class wxCheckBox;
+class wxChoice;
+class wxDirPickerCtrl;
+class wxSpinCtrl;
 
 class SettingsOption : public wxPanel
 {

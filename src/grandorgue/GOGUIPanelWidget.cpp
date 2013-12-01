@@ -19,11 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "GOGUIPanelWidget.h"
+
 #include "GOGUIControl.h"
 #include "GOGUIPanel.h"
-#include "GOGUIPanelWidget.h"
 #include "GOrgueDC.h"
 #include "GOrgueKeyConvert.h"
+#include <wx/dcclient.h>
+#include <wx/dcmemory.h>
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL)
 

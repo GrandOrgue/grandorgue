@@ -22,7 +22,7 @@
 #ifndef GORUGEPATH_H
 #define GORGUEPATH_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 
 wxString GOCreateFilename(wxString path, wxString file);
 void GOCreateDirectory(wxString path);

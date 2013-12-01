@@ -22,18 +22,18 @@
 #ifndef GORGUEDOCUMENT_H
 #define GORGUEDOCUMENT_H
 
-#include <wx/defs.h>
 #include "GOLock.h"
 #include "GOrgueMidiListener.h"
+#include <wx/string.h>
 
 class GOrgueKeyReceiver;
 class GOrgueMidiEvent;
 class GOrgueMidiReceiver;
 class GOrgueMidiSender;
 class GOrgueProgressDialog;
-class GrandOrgueFile;
 class GOrgueSound;
 class GOrgueView;
+class GrandOrgueFile;
 
 class GOrgueDocument : protected GOrgueMidiCallback
 {

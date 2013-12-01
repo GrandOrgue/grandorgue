@@ -22,8 +22,8 @@
 #ifndef GORGUEDIVISIONAL_H
 #define GORGUEDIVISIONAL_H
 
-#include "GOrguePushbutton.h"
 #include "GOrgueCombination.h"
+#include "GOrguePushbutton.h"
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;

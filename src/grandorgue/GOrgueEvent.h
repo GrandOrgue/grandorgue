@@ -22,7 +22,7 @@
 #ifndef GORGUEEVENT_H
 #define GORGUEEVENT_H
 
-#include <wx/wx.h>
+#include <wx/event.h>
 
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_METERS, -1)
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_LOADFILE, -1)

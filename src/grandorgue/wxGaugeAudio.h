@@ -22,7 +22,8 @@
 #ifndef WXGAUGEAUDIO_H
 #define WXGAUGEAUDIO_H
 
-#include <wx/wx.h>
+#include <wx/control.h>
+#include <wx/dcmemory.h>
 
 class wxGaugeAudio : public wxControl
 {

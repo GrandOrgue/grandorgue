@@ -24,7 +24,7 @@
 
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
-#include <wx/wx.h>
+#include <wx/string.h>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;

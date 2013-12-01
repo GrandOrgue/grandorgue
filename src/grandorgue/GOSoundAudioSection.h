@@ -22,19 +22,19 @@
 #ifndef GOSOUNDAUDIOSECTION_H_
 #define GOSOUNDAUDIOSECTION_H_
 
+#include "GOSoundCompress.h"
 #include "GOSoundDefs.h"
 #include "GOSoundResample.h"
 #include "GOrgueInt24.h"
 #include "GOrgueWave.h"
-#include "GOSoundCompress.h"
 #include <assert.h>
-#include <wx/wx.h>
+#include <math.h>
 
-class GOrgueReleaseAlignTable;
+class GOAudioSection;
 class GOrgueCache;
 class GOrgueCacheWriter;
 class GOrgueMemoryPool;
-class GOAudioSection;
+class GOrgueReleaseAlignTable;
 
 struct audio_section_stream_s;
 

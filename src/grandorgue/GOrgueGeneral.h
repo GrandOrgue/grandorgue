@@ -22,8 +22,8 @@
 #ifndef GORGUEGENERAL_H
 #define GORGUEGENERAL_H
 
-#include "GOrguePushbutton.h"
 #include "GOrgueFrameGeneral.h"
+#include "GOrguePushbutton.h"
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;

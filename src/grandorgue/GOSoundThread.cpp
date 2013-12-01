@@ -20,6 +20,7 @@
  */
 
 #include "GOSoundThread.h"
+
 #include "GOSoundEngine.h"
 
 GOSoundThread::GOSoundThread(GOSoundEngine* engine, unsigned n_frames):

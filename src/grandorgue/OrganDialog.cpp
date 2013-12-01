@@ -19,16 +19,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/statline.h>
-#include <wx/spinbutt.h>
-#include <wx/treectrl.h>
 #include "OrganDialog.h"
-#include "GrandOrgueFile.h"
+
 #include "GOrgueEvent.h"
 #include "GOrgueRank.h"
 #include "GOrguePipe.h"
 #include "GOrgueSettings.h"
 #include "GOrgueWindchest.h"
+#include "GrandOrgueFile.h"
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/choicdlg.h>
+#include <wx/choice.h>
+#include <wx/combobox.h>
+#include <wx/sizer.h>
+#include <wx/spinbutt.h>
+#include <wx/statline.h>
+#include <wx/stattext.h>
+#include <wx/treectrl.h>
 
 class OrganTreeItemData : public wxTreeItemData
 {

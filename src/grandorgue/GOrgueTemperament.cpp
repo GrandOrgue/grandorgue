@@ -20,7 +20,9 @@
  */
 
 #include "GOrgueTemperament.h"
+
 #include "GOrgueTemperamentCent.h"
+#include <wx/intl.h>
 
 GOrgueTemperament::GOrgueTemperament(wxString name, wxString group) :
 	m_Group(group),

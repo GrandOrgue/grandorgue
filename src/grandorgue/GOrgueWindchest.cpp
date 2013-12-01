@@ -20,11 +20,13 @@
  */
 
 #include "GOrgueWindchest.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueEnclosure.h"
 #include "GOrguePipe.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 	m_organfile(organfile),

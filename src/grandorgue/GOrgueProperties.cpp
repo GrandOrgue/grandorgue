@@ -19,9 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/statline.h>
 #include "GOrgueProperties.h"
+
 #include "GrandOrgueFile.h"
+#include <wx/sizer.h>
+#include <wx/statline.h>
 
 BEGIN_EVENT_TABLE(wxStaticLink, wxStaticText)
     EVT_LEFT_UP(wxStaticLink::OnClick)

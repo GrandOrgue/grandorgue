@@ -19,12 +19,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/numdlg.h>
-
 #include "SettingsMidiDevices.h"
+
 #include "GOrgueMidi.h"
-#include "GOrgueSound.h"
 #include "GOrgueSettings.h"
+#include "GOrgueSound.h"
+#include <wx/button.h>
+#include <wx/checklst.h>
+#include <wx/numdlg.h>
+#include <wx/sizer.h>
 
 BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_LISTBOX(ID_INDEVICES, SettingsMidiDevices::OnInDevicesClick)

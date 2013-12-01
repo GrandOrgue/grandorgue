@@ -20,6 +20,7 @@
  */
 
 #include "GOrgueMidiListener.h"
+
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 

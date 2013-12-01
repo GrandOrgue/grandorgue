@@ -22,9 +22,9 @@
 #ifndef GORGUEBITMAPCACHE_H
 #define GORGUEBITMAPCACHE_H
 
-#include <wx/wx.h>
 #include "ptrvector.h"
 #include "GOrgueBitmap.h"
+#include <wx/string.h>
 
 class GrandOrgueFile;
 

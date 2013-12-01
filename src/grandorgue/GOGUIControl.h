@@ -22,7 +22,8 @@
 #ifndef GOGUICONTROL_H
 #define GOGUICONTROL_H
 
-#include <wx/wx.h>
+#include <wx/gdicmn.h>
+#include <wx/string.h>
 
 class GOGUIDisplayMetrics;
 class GOGUIMouseState;

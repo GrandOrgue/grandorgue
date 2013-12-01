@@ -23,12 +23,12 @@
 #define GORGUESETTER_H
 
 #include "ptrvector.h"
-#include "GOrgueLabel.h"
 #include "GOrgueEnclosure.h"
+#include "GOrgueLabel.h"
 
-class GOGUIPanel;
-class GOGUILabel;
 class GOGUIControl;
+class GOGUILabel;
+class GOGUIPanel;
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueFrameGeneral;

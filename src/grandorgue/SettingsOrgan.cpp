@@ -20,8 +20,13 @@
  */
 
 #include "SettingsOrgan.h"
+
 #include "GOrgueSettings.h"
 #include "MIDIEventDialog.h"
+#include <wx/button.h>
+#include <wx/listctrl.h>
+#include <wx/msgdlg.h>
+#include <wx/sizer.h>
 
 BEGIN_EVENT_TABLE(SettingsOrgan, wxPanel)
 	EVT_LIST_ITEM_SELECTED(ID_ORGANS, SettingsOrgan::OnOrganSelected)

@@ -20,7 +20,10 @@
  */
 
 #include "OrganSelectDialog.h"
+
 #include "GOrgueSettings.h"
+#include <wx/msgdlg.h>
+#include <wx/sizer.h>
 
 BEGIN_EVENT_TABLE(OrganSelectDialog, wxDialog)
 	EVT_BUTTON(wxID_OK, OrganSelectDialog::OnOK)

@@ -22,9 +22,8 @@
 #ifndef GOSOUNDTHREAD_H_
 #define GOSOUNDTHREAD_H_
 
-#include <wx/wx.h>
 #include "GOLock.h"
-#include "GrandOrgueDef.h"
+#include <wx/thread.h>
 
 class GOSoundEngine;
 

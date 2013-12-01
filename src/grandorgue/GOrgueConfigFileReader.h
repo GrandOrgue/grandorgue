@@ -20,9 +20,9 @@
  */
 
 #ifndef GORGUECONFIGFILEREADER_H
-#define GORGUECONFIGFILEEADER_H
+#define GORGUECONFIGFILEREADER_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 #include <map>
 
 class GOrgueConfigFileReader

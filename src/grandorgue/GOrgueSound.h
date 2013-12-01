@@ -22,17 +22,16 @@
 #ifndef GORGUESOUND_H
 #define GORGUESOUND_H
 
-#include <wx/wx.h>
+#include "portaudio.h"
+#include "RtAudio.h"
+#include "ptrvector.h"
+#include "GOSoundEngine.h"
+#include "GOSoundRecorder.h"
+#include "GOLock.h"
+#include <wx/string.h>
 #include <wx/stopwatch.h>
 #include <map>
 #include <vector>
-#include "ptrvector.h"
-#include "RtAudio.h"
-#include "portaudio.h"
-#include "GrandOrgueDef.h"
-#include "GOLock.h"
-#include "GOSoundEngine.h"
-#include "GOSoundRecorder.h"
 
 class GrandOrgueFile;
 class GOrgueMidi;

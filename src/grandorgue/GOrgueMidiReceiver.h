@@ -26,6 +26,7 @@
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
+class GOrgueMidiEvent;
 class GrandOrgueFile;
 struct IniFileEnumEntry;
 

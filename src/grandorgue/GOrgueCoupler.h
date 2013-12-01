@@ -22,8 +22,8 @@
 #ifndef GORGUECOUPLER_H
 #define GORGUECOUPLER_H
 
-#include <vector>
 #include "GOrgueDrawStop.h"
+#include <vector>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;

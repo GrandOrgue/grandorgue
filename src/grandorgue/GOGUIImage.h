@@ -22,7 +22,6 @@
 #ifndef GOGUIIMAGE_H
 #define GOGUIIMAGE_H
 
-#include <wx/wx.h>
 #include "GOGUIControl.h"
 #include "GOrgueBitmap.h"
 

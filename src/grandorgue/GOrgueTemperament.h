@@ -22,8 +22,8 @@
 #ifndef GORGUETEMPERAMENT_H
 #define GORGUETEMPERAMENT_H
 
-#include <wx/wx.h>
 #include "ptrvector.h"
+#include <wx/string.h>
 
 class GOrgueTemperament
 {

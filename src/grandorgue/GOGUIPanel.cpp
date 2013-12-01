@@ -19,17 +19,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/image.h>
-#include <wx/mstream.h>
+#include "GOGUIPanel.h"
+
 #include "GOGUIButton.h"
 #include "GOGUIControl.h"
+#include "GOGUIDisplayMetrics.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUIHW1Background.h"
+#include "GOGUIHW1DisplayMetrics.h"
 #include "GOGUIImage.h"
 #include "GOGUILabel.h"
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
-#include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
@@ -46,9 +47,8 @@
 #include "GOrgueStop.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
-#include "GOGUIDisplayMetrics.h"
-#include "GOGUIHW1DisplayMetrics.h"
 #include "Images.h"
+#include <wx/image.h>
 
 GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_organfile(organfile),

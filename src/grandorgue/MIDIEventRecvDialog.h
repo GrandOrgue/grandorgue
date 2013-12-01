@@ -22,13 +22,15 @@
 #ifndef MIDIEVENTRECVDIALOG_H_
 #define MIDIEVENTRECVDIALOG_H_
 
-#include <wx/wx.h>
-#include <wx/tglbtn.h>
-#include <wx/spinctrl.h>
 #include "GOrgueMidiListener.h"
 #include "GOrgueMidiReceiver.h"
+#include <wx/panel.h>
 
 class GOrgueSettings;
+class wxButton;
+class wxChoice;
+class wxSpinCtrl;
+class wxToggleButton;
 
 class MIDIEventRecvDialog : public wxPanel, protected GOrgueMidiCallback
 {

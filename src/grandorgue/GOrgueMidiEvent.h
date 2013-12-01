@@ -22,8 +22,9 @@
 #ifndef GORGUEMIDIEVENT_H
 #define GORGUEMIDIEVENT_H
 
+#include "GOrgueTime.h"
+#include <wx/event.h>
 #include <vector>
-#include <wx/wx.h>
 
 typedef enum {
 	MIDI_NONE,
@@ -48,8 +49,6 @@ typedef enum {
 #define MIDI_CTRL_NOTES_OFF 123
 
 DECLARE_LOCAL_EVENT_TYPE( wxEVT_MIDI_ACTION, -1 )
-
-typedef wxLongLong GOTime;
 
 class GOrgueMidiEvent : public wxEvent {
 private:

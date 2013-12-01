@@ -22,11 +22,13 @@
 #ifndef MIDIEVENTSENDDIALOG_H_
 #define MIDIEVENTSENDDIALOG_H_
 
-#include <wx/wx.h>
-#include <wx/spinctrl.h>
 #include "GOrgueMidiSender.h"
+#include <wx/panel.h>
 
 class GOrgueSettings;
+class wxButton;
+class wxChoice;
+class wxSpinCtrl;
 
 class MIDIEventSendDialog : public wxPanel
 {

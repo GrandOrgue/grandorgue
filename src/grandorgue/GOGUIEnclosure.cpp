@@ -20,14 +20,17 @@
  */
 
 #include "GOGUIEnclosure.h"
+
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueDC.h"
-#include "GOrgueEnclosure.h"
 #include "GOrgueDocument.h"
+#include "GOrgueEnclosure.h"
 #include "GrandOrgueFile.h"
+#include <wx/font.h>
+#include <wx/intl.h>
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb):
 	GOGUIControl(panel, control),

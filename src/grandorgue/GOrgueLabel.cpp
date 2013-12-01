@@ -20,6 +20,7 @@
  */
 
 #include "GOrgueLabel.h"
+
 #include "GrandOrgueFile.h"
 
 GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :

@@ -22,10 +22,10 @@
 #ifndef GORGUEBUTTON_H
 #define GORGUEBUTTON_H
 
-#include <wx/wx.h>
 #include "GOrgueKeyReceiver.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
+#include <wx/string.h>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;

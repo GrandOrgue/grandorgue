@@ -20,13 +20,16 @@
  */
 
 #include "GOrgueSound.h"
+
 #include "GOSoundThread.h"
-#include "GrandOrgueFile.h"
-#include "GOrgueRtHelpers.h"
-#include "GOLock.h"
-#include "GOrgueMidi.h"
-#include "GOrgueSettings.h"
 #include "GOrgueEvent.h"
+#include "GOrgueMidi.h"
+#include "GOrgueRtHelpers.h"
+#include "GOrgueSettings.h"
+#include "GrandOrgueFile.h"
+#include <wx/app.h>
+#include <wx/intl.h>
+#include <wx/window.h>
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 

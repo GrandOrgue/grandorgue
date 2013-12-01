@@ -22,11 +22,13 @@
 #ifndef SETTINGSMIDIMESSAGE_H
 #define SETTINGSMIDIMESSAGE_H
 
-#include <wx/wx.h>
-#include <wx/listctrl.h>
+#include <wx/panel.h>
 
 class GOrgueMidi;
 class GOrgueSettings;
+class wxButton;
+class wxListEvent;
+class wxListView;
 
 class SettingsMidiMessage : public wxPanel
 {

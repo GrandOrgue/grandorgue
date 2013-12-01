@@ -22,10 +22,12 @@
 #ifndef SETTINGSAUDIOGROUP_H
 #define SETTINGSAUDIOGROUP_H
 
-#include <wx/wx.h>
+#include <wx/panel.h>
 #include <vector>
 
 class GOrgueSettings;
+class wxButton;
+class wxListBox;
 
 class GOAudioGroupCallback
 {

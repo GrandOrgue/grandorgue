@@ -22,9 +22,10 @@
 #ifndef GOGUIPANEL_H
 #define GOGUIPANEL_H
 
-#include <wx/wx.h>
 #include "ptrvector.h"
 #include "GOrgueBitmap.h"
+#include <wx/gdicmn.h>
+#include <wx/string.h>
 
 class GOGUIControl;
 class GOGUIDisplayMetrics;

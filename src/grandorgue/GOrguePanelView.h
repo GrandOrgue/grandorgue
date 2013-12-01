@@ -22,8 +22,8 @@
 #ifndef GORGUEPANELVIEW_H
 #define GORGUEPANELVIEW_H
 
-#include <wx/wx.h>
 #include "GOrgueView.h"
+#include <wx/scrolwin.h>
 
 class GOGUIControl;
 class GOGUIPanel;

@@ -22,7 +22,8 @@
 #ifndef GORGUECONFIGREADER_H
 #define GORGUECONFIGREADER_H
 
-#include <wx/wx.h>
+#include <wx/colour.h>
+#include <wx/string.h>
 
 class GOrgueConfigReaderDB;
 

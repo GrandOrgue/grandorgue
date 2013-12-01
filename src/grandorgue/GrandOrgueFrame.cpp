@@ -21,15 +21,8 @@
 
 #include "GrandOrgueFrame.h"
 
-#include <algorithm>
-#include <wx/fileconf.h>
-#include <wx/stdpaths.h>
-#include <wx/html/helpctrl.h>
-#include <wx/splash.h>
-#include <wx/spinctrl.h>
-#include "wxGaugeAudio.h"
-#include "Images.h"
 #include "GOGUIPanel.h"
+#include "GOrgueDocument.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrgueProgressDialog.h"
@@ -38,12 +31,25 @@
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GOrgueTemperament.h"
-#include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
+#include "GrandOrgueID.h"
 #include "OrganSelectDialog.h"
-#include "GOrgueDocument.h"
 #include "SettingsDialog.h"
 #include "SplashScreen.h"
+#include "Images.h"
+#include "wxGaugeAudio.h"
+#include <wx/fileconf.h>
+#include <wx/filedlg.h>
+#include <wx/html/helpctrl.h>
+#include <wx/icon.h>
+#include <wx/menu.h>
+#include <wx/msgdlg.h>
+#include <wx/sizer.h>
+#include <wx/spinctrl.h>
+#include <wx/splash.h>
+#include <wx/stdpaths.h>
+#include <wx/toolbar.h>
+#include <algorithm>
 
 BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MSGBOX(GOrgueFrame::OnMsgBox)

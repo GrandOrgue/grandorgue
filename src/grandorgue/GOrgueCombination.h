@@ -23,6 +23,7 @@
 #define GORGUECOMBINATION_H
 
 #include <vector>
+
 class GOrgueCombinationDefinition;
 class GrandOrgueFile;
 

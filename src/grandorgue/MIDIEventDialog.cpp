@@ -19,11 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/bookctrl.h>
 #include "MIDIEventDialog.h"
+
+#include "MIDIEventKeyDialog.h"
 #include "MIDIEventRecvDialog.h"
 #include "MIDIEventSendDialog.h"
-#include "MIDIEventKeyDialog.h"
+#include <wx/bookctrl.h>
 
 BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
 	EVT_BUTTON(wxID_APPLY, MIDIEventDialog::OnApply)

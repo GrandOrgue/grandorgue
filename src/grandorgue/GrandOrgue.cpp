@@ -19,18 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #include "GrandOrgue.h"
+
 #include "GOrgueEvent.h"
 #include "GOrgueLCD.h"
 #include "GOrgueLog.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
+#include "GrandOrgueDef.h"
 #include "GrandOrgueFrame.h"
-
+#include <wx/config.h>
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
-#include <wx/config.h>
+#include <wx/image.h>
 #include <wx/regex.h>
 #include <wx/stdpaths.h>
 

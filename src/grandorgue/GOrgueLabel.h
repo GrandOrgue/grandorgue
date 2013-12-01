@@ -22,8 +22,8 @@
 #ifndef GORGUELABEL_H
 #define GORGUELABEL_H
 
-#include <wx/wx.h>
 #include "GOrgueMidiSender.h"
+#include <wx/string.h>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;

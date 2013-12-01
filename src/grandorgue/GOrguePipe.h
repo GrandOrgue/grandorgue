@@ -22,10 +22,10 @@
 #ifndef GORGUEPIPE_H
 #define GORGUEPIPE_H
 
-#include <wx/wx.h>
+#include "GOSoundProviderWave.h"
 #include "GOrgueCacheObject.h"
 #include "GOrguePipeConfig.h"
-#include "GOSoundProviderWave.h"
+#include <wx/string.h>
 
 class GOrgueCache;
 class GOrgueCacheWriter;

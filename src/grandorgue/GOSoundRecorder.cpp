@@ -20,7 +20,9 @@
  */
 
 #include "GOSoundRecorder.h"
+
 #include "GOrgueWaveTypes.h"
+#include <wx/intl.h>
 
 #pragma pack(push, 1)
 

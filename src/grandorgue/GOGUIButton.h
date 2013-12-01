@@ -22,9 +22,9 @@
 #ifndef GOGUIBUTTON_H
 #define GOGUIBUTTON_H
 
-#include <wx/wx.h>
 #include "GOGUIControl.h"
 #include "GOrgueBitmap.h"
+#include <wx/colour.h>
 
 class GOrgueButton;
 

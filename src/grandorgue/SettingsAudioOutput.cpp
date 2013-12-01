@@ -19,12 +19,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/treectrl.h>
-#include <wx/numdlg.h>
-
 #include "SettingsAudioOutput.h"
-#include "GOrgueSound.h"
+
 #include "GOrgueSettings.h"
+#include "GOrgueSound.h"
+#include <wx/button.h>
+#include <wx/choicdlg.h>
+#include <wx/msgdlg.h>
+#include <wx/numdlg.h>
+#include <wx/sizer.h>
+#include <wx/textdlg.h>
+#include <wx/treectrl.h>
 
 class AudioItemData : public wxTreeItemData
 {

@@ -22,19 +22,17 @@
 #ifndef MIDIEVENTDIALOG_H_
 #define MIDIEVENTDIALOG_H_
 
-#include <wx/wx.h>
-#include <wx/propdlg.h>
-#include "GrandOrgueDef.h"
 #include "GOrgueView.h"
+#include <wx/propdlg.h>
 
+class GOrgueKeyReceiver;
 class GOrgueMidi;
 class GOrgueMidiReceiver;
 class GOrgueMidiSender;
-class GOrgueKeyReceiver;
 class GOrgueSettings;
+class MIDIEventKeyDialog;
 class MIDIEventRecvDialog;
 class MIDIEventSendDialog;
-class MIDIEventKeyDialog;
 
 class MIDIEventDialog : public wxPropertySheetDialog, public GOrgueView
 {

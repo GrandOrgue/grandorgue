@@ -22,12 +22,11 @@
 #ifndef GOSOUNDSAMPLER_H_
 #define GOSOUNDSAMPLER_H_
 
-#include "GOSoundFader.h"
-#include "GOSoundDefs.h"
 #include "GOSoundAudioSection.h"
+#include "GOSoundDefs.h"
+#include "GOSoundFader.h"
 
 class GOSoundProvider;
-class GOAudioSection;
 
 typedef struct GO_SAMPLER_T
 {

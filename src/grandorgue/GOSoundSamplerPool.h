@@ -22,11 +22,9 @@
 #ifndef GOSOUNDSAMPLERPOOL_H_
 #define GOSOUNDSAMPLERPOOL_H_
 
-#include <wx/wx.h>
-
+#include "ptrvector.h"
 #include "GOSoundSampler.h"
 #include "GOLock.h"
-#include "ptrvector.h"
 
 class GOSoundSamplerPool
 {

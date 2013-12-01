@@ -22,9 +22,8 @@
 #ifndef GORGUEDIVISIONALCOUPLER_H
 #define GORGUEDIVISIONALCOUPLER_H
 
-#include <vector>
-#include <wx/wx.h>
 #include "GOrgueDrawStop.h"
+#include <vector>
 
 class GOrgueDivisionalCoupler : public GOrgueDrawstop
 {

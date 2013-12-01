@@ -22,12 +22,18 @@
 #ifndef SETTINGSREVERB_H
 #define SETTINGSREVERB_H
 
-#include <wx/wx.h>
-#include <wx/spinctrl.h>
+#include <wx/panel.h>
 
-class wxFilePickerCtrl;
-class wxFileDirPickerEvent;
 class GOrgueSettings;
+class wxCheckBox;
+class wxChoice;
+class wxFileDirPickerEvent;
+class wxFilePickerCtrl;
+class wxSpinButton;
+class wxSpinCtrl;
+class wxSpinEvent;
+class wxStaticText;
+class wxTextCtrl;
 
 class SettingsReverb : public wxPanel
 {

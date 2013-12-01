@@ -22,9 +22,9 @@
 #ifndef GORGUECACHE_H_
 #define GORGUECACHE_H_
 
-class wxInputStream;
-class wxFile;
 class GOrgueMemoryPool;
+class wxFile;
+class wxInputStream;
 
 class GOrgueCache {
 	wxInputStream* m_stream;

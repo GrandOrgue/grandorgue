@@ -22,7 +22,7 @@
 #ifndef GORGUELOG_H
 #define GORGUELOG_H
 
-#include <wx/wx.h>
+#include <wx/log.h>
 
 class GOrgueLogWindow;
 

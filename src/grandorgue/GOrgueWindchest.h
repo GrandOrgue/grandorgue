@@ -22,8 +22,8 @@
 #ifndef GORGUEWINDCHEST_H
 #define GORGUEWINDCHEST_H
 
+#include <wx/string.h>
 #include <vector>
-#include <wx/wx.h>
 
 class GOrgueConfigReader;
 class GOrguePipe;

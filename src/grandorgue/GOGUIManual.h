@@ -22,9 +22,9 @@
 #ifndef GOGUIMANUAL_H
 #define GOGUIMANUAL_H
 
-#include <vector>
 #include "GOGUIControl.h"
 #include "GOrgueBitmap.h"
+#include <vector>
 
 class GOrgueManual;
 

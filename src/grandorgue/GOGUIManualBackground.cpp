@@ -19,8 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOGUIDisplayMetrics.h"
 #include "GOGUIManualBackground.h"
+
+#include "GOGUIDisplayMetrics.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueManual.h"

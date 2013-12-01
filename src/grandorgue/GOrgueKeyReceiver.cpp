@@ -20,6 +20,7 @@
  */
 
 #include "GOrgueKeyReceiver.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GrandOrgueFile.h"

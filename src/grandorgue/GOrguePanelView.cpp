@@ -20,9 +20,12 @@
  */
 
 #include "GOrguePanelView.h"
+
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
 #include "Images.h"
+#include <wx/frame.h>
+#include <wx/icon.h>
 
 GOrguePanelView* GOrguePanelView::createWindow(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent)
 {

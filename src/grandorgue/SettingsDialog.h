@@ -22,12 +22,10 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
-#include <vector>
-#include <wx/wx.h>
 #include <wx/propdlg.h>
+#include <vector>
 
 class GOrgueSound;
-
 class SettingsAudioGroup;
 class SettingsAudioOutput;
 class SettingsMidiDevices;

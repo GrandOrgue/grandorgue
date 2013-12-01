@@ -21,6 +21,8 @@
 
 #include "GOrgueKeyConvert.h"
 
+#include <wx/intl.h>
+
 static GOShortcutKey shortcuts[] = {
 	{ wxTRANSLATE("back"), 8 },
 	{ wxTRANSLATE("tab"), 9 },

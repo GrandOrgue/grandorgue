@@ -20,7 +20,13 @@
  */
 
 #include "MIDIEventSendDialog.h"
+
 #include "GOrgueSettings.h"
+#include <wx/button.h>
+#include <wx/choice.h>
+#include <wx/sizer.h>
+#include <wx/spinctrl.h>
+#include <wx/stattext.h>
 
 BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
 	EVT_BUTTON(ID_EVENT_NEW, MIDIEventSendDialog::OnNewClick)

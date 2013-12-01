@@ -27,6 +27,7 @@
 #include "GOrgueSetter.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueDivisional::GOrgueDivisional(GrandOrgueFile* organfile, GOrgueCombinationDefinition& divisional_template, bool is_setter) :
 	GOrguePushbutton(organfile),

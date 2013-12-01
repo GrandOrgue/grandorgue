@@ -20,6 +20,7 @@
  */
 
 #include "GOrgueSetterButton.h"
+
 #include "GOrgueSetter.h"
 
 GOrgueSetterButton::GOrgueSetterButton(GrandOrgueFile* organfile, GOrgueSetter* setter, bool Pushbutton) :

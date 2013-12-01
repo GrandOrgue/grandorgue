@@ -22,19 +22,22 @@
 #ifndef ORGANDIALOG_H_
 #define ORGANDIALOG_H_
 
-#include <wx/wx.h>
-#include <vector>
-#include "GrandOrgueDef.h"
 #include "GOrgueView.h"
+#include <wx/dialog.h>
+#include <vector>
 
 class GrandOrgueFile;
+class OrganTreeItemData;
+class wxButton;
+class wxCheckBox;
+class wxChoice;
+class wxComboBox;
+class wxSpinButton;
+class wxSpinEvent;
+class wxTextCtrl;
 class wxTreeCtrl;
 class wxTreeEvent;
 class wxTreeItemId;
-class wxSpinButton;
-class OrganTreeItemData;
-class wxCheckBox;
-class wxSpinEvent;
 
 class OrganDialog : public wxDialog, public GOrgueView
 {

@@ -19,9 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "GOrguePipeConfig.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
-#include "GOrguePipeConfig.h"
 #include "GrandOrgueFile.h"
 
 GOrguePipeConfig::GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback) :

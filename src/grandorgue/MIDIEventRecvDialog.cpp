@@ -20,8 +20,16 @@
  */
 
 #include "MIDIEventRecvDialog.h"
+
+#include "GOrgueMidiEvent.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
+#include <wx/button.h>
+#include <wx/choice.h>
+#include <wx/sizer.h>
+#include <wx/spinctrl.h>
+#include <wx/stattext.h>
+#include <wx/tglbtn.h>
 
 BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
 	EVT_TOGGLEBUTTON(ID_LISTEN, MIDIEventRecvDialog::OnListenClick)

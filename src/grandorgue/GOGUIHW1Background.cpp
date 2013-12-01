@@ -20,8 +20,9 @@
  */
 
 #include "GOGUIHW1Background.h"
-#include "GOGUIPanel.h"
+
 #include "GOGUIDisplayMetrics.h"
+#include "GOGUIPanel.h"
 
 GOGUIHW1Background::GOGUIHW1Background(GOGUIPanel* panel):
 	GOGUIControl(panel, NULL)

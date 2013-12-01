@@ -22,7 +22,8 @@
 #ifndef GRANDORGUEPROGRESSDIALOG_H
 #define GRANDORGUEPROGRESSDIALOG_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
+
 class wxProgressDialog;
 
 class GOrgueProgressDialog

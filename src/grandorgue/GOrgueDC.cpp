@@ -20,8 +20,9 @@
  */
 
 #include "GOrgueDC.h"
+
 #include "GOrgueBitmap.h"
-#include <wx/wx.h>
+#include <wx/dc.h>
 
 GOrgueDC::GOrgueDC(wxDC* dc) :
 	m_DC(dc)

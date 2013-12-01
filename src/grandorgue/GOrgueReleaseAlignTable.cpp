@@ -19,12 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/wx.h>
-
 #include "GOrgueReleaseAlignTable.h"
+
+#include "GOSoundAudioSection.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
-#include "GOSoundAudioSection.h"
 #include <stdlib.h>
 
 #ifndef NDEBUG

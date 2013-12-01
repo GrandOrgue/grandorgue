@@ -22,9 +22,9 @@
 #ifndef GORGUERTHELPERS_H_
 #define GORGUERTHELPERS_H_
 
-#include <wx/wx.h>
 #include "RtAudio.h"
 #include "RtMidi.h"
+#include <wx/string.h>
 
 class GOrgueRtHelpers
 {

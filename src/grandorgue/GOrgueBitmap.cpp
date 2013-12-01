@@ -20,7 +20,8 @@
  */
 
 #include "GOrgueBitmap.h"
-#include <wx/wx.h>
+
+#include <wx/bitmap.h>
 
 GOrgueBitmap::GOrgueBitmap() :
 	m_bmp(NULL)

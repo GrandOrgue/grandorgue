@@ -19,9 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "GOrgueRank.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrguePipe.h"
-#include "GOrgueRank.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 

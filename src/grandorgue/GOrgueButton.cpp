@@ -20,6 +20,7 @@
  */
 
 #include "GOrgueButton.h"
+
 #include "GOrgueConfigReader.h"
 #include "GrandOrgueFile.h"
 

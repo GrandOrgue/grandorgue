@@ -23,11 +23,12 @@
 #define GORGUEDC_H
 
 #include <wx/string.h>
+
+class GOrgueBitmap;
 class wxDC;
 class wxFont;
 class wxColour;
 class wxRect;
-class GOrgueBitmap;
 
 class GOrgueDC
 {

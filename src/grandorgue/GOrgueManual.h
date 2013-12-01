@@ -22,15 +22,12 @@
 #ifndef GORGUEMANUAL_H
 #define GORGUEMANUAL_H
 
-#include <wx/wx.h>
-#include <vector>
 #include "ptrvector.h"
-
+#include "GOrgueCombinationDefinition.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
-#include "GOrgueCombinationDefinition.h"
-
-class wxProgressDialog;
+#include <wx/string.h>
+#include <vector>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;

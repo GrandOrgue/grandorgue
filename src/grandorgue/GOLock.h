@@ -22,10 +22,12 @@
 #ifndef GOLOCK_H
 #define GOLOCK_H
 
-#include <wx/wx.h>
-#include <wx/stackwalk.h>
-#include <vector>
 #include "GrandOrgueDef.h"
+#include <wx/log.h>
+#include <wx/stackwalk.h>
+#include <wx/string.h>
+#include <wx/thread.h>
+#include <vector>
 
 #if 0  /* set to 1 to enable fallback code */
 #undef HAVE_CSTDATOMIC

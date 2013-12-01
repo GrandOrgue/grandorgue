@@ -20,9 +20,12 @@
  */
 
 #include "GOGUIDisplayMetrics.h"
+
+#include "GOGUIEnclosure.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
-#include "GOGUIEnclosure.h"
+#include <wx/font.h>
+#include <wx/intl.h>
 
 GOGUIDisplayMetrics::GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString group) :
 	m_group(group),

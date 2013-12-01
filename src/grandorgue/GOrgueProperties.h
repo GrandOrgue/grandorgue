@@ -22,7 +22,9 @@
 #ifndef GORGUEPROPERTIES_H
 #define GORGUEPROPERTIES_H
 
-#include <wx/wx.h>
+#include <wx/dialog.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
 
 class GrandOrgueFile;
 

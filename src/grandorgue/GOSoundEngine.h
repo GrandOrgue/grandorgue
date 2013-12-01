@@ -23,10 +23,9 @@
 #define GOSOUNDENGINE_H_
 
 #include "GOSoundDefs.h"
-#include "GOSoundSamplerPool.h"
-#include "GrandOrgueDef.h"
-#include "GOLock.h"
 #include "GOSoundResample.h"
+#include "GOSoundSamplerPool.h"
+#include "GOLock.h"
 #include <vector>
 
 #define GO_SOUND_BUFFER_SIZE ((MAX_FRAME_SIZE) * (MAX_OUTPUT_CHANNELS))

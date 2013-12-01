@@ -22,16 +22,16 @@
 #ifndef SETTINGSAUDIOOUTPUT_H
 #define SETTINGSAUDIOOUTPUT_H
 
-#include <wx/wx.h>
+#include "SettingsAudioGroup.h"
+#include <wx/panel.h>
 #include <vector>
 
-#include "SettingsAudioGroup.h"
-
 class AudioItemData;
-class wxTreeItemId;
+class GOrgueSound;
+class wxButton;
 class wxTreeCtrl;
 class wxTreeEvent;
-class GOrgueSound;
+class wxTreeItemId;
 
 class SettingsAudioOutput : public wxPanel
 {

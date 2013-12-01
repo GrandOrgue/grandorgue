@@ -20,11 +20,13 @@
  */
 
 #include "GOGUILabel.h"
-#include "GOGUIPanel.h"
+
 #include "GOGUIDisplayMetrics.h"
+#include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueDC.h"
 #include "GOrgueLabel.h"
+#include <wx/font.h>
 
 GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, unsigned y_pos, wxString name) :
 	GOGUIControl(panel, label),

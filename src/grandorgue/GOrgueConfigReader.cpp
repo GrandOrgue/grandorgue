@@ -20,8 +20,11 @@
  */
 
 #include "GOrgueConfigReader.h"
+
 #include "GOrgueConfigReaderDB.h"
 #include "GOrgueUtil.h"
+#include <wx/intl.h>
+#include <wx/log.h>
 
 GOrgueConfigReader::GOrgueConfigReader(GOrgueConfigReaderDB& cfg) :
 	m_Config(cfg)

@@ -28,6 +28,7 @@
 #include "GOrgueManual.h"
 #include "GOrgueSetter.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueFrameGeneral::GOrgueFrameGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile, bool is_setter):
 	GOrgueCombination(general_template, organfile),

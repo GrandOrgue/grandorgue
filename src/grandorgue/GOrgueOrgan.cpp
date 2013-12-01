@@ -20,8 +20,11 @@
  */
 
 #include "GOrgueOrgan.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
+#include <wx/intl.h>
+#include <wx/stopwatch.h>
 
 GOrgueOrgan::GOrgueOrgan(wxString odf, wxString church_name, wxString organ_builder, wxString recording_detail) :
 	m_ODF(odf),

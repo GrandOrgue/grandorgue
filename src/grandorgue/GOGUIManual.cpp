@@ -19,8 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOGUIDisplayMetrics.h"
 #include "GOGUIManual.h"
+
+#include "GOGUIDisplayMetrics.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
@@ -28,6 +29,7 @@
 #include "GOrgueDocument.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOGUIManual::GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number):
 	GOGUIControl(panel, manual),

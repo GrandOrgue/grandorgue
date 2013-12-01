@@ -19,18 +19,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOGUIPanel.h"
 #include "GOrgueDocument.h"
+
+#include "GOGUIPanel.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrguePanelView.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GOrgueView.h"
-#include "GOrguePanelView.h"
-#include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
+#include "GrandOrgueID.h"
 #include "MIDIEventDialog.h"
 #include "OrganDialog.h"
+#include <wx/app.h>
 
 GOrgueDocument::GOrgueDocument(GOrgueSound* sound) :
 	m_OrganFileReady(false),

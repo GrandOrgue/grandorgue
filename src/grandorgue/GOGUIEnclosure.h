@@ -22,9 +22,10 @@
 #ifndef GOGUIENCLOSURE_H
 #define GOGUIENCLOSURE_H
 
-#include <vector>
 #include "GOGUIControl.h"
 #include "GOrgueBitmap.h"
+#include <wx/colour.h>
+#include <vector>
 
 class GOrgueEnclosure;
 

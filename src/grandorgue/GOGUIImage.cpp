@@ -20,6 +20,7 @@
  */
 
 #include "GOGUIImage.h"
+
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"

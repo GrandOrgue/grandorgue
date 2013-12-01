@@ -23,7 +23,7 @@
 #define GOSOUNDPROVIDERWAVE_H_
 
 #include "GOSoundProvider.h"
-#include <wx/wx.h>
+#include <wx/string.h>
 #include <vector>
 
 class GOrgueWave;

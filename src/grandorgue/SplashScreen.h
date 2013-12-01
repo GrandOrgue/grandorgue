@@ -22,7 +22,10 @@
 #ifndef SPLASHSCREEN_H
 #define SPLASHSCREEN_H
 
-#include <wx/wx.h>
+#include <wx/bitmap.h>
+#include <wx/control.h>
+#include <wx/dialog.h>
+#include <wx/timer.h>
 
 class GOrgueSplashBitmap : public wxControl
 {
