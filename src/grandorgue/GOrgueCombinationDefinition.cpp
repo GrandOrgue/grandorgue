@@ -20,6 +20,7 @@
  */
 
 #include "GOrgueCombinationDefinition.h"
+
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueManual.h"

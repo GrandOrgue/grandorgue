@@ -20,7 +20,10 @@
  */
 
 #include "GOrgueConfigReaderDB.h"
+
 #include "GOrgueConfigFileReader.h"
+#include <wx/intl.h>
+#include <wx/log.h>
 
 GOrgueConfigReaderDB::GOrgueConfigReaderDB() :
 	m_ODF(1000),

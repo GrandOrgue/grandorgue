@@ -20,11 +20,11 @@
  */
 
 #include "GOSoundProvider.h"
-#include "GOrgueReleaseAlignTable.h"
+
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
 #include "GOrgueMemoryPool.h"
-#include <wx/wx.h>
+#include "GOrgueReleaseAlignTable.h"
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 

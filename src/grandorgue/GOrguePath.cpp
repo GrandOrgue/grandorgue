@@ -20,8 +20,10 @@
  */
 
 #include "GOrguePath.h"
-#include <wx/filename.h>
+
 #include <wx/file.h>
+#include <wx/filename.h>
+#include <wx/log.h>
 
 wxString GOCreateFilename(wxString path, wxString file)
 {

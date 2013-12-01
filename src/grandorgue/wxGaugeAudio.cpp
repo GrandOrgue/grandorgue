@@ -20,6 +20,7 @@
  */
 
 #include "wxGaugeAudio.h"
+
 #include "Images.h"
 
 BEGIN_EVENT_TABLE(wxGaugeAudio, wxControl)

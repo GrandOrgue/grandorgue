@@ -22,7 +22,6 @@
 #ifndef GORGUEPUSHBUTTON_H
 #define GORGUEPUSHBUTTON_H
 
-#include <wx/wx.h>
 #include "GOrgueButton.h"
 
 class GOrguePushbutton : public GOrgueButton

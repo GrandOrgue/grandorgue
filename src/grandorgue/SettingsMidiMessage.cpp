@@ -20,8 +20,13 @@
  */
 
 #include "SettingsMidiMessage.h"
+
 #include "GOrgueSettings.h"
 #include "MIDIEventDialog.h"
+#include <wx/button.h>
+#include <wx/listctrl.h>
+#include <wx/stattext.h>
+#include <wx/sizer.h>
 
 BEGIN_EVENT_TABLE(SettingsMidiMessage, wxPanel)
 	EVT_LIST_ITEM_SELECTED(ID_EVENTS, SettingsMidiMessage::OnEventsClick)

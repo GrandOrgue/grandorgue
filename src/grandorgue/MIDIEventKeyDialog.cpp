@@ -20,7 +20,12 @@
  */
 
 #include "MIDIEventKeyDialog.h"
+
 #include "GOrgueKeyConvert.h"
+#include <wx/button.h>
+#include <wx/choice.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
 #include <wx/tglbtn.h>
 
 BEGIN_EVENT_TABLE(MIDIEventKeyDialog, wxPanel)

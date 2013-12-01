@@ -22,9 +22,9 @@
 #ifndef GORGUESTOP_H
 #define GORGUESTOP_H
 
-#include <vector>
-#include <wx/wx.h>
 #include "GOrgueDrawStop.h"
+#include <wx/string.h>
+#include <vector>
 
 class GOrgueRank;
 

@@ -22,9 +22,10 @@
 #ifndef MIDIEVENTKEYDIALOG_H_
 #define MIDIEVENTKEYDIALOG_H_
 
-#include <wx/wx.h>
 #include "GOrgueKeyReceiver.h"
+#include <wx/panel.h>
 
+class wxChoice;
 class wxToggleButton;
 
 class MIDIEventKeyDialog : public wxPanel

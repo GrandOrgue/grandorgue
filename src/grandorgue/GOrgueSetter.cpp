@@ -19,12 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "GOrgueSetter.h"
+
 #include "GOGUIButton.h"
 #include "GOGUIEnclosure.h"
+#include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
-#include "GOGUIHW1Background.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOrgueConfigReader.h"
@@ -34,13 +36,15 @@
 #include "GOrgueEvent.h"
 #include "GOrgueFrameGeneral.h"
 #include "GOrgueManual.h"
-#include "GOrgueSetter.h"
 #include "GOrgueSetterButton.h"
 #include "GOrgueSettings.h"
 #include "GOrgueTemperament.h"
 #include "GOrgueWindchest.h"
-#include "GrandOrgueID.h"
 #include "GrandOrgueFile.h"
+#include "GrandOrgueID.h"
+#include <wx/app.h>
+#include <wx/intl.h>
+#include <wx/window.h>
 
 #define FRAME_GENERALS 1000
 #define GENERAL_BANKS 10

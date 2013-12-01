@@ -20,7 +20,9 @@
  */
 
 #include "GOrgueProgressDialog.h"
+
 #include <wx/progdlg.h>
+#include <wx/stopwatch.h>
 
 GOrgueProgressDialog::GOrgueProgressDialog() :
 	m_dlg(NULL),

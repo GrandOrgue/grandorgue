@@ -20,9 +20,11 @@
  */
 
 #include "GOSoundProviderWave.h"
+
 #include "GOrgueMemoryPool.h"
 #include "GOrguePath.h"
 #include "GOrgueWave.h"
+#include <wx/intl.h>
 
 GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool) :
 	GOSoundProvider(pool)

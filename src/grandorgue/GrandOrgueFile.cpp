@@ -21,11 +21,8 @@
 
 #include "GrandOrgueFile.h"
 
-#include <math.h>
-#include <wx/filename.h>
-#include <wx/stream.h>
-#include <wx/wfstream.h>
-
+#include "GOGUIPanel.h"
+#include "GOSoundEngine.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
 #include "GOrgueConfigFileReader.h"
@@ -36,12 +33,14 @@
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
+#include "GOrgueDocument.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueEvent.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
 #include "GOrgueManual.h"
 #include "GOrgueMidi.h"
+#include "GOrgueMidiEvent.h"
 #include "GOrguePath.h"
 #include "GOrguePipe.h"
 #include "GOrguePiston.h"
@@ -55,10 +54,13 @@
 #include "GOrgueTemperament.h"
 #include "GOrgueTremulant.h"
 #include "GOrgueWindchest.h"
-#include "GOrgueDocument.h"
-#include "GOGUIPanel.h"
-#include "GOSoundEngine.h"
 #include "contrib/sha1.h"
+#include <wx/filename.h>
+#include <wx/msgdlg.h>
+#include <wx/stream.h>
+#include <wx/wfstream.h>
+#include <math.h>
+
 
 GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_doc(doc),

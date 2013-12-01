@@ -20,6 +20,7 @@
  */
 
 #include "GOGUISetterDisplayMetrics.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"

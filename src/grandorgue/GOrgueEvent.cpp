@@ -21,6 +21,9 @@
 
 #include "GOrgueEvent.h"
 
+#include <wx/app.h>
+#include <wx/window.h>
+
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_METERS)
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_LOADFILE)
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_SHOWHELP)

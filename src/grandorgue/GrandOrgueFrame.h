@@ -22,22 +22,22 @@
 #ifndef GRANDORGUEFRAME_H
 #define GRANDORGUEFRAME_H
 
-#include <vector>
-#include <wx/dcmemory.h>
-#include "GrandOrgueDef.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidiListener.h"
 #include "GOLock.h"
+#include <wx/dcmemory.h>
+#include <wx/frame.h>
+#include <vector>
 
-class wxHtmlHelpController;
-class wxGaugeAudio;
-class wxSpinCtrl;
-class GOrgueMidiEvent;
 class GOrgueDocument;
+class GOrgueMidiEvent;
 class GOrgueSettings;
 class GOrgueSound;
 class GOrgueTemperament;
 class wxChoice;
+class wxGaugeAudio;
+class wxHtmlHelpController;
+class wxSpinCtrl;
 
 class GOrgueFrame: public wxFrame, protected GOrgueMidiCallback
 {

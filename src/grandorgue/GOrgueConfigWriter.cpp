@@ -20,9 +20,12 @@
  */
 
 #include "GOrgueConfigFileWriter.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueUtil.h"
+#include <wx/intl.h>
+#include <wx/log.h>
 
 GOrgueConfigWriter::GOrgueConfigWriter(GOrgueConfigFileWriter& cfg, bool prefix) :
 	m_ConfigFile(cfg),

@@ -19,17 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/tokenzr.h>
-#include "GOrgueConfigReader.h"
 #include "GOrguePipe.h"
-#include "GOrgueRank.h"
-#include "GOrgueStop.h"
+
+#include "GOSoundProviderWave.h"
+#include "GOrgueConfigReader.h"
 #include "GOrgueManual.h"
+#include "GOrgueRank.h"
 #include "GOrgueSettings.h"
+#include "GOrgueStop.h"
 #include "GOrgueTemperament.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
-#include "GOSoundProviderWave.h"
+#include <wx/intl.h>
+#include <wx/tokenzr.h>
 
 GOrguePipe::GOrguePipe (GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume) :
 	m_OrganFile(organfile),

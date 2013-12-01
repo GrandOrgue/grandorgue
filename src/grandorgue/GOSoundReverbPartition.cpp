@@ -19,9 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "GOSoundReverbPartition.h"
+
 #include <algorithm>
 #include <assert.h>
-#include "GOSoundReverbPartition.h"
 
 GOSoundReverbPartition::GOSoundReverbPartition(unsigned size, unsigned cnt, unsigned start_pos) :
 	m_PartitionSize(size),

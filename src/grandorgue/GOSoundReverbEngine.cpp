@@ -19,9 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <algorithm>
 #include "GOSoundReverbEngine.h"
+
 #include "GOSoundReverbPartition.h"
+#include <algorithm>
 
 GOSoundReverbEngine::GOSoundReverbEngine(unsigned samples_per_buffer) :
 	m_Partitions()

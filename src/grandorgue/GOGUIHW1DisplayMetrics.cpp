@@ -20,6 +20,7 @@
  */
 
 #include "GOGUIHW1DisplayMetrics.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueManual.h"

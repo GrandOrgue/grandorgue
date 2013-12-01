@@ -22,10 +22,12 @@
 #ifndef SETTINGSMIDIDEVICES_H
 #define SETTINGSMIDIDEVICES_H
 
+#include <wx/panel.h>
 #include <vector>
-#include <wx/wx.h>
 
 class GOrgueSound;
+class wxButton;
+class wxCheckListBox;
 
 class SettingsMidiDevices : public wxPanel
 {

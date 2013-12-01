@@ -19,12 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "GOrgueDrawStop.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
-#include "GOrgueDrawStop.h"
 #include "GOrgueLCD.h"
 #include "GOrgueSwitch.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 const struct IniFileEnumEntry GOrgueDrawstop::m_function_types[] = {
 	{ wxT("Input"), FUNCTION_INPUT},

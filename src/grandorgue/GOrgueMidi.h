@@ -22,18 +22,16 @@
 #ifndef GORGUEMIDI_H
 #define GORGUEMIDI_H
 
-#include <map>
-#include <wx/wx.h>
-#include "GrandOrgueDef.h"
 #include "ptrvector.h"
+#include <wx/event.h>
+#include <map>
 
-class RtMidiIn;
-class RtMidiOut;
-
+class GOrgueMidiEvent;
 class GOrgueMidiListener;
 class GOrgueSettings;
 class GrandOrgueFile;
-class GOrgueMidiEvent;
+class RtMidiIn;
+class RtMidiOut;
 
 class GOrgueMidi : public wxEvtHandler
 {

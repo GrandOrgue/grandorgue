@@ -19,13 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/bookctrl.h>
-
 #include "SettingsDialog.h"
-#include "GrandOrgueID.h"
+
 #include "GOrgueEvent.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
+#include "GrandOrgueID.h"
 #include "SettingsAudioGroup.h"
 #include "SettingsAudioOutput.h"
 #include "SettingsMidiDevices.h"
@@ -33,6 +32,9 @@
 #include "SettingsOption.h"
 #include "SettingsOrgan.h"
 #include "SettingsReverb.h"
+#include <wx/app.h>
+#include <wx/bookctrl.h>
+#include <wx/msgdlg.h>
 
 BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_BUTTON(wxID_APPLY, SettingsDialog::OnApply)

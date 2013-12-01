@@ -21,6 +21,8 @@
 
 #include "GOrgueRtHelpers.h"
 
+#include <wx/intl.h>
+
 void GOrgueRtHelpers::GetDirectSoundConfig(const int latency, unsigned sample_rate, unsigned *nb_buffers, unsigned *buffer_size)
 {
 

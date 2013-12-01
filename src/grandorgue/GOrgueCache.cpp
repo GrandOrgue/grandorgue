@@ -20,9 +20,9 @@
  */
 
 #include "GOrgueCache.h"
-#include "GrandOrgueDef.h"
+
 #include "GOrgueMemoryPool.h"
-#include <wx/wx.h>
+#include "GrandOrgueDef.h"
 #include <wx/wfstream.h>
 #include <wx/zstream.h>
 

@@ -20,8 +20,8 @@
  */
 
 #include "GOSoundResample.h"
-#include "GOSoundDefs.h"
 
+#include "GOSoundDefs.h"
 #include <math.h>
 
 #ifndef M_PI

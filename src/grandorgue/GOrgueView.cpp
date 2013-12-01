@@ -20,6 +20,7 @@
  */
 
 #include "GOrgueView.h"
+
 #include "GOrgueDocument.h"
 
 GOrgueView::GOrgueView(GOrgueDocument* doc, wxWindow* wnd) :

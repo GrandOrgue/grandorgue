@@ -22,7 +22,7 @@
 #ifndef GRANDORGUEID_H
 #define GRANDORGUEID_H
 
-#include <wx/wx.h>
+#include <wx/defs.h>
 
 enum
 {

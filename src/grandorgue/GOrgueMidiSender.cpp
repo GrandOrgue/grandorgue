@@ -20,10 +20,11 @@
  */
 
 #include "GOrgueMidiSender.h"
-#include "GOrgueMidiEvent.h"
-#include "GrandOrgueFile.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
+#include "GOrgueMidiEvent.h"
+#include "GrandOrgueFile.h"
 
 GOrgueMidiSender::GOrgueMidiSender(GrandOrgueFile* organfile, MIDI_SENDER_TYPE type) :
 	GOrgueMidiSenderData(type),

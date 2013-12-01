@@ -21,6 +21,8 @@
 
 #include "GOrgueTemperamentCent.h"
 
+#include <math.h>
+
 GOrgueTemperamentCent::GOrgueTemperamentCent(wxString name, float i1, float i2, float i3, float i4, float i5, float i6, float i7, float i8, float i9, float i10, float i11, float i12) :
 	GOrgueTemperament(name)
 {

@@ -20,12 +20,12 @@
  */
 
 #include "GOSoundEngine.h"
+
 #include "GOSoundProvider.h"
 #include "GOSoundReverb.h"
 #include "GOSoundSampler.h"
 #include "GOrgueEvent.h"
 #include "GOrgueInt24.h"
-#include "GOLock.h"
 #include "GOrguePipe.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueWindchest.h"

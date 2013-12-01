@@ -22,11 +22,12 @@
 #ifndef GORGUESETTINGS_H
 #define GORGUESETTINGS_H
 
-#include <wx/wx.h>
-#include <map>
-#include <vector>
 #include "ptrvector.h"
 #include "GOrgueOrgan.h"
+#include <wx/string.h>
+#include <map>
+#include <vector>
+
 class wxConfigBase;
 
 typedef struct

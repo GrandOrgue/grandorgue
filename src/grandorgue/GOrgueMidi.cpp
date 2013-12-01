@@ -19,13 +19,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
+
+#include "GOrgueEvent.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMidiListener.h"
 #include "GOrgueRtHelpers.h"
 #include "GOrgueSettings.h"
 #include "RtMidi.h"
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/stopwatch.h>
 #include <vector>
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)

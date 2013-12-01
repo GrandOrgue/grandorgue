@@ -22,7 +22,7 @@
 #ifndef GORGUEDIALOGVIEW_H
 #define GORGUEDIALOGVIEW_H
 
-#include <wx/wx.h>
+#include <wx/window.h>
 
 class GOrgueDocument;
 

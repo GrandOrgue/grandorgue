@@ -22,7 +22,6 @@
 #ifndef GORGUESETTERBUTTON_H
 #define GORGUESETTERBUTTON_H
 
-#include <wx/wx.h>
 #include "GOrgueButton.h"
 
 class GOrgueSetter;

@@ -19,13 +19,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <iostream>
+#include "ptrvector.h"
 #include "GOSoundEngine.h"
 #include "GOSoundProviderWave.h"
 #include "GOrgueSettings.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
-#include "ptrvector.h"
+#include <wx/app.h>
+#include <wx/image.h>
+#include <wx/stopwatch.h>
+#include <iostream>
 
 #ifdef __linux__
 #include <sys/time.h>
@@ -106,7 +109,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 
 		for(unsigned i = 0; i < pipes.size(); i++)
 		{
-			SAMPLER_HANDLE handle = engine->StartSample(pipes[i], 1, 0, 127);
+			SAMPLER_HANDLE handle = engine->StartSample(pipes[i], 1, 0, 127, 0);
 			if (handle)
 				handles.push_back(handle);
 		}

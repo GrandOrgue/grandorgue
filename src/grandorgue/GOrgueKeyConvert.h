@@ -22,7 +22,7 @@
 #ifndef GORGUEKEYCONVERT_H
 #define GORGUEKEYCONVERT_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 
 typedef struct {
 	wxString name;

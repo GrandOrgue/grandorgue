@@ -22,8 +22,9 @@
 #ifndef GORGUEMEMORYPOOL_H_
 #define GORGUEMEMORYPOOL_H_
 
+#include "GOLock.h"
 #include <set>
-#include <wx/wx.h>
+
 class wxFile;
 
 class GOrgueOutOfMemory {

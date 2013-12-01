@@ -22,7 +22,7 @@
 #ifndef GO_IMAGES_H /* using IMAGES_H causes a preprocessor conflict */
 #define GO_IMAGES_H
 
-#include <wx/bitmap.h>
+class wxBitmap;
 
 wxBitmap GetImage_draw1off();
 wxBitmap GetImage_draw1on();

@@ -22,11 +22,11 @@
 #ifndef GORGUECONFIGREADERDB_H
 #define GORGUECONFIGREADERDB_H
 
-#include <wx/wx.h>
+#include "GOrgueConfigReader.h"
+#include <wx/hashmap.h>
+#include <wx/string.h>
 
 class GOrgueConfigFileReader;
-
-#include "GOrgueConfigReader.h"
 
 class GOrgueConfigReaderDB
 {

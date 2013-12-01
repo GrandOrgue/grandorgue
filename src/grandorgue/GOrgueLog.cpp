@@ -20,6 +20,7 @@
  */
 
 #include "GOrgueLog.h"
+
 #include "GOrgueLogWindow.h"
 
 GOrgueLog::GOrgueLog(wxWindow* parent) :

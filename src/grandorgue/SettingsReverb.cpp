@@ -19,11 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/filepicker.h>
+#include "SettingsReverb.h"
 
 #include "GOrgueSettings.h"
 #include "GOrgueWave.h"
-#include "SettingsReverb.h"
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
+#include <wx/filepicker.h>
+#include <wx/stattext.h>
+#include <wx/msgdlg.h>
+#include <wx/sizer.h>
+#include <wx/spinctrl.h>
+#include <wx/textctrl.h>
 
 BEGIN_EVENT_TABLE(SettingsReverb, wxPanel)
 	EVT_CHECKBOX(ID_ENABLED, SettingsReverb::OnEnabled)

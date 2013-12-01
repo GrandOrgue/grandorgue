@@ -20,8 +20,12 @@
  */
 
 #include "GOrgueConfigFileReader.h"
-#include <wx/file.h>
+
 #include "contrib/sha1.h"
+#include <wx/file.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/utils.h>
 
 GOrgueConfigFileReader::GOrgueConfigFileReader() :
 	m_Entries(),

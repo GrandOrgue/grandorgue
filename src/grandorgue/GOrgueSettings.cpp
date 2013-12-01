@@ -20,19 +20,20 @@
  */
 
 #include "GOrgueSettings.h"
+
+#include "GOSoundDefs.h"
+#include "GOrgueConfigFileWriter.h"
 #include "GOrgueConfigFileReader.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigReaderDB.h"
-#include "GOrgueConfigFileWriter.h"
 #include "GOrgueConfigWriter.h"
-#include "GOSoundDefs.h"
 #include "GOrguePath.h"
-
-#include <algorithm>
-#include <wx/wx.h>
-#include <wx/stdpaths.h>
-#include <wx/filename.h>
 #include <wx/confbase.h>
+#include <wx/filename.h>
+#include <wx/log.h>
+#include <wx/stdpaths.h>
+#include <wx/thread.h>
+#include <algorithm>
 
 const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
 	{ MIDI_RECV_MANUAL, 1, wxTRANSLATE("Manuals"), wxTRANSLATE("Pedal") },

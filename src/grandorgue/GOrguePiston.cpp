@@ -19,15 +19,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "GOrguePiston.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDrawStop.h"
 #include "GOrgueManual.h"
-#include "GOrguePiston.h"
 #include "GOrgueStop.h"
 #include "GOrgueSwitch.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrguePiston::GOrguePiston(GrandOrgueFile* organfile) :
 	GOrguePushbutton(organfile),

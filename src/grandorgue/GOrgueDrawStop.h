@@ -22,9 +22,9 @@
 #ifndef GORGUEDRAWSTOP_H
 #define GORGUEDRAWSTOP_H
 
-#include <wx/wx.h>
 #include "GOrgueButton.h"
 #include "GOrgueCombinationElement.h"
+#include <wx/string.h>
 
 class GOrgueDrawstop : public GOrgueButton, public GOrgueCombinationElement
 {

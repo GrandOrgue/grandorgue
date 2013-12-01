@@ -22,9 +22,8 @@
 #ifndef GORGUEMIDIRECEIVERDATA_H
 #define GORGUEMIDIRECEIVERDATA_H
 
-#include <wx/wx.h>
+#include "GOrgueTime.h"
 #include <vector>
-#include "GOrgueMidiEvent.h"
 
 typedef enum {
 	MIDI_RECV_DRAWSTOP,

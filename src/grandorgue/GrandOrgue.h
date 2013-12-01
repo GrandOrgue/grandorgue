@@ -22,17 +22,14 @@
 #ifndef GRANDORGUE_H
 #define GRANDORGUE_H
 
-#include "GrandOrgueDef.h"
-
-#include <wx/wx.h>
+#include <wx/app.h>
 #include <wx/cmdline.h>
-
-class wxSplashScreenWindow;
 
 class GOrgueFrame;
 class GOrgueLog;
 class GOrgueSound;
 class GOrgueSettings;
+class wxSplashScreenWindow;
 
 class GOrgueApp : public wxApp
 {

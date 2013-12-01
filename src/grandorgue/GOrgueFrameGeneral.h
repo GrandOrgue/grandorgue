@@ -22,8 +22,8 @@
 #ifndef GORGUEFRAMEGENERAL_H
 #define GORGUEFRAMEGENERAL_H
 
-#include <wx/wx.h>
 #include "GOrgueCombination.h"
+#include <wx/string.h>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;

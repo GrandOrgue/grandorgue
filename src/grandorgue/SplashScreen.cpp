@@ -20,8 +20,12 @@
  */
 
 #include "SplashScreen.h"
+
 #include "GrandOrgueDef.h"
 #include "Images.h"
+#include <wx/dcclient.h>
+#include <wx/dcmemory.h>
+#include <wx/frame.h>
 
 BEGIN_EVENT_TABLE(GOrgueSplashBitmap, wxControl)
 	EVT_PAINT(GOrgueSplashBitmap::OnPaint)

@@ -19,9 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueConfigReader.h"
 #include "GOrgueTremulant.h"
+
 #include "GOSoundProviderSynthedTrem.h"
+#include "GOrgueConfigReader.h"
 #include "GrandOrgueFile.h"
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)

@@ -22,7 +22,8 @@
 #ifndef GORGUELOGWINDOW_H
 #define GORGUELOGWINDOW_H
 
-#include <wx/wx.h>
+#include <wx/frame.h>
+#include <wx/log.h>
 
 class wxListCtrl;
 

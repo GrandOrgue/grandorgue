@@ -22,10 +22,9 @@
 #ifndef GOGUIPANELWIDGET_H
 #define GOGUIPANELWIDGET_H
 
-#include <wx/wx.h>
-
 #include "GOGUIMouseState.h"
-#include "GrandOrgueDef.h"
+#include <wx/bitmap.h>
+#include <wx/panel.h>
 
 class GOGUIPanel;
 

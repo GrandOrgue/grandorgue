@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/wx.h>
-#include <wx/zstream.h>
-#include "GrandOrgueDef.h"
 #include "GOrgueCacheWriter.h"
+
+#include "GrandOrgueDef.h"
+#include <wx/zstream.h>
 
 GOrgueCacheWriter::GOrgueCacheWriter(wxOutputStream& stream, bool compressed) :
 	m_zstream(0),

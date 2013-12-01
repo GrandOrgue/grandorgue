@@ -20,7 +20,12 @@
  */
 
 #include "SettingsAudioGroup.h"
+
 #include "GOrgueSettings.h"
+#include <wx/button.h>
+#include <wx/listbox.h>
+#include <wx/sizer.h>
+#include <wx/textdlg.h>
 
 BEGIN_EVENT_TABLE(SettingsAudioGroup, wxPanel)
 	EVT_LISTBOX(ID_AUDIOGROUP_LIST, SettingsAudioGroup::OnGroup)

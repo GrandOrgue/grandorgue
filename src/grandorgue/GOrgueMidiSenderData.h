@@ -22,7 +22,7 @@
 #ifndef GORGUEMIDISENDERDATA_H
 #define GORGUEMIDISENDERDATA_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 #include <vector>
 
 typedef enum {

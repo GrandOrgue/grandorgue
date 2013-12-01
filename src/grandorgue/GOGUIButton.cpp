@@ -20,14 +20,17 @@
  */
 
 #include "GOGUIButton.h"
+
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOrgueButton.h"
-#include "GOrgueDC.h"
 #include "GOrgueConfigReader.h"
+#include "GOrgueDC.h"
 #include "GOrgueDocument.h"
 #include "GrandOrgueFile.h"
+#include <wx/font.h>
+#include <wx/intl.h>
 
 GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston, unsigned x_pos, unsigned y_pos) :
 	GOGUIControl(panel, control),

@@ -12,6 +12,9 @@
 
 #include "GOrgueLCD.h"
 
+#include <wx/intl.h>
+#include <wx/log.h>
+
 #ifdef __VFD__
 
 #ifdef __WIN32__

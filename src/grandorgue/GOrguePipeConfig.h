@@ -22,7 +22,8 @@
 #ifndef GORGUEPIPECONFIG_H
 #define GORGUEPIPECONFIG_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
+
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GrandOrgueFile;

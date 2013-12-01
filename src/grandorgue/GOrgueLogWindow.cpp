@@ -20,11 +20,14 @@
  */
 
 #include "GOrgueLogWindow.h"
+
+#include <wx/app.h>
 #include <wx/artprov.h>
-#include <wx/imaglist.h>
-#include <wx/listctrl.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
+#include <wx/imaglist.h>
+#include <wx/listctrl.h>
+#include <wx/menu.h>
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_ADD_LOG_MESSAGE)
 

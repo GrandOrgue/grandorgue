@@ -22,7 +22,7 @@
 #ifndef GORGUECONFIGFILEWRITER_H
 #define GORGUECONFIGFILEWRITER_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 #include <map>
 
 class GOrgueConfigFileWriter

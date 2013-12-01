@@ -22,7 +22,7 @@
 #ifndef GORGUE_UTIL_H
 #define GORGUE_UTIL_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 
 wxString formatCDDouble(double value);
 bool parseCDouble(double& result, wxString value);

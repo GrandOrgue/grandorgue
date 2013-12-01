@@ -19,11 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "Images.h"
 #include "GOrgueBitmapCache.h"
+
 #include "GOrguePath.h"
 #include "GrandOrgueFile.h"
-
+#include "Images.h"
+#include <wx/bitmap.h>
+#include <wx/intl.h>
+#include <wx/image.h>
 
 GOrgueBitmapCache::GOrgueBitmapCache(GrandOrgueFile* organfile) :
 	m_organfile(organfile),

@@ -22,8 +22,8 @@
 #ifndef GORGUEORGAN_H
 #define GORGUEORGAN_H
 
-#include <wx/wx.h>
 #include "GOrgueMidiReceiver.h"
+#include <wx/string.h>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;

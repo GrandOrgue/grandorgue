@@ -20,8 +20,8 @@
  */
 
 #include "GOSoundProviderSynthedTrem.h"
+
 #include "GOrgueMemoryPool.h"
-#include <wx/wx.h>
 
 GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOrgueMemoryPool& pool) :
 	GOSoundProvider(pool)

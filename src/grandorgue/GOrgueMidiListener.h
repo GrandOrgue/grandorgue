@@ -22,8 +22,6 @@
 #ifndef GORGUEMIDILISTENER_H
 #define GORGUEMIDILISTENER_H
 
-#include <wx/wx.h>
-
 class GOrgueMidi;
 class GOrgueMidiEvent;
 

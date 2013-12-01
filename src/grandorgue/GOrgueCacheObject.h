@@ -22,8 +22,9 @@
 #ifndef GORGUECACHEOBJECT_H
 #define GORGUECACHEOBJECT_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 #include "contrib/sha1.h"
+
 class GOrgueCache;
 class GOrgueCacheWriter;
 

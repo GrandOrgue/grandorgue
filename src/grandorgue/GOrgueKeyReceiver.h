@@ -22,8 +22,9 @@
 #ifndef GORGUEKEYRECEIVER_H
 #define GORGUEKEYRECEIVER_H
 
-#include <wx/wx.h>
 #include "GOrgueKeyReceiverData.h"
+#include <wx/string.h>
+
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GrandOrgueFile;

@@ -20,6 +20,7 @@
  */
 
 #include "GOrgueConfigFileWriter.h"
+
 #include <wx/file.h>
 
 GOrgueConfigFileWriter::GOrgueConfigFileWriter() :

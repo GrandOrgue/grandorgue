@@ -19,12 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "GOrgueMidiReceiver.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
-#include "GOrgueMidiReceiver.h"
-#include "GOrgueMidiEvent.h"
-#include "GOrgueManual.h"
 #include "GOrgueEnclosure.h"
+#include "GOrgueManual.h"
+#include "GOrgueMidiEvent.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 

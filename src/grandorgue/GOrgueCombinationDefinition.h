@@ -22,8 +22,9 @@
 #ifndef GORGUECOMBINATIONDEFINITION_H
 #define GORGUECOMBINATIONDEFINITION_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 #include <vector>
+
 class GOrgueCombinationElement;
 class GOrgueManual;
 class GrandOrgueFile;

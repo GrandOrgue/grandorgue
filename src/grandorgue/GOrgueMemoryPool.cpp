@@ -19,8 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <wx/wx.h>
+#include "GOrgueMemoryPool.h"
+
 #include <wx/file.h>
+#include <wx/intl.h>
 #ifdef __linux__
 #include <sys/mman.h>
 #endif
@@ -28,8 +30,6 @@
 #include <windows.h>
 #endif
 #include <errno.h>
-
-#include "GOrgueMemoryPool.h"
 
 GOrgueMemoryPool::GOrgueMemoryPool() :
 	m_PoolStart(0),

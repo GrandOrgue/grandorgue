@@ -19,12 +19,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOSoundResample.h"
 #include "GOSoundReverb.h"
+
+#include "GOSoundResample.h"
 #include "GOrgueSettings.h"
 #include "GOrgueWave.h"
-#include <algorithm>
 #include "contrib/zita-convolver.h"
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <algorithm>
 
 GOSoundReverb::GOSoundReverb(unsigned channels) :
 	m_channels(channels),

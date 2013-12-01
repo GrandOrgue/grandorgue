@@ -20,6 +20,7 @@
  */
 
 #include "GOrgueCombination.h"
+
 #include "GOrgueCombinationDefinition.h"
 #include "GOrgueCombinationElement.h"
 #include "GOrgueDrawStop.h"

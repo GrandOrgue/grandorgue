@@ -22,9 +22,9 @@
 #ifndef GOSOUNDRECORDER_H
 #define GOSOUNDRECORDER_H
 
-#include <wx/wx.h>
-#include <wx/file.h>
 #include "GOLock.h"
+#include <wx/file.h>
+#include <wx/string.h>
 
 class GOSoundRecorder {
 private:

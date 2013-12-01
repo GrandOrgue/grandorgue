@@ -22,7 +22,7 @@
 #ifndef GORGUEWAVE_H
 #define GORGUEWAVE_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 #include <vector>
 
 typedef struct

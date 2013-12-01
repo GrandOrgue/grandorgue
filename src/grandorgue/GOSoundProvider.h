@@ -22,12 +22,13 @@
 #ifndef GOSOUNDPROVIDER_H_
 #define GOSOUNDPROVIDER_H_
 
-#include <vector>
-#include "GOSoundAudioSection.h"
 #include "ptrvector.h"
-class GOrgueMemoryPool;
+#include "GOSoundAudioSection.h"
+#include <vector>
+
 class GOrgueCache;
 class GOrgueCacheWriter;
+class GOrgueMemoryPool;
 
 typedef struct audio_section_stream_s audio_section_stream;
 

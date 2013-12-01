@@ -24,6 +24,7 @@
 
 #include "GOGUIControl.h"
 #include "GOrgueBitmap.h"
+#include <wx/colour.h>
 
 class GOrgueLabel;
 

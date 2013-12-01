@@ -20,8 +20,9 @@
  */
 
 #include "GOSoundSamplerPool.h"
-#include <string.h>
+
 #include <assert.h>
+#include <string.h>
 
 GOSoundSamplerPool::GOSoundSamplerPool() :
 	m_SamplerCount(0),

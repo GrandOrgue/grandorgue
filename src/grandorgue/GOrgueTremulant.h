@@ -22,13 +22,13 @@
 #ifndef GORGUETREMULANT_H
 #define GORGUETREMULANT_H
 
-#include <wx/wx.h>
 #include "GOrgueCacheObject.h"
 #include "GOrgueDrawStop.h"
+#include <wx/string.h>
 
+class GOSoundProvider;
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
-class GOSoundProvider;
 struct IniFileEnumEntry;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 

@@ -22,10 +22,9 @@
 #ifndef GORGUECONFIGWRITER_H
 #define GORGUECONFIGWRITER_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 
 class GOrgueConfigFileWriter;
-
 struct IniFileEnumEntry;
 
 class GOrgueConfigWriter
