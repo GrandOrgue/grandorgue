@@ -64,7 +64,7 @@ const wxCmdLineEntryDesc GOrgueApp::m_cmdLineDesc [] = {
 
 void GOrgueApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
-	parser.SetLogo(wxString(wxT(APP_TITLE)) + _(" - Virtual Pipe Organ Software"));
+	parser.SetLogo(wxString::Format(_("GrandOrgue %s - Virtual Pipe Organ Software"), wxT(APP_VERSION)));
 	parser.SetDesc (m_cmdLineDesc);
 }
 
@@ -100,8 +100,8 @@ bool GOrgueApp::OnInit()
 	TransformProcessType(&PSN, kProcessTransformToForegroundApplication);
 #endif
 
-	SetAppName(wxT(APP_NAME));
-	SetClassName(wxT(APP_NAME));
+	SetAppName(wxT("GrandOrgue"));
+	SetClassName(wxT("GrandOrgue"));
 	SetVendorName(wxT("Our Organ"));
 
 	wxIdleEvent::SetMode(wxIDLE_PROCESS_SPECIFIED);
@@ -127,7 +127,7 @@ bool GOrgueApp::OnInit()
 
 	m_soundSystem = new GOrgueSound(*m_Settings);
 
-	m_Frame = new GOrgueFrame(NULL, wxID_ANY, wxT(APP_TITLE), wxDefaultPosition, wxDefaultSize, 
+	m_Frame = new GOrgueFrame(NULL, wxID_ANY, wxString::Format(_("GrandOrgue %s"), wxT(APP_VERSION)), wxDefaultPosition, wxDefaultSize, 
 				  wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE, *m_soundSystem);
 	SetTopWindow(m_Frame);
 	m_Log = new GOrgueLog(m_Frame);

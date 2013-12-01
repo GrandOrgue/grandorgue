@@ -95,7 +95,7 @@ void GOrgueSplash::DrawText(wxBitmap& bitmap)
 	font.SetPointSize(14);
 	font.SetWeight(wxFONTWEIGHT_BOLD);
 	dc.SetFont(font);
-	dc.DrawLabel(wxT(APP_TITLE), wxRect(60, 0, 370, 22), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+	dc.DrawLabel(wxString::Format(_("GrandOrgue %s"), wxT(APP_VERSION)), wxRect(60, 0, 370, 22), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
 
 	font = *wxNORMAL_FONT;
 	font.SetWeight(wxFONTWEIGHT_BOLD);

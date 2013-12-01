@@ -683,7 +683,7 @@ bool GOrgueFrame::Close(bool force)
 
 void GOrgueFrame::OnRevert(wxCommandEvent& event)
 {
-	if (wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), wxT(APP_NAME), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
+	if (wxMessageBox(_("Any customizations you have saved to this\norgan definition file will be lost!\n\nReset to defaults and reload?"), _("GrandOrgue"), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
 	{
 		GOrgueDocument* doc = GetDocument();
 		GOrgueProgressDialog dlg;
