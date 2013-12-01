@@ -1,0 +1,5 @@
+<link project="home:e9925248:grandorgue" package="grandorgue">
+  <patches>
+    <add name="compiler-options.patch" popt="1" />
+  </patches>
+</link>
