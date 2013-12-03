@@ -3718,6 +3718,15 @@ should set it, if you need to display a shorter string.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>EnclosureStyle</term>
+          <listitem>
+            <para>
+(integer 1 - 4, default: implementation dependend) Select a builtin
+enclosure style.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>BitmapCount</term>
           <listitem>
             <para>

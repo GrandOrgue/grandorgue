@@ -84,6 +84,9 @@
 	LABEL(11) \
 	LABEL(12) \
 	ENCLOSURE(A) \
+	ENCLOSURE(B) \
+	ENCLOSURE(C) \
+	ENCLOSURE(D) \
 	PEDAL(, Wood, Black) \
 	PEDAL(Inverted, Black, Wood) \
 	MANUAL(, White, Black) \
