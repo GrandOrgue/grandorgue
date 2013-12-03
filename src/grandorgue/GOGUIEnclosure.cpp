@@ -113,7 +113,7 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 	GOGUIControl::Load(cfg, group);
 
 	unsigned bitmap_count = cfg.ReadInteger(ODFSetting, group, wxT("BitmapCount"), 1, 127, false, 16);
-	wxChar style = wxT('A') + cfg.ReadInteger(ODFSetting, group, wxT("EnclosureStyle"), 1, 4, false, 1);
+	wxChar style = wxT('A') + cfg.ReadInteger(ODFSetting, group, wxT("EnclosureStyle"), 1, 4, false, 1) - 1;
 
 	for(unsigned i = 1; i <= bitmap_count; i++)
 	{
