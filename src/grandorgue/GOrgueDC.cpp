@@ -22,6 +22,7 @@
 #include "GOrgueDC.h"
 
 #include "GOrgueBitmap.h"
+#include "GOrgueFont.h"
 #include <wx/dc.h>
 
 GOrgueDC::GOrgueDC(wxDC* dc) :
@@ -98,10 +99,10 @@ wxString GOrgueDC::WrapText(const wxString& string, unsigned width)
 	return str;
 }
 
-void GOrgueDC::DrawText(const wxString& text, const wxRect& rect, const wxColour& color, const wxFont& font, unsigned text_width, bool align_top)
+void GOrgueDC::DrawText(const wxString& text, const wxRect& rect, const wxColour& color, GOrgueFont& font, unsigned text_width, bool align_top)
 {
 	m_DC->SetTextForeground(color);
-	m_DC->SetFont(font);
+	m_DC->SetFont(font.GetFont());
 	m_DC->DrawLabel(WrapText(text, text_width), rect, (align_top ? 0 : wxALIGN_CENTER_VERTICAL) | wxALIGN_CENTER_HORIZONTAL);
 }
 

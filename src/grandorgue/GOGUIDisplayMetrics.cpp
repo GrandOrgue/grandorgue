@@ -172,27 +172,14 @@ bool GOGUIDisplayMetrics::HasExtraPedalButtonRow()
 	return m_DispExtraPedalButtonRow;
 }
 
-wxFont GOGUIDisplayMetrics::GetControlLabelFont()
+GOrgueFont GOGUIDisplayMetrics::GetControlLabelFont()
 {
-	wxFont font = *wxNORMAL_FONT;
-	if (!font.SetFaceName(m_DispControlLabelFont))
-	{
-		font = *wxNORMAL_FONT;
-	}
-	return font;
+	return m_ControlLabelFont;
 }
 
-wxFont GOGUIDisplayMetrics::GetGroupLabelFont()
+GOrgueFont GOGUIDisplayMetrics::GetGroupLabelFont()
 {
-	wxFont font = *wxNORMAL_FONT;
-#ifdef __linux__
-	font.SetFamily(wxFONTFAMILY_SWISS);
-#endif
-	if (!font.SetFaceName(m_DispGroupLabelFont))
-	{
-		font = *wxNORMAL_FONT;
-	}
-	return font;
+	return m_GroupLabelFont;
 }
 
 unsigned GOGUIDisplayMetrics::GetScreenWidth()
@@ -524,6 +511,8 @@ void GOGUIDisplayMetrics::Update()
 	if (m_DispTrimAboveExtraRows)
 		m_CenterY -= 8;
 
+	m_ControlLabelFont.SetName(m_DispControlLabelFont);
+	m_GroupLabelFont.SetName(m_DispGroupLabelFont);
 }
 
 const GOGUIDisplayMetrics::MANUAL_RENDER_INFO& GOGUIDisplayMetrics::GetManualRenderInfo(const unsigned manual_nb) const

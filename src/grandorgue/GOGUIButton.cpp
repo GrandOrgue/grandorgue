@@ -29,7 +29,6 @@
 #include "GOrgueDC.h"
 #include "GOrgueDocument.h"
 #include "GrandOrgueFile.h"
-#include <wx/font.h>
 #include <wx/intl.h>
 
 GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston, unsigned x_pos, unsigned y_pos) :
@@ -115,6 +114,10 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group)
 	h = m_BoundingRect.GetHeight() - y;
 	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
 	m_TextWidth = m_TextRect.GetWidth() - (m_TextRect.GetWidth() < 50 ? 4 : 14);
+
+	m_Font = m_metrics->GetControlLabelFont();
+	m_Font.SetName(m_FontName);
+	m_Font.SetPoints(m_FontSize);
 }
 
 void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
@@ -190,6 +193,10 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 	h = cfg.ReadInteger(ODFSetting, group, wxT("TextRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y);
 	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
 	m_TextWidth = cfg.ReadInteger(ODFSetting, group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth() - (m_TextRect.GetWidth() < 50 ? 4 : 14));
+
+	m_Font = m_metrics->GetControlLabelFont();
+	m_Font.SetName(m_FontName);
+	m_Font.SetPoints(m_FontSize);
 }
 
 bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
@@ -249,16 +256,7 @@ void GOGUIButton::Draw(GOrgueDC& dc)
 	GOrgueBitmap& bmp = m_Button->DisplayInverted() ^ m_Button->IsEngaged() ? m_OnBitmap : m_OffBitmap;
 	dc.TileBitmap(bmp, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
 	if (m_TextWidth)
-	{
-		wxFont font = m_metrics->GetControlLabelFont();
-		if (m_FontName != wxEmptyString)
-		{
-			wxFont new_font = font;
-			if (new_font.SetFaceName(m_FontName))
-				font = new_font;
-		}
-		font.SetPointSize(m_FontSize);
-		dc.DrawText(m_Text, m_TextRect, m_TextColor, font, m_TextWidth);
-	}
+		dc.DrawText(m_Text, m_TextRect, m_TextColor, m_Font, m_TextWidth);
+
 	GOGUIControl::Draw(dc);
 }

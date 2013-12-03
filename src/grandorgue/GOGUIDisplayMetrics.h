@@ -22,14 +22,13 @@
 #ifndef GOGUIDISPLAYMETRICS_H
 #define GOGUIDISPLAYMETRICS_H
 
+#include "GOrgueFont.h"
 #include <wx/colour.h>
 #include <wx/string.h>
 #include <vector>
 
 class GOGUIEnclosure;
 class GrandOrgueFile;
-
-class wxFont;
 
 class GOGUIDisplayMetrics
 {
@@ -103,6 +102,8 @@ protected:
 	unsigned m_PedalKeyWidth;
 	unsigned m_ManualHeight;
 	unsigned m_ManualKeyWidth;
+	GOrgueFont m_GroupLabelFont;
+	GOrgueFont m_ControlLabelFont;
 
 	/* values computed on screen update */
 	int m_HackY;
@@ -125,8 +126,8 @@ public:
 
 	virtual void GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int* blitX, int* blitY);
 	virtual void GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY);
-	virtual wxFont GetControlLabelFont();
-	virtual wxFont GetGroupLabelFont();
+	virtual GOrgueFont GetControlLabelFont();
+	virtual GOrgueFont GetGroupLabelFont();
 
 	virtual unsigned GetEnclosureWidth();
 	virtual int GetEnclosureY();

@@ -24,6 +24,7 @@
 
 #include "GOGUIControl.h"
 #include "GOrgueBitmap.h"
+#include "GOrgueFont.h"
 #include <wx/colour.h>
 #include <vector>
 
@@ -36,6 +37,7 @@ private:
 	unsigned m_enclosure_nb;
 	unsigned m_FontSize;
 	wxString m_FontName;
+	GOrgueFont m_Font;
 	wxColor m_TextColor;
 	wxString m_Text;
 	wxRect m_TextRect;
