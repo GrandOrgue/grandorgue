@@ -61,7 +61,7 @@ void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
 
 	for(unsigned i = 1; i <= bitmap_count; i++)
 	{
-		wxString bitmap = wxString::Format(wxT("GO:enclosure%c%02d"), wxT('A'), i - 1);
+		wxString bitmap = wxString::Format(wxT("GO:enclosure%c%02d"), wxT('B'), i - 1);
 		wxString mask = wxEmptyString;
 		m_Bitmaps.push_back(m_panel->LoadBitmap(bitmap, mask));
 	}
@@ -113,10 +113,11 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 	GOGUIControl::Load(cfg, group);
 
 	unsigned bitmap_count = cfg.ReadInteger(ODFSetting, group, wxT("BitmapCount"), 1, 127, false, 16);
+	wxChar style = wxT('A') + cfg.ReadInteger(ODFSetting, group, wxT("EnclosureStyle"), 1, 4, false, 1);
 
 	for(unsigned i = 1; i <= bitmap_count; i++)
 	{
-		wxString bitmap = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Bitmap%03d"), i), 256, false, wxString::Format(wxT("GO:enclosure%c%02d"), wxT('A'), i - 1));
+		wxString bitmap = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Bitmap%03d"), i), 256, false, wxString::Format(wxT("GO:enclosure%c%02d"), style, i - 1));
 		wxString mask = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Mask%03d"), i), 256, false, wxEmptyString);
 		m_Bitmaps.push_back(m_panel->LoadBitmap(bitmap, mask));
 	}
