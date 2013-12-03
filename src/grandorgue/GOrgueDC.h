@@ -25,8 +25,8 @@
 #include <wx/string.h>
 
 class GOrgueBitmap;
+class GOrgueFont;
 class wxDC;
-class wxFont;
 class wxColour;
 class wxRect;
 
@@ -42,7 +42,7 @@ public:
 
 	void DrawBitmap(GOrgueBitmap& bitmap, int x, int y);
 	void TileBitmap(GOrgueBitmap& bitmap, const wxRect& target, int xo, int yo);
-	void DrawText(const wxString& text, const wxRect& rect, const wxColour& color, const wxFont& font, unsigned text_width, bool top = false);
+	void DrawText(const wxString& text, const wxRect& rect, const wxColour& color, GOrgueFont& font, unsigned text_width, bool top = false);
 };
 
 #endif

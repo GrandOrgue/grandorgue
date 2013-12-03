@@ -19,39 +19,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOGUILABEL_H
-#define GOGUILABEL_H
-
-#include "GOGUIControl.h"
-#include "GOrgueBitmap.h"
 #include "GOrgueFont.h"
-#include <wx/colour.h>
 
-class GOrgueLabel;
+#include <wx/gdicmn.h>
 
-class GOGUILabel : public GOGUIControl
+GOrgueFont::GOrgueFont() :
+	m_Name(),
+	m_Points(0)
 {
-private:
-	unsigned m_DispXpos;
-	unsigned m_DispYpos;
-	GOrgueLabel* m_Label;
-	GOrgueBitmap m_Bitmap;
-	unsigned m_FontSize;
-	wxString m_FontName;
-	GOrgueFont m_Font;
-	wxString m_Text;
-	wxColour m_TextColor;
-	wxRect m_TextRect;
-	unsigned m_TextWidth;
-	unsigned m_TileOffsetX;
-	unsigned m_TileOffsetY;
+	m_Font = *wxNORMAL_FONT;
+}
 
-public:
-	GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos = 0, unsigned y_pos = 0, wxString name = wxT(""));
-	void Init(GOrgueConfigReader& cfg, wxString group, unsigned imageno = 1);
-	void Load(GOrgueConfigReader& cfg, wxString group);
+void GOrgueFont::SetName(const wxString& name)
+{
+	if (name == wxEmptyString)
+		return;
+	wxFont new_font = m_Font;
+	if (new_font.SetFaceName(name))
+	{
+		m_Font = new_font;
+		m_Name = name;
+	}
+}
+void GOrgueFont::SetPoints(unsigned points)
+{
+	m_Font.SetPointSize(points);
+	m_Points = points;
+}
 
-	void Draw(GOrgueDC& dc);
-};
-
-#endif
+wxFont GOrgueFont::GetFont()
+{
+	return m_Font;
+}

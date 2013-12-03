@@ -224,6 +224,7 @@ GOrgueDrawStop.cpp
 GOrgueEnclosure.cpp
 GOrgueEvent.cpp
 GOrgueFrameGeneral.cpp
+GOrgueFont.cpp
 GOrgueGeneral.cpp
 GOrgueKeyConvert.cpp
 GOrgueKeyReceiver.cpp

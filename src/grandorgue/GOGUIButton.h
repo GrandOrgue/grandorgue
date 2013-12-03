@@ -24,6 +24,7 @@
 
 #include "GOGUIControl.h"
 #include "GOrgueBitmap.h"
+#include "GOrgueFont.h"
 #include <wx/colour.h>
 
 class GOrgueButton;
@@ -39,6 +40,7 @@ protected:
 	GOrgueBitmap m_OffBitmap;
 	unsigned m_FontSize;
 	wxString m_FontName;
+	GOrgueFont m_Font;
 	wxColor m_TextColor;
 	wxString m_Text;
 	wxRect m_TextRect;

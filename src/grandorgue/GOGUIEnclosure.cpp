@@ -29,7 +29,6 @@
 #include "GOrgueDocument.h"
 #include "GOrgueEnclosure.h"
 #include "GrandOrgueFile.h"
-#include <wx/font.h>
 #include <wx/intl.h>
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb):
@@ -104,6 +103,9 @@ void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
 
 	m_MouseAxisStart = m_MouseRect.GetHeight() / 3;
 	m_MouseAxisEnd = m_MouseRect.GetHeight() / 3 * 2;
+
+	m_Font.SetName(m_FontName);
+	m_Font.SetPoints(m_FontSize);
 }
 
 void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
@@ -158,6 +160,9 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 
 	m_MouseAxisStart = cfg.ReadInteger(ODFSetting, group, wxT("MouseAxisStart"), 0, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3);
 	m_MouseAxisEnd = cfg.ReadInteger(ODFSetting, group, wxT("MouseAxisEnd"), m_MouseAxisStart, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3 * 2);
+
+	m_Font.SetName(m_FontName);
+	m_Font.SetPoints(m_FontSize);
 }
 
 void GOGUIEnclosure::Draw(GOrgueDC& dc)
@@ -166,18 +171,7 @@ void GOGUIEnclosure::Draw(GOrgueDC& dc)
 	dc.TileBitmap(bmp, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
 
 	if (m_TextWidth)
-	{
-		wxFont font = *wxNORMAL_FONT;
-		if (m_FontName != wxEmptyString)
-		{
-			wxFont new_font = font;
-			if (new_font.SetFaceName(m_FontName))
-				font = new_font;
-		}
-		font.SetPointSize(m_FontSize);
-
-		dc.DrawText(m_Text, m_TextRect, m_TextColor, font, m_TextWidth, true);
-	}
+		dc.DrawText(m_Text, m_TextRect, m_TextColor, m_Font, m_TextWidth, true);
 
 	GOGUIControl::Draw(dc);
 }
