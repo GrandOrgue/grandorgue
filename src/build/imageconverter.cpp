@@ -66,13 +66,6 @@ int main(int ac, const char* ag[])
 	fprintf(out, "\treturn bitmap;\n");
 	fprintf(out, "}\n");
 
-	fprintf(out, "wxBitmap GetImage_%s_r()\n", ag[3]);
-	fprintf(out, "{\n");
-	fprintf(out, "\tstatic wxMemoryInputStream is(image_%s, sizeof(image_%s));\n", ag[3], ag[3]);
-	fprintf(out, "\tstatic wxBitmap bitmap(wxImage(is, wxBITMAP_TYPE_ANY, -1).Rotate90(), -1);\n");
-	fprintf(out, "\treturn bitmap;\n");
-	fprintf(out, "}\n");
-
 	if (!feof(in) || ferror(in) || ferror(out))
 	{
 		printf("Processing error\n");
