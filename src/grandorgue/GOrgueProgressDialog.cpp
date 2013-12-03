@@ -43,7 +43,7 @@ void GOrgueProgressDialog::Setup(long max, const wxString& title, const wxString
 {
 	if (m_dlg)
 		m_dlg->Destroy();
-	m_dlg = new wxProgressDialog(title, msg, 0xffff, NULL, wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
+	m_dlg = new wxProgressDialog(title, msg, 0x10000, NULL, wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
 	m_last = 0;
 	m_const = 0;
 	m_value = 0;
@@ -75,12 +75,3 @@ bool GOrgueProgressDialog::Update(unsigned value, const wxString& msg)
 	return true;
 }
 
-/*
-	wxProgressDialog dlg
-		(_("Loading sample set")
-		,_("Parsing sample set definition file")
-		,32768
-		,0
-		,wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME
-		);
-*/
