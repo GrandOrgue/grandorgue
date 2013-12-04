@@ -203,7 +203,7 @@ unsigned GOGUIDisplayMetrics::GetJambLeftRightHeight()
 
 int GOGUIDisplayMetrics::GetJambLeftRightY()
 {
-	return (m_DispScreenSizeVert - GetJambLeftRightHeight() - (m_DispDrawstopColsOffset ? (m_DrawStopHeight/2) : 0)) >> 1;
+	return ((int)(m_DispScreenSizeVert - GetJambLeftRightHeight() - (m_DispDrawstopColsOffset ? (m_DrawStopHeight/2) : 0))) / 2;
 }
 
 int GOGUIDisplayMetrics::GetJambLeftRightWidth()
