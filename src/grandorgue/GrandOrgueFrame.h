@@ -118,6 +118,7 @@ private:
 	void OnSize(wxSizeEvent& event);
 
 	void OnMenuOpen(wxMenuEvent& event);
+	void OnCloseWindow(wxCloseEvent& event);
 
 	void OnMidiEvent(const GOrgueMidiEvent& event);
 

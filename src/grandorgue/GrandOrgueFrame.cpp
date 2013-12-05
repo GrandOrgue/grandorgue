@@ -53,6 +53,7 @@
 
 BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MSGBOX(GOrgueFrame::OnMsgBox)
+	EVT_CLOSE(GOrgueFrame::OnCloseWindow)
 	EVT_KEY_DOWN(GOrgueFrame::OnKeyCommand)
 	EVT_COMMAND(0, wxEVT_METERS, GOrgueFrame::OnMeters)
 	EVT_COMMAND(0, wxEVT_LOADFILE, GOrgueFrame::OnLoadFile)
@@ -686,6 +687,10 @@ bool GOrgueFrame::Close(bool force)
 	return true;
 }
 
+void GOrgueFrame::OnCloseWindow(wxCloseEvent& event)
+{
+	Close();
+}
 
 void GOrgueFrame::OnRevert(wxCommandEvent& event)
 {
