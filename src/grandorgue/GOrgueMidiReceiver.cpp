@@ -79,6 +79,13 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 		{
 			m_events[i].device = cfg.ReadString(CMBSetting, group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), 100, false);
 			m_events[i].channel = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), -1, 16);
+			midi_match_message_type default_type = MIDI_M_PGM_CHANGE;
+			if (m_type == MIDI_RECV_MANUAL)
+				default_type = MIDI_M_NOTE;
+			if (m_type == MIDI_RECV_ENCLOSURE)
+				default_type = MIDI_M_CTRL_CHANGE;
+			m_events[i].type = (midi_match_message_type)cfg.ReadEnum(CMBSetting, group, wxString::Format(wxT("MIDIEventType%03d"), i + 1), 
+										 m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]), false, default_type);
 			if (HasDebounce(m_events[i].type))
 				m_events[i].debounce_time = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIDebounce%03d"), i + 1), 0, 3000, false, 0);
 
@@ -97,8 +104,6 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 			
 			if (m_type == MIDI_RECV_ENCLOSURE)
 			{
-				m_events[i].type = (midi_match_message_type)cfg.ReadEnum(CMBSetting, group, wxString::Format(wxT("MIDIEventType%03d"), i + 1), 
-											 m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]), false, MIDI_M_CTRL_CHANGE);
 				m_events[i].low_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 0);
 				m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127);
 				continue;
@@ -108,7 +113,6 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 			if (HasUpperLimit(m_events[i].type))
 				m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1), 0, 127, false, 1);
 			
-			m_events[i].type = (midi_match_message_type)cfg.ReadEnum(CMBSetting, group, wxString::Format(wxT("MIDIEventType%03d"), i + 1), m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 		}
 	}
 	else
