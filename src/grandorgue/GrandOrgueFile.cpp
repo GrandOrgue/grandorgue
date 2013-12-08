@@ -171,60 +171,6 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 
-bool GrandOrgueFile::TryLoad(GOrgueProgressDialog* dlg, GOrgueCache* cache, wxString& error)
-{
-	try
-	{
-		/* Figure out list of pipes to load */
-		std::vector<GOrgueCacheObject*> objects;
-		GenerateCacheObjectList(objects);
-		dlg->Reset(objects.size());
-
-		/* Load pipes */
-		unsigned nb_loaded_obj = 0;
-		for (unsigned i = 0; i < objects.size(); i++)
-		{
-			GOrgueCacheObject* obj = objects[i];
-			if (cache != NULL)
-			{
-				if (!obj->LoadCache(*cache))
-				{
-					error = wxString::Format
-						(_("Failed to read %s from cache.")
-						 ,obj->GetLoadTitle().c_str()
-						 );
-					return false;
-				}
-			}
-			else
-			{
-				obj->LoadData();
-			}
-			nb_loaded_obj++;
-
-			if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
-			{
-				GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
-				return true;
-			}
-			GOrgueLCD_WriteLineTwo
-				(wxString::Format
-					(_("Loading %lu%%")
-					,(unsigned long)((nb_loaded_obj * 100) / (objects.size() + 1))
-					)
-				);
-		}
-	}
-	catch (wxString msg)
-	{
-		error = msg;
-		return false;
-	}
-
-	m_Cacheable = true;
-	return true;
-}
-
 void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 {
 	wxString group = wxT("Organ");
@@ -567,6 +513,13 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 
 		ResolveReferences();
 
+		/* Figure out list of pipes to load */
+		std::vector<GOrgueCacheObject*> objects;
+		GenerateCacheObjectList(objects);
+		dlg->Reset(objects.size());
+		/* Load pipes */
+		unsigned nb_loaded_obj = 0;
+
 		if (wxFileExists(m_CacheFilename))
 		{
 
@@ -594,10 +547,33 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 
 			if (cache_ok)
 			{
-				if (!TryLoad(dlg, &reader, load_error))
+				try
+				{
+					while (nb_loaded_obj < objects.size())
+					{
+						GOrgueCacheObject* obj = objects[nb_loaded_obj];
+						if (!obj->LoadCache(reader))
+						{
+							cache_ok = false;
+							wxLogError(_("Cache load failure: Failed to read %s from cache."), obj->GetLoadTitle().c_str());
+							break;
+						}
+						nb_loaded_obj++;
+						if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
+						{
+							FREE_AND_NULL(dummy);
+							SetTemperament(m_Temperament);
+							GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
+							return wxEmptyString;
+						}
+					}
+					if (nb_loaded_obj >= objects.size())
+						m_Cacheable = true;
+				}
+				catch (wxString msg)
 				{
 					cache_ok = false;
-					wxLogError(_("Cache load failure: %s"), load_error.c_str());
+					wxLogError(_("Cache load failure: %s"), msg.c_str());
 				}
 			}
 
@@ -611,11 +587,21 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 
 		if (!cache_ok)
 		{
-			if (!TryLoad(dlg, NULL, load_error))
+			while (nb_loaded_obj < objects.size())
 			{
-				FREE_AND_NULL(dummy);
-				return load_error;
+				GOrgueCacheObject* obj = objects[nb_loaded_obj];
+				obj->LoadData();
+				nb_loaded_obj++;
+				if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
+				{
+					FREE_AND_NULL(dummy);
+					SetTemperament(m_Temperament);
+					GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
+					return wxEmptyString;
+				}
 			}
+			if (nb_loaded_obj >= objects.size())
+				m_Cacheable = true;
 
 			if (m_Settings.GetManageCache() && m_Cacheable)
 				UpdateCache(dlg, m_Settings.GetCompressCache());

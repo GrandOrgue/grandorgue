@@ -21,6 +21,7 @@
 
 #include "GOrgueProgressDialog.h"
 
+#include "GOrgueLCD.h"
 #include <wx/progdlg.h>
 #include <wx/stopwatch.h>
 
@@ -70,6 +71,7 @@ bool GOrgueProgressDialog::Update(unsigned value, const wxString& msg)
 	if (m_last == wxGetUTCTime())
 		return true;
 	m_last = wxGetUTCTime();
+	GOrgueLCD_WriteLineTwo (wxString::Format(_("Progress %lu%%"), 100 * (m_value + m_const) / m_max));
 	if (!m_dlg->Update(0xffff * (m_value + m_const) / m_max, msg))
 		return false;
 	return true;
