@@ -61,6 +61,7 @@ private:
 	bool m_Stereo;
 	unsigned m_Concurrency;
 	unsigned m_ReleaseConcurrency;
+	unsigned m_LoadConcurrency;
 	bool m_LosslessCompression;
 	bool m_ManagePolyphony;
 	bool m_ManageCache;
@@ -149,6 +150,8 @@ public:
 	void SetConcurrency(unsigned concurrency);
 	unsigned GetReleaseConcurrency();
 	void SetReleaseConcurrency(unsigned concurrency);
+	unsigned GetLoadConcurrency();
+	void SetLoadConcurrency(unsigned concurrency);
 
 	unsigned GetSamplesPerBuffer();
 	void SetSamplesPerBuffer(unsigned sampler_per_buffer);
