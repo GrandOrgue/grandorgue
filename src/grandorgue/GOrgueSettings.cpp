@@ -82,6 +82,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_Stereo(false),
 	m_Concurrency(0),
 	m_ReleaseConcurrency(1),
+	m_LoadConcurrency(0),
 	m_LosslessCompression(true),
 	m_ManagePolyphony(true),
 	m_ManageCache(true),
@@ -150,6 +151,17 @@ void GOrgueSettings::Load()
 			cfg_db.ReadData(cfg_file, CMBSetting, false);
 			GOrgueConfigReader cfg(cfg_db);
 
+			long cpus = wxThread::GetCPUCount();
+			if (cpus == -1)
+				cpus = 4;
+			if (cpus >= 256)
+				cpus = 256;
+			if (cpus == 0)
+				cpus = 1;
+			m_Concurrency = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Concurrency"), 0, 256, false, cpus);
+			m_ReleaseConcurrency = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseConcurrency"), 1, 256, false, cpus);
+			m_LoadConcurrency = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoadConcurrency"), 0, 256, false, cpus);
+
 			m_InterpolationType = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("InterpolationType"), 0, 1, false, 1);
 			m_WaveFormat = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("WaveFormat"), 1, 4, false, 4);
 			m_AttackLoad = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("AttackLoad"), 0, 1, false, 1);
@@ -204,14 +216,7 @@ void GOrgueSettings::Load()
 		}
 	}
 
-	long cpus = wxThread::GetCPUCount();
-	if (cpus == -1)
-		cpus = 4;
 	m_Stereo = m_Config.Read(wxT("StereoEnabled"), 1);
-	m_Concurrency = m_Config.Read(wxT("Concurrency"), cpus);
-	m_ReleaseConcurrency = m_Config.Read(wxT("ReleaseConcurrency"), cpus);
-	if (m_ReleaseConcurrency < 1)
-		m_ReleaseConcurrency = 1;
 	m_LosslessCompression = m_Config.Read(wxT("LosslessCompression"), 0L);
 	m_ManagePolyphony = m_Config.Read(wxT("ManagePolyphony"), 1);
 	m_ManageCache = m_Config.Read(wxT("ManageCache"), 1);
@@ -557,7 +562,6 @@ unsigned GOrgueSettings::GetConcurrency()
 void GOrgueSettings::SetConcurrency(unsigned concurrency)
 {
 	m_Concurrency = concurrency;
-	m_Config.Write(wxT("Concurrency"), (long)m_Concurrency);
 }
 
 unsigned GOrgueSettings::GetReleaseConcurrency()
@@ -570,7 +574,16 @@ void GOrgueSettings::SetReleaseConcurrency(unsigned concurrency)
 	if (concurrency < 1)
 		concurrency = 1;
 	m_ReleaseConcurrency = concurrency;
-	m_Config.Write(wxT("ReleaseConcurrency"), (long)m_ReleaseConcurrency);
+}
+
+unsigned GOrgueSettings::GetLoadConcurrency()
+{
+	return m_LoadConcurrency;
+}
+
+void GOrgueSettings::SetLoadConcurrency(unsigned concurrency)
+{
+	m_LoadConcurrency = concurrency;
 }
 
 bool GOrgueSettings::GetLosslessCompression()
@@ -1018,6 +1031,10 @@ void GOrgueSettings::Flush()
 	cfg.WriteInteger(wxT("General"), wxT("AttackLoad"), m_AttackLoad);
 	cfg.WriteInteger(wxT("General"), wxT("LoopLoad"), m_LoopLoad);
 	cfg.WriteInteger(wxT("General"), wxT("ReleaseLoad"), m_ReleaseLoad);
+
+	cfg.WriteInteger(wxT("General"), wxT("Concurrency"), m_Concurrency);
+	cfg.WriteInteger(wxT("General"), wxT("ReleaseConcurrency"), m_ReleaseConcurrency);
+	cfg.WriteInteger(wxT("General"), wxT("LoadConcurrency"), m_LoadConcurrency);
 
 	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)

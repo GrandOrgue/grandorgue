@@ -36,6 +36,7 @@ class SettingsOption : public wxPanel
 		ID_WAVE_FORMAT = 200,
 		ID_CONCURRENCY,
 		ID_RELEASE_CONCURRENCY,
+		ID_LOAD_CONCURRENCY,
 		ID_LOSSLESS_COMPRESSION,
 		ID_MANAGE_POLYPHONY,
 		ID_COMPRESS_CACHE,
@@ -59,6 +60,7 @@ private:
 	GOrgueSettings& m_Settings;
 	wxChoice* m_Concurrency;
 	wxChoice* m_ReleaseConcurrency;
+	wxChoice* m_LoadConcurrency;
 	wxChoice* m_WaveFormat;
 	wxCheckBox* m_LosslessCompression;
 	wxCheckBox* m_Limit;

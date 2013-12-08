@@ -88,6 +88,12 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(m_ReleaseConcurrency = new wxChoice(this, ID_RELEASE_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
+	for (unsigned i = 0; i < 128; i++)
+		choices.push_back(wxString::Format(wxT("%d"), i));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Load Concurrency Level:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_LoadConcurrency = new wxChoice(this, ID_LOAD_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+
+	choices.clear();
 	choices.push_back(_("8 Bit PCM"));
 	choices.push_back(_("16 Bit PCM"));
 	choices.push_back(_("24 Bit PCM"));
@@ -99,6 +105,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_Interpolation->Select(m_Settings.GetInterpolationType());
 	m_Concurrency->Select(m_Settings.GetConcurrency());
 	m_ReleaseConcurrency->Select(m_Settings.GetReleaseConcurrency() - 1);
+	m_LoadConcurrency->Select(m_Settings.GetLoadConcurrency());
 	m_WaveFormat->Select(m_Settings.GetWaveFormatBytesPerSample() - 1);
 
 	grid = new wxFlexGridSizer(4, 1, 5, 5);
@@ -225,6 +232,7 @@ void SettingsOption::Save()
 	m_Settings.SetRandomizeSpeaking(m_Random->IsChecked());
 	m_Settings.SetConcurrency(m_Concurrency->GetSelection());
 	m_Settings.SetReleaseConcurrency(m_ReleaseConcurrency->GetSelection() + 1);
+	m_Settings.SetLoadConcurrency(m_LoadConcurrency->GetSelection());
 	m_Settings.SetWaveFormatBytesPerSample(m_WaveFormat->GetSelection() + 1);
 	m_Settings.SetUserSettingPath(m_SettingsPath->GetPath());
 	m_Settings.SetUserCachePath(m_CachePath->GetPath());
