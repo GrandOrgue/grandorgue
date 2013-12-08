@@ -38,6 +38,7 @@
 #include "GOrgueEvent.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
+#include "GOrgueLoadThread.h"
 #include "GOrgueManual.h"
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
@@ -518,7 +519,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 		GenerateCacheObjectList(objects);
 		dlg->Reset(objects.size());
 		/* Load pipes */
-		unsigned nb_loaded_obj = 0;
+		std::atomic_uint nb_loaded_obj(0);
 
 		if (wxFileExists(m_CacheFilename))
 		{
@@ -587,11 +588,15 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 
 		if (!cache_ok)
 		{
-			while (nb_loaded_obj < objects.size())
+			ptr_vector<GOrgueLoadThread> threads;
+
+			for(unsigned i = 0; i < threads.size(); i++)
+				threads[i]->Run();
+
+			for(unsigned pos = nb_loaded_obj.fetch_add(1); pos < objects.size(); pos = nb_loaded_obj.fetch_add(1))
 			{
-				GOrgueCacheObject* obj = objects[nb_loaded_obj];
+				GOrgueCacheObject* obj = objects[pos];
 				obj->LoadData();
-				nb_loaded_obj++;
 				if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
 				{
 					FREE_AND_NULL(dummy);
@@ -600,6 +605,10 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 					return wxEmptyString;
 				}
 			}
+
+			for(unsigned i = 0; i < threads.size(); i++)
+				threads[i]->checkResult();
+
 			if (nb_loaded_obj >= objects.size())
 				m_Cacheable = true;
 
