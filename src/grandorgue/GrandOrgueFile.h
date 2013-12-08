@@ -126,7 +126,6 @@ private:
 
 	void ReadOrganFile(GOrgueConfigReader& cfg);
 	void ReadCombinations(GOrgueConfigReader& cfg);
-	bool TryLoad(GOrgueProgressDialog* dlg, GOrgueCache* cache, wxString& error);
 	void GenerateCacheHash(unsigned char hash[20]);
 	wxString GenerateSettingFileName();
 	wxString GenerateCacheFileName();
