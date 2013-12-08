@@ -39,6 +39,7 @@ private:
 	};
 
 	void OnOK(wxCommandEvent& event);
+	void OnDoubleClick(wxListEvent& event);
 
 public:
 	OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSettings& settings);

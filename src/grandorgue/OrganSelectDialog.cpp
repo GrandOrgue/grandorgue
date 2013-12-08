@@ -27,6 +27,7 @@
 
 BEGIN_EVENT_TABLE(OrganSelectDialog, wxDialog)
 	EVT_BUTTON(wxID_OK, OrganSelectDialog::OnOK)
+	EVT_LIST_ITEM_ACTIVATED(ID_ORGANS, OrganSelectDialog::OnDoubleClick)
 END_EVENT_TABLE()
 
 OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSettings& settings) :
@@ -80,3 +81,8 @@ GOrgueOrgan* OrganSelectDialog::GetSelection()
 	return (GOrgueOrgan*)m_Organs->GetItemData(m_Organs->GetFirstSelected());
 }
 
+void OrganSelectDialog::OnDoubleClick(wxListEvent& event)
+{
+	wxCommandEvent e;
+	OnOK(event);
+}
