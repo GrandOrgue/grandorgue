@@ -173,14 +173,8 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 
 bool GrandOrgueFile::TryLoad(GOrgueProgressDialog* dlg, GOrgueCache* cache, wxString& error)
 {
-	void* dummy = NULL;
-
 	try
 	{
-		dummy = malloc(1024 * 1024 * 50);
-		if (!dummy)
-			throw GOrgueOutOfMemory();
-
 		/* Figure out list of pipes to load */
 		std::vector<GOrgueCacheObject*> objects;
 		GenerateCacheObjectList(objects);
@@ -195,7 +189,6 @@ bool GrandOrgueFile::TryLoad(GOrgueProgressDialog* dlg, GOrgueCache* cache, wxSt
 			{
 				if (!obj->LoadCache(*cache))
 				{
-					FREE_AND_NULL(dummy);
 					error = wxString::Format
 						(_("Failed to read %s from cache.")
 						 ,obj->GetLoadTitle().c_str()
@@ -211,7 +204,6 @@ bool GrandOrgueFile::TryLoad(GOrgueProgressDialog* dlg, GOrgueCache* cache, wxSt
 
 			if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
 			{
-				FREE_AND_NULL(dummy);
 				GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
 				return true;
 			}
@@ -223,19 +215,11 @@ bool GrandOrgueFile::TryLoad(GOrgueProgressDialog* dlg, GOrgueCache* cache, wxSt
 				);
 		}
 	}
-	catch (GOrgueOutOfMemory e)
-	{
-		FREE_AND_NULL(dummy);
-		GOMessageBox(_("Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
-		return true;
-	}
 	catch (wxString msg)
 	{
 		error = msg;
-		FREE_AND_NULL(dummy);
 		return false;
 	}
-	FREE_AND_NULL(dummy);
 
 	m_Cacheable = true;
 	return true;
@@ -570,8 +554,13 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 	GOrgueLCD_WriteLineOne(m_ChurchName + wxT(" ") + m_OrganBuilder);
 	GOrgueLCD_WriteLineTwo(_("Loading..."));
 
+	void* dummy = NULL;
+
 	try
 	{
+		dummy = malloc(1024 * 1024 * 50);
+		if (!dummy)
+			throw GOrgueOutOfMemory();
 
 		wxString load_error;
 		bool cache_ok = false;
@@ -623,17 +612,28 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 		if (!cache_ok)
 		{
 			if (!TryLoad(dlg, NULL, load_error))
+			{
+				FREE_AND_NULL(dummy);
 				return load_error;
+			}
 
 			if (m_Settings.GetManageCache() && m_Cacheable)
 				UpdateCache(dlg, m_Settings.GetCompressCache());
 		}
 		SetTemperament(m_Temperament);
 	}
+	catch (GOrgueOutOfMemory e)
+	{
+		FREE_AND_NULL(dummy);
+		GOMessageBox(_("Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
+		return wxEmptyString;
+	}
 	catch (wxString error_)
 	{
+		FREE_AND_NULL(dummy);
 		return error_;
 	}
+	FREE_AND_NULL(dummy);
 
 	GOrgueLCD_WriteLineTwo(_("Ready!"));
 
