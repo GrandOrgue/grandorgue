@@ -639,8 +639,9 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	GOMutexLocker m_locker(m_mutex, true);
 	if (!m_locker.IsLocked())
 		return;
+	GOrgueProgressDialog dlg;
 	if (doc && doc->GetOrganFile())
-		res = doc->GetOrganFile()->UpdateCache(NULL, m_Settings.GetCompressCache());
+		res = doc->GetOrganFile()->UpdateCache(&dlg, m_Settings.GetCompressCache());
 	if (!res)
 	{
 		wxLogError(_("Creating the cache failed"));
