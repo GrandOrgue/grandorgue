@@ -26,6 +26,7 @@
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/frame.h>
+#include <wx/image.h>
 
 BEGIN_EVENT_TABLE(GOrgueSplashBitmap, wxControl)
 	EVT_PAINT(GOrgueSplashBitmap::OnPaint)

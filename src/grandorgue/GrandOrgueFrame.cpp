@@ -42,6 +42,7 @@
 #include <wx/filedlg.h>
 #include <wx/html/helpctrl.h>
 #include <wx/icon.h>
+#include <wx/image.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>

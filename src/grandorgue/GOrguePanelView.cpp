@@ -26,6 +26,7 @@
 #include "Images.h"
 #include <wx/frame.h>
 #include <wx/icon.h>
+#include <wx/image.h>
 
 GOrguePanelView* GOrguePanelView::createWindow(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent)
 {
