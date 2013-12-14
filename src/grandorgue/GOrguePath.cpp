@@ -25,7 +25,7 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-wxString GOCreateFilename(wxString path, wxString file)
+wxString GOCreateFilename(const wxString& path, const wxString& file)
 {
 	/* Translate directory seperator from ODF(\) to native format */
 	wxString temp = file;
@@ -42,7 +42,7 @@ wxString GOCreateFilename(wxString path, wxString file)
 	return temp;
 }
 
-void GOCreateDirectory(wxString path)
+void GOCreateDirectory(const wxString& path)
 {
 	if (wxFileName::DirExists(path))
 		return;
@@ -52,20 +52,20 @@ void GOCreateDirectory(wxString path)
 	}
 }
 
-wxString GONormalizePath(wxString path)
+wxString GONormalizePath(const wxString& path)
 {
 	wxFileName name(path);
 	name.MakeAbsolute();
 	return name.GetLongPath();
 }
 
-wxString GOGetPath(wxString path)
+wxString GOGetPath(const wxString& path)
 {
 	wxFileName name(GONormalizePath(path));
 	return name.GetPath();
 }
 
-void GOSyncDirectory(wxString path)
+void GOSyncDirectory(const wxString& path)
 {
 	int fd = wxOpen(path.c_str(), O_RDONLY, 0);
 	if (fd == -1)
@@ -74,7 +74,7 @@ void GOSyncDirectory(wxString path)
 	wxClose(fd);
 }
 
-bool GORenameFile(wxString from, wxString to)
+bool GORenameFile(const wxString& from, const wxString& to)
 {
 	wxFileName name(to);
 	if (!wxRenameFile(from, to))

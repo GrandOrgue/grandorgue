@@ -24,12 +24,12 @@
 
 #include <wx/string.h>
 
-wxString GOCreateFilename(wxString path, wxString file);
-void GOCreateDirectory(wxString path);
-wxString GONormalizePath(wxString path);
-wxString GOGetPath(wxString path);
+wxString GOCreateFilename(const wxString& path, const wxString& file);
+void GOCreateDirectory(const wxString& path);
+wxString GONormalizePath(const wxString& path);
+wxString GOGetPath(const wxString& path);
 
-void GOSyncDirectory(wxString path);
-bool GORenameFile(wxString from, wxString to);
+void GOSyncDirectory(const wxString& path);
+bool GORenameFile(const wxString& from, const wxString& to);
 
 #endif
