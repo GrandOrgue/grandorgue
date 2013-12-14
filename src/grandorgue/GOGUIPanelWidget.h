@@ -56,6 +56,7 @@ public:
 	~GOGUIPanelWidget();
 
 	void OnUpdate();
+	wxSize UpdateSize(wxSize size);
 
 	DECLARE_EVENT_TABLE();
 };

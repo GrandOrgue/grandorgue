@@ -34,6 +34,9 @@ class GOrguePanelView : public wxScrolledWindow, public GOrgueView
 private:
 	GOGUIPanelWidget* m_panelwidget;
 	GOGUIPanel* m_panel;
+	wxSize m_Scroll;
+
+	void OnSize(wxSizeEvent& event);
 
 public:
 	GOrguePanelView(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent, bool main_panel);
@@ -45,6 +48,8 @@ public:
 	void SyncState();
 
 	bool Destroy();
+
+	DECLARE_EVENT_TABLE()
 };
 
 #endif
