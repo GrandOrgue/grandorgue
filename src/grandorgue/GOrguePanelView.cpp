@@ -28,6 +28,10 @@
 #include <wx/icon.h>
 #include <wx/image.h>
 
+BEGIN_EVENT_TABLE(GOrguePanelView, wxScrolledWindow)
+	EVT_SIZE(GOrguePanelView::OnSize)
+END_EVENT_TABLE()
+
 GOrguePanelView* GOrguePanelView::createWindow(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent)
 {
 	bool is_main = (parent != NULL);
@@ -51,29 +55,30 @@ GOrguePanelView::GOrguePanelView(GOrgueDocument* doc, GOGUIPanel* panel, wxWindo
 	m_panel(panel)
 {
 	wxWindow* frame = parent;
-	m_panelwidget = new GOGUIPanelWidget(panel, this);
+	GOGUIPanelWidget* panelwidget = new GOGUIPanelWidget(panel, this);
 
 	/* Calculate scrollbar size */
 	this->SetSize(50, 50);
 	this->SetVirtualSize(100, 100);
 	this->SetScrollRate(5, 5);
-	wxSize scroll = this->GetSize();
-	scroll.DecBy(this->GetClientSize());
+	m_Scroll = this->GetSize();
+	m_Scroll.DecBy(this->GetClientSize());
 
-	wxSize max = m_panelwidget->GetSize();
-	max.DecBy(scroll);
+	wxSize max = panelwidget->GetSize();
+	max.DecBy(m_Scroll);
 	this->SetVirtualSize(max);
-	this->SetSize(m_panelwidget->GetSize());
+	this->SetSize(panelwidget->GetSize());
 
 	wxRect size = panel->GetWindowSize();
 	frame->SetMaxSize(wxSize(wxDefaultCoord, wxDefaultCoord));
-	frame->SetClientSize(m_panelwidget->GetSize());
+	frame->SetClientSize(panelwidget->GetSize());
 	frame->SetMaxSize(frame->GetSize());
 	if (size.GetWidth() && size.GetHeight())
 		frame->SetSize(size);
 	else
 		frame->Center(wxBOTH);
 	this->SetPosition(wxPoint(0, 0));
+	m_panelwidget = panelwidget;
 	frame->Show();
 	frame->Update();
 	this->SetPosition(wxPoint(0, 0));
@@ -102,4 +107,25 @@ bool GOrguePanelView::Destroy()
 {
 	m_panel->SetView(NULL);
 	return wxScrolledWindow::Destroy();
+}
+
+void GOrguePanelView::OnSize(wxSizeEvent& event)
+{
+	if (m_panelwidget)
+	{
+		wxSize max = event.GetSize();
+		max = m_panelwidget->UpdateSize(max);
+		max.DecBy(m_Scroll);
+		this->SetVirtualSize(max);
+
+		int x, xu, y, yu;
+		GetScrollPixelsPerUnit(&xu, &yu);
+		GetViewStart(&x, &y);
+		if (x * xu + max.GetWidth() > event.GetSize().GetWidth())
+			x = (event.GetSize().GetWidth() - max.GetWidth()) / xu;
+		if (y * yu + max.GetHeight() > event.GetSize().GetHeight())
+			y = (event.GetSize().GetHeight() - max.GetHeight()) / yu;
+		this->Scroll(x, y);
+	}
+	event.Skip();
 }

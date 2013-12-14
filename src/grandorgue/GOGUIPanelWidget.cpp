@@ -59,6 +59,21 @@ GOGUIPanelWidget::~GOGUIPanelWidget()
 {
 }
 
+wxSize GOGUIPanelWidget::UpdateSize(wxSize size)
+{
+	double scaleX = size.GetWidth() / (double)m_panel->GetWidth();
+	double scaleY = size.GetHeight() / (double)m_panel->GetHeight();
+	if (scaleX > scaleY)
+		m_Scale = scaleX;
+	else
+		m_Scale = scaleY;
+	if (m_Scale > 2)
+		m_Scale = 2;
+	OnUpdate();
+	Refresh();
+	return GetSize();
+}
+
 void GOGUIPanelWidget::OnDraw(wxDC* dc)
 {
 	dc->DrawBitmap(m_ClientBitmap, 0, 0, false);
@@ -78,13 +93,13 @@ void GOGUIPanelWidget::OnPaint(wxPaintEvent& event)
 
 void GOGUIPanelWidget::OnUpdate()
 {
-	m_ClientBitmap = wxBitmap(m_panel->GetWidth(), m_panel->GetHeight());
+	m_ClientBitmap = wxBitmap(m_panel->GetWidth() * m_Scale + 0.5, m_panel->GetHeight() * m_Scale + 0.5);
 	wxMemoryDC dc;
 	dc.SelectObject(m_ClientBitmap);
 	GOrgueDC DC(&dc, m_Scale);
 
 	m_panel->Draw(DC);
-	SetSize(m_panel->GetWidth(), m_panel->GetHeight());
+	SetSize(m_ClientBitmap.GetWidth(), m_ClientBitmap.GetHeight());
 }
 
 void GOGUIPanelWidget::CopyToScreen(wxDC* mdc, const wxRect& rect)
