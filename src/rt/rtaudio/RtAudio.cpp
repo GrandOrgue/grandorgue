@@ -5482,8 +5482,10 @@ RtAudio::DeviceInfo RtApiAlsa :: getDeviceInfo( unsigned int device )
   // Get the device name
   char *cardname;
   result = snd_card_get_name( card, &cardname );
-  if ( result >= 0 )
+  if ( result >= 0 ) {
     sprintf( name, "hw:%s,%d", cardname, subdevice );
+    free( cardname );
+  }
   info.name = name;
 
   // That's all ... close the device and return
