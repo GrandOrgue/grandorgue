@@ -36,7 +36,8 @@ GOrgueLoadThread::GOrgueLoadThread(std::vector<GOrgueCacheObject*>& objs, std::a
 
 GOrgueLoadThread::~GOrgueLoadThread()
 {
-	Delete();
+	if (IsAlive())
+		Delete();
 }
 
 void GOrgueLoadThread::checkResult()
