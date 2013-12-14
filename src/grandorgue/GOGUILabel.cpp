@@ -32,7 +32,7 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, un
 	m_DispXpos(x_pos),
 	m_DispYpos(y_pos),
 	m_Label(label),
-	m_Bitmap(0),
+	m_Bitmap(),
 	m_FontSize(0),
 	m_FontName(),
 	m_Text(name),

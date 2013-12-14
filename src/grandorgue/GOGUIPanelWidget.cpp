@@ -46,10 +46,11 @@ END_EVENT_TABLE()
 
 GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindowID id) :
 	wxPanel(parent, id),
-	m_panel(panel)
+	m_panel(panel),
+	m_Scale(1)
 {
 	SetLabel(m_panel->GetName());
-	m_ClientBitmap.Create(m_panel->GetWidth(), m_panel->GetHeight());
+	m_ClientBitmap.Create(m_panel->GetWidth() * m_Scale, m_panel->GetHeight() * m_Scale);
 	OnUpdate();
 	SetFocus();
 }
@@ -80,7 +81,7 @@ void GOGUIPanelWidget::OnUpdate()
 	m_ClientBitmap = wxBitmap(m_panel->GetWidth(), m_panel->GetHeight());
 	wxMemoryDC dc;
 	dc.SelectObject(m_ClientBitmap);
-	GOrgueDC DC(&dc);
+	GOrgueDC DC(&dc, m_Scale);
 
 	m_panel->Draw(DC);
 	SetSize(m_panel->GetWidth(), m_panel->GetHeight());
@@ -99,10 +100,10 @@ void GOGUIPanelWidget::OnGOControl(wxCommandEvent& event)
 
 	wxMemoryDC mdc;
 	mdc.SelectObject(m_ClientBitmap);
-	GOrgueDC DC(&mdc);
+	GOrgueDC DC(&mdc, m_Scale);
 
 	control->Draw(DC);
-	CopyToScreen(&mdc, control->GetBoundingRect());
+	CopyToScreen(&mdc, DC.ScaleRect(control->GetBoundingRect()));
 	event.Skip();
 }
 
@@ -114,7 +115,7 @@ void GOGUIPanelWidget::OnMouseMove(wxMouseEvent& event)
 		return;
 	}
 
-	m_panel->HandleMousePress(event.GetX(), event.GetY(), false, m_leftstate);
+	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, false, m_leftstate);
 	event.Skip();
 }
 
@@ -122,7 +123,7 @@ void GOGUIPanelWidget::OnMouseLeftDown(wxMouseEvent& event)
 {
 	m_leftstate.clear();
 
-	m_panel->HandleMousePress(event.GetX(), event.GetY(), false, m_leftstate);
+	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, false, m_leftstate);
 	event.Skip();
 }
 
@@ -130,14 +131,14 @@ void GOGUIPanelWidget::OnMouseRightDown(wxMouseEvent& event)
 {
 	GOGUIMouseState state;
 
-	m_panel->HandleMousePress(event.GetX(), event.GetY(), true, state);
+	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, true, state);
 	event.Skip();
 }
 
 void GOGUIPanelWidget::OnMouseScroll(wxMouseEvent& event)
 {
 	if (event.GetWheelRotation())
-		m_panel->HandleMouseScroll(event.GetX(), event.GetY(), event.GetWheelRotation());
+		m_panel->HandleMouseScroll(event.GetX() / m_Scale, event.GetY() / m_Scale, event.GetWheelRotation());
 	event.Skip();
 }
 

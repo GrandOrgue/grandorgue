@@ -25,7 +25,8 @@
 
 GOrgueFont::GOrgueFont() :
 	m_Name(),
-	m_Points(0)
+	m_Points(0),
+	m_Scale(0)
 {
 	m_Font = *wxNORMAL_FONT;
 }
@@ -39,15 +40,23 @@ void GOrgueFont::SetName(const wxString& name)
 	{
 		m_Font = new_font;
 		m_Name = name;
+		m_Scale = 0;
 	}
 }
 void GOrgueFont::SetPoints(unsigned points)
 {
 	m_Font.SetPointSize(points);
 	m_Points = points;
+	m_Scale = 0;
 }
 
-wxFont GOrgueFont::GetFont()
+wxFont GOrgueFont::GetFont(double scale)
 {
-	return m_Font;
+	if (m_Scale != scale)
+	{
+		m_ScaledFont = m_Font;
+		m_ScaledFont.SetPointSize(m_Points * scale);
+		m_Scale = scale;
+	}
+	return m_ScaledFont;
 }

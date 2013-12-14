@@ -22,21 +22,25 @@
 #ifndef GORGUEBITMAP_H
 #define GORGUEBITMAP_H
 
-class wxBitmap;
+#include <wx/bitmap.h>
+
+class wxImage;
 
 class GOrgueBitmap
 {
 private:
-	wxBitmap* m_bmp;
+	wxImage* m_img;
+	wxBitmap m_bmp;
+	double m_Scale;
 
 public:
 	GOrgueBitmap();
-	GOrgueBitmap(wxBitmap* bmp);
+	GOrgueBitmap(wxImage* img);
 
 	unsigned GetWidth();
 	unsigned GetHeight();
 
-	const wxBitmap& GetData();
+	const wxBitmap& GetData(double scale);
 };
 
 #endif

@@ -22,28 +22,35 @@
 #include "GOrgueBitmap.h"
 
 #include <wx/bitmap.h>
+#include <wx/image.h>
 
 GOrgueBitmap::GOrgueBitmap() :
-	m_bmp(NULL)
+	m_img(NULL)
 {
 }
 
-GOrgueBitmap::GOrgueBitmap(wxBitmap* bmp) :
-	m_bmp(bmp)
+GOrgueBitmap::GOrgueBitmap(wxImage* img) :
+	m_img(img),
+	m_Scale(0)
 {
 }
 
-const wxBitmap& GOrgueBitmap::GetData()
+const wxBitmap& GOrgueBitmap::GetData(double scale)
 {
-	return *m_bmp;
+	if (scale != m_Scale)
+	{
+		m_bmp = m_img->Scale(GetWidth() * scale, GetHeight() * scale, wxIMAGE_QUALITY_HIGH);
+		m_Scale = scale;
+	}
+	return m_bmp;
 }
 
 unsigned GOrgueBitmap::GetWidth()
 {
-	return m_bmp->GetWidth();
+	return m_img->GetWidth();
 }
 
 unsigned GOrgueBitmap::GetHeight()
 {
-	return m_bmp->GetHeight();
+	return m_img->GetHeight();
 }

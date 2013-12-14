@@ -24,7 +24,6 @@
 #include "GOrguePath.h"
 #include "GrandOrgueFile.h"
 #include "Images.h"
-#include <wx/bitmap.h>
 #include <wx/intl.h>
 #include <wx/image.h>
 
@@ -126,7 +125,7 @@
 	DECLARE_IMAGE(ManualSharp ## C ## Up, "GO:Manual" #A "Off_Sharp"); \
 	DECLARE_IMAGE(ManualSharp ## C ## Down, "GO:Manual" #A "On_Sharp");
 
-#define DECLARE_IMAGE(A, B) wxBitmap GetImage_ ## A ();
+#define DECLARE_IMAGE(A, B) wxImage GetImage_ ## A ();
 #define DECLARE_IMAGE_ROT(A, B)
 
 BITMAP_LIST
@@ -134,10 +133,10 @@ BITMAP_LIST
 #undef DECLARE_IMAGE
 #undef DECLARE_IMAGE_ROT
 
-#define DECLARE_IMAGE(A, B) RegisterBitmap(new wxBitmap(GetImage_ ## A()), wxT(B));
+#define DECLARE_IMAGE(A, B) RegisterBitmap(new wxImage(GetImage_ ## A()), wxT(B));
 #define DECLARE_IMAGE_ROT(A, B) \
-	static wxBitmap A ## _r(GetImage_ ## A().ConvertToImage().Rotate90(), -1); \
-	RegisterBitmap(new wxBitmap(A ## _r), wxT(B)); 
+	static wxImage A ## _r(GetImage_ ## A().Rotate90()); \
+	RegisterBitmap(new wxImage(A ## _r), wxT(B)); 
 
 GOrgueBitmapCache::GOrgueBitmapCache(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
@@ -152,7 +151,7 @@ GOrgueBitmapCache::~GOrgueBitmapCache()
 {
 }
 
-void GOrgueBitmapCache::RegisterBitmap(wxBitmap* bitmap, wxString filename, wxString maskname)
+void GOrgueBitmapCache::RegisterBitmap(wxImage* bitmap, wxString filename, wxString maskname)
 {
 	m_Bitmaps.push_back(bitmap);
 	m_Filenames.push_back(filename);
@@ -182,7 +181,7 @@ GOrgueBitmap GOrgueBitmapCache::GetBitmap(wxString filename, wxString maskName)
 		image.SetMaskFromImage(maskimage, 0xFF, 0xFF, 0xFF);
 	}
 	
-	wxBitmap *bitmap = new wxBitmap(image, -1);
+	wxImage* bitmap = new wxImage(image);
 	RegisterBitmap(bitmap, filename, maskName);
 	return GOrgueBitmap(bitmap);
 }
