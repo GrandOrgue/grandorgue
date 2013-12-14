@@ -22,9 +22,9 @@
 #ifndef GO_IMAGES_H /* using IMAGES_H causes a preprocessor conflict */
 #define GO_IMAGES_H
 
-class wxBitmap;
+class wxImage;
 
-#define DECLARE_IMAGE(A) wxBitmap GetImage_ ## A ();
+#define DECLARE_IMAGE(A) wxImage GetImage_ ## A ();
 
 DECLARE_IMAGE(gauge);
 DECLARE_IMAGE(help);

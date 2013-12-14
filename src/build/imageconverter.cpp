@@ -45,7 +45,6 @@ int main(int ac, const char* ag[])
 		return 1;
 	}
 
-	fprintf(out, "#include <wx/bitmap.h>\n");
 	fprintf(out, "#include <wx/image.h>\n");
 	fprintf(out, "#include <wx/mstream.h>\n");
 	fprintf(out, "static const unsigned char image_%s[] = {\n", ag[3]);
@@ -59,11 +58,11 @@ int main(int ac, const char* ag[])
 	}
 	fprintf(out, "\n};\n\n");
 
-	fprintf(out, "wxBitmap GetImage_%s()\n", ag[3]);
+	fprintf(out, "wxImage GetImage_%s()\n", ag[3]);
 	fprintf(out, "{\n");
 	fprintf(out, "\tstatic wxMemoryInputStream is(image_%s, sizeof(image_%s));\n", ag[3], ag[3]);
-	fprintf(out, "\tstatic wxBitmap bitmap(wxImage(is, wxBITMAP_TYPE_ANY, -1), -1);\n");
-	fprintf(out, "\treturn bitmap;\n");
+	fprintf(out, "\tstatic wxImage image(is, wxBITMAP_TYPE_ANY, -1);\n");
+	fprintf(out, "\treturn image;\n");
 	fprintf(out, "}\n");
 
 	if (!feof(in) || ferror(in) || ferror(out))

@@ -22,6 +22,7 @@
 #include "wxGaugeAudio.h"
 
 #include "Images.h"
+#include <wx/image.h>
 
 BEGIN_EVENT_TABLE(wxGaugeAudio, wxControl)
 	EVT_ERASE_BACKGROUND(wxGaugeAudio::OnErase)
@@ -32,7 +33,7 @@ wxGaugeAudio::wxGaugeAudio(wxWindow* parent, wxWindowID id, const wxPoint& pos) 
 	m_value = 0;
 	m_clip = false;
 
-        m_gauge = GetImage_gauge();
+        m_gauge = wxBitmap(GetImage_gauge());
 	m_gaugedc.SelectObject(m_gauge);
 }
 
