@@ -25,22 +25,30 @@
 #include "GOrgueFont.h"
 #include <wx/dc.h>
 
-GOrgueDC::GOrgueDC(wxDC* dc) :
-	m_DC(dc)
+GOrgueDC::GOrgueDC(wxDC* dc, double scale) :
+	m_DC(dc),
+	m_Scale(scale)
 {
+}
+
+wxRect GOrgueDC::ScaleRect(const wxRect& rect)
+{
+	return wxRect(rect.GetX() * m_Scale + 0.5, rect.GetY() * m_Scale + 0.5, rect.GetWidth() * m_Scale + 0.5, rect.GetHeight() * m_Scale + 0.5);
 }
 
 void GOrgueDC::DrawBitmap(GOrgueBitmap& bitmap, int x, int y)
 {
-	m_DC->DrawBitmap(bitmap.GetData(), x, y, true);
+	m_DC->DrawBitmap(bitmap.GetData(m_Scale), x * m_Scale + 0.5, y * m_Scale + 0.5, true);
 }
 
-void GOrgueDC::TileBitmap(GOrgueBitmap& bitmap, const wxRect& target, int xo, int yo)
+void GOrgueDC::TileBitmap(GOrgueBitmap& bitmap, const wxRect& tgt, int xo, int yo)
 {
+	wxRect target = ScaleRect(tgt);
 	m_DC->SetClippingRegion(target);
-	for (int y = target.GetY() - yo; y < target.GetBottom(); y += bitmap.GetHeight())
-		for (int x = target.GetX() - xo; x < target.GetRight(); x += bitmap.GetWidth())
-			m_DC->DrawBitmap(bitmap.GetData(), x, y, true);
+	const wxBitmap& bmp = bitmap.GetData(m_Scale);
+	for (int y = target.GetY() - yo * m_Scale; y < target.GetBottom(); y += bmp.GetHeight())
+		for (int x = target.GetX() - xo * m_Scale; x < target.GetRight(); x += bmp.GetWidth())
+			m_DC->DrawBitmap(bmp, x, y, true);
 	m_DC->DestroyClippingRegion();
 }
 
@@ -102,8 +110,8 @@ wxString GOrgueDC::WrapText(const wxString& string, unsigned width)
 void GOrgueDC::DrawText(const wxString& text, const wxRect& rect, const wxColour& color, GOrgueFont& font, unsigned text_width, bool align_top)
 {
 	m_DC->SetTextForeground(color);
-	m_DC->SetFont(font.GetFont());
-	m_DC->DrawLabel(WrapText(text, text_width), rect, (align_top ? 0 : wxALIGN_CENTER_VERTICAL) | wxALIGN_CENTER_HORIZONTAL);
+	m_DC->SetFont(font.GetFont(m_Scale));
+	m_DC->DrawLabel(WrapText(text, m_Scale * text_width), ScaleRect(rect), (align_top ? 0 : wxALIGN_CENTER_VERTICAL) | wxALIGN_CENTER_HORIZONTAL);
 }
 
 

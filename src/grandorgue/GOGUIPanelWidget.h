@@ -36,6 +36,7 @@ private:
 	GOGUIPanel* m_panel;
 	wxBitmap m_ClientBitmap;
 	GOGUIMouseState m_leftstate;
+	double m_Scale;
 
 	void CopyToScreen(wxDC* mdc, const wxRect& rect);
 

@@ -32,7 +32,7 @@ class GOrgueBitmapCache
 {
 private:
 	GrandOrgueFile* m_organfile;
-	ptr_vector<wxBitmap> m_Bitmaps;
+	ptr_vector<wxImage> m_Bitmaps;
 	std::vector<wxString> m_Filenames;
 	std::vector<wxString> m_Masknames;
 
@@ -40,7 +40,7 @@ public:
 	GOrgueBitmapCache(GrandOrgueFile* organfile);
 	virtual ~GOrgueBitmapCache();
 
-	void RegisterBitmap(wxBitmap* bitmap, wxString filename, wxString maskname = wxEmptyString);
+	void RegisterBitmap(wxImage* bitmap, wxString filename, wxString maskname = wxEmptyString);
 	GOrgueBitmap GetBitmap(wxString filename, wxString maskName = wxEmptyString);
 };
 
