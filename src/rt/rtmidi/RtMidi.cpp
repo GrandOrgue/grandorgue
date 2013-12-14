@@ -3475,6 +3475,7 @@ MidiInJack :: ~MidiInJack()
 
   if (data->client)
     jack_client_close( data->client );
+  delete data;
 }
 
 void MidiInJack :: openPort( unsigned int portNumber, const std::string portName )
