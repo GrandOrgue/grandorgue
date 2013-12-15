@@ -69,6 +69,7 @@ public:
 	bool SetCacheFile(wxFile& cache_file);
 	void FreeCacheFile();
 
+	bool IsPoolFull();
 	size_t GetAllocSize();
 	size_t GetMappedSize();
 	size_t GetPoolSize();

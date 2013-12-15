@@ -590,7 +590,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 		{
 			ptr_vector<GOrgueLoadThread> threads;
 			for(unsigned i = 0; i < m_Settings.GetLoadConcurrency(); i++)
-				threads.push_back(new GOrgueLoadThread(objects, nb_loaded_obj));
+				threads.push_back(new GOrgueLoadThread(objects, m_pool, nb_loaded_obj));
 
 			for(unsigned i = 0; i < threads.size(); i++)
 				threads[i]->Run();
