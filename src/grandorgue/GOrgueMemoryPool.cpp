@@ -200,6 +200,11 @@ size_t GOrgueMemoryPool::GetMemoryLimit()
 	return m_MemoryLimit;
 }
 
+bool GOrgueMemoryPool::IsPoolFull()
+{
+	return m_AllocError > 0;
+}
+
 void GOrgueMemoryPool::SetMemoryLimit(size_t limit)
 {
 	m_MemoryLimit = limit;
