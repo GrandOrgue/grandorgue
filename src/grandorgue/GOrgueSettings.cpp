@@ -65,14 +65,14 @@ const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
 	{ MIDI_RECV_SETTER, 14, wxTRANSLATE("Sequencer"), wxTRANSLATE("__7") },
 	{ MIDI_RECV_SETTER, 15, wxTRANSLATE("Sequencer"), wxTRANSLATE("__8") },
 	{ MIDI_RECV_SETTER, 16, wxTRANSLATE("Sequencer"), wxTRANSLATE("__9") },
-	{ MIDI_RECV_SETTER, 17, wxTRANSLATE("Sequencer"), wxTRANSLATE("-1 Cent") },
-	{ MIDI_RECV_SETTER, 18, wxTRANSLATE("Sequencer"), wxTRANSLATE("+1 Cent") },
-	{ MIDI_RECV_SETTER, 19, wxTRANSLATE("Sequencer"), wxTRANSLATE("-100 Cent") },
-	{ MIDI_RECV_SETTER, 20, wxTRANSLATE("Sequencer"), wxTRANSLATE("+100 Cent") },
-	{ MIDI_RECV_SETTER, 21, wxTRANSLATE("Sequencer"), wxTRANSLATE("Prev temperament") },
-	{ MIDI_RECV_SETTER, 22, wxTRANSLATE("Sequencer"), wxTRANSLATE("Next temperament") },
-	{ MIDI_RECV_SETTER, 23, wxTRANSLATE("Sequencer"), wxTRANSLATE("Transpose -") },
-	{ MIDI_RECV_SETTER, 24, wxTRANSLATE("Sequencer"), wxTRANSLATE("Transpose +") },
+	{ MIDI_RECV_SETTER, 17, wxTRANSLATE("Master Controls"), wxTRANSLATE("-1 Cent") },
+	{ MIDI_RECV_SETTER, 18, wxTRANSLATE("Master Controls"), wxTRANSLATE("+1 Cent") },
+	{ MIDI_RECV_SETTER, 19, wxTRANSLATE("Master Controls"), wxTRANSLATE("-100 Cent") },
+	{ MIDI_RECV_SETTER, 20, wxTRANSLATE("Master Controls"), wxTRANSLATE("+100 Cent") },
+	{ MIDI_RECV_SETTER, 21, wxTRANSLATE("Master Controls"), wxTRANSLATE("Prev temperament") },
+	{ MIDI_RECV_SETTER, 22, wxTRANSLATE("Master Controls"), wxTRANSLATE("Next temperament") },
+	{ MIDI_RECV_SETTER, 23, wxTRANSLATE("Master Controls"), wxTRANSLATE("Transpose -") },
+	{ MIDI_RECV_SETTER, 24, wxTRANSLATE("Master Controls"), wxTRANSLATE("Transpose +") },
 };
 
 GOrgueSettings::GOrgueSettings(wxString instance) :
