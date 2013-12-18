@@ -22,6 +22,7 @@
 #include "wxGaugeAudio.h"
 
 #include "Images.h"
+#include <wx/dcclient.h>
 #include <wx/image.h>
 
 BEGIN_EVENT_TABLE(wxGaugeAudio, wxControl)
