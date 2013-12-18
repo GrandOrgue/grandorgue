@@ -248,28 +248,54 @@ The File menu contains commands for dealing with the loading and
 saving of sample sets.
 </para>
         <sect3>
+          <title>Load</title>
+          <indexterm>
+            <primary>Known organs list</primary>
+          </indexterm>
+          <indexterm>
+            <primary>Load</primary>
+          </indexterm>
+          <figure id="knownorgans">
+            <title>Known organs list</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata scalefit="1" width="100%" fileref="known_organs_list.png"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+          <para>Open and load a sampleset from the known organs list which is updated whenever a new sample set is successfully loaded.</para>
+          <para>Select an organ in the list, then click <emphasis role="bold">OK</emphasis>.</para>
+	  <note><para>The known organs list is managed in the <link linkend="manage_known_organs">Organs</link> Settings tab.</para></note>
+        </sect3>
+        <sect3>
+          <title>Favorites</title>
+	  <indexterm><primary>Favorites</primary></indexterm>
+	  <indexterm><primary>Favorite organs</primary></indexterm>
+	  <para>This submenu displays the top ten organs in the known organs list. Organs display order is managed in the <link linkend="manage_known_organs">Organs</link> Settings tab.</para>
+	  <para>Choosing an organ in this menu opens and loads its sampleset.</para>
+        </sect3>
+        <sect3>
           <title>Open</title>
           <indexterm>
             <primary>Open</primary>
           </indexterm>
+	  <indexterm><primary>Open organ</primary></indexterm>
           <para>
-Import a sample set stored in a definition file. The location will be
-remembered for the next open operation. The most recently used sample
-sets are also remembered and available in the "Open Recent"
-menu item. Loading sample sets takes some time; a progress window will
-display indicating estimated time remaining and other indicators.
+Open and load a sample set stored in a definition file. The location will be
+remembered for the next open operation. The most recently used sample sets are
+also remembered and available in the "Load", "Open Recent" and "Favorites" menu
+items. Loading sample sets takes some time; a progress window will display
+indicating estimated time remaining and other indicators.
 </para>
+          <para>When the sampleset loads successfully, it registers in the <link linkend="settingstab">configuration file</link>, thus automatically feeding the known organs list.</para>
         </sect3>
         <sect3>
           <title>Open Recent</title>
           <indexterm>
             <primary>Open Recent</primary>
           </indexterm>
-          <para>
-The last 30 used definition files are remembered and displayed as a sub menu.
-If the selected file is not found, an error message is displayed and the sub menu
-item is <emphasis>removed</emphasis>.
-</para>
+	  <para>This submenu displays the ten last used organs from the known organs list. Organs in this menu are ordered by last used date from newest down to oldest.</para>
+	  <para>Choosing an organ in this menu opens and loads its sampleset.</para>
         </sect3>
         <sect3>
           <title>Organ Properties</title>
@@ -829,15 +855,15 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
         <tbody>
           <row>
             <entry>Windows:</entry>
-            <entry>registry key HKEY_CURRENT_USER\Software\Our Organ\GrandOrgue</entry>
+            <entry>registry key HKEY_CURRENT_USER\Software\Our Organ\GrandOrgue and %APPDATA%\GrandOrgueConfig file</entry>
           </row>
           <row>
             <entry>Linux:</entry>
-            <entry>$HOME/.GrandOrgue</entry>
+            <entry>$HOME/.GrandOrgue and $HOME/GrandOrgueConfig</entry>
           </row>
           <row>
             <entry>Mac:</entry>
-            <entry>Library/Preferences/.GrandOrgue</entry>
+            <entry>Library/Preferences/.GrandOrgue and Library/Preferences/GrandOrgue</entry>
           </row>
         </tbody>
       </tgroup>
@@ -1688,7 +1714,7 @@ Variable savings up to 50%
       </indexterm>
       <figure>
         <title>Organs tab</title>
-        <mediaobject>
+        <mediaobject id="manage_known_organs">
           <imageobject>
             <imagedata scalefit="1" width="100%" fileref="organs_tab.png"/>
           </imageobject>
@@ -1769,7 +1795,11 @@ the same channel.
         </imageobject>
       </mediaobject>
     </figure>
-    <para>In its left box, this dialog displays all ranks found in the definition file grouped by windchest. The tree can unfold down to the individual pipe level. Within  windchests, the ranks are ordered as found in the definition file.</para>
+    <para>
+In its left box, this dialog displays all ranks found in the definition file
+grouped by windchest. The tree can unfold down to the individual pipe level.
+Within  windchests, the ranks are ordered as found in the definition file.
+    </para>
     <para>When the tree is unfolded down to the pipe level, the dialog displays the MIDI number assigned to the sample file, along with the file's path.</para>
     <para>The right frames display controls which allow to fine set features at the rank or pipe level.</para>
     <para>Settings can be modified at the organ, rank and individual pipe level. The windchest level is only used as logical grouping, and any settings modified at that level are ignored.</para>
