@@ -315,18 +315,18 @@ another application.
             <primary>Preset</primary>
           </indexterm>
           <para>
-Select the settings file number. A single sample set can create and use up to 10 different settings files.
-</para>
+Select the saved settings number. A single sample set can create and use up to 10 different saved settings.
+          </para>
           <para>
-Selecting the preset number triggers a reload of the sample set, using the presets stored in the selected file.
-If the preset file does not exist, the sample set is reloaded from the organ definition file as provided by the
+Selecting the preset number triggers a reload of the sample set, using the presets stored at the selected number.
+If no saved settings exist for that number, the sample set is reloaded from the organ definition file as provided by the
 sample set creator.
-</para>
+          </para>
           <para>
-A new settings file is created whenever the <link linkend="save">Save</link> menu item is selected.
+A new saved settings set is created whenever the <link linkend="save">Save</link> menu item is selected.
 The file is stored in the directory currently designated by the <link linkend="settingsstore">Settings Store</link>  parameter in the <emphasis>Options</emphasis> tab,
 and the file name is meaningless (as in: not related to the sample set/organ/church name) for the user.
-</para>
+        </para>
         </sect3>
         <sect3 id="save">
           <title>Save</title>
@@ -334,11 +334,11 @@ and the file name is meaningless (as in: not related to the sample set/organ/chu
             <primary>Save</primary>
           </indexterm>
           <para>
-Save to the settings file currently in use; create a new file if none in use. The settings consist of the stop and piston MIDI messages; stop
+Save to the preset number currently in use; create a new file if none in use. The settings consist of the stop and piston MIDI messages; stop
 engaged states; divisional, general, and program combinations;
 volume spinner value; temperament setting; fine tuning data. Note that this is completely reversible using the <link linkend="resettodefaults">Reset to Defaults</link> option, and is the
 recommended method for most users.
-</para>
+          </para>
         </sect3>
         <sect3>
           <title>Update Cache</title>
@@ -379,7 +379,7 @@ quickly restore a sample set to its saved status. The currently selected preset 
           </indexterm>
           <para>Reset the currently loaded sample set to the settings as originally
 supplied by the sample set provider. You will be asked to verify that
-you wish to discard your modifications. Note that the settings file
+you wish to discard your modifications. Note that the file containing saved settings
 currently in use is <emphasis>deleted</emphasis>.
 </para>
         </sect3>
@@ -1111,6 +1111,12 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           </variablelist>
         </sect3>
         <sect3>
+          <title>Load Concurrency Level</title>
+          <indexterm><primary>Load Concurrency Level</primary></indexterm>
+          <para>This number states how many threads GrandOrgue creates to load samples in memory. It has <emphasis role="bold">NO</emphasis> effect when loadind samples from cache.</para>
+          <para>Higher speed-up loading while reducing the available memory for samples. A zero (0) value means classic load.</para>
+        </sect3>
+        <sect3>
           <title>Recorder WAV format</title>
           <indexterm>
             <primary>Recorder WAV format</primary>
@@ -1145,7 +1151,7 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           <indexterm>
             <primary>Settings store</primary>
           </indexterm>
-          <para>This selects the directory where preset settings files are stored. The <emphasis>Browse</emphasis> button opens a file browser where the desired directory can be chosen.</para>
+          <para>This selects the directory where preset files are stored. The <emphasis>Browse</emphasis> button opens a file browser where the desired directory can be chosen.</para>
         </sect3>
         <sect3 id="cachestore">
           <title>Cache store</title>
@@ -1836,14 +1842,14 @@ manual, stop, enclosure, piston, etc.).
       </para>
       <para>
 Customizations done by the user always supersede the matching initial setting.
-If customizations are <link linkend="save">saved</link> to a settings file, all
+If customizations are <link linkend="save">saved</link> to a preset number, all
 subsequent loads will ignore the initial MIDI settings and all futher updates to
 the sampleset's MIDI configuration will be done by right-clicking on the elements
 in the user interface.
       </para>
       <para>
 When a loaded sampleset is <link linkend="resettodefaults">reset to
-default</link>, the settings file is deleted and the initial MIDI settings
+default</link>, the preset file is deleted and the initial MIDI settings
 are used again to initialize the MIDI configuration.
       </para>
       <note>
@@ -1926,8 +1932,8 @@ MIDI settings work properly.
     <title>Organ settings</title>
     <indexterm><primary>Organ settings</primary></indexterm>
     <para>This dialog allows to customize settings for the currently loaded sample set.</para>
-    <para>Initial values come  from the current settings file or from the organ definition file if the settings file does not exist.</para>
-    <para>Modified settings are saved in the current settings file.</para>
+    <para>Initial values come  from the current preset number or imported settings file or from the organ definition file if the settings file does not exist.</para>
+    <para>Modified settings are saved in the current preset number. They also can be exported to a settings file.</para>
     <figure>
       <title>Organ Settings dialog</title>
       <mediaobject>
@@ -1961,7 +1967,7 @@ Within  windchests, the ranks are ordered as found in the definition file.
       </listitem>
     </itemizedlist>
     <note>
-    <para>Select the element you wish to customize. The right frames are populated with values picked from the organ definition file or the current settings file if the latter exists.</para>
+    <para>Select the element you wish to customize. The right frames are populated with values picked from the organ definition file or the current preset number if the latter was saved.</para>
     <para>It is possible to select multiple elements at once, to e.g. update one setting of multiple elements to the same value in a single operation.</para>
     <para>
       <emphasis>To the sample set designer</emphasis>: Fine customizations to the sample set, when made in the <emphasis>Organ Settings</emphasis> dialog, are <emphasis role="bold">NOT</emphasis> copied to the organ definition file. If they were designed to be integral part of the sample set, these customizations need to be manually merged from the settings file to the organ definition file.
