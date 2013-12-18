@@ -247,7 +247,7 @@ The use of the cache increases the necessary disk space.
 The File menu contains commands for dealing with the loading and
 saving of sample sets.
 </para>
-        <sect3>
+        <sect3 id="file_load">
           <title>Load</title>
           <indexterm>
             <primary>Known organs list</primary>
@@ -265,21 +265,21 @@ saving of sample sets.
           </figure>
           <para>Open and load a sampleset from the known organs list which is updated whenever a new sample set is successfully loaded.</para>
           <para>Select an organ in the list, then click <emphasis role="bold">OK</emphasis>.</para>
-	  <note><para>The known organs list is managed in the <link linkend="manage_known_organs">Organs</link> Settings tab.</para></note>
+          <note><para>The known organs list is managed in the <link linkend="manage_known_organs">Organs</link> Settings tab.</para></note>
         </sect3>
         <sect3>
           <title>Favorites</title>
-	  <indexterm><primary>Favorites</primary></indexterm>
-	  <indexterm><primary>Favorite organs</primary></indexterm>
-	  <para>This submenu displays the top ten organs in the known organs list. Organs display order is managed in the <link linkend="manage_known_organs">Organs</link> Settings tab.</para>
-	  <para>Choosing an organ in this menu opens and loads its sampleset.</para>
+          <indexterm><primary>Favorites</primary></indexterm>
+          <indexterm><primary>Favorite organs</primary></indexterm>
+          <para>This submenu displays the top ten organs in the known organs list. Organs display order is managed in the <link linkend="manage_known_organs">Organs</link> Settings tab.</para>
+          <para>Choosing an organ in this menu opens and loads its sampleset.</para>
         </sect3>
-        <sect3>
+        <sect3 id="file_open">
           <title>Open</title>
           <indexterm>
             <primary>Open</primary>
           </indexterm>
-	  <indexterm><primary>Open organ</primary></indexterm>
+          <indexterm><primary>Open organ</primary></indexterm>
           <para>
 Open and load a sample set stored in a definition file. The location will be
 remembered for the next open operation. The most recently used sample sets are
@@ -289,13 +289,13 @@ indicating estimated time remaining and other indicators.
 </para>
           <para>When the sampleset loads successfully, it registers in the <link linkend="settingstab">configuration file</link>, thus automatically feeding the known organs list.</para>
         </sect3>
-        <sect3>
+        <sect3 id="file_recent">
           <title>Open Recent</title>
           <indexterm>
             <primary>Open Recent</primary>
           </indexterm>
-	  <para>This submenu displays the ten last used organs from the known organs list. Organs in this menu are ordered by last used date from newest down to oldest.</para>
-	  <para>Choosing an organ in this menu opens and loads its sampleset.</para>
+          <para>This submenu displays the ten last used organs from the known organs list. Organs in this menu are ordered by last used date from newest down to oldest.</para>
+          <para>Choosing an organ in this menu opens and loads its sampleset.</para>
         </sect3>
         <sect3>
           <title>Organ Properties</title>
@@ -691,7 +691,7 @@ The console section displays the organ console and all its bells and whistles as
 Each manual as well as the pedalboard is displayed in the center of
 the screen. The keys are outlined when messages are received, and
 can be engaged by clicking the mouse. Right clicking on a manual will
-open its corresponding MIDI Event Editor.
+open its corresponding <link linkend="midieventeditor">MIDI Event Editor</link>.
 </para>
       </sect2>
       <sect2>
@@ -714,7 +714,7 @@ pedal, you may
             <para>left click and drag the shoe to the desired position</para>
           </listitem>
           <listitem>
-            <para>right  click to open its corresponding MIDI Event Editor.</para>
+            <para>right  click to open its corresponding <link linkend="midieventeditor">MIDI Event Editor</link>.</para>
           </listitem>
         </itemizedlist>
         <para>The sample set creator can also provide a crescendo shoe.     </para>
@@ -730,7 +730,7 @@ clicked - generally new ranks of pipes which are applied to each
 manual. Other drawstops may perform actions such as coupling one
 manual to another. This deals with the functionality of pipe organs
 and is beyond the scope of this documentation. Right clicking on a
-drawstop will open its corresponding MIDI Event Editor. Any changes
+drawstop will open its corresponding <link linkend="midieventeditor">MIDI Event Editor</link>. Any changes
 made there may be saved or exported into a settings file.
 </para>
         <para>Note: Keep the left button pressed and sweep the mouse over the stop jamb to pull or push multiple drawstops in a single movement.</para>
@@ -804,8 +804,8 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
           <row valign="top">
             <entry>Audio&#160;group:</entry>
             <entry>a name holder used to design logical blocks within the audio system (e.g. "front speakers", "rear speakers", "subwoofer", ...). It is possible to create as many audio groups as needed.
-		    <caution><para>If an audiogroup is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</para></caution>
-	    </entry>
+              <caution><para>If an audiogroup is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</para></caution>
+            </entry>
           </row>
         </tbody>
       </tgroup>
@@ -863,12 +863,12 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
           </row>
           <row>
             <entry>Mac:</entry>
-            <entry>Library/Preferences/.GrandOrgue and Library/Preferences/GrandOrgue</entry>
+            <entry>$HOME/Library/Preferences/.GrandOrgue and $HOME/Library/Preferences/GrandOrgue</entry>
           </row>
         </tbody>
       </tgroup>
     </informaltable>
-    <para>The user can reset  settings to default values by deleting the "options file" according to the platform.</para>
+    <para>The user can reset  settings to default values by deleting the "options files" according to the platform.</para>
     <sect1>
       <title>Options tab</title>
       <indexterm>
@@ -1474,16 +1474,16 @@ Variable savings up to 50%
           <caution>
           <para>Multiple audio devices are currently <emphasis role="bold">NOT</emphasis> supported. Setting multiple audio devices leads to unpredictable results. A warning is displayed and if acknowledged, a new audio device is set in the list.</para>
           </caution>
-	  <para>The <emphasis>Add</emphasis> button opens a pick list with all audio devices found in the system.</para>
-	  <mediaobject id="audiodevicepicklist">
+          <para>The <emphasis>Add</emphasis> button opens a pick list with all audio devices found in the system.</para>
+          <mediaobject id="audiodevicepicklist">
             <imageobject>
               <imagedata fileref="audio_devices_picklist.png"/>
             </imageobject>
           </mediaobject>
           <para>Each audio device is prefixed by its type (ASIO, DirectSound, ALSA, JACK, etc.)</para>
           <para>The <emphasis role="bold">(PA)</emphasis> indicator shows which devices are driven using the <emphasis>Portaudio</emphasis> backend. All other devices are driven using the legacy <emphasis>RtAudio</emphasis> backend.</para>
-	  <para>Select the desired audio device. The devices list is updated with the new device which is initialized with a single channel.</para>
-	  <mediaobject>
+          <para>Select the desired audio device. The devices list is updated with the new device which is initialized with a single channel.</para>
+          <mediaobject>
             <imageobject>
               <imagedata scalefit="1" width="100%" fileref="audio_devices_updated.png"/>
             </imageobject>
@@ -1514,8 +1514,8 @@ Variable savings up to 50%
           <indexterm>
             <primary>Audio device properties</primary>
           </indexterm>
-	  <para>The <emphasis>Properties</emphasis> button becomes active  when an audio device is selected in the tree. It opens a dialog which allows  to set a <emphasis>requested</emphasis> latency.</para>
-	  <mediaobject>
+          <para>The <emphasis>Properties</emphasis> button becomes active  when an audio device is selected in the tree. It opens a dialog which allows  to set a <emphasis>requested</emphasis> latency.</para>
+          <mediaobject>
             <imageobject>
               <imagedata fileref="audio_device_latency_dialog.png"/>
             </imageobject>
@@ -1602,8 +1602,8 @@ Variable savings up to 50%
           <indexterm>
             <primary>Add audio group to audio configuration</primary>
           </indexterm>
-	  <para>This feature is available when a <emphasis role="bold">Channel n</emphasis> node is selected in the tree. The <emphasis>Add</emphasis> button opens a pick list which allows to choose one or more audio group channels.</para>
-	  <mediaobject>
+          <para>This feature is available when a <emphasis role="bold">Channel n</emphasis> node is selected in the tree. The <emphasis>Add</emphasis> button opens a pick list which allows to choose one or more audio group channels.</para>
+          <mediaobject>
             <imageobject>
               <imagedata scalefit="1" width="100%" fileref="audiogroup_picklist.png"/>
             </imageobject>
@@ -1628,8 +1628,8 @@ Variable savings up to 50%
           <indexterm>
             <primary>Audio group properties</primary>
           </indexterm>
-	  <para>This feature is available when an <emphasis role="bold">audio group</emphasis> node is selected in the tree. The <emphasis>Properties</emphasis> button opens the property dialog which allows to set a gain value (in db). 0 means "original volume". A positive value makes the audio group louder than original, a negative value makes the audio group softer.</para>
-	  <mediaobject>
+          <para>This feature is available when an <emphasis role="bold">audio group</emphasis> node is selected in the tree. The <emphasis>Properties</emphasis> button opens the property dialog which allows to set a gain value (in db). 0 means "original volume". A positive value makes the audio group louder than original, a negative value makes the audio group softer.</para>
+          <mediaobject>
             <imageobject>
               <imagedata fileref="audiogroup_volume.png"/>
             </imageobject>
@@ -1675,13 +1675,13 @@ Variable savings up to 50%
         <indexterm>
           <primary>New audio group</primary>
         </indexterm>
-	<para>The <emphasis>Add</emphasis> button opens a dialog where one can type the new audio group name.</para>
-	<mediaobject>
+        <para>The <emphasis>Add</emphasis> button opens a dialog where one can type the new audio group name.</para>
+        <mediaobject>
           <imageobject>
             <imagedata scalefit="1" width="100%" fileref="new_audio_group.png"/>
           </imageobject>
         </mediaobject>
-	<caution><para>If an audiogroup is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</para></caution>
+        <caution><para>If an audiogroup is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</para></caution>
       </sect2>
       <sect2>
         <title>Delete</title>
@@ -1710,7 +1710,7 @@ Variable savings up to 50%
         <primary>Organs</primary>
       </indexterm>
       <indexterm>
-      <primary>Predefined Organs list</primary>
+      <primary>Known Organs List</primary>
       </indexterm>
       <figure>
         <title>Organs tab</title>
@@ -1720,6 +1720,46 @@ Variable savings up to 50%
           </imageobject>
         </mediaobject>
       </figure>
+      <para>This tab manages the <emphasis>known organs list</emphasis>.</para>
+      <para>All organs successfully loaded via the <link linkend="file_open">File/Open</link> menu item are automatically registered in this list.</para>
+      <para>
+This list provides for the lists displayed in the <link linkend="file_load">File/Load</link>, <link linkend="file_recent">File/Open Recent</link>
+and <link linkend="file_recent">File/Favorites</link> menu items.
+      </para>
+      <para>The buttons are grayed out until a line is selected in the list.</para>
+      <para>
+The organs order on this tab is reproduced as is in the <link linkend="file_load">File/Load</link>
+menu whereas only the 10 first entries are displayed in the <link linkend="file_recent">File/Favorites</link> menu.
+      </para>
+      <sect2>
+        <title>Down</title>
+        <para>This button moves the selected entry down one position. It is grayed out if the selected line is last in the list.</para>
+      </sect2>
+      <sect2>
+        <title>Up</title>
+        <para>This button moves the selected entry up one position. It is grayed out if the selected line is first in the list.</para>
+      </sect2>
+      <sect2>
+        <title>Top</title>
+        <para>This button moves the selected entry to the first position in the list. It is grayed out if the selected line is first in the list.</para>
+      </sect2>
+      <sect2>
+        <para>
+This button removes a line from the list. GrandOrgue deregisters this organ.
+<note><para>If presets were saved and/or the samples were cached, the files are <emphasis role="strong">NOT</emphasis> deleted from disk.</para></note>
+        </para>
+      </sect2>
+      <sect2>
+        <title>Properties</title>
+        <para>
+This button opens the <link linkend="midieventeditor">Midi Event Editor</link>
+to manage the MIDI event(s) which enable GrandOrgue to load a sampleset when received.
+        </para>
+        <para>
+A use case of this feature can be: use a rotary selector that sends MIDI <emphasis role="bold">Program Change</emphasis>
+messages to easily switch between samplesets. 
+        </para>
+      </sect2>
     </sect1>
     <sect1>
       <title>MIDI Devices tab</title>
@@ -1816,7 +1856,7 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <para>Else if an organ-level value is defined, use it</para>
       </listitem>
       <listitem>
-	<para>Else use the value defined in the Midi &amp; Audio Settings dialog <link linkend="optionstab">Options</link> tab if any.</para>
+        <para>Else use the value defined in the Midi &amp; Audio Settings dialog <link linkend="optionstab">Options</link> tab if any.</para>
       </listitem>
     </itemizedlist>
     <note>
@@ -1830,14 +1870,14 @@ Within  windchests, the ranks are ordered as found in the definition file.
       <title>Settings frame</title>
       <sect2>
         <title>Amplitude</title>
-	<para>Linear amplitude scale factor applied to the element. The allowed range is {0, +1000}. Amplitude is cumulative from organ level down to pipe level.</para>
+        <para>Linear amplitude scale factor applied to the element. The allowed range is {0, +1000}. Amplitude is cumulative from organ level down to pipe level.</para>
         <para>
         <emphasis>Note</emphasis>: A 100 value means that this setting value has no effect on the effective amplitude.
         </para>
       </sect2>
       <sect2>
         <title>Gain</title>
-	<para>Amplitude scale factor in dB applied to the selected element. The allowed range is {-120, +40}. Gain is cumulative from organ level down to pipe level.</para>
+        <para>Amplitude scale factor in dB applied to the selected element. The allowed range is {-120, +40}. Gain is cumulative from organ level down to pipe level.</para>
         <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective gain.</para>
       </sect2>
       <sect2>
@@ -1848,7 +1888,7 @@ Within  windchests, the ranks are ordered as found in the definition file.
       <sect2>
         <title>Audio Group</title>
         <para>This dropdown selects which audio group the sound from the selected element is routed to</para>
-	<para><emphasis>Note</emphasis>: A blank value means that this setting value is fetched from the upper level. If the effective audio group is still blank, the pipe is routed to the default audio group.</para>
+        <para><emphasis>Note</emphasis>: A blank value means that this setting value is fetched from the upper level. If the effective audio group is still blank, the pipe is routed to the default audio group.</para>
       </sect2>
     </sect1>
     <sect1>
