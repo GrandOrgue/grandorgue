@@ -156,7 +156,7 @@ xxx is:
 eg:
   cmake -DUNICODE=1 -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
 
-Hint: For debugging a release build, add the -DCMAKE_CXX_FLAGS=-g option to cmake.
+Hint: For debugging a release build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
 
 Building Linux packages:
 -----------------------
