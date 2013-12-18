@@ -868,6 +868,13 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
         </tbody>
       </tgroup>
     </informaltable>
+    <note>
+      <para>
+When launched with an instance name (<emphasis>GrandOrgue -i <emphasis role="bold">instanceName</emphasis></emphasis>),
+the name <emphasis>GrandOrgue</emphasis> becomes <emphasis>GrandOrgue-<emphasis role="bold">instanceName</emphasis></emphasis>,
+the name <emphasis>GrandOrgueConfig</emphasis> becomes <emphasis><emphasis role="bold">GrandOrgueConfig-instanceName</emphasis></emphasis>
+      </para>
+    </note>
     <para>The user can reset  settings to default values by deleting the "options files" according to the platform.</para>
     <sect1>
       <title>Options tab</title>
@@ -1744,6 +1751,7 @@ menu whereas only the 10 first entries are displayed in the <link linkend="file_
         <para>This button moves the selected entry to the first position in the list. It is grayed out if the selected line is first in the list.</para>
       </sect2>
       <sect2>
+        <title>Delete</title>
         <para>
 This button removes a line from the list. GrandOrgue deregisters this organ.
 <note><para>If presets were saved and/or the samples were cached, the files are <emphasis role="strong">NOT</emphasis> deleted from disk.</para></note>
@@ -1819,6 +1827,99 @@ the same channel.
           </imageobject>
         </mediaobject>
       </figure>
+      <para>This screen displays default MIDI settings which enable the user to store some physical console MIDI settings.</para>
+      <para>
+When a sampleset is loaded for the first time <emphasis role="bold">OR</emphasis>
+without customization, these default settings are used to initialize the MIDI
+Event dialogs that are accessible by right-clicking a control in the GUI (e.g.
+manual, stop, enclosure, piston, etc.).
+      </para>
+      <para>
+Customizations done by the user always supersede the matching initial setting.
+If customizations are <link linkend="save">saved</link> to a settings file, all
+subsequent loads will ignore the initial MIDI settings and all futher updates to
+the sampleset's MIDI configuration will be done by right-clicking on the elements
+in the user interface.
+      </para>
+      <para>
+When a loaded sampleset is <link linkend="resettodefaults">reset to
+default</link>, the settings file is deleted and the initial MIDI settings
+are used again to initialize the MIDI configuration.
+      </para>
+      <note>
+        <para>
+The sampleset creator must define proper <emphasis role="bold">
+<emphasis>MIDIInputNumber</emphasis></emphasis> values in the Organ
+Definition File to make <link linkend="odfManualEntry">manual mapping</link>
+and <link linkend="odfEnclosureEntry">enclosure mapping</link> to the initial
+MIDI settings work properly.
+        </para>
+      </note>
+      <para>The "Group" column shows which group the element is filed under; the "Element" column identifies the element; The "MIDI Event" column shows if the element is associated to MIDI event(s).</para>
+      <para>The <link linkend="midieventeditor">MIDI Event Editor</link> can be displayed by selecting an element and pushing the "Properties" button, or by double-clicking on the element's entry.</para>
+      <para>The available initial setting are those that are tied to the physical hardware and have no reason to change across dispositions:</para>
+      <variablelist>
+        <varlistentry>
+          <term>Manuals&#160;Group</term>
+          <listitem>Midi setting for pedal (always Manual 0) and up to 5 manuals. Manuals are ordered bottom (Manual 1) to top (Manual 5).</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Enclosures&#160;Group</term>
+          <listitem>Midi setting for up to 6 enclosures. Enclosures are ordered left (Enclosure 1) to right (Enclosure 6).</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Sequencer&#160;Group</term>
+          <listitem>
+            <para>Midi setting for various useful controls from the combination setter.</para>
+            <variablelist>
+              <varlistentry>
+                <term>Previous Memory, Next Memory</term>
+                <listitem>Navigate the memory banks.</listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Memory Set</term>
+                <listitem>Store a combination in a memory slot.</listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Current</term>
+                <listitem>Recalls the current combination.</listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>G.C.</term>
+                <listitem>General Cancel.</listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>-10, +10</term>
+                <listitem>Navigate 10 slots backwards or forward in the current memory bank without recalling the combination (prepare it).</listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>__0 .. __9</term>
+                <listitem>Navigate to slot xx0 to xx9 and recall the combination, the first two digits being set by the +/-10 controls.</listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Master&#160;Controls&#160;Group</term>
+          <listitem>
+            <para>Midi setting for various useful controls from the main control panel.</para>
+            <variablelist>
+              <varlistentry>
+                <term>-1 Cent, +1 Cent, -100 Cent, +100 Cent</term>
+                <listitem>Although referenced under the "Sequencer" group, these controls come from the "Main controls" Panel. They drive the amount of tuning for the whole organ.</listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Prev Temperament, Next Temperament</term>
+                <listitem>Navigate the temperaments list. These controls also come from the "Main controls" panel.</listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Transpose -, Transpose +</term>
+                <listitem>Transpose down, transpose up, one semitone at a time. These controls also come from the "Main controls" panel.</listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+      </variablelist>
     </sect1>
   </chapter>
   <chapter id="organsettings">
@@ -3700,7 +3801,7 @@ extra piston block.
         </varlistentry>
       </variablelist>
     </sect1>
-    <sect1>
+    <sect1 id="odfEnclosureEntry">
       <title>Enclosure objects</title>
       <para>
 An enclosure represents a swell pedal. It consists of non-gui
@@ -4251,7 +4352,7 @@ else turned on.
         </varlistentry>
       </variablelist>
     </sect1>
-    <sect1>
+    <sect1 id="odfManualEntry">
       <title>Manual objects</title>
       <para>
 A manual is associated with a number of stops, tremulants, divisionals 
