@@ -39,21 +39,21 @@ bool inline CompareFourCC(GO_FOURCC fcc, const char* text)
 
 void GOrgueWave::SetInvalid()
 {
-	data = NULL;
-	dataSize = 0;
-	channels = 0;
-	bytesPerSample = 0;
-	sampleRate = 0;
+	m_Content = NULL;
+	m_SampleData = NULL;
+	m_SampleDataSize = 0;
+	m_Channels = 0;
+	m_BytesPerSample = 0;
+	m_SampleRate = 0;
 	m_MidiNote = 0;
 	m_PitchFract = 0;
-	hasFormat = false;
-	release = 0;
-	hasRelease = false;
-	loops.clear();
+	m_CuePoint = -1;
+	m_hasRelease = false;
+	m_Loops.clear();
 }
 
 GOrgueWave::GOrgueWave() :
-	loops()
+	m_Loops()
 {
 	/* Start up the waveform in an invalid state */
 	SetInvalid();
@@ -63,19 +63,6 @@ GOrgueWave::~GOrgueWave()
 {
 	/* Close and free any currently open wave data */
 	Close();
-}
-
-void GOrgueWave::LoadDataChunk(char* ptr, unsigned long length)
-{
-	if (!hasFormat)
-		throw (wxString)_("< Malformed wave file. Format chunk must preceed data chunk.");
-
-	data = (char*)malloc(length);
-	if (data == NULL)
-		throw GOrgueOutOfMemory();
-
-	dataSize = length;
-	memcpy(data, ptr, dataSize);
 }
 
 void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
@@ -92,23 +79,18 @@ void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
 	if (formatCode != 1 && formatCode != 3)
 		throw (wxString)_("< Unsupported PCM format");
 
-	/* get channels and ensure only mono or stereo */
-	channels = wxUINT16_SWAP_ON_BE(format->wf.wf.nChannels);
-
-	/* get sample rate and ensure only 44.1 kHz */
-	sampleRate = wxUINT32_SWAP_ON_BE(format->wf.wf.nSamplesPerSec);
+	m_Channels = wxUINT16_SWAP_ON_BE(format->wf.wf.nChannels);
+	m_SampleRate = wxUINT32_SWAP_ON_BE(format->wf.wf.nSamplesPerSec);
 
 	unsigned bitsPerSample = wxUINT16_SWAP_ON_BE(format->wf.wBitsPerSample);
 	if (bitsPerSample % 8)
 		throw (wxString)_("< Bits per sample must be a multiple of 8 in this implementation");
-	bytesPerSample = bitsPerSample / 8;
+	m_BytesPerSample = bitsPerSample / 8;
 
-	if (formatCode == 3 && bytesPerSample != 4)
+	if (formatCode == 3 && m_BytesPerSample != 4)
 		throw (wxString)_("< Only 32bit IEEE float samples supported");
-	else if (formatCode == 1 && bytesPerSample > 3)
+	else if (formatCode == 1 && m_BytesPerSample > 3)
 		throw (wxString)_("< Unsupport PCM bit size");
-
-	hasFormat = true;
 }
 
 void GOrgueWave::LoadCueChunk(char* ptr, unsigned long length)
@@ -122,13 +104,15 @@ void GOrgueWave::LoadCueChunk(char* ptr, unsigned long length)
 		throw (wxString)_("< Invalid CUE chunk in");
 
 	GO_WAVECUEPOINT* points = (GO_WAVECUEPOINT*)(ptr + sizeof(GO_WAVECUECHUNK));
-	hasRelease = (nbPoints > 0);
+	m_hasRelease = (nbPoints > 0);
+	if (m_hasRelease)
+		m_CuePoint = 0;
 	for (unsigned k = 0; k < nbPoints; k++)
 	{
-		assert(channels != 0);
+		assert(m_Channels != 0);
 		unsigned position = wxUINT32_SWAP_ON_BE(points[k].dwSampleOffset);
-		if (position > release)
-			release = position;
+		if (position > m_CuePoint)
+			m_CuePoint = position;
 	}
 }
 
@@ -143,13 +127,13 @@ void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
 		throw (wxString)_("<Invalid SMPL chunk in");
 
 	GO_WAVESAMPLERLOOP* loops = (GO_WAVESAMPLERLOOP*)(ptr + sizeof(GO_WAVESAMPLERCHUNK));
-	this->loops.clear();
+	m_Loops.clear();
 	for (unsigned k = 0; k < numberOfLoops; k++)
 	{
 		GO_WAVE_LOOP l;
 		l.start_sample = wxUINT32_SWAP_ON_BE(loops[k].dwStart);
 		l.end_sample = wxUINT32_SWAP_ON_BE(loops[k].dwEnd);
-		this->loops.push_back(l);
+		m_Loops.push_back(l);
 	}
 
 	m_MidiNote = wxUINT32_SWAP_ON_BE(sampler->dwMIDIUnityNote);
@@ -168,10 +152,11 @@ void GOrgueWave::Open(const wxString& filename)
 		message.Printf(_("Failed to open file '%s'"), filename.c_str());
 		throw message;
 	}
-	wxFileOffset length = file.Length();
+	unsigned length = file.Length();
 	
 	// Allocate memory for wave and read it.
-	char* ptr = (char*)malloc(length);
+	m_Content = (char*)malloc(length);
+	char* ptr = m_Content;
 
 	unsigned offset = 0;
 	unsigned start = 0;
@@ -216,9 +201,10 @@ void GOrgueWave::Open(const wxString& filename)
 		/* This is a bit more leaniant than the original code... it will
 		 * truncate the usable size of the file if the size on disk is larger
 		 * than the size of the RIFF chunk */
-		if ((unsigned long)length > riffChunkSize + 8)
+		if ((unsigned long)length > riffChunkSize + 8 + start)
 			length = riffChunkSize + 8 + start;
 
+		bool hasFormat = false;
 		/* Find required chunks... */
 		for (; offset + 8 <= length;)
 		{
@@ -232,9 +218,18 @@ void GOrgueWave::Open(const wxString& filename)
 			offset += sizeof(GO_WAVECHUNKHEADER);
 
 			if (CompareFourCC(header->fccChunk, "data"))
-				LoadDataChunk(ptr + offset, size);
+			{
+				if (!hasFormat)
+					throw (wxString)_("< Malformed wave file. Format chunk must preceed data chunk.");
+
+				m_SampleData = ptr + offset;
+				m_SampleDataSize = size;
+			}
 			if (CompareFourCC(header->fccChunk, "fmt "))
+			{
+				hasFormat = true;
 				LoadFormatChunk(ptr + offset, size);
+			}
 			if (CompareFourCC(header->fccChunk, "cue ")) /* This used to only work if !load m_pipe_percussive[i] */
 				LoadCueChunk(ptr + offset, size);
 			if (CompareFourCC(header->fccChunk, "smpl")) /* This used to only work if !load m_pipe_percussive[i] */
@@ -247,28 +242,22 @@ void GOrgueWave::Open(const wxString& filename)
 
 		if (offset != length)
 			throw (wxString)_("<Invalid WAV file");
+		if (!m_SampleData || !m_SampleDataSize)
+			throw (wxString)_("No samples found");
 
 		// learning lesson: never ever trust the range values of outside sources to be correct!
-		for (unsigned int i = 0; i < loops.size(); i++)
+		for (unsigned int i = 0; i < m_Loops.size(); i++)
 		{
-			if ((loops[i].start_sample >= loops[i].end_sample) ||
-			    (loops[i].start_sample >= GetLength()) ||
-			    (loops[i].end_sample >= GetLength()) ||
-				(loops[i].end_sample == 0))
-				loops.erase(loops.begin() + i);
+			if ((m_Loops[i].start_sample >= m_Loops[i].end_sample) ||
+			    (m_Loops[i].start_sample >= GetLength()) ||
+			    (m_Loops[i].end_sample >= GetLength()) ||
+				(m_Loops[i].end_sample == 0))
+				m_Loops.erase(m_Loops.begin() + i);
 		}
-
-		/* Free the memory used to hold the file */
-		free(ptr);
-
 	}
 	catch (wxString msg)
 	{
 		wxLogError(_("unhandled exception: %s\n"), msg.c_str());
-
-		/* Free the memory used to hold the file */
-		if (ptr)
-			free(ptr);
 
 		/* Free any memory that was allocated by chunk loading procedures */
 		Close();
@@ -278,10 +267,6 @@ void GOrgueWave::Open(const wxString& filename)
 	}
 	catch (...)
 	{
-		/* Free the memory used to hold the file */
-		if (ptr)
-			free(ptr);
-
 		/* Free any memory that was allocated by chunk loading procedures */
 		Close();
 
@@ -293,30 +278,29 @@ void GOrgueWave::Open(const wxString& filename)
 void GOrgueWave::Close()
 {
 	/* Free the wave data if it has been alloc'ed */
-	if (data != NULL)
+	if (m_Content != NULL)
 	{
-		free(data);
-		data = NULL;
+		free(m_Content);
+		m_Content = NULL;
 	}
 
-	/* Set the wave to the invalid state. This ensures that data will be set
-	 * to NULL and dataSize will be set to zero... etc */
+	/* Set the wave to the invalid state.  */
 	SetInvalid();
 }
 
 unsigned GOrgueWave::GetBitsPerSample() const
 {
-	return bytesPerSample * 8;
+	return m_BytesPerSample * 8;
 }
 
 unsigned GOrgueWave::GetChannels() const
 {
-	return channels;
+	return m_Channels;
 }
 
 bool GOrgueWave::HasReleaseMarker() const
 {
-	return hasRelease;
+	return m_hasRelease;
 }
 
 unsigned GOrgueWave::GetReleaseMarkerPosition() const
@@ -324,32 +308,32 @@ unsigned GOrgueWave::GetReleaseMarkerPosition() const
 	/* release = dwSampleOffset from cue chunk. This is a byte offset into
 	 * the data chunk. Compute this to a block start
 	 */
-	return release;
+	return m_CuePoint;
 }
 
 const GO_WAVE_LOOP& GOrgueWave::GetLongestLoop() const
 {
-	if (loops.size() < 1)
+	if (m_Loops.size() < 1)
 		throw (wxString)_("wave does not contain loops");
 
-	assert(loops[0].end_sample > loops[0].start_sample);
+	assert(m_Loops[0].end_sample > m_Loops[0].start_sample);
 	unsigned lidx = 0;
-	for (unsigned int i = 1; i < loops.size(); i++)
+	for (unsigned int i = 1; i < m_Loops.size(); i++)
 	{
-		assert(loops[i].end_sample > loops[i].start_sample);
-		if ((loops[i].end_sample - loops[i].start_sample) >
-			(loops[lidx].end_sample - loops[lidx].start_sample))
+		assert(Loops[i].end_sample > m_Loops[i].start_sample);
+		if ((m_Loops[i].end_sample - m_Loops[i].start_sample) >
+			(m_Loops[lidx].end_sample - m_Loops[lidx].start_sample))
 			lidx = i;
 	}
 
-	return loops[lidx];
+	return m_Loops[lidx];
 }
 
 unsigned GOrgueWave::GetLength() const
 {
 	/* return number of samples in the stream */
-	assert((dataSize % (bytesPerSample * channels)) == 0);
-	return dataSize / (bytesPerSample * channels);
+	assert((m_SampleDataSize % (m_BytesPerSample * m_Channels)) == 0);
+	return m_SampleDataSize / (m_BytesPerSample * m_Channels);
 }
 
 void GOrgueWave::ReadSamples
@@ -359,39 +343,39 @@ void GOrgueWave::ReadSamples
 	,int return_channels                      /** number of channels to return or if negative, specific channel as mono*/
 	) const
 {
-	if (sampleRate != sample_rate)
+	if (m_SampleRate != sample_rate)
 		throw (wxString)_("bad format!");
 
-	if (bytesPerSample < 1 || bytesPerSample > 4)
+	if (m_BytesPerSample < 1 || m_BytesPerSample > 4)
 		throw (wxString)_("Unsupported format");
 
 	unsigned select_channel = 0;
 	if (return_channels < 0)
 	{
-		if ((unsigned)-return_channels > channels)
+		if ((unsigned)-return_channels > m_Channels)
 			throw (wxString)_("Unsupported channel number");
 		select_channel = -return_channels;
 	}
-	else if (channels != (unsigned)return_channels && return_channels != 1)
+	else if (m_Channels != (unsigned)return_channels && return_channels != 1)
 		throw (wxString)_("Unsupported channel count");
 
 	unsigned merge_count = 1;
 	/* need reduce stereo to mono ? */
-	if (channels != (unsigned)return_channels && return_channels == 1)
-		merge_count = channels;
+	if (m_Channels != (unsigned)return_channels && return_channels == 1)
+		merge_count = m_Channels;
 	if (select_channel != 0)
-		merge_count = channels;
+		merge_count = m_Channels;
 
-	char* input  = (char*)data;
+	char* input  = m_SampleData;
 	char* output = (char*)dest_buffer;
 
-	for(unsigned i = 0; i < channels * GetLength() / merge_count; i++)
+	for(unsigned i = 0; i < m_Channels * GetLength() / merge_count; i++)
 	{
 		int value = 0; /* Value will be stored with 24 fractional bits of precision */
 		for (unsigned j = 0; j < merge_count; j++)
 		{
 			int val; /* Value will be stored with 24 fractional bits of precision */
-			switch(bytesPerSample)
+			switch(m_BytesPerSample)
 			{
 			case 1:
 				val = (*((unsigned char*)input) - 0x80);
@@ -410,7 +394,7 @@ void GOrgueWave::ReadSamples
 			default:
 				throw (wxString)_("bad format!");
 			}
-			input += bytesPerSample;
+			input += m_BytesPerSample;
 
 			if (select_channel && select_channel != j + 1)
 				continue;
@@ -453,18 +437,18 @@ void GOrgueWave::ReadSamples
 
 unsigned GOrgueWave::GetNbLoops() const
 {
-	return loops.size();
+	return m_Loops.size();
 }
 
 const GO_WAVE_LOOP& GOrgueWave::GetLoop(unsigned idx) const
 {
-	assert(idx < loops.size());
-	return loops[idx];
+	assert(idx < m_Loops.size());
+	return m_Loops[idx];
 }
 
 unsigned GOrgueWave::GetSampleRate() const
 {
-	return sampleRate;
+	return m_SampleRate;
 }
 
 unsigned GOrgueWave::GetMidiNote() const

@@ -35,29 +35,22 @@ class GOrgueWave
 {
 
 private:
-
-	char* data;
-	unsigned dataSize;
-
-	unsigned channels;
-	unsigned release;
-	unsigned bytesPerSample;
-	unsigned sampleRate;
+	char* m_Content;
+	char* m_SampleData;
+	unsigned m_SampleDataSize;
+	unsigned m_BytesPerSample;
+	unsigned m_SampleRate;
+	unsigned m_CuePoint;
+	unsigned m_Channels;
 	unsigned m_MidiNote;
 	float m_PitchFract;
-	bool hasFormat;
-
-	bool hasRelease;
-
-	unsigned peak;
+	bool m_hasRelease;
+	std::vector<GO_WAVE_LOOP> m_Loops;
 
 	void SetInvalid();
-	void LoadDataChunk(char* ptr, unsigned long length);
 	void LoadFormatChunk(char* ptr, unsigned long length);
 	void LoadCueChunk(char* ptr, unsigned long length);
 	void LoadSamplerChunk(char* ptr, unsigned long length);
-
-	std::vector<GO_WAVE_LOOP> loops;
 
 public:
 
