@@ -5842,12 +5842,31 @@ release sample is choosen. -1 means infinite.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Pipe999AttackStart</term>
+          <listitem>
+            <para>
+(int 0 - 158760000, default: 0) Allows to override the start of the
+stample. This option is specified in samples.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Pipe999CuePoint</term>
           <listitem>
             <para>
 (int -1 - 158760000, default: -1) Allows to override the cue point for
 the release. -1 means use from the wave file. This option is specified
 in samples.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999ReleaseEnd</term>
+          <listitem>
+            <para>
+(int -1 - 158760000, default: -1) Allows to override the end of the
+release. -1 means play till the end of the wav. This option is
+specified in samples.
      </para>
           </listitem>
         </varlistentry>
@@ -5992,12 +6011,31 @@ release sample is choosen. -1 means infinite.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Pipe999Attack999AttackStart</term>
+          <listitem>
+            <para>
+(int 0 - 158760000, default: 0) Allows to override the start of the
+stample. This option is specified in samples.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Pipe999Attack999CuePoint</term>
           <listitem>
             <para>
 (int -1 - 158760000, default: -1) Allows to override the cue point for
 the release. -1 means use from the wave file. This option is specified
 in samples.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Attack999ReleaseEnd</term>
+          <listitem>
+            <para>
+(int -1 - 158760000, default: -1) Allows to override the end of the
+release. -1 means play till the end of the wav. This option is
+specified in samples.
      </para>
           </listitem>
         </varlistentry>
@@ -6071,6 +6109,16 @@ release sample is choosen. -1 means infinite.
             <para>
 (int -1 - 158760000, default: -1) Allows to override the cue point for
 the release. -1 means use from the wave file.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Release999ReleaseEnd</term>
+          <listitem>
+            <para>
+(int -1 - 158760000, default: -1) Allows to override the end of the
+release. -1 means play till the end of the wav. This option is
+specified in samples.
      </para>
           </listitem>
         </varlistentry>

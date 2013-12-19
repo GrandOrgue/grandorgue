@@ -60,7 +60,9 @@ typedef struct
 	bool percussive;
 	unsigned min_attack_velocity;
 	int max_playback_time;
+	int attack_start;
 	int cue_point;
+	int release_end;
 	std::vector<loop_load_info> loops;
 } attack_load_info;
 
@@ -70,17 +72,18 @@ typedef struct
 	int sample_group;
 	int max_playback_time;
 	int cue_point;
+	int release_end;
 } release_load_info;
 
 class GOSoundProviderWave : public GOSoundProvider
 {
 	unsigned GetBytesPerSample(unsigned bits_per_sample);
        
-	void CreateAttack(const char* data, GOrgueWave& wave, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, unsigned channels, bool compress, loop_load_type loop_mode, bool percussive,
-			  unsigned min_attack_velocity);
-	void CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, unsigned channels, bool compress);
-	void ProcessFile(wxString filename, wxString path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int cue_point, unsigned bits_per_sample, 
-			 int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity);
+	void CreateAttack(const char* data, GOrgueWave& wave, int attack_start, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, 
+			  unsigned channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity);
+	void CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, int release_end, unsigned bits_per_sample, unsigned channels, bool compress);
+	void ProcessFile(wxString filename, wxString path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int attack_start, int cue_point, 
+			 int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity);
 
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
