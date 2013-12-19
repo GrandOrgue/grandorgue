@@ -1080,7 +1080,7 @@ const wxString GrandOrgueFile::GetODFFilename()
 
 const wxString GrandOrgueFile::GetODFPath()
 {
-	return m_path;
+	return m_path.c_str();
 }
 
 const wxString GrandOrgueFile::GetSettingFilename()
