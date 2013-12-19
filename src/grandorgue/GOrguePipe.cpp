@@ -281,6 +281,8 @@ void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString pr
 	ainfo.max_playback_time = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
 	ainfo.cue_point = cfg.ReadInteger(ODFSetting, group, prefix + wxT("CuePoint"), -1, 158760000, false, -1);
 	ainfo.min_attack_velocity = cfg.ReadInteger(ODFSetting, group, prefix + wxT("AttackVelocity"), 0, 127, false, 0);
+	ainfo.attack_start = cfg.ReadInteger(ODFSetting, group, prefix + wxT("AttackStart"), 0, 158760000, false, 0);
+	ainfo.release_end = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseEnd"), -1, 158760000, false, -1);
 
 	unsigned loop_cnt = cfg.ReadInteger(ODFSetting, group, prefix + wxT("LoopCount"), 0, 100, false, 0);
 	for(unsigned j = 0; j < loop_cnt; j++)
@@ -324,6 +326,7 @@ void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 		rinfo.sample_group = cfg.ReadInteger(ODFSetting, group, p + wxT("IsTremulant"), -1, 1, false, -1);
 		rinfo.max_playback_time = cfg.ReadInteger(ODFSetting, group, p + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
 		rinfo.cue_point = cfg.ReadInteger(ODFSetting, group, p + wxT("CuePoint"), -1, 158760000, false, -1);
+		rinfo.release_end = cfg.ReadInteger(ODFSetting, group, p + wxT("ReleaseEnd"), -1, 158760000, false, -1);
 		
 		m_ReleaseInfo.push_back(rinfo);
 	}
@@ -440,6 +443,10 @@ void GOrguePipe::UpdateHash(SHA_CTX& ctx)
 		SHA1_Update(&ctx, &value, sizeof(value));
 		value = m_AttackInfo[i].loops.size();
 		SHA1_Update(&ctx, &value, sizeof(value));
+		value = m_AttackInfo[i].attack_start;
+		SHA1_Update(&ctx, &value, sizeof(value));
+		value = m_AttackInfo[i].release_end;
+		SHA1_Update(&ctx, &value, sizeof(value));
 		for(unsigned j = 0; j < m_AttackInfo[i].loops.size(); j++)
 		{
 			value = m_AttackInfo[i].loops[j].loop_start;
@@ -460,6 +467,8 @@ void GOrguePipe::UpdateHash(SHA_CTX& ctx)
 		value = m_ReleaseInfo[i].max_playback_time;
 		SHA1_Update(&ctx, &value, sizeof(value));
 		value = m_ReleaseInfo[i].cue_point;
+		SHA1_Update(&ctx, &value, sizeof(value));
+		value = m_ReleaseInfo[i].release_end;
 		SHA1_Update(&ctx, &value, sizeof(value));
 	}
 }
