@@ -161,7 +161,7 @@ void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
-void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int attack_start,
+void GOSoundProviderWave::ProcessFile(const wxString& filename, const wxString& path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int attack_start,
 				      int cue_point, int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity)
 {
 	wxLogDebug(_("Loading file %s"), filename.c_str());
@@ -213,7 +213,7 @@ void GOSoundProviderWave::ProcessFile(wxString filename, wxString path, std::vec
 void GOSoundProviderWave::LoadFromFile
 	(std::vector<attack_load_info> attacks
 	,std::vector<release_load_info> releases
-	,wxString       path
+	,const wxString& path
 	,unsigned       bits_per_sample
 	,int            load_channels
 	,bool           compress
