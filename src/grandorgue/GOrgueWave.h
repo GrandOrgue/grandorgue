@@ -44,6 +44,7 @@ private:
 	unsigned m_Channels;
 	unsigned m_MidiNote;
 	float m_PitchFract;
+	bool m_isPacked;
 	bool m_hasRelease;
 	std::vector<GO_WAVE_LOOP> m_Loops;
 

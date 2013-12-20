@@ -263,6 +263,7 @@ GOSoundResample.cpp
 GOSoundSamplerPool.cpp
 GOSoundThread.cpp
 GOrgueWave.cpp
+GOrgueWavPack.cpp
 GOrgueBitmap.cpp
 GOrgueCache.cpp
 GOrgueCacheWriter.cpp
