@@ -24,6 +24,7 @@
 #include "GOrgueMemoryPool.h"
 #include "GOrgueInt24.h"
 #include "GOrgueWaveTypes.h"
+#include "GOrgueWavPack.h"
 #include <wx/file.h>
 #include <wx/intl.h>
 
@@ -49,6 +50,7 @@ void GOrgueWave::SetInvalid()
 	m_PitchFract = 0;
 	m_CuePoint = -1;
 	m_hasRelease = false;
+	m_isPacked = false;
 	m_Loops.clear();
 }
 
@@ -176,6 +178,22 @@ void GOrgueWave::Open(const wxString& filename)
 		}
 		file.Close();
 
+		GOrgueWavPack pack(m_Content, length);
+		if (pack.IsWavPack())
+		{
+			if (!pack.Unpack())
+				throw (wxString)_("Failed to decode WavePack data");
+			free(m_Content);
+			m_Content = NULL;
+
+			pack.GetSamples(m_SampleData, m_SampleDataSize);
+			m_Content = m_SampleData;
+
+			pack.GetWrapper(ptr, length);
+			offset = 0;
+			m_isPacked = true;
+		}
+
 		/* Read the header, get it's size and make sure that it makes sense. */
 		GO_WAVECHUNKHEADER* riffHeader = (GO_WAVECHUNKHEADER*)(ptr + offset);
 		unsigned long riffChunkSize = wxUINT32_SWAP_ON_BE(riffHeader->dwSize);
@@ -197,6 +215,13 @@ void GOrgueWave::Open(const wxString& filename)
 		if (!CompareFourCC(*riffIdent, "WAVE"))
 			throw (wxString)_("< Invalid RIFF/WAVE file");
 		offset += sizeof(GO_FOURCC);
+
+		if (m_isPacked)
+		{
+			if (riffChunkSize < pack.GetOrigDataLen())
+				throw (wxString)_("Inconsitant WavPack file");
+			riffChunkSize -= pack.GetOrigDataLen();
+		}
 
 		/* This is a bit more leaniant than the original code... it will
 		 * truncate the usable size of the file if the size on disk is larger
@@ -222,8 +247,13 @@ void GOrgueWave::Open(const wxString& filename)
 				if (!hasFormat)
 					throw (wxString)_("< Malformed wave file. Format chunk must preceed data chunk.");
 
-				m_SampleData = ptr + offset;
-				m_SampleDataSize = size;
+				if (m_isPacked)
+					size = 0;
+				else
+				{
+					m_SampleData = ptr + offset;
+					m_SampleDataSize = size;
+				}
 			}
 			if (CompareFourCC(header->fccChunk, "fmt "))
 			{
@@ -331,6 +361,8 @@ const GO_WAVE_LOOP& GOrgueWave::GetLongestLoop() const
 
 unsigned GOrgueWave::GetLength() const
 {
+	if (m_isPacked)
+		return m_SampleDataSize / (4 * m_Channels);
 	/* return number of samples in the stream */
 	assert((m_SampleDataSize % (m_BytesPerSample * m_Channels)) == 0);
 	return m_SampleDataSize / (m_BytesPerSample * m_Channels);
@@ -375,26 +407,43 @@ void GOrgueWave::ReadSamples
 		for (unsigned j = 0; j < merge_count; j++)
 		{
 			int val; /* Value will be stored with 24 fractional bits of precision */
-			switch(m_BytesPerSample)
+			if (m_isPacked && m_BytesPerSample != 4)
 			{
-			case 1:
-				val = (*((unsigned char*)input) - 0x80);
-				val <<= 16;
-				break;
-			case 2:
-				val = wxINT16_SWAP_ON_BE(*((wxInt16*)input));
-				val <<= 8;
-				break;
-			case 3:
-				val = GOInt24ToInt(*((GO_Int24*)input));
-				break;
-			case 4:
-				val = (*(float*)input) * (float)(1 << 23);
-				break;
-			default:
-				throw (wxString)_("bad format!");
+				val = (*((int32_t*)input));
+				switch(m_BytesPerSample)
+				{
+				case 1:
+					val <<= 16;
+					break;
+				case 2:
+					val <<= 8;
+					break;
+				}
+				input += 4;
 			}
-			input += m_BytesPerSample;
+			else
+			{
+				switch(m_BytesPerSample)
+				{
+				case 1:
+					val = (*((unsigned char*)input) - 0x80);
+					val <<= 16;
+					break;
+				case 2:
+					val = wxINT16_SWAP_ON_BE(*((wxInt16*)input));
+					val <<= 8;
+					break;
+				case 3:
+					val = GOInt24ToInt(*((GO_Int24*)input));
+					break;
+				case 4:
+					val = (*(float*)input) * (float)(1 << 23);
+					break;
+				default:
+					throw (wxString)_("bad format!");
+				}
+				input += m_BytesPerSample;
+			}
 
 			if (select_channel && select_channel != j + 1)
 				continue;
