@@ -117,7 +117,7 @@ void GOSoundReverbPartition::Process(float* output_buf, const float* input_buf, 
 			memcpy
 				(m_InputHistory[m_InputHistoryPos]
 				,m_fftwTmpComplex
-				,m_PartitionSize * sizeof(fftwf_complex)
+				,(m_PartitionSize + 1) * sizeof(fftwf_complex)
 				);
 
 			ZeroComplex(m_fftwTmpComplex, m_PartitionSize + 1);
