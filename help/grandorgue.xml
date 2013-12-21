@@ -2561,6 +2561,13 @@ release is loaded starting with this position, else the whole file
 loaded. dwMIDIUnityNote and dwMIDIPitchFraction of the smpl chunk are
 used for retuning an organ to other temperaments.
       </para>
+      <para>
+The samples in the format above may also be packed with wavpack
+http://www.wavpack.com/.  GO only supports the wavpack V4 format
+without hybrid compression and it must include all meta data. A good
+starting point for the wavpack compression options is
+<emphasis>-x6</emphasis>
+      </para>
     </sect1>
     <sect1>
       <title>Shortcut keys</title>
