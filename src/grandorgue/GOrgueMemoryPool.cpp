@@ -29,6 +29,12 @@
 #ifdef __WIN32__
 #include <windows.h>
 #endif
+#ifdef __WXMAC__
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#include <sys/mman.h>
+#endif
 #include <errno.h>
 
 GOrgueMemoryPool::GOrgueMemoryPool() :
@@ -215,7 +221,7 @@ bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 	bool result = false;
 	FreePool();
 
-#ifdef __linux__
+#if defined __linux__ || __WXMAC__
 	m_CacheSize = cache_file.Length();
 	m_CacheStart = (char*)mmap(NULL, m_CacheSize, PROT_READ, MAP_SHARED, cache_file.fd(), 0);
 	if (m_CacheStart == MAP_FAILED)
@@ -257,6 +263,9 @@ void GOrgueMemoryPool::CalculatePageSize()
 #ifdef __linux__
 	m_PageSize = sysconf(_SC_PAGESIZE);
 #endif
+#ifdef __WXMAC__
+	m_PageSize = getpagesize();
+#endif
 #ifdef __WIN32__
 	SYSTEM_INFO info;
 	GetSystemInfo(&info);
@@ -280,6 +289,21 @@ void GOrgueMemoryPool::CalculatePoolLimit()
 		m_PoolLimit = sysconf(_SC_PHYS_PAGES) * m_PageSize;
 
 	m_PoolLimit -= m_CacheSize;
+#endif
+#ifdef __WXMAC__
+	int mib[2];
+	int64_t mem;
+	size_t l;
+	
+	mib[0] = CTL_HW;
+	mib[1] = HW_MEMSIZE;
+	l = sizeof(mem);
+	sysctl(mib, 2, &mem, &l, NULL, 0);
+
+	if (sizeof(void*) == 4)
+		m_PoolLimit = (1ul << 31) + (1ul << 29);
+	else
+		m_PoolLimit = mem;
 #endif
 #ifdef __WIN32__
 	SYSTEM_INFO info;
@@ -315,8 +339,8 @@ void GOrgueMemoryPool::CalculatePoolLimit()
 
 bool GOrgueMemoryPool::AllocatePool()
 {
-#ifdef __linux__
-	m_PoolStart = (char*)mmap(NULL, m_PoolLimit, PROT_NONE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
+#if defined __linux__ || __WXMAC__
+	m_PoolStart = (char*)mmap(NULL, m_PoolLimit, PROT_NONE, MAP_SHARED|MAP_ANON, -1, 0);
 	if (m_PoolStart == MAP_FAILED)
 	{
 		m_PoolStart = 0;
@@ -362,7 +386,7 @@ void GOrgueMemoryPool::FreePool()
 	{
 		wxLogError(wxT("Freeing non-empty memory pool"));
 	}
-#ifdef __linux__
+#if defined __linux__ || __WXMAC__
 	if (m_PoolStart)
 		munmap(m_PoolStart, m_PoolLimit);
 	if (m_CacheSize)
@@ -391,7 +415,7 @@ void GOrgueMemoryPool::GrowPool(size_t length)
 		new_size = m_PoolLimit;
 	if (m_PoolSize >= m_PoolLimit)
 		return;
-#ifdef __linux__
+#if defined __linux__ || __WXMAC__
 	if (mprotect(m_PoolStart, new_size, PROT_READ | PROT_WRITE) == -1)
 		return;
 	m_PoolSize = new_size;
