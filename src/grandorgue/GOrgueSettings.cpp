@@ -546,7 +546,7 @@ unsigned GOrgueSettings::GetSamplesPerBuffer()
 
 void GOrgueSettings::SetSamplesPerBuffer(unsigned sampler_per_buffer)
 {
-	m_SamplesPerBuffer = BLOCKS_PER_FRAME * ceil(sampler_per_buffer / BLOCKS_PER_FRAME);
+	m_SamplesPerBuffer = BLOCKS_PER_FRAME * ((sampler_per_buffer + BLOCKS_PER_FRAME - 1) / BLOCKS_PER_FRAME);
 	if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
 		m_SamplesPerBuffer = MAX_FRAME_SIZE;
 	if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
