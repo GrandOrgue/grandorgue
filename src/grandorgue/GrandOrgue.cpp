@@ -96,13 +96,13 @@ bool GOrgueApp::OnInit()
 	m_locale.AddCatalog(wxT("GrandOrgue"));
 
 #ifdef __WXMAC__
-		/* This ensures that the executable (when it is not in the form of an OS X
-		 * bundle, is brought into the foreground). GetCurrentProcess() should not
-		 * be used as it has been deprecated as of 10.9. We use a "Process
-		 * Identification Constant" instead. See the "Process Manager Reference"
-		 * document for more information. */
-		static const ProcessSerialNumber PSN = {0, kCurrentProcess};
-		TransformProcessType(&PSN, kProcessTransformToForegroundApplication);
+	/* This ensures that the executable (when it is not in the form of an OS X
+	 * bundle, is brought into the foreground). GetCurrentProcess() should not
+	 * be used as it has been deprecated as of 10.9. We use a "Process
+	 * Identification Constant" instead. See the "Process Manager Reference"
+	 * document for more information. */
+	static const ProcessSerialNumber PSN = {0, kCurrentProcess};
+	TransformProcessType(&PSN, kProcessTransformToForegroundApplication);
 #endif
 
 	SetAppName(wxT("GrandOrgue"));
