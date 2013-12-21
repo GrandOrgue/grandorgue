@@ -205,12 +205,12 @@ int GOrgueWavPack::SetPosRel(int32_t delta, int mode)
 }
 
 WavpackStreamReader GOrgueWavPack::m_Reader = {
-	read_bytes: ReadBytes, 
-	get_pos: GetPos, 
-	set_pos_abs: SetPosAbs, 
-	set_pos_rel: SetPosRel, 
-	push_back_byte: PushBackByte, 
-	get_length: GetLength, 
-	can_seek: CanSeek,
-	write_bytes: NULL
+	.read_bytes     = ReadBytes,
+	.get_pos        = GetPos,
+	.set_pos_abs    = SetPosAbs,
+	.set_pos_rel    = SetPosRel,
+	.push_back_byte = PushBackByte,
+	.get_length     = GetLength,
+	.can_seek       = CanSeek,
+	.write_bytes    = NULL
 };
