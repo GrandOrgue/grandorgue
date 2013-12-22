@@ -23,6 +23,7 @@
 
 #include <algorithm>
 #include <assert.h>
+#include <string.h>
 
 GOSoundReverbPartition::GOSoundReverbPartition(unsigned size, unsigned cnt, unsigned start_pos) :
 	m_PartitionSize(size),
