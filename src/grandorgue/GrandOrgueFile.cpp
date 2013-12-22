@@ -80,7 +80,6 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_DivisionalsStoreTremulants(false),
 	m_GeneralsStoreDivisionalCouplers(false),
 	m_CombinationsStoreNonDisplayedDrawstops(false),
-	m_HighestSampleFormat(0),
 	m_FirstManual(0),
 	m_HauptwerkOrganFileFormatVersion(),
 	m_ChurchName(),
