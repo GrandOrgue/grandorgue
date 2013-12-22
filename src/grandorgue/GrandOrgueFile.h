@@ -82,13 +82,7 @@ private:
 	bool m_GeneralsStoreDivisionalCouplers;
 	bool m_CombinationsStoreNonDisplayedDrawstops;
 
-	wxInt16 m_HighestSampleFormat;
-	wxInt16 m_FirstManual;
-
-	float m_AmplitudeLevel;
-	float m_Amplitude;
-	float m_DefaultTuning;
-	float m_Tuning;
+	unsigned m_FirstManual;
 
 	wxString m_HauptwerkOrganFileFormatVersion;
 	wxString m_ChurchName;
