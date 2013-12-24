@@ -65,14 +65,15 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_events.resize(0);
 
+	/* Skip old style entries */
+	if (m_type == MIDI_RECV_DRAWSTOP)
+		cfg.ReadInteger(ODFSetting, group, wxT("StopControlMIDIKeyNumber"), -1, 127, false);
+	if (m_type == MIDI_RECV_BUTTON)
+		cfg.ReadInteger(ODFSetting, group, wxT("MIDIProgramChangeNumber"), 0, 128, false);
+
 	int event_cnt = cfg.ReadInteger(CMBSetting, group, wxT("NumberOfMIDIEvents"), -1, 255, false);
 	if (event_cnt >= 0)
 	{
-		/* Skip old style entries */
-		if (m_type == MIDI_RECV_DRAWSTOP)
-			cfg.ReadInteger(ODFSetting, group, wxT("StopControlMIDIKeyNumber"), -1, 127, false);
-		if (m_type == MIDI_RECV_BUTTON)
-			cfg.ReadInteger(ODFSetting, group, wxT("MIDIProgramChangeNumber"), 0, 128, false);
 
 		m_events.resize(event_cnt);
 		for(unsigned i = 0; i < m_events.size(); i++)
