@@ -167,6 +167,18 @@ void GOrgueSettings::Load()
 			m_AttackLoad = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("AttackLoad"), 0, 1, false, 1);
 			m_LoopLoad = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoopLoad"), 0, 2, false, 2);
 			m_ReleaseLoad = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLoad"), 0, 1, false, 1);
+
+			m_ManageCache = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManageCache"), false, true);
+			m_CompressCache = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("CompressCache"), false, false);
+			m_LoadLastFile = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LoadLastFile"), false, true);
+			m_LastFile = cfg.ReadString(CMBSetting, wxT("General"), wxT("LastFile"), 512, false, wxEmptyString);
+
+			m_Stereo = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("Stereo"), false, true);
+			m_LosslessCompression = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LosslessCompression"), false, false);
+			m_ManagePolyphony = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManagePolyphony"), false, true);
+			m_ScaleRelease = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ScaleRelease"), false, true);
+			m_RandomizeSpeaking = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("RandomizeSpeaking"), false, true);
+			m_MemoryLimit = cfg.ReadFloat(CMBSetting, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, false, 0) * (1024.0 * 1024.0);
 			
 			m_OrganList.clear();
 			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
@@ -216,14 +228,6 @@ void GOrgueSettings::Load()
 		}
 	}
 
-	m_Stereo = m_Config.Read(wxT("StereoEnabled"), 1);
-	m_LosslessCompression = m_Config.Read(wxT("LosslessCompression"), 0L);
-	m_ManagePolyphony = m_Config.Read(wxT("ManagePolyphony"), 1);
-	m_ManageCache = m_Config.Read(wxT("ManageCache"), 1);
-	m_CompressCache = m_Config.Read(wxT("CompressCache"), 0L);
-	m_ScaleRelease = m_Config.Read(wxT("ScaleRelease"), 1);
-	m_RandomizeSpeaking = m_Config.Read(wxT("RandomizeSpeaking"), 1);
-	m_LoadLastFile = m_Config.Read(wxT("LoadLastFile"), 1);
 	SetSamplesPerBuffer(m_Config.Read(wxT("SamplesPerBuffer"), 1024));
 	m_SampleRate = m_Config.Read(wxT("SampleRate"), 44100);
 	m_Reverb = m_Config.Read(wxT("Reverb"), 0L);
@@ -244,7 +248,6 @@ void GOrgueSettings::Load()
 	m_SettingPath = m_Config.Read(wxT("cmbPath"), GetStandardOrganDirectory());
 	SetUserSettingPath (m_Config.Read(wxT("SettingPath"), wxEmptyString));
 	SetUserCachePath (m_Config.Read(wxT("CachePath"), wxEmptyString));
-	m_LastFile = m_Config.Read(wxT("LastFile"), wxEmptyString);
 	m_Preset = m_Config.Read(wxT("Preset"), 0L);
 
 	m_ReverbEnabled = m_Config.Read(wxT("ReverbEnabled"), 0L);
@@ -324,9 +327,6 @@ void GOrgueSettings::Load()
 		}
 		m_AudioDeviceConfig.push_back(conf);
 	}
-	double tmp;
-	m_Config.Read(wxT("MemoryLimit"), &tmp, 0.0);
-	m_MemoryLimit = tmp * (1024.0 * 1024.0);
 
 	wxString str;
 	long no;
@@ -408,7 +408,6 @@ size_t GOrgueSettings::GetMemoryLimit()
 void GOrgueSettings::SetMemoryLimit(size_t limit)
 {
 	m_MemoryLimit = limit;
-	m_Config.Write(wxT("MemoryLimit"), (double)m_MemoryLimit / (1024.0 * 1024.0));
 }
 
 wxString GOrgueSettings::GetStandardDocumentDirectory()
@@ -513,8 +512,6 @@ void GOrgueSettings::SetLastFile(wxString path)
 	file.MakeAbsolute();
 	path = file.GetFullPath();
 	m_LastFile = path;
-	m_Config.Write(wxT("LastFile"), m_LastFile);
-	m_Config.Flush();
 }
 
 unsigned  GOrgueSettings::GetPreset()
@@ -536,7 +533,6 @@ bool GOrgueSettings::GetLoadInStereo()
 void GOrgueSettings::SetLoadInStereo(bool stereo)
 {
 	m_Stereo = stereo;
-	m_Config.Write(wxT("StereoEnabled"), m_Stereo);
 }
 
 unsigned GOrgueSettings::GetSamplesPerBuffer()
@@ -594,7 +590,6 @@ bool GOrgueSettings::GetLosslessCompression()
 void GOrgueSettings::SetLosslessCompression(bool lossless_compression)
 {
 	m_LosslessCompression = lossless_compression;
-	m_Config.Write(wxT("LosslessCompression"), m_LosslessCompression);
 }
 
 bool GOrgueSettings::GetManagePolyphony()
@@ -605,7 +600,6 @@ bool GOrgueSettings::GetManagePolyphony()
 void GOrgueSettings::SetManagePolyphony(bool manage_polyphony)
 {
 	m_ManagePolyphony = manage_polyphony;
-	m_Config.Write(wxT("ManagePolyphony"), m_ManagePolyphony);
 }
 
 bool GOrgueSettings::GetManageCache()
@@ -616,7 +610,6 @@ bool GOrgueSettings::GetManageCache()
 void GOrgueSettings::SetManageCache(bool manage)
 {
 	m_ManageCache = manage;
-	m_Config.Write(wxT("ManageCache"), m_ManageCache);
 }
 
 bool GOrgueSettings::GetCompressCache()
@@ -627,7 +620,6 @@ bool GOrgueSettings::GetCompressCache()
 void GOrgueSettings::SetCompressCache(bool compress)
 {
 	m_CompressCache = compress;
-	m_Config.Write(wxT("CompressCache"), m_CompressCache);
 }
 
 bool GOrgueSettings::GetScaleRelease()
@@ -638,7 +630,6 @@ bool GOrgueSettings::GetScaleRelease()
 void GOrgueSettings::SetScaleRelease(bool scale_release)
 {
 	m_ScaleRelease = scale_release;
-	m_Config.Write(wxT("ScaleRelease"), m_ScaleRelease);
 }
 
 bool GOrgueSettings::GetLoadLastFile()
@@ -649,7 +640,6 @@ bool GOrgueSettings::GetLoadLastFile()
 void GOrgueSettings::SetLoadLastFile(bool last_file)
 {
 	m_LoadLastFile = last_file;
-	m_Config.Write(wxT("LoadLastFile"), m_LoadLastFile);
 }
 
 unsigned GOrgueSettings::GetInterpolationType()
@@ -672,7 +662,6 @@ bool GOrgueSettings::GetRandomizeSpeaking()
 void GOrgueSettings::SetRandomizeSpeaking(bool randomize)
 {
 	m_RandomizeSpeaking = randomize;
-	m_Config.Write(wxT("RandomizeSpeaking"), m_RandomizeSpeaking);
 }
 
 unsigned GOrgueSettings::GetSampleRate()
@@ -1035,6 +1024,18 @@ void GOrgueSettings::Flush()
 	cfg.WriteInteger(wxT("General"), wxT("Concurrency"), m_Concurrency);
 	cfg.WriteInteger(wxT("General"), wxT("ReleaseConcurrency"), m_ReleaseConcurrency);
 	cfg.WriteInteger(wxT("General"), wxT("LoadConcurrency"), m_LoadConcurrency);
+
+	cfg.WriteBoolean(wxT("General"), wxT("ManageCache"), m_ManageCache);
+	cfg.WriteBoolean(wxT("General"), wxT("CompressCache"), m_CompressCache);
+	cfg.WriteBoolean(wxT("General"), wxT("LoadLastFile"), m_LoadLastFile);
+	cfg.WriteString(wxT("General"), wxT("LastFile"), m_LastFile);
+
+	cfg.WriteBoolean(wxT("General"), wxT("Stereo"), m_Stereo);
+	cfg.WriteBoolean(wxT("General"), wxT("LosslessCompression"), m_LosslessCompression);
+	cfg.WriteBoolean(wxT("General"), wxT("ManagePolyphony"), m_ManagePolyphony);
+	cfg.WriteBoolean(wxT("General"), wxT("ScaleRelease"), m_ScaleRelease);
+	cfg.WriteBoolean(wxT("General"), wxT("RandomizeSpeaking"), m_RandomizeSpeaking);
+	cfg.WriteFloat(wxT("General"), wxT("MemoryLimit"), (double)m_MemoryLimit / (1024.0 * 1024.0));
 
 	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
