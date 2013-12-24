@@ -111,7 +111,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_AudioGroups(),
 	m_AudioDeviceConfig(),
 	m_Transpose(0),
-	m_Reverb(0),
+	m_ReleaseLength(0),
 	m_ReverbEnabled(false),
 	m_ReverbDirect(true),
 	m_ReverbChannel(1),
@@ -198,6 +198,8 @@ void GOrgueSettings::Load()
 			SetUserSettingPath (cfg.ReadString(CMBSetting, wxT("General"), wxT("SettingPath"), 512, false, m_Config.Read(wxT("SettingPath"), wxEmptyString)));
 			SetUserCachePath (cfg.ReadString(CMBSetting, wxT("General"), wxT("CachePath"), 512, false, m_Config.Read(wxT("CachePath"), wxEmptyString)));
 			SetPreset(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Preset"), 0, ID_PRESET_LAST - ID_PRESET_0 + 1, false, 0));
+
+			SetReleaseLength(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLength"), 0, 5, false, 0));
 		
 			m_OrganList.clear();
 			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
@@ -261,10 +263,6 @@ void GOrgueSettings::Load()
 			wxLogError(wxT("%s\n"),error.c_str());
 		}
 	}
-
-	m_Reverb = m_Config.Read(wxT("Reverb"), 0L);
-	if (m_Reverb > 5 || m_Reverb < 0)
-		m_Reverb = 0;
 
 	m_WAVPath = m_Config.Read(wxT("wavPath"), GetStandardDocumentDirectory());
 	m_OrganPath = m_Config.Read(wxT("organPath"), GetStandardOrganDirectory());
@@ -916,15 +914,16 @@ void GOrgueSettings::SetTranspose(int transpose)
 	m_Transpose = transpose;
 }
 
-int GOrgueSettings::GetReverb()
+unsigned GOrgueSettings::GetReleaseLength()
 {
-	return m_Reverb;
+	return m_ReleaseLength;
 }
 
-void GOrgueSettings::SetReverb(int reverb)
+void GOrgueSettings::SetReleaseLength(unsigned reverb)
 {
-	m_Reverb = reverb;
-	m_Config.Write(wxT("Reverb"), reverb);
+	if (reverb > 5)
+		reverb = 5;
+	m_ReleaseLength = reverb;
 }
 
 bool GOrgueSettings::GetReverbEnabled()
@@ -1055,6 +1054,8 @@ void GOrgueSettings::Flush()
 	cfg.WriteString(wxT("General"), wxT("SettingPath"), m_UserSettingPath);
 	cfg.WriteString(wxT("General"), wxT("CachePath"), m_UserCachePath);
 	cfg.WriteInteger(wxT("General"), wxT("Preset"), m_Preset);
+
+	cfg.WriteInteger(wxT("General"), wxT("ReleaseLength"), m_ReleaseLength);
 
 	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)

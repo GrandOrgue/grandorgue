@@ -37,7 +37,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_ReleaseAlignmentEnabled(true),
 	m_RandomizeSpeaking(true),
 	m_Volume(-15),
-	m_Reverb(0),
+	m_ReleaseLength(0),
 	m_Gain(1),
 	m_SampleRate(0),
 	m_CurrentTime(1),
@@ -128,14 +128,12 @@ void GOSoundEngine::SetHardPolyphony(unsigned polyphony)
 	m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
 }
 
-int GOSoundEngine::GetReverb() const
+void GOSoundEngine::SetReleaseLength(unsigned reverb)
 {
-	return m_Reverb;
-}
-
-void GOSoundEngine::SetReverb(int reverb)
-{
-	m_Reverb = reverb;
+	int n = reverb;
+	if (n > 0)
+		n = -17 + n;
+	m_ReleaseLength = n;
 }
 
 void GOSoundEngine::SetPolyphonyLimiting(bool limiting)
@@ -876,7 +874,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			unsigned CrossFadeLenBits = GetFaderLength(this_pipe->GetMidiKeyNumber());
 			new_sampler->fader.NewAttacking(gain_target, -CrossFadeLenBits, 1 << (CrossFadeLenBits + 1));
 
-			int reverb = GetReverb();
+			int reverb = m_ReleaseLength;
 			if ( reverb < 0 )
 			{
 				if ( reverb > gain_decay_rate || gain_decay_rate == 0 )
