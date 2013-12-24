@@ -28,6 +28,7 @@
 #include "GOrgueConfigReaderDB.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrguePath.h"
+#include "GrandOrgueID.h"
 #include <wx/confbase.h>
 #include <wx/filename.h>
 #include <wx/log.h>
@@ -188,6 +189,15 @@ void GOrgueSettings::Load()
 			SetReverbDelay(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, false, 0));
 			SetReverbGain(cfg.ReadFloat(CMBSetting, wxT("Reverb"), wxT("ReverbGain"), 0, 50, false, 1));
 			SetReverbFile(cfg.ReadString(CMBSetting, wxT("Reverb"), wxT("ReverbFile"), 512, false, wxEmptyString));
+
+			SetSamplesPerBuffer(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SamplesPerBuffer"), BLOCKS_PER_FRAME, MAX_FRAME_SIZE, false, 1024));
+			SetSampleRate(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SampleRate"), 1000, 100000, false, 44100));
+			SetBitsPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("BitsPerSample"), 8, 24, false, 24));
+			SetVolume(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Volume"), -120, 20, false, -15));
+			SetPolyphonyLimit(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("PolyphonyLimit"), 0, 50000, false, 2048));
+			SetUserSettingPath (cfg.ReadString(CMBSetting, wxT("General"), wxT("SettingPath"), 512, false, m_Config.Read(wxT("SettingPath"), wxEmptyString)));
+			SetUserCachePath (cfg.ReadString(CMBSetting, wxT("General"), wxT("CachePath"), 512, false, m_Config.Read(wxT("CachePath"), wxEmptyString)));
+			SetPreset(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Preset"), 0, ID_PRESET_LAST - ID_PRESET_0 + 1, false, 0));
 		
 			m_OrganList.clear();
 			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
@@ -252,27 +262,13 @@ void GOrgueSettings::Load()
 		}
 	}
 
-	SetSamplesPerBuffer(m_Config.Read(wxT("SamplesPerBuffer"), 1024));
-	m_SampleRate = m_Config.Read(wxT("SampleRate"), 44100);
 	m_Reverb = m_Config.Read(wxT("Reverb"), 0L);
 	if (m_Reverb > 5 || m_Reverb < 0)
 		m_Reverb = 0;
-	if (m_SampleRate < 1000)
-		m_SampleRate = 44100;
-	m_BitsPerSample = m_Config.Read(wxT("BitsPerSample"), 24);
-	if (m_BitsPerSample != 8 && m_BitsPerSample != 12 && m_BitsPerSample != 16 && m_BitsPerSample != 20 && m_BitsPerSample != 24)
-		m_BitsPerSample = 24;
-	m_Volume = m_Config.Read(wxT("Volume"), (long)-15);
-	if (m_Volume > 20)
-		m_Volume = -15;
-	m_PolyphonyLimit = m_Config.Read(wxT("PolyphonyLimit"), 2048);
 
 	m_WAVPath = m_Config.Read(wxT("wavPath"), GetStandardDocumentDirectory());
 	m_OrganPath = m_Config.Read(wxT("organPath"), GetStandardOrganDirectory());
 	m_SettingPath = m_Config.Read(wxT("cmbPath"), GetStandardOrganDirectory());
-	SetUserSettingPath (m_Config.Read(wxT("SettingPath"), wxEmptyString));
-	SetUserCachePath (m_Config.Read(wxT("CachePath"), wxEmptyString));
-	m_Preset = m_Config.Read(wxT("Preset"), 0L);
 
 	if (m_AudioGroups.size() == 0)
 	{
@@ -471,7 +467,6 @@ void GOrgueSettings::SetUserSettingPath(wxString path)
 	path = file.GetFullPath();
 	GOCreateDirectory(path);
 	m_UserSettingPath = path;
-	m_Config.Write(wxT("SettingPath"), m_UserSettingPath);
 }
 
 wxString GOrgueSettings::GetUserCachePath()
@@ -490,7 +485,6 @@ void GOrgueSettings::SetUserCachePath(wxString path)
 	path = file.GetFullPath();
 	GOCreateDirectory(path);
 	m_UserCachePath = path;
-	m_Config.Write(wxT("CachePath"), m_UserCachePath);
 }
 
 wxString GOrgueSettings::GetLastFile()
@@ -513,8 +507,9 @@ unsigned  GOrgueSettings::GetPreset()
 
 void  GOrgueSettings::SetPreset(unsigned value)
 {
+	if (value > ID_PRESET_LAST - ID_PRESET_0 + 1)
+		value = ID_PRESET_LAST - ID_PRESET_0 + 1;
 	m_Preset = value;
-	m_Config.Write(wxT("Preset"), (long)m_Preset);
 }
 
 bool GOrgueSettings::GetLoadInStereo()
@@ -539,7 +534,6 @@ void GOrgueSettings::SetSamplesPerBuffer(unsigned sampler_per_buffer)
 		m_SamplesPerBuffer = MAX_FRAME_SIZE;
 	if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
 		m_SamplesPerBuffer = BLOCKS_PER_FRAME;
-	m_Config.Write(wxT("SamplesPerBuffer"), (long)m_SamplesPerBuffer);
 }
 
 unsigned GOrgueSettings::GetConcurrency()
@@ -665,8 +659,9 @@ void GOrgueSettings::SetSampleRate(unsigned sample_rate)
 {
 	if (sample_rate < 1000)
 		sample_rate = 44100;
+	if (sample_rate > 100000)
+		sample_rate = 100000;
 	m_SampleRate = sample_rate;
-	m_Config.Write(wxT("SampleRate"), (long)sample_rate);
 }
 
 unsigned GOrgueSettings::GetBitsPerSample()
@@ -679,7 +674,6 @@ void GOrgueSettings::SetBitsPerSample(unsigned bits_per_sample)
 	if (bits_per_sample != 8 && bits_per_sample != 12 && bits_per_sample != 16 && bits_per_sample != 20 && bits_per_sample != 24)
 		bits_per_sample = 24;
 	m_BitsPerSample = bits_per_sample;
-	m_Config.Write(wxT("BitsPerSample"), (long)m_BitsPerSample);
 }
 
 
@@ -740,10 +734,11 @@ int GOrgueSettings::GetVolume()
 
 void GOrgueSettings::SetVolume(int volume)
 {
+	if (volume < -120)
+		volume = -120;
 	if (volume > 20)
 		volume = -15;
 	m_Volume = volume;
-	m_Config.Write(wxT("Volume"), (long)m_Volume);
 }
 
 unsigned GOrgueSettings::GetPolyphonyLimit()
@@ -753,8 +748,9 @@ unsigned GOrgueSettings::GetPolyphonyLimit()
 
 void GOrgueSettings::SetPolyphonyLimit(unsigned polyphony_limit)
 {
+	if (polyphony_limit > 50000)
+		polyphony_limit = 50000;
 	m_PolyphonyLimit = polyphony_limit;
-	m_Config.Write(wxT("PolyphonyLimit"), (long)m_PolyphonyLimit);
 }
 
 unsigned GOrgueSettings::GetAudioDeviceLatency(wxString device)
@@ -1050,6 +1046,15 @@ void GOrgueSettings::Flush()
 	cfg.WriteBoolean(wxT("General"), wxT("ScaleRelease"), m_ScaleRelease);
 	cfg.WriteBoolean(wxT("General"), wxT("RandomizeSpeaking"), m_RandomizeSpeaking);
 	cfg.WriteFloat(wxT("General"), wxT("MemoryLimit"), (double)m_MemoryLimit / (1024.0 * 1024.0));
+
+	cfg.WriteInteger(wxT("General"), wxT("SamplesPerBuffer"), m_SamplesPerBuffer);
+	cfg.WriteInteger(wxT("General"), wxT("SampleRate"), m_SampleRate);
+	cfg.WriteInteger(wxT("General"), wxT("BitsPerSample"), m_BitsPerSample);
+	cfg.WriteInteger(wxT("General"), wxT("Volume"), m_Volume);
+	cfg.WriteInteger(wxT("General"), wxT("PolyphonyLimit"), m_PolyphonyLimit);
+	cfg.WriteString(wxT("General"), wxT("SettingPath"), m_UserSettingPath);
+	cfg.WriteString(wxT("General"), wxT("CachePath"), m_UserCachePath);
+	cfg.WriteInteger(wxT("General"), wxT("Preset"), m_Preset);
 
 	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
