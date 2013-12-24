@@ -43,20 +43,20 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 
 	wxArrayString choices;
 	std::map<wxString, int> list = m_Sound.GetMidi().GetInDevices();
+	std::vector<bool> state;
 	for (std::map<wxString, int>::iterator it2 = list.begin(); it2 != list.end(); it2++)
 	{
 		choices.push_back(it2->first);
 		m_InDeviceData.push_back(m_Sound.GetSettings().GetMidiInDeviceChannelShift(it2->first));
+		state.push_back(m_Sound.GetSettings().GetMidiInState(it2->first));
 	}
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &input devices"));
 	m_InDevices = new wxCheckListBox(this, ID_INDEVICES, wxDefaultPosition, wxDefaultSize, choices);
-	for (unsigned i = 0; i < m_InDeviceData.size(); i++)
+	for (unsigned i = 0; i < state.size(); i++)
 	{
-		if (m_InDeviceData[i] < 0)
-			m_InDeviceData[i] = -m_InDeviceData[i] - 1;
-		else
+		if (state[i])
 			m_InDevices->Check(i);
 	}
 	item3->Add(m_InDevices, 1, wxEXPAND | wxALL, 5);
@@ -108,12 +108,8 @@ void SettingsMidiDevices::Save()
 {
 	for (unsigned i = 0; i < m_InDevices->GetCount(); i++)
 	{
-		int j;
-
-		j = m_InDeviceData[i];
-		if (!m_InDevices->IsChecked(i))
-			j = -j - 1;
-		m_Sound.GetSettings().SetMidiInDeviceChannelShift(m_InDevices->GetString(i), j);
+		m_Sound.GetSettings().SetMidiInState(m_InDevices->GetString(i), m_InDevices->IsChecked(i));
+		m_Sound.GetSettings().SetMidiInDeviceChannelShift(m_InDevices->GetString(i), m_InDeviceData[i]);
 	}
 
 	for (unsigned i = 0; i < m_OutDevices->GetCount(); i++)

@@ -169,7 +169,7 @@ void GOrgueMidi::Open()
 		memset(this_dev.nrpn_lsb, 0, sizeof(this_dev.nrpn_lsb));
 		this_dev.rpn = false;
 		int channel_shift = m_Settings.GetMidiInDeviceChannelShift(this_dev.name);
-		if (channel_shift >= 0)
+		if (m_Settings.GetMidiInState(this_dev.name))
 		{
 			try
 			{
