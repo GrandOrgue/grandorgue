@@ -81,7 +81,8 @@ private:
 	unsigned m_PolyphonyLimit;
 	unsigned m_Preset;
 	ptr_vector<GOrgueOrgan> m_OrganList;
-	std::map<wxString, int> m_MidiIn;
+	std::map<wxString, bool> m_MidiIn;
+	std::map<wxString, unsigned> m_MidiInShift;
 	std::map<wxString, bool> m_MidiOut;
 	wxString m_WAVPath;
 	wxString m_OrganPath;
@@ -196,11 +197,13 @@ public:
 	int GetAudioDeviceActualLatency(wxString device);
 	void SetAudioDeviceActualLatency(wxString device, unsigned latency);
 
-	int GetMidiInDeviceChannelShift(wxString device);
-	void SetMidiInDeviceChannelShift(wxString device, int shift);
+	bool GetMidiInState(wxString device);
+	void SetMidiInState(wxString device, bool enabled);
+	unsigned GetMidiInDeviceChannelShift(wxString device);
+	void SetMidiInDeviceChannelShift(wxString device, unsigned shift);
 	std::vector<wxString> GetMidiInDeviceList();
 
-	int GetMidiOutState(wxString device);
+	bool GetMidiOutState(wxString device);
 	void SetMidiOutState(wxString device, bool enabled);
 	std::vector<wxString> GetMidiOutDeviceList();
 

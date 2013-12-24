@@ -229,6 +229,21 @@ void GOrgueSettings::Load()
 				m_AudioDeviceConfig.push_back(conf);
 			}
 
+			count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, 10000, false, 0);
+			for(unsigned i = 0; i < count; i++)
+			{
+				wxString name = cfg.ReadString(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03d"), i + 1), 512);
+				SetMidiInState(name, cfg.ReadBoolean(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dEnabled"), i + 1)));
+				SetMidiInDeviceChannelShift(name, cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dShift"), i + 1), 0, 15));;
+			}
+
+			count = cfg.ReadInteger(CMBSetting, wxT("MIDIOut"), wxT("Count"), 0, 10000, false, 0);
+			for(unsigned i = 0; i < count; i++)
+			{
+				wxString name = cfg.ReadString(CMBSetting, wxT("MIDIOut"), wxString::Format(wxT("Device%03d"), i + 1), 512);
+				SetMidiOutState(name, cfg.ReadBoolean(CMBSetting, wxT("MIDIOut"), wxString::Format(wxT("Device%03dEnabled"), i + 1)));
+			}
+
 			wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
 		}
 		catch (wxString error)
@@ -324,26 +339,6 @@ void GOrgueSettings::Load()
 		}
 		m_AudioDeviceConfig.push_back(conf);
 	}
-
-	wxString str;
-	long no;
-	m_Config.SetPath(wxT("/Devices/MIDI"));
-	if (m_Config.GetFirstEntry(str, no))
-		do
-		{
-			m_MidiIn[str] = m_Config.Read(str, 0L);
-		}
-		while (m_Config.GetNextEntry(str, no));
-	m_Config.SetPath(wxT("/"));
-
-	m_Config.SetPath(wxT("/Devices/MIDIOut"));
-	if (m_Config.GetFirstEntry(str, no))
-		do
-		{
-			m_MidiOut[str] = m_Config.Read(str, 0L) == 1 ? true : false;
-		}
-		while (m_Config.GetNextEntry(str, no));
-	m_Config.SetPath(wxT("/"));
 }
 
 unsigned GOrgueSettings::GetEventCount()
@@ -813,30 +808,47 @@ void GOrgueSettings::AddOrgan(GOrgueOrgan* organ)
 	m_OrganList.push_back(organ);
 }
 
-int GOrgueSettings::GetMidiInDeviceChannelShift(wxString device)
+bool GOrgueSettings::GetMidiInState(wxString device)
 {
-	std::map<wxString, int>::iterator it = m_MidiIn.find(device);
+	std::map<wxString, bool>::iterator it = m_MidiIn.find(device);
 	if (it == m_MidiIn.end())
+	{
+		m_MidiIn[device] = true;
+		return true;
+	}
+	else
+		return it->second;
+}
+
+void GOrgueSettings::SetMidiInState(wxString device, bool enabled)
+{
+	m_MidiIn[device] = enabled;
+}
+
+unsigned GOrgueSettings::GetMidiInDeviceChannelShift(wxString device)
+{
+	std::map<wxString, unsigned>::iterator it = m_MidiInShift.find(device);
+	if (it == m_MidiInShift.end())
 		return 0;
 	else
 		return it->second;
 }
 
-void GOrgueSettings::SetMidiInDeviceChannelShift(wxString device, int shift)
+void GOrgueSettings::SetMidiInDeviceChannelShift(wxString device, unsigned shift)
 {
-	m_Config.Write(wxT("Devices/MIDI/") + device, shift);
-	m_MidiIn[device] = shift;
+	shift = shift % 16;
+	m_MidiInShift[device] = shift;
 }
 
 std::vector<wxString> GOrgueSettings::GetMidiInDeviceList()
 {
 	std::vector<wxString> list;
-	for (std::map<wxString, int>::iterator it = m_MidiIn.begin(); it != m_MidiIn.end(); it++)
+	for (std::map<wxString, bool>::iterator it = m_MidiIn.begin(); it != m_MidiIn.end(); it++)
 		list.push_back(it->first);
 	return list;
 }
 
-int GOrgueSettings::GetMidiOutState(wxString device)
+bool GOrgueSettings::GetMidiOutState(wxString device)
 {
 	std::map<wxString, bool>::iterator it = m_MidiOut.find(device);
 	if (it == m_MidiOut.end())
@@ -847,7 +859,6 @@ int GOrgueSettings::GetMidiOutState(wxString device)
 
 void GOrgueSettings::SetMidiOutState(wxString device, bool enabled)
 {
-	m_Config.Write(wxT("Devices/MIDIOut/") + device, enabled ? 1 : -1);
 	m_MidiOut[device] = enabled;
 }
 
@@ -1078,6 +1089,25 @@ void GOrgueSettings::Flush()
 	cfg.WriteInteger(wxT("Reverb"), wxT("ReverbDelay"), m_ReverbDelay);
 	cfg.WriteFloat(wxT("Reverb"), wxT("ReverbGain"), m_ReverbGain);
 	cfg.WriteString(wxT("Reverb"), wxT("ReverbFile"), m_ReverbFile);
+
+	unsigned count = 0;
+	for (std::map<wxString, bool>::iterator it = m_MidiIn.begin(); it != m_MidiIn.end(); it++)
+	{
+		count++;
+		cfg.WriteString(wxT("MIDIIn"), wxString::Format(wxT("Device%03d"), count), it->first);
+		cfg.WriteBoolean(wxT("MIDIIn"), wxString::Format(wxT("Device%03dEnabled"), count), it->second >= 0);
+		cfg.WriteInteger(wxT("MIDIIn"), wxString::Format(wxT("Device%03dShift"), count), GetMidiInDeviceChannelShift(it->first));
+	}
+	cfg.WriteInteger(wxT("MIDIIn"), wxT("Count"), count);
+
+	count = 0;
+	for (std::map<wxString, bool>::iterator it = m_MidiOut.begin(); it != m_MidiOut.end(); it++)
+	{
+		count++;
+		cfg.WriteString(wxT("MIDIOut"), wxString::Format(wxT("Device%03d"), count), it->first);
+		cfg.WriteBoolean(wxT("MIDIOut"), wxString::Format(wxT("Device%03dEnabled"), count), it->second);
+	}
+	cfg.WriteInteger(wxT("MIDIOut"), wxT("Count"), count);
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
