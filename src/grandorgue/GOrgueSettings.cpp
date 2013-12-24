@@ -179,7 +179,16 @@ void GOrgueSettings::Load()
 			SetScaleRelease(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ScaleRelease"), false, true));
 			SetRandomizeSpeaking(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("RandomizeSpeaking"), false, true));
 			SetMemoryLimit(cfg.ReadFloat(CMBSetting, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, false, 0) * (1024.0 * 1024.0));
-			
+
+			SetReverbEnabled(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbEnabled"), false, false));
+			SetReverbDirect(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbDirect"), false, true));
+			SetReverbChannel(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, false, 1));
+			SetReverbStartOffset(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbStartOffset"), 0, 158760000, false, 0));
+			SetReverbLen(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbLen"), 0, 158760000, false, 0));
+			SetReverbDelay(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, false, 0));
+			SetReverbGain(cfg.ReadFloat(CMBSetting, wxT("Reverb"), wxT("ReverbGain"), 0, 50, false, 1));
+			SetReverbFile(cfg.ReadString(CMBSetting, wxT("Reverb"), wxT("ReverbFile"), 512, false, wxEmptyString));
+		
 			m_OrganList.clear();
 			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
 			for(unsigned i = 0; i < organ_count; i++)
@@ -249,18 +258,6 @@ void GOrgueSettings::Load()
 	SetUserSettingPath (m_Config.Read(wxT("SettingPath"), wxEmptyString));
 	SetUserCachePath (m_Config.Read(wxT("CachePath"), wxEmptyString));
 	m_Preset = m_Config.Read(wxT("Preset"), 0L);
-
-	m_ReverbEnabled = m_Config.Read(wxT("ReverbEnabled"), 0L);
-	m_ReverbDirect = m_Config.Read(wxT("ReverbDirect"), 1L);
-	m_ReverbChannel = m_Config.Read(wxT("ReverbChannel"), 1);
-	m_ReverbStartOffset = m_Config.Read(wxT("ReverbStartOffset"), 0L);
-	m_ReverbLen = m_Config.Read(wxT("ReverbLen"), 0L);
-	m_ReverbDelay = m_Config.Read(wxT("ReverbDelay"), 0L);
-	double gain;
-	m_Config.Read(wxT("ReverbGain"), &gain, 1.0f);
-	m_ReverbGain = gain;
-	m_ReverbFile = m_Config.Read(wxT("ReverbFile"), wxEmptyString);
-
 
 	if (m_AudioGroups.size() == 0)
 	{
@@ -931,7 +928,6 @@ bool GOrgueSettings::GetReverbEnabled()
 void GOrgueSettings::SetReverbEnabled(bool on)
 {
 	m_ReverbEnabled = on;
-	m_Config.Write(wxT("ReverbEnabled"), (long)m_ReverbEnabled);
 }
 
 bool GOrgueSettings::GetReverbDirect()
@@ -942,7 +938,6 @@ bool GOrgueSettings::GetReverbDirect()
 void GOrgueSettings::SetReverbDirect(bool on)
 {
 	m_ReverbDirect = on;
-	m_Config.Write(wxT("ReverbDirect"), (long)m_ReverbDirect);
 }
 
 wxString GOrgueSettings::GetReverbFile()
@@ -953,7 +948,6 @@ wxString GOrgueSettings::GetReverbFile()
 void GOrgueSettings::SetReverbFile(wxString file)
 {
 	m_ReverbFile = file;
-	m_Config.Write(wxT("ReverbFile"), m_ReverbFile);
 }
 
 unsigned GOrgueSettings::GetReverbStartOffset()
@@ -963,8 +957,9 @@ unsigned GOrgueSettings::GetReverbStartOffset()
 
 void GOrgueSettings::SetReverbStartOffset(unsigned offset)
 {
+	if (offset > 158760000)
+		offset = 158760000;
 	m_ReverbStartOffset = offset;
-	m_Config.Write(wxT("ReverbStartOffset"), (long)m_ReverbStartOffset);
 }
 
 unsigned GOrgueSettings::GetReverbLen()
@@ -974,8 +969,9 @@ unsigned GOrgueSettings::GetReverbLen()
 
 void GOrgueSettings::SetReverbLen(unsigned length)
 {
+	if (length > 158760000)
+		length = 158760000;
 	m_ReverbLen = length;
-	m_Config.Write(wxT("ReverbLen"), (long)m_ReverbLen);
 }
 
 float GOrgueSettings::GetReverbGain()
@@ -985,8 +981,11 @@ float GOrgueSettings::GetReverbGain()
 
 void GOrgueSettings::SetReverbGain(float gain)
 {
+	if (gain <= 0)
+		gain = 1;
+	if (gain > 50)
+		gain = 50;
 	m_ReverbGain = gain;
-	m_Config.Write(wxT("ReverbGain"), m_ReverbGain);
 }
 
 int GOrgueSettings::GetReverbChannel()
@@ -996,8 +995,9 @@ int GOrgueSettings::GetReverbChannel()
 
 void GOrgueSettings::SetReverbChannel(int channel)
 {
+	if (channel < 1 || channel > 4)
+		channel = 1;
 	m_ReverbChannel = channel;
-	m_Config.Write(wxT("ReverbChannel"), m_ReverbChannel);
 }
 
 unsigned GOrgueSettings::GetReverbDelay()
@@ -1007,8 +1007,9 @@ unsigned GOrgueSettings::GetReverbDelay()
 
 void GOrgueSettings::SetReverbDelay(unsigned delay)
 {
+	if (delay > 10000)
+		delay = 10000;
 	m_ReverbDelay = delay;
-	m_Config.Write(wxT("ReverbDelay"), (long)m_ReverbDelay);
 }
 
 void GOrgueSettings::Flush()
@@ -1068,6 +1069,15 @@ void GOrgueSettings::Flush()
 		}
 	}
 	cfg.WriteInteger(wxT("AudioDevices"), wxT("Count"), m_AudioDeviceConfig.size());
+
+	cfg.WriteBoolean(wxT("Reverb"), wxT("ReverbEnabled"), m_ReverbEnabled);
+	cfg.WriteBoolean(wxT("Reverb"), wxT("ReverbDirect"), m_ReverbDirect);
+	cfg.WriteInteger(wxT("Reverb"), wxT("ReverbChannel"), m_ReverbChannel);
+	cfg.WriteInteger(wxT("Reverb"), wxT("ReverbStartOffset"), m_ReverbStartOffset);
+	cfg.WriteInteger(wxT("Reverb"), wxT("ReverbLen"), m_ReverbLen);
+	cfg.WriteInteger(wxT("Reverb"), wxT("ReverbDelay"), m_ReverbDelay);
+	cfg.WriteFloat(wxT("Reverb"), wxT("ReverbGain"), m_ReverbGain);
+	cfg.WriteString(wxT("Reverb"), wxT("ReverbFile"), m_ReverbFile);
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
