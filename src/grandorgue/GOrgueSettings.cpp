@@ -158,27 +158,27 @@ void GOrgueSettings::Load()
 				cpus = 256;
 			if (cpus == 0)
 				cpus = 1;
-			m_Concurrency = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Concurrency"), 0, 256, false, cpus);
-			m_ReleaseConcurrency = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseConcurrency"), 1, 256, false, cpus);
-			m_LoadConcurrency = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoadConcurrency"), 0, 256, false, cpus);
+			SetConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Concurrency"), 0, 256, false, cpus));
+			SetReleaseConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseConcurrency"), 1, 256, false, cpus));
+			SetLoadConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoadConcurrency"), 0, 256, false, cpus));
 
-			m_InterpolationType = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("InterpolationType"), 0, 1, false, 1);
-			m_WaveFormat = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("WaveFormat"), 1, 4, false, 4);
-			m_AttackLoad = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("AttackLoad"), 0, 1, false, 1);
-			m_LoopLoad = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoopLoad"), 0, 2, false, 2);
-			m_ReleaseLoad = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLoad"), 0, 1, false, 1);
+			SetInterpolationType(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("InterpolationType"), 0, 1, false, 1));
+			SetWaveFormatBytesPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("WaveFormat"), 1, 4, false, 4));
+			SetAttackLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("AttackLoad"), 0, 1, false, 1));
+			SetLoopLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoopLoad"), 0, 2, false, 2));
+			SetReleaseLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLoad"), 0, 1, false, 1));
 
-			m_ManageCache = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManageCache"), false, true);
-			m_CompressCache = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("CompressCache"), false, false);
-			m_LoadLastFile = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LoadLastFile"), false, true);
-			m_LastFile = cfg.ReadString(CMBSetting, wxT("General"), wxT("LastFile"), 512, false, wxEmptyString);
+			SetManageCache(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManageCache"), false, true));
+			SetCompressCache(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("CompressCache"), false, false));
+			SetLoadLastFile(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LoadLastFile"), false, true));
+			SetLastFile(cfg.ReadString(CMBSetting, wxT("General"), wxT("LastFile"), 512, false, wxEmptyString));
 
-			m_Stereo = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("Stereo"), false, true);
-			m_LosslessCompression = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LosslessCompression"), false, false);
-			m_ManagePolyphony = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManagePolyphony"), false, true);
-			m_ScaleRelease = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ScaleRelease"), false, true);
-			m_RandomizeSpeaking = cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("RandomizeSpeaking"), false, true);
-			m_MemoryLimit = cfg.ReadFloat(CMBSetting, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, false, 0) * (1024.0 * 1024.0);
+			SetLoadInStereo(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("Stereo"), false, true));
+			SetLosslessCompression(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LosslessCompression"), false, false));
+			SetManagePolyphony(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManagePolyphony"), false, true));
+			SetScaleRelease(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ScaleRelease"), false, true));
+			SetRandomizeSpeaking(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("RandomizeSpeaking"), false, true));
+			SetMemoryLimit(cfg.ReadFloat(CMBSetting, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, false, 0) * (1024.0 * 1024.0));
 			
 			m_OrganList.clear();
 			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
@@ -698,6 +698,8 @@ unsigned GOrgueSettings::GetWaveFormatBytesPerSample()
 
 void GOrgueSettings::SetWaveFormatBytesPerSample(unsigned bytes_per_sample)
 {
+	if (bytes_per_sample < 1)
+		bytes_per_sample = 1;
 	if (bytes_per_sample > 4)
 		bytes_per_sample = 4;
 	m_WaveFormat = bytes_per_sample;
