@@ -87,7 +87,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU(ID_POLYPHONY, GOrgueFrame::OnSettingsPolyphony)
 	EVT_MENU(ID_MEMORY, GOrgueFrame::OnSettingsMemoryEnter)
 	EVT_MENU(ID_TRANSPOSE, GOrgueFrame::OnSettingsTranspose)
-	EVT_MENU(ID_REVERB, GOrgueFrame::OnSettingsReverb)
+	EVT_MENU(ID_RELEASELENGTH, GOrgueFrame::OnSettingsReleaseLength)
 	EVT_MENU_RANGE(ID_PANEL_FIRST, ID_PANEL_LAST, GOrgueFrame::OnPanel)
 	EVT_MENU_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnPreset)
 	EVT_MENU_RANGE(ID_TEMPERAMENT_0, ID_TEMPERAMENT_LAST, GOrgueFrame::OnTemperament)
@@ -95,7 +95,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_TEXT(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 	EVT_TEXT_ENTER(ID_METER_TRANSPOSE_SPIN, GOrgueFrame::OnSettingsTranspose)
 	EVT_COMMAND(ID_METER_TRANSPOSE_SPIN, wxEVT_SETVALUE, GOrgueFrame::OnChangeTranspose)
-	EVT_CHOICE(ID_REVERB_SELECT, GOrgueFrame::OnSettingsReverb)
+	EVT_CHOICE(ID_RELEASELENGTH_SELECT, GOrgueFrame::OnSettingsReleaseLength)
 	EVT_TEXT(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 	EVT_TEXT_ENTER(ID_METER_POLY_SPIN, GOrgueFrame::OnSettingsPolyphony)
 	EVT_TEXT(ID_METER_FRAME_SPIN, GOrgueFrame::OnSettingsMemory)
@@ -123,7 +123,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_VolumeLeft(NULL),
 	m_VolumeRight(NULL),
 	m_Transpose(NULL),
-	m_Reverb(NULL),
+	m_ReleaseLength(NULL),
 	m_Polyphony(NULL),
 	m_SetterPosition(NULL),
 	m_Volume(NULL),
@@ -246,7 +246,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	}
 	m_Volume->SetValue(m_Settings.GetVolume());
 	
-	tb->AddTool(ID_REVERB, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
+	tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
 	choices.clear();
 	choices.push_back(_("Max"));
 	choices.push_back(_("2.8 s"));
@@ -254,13 +254,11 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	choices.push_back(_("700 ms"));
 	choices.push_back(_("350 ms"));
 	choices.push_back(_("175 ms"));
-	m_Reverb = new wxChoice(tb, ID_REVERB_SELECT, wxDefaultPosition, wxDefaultSize, choices);
-	tb->AddControl(m_Reverb);
-	int n = m_Settings.GetReverb();
-	m_Reverb->SetSelection(n);
-		if (n > 0)
-		n = -17 + n;
-	m_Sound.GetEngine().SetReverb(n);
+	m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
+	tb->AddControl(m_ReleaseLength);
+	unsigned n = m_Settings.GetReleaseLength();
+	m_ReleaseLength->SetSelection(n);
+	m_Sound.GetEngine().SetReleaseLength(n);
 	
 	tb->AddTool(ID_TRANSPOSE, _("&Transpose"), GetImage_transpose(), _("Transpose"), wxITEM_NORMAL);
 	m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
@@ -821,13 +819,11 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 		doc->GetOrganFile()->GetSetter()->SetTranspose(n);
 }
 
-void GOrgueFrame::OnSettingsReverb(wxCommandEvent& event)
+void GOrgueFrame::OnSettingsReleaseLength(wxCommandEvent& event)
 {
-	int n = m_Reverb->GetSelection();
-	m_Settings.SetReverb(n);
-	if (n > 0)
-		n = -17 + n;
-	m_Sound.GetEngine().SetReverb(n);
+	m_Settings.SetReleaseLength(m_ReleaseLength->GetSelection());
+	unsigned n = m_Settings.GetReleaseLength();
+	m_Sound.GetEngine().SetReleaseLength(n);
 }
 
 void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)

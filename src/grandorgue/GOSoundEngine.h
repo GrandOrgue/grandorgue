@@ -149,7 +149,7 @@ private:
 	bool                          m_ReleaseAlignmentEnabled;
 	bool                          m_RandomizeSpeaking;
 	int                           m_Volume;
-	int                           m_Reverb;
+	int                           m_ReleaseLength;
 	float                         m_Gain;
 	unsigned                      m_SampleRate;
 	unsigned long                 m_CurrentTime;
@@ -206,8 +206,7 @@ public:
 	int GetVolume() const;
 	void SetScaledReleases(bool enable);
 	void SetRandomizeSpeaking(bool enable);
-	void SetReverb(int reverb);
-	int GetReverb() const;
+	void SetReleaseLength(unsigned reverb);
 
 	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);

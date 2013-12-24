@@ -52,7 +52,7 @@ private:
 	wxGaugeAudio *m_SamplerUsage;
 	wxGaugeAudio *m_VolumeLeft, *m_VolumeRight;
 	wxSpinCtrl* m_Transpose;
-	wxChoice* m_Reverb;
+	wxChoice* m_ReleaseLength;
 	wxSpinCtrl* m_Polyphony;
 	wxSpinCtrl* m_SetterPosition;
 	wxSpinCtrl* m_Volume;
@@ -107,7 +107,7 @@ private:
 	void OnSettingsMemory(wxCommandEvent& event);
 	void OnSettingsMemoryEnter(wxCommandEvent& event);
 	void OnSettingsTranspose(wxCommandEvent& event);
-	void OnSettingsReverb(wxCommandEvent& event);
+	void OnSettingsReleaseLength(wxCommandEvent& event);
 
 	void OnKeyCommand(wxKeyEvent& event);
 	void OnChangeTranspose(wxCommandEvent& event);
