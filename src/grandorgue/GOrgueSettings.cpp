@@ -492,6 +492,8 @@ wxString GOrgueSettings::GetLastFile()
 
 void GOrgueSettings::SetLastFile(wxString path)
 {
+	if (path == wxEmptyString)
+		return;
 	wxFileName file(path);
 	file.MakeAbsolute();
 	path = file.GetFullPath();
