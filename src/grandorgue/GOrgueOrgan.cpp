@@ -43,7 +43,7 @@ GOrgueOrgan::GOrgueOrgan(GOrgueConfigReader& cfg, wxString group) :
 	m_ChurchName = cfg.ReadString(CMBSetting, group, wxT("ChurchName"));
 	m_OrganBuilder = cfg.ReadString(CMBSetting, group, wxT("OrganBuilder"));
 	m_RecordingDetail = cfg.ReadString(CMBSetting, group, wxT("RecordingDetail"));
-	m_LastUse = cfg.ReadInteger(CMBSetting, group, wxT("LastUsed"), 0, INT_MAX, false, wxGetUTCTime());
+	m_LastUse = cfg.ReadInteger(CMBSetting, group, wxT("LastUse"), 0, INT_MAX, false, wxGetUTCTime());
 	m_midi.Load(cfg, group);
 }
 
