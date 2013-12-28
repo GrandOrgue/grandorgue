@@ -760,6 +760,7 @@ void GOAudioSection::Setup
 	if (pcm_data_channels < 1 || pcm_data_channels > 2)
 		throw (wxString)_("< More than 2 channels in");
 
+	m_BitsPerSample  = wave_bits_per_sample(pcm_data_format);
 	compress = (compress) && (m_BitsPerSample >= 12);
 
 	assert(pcm_data_nb_samples > 0);
@@ -863,7 +864,6 @@ void GOAudioSection::Setup
 		throw GOrgueOutOfMemory();
 	m_SampleRate     = pcm_data_sample_rate;
 	m_SampleCount    = total_alloc_samples;
-	m_BitsPerSample  = wave_bits_per_sample(pcm_data_format);
 	m_SampleFracBits = m_BitsPerSample - 1;
 	m_Channels       = pcm_data_channels;
 	m_Compressed     = false;
