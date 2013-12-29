@@ -53,7 +53,8 @@ class GOrgueMemoryPool {
 	void* PoolAlloc(size_t length);
 	void AddPoolAlloc(void* data);
 
-	void CalculatePageSize();
+	static size_t GetVMALimit();
+	static size_t GetSystemMemory();
 	void CalculatePoolLimit();
 	bool AllocatePool();
 public:
@@ -75,6 +76,9 @@ public:
 	size_t GetPoolSize();
 	size_t GetPoolUsage();
 	size_t GetMemoryLimit();
+
+	static size_t GetSystemMemoryLimit();
+	static size_t GetPageSize();
 };
 
 
