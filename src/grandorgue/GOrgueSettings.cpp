@@ -27,6 +27,7 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigReaderDB.h"
 #include "GOrgueConfigWriter.h"
+#include "GOrgueMemoryPool.h"
 #include "GOrguePath.h"
 #include "GrandOrgueID.h"
 #include <wx/confbase.h>
@@ -179,7 +180,7 @@ void GOrgueSettings::Load()
 			SetManagePolyphony(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManagePolyphony"), false, true));
 			SetScaleRelease(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ScaleRelease"), false, true));
 			SetRandomizeSpeaking(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("RandomizeSpeaking"), false, true));
-			SetMemoryLimit(cfg.ReadFloat(CMBSetting, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, false, 0) * (1024.0 * 1024.0));
+			SetMemoryLimit(cfg.ReadFloat(CMBSetting, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, false, GOrgueMemoryPool::GetSystemMemoryLimit()) * (1024.0 * 1024.0));
 
 			SetReverbEnabled(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbEnabled"), false, false));
 			SetReverbDirect(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbDirect"), false, true));

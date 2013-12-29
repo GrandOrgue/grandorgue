@@ -257,38 +257,26 @@ bool GOrgueMemoryPool::SetCacheFile(wxFile& cache_file)
 	return result;
 }
 
-void GOrgueMemoryPool::CalculatePageSize()
+size_t GOrgueMemoryPool::GetPageSize()
 {
-	m_PageSize = 4096;
 #ifdef __linux__
-	m_PageSize = sysconf(_SC_PAGESIZE);
+	return sysconf(_SC_PAGESIZE);
 #endif
 #ifdef __WXMAC__
-	m_PageSize = getpagesize();
+	return getpagesize();
 #endif
 #ifdef __WIN32__
 	SYSTEM_INFO info;
 	GetSystemInfo(&info);
-	m_PageSize = info.dwPageSize;
+	return info.dwPageSize;
 #endif
+	return 4096;
 }
 
-void GOrgueMemoryPool::CalculatePoolLimit()
+size_t GOrgueMemoryPool::GetSystemMemory()
 {
-	m_PoolLimit = 0;
 #ifdef __linux__
-	/* We reserve virtual address and add backing memory only, if the 
-	   memory region is needed.
-	   
-	   On 32 bit, limit to 2.5 GB address space (so 500 MB address space is left for the rest of GO)
-	   On 64 bit, we reserve the size of the physical memory
-	*/
-	if (sizeof(void*) == 4)
-		m_PoolLimit = (1l << 31) + (1l << 29);
-	else
-		m_PoolLimit = sysconf(_SC_PHYS_PAGES) * m_PageSize;
-
-	m_PoolLimit -= m_CacheSize;
+	return sysconf(_SC_PHYS_PAGES) * GetPageSize();
 #endif
 #ifdef __WXMAC__
 	int mib[2];
@@ -300,40 +288,73 @@ void GOrgueMemoryPool::CalculatePoolLimit()
 	l = sizeof(mem);
 	sysctl(mib, 2, &mem, &l, NULL, 0);
 
+	return mem;
+#endif
+#ifdef __WIN32__
+	MEMORYSTATUSEX mem_stat;
+	mem_stat.dwLength = sizeof(mem_stat);
+
+	if (GlobalMemoryStatusEx(&mem_stat))
+	{
+		return mem_stat.ullTotalPhys;
+	}
+	
+#endif
+	return 0;
+}
+
+size_t GOrgueMemoryPool::GetSystemMemoryLimit()
+{
+	size_t mem = GetSystemMemory() / (1024 * 1024);
+	if (mem > 200)
+		mem -= 200;
+	return mem;
+}
+
+size_t GOrgueMemoryPool::GetVMALimit()
+{
+#ifdef __linux__
+	/* On 32 bit, limit to 2.5 GB address space (so 500 MB address space is left for the rest of GO) */
 	if (sizeof(void*) == 4)
-		m_PoolLimit = (1ul << 31) + (1ul << 29);
+		return (1l << 31) + (1l << 29);
 	else
-		m_PoolLimit = mem;
+		return SIZE_MAX;
+#endif
+#ifdef __WXMAC__
+	if (sizeof(void*) == 4)
+		return (1ul << 31) + (1ul << 29);
+	else
+		return SIZE_MAX;
 #endif
 #ifdef __WIN32__
 	SYSTEM_INFO info;
 	MEMORY_BASIC_INFORMATION mem_info;
-	MEMORYSTATUSEX mem_stat;
-	mem_stat.dwLength = sizeof(mem_stat);
 	GetSystemInfo(&info);
 
 	/* Search for largest block */
-	m_PoolLimit = 0;
+	size_t max_block = 0;
 	for(char* ptr = 0; ptr < info.lpMaximumApplicationAddress; ptr += mem_info.RegionSize)
 	{
 		if (VirtualQuery(ptr, &mem_info, sizeof(mem_info)) <= 0)
 		    break;
 		if (mem_info.State == MEM_FREE)
-			if (m_PoolLimit < mem_info.RegionSize)
-				m_PoolLimit = mem_info.RegionSize;
+			if (max_block < mem_info.RegionSize)
+				max_block = mem_info.RegionSize;
 	}
-	/* Limit with the available system memory */
-	if (GlobalMemoryStatusEx(&mem_stat))
-	{
-		if (m_PoolLimit + m_CacheSize > mem_stat.ullTotalPhys)
-		{
-			if (mem_stat.ullTotalPhys > m_CacheSize)
-				m_PoolLimit = mem_stat.ullTotalPhys - m_CacheSize;
-			else
-				m_PoolLimit = 0;
-		}
-	}
+	return max_block;
 #endif
+	return 0;
+}
+
+void GOrgueMemoryPool::CalculatePoolLimit()
+{
+	size_t vma = GetVMALimit();
+	size_t memory = GetSystemMemory();
+	if (memory > m_CacheSize)
+		memory -= m_CacheSize;
+	else
+		memory = 0;
+	m_PoolLimit = std::min (memory, vma);
 	m_PoolIncrement = 1000 * m_PageSize;
 }
 
@@ -360,7 +381,7 @@ void GOrgueMemoryPool::InitPool()
 	m_AllocError = 0;
 	m_PoolStart = 0;
 	m_PoolSize = 0;
-	CalculatePageSize();
+	m_PageSize = GetPageSize();
 	CalculatePoolLimit();
 	wxLogDebug(wxT("Memory pool limit: %llu bytes (page size: %d)"), (unsigned long long)m_PoolLimit, (int)m_PageSize);
 
