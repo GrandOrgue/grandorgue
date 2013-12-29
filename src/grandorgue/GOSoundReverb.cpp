@@ -80,7 +80,9 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 		if (offset > wav.GetLength())
 			throw (wxString)_("Invalid reverb start offset");
 		len = wav.GetLength();
-		float* data = new float[len];
+		data = (float*)malloc(sizeof(float)*len);
+		if (!data)
+			throw (wxString)_("Out of memory");
 		wav.ReadSamples(data, GOrgueWave::SF_IEEE_FLOAT, wav.GetSampleRate(), -settings.GetReverbChannel());
 		for(unsigned i = 0; i < len; i++)
 			data[i] *= gain;
@@ -91,7 +93,7 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 			float* new_data = resample_block(data, len, wav.GetSampleRate(), settings.GetSampleRate());
 			if (!new_data)
 				throw (wxString)_("Resampling failed");
-			delete[] data;
+			free(data);
 			data = new_data;
 			offset = (offset * settings.GetSampleRate()) / (float)wav.GetSampleRate();
 		}
@@ -118,7 +120,7 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 		m_engine = NULL;
 	}
 	if (data)
-		delete[] data;
+		free(data);
 }
 
 void GOSoundReverb::Reset()

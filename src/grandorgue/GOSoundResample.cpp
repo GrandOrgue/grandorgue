@@ -23,6 +23,7 @@
 
 #include "GOSoundDefs.h"
 #include <math.h>
+#include <stdlib.h>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846264338327950288
@@ -154,8 +155,10 @@ resample_block(float* data, unsigned& len, unsigned from_samplerate, unsigned to
 	unsigned position_fraction = 0;
 	unsigned increment_fraction = factor * UPSAMPLE_FACTOR;
 	if (!new_len)
-		return 0;
-	float* out = new float[new_len];
+		return NULL;
+	float* out = (float*)malloc(sizeof(float) * new_len);
+	if (!out)
+		return NULL;
 
 	for (unsigned i = 0; i < new_len; ++i, position_fraction += increment_fraction)
 	{
