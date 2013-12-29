@@ -347,13 +347,13 @@ wxString GOrgueSettings::GetEventSection(unsigned index)
 	switch(m_MIDISettings[index].type)
 	{
 	case MIDI_RECV_ENCLOSURE:
-		return wxString::Format(wxT("Enclosure%03d"), index);
+		return wxString::Format(wxT("Enclosure%03d"), m_MIDISettings[index].index);
 
 	case MIDI_RECV_MANUAL:
-		return wxString::Format(wxT("Manual%03d"), index);
+		return wxString::Format(wxT("Manual%03d"), m_MIDISettings[index].index);
 
 	case MIDI_RECV_SETTER:
-		return wxString::Format(wxT("Setter%03d"), index);
+		return wxString::Format(wxT("Setter%03d"), m_MIDISettings[index].index);
 		
 	default:
 	assert(false);
