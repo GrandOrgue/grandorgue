@@ -88,6 +88,16 @@ GOrguePanelView::GOrguePanelView(GOrgueDocument* doc, GOGUIPanel* panel, wxWindo
 
 GOrguePanelView::~GOrguePanelView()
 {
+	if (m_panel)
+		m_panel->SetView(NULL);
+}
+
+void GOrguePanelView::RemoveView()
+{
+	if (m_panel)
+		m_panel->SetView(NULL);
+	m_panel = NULL;
+	GOrgueView::RemoveView();
 }
 
 void GOrguePanelView::AddEvent(GOGUIControl* control)
@@ -105,7 +115,8 @@ void GOrguePanelView::SyncState()
 
 bool GOrguePanelView::Destroy()
 {
-	m_panel->SetView(NULL);
+	if (m_panel)
+		m_panel->SetView(NULL);
 	return wxScrolledWindow::Destroy();
 }
 

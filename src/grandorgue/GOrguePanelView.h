@@ -48,6 +48,7 @@ public:
 	void SyncState();
 
 	bool Destroy();
+	void RemoveView();
 
 	DECLARE_EVENT_TABLE()
 };
