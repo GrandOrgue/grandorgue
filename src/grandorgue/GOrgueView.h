@@ -36,7 +36,7 @@ public:
 	GOrgueView(GOrgueDocument* doc, wxWindow* wnd);
 	virtual ~GOrgueView();
 
-	void RemoveView();
+	virtual void RemoveView();
 	void ShowView();
 };
 
