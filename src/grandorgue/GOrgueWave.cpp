@@ -170,7 +170,7 @@ void GOrgueWave::Open(const wxString& filename)
 		if (length < 12)
 			throw (wxString)_("< Not a RIFF file");
 
-		if (file.Read(ptr, length) != length)
+		if (file.Read(ptr, length) != (size_t)length)
 		{
 			wxString message;
 			message.Printf(_("Failed to read file '%s'\n"), filename.c_str());
@@ -350,7 +350,7 @@ const GO_WAVE_LOOP& GOrgueWave::GetLongestLoop() const
 	unsigned lidx = 0;
 	for (unsigned int i = 1; i < m_Loops.size(); i++)
 	{
-		assert(Loops[i].end_sample > m_Loops[i].start_sample);
+		assert(m_Loops[i].end_sample > m_Loops[i].start_sample);
 		if ((m_Loops[i].end_sample - m_Loops[i].start_sample) >
 			(m_Loops[lidx].end_sample - m_Loops[lidx].start_sample))
 			lidx = i;
