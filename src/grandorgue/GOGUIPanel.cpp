@@ -276,8 +276,8 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	else
 	{
 		wxString buffer;
-		m_Name = cfg.ReadStringLen(ODFSetting, group, wxT("Name"), 100);
-		m_GroupName = cfg.ReadStringLen(ODFSetting, group, wxT("Group"), 100, false);
+		m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"));
+		m_GroupName = cfg.ReadString(ODFSetting, group, wxT("Group"), false);
 		unsigned nb_manuals    = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 0, m_organfile->GetManualAndPedalCount());
 		unsigned first_manual  = cfg.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
 		unsigned NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, m_organfile->GetEnclosureCount());

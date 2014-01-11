@@ -128,7 +128,7 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("Dark Red"));
 	m_FontSize = cfg.ReadFontSize(ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
 	m_FontName = cfg.ReadStringLen(ODFSetting, group, wxT("DispLabelFontName"), 255, false, wxT(""));
-	m_Text = cfg.ReadStringLen(ODFSetting, group, wxT("DispLabelText"), 255, false, m_Button->GetName());
+	m_Text = cfg.ReadString(ODFSetting, group, wxT("DispLabelText"), false, m_Button->GetName());
 
 	int x, y, w, h;
 

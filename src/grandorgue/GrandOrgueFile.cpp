@@ -81,7 +81,6 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_GeneralsStoreDivisionalCouplers(false),
 	m_CombinationsStoreNonDisplayedDrawstops(false),
 	m_FirstManual(0),
-	m_HauptwerkOrganFileFormatVersion(),
 	m_ChurchName(),
 	m_ChurchAddress(),
 	m_OrganBuilder(),
@@ -176,13 +175,13 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	wxString group = wxT("Organ");
 
 	/* load church info */
-	m_HauptwerkOrganFileFormatVersion = cfg.ReadStringLen(ODFSetting, group, wxT("HauptwerkOrganFileFormatVersion"),  256, false);
+	cfg.ReadString(ODFSetting, group, wxT("HauptwerkOrganFileFormatVersion"),  false);
 	m_ChurchName = cfg.ReadStringLen(ODFSetting, group, wxT("ChurchName"),  128);
-	m_ChurchAddress = cfg.ReadStringLen(ODFSetting, group, wxT("ChurchAddress"),  128);
-	m_OrganBuilder = cfg.ReadStringLen(ODFSetting, group, wxT("OrganBuilder"),  128, false);
-	m_OrganBuildDate = cfg.ReadStringLen(ODFSetting, group, wxT("OrganBuildDate"),  128, false);
-	m_OrganComments = cfg.ReadStringLen(ODFSetting, group, wxT("OrganComments"),  256, false);
-	m_RecordingDetails = cfg.ReadStringLen(ODFSetting, group, wxT("RecordingDetails"),  256, false);
+	m_ChurchAddress = cfg.ReadString(ODFSetting, group, wxT("ChurchAddress"));
+	m_OrganBuilder = cfg.ReadString(ODFSetting, group, wxT("OrganBuilder"),  false);
+	m_OrganBuildDate = cfg.ReadString(ODFSetting, group, wxT("OrganBuildDate"),  false);
+	m_OrganComments = cfg.ReadString(ODFSetting, group, wxT("OrganComments"),  false);
+	m_RecordingDetails = cfg.ReadString(ODFSetting, group, wxT("RecordingDetails"),  false);
 	m_InfoFilename = cfg.ReadStringLen(ODFSetting, group, wxT("InfoFilename"),  256, false);
 	wxFileName fn;
 	if (m_InfoFilename.IsEmpty())

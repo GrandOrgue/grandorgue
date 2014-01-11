@@ -101,7 +101,7 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumber)
 {
 	m_group = group;
-	m_name                              = cfg.ReadStringLen (ODFSetting, group, wxT("Name"), 32);
+	m_name                              = cfg.ReadString (ODFSetting, group, wxT("Name"));
 	m_nb_logical_keys                   = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalKeys"), 1, 192);
 	m_first_accessible_logical_key_nb   = cfg.ReadInteger(ODFSetting, group, wxT("FirstAccessibleKeyLogicalKeyNumber"), 1, m_nb_logical_keys);
 	m_first_accessible_key_midi_note_nb = cfg.ReadInteger(ODFSetting, group, wxT("FirstAccessibleKeyMIDINoteNumber"), 0, 127);

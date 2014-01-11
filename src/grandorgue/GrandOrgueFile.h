@@ -84,7 +84,6 @@ private:
 
 	unsigned m_FirstManual;
 
-	wxString m_HauptwerkOrganFileFormatVersion;
 	wxString m_ChurchName;
 	wxString m_ChurchAddress;
 	wxString m_OrganBuilder;
