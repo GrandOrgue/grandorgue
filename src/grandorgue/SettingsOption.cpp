@@ -213,6 +213,10 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	if (m_Settings.GetManageCache())
 		m_ManageCache->SetValue(true);
 
+	item9->Add(m_ODFCheck  = new wxCheckBox(this, ID_ODF_CHECK, _("Perform strict ODF")), 0, wxEXPAND | wxALL, 5);
+	if (m_Settings.GetODFCheck())
+		m_ODFCheck->SetValue(true);
+
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
@@ -229,6 +233,7 @@ void SettingsOption::Save()
 	m_Settings.SetCompressCache(m_CompressCache->IsChecked());
 	m_Settings.SetManageCache(m_ManageCache->IsChecked());
 	m_Settings.SetLoadLastFile(m_LoadLastFile->IsChecked());
+	m_Settings.SetODFCheck(m_ODFCheck->IsChecked());
 	m_Settings.SetScaleRelease(m_Scale->IsChecked());
 	m_Settings.SetRandomizeSpeaking(m_Random->IsChecked());
 	m_Settings.SetConcurrency(m_Concurrency->GetSelection());

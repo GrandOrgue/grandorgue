@@ -55,6 +55,7 @@ class SettingsOption : public wxPanel
 		ID_SAMPLE_RATE,
 		ID_SAMPLES_PER_BUFFER,
 		ID_MEMORY_LIMIT,
+		ID_ODF_CHECK,
 	};
 private:
 	GOrgueSettings& m_Settings;
@@ -69,6 +70,7 @@ private:
 	wxCheckBox* m_LoadLastFile;
 	wxCheckBox* m_Scale;
 	wxCheckBox* m_Random;
+	wxCheckBox* m_ODFCheck;
 	wxDirPickerCtrl* m_SettingsPath;
 	wxDirPickerCtrl* m_CachePath;
 	wxChoice* m_BitsPerSample;
