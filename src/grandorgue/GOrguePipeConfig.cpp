@@ -52,7 +52,7 @@ void GOrguePipeConfig::Load(GOrgueConfigReader& cfg, wxString group, wxString pr
 {
 	m_Group = group;
 	m_NamePrefix = prefix;
-	m_AudioGroup = cfg.ReadStringLen(CMBSetting, group, prefix + wxT("AudioGroup"), 256, false);
+	m_AudioGroup = cfg.ReadString(CMBSetting, group, prefix + wxT("AudioGroup"), false);
 	m_DefaultAmplitude = cfg.ReadFloat(ODFSetting, group, prefix + wxT("AmplitudeLevel"), 0, 1000, false, 100);
 	m_Amplitude = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Amplitude"), 0, 1000, false, m_DefaultAmplitude);
 	m_DefaultGain = cfg.ReadFloat(ODFSetting, group, prefix + wxT("Gain"), -120, 40, false, 0);

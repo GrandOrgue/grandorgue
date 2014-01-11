@@ -48,6 +48,8 @@ public:
 	bool ReadBoolean(GOSettingType type, wxString group, wxString key, bool required, bool defaultValue);
 	wxColour ReadColor(GOSettingType type, wxString group, wxString key, bool required = true);
 	wxColour ReadColor(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue);
+	wxString ReadString(GOSettingType type, wxString group, wxString key, bool required = true);
+	wxString ReadString(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue);
 	wxString ReadStringLen(GOSettingType type, wxString group, wxString key, unsigned nmax = 4096, bool required = true);
 	wxString ReadStringLen(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue);
 	int ReadInteger(GOSettingType type, wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
