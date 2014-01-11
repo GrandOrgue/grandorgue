@@ -41,7 +41,7 @@ void GOrguePiston::Load(GOrgueConfigReader& cfg, wxString group)
 {
 
 	int i, j;
-	wxString type = cfg.ReadString(ODFSetting, group, wxT("ObjectType"));
+	wxString type = cfg.ReadStringLen(ODFSetting, group, wxT("ObjectType"));
 	type.MakeUpper();
 
 	if (type == wxT("STOP"))

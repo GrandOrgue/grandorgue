@@ -82,10 +82,10 @@ GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, GrandOrg
 	m_DispKeyHorizBackgroundImageNum = ini.ReadInteger(ODFSetting, m_group, wxT("DispKeyHorizBackgroundImageNum"), 1, 64);
 	m_DispKeyVertBackgroundImageNum = ini.ReadInteger(ODFSetting, m_group, wxT("DispKeyVertBackgroundImageNum"), 1, 64);
 	m_DispDrawstopInsetBackgroundImageNum = ini.ReadInteger(ODFSetting, m_group, wxT("DispDrawstopInsetBackgroundImageNum"), 1, 64);
-	m_DispControlLabelFont = ini.ReadString(ODFSetting, m_group, wxT("DispControlLabelFont"));
-	m_DispShortcutKeyLabelFont = ini.ReadString(ODFSetting, m_group, wxT("DispShortcutKeyLabelFont"));
+	m_DispControlLabelFont = ini.ReadStringLen(ODFSetting, m_group, wxT("DispControlLabelFont"));
+	m_DispShortcutKeyLabelFont = ini.ReadStringLen(ODFSetting, m_group, wxT("DispShortcutKeyLabelFont"));
 	m_DispShortcutKeyLabelColour = ini.ReadColor(ODFSetting, m_group, wxT("DispShortcutKeyLabelColour"));
-	m_DispGroupLabelFont = ini.ReadString(ODFSetting, m_group, wxT("DispGroupLabelFont"));
+	m_DispGroupLabelFont = ini.ReadStringLen(ODFSetting, m_group, wxT("DispGroupLabelFont"));
 	m_DispDrawstopCols = ini.ReadInteger(ODFSetting, m_group, wxT("DispDrawstopCols"), 2, 12);
 	m_DispDrawstopRows = ini.ReadInteger(ODFSetting, m_group, wxT("DispDrawstopRows"), 1, 20);
 	m_DispDrawstopColsOffset = ini.ReadBoolean(ODFSetting, m_group, wxT("DispDrawstopColsOffset"));

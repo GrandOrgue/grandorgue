@@ -61,7 +61,7 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 {
 	m_FirstMidiNoteNumber = cfg.ReadInteger(ODFSetting, group, wxT("FirstMidiNoteNumber"), 0, 256, false, first_midi_note_number);
 	m_Group = group;
-	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), 64, true);
+	m_Name = cfg.ReadStringLen(ODFSetting, group, wxT("Name"), 64, true);
 
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalPipes"), 1, 192);
 	m_PipeConfig.Load(cfg, group, wxEmptyString);

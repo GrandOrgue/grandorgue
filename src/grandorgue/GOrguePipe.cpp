@@ -275,7 +275,7 @@ unsigned GOrguePipe::GetEffectiveChannels()
 void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	attack_load_info ainfo;
-	ainfo.filename = cfg.ReadString(ODFSetting, group, prefix);
+	ainfo.filename = cfg.ReadStringLen(ODFSetting, group, prefix);
 	ainfo.sample_group = cfg.ReadInteger(ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
 	ainfo.load_release = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("LoadRelease"), false, !m_Percussive);;
 	ainfo.percussive = m_Percussive;
@@ -299,7 +299,7 @@ void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString pr
 
 void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
-	m_Filename = cfg.ReadString(ODFSetting, group, prefix);
+	m_Filename = cfg.ReadStringLen(ODFSetting, group, prefix);
 	if (m_Filename.StartsWith(wxT("REF:")))
 		return;
 	m_PipeConfig.Load(cfg, group, prefix);
@@ -323,7 +323,7 @@ void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 		release_load_info rinfo;
 		wxString p = prefix + wxString::Format(wxT("Release%03d"), i + 1);
 
-		rinfo.filename = cfg.ReadString(ODFSetting, group, p);
+		rinfo.filename = cfg.ReadStringLen(ODFSetting, group, p);
 		rinfo.sample_group = cfg.ReadInteger(ODFSetting, group, p + wxT("IsTremulant"), -1, 1, false, -1);
 		rinfo.max_playback_time = cfg.ReadInteger(ODFSetting, group, p + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
 		rinfo.cue_point = cfg.ReadInteger(ODFSetting, group, p + wxT("CuePoint"), -1, MAX_SAMPLE_LENGTH, false, -1);

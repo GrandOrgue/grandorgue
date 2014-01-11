@@ -39,10 +39,10 @@ GOrgueOrgan::GOrgueOrgan(wxString odf, wxString church_name, wxString organ_buil
 GOrgueOrgan::GOrgueOrgan(GOrgueConfigReader& cfg, wxString group) :
 	m_midi(NULL, MIDI_RECV_ORGAN)
 {
-	m_ODF = cfg.ReadString(CMBSetting, group, wxT("ODFPath"));
-	m_ChurchName = cfg.ReadString(CMBSetting, group, wxT("ChurchName"));
-	m_OrganBuilder = cfg.ReadString(CMBSetting, group, wxT("OrganBuilder"));
-	m_RecordingDetail = cfg.ReadString(CMBSetting, group, wxT("RecordingDetail"));
+	m_ODF = cfg.ReadStringLen(CMBSetting, group, wxT("ODFPath"));
+	m_ChurchName = cfg.ReadStringLen(CMBSetting, group, wxT("ChurchName"));
+	m_OrganBuilder = cfg.ReadStringLen(CMBSetting, group, wxT("OrganBuilder"));
+	m_RecordingDetail = cfg.ReadStringLen(CMBSetting, group, wxT("RecordingDetail"));
 	m_LastUse = cfg.ReadInteger(CMBSetting, group, wxT("LastUse"), 0, INT_MAX, false, wxGetUTCTime());
 	m_midi.Load(cfg, group);
 }

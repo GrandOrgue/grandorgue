@@ -176,14 +176,14 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	wxString group = wxT("Organ");
 
 	/* load church info */
-	m_HauptwerkOrganFileFormatVersion = cfg.ReadString(ODFSetting, group, wxT("HauptwerkOrganFileFormatVersion"),  256, false);
-	m_ChurchName = cfg.ReadString(ODFSetting, group, wxT("ChurchName"),  128);
-	m_ChurchAddress = cfg.ReadString(ODFSetting, group, wxT("ChurchAddress"),  128);
-	m_OrganBuilder = cfg.ReadString(ODFSetting, group, wxT("OrganBuilder"),  128, false);
-	m_OrganBuildDate = cfg.ReadString(ODFSetting, group, wxT("OrganBuildDate"),  128, false);
-	m_OrganComments = cfg.ReadString(ODFSetting, group, wxT("OrganComments"),  256, false);
-	m_RecordingDetails = cfg.ReadString(ODFSetting, group, wxT("RecordingDetails"),  256, false);
-	m_InfoFilename = cfg.ReadString(ODFSetting, group, wxT("InfoFilename"),  256, false);
+	m_HauptwerkOrganFileFormatVersion = cfg.ReadStringLen(ODFSetting, group, wxT("HauptwerkOrganFileFormatVersion"),  256, false);
+	m_ChurchName = cfg.ReadStringLen(ODFSetting, group, wxT("ChurchName"),  128);
+	m_ChurchAddress = cfg.ReadStringLen(ODFSetting, group, wxT("ChurchAddress"),  128);
+	m_OrganBuilder = cfg.ReadStringLen(ODFSetting, group, wxT("OrganBuilder"),  128, false);
+	m_OrganBuildDate = cfg.ReadStringLen(ODFSetting, group, wxT("OrganBuildDate"),  128, false);
+	m_OrganComments = cfg.ReadStringLen(ODFSetting, group, wxT("OrganComments"),  256, false);
+	m_RecordingDetails = cfg.ReadStringLen(ODFSetting, group, wxT("RecordingDetails"),  256, false);
+	m_InfoFilename = cfg.ReadStringLen(ODFSetting, group, wxT("InfoFilename"),  256, false);
 	wxFileName fn;
 	if (m_InfoFilename.IsEmpty())
 	{
@@ -219,7 +219,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_volume = cfg.ReadInteger(CMBSetting, group, wxT("Volume"), -121, 100, false, -121);
 	if (m_volume > 20)
 		m_volume = -121;
-	m_Temperament = cfg.ReadString(CMBSetting, group, wxT("Temperament"), 256, false);
+	m_Temperament = cfg.ReadStringLen(CMBSetting, group, wxT("Temperament"), 256, false);
 	m_IgnorePitch = cfg.ReadBoolean(CMBSetting, group, wxT("IgnorePitch"), false, false);
 
 	wxString buffer;
@@ -485,10 +485,10 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 	{
 		GOrgueConfigReader cfg(ini);
 		/* skip informational items */
-		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"), 4096, false);
-		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), 4096, false);
-		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), 4096, false);
-		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFHash"), 4096, false);
+		cfg.ReadStringLen(CMBSetting, wxT("Organ"), wxT("ChurchName"), 4096, false);
+		cfg.ReadStringLen(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), 4096, false);
+		cfg.ReadStringLen(CMBSetting, wxT("Organ"), wxT("ODFPath"), 4096, false);
+		cfg.ReadStringLen(CMBSetting, wxT("Organ"), wxT("ODFHash"), 4096, false);
 		ReadOrganFile(cfg);
 	}
 	catch (wxString error_)
@@ -650,7 +650,7 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 		ini.ReadData(odf_ini_file, CMBSetting, false);
 		GOrgueConfigReader cfg(ini);
 
-		wxString church_name = cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"),  128);
+		wxString church_name = cfg.ReadStringLen(CMBSetting, wxT("Organ"), wxT("ChurchName"),  128);
 		if (church_name != m_ChurchName)
 			throw wxString::Format(_("File belongs to a different organ: %s"), church_name.c_str());
 		wxString hash = odf_ini_file.getEntry(wxT("Organ"), wxT("ODFHash"));
@@ -660,8 +660,8 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 				wxLogError(_("The ODF does not match the combination file."));
 			}
 		/* skip informational items */
-		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), 4096, false);
-		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), 4096, false);
+		cfg.ReadStringLen(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), 4096, false);
+		cfg.ReadStringLen(CMBSetting, wxT("Organ"), wxT("ODFPath"), 4096, false);
 
 		ReadCombinations(cfg);
 	}

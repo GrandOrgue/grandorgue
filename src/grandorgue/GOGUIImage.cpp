@@ -40,8 +40,8 @@ void GOGUIImage::Load(GOrgueConfigReader& cfg, wxString group)
 	wxString image_mask_file;
 	wxString image_file;
 
-	image_file = cfg.ReadString(ODFSetting, group, wxT("Image"), 255, true);
-	image_mask_file = cfg.ReadString(ODFSetting, group, wxT("Mask"), 255, false, wxEmptyString);
+	image_file = cfg.ReadStringLen(ODFSetting, group, wxT("Image"), 255, true);
+	image_mask_file = cfg.ReadStringLen(ODFSetting, group, wxT("Mask"), 255, false, wxEmptyString);
 
 	m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);
 
