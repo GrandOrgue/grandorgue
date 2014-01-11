@@ -26,5 +26,6 @@
 
 wxString formatCDDouble(double value);
 bool parseCDouble(double& result, wxString value);
+bool parseLong(long& result, wxString value);
 
 #endif
