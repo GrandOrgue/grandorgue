@@ -117,8 +117,8 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 
 	for(unsigned i = 1; i <= bitmap_count; i++)
 	{
-		wxString bitmap = cfg.ReadStringLen(ODFSetting, group, wxString::Format(wxT("Bitmap%03d"), i), 256, false, wxString::Format(wxT("GO:enclosure%c%02d"), style, i - 1));
-		wxString mask = cfg.ReadStringLen(ODFSetting, group, wxString::Format(wxT("Mask%03d"), i), 256, false, wxEmptyString);
+		wxString bitmap = cfg.ReadStringTrim(ODFSetting, group, wxString::Format(wxT("Bitmap%03d"), i), false, wxString::Format(wxT("GO:enclosure%c%02d"), style, i - 1));
+		wxString mask = cfg.ReadStringTrim(ODFSetting, group, wxString::Format(wxT("Mask%03d"), i), false, wxEmptyString);
 		m_Bitmaps.push_back(m_panel->LoadBitmap(bitmap, mask));
 	}
 
@@ -143,7 +143,7 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 
 	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("White"));
 	m_FontSize = cfg.ReadFontSize(ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("7"));
-	m_FontName = cfg.ReadStringLen(ODFSetting, group, wxT("DispLabelFontName"), 255, false, wxT(""));
+	m_FontName = cfg.ReadStringTrim(ODFSetting, group, wxT("DispLabelFontName"), false, wxT(""));
 	m_Text = cfg.ReadString(ODFSetting, group, wxT("DispLabelText"), false, m_enclosure->GetName());
 
 	x = cfg.ReadInteger(ODFSetting, group, wxT("TextRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 0);
