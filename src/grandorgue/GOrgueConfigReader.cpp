@@ -184,7 +184,7 @@ wxColour GOrgueConfigReader::ReadColor(GOSettingType type, wxString group, wxStr
 		return wxColour(0xFF, 0xFF, 0xFF);
 
 	wxColour colour;
-	if (colour.Set(value))
+	if (parseColor(colour, value))
 		return colour;
 	
 	wxString error;

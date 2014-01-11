@@ -134,3 +134,54 @@ bool parseLong(long& result, wxString value)
 		result = -result;
 	return true;
 }
+
+bool parseColor(wxColour& result, wxString value)
+{
+	if (value.length() == 7 && value[0] == wxT('#'))
+	{
+		unsigned r = 0, g = 0, b = 0;
+
+		if (wxT('0') <= value[1] && value[1] <= wxT('9'))
+			r = r * 10 + value[1] - wxT('0');
+		else if (wxT('A') <= value[1] && value[1] <= wxT('F'))
+			r = r * 10 + value[1] - wxT('A') + 10;
+		else
+			return false;
+		if (wxT('0') <= value[2] && value[2] <= wxT('9'))
+			r = r * 10 + value[2] - wxT('0');
+		else if (wxT('A') <= value[2] && value[2] <= wxT('F'))
+			r = r * 10 + value[2] - wxT('A') + 10;
+		else
+			return false;
+
+		if (wxT('0') <= value[3] && value[3] <= wxT('9'))
+			g = g * 10 + value[3] - wxT('0');
+		else if (wxT('A') <= value[3] && value[3] <= wxT('F'))
+			g = g * 10 + value[3] - wxT('A') + 10;
+		else
+			return false;
+		if (wxT('0') <= value[4] && value[4] <= wxT('9'))
+			g = g * 10 + value[4] - wxT('0');
+		else if (wxT('A') <= value[4] && value[4] <= wxT('F'))
+			g = g * 10 + value[4] - wxT('A') + 10;
+		else
+			return false;
+
+		if (wxT('0') <= value[5] && value[5] <= wxT('9'))
+			b = b * 10 + value[5] - wxT('0');
+		else if (wxT('A') <= value[5] && value[5] <= wxT('F'))
+			b = b * 10 + value[5] - wxT('A') + 10;
+		else
+			return false;
+		if (wxT('0') <= value[6] && value[6] <= wxT('9'))
+			b = b * 10 + value[6] - wxT('0');
+		else if (wxT('A') <= value[6] && value[6] <= wxT('F'))
+			b = b * 10 + value[6] - wxT('A') + 10;
+		else
+			return false;
+
+		result.Set(r, g, b);
+		return true;
+	}
+	return false;
+}
