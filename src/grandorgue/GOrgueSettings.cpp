@@ -27,9 +27,9 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigReaderDB.h"
 #include "GOrgueConfigWriter.h"
+#include "GOrgueLimits.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrguePath.h"
-#include "GrandOrgueID.h"
 #include <wx/confbase.h>
 #include <wx/filename.h>
 #include <wx/log.h>
@@ -196,13 +196,13 @@ void GOrgueSettings::Load()
 			long cpus = wxThread::GetCPUCount();
 			if (cpus == -1)
 				cpus = 4;
-			if (cpus >= 256)
-				cpus = 256;
+			if (cpus > MAX_CPU)
+				cpus = MAX_CPU;
 			if (cpus == 0)
 				cpus = 1;
-			SetConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Concurrency"), 0, 256, false, cpus));
-			SetReleaseConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseConcurrency"), 1, 256, false, cpus));
-			SetLoadConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoadConcurrency"), 0, 256, false, cpus));
+			SetConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, false, cpus));
+			SetReleaseConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, false, cpus));
+			SetLoadConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, false, cpus));
 
 			SetInterpolationType(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("InterpolationType"), 0, 1, false, 1));
 			SetWaveFormatBytesPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("WaveFormat"), 1, 4, false, 4));
@@ -225,8 +225,8 @@ void GOrgueSettings::Load()
 			SetReverbEnabled(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbEnabled"), false, false));
 			SetReverbDirect(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbDirect"), false, true));
 			SetReverbChannel(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, false, 1));
-			SetReverbStartOffset(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbStartOffset"), 0, 158760000, false, 0));
-			SetReverbLen(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbLen"), 0, 158760000, false, 0));
+			SetReverbStartOffset(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbStartOffset"), 0, MAX_SAMPLE_LENGTH, false, 0));
+			SetReverbLen(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbLen"), 0, MAX_SAMPLE_LENGTH, false, 0));
 			SetReverbDelay(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, false, 0));
 			SetReverbGain(cfg.ReadFloat(CMBSetting, wxT("Reverb"), wxT("ReverbGain"), 0, 50, false, 1));
 			SetReverbFile(cfg.ReadString(CMBSetting, wxT("Reverb"), wxT("ReverbFile"), 512, false, wxEmptyString));
@@ -235,14 +235,14 @@ void GOrgueSettings::Load()
 			SetSampleRate(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SampleRate"), 1000, 100000, false, 44100));
 			SetBitsPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("BitsPerSample"), 8, 24, false, 24));
 			SetVolume(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Volume"), -120, 20, false, -15));
-			SetPolyphonyLimit(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("PolyphonyLimit"), 0, 50000, false, 2048));
+			SetPolyphonyLimit(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, false, 2048));
 			SetUserSettingPath (cfg.ReadString(CMBSetting, wxT("General"), wxT("SettingPath"), 512, false, m_Config.Read(wxT("SettingPath"), wxEmptyString)));
 			SetUserCachePath (cfg.ReadString(CMBSetting, wxT("General"), wxT("CachePath"), 512, false, m_Config.Read(wxT("CachePath"), wxEmptyString)));
-			SetPreset(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Preset"), 0, ID_PRESET_LAST - ID_PRESET_0 + 1, false, 0));
+			SetPreset(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Preset"), 0, MAX_PRESET, false, 0));
 
 			SetReleaseLength(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLength"), 0, 5, false, 0));
 		
-			count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, 10000, false, 0);
+			count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
 			for(unsigned i = 0; i < count; i++)
 			{
 				wxString name = cfg.ReadString(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03d"), i + 1), 512);
@@ -250,7 +250,7 @@ void GOrgueSettings::Load()
 				SetMidiInDeviceChannelShift(name, cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dShift"), i + 1), 0, 15));;
 			}
 
-			count = cfg.ReadInteger(CMBSetting, wxT("MIDIOut"), wxT("Count"), 0, 10000, false, 0);
+			count = cfg.ReadInteger(CMBSetting, wxT("MIDIOut"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
 			for(unsigned i = 0; i < count; i++)
 			{
 				wxString name = cfg.ReadString(CMBSetting, wxT("MIDIOut"), wxString::Format(wxT("Device%03d"), i + 1), 512);
@@ -508,8 +508,8 @@ unsigned  GOrgueSettings::GetPreset()
 
 void  GOrgueSettings::SetPreset(unsigned value)
 {
-	if (value > ID_PRESET_LAST - ID_PRESET_0 + 1)
-		value = ID_PRESET_LAST - ID_PRESET_0 + 1;
+	if (value > MAX_PRESET)
+		value = MAX_PRESET;
 	m_Preset = value;
 }
 
@@ -544,6 +544,8 @@ unsigned GOrgueSettings::GetConcurrency()
 
 void GOrgueSettings::SetConcurrency(unsigned concurrency)
 {
+	if (concurrency > MAX_CPU)
+		concurrency = MAX_CPU;
 	m_Concurrency = concurrency;
 }
 
@@ -554,6 +556,8 @@ unsigned GOrgueSettings::GetReleaseConcurrency()
 
 void GOrgueSettings::SetReleaseConcurrency(unsigned concurrency)
 {
+	if (concurrency > MAX_CPU)
+		concurrency = MAX_CPU;
 	if (concurrency < 1)
 		concurrency = 1;
 	m_ReleaseConcurrency = concurrency;
@@ -566,6 +570,8 @@ unsigned GOrgueSettings::GetLoadConcurrency()
 
 void GOrgueSettings::SetLoadConcurrency(unsigned concurrency)
 {
+	if (concurrency > MAX_CPU)
+		concurrency = MAX_CPU;
 	m_LoadConcurrency = concurrency;
 }
 
@@ -749,8 +755,8 @@ unsigned GOrgueSettings::GetPolyphonyLimit()
 
 void GOrgueSettings::SetPolyphonyLimit(unsigned polyphony_limit)
 {
-	if (polyphony_limit > 50000)
-		polyphony_limit = 50000;
+	if (polyphony_limit > MAX_POLYPHONY)
+		polyphony_limit = MAX_POLYPHONY;
 	m_PolyphonyLimit = polyphony_limit;
 }
 
@@ -966,8 +972,8 @@ unsigned GOrgueSettings::GetReverbStartOffset()
 
 void GOrgueSettings::SetReverbStartOffset(unsigned offset)
 {
-	if (offset > 158760000)
-		offset = 158760000;
+	if (offset > MAX_SAMPLE_LENGTH)
+		offset = MAX_SAMPLE_LENGTH;
 	m_ReverbStartOffset = offset;
 }
 
@@ -978,8 +984,8 @@ unsigned GOrgueSettings::GetReverbLen()
 
 void GOrgueSettings::SetReverbLen(unsigned length)
 {
-	if (length > 158760000)
-		length = 158760000;
+	if (length > MAX_SAMPLE_LENGTH)
+		length = MAX_SAMPLE_LENGTH;
 	m_ReverbLen = length;
 }
 
@@ -1107,6 +1113,8 @@ void GOrgueSettings::Flush()
 		cfg.WriteBoolean(wxT("MIDIIn"), wxString::Format(wxT("Device%03dEnabled"), count), it->second >= 0);
 		cfg.WriteInteger(wxT("MIDIIn"), wxString::Format(wxT("Device%03dShift"), count), GetMidiInDeviceChannelShift(it->first));
 	}
+	if (count > MAX_MIDI_DEVICES)
+		count = MAX_MIDI_DEVICES;
 	cfg.WriteInteger(wxT("MIDIIn"), wxT("Count"), count);
 
 	count = 0;
@@ -1116,6 +1124,8 @@ void GOrgueSettings::Flush()
 		cfg.WriteString(wxT("MIDIOut"), wxString::Format(wxT("Device%03d"), count), it->first);
 		cfg.WriteBoolean(wxT("MIDIOut"), wxString::Format(wxT("Device%03dEnabled"), count), it->second);
 	}
+	if (count > MAX_MIDI_DEVICES)
+		count = MAX_MIDI_DEVICES;
 	cfg.WriteInteger(wxT("MIDIOut"), wxT("Count"), count);
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))

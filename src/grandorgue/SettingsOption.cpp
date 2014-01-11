@@ -22,6 +22,7 @@
 #include "SettingsOption.h"
 
 #include "GOSoundDefs.h"
+#include "GOrgueLimits.h"
 #include "GOrgueSettings.h"
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -76,7 +77,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(m_Interpolation = new wxChoice(this, ID_INTERPOLATION, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
-	for (unsigned i = 0; i < 128; i++)
+	for (unsigned i = 0; i < MAX_CPU; i++)
 		choices.push_back(wxString::Format(wxT("%d"), i));
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Concurrency Level:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_Concurrency = new wxChoice(this, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
@@ -88,7 +89,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(m_ReleaseConcurrency = new wxChoice(this, ID_RELEASE_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
-	for (unsigned i = 0; i < 128; i++)
+	for (unsigned i = 0; i < MAX_CPU; i++)
 		choices.push_back(wxString::Format(wxT("%d"), i));
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Load Concurrency Level:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_LoadConcurrency = new wxChoice(this, ID_LOAD_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
