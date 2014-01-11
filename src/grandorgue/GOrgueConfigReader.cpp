@@ -210,7 +210,7 @@ int GOrgueConfigReader::ReadInteger(GOSettingType type, wxString group, wxString
 			wxLogWarning(_("Trailing whitespace at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
 		value.Trim();
 	}
-	if (!value.ToLong(&retval))
+	if (!parseLong(retval, value))
 	{
 		if (value.Length() && !::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")) && !value.IsEmpty())
 		{
@@ -310,9 +310,10 @@ unsigned GOrgueConfigReader::ReadSize(GOSettingType type, wxString group, wxStri
 	else if (value == wxT("LARGE"))
 		return sizes[size_type][3];
 
-	unsigned long size;
-	if (value.ToULong(&size) && 100 <= size && size <= 4000)
-		return size;
+	long size;
+	if (parseLong(size, value))
+		if (100 <= size && size <= 4000)
+			return size;
 	
 	wxString error;
 	error.Printf(_("Invalid size at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
@@ -345,9 +346,10 @@ unsigned GOrgueConfigReader::ReadFontSize(GOSettingType type, wxString group, wx
 	else if (value == wxT("LARGE"))
 		return 10;
 
-	unsigned long size;
-	if (value.ToULong(&size) && 1 <= size && size <= 50)
-		return size;
+	long size;
+	if (parseLong(size, value))
+		if (1 <= size && size <= 50)
+			return size;
 
 	wxString error;
 	error.Printf(_("Invalid font size at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());

@@ -106,3 +106,31 @@ bool parseCDouble(double& result, wxString value)
 		result = -result;
 	return true;
 }
+
+bool parseLong(long& result, wxString value)
+{
+	bool sign = false;
+	unsigned pos = 0;
+	result = 0;
+	if (value.length() > 0)
+	{
+		if (value[0] == wxT('-'))
+		{
+			sign = true;
+			pos = 1;
+		}
+		else if (value[0] == wxT('+'))
+			pos = 1;
+	}
+	if (value.length() < pos + 1)
+		return false;
+	for (; pos < value.length(); pos++)
+	{
+		if (value[pos] < wxT('0') || wxT('9') < value[pos])
+			return false;
+		result = result * 10 + (value[pos] - wxT('0'));
+	}
+	if (sign)
+		result = -result;
+	return true;
+}
