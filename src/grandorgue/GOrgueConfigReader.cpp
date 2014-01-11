@@ -64,7 +64,7 @@ bool GOrgueConfigReader::Read(GOSettingType type, wxString group, wxString key, 
 	return true;
 }
 
-wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue)
+wxString GOrgueConfigReader::ReadStringLen(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue)
 {
 	wxString value;
 	bool found = Read(type, group, key, required, value);
@@ -82,9 +82,9 @@ wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxSt
 	return value;
 }
 
-wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required)
+wxString GOrgueConfigReader::ReadStringLen(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required)
 {
-	return ReadString(type, group, key, nmax, required, wxT(""));
+	return ReadStringLen(type, group, key, nmax, required, wxT(""));
 }
 
 bool GOrgueConfigReader::ReadBoolean(GOSettingType type, wxString group, wxString key, bool required)

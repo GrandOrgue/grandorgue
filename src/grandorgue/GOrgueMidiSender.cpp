@@ -62,7 +62,7 @@ void GOrgueMidiSender::Load(GOrgueConfigReader& cfg, wxString group)
 	m_events.resize(event_cnt);
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
-		m_events[i].device = cfg.ReadString(CMBSetting, group, wxString::Format(wxT("MIDISendDevice%03d"), i + 1), 100, false);
+		m_events[i].device = cfg.ReadStringLen(CMBSetting, group, wxString::Format(wxT("MIDISendDevice%03d"), i + 1), 100, false);
 		m_events[i].channel = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDISendChannel%03d"), i + 1), 1, 16);
 		m_events[i].type = (midi_send_message_type)cfg.ReadEnum(CMBSetting, group, wxString::Format(wxT("MIDISendEventType%03d"), i + 1), m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 		if (m_type != MIDI_SEND_MANUAL)

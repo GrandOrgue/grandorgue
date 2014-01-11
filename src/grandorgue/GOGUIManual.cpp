@@ -263,15 +263,15 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		off_file = wxT("GO:") + type + wxT("Off_") + bmp_type;
 		on_file = wxT("GO:") + type + wxT("On_") + bmp_type;
 
-		on_file = cfg.ReadString(ODFSetting, group, wxT("ImageOn_") + base, 255, false, on_file);
-		off_file = cfg.ReadString(ODFSetting, group, wxT("ImageOff_") + base, 255, false, off_file);
-		on_mask_file = cfg.ReadString(ODFSetting, group, wxT("MaskOn_") + base, 255, false, wxEmptyString);
-		off_mask_file = cfg.ReadString(ODFSetting, group, wxT("MaskOff_") + base, 255, false, on_mask_file);
+		on_file = cfg.ReadStringLen(ODFSetting, group, wxT("ImageOn_") + base, 255, false, on_file);
+		off_file = cfg.ReadStringLen(ODFSetting, group, wxT("ImageOff_") + base, 255, false, off_file);
+		on_mask_file = cfg.ReadStringLen(ODFSetting, group, wxT("MaskOn_") + base, 255, false, wxEmptyString);
+		off_mask_file = cfg.ReadStringLen(ODFSetting, group, wxT("MaskOff_") + base, 255, false, on_mask_file);
 
-		on_file = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Key%03dImageOn"), i + 1), 255, false, on_file);
-		off_file = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Key%03dImageOff"), i + 1), 255, false, off_file);
-		on_mask_file = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Key%03dMaskOn"), i + 1), 255, false, on_mask_file);
-		off_mask_file = cfg.ReadString(ODFSetting, group, wxString::Format(wxT("Key%03dMaskOff"), i + 1), 255, false, off_mask_file);
+		on_file = cfg.ReadStringLen(ODFSetting, group, wxString::Format(wxT("Key%03dImageOn"), i + 1), 255, false, on_file);
+		off_file = cfg.ReadStringLen(ODFSetting, group, wxString::Format(wxT("Key%03dImageOff"), i + 1), 255, false, off_file);
+		on_mask_file = cfg.ReadStringLen(ODFSetting, group, wxString::Format(wxT("Key%03dMaskOn"), i + 1), 255, false, on_mask_file);
+		off_mask_file = cfg.ReadStringLen(ODFSetting, group, wxString::Format(wxT("Key%03dMaskOff"), i + 1), 255, false, off_mask_file);
 
 		m_Keys[i].OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
 		m_Keys[i].OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
