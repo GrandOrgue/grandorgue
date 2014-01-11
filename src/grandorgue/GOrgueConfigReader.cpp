@@ -61,7 +61,6 @@ bool GOrgueConfigReader::Read(GOSettingType type, wxString group, wxString key, 
 		else
 			return false;
 	}
-	value.Trim();
 	return true;
 }
 
@@ -73,6 +72,7 @@ wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxSt
 	if (!found)
 			value = defaultValue;
 
+	value.Trim();
 	if (value.length() > nmax)
 	{
 		wxString error;
@@ -98,6 +98,7 @@ bool GOrgueConfigReader::ReadBoolean(GOSettingType type, wxString group, wxStrin
 	if (!Read(type, group, key, required, value))
 		return defaultValue;
 
+	value.Trim();
 	if (value == wxT("Y") || value == wxT("y"))
 		return true;
 	if (value == wxT("N") || value == wxT("n"))
@@ -125,6 +126,7 @@ wxColour GOrgueConfigReader::ReadColor(GOSettingType type, wxString group, wxStr
 	if (!Read(type, group, key, required, value))
 		value = defaultValue;
 
+	value.Trim();
 	value.MakeUpper();
 
 	if (value == wxT("BLACK"))
@@ -181,6 +183,7 @@ int GOrgueConfigReader::ReadInteger(GOSettingType type, wxString group, wxString
 		return defaultValue;
 
 	long retval;
+	value.Trim();
 	if (!value.ToLong(&retval))
 	{
 		if (value.Length() && !::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")) && !value.IsEmpty())
@@ -223,6 +226,7 @@ double GOrgueConfigReader::ReadFloat(GOSettingType type, wxString group, wxStrin
 	if (!Read(type, group, key, required, value))
 		return defaultValue;
 
+	value.Trim();
 	double retval;
 	int pos = value.find(wxT(","), 0);
 	if (pos >= 0)
@@ -258,6 +262,7 @@ unsigned GOrgueConfigReader::ReadSize(GOSettingType type, wxString group, wxStri
 	if (!Read(type, group, key, required, value))
 		value = defaultValue;
 
+	value.Trim();
 	value.MakeUpper();
 
 	if (value == wxT("SMALL"))
@@ -289,6 +294,7 @@ unsigned GOrgueConfigReader::ReadFontSize(GOSettingType type, wxString group, wx
 	if (!Read(type, group, key, required, value))
 		value = defaultValue;
 
+	value.Trim();
 	value.MakeUpper();
 
 	if (value == wxT("SMALL"))
@@ -323,6 +329,7 @@ int GOrgueConfigReader::ReadEnum(GOSettingType type, wxString group, wxString ke
 	if (!Read(type, group, key, required, value))
 	    return entry[defaultEntry].value;
 
+	value.Trim();
 	for (unsigned i = 0; i < count; i++)
 		if (entry[i].name == value)
 			return entry[i].value;
