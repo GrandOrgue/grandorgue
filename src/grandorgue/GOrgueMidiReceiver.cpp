@@ -78,7 +78,7 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 		m_events.resize(event_cnt);
 		for(unsigned i = 0; i < m_events.size(); i++)
 		{
-			m_events[i].device = cfg.ReadStringLen(CMBSetting, group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), 100, false);
+			m_events[i].device = cfg.ReadString(CMBSetting, group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), false);
 			m_events[i].channel = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), -1, 16);
 			midi_match_message_type default_type = MIDI_M_PGM_CHANGE;
 			if (m_type == MIDI_RECV_MANUAL)
