@@ -92,6 +92,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_ScaleRelease(true),
 	m_RandomizeSpeaking(true),
 	m_LoadLastFile(true),
+	m_ODFCheck(false),
 	m_SampleRate(44100),
 	m_BitsPerSample(24),
 	m_InterpolationType(0),
@@ -214,6 +215,7 @@ void GOrgueSettings::Load()
 			SetCompressCache(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("CompressCache"), false, false));
 			SetLoadLastFile(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LoadLastFile"), false, true));
 			SetLastFile(cfg.ReadString(CMBSetting, wxT("General"), wxT("LastFile"), false, wxEmptyString));
+			SetODFCheck(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("StrictODFCheck"), false, false));
 
 			SetLoadInStereo(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("Stereo"), false, true));
 			SetLosslessCompression(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LosslessCompression"), false, false));
@@ -613,6 +615,16 @@ bool GOrgueSettings::GetCompressCache()
 void GOrgueSettings::SetCompressCache(bool compress)
 {
 	m_CompressCache = compress;
+}
+
+bool GOrgueSettings::GetODFCheck()
+{
+	return m_ODFCheck;
+}
+
+void GOrgueSettings::SetODFCheck(bool strict)
+{
+	m_ODFCheck = strict;
 }
 
 bool GOrgueSettings::GetScaleRelease()
@@ -1047,6 +1059,7 @@ void GOrgueSettings::Flush()
 	cfg.WriteBoolean(wxT("General"), wxT("CompressCache"), m_CompressCache);
 	cfg.WriteBoolean(wxT("General"), wxT("LoadLastFile"), m_LoadLastFile);
 	cfg.WriteString(wxT("General"), wxT("LastFile"), m_LastFile);
+	cfg.WriteBoolean(wxT("General"), wxT("StrictODFCheck"), m_ODFCheck);
 
 	cfg.WriteBoolean(wxT("General"), wxT("Stereo"), m_Stereo);
 	cfg.WriteBoolean(wxT("General"), wxT("LosslessCompression"), m_LosslessCompression);

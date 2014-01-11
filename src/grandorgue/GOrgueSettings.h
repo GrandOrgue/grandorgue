@@ -69,6 +69,7 @@ private:
 	bool m_ScaleRelease;
 	bool m_RandomizeSpeaking;
 	bool m_LoadLastFile;
+	bool m_ODFCheck;
 	unsigned m_SamplesPerBuffer;
 	unsigned m_SampleRate;
 	unsigned m_BitsPerSample;
@@ -143,6 +144,8 @@ public:
 	void SetLastFile(wxString path);
 	unsigned GetPreset();
 	void SetPreset(unsigned value);
+	bool GetODFCheck();
+	void SetODFCheck(bool strict);
 
 	bool GetLoadInStereo();
 	void SetLoadInStereo(bool stereo);
