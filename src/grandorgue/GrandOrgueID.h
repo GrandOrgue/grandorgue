@@ -22,6 +22,7 @@
 #ifndef GRANDORGUEID_H
 #define GRANDORGUEID_H
 
+#include "GOrgueLimits.h"
 #include <wx/defs.h>
 
 enum
@@ -55,7 +56,7 @@ enum
 	ID_AUDIO_SETTINGS,
 
 	ID_PRESET_0,
-	ID_PRESET_LAST = ID_PRESET_0 + 10, 
+	ID_PRESET_LAST = ID_PRESET_0 + MAX_PRESET, 
 
 	ID_TEMPERAMENT_0,
 	ID_TEMPERAMENT_LAST = ID_TEMPERAMENT_0 + 100,
