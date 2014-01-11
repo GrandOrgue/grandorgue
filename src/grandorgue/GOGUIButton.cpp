@@ -127,7 +127,7 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 
 	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("Dark Red"));
 	m_FontSize = cfg.ReadFontSize(ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
-	m_FontName = cfg.ReadStringLen(ODFSetting, group, wxT("DispLabelFontName"), 255, false, wxT(""));
+	m_FontName = cfg.ReadStringTrim(ODFSetting, group, wxT("DispLabelFontName"), false, wxT(""));
 	m_Text = cfg.ReadString(ODFSetting, group, wxT("DispLabelText"), false, m_Button->GetName());
 
 	int x, y, w, h;
@@ -159,10 +159,10 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 		m_metrics->GetDrawstopBlitPosition(m_DispRow, m_DispCol, &x, &y);
 	}
 
-	on_file = cfg.ReadStringLen(ODFSetting, group, wxT("ImageOn"), 255, false, on_file);
-	off_file = cfg.ReadStringLen(ODFSetting, group, wxT("ImageOff"), 255, false, off_file);
-	on_mask_file = cfg.ReadStringLen(ODFSetting, group, wxT("MaskOn"), 255, false, wxEmptyString);
-	off_mask_file = cfg.ReadStringLen(ODFSetting, group, wxT("MaskOff"), 255, false, on_mask_file);
+	on_file = cfg.ReadStringTrim(ODFSetting, group, wxT("ImageOn"), false, on_file);
+	off_file = cfg.ReadStringTrim(ODFSetting, group, wxT("ImageOff"), false, off_file);
+	on_mask_file = cfg.ReadStringTrim(ODFSetting, group, wxT("MaskOn"), false, wxEmptyString);
+	off_mask_file = cfg.ReadStringTrim(ODFSetting, group, wxT("MaskOff"), false, on_mask_file);
 
 	m_OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
 	m_OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);

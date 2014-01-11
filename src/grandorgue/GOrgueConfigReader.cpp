@@ -26,7 +26,8 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-GOrgueConfigReader::GOrgueConfigReader(GOrgueConfigReaderDB& cfg) :
+GOrgueConfigReader::GOrgueConfigReader(GOrgueConfigReaderDB& cfg, bool strict) :
+	m_Strict(strict),
 	m_Config(cfg)
 {
 }
@@ -79,27 +80,22 @@ wxString GOrgueConfigReader::ReadString(GOSettingType type, wxString group, wxSt
 	return ReadString(type, group, key, required, wxT(""));
 }
 
-wxString GOrgueConfigReader::ReadStringLen(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue)
+wxString GOrgueConfigReader::ReadStringTrim(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue)
 {
-	wxString value;
-	bool found = Read(type, group, key, required, value);
+	wxString value = ReadString(type, group, key, required, defaultValue);
 
-	if (!found)
-			value = defaultValue;
-
-	value.Trim();
-	if (value.length() > nmax)
+	if (value.length() > 0 && value[value.length() - 1] == ' ')
 	{
-		wxString error;
-		error.Printf(_("Value too long: section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
-		throw error;
+		if (m_Strict)
+			wxLogWarning(_("Trailing whitespace at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		value.Trim();
 	}
 	return value;
 }
 
-wxString GOrgueConfigReader::ReadStringLen(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required)
+wxString GOrgueConfigReader::ReadStringTrim(GOSettingType type, wxString group, wxString key, bool required)
 {
-	return ReadStringLen(type, group, key, nmax, required, wxT(""));
+	return ReadStringTrim(type, group, key, required, wxT(""));
 }
 
 bool GOrgueConfigReader::ReadBoolean(GOSettingType type, wxString group, wxString key, bool required)
@@ -113,7 +109,12 @@ bool GOrgueConfigReader::ReadBoolean(GOSettingType type, wxString group, wxStrin
 	if (!Read(type, group, key, required, value))
 		return defaultValue;
 
-	value.Trim();
+	if (value.length() > 0 && value[value.length() - 1] == ' ')
+	{
+		if (m_Strict)
+			wxLogWarning(_("Trailing whitespace at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		value.Trim();
+	}
 	if (value == wxT("Y") || value == wxT("y"))
 		return true;
 	if (value == wxT("N") || value == wxT("n"))
@@ -141,7 +142,12 @@ wxColour GOrgueConfigReader::ReadColor(GOSettingType type, wxString group, wxStr
 	if (!Read(type, group, key, required, value))
 		value = defaultValue;
 
-	value.Trim();
+	if (value.length() > 0 && value[value.length() - 1] == ' ')
+	{
+		if (m_Strict)
+			wxLogWarning(_("Trailing whitespace at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		value.Trim();
+	}
 	value.MakeUpper();
 
 	if (value == wxT("BLACK"))
@@ -198,7 +204,12 @@ int GOrgueConfigReader::ReadInteger(GOSettingType type, wxString group, wxString
 		return defaultValue;
 
 	long retval;
-	value.Trim();
+	if (value.length() > 0 && value[value.length() - 1] == ' ')
+	{
+		if (m_Strict)
+			wxLogWarning(_("Trailing whitespace at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		value.Trim();
+	}
 	if (!value.ToLong(&retval))
 	{
 		if (value.Length() && !::wxIsdigit(value[0]) && value[0] != wxT('+') && value[0] != wxT('-') && value.CmpNoCase(wxT("none")) && !value.IsEmpty())
@@ -241,7 +252,12 @@ double GOrgueConfigReader::ReadFloat(GOSettingType type, wxString group, wxStrin
 	if (!Read(type, group, key, required, value))
 		return defaultValue;
 
-	value.Trim();
+	if (value.length() > 0 && value[value.length() - 1] == ' ')
+	{
+		if (m_Strict)
+			wxLogWarning(_("Trailing whitespace at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		value.Trim();
+	}
 	double retval;
 	int pos = value.find(wxT(","), 0);
 	if (pos >= 0)
@@ -277,7 +293,12 @@ unsigned GOrgueConfigReader::ReadSize(GOSettingType type, wxString group, wxStri
 	if (!Read(type, group, key, required, value))
 		value = defaultValue;
 
-	value.Trim();
+	if (value.length() > 0 && value[value.length() - 1] == ' ')
+	{
+		if (m_Strict)
+			wxLogWarning(_("Trailing whitespace at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		value.Trim();
+	}
 	value.MakeUpper();
 
 	if (value == wxT("SMALL"))
@@ -309,7 +330,12 @@ unsigned GOrgueConfigReader::ReadFontSize(GOSettingType type, wxString group, wx
 	if (!Read(type, group, key, required, value))
 		value = defaultValue;
 
-	value.Trim();
+	if (value.length() > 0 && value[value.length() - 1] == ' ')
+	{
+		if (m_Strict)
+			wxLogWarning(_("Trailing whitespace at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		value.Trim();
+	}
 	value.MakeUpper();
 
 	if (value == wxT("SMALL"))
@@ -344,7 +370,12 @@ int GOrgueConfigReader::ReadEnum(GOSettingType type, wxString group, wxString ke
 	if (!Read(type, group, key, required, value))
 	    return entry[defaultEntry].value;
 
-	value.Trim();
+	if (value.length() > 0 && value[value.length() - 1] == ' ')
+	{
+		if (m_Strict)
+			wxLogWarning(_("Trailing whitespace at section '%s' entry '%s': %s"), group.c_str(), key.c_str(), value.c_str());
+		value.Trim();
+	}
 	for (unsigned i = 0; i < count; i++)
 		if (entry[i].name == value)
 			return entry[i].value;

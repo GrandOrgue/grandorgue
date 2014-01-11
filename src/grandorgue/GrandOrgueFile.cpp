@@ -176,13 +176,13 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 	/* load church info */
 	cfg.ReadString(ODFSetting, group, wxT("HauptwerkOrganFileFormatVersion"),  false);
-	m_ChurchName = cfg.ReadStringLen(ODFSetting, group, wxT("ChurchName"),  128);
+	m_ChurchName = cfg.ReadStringTrim(ODFSetting, group, wxT("ChurchName"));
 	m_ChurchAddress = cfg.ReadString(ODFSetting, group, wxT("ChurchAddress"));
 	m_OrganBuilder = cfg.ReadString(ODFSetting, group, wxT("OrganBuilder"),  false);
 	m_OrganBuildDate = cfg.ReadString(ODFSetting, group, wxT("OrganBuildDate"),  false);
 	m_OrganComments = cfg.ReadString(ODFSetting, group, wxT("OrganComments"),  false);
 	m_RecordingDetails = cfg.ReadString(ODFSetting, group, wxT("RecordingDetails"),  false);
-	m_InfoFilename = cfg.ReadStringLen(ODFSetting, group, wxT("InfoFilename"),  256, false);
+	m_InfoFilename = cfg.ReadStringTrim(ODFSetting, group, wxT("InfoFilename"), false);
 	wxFileName fn;
 	if (m_InfoFilename.IsEmpty())
 	{
@@ -482,7 +482,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 
 	try
 	{
-		GOrgueConfigReader cfg(ini);
+		GOrgueConfigReader cfg(ini, m_Settings.GetODFCheck());
 		/* skip informational items */
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"), false);
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);

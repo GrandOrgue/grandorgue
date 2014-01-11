@@ -37,12 +37,13 @@ typedef enum { ODFSetting, CMBSetting } GOSettingType;
 class GOrgueConfigReader
 {
 private:
+	bool m_Strict;
 	GOrgueConfigReaderDB& m_Config;
 
 	bool Read(GOSettingType type, wxString group, wxString key, bool required, wxString& value);
 
 public:
-	GOrgueConfigReader(GOrgueConfigReaderDB& cfg);
+	GOrgueConfigReader(GOrgueConfigReaderDB& cfg, bool strict = true);
 
 	bool ReadBoolean(GOSettingType type, wxString group, wxString key, bool required = true);
 	bool ReadBoolean(GOSettingType type, wxString group, wxString key, bool required, bool defaultValue);
@@ -50,8 +51,8 @@ public:
 	wxColour ReadColor(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue);
 	wxString ReadString(GOSettingType type, wxString group, wxString key, bool required = true);
 	wxString ReadString(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue);
-	wxString ReadStringLen(GOSettingType type, wxString group, wxString key, unsigned nmax = 4096, bool required = true);
-	wxString ReadStringLen(GOSettingType type, wxString group, wxString key, unsigned nmax, bool required, wxString defaultValue);
+	wxString ReadStringTrim(GOSettingType type, wxString group, wxString key, bool required = true);
+	wxString ReadStringTrim(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue);
 	int ReadInteger(GOSettingType type, wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
 	int ReadInteger(GOSettingType type, wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue);
 	int ReadLong(GOSettingType type, wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
