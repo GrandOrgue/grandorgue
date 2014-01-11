@@ -153,6 +153,46 @@ void GOrgueSettings::Load()
 			cfg_db.ReadData(cfg_file, CMBSetting, false);
 			GOrgueConfigReader cfg(cfg_db);
 
+			m_OrganList.clear();
+			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
+			for(unsigned i = 0; i < organ_count; i++)
+				m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1)));
+
+			m_AudioGroups.clear();
+			unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), wxT("Count"), 0, 200, false, 0);
+			for(unsigned i = 0; i < count; i++)
+				m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), 4096, false, wxString::Format(_("Audio group %d"), i + 1)));
+
+			m_AudioDeviceConfig.clear();
+			count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxT("Count"), 0, 200, false, 0);
+			for(unsigned i = 0; i < count; i++)
+			{
+				GOAudioDeviceConfig conf;
+				conf.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dName"), i + 1));
+				conf.channels = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dChannelCount"), i + 1), 0, 200);
+				conf.scale_factors.resize(conf.channels);
+				for(unsigned j = 0; j < conf.channels; j++)
+				{
+					wxString prefix = wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);
+					unsigned group_count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), prefix + wxT("GroupCount"), 0, 200);
+					for(unsigned k = 0; k < group_count; k++)
+					{
+						GOAudioGroupOutputConfig group;
+						wxString p = prefix + wxString::Format(wxT("Group%03d"), k + 1);
+
+						group.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), p + wxT("Name"));
+						group.left = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"), p + wxT("Left"), -121.0, 40);
+						group.right = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"), p + wxT("Right"), -121.0, 40);
+
+						conf.scale_factors[j].push_back(group);
+					}
+				}
+				m_AudioDeviceConfig.push_back(conf);
+			}
+
+			for(unsigned i = 0; i < GetEventCount(); i++)
+				m_MIDIEvents[i]->Load(cfg, GetEventSection(i));
+
 			long cpus = wxThread::GetCPUCount();
 			if (cpus == -1)
 				cpus = 4;
@@ -202,46 +242,6 @@ void GOrgueSettings::Load()
 
 			SetReleaseLength(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLength"), 0, 5, false, 0));
 		
-			m_OrganList.clear();
-			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
-			for(unsigned i = 0; i < organ_count; i++)
-				m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1)));
-
-			for(unsigned i = 0; i < GetEventCount(); i++)
-				m_MIDIEvents[i]->Load(cfg, GetEventSection(i));
-
-			m_AudioGroups.clear();
-			unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), wxT("Count"), 0, 200, false, 0);
-			for(unsigned i = 0; i < count; i++)
-				m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), 4096, false, wxString::Format(_("Audio group %d"), i + 1)));
-
-			m_AudioDeviceConfig.clear();
-			count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxT("Count"), 0, 200, false, 0);
-			for(unsigned i = 0; i < count; i++)
-			{
-				GOAudioDeviceConfig conf;
-				conf.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dName"), i + 1));
-				conf.channels = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dChannelCount"), i + 1), 0, 200);
-				conf.scale_factors.resize(conf.channels);
-				for(unsigned j = 0; j < conf.channels; j++)
-				{
-					wxString prefix = wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);
-					unsigned group_count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), prefix + wxT("GroupCount"), 0, 200);
-					for(unsigned k = 0; k < group_count; k++)
-					{
-						GOAudioGroupOutputConfig group;
-						wxString p = prefix + wxString::Format(wxT("Group%03d"), k + 1);
-
-						group.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), p + wxT("Name"));
-						group.left = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"), p + wxT("Left"), -121.0, 40);
-						group.right = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"), p + wxT("Right"), -121.0, 40);
-
-						conf.scale_factors[j].push_back(group);
-					}
-				}
-				m_AudioDeviceConfig.push_back(conf);
-			}
-
 			count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, 10000, false, 0);
 			for(unsigned i = 0; i < count; i++)
 			{
