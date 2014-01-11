@@ -23,9 +23,11 @@
 #define GORGUE_UTIL_H
 
 #include <wx/string.h>
+#include <wx/colour.h>
 
 wxString formatCDDouble(double value);
 bool parseCDouble(double& result, wxString value);
 bool parseLong(long& result, wxString value);
+bool parseColor(wxColour& result, wxString value);
 
 #endif
