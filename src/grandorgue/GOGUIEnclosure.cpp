@@ -144,7 +144,7 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("White"));
 	m_FontSize = cfg.ReadFontSize(ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("7"));
 	m_FontName = cfg.ReadStringLen(ODFSetting, group, wxT("DispLabelFontName"), 255, false, wxT(""));
-	m_Text = cfg.ReadStringLen(ODFSetting, group, wxT("DispLabelText"), 255, false, m_enclosure->GetName());
+	m_Text = cfg.ReadString(ODFSetting, group, wxT("DispLabelText"), false, m_enclosure->GetName());
 
 	x = cfg.ReadInteger(ODFSetting, group, wxT("TextRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 0);
 	y = cfg.ReadInteger(ODFSetting, group, wxT("TextRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 0);

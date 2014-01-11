@@ -60,7 +60,7 @@ void GOrgueButton::Init(GOrgueConfigReader& cfg, wxString group, wxString name)
 void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_group = group;
-	m_Name = cfg.ReadStringLen(ODFSetting, group, wxT("Name"), 64, true);
+	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), true);
 	m_Displayed = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), true, false);
 	m_DisplayInInvertedState = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
 	if (!m_ReadOnly)

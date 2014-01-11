@@ -120,7 +120,7 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("BLACK"));
 	m_FontSize = cfg.ReadFontSize(ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
 	m_FontName = cfg.ReadStringLen(ODFSetting, group, wxT("DispLabelFontName"), 255, false, wxT(""));
-	m_Text = cfg.ReadStringLen(ODFSetting, group, wxT("Name"), 64, false, m_Text);
+	m_Text = cfg.ReadString(ODFSetting, group, wxT("Name"), false, m_Text);
 
 	unsigned DispImageNum = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 12, false, 1);
 
