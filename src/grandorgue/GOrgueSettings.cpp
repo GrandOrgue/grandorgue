@@ -1123,7 +1123,7 @@ void GOrgueSettings::Flush()
 	{
 		count++;
 		cfg.WriteString(wxT("MIDIIn"), wxString::Format(wxT("Device%03d"), count), it->first);
-		cfg.WriteBoolean(wxT("MIDIIn"), wxString::Format(wxT("Device%03dEnabled"), count), it->second >= 0);
+		cfg.WriteBoolean(wxT("MIDIIn"), wxString::Format(wxT("Device%03dEnabled"), count), it->second);
 		cfg.WriteInteger(wxT("MIDIIn"), wxString::Format(wxT("Device%03dShift"), count), GetMidiInDeviceChannelShift(it->first));
 	}
 	if (count > MAX_MIDI_DEVICES)
