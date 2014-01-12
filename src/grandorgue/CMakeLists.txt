@@ -415,6 +415,6 @@ if (INSTALL_DEPEND STREQUAL "ON")
 endif()
 
 add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp ${grandorgue_src})
-target_link_libraries(perftest ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES})
+target_link_libraries(perftest ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
 
 add_custom_target(test COMMAND perftest ${CMAKE_SOURCE_DIR}/tests DEPENDS perftest)

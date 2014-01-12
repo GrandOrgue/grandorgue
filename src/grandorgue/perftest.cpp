@@ -85,12 +85,15 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
  			std::vector<release_load_info> release;
  			std::vector<attack_load_info> attack;
 			attack_load_info ainfo;
-			ainfo.cue_point = -1;
 			ainfo.filename = wxString::Format(wxT("%02d.wav"), i % 3);
 			ainfo.sample_group = -1;
 			ainfo.load_release = true;
 			ainfo.percussive = false;
+			ainfo.min_attack_velocity = 0;
 			ainfo.max_playback_time = -1;
+			ainfo.cue_point = -1;
+			ainfo.release_end = -1;
+			ainfo.loops.clear();
 			attack.push_back(ainfo);
 			w->LoadFromFile(attack, release, argv[1], bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1);
 			pipes.push_back(w);
