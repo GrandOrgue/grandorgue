@@ -170,7 +170,7 @@ void GOrgueWave::Open(const wxString& filename)
 		if (length < 12)
 			throw (wxString)_("< Not a RIFF file");
 
-		if (file.Read(ptr, length) != (size_t)length)
+		if (file.Read(ptr, length) != (ssize_t)length)
 		{
 			wxString message;
 			message.Printf(_("Failed to read file '%s'\n"), filename.c_str());
@@ -401,7 +401,8 @@ void GOrgueWave::ReadSamples
 	char* input  = m_SampleData;
 	char* output = (char*)dest_buffer;
 
-	for(unsigned i = 0; i < m_Channels * GetLength() / merge_count; i++)
+	unsigned len = m_Channels * GetLength() / merge_count;
+	for(unsigned i = 0; i < len; i++)
 	{
 		int value = 0; /* Value will be stored with 24 fractional bits of precision */
 		for (unsigned j = 0; j < merge_count; j++)
