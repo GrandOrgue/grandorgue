@@ -1104,3 +1104,8 @@ unsigned GOAudioSection::GetSampleRate() const
 	return m_SampleRate;
 }
 
+
+void GOAudioSection::GetHistory(const audio_section_stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS])
+{
+	memcpy (history, stream->history, sizeof(stream->history));
+}
