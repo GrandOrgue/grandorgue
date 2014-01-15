@@ -22,6 +22,7 @@
 #ifndef GOSOUNDCOMPRESS_H_
 #define GOSOUNDCOMPRESS_H_
 
+#include "GOSoundDefs.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -125,9 +126,10 @@ static inline void AudioWriteCompressed16(unsigned char* data, unsigned& output_
 
 typedef struct {
 	unsigned position;
-	int diff[2];
-	int value[2];
-	int last[2];
+	int diff[MAX_OUTPUT_CHANNELS];
+	int value[MAX_OUTPUT_CHANNELS];
+	int last[MAX_OUTPUT_CHANNELS];
+	int prev[MAX_OUTPUT_CHANNELS];
 	const unsigned char* ptr;
 } DecompressionCache;
 
@@ -135,11 +137,12 @@ static inline void InitDecompressionCache(DecompressionCache& cache)
 {
 	cache.position = 0;
 	cache.ptr = NULL;
-	for(unsigned j = 0; j < 2; j++)
+	for(unsigned j = 0; j < MAX_OUTPUT_CHANNELS; j++)
 	{
 		cache.diff[j] = 0;
 		cache.last[j] = 0;
 		cache.value[j] = 0;
+		cache.prev[j] = 0;
 	}
 }
 
@@ -159,6 +162,7 @@ static inline void DecompressTo(DecompressionCache& cache, unsigned position, co
 				val = AudioReadCompressed16(cache.ptr);
 			else
 				val = AudioReadCompressed8(cache.ptr);
+			cache.prev[j] = cache.value[j];
 			cache.value[j] = cache.last[j] + val;
 			cache.diff[j] = (cache.diff[j] + val) / 2;
 			cache.last[j] = cache.value[j] + cache.diff[j];
