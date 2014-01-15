@@ -229,6 +229,8 @@ public:
 
 	bool IsOneshot() const;
 
+	static int GetSampleData(unsigned position, unsigned channel, unsigned bits_per_sample, unsigned channels, const unsigned char* data);
+
 	int GetSample
 		(unsigned              position
 		,unsigned              channel
@@ -266,6 +268,28 @@ bool GOAudioSection::IsOneshot() const
 	return (m_EndSegments.size() == 1) && (m_EndSegments[0].next_start_segment_index < 0);
 }
 
+inline 
+int GOAudioSection::GetSampleData(unsigned position, unsigned channel, unsigned bits_per_sample, unsigned channels, const unsigned char* sample_data)
+{
+	if (bits_per_sample <= 8)
+	{
+		wxInt8* data = (wxInt8*)sample_data;
+		return data[position * channels + channel];
+	}
+	if (bits_per_sample <= 16)
+	{
+		wxInt16* data = (wxInt16*)sample_data;
+		return data[position * channels + channel];
+	}
+	if (bits_per_sample <= 24)
+	{
+		Int24* data = (Int24*)sample_data;
+		return data[position * channels + channel];
+	}
+	assert(0 && "broken sampler type");
+	return 0;
+}
+
 inline
 int GOAudioSection::GetSample
 	(unsigned              position
@@ -275,21 +299,7 @@ int GOAudioSection::GetSample
 {
 	if (!m_Compressed)
 	{
-		if (m_BitsPerSample == 8)
-		{
-			wxInt8* data = (wxInt8*)m_Data;
-			return data[position * m_Channels + channel];
-		}
-		if (m_BitsPerSample == 16 || m_BitsPerSample == 12)
-		{
-			wxInt16* data = (wxInt16*)m_Data;
-			return data[position * m_Channels + channel];
-		}
-		if (m_BitsPerSample == 24 || m_BitsPerSample == 20)
-		{
-			Int24* data = (Int24*)m_Data;
-			return data[position * m_Channels + channel];
-		}
+		return GetSampleData(position, channel, m_BitsPerSample, m_Channels, m_Data);
 	}
 	else
 	{
@@ -310,9 +320,6 @@ int GOAudioSection::GetSample
 			);
 		return cache->value[channel];
 	}
-
-	assert(0 && "broken sampler type");
-	return 0;
 }
 
 inline
