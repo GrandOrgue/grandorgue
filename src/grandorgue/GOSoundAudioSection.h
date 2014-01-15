@@ -64,10 +64,7 @@ typedef struct audio_start_data_segment_s
 	/* History of samples required to start in this blob
 	 * TODO: this is where we'll need compression info etc... */
 	int         history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
-	int         last_value[MAX_OUTPUT_CHANNELS];
-	int         diff_value[MAX_OUTPUT_CHANNELS];
-	int         curr_value[MAX_OUTPUT_CHANNELS];
-	int         next_value[MAX_OUTPUT_CHANNELS];
+	DecompressionCache cache;
 
 
 } audio_start_data_segment;

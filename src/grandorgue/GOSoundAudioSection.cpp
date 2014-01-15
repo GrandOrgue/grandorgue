@@ -637,10 +637,10 @@ bool GOAudioSection::ReadBlock
 			stream->ptr = stream->audio_section->m_Data + next->data_offset;
 			stream->last_position = 0;
 			stream->end_ptr = next_end->end_data;
-			memcpy(stream->last_value, next->last_value, sizeof(stream->last_value));
-			memcpy(stream->next_value, next->next_value, sizeof(stream->next_value));
-			memcpy(stream->diff_value, next->diff_value, sizeof(stream->diff_value));
-			memcpy(stream->curr_value, next->curr_value, sizeof(stream->curr_value));
+			memcpy(stream->last_value, next->cache.last, sizeof(stream->last_value));
+			memcpy(stream->next_value, next->cache.value, sizeof(stream->next_value));
+			memcpy(stream->diff_value, next->cache.diff, sizeof(stream->diff_value));
+			memcpy(stream->curr_value, next->cache.prev, sizeof(stream->curr_value));
 			assert(next_end->end_offset >= next->start_offset);
 			stream->transition_position
 				= (next_end->transition_offset >= next->start_offset)
@@ -892,45 +892,35 @@ void GOAudioSection::Compress(bool format16)
 		throw GOrgueOutOfMemory();
 
 	unsigned output_len = 0;
-	int diff[MAX_OUTPUT_CHANNELS];
-	int last[MAX_OUTPUT_CHANNELS];
-	int prev[MAX_OUTPUT_CHANNELS];
-	memset(diff, 0, sizeof(diff));
-	memset(last, 0, sizeof(last));
-	memset(prev, 0, sizeof(prev));
+	DecompressionCache state;
+	InitDecompressionCache(state);
 
 	for (unsigned i = 0; i < m_SampleCount; i++)
 	{
-		int this_val[MAX_OUTPUT_CHANNELS];
-		this_val[0] = GetSample(i, 0);
+		state.position = i;
+		state.ptr = (const unsigned char*)(intptr_t)output_len;
+		state.value[0] = GetSample(i, 0);
 		if (m_Channels > 1)
-			this_val[1] = GetSample(i, 1);
+			state.value[1] = GetSample(i, 1);
 
 		for (unsigned j = 0; j < m_StartSegments.size(); j++)
 		{
 			if (m_StartSegments[j].start_offset == i)
 			{
 				start_offsets[j] = output_len;
-				m_StartSegments[j].last_value[0] = last[0];
-				m_StartSegments[j].last_value[1] = last[1];
-				m_StartSegments[j].diff_value[0] = diff[0];
-				m_StartSegments[j].diff_value[1] = diff[1];
-				m_StartSegments[j].next_value[0] = this_val[0];
-				m_StartSegments[j].next_value[1] = this_val[1];
-				m_StartSegments[j].curr_value[0] = prev[0];
-				m_StartSegments[j].curr_value[1] = prev[1];
+				m_StartSegments[j].cache = state;
 			}
 		}
 
-		prev[0] = this_val[0];
-		prev[1] = this_val[1];
+		state.prev[0] = state.value[0];
+		state.prev[1] = state.value[1];
 
 		for (unsigned j = 0; j < m_Channels; j++)
 		{
-			int val = this_val[j];
-			int encode = val - last[j];
-			diff[j] = (diff[j] + val - last[j]) / 2;
-			last[j] = val + diff[j];
+			int val = state.value[j];
+			int encode = val - state.last[j];
+			state.diff[j] = (state.diff[j] + val - state.last[j]) / 2;
+			state.last[j] = val + state.diff[j];
 
 			if (format16)
 				AudioWriteCompressed16(data, output_len, encode);
@@ -1048,10 +1038,10 @@ void GOAudioSection::InitStream
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->last_position = 0;
-	memcpy(stream->last_value, start.last_value, sizeof(stream->last_value));
-	memcpy(stream->next_value, start.next_value, sizeof(stream->next_value));
-	memcpy(stream->diff_value, start.diff_value, sizeof(stream->diff_value));
-	memcpy(stream->curr_value, start.curr_value, sizeof(stream->curr_value));
+	memcpy(stream->last_value, start.cache.last, sizeof(stream->last_value));
+	memcpy(stream->next_value, start.cache.value, sizeof(stream->next_value));
+	memcpy(stream->diff_value, start.cache.diff, sizeof(stream->diff_value));
+	memcpy(stream->curr_value, start.cache.prev, sizeof(stream->curr_value));
 	memcpy
 		(stream->history
 		,m_History
@@ -1083,10 +1073,10 @@ void GOAudioSection::InitAlignedStream
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->last_position = 0;
-	memcpy(stream->last_value, start.last_value, sizeof(stream->last_value));
-	memcpy(stream->next_value, start.next_value, sizeof(stream->next_value));
-	memcpy(stream->diff_value, start.diff_value, sizeof(stream->diff_value));
-	memcpy(stream->curr_value, start.curr_value, sizeof(stream->curr_value));
+	memcpy(stream->last_value, start.cache.last, sizeof(stream->last_value));
+	memcpy(stream->next_value, start.cache.value, sizeof(stream->next_value));
+	memcpy(stream->diff_value, start.cache.diff, sizeof(stream->diff_value));
+	memcpy(stream->curr_value, start.cache.prev, sizeof(stream->curr_value));
 	memcpy
 		(stream->history
 		,m_History
