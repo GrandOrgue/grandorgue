@@ -216,6 +216,7 @@ public:
 
 	/* Read an audio buffer from an audio section stream */
 	static bool ReadBlock(audio_section_stream *stream, float *buffer);
+	static void GetHistory(const audio_section_stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
 
 	void Setup
 		(const void                      *pcm_data

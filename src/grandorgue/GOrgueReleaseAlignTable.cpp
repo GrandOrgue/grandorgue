@@ -217,14 +217,16 @@ void GOrgueReleaseAlignTable::SetupRelease
 	,const audio_section_stream &old_sampler
 	) const
 {
+	int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
+	GOAudioSection::GetHistory(&old_sampler, history);
 
 	/* Get combined release f's and v's */
 	int f_mod = 0;
 	int v_mod = 0;
 	for (unsigned i = 0; i < MAX_OUTPUT_CHANNELS; i++)
 	{
-		f_mod += old_sampler.history[(BLOCK_HISTORY - 1)][i];
-		v_mod += old_sampler.history[(BLOCK_HISTORY - 2)][i];
+		f_mod += history[(BLOCK_HISTORY - 1)][i];
+		v_mod += history[(BLOCK_HISTORY - 2)][i];
 	}
 	v_mod = f_mod - v_mod;
 
