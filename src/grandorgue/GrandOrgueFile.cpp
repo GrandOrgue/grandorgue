@@ -164,6 +164,12 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 	SHA1_Update(&ctx, &len, sizeof(len));
 	len = BLOCK_HISTORY;
 	SHA1_Update(&ctx, &len, sizeof(len));
+	len = sizeof(attack_section_info);
+	SHA1_Update(&ctx, &len, sizeof(len));
+	len = sizeof(release_section_info);
+	SHA1_Update(&ctx, &len, sizeof(len));
+	len = sizeof(audio_start_data_segment);
+	SHA1_Update(&ctx, &len, sizeof(len));
 
 	SHA1_Final(hash, &ctx);
 }
