@@ -1070,5 +1070,30 @@ unsigned GOAudioSection::GetSampleRate() const
 
 void GOAudioSection::GetHistory(const audio_section_stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS])
 {
-	memcpy (history, stream->history, sizeof(stream->history));
+	memset(history, 0, sizeof(history));
+	if (stream->position_index >= stream->transition_position)
+	{
+		for(unsigned i = 0; i < BLOCK_HISTORY; i++)
+			for(unsigned j = 0; j < stream->audio_section->m_Channels; j++)
+				history[i][j] = GetSampleData(stream->position_index - stream->transition_position + i, j, stream->audio_section->m_BitsPerSample, stream->audio_section->m_Channels, stream->end_ptr);
+	}
+	else
+	{
+		if (!stream->audio_section->m_Compressed)
+		{
+			for(unsigned i = 0; i < BLOCK_HISTORY; i++)
+				for(unsigned j = 0; j < stream->audio_section->m_Channels; j++)
+					history[i][j] = GetSampleData(stream->position_index + i, j, stream->audio_section->m_BitsPerSample, stream->audio_section->m_Channels, stream->ptr);
+		}
+		else
+		{
+			DecompressionCache cache = stream->cache;
+			for(unsigned i = 0; i < BLOCK_HISTORY; i++)
+			{
+				for(unsigned j = 0; j < stream->audio_section->m_Channels; j++)
+					history[i][j] = cache.value[j];
+				DecompressionStep(cache, stream->audio_section->m_Channels, stream->audio_section->m_BitsPerSample >= 20);
+			}
+		}
+	}
 }
