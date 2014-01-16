@@ -146,6 +146,23 @@ static inline void InitDecompressionCache(DecompressionCache& cache)
 	}
 }
 
+static inline void DecompressionStep(DecompressionCache& cache, unsigned channels, bool format16)
+{
+	for (unsigned j = 0; j < channels; j++)
+	{
+		int val;
+		if (format16)
+			val = AudioReadCompressed16(cache.ptr);
+		else
+			val = AudioReadCompressed8(cache.ptr);
+		cache.prev[j] = cache.value[j];
+		cache.value[j] = cache.last[j] + val;
+		cache.diff[j] = (cache.diff[j] + val) / 2;
+		cache.last[j] = cache.value[j] + cache.diff[j];
+	}
+	cache.position++;
+}
+
 static inline void DecompressTo(DecompressionCache& cache, unsigned position, const unsigned char* data, unsigned channels, bool format16)
 {
 	if (!cache.ptr || cache.position > position + 1)
@@ -153,21 +170,8 @@ static inline void DecompressTo(DecompressionCache& cache, unsigned position, co
 		InitDecompressionCache(cache);
 		cache.ptr = data;
 	}
-	for(; cache.position <= position; cache.position++)
-	{
-		for (unsigned j = 0; j < channels; j++)
-		{
-			int val;
-			if (format16)
-				val = AudioReadCompressed16(cache.ptr);
-			else
-				val = AudioReadCompressed8(cache.ptr);
-			cache.prev[j] = cache.value[j];
-			cache.value[j] = cache.last[j] + val;
-			cache.diff[j] = (cache.diff[j] + val) / 2;
-			cache.last[j] = cache.value[j] + cache.diff[j];
-		}
-	}
+	while(cache.position <= position)
+		DecompressionStep(cache, channels, format16);
 }
 
 #endif

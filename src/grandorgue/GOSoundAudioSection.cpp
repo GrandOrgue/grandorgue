@@ -401,19 +401,9 @@ void GOAudioSection::MonoCompressedLinear
 
 		while (stream->cache.position <= stream->position_index + 1)
 		{
-			int val;
-			if (format16)
-				val = AudioReadCompressed16(stream->cache.ptr);
-			else
-				val = AudioReadCompressed8(stream->cache.ptr);
+			DecompressionStep(stream->cache, 1, format16);
 
-			stream->cache.prev[0] = stream->cache.value[0];
-			stream->cache.value[0] = stream->cache.last[0] + val;
-			stream->cache.diff[0] = (stream->cache.diff[0] +  val) / 2;
-			stream->cache.last[0] = stream->cache.value[0] + stream->cache.diff[0];
 			history[hist_ptr] = stream->cache.prev[0];
-
-			stream->cache.position++;
 			hist_ptr++;
 			if (hist_ptr >= BLOCK_HISTORY)
 				hist_ptr = 0;
@@ -460,21 +450,10 @@ void GOAudioSection::StereoCompressedLinear
 
 		while (stream->cache.position <= stream->position_index + 1)
 		{
-			for(unsigned j = 0; j < 2; j++)
-			{
-				int val;
-				if (format16)
-					val = AudioReadCompressed16(stream->cache.ptr);
-				else
-					val = AudioReadCompressed8(stream->cache.ptr);
-				stream->cache.prev[j] = stream->cache.value[j];
-				stream->cache.value[j] = stream->cache.last[j] + val;
-				stream->cache.diff[j] = (stream->cache.diff[j] +  val) / 2;
-				stream->cache.last[j] = stream->cache.value[j] + stream->cache.diff[j];
-				history[hist_ptr][j] = stream->cache.prev[j];
-			}
+			DecompressionStep(stream->cache, 2, format16);
 
-			stream->cache.position++;
+			history[hist_ptr][0] = stream->cache.prev[0];
+			history[hist_ptr][1] = stream->cache.prev[1];
 			hist_ptr++;
 			if (hist_ptr >= BLOCK_HISTORY)
 				hist_ptr = 0;
