@@ -61,9 +61,6 @@ typedef struct audio_start_data_segment_s
 	/* Sample offset into entire audio section where data begins. */
 	unsigned    start_offset;
 
-	/* History of samples required to start in this blob
-	 * TODO: this is where we'll need compression info etc... */
-	int         history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
 	DecompressionCache cache;
 
 
@@ -116,7 +113,6 @@ typedef struct audio_section_stream_s
 	unsigned                     increment_fraction;
 
 	/* for decoding compressed format */
-	int                          history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
 	DecompressionCache           cache;
 } audio_section_stream;
 
@@ -171,10 +167,6 @@ private:
 	unsigned                   m_Compressed;
 	unsigned                   m_BitsPerSample;
 	unsigned                   m_Channels;
-
-	/* The starting sample and derivatives for each channel (used in the
-	 * compression and release-alignment schemes */
-	int                        m_History[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
 
 	/* Size of the section in BYTES */
 	GOrgueMemoryPool          &m_Pool;
