@@ -399,27 +399,27 @@ void GOAudioSection::MonoCompressedLinear
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
 
-		while (stream->last_position <= stream->position_index + 1)
+		while (stream->cache.position <= stream->position_index + 1)
 		{
 			int val;
 			if (format16)
-				val = AudioReadCompressed16(stream->ptr);
+				val = AudioReadCompressed16(stream->cache.ptr);
 			else
-				val = AudioReadCompressed8(stream->ptr);
+				val = AudioReadCompressed8(stream->cache.ptr);
 
-			stream->curr_value[0] = stream->next_value[0];
-			stream->next_value[0] = stream->last_value[0] + val;
-			stream->diff_value[0] = (stream->diff_value[0] +  val) / 2;
-			stream->last_value[0] = stream->next_value[0] + stream->diff_value[0];
-			history[hist_ptr] = stream->curr_value[0];
+			stream->cache.prev[0] = stream->cache.value[0];
+			stream->cache.value[0] = stream->cache.last[0] + val;
+			stream->cache.diff[0] = (stream->cache.diff[0] +  val) / 2;
+			stream->cache.last[0] = stream->cache.value[0] + stream->cache.diff[0];
+			history[hist_ptr] = stream->cache.prev[0];
 
-			stream->last_position++;
+			stream->cache.position++;
 			hist_ptr++;
 			if (hist_ptr >= BLOCK_HISTORY)
 				hist_ptr = 0;
 		}
 
-		output[0] = stream->curr_value[0] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->next_value[0] * stream->resample_coefs->linear[stream->position_fraction][0];
+		output[0] = stream->cache.prev[0] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->cache.value[0] * stream->resample_coefs->linear[stream->position_fraction][0];
 		output[1] = output[0];
 	}
 
@@ -458,30 +458,30 @@ void GOAudioSection::StereoCompressedLinear
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
 
-		while (stream->last_position <= stream->position_index + 1)
+		while (stream->cache.position <= stream->position_index + 1)
 		{
 			for(unsigned j = 0; j < 2; j++)
 			{
 				int val;
 				if (format16)
-					val = AudioReadCompressed16(stream->ptr);
+					val = AudioReadCompressed16(stream->cache.ptr);
 				else
-					val = AudioReadCompressed8(stream->ptr);
-				stream->curr_value[j] = stream->next_value[j];
-				stream->next_value[j] = stream->last_value[j] + val;
-				stream->diff_value[j] = (stream->diff_value[j] +  val) / 2;
-				stream->last_value[j] = stream->next_value[j] + stream->diff_value[j];
-				history[hist_ptr][j] = stream->curr_value[j];
+					val = AudioReadCompressed8(stream->cache.ptr);
+				stream->cache.prev[j] = stream->cache.value[j];
+				stream->cache.value[j] = stream->cache.last[j] + val;
+				stream->cache.diff[j] = (stream->cache.diff[j] +  val) / 2;
+				stream->cache.last[j] = stream->cache.value[j] + stream->cache.diff[j];
+				history[hist_ptr][j] = stream->cache.prev[j];
 			}
 
-			stream->last_position++;
+			stream->cache.position++;
 			hist_ptr++;
 			if (hist_ptr >= BLOCK_HISTORY)
 				hist_ptr = 0;
 		}
 
-		output[0] = stream->curr_value[0] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->next_value[0] * stream->resample_coefs->linear[stream->position_fraction][0];
-		output[1] = stream->curr_value[1] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->next_value[1] * stream->resample_coefs->linear[stream->position_fraction][0];
+		output[0] = stream->cache.prev[0] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->cache.value[0] * stream->resample_coefs->linear[stream->position_fraction][0];
+		output[1] = stream->cache.prev[1] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->cache.value[1] * stream->resample_coefs->linear[stream->position_fraction][0];
 	}
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
@@ -635,12 +635,10 @@ bool GOAudioSection::ReadBlock
 			 * very large tuning. */
 			assert(stream->position_index < 2 * BLOCKS_PER_FRAME);
 			stream->ptr = stream->audio_section->m_Data + next->data_offset;
-			stream->last_position = 0;
 			stream->end_ptr = next_end->end_data;
-			memcpy(stream->last_value, next->cache.last, sizeof(stream->last_value));
-			memcpy(stream->next_value, next->cache.value, sizeof(stream->next_value));
-			memcpy(stream->diff_value, next->cache.diff, sizeof(stream->diff_value));
-			memcpy(stream->curr_value, next->cache.prev, sizeof(stream->curr_value));
+			stream->cache = next->cache;
+			stream->cache.position = 0;
+			stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 			assert(next_end->end_offset >= next->start_offset);
 			stream->transition_position
 				= (next_end->transition_offset >= next->start_offset)
@@ -1037,11 +1035,9 @@ void GOAudioSection::InitStream
 	stream->position_fraction        = 0;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
-	stream->last_position = 0;
-	memcpy(stream->last_value, start.cache.last, sizeof(stream->last_value));
-	memcpy(stream->next_value, start.cache.value, sizeof(stream->next_value));
-	memcpy(stream->diff_value, start.cache.diff, sizeof(stream->diff_value));
-	memcpy(stream->curr_value, start.cache.prev, sizeof(stream->curr_value));
+	stream->cache = start.cache;
+	stream->cache.position = 0;
+	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 	memcpy
 		(stream->history
 		,m_History
@@ -1072,11 +1068,9 @@ void GOAudioSection::InitAlignedStream
 	stream->position_fraction        = existing_stream->position_fraction;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
-	stream->last_position = 0;
-	memcpy(stream->last_value, start.cache.last, sizeof(stream->last_value));
-	memcpy(stream->next_value, start.cache.value, sizeof(stream->next_value));
-	memcpy(stream->diff_value, start.cache.diff, sizeof(stream->diff_value));
-	memcpy(stream->curr_value, start.cache.prev, sizeof(stream->curr_value));
+	stream->cache = start.cache;
+	stream->cache.position = 0;
+	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 	memcpy
 		(stream->history
 		,m_History
