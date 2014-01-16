@@ -792,7 +792,7 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
     <para>
     Settings in the <link linkend="settingstab">Midi &amp; Audio Settings</link> tab describe the physical environment, while settings in the <link linkend="organsettings">Organ settings</link> dialog describe how the different parts of the virtual organ map to the real-world audio outputs.
     </para>
-  <informaltable frame="none">
+    <informaltable frame="none">
       <tgroup cols="2">
         <colspec colname="c1" colsep="0" rowsep="0" colwidth="90px"/>
         <colspec colname="c2" colsep="0" rowsep="0"/>
@@ -1382,7 +1382,12 @@ Variable savings up to 50%
             <primary>Memory limit</primary>
           </indexterm>
           <para>Chooses the size of the memory cache where samples are loaded. This is especially useful when running the 32 bits Windows build on 64 bits platforms to avoid a crash while loading a big sample set.</para>
-          <para>If this parameter is not set, it defaults to the amount of available memory in the system.</para>
+          <para>
+            If this parameter is set to zero, it tries to load as much data as possible.
+            <caution>
+              <para>In this case, GrandOrgue keeps loading until the OS fails to provide memory. It can provide large amounts of swap space with expectable adverse impact on performances.</para>
+            </caution>
+          </para>
         </sect3>
       </sect2>
       <sect2>
@@ -1991,6 +1996,11 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <title>Tuning</title>
         <para>This spinner allows to fine tune the pitch of the element. The unit is 1/100th of a semitone, and the allowed range is {-1200, +1200}. Tuning is cumulative from organ level down to pipe level.</para>
         <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective tuning.</para>
+      </sect2>
+      <sect2>
+        <title>Tracker</title>
+	<para>This spinner allows to define a delay in ms. This delay simulates the time spent by the tracker system to open the valve after a key is depressed.</para>
+	<para>Tracker delay is cumulative from organ level down to pipe level.</para>
       </sect2>
       <sect2>
         <title>Audio Group</title>
