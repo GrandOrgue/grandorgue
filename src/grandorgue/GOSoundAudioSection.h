@@ -116,12 +116,8 @@ typedef struct audio_section_stream_s
 	unsigned                     increment_fraction;
 
 	/* for decoding compressed format */
-	unsigned                     last_position;
-	int                          last_value[MAX_OUTPUT_CHANNELS];
-	int                          diff_value[MAX_OUTPUT_CHANNELS];
-	int                          curr_value[MAX_OUTPUT_CHANNELS];
-	int                          next_value[MAX_OUTPUT_CHANNELS];
 	int                          history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
+	DecompressionCache           cache;
 } audio_section_stream;
 
 class GOAudioSection
