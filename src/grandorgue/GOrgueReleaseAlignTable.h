@@ -39,7 +39,6 @@ private:
 	int m_PhaseAlignMaxAmplitude;
 	int m_PhaseAlignMaxDerivative;
 	int m_PositionEntries[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
-	int m_HistoryEntries[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES][BLOCK_HISTORY * MAX_OUTPUT_CHANNELS];
 
 public:
 

@@ -35,7 +35,6 @@
 GOrgueReleaseAlignTable::GOrgueReleaseAlignTable()
 {
 	memset(m_PositionEntries, 0, sizeof(m_PositionEntries));
-	memset(m_HistoryEntries, 0, sizeof(m_HistoryEntries));
 	m_PhaseAlignMaxAmplitude = 0;
 	m_PhaseAlignMaxDerivative = 0;
 }
@@ -53,8 +52,6 @@ bool GOrgueReleaseAlignTable::Load(GOrgueCache& cache)
 		return false;
 	if (!cache.Read(&m_PositionEntries, sizeof(m_PositionEntries)))
 		return false;
-	if (!cache.Read(&m_HistoryEntries, sizeof(m_HistoryEntries)))
-		return false;
 	return true;
 }
 
@@ -65,8 +62,6 @@ bool GOrgueReleaseAlignTable::Save(GOrgueCacheWriter& cache)
 	if (!cache.Write(&m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative)))
 		return false;
 	if (!cache.Write(&m_PositionEntries, sizeof(m_PositionEntries)))
-		return false;
-	if (!cache.Write(&m_HistoryEntries, sizeof(m_HistoryEntries)))
 		return false;
 	return true;
 }
@@ -136,10 +131,6 @@ void GOrgueReleaseAlignTable::ComputeTable
 		if (!found[derivIndex][ampIndex])
 		{
 			m_PositionEntries[derivIndex][ampIndex] = i + 1;
-			for (unsigned j = 0; j < BLOCK_HISTORY; j++)
-				for (unsigned k = 0; k < MAX_OUTPUT_CHANNELS; k++)
-					m_HistoryEntries[derivIndex][ampIndex][j * MAX_OUTPUT_CHANNELS + k]
-						= (k < channels) ? release.GetSample(start_position + i + j - BLOCK_HISTORY, k, &cache) : 0;
 			found[derivIndex][ampIndex] = true;
 		}
 
@@ -193,11 +184,6 @@ void GOrgueReleaseAlignTable::ComputeTable
 							)
 							{
 								m_PositionEntries[i][j] = m_PositionEntries[i + sl][j + sk];
-								memcpy
-									(m_HistoryEntries[i][j]
-									,m_HistoryEntries[i+sl][j+sk]
-									,sizeof(m_HistoryEntries[i][j])
-									);
 							}
 						else
 						{
@@ -249,11 +235,6 @@ void GOrgueReleaseAlignTable::SetupRelease
 	derivIndex = (derivIndex < 0) ? 0 : ((derivIndex >= PHASE_ALIGN_DERIVATIVES) ? PHASE_ALIGN_DERIVATIVES-1 : derivIndex);
 	ampIndex = (ampIndex < 0) ? 0 : ((ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES-1 : ampIndex);
 	release_sampler.position_index  = m_PositionEntries[derivIndex][ampIndex];
-	memcpy
-		(release_sampler.history
-		,m_HistoryEntries[derivIndex][ampIndex]
-		,sizeof(release_sampler.history)
-		);
 
 #ifndef NDEBUG
 #ifdef PALIGN_DEBUG

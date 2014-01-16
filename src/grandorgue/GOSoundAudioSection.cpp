@@ -48,7 +48,6 @@ void GOAudioSection::ClearData()
 	m_AllocSize = 0;
 	m_SampleCount = 0;
 	m_SampleRate = 0;
-	memset(m_History, 0, sizeof(m_History));
 	m_BitsPerSample = 0;
 	m_Compressed = false;
 	m_Channels = 0;
@@ -85,8 +84,6 @@ bool GOAudioSection::LoadCache(GOrgueCache& cache)
 	if (!cache.Read(&m_Compressed, sizeof(m_Compressed)))
 		return false;
 	if (!cache.Read(&m_Channels, sizeof(m_Channels)))
-		return false;
-	if (!cache.Read(&m_History, sizeof(m_History)))
 		return false;
 	if (!cache.Read(&m_SampleFracBits, sizeof(m_SampleFracBits)))
 		return false;
@@ -154,8 +151,6 @@ bool GOAudioSection::SaveCache(GOrgueCacheWriter& cache) const
 	if (!cache.Write(&m_Compressed, sizeof(m_Compressed)))
 		return false;
 	if (!cache.Write(&m_Channels, sizeof(m_Channels)))
-		return false;
-	if (!cache.Write(&m_History, sizeof(m_History)))
 		return false;
 	if (!cache.Write(&m_SampleFracBits, sizeof(m_SampleFracBits)))
 		return false;
@@ -238,13 +233,6 @@ void GOAudioSection::MonoUncompressedLinear
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
-
-	// update sample history (for release alignment / compression)
-	unsigned pos = (unsigned)stream->position_index;
-	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
-	{
-		stream->history[i - 1][0] = input[pos - 1];
-	}
 }
 
 template<class T>
@@ -276,14 +264,6 @@ void GOAudioSection::StereoUncompressedLinear
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
-
-	// update sample history (for release alignment / compression)
-	unsigned pos = stream->position_index;
-	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
-	{
-		stream->history[i - 1][0] = input[pos - 1][0];
-		stream->history[i - 1][1] = input[pos - 1][1];
-	}
 }
 
 template<class T>
@@ -319,14 +299,6 @@ void GOAudioSection::MonoUncompressedPolyphase
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
-
-	unsigned pos = stream->position_index;
-
-	// update sample history (for release alignment / compression)
-	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
-	{
-		stream->history[i - 1][0] = input[pos-1];
-	}
 }
 
 template<class T>
@@ -368,15 +340,6 @@ void GOAudioSection::StereoUncompressedPolyphase
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
-
-	unsigned pos               = stream->position_index;
-
-	// update sample history (for release alignment / compression)
-	for (unsigned i = BLOCK_HISTORY; i > 0 && pos; i--, pos--)
-	{
-		stream->history[i - 1][0] = input[pos-1][0];
-		stream->history[i - 1][1] = input[pos-1][1];
-	}
 }
 
 template<bool format16>
@@ -386,9 +349,6 @@ void GOAudioSection::MonoCompressedLinear
 	,float                *output
 	)
 {
-	int history[BLOCK_HISTORY];
-	unsigned hist_ptr = 0;
-
 	for (unsigned int i = 0
 	    ;i < BLOCKS_PER_FRAME
 	    ;i++
@@ -402,11 +362,6 @@ void GOAudioSection::MonoCompressedLinear
 		while (stream->cache.position <= stream->position_index + 1)
 		{
 			DecompressionStep(stream->cache, 1, format16);
-
-			history[hist_ptr] = stream->cache.prev[0];
-			hist_ptr++;
-			if (hist_ptr >= BLOCK_HISTORY)
-				hist_ptr = 0;
 		}
 
 		output[0] = stream->cache.prev[0] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->cache.value[0] * stream->resample_coefs->linear[stream->position_fraction][0];
@@ -415,16 +370,6 @@ void GOAudioSection::MonoCompressedLinear
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
-
-	// update sample history (for release alignment / compression)
-	for (unsigned i = BLOCK_HISTORY; i > 0; i--)
-	{
-		if (hist_ptr == 0)
-			hist_ptr = BLOCK_HISTORY - 1;
-		else
-			hist_ptr--;
-		stream->history[i - 1][0] = history[hist_ptr];
-	}
 }
 
 template<bool format16>
@@ -434,9 +379,6 @@ void GOAudioSection::StereoCompressedLinear
 	,float                *output
 	)
 {
-	int history[BLOCK_HISTORY][2];
-	unsigned hist_ptr = 0;
-
 	// copy the sample buffer
 	for (unsigned int i = 0
 	    ;i < BLOCKS_PER_FRAME
@@ -451,12 +393,6 @@ void GOAudioSection::StereoCompressedLinear
 		while (stream->cache.position <= stream->position_index + 1)
 		{
 			DecompressionStep(stream->cache, 2, format16);
-
-			history[hist_ptr][0] = stream->cache.prev[0];
-			history[hist_ptr][1] = stream->cache.prev[1];
-			hist_ptr++;
-			if (hist_ptr >= BLOCK_HISTORY)
-				hist_ptr = 0;
 		}
 
 		output[0] = stream->cache.prev[0] * stream->resample_coefs->linear[stream->position_fraction][1] + stream->cache.value[0] * stream->resample_coefs->linear[stream->position_fraction][0];
@@ -465,17 +401,6 @@ void GOAudioSection::StereoCompressedLinear
 
 	stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 	stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
-
-	// update sample history (for release alignment / compression)
-	for (unsigned i = BLOCK_HISTORY; i > 0; i--)
-	{
-		if (hist_ptr == 0)
-			hist_ptr = BLOCK_HISTORY - 1;
-		else
-			hist_ptr--;
-		stream->history[i - 1][0] = history[hist_ptr][0];
-		stream->history[i - 1][1] = history[hist_ptr][1];
-	}
 }
 
 inline
@@ -751,7 +676,6 @@ void GOAudioSection::Setup
 		audio_start_data_segment start_seg;
 		start_seg.data_offset = 0;
 		start_seg.start_offset = 0;
-		memset(&start_seg.history, 0, sizeof(start_seg.history));
 		m_StartSegments.push_back(start_seg);
 	}
 
@@ -1017,11 +941,6 @@ void GOAudioSection::InitStream
 	stream->cache = start.cache;
 	stream->cache.position = 0;
 	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
-	memcpy
-		(stream->history
-		,m_History
-		,sizeof(stream->history)
-		);
 }
 
 void GOAudioSection::InitAlignedStream
@@ -1050,11 +969,6 @@ void GOAudioSection::InitAlignedStream
 	stream->cache = start.cache;
 	stream->cache.position = 0;
 	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
-	memcpy
-		(stream->history
-		,m_History
-		,sizeof(stream->history)
-		);
 	if (!m_ReleaseAligner)
 	{
 		return;
