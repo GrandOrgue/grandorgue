@@ -22,18 +22,13 @@
 #ifndef GOSOUNDDEFS_H_
 #define GOSOUNDDEFS_H_
 
-/* Number of samples to store from previous block decode as history. This may
- * be needed for features such as release alignment and compression. */
+/* Number of samples to match for release alignment. */
 #define BLOCK_HISTORY          (2)
 
 /* BLOCKS_PER_FRAME specifies the number of mono samples or stereo sample
  * pairs which are decoded for each iteration of the audio engines main loop.
- * Setting this value too low will result in inefficiencies or certain
- * features (compression) failing to work. */
+ * Setting this value too low will result in inefficiencies. */
 #define BLOCKS_PER_FRAME       (16)
-
-/* Number of extra samples to avoid out of array accesses */
-#define EXTRA_FRAMES           (128)
 
 /* Maximum number of blocks (1 block is nChannels samples) per frame */
 #define MAX_FRAME_SIZE         (1024)
