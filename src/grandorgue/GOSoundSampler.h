@@ -36,7 +36,7 @@ typedef struct GO_SAMPLER_T
 	unsigned                   audio_group_id;
 	audio_section_stream       stream;
 	GOSoundFader               fader;
-	unsigned                   time;
+	uint64_t                   time;
 	unsigned                   velocity;
 	unsigned                   delay;
 	/* current index of the current block into this sample */

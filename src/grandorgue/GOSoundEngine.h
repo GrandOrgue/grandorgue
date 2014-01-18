@@ -152,7 +152,7 @@ private:
 	int                           m_ReleaseLength;
 	float                         m_Gain;
 	unsigned                      m_SampleRate;
-	unsigned long                 m_CurrentTime;
+	uint64_t                      m_CurrentTime;
 	GOSoundSamplerPool            m_SamplerPool;
 	unsigned                      m_AudioGroupCount;
 	unsigned                      m_WindchestCount;
