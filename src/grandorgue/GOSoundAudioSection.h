@@ -97,6 +97,8 @@ typedef struct audio_section_stream_s
 	const unsigned char         *end_ptr;
 	unsigned                     transition_position;
 	unsigned                     end_loop_length;
+	unsigned                     end_length;
+	unsigned                     read_end;
 	unsigned                     section_length;
 	int                          next_start_segment_index;
 
