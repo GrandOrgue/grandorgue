@@ -40,18 +40,6 @@ struct audio_section_stream_s;
 
 typedef void (*DecodeBlockFunction)(audio_section_stream_s *stream, float *output);
 
-/* Reduces the number of samples which can be read from the main data stream
- * of the audio section (sample_count). This is necessary to ensure that
- * during a block read call, samples will not be read beyond the end of a
- * particular loop - but will be wrapped back to the beginning of the loop. */
-#define SECTION_STOP_SAMPLES_BEFORE (2 * BLOCKS_PER_FRAME)
-
-/* Number of additional samples to save after the end of a loop to guarantee
- * correct wrapping of samples. This parameter must be greater than
- * BLOCKS_PER_FRAME to accomodate for stretching of blocks (when they are
- * re-pitched). */
-#define SECTION_SAVE_SAMPLES_AFTER (2 * BLOCKS_PER_FRAME)
-
 typedef struct audio_start_data_segment_s
 {
 

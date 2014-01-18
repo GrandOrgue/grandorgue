@@ -507,60 +507,62 @@ bool GOAudioSection::ReadBlock
 	,float                *buffer
 	)
 {
-	if (stream->position_index >= stream->transition_position)
 	{
-		assert(stream->end_decode_call);
-
-		/* Setup ptr and position required by the end-block */
-		stream->ptr              = stream->end_ptr;
-		stream->position_index  -= stream->transition_position;
-		stream->end_decode_call(stream, buffer);
-
-		/* Restore the existing position */
-		stream->position_index  += stream->transition_position;
-		if (stream->position_index >= stream->section_length)
+		if (stream->position_index >= stream->transition_position)
 		{
-			if (stream->next_start_segment_index < 0)
-				return 0;
+			assert(stream->end_decode_call);
 
-			const unsigned next_index = stream->next_start_segment_index;
-			const audio_start_data_segment *next =
+			/* Setup ptr and position required by the end-block */
+			stream->ptr              = stream->end_ptr;
+			stream->position_index  -= stream->transition_position;
+			stream->end_decode_call(stream, buffer);
+
+			/* Restore the existing position */
+			stream->position_index  += stream->transition_position;
+			if (stream->position_index >= stream->section_length)
+			{
+				if (stream->next_start_segment_index < 0)
+					return 0;
+
+				const unsigned next_index = stream->next_start_segment_index;
+				const audio_start_data_segment *next =
 					&stream->audio_section->m_StartSegments[next_index];
 
-			/* Find a suitable end segment */
-			const unsigned next_end_segment_index = stream->audio_section->PickEndSegment(next_index);
-			const audio_end_data_segment *next_end =
+				/* Find a suitable end segment */
+				const unsigned next_end_segment_index = stream->audio_section->PickEndSegment(next_index);
+				const audio_end_data_segment *next_end =
 					&stream->audio_section->m_EndSegments[next_end_segment_index];
 
-			/* TODO: this is also where we need to copy startup information to the stream */
-			while (stream->position_index >= stream->section_length)
-				stream->position_index -= stream->section_length;
+				/* TODO: this is also where we need to copy startup information to the stream */
+				while (stream->position_index >= stream->section_length)
+					stream->position_index -= stream->section_length;
 
-			/* Because we support linear interpolation, we can't assume that
-			 * the position after a seek-back will be within a single block. In
-			 * reality, this shouldn't ever be very much more than BLOCKS_PER_
-			 * FRAME, but including a case for 2 times the size allows for a
-			 * very large tuning. */
-			assert(stream->position_index < 2 * BLOCKS_PER_FRAME);
-			stream->ptr = stream->audio_section->m_Data + next->data_offset;
-			stream->end_ptr = next_end->end_data;
-			stream->cache = next->cache;
-			stream->cache.position = 0;
-			stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
-			assert(next_end->end_offset >= next->start_offset);
-			stream->transition_position
-				= (next_end->transition_offset >= next->start_offset)
-				? next_end->transition_offset - next->start_offset
-				: 0;
-			stream->section_length = 1 + next_end->end_offset - next->start_offset;
-			stream->next_start_segment_index  = next_end->next_start_segment_index;
+				/* Because we support linear interpolation, we can't assume that
+				 * the position after a seek-back will be within a single block. In
+				 * reality, this shouldn't ever be very much more than BLOCKS_PER_
+				 * FRAME, but including a case for 2 times the size allows for a
+				 * very large tuning. */
+				assert(stream->position_index < 2 * BLOCKS_PER_FRAME);
+				stream->ptr = stream->audio_section->m_Data + next->data_offset;
+				stream->end_ptr = next_end->end_data;
+				stream->cache = next->cache;
+				stream->cache.position = 0;
+				stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
+				assert(next_end->end_offset >= next->start_offset);
+				stream->transition_position
+					= (next_end->transition_offset >= next->start_offset)
+					? next_end->transition_offset - next->start_offset
+					: 0;
+				stream->section_length = 1 + next_end->end_offset - next->start_offset;
+				stream->next_start_segment_index  = next_end->next_start_segment_index;
+			}
 		}
-	}
-	else
-	{
-		assert(stream->decode_call);
-		stream->decode_call(stream, buffer);
-		assert(stream->position_index < stream->section_length);
+		else
+		{
+			assert(stream->decode_call);
+			stream->decode_call(stream, buffer);
+			assert(stream->position_index < stream->section_length);
+		}
 	}
 
 	return 1;
