@@ -79,6 +79,8 @@ typedef struct audio_end_data_segment_s
 
 	/* Uncompressed ending data blob. This data must start before sample_offset*/
 	unsigned char *end_data;
+	unsigned end_length;
+	unsigned end_size;
 
 	/* Index of the next section segment to be played (-1 indicates the
 	 * end of the blob. */
