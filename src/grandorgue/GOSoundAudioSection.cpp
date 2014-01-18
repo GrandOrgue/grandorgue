@@ -93,8 +93,6 @@ bool GOAudioSection::LoadCache(GOrgueCache& cache)
 	if (!m_Data)
 		return false;
 
-	const unsigned bytes_per_sample_frame = m_Channels * ((m_BitsPerSample + 7) / 8);
-
 	unsigned temp;
 	if (!cache.Read(&temp, sizeof(temp)))
 		return false;
@@ -117,7 +115,11 @@ bool GOAudioSection::LoadCache(GOrgueCache& cache)
 			return false;
 		if (!cache.Read(&s.transition_offset, sizeof(s.transition_offset)))
 			return false;
-		s.end_data = (unsigned char*)cache.ReadBlock(4 * BLOCKS_PER_FRAME * bytes_per_sample_frame);
+		if (!cache.Read(&s.end_length, sizeof(s.end_length)))
+			return false;
+		if (!cache.Read(&s.end_size, sizeof(s.end_size)))
+			return false;
+		s.end_data = (unsigned char*)cache.ReadBlock(s.end_size);
 		if (!s.end_data)
 			return false;
 
@@ -159,8 +161,6 @@ bool GOAudioSection::SaveCache(GOrgueCacheWriter& cache) const
 	if (!cache.WriteBlock(m_Data, m_AllocSize))
 		return false;
 
-	const unsigned bytes_per_sample_frame = m_Channels * ((m_BitsPerSample + 7) / 8);
-
 	unsigned temp;
 
 	temp = m_StartSegments.size();
@@ -185,7 +185,11 @@ bool GOAudioSection::SaveCache(GOrgueCacheWriter& cache) const
 			return false;
 		if (!cache.Write(&s->transition_offset, sizeof(s->transition_offset)))
 			return false;
-		if (!cache.WriteBlock(s->end_data, 4 * BLOCKS_PER_FRAME * bytes_per_sample_frame))
+		if (!cache.Write(&s->end_length, sizeof(s->end_length)))
+			return false;
+		if (!cache.Write(&s->end_size, sizeof(s->end_size)))
+			return false;
+		if (!cache.WriteBlock(s->end_data, s->end_size))
 			return false;
 	}
 
@@ -696,7 +700,9 @@ void GOAudioSection::Setup
 			start_seg.data_offset            = loop.start_sample * bytes_per_sample_frame;
 			end_seg.end_offset               = loop.end_sample;
 			end_seg.next_start_segment_index = i + 1;
-			end_seg.end_data                 = (unsigned char*)m_Pool.Alloc(4 * BLOCKS_PER_FRAME * bytes_per_sample_frame, true);
+			end_seg.end_length = 4 * BLOCKS_PER_FRAME;
+			end_seg.end_size = end_seg.end_length * bytes_per_sample_frame;
+			end_seg.end_data = (unsigned char*)m_Pool.Alloc(end_seg.end_size, true);
 			end_seg.transition_offset
 				= (end_seg.end_offset - start_seg.start_offset > 2 * BLOCKS_PER_FRAME)
 				? end_seg.end_offset - 2 * BLOCKS_PER_FRAME
@@ -717,7 +723,7 @@ void GOAudioSection::Setup
 				(((unsigned char*)end_seg.end_data) + copy_len * bytes_per_sample_frame
 				,((const unsigned char*)pcm_data) + loop.start_sample * bytes_per_sample_frame
 				,loop_length * bytes_per_sample_frame
-				,(4 * BLOCKS_PER_FRAME - copy_len) * bytes_per_sample_frame
+				,(end_seg.end_length - copy_len) * bytes_per_sample_frame
 				);
 
 			m_StartSegments.push_back(start_seg);
@@ -734,7 +740,9 @@ void GOAudioSection::Setup
 		audio_end_data_segment end_seg;
 		end_seg.end_offset               = pcm_data_nb_samples - 1;
 		end_seg.next_start_segment_index = -1;
-		end_seg.end_data                 = (unsigned char*)m_Pool.Alloc(4 * BLOCKS_PER_FRAME * bytes_per_sample_frame, true);
+		end_seg.end_length = 4 * BLOCKS_PER_FRAME;
+		end_seg.end_size = end_seg.end_length * bytes_per_sample_frame;
+		end_seg.end_data = (unsigned char*)m_Pool.Alloc(end_seg.end_size, true);
 		end_seg.transition_offset
 			= (end_seg.end_offset > 2 * BLOCKS_PER_FRAME)
 			? end_seg.end_offset - 2 * BLOCKS_PER_FRAME
@@ -753,7 +761,7 @@ void GOAudioSection::Setup
 		memset
 			(((unsigned char*)end_seg.end_data) + copy_len * bytes_per_sample_frame
 			,0
-			,(4 * BLOCKS_PER_FRAME - copy_len) * bytes_per_sample_frame
+			,(end_seg.end_length - copy_len) * bytes_per_sample_frame
 			);
 
 		m_EndSegments.push_back(end_seg);
