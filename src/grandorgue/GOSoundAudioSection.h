@@ -96,6 +96,7 @@ typedef struct audio_section_stream_s
 	 * this stream. */
 	const unsigned char         *end_ptr;
 	unsigned                     transition_position;
+	unsigned                     margin;
 	unsigned                     end_loop_length;
 	unsigned                     end_length;
 	unsigned                     read_end;
@@ -134,6 +135,7 @@ private:
 		,interpolation_type interpolation
 		,bool     is_end
 		);
+	static unsigned GetMargin(bool compressed, interpolation_type interpolation);
 
 	void Compress(bool format16);
 
