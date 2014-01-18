@@ -38,7 +38,7 @@ class GOrgueReleaseAlignTable;
 
 struct audio_section_stream_s;
 
-typedef void (*DecodeBlockFunction)(audio_section_stream_s *stream, float *output);
+typedef void (*DecodeBlockFunction)(audio_section_stream_s *stream, float *output, unsigned int n_blocks);
 
 typedef struct audio_start_data_segment_s
 {
@@ -111,17 +111,17 @@ class GOAudioSection
 
 private:
 	template<class T>
-	static void MonoUncompressedLinear(audio_section_stream *stream, float *output);
+	static void MonoUncompressedLinear(audio_section_stream *stream, float *output, unsigned int n_blocks);
 	template<class T>
-	static void StereoUncompressedLinear(audio_section_stream *stream, float *output);
+	static void StereoUncompressedLinear(audio_section_stream *stream, float *output, unsigned int n_blocks);
 	template<class T>
-	static void MonoUncompressedPolyphase(audio_section_stream *stream, float *output);
+	static void MonoUncompressedPolyphase(audio_section_stream *stream, float *output, unsigned int n_blocks);
 	template<class T>
-	static void StereoUncompressedPolyphase(audio_section_stream *stream, float *output);
+	static void StereoUncompressedPolyphase(audio_section_stream *stream, float *output, unsigned int n_blocks);
 	template<bool format16>
-	static void MonoCompressedLinear(audio_section_stream *stream, float *output);
+	static void MonoCompressedLinear(audio_section_stream *stream, float *output, unsigned int n_blocks);
 	template<bool format16>
-	static void StereoCompressedLinear(audio_section_stream *stream, float *output);
+	static void StereoCompressedLinear(audio_section_stream *stream, float *output, unsigned int n_blocks);
 
 	static DecodeBlockFunction GetDecodeBlockFunction
 		(unsigned channels
