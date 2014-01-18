@@ -297,7 +297,7 @@ void GOSoundEngine::ReadSamplerFrames
 
 void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, bool depend)
 {
-	unsigned block_time = n_frames / BLOCKS_PER_FRAME;
+	unsigned block_time = n_frames;
 	GOMutexLocker locker(state.mutex, !depend);
 
 	if (!locker.IsLocked())
@@ -348,7 +348,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 					(m_PolyphonyLimiting) &&
 					(sampler->is_release) &&
 					(m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
-					(m_CurrentTime - sampler->time > 172)
+					(m_CurrentTime - sampler->time > 172 * 16)
 				)
 				sampler->fader.StartDecay(-13); /* Approx 0.37s at 44.1kHz */
 
@@ -686,7 +686,7 @@ int GOSoundEngine::GetSamples
 
 	m_ReverbEngine[0]->Process(FinalBuffer, n_frames);
 
-	m_CurrentTime += n_frames / BLOCKS_PER_FRAME;
+	m_CurrentTime += n_frames;
 
 	/* Clamp the output */
 	static const float CLAMP_MIN = -1.0f;
@@ -744,7 +744,7 @@ SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampl
 			);
 		const float playback_gain = pipe->GetGain() * attack->GetNormGain();
 		sampler->fader.NewConstant(playback_gain);
-		sampler->delay = (delay * m_SampleRate) / (1000 * BLOCKS_PER_FRAME);
+		sampler->delay = (delay * m_SampleRate) / (1000);
 		sampler->time = m_CurrentTime + sampler->delay;
 		sampler->fader.SetVelocityVolume(sampler->pipe->GetVelocityVolume(sampler->velocity));
 		StartSampler(sampler, sampler_group_id, audio_group);
@@ -804,7 +804,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 	// against a double. We should test against a minimum level.
 	if (vol)
 	{
-		const GOAudioSection* release_section = this_pipe->GetRelease(&handle->stream, ((double)(m_CurrentTime - handle->time) * BLOCKS_PER_FRAME) / m_SampleRate);
+		const GOAudioSection* release_section = this_pipe->GetRelease(&handle->stream, ((double)(m_CurrentTime - handle->time)) / m_SampleRate);
 		if (!release_section)
 			return;
 
@@ -830,7 +830,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 				if (m_ScaledReleases)
 				{
 					/* Note: "time" is in milliseconds. */
-					int time = ((m_CurrentTime - handle->time) * (10 * BLOCKS_PER_FRAME)) / (m_SampleRate / 100);
+					int time = ((m_CurrentTime - handle->time) * 1000) / m_SampleRate;
 					/* TODO: below code should be replaced by a more accurate model of the attack to get a better estimate of the amplitude when playing very short notes
 					* estimating attack duration from pipe midi pitch */
 					unsigned midikey_frequency = this_pipe->GetMidiKeyNumber();
