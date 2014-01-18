@@ -268,31 +268,10 @@ void GOSoundEngine::ReadSamplerFrames
 	,float* decoded_sampler_audio_frame
 	)
 {
-
-	for (unsigned int i = 0
-	    ;i < n_blocks
-	    ;i += BLOCKS_PER_FRAME
-	    ,decoded_sampler_audio_frame += BLOCKS_PER_FRAME * 2
-	    )
+	if (!GOAudioSection::ReadBlock(&sampler->stream, decoded_sampler_audio_frame, n_blocks))
 	{
-
-		if (!sampler->pipe)
-		{
-			std::fill
-				(decoded_sampler_audio_frame
-				,decoded_sampler_audio_frame + (BLOCKS_PER_FRAME * 2)
-				,0.0f
-				);
-			continue;
-		}
-
-		if (!GOAudioSection::ReadBlock(&sampler->stream, decoded_sampler_audio_frame, BLOCKS_PER_FRAME))
-		{
-			sampler->pipe = NULL;
-		}
-
+		sampler->pipe = NULL;
 	}
-
 }
 
 void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, bool depend)

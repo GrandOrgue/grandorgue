@@ -158,9 +158,11 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 	SHA1_Update(&ctx, &len, sizeof(len));
 	len = sizeof(GOrgueReleaseAlignTable);
 	SHA1_Update(&ctx, &len, sizeof(len));
-	len = BLOCKS_PER_FRAME;
-	SHA1_Update(&ctx, &len, sizeof(len));
 	len = BLOCK_HISTORY;
+	SHA1_Update(&ctx, &len, sizeof(len));
+	len = MAX_READAHEAD;
+	SHA1_Update(&ctx, &len, sizeof(len));
+	len = SHORT_LOOP_LENGTH;
 	SHA1_Update(&ctx, &len, sizeof(len));
 	len = sizeof(attack_section_info);
 	SHA1_Update(&ctx, &len, sizeof(len));
