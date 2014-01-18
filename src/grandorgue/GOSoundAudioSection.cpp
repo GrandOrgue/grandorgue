@@ -214,19 +214,11 @@ bool GOAudioSection::SaveCache(GOrgueCacheWriter& cache) const
 
 template<class T>
 inline
-void GOAudioSection::MonoUncompressedLinear
-	(audio_section_stream *stream
-	,float                *output
-	)
+void GOAudioSection::MonoUncompressedLinear(audio_section_stream *stream, float *output, unsigned int n_blocks)
 {
 	// copy the sample buffer
 	T* input = (T*)(stream->ptr);
-	for (unsigned int i = 0
-	    ;i < BLOCKS_PER_FRAME
-	    ;i++
-	    ,stream->position_fraction += stream->increment_fraction
-	    ,output += 2
-	    )
+	for (unsigned int i = 0; i < n_blocks; i++, stream->position_fraction += stream->increment_fraction, output += 2)
 	{
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
@@ -241,10 +233,7 @@ void GOAudioSection::MonoUncompressedLinear
 
 template<class T>
 inline
-void GOAudioSection::StereoUncompressedLinear
-	(audio_section_stream *stream
-	,float                *output
-	)
+void GOAudioSection::StereoUncompressedLinear(audio_section_stream *stream, float *output, unsigned int n_blocks)
 {
 	typedef T stereoSample[0][2];
 
@@ -252,12 +241,7 @@ void GOAudioSection::StereoUncompressedLinear
 	stereoSample& input = (stereoSample&)*(T*)(stream->ptr);
 
 	// copy the sample buffer
-	for (unsigned int i = 0
-	    ;i < BLOCKS_PER_FRAME
-	    ;stream->position_fraction += stream->increment_fraction
-	    ,output += 2
-	    ,i++
-	    )
+	for (unsigned int i = 0; i < n_blocks; stream->position_fraction += stream->increment_fraction, output += 2, i++)
 	{
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
@@ -272,15 +256,12 @@ void GOAudioSection::StereoUncompressedLinear
 
 template<class T>
 inline
-void GOAudioSection::MonoUncompressedPolyphase
-	(audio_section_stream *stream
-	,float                *output
-	)
+void GOAudioSection::MonoUncompressedPolyphase(audio_section_stream *stream, float *output, unsigned int n_blocks)
 {
 	// copy the sample buffer
 	T* input                = ((T*)stream->ptr);
 	const float* coef       = stream->resample_coefs->coefs;
-	for (unsigned i = 0; i < BLOCKS_PER_FRAME; ++i, output += 2, stream->position_fraction += stream->increment_fraction)
+	for (unsigned i = 0; i < n_blocks; ++i, output += 2, stream->position_fraction += stream->increment_fraction)
 	{
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
@@ -307,17 +288,14 @@ void GOAudioSection::MonoUncompressedPolyphase
 
 template<class T>
 inline
-void GOAudioSection::StereoUncompressedPolyphase
-	(audio_section_stream *stream
-	,float                *output
-	)
+void GOAudioSection::StereoUncompressedPolyphase(audio_section_stream *stream, float *output, unsigned int n_blocks)
 {
 	typedef T stereoSample[0][2];
 
 	// copy the sample buffer
 	stereoSample& input                = (stereoSample&)*(T*)(stream->ptr);
 	const float* coef       = stream->resample_coefs->coefs;
-	for (unsigned i = 0; i < BLOCKS_PER_FRAME; ++i, output += 2, stream->position_fraction += stream->increment_fraction)
+	for (unsigned i = 0; i < n_blocks; ++i, output += 2, stream->position_fraction += stream->increment_fraction)
 	{
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
@@ -348,17 +326,9 @@ void GOAudioSection::StereoUncompressedPolyphase
 
 template<bool format16>
 inline
-void GOAudioSection::MonoCompressedLinear
-	(audio_section_stream *stream
-	,float                *output
-	)
+void GOAudioSection::MonoCompressedLinear(audio_section_stream *stream, float *output, unsigned int n_blocks)
 {
-	for (unsigned int i = 0
-	    ;i < BLOCKS_PER_FRAME
-	    ;i++
-	    ,stream->position_fraction += stream->increment_fraction
-	    ,output += 2
-	    )
+	for (unsigned int i = 0; i < n_blocks; i++, stream->position_fraction += stream->increment_fraction, output += 2)
 	{
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
@@ -378,18 +348,10 @@ void GOAudioSection::MonoCompressedLinear
 
 template<bool format16>
 inline
-void GOAudioSection::StereoCompressedLinear
-	(audio_section_stream *stream
-	,float                *output
-	)
+void GOAudioSection::StereoCompressedLinear(audio_section_stream *stream, float *output, unsigned int n_blocks)
 {
 	// copy the sample buffer
-	for (unsigned int i = 0
-	    ;i < BLOCKS_PER_FRAME
-	    ;stream->position_fraction += stream->increment_fraction
-	    ,output += 2
-	    ,i++
-	    )
+	for (unsigned int i = 0; i < n_blocks; stream->position_fraction += stream->increment_fraction, output += 2, i++)
 	{
 		stream->position_index += stream->position_fraction >> UPSAMPLE_BITS;
 		stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
@@ -515,7 +477,7 @@ bool GOAudioSection::ReadBlock
 			/* Setup ptr and position required by the end-block */
 			stream->ptr              = stream->end_ptr;
 			stream->position_index  -= stream->transition_position;
-			stream->end_decode_call(stream, buffer);
+			stream->end_decode_call(stream, buffer, BLOCKS_PER_FRAME);
 
 			/* Restore the existing position */
 			stream->position_index  += stream->transition_position;
@@ -560,7 +522,7 @@ bool GOAudioSection::ReadBlock
 		else
 		{
 			assert(stream->decode_call);
-			stream->decode_call(stream, buffer);
+			stream->decode_call(stream, buffer, BLOCKS_PER_FRAME);
 			assert(stream->position_index < stream->section_length);
 		}
 	}
