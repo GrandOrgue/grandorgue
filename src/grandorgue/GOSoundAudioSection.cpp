@@ -464,10 +464,7 @@ unsigned GOAudioSection::PickEndSegment(unsigned start_segment_index) const
 	return 0;
 }
 
-bool GOAudioSection::ReadBlock
-	(audio_section_stream *stream
-	,float                *buffer
-	)
+bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsigned int n_blocks)
 {
 	{
 		if (stream->position_index >= stream->transition_position)
@@ -477,7 +474,8 @@ bool GOAudioSection::ReadBlock
 			/* Setup ptr and position required by the end-block */
 			stream->ptr              = stream->end_ptr;
 			stream->position_index  -= stream->transition_position;
-			stream->end_decode_call(stream, buffer, BLOCKS_PER_FRAME);
+			unsigned len = n_blocks;
+			stream->end_decode_call(stream, buffer, len);
 
 			/* Restore the existing position */
 			stream->position_index  += stream->transition_position;
@@ -522,7 +520,8 @@ bool GOAudioSection::ReadBlock
 		else
 		{
 			assert(stream->decode_call);
-			stream->decode_call(stream, buffer, BLOCKS_PER_FRAME);
+			unsigned len = n_blocks;
+			stream->decode_call(stream, buffer, len);
 			assert(stream->position_index < stream->section_length);
 		}
 	}
