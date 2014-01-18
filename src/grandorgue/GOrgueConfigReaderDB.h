@@ -34,6 +34,7 @@ private:
 	WX_DECLARE_STRING_HASH_MAP( wxString, GOStringHashMap );
 	WX_DECLARE_STRING_HASH_MAP( bool, GOBoolHashMap );
 
+	bool m_CaseSensitive;
 	GOStringHashMap m_ODF;
 	GOStringHashMap m_ODF_LC;
 	GOStringHashMap m_CMB;
@@ -43,7 +44,7 @@ private:
 	void AddEntry(GOStringHashMap& hash, wxString key, wxString value);
 
 public:
-	GOrgueConfigReaderDB();
+	GOrgueConfigReaderDB(bool case_sensitive = false);
 	~GOrgueConfigReaderDB();
 	void ReportUnused();
 	void ClearCMB();
