@@ -286,7 +286,7 @@ void GOSoundEngine::ReadSamplerFrames
 			continue;
 		}
 
-		if (!GOAudioSection::ReadBlock(&sampler->stream, decoded_sampler_audio_frame))
+		if (!GOAudioSection::ReadBlock(&sampler->stream, decoded_sampler_audio_frame, BLOCKS_PER_FRAME))
 		{
 			sampler->pipe = NULL;
 		}
