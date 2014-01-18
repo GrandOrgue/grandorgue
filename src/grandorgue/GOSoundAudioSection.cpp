@@ -115,6 +115,8 @@ bool GOAudioSection::LoadCache(GOrgueCache& cache)
 			return false;
 		if (!cache.Read(&s.transition_offset, sizeof(s.transition_offset)))
 			return false;
+		if (!cache.Read(&s.end_loop_length, sizeof(s.end_loop_length)))
+			return false;
 		if (!cache.Read(&s.end_length, sizeof(s.end_length)))
 			return false;
 		if (!cache.Read(&s.end_size, sizeof(s.end_size)))
@@ -184,6 +186,8 @@ bool GOAudioSection::SaveCache(GOrgueCacheWriter& cache) const
 		if (!cache.Write(&s->next_start_segment_index, sizeof(s->next_start_segment_index)))
 			return false;
 		if (!cache.Write(&s->transition_offset, sizeof(s->transition_offset)))
+			return false;
+		if (!cache.Write(&s->end_loop_length, sizeof(s->end_loop_length)))
 			return false;
 		if (!cache.Write(&s->end_length, sizeof(s->end_length)))
 			return false;
@@ -484,6 +488,11 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 				if (stream->next_start_segment_index < 0)
 					return 0;
 
+				if (stream->position_index >= stream->section_length)
+					stream->position_index -= stream->section_length;
+				while (stream->position_index >= stream->end_loop_length)
+					stream->position_index -= stream->end_loop_length;
+
 				const unsigned next_index = stream->next_start_segment_index;
 				const audio_start_data_segment *next =
 					&stream->audio_section->m_StartSegments[next_index];
@@ -492,10 +501,6 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 				const unsigned next_end_segment_index = stream->audio_section->PickEndSegment(next_index);
 				const audio_end_data_segment *next_end =
 					&stream->audio_section->m_EndSegments[next_end_segment_index];
-
-				/* TODO: this is also where we need to copy startup information to the stream */
-				while (stream->position_index >= stream->section_length)
-					stream->position_index -= stream->section_length;
 
 				/* Because we support linear interpolation, we can't assume that
 				 * the position after a seek-back will be within a single block. In
@@ -515,6 +520,7 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 					: 0;
 				stream->section_length = 1 + next_end->end_offset - next->start_offset;
 				stream->next_start_segment_index  = next_end->next_start_segment_index;
+				stream->end_loop_length = next_end->end_loop_length;
 			}
 		}
 		else
@@ -688,6 +694,7 @@ void GOAudioSection::Setup
 				,loop_length * bytes_per_sample_frame
 				,(end_seg.end_length - copy_len) * bytes_per_sample_frame
 				);
+			end_seg.end_loop_length = loop_length;
 
 			m_StartSegments.push_back(start_seg);
 			m_EndSegments.push_back(end_seg);
@@ -710,6 +717,7 @@ void GOAudioSection::Setup
 			= (end_seg.end_offset > 2 * BLOCKS_PER_FRAME)
 			? end_seg.end_offset - 2 * BLOCKS_PER_FRAME
 			: 0;
+		end_seg.end_loop_length = end_seg.end_length * 2;
 
 		const unsigned copy_len = 1 + end_seg.end_offset - end_seg.transition_offset;
 
@@ -909,6 +917,7 @@ void GOAudioSection::InitStream
 	stream->position_fraction        = 0;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
+	stream->end_loop_length = end.end_loop_length;
 	stream->cache = start.cache;
 	stream->cache.position = 0;
 	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
@@ -937,6 +946,7 @@ void GOAudioSection::InitAlignedStream
 	stream->position_fraction        = existing_stream->position_fraction;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
+	stream->end_loop_length = end.end_loop_length;
 	stream->cache = start.cache;
 	stream->cache.position = 0;
 	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;

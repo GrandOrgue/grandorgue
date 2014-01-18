@@ -69,6 +69,7 @@ typedef struct audio_end_data_segment_s
 	unsigned char *end_data;
 	unsigned end_length;
 	unsigned end_size;
+	unsigned end_loop_length;
 
 	/* Index of the next section segment to be played (-1 indicates the
 	 * end of the blob. */
@@ -95,6 +96,7 @@ typedef struct audio_section_stream_s
 	 * this stream. */
 	const unsigned char         *end_ptr;
 	unsigned                     transition_position;
+	unsigned                     end_loop_length;
 	unsigned                     section_length;
 	int                          next_start_segment_index;
 
