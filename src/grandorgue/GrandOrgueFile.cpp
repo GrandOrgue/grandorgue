@@ -435,7 +435,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 	m_ODFHash = odf_ini_file.GetHash();
 	wxString error = wxT("!");
 	m_b_customized = false;
-	GOrgueConfigReaderDB ini;
+	GOrgueConfigReaderDB ini(m_Settings.GetODFCheck());
 	ini.ReadData(odf_ini_file, ODFSetting, false);
 
 	wxString setting_file = file2;

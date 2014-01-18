@@ -25,7 +25,8 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-GOrgueConfigReaderDB::GOrgueConfigReaderDB() :
+GOrgueConfigReaderDB::GOrgueConfigReaderDB(bool case_sensitive) :
+	m_CaseSensitive(case_sensitive),
 	m_ODF(1000),
 	m_ODF_LC(1000),
 	m_CMB(100)
@@ -90,7 +91,8 @@ bool GOrgueConfigReaderDB::ReadData(GOrgueConfigFileReader& ODF, GOSettingType t
 				if (type == ODFSetting)
 				{
 					AddEntry(m_ODF, k, value);
-					AddEntry(m_ODF_LC, k.Lower(), value);
+					if (!m_CaseSensitive)
+						AddEntry(m_ODF_LC, k.Lower(), value);
 					m_ODFUsed[k] = false;
 				}
 				else
@@ -146,7 +148,7 @@ bool GOrgueConfigReaderDB::GetString(GOSettingType type, wxString group, wxStrin
 			return true;
 		}
 	}
-	if (type == ODFSetting)
+	if (type == ODFSetting && !m_CaseSensitive)
 	{
 		GOStringHashMap::iterator i = m_ODF_LC.find(index.Lower());
 		if (i != m_ODF.end())
