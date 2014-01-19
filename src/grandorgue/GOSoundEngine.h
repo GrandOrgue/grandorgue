@@ -178,7 +178,6 @@ private:
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group);
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
 	void SwitchAttackSampler(GO_SAMPLER* sampler);
-	void ReadSamplerFrames(GO_SAMPLER* sampler, unsigned int n_blocks, float* decoded_sampler_audio_frame);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, bool depend = true);
 	void ResetDoneFlags();
 	unsigned GetFaderLength(unsigned MidiKeyNumber);

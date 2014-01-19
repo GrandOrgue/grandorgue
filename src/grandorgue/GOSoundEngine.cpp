@@ -261,19 +261,6 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 	Reset();
 }
 
-inline
-void GOSoundEngine::ReadSamplerFrames
-	(GO_SAMPLER* sampler
-	,unsigned int n_blocks
-	,float* decoded_sampler_audio_frame
-	)
-{
-	if (!GOAudioSection::ReadBlock(&sampler->stream, decoded_sampler_audio_frame, n_blocks))
-	{
-		sampler->pipe = NULL;
-	}
-}
-
 void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, bool depend)
 {
 	unsigned block_time = n_frames;
@@ -342,11 +329,8 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			 *
 			 *     playback gain * (2 ^ -sampler->pipe_section->sample_bits)
 			 */
-			ReadSamplerFrames
-				(sampler
-				,n_frames
-				,temp
-				);
+			if (!GOAudioSection::ReadBlock(&sampler->stream, temp, n_frames))
+				sampler->pipe = NULL;
 
 			sampler->fader.Process(n_frames, temp, volume);
 
