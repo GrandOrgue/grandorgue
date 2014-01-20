@@ -334,10 +334,10 @@ void GOrgueSound::OpenStreams()
 				{
 					if (i == 0)
 					{
-						m_SamplesPerBuffer = samples_per_buffer;
-						m_Settings.SetSamplesPerBuffer(m_SamplesPerBuffer);
+						m_Settings.SetSamplesPerBuffer(samples_per_buffer);
+						m_SamplesPerBuffer = m_Settings.GetSamplesPerBuffer();
 					}
-					else
+					if (samples_per_buffer != m_SamplesPerBuffer)
 						throw wxString::Format(_("Device %s wants a different frame count: %d"), m_AudioOutputs[i].name.c_str(), samples_per_buffer);
 				}
 			}
@@ -575,8 +575,11 @@ void GOrgueSound::ResetMeters()
 
 int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffer, unsigned int n_frames, double stream_time)
 {
-	assert(n_frames == m_SamplesPerBuffer);
-
+	if (n_frames != m_SamplesPerBuffer)
+	{
+		wxLogError(_("No sound output will happen. Samples per buffer has been changed by the sound driver to %d"), n_frames);
+		return 1;
+	}
 	GOMutexLocker locker(device->mutex);
 
 	int r;
@@ -666,16 +669,6 @@ int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer, unsigned i
 {
 	assert(userData);
 	GO_SOUND_OUTPUT* sound = (GO_SOUND_OUTPUT*) userData;
-	if (nFrames & (BLOCKS_PER_FRAME - 1))
-	{
-		wxString error;
-		error.Printf
-			(_("Audio callback of %u blocks requested. Must be divisible by %u.")
-			,nFrames
-			,BLOCKS_PER_FRAME
-			);
-		throw error;
-	}
 
 	return sound->sound->AudioCallbackLocal(sound, static_cast<float*>(outputBuffer), nFrames, streamTime);
 }
@@ -684,16 +677,6 @@ int GOrgueSound::PaAudioCallback (const void *input, void *output, unsigned long
 {
 	assert(userData);
 	GO_SOUND_OUTPUT* sound = (GO_SOUND_OUTPUT*) userData;
-	if (frameCount & (BLOCKS_PER_FRAME - 1))
-	{
-		wxString error;
-		error.Printf
-			(_("Audio callback of %u blocks requested. Must be divisible by %u.")
-			,frameCount
-			,BLOCKS_PER_FRAME
-			);
-		throw error;
-	}
 
 	int ret = sound->sound->AudioCallbackLocal(sound, static_cast<float*>(output), frameCount, 0*timeInfo->currentTime);
 
