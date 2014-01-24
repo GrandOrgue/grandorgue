@@ -31,11 +31,11 @@
 #define BLOCKS_PER_FRAME       (16)
 
 /* Read-Ahead of various playback modes */
-#define POLYPHASE_READAHEAD    (4)
+#define POLYPHASE_READAHEAD    (8)
 #define LINEAR_COMPRESSED_READAHEAD    (2)
 #define LINEAR_READAHEAD    (1)
 /* Maximum of the above values */
-#define MAX_READAHEAD       (4)
+#define MAX_READAHEAD       (8)
 
 /* Max length for short loops */
 #define SHORT_LOOP_LENGTH     256
