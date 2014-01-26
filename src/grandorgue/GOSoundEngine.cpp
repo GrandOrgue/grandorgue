@@ -296,6 +296,25 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			volume *= state.windchest->GetVolume();
 	}
 
+	if (!state.is_tremulant)
+	{
+		if (state.windchest)
+		{
+			GOrgueWindchest* current_windchest = state.windchest;
+			for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
+			{
+				unsigned tremulant_pos = current_windchest->GetTremulantId(i);
+				if (!m_Tremulants[tremulant_pos].done)
+					ProcessAudioSamplers(m_Tremulants[tremulant_pos], n_frames);
+
+				if (m_Tremulants[tremulant_pos].done == 1)
+				{
+					volume *= m_Tremulants[tremulant_pos].buff[n_frames - 1];
+				}
+			}
+		}
+	}
+
 	assert((n_frames & (BLOCKS_PER_FRAME - 1)) == 0);
 	assert(n_frames > BLOCKS_PER_FRAME);
 	float* output_buffer = state.buff;
@@ -383,28 +402,6 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 			previous_sampler = sampler;
 
 	}
-
-	if (!state.is_tremulant)
-	{
-		if (state.windchest)
-		{
-			GOrgueWindchest* current_windchest = state.windchest;
-			for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
-			{
-				unsigned tremulant_pos = current_windchest->GetTremulantId(i);
-				if (!m_Tremulants[tremulant_pos].done)
-					ProcessAudioSamplers(m_Tremulants[tremulant_pos], n_frames);
-
-				if (m_Tremulants[tremulant_pos].done == 1)
-				{
-					const float *ptr = m_Tremulants[tremulant_pos].buff;
-					for (unsigned int k = 0; k < n_frames * 2; k++)
-						output_buffer[k] *= ptr[k];
-				}
-			}
-		}
-	}
-
 	state.done = 1;
 }
 
