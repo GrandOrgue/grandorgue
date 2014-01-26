@@ -27,6 +27,11 @@
 
 class GOSoundFader
 {
+	typedef struct
+	{
+		float gain;
+		float gain_delta;
+	} FaderState;
 private:
 	float       m_gain;
 	float       m_attack;
@@ -44,11 +49,14 @@ public:
 	bool IsSilent();
 	void SetVelocityVolume(float volume);
 
-	void Process(unsigned n_blocks, float *decoded_sampler_audio_frame, float volume);
+	FaderState SetupProcess(unsigned n_blocks, float volume);
+	void ProcessData(FaderState& state, unsigned n_blocks, float *buffer);
+
+	void Process(unsigned n_blocks, float *buffer, float volume);
 };
 
 inline
-void GOSoundFader::Process(unsigned n_blocks, float *decoded_sampler_audio_frame, float volume)
+GOSoundFader::FaderState GOSoundFader::SetupProcess(unsigned n_blocks, float volume)
 {
 	volume *= m_VelocityVolume;
 
@@ -58,75 +66,30 @@ void GOSoundFader::Process(unsigned n_blocks, float *decoded_sampler_audio_frame
 		m_real_target = m_target * volume;
 		m_gain *= volume;
 	}
-
-	/* Multiply each of the buffer samples by the fade factor - note:
-	 * FADE IS NEGATIVE. A positive fade would indicate a gain of zero.
-	 * Note: this for loop has been split by an if to aide the vectorizer.
-	 */
-	float gain_delta = m_attack + m_decay;
 	float gain = m_gain;
-	float target = m_real_target;
-	if (volume != m_last_volume)
+	float gain_delta = 0;
+	if (volume != m_last_volume || m_attack + m_decay != 0)
 	{
-		gain_delta *= volume;
-		gain_delta += m_target * (volume - m_last_volume) / (1024 / 2);
-		float new_last_volume = m_last_volume + ((volume - m_last_volume) * n_blocks) / 1024;
-		if (volume > m_last_volume)
+		float volume_diff = m_target * (volume - m_last_volume) * n_blocks / MAX_FRAME_SIZE;
+		float fade_diff = n_blocks * (m_attack + m_decay) * volume;
+		float new_last_volume = m_last_volume + ((volume - m_last_volume) * n_blocks) / MAX_FRAME_SIZE;
+		m_real_target = m_target * new_last_volume;
+
+		float end = m_gain + volume_diff + fade_diff;
+		if (end < 0)
 		{
-			target = m_target * volume;
-			m_real_target = target;
+			end = 0;
+			m_decay = 0;
 		}
-		else
+		else if (end > m_real_target)
 		{
-			target = m_target * new_last_volume;
+			end = m_real_target;
+			m_attack = 0.0f;
 		}
+		gain_delta = (end - m_gain) / (n_blocks);
 		m_last_volume = new_last_volume;
+		m_gain = end;
 	}
-	else
-		gain_delta *= volume;
-	if (gain_delta)
-	{
-
-		for(unsigned int i = 0; i < n_blocks / 2; i++, decoded_sampler_audio_frame += 4)
-		{
-
-			decoded_sampler_audio_frame[0] *= gain;
-			decoded_sampler_audio_frame[1] *= gain;
-			decoded_sampler_audio_frame[2] *= gain;
-			decoded_sampler_audio_frame[3] *= gain;
-
-			gain += gain_delta;
-			if (gain < 0.0f)
-			{
-				gain = 0.0f;
-				m_decay = 0.0f;
-			}
-			else if (gain > m_real_target)
-			{
-				gain = m_real_target;
-				m_attack = 0.0f;
-			}
-
-		}
-
-		m_gain = gain;
-		m_real_target = target;
-	}
-	else
-	{
-
-		for(unsigned int i = 0; i < n_blocks / 2; i++, decoded_sampler_audio_frame += 4)
-		{
-
-			decoded_sampler_audio_frame[0] *= gain;
-			decoded_sampler_audio_frame[1] *= gain;
-			decoded_sampler_audio_frame[2] *= gain;
-			decoded_sampler_audio_frame[3] *= gain;
-
-		}
-
-	}
-
 	if (m_attack > 0.0f)
 	{
 		if (m_nb_attack_frames_left >= n_blocks)
@@ -134,7 +97,37 @@ void GOSoundFader::Process(unsigned n_blocks, float *decoded_sampler_audio_frame
 		else
 			m_attack = 0.0f;
 	}
+	return {gain, gain_delta};
+}
 
+inline
+void GOSoundFader::ProcessData(FaderState& state, unsigned n_blocks, float *buffer)
+{
+	if (state.gain_delta)
+	{
+		for(unsigned int i = 0; i < n_blocks; i++, buffer += 2)
+		{
+			buffer[0] *= state.gain;
+			buffer[1] *= state.gain;
+			state.gain += state.gain_delta;
+		}
+	}
+	else
+	{
+
+		for(unsigned int i = 0; i < n_blocks; i++, buffer += 2)
+		{
+			buffer[0] *= state.gain;
+			buffer[1] *= state.gain;
+		}
+	}
+}
+
+inline
+void GOSoundFader::Process(unsigned n_blocks, float *buffer, float volume)
+{
+	FaderState state = SetupProcess(n_blocks, volume);
+	ProcessData(state, n_blocks, buffer);
 }
 
 inline
