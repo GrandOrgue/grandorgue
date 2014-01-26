@@ -486,18 +486,17 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 
 			/* Setup ptr and position required by the end-block */
 			stream->ptr              = stream->end_ptr;
-			stream->position_index  -= stream->transition_position;
-			unsigned len = ((stream->end_length - stream->position_index) << UPSAMPLE_BITS) / stream->increment_fraction;
+			unsigned len = ((stream->end_pos - stream->position_index) << UPSAMPLE_BITS) / stream->increment_fraction;
 			if (len == 0)
 				len = 1;
 			len = std::min(len, n_blocks);
+			stream->position_index  -= stream->transition_position;
 			stream->end_decode_call(stream, buffer, len);
+			stream->position_index  += stream->transition_position;
 			buffer += 2 * len;
 			n_blocks -= len;
 
-			/* Restore the existing position */
-			stream->position_index  += stream->transition_position;
-			if (stream->position_index >= stream->section_length)
+			if (stream->position_index >= stream->section_end)
 			{
 				if (stream->next_start_segment_index < 0)
 				{
@@ -506,8 +505,7 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 					return 0;
 				}
 
-				if (stream->position_index >= stream->section_length)
-					stream->position_index -= stream->section_length;
+				stream->position_index -= stream->section_end;
 				while (stream->position_index >= stream->end_loop_length)
 					stream->position_index -= stream->end_loop_length;
 
@@ -525,18 +523,18 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 				 * reality, this shouldn't ever be very much more than BLOCKS_PER_
 				 * FRAME, but including a case for 2 times the size allows for a
 				 * very large tuning. */
+				stream->position_index += next->start_offset;
 				assert(stream->position_index < 2 * BLOCKS_PER_FRAME);
-				stream->ptr = stream->audio_section->m_Data + next->data_offset;
-				stream->end_ptr = next_end->end_data;
+				stream->ptr = stream->audio_section->m_Data;
 				stream->cache = next->cache;
-				stream->cache.position = 0;
 				stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 				assert(next_end->end_offset >= next->start_offset);
-				stream->transition_position = limited_diff (next_end->transition_offset, next->start_offset);
-				stream->section_length = 1 + next_end->end_offset - next->start_offset;
+				stream->transition_position = next_end->transition_offset;
+				stream->end_ptr = next_end->end_data;
+				stream->section_end = 1 + next_end->end_offset;
 				stream->next_start_segment_index  = next_end->next_start_segment_index;
-				stream->read_end = limited_diff(stream->section_length, stream->margin);
-				stream->end_length = limited_diff(next_end->end_length, stream->margin);
+				stream->read_end = limited_diff(stream->section_end, stream->margin);
+				stream->end_pos = limited_diff(next_end->end_length, stream->margin) + stream->transition_position;
 				stream->end_loop_length = next_end->end_loop_length;
 			}
 		}
@@ -550,7 +548,7 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 			stream->decode_call(stream, buffer, len);
 			buffer += 2 * len;
 			n_blocks -= len;
-			assert(stream->position_index < stream->section_length);
+			assert(stream->position_index < stream->section_end);
 		}
 	}
 
@@ -940,22 +938,21 @@ void GOAudioSection::InitStream
 	const audio_end_data_segment &end     = m_EndSegments[PickEndSegment(0)];
 	assert(end.transition_offset >= start.start_offset);
 	stream->resample_coefs           = resampler_coefs;
-	stream->ptr                      = stream->audio_section->m_Data + start.data_offset;
-	stream->transition_position      = end.transition_offset - start.start_offset;
-	stream->section_length           = 1 + end.end_offset - start.start_offset;
+	stream->ptr = stream->audio_section->m_Data;
+	stream->transition_position  = end.transition_offset;
+	stream->section_end = 1 + end.end_offset;
 	stream->next_start_segment_index = end.next_start_segment_index;
-	stream->end_ptr                  = end.end_data;
-	stream->increment_fraction       = sample_rate_adjustment * m_SampleRate * UPSAMPLE_FACTOR;
-	stream->position_index           = 0;
-	stream->position_fraction        = 0;
+	stream->end_ptr = end.end_data;
+	stream->increment_fraction = sample_rate_adjustment * m_SampleRate * UPSAMPLE_FACTOR;
+	stream->position_index = start.start_offset;
+	stream->position_fraction = 0;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->margin = GetMargin(m_Compressed, stream->resample_coefs->interpolation);
 	stream->end_loop_length = end.end_loop_length;
-	stream->read_end = limited_diff (stream->section_length, stream->margin);
-	stream->end_length = limited_diff (end.end_length, stream->margin);
+	stream->read_end = limited_diff (stream->section_end, stream->margin);
+	stream->end_pos = limited_diff (end.end_length, stream->margin) + stream->transition_position;
 	stream->cache = start.cache;
-	stream->cache.position = 0;
 	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 }
 
@@ -970,24 +967,23 @@ void GOAudioSection::InitAlignedStream
 	const audio_end_data_segment &end     = m_EndSegments[PickEndSegment(m_ReleaseStartSegment)];
 	assert(end.transition_offset >= start.start_offset);
 
-	stream->ptr                      = stream->audio_section->m_Data + start.data_offset;
-	stream->transition_position      = end.transition_offset - start.start_offset;
-	stream->section_length           = 1 + end.end_offset - start.start_offset;
+	stream->ptr = stream->audio_section->m_Data;
+	stream->transition_position = end.transition_offset;
+	stream->section_end = 1 + end.end_offset;
 	stream->next_start_segment_index = end.next_start_segment_index;
-	stream->end_ptr                  = end.end_data;
+	stream->end_ptr = end.end_data;
 	/* Translate increment in case of differing sample rates */
 	stream->resample_coefs           = existing_stream->resample_coefs;
-	stream->increment_fraction       = roundf((((float)existing_stream->increment_fraction) / existing_stream->audio_section->GetSampleRate()) * m_SampleRate);
-	stream->position_index           = 0;
-	stream->position_fraction        = existing_stream->position_fraction;
+	stream->increment_fraction = roundf((((float)existing_stream->increment_fraction) / existing_stream->audio_section->GetSampleRate()) * m_SampleRate);
+	stream->position_index = start.start_offset;
+	stream->position_fraction = existing_stream->position_fraction;
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->margin = GetMargin(m_Compressed, stream->resample_coefs->interpolation);
 	stream->end_loop_length = end.end_loop_length;
-	stream->read_end = limited_diff (stream->section_length, stream->margin);
-	stream->end_length = limited_diff (end.end_length, stream->margin);
+	stream->read_end = limited_diff (stream->section_end, stream->margin);
+	stream->end_pos = limited_diff (end.end_length, stream->margin) + stream->transition_position;
 	stream->cache = start.cache;
-	stream->cache.position = 0;
 	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 	if (!m_ReleaseAligner)
 	{
