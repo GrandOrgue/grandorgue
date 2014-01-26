@@ -98,9 +98,9 @@ typedef struct audio_section_stream_s
 	unsigned                     transition_position;
 	unsigned                     margin;
 	unsigned                     end_loop_length;
-	unsigned                     end_length;
+	unsigned                     end_pos;
 	unsigned                     read_end;
-	unsigned                     section_length;
+	unsigned                     section_end;
 	int                          next_start_segment_index;
 
 	unsigned                     position_index;
