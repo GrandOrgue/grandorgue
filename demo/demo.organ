@@ -4130,7 +4130,6 @@ Displayed=Y
 DispImageNum=1
 DispButtonRow=100
 DispButtonCol=1
-MIDIProgramChangeNumber=1
 DispKeyLabelOnLeft=Y
 
 [General002]
@@ -4173,7 +4172,6 @@ Displayed=Y
 DispImageNum=1
 DispButtonRow=100
 DispButtonCol=2
-MIDIProgramChangeNumber=1
 DispKeyLabelOnLeft=Y
 
 [General003]
@@ -4216,7 +4214,6 @@ Displayed=Y
 DispImageNum=1
 DispButtonRow=100
 DispButtonCol=3
-MIDIProgramChangeNumber=1
 DispKeyLabelOnLeft=Y
 
 [General004]
@@ -4259,7 +4256,6 @@ Displayed=Y
 DispImageNum=1
 DispButtonRow=100
 DispButtonCol=4
-MIDIProgramChangeNumber=1
 DispKeyLabelOnLeft=Y
 
 [General005]
@@ -4302,7 +4298,6 @@ Displayed=Y
 DispImageNum=1
 DispButtonRow=100
 DispButtonCol=5
-MIDIProgramChangeNumber=1
 DispKeyLabelOnLeft=Y
 
 [General006]
@@ -4345,7 +4340,6 @@ Displayed=Y
 DispImageNum=1
 DispButtonRow=100
 DispButtonCol=6
-MIDIProgramChangeNumber=1
 DispKeyLabelOnLeft=Y
 
 [SetterElement001]
