@@ -38,7 +38,6 @@ private:
 	bool OnInit();
 	int OnRun();
 	int OnExit();
-	void AsyncLoadFile(wxString iFile);
 	void OnInitCmdLine(wxCmdLineParser& parser);
 	bool OnCmdLineParsed(wxCmdLineParser& parser);
 

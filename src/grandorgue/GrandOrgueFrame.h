@@ -133,7 +133,7 @@ public:
 	GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
 	~GOrgueFrame(void);
 
-	void Init();
+	void Init(wxString filename);
 	bool Close(bool force = false);
 
 	void DoSplash(bool timeout = true);
