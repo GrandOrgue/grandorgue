@@ -302,7 +302,7 @@ GOrgueFrame::~GOrgueFrame()
 		delete m_Help;
 }
 
-void GOrgueFrame::Init()
+void GOrgueFrame::Init(wxString filename)
 {
 	Show(true);
 
@@ -314,6 +314,17 @@ void GOrgueFrame::Init()
 		wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_AUDIO_SETTINGS);
 		GetEventHandler()->AddPendingEvent(event);
 	}
+	if (!filename.IsEmpty())
+		Open(filename);
+	else if (m_Settings.GetLoadLastFile() && m_Settings.GetLastFile() != wxEmptyString)
+		Open(m_Settings.GetLastFile());
+	else if (m_Settings.GetLoadLastFile())
+	{
+		wxString name = wxStandardPaths::Get().GetResourcesDir() + wxFILE_SEP_PATH + wxT("demo") + wxFILE_SEP_PATH + wxT("demo.organ");
+		if (wxFileExists(name))
+			Open(name);
+	}
+
 	m_listener.SetCallback(this);
 }
 

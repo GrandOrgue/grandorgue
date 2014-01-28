@@ -33,7 +33,6 @@
 #include <wx/fs_zip.h>
 #include <wx/image.h>
 #include <wx/regex.h>
-#include <wx/stdpaths.h>
 
 #ifdef __WXMAC__
 #include <ApplicationServices/ApplicationServices.h>
@@ -138,18 +137,7 @@ bool GOrgueApp::OnInit()
 	m_Log = new GOrgueLog(m_Frame);
 	wxLog::SetActiveTarget(m_Log);
 	m_Frame->DoSplash();
-	m_Frame->Init();
-
-	if (!m_FileName.IsEmpty())
-		AsyncLoadFile(m_FileName);
-	else if (m_Settings->GetLoadLastFile() && m_Settings->GetLastFile() != wxEmptyString)
-		AsyncLoadFile(m_Settings->GetLastFile());
-	else if (m_Settings->GetLoadLastFile())
-	{
-		wxString name = wxStandardPaths::Get().GetResourcesDir() + wxFILE_SEP_PATH + wxT("demo") + wxFILE_SEP_PATH + wxT("demo.organ");
-		if (wxFileExists(name))
-			AsyncLoadFile(name);
-	}
+	m_Frame->Init(m_FileName);
 
 	GOrgueLCD_Open();
 
@@ -158,17 +146,10 @@ bool GOrgueApp::OnInit()
 
 void GOrgueApp::MacOpenFile(const wxString &filename)
 {
-	AsyncLoadFile(filename);
-}
-
-void GOrgueApp::AsyncLoadFile(wxString what)
-{
 	if (m_Frame)
 	{
-		wxFileName fn(what);
-		fn.Normalize();
 		wxCommandEvent event(wxEVT_LOADFILE, 0);
-		event.SetString(fn.GetFullPath());
+		event.SetString(filename);
 		m_Frame->GetEventHandler()->AddPendingEvent(event);
 	}
 }
