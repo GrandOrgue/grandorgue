@@ -1,5 +1,5 @@
 MyOrgan 1.06 Code base, Copyright 2006 Milan Digital Audio LLC
-Copyright 2009-2013 GrandOrgue contributors (see AUTHORS)
+Copyright 2009-2014 GrandOrgue contributors (see AUTHORS)
 
 
 
