@@ -2,7 +2,7 @@
  * GrandOrgue - a free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2013 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2014 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -118,7 +118,7 @@ void GOrgueSplash::DrawText(wxBitmap& bitmap)
 	font.SetWeight(wxFONTWEIGHT_NORMAL);
 	font.SetPointSize(7);
 	dc.SetFont(font);
-	wxString msg = _("Copyright 2006 Milan Digital Audio LLC\nCopyright 2009-2013 GrandOrgue contributors\n\nThis software comes with no warranty.\n\nASIO Interface Technology by Steinberg Media Technologies GmbH,\nby use of the Steinberg ASIO SDK, Version 2.2.\nASIO is a trademark and software of Steinberg Media Technologies GmbH.");
+	wxString msg = _("Copyright 2006 Milan Digital Audio LLC\nCopyright 2009-2014 GrandOrgue contributors\n\nThis software comes with no warranty.\n\nASIO Interface Technology by Steinberg Media Technologies GmbH,\nby use of the Steinberg ASIO SDK, Version 2.2.\nASIO is a trademark and software of Steinberg Media Technologies GmbH.");
 	dc.DrawLabel(msg, wxRect(60, 62, 370, 100), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
 }
 
