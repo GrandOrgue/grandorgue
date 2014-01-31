@@ -74,6 +74,7 @@ if(UNIX AND NOT APPLE)
   install(FILES GrandOrgue.png DESTINATION share/pixmaps)
   install(FILES grandorgue.xml DESTINATION share/mime/packages)
   install(FILES GrandOrgue.1 DESTINATION share/man/man1)
+  install(FILES GrandOrgue.appdata.xml DESTINATION share/appdata)
 endif()
 
 # setup compiler flags for debug vs release compiles
