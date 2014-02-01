@@ -1,0 +1,63 @@
+/*
+ * GrandOrgue - free pipe organ simulator
+ *
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2014 GrandOrgue contributors (see AUTHORS)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#ifndef GORGUEMIDIWXEVENT_H
+#define GORGUEMIDIWXEVENT_H
+
+#include "GOrgueMidiEvent.h"
+
+#include <wx/event.h>
+
+DECLARE_LOCAL_EVENT_TYPE( wxEVT_MIDI_ACTION, -1 )
+
+class wxMidiEvent : public wxEvent {
+private:
+	GOrgueMidiEvent m_midi;
+
+public:
+	wxMidiEvent(wxEventType type = wxEVT_MIDI_ACTION, int id = 0);
+	wxMidiEvent(const GOrgueMidiEvent& e, wxEventType type = wxEVT_MIDI_ACTION, int id = 0);
+	wxMidiEvent(const wxMidiEvent& e);
+
+	void SetMidiEvent(const GOrgueMidiEvent& e)
+	{
+		m_midi = e;
+	}
+
+	const GOrgueMidiEvent& GetMidiEvent() const
+	{
+		return m_midi;
+	}
+
+	wxEvent* Clone() const;
+
+	DECLARE_DYNAMIC_CLASS(wxMidiEvent)
+};
+
+
+typedef void (wxEvtHandler::*wxMidiEventFunction)(wxMidiEvent&);
+
+#define EVT_MIDI(fn) \
+    DECLARE_EVENT_TABLE_ENTRY( wxEVT_MIDI_ACTION, wxID_ANY, wxID_ANY, \
+    (wxObjectEventFunction) (wxEventFunction) \
+    wxStaticCastEvent( wxMidiEventFunction, & fn ), (wxObject *) NULL ),
+
+#endif

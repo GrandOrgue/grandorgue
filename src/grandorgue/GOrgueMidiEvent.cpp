@@ -21,12 +21,7 @@
 
 #include "GOrgueMidiEvent.h"
 
-DEFINE_LOCAL_EVENT_TYPE( wxEVT_MIDI_ACTION )
-
-IMPLEMENT_DYNAMIC_CLASS( GOrgueMidiEvent, wxEvent )
-
-GOrgueMidiEvent::GOrgueMidiEvent(wxEventType type, int id) :
-	wxEvent(id, type),
+GOrgueMidiEvent::GOrgueMidiEvent() :
 	m_miditype(MIDI_NONE),
 	m_channel(-1),
 	m_key(-1),
@@ -36,7 +31,6 @@ GOrgueMidiEvent::GOrgueMidiEvent(wxEventType type, int id) :
 }
 
 GOrgueMidiEvent::GOrgueMidiEvent(const GOrgueMidiEvent& e) :
-	wxEvent(e),
 	m_miditype(e.m_miditype),
 	m_channel(e.m_channel),
 	m_key(e.m_key),
@@ -44,11 +38,6 @@ GOrgueMidiEvent::GOrgueMidiEvent(const GOrgueMidiEvent& e) :
 	m_device(e.m_device),
 	m_time(e.m_time)
 {
-}
-
-wxEvent* GOrgueMidiEvent::Clone() const
-{
-	return new GOrgueMidiEvent(*this);
 }
 
 void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg)
