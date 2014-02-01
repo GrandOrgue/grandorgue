@@ -36,7 +36,7 @@ GOrgueOrgan::GOrgueOrgan(wxString odf, wxString church_name, wxString organ_buil
 	m_LastUse = wxGetUTCTime();
 }
 
-GOrgueOrgan::GOrgueOrgan(GOrgueConfigReader& cfg, wxString group) :
+GOrgueOrgan::GOrgueOrgan(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map) :
 	m_midi(NULL, MIDI_RECV_ORGAN)
 {
 	m_ODF = cfg.ReadString(CMBSetting, group, wxT("ODFPath"));
@@ -44,7 +44,7 @@ GOrgueOrgan::GOrgueOrgan(GOrgueConfigReader& cfg, wxString group) :
 	m_OrganBuilder = cfg.ReadString(CMBSetting, group, wxT("OrganBuilder"));
 	m_RecordingDetail = cfg.ReadString(CMBSetting, group, wxT("RecordingDetail"));
 	m_LastUse = cfg.ReadInteger(CMBSetting, group, wxT("LastUse"), 0, INT_MAX, false, wxGetUTCTime());
-	m_midi.Load(cfg, group);
+	m_midi.Load(cfg, group, map);
 }
 
 GOrgueOrgan::~GOrgueOrgan()
@@ -94,14 +94,14 @@ long GOrgueOrgan::GetLastUse()
 	return m_LastUse;
 }
 
-void GOrgueOrgan::Save(GOrgueConfigWriter& cfg, wxString group)
+void GOrgueOrgan::Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiMap& map)
 {
 	cfg.WriteString(group, wxT("ODFPath"), m_ODF);
 	cfg.WriteString(group, wxT("ChurchName"), m_ChurchName);
 	cfg.WriteString(group, wxT("OrganBuilder"), m_OrganBuilder);
 	cfg.WriteString(group, wxT("RecordingDetail"), m_RecordingDetail);
 	cfg.WriteInteger(group, wxT("LastUse"), m_LastUse);
-	m_midi.Save(cfg, group);
+	m_midi.Save(cfg, group, map);
 }
 
 bool GOrgueOrgan::Match(const GOrgueMidiEvent& e)

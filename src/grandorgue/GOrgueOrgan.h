@@ -27,6 +27,7 @@
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
+class GOrgueMidiMap;
 
 class GOrgueOrgan
 {
@@ -40,12 +41,12 @@ private:
 
 public:
 	GOrgueOrgan(wxString odf, wxString church_name, wxString organ_builder, wxString recording_detail);
-	GOrgueOrgan(GOrgueConfigReader& cfg, wxString group);
+	GOrgueOrgan(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map);
 	virtual ~GOrgueOrgan();
 
 	void Update(GOrgueOrgan* organ);
 
-	void Save(GOrgueConfigWriter& cfg, wxString group);
+	void Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiMap& map);
 
 	const wxString& GetODFPath();
 	const wxString& GetChurchName();

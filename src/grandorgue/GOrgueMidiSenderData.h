@@ -22,7 +22,6 @@
 #ifndef GORGUEMIDISENDERDATA_H
 #define GORGUEMIDISENDERDATA_H
 
-#include <wx/string.h>
 #include <vector>
 
 typedef enum {
@@ -51,7 +50,7 @@ typedef enum {
 } midi_send_message_type;
 
 typedef struct {
-	wxString device;
+	unsigned device;
 	midi_send_message_type type;
 	unsigned channel;
 	unsigned key;

@@ -27,6 +27,7 @@
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueMidiEvent;
+class GOrgueMidiMap;
 class GrandOrgueFile;
 struct IniFileEnumEntry;
 
@@ -43,8 +44,8 @@ private:
 public:
 	GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type);
 
-	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Save(GOrgueConfigWriter& cfg, wxString group);
+	void Load(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map);
+	void Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiMap& map);
 
 	void SetIndex(int index);
 

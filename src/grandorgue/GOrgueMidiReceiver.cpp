@@ -26,6 +26,7 @@
 #include "GOrgueEnclosure.h"
 #include "GOrgueManual.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrgueMidiMap.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 
@@ -61,7 +62,7 @@ const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
 	{ wxT("NoteShortOctave"), MIDI_M_NOTE_SHORT_OCTAVE },
 };
 
-void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
+void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map)
 {
 	m_events.resize(0);
 
@@ -81,7 +82,7 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 		m_events.resize(event_cnt);
 		for(unsigned i = 0; i < m_events.size(); i++)
 		{
-			m_events[i].device = cfg.ReadString(CMBSetting, group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), false);
+			m_events[i].device = map.GetDeviceByString(cfg.ReadString(CMBSetting, group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), false));
 			m_events[i].channel = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), -1, 16);
 			midi_match_message_type default_type = MIDI_M_PGM_CHANGE;
 			if (m_type == MIDI_RECV_MANUAL)
@@ -152,12 +153,12 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 	}
 }
 
-void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
+void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiMap& map)
 {
 	cfg.WriteInteger(group, wxT("NumberOfMIDIEvents"), m_events.size());
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
-		cfg.WriteString(group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), m_events[i].device);
+		cfg.WriteString(group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), map.GetDeviceByID(m_events[i].device));
 		cfg.WriteInteger(group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), m_events[i].channel);
 		cfg.WriteEnum(group, wxString::Format(wxT("MIDIEventType%03d"), i + 1), m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
 		if (HasDebounce(m_events[i].type))
@@ -272,7 +273,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 	{
 		if (m_events[i].channel != -1 && m_events[i].channel != e.GetChannel())
 			continue;
-		if (!m_events[i].device.IsEmpty() && m_events[i].device != e.GetDevice())
+		if (m_events[i].device != 0 && m_events[i].device != e.GetDevice())
 			continue;
 		if (m_type == MIDI_RECV_MANUAL)
 		{

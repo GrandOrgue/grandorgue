@@ -24,6 +24,7 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueCoupler.h"
 #include "GOrgueDivisional.h"
+#include "GOrgueSettings.h"
 #include "GOrgueStop.h"
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
@@ -90,8 +91,8 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_tremulant_ids.resize(0);
 	m_switch_ids.resize(0);
 	m_divisionals.resize(0);
-	m_midi.Load(cfg, group);
-	m_sender.Load(cfg, group);
+	m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+	m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 
 	Resize();
 	m_KeyVelocity.resize(m_nb_accessible_keys);
@@ -174,8 +175,8 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 		m_organfile->MarkSectionInUse(buffer);
 		m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
 	}
-	m_midi.Load(cfg, group);
-	m_sender.Load(cfg, group);
+	m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+	m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 
 	Resize();
 	m_KeyVelocity.resize(m_nb_accessible_keys);
@@ -396,8 +397,8 @@ void GOrgueManual::Save(GOrgueConfigWriter& cfg)
 	for (unsigned i = 0; i < m_divisionals.size(); i++)
 		m_divisionals[i]->Save(cfg);
 
-	m_midi.Save(cfg, m_group);
-	m_sender.Save(cfg, m_group);
+	m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+	m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
 void GOrgueManual::Abort()

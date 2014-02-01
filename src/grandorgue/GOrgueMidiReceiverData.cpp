@@ -48,7 +48,7 @@ MIDI_MATCH_EVENT& GOrgueMidiReceiverData::GetEvent(unsigned index)
 
 unsigned GOrgueMidiReceiverData::AddNewEvent()
 {
-	MIDI_MATCH_EVENT m = { wxT(""), MIDI_M_NONE, -1, 0 };
+	MIDI_MATCH_EVENT m = { 0, MIDI_M_NONE, -1, 0 };
 	m_events.push_back(m);
 	return m_events.size() - 1;
 }

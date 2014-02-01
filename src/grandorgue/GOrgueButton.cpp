@@ -22,6 +22,7 @@
 #include "GOrgueButton.h"
 
 #include "GOrgueConfigReader.h"
+#include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 
 GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton) :
@@ -51,10 +52,10 @@ void GOrgueButton::Init(GOrgueConfigReader& cfg, wxString group, wxString name)
 	m_DisplayInInvertedState = false;
 	if (!m_ReadOnly)
 	{
-		m_midi.Load(cfg, group);
+		m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 		m_shortcut.Load(cfg, group);
 	}
-	m_sender.Load(cfg, group);
+	m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 }
 
 void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group)
@@ -65,20 +66,20 @@ void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group)
 	m_DisplayInInvertedState = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
 	if (!m_ReadOnly)
 	{
-		m_midi.Load(cfg, group);
+		m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 		m_shortcut.Load(cfg, group);
 	}
-	m_sender.Load(cfg, group);
+	m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 }
 
 void GOrgueButton::Save(GOrgueConfigWriter& cfg)
 {
 	if (!m_ReadOnly)
 	{
-		m_midi.Save(cfg, m_group);
+		m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 		m_shortcut.Save(cfg, m_group);
 	}
-	m_sender.Save(cfg, m_group);
+	m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
 bool GOrgueButton::IsDisplayed()

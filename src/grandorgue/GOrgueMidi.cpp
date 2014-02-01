@@ -72,6 +72,7 @@ void GOrgueMidi::UpdateDevices()
 					t->rtmidi_port_no = i;
 					t->active = false;
 					t->name = name;
+					t->id = m_Settings.GetMidiMap().GetDeviceByString(t->name);
 					t->midi_in->setCallback(&MIDICallback, t);
 					m_midi_in_devices.push_back(t);
 			
@@ -104,6 +105,7 @@ void GOrgueMidi::UpdateDevices()
 					t->rtmidi_port_no = i;
 					t->active = false;
 					t->name = name;
+					t->id = m_Settings.GetMidiMap().GetDeviceByString(t->name);
 					m_midi_out_devices.push_back(t);
 			
 					name.Replace(wxT("\\"), wxT("|"));
@@ -253,7 +255,7 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE*
 	e.FromMidi(msg);
 	if (e.GetMidiType() == MIDI_NONE)
 		return;
-	e.SetDevice(device->name);
+	e.SetDevice(device->id);
 	e.SetTime(wxGetLocalTimeMillis());
 
 	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_BANK_SELECT_MSB)
@@ -332,7 +334,7 @@ void GOrgueMidi::Send(GOrgueMidiEvent& e)
 			MIDI_OUT_DEVICE& this_dev = *m_midi_out_devices[j];
 			if (!this_dev.active)
 				continue;
-			if (this_dev.name == e.GetDevice() || e.GetDevice() == wxEmptyString)
+			if (this_dev.id == e.GetDevice() || e.GetDevice() == 0)
 				this_dev.midi_out->sendMessage(&msg[i]);
 		}
 	}

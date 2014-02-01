@@ -251,10 +251,10 @@ void MIDIEventRecvDialog::LoadEvent()
 		{
 			wxString buffer;
 			wxString device;
-			if (m_midi.GetEvent(i).device.IsEmpty())
+			if (m_midi.GetEvent(i).device == 0)
 				device =  _("Any device");
 			else
-				device = m_midi.GetEvent(i).device;
+				device = m_Settings.GetMidiMap().GetDeviceByID(m_midi.GetEvent(i).device);
 			buffer.Printf(_("%d (%s)"), i + 1, device.c_str());
 			m_eventno->Append(buffer);
 		}
@@ -273,7 +273,7 @@ void MIDIEventRecvDialog::LoadEvent()
 
 	m_device->SetSelection(0);
 	for(unsigned i = 1; i < m_device->GetCount(); i++)
-		if (e.device == m_device->GetString(i))
+		if (m_Settings.GetMidiMap().GetDeviceByID(e.device) == m_device->GetString(i))
 			m_device->SetSelection(i);
 
 	m_channel->SetSelection(0);
@@ -296,9 +296,9 @@ void MIDIEventRecvDialog::StoreEvent()
 {
 	MIDI_MATCH_EVENT& e=m_midi.GetEvent(m_current);
 	if (m_device->GetSelection() == 0)
-		e.device = wxT("");
+		e.device = 0;
 	else
-		e.device = m_device->GetStringSelection();
+		e.device = m_Settings.GetMidiMap().GetDeviceByString(m_device->GetStringSelection());
 
 	e.type = (midi_match_message_type)(intptr_t) m_eventtype->GetClientData(m_eventtype->GetSelection());
 	if (m_channel->GetSelection() == 0)
