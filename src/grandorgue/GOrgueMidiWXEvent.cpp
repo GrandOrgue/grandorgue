@@ -25,14 +25,14 @@ DEFINE_LOCAL_EVENT_TYPE( wxEVT_MIDI_ACTION )
 
 IMPLEMENT_DYNAMIC_CLASS( wxMidiEvent, wxEvent )
 
-wxMidiEvent::wxMidiEvent(wxEventType type, int id) :
-	wxEvent(type, id),
+wxMidiEvent::wxMidiEvent(int id, wxEventType type) :
+	wxEvent(id, type),
 	m_midi()
 {
 }
 
-wxMidiEvent::wxMidiEvent(const GOrgueMidiEvent& e, wxEventType type, int id) :
-	wxEvent(type, id),
+wxMidiEvent::wxMidiEvent(const GOrgueMidiEvent& e, int id, wxEventType type) :
+	wxEvent(id, type),
 	m_midi(e)
 {
 }
