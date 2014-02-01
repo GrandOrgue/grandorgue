@@ -22,8 +22,8 @@
 #include "GOrgueMidi.h"
 
 #include "GOrgueEvent.h"
-#include "GOrgueMidiEvent.h"
 #include "GOrgueMidiListener.h"
+#include "GOrgueMidiWXEvent.h"
 #include "GOrgueRtHelpers.h"
 #include "GOrgueSettings.h"
 #include "RtMidi.h"
@@ -313,14 +313,16 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE*
 	if (e.GetChannel() != -1)
 		e.SetChannel(((e.GetChannel() - 1 + device->channel_shift) & 0x0F) + 1);
 
-	AddPendingEvent(e);
+	wxMidiEvent event(e);
+	AddPendingEvent(event);
 }
 
-void GOrgueMidi::OnMidiEvent(GOrgueMidiEvent& event)
+void GOrgueMidi::OnMidiEvent(wxMidiEvent& event)
 {
+	GOrgueMidiEvent e = event.GetMidiEvent();
 	for(unsigned i = 0; i < m_Listeners.size(); i++)
 		if (m_Listeners[i])
-			m_Listeners[i]->Send(event);
+			m_Listeners[i]->Send(e);
 }
 
 void GOrgueMidi::Send(GOrgueMidiEvent& e)

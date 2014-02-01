@@ -32,6 +32,7 @@ class GOrgueSettings;
 class GrandOrgueFile;
 class RtMidiIn;
 class RtMidiOut;
+class wxMidiEvent;
 
 class GOrgueMidi : public wxEvtHandler
 {
@@ -73,7 +74,7 @@ private:
 	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE* device);
 
 	static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData);
-	void OnMidiEvent(GOrgueMidiEvent& event);
+	void OnMidiEvent(wxMidiEvent& event);
 
 public:
 

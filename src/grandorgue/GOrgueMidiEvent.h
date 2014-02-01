@@ -23,7 +23,6 @@
 #define GORGUEMIDIEVENT_H
 
 #include "GOrgueTime.h"
-#include <wx/event.h>
 #include <vector>
 
 typedef enum {
@@ -48,9 +47,7 @@ typedef enum {
 #define MIDI_CTRL_SOUNDS_OFF 120
 #define MIDI_CTRL_NOTES_OFF 123
 
-DECLARE_LOCAL_EVENT_TYPE( wxEVT_MIDI_ACTION, -1 )
-
-class GOrgueMidiEvent : public wxEvent {
+class GOrgueMidiEvent {
 private:
 	midi_message_type m_miditype;
 	int m_channel, m_key, m_value;
@@ -58,7 +55,7 @@ private:
 	GOTime m_time;
 
 public:
-	GOrgueMidiEvent(wxEventType type = wxEVT_MIDI_ACTION, int id = 0);
+	GOrgueMidiEvent();
 	GOrgueMidiEvent(const GOrgueMidiEvent& e);
 
 	midi_message_type GetMidiType() const
@@ -116,20 +113,8 @@ public:
 		m_time = t;
 	}
 
-	wxEvent* Clone() const;
-
 	void FromMidi(const std::vector<unsigned char>& msg);
 	void ToMidi(std::vector<std::vector<unsigned char>>& msg);
-
-	DECLARE_DYNAMIC_CLASS(GOrgueMidiEvent)
 };
-
-typedef void (wxEvtHandler::*wxMidiEventFunction)(GOrgueMidiEvent&);
-
-#define EVT_MIDI(fn) \
-    DECLARE_EVENT_TABLE_ENTRY( wxEVT_MIDI_ACTION, wxID_ANY, wxID_ANY, \
-    (wxObjectEventFunction) (wxEventFunction) \
-    wxStaticCastEvent( wxMidiEventFunction, & fn ), (wxObject *) NULL ),
-
 
 #endif
