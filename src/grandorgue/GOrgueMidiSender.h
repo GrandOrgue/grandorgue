@@ -24,8 +24,11 @@
 
 #include "GOrgueMidiSenderData.h"
 
+#include <wx/string.h>
+
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
+class GOrgueMidiMap;
 class GrandOrgueFile;
 struct IniFileEnumEntry;
 
@@ -39,8 +42,8 @@ public:
 	GOrgueMidiSender(GrandOrgueFile* organfile, MIDI_SENDER_TYPE type);
 	~GOrgueMidiSender();
 
-	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Save(GOrgueConfigWriter& cfg, wxString group);
+	void Load(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map);
+	void Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiMap& map);
 
 	void SetDisplay(bool state);
 	void SetKey(unsigned key, bool state);

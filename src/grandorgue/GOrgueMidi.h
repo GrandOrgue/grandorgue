@@ -40,6 +40,7 @@ private:
 	typedef struct {
 		RtMidiIn* midi_in;
 		wxString name;
+		unsigned id;
 		bool active;
 		int channel_shift;
 		int rtmidi_port_no;
@@ -56,6 +57,7 @@ private:
 	typedef struct {
 		RtMidiOut* midi_out;
 		wxString name;
+		unsigned id;
 		bool active;
 		int rtmidi_port_no;
 	} MIDI_OUT_DEVICE;

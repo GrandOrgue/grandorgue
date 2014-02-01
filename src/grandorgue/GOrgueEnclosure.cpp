@@ -22,6 +22,7 @@
 #include "GOrgueEnclosure.h"
 
 #include "GOrgueConfigReader.h"
+#include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 
 GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
@@ -46,8 +47,8 @@ void GOrgueEnclosure::Init(GOrgueConfigReader& cfg, wxString group, wxString Nam
 	m_group = group;
 	m_Name = cfg.ReadString(ODFSetting, m_group, wxT("Name"), false, Name);
 	Set(0);	// default to down
-	m_midi.Load(cfg, m_group);
-	m_sender.Load(cfg, m_group);
+	m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_AmpMinimumLevel = 0;
 }
 
@@ -60,14 +61,14 @@ void GOrgueEnclosure::Load(GOrgueConfigReader& cfg, wxString group, int enclosur
 	m_MIDIInputNumber = cfg.ReadInteger(ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
 	Set(127);	// default to full volume until we receive any messages
 	m_midi.SetIndex(enclosure_nb);
-	m_midi.Load(cfg, m_group);
-	m_sender.Load(cfg, m_group);
+	m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
 void GOrgueEnclosure::Save(GOrgueConfigWriter& cfg)
 {
-	m_midi.Save(cfg, m_group);
-	m_sender.Save(cfg, m_group);
+	m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+	m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
 void GOrgueEnclosure::Set(int n)

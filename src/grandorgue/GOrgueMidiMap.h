@@ -19,41 +19,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueMidiSenderData.h"
+#ifndef GORGUEMIDIMAP_H
+#define GORGUEMIDIMAP_H
 
-GOrgueMidiSenderData::GOrgueMidiSenderData(MIDI_SENDER_TYPE type) :
-	m_type(type),
-	m_events()
-{
-}
+#include <wx/string.h>
+#include <vector>
 
-GOrgueMidiSenderData::~GOrgueMidiSenderData()
+class GOrgueMidiMap
 {
-}
+private:
+	std::vector<wxString> m_DeviceMap;
 
-MIDI_SENDER_TYPE GOrgueMidiSenderData::GetType() const
-{
-	return m_type;
-}
+public:
+	GOrgueMidiMap();
+	~GOrgueMidiMap();
 
-unsigned GOrgueMidiSenderData::GetEventCount() const
-{
-	return m_events.size();
-}
+	unsigned GetDeviceByString(const wxString& str);
+	const wxString& GetDeviceByID(unsigned id);
+};
 
-MIDI_SEND_EVENT& GOrgueMidiSenderData::GetEvent(unsigned index)
-{
-	return m_events[index];
-}
-
-unsigned GOrgueMidiSenderData::AddNewEvent()
-{
-	MIDI_SEND_EVENT m = { 0, MIDI_S_NONE, 1, 1, 0, 127};
-	m_events.push_back(m);
-	return m_events.size() - 1;
-}
-
-void GOrgueMidiSenderData::DeleteEvent(unsigned index)
-{
-	m_events.erase(m_events.begin() + index);
-}
+#endif

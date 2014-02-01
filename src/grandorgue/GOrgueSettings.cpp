@@ -158,7 +158,7 @@ void GOrgueSettings::Load()
 		m_OrganList.clear();
 		unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
 		for(unsigned i = 0; i < organ_count; i++)
-			m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1)));
+			m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap));
 
 		m_AudioGroups.clear();
 		unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), wxT("Count"), 0, 200, false, 0);
@@ -193,7 +193,7 @@ void GOrgueSettings::Load()
 		}
 
 		for(unsigned i = 0; i < GetEventCount(); i++)
-			m_MIDIEvents[i]->Load(cfg, GetEventSection(i));
+			m_MIDIEvents[i]->Load(cfg, GetEventSection(i), m_MidiMap);
 
 		long cpus = wxThread::GetCPUCount();
 		if (cpus == -1)
@@ -1039,6 +1039,11 @@ void GOrgueSettings::SetReverbDelay(unsigned delay)
 	m_ReverbDelay = delay;
 }
 
+GOrgueMidiMap& GOrgueSettings::GetMidiMap()
+{
+	return m_MidiMap;
+}
+
 void GOrgueSettings::Flush()
 {
 	wxString tmp_name = m_ConfigFileName + wxT(".new");
@@ -1081,10 +1086,10 @@ void GOrgueSettings::Flush()
 
 	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
-		m_OrganList[i]->Save(cfg, wxString::Format(wxT("Organ%03d"), i + 1));
+		m_OrganList[i]->Save(cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap);
 
 	for(unsigned i = 0; i < GetEventCount(); i++)
-		m_MIDIEvents[i]->Save(cfg, GetEventSection(i));
+		m_MIDIEvents[i]->Save(cfg, GetEventSection(i), m_MidiMap);
 
 	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
 		cfg.WriteString(wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), m_AudioGroups[i]);

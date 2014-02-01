@@ -63,7 +63,7 @@ typedef enum {
 } midi_match_message_type;
 
 typedef struct {
-	wxString device;
+	unsigned device;
 	midi_match_message_type type;
 	int channel;
 	int key;

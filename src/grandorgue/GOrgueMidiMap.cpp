@@ -19,41 +19,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueMidiSenderData.h"
+#include "GOrgueMidiMap.h"
 
-GOrgueMidiSenderData::GOrgueMidiSenderData(MIDI_SENDER_TYPE type) :
-	m_type(type),
-	m_events()
+#include <assert.h>
+
+GOrgueMidiMap::GOrgueMidiMap() :
+	m_DeviceMap()
+{
+	m_DeviceMap.push_back(wxEmptyString);
+	assert(m_DeviceMap[0] == wxEmptyString);
+}
+
+GOrgueMidiMap::~GOrgueMidiMap()
 {
 }
 
-GOrgueMidiSenderData::~GOrgueMidiSenderData()
+const wxString& GOrgueMidiMap::GetDeviceByID(unsigned id)
 {
+	assert(id <= m_DeviceMap.size());
+	return m_DeviceMap[id];
 }
 
-MIDI_SENDER_TYPE GOrgueMidiSenderData::GetType() const
+unsigned GOrgueMidiMap::GetDeviceByString(const wxString& str)
 {
-	return m_type;
+	for(unsigned i = 0; i < m_DeviceMap.size(); i++)
+		if (m_DeviceMap[i] == str)
+			return i;
+	m_DeviceMap.push_back(str);
+	return m_DeviceMap.size() - 1;
 }
 
-unsigned GOrgueMidiSenderData::GetEventCount() const
-{
-	return m_events.size();
-}
-
-MIDI_SEND_EVENT& GOrgueMidiSenderData::GetEvent(unsigned index)
-{
-	return m_events[index];
-}
-
-unsigned GOrgueMidiSenderData::AddNewEvent()
-{
-	MIDI_SEND_EVENT m = { 0, MIDI_S_NONE, 1, 1, 0, 127};
-	m_events.push_back(m);
-	return m_events.size() - 1;
-}
-
-void GOrgueMidiSenderData::DeleteEvent(unsigned index)
-{
-	m_events.erase(m_events.begin() + index);
-}

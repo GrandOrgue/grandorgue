@@ -54,7 +54,7 @@ class GOrgueMidiEvent : public wxEvent {
 private:
 	midi_message_type m_miditype;
 	int m_channel, m_key, m_value;
-	wxString m_device;
+	unsigned m_device;
 	GOTime m_time;
 
 public:
@@ -70,12 +70,12 @@ public:
 		m_miditype = t;
 	}
 
-	void SetDevice(const wxString& dev)
+	void SetDevice(unsigned dev)
 	{
 		m_device = dev;
 	}
 
-	const wxString& GetDevice() const
+	unsigned GetDevice() const
 	{
 		return m_device;
 	}	

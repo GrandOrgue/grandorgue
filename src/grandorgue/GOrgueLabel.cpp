@@ -21,6 +21,7 @@
 
 #include "GOrgueLabel.h"
 
+#include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 
 GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
@@ -38,18 +39,18 @@ GOrgueLabel::~GOrgueLabel()
 void GOrgueLabel::Init(GOrgueConfigReader& cfg, wxString group)
 {
 	m_group = group;
-	m_sender.Load(cfg, m_group);
+	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
 void GOrgueLabel::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_group = group;
-	m_sender.Load(cfg, m_group);
+	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
 void GOrgueLabel::Save(GOrgueConfigWriter& cfg)
 {
-	m_sender.Save(cfg, m_group);
+	m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
 const wxString& GOrgueLabel::GetName()

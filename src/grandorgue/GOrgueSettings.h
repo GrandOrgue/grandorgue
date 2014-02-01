@@ -22,8 +22,9 @@
 #ifndef GORGUESETTINGS_H
 #define GORGUESETTINGS_H
 
-#include "ptrvector.h"
+#include "GOrgueMidiMap.h"
 #include "GOrgueOrgan.h"
+#include "ptrvector.h"
 #include <wx/string.h>
 #include <map>
 #include <vector>
@@ -104,6 +105,7 @@ private:
 	float m_ReverbGain;
 	wxString m_ReverbFile;
 	ptr_vector<GOrgueMidiReceiver> m_MIDIEvents;
+	GOrgueMidiMap m_MidiMap;
 
 	static const GOMidiSetting m_MIDISettings[];
 
@@ -243,6 +245,8 @@ public:
 	void AddOrgan(GOrgueOrgan* organ);
 	ptr_vector<GOrgueOrgan>& GetOrganList();
 	std::vector<GOrgueOrgan*> GetLRUOrganList();
+
+	GOrgueMidiMap& GetMidiMap();
 
 	void Flush();
 };
