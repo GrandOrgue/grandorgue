@@ -33,8 +33,8 @@ private:
 	GOrgueMidiEvent m_midi;
 
 public:
-	wxMidiEvent(wxEventType type = wxEVT_MIDI_ACTION, int id = 0);
-	wxMidiEvent(const GOrgueMidiEvent& e, wxEventType type = wxEVT_MIDI_ACTION, int id = 0);
+	wxMidiEvent(int id = 0, wxEventType type = wxEVT_MIDI_ACTION);
+	wxMidiEvent(const GOrgueMidiEvent& e, int id = 0, wxEventType type = wxEVT_MIDI_ACTION);
 	wxMidiEvent(const wxMidiEvent& e);
 
 	void SetMidiEvent(const GOrgueMidiEvent& e)
