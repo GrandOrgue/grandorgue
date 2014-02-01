@@ -350,6 +350,8 @@ SplashScreen.cpp
 wxGaugeAudio.cpp
 ${IMAGE_LIST})
 
+add_library(golib STATIC ${grandorgue_src})
+
 macro(add_linker_option _target _option)
   set(_name "OPTION_LINK_${_option}")
   SET(CMAKE_REQUIRED_FLAGS "-Wl,--${_option}")
@@ -396,11 +398,11 @@ elseif (APPLE)
 
 else ()
 
-   add_executable(${PROJECT_NAME} GrandOrgue.cpp ${grandorgue_src})
+   add_executable(${PROJECT_NAME} GrandOrgue.cpp)
 
 endif ()
 
-target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} RtAudio RtMidi)
+target_link_libraries(${PROJECT_NAME} golib ${wxWidgets_LIBRARIES} RtAudio RtMidi)
 target_link_libraries(${PROJECT_NAME} ${PORTAUDIO_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${FFTW_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${WAVPACK_LIBRARIES})
@@ -416,7 +418,7 @@ if (INSTALL_DEPEND STREQUAL "ON")
   CopyDependencies(${PROJECT_NAME})
 endif()
 
-add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp ${grandorgue_src})
-target_link_libraries(perftest ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
+add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)
+target_link_libraries(perftest golib ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
 
 add_custom_target(test COMMAND perftest ${CMAKE_SOURCE_DIR}/tests DEPENDS perftest)
