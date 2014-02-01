@@ -142,129 +142,129 @@ wxConfigBase& GOrgueSettings::GetConfig()
 
 void GOrgueSettings::Load()
 {
+	GOrgueConfigFileReader cfg_file;
 	if (wxFileExists(m_ConfigFileName))
 	{
-		try
-		{
-			GOrgueConfigFileReader cfg_file;
-			if (!cfg_file.Read(m_ConfigFileName))
-				throw wxString::Format(_("Unable to read '%s'"), m_ConfigFileName.c_str());
+		if (!cfg_file.Read(m_ConfigFileName))
+			wxLogError(_("Unable to read '%s'"), m_ConfigFileName.c_str());
+	}
 
-			GOrgueConfigReaderDB cfg_db;
-			cfg_db.ReadData(cfg_file, CMBSetting, false);
-			GOrgueConfigReader cfg(cfg_db);
+	try
+	{
+		GOrgueConfigReaderDB cfg_db;
+		cfg_db.ReadData(cfg_file, CMBSetting, false);
+		GOrgueConfigReader cfg(cfg_db);
 
-			m_OrganList.clear();
-			unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
-			for(unsigned i = 0; i < organ_count; i++)
-				m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1)));
+		m_OrganList.clear();
+		unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
+		for(unsigned i = 0; i < organ_count; i++)
+			m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1)));
 
-			m_AudioGroups.clear();
-			unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), wxT("Count"), 0, 200, false, 0);
-			for(unsigned i = 0; i < count; i++)
-				m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), false, wxString::Format(_("Audio group %d"), i + 1)));
-
-			m_AudioDeviceConfig.clear();
-			count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxT("Count"), 0, 200, false, 0);
-			for(unsigned i = 0; i < count; i++)
-			{
-				GOAudioDeviceConfig conf;
-				conf.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dName"), i + 1));
-				conf.channels = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dChannelCount"), i + 1), 0, 200);
-				conf.scale_factors.resize(conf.channels);
-				for(unsigned j = 0; j < conf.channels; j++)
-				{
-					wxString prefix = wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);
-					unsigned group_count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), prefix + wxT("GroupCount"), 0, 200);
-					for(unsigned k = 0; k < group_count; k++)
-					{
-						GOAudioGroupOutputConfig group;
-						wxString p = prefix + wxString::Format(wxT("Group%03d"), k + 1);
-
-						group.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), p + wxT("Name"));
-						group.left = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"), p + wxT("Left"), -121.0, 40);
-						group.right = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"), p + wxT("Right"), -121.0, 40);
-
-						conf.scale_factors[j].push_back(group);
-					}
-				}
-				m_AudioDeviceConfig.push_back(conf);
-			}
-
-			for(unsigned i = 0; i < GetEventCount(); i++)
-				m_MIDIEvents[i]->Load(cfg, GetEventSection(i));
-
-			long cpus = wxThread::GetCPUCount();
-			if (cpus == -1)
-				cpus = 4;
-			if (cpus > MAX_CPU)
-				cpus = MAX_CPU;
-			if (cpus == 0)
-				cpus = 1;
-			SetConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, false, cpus));
-			SetReleaseConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, false, cpus));
-			SetLoadConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, false, cpus));
-
-			SetInterpolationType(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("InterpolationType"), 0, 1, false, 1));
-			SetWaveFormatBytesPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("WaveFormat"), 1, 4, false, 4));
-			SetAttackLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("AttackLoad"), 0, 1, false, 1));
-			SetLoopLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoopLoad"), 0, 2, false, 2));
-			SetReleaseLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLoad"), 0, 1, false, 1));
-
-			SetManageCache(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManageCache"), false, true));
-			SetCompressCache(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("CompressCache"), false, false));
-			SetLoadLastFile(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LoadLastFile"), false, true));
-			SetLastFile(cfg.ReadString(CMBSetting, wxT("General"), wxT("LastFile"), false, wxEmptyString));
-			SetODFCheck(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("StrictODFCheck"), false, false));
-
-			SetLoadInStereo(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("Stereo"), false, true));
-			SetLosslessCompression(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LosslessCompression"), false, false));
-			SetManagePolyphony(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManagePolyphony"), false, true));
-			SetScaleRelease(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ScaleRelease"), false, true));
-			SetRandomizeSpeaking(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("RandomizeSpeaking"), false, true));
-			SetMemoryLimit(cfg.ReadFloat(CMBSetting, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, false, GOrgueMemoryPool::GetSystemMemoryLimit()) * (1024.0 * 1024.0));
-
-			SetReverbEnabled(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbEnabled"), false, false));
-			SetReverbDirect(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbDirect"), false, true));
-			SetReverbChannel(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, false, 1));
-			SetReverbStartOffset(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbStartOffset"), 0, MAX_SAMPLE_LENGTH, false, 0));
-			SetReverbLen(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbLen"), 0, MAX_SAMPLE_LENGTH, false, 0));
-			SetReverbDelay(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, false, 0));
-			SetReverbGain(cfg.ReadFloat(CMBSetting, wxT("Reverb"), wxT("ReverbGain"), 0, 50, false, 1));
-			SetReverbFile(cfg.ReadString(CMBSetting, wxT("Reverb"), wxT("ReverbFile"), false, wxEmptyString));
-
-			SetSamplesPerBuffer(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SamplesPerBuffer"), BLOCKS_PER_FRAME, MAX_FRAME_SIZE, false, 1024));
-			SetSampleRate(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SampleRate"), 1000, 100000, false, 44100));
-			SetBitsPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("BitsPerSample"), 8, 24, false, 24));
-			SetVolume(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Volume"), -120, 20, false, -15));
-			SetPolyphonyLimit(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, false, 2048));
-			SetUserSettingPath (cfg.ReadString(CMBSetting, wxT("General"), wxT("SettingPath"), false, m_Config.Read(wxT("SettingPath"), wxEmptyString)));
-			SetUserCachePath (cfg.ReadString(CMBSetting, wxT("General"), wxT("CachePath"), false, m_Config.Read(wxT("CachePath"), wxEmptyString)));
-			SetPreset(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Preset"), 0, MAX_PRESET, false, 0));
-
-			SetReleaseLength(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLength"), 0, 5, false, 0));
+		m_AudioGroups.clear();
+		unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), wxT("Count"), 0, 200, false, 0);
+		for(unsigned i = 0; i < count; i++)
+			m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), false, wxString::Format(_("Audio group %d"), i + 1)));
 		
-			count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
-			for(unsigned i = 0; i < count; i++)
-			{
-				wxString name = cfg.ReadString(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03d"), i + 1));
-				SetMidiInState(name, cfg.ReadBoolean(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dEnabled"), i + 1)));
-				SetMidiInDeviceChannelShift(name, cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dShift"), i + 1), 0, 15));;
-			}
-
-			count = cfg.ReadInteger(CMBSetting, wxT("MIDIOut"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
-			for(unsigned i = 0; i < count; i++)
-			{
-				wxString name = cfg.ReadString(CMBSetting, wxT("MIDIOut"), wxString::Format(wxT("Device%03d"), i + 1));
-				SetMidiOutState(name, cfg.ReadBoolean(CMBSetting, wxT("MIDIOut"), wxString::Format(wxT("Device%03dEnabled"), i + 1)));
-			}
-
-			wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
-		}
-		catch (wxString error)
+		m_AudioDeviceConfig.clear();
+		count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxT("Count"), 0, 200, false, 0);
+		for(unsigned i = 0; i < count; i++)
 		{
-			wxLogError(wxT("%s\n"),error.c_str());
+			GOAudioDeviceConfig conf;
+			conf.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dName"), i + 1));
+			conf.channels = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dChannelCount"), i + 1), 0, 200);
+			conf.scale_factors.resize(conf.channels);
+			for(unsigned j = 0; j < conf.channels; j++)
+			{
+				wxString prefix = wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);
+				unsigned group_count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), prefix + wxT("GroupCount"), 0, 200);
+				for(unsigned k = 0; k < group_count; k++)
+				{
+					GOAudioGroupOutputConfig group;
+					wxString p = prefix + wxString::Format(wxT("Group%03d"), k + 1);
+
+					group.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), p + wxT("Name"));
+					group.left = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"), p + wxT("Left"), -121.0, 40);
+					group.right = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"), p + wxT("Right"), -121.0, 40);
+
+					conf.scale_factors[j].push_back(group);
+				}
+			}
+			m_AudioDeviceConfig.push_back(conf);
 		}
+
+		for(unsigned i = 0; i < GetEventCount(); i++)
+			m_MIDIEvents[i]->Load(cfg, GetEventSection(i));
+
+		long cpus = wxThread::GetCPUCount();
+		if (cpus == -1)
+			cpus = 4;
+		if (cpus > MAX_CPU)
+			cpus = MAX_CPU;
+		if (cpus == 0)
+			cpus = 1;
+		SetConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, false, cpus));
+		SetReleaseConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, false, cpus));
+		SetLoadConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, false, cpus));
+
+		SetInterpolationType(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("InterpolationType"), 0, 1, false, 1));
+		SetWaveFormatBytesPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("WaveFormat"), 1, 4, false, 4));
+		SetAttackLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("AttackLoad"), 0, 1, false, 1));
+		SetLoopLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoopLoad"), 0, 2, false, 2));
+		SetReleaseLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLoad"), 0, 1, false, 1));
+
+		SetManageCache(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManageCache"), false, true));
+		SetCompressCache(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("CompressCache"), false, false));
+		SetLoadLastFile(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LoadLastFile"), false, true));
+		SetLastFile(cfg.ReadString(CMBSetting, wxT("General"), wxT("LastFile"), false, wxEmptyString));
+		SetODFCheck(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("StrictODFCheck"), false, false));
+
+		SetLoadInStereo(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("Stereo"), false, true));
+		SetLosslessCompression(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LosslessCompression"), false, false));
+		SetManagePolyphony(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManagePolyphony"), false, true));
+		SetScaleRelease(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ScaleRelease"), false, true));
+		SetRandomizeSpeaking(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("RandomizeSpeaking"), false, true));
+		SetMemoryLimit(cfg.ReadFloat(CMBSetting, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, false, GOrgueMemoryPool::GetSystemMemoryLimit()) * (1024.0 * 1024.0));
+
+		SetReverbEnabled(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbEnabled"), false, false));
+		SetReverbDirect(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbDirect"), false, true));
+		SetReverbChannel(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, false, 1));
+		SetReverbStartOffset(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbStartOffset"), 0, MAX_SAMPLE_LENGTH, false, 0));
+		SetReverbLen(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbLen"), 0, MAX_SAMPLE_LENGTH, false, 0));
+		SetReverbDelay(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, false, 0));
+		SetReverbGain(cfg.ReadFloat(CMBSetting, wxT("Reverb"), wxT("ReverbGain"), 0, 50, false, 1));
+		SetReverbFile(cfg.ReadString(CMBSetting, wxT("Reverb"), wxT("ReverbFile"), false, wxEmptyString));
+
+		SetSamplesPerBuffer(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SamplesPerBuffer"), BLOCKS_PER_FRAME, MAX_FRAME_SIZE, false, 1024));
+		SetSampleRate(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SampleRate"), 1000, 100000, false, 44100));
+		SetBitsPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("BitsPerSample"), 8, 24, false, 24));
+		SetVolume(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Volume"), -120, 20, false, -15));
+		SetPolyphonyLimit(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, false, 2048));
+		SetUserSettingPath (cfg.ReadString(CMBSetting, wxT("General"), wxT("SettingPath"), false, m_Config.Read(wxT("SettingPath"), wxEmptyString)));
+		SetUserCachePath (cfg.ReadString(CMBSetting, wxT("General"), wxT("CachePath"), false, m_Config.Read(wxT("CachePath"), wxEmptyString)));
+		SetPreset(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Preset"), 0, MAX_PRESET, false, 0));
+
+		SetReleaseLength(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLength"), 0, 5, false, 0));
+		
+		count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
+		for(unsigned i = 0; i < count; i++)
+		{
+			wxString name = cfg.ReadString(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03d"), i + 1));
+			SetMidiInState(name, cfg.ReadBoolean(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dEnabled"), i + 1)));
+			SetMidiInDeviceChannelShift(name, cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dShift"), i + 1), 0, 15));;
+		}
+
+		count = cfg.ReadInteger(CMBSetting, wxT("MIDIOut"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
+		for(unsigned i = 0; i < count; i++)
+		{
+			wxString name = cfg.ReadString(CMBSetting, wxT("MIDIOut"), wxString::Format(wxT("Device%03d"), i + 1));
+			SetMidiOutState(name, cfg.ReadBoolean(CMBSetting, wxT("MIDIOut"), wxString::Format(wxT("Device%03dEnabled"), i + 1)));
+		}
+
+		wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
+	}
+	catch (wxString error)
+	{
+		wxLogError(wxT("%s\n"),error.c_str());
 	}
 
 	m_WAVPath = m_Config.Read(wxT("wavPath"), GetStandardDocumentDirectory());
