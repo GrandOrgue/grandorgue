@@ -111,6 +111,7 @@ sets wherever is convenient and space permits.
 Please look at https://sourceforge.net/p/ourorgan/samplesets/ for
 more information.
       </para>
+      <note><para>Some Hauptwerk&#8482; Organ Definition File keywords are not used by GrandOrgue and are reported in a pop-up window. These warning messages can be safely ignored</para></note>
     </sect1>
     <sect1>
       <title>Features</title>
@@ -759,6 +760,19 @@ settings file.
         <para>
 GrandOrgue provides additional panels. These panels work as console extensions and are not displayed by default. They can be accessed via the <link linkend="panel">Panels</link> menu.</para>
       </sect2>
+    </sect1>
+    <sect1>
+      <title>Message log</title>
+      <figure><title>Message Log</title><mediaobject><imageobject><imagedata fileref="message_log.png" security=""/></imageobject></mediaobject></figure>
+      <para>Whenever GrandOrgue needs to display a message, it opens a pop-up window. Messages are displayed in reverse chronological order : newest on top of the window.</para>
+      <para>Messages are displayed with a rating icon.</para>
+      <para><imageobject><imagedata fileref="warning_message_icon.png" /></imageobject> Warning message</para>
+      <para><imageobject><imagedata fileref="serious_message_icon.png" /></imageobject> Serious message</para>
+      <para>
+Right-clicking anywhere in this window displays a small menu which copies the
+window's content to the clipboard. When pasted to a file, the messages are
+displayed in chronological order: oldest on the first line.
+      </para>
     </sect1>
   </chapter>
   <chapter>
@@ -1447,6 +1461,35 @@ Variable savings up to 50%
           <para>Selects whether the cache must be automatically created or updated when the sample set is loaded.</para>
         </sect3>
       </sect2>
+      <sect2>
+        <title>Perform strict ODF</title>
+        <indexterm><primary>Preform strict ODF</primary></indexterm>
+        <para>
+Organ Definition File (ODF) syntax has much changed since the days of
+Hauptwerk&#8482; version 1. Some Hauptwerk&#8482; 1 keywords are not used by
+GrandOrgue and are reported as warning in the pop-up message window.
+        </para>
+        <para>
+Introducing ODF warnings to GrandOrgue is a two-step development process:
+          <orderedlist>
+            <listitem>
+A new warning is added to the ODF parsing utilities. It is displayed only in
+strict ODF mode, to give samplesets designers time to remove the new warning
+from their Organ Definition Files, without disturbing users.
+            </listitem>
+            <listitem>After a suitable number of months has elapsed, the warning is moved to normal mode and is always displayed.</listitem>
+          </orderedlist>
+        </para>
+        <para>This checkbox enables strict ODF mode.</para>
+        <note>
+          <para>
+Sampleset designers are <emphasis role="strong">strongly</emphasis> encouraged
+to update their Organ Definition Files in order to remove warnings and improve
+user experience.
+          </para>
+          <para>Likewise, GrandOrgue users are <emphasis role="strong">strongly</emphasis> encouraged to report new warnings to the sampleset designer.</para>
+        </note>
+      </sect2>
     </sect1>
     <sect1>
       <title>Audio Output tab</title>
@@ -2067,8 +2110,8 @@ Within  windchests, the ranks are ordered as found in the definition file.
       </sect2>
       <sect2>
         <title>Tracker</title>
-	<para>This spinner allows to define a delay in ms. This delay simulates the time spent by the tracker system to open the valve after a key is depressed.</para>
-	<para>Tracker delay is cumulative from organ level down to pipe level.</para>
+        <para>This spinner allows to define a delay in ms. This delay simulates the time spent by the tracker system to open the valve after a key is depressed.</para>
+        <para>Tracker delay is cumulative from organ level down to pipe level.</para>
       </sect2>
       <sect2>
         <title>Audio Group</title>
@@ -6403,14 +6446,6 @@ It has the following attributes:
       </para>
       <variablelist>
         <varlistentry>
-          <term>Comment</term>
-          <listitem>
-            <para>
-(string, default: empty string) Description of this windchest
-     </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
           <term>Name</term>
           <listitem>
             <para>
@@ -6766,3 +6801,6 @@ very similar name that that has been discontinued.
     </para>
   </chapter>
 </book>
+<!--
+ vim: ts=2 sw=2 et 
+-->
