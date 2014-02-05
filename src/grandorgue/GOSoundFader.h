@@ -22,9 +22,6 @@
 #ifndef GOSOUNDFADER_H_
 #define GOSOUNDFADER_H_
 
-#include <assert.h>
-#include <math.h>
-
 class GOSoundFader
 {
 	typedef struct
@@ -42,10 +39,13 @@ private:
 	float       m_last_volume;
 	unsigned    m_nb_attack_frames_left;
 
+	void NewAttacking(float target_gain, unsigned n_frames);
+
 public:
-	void NewAttacking(float target_gain, int duration_shift, int max_fadein_frames);
+	void NewAttacking(float target_gain, unsigned ms, unsigned sample_rate);
 	void NewConstant(float gain);
-	void StartDecay(int duration_shift);
+	void StartDecay(unsigned n_frames);
+	void StartDecay(unsigned ms, unsigned sample_rate);
 	bool IsSilent();
 	void SetVelocityVolume(float volume);
 
@@ -131,10 +131,9 @@ void GOSoundFader::Process(unsigned n_blocks, float *buffer, float volume)
 }
 
 inline
-void GOSoundFader::StartDecay(int duration_shift)
+void GOSoundFader::StartDecay(unsigned n_frames)
 {
-	assert(duration_shift < 0);
-	m_decay = -scalbnf(m_target, duration_shift);
+	m_decay = - (m_target / n_frames);
 }
 
 inline
@@ -144,17 +143,16 @@ bool GOSoundFader::IsSilent()
 }
 
 inline
-void GOSoundFader::NewAttacking(float target_gain, int duration_shift, int max_fadein_frames)
+void GOSoundFader::NewAttacking(float target_gain, unsigned n_frames)
 {
-	assert(duration_shift < 0);
-	m_nb_attack_frames_left = max_fadein_frames;
+	m_nb_attack_frames_left = n_frames;
 	m_decay  = 0.0f;
 	m_gain   = 0.0f;
 	m_target = target_gain;
 	m_last_volume = -1;
 	m_VelocityVolume = 1;
 	
-	m_attack = scalbnf(target_gain, duration_shift);
+	m_attack = target_gain / n_frames;
 }
 
 inline
@@ -171,6 +169,18 @@ inline
 void GOSoundFader::SetVelocityVolume(float volume)
 {
 	m_VelocityVolume = volume;
+}
+
+inline
+void GOSoundFader::NewAttacking(float target_gain, unsigned ms, unsigned sample_rate)
+{
+	NewAttacking(target_gain, sample_rate * ms / 1000);
+}
+
+inline
+void GOSoundFader::StartDecay(unsigned ms, unsigned sample_rate)
+{
+	StartDecay(sample_rate * ms / 1000);
 }
 
 #endif /* GOSOUNDFADER_H_ */
