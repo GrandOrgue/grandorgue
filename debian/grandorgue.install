@@ -1,6 +1,7 @@
 usr/bin/*
 usr/share/GrandOrgue/help
 usr/share/applications/*
+usr/share/appdata/*
 usr/share/pixmaps/*
 usr/share/mime/packages/*
 usr/share/man/man1/*
