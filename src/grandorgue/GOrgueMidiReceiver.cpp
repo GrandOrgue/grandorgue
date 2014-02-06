@@ -54,6 +54,7 @@ const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
 	{ wxT("RPNOff"), MIDI_M_RPN_OFF },
 	{ wxT("NRPNOn"), MIDI_M_NRPN_ON },
 	{ wxT("NRPNOff"), MIDI_M_NRPN_OFF },
+	{ wxT("ControlChangeBitfield"), MIDI_M_CTRL_BIT },
 	{ wxT("ControlChangeOn"), MIDI_M_CTRL_CHANGE_ON },
 	{ wxT("ControlChangeOff"), MIDI_M_CTRL_CHANGE_OFF },
 	{ wxT("NoteOn"), MIDI_M_NOTE_ON },
@@ -216,6 +217,7 @@ bool GOrgueMidiReceiver::HasLowerLimit(midi_match_message_type type)
 		return false;
 	if (type == MIDI_M_NOTE ||
 	    type == MIDI_M_CTRL_CHANGE ||
+	    type == MIDI_M_CTRL_BIT ||
 	    type == MIDI_M_RPN ||
 	    type == MIDI_M_NRPN ||
 	    type == MIDI_M_NOTE_OFF ||
@@ -386,6 +388,14 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 			if (e.GetValue() >= m_events[i].high_value)
 				return MIDI_MATCH_ON;
 			continue;
+		}
+		if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].type == MIDI_M_CTRL_BIT && m_events[i].key == e.GetKey())
+		{
+			unsigned mask = 1 << m_events[i].low_value;
+			if (e.GetValue() & mask)
+				return MIDI_MATCH_ON;
+			else
+				return MIDI_MATCH_OFF;
 		}
 		if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].type == MIDI_M_CTRL_CHANGE_ON && m_events[i].key == e.GetKey() && e.GetValue() >= m_events[i].high_value)
 			return debounce(e, MIDI_MATCH_CHANGE, i);
