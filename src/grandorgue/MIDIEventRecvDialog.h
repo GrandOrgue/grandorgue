@@ -30,6 +30,7 @@ class GOrgueSettings;
 class wxButton;
 class wxChoice;
 class wxSpinCtrl;
+class wxStaticText;
 class wxToggleButton;
 
 class MIDIEventRecvDialog : public wxPanel, protected GOrgueMidiCallback
@@ -43,7 +44,9 @@ private:
 	wxSpinCtrl *m_data;
 	wxSpinCtrl *m_LowKey;
 	wxSpinCtrl *m_HighKey;
+	wxStaticText *m_LowValueLabel;
 	wxSpinCtrl *m_LowValue;
+	wxStaticText *m_HighValueLabel;
 	wxSpinCtrl *m_HighValue;
 	wxSpinCtrl *m_Debounce;
 	wxToggleButton* m_listen;
