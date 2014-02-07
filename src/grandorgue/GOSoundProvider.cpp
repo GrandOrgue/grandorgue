@@ -25,6 +25,7 @@
 #include "GOrgueCacheWriter.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrgueReleaseAlignTable.h"
+#include <wx/intl.h>
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
@@ -152,6 +153,10 @@ void GOSoundProvider::ComputeReleaseAlignmentInfo()
 			if (m_AttackInfo[i].sample_group == k)
 				m_Attack[i]->SetupStreamAlignment(sections, 1);
 	}
+
+	for(unsigned i = 1; i < m_Attack.size(); i++)
+		if (m_Attack[0]->IsOneshot() != m_Attack[i]->IsOneshot())
+			throw (wxString)_("Mixing of percussive and non-percussive samples in one pipe not allowed");
 }
 
 int GOSoundProvider::IsOneshot() const
