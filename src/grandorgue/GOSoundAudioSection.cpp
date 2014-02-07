@@ -524,7 +524,6 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 				 * FRAME, but including a case for 2 times the size allows for a
 				 * very large tuning. */
 				stream->position_index += next->start_offset;
-				assert(stream->position_index < 2 * BLOCKS_PER_FRAME);
 				stream->ptr = stream->audio_section->m_Data;
 				stream->cache = next->cache;
 				stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;

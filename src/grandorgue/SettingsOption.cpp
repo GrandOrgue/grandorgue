@@ -192,17 +192,15 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_SampleRate = new wxChoice(this, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
-	choices.clear();
-	for(unsigned i = 0; i < MAX_FRAME_SIZE / BLOCKS_PER_FRAME; i++)
-		choices.push_back(wxString::Format(wxT("%d"), (i + 1) * BLOCKS_PER_FRAME));
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Samples per buffer:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
-	grid->Add(m_SamplesPerBuffer = new wxChoice(this, ID_SAMPLES_PER_BUFFER, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+	grid->Add(m_SamplesPerBuffer = new wxSpinCtrl(this, ID_SAMPLES_PER_BUFFER, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
+	m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
+	m_SamplesPerBuffer->SetValue(m_Settings.GetSamplesPerBuffer());
 
 	m_SampleRate->Select(0);
 	for(unsigned i = 0; i < m_SampleRate->GetCount(); i++)
 		if (wxString::Format(wxT("%d"), m_Settings.GetSampleRate()) == m_SampleRate->GetString(i))
 			m_SampleRate->Select(i);
-	m_SamplesPerBuffer->SetSelection(m_Settings.GetSamplesPerBuffer() / BLOCKS_PER_FRAME - 1);
 
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Cache"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
@@ -253,7 +251,7 @@ void SettingsOption::Save()
 		m_Settings.SetSampleRate(sample_rate);
 	else
 		wxLogError(_("Invalid sample rate"));
-	m_Settings.SetSamplesPerBuffer((m_SamplesPerBuffer->GetSelection() + 1) * BLOCKS_PER_FRAME);
+	m_Settings.SetSamplesPerBuffer(m_SamplesPerBuffer->GetValue());
 	m_Settings.SetMemoryLimit(m_MemoryLimit->GetValue() * 1024.0 * 1024.0);
 }
 

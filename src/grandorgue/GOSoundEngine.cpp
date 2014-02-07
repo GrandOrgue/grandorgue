@@ -299,8 +299,6 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		}
 	}
 
-	assert((n_frames & (BLOCKS_PER_FRAME - 1)) == 0);
-	assert(n_frames > BLOCKS_PER_FRAME);
 	float* output_buffer = state.buff;
 	std::fill(output_buffer, output_buffer + n_frames * 2, state.is_tremulant ? 1.0f : 0.0f);
 	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;

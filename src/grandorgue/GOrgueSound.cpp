@@ -352,9 +352,6 @@ void GOrgueSound::OpenStreams()
 
 void GOrgueSound::StartStreams()
 {
-	if (m_SamplesPerBuffer & (BLOCKS_PER_FRAME - 1))
-		throw wxString::Format(_("Audio engine wants frame size of %u blocks which is indivisible by %u."), m_SamplesPerBuffer, BLOCKS_PER_FRAME);
-
 	if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
 		throw wxString::Format(_("Cannot use buffer size above %d samples; unacceptable quantization would occur."), MAX_FRAME_SIZE);
 

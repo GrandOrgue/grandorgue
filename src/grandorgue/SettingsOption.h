@@ -80,7 +80,7 @@ private:
 	wxChoice* m_Stereo;
 	wxChoice* m_Interpolation;
 	wxChoice* m_SampleRate;
-	wxChoice* m_SamplesPerBuffer;
+	wxSpinCtrl* m_SamplesPerBuffer;
 	wxSpinCtrl* m_MemoryLimit;
 	bool m_OldStereo;
 	bool m_OldLosslessCompression;
