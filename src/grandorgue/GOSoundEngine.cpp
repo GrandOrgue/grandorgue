@@ -130,10 +130,7 @@ void GOSoundEngine::SetHardPolyphony(unsigned polyphony)
 
 void GOSoundEngine::SetReleaseLength(unsigned reverb)
 {
-	int n = reverb;
-	if (n > 0)
-		n = -17 + n;
-	m_ReleaseLength = n;
+	m_ReleaseLength = reverb;
 }
 
 void GOSoundEngine::SetPolyphonyLimiting(bool limiting)
@@ -763,7 +760,7 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 			new_sampler->time = m_CurrentTime + 1;
 			new_sampler->velocity = handle->velocity;
 
-			int gain_decay_rate = 0;
+			unsigned gain_decay_length = 0;
 			float gain_target = this_pipe->GetGain() * release_section->GetNormGain();
 			const bool not_a_tremulant = (handle->sampler_group_id >= 0);
 			if (not_a_tremulant)
@@ -813,23 +810,21 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 						/* in function of note duration, fading happens between: 
 						* 200 ms and 6 s for release with little reverberation e.g. short release 
 						* 700 ms and 6 s for release with large reverberation e.g. long release */ 
-						int reverb_mini = time_to_full_reverb / 80;
-						gain_decay_rate = -11  - reverb_mini - ( ( ( ( (6 - reverb_mini) * time * 2 ) / time_to_full_reverb ) + 1 ) / 2 ); 
+						gain_decay_length = time_to_full_reverb + 6000 * time / time_to_full_reverb;
 					}
 				}
 			}
 			unsigned cross_fade_len = GetFaderLength(this_pipe->GetMidiKeyNumber());
 			new_sampler->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
 
-			int reverb = m_ReleaseLength;
-			if ( reverb < 0 )
+			if (m_ReleaseLength > 0)
 			{
-				if ( reverb > gain_decay_rate || gain_decay_rate == 0 )
-					gain_decay_rate = reverb;
+				if ( m_ReleaseLength < gain_decay_length || gain_decay_length == 0 )
+					gain_decay_length = m_ReleaseLength;
 			}
 
-			if (gain_decay_rate < 0)
-				new_sampler->fader.StartDecay(2 << -gain_decay_rate);
+			if (gain_decay_length > 0)
+				new_sampler->fader.StartDecay(gain_decay_length, m_SampleRate);
 
 			if (m_ReleaseAlignmentEnabled && release_section->SupportsStreamAlignment())
 			{

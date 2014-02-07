@@ -149,7 +149,7 @@ private:
 	bool                          m_ReleaseAlignmentEnabled;
 	bool                          m_RandomizeSpeaking;
 	int                           m_Volume;
-	int                           m_ReleaseLength;
+	unsigned                      m_ReleaseLength;
 	float                         m_Gain;
 	unsigned                      m_SampleRate;
 	uint64_t                      m_CurrentTime;

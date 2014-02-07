@@ -40,11 +40,11 @@ private:
 	unsigned    m_nb_attack_frames_left;
 
 	void NewAttacking(float target_gain, unsigned n_frames);
+	void StartDecay(unsigned n_frames);
 
 public:
 	void NewAttacking(float target_gain, unsigned ms, unsigned sample_rate);
 	void NewConstant(float gain);
-	void StartDecay(unsigned n_frames);
 	void StartDecay(unsigned ms, unsigned sample_rate);
 	bool IsSilent();
 	void SetVelocityVolume(float volume);
