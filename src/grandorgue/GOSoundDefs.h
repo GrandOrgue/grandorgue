@@ -25,11 +25,6 @@
 /* Number of samples to match for release alignment. */
 #define BLOCK_HISTORY          (2)
 
-/* BLOCKS_PER_FRAME specifies the number of mono samples or stereo sample
- * pairs which are decoded for each iteration of the audio engines main loop.
- * Setting this value too low will result in inefficiencies. */
-#define BLOCKS_PER_FRAME       (16)
-
 /* Read-Ahead of various playback modes */
 #define POLYPHASE_READAHEAD    (8)
 #define LINEAR_COMPRESSED_READAHEAD    (2)

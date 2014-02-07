@@ -234,7 +234,7 @@ void GOrgueSettings::Load()
 		SetReverbGain(cfg.ReadFloat(CMBSetting, wxT("Reverb"), wxT("ReverbGain"), 0, 50, false, 1));
 		SetReverbFile(cfg.ReadString(CMBSetting, wxT("Reverb"), wxT("ReverbFile"), false, wxEmptyString));
 
-		SetSamplesPerBuffer(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SamplesPerBuffer"), BLOCKS_PER_FRAME, MAX_FRAME_SIZE, false, 1024));
+		SetSamplesPerBuffer(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SamplesPerBuffer"), 1, MAX_FRAME_SIZE, false, 1024));
 		SetSampleRate(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SampleRate"), 1000, 100000, false, 44100));
 		SetBitsPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("BitsPerSample"), 8, 24, false, 24));
 		SetVolume(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Volume"), -120, 20, false, -15));
@@ -532,11 +532,11 @@ unsigned GOrgueSettings::GetSamplesPerBuffer()
 
 void GOrgueSettings::SetSamplesPerBuffer(unsigned sampler_per_buffer)
 {
-	m_SamplesPerBuffer = BLOCKS_PER_FRAME * ((sampler_per_buffer + BLOCKS_PER_FRAME - 1) / BLOCKS_PER_FRAME);
+	m_SamplesPerBuffer = sampler_per_buffer;
 	if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
 		m_SamplesPerBuffer = MAX_FRAME_SIZE;
-	if (m_SamplesPerBuffer < BLOCKS_PER_FRAME)
-		m_SamplesPerBuffer = BLOCKS_PER_FRAME;
+	if (m_SamplesPerBuffer < 1)
+		m_SamplesPerBuffer = 1;
 }
 
 unsigned GOrgueSettings::GetConcurrency()
