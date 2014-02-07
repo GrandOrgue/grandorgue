@@ -250,15 +250,12 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
 	choices.clear();
 	choices.push_back(_("Max"));
-	choices.push_back(_("2.8 s"));
-	choices.push_back(_("1.4 s"));
-	choices.push_back(_("700 ms"));
-	choices.push_back(_("350 ms"));
-	choices.push_back(_("175 ms"));
+	for(unsigned i = 1; i <= 60; i++)
+		choices.push_back(wxString::Format(_("%d ms"), i * 50));
 	m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
 	tb->AddControl(m_ReleaseLength);
 	unsigned n = m_Settings.GetReleaseLength();
-	m_ReleaseLength->SetSelection(n);
+	m_ReleaseLength->SetSelection(n / 50);
 	m_Sound.GetEngine().SetReleaseLength(n);
 	
 	tb->AddTool(ID_TRANSPOSE, _("&Transpose"), GetImage_transpose(), _("Transpose"), wxITEM_NORMAL);
@@ -833,9 +830,8 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 
 void GOrgueFrame::OnSettingsReleaseLength(wxCommandEvent& event)
 {
-	m_Settings.SetReleaseLength(m_ReleaseLength->GetSelection());
-	unsigned n = m_Settings.GetReleaseLength();
-	m_Sound.GetEngine().SetReleaseLength(n);
+	m_Settings.SetReleaseLength(m_ReleaseLength->GetSelection() * 50);
+	m_Sound.GetEngine().SetReleaseLength(m_Settings.GetReleaseLength());
 }
 
 void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)

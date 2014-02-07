@@ -243,7 +243,7 @@ void GOrgueSettings::Load()
 		SetUserCachePath (cfg.ReadString(CMBSetting, wxT("General"), wxT("CachePath"), false, m_Config.Read(wxT("CachePath"), wxEmptyString)));
 		SetPreset(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Preset"), 0, MAX_PRESET, false, 0));
 
-		SetReleaseLength(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLength"), 0, 5, false, 0));
+		SetReleaseLength(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLength"), 0, 3000, false, 0));
 		
 		count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
 		for(unsigned i = 0; i < count; i++)
@@ -942,8 +942,8 @@ unsigned GOrgueSettings::GetReleaseLength()
 
 void GOrgueSettings::SetReleaseLength(unsigned reverb)
 {
-	if (reverb > 5)
-		reverb = 5;
+	if (reverb > 3000)
+		reverb = 3000;
 	m_ReleaseLength = reverb;
 }
 

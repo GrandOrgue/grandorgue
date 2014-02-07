@@ -95,7 +95,7 @@ private:
 	std::vector<wxString> m_AudioGroups;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 	int m_Transpose;
-	int m_ReleaseLength;
+	unsigned m_ReleaseLength;
 	bool m_ReverbEnabled;
 	bool m_ReverbDirect;
 	int m_ReverbChannel;
