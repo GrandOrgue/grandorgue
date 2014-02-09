@@ -22,6 +22,7 @@
 #ifndef GOSOUNDREVERB_H
 #define GOSOUNDREVERB_H
 
+#include "ptrvector.h"
 class Convproc;
 class GOrgueSettings;
 
@@ -29,7 +30,7 @@ class GOSoundReverb
 {
 private:
 	unsigned m_channels;
-	Convproc* m_engine;
+	ptr_vector<Convproc> m_engine;
 
 	void Cleanup();
 
