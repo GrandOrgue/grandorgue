@@ -1220,6 +1220,9 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 	for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
 		m_divisionalcoupler[i]->PreparePlayback();
 
+	for (unsigned i = 0; i < m_windchest.size(); i++)
+		m_windchest[i]->PreparePlayback();
+
 	m_setter->PreparePlayback();
 	m_PitchLabel.PreparePlayback();
 	m_TemperamentLabel.PreparePlayback();
@@ -1240,6 +1243,12 @@ void GrandOrgueFile::Update()
 		m_divisionalcoupler[i]->Update();
 
 	m_setter->Update();
+}
+
+void GrandOrgueFile::UpdateVolume()
+{
+	for (unsigned i = 0; i < m_windchest.size(); i++)
+		m_windchest[i]->UpdateVolume();
 }
 
 void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)

@@ -147,6 +147,7 @@ public:
 	void AllNotesOff();
 	void ControlChanged(void* control);
 	void UpdateTremulant(GOrgueTremulant* tremulant);
+	void UpdateVolume();
 	void Modified();
 	GOrgueDocument* GetDocument();
 	~GrandOrgueFile(void);

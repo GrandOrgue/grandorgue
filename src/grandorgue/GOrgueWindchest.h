@@ -26,6 +26,7 @@
 #include <vector>
 
 class GOrgueConfigReader;
+class GOrgueEnclosure;
 class GOrguePipe;
 class GOrgueRank;
 class GOrgueTremulant;
@@ -36,7 +37,8 @@ class GOrgueWindchest
 private:
 	GrandOrgueFile* m_organfile;
 	wxString m_Name;
-	std::vector<unsigned> m_enclosure;
+	float m_Volume;
+	std::vector<GOrgueEnclosure*> m_enclosure;
 	std::vector<unsigned> m_tremulant;
 	std::vector<GOrgueRank*> m_ranks;
 	std::vector<GOrguePipe*> m_pipes;
@@ -46,14 +48,16 @@ public:
 	GOrgueWindchest(GrandOrgueFile* organfile);
 	void Load(GOrgueConfigReader& cfg, wxString group, unsigned index);
 	void UpdateTremulant(GOrgueTremulant* tremulant);
+	void UpdateVolume();
 	float GetVolume();
+	void PreparePlayback();
 	unsigned GetTremulantCount();
 	unsigned GetTremulantId(unsigned index);
 	unsigned GetRankCount();
 	GOrgueRank* GetRank(unsigned index);
 	void AddRank(GOrgueRank* rank);
 	void AddPipe(GOrguePipe* pipe);
-	void AddEnclosure(unsigned index);
+	void AddEnclosure(GOrgueEnclosure* enclosure);
 	const wxString& GetName();
 };
 
