@@ -31,6 +31,7 @@
 GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_Name(),
+	m_Volume(1),
 	m_enclosure(0),
 	m_tremulant(0),
 	m_ranks(0),
@@ -49,7 +50,7 @@ void GOrgueWindchest::Load(GOrgueConfigReader& cfg, wxString group, unsigned ind
 	{
 		wxString buffer;
 		buffer.Printf(wxT("Enclosure%03d"), i + 1);
-		m_enclosure.push_back(cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetEnclosureCount()) - 1);
+		m_enclosure.push_back(m_organfile->GetEnclosure(cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetEnclosureCount()) - 1));
 	}
 
 	m_tremulant.resize(0);
@@ -63,12 +64,17 @@ void GOrgueWindchest::Load(GOrgueConfigReader& cfg, wxString group, unsigned ind
 	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), false, wxString::Format(_("Windchest %d"), index + 1));
 }
 
-float GOrgueWindchest::GetVolume()
+void GOrgueWindchest::UpdateVolume()
 {
 	float f = 1.0f;
 	for (unsigned i = 0; i < m_enclosure.size(); i++)
-		f *= m_organfile->GetEnclosure(m_enclosure[i])->GetAttenuation();
-	return f;
+		f *= m_enclosure[i]->GetAttenuation();
+	m_Volume = f;
+}
+
+float GOrgueWindchest::GetVolume()
+{
+	return m_Volume;
 }
 
 unsigned GOrgueWindchest::GetTremulantCount()
@@ -101,9 +107,9 @@ void GOrgueWindchest::AddPipe(GOrguePipe* pipe)
 	m_pipes.push_back(pipe);
 }
 
-void GOrgueWindchest::AddEnclosure(unsigned index)
+void GOrgueWindchest::AddEnclosure(GOrgueEnclosure* enclosure)
 {
-	m_enclosure.push_back(index);
+	m_enclosure.push_back(enclosure);
 }
 
 const wxString& GOrgueWindchest::GetName()
@@ -124,4 +130,9 @@ void GOrgueWindchest::UpdateTremulant(GOrgueTremulant* tremulant)
 				m_pipes[j]->SetTremulant(on);
 			return;
 		}
+}
+
+void GOrgueWindchest::PreparePlayback()
+{
+	UpdateVolume();
 }

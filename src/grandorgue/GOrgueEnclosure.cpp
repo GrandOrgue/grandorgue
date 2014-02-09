@@ -79,6 +79,7 @@ void GOrgueEnclosure::Set(int n)
 		n = 127;
 	m_MIDIValue = n;
 	m_sender.SetValue(m_MIDIValue);
+	m_organfile->UpdateVolume();
 	m_organfile->ControlChanged(this);
 }
 

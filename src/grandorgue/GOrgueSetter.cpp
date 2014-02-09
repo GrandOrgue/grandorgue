@@ -550,7 +550,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 	GOrgueEnclosure* master_enc = new GOrgueEnclosure(m_organfile);
 	master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"));
 	master_enc->Set(127);
-	unsigned master = m_organfile->AddEnclosure(master_enc);
+	m_organfile->AddEnclosure(master_enc);
 
 	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, master_enc, 0);
 	enclosure->Init(cfg, wxT("SetterMasterVolume"));
@@ -559,12 +559,13 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 	for(unsigned i = 0; i < m_organfile->GetWindchestGroupCount(); i++)
 	{
 		GOrgueWindchest* windchest = m_organfile->GetWindchest(i);
-		windchest->AddEnclosure(master);
+		windchest->AddEnclosure(master_enc);
 
 		GOrgueEnclosure* enc = new GOrgueEnclosure(m_organfile);
 		enc->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1), windchest->GetName());
 		enc->Set(127);
-		windchest->AddEnclosure(m_organfile->AddEnclosure(enc));
+		m_organfile->AddEnclosure(enc);
+		windchest->AddEnclosure(enc);
 
 		enclosure = new GOGUIEnclosure(panel, enc, i + 1);
 		enclosure->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1));
