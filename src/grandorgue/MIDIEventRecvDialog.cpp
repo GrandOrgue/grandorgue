@@ -32,7 +32,9 @@
 #include <wx/tglbtn.h>
 
 BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
-	EVT_TOGGLEBUTTON(ID_LISTEN, MIDIEventRecvDialog::OnListenClick)
+	EVT_TOGGLEBUTTON(ID_LISTEN_SIMPLE, MIDIEventRecvDialog::OnListenSimpleClick)
+	EVT_TOGGLEBUTTON(ID_LISTEN_ADVANCED, MIDIEventRecvDialog::OnListenAdvancedClick)
+	EVT_TIMER(ID_TIMER, MIDIEventRecvDialog::OnTimer)
 	EVT_BUTTON(ID_EVENT_NEW, MIDIEventRecvDialog::OnNewClick)
 	EVT_BUTTON(ID_EVENT_DELETE, MIDIEventRecvDialog::OnDeleteClick)
 	EVT_CHOICE(ID_EVENT_NO, MIDIEventRecvDialog::OnEventChange)
@@ -45,7 +47,9 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	m_Settings(settings),
 	m_original(event),
 	m_midi(*event),
-	m_listener()
+	m_listener(),
+	m_ListenState(0),
+	m_Timer(this, ID_TIMER)
 {
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -116,9 +120,15 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	m_Debounce = new wxSpinCtrl(this, ID_DEBOUNCE, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 3000);
 	box->Add(m_Debounce, 0);
 
+	m_ListenSimple = new wxToggleButton(this, ID_LISTEN_SIMPLE, _("&Listen for Event"));
+	sizer->Add(m_ListenSimple, 0, wxTOP, 5);
+	m_ListenAdvanced = new wxToggleButton(this, ID_LISTEN_ADVANCED, _("&Detect complex MIDI setup"));
+	sizer->Add(m_ListenAdvanced, 0, wxTOP, 5);
+
 	sizer->Add(new wxStaticText(this, wxID_ANY, wxEmptyString));
-	m_listen = new wxToggleButton(this, ID_LISTEN, _("&Listen for Event"));
-	sizer->Add(m_listen, 0, wxTOP, 5);
+	m_ListenInstructions = new wxStaticText(this, wxID_ANY, wxT(""));
+	sizer->Add(m_ListenInstructions, 0, wxTOP, 5);
+
 	SetSizer(topSizer);
 
 	m_device->Append(_("Any device"));
@@ -197,7 +207,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 
 MIDIEventRecvDialog::~MIDIEventRecvDialog()
 {
-	m_listener.SetCallback(NULL);
+	StopListen();
 }
 
 void MIDIEventRecvDialog::RegisterMIDIListener(GOrgueMidi* midi)
@@ -348,26 +358,280 @@ void MIDIEventRecvDialog::OnEventChange(wxCommandEvent& event)
 	LoadEvent();
 }
 
-void MIDIEventRecvDialog::OnListenClick(wxCommandEvent& event)
+void MIDIEventRecvDialog::OnListenSimpleClick(wxCommandEvent& event)
 {
-	if (m_listen->GetValue())
-	{
-		this->SetCursor(wxCursor(wxCURSOR_WAIT));
-		m_listener.SetCallback(this);
-	}
+	if (m_ListenSimple->GetValue())
+		StartListen(false);
 	else
+		StopListen();
+}
+
+void MIDIEventRecvDialog::OnListenAdvancedClick(wxCommandEvent& event)
+{
+	if (m_ListenAdvanced->GetValue())
+		StartListen(true);
+	else
+		StopListen();
+}
+
+void MIDIEventRecvDialog::OnTimer(wxTimerEvent& event)
+{
+	if (m_ListenState == 2)
 	{
-		m_listener.SetCallback(NULL);
-		this->SetCursor(wxCursor(wxCURSOR_ARROW));
+		wxString label;
+		switch(m_midi.GetType())
+		{
+		case MIDI_RECV_MANUAL:
+			label = _("Please press the highest key with minimal velocity");
+			break;
+
+		case MIDI_RECV_ENCLOSURE:
+			label = _("Please fully close the enclosure");
+			break;
+			
+		default:
+			label = _("Please toggle it again (to off state, if possible)");
+		}
+
+		m_ListenInstructions->SetLabel(label);
+		m_ListenState = 3;
 	}
+	else if (m_ListenState == 3)
+		DetectEvent();
 }
 
 void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 {
-	if (event.GetMidiType() == MIDI_NONE)
-		return;
+	switch(event.GetMidiType())
+	{
+	case MIDI_NOTE:
+	case MIDI_CTRL_CHANGE:
+	case MIDI_PGM_CHANGE:
+	case MIDI_RPN:
+	case MIDI_NRPN:
+	case MIDI_SYSEX_JOHANNUS:
+		break;
 
-	MIDI_MATCH_EVENT& e=m_midi.GetEvent(m_current);
+	default:
+		return;
+	}
+
+	if (m_ListenState == 1)
+	{
+		m_OnList.push_back(event);
+		DetectEvent();
+	}
+	else if (m_ListenState == 2)
+	{
+		m_Timer.Stop();
+		m_Timer.Start(1000, true);
+		m_OnList.push_back(event);
+	}
+	else if (m_ListenState == 3)
+	{
+		m_OffList.push_back(event);
+		m_Timer.Stop();
+		m_Timer.Start(1000, true);
+	}
+}
+
+void MIDIEventRecvDialog::StartListen(bool type)
+{
+	this->SetCursor(wxCursor(wxCURSOR_WAIT));
+	m_listener.SetCallback(this);
+	if (!type)
+		m_ListenAdvanced->Disable();
+	if (type)
+		m_ListenSimple->Disable();
+	m_OnList.clear();
+	m_OffList.clear();
+	if (!type)
+	{
+		m_ListenInstructions->SetLabel(_("Please press the MIDI element"));
+		m_ListenState = 1;
+	}
+	else
+	{
+		m_ListenState = 2;
+		wxString label;
+		switch(m_midi.GetType())
+		{
+		case MIDI_RECV_MANUAL:
+			label = _("Please press the lowest key with minimal velocity");
+			break;
+
+		case MIDI_RECV_ENCLOSURE:
+			label = _("Please fully open the enclosure");
+			break;
+			
+		default:
+			label = _("Please toggle it (to on state, if possible)");
+		}
+
+		m_ListenInstructions->SetLabel(label);
+	}
+}
+
+void MIDIEventRecvDialog::StopListen()
+{
+	m_listener.SetCallback(NULL);
+	m_Timer.Stop();
+	this->SetCursor(wxCursor(wxCURSOR_ARROW));
+	m_ListenAdvanced->Enable();
+	m_ListenSimple->Enable();
+	m_ListenSimple->SetValue(false);
+	m_ListenAdvanced->SetValue(false);
+	m_ListenInstructions->SetLabel(wxEmptyString);
+	m_ListenState = 0;
+	m_OnList.clear();
+	m_OffList.clear();
+}
+
+void MIDIEventRecvDialog::DetectEvent()
+{
+	if (m_ListenState == 3)
+	{
+		for(unsigned i = 0; i < m_OnList.size(); i++)
+		{
+			if (i + 1 < m_OnList.size())
+			{
+				if (m_OnList[i].GetDevice() == m_OnList[i + 1].GetDevice() &&
+				    m_OnList[i].GetMidiType() == m_OnList[i + 1].GetMidiType() &&
+				    m_OnList[i].GetChannel() == m_OnList[i + 1].GetChannel() &&
+				    m_OnList[i].GetKey() == m_OnList[i + 1].GetKey())
+				{
+					if (m_OnList[i].GetMidiType() != MIDI_NOTE)
+						continue;
+				}
+			}
+			GOrgueMidiEvent on = m_OnList[i];
+			for(unsigned j = 0; j < m_OffList.size(); j++)
+			{
+				if (j + 1 < m_OffList.size())
+				{
+					if (m_OffList[j].GetDevice() == m_OffList[j + 1].GetDevice() &&
+					    m_OffList[j].GetMidiType() == m_OffList[j + 1].GetMidiType() &&
+					    m_OffList[j].GetChannel() == m_OffList[j + 1].GetChannel() &&
+					    m_OffList[j].GetKey() == m_OffList[j + 1].GetKey())
+					{
+						if (m_OffList[j].GetMidiType() != MIDI_NOTE)
+						continue;
+					}
+				}
+				GOrgueMidiEvent off = m_OffList[j];
+				if (on.GetDevice() != off.GetDevice())
+					continue;
+				if (on.GetChannel() != off.GetChannel())
+					continue;
+				if (on.GetMidiType() != off.GetMidiType())
+					continue;
+				if (m_midi.GetType() == MIDI_RECV_MANUAL)
+				{
+					if (on.GetMidiType() != MIDI_NOTE)
+						continue;
+					MIDI_MATCH_EVENT& e = m_midi.GetEvent(m_current);
+					e.type = MIDI_M_NOTE;
+					e.device = on.GetDevice();
+					e.channel = on.GetChannel();
+					e.low_key = on.GetKey();
+					e.high_key = off.GetKey();
+					e.low_value = std::min(on.GetValue(), off.GetValue());
+					e.high_value = 127;
+					e.debounce_time = 0;
+					LoadEvent();
+					StopListen();
+					return;
+				}
+				if (on.GetKey() != off.GetKey())
+					continue;
+				if (m_midi.GetType() == MIDI_RECV_ENCLOSURE)
+				{
+					MIDI_MATCH_EVENT& e = m_midi.GetEvent(m_current);
+					switch(on.GetMidiType())
+					{
+					case MIDI_CTRL_CHANGE:
+						e.type = MIDI_M_CTRL_CHANGE;
+						break;
+					case MIDI_RPN:
+						e.type = MIDI_M_RPN;
+						break;
+					case MIDI_NRPN:
+						e.type = MIDI_M_NRPN;
+						break;
+					default:
+						continue;
+					}
+					e.device = on.GetDevice();
+					e.channel = on.GetChannel();
+					e.key = on.GetKey();
+					e.low_key = 0;
+					e.high_key = 0;
+					e.high_value = on.GetValue();
+					e.low_value = off.GetValue();
+					LoadEvent();
+					StopListen();
+					return;
+				}
+				MIDI_MATCH_EVENT& e = m_midi.GetEvent(m_current);
+				unsigned low = 0;
+				unsigned high = 1;
+				switch(on.GetMidiType())
+				{
+				case MIDI_NOTE:
+					e.type = MIDI_M_NOTE;
+					if (on.GetValue() > 0 && off.GetValue() > 0)
+						e.type = MIDI_M_NOTE_ON;
+					if (on.GetValue() == 0 && off.GetValue() == 0)
+						e.type = MIDI_M_NOTE_OFF;
+					break;
+				case MIDI_CTRL_CHANGE:
+					e.type = MIDI_M_CTRL_CHANGE;
+					if (on.GetValue() == off.GetValue())
+						e.type = on.GetValue() > 0 ? MIDI_M_CTRL_CHANGE_ON : MIDI_M_CTRL_CHANGE_OFF;
+					for(unsigned k = 0; k < 7; k++)
+						if (on.GetValue() == off.GetValue() + (1 << k))
+						{
+							e.type = MIDI_M_CTRL_BIT;
+							low = k;
+						}
+					break;
+				case MIDI_PGM_CHANGE:
+					e.type = MIDI_M_PGM_CHANGE;
+					break;
+				case MIDI_RPN:
+					e.type = MIDI_M_RPN;
+					if (on.GetValue() == off.GetValue())
+						e.type = on.GetValue() > 0 ? MIDI_M_RPN_ON : MIDI_M_RPN_OFF;
+					break;
+				case MIDI_NRPN:
+					e.type = MIDI_M_NRPN;
+					if (on.GetValue() == off.GetValue())
+						e.type = on.GetValue() > 0 ? MIDI_M_NRPN_ON : MIDI_M_NRPN_OFF;
+					break;
+				case MIDI_SYSEX_JOHANNUS:
+					e.type = MIDI_M_SYSEX_JOHANNUS;
+					break;
+
+				default:
+					continue;
+				}
+				e.device = on.GetDevice();
+				e.channel = on.GetChannel();
+				e.key = on.GetKey();
+				e.low_key = 0;
+				e.high_key = 0;
+				e.low_value = low;
+				e.high_value = high;
+				e.debounce_time = 0;
+				LoadEvent();
+				StopListen();
+				return;
+			}
+		}
+	}
+
+	MIDI_MATCH_EVENT& e = m_midi.GetEvent(m_current);
+	GOrgueMidiEvent& event = m_OnList[0];
 	switch(event.GetMidiType())
 	{
 	case MIDI_NOTE:
@@ -390,7 +654,7 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 		break;
 
 	default:
-		return;
+		e.type = MIDI_M_NONE;
 	}
 	e.device = event.GetDevice();
 	e.channel = event.GetChannel();
@@ -401,10 +665,7 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 	e.low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
 	e.high_value = (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE) ? 127 : 1;
 	e.debounce_time = 0;
-
+	
 	LoadEvent();
-
-	m_listen->SetValue(false);
-	m_listener.SetCallback(NULL);
-	this->SetCursor(wxCursor(wxCURSOR_ARROW));
+	StopListen();
 }
