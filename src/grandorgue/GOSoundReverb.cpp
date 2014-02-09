@@ -31,7 +31,7 @@
 
 GOSoundReverb::GOSoundReverb(unsigned channels) :
 	m_channels(channels),
-	m_engine(0)
+	m_engine()
 {
 }
 
@@ -42,12 +42,10 @@ GOSoundReverb::~GOSoundReverb()
 
 void GOSoundReverb::Cleanup()
 {
-	if (m_engine)
+	for(unsigned i = 0; i < m_engine.size(); i++)
 	{
-		m_engine->stop_process();
-		m_engine->cleanup();
-		delete m_engine;
-		m_engine = NULL;
+		m_engine[i]->stop_process();
+		m_engine[i]->cleanup();
 	}
 }
 
@@ -58,7 +56,9 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 	if (!settings.GetReverbEnabled())
 		return;
 
-	m_engine = new Convproc();
+	m_engine.clear();
+	for(unsigned i = 0; i < m_channels; i++)
+		m_engine.push_back(new Convproc());
 	unsigned val = settings.GetSamplesPerBuffer();
 	if (val < Convproc::MINPART)
 		val = Convproc::MINPART;
@@ -68,8 +68,9 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 	unsigned len = 0;
 	try
 	{
-		if (m_engine->configure(m_channels, m_channels, 1000000, settings.GetSamplesPerBuffer(), val, Convproc::MAXPART))
-			throw (wxString)_("Invalid reverb configuration (samples per buffer)");
+		for(unsigned i = 0; i < m_engine.size(); i++)
+			if (m_engine[i]->configure(1, 1, 1000000, settings.GetSamplesPerBuffer(), val, Convproc::MAXPART))
+				throw (wxString)_("Invalid reverb configuration (samples per buffer)");
 
 		GOrgueWave wav;
 		unsigned block = 0x4000;
@@ -104,20 +105,20 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 			unsigned l = len - offset;
 			float g = 1;
 			if  (settings.GetReverbDirect())
-				m_engine->impdata_create(i, i, 0, &g, 0, 1);
+				m_engine[i]->impdata_create(0, 0, 0, &g, 0, 1);
 			for(unsigned j = 0; j < l; j+= block)
 			{
-				m_engine->impdata_create(i, i, 1, d + j, delay + j, delay + j + std::min(l - j, block));
+				m_engine[i]->impdata_create(0, 0, 1, d + j, delay + j, delay + j + std::min(l - j, block));
 			}
 		}
 		wav.Close();
-		m_engine->start_process(0, 0);
+		for(unsigned i = 0; i < m_engine.size(); i++)
+			m_engine[i]->start_process(0, 0);
 	}
 	catch(wxString error)
 	{
 		wxLogError(_("Load error: %s"), error.c_str());
-		delete m_engine;
-		m_engine = NULL;
+		m_engine.clear();
 	}
 	if (data)
 		free(data);
@@ -125,27 +126,28 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 
 void GOSoundReverb::Reset()
 {
-	if (m_engine)
-		m_engine->reset();
+	for(unsigned i = 0; i < m_engine.size(); i++)
+		m_engine[i]->reset();
 }
 
 void GOSoundReverb::Process(float *output_buffer, unsigned n_frames)
 {
-	if (!m_engine)
+	if (!m_engine.size())
 		return;
 
 	for(unsigned i = 0; i < m_channels; i++)
 	{
-		float* ptr = m_engine->inpdata(i);
+		float* ptr = m_engine[i]->inpdata(0);
 		for(unsigned j = 0; j < n_frames; j++)
 			ptr[j] = output_buffer[i + m_channels * j];
 	}
 
-	m_engine->process();
+	for(unsigned i = 0; i < m_engine.size(); i++)
+		m_engine[i]->process();
 
 	for(unsigned i = 0; i < m_channels; i++)
 	{
-		float* ptr = m_engine->outdata(i);
+		float* ptr = m_engine[i]->outdata(0);
 		for(unsigned j = 0; j < n_frames; j++)
 			output_buffer[i + m_channels * j] = ptr[j];
 	}
