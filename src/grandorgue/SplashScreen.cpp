@@ -65,12 +65,9 @@ BEGIN_EVENT_TABLE(GOrgueSplash, wxDialog)
 	EVT_CLOSE(GOrgueSplash::OnCloseWindow)
 END_EVENT_TABLE()
 
-GOrgueSplash::GOrgueSplash
-	(int                has_timeout
-	,wxWindow          *parent
-	,wxWindowID         id
-	) :
-	wxDialog(parent, id, wxEmptyString, wxPoint(0, 0), wxSize(100, 100), wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP)
+GOrgueSplash::GOrgueSplash(int has_timeout, wxWindow *parent, wxWindowID id) :
+	wxDialog(parent, id, wxEmptyString, wxPoint(0, 0), wxSize(100, 100), wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP),
+	m_Timer(this, GORGUE_SPLASH_TIMER_ID)
 {
 	wxBitmap bitmap = GetImage_Splash();
 	DrawText(bitmap);
@@ -79,7 +76,6 @@ GOrgueSplash::GOrgueSplash
 	CentreOnScreen();
 	if (has_timeout)
 	{
-		m_Timer.SetOwner(this, GORGUE_SPLASH_TIMER_ID);
 		m_Timer.Start(GORGUE_SPLASH_TIMEOUT_LENGTH, true);
 		Show(true);
 	}
