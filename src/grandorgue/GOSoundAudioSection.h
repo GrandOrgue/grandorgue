@@ -42,10 +42,6 @@ typedef void (*DecodeBlockFunction)(audio_section_stream_s *stream, float *outpu
 
 typedef struct audio_start_data_segment_s
 {
-
-	/* Byte offset into data buffer where this section begins. */
-	unsigned    data_offset; /* TODO: Will need to be an array... */
-
 	/* Sample offset into entire audio section where data begins. */
 	unsigned    start_offset;
 
@@ -67,6 +63,7 @@ typedef struct audio_end_data_segment_s
 
 	/* Uncompressed ending data blob. This data must start before sample_offset*/
 	unsigned char *end_data;
+	unsigned char *end_ptr;
 	unsigned end_length;
 	unsigned end_size;
 	unsigned end_loop_length;
@@ -162,6 +159,7 @@ private:
 	/* Type of the data which is stored in the data pointer */
 	unsigned                   m_Compressed;
 	unsigned                   m_BitsPerSample;
+	unsigned                   m_BytesPerSample;
 	unsigned                   m_Channels;
 
 	/* Size of the section in BYTES */
