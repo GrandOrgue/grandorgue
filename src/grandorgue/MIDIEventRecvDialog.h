@@ -25,6 +25,8 @@
 #include "GOrgueMidiListener.h"
 #include "GOrgueMidiReceiver.h"
 #include <wx/panel.h>
+#include <wx/timer.h>
+#include <vector>
 
 class GOrgueSettings;
 class wxButton;
@@ -49,14 +51,25 @@ private:
 	wxStaticText *m_HighValueLabel;
 	wxSpinCtrl *m_HighValue;
 	wxSpinCtrl *m_Debounce;
-	wxToggleButton* m_listen;
+	wxToggleButton* m_ListenSimple;
+	wxStaticText* m_ListenInstructions;
+	wxToggleButton* m_ListenAdvanced;
+	unsigned m_ListenState;
 	wxButton* m_new, *m_delete;
+	wxTimer m_Timer;
 	int m_current;
+	std::vector<GOrgueMidiEvent> m_OnList;
+	std::vector<GOrgueMidiEvent> m_OffList;
 
 	void StoreEvent();
 	void LoadEvent();
+	void StartListen(bool type);
+	void StopListen();
+	void DetectEvent();
 
-	void OnListenClick(wxCommandEvent& event);
+	void OnTimer(wxTimerEvent& event);
+	void OnListenSimpleClick(wxCommandEvent& event);
+	void OnListenAdvancedClick(wxCommandEvent& event);
 	void OnNewClick(wxCommandEvent& event);
 	void OnDeleteClick(wxCommandEvent& event);
 	void OnEventChange(wxCommandEvent& event);
@@ -72,7 +85,9 @@ protected:
 		ID_EVENT,
 		ID_CHANNEL,
 		ID_DATA,
-		ID_LISTEN,
+		ID_LISTEN_SIMPLE,
+		ID_LISTEN_ADVANCED,
+		ID_TIMER,
 		ID_LOW_KEY,
 		ID_HIGH_KEY,
 		ID_LOW_VALUE,
