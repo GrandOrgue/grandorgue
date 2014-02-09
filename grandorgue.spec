@@ -103,6 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/GrandOrgue/help
 %dir %{_datadir}/GrandOrgue
 %{_datadir}/applications/*
+%dir %{_datadir}/appdata
 %{_datadir}/appdata/*
 %{_datadir}/pixmaps/*
 %{_datadir}/mime/packages/*
