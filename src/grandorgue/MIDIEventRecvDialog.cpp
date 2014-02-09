@@ -538,6 +538,11 @@ void MIDIEventRecvDialog::DetectEvent()
 					e.low_value = std::min(on.GetValue(), off.GetValue());
 					e.high_value = 127;
 					e.debounce_time = 0;
+					if ((on.GetKey() % 12) == 4)
+					{
+						e.type = MIDI_M_NOTE_SHORT_OCTAVE;
+						e.low_key -= 4;
+					}
 					LoadEvent();
 					StopListen();
 					return;
