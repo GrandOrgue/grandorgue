@@ -82,10 +82,9 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	sizer->Add(box);
 	m_channel = new wxChoice(this, ID_CHANNEL);
 	box->Add(m_channel, 0);
-	if (m_midi.GetType() == MIDI_RECV_MANUAL)
-		box->Add(new wxStaticText(this, wxID_ANY, _("&Transpose:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
-	else
-		box->Add(new wxStaticText(this, wxID_ANY, _("&Data:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+
+	m_DataLabel = new wxStaticText(this, wxID_ANY, wxT(""));
+	box->Add(m_DataLabel, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
 	m_data = new wxSpinCtrl(this, ID_CHANNEL, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 127);
 	box->Add(m_data, 0);
 
@@ -256,6 +255,7 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 	{
 		m_LowValueLabel->SetLabel(_("L&owest velocity:"));
 		m_HighValueLabel->SetLabel(_("H&ighest velocity:"));
+		m_DataLabel->SetLabel(_("&Transpose:"));
 	}
 	else
 	{
@@ -264,7 +264,29 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 		else
 			m_LowValueLabel->SetLabel(_("L&ower limit:"));
 		m_HighValueLabel->SetLabel(_("&Upper limit:"));
+		switch(type)
+		{
+		case MIDI_M_CTRL_CHANGE:
+		case MIDI_M_CTRL_BIT:
+		case MIDI_M_CTRL_CHANGE_ON:
+		case MIDI_M_CTRL_CHANGE_OFF:
+			m_DataLabel->SetLabel(_("&Controller-No:"));
+			break;
+
+		case MIDI_M_RPN:
+		case MIDI_M_NRPN:
+		case MIDI_M_RPN_ON:
+		case MIDI_M_RPN_OFF:
+		case MIDI_M_NRPN_ON:
+		case MIDI_M_NRPN_OFF:
+			m_DataLabel->SetLabel(_("&Parameter-No:"));
+			break;
+
+		default:
+			m_DataLabel->SetLabel(_("&Data:"));
+		}
 	}
+	Layout();
 }
 
 void MIDIEventRecvDialog::LoadEvent()

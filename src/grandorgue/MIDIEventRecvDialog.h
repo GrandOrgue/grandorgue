@@ -43,6 +43,7 @@ private:
 	GOrgueMidiReceiverData m_midi;
 	GOrgueMidiListener m_listener;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
+	wxStaticText* m_DataLabel;
 	wxSpinCtrl *m_data;
 	wxSpinCtrl *m_LowKey;
 	wxSpinCtrl *m_HighKey;

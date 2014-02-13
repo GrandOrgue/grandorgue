@@ -71,7 +71,8 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 	m_channel = new wxChoice(this, ID_CHANNEL);
 	sizer->Add(m_channel, 1, wxEXPAND);
 
-	sizer->Add(new wxStaticText(this, wxID_ANY, _("&CTRL/PGM:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+	m_KeyLabel = new wxStaticText(this, wxID_ANY, wxT(""));
+	sizer->Add(m_KeyLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 	m_key = new wxSpinCtrl(this, ID_KEY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
 	sizer->Add(m_key, 0);
 
@@ -176,6 +177,27 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 		m_HighValue->Enable();
 	else
 		m_HighValue->Disable();
+	switch(type)
+	{
+	case MIDI_S_CTRL_ON:
+	case MIDI_S_CTRL_OFF:
+	case MIDI_S_CTRL:
+		m_KeyLabel->SetLabel(_("&Controller-No:"));
+		break;
+
+	case MIDI_S_RPN:
+	case MIDI_S_NRPN:
+	case MIDI_S_RPN_ON:
+	case MIDI_S_RPN_OFF:
+	case MIDI_S_NRPN_ON:
+	case MIDI_S_NRPN_OFF:
+		m_KeyLabel->SetLabel(_("&Parameter-No:"));
+		break;
+
+	default:
+		m_KeyLabel->SetLabel(_("&CTRL/PGM:"));
+	}
+	Layout();
 }
 
 void MIDIEventSendDialog::LoadEvent()
