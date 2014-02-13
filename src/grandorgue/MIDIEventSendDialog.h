@@ -29,6 +29,7 @@ class GOrgueSettings;
 class wxButton;
 class wxChoice;
 class wxSpinCtrl;
+class wxStaticText;
 
 class MIDIEventSendDialog : public wxPanel
 {
@@ -37,6 +38,7 @@ private:
 	GOrgueMidiSender* m_original;
 	GOrgueMidiSenderData m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
+	wxStaticText* m_KeyLabel;
 	wxSpinCtrl *m_key;
 	wxSpinCtrl *m_LowValue;
 	wxSpinCtrl *m_HighValue;
