@@ -286,9 +286,9 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE*
 		device->rpn = false;
 		return;
 	}
-	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_NRPN_LSB)
+	if (e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_NRPN_MSB)
 	{
-		device->nrpn_lsb[e.GetChannel() - 1] = e.GetValue();
+		device->nrpn_msb[e.GetChannel() - 1] = e.GetValue();
 		device->rpn = false;
 		return;
 	}
