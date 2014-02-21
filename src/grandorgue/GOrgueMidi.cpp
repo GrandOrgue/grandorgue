@@ -67,6 +67,7 @@ void GOrgueMidi::UpdateDevices()
 				{
 					MIDI_IN_DEVICE *t = new MIDI_IN_DEVICE;
 					t->midi_in = new RtMidiIn(apis[j], "GrandOrgue");
+					t->midi_in->ignoreTypes(false);
 					t->channel_shift = 0;
 					t->midi = this;
 					t->rtmidi_port_no = i;
