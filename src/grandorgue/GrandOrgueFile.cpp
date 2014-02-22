@@ -1203,6 +1203,7 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 	m_soundengine = engine;
 	m_midi = midi;
 
+	m_MidiRecorder.SetOutputDevice(m_Settings.GetMidiMap().GetDeviceByString(m_Settings.GetMidiRecorderOutputDevice()));
 	m_MidiRecorder.Clear();
 	UpdateAudioGroup();
 

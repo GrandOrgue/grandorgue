@@ -26,8 +26,10 @@
 #include "GOrgueSound.h"
 #include <wx/button.h>
 #include <wx/checklst.h>
+#include <wx/choice.h>
 #include <wx/numdlg.h>
 #include <wx/sizer.h>
+#include <wx/stattext.h>
 
 BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_LISTBOX(ID_INDEVICES, SettingsMidiDevices::OnInDevicesClick)
@@ -81,6 +83,21 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 			m_OutDevices->Check(i);
 
 	item3->Add(m_OutDevices, 1, wxEXPAND | wxALL, 5);
+	wxBoxSizer* box = new wxBoxSizer(wxHORIZONTAL);
+	item3->Add(box);
+	box->Add(new wxStaticText(this, wxID_ANY, _("Send MIDI Recorder Output Stream to ")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+	m_RecorderDevice = new wxChoice(this, ID_RECORDERDEVICE);
+	box->Add(m_RecorderDevice, 0);
+	m_RecorderDevice->Append(_("No device"));
+	m_RecorderDevice->Select(0);
+	list = m_Sound.GetMidi().GetOutDevices();
+	for (std::map<wxString, int>::iterator it2 = list.begin(); it2 != list.end(); it2++)
+	{
+		m_RecorderDevice->Append(it2->first);
+		if (m_Sound.GetSettings().GetMidiRecorderOutputDevice() == it2->first)
+			m_RecorderDevice->SetSelection(m_RecorderDevice->GetCount() - 1);
+	}
+
 	topSizer->Add(item3, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 
 	topSizer->AddSpacer(5);
@@ -116,4 +133,8 @@ void SettingsMidiDevices::Save()
 	{
 		m_Sound.GetSettings().SetMidiOutState(m_OutDevices->GetString(i), m_OutDevices->IsChecked(i));
 	}
+	if (m_RecorderDevice->GetSelection() == 0)
+		m_Sound.GetSettings().SetMidiRecorderOutputDevice(wxEmptyString);
+	else
+		m_Sound.GetSettings().SetMidiRecorderOutputDevice(m_RecorderDevice->GetString(m_RecorderDevice->GetSelection()));
 }

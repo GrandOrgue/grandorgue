@@ -28,6 +28,7 @@
 class GOrgueSound;
 class wxButton;
 class wxCheckListBox;
+class wxChoice;
 
 class SettingsMidiDevices : public wxPanel
 {
@@ -35,6 +36,7 @@ class SettingsMidiDevices : public wxPanel
 		ID_INDEVICES = 200,
 		ID_INPROPERTIES,
 		ID_OUTDEVICES,
+		ID_RECORDERDEVICE,
 	};
 private:
 	GOrgueSound& m_Sound;
@@ -42,6 +44,7 @@ private:
 	wxCheckListBox* m_OutDevices;
 	std::vector<int> m_InDeviceData;
 	wxButton* m_InProperties;
+	wxChoice* m_RecorderDevice;
 
 	void OnInDevicesClick(wxCommandEvent& event);
 	void OnInDevicesDoubleClick(wxCommandEvent& event);
