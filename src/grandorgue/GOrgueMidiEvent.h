@@ -37,6 +37,8 @@ typedef enum {
 	MIDI_RPN,
 	MIDI_NRPN,
 	MIDI_SYSEX_JOHANNUS,
+	MIDI_SYSEX_GO_CLEAR,
+	MIDI_SYSEX_GO_SETUP,
 } midi_message_type;
 
 #define MIDI_CTRL_BANK_SELECT_MSB 0
