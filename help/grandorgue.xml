@@ -2683,6 +2683,11 @@ loaded. dwMIDIUnityNote and dwMIDIPitchFraction of the smpl chunk are
 used for retuning an organ to other temperaments.
       </para>
       <para>
+If multiple sample files are specified for one pipe, they must match
+each other in regards to pitch, amplitude and other things. GrandOrgue
+only allows adjustments at pipe level.
+      </para>
+      <para>
 The samples in the format above may also be packed with wavpack
 http://www.wavpack.com/.  GO only supports the wavpack V4 format
 without hybrid compression and it must include all meta data. A good

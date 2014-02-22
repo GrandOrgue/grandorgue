@@ -161,8 +161,20 @@ void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
+void GOSoundProviderWave::LoadPitch(const wxString& filename, const wxString& path)
+{
+	wxLogDebug(_("Loading file %s"), filename.c_str());
+
+	GOrgueWave wave;
+	wave.Open(GOCreateFilename(path, filename));
+
+	m_MidiKeyNumber = wave.GetMidiNote();
+	m_MidiPitchFract = wave.GetPitchFract();
+}
+
+
 void GOSoundProviderWave::ProcessFile(const wxString& filename, const wxString& path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int attack_start,
-				      int cue_point, int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity)
+				      int cue_point, int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity, bool use_pitch)
 {
 	wxLogDebug(_("Loading file %s"), filename.c_str());
 
@@ -175,8 +187,11 @@ void GOSoundProviderWave::ProcessFile(const wxString& filename, const wxString& 
 	if (data == NULL)
 		throw GOrgueOutOfMemory();
 
-	m_MidiKeyNumber = wave.GetMidiNote();
-	m_MidiPitchFract = wave.GetPitchFract();
+	if (use_pitch)
+	{
+		m_MidiKeyNumber = wave.GetMidiNote();
+		m_MidiPitchFract = wave.GetPitchFract();
+	}
 
 	unsigned channels = wave.GetChannels();
 	if (load_channels == 1)
@@ -227,6 +242,8 @@ void GOSoundProviderWave::LoadFromFile
 	ClearData();
 	if (!load_channels)
 		return;
+
+	bool load_first_attack = true;
 
 	if (!release_load)
 		for(int k = -1; k < 2; k++)
@@ -293,6 +310,11 @@ void GOSoundProviderWave::LoadFromFile
 					attacks[i].min_attack_velocity = min_velocity;
 				if (attacks[i].sample_group != k || best_idx == -1 || best_idx == (int)i)
 					continue;
+				if (load_first_attack && i == 0)
+				{
+					LoadPitch(attacks[i].filename, path);
+					load_first_attack = false;
+				}
 				for(unsigned j = i + 1; j < attacks.size(); j++)
 					attacks[j - 1] = attacks[j];
 				if ((int)i < best_idx)
@@ -315,14 +337,15 @@ void GOSoundProviderWave::LoadFromFile
 				loops.push_back(loop);
 			}
 			ProcessFile(attacks[i].filename, path, loops, true, attacks[i].load_release, attacks[i].sample_group, attacks[i].max_playback_time, attacks[i].attack_start, attacks[i].cue_point,
-				    attacks[i].release_end, bits_per_sample, load_channels, compress, loop_mode, attacks[i].percussive, attacks[i].min_attack_velocity);
+				    attacks[i].release_end, bits_per_sample, load_channels, compress, loop_mode, attacks[i].percussive, attacks[i].min_attack_velocity, load_first_attack);
+			load_first_attack = false;
 		}
 
 		for(unsigned i = 0; i < releases.size(); i++)
 		{
 			std::vector<GO_WAVE_LOOP> loops;
 			ProcessFile(releases[i].filename, path, loops, false, true, releases[i].sample_group, releases[i].max_playback_time, 0, releases[i].cue_point, releases[i].release_end, 
-				    bits_per_sample, load_channels, compress, loop_mode, true, 0);
+				    bits_per_sample, load_channels, compress, loop_mode, true, 0, false);
 		}
 
 		ComputeReleaseAlignmentInfo();

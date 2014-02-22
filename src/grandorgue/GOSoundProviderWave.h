@@ -83,7 +83,8 @@ class GOSoundProviderWave : public GOSoundProvider
 			  unsigned channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity);
 	void CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, int release_end, unsigned bits_per_sample, unsigned channels, bool compress);
 	void ProcessFile(const wxString& filename, const wxString& path, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int attack_start, int cue_point, 
-			 int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity);
+			 int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity, bool use_pitch);
+	void LoadPitch(const wxString& filename, const wxString& path);
 
 public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
