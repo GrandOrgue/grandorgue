@@ -24,9 +24,11 @@
 #include <assert.h>
 
 GOrgueMidiMap::GOrgueMidiMap() :
-	m_DeviceMap()
+	m_DeviceMap(),
+	m_ElementMap()
 {
 	m_DeviceMap.push_back(wxEmptyString);
+	m_ElementMap.push_back(wxEmptyString);
 	assert(m_DeviceMap[0] == wxEmptyString);
 }
 
@@ -49,3 +51,17 @@ unsigned GOrgueMidiMap::GetDeviceByString(const wxString& str)
 	return m_DeviceMap.size() - 1;
 }
 
+unsigned  GOrgueMidiMap::GetElementByString(const wxString& str)
+{
+	for(unsigned i = 0; i < m_ElementMap.size(); i++)
+		if (m_ElementMap[i] == str)
+			return i;
+	m_ElementMap.push_back(str);
+	return m_ElementMap.size() - 1;
+}
+
+const wxString&  GOrgueMidiMap::GetElementByID(unsigned id)
+{
+	assert(id <= m_ElementMap.size());
+	return m_ElementMap[id];
+}

@@ -21,6 +21,8 @@
 
 #include "GOrgueMidiEvent.h"
 
+#include "GOrgueMidiMap.h"
+
 GOrgueMidiEvent::GOrgueMidiEvent() :
 	m_miditype(MIDI_NONE),
 	m_channel(-1),
@@ -40,7 +42,7 @@ GOrgueMidiEvent::GOrgueMidiEvent(const GOrgueMidiEvent& e) :
 {
 }
 
-void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg)
+void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg, GOrgueMidiMap& map)
 {
 	SetMidiType(MIDI_NONE);
 	SetChannel(-1);
@@ -107,7 +109,7 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg)
 	}
 }
 
-void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg)
+void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgueMidiMap& map)
 {
 	msg.resize(0);
 	std::vector<unsigned char> m;
