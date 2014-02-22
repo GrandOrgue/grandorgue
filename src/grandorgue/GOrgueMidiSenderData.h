@@ -34,6 +34,7 @@ typedef enum {
 typedef enum {
 	MIDI_S_NONE,
 	MIDI_S_NOTE,
+	MIDI_S_NOTE_NO_VELOCITY,
 	MIDI_S_CTRL,
 	MIDI_S_RPN,
 	MIDI_S_NRPN,

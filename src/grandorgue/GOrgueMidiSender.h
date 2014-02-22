@@ -46,7 +46,8 @@ public:
 	void Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiMap& map);
 
 	void SetDisplay(bool state);
-	void SetKey(unsigned key, bool state);
+	void SetKey(unsigned key, unsigned velocity);
+	void ResetKey();
 	void SetValue(unsigned value);
 	void SetLabel(wxString text);
 

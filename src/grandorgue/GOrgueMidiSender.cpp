@@ -39,6 +39,7 @@ GOrgueMidiSender::~GOrgueMidiSender()
 
 const struct IniFileEnumEntry GOrgueMidiSender::m_MidiTypes[] = {
 	{ wxT("Note"), MIDI_S_NOTE },
+	{ wxT("NoteNoVelocity"), MIDI_S_NOTE_NO_VELOCITY },
 	{ wxT("ControlChange"), MIDI_S_CTRL },
 	{ wxT("RPN"), MIDI_S_RPN },
 	{ wxT("NRPN"), MIDI_S_NRPN },
@@ -103,6 +104,7 @@ bool GOrgueMidiSender::HasLowValue(midi_send_message_type type)
 	    type == MIDI_S_RPN_OFF ||
 	    type == MIDI_S_NRPN_OFF ||
 	    type == MIDI_S_NOTE ||
+	    type == MIDI_S_NOTE_NO_VELOCITY ||
 	    type == MIDI_S_RPN ||
 	    type == MIDI_S_NRPN ||
 	    type == MIDI_S_CTRL)
@@ -117,6 +119,7 @@ bool GOrgueMidiSender::HasHighValue(midi_send_message_type type)
 	    type == MIDI_S_RPN_ON ||
 	    type == MIDI_S_NRPN_ON ||
 	    type == MIDI_S_NOTE ||
+	    type == MIDI_S_NOTE_NO_VELOCITY ||
 	    type == MIDI_S_RPN ||
 	    type == MIDI_S_NRPN ||
 	    type == MIDI_S_CTRL)
@@ -270,7 +273,24 @@ void GOrgueMidiSender::SetDisplay(bool state)
 	}
 }
 
-void GOrgueMidiSender::SetKey(unsigned key, bool state)
+void GOrgueMidiSender::ResetKey()
+{
+	for(unsigned i = 0; i < m_events.size(); i++)
+	{
+		if (m_events[i].type == MIDI_S_NOTE || m_events[i].type == MIDI_S_NOTE_NO_VELOCITY)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_CTRL_CHANGE);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(MIDI_CTRL_NOTES_OFF);
+			e.SetValue(1);
+			m_organfile->SendMidiMessage(e);
+		}
+	}
+}
+
+void GOrgueMidiSender::SetKey(unsigned key, unsigned velocity)
 {
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
@@ -281,7 +301,17 @@ void GOrgueMidiSender::SetKey(unsigned key, bool state)
 			e.SetMidiType(MIDI_NOTE);
 			e.SetChannel(m_events[i].channel);
 			e.SetKey(key);
-			e.SetValue(state ? m_events[i].high_value : m_events[i].low_value);
+			e.SetValue(m_events[i].low_value + velocity * (m_events[i].high_value - m_events[i].low_value));
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_NOTE_NO_VELOCITY)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_NOTE);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(key);
+			e.SetValue(velocity ? m_events[i].high_value : m_events[i].low_value);
 			m_organfile->SendMidiMessage(e);
 		}
 	}
