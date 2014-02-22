@@ -304,6 +304,7 @@ GOrgueMidiSender.cpp
 GOrgueMidiSenderData.cpp
 GOrgueMidiReceiver.cpp
 GOrgueMidiReceiverData.cpp
+GOrgueMidiRecorder.cpp
 GOrgueMidiWXEvent.cpp
 GOrgueOrgan.cpp
 GOrguePath.cpp

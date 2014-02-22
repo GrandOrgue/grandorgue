@@ -27,6 +27,7 @@
 #include "GOrgueCombinationDefinition.h"
 #include "GOrgueLabel.h"
 #include "GOrgueMemoryPool.h"
+#include "GOrgueMidiRecorder.h"
 #include "GOrguePipeConfig.h"
 #include <wx/hashmap.h>
 #include <wx/string.h>
@@ -113,6 +114,7 @@ private:
 	GOrgueBitmapCache m_bitmaps;
 	GOrguePipeConfig m_PipeConfig;
 	GOrgueSettings& m_Settings;
+	GOrgueMidiRecorder m_MidiRecorder;
 	GOrgueCombinationDefinition m_GeneralTemplate;
 	GOrgueLabel m_PitchLabel;
 	GOrgueLabel m_TemperamentLabel;
@@ -188,6 +190,7 @@ public:
 	wxString GetTemperament();
 	void MarkSectionInUse(wxString name);
 
+	GOrgueMidiRecorder& GetMidiRecorder();
 	GOrgueCombinationDefinition& GetGeneralTemplate();
 	GOrgueLabel* GetPitchLabel();
 	GOrgueLabel* GetTemperamentLabel();
@@ -233,6 +236,7 @@ public:
 	void UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity);
 
 	void SendMidiMessage(GOrgueMidiEvent& e);
+	void SendMidiRecorderMessage(GOrgueMidiEvent& e);
 	void AddMidiListener(GOrgueMidiListener* listener);
 };
 

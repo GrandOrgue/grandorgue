@@ -106,6 +106,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_bitmaps(this),
 	m_PipeConfig(this, this),
 	m_Settings(settings),
+	m_MidiRecorder(this),
 	m_GeneralTemplate(this),
 	m_PitchLabel(this),
 	m_TemperamentLabel(this)
@@ -1145,6 +1146,11 @@ void GrandOrgueFile::SendMidiMessage(GOrgueMidiEvent& e)
 		m_midi->Send(e);
 }
 
+void GrandOrgueFile::SendMidiRecorderMessage(GOrgueMidiEvent& e)
+{
+	m_MidiRecorder.SendMidiRecorderMessage(e);
+}
+
 void GrandOrgueFile::AddMidiListener(GOrgueMidiListener* listener)
 {
 	if (m_midi)
@@ -1194,6 +1200,7 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 	m_soundengine = engine;
 	m_midi = midi;
 
+	m_MidiRecorder.Clear();
 	UpdateAudioGroup();
 
 	for (unsigned i = 0; i < m_ranks.size(); i++)
@@ -1230,6 +1237,8 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 
 void GrandOrgueFile::PrepareRecording()
 {
+	m_MidiRecorder.Clear();
+
 	for (unsigned i = 0; i < m_switches.size(); i++)
 		m_switches[i]->PrepareRecording();
 
@@ -1385,6 +1394,11 @@ void GrandOrgueFile::AllNotesOff()
 void GrandOrgueFile::Modified()
 {
 	m_doc->Modify(true);
+}
+
+GOrgueMidiRecorder& GrandOrgueFile::GetMidiRecorder()
+{
+	return m_MidiRecorder;
 }
 
 GOrgueCombinationDefinition& GrandOrgueFile::GetGeneralTemplate()
