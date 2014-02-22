@@ -35,7 +35,8 @@ GOrgueMidiReceiver::GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_
 	m_organfile(organfile),
 	m_Index(-1),
 	m_ElementID(-1),
-	m_last()
+	m_last(),
+	m_Internal()
 {
 }
 
@@ -284,6 +285,73 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, int& value)
 MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsigned midi_map[128], int& key, int& value)
 {
 	value = 0;
+
+	if (e.GetMidiType() == MIDI_SYSEX_GO_CLEAR)
+	{
+		for(unsigned i = 0; i < m_Internal.size(); i++)
+			if (m_Internal[i].device == e.GetDevice())
+			{
+				m_Internal[i] = m_Internal[m_Internal.size() - 1];
+				m_Internal.resize(m_Internal.size() - 1);
+				break;
+			}
+		return MIDI_MATCH_NONE;
+	}
+	if (e.GetMidiType() == MIDI_SYSEX_GO_SETUP)
+	{
+		if (m_ElementID == -1)
+			return MIDI_MATCH_NONE;
+		if (m_ElementID != e.GetKey())
+			return MIDI_MATCH_NONE;
+
+		unsigned pos = 0;
+		while(pos < m_Internal.size() && m_Internal[pos].device == e.GetDevice())
+			pos++;
+		if (pos >= m_Internal.size())
+			m_Internal.resize(m_Internal.size() + 1);
+		m_Internal[pos].device = e.GetDevice();
+		m_Internal[pos].channel = e.GetChannel();
+		m_Internal[pos].key = e.GetValue();
+		return MIDI_MATCH_NONE;
+	}
+
+	for(unsigned i = 0; i < m_Internal.size(); i++)
+		if (m_Internal[i].device == e.GetDevice())
+		{
+			if (m_type == MIDI_RECV_MANUAL)
+			{
+				if (e.GetMidiType() == MIDI_NOTE && e.GetChannel() == m_Internal[i].channel)
+				{
+					key = e.GetKey();
+					value = e.GetValue();
+					if (value == 0)
+						return MIDI_MATCH_OFF;
+					else
+						return MIDI_MATCH_ON;
+				}
+
+				if (e.GetMidiType() == MIDI_CTRL_CHANGE && 
+				    e.GetKey() == MIDI_CTRL_NOTES_OFF &&
+				    e.GetChannel() == m_Internal[i].channel)
+					return MIDI_MATCH_RESET;
+			}
+			else
+			{
+				if (e.GetMidiType() == MIDI_NRPN && e.GetChannel() == m_Internal[i].channel && e.GetKey() == m_Internal[i].key)
+				{
+					value = e.GetValue();
+					if (m_type == MIDI_RECV_ENCLOSURE)
+						return MIDI_MATCH_CHANGE;
+					if (value == 0)
+						return MIDI_MATCH_OFF;
+					else
+						return MIDI_MATCH_ON;
+				}
+			}
+			break;
+		}
+
+
 	for(unsigned i = 0; i < m_events.size();i++)
 	{
 		if (m_events[i].channel != -1 && m_events[i].channel != e.GetChannel())
@@ -479,4 +547,5 @@ void GOrgueMidiReceiver::Assign(const GOrgueMidiReceiverData& data)
 
 void GOrgueMidiReceiver::PreparePlayback()
 {
+	m_Internal.resize(0);
 }
