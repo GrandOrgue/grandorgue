@@ -29,6 +29,7 @@ class GOrgueMidiMap
 {
 private:
 	std::vector<wxString> m_DeviceMap;
+	std::vector<wxString> m_ElementMap;
 
 public:
 	GOrgueMidiMap();
@@ -36,6 +37,9 @@ public:
 
 	unsigned GetDeviceByString(const wxString& str);
 	const wxString& GetDeviceByID(unsigned id);
+
+	unsigned GetElementByString(const wxString& str);
+	const wxString& GetElementByID(unsigned id);
 };
 
 #endif

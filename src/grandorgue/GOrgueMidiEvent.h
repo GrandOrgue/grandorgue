@@ -25,6 +25,8 @@
 #include "GOrgueTime.h"
 #include <vector>
 
+class GOrgueMidiMap;
+
 typedef enum {
 	MIDI_NONE,
 	MIDI_RESET,
@@ -113,8 +115,8 @@ public:
 		m_time = t;
 	}
 
-	void FromMidi(const std::vector<unsigned char>& msg);
-	void ToMidi(std::vector<std::vector<unsigned char>>& msg);
+	void FromMidi(const std::vector<unsigned char>& msg, GOrgueMidiMap& map);
+	void ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgueMidiMap& map);
 };
 
 #endif
