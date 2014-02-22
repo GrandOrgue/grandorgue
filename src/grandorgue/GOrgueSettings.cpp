@@ -244,6 +244,7 @@ void GOrgueSettings::Load()
 		SetPreset(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Preset"), 0, MAX_PRESET, false, 0));
 
 		SetReleaseLength(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLength"), 0, 3000, false, 0));
+		SetMidiRecorderOutputDevice(cfg.ReadString(CMBSetting, wxT("MIDIOut"), wxT("MIDIRecorderDevice"), false, wxEmptyString));
 		
 		count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
 		for(unsigned i = 0; i < count; i++)
@@ -885,6 +886,16 @@ std::vector<wxString> GOrgueSettings::GetMidiOutDeviceList()
 	return list;
 }
 
+wxString GOrgueSettings::GetMidiRecorderOutputDevice()
+{
+	return m_MidiRecorderOutputDevice;
+}
+
+void GOrgueSettings::SetMidiRecorderOutputDevice(wxString device)
+{
+	m_MidiRecorderOutputDevice = device;
+}
+
 const std::vector<wxString>& GOrgueSettings::GetAudioGroups()
 {
 	return m_AudioGroups;
@@ -1145,6 +1156,7 @@ void GOrgueSettings::Flush()
 	if (count > MAX_MIDI_DEVICES)
 		count = MAX_MIDI_DEVICES;
 	cfg.WriteInteger(wxT("MIDIOut"), wxT("Count"), count);
+	cfg.WriteString(wxT("MIDIOut"), wxT("MIDIRecorderDevice"), m_MidiRecorderOutputDevice);
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
