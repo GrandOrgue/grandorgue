@@ -94,6 +94,8 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 
+	SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("M%d"), m_manual_number)));
+
 	Resize();
 	m_KeyVelocity.resize(m_nb_accessible_keys);
 	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
@@ -131,6 +133,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 448));
 		m_organfile->MarkSectionInUse(buffer);
 		m_stops[i]->Load(cfg, buffer);
+		m_stops[i]->SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("M%dS%d"), m_manual_number, i)));
 	}
 
 	m_couplers.resize(0);
@@ -141,6 +144,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 		buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 64));
 		m_organfile->MarkSectionInUse(buffer);
 		m_couplers[i]->Load(cfg, buffer);
+		m_couplers[i]->SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("M%dC%d"), m_manual_number, i)));
 	}
 
 	m_tremulant_ids.resize(0);
@@ -177,6 +181,8 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	}
 	m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+
+	SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("M%d"), m_manual_number)));
 
 	Resize();
 	m_KeyVelocity.resize(m_nb_accessible_keys);
