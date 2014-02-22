@@ -103,6 +103,28 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg, GOrgueMidi
 			SetKey(msg[7]);
 			SetMidiType(MIDI_SYSEX_JOHANNUS);
 		}
+		if (msg.size() >= 6 && msg[0] == 0xF0 && msg[1] == 0x7D && msg[2] == 0x47 && msg[3] == 0x4F && msg[msg.size() - 1] == 0xF7)
+		{
+			if (msg[4] == 0x00 && msg.size() == 6)
+			{
+				SetMidiType(MIDI_SYSEX_GO_CLEAR);
+				break;
+			}
+			if ((msg[4] & 0xF0) == 0x10)
+			{
+				wxCharBuffer b(msg.size() - 7);
+				char* buf = b.data();
+				for(unsigned i = 0; i < msg.size() - 8; i++)
+					buf[i] = msg[7 + i];
+				buf[msg.size() - 8] = 0;
+				SetChannel((msg[4] & 0x0F) + 1);
+				SetValue(((msg[5] & 0x7F) >> 7) | (msg[6] & 0x7F));
+				wxString s = wxString::FromAscii(b);
+				SetKey(map.GetElementByString(s));
+				SetMidiType(MIDI_SYSEX_GO_SETUP);
+				break;
+			}
+		}
 		return;
 	default:
 		return;
@@ -213,6 +235,38 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgu
 		m[2] = (GetValue() >> 0) & 0x7F;
 		msg.push_back(m);
 
+		return;
+
+	case MIDI_SYSEX_GO_CLEAR:
+		m.resize(6);
+		m[0] = 0xF0;
+		m[1] = 0x7D;
+		m[2] = 0x47;
+		m[3] = 0x4F;
+		m[4] = 0x00;
+		m[5] = 0xF7;
+		msg.push_back(m);
+		return;
+
+	case MIDI_SYSEX_GO_SETUP:
+		{
+			const wxString& s = map.GetElementByID(GetKey());
+			wxCharBuffer b = s.ToAscii();
+			unsigned len = s.length();
+			m.resize(len + 8);
+			m[0] = 0xF0;
+			m[1] = 0x7D;
+			m[2] = 0x47;
+			m[3] = 0x4F;
+			m[4] = 0x10;
+			m[4] |= (GetChannel() - 1) & 0x0F;
+			m[5] = (GetValue() >> 7) & 0x7F;
+			m[6] = (GetValue()) & 0x7F;
+			for(unsigned i = 0; i < len; i++)
+				m[7 + i] = b[i] & 0x7F;
+			m[7 + len] = 0xF7;
+			msg.push_back(m);
+		}
 		return;
 
 	case MIDI_SYSEX_JOHANNUS:
