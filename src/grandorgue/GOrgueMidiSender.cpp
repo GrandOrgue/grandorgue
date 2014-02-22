@@ -136,6 +136,15 @@ bool GOrgueMidiSender::HasHighValue(midi_send_message_type type)
 
 void GOrgueMidiSender::SetDisplay(bool state)
 {
+	if (m_ElementID != -1)
+	{
+		GOrgueMidiEvent e;
+		e.SetMidiType(MIDI_NRPN);
+		e.SetDevice(m_ElementID);
+		e.SetValue(state ? 0x7F : 0x00);
+		m_organfile->SendMidiRecorderMessage(e);
+	}
+
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		if (m_events[i].type == MIDI_S_NOTE)
@@ -281,6 +290,16 @@ void GOrgueMidiSender::SetDisplay(bool state)
 
 void GOrgueMidiSender::ResetKey()
 {
+	if (m_ElementID != -1)
+	{
+		GOrgueMidiEvent e;
+		e.SetMidiType(MIDI_CTRL_CHANGE);
+		e.SetDevice(m_ElementID);
+		e.SetKey(MIDI_CTRL_NOTES_OFF);
+		e.SetValue(1);
+		m_organfile->SendMidiRecorderMessage(e);
+	}
+
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		if (m_events[i].type == MIDI_S_NOTE || m_events[i].type == MIDI_S_NOTE_NO_VELOCITY)
@@ -298,6 +317,16 @@ void GOrgueMidiSender::ResetKey()
 
 void GOrgueMidiSender::SetKey(unsigned key, unsigned velocity)
 {
+	if (m_ElementID != -1)
+	{
+		GOrgueMidiEvent e;
+		e.SetMidiType(MIDI_NOTE);
+		e.SetDevice(m_ElementID);
+		e.SetKey(key & 0x7F);
+		e.SetValue(velocity & 0x7F);
+		m_organfile->SendMidiRecorderMessage(e);
+	}
+
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		if (m_events[i].type == MIDI_S_NOTE)
@@ -325,6 +354,15 @@ void GOrgueMidiSender::SetKey(unsigned key, unsigned velocity)
 
 void GOrgueMidiSender::SetValue(unsigned value)
 {
+	if (m_ElementID != -1)
+	{
+		GOrgueMidiEvent e;
+		e.SetMidiType(MIDI_NRPN);
+		e.SetDevice(m_ElementID);
+		e.SetValue(value & 0x7F);
+		m_organfile->SendMidiRecorderMessage(e);
+	}
+
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		if (m_events[i].type == MIDI_S_CTRL)
