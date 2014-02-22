@@ -89,10 +89,12 @@ public:
 	void SetUnisonOff(bool on);
 	void Abort();
 	void PreparePlayback();
+	void PrepareRecording();
 	void Update();
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);
+	void SetElementID(int id);
 	GOrgueMidiReceiver& GetMidiReceiver();
 	GOrgueMidiSender& GetMidiSender();
 	~GOrgueManual(void);

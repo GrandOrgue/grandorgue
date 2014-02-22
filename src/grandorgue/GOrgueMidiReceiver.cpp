@@ -34,6 +34,7 @@ GOrgueMidiReceiver::GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_
 	GOrgueMidiReceiverData(type),
 	m_organfile(organfile),
 	m_Index(-1),
+	m_ElementID(-1),
 	m_last()
 {
 }
@@ -41,6 +42,11 @@ GOrgueMidiReceiver::GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_
 void GOrgueMidiReceiver::SetIndex(int index)
 {
 	m_Index = index;
+}
+
+void GOrgueMidiReceiver::SetElementID(int id)
+{
+	m_ElementID = id;
 }
 
 const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
@@ -450,4 +456,8 @@ void GOrgueMidiReceiver::Assign(const GOrgueMidiReceiverData& data)
 	*(GOrgueMidiReceiverData*)this = data;
 	if (m_organfile)
 		m_organfile->Modified();
+}
+
+void GOrgueMidiReceiver::PreparePlayback()
+{
 }

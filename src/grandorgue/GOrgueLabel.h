@@ -48,6 +48,7 @@ public:
 	GOrgueMidiSender& GetMidiSender();
 	virtual void Abort();
 	virtual void PreparePlayback();
+	virtual void PrepareRecording();
 };
 
 #endif

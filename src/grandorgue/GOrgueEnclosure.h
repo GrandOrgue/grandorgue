@@ -64,6 +64,8 @@ public:
 	bool IsDisplayed();
 	virtual void Abort();
 	virtual void PreparePlayback();
+	virtual void PrepareRecording();
+	void SetElementID(int id);
 };
 
 #endif /* GORGUEENCLOSURE_H_ */

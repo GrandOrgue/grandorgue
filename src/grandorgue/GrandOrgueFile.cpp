@@ -1228,6 +1228,25 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 	m_TemperamentLabel.PreparePlayback();
 }
 
+void GrandOrgueFile::PrepareRecording()
+{
+	for (unsigned i = 0; i < m_switches.size(); i++)
+		m_switches[i]->PrepareRecording();
+
+	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
+		m_manual[i]->PrepareRecording();
+
+	for (unsigned i = 0; i < m_enclosure.size(); i++)
+		m_enclosure[i]->PrepareRecording();
+
+	for (unsigned i = 0; i < m_tremulant.size(); i++)
+		m_tremulant[i]->PrepareRecording();
+
+	m_setter->PrepareRecording();
+	m_PitchLabel.PrepareRecording();
+	m_TemperamentLabel.PrepareRecording();
+}
+
 void GrandOrgueFile::Update()
 {
 	for (unsigned i = 0; i < m_switches.size(); i++)

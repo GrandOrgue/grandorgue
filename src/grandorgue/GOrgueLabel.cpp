@@ -75,6 +75,11 @@ void GOrgueLabel::PreparePlayback()
 	m_sender.SetLabel(m_Name);
 }
 
+void GOrgueLabel::PrepareRecording()
+{
+	m_sender.SetLabel(m_Name);
+}
+
 GOrgueMidiSender& GOrgueLabel::GetMidiSender()
 {
 	return m_sender;

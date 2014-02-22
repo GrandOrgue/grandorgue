@@ -138,6 +138,12 @@ void GOrgueButton::Abort()
 
 void GOrgueButton::PreparePlayback()
 {
+	m_midi.PreparePlayback();
+	m_sender.SetDisplay(m_Engaged);
+}
+
+void GOrgueButton::PrepareRecording()
+{
 	m_sender.SetDisplay(m_Engaged);
 }
 
@@ -185,4 +191,13 @@ bool GOrgueButton::IsEngaged() const
 bool GOrgueButton::DisplayInverted() const
 {
 	return m_DisplayInInvertedState;
+}
+
+void GOrgueButton::SetElementID(int id)
+{
+	if (!m_ReadOnly)
+	{
+		m_midi.SetElementID(id);
+		m_sender.SetElementID(id);
+	}
 }

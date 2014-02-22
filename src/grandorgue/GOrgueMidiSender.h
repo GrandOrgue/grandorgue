@@ -37,10 +37,13 @@ class GOrgueMidiSender : public GOrgueMidiSenderData
 private:
 	static const struct IniFileEnumEntry m_MidiTypes[];
 	GrandOrgueFile* m_organfile;
+	int m_ElementID;
 
 public:
 	GOrgueMidiSender(GrandOrgueFile* organfile, MIDI_SENDER_TYPE type);
 	~GOrgueMidiSender();
+
+	void SetElementID(int id);
 
 	void Load(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map);
 	void Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiMap& map);
