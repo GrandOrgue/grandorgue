@@ -23,18 +23,31 @@
 #define GORGUEMIDIRECORDER_H
 
 #include <wx/string.h>
+#include <vector>
 
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
 class GOrgueMidiRecorder
 {
+	typedef struct
+	{
+		unsigned elementID;
+		unsigned channel;
+		unsigned key;
+	} midi_map;
 private:
 	GrandOrgueFile* m_organfile;
+	unsigned m_NextChannel;
+	unsigned m_NextNRPN;
+	std::vector<midi_map> m_Mappings;
+	unsigned m_OutputDevice;
 
 public:
 	GOrgueMidiRecorder(GrandOrgueFile* organfile);
 	~GOrgueMidiRecorder();
+
+	void SetOutputDevice(unsigned device_id);
 
 	void SendMidiRecorderMessage(GOrgueMidiEvent& e);
 
