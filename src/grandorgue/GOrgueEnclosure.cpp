@@ -139,5 +139,17 @@ void GOrgueEnclosure::Abort()
 
 void GOrgueEnclosure::PreparePlayback()
 {
+	m_midi.PreparePlayback();
 	m_sender.SetValue(m_MIDIValue);
+}
+
+void GOrgueEnclosure::PrepareRecording()
+{
+	m_sender.SetValue(m_MIDIValue);
+}
+
+void GOrgueEnclosure::SetElementID(int id)
+{
+	m_midi.SetElementID(id);
+	m_sender.SetElementID(id);
 }

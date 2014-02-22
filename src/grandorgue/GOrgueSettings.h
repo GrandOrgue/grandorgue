@@ -86,6 +86,7 @@ private:
 	std::map<wxString, bool> m_MidiIn;
 	std::map<wxString, unsigned> m_MidiInShift;
 	std::map<wxString, bool> m_MidiOut;
+	wxString m_MidiRecorderOutputDevice;
 	wxString m_WAVPath;
 	wxString m_OrganPath;
 	wxString m_SettingPath;
@@ -211,6 +212,9 @@ public:
 	bool GetMidiOutState(wxString device);
 	void SetMidiOutState(wxString device, bool enabled);
 	std::vector<wxString> GetMidiOutDeviceList();
+
+	wxString GetMidiRecorderOutputDevice();
+	void SetMidiRecorderOutputDevice(wxString device);
 
 	const std::vector<wxString>& GetAudioGroups();
 	void SetAudioGroups(const std::vector<wxString>& audio_groups);

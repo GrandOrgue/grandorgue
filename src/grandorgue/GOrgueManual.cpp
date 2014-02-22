@@ -417,6 +417,7 @@ void GOrgueManual::Abort()
 
 void GOrgueManual::PreparePlayback()
 {
+	m_midi.PreparePlayback();
 	m_KeyVelocity.resize(m_nb_accessible_keys);
 	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
 	m_sender.ResetKey();
@@ -437,6 +438,20 @@ void GOrgueManual::PreparePlayback()
 
 	for (unsigned i = 0; i < m_divisionals.size(); i++)
 		m_divisionals[i]->PreparePlayback();
+}
+
+void GOrgueManual::PrepareRecording()
+{
+	m_sender.ResetKey();
+	for(unsigned i = 0; i < m_KeyVelocity.size(); i++)
+		if (m_KeyVelocity[i] > 0)
+			m_sender.SetKey(i + m_first_accessible_key_midi_note_nb, m_KeyVelocity[i]);
+
+	for (unsigned i = 0; i < m_stops.size(); i++)
+		m_stops[i]->PrepareRecording();
+
+	for (unsigned i = 0; i < m_couplers.size(); i++)
+		m_couplers[i]->PrepareRecording();
 }
 
 void GOrgueManual::Update()
@@ -506,4 +521,10 @@ void GOrgueManual::Reset()
 	
 	for (unsigned j = 0; j < GetStopCount(); j++)
                 GetStop(j)->Reset();
+}
+
+void GOrgueManual::SetElementID(int id)
+{
+	m_midi.SetElementID(id);
+	m_sender.SetElementID(id);
 }

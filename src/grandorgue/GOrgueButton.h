@@ -69,6 +69,8 @@ public:
 	bool DisplayInverted() const;
 	virtual void Abort();
 	virtual void PreparePlayback();
+	virtual void PrepareRecording();
+	void SetElementID(int id);
 };
 
 #endif

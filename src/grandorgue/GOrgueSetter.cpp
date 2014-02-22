@@ -1309,6 +1309,18 @@ void GOrgueSetter::PreparePlayback()
 		m_button[i]->PreparePlayback();
 }
 
+void GOrgueSetter::PrepareRecording()
+{
+	m_PosDisplay.PrepareRecording();
+	m_CrescendoDisplay.PrepareRecording();
+	m_BankDisplay.PrepareRecording();
+	m_TransposeDisplay.PrepareRecording();
+	m_swell.PrepareRecording();
+
+	for(unsigned i = 0; i < m_button.size(); i++)
+		m_button[i]->PrepareRecording();
+}
+
 void GOrgueSetter::Update()
 {
 }

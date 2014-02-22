@@ -37,6 +37,7 @@ private:
 	GrandOrgueFile* m_organfile;
 	static const struct IniFileEnumEntry m_MidiTypes[];
 	int m_Index;
+	int m_ElementID;
 	std::vector<GOTime> m_last;
 
 	MIDI_MATCH_TYPE debounce(const GOrgueMidiEvent& e, MIDI_MATCH_TYPE event, unsigned index);
@@ -46,8 +47,10 @@ public:
 
 	void Load(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map);
 	void Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiMap& map);
+	void PreparePlayback();
 
 	void SetIndex(int index);
+	void SetElementID(int id);
 
 	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e);
  	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e, int& value);

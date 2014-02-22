@@ -29,7 +29,8 @@
 
 GOrgueMidiSender::GOrgueMidiSender(GrandOrgueFile* organfile, MIDI_SENDER_TYPE type) :
 	GOrgueMidiSenderData(type),
-	m_organfile(organfile)
+	m_organfile(organfile),
+	m_ElementID(-1)
 {
 }
 
@@ -54,6 +55,11 @@ const struct IniFileEnumEntry GOrgueMidiSender::m_MidiTypes[] = {
 	{ wxT("NRPNOn"), MIDI_S_NRPN_ON },
 	{ wxT("NRPNOff"), MIDI_S_NRPN_OFF },
 };
+
+void GOrgueMidiSender::SetElementID(int id)
+{
+	m_ElementID = id;
+}
 
 void GOrgueMidiSender::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map)
 {
