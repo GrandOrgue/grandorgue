@@ -551,6 +551,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 	master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"));
 	master_enc->Set(127);
 	m_organfile->AddEnclosure(master_enc);
+	master_enc->SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("SM"))));
 
 	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, master_enc, 0);
 	enclosure->Init(cfg, wxT("SetterMasterVolume"));
@@ -565,6 +566,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 		enc->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1), windchest->GetName());
 		enc->Set(127);
 		m_organfile->AddEnclosure(enc);
+		enc->SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("SM%d"), i)));
 		windchest->AddEnclosure(enc);
 
 		enclosure = new GOGUIEnclosure(panel, enc, i + 1);
@@ -602,6 +604,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
 		coupler->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i), _("16"), false, false, -12, i, GOrgueCoupler::COUPLER_NORMAL);
+		coupler->SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("S%dM%dC16"), manual_nr, i)));
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 2, 100 + i);
 		control->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i));
@@ -609,6 +612,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
 		coupler->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i), manual_nr != i ? _("8") : _("U.O."), manual_nr == i, false, 0, i, GOrgueCoupler::COUPLER_NORMAL);
+		coupler->SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("S%dM%dC8"), manual_nr, i)));
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 3, 100 + i);
 		control->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i));
@@ -616,6 +620,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
 		coupler->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i), _("4"), false, false, 12, i, GOrgueCoupler::COUPLER_NORMAL);
+		coupler->SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("S%dM%dC4"), manual_nr, i)));
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 4, 100 + i);
 		control->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i));
@@ -623,6 +628,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
 		coupler->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i), _("BAS"), false, false, 0, i, GOrgueCoupler::COUPLER_BASS);
+		coupler->SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("S%dM%dCB"), manual_nr, i)));
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 5, 100 + i);
 		control->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i));
@@ -630,6 +636,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 
 		coupler = new GOrgueCoupler(m_organfile, manual_nr);
 		coupler->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i), _("MEL"), false, false, 0, i, GOrgueCoupler::COUPLER_MELODY);
+		coupler->SetElementID(m_organfile->GetMidiRecorder().GetElementID(wxString::Format(wxT("S%dM%dCM"), manual_nr, i)));
 		manual->AddCoupler(coupler);
 		control = new GOGUIButton(panel, coupler, false, 6, 100 + i);
 		control->Init(cfg, wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i));
