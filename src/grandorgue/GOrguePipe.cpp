@@ -485,6 +485,12 @@ void GOrguePipe::LoadData()
 					     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad(), GetEffectiveAttackLoad(), GetEffectiveReleaseLoad(),
 					     m_SampleMidiKeyNumber);
 	}
+	catch(wxString str)
+	{
+		m_SoundProvider.ClearData();
+		throw wxString::Format(_("Error while loading samples for rank %s pipe %s: %s"),
+				       m_Rank->GetName().c_str(), GetLoadTitle().c_str(), str.c_str());
+	}
 	catch(std::bad_alloc& ba)
 	{
 		m_SoundProvider.ClearData();
