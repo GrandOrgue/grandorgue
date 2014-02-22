@@ -828,8 +828,8 @@ bool GOrgueSettings::GetMidiInState(wxString device)
 	std::map<wxString, bool>::iterator it = m_MidiIn.find(device);
 	if (it == m_MidiIn.end())
 	{
-		m_MidiIn[device] = true;
-		return true;
+		m_MidiIn[device] = device.Find(wxT("GrandOrgue")) == wxNOT_FOUND;
+		return m_MidiIn[device];
 	}
 	else
 		return it->second;
