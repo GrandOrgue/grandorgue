@@ -33,12 +33,19 @@ struct IniFileEnumEntry;
 
 class GOrgueMidiReceiver : public GOrgueMidiReceiverData
 {
+typedef struct {
+	unsigned device;
+	int channel;
+	int key;
+} midi_internal_match;
+
 private:
 	GrandOrgueFile* m_organfile;
 	static const struct IniFileEnumEntry m_MidiTypes[];
 	int m_Index;
 	int m_ElementID;
 	std::vector<GOTime> m_last;
+	std::vector<midi_internal_match> m_Internal;
 
 	MIDI_MATCH_TYPE debounce(const GOrgueMidiEvent& e, MIDI_MATCH_TYPE event, unsigned index);
 
