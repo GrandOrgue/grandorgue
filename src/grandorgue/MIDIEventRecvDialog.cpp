@@ -179,6 +179,9 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 	{
 		m_eventtype->Append(_("Ctrl Change Bitfield"), (void*)MIDI_M_CTRL_BIT);
+		m_eventtype->Append(_("Bx Ctrl Change Fixed Value"), (void*)MIDI_M_CTRL_CHANGE_FIXED);
+		m_eventtype->Append(_("Bx Ctrl Change Fixed On Value Toogle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_ON);
+		m_eventtype->Append(_("Bx Ctrl Change Fixed Off Value Toogle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_OFF);
 		m_eventtype->Append(_("Sys Ex Johannus"), (void*)MIDI_M_SYSEX_JOHANNUS);
 	}
 
@@ -261,15 +264,23 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 	{
 		if (type == MIDI_M_CTRL_BIT)
 			m_LowValueLabel->SetLabel(_("&Bit number:"));
+		else if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_OFF)
+			m_LowValueLabel->SetLabel(_("&Off value:"));
 		else
 			m_LowValueLabel->SetLabel(_("L&ower limit:"));
-		m_HighValueLabel->SetLabel(_("&Upper limit:"));
+		if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_ON)
+			m_HighValueLabel->SetLabel(_("&On value:"));
+		else
+			m_HighValueLabel->SetLabel(_("&Upper limit:"));
 		switch(type)
 		{
 		case MIDI_M_CTRL_CHANGE:
 		case MIDI_M_CTRL_BIT:
 		case MIDI_M_CTRL_CHANGE_ON:
 		case MIDI_M_CTRL_CHANGE_OFF:
+		case MIDI_M_CTRL_CHANGE_FIXED:
+		case MIDI_M_CTRL_CHANGE_FIXED_ON:
+		case MIDI_M_CTRL_CHANGE_FIXED_OFF:
 			m_DataLabel->SetLabel(_("&Controller-No:"));
 			break;
 
@@ -621,6 +632,15 @@ void MIDIEventRecvDialog::DetectEvent()
 							e.type = MIDI_M_CTRL_BIT;
 							low = k;
 						}
+					if (off.GetValue() != 0 && (on.GetValue() & 64) && (on.GetValue() & 63) == off.GetValue())
+					{
+						if (e.type != MIDI_M_CTRL_BIT || on.GetKey() >= 60)
+						{
+							high = on.GetValue();
+							low = off.GetValue();
+							e.type = MIDI_M_CTRL_CHANGE_FIXED;
+						}
+					}
 					break;
 				case MIDI_PGM_CHANGE:
 					e.type = MIDI_M_PGM_CHANGE;
