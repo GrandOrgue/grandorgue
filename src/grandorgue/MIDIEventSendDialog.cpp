@@ -98,6 +98,8 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 	m_eventtype->Append(_("(none)"), (void*)MIDI_S_NONE);
 	if (m_midi.GetType() == MIDI_SEND_MANUAL || m_midi.GetType() == MIDI_SEND_BUTTON)
 		m_eventtype->Append(_("9x Note"), (void*)MIDI_S_NOTE);
+	if (m_midi.GetType() == MIDI_SEND_MANUAL)
+		m_eventtype->Append(_("9x Note without Velocity"), (void*)MIDI_S_NOTE_NO_VELOCITY);
 	if (m_midi.GetType() == MIDI_SEND_BUTTON)
 	{
 		m_eventtype->Append(_("9x Note On"), (void*)MIDI_S_NOTE_ON);

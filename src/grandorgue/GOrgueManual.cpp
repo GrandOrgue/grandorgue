@@ -419,6 +419,7 @@ void GOrgueManual::PreparePlayback()
 {
 	m_KeyVelocity.resize(m_nb_accessible_keys);
 	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
+	m_sender.ResetKey();
 	m_UnisonOff = 0;
 	for(unsigned i = 0; i < m_Velocity.size(); i++)
 		m_Velocity[i] = 0;
