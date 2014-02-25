@@ -80,6 +80,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU(ID_AUDIO_RECORD, GOrgueFrame::OnAudioRecord)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
 	EVT_MENU(ID_AUDIO_SETTINGS, GOrgueFrame::OnAudioSettings)
+	EVT_MENU(ID_MIDI_RECORD, GOrgueFrame::OnMidiRecord)
 	EVT_MENU(wxID_HELP, GOrgueFrame::OnHelp)
 	EVT_MENU(wxID_ABOUT, GOrgueFrame::OnHelpAbout)
 	EVT_COMMAND(0, wxEVT_SHOWHELP, GOrgueFrame::OnShowHelp)
@@ -214,6 +215,8 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	audio_menu->Append(ID_AUDIO_RECORD, _("&Record\tCtrl+R"), wxEmptyString, wxITEM_CHECK);
 	audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
 	audio_menu->Append(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), wxEmptyString, wxITEM_CHECK);
+	audio_menu->AppendSeparator();
+	audio_menu->Append(ID_MIDI_RECORD, _("&Record MIDI\tCtrl+M"), wxEmptyString, wxITEM_CHECK);
 	
 	
 	wxMenu *help_menu = new wxMenu;
@@ -503,6 +506,8 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 
 	if (event.GetId() == ID_AUDIO_RECORD)
 		event.Check(m_Sound.IsRecording());
+	else if (event.GetId() == ID_MIDI_RECORD)
+		event.Check(organfile && organfile->GetMidiRecorder().IsRecording());
 	else if (event.GetId() == ID_AUDIO_MEMSET)
 		event.Check(organfile && organfile->GetSetter() && organfile->GetSetter()->IsSetterActive());
 	else if (event.GetId() == ID_ORGAN_EDIT)
@@ -744,6 +749,30 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 				}
 				m_Sound.StartRecording(filepath);
 			}
+	}
+}
+
+void GOrgueFrame::OnMidiRecord(wxCommandEvent& WXUNUSED(event))
+{
+	GOrgueDocument* doc = GetDocument();
+	if (!doc || !doc->GetOrganFile())
+		return;
+	GOrgueMidiRecorder& rec = doc->GetOrganFile()->GetMidiRecorder();
+	if (rec.IsRecording())
+		rec.StopRecording();
+	else
+	{
+		wxFileDialog dlg(this, _("Save as"), m_Settings.GetWAVPath(), wxEmptyString, _("MID files (*.mid)|*.mid"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+		if (dlg.ShowModal() == wxID_OK)
+		{
+			m_Settings.SetWAVPath(dlg.GetDirectory());
+			wxString filepath = dlg.GetPath();
+			if (filepath.Find(wxT(".mid")) == wxNOT_FOUND)
+			{
+				filepath.append(wxT(".mid"));
+			}
+			rec.StartRecording(filepath);
+		}
 	}
 }
 
