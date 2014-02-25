@@ -22,7 +22,6 @@
 #include "GOrgueMidiRecorder.h"
 
 #include "GOrgueMidiEvent.h"
-#include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 
 GOrgueMidiRecorder::GOrgueMidiRecorder(GrandOrgueFile* organfile) :
@@ -96,9 +95,4 @@ void GOrgueMidiRecorder::SendMidiRecorderMessage(GOrgueMidiEvent& e)
 
 	e.SetDevice(m_OutputDevice);
 	m_organfile->SendMidiMessage(e);
-}
-
-int GOrgueMidiRecorder::GetElementID(wxString name)
-{
-	return m_organfile->GetSettings().GetMidiMap().GetElementByString(name);
 }

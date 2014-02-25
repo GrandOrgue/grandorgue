@@ -250,7 +250,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		m_enclosure.push_back(new GOrgueEnclosure(this));
 		buffer.Printf(wxT("Enclosure%03u"), i + 1);
 		m_enclosure[i]->Load(cfg, buffer, i);
-		m_enclosure[i]->SetElementID(m_MidiRecorder.GetElementID(wxString::Format(wxT("E%d"), i)));
+		m_enclosure[i]->SetElementID(GetRecorderElementID(wxString::Format(wxT("E%d"), i)));
 	}
 
 	m_switches.resize(0);
@@ -259,7 +259,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		m_switches.push_back(new GOrgueSwitch(this));
 		buffer.Printf(wxT("Switch%03d"), i + 1);
 		m_switches[i]->Load(cfg, buffer);
-		m_switches[i]->SetElementID(m_MidiRecorder.GetElementID(wxString::Format(wxT("S%d"), i)));
+		m_switches[i]->SetElementID(GetRecorderElementID(wxString::Format(wxT("S%d"), i)));
 	}
 
 	m_tremulant.resize(0);
@@ -268,7 +268,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		m_tremulant.push_back(new GOrgueTremulant(this));
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
 		m_tremulant[i]->Load(cfg, buffer, -((int)(i + 1)));
-		m_tremulant[i]->SetElementID(m_MidiRecorder.GetElementID(wxString::Format(wxT("T%d"), i)));
+		m_tremulant[i]->SetElementID(GetRecorderElementID(wxString::Format(wxT("T%d"), i)));
 	}
 
 	for (unsigned  i = 0; i < NumberOfWindchestGroups; i++)
@@ -1403,6 +1403,11 @@ void GrandOrgueFile::Modified()
 GOrgueMidiRecorder& GrandOrgueFile::GetMidiRecorder()
 {
 	return m_MidiRecorder;
+}
+
+int GrandOrgueFile::GetRecorderElementID(wxString name)
+{
+	return m_Settings.GetMidiMap().GetElementByString(name);
 }
 
 GOrgueCombinationDefinition& GrandOrgueFile::GetGeneralTemplate()

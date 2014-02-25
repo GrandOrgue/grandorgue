@@ -51,8 +51,6 @@ public:
 
 	void SendMidiRecorderMessage(GOrgueMidiEvent& e);
 
-	int GetElementID(wxString name);
-
 	void Clear();
 };
 
