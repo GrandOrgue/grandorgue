@@ -191,6 +191,7 @@ public:
 	void MarkSectionInUse(wxString name);
 
 	GOrgueMidiRecorder& GetMidiRecorder();
+	int GetRecorderElementID(wxString name);
 	GOrgueCombinationDefinition& GetGeneralTemplate();
 	GOrgueLabel* GetPitchLabel();
 	GOrgueLabel* GetTemperamentLabel();
