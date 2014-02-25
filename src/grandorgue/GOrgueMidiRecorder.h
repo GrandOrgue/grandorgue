@@ -22,6 +22,9 @@
 #ifndef GORGUEMIDIRECORDER_H
 #define GORGUEMIDIRECORDER_H
 
+#include "GOrgueTime.h"
+
+#include <wx/file.h>
 #include <wx/string.h>
 #include <vector>
 
@@ -42,6 +45,17 @@ private:
 	unsigned m_NextNRPN;
 	std::vector<midi_map> m_Mappings;
 	unsigned m_OutputDevice;
+	wxFile m_file;
+	char m_Buffer[2000];
+	unsigned m_BufferPos;
+	unsigned m_FileLength;
+	GOTime m_Last;
+
+	void Ensure(unsigned length);
+	void Flush();
+	void EncodeLength(unsigned len);
+	void Write(const void* data, unsigned len);
+	void WriteEvent(GOrgueMidiEvent& e);
 
 public:
 	GOrgueMidiRecorder(GrandOrgueFile* organfile);
@@ -52,6 +66,10 @@ public:
 	void SendMidiRecorderMessage(GOrgueMidiEvent& e);
 
 	void Clear();
+
+	void StartRecording(wxString filename);
+	bool IsRecording();
+	void StopRecording();
 };
 
 #endif
