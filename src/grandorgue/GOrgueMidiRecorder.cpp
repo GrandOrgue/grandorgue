@@ -21,6 +21,7 @@
 
 #include "GOrgueMidiRecorder.h"
 
+#include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMidiFile.h"
 #include "GOrgueSettings.h"
@@ -28,8 +29,9 @@
 #include <wx/intl.h>
 #include <wx/stopwatch.h>
 
-GOrgueMidiRecorder::GOrgueMidiRecorder(GrandOrgueFile* organfile) :
-	m_organfile(organfile),
+GOrgueMidiRecorder::GOrgueMidiRecorder(GOrgueMidi& midi) :
+	m_midi(midi),
+	m_organfile(0),
 	m_NextChannel(0),
 	m_NextNRPN(0),
 	m_Mappings(),
@@ -45,6 +47,11 @@ GOrgueMidiRecorder::GOrgueMidiRecorder(GrandOrgueFile* organfile) :
 GOrgueMidiRecorder::~GOrgueMidiRecorder()
 {
 	StopRecording();
+}
+
+void GOrgueMidiRecorder::SetOrganFile(GrandOrgueFile* file)
+{
+	m_organfile = file;
 }
 
 void GOrgueMidiRecorder::SetOutputDevice(unsigned device_id)
@@ -63,7 +70,7 @@ void GOrgueMidiRecorder::Clear()
 	e.SetDevice(m_OutputDevice);
 	e.SetTime(wxGetLocalTimeMillis());
 	if (m_OutputDevice)
-		m_organfile->SendMidiMessage(e);
+		m_midi.Send(e);
 	if (IsRecording())
 		WriteEvent(e);
 }
@@ -104,7 +111,7 @@ void GOrgueMidiRecorder::SendMidiRecorderMessage(GOrgueMidiEvent& e)
 		e1.SetChannel(m_Mappings[e.GetDevice()].channel);
 		e1.SetValue(m_Mappings[e.GetDevice()].key);
 		if (m_OutputDevice)
-			m_organfile->SendMidiMessage(e1);
+			m_midi.Send(e1);
 		WriteEvent(e1);
 	}
 	e.SetChannel(m_Mappings[e.GetDevice()].channel);
@@ -113,7 +120,7 @@ void GOrgueMidiRecorder::SendMidiRecorderMessage(GOrgueMidiEvent& e)
 
 	e.SetDevice(m_OutputDevice);
 	if (m_OutputDevice)
-		m_organfile->SendMidiMessage(e);
+		m_midi.Send(e);
 	WriteEvent(e);
 }
 
@@ -169,7 +176,7 @@ void GOrgueMidiRecorder::WriteEvent(GOrgueMidiEvent& e)
 	if (!IsRecording())
 		return;
 	std::vector<std::vector<unsigned char>> msg;
-	e.ToMidi(msg, m_organfile->GetSettings().GetMidiMap());
+	e.ToMidi(msg, m_midi.GetMidiMap());
 	for(unsigned i = 0; i < msg.size(); i++)
 	{
 		EncodeLength((e.GetTime() - m_Last).GetValue());
@@ -211,6 +218,8 @@ void GOrgueMidiRecorder::StartRecording(wxString filename)
 	MIDIFileHeader t = { { 'M', 'T', 'r', 'k' }, 0 };
 
 	StopRecording();
+	if (!m_organfile)
+		return;
 
         m_file.Create(filename, true);
         if (!m_file.IsOpened())

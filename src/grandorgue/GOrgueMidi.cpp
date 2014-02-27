@@ -44,7 +44,8 @@ GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_midi_in_devices(),
 	m_midi_out_device_map(),
 	m_midi_out_devices(),
-	m_Listeners()
+	m_Listeners(),
+	m_MidiRecorder(*this)
 {
 	UpdateDevices();
 }
@@ -73,7 +74,7 @@ void GOrgueMidi::UpdateDevices()
 					t->rtmidi_port_no = i;
 					t->active = false;
 					t->name = name;
-					t->id = m_Settings.GetMidiMap().GetDeviceByString(t->name);
+					t->id = GetMidiMap().GetDeviceByString(t->name);
 					t->midi_in->setCallback(&MIDICallback, t);
 					m_midi_in_devices.push_back(t);
 			
@@ -106,7 +107,7 @@ void GOrgueMidi::UpdateDevices()
 					t->rtmidi_port_no = i;
 					t->active = false;
 					t->name = name;
-					t->id = m_Settings.GetMidiMap().GetDeviceByString(t->name);
+					t->id = GetMidiMap().GetDeviceByString(t->name);
 					m_midi_out_devices.push_back(t);
 			
 					name.Replace(wxT("\\"), wxT("|"));
@@ -226,6 +227,8 @@ void GOrgueMidi::Open()
 			this_dev.midi_out->closePort();
 		}
 	}
+
+	m_MidiRecorder.SetOutputDevice(GetMidiMap().GetDeviceByString(m_Settings.GetMidiRecorderOutputDevice()));
 }
 
 std::map<wxString, int>& GOrgueMidi::GetInDevices()
@@ -253,7 +256,7 @@ void GOrgueMidi::ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE*
 		return;
 
 	GOrgueMidiEvent e;
-	e.FromMidi(msg, m_Settings.GetMidiMap());
+	e.FromMidi(msg, GetMidiMap());
 	if (e.GetMidiType() == MIDI_NONE)
 		return;
 	e.SetDevice(device->id);
@@ -329,7 +332,7 @@ void GOrgueMidi::OnMidiEvent(wxMidiEvent& event)
 void GOrgueMidi::Send(GOrgueMidiEvent& e)
 {
 	std::vector<std::vector<unsigned char>> msg;
-	e.ToMidi(msg, m_Settings.GetMidiMap());
+	e.ToMidi(msg, GetMidiMap());
 	for(unsigned i = 0; i < msg.size(); i++)
 	{
 		for(unsigned j = 0; j < m_midi_out_devices.size(); j++)
@@ -373,4 +376,14 @@ void GOrgueMidi::MIDICallback (double timeStamp, std::vector<unsigned char>* msg
 {
 	MIDI_IN_DEVICE* m_dev = (MIDI_IN_DEVICE*)userData;
 	m_dev->midi->ProcessMessage(*msg, m_dev);
+}
+
+GOrgueMidiRecorder& GOrgueMidi::GetMidiRecorder()
+{
+	return m_MidiRecorder;
+}
+
+GOrgueMidiMap& GOrgueMidi::GetMidiMap()
+{
+	return m_Settings.GetMidiMap();
 }
