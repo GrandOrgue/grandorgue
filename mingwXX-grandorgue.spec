@@ -135,7 +135,7 @@ cmake ../src/build
 make
 cd ..
 %define gooptions -DUNICODE=1 -DRTAUDIO_USE_ASIO=%ASIO  -DIMPORT_EXECUTABLES=../build-tools/ImportExecutables.cmake -DVERSION_REVISION="`echo %{version}|cut -d. -f4`" -DMSYS=1 -DSTATIC=1
-%define goinstall GrandOrgue-%{version}-win%{_mingw_bitsize}.exe
+%define goinstall GrandOrgue-%{version}-%{release}-win%{_mingw_bitsize}.exe
 %{__mkdir} build-mingw
 cd build-mingw
 %{_mingw_cmake} .. -DINSTALL_DEPEND=OFF %{gooptions}
