@@ -505,9 +505,9 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 	}
 
 	if (event.GetId() == ID_AUDIO_RECORD)
-		event.Check(m_Sound.IsRecording());
+		event.Check(m_Sound.IsAudioRecording());
 	else if (event.GetId() == ID_MIDI_RECORD)
-		event.Check(organfile && organfile->GetMidiRecorder().IsRecording());
+		event.Check(m_Sound.IsMidiRecording());
 	else if (event.GetId() == ID_AUDIO_MEMSET)
 		event.Check(organfile && organfile->GetSetter() && organfile->GetSetter()->IsSetterActive());
 	else if (event.GetId() == ID_ORGAN_EDIT)
@@ -734,8 +734,8 @@ void GOrgueFrame::OnAudioPanic(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 {
-	if (m_Sound.IsRecording())
-		m_Sound.StopRecording();
+	if (m_Sound.IsAudioRecording())
+		m_Sound.StopAudioRecording();
 	else
 	{
 		wxFileDialog dlg(this, _("Save as"), m_Settings.GetWAVPath(), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
@@ -747,19 +747,15 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 				{
 					filepath.append(wxT(".wav"));
 				}
-				m_Sound.StartRecording(filepath);
+				m_Sound.StartAudioRecording(filepath);
 			}
 	}
 }
 
 void GOrgueFrame::OnMidiRecord(wxCommandEvent& WXUNUSED(event))
 {
-	GOrgueDocument* doc = GetDocument();
-	if (!doc || !doc->GetOrganFile())
-		return;
-	GOrgueMidiRecorder& rec = doc->GetOrganFile()->GetMidiRecorder();
-	if (rec.IsRecording())
-		rec.StopRecording();
+	if (m_Sound.IsMidiRecording())
+		m_Sound.StopMidiRecording();
 	else
 	{
 		wxFileDialog dlg(this, _("Save as"), m_Settings.GetWAVPath(), wxEmptyString, _("MID files (*.mid)|*.mid"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
@@ -771,7 +767,7 @@ void GOrgueFrame::OnMidiRecord(wxCommandEvent& WXUNUSED(event))
 			{
 				filepath.append(wxT(".mid"));
 			}
-			rec.StartRecording(filepath);
+			m_Sound.StartMidiRecording(filepath);
 		}
 	}
 }

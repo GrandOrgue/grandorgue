@@ -239,9 +239,9 @@ bool GOrgueSound::OpenSound()
 	m_SoundEngine.SetInterpolationType(m_Settings.GetInterpolationType());
 	m_SoundEngine.SetAudioGroupCount(audio_group_count);
 	unsigned sample_rate = m_Settings.GetSampleRate();
-	m_recorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
+	m_AudioRecorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
 	GetEngine().SetSampleRate(sample_rate);
-	m_recorder.SetSampleRate(sample_rate);
+	m_AudioRecorder.SetSampleRate(sample_rate);
 	m_SoundEngine.SetAudioOutput(engine_config);
 	m_SoundEngine.SetupReverb(m_Settings);
 
@@ -411,7 +411,8 @@ void GOrgueSound::StartStreams()
 void GOrgueSound::CloseSound()
 {
 	StopThreads();
-	m_recorder.Close();
+	StopAudioRecording();
+	StopMidiRecording();
 
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 	{
@@ -468,6 +469,7 @@ void GOrgueSound::CloseSound()
 
 		if (m_organfile)
 		{
+			m_midi->GetMidiRecorder().SetOrganFile(NULL);
 			m_organfile->Abort();
 			m_organfile = NULL;
 		}
@@ -506,19 +508,34 @@ GrandOrgueFile* GOrgueSound::GetOrganFile()
 	return m_organfile;
 }
 
-bool GOrgueSound::IsRecording()
+bool GOrgueSound::IsAudioRecording()
 {
-	return m_recorder.IsOpen();
+	return m_AudioRecorder.IsOpen();
 }
 
-void GOrgueSound::StartRecording(wxString filepath)
+void GOrgueSound::StartAudioRecording(wxString filepath)
 {
-	m_recorder.Open(filepath);
+	m_AudioRecorder.Open(filepath);
 }
 
-void GOrgueSound::StopRecording()
+void GOrgueSound::StopAudioRecording()
 {
-	m_recorder.Close();
+	m_AudioRecorder.Close();
+}
+
+bool GOrgueSound::IsMidiRecording()
+{
+	return m_midi->GetMidiRecorder().IsRecording();
+}
+
+void GOrgueSound::StartMidiRecording(wxString filename)
+{
+	m_midi->GetMidiRecorder().StartRecording(filename);
+}
+
+void GOrgueSound::StopMidiRecording()
+{
+	m_midi->GetMidiRecorder().StopRecording();
 }
 
 void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
@@ -529,6 +546,7 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 		multi.Add(m_AudioOutputs[i].mutex);
 
 	m_organfile = organfile;
+	m_midi->GetMidiRecorder().SetOrganFile(m_organfile);
 	StopThreads();
 	if (organfile)
 	{
@@ -593,7 +611,7 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 			 );
 
 		/* Write data to file if recording is enabled*/
-		m_recorder.Write(buffer, n_frames * 2);
+		m_AudioRecorder.Write(buffer, n_frames * 2);
 
 		/* Update meters */
 		meter_counter += n_frames;

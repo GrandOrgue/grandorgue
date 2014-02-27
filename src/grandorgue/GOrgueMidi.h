@@ -22,12 +22,14 @@
 #ifndef GORGUEMIDI_H
 #define GORGUEMIDI_H
 
+#include "GOrgueMidiRecorder.h"
 #include "ptrvector.h"
 #include <wx/event.h>
 #include <map>
 
 class GOrgueMidiEvent;
 class GOrgueMidiListener;
+class GOrgueMidiMap;
 class GOrgueSettings;
 class GrandOrgueFile;
 class RtMidiIn;
@@ -70,6 +72,7 @@ private:
 	ptr_vector<MIDI_OUT_DEVICE> m_midi_out_devices;
 	int m_transpose;
 	std::vector<GOrgueMidiListener*> m_Listeners;
+	GOrgueMidiRecorder m_MidiRecorder;
 
 	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE* device);
 
@@ -93,6 +96,9 @@ public:
 	void SetTranspose(int transpose);
 	void Register(GOrgueMidiListener* listener);
 	void Unregister(GOrgueMidiListener* listener);
+
+	GOrgueMidiMap& GetMidiMap();
+	GOrgueMidiRecorder& GetMidiRecorder();
 
 	DECLARE_EVENT_TABLE()
 };

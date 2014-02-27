@@ -28,6 +28,7 @@
 #include <wx/string.h>
 #include <vector>
 
+class GOrgueMidi;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
@@ -40,6 +41,7 @@ class GOrgueMidiRecorder
 		unsigned key;
 	} midi_map;
 private:
+	GOrgueMidi& m_midi;
 	GrandOrgueFile* m_organfile;
 	unsigned m_NextChannel;
 	unsigned m_NextNRPN;
@@ -58,9 +60,10 @@ private:
 	void WriteEvent(GOrgueMidiEvent& e);
 
 public:
-	GOrgueMidiRecorder(GrandOrgueFile* organfile);
+	GOrgueMidiRecorder(GOrgueMidi& midi);
 	~GOrgueMidiRecorder();
 
+	void SetOrganFile(GrandOrgueFile* file);
 	void SetOutputDevice(unsigned device_id);
 
 	void SendMidiRecorderMessage(GOrgueMidiEvent& e);

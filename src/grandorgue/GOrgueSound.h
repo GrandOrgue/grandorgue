@@ -143,7 +143,7 @@ private:
 
 	GOrgueMidi* m_midi;
 	GrandOrgueFile* m_organfile;
-	GOSoundRecorder m_recorder;
+	GOSoundRecorder m_AudioRecorder;
 
 	GOSoundEngine m_SoundEngine;
 	ptr_vector <GOSoundThread> m_Threads;
@@ -178,9 +178,13 @@ public:
 
 	GOrgueSettings& GetSettings();
 
-	bool IsRecording();
-	void StartRecording(wxString filename);
-	void StopRecording();
+	bool IsAudioRecording();
+	void StartAudioRecording(wxString filename);
+	void StopAudioRecording();
+
+	bool IsMidiRecording();
+	void StartMidiRecording(wxString filename);
+	void StopMidiRecording();
 
 	void PreparePlayback(GrandOrgueFile* organfile);
 	GrandOrgueFile* GetOrganFile();
