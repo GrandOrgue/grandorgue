@@ -296,7 +296,7 @@ void GOrgueMidiSender::ResetKey()
 		e.SetMidiType(MIDI_CTRL_CHANGE);
 		e.SetDevice(m_ElementID);
 		e.SetKey(MIDI_CTRL_NOTES_OFF);
-		e.SetValue(1);
+		e.SetValue(0);
 		m_organfile->SendMidiRecorderMessage(e);
 	}
 
@@ -309,7 +309,7 @@ void GOrgueMidiSender::ResetKey()
 			e.SetMidiType(MIDI_CTRL_CHANGE);
 			e.SetChannel(m_events[i].channel);
 			e.SetKey(MIDI_CTRL_NOTES_OFF);
-			e.SetValue(1);
+			e.SetValue(0);
 			m_organfile->SendMidiMessage(e);
 		}
 	}
