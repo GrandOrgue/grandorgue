@@ -40,7 +40,9 @@ private:
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
 	wxStaticText* m_KeyLabel;
 	wxSpinCtrl *m_key;
+	wxStaticText* m_LowValueLabel;
 	wxSpinCtrl *m_LowValue;
+	wxStaticText* m_HighValueLabel;
 	wxSpinCtrl *m_HighValue;
 	wxButton* m_new, *m_delete;
 	int m_current;

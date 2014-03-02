@@ -48,6 +48,8 @@ typedef enum {
 	MIDI_S_RPN_OFF,
 	MIDI_S_NRPN_ON,
 	MIDI_S_NRPN_OFF,
+	MIDI_S_HW_STRING,
+	MIDI_S_HW_LCD,
 } midi_send_message_type;
 
 typedef struct {
