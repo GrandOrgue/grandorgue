@@ -76,12 +76,14 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 	m_key = new wxSpinCtrl(this, ID_KEY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
 	sizer->Add(m_key, 0);
 
-	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Off Value:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+	m_LowValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
+	sizer->Add(m_LowValueLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 	box = new wxBoxSizer(wxHORIZONTAL);
 	sizer->Add(box);
 	m_LowValue = new wxSpinCtrl(this, ID_LOW_VALUE, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
 	box->Add(m_LowValue, 0);
-	box->Add(new wxStaticText(this, wxID_ANY, _("&On value:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+	m_HighValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
+	box->Add(m_HighValueLabel, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
 	m_HighValue = new wxSpinCtrl(this, ID_HIGH_VALUE, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
 	box->Add(m_HighValue, 0);
 	SetSizer(topSizer);
@@ -128,6 +130,11 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 		m_eventtype->Append(_("RPN Off"), (void*)MIDI_S_RPN_OFF);
 		m_eventtype->Append(_("NRPN On"), (void*)MIDI_S_NRPN_ON);
 		m_eventtype->Append(_("NRPN Off"), (void*)MIDI_S_NRPN_OFF);
+	}
+	if (m_midi.GetType() == MIDI_SEND_LABEL)
+	{
+		m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD"), (void*)MIDI_S_HW_LCD);
+		m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String"), (void*)MIDI_S_HW_STRING);
 	}
 
 	m_key->SetRange(0, 0x200000);
@@ -184,6 +191,11 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 		m_HighValue->Enable();
 	else
 		m_HighValue->Disable();
+	if (type == MIDI_S_HW_LCD)
+		m_LowValueLabel->SetLabel(_("&Color:"));
+	else
+		m_LowValueLabel->SetLabel(_("&Off Value:"));
+	m_HighValueLabel->SetLabel(_("&On value:"));
 	switch(type)
 	{
 	case MIDI_S_CTRL_ON:
@@ -199,6 +211,11 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 	case MIDI_S_NRPN_ON:
 	case MIDI_S_NRPN_OFF:
 		m_KeyLabel->SetLabel(_("&Parameter-No:"));
+		break;
+
+	case MIDI_S_HW_STRING:
+	case MIDI_S_HW_LCD:
+		m_KeyLabel->SetLabel(_("&ID:"));
 		break;
 
 	default:

@@ -269,6 +269,50 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgu
 		}
 		return;
 
+	case MIDI_SYSEX_HW_STRING:
+		{
+			const wxString& s = map.GetElementByID(GetValue());
+			wxCharBuffer b = s.ToAscii();
+			unsigned len = s.length();
+			if (len > 16)
+				len = 16;
+			m.resize(21);
+			m[0] = 0xF0;
+			m[1] = 0x7D;
+			m[2] = 0x10;
+			m[4] = (GetKey()) & 0x7F;
+			for(unsigned i = 0; i < len; i++)
+				m[5 + i] = b[i] & 0x7F; 
+			for(unsigned i = len; i < 16; i++)
+				m[5 + i] = ' ';
+			m[20] = 0xF7;
+			msg.push_back(m);
+		}
+		return;
+
+	case MIDI_SYSEX_HW_LCD:
+		{
+			const wxString& s = map.GetElementByID(GetValue());
+			wxCharBuffer b = s.ToAscii();
+			unsigned len = s.length();
+			if (len > 32)
+				len = 32;
+			m.resize(38);
+			m[0] = 0xF0;
+			m[1] = 0x7D;
+			m[2] = 0x01;
+			m[3] = (GetKey() >> 7) & 0x7F;
+			m[4] = (GetKey()) & 0x7F;
+			m[5] = (GetChannel()) & 0x7F;
+			for(unsigned i = 0; i < len; i++)
+				m[6 + i] = b[i] & 0x7F; 
+			for(unsigned i = len; i < 32; i++)
+				m[6 + i] = ' ';
+			m[37] = 0xF7;
+			msg.push_back(m);
+		}
+		return;
+
 	case MIDI_SYSEX_JOHANNUS:
 	case MIDI_AFTERTOUCH:
 	case MIDI_NONE:
