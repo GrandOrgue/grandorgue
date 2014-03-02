@@ -54,6 +54,8 @@ public:
 	void SetValue(unsigned value);
 	void SetLabel(wxString text);
 
+	bool HasChannel(midi_send_message_type type);
+	bool HasKey(midi_send_message_type type);
 	bool HasLowValue(midi_send_message_type type);
 	bool HasHighValue(midi_send_message_type type);
 

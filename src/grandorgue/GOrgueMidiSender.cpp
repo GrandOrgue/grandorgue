@@ -71,9 +71,10 @@ void GOrgueMidiSender::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMidiM
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		m_events[i].device = map.GetDeviceByString(cfg.ReadString(CMBSetting, group, wxString::Format(wxT("MIDISendDevice%03d"), i + 1), false));
-		m_events[i].channel = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDISendChannel%03d"), i + 1), 1, 16);
 		m_events[i].type = (midi_send_message_type)cfg.ReadEnum(CMBSetting, group, wxString::Format(wxT("MIDISendEventType%03d"), i + 1), m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
-		if (m_type != MIDI_SEND_MANUAL)
+		if (HasChannel(m_events[i].type))
+			m_events[i].channel = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDISendChannel%03d"), i + 1), 1, 16);
+		if (HasKey(m_events[i].type))
 			m_events[i].key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDISendKey%03d"), i + 1), 0, 0x200000);
 
 		if (HasLowValue(m_events[i].type))
@@ -90,9 +91,10 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiM
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		cfg.WriteString(group, wxString::Format(wxT("MIDISendDevice%03d"), i + 1), map.GetDeviceByID(m_events[i].device));
-		cfg.WriteInteger(group, wxString::Format(wxT("MIDISendChannel%03d"), i + 1), m_events[i].channel);
 		cfg.WriteEnum(group, wxString::Format(wxT("MIDISendEventType%03d"), i + 1), m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
-		if (m_type != MIDI_SEND_MANUAL)
+		if (HasChannel(m_events[i].type))
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDISendChannel%03d"), i + 1), m_events[i].channel);
+		if (HasKey(m_events[i].type))
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDISendKey%03d"), i + 1), m_events[i].key);
 
 		if (HasLowValue(m_events[i].type))
@@ -101,6 +103,53 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiM
 		if (HasHighValue(m_events[i].type))
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDISendHighValue%03d"), i + 1), m_events[i].high_value);
 	}
+}
+
+bool GOrgueMidiSender::HasChannel(midi_send_message_type type)
+{
+	if (type == MIDI_S_NOTE ||
+	    type == MIDI_S_NOTE_NO_VELOCITY ||
+	    type == MIDI_S_CTRL ||
+	    type == MIDI_S_RPN ||
+	    type == MIDI_S_NRPN ||
+	    type == MIDI_S_PGM_ON ||
+	    type == MIDI_S_PGM_OFF ||
+	    type == MIDI_S_NOTE_ON ||
+	    type == MIDI_S_NOTE_OFF ||
+	    type == MIDI_S_CTRL_ON ||
+	    type == MIDI_S_CTRL_OFF ||
+	    type == MIDI_S_RPN_ON ||
+	    type == MIDI_S_RPN_OFF ||
+	    type == MIDI_S_NRPN_ON ||
+	    type == MIDI_S_NRPN_OFF)
+		return true;
+
+	return false;
+}
+
+bool GOrgueMidiSender::HasKey(midi_send_message_type type)
+{
+	if (m_type == MIDI_SEND_MANUAL)
+		return false;
+
+	if (type == MIDI_S_NOTE ||
+	    type == MIDI_S_NOTE_NO_VELOCITY ||
+	    type == MIDI_S_CTRL ||
+	    type == MIDI_S_RPN ||
+	    type == MIDI_S_NRPN ||
+	    type == MIDI_S_PGM_ON ||
+	    type == MIDI_S_PGM_OFF ||
+	    type == MIDI_S_NOTE_ON ||
+	    type == MIDI_S_NOTE_OFF ||
+	    type == MIDI_S_CTRL_ON ||
+	    type == MIDI_S_CTRL_OFF ||
+	    type == MIDI_S_RPN_ON ||
+	    type == MIDI_S_RPN_OFF ||
+	    type == MIDI_S_NRPN_ON ||
+	    type == MIDI_S_NRPN_OFF)
+		return true;
+
+	return false;
 }
 
 bool GOrgueMidiSender::HasLowValue(midi_send_message_type type)
@@ -132,7 +181,6 @@ bool GOrgueMidiSender::HasHighValue(midi_send_message_type type)
 		return true;
 	return false;
 }
-
 
 void GOrgueMidiSender::SetDisplay(bool state)
 {

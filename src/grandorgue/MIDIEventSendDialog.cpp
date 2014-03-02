@@ -130,10 +130,7 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 		m_eventtype->Append(_("NRPN Off"), (void*)MIDI_S_NRPN_OFF);
 	}
 
-	if (m_midi.GetType() == MIDI_SEND_MANUAL)
-		m_key->Disable();
-	else
-		m_key->SetRange(0, 0x200000);
+	m_key->SetRange(0, 0x200000);
 
 	m_current = 0;
 	if (!m_midi.GetEventCount())
@@ -171,6 +168,14 @@ void MIDIEventSendDialog::DoApply()
 void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 {
 	midi_send_message_type type = (midi_send_message_type)(intptr_t)m_eventtype->GetClientData(m_eventtype->GetSelection());
+	if (m_original->HasChannel(type))
+		m_channel->Enable();
+	else
+		m_channel->Disable();
+	if (m_original->HasKey(type))
+		m_key->Enable();
+	else
+		m_key->Disable();
 	if (m_original->HasLowValue(type))
 		m_LowValue->Enable();
 	else
