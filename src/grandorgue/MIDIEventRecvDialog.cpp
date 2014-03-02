@@ -161,6 +161,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	{
 		m_eventtype->Append(_("9x Note without Velocity"), (void*)MIDI_M_NOTE_NO_VELOCITY);
 		m_eventtype->Append(_("9x Note short octave at low key"), (void*)MIDI_M_NOTE_SHORT_OCTAVE);
+		m_eventtype->Append(_("9x Note without map"), (void*)MIDI_M_NOTE_NORMAL);
 	}
 
 	if (m_midi.GetType() != MIDI_RECV_MANUAL)

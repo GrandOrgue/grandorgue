@@ -71,6 +71,7 @@ const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
 	{ wxT("NoteOff"), MIDI_M_NOTE_OFF },
 	{ wxT("NoteNoVelocity"), MIDI_M_NOTE_NO_VELOCITY },
 	{ wxT("NoteShortOctave"), MIDI_M_NOTE_SHORT_OCTAVE },
+	{ wxT("NoteNormal"), MIDI_M_NOTE_NORMAL },
 };
 
 void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map)
@@ -226,6 +227,7 @@ bool GOrgueMidiReceiver::HasChannel(midi_match_message_type type)
 	   type == MIDI_M_NRPN_ON ||
 	   type == MIDI_M_NRPN_OFF ||
 	   type == MIDI_M_NOTE_NO_VELOCITY ||
+	   type == MIDI_M_NOTE_NORMAL ||
 	   type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
 	return false;
@@ -252,6 +254,7 @@ bool GOrgueMidiReceiver::HasKey(midi_match_message_type type)
 	   type == MIDI_M_NRPN_ON ||
 	   type == MIDI_M_NRPN_OFF ||
 	   type == MIDI_M_NOTE_NO_VELOCITY ||
+	   type == MIDI_M_NOTE_NORMAL ||
 	   type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
 	return false;
@@ -263,6 +266,7 @@ bool GOrgueMidiReceiver::HasLowKey(midi_match_message_type type)
 		return false;
 	if(type == MIDI_M_NOTE ||
 	   type == MIDI_M_NOTE_NO_VELOCITY ||
+	   type == MIDI_M_NOTE_NORMAL ||
 	   type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
 	return false;
@@ -274,6 +278,7 @@ bool GOrgueMidiReceiver::HasHighKey(midi_match_message_type type)
 		return false;
 	if(type == MIDI_M_NOTE ||
 	   type == MIDI_M_NOTE_NO_VELOCITY ||
+	   type == MIDI_M_NOTE_NORMAL ||
 	   type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
 	return false;
@@ -441,7 +446,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 		if (m_type == MIDI_RECV_MANUAL)
 		{
 			if (m_events[i].type != MIDI_M_NOTE && m_events[i].type != MIDI_M_NOTE_NO_VELOCITY &&
-			    m_events[i].type != MIDI_M_NOTE_SHORT_OCTAVE)
+			    m_events[i].type != MIDI_M_NOTE_SHORT_OCTAVE && m_events[i].type != MIDI_M_NOTE_NORMAL)
 				continue;
 			if (e.GetMidiType() == MIDI_NOTE || e.GetMidiType() == MIDI_AFTERTOUCH)
 			{
@@ -461,7 +466,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 					continue;
 				if (key > 127)
 					continue;
-				if (midi_map && m_events[i].type != MIDI_M_NOTE_SHORT_OCTAVE)
+				if (midi_map && m_events[i].type != MIDI_M_NOTE_SHORT_OCTAVE && m_events[i].type != MIDI_M_NOTE_NORMAL)
 					key = midi_map[key];
 				if (m_events[i].type == MIDI_M_NOTE_NO_VELOCITY)
 				{
