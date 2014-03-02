@@ -185,17 +185,6 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 		m_eventtype->Append(_("Sys Ex Johannus"), (void*)MIDI_M_SYSEX_JOHANNUS);
 	}
 
-	if (m_midi.GetType() == MIDI_RECV_MANUAL)
-	{
-		m_LowKey->Enable();
-		m_HighKey->Enable();
-	}
-	else
-	{
-		m_LowKey->Disable();
-		m_HighKey->Disable();
-	}
-
 	m_current = 0;
 	if (!m_midi.GetEventCount())
 		m_midi.AddNewEvent();
@@ -241,10 +230,22 @@ void MIDIEventRecvDialog::DoApply()
 void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 {
 	midi_match_message_type type = (midi_match_message_type)(intptr_t)m_eventtype->GetClientData(m_eventtype->GetSelection());
+	if (m_original->HasChannel(type))
+		m_channel->Enable();
+	else
+		m_channel->Disable();
 	if (m_original->HasDebounce(type))
 		m_Debounce->Enable();
 	else
 		m_Debounce->Disable();
+	if (m_original->HasLowKey(type))
+		m_LowKey->Enable();
+	else
+		m_LowKey->Disable();
+	if (m_original->HasHighKey(type))
+		m_HighKey->Enable();
+	else
+               m_HighKey->Disable();
 	if (m_original->HasLowerLimit(type) || m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
 		m_LowValue->Enable();
 	else
@@ -253,6 +254,10 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 		m_HighValue->Enable();
 	else
                m_HighValue->Disable();
+	if (m_original->HasKey(type))
+		m_data->Enable();
+	else
+		m_data->Disable();
 
 	if (m_midi.GetType() == MIDI_RECV_MANUAL)
 	{

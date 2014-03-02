@@ -64,6 +64,10 @@ public:
  	MIDI_MATCH_TYPE Match(const GOrgueMidiEvent& e, const unsigned midi_map[128], int& key, int& value);
 
 	bool HasDebounce(midi_match_message_type type);
+	bool HasChannel(midi_match_message_type type);
+	bool HasKey(midi_match_message_type type);
+	bool HasLowKey(midi_match_message_type type);
+	bool HasHighKey(midi_match_message_type type);
 	bool HasLowerLimit(midi_match_message_type type);
 	bool HasUpperLimit(midi_match_message_type type);
 
