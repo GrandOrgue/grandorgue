@@ -94,7 +94,6 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMid
 		for(unsigned i = 0; i < m_events.size(); i++)
 		{
 			m_events[i].device = map.GetDeviceByString(cfg.ReadString(CMBSetting, group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), false));
-			m_events[i].channel = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), -1, 16);
 			midi_match_message_type default_type = MIDI_M_PGM_CHANGE;
 			if (m_type == MIDI_RECV_MANUAL)
 				default_type = MIDI_M_NOTE;
@@ -102,21 +101,24 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMid
 				default_type = MIDI_M_CTRL_CHANGE;
 			m_events[i].type = (midi_match_message_type)cfg.ReadEnum(CMBSetting, group, wxString::Format(wxT("MIDIEventType%03d"), i + 1), 
 										 m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]), false, default_type);
+			if (HasChannel(m_events[i].type))
+				m_events[i].channel = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), -1, 16);
 			if (HasDebounce(m_events[i].type))
 				m_events[i].debounce_time = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIDebounce%03d"), i + 1), 0, 3000, false, 0);
+			if (HasLowKey(m_events[i].type))
+				m_events[i].low_key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), 0, 127, false, 0);
+			if (HasHighKey(m_events[i].type))
+				m_events[i].high_key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), 0, 127, false, 127);
 
 			if (m_type == MIDI_RECV_MANUAL)
 			{
 				m_events[i].key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIKeyShift%03d"), i + 1), -35, 35);
-				m_events[i].type = (midi_match_message_type)cfg.ReadEnum(CMBSetting, group, wxString::Format(wxT("MIDIEventType%03d"), i + 1), 
-											 m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]), false, MIDI_M_NOTE);
-				m_events[i].low_key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), 0, 127, false, 0);
-				m_events[i].high_key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), 0, 127, false, 127);
 				m_events[i].low_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 1);
 				m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127);
 				continue;
 			}
-			m_events[i].key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIKey%03d"), i + 1), 0, 0x200000);
+			if (HasHighKey(m_events[i].type))
+				m_events[i].key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIKey%03d"), i + 1), 0, 0x200000);
 			
 			if (m_type == MIDI_RECV_ENCLOSURE)
 			{
@@ -170,21 +172,26 @@ void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMid
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
 		cfg.WriteString(group, wxString::Format(wxT("MIDIDevice%03d"), i + 1), map.GetDeviceByID(m_events[i].device));
-		cfg.WriteInteger(group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), m_events[i].channel);
 		cfg.WriteEnum(group, wxString::Format(wxT("MIDIEventType%03d"), i + 1), m_events[i].type, m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]));
+		if (HasChannel(m_events[i].type))
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), m_events[i].channel);
 		if (HasDebounce(m_events[i].type))
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDIDebounce%03d"), i + 1), m_events[i].debounce_time);
+
+		if (HasLowKey(m_events[i].type))
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), m_events[i].low_key);
+		if (HasHighKey(m_events[i].type))
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), m_events[i].high_key);
 
 		if (m_type == MIDI_RECV_MANUAL)
 		{
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDIKeyShift%03d"), i + 1), m_events[i].key);
-			cfg.WriteInteger(group, wxString::Format(wxT("MIDILowerKey%03d"), i + 1), m_events[i].low_key);
-			cfg.WriteInteger(group, wxString::Format(wxT("MIDIUpperKey%03d"), i + 1), m_events[i].high_key);
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), m_events[i].low_value);
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_value);
 			continue;
 		}
-		cfg.WriteInteger(group, wxString::Format(wxT("MIDIKey%03d"), i + 1), m_events[i].key);
+		if (HasHighKey(m_events[i].type))
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDIKey%03d"), i + 1), m_events[i].key);
 
 		if (m_type == MIDI_RECV_ENCLOSURE)
 		{
@@ -197,6 +204,79 @@ void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMid
 		if (HasUpperLimit(m_events[i].type))
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1), m_events[i].high_value);
 	}
+}
+
+bool GOrgueMidiReceiver::HasChannel(midi_match_message_type type)
+{
+	if(type == MIDI_M_NOTE ||
+	   type == MIDI_M_CTRL_CHANGE ||
+	   type == MIDI_M_PGM_CHANGE ||
+	   type == MIDI_M_CTRL_BIT ||
+	   type == MIDI_M_CTRL_CHANGE_FIXED ||
+	   type == MIDI_M_RPN ||
+	   type == MIDI_M_NRPN ||
+	   type == MIDI_M_NOTE_ON ||
+	   type == MIDI_M_NOTE_OFF ||
+	   type == MIDI_M_CTRL_CHANGE_ON ||
+	   type == MIDI_M_CTRL_CHANGE_OFF ||
+	   type == MIDI_M_CTRL_CHANGE_FIXED_ON ||
+	   type == MIDI_M_CTRL_CHANGE_FIXED_OFF ||
+	   type == MIDI_M_RPN_ON ||
+	   type == MIDI_M_RPN_OFF ||
+	   type == MIDI_M_NRPN_ON ||
+	   type == MIDI_M_NRPN_OFF ||
+	   type == MIDI_M_NOTE_NO_VELOCITY ||
+	   type == MIDI_M_NOTE_SHORT_OCTAVE)
+		return true;
+	return false;
+}
+
+bool GOrgueMidiReceiver::HasKey(midi_match_message_type type)
+{
+	if(type == MIDI_M_NOTE ||
+	   type == MIDI_M_CTRL_CHANGE ||
+	   type == MIDI_M_PGM_CHANGE ||
+	   type == MIDI_M_SYSEX_JOHANNUS ||
+	   type == MIDI_M_CTRL_BIT ||
+	   type == MIDI_M_CTRL_CHANGE_FIXED ||
+	   type == MIDI_M_RPN ||
+	   type == MIDI_M_NRPN ||
+	   type == MIDI_M_NOTE_ON ||
+	   type == MIDI_M_NOTE_OFF ||
+	   type == MIDI_M_CTRL_CHANGE_ON ||
+	   type == MIDI_M_CTRL_CHANGE_OFF ||
+	   type == MIDI_M_CTRL_CHANGE_FIXED_ON ||
+	   type == MIDI_M_CTRL_CHANGE_FIXED_OFF ||
+	   type == MIDI_M_RPN_ON ||
+	   type == MIDI_M_RPN_OFF ||
+	   type == MIDI_M_NRPN_ON ||
+	   type == MIDI_M_NRPN_OFF ||
+	   type == MIDI_M_NOTE_NO_VELOCITY ||
+	   type == MIDI_M_NOTE_SHORT_OCTAVE)
+		return true;
+	return false;
+}
+
+bool GOrgueMidiReceiver::HasLowKey(midi_match_message_type type)
+{
+	if (m_type != MIDI_RECV_MANUAL)
+		return false;
+	if(type == MIDI_M_NOTE ||
+	   type == MIDI_M_NOTE_NO_VELOCITY ||
+	   type == MIDI_M_NOTE_SHORT_OCTAVE)
+		return true;
+	return false;
+}
+
+bool GOrgueMidiReceiver::HasHighKey(midi_match_message_type type)
+{
+	if (m_type != MIDI_RECV_MANUAL)
+		return false;
+	if(type == MIDI_M_NOTE ||
+	   type == MIDI_M_NOTE_NO_VELOCITY ||
+	   type == MIDI_M_NOTE_SHORT_OCTAVE)
+		return true;
+	return false;
 }
 
 bool GOrgueMidiReceiver::HasDebounce(midi_match_message_type type)
