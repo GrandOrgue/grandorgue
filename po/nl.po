@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-02-18 09:03+0100\n"
-"PO-Revision-Date: 2014-03-01 14:13+0100\n"
+"POT-Creation-Date: 2014-03-01 17:19+0100\n"
+"PO-Revision-Date: 2014-03-03 10:54+0100\n"
 "Last-Translator: Gerrit Veldman\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
@@ -15,252 +15,260 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.5.7\n"
 
-#, c-format
-msgid "bitmap size does not match for '%s'"
-msgstr "bitmapgrootte komt niet overeen voor '%s'"
+msgid " (PA): "
+msgstr " (PA): "
 
-msgid "Midi-Settings for Enclosure - "
-msgstr "Midi-instellingen voor zwelkast "
+msgid " - "
+msgstr " - "
 
-msgid "< More than 2 channels in"
-msgstr "< Meer dan 2 kanalen in"
+msgid "\""
+msgstr "\""
 
-msgid "Alsa"
-msgstr "Alsa"
-
-msgid "OSS"
-msgstr "OSS"
-
-msgid "PulseAudio"
-msgstr "PulseAudio"
-
-msgid "Core"
-msgstr "Core"
-
-msgid "Jack"
-msgstr "Jack"
-
-msgid "ASIO"
-msgstr "ASIO"
-
-msgid "DirectSound"
-msgstr "DirectSound"
-
-msgid "Unknown"
-msgstr "Onbekend"
-
-msgid "Jack: "
-msgstr "Jack: "
-
-msgid "KSAPI: "
-msgstr "KSAPI: "
-
-msgid "Unknown: "
-msgstr "Onbekend: "
-
-msgid "8 bit PCM"
-msgstr "8 bit PCM"
-
-msgid "16 bit PCM"
-msgstr "16 bit PCM"
-
-msgid "24 bit PCM"
-msgstr "24 bit PCM"
-
-msgid "32 bit PCM"
-msgstr "32 bit PCM"
-
-msgid "32 bit float"
-msgstr "32 bit float"
-
-msgid "64 bit float"
-msgstr "64 bit float"
-
-msgid "none"
-msgstr "geen"
-
-#, c-format
-msgid "Filename '%s' not compatible with case sensitive systems"
-msgstr "Bestandsnaam '%s' is niet compatibel met hoofdlettergevoelige systemen"
-
-#, c-format
-msgid "Failed to create directory '%s'"
-msgstr "Aanmaken van map '%s' mislukt"
-
-#, c-format
-msgid "Could not remove '%s'"
-msgstr "'%s' kon niet verplaatst worden"
-
-#, c-format
-msgid "Could not write to '%s'"
-msgstr "Er kon niet naar '%s' geschreven worden"
-
-msgid "Realloc of non-top element failed"
-msgstr "Het toewijzen van het niet-bovenliggende element is mislukt"
-
-#, c-format
-msgid "Memory pool is full: %llu of %llu used"
-msgstr "Geheugenpool is vol: %llu van %llu in gebruik"
-
-#, c-format
-msgid "Memory mapping of the cache file failed with error code %d"
-msgstr "Geheugentoewijzing van het cache bestand is mislukt met foutcode %d"
-
-#, c-format
-msgid "Failed to open the graphic '%s'"
-msgstr "Openen van afbeelding '%s' mislukt"
-
-#, c-format
-msgid "bitmap size of '%s' does not match mask '%s'"
-msgstr "bitmapgrootte van '%s' komt niet overeen met masker '%s'"
-
-#, c-format
-msgid "LCD-1: %s"
-msgstr "LCD-1: %s"
-
-#, c-format
-msgid "LCD-2: %s"
-msgstr "LCD-2: %s"
-
-msgid "Invalid object type for reversible piston"
-msgstr "Ongeldig objecttype voor omkeerbare piston"
-
-msgid "Midi-Settings for Drawstop - "
-msgstr "Midi-instellingen voor registerknop - "
-
-msgid "Midi-Settings for Pushbutton - "
-msgstr "Midi-instellingen voor drukknop - "
-
-msgid "Midi-Settings for Button - "
-msgstr "Midi-instellingen voor knop - "
-
-#, c-format
-msgid "Duplicate combination entry %s in %s"
-msgstr "Dubbele combinatie-entry %s in %s"
-
-#, c-format
-msgid "Invalid combination entry %s in %s"
-msgstr "Ongeldige combinatie-entry %s in %s"
-
-#, c-format
-msgid "Floating %d"
-msgstr "Zwevend %d"
-
-#, c-format
-msgid "Manual %d: Tremulant%03d already in use"
-msgstr "Klavier %d: Tremulant%03d wordt al gebruikt"
-
-#, c-format
-msgid "Manual %d: Switch%03d already in use"
-msgstr "Klavier %d: Schakelaar %03d wordt al gebruikt"
-
-msgid "Organ Properties"
-msgstr "Orgel-eigenschappen"
-
-msgid "Title"
-msgstr "Titel"
-
-msgid "Address"
-msgstr "Adres"
-
-msgid "Builder"
-msgstr "Bouwer"
-
-msgid "Build Date"
-msgstr "Bouwjaar/-datum"
-
-msgid "Recording Details"
-msgstr "Opname-details"
-
-msgid "Other Comments"
-msgstr "Overige opmerkingen"
-
-msgid "More Information"
-msgstr "Meer informatie"
-
-msgid "Allocated sample memory"
-msgstr "Toegewezen sample-geheugen"
-
-#, c-format
-msgid "%.3f MB of %.3f MB"
-msgstr "%.3f MB van %.3f MB"
-
-msgid "Mapped memory of the cache"
-msgstr "Toegewezen cachegeheugen"
+msgid "#"
+msgstr "#"
 
 #, c-format
 msgid "%.3f MB"
 msgstr "%.3f MB"
 
-msgid "Memory pool size"
-msgstr "Geheugenpoolgrootte"
-
-msgid "Master Controls"
-msgstr "Hoofdbediening"
-
-msgid "Floating manuals"
-msgstr "Zwevende klavieren"
-
-msgid "Master"
-msgstr "Hoofd"
+#, c-format
+msgid "%.3f MB (not limited)"
+msgstr "%.3f MB (onbeperkt)"
 
 #, c-format
-msgid "Coupler %s"
-msgstr "Koppel %s"
+msgid "%.3f MB of %.3f MB"
+msgstr "%.3f MB van %.3f MB"
 
-msgid "Coupler"
-msgstr "Koppel"
+#, c-format
+msgid "%d"
+msgstr "%d"
 
-msgid "16"
-msgstr "16"
+#, c-format
+msgid "%d (%s)"
+msgstr "%d (%s)"
 
-msgid "8"
-msgstr "8"
+#, c-format
+msgid "%d ms"
+msgstr "%d ms"
 
-msgid "U.O."
-msgstr "U.O."
+#, c-format
+msgid "%d: %s"
+msgstr "%d: %s"
 
-msgid "4"
-msgstr "4"
+#, c-format
+msgid "%f cent"
+msgstr "%f cent"
 
-msgid "BAS"
-msgstr "BAS"
+#, c-format
+msgid "%s - left"
+msgstr "%s - links"
 
-msgid "MEL"
-msgstr "MEL"
+#, c-format
+msgid "%s - right"
+msgstr "%s - rechts"
 
-msgid "Divisionals"
-msgstr "Divisionals"
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
 
-msgid "Generals"
-msgstr "Generals"
+#, c-format
+msgid "%s: %f dB"
+msgstr "%s: %f dB"
 
-msgid "Combination Setter"
-msgstr "Combinatie-setter"
+#, c-format
+msgid "%s: %s\n"
+msgstr "%s: %s\n"
 
-msgid "Crescendo Pedal"
-msgstr "Crescendo-pedaal"
+#, c-format
+msgid "%s: mute"
+msgstr "%s: stil"
 
-msgid "Previous"
-msgstr "Vorige"
+#, c-format
+msgid "&%d: %s"
+msgstr "&%d: %s"
 
-msgid "Next"
-msgstr "Volgende"
+msgid "&About"
+msgstr "O&ver"
 
-msgid "Set"
-msgstr "Set"
+msgid "&Add"
+msgstr "&Toevoegen"
 
-msgid "-1"
-msgstr "-1"
+msgid "&Audio/Midi"
+msgstr "&Audio/Midi"
 
-msgid "-10"
-msgstr "-10"
+msgid "&Bit number:"
+msgstr "&Bit-nummer"
 
-msgid "-100"
-msgstr "-100"
+msgid "&CTRL/PGM:"
+msgstr "&CTRL/PGM:"
+
+msgid "&Cache"
+msgstr "&Cache"
+
+msgid "&Channel:"
+msgstr "&Kanaal:"
+
+msgid "&Close"
+msgstr "&Sluiten"
+
+msgid "&Controller-No:"
+msgstr "&Controller-nr.:"
+
+msgid "&Convolution reverb"
+msgstr "&Convolutie-nagalm"
+
+msgid "&Data:"
+msgstr "&Data:"
+
+msgid "&Debounce time(ms):"
+msgstr "&Debounce-tijd (ms):"
+
+msgid "&Delete"
+msgstr "&Verwijderen"
+
+msgid "&Detect complex MIDI setup"
+msgstr "Complexe MIDI-setup &detecteren"
+
+msgid "&Device:"
+msgstr "&Apparaat:"
+
+msgid "&Down"
+msgstr "Om&laag"
+
+msgid "&Enhancements"
+msgstr "&Uitbreidingen"
+
+msgid "&Event:"
+msgstr "&Event:"
+
+msgid "&Export Settings/Combinations"
+msgstr "Instellingen/combinaties &exporteren"
+
+msgid "&Favorites"
+msgstr "&Favorieten"
+
+msgid "&File"
+msgstr "&Bestand"
+
+msgid "&Help"
+msgstr "&Help"
+
+msgid "&Help\tF1"
+msgstr "&Help\tF1"
+
+msgid "&Highest key:"
+msgstr "&Hoogste toets"
+
+msgid "&Import Settings"
+msgstr "Instellingen &importen"
+
+msgid "&Listen for Event"
+msgstr "&Signaal detecteren"
+
+msgid "&Load\tCtrl+L"
+msgstr "&Laden\tCtrl+L"
+
+msgid "&Lowest key:"
+msgstr "&Laagste toets"
+
+msgid "&Memory Level"
+msgstr "&Geheugenbank"
+
+msgid "&Memory Set\tShift"
+msgstr "In &geheugenbank vastleggen\tShift"
+
+msgid "&Off Value:"
+msgstr "&Off-waarde:"
+
+msgid "&Off value:"
+msgstr "&Off-waarde:"
+
+msgid "&On value:"
+msgstr "&On-waarde:"
+
+msgid "&Open\tCtrl+O"
+msgstr "&Openen\tCtrl+O"
+
+msgid "&Organ settings"
+msgstr "&Orgel-instellingen"
+
+msgid "&Panel"
+msgstr "&Venster"
+
+msgid "&Panic\tEscape"
+msgstr "&Nooduitgang\tEscape"
+
+msgid "&Parameter-No:"
+msgstr "&Parameter-nr.:"
+
+msgid "&Paths"
+msgstr "&Paden"
+
+msgid "&Polyphony"
+msgstr "&Polyfonie"
+
+msgid "&Record\tCtrl+R"
+msgstr "O&pnemen\tCtrl+R"
+
+msgid "&Record MIDI\tCtrl+M"
+msgstr "&MIDI opnemen\tCtrl+M"
+
+msgid "&Release tail length"
+msgstr "Lengte van de &galmstaart"
+
+msgid "&Sample loading"
+msgstr "&Samples laden"
+
+msgid "&Save\tCtrl+S"
+msgstr "&Opslaan\tCtrl+S"
+
+msgid "&Shortcut:"
+msgstr "&Sneltoets"
+
+msgid "&Sound Engine"
+msgstr "Geluidsmodule"
+
+msgid "&Sound output"
+msgstr "&Geluidsuitvoer"
+
+msgid "&Temperament"
+msgstr "Ste&mming"
+
+msgid "&Top"
+msgstr "&Bovenste"
+
+msgid "&Transpose"
+msgstr "&Transponeren"
+
+msgid "&Transpose:"
+msgstr "&Transponeren"
+
+msgid "&Up"
+msgstr "Om&hoog"
+
+msgid "&Update Cache..."
+msgstr "Cache &bijwerken"
+
+msgid "&Upper limit:"
+msgstr "&Bovengrens"
+
+msgid "&Volume"
+msgstr "&Volume"
+
+msgid "(none)"
+msgstr "(geen)"
+
+msgid "*.wav"
+msgstr "*.wav"
+
+msgid "+"
+msgstr "+"
 
 msgid "+1"
 msgstr "+1"
+
+msgid "+1 Cent"
+msgstr "+1 cent"
 
 msgid "+10"
 msgstr "+10"
@@ -268,147 +276,41 @@ msgstr "+10"
 msgid "+100"
 msgstr "+100"
 
-msgid "Current"
-msgstr "Huidige"
+msgid "+100 Cent"
+msgstr "+100 cent"
 
-msgid "000"
-msgstr "000"
-
-msgid "G.C."
-msgstr "G.C."
-
-msgid "Regular"
-msgstr "Normaal"
-
-msgid "Scope"
-msgstr "Scope"
-
-msgid "Scoped"
-msgstr "Scoped"
-
-msgid "Full"
-msgstr "Vol"
-
-msgid "Insert"
-msgstr "Invoegen"
-
-msgid "Delete"
-msgstr "Verwijderen"
-
-msgid "<"
-msgstr "<"
-
-msgid ">"
-msgstr ">"
-
-msgid "A"
-msgstr "A"
-
-msgid "B"
-msgstr "B"
-
-msgid "C"
-msgstr "C"
-
-msgid "D"
-msgstr "D"
+msgid ","
+msgstr ","
 
 msgid "-"
 msgstr "-"
 
-msgid "+"
-msgstr "+"
+msgid "-1"
+msgstr "-1"
 
-msgid "Save"
-msgstr "Opslaan"
+msgid "-1 Cent"
+msgstr "-1 cent"
 
-msgid "Crescendo"
-msgstr "Crescendo"
+msgid "-10"
+msgstr "-10"
 
-#, c-format
-msgid "__%d"
-msgstr "__%d"
+msgid "-100"
+msgstr "-100"
 
-#, c-format
-msgid "%d"
-msgstr "%d"
+msgid "-100 Cent"
+msgstr "-100 cent"
 
-msgid "Prev"
-msgstr "Vorige"
+msgid "."
+msgstr "."
 
-#, c-format
-msgid "RtMidi error: %s"
-msgstr "RtMidi-fout: %s"
+msgid "0"
+msgstr "0"
 
-msgid "GrandOrgue Input"
-msgstr "GrandOrgue-invoer"
+msgid "000"
+msgstr "000"
 
-msgid "GrandOrgue Output"
-msgstr "GrandOrgue-uitvoer"
-
-#, c-format
-msgid "Missing required value section '%s' entry '%s'"
-msgstr "Er ontbreekt een verplichte waarde: sectie '%s' entry '%s'"
-
-#, c-format
-msgid "Value too long: section '%s' entry '%s': %s"
-msgstr "Waarde te lang: sectie '%s' entry '%s': %s"
-
-#, c-format
-msgid "Strange boolean value for section '%s' entry '%s': %s"
-msgstr "Vreemde boolean-waarde voor sectie '%s' entry '%s': %s"
-
-#, c-format
-msgid "Invalid boolean value at section '%s' entry '%s': %s"
-msgstr "Ongeldige boolean-waarde in sectie '%s' entry '%s': %s"
-
-#, c-format
-msgid "Invalid color at section '%s' entry '%s': %s"
-msgstr "Ongeldige kleur in sectie '%s' entry '%s': %s"
-
-#, c-format
-msgid "Invalid integer value at section '%s' entry '%s': %s"
-msgstr "Ongeldige integer-waarde in sectie '%s' entry '%s': %s"
-
-#, c-format
-msgid "Out of range value at section '%s' entry '%s': %d"
-msgstr "Waarde buiten het bereik in sectie '%s' entry '%s': %d"
-
-#, c-format
-msgid "Number %s contains locale dependent floating point"
-msgstr "Nummer %s bevat een locale-afhankelijk floatingpunt"
-
-#, c-format
-msgid "Invalid float value at section '%s' entry '%s': %s"
-msgstr "Ongeldige float-waarde in sectie '%s' entry '%s': %s"
-
-#, c-format
-msgid "Out of range value at section '%s' entry '%s': %f"
-msgstr "Waarde buiten het bereik in sectie '%s' entry '%s': %f"
-
-#, c-format
-msgid "Invalid size at section '%s' entry '%s': %s"
-msgstr "Ongeldige grootte in sectie '%s' entry '%s': %s"
-
-#, c-format
-msgid "Invalid font size at section '%s' entry '%s': %s"
-msgstr "Ongeldige lettergrootte in sectie '%s' entry '%s': %s"
-
-msgid "Invalid enum default value"
-msgstr "Ongeldige standaard enum-waarde"
-
-#, c-format
-msgid "Invalid enum value at section '%s' entry '%s': %s"
-msgstr "Ongeldige enum-waarde in sectie '%s' entry '%s': %s"
-
-msgid "Midi-Settings for Manual - "
-msgstr "Midi-instellingen voor Klavier - "
-
-msgid "Original temperament"
-msgstr "Originele stemming"
-
-msgid "Equal temperament"
-msgstr "Gelijkzwevende stemming"
+msgid "1"
+msgstr "1"
 
 msgid "1/4 comma meantone (Aaron 1523)"
 msgstr "1/4-komma middentoonstemming (Aaron 1523)"
@@ -416,50 +318,11 @@ msgstr "1/4-komma middentoonstemming (Aaron 1523)"
 msgid "1/4 comma variants"
 msgstr "1/4-komma varianten"
 
-msgid "1/4-comma meantone approximation"
-msgstr "1/4-komma middentoonstemming bij benadering"
-
 msgid "1/4-comma equal beating fifths"
 msgstr "1/4-komma met gelijkzwevende kwinten"
 
-msgid "Alexander Metcalf Fisher"
-msgstr "Alexander Metcalf Fisher"
-
-msgid "Chaumont"
-msgstr "Chaumont"
-
-msgid "Corrette (1753)"
-msgstr "Corrette (1753)"
-
-msgid "Couperin"
-msgstr "Couperin"
-
-msgid "d'Alembert modified meantone (1726)"
-msgstr "d'Alembert aangepaste middentoonstemming (1726)"
-
-msgid "Ferdinand Bossard (1743/44) Klosterkirche Muri"
-msgstr "Ferdinand Bossard (1743/44) Klosterkirche Muri"
-
-msgid "Fisk-Vogel: Memorial Church at Stanford"
-msgstr "Fisk-Vogel: Memorial Church in Stanford"
-
-msgid "Mersenne's Improved Meantone 1"
-msgstr "Mersennes verbeterde middentoonstemming 1"
-
-msgid "Rameau bemols"
-msgstr "Rameau bémols"
-
-msgid "Rameau dieses"
-msgstr "Rameau dièzes"
-
-msgid "Rameau's modified meantone temperament (1725)"
-msgstr "Rameau's aangepaste middentoonstemming (1725)"
-
-msgid "Rameau Nouveau Systeme (1726)"
-msgstr "Rameau Nouveau Systeme (1726)"
-
-msgid "Stade St. Cosmae"
-msgstr "Stade St. Cosmae"
+msgid "1/4-comma meantone approximation"
+msgstr "1/4-komma middentoonstemming bij benadering"
 
 msgid "1/5 comma"
 msgstr "1/5-komma"
@@ -467,23 +330,8 @@ msgstr "1/5-komma"
 msgid "1/5-comma meantone (Verheijen)"
 msgstr "1/5-komma middentoonstemming (Verheijen)"
 
-msgid "Holden (John) 1770"
-msgstr "Holden (John) 1770"
-
-msgid "Scheffer (1748) modified, Sweden"
-msgstr "Scheffer (1748) aangepast, Zweden"
-
-msgid "Keller (Gottfried) 1707"
-msgstr "Keller (Gottfried) 1707"
-
-msgid "Schnitger organ St. Jakobi, Hamburg "
-msgstr "Schnitger-orgel St. Jakobi, Hamburg "
-
 msgid "1/6 comma"
 msgstr "1/6-komma"
-
-msgid "1/6-comma meantone"
-msgstr "1/6-komma middentoonstemming"
 
 msgid "1/6-comma (bemols)"
 msgstr "1/6-comma (bémols)"
@@ -494,277 +342,608 @@ msgstr "1/6-comma (dièzes)"
 msgid "1/6-comma equal beating fifths"
 msgstr "1/6-komma met gelijkzwevende kwinten"
 
+msgid "1/6-comma meantone"
+msgstr "1/6-komma middentoonstemming"
+
 msgid "1/6-comma, wolf over 4 fifths"
 msgstr "1/6-comma, wolf over 4 kwinten"
 
-msgid "Freytag Organ Bellingwolde 1798/2002"
-msgstr "Freytag-orgel Bellingwolde 1798/2002"
+msgid "12 bits"
+msgstr "12 bits"
 
-msgid "G. Silbermann nr 2"
-msgstr "G. Silbermann nr. 2"
+msgid "16"
+msgstr "16"
 
-msgid "Sauveur (Memoires 1701)"
-msgstr "Sauveur (Memoires 1701)"
+msgid "16 Bit PCM"
+msgstr "16 bit PCM"
 
-msgid "Various comma"
-msgstr "Allerlei komma-stemmingen"
+msgid "16 bit PCM"
+msgstr "16 bit PCM"
+
+msgid "16 bits"
+msgstr "16 bits"
+
+msgid "2"
+msgstr "2"
+
+msgid "20 bits"
+msgstr "20 bits"
+
+msgid "24 Bit PCM"
+msgstr "24 bit PCM"
+
+msgid "24 bit PCM"
+msgstr "24 bit PCM"
+
+msgid "24 bits"
+msgstr "24 bits"
+
+msgid "3"
+msgstr "3"
 
 msgid "3/14-comma meantone (Giordano Riccati, 1762)"
 msgstr "3/14-komma middentoonstemming (Giordano Riccati, 1762)"
 
-msgid "Lambert (1774) 1/7 comma"
-msgstr "Lambert (1774) 1/7-komma"
+msgid "32 bit PCM"
+msgstr "32 bit PCM"
 
-msgid "Variable meantone 1"
-msgstr "Variabele middentoonstemming 1"
+msgid "32 bit float"
+msgstr "32 bit float"
 
-msgid "Variable meantone 2"
-msgstr "Variabele middentoonstemming 2"
+msgid "4"
+msgstr "4"
 
-msgid "Variable meantone 3"
-msgstr "Variabele middentoonstemming 3"
+msgid "5"
+msgstr "5"
 
-msgid "Variable meantone 4"
-msgstr "Variabele middentoonstemming 4"
+msgid "6"
+msgstr "6"
 
-msgid "William Holder equal beating (1694)"
-msgstr "William Holder gelijkzwevend (1694)"
+msgid "64 bit float"
+msgstr "64 bit float"
 
-msgid "Zarlino (1558) 2/7-comma meantone"
-msgstr "Zarlino (1558) 2/7-komma middentoonstemming"
+msgid "7"
+msgstr "7"
 
-msgid "Pythagorean"
-msgstr "Pythagoreïsch"
+msgid "8"
+msgstr "8"
 
-msgid "Boulliau (1373)/Mersenne 1636. "
-msgstr "Boulliau (1373)/Mersenne 1636. "
+msgid "8 Bit PCM"
+msgstr "8 bit PCM"
 
-msgid "De Caus (1615)"
-msgstr "De Caus (1615)"
+msgid "8 bit PCM"
+msgstr "8 bit PCM"
 
-msgid "Grammateus (1518)"
-msgstr "Grammateus (1518)"
+msgid "8 bits"
+msgstr "8 bits"
 
-msgid "Henri Arnaut De Zwolle. (1436)."
-msgstr "Henri Arnaut de Zwolle (1436)"
+msgid "9"
+msgstr "9"
 
-msgid "Sauveur 1702"
-msgstr "Sauveur 1702"
+msgid "9x Note"
+msgstr "9x noot"
 
-msgid "Other just"
-msgstr "Andere reine stemmingen"
+msgid "9x Note Off"
+msgstr "9x Note off"
 
-msgid "Pure Major"
-msgstr "Rein majeur"
+msgid "9x Note Off Toggle"
+msgstr "9x Note off aan/uit"
 
-msgid "Pure Minor"
-msgstr "Rein mineur"
+msgid "9x Note On"
+msgstr "9x Note on"
 
-msgid "Smith's (Robert) Equal Harmony 1749"
-msgstr "Smith's (Robert) Equal Harmony 1749"
+msgid "9x Note On Toogle"
+msgstr "9x Note on aan/uit"
 
-msgid "Well tempered"
-msgstr "Welgetempereerde stemmingen"
+msgid "9x Note short octave at low key"
+msgstr "9x noot met kort octaaf aan de ondergrens"
 
-msgid "Bach (Bradley Lehman)"
-msgstr "Bach (Bradley Lehman)"
+msgid "9x Note without Velocity"
+msgstr "9x noot zonder aanslaggevoeligheid"
 
-msgid "Barca 1786"
-msgstr "Barca 1786"
+msgid ":"
+msgstr ":"
 
-msgid "Bethisy temperament ordinaire (1764)"
-msgstr "Bethisy temperament ordinaire (1764)"
+msgid "<"
+msgstr "<"
 
-msgid "Freres Jullien Organ, France (1690)"
-msgstr "Freres Jullien-orgel, Frankrijk (1690)"
+msgid "< Bits per sample must be a multiple of 8 in this implementation"
+msgstr "< Bits per sample moet een meervoud van 8 zijn in deze implementatie"
 
-msgid "Ganassi (Sylvestro) - 1543"
-msgstr "Ganassi (Sylvestro) - 1543"
+msgid "< Invalid CUE chunk in"
+msgstr "< Ongeldige CUE-chunk in"
 
-msgid "Gottfried Silbermann nr 1"
-msgstr "Gottfried Silbermann nr. 1"
+msgid "< Invalid RIFF file"
+msgstr "< Ongeldig RIFF-bestand"
 
-msgid "Heun (Jan) 1805"
-msgstr "Heun (Jan) 1805"
+msgid "< Invalid RIFF/WAVE file"
+msgstr "< Ongeldig RIFF/WAVE-bestand"
 
-msgid "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
-msgstr "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
+msgid "< Invalid SMPL chunk in"
+msgstr "< Ongeldige SMPL-chunk in"
 
-msgid "Kellner's Bach tuning"
-msgstr "Kellners Bachstemming"
+msgid "< Invalid WAVE format chunk"
+msgstr "< Ongeldig WAVE-formaatchunk"
 
-msgid "Kepler's choice system (1619)"
-msgstr "Keplers keuzesysteem (1619)"
+msgid "< Malformed wave file. Format chunk must preceed data chunk."
+msgstr "< Misvormd wave-bestand. Formaatchunk moet voorafgaan aan datachunk."
 
-msgid "Kirnberger III"
-msgstr "Kirnberger III"
+msgid "< More than 2 channels in"
+msgstr "< Meer dan 2 kanalen in"
 
-msgid "Koenig, Balthasar Organ Nederehe 1714"
-msgstr "Koenig, Balthasar-orgel Nederehe 1714"
+msgid "< Not a RIFF file"
+msgstr "< Dit is geen RIFF-bestand"
 
-msgid "Mercadier's well-temperament"
-msgstr "Mercadiers welgetempereerd"
+msgid "< Only 32bit IEEE float samples supported"
+msgstr "< Er worden alleen 32bit IEEE float samples ondersteund"
 
-msgid "Malerbi's well-temperament nr 1 (1794)"
-msgstr "Malerbi's welgetempereerd nr. 1 (1794)"
+msgid "< Unsupport PCM bit size"
+msgstr "< PCM-bitomvang wordt niet ondersteund"
 
-msgid "Mark Lindley, Grosvenor Chapel, London"
-msgstr "Mark Lindley, Grosvenor Chapel, Londen"
+msgid "< Unsupported PCM format"
+msgstr "< PCM-formaat wordt niet ondersteund"
 
-msgid "Marpurg nr 1"
-msgstr "Marpurg nr. 1"
+msgid "<Invalid SMPL chunk in"
+msgstr "<Ongeldige SMPL-chunk in"
 
-msgid "Marpurg nr 2"
-msgstr "Marpurg nr. 2"
+msgid "<Invalid WAV file"
+msgstr "<Ongeldig WAV-bestand"
 
-msgid "Marpurg nr 3"
-msgstr "Marpurg nr. 3"
+msgid ">"
+msgstr ">"
 
-msgid "Marpurg nr 4"
-msgstr "Marpurg nr. 4"
+msgid "?"
+msgstr "?"
 
-msgid "Marpurg nr 5"
-msgstr "Marpurg nr. 5"
+msgid "A"
+msgstr "A"
 
-msgid "Marpurg nr 7"
-msgstr "Marpurg nr. 7"
+msgid ""
+"A channel offset allows the use of two MIDI\n"
+"interfaces with conflicting MIDI channels. For\n"
+"example, applying a channel offset of 8 to\n"
+"one of the MIDI interfaces would cause that\n"
+"interface's channel 1 to appear as channel 9,\n"
+"channel 2 to appear as channel 10, and so on."
+msgstr ""
+"Een kanaalverschil maakt het mogelijk om twee\n"
+"MIDI-interfaces met conflicterende MIDI-kanelen\n"
+"te gebruiken. Bijvoorbeeld: een kanaalverschil van 8\n"
+"voor een van de MIDI-interfaces zorgt ervoor dat\n"
+"kanaal 1 van die interface verschijnt als kanaal 9,\n"
+"kanaal 2 als kanaal 10, enzovoort."
 
-msgid "Marpurg nr 8"
-msgstr "Marpurg nr. 8"
+msgid "A&dvanced..."
+msgstr "&Uitgebreid"
 
-msgid "Marpurg nr 9"
-msgstr "Marpurg nr. 9"
+msgid "ALSA"
+msgstr "ALSA"
 
-msgid "Marpurg nr 11"
-msgstr "Marpurg nr. 11"
+msgid "ASIO"
+msgstr "ASIO"
 
-msgid "Marpurg nr 12"
-msgstr "Marpurg nr. 12"
+msgid "Active polyphony management"
+msgstr "Actief polyfoniebeheer"
 
-msgid "Mod. Silbermann nr 2"
-msgstr "Silbermann nr. 2 aangepast"
+msgid "Add dirac pulse"
+msgstr "Dirac-puls toevoegen"
 
-msgid "Neidhardt I (1724)"
-msgstr "Neidhardt I (1724)"
+msgid "Add new audio device"
+msgstr "Nieuw audio-apparaat toevoegen"
 
-msgid "Neidhardt II (1724)"
-msgstr "Neidhardt II (1724)"
+msgid "Add new audio group"
+msgstr "Nieuwe audiogroep toevoegen"
 
-msgid "Neidhardt III (1724)"
-msgstr "Neidhardt III (1724)"
-
-msgid "Norden"
-msgstr "Norden"
-
-msgid "Prelleur (Peter) 1731"
-msgstr "Prelleur (Peter) 1731"
-
-msgid "Rousseau's temperament (1768)"
-msgstr "Rousseau's stemming (1768)"
-
-msgid "Schlick (Arnolt), 1511"
-msgstr "Schlick (Arnolt), 1511"
-
-msgid "Schlick: 1555"
-msgstr "Schlick: 1555"
-
-msgid "Schlick's (1991)"
-msgstr "Schlick's (1991)"
-
-msgid "Sorge, 1744 (A)"
-msgstr "Sorge, 1744 (A)"
-
-msgid "Sorge, 1744 (B)"
-msgstr "Sorge, 1744 (B)"
-
-msgid "Sorge, 1758"
-msgstr "Sorge, 1758"
-
-msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
-msgstr "Thomas/Philpott-orgel 1829/1881, St. Jansklooster"
-
-msgid "Valotti"
-msgstr "Valotti"
-
-msgid "Wegscheider 20 note"
-msgstr "Wegscheider 20 noten"
-
-msgid "Werckmeister III"
-msgstr "Werckmeister III"
-
-msgid "Werckmeister 4 (1691)"
-msgstr "Werckmeister 4 (1691)"
-
-msgid "Werckmeister 5 (1691)"
-msgstr "Werckmeister 5 (1691)"
-
-msgid "Werckmeister 6"
-msgstr "Werckmeister 6"
-
-msgid "Harpsichord/Piano/Monochord"
-msgstr "Clavecimbel/piano/monochordium"
+msgid "Address"
+msgstr "Adres"
 
 msgid "Agricola's Monochord, Rudimenta musices (1539)"
 msgstr "Agricola's monochordium, Rudimenta musices (1539)"
 
+msgid "Alexander Metcalf Fisher"
+msgstr "Alexander Metcalf Fisher"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "All loops"
+msgstr "Alle lussen"
+
+msgid "Allocated sample memory"
+msgstr "Toegewezen sample-geheugen"
+
+msgid "Alsa"
+msgstr "Alsa"
+
+msgid "Amplitude is invalid"
+msgstr "Amplitude is ongeldig"
+
+msgid "Amplitude:"
+msgstr "Amplitude:"
+
+msgid "Any channel"
+msgstr "Alle kanalen"
+
+msgid ""
+"Any customizations you have saved to this\n"
+"organ definition file will be lost!\n"
+"\n"
+"Reset to defaults and reload?"
+msgstr ""
+"Alle aanpassingen die je hebt opgeslagen\n"
+"voor dit orgeldefinitiebestand gaan\n"
+"verloren!\n"
+"\n"
+"Standaardwaarden herstellen en herladen?"
+
+msgid "Any device"
+msgstr "Alle apparaten"
+
+msgid "Apply"
+msgstr "Toepassen"
+
+msgid "Attack loading:"
+msgstr "Aanslagsamples laden:"
+
+msgid ""
+"Attention:\n"
+"These initial midi settings only affect the first load of a organ.\n"
+"Right-click on manuals, stops, ... to do further changes."
+msgstr ""
+"Let op:\n"
+"Deze initiële midi-instellingen zijn alleen nodig als je een orgel voor het "
+"eerst laadt.\n"
+"Klik met de rechter muisknop op manualen, registers, enzovoort om meer te "
+"wijzigen."
+
+msgid "Audio Groups"
+msgstr "Audiogroepen"
+
+msgid "Audio Output"
+msgstr "Audio-uitvoer"
+
+msgid "Audio device settings"
+msgstr "Audio-apparaatinstellingen"
+
+#, c-format
+msgid "Audio group %d"
+msgstr "Audiogroep %d"
+
+msgid "Audio group name"
+msgstr "Naam audiogroep"
+
+msgid "Audio group:"
+msgstr "Audiogroep:"
+
+msgid "Audio groups"
+msgstr "Audiogroepen"
+
+msgid "Audio/Midi &Settings"
+msgstr "Au&dio/Midi-instellingen"
+
+msgid "Automatically manage cache"
+msgstr "Cache automatisch beheren"
+
+msgid "B"
+msgstr "B"
+
+msgid "BAS"
+msgstr "BAS"
+
+msgid "Bach (Bradley Lehman)"
+msgstr "Bach (Bradley Lehman)"
+
+msgid "Bad buffer pointer"
+msgstr "Verkeerde bufferpointer"
+
+msgid "Barca 1786"
+msgstr "Barca 1786"
+
 msgid "Bermudo (1555) "
 msgstr "Bermudo (1555) "
 
-msgid "d'Alembert's: John Sankey's Scarlatti"
-msgstr "d'Alembert's: John Sankey's Scarlatti"
+msgid "Bethisy temperament ordinaire (1764)"
+msgstr "Bethisy temperament ordinaire (1764)"
 
-msgid "Equal beating Victorian piano temperament"
-msgstr "Victoriaanse gelijkzwevende pianostemming"
+msgid "Boulliau (1373)/Mersenne 1636. "
+msgstr "Boulliau (1373)/Mersenne 1636. "
 
-msgid "Hummel's quasi-equal temperament (1829)"
-msgstr "Hummels quasi-gelijkzwevende stemming (1829)"
+msgid "Buffer too big"
+msgstr "Buffer is te groot"
 
-msgid "Mersenne spinet 1"
-msgstr "Mersenne spinet 1"
+msgid "Buffer too small"
+msgstr "Buffer is te klein"
 
-msgid "Mersenne spinet 2"
-msgstr "Mersenne spinet 2"
+msgid "Build Date"
+msgstr "Bouwjaar/-datum"
 
-msgid "Ramos de Pareja 1482 - Monochord"
-msgstr "Ramos de Pareja 1482 - monochordium"
+msgid "Builder"
+msgstr "Bouwer"
 
-msgid "Sauveur harpsichord 1697"
-msgstr "Sauveur clavecimbel 1697"
+msgid "Bx Controller"
+msgstr "Bx Controller"
 
-msgid "Sorge Monochord (1756)"
-msgstr "Sorge monochordium (1756)"
+msgid "Bx Controller Off"
+msgstr "Bx Controller off"
 
-msgid "Stevin (Simon), monochord 1585"
-msgstr "Stevin (Simon), monochordium 1585"
+msgid "Bx Controller Off Toogle"
+msgstr "Bx Controller off aan/uit"
 
-msgid "Victorian temperament 1885"
-msgstr "Victoriaanse stemming 1885"
+msgid "Bx Controller On"
+msgstr "Bx Controller on"
+
+msgid "Bx Controller On Toogle"
+msgstr "Bx Controller on aan/uit"
+
+msgid "Bx Ctrl Change Fixed Off Value Toogle"
+msgstr "Bx Ctrl change vaste off-waarde aan/uit"
+
+msgid "Bx Ctrl Change Fixed On Value Toogle"
+msgstr "Bx Ctrl change vast on-waarde aan/uit"
+
+msgid "Bx Ctrl Change Fixed Value"
+msgstr "Bx Ctrl change vaste waarde"
+
+msgid "C"
+msgstr "C"
+
+msgid "C&opy"
+msgstr "&Kopiëren"
+
+msgid "Cache file had bad magic bypassing cache."
+msgstr ""
+"Het cache-bestand had een verkeerde magic-waarde. Daarom is de cache niet "
+"gebruikt."
+
+msgid "Cache file had diffent hash bypassing cache."
+msgstr ""
+"Het cache-bestand had een andere hash-waarde. Daarom is de cache niet "
+"gebruikt."
 
 #, c-format
-msgid "Switch %d already assigned to %s"
-msgstr "Schakelaar %d is al toegewezen aan %s"
+msgid "Cache load failure: %s"
+msgstr "Laden van de cache mislukt: %s"
+
+#, c-format
+msgid "Cache load failure: Failed to read %s from cache."
+msgstr ""
+"Het laden van de cache is mislukt: het lezen van %s uit de cache is mislukt."
+
+msgid "Cache store:"
+msgstr "Cache-opslag:"
+
+msgid "Can't read from a callback stream"
+msgstr "Er kan niet gelezen worden uit een callbackstream"
+
+msgid "Can't read from an output only stream"
+msgstr "Er kan niet gelezen uit een alleen-uitvoer-stream"
+
+msgid "Can't write to a callback stream"
+msgstr "Er kan niet geschreven naar een callbackstream"
+
+msgid "Can't write to an input only stream"
+msgstr "Er kan niet geschreven naar een alleen-invoer-stream"
+
+#, c-format
+msgid ""
+"Cannot use buffer size above %d samples; unacceptable quantization would "
+"occur."
+msgstr ""
+"Er kan geen buffergrootte gebruikt worden met meer dan %d samples; dan zou "
+"er een onacceptabele kwantisering plaatsvinden"
+
+msgid "Change"
+msgstr "Wijzigen"
+
+msgid "Change audio device"
+msgstr "Audio-apparaat wijzigen"
+
+msgid "Change audio group"
+msgstr "Audiogroep wijzigen"
+
+#, c-format
+msgid "Channel %d"
+msgstr "Kanaal %d"
+
+msgid "Channel offset:"
+msgstr "Kanaalverschil:"
+
+msgid "Channel:"
+msgstr "Kanaal:"
+
+msgid "Chaumont"
+msgstr "Chaumont"
+
+msgid "Church"
+msgstr "Kerk"
+
+msgid "Combination Setter"
+msgstr "Combinatie-setter"
+
+msgid "Compress cache"
+msgstr "Cache comprimeren"
+
+msgid "Concurrency Level:"
+msgstr "Concurrency-niveau:"
+
+#, c-format
+msgid "Config entry without any group at line %d"
+msgstr "Configuratie-entry zonder groep op regel %d"
+
+msgid ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2014 GrandOrgue contributors\n"
+"\n"
+"This software comes with no warranty.\n"
+"\n"
+"ASIO Interface Technology by Steinberg Media Technologies GmbH,\n"
+"by use of the Steinberg ASIO SDK, Version 2.2.\n"
+"ASIO is a trademark and software of Steinberg Media Technologies GmbH."
+msgstr ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2014 medewerkers aan GrandOrgue\n"
+"\n"
+"Deze software wordt geleverd zonder garantie.\n"
+"\n"
+"ASIO Interface Technology door Steinberg Media Technologies GmbH,\n"
+"met gebruikmaking van de Steinberg ASIO SDK, versie 2.2.\n"
+"ASIO is een handelsmerk en software van Steinberg Media Technologies GmbH."
+
+msgid "Core"
+msgstr "Core"
+
+msgid "Core Audio"
+msgstr "Core Audio"
+
+msgid "Corrette (1753)"
+msgstr "Corrette (1753)"
+
+#, c-format
+msgid "Could not remove '%s'"
+msgstr "'%s' kon niet verplaatst worden"
+
+#, c-format
+msgid "Could not write to '%s'"
+msgstr "Er kon niet naar '%s' geschreven worden"
+
+msgid "Couperin"
+msgstr "Couperin"
+
+msgid "Coupler"
+msgstr "Koppel"
+
+#, c-format
+msgid "Coupler %s"
+msgstr "Koppel %s"
+
+msgid "Creating sample cache"
+msgstr "Cachebestand wordt aangemaakt."
+
+msgid "Creating the cache failed"
+msgstr "Aanmaken van de cache mislukt"
+
+msgid "Crescendo"
+msgstr "Crescendo"
+
+msgid "Crescendo Pedal"
+msgstr "Crescendo-pedaal"
+
+msgid "Ctrl Change Bitfield"
+msgstr "Ctrl change bit-veld"
+
+msgid "Current"
+msgstr "Huidige"
+
+msgid "Cx Program Change"
+msgstr "Cx Program change"
+
+msgid "Cx Program Change Off"
+msgstr "Cx Program change off"
+
+msgid "Cx Program Change On"
+msgstr "Cx Program change on"
+
+msgid "D"
+msgstr "D"
+
+msgid "De Caus (1615)"
+msgstr "De Caus (1615)"
+
+msgid "Default"
+msgstr "Standaard"
+
+msgid "Default audio group"
+msgstr "Standaard audiogroep"
+
+msgid "Delay (ms):"
+msgstr "Vertraging (ms):"
+
+msgid "Delete"
+msgstr "Verwijderen"
+
+msgid "Delete &Cache..."
+msgstr "Cache &verwijderen"
+
+msgid "Desired latency:"
+msgstr "Gewenste vertraging:"
+
+msgid "Desired output latency"
+msgstr "Gewenste uitvoervertraging"
+
+#, c-format
+msgid "Device %s wants a different frame count: %d"
+msgstr "Apparaat %s wil een ander frame-aantal: %d"
+
+msgid "Device unavailable"
+msgstr "Apparaat is niet beschikbaar"
+
+#, c-format
+msgid "Device: %s"
+msgstr "Apparaat: %s"
+
+#, c-format
+msgid "Device: %s (%d ms)"
+msgstr "Apparaat: %s (%d ms)"
+
+msgid "Direct Sound:"
+msgstr "Direct Sound:"
+
+msgid "DirectSound"
+msgstr "DirectSound"
+
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+msgid "Distribute audio groups"
+msgstr "Verdeling over de audiogroepen"
+
+msgid "Divisionals"
+msgstr "Divisionals"
+
+#, c-format
+msgid "Do you want to remove %s?"
+msgstr "Wil je %s verwijderen?"
+
+msgid "Don't load"
+msgstr "Niet laden"
 
 #, c-format
 msgid "Drawstop %s can't reference to itself"
 msgstr "Registerknop %s kan niet naar zichzelf verwijzen"
 
-msgid "Manual 1 (Pedal)"
-msgstr "Klavier 1 (pedaal)"
+#, c-format
+msgid "Duplicate combination entry %s in %s"
+msgstr "Dubbele combinatie-entry %s in %s"
 
-msgid "Manual 2 (Great)"
-msgstr "Klavier 2 (manuaal 1)"
+#, c-format
+msgid "Duplicate entry in section %s at line %d: %s"
+msgstr "Dubbele entry in sectie %s op regel %d: %s"
 
-msgid "Manual 3 (Swell)"
-msgstr "Klavier 3 (manuaal 2)"
+#, c-format
+msgid "Duplicate entry: %s"
+msgstr "Dubbele invoer: %s"
 
-msgid "Manual 4 (Choir)"
-msgstr "Klavier 4 (manuaal 3)"
+#, c-format
+msgid "Duplicate group at line %d: %s"
+msgstr "Dubbele groep op regel %d: %s"
 
-msgid "Manual 5 (Solo)"
-msgstr "Klavier 5 (manuaal 4)"
+msgid "E"
+msgstr "E"
 
-msgid "Manual 6 (Echo)"
-msgstr "Klavier 6 (manuaal 5)"
+msgid "E&xit"
+msgstr "&Afsluiten"
+
+msgid "Element"
+msgstr "Element"
+
+msgid "Element already in the pool"
+msgstr "Element bestaat al in de pool"
+
+msgid "Enable Convolution Reverb"
+msgstr "Convolutie-nagalm inschakelen"
+
+msgid "Enabled"
+msgstr "Ingeschakeld"
 
 msgid "Enclosure 1"
 msgstr "Zwelkast 1"
@@ -784,1089 +963,34 @@ msgstr "Zwelkast 5"
 msgid "Enclosure 6"
 msgstr "Zwelkast 6"
 
-msgid "Previous Memory"
-msgstr "Vorige geheugenbank"
+msgid "Enclosures"
+msgstr "Zwelkasten"
 
-msgid "Next Memory"
-msgstr "Volgende geheugenbank"
+msgid "Equal beating Victorian piano temperament"
+msgstr "Victoriaanse gelijkzwevende pianostemming"
 
-msgid "Memory Set"
-msgstr "Geheugen instellen"
-
-msgid "Stop Changes"
-msgstr "Registratiewijzigingen"
-
-#, c-format
-msgid "Audio group %d"
-msgstr "Audiogroep %d"
-
-msgid "Default audio group"
-msgstr "Standaard audiogroep"
-
-msgid "My Organs"
-msgstr "Mijn orgels"
-
-msgid "Log messages"
-msgstr "Logberichten"
-
-msgid "enclosure not found"
-msgstr "zwelkast niet gevonden"
-
-msgid "Unable to open file for writing"
-msgstr "Bestand kon niet geopend worden om te beschrijven"
-
-msgid "Invalid reference "
-msgstr "Ongeldige verwijzing "
-
-#, c-format
-msgid "RtAudio error: %s"
-msgstr "RtAudio-fout: %s"
-
-msgid " (PA): "
-msgstr " (PA): "
+msgid "Equal temperament"
+msgstr "Gelijkzwevende stemming"
 
 msgid "Error"
 msgstr "Fout"
 
 #, c-format
-msgid "Output device %s not found - no sound output will occure"
+msgid "Error while loading samples for rank %s pipe %s: %s"
 msgstr ""
-"Uitvoer apparaat %s niet gevonden. Er kan geen geluid geproduceerd worden."
-
-#, c-format
-msgid "Open of the audio stream for %s failed: %s"
-msgstr "Het openen van de audiostream voor %s is mislukt: %s"
-
-#, c-format
-msgid "Device %s wants a different frame count: %d"
-msgstr "Apparaat %s wil een ander frame-aantal: %d"
-
-#, c-format
-msgid "Audio engine wants frame size of %u blocks which is indivisible by %u."
-msgstr ""
-"De audiomodule wil een frameomvang van %u blokken, wat ondeelbaar is door %u."
-
-#, c-format
-msgid ""
-"Cannot use buffer size above %d samples; unacceptable quantization would "
-"occur."
-msgstr ""
-"Er kan geen buffergrootte gebruikt worden met meer dan %d samples; dan zou "
-"er een onacceptabele kwantisering plaatsvinden"
-
-#, c-format
-msgid "Sample rate of device %s changed"
-msgstr "Samplerate van apparaat %s is gewijzigd"
-
-#, c-format
-msgid "Start of audio stream of %s failed: %s"
-msgstr "Het starten van de audiostream van %s is mislukt: %s"
-
-#, c-format
-msgid "Audio callback of %u blocks requested. Must be divisible by %u."
-msgstr "Audio-callback van %u blokken gevraagd. Moet deelbaar zijn door %u."
-
-#, c-format
-msgid "Invalid enum value for /%s/%s: %d"
-msgstr "Ongeldige enum-waarde voor /%s/%s: %d"
-
-msgid "Loading sample set"
-msgstr "Sampleset wordt geladen"
-
-msgid "Parsing sample set definition file"
-msgstr "Sampelsetdefinitiebestand wordt geanalyseerd"
-
-#, c-format
-msgid "Failed to read %s from cache."
-msgstr "Het lezen van %s uit de cache is mislukt."
-
-msgid "Load aborted by the user - only parts of the organ are loaded."
-msgstr ""
-"Laden afgebroken door de gebruiker. Slechts een gedeelte van het orgel is "
-"geladen."
-
-msgid "Load error"
-msgstr "Laadfout"
-
-#, c-format
-msgid "Loading %lu%%"
-msgstr "%lu%% wordt geladen"
-
-msgid ""
-"Out of memory - only parts of the organ are loaded. Please reduce memory "
-"footprint via the sample loading settings."
-msgstr ""
-"Te weinig geheugen. Slechts een gedeelte van het orgel is geladen. Probeer "
-"alsjeblieft om de geheugenbehoefte te beperking via de instellingen voor het "
-"laden van de sampleset."
-
-#, c-format
-msgid "Unable to read '%s'"
-msgstr "'%s' kon niet geladen worden"
-
-#, c-format
-msgid ""
-"This combination file is only compatible with:\n"
-"%s"
-msgstr ""
-"Dit combinatiebestand is alleen compatibel met:\n"
-"%s"
-
-msgid ""
-"The ODF does not match the combination file. Importing it can cause various "
-"problems. Should they really be imported?"
-msgstr ""
-"De ODF komt niet overeen met het combinatiebestand. Importeren kan allerlei "
-"problemen veroorzaken. Moeten deze echt geïmporteerd worden?"
-
-msgid "Import"
-msgstr "Importeren"
-
-msgid ""
-"The ODF contains GrandOrgue 0.2 styled saved settings. Should they be "
-"imported?"
-msgstr ""
-"De ODF bevat opgeslagen instellingen in de stijl van GrandOrgue 0.2. Moeten "
-"die geïmporteerd worden?"
-
-msgid "Loading..."
-msgstr "Bezig met laden..."
-
-msgid "Cache file had bad magic bypassing cache."
-msgstr ""
-
-msgid "Cache file had diffent hash bypassing cache."
-msgstr ""
-
-#, c-format
-msgid "Cache load failure: %s"
-msgstr "Laden van de cache mislukt: %s"
-
-msgid "The cache for this organ is outdated. Please update or delete it."
-msgstr ""
-"De cache voor dit orgel is verouderd. Werk hem alsjeblieft bij of verwijder "
-"hem."
-
-msgid "Warning"
-msgstr "Waarschuwing"
-
-msgid "Ready!"
-msgstr "Gereed!"
-
-#, c-format
-msgid "File belongs to a different organ: %s"
-msgstr "Bestand hoort bij een ander orgel: %s"
-
-msgid "The ODF does not match the combination file."
-msgstr "De ODF komt niet overeen met het combinatiebestand."
-
-msgid "Creating sample cache"
-msgstr "Cachebestand wordt aangemaakt."
-
-#, c-format
-msgid "Save of %s to the cache failed"
-msgstr "Het opslaan van %s in de cache is mislukt"
-
-#, c-format
-msgid "%f cent"
-msgstr "%f cent"
-
-#, c-format
-msgid "Section %s already in use"
-msgstr "Sectie %s is al in gebruik"
-
-msgid "Receive"
-msgstr "Ontvangen"
-
-msgid "Send"
-msgstr "Verzenden"
-
-msgid "Shortcut"
-msgstr "Sneltoets"
-
-msgid "Organ settings"
-msgstr "Orgel-instellingen"
-
-msgid "Distribute audio groups"
-msgstr "Verdeling over de audiogroepen"
-
-msgid "Settings"
-msgstr "Instellingen"
-
-msgid "Amplitude:"
-msgstr "Amplitude:"
-
-msgid "Gain (dB):"
-msgstr "Signaalversterking (dB):"
-
-msgid "Tuning (Cent):"
-msgstr "Stemming (cent)"
-
-msgid "Audio group:"
-msgstr "Audiogroep:"
-
-msgid "Sample Loading"
-msgstr "Het laden van samples"
-
-msgid "Parent default"
-msgstr "Bovenliggende standaardwaarde"
-
-msgid "8 bits"
-msgstr "8 bits"
-
-msgid "12 bits"
-msgstr "12 bits"
-
-msgid "16 bits"
-msgstr "16 bits"
-
-msgid "20 bits"
-msgstr "20 bits"
-
-msgid "24 bits"
-msgstr "24 bits"
-
-msgid "Sample Size:"
-msgstr "Samplegrootte"
-
-msgid "Disabled"
-msgstr "Uitgeschakeld"
-
-msgid "Enabled"
-msgstr "Ingeschakeld"
-
-msgid "Lossless compression:"
-msgstr "Compressie zonder kwaliteitsverlies"
-
-msgid "Don't load"
-msgstr "Niet laden"
-
-msgid "Mono"
-msgstr "Mono"
-
-msgid "Stereo"
-msgstr "Stereo"
-
-msgid "Sample channels:"
-msgstr "Sample-kanalen"
-
-msgid "First loop"
-msgstr "Eerste lus"
-
-msgid "Longest loop"
-msgstr "Langste lus"
-
-msgid "All loops"
-msgstr "Alle lussen"
-
-msgid "Loop loading:"
-msgstr "Het laden van lussen:"
-
-msgid "Single attack"
-msgstr "Eén aanslagsample"
-
-msgid "All"
-msgstr "Alle"
-
-msgid "Attack loading:"
-msgstr "Het laden van aanslagsamples:"
-
-msgid "Single release"
-msgstr "Eén galmsample"
-
-msgid "Release loading:"
-msgstr "Het laden van galmsamples:"
-
-msgid "Apply"
-msgstr "Toepassen"
-
-msgid "Reset"
-msgstr "Herstellen"
-
-msgid "Default"
-msgstr "Standaard"
-
-msgid "Tuning and Voicing"
-msgstr "Stemming en intonatie"
-
-msgid "Ignore pitch info in organ samples wav files"
-msgstr "Toonhoogte-informatie in de wav-bestanden van de orgelsamples negeren"
-
-#, c-format
-msgid "Invalid item selected: %s"
-msgstr "Ongeldige keuze geselecteerd: %s"
-
-#, c-format
-msgid "%d: %s"
-msgstr "%d: %s"
-
-msgid "Amplitude is invalid"
-msgstr "Amplitude is ongeldig"
-
-msgid "Gain is invalid"
-msgstr "Signaalversterking is ongeldig"
-
-msgid "Tuning is invalid"
-msgstr "Stemming is ongeldig"
-
-msgid "Please apply changes first"
-msgstr "Wijzigingen alsjeblieft eerst toepassen"
-
-msgid "Select audio groups to distribute:"
-msgstr "Audiogroepen selecteren voor de verdeling:"
-
-msgid "Organ dialog"
-msgstr "Orgel-dialoogvenster"
-
-msgid "No audio group selected"
-msgstr "Geen audiogroep geselecteerd"
-
-msgid "Enable Convolution Reverb"
-msgstr "Convolutie-nagalm inschakelen"
-
-msgid "&Convolution reverb"
-msgstr "&Convolutie-nagalm"
-
-msgid "Select an impulse file"
-msgstr "Een impulsbestand selecteren"
-
-msgid "*.wav"
-msgstr "*.wav"
-
-msgid "Impulse response:"
-msgstr "Impulsreactie:"
-
-msgid "Delay (ms):"
-msgstr "Vertraging (ms):"
-
-msgid "Start offset:"
-msgstr "Startpunt:"
-
-msgid "Length:"
-msgstr "Duur:"
-
-msgid "Channel:"
-msgstr "Kanaal:"
-
-msgid "Gain:"
-msgstr "Signaalversterking:"
-
-msgid "Direct Sound:"
-msgstr "Direct Sound:"
-
-msgid "Add dirac pulse"
-msgstr "Dirac-puls toevoegen"
-
-msgid "This feature is currently not supported."
-msgstr "Deze mogelijkheid wordt op dit moment niet ondersteund."
+"Er is iets fout gegaan bij het laden van de samples voor koor %s pijp %s: %s"
 
 msgid "Event-&No"
 msgstr "Event-&nr."
 
-msgid "New"
-msgstr "Nieuw"
-
-msgid "&Device:"
-msgstr "&Apparaat:"
-
-msgid "&Event:"
-msgstr "&Event:"
-
-msgid "&Channel:"
-msgstr "&Kanaal:"
-
-msgid "&CTRL/PGM:"
-msgstr "&CTRL/PGM:"
-
-msgid "&Off Value:"
-msgstr "&Off-waarde:"
-
-msgid "&On value:"
-msgstr "&On-waarde:"
-
-msgid "Any device"
-msgstr "Alle apparaten"
-
-msgid "(none)"
-msgstr "(geen)"
-
-msgid "9x Note"
-msgstr "9x Note"
-
-msgid "9x Note On"
-msgstr "9x Note on"
-
-msgid "9x Note Off"
-msgstr "9x Note off"
-
-msgid "Bx Controller"
-msgstr "Bx Controller"
-
-msgid "Bx Controller On"
-msgstr "Bx Controller on"
-
-msgid "Bx Controller Off"
-msgstr "Bx Controller off"
-
-msgid "Cx Program Change On"
-msgstr "Cx Program change on"
-
-msgid "Cx Program Change Off"
-msgstr "Cx Program change off"
-
-#, c-format
-msgid "%d (%s)"
-msgstr "%d (%s)"
-
-msgid "h"
-msgstr "h"
-
-msgid "help"
-msgstr "help"
-
-msgid "displays help on the command line parameters"
-msgstr "laat hulp zien over de commandoregelparameters"
-
-msgid "i"
-msgstr "i"
-
-msgid "instance"
-msgstr "instantie"
-
-msgid "specifiy GrandOrgue instance name"
-msgstr "GrandOrgue-instantienaam specificeren"
-
-msgid "organ file"
-msgstr "orgelbestand"
-
-msgid " - Virtual Pipe Organ Software"
-msgstr " - virtueel pijporgelsoftware"
-
-msgid "Invalid instance name"
-msgstr "Ongeldige instantienaam"
-
-msgid "Sample set definition files"
-msgstr "Definitiebestanden van samplesets"
-
-msgid "*.organ"
-msgstr "*.organ"
-
-#, c-format
-msgid "Preset %d"
-msgstr "Voorkeuze %d"
-
-msgid "&Open\tCtrl+O"
-msgstr "&Openen\tCtrl+O"
-
-msgid "Open &Recent"
-msgstr "&Recent geopend"
-
-msgid "Organ &Properties"
-msgstr "Orgel-&eigenschappen"
-
-msgid "Pr&eset"
-msgstr "&Voorkeuze"
-
-msgid "&Save\tCtrl+S"
-msgstr "&Opslaan\tCtrl+S"
-
-msgid "&Update Cache..."
-msgstr "Cache &bijwerken"
-
-msgid "Delete &Cache..."
-msgstr "Cache &verwijderen"
-
-msgid "Re&load"
-msgstr "&Herladen"
-
-msgid "Reset to &Defaults"
-msgstr "Standaardinstellingen &terugzetten"
-
-msgid "&Import Settings"
-msgstr "Instellingen &importen"
-
-msgid "Import &Combinations"
-msgstr "&Combinaties importeren"
-
-msgid "&Export Settings/Combinations"
-msgstr "Instellingen/combinaties &exporteren"
-
-msgid "&Close"
-msgstr "&Sluiten"
-
-msgid "E&xit"
-msgstr "&Afsluiten"
-
-msgid "&Temperament"
-msgstr "Ste&mming"
-
-msgid "&Organ settings"
-msgstr "&Orgel-instellingen"
-
-msgid "Audio/Midi &Settings"
-msgstr "Au&dio/Midi-instellingen"
-
-msgid "&Record\tCtrl+R"
-msgstr "O&pnemen\tCtrl+R"
-
-msgid "&Panic\tEscape"
-msgstr "Vluchtweg bij &paniek\tEscape"
-
-msgid "&Memory Set\tShift"
-msgstr "&Geheugen instellen\tShift"
-
-msgid "&Help\tF1"
-msgstr "&Help\tF1"
-
-msgid "&About"
-msgstr "O&ver"
-
-msgid "&Memory Level"
-msgstr "&Geheugenniveau"
-
-msgid "Memory Level"
-msgstr "Geheugenniveau"
-
-msgid "&Volume"
-msgstr "&Volume"
-
-msgid "Volume"
-msgstr "Volume"
-
-msgid "&Release tail length"
-msgstr "Lengte van de &galmstaart"
-
-msgid "Release tail length"
-msgstr "Lengte van de galmstaart"
-
-msgid "Max"
-msgstr "Max"
-
-msgid "2.8 s"
-msgstr "2.8 s"
-
-msgid "1.4 s"
-msgstr "1.4 s"
-
-msgid "700 ms"
-msgstr "700 ms"
-
-msgid "350 ms"
-msgstr "350 ms"
-
-msgid "175 ms"
-msgstr "175 ms"
-
-msgid "&Transpose"
-msgstr "&Transponeren"
-
-msgid "Transpose"
-msgstr "Transponeren"
-
-msgid "&Polyphony"
-msgstr "&Polyfonie"
-
-msgid "Polyphony"
-msgstr "Polyfonie"
-
-msgid "Panic"
-msgstr "Paniek"
-
-msgid "&File"
-msgstr "&Bestand"
-
-msgid "&Audio/Midi"
-msgstr "&Audio/Midi"
-
-msgid "&Panel"
-msgstr "&Venster"
-
-msgid "&Help"
-msgstr "&Help"
-
-#, c-format
-msgid "Using helpfile %s (search path: %s)"
-msgstr "Helpbestand %s wordt gebruikt (zoekpad: %s)"
-
-msgid "Import Settings"
-msgstr "Instellingen importeren"
-
-msgid "Settings files (*.cmb)|*.cmb"
-msgstr "Bestanden met instellingen (*.cmb)|*.cmb"
-
-msgid "Import Combinations"
-msgstr "Combinaties importeren"
-
 msgid "Export Settings"
 msgstr "Instellingen exporteren"
-
-msgid "KB"
-msgstr "KB"
-
-msgid "MB"
-msgstr "MB"
-
-msgid "GB"
-msgstr "GB"
-
-msgid "TB"
-msgstr "TB"
-
-msgid "Creating the cache failed"
-msgstr "Aanmaken van de cache mislukt"
-
-msgid ""
-"Any customizations you have saved to this\n"
-"organ definition file will be lost!\n"
-"\n"
-"Reset to defaults and reload?"
-msgstr ""
-"Alle aanpassingen die je hebt opgeslagen\n"
-"voor dit orgeldefinitiebestand gaan\n"
-"verloren!\n"
-"\n"
-"Standaardwaarden herstellen en herladen?"
-
-msgid "Save as"
-msgstr "Opslaan als"
-
-msgid "WAV files (*.wav)|*.wav"
-msgstr "WAV-bestanden (*.wav)|*.wav"
-
-msgid "settingsdialog.."
-msgstr "instellingendialoogvenster..."
-
-msgid "success"
-msgstr "gelukt"
-
-msgid "User Interface"
-msgstr "Gebruikersinterface"
-
-msgid " - "
-msgstr " - "
-
-msgid "&Shortcut:"
-msgstr "&Sneltoets"
-
-msgid "&Listen for Event"
-msgstr "&Luisteren naar event"
-
-msgid "None"
-msgstr "Geen"
-
-msgid "&Enhancements"
-msgstr "&Uitbreidingen"
-
-msgid "Active polyphony management"
-msgstr "Actief polyfoniebeheer"
-
-msgid "Release sample scaling"
-msgstr "Galmsamples schalen"
-
-msgid "Randomize pipe speaking"
-msgstr "Pijpen willekeurig aanspreken"
-
-msgid "Load last file at startup"
-msgstr "Bij opstarten laatste bestand laden"
-
-msgid "&Sound Engine"
-msgstr "Geluidsmodule"
-
-msgid "Linear"
-msgstr "Lineair"
-
-msgid "Polyphase"
-msgstr "Polyfase"
-
-msgid "Interpolation:"
-msgstr "Interpolatie:"
-
-msgid "Concurrency Level:"
-msgstr "Concurrency-niveau:"
-
-msgid "Release Concurrency Level:"
-msgstr "Concurrency-niveau galmstaarten:"
-
-msgid "8 Bit PCM"
-msgstr "8 bit PCM"
-
-msgid "16 Bit PCM"
-msgstr "16 bit PCM"
-
-msgid "24 Bit PCM"
-msgstr "24 bit PCM"
-
-msgid "IEEE Float"
-msgstr "IEEE Float"
-
-msgid "Recorder WAV Format:"
-msgstr "WAV-formaat recorder:"
-
-msgid "&Paths"
-msgstr "&Paden"
-
-msgid "Settings store:"
-msgstr "Instellingenopslag:"
-
-msgid "Select directory for settings store"
-msgstr "Map selecteren om instellingen op te slaan"
-
-msgid "Cache store:"
-msgstr "Cache-opslag:"
-
-msgid "Select directory for cache store"
-msgstr "Map selecteren om cache op te slaan"
-
-msgid "&Sample loading"
-msgstr "&Samples laden"
-
-msgid "Lossless compression"
-msgstr "Compressie zonder kwaliteitsverlies"
-
-msgid "Load &stereo samples in:"
-msgstr "&Stereo-samples laden in:"
-
-msgid "Sample size:"
-msgstr "Samplegrootte:"
-
-msgid "Memory Limit (MB):"
-msgstr "Geheugenlimiet (MB)"
-
-msgid "&Sound output"
-msgstr "&Geluidsuitvoer"
-
-msgid "Sample Rate:"
-msgstr "Samplerate:"
-
-msgid "Samples per buffer:"
-msgstr "Samples per buffer:"
-
-msgid "&Cache"
-msgstr "&Cache"
-
-msgid "Compress cache"
-msgstr "Cache comprimeren"
-
-msgid "Automatically manage cache"
-msgstr "Cache automatisch beheren"
-
-msgid ""
-"Polyphase is not supported with lossless compression - falling back to "
-"linear."
-msgstr ""
-"Polyfase wordt niet ondersteund bij compressie zonder kwaliteitsverlies. Er "
-"wordt teruggevallen op lineair."
-
-msgid "Invalid sample rate"
-msgstr "Ongeldige samplerate"
-
-msgid "Cx Program Change"
-msgstr "Cx Program change"
-
-msgid "Invalid event type"
-msgstr "Ongeldig eventtype"
-
-msgid "&Data:"
-msgstr "&Data:"
-
-msgid "MIDI Messages"
-msgstr "MIDI-messages"
-
-msgid "Midi & Audio Settings"
-msgstr "Midi- & audio-instellingen"
-
-msgid "Options"
-msgstr "Voorkeuren"
-
-msgid "Audio Output"
-msgstr "Audio-uitvoer"
-
-msgid "Reverb"
-msgstr "Nagalm"
-
-msgid "Audio Groups"
-msgstr "Audiogroepen"
-
-msgid "Organs"
-msgstr "Orgels"
-
-msgid "MIDI Devices"
-msgstr "MIDI-apparaten"
-
-msgid "Initial MIDI Configuration"
-msgstr "Initiële MIDI-configuratie"
-
-msgid ""
-"Some changed settings effect unless the sample set is reloaded.\n"
-"\n"
-"Would you like to reload the sample set now?"
-msgstr ""
-"Sommige gewijzige instellingen worden pas effectief als de sampleset opnieuw "
-"geladen is.\n"
-"\n"
-"Wil je de sampleset nu opnieuw laden?"
-
-msgid "Organ Doc"
-msgstr "Orgeldocument"
-
-msgid "Organ View"
-msgstr "Orgelweergave"
-
-msgid "Invalid reverb start offset"
-msgstr "Ongeldig nagalm-startpunt"
-
-msgid "Resampling failed"
-msgstr "Opnieuw samplen mislukt"
-
-#, c-format
-msgid "Load error: %s"
-msgstr "Laadfout: %s"
-
-msgid "back"
-msgstr "back"
-
-msgid "tab"
-msgstr "tab"
-
-msgid "return"
-msgstr "return"
-
-msgid "alt"
-msgstr "alt"
-
-msgid "control"
-msgstr "control"
-
-msgid "menu"
-msgstr "menu"
-
-msgid "pause"
-msgstr "pause"
-
-msgid "capital"
-msgstr "capital"
-
-msgid "escape"
-msgstr "escape"
-
-msgid "space"
-msgstr "spatie"
-
-msgid "pageup"
-msgstr "pageup"
-
-msgid "pagedown"
-msgstr "pagedown"
-
-msgid "end"
-msgstr "end"
-
-msgid "home"
-msgstr "home"
-
-msgid "left"
-msgstr "links"
-
-msgid "up"
-msgstr "omhoog"
-
-msgid "right"
-msgstr "rechts"
-
-msgid "down"
-msgstr "omlaag"
-
-msgid "select"
-msgstr "select"
-
-msgid "print"
-msgstr "print"
-
-msgid "execute"
-msgstr "execute"
-
-msgid "snapshot"
-msgstr "snapshot"
-
-msgid "insert"
-msgstr "insert"
-
-msgid "delete"
-msgstr "delete"
-
-msgid "0"
-msgstr "0"
-
-msgid "1"
-msgstr "1"
-
-msgid "2"
-msgstr "2"
-
-msgid "3"
-msgstr "3"
-
-msgid "5"
-msgstr "5"
-
-msgid "6"
-msgstr "6"
-
-msgid "7"
-msgstr "7"
-
-msgid "9"
-msgstr "9"
-
-msgid "E"
-msgstr "E"
 
 msgid "F"
 msgstr "F"
 
-msgid "G"
-msgstr "G"
-
-msgid "H"
-msgstr "H"
-
-msgid "I"
-msgstr "I"
-
-msgid "J"
-msgstr "J"
-
-msgid "K"
-msgstr "K"
-
-msgid "L"
-msgstr "L"
-
-msgid "M"
-msgstr "M"
-
-msgid "N"
-msgstr "N"
-
-msgid "O"
-msgstr "O"
-
-msgid "P"
-msgstr "P"
-
-msgid "Q"
-msgstr "Q"
-
-msgid "R"
-msgstr "R"
-
-msgid "S"
-msgstr "S"
-
-msgid "T"
-msgstr "T"
-
-msgid "U"
-msgstr "U"
-
-msgid "V"
-msgstr "V"
-
-msgid "W"
-msgstr "W"
-
-msgid "X"
-msgstr "X"
-
-msgid "Y"
-msgstr "Y"
-
-msgid "Z"
-msgstr "Z"
-
-msgid "Windows left"
-msgstr "Windows links"
-
-msgid "Windows right"
-msgstr "Windows rechts"
-
-msgid "Windows menu"
-msgstr "Windows menu"
-
-msgid "numpad 0"
-msgstr "numpad 0"
-
-msgid "numpad 1"
-msgstr "numpad 1"
-
-msgid "numpad 2"
-msgstr "numpad 2"
-
-msgid "numpad 3"
-msgstr "numpad 3"
-
-msgid "numpad 4"
-msgstr "numpad 4"
-
-msgid "numpad 5"
-msgstr "numpad 5"
-
-msgid "numpad 6"
-msgstr "numpad 6"
-
-msgid "numpad 7"
-msgstr "numpad 7"
-
-msgid "numpad 8"
-msgstr "numpad 8"
-
-msgid "numpad 9"
-msgstr "numpad 9"
-
-msgid "multiply"
-msgstr "vermenigvuldigen"
-
-msgid "add"
-msgstr "optellen"
-
-msgid "seperator"
-msgstr "scheidingsteken"
-
-msgid "subtract"
-msgstr "aftrekken"
-
-msgid "decimal"
-msgstr "decimaal"
-
-msgid "divide"
-msgstr "delen"
-
 msgid "F1"
 msgstr "F1"
-
-msgid "F2"
-msgstr "F2"
-
-msgid "F3"
-msgstr "F3"
-
-msgid "F4"
-msgstr "F4"
-
-msgid "F5"
-msgstr "F5"
-
-msgid "F6"
-msgstr "F6"
-
-msgid "F7"
-msgstr "F7"
-
-msgid "F8"
-msgstr "F8"
-
-msgid "F9"
-msgstr "F9"
 
 msgid "F10"
 msgstr "F10"
@@ -1898,6 +1022,9 @@ msgstr "F18"
 msgid "F19"
 msgstr "F19"
 
+msgid "F2"
+msgstr "F2"
+
 msgid "F20"
 msgstr "F20"
 
@@ -1913,32 +1040,1642 @@ msgstr "F23"
 msgid "F24"
 msgstr "F24"
 
-msgid "numlock"
-msgstr "numlock"
+msgid "F3"
+msgstr "F3"
 
-msgid "scroll"
-msgstr "scroll"
+msgid "F4"
+msgstr "F4"
 
-msgid ":"
-msgstr ":"
+msgid "F5"
+msgstr "F5"
 
-msgid "numpad equal"
-msgstr "numpad ="
+msgid "F6"
+msgstr "F6"
 
-msgid ","
-msgstr ","
+msgid "F7"
+msgstr "F7"
+
+msgid "F8"
+msgstr "F8"
+
+msgid "F9"
+msgstr "F9"
+
+#, c-format
+msgid "Failed to create directory '%s'"
+msgstr "Aanmaken van map '%s' mislukt"
+
+msgid "Failed to decode WavePack data"
+msgstr "Het decoderen van WavePack-data is mislukt"
+
+#, c-format
+msgid "Failed to export settings to '%s'"
+msgstr "Het exporteren van instellingen naar '%s' is mislukt"
+
+#, c-format
+msgid "Failed to load file '%s' into the memory"
+msgstr "Het laden van het bestand '%s' in het geheugen is mislukt"
+
+#, c-format
+msgid "Failed to open file '%s'"
+msgstr "Het openen van bestand '%s' is mislukt"
+
+#, c-format
+msgid "Failed to open the graphic '%s'"
+msgstr "Openen van afbeelding '%s' mislukt"
+
+#, c-format
+msgid "Failed to read file '%s'"
+msgstr "Lezen van bestand '%s' mislukt"
+
+#, c-format
+msgid "Failed to read file '%s'\n"
+msgstr "Het lezen van bestand '%s' is mislukt\n"
+
+msgid "Failed to save the organ setting"
+msgstr "Het opslaan van de orgelinstellingen is mislukt"
+
+msgid "Ferdinand Bossard (1743/44) Klosterkirche Muri"
+msgstr "Ferdinand Bossard (1743/1744) Klosterkirche Muri"
+
+#, c-format
+msgid "File belongs to a different organ: %s"
+msgstr "Bestand hoort bij een ander orgel: %s"
+
+#, c-format
+msgid "Filename '%s' not compatible with case sensitive systems"
+msgstr "Bestandsnaam '%s' is niet compatibel met hoofdlettergevoelige systemen"
+
+msgid "First loop"
+msgstr "Eerste lus"
+
+msgid "Fisk-Vogel: Memorial Church at Stanford"
+msgstr "Fisk-Vogel: Memorial Church in Stanford"
+
+#, c-format
+msgid "Floating %d"
+msgstr "Zwevend %d"
+
+msgid "Floating manuals"
+msgstr "Zwevende manualen"
+
+msgid "Freres Jullien Organ, France (1690)"
+msgstr "Freres Jullien-orgel, Frankrijk (1690)"
+
+msgid "Freytag Organ Bellingwolde 1798/2002"
+msgstr "Freytag-orgel Bellingwolde 1798/2002"
+
+msgid "Full"
+msgstr "Tutti"
+
+msgid "G"
+msgstr "G"
+
+msgid "G. Silbermann nr 2"
+msgstr "G. Silbermann nr. 2"
+
+msgid "G.C."
+msgstr "G.C."
+
+msgid "GB"
+msgstr "GB"
+
+msgid "Gain (dB):"
+msgstr "Signaalversterking (dB):"
+
+msgid "Gain is invalid"
+msgstr "Signaalversterking is ongeldig"
+
+msgid "Gain:"
+msgstr "Signaalversterking:"
+
+msgid "Ganassi (Sylvestro) - 1543"
+msgstr "Ganassi (Sylvestro) - 1543"
+
+msgid "Generals"
+msgstr "Generals"
+
+msgid "Gottfried Silbermann nr 1"
+msgstr "Gottfried Silbermann nr. 1"
+
+msgid "Grammateus (1518)"
+msgstr "Grammateus (1518)"
+
+msgid "GrandOrgue"
+msgstr "GrandOrgue"
+
+#, c-format
+msgid "GrandOrgue %s"
+msgstr "GrandOrgue %s"
+
+#, c-format
+msgid "GrandOrgue %s - Virtual Pipe Organ Software"
+msgstr "GrandOrgue %s - virtueel pijporgelsoftware"
+
+msgid "GrandOrgue Input"
+msgstr "GrandOrgue-invoer"
+
+msgid "GrandOrgue Output"
+msgstr "GrandOrgue-uitvoer"
+
+msgid "Group"
+msgstr "Groep"
+
+msgid "H"
+msgstr "H"
+
+msgid "H&ighest velocity:"
+msgstr "&Snelste aanslag"
+
+msgid "Harpsichord/Piano/Monochord"
+msgstr "Clavecimbel/piano/monochordium"
+
+msgid "Henri Arnaut De Zwolle. (1436)."
+msgstr "Henri Arnaut de Zwolle (1436)"
+
+msgid "Heun (Jan) 1805"
+msgstr "Heun (Jan) 1805"
+
+msgid "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
+msgstr "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
+
+msgid "Holden (John) 1770"
+msgstr "Holden (John) 1770"
+
+msgid "Host API not found"
+msgstr "Host-API niet gevonden"
+
+msgid "Hummel's quasi-equal temperament (1829)"
+msgstr "Hummels quasi-gelijkzwevende stemming (1829)"
+
+msgid "I"
+msgstr "I"
+
+msgid "IEEE Float"
+msgstr "IEEE Float"
+
+msgid "Ignore pitch info in organ samples wav files"
+msgstr "Toonhoogte-informatie in de wav-bestanden van de orgelsamples negeren"
+
+msgid "Illegal combination of I/O devices"
+msgstr "Ongeldige combinatie van I/O-apparaten"
+
+msgid "Import"
+msgstr "Importeren"
+
+msgid "Import &Combinations"
+msgstr "&Combinaties importeren"
+
+msgid "Import Combinations"
+msgstr "Combinaties importeren"
+
+msgid "Import Settings"
+msgstr "Instellingen importeren"
+
+msgid "Impulse response:"
+msgstr "Impulsreactie:"
+
+msgid "Incompatible host API specific stream info"
+msgstr "Niet-compatibele streaminfo die specifiek is voor de host-API"
+
+msgid "Incompatible stream host API"
+msgstr "Niet-compatibele streamhost API"
+
+msgid "Inconsitant WavPack file"
+msgstr "Inconsistent WavePack-bestand"
+
+#, c-format
+msgid "Incorrect case for section '%s' entry '%s'"
+msgstr "Onjuiste hoofd- of kleine letter voor sectie '%s' entry '%s'"
+
+msgid "Initial MIDI Configuration"
+msgstr "Initiële MIDI-configuratie"
+
+#, c-format
+msgid "Initial MIDI settings for %s"
+msgstr "Initiële MIDI-instellingen voor %s"
+
+msgid "Input overflowed"
+msgstr "Invoer overflowed"
+
+msgid "Insert"
+msgstr "Invoegen"
+
+msgid "Insufficient memory"
+msgstr "Te weinig geheugen"
+
+msgid "Internal PortAudio error"
+msgstr "Interne PortAudio-fout"
+
+msgid "Interpolation:"
+msgstr "Interpolatie:"
+
+#, c-format
+msgid "Invalid Config entry at line %d: %s"
+msgstr "Ongeldige configuratie-entry op regel %d: %s"
+
+#, c-format
+msgid "Invalid boolean value at section '%s' entry '%s': %s"
+msgstr "Ongeldige boolean-waarde in sectie '%s' entry '%s': %s"
+
+#, c-format
+msgid "Invalid color at section '%s' entry '%s': %s"
+msgstr "Ongeldige kleur in sectie '%s' entry '%s': %s"
+
+#, c-format
+msgid "Invalid combination entry %s in %s"
+msgstr "Ongeldige combinatie-entry %s in %s"
+
+msgid "Invalid device"
+msgstr "Ongeldig apparaat"
+
+msgid "Invalid enum default value"
+msgstr "Ongeldige standaard enum-waarde"
+
+#, c-format
+msgid "Invalid enum value at section '%s' entry '%s': %s"
+msgstr "Ongeldige enum-waarde in sectie '%s' entry '%s': %s"
+
+#, c-format
+msgid "Invalid enum value for /%s/%s: %d"
+msgstr "Ongeldige enum-waarde voor /%s/%s: %d"
+
+msgid "Invalid error code"
+msgstr "Ongeldige foutcode"
+
+msgid "Invalid error code (value greater than zero)"
+msgstr "Ongeldige foutcode (waarde groter dan nul)"
+
+msgid "Invalid flag"
+msgstr "Ongeldig label"
+
+#, c-format
+msgid "Invalid float value at section '%s' entry '%s': %s"
+msgstr "Ongeldige float-waarde in sectie '%s' entry '%s': %s"
+
+#, c-format
+msgid "Invalid font size at section '%s' entry '%s': %s"
+msgstr "Ongeldige lettergrootte in sectie '%s' entry '%s': %s"
+
+msgid "Invalid host API"
+msgstr "Ongeldige host-API"
+
+msgid "Invalid instance name"
+msgstr "Ongeldige instantienaam"
+
+#, c-format
+msgid "Invalid integer value at section '%s' entry '%s': %s"
+msgstr "Ongeldige integer-waarde in sectie '%s' entry '%s': %s"
+
+#, c-format
+msgid "Invalid item selected: %s"
+msgstr "Ongeldige keuze geselecteerd: %s"
+
+msgid "Invalid loop defintion"
+msgstr "Ongeldige lusdefinitie"
+
+msgid "Invalid number of channels"
+msgstr "Ongeldig aantal kanalen"
+
+msgid "Invalid object type for reversible piston"
+msgstr "Ongeldig objecttype voor omkeerbare piston"
+
+msgid "Invalid reference "
+msgstr "Ongeldige verwijzing "
+
+msgid "Invalid release end position"
+msgstr "Ongeldige galmeindepositie"
+
+msgid "Invalid release position"
+msgstr "Ongeldige galmpositie"
+
+msgid "Invalid reverb configuration (samples per buffer)"
+msgstr "Ongelde nagalmconfiguratie (samples per buffer)"
+
+msgid "Invalid reverb start offset"
+msgstr "Ongeldig nagalm-startpunt"
+
+msgid "Invalid sample rate"
+msgstr "Ongeldige samplerate"
+
+#, c-format
+msgid "Invalid section start at line %d: %s"
+msgstr "Ongeldig sectiebegin op regel %d: %s"
+
+#, c-format
+msgid "Invalid size at section '%s' entry '%s': %s"
+msgstr "Ongeldige grootte in sectie '%s' entry '%s': %s"
+
+msgid "Invalid stream pointer"
+msgstr "Ongeldige streampointer"
+
+msgid "J"
+msgstr "J"
+
+msgid "JACK Audio Connection Kit"
+msgstr "JACK Audio Connection Kit"
+
+msgid "Jack"
+msgstr "Jack"
+
+msgid "Jack: "
+msgstr "Jack: "
+
+msgid "K"
+msgstr "K"
+
+msgid "KB"
+msgstr "KB"
+
+msgid "KSAPI: "
+msgstr "KSAPI: "
+
+msgid "Keller (Gottfried) 1707"
+msgstr "Keller (Gottfried) 1707"
+
+msgid "Kellner's Bach tuning"
+msgstr "Kellners Bachstemming"
+
+msgid "Kepler's choice system (1619)"
+msgstr "Keplers keuzesysteem (1619)"
+
+msgid "Kirnberger III"
+msgstr "Kirnberger III"
+
+msgid "Koenig, Balthasar Organ Nederehe 1714"
+msgstr "Koenig, Balthasar-orgel Nederehe 1714"
+
+msgid "L"
+msgstr "L"
+
+msgid "L&ower limit:"
+msgstr "&Ondergrens"
+
+msgid "L&owest velocity:"
+msgstr "T&raagste aanslag"
+
+#, c-format
+msgid "LCD-1: %s"
+msgstr "LCD-1: %s"
+
+#, c-format
+msgid "LCD-2: %s"
+msgstr "LCD-2: %s"
+
+msgid "Lambert (1774) 1/7 comma"
+msgstr "Lambert (1774) 1/7-komma"
+
+msgid "Length:"
+msgstr "Duur:"
+
+msgid "Linear"
+msgstr "Lineair"
+
+msgid "Load &stereo samples in:"
+msgstr "&Stereo-samples laden in:"
+
+msgid "Load Concurrency Level:"
+msgstr "Concurrency-niveau bij laden"
+
+msgid "Load aborted by the user - only parts of the organ are loaded."
+msgstr ""
+"Laden afgebroken door de gebruiker. Slechts een gedeelte van het orgel is "
+"geladen."
+
+msgid "Load error"
+msgstr "Laadfout"
+
+#, c-format
+msgid "Load error: %s"
+msgstr "Laadfout: %s"
+
+msgid "Load last file at startup"
+msgstr "Bij opstarten laatste bestand laden"
+
+#, c-format
+msgid "Loading file %s"
+msgstr "Bestand %s wordt geladen"
+
+msgid "Loading sample set"
+msgstr "Sampleset wordt geladen"
+
+msgid "Loading..."
+msgstr "Bezig met laden..."
+
+msgid "Log messages"
+msgstr "Logberichten"
+
+msgid "Longest loop"
+msgstr "Langste lus"
+
+msgid "Loop loading:"
+msgstr "Het laden van lussen:"
+
+msgid "Lossless compression"
+msgstr "Compressie zonder kwaliteitsverlies"
+
+msgid "Lossless compression:"
+msgstr "Compressie zonder kwaliteitsverlies"
+
+msgid "M"
+msgstr "M"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "MEL"
+msgstr "MEL"
+
+msgid "MID files (*.mid)|*.mid"
+msgstr "MID-bestanden (*.mid)|*.mid"
+
+msgid "MIDI"
+msgstr "MIDI"
+
+msgid "MIDI &input devices"
+msgstr "MIDI &invoer-apparaten"
+
+msgid "MIDI &output devices"
+msgstr "MIDI &uitvoer-apparaten"
+
+msgid "MIDI Devices"
+msgstr "MIDI-apparaten"
+
+msgid "MIDI Event"
+msgstr "MIDI-event"
+
+#, c-format
+msgid "MIDI settings for organ %s"
+msgstr "MIDI-instellingen voor orgel %s"
+
+msgid "MME"
+msgstr "MME"
+
+msgid "Malerbi's well-temperament nr 1 (1794)"
+msgstr "Malerbi's welgetempereerd nr. 1 (1794)"
+
+#, c-format
+msgid "Manual %d: Switch%03d already in use"
+msgstr "Manuaal %d: Schakelaar %03d wordt al gebruikt"
+
+#, c-format
+msgid "Manual %d: Tremulant%03d already in use"
+msgstr "Manuaal %d: Tremulant%03d wordt al gebruikt"
+
+msgid "Manual 1"
+msgstr "Manuaal 1"
+
+msgid "Manual 2"
+msgstr "Manuaal 2"
+
+msgid "Manual 3"
+msgstr "Manuaal 3"
+
+msgid "Manual 4"
+msgstr "Manuaal 4"
+
+msgid "Manual 5"
+msgstr "Manuaal 5"
+
+msgid "Manuals"
+msgstr "Manualen"
+
+msgid "Mapped memory of the cache"
+msgstr "Toegewezen cachegeheugen"
+
+msgid "Mark Lindley, Grosvenor Chapel, London"
+msgstr "Mark Lindley, Grosvenor Chapel, Londen"
+
+msgid "Marpurg nr 1"
+msgstr "Marpurg nr. 1"
+
+msgid "Marpurg nr 11"
+msgstr "Marpurg nr. 11"
+
+msgid "Marpurg nr 12"
+msgstr "Marpurg nr. 12"
+
+msgid "Marpurg nr 2"
+msgstr "Marpurg nr. 2"
+
+msgid "Marpurg nr 3"
+msgstr "Marpurg nr. 3"
+
+msgid "Marpurg nr 4"
+msgstr "Marpurg nr. 4"
+
+msgid "Marpurg nr 5"
+msgstr "Marpurg nr. 5"
+
+msgid "Marpurg nr 7"
+msgstr "Marpurg nr. 7"
+
+msgid "Marpurg nr 8"
+msgstr "Marpurg nr. 8"
+
+msgid "Marpurg nr 9"
+msgstr "Marpurg nr. 9"
+
+msgid "Master"
+msgstr "Hoofd"
+
+msgid "Master Controls"
+msgstr "Hoofdbediening"
+
+msgid "Max"
+msgstr "Max"
+
+msgid "Memory Level"
+msgstr "Geheugenbank"
+
+msgid "Memory Limit (MB):"
+msgstr "Geheugenlimiet (MB)"
+
+msgid "Memory Set"
+msgstr "In geheugenbank vastleggen"
+
+#, c-format
+msgid "Memory mapping of the cache file failed with error code %d"
+msgstr "Geheugentoewijzing van het cache bestand is mislukt met foutcode %d"
+
+#, c-format
+msgid "Memory pool is full: %llu of %llu used"
+msgstr "Geheugenpool is vol: %llu van %llu in gebruik"
+
+msgid "Memory pool size"
+msgstr "Geheugenpoolgrootte"
+
+msgid "Mercadier's well-temperament"
+msgstr "Mercadiers welgetempereerd"
+
+msgid "Mersenne spinet 1"
+msgstr "Mersenne spinet 1"
+
+msgid "Mersenne spinet 2"
+msgstr "Mersenne spinet 2"
+
+msgid "Mersenne's Improved Meantone 1"
+msgstr "Mersennes verbeterde middentoonstemming 1"
+
+msgid "Midi & Audio Settings"
+msgstr "Midi- & audio-instellingen"
+
+msgid "Midi-Settings for Button - "
+msgstr "Midi-instellingen voor knop - "
+
+msgid "Midi-Settings for Drawstop - "
+msgstr "Midi-instellingen voor registerknop - "
+
+msgid "Midi-Settings for Enclosure - "
+msgstr "Midi-instellingen voor zwelkast "
+
+msgid "Midi-Settings for Manual - "
+msgstr "Midi-instellingen voor manuaal - "
+
+msgid "Midi-Settings for Pushbutton - "
+msgstr "Midi-instellingen voor drukknop - "
+
+#, c-format
+msgid "Missing required value section '%s' entry '%s'"
+msgstr "Er ontbreekt een verplichte waarde: sectie '%s' entry '%s'"
+
+msgid "Mixing of percussive and non-percussive samples in one pipe not allowed"
+msgstr ""
+"Het mengen van slagwerk- en niet-slagwerksamples in één pijp is niet "
+"toegestaan"
+
+msgid "Mod. Silbermann nr 2"
+msgstr "Silbermann nr. 2 aangepast"
+
+msgid "Mono"
+msgstr "Mono"
+
+msgid "More Information"
+msgstr "Meer informatie"
+
+msgid "My Organs"
+msgstr "Mijn orgels"
+
+msgid "N"
+msgstr "N"
+
+msgid "NRPN"
+msgstr "NRPN"
+
+msgid "NRPN Off"
+msgstr "NRPN off"
+
+msgid "NRPN On"
+msgstr "NRPN on"
+
+msgid "NRPN Toogle"
+msgstr "NRPN on/off"
+
+msgid "Neidhardt I (1724)"
+msgstr "Neidhardt I (1724)"
+
+msgid "Neidhardt II (1724)"
+msgstr "Neidhardt II (1724)"
+
+msgid "Neidhardt III (1724)"
+msgstr "Neidhardt III (1724)"
+
+msgid "New"
+msgstr "Nieuw"
+
+msgid "New audio device"
+msgstr "Nieuw audio-apparaat"
+
+msgid "New audio group"
+msgstr "Nieuwe audiogroep"
+
+msgid "New audio group name"
+msgstr "Nieuw naam voor audiogroep"
+
+msgid "Next"
+msgstr "Volgende"
+
+msgid "Next Memory"
+msgstr "Volgende geheugenbank"
+
+msgid "Next temperament"
+msgstr "Volgende stemming"
+
+msgid "No"
+msgstr "Nee"
+
+msgid "No audio group selected"
+msgstr "Geen audiogroep geselecteerd"
+
+msgid "No callback routine specified"
+msgstr "Geen callbackroutine gespecificeerd"
+
+msgid "No device"
+msgstr "Geen apparaat"
+
+msgid "No loop found"
+msgstr "Geen lus gevonden"
+
+msgid "No samples found"
+msgstr "Geen samples gevonden"
+
+#, c-format
+msgid ""
+"No sound output will happen. Samples per buffer has been changed by the "
+"sound driver to %d"
+msgstr ""
+"Er wordt geen geluid gemaakt. Samples per buffer is door de driver van de "
+"geluidskaart gewijzigd in %d"
+
+msgid "None"
+msgstr "Geen"
+
+msgid "Norden"
+msgstr "Norden"
+
+#, c-format
+msgid "Number %s contains locale dependent floating point"
+msgstr "Nummer %s bevat een locale-afhankelijk floatingpunt"
+
+msgid "O"
+msgstr "O"
+
+msgid "ODF Path"
+msgstr "ODF-pad"
+
+msgid "OSS"
+msgstr "OSS"
+
+msgid "Old GO 0.2 styled setting in ODF"
+msgstr "Instelling in ODF in oude GO 0.2-stijl"
+
+msgid "Open &Recent"
+msgstr "&Recent geopend"
+
+#, c-format
+msgid "Open of the audio stream for %s failed: %s"
+msgstr "Het openen van de audiostream voor %s is mislukt: %s"
+
+msgid "Open organ"
+msgstr "Orgel openen"
+
+msgid "Options"
+msgstr "Voorkeuren"
+
+msgid "Organ &Properties"
+msgstr "Orgel-&eigenschappen"
+
+msgid "Organ Properties"
+msgstr "Orgel-eigenschappen"
+
+msgid "Organ dialog"
+msgstr "Orgel-dialoogvenster"
+
+msgid "Organ settings"
+msgstr "Orgel-instellingen"
+
+msgid "Organs"
+msgstr "Orgels"
+
+msgid "Original temperament"
+msgstr "Originele stemming"
+
+msgid "Other Comments"
+msgstr "Overige opmerkingen"
+
+msgid "Other just"
+msgstr "Andere reine stemmingen"
+
+msgid "Out of memory"
+msgstr "Het geheugen is vol"
+
+msgid ""
+"Out of memory - only parts of the organ are loaded. Please reduce memory "
+"footprint via the sample loading settings."
+msgstr ""
+"Te weinig geheugen. Slechts een gedeelte van het orgel is geladen. Probeer "
+"de geheugenbehoefte te beperking via de instellingen voor het laden van de "
+"sampleset."
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %d"
+msgstr "Waarde buiten het bereik in sectie '%s' entry '%s': %d"
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %f"
+msgstr "Waarde buiten het bereik in sectie '%s' entry '%s': %f"
+
+#, c-format
+msgid "Output device %s not found - no sound output will occure"
+msgstr ""
+"Uitvoer apparaat %s niet gevonden. Er kan geen geluid geproduceerd worden."
+
+msgid "Output underflowed"
+msgstr "Uitvoer underflowed"
+
+msgid "P"
+msgstr "P"
+
+msgid "P&roperties..."
+msgstr "&Eigenschappen"
+
+msgid "Panic"
+msgstr "Nooduitgang"
+
+msgid "Parent default"
+msgstr "Bovenliggende standaardwaarde"
+
+msgid "Parsing sample set definition file"
+msgstr "Sampelsetdefinitiebestand wordt geanalyseerd"
+
+msgid "Pedal"
+msgstr "Pedaal"
+
+msgid "Perform strict ODF"
+msgstr "Strikte ODF gebruiken"
+
+msgid "Please apply changes first"
+msgstr "Eerst de wijzigingen toepassen"
+
+msgid "Please enter a volume between -120 and 40 dB"
+msgstr "Vul een volume in tussen -120 en 40 dB"
+
+msgid "Please enter new volume in dB:"
+msgstr "Vul een nieuw volume in in dB:"
+
+msgid "Please fully close the enclosure"
+msgstr "Sluit de zwelkast volledig"
+
+msgid "Please fully open the enclosure"
+msgstr "Open de zwelkast volledig"
+
+msgid "Please press the MIDI element"
+msgstr "Druk het MIDI-element in"
+
+msgid "Please press the highest key with minimal velocity"
+msgstr "Druk zo traag mogelijk de hoogste toets in"
+
+msgid "Please press the lowest key with minimal velocity"
+msgstr "Druk zo traag mogelijk de laagste toets in"
+
+msgid "Please select an organ"
+msgstr "Selecteer een orgel"
+
+msgid "Please toggle it (to on state, if possible)"
+msgstr "Schakel dit element aan of uit (zo mogelijk aan)"
+
+msgid "Please toggle it again (to off state, if possible)"
+msgstr "Schakel dit element aan of uit (zo mogelijk uit)"
+
+msgid "Polyphase"
+msgstr "Polyfase"
+
+msgid ""
+"Polyphase is not supported with lossless compression - falling back to "
+"linear."
+msgstr ""
+"Polyfase wordt niet ondersteund bij compressie zonder kwaliteitsverlies. Er "
+"wordt teruggevallen op lineair."
+
+msgid "Polyphony"
+msgstr "Polyfonie"
+
+msgid "PortAudio not initialized"
+msgstr "PortAudio is niet geïnitialiseerd"
+
+msgid "Pr&eset"
+msgstr "&Voorkeuze"
+
+msgid "Prelleur (Peter) 1731"
+msgstr "Prelleur (Peter) 1731"
+
+#, c-format
+msgid "Preset %d"
+msgstr "Voorkeuze %d"
+
+msgid "Prev"
+msgstr "Vorige"
+
+msgid "Prev temperament"
+msgstr "Vorige stemming"
+
+msgid "Previous"
+msgstr "Vorige"
+
+msgid "Previous Memory"
+msgstr "Vorige geheugenbank"
+
+#, c-format
+msgid "Progress %lu%%"
+msgstr "Voortgang %lu%%"
+
+msgid "Properties"
+msgstr "Eigenschappen"
+
+msgid "PulseAudio"
+msgstr "PulseAudio"
+
+msgid "Pure Major"
+msgstr "Rein majeur"
+
+msgid "Pure Minor"
+msgstr "Rein mineur"
+
+msgid "Pythagorean"
+msgstr "Pythagoreïsch"
+
+msgid "Q"
+msgstr "Q"
+
+msgid "R"
+msgstr "R"
+
+msgid "RPN"
+msgstr "RPN"
+
+msgid "RPN Off"
+msgstr "RPN off"
+
+msgid "RPN On"
+msgstr "RPN on"
+
+msgid "RPN Toogle"
+msgstr "RPN on/off"
+
+msgid "Rameau Nouveau Systeme (1726)"
+msgstr "Rameau Nouveau Systeme (1726)"
+
+msgid "Rameau bemols"
+msgstr "Rameau bémols"
+
+msgid "Rameau dieses"
+msgstr "Rameau dièzes"
+
+msgid "Rameau's modified meantone temperament (1725)"
+msgstr "Rameau's aangepaste middentoonstemming (1725)"
+
+msgid "Ramos de Pareja 1482 - Monochord"
+msgstr "Ramos de Pareja 1482 - monochordium"
+
+msgid "Randomize pipe speaking"
+msgstr "Pijpen willekeurig aanspreken"
+
+msgid "Re&load"
+msgstr "&Herladen"
+
+msgid "Ready!"
+msgstr "Gereed!"
+
+msgid "Receive"
+msgstr "Ontvangen"
+
+msgid "Recorder WAV Format:"
+msgstr "WAV-formaat recorder:"
+
+msgid "Recording"
+msgstr "Opname"
+
+msgid "Recording Details"
+msgstr "Opname-details"
+
+msgid "Regular"
+msgstr "Normaal"
+
+msgid "Release Concurrency Level:"
+msgstr "Concurrency-niveau galmstaarten:"
+
+msgid "Release loading:"
+msgstr "Galmsamples laden:"
+
+msgid "Release sample scaling"
+msgstr "Galmsamples schalen"
+
+msgid "Release tail length"
+msgstr "Lengte van de galmstaart"
+
+msgid "Rename"
+msgstr "Hernoemen"
+
+msgid "Resampling failed"
+msgstr "Opnieuw samplen mislukt"
+
+msgid "Reset"
+msgstr "Herstellen"
+
+msgid "Reset to &Defaults"
+msgstr "Standaardinstellingen &terugzetten"
+
+msgid "Reverb"
+msgstr "Nagalm"
+
+msgid "Revert"
+msgstr "Herstellen"
+
+msgid "Revert to Default"
+msgstr "Standaardwaarden herstellen"
+
+msgid "Rousseau's temperament (1768)"
+msgstr "Rousseau's stemming (1768)"
+
+#, c-format
+msgid "RtAudio error: %s"
+msgstr "RtAudio-fout: %s"
+
+#, c-format
+msgid "RtMidi error: %s"
+msgstr "RtMidi-fout: %s"
+
+msgid "S"
+msgstr "S"
+
+msgid "Sample Loading"
+msgstr "Het laden van samples"
+
+msgid "Sample Rate:"
+msgstr "Samplerate:"
+
+msgid "Sample Size:"
+msgstr "Samplegrootte"
+
+msgid "Sample channels:"
+msgstr "Sample-kanalen"
+
+msgid "Sample format not supported"
+msgstr "Sampleformaat wordt niet ondersteund"
+
+#, c-format
+msgid "Sample rate of device %s changed"
+msgstr "Samplerate van apparaat %s is gewijzigd"
+
+msgid "Sample set definition files (*.organ)|*.organ"
+msgstr "Samplesetdefinitiebestanden  (*.organ)|*.organ"
+
+msgid "Sample size:"
+msgstr "Samplegrootte:"
+
+msgid "Samples per buffer:"
+msgstr "Samples per buffer:"
+
+msgid "Sauveur (Memoires 1701)"
+msgstr "Sauveur (Memoires 1701)"
+
+msgid "Sauveur 1702"
+msgstr "Sauveur 1702"
+
+msgid "Sauveur harpsichord 1697"
+msgstr "Sauveur clavecimbel 1697"
+
+msgid "Save"
+msgstr "Opslaan"
+
+msgid "Save as"
+msgstr "Opslaan als"
+
+#, c-format
+msgid "Save of %s to the cache failed"
+msgstr "Het opslaan van %s in de cache is mislukt"
+
+msgid "Scheffer (1748) modified, Sweden"
+msgstr "Scheffer (1748) aangepast, Zweden"
+
+msgid "Schlick (Arnolt), 1511"
+msgstr "Schlick (Arnolt), 1511"
+
+msgid "Schlick's (1991)"
+msgstr "Schlick's (1991)"
+
+msgid "Schlick: 1555"
+msgstr "Schlick: 1555"
+
+msgid "Schnitger organ St. Jakobi, Hamburg "
+msgstr "Schnitger-orgel St. Jakobi, Hamburg "
+
+msgid "Scope"
+msgstr "Scope"
+
+msgid "Scoped"
+msgstr "Scoped"
+
+#, c-format
+msgid "Section %s already in use"
+msgstr "Sectie %s is al in gebruik"
+
+msgid "Select an impulse file"
+msgstr "Een impulsbestand selecteren"
+
+msgid "Select audio groups to distribute:"
+msgstr "Audiogroepen selecteren voor de verdeling:"
+
+msgid "Select directory for cache store"
+msgstr "Map selecteren om cache op te slaan"
+
+msgid "Select directory for settings store"
+msgstr "Map selecteren om instellingen op te slaan"
+
+msgid "Select organ to load"
+msgstr "Een orgel selecteren om te laden"
+
+msgid "Send"
+msgstr "Verzenden"
+
+msgid "Send MIDI Recorder Output Stream to "
+msgstr "Uitvoerstream van de MIDI-recorder sturen naar "
+
+msgid "Sequencer"
+msgstr "Sequencer"
+
+msgid "Set"
+msgstr "Set"
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Settings files (*.cmb)|*.cmb"
+msgstr "Bestanden met instellingen (*.cmb)|*.cmb"
+
+msgid "Settings store:"
+msgstr "Instellingenopslag:"
+
+msgid "Shortcut"
+msgstr "Sneltoets"
+
+msgid ""
+"Should the audio config be reverted to the default stereo configuration?"
+msgstr ""
+"Moet de audioconfiguratie teruggezet worden naar de standaard "
+"stereoconfiguratie?"
+
+msgid "Single attack"
+msgstr "Eén aanslagsample"
+
+msgid "Single release"
+msgstr "Eén galmsample"
+
+msgid "Smith's (Robert) Equal Harmony 1749"
+msgstr "Smith's (Robert) Equal Harmony 1749"
+
+msgid ""
+"Some changed settings effect unless the sample set is reloaded.\n"
+"\n"
+"Would you like to reload the sample set now?"
+msgstr ""
+"Sommige gewijzigde instellingen worden pas effectief als de sampleset "
+"opnieuw geladen wordt.\n"
+"\n"
+"Wil je de sampleset nu opnieuw laden?"
+
+msgid "Sorge Monochord (1756)"
+msgstr "Sorge monochordium (1756)"
+
+msgid "Sorge, 1744 (A)"
+msgstr "Sorge, 1744 (A)"
+
+msgid "Sorge, 1744 (B)"
+msgstr "Sorge, 1744 (B)"
+
+msgid "Sorge, 1758"
+msgstr "Sorge, 1758"
+
+msgid "Stade St. Cosmae"
+msgstr "Stade St. Cosmae"
+
+#, c-format
+msgid "Start of audio stream of %s failed: %s"
+msgstr "Het starten van de audiostream van %s is mislukt: %s"
+
+msgid "Start offset:"
+msgstr "Startpunt:"
+
+msgid "Stereo"
+msgstr "Stereo"
+
+msgid "Stevin (Simon), monochord 1585"
+msgstr "Stevin (Simon), monochordium 1585"
+
+#, c-format
+msgid "Strange boolean value for section '%s' entry '%s': %s"
+msgstr "Vreemde boolean-waarde voor sectie '%s' entry '%s': %s"
+
+msgid "Stream is not stopped"
+msgstr "Stream is niet gestopt"
+
+msgid "Stream is stopped"
+msgstr "Stream is gestopt"
+
+msgid "Success"
+msgstr "Gelukt"
+
+#, c-format
+msgid "Switch %d already assigned to %s"
+msgstr "Schakelaar %d is al toegewezen aan %s"
+
+msgid "Sys Ex Johannus"
+msgstr "Sys Ex Johannus"
+
+msgid "T"
+msgstr "T"
+
+msgid "TB"
+msgstr "TB"
+
+msgid ""
+"The ODF contains GrandOrgue 0.2 styled saved settings. Should they be "
+"imported?"
+msgstr ""
+"De ODF bevat opgeslagen instellingen in de stijl van GrandOrgue 0.2. Moeten "
+"die geïmporteerd worden?"
+
+msgid "The ODF does not match the combination file."
+msgstr "De ODF komt niet overeen met het combinatiebestand."
+
+msgid ""
+"The ODF does not match the combination file. Importing it can cause various "
+"problems. Should they really be imported?"
+msgstr ""
+"De ODF komt niet overeen met het combinatiebestand. Importeren kan allerlei "
+"problemen veroorzaken. Moeten deze echt geïmporteerd worden?"
+
+msgid "The cache for this organ is outdated. Please update or delete it."
+msgstr "De cache voor dit orgel is verouderd. Werk hem bij of verwijder hem."
+
+msgid "The organ settings have been modified. Do you want to save the changes?"
+msgstr "De orgelinstellingen zijn aangepast. Wil je de wijzigingen opslaan?"
+
+#, c-format
+msgid ""
+"This combination file is only compatible with:\n"
+"%s"
+msgstr ""
+"Dit combinatiebestand is alleen compatibel met:\n"
+"%s"
+
+msgid "This feature is currently not supported."
+msgstr "Deze mogelijkheid wordt op dit moment niet ondersteund."
+
+msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
+msgstr "Thomas/Philpott-orgel 1829/1881, St. Jansklooster"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Too many audio channels configured for the new audio interface"
+msgstr ""
+"Er zijn te veel audiokanalen geconfigureerd voor de nieuw audio-interface"
+
+msgid "Tracker (ms):"
+msgstr "Tractuur (ms):"
+
+msgid "Tracker delay is invalid"
+msgstr "Ongeldige tractuurvertraging"
+
+#, c-format
+msgid "Trailing whitespace at section '%s' entry '%s': %s"
+msgstr "Witruimte aan het eind van sectie '%s' entry '%s': %s"
+
+msgid "Transpose"
+msgstr "Transponeren"
+
+msgid "Transpose +"
+msgstr "Transponeren +"
+
+msgid "Transpose -"
+msgstr "Transponeren -"
+
+msgid "Tuning (Cent):"
+msgstr "Stemming (cent)"
+
+msgid "Tuning and Voicing"
+msgstr "Stemming en intonatie"
+
+msgid "Tuning is invalid"
+msgstr "Stemming is ongeldig"
+
+msgid "U"
+msgstr "U"
+
+msgid "U.O."
+msgstr "U.O."
+
+msgid "Unable to open file for writing"
+msgstr "Bestand kon niet geopend worden om te beschrijven"
+
+#, c-format
+msgid "Unable to read '%s'"
+msgstr "'%s' kon niet geladen worden"
+
+msgid "Unanticipated host error"
+msgstr "Onverwachte hostfout"
+
+msgid "Unknown"
+msgstr "Onbekend"
+
+msgid "Unknown: "
+msgstr "Onbekend: "
+
+msgid "Unsupported channel count"
+msgstr "Niet ondersteund aantal kanalen"
+
+msgid "Unsupported channel number"
+msgstr "Niet ondersteund kanaalnummer"
+
+msgid "Unsupported format"
+msgstr "Niet ondersteund formaat"
+
+#, c-format
+msgid "Unused CMB entry '%s'"
+msgstr "Ongebruikte CMB-entry '%s'"
+
+#, c-format
+msgid "Unused ODF entry '%s'"
+msgstr "Ongebruikte ODF-entry '%s'"
+
+msgid "User Interface"
+msgstr "Gebruikersinterface"
+
+#, c-format
+msgid "Using helpfile %s (search path: %s)"
+msgstr "Helpbestand %s wordt gebruikt (zoekpad: %s)"
+
+msgid "Using more than one audio interface is currently not supported."
+msgstr ""
+"Het gebruik van meer dan één audio-interface wordt op dit moment niet "
+"ondersteund."
+
+msgid "V"
+msgstr "V"
+
+msgid "Valotti"
+msgstr "Valotti"
+
+msgid "Variable meantone 1"
+msgstr "Variabele middentoonstemming 1"
+
+msgid "Variable meantone 2"
+msgstr "Variabele middentoonstemming 2"
+
+msgid "Variable meantone 3"
+msgstr "Variabele middentoonstemming 3"
+
+msgid "Variable meantone 4"
+msgstr "Variabele middentoonstemming 4"
+
+msgid "Various comma"
+msgstr "Allerlei komma-stemmingen"
+
+msgid "Victorian temperament 1885"
+msgstr "Victoriaanse stemming 1885"
+
+msgid "Volume"
+msgstr "Volume"
+
+msgid "W"
+msgstr "W"
+
+msgid "WAV files (*.wav)|*.wav"
+msgstr "WAV-bestanden (*.wav)|*.wav"
+
+msgid "Wait timed out"
+msgstr "Wachttijd verstreken"
+
+msgid "Warning"
+msgstr "Waarschuwing"
+
+msgid "Wegscheider 20 note"
+msgstr "Wegscheider 20 noten"
+
+msgid "Well tempered"
+msgstr "Welgetempereerde stemmingen"
+
+msgid "Werckmeister 4 (1691)"
+msgstr "Werckmeister 4 (1691)"
+
+msgid "Werckmeister 5 (1691)"
+msgstr "Werckmeister 5 (1691)"
+
+msgid "Werckmeister 6"
+msgstr "Werckmeister 6"
+
+msgid "Werckmeister III"
+msgstr "Werckmeister III"
+
+msgid "William Holder equal beating (1694)"
+msgstr "William Holder gelijkzwevend (1694)"
+
+#, c-format
+msgid "Windchest %d"
+msgstr "Windlade %d"
+
+msgid "Windows DirectSound"
+msgstr "Windows DirectSound"
+
+msgid "Windows WASAPI"
+msgstr "Windows WASAPI"
+
+msgid "Windows WDM-KS"
+msgstr "Windows WDM-KS"
+
+msgid "Windows left"
+msgstr "Windows links"
+
+msgid "Windows menu"
+msgstr "Windows menu"
+
+msgid "Windows right"
+msgstr "Windows rechts"
+
+msgid "X"
+msgstr "X"
+
+msgid "Y"
+msgstr "Y"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "Z"
+msgstr "Z"
+
+msgid "Zarlino (1558) 2/7-comma meantone"
+msgstr "Zarlino (1558) 2/7-komma middentoonstemming"
 
 msgid "_"
 msgstr "_"
 
-msgid "."
-msgstr "."
+#, c-format
+msgid "__%d"
+msgstr "__%d"
 
-msgid "?"
-msgstr "?"
+msgid "__0"
+msgstr "__0"
 
-msgid "\""
-msgstr "\""
+msgid "__1"
+msgstr "__1"
+
+msgid "__2"
+msgstr "__2"
+
+msgid "__3"
+msgstr "__3"
+
+msgid "__4"
+msgstr "__4"
+
+msgid "__5"
+msgstr "__5"
+
+msgid "__6"
+msgstr "__6"
+
+msgid "__7"
+msgstr "__7"
+
+msgid "__8"
+msgstr "__8"
+
+msgid "__9"
+msgstr "__9"
+
+msgid "`"
+msgstr "`"
+
+msgid "add"
+msgstr "optellen"
+
+msgid "alt"
+msgstr "alt"
+
+msgid "back"
+msgstr "back"
+
+msgid "bad format!"
+msgstr "Verkeerd formaat!"
+
+msgid "bad return format!"
+msgstr "Verkeerd formaat teruggegeven!"
+
+#, c-format
+msgid "bitmap size does not match for '%s'"
+msgstr "bitmapgrootte komt niet overeen voor '%s'"
+
+#, c-format
+msgid "bitmap size of '%s' does not match mask '%s'"
+msgstr "bitmapgrootte van '%s' komt niet overeen met masker '%s'"
+
+msgid "capital"
+msgstr "capital"
+
+#, c-format
+msgid "caught exception: %s\n"
+msgstr "opgevangen uitzondering: %s\n"
+
+msgid "control"
+msgstr "control"
+
+msgid "d'Alembert modified meantone (1726)"
+msgstr "d'Alembert aangepaste middentoonstemming (1726)"
+
+msgid "d'Alembert's: John Sankey's Scarlatti"
+msgstr "d'Alembert's: John Sankey's Scarlatti"
+
+msgid "decimal"
+msgstr "decimaal"
+
+msgid "delete"
+msgstr "delete"
+
+msgid "displays help on the command line parameters"
+msgstr "laat hulp zien over de commandoregelparameters"
+
+msgid "divide"
+msgstr "delen"
+
+msgid "down"
+msgstr "omlaag"
+
+msgid "enclosure not found"
+msgstr "zwelkast niet gevonden"
+
+msgid "end"
+msgstr "end"
+
+msgid "escape"
+msgstr "escape"
+
+msgid "execute"
+msgstr "execute"
+
+msgid "h"
+msgstr "h"
+
+msgid "help"
+msgstr "help"
+
+msgid "home"
+msgstr "home"
+
+msgid "i"
+msgstr "i"
+
+msgid "insert"
+msgstr "insert"
+
+msgid "instance"
+msgstr "instantie"
+
+msgid "left"
+msgstr "links"
+
+msgid "licensed under the GNU GPLv2 (or later)"
+msgstr "licentie wordt verleend onder de GNU GPLv2 (of later)"
+
+msgid "menu"
+msgstr "menu"
+
+msgid "multiply"
+msgstr "vermenigvuldigen"
+
+msgid "none"
+msgstr "geen"
+
+msgid "numlock"
+msgstr "numlock"
+
+msgid "numpad 0"
+msgstr "numpad 0"
+
+msgid "numpad 1"
+msgstr "numpad 1"
+
+msgid "numpad 2"
+msgstr "numpad 2"
+
+msgid "numpad 3"
+msgstr "numpad 3"
+
+msgid "numpad 4"
+msgstr "numpad 4"
+
+msgid "numpad 5"
+msgstr "numpad 5"
+
+msgid "numpad 6"
+msgstr "numpad 6"
+
+msgid "numpad 7"
+msgstr "numpad 7"
+
+msgid "numpad 8"
+msgstr "numpad 8"
+
+msgid "numpad 9"
+msgstr "numpad 9"
+
+msgid "numpad equal"
+msgstr "numpad ="
+
+msgid "organ file"
+msgstr "orgelbestand"
+
+msgid "pagedown"
+msgstr "pagedown"
+
+msgid "pageup"
+msgstr "pageup"
+
+msgid "pause"
+msgstr "pause"
+
+msgid "print"
+msgstr "print"
+
+msgid "return"
+msgstr "return"
+
+msgid "right"
+msgstr "rechts"
+
+msgid "scroll"
+msgstr "scroll"
+
+msgid "select"
+msgstr "select"
+
+msgid "seperator"
+msgstr "scheidingsteken"
+
+msgid "settingsdialog.."
+msgstr "instellingendialoogvenster..."
+
+msgid "snapshot"
+msgstr "snapshot"
+
+msgid "space"
+msgstr "spatie"
+
+msgid "specifiy GrandOrgue instance name"
+msgstr "GrandOrgue-instantienaam specificeren"
+
+msgid "subtract"
+msgstr "aftrekken"
+
+msgid "success"
+msgstr "gelukt"
+
+msgid "tab"
+msgstr "tab"
+
+#, c-format
+msgid "unhandled exception: %s\n"
+msgstr "niet-verwerkte uitzondering: %s\n"
+
+msgid "up"
+msgstr "omhoog"
+
+msgid "virtual pipe organ simulator"
+msgstr "virtuele pijporgelsimulator"
+
+msgid "wave does not contain loops"
+msgstr "wave-bestand bevat geen lussen"
 
 msgid "{"
 msgstr "{"
@@ -1948,478 +2685,3 @@ msgstr "|"
 
 msgid "}"
 msgstr "}"
-
-msgid "#"
-msgstr "#"
-
-msgid "`"
-msgstr "`"
-
-msgid "Organ"
-msgstr "Orgel"
-
-msgid "Event"
-msgstr "Event"
-
-msgid "Channel"
-msgstr "Kanaal"
-
-msgid "Data"
-msgstr "Data"
-
-msgid "P&roperties..."
-msgstr "&Eigenschappen"
-
-msgid "&Add"
-msgstr "&Toevoegen"
-
-msgid "&Delete"
-msgstr "&Verwijderen"
-
-msgid "Choose a file"
-msgstr "Bestand kiezen"
-
-#, c-format
-msgid "Create %p"
-msgstr "%p aanmaken"
-
-#, c-format
-msgid "Destroy %p"
-msgstr "%p vernietigen"
-
-msgid "< Malformed wave file. Format chunk must preceed data chunk."
-msgstr "< Misvormd wave-bestand. Formaatbrok moet voorafgaan aan databrok."
-
-msgid "< Invalid WAVE format chunk"
-msgstr "< Ongeldig WAVE-formaatbrok"
-
-msgid "< Unsupported PCM format"
-msgstr "< PCM-formaat wordt niet ondersteund"
-
-msgid "< Bits per sample must be a multiple of 8 in this implementation"
-msgstr "< Bits per sample moet een meervoud van 8 zijn in deze implementatie"
-
-msgid "< Only 32bit IEEE float samples supported"
-msgstr "< Er worden alleen 32bit IEEE float samples ondersteund"
-
-msgid "< Unsupport PCM bit size"
-msgstr "< PCM-bitomvang wordt niet ondersteund"
-
-msgid "< Invalid CUE chunk in"
-msgstr "< Ongeldig CUE-brok in"
-
-msgid "< Invalid SMPL chunk in"
-msgstr "< Ongeldig SMPL-brok in"
-
-msgid "<Invalid SMPL chunk in"
-msgstr "<Ongeldig CUE-brok in"
-
-#, c-format
-msgid "Failed to open file '%s'"
-msgstr "Het openen van bestand '%s' is mislukt"
-
-msgid "< Not a RIFF file"
-msgstr "< Dit is geen RIFF-bestand"
-
-#, c-format
-msgid "Failed to read file '%s'\n"
-msgstr "Het lezen van bestand '%s' is mislukt\n"
-
-msgid "< Invalid RIFF file"
-msgstr "< Ongeldig RIFF-bestand"
-
-msgid "< Invalid RIFF/WAVE file"
-msgstr "< Ongeldig RIFF/WAVE-bestand"
-
-msgid "<Invalid WAV file"
-msgstr "< Ongeldig WAV-bestand"
-
-#, c-format
-msgid "unhandled exception: %s\n"
-msgstr "niet-verwerkte uitzondering: %s\n"
-
-msgid "wave does not contain loops"
-msgstr "wave-bestand bevat geen lussen"
-
-msgid "bad format!"
-msgstr "Verkeerd formaat!"
-
-msgid "Unsupported format"
-msgstr "Niet ondersteund formaat"
-
-msgid "Unsupported channel number"
-msgstr "Niet ondersteund kanaalnummer"
-
-msgid "Unsupported channel count"
-msgstr "Niet ondersteund aantal kanalen"
-
-msgid "bad return format!"
-msgstr "Verkeerd formaat teruggegeven!"
-
-#, c-format
-msgid "Windchest %d"
-msgstr "Windlade %d"
-
-msgid "Invalid loop defintion"
-msgstr "Ongeldige lusdefinitie"
-
-msgid "Invalid release position"
-msgstr "Ongeldige galmpositie"
-
-#, c-format
-msgid "Loading file %s"
-msgstr "Bestand %s wordt geladen"
-
-#, c-format
-msgid "caught exception: %s\n"
-msgstr "opgevangen uitzondering: %s\n"
-
-msgid "&Transpose:"
-msgstr "&Transponeren"
-
-msgid "&Lowest key:"
-msgstr "&Laagste toets"
-
-msgid "&Highest key:"
-msgstr "&Hoogste toets"
-
-msgid "L&owest velocity:"
-msgstr "T&raagste aanslag"
-
-msgid "H&ighest velocity:"
-msgstr "&Snelste aanslag"
-
-msgid "Any channel"
-msgstr "Alle kanalen"
-
-msgid "9x Note On Toogle"
-msgstr "9x Note on aan/uit"
-
-msgid "9x Note Off Toggle"
-msgstr "9x Note off aan/uit"
-
-msgid "Bx Controller On Toogle"
-msgstr "Bx Controller on aan/uit"
-
-msgid "Bx Controller Off Toogle"
-msgstr "Bx Controller off aan/uit"
-
-msgid "9x Note without Velocity"
-msgstr "9x Noot zonder aanslaggevoeligheid"
-
-msgid "9x Note short octave at low key"
-msgstr "9x Noot met kort octaaf aan de ondergrens"
-
-msgid "Action"
-msgstr "Action"
-
-msgid "MIDI Event"
-msgstr "MIDI-event"
-
-msgid "Data/Offset"
-msgstr "Data/offset"
-
-msgid "virtual pipe organ simulator"
-msgstr "virtuele pijporgelsimulator"
-
-msgid "licensed under the GNU GPLv2 (or later)"
-msgstr "licentie wordt verleend onder de GNU GPLv2 (of later)"
-
-msgid ""
-"Copyright 2006 Milan Digital Audio LLC\n"
-"Copyright 2009-2013 GrandOrgue contributors\n"
-"\n"
-"This software comes with no warranty.\n"
-"\n"
-"ASIO Interface Technology by Steinberg Media Technologies GmbH,\n"
-"by use of the Steinberg ASIO SDK, Version 2.2.\n"
-"ASIO is a trademark and software of Steinberg Media Technologies GmbH."
-msgstr ""
-"Copyright 2006 Milan Digital Audio LLC\n"
-"Copyright 2009-2013 GrandOrgue contributors\n"
-"\n"
-"This software comes with no warranty.\n"
-"\n"
-"ASIO Interface Technology by Steinberg Media Technologies GmbH,\n"
-"by use of the Steinberg ASIO SDK, Version 2.2.\n"
-"ASIO is a trademark and software of Steinberg Media Technologies GmbH."
-
-msgid "Rename"
-msgstr "Hernoemen"
-
-msgid "New audio group name"
-msgstr "Nieuw naam voor audiogroep"
-
-msgid "Audio groups"
-msgstr "Audiogroepen"
-
-msgid "Audio group name"
-msgstr "Naam audiogroep"
-
-#, c-format
-msgid "Failed to read file '%s'"
-msgstr "Lezen van bestand '%s' mislukt"
-
-#, c-format
-msgid "Invalid Config entry at line %d: %s"
-msgstr "Ongeldige configuratie-entry op regel %d: %s"
-
-#, c-format
-msgid "Invalid section start at line %d: %s"
-msgstr "Ongeldig sectiebegin op regel %d: %s"
-
-#, c-format
-msgid "Duplicate group at line %d: %s"
-msgstr "Dubbele groep op regel %d: %s"
-
-#, c-format
-msgid "Config entry without any group at line %d"
-msgstr "Configuratie-entry zonder groep op regel %d"
-
-#, c-format
-msgid "Duplicate entry in section %s at line %d: %s"
-msgstr "Dubbele entry in sectie %s op regel %d: %s"
-
-msgid "Change"
-msgstr "Wijzigen"
-
-msgid "Properties"
-msgstr "Eigenschappen"
-
-msgid "Revert to Default"
-msgstr "Terugzetten naar Standaard"
-
-#, c-format
-msgid "Device: %s (%d ms)"
-msgstr "Apparaat: %s (%d ms)"
-
-#, c-format
-msgid "Device: %s"
-msgstr "Apparaat: %s"
-
-#, c-format
-msgid "Channel %d"
-msgstr "Kanaal %d"
-
-#, c-format
-msgid "%s - left"
-msgstr "%s - links"
-
-#, c-format
-msgid "%s - right"
-msgstr "%s - rechts"
-
-#, c-format
-msgid "%s: %f dB"
-msgstr "%s: %f dB"
-
-#, c-format
-msgid "%s: mute"
-msgstr "%s: stil"
-
-msgid "Add new audio group"
-msgstr "Nieuwe audiogroep toevoegen"
-
-msgid "New audio group"
-msgstr "Nieuwe audiogroep"
-
-msgid "Add new audio device"
-msgstr "Nieuw audio-apparaat toevoegen"
-
-msgid "New audio device"
-msgstr "Nieuw audio-apparaat"
-
-msgid "Using more than one audio interface is currently not supported."
-msgstr ""
-"Het gebruik van meer dan één audio-interface wordt op dit moment niet "
-"ondersteund."
-
-msgid "Change audio device"
-msgstr "Audio-apparaat wijzigen"
-
-msgid "Change audio group"
-msgstr "Audiogroep wijzigen"
-
-msgid "Desired output latency"
-msgstr "Gewenste uitvoervertraging"
-
-msgid "Desired latency:"
-msgstr "Gewenste vertraging:"
-
-msgid "Audio device settings"
-msgstr "Audio-apparaatinstellingen"
-
-msgid "Please enter new volume in dB:"
-msgstr "Vul alsjeblief een nieuw volume in in dB:"
-
-msgid "Please enter a volume between -120 and 40 dB"
-msgstr "Vul alsjeblieft een volume in tussen -120 en 40 dB"
-
-msgid ""
-"Should the audio config be reverted to the default stereo configuration?"
-msgstr ""
-"Moet de audioconfiguratie teruggezet worden naar de standaard "
-"stereoconfiguratie?"
-
-msgid "Revert"
-msgstr "Terugzetten"
-
-#, c-format
-msgid "Unused CMB entry '%s'"
-msgstr "Ongebruikte CMB-entry '%s'"
-
-msgid "Old GO 0.2 styled setting in ODF"
-msgstr "Instelling in ODF in oude GO 0.2-stijl"
-
-#, c-format
-msgid "Unused ODF entry '%s'"
-msgstr "Ongebruikte ODF-entry '%s'"
-
-#, c-format
-msgid "Duplicate entry: %s"
-msgstr "Dubbele invoer: %s"
-
-#, c-format
-msgid "Incorrect case for section '%s' entry '%s'"
-msgstr "Onjuiste hoofd- of kleine letter voor sectie '%s' entry '%s'"
-
-msgid "MIDI &input devices"
-msgstr "MIDI &invoer-apparaten"
-
-msgid "A&dvanced..."
-msgstr "&Uitgebreid"
-
-msgid "MIDI &output devices"
-msgstr "MIDI &uitvoer-apparaten"
-
-msgid ""
-"A channel offset allows the use of two MIDI\n"
-"interfaces with conflicting MIDI channels. For\n"
-"example, applying a channel offset of 8 to\n"
-"one of the MIDI interfaces would cause that\n"
-"interface's channel 1 to appear as channel 9,\n"
-"channel 2 to appear as channel 10, and so on."
-msgstr ""
-"Een kanaalverschil maakt het mogelijk om twee\n"
-"MIDI-interfaces met conflicterende MIDI-kanelen\n"
-"te gebruiken. Bijvoorbeeld: een kanaalverschil van 8\n"
-"voor een van de MIDI-interfaces zorgt ervoor dat\n"
-"kanaal 1 van die interface verschijnt als kanaal 9,\n"
-"kanaal 2 als kanaal 10, enzovoort."
-
-msgid "Channel offset:"
-msgstr "Kanaalverschil:"
-
-msgid "Success"
-msgstr "Gelukt"
-
-msgid "PortAudio not initialized"
-msgstr "PortAudio is niet geïnitialiseerd"
-
-msgid "Unanticipated host error"
-msgstr "Onverwachte hostfout"
-
-msgid "Invalid number of channels"
-msgstr "Ongeldig aantal kanalen"
-
-msgid "Invalid device"
-msgstr "Ongeldig apparaat"
-
-msgid "Invalid flag"
-msgstr "Ongeldig label"
-
-msgid "Sample format not supported"
-msgstr "Sampleformaat wordt niet ondersteund"
-
-msgid "Illegal combination of I/O devices"
-msgstr "Ongeldige combinatie van I/O-apparaten"
-
-msgid "Insufficient memory"
-msgstr "Te weinig geheugen"
-
-msgid "Buffer too big"
-msgstr "Buffer is te groot"
-
-msgid "Buffer too small"
-msgstr "Buffer is te klein"
-
-msgid "No callback routine specified"
-msgstr "Geen callbackroutine gespecificeerd"
-
-msgid "Invalid stream pointer"
-msgstr "Ongeldige streampointer"
-
-msgid "Wait timed out"
-msgstr "Wachttijd verstreken"
-
-msgid "Internal PortAudio error"
-msgstr "Interne PortAudio-fout"
-
-msgid "Device unavailable"
-msgstr "Apparaat is niet beschikbaar"
-
-msgid "Incompatible host API specific stream info"
-msgstr "Niet-compatibele streaminfo die specifiek is voor de host-API"
-
-msgid "Stream is stopped"
-msgstr "Stream is gestopt"
-
-msgid "Stream is not stopped"
-msgstr "Stream is niet gestopt"
-
-msgid "Input overflowed"
-msgstr "Invoer overflowed"
-
-msgid "Output underflowed"
-msgstr "Uitvoer underflowed"
-
-msgid "Host API not found"
-msgstr "Host-API niet gevonden"
-
-msgid "Invalid host API"
-msgstr "Ongeldige host-API"
-
-msgid "Can't read from a callback stream"
-msgstr "Er kan niet gelezen worden uit een callbackstream"
-
-msgid "Can't write to a callback stream"
-msgstr "Er kan niet geschreven naar een callbackstream"
-
-msgid "Can't read from an output only stream"
-msgstr "Er kan niet gelezen uit een alleen-uitvoer-stream"
-
-msgid "Can't write to an input only stream"
-msgstr "Er kan niet geschreven naar een alleen-invoer-stream"
-
-msgid "Incompatible stream host API"
-msgstr "Niet-compatibele streamhost API"
-
-msgid "Bad buffer pointer"
-msgstr "Verkeerde bufferpointer"
-
-msgid "Invalid error code (value greater than zero)"
-msgstr "Ongeldige foutcode (waarde groter dan nul)"
-
-msgid "Invalid error code"
-msgstr "Ongeldige foutcode"
-
-msgid "ALSA"
-msgstr "ALSA"
-
-msgid "Core Audio"
-msgstr "Core Audio"
-
-msgid "Windows DirectSound"
-msgstr "Windows DirectSound"
-
-msgid "JACK Audio Connection Kit"
-msgstr "JACK Audio Connection Kit"
-
-msgid "Windows WASAPI"
-msgstr "Windows WASAPI"
-
-msgid "Windows WDM-KS"
-msgstr "Windows WDM-KS"
-
-msgid "MME"
-msgstr "MME"
