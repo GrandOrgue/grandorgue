@@ -118,7 +118,7 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMid
 				m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127);
 				continue;
 			}
-			if (HasHighKey(m_events[i].type))
+			if (HasKey(m_events[i].type))
 				m_events[i].key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIKey%03d"), i + 1), 0, 0x200000);
 			
 			if (m_type == MIDI_RECV_ENCLOSURE)
@@ -191,7 +191,7 @@ void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMid
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), m_events[i].high_value);
 			continue;
 		}
-		if (HasHighKey(m_events[i].type))
+		if (HasKey(m_events[i].type))
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDIKey%03d"), i + 1), m_events[i].key);
 
 		if (m_type == MIDI_RECV_ENCLOSURE)
