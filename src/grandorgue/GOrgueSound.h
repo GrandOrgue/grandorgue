@@ -186,6 +186,10 @@ public:
 	void StartMidiRecording(wxString filename);
 	void StopMidiRecording();
 
+	bool IsMidiPlaying();
+	void StartMidiPlaying(wxString filename);
+	void StopMidiPlaying();
+
 	void PreparePlayback(GrandOrgueFile* organfile);
 	GrandOrgueFile* GetOrganFile();
 
