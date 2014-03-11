@@ -300,6 +300,7 @@ GOrgueMidi.cpp
 GOrgueMidiEvent.cpp
 GOrgueMidiListener.cpp
 GOrgueMidiMap.cpp
+GOrgueMidiMerger.cpp
 GOrgueMidiSender.cpp
 GOrgueMidiSenderData.cpp
 GOrgueMidiReceiver.cpp
