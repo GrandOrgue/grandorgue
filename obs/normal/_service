@@ -16,6 +16,16 @@
     <param name="files">*/debian/changelog</param>
     <param name="outfilename">debian.changelog</param>
   </service>
+  <service name="extract_file">
+    <param name="archive">*.tar</param>
+    <param name="files">*/obs/grandorgue.dsc</param>
+    <param name="outfilename">grandorgue.dsc</param>
+  </service>
+  <service name="extract_file">
+    <param name="archive">*.tar</param>
+    <param name="files">*/obs/debian.debtransform</param>
+    <param name="outfilename">debian.debtransform</param>
+  </service>
   <service name="recompress">
     <param name="file">*.tar</param>
     <param name="compression">gz</param>
