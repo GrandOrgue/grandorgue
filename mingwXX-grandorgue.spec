@@ -17,7 +17,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-%define _mingw_bitsize XX (32 or 64)
+# Set bitsize either to 32 or 64
+%define _mingw_bitsize XX
 %define with_asio 0
 
 %if %{_mingw_bitsize} == 32
