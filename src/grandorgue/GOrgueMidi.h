@@ -22,6 +22,7 @@
 #ifndef GORGUEMIDI_H
 #define GORGUEMIDI_H
 
+#include "GOrgueMidiMerger.h"
 #include "GOrgueMidiRecorder.h"
 #include "ptrvector.h"
 #include <wx/event.h>
@@ -47,13 +48,7 @@ private:
 		bool active;
 		int channel_shift;
 		int rtmidi_port_no;
-		unsigned bank_lsb[16];
-		unsigned bank_msb[16];
-		bool rpn;
-		unsigned rpn_lsb[16];
-		unsigned rpn_msb[16];
-		unsigned nrpn_lsb[16];
-		unsigned nrpn_msb[16];
+		GOrgueMidiMerger merger;
 		GOrgueMidi* midi;
 	} MIDI_IN_DEVICE;
 
