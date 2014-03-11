@@ -45,7 +45,8 @@ GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_midi_out_device_map(),
 	m_midi_out_devices(),
 	m_Listeners(),
-	m_MidiRecorder(*this)
+	m_MidiRecorder(*this),
+	m_MidiPlayer(*this)
 {
 	UpdateDevices();
 }
@@ -327,6 +328,11 @@ void GOrgueMidi::MIDICallback (double timeStamp, std::vector<unsigned char>* msg
 GOrgueMidiRecorder& GOrgueMidi::GetMidiRecorder()
 {
 	return m_MidiRecorder;
+}
+
+GOrgueMidiPlayer& GOrgueMidi::GetMidiPlayer()
+{
+	return m_MidiPlayer;
 }
 
 GOrgueMidiMap& GOrgueMidi::GetMidiMap()

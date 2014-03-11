@@ -23,6 +23,7 @@
 #define GORGUEMIDI_H
 
 #include "GOrgueMidiMerger.h"
+#include "GOrgueMidiPlayer.h"
 #include "GOrgueMidiRecorder.h"
 #include "ptrvector.h"
 #include <wx/event.h>
@@ -68,6 +69,7 @@ private:
 	int m_transpose;
 	std::vector<GOrgueMidiListener*> m_Listeners;
 	GOrgueMidiRecorder m_MidiRecorder;
+	GOrgueMidiPlayer m_MidiPlayer;
 
 	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE* device);
 
@@ -94,6 +96,7 @@ public:
 
 	GOrgueMidiMap& GetMidiMap();
 	GOrgueMidiRecorder& GetMidiRecorder();
+	GOrgueMidiPlayer& GetMidiPlayer();
 
 	DECLARE_EVENT_TABLE()
 };

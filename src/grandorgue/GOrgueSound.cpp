@@ -410,6 +410,7 @@ void GOrgueSound::StartStreams()
 
 void GOrgueSound::CloseSound()
 {
+	StopMidiPlaying();
 	StopThreads();
 	StopAudioRecording();
 	StopMidiRecording();
@@ -536,6 +537,22 @@ void GOrgueSound::StartMidiRecording(wxString filename)
 void GOrgueSound::StopMidiRecording()
 {
 	m_midi->GetMidiRecorder().StopRecording();
+}
+
+bool GOrgueSound::IsMidiPlaying()
+{
+	return m_midi->GetMidiPlayer().IsPlaying();
+}
+
+void GOrgueSound::StartMidiPlaying(wxString filename)
+{
+	m_midi->GetMidiPlayer().Load(filename, m_organfile ? (m_organfile->GetODFManualCount() - 1): 2, m_organfile ? (m_organfile->GetFirstManualIndex() == 0) : true);
+	m_midi->GetMidiPlayer().Play();
+}
+
+void GOrgueSound::StopMidiPlaying()
+{
+	m_midi->GetMidiPlayer().StopPlayer();
 }
 
 void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)

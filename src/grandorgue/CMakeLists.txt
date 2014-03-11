@@ -298,9 +298,11 @@ GOrgueManual.cpp
 GOrgueMemoryPool.cpp
 GOrgueMidi.cpp
 GOrgueMidiEvent.cpp
+GOrgueMidiFileReader.cpp
 GOrgueMidiListener.cpp
 GOrgueMidiMap.cpp
 GOrgueMidiMerger.cpp
+GOrgueMidiPlayer.cpp
 GOrgueMidiSender.cpp
 GOrgueMidiSenderData.cpp
 GOrgueMidiReceiver.cpp
