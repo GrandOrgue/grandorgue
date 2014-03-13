@@ -5673,8 +5673,8 @@ MIDI note numbers
           <term>CoupleToSubsequentUnisonIntermanualCouplers</term>
           <listitem>
             <para>
-(boolean, required if not a unison off coupler) Triggers further
-inter-manual coupler with a destination key shif of zero.
+(boolean, required if not a unison off/melody/bass coupler) Triggers
+further inter-manual coupler with a destination key shif of zero.
      </para>
           </listitem>
         </varlistentry>
@@ -5682,8 +5682,9 @@ inter-manual coupler with a destination key shif of zero.
           <term>CoupleToSubsequentUpwardIntermanualCouplers</term>
           <listitem>
             <para>
-(boolean, required if not a unison off coupler) Triggers further
-inter-manual coupler with a destination key shift greater than zero.
+(boolean, required if not a unison off/melody/bass coupler) Triggers
+further inter-manual coupler with a destination key shift greater than
+zero.
      </para>
           </listitem>
         </varlistentry>
@@ -5691,8 +5692,9 @@ inter-manual coupler with a destination key shift greater than zero.
           <term>CoupleToSubsequentDownwardIntermanualCouplers</term>
           <listitem>
             <para>
-(boolean, required if not a unison off coupler) Triggers further
-inter-manual coupler with a destination key shift less than zero.
+(boolean, required if not a unison off/melody/bass coupler) Triggers
+further inter-manual coupler with a destination key shift less than
+zero.
      </para>
           </listitem>
         </varlistentry>
@@ -5700,8 +5702,9 @@ inter-manual coupler with a destination key shift less than zero.
           <term>CoupleToSubsequentUpwardIntramanualCouplers</term>
           <listitem>
             <para>
-(boolean, required if not a unison off coupler) Triggers further
-intra-manual coupler with a destination key shift greater than zero.
+(boolean, required if not a unison off/melody/bass coupler) Triggers
+further intra-manual coupler with a destination key shift greater than
+zero.
      </para>
           </listitem>
         </varlistentry>
@@ -5709,8 +5712,9 @@ intra-manual coupler with a destination key shift greater than zero.
           <term>CoupleToSubsequentDownwardIntramanualCouplers</term>
           <listitem>
             <para>
-(boolean, required if not a unison off coupler) Triggers further
-intra-manual coupler with a destination key shift less than zero.
+(boolean, required if not a unison off/melody/bass coupler) Triggers
+further intra-manual coupler with a destination key shift less than
+zero.
      </para>
           </listitem>
         </varlistentry>
