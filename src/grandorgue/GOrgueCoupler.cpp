@@ -23,6 +23,7 @@
 
 #include "GOrgueConfigReader.h"
 #include "GOrgueManual.h"
+#include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 
 GOrgueCoupler::GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual) :
@@ -108,16 +109,40 @@ void GOrgueCoupler::Load(GOrgueConfigReader& cfg, wxString group)
 	m_UnisonOff                                     = cfg.ReadBoolean(ODFSetting, group, wxT("UnisonOff"), true, false);
 	m_DestinationManual                             = cfg.ReadInteger(ODFSetting, group, wxT("DestinationManual"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount(), !m_UnisonOff, 0);
 	m_DestinationKeyshift                           = cfg.ReadInteger(ODFSetting, group, wxT("DestinationKeyshift"), -24, 24, !m_UnisonOff, 0);
-	m_CoupleToSubsequentUnisonIntermanualCouplers   = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUnisonIntermanualCouplers"), !m_UnisonOff, false);
-	m_CoupleToSubsequentUpwardIntermanualCouplers   = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUpwardIntermanualCouplers"), !m_UnisonOff, false);
-	m_CoupleToSubsequentDownwardIntermanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentDownwardIntermanualCouplers"), !m_UnisonOff, false);
-	m_CoupleToSubsequentUpwardIntramanualCouplers   = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUpwardIntramanualCouplers"), !m_UnisonOff, false);
-	m_CoupleToSubsequentDownwardIntramanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentDownwardIntramanualCouplers"), !m_UnisonOff, false);
+	if (m_UnisonOff)
+	{
+		m_CoupleToSubsequentUnisonIntermanualCouplers = false;
+		m_CoupleToSubsequentUpwardIntermanualCouplers = false;
+		m_CoupleToSubsequentDownwardIntermanualCouplers = false;
+		m_CoupleToSubsequentUpwardIntramanualCouplers = false;
+		m_CoupleToSubsequentDownwardIntramanualCouplers = false;
+		m_CouplerType = COUPLER_NORMAL;
+		m_FirstMidiNote = 0; 
+		m_NumberOfKeys = 127;
+		if (!m_organfile->GetSettings().GetODFCheck())
+		{
+			cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUnisonIntermanualCouplers"), false, false);
+			cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUpwardIntermanualCouplers"), false, false);
+			cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentDownwardIntermanualCouplers"), false, false);
+			cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUpwardIntramanualCouplers"), false, false);
+			cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentDownwardIntramanualCouplers"), false, false);
+			cfg.ReadInteger(ODFSetting, group, wxT("FirstMIDINoteNumber"), 0, 127, false, 0); 
+			cfg.ReadInteger(ODFSetting, group, wxT("NumberOfKeys"), 0, 127, false, 127);
+		}
+	}
+	else
+	{
+		m_CouplerType = (GOrgueCouplerType)cfg.ReadEnum(ODFSetting, group, wxT("CouplerType"), m_coupler_types, sizeof(m_coupler_types) / sizeof(m_coupler_types[0]), false, COUPLER_NORMAL);
+		m_CoupleToSubsequentUnisonIntermanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUnisonIntermanualCouplers"), true, false);
+		m_CoupleToSubsequentUpwardIntermanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUpwardIntermanualCouplers"), true, false);
+		m_CoupleToSubsequentDownwardIntermanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentDownwardIntermanualCouplers"), true, false);
+		m_CoupleToSubsequentUpwardIntramanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUpwardIntramanualCouplers"), true, false);
+		m_CoupleToSubsequentDownwardIntramanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentDownwardIntramanualCouplers"), true, false);
+		m_FirstMidiNote = cfg.ReadInteger(ODFSetting, group, wxT("FirstMIDINoteNumber"), 0, 127, false, 0); 
+		m_NumberOfKeys = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfKeys"), 0, 127, false, 127);
+	}
 	GOrgueDrawstop::Load(cfg, group);
 
-	m_CouplerType = (GOrgueCouplerType)cfg.ReadEnum(ODFSetting, group, wxT("CouplerType"), m_coupler_types, sizeof(m_coupler_types) / sizeof(m_coupler_types[0]), false, COUPLER_NORMAL);
-	m_FirstMidiNote = cfg.ReadInteger(ODFSetting, group, wxT("FirstMIDINoteNumber"), 0, 127, false, 0); 
-	m_NumberOfKeys = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfKeys"), 0, 127, false, 127);
 
 	if (!m_UnisonOff)
 		m_CouplerID = m_organfile->GetManual(m_DestinationManual)->RegisterCoupler(this);
