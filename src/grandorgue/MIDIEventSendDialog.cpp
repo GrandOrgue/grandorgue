@@ -123,6 +123,7 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 	{
 		m_eventtype->Append(_("RPN"), (void*)MIDI_S_RPN);
 		m_eventtype->Append(_("NRPN"), (void*)MIDI_S_NRPN);
+		m_eventtype->Append(_("Cx Program Change Range"), (void*)MIDI_S_PGM_RANGE);
 	}
 	if (m_midi.GetType() == MIDI_SEND_BUTTON)
 	{
@@ -193,9 +194,14 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 		m_HighValue->Disable();
 	if (type == MIDI_S_HW_LCD)
 		m_LowValueLabel->SetLabel(_("&Color:"));
+	else if (type == MIDI_S_PGM_RANGE)
+		m_LowValueLabel->SetLabel(_("&Lower PGM number:"));
 	else
 		m_LowValueLabel->SetLabel(_("&Off Value:"));
-	m_HighValueLabel->SetLabel(_("&On value:"));
+	if (type == MIDI_S_PGM_RANGE)
+		m_HighValueLabel->SetLabel(_("&Upper PGM number:"));
+	else
+		m_HighValueLabel->SetLabel(_("&On value:"));
 	switch(type)
 	{
 	case MIDI_S_CTRL_ON:

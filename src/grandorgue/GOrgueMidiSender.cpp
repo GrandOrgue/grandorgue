@@ -47,6 +47,7 @@ const struct IniFileEnumEntry GOrgueMidiSender::m_MidiTypes[] = {
 	{ wxT("NRPN"), MIDI_S_NRPN },
 	{ wxT("ProgramOn"), MIDI_S_PGM_ON },
 	{ wxT("ProgramOff"), MIDI_S_PGM_OFF },
+	{ wxT("ProgramRange"), MIDI_S_PGM_RANGE },
 	{ wxT("NoteOn"), MIDI_S_NOTE_ON },
 	{ wxT("NoteOff"), MIDI_S_NOTE_OFF },
 	{ wxT("ControlOn"), MIDI_S_CTRL_ON },
@@ -117,6 +118,7 @@ bool GOrgueMidiSender::HasChannel(midi_send_message_type type)
 	    type == MIDI_S_NRPN ||
 	    type == MIDI_S_PGM_ON ||
 	    type == MIDI_S_PGM_OFF ||
+	    type == MIDI_S_PGM_RANGE ||
 	    type == MIDI_S_NOTE_ON ||
 	    type == MIDI_S_NOTE_OFF ||
 	    type == MIDI_S_CTRL_ON ||
@@ -163,6 +165,7 @@ bool GOrgueMidiSender::HasLowValue(midi_send_message_type type)
 	    type == MIDI_S_CTRL_OFF ||
 	    type == MIDI_S_RPN_OFF ||
 	    type == MIDI_S_NRPN_OFF ||
+	    type == MIDI_S_PGM_RANGE ||
 	    type == MIDI_S_NOTE ||
 	    type == MIDI_S_NOTE_NO_VELOCITY ||
 	    type == MIDI_S_RPN ||
@@ -179,6 +182,7 @@ bool GOrgueMidiSender::HasHighValue(midi_send_message_type type)
 	    type == MIDI_S_CTRL_ON ||
 	    type == MIDI_S_RPN_ON ||
 	    type == MIDI_S_NRPN_ON ||
+	    type == MIDI_S_PGM_RANGE ||
 	    type == MIDI_S_NOTE ||
 	    type == MIDI_S_NOTE_NO_VELOCITY ||
 	    type == MIDI_S_RPN ||
@@ -239,6 +243,15 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			e.SetChannel(m_events[i].channel);
 			e.SetKey(m_events[i].key);
 			e.SetValue(state ? m_events[i].high_value : m_events[i].low_value);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_PGM_RANGE)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_PGM_CHANGE);
+			e.SetChannel(m_events[i].channel);
+			e.SetKey(state ? m_events[i].high_value : m_events[i].low_value);
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_PGM_ON && state)
@@ -462,6 +475,20 @@ void GOrgueMidiSender::SetValue(unsigned value)
 			if (val > 0x7f)
 				val = 0x7f;
 			e.SetValue(val);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_PGM_RANGE)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_PGM_CHANGE);
+			e.SetChannel(m_events[i].channel);
+			unsigned val = m_events[i].low_value + ((m_events[i].high_value - m_events[i].low_value) * value) / 0x7f;
+			if (val < 0)
+				val = 0;
+			if (val > 0x7f)
+				val = 0x7f;
+			e.SetKey(val);
 			m_organfile->SendMidiMessage(e);
 		}
 	}

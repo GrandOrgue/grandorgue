@@ -168,6 +168,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	{
 		m_eventtype->Append(_("RPN"), (void*)MIDI_M_RPN);
 		m_eventtype->Append(_("NRPN"), (void*)MIDI_M_NRPN);
+		m_eventtype->Append(_("Cx Program Change Range"), (void*)MIDI_M_PGM_RANGE);
 	}
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 	{
@@ -247,11 +248,11 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 		m_HighKey->Enable();
 	else
                m_HighKey->Disable();
-	if (m_original->HasLowerLimit(type) || m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
+	if (m_original->HasLowerLimit(type))
 		m_LowValue->Enable();
 	else
 		m_LowValue->Disable();
-	if (m_original->HasUpperLimit(type) || m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
+	if (m_original->HasUpperLimit(type))
 		m_HighValue->Enable();
 	else
                m_HighValue->Disable();
@@ -272,10 +273,14 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 			m_LowValueLabel->SetLabel(_("&Bit number:"));
 		else if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_OFF)
 			m_LowValueLabel->SetLabel(_("&Off value:"));
+		else if (type == MIDI_M_PGM_RANGE)
+			m_LowValueLabel->SetLabel(_("&Lower PGM number:"));
 		else
 			m_LowValueLabel->SetLabel(_("L&ower limit:"));
 		if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_ON)
 			m_HighValueLabel->SetLabel(_("&On value:"));
+		else if (type == MIDI_M_PGM_RANGE)
+			m_HighValueLabel->SetLabel(_("&Upper PGM number:"));
 		else
 			m_HighValueLabel->SetLabel(_("&Upper limit:"));
 		switch(type)
@@ -586,11 +591,14 @@ void MIDIEventRecvDialog::DetectEvent()
 					StopListen();
 					return;
 				}
-				if (on.GetKey() != off.GetKey())
+				if (on.GetKey() != off.GetKey() && on.GetMidiType() != MIDI_PGM_CHANGE)
 					continue;
 				if (m_midi.GetType() == MIDI_RECV_ENCLOSURE)
 				{
 					MIDI_MATCH_EVENT& e = m_midi.GetEvent(m_current);
+					unsigned low = off.GetValue();
+					unsigned high = on.GetValue();
+					int key = on.GetKey();
 					switch(on.GetMidiType())
 					{
 					case MIDI_CTRL_CHANGE:
@@ -602,16 +610,22 @@ void MIDIEventRecvDialog::DetectEvent()
 					case MIDI_NRPN:
 						e.type = MIDI_M_NRPN;
 						break;
+					case MIDI_PGM_CHANGE:
+						e.type = MIDI_M_PGM_RANGE;
+						low = off.GetKey();
+						high = on.GetKey();
+						key = -1;
+						break;
 					default:
 						continue;
 					}
 					e.device = on.GetDevice();
 					e.channel = on.GetChannel();
-					e.key = on.GetKey();
+					e.key = key;
 					e.low_key = 0;
 					e.high_key = 0;
-					e.high_value = on.GetValue();
-					e.low_value = off.GetValue();
+					e.high_value = high;
+					e.low_value = low;
 					LoadEvent();
 					StopListen();
 					return;
@@ -619,6 +633,7 @@ void MIDIEventRecvDialog::DetectEvent()
 				MIDI_MATCH_EVENT& e = m_midi.GetEvent(m_current);
 				unsigned low = 0;
 				unsigned high = 1;
+				int key = on.GetKey();
 				switch(on.GetMidiType())
 				{
 				case MIDI_NOTE:
@@ -649,7 +664,15 @@ void MIDIEventRecvDialog::DetectEvent()
 					}
 					break;
 				case MIDI_PGM_CHANGE:
-					e.type = MIDI_M_PGM_CHANGE;
+					if (on.GetKey() == off.GetKey())
+						e.type = MIDI_M_PGM_CHANGE;
+					else
+					{
+						e.type = MIDI_M_PGM_RANGE;
+						low = off.GetKey();
+						high = on.GetKey();
+						key = -1;
+					}
 					break;
 				case MIDI_RPN:
 					e.type = MIDI_M_RPN;
@@ -670,7 +693,7 @@ void MIDIEventRecvDialog::DetectEvent()
 				}
 				e.device = on.GetDevice();
 				e.channel = on.GetChannel();
-				e.key = on.GetKey();
+				e.key = key;
 				e.low_key = 0;
 				e.high_key = 0;
 				e.low_value = low;
