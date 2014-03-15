@@ -531,6 +531,25 @@ void MIDIEventRecvDialog::StopListen()
 	m_OffList.clear();
 }
 
+bool MIDIEventRecvDialog::SimilarEvent(const GOrgueMidiEvent& e1, const GOrgueMidiEvent& e2)
+{
+	if (e1.GetDevice() != e2.GetDevice())
+		return false;
+	if (e1.GetMidiType() != e2.GetMidiType())
+		return false;
+	if (e1.GetChannel() != e2.GetChannel())
+		return false;
+
+	if (e1.GetMidiType() == MIDI_PGM_CHANGE)
+		return true;
+	if (e1.GetKey() == e2.GetKey())
+	{
+		if (e1.GetMidiType() != MIDI_NOTE)
+			return true;
+	}
+	return false;
+}
+
 void MIDIEventRecvDialog::DetectEvent()
 {
 	if (m_ListenState == 3)
@@ -539,24 +558,15 @@ void MIDIEventRecvDialog::DetectEvent()
 		{
 			if (i + 1 < m_OnList.size())
 			{
-				if (m_OnList[i].GetDevice() == m_OnList[i + 1].GetDevice() &&
-				    m_OnList[i].GetMidiType() == m_OnList[i + 1].GetMidiType() &&
-				    m_OnList[i].GetChannel() == m_OnList[i + 1].GetChannel() &&
-				    m_OnList[i].GetKey() == m_OnList[i + 1].GetKey())
-				{
-					if (m_OnList[i].GetMidiType() != MIDI_NOTE)
+				if (SimilarEvent(m_OnList[i], m_OnList[i + 1]))
 						continue;
-				}
 			}
 			GOrgueMidiEvent on = m_OnList[i];
 			for(unsigned j = 0; j < m_OffList.size(); j++)
 			{
 				if (j + 1 < m_OffList.size())
 				{
-					if (m_OffList[j].GetDevice() == m_OffList[j + 1].GetDevice() &&
-					    m_OffList[j].GetMidiType() == m_OffList[j + 1].GetMidiType() &&
-					    m_OffList[j].GetChannel() == m_OffList[j + 1].GetChannel() &&
-					    m_OffList[j].GetKey() == m_OffList[j + 1].GetKey())
+					if (SimilarEvent(m_OffList[j], m_OffList[j + 1]))
 					{
 						if (m_OffList[j].GetMidiType() != MIDI_NOTE)
 						continue;
