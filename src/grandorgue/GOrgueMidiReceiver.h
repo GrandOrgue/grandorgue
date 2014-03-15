@@ -70,6 +70,9 @@ public:
 	bool HasHighKey(midi_match_message_type type);
 	bool HasLowerLimit(midi_match_message_type type);
 	bool HasUpperLimit(midi_match_message_type type);
+	unsigned KeyLimit(midi_match_message_type type);
+	unsigned LowerValueLimit(midi_match_message_type type);
+	unsigned UpperValueLimit(midi_match_message_type type);
 
 	void Assign(const GOrgueMidiReceiverData& data);
 

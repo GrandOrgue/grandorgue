@@ -58,6 +58,8 @@ const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
 	{ wxT("SysExJohannus"), MIDI_M_SYSEX_JOHANNUS },
 	{ wxT("RPN"), MIDI_M_RPN },
 	{ wxT("NRPN"), MIDI_M_NRPN },
+	{ wxT("RPNRange"), MIDI_M_RPN_RANGE },
+	{ wxT("NRPNRange"), MIDI_M_NRPN_RANGE },
 	{ wxT("RPNOn"), MIDI_M_RPN_ON },
 	{ wxT("RPNOff"), MIDI_M_RPN_OFF },
 	{ wxT("NRPNOn"), MIDI_M_NRPN_ON },
@@ -119,10 +121,10 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMid
 				m_events[i].key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIKey%03d"), i + 1), 0, 0x200000);
 			
 			if (HasLowerLimit(m_events[i].type))
-				m_events[i].low_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerLimit%03d"), i + 1), 0, 127, false, 
+				m_events[i].low_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerLimit%03d"), i + 1), 0, 0x3fff, false, 
 									cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 1));
 			if (HasUpperLimit(m_events[i].type))
-				m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1), 0, 127, false, 
+				m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1), 0, 0x3fff, false, 
 									 cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127));
 			
 		}
@@ -196,6 +198,8 @@ bool GOrgueMidiReceiver::HasChannel(midi_match_message_type type)
 	   type == MIDI_M_CTRL_CHANGE ||
 	   type == MIDI_M_PGM_CHANGE ||
 	   type == MIDI_M_PGM_RANGE ||
+	   type == MIDI_M_RPN_RANGE ||
+	   type == MIDI_M_NRPN_RANGE ||
 	   type == MIDI_M_CTRL_BIT ||
 	   type == MIDI_M_CTRL_CHANGE_FIXED ||
 	   type == MIDI_M_RPN ||
@@ -222,6 +226,8 @@ bool GOrgueMidiReceiver::HasKey(midi_match_message_type type)
 	if(type == MIDI_M_NOTE ||
 	   type == MIDI_M_CTRL_CHANGE ||
 	   type == MIDI_M_PGM_CHANGE ||
+	   type == MIDI_M_RPN_RANGE ||
+	   type == MIDI_M_NRPN_RANGE ||
 	   type == MIDI_M_SYSEX_JOHANNUS ||
 	   type == MIDI_M_CTRL_BIT ||
 	   type == MIDI_M_CTRL_CHANGE_FIXED ||
@@ -294,6 +300,8 @@ bool GOrgueMidiReceiver::HasLowerLimit(midi_match_message_type type)
 		return false;
 	if (type == MIDI_M_NOTE ||
 	    type == MIDI_M_PGM_RANGE ||
+	    type == MIDI_M_RPN_RANGE ||
+	    type == MIDI_M_NRPN_RANGE ||
 	    type == MIDI_M_CTRL_CHANGE ||
 	    type == MIDI_M_CTRL_CHANGE_FIXED ||
 	    type == MIDI_M_CTRL_BIT ||
@@ -317,6 +325,8 @@ bool GOrgueMidiReceiver::HasUpperLimit(midi_match_message_type type)
 		return false;
 	if (type == MIDI_M_NOTE ||
 	    type == MIDI_M_PGM_RANGE ||
+	    type == MIDI_M_RPN_RANGE ||
+	    type == MIDI_M_NRPN_RANGE ||
 	    type == MIDI_M_CTRL_CHANGE ||
 	    type == MIDI_M_CTRL_CHANGE_FIXED ||
 	    type == MIDI_M_RPN ||
@@ -331,6 +341,48 @@ bool GOrgueMidiReceiver::HasUpperLimit(midi_match_message_type type)
 	    type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
 	return false;
+}
+
+unsigned GOrgueMidiReceiver::KeyLimit(midi_match_message_type type)
+{
+	if (type == MIDI_M_PGM_CHANGE)
+		return 0x200000;
+	if (type == MIDI_M_RPN_ON ||
+	    type == MIDI_M_RPN_OFF ||
+	    type == MIDI_M_RPN ||
+	    type == MIDI_M_NRPN ||
+	    type == MIDI_M_NRPN_ON ||
+	    type == MIDI_M_NRPN_OFF)
+		return 0x3fff;
+
+	if (type == MIDI_M_CTRL_BIT)
+		return 7;
+
+	return 0x7f;
+}
+
+unsigned GOrgueMidiReceiver::LowerValueLimit(midi_match_message_type type)
+{
+	if (type == MIDI_M_RPN_RANGE ||
+	    type == MIDI_M_NRPN_RANGE)
+		return 0x3fff;
+
+	if (type == MIDI_M_PGM_RANGE)
+		return 0x200000;
+
+	return 0x7f;
+}
+
+unsigned GOrgueMidiReceiver::UpperValueLimit(midi_match_message_type type)
+{
+	if (type == MIDI_M_RPN_RANGE ||
+	    type == MIDI_M_NRPN_RANGE)
+		return 0x3fff;
+
+	if (type == MIDI_M_PGM_RANGE)
+		return 0x200000;
+
+	return 0x7f;
 }
 
 MIDI_MATCH_TYPE GOrgueMidiReceiver::debounce(const GOrgueMidiEvent& e, MIDI_MATCH_TYPE event, unsigned index)
@@ -619,6 +671,14 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 		{
 			return debounce(e, MIDI_MATCH_CHANGE, i);
 		}
+		if (e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_RANGE && m_events[i].low_value == e.GetKey() && m_events[i].key == e.GetValue())
+				return MIDI_MATCH_OFF;
+		if (e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_RANGE && m_events[i].high_value == e.GetKey() && m_events[i].key == e.GetValue())
+				return MIDI_MATCH_ON;
+		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_RANGE && m_events[i].low_value == e.GetKey() && m_events[i].key == e.GetValue())
+				return MIDI_MATCH_OFF;
+		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_RANGE && m_events[i].high_value == e.GetKey() && m_events[i].key == e.GetValue())
+				return MIDI_MATCH_ON;
 	}
 	return MIDI_MATCH_NONE;
 }
