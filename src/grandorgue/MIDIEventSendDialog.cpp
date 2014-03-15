@@ -131,14 +131,14 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 		m_eventtype->Append(_("RPN Off"), (void*)MIDI_S_RPN_OFF);
 		m_eventtype->Append(_("NRPN On"), (void*)MIDI_S_NRPN_ON);
 		m_eventtype->Append(_("NRPN Off"), (void*)MIDI_S_NRPN_OFF);
+		m_eventtype->Append(_("RPN Range"), (void*)MIDI_S_RPN_RANGE);
+		m_eventtype->Append(_("NRPN Range"), (void*)MIDI_S_NRPN_RANGE);
 	}
 	if (m_midi.GetType() == MIDI_SEND_LABEL)
 	{
 		m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD"), (void*)MIDI_S_HW_LCD);
 		m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String"), (void*)MIDI_S_HW_STRING);
 	}
-
-	m_key->SetRange(0, 0x200000);
 
 	m_current = 0;
 	if (!m_midi.GetEventCount())
@@ -181,25 +181,42 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 	else
 		m_channel->Disable();
 	if (m_original->HasKey(type))
+	{
 		m_key->Enable();
+		m_key->SetRange(0, m_original->KeyLimit(type));
+	}
 	else
 		m_key->Disable();
 	if (m_original->HasLowValue(type))
+	{
 		m_LowValue->Enable();
+		m_LowValue->SetRange(0, m_original->LowValueLimit(type));
+	}
 	else
 		m_LowValue->Disable();
 	if (m_original->HasHighValue(type))
+	{
 		m_HighValue->Enable();
+		m_HighValue->SetRange(0, m_original->HighValueLimit(type));
+	}
 	else
 		m_HighValue->Disable();
 	if (type == MIDI_S_HW_LCD)
 		m_LowValueLabel->SetLabel(_("&Color:"));
 	else if (type == MIDI_S_PGM_RANGE)
 		m_LowValueLabel->SetLabel(_("&Lower PGM number:"));
+	else if (type == MIDI_S_RPN_RANGE)
+		m_LowValueLabel->SetLabel(_("&Off RPN number:"));
+	else if (type == MIDI_S_NRPN_RANGE)
+		m_LowValueLabel->SetLabel(_("&Off NRPN number:"));
 	else
 		m_LowValueLabel->SetLabel(_("&Off Value:"));
 	if (type == MIDI_S_PGM_RANGE)
 		m_HighValueLabel->SetLabel(_("&Upper PGM number:"));
+	else if (type == MIDI_S_RPN_RANGE)
+		m_HighValueLabel->SetLabel(_("&On RPN number:"));
+	else if (type == MIDI_S_NRPN_RANGE)
+		m_HighValueLabel->SetLabel(_("&On NRPN number:"));
 	else
 		m_HighValueLabel->SetLabel(_("&On value:"));
 	switch(type)
@@ -222,6 +239,11 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 	case MIDI_S_HW_STRING:
 	case MIDI_S_HW_LCD:
 		m_KeyLabel->SetLabel(_("&ID:"));
+		break;
+
+	case MIDI_S_RPN_RANGE:
+	case MIDI_S_NRPN_RANGE:
+		m_KeyLabel->SetLabel(_("&Value:"));
 		break;
 
 	default:
@@ -257,6 +279,9 @@ void MIDIEventSendDialog::LoadEvent()
 		if ((void*)e.type == m_eventtype->GetClientData(i))
 			m_eventtype->SetSelection(i);
 
+	wxCommandEvent event;
+	OnTypeChange(event);
+
 	m_device->SetSelection(0);
 	for(unsigned i = 1; i < m_device->GetCount(); i++)
 		if (m_Settings.GetMidiMap().GetDeviceByID(e.device) == m_device->GetString(i))
@@ -266,9 +291,6 @@ void MIDIEventSendDialog::LoadEvent()
 	m_key->SetValue(e.key);
 	m_LowValue->SetValue(e.low_value);
 	m_HighValue->SetValue(e.high_value);
-
-	wxCommandEvent event;
-	OnTypeChange(event);
 }
 
 void MIDIEventSendDialog::StoreEvent()

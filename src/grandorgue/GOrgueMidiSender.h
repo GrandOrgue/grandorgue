@@ -58,6 +58,9 @@ public:
 	bool HasKey(midi_send_message_type type);
 	bool HasLowValue(midi_send_message_type type);
 	bool HasHighValue(midi_send_message_type type);
+	unsigned KeyLimit(midi_send_message_type type);
+	unsigned LowValueLimit(midi_send_message_type type);
+	unsigned HighValueLimit(midi_send_message_type type);
 
 	void Assign(const GOrgueMidiSenderData& data);
 };
