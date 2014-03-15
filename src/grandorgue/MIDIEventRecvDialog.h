@@ -62,6 +62,8 @@ private:
 	std::vector<GOrgueMidiEvent> m_OnList;
 	std::vector<GOrgueMidiEvent> m_OffList;
 
+	bool SimilarEvent(const GOrgueMidiEvent& e1, const GOrgueMidiEvent& e2);
+
 	void StoreEvent();
 	void LoadEvent();
 	void StartListen(bool type);
