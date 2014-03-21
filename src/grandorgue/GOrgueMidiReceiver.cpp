@@ -116,8 +116,7 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMid
 
 			if (m_type == MIDI_RECV_MANUAL)
 				m_events[i].key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIKeyShift%03d"), i + 1), -35, 35);
-
-			if (HasKey(m_events[i].type))
+			else if (HasKey(m_events[i].type))
 				m_events[i].key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIKey%03d"), i + 1), 0, 0x200000);
 			
 			if (HasLowerLimit(m_events[i].type))
@@ -181,8 +180,7 @@ void GOrgueMidiReceiver::Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMid
 
 		if (m_type == MIDI_RECV_MANUAL)
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDIKeyShift%03d"), i + 1), m_events[i].key);
-
-		if (HasKey(m_events[i].type))
+		else if (HasKey(m_events[i].type))
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDIKey%03d"), i + 1), m_events[i].key);
 
 		if (HasLowerLimit(m_events[i].type))
