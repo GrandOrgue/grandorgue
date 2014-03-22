@@ -109,6 +109,7 @@ OrganDialog::OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile*
 	m_Last(NULL),
 	m_LoadChangeCnt(0),
 	m_ModalDialog(NULL),
+	m_Destroying(false),
 	m_DestroyPending(false)
 {
 	wxArrayString choices;
@@ -296,7 +297,8 @@ bool OrganDialog::CloseModal()
 		wxDialog* dlg = m_ModalDialog;
 		m_ModalDialog = NULL;
 		dlg->EndModal(wxID_CANCEL);
-		m_DestroyPending = true;
+		if (m_Destroying)
+			m_DestroyPending = true;
 		return true;
 	}
 	return false;
@@ -305,6 +307,7 @@ bool OrganDialog::CloseModal()
 bool OrganDialog::Destroy()
 {
 	Hide();
+	m_Destroying = true;
 	if (CloseModal())
 		return true;
 	return wxDialog::Destroy();
