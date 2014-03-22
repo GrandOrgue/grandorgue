@@ -92,8 +92,6 @@ public:
 	void PreparePlayback();
 	void PrepareRecording();
 	void Update();
-	void ProcessMidi(const GOrgueMidiEvent& event);
-	void HandleKey(int key);
 	void ControlChanged(void* control);
 
 	bool StoreInvisibleObjects();

@@ -22,6 +22,7 @@
 #ifndef GORGUEENCLOSURE_H_
 #define GORGUEENCLOSURE_H_
 
+#include "GOrgueEventHandler.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
 #include <wx/string.h>
@@ -31,7 +32,7 @@ class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
-class GOrgueEnclosure
+class GOrgueEnclosure : private GOrgueEventHandler
 {
 private:
 	wxString m_group;
@@ -44,6 +45,9 @@ private:
 	wxString m_Name;
 	bool m_Displayed;
 
+	void ProcessMidi(const GOrgueMidiEvent& event);
+	void HandleKey(int key);
+
 public:
 
 	GOrgueEnclosure(GrandOrgueFile* organfile);
@@ -52,7 +56,6 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group, int enclosure_nb);
 	void Save(GOrgueConfigWriter& cfg);
 	void Set(int n);
-	void ProcessMidi(const GOrgueMidiEvent& event);
 	GOrgueMidiReceiver& GetMidiReceiver();
 	GOrgueMidiSender& GetMidiSender();
 	const wxString& GetName();

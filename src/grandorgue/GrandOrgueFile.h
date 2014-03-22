@@ -37,6 +37,7 @@ class GOrgueCache;
 class GOrgueCacheObject;
 class GOrgueDivisionalCoupler;
 class GOrgueEnclosure;
+class GOrgueEventHandler;
 class GOrgueGeneral;
 class GOrgueManual;
 class GOrgueMidi;
@@ -104,6 +105,7 @@ private:
 	ptr_vector<GOrgueRank> m_ranks;
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
+	std::vector<GOrgueEventHandler*> m_handler;
 	GOStringBoolMap m_UsedSections;
 
 	GOSoundEngine* m_soundengine;
@@ -150,6 +152,7 @@ public:
 	void UpdateTremulant(GOrgueTremulant* tremulant);
 	void UpdateVolume();
 	void Modified();
+	void RegisterEventHandler(GOrgueEventHandler* handler);
 	GOrgueDocument* GetDocument();
 	~GrandOrgueFile(void);
 

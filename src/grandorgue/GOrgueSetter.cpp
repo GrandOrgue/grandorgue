@@ -1063,20 +1063,6 @@ void GOrgueSetter::Save(GOrgueConfigWriter& cfg)
 	m_TransposeDisplay.Save(cfg);
 }
 
-void GOrgueSetter::ProcessMidi(const GOrgueMidiEvent& event)
-{
-	for(unsigned i = 0; i < m_button.size(); i++)
-		m_button[i]->ProcessMidi(event);
-
-	m_swell.ProcessMidi(event);
-}
-
-void GOrgueSetter::HandleKey(int key)
-{
-	for(unsigned i = 0; i < m_button.size(); i++)
-		m_button[i]->HandleKey(key);
-}
-
 void GOrgueSetter::SetterButtonChanged(GOrgueSetterButton* button)
 {
 	for(unsigned i = 0; i < m_button.size(); i++)
