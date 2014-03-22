@@ -274,11 +274,11 @@ void GOrgueDocument::ShowMidiList()
 	}
 }
 
-void GOrgueDocument::ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key)
+void GOrgueDocument::ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division)
 {
 	if (!showWindow(GOrgueDocument::MIDI_EVENT, element) && m_organfile)
 	{
 		registerWindow(GOrgueDocument::MIDI_EVENT, element,
-			       new MIDIEventDialog (this, NULL, title, m_organfile->GetSettings(), event, sender, key));
+			       new MIDIEventDialog (this, NULL, title, m_organfile->GetSettings(), event, sender, key, division));
 	}
 }
