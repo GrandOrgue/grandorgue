@@ -68,7 +68,7 @@ public:
 
 	void ShowPanel(unsigned id);
 	void ShowOrganDialog();
-	void ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
+	void ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division = NULL);
 	void ShowMidiList();
 
 	bool Load(GOrgueProgressDialog* dlg, const wxString& odf);

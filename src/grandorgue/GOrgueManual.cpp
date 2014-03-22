@@ -34,11 +34,13 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_group(wxT("---")),
 	m_midi(organfile, MIDI_RECV_MANUAL),
 	m_sender(organfile, MIDI_SEND_MANUAL),
+	m_division(organfile, MIDI_SEND_MANUAL),
 	m_organfile(organfile),
 	m_InputCouplers(),
 	m_KeyVelocity(0),
 	m_RemoteVelocity(),
 	m_Velocity(),
+	m_DivisionState(),
 	m_Velocities(),
 	m_manual_number(0),
 	m_first_accessible_logical_key_nb(0),
@@ -71,6 +73,7 @@ unsigned GOrgueManual::RegisterCoupler(GOrgueCoupler* coupler)
 void GOrgueManual::Resize()
 {
 	m_Velocity.resize(m_nb_logical_keys);
+	m_DivisionState.resize(m_nb_logical_keys);
 	m_RemoteVelocity.resize(m_nb_logical_keys);
 	m_Velocities.resize(m_nb_logical_keys);
 	for(unsigned i = 0; i < m_Velocities.size(); i++)
@@ -97,6 +100,7 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_divisionals.resize(0);
 	m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+	m_division.Load(cfg, group + wxT("Division"), m_organfile->GetSettings().GetMidiMap());
 
 	SetElementID(m_organfile->GetRecorderElementID(wxString::Format(wxT("M%d"), m_manual_number)));
 
@@ -186,12 +190,31 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	}
 	m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+	m_division.Load(cfg, group + wxT("Division"), m_organfile->GetSettings().GetMidiMap());
 
 	SetElementID(m_organfile->GetRecorderElementID(wxString::Format(wxT("M%d"), m_manual_number)));
 
 	Resize();
 	m_KeyVelocity.resize(m_nb_accessible_keys);
 	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
+}
+
+void GOrgueManual::SetOutput(unsigned note, unsigned velocity)
+{
+	if (note < 0 || note >= m_DivisionState.size())
+		return;
+	velocity >>= 2;
+
+	if (m_DivisionState[note] == velocity)
+		return;
+	m_DivisionState[note] = velocity;
+
+	for (unsigned i = 0; i < m_stops.size(); i++)
+		m_stops[i]->SetKey(note + 1, velocity);
+
+	int midi_note = note + m_first_accessible_key_midi_note_nb - m_first_accessible_logical_key_nb + 1;
+	if (midi_note >= 0 && midi_note < 127)
+		m_division.SetKey(midi_note, velocity);
 }
 
 void GOrgueManual::SetKey(unsigned note, unsigned velocity, GOrgueCoupler* prev, unsigned couplerID)
@@ -216,8 +239,7 @@ void GOrgueManual::SetKey(unsigned note, unsigned velocity, GOrgueCoupler* prev,
 	for (unsigned i = 0; i < m_couplers.size(); i++)
 		m_couplers[i]->SetKey(note, m_Velocities[note], m_InputCouplers);
 
-	for (unsigned i = 0; i < m_stops.size(); i++)
-		m_stops[i]->SetKey(note + 1, m_UnisonOff > 0 ? m_RemoteVelocity[note] : m_Velocity[note]);
+	SetOutput(note, m_UnisonOff > 0 ? m_RemoteVelocity[note] : m_Velocity[note]);
 
 	if (m_first_accessible_logical_key_nb <= note + 1 && note <= m_first_accessible_logical_key_nb + m_nb_accessible_keys)
 		m_organfile->ControlChanged(this);
@@ -249,8 +271,7 @@ void GOrgueManual::SetUnisonOff(bool on)
 			return;
 	}
 	for(unsigned note = 0; note < m_Velocity.size(); note++)
-		for (unsigned j = 0; j < m_stops.size(); j++)
-			m_stops[j]->SetKey(note + 1, on ? m_RemoteVelocity[note] : m_Velocity[note]);
+		SetOutput(note, on ? m_RemoteVelocity[note] : m_Velocity[note]);
 }
 
 GOrgueManual::~GOrgueManual(void)
@@ -394,6 +415,7 @@ void GOrgueManual::Save(GOrgueConfigWriter& cfg)
 {
 	m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+	m_division.Save(cfg, m_group + wxT("Division"), m_organfile->GetSettings().GetMidiMap());
 }
 
 void GOrgueManual::Abort()
@@ -416,9 +438,12 @@ void GOrgueManual::PreparePlayback()
 	m_KeyVelocity.resize(m_nb_accessible_keys);
 	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
 	m_sender.ResetKey();
+	m_division.ResetKey();
 	m_UnisonOff = 0;
 	for(unsigned i = 0; i < m_Velocity.size(); i++)
 		m_Velocity[i] = 0;
+	for(unsigned i = 0; i < m_DivisionState.size(); i++)
+		m_DivisionState[i] = 0;
 	for(unsigned i = 0; i < m_RemoteVelocity.size(); i++)
 		m_RemoteVelocity[i] = 0;
 	for(unsigned i = 0; i < m_Velocities.size(); i++)
@@ -521,5 +546,5 @@ void GOrgueManual::ShowConfigDialog()
 {
 	wxString title = wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType().c_str(), GetMidiName().c_str());
 
-	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, &m_midi, &m_sender, NULL);
+	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, &m_midi, &m_sender, NULL, &m_division);
 }

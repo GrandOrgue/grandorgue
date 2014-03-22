@@ -39,6 +39,7 @@ class MIDIEventDialog : public wxPropertySheetDialog, public GOrgueView
 private:
 	MIDIEventRecvDialog* m_recvPage;
 	MIDIEventSendDialog* m_sendPage;
+	MIDIEventSendDialog* m_sendDivisionPage;
 	MIDIEventKeyDialog* m_keyPage;
 
 	void DoApply();
@@ -48,7 +49,7 @@ private:
 	void OnCancel(wxCommandEvent& event);
 
 public:
-	MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
+	MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division = NULL);
 	~MIDIEventDialog();
 
 	void RegisterMIDIListener(GOrgueMidi* midi);

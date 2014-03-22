@@ -32,11 +32,12 @@ BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
 	EVT_BUTTON(wxID_CANCEL, MIDIEventDialog::OnCancel)
 END_EVENT_TABLE()
 
-MIDIEventDialog::MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key):
+MIDIEventDialog::MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division):
 	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize),
 	GOrgueView(doc, this),
 	m_recvPage(NULL),
 	m_sendPage(NULL),
+	m_sendDivisionPage(NULL),
 	m_keyPage(NULL)
 {
 	CreateButtons(wxOK | wxCANCEL);
@@ -57,6 +58,11 @@ MIDIEventDialog::MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxStrin
 	{
 		m_keyPage = new MIDIEventKeyDialog(notebook, key);
 		notebook->AddPage(m_keyPage,  _("Shortcut"));
+	}
+	if (division)
+	{
+		m_sendDivisionPage = new MIDIEventSendDialog(notebook, division, settings);
+		notebook->AddPage(m_sendDivisionPage,  _("Send Division Output"));
 	}
 
 	LayoutDialog();
@@ -94,6 +100,8 @@ void MIDIEventDialog::DoApply()
 		m_recvPage->DoApply();
 	if (m_sendPage)
 		m_sendPage->DoApply();
+	if (m_sendDivisionPage)
+		m_sendDivisionPage->DoApply();
 	if (m_keyPage)
 		m_keyPage->DoApply();
 }

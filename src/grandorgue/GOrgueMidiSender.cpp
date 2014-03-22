@@ -470,7 +470,7 @@ void GOrgueMidiSender::SetKey(unsigned key, unsigned velocity)
 			e.SetMidiType(MIDI_NOTE);
 			e.SetChannel(m_events[i].channel);
 			e.SetKey(key);
-			e.SetValue(m_events[i].low_value + velocity * (m_events[i].high_value - m_events[i].low_value));
+			e.SetValue(m_events[i].low_value + (velocity * (m_events[i].high_value - m_events[i].low_value)) / 0x7f);
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_NOTE_NO_VELOCITY)

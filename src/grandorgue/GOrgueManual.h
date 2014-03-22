@@ -49,6 +49,7 @@ private:
 	wxString m_group;
 	GOrgueMidiReceiver m_midi;
 	GOrgueMidiSender m_sender;
+	GOrgueMidiSender m_division;
 	GrandOrgueFile* m_organfile;
 	std::vector<GOrgueCoupler*> m_InputCouplers;
 	/* Keyboard state */
@@ -56,6 +57,7 @@ private:
 	/* Internal state affected by couplers */
 	std::vector<unsigned> m_RemoteVelocity;
 	std::vector<unsigned> m_Velocity;
+	std::vector<unsigned> m_DivisionState;
 	std::vector<std::vector<unsigned> > m_Velocities;
 	unsigned m_MidiMap[128];
 	unsigned m_manual_number;
@@ -82,6 +84,7 @@ private:
 
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);
+	void SetOutput(unsigned note, unsigned velocity);
 
 	void Save(GOrgueConfigWriter& cfg);
 
