@@ -83,4 +83,8 @@ void GOrguePiston::Push()
 	this->drawstop->Push();
 }
 
+wxString GOrguePiston::GetMidiType()
+{
+	return _("Piston");
+}
 

@@ -23,6 +23,7 @@
 
 #include "GOrgueConfigReader.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueDivisionalCoupler::GOrgueDivisionalCoupler(GrandOrgueFile* organfile) :
 	GOrgueDrawstop(organfile),
@@ -66,4 +67,9 @@ unsigned GOrgueDivisionalCoupler::GetManual(unsigned index)
 bool GOrgueDivisionalCoupler::IsBidirectional()
 {
 	return m_BiDirectionalCoupling;
+}
+
+wxString GOrgueDivisionalCoupler::GetMidiType()
+{
+	return _("Divisional Coupler");
 }

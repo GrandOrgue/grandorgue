@@ -32,6 +32,8 @@ protected:
 public:
 	GOrgueSwitch(GrandOrgueFile* organfile);
 	~GOrgueSwitch();
+
+	wxString GetMidiType();
 };
 
 #endif

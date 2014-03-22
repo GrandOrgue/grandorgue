@@ -40,6 +40,8 @@ public:
 	unsigned GetNumberOfManuals();
 	unsigned GetManual(unsigned index);
 	bool IsBidirectional();
+
+	wxString GetMidiType();
 };
 
 #endif /* GORGUEDIVISIONALCOUPLER_H */

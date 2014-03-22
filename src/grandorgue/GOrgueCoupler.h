@@ -75,6 +75,7 @@ public:
 	bool IsIntermanual();
 	bool IsUnisonOff();
 
+	wxString GetMidiType();
 };
 
 #endif

@@ -39,6 +39,8 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Push();
 	void ControlChanged(void* control);
+
+	wxString GetMidiType();
 };
 
 #endif /* GORGUEPISTON_H */

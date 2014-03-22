@@ -21,6 +21,8 @@
 
 #include "GOrgueGeneral.h"
 
+#include <wx/intl.h>
+
 GOrgueGeneral::GOrgueGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile, bool is_setter):
 	GOrguePushbutton(organfile),
 	m_general(general_template, organfile, is_setter)
@@ -41,4 +43,9 @@ void GOrgueGeneral::Push()
 GOrgueFrameGeneral& GOrgueGeneral::GetGeneral()
 {
 	return m_general;
+}
+
+wxString GOrgueGeneral::GetMidiType()
+{
+	return _("General");
 }

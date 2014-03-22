@@ -26,9 +26,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueDC.h"
-#include "GOrgueDocument.h"
 #include "GOrgueManual.h"
-#include "GrandOrgueFile.h"
 #include <wx/intl.h>
 
 GOGUIManual::GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number):
@@ -346,11 +344,7 @@ bool GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 
 	if (right)
 	{
-		GOrgueMidiReceiver* midi = &m_manual->GetMidiReceiver();
-		GOrgueMidiSender* sender = &m_manual->GetMidiSender();
-
-		GOrgueDocument* doc = m_panel->GetOrganFile()->GetDocument();
-		doc->ShowMIDIEventDialog(&m_manual, _("Midi-Settings for Manual - ") + m_manual->GetName(), midi, sender, NULL);
+		m_manual->ShowConfigDialog();
 		return true;
 	}
 	else
@@ -373,4 +367,3 @@ bool GOGUIManual::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 		return false;
 	}
 }
-

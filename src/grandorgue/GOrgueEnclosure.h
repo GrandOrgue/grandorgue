@@ -23,6 +23,7 @@
 #define GORGUEENCLOSURE_H_
 
 #include "GOrgueEventHandler.h"
+#include "GOrgueMidiConfigurator.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
 #include "GOrgueSaveableObject.h"
@@ -33,7 +34,8 @@ class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
-class GOrgueEnclosure : private GOrgueEventHandler, private GOrgueSaveableObject
+class GOrgueEnclosure : private GOrgueEventHandler, private GOrgueSaveableObject, 
+	public GOrgueMidiConfigurator
 {
 private:
 	GOrgueMidiReceiver m_midi;
@@ -70,6 +72,10 @@ public:
 	virtual void PreparePlayback();
 	virtual void PrepareRecording();
 	void SetElementID(int id);
+
+	wxString GetMidiType();
+	wxString GetMidiName();
+	void ShowConfigDialog();
 };
 
 #endif /* GORGUEENCLOSURE_H_ */

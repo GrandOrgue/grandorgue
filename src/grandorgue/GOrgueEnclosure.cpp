@@ -22,8 +22,10 @@
 #include "GOrgueEnclosure.h"
 
 #include "GOrgueConfigReader.h"
+#include "GOrgueDocument.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
 	m_midi(organfile, MIDI_RECV_ENCLOSURE),
@@ -36,6 +38,7 @@ GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
 	m_Displayed(false)
 {
 	m_organfile->RegisterEventHandler(this);
+	m_organfile->RegisterMidiConfigurator(this);
 }
 
 GOrgueEnclosure::~GOrgueEnclosure()
@@ -158,4 +161,21 @@ void GOrgueEnclosure::SetElementID(int id)
 {
 	m_midi.SetElementID(id);
 	m_sender.SetElementID(id);
+}
+
+wxString GOrgueEnclosure::GetMidiType()
+{
+	return _("Enclosure");
+}
+
+wxString GOrgueEnclosure::GetMidiName()
+{
+	return GetName();
+}
+
+void GOrgueEnclosure::ShowConfigDialog()
+{
+	wxString title = wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType().c_str(), GetMidiName().c_str());
+
+	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, &m_midi, &m_sender, NULL);
 }

@@ -27,8 +27,6 @@
 #include "GOrgueButton.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueDC.h"
-#include "GOrgueDocument.h"
-#include "GrandOrgueFile.h"
 #include <wx/intl.h>
 
 GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston, unsigned x_pos, unsigned y_pos) :
@@ -210,32 +208,7 @@ bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	}
 	if (right)
 	{
-		GOrgueMidiReceiver* midi = &m_Button->GetMidiReceiver();
-		GOrgueMidiSender* sender = &m_Button->GetMidiSender();
-		GOrgueKeyReceiver* key = &m_Button->GetKeyReceiver();
-		wxString title;
-		switch(midi->GetType())
-		{
-		case MIDI_RECV_DRAWSTOP:
-			title = _("Midi-Settings for Drawstop - ") + m_Button->GetName();
-			break;
-
-		case MIDI_RECV_BUTTON:
-			title = _("Midi-Settings for Pushbutton - ") + m_Button->GetName();
-			break;
-
-		default:
-			title = _("Midi-Settings for Button - ") + m_Button->GetName();
-		}
-
-		if (m_Button->IsReadOnly())
-		{
-			midi = NULL;
-			key = NULL;
-		}
-
-		GOrgueDocument* doc = m_panel->GetOrganFile()->GetDocument();
-		doc->ShowMIDIEventDialog(&m_Button, title, midi, sender, key);
+		m_Button->ShowConfigDialog();
 		return true;
 	}
 	else

@@ -24,6 +24,7 @@
 #include "GOSoundProviderSynthedTrem.h"
 #include "GOrgueConfigReader.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
@@ -152,4 +153,9 @@ void GOrgueTremulant::PreparePlayback()
 GOrgueTremulantType GOrgueTremulant::GetTremulantType()
 {
 	return m_TremulantType;
+}
+
+wxString GOrgueTremulant::GetMidiType()
+{
+	return _("Tremulant");
 }

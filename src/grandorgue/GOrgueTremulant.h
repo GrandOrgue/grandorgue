@@ -64,6 +64,8 @@ public:
 	void Abort();
 	void PreparePlayback();
 	GOrgueTremulantType GetTremulantType();
+
+	wxString GetMidiType();
 };
 
 #endif /* GORGUETREMULANT_H_ */

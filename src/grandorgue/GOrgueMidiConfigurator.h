@@ -19,26 +19,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEGENERAL_H
-#define GORGUEGENERAL_H
+#ifndef GORGUEMIDICONFIGURATOR_H
+#define GORGUEMIDICONFIGURATOR_H
 
-#include "GOrgueFrameGeneral.h"
-#include "GOrguePushbutton.h"
+#include <wx/string.h>
 
-class GOrgueConfigReader;
-
-class GOrgueGeneral : public GOrguePushbutton
+class GOrgueMidiConfigurator
 {
-private:
-	GOrgueFrameGeneral m_general;
-
 public:
-	GOrgueGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile, bool is_setter);
-	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Push();
-	GOrgueFrameGeneral& GetGeneral();
+	virtual ~GOrgueMidiConfigurator()
+	{
+	}
 
-	wxString GetMidiType();
+	virtual wxString GetMidiType() = 0;
+	virtual wxString GetMidiName() = 0;
+
+	virtual void ShowConfigDialog() = 0;
 };
 
-#endif /* GORGUEGENERAL_H */
+#endif

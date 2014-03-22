@@ -22,8 +22,10 @@
 #include "GOrgueButton.h"
 
 #include "GOrgueConfigReader.h"
+#include "GOrgueDocument.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton) :
 	m_organfile(organfile),
@@ -38,6 +40,7 @@ GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_ty
 	m_ReadOnly(false)
 {
 	m_organfile->RegisterEventHandler(this);
+	m_organfile->RegisterMidiConfigurator(this);
 }
 
 GOrgueButton::~GOrgueButton()
@@ -202,4 +205,24 @@ void GOrgueButton::SetElementID(int id)
 		m_midi.SetElementID(id);
 		m_sender.SetElementID(id);
 	}
+}
+
+wxString GOrgueButton::GetMidiName()
+{
+	return GetName();
+}
+
+void GOrgueButton::ShowConfigDialog()
+{
+	wxString title = wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType().c_str(), GetMidiName().c_str());
+
+	GOrgueMidiReceiver* midi = &m_midi;
+	GOrgueKeyReceiver* key = &m_shortcut;
+	if (IsReadOnly())
+	{
+		midi = NULL;
+		key = NULL;
+	}
+
+	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, midi, &m_sender, key);
 }
