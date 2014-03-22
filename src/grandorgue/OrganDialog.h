@@ -74,6 +74,7 @@ private:
 	OrganTreeItemData* m_Last;
 	unsigned m_LoadChangeCnt;
 	wxDialog* m_ModalDialog;
+	bool m_Destroying;
 	bool m_DestroyPending;
 
 	bool CloseModal();
