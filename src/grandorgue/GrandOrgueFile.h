@@ -106,6 +106,7 @@ private:
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
 	std::vector<GOrgueEventHandler*> m_handler;
+	std::vector<GOrgueCacheObject*> m_CacheObjects;
 	GOStringBoolMap m_UsedSections;
 
 	GOSoundEngine* m_soundengine;
@@ -125,7 +126,6 @@ private:
 	wxString GenerateSettingFileName();
 	wxString GenerateCacheFileName();
 	void SetTemperament(const GOrgueTemperament& temperament);
-	void GenerateCacheObjectList(std::vector<GOrgueCacheObject*>& objects);
 	void ResolveReferences();
 
 public:
@@ -153,6 +153,7 @@ public:
 	void UpdateVolume();
 	void Modified();
 	void RegisterEventHandler(GOrgueEventHandler* handler);
+	void RegisterCacheObject(GOrgueCacheObject* obj);
 	GOrgueDocument* GetDocument();
 	~GrandOrgueFile(void);
 

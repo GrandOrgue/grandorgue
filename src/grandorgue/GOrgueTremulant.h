@@ -34,7 +34,7 @@ typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
 typedef enum { GOSynthTrem, GOWavTrem } GOrgueTremulantType;
 
-class GOrgueTremulant : public GOrgueDrawstop, public GOrgueCacheObject
+class GOrgueTremulant : public GOrgueDrawstop, private GOrgueCacheObject
 {
 private:
 	static const struct IniFileEnumEntry m_tremulant_types[];
@@ -49,6 +49,14 @@ private:
 
 	void InitSoundProvider();
 	void ChangeState(bool on);
+
+	void Initialize();
+	void LoadData();
+	bool LoadCache(GOrgueCache& cache);
+	bool SaveCache(GOrgueCacheWriter& cache);
+	void UpdateHash(SHA_CTX& ctx);
+	const wxString& GetLoadTitle();
+
 public:
 	GOrgueTremulant(GrandOrgueFile* organfile);
 	~GOrgueTremulant();
@@ -57,13 +65,6 @@ public:
 	void Abort();
 	void PreparePlayback();
 	GOrgueTremulantType GetTremulantType();
-
-	void Initialize();
-	void LoadData();
-	bool LoadCache(GOrgueCache& cache);
-	bool SaveCache(GOrgueCacheWriter& cache);
-	void UpdateHash(SHA_CTX& ctx);
-	const wxString& GetLoadTitle();
 };
 
 #endif /* GORGUETREMULANT_H_ */

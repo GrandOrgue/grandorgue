@@ -102,6 +102,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_manual(0),
 	m_panels(0),
 	m_handler(0),
+	m_CacheObjects(0),
 	m_UsedSections(),
 	m_soundengine(0),
 	m_midi(0),
@@ -120,27 +121,10 @@ bool GrandOrgueFile::IsCacheable()
 	return m_Cacheable;
 }
 
-void GrandOrgueFile::GenerateCacheObjectList(std::vector<GOrgueCacheObject*>& objects)
-{
-	objects.clear();
-	for (unsigned i = 0; i < m_tremulant.size(); i++)
-		objects.push_back(m_tremulant[i]);
-
-	for (unsigned i = 0; i < m_ranks.size(); i++)
-		for (unsigned k = 0; k < m_ranks[i]->GetPipeCount(); k++)
-		{
-			GOrguePipe* pipe = m_ranks[i]->GetPipe(k);
-			if (!pipe->IsReference())
-				objects.push_back(pipe);
-		}
-}
-
 void GrandOrgueFile::ResolveReferences()
 {
-	std::vector<GOrgueCacheObject*> objects;
-	GenerateCacheObjectList(objects);
-	for(unsigned i = 0; i < objects.size(); i++)
-		objects[i]->Initialize();
+	for(unsigned i = 0; i < m_CacheObjects.size(); i++)
+		m_CacheObjects[i]->Initialize();
 }
 
 
@@ -149,10 +133,8 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 	SHA_CTX ctx;
 	int len;
 	SHA1_Init(&ctx);
-	std::vector<GOrgueCacheObject*> objects;
-	GenerateCacheObjectList(objects);
-	for (unsigned i = 0; i < objects.size(); i++)
-		objects[i]->UpdateHash(ctx);
+	for (unsigned i = 0; i < m_CacheObjects.size(); i++)
+		m_CacheObjects[i]->UpdateHash(ctx);
 
 	len = sizeof(GOAudioSection);
 	SHA1_Update(&ctx, &len, sizeof(len));
@@ -526,9 +508,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 		ResolveReferences();
 
 		/* Figure out list of pipes to load */
-		std::vector<GOrgueCacheObject*> objects;
-		GenerateCacheObjectList(objects);
-		dlg->Reset(objects.size());
+		dlg->Reset(m_CacheObjects.size());
 		/* Load pipes */
 		std::atomic_uint nb_loaded_obj(0);
 
@@ -561,9 +541,9 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 			{
 				try
 				{
-					while (nb_loaded_obj < objects.size())
+					while (nb_loaded_obj < m_CacheObjects.size())
 					{
-						GOrgueCacheObject* obj = objects[nb_loaded_obj];
+						GOrgueCacheObject* obj = m_CacheObjects[nb_loaded_obj];
 						if (!obj->LoadCache(reader))
 						{
 							cache_ok = false;
@@ -579,7 +559,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 							return wxEmptyString;
 						}
 					}
-					if (nb_loaded_obj >= objects.size())
+					if (nb_loaded_obj >= m_CacheObjects.size())
 						m_Cacheable = true;
 				}
 				catch (wxString msg)
@@ -601,14 +581,14 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 		{
 			ptr_vector<GOrgueLoadThread> threads;
 			for(unsigned i = 0; i < m_Settings.GetLoadConcurrency(); i++)
-				threads.push_back(new GOrgueLoadThread(objects, m_pool, nb_loaded_obj));
+				threads.push_back(new GOrgueLoadThread(m_CacheObjects, m_pool, nb_loaded_obj));
 
 			for(unsigned i = 0; i < threads.size(); i++)
 				threads[i]->Run();
 
-			for(unsigned pos = nb_loaded_obj.fetch_add(1); pos < objects.size(); pos = nb_loaded_obj.fetch_add(1))
+			for(unsigned pos = nb_loaded_obj.fetch_add(1); pos < m_CacheObjects.size(); pos = nb_loaded_obj.fetch_add(1))
 			{
-				GOrgueCacheObject* obj = objects[pos];
+				GOrgueCacheObject* obj = m_CacheObjects[pos];
 				obj->LoadData();
 				if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
 				{
@@ -622,7 +602,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 			for(unsigned i = 0; i < threads.size(); i++)
 				threads[i]->checkResult();
 
-			if (nb_loaded_obj >= objects.size())
+			if (nb_loaded_obj >= m_CacheObjects.size())
 				m_Cacheable = true;
 
 			if (m_Settings.GetManageCache() && m_Cacheable)
@@ -694,10 +674,8 @@ bool GrandOrgueFile::UpdateCache(GOrgueProgressDialog* dlg, bool compress)
 	DeleteCache();
 	/* Figure out the list of pipes to save */
 	unsigned nb_saved_objs = 0;
-	std::vector<GOrgueCacheObject*> objects;
-	GenerateCacheObjectList(objects);
 
-	dlg->Setup(objects.size(), _("Creating sample cache"));
+	dlg->Setup(m_CacheObjects.size(), _("Creating sample cache"));
 
 	wxFileOutputStream file(m_CacheFilename);
 	GOrgueCacheWriter writer(file, compress);
@@ -710,9 +688,9 @@ bool GrandOrgueFile::UpdateCache(GOrgueProgressDialog* dlg, bool compress)
 	if (!writer.Write(hash, sizeof(hash)))
 		cache_save_ok = false;
 
-	for (unsigned i = 0; cache_save_ok && i < objects.size(); i++)
+	for (unsigned i = 0; cache_save_ok && i < m_CacheObjects.size(); i++)
 	{
-		GOrgueCacheObject* obj = objects[i];
+		GOrgueCacheObject* obj = m_CacheObjects[i];
 		if (!obj->SaveCache(writer))
 		{
 			cache_save_ok = false;
@@ -1350,6 +1328,11 @@ void GrandOrgueFile::ControlChanged(void* control)
 void GrandOrgueFile::RegisterEventHandler(GOrgueEventHandler* handler)
 {
 	m_handler.push_back(handler);
+}
+
+void GrandOrgueFile::RegisterCacheObject(GOrgueCacheObject* obj)
+{
+	m_CacheObjects.push_back(obj);
 }
 
 void GrandOrgueFile::UpdateTremulant(GOrgueTremulant* tremulant)
