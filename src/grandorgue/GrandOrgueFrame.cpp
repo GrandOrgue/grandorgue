@@ -76,6 +76,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU(ID_FILE_CACHE, GOrgueFrame::OnCache)
 	EVT_MENU(ID_FILE_CACHE_DELETE, GOrgueFrame::OnCacheDelete)
 	EVT_MENU(ID_ORGAN_EDIT, GOrgueFrame::OnEditOrgan)
+	EVT_MENU(ID_MIDI_LIST, GOrgueFrame::OnMidiList)
 	EVT_MENU(ID_AUDIO_PANIC, GOrgueFrame::OnAudioPanic)
 	EVT_MENU(ID_AUDIO_RECORD, GOrgueFrame::OnAudioRecord)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
@@ -210,6 +211,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	wxMenu *audio_menu = new wxMenu;
 	audio_menu->AppendSubMenu(temperament_menu, _("&Temperament"));
 	audio_menu->Append(ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_CHECK);
+	audio_menu->Append(ID_MIDI_LIST, _("M&idi Objects"), wxEmptyString, wxITEM_CHECK);
 	audio_menu->AppendSeparator();
 	audio_menu->Append(ID_AUDIO_SETTINGS, _("Audio/Midi &Settings"), wxEmptyString, wxITEM_NORMAL);
 	audio_menu->AppendSeparator();
@@ -516,6 +518,8 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		event.Check(organfile && organfile->GetSetter() && organfile->GetSetter()->IsSetterActive());
 	else if (event.GetId() == ID_ORGAN_EDIT)
 		event.Check(doc && doc->WindowExists(GOrgueDocument::ORGAN_DIALOG, NULL));
+	else if (event.GetId() == ID_MIDI_LIST)
+		event.Check(doc && doc->WindowExists(GOrgueDocument::MIDI_LIST, NULL));
 
 	if (event.GetId() == ID_FILE_CACHE_DELETE)
 		event.Enable(organfile && organfile->CachePresent());
@@ -812,6 +816,13 @@ void GOrgueFrame::OnEditOrgan(wxCommandEvent& event)
 	GOrgueDocument* doc = GetDocument();
 	if (doc && doc->GetOrganFile())
 		doc->ShowOrganDialog();
+}
+
+void GOrgueFrame::OnMidiList(wxCommandEvent& event)
+{
+	GOrgueDocument* doc = GetDocument();
+	if (doc && doc->GetOrganFile())
+		doc->ShowMidiList();
 }
 
 void GOrgueFrame::OnHelp(wxCommandEvent& event)
