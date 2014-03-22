@@ -105,11 +105,6 @@ void GOrgueTremulant::InitSoundProvider()
 	}
 }
 
-void GOrgueTremulant::Save(GOrgueConfigWriter& cfg)
-{
-	GOrgueDrawstop::Save(cfg);
-}
-
 void GOrgueTremulant::ChangeState(bool on)
 {
 	if (m_TremulantType == GOSynthTrem)

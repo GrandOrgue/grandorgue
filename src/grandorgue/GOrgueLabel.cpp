@@ -26,7 +26,6 @@
 
 GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
 	m_Name(),
-	m_group(),
 	m_organfile(organfile),
 	m_sender(organfile, MIDI_SEND_LABEL)
 {
@@ -38,12 +37,14 @@ GOrgueLabel::~GOrgueLabel()
 
 void GOrgueLabel::Init(GOrgueConfigReader& cfg, wxString group)
 {
+	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
 void GOrgueLabel::Load(GOrgueConfigReader& cfg, wxString group)
 {
+	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }

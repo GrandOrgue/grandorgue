@@ -1029,40 +1029,6 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_button[ID_SETTER_GENERAL_NEXT]->Init(cfg, wxT("SetterGeneralNext"), _("Next"));
 }
 
-void GOrgueSetter::LoadCombination(GOrgueConfigReader& cfg)
-{
-	for (unsigned i = 0; i < m_framegeneral.size(); i++)
-		m_framegeneral[i]->LoadCombination(cfg);
-
-	for (unsigned i = 0; i < m_general.size(); i++)
-		m_general[i]->LoadCombination(cfg);
-
-	for (unsigned i = 0; i < m_crescendo.size(); i++)
-		m_crescendo[i]->LoadCombination(cfg);
-}
-
-void GOrgueSetter::Save(GOrgueConfigWriter& cfg)
-{
-	for (unsigned j = 0; j < m_framegeneral.size(); j++)
-		m_framegeneral[j]->Save(cfg);
-
-	for (unsigned j = 0; j < m_general.size(); j++)
-		m_general[j]->Save(cfg);
-
-	for (unsigned j = 0; j < m_crescendo.size(); j++)
-		m_crescendo[j]->Save(cfg);
-
-	for (unsigned j = 0; j < m_button.size(); j++)
-		m_button[j]->Save(cfg);
-
-	m_swell.Save(cfg);
-
-	m_PosDisplay.Save(cfg);
-	m_BankDisplay.Save(cfg);
-	m_CrescendoDisplay.Save(cfg);
-	m_TransposeDisplay.Save(cfg);
-}
-
 void GOrgueSetter::SetterButtonChanged(GOrgueSetterButton* button)
 {
 	for(unsigned i = 0; i < m_button.size(); i++)

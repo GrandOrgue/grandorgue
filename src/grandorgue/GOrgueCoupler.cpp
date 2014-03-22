@@ -167,11 +167,6 @@ void GOrgueCoupler::Load(GOrgueConfigReader& cfg, wxString group)
 		m_CouplerID = m_organfile->GetManual(m_DestinationManual)->RegisterCoupler(this);
 }
 
-void GOrgueCoupler::Save(GOrgueConfigWriter& cfg)
-{
-	GOrgueDrawstop::Save(cfg);
-}
-
 void GOrgueCoupler::SetOut(int noteNumber, unsigned velocity)
 {
 	if (noteNumber < 0)

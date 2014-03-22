@@ -24,18 +24,18 @@
 
 #include "ptrvector.h"
 #include "GOrguePipeConfig.h"
+#include "GOrgueSaveableObject.h"
 
 class GOrguePipe;
 class GOrgueStop;
 class GOrgueTemperament;
 class GrandOrgueFile;
 
-class GOrgueRank : public GOrguePipeUpdateCallback
+class GOrgueRank : public GOrguePipeUpdateCallback, private GOrgueSaveableObject
 {
 private:
 	GrandOrgueFile* m_organfile;
 	wxString m_Name;
-	wxString m_Group;
 	ptr_vector<GOrguePipe> m_Pipes;
 	unsigned m_StopCount;
 	std::vector<unsigned> m_Velocity;
@@ -51,11 +51,12 @@ private:
 
 	void Resize();
 
+	void Save(GOrgueConfigWriter& cfg);
+
 public:
 	GOrgueRank(GrandOrgueFile* organfile);
 	~GOrgueRank();
 	void Load(GOrgueConfigReader& cfg, wxString group, int first_midi_note_number);
-	void Save(GOrgueConfigWriter& cfg);
 	unsigned RegisterStop(GOrgueStop* stop);
 	void SetKey(int note, unsigned velocity, unsigned stopID);
 	GOrguePipe* GetPipe(unsigned index);

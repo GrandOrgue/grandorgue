@@ -26,7 +26,6 @@
 #include "GrandOrgueFile.h"
 
 GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
-	m_group(wxT("---")),
 	m_midi(organfile, MIDI_RECV_ENCLOSURE),
 	m_sender(organfile, MIDI_SEND_ENCLOSURE),
 	m_organfile(organfile),
@@ -45,6 +44,7 @@ GOrgueEnclosure::~GOrgueEnclosure()
 
 void GOrgueEnclosure::Init(GOrgueConfigReader& cfg, wxString group, wxString Name)
 {
+	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_Name = cfg.ReadString(ODFSetting, m_group, wxT("Name"), false, Name);
 	Set(0);	// default to down
@@ -55,6 +55,7 @@ void GOrgueEnclosure::Init(GOrgueConfigReader& cfg, wxString group, wxString Nam
 
 void GOrgueEnclosure::Load(GOrgueConfigReader& cfg, wxString group, int enclosure_nb)
 {
+	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_Name = cfg.ReadString(ODFSetting, m_group, wxT("Name"));
 	m_Displayed = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);

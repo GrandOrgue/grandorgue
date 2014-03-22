@@ -58,7 +58,6 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_GroupName(),
 	m_metrics(0),
 	m_view(0),
-	m_group(),
 	m_size(0, 0, 0, 0),
 	m_InitialOpenWindow(false)
 {
@@ -104,11 +103,12 @@ void GOGUIPanel::SetView(GOrguePanelView* view)
 
 void GOGUIPanel::Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name)
 {
+	m_organfile->RegisterSaveableObject(this);
+	m_group = group;
 	m_metrics = metrics;
 	m_Name = name;
 	m_GroupName = group_name;
 	m_controls.resize(0);
-	m_group = group;
 
 	int x = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowX"), -20, 10000, false, 0);
 	int y = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowY"), -20, 10000, false, 0);
@@ -122,8 +122,9 @@ void GOGUIPanel::Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxS
 
 void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 {
-	m_metrics = new GOGUIHW1DisplayMetrics(cfg, m_organfile, group);
+	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
+	m_metrics = new GOGUIHW1DisplayMetrics(cfg, m_organfile, group);
 
 	if (group.IsEmpty())
 	{
@@ -516,9 +517,6 @@ void GOGUIPanel::Draw(GOrgueDC& dc)
 
 void GOGUIPanel::Save(GOrgueConfigWriter& cfg)
 {
-	for(unsigned i = 0; i < m_controls.size(); i++)
-		m_controls[i]->Save(cfg);
-
 	cfg.WriteBoolean(m_group, wxT("WindowDisplayed"), m_InitialOpenWindow);
 	wxRect size = m_size;
 	int x = size.GetLeft();

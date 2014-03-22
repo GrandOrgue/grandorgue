@@ -39,7 +39,6 @@ GOrguePiston::GOrguePiston(GrandOrgueFile* organfile) :
 
 void GOrguePiston::Load(GOrgueConfigReader& cfg, wxString group)
 {
-
 	int i, j;
 	wxString type = cfg.ReadStringTrim(ODFSetting, group, wxT("ObjectType"));
 	type.MakeUpper();
@@ -77,11 +76,6 @@ void GOrguePiston::ControlChanged(void* control)
 {
 	if (control == drawstop)
 		Display(drawstop->IsEngaged() ^ drawstop->DisplayInverted());
-}
-
-void GOrguePiston::Save(GOrgueConfigWriter& cfg)
-{
-	GOrguePushbutton::Save(cfg);
 }
 
 void GOrguePiston::Push()

@@ -23,24 +23,25 @@
 #define GORGUEFRAMEGENERAL_H
 
 #include "GOrgueCombination.h"
+#include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GrandOrgueFile;
 
-class GOrgueFrameGeneral : public GOrgueCombination
+class GOrgueFrameGeneral : public GOrgueCombination, private GOrgueSaveableObject
 {
 private:
 	GrandOrgueFile* m_organfile;
-	wxString m_group;
 	bool m_IsSetter;
+
+	void Save(GOrgueConfigWriter& cfg);
+	void LoadCombination(GOrgueConfigReader& cfg);
 
 public:
 	GOrgueFrameGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile, bool is_setter);
 	void Load(GOrgueConfigReader& cfg, wxString group);
-	void LoadCombination(GOrgueConfigReader& cfg);
-	void Save(GOrgueConfigWriter& cfg);
 	void Push();
 };
 

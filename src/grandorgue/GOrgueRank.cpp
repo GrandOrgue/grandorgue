@@ -29,7 +29,6 @@
 GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_Name(),
-	m_Group(),
 	m_Pipes(),
 	m_StopCount(0),
 	m_Velocity(),
@@ -59,8 +58,10 @@ void GOrgueRank::Resize()
 
 void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_note_number)
 {
+	m_group = group;
+	m_organfile->RegisterSaveableObject(this);
+
 	m_FirstMidiNoteNumber = cfg.ReadInteger(ODFSetting, group, wxT("FirstMidiNoteNumber"), 0, 256, false, first_midi_note_number);
-	m_Group = group;
 	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), true);
 
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalPipes"), 1, 192);
@@ -96,8 +97,6 @@ unsigned GOrgueRank::RegisterStop(GOrgueStop* stop)
 
 void GOrgueRank::Save(GOrgueConfigWriter& cfg)
 {
-	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->Save(cfg);
 	m_PipeConfig.Save(cfg);
 }
 

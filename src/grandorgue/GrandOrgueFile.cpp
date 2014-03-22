@@ -49,6 +49,7 @@
 #include "GOrgueProgressDialog.h"
 #include "GOrguePushbutton.h"
 #include "GOrgueReleaseAlignTable.h"
+#include "GOrgueSaveableObject.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSwitch.h"
@@ -103,6 +104,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_panels(0),
 	m_handler(0),
 	m_CacheObjects(0),
+	m_SaveableObjects(0),
 	m_UsedSections(),
 	m_soundengine(0),
 	m_midi(0),
@@ -349,14 +351,8 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 void GrandOrgueFile::ReadCombinations(GOrgueConfigReader& cfg)
 {
-	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		m_manual[i]->LoadCombination(cfg);
-
-	for (unsigned j = 0; j < m_general.size(); j++)
-		m_general[j]->LoadCombination(cfg);
-
-	if (m_setter)
-		m_setter->LoadCombination(cfg);
+	for(unsigned i = 0; i < m_SaveableObjects.size(); i++)
+		m_SaveableObjects[i]->LoadCombination(cfg);
 }
 
 wxString GrandOrgueFile::GenerateSettingFileName()
@@ -766,38 +762,8 @@ bool GrandOrgueFile::Export(const wxString& cmb)
 	cfg.WriteBoolean(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch);
 	m_PipeConfig.Save(cfg);
 
-	for (unsigned j = 0; j < m_ranks.size(); j++)
-		m_ranks[j]->Save(cfg);
-
-	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		m_manual[i]->Save(cfg);
-
-	for (unsigned j = 0; j < m_tremulant.size(); j++)
-		m_tremulant[j]->Save(cfg);
-
-	for (unsigned j = 0; j < m_divisionalcoupler.size(); j++)
-		m_divisionalcoupler[j]->Save(cfg);
-
-	for (unsigned j = 0; j < m_switches.size(); j++)
-		m_switches[j]->Save(cfg);
-
-	for (unsigned j = 0; j < m_general.size(); j++)
-		m_general[j]->Save(cfg);
-
-	if (m_setter)
-		m_setter->Save(cfg);
-
-	for (unsigned j = 0; j < m_piston.size(); j++)
-		m_piston[j]->Save(cfg);
-
-	for (unsigned j = 0; j < m_enclosure.size(); j++)
-		m_enclosure[j]->Save(cfg);
-
-	for(unsigned i = 0; i < m_panels.size(); i++)
-		m_panels[i]->Save(cfg);
-
-	m_PitchLabel.Save(cfg);
-	m_TemperamentLabel.Save(cfg);
+	for(unsigned i = 0; i < m_SaveableObjects.size(); i++)
+		m_SaveableObjects[i]->Save(cfg);
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
@@ -1333,6 +1299,11 @@ void GrandOrgueFile::RegisterEventHandler(GOrgueEventHandler* handler)
 void GrandOrgueFile::RegisterCacheObject(GOrgueCacheObject* obj)
 {
 	m_CacheObjects.push_back(obj);
+}
+
+void GrandOrgueFile::RegisterSaveableObject(GOrgueSaveableObject* obj)
+{
+	m_SaveableObjects.push_back(obj);
 }
 
 void GrandOrgueFile::UpdateTremulant(GOrgueTremulant* tremulant)

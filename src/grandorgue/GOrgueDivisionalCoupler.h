@@ -32,10 +32,10 @@ private:
 	std::vector<unsigned> m_manuals;
 
 	void ChangeState(bool on);
+
 public:
 	GOrgueDivisionalCoupler(GrandOrgueFile* organfile);
 	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Save(GOrgueConfigWriter& cfg);
 
 	unsigned GetNumberOfManuals();
 	unsigned GetManual(unsigned index);

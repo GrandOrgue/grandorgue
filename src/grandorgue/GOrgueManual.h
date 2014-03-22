@@ -27,6 +27,7 @@
 #include "GOrgueEventHandler.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
+#include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 #include <vector>
 
@@ -40,7 +41,7 @@ class GOrgueSwitch;
 class GOrgueTremulant;
 class GrandOrgueFile;
 
-class GOrgueManual : private GOrgueEventHandler
+class GOrgueManual : private GOrgueEventHandler, private GOrgueSaveableObject
 {
 private:
 	wxString m_group;
@@ -80,13 +81,13 @@ private:
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);
 
+	void Save(GOrgueConfigWriter& cfg);
+
 public:
 
 	GOrgueManual(GrandOrgueFile* organfile);
 	void Init(GOrgueConfigReader& cfg, wxString group, int manualNumber, unsigned first_midi, unsigned keys);
 	void Load(GOrgueConfigReader& cfg, wxString group, int manualNumber);
-	void LoadCombination(GOrgueConfigReader& cfg);
-	void Save(GOrgueConfigWriter& cfg);
 	unsigned RegisterCoupler(GOrgueCoupler* coupler);
 	void SetKey(unsigned note, unsigned velocity, GOrgueCoupler* prev, unsigned couplerID);
 	void Set(unsigned note, unsigned velocity);

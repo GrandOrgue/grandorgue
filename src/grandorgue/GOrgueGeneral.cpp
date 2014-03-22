@@ -33,17 +33,6 @@ void GOrgueGeneral::Load(GOrgueConfigReader& cfg, wxString group)
 	GOrguePushbutton::Load(cfg, group);
 }
 
-void GOrgueGeneral::LoadCombination(GOrgueConfigReader& cfg)
-{
-	m_general.LoadCombination(cfg);
-}
-
-void GOrgueGeneral::Save(GOrgueConfigWriter& cfg)
-{
-	GOrguePushbutton::Save(cfg);
-	m_general.Save(cfg);
-}
-
 void GOrgueGeneral::Push()
 {
 	m_general.Push();

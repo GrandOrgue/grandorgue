@@ -22,6 +22,7 @@
 #ifndef GOGUICONTROL_H
 #define GOGUICONTROL_H
 
+#include "GOrgueSaveableObject.h"
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 
@@ -29,17 +30,17 @@ class GOGUIDisplayMetrics;
 class GOGUIMouseState;
 class GOGUIPanel;
 class GOrgueConfigReader;
-class GOrgueConfigWriter;
 class GOrgueDC;
 
-class GOGUIControl {
+class GOGUIControl : private GOrgueSaveableObject {
 protected:
 	GOGUIPanel* m_panel;
-	wxString m_group;
 	GOGUIDisplayMetrics* m_metrics;
 	void* m_control;
 	wxRect m_BoundingRect;
 	bool m_DrawPending;
+
+	void Save(GOrgueConfigWriter& cfg);
 
 public:
 	GOGUIControl(GOGUIPanel* panel, void* control);
@@ -47,7 +48,6 @@ public:
 
 	virtual void Init(GOrgueConfigReader& cfg, wxString group);
 	virtual void Load(GOrgueConfigReader& cfg, wxString group);
-	virtual void Save(GOrgueConfigWriter& cfg);
 
 	virtual void ControlChanged(void* control);
 	virtual void Draw(GOrgueDC& dc);
