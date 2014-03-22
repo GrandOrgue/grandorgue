@@ -93,6 +93,7 @@ void GOrgueTremulant::Load(GOrgueConfigReader& cfg, wxString group, int sampler_
 		m_PlaybackHandle    = 0;
 	}
 	GOrgueDrawstop::Load(cfg, group);
+	m_organfile->RegisterCacheObject(this);
 }
 
 void GOrgueTremulant::InitSoundProvider()
