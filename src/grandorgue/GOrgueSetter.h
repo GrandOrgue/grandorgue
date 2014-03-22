@@ -25,6 +25,7 @@
 #include "ptrvector.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueLabel.h"
+#include "GOrgueSetterButtonCallback.h"
 
 class GOGUIControl;
 class GOGUILabel;
@@ -44,7 +45,7 @@ typedef enum
 	SETTER_SCOPED
 } SetterType;
 
-class GOrgueSetter
+class GOrgueSetter : private GOrgueSetterButtonCallback
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -69,6 +70,8 @@ private:
 
 	static const struct IniFileEnumEntry m_setter_element_types[];
 
+	void SetterButtonChanged(GOrgueSetterButton* button);
+
 public:
 	GOrgueSetter(GrandOrgueFile* organfile);
 	virtual ~GOrgueSetter();
@@ -89,7 +92,6 @@ public:
 	void PreparePlayback();
 	void PrepareRecording();
 	void Update();
-	void Change(GOrgueSetterButton* button);
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);
 	void ControlChanged(void* control);

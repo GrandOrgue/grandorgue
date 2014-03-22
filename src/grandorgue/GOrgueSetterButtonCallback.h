@@ -19,28 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueSetterButton.h"
+#ifndef GORGUESETTERBUTTONCALLBACK_H
+#define GORGUESETTERBUTTONCALLBACK_H
 
-#include "GOrgueSetterButtonCallback.h"
+class GOrgueSetterButton;
 
-GOrgueSetterButton::GOrgueSetterButton(GrandOrgueFile* organfile, GOrgueSetterButtonCallback* setter, bool Pushbutton) :
-	GOrgueButton(organfile, MIDI_RECV_SETTER, Pushbutton),
-	m_setter(setter)
+class GOrgueSetterButtonCallback
 {
-}
+public:
+	virtual ~GOrgueSetterButtonCallback()
+	{
+	}
 
-void GOrgueSetterButton::Push()
-{
-	if (m_Pushbutton)
-		m_setter->SetterButtonChanged(this);
-	else
-		GOrgueButton::Push();
-}
+	virtual void SetterButtonChanged(GOrgueSetterButton* button) = 0;
+};
 
-void GOrgueSetterButton::Set(bool on)
-{
-	if (IsEngaged() == on)
-		return;
-	m_setter->SetterButtonChanged(this);
-	Display(on);
-}
+#endif
