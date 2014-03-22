@@ -24,6 +24,7 @@
 
 #include "ptrvector.h"
 #include "GOrgueCombinationDefinition.h"
+#include "GOrgueEventHandler.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
 #include <wx/string.h>
@@ -39,7 +40,7 @@ class GOrgueSwitch;
 class GOrgueTremulant;
 class GrandOrgueFile;
 
-class GOrgueManual 
+class GOrgueManual : private GOrgueEventHandler
 {
 private:
 	wxString m_group;
@@ -76,6 +77,9 @@ private:
 
 	void Resize();
 
+	void ProcessMidi(const GOrgueMidiEvent& event);
+	void HandleKey(int key);
+
 public:
 
 	GOrgueManual(GrandOrgueFile* organfile);
@@ -92,8 +96,6 @@ public:
 	void PrepareRecording();
 	void Update();
 	void Reset();
-	void ProcessMidi(const GOrgueMidiEvent& event);
-	void HandleKey(int key);
 	void SetElementID(int id);
 	GOrgueMidiReceiver& GetMidiReceiver();
 	GOrgueMidiSender& GetMidiSender();

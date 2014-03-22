@@ -56,6 +56,7 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_DivisionalTemplate(organfile)
 {
 	m_InputCouplers.push_back(NULL);
+	m_organfile->RegisterEventHandler(this);
 }
 
 unsigned GOrgueManual::RegisterCoupler(GOrgueCoupler* coupler)
@@ -473,15 +474,6 @@ void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
 {
 	int key, value;
 
-	for(unsigned i = 0; i < m_stops.size(); i++)
-		m_stops[i]->ProcessMidi(event);
-
-	for(unsigned i = 0; i < m_couplers.size(); i++)
-		m_couplers[i]->ProcessMidi(event);
-
-	for(unsigned i = 0; i < m_divisionals.size(); i++)
-		m_divisionals[i]->ProcessMidi(event);
-
 	switch(m_midi.Match(event, m_MidiMap, key, value))
 	{
 	case MIDI_MATCH_ON:
@@ -505,14 +497,6 @@ void GOrgueManual::ProcessMidi(const GOrgueMidiEvent& event)
 
 void GOrgueManual::HandleKey(int key)
 {
-	for(unsigned i = 0; i < m_stops.size(); i++)
-		m_stops[i]->HandleKey(key);
-
-	for(unsigned i = 0; i < m_couplers.size(); i++)
-		m_couplers[i]->HandleKey(key);
-
-	for(unsigned i = 0; i < m_divisionals.size(); i++)
-		m_divisionals[i]->HandleKey(key);
 }
 
 void GOrgueManual::Reset()

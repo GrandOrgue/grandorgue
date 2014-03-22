@@ -38,6 +38,7 @@ GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_ty
 	m_DisplayInInvertedState(false),
 	m_ReadOnly(false)
 {
+	m_organfile->RegisterEventHandler(this);
 }
 
 GOrgueButton::~GOrgueButton()

@@ -22,6 +22,7 @@
 #ifndef GORGUEBUTTON_H
 #define GORGUEBUTTON_H
 
+#include "GOrgueEventHandler.h"
 #include "GOrgueKeyReceiver.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
@@ -32,7 +33,7 @@ class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
-class GOrgueButton 
+class GOrgueButton : private GOrgueEventHandler
 {
 protected:
 	GrandOrgueFile* m_organfile;
@@ -47,6 +48,9 @@ protected:
 	bool m_DisplayInInvertedState;
 	bool m_ReadOnly;
 
+	void ProcessMidi(const GOrgueMidiEvent& event);
+	void HandleKey(int key);
+
 public:
 	GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton);
 	virtual ~GOrgueButton();
@@ -60,11 +64,9 @@ public:
 	GOrgueMidiSender& GetMidiSender();
 	GOrgueKeyReceiver& GetKeyReceiver();
 
-	virtual void ProcessMidi(const GOrgueMidiEvent& event);
 	virtual void Push();
 	virtual void Set(bool on);
 	virtual void Display(bool onoff);
-	void HandleKey(int key);
 	bool IsEngaged() const;
 	bool DisplayInverted() const;
 	virtual void Abort();

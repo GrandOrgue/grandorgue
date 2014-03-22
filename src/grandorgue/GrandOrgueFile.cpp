@@ -36,6 +36,7 @@
 #include "GOrgueDocument.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueEvent.h"
+#include "GOrgueEventHandler.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
 #include "GOrgueLoadThread.h"
@@ -100,6 +101,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_ranks(0),
 	m_manual(0),
 	m_panels(0),
+	m_handler(0),
 	m_UsedSections(),
 	m_soundengine(0),
 	m_midi(0),
@@ -1290,51 +1292,14 @@ void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)
 		return;
 	}
 
-	for(unsigned i = 0; i < m_enclosure.size(); i++)
-		m_enclosure[i]->ProcessMidi(event);
-
-	for(unsigned i = 0; i < m_tremulant.size(); i++)
-		m_tremulant[i]->ProcessMidi(event);
-
-	for(unsigned i = 0; i < m_piston.size(); i++)
-		m_piston[i]->ProcessMidi(event);
-
-	for(unsigned i = 0; i < m_general.size(); i++)
-		m_general[i]->ProcessMidi(event);
-
-	for(unsigned i = 0; i < m_divisionalcoupler.size(); i++)
-		m_divisionalcoupler[i]->ProcessMidi(event);
-
-	for(unsigned i = 0; i < m_switches.size(); i++)
-		m_switches[i]->ProcessMidi(event);
-
-	for(unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		m_manual[i]->ProcessMidi(event);
-	
-	m_setter->ProcessMidi(event);
+	for(unsigned i = 0; i < m_handler.size(); i++)
+		m_handler[i]->ProcessMidi(event);
 }
 
 void GrandOrgueFile::HandleKey(int key)
 {
-	for(unsigned i = 0; i < m_tremulant.size(); i++)
-		m_tremulant[i]->HandleKey(key);
-
-	for(unsigned i = 0; i < m_piston.size(); i++)
-		m_piston[i]->HandleKey(key);
-
-	for(unsigned i = 0; i < m_general.size(); i++)
-		m_general[i]->HandleKey(key);
-
-	for(unsigned i = 0; i < m_divisionalcoupler.size(); i++)
-		m_divisionalcoupler[i]->HandleKey(key);
-
-	for(unsigned i = 0; i < m_switches.size(); i++)
-		m_switches[i]->HandleKey(key);
-
-	for(unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		m_manual[i]->HandleKey(key);
-	
-	m_setter->HandleKey(key);
+	for(unsigned i = 0; i < m_handler.size(); i++)
+		m_handler[i]->HandleKey(key);
 }
 
 void GrandOrgueFile::Reset()
@@ -1380,6 +1345,11 @@ void GrandOrgueFile::ControlChanged(void* control)
 	for(unsigned i = 0; i < m_piston.size(); i++)
 		m_piston[i]->ControlChanged(control);
 	m_setter->ControlChanged(control);
+}
+
+void GrandOrgueFile::RegisterEventHandler(GOrgueEventHandler* handler)
+{
+	m_handler.push_back(handler);
 }
 
 void GrandOrgueFile::UpdateTremulant(GOrgueTremulant* tremulant)

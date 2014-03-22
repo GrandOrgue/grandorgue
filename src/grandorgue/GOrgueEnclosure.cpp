@@ -36,8 +36,9 @@ GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
 	m_Name(),
 	m_Displayed(false)
 {
-
+	m_organfile->RegisterEventHandler(this);
 }
+
 GOrgueEnclosure::~GOrgueEnclosure()
 {
 }
@@ -104,6 +105,10 @@ void GOrgueEnclosure::ProcessMidi(const GOrgueMidiEvent& event)
 	int value;
 	if (m_midi.Match(event, value) == MIDI_MATCH_CHANGE)
 		Set(value);
+}
+
+void GOrgueEnclosure::HandleKey(int key)
+{
 }
 
 GOrgueMidiReceiver& GOrgueEnclosure::GetMidiReceiver()
