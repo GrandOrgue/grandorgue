@@ -31,6 +31,10 @@ class GOrgueCacheWriter;
 class GOrgueCacheObject
 {
 public:
+	virtual ~GOrgueCacheObject()
+	{
+	}
+
 	virtual void Initialize() = 0;
 	virtual void LoadData() = 0;
 	virtual bool LoadCache(GOrgueCache& cache) = 0;

@@ -24,15 +24,15 @@
 
 #include "GOrgueButton.h"
 
-class GOrgueSetter;
+class GOrgueSetterButtonCallback;
 
 class GOrgueSetterButton : public GOrgueButton
 {
 protected:
-	GOrgueSetter* m_setter;
+	GOrgueSetterButtonCallback* m_setter;
 
 public:
-	GOrgueSetterButton(GrandOrgueFile* organfile, GOrgueSetter* setter, bool Pushbutton);
+	GOrgueSetterButton(GrandOrgueFile* organfile, GOrgueSetterButtonCallback* setter, bool Pushbutton);
 	void Push(void);
 	void Set(bool on);
 };

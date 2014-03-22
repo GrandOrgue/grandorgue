@@ -1077,7 +1077,7 @@ void GOrgueSetter::HandleKey(int key)
 		m_button[i]->HandleKey(key);
 }
 
-void GOrgueSetter::Change(GOrgueSetterButton* button)
+void GOrgueSetter::SetterButtonChanged(GOrgueSetterButton* button)
 {
 	for(unsigned i = 0; i < m_button.size(); i++)
 		if (m_button[i] == button)
