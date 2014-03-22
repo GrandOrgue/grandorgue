@@ -38,7 +38,7 @@ class GrandOrgueFile;
 class GOrgueDocument : protected GOrgueMidiCallback
 {
 public:
-	typedef enum { ORGAN_DIALOG, MIDI_EVENT, PANEL } WindowType;
+	typedef enum { ORGAN_DIALOG, MIDI_EVENT, MIDI_LIST, PANEL } WindowType;
 private:
 	typedef struct {
 		WindowType type;
@@ -69,6 +69,7 @@ public:
 	void ShowPanel(unsigned id);
 	void ShowOrganDialog();
 	void ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key);
+	void ShowMidiList();
 
 	bool Load(GOrgueProgressDialog* dlg, const wxString& odf);
 	bool Save();

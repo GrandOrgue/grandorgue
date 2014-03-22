@@ -31,6 +31,7 @@
 #include "GrandOrgueFile.h"
 #include "GrandOrgueID.h"
 #include "MIDIEventDialog.h"
+#include "MIDIList.h"
 #include "OrganDialog.h"
 #include <wx/app.h>
 
@@ -261,6 +262,15 @@ void GOrgueDocument::ShowOrganDialog()
 	{
 		registerWindow(GOrgueDocument::ORGAN_DIALOG, NULL,
 			       new OrganDialog(this, NULL, m_organfile));
+	}
+}
+
+void GOrgueDocument::ShowMidiList()
+{
+	if (!showWindow(GOrgueDocument::MIDI_LIST, NULL) && m_organfile)
+	{
+		registerWindow(GOrgueDocument::MIDI_LIST, NULL,
+			       new MIDIList(this, NULL, m_organfile));
 	}
 }
 

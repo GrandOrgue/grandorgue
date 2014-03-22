@@ -90,6 +90,7 @@ private:
 	void OnProperties(wxCommandEvent& event);
 
 	void OnEditOrgan(wxCommandEvent& event);
+	void OnMidiList(wxCommandEvent& event);
 
 	void OnAudioPanic(wxCommandEvent& event);
 	void OnAudioRecord(wxCommandEvent& event);
