@@ -19,38 +19,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUELABEL_H
-#define GORGUELABEL_H
+#ifndef GORGUESAVEABLE_H
+#define GORGUESAVEABLE_H
 
-#include "GOrgueMidiSender.h"
-#include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
-class GrandOrgueFile;
 
-class GOrgueLabel : private GOrgueSaveableObject
+class GOrgueSaveableObject
 {
 protected:
-	wxString m_Name;
 	wxString m_group;
-	GrandOrgueFile* m_organfile;
-	GOrgueMidiSender m_sender;
-
-	void Save(GOrgueConfigWriter& cfg);
 
 public:
-	GOrgueLabel(GrandOrgueFile* organfile);
-	virtual ~GOrgueLabel();
-	void Init(GOrgueConfigReader& cfg, wxString group);
-	void Load(GOrgueConfigReader& cfg, wxString group);
-	const wxString& GetName();
-	void SetName(wxString name);
-	GOrgueMidiSender& GetMidiSender();
-	virtual void Abort();
-	virtual void PreparePlayback();
-	virtual void PrepareRecording();
+	GOrgueSaveableObject() :
+		m_group()
+	{
+	}
+
+	virtual ~GOrgueSaveableObject()
+	{
+	}
+
+	virtual void Save(GOrgueConfigWriter& cfg) = 0;
+	virtual void LoadCombination(GOrgueConfigReader& cfg)
+	{
+	}
 };
 
 #endif

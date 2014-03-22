@@ -86,8 +86,6 @@ public:
 	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
 
 	void Load(GOrgueConfigReader& cfg);
-	void Save(GOrgueConfigWriter& cfg);
-	void LoadCombination(GOrgueConfigReader& cfg);
 	void Abort();
 	void PreparePlayback();
 	void PrepareRecording();

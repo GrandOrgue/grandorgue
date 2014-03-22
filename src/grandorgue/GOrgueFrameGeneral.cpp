@@ -33,13 +33,13 @@
 GOrgueFrameGeneral::GOrgueFrameGeneral(GOrgueCombinationDefinition& general_template, GrandOrgueFile* organfile, bool is_setter):
 	GOrgueCombination(general_template, organfile),
 	m_organfile(organfile),
-	m_group(),
 	m_IsSetter(is_setter)
 {
 }
 
 void GOrgueFrameGeneral::Load(GOrgueConfigReader& cfg, wxString group)
 {
+	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 
 	m_Protected = cfg.ReadBoolean(ODFSetting, group, wxT("Protected"), false, false);

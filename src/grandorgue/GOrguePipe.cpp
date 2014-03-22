@@ -300,6 +300,8 @@ void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString pr
 void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	m_OrganFile->RegisterCacheObject(this);
+	m_OrganFile->RegisterSaveableObject(this);
+	m_group = group;
 	m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
 	if (m_Filename.StartsWith(wxT("REF:")))
 		return;

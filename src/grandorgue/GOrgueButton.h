@@ -26,6 +26,7 @@
 #include "GOrgueKeyReceiver.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
+#include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 
 class GOrgueConfigReader;
@@ -33,7 +34,7 @@ class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
-class GOrgueButton : private GOrgueEventHandler
+class GOrgueButton : private GOrgueEventHandler, protected GOrgueSaveableObject
 {
 protected:
 	GrandOrgueFile* m_organfile;
@@ -41,7 +42,6 @@ protected:
 	GOrgueMidiSender m_sender;
 	GOrgueKeyReceiver m_shortcut;
 	bool m_Pushbutton;
-	wxString m_group;
 	bool m_Displayed;
 	wxString m_Name;
 	bool m_Engaged;
@@ -51,12 +51,13 @@ protected:
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);
 
+	void Save(GOrgueConfigWriter& cfg);
+
 public:
 	GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton);
 	virtual ~GOrgueButton();
 	void Init(GOrgueConfigReader& cfg, wxString group, wxString name);
 	void Load(GOrgueConfigReader& cfg, wxString group);
-	virtual void Save(GOrgueConfigWriter& cfg);
 	bool IsDisplayed();
 	bool IsReadOnly();
 	const wxString& GetName();

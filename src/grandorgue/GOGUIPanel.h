@@ -24,6 +24,7 @@
 
 #include "ptrvector.h"
 #include "GOrgueBitmap.h"
+#include "GOrgueSaveableObject.h"
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 
@@ -38,7 +39,8 @@ class GOrgueDC;
 class GOrguePanelView;
 class GrandOrgueFile;
 
-class GOGUIPanel {
+class GOGUIPanel : private GOrgueSaveableObject
+{
 protected:
 	GrandOrgueFile* m_organfile;
 	ptr_vector<GOGUIControl> m_controls;
@@ -47,16 +49,16 @@ protected:
 	wxString m_GroupName;
 	GOGUIDisplayMetrics* m_metrics;
 	GOrguePanelView* m_view;
-	wxString m_group;
 	wxRect m_size;
 	bool m_InitialOpenWindow;
+
+	void Save(GOrgueConfigWriter& cfg);
 
 public:
 	GOGUIPanel(GrandOrgueFile* organfile);
 	virtual ~GOGUIPanel();
 	void Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name=wxT(""));
 	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Save(GOrgueConfigWriter& cfg);
 
 	void SetView(GOrguePanelView* view);
 

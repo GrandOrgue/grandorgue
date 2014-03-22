@@ -43,11 +43,12 @@ protected:
 	void SetState(bool on);
 	virtual void ChangeState(bool on) = 0;
 
+	void Save(GOrgueConfigWriter& cfg);
+
 public:
 	GOrgueDrawstop(GrandOrgueFile* organfile);
 	void Init(GOrgueConfigReader& cfg, wxString group, wxString name);
 	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Save(GOrgueConfigWriter& cfg);
 	void RegisterControlled(GOrgueDrawstop* sw);
 	virtual void Set(bool on);
 	virtual void PreparePlayback();

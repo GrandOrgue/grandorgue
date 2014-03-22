@@ -64,12 +64,12 @@ private:
 	void SetOut(int note, unsigned velocity);
 	unsigned GetInternalState(int note);
 	void ChangeState(bool on);
+
 public:
 
 	GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual);
 	void Init(GOrgueConfigReader& cfg, wxString group, wxString name, bool unison_off, bool recursive, int keyshift, int dest_manual, GOrgueCouplerType coupler_type);
 	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Save(GOrgueConfigWriter& cfg);
 	void SetKey(unsigned note, const std::vector<unsigned>& velocities, const std::vector<GOrgueCoupler*>& couplers);
 	void PreparePlayback();
 	bool IsIntermanual();

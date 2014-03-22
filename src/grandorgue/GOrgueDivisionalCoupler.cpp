@@ -49,11 +49,6 @@ void GOrgueDivisionalCoupler::Load(GOrgueConfigReader& cfg, wxString group)
 
 }
 
-void GOrgueDivisionalCoupler::Save(GOrgueConfigWriter& cfg)
-{
-	GOrgueDrawstop::Save(cfg);
-}
-
 void GOrgueDivisionalCoupler::ChangeState(bool on)
 {
 }

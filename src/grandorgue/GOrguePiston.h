@@ -30,14 +30,13 @@ class GOrgueConfigWriter;
 
 class GOrguePiston : public GOrguePushbutton
 {
+private:
+	GOrgueButton* drawstop;
 
 public:
 
-	GOrgueButton* drawstop;
-
 	GOrguePiston(GrandOrgueFile* organfile);
 	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Save(GOrgueConfigWriter& cfg);
 	void Push();
 	void ControlChanged(void* control);
 };

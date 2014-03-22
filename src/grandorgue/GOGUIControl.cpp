@@ -23,10 +23,10 @@
 
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
+#include "GrandOrgueFile.h"
 
 GOGUIControl::GOGUIControl(GOGUIPanel* panel,void* control) :
 	m_panel(panel),
-	m_group(wxT("---")),
 	m_control(control),
 	m_BoundingRect(0, 0, 0, 0),
 	m_DrawPending(false)
@@ -40,11 +40,13 @@ GOGUIControl::~GOGUIControl()
 
 void GOGUIControl::Init(GOrgueConfigReader& cfg, wxString group)
 {
+	m_panel->GetOrganFile()->RegisterSaveableObject(this);
 	m_group = group;
 }
 
 void GOGUIControl::Load(GOrgueConfigReader& cfg, wxString group)
 {
+	m_panel->GetOrganFile()->RegisterSaveableObject(this);
 	m_group = group;
 }
 

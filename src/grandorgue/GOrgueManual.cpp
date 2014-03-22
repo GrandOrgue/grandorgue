@@ -77,6 +77,7 @@ void GOrgueManual::Resize()
 
 void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumber, unsigned first_midi, unsigned keys)
 {
+	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_name = wxString::Format(_("Floating %d"), manualNumber - m_organfile->GetODFManualCount() + 1);
 	m_nb_logical_keys = keys;
@@ -104,6 +105,7 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 
 void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumber)
 {
+	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_name                              = cfg.ReadString (ODFSetting, group, wxT("Name"));
 	m_nb_logical_keys                   = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalKeys"), 1, 192);
@@ -189,13 +191,6 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_KeyVelocity.resize(m_nb_accessible_keys);
 	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
 }
-
-void GOrgueManual::LoadCombination(GOrgueConfigReader& cfg)
-{
-	for (unsigned i = 0; i < m_divisionals.size(); i++)
-		m_divisionals[i]->LoadCombination(cfg);
-}
-
 
 void GOrgueManual::SetKey(unsigned note, unsigned velocity, GOrgueCoupler* prev, unsigned couplerID)
 {
@@ -395,15 +390,6 @@ bool GOrgueManual::IsDisplayed()
 
 void GOrgueManual::Save(GOrgueConfigWriter& cfg)
 {
-	for (unsigned i = 0; i < m_stops.size(); i++)
-		m_stops[i]->Save(cfg);
-
-	for (unsigned i = 0; i < m_couplers.size(); i++)
-		m_couplers[i]->Save(cfg);
-
-	for (unsigned i = 0; i < m_divisionals.size(); i++)
-		m_divisionals[i]->Save(cfg);
-
 	m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }

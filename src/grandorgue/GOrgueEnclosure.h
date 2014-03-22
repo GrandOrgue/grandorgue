@@ -25,6 +25,7 @@
 #include "GOrgueEventHandler.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
+#include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 
 class GOrgueConfigReader;
@@ -32,10 +33,9 @@ class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
-class GOrgueEnclosure : private GOrgueEventHandler
+class GOrgueEnclosure : private GOrgueEventHandler, private GOrgueSaveableObject
 {
 private:
-	wxString m_group;
 	GOrgueMidiReceiver m_midi;
 	GOrgueMidiSender m_sender;
 	GrandOrgueFile* m_organfile;
@@ -48,13 +48,14 @@ private:
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);
 
+	void Save(GOrgueConfigWriter& cfg);
+
 public:
 
 	GOrgueEnclosure(GrandOrgueFile* organfile);
 	virtual ~GOrgueEnclosure();
 	void Init(GOrgueConfigReader& cfg, wxString group, wxString Name);
 	void Load(GOrgueConfigReader& cfg, wxString group, int enclosure_nb);
-	void Save(GOrgueConfigWriter& cfg);
 	void Set(int n);
 	GOrgueMidiReceiver& GetMidiReceiver();
 	GOrgueMidiSender& GetMidiSender();

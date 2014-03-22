@@ -47,6 +47,7 @@ class GOrguePiston;
 class GOrgueProgressDialog;
 class GOrguePushbutton;
 class GOrgueRank;
+class GOrgueSaveableObject;
 class GOrgueSetter;
 class GOrgueSettings;
 class GOrgueSwitch;
@@ -107,6 +108,7 @@ private:
 	ptr_vector<GOGUIPanel> m_panels;
 	std::vector<GOrgueEventHandler*> m_handler;
 	std::vector<GOrgueCacheObject*> m_CacheObjects;
+	std::vector<GOrgueSaveableObject*> m_SaveableObjects;
 	GOStringBoolMap m_UsedSections;
 
 	GOSoundEngine* m_soundengine;
@@ -154,6 +156,7 @@ public:
 	void Modified();
 	void RegisterEventHandler(GOrgueEventHandler* handler);
 	void RegisterCacheObject(GOrgueCacheObject* obj);
+	void RegisterSaveableObject(GOrgueSaveableObject* obj);
 	GOrgueDocument* GetDocument();
 	~GrandOrgueFile(void);
 

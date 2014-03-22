@@ -31,7 +31,6 @@ GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_ty
 	m_sender(organfile, MIDI_SEND_BUTTON),
 	m_shortcut(organfile),
 	m_Pushbutton(pushbutton),
-	m_group(wxT("---")),
 	m_Displayed(false),
 	m_Name(),
 	m_Engaged(false),
@@ -47,6 +46,7 @@ GOrgueButton::~GOrgueButton()
 
 void GOrgueButton::Init(GOrgueConfigReader& cfg, wxString group, wxString name)
 {
+	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_Name = name;
 	m_Displayed = false;
@@ -61,6 +61,7 @@ void GOrgueButton::Init(GOrgueConfigReader& cfg, wxString group, wxString name)
 
 void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group)
 {
+	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), true);
 	m_Displayed = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), true, false);
