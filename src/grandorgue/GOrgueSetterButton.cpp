@@ -22,6 +22,7 @@
 #include "GOrgueSetterButton.h"
 
 #include "GOrgueSetterButtonCallback.h"
+#include <wx/intl.h>
 
 GOrgueSetterButton::GOrgueSetterButton(GrandOrgueFile* organfile, GOrgueSetterButtonCallback* setter, bool Pushbutton) :
 	GOrgueButton(organfile, MIDI_RECV_SETTER, Pushbutton),
@@ -43,4 +44,9 @@ void GOrgueSetterButton::Set(bool on)
 		return;
 	m_setter->SetterButtonChanged(this);
 	Display(on);
+}
+
+wxString GOrgueSetterButton::GetMidiType()
+{
+	return _("Button");
 }

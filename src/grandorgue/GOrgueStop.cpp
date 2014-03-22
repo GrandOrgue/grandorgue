@@ -24,6 +24,7 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueRank.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number) :
 	GOrgueDrawstop(organfile),
@@ -149,4 +150,9 @@ void GOrgueStop::PreparePlayback()
 GOrgueRank* GOrgueStop::GetRank(unsigned index)
 {
 	return m_RankInfo[index].Rank;
+}
+
+wxString GOrgueStop::GetMidiType()
+{
+	return _("Stop");
 }

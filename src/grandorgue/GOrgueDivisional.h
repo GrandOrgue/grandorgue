@@ -43,6 +43,8 @@ public:
 	void LoadCombination(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
 	void Push();
+
+	wxString GetMidiType();
 };
 
 #endif

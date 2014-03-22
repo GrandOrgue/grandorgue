@@ -21,14 +21,17 @@
 
 #include "GOrgueLabel.h"
 
+#include "GOrgueDocument.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
 	m_Name(),
 	m_organfile(organfile),
 	m_sender(organfile, MIDI_SEND_LABEL)
 {
+	m_organfile->RegisterMidiConfigurator(this);
 }
 
 GOrgueLabel::~GOrgueLabel()
@@ -84,4 +87,21 @@ void GOrgueLabel::PrepareRecording()
 GOrgueMidiSender& GOrgueLabel::GetMidiSender()
 {
 	return m_sender;
+}
+
+wxString GOrgueLabel::GetMidiType()
+{
+	return _("Label");
+}
+
+wxString GOrgueLabel::GetMidiName()
+{
+	return GetName();
+}
+
+void GOrgueLabel::ShowConfigDialog()
+{
+	wxString title = wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType().c_str(), GetMidiName().c_str());
+
+	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, NULL, &m_sender, NULL);
 }

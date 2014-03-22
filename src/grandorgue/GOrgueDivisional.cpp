@@ -348,3 +348,8 @@ void GOrgueDivisional::Push()
 		}
 	}
 }
+
+wxString GOrgueDivisional::GetMidiType()
+{
+	return _("Divisional");
+}

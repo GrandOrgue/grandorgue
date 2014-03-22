@@ -25,10 +25,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueDC.h"
-#include "GOrgueDocument.h"
 #include "GOrgueLabel.h"
-#include "GrandOrgueFile.h"
-#include <wx/intl.h>
 
 GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, unsigned y_pos, wxString name) :
 	GOGUIControl(panel, label),
@@ -174,10 +171,7 @@ bool GOGUILabel::HandleMousePress(int x, int y, bool right, GOGUIMouseState& sta
 	{
 		if (!m_Label)
 			return false;
-		GOrgueMidiSender* sender = &m_Label->GetMidiSender();
-
-		GOrgueDocument* doc = m_panel->GetOrganFile()->GetDocument();
-		doc->ShowMIDIEventDialog(&m_Label, _("Midi-Settings for this Label"), NULL, sender, NULL);
+		m_Label->ShowConfigDialog();
 		return true;
 	}
 	else

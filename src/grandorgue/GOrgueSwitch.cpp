@@ -21,6 +21,8 @@
 
 #include "GOrgueSwitch.h"
 
+#include <wx/intl.h>
+
 GOrgueSwitch::GOrgueSwitch(GrandOrgueFile* organfile) :
 	GOrgueDrawstop(organfile)
 {
@@ -34,3 +36,7 @@ void GOrgueSwitch::ChangeState(bool on)
 {
 }
 
+wxString GOrgueSwitch::GetMidiType()
+{
+	return _("Drawstop");
+}

@@ -25,6 +25,7 @@
 #include "ptrvector.h"
 #include "GOrgueCombinationDefinition.h"
 #include "GOrgueEventHandler.h"
+#include "GOrgueMidiConfigurator.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
 #include "GOrgueSaveableObject.h"
@@ -41,7 +42,8 @@ class GOrgueSwitch;
 class GOrgueTremulant;
 class GrandOrgueFile;
 
-class GOrgueManual : private GOrgueEventHandler, private GOrgueSaveableObject
+class GOrgueManual : private GOrgueEventHandler, private GOrgueSaveableObject,
+	public GOrgueMidiConfigurator
 {
 private:
 	wxString m_group;
@@ -127,6 +129,9 @@ public:
 	const wxString& GetName();
 	bool IsDisplayed();
 
+	wxString GetMidiType();
+	wxString GetMidiName();
+	void ShowConfigDialog();
 };
 
 #endif

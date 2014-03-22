@@ -25,6 +25,7 @@
 #include "GOrgueManual.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueCoupler::GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual) :
 	GOrgueDrawstop(organfile),
@@ -304,4 +305,9 @@ bool GOrgueCoupler::IsIntermanual()
 bool GOrgueCoupler::IsUnisonOff()
 {
 	return m_UnisonOff;
+}
+
+wxString GOrgueCoupler::GetMidiType()
+{
+	return _("Coupler");
 }

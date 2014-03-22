@@ -41,6 +41,7 @@ class GOrgueEventHandler;
 class GOrgueGeneral;
 class GOrgueManual;
 class GOrgueMidi;
+class GOrgueMidiConfigurator;
 class GOrgueMidiEvent;
 class GOrgueMidiListener;
 class GOrguePiston;
@@ -109,6 +110,7 @@ private:
 	std::vector<GOrgueEventHandler*> m_handler;
 	std::vector<GOrgueCacheObject*> m_CacheObjects;
 	std::vector<GOrgueSaveableObject*> m_SaveableObjects;
+	std::vector<GOrgueMidiConfigurator*> m_MidiConfigurator;
 	GOStringBoolMap m_UsedSections;
 
 	GOSoundEngine* m_soundengine;
@@ -157,6 +159,7 @@ public:
 	void RegisterEventHandler(GOrgueEventHandler* handler);
 	void RegisterCacheObject(GOrgueCacheObject* obj);
 	void RegisterSaveableObject(GOrgueSaveableObject* obj);
+	void RegisterMidiConfigurator(GOrgueMidiConfigurator* obj);
 	GOrgueDocument* GetDocument();
 	~GrandOrgueFile(void);
 
@@ -194,6 +197,9 @@ public:
 	void SetTemperament(wxString name);
 	wxString GetTemperament();
 	void MarkSectionInUse(wxString name);
+
+	unsigned GetMidiConfiguratorCount();
+	GOrgueMidiConfigurator* GetMidiConfigurator(unsigned index);
 
 	int GetRecorderElementID(wxString name);
 	GOrgueCombinationDefinition& GetGeneralTemplate();

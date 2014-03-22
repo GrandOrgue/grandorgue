@@ -35,6 +35,8 @@ public:
 	GOrgueSetterButton(GrandOrgueFile* organfile, GOrgueSetterButtonCallback* setter, bool Pushbutton);
 	void Push(void);
 	void Set(bool on);
+
+	wxString GetMidiType();
 };
 
 #endif

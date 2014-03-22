@@ -59,6 +59,8 @@ public:
 	~GOrgueStop(void);
 
 	unsigned IsAuto() const;
+
+	wxString GetMidiType();
 };
 
 #endif /* GORGUESTOP_H_ */

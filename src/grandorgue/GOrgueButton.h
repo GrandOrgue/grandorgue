@@ -24,6 +24,7 @@
 
 #include "GOrgueEventHandler.h"
 #include "GOrgueKeyReceiver.h"
+#include "GOrgueMidiConfigurator.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
 #include "GOrgueSaveableObject.h"
@@ -34,7 +35,8 @@ class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
-class GOrgueButton : private GOrgueEventHandler, protected GOrgueSaveableObject
+class GOrgueButton : private GOrgueEventHandler, protected GOrgueSaveableObject,
+	public GOrgueMidiConfigurator
 {
 protected:
 	GrandOrgueFile* m_organfile;
@@ -74,6 +76,9 @@ public:
 	virtual void PreparePlayback();
 	virtual void PrepareRecording();
 	void SetElementID(int id);
+
+	wxString GetMidiName();
+	void ShowConfigDialog();
 };
 
 #endif

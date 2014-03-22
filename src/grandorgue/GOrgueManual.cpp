@@ -23,6 +23,7 @@
 
 #include "GOrgueConfigReader.h"
 #include "GOrgueCoupler.h"
+#include "GOrgueDocument.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueSettings.h"
 #include "GOrgueStop.h"
@@ -57,6 +58,7 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 {
 	m_InputCouplers.push_back(NULL);
 	m_organfile->RegisterEventHandler(this);
+	m_organfile->RegisterMidiConfigurator(this);
 }
 
 unsigned GOrgueManual::RegisterCoupler(GOrgueCoupler* coupler)
@@ -503,4 +505,21 @@ void GOrgueManual::SetElementID(int id)
 {
 	m_midi.SetElementID(id);
 	m_sender.SetElementID(id);
+}
+
+wxString GOrgueManual::GetMidiType()
+{
+	return _("Manual");
+}
+
+wxString GOrgueManual::GetMidiName()
+{
+	return GetName();
+}
+
+void GOrgueManual::ShowConfigDialog()
+{
+	wxString title = wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType().c_str(), GetMidiName().c_str());
+
+	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, &m_midi, &m_sender, NULL);
 }

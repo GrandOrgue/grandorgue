@@ -92,19 +92,20 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_InfoFilename(),
 	m_RankCount(0),
 	m_ODFManualCount(0),
-	m_enclosure(0),
-	m_tremulant(0),
-	m_windchest(0),
-	m_piston(0),
-	m_general(0),
-	m_divisionalcoupler(0),
-	m_switches(0),
-	m_ranks(0),
-	m_manual(0),
-	m_panels(0),
-	m_handler(0),
-	m_CacheObjects(0),
-	m_SaveableObjects(0),
+	m_enclosure(),
+	m_tremulant(),
+	m_windchest(),
+	m_piston(),
+	m_general(),
+	m_divisionalcoupler(),
+	m_switches(),
+	m_ranks(),
+	m_manual(),
+	m_panels(),
+	m_handler(),
+	m_CacheObjects(),
+	m_SaveableObjects(),
+	m_MidiConfigurator(),
 	m_UsedSections(),
 	m_soundengine(0),
 	m_midi(0),
@@ -1304,6 +1305,21 @@ void GrandOrgueFile::RegisterCacheObject(GOrgueCacheObject* obj)
 void GrandOrgueFile::RegisterSaveableObject(GOrgueSaveableObject* obj)
 {
 	m_SaveableObjects.push_back(obj);
+}
+
+void GrandOrgueFile::RegisterMidiConfigurator(GOrgueMidiConfigurator* obj)
+{
+	m_MidiConfigurator.push_back(obj);
+}
+
+unsigned GrandOrgueFile::GetMidiConfiguratorCount()
+{
+	return m_MidiConfigurator.size();
+}
+
+GOrgueMidiConfigurator* GrandOrgueFile::GetMidiConfigurator(unsigned index)
+{
+	return m_MidiConfigurator[index];
 }
 
 void GrandOrgueFile::UpdateTremulant(GOrgueTremulant* tremulant)

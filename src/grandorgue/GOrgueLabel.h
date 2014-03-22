@@ -22,6 +22,7 @@
 #ifndef GORGUELABEL_H
 #define GORGUELABEL_H
 
+#include "GOrgueMidiConfigurator.h"
 #include "GOrgueMidiSender.h"
 #include "GOrgueSaveableObject.h"
 #include <wx/string.h>
@@ -30,7 +31,7 @@ class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GrandOrgueFile;
 
-class GOrgueLabel : private GOrgueSaveableObject
+class GOrgueLabel : private GOrgueSaveableObject, public GOrgueMidiConfigurator
 {
 protected:
 	wxString m_Name;
@@ -51,6 +52,10 @@ public:
 	virtual void Abort();
 	virtual void PreparePlayback();
 	virtual void PrepareRecording();
+
+	wxString GetMidiType();
+	wxString GetMidiName();
+	void ShowConfigDialog();
 };
 
 #endif
