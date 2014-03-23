@@ -739,7 +739,7 @@ void MIDIEventRecvDialog::DetectEvent()
 				case MIDI_NRPN:
 					if (is_range)
 					{
-						e.type = MIDI_M_RPN_RANGE;
+						e.type = MIDI_M_NRPN_RANGE;
 						key = on.GetValue();
 						low = off.GetKey();
 						high = on.GetKey();
