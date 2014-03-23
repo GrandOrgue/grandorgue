@@ -102,7 +102,6 @@ void GOrgueStop::SetKey(unsigned note, unsigned velocity)
 	if (IsAuto())
 		return;
 	note -= m_FirstAccessiblePipeLogicalKeyNumber;
-	velocity = velocity >> 2;
 	
 	if (m_KeyVelocity[note] == velocity)
 		return;
