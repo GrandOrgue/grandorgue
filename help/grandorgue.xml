@@ -4763,6 +4763,15 @@ sharp key overlapped with the previous key.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>YOffset_<emphasis>KEYTYPE</emphasis></term>
+          <listitem>
+            <para>
+(integer 0 - 500, default: 0) This value is can be used to adjust the
+Y coordinate of the current key.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Key999ImageOn</term>
           <listitem>
             <para>
@@ -4813,8 +4822,20 @@ key.
           <listitem>
             <para>
 (integer -500 - 500, default: corresponding
-Offset_<emphasis>KEYTYPE</emphasis>) Allows to set the width of the
+Offset_<emphasis>KEYTYPE</emphasis>) This value is
+can be used to adjust the display of the 999 key, eg. to place a
+sharp key overlapped with the previous key.
 999 key.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Key999YOffset</term>
+          <listitem>
+            <para>
+(integer 0 - 500, default: corresponding
+YOffset_<emphasis>KEYTYPE</emphasis>) This value is can be used to
+adjust the Y coordinate of the 999 key.  999 key.
      </para>
           </listitem>
         </varlistentry>
