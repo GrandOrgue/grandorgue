@@ -294,8 +294,6 @@ bool GOrgueMidiReceiver::HasDebounce(midi_match_message_type type)
 
 bool GOrgueMidiReceiver::HasLowerLimit(midi_match_message_type type)
 {
-	if (m_type == MIDI_RECV_MANUAL)
-		return false;
 	if (type == MIDI_M_NOTE ||
 	    type == MIDI_M_PGM_RANGE ||
 	    type == MIDI_M_RPN_RANGE ||
@@ -319,8 +317,6 @@ bool GOrgueMidiReceiver::HasLowerLimit(midi_match_message_type type)
 
 bool GOrgueMidiReceiver::HasUpperLimit(midi_match_message_type type)
 {
-	if (m_type == MIDI_RECV_MANUAL)
-		return false;
 	if (type == MIDI_M_NOTE ||
 	    type == MIDI_M_PGM_RANGE ||
 	    type == MIDI_M_RPN_RANGE ||
