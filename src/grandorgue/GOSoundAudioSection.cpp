@@ -981,7 +981,7 @@ unsigned GOAudioSection::GetSampleRate() const
 
 void GOAudioSection::GetHistory(const audio_section_stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS])
 {
-	memset(history, 0, sizeof(history));
+	memset(history, 0, sizeof(history[0][0]) * BLOCK_HISTORY * MAX_OUTPUT_CHANNELS);
 	if (stream->position_index >= stream->transition_position)
 	{
 		for(unsigned i = 0; i < BLOCK_HISTORY; i++)
