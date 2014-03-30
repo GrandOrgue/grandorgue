@@ -23,7 +23,7 @@
 
 #include "GOrgueConfigReader.h"
 #include "GOrgueEnclosure.h"
-#include "GOrguePipe.h"
+#include "GOrguePipeWindchestCallback.h"
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
@@ -102,7 +102,7 @@ void GOrgueWindchest::AddRank(GOrgueRank* rank)
 	m_ranks.push_back(rank);
 }
 
-void GOrgueWindchest::AddPipe(GOrguePipe* pipe)
+void GOrgueWindchest::AddPipe(GOrguePipeWindchestCallback * pipe)
 {
 	m_pipes.push_back(pipe);
 }

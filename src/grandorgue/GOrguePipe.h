@@ -25,6 +25,7 @@
 #include "GOSoundProviderWave.h"
 #include "GOrgueCacheObject.h"
 #include "GOrguePipeConfig.h"
+#include "GOrguePipeWindchestCallback.h"
 #include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 
@@ -37,9 +38,9 @@ class GOrgueTemperament;
 class GrandOrgueFile;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
-class GOrguePipe : public GOrguePipeUpdateCallback, private GOrgueCacheObject, private GOrgueSaveableObject
+class GOrguePipe : public GOrguePipeUpdateCallback, private GOrgueCacheObject, private GOrgueSaveableObject,
+	private GOrguePipeWindchestCallback
 {
-
 private:
 	GrandOrgueFile* m_OrganFile;
 	GOrgueRank* m_Rank;
@@ -83,12 +84,13 @@ private:
 
 	void Save(GOrgueConfigWriter& cfg);
 
+	void SetTremulant(bool on);
+
 public:
 	GOrguePipe(GrandOrgueFile* organfile, GOrgueRank* m_Rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume);
 	~GOrguePipe();
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void Set(unsigned velocity, unsigned referenceID = 0);
-	void SetTremulant(bool on);
 	bool InitializeReference();
 	unsigned RegisterReference(GOrguePipe* pipe);
 	void Abort();
