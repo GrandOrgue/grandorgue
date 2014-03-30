@@ -22,20 +22,12 @@
 #ifndef GORGUEPIPECONFIG_H
 #define GORGUEPIPECONFIG_H
 
+#include "GOrguePipeUpdateCallback.h"
 #include <wx/string.h>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GrandOrgueFile;
-
-class GOrguePipeUpdateCallback
-{
-public:
-	virtual ~GOrguePipeUpdateCallback() { }
-	virtual void UpdateAmplitude() = 0;
-	virtual void UpdateTuning() = 0;
-	virtual void UpdateAudioGroup() = 0;
-};
 
 class GOrguePipeConfig
 {
