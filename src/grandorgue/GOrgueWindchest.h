@@ -27,7 +27,7 @@
 
 class GOrgueConfigReader;
 class GOrgueEnclosure;
-class GOrguePipe;
+class GOrguePipeWindchestCallback;
 class GOrgueRank;
 class GOrgueTremulant;
 class GrandOrgueFile;
@@ -41,7 +41,7 @@ private:
 	std::vector<GOrgueEnclosure*> m_enclosure;
 	std::vector<unsigned> m_tremulant;
 	std::vector<GOrgueRank*> m_ranks;
-	std::vector<GOrguePipe*> m_pipes;
+	std::vector<GOrguePipeWindchestCallback*> m_pipes;
 
 public:
 
@@ -56,7 +56,7 @@ public:
 	unsigned GetRankCount();
 	GOrgueRank* GetRank(unsigned index);
 	void AddRank(GOrgueRank* rank);
-	void AddPipe(GOrguePipe* pipe);
+	void AddPipe(GOrguePipeWindchestCallback* pipe);
 	void AddEnclosure(GOrgueEnclosure* enclosure);
 	const wxString& GetName();
 };
