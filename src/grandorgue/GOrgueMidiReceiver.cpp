@@ -349,9 +349,6 @@ unsigned GOrgueMidiReceiver::KeyLimit(midi_match_message_type type)
 	    type == MIDI_M_NRPN_OFF)
 		return 0x3fff;
 
-	if (type == MIDI_M_CTRL_BIT)
-		return 7;
-
 	return 0x7f;
 }
 
@@ -375,6 +372,9 @@ unsigned GOrgueMidiReceiver::UpperValueLimit(midi_match_message_type type)
 
 	if (type == MIDI_M_PGM_RANGE)
 		return 0x200000;
+
+	if (type == MIDI_M_CTRL_BIT)
+		return 7;
 
 	return 0x7f;
 }
