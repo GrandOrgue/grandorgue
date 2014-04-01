@@ -455,7 +455,7 @@ void GOrgueSound::CloseSound()
 		}
 		if (m_AudioOutputs[i].audioStream)
 		{
-			Pa_AbortStream(m_AudioOutputs[i].audioStream);
+			Pa_StopStream(m_AudioOutputs[i].audioStream);
 			Pa_CloseStream(m_AudioOutputs[i].audioStream);
 			m_AudioOutputs[i].audioStream = 0;
 		}
