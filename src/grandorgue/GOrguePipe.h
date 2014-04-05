@@ -37,10 +37,10 @@ class GOrgueTemperament;
 class GrandOrgueFile;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
-class GOrguePipe : public GOrguePipeUpdateCallback, private GOrgueCacheObject, private GOrguePipeWindchestCallback
+class GOrguePipe : private GOrguePipeUpdateCallback, private GOrgueCacheObject, private GOrguePipeWindchestCallback
 {
 private:
-	GrandOrgueFile* m_OrganFile;
+	GrandOrgueFile* m_organfile;
 	GOrgueRank* m_Rank;
 	SAMPLER_HANDLE  m_Sampler;
 	int m_Instances;
@@ -68,8 +68,9 @@ private:
 	unsigned m_Velocity;
 	std::vector<unsigned> m_Velocities;
 
-	void SetOn();
+	void SetOn(unsigned velocity);
 	void SetOff();
+	void Change(unsigned velocity, unsigned old_velocity);
 	GOSoundProvider* GetSoundProvider();
 	void LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 
@@ -81,6 +82,10 @@ private:
 	const wxString& GetLoadTitle();
 
 	void SetTremulant(bool on);
+
+	void UpdateAmplitude();
+	void UpdateTuning();
+	void UpdateAudioGroup();
 
 public:
 	GOrguePipe(GrandOrgueFile* organfile, GOrgueRank* m_Rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume);
@@ -96,10 +101,6 @@ public:
 	GOrguePipeConfigNode& GetPipeConfig();
 	void SetTemperament(const GOrgueTemperament& temperament);
 	unsigned GetMidiKeyNumber();
-
-	void UpdateAmplitude();
-	void UpdateTuning();
-	void UpdateAudioGroup();
 };
 
 #endif

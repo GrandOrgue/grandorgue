@@ -35,7 +35,7 @@
 #include <wx/tokenzr.h>
 
 GOrguePipe::GOrguePipe (GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume) :
-	m_OrganFile(organfile),
+	m_organfile(organfile),
 	m_Rank(rank),
 	m_Sampler(NULL),
 	m_Instances(0),
@@ -73,9 +73,9 @@ GOSoundProvider* GOrguePipe::GetSoundProvider()
 	return &m_SoundProvider;
 }
 
-void GOrguePipe::SetOn()
+void GOrguePipe::SetOn(unsigned velocity)
 {
-	m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, m_Velocity, m_PipeConfig.GetEffectiveDelay());
+	m_Sampler = m_organfile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, velocity, m_PipeConfig.GetEffectiveDelay());
 	if (m_Sampler)
 		m_Instances++;
 	if (GetSoundProvider()->IsOneshot())
@@ -87,9 +87,25 @@ void GOrguePipe::SetOff()
 	m_Instances--;
 	if (m_Sampler)
 	{
-		m_OrganFile->StopSample(GetSoundProvider(), m_Sampler);
+		m_organfile->StopSample(GetSoundProvider(), m_Sampler);
 		this->m_Sampler = 0;
 	}
+}
+
+void GOrguePipe::Change(unsigned velocity, unsigned last_velocity)
+{
+	if (m_Reference)
+	{
+		m_Reference->Set(velocity, m_ReferenceID);
+		return;
+	}
+
+	if (!m_Instances && velocity)
+		SetOn(velocity);
+	else if (m_Instances && !velocity)
+		SetOff();
+	else if (m_Sampler && last_velocity != velocity)
+		m_organfile->UpdateVelocity(m_Sampler, velocity);
 }
 
 void GOrguePipe::Set(unsigned velocity, unsigned referenceID)
@@ -113,19 +129,7 @@ void GOrguePipe::Set(unsigned velocity, unsigned referenceID)
 			if (m_Velocity < m_Velocities[i])
 				m_Velocity = m_Velocities[i];
 	}
-
-	if (m_Reference)
-	{
-		m_Reference->Set(m_Velocity, m_ReferenceID);
-		return;
-	}
-
-	if (!m_Instances && m_Velocity)
-		SetOn();
-	else if (m_Instances && !m_Velocity)
-		SetOff();
-	else if (m_Sampler && last_velocity != m_Velocity)
-		m_OrganFile->UpdateVelocity(m_Sampler, m_Velocity);
+	Change(m_Velocity, last_velocity);
 }
 
 void GOrguePipe::SetTremulant(bool on)
@@ -137,7 +141,7 @@ void GOrguePipe::SetTremulant(bool on)
 			m_Tremulant = true;
 			m_SoundProvider.UseSampleGroup(1);
 			if (m_Sampler)
-				m_OrganFile->SwitchSample(GetSoundProvider(), m_Sampler);
+				m_organfile->SwitchSample(GetSoundProvider(), m_Sampler);
 		}
 	}
 	else
@@ -147,7 +151,7 @@ void GOrguePipe::SetTremulant(bool on)
 			m_Tremulant = false;
 			m_SoundProvider.UseSampleGroup(0);
 			if (m_Sampler)
-				m_OrganFile->SwitchSample(GetSoundProvider(), m_Sampler);
+				m_organfile->SwitchSample(GetSoundProvider(), m_Sampler);
 		}
 	}
 }
@@ -174,7 +178,7 @@ void GOrguePipe::UpdateTuning()
 
 void GOrguePipe::UpdateAudioGroup()
 {
-	m_AudioGroupID = m_OrganFile->GetSettings().GetAudioGroupId(m_PipeConfig.GetEffectiveAudioGroup());
+	m_AudioGroupID = m_organfile->GetSettings().GetAudioGroupId(m_PipeConfig.GetEffectiveAudioGroup());
 }
 
 void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix)
@@ -204,18 +208,18 @@ void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString pr
 
 void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
-	m_OrganFile->RegisterCacheObject(this);
+	m_organfile->RegisterCacheObject(this);
 	m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
 	if (m_Filename.StartsWith(wxT("REF:")))
 		return;
 	m_PipeConfig.Load(cfg, group, prefix);
 	m_HarmonicNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("HarmonicNumber"), 1, 1024, false, m_HarmonicNumber);
 	m_PitchCorrection = cfg.ReadFloat(ODFSetting, group, prefix + wxT("PitchCorrection"), -1200, 1200, false, m_PitchCorrection);
-	m_SamplerGroupID = cfg.ReadInteger(ODFSetting, group, prefix + wxT("WindchestGroup"), 1, m_OrganFile->GetWindchestGroupCount(), false, m_SamplerGroupID);
+	m_SamplerGroupID = cfg.ReadInteger(ODFSetting, group, prefix + wxT("WindchestGroup"), 1, m_organfile->GetWindchestGroupCount(), false, m_SamplerGroupID);
 	m_Percussive = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("Percussive"), false, m_Percussive);
 	m_SampleMidiKeyNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MIDIKeyNumber"), -1, 127, false, -1);
 	UpdateAmplitude();
-	m_OrganFile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
 	LoadAttack(cfg, group, prefix);
 
@@ -255,11 +259,11 @@ bool GOrguePipe::InitializeReference()
 		    !strs[1].ToULong(&stop) ||
 		    !strs[2].ToULong(&pipe))
 			throw (wxString)_("Invalid reference ") + m_Filename;
-		if ((manual < m_OrganFile->GetFirstManualIndex()) || (manual >= m_OrganFile->GetODFManualCount()) ||
-			(stop <= 0) || (stop > m_OrganFile->GetManual(manual)->GetStopCount()) ||
-		    (pipe <= 0) || (pipe > m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank(0)->GetPipeCount()))
+		if ((manual < m_organfile->GetFirstManualIndex()) || (manual >= m_organfile->GetODFManualCount()) ||
+			(stop <= 0) || (stop > m_organfile->GetManual(manual)->GetStopCount()) ||
+		    (pipe <= 0) || (pipe > m_organfile->GetManual(manual)->GetStop(stop-1)->GetRank(0)->GetPipeCount()))
 			throw (wxString)_("Invalid reference ") + m_Filename;
-		m_Reference = m_OrganFile->GetManual(manual)->GetStop(stop-1)->GetRank(0)->GetPipe(pipe-1);
+		m_Reference = m_organfile->GetManual(manual)->GetStop(stop-1)->GetRank(0)->GetPipe(pipe-1);
 		m_ReferenceID = m_Reference->RegisterReference(this);
 		return true;
 	}
@@ -381,7 +385,7 @@ void GOrguePipe::LoadData()
 	m_Reference = NULL;
 	try
 	{
-		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_OrganFile->GetODFPath(), m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
+		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_organfile->GetODFPath(), m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
 					     m_PipeConfig.GetEffectiveCompress(), (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(), m_PipeConfig.GetEffectiveAttackLoad(), m_PipeConfig.GetEffectiveReleaseLoad(),
 					     m_SampleMidiKeyNumber);
 	}
@@ -436,7 +440,7 @@ const wxString& GOrguePipe::GetLoadTitle()
 void GOrguePipe::SetTemperament(const GOrgueTemperament& temperament)
 {
 	
-	m_TemperamentOffset = temperament.GetOffset(m_OrganFile->GetIgnorePitch(), m_MidiKeyNumber, m_SoundProvider.GetMidiKeyNumber(), m_SoundProvider.GetMidiPitchFract(), m_HarmonicNumber, m_PitchCorrection,
+	m_TemperamentOffset = temperament.GetOffset(m_organfile->GetIgnorePitch(), m_MidiKeyNumber, m_SoundProvider.GetMidiKeyNumber(), m_SoundProvider.GetMidiPitchFract(), m_HarmonicNumber, m_PitchCorrection,
 						    m_PipeConfig.GetDefaultTuning());
 	UpdateTuning();
 }
