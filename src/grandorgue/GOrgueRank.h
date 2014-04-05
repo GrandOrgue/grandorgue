@@ -23,14 +23,17 @@
 #define GORGUERANK_H
 
 #include "ptrvector.h"
+#include "GOrgueMidiConfigurator.h"
 #include "GOrguePipeConfigTreeNode.h"
+#include "GOrgueMidiSender.h"
+#include "GOrgueSaveableObject.h"
 
 class GOrguePipe;
 class GOrgueStop;
 class GOrgueTemperament;
 class GrandOrgueFile;
 
-class GOrgueRank
+class GOrgueRank : private GOrgueSaveableObject, public GOrgueMidiConfigurator
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -46,9 +49,12 @@ private:
 	float m_PitchCorrection;
 	float m_MinVolume;
 	float m_MaxVolume;
+	GOrgueMidiSender m_sender;
 	GOrguePipeConfigTreeNode m_PipeConfig;
 
 	void Resize();
+
+	void Save(GOrgueConfigWriter& cfg);
 
 public:
 	GOrgueRank(GrandOrgueFile* organfile);
@@ -63,6 +69,12 @@ public:
 	GOrguePipeConfigNode& GetPipeConfig();
 	void SetTemperament(const GOrgueTemperament& temperament);
 	const wxString& GetName();
+
+	wxString GetMidiType();
+	wxString GetMidiName();
+	void ShowConfigDialog();
+
+	void SendKey(unsigned note, unsigned velocity);
 };
 
 #endif
