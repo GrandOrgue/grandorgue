@@ -1184,22 +1184,22 @@ void GOrgueSetter::SetterButtonChanged(GOrgueSetterButton* button)
 				break;
 
 			case ID_SETTER_PITCH_M1:
-				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() - 1);
+				m_organfile->GetPipeConfig().ModifyTuning(1);
 				break;
 			case ID_SETTER_PITCH_M10:
-				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() - 10);
+				m_organfile->GetPipeConfig().ModifyTuning(10);
 				break;
 			case ID_SETTER_PITCH_M100:
-				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() - 100);
+				m_organfile->GetPipeConfig().ModifyTuning(100);
 				break;
 			case ID_SETTER_PITCH_P1:
-				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() + 1);
+				m_organfile->GetPipeConfig().ModifyTuning(1);
 				break;
 			case ID_SETTER_PITCH_P10:
-				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() + 10);
+				m_organfile->GetPipeConfig().ModifyTuning(10);
 				break;
 			case ID_SETTER_PITCH_P100:
-				m_organfile->GetPipeConfig().SetTuning(m_organfile->GetPipeConfig().GetTuning() + 100);
+				m_organfile->GetPipeConfig().ModifyTuning(100);
 				break;
 			case ID_SETTER_SAVE:
 				m_organfile->Save();

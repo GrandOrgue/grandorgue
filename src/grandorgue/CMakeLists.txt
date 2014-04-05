@@ -313,6 +313,7 @@ GOrgueOrgan.cpp
 GOrguePath.cpp
 GOrguePipe.cpp
 GOrguePipeConfig.cpp
+GOrguePipeConfigNode.cpp
 GOrguePiston.cpp
 GOrgueProgressDialog.cpp
 GOrgueProperties.cpp

@@ -622,7 +622,7 @@ void OrganDialog::Modified()
 
 void OrganDialog::FillTree()
 {
-	wxTreeItemId id_root = m_Tree->AddRoot(m_organfile->GetChurchName(), -1, -1, new OrganTreeItemData(m_organfile->GetPipeConfig()));
+	wxTreeItemId id_root = m_Tree->AddRoot(m_organfile->GetChurchName(), -1, -1, new OrganTreeItemData(m_organfile->GetPipeConfig().GetPipeConfig()));
 	for (unsigned j = 0; j < m_organfile->GetWindchestGroupCount(); j++)
 	{
 		GOrgueWindchest* windchest = m_organfile->GetWindchest(j);
@@ -630,14 +630,14 @@ void OrganDialog::FillTree()
 		for(unsigned i = 0; i < windchest->GetRankCount(); i++)
 		{
 			GOrgueRank* rank = windchest->GetRank(i);
-			wxTreeItemId id_rank = m_Tree->AppendItem(id_windchest, rank->GetName(), -1, -1, new OrganTreeItemData(rank->GetPipeConfig()));
+			wxTreeItemId id_rank = m_Tree->AppendItem(id_windchest, rank->GetName(), -1, -1, new OrganTreeItemData(rank->GetPipeConfig().GetPipeConfig()));
 			for(unsigned k = 0; k < rank->GetPipeCount(); k++)
 			{
 				GOrguePipe* pipe = rank->GetPipe(k);
 				if (pipe->IsReference())
 					continue;
 				m_Tree->AppendItem(id_rank, wxString::Format(_("%d: %s"), pipe->GetMidiKeyNumber(), pipe->GetFilename().c_str()), 
-						   -1, -1, new OrganTreeItemData(pipe->GetPipeConfig()));
+						   -1, -1, new OrganTreeItemData(pipe->GetPipeConfig().GetPipeConfig()));
 			}
 		}
 		m_Tree->Expand(id_windchest);

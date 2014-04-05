@@ -56,7 +56,7 @@ GOrguePipe::GOrguePipe (GrandOrgueFile* organfile, GOrgueRank* rank, bool percus
 	m_Reference(NULL),
 	m_ReferenceID(0),
 	m_SoundProvider(organfile->GetMemoryPool()),
-	m_PipeConfig(organfile, this),
+	m_PipeConfig(&rank->GetPipeConfig(), organfile, this),
 	m_Velocity(0),
 	m_Velocities(1)
 {
@@ -75,7 +75,7 @@ GOSoundProvider* GOrguePipe::GetSoundProvider()
 
 void GOrguePipe::SetOn()
 {
-	m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, m_Velocity, GetEffectiveDelay());
+	m_Sampler = m_OrganFile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, m_Velocity, m_PipeConfig.GetEffectiveDelay());
 	if (m_Sampler)
 		m_Instances++;
 	if (GetSoundProvider()->IsOneshot())
@@ -157,119 +157,24 @@ bool GOrguePipe::IsReference()
 	return m_Reference != NULL;
 }
 
-GOrguePipeConfig& GOrguePipe::GetPipeConfig()
+GOrguePipeConfigNode& GOrguePipe::GetPipeConfig()
 {
 	return m_PipeConfig;
 }
 
-float GOrguePipe::GetEffectiveAmplitude()
-{
-	return m_PipeConfig.GetAmplitude() * m_Rank->GetPipeConfig().GetAmplitude() * m_OrganFile->GetPipeConfig().GetAmplitude();
-}
-
-float GOrguePipe::GetEffectiveGain()
-{
-	return m_PipeConfig.GetGain() + m_Rank->GetPipeConfig().GetGain() + m_OrganFile->GetPipeConfig().GetGain();
-}
-
 void GOrguePipe::UpdateAmplitude()
 {
-	m_SoundProvider.SetAmplitude(GetEffectiveAmplitude(), GetEffectiveGain());
-}
-
-float GOrguePipe::GetEffectiveTuning()
-{
-	return m_OrganFile->GetPipeConfig().GetTuning() + m_Rank->GetPipeConfig().GetTuning() + m_PipeConfig.GetTuning() + m_TemperamentOffset;
+	m_SoundProvider.SetAmplitude(m_PipeConfig.GetEffectiveAmplitude(), m_PipeConfig.GetEffectiveGain());
 }
 
 void GOrguePipe::UpdateTuning()
 {
-	m_SoundProvider.SetTuning(GetEffectiveTuning());
-}
-
-unsigned GOrguePipe::GetEffectiveDelay()
-{
-	return m_OrganFile->GetPipeConfig().GetDelay() + m_Rank->GetPipeConfig().GetDelay() + m_PipeConfig.GetDelay();
-}
-
-wxString GOrguePipe::GetEffectiveAudioGroup()
-{
-	if (m_PipeConfig.GetAudioGroup() != wxEmptyString)
-		return m_PipeConfig.GetAudioGroup();
-	if (m_Rank->GetPipeConfig().GetAudioGroup() != wxEmptyString)
-		return m_Rank->GetPipeConfig().GetAudioGroup();
-	return m_OrganFile->GetPipeConfig().GetAudioGroup();
+	m_SoundProvider.SetTuning(m_PipeConfig.GetEffectiveTuning() + m_TemperamentOffset);
 }
 
 void GOrguePipe::UpdateAudioGroup()
 {
-	m_AudioGroupID = m_OrganFile->GetSettings().GetAudioGroupId(GetEffectiveAudioGroup());
-}
-
-unsigned GOrguePipe::GetEffectiveBitsPerSample()
-{
-	if (m_PipeConfig.GetBitsPerSample() != -1)
-		return m_PipeConfig.GetBitsPerSample();
-	if (m_Rank->GetPipeConfig().GetBitsPerSample() != -1)
-		return m_Rank->GetPipeConfig().GetBitsPerSample();
-	if (m_OrganFile->GetPipeConfig().GetBitsPerSample() != -1)
-		return m_OrganFile->GetPipeConfig().GetBitsPerSample();
-	return m_OrganFile->GetSettings().GetBitsPerSample();
-}
-
-bool GOrguePipe::GetEffectiveCompress()
-{
-	if (m_PipeConfig.GetCompress() != -1)
-		return m_PipeConfig.GetCompress() ? true : false;
-	if (m_Rank->GetPipeConfig().GetCompress() != -1)
-		return m_Rank->GetPipeConfig().GetCompress() ? true : false;
-	if (m_OrganFile->GetPipeConfig().GetCompress() != -1)
-		return m_OrganFile->GetPipeConfig().GetCompress() ? true : false;
-	return m_OrganFile->GetSettings().GetLosslessCompression();
-}
-
-unsigned GOrguePipe::GetEffectiveLoopLoad()
-{
-	if (m_PipeConfig.GetLoopLoad() != -1)
-		return m_PipeConfig.GetLoopLoad();
-	if (m_Rank->GetPipeConfig().GetLoopLoad() != -1)
-		return m_Rank->GetPipeConfig().GetLoopLoad();
-	if (m_OrganFile->GetPipeConfig().GetLoopLoad() != -1)
-		return m_OrganFile->GetPipeConfig().GetLoopLoad();
-	return m_OrganFile->GetSettings().GetLoopLoad();
-}
-
-unsigned GOrguePipe::GetEffectiveAttackLoad()
-{
-	if (m_PipeConfig.GetAttackLoad() != -1)
-		return m_PipeConfig.GetAttackLoad();
-	if (m_Rank->GetPipeConfig().GetAttackLoad() != -1)
-		return m_Rank->GetPipeConfig().GetAttackLoad();
-	if (m_OrganFile->GetPipeConfig().GetAttackLoad() != -1)
-		return m_OrganFile->GetPipeConfig().GetAttackLoad();
-	return m_OrganFile->GetSettings().GetAttackLoad();
-}
-
-unsigned GOrguePipe::GetEffectiveReleaseLoad()
-{
-	if (m_PipeConfig.GetReleaseLoad() != -1)
-		return m_PipeConfig.GetReleaseLoad();
-	if (m_Rank->GetPipeConfig().GetReleaseLoad() != -1)
-		return m_Rank->GetPipeConfig().GetReleaseLoad();
-	if (m_OrganFile->GetPipeConfig().GetReleaseLoad() != -1)
-		return m_OrganFile->GetPipeConfig().GetReleaseLoad();
-	return m_OrganFile->GetSettings().GetReleaseLoad();
-}
-
-unsigned GOrguePipe::GetEffectiveChannels()
-{
-	if (m_PipeConfig.GetChannels() != -1)
-		return m_PipeConfig.GetChannels();
-	if (m_Rank->GetPipeConfig().GetChannels() != -1)
-		return m_Rank->GetPipeConfig().GetChannels();
-	if (m_OrganFile->GetPipeConfig().GetChannels() != -1)
-		return m_OrganFile->GetPipeConfig().GetChannels();
-	return m_OrganFile->GetSettings().GetLoadInStereo() ? 2 : 1;
+	m_AudioGroupID = m_OrganFile->GetSettings().GetAudioGroupId(m_PipeConfig.GetEffectiveAudioGroup());
 }
 
 void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix)
@@ -300,8 +205,6 @@ void GOrguePipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString pr
 void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	m_OrganFile->RegisterCacheObject(this);
-	m_OrganFile->RegisterSaveableObject(this);
-	m_group = group;
 	m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
 	if (m_Filename.StartsWith(wxT("REF:")))
 		return;
@@ -338,13 +241,7 @@ void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 	m_MinVolume = cfg.ReadFloat(ODFSetting, group, wxT("MinVelocityVolume"), 0, 1000, false, m_MinVolume);
 	m_MaxVolume = cfg.ReadFloat(ODFSetting, group, wxT("MaxVelocityVolume"), 0, 1000, false, m_MaxVolume);
 	m_SoundProvider.SetVelocityParameter(m_MinVolume, m_MaxVolume);
-}
-
-void GOrguePipe::Save(GOrgueConfigWriter& cfg)
-{
-	if (IsReference())
-		return;
-	m_PipeConfig.Save(cfg);
+	m_PipeConfig.SetName(wxString::Format(_("%d: %s"), GetMidiKeyNumber(), GetFilename().c_str()));
 }
 
 bool GOrguePipe::InitializeReference()
@@ -414,17 +311,17 @@ void GOrguePipe::UpdateHash(SHA_CTX& ctx)
 	unsigned value;
 	wxString filename = GetFilename();
 	SHA1_Update(&ctx, (const wxChar*)filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
-	value = GetEffectiveBitsPerSample();
+	value = m_PipeConfig.GetEffectiveBitsPerSample();
 	SHA1_Update(&ctx, &value, sizeof(value));
-	value = GetEffectiveCompress();
+	value = m_PipeConfig.GetEffectiveCompress();
 	SHA1_Update(&ctx, &value, sizeof(value));
-	value = GetEffectiveChannels();
+	value = m_PipeConfig.GetEffectiveChannels();
 	SHA1_Update(&ctx, &value, sizeof(value));
-	value = GetEffectiveLoopLoad();
+	value = m_PipeConfig.GetEffectiveLoopLoad();
 	SHA1_Update(&ctx, &value, sizeof(value));
-	value = GetEffectiveAttackLoad();
+	value = m_PipeConfig.GetEffectiveAttackLoad();
 	SHA1_Update(&ctx, &value, sizeof(value));
-	value = GetEffectiveReleaseLoad();
+	value = m_PipeConfig.GetEffectiveReleaseLoad();
 	SHA1_Update(&ctx, &value, sizeof(value));
 	value = m_SampleMidiKeyNumber;
 	SHA1_Update(&ctx, &value, sizeof(value));
@@ -484,8 +381,8 @@ void GOrguePipe::LoadData()
 	m_Reference = NULL;
 	try
 	{
-		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_OrganFile->GetODFPath(), GetEffectiveBitsPerSample(), GetEffectiveChannels(), 
-					     GetEffectiveCompress(), (loop_load_type)GetEffectiveLoopLoad(), GetEffectiveAttackLoad(), GetEffectiveReleaseLoad(),
+		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_OrganFile->GetODFPath(), m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
+					     m_PipeConfig.GetEffectiveCompress(), (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(), m_PipeConfig.GetEffectiveAttackLoad(), m_PipeConfig.GetEffectiveReleaseLoad(),
 					     m_SampleMidiKeyNumber);
 	}
 	catch(wxString str)
@@ -539,7 +436,7 @@ void GOrguePipe::SetTemperament(const GOrgueTemperament& temperament)
 {
 	
 	m_TemperamentOffset = temperament.GetOffset(m_OrganFile->GetIgnorePitch(), m_MidiKeyNumber, m_SoundProvider.GetMidiKeyNumber(), m_SoundProvider.GetMidiPitchFract(), m_HarmonicNumber, m_PitchCorrection,
-						    m_OrganFile->GetPipeConfig().GetDefaultTuning() + m_Rank->GetPipeConfig().GetDefaultTuning() + m_PipeConfig.GetDefaultTuning());
+						    m_PipeConfig.GetDefaultTuning());
 	UpdateTuning();
 }
 

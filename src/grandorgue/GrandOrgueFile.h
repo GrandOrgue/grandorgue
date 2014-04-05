@@ -27,7 +27,7 @@
 #include "GOrgueCombinationDefinition.h"
 #include "GOrgueLabel.h"
 #include "GOrgueMemoryPool.h"
-#include "GOrguePipeConfig.h"
+#include "GOrguePipeConfigNode.h"
 #include <wx/hashmap.h>
 #include <wx/string.h>
 #include <vector>
@@ -118,7 +118,7 @@ private:
 
 	GOrgueMemoryPool m_pool;
 	GOrgueBitmapCache m_bitmaps;
-	GOrguePipeConfig m_PipeConfig;
+	GOrguePipeConfigNode m_PipeConfig;
 	GOrgueSettings& m_Settings;
 	GOrgueCombinationDefinition m_GeneralTemplate;
 	GOrgueLabel m_PitchLabel;
@@ -193,7 +193,7 @@ public:
 	GOrgueMemoryPool& GetMemoryPool();
 	GOrgueSettings& GetSettings();
 	GOrgueBitmapCache& GetBitmapCache();
-	GOrguePipeConfig& GetPipeConfig();
+	GOrguePipeConfigNode& GetPipeConfig();
 	void SetTemperament(wxString name);
 	wxString GetTemperament();
 	void MarkSectionInUse(wxString name);
