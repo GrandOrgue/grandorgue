@@ -23,7 +23,6 @@
 
 #include "GOrgueEvent.h"
 #include "GOrgueRank.h"
-#include "GOrguePipe.h"
 #include "GOrgueSettings.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
@@ -641,18 +640,8 @@ void OrganDialog::FillTree()
 		GOrgueWindchest* windchest = m_organfile->GetWindchest(j);
 		wxTreeItemId id_windchest = m_Tree->AppendItem(id_root, windchest->GetName());
 		for(unsigned i = 0; i < windchest->GetRankCount(); i++)
-		{
-			GOrgueRank* rank = windchest->GetRank(i);
-			wxTreeItemId id_rank = m_Tree->AppendItem(id_windchest, rank->GetName(), -1, -1, new OrganTreeItemData(rank->GetPipeConfig().GetPipeConfig()));
-			for(unsigned k = 0; k < rank->GetPipeCount(); k++)
-			{
-				GOrguePipe* pipe = rank->GetPipe(k);
-				if (pipe->IsReference())
-					continue;
-				m_Tree->AppendItem(id_rank, wxString::Format(_("%d: %s"), pipe->GetMidiKeyNumber(), pipe->GetFilename().c_str()), 
-						   -1, -1, new OrganTreeItemData(pipe->GetPipeConfig().GetPipeConfig()));
-			}
-		}
+			FillTree(id_windchest, windchest->GetRank(i)->GetPipeConfig());
+
 		m_Tree->Expand(id_windchest);
 	}
 	m_Tree->Expand(id_root);

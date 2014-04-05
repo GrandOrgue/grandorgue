@@ -320,6 +320,7 @@ GOrgueProgressDialog.cpp
 GOrgueProperties.cpp
 GOrguePushbutton.cpp
 GOrgueRank.cpp
+GOrgueReferencePipe.cpp
 GOrgueReleaseAlignTable.cpp
 GOrgueRtHelpers.cpp
 GOrgueSetter.cpp

@@ -22,7 +22,7 @@
 #include "GOrgueRank.h"
 
 #include "GOrgueConfigReader.h"
-#include "GOrguePipe.h"
+#include "GOrgueReferencePipe.h"
 #include "GOrgueSoundingPipe.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
@@ -81,7 +81,7 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 		wxString name = cfg.ReadStringTrim(ODFSetting, group, buffer);
 		if (name.StartsWith(wxT("REF:")))
 		{
-			m_Pipes.push_back(new GOrguePipe (m_organfile, this, m_FirstMidiNoteNumber + i));
+			m_Pipes.push_back(new GOrgueReferencePipe (m_organfile, this, m_FirstMidiNoteNumber + i));
 		}
 		else
 		{
