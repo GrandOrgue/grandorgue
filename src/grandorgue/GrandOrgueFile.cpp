@@ -110,7 +110,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_soundengine(0),
 	m_midi(0),
 	m_bitmaps(this),
-	m_PipeConfig(this, this),
+	m_PipeConfig(NULL, this, this),
 	m_Settings(settings),
 	m_GeneralTemplate(this),
 	m_PitchLabel(this),
@@ -347,6 +347,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->GetDivisionalTemplate().InitDivisional(i);
 
+	m_PipeConfig.SetName(GetChurchName());
 	ReadCombinations(cfg);
 }
 
@@ -761,7 +762,6 @@ bool GrandOrgueFile::Export(const wxString& cmb)
 
 	cfg.WriteString(wxT("Organ"), wxT("Temperament"), m_Temperament);
 	cfg.WriteBoolean(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch);
-	m_PipeConfig.Save(cfg);
 
 	for(unsigned i = 0; i < m_SaveableObjects.size(); i++)
 		m_SaveableObjects[i]->Save(cfg);
@@ -1000,7 +1000,7 @@ unsigned GrandOrgueFile::AddEnclosure(GOrgueEnclosure* enclosure)
 	return m_enclosure.size() - 1;
 }
 
-GOrguePipeConfig& GrandOrgueFile::GetPipeConfig()
+GOrguePipeConfigNode& GrandOrgueFile::GetPipeConfig()
 {
 	return m_PipeConfig;
 }
@@ -1013,7 +1013,7 @@ void GrandOrgueFile::UpdateAmplitude()
 
 void GrandOrgueFile::UpdateTuning()
 {
-	m_PitchLabel.SetName(wxString::Format(_("%f cent"), m_PipeConfig.GetTuning()));
+	m_PitchLabel.SetName(wxString::Format(_("%f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));
 	for (unsigned i = 0; i < m_ranks.size(); i++)
 		m_ranks[i]->UpdateTuning();
 }

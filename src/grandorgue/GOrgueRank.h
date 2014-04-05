@@ -23,15 +23,14 @@
 #define GORGUERANK_H
 
 #include "ptrvector.h"
-#include "GOrguePipeConfig.h"
-#include "GOrgueSaveableObject.h"
+#include "GOrguePipeConfigNode.h"
 
 class GOrguePipe;
 class GOrgueStop;
 class GOrgueTemperament;
 class GrandOrgueFile;
 
-class GOrgueRank : public GOrguePipeUpdateCallback, private GOrgueSaveableObject
+class GOrgueRank : public GOrguePipeUpdateCallback
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -47,11 +46,9 @@ private:
 	float m_PitchCorrection;
 	float m_MinVolume;
 	float m_MaxVolume;
-	GOrguePipeConfig m_PipeConfig;
+	GOrguePipeConfigNode m_PipeConfig;
 
 	void Resize();
-
-	void Save(GOrgueConfigWriter& cfg);
 
 public:
 	GOrgueRank(GrandOrgueFile* organfile);
@@ -63,7 +60,7 @@ public:
 	unsigned GetPipeCount();
 	void Abort();
 	void PreparePlayback();
-	GOrguePipeConfig& GetPipeConfig();
+	GOrguePipeConfigNode& GetPipeConfig();
 	void SetTemperament(const GOrgueTemperament& temperament);
 	const wxString& GetName();
 

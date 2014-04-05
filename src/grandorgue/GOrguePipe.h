@@ -24,9 +24,8 @@
 
 #include "GOSoundProviderWave.h"
 #include "GOrgueCacheObject.h"
-#include "GOrguePipeConfig.h"
+#include "GOrguePipeConfigNode.h"
 #include "GOrguePipeWindchestCallback.h"
-#include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 
 class GOrgueCache;
@@ -38,8 +37,7 @@ class GOrgueTemperament;
 class GrandOrgueFile;
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
-class GOrguePipe : public GOrguePipeUpdateCallback, private GOrgueCacheObject, private GOrgueSaveableObject,
-	private GOrguePipeWindchestCallback
+class GOrguePipe : public GOrguePipeUpdateCallback, private GOrgueCacheObject, private GOrguePipeWindchestCallback
 {
 private:
 	GrandOrgueFile* m_OrganFile;
@@ -65,7 +63,7 @@ private:
 	GOrguePipe* m_Reference;
 	unsigned m_ReferenceID;
 	GOSoundProviderWave m_SoundProvider;
-	GOrguePipeConfig m_PipeConfig;
+	GOrguePipeConfigNode m_PipeConfig;
 
 	unsigned m_Velocity;
 	std::vector<unsigned> m_Velocities;
@@ -82,8 +80,6 @@ private:
 	void UpdateHash(SHA_CTX& ctx);
 	const wxString& GetLoadTitle();
 
-	void Save(GOrgueConfigWriter& cfg);
-
 	void SetTremulant(bool on);
 
 public:
@@ -97,28 +93,13 @@ public:
 	void PreparePlayback();
 	wxString GetFilename();
 	bool IsReference();
-	GOrguePipeConfig& GetPipeConfig();
+	GOrguePipeConfigNode& GetPipeConfig();
 	void SetTemperament(const GOrgueTemperament& temperament);
 	unsigned GetMidiKeyNumber();
 
-	float GetEffectiveAmplitude();
-	float GetEffectiveGain();
 	void UpdateAmplitude();
-
-	float GetEffectiveTuning();
 	void UpdateTuning();
-
-	unsigned GetEffectiveDelay();
-
-	wxString GetEffectiveAudioGroup();
 	void UpdateAudioGroup();
-
-	unsigned GetEffectiveBitsPerSample();
-	bool GetEffectiveCompress();
-	unsigned GetEffectiveLoopLoad();
-	unsigned GetEffectiveAttackLoad();
-	unsigned GetEffectiveReleaseLoad();
-	unsigned GetEffectiveChannels();
 };
 
 #endif

@@ -40,7 +40,7 @@ GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_PitchCorrection(0),
 	m_MinVolume(100),
 	m_MaxVolume(100),
-	m_PipeConfig(organfile, this)
+	m_PipeConfig(&organfile->GetPipeConfig(), organfile, this)
 {
 }
 
@@ -58,9 +58,6 @@ void GOrgueRank::Resize()
 
 void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_note_number)
 {
-	m_group = group;
-	m_organfile->RegisterSaveableObject(this);
-
 	m_FirstMidiNoteNumber = cfg.ReadInteger(ODFSetting, group, wxT("FirstMidiNoteNumber"), 0, 256, false, first_midi_note_number);
 	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), true);
 
@@ -84,7 +81,8 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 				  new GOrguePipe (m_organfile, this, m_Percussive, m_WindchestGroup, m_FirstMidiNoteNumber + i, m_HarmonicNumber, m_PitchCorrection, m_MinVolume, m_MaxVolume)
 			   );
                m_Pipes[i]->Load(cfg, group, buffer);
-       }
+	}
+	m_PipeConfig.SetName(GetName());
 	Resize();
 }
 
@@ -93,11 +91,6 @@ unsigned GOrgueRank::RegisterStop(GOrgueStop* stop)
 	unsigned id = m_StopCount++;
 	Resize();
 	return id;
-}
-
-void GOrgueRank::Save(GOrgueConfigWriter& cfg)
-{
-	m_PipeConfig.Save(cfg);
 }
 
 void GOrgueRank::SetKey(int note, unsigned velocity, unsigned stopID)
@@ -141,7 +134,7 @@ const wxString& GOrgueRank::GetName()
 	return m_Name;
 }
 
-GOrguePipeConfig& GOrgueRank::GetPipeConfig()
+GOrguePipeConfigNode& GOrgueRank::GetPipeConfig()
 {
 	return m_PipeConfig;
 }
