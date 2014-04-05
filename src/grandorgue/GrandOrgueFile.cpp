@@ -44,7 +44,6 @@
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrguePath.h"
-#include "GOrguePipe.h"
 #include "GOrguePiston.h"
 #include "GOrgueProgressDialog.h"
 #include "GOrguePushbutton.h"
@@ -52,6 +51,7 @@
 #include "GOrgueSaveableObject.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
+#include "GOrgueSoundingPipe.h"
 #include "GOrgueSwitch.h"
 #include "GOrgueRank.h"
 #include "GOrgueTemperament.h"
@@ -141,7 +141,7 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 
 	len = sizeof(GOAudioSection);
 	SHA1_Update(&ctx, &len, sizeof(len));
-	len = sizeof(GOrguePipe);
+	len = sizeof(GOrgueSoundingPipe);
 	SHA1_Update(&ctx, &len, sizeof(len));
 	len = sizeof(GOrgueReleaseAlignTable);
 	SHA1_Update(&ctx, &len, sizeof(len));

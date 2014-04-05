@@ -326,6 +326,7 @@ GOrgueSetter.cpp
 GOrgueSetterButton.cpp
 GOrgueSettings.cpp
 GOrgueSound.cpp
+GOrgueSoundingPipe.cpp
 GOrgueStop.cpp
 GOrgueTemperament.cpp
 GOrgueTemperamentCent.cpp

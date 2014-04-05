@@ -22,10 +22,10 @@
 #ifndef GORGUEPIPE_H
 #define GORGUEPIPE_H
 
-#include "GOSoundProviderWave.h"
 #include "GOrgueCacheObject.h"
 #include "GOrguePipeConfigNode.h"
 #include "GOrguePipeWindchestCallback.h"
+#include <vector>
 #include <wx/string.h>
 
 class GOrgueCache;
@@ -35,44 +35,24 @@ class GOrgueConfigWriter;
 class GOrgueRank;
 class GOrgueTemperament;
 class GrandOrgueFile;
-typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
-class GOrguePipe : private GOrguePipeUpdateCallback, private GOrgueCacheObject, private GOrguePipeWindchestCallback
+class GOrguePipe : private GOrguePipeUpdateCallback, protected GOrgueCacheObject, protected GOrguePipeWindchestCallback
 {
 private:
-	GrandOrgueFile* m_organfile;
-	GOrgueRank* m_Rank;
-	SAMPLER_HANDLE  m_Sampler;
-	int m_Instances;
-	bool m_Tremulant;
-	std::vector<attack_load_info> m_AttackInfo;
-	std::vector<release_load_info> m_ReleaseInfo;
-
-	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
-	int m_SamplerGroupID;
-	unsigned m_AudioGroupID;
-	wxString m_Filename;
-	bool m_Percussive;
-	unsigned m_MidiKeyNumber;
-	float m_TemperamentOffset;
-	unsigned m_HarmonicNumber;
-	float m_PitchCorrection;
-	float m_MinVolume;
-	float m_MaxVolume;
-	int m_SampleMidiKeyNumber;
-	GOrguePipe* m_Reference;
-	unsigned m_ReferenceID;
-	GOSoundProviderWave m_SoundProvider;
-	GOrguePipeConfigNode m_PipeConfig;
-
 	unsigned m_Velocity;
 	std::vector<unsigned> m_Velocities;
 
-	void SetOn(unsigned velocity);
-	void SetOff();
-	void Change(unsigned velocity, unsigned old_velocity);
-	GOSoundProvider* GetSoundProvider();
-	void LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix);
+protected:
+	GrandOrgueFile* m_organfile;
+	GOrgueRank* m_Rank;
+
+	wxString m_Filename;
+	unsigned m_MidiKeyNumber;
+	GOrguePipe* m_Reference;
+	unsigned m_ReferenceID;
+	GOrguePipeConfigNode m_PipeConfig;
+
+	virtual void Change(unsigned velocity, unsigned old_velocity);
 
 	void Initialize();
 	void LoadData();
@@ -88,18 +68,18 @@ private:
 	void UpdateAudioGroup();
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, GOrgueRank* m_Rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume);
-	~GOrguePipe();
-	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
+	GOrguePipe(GrandOrgueFile* organfile, GOrgueRank* m_Rank, unsigned midi_key_number);
+	virtual ~GOrguePipe();
+	virtual void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void Set(unsigned velocity, unsigned referenceID = 0);
 	bool InitializeReference();
 	unsigned RegisterReference(GOrguePipe* pipe);
-	void Abort();
-	void PreparePlayback();
+	virtual void Abort();
+	virtual void PreparePlayback();
 	wxString GetFilename();
 	bool IsReference();
 	GOrguePipeConfigNode& GetPipeConfig();
-	void SetTemperament(const GOrgueTemperament& temperament);
+	virtual void SetTemperament(const GOrgueTemperament& temperament);
 	unsigned GetMidiKeyNumber();
 };
 
