@@ -415,6 +415,7 @@ void GOrguePipe::Abort()
 
 void GOrguePipe::PreparePlayback()
 {
+	UpdateAudioGroup();
 	if (m_Reference)
 		m_Reference->PreparePlayback();
 	m_Velocity = 0;

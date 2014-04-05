@@ -620,6 +620,19 @@ void OrganDialog::Modified()
 		m_Apply->Enable();
 }
 
+void OrganDialog::FillTree(wxTreeItemId parent, GOrguePipeConfigNode& config)
+{
+	wxTreeItemData* data = new OrganTreeItemData(config.GetPipeConfig());
+	wxTreeItemId e;
+	if (!parent.IsOk())
+		e = m_Tree->AddRoot(config.GetName(), -1, -1, data);
+	else
+		e = m_Tree->AppendItem(parent, config.GetName(), -1, -1, data);
+	for(unsigned i = 0; i < config.GetChildCount(); i++)
+		FillTree(e, *config.GetChild(i));
+	m_Tree->Expand(e);
+}
+
 void OrganDialog::FillTree()
 {
 	wxTreeItemId id_root = m_Tree->AddRoot(m_organfile->GetChurchName(), -1, -1, new OrganTreeItemData(m_organfile->GetPipeConfig().GetPipeConfig()));
@@ -765,7 +778,6 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 	m_Last = NULL;
 	Load();
 }
-
 
 void OrganDialog::OnTreeChanging(wxTreeEvent& e)
 {

@@ -58,6 +58,8 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void Save(GOrgueConfigWriter& cfg);
 
+	GOrguePipeUpdateCallback* GetCallback();
+
 	float GetAmplitude();
 	float GetDefaultAmplitude();
 	void SetAmplitude(float amp);

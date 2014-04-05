@@ -26,6 +26,7 @@
 #include <wx/dialog.h>
 #include <vector>
 
+class GOrguePipeConfigNode;
 class GrandOrgueFile;
 class OrganTreeItemData;
 class wxButton;
@@ -85,6 +86,7 @@ private:
 	void SetEmpty(wxChoice* choice);
 	void RemoveEmpty(wxChoice* choice);
 	void UpdateAudioGroup(std::vector<wxString> audio_group, unsigned& pos, wxTreeItemId item);
+	void FillTree(wxTreeItemId parent, GOrguePipeConfigNode& config);
 
 	void OnTreeChanging(wxTreeEvent& e);
 	void OnTreeChanged(wxTreeEvent& e);

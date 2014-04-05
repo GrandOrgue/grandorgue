@@ -1007,21 +1007,15 @@ GOrguePipeConfigNode& GrandOrgueFile::GetPipeConfig()
 
 void GrandOrgueFile::UpdateAmplitude()
 {
-	for (unsigned i = 0; i < m_ranks.size(); i++)
-		m_ranks[i]->UpdateAmplitude();
 }
 
 void GrandOrgueFile::UpdateTuning()
 {
 	m_PitchLabel.SetName(wxString::Format(_("%f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));
-	for (unsigned i = 0; i < m_ranks.size(); i++)
-		m_ranks[i]->UpdateTuning();
 }
 
 void GrandOrgueFile::UpdateAudioGroup()
 {
-	for (unsigned i = 0; i < m_ranks.size(); i++)
-		m_ranks[i]->UpdateAudioGroup();
 }
 
 bool GrandOrgueFile::IsCustomized()

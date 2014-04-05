@@ -27,7 +27,7 @@
 #include "GOrgueCombinationDefinition.h"
 #include "GOrgueLabel.h"
 #include "GOrgueMemoryPool.h"
-#include "GOrguePipeConfigNode.h"
+#include "GOrguePipeConfigTreeNode.h"
 #include <wx/hashmap.h>
 #include <wx/string.h>
 #include <vector>
@@ -61,7 +61,7 @@ class GOSoundProvider;
 
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
-class GrandOrgueFile : public GOrguePipeUpdateCallback
+class GrandOrgueFile : private GOrguePipeUpdateCallback
 {
 	WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
@@ -118,7 +118,7 @@ private:
 
 	GOrgueMemoryPool m_pool;
 	GOrgueBitmapCache m_bitmaps;
-	GOrguePipeConfigNode m_PipeConfig;
+	GOrguePipeConfigTreeNode m_PipeConfig;
 	GOrgueSettings& m_Settings;
 	GOrgueCombinationDefinition m_GeneralTemplate;
 	GOrgueLabel m_PitchLabel;
@@ -132,6 +132,10 @@ private:
 	void SetTemperament(const GOrgueTemperament& temperament);
 	void ResolveReferences();
 
+	void UpdateAmplitude();
+	void UpdateTuning();
+	void UpdateAudioGroup();
+	
 public:
 
 	GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings);
@@ -216,10 +220,6 @@ public:
 	void SetVolume(int volume);
 	int GetVolume();
 
-	void UpdateAmplitude();
-	void UpdateTuning();
-	void UpdateAudioGroup();
-	
 	void SetIgnorePitch(bool ignorepitch);
 	bool GetIgnorePitch();
 	
