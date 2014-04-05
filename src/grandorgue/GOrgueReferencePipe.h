@@ -19,39 +19,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEPIPE_H
-#define GORGUEPIPE_H
+#ifndef GORGUEREFERENCEPIPE_H
+#define GORGUEREFERENCEPIPE_H
 
-#include <vector>
-#include <wx/string.h>
+#include "GOrgueCacheObject.h"
+#include "GOrguePipe.h"
 
-class GOrgueConfigReader;
-class GOrgueRank;
-class GOrgueTemperament;
-class GrandOrgueFile;
-
-class GOrguePipe
+class GOrgueReferencePipe : public GOrguePipe, private GOrgueCacheObject
 {
 private:
-	unsigned m_Velocity;
-	std::vector<unsigned> m_Velocities;
+	GOrguePipe* m_Reference;
+	unsigned m_ReferenceID;
+	wxString m_Filename;
 
-protected:
-	GrandOrgueFile* m_organfile;
-	GOrgueRank* m_Rank;
-	unsigned m_MidiKeyNumber;
+	void Initialize();
+	void LoadData();
+	bool LoadCache(GOrgueCache& cache);
+	bool SaveCache(GOrgueCacheWriter& cache);
+	void UpdateHash(SHA_CTX& ctx);
+	const wxString& GetLoadTitle();
 
-	virtual void Change(unsigned velocity, unsigned old_velocity) = 0;
+	void Change(unsigned velocity, unsigned old_velocity);
 
 public:
-	GOrguePipe(GrandOrgueFile* organfile, GOrgueRank* rank, unsigned midi_key_number);
-	virtual ~GOrguePipe();
-	virtual void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix) = 0;
-	void Set(unsigned velocity, unsigned referenceID = 0);
-	unsigned RegisterReference(GOrguePipe* pipe);
-	virtual void Abort();
-	virtual void PreparePlayback();
-	virtual void SetTemperament(const GOrgueTemperament& temperament);
+	GOrgueReferencePipe(GrandOrgueFile* organfile, GOrgueRank* rank, unsigned midi_key_number);
+
+	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 };
 
 #endif

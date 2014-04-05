@@ -37,6 +37,7 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 	m_Tremulant(false),
 	m_AttackInfo(),
 	m_ReleaseInfo(),
+	m_Filename(),
 	m_SamplerGroupID(sampler_group_id),
 	m_AudioGroupID(0),
 	m_Percussive(percussive),
@@ -46,7 +47,8 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 	m_MinVolume(min_volume),
 	m_MaxVolume(max_volume),
 	m_SampleMidiKeyNumber(-1),
-	m_SoundProvider(organfile->GetMemoryPool())
+	m_SoundProvider(organfile->GetMemoryPool()),
+	m_PipeConfig(&rank->GetPipeConfig(), organfile, this)
 {
 }
 

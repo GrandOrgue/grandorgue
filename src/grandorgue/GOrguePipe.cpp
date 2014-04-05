@@ -21,24 +21,16 @@
 
 #include "GOrguePipe.h"
 
-#include "GOrgueConfigReader.h"
-#include "GOrgueManual.h"
 #include "GOrgueRank.h"
-#include "GOrgueStop.h"
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
-#include <wx/tokenzr.h>
 
 GOrguePipe::GOrguePipe (GrandOrgueFile* organfile, GOrgueRank* rank, unsigned midi_key_number) :
 	m_Velocity(0),
 	m_Velocities(1),
 	m_organfile(organfile),
 	m_Rank(rank),
-	m_Filename(),
-	m_MidiKeyNumber(midi_key_number),
-	m_Reference(NULL),
-	m_ReferenceID(0),
-	m_PipeConfig(&rank->GetPipeConfig(), organfile, this)
+	m_MidiKeyNumber(midi_key_number)
 {
 }
 
@@ -66,16 +58,6 @@ void GOrguePipe::PreparePlayback()
 
 void GOrguePipe::SetTemperament(const GOrgueTemperament& temperament)
 {
-	
-}
-
-void GOrguePipe::Change(unsigned velocity, unsigned last_velocity)
-{
-	if (m_Reference)
-	{
-		m_Reference->Set(velocity, m_ReferenceID);
-		return;
-	}
 }
 
 void GOrguePipe::Set(unsigned velocity, unsigned referenceID)
@@ -99,103 +81,6 @@ void GOrguePipe::Set(unsigned velocity, unsigned referenceID)
 			if (m_Velocity < m_Velocities[i])
 				m_Velocity = m_Velocities[i];
 	}
+
 	Change(m_Velocity, last_velocity);
-}
-
-void GOrguePipe::SetTremulant(bool on)
-{
-}
-
-bool GOrguePipe::IsReference()
-{
-	return m_Reference != NULL;
-}
-
-GOrguePipeConfigNode& GOrguePipe::GetPipeConfig()
-{
-	return m_PipeConfig;
-}
-
-void GOrguePipe::UpdateAmplitude()
-{
-}
-
-void GOrguePipe::UpdateTuning()
-{
-}
-
-void GOrguePipe::UpdateAudioGroup()
-{
-}
-
-void GOrguePipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
-{
-	m_organfile->RegisterCacheObject(this);
-	m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
-	if (m_Filename.StartsWith(wxT("REF:")))
-		return;
-}
-
-bool GOrguePipe::InitializeReference()
-{
-	if (m_Filename.StartsWith(wxT("REF:")))
-	{
-		unsigned long manual, stop, pipe;
-		wxArrayString strs = wxStringTokenize(m_Filename.Mid(4), wxT(":"), wxTOKEN_RET_EMPTY_ALL);
-		if (strs.GetCount() != 3 ||
-		    !strs[0].ToULong(&manual) ||
-		    !strs[1].ToULong(&stop) ||
-		    !strs[2].ToULong(&pipe))
-			throw (wxString)_("Invalid reference ") + m_Filename;
-		if ((manual < m_organfile->GetFirstManualIndex()) || (manual >= m_organfile->GetODFManualCount()) ||
-			(stop <= 0) || (stop > m_organfile->GetManual(manual)->GetStopCount()) ||
-		    (pipe <= 0) || (pipe > m_organfile->GetManual(manual)->GetStop(stop-1)->GetRank(0)->GetPipeCount()))
-			throw (wxString)_("Invalid reference ") + m_Filename;
-		m_Reference = m_organfile->GetManual(manual)->GetStop(stop-1)->GetRank(0)->GetPipe(pipe-1);
-		m_ReferenceID = m_Reference->RegisterReference(this);
-		return true;
-	}
-	return false;
-}
-
-bool GOrguePipe::LoadCache(GOrgueCache& cache)
-{
-	InitializeReference();
-	return true;
-}
-
-bool GOrguePipe::SaveCache(GOrgueCacheWriter& cache)
-{
-	return true;
-}
-
-void GOrguePipe::Initialize()
-{
-	InitializeReference();
-}
-
-void GOrguePipe::UpdateHash(SHA_CTX& ctx)
-{
-}
-
-void GOrguePipe::LoadData()
-{
-	if (InitializeReference())
-		return;
-	m_Reference = NULL;
-}
-
-wxString GOrguePipe::GetFilename()
-{
-	return m_Filename;
-}
-
-const wxString& GOrguePipe::GetLoadTitle()
-{
-	return m_Filename;
-}
-
-unsigned GOrguePipe::GetMidiKeyNumber()
-{
-	return m_MidiKeyNumber;
 }

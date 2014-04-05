@@ -23,11 +23,15 @@
 #define GORGUESOUNDINGPIPE_H
 
 #include "GOSoundProviderWave.h"
+#include "GOrgueCacheObject.h"
 #include "GOrguePipe.h"
+#include "GOrguePipeConfigNode.h"
+#include "GOrguePipeWindchestCallback.h"
 
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
-class GOrgueSoundingPipe : public GOrguePipe
+class GOrgueSoundingPipe : public GOrguePipe, private GOrgueCacheObject, private GOrguePipeUpdateCallback, 
+	private GOrguePipeWindchestCallback
 {
 private:
 	SAMPLER_HANDLE  m_Sampler;
@@ -35,6 +39,7 @@ private:
 	bool m_Tremulant;
 	std::vector<attack_load_info> m_AttackInfo;
 	std::vector<release_load_info> m_ReleaseInfo;
+	wxString m_Filename;
 
 	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
 	int m_SamplerGroupID;
@@ -47,6 +52,7 @@ private:
 	float m_MaxVolume;
 	int m_SampleMidiKeyNumber;
 	GOSoundProviderWave m_SoundProvider;
+	GOrguePipeConfigNode m_PipeConfig;
 
 	void SetOn(unsigned velocity);
 	void SetOff();
