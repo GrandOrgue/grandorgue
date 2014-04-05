@@ -23,14 +23,14 @@
 #define GORGUERANK_H
 
 #include "ptrvector.h"
-#include "GOrguePipeConfigNode.h"
+#include "GOrguePipeConfigTreeNode.h"
 
 class GOrguePipe;
 class GOrgueStop;
 class GOrgueTemperament;
 class GrandOrgueFile;
 
-class GOrgueRank : public GOrguePipeUpdateCallback
+class GOrgueRank
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -46,7 +46,7 @@ private:
 	float m_PitchCorrection;
 	float m_MinVolume;
 	float m_MaxVolume;
-	GOrguePipeConfigNode m_PipeConfig;
+	GOrguePipeConfigTreeNode m_PipeConfig;
 
 	void Resize();
 
@@ -63,10 +63,6 @@ public:
 	GOrguePipeConfigNode& GetPipeConfig();
 	void SetTemperament(const GOrgueTemperament& temperament);
 	const wxString& GetName();
-
-	void UpdateAmplitude();
-	void UpdateTuning();
-	void UpdateAudioGroup();
 };
 
 #endif

@@ -40,7 +40,7 @@ GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_PitchCorrection(0),
 	m_MinVolume(100),
 	m_MaxVolume(100),
-	m_PipeConfig(&organfile->GetPipeConfig(), organfile, this)
+	m_PipeConfig(&organfile->GetPipeConfig(), organfile, NULL)
 {
 }
 
@@ -139,24 +139,6 @@ GOrguePipeConfigNode& GOrgueRank::GetPipeConfig()
 	return m_PipeConfig;
 }
 
-void GOrgueRank::UpdateAmplitude()
-{
-	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->UpdateAmplitude();
-}
-
-void GOrgueRank::UpdateTuning()
-{
-	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->UpdateTuning();
-}
-
-void GOrgueRank::UpdateAudioGroup()
-{
-	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->UpdateAudioGroup();
-}
-
 void GOrgueRank::SetTemperament(const GOrgueTemperament& temperament)
 {
 	for(unsigned j = 0; j < m_Pipes.size(); j++)
@@ -171,7 +153,6 @@ void GOrgueRank::Abort()
 
 void GOrgueRank::PreparePlayback()
 {
-	UpdateAudioGroup();
 	for(unsigned i = 0; i < m_Pipes.size(); i++)
 		m_Pipes[i]->PreparePlayback();
 	for(unsigned i = 0; i < m_Velocity.size(); i++)

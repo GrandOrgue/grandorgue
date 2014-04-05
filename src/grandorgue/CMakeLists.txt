@@ -314,6 +314,7 @@ GOrguePath.cpp
 GOrguePipe.cpp
 GOrguePipeConfig.cpp
 GOrguePipeConfigNode.cpp
+GOrguePipeConfigTreeNode.cpp
 GOrguePiston.cpp
 GOrgueProgressDialog.cpp
 GOrgueProperties.cpp

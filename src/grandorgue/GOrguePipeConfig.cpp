@@ -89,6 +89,11 @@ void GOrguePipeConfig::Save(GOrgueConfigWriter& cfg)
 	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
 }
 
+GOrguePipeUpdateCallback* GOrguePipeConfig::GetCallback()
+{
+	return m_Callback;
+}
+
 const wxString& GOrguePipeConfig::GetAudioGroup()
 {
 	return m_AudioGroup;
