@@ -22,6 +22,7 @@
 #include "GOrgueRank.h"
 
 #include "GOrgueConfigReader.h"
+#include "GOrgueDummyPipe.h"
 #include "GOrgueReferencePipe.h"
 #include "GOrgueSoundingPipe.h"
 #include "GOrgueWindchest.h"
@@ -79,7 +80,11 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 		wxString buffer;
 		buffer.Printf(wxT("Pipe%03u"), i + 1);
 		wxString name = cfg.ReadStringTrim(ODFSetting, group, buffer);
-		if (name.StartsWith(wxT("REF:")))
+		if (name == wxT("DUMMY"))
+		{
+			m_Pipes.push_back(new GOrgueDummyPipe (m_organfile, this, m_FirstMidiNoteNumber + i));
+		}
+		else if (name.StartsWith(wxT("REF:")))
 		{
 			m_Pipes.push_back(new GOrgueReferencePipe (m_organfile, this, m_FirstMidiNoteNumber + i));
 		}

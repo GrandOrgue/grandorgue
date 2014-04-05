@@ -280,6 +280,7 @@ GOrgueCoupler.cpp
 GOrgueDC.cpp
 GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp
+GOrgueDummyPipe.cpp
 GOrgueDrawStop.cpp
 GOrgueEnclosure.cpp
 GOrgueEvent.cpp
