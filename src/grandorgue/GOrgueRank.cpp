@@ -22,11 +22,14 @@
 #include "GOrgueRank.h"
 
 #include "GOrgueConfigReader.h"
+#include "GOrgueDocument.h"
 #include "GOrgueDummyPipe.h"
 #include "GOrgueReferencePipe.h"
+#include "GOrgueSettings.h"
 #include "GOrgueSoundingPipe.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
@@ -42,8 +45,10 @@ GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_PitchCorrection(0),
 	m_MinVolume(100),
 	m_MaxVolume(100),
+	m_sender(organfile, MIDI_SEND_MANUAL),
 	m_PipeConfig(&organfile->GetPipeConfig(), organfile, NULL)
 {
+	m_organfile->RegisterMidiConfigurator(this);
 }
 
 GOrgueRank::~GOrgueRank()
@@ -60,6 +65,9 @@ void GOrgueRank::Resize()
 
 void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_note_number)
 {
+	m_organfile->RegisterSaveableObject(this);
+	m_group = group;
+
 	m_FirstMidiNoteNumber = cfg.ReadInteger(ODFSetting, group, wxT("FirstMidiNoteNumber"), 0, 256, false, first_midi_note_number);
 	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), true);
 
@@ -94,8 +102,14 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 		}
                m_Pipes[i]->Load(cfg, group, buffer);
 	}
+	m_sender.Load(cfg, group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
 	m_PipeConfig.SetName(GetName());
 	Resize();
+}
+
+void GOrgueRank::Save(GOrgueConfigWriter& cfg)
+{
+	m_sender.Save(cfg, m_group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
 }
 
 unsigned GOrgueRank::RegisterStop(GOrgueStop* stop)
@@ -165,6 +179,7 @@ void GOrgueRank::Abort()
 
 void GOrgueRank::PreparePlayback()
 {
+	m_sender.ResetKey();
 	for(unsigned i = 0; i < m_Pipes.size(); i++)
 		m_Pipes[i]->PreparePlayback();
 	for(unsigned i = 0; i < m_Velocity.size(); i++)
@@ -172,5 +187,27 @@ void GOrgueRank::PreparePlayback()
 	for(unsigned i = 0; i < m_Velocities.size(); i++)
 		for(unsigned j = 0; j < m_Velocities[i].size(); j++)
 			m_Velocities[i][j] = 0;
+}
+
+void GOrgueRank::SendKey(unsigned note, unsigned velocity)
+{
+	m_sender.SetKey(note, velocity);
+}
+
+wxString GOrgueRank::GetMidiType()
+{
+	return _("Rank");
+}
+
+wxString GOrgueRank::GetMidiName()
+{
+	return m_Name;
+}
+
+void GOrgueRank::ShowConfigDialog()
+{
+	wxString title = wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType().c_str(), GetMidiName().c_str());
+
+	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, NULL, &m_sender, NULL, NULL);
 }
 

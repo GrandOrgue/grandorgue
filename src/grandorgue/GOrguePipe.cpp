@@ -82,5 +82,6 @@ void GOrguePipe::Set(unsigned velocity, unsigned referenceID)
 				m_Velocity = m_Velocities[i];
 	}
 
+	m_Rank->SendKey(m_MidiKeyNumber, velocity);
 	Change(m_Velocity, last_velocity);
 }
