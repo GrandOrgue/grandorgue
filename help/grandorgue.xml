@@ -5959,6 +5959,7 @@ that pipe.
 (string, required) Relative path to the sample WAV file of the first
 attack. It contain may be REF:aa:bb:cc too. In that case, it means
 that this pipe is borrowed from manual aa, first rank of stop bb the pipe cc.
+It may contain DUMMY, which defines a not sounding placeholder.
      </para>
           </listitem>
         </varlistentry>
