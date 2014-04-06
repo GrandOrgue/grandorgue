@@ -1265,7 +1265,7 @@ void GrandOrgueFile::SetTemperament(const GOrgueTemperament& temperament)
 
 void GrandOrgueFile::SetTemperament(wxString name)
 {
-	const GOrgueTemperament& temperament = GOrgueTemperament::GetTemperament(name);
+	const GOrgueTemperament& temperament = m_Settings.GetTemperaments().GetTemperament(name);
 	m_Temperament = temperament.GetName();
 	SetTemperament(temperament);
 }

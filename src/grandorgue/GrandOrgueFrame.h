@@ -27,13 +27,11 @@
 #include "GOLock.h"
 #include <wx/dcmemory.h>
 #include <wx/frame.h>
-#include <vector>
 
 class GOrgueDocument;
 class GOrgueMidiEvent;
 class GOrgueSettings;
 class GOrgueSound;
-class GOrgueTemperament;
 class wxChoice;
 class wxGaugeAudio;
 class wxHtmlHelpController;
@@ -44,9 +42,11 @@ class GOrgueFrame: public wxFrame, protected GOrgueMidiCallback
 private:
 	GOMutex m_mutex;
 	wxMenu* m_file_menu;
+	wxMenu* m_audio_menu;
 	wxMenu* m_panel_menu;
 	wxMenu* m_favorites_menu;
 	wxMenu* m_recent_menu;
+	wxMenu* m_temperament_menu;
 	GOrgueDocument* m_doc;
 	wxHtmlHelpController* m_Help;
 	wxGaugeAudio *m_SamplerUsage;
@@ -56,7 +56,6 @@ private:
 	wxSpinCtrl* m_Polyphony;
 	wxSpinCtrl* m_SetterPosition;
 	wxSpinCtrl* m_Volume;
-	std::vector<GOrgueTemperament*> m_Temperaments;
 	GOrgueSound& m_Sound;
 	GOrgueSettings& m_Settings;
 	GOrgueMidiListener m_listener;
@@ -67,6 +66,7 @@ private:
 	void UpdatePanelMenu();
 	void UpdateFavoritesMenu();
 	void UpdateRecentMenu();
+	void UpdateTemperamentMenu();
 
 	GOrgueDocument* GetDocument();
 

@@ -1055,6 +1055,11 @@ GOrgueMidiMap& GOrgueSettings::GetMidiMap()
 	return m_MidiMap;
 }
 
+GOrgueTemperamentList& GOrgueSettings::GetTemperaments()
+{
+	return m_Temperaments;
+}
+
 void GOrgueSettings::Flush()
 {
 	wxString tmp_name = m_ConfigFileName + wxT(".new");
