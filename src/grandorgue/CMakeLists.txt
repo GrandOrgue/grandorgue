@@ -332,6 +332,7 @@ GOrgueSoundingPipe.cpp
 GOrgueStop.cpp
 GOrgueTemperament.cpp
 GOrgueTemperamentCent.cpp
+GOrgueTemperamentList.cpp
 GOrgueTremulant.cpp
 GOrgueWindchest.cpp
 GOrgueSwitch.cpp

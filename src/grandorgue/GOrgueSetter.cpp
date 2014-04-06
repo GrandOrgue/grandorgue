@@ -38,7 +38,6 @@
 #include "GOrgueManual.h"
 #include "GOrgueSetterButton.h"
 #include "GOrgueSettings.h"
-#include "GOrgueTemperament.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgueID.h"
@@ -1208,14 +1207,14 @@ void GOrgueSetter::SetterButtonChanged(GOrgueSetterButton* button)
 			case ID_SETTER_TEMPERAMENT_NEXT:
 			case ID_SETTER_TEMPERAMENT_PREV:
 				{
-					unsigned index = GOrgueTemperament::GetTemperamentIndex(m_organfile->GetTemperament());
-					index += GOrgueTemperament::GetTemperamentCount();
+					unsigned index = m_organfile->GetSettings().GetTemperaments().GetTemperamentIndex(m_organfile->GetTemperament());
+					index += m_organfile->GetSettings().GetTemperaments().GetTemperamentCount();
 					if (i == ID_SETTER_TEMPERAMENT_NEXT)
 						index++;
 					else
 						index--;
-					index = index % GOrgueTemperament::GetTemperamentCount();
-					m_organfile->SetTemperament(GOrgueTemperament::GetTemperamentName(index));
+					index = index % m_organfile->GetSettings().GetTemperaments().GetTemperamentCount();
+					m_organfile->SetTemperament(m_organfile->GetSettings().GetTemperaments().GetTemperamentName(index));
 				}
 				break;
 

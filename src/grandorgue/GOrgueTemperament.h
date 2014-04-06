@@ -22,7 +22,6 @@
 #ifndef GORGUETEMPERAMENT_H
 #define GORGUETEMPERAMENT_H
 
-#include "ptrvector.h"
 #include <wx/string.h>
 
 class GOrgueTemperament
@@ -30,9 +29,7 @@ class GOrgueTemperament
 protected:
 	wxString m_Group;
 	wxString m_Name;
-
-	static ptr_vector<GOrgueTemperament> m_Temperaments;
-	static void InitTemperaments();
+	wxString m_Title;
 
 public:
 	GOrgueTemperament(wxString name, wxString group = wxEmptyString);
@@ -40,13 +37,8 @@ public:
 
 	virtual float GetOffset(bool ignorepitch, unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const;
 	wxString GetName() const;
+	wxString GetTitle() const;
 	wxString GetGroup() const;
-
-	static const GOrgueTemperament& GetTemperament(wxString Name);
-	static std::vector<GOrgueTemperament*> GetTemperaments();
-	static unsigned GetTemperamentIndex(wxString name);
-	static const wxString GetTemperamentName(unsigned index);
-	static unsigned GetTemperamentCount();
 };
 
 #endif

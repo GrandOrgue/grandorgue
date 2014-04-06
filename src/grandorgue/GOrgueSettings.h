@@ -24,6 +24,7 @@
 
 #include "GOrgueMidiMap.h"
 #include "GOrgueOrgan.h"
+#include "GOrgueTemperamentList.h"
 #include "ptrvector.h"
 #include <wx/string.h>
 #include <map>
@@ -107,6 +108,7 @@ private:
 	wxString m_ReverbFile;
 	ptr_vector<GOrgueMidiReceiver> m_MIDIEvents;
 	GOrgueMidiMap m_MidiMap;
+	GOrgueTemperamentList m_Temperaments;
 
 	static const GOMidiSetting m_MIDISettings[];
 
@@ -251,6 +253,8 @@ public:
 	std::vector<GOrgueOrgan*> GetLRUOrganList();
 
 	GOrgueMidiMap& GetMidiMap();
+
+	GOrgueTemperamentList& GetTemperaments();
 
 	void Flush();
 };

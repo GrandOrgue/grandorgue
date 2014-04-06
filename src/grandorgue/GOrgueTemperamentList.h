@@ -19,38 +19,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueTemperament.h"
+#ifndef GORGUETEMPERAMENTLIST_H
+#define GORGUETEMPERAMENTLIST_H
 
-#include "GOrgueTemperamentCent.h"
-#include <wx/intl.h>
+#include "ptrvector.h"
+#include <wx/string.h>
 
-GOrgueTemperament::GOrgueTemperament(wxString name, wxString group) :
-	m_Group(group),
-	m_Name(name),
-	m_Title(wxGetTranslation(name))
+class GOrgueTemperament;
+
+class GOrgueTemperamentList
 {
-}
+private:
+	ptr_vector<GOrgueTemperament> m_Temperaments;
 
-GOrgueTemperament::~GOrgueTemperament()
-{
-}
+	void InitTemperaments();
 
-float GOrgueTemperament::GetOffset(bool ignorepitch, unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const
-{
-	return 0;
-}
+public:
+	GOrgueTemperamentList();
+	~GOrgueTemperamentList();
 
-wxString GOrgueTemperament::GetName() const
-{
-	return m_Name;
-}
+	const GOrgueTemperament& GetTemperament(wxString Name);
+	const GOrgueTemperament& GetTemperament(unsigned index);
+	unsigned GetTemperamentIndex(wxString name);
+	const wxString GetTemperamentName(unsigned index);
+	unsigned GetTemperamentCount();
+};
 
-wxString GOrgueTemperament::GetTitle() const
-{
-	return m_Title;
-}
+#endif
 
-wxString GOrgueTemperament::GetGroup() const
-{
-	return m_Group;
-}

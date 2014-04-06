@@ -112,7 +112,6 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 
 	EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOrgueFrame::OnUpdateLoaded)
 	EVT_UPDATE_UI_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnUpdateLoaded)
-	EVT_UPDATE_UI_RANGE(ID_TEMPERAMENT_0, ID_TEMPERAMENT_LAST, GOrgueFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
 
 GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound) :
@@ -131,7 +130,6 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_Polyphony(NULL),
 	m_SetterPosition(NULL),
 	m_Volume(NULL),
-	m_Temperaments(),
 	m_Sound(sound),
 	m_Settings(sound.GetSettings()),
 	m_listener(),
@@ -182,45 +180,21 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_file_menu->Append(ID_FILE_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->Append(ID_FILE_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
 	
-	m_Temperaments = GOrgueTemperament::GetTemperaments();
-	wxMenu *temperament_menu = new wxMenu;
-	for(unsigned i = 0; i < m_Temperaments.size(); i++)
-	{
-		wxMenu *menu;
-		wxString group = m_Temperaments[i]->GetGroup();
-		if (group == wxEmptyString)
-			menu = temperament_menu;
-		else
-		{
-			menu = NULL;
-			for(unsigned j = 0; j < temperament_menu->GetMenuItemCount(); j++)
-			{
-				wxMenuItem* it = temperament_menu->FindItemByPosition(j);
-				if (it->GetItemLabel() == group && it->GetSubMenu())
-					menu = it->GetSubMenu();
-			}
-			if (!menu)
-			{
-				menu = new wxMenu();
-				temperament_menu->AppendSubMenu(menu, group);
-			}
-		}
-		menu->Append(ID_TEMPERAMENT_0 + i, wxGetTranslation(m_Temperaments[i]->GetName()), wxEmptyString, wxITEM_CHECK);
-	}
+	m_temperament_menu = new wxMenu;
 	
-	wxMenu *audio_menu = new wxMenu;
-	audio_menu->AppendSubMenu(temperament_menu, _("&Temperament"));
-	audio_menu->Append(ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_CHECK);
-	audio_menu->Append(ID_MIDI_LIST, _("M&idi Objects"), wxEmptyString, wxITEM_CHECK);
-	audio_menu->AppendSeparator();
-	audio_menu->Append(ID_AUDIO_SETTINGS, _("Audio/Midi &Settings"), wxEmptyString, wxITEM_NORMAL);
-	audio_menu->AppendSeparator();
-	audio_menu->Append(ID_AUDIO_RECORD, _("&Record\tCtrl+R"), wxEmptyString, wxITEM_CHECK);
-	audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
-	audio_menu->Append(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), wxEmptyString, wxITEM_CHECK);
-	audio_menu->AppendSeparator();
-	audio_menu->Append(ID_MIDI_RECORD, _("&Record MIDI\tCtrl+M"), wxEmptyString, wxITEM_CHECK);
-	audio_menu->Append(ID_MIDI_PLAY, _("&Play MIDI\tCtrl+P"), wxEmptyString, wxITEM_CHECK);
+	m_audio_menu = new wxMenu;
+	m_audio_menu->AppendSubMenu(m_temperament_menu, _("&Temperament"));
+	m_audio_menu->Append(ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_CHECK);
+	m_audio_menu->Append(ID_MIDI_LIST, _("M&idi Objects"), wxEmptyString, wxITEM_CHECK);
+	m_audio_menu->AppendSeparator();
+	m_audio_menu->Append(ID_AUDIO_SETTINGS, _("Audio/Midi &Settings"), wxEmptyString, wxITEM_NORMAL);
+	m_audio_menu->AppendSeparator();
+	m_audio_menu->Append(ID_AUDIO_RECORD, _("&Record\tCtrl+R"), wxEmptyString, wxITEM_CHECK);
+	m_audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
+	m_audio_menu->Append(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), wxEmptyString, wxITEM_CHECK);
+	m_audio_menu->AppendSeparator();
+	m_audio_menu->Append(ID_MIDI_RECORD, _("&Record MIDI\tCtrl+M"), wxEmptyString, wxITEM_CHECK);
+	m_audio_menu->Append(ID_MIDI_PLAY, _("&Play MIDI\tCtrl+P"), wxEmptyString, wxITEM_CHECK);
 	
 	
 	wxMenu *help_menu = new wxMenu;
@@ -285,7 +259,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	
 	wxMenuBar *menu_bar = new wxMenuBar;
 	menu_bar->Append(m_file_menu, _("&File"));
-	menu_bar->Append(audio_menu, _("&Audio/Midi"));
+	menu_bar->Append(m_audio_menu, _("&Audio/Midi"));
 	menu_bar->Append(m_panel_menu, _("&Panel"));
 	menu_bar->Append(help_menu, _("&Help"));
 	SetMenuBar(menu_bar);
@@ -460,6 +434,45 @@ void GOrgueFrame::UpdateRecentMenu()
 	}
 }
 
+void GOrgueFrame::UpdateTemperamentMenu()
+{
+	GOrgueDocument* doc = GetDocument();
+	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
+	wxString temperament = wxEmptyString;
+	if (organfile)
+		temperament = organfile->GetTemperament();
+
+	while (m_temperament_menu->GetMenuItemCount() > 0)
+		m_temperament_menu->Destroy(m_temperament_menu->FindItemByPosition(m_temperament_menu->GetMenuItemCount() - 1));
+
+	for(unsigned i = 0; i < m_Settings.GetTemperaments().GetTemperamentCount() && i < ID_TEMPERAMENT_LAST - ID_TEMPERAMENT_0; i++)
+	{
+		const GOrgueTemperament& t = m_Settings.GetTemperaments().GetTemperament(i);
+		wxMenu *menu;
+		wxString group = t.GetGroup();
+		if (group == wxEmptyString)
+			menu = m_temperament_menu;
+		else
+		{
+			menu = NULL;
+			for(unsigned j = 0; j < m_temperament_menu->GetMenuItemCount(); j++)
+			{
+				wxMenuItem* it = m_temperament_menu->FindItemByPosition(j);
+				if (it->GetItemLabel() == group && it->GetSubMenu())
+					menu = it->GetSubMenu();
+			}
+			if (!menu)
+			{
+				menu = new wxMenu();
+				m_temperament_menu->AppendSubMenu(menu, group);
+			}
+		}
+		wxMenuItem* e = menu->Append(ID_TEMPERAMENT_0 + i, t.GetTitle(), wxEmptyString, wxITEM_CHECK);
+		e->Enable(organfile);
+		e->Check(t.GetName() == temperament);
+	}
+}
+
 void GOrgueFrame::OnSize(wxSizeEvent& event)
 {
 	wxWindow *child = (wxWindow *)NULL;
@@ -501,13 +514,6 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		return;
 	}
 
-	if (ID_TEMPERAMENT_0 <= event.GetId() && event.GetId() <= ID_TEMPERAMENT_LAST)
-	{
-		event.Enable(organfile);
-		event.Check(organfile && m_Temperaments[event.GetId() - ID_TEMPERAMENT_0]->GetName() == organfile->GetTemperament());
-		return;
-	}
-
 	if (event.GetId() == ID_AUDIO_RECORD)
 		event.Check(m_Sound.IsAudioRecording());
 	else if (event.GetId() == ID_MIDI_RECORD)
@@ -543,8 +549,8 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_TEMPERAMENT_0;
 	GOrgueDocument* doc = GetDocument();
-	if (doc && doc->GetOrganFile())
-		doc->GetOrganFile()->SetTemperament(m_Temperaments[id]->GetName());
+	if (doc && doc->GetOrganFile() && id < m_Settings.GetTemperaments().GetTemperamentCount())
+		doc->GetOrganFile()->SetTemperament(m_Settings.GetTemperaments().GetTemperament(id).GetName());
 }
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
@@ -910,6 +916,8 @@ void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
 		UpdateFavoritesMenu();
     if (event.GetMenu() == m_file_menu)
 		UpdateRecentMenu();
+    if (event.GetMenu() == m_audio_menu)
+		UpdateTemperamentMenu();
     event.Skip();
 }
 
