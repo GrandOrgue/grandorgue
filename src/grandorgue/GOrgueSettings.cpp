@@ -160,6 +160,9 @@ void GOrgueSettings::Load()
 		for(unsigned i = 0; i < organ_count; i++)
 			m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap));
 
+		m_Temperaments.InitTemperaments();
+		m_Temperaments.Load(cfg);
+
 		m_AudioGroups.clear();
 		unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), wxT("Count"), 0, 200, false, 0);
 		for(unsigned i = 0; i < count; i++)
@@ -1103,6 +1106,8 @@ void GOrgueSettings::Flush()
 	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
 		m_OrganList[i]->Save(cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap);
+
+	m_Temperaments.Save(cfg);
 
 	for(unsigned i = 0; i < GetEventCount(); i++)
 		m_MIDIEvents[i]->Save(cfg, GetEventSection(i), m_MidiMap);

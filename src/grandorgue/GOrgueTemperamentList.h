@@ -25,24 +25,33 @@
 #include "ptrvector.h"
 #include <wx/string.h>
 
+class GOrgueConfigReader;
+class GOrgueConfigWriter;
 class GOrgueTemperament;
+class GOrgueTemperamentUser;
 
 class GOrgueTemperamentList
 {
 private:
 	ptr_vector<GOrgueTemperament> m_Temperaments;
-
-	void InitTemperaments();
+	ptr_vector<GOrgueTemperamentUser> m_UserTemperaments;
 
 public:
 	GOrgueTemperamentList();
 	~GOrgueTemperamentList();
+
+	void Load(GOrgueConfigReader& cfg);
+	void Save(GOrgueConfigWriter& cfg);
+	ptr_vector<GOrgueTemperamentUser>& GetUserTemperaments();
+
+	void InitTemperaments();
 
 	const GOrgueTemperament& GetTemperament(wxString Name);
 	const GOrgueTemperament& GetTemperament(unsigned index);
 	unsigned GetTemperamentIndex(wxString name);
 	const wxString GetTemperamentName(unsigned index);
 	unsigned GetTemperamentCount();
+
 };
 
 #endif

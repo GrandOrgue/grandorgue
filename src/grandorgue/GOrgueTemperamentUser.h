@@ -19,27 +19,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUETEMPERAMENT_H
-#define GORGUETEMPERAMENT_H
+#ifndef GORGUETEMPERAMENTUSER_H
+#define GORGUETEMPERAMENTUSER_H
 
-#include <wx/string.h>
+#include "GOrgueTemperamentCent.h"
 
-class GOrgueTemperament
+class GOrgueConfigReader;
+class GOrgueConfigWriter;
+
+class GOrgueTemperamentUser : public GOrgueTemperamentCent
 {
-protected:
-	wxString m_Group;
-	wxString m_Name;
-	wxString m_Title;
-
 public:
-	GOrgueTemperament(wxString name, wxString group = wxEmptyString);
-	GOrgueTemperament(wxString name, wxString title, wxString group);
-	virtual ~GOrgueTemperament();
+	GOrgueTemperamentUser(wxString name, wxString title, wxString group);
+	GOrgueTemperamentUser(GOrgueConfigReader& cfg, wxString group);
 
-	virtual float GetOffset(bool ignorepitch, unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const;
-	wxString GetName() const;
-	wxString GetTitle() const;
-	wxString GetGroup() const;
+	void Save(GOrgueConfigWriter& cfg, wxString group);
+
+	float GetOffset(unsigned note);
+	void SetOffset(unsigned note, float offset);
+
+	void SetTitle(wxString title);
+	void SetGroup(wxString group);
 };
 
 #endif

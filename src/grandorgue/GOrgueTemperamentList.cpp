@@ -21,8 +21,12 @@
 
 #include "GOrgueTemperamentList.h"
 
+#include "GOrgueConfigReader.h"
+#include "GOrgueConfigWriter.h"
+#include "GOrgueLimits.h"
 #include "GOrgueTemperament.h"
 #include "GOrgueTemperamentCent.h"
+#include "GOrgueTemperamentUser.h"
 #include <wx/intl.h>
 
 GOrgueTemperamentList::GOrgueTemperamentList()
@@ -33,21 +37,52 @@ GOrgueTemperamentList::~GOrgueTemperamentList()
 {
 }
 
+void GOrgueTemperamentList::Load(GOrgueConfigReader& cfg)
+{
+	unsigned count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("UserTemperamentCount"), 0, MAX_TEMPERAMENTS, false, 0);
+	for(unsigned i = 0; i < count; i++)
+		m_UserTemperaments.push_back(new GOrgueTemperamentUser(cfg, wxString::Format(wxT("UserTemperament%03d"), i + 1)));;
+}
+
+void GOrgueTemperamentList::Save(GOrgueConfigWriter& cfg)
+{
+	if (m_UserTemperaments.size() > MAX_TEMPERAMENTS)
+		m_UserTemperaments.resize(MAX_TEMPERAMENTS);
+
+	for(unsigned i = 0; i < m_UserTemperaments.size(); i++)
+		m_UserTemperaments[i]->Save(cfg, wxString::Format(wxT("UserTemperament%03d"), i + 1));
+
+	cfg.WriteInteger(wxT("General"), wxT("UserTemperamentCount"), m_UserTemperaments.size());
+}
+
+ptr_vector<GOrgueTemperamentUser>& GOrgueTemperamentList::GetUserTemperaments()
+{
+	return m_UserTemperaments;
+}
+
 const GOrgueTemperament& GOrgueTemperamentList::GetTemperament(unsigned index)
 {
-	InitTemperaments();
-	
-	return *m_Temperaments[index];
+	if (index < m_Temperaments.size())
+		return *m_Temperaments[index];
+
+	index -= m_Temperaments.size();
+	if (index < m_UserTemperaments.size())
+		return *m_UserTemperaments[index];
+
+	/* else return original temperament */
+	return *m_Temperaments[0];
 }
 
 
 const GOrgueTemperament& GOrgueTemperamentList::GetTemperament(wxString Name)
 {
-	InitTemperaments();
-
 	for(unsigned i = 0; i < m_Temperaments.size(); i++)
 		if (Name == m_Temperaments[i]->GetName())
 			return *m_Temperaments[i];
+
+	for(unsigned i = 0; i < m_UserTemperaments.size(); i++)
+		if (Name == m_UserTemperaments[i]->GetName())
+			return *m_UserTemperaments[i];
 
 	/* else return original temperament */
 	return *m_Temperaments[0];
@@ -55,26 +90,32 @@ const GOrgueTemperament& GOrgueTemperamentList::GetTemperament(wxString Name)
 
 unsigned GOrgueTemperamentList::GetTemperamentIndex(wxString name)
 {
-	InitTemperaments();
-
 	for(unsigned i = 0; i < m_Temperaments.size(); i++)
 		if (m_Temperaments[i]->GetName() == name)
 			return i;
+
+	for(unsigned i = 0; i < m_UserTemperaments.size(); i++)
+		if (m_UserTemperaments[i]->GetName() == name)
+			return i + m_Temperaments.size();
+
 	return 0;
 }
 
 const wxString GOrgueTemperamentList::GetTemperamentName(unsigned index)
 {
-	InitTemperaments();
+	if (index < m_Temperaments.size())
+		return m_Temperaments[index]->GetName();
 
-	return m_Temperaments[index]->GetName();
+	index -= m_Temperaments.size();
+	if (index < m_UserTemperaments.size())
+		return m_UserTemperaments[index]->GetName();
+
+	return m_Temperaments[0]->GetName();
 }
 
 unsigned GOrgueTemperamentList::GetTemperamentCount()
 {
-	InitTemperaments();
-
-	return m_Temperaments.size();
+	return m_Temperaments.size() + m_UserTemperaments.size();
 }
 
 void GOrgueTemperamentList::InitTemperaments()

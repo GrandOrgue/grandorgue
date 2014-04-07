@@ -333,6 +333,7 @@ GOrgueStop.cpp
 GOrgueTemperament.cpp
 GOrgueTemperamentCent.cpp
 GOrgueTemperamentList.cpp
+GOrgueTemperamentUser.cpp
 GOrgueTremulant.cpp
 GOrgueWindchest.cpp
 GOrgueSwitch.cpp
@@ -357,6 +358,7 @@ SettingsMidiMessage.cpp
 SettingsOption.cpp
 SettingsOrgan.cpp
 SettingsReverb.cpp
+SettingsTemperaments.cpp
 SplashScreen.cpp
 wxGaugeAudio.cpp
 ${IMAGE_LIST})

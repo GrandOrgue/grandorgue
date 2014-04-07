@@ -31,6 +31,13 @@ GOrgueTemperament::GOrgueTemperament(wxString name, wxString group) :
 {
 }
 
+GOrgueTemperament::GOrgueTemperament(wxString name, wxString title, wxString group) :
+	m_Group(group),
+	m_Name(name),
+	m_Title(title)
+{
+}
+
 GOrgueTemperament::~GOrgueTemperament()
 {
 }
