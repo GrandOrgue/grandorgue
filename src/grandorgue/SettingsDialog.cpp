@@ -32,6 +32,7 @@
 #include "SettingsOption.h"
 #include "SettingsOrgan.h"
 #include "SettingsReverb.h"
+#include "SettingsTemperaments.h"
 #include <wx/app.h>
 #include <wx/bookctrl.h>
 #include <wx/msgdlg.h>
@@ -57,6 +58,7 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	m_GroupPage = new SettingsAudioGroup(m_Sound.GetSettings(), notebook);
 	m_OutputPage = new SettingsAudioOutput(m_Sound, *m_GroupPage, notebook);
 	m_ReverbPage = new SettingsReverb(m_Sound.GetSettings(), notebook);
+	m_TemperamentsPage = new SettingsTemperaments(m_Sound.GetSettings(), notebook);
 
 	notebook->AddPage(m_OptionsPage,  _("Options"));
 	notebook->AddPage(m_OutputPage, _("Audio Output"));
@@ -64,6 +66,7 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	notebook->AddPage(m_GroupPage, _("Audio Groups"));
 	notebook->AddPage(m_OrganPage, _("Organs"));
 	notebook->AddPage(m_MidiDevicePage,  _("MIDI Devices"));
+	notebook->AddPage(m_TemperamentsPage, _("Temperaments"));
 	notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Configuration"));
 
 }
@@ -109,6 +112,7 @@ bool SettingsDialog::DoApply()
 	m_GroupPage->Save();
 	m_OutputPage->Save();
 	m_ReverbPage->Save();
+	m_TemperamentsPage->Save();
 
 	m_Sound.ResetSound(true);
 	m_Sound.GetSettings().Flush();

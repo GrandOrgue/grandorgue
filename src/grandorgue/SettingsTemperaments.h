@@ -19,27 +19,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUETEMPERAMENT_H
-#define GORGUETEMPERAMENT_H
+#ifndef SETTINGSTEMPERAMENTS_H
+#define SETTINGSTEMERPAMENTS_H
 
-#include <wx/string.h>
+#include <vector>
+#include <wx/panel.h>
 
-class GOrgueTemperament
+class GOrgueSettings;
+class GOrgueTemperamentList;
+class GOrgueTemperamentUser;
+class wxButton;
+class wxGrid;
+class wxGridEvent;
+
+class SettingsTemperaments : public wxPanel
 {
-protected:
-	wxString m_Group;
-	wxString m_Name;
-	wxString m_Title;
+	enum {
+		ID_LIST,
+		ID_ADD,
+		ID_DEL,
+	};
+private:
+	GOrgueTemperamentList& m_Temperaments;
+	std::vector<GOrgueTemperamentUser*> m_Ptrs;
+	wxGrid* m_List;
+	wxButton* m_Add;
+	wxButton* m_Del;
+
+	void OnListSelected(wxGridEvent& event);
+	void OnAdd(wxCommandEvent& event);
+	void OnDel(wxCommandEvent& event);
+
+	void Update();
 
 public:
-	GOrgueTemperament(wxString name, wxString group = wxEmptyString);
-	GOrgueTemperament(wxString name, wxString title, wxString group);
-	virtual ~GOrgueTemperament();
+	SettingsTemperaments(GOrgueSettings& settings, wxWindow* parent);
 
-	virtual float GetOffset(bool ignorepitch, unsigned midi_number, unsigned wav_midi_number, float wav_pitch_fract, float harmonic_number, float pitch_correction, float default_tuning) const;
-	wxString GetName() const;
-	wxString GetTitle() const;
-	wxString GetGroup() const;
+	void Save();
+	
+	DECLARE_EVENT_TABLE()
 };
 
 #endif
