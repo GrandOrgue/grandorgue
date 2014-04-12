@@ -187,6 +187,7 @@ void GOrgueDocument::CloseOrgan()
 		m_Windows.erase(m_Windows.begin());
 		wnd->RemoveView();
 	}
+	wxTheApp->ProcessPendingEvents();
 
 	m_OrganFileReady = false;
 	GOMutexLocker locker(m_lock);
