@@ -264,7 +264,8 @@ void GOrgueSettings::Load()
 			SetMidiOutState(name, cfg.ReadBoolean(CMBSetting, wxT("MIDIOut"), wxString::Format(wxT("Device%03dEnabled"), i + 1)));
 		}
 
-		wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
+		if (wxFileExists(m_ConfigFileName))
+			wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
 	}
 	catch (wxString error)
 	{
