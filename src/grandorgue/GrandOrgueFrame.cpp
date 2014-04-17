@@ -379,7 +379,8 @@ void GOrgueFrame::UpdatePanelMenu()
 {
 	GOrgueDocument* doc = GetDocument();
 	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
-	unsigned panelcount = std::min (organfile ? organfile->GetPanelCount() - 1 : 0, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
+	unsigned panelcount = (organfile && organfile->GetPanelCount()) ? organfile->GetPanelCount() - 1 : 0;
+	panelcount = std::min (panelcount, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
 
 	while (m_panel_menu->GetMenuItemCount() > 0)
 		m_panel_menu->Destroy(m_panel_menu->FindItemByPosition(m_panel_menu->GetMenuItemCount() - 1));
