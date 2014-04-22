@@ -24,7 +24,7 @@
 
 #define SUBFILTER_BITS            (3U)
 #define SUBFILTER_TAPS            (1U << SUBFILTER_BITS)
-#define UPSAMPLE_BITS             (11U)
+#define UPSAMPLE_BITS             (13U)
 #define UPSAMPLE_FACTOR           (1U << UPSAMPLE_BITS)
 
 /* This factor must not be exceeded in the downsampler and it MUST be
