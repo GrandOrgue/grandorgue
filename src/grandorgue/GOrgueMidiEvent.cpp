@@ -282,9 +282,9 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgu
 			m[2] = 0x10;
 			m[3] = (GetKey()) & 0x7F;
 			for(unsigned i = 0; i < len; i++)
-				m[5 + i] = b[i] & 0x7F; 
+				m[4 + i] = b[i] & 0x7F; 
 			for(unsigned i = len; i < 16; i++)
-				m[5 + i] = ' ';
+				m[4 + i] = ' ';
 			m[20] = 0xF7;
 			msg.push_back(m);
 		}
