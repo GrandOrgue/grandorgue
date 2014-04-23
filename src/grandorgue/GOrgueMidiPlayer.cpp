@@ -174,6 +174,7 @@ void GOrgueMidiPlayer::Notify()
 			m_Pos++;
 			e.SetDevice(m_DeviceID);
 			m_Last = e.GetTime();
+			e.SetTime(wxGetLocalTimeMillis());
 			wxMidiEvent event(e);
 			m_midi.AddPendingEvent(event);
 		}
