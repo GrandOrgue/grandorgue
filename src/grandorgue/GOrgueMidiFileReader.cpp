@@ -311,6 +311,7 @@ bool GOrgueMidiFileReader::ReadEvent(GOrgueMidiEvent& e)
 		}
 		for(unsigned i = 0; i < len; i++)
 			msg.push_back(m_Data[m_Pos++]);
+		m_LastTime += rel_time * m_Speed;
 
 		if (msg[0] == 0xFF && msg[1] == 0x2F && msg[2] == 0x00)
 		{
@@ -330,7 +331,6 @@ bool GOrgueMidiFileReader::ReadEvent(GOrgueMidiEvent& e)
 		}
 		
 		e.FromMidi(msg, m_Map);
-		m_LastTime += rel_time * m_Speed;
 		e.SetTime(m_LastTime);
 		if (e.GetMidiType() != MIDI_NONE)
 			return true;
