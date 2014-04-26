@@ -58,8 +58,6 @@ class GOSoundEngine
 
 private:
 
-	typedef int sound_buffer[GO_SOUND_BUFFER_SIZE];
-
 	/* This is inteded to be struct, but needs copy constructors to make GOMutex work with std::vector */
 	class GOSamplerEntry
 	{
@@ -178,6 +176,7 @@ private:
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group);
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
 	void SwitchAttackSampler(GO_SAMPLER* sampler);
+	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, bool depend = true);
 	void ResetDoneFlags();
 	unsigned GetFaderLength(unsigned MidiKeyNumber);
