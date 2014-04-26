@@ -245,9 +245,78 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 	Reset();
 }
 
+bool GOSoundEngine::ProcessSampler(float output_buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume)
+{
+	const unsigned block_time = n_frames;
+	float temp[GO_SOUND_BUFFER_SIZE];
+	bool changed_sampler = false;
+	const bool process_sampler = (sampler->time <= m_CurrentTime);
+
+	if (process_sampler)
+	{
+
+		if  (
+		     (m_PolyphonyLimiting) &&
+		     (sampler->is_release) &&
+		     (m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
+		     (m_CurrentTime - sampler->time > 172 * 16)
+		     )
+			sampler->fader.StartDecay(370, m_SampleRate); /* Approx 0.37s at 44.1kHz */
+
+		if (sampler->stop && sampler->stop <= m_CurrentTime && sampler->stop - sampler->time <= block_time)
+			sampler->pipe = NULL;
+
+		/* The decoded sampler frame will contain values containing
+		 * sampler->pipe_section->sample_bits worth of significant bits.
+		 * It is the responsibility of the fade engine to bring these bits
+		 * back into a sensible state. This is achieved during setup of the
+		 * fade parameters. The gain target should be:
+		 *
+		 *     playback gain * (2 ^ -sampler->pipe_section->sample_bits)
+		 */
+		if (!GOAudioSection::ReadBlock(&sampler->stream, temp, n_frames))
+			sampler->pipe = NULL;
+
+		sampler->fader.Process(n_frames, temp, volume);
+		
+		/* Add these samples to the current output buffer shifting
+		 * right by the necessary amount to bring the sample gain back
+		 * to unity (this value is computed in GOrguePipe.cpp)
+		 */
+		for(unsigned i = 0; i < n_frames * 2; i++)
+			output_buffer[i] += temp[i];
+
+		if (sampler->stop && sampler->stop <= m_CurrentTime)
+		{
+			CreateReleaseSampler(sampler);
+			
+			/* The above code created a new sampler to playback the release, the
+			 * following code takes the active sampler for this pipe (which will be
+			 * in either the attack or loop section) and sets the fadeout property
+			 * which will decay this portion of the pipe. The sampler will
+			 * automatically be placed back in the pool when the fade restores to
+			 * zero. */
+			unsigned cross_fade_len = sampler->pipe ? GetFaderLength(sampler->pipe->GetMidiKeyNumber()) : 46;
+			sampler->fader.StartDecay(cross_fade_len, m_SampleRate);
+			sampler->is_release = true;
+			sampler->stop = 0;
+		} 
+		else if (sampler->new_attack && sampler->new_attack <= m_CurrentTime)
+		{
+			SwitchAttackSampler(sampler);
+			sampler->new_attack = 0;
+			changed_sampler = true;
+		}
+	}
+
+	if (!sampler->pipe || (sampler->fader.IsSilent() && process_sampler && !changed_sampler))
+		return false;
+	else
+		return true;
+}
+
 void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, bool depend)
 {
-	unsigned block_time = n_frames;
 	GOMutexLocker locker(state.mutex, !depend);
 
 	if (!locker.IsLocked())
@@ -278,10 +347,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		volume = m_Gain;
 		if (state.windchest)
 			volume *= state.windchest->GetVolume();
-	}
 
-	if (!state.is_tremulant)
-	{
 		if (state.windchest)
 		{
 			GOrgueWindchest* current_windchest = state.windchest;
@@ -304,73 +370,12 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
 	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
 	{
-		float temp[GO_SOUND_BUFFER_SIZE];
-		bool changed_sampler = false;
-
-		const bool process_sampler = (sampler->time <= m_CurrentTime);
-		if (process_sampler)
-		{
-
-			if  (
-					(m_PolyphonyLimiting) &&
-					(sampler->is_release) &&
-					(m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
-					(m_CurrentTime - sampler->time > 172 * 16)
-				)
-				sampler->fader.StartDecay(370, m_SampleRate); /* Approx 0.37s at 44.1kHz */
-
-			if (sampler->stop && sampler->stop <= m_CurrentTime && sampler->stop - sampler->time <= block_time)
-				sampler->pipe = NULL;
-
-			/* The decoded sampler frame will contain values containing
-			 * sampler->pipe_section->sample_bits worth of significant bits.
-			 * It is the responsibility of the fade engine to bring these bits
-			 * back into a sensible state. This is achieved during setup of the
-			 * fade parameters. The gain target should be:
-			 *
-			 *     playback gain * (2 ^ -sampler->pipe_section->sample_bits)
-			 */
-			if (!GOAudioSection::ReadBlock(&sampler->stream, temp, n_frames))
-				sampler->pipe = NULL;
-
-			sampler->fader.Process(n_frames, temp, volume);
-
-			/* Add these samples to the current output buffer shifting
-			 * right by the necessary amount to bring the sample gain back
-			 * to unity (this value is computed in GOrguePipe.cpp)
-			 */
-			for(unsigned i = 0; i < n_frames * 2; i++)
-				output_buffer[i] += temp[i];
-
-			if (sampler->stop && sampler->stop <= m_CurrentTime)
-			{
-				CreateReleaseSampler(sampler);
-
-				/* The above code created a new sampler to playback the release, the
-				 * following code takes the active sampler for this pipe (which will be
-				 * in either the attack or loop section) and sets the fadeout property
-				 * which will decay this portion of the pipe. The sampler will
-				 * automatically be placed back in the pool when the fade restores to
-				 * zero. */
-				unsigned cross_fade_len = sampler->pipe ? GetFaderLength(sampler->pipe->GetMidiKeyNumber()) : 46;
-				sampler->fader.StartDecay(cross_fade_len, m_SampleRate);
-				sampler->is_release = true;
-				sampler->stop = 0;
-			} 
-			else if (sampler->new_attack && sampler->new_attack <= m_CurrentTime)
-			{
-				SwitchAttackSampler(sampler);
-				sampler->new_attack = 0;
-				changed_sampler = true;
-			}
-		}
+		bool keep;
+		keep = ProcessSampler(output_buffer, sampler, n_frames, volume);
 
 		next_sampler = sampler->next;
-		/* if this sampler's pipe has been set to null or the fade value is
-		 * zero, the sample is no longer required and can be removed from the
-		 * linked list. If it was still supplying audio, we must update the
-		 * previous valid sampler. */
-		if (!sampler->pipe || (sampler->fader.IsSilent() && process_sampler && !changed_sampler))
+
+		if (!keep)
 		{
 			/* sampler needs to be removed from the list */
 			if (sampler == state.sampler)
