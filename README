@@ -20,7 +20,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org)and NSIS (htt
 
 #2: TDM64 environment
 	Install TDM64 from http://tdm-gcc.tdragon.net/download
-	Install wxWidgets-2.8.12 from http://www.wxwidgets.org/downloads/ in C:\TDM\wx32\wxWidgets-2.8.12 and C:\TDM\wx64\wxWidgets-2.8.12
+	Install the sources of wxWidgets-2.8.12 from http://www.wxwidgets.org/downloads/ in C:\TDM\wx32\wxWidgets-2.8.12 and C:\TDM\wx64\wxWidgets-2.8.12 (same sources at both places)
 	Install all the tools for translation and help generation (see Building the help and translations on Windows in README C) ). It is a good idea to copy all exe in the same directory and to add this directory to the Windows path (e.g. C:\TDM\tools\bin, C:\TDM\docbook-xsl-1.76.1 )
 	
 	Building for 32 bits
@@ -29,6 +29,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org)and NSIS (htt
 			mingw32-make -f makefile.gcc UNICODE=1 BUILD=Release SHARED=0 CXXFLAGS="-m32" CFLAGS="-m32"
 		GO:
 			create a build directory (e.g. c:\go\build32)
+			ASIO support: Either add -DRTAUDIO_USE_ASIO=OFF to the cmake parameters below (no ASIO support), or copy the sources from ASIO SDK at http://www.steinberg.net/en/company/developer.html into C:\go\ext\rt\asio\include (the SDK is free but you will need to set up a developer account with Steinberg).
 			you need to replace %1 by GO revision number at the end of the following line, or copy this line in a bat file and use the revision number as the parameter when executing the bat file.
 			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx32\wxWidgets-2.8.12 -DCMAKE_EXE_LINKER_FLAGS="-m32 -static-libgcc" -DCMAKE_CXX_FLAGS="-m32" -DCMAKE_C_FLAGS="-m32" -DCMAKE_RC_FLAGS="-F pe-i386 -U WIN64" -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1  -DRTAUDIO_USE_WASAPI=ON -DRTAUDIO_USE_JACK=OFF -DRTMIDI_USE_JACK=OFF -DINSTALL_DEMO=ON -DVERSION_REVISION=%1
 			mingw32-make 
@@ -44,6 +45,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org)and NSIS (htt
 			mingw32-make -f makefile.gcc BUILD=Release UNICODE=1 SHARED=0 CXXFLAGS=-DHAVE_VARIADIC_MACROS=1
 		GO:
 			create a build directory (e.g. c:\go\build64)
+			ASIO support: Either add -DRTAUDIO_USE_ASIO=OFF to the cmake parameters below (no ASIO support), or copy the sources from ASIO SDK at http://www.steinberg.net/en/company/developer.html into C:\go\ext\rt\asio\include (the SDK is free but you will need to set up a developer account with Steinberg).
 			you need to have build the 32 bit version first since the executables are required to compile the 64 bit version
 			you need to replace %1 by GO revision number at the end of the following line, or copy this line in a bat file and use the revision number as the parameter when executing the bat file.
 			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx64\wxWidgets-2.8.12 -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc" -DIMPORT_EXECUTABLES=c:\go\build32\ImportExecutables.cmake -DCMAKE_SYSTEM_NAME=Windows -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1 -DRTAUDIO_USE_WASAPI=ON -DINSTALL_DEMO=ON -DRTAUDIO_USE_JACK=OFF -DRTMIDI_USE_JACK=OFF -DVERSION_REVISION=%1 
