@@ -66,7 +66,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	if (m_Settings.GetRandomizeSpeaking())
 		m_Random->SetValue(true);
 
-	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 5, 5);
+	wxFlexGridSizer* grid = new wxFlexGridSizer(5, 2, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound Engine"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
