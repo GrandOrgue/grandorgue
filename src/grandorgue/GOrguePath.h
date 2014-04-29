@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORUGEPATH_H
+#ifndef GORGUEPATH_H
 #define GORGUEPATH_H
 
 #include <wx/string.h>

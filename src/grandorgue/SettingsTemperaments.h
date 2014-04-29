@@ -20,7 +20,7 @@
  */
 
 #ifndef SETTINGSTEMPERAMENTS_H
-#define SETTINGSTEMERPAMENTS_H
+#define SETTINGSTEMPERAMENTS_H
 
 #include <vector>
 #include <wx/panel.h>
