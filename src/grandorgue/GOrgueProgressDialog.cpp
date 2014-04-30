@@ -43,24 +43,30 @@ GOrgueProgressDialog::~GOrgueProgressDialog()
 void GOrgueProgressDialog::Setup(long max, const wxString& title, const wxString& msg)
 {
 	if (m_dlg)
-		m_dlg->Destroy();
-	m_dlg = new wxProgressDialog(title, msg, 0x10000, NULL, wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
+		m_dlg->SetTitle(title);
+	else
+		m_dlg = new wxProgressDialog(title, msg, 0x10000, NULL, wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
+
 	m_last = 0;
 	m_const = 0;
 	m_value = 0;
-	m_max = 0;
-	if (!max)
-		max = 1;
+	m_max = (max == 0) ? 1 : max;
 	Reset(max, msg);
+}
+
+bool GOrgueProgressDialog::ForceVisualUpdate(const wxString& msg)
+{
+	GOrgueLCD_WriteLineTwo(wxString::Format(_("Progress %lu%%"), 100 * (m_value + m_const) / m_max));
+	return m_dlg->Update(0xffff * (m_value + m_const) / m_max, msg);
 }
 
 void GOrgueProgressDialog::Reset(long max, const wxString& msg)
 {
+	m_last   = wxGetUTCTime();
 	m_const += m_value;
-	m_max += max;
-	m_last--;
-	Update(0, msg);
-	m_last--;
+	m_value  = 0;
+	m_max    = m_value + max;
+	ForceVisualUpdate(msg);
 }
 
 bool GOrgueProgressDialog::Update(unsigned value, const wxString& msg)
@@ -71,9 +77,6 @@ bool GOrgueProgressDialog::Update(unsigned value, const wxString& msg)
 	if (m_last == wxGetUTCTime())
 		return true;
 	m_last = wxGetUTCTime();
-	GOrgueLCD_WriteLineTwo (wxString::Format(_("Progress %lu%%"), 100 * (m_value + m_const) / m_max));
-	if (!m_dlg->Update(0xffff * (m_value + m_const) / m_max, msg))
-		return false;
-	return true;
+	return ForceVisualUpdate(msg);
 }
 
