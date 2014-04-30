@@ -34,4 +34,60 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="varlistentry" mode="varlist-table">
+    <xsl:variable name="presentation">
+      <xsl:call-template name="pi.dbhtml_term-presentation">
+        <xsl:with-param name="node" select=".."/>
+      </xsl:call-template>
+    </xsl:variable>
+  
+    <xsl:variable name="separator">
+      <xsl:call-template name="pi.dbhtml_term-separator">
+        <xsl:with-param name="node" select=".."/>
+      </xsl:call-template>
+    </xsl:variable>
+    <tr valign="top">
+      <xsl:call-template name="tr.attributes">
+        <xsl:with-param name="rownum">
+          <xsl:number from="variablelist" count="varlistentry"/>
+        </xsl:with-param>
+      </xsl:call-template>
+  
+      <td valign="top">
+        <p>
+        <xsl:call-template name="anchor"/>
+        <xsl:choose>
+          <xsl:when test="$presentation = 'bold'">
+            <strong>
+              <xsl:apply-templates select="term"/>
+              <xsl:value-of select="$separator"/>
+            </strong>
+          </xsl:when>
+          <xsl:when test="$presentation = 'italic'">
+            <em>
+              <xsl:apply-templates select="term"/>
+              <xsl:value-of select="$separator"/>
+            </em>
+          </xsl:when>
+          <xsl:when test="$presentation = 'bold-italic'">
+            <strong>
+              <em>
+                <xsl:apply-templates select="term"/>
+                <xsl:value-of select="$separator"/>
+              </em>
+            </strong>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="term"/>
+            <xsl:value-of select="$separator"/>
+          </xsl:otherwise>
+        </xsl:choose>
+        </p>
+      </td>
+      <td valign="top">
+        <xsl:apply-templates select="listitem"/>
+      </td>
+    </tr>
+  </xsl:template>
+
 </xsl:stylesheet>

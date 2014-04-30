@@ -60,20 +60,20 @@ Welcome to the manual for GrandOrgue.
     </para>
     <itemizedlist mark="bullet">
       <listitem>
-        <para>
+        <simpara>
 Click the Contents tab to display a list of important topics about the
 program.
-        </para>
+        </simpara>
       </listitem>
       <listitem>
-        <para>
+        <simpara>
 Click the Index tab to display an alphabetical listing of topics.
-        </para>
+        </simpara>
       </listitem>
       <listitem>
-        <para>
+        <simpara>
 Click the Search tab to search for a specific word in the help system.
-        </para>
+        </simpara>
       </listitem>
     </itemizedlist>
   </chapter>
@@ -111,7 +111,7 @@ sets wherever is convenient and space permits.
 Please look at https://sourceforge.net/p/ourorgan/samplesets/ for
 more information.
       </para>
-      <note><para>Some Hauptwerk&#8482; Organ Definition File keywords are not used by GrandOrgue and are reported in a pop-up window. These warning messages can be safely ignored</para></note>
+      <note><simpara>Some Hauptwerk&#8482; Organ Definition File keywords are not used by GrandOrgue and are reported in a pop-up window. These warning messages can be safely ignored</simpara></note>
     </sect1>
     <sect1>
       <title>Features</title>
@@ -120,59 +120,59 @@ more information.
       </indexterm>
       <itemizedlist mark="bullet">
         <listitem>
-          <para>
+          <simpara>
 High definition output with supporting hardware
-          </para>
+          </simpara>
         </listitem>
         <listitem>
-          <para>
+          <simpara>
 High precision internal processing for optimal sound quality
-          </para>
+          </simpara>
         </listitem>
         <listitem>
-          <para>
+          <simpara>
 Integrated software reverberation
-          </para>
+          </simpara>
         </listitem>
         <listitem>
-          <para>
+          <simpara>
 Polyphony management to avoid CPU overload
-          </para>
+          </simpara>
         </listitem>
         <listitem>
-          <para>
+          <simpara>
 Low latency output with proper hardware support
-          </para>
+          </simpara>
         </listitem>
         <listitem>
-          <para>
+          <simpara>
 Quick and easy MIDI setup, including "Listen for Event"
-          </para>
+          </simpara>
         </listitem>
         <listitem>
-          <para>
+          <simpara>
 Lossless compression reduces RAM requirements by up to 40%
-          </para>
+          </simpara>
         </listitem>
         <listitem>
-          <para>
+          <simpara>
 Release sample enhancements for realistic sound
-          </para>
+          </simpara>
         </listitem>
         <listitem>
-          <para>
+          <simpara>
 All features and enhancements configurable
-          </para>
+          </simpara>
         </listitem>
         <listitem>
-          <para>
+          <simpara>
 High speed loading and caching of sample sets
-          </para>
+          </simpara>
         </listitem>
         <listitem>
-          <para>
+          <simpara>
 Save settings per sample set or export to settings files
-          </para>
+          </simpara>
         </listitem>
       </itemizedlist>
     </sect1>
@@ -185,24 +185,24 @@ Save settings per sample set or export to settings files
         <title>All Platforms</title>
         <itemizedlist mark="bullet">
           <listitem>
-            <para>
+            <simpara>
 SSE3 capable processor
-            </para>
-            <para>
+            </simpara>
+            <simpara>
 <emphasis>NOTE: A newer, faster processor will permit a higher polyphony</emphasis>
-            </para>
+            </simpara>
           </listitem>
           <listitem>
-            <para>
+            <simpara>
 Sufficient RAM to fully load the largest sample set you wish to use. A
 64 bit OS is recommended to support larger sample set sizes.
-            </para>
+            </simpara>
           </listitem>
           <listitem>
-            <para>
+            <simpara>
 A hard disk (or other storage) with enough free space to store sample sets.
 The use of the cache increases the necessary disk space.
-            </para>
+            </simpara>
           </listitem>
         </itemizedlist>
       </sect2>
@@ -227,16 +227,16 @@ The use of the cache increases the necessary disk space.
       <para>The menu bar has 4 menus:</para>
       <itemizedlist>
         <listitem>
-          <para>File: file operations, exit</para>
+          <simpara>File: file operations, exit</simpara>
         </listitem>
         <listitem>
-          <para>Audio/Midi: manage settings</para>
+          <simpara>Audio/Midi: manage settings</simpara>
         </listitem>
         <listitem>
-          <para>Panel: manage additional panels</para>
+          <simpara>Panel: manage additional panels</simpara>
         </listitem>
         <listitem>
-          <para>Help: display on-line help</para>
+          <simpara>Help: display on-line help</simpara>
         </listitem>
       </itemizedlist>
       <sect2>
@@ -266,7 +266,7 @@ saving of sample sets.
           </figure>
           <para>Open and load a sampleset from the known organs list which is updated whenever a new sample set is successfully loaded.</para>
           <para>Select an organ in the list, then click <emphasis role="bold">OK</emphasis>.</para>
-          <note><para>The known organs list is managed in the <link linkend="manage_known_organs">Organs</link> Settings tab.</para></note>
+          <note><simpara>The known organs list is managed in the <link linkend="manage_known_organs">Organs</link> Settings tab.</simpara></note>
         </sect3>
         <sect3>
           <title>Favorites</title>
@@ -709,13 +709,13 @@ pedal, you may
 </para>
         <itemizedlist>
           <listitem>
-            <para>use the mouse wheel to adjust its position, </para>
+            <simpara>use the mouse wheel to adjust its position, </simpara>
           </listitem>
           <listitem>
-            <para>left click and drag the shoe to the desired position</para>
+            <simpara>left click and drag the shoe to the desired position</simpara>
           </listitem>
           <listitem>
-            <para>right  click to open its corresponding <link linkend="midieventeditor">MIDI Event Editor</link>.</para>
+            <simpara>right  click to open its corresponding <link linkend="midieventeditor">MIDI Event Editor</link>.</simpara>
           </listitem>
         </itemizedlist>
         <para>The sample set creator can also provide a crescendo shoe.     </para>
@@ -766,8 +766,8 @@ GrandOrgue provides additional panels. These panels work as console extensions a
       <figure><title>Message Log</title><mediaobject><imageobject><imagedata fileref="message_log.png" security=""/></imageobject></mediaobject></figure>
       <para>Whenever GrandOrgue needs to display a message, it opens a pop-up window. Messages are displayed in reverse chronological order : newest on top of the window.</para>
       <para>Messages are displayed with a rating icon.</para>
-      <para><imageobject><imagedata fileref="warning_message_icon.png" /></imageobject> Warning message</para>
-      <para><imageobject><imagedata fileref="serious_message_icon.png" /></imageobject> Serious message</para>
+      <para><inlinemediaobject><imageobject><imagedata fileref="warning_message_icon.png" /></imageobject></inlinemediaobject> Warning message</para>
+      <para><inlinemediaobject><imageobject><imagedata fileref="serious_message_icon.png" /></imageobject></inlinemediaobject> Serious message</para>
       <para>
 Right-clicking anywhere in this window displays a small menu which copies the
 window's content to the clipboard. When pasted to a file, the messages are
@@ -795,64 +795,64 @@ configured, the fields circled in red will be disabled or relabeled.
       <variablelist>
         <varlistentry>
           <term>Event-No</term>
-          <listitem>Event identifier. If the event is associated to a specific MIDI device, the device name is part of the identifier.</listitem>
+          <listitem><simpara>Event identifier. If the event is associated to a specific MIDI device, the device name is part of the identifier.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Device</term>
           <listitem>
-            <para>
+            <simpara>
 The dropdown displays every MIDI input device that was ever known to
 GrandOrgue. If a device is selected in the dropdown, GrandOrgue listens only
 for that event coming from that device. If no device is selected, GrandOrgue
 listens for that event coming from any selected input device (in the <link
   linkend="mididevicestab">Midi Devices Tab</link>) connected to the computer.
-            </para>
+            </simpara>
           </listitem>
         </varlistentry>
         <varlistentry>
           <term>Event</term>
-          <listitem>The dropdown displays the list of allowed events for the control.</listitem>
+          <listitem><simpara>The dropdown displays the list of allowed events for the control.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Channel</term>
-          <listitem>MIDI channel for this event (1-16 or Any). If set to "Any channel", GrandOrgue listens for that event on any channel.</listitem>
+          <listitem><simpara>MIDI channel for this event (1-16 or Any). If set to "Any channel", GrandOrgue listens for that event on any channel.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>New</term>
-          <listitem>This buttow allows to add a new event to the list of received events. A blank form is displayed with an incremented event number.</listitem>
+          <listitem><simpara>This buttow allows to add a new event to the list of received events. A blank form is displayed with an incremented event number.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Delete</term>
           <listitem>
-            <para>
+            <simpara>
 This button allows to delete the currently selected event. <emphasis>It is
 enabled only when there are at least 2 events in the list.</emphasis>
-            </para>
+            </simpara>
             <note>
-              <para>
+              <simpara>
 An event can also be marked for deletion by setting its <emphasis>Event</emphasis>
 dropdown to <emphasis role="bold"><emphasis>None</emphasis></emphasis>.
 It is effectively deleted when the OK button is pressed.
-              </para>
-              <para>It is the only way to delete the last event and blank out the list</para>
+              </simpara>
+              <simpara>It is the only way to delete the last event and blank out the list</simpara>
             </note>
           </listitem>
         </varlistentry>
         <varlistentry>
           <term>Listen&#160;for&#160;Event</term>
-          <listitem>
+          <listitem><para>
 Triggers <emphasis>listening mode</emphasis>. GrandOrgue waits for a MIDI event, then fills the dialog with the event's data.
-<note>This legacy configuration technique is useful only for very simple settings. The preferred way to configure MIDI is to use the <emphasis>Detect Complex Midi Setup</emphasis> functionality.</note>
-          </listitem>
+<note><simpara>This legacy configuration technique is useful only for very simple settings. The preferred way to configure MIDI is to use the <emphasis>Detect Complex Midi Setup</emphasis> functionality.</simpara></note>
+          </para></listitem>
         </varlistentry>
         <varlistentry>
           <term>Detect&#160;complex MIDI&#160;Setup</term>
-          <listitem>
+          <listitem><simpara>
 Triggers <emphasis>listening mode</emphasis>. GrandOrgue asks for two MIDI
 event sequences which define the operating range for the control. More
 information is available for each console element in the next section. Suitable
 instructions are displayed in the space above the OK / Cancel buttons.
-          </listitem>
+          </simpara></listitem>
         </varlistentry>
       </variablelist>
     </sect1>
@@ -868,46 +868,46 @@ configured, the fields circled in red will be disabled or relabeled.
       <variablelist>
         <varlistentry>
           <term>Event-No</term>
-          <listitem>Event identifier. If the event is associated to a specific MIDI device, the device name is part of the identifier.</listitem>
+          <listitem><simpara>Event identifier. If the event is associated to a specific MIDI device, the device name is part of the identifier.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Device</term>
           <listitem>
-            <para>
+            <simpara>
 The dropdown displays every MIDI output device that was ever known to
 GrandOrgue. If a device is selected in the dropdown, GrandOrgue outputs that
 event only to that device. If no device is selected, GrandOrgue outputs that
 event to all selected output devices ( in the <link
   linkend="mididevicestab">Midi Devices Tab</link>) connected to the computer.
-            </para>
+            </simpara>
           </listitem>
         </varlistentry>
         <varlistentry>
           <term>Event</term>
-          <listitem>The dropdown displays the list of allowed events for the control.</listitem>
+          <listitem><simpara>The dropdown displays the list of allowed events for the control.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Channel</term>
-          <listitem>MIDI channel for this event (1-16, defaults to 1).</listitem>
+          <listitem><simpara>MIDI channel for this event (1-16, defaults to 1).</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>New</term>
-          <listitem>This buttow allows to add a new event to the list of sent events. A blank form is displayed with an incremented event number.</listitem>
+          <listitem><simpara>This buttow allows to add a new event to the list of sent events. A blank form is displayed with an incremented event number.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Delete</term>
           <listitem>
-            <para>
+            <simpara>
 This button allows to delete the currently selected event. <emphasis>It is
 enabled only when there are at least 2 events in the list.</emphasis>
-            </para>
+            </simpara>
             <note>
-              <para>
+              <simpara>
 An event can also be marked for deletion by setting its <emphasis>Event</emphasis>
 dropdown to <emphasis role="bold"><emphasis>None</emphasis></emphasis>. It is
 effectively deleted when the OK button is pressed.
-              </para>
-              <para>It is the only way to delete the last event and blank out the list</para>
+              </simpara>
+              <simpara>It is the only way to delete the last event and blank out the list</simpara>
             </note>
           </listitem>
         </varlistentry>
@@ -920,10 +920,10 @@ effectively deleted when the OK button is pressed.
       <variablelist>
         <varlistentry>
           <term>Shortcut</term>
-          <listitem>
+          <listitem><para>
 This dropdown lists all usable key values.
-<note><para>According to the platform running GrandOrgue, some keys will be unusable.</para></note>
-          </listitem>
+<note><simpara>According to the platform running GrandOrgue, some keys will be unusable.</simpara></note>
+          </para></listitem>
         </varlistentry>
         <varlistentry>
           <term>Listen&#160;for&#160;Event</term>
@@ -935,6 +935,154 @@ This dropdown lists all usable key values.
       <title>Editor by console element</title>
       <sect2>
         <title>Keyboard</title>
+        <sect3>
+          <title>Received Event</title>
+          <mediaobject><imageobject><imagedata fileref="midi_event_editor_manual_receive.png" /></imageobject></mediaobject>
+          <variablelist>
+            <varlistentry>
+              <term>Event</term>
+              <listitem>
+                <simpara>The available events are:</simpara>
+                <variablelist>
+                  <varlistentry>
+                    <term>9x Note</term>
+                    <listitem>
+                      <simpara>
+Receive NoteOn / NoteOff with velocity. The velocity value is used to select
+the "best" attack sample and alter sound rendering (e.g. piano plays loud/soft
+according to velocity).
+                      </simpara>
+                      <simpara>
+This setting honors the key mapping that can be defined in the Organ Definition
+File (Manual999, optional <link linkend="midikeyentry">MIDIKey999</link>
+entries).
+                      </simpara>
+                    </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>9x Note without Velocity</term>
+                    <listitem><simpara>Same as 9x Note. The velocity value, if any, is always translated to On = 127, Off = 0.</simpara></listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>9x Note short octave at low key</term>
+                    <listitem>
+                      <simpara>Same as 9x Note plus hardcoded short octave processing in the lowest octave.</simpara>
+                      <simpara>
+The lowest octave is that of the lowest C on a full compass keyboard.
+<emphasis>Lowest key</emphasis> field value needs to match the actual lowest C
+MIDI key number.
+                      </simpara>
+                      <note><simpara>
+The hardcoded processing matches E key to C note, F key to F note, # key to D
+note, G key to G note, G# key to E note, and from A upwards, the key on the
+keyboard matches the same note.
+                      </simpara></note>
+                      <simpara>The main usage of this setting is to quickly convert a full compass keyboard to short octave. See appendix A.</simpara>
+                    </listitem>
+                  </varlistentry>
+                  <varlistentry id="9xnoteWOmap">
+                    <term>9x Note without map</term>
+                    <listitem>
+                      <simpara>
+Ignore the key mapping defined in the Organ Definition File (Manual999,
+optional <link linkend="midikeyentry">MIDIKey999</link> entries).
+                      </simpara>
+                      <simpara>The main usage of this setting is to quickly convert a short octave keyboard to full compass. See appendix A.</simpara>
+                    </listitem>
+                  </varlistentry>
+                </variablelist>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Transpose</term>
+              <listitem><simpara>This spinner sets a permanent transposition in semitones. Positive values transpose up, negative values transpose down.</simpara></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Lowest&#160;Key</term>
+              <term>Highest&#160;Key</term>
+              <listitem><simpara>
+These spinners set the key number range which GrandOrgue will acknowledge when
+listening for MIDI events. Any key number outside the range will be ignored.
+The lowest key value designates the lowest octave (where short octave
+processing takes place).
+              </simpara></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Lowest&#160;velocity</term>
+              <term>Highest&#160;velocity</term>
+              <listitem>
+                <simpara>These spinners set the velocity range which GrandOrgue will acknowledge when listening for MIDI events.</simpara>
+                <itemizedlist>
+                  <listitem><simpara>All events with velocity &gt; "highest velocity" are ignored.</simpara></listitem>
+                  <listitem><simpara>All events with velocity &lt; "lowest velocity" are translated to <emphasis>NoteOff</emphasis>.</simpara></listitem>
+                  <listitem><simpara>Velocity values between "lowest velocity" and "highest velocity" are rescaled to 0-127</simpara></listitem>
+                </itemizedlist>
+                <warning><simpara>Lowest velocity must be at least 1, otherwise all key releases will be missed.</simpara></warning>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Debounce&#160;time</term>
+              <listitem><simpara>This spinner is always disabled for a keyboard.</simpara></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Detect&#160;complex MIDI&#160;Setup</term>
+              <listitem>
+                <simpara>
+Asks to press the lowest and highest keys available on the keyboard. GrandOrgue
+uses the values it reads to determine the channel, lowest key number, highest
+key number, lowest velocity value. Highest velocity value is always set to 127.
+Event is set to
+                </simpara>
+                <itemizedlist>
+                  <listitem><simpara><emphasis role="bold">9x Note short octave at low key</emphasis> if the lowest E is hit</simpara></listitem>
+                  <listitem><simpara><emphasis role="bold">9x Note</emphasis> if any other key in the lowest octave is hit</simpara></listitem>
+                </itemizedlist>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Sent Event</title>
+          <mediaobject><imageobject><imagedata fileref="midi_event_editor_manual_send.png" /></imageobject></mediaobject>
+          <variablelist>
+            <varlistentry>
+              <term>Event</term>
+              <listitem>
+                <simpara>The available events are:</simpara>
+                <variablelist>
+                  <varlistentry>
+                    <term>9x Note</term>
+                    <listitem><simpara>
+Send NoteOn / NoteOff. Velocity is sent, rescaled to the range defined in the
+<emphasis>Off Value</emphasis> and <emphasis>On Value</emphasis> fields.
+                    </simpara></listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>9x Note without Velocity</term>
+                    <listitem><simpara>
+Send NoteOn / NoteOff. The velocity value is always set to On = value of
+<emphasis>On Value</emphasis> field, Off = value of <emphasis>Off
+Value</emphasis> field.
+                    </simpara></listitem>
+                  </varlistentry>
+                </variablelist>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>CTRL/PGM</term>
+              <listitem><simpara>This spinner is always disabled for a keyboard.</simpara></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Off&#160;Value</term>
+              <listitem><simpara>This spinner sets the velocity value sent when a key is released on the keyboard.</simpara></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>On&#160;Value</term>
+              <listitem><simpara>This spinner sets the velocity value sent when a key is depressed on the keyboard.</simpara></listitem>
+            </varlistentry>
+          </variablelist>
+          <note><simpara>Off value <emphasis role="strong">must</emphasis> be set to zero (0) if NoteOff is wished.</simpara></note>
+        </sect3>
       </sect2>
       <sect2>
         <title>Enclosure</title>
@@ -1110,9 +1258,11 @@ The label of this field changes according to the event type:
       </sect2>
       <sect2>
         <title>Drawstop and Pushbutton</title>
+        <para />
       </sect2>
       <sect2>
         <title>Label</title>
+        <para />
       </sect2>
     </sect1>
   </chapter>
@@ -1224,11 +1374,11 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
       </tgroup>
     </informaltable>
     <note>
-      <para>
+      <simpara>
 When launched with an instance name (<emphasis>GrandOrgue -i <emphasis role="bold">instanceName</emphasis></emphasis>),
 the name <emphasis>GrandOrgue</emphasis> becomes <emphasis>GrandOrgue-<emphasis role="bold">instanceName</emphasis></emphasis>,
 the name <emphasis>GrandOrgueConfig</emphasis> becomes <emphasis><emphasis role="bold">GrandOrgueConfig-instanceName</emphasis></emphasis>
-      </para>
+      </simpara>
     </note>
     <para>The user can reset  settings to default values by deleting the "options files" according to the platform.</para>
     <sect1>
@@ -1260,19 +1410,19 @@ polyphony.
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>Conserved</para>
+                <simpara>Conserved</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1291,19 +1441,19 @@ staccato. It will have little to no effect on "dry" sample sets.
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1321,19 +1471,19 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1348,19 +1498,19 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1378,13 +1528,13 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
             <varlistentry>
               <term>Polyphase</term>
               <listitem>
-                <para>This method gives better audio results at the expense of higher CPU load.</para>
+                <simpara>This method gives better audio results at the expense of higher CPU load.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Linear</term>
               <listitem>
-                <para>This method  lowers CPU load at he expense of audio quality. It is the only usable option when <link linkend="losslesscompression">lossless compression</link> is enabled, as polyphase interpolation is not yet implemented with lossless compression.</para>
+                <simpara>This method  lowers CPU load at he expense of audio quality. It is the only usable option when <link linkend="losslesscompression">lossless compression</link> is enabled, as polyphase interpolation is not yet implemented with lossless compression.</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1393,19 +1543,19 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>Linear gives more polyphony</para>
+                <simpara>Linear gives more polyphony</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1421,19 +1571,19 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>Raising the number of cores raises the polyphony attained before the sound starts to break.</para>
+                <simpara>Raising the number of cores raises the polyphony attained before the sound starts to break.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1448,19 +1598,19 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>Same as concurrency</para>
+                <simpara>Same as concurrency</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>Same as concurrency</para>
+                <simpara>Same as concurrency</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>Same as concurrency</para>
+                <simpara>Same as concurrency</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1481,19 +1631,19 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1532,19 +1682,19 @@ useful for large sample sets.
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>Variable savings up to 40%</para>
+                <simpara>Variable savings up to 40%</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>Approx. 10% lower</para>
+                <simpara>Approx. 10% lower</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>Approx. 20% slower. Only affects load without cache - as the compressed data is cached.</para>
+                <simpara>Approx. 20% slower. Only affects load without cache - as the compressed data is cached.</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1562,21 +1712,19 @@ If set to Mono, all samples are loaded in Mono. When compression is disabled, th
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>
-Variable savings up to 50%
-   </para>
+                <simpara>Variable savings up to 50%</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>Slight impact, as loading in Mono saves a few calculations per sample.</para>
+                <simpara>Slight impact, as loading in Mono saves a few calculations per sample.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1591,19 +1739,19 @@ Variable savings up to 50%
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>High impact</para>
+                <simpara>High impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>The polyphony will increase with lower bit sizes and decrease with higher bit sizes.</para>
+                <simpara>The polyphony will increase with lower bit sizes and decrease with higher bit sizes.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>Slight impact</para>
+                <simpara>Slight impact</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1618,37 +1766,37 @@ Variable savings up to 50%
             <varlistentry>
               <term>First loop</term>
               <listitem>
-                <para>Load only the first loop.</para>
+                <simpara>Load only the first loop.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Longest loop</term>
               <listitem>
-                <para>Load only the longest loop found in the sample. Longer loops usually feel more lively.</para>
+                <simpara>Load only the longest loop found in the sample. Longer loops usually feel more lively.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>All loops</term>
               <listitem>
-                <para>Load all loops found in the sample. While playing, the loops are cycled using a round-robin scheme.</para>
+                <simpara>Load all loops found in the sample. While playing, the loops are cycled using a round-robin scheme.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para><emphasis>First loop</emphasis> less than <emphasis>Longest loop</emphasis> less than <emphasis>All loops</emphasis></para>
+                <simpara><emphasis>First loop</emphasis> less than <emphasis>Longest loop</emphasis> less than <emphasis>All loops</emphasis></simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>Increases with the amount of data loaded</para>
+                <simpara>Increases with the amount of data loaded</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1663,31 +1811,31 @@ Variable savings up to 50%
             <varlistentry>
               <term>All</term>
               <listitem>
-                <para>Load all attack files.</para>
+                <simpara>Load all attack files.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry id="attackloading">
               <term>Single attack</term>
               <listitem>
-                <para>Load only the "best" provided file.</para>
+                <simpara>Load only the "best" provided file.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para><emphasis>Single attack</emphasis> less than <emphasis>All</emphasis></para>
+                <simpara><emphasis>Single attack</emphasis> less than <emphasis>All</emphasis></simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>Increases with the amount of data loaded</para>
+                <simpara>Increases with the amount of data loaded</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1702,31 +1850,31 @@ Variable savings up to 50%
             <varlistentry>
               <term>All</term>
               <listitem>
-                <para>Load all release files. The sound engine selects which release to play according to how much time the sustain sample was held. For example, it usually selects the shortest release sample while playing staccato.</para>
+                <simpara>Load all release files. The sound engine selects which release to play according to how much time the sustain sample was held. For example, it usually selects the shortest release sample while playing staccato.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Single&#160;release</term>
               <listitem>
-                <para>Load only the "best" provided release file.</para>
+                <simpara>Load only the "best" provided release file.</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>Same as <link linkend="attackloading">Attack loading</link></para>
+                <simpara>Same as <link linkend="attackloading">Attack loading</link></simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>Same as Attack loading</para>
+                <simpara>Same as Attack loading</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1740,7 +1888,7 @@ Variable savings up to 50%
           <para>
             If this parameter is set to zero, it tries to load as much data as possible.
             <caution>
-              <para>In this case, GrandOrgue keeps loading until the OS fails to provide memory. It can provide large amounts of swap space with expectable adverse impact on performances.</para>
+              <simpara>In this case, GrandOrgue keeps loading until the OS fails to provide memory. It can provide large amounts of swap space with expectable adverse impact on performances.</simpara>
             </caution>
           </para>
         </sect3>
@@ -1776,20 +1924,20 @@ Variable savings up to 50%
             <varlistentry>
               <term>Memory</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Polyphony</term>
               <listitem>
-                <para>No impact</para>
+                <simpara>No impact</simpara>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term>Load time</term>
               <listitem>
-                <para>Loading from an uncompressed cache is I/O bound, while loading from a compressed cache requires more CPU. With a slow disk + fast CPU, compressed might be better.</para>
-                <para>This feature is closely related to the hardware capacities, so the user is encouraged to test for himself and retain the best setting for his computer.</para>
+                <simpara>Loading from an uncompressed cache is I/O bound, while loading from a compressed cache requires more CPU. With a slow disk + fast CPU, compressed might be better.</simpara>
+                <simpara>This feature is closely related to the hardware capacities, so the user is encouraged to test for himself and retain the best setting for his computer.</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1813,22 +1961,22 @@ GrandOrgue and are reported as warning in the pop-up message window.
         <para>
 Introducing ODF warnings to GrandOrgue is a two-step development process:
           <orderedlist>
-            <listitem>
+            <listitem><simpara>
 A new warning is added to the ODF parsing utilities. It is displayed only in
 strict ODF mode, to give samplesets designers time to remove the new warning
 from their Organ Definition Files, without disturbing users.
-            </listitem>
-            <listitem>After a suitable number of months has elapsed, the warning is moved to normal mode and is always displayed.</listitem>
+            </simpara></listitem>
+            <listitem><simpara>After a suitable number of months has elapsed, the warning is moved to normal mode and is always displayed.</simpara></listitem>
           </orderedlist>
         </para>
         <para>This checkbox enables strict ODF mode.</para>
         <note>
-          <para>
+          <simpara>
 Sampleset designers are <emphasis role="strong">strongly</emphasis> encouraged
 to update their Organ Definition Files in order to remove warnings and improve
 user experience.
-          </para>
-          <para>Likewise, GrandOrgue users are <emphasis role="strong">strongly</emphasis> encouraged to report new warnings to the sampleset designer.</para>
+          </simpara>
+          <simpara>Likewise, GrandOrgue users are <emphasis role="strong">strongly</emphasis> encouraged to report new warnings to the sampleset designer.</simpara>
         </note>
       </sect2>
     </sect1>
@@ -1874,7 +2022,7 @@ user experience.
           </indexterm>
           <para>This feature is available when the <emphasis role="bold">&lt;Audio Output&gt;</emphasis> node is selected. The <emphasis>Add</emphasis> button is active. This node is the place where it is technically possible to add multiple audio devices.</para>
           <caution>
-          <para>Multiple audio devices are currently <emphasis role="bold">NOT</emphasis> supported. Setting multiple audio devices leads to unpredictable results. A warning is displayed and if acknowledged, a new audio device is set in the list.</para>
+          <simpara>Multiple audio devices are currently <emphasis role="bold">NOT</emphasis> supported. Setting multiple audio devices leads to unpredictable results. A warning is displayed and if acknowledged, a new audio device is set in the list.</simpara>
           </caution>
           <para>The <emphasis>Add</emphasis> button opens a pick list with all audio devices found in the system.</para>
           <mediaobject id="audiodevicepicklist">
@@ -1892,7 +2040,7 @@ user experience.
           </mediaobject>
           <para>The new device needs further configuration to be usable. See <link linkend="audiochannels">Managing Channels</link> for more information.</para>
           <caution><title>Reminder</title>
-            <para>Multi-device configuration is <emphasis role="bold">NOT</emphasis> supported.</para>
+            <simpara>Multi-device configuration is <emphasis role="bold">NOT</emphasis> supported.</simpara>
           </caution>
         </sect3>
         <sect3>
@@ -1923,7 +2071,7 @@ user experience.
             </imageobject>
           </mediaobject>
           <note>
-            <para>This feature is closely related to the <link linkend="samplesperbuffer">samples per buffer</link> setting in the <emphasis>Options</emphasis> tab. Its behavior differs according to the chosen backend.</para>
+            <simpara>This feature is closely related to the <link linkend="samplesperbuffer">samples per buffer</link> setting in the <emphasis>Options</emphasis> tab. Its behavior differs according to the chosen backend.</simpara>
             <informaltable frame="none">
               <tgroup cols="2">
                 <colspec colname="c1" colwidth="80px" colsep="0" rowsep="0"/>
@@ -1983,7 +2131,7 @@ user experience.
           <para>This feature is available when a <emphasis role="bold">Device:</emphasis> node is selected in the tree. The <emphasis>Add</emphasis> button becomes active only if the number of channels currently defined for that device is less than the device's maximum number of channels.</para>
           <para>The <emphasis>Add</emphasis> button adds a new channel which is numbered with the next channel number. The new channel needs further configuration (audio groups) to be usable. See <link linkend="audiogroups" os="">Managing Audio Groups</link> for further information on that topic.</para>
           <note>
-            <para>Only trial and error can determine which GrandOrgue channel is linked to each real-world audio channel.</para>
+            <simpara>Only trial and error can determine which GrandOrgue channel is linked to each real-world audio channel.</simpara>
           </note>
         </sect3>
         <sect3>
@@ -2012,7 +2160,7 @@ user experience.
           </mediaobject>
           <para>The <emphasis>Add</emphasis> button becomes unavailable when all audio group channels are used and the pick list is empty.</para>
           <note>
-            <para>An audio group always contains a left an a right channel. These channel names can't be changed.</para>
+            <simpara>An audio group always contains a left an a right channel. These channel names can't be changed.</simpara>
           </note>
         </sect3>
         <sect3>
@@ -2022,7 +2170,7 @@ user experience.
           </indexterm>
           <para>This feature is available when an <emphasis role="bold">audio group</emphasis> node is selected in the tree. Every audio group channel (left/right) can be deleted from its parent GrandOrgue channel. Push the <emphasis>Delete</emphasis> button. The selected audio group channel  is deleted.</para>
           <caution>
-            <para>When an audio group is not assigned to at least one audio channel (i.e. it is not used), all pipes assigned to this audio group in the <link linkend="organsettings">Organ Settings</link> dialog are <emphasis role="bold">muted</emphasis></para>
+            <simpara>When an audio group is not assigned to at least one audio channel (i.e. it is not used), all pipes assigned to this audio group in the <link linkend="organsettings">Organ Settings</link> dialog are <emphasis role="bold">muted</emphasis></simpara>
           </caution>
         </sect3>
         <sect3>
@@ -2067,58 +2215,60 @@ convolution engine to produce the reverberated wave.
         <varlistentry>
           <term>Enable Convolution Reverb</term>
           <listitem>
-            <para>This checkbox enables the feature. A pop-up is displayed which can be safely ignored.</para>
+            <simpara>This checkbox enables the feature. A pop-up is displayed which can be safely ignored.</simpara>
             <mediaobject><imageobject><imagedata fileref="reverb_warning.png"/></imageobject></mediaobject>
           </listitem>
         </varlistentry>
         <varlistentry>
           <term>Browse Impulse Response</term>
-          <listitem>
+          <listitem><para>
             This button opens a file chooser which allows to choose and load an impulse response file. GrandOrgue currently supports only Wave (.wav) or WavPack (.wpk) files.
             <note>
-              <para>A response file is <emphasis role="strong"><emphasis>required</emphasis></emphasis> when the reverberation is enabled.</para>
-              <para>GrandOrgue wiki displays a page linking to sites where IR files can be <ulink url="https://sourceforge.net/p/ourorgan/samplesets/ImpuleResponses/">downloaded</ulink>.</para>
+              <simpara>A response file is <emphasis role="strong"><emphasis>required</emphasis></emphasis> when the reverberation is enabled.</simpara>
+              <simpara>GrandOrgue wiki displays a page linking to sites where IR files can be <ulink url="https://sourceforge.net/p/ourorgan/samplesets/ImpuleResponses/">downloaded</ulink>.</simpara>
             </note>
-          </listitem>
+          </para></listitem>
         </varlistentry>
         <varlistentry>
           <term>Delay</term>
-          <listitem>This spinner sets the delay in ms before the reverberated signal quicks in. This setting is additive to the delay that can be generated by the IR file itself.</listitem>
+          <listitem><simpara>This spinner sets the delay in ms before the reverberated signal quicks in. This setting is additive to the delay that can be generated by the IR file itself.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Start&#160;Offset</term>
-          <listitem>This spinner sets the number of samples to skip from the beginning of the impulse response file.</listitem>
+          <listitem><simpara>This spinner sets the number of samples to skip from the beginning of the impulse response file.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Length</term>
-          <listitem>This spinner sets the number of samples to use in the impulse response file (starting from the offset).</listitem>
+          <listitem><simpara>This spinner sets the number of samples to use in the impulse response file (starting from the offset).</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Channel</term>
-          <listitem>
+          <listitem><simpara>
 This dropdown sets the channel to use in an impulse response file. Depending on
 the recording method, an IR file can have many channels. GrandOrgue current
 reverberation engine uses only one channel.
-          </listitem>
+          </simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Gain</term>
-          <listitem>This spinner sets the gain to apply to the reverberated signal. <emphasis>Use low values (&lt; 0.1) to avoid artifacts by overloading the sound system.</emphasis></listitem>
+          <listitem><simpara>This spinner sets the gain to apply to the reverberated signal. <emphasis>Use low values (&lt; 0.1) to avoid artifacts by overloading the sound system.</emphasis></simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Direct&#160;Sound</term>
           <listitem>
-            <para>This checkbox enables mixing the direct and reverberated signals.</para>
-            <para>
+            <simpara>This checkbox enables mixing the direct and reverberated signals.</simpara>
+            <simpara>
 The reverberated sound, when fed alone to the audio system, usually sounds a
 bit muffled and a bit garbled by the alterations introduced by the room
 response (delays, multiple echos, etc.).  Adding the direct sound is the only
 way to get a clear sound, so this box should be checked at all times.
-            </para>
+            </simpara>
             <note>
+              <simpara>
 Set the <link linkend="releasetaillength">release tail length</link> to a low
 value if you want to use the convolution reverberation alone, ie. without the
 recorded release tail of wet samples.
+              </simpara>
             </note>
           </listitem>
         </varlistentry>
@@ -2151,7 +2301,7 @@ recorded release tail of wet samples.
             <imagedata scalefit="1" width="100%" fileref="new_audio_group.png"/>
           </imageobject>
         </mediaobject>
-        <caution><para>If an audiogroup is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</para></caution>
+        <caution><simpara>If an audiogroup is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</simpara></caution>
       </sect2>
       <sect2>
         <title>Delete</title>
@@ -2160,7 +2310,7 @@ recorded release tail of wet samples.
         </indexterm>
         <para>This feature is available when an audio group name is selected in the list. The <emphasis>Delete</emphasis> button is active. Push the button, the selected audio group is deleted.</para>
         <caution>
-          <para>If the deleted audio group is assigned to an organ element (<link linkend="organsettings">Organ Settings</link> dialog), all pipes routed to this audio group will be automatically routed to the default audio group.</para>
+          <simpara>If the deleted audio group is assigned to an organ element (<link linkend="organsettings">Organ Settings</link> dialog), all pipes routed to this audio group will be automatically routed to the default audio group.</simpara>
         </caution>
       </sect2>
       <sect2>
@@ -2170,7 +2320,7 @@ recorded release tail of wet samples.
         </indexterm>
         <para>This feature is available when an audio group name is selected in the list. The <emphasis>Rename</emphasis> button is active. It opens the same dialog as in <link linkend="addaudiogroup">Add</link>, where the audio group's name can be changed.</para>
         <caution>
-          <para>If the renamed audio group is assigned to an organ element (<link linkend="organsettings">Organ Settings</link> dialog), all pipes routed to this audio group will be automatically routed to the default audio group.</para>
+          <simpara>If the renamed audio group is assigned to an organ element (<link linkend="organsettings">Organ Settings</link> dialog), all pipes routed to this audio group will be automatically routed to the default audio group.</simpara>
         </caution>
       </sect2>
     </sect1>
@@ -2217,7 +2367,7 @@ menu whereas only the 10 first entries are displayed in the <link linkend="file_
         <title>Delete</title>
         <para>
 This button removes a line from the list. GrandOrgue deregisters this organ.
-<note><para>If presets were saved and/or the samples were cached, the files are <emphasis role="strong">NOT</emphasis> deleted from disk.</para></note>
+<note><simpara>If presets were saved and/or the samples were cached, the files are <emphasis role="strong">NOT</emphasis> deleted from disk.</simpara></note>
         </para>
       </sect2>
       <sect2>
@@ -2275,7 +2425,7 @@ channel 1 to appear as channel 9, channel 2 to appear as channel 10, and so on.
 This may be useful if you have multiple keyboards that are configured to use
 the same channel.
       </para>
-      <note><para>The devices list is refreshed whenever the <emphasis>Audio &amp; Midi Settings</emphasis> dialog is displayed.</para></note>
+      <note><simpara>The devices list is refreshed whenever the <emphasis>Audio &amp; Midi Settings</emphasis> dialog is displayed.</simpara></note>
     </sect1>
     <sect1>
       <title>Initial Midi Configuration tab</title>
@@ -2310,13 +2460,13 @@ default</link>, the preset file is deleted and the initial MIDI settings
 are used again to initialize the MIDI configuration.
       </para>
       <note>
-        <para>
+        <simpara>
 The sampleset creator must define proper <emphasis role="bold">
 <emphasis>MIDIInputNumber</emphasis></emphasis> values in the Organ
 Definition File to make <link linkend="odfManualEntry">manual mapping</link>
 and <link linkend="odfEnclosureEntry">enclosure mapping</link> to the initial
 MIDI settings work properly.
-        </para>
+        </simpara>
       </note>
       <para>The "Group" column shows which group the element is filed under; the "Element" column identifies the element; The "MIDI Event" column shows if the element is associated to MIDI event(s).</para>
       <para>The <link linkend="midieventeditor">MIDI Event Editor</link> can be displayed by selecting an element and pushing the "Properties" button, or by double-clicking on the element's entry.</para>
@@ -2324,40 +2474,40 @@ MIDI settings work properly.
       <variablelist>
         <varlistentry>
           <term>Manuals&#160;Group</term>
-          <listitem>Midi setting for pedal (always Manual 0) and up to 5 manuals. Manuals are ordered bottom (Manual 1) to top (Manual 5).</listitem>
+          <listitem><simpara>Midi setting for pedal (always Manual 0) and up to 5 manuals. Manuals are ordered bottom (Manual 1) to top (Manual 5).</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Enclosures&#160;Group</term>
-          <listitem>Midi setting for up to 6 enclosures. Enclosures are ordered left (Enclosure 1) to right (Enclosure 6).</listitem>
+          <listitem><simpara>Midi setting for up to 6 enclosures. Enclosures are ordered left (Enclosure 1) to right (Enclosure 6).</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Sequencer&#160;Group</term>
           <listitem>
-            <para>Midi setting for various useful controls from the combination setter.</para>
+            <simpara>Midi setting for various useful controls from the combination setter.</simpara>
             <variablelist>
               <varlistentry>
                 <term>Previous Memory, Next Memory</term>
-                <listitem>Navigate the memory banks.</listitem>
+                <listitem><simpara>Navigate the memory banks.</simpara></listitem>
               </varlistentry>
               <varlistentry>
                 <term>Memory Set</term>
-                <listitem>Store a combination in a memory slot.</listitem>
+                <listitem><simpara>Store a combination in a memory slot.</simpara></listitem>
               </varlistentry>
               <varlistentry>
                 <term>Current</term>
-                <listitem>Recalls the current combination.</listitem>
+                <listitem><simpara>Recalls the current combination.</simpara></listitem>
               </varlistentry>
               <varlistentry>
                 <term>G.C.</term>
-                <listitem>General Cancel.</listitem>
+                <listitem><simpara>General Cancel.</simpara></listitem>
               </varlistentry>
               <varlistentry>
                 <term>-10, +10</term>
-                <listitem>Navigate 10 slots backwards or forward in the current memory bank without recalling the combination (prepare it).</listitem>
+                <listitem><simpara>Navigate 10 slots backwards or forward in the current memory bank without recalling the combination (prepare it).</simpara></listitem>
               </varlistentry>
               <varlistentry>
                 <term>__0 .. __9</term>
-                <listitem>Navigate to slot xx0 to xx9 and recall the combination, the first two digits being set by the +/-10 controls.</listitem>
+                <listitem><simpara>Navigate to slot xx0 to xx9 and recall the combination, the first two digits being set by the +/-10 controls.</simpara></listitem>
               </varlistentry>
             </variablelist>
           </listitem>
@@ -2365,19 +2515,19 @@ MIDI settings work properly.
         <varlistentry>
           <term>Master&#160;Controls&#160;Group</term>
           <listitem>
-            <para>Midi setting for various useful controls from the main control panel.</para>
+            <simpara>Midi setting for various useful controls from the main control panel.</simpara>
             <variablelist>
               <varlistentry>
                 <term>-1 Cent, +1 Cent, -100 Cent, +100 Cent</term>
-                <listitem>Although referenced under the "Sequencer" group, these controls come from the "Main controls" Panel. They drive the amount of tuning for the whole organ.</listitem>
+                <listitem><simpara>Although referenced under the "Sequencer" group, these controls come from the "Main controls" Panel. They drive the amount of tuning for the whole organ.</simpara></listitem>
               </varlistentry>
               <varlistentry>
                 <term>Prev Temperament, Next Temperament</term>
-                <listitem>Navigate the temperaments list. These controls also come from the "Main controls" panel.</listitem>
+                <listitem><simpara>Navigate the temperaments list. These controls also come from the "Main controls" panel.</simpara></listitem>
               </varlistentry>
               <varlistentry>
                 <term>Transpose -, Transpose +</term>
-                <listitem>Transpose down, transpose up, one semitone at a time. These controls also come from the "Main controls" panel.</listitem>
+                <listitem><simpara>Transpose down, transpose up, one semitone at a time. These controls also come from the "Main controls" panel.</simpara></listitem>
               </varlistentry>
             </variablelist>
           </listitem>
@@ -2411,24 +2561,24 @@ Within  windchests, the ranks are ordered as found in the definition file.
     <para>For the other (non cumulative) settings, the effective setting value is applied to the individual pipe using these precedence rules:</para>
     <itemizedlist>
       <listitem>
-        <para>If a pipe-level value is defined, use it</para>
+        <simpara>If a pipe-level value is defined, use it</simpara>
       </listitem>
       <listitem>
-        <para>Else if a rank-level value is defined, use it</para>
+        <simpara>Else if a rank-level value is defined, use it</simpara>
       </listitem>
       <listitem>
-        <para>Else if an organ-level value is defined, use it</para>
+        <simpara>Else if an organ-level value is defined, use it</simpara>
       </listitem>
       <listitem>
-        <para>Else use the value defined in the Midi &amp; Audio Settings dialog <link linkend="optionstab">Options</link> tab if any.</para>
+        <simpara>Else use the value defined in the Midi &amp; Audio Settings dialog <link linkend="optionstab">Options</link> tab if any.</simpara>
       </listitem>
     </itemizedlist>
     <note>
-    <para>Select the element you wish to customize. The right frames are populated with values picked from the organ definition file or the current preset number if the latter was saved.</para>
-    <para>It is possible to select multiple elements at once, to e.g. update one setting of multiple elements to the same value in a single operation.</para>
-    <para>
+    <simpara>Select the element you wish to customize. The right frames are populated with values picked from the organ definition file or the current preset number if the latter was saved.</simpara>
+    <simpara>It is possible to select multiple elements at once, to e.g. update one setting of multiple elements to the same value in a single operation.</simpara>
+    <simpara>
       <emphasis>To the sample set designer</emphasis>: Fine customizations to the sample set, when made in the <emphasis>Organ Settings</emphasis> dialog, are <emphasis role="bold">NOT</emphasis> copied to the organ definition file. If they were designed to be integral part of the sample set, these customizations need to be manually merged from the settings file to the organ definition file.
-    </para>
+    </simpara>
     </note>
     <sect1>
       <title>Settings frame</title>
@@ -2475,19 +2625,19 @@ Within  windchests, the ranks are ordered as found in the definition file.
           <varlistentry>
             <term>Parent default</term>
             <listitem>
-              <para>Means that the value is fetched from the parent level.</para>
+              <simpara>Means that the value is fetched from the parent level.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>Enabled</term>
             <listitem>
-              <para>Enables lossless compression at that level</para>
+              <simpara>Enables lossless compression at that level</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>Disabled</term>
             <listitem>
-              <para>Disables lossless compression at that level</para>
+              <simpara>Disables lossless compression at that level</simpara>
             </listitem>
           </varlistentry>
         </variablelist>
@@ -2500,25 +2650,25 @@ Within  windchests, the ranks are ordered as found in the definition file.
           <varlistentry>
             <term>Parent default</term>
             <listitem>
-              <para>Means that the value is fetched from the parent level.</para>
+              <simpara>Means that the value is fetched from the parent level.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>Don't load</term>
             <listitem>
-              <para>Don't load the samples at that level.</para>
+              <simpara>Don't load the samples at that level.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>Mono</term>
             <listitem>
-              <para>Load stereo samples in mono.</para>
+              <simpara>Load stereo samples in mono.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>Stereo</term>
             <listitem>
-              <para>Load stereo samples in stereo.</para>
+              <simpara>Load stereo samples in stereo.</simpara>
             </listitem>
           </varlistentry>
         </variablelist>
@@ -2531,25 +2681,25 @@ Within  windchests, the ranks are ordered as found in the definition file.
           <varlistentry>
             <term>Parent default</term>
             <listitem>
-              <para>Means that the value is fetched from the parent level.</para>
+              <simpara>Means that the value is fetched from the parent level.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>First loop</term>
             <listitem>
-              <para>Load the first loop found in the sample file.</para>
+              <simpara>Load the first loop found in the sample file.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>Longest loop</term>
             <listitem>
-              <para>Load the longest loop found in the sample file.</para>
+              <simpara>Load the longest loop found in the sample file.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>All loops</term>
             <listitem>
-              <para>Load all loops found in the sample file.</para>
+              <simpara>Load all loops found in the sample file.</simpara>
             </listitem>
           </varlistentry>
         </variablelist>
@@ -2562,19 +2712,19 @@ Within  windchests, the ranks are ordered as found in the definition file.
           <varlistentry>
             <term>Parent default</term>
             <listitem>
-              <para>Means that the value is fetched from the parent level.</para>
+              <simpara>Means that the value is fetched from the parent level.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>Single attack</term>
             <listitem>
-              <para>Loads only the "best" provided attack sample file.</para>
+              <simpara>Loads only the "best" provided attack sample file.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>All</term>
             <listitem>
-              <para>Loads all attack sample files</para>
+              <simpara>Loads all attack sample files</simpara>
             </listitem>
           </varlistentry>
         </variablelist>
@@ -2587,19 +2737,19 @@ Within  windchests, the ranks are ordered as found in the definition file.
           <varlistentry>
             <term>Parent default</term>
             <listitem>
-              <para>Means that the value is fetched from the parent level.</para>
+              <simpara>Means that the value is fetched from the parent level.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>Single&#160;release</term>
             <listitem>
-              <para>Loads only the "best" provided release sample file.</para>
+              <simpara>Loads only the "best" provided release sample file.</simpara>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term>All</term>
             <listitem>
-              <para>Loads all release sample files</para>
+              <simpara>Loads all release sample files</simpara>
             </listitem>
           </varlistentry>
         </variablelist>
@@ -2613,23 +2763,23 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <varlistentry>
           <term>Default</term>
           <listitem>
-            <para>This button restores the setting values for the selected element from the organ definition file.</para>
+            <simpara>This button restores the setting values for the selected element from the organ definition file.</simpara>
           </listitem>
         </varlistentry>
         <varlistentry>
           <term>Reset</term>
           <listitem>
-            <para>This button is grayed out until a value is modified. It restores all previously applied values.</para>
+            <simpara>This button is grayed out until a value is modified. It restores all previously applied values.</simpara>
           </listitem>
         </varlistentry>
         <varlistentry>
           <term>Apply</term>
           <listitem>
-            <para>
+            <simpara>
 This button applies all modified values to the selected element.
 Changes <emphasis role="bold">MUST</emphasis> be applied before proceeding to another element modification
 or closing the dialog with the <emphasis role="bold">OK</emphasis> button.
-            </para>
+            </simpara>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -2648,11 +2798,11 @@ or closing the dialog with the <emphasis role="bold">OK</emphasis> button.
       Push the <emphasis role="bold">OK</emphasis> button. The modification is applied.
       </para>
       <caution>
-      <para>
+      <simpara>
       The round-robin scheme is applied to the audio groups in their display order in the selector dialog.
       They appear in that dialog in the same order they were created.
       Therefore, when elements need to be spread over a list of audio groups, these audio groups
-      <emphasis role="bold">must</emphasis> be created in the order of the round-robin scheme.</para>
+      <emphasis role="bold">must</emphasis> be created in the order of the round-robin scheme.</simpara>
       </caution>
     </sect1>
   </chapter>
@@ -5003,7 +5153,7 @@ section containg the switch details.
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry>
+        <varlistentry id="midikeyentry">
           <term>MIDIKey000 - MIDIKey127</term>
           <listitem>
             <para>
@@ -5252,7 +5402,7 @@ to displays.
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry>
+        <varlistentry id="displaykeyentry">
           <term>DisplayKey999</term>
           <listitem>
             <para>
@@ -7172,6 +7322,174 @@ GrandOrgue is a project based on a previous GNU GPL project with a
 very similar name that that has been discontinued.
     </para>
   </chapter>
+  <appendix>
+    <title>Short octave</title>
+    <simpara>GrandOrgue can use three different methods to make a short octave keyboard:</simpara>
+    <itemizedlist>
+      <listitem>
+        <simpara><emphasis>Tie samples to keys</emphasis></simpara>
+        <simpara>This is the build scheme:</simpara>
+        <itemizedlist>
+          <listitem><simpara>The keyboard defines e.g. 45 keys (full compass: 49)</simpara></listitem>
+          <listitem><simpara>The first accessible key on the physical keyboard is low E</simpara></listitem>
+          <listitem><simpara>The fist sample (Pipe001) refers to low C (read: press low E, hear low C)</simpara></listitem>
+          <listitem><simpara>The second sample (Pipe002) refers to low F (read: press low F, hear low F)</simpara></listitem>
+          <listitem><simpara>The third sample (Pipe003) refers to low D (read: press low F#, hear low D)</simpara></listitem>
+          <listitem><simpara>The fourth sample (Pipe004) refers to low G (read: press low G, hear low G)</simpara></listitem>
+          <listitem><simpara>The fifth sample (Pipe005) refers to low E (read: press low G#, hear low E)</simpara></listitem>
+          <listitem><simpara>From the sixth sample and upwards, the keyboard layout is "normal"</simpara></listitem>
+        </itemizedlist>
+        <para>
+          The pipe layout to the keys being hardwired, many useful features which expect 12-note octaves are broken in the low octave:
+          <itemizedlist>
+            <listitem><simpara>Octave and suboctave couplers (Even if this feature is unlikely when reproducing old organs)</simpara></listitem>
+            <listitem><simpara>Bass and melody couplers</simpara></listitem>
+            <listitem><simpara>Tuning to other temperaments</simpara></listitem>
+          </itemizedlist>
+        </para>
+        <simpara>
+This method should be considered as legacy and used only for backward
+compatibility with Hauptwerk&#8482; version 1 samplesets.  The preferred method
+for designing a short octave keyboard is through a key mapping (see <link
+linkend="midikeyentry">MIDIKey999</link>) and below.
+        </simpara>
+      </listitem>
+      <listitem>
+        <simpara><emphasis>MIDI setting: 9x Note short octave at low key</emphasis></simpara>
+        <simpara>
+Use this setting to simulate a short octave keyboard when the Organ Definition
+File only provides a full compass keyboard. GrandOrgue renders sound as if the
+keyboard were fit with a short octave, but the visual feedback is that of a
+full compass keyboard (e.g. press low E and the keyboard image in the GUI
+displays a depressed low C).
+        </simpara>
+        <simpara />
+      </listitem>
+      <listitem>
+        <simpara><emphasis>MIDI mapping on full compass</emphasis></simpara>
+        <para>This is the build scheme:
+          <itemizedlist>
+            <listitem><simpara>The keybaord defines e.g. 49 keys, full compass</simpara></listitem>
+            <listitem><simpara>The first accessible key on the physical keyboard is low C</simpara></listitem>
+            <listitem><simpara><emphasis>Pipe999</emphasis> entries refer to all pipes starting a low C, as usual</simpara><simpara/></listitem>
+            <listitem><simpara>Configure the GUI:</simpara>
+              <informaltable frame="none">
+                <tgroup cols="2">
+                  <colspec colname="c1" colsep="0" rowsep="0" colwidth="150px"/>
+                  <colspec colname="c2" colsep="0" rowsep="0"/>
+                  <tbody>
+                    <row valign="top">
+                      <entry>DisplayKeys=45</entry>
+                      <entry>Display only 45 keys</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>DisplayFirstNote=40</entry>
+                      <entry>The fist displayed key is low E</entry>
+                    </row>
+                  </tbody>
+                </tgroup>
+              </informaltable>
+              <simpara />
+            </listitem>
+            <listitem><simpara>Add <emphasis>MIDIKey999</emphasis> entries.</simpara>
+              <informaltable frame="none">
+                <tgroup cols="2">
+                  <colspec colname="c1" colsep="0" rowsep="0" colwidth="150px"/>
+                  <colspec colname="c2" colsep="0" rowsep="0"/>
+                  <tbody>
+                    <row valign="top">
+                      <entry>MIDIKey036=0</entry>
+                      <entry>Disable low C</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>MIDIKey037=0</entry>
+                      <entry>Disable low C#</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>MIDIKey038=0</entry>
+                      <entry>Disable low D</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>MIDIKey039=0</entry>
+                      <entry>Disable low D#</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>MIDIKey040=36</entry>
+                      <entry>Map physical low E to sound low C</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>MIDIKey041=41</entry>
+                      <entry>Map physical low F to sound low F</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>MIDIKey042=38</entry>
+                      <entry>Map physical low F# to sound low D</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>MIDIKey043=43</entry>
+                      <entry>Map physical low G to sound low G</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>MIDIKey044=40</entry>
+                      <entry>Map physical low G# to sound low E</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>MIDIKey045=45</entry>
+                      <entry>Map physical low A to sound low A. From this key up to the top end of the keyboard, the mapping is usual and can be omitted. </entry>
+                    </row>
+                  </tbody>
+                </tgroup>
+              </informaltable>
+              <para />
+            </listitem>
+            <listitem><simpara>Add <link linkend="displaykeyentry">DisplayKey999</link> entries to tie GUI keys to Midi note numbers:</simpara>
+              <informaltable frame="none">
+                <tgroup cols="2">
+                  <colspec colname="c1" colsep="0" rowsep="0" colwidth="150px"/>
+                  <colspec colname="c2" colsep="0" rowsep="0"/>
+                  <tbody>
+                    <row valign="top">
+                      <entry>DisplayKey001=36</entry>
+                      <entry>1st Key is depressed in the GUI when Midi note 36 (low C) is received</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>DisplayKey002=41</entry>
+                      <entry>2nd Key is depressed in the GUI when Midi note 41 (low F) is received</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>DisplayKey003=38</entry>
+                      <entry>3rd Key is depressed in the GUI when Midi note 38 (low D) is received</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>DisplayKey004=43</entry>
+                      <entry>4th Key is depressed in the GUI when Midi note 43 (low G) is received</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>DisplayKey005=40</entry>
+                      <entry>5th Key is depressed in the GUI when Midi note 40 (low E) is received</entry>
+                    </row>
+                    <row valign="top">
+                      <entry>DisplayKey006=45</entry>
+                      <entry>6th Key is depressed in the GUI when Midi note 45 (low A) is received. From this key up to the top end of the keyboard, the mapping is usual and can be omitted.
+                      </entry>
+                    </row>
+                  </tbody>
+                </tgroup>
+              </informaltable>
+            </listitem>
+          </itemizedlist>
+          <note>
+            <simpara>
+When sampling a real-world organ, missing samples in the low octave need to be
+generated to get a complete low octave. If this is not done, holes will appear
+in the low octave if the keyboard is converted to full compass using the
+<link linkend="9xnoteWOmap">9x Note without map</link> MIDI setting.
+            </simpara>
+          </note>
+        </para>
+      </listitem>
+    </itemizedlist>
+  </appendix>
 </book>
 <!--
  vim: ts=2 sw=2 et 
