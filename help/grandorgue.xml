@@ -938,6 +938,175 @@ This dropdown lists all usable key values.
       </sect2>
       <sect2>
         <title>Enclosure</title>
+        <sect3>
+          <title>Received Event</title>
+          <mediaobject><imageobject><imagedata fileref="midi_event_editor_enclosure_receive.png" /></imageobject></mediaobject>
+          <variablelist>
+            <varlistentry>
+              <term>Event</term>
+              <listitem>
+                <para>The available events are:</para>
+                <variablelist>
+                  <varlistentry>
+                    <term>Bx controller</term>
+                    <listitem>
+                      <para>Receive Control Change messages.</para>
+                      <para>GrandOrgue expects this message sequence: Bn controller# MSB; data value.</para>
+                    </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>RPN</term>
+                    <listitem>
+                      <para>Receive RPN (Registered Parameter Number) messages.</para>
+                      <para>GrandOrgue supports: Parameter number MSByte, Parameter number LSByte and only Data Entry MSByte (0x06).</para>
+                      <para>GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 data value</para>
+                    </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>NRPN</term>
+                    <listitem>
+                      <para>Receive NRPN (Non Registered Parameter Number) messages.</para>
+                      <para>GrandOrgue supports: Parameter number MSByte, Parameter number LSByte and only Data Entry MSByte (0x06).</para>
+                      <para>GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 data value</para>
+                    </listitem>
+                  </varlistentry>
+                </variablelist>
+              </listitem>
+            </varlistentry>
+            <varlistentry id="RPNNo">
+              <term>Data</term>
+              <listitem>
+                <para>Sets the controller (Bx) or parameter (RPN/NRPN) number.</para>
+                <para>
+When receiving RPN, if the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64
+&lt;data2&gt;, the parameter number will be displayed as the value of
+<emphasis>data1</emphasis> shifted left 7 bits ORed (bitwise) with
+<emphasis>data2</emphasis>.
+                </para>
+                <para>E.g.: Bn 0x65 1; Bn 0x64 2 will display 130.</para>
+                <para>The behavior is identical for NRPN.</para>
+                <note>
+The label of this field changes according to the event type:
+<informaltable frame="none">
+  <tgroup cols="3">
+    <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+    <colspec colname="c2" colsep="0" rowsep="0" colwidth="9px"/>
+    <colspec colname="c3" colsep="0" rowsep="0"/>
+    <tbody>
+      <row valign="top">
+        <entry>Bx Controller</entry><entry>=&gt;</entry><entry>Controller-No</entry>
+      </row>
+      <row valign="top">
+        <entry>RPN or NRPN</entry><entry>=&gt;</entry><entry>Parameter-No</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+                </note>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Lowest&#160;Key</term>
+              <term>Highest&#160;Key</term>
+              <listitem>These spinners are always disabled for an enclosure.</listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Lower&#160;limit</term>
+              <term>Upper&#160;limit</term>
+              <listitem>
+These spinners set the controller values range which defines a full open/closed
+enclosure. The value is rescaled to the full range (0-127) for that controller.
+Values outside the range are translated to their limit values: value&#160;&lt;&#160;lower
+limit yields 0, value&#160;&gt;&#160;upper limit yields 127.
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Debounce&#160;time</term>
+              <listitem>This spinner is always disabled for an enclosure.</listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Detect&#160;complex MIDI&#160;Setup</term>
+              <listitem>
+Asks to move the physical device (usually a shoe) to fully open and close the
+enclosure. GrandOrgue uses the values it reads to determine the channel,
+controller type and number and the limits of the usable range.
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Sent Event</title>
+          <mediaobject><imageobject><imagedata fileref="midi_event_editor_enclosure_send.png" /></imageobject></mediaobject>
+          <variablelist>
+            <varlistentry>
+              <term>Event</term>
+              <listitem>
+                <para>The available events are:</para>
+                <variablelist>
+                  <varlistentry>
+                    <term>Bx controller</term>
+                    <listitem>
+                      <para>Send Control Change messages.</para>
+                      <para>GrandOrgue sends this message sequence: Bn controller# MSB; data value.</para>
+                    </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>RPN</term>
+                    <listitem>
+                      <para>Send RPN (Registered Parameter Number) messages.</para>
+                      <para>GrandOrgue supports: Parameter number MSByte, Parameter number LSByte and only Data Entry MSByte (0x06).</para>
+                      <para>GrandOrgue sends this message sequence: Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 data value</para>
+                    </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>NRPN</term>
+                    <listitem>
+                      <para>Send NRPN (Non Registered Parameter Number) messages.</para>
+                      <para>GrandOrgue supports: Parameter number MSByte, Parameter number LSByte and only Data Entry MSByte (0x06).</para>
+                      <para>GrandOrgue sends this message sequence: Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 data value</para>
+                    </listitem>
+                  </varlistentry>
+                </variablelist>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>CTRL/PGM</term>
+              <listitem>
+                <para>For a Bx controller, this spinner sets the controller number (range 0-127).</para>
+                <para>
+For RPN or NRPN, this value is in the range 0-16383. GrandOrgue will
+automatically split this parameter number into its most significant byte and
+least significant byte to send Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;data2&gt;
+where data1 is computed as "ParameterNo right shifted 7 bits AND 0x7F" and
+data2 is computed as "ParameterNo AND 0x7F" 
+                </para>
+                <note>
+The label of this field changes according to the event type:
+<informaltable frame="none">
+  <tgroup cols="3">
+    <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+    <colspec colname="c2" colsep="0" rowsep="0" colwidth="9px"/>
+    <colspec colname="c3" colsep="0" rowsep="0"/>
+    <tbody>
+      <row valign="top">
+        <entry>Bx Controller</entry><entry>=&gt;</entry><entry>Controller-No</entry>
+      </row>
+      <row valign="top">
+        <entry>RPN or NRPN</entry><entry>=&gt;</entry><entry>Parameter-No</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+                </note>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Off&#160;Value</term>
+              <term>On&#160;Value</term>
+              <listitem>Define the values for sending a fully open/closed enclosure. Values will be rescaled to the range defined by these limits.</listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
       </sect2>
       <sect2>
         <title>Drawstop and Pushbutton</title>
