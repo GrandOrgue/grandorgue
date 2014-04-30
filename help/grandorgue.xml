@@ -775,6 +775,178 @@ displayed in chronological order: oldest on the first line.
       </para>
     </sect1>
   </chapter>
+  <chapter id="midieventeditor">
+    <title>Midi Event Editor</title>
+    <indexterm><primary>Midi Event Editor</primary></indexterm>
+    <para>
+Every console element, including those defined on <!--link
+linkend="panels"-->panels<!--/link-->, is configurable with this editor. The
+Midi Event Editor is invoked by right-clicking on the element.
+    </para> 
+    <sect1>
+      <title>Received Event</title>
+      <figure><title>Midi received event</title><mediaobject><imageobject><imagedata fileref="midi_event_editor_receive.png" /></imageobject></mediaobject></figure>
+      <para>This tab configures which MIDI events will drive the console element.</para>
+      <para>
+The overall layout is the same for all elements. Depending on the element being
+configured, the fields circled in red will be disabled or relabeled.
+      </para>
+      <para>It is possible to define several received events for the same GUI control. Any of them received at any time will trigger the control.</para>
+      <variablelist>
+        <varlistentry>
+          <term>Event-No</term>
+          <listitem>Event identifier. If the event is associated to a specific MIDI device, the device name is part of the identifier.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Device</term>
+          <listitem>
+            <para>
+The dropdown displays every MIDI input device that was ever known to
+GrandOrgue. If a device is selected in the dropdown, GrandOrgue listens only
+for that event coming from that device. If no device is selected, GrandOrgue
+listens for that event coming from any selected input device (in the <link
+  linkend="mididevicestab">Midi Devices Tab</link>) connected to the computer.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Event</term>
+          <listitem>The dropdown displays the list of allowed events for the control.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Channel</term>
+          <listitem>MIDI channel for this event (1-16 or Any). If set to "Any channel", GrandOrgue listens for that event on any channel.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>New</term>
+          <listitem>This buttow allows to add a new event to the list of received events. A blank form is displayed with an incremented event number.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Delete</term>
+          <listitem>
+            <para>
+This button allows to delete the currently selected event. <emphasis>It is
+enabled only when there are at least 2 events in the list.</emphasis>
+            </para>
+            <note>
+              <para>
+An event can also be marked for deletion by setting its <emphasis>Event</emphasis>
+dropdown to <emphasis role="bold"><emphasis>None</emphasis></emphasis>.
+It is effectively deleted when the OK button is pressed.
+              </para>
+              <para>It is the only way to delete the last event and blank out the list</para>
+            </note>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Listen&#160;for&#160;Event</term>
+          <listitem>
+Triggers <emphasis>listening mode</emphasis>. GrandOrgue waits for a MIDI event, then fills the dialog with the event's data.
+<note>This legacy configuration technique is useful only for very simple settings. The preferred way to configure MIDI is to use the <emphasis>Detect Complex Midi Setup</emphasis> functionality.</note>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Detect&#160;complex MIDI&#160;Setup</term>
+          <listitem>
+Triggers <emphasis>listening mode</emphasis>. GrandOrgue asks for two MIDI
+event sequences which define the operating range for the control. More
+information is available for each console element in the next section. Suitable
+instructions are displayed in the space above the OK / Cancel buttons.
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Sent Event</title>
+      <figure><title>Midi sent event</title><mediaobject><imageobject><imagedata fileref="midi_event_editor_send.png" /></imageobject></mediaobject></figure>
+      <para>This tab configures which MIDI events are sent from the console element.</para>
+      <para>
+The overall layout is the same for all elements. Depending on the element being
+configured, the fields circled in red will be disabled or relabeled.
+      </para>
+      <para>It is possible to define several sent events for the same GUI control. All of them will be sent whenever the control is triggered.</para>
+      <variablelist>
+        <varlistentry>
+          <term>Event-No</term>
+          <listitem>Event identifier. If the event is associated to a specific MIDI device, the device name is part of the identifier.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Device</term>
+          <listitem>
+            <para>
+The dropdown displays every MIDI output device that was ever known to
+GrandOrgue. If a device is selected in the dropdown, GrandOrgue outputs that
+event only to that device. If no device is selected, GrandOrgue outputs that
+event to all selected output devices ( in the <link
+  linkend="mididevicestab">Midi Devices Tab</link>) connected to the computer.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Event</term>
+          <listitem>The dropdown displays the list of allowed events for the control.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Channel</term>
+          <listitem>MIDI channel for this event (1-16, defaults to 1).</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>New</term>
+          <listitem>This buttow allows to add a new event to the list of sent events. A blank form is displayed with an incremented event number.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Delete</term>
+          <listitem>
+            <para>
+This button allows to delete the currently selected event. <emphasis>It is
+enabled only when there are at least 2 events in the list.</emphasis>
+            </para>
+            <note>
+              <para>
+An event can also be marked for deletion by setting its <emphasis>Event</emphasis>
+dropdown to <emphasis role="bold"><emphasis>None</emphasis></emphasis>. It is
+effectively deleted when the OK button is pressed.
+              </para>
+              <para>It is the only way to delete the last event and blank out the list</para>
+            </note>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Keyboard shortcut</title>
+      <figure><title>Keyboard shortcut</title><mediaobject><imageobject><imagedata fileref="midi_event_editor_shortcut.png" /></imageobject></mediaobject></figure>
+      <para>This tab is displayed only for drawstops and buttons.</para>
+      <variablelist>
+        <varlistentry>
+          <term>Shortcut</term>
+          <listitem>
+This dropdown lists all usable key values.
+<note><para>According to the platform running GrandOrgue, some keys will be unusable.</para></note>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Listen&#160;for&#160;Event</term>
+          <listitem>Triggers <emphasis>listening mode</emphasis>. GrandOrgue waits for a key to be depressed, then sets the dropdown to that key.</listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Editor by console element</title>
+      <sect2>
+        <title>Keyboard</title>
+      </sect2>
+      <sect2>
+        <title>Enclosure</title>
+      </sect2>
+      <sect2>
+        <title>Drawstop and Pushbutton</title>
+      </sect2>
+      <sect2>
+        <title>Label</title>
+      </sect2>
+    </sect1>
+  </chapter>
   <chapter>
     <title>Audio and Organ settings overview</title>
     <indexterm>
@@ -1891,7 +2063,7 @@ messages to easily switch between samplesets.
         </para>
       </sect2>
     </sect1>
-    <sect1>
+    <sect1 id="mididevicestab">
       <title>MIDI Devices tab</title>
       <indexterm>
         <primary>MIDI Devices</primary>
