@@ -200,11 +200,6 @@ void GOrgueDocument::CloseOrgan()
 	wxCommandEvent event(wxEVT_WINTITLE, 0);
 	event.SetString(wxEmptyString);
 	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-
-	/* This exists again as the pending event queue could which gets processed
-	 * above may cause the sound system to be re-initialized during a startup
-	 * sequence. */
-	m_sound.CloseSound();
 }
 
 GrandOrgueFile* GOrgueDocument::GetOrganFile()

@@ -35,8 +35,6 @@ private:
 	long m_value;
 	long m_max;
 
-	bool ForceVisualUpdate(const wxString& msg);
-
 public:
 	GOrgueProgressDialog();
 	~GOrgueProgressDialog();

@@ -293,14 +293,14 @@ void GOrgueFrame::Init(wxString filename)
 		GetEventHandler()->AddPendingEvent(event);
 	}
 	if (!filename.IsEmpty())
-		Open(filename);
+		SendLoadFile(filename);
 	else if (m_Settings.GetLoadLastFile() && m_Settings.GetLastFile() != wxEmptyString)
-		Open(m_Settings.GetLastFile());
+		SendLoadFile(m_Settings.GetLastFile());
 	else if (m_Settings.GetLoadLastFile())
 	{
 		wxString name = wxStandardPaths::Get().GetResourcesDir() + wxFILE_SEP_PATH + wxT("demo") + wxFILE_SEP_PATH + wxT("demo.organ");
 		if (wxFileExists(name))
-			Open(name);
+			SendLoadFile(name);
 	}
 
 	m_listener.SetCallback(this);
@@ -603,6 +603,9 @@ void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 		GOrgueProgressDialog pdlg;
 		m_Settings.SetSettingPath(dlg.GetDirectory());
 		wxString file = doc->GetOrganFile()->GetODFFilename();
+		GOMutexLocker m_locker(m_mutex, true);
+		if(!m_locker.IsLocked())
+			return;
 		doc->Import(&pdlg, file, dlg.GetPath());
 	}
 }
@@ -961,9 +964,7 @@ void GOrgueFrame::OnMidiEvent(const GOrgueMidiEvent& event)
 	for(unsigned i = 0; i < organs.size(); i++)
 		if (organs[i]->Match(event))
 		{
-			wxCommandEvent evt(wxEVT_LOADFILE, 0);
-			evt.SetString(organs[i]->GetODFPath());
-			GetEventHandler()->AddPendingEvent(evt);
+			SendLoadFile(organs[i]->GetODFPath());
 			return;
 		}
 }
@@ -980,4 +981,11 @@ void GOrgueFrame::OnSetTitle(wxCommandEvent& event)
 void GOrgueFrame::OnMsgBox(wxMsgBoxEvent& event)
 {
 	wxMessageBox(event.getText(), event.getTitle(), event.getStyle(), this);
+}
+
+void GOrgueFrame::SendLoadFile(wxString filename)
+{
+	wxCommandEvent evt(wxEVT_LOADFILE, 0);
+	evt.SetString(filename);
+	GetEventHandler()->AddPendingEvent(evt);
 }

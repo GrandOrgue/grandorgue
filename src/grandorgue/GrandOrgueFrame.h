@@ -141,6 +141,8 @@ public:
 
 	void DoSplash(bool timeout = true);
 
+	void SendLoadFile(wxString filename);
+
 	DECLARE_EVENT_TABLE()
 };
 
