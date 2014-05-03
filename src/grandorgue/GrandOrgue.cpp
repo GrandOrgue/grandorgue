@@ -21,7 +21,6 @@
 
 #include "GrandOrgue.h"
 
-#include "GOrgueEvent.h"
 #include "GOrgueLCD.h"
 #include "GOrgueLog.h"
 #include "GOrgueSettings.h"
@@ -147,11 +146,7 @@ bool GOrgueApp::OnInit()
 void GOrgueApp::MacOpenFile(const wxString &filename)
 {
 	if (m_Frame)
-	{
-		wxCommandEvent event(wxEVT_LOADFILE, 0);
-		event.SetString(filename);
-		m_Frame->GetEventHandler()->AddPendingEvent(event);
-	}
+		m_Frame->SendLoadFile(filename);
 }
 
 int GOrgueApp::OnRun()
