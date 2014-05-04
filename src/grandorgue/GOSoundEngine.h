@@ -73,7 +73,6 @@ private:
 		GOrgueWindchest  *windchest;
 		unsigned          done;
 		unsigned          count;
-		bool              is_tremulant;
 
 		GOSamplerEntry()
 		{
@@ -83,7 +82,6 @@ private:
 			windchest = NULL;
 			done = 0;
 			count = 0;
-			is_tremulant = false;
 		}
 
 		GOSamplerEntry(const GOSamplerEntry& entry)
@@ -94,7 +92,6 @@ private:
 			windchest = entry.windchest;
 			done = 0;
 			count = entry.count;
-			is_tremulant = entry.is_tremulant;
 		}
 
 		const GOSamplerEntry& operator=(const GOSamplerEntry& entry)
@@ -104,7 +101,6 @@ private:
 			end_new_sampler = entry.end_new_sampler;
 			windchest = entry.windchest;
 			count = entry.count;
-			is_tremulant = entry.is_tremulant;
 			done = 0;
 			return *this;
 		}
@@ -177,6 +173,7 @@ private:
 	void CreateReleaseSampler(const GO_SAMPLER* sampler);
 	void SwitchAttackSampler(GO_SAMPLER* sampler);
 	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);
+	void ProcessTremulant (GOSamplerEntry& state, unsigned int n_frames);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, bool depend = true);
 	void ResetDoneFlags();
 	unsigned GetFaderLength(unsigned MidiKeyNumber);

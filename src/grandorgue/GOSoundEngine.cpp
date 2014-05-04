@@ -239,8 +239,6 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 		for(unsigned j = 0; j < m_AudioGroupCount; j++)
 			m_Windchests[m_WindchestCount * j + i].windchest = organ_file->GetWindchest(i);
 	m_Tremulants.resize(organ_file->GetTremulantCount());
-	for (unsigned i = 0; i < m_Tremulants.size(); i++)
-		m_Tremulants[i].is_tremulant = true;
 	m_WorkItems.resize(GetGroupCount());
 	Reset();
 }
@@ -315,8 +313,62 @@ bool GOSoundEngine::ProcessSampler(float output_buffer[GO_SOUND_BUFFER_SIZE], GO
 		return true;
 }
 
+void GOSoundEngine::ProcessTremulant (GOSamplerEntry& state, unsigned int n_frames)
+{
+	GOMutexLocker locker(state.mutex);
+
+	if (state.done)
+		return;
+	{
+		GOMutexLocker locker(state.lock);
+		if (state.new_sampler)
+		{
+			*state.end_new_sampler = state.sampler;
+			state.sampler = state.new_sampler;
+			state.new_sampler = 0;
+			state.end_new_sampler = 0;
+		}
+	}
+
+	if (state.sampler == NULL)
+	{
+		state.done = 2;
+		return;
+	}
+
+	float volume = 1;
+
+	float* output_buffer = state.buff;
+	std::fill(output_buffer, output_buffer + n_frames * 2, 1.0f);
+	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
+	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
+	{
+		bool keep;
+		keep = ProcessSampler(output_buffer, sampler, n_frames, volume);
+
+		next_sampler = sampler->next;
+
+		if (!keep)
+		{
+			/* sampler needs to be removed from the list */
+			if (sampler == state.sampler)
+				state.sampler = sampler->next;
+			else
+				previous_sampler->next = sampler->next;
+			m_SamplerPool.ReturnSampler(sampler);
+			state.count--;
+		}
+		else
+			previous_sampler = sampler;
+
+	}
+	state.done = 1;
+}
+
 void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, bool depend)
 {
+	ProcessTremulants(n_frames);
+
 	GOMutexLocker locker(state.mutex, !depend);
 
 	if (!locker.IsLocked())
@@ -341,32 +393,27 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		return;
 	}
 
-	float volume = 1;
-	if (!state.is_tremulant)
+	float volume = m_Gain;
+
+	if (state.windchest)
+		volume *= state.windchest->GetVolume();
+
+	if (state.windchest)
 	{
-		volume = m_Gain;
-		if (state.windchest)
-			volume *= state.windchest->GetVolume();
-
-		if (state.windchest)
+		GOrgueWindchest* current_windchest = state.windchest;
+		for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
 		{
-			GOrgueWindchest* current_windchest = state.windchest;
-			for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
-			{
-				unsigned tremulant_pos = current_windchest->GetTremulantId(i);
-				if (!m_Tremulants[tremulant_pos].done)
-					ProcessAudioSamplers(m_Tremulants[tremulant_pos], n_frames);
+			unsigned tremulant_pos = current_windchest->GetTremulantId(i);
 
-				if (m_Tremulants[tremulant_pos].done == 1)
-				{
-					volume *= m_Tremulants[tremulant_pos].buff[n_frames - 1];
-				}
+			if (m_Tremulants[tremulant_pos].done == 1)
+			{
+				volume *= m_Tremulants[tremulant_pos].buff[n_frames - 1];
 			}
 		}
 	}
 
 	float* output_buffer = state.buff;
-	std::fill(output_buffer, output_buffer + n_frames * 2, state.is_tremulant ? 1.0f : 0.0f);
+	std::fill(output_buffer, output_buffer + n_frames * 2, 0.0f);
 	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
 	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
 	{
@@ -487,7 +534,7 @@ void GOSoundEngine::ProcessTremulants(unsigned n_frames)
 {
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
 		if (!m_Tremulants[j].done)
-			ProcessAudioSamplers(m_Tremulants[j], n_frames);
+			ProcessTremulant(m_Tremulants[j], n_frames);
 }
 
 void GOSoundEngine::ProcessOutputGroup(unsigned audio_group, unsigned n_frames)
