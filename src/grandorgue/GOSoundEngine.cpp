@@ -71,23 +71,17 @@ void GOSoundEngine::Reset()
 	m_OutputGroups.resize(m_AudioGroupCount);
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
 	{
-		m_Windchests[i].new_sampler = 0;
-		m_Windchests[i].end_new_sampler = 0;
-		m_Windchests[i].sampler = 0;
+		m_Windchests[i].samplers.Clear();
 		m_Windchests[i].count = 0;
 	}
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 	{
-		m_Tremulants[i].new_sampler = 0;
-		m_Tremulants[i].end_new_sampler = 0;
-		m_Tremulants[i].sampler = 0;
+		m_Tremulants[i].samplers.Clear();
 		m_Tremulants[i].count = 0;
 	}
 	for (unsigned i = 0; i < m_DetachedRelease.size(); i++)
 	{
-		m_DetachedRelease[i].new_sampler = 0;
-		m_DetachedRelease[i].end_new_sampler = 0;
-		m_DetachedRelease[i].sampler = 0;
+		m_DetachedRelease[i].samplers.Clear();
 		m_DetachedRelease[i].count = 0;
 	}
 	for (unsigned i = 0; i < m_ReverbEngine.size(); i++)
@@ -216,14 +210,7 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsi
 	sampler->stop = 0;
 	sampler->new_attack = 0;
 
-	{
-		GOMutexLocker locker(state->lock);
-		if (!state->end_new_sampler)
-			state->end_new_sampler = &sampler->next;
-		sampler->next = state->new_sampler;
-		state->new_sampler = sampler;
-		state->count++;
-	}
+	state->samplers.Put(sampler);
 }
 
 void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
@@ -319,18 +306,10 @@ void GOSoundEngine::ProcessTremulant (GOSamplerEntry& state, unsigned int n_fram
 
 	if (state.done)
 		return;
-	{
-		GOMutexLocker locker(state.lock);
-		if (state.new_sampler)
-		{
-			*state.end_new_sampler = state.sampler;
-			state.sampler = state.new_sampler;
-			state.new_sampler = 0;
-			state.end_new_sampler = 0;
-		}
-	}
 
-	if (state.sampler == NULL)
+	state.count = state.samplers.GetCount();
+	state.samplers.Move();
+	if (state.samplers.Peek() == NULL)
 	{
 		state.done = 2;
 		return;
@@ -340,26 +319,17 @@ void GOSoundEngine::ProcessTremulant (GOSamplerEntry& state, unsigned int n_fram
 
 	float* output_buffer = state.buff;
 	std::fill(output_buffer, output_buffer + n_frames * 2, 1.0f);
-	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
-	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
+	for (GO_SAMPLER* sampler = state.samplers.Get(); sampler; sampler = state.samplers.Get())
 	{
 		bool keep;
 		keep = ProcessSampler(output_buffer, sampler, n_frames, volume);
 
-		next_sampler = sampler->next;
-
 		if (!keep)
 		{
-			/* sampler needs to be removed from the list */
-			if (sampler == state.sampler)
-				state.sampler = sampler->next;
-			else
-				previous_sampler->next = sampler->next;
 			m_SamplerPool.ReturnSampler(sampler);
-			state.count--;
 		}
 		else
-			previous_sampler = sampler;
+			state.samplers.Put(sampler);
 
 	}
 	state.done = 1;
@@ -376,18 +346,10 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 
 	if (state.done)
 		return;
-	{
-		GOMutexLocker locker(state.lock);
-		if (state.new_sampler)
-		{
-			*state.end_new_sampler = state.sampler;
-			state.sampler = state.new_sampler;
-			state.new_sampler = 0;
-			state.end_new_sampler = 0;
-		}
-	}
 
-	if (state.sampler == NULL)
+	state.count = state.samplers.GetCount();
+	state.samplers.Move();
+	if (state.samplers.Peek() == NULL)
 	{
 		state.done = 2;
 		return;
@@ -414,26 +376,17 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 
 	float* output_buffer = state.buff;
 	std::fill(output_buffer, output_buffer + n_frames * 2, 0.0f);
-	GO_SAMPLER* previous_sampler = NULL, *next_sampler = NULL;
-	for (GO_SAMPLER* sampler = state.sampler; sampler; sampler = next_sampler)
+	for (GO_SAMPLER* sampler = state.samplers.Get(); sampler; sampler = state.samplers.Get())
 	{
 		bool keep;
 		keep = ProcessSampler(output_buffer, sampler, n_frames, volume);
 
-		next_sampler = sampler->next;
-
 		if (!keep)
 		{
-			/* sampler needs to be removed from the list */
-			if (sampler == state.sampler)
-				state.sampler = sampler->next;
-			else
-				previous_sampler->next = sampler->next;
 			m_SamplerPool.ReturnSampler(sampler);
-			state.count--;
 		}
 		else
-			previous_sampler = sampler;
+			state.samplers.Put(sampler);
 
 	}
 	state.done = 1;

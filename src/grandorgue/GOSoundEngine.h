@@ -24,6 +24,7 @@
 
 #include "GOSoundDefs.h"
 #include "GOSoundResample.h"
+#include "GOSoundSamplerList.h"
 #include "GOSoundSamplerPool.h"
 #include "GOLock.h"
 #include <vector>
@@ -62,12 +63,8 @@ private:
 	class GOSamplerEntry
 	{
 	public:
-		GO_SAMPLER       *sampler;
-		GO_SAMPLER       *new_sampler;
-		GO_SAMPLER      **end_new_sampler;
+		GOSoundSamplerList samplers;
 		float             buff[GO_SOUND_BUFFER_SIZE];
-		/* access lock for sampler data */
-		GOMutex           lock;
 		/* access lock for data buffer */
 		GOMutex           mutex;
 		GOrgueWindchest  *windchest;
@@ -76,9 +73,6 @@ private:
 
 		GOSamplerEntry()
 		{
-			sampler = NULL;
-			new_sampler = NULL;
-			end_new_sampler = NULL;
 			windchest = NULL;
 			done = 0;
 			count = 0;
@@ -86,9 +80,6 @@ private:
 
 		GOSamplerEntry(const GOSamplerEntry& entry)
 		{
-			sampler = entry.sampler;
-			new_sampler = entry.new_sampler;
-			end_new_sampler = entry.end_new_sampler;
 			windchest = entry.windchest;
 			done = 0;
 			count = entry.count;
@@ -96,9 +87,6 @@ private:
 
 		const GOSamplerEntry& operator=(const GOSamplerEntry& entry)
 		{
-			sampler = entry.sampler;
-			new_sampler = entry.new_sampler;
-			end_new_sampler = entry.end_new_sampler;
 			windchest = entry.windchest;
 			count = entry.count;
 			done = 0;
