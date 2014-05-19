@@ -3097,7 +3097,7 @@ Boolean values are represented as <emphasis>Y</emphasis> for true and
 A color can be one of the following colors (not case sensitive):
 BLACK, BLUE, DARK BLUE, GREEN, DARK GREEN, CYAN, DARK CYAN, RED, DARK
 RED, MAGENTA, DARK MAGENTA, YELLOW, DARK YELLOW, LIGHT GREY, DARK
-GREY, WHITE
+GREY, WHITE, BROWN
 Additionally, it supported the HTML syntax #RRGGBB
       </para>
       <para>

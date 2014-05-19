@@ -182,6 +182,8 @@ wxColour GOrgueConfigReader::ReadColor(GOSettingType type, wxString group, wxStr
 		return wxColour(0x80, 0x80, 0x80);
 	else if (value == wxT("WHITE"))
 		return wxColour(0xFF, 0xFF, 0xFF);
+	else if (value == wxT("BROWN"))
+		return wxColour(0xA5, 0x2A, 0x2A);
 
 	wxColour colour;
 	if (parseColor(colour, value))
