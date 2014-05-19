@@ -118,7 +118,7 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg, GOrgueMidi
 					buf[i] = msg[7 + i];
 				buf[msg.size() - 8] = 0;
 				SetChannel((msg[4] & 0x0F) + 1);
-				SetValue(((msg[5] & 0x7F) >> 7) | (msg[6] & 0x7F));
+				SetValue(((msg[5] & 0x7F) << 7) | (msg[6] & 0x7F));
 				wxString s = wxString::FromAscii(b);
 				SetKey(map.GetElementByString(s));
 				SetMidiType(MIDI_SYSEX_GO_SETUP);

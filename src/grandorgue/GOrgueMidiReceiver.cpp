@@ -120,10 +120,10 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMid
 				m_events[i].key = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIKey%03d"), i + 1), 0, 0x200000);
 			
 			if (HasLowerLimit(m_events[i].type))
-				m_events[i].low_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerLimit%03d"), i + 1), 0, 0x3fff, false, 
+				m_events[i].low_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerLimit%03d"), i + 1), 0, 0x200000, false, 
 									cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDILowerVelocity%03d"), i + 1), 0, 127, false, 1));
 			if (HasUpperLimit(m_events[i].type))
-				m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1), 0, 0x3fff, false, 
+				m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1), 0, 0x200000, false, 
 									 cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIUpperVelocity%03d"), i + 1), 0, 127, false, 127));
 			
 		}
