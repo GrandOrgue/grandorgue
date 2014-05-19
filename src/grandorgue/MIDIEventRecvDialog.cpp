@@ -182,6 +182,8 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 		m_eventtype->Append(_("Bx Ctrl Change Fixed On Value Toggle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_ON);
 		m_eventtype->Append(_("Bx Ctrl Change Fixed Off Value Toggle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_OFF);
 		m_eventtype->Append(_("Sys Ex Johannus"), (void*)MIDI_M_SYSEX_JOHANNUS);
+		m_eventtype->Append(_("Sys Ex Viscount"), (void*)MIDI_M_SYSEX_VISCOUNT);
+		m_eventtype->Append(_("Sys Ex Viscount Toggle"), (void*)MIDI_M_SYSEX_VISCOUNT_TOGGLE);
 	}
 
 	m_current = 0;
@@ -280,7 +282,7 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 	{
 		if (type == MIDI_M_CTRL_BIT)
 			m_LowValueLabel->SetLabel(_("&Bit number:"));
-		else if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_OFF)
+		else if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_OFF || type == MIDI_M_SYSEX_VISCOUNT)
 			m_LowValueLabel->SetLabel(_("&Off value:"));
 		else if (type == MIDI_M_PGM_RANGE)
 			m_LowValueLabel->SetLabel(_("&Lower PGM number:"));
@@ -288,10 +290,12 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 			m_LowValueLabel->SetLabel(_("&Off RPN number:"));
 		else if (type == MIDI_M_NRPN_RANGE)
 			m_LowValueLabel->SetLabel(_("&Off NRPN number:"));
+		else if (type == MIDI_M_SYSEX_VISCOUNT_TOGGLE)
+			m_LowValueLabel->SetLabel(_("&Value:"));
 		else
 			m_LowValueLabel->SetLabel(_("L&ower limit:"));
 
-		if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_ON)
+		if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_ON || type == MIDI_M_SYSEX_VISCOUNT)
 			m_HighValueLabel->SetLabel(_("&On value:"));
 		else if (type == MIDI_M_PGM_RANGE)
 			m_HighValueLabel->SetLabel(_("&Upper PGM number:"));
@@ -479,6 +483,7 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 	case MIDI_RPN:
 	case MIDI_NRPN:
 	case MIDI_SYSEX_JOHANNUS:
+	case MIDI_SYSEX_VISCOUNT:
 		break;
 
 	default:
@@ -566,6 +571,8 @@ bool MIDIEventRecvDialog::SimilarEvent(const GOrgueMidiEvent& e1, const GOrgueMi
 		return false;
 
 	if (e1.GetMidiType() == MIDI_PGM_CHANGE)
+		return true;
+	if (e1.GetMidiType() == MIDI_SYSEX_VISCOUNT)
 		return true;
 	if (e1.GetKey() == e2.GetKey())
 	{
@@ -752,6 +759,19 @@ void MIDIEventRecvDialog::DetectEvent()
 				case MIDI_SYSEX_JOHANNUS:
 					e.type = MIDI_M_SYSEX_JOHANNUS;
 					break;
+				case MIDI_SYSEX_VISCOUNT:
+					if (on.GetValue() == off.GetValue())
+					{
+						low = off.GetValue();
+						e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
+					}
+					else
+					{
+						low = off.GetValue();
+						high = on.GetValue();
+						e.type = MIDI_M_SYSEX_VISCOUNT;
+					}
+					break;
 
 				default:
 					continue;
@@ -773,6 +793,7 @@ void MIDIEventRecvDialog::DetectEvent()
 
 	MIDI_MATCH_EVENT& e = m_midi.GetEvent(m_current);
 	GOrgueMidiEvent& event = m_OnList[0];
+	unsigned low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
 	switch(event.GetMidiType())
 	{
 	case MIDI_NOTE:
@@ -793,6 +814,10 @@ void MIDIEventRecvDialog::DetectEvent()
 	case MIDI_SYSEX_JOHANNUS:
 		e.type = MIDI_M_SYSEX_JOHANNUS;
 		break;
+	case MIDI_SYSEX_VISCOUNT:
+		e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
+		low_value = event.GetValue();
+		break;
 
 	default:
 		e.type = MIDI_M_NONE;
@@ -803,7 +828,7 @@ void MIDIEventRecvDialog::DetectEvent()
 		e.key = event.GetKey();
 	e.low_key = 0;
 	e.high_key = 127;
-	e.low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
+	e.low_value = low_value;
 	e.high_value = (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE) ? 127 : 1;
 	e.debounce_time = 0;
 	
