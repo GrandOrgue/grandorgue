@@ -140,15 +140,15 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 		m_eventtype->Append(_("9x Note"), (void*)MIDI_M_NOTE);
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 	{
-		m_eventtype->Append(_("9x Note On Toogle"), (void*)MIDI_M_NOTE_ON);
+		m_eventtype->Append(_("9x Note On Toggle"), (void*)MIDI_M_NOTE_ON);
 		m_eventtype->Append(_("9x Note Off Toggle"), (void*)MIDI_M_NOTE_OFF);
 	}
 	if (m_midi.GetType() != MIDI_RECV_MANUAL)
 		m_eventtype->Append(_("Bx Controller"), (void*)MIDI_M_CTRL_CHANGE);
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 	{
-		m_eventtype->Append(_("Bx Controller On Toogle"), (void*)MIDI_M_CTRL_CHANGE_ON);
-		m_eventtype->Append(_("Bx Controller Off Toogle"), (void*)MIDI_M_CTRL_CHANGE_OFF);
+		m_eventtype->Append(_("Bx Controller On Toggle"), (void*)MIDI_M_CTRL_CHANGE_ON);
+		m_eventtype->Append(_("Bx Controller Off Toggle"), (void*)MIDI_M_CTRL_CHANGE_OFF);
 	}
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 		m_eventtype->Append(_("Cx Program Change"), (void*)MIDI_M_PGM_CHANGE);
@@ -167,10 +167,10 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	}
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 	{
-		m_eventtype->Append(_("RPN Toogle"), (void*)MIDI_M_RPN_ON);
-		m_eventtype->Append(_("RPN Toogle"), (void*)MIDI_M_RPN_OFF);
-		m_eventtype->Append(_("NRPN Toogle"), (void*)MIDI_M_NRPN_ON);
-		m_eventtype->Append(_("NRPN Toogle"), (void*)MIDI_M_NRPN_OFF);
+		m_eventtype->Append(_("RPN Toggle"), (void*)MIDI_M_RPN_ON);
+		m_eventtype->Append(_("RPN Toggle"), (void*)MIDI_M_RPN_OFF);
+		m_eventtype->Append(_("NRPN Toggle"), (void*)MIDI_M_NRPN_ON);
+		m_eventtype->Append(_("NRPN Toggle"), (void*)MIDI_M_NRPN_OFF);
 		m_eventtype->Append(_("RPN Range"), (void*)MIDI_M_RPN_RANGE);
 		m_eventtype->Append(_("NRPN Range"), (void*)MIDI_M_NRPN_RANGE);
 	}
@@ -179,8 +179,8 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	{
 		m_eventtype->Append(_("Ctrl Change Bitfield"), (void*)MIDI_M_CTRL_BIT);
 		m_eventtype->Append(_("Bx Ctrl Change Fixed Value"), (void*)MIDI_M_CTRL_CHANGE_FIXED);
-		m_eventtype->Append(_("Bx Ctrl Change Fixed On Value Toogle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_ON);
-		m_eventtype->Append(_("Bx Ctrl Change Fixed Off Value Toogle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_OFF);
+		m_eventtype->Append(_("Bx Ctrl Change Fixed On Value Toggle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_ON);
+		m_eventtype->Append(_("Bx Ctrl Change Fixed Off Value Toggle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_OFF);
 		m_eventtype->Append(_("Sys Ex Johannus"), (void*)MIDI_M_SYSEX_JOHANNUS);
 	}
 
