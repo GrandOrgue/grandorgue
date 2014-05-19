@@ -441,8 +441,12 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 			{
 				if (e.GetMidiType() == MIDI_NOTE && e.GetChannel() == m_Internal[i].channel)
 				{
-					key = e.GetKey();
+					key = e.GetKey() + m_organfile->GetSettings().GetTranspose();
 					value = e.GetValue();
+					if (key < 0)
+						return MIDI_MATCH_NONE;
+					if (key > 127)
+						return MIDI_MATCH_NONE;
 					if (value == 0)
 						return MIDI_MATCH_OFF;
 					else
