@@ -364,7 +364,8 @@ unsigned GOrgueMidiReceiver::LowerValueLimit(midi_match_message_type type)
 	    type == MIDI_M_NRPN_RANGE)
 		return 0x3fff;
 
-	if (type == MIDI_M_SYSEX_VISCOUNT)
+	if (type == MIDI_M_SYSEX_VISCOUNT ||
+	    type == MIDI_M_SYSEX_VISCOUNT_TOGGLE)
 		return 0x1FFFFF;
 
 	if (type == MIDI_M_PGM_RANGE)
@@ -382,8 +383,7 @@ unsigned GOrgueMidiReceiver::UpperValueLimit(midi_match_message_type type)
 	    type == MIDI_M_NRPN_RANGE)
 		return 0x3fff;
 
-	if (type == MIDI_M_SYSEX_VISCOUNT ||
-	    type == MIDI_M_SYSEX_VISCOUNT_TOGGLE)
+	if (type == MIDI_M_SYSEX_VISCOUNT)
 		return 0x1FFFFF;
 
 	if (type == MIDI_M_PGM_RANGE)
