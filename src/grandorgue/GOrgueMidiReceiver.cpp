@@ -56,6 +56,8 @@ const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
 	{ wxT("ProgramChange"), MIDI_M_PGM_CHANGE },
 	{ wxT("ProgramRange"), MIDI_M_PGM_RANGE },
 	{ wxT("SysExJohannus"), MIDI_M_SYSEX_JOHANNUS },
+	{ wxT("SysExViscount"), MIDI_M_SYSEX_VISCOUNT },
+	{ wxT("SysExViscountToggle"), MIDI_M_SYSEX_VISCOUNT_TOGGLE },
 	{ wxT("RPN"), MIDI_M_RPN },
 	{ wxT("NRPN"), MIDI_M_NRPN },
 	{ wxT("RPNRange"), MIDI_M_RPN_RANGE },
@@ -287,6 +289,7 @@ bool GOrgueMidiReceiver::HasDebounce(midi_match_message_type type)
 	    type == MIDI_M_CTRL_CHANGE_ON ||
 	    type == MIDI_M_RPN_ON ||
 	    type == MIDI_M_NRPN_ON ||
+	    type == MIDI_M_SYSEX_VISCOUNT_TOGGLE ||
 	    type == MIDI_M_SYSEX_JOHANNUS)
 		return true;
 	return false;
@@ -310,6 +313,8 @@ bool GOrgueMidiReceiver::HasLowerLimit(midi_match_message_type type)
 	    type == MIDI_M_NRPN_OFF ||
 	    type == MIDI_M_NOTE_NO_VELOCITY ||
 	    type == MIDI_M_NOTE_NORMAL ||
+	    type == MIDI_M_SYSEX_VISCOUNT ||
+	    type == MIDI_M_SYSEX_VISCOUNT_TOGGLE ||
 	    type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
 	return false;
@@ -332,6 +337,7 @@ bool GOrgueMidiReceiver::HasUpperLimit(midi_match_message_type type)
 	    type == MIDI_M_NRPN_ON ||
 	    type == MIDI_M_NOTE_NO_VELOCITY ||
 	    type == MIDI_M_NOTE_NORMAL ||
+	    type == MIDI_M_SYSEX_VISCOUNT ||
 	    type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
 	return false;
@@ -358,6 +364,9 @@ unsigned GOrgueMidiReceiver::LowerValueLimit(midi_match_message_type type)
 	    type == MIDI_M_NRPN_RANGE)
 		return 0x3fff;
 
+	if (type == MIDI_M_SYSEX_VISCOUNT)
+		return 0x1FFFFF;
+
 	if (type == MIDI_M_PGM_RANGE)
 		return 0x200000;
 
@@ -372,6 +381,10 @@ unsigned GOrgueMidiReceiver::UpperValueLimit(midi_match_message_type type)
 	if (type == MIDI_M_RPN_RANGE ||
 	    type == MIDI_M_NRPN_RANGE)
 		return 0x3fff;
+
+	if (type == MIDI_M_SYSEX_VISCOUNT ||
+	    type == MIDI_M_SYSEX_VISCOUNT_TOGGLE)
+		return 0x1FFFFF;
 
 	if (type == MIDI_M_PGM_RANGE)
 		return 0x200000;
@@ -677,6 +690,15 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 				return MIDI_MATCH_OFF;
 		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_RANGE && m_events[i].high_value == e.GetKey() && m_events[i].key == e.GetValue())
 				return MIDI_MATCH_ON;
+
+		if (e.GetMidiType() == MIDI_SYSEX_VISCOUNT && m_events[i].type == MIDI_M_SYSEX_VISCOUNT && m_events[i].low_value == e.GetKey())
+				return MIDI_MATCH_OFF;
+		if (e.GetMidiType() == MIDI_SYSEX_VISCOUNT && m_events[i].type == MIDI_M_SYSEX_VISCOUNT && m_events[i].high_value == e.GetKey())
+				return MIDI_MATCH_ON;
+		if (e.GetMidiType() == MIDI_SYSEX_VISCOUNT && m_events[i].type == MIDI_M_SYSEX_VISCOUNT_TOGGLE && m_events[i].low_value == e.GetKey())
+		{
+			return debounce(e, MIDI_MATCH_CHANGE, i);
+		}
 	}
 	return MIDI_MATCH_NONE;
 }
