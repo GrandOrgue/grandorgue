@@ -1262,7 +1262,48 @@ The label of this field changes according to the event type:
       </sect2>
       <sect2>
         <title>Label</title>
-        <para />
+        <para>
+GrandOrgue supports "active" labels. These are labels which display variable
+contents, such as the step number in the <!-- link
+linkend="crescendoPanel"-->Crescendo panel<!--/link-->, the temperament name in
+the <!-- link linkend="masterControls"-->Master Controls panel<!--/link--> and
+many others. Labels can be configured only for sending data to a Midi LCD
+device. GrandOrgue sends the label contents following the Hauptwerk&#8482; standards.
+        </para>
+        <sect3>
+          <title>Hauptwerk SYSEX 32 byte LCD</title>
+          <mediaobject><imageobject><imagedata fileref="midi_event_editor_label_send_HW32.png" /></imageobject></mediaobject>
+          <para>This setting drives a Hauptwerk&#8482; compatible LCD display, including the RGB LED color. Up to 32 characters are sent to the LCD display.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Channel</term>
+              <listitem><simpara>Always disabled, since SYSEX is independent of any channel.</simpara></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>ID</term>
+              <listitem><simpara>Sets the display's ID number. Range is [0, 127].</simpara></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Color</term>
+              <listitem><simpara>Sets the LED's color. Range is [0, 127].</simpara></listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
+          <title>Hauptwerk SYSEX 16 byte string</title>
+          <mediaobject><imageobject><imagedata fileref="midi_event_editor_label_send_HW16.png" /></imageobject></mediaobject>
+          <para>This setting sends character strings to a Hauptwerk&#8482; compatible LCD display. The RGB LED (if any) color is ignored. Up to 16 characters are sent to the LCD display.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Channel</term>
+              <listitem><simpara>Always disabled, since SYSEX is independent of any channel.</simpara></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>ID</term>
+              <listitem><simpara>Sets the display's ID number. Range is [0, 127].</simpara></listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
       </sect2>
     </sect1>
   </chapter>
