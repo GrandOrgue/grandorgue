@@ -37,7 +37,7 @@ private:
 	GOrgueMidi& m_midi;
 	std::vector<GOrgueMidiEvent> m_Events;
 	unsigned m_Pos;
-	GOTime m_Last;
+	GOTime m_Start;
 	float m_Speed;
 	bool m_IsPlaying;
 	unsigned m_DeviceID;
