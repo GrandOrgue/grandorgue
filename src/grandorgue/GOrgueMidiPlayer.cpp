@@ -35,7 +35,7 @@ GOrgueMidiPlayer::GOrgueMidiPlayer(GOrgueMidi& midi) :
 	m_midi(midi),
 	m_Events(),
 	m_Pos(0),
-	m_Last(0),
+	m_Start(0),
 	m_Speed(1),
 	m_IsPlaying(false)
 {
@@ -141,7 +141,7 @@ void GOrgueMidiPlayer::Play()
 	StopPlayer();
 	m_DeviceID = m_midi.GetMidiMap().GetDeviceByString(_("GrandOrgue MIDI Player"));
 	m_Pos = 0;
-	m_Last = 0;
+	m_Start = wxGetLocalTimeMillis();
 	m_IsPlaying = true;
 	Notify();
 }
@@ -161,6 +161,7 @@ void GOrgueMidiPlayer::Notify()
 {
 	if (!m_IsPlaying)
 		return;
+	GOTime now = wxGetLocalTimeMillis();
 	do
 	{
 		if (m_Pos >= m_Events.size())
@@ -169,19 +170,17 @@ void GOrgueMidiPlayer::Notify()
 			return;
 		}
 		GOrgueMidiEvent e = m_Events[m_Pos];
-		if (e.GetTime() <= m_Last)
+		if (e.GetTime() + m_Start <= now)
 		{
 			m_Pos++;
 			e.SetDevice(m_DeviceID);
-			m_Last = e.GetTime();
 			e.SetTime(wxGetLocalTimeMillis());
 			wxMidiEvent event(e);
 			m_midi.AddPendingEvent(event);
 		}
 		else
 		{
-			GOTime wait = e.GetTime() - m_Last;
-			m_Last = e.GetTime();
+			GOTime wait = e.GetTime() + m_Start - now;
 			wxTimer::Start(wait.GetValue(), true);
 			return;
 		}
