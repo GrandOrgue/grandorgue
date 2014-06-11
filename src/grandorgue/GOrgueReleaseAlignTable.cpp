@@ -130,7 +130,7 @@ void GOrgueReleaseAlignTable::ComputeTable
 		ampIndex = (ampIndex < 0) ? 0 : ((ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES-1 : ampIndex);
 		if (!found[derivIndex][ampIndex])
 		{
-			m_PositionEntries[derivIndex][ampIndex] = i + 1;
+			m_PositionEntries[derivIndex][ampIndex] = i + 1 + start_position;
 			found[derivIndex][ampIndex] = true;
 		}
 
