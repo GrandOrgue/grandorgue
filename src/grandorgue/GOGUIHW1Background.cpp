@@ -31,27 +31,27 @@ GOGUIHW1Background::GOGUIHW1Background(GOGUIPanel* panel):
 
 void GOGUIHW1Background::Draw(GOrgueDC& dc)
 {
-	m_panel->TileWood(dc, m_metrics->GetDrawstopBackgroundImageNum(), 0, 0, m_metrics->GetCenterX(), m_metrics->GetScreenHeight());
-	m_panel->TileWood(dc, m_metrics->GetDrawstopBackgroundImageNum(), m_metrics->GetCenterX() + m_metrics->GetCenterWidth(), 
-			  0, m_metrics->GetScreenWidth() - (m_metrics->GetCenterX() + m_metrics->GetCenterWidth()), m_metrics->GetScreenHeight());
-	m_panel->TileWood(dc, m_metrics->GetConsoleBackgroundImageNum(), m_metrics->GetCenterX(), 0, m_metrics->GetCenterWidth(), m_metrics->GetScreenHeight());
+	m_panel->TileWood(dc, m_metrics->GetDrawstopBackgroundImageNum(), 0, 0, m_layout->GetCenterX(), m_metrics->GetScreenHeight());
+	m_panel->TileWood(dc, m_metrics->GetDrawstopBackgroundImageNum(), m_layout->GetCenterX() + m_layout->GetCenterWidth(), 
+			  0, m_metrics->GetScreenWidth() - (m_layout->GetCenterX() + m_layout->GetCenterWidth()), m_metrics->GetScreenHeight());
+	m_panel->TileWood(dc, m_metrics->GetConsoleBackgroundImageNum(), m_layout->GetCenterX(), 0, m_layout->GetCenterWidth(), m_metrics->GetScreenHeight());
 
 	if (m_metrics->HasPairDrawstopCols())
 	{
 		for (unsigned i = 0; i < (m_metrics->NumberOfDrawstopColsToDisplay() >> 2); i++)
 		{
-			m_panel->TileWood(dc, m_metrics->GetDrawstopInsetBackgroundImageNum(), i * (2 * m_metrics->GetDrawstopWidth() + 18) + m_metrics->GetJambLeftX() - 5,
-				m_metrics->GetJambLeftRightY(), 2 * m_metrics->GetDrawstopWidth() + 10, m_metrics->GetJambLeftRightHeight());
-			m_panel->TileWood(dc, m_metrics->GetDrawstopInsetBackgroundImageNum(), i * (2 * m_metrics->GetDrawstopWidth() + 18) + m_metrics->GetJambRightX() - 5, 
-					  m_metrics->GetJambLeftRightY(), 2 * m_metrics->GetDrawstopWidth() + 10, m_metrics->GetJambLeftRightHeight());
+			m_panel->TileWood(dc, m_metrics->GetDrawstopInsetBackgroundImageNum(), i * (2 * m_metrics->GetDrawstopWidth() + 18) + m_layout->GetJambLeftX() - 5,
+				m_layout->GetJambLeftRightY(), 2 * m_metrics->GetDrawstopWidth() + 10, m_layout->GetJambLeftRightHeight());
+			m_panel->TileWood(dc, m_metrics->GetDrawstopInsetBackgroundImageNum(), i * (2 * m_metrics->GetDrawstopWidth() + 18) + m_layout->GetJambRightX() - 5, 
+					  m_layout->GetJambLeftRightY(), 2 * m_metrics->GetDrawstopWidth() + 10, m_layout->GetJambLeftRightHeight());
 		}
 	}
 
 	if (m_metrics->HasTrimAboveExtraRows())
-		m_panel->TileWood(dc, m_metrics->GetKeyVertBackgroundImageNum(), m_metrics->GetCenterX(), m_metrics->GetCenterY(), m_metrics->GetCenterWidth(), 8);
+		m_panel->TileWood(dc, m_metrics->GetKeyVertBackgroundImageNum(), m_layout->GetCenterX(), m_layout->GetCenterY(), m_layout->GetCenterWidth(), 8);
 
-	if (m_metrics->GetJambTopHeight() + m_metrics->GetPistonTopHeight())
-		m_panel->TileWood(dc, m_metrics->GetKeyHorizBackgroundImageNum(), m_metrics->GetCenterX(), m_metrics->GetJambTopY(), 
-			 m_metrics->GetCenterWidth(), m_metrics->GetJambTopHeight() + m_metrics->GetPistonTopHeight());
+	if (m_layout->GetJambTopHeight() + m_layout->GetPistonTopHeight())
+		m_panel->TileWood(dc, m_metrics->GetKeyHorizBackgroundImageNum(), m_layout->GetCenterX(), m_layout->GetJambTopY(), 
+			 m_layout->GetCenterWidth(), m_layout->GetJambTopHeight() + m_layout->GetPistonTopHeight());
 	GOGUIControl::Draw(dc);
 }

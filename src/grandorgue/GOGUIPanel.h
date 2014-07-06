@@ -48,6 +48,7 @@ protected:
 	wxString m_Name;
 	wxString m_GroupName;
 	GOGUIDisplayMetrics* m_metrics;
+	GOGUIDisplayMetrics* m_layout;
 	GOrguePanelView* m_view;
 	wxRect m_size;
 	bool m_InitialOpenWindow;
@@ -68,6 +69,7 @@ public:
 	void AddEvent(GOGUIControl* control);
 	void AddControl(GOGUIControl* control);
 	GOGUIDisplayMetrics* GetDisplayMetrics();
+	GOGUIDisplayMetrics* GetLayoutEngine();
 	void ControlChanged(void* control);
 	void Draw(GOrgueDC& dc);
 	void TileWood(GOrgueDC& dc, unsigned which, int sx, int sy, int cx, int cy);

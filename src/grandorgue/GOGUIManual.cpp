@@ -47,7 +47,7 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 	wxString type = m_ManualNumber ? wxT("Manual") : wxT("Pedal");
 	unsigned first_midi_note = m_manual->GetFirstAccessibleKeyMIDINoteNumber();
 
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 	unsigned x = 0, y = 0;
 	int width = 0;
 	int height = 1;
@@ -190,7 +190,7 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		type += wxT("Wood");
 	unsigned first_midi_note = cfg.ReadInteger(ODFSetting, group, wxT("DisplayFirstNote"), 0, 127, false, m_manual->GetFirstAccessibleKeyMIDINoteNumber());
 
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 	unsigned x = 0, y = 0;
 	int width = 0;
 	int height = 1;

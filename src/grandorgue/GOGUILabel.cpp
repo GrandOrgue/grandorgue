@@ -96,9 +96,9 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 
 		int i = m_metrics->NumberOfDrawstopColsToDisplay() >> 1;
 		if (DispDrawstopCol <= i)
-			m_DispXpos = m_metrics->GetJambLeftX()  + (DispDrawstopCol - 1) * 78 + 1;
+			m_DispXpos = m_layout->GetJambLeftX()  + (DispDrawstopCol - 1) * 78 + 1;
 		else
-			m_DispXpos = m_metrics->GetJambRightX() + (DispDrawstopCol - 1 - i) * 78 + 1;
+			m_DispXpos = m_layout->GetJambRightX() + (DispDrawstopCol - 1 - i) * 78 + 1;
 		if (DispSpanDrawstopColToRight)
 			m_DispXpos += 39;
 	}
@@ -111,9 +111,9 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 	{
 		bool DispAtTopOfDrawstopCol = cfg.ReadBoolean(ODFSetting, group, wxT("DispAtTopOfDrawstopCol"), true, false);
 
-		m_DispYpos = m_metrics->GetJambLeftRightY() + 1;
+		m_DispYpos = m_layout->GetJambLeftRightY() + 1;
 		if (!DispAtTopOfDrawstopCol)
-			m_DispYpos += m_metrics->GetJambLeftRightHeight() - 32;
+			m_DispYpos += m_layout->GetJambLeftRightHeight() - 32;
 	}
 	else
 	{

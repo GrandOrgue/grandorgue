@@ -32,6 +32,7 @@ GOGUIControl::GOGUIControl(GOGUIPanel* panel,void* control) :
 	m_DrawPending(false)
 {
 	m_metrics = panel->GetDisplayMetrics();
+	m_layout = panel->GetLayoutEngine();
 }
 
 GOGUIControl::~GOGUIControl()
