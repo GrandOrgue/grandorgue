@@ -167,10 +167,10 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	}
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 	{
-		m_eventtype->Append(_("RPN Toggle"), (void*)MIDI_M_RPN_ON);
-		m_eventtype->Append(_("RPN Toggle"), (void*)MIDI_M_RPN_OFF);
-		m_eventtype->Append(_("NRPN Toggle"), (void*)MIDI_M_NRPN_ON);
-		m_eventtype->Append(_("NRPN Toggle"), (void*)MIDI_M_NRPN_OFF);
+		m_eventtype->Append(_("RPN On Toggle"), (void*)MIDI_M_RPN_ON);
+		m_eventtype->Append(_("RPN Off Toggle"), (void*)MIDI_M_RPN_OFF);
+		m_eventtype->Append(_("NRPN On Toggle"), (void*)MIDI_M_NRPN_ON);
+		m_eventtype->Append(_("NRPN Off Toggle"), (void*)MIDI_M_NRPN_OFF);
 		m_eventtype->Append(_("RPN Range"), (void*)MIDI_M_RPN_RANGE);
 		m_eventtype->Append(_("NRPN Range"), (void*)MIDI_M_NRPN_RANGE);
 	}
