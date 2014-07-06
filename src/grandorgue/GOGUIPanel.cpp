@@ -503,6 +503,11 @@ GOGUIDisplayMetrics* GOGUIPanel::GetDisplayMetrics()
 	return m_metrics;
 }
 
+GOGUIDisplayMetrics* GOGUIPanel::GetLayoutEngine()
+{
+	return m_metrics;
+}
+
 void GOGUIPanel::ControlChanged(void* control)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)

@@ -36,6 +36,7 @@ class GOGUIControl : private GOrgueSaveableObject {
 protected:
 	GOGUIPanel* m_panel;
 	GOGUIDisplayMetrics* m_metrics;
+	GOGUIDisplayMetrics* m_layout;
 	void* m_control;
 	wxRect m_BoundingRect;
 	bool m_DrawPending;

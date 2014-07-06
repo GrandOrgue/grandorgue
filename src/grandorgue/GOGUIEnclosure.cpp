@@ -71,8 +71,8 @@ void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
 
 	int x, y, w, h;
 
-	x = m_metrics->GetEnclosureX(this);
-	y = m_metrics->GetEnclosureY();
+	x = m_layout->GetEnclosureX(this);
+	y = m_layout->GetEnclosureY();
 
 	w = m_Bitmaps[0].GetWidth();
 	h = m_Bitmaps[0].GetHeight();
@@ -127,8 +127,8 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 
 	int x, y, w, h;
 
-	x = m_metrics->GetEnclosureX(this);
-	y = m_metrics->GetEnclosureY();
+	x = m_layout->GetEnclosureX(this);
+	y = m_layout->GetEnclosureY();
 
 	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
 	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);

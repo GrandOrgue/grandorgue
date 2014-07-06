@@ -36,7 +36,7 @@ void GOGUIManualBackground::Init(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Init(cfg, group);
 
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 	m_BoundingRect = wxRect(mri.x, mri.y, mri.width, mri.height);
 }
 
@@ -44,19 +44,19 @@ void GOGUIManualBackground::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 	m_BoundingRect = wxRect(mri.x, mri.y, mri.width, mri.height);
 }
 
 void GOGUIManualBackground::Draw(GOrgueDC& dc)
 {
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_metrics->GetManualRenderInfo(m_ManualNumber);
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 
-	m_panel->TileWood(dc, m_metrics->GetKeyVertBackgroundImageNum(), m_metrics->GetCenterX(), mri.y,
-			  m_metrics->GetCenterWidth(), mri.height);
+	m_panel->TileWood(dc, m_metrics->GetKeyVertBackgroundImageNum(), m_layout->GetCenterX(), mri.y,
+			  m_layout->GetCenterWidth(), mri.height);
 
-	m_panel->TileWood(dc, m_metrics->GetKeyHorizBackgroundImageNum(), m_metrics->GetCenterX(),
-			  mri.piston_y, m_metrics->GetCenterWidth(), 
+	m_panel->TileWood(dc, m_metrics->GetKeyHorizBackgroundImageNum(), m_layout->GetCenterX(),
+			  mri.piston_y, m_layout->GetCenterWidth(), 
 			  (!m_ManualNumber && m_metrics->HasExtraPedalButtonRow()) ? 2 * m_metrics->GetButtonHeight() : m_metrics->GetButtonHeight());
 	GOGUIControl::Draw(dc);
 }
