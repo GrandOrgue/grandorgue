@@ -51,9 +51,9 @@ protected:
 	unsigned m_TileOffsetY;
 
 public:
-	GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston = false, unsigned x_pos = 1, unsigned y_pos = 1);
+	GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston = false);
 
-	void Init(GOrgueConfigReader& cfg, wxString group);
+	void Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 
 	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
