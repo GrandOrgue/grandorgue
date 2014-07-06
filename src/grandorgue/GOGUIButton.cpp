@@ -29,7 +29,7 @@
 #include "GOrgueDC.h"
 #include <wx/intl.h>
 
-GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston, unsigned x_pos, unsigned y_pos) :
+GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston) :
 	GOGUIControl(panel, control),
 	m_IsPiston(is_piston),
 	m_Button(control),
@@ -41,16 +41,19 @@ GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_pisto
 	m_Text(),
 	m_TextRect(),
 	m_TextWidth(0),
-	m_DispCol(x_pos),
-	m_DispRow(y_pos),
+	m_DispCol(0),
+	m_DispRow(0),
 	m_TileOffsetX(0),
 	m_TileOffsetY(0)
 {
 }
 
-void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group)
+void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos)
 {
 	GOGUIControl::Init(cfg, group);
+
+	m_DispCol = x_pos;
+	m_DispRow = y_pos;
 
 	m_TextColor = wxColour(0x80, 0x00, 0x00);
 	m_FontSize = 7;
@@ -140,8 +143,8 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 		off_file = wxString::Format(wxT("GO:piston%02d_off"), DispImageNum);
 		on_file = wxString::Format(wxT("GO:piston%02d_on"), DispImageNum);
 		
-		m_DispRow = cfg.ReadInteger(ODFSetting, group, wxT("DispButtonRow"), 0, 99 + m_metrics->NumberOfExtraButtonRows(), false, m_DispRow);
-		m_DispCol = cfg.ReadInteger(ODFSetting, group, wxT("DispButtonCol"), 1, m_metrics->NumberOfButtonCols(), false, m_DispCol);
+		m_DispRow = cfg.ReadInteger(ODFSetting, group, wxT("DispButtonRow"), 0, 99 + m_metrics->NumberOfExtraButtonRows(), false, 1);
+		m_DispCol = cfg.ReadInteger(ODFSetting, group, wxT("DispButtonCol"), 1, m_metrics->NumberOfButtonCols(), false, 1);
 		m_metrics->GetPushbuttonBlitPosition(m_DispRow, m_DispCol, &x, &y);
 		if (!DispKeyLabelOnLeft)
 			x -= 13;
@@ -152,8 +155,8 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 		off_file = wxString::Format(wxT("GO:drawstop%02d_off"), DispImageNum);
 		on_file = wxString::Format(wxT("GO:drawstop%02d_on"), DispImageNum);
 
-		m_DispRow = cfg.ReadInteger(ODFSetting, group, wxT("DispDrawstopRow"), 1, 99 + m_metrics->NumberOfExtraDrawstopRowsToDisplay(), false, m_DispRow);
-		m_DispCol = cfg.ReadInteger(ODFSetting, group, wxT("DispDrawstopCol"), 1, m_DispRow > 99 ? m_metrics->NumberOfExtraDrawstopColsToDisplay() : m_metrics->NumberOfDrawstopColsToDisplay(), false, m_DispCol);
+		m_DispRow = cfg.ReadInteger(ODFSetting, group, wxT("DispDrawstopRow"), 1, 99 + m_metrics->NumberOfExtraDrawstopRowsToDisplay(), false, 1);
+		m_DispCol = cfg.ReadInteger(ODFSetting, group, wxT("DispDrawstopCol"), 1, m_DispRow > 99 ? m_metrics->NumberOfExtraDrawstopColsToDisplay() : m_metrics->NumberOfDrawstopColsToDisplay(), false, 1);
 		m_metrics->GetDrawstopBlitPosition(m_DispRow, m_DispCol, &x, &y);
 	}
 
