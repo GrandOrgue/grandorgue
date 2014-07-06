@@ -596,7 +596,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 		GOrgueCoupler* coupler;
 		GOGUIButton* button;
 
-		metrics->GetDrawstopBlitPosition(100 + i, 1, &x, &y);
+		metrics->GetDrawstopBlitPosition(100 + i, 1, x, y);
 
 		GOGUILabel* PosDisplay=new GOGUILabel(panel, NULL);
 		PosDisplay->Init(cfg, wxString::Format(wxT("SetterCoupler%03dLabel%03d"), manual_nr, i), x, y, dest_manual->GetName());
@@ -685,7 +685,7 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(GOrgueConfigReader& cfg)
 		int x, y;
 		GOrgueManual* manual = m_organfile->GetManual(i);
 
-		metrics->GetPushbuttonBlitPosition(100 + i, 1, &x, &y);
+		metrics->GetPushbuttonBlitPosition(100 + i, 1, x, y);
 
 		GOGUILabel* PosDisplay=new GOGUILabel(panel, NULL);
 		PosDisplay->Init(cfg, wxString::Format(wxT("SetterDivisionalLabel%03d"), i), x, y, manual->GetName());

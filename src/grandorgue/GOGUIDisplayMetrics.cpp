@@ -331,20 +331,19 @@ int GOGUIDisplayMetrics::GetJambTopY()
  * BLIT POSITION FUNCTIONS
  */
 
-void GOGUIDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int* blitX, int* blitY)
+void GOGUIDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int& blitX, int& blitY)
 {
-	// FIXME: check blitX and blitY for null ptr
 	int i;
 	if (drawstopRow > 99)
 	{
-		*blitX = GetJambTopX() + (drawstopCol - 1) * m_DrawStopWidth + 6;
+		blitX = GetJambTopX() + (drawstopCol - 1) * m_DrawStopWidth + 6;
 		if (m_DispExtraDrawstopRowsAboveExtraButtonRows)
 		{
-			*blitY = GetJambTopDrawstop() + (drawstopRow - 100) * m_DrawStopHeight + 2;
+			blitY = GetJambTopDrawstop() + (drawstopRow - 100) * m_DrawStopHeight + 2;
 		}
 		else
 		{
-			*blitY = GetJambTopDrawstop() + (drawstopRow - 100) * m_DrawStopHeight + (m_DispExtraButtonRows * m_ButtonHeight) + 2;
+			blitY = GetJambTopDrawstop() + (drawstopRow - 100) * m_DrawStopHeight + (m_DispExtraButtonRows * m_ButtonHeight) + 2;
 		}
 	}
 	else
@@ -352,40 +351,40 @@ void GOGUIDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const i
 		i = m_DispDrawstopCols >> 1;
 		if (drawstopCol <= i)
 		{
-			*blitX = GetJambLeftX() + (drawstopCol - 1) * m_DrawStopWidth + 6;
-			*blitY = GetJambLeftRightY() + (drawstopRow - 1) * m_DrawStopHeight + 32;
+			blitX = GetJambLeftX() + (drawstopCol - 1) * m_DrawStopWidth + 6;
+			blitY = GetJambLeftRightY() + (drawstopRow - 1) * m_DrawStopHeight + 32;
 		}
 		else
 		{
-			*blitX = GetJambRightX() + (drawstopCol - 1 - i) * m_DrawStopWidth + 6;
-			*blitY = GetJambLeftRightY() + (drawstopRow - 1) * m_DrawStopHeight + 32;
+			blitX = GetJambRightX() + (drawstopCol - 1 - i) * m_DrawStopWidth + 6;
+			blitY = GetJambLeftRightY() + (drawstopRow - 1) * m_DrawStopHeight + 32;
 		}
 		if (m_DispPairDrawstopCols)
-			*blitX += (((drawstopCol - 1) % i) >> 1) * (m_DrawStopWidth / 4);
+			blitX += (((drawstopCol - 1) % i) >> 1) * (m_DrawStopWidth / 4);
 
 		if (drawstopCol <= i)
 			i = drawstopCol;
 		else
 			i = m_DispDrawstopCols - drawstopCol + 1;
 		if (m_DispDrawstopColsOffset && (i & 1) ^ m_DispDrawstopOuterColOffsetUp)
-			*blitY += m_DrawStopHeight / 2;
+			blitY += m_DrawStopHeight / 2;
 
 	}
 }
 
-void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY)
+void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int& blitX, int& blitY)
 {
 
-	*blitX = GetPistonX() + (buttonCol - 1) * m_ButtonWidth + 6;
+	blitX = GetPistonX() + (buttonCol - 1) * m_ButtonWidth + 6;
 	if (buttonRow > 99)
 	{
 		if (m_DispExtraDrawstopRowsAboveExtraButtonRows)
 		{
-			*blitY = GetJambTopPiston() + (buttonRow - 100) * m_ButtonHeight + (m_DispExtraDrawstopRows * m_DrawStopHeight) + 5;
+			blitY = GetJambTopPiston() + (buttonRow - 100) * m_ButtonHeight + (m_DispExtraDrawstopRows * m_DrawStopHeight) + 5;
 		}
 		else
 		{
-			*blitY = GetJambTopPiston() + (buttonRow - 100) * m_ButtonHeight + 5;
+			blitY = GetJambTopPiston() + (buttonRow - 100) * m_ButtonHeight + 5;
 		}
 	}
 	else
@@ -395,14 +394,14 @@ void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const i
 			i = 0;
 
 		if (i > (int)m_nb_manuals)
-			*blitY = m_HackY - (i - (int)m_nb_manuals) * (m_ManualHeight + m_ButtonHeight) + m_ManualHeight + 5;
+			blitY = m_HackY - (i - (int)m_nb_manuals) * (m_ManualHeight + m_ButtonHeight) + m_ManualHeight + 5;
 		else
-			*blitY = m_manual_info[i].render_info.piston_y + 5;
+			blitY = m_manual_info[i].render_info.piston_y + 5;
 
 		if (m_DispExtraPedalButtonRow && !buttonRow)
-			*blitY += m_ButtonHeight;
+			blitY += m_ButtonHeight;
 		if (m_DispExtraPedalButtonRowOffset && buttonRow == 99)
-			*blitX -= m_ButtonWidth / 2 + 2;
+			blitX -= m_ButtonWidth / 2 + 2;
 	}
 
 }

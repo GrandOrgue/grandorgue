@@ -124,8 +124,8 @@ public:
 	virtual unsigned NumberOfButtonCols();
 	virtual unsigned NumberOfExtraButtonRows();
 
-	virtual void GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int* blitX, int* blitY);
-	virtual void GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int* blitX, int* blitY);
+	virtual void GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int& blitX, int& blitY);
+	virtual void GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int& blitX, int& blitY);
 	virtual GOrgueFont GetControlLabelFont();
 	virtual GOrgueFont GetGroupLabelFont();
 

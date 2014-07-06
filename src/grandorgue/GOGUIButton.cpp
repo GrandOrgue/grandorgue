@@ -72,7 +72,7 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, 
 		off_file = wxString::Format(wxT("GO:piston%02d_off"), DispImageNum);
 		on_file = wxString::Format(wxT("GO:piston%02d_on"), DispImageNum);
 		
-		m_layout->GetPushbuttonBlitPosition(m_DispRow, m_DispCol, &x, &y);
+		m_layout->GetPushbuttonBlitPosition(m_DispRow, m_DispCol, x, y);
 		if (!DispKeyLabelOnLeft)
 			x -= 13;
 	}
@@ -82,7 +82,7 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, 
 		off_file = wxString::Format(wxT("GO:drawstop%02d_off"), DispImageNum);
 		on_file = wxString::Format(wxT("GO:drawstop%02d_on"), DispImageNum);
 
-		m_layout->GetDrawstopBlitPosition(m_DispRow, m_DispCol, &x, &y);
+		m_layout->GetDrawstopBlitPosition(m_DispRow, m_DispCol, x, y);
 	}
 
 	on_mask_file = wxEmptyString;
@@ -145,7 +145,7 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 		
 		m_DispRow = cfg.ReadInteger(ODFSetting, group, wxT("DispButtonRow"), 0, 99 + m_metrics->NumberOfExtraButtonRows(), false, 1);
 		m_DispCol = cfg.ReadInteger(ODFSetting, group, wxT("DispButtonCol"), 1, m_metrics->NumberOfButtonCols(), false, 1);
-		m_layout->GetPushbuttonBlitPosition(m_DispRow, m_DispCol, &x, &y);
+		m_layout->GetPushbuttonBlitPosition(m_DispRow, m_DispCol, x, y);
 		if (!DispKeyLabelOnLeft)
 			x -= 13;
 	}
@@ -157,7 +157,7 @@ void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
 
 		m_DispRow = cfg.ReadInteger(ODFSetting, group, wxT("DispDrawstopRow"), 1, 99 + m_metrics->NumberOfExtraDrawstopRowsToDisplay(), false, 1);
 		m_DispCol = cfg.ReadInteger(ODFSetting, group, wxT("DispDrawstopCol"), 1, m_DispRow > 99 ? m_metrics->NumberOfExtraDrawstopColsToDisplay() : m_metrics->NumberOfDrawstopColsToDisplay(), false, 1);
-		m_layout->GetDrawstopBlitPosition(m_DispRow, m_DispCol, &x, &y);
+		m_layout->GetDrawstopBlitPosition(m_DispRow, m_DispCol, x, y);
 	}
 
 	on_file = cfg.ReadStringTrim(ODFSetting, group, wxT("ImageOn"), false, on_file);
