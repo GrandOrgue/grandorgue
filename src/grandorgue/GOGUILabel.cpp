@@ -26,16 +26,18 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueDC.h"
 #include "GOrgueLabel.h"
+#include "GOrgueSettings.h"
+#include "GrandOrgueFile.h"
 
-GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, unsigned y_pos, wxString name) :
+GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label) :
 	GOGUIControl(panel, label),
-	m_DispXpos(x_pos),
-	m_DispYpos(y_pos),
+	m_DispXpos(0),
+	m_DispYpos(0),
 	m_Label(label),
 	m_Bitmap(),
 	m_FontSize(0),
 	m_FontName(),
-	m_Text(name),
+	m_Text(),
 	m_TextColor(0,0,0),
 	m_TextRect(),
 	m_TextWidth(0),
@@ -44,13 +46,14 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label, unsigned x_pos, un
 {
 }
 
-void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned DispImageNum)
+void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos, wxString name, unsigned DispImageNum)
 {
 	GOGUIControl::Init(cfg, group);
 
 	m_TextColor = wxColour(0x00, 0x00, 0x00);
 	m_FontSize = 7;
 	m_FontName = wxT("");
+	m_Text = name;
 
 	wxString image_file = wxString::Format(wxT("GO:label%02d"), DispImageNum);
 	wxString image_mask_file = wxEmptyString;
@@ -58,8 +61,8 @@ void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned DispImag
 	m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);
 
 	int x, y, w, h;
-	x = m_DispXpos;
-	y = m_DispYpos;
+	x = x_pos;
+	y = y_pos;
 	w = m_Bitmap.GetWidth();
 	h = m_Bitmap.GetHeight();
 	m_BoundingRect = wxRect(x, y, w, h);
@@ -120,7 +123,8 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("BLACK"));
 	m_FontSize = cfg.ReadFontSize(ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
 	m_FontName = cfg.ReadStringTrim(ODFSetting, group, wxT("DispLabelFontName"), false, wxT(""));
-	m_Text = cfg.ReadString(ODFSetting, group, wxT("Name"), false, m_Text);
+	if (!m_Label || !m_panel->GetOrganFile()->GetSettings().GetODFCheck())
+		m_Text = cfg.ReadString(ODFSetting, group, wxT("Name"), false, wxEmptyString);
 
 	unsigned DispImageNum = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 12, false, 1);
 
