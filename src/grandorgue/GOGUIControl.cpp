@@ -51,6 +51,10 @@ void GOGUIControl::Load(GOrgueConfigReader& cfg, wxString group)
 	m_group = group;
 }
 
+void GOGUIControl::Layout()
+{
+}
+
 void GOGUIControl::Save(GOrgueConfigWriter& cfg)
 {
 }

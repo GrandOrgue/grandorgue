@@ -60,6 +60,7 @@ public:
 	virtual ~GOGUIPanel();
 	void Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name=wxT(""));
 	void Load(GOrgueConfigReader& cfg, wxString group);
+	void Layout();
 
 	void SetView(GOrguePanelView* view);
 
