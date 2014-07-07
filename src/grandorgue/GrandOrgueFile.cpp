@@ -343,6 +343,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 	m_panels.push_back(m_setter->CreateMasterPanel(cfg));
 
+	for(unsigned i = 0; i < m_panels.size(); i++)
+		m_panels[i]->Layout();
+
 	m_GeneralTemplate.InitGeneral();
 	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
 		m_manual[i]->GetDivisionalTemplate().InitDivisional(i);

@@ -462,6 +462,12 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	m_InitialOpenWindow = cfg.ReadBoolean(CMBSetting, m_group, wxT("WindowDisplayed"), false, false);
 }
 
+void GOGUIPanel::Layout()
+{
+	for(unsigned i = 0; i < m_controls.size(); i++)
+		m_controls[i]->Layout();
+}
+
 unsigned GOGUIPanel::GetWidth()
 {
 	return m_metrics->GetScreenWidth();

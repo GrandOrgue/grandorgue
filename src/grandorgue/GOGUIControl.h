@@ -49,6 +49,7 @@ public:
 
 	virtual void Init(GOrgueConfigReader& cfg, wxString group);
 	virtual void Load(GOrgueConfigReader& cfg, wxString group);
+	virtual void Layout();
 
 	virtual void ControlChanged(void* control);
 	virtual void Draw(GOrgueDC& dc);
