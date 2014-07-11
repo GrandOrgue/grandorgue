@@ -47,7 +47,6 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 	wxString type = m_ManualNumber ? wxT("Manual") : wxT("Pedal");
 	unsigned first_midi_note = m_manual->GetFirstAccessibleKeyMIDINoteNumber();
 
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 	unsigned x = 0, y = 0;
 	int width = 0;
 	int height = 1;
@@ -161,18 +160,7 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 		x += key_width;
 	}
 
-	x = mri.x + 1;
-	y = mri.keys_y;
-
-	for(unsigned i = 0; i < m_Keys.size(); i++)
-	{
-		m_Keys[i].Rect.SetX(m_Keys[i].Rect.GetX() + x);
-		m_Keys[i].Rect.SetY(m_Keys[i].Rect.GetY() + y);
-		m_Keys[i].MouseRect.SetX(m_Keys[i].MouseRect.GetX() + x);
-		m_Keys[i].MouseRect.SetY(m_Keys[i].MouseRect.GetY() + y);
-	}
-
-	m_BoundingRect = wxRect(x, y, width, height);
+	m_BoundingRect = wxRect(-1, -1, width, height);
 }
 
 void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
@@ -190,7 +178,6 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		type += wxT("Wood");
 	unsigned first_midi_note = cfg.ReadInteger(ODFSetting, group, wxT("DisplayFirstNote"), 0, 127, false, m_manual->GetFirstAccessibleKeyMIDINoteNumber());
 
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 	unsigned x = 0, y = 0;
 	int width = 0;
 	int height = 1;
@@ -319,21 +306,25 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		x += key_width;
 	}
 
-	x = mri.x + 1;
-	y = mri.keys_y;
+	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, -1);
+	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, -1);
 
-	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
-	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
+	m_BoundingRect = wxRect(x, y, width, height);
+}
+
+void GOGUIManual::Layout()
+{
+	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
+	if (m_BoundingRect.GetX() == -1)
+		m_BoundingRect.SetX(mri.x + 1);
+	if (m_BoundingRect.GetY() == -1)
+		m_BoundingRect.SetY(mri.keys_y);
 
 	for(unsigned i = 0; i < m_Keys.size(); i++)
 	{
-		m_Keys[i].Rect.SetX(m_Keys[i].Rect.GetX() + x);
-		m_Keys[i].Rect.SetY(m_Keys[i].Rect.GetY() + y);
-		m_Keys[i].MouseRect.SetX(m_Keys[i].MouseRect.GetX() + x);
-		m_Keys[i].MouseRect.SetY(m_Keys[i].MouseRect.GetY() + y);
+		m_Keys[i].Rect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
+		m_Keys[i].MouseRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
 	}
-
-	m_BoundingRect = wxRect(x, y, width, height);
 }
 
 void GOGUIManual::Draw(GOrgueDC& dc)
