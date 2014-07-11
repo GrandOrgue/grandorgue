@@ -34,6 +34,7 @@ public:
 
 	void Init(GOrgueConfigReader& cfg, wxString group);
 	void Load(GOrgueConfigReader& cfg, wxString group);
+	void Layout();
 
 	void Draw(GOrgueDC& dc);
 };
