@@ -26,7 +26,7 @@ url='http://sourceforge.net/projects/ourorgan/'
 license=('GPL2+')
 groups=('multimedia')
 depends=('alsa-lib' 'jack' 'wxgtk2.8')
-makedepends=('gcc' 'libxslt' 'zip' 'gettext' 'docbook-xsl' 'cmake')
+makedepends=('gcc' 'libxslt' 'zip' 'gettext' 'docbook-xsl' 'cmake' 'po4a')
 source=("grandorgue-$pkgver.tar.gz")
 md5sums=('SKIP')
 
