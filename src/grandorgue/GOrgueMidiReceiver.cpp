@@ -691,11 +691,11 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_RANGE && m_events[i].high_value == e.GetKey() && m_events[i].key == e.GetValue())
 				return MIDI_MATCH_ON;
 
-		if (e.GetMidiType() == MIDI_SYSEX_VISCOUNT && m_events[i].type == MIDI_M_SYSEX_VISCOUNT && m_events[i].low_value == e.GetKey())
+		if (e.GetMidiType() == MIDI_SYSEX_VISCOUNT && m_events[i].type == MIDI_M_SYSEX_VISCOUNT && m_events[i].low_value == e.GetValue())
 				return MIDI_MATCH_OFF;
-		if (e.GetMidiType() == MIDI_SYSEX_VISCOUNT && m_events[i].type == MIDI_M_SYSEX_VISCOUNT && m_events[i].high_value == e.GetKey())
+		if (e.GetMidiType() == MIDI_SYSEX_VISCOUNT && m_events[i].type == MIDI_M_SYSEX_VISCOUNT && m_events[i].high_value == e.GetValue())
 				return MIDI_MATCH_ON;
-		if (e.GetMidiType() == MIDI_SYSEX_VISCOUNT && m_events[i].type == MIDI_M_SYSEX_VISCOUNT_TOGGLE && m_events[i].low_value == e.GetKey())
+		if (e.GetMidiType() == MIDI_SYSEX_VISCOUNT && m_events[i].type == MIDI_M_SYSEX_VISCOUNT_TOGGLE && m_events[i].low_value == e.GetValue())
 		{
 			return debounce(e, MIDI_MATCH_CHANGE, i);
 		}
