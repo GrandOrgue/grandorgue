@@ -33,6 +33,7 @@ class GOGUIButton : public GOGUIControl
 {
 protected:
 	bool m_IsPiston;
+	bool m_DispKeyLabelOnLeft;
 	GOrgueButton* m_Button;
 	wxRect m_MouseRect;
 	unsigned m_Radius;
@@ -55,6 +56,7 @@ public:
 
 	void Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos);
 	void Load(GOrgueConfigReader& cfg, wxString group);
+	void Layout();
 
 	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	void Draw(GOrgueDC& dc);
