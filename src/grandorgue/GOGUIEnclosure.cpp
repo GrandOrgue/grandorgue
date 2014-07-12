@@ -71,9 +71,8 @@ void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
 
 	int x, y, w, h;
 
-	x = m_layout->GetEnclosureX(this);
-	y = m_layout->GetEnclosureY();
-
+	x = -1;
+	y = -1;
 	w = m_Bitmaps[0].GetWidth();
 	h = m_Bitmaps[0].GetHeight();
 	m_BoundingRect = wxRect(x, y, w, h);
@@ -90,14 +89,14 @@ void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
 	y = 0;
 	w = m_BoundingRect.GetWidth() - x;
 	h = m_BoundingRect.GetHeight() - y;
-	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_TextRect = wxRect(x, y, w, h);
 	m_TextWidth = m_TextRect.GetWidth();
 
 	x = 0;
 	y = 13;
 	w = m_BoundingRect.GetWidth() - x;
 	h = m_BoundingRect.GetHeight() - y - 3;
-	m_MouseRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_MouseRect = wxRect(x, y, w, h);
 
 	m_MouseAxisStart = m_MouseRect.GetHeight() / 3;
 	m_MouseAxisEnd = m_MouseRect.GetHeight() / 3 * 2;
@@ -127,11 +126,8 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 
 	int x, y, w, h;
 
-	x = m_layout->GetEnclosureX(this);
-	y = m_layout->GetEnclosureY();
-
-	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
-	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
+	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, -1);
+	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, -1);
 	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmaps[0].GetWidth());
 	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmaps[0].GetHeight());
 	m_BoundingRect = wxRect(x, y, w, h);
@@ -148,20 +144,31 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 	y = cfg.ReadInteger(ODFSetting, group, wxT("TextRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 0);
 	w = cfg.ReadInteger(ODFSetting, group, wxT("TextRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
 	h = cfg.ReadInteger(ODFSetting, group, wxT("TextRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y);
-	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_TextRect = wxRect(x, y, w, h);
 	m_TextWidth = cfg.ReadInteger(ODFSetting, group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth());
 
 	x = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectLeft"), 0, m_BoundingRect.GetWidth() - 1, false, 0);
 	y = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 13);
 	w = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
 	h = cfg.ReadInteger(ODFSetting, group, wxT("MouseRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y - 3);
-	m_MouseRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_MouseRect = wxRect(x, y, w, h);
 
 	m_MouseAxisStart = cfg.ReadInteger(ODFSetting, group, wxT("MouseAxisStart"), 0, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3);
 	m_MouseAxisEnd = cfg.ReadInteger(ODFSetting, group, wxT("MouseAxisEnd"), m_MouseAxisStart, m_MouseRect.GetHeight(), false, m_MouseRect.GetHeight() / 3 * 2);
 
 	m_Font.SetName(m_FontName);
 	m_Font.SetPoints(m_FontSize);
+}
+
+void GOGUIEnclosure::Layout()
+{
+	if (m_BoundingRect.GetX() == -1)
+		m_BoundingRect.SetX(m_layout->GetEnclosureX(this));
+	if (m_BoundingRect.GetY() == -1)
+		m_BoundingRect.SetY(m_layout->GetEnclosureY());
+
+	m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
+	m_MouseRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
 }
 
 void GOGUIEnclosure::Draw(GOrgueDC& dc)
