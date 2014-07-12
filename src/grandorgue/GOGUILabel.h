@@ -50,6 +50,7 @@ public:
 	GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label);
 	void Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos = 0, unsigned y_pos = 0, wxString name = wxT(""), unsigned imageno = 1);
 	void Load(GOrgueConfigReader& cfg, wxString group);
+	void Layout();
 
 	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	void Draw(GOrgueDC& dc);
