@@ -74,7 +74,7 @@ void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, u
 	y = 1;
 	w = m_BoundingRect.GetWidth() - x;
 	h = m_BoundingRect.GetHeight() - y;
-	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_TextRect = wxRect(x, y, w, h);
 	m_TextWidth = m_TextRect.GetWidth();
 
 	m_Font = m_metrics->GetGroupLabelFont();
@@ -89,35 +89,38 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 	bool FreeXPlacement = cfg.ReadBoolean(ODFSetting, group, wxT("FreeXPlacement"), false, true);
 	bool FreeYPlacement = cfg.ReadBoolean(ODFSetting, group, wxT("FreeYPlacement"), false, true);
 
+	int x = -1, y = -1;
 	if (!FreeXPlacement)
 	{
 		int DispDrawstopCol = cfg.ReadInteger(ODFSetting, group, wxT("DispDrawstopCol"), 1, m_metrics->NumberOfDrawstopColsToDisplay(), true, 1);
 		bool DispSpanDrawstopColToRight = cfg.ReadBoolean(ODFSetting, group, wxT("DispSpanDrawstopColToRight"), true, false);
 
 		int i = m_metrics->NumberOfDrawstopColsToDisplay() >> 1;
-		if (DispDrawstopCol <= i)
-			m_DispXpos = m_layout->GetJambLeftX()  + (DispDrawstopCol - 1) * 78 + 1;
-		else
-			m_DispXpos = m_layout->GetJambRightX() + (DispDrawstopCol - 1 - i) * 78 + 1;
 		if (DispSpanDrawstopColToRight)
-			m_DispXpos += 39;
+			m_DispXpos = 39;
+		else
+			m_DispXpos = 0;
+		if (DispDrawstopCol <= i)
+			m_DispXpos = m_DispXpos  + (DispDrawstopCol - 1) * 78 + 1;
+		else
+			m_DispXpos = - (m_DispXpos + (DispDrawstopCol - 1 - i) * 78 + 1);
 	}
 	else
 	{
-		m_DispXpos = cfg.ReadInteger(ODFSetting, group, wxT("DispXpos"), 0, m_metrics->GetScreenWidth(), false, m_DispXpos);
+		x = cfg.ReadInteger(ODFSetting, group, wxT("DispXpos"), 0, m_metrics->GetScreenWidth(), false, 0);
 	}
 
 	if (!FreeYPlacement)
 	{
 		bool DispAtTopOfDrawstopCol = cfg.ReadBoolean(ODFSetting, group, wxT("DispAtTopOfDrawstopCol"), true, false);
 
-		m_DispYpos = m_layout->GetJambLeftRightY() + 1;
+		m_DispYpos = 1;
 		if (!DispAtTopOfDrawstopCol)
-			m_DispYpos += m_layout->GetJambLeftRightHeight() - 32;
+			m_DispYpos += -32;
 	}
 	else
 	{
-		m_DispYpos = cfg.ReadInteger(ODFSetting, group, wxT("DispYpos"), 0, m_metrics->GetScreenHeight(), false, m_DispYpos);
+		y = cfg.ReadInteger(ODFSetting, group, wxT("DispYpos"), 0, m_metrics->GetScreenHeight(), false, 0);
 	}
 
 	m_TextColor = cfg.ReadColor(ODFSetting, group, wxT("DispLabelColour"), false, wxT("BLACK"));
@@ -133,9 +136,9 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 
 	m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);
 
-	int x, y, w, h;
-	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, m_DispXpos);
-	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, m_DispYpos);
+	int w, h;
+	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, x);
+	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, y);
 	w = cfg.ReadInteger(ODFSetting, group, wxT("Width"), 1, m_metrics->GetScreenWidth(), false, m_Bitmap.GetWidth());
 	h = cfg.ReadInteger(ODFSetting, group, wxT("Height"), 1, m_metrics->GetScreenHeight(), false, m_Bitmap.GetHeight());
 	m_BoundingRect = wxRect(x, y, w, h);
@@ -147,12 +150,32 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 	y = cfg.ReadInteger(ODFSetting, group, wxT("TextRectTop"), 0, m_BoundingRect.GetHeight() - 1, false, 1);
 	w = cfg.ReadInteger(ODFSetting, group, wxT("TextRectWidth"), 1, m_BoundingRect.GetWidth() - x, false, m_BoundingRect.GetWidth() - x);
 	h = cfg.ReadInteger(ODFSetting, group, wxT("TextRectHeight"), 1, m_BoundingRect.GetHeight() - y, false, m_BoundingRect.GetHeight() - y);
-	m_TextRect = wxRect(x + m_BoundingRect.GetX(), y + m_BoundingRect.GetY(), w, h);
+	m_TextRect = wxRect(x, y, w, h);
 	m_TextWidth = cfg.ReadInteger(ODFSetting, group, wxT("TextBreakWidth"), 0, m_TextRect.GetWidth(), false, m_TextRect.GetWidth());
 
 	m_Font = m_metrics->GetGroupLabelFont();
 	m_Font.SetName(m_FontName);
 	m_Font.SetPoints(m_FontSize);
+}
+
+void GOGUILabel::Layout()
+{
+	if (m_DispXpos >= 0)
+		m_DispXpos = m_layout->GetJambLeftX() + m_DispXpos;
+	else
+		m_DispXpos = m_layout->GetJambRightX() - m_DispXpos;
+
+	if (m_DispYpos >= 0)
+		m_DispYpos = m_layout->GetJambLeftRightY() + 1;
+	else
+		m_DispYpos = m_layout->GetJambLeftRightY() + 1 + m_layout->GetJambLeftRightHeight() - 32;
+
+	if (m_BoundingRect.GetX() == -1)
+		m_BoundingRect.SetX(m_DispXpos);
+	if (m_BoundingRect.GetY() == -1)
+		m_BoundingRect.SetY(m_DispYpos);
+
+	m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
 }
 
 void GOGUILabel::Draw(GOrgueDC& dc)
