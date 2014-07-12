@@ -58,10 +58,10 @@ protected:
 	} MANUAL_INFO;
 
 	/* Values loaded in constructor */
-	unsigned m_nb_enclosures;
 	unsigned m_nb_manuals;
 	unsigned m_first_manual;
 	std::vector<MANUAL_INFO> m_manual_info;
+	std::vector<GOGUIEnclosure*> m_Enclosures;
 
 	/* Values loaded from ODF */
 	unsigned m_DispScreenSizeHoriz;
@@ -110,8 +110,6 @@ protected:
 	int m_EnclosureY;
 	int m_CenterY;
 	int m_CenterWidth;
-
-	virtual void Update();
 
 public:
 
@@ -164,7 +162,7 @@ public:
 	virtual bool HasTrimAboveExtraRows();
 	virtual bool HasExtraPedalButtonRow();
 
-	virtual unsigned NewEnclosure();
+	void RegisterEnclosure(GOGUIEnclosure* enclosure);
 
 	virtual const MANUAL_RENDER_INFO& GetManualRenderInfo(const unsigned manual_nb) const;
 
@@ -172,6 +170,8 @@ public:
 	virtual unsigned GetDrawstopHeight();
 	virtual unsigned GetButtonWidth();
 	virtual unsigned GetButtonHeight();
+
+	virtual void Update();
 };
 
 #endif

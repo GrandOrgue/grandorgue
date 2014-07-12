@@ -424,7 +424,7 @@ GOGUIControl* GOrgueSetter::CreateGUIElement(GOrgueConfigReader& cfg, wxString g
 	}
 	if (element == ID_SETTER_CRESCENDO_SWELL)
 	{
-		GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell, panel->GetDisplayMetrics()->NewEnclosure());
+		GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell);
 		enclosure->Load(cfg, group);
 		return enclosure;
 	}
@@ -543,16 +543,13 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 
 	}
 
-	for(unsigned i = 0; i < m_organfile->GetWindchestGroupCount() + 1; i++)
-		panel->GetDisplayMetrics()->NewEnclosure();
-
 	GOrgueEnclosure* master_enc = new GOrgueEnclosure(m_organfile);
 	master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"));
 	master_enc->Set(127);
 	m_organfile->AddEnclosure(master_enc);
 	master_enc->SetElementID(m_organfile->GetRecorderElementID(wxString::Format(wxT("SM"))));
 
-	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, master_enc, 0);
+	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, master_enc);
 	enclosure->Init(cfg, wxT("SetterMasterVolume"));
 	panel->AddControl(enclosure);
 
@@ -568,7 +565,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 		enc->SetElementID(m_organfile->GetRecorderElementID(wxString::Format(wxT("SM%d"), i)));
 		windchest->AddEnclosure(enc);
 
-		enclosure = new GOGUIEnclosure(panel, enc, i + 1);
+		enclosure = new GOGUIEnclosure(panel, enc);
 		enclosure->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1));
 		panel->AddControl(enclosure);
 	}
@@ -589,6 +586,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 	control->Init(cfg, wxString::Format(wxT("SetterCouplers%03d"), manual_nr));
 	panel->AddControl(control);
 
+	panel->GetLayoutEngine()->Update();
 	for (unsigned int i = m_organfile->GetFirstManualIndex(); i < m_organfile->GetODFManualCount(); i++)
 	{
 		int x, y;
@@ -596,7 +594,7 @@ GOGUIPanel* GOrgueSetter::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned m
 		GOrgueCoupler* coupler;
 		GOGUIButton* button;
 
-		metrics->GetDrawstopBlitPosition(100 + i, 1, x, y);
+		panel->GetLayoutEngine()->GetDrawstopBlitPosition(100 + i, 1, x, y);
 
 		GOGUILabel* PosDisplay=new GOGUILabel(panel, NULL);
 		PosDisplay->Init(cfg, wxString::Format(wxT("SetterCoupler%03dLabel%03d"), manual_nr, i), x, y, dest_manual->GetName());
@@ -680,12 +678,13 @@ GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(GOrgueConfigReader& cfg)
 	button->Init(cfg, wxT("SetterGeneralsFull"), 7, 100);
 	panel->AddControl(button);
 
+	panel->GetLayoutEngine()->Update();
 	for (unsigned int i = m_organfile->GetFirstManualIndex(); i < m_organfile->GetODFManualCount(); i++)
 	{
 		int x, y;
 		GOrgueManual* manual = m_organfile->GetManual(i);
 
-		metrics->GetPushbuttonBlitPosition(100 + i, 1, x, y);
+		panel->GetLayoutEngine()->GetPushbuttonBlitPosition(100 + i, 1, x, y);
 
 		GOGUILabel* PosDisplay=new GOGUILabel(panel, NULL);
 		PosDisplay->Init(cfg, wxString::Format(wxT("SetterDivisionalLabel%03d"), i), x, y, manual->GetName());
@@ -872,7 +871,7 @@ GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(GOrgueConfigReader& cfg)
 	control->Init(cfg, wxT("SetterCrescendo"));
 	panel->AddControl(control);
 
-	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell, panel->GetDisplayMetrics()->NewEnclosure());
+	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell);
 	enclosure->Init(cfg, wxT("SetterSwell"));
 	panel->AddControl(enclosure);
 

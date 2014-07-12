@@ -162,21 +162,21 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			AddControl(control);
 		}
 
+		for (unsigned i = 0; i < m_organfile->GetEnclosureCount(); i++)
+			if (m_organfile->GetEnclosure(i)->IsDisplayed())
+			{
+				buffer.Printf(wxT("Enclosure%03d"), i + 1);
+				GOGUIControl* control = new GOGUIEnclosure(this, m_organfile->GetEnclosure(i));
+				control->Load(cfg, buffer);
+				AddControl(control);
+			}
+
 		unsigned NumberOfSetterElements = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSetterElements"), 0, 999, false);
 		for (unsigned i = 0; i < NumberOfSetterElements; i++)
 		{
 			buffer.Printf(wxT("SetterElement%03d"), i + 1);
 			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this));
 		}
-
-		for (unsigned no = 0, i = 0; i < m_organfile->GetEnclosureCount(); i++)
-			if (m_organfile->GetEnclosure(i)->IsDisplayed())
-			{
-				buffer.Printf(wxT("Enclosure%03d"), i + 1);
-				GOGUIControl* control = new GOGUIEnclosure(this, m_organfile->GetEnclosure(i), no++);
-				control->Load(cfg, buffer);
-				AddControl(control);
-			}
 
 		for (unsigned i = 0; i < m_organfile->GetTremulantCount(); i++)
 			if (m_organfile->GetTremulant(i)->IsDisplayed())
@@ -320,22 +320,22 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			AddControl(control);
 		}
 
-		unsigned NumberOfSetterElements = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSetterElements"), 0, 999, false);
-		for (unsigned i = 0; i < NumberOfSetterElements; i++)
-		{
-			buffer.Printf(wxT("SetterElement%03d"), i + 1);
-			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, group + buffer, this));
-		}
-
 		for (unsigned i = 0; i < NumberOfEnclosures; i++)
 		{
 			buffer.Printf(wxT("Enclosure%03d"), i + 1);
 			unsigned enclosure_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetEnclosureCount());
 			buffer.Printf(wxT("Enclosure%03d"), enclosure_nb);
-			GOGUIControl* control = new GOGUIEnclosure(this, m_organfile->GetEnclosure(enclosure_nb - 1), i);
+			GOGUIControl* control = new GOGUIEnclosure(this, m_organfile->GetEnclosure(enclosure_nb - 1));
 			m_organfile->MarkSectionInUse(group + buffer);
 			control->Load(cfg, group + buffer);
 			AddControl(control);
+		}
+
+		unsigned NumberOfSetterElements = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSetterElements"), 0, 999, false);
+		for (unsigned i = 0; i < NumberOfSetterElements; i++)
+		{
+			buffer.Printf(wxT("SetterElement%03d"), i + 1);
+			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, group + buffer, this));
 		}
 
 		for (unsigned i = 0; i < NumberOfTremulants; i++)
@@ -464,6 +464,8 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 
 void GOGUIPanel::Layout()
 {
+	m_metrics->Update();
+
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->Layout();
 }

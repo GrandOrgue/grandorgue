@@ -30,10 +30,10 @@
 GOGUIDisplayMetrics::GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString group) :
 	m_group(group),
 	m_organfile(organfile),
-	m_nb_enclosures(0),
 	m_nb_manuals(0),
 	m_first_manual(0),
 	m_manual_info(),
+	m_Enclosures(),
 	m_DispScreenSizeHoriz(0),
 	m_DispScreenSizeVert(0),
 	m_DispDrawstopBackgroundImageNum(0),
@@ -265,7 +265,7 @@ int GOGUIDisplayMetrics::GetCenterY()
 
 unsigned GOGUIDisplayMetrics::GetEnclosureWidth()
 {
-	return m_EnclosureWidth * m_nb_enclosures;
+	return m_EnclosureWidth * m_Enclosures.size();
 }
 
 int GOGUIDisplayMetrics::GetEnclosureY()
@@ -279,9 +279,9 @@ int GOGUIDisplayMetrics::GetEnclosureX(const GOGUIEnclosure* enclosure)
 	assert(enclosure);
 
 	int enclosure_x = (GetScreenWidth() - GetEnclosureWidth() + 6) >> 1;
-	for (unsigned int i = 0; i < m_nb_enclosures; i++)
+	for (unsigned int i = 0; i < m_Enclosures.size(); i++)
 	{
-		if (enclosure->IsEnclosure(i))
+		if (enclosure == m_Enclosures[i])
 			return enclosure_x;
 		enclosure_x += m_EnclosureWidth;
 	}
@@ -436,7 +436,7 @@ void GOGUIDisplayMetrics::Update()
 			m_EnclosureY = m_CenterY;
 			m_CenterY -= 12;
 		}
-		if (!i && m_nb_manuals < m_first_manual && m_nb_enclosures)
+		if (!i && m_nb_manuals < m_first_manual && m_Enclosures.size())
 		{
 			m_CenterY -= 12;
 			m_CenterY -= m_EnclosureHeight;
@@ -523,9 +523,7 @@ const GOGUIDisplayMetrics::MANUAL_RENDER_INFO& GOGUIDisplayMetrics::GetManualRen
 
 }
 
-unsigned GOGUIDisplayMetrics::NewEnclosure()
+void GOGUIDisplayMetrics::RegisterEnclosure(GOGUIEnclosure* enclosure)
 {
-	unsigned no = m_nb_enclosures++;
-	Update();
-	return no;
+	m_Enclosures.push_back(enclosure);
 }
