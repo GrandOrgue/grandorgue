@@ -99,7 +99,6 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 		button_rows = 5;
 	}
 
-	m_nb_enclosures = 0;
 	m_nb_manuals    = 0;
 	m_first_manual  = 1;
 	if (type == GOGUI_SETTER_FLOATING)

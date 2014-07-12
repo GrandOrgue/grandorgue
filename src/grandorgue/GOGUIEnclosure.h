@@ -34,7 +34,6 @@ class GOGUIEnclosure : public GOGUIControl
 {
 private:
 	GOrgueEnclosure* m_enclosure;
-	unsigned m_enclosure_nb;
 	unsigned m_FontSize;
 	wxString m_FontName;
 	GOrgueFont m_Font;
@@ -50,7 +49,7 @@ private:
 	std::vector<GOrgueBitmap> m_Bitmaps;
 	
 public:
-	GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb);
+	GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control);
 
 	void Init(GOrgueConfigReader& cfg, wxString group);
 	void Load(GOrgueConfigReader& cfg, wxString group);
@@ -59,8 +58,6 @@ public:
 	void Draw(GOrgueDC& dc);
 	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	bool HandleMouseScroll(int x, int y, int amount);
-
-	bool IsEnclosure(const unsigned nb) const;
 };
 
 #endif

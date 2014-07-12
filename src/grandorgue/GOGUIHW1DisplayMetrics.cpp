@@ -22,7 +22,6 @@
 #include "GOGUIHW1DisplayMetrics.h"
 
 #include "GOrgueConfigReader.h"
-#include "GOrgueEnclosure.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
 
@@ -37,15 +36,6 @@ GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, GrandOrg
 		IsMainPanel = true;
 	}
 
-	if (!IsMainPanel)
-		m_nb_enclosures = ini.ReadInteger(ODFSetting, m_group, wxT("NumberOfEnclosures"), 0, organfile->GetEnclosureCount());
-	else
-	{
-		m_nb_enclosures = 0;
-		for(unsigned i = 0; i < organfile->GetEnclosureCount(); i++)
-			if (organfile->GetEnclosure(i)->IsDisplayed())
-				m_nb_enclosures++;
-	}
 	m_nb_manuals    = ini.ReadInteger(ODFSetting, m_group, wxT("NumberOfManuals"), IsMainPanel ? 1 : 0, organfile->GetODFManualCount() - 1);
 	m_first_manual  = ini.ReadBoolean(ODFSetting, m_group, wxT("HasPedals")) ? 0 : 1;
 	if (m_first_manual < organfile->GetFirstManualIndex())

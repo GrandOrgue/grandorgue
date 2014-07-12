@@ -29,10 +29,9 @@
 #include "GOrgueEnclosure.h"
 #include <wx/intl.h>
 
-GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsigned enclosure_nb):
+GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control):
 	GOGUIControl(panel, control),
 	m_enclosure(control),
-	m_enclosure_nb(enclosure_nb),
 	m_FontSize(0),
 	m_FontName(),
 	m_TextColor(0,0,0),
@@ -44,11 +43,7 @@ GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control, unsi
 	m_TileOffsetY(0),
 	m_Bitmaps(0)
 {
-}
-
-bool GOGUIEnclosure::IsEnclosure(const unsigned nb) const
-{
-	return (m_enclosure_nb == nb);
+	m_layout->RegisterEnclosure(this);
 }
 
 void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
