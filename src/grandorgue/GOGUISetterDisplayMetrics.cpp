@@ -99,25 +99,6 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 		button_rows = 5;
 	}
 
-	m_nb_manuals    = 0;
-	m_first_manual  = 1;
-	if (type == GOGUI_SETTER_FLOATING)
-	{
-		m_nb_manuals    = (organfile->GetManualAndPedalCount() - organfile->GetODFManualCount());
-		m_first_manual  = 0;
-	}
-
-	for (unsigned int i = 0; i <= m_nb_manuals; i++)
-	{
-		wxString buffer;
-		MANUAL_INFO man;
-		memset(&man, 0, sizeof(man));
-		man.displayed = true;
-		man.first_accessible_key_midi_note_nb = m_organfile->GetManual(i + organfile->GetODFManualCount())->GetFirstAccessibleKeyMIDINoteNumber();
-		man.nb_accessible_keys = m_organfile->GetManual(i + organfile->GetODFManualCount())->GetNumberOfAccessibleKeys();
-		m_manual_info.push_back(man);
-	}
-
 	int background_img = ini.ReadInteger(ODFSetting, wxT("Organ"), wxT("DispConsoleBackgroundImageNum"), 1, 64, false, 32);
 	int horiz_img = ini.ReadInteger(ODFSetting, wxT("Organ"), wxT("DispKeyHorizBackgroundImageNum"), 1, 64, false, 22);
 	int vert_img = ini.ReadInteger(ODFSetting, wxT("Organ"), wxT("DispKeyVertBackgroundImageNum"), 1, 64, false, 19);
@@ -151,5 +132,5 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 	m_DispTrimAboveExtraRows = true;
 	m_DispExtraDrawstopRowsAboveExtraButtonRows = true;
 
-	Update();
+	Init();
 }

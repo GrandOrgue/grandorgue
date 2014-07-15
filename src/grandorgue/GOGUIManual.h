@@ -47,6 +47,9 @@ private:
 public:
 	GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number);
 
+	bool IsSharp(unsigned key);
+	unsigned GetKeyCount();
+
 	void Init(GOrgueConfigReader& cfg, wxString group);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Layout();

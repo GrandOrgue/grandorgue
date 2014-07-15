@@ -57,6 +57,7 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_Name(),
 	m_GroupName(),
 	m_metrics(0),
+	m_layout(0),
 	m_view(0),
 	m_size(0, 0, 0, 0),
 	m_InitialOpenWindow(false)
@@ -106,6 +107,7 @@ void GOGUIPanel::Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxS
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_metrics = metrics;
+	m_layout = metrics;
 	m_Name = name;
 	m_GroupName = group_name;
 	m_controls.resize(0);
@@ -125,6 +127,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_metrics = new GOGUIHW1DisplayMetrics(cfg, m_organfile, group);
+	m_layout = m_metrics;
 
 	if (group.IsEmpty())
 	{
@@ -140,6 +143,8 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			AddControl(control);
 		}
 		
+		for(unsigned i = 0; i < m_organfile->GetFirstManualIndex(); i++)
+			m_layout->RegisterManual(0);
 
 		for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
 		{
@@ -301,6 +306,8 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			AddControl(control);
 		}
 		
+		for(unsigned i = 0; i < first_manual; i++)
+			m_layout->RegisterManual(0);
 		for (unsigned int i = first_manual; i <= nb_manuals; i++)
 		{
 			buffer.Printf(wxT("Manual%03d"), i);
@@ -464,7 +471,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 
 void GOGUIPanel::Layout()
 {
-	m_metrics->Update();
+	m_layout->Update();
 
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->Layout();
@@ -513,7 +520,7 @@ GOGUIDisplayMetrics* GOGUIPanel::GetDisplayMetrics()
 
 GOGUIDisplayMetrics* GOGUIPanel::GetLayoutEngine()
 {
-	return m_metrics;
+	return m_layout;
 }
 
 void GOGUIPanel::ControlChanged(void* control)

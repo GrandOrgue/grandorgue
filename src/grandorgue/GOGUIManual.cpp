@@ -36,6 +36,17 @@ GOGUIManual::GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manua
 	m_ManualNumber(manual_number),
 	m_Keys()
 {
+	m_layout->RegisterManual(this);
+}
+
+bool GOGUIManual::IsSharp(unsigned key)
+{
+	return m_Keys[key].IsSharp;
+}
+
+unsigned GOGUIManual::GetKeyCount()
+{
+	return m_Keys.size();
 }
 
 void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)

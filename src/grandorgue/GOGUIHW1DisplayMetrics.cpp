@@ -28,42 +28,8 @@
 GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, wxString group) :
 	GOGUIDisplayMetrics(organfile, group)
 {
-	bool IsMainPanel = false;
-
 	if (group.IsEmpty())
-	{
 		m_group = wxT("Organ");
-		IsMainPanel = true;
-	}
-
-	m_nb_manuals    = ini.ReadInteger(ODFSetting, m_group, wxT("NumberOfManuals"), IsMainPanel ? 1 : 0, organfile->GetODFManualCount() - 1);
-	m_first_manual  = ini.ReadBoolean(ODFSetting, m_group, wxT("HasPedals")) ? 0 : 1;
-	if (m_first_manual < organfile->GetFirstManualIndex())
-		m_first_manual = organfile->GetFirstManualIndex();
-
-	for (unsigned int i = 0; i <= m_nb_manuals; i++)
-	{
-		wxString buffer;
-		MANUAL_INFO man;
-		memset(&man, 0, sizeof(man));
-		if (i >= m_first_manual)
-		{
-			unsigned manual_nb = i;
-			wxString g;
-			g.Printf(wxT("Manual%03d"), i);
-			if (!IsMainPanel)
-			{
-				wxString Buffer;
-				buffer.Printf(wxT("Manual%03d"), i);
-				manual_nb  = ini.ReadInteger(ODFSetting, m_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetODFManualCount() - 1);
-				g = m_group + g;
-			}
-			man.first_accessible_key_midi_note_nb = ini.ReadInteger(ODFSetting, g, wxT("DisplayFirstNote"), 0, 127, false, m_organfile->GetManual(manual_nb)->GetFirstAccessibleKeyMIDINoteNumber());
-			man.nb_accessible_keys = ini.ReadInteger(ODFSetting, g, wxT("DisplayKeys"), 1, m_organfile->GetManual(manual_nb)->GetNumberOfAccessibleKeys(), false, m_organfile->GetManual(manual_nb)->GetNumberOfAccessibleKeys());
-			man.displayed = !IsMainPanel || m_organfile->GetManual(i)->IsDisplayed();
-		}
-		m_manual_info.push_back(man);
-	}
 
 	m_DispScreenSizeHoriz = ini.ReadSize(ODFSetting, m_group, wxT("DispScreenSizeHoriz"), 0);
 	m_DispScreenSizeVert = ini.ReadSize(ODFSetting, m_group, wxT("DispScreenSizeVert"), 1);
@@ -104,5 +70,5 @@ GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, GrandOrg
 	m_ManualHeight = ini.ReadInteger(ODFSetting, m_group, wxT("DispManualHeight"), 1, 500, false, 32),
 	m_ManualKeyWidth = ini.ReadInteger(ODFSetting, m_group, wxT("DispManualKeyWidth"), 1, 500, false, 12),
 
-	Update();
+	Init();
 }
