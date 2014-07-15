@@ -28,6 +28,7 @@
 #include <vector>
 
 class GOGUIEnclosure;
+class GOGUIManual;
 class GrandOrgueFile;
 
 class GOGUIDisplayMetrics
@@ -49,19 +50,9 @@ protected:
 	wxString m_group;
 	GrandOrgueFile* m_organfile;
 
-	typedef struct
-	{
-		bool displayed;
-		unsigned nb_accessible_keys;
-		int first_accessible_key_midi_note_nb;
-		MANUAL_RENDER_INFO render_info;
-	} MANUAL_INFO;
-
-	/* Values loaded in constructor */
-	unsigned m_nb_manuals;
-	unsigned m_first_manual;
-	std::vector<MANUAL_INFO> m_manual_info;
+	std::vector<MANUAL_RENDER_INFO> m_ManualRenderInfo;
 	std::vector<GOGUIEnclosure*> m_Enclosures;
+	std::vector<GOGUIManual*> m_Manuals;
 
 	/* Values loaded from ODF */
 	unsigned m_DispScreenSizeHoriz;
@@ -110,6 +101,8 @@ protected:
 	int m_EnclosureY;
 	int m_CenterY;
 	int m_CenterWidth;
+
+	void Init();
 
 public:
 
@@ -163,6 +156,7 @@ public:
 	virtual bool HasExtraPedalButtonRow();
 
 	void RegisterEnclosure(GOGUIEnclosure* enclosure);
+	void RegisterManual(GOGUIManual* enclosure);
 
 	virtual const MANUAL_RENDER_INFO& GetManualRenderInfo(const unsigned manual_nb) const;
 

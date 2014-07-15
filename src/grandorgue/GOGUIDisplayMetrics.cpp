@@ -22,6 +22,7 @@
 #include "GOGUIDisplayMetrics.h"
 
 #include "GOGUIEnclosure.h"
+#include "GOGUIManual.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
 #include <wx/font.h>
@@ -30,10 +31,9 @@
 GOGUIDisplayMetrics::GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString group) :
 	m_group(group),
 	m_organfile(organfile),
-	m_nb_manuals(0),
-	m_first_manual(0),
-	m_manual_info(),
+	m_ManualRenderInfo(),
 	m_Enclosures(),
+	m_Manuals(),
 	m_DispScreenSizeHoriz(0),
 	m_DispScreenSizeVert(0),
 	m_DispDrawstopBackgroundImageNum(0),
@@ -81,6 +81,12 @@ GOGUIDisplayMetrics::GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString gro
 
 GOGUIDisplayMetrics::~GOGUIDisplayMetrics()
 {
+}
+
+void GOGUIDisplayMetrics::Init()
+{
+	m_ControlLabelFont.SetName(m_DispControlLabelFont);
+	m_GroupLabelFont.SetName(m_DispGroupLabelFont);
 }
 
 unsigned GOGUIDisplayMetrics::GetDrawstopWidth()
@@ -393,10 +399,10 @@ void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const i
 		if (i == 99)
 			i = 0;
 
-		if (i > (int)m_nb_manuals)
-			blitY = m_HackY - (i - (int)m_nb_manuals) * (m_ManualHeight + m_ButtonHeight) + m_ManualHeight + 5;
+		if (i >= (int)m_Manuals.size())
+			blitY = m_HackY - (i + 1 - (int)m_Manuals.size()) * (m_ManualHeight + m_ButtonHeight) + m_ManualHeight + 5;
 		else
-			blitY = m_manual_info[i].render_info.piston_y + 5;
+			blitY = m_ManualRenderInfo[i].piston_y + 5;
 
 		if (m_DispExtraPedalButtonRow && !buttonRow)
 			blitY += m_ButtonHeight;
@@ -415,28 +421,31 @@ void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const i
 
 void GOGUIDisplayMetrics::Update()
 {
+	if (!m_Manuals.size())
+		m_Manuals.push_back(NULL);
 
+	m_ManualRenderInfo.resize(m_Manuals.size());
 	m_CenterY = m_DispScreenSizeVert - m_PedalHeight;
 	m_CenterWidth = std::max(GetJambTopWidth(), GetPistonWidth());
 
-	for (unsigned i = 0; i <= m_nb_manuals; i++)
+	for (unsigned i = 0; i < m_Manuals.size(); i++)
 	{
 
-		if (!i && m_nb_manuals >= m_first_manual)
+		if (!i && m_Manuals[i])
 		{
-			m_manual_info[0].render_info.height = m_PedalHeight;
-			m_manual_info[0].render_info.keys_y = m_manual_info[0].render_info.y = m_CenterY;
+			m_ManualRenderInfo[0].height = m_PedalHeight;
+			m_ManualRenderInfo[0].keys_y = m_ManualRenderInfo[0].y = m_CenterY;
 			m_CenterY -= m_PedalHeight;
 			if (m_DispExtraPedalButtonRow)
 				m_CenterY -= m_ButtonHeight;
-			m_manual_info[0].render_info.piston_y = m_CenterY;
+			m_ManualRenderInfo[0].piston_y = m_CenterY;
 			m_CenterWidth = std::max(m_CenterWidth, (int)GetEnclosureWidth());
 			m_CenterY -= 12;
 			m_CenterY -= m_EnclosureHeight;
 			m_EnclosureY = m_CenterY;
 			m_CenterY -= 12;
 		}
-		if (!i && m_nb_manuals < m_first_manual && m_Enclosures.size())
+		if (!i && !m_Manuals[i] && m_Enclosures.size())
 		{
 			m_CenterY -= 12;
 			m_CenterY -= m_EnclosureHeight;
@@ -444,7 +453,7 @@ void GOGUIDisplayMetrics::Update()
 			m_CenterY -= 12;
 		}
 
-		if (!m_manual_info[i].displayed || i < m_first_manual)
+		if (!m_Manuals[i])
 			continue;
 
 		if (i)
@@ -452,52 +461,50 @@ void GOGUIDisplayMetrics::Update()
 			if (!m_DispButtonsAboveManuals)
 			{
 				m_CenterY -= m_ButtonHeight;
-				m_manual_info[i].render_info.piston_y = m_CenterY;
+				m_ManualRenderInfo[i].piston_y = m_CenterY;
 			}
-			m_manual_info[i].render_info.height = m_ManualHeight;
+			m_ManualRenderInfo[i].height = m_ManualHeight;
 			if (m_DispTrimBelowManuals && i == 1)
 			{
-				m_manual_info[i].render_info.height += 8;
+				m_ManualRenderInfo[i].height += 8;
 				m_CenterY -= 8;
 			}
 			m_CenterY -= m_ManualHeight;
-			m_manual_info[i].render_info.keys_y = m_CenterY;
-			if (m_DispTrimAboveManuals && i == m_nb_manuals)
+			m_ManualRenderInfo[i].keys_y = m_CenterY;
+			if (m_DispTrimAboveManuals && i + 1 == m_Manuals.size())
 			{
 				m_CenterY -= 8;
-				m_manual_info[i].render_info.height += 8;
+				m_ManualRenderInfo[i].height += 8;
 			}
 			if (m_DispButtonsAboveManuals)
 			{
 				m_CenterY -= m_ButtonHeight;
-				m_manual_info[i].render_info.piston_y = m_CenterY;
+				m_ManualRenderInfo[i].piston_y = m_CenterY;
 			}
-			m_manual_info[i].render_info.y = m_CenterY;
+			m_ManualRenderInfo[i].y = m_CenterY;
 		}
-		m_manual_info[i].render_info.width = 1;
+		m_ManualRenderInfo[i].width = 1;
 		if (i)
 		{
-			for (unsigned j = 0; j < m_manual_info[i].nb_accessible_keys; j++)
+			for (unsigned j = 0; j < m_Manuals[i]->GetKeyCount(); j++)
 			{
-				int k = (m_manual_info[i].first_accessible_key_midi_note_nb + j) % 12;
-				if ((k < 5 && !(k & 1)) || (k >= 5 && (k & 1)))
-					m_manual_info[i].render_info.width += m_ManualKeyWidth;
+				if (!m_Manuals[i]->IsSharp(j))
+					m_ManualRenderInfo[i].width += m_ManualKeyWidth;
 			}
 		}
 		else
 		{
-			for (unsigned j = 0; j < m_manual_info[i].nb_accessible_keys; j++)
+			for (unsigned j = 0; j < m_Manuals[i]->GetKeyCount(); j++)
 			{
-				m_manual_info[i].render_info.width += m_PedalKeyWidth;
-				int k = (m_manual_info[i].first_accessible_key_midi_note_nb + j) % 12;
-				if (j && (!k || k == 5))
-					m_manual_info[i].render_info.width += m_PedalKeyWidth;
+				m_ManualRenderInfo[i].width += m_PedalKeyWidth;
+				if (j && !m_Manuals[i]->IsSharp(j - 1) && !m_Manuals[i]->IsSharp(j))
+					m_ManualRenderInfo[i].width += m_PedalKeyWidth;
 			}
 		}
-		m_manual_info[i].render_info.x = (m_DispScreenSizeHoriz - m_manual_info[i].render_info.width) >> 1;
-		m_manual_info[i].render_info.width += 16;
-		if ((int)m_manual_info[i].render_info.width > m_CenterWidth)
-			m_CenterWidth = m_manual_info[i].render_info.width;
+		m_ManualRenderInfo[i].x = (m_DispScreenSizeHoriz - m_ManualRenderInfo[i].width) >> 1;
+		m_ManualRenderInfo[i].width += 16;
+		if ((int)m_ManualRenderInfo[i].width > m_CenterWidth)
+			m_CenterWidth = m_ManualRenderInfo[i].width;
 	}
 
 	m_HackY = m_CenterY;
@@ -509,21 +516,21 @@ void GOGUIDisplayMetrics::Update()
 	m_CenterY -= GetJambTopHeight();
 	if (m_DispTrimAboveExtraRows)
 		m_CenterY -= 8;
-
-	m_ControlLabelFont.SetName(m_DispControlLabelFont);
-	m_GroupLabelFont.SetName(m_DispGroupLabelFont);
 }
 
 const GOGUIDisplayMetrics::MANUAL_RENDER_INFO& GOGUIDisplayMetrics::GetManualRenderInfo(const unsigned manual_nb) const
 {
-
-	assert(manual_nb < m_manual_info.size());
-	assert(manual_nb >= m_first_manual);
-	return m_manual_info[manual_nb].render_info;
+	assert(manual_nb < m_ManualRenderInfo.size());
+	return m_ManualRenderInfo[manual_nb];
 
 }
 
 void GOGUIDisplayMetrics::RegisterEnclosure(GOGUIEnclosure* enclosure)
 {
 	m_Enclosures.push_back(enclosure);
+}
+
+void GOGUIDisplayMetrics::RegisterManual(GOGUIManual* manual)
+{
+	m_Manuals.push_back(manual);
 }
