@@ -109,9 +109,35 @@ unsigned GOGUIDisplayMetrics::GetButtonHeight()
 	return m_ButtonHeight;
 }
 
-/*
- * BASIC EXPORTS STRAIGHT FROM ODF
- */
+unsigned GOGUIDisplayMetrics::GetEnclosureWidth()
+{
+	return m_EnclosureWidth;
+}
+
+unsigned GOGUIDisplayMetrics::GetEnclosureHeight()
+{
+	return m_EnclosureHeight;
+}
+
+unsigned GOGUIDisplayMetrics::GetManualKeyWidth()
+{
+	return m_ManualKeyWidth;
+}
+
+unsigned GOGUIDisplayMetrics::GetManualHeight()
+{
+	return m_ManualHeight;
+}
+
+unsigned GOGUIDisplayMetrics::GetPedalKeyWidth()
+{
+	return m_PedalKeyWidth;
+}
+
+unsigned GOGUIDisplayMetrics::GetPedalHeight()
+{
+	return m_PedalHeight;
+}
 
 unsigned GOGUIDisplayMetrics::NumberOfExtraDrawstopRowsToDisplay()
 {
@@ -121,6 +147,11 @@ unsigned GOGUIDisplayMetrics::NumberOfExtraDrawstopRowsToDisplay()
 unsigned GOGUIDisplayMetrics::NumberOfExtraDrawstopColsToDisplay()
 {
 	return m_DispExtraDrawstopCols;
+}
+
+unsigned GOGUIDisplayMetrics::NumberOfDrawstopRowsToDisplay()
+{
+	return m_DispDrawstopRows;
 }
 
 unsigned GOGUIDisplayMetrics::NumberOfDrawstopColsToDisplay()
@@ -173,9 +204,44 @@ bool GOGUIDisplayMetrics::HasTrimAboveExtraRows()
 	return m_DispTrimAboveExtraRows;
 }
 
+bool GOGUIDisplayMetrics::HasTrimAboveManuals()
+{
+	return m_DispTrimAboveManuals;
+}
+
+bool GOGUIDisplayMetrics::HasTrimBelowManuals()
+{
+	return m_DispTrimBelowManuals;
+}
+
 bool GOGUIDisplayMetrics::HasExtraPedalButtonRow()
 {
 	return m_DispExtraPedalButtonRow;
+}
+
+bool GOGUIDisplayMetrics::HasButtonsAboveManuals()
+{
+	return m_DispButtonsAboveManuals;
+}
+
+bool GOGUIDisplayMetrics::HasExtraPedalButtonRowOffset()
+{
+	return m_DispExtraPedalButtonRowOffset;
+}
+
+bool GOGUIDisplayMetrics::HasExtraDrawstopRowsAboveExtraButtonRows()
+{
+	return m_DispExtraDrawstopRowsAboveExtraButtonRows;
+}
+
+bool GOGUIDisplayMetrics::HasDrawstopColsOffset()
+{
+	return m_DispDrawstopColsOffset;
+}
+
+bool GOGUIDisplayMetrics::HasDrawstopOuterColOffsetUp()
+{
+	return m_DispDrawstopOuterColOffsetUp;
 }
 
 GOrgueFont GOGUIDisplayMetrics::GetControlLabelFont()
@@ -204,50 +270,50 @@ unsigned GOGUIDisplayMetrics::GetScreenHeight()
 
 unsigned GOGUIDisplayMetrics::GetJambLeftRightHeight()
 {
-	return (m_DispDrawstopRows + 1) * m_DrawStopHeight;
+	return (NumberOfDrawstopRowsToDisplay() + 1) * GetDrawstopHeight();
 }
 
 int GOGUIDisplayMetrics::GetJambLeftRightY()
 {
-	return ((int)(m_DispScreenSizeVert - GetJambLeftRightHeight() - (m_DispDrawstopColsOffset ? (m_DrawStopHeight/2) : 0))) / 2;
+	return ((int)(GetScreenHeight() - GetJambLeftRightHeight() - (HasDrawstopColsOffset() ? (GetDrawstopHeight()/2) : 0))) / 2;
 }
 
 int GOGUIDisplayMetrics::GetJambLeftRightWidth()
 {
-	int jamblrw = m_DispDrawstopCols * m_DrawStopWidth / 2;
-	if (m_DispPairDrawstopCols)
-		jamblrw += ((m_DispDrawstopCols >> 2) * (m_DrawStopWidth / 4)) - 8;
+	int jamblrw = NumberOfDrawstopColsToDisplay() * GetDrawstopWidth() / 2;
+	if (HasPairDrawstopCols())
+		jamblrw += ((NumberOfDrawstopColsToDisplay() >> 2) * (GetDrawstopWidth() / 4)) - 8;
 	return jamblrw;
 }
 
 unsigned GOGUIDisplayMetrics::GetJambTopHeight()
 {
-	return m_DispExtraDrawstopRows * m_DrawStopHeight;
+	return NumberOfExtraDrawstopRowsToDisplay() * GetDrawstopHeight();
 }
 
 unsigned GOGUIDisplayMetrics::GetJambTopWidth()
 {
-	return m_DispExtraDrawstopCols * m_DrawStopWidth;
+	return NumberOfExtraDrawstopColsToDisplay() * GetDrawstopWidth();
 }
 
 int GOGUIDisplayMetrics::GetJambTopX()
 {
-	return (m_DispScreenSizeHoriz - GetJambTopWidth()) >> 1;
+	return (GetScreenWidth() - GetJambTopWidth()) >> 1;
 }
 
 unsigned GOGUIDisplayMetrics::GetPistonTopHeight()
 {
-	return m_DispExtraButtonRows * m_ButtonHeight;
+	return NumberOfExtraButtonRows() * GetButtonHeight();
 }
 
 unsigned GOGUIDisplayMetrics::GetPistonWidth()
 {
-	return m_DispButtonCols * m_ButtonWidth;
+	return NumberOfButtonCols() * GetButtonWidth();
 }
 
 int GOGUIDisplayMetrics::GetPistonX()
 {
-	return (m_DispScreenSizeHoriz - GetPistonWidth()) >> 1;
+	return (GetScreenWidth() - GetPistonWidth()) >> 1;
 }
 
 /*
@@ -261,7 +327,7 @@ int GOGUIDisplayMetrics::GetCenterWidth()
 
 int GOGUIDisplayMetrics::GetCenterX()
 {
-	return (m_DispScreenSizeHoriz - m_CenterWidth) >> 1;
+	return (GetScreenWidth() - GetCenterWidth()) >> 1;
 }
 
 int GOGUIDisplayMetrics::GetCenterY()
@@ -269,9 +335,14 @@ int GOGUIDisplayMetrics::GetCenterY()
 	return m_CenterY;
 }
 
-unsigned GOGUIDisplayMetrics::GetEnclosureWidth()
+int GOGUIDisplayMetrics::GetHackY()
 {
-	return m_EnclosureWidth * m_Enclosures.size();
+	return m_HackY;
+}
+
+unsigned GOGUIDisplayMetrics::GetEnclosuresWidth()
+{
+	return GetEnclosureWidth() * m_Enclosures.size();
 }
 
 int GOGUIDisplayMetrics::GetEnclosureY()
@@ -284,12 +355,12 @@ int GOGUIDisplayMetrics::GetEnclosureX(const GOGUIEnclosure* enclosure)
 
 	assert(enclosure);
 
-	int enclosure_x = (GetScreenWidth() - GetEnclosureWidth() + 6) >> 1;
+	int enclosure_x = (GetScreenWidth() - GetEnclosuresWidth() + 6) >> 1;
 	for (unsigned int i = 0; i < m_Enclosures.size(); i++)
 	{
 		if (enclosure == m_Enclosures[i])
 			return enclosure_x;
-		enclosure_x += m_EnclosureWidth;
+		enclosure_x += GetEnclosureWidth();
 	}
 
 	throw (wxString)_("enclosure not found");
@@ -299,38 +370,38 @@ int GOGUIDisplayMetrics::GetEnclosureX(const GOGUIEnclosure* enclosure)
 int GOGUIDisplayMetrics::GetJambLeftX()
 {
 	int jamblx = (GetCenterX() - GetJambLeftRightWidth()) >> 1;
-	if (m_DispPairDrawstopCols)
+	if (HasPairDrawstopCols())
 		jamblx += 5;
 	return jamblx;
 }
 
 int GOGUIDisplayMetrics::GetJambRightX()
 {
-	int jambrx = GetJambLeftX() + GetCenterX() + m_CenterWidth;
-	if (m_DispPairDrawstopCols)
+	int jambrx = GetJambLeftX() + GetCenterX() + GetCenterWidth();
+	if (HasPairDrawstopCols())
 		jambrx += 5;
 	return jambrx;
 }
 
 int GOGUIDisplayMetrics::GetJambTopDrawstop()
 {
-	if (m_DispTrimAboveExtraRows)
-		return m_CenterY + 8;
-	return m_CenterY;
+	if (HasTrimAboveExtraRows())
+		return GetCenterY() + 8;
+	return GetCenterY();
 }
 
 int GOGUIDisplayMetrics::GetJambTopPiston()
 {
-	if (m_DispTrimAboveExtraRows)
-		return m_CenterY + 8;
-	return m_CenterY;
+	if (HasTrimAboveExtraRows())
+		return GetCenterY() + 8;
+	return GetCenterY();
 }
 
 int GOGUIDisplayMetrics::GetJambTopY()
 {
-	if (m_DispTrimAboveExtraRows)
-		return m_CenterY + 8;
-	return m_CenterY;
+	if (HasTrimAboveExtraRows())
+		return GetCenterY() + 8;
+	return GetCenterY();
 }
 
 /*
@@ -342,38 +413,38 @@ void GOGUIDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const i
 	int i;
 	if (drawstopRow > 99)
 	{
-		blitX = GetJambTopX() + (drawstopCol - 1) * m_DrawStopWidth + 6;
-		if (m_DispExtraDrawstopRowsAboveExtraButtonRows)
+		blitX = GetJambTopX() + (drawstopCol - 1) * GetDrawstopWidth() + 6;
+		if (HasExtraDrawstopRowsAboveExtraButtonRows())
 		{
-			blitY = GetJambTopDrawstop() + (drawstopRow - 100) * m_DrawStopHeight + 2;
+			blitY = GetJambTopDrawstop() + (drawstopRow - 100) * GetDrawstopHeight() + 2;
 		}
 		else
 		{
-			blitY = GetJambTopDrawstop() + (drawstopRow - 100) * m_DrawStopHeight + (m_DispExtraButtonRows * m_ButtonHeight) + 2;
+			blitY = GetJambTopDrawstop() + (drawstopRow - 100) * GetDrawstopHeight() + (NumberOfExtraButtonRows() * GetButtonHeight()) + 2;
 		}
 	}
 	else
 	{
-		i = m_DispDrawstopCols >> 1;
+		i = NumberOfDrawstopColsToDisplay() >> 1;
 		if (drawstopCol <= i)
 		{
-			blitX = GetJambLeftX() + (drawstopCol - 1) * m_DrawStopWidth + 6;
-			blitY = GetJambLeftRightY() + (drawstopRow - 1) * m_DrawStopHeight + 32;
+			blitX = GetJambLeftX() + (drawstopCol - 1) * GetDrawstopWidth() + 6;
+			blitY = GetJambLeftRightY() + (drawstopRow - 1) * GetDrawstopHeight() + 32;
 		}
 		else
 		{
-			blitX = GetJambRightX() + (drawstopCol - 1 - i) * m_DrawStopWidth + 6;
-			blitY = GetJambLeftRightY() + (drawstopRow - 1) * m_DrawStopHeight + 32;
+			blitX = GetJambRightX() + (drawstopCol - 1 - i) * GetDrawstopWidth() + 6;
+			blitY = GetJambLeftRightY() + (drawstopRow - 1) * GetDrawstopHeight() + 32;
 		}
-		if (m_DispPairDrawstopCols)
-			blitX += (((drawstopCol - 1) % i) >> 1) * (m_DrawStopWidth / 4);
+		if (HasPairDrawstopCols())
+			blitX += (((drawstopCol - 1) % i) >> 1) * (GetDrawstopWidth() / 4);
 
 		if (drawstopCol <= i)
 			i = drawstopCol;
 		else
-			i = m_DispDrawstopCols - drawstopCol + 1;
-		if (m_DispDrawstopColsOffset && (i & 1) ^ m_DispDrawstopOuterColOffsetUp)
-			blitY += m_DrawStopHeight / 2;
+			i = NumberOfDrawstopColsToDisplay() - drawstopCol + 1;
+		if (HasDrawstopColsOffset() && (i & 1) ^ HasDrawstopOuterColOffsetUp())
+			blitY += GetDrawstopHeight() / 2;
 
 	}
 }
@@ -381,16 +452,16 @@ void GOGUIDisplayMetrics::GetDrawstopBlitPosition(const int drawstopRow, const i
 void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int& blitX, int& blitY)
 {
 
-	blitX = GetPistonX() + (buttonCol - 1) * m_ButtonWidth + 6;
+	blitX = GetPistonX() + (buttonCol - 1) * GetButtonWidth() + 6;
 	if (buttonRow > 99)
 	{
-		if (m_DispExtraDrawstopRowsAboveExtraButtonRows)
+		if (HasExtraDrawstopRowsAboveExtraButtonRows())
 		{
-			blitY = GetJambTopPiston() + (buttonRow - 100) * m_ButtonHeight + (m_DispExtraDrawstopRows * m_DrawStopHeight) + 5;
+			blitY = GetJambTopPiston() + (buttonRow - 100) * GetButtonHeight() + (NumberOfExtraDrawstopRowsToDisplay() * GetDrawstopHeight()) + 5;
 		}
 		else
 		{
-			blitY = GetJambTopPiston() + (buttonRow - 100) * m_ButtonHeight + 5;
+			blitY = GetJambTopPiston() + (buttonRow - 100) * GetButtonHeight() + 5;
 		}
 	}
 	else
@@ -400,14 +471,14 @@ void GOGUIDisplayMetrics::GetPushbuttonBlitPosition(const int buttonRow, const i
 			i = 0;
 
 		if (i >= (int)m_Manuals.size())
-			blitY = m_HackY - (i + 1 - (int)m_Manuals.size()) * (m_ManualHeight + m_ButtonHeight) + m_ManualHeight + 5;
+			blitY = m_HackY - (i + 1 - (int)m_Manuals.size()) * (GetManualHeight() + GetButtonHeight()) + GetManualHeight() + 5;
 		else
-			blitY = m_ManualRenderInfo[i].piston_y + 5;
+			blitY = GetManualRenderInfo(i).piston_y + 5;
 
-		if (m_DispExtraPedalButtonRow && !buttonRow)
-			blitY += m_ButtonHeight;
-		if (m_DispExtraPedalButtonRowOffset && buttonRow == 99)
-			blitX -= m_ButtonWidth / 2 + 2;
+		if (HasExtraPedalButtonRow() && !buttonRow)
+			blitY += GetButtonHeight();
+		if (HasExtraPedalButtonRowOffset() && buttonRow == 99)
+			blitX -= GetButtonWidth() / 2 + 2;
 	}
 
 }
@@ -425,7 +496,7 @@ void GOGUIDisplayMetrics::Update()
 		m_Manuals.push_back(NULL);
 
 	m_ManualRenderInfo.resize(m_Manuals.size());
-	m_CenterY = m_DispScreenSizeVert - m_PedalHeight;
+	m_CenterY = GetScreenHeight() - GetPedalHeight();
 	m_CenterWidth = std::max(GetJambTopWidth(), GetPistonWidth());
 
 	for (unsigned i = 0; i < m_Manuals.size(); i++)
@@ -433,22 +504,22 @@ void GOGUIDisplayMetrics::Update()
 
 		if (!i && m_Manuals[i])
 		{
-			m_ManualRenderInfo[0].height = m_PedalHeight;
+			m_ManualRenderInfo[0].height = GetPedalHeight();
 			m_ManualRenderInfo[0].keys_y = m_ManualRenderInfo[0].y = m_CenterY;
-			m_CenterY -= m_PedalHeight;
-			if (m_DispExtraPedalButtonRow)
-				m_CenterY -= m_ButtonHeight;
+			m_CenterY -= GetPedalHeight();
+			if (HasExtraPedalButtonRow())
+				m_CenterY -= GetButtonHeight();
 			m_ManualRenderInfo[0].piston_y = m_CenterY;
-			m_CenterWidth = std::max(m_CenterWidth, (int)GetEnclosureWidth());
+			m_CenterWidth = std::max(m_CenterWidth, (int)GetEnclosuresWidth());
 			m_CenterY -= 12;
-			m_CenterY -= m_EnclosureHeight;
+			m_CenterY -= GetEnclosureHeight();
 			m_EnclosureY = m_CenterY;
 			m_CenterY -= 12;
 		}
 		if (!i && !m_Manuals[i] && m_Enclosures.size())
 		{
 			m_CenterY -= 12;
-			m_CenterY -= m_EnclosureHeight;
+			m_CenterY -= GetEnclosureHeight();
 			m_EnclosureY = m_CenterY;
 			m_CenterY -= 12;
 		}
@@ -458,27 +529,27 @@ void GOGUIDisplayMetrics::Update()
 
 		if (i)
 		{
-			if (!m_DispButtonsAboveManuals)
+			if (!HasButtonsAboveManuals())
 			{
-				m_CenterY -= m_ButtonHeight;
+				m_CenterY -= GetButtonHeight();
 				m_ManualRenderInfo[i].piston_y = m_CenterY;
 			}
-			m_ManualRenderInfo[i].height = m_ManualHeight;
-			if (m_DispTrimBelowManuals && i == 1)
+			m_ManualRenderInfo[i].height = GetManualHeight();
+			if (HasTrimBelowManuals() && i == 1)
 			{
 				m_ManualRenderInfo[i].height += 8;
 				m_CenterY -= 8;
 			}
-			m_CenterY -= m_ManualHeight;
+			m_CenterY -= GetManualHeight();
 			m_ManualRenderInfo[i].keys_y = m_CenterY;
-			if (m_DispTrimAboveManuals && i + 1 == m_Manuals.size())
+			if (HasTrimAboveManuals() && i + 1 == m_Manuals.size())
 			{
 				m_CenterY -= 8;
 				m_ManualRenderInfo[i].height += 8;
 			}
-			if (m_DispButtonsAboveManuals)
+			if (HasButtonsAboveManuals())
 			{
-				m_CenterY -= m_ButtonHeight;
+				m_CenterY -= GetButtonHeight();
 				m_ManualRenderInfo[i].piston_y = m_CenterY;
 			}
 			m_ManualRenderInfo[i].y = m_CenterY;
@@ -489,19 +560,19 @@ void GOGUIDisplayMetrics::Update()
 			for (unsigned j = 0; j < m_Manuals[i]->GetKeyCount(); j++)
 			{
 				if (!m_Manuals[i]->IsSharp(j))
-					m_ManualRenderInfo[i].width += m_ManualKeyWidth;
+					m_ManualRenderInfo[i].width += GetManualKeyWidth();
 			}
 		}
 		else
 		{
 			for (unsigned j = 0; j < m_Manuals[i]->GetKeyCount(); j++)
 			{
-				m_ManualRenderInfo[i].width += m_PedalKeyWidth;
+				m_ManualRenderInfo[i].width += GetPedalKeyWidth();
 				if (j && !m_Manuals[i]->IsSharp(j - 1) && !m_Manuals[i]->IsSharp(j))
-					m_ManualRenderInfo[i].width += m_PedalKeyWidth;
+					m_ManualRenderInfo[i].width += GetPedalKeyWidth();
 			}
 		}
-		m_ManualRenderInfo[i].x = (m_DispScreenSizeHoriz - m_ManualRenderInfo[i].width) >> 1;
+		m_ManualRenderInfo[i].x = (GetScreenWidth() - m_ManualRenderInfo[i].width) >> 1;
 		m_ManualRenderInfo[i].width += 16;
 		if ((int)m_ManualRenderInfo[i].width > m_CenterWidth)
 			m_CenterWidth = m_ManualRenderInfo[i].width;
@@ -509,12 +580,12 @@ void GOGUIDisplayMetrics::Update()
 
 	m_HackY = m_CenterY;
 
-	if (m_CenterWidth + GetJambLeftRightWidth() * 2 < (int)m_DispScreenSizeHoriz)
-		m_CenterWidth += (m_DispScreenSizeHoriz - m_CenterWidth - GetJambLeftRightWidth() * 2) / 3;
+	if (m_CenterWidth + GetJambLeftRightWidth() * 2 < (int)GetScreenWidth())
+		m_CenterWidth += (GetScreenWidth() - m_CenterWidth - GetJambLeftRightWidth() * 2) / 3;
 
 	m_CenterY -= GetPistonTopHeight();
 	m_CenterY -= GetJambTopHeight();
-	if (m_DispTrimAboveExtraRows)
+	if (HasTrimAboveExtraRows())
 		m_CenterY -= 8;
 }
 
@@ -522,7 +593,6 @@ const GOGUIDisplayMetrics::MANUAL_RENDER_INFO& GOGUIDisplayMetrics::GetManualRen
 {
 	assert(manual_nb < m_ManualRenderInfo.size());
 	return m_ManualRenderInfo[manual_nb];
-
 }
 
 void GOGUIDisplayMetrics::RegisterEnclosure(GOGUIEnclosure* enclosure)

@@ -33,9 +33,7 @@ class GrandOrgueFile;
 
 class GOGUIDisplayMetrics
 {
-
 public:
-
 	typedef struct
 	{
 		unsigned width;
@@ -109,23 +107,53 @@ public:
 	GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString group);
 	virtual ~GOGUIDisplayMetrics();
 
-	virtual unsigned NumberOfExtraDrawstopRowsToDisplay();
-	virtual unsigned NumberOfExtraDrawstopColsToDisplay();
-	virtual unsigned NumberOfDrawstopColsToDisplay();
-	virtual unsigned NumberOfButtonCols();
-	virtual unsigned NumberOfExtraButtonRows();
+	unsigned NumberOfExtraDrawstopRowsToDisplay();
+	unsigned NumberOfExtraDrawstopColsToDisplay();
+	unsigned NumberOfDrawstopRowsToDisplay();
+	unsigned NumberOfDrawstopColsToDisplay();
+	unsigned NumberOfButtonCols();
+	unsigned NumberOfExtraButtonRows();
+
+	GOrgueFont GetControlLabelFont();
+	GOrgueFont GetGroupLabelFont();
+
+	unsigned GetScreenWidth();
+	unsigned GetScreenHeight();
+
+	unsigned GetDrawstopBackgroundImageNum();
+	unsigned GetConsoleBackgroundImageNum();
+	unsigned GetDrawstopInsetBackgroundImageNum();
+	unsigned GetKeyVertBackgroundImageNum();
+	unsigned GetKeyHorizBackgroundImageNum();
+
+	bool HasPairDrawstopCols();
+	bool HasTrimAboveExtraRows();
+	bool HasTrimAboveManuals();
+	bool HasTrimBelowManuals();
+	bool HasExtraPedalButtonRow();
+	bool HasButtonsAboveManuals();
+	bool HasExtraPedalButtonRowOffset();
+	bool HasExtraDrawstopRowsAboveExtraButtonRows();
+	bool HasDrawstopColsOffset();
+	bool HasDrawstopOuterColOffsetUp();
+
+	unsigned GetDrawstopWidth();
+	unsigned GetDrawstopHeight();
+	unsigned GetButtonWidth();
+	unsigned GetButtonHeight();
+	unsigned GetEnclosureWidth();
+	unsigned GetEnclosureHeight();
+	unsigned GetManualKeyWidth();
+	unsigned GetManualHeight();
+	unsigned GetPedalKeyWidth();
+	unsigned GetPedalHeight();
 
 	virtual void GetDrawstopBlitPosition(const int drawstopRow, const int drawstopCol, int& blitX, int& blitY);
 	virtual void GetPushbuttonBlitPosition(const int buttonRow, const int buttonCol, int& blitX, int& blitY);
-	virtual GOrgueFont GetControlLabelFont();
-	virtual GOrgueFont GetGroupLabelFont();
 
-	virtual unsigned GetEnclosureWidth();
+	virtual unsigned GetEnclosuresWidth();
 	virtual int GetEnclosureY();
 	virtual int GetEnclosureX(const GOGUIEnclosure* enclosure);
-
-	virtual unsigned GetScreenWidth();
-	virtual unsigned GetScreenHeight();
 
 	virtual int GetJambLeftRightWidth();
 	virtual unsigned GetJambLeftRightHeight();
@@ -144,26 +172,12 @@ public:
 	virtual int GetCenterWidth();
 	virtual int GetCenterY();
 	virtual int GetCenterX();
-
-	virtual unsigned GetDrawstopBackgroundImageNum();
-	virtual unsigned GetConsoleBackgroundImageNum();
-	virtual unsigned GetDrawstopInsetBackgroundImageNum();
-	virtual unsigned GetKeyVertBackgroundImageNum();
-	virtual unsigned GetKeyHorizBackgroundImageNum();
-
-	virtual bool HasPairDrawstopCols();
-	virtual bool HasTrimAboveExtraRows();
-	virtual bool HasExtraPedalButtonRow();
-
-	void RegisterEnclosure(GOGUIEnclosure* enclosure);
-	void RegisterManual(GOGUIManual* enclosure);
+	virtual int GetHackY();
 
 	virtual const MANUAL_RENDER_INFO& GetManualRenderInfo(const unsigned manual_nb) const;
 
-	virtual unsigned GetDrawstopWidth();
-	virtual unsigned GetDrawstopHeight();
-	virtual unsigned GetButtonWidth();
-	virtual unsigned GetButtonHeight();
+	void RegisterEnclosure(GOGUIEnclosure* enclosure);
+	void RegisterManual(GOGUIManual* enclosure);
 
 	virtual void Update();
 };
