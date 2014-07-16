@@ -22,6 +22,7 @@
 #include "GOGUIEnclosure.h"
 
 #include "GOGUIDisplayMetrics.h"
+#include "GOGUILayoutEngine.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"

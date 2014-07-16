@@ -29,6 +29,7 @@
 #include "GOGUIHW1DisplayMetrics.h"
 #include "GOGUIImage.h"
 #include "GOGUILabel.h"
+#include "GOGUILayoutEngine.h"
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanelWidget.h"
@@ -68,6 +69,8 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 
 GOGUIPanel::~GOGUIPanel()
 {
+	if (m_layout)
+		delete m_layout;
 	if (m_metrics)
 		delete m_metrics;
 }
@@ -107,7 +110,7 @@ void GOGUIPanel::Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxS
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_metrics = metrics;
-	m_layout = metrics;
+	m_layout = new GOGUILayoutEngine(*m_metrics);
 	m_Name = name;
 	m_GroupName = group_name;
 	m_controls.resize(0);
@@ -127,7 +130,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_metrics = new GOGUIHW1DisplayMetrics(cfg, group);
-	m_layout = m_metrics;
+	m_layout = new GOGUILayoutEngine(*m_metrics);
 
 	if (group.IsEmpty())
 	{
@@ -514,7 +517,7 @@ GOGUIDisplayMetrics* GOGUIPanel::GetDisplayMetrics()
 	return m_metrics;
 }
 
-GOGUIDisplayMetrics* GOGUIPanel::GetLayoutEngine()
+GOGUILayoutEngine* GOGUIPanel::GetLayoutEngine()
 {
 	return m_layout;
 }

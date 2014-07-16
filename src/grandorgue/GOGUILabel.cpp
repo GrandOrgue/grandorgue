@@ -22,6 +22,7 @@
 #include "GOGUILabel.h"
 
 #include "GOGUIDisplayMetrics.h"
+#include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueDC.h"

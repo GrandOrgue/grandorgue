@@ -27,6 +27,7 @@
 #include <wx/string.h>
 
 class GOGUIDisplayMetrics;
+class GOGUILayoutEngine;
 class GOGUIMouseState;
 class GOGUIPanel;
 class GOrgueConfigReader;
@@ -36,7 +37,7 @@ class GOGUIControl : private GOrgueSaveableObject {
 protected:
 	GOGUIPanel* m_panel;
 	GOGUIDisplayMetrics* m_metrics;
-	GOGUIDisplayMetrics* m_layout;
+	GOGUILayoutEngine* m_layout;
 	void* m_control;
 	wxRect m_BoundingRect;
 	bool m_DrawPending;

@@ -22,6 +22,7 @@
 #include "GOGUIHW1Background.h"
 
 #include "GOGUIDisplayMetrics.h"
+#include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 
 GOGUIHW1Background::GOGUIHW1Background(GOGUIPanel* panel):
