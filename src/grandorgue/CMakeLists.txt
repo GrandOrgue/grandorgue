@@ -240,6 +240,7 @@ contrib/zita-convolver.cpp
 GOGUIButton.cpp
 GOGUIControl.cpp
 GOGUIDisplayMetrics.cpp
+GOGUILayoutEngine.cpp
 GOGUIHW1DisplayMetrics.cpp
 GOGUISetterDisplayMetrics.cpp
 GOGUIEnclosure.cpp

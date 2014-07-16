@@ -22,6 +22,7 @@
 #include "GOGUIManualBackground.h"
 
 #include "GOGUIDisplayMetrics.h"
+#include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueManual.h"
@@ -44,13 +45,13 @@ void GOGUIManualBackground::Load(GOrgueConfigReader& cfg, wxString group)
 
 void GOGUIManualBackground::Layout()
 {
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
+	const GOGUILayoutEngine::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 	m_BoundingRect = wxRect(mri.x, mri.y, mri.width, mri.height);
 }
 
 void GOGUIManualBackground::Draw(GOrgueDC& dc)
 {
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
+	const GOGUILayoutEngine::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 
 	m_panel->TileWood(dc, m_metrics->GetKeyVertBackgroundImageNum(), m_layout->GetCenterX(), mri.y,
 			  m_layout->GetCenterWidth(), mri.height);

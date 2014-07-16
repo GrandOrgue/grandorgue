@@ -22,8 +22,6 @@
 #include "GOGUIHW1DisplayMetrics.h"
 
 #include "GOrgueConfigReader.h"
-#include "GOrgueManual.h"
-#include "GrandOrgueFile.h"
 
 GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, wxString group) :
 	GOGUIDisplayMetrics()

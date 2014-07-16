@@ -22,6 +22,7 @@
 #include "GOGUIManual.h"
 
 #include "GOGUIDisplayMetrics.h"
+#include "GOGUILayoutEngine.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
@@ -325,7 +326,7 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 
 void GOGUIManual::Layout()
 {
-	const GOGUIDisplayMetrics::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
+	const GOGUILayoutEngine::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 	if (m_BoundingRect.GetX() == -1)
 		m_BoundingRect.SetX(mri.x + 1);
 	if (m_BoundingRect.GetY() == -1)

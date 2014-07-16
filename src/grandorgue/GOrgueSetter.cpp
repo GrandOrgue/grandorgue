@@ -25,6 +25,7 @@
 #include "GOGUIEnclosure.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
+#include "GOGUILayoutEngine.h"
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
