@@ -26,8 +26,8 @@
 #include "GrandOrgueFile.h"
 #include <algorithm>
 
-GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, wxString group, GOGUISetterType type) :
-	GOGUIDisplayMetrics(organfile, group)
+GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, GOGUISetterType type) :
+	GOGUIDisplayMetrics()
 {
 	unsigned x_size, y_size;
 	int drawstop_rows, drawstop_cols;

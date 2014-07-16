@@ -126,7 +126,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
-	m_metrics = new GOGUIHW1DisplayMetrics(cfg, m_organfile, group);
+	m_metrics = new GOGUIHW1DisplayMetrics(cfg, group);
 	m_layout = m_metrics;
 
 	if (group.IsEmpty())

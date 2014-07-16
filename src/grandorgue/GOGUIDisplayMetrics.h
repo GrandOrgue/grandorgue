@@ -29,7 +29,6 @@
 
 class GOGUIEnclosure;
 class GOGUIManual;
-class GrandOrgueFile;
 
 class GOGUIDisplayMetrics
 {
@@ -45,9 +44,6 @@ public:
 	} MANUAL_RENDER_INFO;
 
 protected:
-	wxString m_group;
-	GrandOrgueFile* m_organfile;
-
 	std::vector<MANUAL_RENDER_INFO> m_ManualRenderInfo;
 	std::vector<GOGUIEnclosure*> m_Enclosures;
 	std::vector<GOGUIManual*> m_Manuals;
@@ -103,8 +99,7 @@ protected:
 	void Init();
 
 public:
-
-	GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString group);
+	GOGUIDisplayMetrics();
 	virtual ~GOGUIDisplayMetrics();
 
 	unsigned NumberOfExtraDrawstopRowsToDisplay();

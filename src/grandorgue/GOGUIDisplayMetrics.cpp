@@ -28,9 +28,7 @@
 #include <wx/font.h>
 #include <wx/intl.h>
 
-GOGUIDisplayMetrics::GOGUIDisplayMetrics(GrandOrgueFile* organfile, wxString group) :
-	m_group(group),
-	m_organfile(organfile),
+GOGUIDisplayMetrics::GOGUIDisplayMetrics() :
 	m_ManualRenderInfo(),
 	m_Enclosures(),
 	m_Manuals(),
