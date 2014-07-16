@@ -146,13 +146,13 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		for(unsigned i = 0; i < m_organfile->GetFirstManualIndex(); i++)
 			m_layout->RegisterManual(0);
 
-		for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
+		for (unsigned no = m_organfile->GetFirstManualIndex(), i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
 		{
 			wxString group;
 			group.Printf(wxT("Manual%03d"), i);
 			if (m_organfile->GetManual(i)->IsDisplayed())
 			{
-				GOGUIControl* control = new GOGUIManualBackground(this, i);
+				GOGUIControl* control = new GOGUIManualBackground(this, no++);
 				control->Load(cfg, group);
 				AddControl(control);
 			}
