@@ -29,6 +29,10 @@ wxString GOCreateFilename(const wxString& path, const wxString& file)
 {
 	/* Translate directory seperator from ODF(\) to native format */
 	wxString temp = file;
+	if (temp.Find(wxT('/')) != wxNOT_FOUND)
+	{
+		wxLogWarning(_("Filename '%s' contains non-portable directory seperator /"), file.c_str());
+	}
 	temp.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
 	temp = path + wxFileName::GetPathSeparator() + temp;
 
