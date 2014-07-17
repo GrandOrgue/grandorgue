@@ -21,20 +21,22 @@
 
 #include "GOrguePath.h"
 
+#include "GOrgueSettings.h"
+#include "GrandOrgueFile.h"
 #include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/log.h>
 
-wxString GOCreateFilename(const wxString& path, const wxString& file)
+wxString GOCreateFilename(GrandOrgueFile* organfile, const wxString& file)
 {
 	/* Translate directory seperator from ODF(\) to native format */
 	wxString temp = file;
-	if (temp.Find(wxT('/')) != wxNOT_FOUND)
+	if (organfile->GetSettings().GetODFCheck() && temp.Find(wxT('/')) != wxNOT_FOUND)
 	{
 		wxLogWarning(_("Filename '%s' contains non-portable directory seperator /"), file.c_str());
 	}
 	temp.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
-	temp = path + wxFileName::GetPathSeparator() + temp;
+	temp = organfile->GetODFPath() + wxFileName::GetPathSeparator() + temp;
 
 	wxFileName path_name(temp);
 	path_name.Normalize(wxPATH_NORM_DOTS);
