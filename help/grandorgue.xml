@@ -1748,7 +1748,10 @@ useful for large sample sets.
           <para>Selects whether stereo samples are loaded in Mono or Stereo</para>
           <para>
 If set to Mono, all samples are loaded in Mono. When compression is disabled, this will save 50%, but when compression is enabled, much less will be saved because the compression is much less effective on monoaural inputs.
-   </para>
+	  </para>
+          <para>
+This setting can be set to don't load, if you want GrandOrgue to avoid loading any samples. Via <link linkend="organsettings">Organ Settings</link>, it is still possible to load only specific parts of the organ.
+	  </para>
           <variablelist>
             <varlistentry>
               <term>Memory</term>
