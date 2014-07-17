@@ -24,7 +24,9 @@
 
 #include <wx/string.h>
 
-wxString GOCreateFilename(const wxString& path, const wxString& file);
+class GrandOrgueFile;
+
+wxString GOCreateFilename(GrandOrgueFile* organfile, const wxString& file);
 void GOCreateDirectory(const wxString& path);
 wxString GONormalizePath(const wxString& path);
 wxString GOGetPath(const wxString& path);

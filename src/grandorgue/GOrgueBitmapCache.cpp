@@ -166,12 +166,12 @@ GOrgueBitmap GOrgueBitmapCache::GetBitmap(wxString filename, wxString maskName)
 
 	wxImage image, maskimage;
 	
-	if (!image.LoadFile(GOCreateFilename(m_organfile->GetODFPath(), filename), wxBITMAP_TYPE_ANY, -1))
+	if (!image.LoadFile(GOCreateFilename(m_organfile, filename), wxBITMAP_TYPE_ANY, -1))
 		throw wxString::Format(_("Failed to open the graphic '%s'"), filename.c_str());
 
 	if (maskName != wxEmptyString)
 	{
-		if (!maskimage.LoadFile(GOCreateFilename(m_organfile->GetODFPath(), maskName), wxBITMAP_TYPE_ANY, -1))
+		if (!maskimage.LoadFile(GOCreateFilename(m_organfile, maskName), wxBITMAP_TYPE_ANY, -1))
 			throw wxString::Format(_("Failed to open the graphic '%s'"), maskName.c_str());
 
 		if (image.GetWidth() != maskimage.GetWidth() ||

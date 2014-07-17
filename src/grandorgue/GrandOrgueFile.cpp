@@ -186,7 +186,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		fn.SetExt(wxT(".html"));
 	}
 	else
-		fn = GOCreateFilename(m_path, m_InfoFilename);
+		fn = GOCreateFilename(this, m_InfoFilename);
 	if (fn.FileExists())
 		m_InfoFilename = fn.GetFullPath();
 	else
