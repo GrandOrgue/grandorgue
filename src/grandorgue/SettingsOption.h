@@ -50,7 +50,7 @@ class SettingsOption : public wxPanel
 		ID_LOOP_LOAD,
 		ID_ATTACK_LOAD,
 		ID_RELEASE_LOAD,
-		ID_MONO_STEREO,
+		ID_CHANNELS,
 		ID_INTERPOLATION,
 		ID_SAMPLE_RATE,
 		ID_SAMPLES_PER_BUFFER,
@@ -77,12 +77,12 @@ private:
 	wxChoice* m_LoopLoad;
 	wxChoice* m_AttackLoad;
 	wxChoice* m_ReleaseLoad;
-	wxChoice* m_Stereo;
+	wxChoice* m_Channels;
 	wxChoice* m_Interpolation;
 	wxChoice* m_SampleRate;
 	wxSpinCtrl* m_SamplesPerBuffer;
 	wxSpinCtrl* m_MemoryLimit;
-	bool m_OldStereo;
+	unsigned m_OldChannels;
 	bool m_OldLosslessCompression;
 	unsigned m_OldBitsPerSample;
 	unsigned m_OldLoopLoad;

@@ -38,7 +38,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 {
 	wxArrayString choices;
 
-	m_OldStereo = m_Settings.GetLoadInStereo();
+	m_OldChannels = m_Settings.GetLoadChannels();
 	m_OldLosslessCompression = m_Settings.GetLosslessCompression();
 	m_OldBitsPerSample = m_Settings.GetBitsPerSample();
 	m_OldLoopLoad = m_Settings.GetLoopLoad();
@@ -139,10 +139,11 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	choices.clear();
+	choices.push_back(_("Don't load"));
 	choices.push_back(_("Mono"));
 	choices.push_back(_("Stereo"));	
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Load &stereo samples in:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
-	grid->Add(m_Stereo = new wxChoice(this, ID_MONO_STEREO, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+	grid->Add(m_Channels = new wxChoice(this, ID_CHANNELS, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
 	for (unsigned i = 0; i < 5; i++)
@@ -173,7 +174,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(m_MemoryLimit = new wxSpinCtrl(this, ID_MEMORY_LIMIT, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
 	m_MemoryLimit->SetRange(0, 1024 * 1024);
 
-	m_Stereo->Select(m_Settings.GetLoadInStereo());
+	m_Channels->Select(m_Settings.GetLoadChannels());
 	m_BitsPerSample->Select((m_Settings.GetBitsPerSample() - 8) / 4);
 	m_LoopLoad->Select(m_Settings.GetLoopLoad());
 	m_AttackLoad->Select(m_Settings.GetAttackLoad());
@@ -244,7 +245,7 @@ void SettingsOption::Save()
 	m_Settings.SetLoopLoad(m_LoopLoad->GetSelection());
 	m_Settings.SetAttackLoad(m_AttackLoad->GetSelection());
 	m_Settings.SetReleaseLoad(m_ReleaseLoad->GetSelection());
-	m_Settings.SetLoadInStereo(m_Stereo->GetSelection());
+	m_Settings.SetLoadChannels(m_Channels->GetSelection());
 	m_Settings.SetInterpolationType(m_Interpolation->GetSelection());
 	unsigned long sample_rate;
 	if (m_SampleRate->GetStringSelection().ToULong(&sample_rate))
@@ -262,5 +263,5 @@ bool SettingsOption::NeedReload()
 		m_OldLoopLoad != m_Settings.GetLoopLoad() || 
 		m_OldAttackLoad != m_Settings.GetAttackLoad() ||
 		m_OldReleaseLoad != m_Settings.GetReleaseLoad() ||
-		m_OldStereo != m_Settings.GetLoadInStereo();
+		m_OldChannels != m_Settings.GetLoadChannels();
 }

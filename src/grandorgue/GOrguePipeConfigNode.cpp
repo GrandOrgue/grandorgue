@@ -176,7 +176,7 @@ unsigned GOrguePipeConfigNode::GetEffectiveChannels()
 	if (m_parent)
 		return m_parent->GetEffectiveChannels();
 	else
-		return m_organfile->GetSettings().GetLoadInStereo() ? 2 : 1;
+		return m_organfile->GetSettings().GetLoadChannels();
 }
 
 unsigned GOrguePipeConfigNode::GetChildCount()

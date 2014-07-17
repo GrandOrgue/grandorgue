@@ -60,7 +60,7 @@ private:
 	wxString m_InstanceName;
 	wxString m_ConfigFileName;
 	size_t m_MemoryLimit;
-	bool m_Stereo;
+	unsigned m_Channels;
 	unsigned m_Concurrency;
 	unsigned m_ReleaseConcurrency;
 	unsigned m_LoadConcurrency;
@@ -152,8 +152,8 @@ public:
 	bool GetODFCheck();
 	void SetODFCheck(bool strict);
 
-	bool GetLoadInStereo();
-	void SetLoadInStereo(bool stereo);
+	unsigned GetLoadChannels();
+	void SetLoadChannels(unsigned channels);
 
 	unsigned GetConcurrency();
 	void SetConcurrency(unsigned concurrency);

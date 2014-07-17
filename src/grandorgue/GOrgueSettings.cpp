@@ -81,7 +81,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_Config(*wxConfigBase::Get()),
 	m_InstanceName(instance),
 	m_MemoryLimit(0),
-	m_Stereo(false),
+	m_Channels(2),
 	m_Concurrency(0),
 	m_ReleaseConcurrency(1),
 	m_LoadConcurrency(0),
@@ -221,7 +221,7 @@ void GOrgueSettings::Load()
 		SetLastFile(cfg.ReadString(CMBSetting, wxT("General"), wxT("LastFile"), false, wxEmptyString));
 		SetODFCheck(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("StrictODFCheck"), false, false));
 
-		SetLoadInStereo(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("Stereo"), false, true));
+		SetLoadChannels(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Channels"), 0, 2, false, 2));
 		SetLosslessCompression(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LosslessCompression"), false, false));
 		SetManagePolyphony(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManagePolyphony"), false, true));
 		SetScaleRelease(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ScaleRelease"), false, true));
@@ -520,14 +520,16 @@ void  GOrgueSettings::SetPreset(unsigned value)
 	m_Preset = value;
 }
 
-bool GOrgueSettings::GetLoadInStereo()
+unsigned GOrgueSettings::GetLoadChannels()
 {
-	return m_Stereo;
+	return m_Channels;
 }
 
-void GOrgueSettings::SetLoadInStereo(bool stereo)
+void GOrgueSettings::SetLoadChannels(unsigned channels)
 {
-	m_Stereo = stereo;
+	if (channels > 2)
+		channels = 2;
+	m_Channels = channels;
 }
 
 unsigned GOrgueSettings::GetSamplesPerBuffer()
@@ -1086,7 +1088,7 @@ void GOrgueSettings::Flush()
 	cfg.WriteString(wxT("General"), wxT("LastFile"), m_LastFile);
 	cfg.WriteBoolean(wxT("General"), wxT("StrictODFCheck"), m_ODFCheck);
 
-	cfg.WriteBoolean(wxT("General"), wxT("Stereo"), m_Stereo);
+	cfg.WriteInteger(wxT("General"), wxT("Channels"), m_Channels);
 	cfg.WriteBoolean(wxT("General"), wxT("LosslessCompression"), m_LosslessCompression);
 	cfg.WriteBoolean(wxT("General"), wxT("ManagePolyphony"), m_ManagePolyphony);
 	cfg.WriteBoolean(wxT("General"), wxT("ScaleRelease"), m_ScaleRelease);
