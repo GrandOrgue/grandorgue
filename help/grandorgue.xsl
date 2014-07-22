@@ -34,6 +34,7 @@
     </xsl:choose>
   </xsl:template>
 
+  <!--
   <xsl:template match="varlistentry" mode="varlist-table">
     <xsl:variable name="presentation">
       <xsl:call-template name="pi.dbhtml_term-presentation">
@@ -88,6 +89,11 @@
         <xsl:apply-templates select="listitem"/>
       </td>
     </tr>
+  </xsl:template>
+-->
+
+  <xsl:template match="breakline">
+    <br/>
   </xsl:template>
 
 </xsl:stylesheet>
