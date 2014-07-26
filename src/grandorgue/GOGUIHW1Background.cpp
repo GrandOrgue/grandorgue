@@ -30,6 +30,11 @@ GOGUIHW1Background::GOGUIHW1Background(GOGUIPanel* panel):
 {
 }
 
+void GOGUIHW1Background::Init(GOrgueConfigReader& cfg, wxString group)
+{
+	GOGUIControl::Init(cfg, group);
+}
+
 void GOGUIHW1Background::Draw(GOrgueDC& dc)
 {
 	m_panel->TileWood(dc, m_metrics->GetDrawstopBackgroundImageNum(), 0, 0, m_layout->GetCenterX(), m_metrics->GetScreenHeight());

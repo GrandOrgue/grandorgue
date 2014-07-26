@@ -29,6 +29,8 @@ class GOGUIHW1Background : public GOGUIControl
 public:
 	GOGUIHW1Background(GOGUIPanel* panel);
 
+	void Init(GOrgueConfigReader& cfg, wxString group);
+
 	void Draw(GOrgueDC& dc);
 };
 
