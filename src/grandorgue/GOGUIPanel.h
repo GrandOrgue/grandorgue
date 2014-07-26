@@ -54,6 +54,7 @@ protected:
 	wxRect m_size;
 	bool m_InitialOpenWindow;
 
+	void LoadControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 
 public:
