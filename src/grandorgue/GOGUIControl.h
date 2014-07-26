@@ -42,13 +42,13 @@ protected:
 	wxRect m_BoundingRect;
 	bool m_DrawPending;
 
+	void Init(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 
 public:
 	GOGUIControl(GOGUIPanel* panel, void* control);
 	virtual ~GOGUIControl();
 
-	virtual void Init(GOrgueConfigReader& cfg, wxString group);
 	virtual void Load(GOrgueConfigReader& cfg, wxString group);
 	virtual void Layout();
 
