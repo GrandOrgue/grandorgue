@@ -181,7 +181,10 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		for (unsigned i = 0; i < NumberOfSetterElements; i++)
 		{
 			wxString buffer = wxString::Format(wxT("SetterElement%03d"), i + 1);
-			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this));
+			GOGUIControl* control = m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this);
+			if (!control)
+				throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), buffer.c_str());
+			LoadControl(control, cfg, buffer);
 		}
 
 		for (unsigned i = 0; i < m_organfile->GetTremulantCount(); i++)
@@ -341,7 +344,10 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		for (unsigned i = 0; i < NumberOfSetterElements; i++)
 		{
 			wxString buffer = wxString::Format(wxT("SetterElement%03d"), i + 1);
-			AddControl(m_organfile->GetSetter()->CreateGUIElement(cfg, group + buffer, this));
+			GOGUIControl* control = m_organfile->GetSetter()->CreateGUIElement(cfg, group + buffer, this);
+			if (!control)
+				throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), (group + buffer).c_str());
+			LoadControl(control, cfg, group + buffer);
 		}
 
 		for (unsigned i = 0; i < NumberOfTremulants; i++)
@@ -505,6 +511,12 @@ void GOGUIPanel::AddEvent(GOGUIControl* control)
 {
 	if (m_view)
 		m_view->AddEvent(control);
+}
+
+void GOGUIPanel::LoadControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group)
+{
+	control->Load(cfg, group);
+	AddControl(control);
 }
 
 void GOGUIPanel::AddControl(GOGUIControl* control)

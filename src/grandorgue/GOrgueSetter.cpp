@@ -154,14 +154,6 @@ enum {
 	ID_SETTER_TRANSPOSE_UP,
 
 	ID_SETTER_SAVE,
-
-	ID_SETTER_LABEL, /* Must be the last elements */
-	ID_SETTER_GENERAL_LABEL,
-	ID_SETTER_CRESCENDO_LABEL,
-	ID_SETTER_TEMPERAMENT_LABEL,
-	ID_SETTER_PITCH_LABEL,
-	ID_SETTER_TRANSPOSE_LABEL,
-	ID_SETTER_CRESCENDO_SWELL,
 };
 
 const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
@@ -190,7 +182,6 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("Regular"), ID_SETTER_REGULAR },
 	{ wxT("Scope"), ID_SETTER_SCOPE },
 	{ wxT("Scoped"), ID_SETTER_SCOPED },
-	{ wxT("Label"), ID_SETTER_LABEL },
 	{ wxT("Full"), ID_SETTER_FULL },
 	{ wxT("Insert"), ID_SETTER_INSERT },
 	{ wxT("Delete"), ID_SETTER_DELETE },
@@ -268,12 +259,6 @@ const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
 	{ wxT("CrescendoPrev"), ID_SETTER_CRESCENDO_PREV },
 	{ wxT("CrescendoCurrent"), ID_SETTER_CRESCENDO_CURRENT },
 	{ wxT("CrescendoNext"), ID_SETTER_CRESCENDO_NEXT },
-	{ wxT("Swell"), ID_SETTER_CRESCENDO_SWELL },
-	{ wxT("CrescendoLabel"), ID_SETTER_CRESCENDO_LABEL },
-	{ wxT("PitchLabel"), ID_SETTER_PITCH_LABEL },
-	{ wxT("GeneralLabel"), ID_SETTER_GENERAL_LABEL },
-	{ wxT("TemperamentLabel"), ID_SETTER_TEMPERAMENT_LABEL },
-	{ wxT("TransposeLabel"), ID_SETTER_TRANSPOSE_LABEL },
 
 };
 
@@ -386,53 +371,33 @@ GOrgueSetter::~GOrgueSetter()
 
 GOGUIControl* GOrgueSetter::CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel)
 {
-	unsigned element  = cfg.ReadEnum(ODFSetting, group, wxT("Type"), m_setter_element_types, sizeof(m_setter_element_types) / sizeof(m_setter_element_types[0]), true);
-	if (element == ID_SETTER_LABEL)
-	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay);
-		PosDisplay->Load(cfg, group);
-		return PosDisplay;
-	}
-	if (element == ID_SETTER_CRESCENDO_LABEL)
-	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay);
-		PosDisplay->Load(cfg, group);
-		return PosDisplay;
-	}
-	if (element == ID_SETTER_GENERAL_LABEL)
-	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_BankDisplay);
-		PosDisplay->Load(cfg, group);
-		return PosDisplay;
-	}
-	if (element == ID_SETTER_PITCH_LABEL)
-	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetPitchLabel());
-		PosDisplay->Load(cfg, group);
-		return PosDisplay;
-	}
-	if (element == ID_SETTER_TEMPERAMENT_LABEL)
-	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel());
-		PosDisplay->Load(cfg, group);
-		return PosDisplay;
-	}
-	if (element == ID_SETTER_TRANSPOSE_LABEL)
-	{
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_TransposeDisplay);
-		PosDisplay->Load(cfg, group);
-		return PosDisplay;
-	}
-	if (element == ID_SETTER_CRESCENDO_SWELL)
-	{
-		GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell);
-		enclosure->Load(cfg, group);
-		return enclosure;
-	}
+	wxString type = cfg.ReadString(ODFSetting, group, wxT("Type"), true);
+	if (type == wxT("Label"))
+		return new GOGUILabel(panel, &m_PosDisplay);
 
-	GOGUIButton* button = new GOGUIButton(panel, m_button[element], false);
-	button->Load(cfg, group);
-	return button;
+	if (type == wxT("CrescendoLabel"))
+		return new GOGUILabel(panel, &m_CrescendoDisplay);
+
+	if (type == wxT("GeneralLabel"))
+		return new GOGUILabel(panel, &m_BankDisplay);
+
+	if (type == wxT("PitchLabel"))
+		return new GOGUILabel(panel, m_organfile->GetPitchLabel());
+
+	if (type == wxT("TemperamentLabel"))
+		return new GOGUILabel(panel, m_organfile->GetTemperamentLabel());
+
+	if (type == wxT("TransposeLabel"))
+		return new GOGUILabel(panel, &m_TransposeDisplay);
+
+	if (type == wxT("Swell"))
+		return new GOGUIEnclosure(panel, &m_swell);
+
+	for(unsigned i = 0; i < sizeof(m_setter_element_types) / sizeof(m_setter_element_types[0]); i++)
+		if (type == m_setter_element_types[i].name)
+			return new GOGUIButton(panel, m_button[m_setter_element_types[i].value], false);
+
+	return NULL;
 }
 
 GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
