@@ -130,50 +130,61 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
-	m_metrics = new GOGUIHW1DisplayMetrics(cfg, group);
-	m_layout = new GOGUILayoutEngine(*m_metrics);
+	wxString panel_group;
+	wxString panel_prefix;
+	bool is_main_panel;
 
 	if (group.IsEmpty())
 	{
 		m_Name = m_organfile->GetChurchName();
 		m_GroupName = wxT("");
+		m_group = wxT("Organ");
+		panel_group = m_group;
+		panel_prefix = wxEmptyString;
+		is_main_panel = true;
 	}
 	else
 	{
-		m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"));
-		m_GroupName = cfg.ReadString(ODFSetting, group, wxT("Group"), false);
+		panel_group = group;
+		panel_prefix = panel_group;
+		is_main_panel = false;
+		m_Name = cfg.ReadString(ODFSetting, panel_group, wxT("Name"));
+		m_GroupName = cfg.ReadString(ODFSetting, panel_group, wxT("Group"), false);
 	}
 
+	m_metrics = new GOGUIHW1DisplayMetrics(cfg, panel_group);
+	m_layout = new GOGUILayoutEngine(*m_metrics);
+
+	unsigned first_manual  = cfg.ReadBoolean(ODFSetting, panel_group, wxT("HasPedals")) ? 0 : 1;
+	for(unsigned i = 0; i < first_manual; i++)
+		m_layout->RegisterManual(0);
+
 	LoadBackgroundControl(new GOGUIHW1Background(this), cfg, wxString::Format(wxT("---")));
-		
-	if (group.IsEmpty())
+
+	unsigned NumberOfImages = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfImages"), 0, 999, false, 0);
+	for (unsigned i = 0; i < NumberOfImages; i++)
 	{
-		m_group = group = wxT("Organ");
+		LoadControl(new GOGUIImage(this), cfg, panel_prefix + wxString::Format(wxT("Image%03d"), i + 1));
+	}
 
-		
-		for(unsigned i = 0; i < m_organfile->GetFirstManualIndex(); i++)
-			m_layout->RegisterManual(0);
-
-		unsigned NumberOfImages = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfImages"), 0, 999, false, 0);
-		for (unsigned i = 0; i < NumberOfImages; i++)
-		{
-			LoadControl(new GOGUIImage(this), cfg, wxString::Format(wxT("Image%03d"), i + 1));
-		}
-
+	if (is_main_panel)
+	{
 		for (unsigned i = 0; i < m_organfile->GetEnclosureCount(); i++)
 			if (m_organfile->GetEnclosure(i)->IsDisplayed())
 			{
 				LoadControl(new GOGUIEnclosure(this, m_organfile->GetEnclosure(i)), cfg, wxString::Format(wxT("Enclosure%03d"), i + 1));
 			}
 
-		unsigned NumberOfSetterElements = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSetterElements"), 0, 999, false);
-		for (unsigned i = 0; i < NumberOfSetterElements; i++)
 		{
-			wxString buffer = wxString::Format(wxT("SetterElement%03d"), i + 1);
-			GOGUIControl* control = m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this);
-			if (!control)
-				throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), buffer.c_str());
-			LoadControl(control, cfg, buffer);
+			unsigned NumberOfSetterElements = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfSetterElements"), 0, 999, false, 0);
+			for (unsigned i = 0; i < NumberOfSetterElements; i++)
+			{
+				wxString buffer = wxString::Format(wxT("SetterElement%03d"), i + 1);
+				GOGUIControl* control = m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this);
+				if (!control)
+					throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), buffer.c_str());
+				LoadControl(control, cfg, buffer);
+			}
 		}
 
 		for (unsigned i = 0; i < m_organfile->GetTremulantCount(); i++)
@@ -239,151 +250,133 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 					LoadControl(new GOGUIButton(this, m_organfile->GetManual(i)->GetDivisional(j), true), cfg, buffer);
 				}
 		}
-
-		unsigned NumberOfLabels = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLabels"), 0, 999);
-		for (unsigned i = 0; i < NumberOfLabels; i++)
-		{
-			LoadControl(new GOGUILabel(this, NULL), cfg, wxString::Format(wxT("Label%03d"), i + 1));
-		}
 	}
 	else
 	{
-		unsigned first_manual  = cfg.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
-
-		if (first_manual < m_organfile->GetFirstManualIndex())
-			first_manual = m_organfile->GetFirstManualIndex();
-
-		for(unsigned i = 0; i < first_manual; i++)
-			m_layout->RegisterManual(0);
-
-		unsigned NumberOfImages = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfImages"), 0, 999, false, 0);
-		for (unsigned i = 0; i < NumberOfImages; i++)
-		{
-			LoadControl(new GOGUIImage(this), cfg, group + wxString::Format(wxT("Image%03d"), i + 1));
-		}
-
-		unsigned NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, m_organfile->GetEnclosureCount());
+		unsigned NumberOfEnclosures = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfEnclosures"), 0, m_organfile->GetEnclosureCount());
 		for (unsigned i = 0; i < NumberOfEnclosures; i++)
 		{
 			wxString buffer = wxString::Format(wxT("Enclosure%03d"), i + 1);
-			unsigned enclosure_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetEnclosureCount());
+			unsigned enclosure_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetEnclosureCount());
 			buffer = wxString::Format(wxT("Enclosure%03d"), enclosure_nb);
-			LoadControl(new GOGUIEnclosure(this, m_organfile->GetEnclosure(enclosure_nb - 1)), cfg, group + buffer);
-			m_organfile->MarkSectionInUse(group + buffer);
+			LoadControl(new GOGUIEnclosure(this, m_organfile->GetEnclosure(enclosure_nb - 1)), cfg, panel_prefix + buffer);
+			m_organfile->MarkSectionInUse(panel_prefix + buffer);
 		}
 
-		unsigned NumberOfSetterElements = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSetterElements"), 0, 999, false);
+		unsigned NumberOfSetterElements = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfSetterElements"), 0, 999, false);
 		for (unsigned i = 0; i < NumberOfSetterElements; i++)
 		{
 			wxString buffer = wxString::Format(wxT("SetterElement%03d"), i + 1);
-			GOGUIControl* control = m_organfile->GetSetter()->CreateGUIElement(cfg, group + buffer, this);
+			GOGUIControl* control = m_organfile->GetSetter()->CreateGUIElement(cfg, panel_prefix + buffer, this);
 			if (!control)
-				throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), (group + buffer).c_str());
-			LoadControl(control, cfg, group + buffer);
+				throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), (panel_prefix + buffer).c_str());
+			LoadControl(control, cfg, panel_prefix + buffer);
 		}
 
-		unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount());
+		unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount());
 		for (unsigned i = 0; i < NumberOfTremulants; i++)
 		{
 			wxString buffer = wxString::Format(wxT("Tremulant%03d"), i + 1);
-			unsigned tremulant_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount());
+			unsigned tremulant_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetTremulantCount());
 			buffer = wxString::Format(wxT("Tremulant%03d"), tremulant_nb);
-			LoadControl(new GOGUIButton(this, m_organfile->GetTremulant(tremulant_nb - 1)), cfg, group + buffer);
-			m_organfile->MarkSectionInUse(group + buffer);
+			LoadControl(new GOGUIButton(this, m_organfile->GetTremulant(tremulant_nb - 1)), cfg, panel_prefix + buffer);
+			m_organfile->MarkSectionInUse(panel_prefix + buffer);
 		}	
 		
-		unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionalCouplers"), 0, m_organfile->GetDivisionalCouplerCount());
+		unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfDivisionalCouplers"), 0, m_organfile->GetDivisionalCouplerCount());
 		for (unsigned i = 0; i < NumberOfDivisionalCouplers; i++)
 		{
 			wxString buffer = wxString::Format(wxT("DivisionalCoupler%03d"), i + 1);
-			unsigned coupler_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetDivisionalCouplerCount());
+			unsigned coupler_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetDivisionalCouplerCount());
 			buffer = wxString::Format(wxT("DivisionalCoupler%03d"), coupler_nb);
-			LoadControl(new GOGUIButton(this, m_organfile->GetDivisionalCoupler(coupler_nb - 1)),cfg, group + buffer);
-			m_organfile->MarkSectionInUse(group + buffer);
+			LoadControl(new GOGUIButton(this, m_organfile->GetDivisionalCoupler(coupler_nb - 1)), cfg, panel_prefix + buffer);
+			m_organfile->MarkSectionInUse(panel_prefix + buffer);
 		}	
 		
-		unsigned NumberOfGenerals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfGenerals"), 0, m_organfile->GetGeneralCount());
+		unsigned NumberOfGenerals = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfGenerals"), 0, m_organfile->GetGeneralCount());
 		for (unsigned i = 0; i < NumberOfGenerals; i++)
 		{
 			wxString buffer = wxString::Format(wxT("General%03d"), i + 1);
-			unsigned general_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetGeneralCount());
+			unsigned general_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetGeneralCount());
 			buffer = wxString::Format(wxT("General%03d"), general_nb);
-			LoadControl(new GOGUIButton(this, m_organfile->GetGeneral(general_nb - 1), true), cfg, group + buffer);
-			m_organfile->MarkSectionInUse(group + buffer);
+			LoadControl(new GOGUIButton(this, m_organfile->GetGeneral(general_nb - 1), true), cfg, panel_prefix + buffer);
+			m_organfile->MarkSectionInUse(panel_prefix + buffer);
 		}	
 
-		unsigned NumberOfReversiblePistons = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfReversiblePistons"), 0, m_organfile->GetNumberOfReversiblePistons());
+		unsigned NumberOfReversiblePistons = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfReversiblePistons"), 0, m_organfile->GetNumberOfReversiblePistons());
 		for (unsigned i = 0; i < NumberOfReversiblePistons; i++)
 		{
 			wxString buffer = wxString::Format(wxT("ReversiblePiston%03d"), i + 1);
-			unsigned piston_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetNumberOfReversiblePistons());
+			unsigned piston_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetNumberOfReversiblePistons());
 			buffer = wxString::Format(wxT("ReversiblePiston%03d"), piston_nb);
-			LoadControl(new GOGUIButton(this, m_organfile->GetPiston(piston_nb - 1), true), cfg, group + buffer);
-			m_organfile->MarkSectionInUse(group + buffer);
+			LoadControl(new GOGUIButton(this, m_organfile->GetPiston(piston_nb - 1), true), cfg, panel_prefix + buffer);
+			m_organfile->MarkSectionInUse(panel_prefix + buffer);
 		}	
 
-		unsigned NumberOfSwitches = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSwitches"), 0, m_organfile->GetSwitchCount(), false, 0);
+		unsigned NumberOfSwitches = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfSwitches"), 0, m_organfile->GetSwitchCount(), false, 0);
 		for (unsigned i = 0; i < NumberOfSwitches; i++)
 		{
 			wxString buffer = wxString::Format(wxT("Switch%03d"), i + 1);
-			unsigned switch_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetSwitchCount());
+			unsigned switch_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetSwitchCount());
 			buffer = wxString::Format(wxT("Switch%03d"), switch_nb);
-			LoadControl(new GOGUIButton(this, m_organfile->GetSwitch(switch_nb - 1), false), cfg, group + buffer);
-			m_organfile->MarkSectionInUse(group + buffer);
+			LoadControl(new GOGUIButton(this, m_organfile->GetSwitch(switch_nb - 1), false), cfg, panel_prefix + buffer);
+			m_organfile->MarkSectionInUse(panel_prefix + buffer);
 		}	
 
-		unsigned nb_manuals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 0, m_organfile->GetManualAndPedalCount());
+		unsigned nb_manuals = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfManuals"), 0, m_organfile->GetManualAndPedalCount());
 		for (unsigned int i = first_manual; i <= nb_manuals; i++)
 		{
 			wxString buffer = wxString::Format(wxT("Manual%03d"), i);
-			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 			buffer = wxString::Format(wxT("Manual%03d"), manual_nb);
-			LoadBackgroundControl(new GOGUIManualBackground(this, i), cfg, group + buffer);
-			LoadControl(new GOGUIManual(this, m_organfile->GetManual(manual_nb), m_layout->GetManualNumber()), cfg, group + buffer);
-			m_organfile->MarkSectionInUse(group + buffer);
+			LoadBackgroundControl(new GOGUIManualBackground(this, i), cfg, panel_prefix + buffer);
+			LoadControl(new GOGUIManual(this, m_organfile->GetManual(manual_nb), m_layout->GetManualNumber()), cfg, panel_prefix + buffer);
+			m_organfile->MarkSectionInUse(panel_prefix + buffer);
 		}
 
-		unsigned NumberOfCouplers = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfCouplers"), 0, 999);
+		unsigned NumberOfCouplers = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfCouplers"), 0, 999);
 		for(unsigned j = 0; j < NumberOfCouplers; j++)
 		{
 			wxString buffer = wxString::Format(wxT("Coupler%03dManual"), j + 1);
-			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 			buffer = wxString::Format(wxT("Coupler%03d"), j + 1);
-			unsigned coupler_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetManual(manual_nb)->GetCouplerCount());
+			unsigned coupler_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetManual(manual_nb)->GetCouplerCount());
 			buffer = wxString::Format(wxT("Coupler%03d"), j + 1);
-			LoadControl(new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetCoupler(coupler_nb - 1)), cfg, group + buffer);
-			m_organfile->MarkSectionInUse(group + wxString::Format(wxT("Manual%03dCoupler%03d"), manual_nb, coupler_nb));
+			LoadControl(new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetCoupler(coupler_nb - 1)), cfg, panel_prefix + buffer);
+			m_organfile->MarkSectionInUse(panel_prefix + wxString::Format(wxT("Manual%03dCoupler%03d"), manual_nb, coupler_nb));
 		}
 
-		unsigned NumberOfStops = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfStops"), 0, 999);
+		unsigned NumberOfStops = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfStops"), 0, 999);
 		for(unsigned j = 0; j < NumberOfStops; j++)
 		{
 			wxString buffer = wxString::Format(wxT("Stop%03dManual"), j + 1);
-			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 			buffer = wxString::Format(wxT("Stop%03d"), j + 1);
-			unsigned stop_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetManual(manual_nb)->GetStopCount());
+			unsigned stop_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetManual(manual_nb)->GetStopCount());
 			buffer = wxString::Format(wxT("Stop%03d"), j + 1);
-			LoadControl(new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetStop(stop_nb - 1)), cfg, group + buffer);
-			m_organfile->MarkSectionInUse(group + wxString::Format(wxT("Manual%03dStop%03d"), manual_nb, stop_nb));
+			LoadControl(new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetStop(stop_nb - 1)), cfg, panel_prefix + buffer);
+			m_organfile->MarkSectionInUse(panel_prefix + wxString::Format(wxT("Manual%03dStop%03d"), manual_nb, stop_nb));
 		}
 				
-		unsigned NumberOfDivisionals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionals"), 0, 999);
+		unsigned NumberOfDivisionals = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfDivisionals"), 0, 999);
 		for(unsigned j = 0; j < NumberOfDivisionals; j++)
 		{
 			wxString buffer = wxString::Format(wxT("Divisional%03dManual"), j + 1);
-			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
+			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 			buffer = wxString::Format(wxT("Divisional%03d"), j + 1);
-			unsigned divisional_nb  = cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetManual(manual_nb)->GetDivisionalCount());
+			unsigned divisional_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetManual(manual_nb)->GetDivisionalCount());
 			buffer = wxString::Format(wxT("Divisional%03d"), j + 1);
-			LoadControl(new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetDivisional(divisional_nb - 1), true), cfg, group + buffer);
-			m_organfile->MarkSectionInUse(group + wxString::Format(wxT("Manual%03dDivisional%03d"), manual_nb, divisional_nb));
+			LoadControl(new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetDivisional(divisional_nb - 1), true), cfg, panel_prefix + buffer);
+			m_organfile->MarkSectionInUse(panel_prefix + wxString::Format(wxT("Manual%03dDivisional%03d"), manual_nb, divisional_nb));
 		}
+	}
 
-		unsigned NumberOfLabels = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLabels"), 0, 999);
+	{
+		unsigned NumberOfLabels = cfg.ReadInteger(ODFSetting, panel_group, wxT("NumberOfLabels"), 0, 999);
 		for (unsigned i = 0; i < NumberOfLabels; i++)
 		{
 			wxString buffer = wxString::Format(wxT("Label%03d"), i + 1);
-			LoadControl(new GOGUILabel(this, NULL), cfg, group + buffer);
+			LoadControl(new GOGUILabel(this, NULL), cfg, panel_prefix + buffer);
 		}
 	}
 
