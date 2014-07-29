@@ -382,3 +382,8 @@ void GOGUILayoutEngine::RegisterManual(GOGUIManual* manual)
 {
 	m_Manuals.push_back(manual);
 }
+
+unsigned GOGUILayoutEngine::GetManualNumber()
+{
+	return m_Manuals.size();
+}

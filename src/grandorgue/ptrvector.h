@@ -91,6 +91,11 @@ public:
 	{
 		std::vector<T*>::push_back(ptr);
 	}
+
+	void insert(unsigned pos, T* ptr)
+	{
+		std::vector<T*>::insert(std::vector<T*>::begin() + pos, ptr);
+	}
 };
 
 #endif

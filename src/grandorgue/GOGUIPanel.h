@@ -46,6 +46,7 @@ protected:
 	GrandOrgueFile* m_organfile;
 	ptr_vector<GOGUIControl> m_controls;
 	std::vector<GOrgueBitmap> m_WoodImages;
+	unsigned m_BackgroundControls;
 	wxString m_Name;
 	wxString m_GroupName;
 	GOGUIDisplayMetrics* m_metrics;
@@ -55,6 +56,7 @@ protected:
 	bool m_InitialOpenWindow;
 
 	void LoadControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group);
+	void LoadBackgroundControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 
 public:

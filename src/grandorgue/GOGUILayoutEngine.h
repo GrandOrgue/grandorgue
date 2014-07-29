@@ -87,6 +87,7 @@ public:
 
 	void RegisterEnclosure(GOGUIEnclosure* enclosure);
 	void RegisterManual(GOGUIManual* manual);
+	unsigned GetManualNumber();
 
 	virtual void Update();
 };
