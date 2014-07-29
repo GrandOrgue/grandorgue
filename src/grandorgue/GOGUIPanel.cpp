@@ -55,6 +55,7 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_controls(0),
 	m_WoodImages(0),
+	m_BackgroundControls(0),
 	m_Name(),
 	m_GroupName(),
 	m_metrics(0),
@@ -136,20 +137,22 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	{
 		m_Name = m_organfile->GetChurchName();
 		m_GroupName = wxT("");
+	}
+	else
+	{
+		m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"));
+		m_GroupName = cfg.ReadString(ODFSetting, group, wxT("Group"), false);
+	}
+
+	LoadBackgroundControl(new GOGUIHW1Background(this), cfg, wxString::Format(wxT("---")));
+		
+	if (group.IsEmpty())
+	{
 		m_group = group = wxT("Organ");
 
-		LoadControl(new GOGUIHW1Background(this), cfg, wxString::Format(wxT("---")));
 		
 		for(unsigned i = 0; i < m_organfile->GetFirstManualIndex(); i++)
 			m_layout->RegisterManual(0);
-
-		for (unsigned no = m_organfile->GetFirstManualIndex(), i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
-		{
-			if (m_organfile->GetManual(i)->IsDisplayed())
-			{
-				LoadControl(new GOGUIManualBackground(this, no++), cfg, wxString::Format(wxT("Manual%03d"), i));
-			}
-		}
 
 		unsigned NumberOfImages = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfImages"), 0, 999, false, 0);
 		for (unsigned i = 0; i < NumberOfImages; i++)
@@ -205,17 +208,18 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 
 		for (unsigned int i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
 		{
-			wxString group = wxString::Format(wxT("Manual%03d"), i);
+			wxString manual_group = wxString::Format(wxT("Manual%03d"), i);
 			if (m_organfile->GetManual(i)->IsDisplayed())
 			{
-				LoadControl(new GOGUIManual(this, m_organfile->GetManual(i), i), cfg, group);
+				LoadBackgroundControl(new GOGUIManualBackground(this, m_layout->GetManualNumber()), cfg, manual_group);
+				LoadControl(new GOGUIManual(this, m_organfile->GetManual(i), m_layout->GetManualNumber()), cfg, manual_group);
 			}
 
 			for(unsigned j = 0; j < m_organfile->GetManual(i)->GetCouplerCount(); j++)
 				if (m_organfile->GetManual(i)->GetCoupler(j)->IsDisplayed())
 				{
 					wxString buffer = wxString::Format(wxT("Coupler%03d"), j + 1);
-					buffer = wxString::Format(wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 64));
+					buffer = wxString::Format(wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 64));
 					LoadControl(new GOGUIButton(this, m_organfile->GetManual(i)->GetCoupler(j)), cfg, buffer);
 				}
 
@@ -223,7 +227,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 				if (m_organfile->GetManual(i)->GetStop(j)->IsDisplayed())
 				{
 					wxString buffer = wxString::Format(wxT("Stop%03d"), j + 1);
-					buffer = wxString::Format(wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 448));
+					buffer = wxString::Format(wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 448));
 					LoadControl(new GOGUIButton(this, m_organfile->GetManual(i)->GetStop(j)), cfg, buffer);
 				}
 				
@@ -231,7 +235,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 				if (m_organfile->GetManual(i)->GetDivisional(j)->IsDisplayed())
 				{
 					wxString buffer = wxString::Format(wxT("Divisional%03d"), j + 1);
-					buffer = wxString::Format(wxT("Divisional%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 224));
+					buffer = wxString::Format(wxT("Divisional%03d"), cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 224));
 					LoadControl(new GOGUIButton(this, m_organfile->GetManual(i)->GetDivisional(j), true), cfg, buffer);
 				}
 		}
@@ -244,26 +248,13 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	}
 	else
 	{
-		m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"));
-		m_GroupName = cfg.ReadString(ODFSetting, group, wxT("Group"), false);
-		unsigned nb_manuals    = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 0, m_organfile->GetManualAndPedalCount());
 		unsigned first_manual  = cfg.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
 
 		if (first_manual < m_organfile->GetFirstManualIndex())
 			first_manual = m_organfile->GetFirstManualIndex();
 
-		{
-			LoadControl(new GOGUIHW1Background(this), cfg, wxString::Format(wxT("---")));
-		}
-		
 		for(unsigned i = 0; i < first_manual; i++)
 			m_layout->RegisterManual(0);
-		for (unsigned int i = first_manual; i <= nb_manuals; i++)
-		{
-			wxString buffer = wxString::Format(wxT("Manual%03d"), i);
-			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
-			LoadControl(new GOGUIManualBackground(this, i), cfg, group + wxString::Format(wxT("Manual%03d"), manual_nb));
-		}
 
 		unsigned NumberOfImages = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfImages"), 0, 999, false, 0);
 		for (unsigned i = 0; i < NumberOfImages; i++)
@@ -341,12 +332,14 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			m_organfile->MarkSectionInUse(group + buffer);
 		}	
 
+		unsigned nb_manuals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 0, m_organfile->GetManualAndPedalCount());
 		for (unsigned int i = first_manual; i <= nb_manuals; i++)
 		{
 			wxString buffer = wxString::Format(wxT("Manual%03d"), i);
 			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 			buffer = wxString::Format(wxT("Manual%03d"), manual_nb);
-			LoadControl(new GOGUIManual(this, m_organfile->GetManual(manual_nb), i), cfg, group + buffer);
+			LoadBackgroundControl(new GOGUIManualBackground(this, i), cfg, group + buffer);
+			LoadControl(new GOGUIManual(this, m_organfile->GetManual(manual_nb), m_layout->GetManualNumber()), cfg, group + buffer);
 			m_organfile->MarkSectionInUse(group + buffer);
 		}
 
@@ -446,6 +439,13 @@ void GOGUIPanel::LoadControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxS
 {
 	control->Load(cfg, group);
 	AddControl(control);
+}
+
+void GOGUIPanel::LoadBackgroundControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group)
+{
+	control->Load(cfg, group);
+	m_controls.insert(m_BackgroundControls, control);
+	m_BackgroundControls++;
 }
 
 void GOGUIPanel::AddControl(GOGUIControl* control)
