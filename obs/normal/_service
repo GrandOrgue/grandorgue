@@ -45,5 +45,20 @@
     <param name="files">*/mingwXX-grandorgue.spec</param>
     <param name="outfilename">mingw64-grandorgue.spec</param>
   </service>
+  <service name="extract_file">
+    <param name="archive">*.tar.gz</param>
+    <param name="files">*/PKGBUILD</param>
+    <param name="outfilename">PKGBUILD</param>
+  </service>
+  <service name="regex_replace">
+    <param name="file">*mingw32-grandorgue.spec</param>
+    <param name="regex">_mingw_bitsize XX</param>
+    <param name="replace">_mingw_bitsize 32</param>
+  </service>
+  <service name="regex_replace">
+    <param name="file">mingw64-grandorgue.spec</param>
+    <param name="regex">_mingw_bitsize XX</param>
+    <param name="replace">_mingw_bitsize 64</param>
+  </service>
   <service name="set_version"/>
 </services>
