@@ -109,6 +109,8 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMid
 										 m_MidiTypes, sizeof(m_MidiTypes)/sizeof(m_MidiTypes[0]), false, default_type);
 			if (HasChannel(m_events[i].type))
 				m_events[i].channel = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIChannel%03d"), i + 1), -1, 16);
+			else
+				m_events[i].channel = -1;
 			if (HasDebounce(m_events[i].type))
 				m_events[i].debounce_time = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDIDebounce%03d"), i + 1), 0, 3000, false, 0);
 			if (HasLowKey(m_events[i].type))
@@ -490,7 +492,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 
 	for(unsigned i = 0; i < m_events.size();i++)
 	{
-		if (m_events[i].channel != -1 && m_events[i].channel != e.GetChannel())
+		if (m_events[i].channel != -1 && m_events[i].channel != e.GetChannel() && HasChannel(m_events[i].type))
 			continue;
 		if (m_events[i].device != 0 && m_events[i].device != e.GetDevice())
 			continue;
