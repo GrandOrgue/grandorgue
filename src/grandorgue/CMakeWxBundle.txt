@@ -112,7 +112,11 @@ macro(CopyDependencies target)
   get_prerequisites("${targetfile}" prereqs 1 1 "${searchdirs}" "")
 
   set(_dlls)
-  foreach(d ${prereqs})
+  foreach(ri ${prereqs})
+    set(d d-NOTFOUND)
+    find_file(d "${ri}" PATHS ${searchdirs} CMAKE_FIND_ROOT_PATH)
+    find_file(d "${ri}" PATHS ${searchdirs} NO_CMAKE_FIND_ROOT_PATH)
+
     if(EXISTS ${d})
       GET_FILENAME_COMPONENT(_basename ${d} NAME)
 
