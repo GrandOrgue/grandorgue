@@ -32,8 +32,8 @@ class GOrgueLabel;
 class GOGUILabel : public GOGUIControl
 {
 private:
-	unsigned m_DispXpos;
-	unsigned m_DispYpos;
+	int m_DispXpos;
+	int m_DispYpos;
 	GOrgueLabel* m_Label;
 	GOrgueBitmap m_Bitmap;
 	unsigned m_FontSize;
