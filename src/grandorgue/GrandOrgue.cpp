@@ -25,6 +25,7 @@
 #include "GOrgueLog.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
+#include "GOrgueStdPath.h"
 #include "GrandOrgueDef.h"
 #include "GrandOrgueFrame.h"
 #include <wx/config.h>
@@ -90,6 +91,7 @@ bool GOrgueApp::OnInit()
 	/* wxMessageOutputStderr break wxLogStderr (fwide), therefore use MessageBox everywhere */
 	wxMessageOutput::Set(new wxMessageOutputMessageBox());
 
+	GOrgueStdPath::InitLocaleDir();
 	m_locale.Init(wxLANGUAGE_DEFAULT);
 	m_locale.AddCatalog(wxT("GrandOrgue"));
 

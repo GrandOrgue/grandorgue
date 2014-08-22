@@ -30,6 +30,7 @@
 %define __os_install_post %{_mingw32_install_post}
 %define _mingw_cmake %{_mingw32_cmake}
 %define _mingw_bindir %{_mingw32_bindir}
+%define _mingw_datadir %{_mingw32_datadir}
 %else
 %define __strip %{_mingw64_strip}
 %define __objdump %{_mingw64_objdump}
@@ -39,6 +40,7 @@
 %define __os_install_post %{_mingw64_install_post}
 %define _mingw_cmake %{_mingw64_cmake}
 %define _mingw_bindir %{_mingw64_bindir}
+%define _mingw_datadir %{_mingw64_datadir}
 %endif
 
 Summary:        Virtual Pipe Organ Software
@@ -166,12 +168,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_mingw_bindir}/GrandOrgue.exe
-%{_mingw_bindir}/[a-z][a-z]/
-%{_mingw_bindir}/help
+%{_mingw_datadir}/share/locale
+%{_mingw_datadir}/GrandOrgue/help
 
 %files demo
 %defattr(-,root,root)
-%{_mingw_bindir}/demo
+%{_mingw_datadir}/GrandOrgue/demo
 
 %files installer
 %defattr(-,root,root)
