@@ -28,6 +28,7 @@
 #include "GOrgueMidi.h"
 #include "GOrgueProgressDialog.h"
 #include "GOrgueProperties.h"
+#include "GOrgueStdPath.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
@@ -49,7 +50,6 @@
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/splash.h>
-#include <wx/stdpaths.h>
 #include <wx/toolbar.h>
 #include <algorithm>
 
@@ -298,7 +298,7 @@ void GOrgueFrame::Init(wxString filename)
 		SendLoadFile(m_Settings.GetLastFile());
 	else if (m_Settings.GetLoadLastFile())
 	{
-		wxString name = wxStandardPaths::Get().GetResourcesDir() + wxFILE_SEP_PATH + wxT("demo") + wxFILE_SEP_PATH + wxT("demo.organ");
+		wxString name = GOrgueStdPath::GetResourceDir() + wxFILE_SEP_PATH + wxT("demo") + wxFILE_SEP_PATH + wxT("demo.organ");
 		if (wxFileExists(name))
 			SendLoadFile(name);
 	}
@@ -314,7 +314,7 @@ void GOrgueFrame::InitHelp()
 	wxString lang = wxGetLocale()->GetCanonicalName();
 
 	wxString searchpath;
-	searchpath.Append(wxStandardPaths::Get().GetResourcesDir() + wxFILE_SEP_PATH + wxT("help"));
+	searchpath.Append(GOrgueStdPath::GetResourceDir() + wxFILE_SEP_PATH + wxT("help"));
 
 	if (!wxFindFileInPath(&result, searchpath, wxT("GrandOrgue_") + lang + wxT(".htb")))
 	{
