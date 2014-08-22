@@ -60,7 +60,7 @@ BuildRequires:  mingw32-cross-nsis
 BuildRequires:  mingw%{_mingw_bitsize}-wxwidgets-devel
 BuildRequires:  mingw%{_mingw_bitsize}-jack
 BuildRequires:  mingw%{_mingw_bitsize}-jack-devel
-BuildRequires:  mingw%{_mingw_bitsize}-libgnurx
+BuildRequires:  mingw%{_mingw_bitsize}-libgnurx0
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx-devel
 URL:            http://sourceforge.net/projects/ourorgan/
 License:        GPL-2.0+
