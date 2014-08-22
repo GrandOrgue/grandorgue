@@ -24,13 +24,14 @@
 
 #include "GOLock.h"
 #include <set>
+#include <wx/thread.h>
 
 class wxFile;
 
 class GOrgueOutOfMemory {
 };
 
-class GOrgueMemoryPool {
+class GOrgueMemoryPool : private wxThread {
 	GOMutex m_mutex;
 	std::set<void*> m_PoolAllocs;
 	char* m_PoolStart;
@@ -57,10 +58,14 @@ class GOrgueMemoryPool {
 	static size_t GetSystemMemory();
 	void CalculatePoolLimit();
 	bool AllocatePool();
+
+	void* Entry();
+
 public:
 	GOrgueMemoryPool();
 	~GOrgueMemoryPool();
 	void SetMemoryLimit(size_t limit);
+	void StartThread();
 
 	void *Alloc(size_t length, bool final);
 	void *MoveToPool(void* data, size_t length);
