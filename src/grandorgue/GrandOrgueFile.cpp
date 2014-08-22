@@ -557,6 +557,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 							FREE_AND_NULL(dummy);
 							SetTemperament(m_Temperament);
 							GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
+							m_pool.StartThread();
 							return wxEmptyString;
 						}
 					}
@@ -615,6 +616,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 	{
 		FREE_AND_NULL(dummy);
 		GOMessageBox(_("Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
+		m_pool.StartThread();
 		return wxEmptyString;
 	}
 	catch (wxString error_)
@@ -624,6 +626,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 	}
 	FREE_AND_NULL(dummy);
 
+	m_pool.StartThread();
 	GOrgueLCD_WriteLineTwo(_("Ready!"));
 
 	return wxEmptyString;

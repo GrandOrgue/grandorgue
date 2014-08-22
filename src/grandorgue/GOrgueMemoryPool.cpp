@@ -23,6 +23,7 @@
 
 #include <wx/file.h>
 #include <wx/intl.h>
+#include <wx/utils.h>
 #ifdef __linux__
 #include <sys/mman.h>
 #endif
@@ -38,6 +39,7 @@
 #include <errno.h>
 
 GOrgueMemoryPool::GOrgueMemoryPool() :
+	wxThread(wxTHREAD_JOINABLE),
 	m_PoolStart(0),
 	m_PoolPtr(0),
 	m_PoolEnd(0),
@@ -51,11 +53,14 @@ GOrgueMemoryPool::GOrgueMemoryPool() :
 	m_AllocError(0),
 	m_dummy(0)
 {
+	Create();
 	InitPool();
 }
 
 GOrgueMemoryPool::~GOrgueMemoryPool()
 {
+	if (IsAlive())
+		Delete();
 	FreePool();
 }
 
@@ -167,7 +172,7 @@ void *GOrgueMemoryPool::GetCacheData(size_t offset, size_t length)
 	if (m_CacheStart)
 	{
 		char* data = m_CacheStart + offset;
-		for (unsigned i = 0; i < length; i+= 512)
+		for (unsigned i = 0; i < length; i+= m_PageSize)
 			m_dummy += data[i];
 		if (length)
 			m_dummy += data[length - 1];
@@ -451,3 +456,37 @@ void GOrgueMemoryPool::GrowPool(size_t length)
 	m_PoolEnd = m_PoolStart + m_PoolSize;
 }
 
+void GOrgueMemoryPool::StartThread()
+{
+	Run();
+}
+
+void* GOrgueMemoryPool::Entry()
+{
+	while (!TestDestroy())
+	{
+		for(size_t pos = 0, i = 0; pos < m_CacheSize; pos+= m_PageSize, i++)
+		{
+			const char* data = m_CacheStart + pos;
+			m_dummy += *data;
+			if ((i % 256) == 0)
+			{
+				if (TestDestroy())
+					return NULL;
+				wxMilliSleep(200);
+			}
+		}
+		for(size_t pos = 0, i = 0; pos < m_PoolSize; pos+= m_PageSize, i++)
+		{
+			const char* data = m_PoolStart + pos;
+			m_dummy += *data;
+			if ((i % 256) == 0)
+			{
+				if (TestDestroy())
+					return NULL;
+				wxMilliSleep(200);
+			}
+		}
+	}
+	return NULL;
+}
