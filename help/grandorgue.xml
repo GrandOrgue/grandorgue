@@ -463,6 +463,9 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
           </figure>
           <para>The first menu item is always <emphasis>Original temperament</emphasis>, which allows the user to return to the tuning provided by the sample set creator.</para>
           <para>The samples are retuned on the fly when playing. No additional disk storage is required.</para>
+          <para>User temperaments that are added in the <link linkend="temperamentTab">Temperaments tab</link> are dynamically displayed at the end of this menu</para>
+          <para/>
+          <mediaobject><imageobject><imagedata fileref="custom_temperaments.png" /></imageobject></mediaobject>
         </sect3>
         <sect3>
           <title>Organ Settings</title>
@@ -470,6 +473,21 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
             <primary>Organ Settings</primary>
           </indexterm>
           <para>Displays a dialog which allows to set audio settings (amplitude, gain, tuning, etc.) at every level of the sample set from the whole organ level down to the individual pipe. See <link linkend="organsettings">Organ Settings</link> for detailed information on this topic.</para>
+        </sect3>
+        <sect3>
+          <title>Midi Objects</title>
+          <indexterm><primary>Midi Objects</primary></indexterm>
+          <figure>
+            <title>Midi Objects</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="Midi_Objects.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+          <para>Opens a window displaying all GrandOrgue objects which can have a MIDI event assigned to them.</para>
+          <para>The <emphasis role="strong">Configure</emphasis> button opens the <link linkend="midieventeditor">midi event editor</link> dialog for this element.</para>
+          <para>Double-clicking on the element in the list opens the midi event editor as well.</para>
         </sect3>
         <sect3>
           <title id="audiomidisettings">Audio/Midi Settings</title>
@@ -520,6 +538,28 @@ set has been disengaged) to recall those stops. A checkmark appears
 next to the menu item, and the toolbar button remains pushed, to
 indicate when memory set is active.
 </para>
+        </sect3>
+        <sect3>
+          <title>Record Midi</title>
+          <para>
+Opens a dialog prompting where to save the recorded MIDI file. The location
+chosen in this dialog will be remembered for the next time. Upon clicking to
+select a file name, recording commences and continues until the
+<emphasis>Record Midi</emphasis>menu option is selected again. A check mark
+appears next to the menu item to indicate when recording is active.
+          </para>
+          <caution>
+            <simpara>GrandOrgue stores Midi data using a specific internal format that makes the file unsuitable for usage with a regular Midi sequencer.</simpara>
+            <simpara>Playing a recorded Midi file in another sampleset than the sampleset used for recording will yield unexpected results.</simpara>
+          </caution>
+        </sect3>
+        <sect3>
+          <title>Play Midi</title>
+          <para>
+Opens a file chooser to select a recorded MIDI file. The location chosen in
+this dialog will be remembered for the next time. The player starts as soon as
+a file is selected. See above for caveats.
+          </para>
         </sect3>
       </sect2>
       <sect2 id="panel">
@@ -3677,41 +3717,103 @@ messages to easily switch between samplesets.
         <title>MIDI devices options</title>
         <mediaobject>
           <imageobject>
-            <imagedata scalefit="1" width="100%" fileref="midi_devices_tab.png"/>
+            <imagedata fileref="midi_devices_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
       <para>This tab shows all available MIDI devices.</para>
-      <para>
+      <variablelist>
+        <varlistentry>
+          <term>Upper frame</term>
+          <listitem>
+            <para>
 The upper  frame shows a list of all available MIDI input interfaces. Selecting
 a device means that GrandOrgue will listen for incoming MIDI messages through
 that interface. This allows to listen to more than one device at a time; for
 example, to listen to both a controller and a sequencer or loopback device.
-      </para>
-      <para>
-The lower frame shows a list of all available MIDI output interfaces. Selecting
-a device means that GrandOrgue will write MIDI information to external
-hardware. Possible uses are SAM or LED drivers for stop control feedback, or
-physical pipes drivers when digitally expanding a genuine pipe organ.
-      </para>
-      <para>The <indexterm><secondary>Advanced properties</secondary></indexterm> <emphasis>Advanced</emphasis> button is grayed out unless an input channel is selected. It opens a dialog to set advanced properties of the selected input channel.</para>
-      <figure>
-        <title>MIDI input channel advanced properties</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="midi_input_device_advanced_properties.png"/>
-          </imageobject>
-        </mediaobject>
-      </figure>
-      <para>
+          </para>
+          <para>
+The <indexterm><secondary>Advanced properties</secondary></indexterm>
+<emphasis>Advanced</emphasis> button is grayed out unless an input channel is
+selected. It opens a dialog to set advanced properties of the selected input
+channel.
+          </para>
+          <figure>
+            <title>MIDI input channel advanced properties</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="midi_input_device_advanced_properties.png"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+          <para>
 This allows the setting of a channel offset. A channel offset allows the use of
 two MIDI interfaces with conflicting MIDI channels. For example, applying a
 channel offset of 8 to one of the MIDI interfaces would cause that interface's
 channel 1 to appear as channel 9, channel 2 to appear as channel 10, and so on.
 This may be useful if you have multiple keyboards that are configured to use
 the same channel.
-      </para>
-      <note><simpara>The devices list is refreshed whenever the <emphasis>Audio &amp; Midi Settings</emphasis> dialog is displayed.</simpara></note>
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>Lower frame</term>
+        <listitem>
+          <para>
+The lower frame shows a list of all available MIDI output interfaces. Selecting
+a device means that GrandOrgue will write MIDI information to external
+hardware. Possible uses are SAM or LED drivers for stop control feedback, or
+physical pipes drivers when digitally expanding a genuine pipe organ.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>Send MIDI Recorder Output Stream</term>
+        <listitem>
+          <para>
+The dropdown labeled <emphasis>Send MIDI Recorder Output Stream to</emphasis>
+allows the user to pick a target output MIDI device to receive all
+Recorder-generated output. The selected device must be activeted in the
+<emphasis>MIDI output devices</emphasis> frame.
+          </para>
+          <para>When an output device is selected in that dropdown, the recorder outpout is generated even if no MIDI file is being recorded.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    <note><simpara>The devices list is refreshed whenever the <emphasis>Audio &amp; Midi Settings</emphasis> dialog is displayed.</simpara></note>
+    </sect1>
+    <sect1 id="temperamentTab">
+      <title>Temperaments</title>
+      <indexterm><primary>Temperament</primary></indexterm>
+      <indexterm><primary>User-defined Temperament</primary></indexterm>
+      <figure>
+        <title>User-defined Temperaments</title>
+        <mediaobject><imageobject><imagedata fileref="temperaments_tab.png" /></imageobject></mediaobject>
+      </figure>
+      <para>This tab enables the user to add his own custom temperaments. User-defined temperaments are displayed in dynamic submenus in the <emphasis>Audio/Midi &gt; Temperaments</emphasis> menu.</para>
+      <para>The <emphasis role="bold">Add</emphasis> button adds a new "empty" line.</para>
+      <para>The <emphasis role="bold">Delete</emphasis> button deletes the selected line.</para>
+      <variablelist>
+        <varlistentry>
+          <term>Group</term>
+          <listitem><simpara>
+Defines the submenu label in the <emphasis>Audio/Midi &gt;
+Temperaments</emphasis> menu. The submenus are dynamically added as soon as
+this screen has entries. Entries having the same <emphasis
+role="bold">Group</emphasis> attribute are grouped in the same submenu.
+          </simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Name</term>
+          <listitem><simpara>Defines the menu item label.</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>c, c# ... b</term>
+        <listitem><simpara>A column for each note of the scale defines the deviation in cents from equal temperament for that note.</simpara></listitem>
+        </varlistentry>
+      </variablelist>
+      <para>To modify any value in the grid, double-click in the cell. Updated values are stored as soon as the <emphasis role="bold">OK</emphasis> button is depressed.</para>
+      <para>Temperaments are stored in the system-wide <link linkend="settingstab">configuration file</link>.</para>
     </sect1>
     <sect1>
       <title>Initial Midi Configuration tab</title>
