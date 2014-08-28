@@ -61,7 +61,7 @@ void GOrgueWindchest::Load(GOrgueConfigReader& cfg, wxString group, unsigned ind
 		m_tremulant.push_back(cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount()) - 1);
 	}
 
-	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), false, wxString::Format(_("Windchest %d"), index + 1));
+	m_Name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), false, wxString::Format(_("Windchest %d"), index + 1));
 }
 
 void GOrgueWindchest::UpdateVolume()

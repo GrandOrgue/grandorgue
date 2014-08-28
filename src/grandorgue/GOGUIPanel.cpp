@@ -157,7 +157,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		panel_group = group;
 		panel_prefix = panel_group;
 		is_main_panel = false;
-		m_Name = cfg.ReadString(ODFSetting, panel_group, wxT("Name"));
+		m_Name = cfg.ReadStringNotEmpty(ODFSetting, panel_group, wxT("Name"));
 		m_GroupName = cfg.ReadString(ODFSetting, panel_group, wxT("Group"), false);
 	}
 

@@ -98,6 +98,22 @@ wxString GOrgueConfigReader::ReadStringTrim(GOSettingType type, wxString group, 
 	return ReadStringTrim(type, group, key, required, wxT(""));
 }
 
+wxString GOrgueConfigReader::ReadStringNotEmpty(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue)
+{
+	wxString value = ReadString(type, group, key, required, defaultValue);
+
+	if (value.Trim().length() == 0 && m_Strict)
+	{
+		wxLogWarning(_("Empty at section '%s' entry '%s'"), group.c_str(), key.c_str());
+	}
+	return value;
+}
+
+wxString GOrgueConfigReader::ReadStringNotEmpty(GOSettingType type, wxString group, wxString key, bool required)
+{
+	return ReadStringNotEmpty(type, group, key, required, wxT(""));
+}
+
 bool GOrgueConfigReader::ReadBoolean(GOSettingType type, wxString group, wxString key, bool required)
 {
 	return ReadBoolean(type, group, key, required, false);
