@@ -71,6 +71,7 @@ private:
 	wxButton* m_Reset;
 	wxButton* m_Default;
 	wxButton* m_AudioGroupAssistant;
+	wxButton* m_Collapse;
 	wxCheckBox* m_IgnorePitch;
 	OrganTreeItemData* m_Last;
 	unsigned m_LoadChangeCnt;
@@ -87,6 +88,7 @@ private:
 	void RemoveEmpty(wxChoice* choice);
 	void UpdateAudioGroup(std::vector<wxString> audio_group, unsigned& pos, wxTreeItemId item);
 	void FillTree(wxTreeItemId parent, GOrguePipeConfigNode& config);
+	void CloseTree(wxTreeItemId parent);
 
 	void OnTreeChanging(wxTreeEvent& e);
 	void OnTreeChanged(wxTreeEvent& e);
@@ -112,6 +114,7 @@ private:
 	void OnOK(wxCommandEvent& event);
 	void OnCancel(wxCommandEvent& event);
 	void OnAudioGroupAssitant(wxCommandEvent &e);
+	void OnCollapse(wxCommandEvent &e);
 
 protected:
 
@@ -120,6 +123,7 @@ protected:
 		ID_EVENT_APPLY,
 		ID_EVENT_RESET,
 		ID_EVENT_AUDIO_GROUP_ASSISTANT,
+		ID_EVENT_COLLAPSE,
 		ID_EVENT_DEFAULT,
 		ID_EVENT_AMPLITUDE,
 		ID_EVENT_AMPLITUDE_SPIN,
