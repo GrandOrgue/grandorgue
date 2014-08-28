@@ -75,6 +75,7 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_CHOICE(ID_EVENT_LOOP_LOAD, OrganDialog::OnLoopLoadChanged)
 	EVT_CHOICE(ID_EVENT_ATTACK_LOAD, OrganDialog::OnAttackLoadChanged)
 	EVT_CHOICE(ID_EVENT_RELEASE_LOAD, OrganDialog::OnReleaseLoadChanged)
+	EVT_BUTTON(ID_EVENT_COLLAPSE, OrganDialog::OnCollapse)
 END_EVENT_TABLE()
 
 OrganDialog::OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile* organfile) :
@@ -100,8 +101,10 @@ OrganDialog::OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile*
 	wxBoxSizer* Sizer1 = new wxBoxSizer(wxVERTICAL);
 	Sizer1->Add(m_Tree, wxALIGN_TOP | wxEXPAND);
 
+	m_Collapse = new wxButton(this, ID_EVENT_COLLAPSE, _("Collapse tree"));
+	Sizer1->Add(m_Collapse);
 	m_AudioGroupAssistant = new wxButton(this, ID_EVENT_AUDIO_GROUP_ASSISTANT, _("Distribute audio groups"));
-	Sizer1->Add(m_AudioGroupAssistant, wxALIGN_CENTER);
+	Sizer1->Add(m_AudioGroupAssistant);
 
 	mainSizer->Add(Sizer1, wxALIGN_LEFT | wxEXPAND);
 	mainSizer->AddSpacer(5);
@@ -899,4 +902,23 @@ void OrganDialog::OnAudioGroupAssitant(wxCommandEvent &e)
 		UpdateAudioGroup(group_list, pos, entries[i]);
 	m_Last = NULL;
 	Load();
+}
+
+void OrganDialog::CloseTree(wxTreeItemId parent)
+{
+	m_Tree->Collapse(parent);
+	wxTreeItemIdValue it;
+	for(wxTreeItemId child = m_Tree->GetFirstChild(parent, it); child.IsOk(); child = m_Tree->GetNextChild(parent, it))
+		CloseTree(child);
+}
+
+
+void OrganDialog::OnCollapse(wxCommandEvent &e)
+{
+	if (Changed())
+	{
+		GOMessageBox(_("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
+		return;
+	}
+	CloseTree(m_Tree->GetRootItem());
 }
