@@ -53,6 +53,8 @@ public:
 	wxString ReadString(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue);
 	wxString ReadStringTrim(GOSettingType type, wxString group, wxString key, bool required = true);
 	wxString ReadStringTrim(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue);
+	wxString ReadStringNotEmpty(GOSettingType type, wxString group, wxString key, bool required = true);
+	wxString ReadStringNotEmpty(GOSettingType type, wxString group, wxString key, bool required, wxString defaultValue);
 	int ReadInteger(GOSettingType type, wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
 	int ReadInteger(GOSettingType type, wxString group, wxString key, int nmin, int nmax, bool required, int defaultValue);
 	int ReadLong(GOSettingType type, wxString group, wxString key, int nmin = 0, int nmax = 0, bool required = true);
