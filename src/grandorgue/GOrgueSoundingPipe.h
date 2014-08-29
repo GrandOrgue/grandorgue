@@ -58,6 +58,7 @@ private:
 	void SetOff();
 	void Change(unsigned velocity, unsigned old_velocity);
 	GOSoundProvider* GetSoundProvider();
+	void Validate();
 
 	void LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 
