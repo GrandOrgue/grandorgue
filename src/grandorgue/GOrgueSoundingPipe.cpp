@@ -124,6 +124,7 @@ void GOrgueSoundingPipe::LoadData()
 		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_organfile, m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
 					     m_PipeConfig.GetEffectiveCompress(), (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(), m_PipeConfig.GetEffectiveAttackLoad(), m_PipeConfig.GetEffectiveReleaseLoad(),
 					     m_SampleMidiKeyNumber);
+		Validate();
 	}
 	catch(wxString str)
 	{
@@ -147,7 +148,10 @@ bool GOrgueSoundingPipe::LoadCache(GOrgueCache& cache)
 {
 	try
 	{
-		return m_SoundProvider.LoadCache(cache);
+		bool result = m_SoundProvider.LoadCache(cache);
+		if (result)
+			Validate();
+		return result;
 	}
 	catch(std::bad_alloc& ba)
 	{
@@ -241,6 +245,32 @@ void GOrgueSoundingPipe::Initialize()
 const wxString& GOrgueSoundingPipe::GetLoadTitle()
 {
 	return m_Filename;
+}
+
+void GOrgueSoundingPipe::Validate()
+{
+	if (!m_organfile->GetSettings().GetODFCheck())
+		return;
+
+	if (m_SoundProvider.GetMidiKeyNumber() == 0 &&  m_SoundProvider.GetMidiPitchFract() == 0)
+	{
+		wxLogWarning(_("rank %s pipe %s: no pitch information provided"),
+			     m_Rank->GetName().c_str(), GetLoadTitle().c_str());
+		return;
+	}
+	double offset = m_SoundProvider.GetMidiKeyNumber() + log(8.0 / m_HarmonicNumber) * (12.0 / log(2)) - (m_SoundProvider.GetMidiPitchFract() - m_PipeConfig.GetDefaultTuning() + m_PitchCorrection) / 100.0 - m_MidiKeyNumber;
+	if (offset < -12 || offset > 12)
+	{
+		wxLogError(_("rank %s pipe %s: temperament would retune pipe by more than 1200 cent"),
+			   m_Rank->GetName().c_str(), GetLoadTitle().c_str());
+		return;
+	}
+	if (offset < -6 || offset > 6)
+	{
+		wxLogWarning(_("rank %s pipe %s: temperament would retune pipe by more than 600 cent"),
+			   m_Rank->GetName().c_str(), GetLoadTitle().c_str());
+		return;
+	}
 }
 
 void GOrgueSoundingPipe::SetTremulant(bool on)
