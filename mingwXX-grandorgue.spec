@@ -168,7 +168,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_mingw_bindir}/GrandOrgue.exe
-%{_mingw_datadir}/share/locale
+%{_mingw_datadir}/locale
+%dir %{_mingw_datadir}/GrandOrgue
 %{_mingw_datadir}/GrandOrgue/help
 
 %files demo
