@@ -190,6 +190,7 @@ public:
 	bool IsOneshot() const;
 
 	static int GetSampleData(unsigned position, unsigned channel, unsigned bits_per_sample, unsigned channels, const unsigned char* data);
+	static void SetSampleData(unsigned position, unsigned channel, unsigned bits_per_sample, unsigned channels, unsigned value, unsigned char* data);
 
 	int GetSample(unsigned position, unsigned channel, DecompressionCache *cache = NULL) const;
 
@@ -272,6 +273,31 @@ int GOAudioSection::GetSample(unsigned position, unsigned channel, Decompression
 			);
 		return cache->value[channel];
 	}
+}
+
+inline
+void GOAudioSection::SetSampleData(unsigned position, unsigned channel, unsigned bits_per_sample, unsigned channels, unsigned value, unsigned char* sample_data)
+{
+	if (bits_per_sample <= 8)
+	{
+		wxInt8* data = (wxInt8*)sample_data;
+		data[position * channels + channel] = value;
+		return;
+	}
+	if (bits_per_sample <= 16)
+	{
+		wxInt16* data = (wxInt16*)sample_data;
+		data[position * channels + channel] = value;
+		return;
+	}
+	if (bits_per_sample <= 24)
+	{
+		Int24* data = (Int24*)sample_data;
+		data[position * channels + channel] = value;
+		return;
+	}
+	assert(0 && "broken sampler type");
+
 }
 
 inline
