@@ -388,13 +388,7 @@ void GOAudioSection::StereoCompressedLinear(audio_section_stream *stream, float 
 }
 
 inline
-DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction
-	(unsigned channels
-	,unsigned bits_per_sample
-	,bool     compressed
-	,interpolation_type interpolation
-	,bool     is_end
-	)
+DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(unsigned channels, unsigned bits_per_sample, bool compressed, interpolation_type interpolation, bool is_end)
 {
 	if (compressed && !is_end)
 	{
@@ -582,21 +576,14 @@ unsigned wave_bits_per_sample(GOrgueWave::SAMPLE_FORMAT format)
 	}
 }
 
-static
-inline
+static inline
 unsigned wave_bytes_per_sample(GOrgueWave::SAMPLE_FORMAT format)
 {
 	return (wave_bits_per_sample(format) + 7) / 8;
 }
 
-static
-inline
-void loop_memcpy
-	(unsigned char*        dest
-	,const unsigned char*  source
-	,unsigned              source_len
-	,unsigned              count
-	)
+static inline
+void loop_memcpy(unsigned char* dest, const unsigned char* source, unsigned source_len, unsigned count)
 {
 	while (count > source_len)
 	{
@@ -645,15 +632,8 @@ void GOAudioSection::GetMaxAmplitudeAndDerivative()
 	}
 }
 
-void GOAudioSection::Setup
-	(const void                      *pcm_data
-	,const GOrgueWave::SAMPLE_FORMAT  pcm_data_format
-	,const unsigned                   pcm_data_channels
-	,const unsigned                   pcm_data_sample_rate
-	,const unsigned                   pcm_data_nb_samples
-	,const std::vector<GO_WAVE_LOOP> *loop_points
-	,bool                       compress
-	)
+void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT pcm_data_format, const unsigned pcm_data_channels, const unsigned pcm_data_sample_rate, const unsigned pcm_data_nb_samples, 
+			   const std::vector<GO_WAVE_LOOP> *loop_points, bool compress, unsigned crossfade_length)
 {
 	if (pcm_data_channels < 1 || pcm_data_channels > 2)
 		throw (wxString)_("< More than 2 channels in");
@@ -758,11 +738,7 @@ void GOAudioSection::Setup
 	m_Compressed     = false;
 
 	/* Store the main data blob. */
-	memcpy
-		(m_Data
-		,pcm_data
-		,m_AllocSize
-		);
+	memcpy(m_Data, pcm_data, m_AllocSize);
 
 	GetMaxAmplitudeAndDerivative();
 
@@ -907,11 +883,7 @@ unsigned GOAudioSection::GetMargin(bool compressed, interpolation_type interpola
 		return LINEAR_READAHEAD;
 }
 
-void GOAudioSection::InitStream
-	(const struct resampler_coefs_s *resampler_coefs
-	,audio_section_stream           *stream
-	,float                           sample_rate_adjustment
-	) const
+void GOAudioSection::InitStream(const struct resampler_coefs_s *resampler_coefs, audio_section_stream *stream, float sample_rate_adjustment) const
 {
 	stream->audio_section = this;
 
@@ -937,10 +909,7 @@ void GOAudioSection::InitStream
 	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 }
 
-void GOAudioSection::InitAlignedStream
-	(audio_section_stream       *stream
-	,const audio_section_stream *existing_stream
-	) const
+void GOAudioSection::InitAlignedStream(audio_section_stream *stream, const audio_section_stream *existing_stream) const
 {
 	stream->audio_section = this;
 

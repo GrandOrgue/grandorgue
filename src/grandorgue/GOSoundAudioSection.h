@@ -125,13 +125,7 @@ private:
 	template<bool format16>
 	static void StereoCompressedLinear(audio_section_stream *stream, float *output, unsigned int n_blocks);
 
-	static DecodeBlockFunction GetDecodeBlockFunction
-		(unsigned channels
-		,unsigned bits_per_sample
-		,bool     compressed
-		,interpolation_type interpolation
-		,bool     is_end
-		);
+	static DecodeBlockFunction GetDecodeBlockFunction(unsigned channels, unsigned bits_per_sample, bool compressed, interpolation_type interpolation, bool is_end);
 	static unsigned GetMargin(bool compressed, interpolation_type interpolation);
 
 	void Compress(bool format16);
@@ -181,41 +175,23 @@ public:
 
 	/* Initialize a stream to play this audio section and seek into it using
 	 * release alignment if available. */
-	void InitAlignedStream
-		(audio_section_stream           *stream
-		,const audio_section_stream     *existing_stream
-		) const;
+	void InitAlignedStream(audio_section_stream *stream, const audio_section_stream *existing_stream) const;
 
 	/* Initialize a stream to play this audio section */
-	void InitStream
-		(const struct resampler_coefs_s *resampler_coefs
-		,audio_section_stream           *stream
-		,float                           sample_rate_adjustment
-		) const;
+	void InitStream(const struct resampler_coefs_s *resampler_coefs, audio_section_stream *stream, float sample_rate_adjustment) const;
 
 	/* Read an audio buffer from an audio section stream */
 	static bool ReadBlock(audio_section_stream *stream, float *buffer, unsigned int n_blocks);
 	static void GetHistory(const audio_section_stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
 
-	void Setup
-		(const void                      *pcm_data
-		,GOrgueWave::SAMPLE_FORMAT        pcm_data_format
-		,unsigned                         pcm_data_channels
-		,unsigned                         pcm_data_sample_rate
-		,unsigned                         pcm_data_nb_samples
-		,const std::vector<GO_WAVE_LOOP> *loop_points
-		,bool                       compress
-		);
+	void Setup(const void *pcm_data, GOrgueWave::SAMPLE_FORMAT pcm_data_format, unsigned pcm_data_channels, unsigned pcm_data_sample_rate, unsigned pcm_data_nb_samples, 
+		   const std::vector<GO_WAVE_LOOP> *loop_points, bool compress, unsigned crossfade_length);
 
 	bool IsOneshot() const;
 
 	static int GetSampleData(unsigned position, unsigned channel, unsigned bits_per_sample, unsigned channels, const unsigned char* data);
 
-	int GetSample
-		(unsigned              position
-		,unsigned              channel
-		,DecompressionCache   *cache = NULL
-		) const;
+	int GetSample(unsigned position, unsigned channel, DecompressionCache *cache = NULL) const;
 
 	float GetNormGain() const;
 	unsigned GetSampleRate() const;
@@ -271,11 +247,7 @@ int GOAudioSection::GetSampleData(unsigned position, unsigned channel, unsigned 
 }
 
 inline
-int GOAudioSection::GetSample
-	(unsigned              position
-	,unsigned              channel
-	,DecompressionCache   *cache
-	) const
+int GOAudioSection::GetSample(unsigned position, unsigned channel, DecompressionCache *cache) const
 {
 	if (!m_Compressed)
 	{
