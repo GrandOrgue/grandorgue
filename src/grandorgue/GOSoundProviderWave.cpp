@@ -50,7 +50,7 @@ unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample)
 }
 
 void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, int attack_start, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, unsigned channels, 
-				       bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity)
+				       bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity, unsigned crossfade_length)
 {
 	std::vector<GO_WAVE_LOOP> loops;
 	unsigned attack_pos = attack_start;
@@ -114,15 +114,8 @@ void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, int a
 	m_AttackInfo.push_back(attack_info);
 	GOAudioSection* section = new GOAudioSection(m_pool);
 	m_Attack.push_back(section);
-	section->Setup
-		(data + attack_pos * GetBytesPerSample(bits_per_sample) * channels
-		 ,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
-		 ,channels
-		 ,wave.GetSampleRate()
-		 ,wave.GetLength()
-		 ,&loops
-		 ,compress
-		 );
+	section->Setup(data + attack_pos * GetBytesPerSample(bits_per_sample) * channels, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, 
+		       channels, wave.GetSampleRate(), wave.GetLength(), &loops, compress, crossfade_length);
 }
 
 void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, int release_end, unsigned bits_per_sample, unsigned channels, bool compress)
@@ -147,15 +140,7 @@ void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int 
 	m_ReleaseInfo.push_back(release_info);
 	GOAudioSection* section = new GOAudioSection(m_pool);
 	m_Release.push_back(section);
-	section->Setup
-		(data + release_offset * GetBytesPerSample(bits_per_sample) * channels
-		 ,(GOrgueWave::SAMPLE_FORMAT)bits_per_sample
-		 ,channels
-		 ,wave.GetSampleRate()
-		 ,release_samples
-		 ,NULL
-		 ,compress
-		 );
+	section->Setup(data + release_offset * GetBytesPerSample(bits_per_sample) * channels, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, channels, wave.GetSampleRate(), release_samples, NULL, compress, 0);
 }
 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
@@ -175,7 +160,7 @@ void GOSoundProviderWave::LoadPitch(const wxString& filename, GrandOrgueFile* or
 
 void GOSoundProviderWave::ProcessFile(const wxString& filename, GrandOrgueFile * organfile, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, int attack_start,
 				      int cue_point, int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity, 
-				      bool use_pitch)
+				      bool use_pitch, unsigned crossfade_length)
 {
 	wxLogDebug(_("Loading file %s"), filename.c_str());
 
@@ -211,7 +196,7 @@ void GOSoundProviderWave::ProcessFile(const wxString& filename, GrandOrgueFile *
 		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), wave_channels);
 
 		if (is_attack)
-			CreateAttack(data, wave, attack_start, loops, sample_group, bits_per_sample, channels, compress, loop_mode, percussive, min_attack_velocity);
+			CreateAttack(data, wave, attack_start, loops, sample_group, bits_per_sample, channels, compress, loop_mode, percussive, min_attack_velocity, crossfade_length);
 
 		if (is_release && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
 			CreateRelease(data, wave, sample_group, max_playback_time, cue_point, release_end, bits_per_sample, channels, compress);
@@ -227,7 +212,7 @@ void GOSoundProviderWave::ProcessFile(const wxString& filename, GrandOrgueFile *
 }
 
 void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, GrandOrgueFile* organfile, unsigned bits_per_sample, int load_channels, bool compress, 
-				       loop_load_type loop_mode, unsigned attack_load, unsigned release_load, int midi_key_number)
+				       loop_load_type loop_mode, unsigned attack_load, unsigned release_load, int midi_key_number, unsigned crossfade_length)
 {
 
 	ClearData();
@@ -328,7 +313,7 @@ void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, st
 				loops.push_back(loop);
 			}
 			ProcessFile(attacks[i].filename, organfile, loops, true, attacks[i].load_release, attacks[i].sample_group, attacks[i].max_playback_time, attacks[i].attack_start, attacks[i].cue_point,
-				    attacks[i].release_end, bits_per_sample, load_channels, compress, loop_mode, attacks[i].percussive, attacks[i].min_attack_velocity, load_first_attack);
+				    attacks[i].release_end, bits_per_sample, load_channels, compress, loop_mode, attacks[i].percussive, attacks[i].min_attack_velocity, load_first_attack, crossfade_length);
 			load_first_attack = false;
 		}
 
@@ -336,7 +321,7 @@ void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, st
 		{
 			std::vector<GO_WAVE_LOOP> loops;
 			ProcessFile(releases[i].filename, organfile, loops, false, true, releases[i].sample_group, releases[i].max_playback_time, 0, releases[i].cue_point, releases[i].release_end, 
-				    bits_per_sample, load_channels, compress, loop_mode, true, 0, false);
+				    bits_per_sample, load_channels, compress, loop_mode, true, 0, false, crossfade_length);
 		}
 
 		ComputeReleaseAlignmentInfo();

@@ -125,15 +125,7 @@ void GOSoundProviderSynthedTrem::Create
 	attack_info.min_attack_velocity = 0;
 	m_AttackInfo.push_back(attack_info);
 	m_Attack.push_back(new GOAudioSection(m_pool));
-	m_Attack[0]->Setup
-		(data
-		,GOrgueWave::SF_SIGNEDSHORT_16
-		,1
-		,sample_freq
-		,trem_loop.end_sample
-		,&trem_loops
-		,false
-		);
+	m_Attack[0]->Setup(data, GOrgueWave::SF_SIGNEDSHORT_16, 1, sample_freq, trem_loop.end_sample, &trem_loops, false, 0);
 
 	/* Release section */
 	release_section_info release_info;
@@ -141,15 +133,7 @@ void GOSoundProviderSynthedTrem::Create
 	release_info.max_playback_time = -1;
 	m_ReleaseInfo.push_back(release_info);
 	m_Release.push_back(new GOAudioSection(m_pool));
-	m_Release[0]->Setup
-		(&data[attack_samples + loop_samples]
-		,GOrgueWave::SF_SIGNEDSHORT_16
-		,1
-		,sample_freq
-		,release_samples
-		,NULL
-		,false
-		);
+	m_Release[0]->Setup(&data[attack_samples + loop_samples], GOrgueWave::SF_SIGNEDSHORT_16, 1, sample_freq, release_samples, NULL, false, 0);
 
 	free(data);
 
