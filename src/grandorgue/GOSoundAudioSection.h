@@ -134,6 +134,8 @@ private:
 
 	void GetMaxAmplitudeAndDerivative();
 
+	void DoCrossfade(unsigned char* dest, unsigned dest_offset, const unsigned char* src, unsigned src_offset, unsigned channels, unsigned bits_per_sample, unsigned fade_length, unsigned loop_length, unsigned length);
+
 	std::vector<audio_start_data_segment> m_StartSegments;
 	std::vector<audio_end_data_segment>  m_EndSegments;
 
