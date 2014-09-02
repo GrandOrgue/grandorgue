@@ -43,6 +43,7 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 	m_Percussive(percussive),
 	m_TemperamentOffset(0),
 	m_HarmonicNumber(harmonic_number),
+	m_CrossfadeLength(0),
 	m_PitchCorrection(pitch_correction),
 	m_MinVolume(min_volume),
 	m_MaxVolume(max_volume),
@@ -123,7 +124,7 @@ void GOrgueSoundingPipe::LoadData()
 	{
 		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_organfile, m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
 					     m_PipeConfig.GetEffectiveCompress(), (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(), m_PipeConfig.GetEffectiveAttackLoad(), m_PipeConfig.GetEffectiveReleaseLoad(),
-					     m_SampleMidiKeyNumber, 0);
+					     m_SampleMidiKeyNumber, m_CrossfadeLength);
 		Validate();
 	}
 	catch(wxString str)
@@ -188,6 +189,8 @@ void GOrgueSoundingPipe::UpdateHash(SHA_CTX& ctx)
 	value = m_PipeConfig.GetEffectiveReleaseLoad();
 	SHA1_Update(&ctx, &value, sizeof(value));
 	value = m_SampleMidiKeyNumber;
+	SHA1_Update(&ctx, &value, sizeof(value));
+	value = m_CrossfadeLength;
 	SHA1_Update(&ctx, &value, sizeof(value));
 
 	value = m_AttackInfo.size();

@@ -494,7 +494,7 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 			buffer += 2 * len;
 			n_blocks -= len;
 
-			if (stream->position_index >= stream->section_end)
+			if (stream->position_index >= stream->end_pos)
 			{
 				if (stream->next_start_segment_index < 0)
 				{
@@ -632,6 +632,19 @@ void GOAudioSection::GetMaxAmplitudeAndDerivative()
 	}
 }
 
+void GOAudioSection::DoCrossfade(unsigned char* dest, unsigned dest_offset, const unsigned char* src,unsigned src_offset, unsigned channels, unsigned bits_per_sample, unsigned fade_length, unsigned loop_length, unsigned length)
+{
+	for(;dest_offset < length; dest_offset += loop_length)
+		for(unsigned pos = 0; pos < fade_length; pos++)
+			for(unsigned j = 0; j < channels; j++)
+			{
+				float val1 = GetSampleData(pos + dest_offset, j, bits_per_sample, channels, dest);
+				float val2 = GetSampleData(pos + src_offset, j, bits_per_sample, channels, src);
+				float result = (val1 * pos + val2 * (fade_length - pos)) / fade_length;
+				SetSampleData(pos + dest_offset, j, bits_per_sample, channels, result, dest);
+			}
+}
+
 void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT pcm_data_format, const unsigned pcm_data_channels, const unsigned pcm_data_sample_rate, const unsigned pcm_data_nb_samples, 
 			   const std::vector<GO_WAVE_LOOP> *loop_points, bool compress, unsigned crossfade_length)
 {
@@ -640,6 +653,7 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 
 	m_BitsPerSample  = wave_bits_per_sample(pcm_data_format);
 	compress = (compress) && (m_BitsPerSample >= 12);
+	crossfade_length = crossfade_length * pcm_data_sample_rate / 1000;
 
 	assert(pcm_data_nb_samples > 0);
 
@@ -664,21 +678,40 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 			audio_start_data_segment start_seg;
 			audio_end_data_segment end_seg;
 			const GO_WAVE_LOOP& loop = (*loop_points)[i];
+			unsigned fade_len = crossfade_length;
 			if (loop.end_sample + 1 > min_reqd_samples)
 				min_reqd_samples = loop.end_sample + 1;
 
 			start_seg.start_offset           = loop.start_sample;
 			end_seg.end_offset               = loop.end_sample;
 			end_seg.next_start_segment_index = i + 1;
+			const unsigned loop_length = 1 + end_seg.end_offset - start_seg.start_offset;
+
 			if (end_seg.end_offset - start_seg.start_offset > SHORT_LOOP_LENGTH)
 			{
+				if (fade_len > end_seg.end_offset - start_seg.start_offset)
+					throw (wxString)_("Loop too short for crossfade");
+
+				if (total_alloc_samples - end_seg.end_offset < fade_len)
+					throw (wxString)_("Not enough samples for a crossfade");
+
+
 				end_seg.transition_offset = end_seg.end_offset - MAX_READAHEAD;
-				end_seg.end_length = 2 * MAX_READAHEAD;
+				end_seg.end_length = 2 * MAX_READAHEAD + fade_len;
 			}
 			else
 			{
+				if (fade_len > end_seg.end_offset - start_seg.start_offset)
+					throw (wxString)_("Loop too short for crossfade");
+
+				if (total_alloc_samples - end_seg.end_offset < fade_len)
+					throw (wxString)_("Not enough samples for a crossfade");
+
 				end_seg.transition_offset = start_seg.start_offset;
 				end_seg.end_length = SHORT_LOOP_LENGTH + MAX_READAHEAD;
+				if (end_seg.end_length < MAX_READAHEAD + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len)
+					end_seg.end_length = MAX_READAHEAD + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len;
+
 			}
 			end_seg.end_size = end_seg.end_length * m_BytesPerSample;
 			end_seg.end_data = (unsigned char*)m_Pool.Alloc(end_seg.end_size, true);
@@ -688,11 +721,13 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 				throw GOrgueOutOfMemory();
 
 			const unsigned copy_len = 1 + end_seg.end_offset - end_seg.transition_offset;
-			const unsigned loop_length = 1 + end_seg.end_offset - start_seg.start_offset;
 
 			memcpy (end_seg.end_data, ((const unsigned char*)pcm_data) + end_seg.transition_offset * m_BytesPerSample, copy_len * m_BytesPerSample);
 			loop_memcpy (((unsigned char*)end_seg.end_data) + copy_len * m_BytesPerSample, ((const unsigned char*)pcm_data) + loop.start_sample * m_BytesPerSample,
 				loop_length * m_BytesPerSample, (end_seg.end_length - copy_len) * m_BytesPerSample);
+			if (fade_len > 0)
+				DoCrossfade(end_seg.end_data, MAX_READAHEAD, (const unsigned char*)pcm_data, end_seg.end_offset, pcm_data_channels, m_BitsPerSample, fade_len, loop_length, end_seg.end_length);
+
 			end_seg.end_loop_length = loop_length;
 
 			m_StartSegments.push_back(start_seg);
