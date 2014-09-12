@@ -474,7 +474,7 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
           </indexterm>
           <para>Displays a dialog which allows to set audio settings (amplitude, gain, tuning, etc.) at every level of the sample set from the whole organ level down to the individual pipe. See <link linkend="organsettings">Organ Settings</link> for detailed information on this topic.</para>
         </sect3>
-        <sect3>
+        <sect3 id="midiobjects">
           <title>Midi Objects</title>
           <indexterm><primary>Midi Objects</primary></indexterm>
           <figure>
@@ -824,7 +824,7 @@ linkend="panels"-->panels<!--/link-->, is configurable with this editor. The
 Midi Event Editor is invoked by right-clicking on the element.
     </para> 
     <sect1>
-      <title>Received Event</title>
+      <title>Receive</title>
       <figure><title>Midi received event</title><mediaobject><imageobject><imagedata fileref="midi_event_editor_receive.png" /></imageobject></mediaobject></figure>
       <para>This tab configures which MIDI events will drive the console element.</para>
       <para>
@@ -897,7 +897,7 @@ instructions are displayed in the space above the OK / Cancel buttons.
       </variablelist>
     </sect1>
     <sect1>
-      <title>Sent Event</title>
+      <title>Send</title>
       <figure><title>Midi sent event</title><mediaobject><imageobject><imagedata fileref="midi_event_editor_send.png" /></imageobject></mediaobject></figure>
       <para>This tab configures which MIDI events are sent from the console element.</para>
       <para>
@@ -976,7 +976,7 @@ This dropdown lists all usable key values.
       <sect2>
         <title>Keyboard</title>
         <sect3>
-          <title>Received Event</title>
+          <title>Receive</title>
           <mediaobject><imageobject><imagedata fileref="midi_event_editor_manual_receive.png" /></imageobject></mediaobject>
           <variablelist>
             <varlistentry>
@@ -1082,8 +1082,52 @@ Event is set to
           </variablelist>
         </sect3>
         <sect3>
-          <title>Sent Event</title>
+          <title>Send</title>
+          <simpara>This tab controls how the input state of the manual keys is mirrored to an external MIDI device</simpara>
           <mediaobject><imageobject><imagedata fileref="midi_event_editor_manual_send.png" /></imageobject></mediaobject>
+          <variablelist>
+            <varlistentry>
+              <term>Event</term>
+              <listitem>
+                <simpara>The available events are:</simpara>
+                <variablelist>
+                  <varlistentry>
+                    <term>9x Note</term>
+                    <listitem><simpara>
+Send NoteOn / NoteOff. Velocity is sent, rescaled to the range defined in the
+<emphasis>Off Value</emphasis> and <emphasis>On Value</emphasis> fields.
+                    </simpara></listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>9x Note without Velocity</term>
+                    <listitem><simpara>
+Send NoteOn / NoteOff. The velocity value is always set to On = value of
+<emphasis>On Value</emphasis> field, Off = value of <emphasis>Off
+Value</emphasis> field.
+                    </simpara></listitem>
+                  </varlistentry>
+                </variablelist>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>CTRL/PGM</term>
+              <listitem><simpara>This spinner is always disabled for a keyboard.</simpara></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Off&#160;Value</term>
+              <listitem><simpara>This spinner sets the velocity value sent when a key is released on the keyboard.</simpara></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>On&#160;Value</term>
+              <listitem><simpara>This spinner sets the velocity value sent when a key is depressed on the keyboard.</simpara></listitem>
+            </varlistentry>
+          </variablelist>
+          <note><simpara>Off value <emphasis role="strong">must</emphasis> be set to zero (0) if NoteOff is wished.</simpara></note>
+        </sect3>
+        <sect3>
+          <title>Send Division Output</title>
+          <simpara>This tab controls how the state <emphasis role="bold">after coupler processing</emphasis> of the division is sent to an external MIDI device.</simpara>
+          <mediaobject><imageobject><imagedata fileref="midi_event_editor_division_send.png" /></imageobject></mediaobject>
           <variablelist>
             <varlistentry>
               <term>Event</term>
@@ -1125,9 +1169,81 @@ Value</emphasis> field.
         </sect3>
       </sect2>
       <sect2>
+        <title>Rank</title>
+        <mediaobject><imageobject><imagedata fileref="midi_event_editor_rank_send.png" /></imageobject></mediaobject>
+        <para>
+This setting allows to send NoteOn / NoteOff data only when a rank has been
+activated by pulling the stop it belongs to. This setting is loosely related to
+the <emphasis>Manual's Send</emphasis> settings.  The following table
+summarizes the main use cases for each setting.
+<informaltable frame="none">
+  <tgroup cols="3">
+    <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+    <colspec colname="c2" colsep="0" rowsep="0"/>
+    <colspec colname="c2" colsep="0" rowsep="0"/>
+    <tbody>
+      <row valign="top">
+        <entry>Manual: Send</entry>
+        <entry>Mirrors the keyboard input state. The configured Midi event is sent whenever the key is physically depressed. Couplers defined in GrandOrgue are <emphasis role="bold">ignored</emphasis></entry>
+        <entry>Can be used for recording keyboard action to an external Midi device</entry>
+      </row>
+      <row valign="top">
+        <entry>Manual:&#160;Send&#160;Division&#160;Output</entry>
+        <entry>Sends the division state after all couplers have been processed. Even if the key is displayed as depressed in GrandOrgue GUI, the event tied to the manual is <emphasis role="bold">not</emphasis> sent</entry>
+        <entry>Can be used to control an external windchest having a single valve per note</entry>
+      </row>
+      <row valign="top">
+        <entry>Rank: Send</entry>
+        <entry>Sends the individual pipe state</entry>
+        <entry>Can be used to control an external windchest having a valve per pipe</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+        </para> 
+        <variablelist>
+          <varlistentry>
+            <term>Event</term>
+            <listitem>
+              <simpara>The available events are:</simpara>
+              <variablelist>
+                <varlistentry>
+                  <term>9x Note</term>
+                  <listitem><simpara>
+Send NoteOn / NoteOff. Velocity is sent, rescaled to the range defined in the
+<emphasis>Off Value</emphasis> and <emphasis>On Value</emphasis> fields.
+                  </simpara></listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>9x Note without Velocity</term>
+                  <listitem><simpara>
+Send NoteOn / NoteOff. The velocity value is always set to On = value of
+<emphasis>On Value</emphasis> field, Off = value of <emphasis>Off
+Value</emphasis> field.
+                  </simpara></listitem>
+                </varlistentry>
+              </variablelist>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>CTRL/PGM</term>
+            <listitem><simpara>This spinner is always disabled for a rank.</simpara></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>Off&#160;Value</term>
+            <listitem><simpara>This spinner sets the velocity value sent when a pipe is muted.</simpara></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>On&#160;Value</term>
+            <listitem><simpara>This spinner sets the velocity value sent when a pipe starts playing.</simpara></listitem>
+          </varlistentry>
+        </variablelist>
+        <note>Rank Midi configuration can be accessed only via the <link linkend="midiobjects">Midi Objects list</link>.</note>
+      </sect2>
+      <sect2>
         <title>Enclosure</title>
         <sect3>
-          <title>Received Event</title>
+          <title>Receive</title>
           <mediaobject><imageobject><imagedata fileref="midi_event_editor_enclosure_receive.png" /></imageobject></mediaobject>
           <variablelist>
             <varlistentry>
@@ -1229,7 +1345,7 @@ controller type and number and the limits of the usable range.
           </variablelist>
         </sect3>
         <sect3>
-          <title>Sent Event</title>
+          <title>Send</title>
           <mediaobject><imageobject><imagedata fileref="midi_event_editor_enclosure_send.png" /></imageobject></mediaobject>
           <variablelist>
             <varlistentry>
@@ -1307,7 +1423,7 @@ The label of this field changes according to the event type:
       <sect2>
         <title>Drawstop and Pushbutton</title>
         <sect3>
-          <title>Received Event</title>
+          <title>Receive</title>
           <sect4>
             <title>9x Note</title>
               <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_Note.png" /></imageobject></mediaobject>
@@ -2091,7 +2207,7 @@ MIDI event and all associated settings.
             </sect4>
         </sect3>
         <sect3>
-          <title>Sent Event</title>
+          <title>Send</title>
           <sect4>
             <title>9x Note</title>
             <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_Note.png" /></imageobject></mediaobject>
