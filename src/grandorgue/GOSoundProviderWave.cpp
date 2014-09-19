@@ -59,10 +59,14 @@ void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, int a
 			loop_list.push_back(wave.GetLoop(i));
 
 	for(unsigned i = 0; i < loop_list.size(); i++)
+	{
 		if (loop_list[i].start_sample >= wave.GetLength() ||
 		    loop_list[i].start_sample >= loop_list[i].end_sample ||
 		    loop_list[i].end_sample >= wave.GetLength())
 			throw (wxString)_("Invalid loop defintion");
+		if(loop_list[i].start_sample + REMAINING_AFTER_CROSSFADE + crossfade_length >= loop_list[i].end_sample)
+			throw (wxString)_("Loop too short for a cross fade");
+	}
 
 	if ((loop_list.size() > 0) && !percussive)
 	{

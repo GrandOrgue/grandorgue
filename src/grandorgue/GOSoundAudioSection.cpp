@@ -695,7 +695,6 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 				if (total_alloc_samples - end_seg.end_offset < fade_len)
 					throw (wxString)_("Not enough samples for a crossfade");
 
-
 				end_seg.transition_offset = end_seg.end_offset - MAX_READAHEAD;
 				end_seg.end_length = 2 * MAX_READAHEAD + fade_len;
 			}
