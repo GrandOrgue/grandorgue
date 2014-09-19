@@ -31,6 +31,8 @@
 #define LINEAR_READAHEAD    (1)
 /* Maximum of the above values */
 #define MAX_READAHEAD       (8)
+/* Minimum remaining loop length after a crossfade */
+#define REMAINING_AFTER_CROSSFADE  256
 
 /* Max length for short loops */
 #define SHORT_LOOP_LENGTH     256

@@ -8276,6 +8276,15 @@ specified in samples.
      </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>Pipe999LoopCrossfadeLength</term>
+          <listitem>
+            <para>
+(int 0 - 120, default: 0) Crossfade length between loop start and loop
+end. A cross fade requires enough samples after the end of the loop.
+     </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
