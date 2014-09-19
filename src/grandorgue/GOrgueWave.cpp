@@ -282,7 +282,10 @@ void GOrgueWave::Open(const wxString& filename)
 			    (m_Loops[i].start_sample >= GetLength()) ||
 			    (m_Loops[i].end_sample >= GetLength()) ||
 				(m_Loops[i].end_sample == 0))
+			{
+				wxLogError(wxT("Invalid loop in %s"), filename.c_str());
 				m_Loops.erase(m_Loops.begin() + i);
+			}
 		}
 	}
 	catch (wxString msg)
