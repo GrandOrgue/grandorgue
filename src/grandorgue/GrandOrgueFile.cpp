@@ -177,20 +177,28 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_OrganBuildDate = cfg.ReadString(ODFSetting, group, wxT("OrganBuildDate"),  false);
 	m_OrganComments = cfg.ReadString(ODFSetting, group, wxT("OrganComments"),  false);
 	m_RecordingDetails = cfg.ReadString(ODFSetting, group, wxT("RecordingDetails"),  false);
-	m_InfoFilename = cfg.ReadStringTrim(ODFSetting, group, wxT("InfoFilename"), false);
+	wxString info_filename = cfg.ReadStringTrim(ODFSetting, group, wxT("InfoFilename"), false);
 	wxFileName fn;
-	if (m_InfoFilename.IsEmpty())
+	if (info_filename.IsEmpty())
 	{
 		/* Resolve organ file path */
 		fn = GetODFFilename();
-		fn.SetExt(wxT(".html"));
+		fn.SetExt(wxT("html"));
+		if (fn.FileExists())
+			m_InfoFilename = fn.GetFullPath();
 	}
 	else
-		fn = GOCreateFilename(this, m_InfoFilename);
-	if (fn.FileExists())
-		m_InfoFilename = fn.GetFullPath();
-	else
-		m_InfoFilename = wxEmptyString;
+	{
+		fn = GOCreateFilename(this, info_filename);
+		if (fn.FileExists() && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm")))
+			m_InfoFilename = fn.GetFullPath();
+		else
+		{
+			m_InfoFilename = wxEmptyString;
+			if (m_Settings.GetODFCheck())
+				wxLogWarning(_("InfoFilename does not point to a html file"));
+		}
+	}
 
 	/* load basic organ information */
 	unsigned NumberOfManuals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 1, 16);
