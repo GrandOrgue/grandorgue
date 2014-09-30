@@ -1255,7 +1255,7 @@ Value</emphasis> field.
                     <term>Bx controller</term>
                     <listitem>
                       <para>Receive Control Change messages.</para>
-                      <para>GrandOrgue expects this message sequence: Bn controller# MSB; data value.</para>
+                      <para>GrandOrgue expects this message sequence: Bn controller# MSB; controller value.</para>
                     </listitem>
                   </varlistentry>
                   <varlistentry>
@@ -1263,7 +1263,7 @@ Value</emphasis> field.
                     <listitem>
                       <para>Receive RPN (Registered Parameter Number) messages.</para>
                       <para>GrandOrgue supports: Parameter number MSByte, Parameter number LSByte and only Data Entry MSByte (0x06).</para>
-                      <para>GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 data value</para>
+                      <para>GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value</para>
                     </listitem>
                   </varlistentry>
                   <varlistentry>
@@ -1271,7 +1271,7 @@ Value</emphasis> field.
                     <listitem>
                       <para>Receive NRPN (Non Registered Parameter Number) messages.</para>
                       <para>GrandOrgue supports: Parameter number MSByte, Parameter number LSByte and only Data Entry MSByte (0x06).</para>
-                      <para>GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 data value</para>
+                      <para>GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 parameter value</para>
                     </listitem>
                   </varlistentry>
                 </variablelist>
@@ -1357,7 +1357,7 @@ controller type and number and the limits of the usable range.
                     <term>Bx controller</term>
                     <listitem>
                       <para>Send Control Change messages.</para>
-                      <para>GrandOrgue sends this message sequence: Bn controller# MSB; data value.</para>
+                      <para>GrandOrgue sends this message sequence: Bn controller# MSB; controller value.</para>
                     </listitem>
                   </varlistentry>
                   <varlistentry>
@@ -1365,7 +1365,7 @@ controller type and number and the limits of the usable range.
                     <listitem>
                       <para>Send RPN (Registered Parameter Number) messages.</para>
                       <para>GrandOrgue supports: Parameter number MSByte, Parameter number LSByte and only Data Entry MSByte (0x06).</para>
-                      <para>GrandOrgue sends this message sequence: Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 data value</para>
+                      <para>GrandOrgue sends this message sequence: Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 parameter value</para>
                     </listitem>
                   </varlistentry>
                   <varlistentry>
@@ -1373,7 +1373,7 @@ controller type and number and the limits of the usable range.
                     <listitem>
                       <para>Send NRPN (Non Registered Parameter Number) messages.</para>
                       <para>GrandOrgue supports: Parameter number MSByte, Parameter number LSByte and only Data Entry MSByte (0x06).</para>
-                      <para>GrandOrgue sends this message sequence: Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 data value</para>
+                      <para>GrandOrgue sends this message sequence: Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 parameter value</para>
                     </listitem>
                   </varlistentry>
                 </variablelist>
@@ -1549,7 +1549,7 @@ key number will toggle the state of the button/drawstop.
             <sect4>
               <title>Bx Controller</title>
               <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxController.png" /></imageobject></mediaobject>
-              <simpara>Receive Control Change messages. GrandOrgue expects this message sequence: Bn controller# MSB; data value.</simpara>
+              <simpara>Receive Control Change messages. GrandOrgue expects this message sequence: Bn controller# MSB; controller value.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
                   <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
@@ -1632,7 +1632,7 @@ key number will toggle the state of the button/drawstop.
             <sect4>
               <title>Bx Controller On Toggle</title>
               <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxControllerOnToggle.png" /></imageobject></mediaobject>
-              <simpara>Receive Control Change messages. GrandOrgue expects this message sequence: Bn controller# MSB; data value.</simpara>
+              <simpara>Receive Control Change messages. GrandOrgue expects this message sequence: Bn controller# MSB; controller value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -1672,7 +1672,7 @@ key number will toggle the state of the button/drawstop.
             <sect4>
               <title>Bx Controller Off Toggle</title>
               <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxControllerOffToggle.png" /></imageobject></mediaobject>
-              <simpara>Receive Control Change messages. GrandOrgue expects this message sequence: Bn controller# MSB; data value.</simpara>
+              <simpara>Receive Control Change messages. GrandOrgue expects this message sequence: Bn controller# MSB; controller value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -1761,7 +1761,7 @@ with <emphasis>prog#</emphasis> + 1 [ math: ((data1 &lt;&lt; 14) | (data2 &lt;&l
             <sect4>
               <title>RPN</title>
               <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_RPN.png" /></imageobject></mediaobject>
-              <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 data value.</simpara>
+              <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
                   <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
@@ -1803,7 +1803,7 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
             <sect4>
               <title>NRPN</title>
               <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_RPN.png" /></imageobject></mediaobject>
-              <simpara>Receive NRPN (Non Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 data value.</simpara>
+              <simpara>Receive NRPN (Non Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
                   <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
@@ -1842,9 +1842,68 @@ Parameter number. If the MIDI device sends Bn 0x63 &lt;data1&gt;; Bn 0x62 &lt;da
               </informaltable>
             </sect4>
             <sect4>
+              <title>Cx Program Change Range</title>
+              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_CxProgramChangeRange.png" /></imageobject></mediaobject>
+              <simpara>Receive Program Change messages. GrandOrgue expects this message sequence: [Bn 0x00 bank# MSB;][Bn 0x20 bank# LSB;] Cn prog#.</simpara>
+              <simpara>This control uses 2 <emphasis role="bold">different</emphasis> program numbers: one to pull and the other to push the drawstop or button.</simpara>
+              <simpara>The optional bank select controllers enable GrandOrgue to manage more than 64 drawstops or buttons on a single channel with Program Change messages.</simpara>
+              <informaltable frame="none">
+                <tgroup cols="2">
+                  <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
+                  <colspec colname="c2" colsep="0" rowsep="0" />
+                  <tbody>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Lower&#160;PGM&#160;number</emphasis></entry>
+                      <entry valign="top">
+                        <simpara>Program number to push the drawstop or button. Range is [1, 128] when bank select messages are not used.</simpara>
+                        <simpara>
+When receiving Bank Select + Program Change, if the MIDI device sends Bn 0x00
+&lt;data1&gt;; Bn 0x20 &lt;data2&gt;; Cn prog#, the program number will be
+displayed as the value of <emphasis>data1</emphasis> shifted left 14 bits ORed
+(bitwise) with <emphasis>data2</emphasis> shifted left 7 bits ORed (bitwise)
+with <emphasis>prog#</emphasis> + 1 [ math: ((data1 &lt;&lt; 14) | (data2 &lt;&lt; 7) | prog#) + 1 ].
+                        </simpara>
+                        <simpara />
+                      </entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Upper&#160;PGM&#160;number</emphasis></entry>
+                      <entry valign="top">
+                        <simpara>Program number to pull the drawstop or button. Range is [1, 128] when bank select messages are not used.</simpara>
+                        <simpara>
+When receiving Bank Select + Program Change, if the MIDI device sends Bn 0x00
+&lt;data1&gt;; Bn 0x20 &lt;data2&gt;; Cn prog#, the program number will be
+displayed as the value of <emphasis>data1</emphasis> shifted left 14 bits ORed
+(bitwise) with <emphasis>data2</emphasis> shifted left 7 bits ORed (bitwise)
+with <emphasis>prog#</emphasis> + 1 [ math: ((data1 &lt;&lt; 14) | (data2 &lt;&lt; 7) | prog#) + 1 ].
+                        </simpara>
+                        <simpara />
+                      </entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Data</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Lowest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Highest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Debounce time</emphasis></entry>
+                      <entry>Minimum time in milliseconds that must elapse between two successive messages changing to the same program for the drawstop/button to toggle its state.</entry>
+                    </row>
+                  </tbody>
+                </tgroup>
+              </informaltable>
+            </sect4>
+            <sect4>
               <title>RPN On Toggle</title>
               <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_RPNOnToggle.png" /></imageobject></mediaobject>
-              <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 data value.</simpara>
+              <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -1886,7 +1945,7 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
             <sect4>
               <title>RPN Off Toggle</title>
               <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_RPNOffToggle.png" /></imageobject></mediaobject>
-              <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 data value.</simpara>
+              <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -1928,7 +1987,7 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
             <sect4>
               <title>NRPN On Toggle</title>
               <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_NRPNOnToggle.png" /></imageobject></mediaobject>
-              <simpara>Receive NRPN (Non Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 data value.</simpara>
+              <simpara>Receive NRPN (Non Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -1970,7 +2029,7 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
             <sect4>
               <title>NRPN Off Toggle</title>
               <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_NRPNOffToggle.png" /></imageobject></mediaobject>
-              <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 data value.</simpara>
+              <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -2003,6 +2062,128 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
                     </row>
                     <row valign="top">
                       <entry><emphasis role="strong">Highest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                  </tbody>
+                </tgroup>
+              </informaltable>
+            </sect4>
+            <sect4>
+              <title>RPN Range</title>
+              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_RPNRange.png" /></imageobject></mediaobject>
+              <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value.</simpara>
+              <simpara>
+This control uses 2 <emphasis role="bold">different</emphasis> parameter
+numbers: one to pull and the other to push the drawstop or button. The
+parameter value <emphasis role="bold">MUST</emphasis> be the same for both
+(pull and push) messages.
+              </simpara>
+              <informaltable frame="none">
+                <tgroup cols="2">
+                  <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
+                  <colspec colname="c2" colsep="0" rowsep="0" />
+                  <tbody>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Value</emphasis></entry>
+                      <entry>Parameter value. Range is [0, 127].</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Off&#160;RPN&#160;number</emphasis></entry>
+                      <entry valign="top">
+                        <simpara>Parameter number to push the drawstop or button. Range is [0, 127].</simpara>
+                        <simpara>
+If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;data2&gt;, the
+parameter number will be displayed as the value of <emphasis>data1</emphasis>
+shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
+(data1 &lt;&lt; 7) | data2 ].
+                        </simpara>
+                        <simpara />
+                      </entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">On&#160;RPN&#160;number</emphasis></entry>
+                      <entry valign="top">
+                        <simpara>Parameter number to pull the drawstop or button. Range is [0, 127].</simpara>
+                        <simpara>
+If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;data2&gt;, the
+parameter number will be displayed as the value of <emphasis>data1</emphasis>
+shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
+(data1 &lt;&lt; 7) | data2 ].
+                        </simpara>
+                        <simpara />
+                      </entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Lowest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Highest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Debounce time</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                  </tbody>
+                </tgroup>
+              </informaltable>
+            </sect4>
+            <sect4>
+              <title>NRPN Range</title>
+              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_NRPNRange.png" /></imageobject></mediaobject>
+              <simpara>Receive NRPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 parameter value.</simpara>
+              <simpara>
+This control uses 2 <emphasis role="bold">different</emphasis> parameter
+numbers: one to pull and the other to push the drawstop or button. The
+parameter value <emphasis role="bold">MUST</emphasis> be the same for both
+(pull and push) messages.
+              </simpara>
+              <informaltable frame="none">
+                <tgroup cols="2">
+                  <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
+                  <colspec colname="c2" colsep="0" rowsep="0" />
+                  <tbody>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Value</emphasis></entry>
+                      <entry>Parameter value. Range is [0, 127].</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Off&#160;NRPN&#160;number</emphasis></entry>
+                      <entry valign="top">
+                        <simpara>Parameter number to push the drawstop or button. Range is [0, 127].</simpara>
+                        <simpara>
+If the MIDI device sends Bn 0x63 &lt;data1&gt;; Bn 0x62 &lt;data2&gt;, the
+parameter number will be displayed as the value of <emphasis>data1</emphasis>
+shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
+(data1 &lt;&lt; 7) | data2 ].
+                        </simpara>
+                        <simpara />
+                      </entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">On&#160;NRPN&#160;number</emphasis></entry>
+                      <entry valign="top">
+                        <simpara>Parameter number to pull the drawstop or button. Range is [0, 127].</simpara>
+                        <simpara>
+If the MIDI device sends Bn 0x63 &lt;data1&gt;; Bn 0x62 &lt;data2&gt;, the
+parameter number will be displayed as the value of <emphasis>data1</emphasis>
+shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
+(data1 &lt;&lt; 7) | data2 ].
+                        </simpara>
+                        <simpara />
+                      </entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Lowest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Highest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Debounce time</emphasis></entry>
                       <entry>Unused by this setting</entry>
                     </row>
                   </tbody>
@@ -2188,6 +2369,80 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
                     </row>
                     <row valign="top">
                       <entry><emphasis role="strong">Upper limit</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                  </tbody>
+                </tgroup>
+              </informaltable>
+            </sect4>
+            <sect4>
+              <title>Sys Ex Viscount</title>
+              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_SysexViscount.png" /></imageobject></mediaobject>
+              <simpara>This setting is used by Viscount&#8482; digital organs.</simpara>
+              <informaltable frame="none">
+                <tgroup cols="2">
+                  <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
+                  <colspec colname="c2" colsep="0" rowsep="0" />
+                  <tbody>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Off value</emphasis></entry>
+                      <entry>Data value that toggles the button or drawstop state off. Range is [0, 2097151].</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">On value</emphasis></entry>
+                      <entry>Data value that toggles the button or drawstop state on. Range is [0, 2097151].</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Data</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Lowest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Highest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Debounce time</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                  </tbody>
+                </tgroup>
+              </informaltable>
+            </sect4>
+            <sect4>
+              <title>Sys Ex Viscount Toggle</title>
+              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_SysexViscount.png" /></imageobject></mediaobject>
+              <simpara>This setting is used by Viscount&#8482; digital organs. The button or drawstop toggles its state whenever two successive identical messages are received.</simpara>
+              <informaltable frame="none">
+                <tgroup cols="2">
+                  <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
+                  <colspec colname="c2" colsep="0" rowsep="0" />
+                  <tbody>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Value</emphasis></entry>
+                      <entry>Data value that toggles the button or drawstop state. Range is [0, 2097151].</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Debounce time</emphasis></entry>
+                      <entry>Minimum time in milliseconds that must elapse between two successive identical SysEx messages for the drawstop/button to toggle its state.</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Data</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Lowest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Highest&#160;key</emphasis></entry>
+                      <entry>Unused by this setting</entry>
+                    </row>
+                    <row valign="top">
+                      <entry><emphasis role="strong">Upper&#160;limit</emphasis></entry>
                       <entry>Unused by this setting</entry>
                     </row>
                   </tbody>
@@ -2447,7 +2702,7 @@ bits ORed (bitwise) with <emphasis>data2</emphasis> shifted left 7 bits ORed
             <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_RPN.png" /></imageobject></mediaobject>
             <simpara>
               Send RPN values when the drawstop/button changes state.
-              The message sequence is Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 data value.
+              The message sequence is Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 parameter value.
             </simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2484,7 +2739,7 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
             <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_NRPN.png" /></imageobject></mediaobject>
             <simpara>
               Send NRPN values when the drawstop/button changes state.
-              The message sequence is Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 data value.
+              The message sequence is Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 parameter value.
             </simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2517,11 +2772,43 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
             </informaltable>
           </sect4>
           <sect4>
+            <title>Cx Program Change Range</title>
+            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_CxProgramChangeRange.png" /></imageobject></mediaobject>
+            <simpara>Send Bank Select and Program Change when the drawstop/button changes state.</simpara>
+            <simpara>
+GrandOrgue always sends Bn 0x00 &lt;data1&gt;; Bn 0x20 &lt;data2&gt;; Cn prog#.
+This field value is the result of <emphasis>data1</emphasis> shifted left 14
+bits ORed (bitwise) with <emphasis>data2</emphasis> shifted left 7 bits ORed
+(bitwise) with <emphasis>prog#</emphasis> + 1 [ math: ((data1 &lt;&lt; 14) |
+(data2 &lt;&lt; 7) | prog#) + 1 ].
+            </simpara>
+            <informaltable frame="none">
+              <tgroup cols="2">
+                <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
+                <colspec colname="c2" colsep="0" rowsep="0" />
+                <tbody>
+                  <row valign="top">
+                    <entry><emphasis role="strong">Lower&#160;PGM&#160;number</emphasis></entry>
+                    <entry>Program number and optional Bank Select MIDI messages sent when the drawstop/button goes to <emphasis>Off</emphasis> state. Range is [0, 2097152]</entry>
+                  </row>
+                  <row valign="top">
+                    <entry><emphasis role="strong">Upper&#160;PGM&#160;number</emphasis></entry>
+                    <entry>Program number and optional Bank Select MIDI messages sent when the drawstop/button goes to <emphasis>On</emphasis> state. Range is [0, 2097152]</entry>
+                  </row>
+                  <row valign="top">
+                    <entry><emphasis role="strong">CTRL/PGM</emphasis></entry>
+                    <entry>Unused by this setting.</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </sect4>
+          <sect4>
             <title>RPN On</title>
             <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_RPNOn.png" /></imageobject></mediaobject>
             <simpara>
               Send RPN value only when the drawstop/button changes to <emphasis>On</emphasis> state.
-              The message sequence is Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 data value.
+              The message sequence is Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 parameter value.
             </simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2556,7 +2843,7 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
             <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_RPNOff.png" /></imageobject></mediaobject>
             <simpara>
               Send RPN value only when the drawstop/button changes to <emphasis>Off</emphasis> state.
-              The message sequence is Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 data value.
+              The message sequence is Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 parameter value.
             </simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2591,7 +2878,7 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
             <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_RPNOn.png" /></imageobject></mediaobject>
             <simpara>
               Send NRPN value only when the drawstop/button changes to <emphasis>On</emphasis> state.
-              The message sequence is Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 data value.
+              The message sequence is Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 parameter value.
             </simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2626,7 +2913,7 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
             <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_NRPNOff.png" /></imageobject></mediaobject>
             <simpara>
               Send NRPN value only when the drawstop/button changes to <emphasis>Off</emphasis> state.
-              The message sequence is Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 data value.
+              The message sequence is Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 parameter value.
             </simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2651,6 +2938,68 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
                   <row valign="top">
                     <entry><emphasis role="strong">On Value</emphasis></entry>
                     <entry>Unused by this setting</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </sect4>
+          <sect4>
+            <title>RPN Range</title>
+            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_RPNRange.png" /></imageobject></mediaobject>
+            <simpara>Send RPN when the drawstop/button changes state.</simpara>
+            <simpara>
+GrandOrgue always sends Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 parameter value.
+The parameter number displays the result of <emphasis>parameter# MSB</emphasis>
+shifted left 7 bits ORed (bitwise) with <emphasis>parameter# LSB</emphasis>
+[ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
+            </simpara>
+            <informaltable frame="none">
+              <tgroup cols="2">
+                <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
+                <colspec colname="c2" colsep="0" rowsep="0" />
+                <tbody>
+                  <row valign="top">
+                    <entry><emphasis role="strong">Off&#160;RPN&#160;number</emphasis></entry>
+                    <entry>RPN number MIDI messages sent when the drawstop/button goes to <emphasis>Off</emphasis> state. Range is [0, 16383]</entry>
+                  </row>
+                  <row valign="top">
+                    <entry><emphasis role="strong">On&#160;RPN&#160;number</emphasis></entry>
+                    <entry>RPN number MIDI messages sent when the drawstop/button goes to <emphasis>On</emphasis> state. Range is [0, 16383]</entry>
+                  </row>
+                  <row valign="top">
+                    <entry><emphasis role="strong">Value</emphasis></entry>
+                    <entry>Parameter value. Range is [0, 127]</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </sect4>
+          <sect4>
+            <title>NRPN Range</title>
+            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_NRPNRange.png" /></imageobject></mediaobject>
+            <simpara>Send NRPN when the drawstop/button changes state.</simpara>
+            <simpara>
+GrandOrgue always sends Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 parameter value.
+The parameter number displays the result of <emphasis>parameter# MSB</emphasis>
+shifted left 7 bits ORed (bitwise) with <emphasis>parameter# LSB</emphasis>
+[ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
+            </simpara>
+            <informaltable frame="none">
+              <tgroup cols="2">
+                <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px" />
+                <colspec colname="c2" colsep="0" rowsep="0" />
+                <tbody>
+                  <row valign="top">
+                    <entry><emphasis role="strong">Off&#160;NRPN&#160;number</emphasis></entry>
+                    <entry>NRPN number MIDI messages sent when the drawstop/button goes to <emphasis>Off</emphasis> state. Range is [0, 16383]</entry>
+                  </row>
+                  <row valign="top">
+                    <entry><emphasis role="strong">On&#160;NRPN&#160;number</emphasis></entry>
+                    <entry>NRPN number MIDI messages sent when the drawstop/button goes to <emphasis>On</emphasis> state. Range is [0, 16383]</entry>
+                  </row>
+                  <row valign="top">
+                    <entry><emphasis role="strong">Value</emphasis></entry>
+                    <entry>Parameter value. Range is [0, 127]</entry>
                   </row>
                 </tbody>
               </tgroup>
