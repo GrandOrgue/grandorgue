@@ -146,7 +146,7 @@ Low latency output with proper hardware support
         </listitem>
         <listitem>
           <simpara>
-Quick and easy MIDI setup, including "Listen for Event"
+Quick and easy MIDI setup, including "Listen for Event" and "Complex MIDI Event detection"
           </simpara>
         </listitem>
         <listitem>
@@ -172,6 +172,11 @@ High speed loading and caching of sample sets
         <listitem>
           <simpara>
 Save settings per sample set or export to settings files
+          </simpara>
+        </listitem>
+        <listitem>
+          <simpara>
+Shipped with a small demo organ which is automatically loaded on the very first run of GrandOrgue after installation
           </simpara>
         </listitem>
       </itemizedlist>
@@ -218,7 +223,7 @@ The use of the cache increases the necessary disk space.
       <title>GrandOrgue User Interface</title>
       <mediaobject>
         <imageobject>
-          <imagedata scalefit="1" width="100%" fileref="Burea_funeral_extend_main.png"/>
+          <imagedata scalefit="1" width="100%" fileref="GO_Main_Frame.png"/>
         </imageobject>
       </mediaobject>
     </figure>
@@ -2266,7 +2271,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
             </sect4>
             <sect4>
               <title>Bx Ctrl Change Fixed On Value Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxCtrlChangeFixedValue.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxCtrlChangeFixedValueOnToggle.png" /></imageobject></mediaobject>
               <simpara>This setting is used by some Alhborn&#8482; digital organs. GrandOrgue toggles the drawstop or button state when detecting bit patterns like 01xx xxxx.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -2303,7 +2308,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
             </sect4>
             <sect4>
               <title>Bx Ctrl Change Fixed Off Value Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxCtrlChangeFixedValue.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxCtrlChangeFixedValueOffToggle.png" /></imageobject></mediaobject>
               <simpara>This setting is used by some Alhborn&#8482; digital organs. GrandOrgue toggles the drawstop or button state when detecting bit patterns like 00xx xxxx.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
