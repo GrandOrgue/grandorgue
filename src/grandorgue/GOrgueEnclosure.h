@@ -56,7 +56,7 @@ public:
 
 	GOrgueEnclosure(GrandOrgueFile* organfile);
 	virtual ~GOrgueEnclosure();
-	void Init(GOrgueConfigReader& cfg, wxString group, wxString Name);
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString Name, unsigned def_value);
 	void Load(GOrgueConfigReader& cfg, wxString group, int enclosure_nb);
 	void Set(int n);
 	GOrgueMidiReceiver& GetMidiReceiver();
