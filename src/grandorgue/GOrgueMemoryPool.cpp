@@ -38,6 +38,11 @@
 #endif
 #include <errno.h>
 
+static inline void touchMemory(const char* pos)
+{
+	*(const volatile char*)pos;
+}
+
 GOrgueMemoryPool::GOrgueMemoryPool() :
 	wxThread(wxTHREAD_JOINABLE),
 	m_PoolStart(0),
@@ -50,8 +55,7 @@ GOrgueMemoryPool::GOrgueMemoryPool() :
 	m_CacheSize(0),
 	m_MallocSize(0),
 	m_MemoryLimit(0),
-	m_AllocError(0),
-	m_dummy(0)
+	m_AllocError(0)
 {
 	Create();
 	InitPool();
@@ -173,9 +177,9 @@ void *GOrgueMemoryPool::GetCacheData(size_t offset, size_t length)
 	{
 		char* data = m_CacheStart + offset;
 		for (unsigned i = 0; i < length; i+= m_PageSize)
-			m_dummy += data[i];
+			touchMemory(data + i);
 		if (length)
-			m_dummy += data[length - 1];
+			touchMemory(data + length - 1);
 		AddPoolAlloc(data);
 		return data;
 	}
@@ -467,24 +471,22 @@ void* GOrgueMemoryPool::Entry()
 	{
 		for(size_t pos = 0, i = 0; pos < m_CacheSize; pos+= m_PageSize, i++)
 		{
-			const char* data = m_CacheStart + pos;
-			m_dummy += *data;
+			touchMemory(m_CacheStart + pos);
 			if ((i % 256) == 0)
 			{
 				if (TestDestroy())
 					return NULL;
-				wxMilliSleep(200);
+				wxMilliSleep(50);
 			}
 		}
 		for(size_t pos = 0, i = 0; pos < m_PoolSize; pos+= m_PageSize, i++)
 		{
-			const char* data = m_PoolStart + pos;
-			m_dummy += *data;
+			touchMemory(m_PoolStart + pos);
 			if ((i % 256) == 0)
 			{
 				if (TestDestroy())
 					return NULL;
-				wxMilliSleep(200);
+				wxMilliSleep(50);
 			}
 		}
 	}

@@ -46,7 +46,6 @@ class GOrgueMemoryPool : private wxThread {
 	size_t m_MallocSize;
 	size_t m_MemoryLimit;
 	unsigned m_AllocError;
-	char m_dummy;
 
 	void InitPool();
 	void GrowPool(size_t size);
