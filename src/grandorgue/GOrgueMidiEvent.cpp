@@ -136,7 +136,7 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg, GOrgueMidi
 	}
 }
 
-void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgueMidiMap& map)
+void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgueMidiMap& map) const
 {
 	msg.resize(0);
 	std::vector<unsigned char> m;

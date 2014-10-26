@@ -121,7 +121,7 @@ public:
 	}
 
 	void FromMidi(const std::vector<unsigned char>& msg, GOrgueMidiMap& map);
-	void ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgueMidiMap& map);
+	void ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgueMidiMap& map) const;
 };
 
 #endif
