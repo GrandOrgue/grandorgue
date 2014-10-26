@@ -507,8 +507,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 	}
 
 	GOrgueEnclosure* master_enc = new GOrgueEnclosure(m_organfile);
-	master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"));
-	master_enc->Set(127);
+	master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
 	m_organfile->AddEnclosure(master_enc);
 	master_enc->SetElementID(m_organfile->GetRecorderElementID(wxString::Format(wxT("SM"))));
 
@@ -522,8 +521,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 		windchest->AddEnclosure(master_enc);
 
 		GOrgueEnclosure* enc = new GOrgueEnclosure(m_organfile);
-		enc->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1), windchest->GetName());
-		enc->Set(127);
+		enc->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1), windchest->GetName(), 127);
 		m_organfile->AddEnclosure(enc);
 		enc->SetElementID(m_organfile->GetRecorderElementID(wxString::Format(wxT("SM%d"), i)));
 		windchest->AddEnclosure(enc);
@@ -958,7 +956,7 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 
 	m_button[ID_SETTER_SAVE]->Init(cfg, wxT("SetterSave"), _("Save"));
 
-	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"));
+	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"), 0);
 
 	m_PosDisplay.Init(cfg, wxT("SetterCurrentPosition"));
 	m_BankDisplay.Init(cfg, wxT("SetterGeneralBank"));

@@ -45,11 +45,11 @@ GOrgueEnclosure::~GOrgueEnclosure()
 {
 }
 
-void GOrgueEnclosure::Init(GOrgueConfigReader& cfg, wxString group, wxString Name)
+void GOrgueEnclosure::Init(GOrgueConfigReader& cfg, wxString group, wxString Name, unsigned def_value)
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
-	Set(0);	// default to down
+	Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, def_value));
 	m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_AmpMinimumLevel = 0;
@@ -63,7 +63,7 @@ void GOrgueEnclosure::Load(GOrgueConfigReader& cfg, wxString group, int enclosur
 	m_Displayed = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);
 	m_AmpMinimumLevel = cfg.ReadInteger(ODFSetting, m_group, wxT("AmpMinimumLevel"), 0, 100);
 	m_MIDIInputNumber = cfg.ReadInteger(ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
-	Set(127);	// default to full volume until we receive any messages
+	Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, 127));
 	m_midi.SetIndex(enclosure_nb);
 	m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
