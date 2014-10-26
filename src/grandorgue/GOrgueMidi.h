@@ -22,58 +22,31 @@
 #ifndef GORGUEMIDI_H
 #define GORGUEMIDI_H
 
-#include "GOrgueMidiMerger.h"
 #include "GOrgueMidiPlayer.h"
 #include "GOrgueMidiRecorder.h"
 #include "ptrvector.h"
 #include <wx/event.h>
-#include <map>
 
 class GOrgueMidiEvent;
+class GOrgueMidiInPort;
 class GOrgueMidiListener;
 class GOrgueMidiMap;
+class GOrgueMidiOutPort;
 class GOrgueSettings;
 class GrandOrgueFile;
-class RtMidiIn;
-class RtMidiOut;
 class wxMidiEvent;
 
 class GOrgueMidi : public wxEvtHandler
 {
 private:
-
-	typedef struct {
-		RtMidiIn* midi_in;
-		wxString name;
-		unsigned id;
-		bool active;
-		int channel_shift;
-		int rtmidi_port_no;
-		GOrgueMidiMerger merger;
-		GOrgueMidi* midi;
-	} MIDI_IN_DEVICE;
-
-	typedef struct {
-		RtMidiOut* midi_out;
-		wxString name;
-		unsigned id;
-		bool active;
-		int rtmidi_port_no;
-	} MIDI_OUT_DEVICE;
-
 	GOrgueSettings& m_Settings;
-	std::map<wxString, int> m_midi_in_device_map;
-	ptr_vector<MIDI_IN_DEVICE> m_midi_in_devices;
-	std::map<wxString, int> m_midi_out_device_map;
-	ptr_vector<MIDI_OUT_DEVICE> m_midi_out_devices;
+	ptr_vector<GOrgueMidiInPort> m_midi_in_devices;
+	ptr_vector<GOrgueMidiOutPort> m_midi_out_devices;
 	int m_transpose;
 	std::vector<GOrgueMidiListener*> m_Listeners;
 	GOrgueMidiRecorder m_MidiRecorder;
 	GOrgueMidiPlayer m_MidiPlayer;
 
-	void ProcessMessage(std::vector<unsigned char>& msg, MIDI_IN_DEVICE* device);
-
-	static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData);
 	void OnMidiEvent(wxMidiEvent& event);
 
 public:
@@ -84,7 +57,8 @@ public:
 	void Open();
 	void UpdateDevices();
 
-	void Send(GOrgueMidiEvent& e);
+	void Recv(const GOrgueMidiEvent& e);
+	void Send(const GOrgueMidiEvent& e);
 
 	std::vector<wxString> GetInDevices();
 	std::vector<wxString> GetOutDevices();

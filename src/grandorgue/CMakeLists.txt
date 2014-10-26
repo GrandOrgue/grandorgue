@@ -304,12 +304,16 @@ GOrgueMidiFileReader.cpp
 GOrgueMidiListener.cpp
 GOrgueMidiMap.cpp
 GOrgueMidiMerger.cpp
+GOrgueMidiInPort.cpp
+GOrgueMidiOutPort.cpp
 GOrgueMidiPlayer.cpp
 GOrgueMidiSender.cpp
 GOrgueMidiSenderData.cpp
 GOrgueMidiReceiver.cpp
 GOrgueMidiReceiverData.cpp
 GOrgueMidiRecorder.cpp
+GOrgueMidiRtInPort.cpp
+GOrgueMidiRtOutPort.cpp
 GOrgueMidiWXEvent.cpp
 GOrgueOrgan.cpp
 GOrguePath.cpp

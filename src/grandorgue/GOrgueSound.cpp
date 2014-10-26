@@ -45,15 +45,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 {
 	memset(&meter_info, 0, sizeof(meter_info));
 
-	try
-	{
-		m_midi = new GOrgueMidi(m_Settings);
-	}
-	catch (RtError &e)
-	{
-		wxString error = wxString::FromAscii(e.getMessage().c_str());
-		wxLogError(_("RtMidi error: %s"), error.c_str());
-	}
+	m_midi = new GOrgueMidi(m_Settings);
 
 	RtAudio* audioDevice = 0;
 	try
@@ -176,15 +168,7 @@ void GOrgueSound::StopThreads()
 
 void GOrgueSound::OpenMidi()
 {
-	try
-	{
-		m_midi->Open();
-	}
-	catch (RtError &e)
-	{
-		wxString error = wxString::FromAscii(e.getMessage().c_str());
-		throw wxString::Format(_("RtMidi error: %s"), error.c_str());
-	}
+	m_midi->Open();
 }
 
 bool GOrgueSound::OpenSound()
