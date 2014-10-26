@@ -86,8 +86,8 @@ public:
 
 	void Send(GOrgueMidiEvent& e);
 
-	std::map<wxString, int>& GetInDevices();
-	std::map<wxString, int>& GetOutDevices();
+	std::vector<wxString> GetInDevices();
+	std::vector<wxString> GetOutDevices();
 	bool HasActiveDevice();
 	int GetTranspose();
 	void SetTranspose(int transpose);
