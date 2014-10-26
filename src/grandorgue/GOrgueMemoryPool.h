@@ -57,6 +57,7 @@ class GOrgueMemoryPool : private wxThread {
 	static size_t GetSystemMemory();
 	void CalculatePoolLimit();
 	bool AllocatePool();
+	bool InMemoryPool(void* ptr);
 
 	void* Entry();
 

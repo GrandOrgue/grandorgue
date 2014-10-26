@@ -68,6 +68,15 @@ GOrgueMemoryPool::~GOrgueMemoryPool()
 	FreePool();
 }
 
+bool inline GOrgueMemoryPool::InMemoryPool(void* ptr)
+{
+	if (m_CacheStart <= ptr && ptr <= m_CacheStart + m_CacheSize)
+	    return true;
+	if (m_PoolStart <= ptr && ptr <= m_PoolEnd)
+		return true;
+	return false;
+}
+
 void *GOrgueMemoryPool::Alloc(size_t length, bool final)
 {
 	if (m_MemoryLimit && m_CacheSize + m_PoolSize + m_MallocSize > m_MemoryLimit)
@@ -89,11 +98,17 @@ void GOrgueMemoryPool::Free(void* data)
 {
 	if (!data)
 		return;
-	GOMutexLocker locker(m_mutex);
-	if (m_PoolAllocs.count(data))
+	if (InMemoryPool(data))
 	{
-		/* Pool memory is not individually freed */
-		m_PoolAllocs.erase(m_PoolAllocs.find(data));
+		GOMutexLocker locker(m_mutex);
+		if (m_PoolAllocs.count(data))
+		{
+			/* Pool memory is not individually freed */
+			m_PoolAllocs.erase(m_PoolAllocs.find(data));
+			return;
+		}
+		else
+			wxLogError(_("Invalid free of %p"), data);
 		return;
 	}
 	free(data);
@@ -101,7 +116,7 @@ void GOrgueMemoryPool::Free(void* data)
 
 void *GOrgueMemoryPool::MoveToPool(void* data, size_t length)
 {
-	if (m_PoolAllocs.count(data))
+	if (InMemoryPool(data))
 	{
 		wxLogWarning(_("Element already in the pool"));
 		return data;
