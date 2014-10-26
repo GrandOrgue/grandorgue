@@ -49,7 +49,7 @@ void GOrgueEnclosure::Init(GOrgueConfigReader& cfg, wxString group, wxString Nam
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
-	Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, def_value));
+	Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, false, def_value));
 	m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_AmpMinimumLevel = 0;
@@ -63,7 +63,7 @@ void GOrgueEnclosure::Load(GOrgueConfigReader& cfg, wxString group, int enclosur
 	m_Displayed = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);
 	m_AmpMinimumLevel = cfg.ReadInteger(ODFSetting, m_group, wxT("AmpMinimumLevel"), 0, 100);
 	m_MIDIInputNumber = cfg.ReadInteger(ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
-	Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, 127));
+	Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, false, 127));
 	m_midi.SetIndex(enclosure_nb);
 	m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
