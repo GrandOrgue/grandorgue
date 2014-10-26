@@ -226,14 +226,20 @@ void GOrgueMidi::Open()
 	m_MidiRecorder.SetOutputDevice(GetMidiMap().GetDeviceByString(m_Settings.GetMidiRecorderOutputDevice()));
 }
 
-std::map<wxString, int>& GOrgueMidi::GetInDevices()
+std::vector<wxString> GOrgueMidi::GetInDevices()
 {
-	return m_midi_in_device_map;
+	std::vector<wxString> list;
+	for (std::map<wxString, int>::iterator it2 = m_midi_in_device_map.begin(); it2 != m_midi_in_device_map.end(); it2++)
+		list.push_back(it2->first);
+	return list;
 }
 
-std::map<wxString, int>& GOrgueMidi::GetOutDevices()
+std::vector<wxString> GOrgueMidi::GetOutDevices()
 {
-	return m_midi_out_device_map;
+	std::vector<wxString> list;
+	for (std::map<wxString, int>::iterator it2 = m_midi_out_device_map.begin(); it2 != m_midi_out_device_map.end(); it2++)
+		list.push_back(it2->first);
+	return list;
 }
 
 bool GOrgueMidi::HasActiveDevice()

@@ -44,13 +44,13 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	m_Sound.GetMidi().UpdateDevices();
 
 	wxArrayString choices;
-	std::map<wxString, int> list = m_Sound.GetMidi().GetInDevices();
+	std::vector<wxString> list = m_Sound.GetMidi().GetInDevices();
 	std::vector<bool> state;
-	for (std::map<wxString, int>::iterator it2 = list.begin(); it2 != list.end(); it2++)
+	for (unsigned i = 0; i < list.size(); i++)
 	{
-		choices.push_back(it2->first);
-		m_InDeviceData.push_back(m_Sound.GetSettings().GetMidiInDeviceChannelShift(it2->first));
-		state.push_back(m_Sound.GetSettings().GetMidiInState(it2->first));
+		choices.push_back(list[i]);
+		m_InDeviceData.push_back(m_Sound.GetSettings().GetMidiInDeviceChannelShift(list[i]));
+		state.push_back(m_Sound.GetSettings().GetMidiInState(list[i]));
 	}
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -70,10 +70,10 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	choices.clear();
 	std::vector<bool> out_state;
 	list = m_Sound.GetMidi().GetOutDevices();
-	for (std::map<wxString, int>::iterator it2 = list.begin(); it2 != list.end(); it2++)
+	for (unsigned i = 0; i < list.size(); i++)
 	{
-		choices.push_back(it2->first);
-		out_state.push_back(m_Sound.GetSettings().GetMidiOutState(it2->first) == 1);
+		choices.push_back(list[i]);
+		out_state.push_back(m_Sound.GetSettings().GetMidiOutState(list[i]) == 1);
 	}
 
 	item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &output devices"));
@@ -91,10 +91,10 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	m_RecorderDevice->Append(_("No device"));
 	m_RecorderDevice->Select(0);
 	list = m_Sound.GetMidi().GetOutDevices();
-	for (std::map<wxString, int>::iterator it2 = list.begin(); it2 != list.end(); it2++)
+	for (unsigned i = 0; i < list.size(); i++)
 	{
-		m_RecorderDevice->Append(it2->first);
-		if (m_Sound.GetSettings().GetMidiRecorderOutputDevice() == it2->first)
+		m_RecorderDevice->Append(list[i]);
+		if (m_Sound.GetSettings().GetMidiRecorderOutputDevice() == list[i])
 			m_RecorderDevice->SetSelection(m_RecorderDevice->GetCount() - 1);
 	}
 
