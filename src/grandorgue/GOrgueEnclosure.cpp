@@ -22,6 +22,7 @@
 #include "GOrgueEnclosure.h"
 
 #include "GOrgueConfigReader.h"
+#include "GOrgueConfigWriter.h"
 #include "GOrgueDocument.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
@@ -73,6 +74,7 @@ void GOrgueEnclosure::Save(GOrgueConfigWriter& cfg)
 {
 	m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+	cfg.WriteInteger(m_group, wxT("Value"), m_MIDIValue);
 }
 
 void GOrgueEnclosure::Set(int n)
