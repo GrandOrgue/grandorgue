@@ -24,6 +24,7 @@
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMidiMap.h"
+#include <wx/intl.h>
 
 GOrgueMidiOutPort::GOrgueMidiOutPort(GOrgueMidi* midi, wxString prefix, wxString name) :
 	m_midi(midi),
