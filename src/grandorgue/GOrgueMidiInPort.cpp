@@ -24,6 +24,7 @@
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMidiMap.h"
+#include <wx/intl.h>
 #include <wx/stopwatch.h>
 
 GOrgueMidiInPort::GOrgueMidiInPort(GOrgueMidi* midi, wxString prefix, wxString name) :
