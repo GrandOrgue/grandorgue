@@ -196,9 +196,9 @@ public:
 	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
 	void UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity);
 
-	int GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
+	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
 
-	int GetSamples(float *output_buffer, unsigned n_frames, METER_INFO *meter_info);
+	void GetSamples(float *output_buffer, unsigned n_frames, METER_INFO *meter_info);
 	void Process(unsigned group_id, unsigned n_frames);
 	unsigned GetGroupCount();
 	int GetNextGroup();

@@ -567,7 +567,7 @@ void GOSoundEngine::SetupReverb(GOrgueSettings& settings)
 		m_ReverbEngine[i]->Setup(settings);
 }
 
-int GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output)
+void GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output)
 {
 	GOAudioOutput& output = m_AudioOutputs[audio_output];
 
@@ -600,15 +600,13 @@ int GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsig
 		float f = std::min(std::max(output_buffer[k], CLAMP_MIN), CLAMP_MAX);
 		output_buffer[k] = f;
 	}
-
-	return 0;
 }
 
 
 // this callback will fill the buffer with bufferSize frame
 // audio is opened with 32 bit stereo, so one frame is 64bit (32bit for right 32bit for left)
 // So buffer can handle 8*bufferSize char (or 2*bufferSize float)
-int GOSoundEngine::GetSamples (float *output_buffer, unsigned n_frames, METER_INFO *meter_info)
+void GOSoundEngine::GetSamples (float *output_buffer, unsigned n_frames, METER_INFO *meter_info)
 {
 	/* initialise the output buffer */
 	float FinalBuffer[GO_SOUND_BUFFER_SIZE];
@@ -664,8 +662,6 @@ int GOSoundEngine::GetSamples (float *output_buffer, unsigned n_frames, METER_IN
 	}
 
 	ResetDoneFlags();
-
-	return 0;
 }
 
 
