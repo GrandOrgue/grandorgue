@@ -246,10 +246,10 @@ void MidiApi :: error( RtMidiError::Type type, std::string errorString )
     return;
   }
 
-  if (type == RtMidiError::WARNING) {
+  if ( type == RtMidiError::WARNING ) {
     std::cerr << '\n' << errorString << "\n\n";
   }
-  else if (type == RtMidiError::DEBUG_WARNING) {
+  else if ( type == RtMidiError::DEBUG_WARNING ) {
 #if defined(__RTMIDI_DEBUG__)
     std::cerr << '\n' << errorString << "\n\n";
 #endif
@@ -389,7 +389,7 @@ struct CoreMidiData {
 //  Class Definitions: MidiInCore
 //*********************************************************************//
 
-static void midiInputCallback( const MIDIPacketList *list, void *procRef, void * /*srcRef*/ )
+static void midiInputCallback( const MIDIPacketList *list, void *procRef, void */*srcRef*/ )
 {
   MidiInApi::RtMidiInData *data = static_cast<MidiInApi::RtMidiInData *> (procRef);
   CoreMidiData *apiData = static_cast<CoreMidiData *> (data->apiData);
@@ -1006,8 +1006,8 @@ void MidiOutCore :: sendMessage( std::vector<unsigned char> *message )
     return;
    }
 
-   // Copy data to buffer.
-   for ( unsigned int i=0; i<nBytes; ++i ) sysexBuffer[i] = message->at(i);
+    // Copy data to buffer.
+    for ( unsigned int i=0; i<nBytes; ++i ) sysexBuffer[i] = message->at(i);
 
    data->sysexreq.destination = data->destinationId;
    data->sysexreq.data = (Byte *)sysexBuffer;
@@ -1182,13 +1182,13 @@ static void *alsaMidiHandler( void *ptr )
     doDecode = false;
     switch ( ev->type ) {
 
-		case SND_SEQ_EVENT_PORT_SUBSCRIBED:
+    case SND_SEQ_EVENT_PORT_SUBSCRIBED:
 #if defined(__RTMIDI_DEBUG__)
       std::cout << "MidiInAlsa::alsaMidiHandler: port connection made!\n";
 #endif
       break;
 
-		case SND_SEQ_EVENT_PORT_UNSUBSCRIBED:
+    case SND_SEQ_EVENT_PORT_UNSUBSCRIBED:
 #if defined(__RTMIDI_DEBUG__)
       std::cerr << "MidiInAlsa::alsaMidiHandler: port connection has closed!\n";
       std::cout << "sender = " << (int) ev->data.connect.sender.client << ":"
@@ -1451,7 +1451,7 @@ void MidiInAlsa :: openPort( unsigned int portNumber, const std::string portName
   }
 
   unsigned int nSrc = this->getPortCount();
-  if (nSrc < 1) {
+  if ( nSrc < 1 ) {
     errorString_ = "MidiInAlsa::openPort: no MIDI input sources found!";
     error( RtMidiError::NO_DEVICES_FOUND, errorString_ );
     return;
@@ -1775,7 +1775,7 @@ void MidiOutAlsa :: openPort( unsigned int portNumber, const std::string portNam
     if ( data->vport < 0 ) {
       errorString_ = "MidiOutAlsa::openPort: ALSA error creating output port.";
       error( RtMidiError::DRIVER_ERROR, errorString_ );
-    return;
+      return;
     }
   }
 
@@ -2136,7 +2136,7 @@ void MidiInWinMM :: closePort( void )
         midiInClose( data->inHandle );
         errorString_ = "MidiInWinMM::openPort: error closing Windows MM MIDI input port (midiInUnprepareHeader).";
         error( RtMidiError::DRIVER_ERROR, errorString_ );
-	return;
+        return;
       }
     }
 
@@ -2443,7 +2443,7 @@ static int jackProcessIn( jack_nframes_t nframes, void *arg )
 
     jack_midi_event_get( &event, buff, j );
 
-    for (unsigned int i = 0; i < event.size; i++ )
+    for ( unsigned int i = 0; i < event.size; i++ )
       message.bytes.push_back( event.buffer[i] );
 
     // Compute the delta time.
@@ -2498,7 +2498,7 @@ void MidiInJack :: initialize( const std::string& clientName )
 void MidiInJack :: connect()
 {
   JackMidiData *data = static_cast<JackMidiData *> (apiData_);
-  if (data->client)
+  if ( data->client )
     return;
   // Initialize JACK client
   if (( data->client = jack_client_open( clientName.c_str(), JackNoStartServer, NULL )) == 0) {
@@ -2516,7 +2516,7 @@ MidiInJack :: ~MidiInJack()
   JackMidiData *data = static_cast<JackMidiData *> (apiData_);
   closePort();
 
-  if (data->client)
+  if ( data->client )
     jack_client_close( data->client );
   delete data;
 }
@@ -2562,7 +2562,7 @@ unsigned int MidiInJack :: getPortCount()
   int count = 0;
   JackMidiData *data = static_cast<JackMidiData *> (apiData_);
   connect();
-  if (!data->client)
+  if ( !data->client )
     return 0;
 
   // List of available ports
@@ -2665,7 +2665,7 @@ void MidiOutJack :: initialize( const std::string& clientName )
 void MidiOutJack :: connect()
 {
   JackMidiData *data = static_cast<JackMidiData *> (apiData_);
-  if (data->client)
+  if ( data->client )
     return;
   // Initialize JACK client
   if (( data->client = jack_client_open( clientName.c_str(), JackNoStartServer, NULL )) == 0) {
@@ -2685,7 +2685,7 @@ MidiOutJack :: ~MidiOutJack()
   JackMidiData *data = static_cast<JackMidiData *> (apiData_);
   closePort();
 
-  if (data->client) {
+  if ( data->client ) {
     // Cleanup
     jack_client_close( data->client );
     jack_ringbuffer_free( data->buffSize );
@@ -2736,7 +2736,7 @@ unsigned int MidiOutJack :: getPortCount()
   int count = 0;
   JackMidiData *data = static_cast<JackMidiData *> (apiData_);
   connect();
-  if (!data->client)
+  if ( !data->client )
     return 0;
 
   // List of available ports
