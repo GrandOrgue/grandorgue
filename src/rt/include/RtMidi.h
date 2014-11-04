@@ -113,7 +113,7 @@ typedef void (*RtMidiErrorCallback)( RtMidiError::Type type, const std::string &
 
 class MidiApi;
 
- class RtMidi
+class RtMidi
 {
  public:
 
@@ -241,7 +241,7 @@ class RtMidiIn : public RtMidi
   //! Open a MIDI input connection given by enumeration number.
   /*!
     \param portNumber An optional port number greater than 0 can be specified.
-    Otherwise, the default or first port found is opened.
+                      Otherwise, the default or first port found is opened.
     \param portName An optional name for the application port that is used to connect to portId can be specified.
   */
   void openPort( unsigned int portNumber = 0, const std::string portName = std::string( "RtMidi Input" ) );

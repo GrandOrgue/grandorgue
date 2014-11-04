@@ -41,6 +41,8 @@ const wxChar* GOrgueRtHelpers::GetApiName(const RtAudio::Api api)
 		return _("ASIO");
 	case RtAudio::WINDOWS_DS:
 		return _("DirectSound");
+	case RtAudio::WINDOWS_WASAPI:
+		return _("WASAPI");
 	case RtAudio::UNSPECIFIED:
 	default:
 		return _("Unknown");
