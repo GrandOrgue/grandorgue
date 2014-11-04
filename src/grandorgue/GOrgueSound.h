@@ -27,6 +27,7 @@
 #include "ptrvector.h"
 #include "GOSoundEngine.h"
 #include "GOSoundRecorder.h"
+#include "GOrgueSoundDevInfo.h"
 #include "GOLock.h"
 #include <wx/string.h>
 #include <wx/stopwatch.h>
@@ -116,7 +117,6 @@ class GOrgueSound
 			return *this;
 		}
 	};
-public:
 
 	typedef struct
 	{
@@ -195,7 +195,7 @@ public:
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
 
-	const std::map<wxString, GO_SOUND_DEV_CONFIG>& GetAudioDevices();
+	std::vector<GOrgueSoundDevInfo> GetAudioDevices();
 	const wxString GetDefaultAudioDevice();
 
 	GOrgueMidi& GetMidi();

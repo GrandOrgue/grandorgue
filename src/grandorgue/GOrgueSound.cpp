@@ -566,9 +566,19 @@ void GOrgueSound::SetLogSoundErrorMessages(bool settingsDialogVisible)
 	logSoundErrors = settingsDialogVisible;
 }
 
-const std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>& GOrgueSound::GetAudioDevices()
+std::vector<GOrgueSoundDevInfo> GOrgueSound::GetAudioDevices()
 {
-	return m_audioDevices;
+	std::vector<GOrgueSoundDevInfo> result;
+	std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>::iterator it = m_audioDevices.begin();
+	while(it != m_audioDevices.end())
+	{
+		GOrgueSoundDevInfo info;
+		info.name = it->first;
+		info.channels = it->second.channels;
+		result.push_back(info);
+		it++;
+	}
+	return result;
 }
 
 const wxString GOrgueSound::GetDefaultAudioDevice()
