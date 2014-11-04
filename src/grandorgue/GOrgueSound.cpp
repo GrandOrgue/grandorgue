@@ -24,7 +24,6 @@
 #include "GOSoundThread.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
-#include "GOrgueRtHelpers.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSoundPort.h"
 #include "GrandOrgueFile.h"
