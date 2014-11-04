@@ -35,7 +35,7 @@ GOrgueSoundRtPort::GOrgueSoundRtPort(GOrgueSound* sound, wxString name, RtAudio:
 	{
 		m_port = new RtAudio(api);
 	}
-	catch (RtError &e)
+	catch (RtAudioError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtAudio error: %s"), error.c_str());
@@ -50,7 +50,7 @@ GOrgueSoundRtPort::~GOrgueSoundRtPort()
 		if (m_port)
 			delete m_port;
 	}
-	catch (RtError &e)
+	catch (RtAudioError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtAudio error: %s"), error.c_str());
@@ -90,7 +90,7 @@ void GOrgueSoundRtPort::Open()
 		}
 		m_IsOpen = true;
 	}
-	catch (RtError &e)
+	catch (RtAudioError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		throw wxString::Format(_("RtAudio error: %s"), error.c_str());
@@ -115,7 +115,7 @@ void GOrgueSoundRtPort::StartStream()
 
 		SetActualLatency(actual_latency / m_SampleRate);
 	}
-	catch (RtError &e)
+	catch (RtAudioError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		throw wxString::Format(_("RtAudio error: %s"), error.c_str());
@@ -133,7 +133,7 @@ void GOrgueSoundRtPort::Close()
 	{
 		m_port->abortStream();
 	}
-	catch (RtError &e)
+	catch (RtAudioError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtAudio error: %s"), error.c_str());
@@ -142,7 +142,7 @@ void GOrgueSoundRtPort::Close()
 	{
 		m_port->closeStream();
 	}
-	catch (RtError &e)
+	catch (RtAudioError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtAudio error: %s"), error.c_str());
@@ -167,7 +167,7 @@ wxString GOrgueSoundRtPort::getName(RtAudio::Api api, RtAudio* rt_api, unsigned 
 		RtAudio::DeviceInfo info = rt_api->getDeviceInfo(index);
 		return  prefix + wxString::FromAscii(info.name.c_str());
 	}
-	catch (RtError &e)
+	catch (RtAudioError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtAudio error: %s"), error.c_str());
@@ -194,7 +194,7 @@ GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
 						return new GOrgueSoundRtPort(sound, name, rtaudio_apis[k]);
 
 			}
-			catch (RtError &e)
+			catch (RtAudioError &e)
 			{
 				wxString error = wxString::FromAscii(e.getMessage().c_str());
 				wxLogError(_("RtAudio error: %s"), error.c_str());
@@ -203,7 +203,7 @@ GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
 				delete audioDevice;
 		}
 	}
-	catch (RtError &e)
+	catch (RtAudioError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtAudio error: %s"), error.c_str());
@@ -239,7 +239,7 @@ void GOrgueSoundRtPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)
 					result.push_back(info);
 				}
 			}
-			catch (RtError &e)
+			catch (RtAudioError &e)
 			{
 				wxString error = wxString::FromAscii(e.getMessage().c_str());
 				wxLogError(_("RtAudio error: %s"), error.c_str());
@@ -248,7 +248,7 @@ void GOrgueSoundRtPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)
 				delete audioDevice;
 		}
 	}
-	catch (RtError &e)
+	catch (RtAudioError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtAudio error: %s"), error.c_str());
