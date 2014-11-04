@@ -8,7 +8,7 @@
     RtMidi WWW site: http://music.mcgill.ca/~gary/rtmidi/
 
     RtMidi: realtime MIDI i/o C++ classes
-    Copyright (c) 2003-2012 Gary P. Scavone
+    Copyright (c) 2003-2014 Gary P. Scavone
 
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation files
@@ -40,14 +40,66 @@
   \file RtMidi.h
  */
 
-// RtMidi: Version 2.0.1
-
 #ifndef RTMIDI_H
 #define RTMIDI_H
 
-#include "RtError.h"
+#define RTMIDI_VERSION "2.0.1"
+
+#include <exception>
+#include <iostream>
 #include <string>
 #include <vector>
+
+/************************************************************************/
+/*! \class RtMidiError
+    \brief Exception handling class for RtMidi.
+
+    The RtMidiError class is quite simple but it does allow errors to be
+    "caught" by RtMidiError::Type. See the RtMidi documentation to know
+    which methods can throw an RtMidiError.
+*/
+/************************************************************************/
+
+class RtMidiError : public std::exception
+{
+ public:
+  //! Defined RtMidiError types.
+  enum Type {
+    WARNING,           /*!< A non-critical error. */
+    DEBUG_WARNING,     /*!< A non-critical error which might be useful for debugging. */
+    UNSPECIFIED,       /*!< The default, unspecified error type. */
+    NO_DEVICES_FOUND,  /*!< No devices found on system. */
+    INVALID_DEVICE,    /*!< An invalid device ID was specified. */
+    MEMORY_ERROR,      /*!< An error occured during memory allocation. */
+    INVALID_PARAMETER, /*!< An invalid parameter was specified to a function. */
+    INVALID_USE,       /*!< The function was called incorrectly. */
+    DRIVER_ERROR,      /*!< A system driver error occured. */
+    SYSTEM_ERROR,      /*!< A system error occured. */
+    THREAD_ERROR       /*!< A thread error occured. */
+  };
+
+  //! The constructor.
+  RtMidiError( const std::string& message, Type type = RtMidiError::UNSPECIFIED ) throw() : message_(message), type_(type) {}
+ 
+  //! The destructor.
+  virtual ~RtMidiError( void ) throw() {}
+
+  //! Prints thrown error message to stderr.
+  virtual void printMessage( void ) const throw() { std::cerr << '\n' << message_ << "\n\n"; }
+
+  //! Returns the thrown error message type.
+  virtual const Type& getType(void) const throw() { return type_; }
+
+  //! Returns the thrown error message string.
+  virtual const std::string& getMessage(void) const throw() { return message_; }
+
+  //! Returns the thrown error message as a c-style string.
+  virtual const char* what( void ) const throw() { return message_.c_str(); }
+
+ protected:
+  std::string message_;
+  Type type_;
+};
 
 class RtMidi
 {
@@ -88,7 +140,7 @@ class RtMidi
   virtual void closePort( void ) = 0;
 
   //! A basic error reporting function for RtMidi classes.
-  static void error( RtError::Type type, std::string errorString );
+  static void error( RtMidiError::Type type, std::string errorString );
 
  protected:
 
@@ -424,23 +476,23 @@ class MidiOutApi
 // **************************************************************** //
 
 inline RtMidi::Api RtMidiIn :: getCurrentApi( void ) throw() { return rtapi_->getCurrentApi(); }
-inline void RtMidiIn :: openPort( unsigned int portNumber, const std::string portName ) { return rtapi_->openPort( portNumber, portName ); }
-inline void RtMidiIn :: openVirtualPort( const std::string portName ) { return rtapi_->openVirtualPort( portName ); }
-inline void RtMidiIn :: closePort( void ) { return rtapi_->closePort(); }
-inline void RtMidiIn :: setCallback( RtMidiCallback callback, void *userData ) { return rtapi_->setCallback( callback, userData ); }
+inline void RtMidiIn :: openPort( unsigned int portNumber, const std::string portName ) { rtapi_->openPort( portNumber, portName ); }
+inline void RtMidiIn :: openVirtualPort( const std::string portName ) { rtapi_->openVirtualPort( portName ); }
+inline void RtMidiIn :: closePort( void ) { rtapi_->closePort(); }
+inline void RtMidiIn :: setCallback( RtMidiCallback callback, void *userData ) { rtapi_->setCallback( callback, userData ); }
 inline void RtMidiIn :: cancelCallback( void ) { return rtapi_->cancelCallback(); }
 inline unsigned int RtMidiIn :: getPortCount( void ) { return rtapi_->getPortCount(); }
 inline std::string RtMidiIn :: getPortName( unsigned int portNumber ) { return rtapi_->getPortName( portNumber ); }
-inline void RtMidiIn :: ignoreTypes( bool midiSysex, bool midiTime, bool midiSense ) { return rtapi_->ignoreTypes( midiSysex, midiTime, midiSense ); }
+inline void RtMidiIn :: ignoreTypes( bool midiSysex, bool midiTime, bool midiSense ) { rtapi_->ignoreTypes( midiSysex, midiTime, midiSense ); }
 inline double RtMidiIn :: getMessage( std::vector<unsigned char> *message ) { return rtapi_->getMessage( message ); }
 
 inline RtMidi::Api RtMidiOut :: getCurrentApi( void ) throw() { return rtapi_->getCurrentApi(); }
-inline void RtMidiOut :: openPort( unsigned int portNumber, const std::string portName ) { return rtapi_->openPort( portNumber, portName ); }
-inline void RtMidiOut :: openVirtualPort( const std::string portName ) { return rtapi_->openVirtualPort( portName ); }
-inline void RtMidiOut :: closePort( void ) { return rtapi_->closePort(); }
+inline void RtMidiOut :: openPort( unsigned int portNumber, const std::string portName ) { rtapi_->openPort( portNumber, portName ); }
+inline void RtMidiOut :: openVirtualPort( const std::string portName ) { rtapi_->openVirtualPort( portName ); }
+inline void RtMidiOut :: closePort( void ) { rtapi_->closePort(); }
 inline unsigned int RtMidiOut :: getPortCount( void ) { return rtapi_->getPortCount(); }
 inline std::string RtMidiOut :: getPortName( unsigned int portNumber ) { return rtapi_->getPortName( portNumber ); }
-inline void RtMidiOut :: sendMessage( std::vector<unsigned char> *message ) { return rtapi_->sendMessage( message ); }
+inline void RtMidiOut :: sendMessage( std::vector<unsigned char> *message ) { rtapi_->sendMessage( message ); }
 
 // **************************************************************** //
 //
@@ -648,32 +700,32 @@ class MidiOutWinKS: public MidiOutApi
 class MidiInDummy: public MidiInApi
 {
  public:
- MidiInDummy( const std::string clientName, unsigned int queueSizeLimit ) : MidiInApi( queueSizeLimit ) { errorString_ = "MidiInDummy: This class provides no functionality."; RtMidi::error( RtError::WARNING, errorString_ ); };
-  RtMidi::Api getCurrentApi( void ) { return RtMidi::RTMIDI_DUMMY; };
-  void openPort( unsigned int portNumber, const std::string portName ) {};
-  void openVirtualPort( const std::string portName ) {};
-  void closePort( void ) {};
-  unsigned int getPortCount( void ) { return 0; };
-  std::string getPortName( unsigned int portNumber ) { return ""; };
+ MidiInDummy( const std::string /*clientName*/, unsigned int queueSizeLimit ) : MidiInApi( queueSizeLimit ) { errorString_ = "MidiInDummy: This class provides no functionality."; RtMidi::error( RtMidiError::WARNING, errorString_ ); }
+  RtMidi::Api getCurrentApi( void ) { return RtMidi::RTMIDI_DUMMY; }
+  void openPort( unsigned int /*portNumber*/, const std::string /*portName*/ ) {}
+  void openVirtualPort( const std::string /*portName*/ ) {}
+  void closePort( void ) {}
+  unsigned int getPortCount( void ) { return 0; }
+  std::string getPortName( unsigned int portNumber ) { return ""; }
 
  protected:
-  void initialize( const std::string& clientName ) {};
+  void initialize( const std::string& /*clientName*/ ) {}
 };
 
 class MidiOutDummy: public MidiOutApi
 {
  public:
-  MidiOutDummy( const std::string clientName ) { errorString_ = "MidiOutDummy: This class provides no functionality."; RtMidi::error( RtError::WARNING, errorString_ ); };
-  RtMidi::Api getCurrentApi( void ) { return RtMidi::RTMIDI_DUMMY; };
-  void openPort( unsigned int portNumber, const std::string portName ) {};
-  void openVirtualPort( const std::string portName ) {};
-  void closePort( void ) {};
-  unsigned int getPortCount( void ) { return 0; };
-  std::string getPortName( unsigned int portNumber ) { return ""; };
-  void sendMessage( std::vector<unsigned char> *message ) {};
+  MidiOutDummy( const std::string /*clientName*/ ) { errorString_ = "MidiOutDummy: This class provides no functionality."; RtMidi::error( RtMidiError::WARNING, errorString_ ); }
+  RtMidi::Api getCurrentApi( void ) { return RtMidi::RTMIDI_DUMMY; }
+  void openPort( unsigned int /*portNumber*/, const std::string /*portName*/ ) {}
+  void openVirtualPort( const std::string /*portName*/ ) {}
+  void closePort( void ) {}
+  unsigned int getPortCount( void ) { return 0; }
+  std::string getPortName( unsigned int /*portNumber*/ ) { return ""; }
+  void sendMessage( std::vector<unsigned char> * /*message*/ ) {}
 
  protected:
-  void initialize( const std::string& clientName ) {};
+  void initialize( const std::string& /*clientName*/ ) {}
 };
 
 #endif

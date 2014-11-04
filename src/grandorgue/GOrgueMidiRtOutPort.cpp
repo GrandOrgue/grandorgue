@@ -32,7 +32,7 @@ GOrgueMidiRtOutPort::GOrgueMidiRtOutPort(GOrgueMidi* midi, wxString prefix, wxSt
 	{
 		m_port = new RtMidiOut(api, (const char*)GetClientName().fn_str());
 	}
-	catch (RtError &e)
+	catch (RtMidiError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtMidi error: %s"), error.c_str());
@@ -47,7 +47,7 @@ GOrgueMidiRtOutPort::~GOrgueMidiRtOutPort()
 		if (m_port)
 			delete m_port;
 	}
-	catch (RtError &e)
+	catch (RtMidiError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtMidi error: %s"), error.c_str());
@@ -71,7 +71,7 @@ bool GOrgueMidiRtOutPort::Open()
 			}
 		}
 	}
-	catch (RtError &e)
+	catch (RtMidiError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtMidi error: %s"), error.c_str());
@@ -88,7 +88,7 @@ void GOrgueMidiRtOutPort::Close()
 		m_port->closePort();
 		m_IsActive = false;
 	}
-	catch (RtError &e)
+	catch (RtMidiError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtMidi error: %s"), error.c_str());
@@ -101,7 +101,7 @@ void GOrgueMidiRtOutPort::SendData(std::vector<unsigned char>& msg)
 	{
 		m_port->sendMessage(&msg);
 	}
-	catch (RtError &e)
+	catch (RtMidiError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtMidi error: %s"), error.c_str());
@@ -131,14 +131,14 @@ void GOrgueMidiRtOutPort::addMissingDevices(GOrgueMidi* midi, ptr_vector<GOrgueM
 						ports.push_back(new GOrgueMidiRtOutPort(midi, GOrgueRtHelpers::GetMidiApiPrefix(apis[i]), name, apis[i]));
 				}
 			}
-			catch (RtError &e)
+			catch (RtMidiError &e)
 			{
 				wxString error = wxString::FromAscii(e.getMessage().c_str());
 				wxLogError(_("RtMidi error: %s"), error.c_str());
 			}
 		}
 	}
-	catch (RtError &e)
+	catch (RtMidiError &e)
 	{
 		wxString error = wxString::FromAscii(e.getMessage().c_str());
 		wxLogError(_("RtMidi error: %s"), error.c_str());
