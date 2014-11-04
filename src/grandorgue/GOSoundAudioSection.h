@@ -64,7 +64,8 @@ typedef struct audio_end_data_segment_s
 	/* Uncompressed ending data blob. This data must start before sample_offset*/
 	unsigned char *end_data;
 	unsigned char *end_ptr;
-	unsigned end_length;
+	unsigned read_end;
+	unsigned end_pos;
 	unsigned end_size;
 	unsigned end_loop_length;
 
@@ -91,14 +92,12 @@ typedef struct audio_section_stream_s
 
 	/* Derived from the start and end audio segments which were used to setup
 	 * this stream. */
+	const audio_end_data_segment *end_seg;
 	const unsigned char         *end_ptr;
-	unsigned                     transition_position;
 	unsigned                     margin;
-	unsigned                     end_loop_length;
-	unsigned                     end_pos;
+	unsigned                     transition_position;
 	unsigned                     read_end;
-	unsigned                     section_end;
-	int                          next_start_segment_index;
+	unsigned                     end_pos;
 
 	unsigned                     position_index;
 	unsigned                     position_fraction;
