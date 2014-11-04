@@ -195,7 +195,7 @@ RtAudio :: RtAudio( RtAudio::Api api )
 RtAudio :: ~RtAudio() throw()
 {
   if ( rtapi_ )
-  delete rtapi_;
+    delete rtapi_;
 }
 
 void RtAudio :: openStream( RtAudio::StreamParameters *outputParameters,
@@ -400,6 +400,14 @@ double RtApi :: getStreamTime( void )
 #else
   return stream_.streamTime;
 #endif
+}
+
+void RtApi :: setStreamTime( double time )
+{
+  verifyStream();
+
+  if ( time >= 0.0 )
+    stream_.streamTime = time;
 }
 
 unsigned int RtApi :: getStreamSampleRate( void )
