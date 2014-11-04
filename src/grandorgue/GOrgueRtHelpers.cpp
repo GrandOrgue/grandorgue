@@ -59,8 +59,6 @@ GOrgueRtHelpers::GetMidiApiPrefix(const RtMidi::Api api)
 		return wxEmptyString;
 	case RtMidi::UNIX_JACK:
 		return _("Jack: ");
-	case RtMidi::WINDOWS_KS:
-		return _("KSAPI: ");
 	case RtMidi::UNSPECIFIED:
 	default:
 		return _("Unknown: ");
