@@ -268,13 +268,11 @@ void SettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
 std::vector<wxString> SettingsAudioOutput::GetRemainingAudioDevices()
 {
 	std::vector<wxString> result;
-	std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG> devs = m_Sound.GetAudioDevices();
-	std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>::iterator it = devs.begin();
-	while(it != devs.end())
+	std::vector<GOrgueSoundDevInfo> devs = m_Sound.GetAudioDevices();
+	for(unsigned i = 0; i < devs.size(); i++)
 	{
-		if (!GetDeviceNode(it->first).IsOk())
-			result.push_back(it->first);
-		it++;
+		if (!GetDeviceNode(devs[i].name).IsOk())
+			result.push_back(devs[i].name);
 	}
 	return result;
 }
@@ -300,9 +298,13 @@ void SettingsAudioOutput::UpdateButtons()
 	AudioItemData* data = GetObject(selection);
 	if (data && data->type == AudioItemData::AUDIO_NODE)
 	{
-		std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG> devs = m_Sound.GetAudioDevices();
-		std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>::iterator it = devs.find(data->name);
-		if (it != devs.end() && m_AudioOutput->GetChildrenCount(selection, false) != it->second.channels)
+		bool enable = false;
+		std::vector<GOrgueSoundDevInfo> devs = m_Sound.GetAudioDevices();
+		for(unsigned i = 0; i < devs.size(); i++)
+			if (devs[i].name == data->name)
+				if (m_AudioOutput->GetChildrenCount(selection, false) < devs[i].channels)
+					enable = true;
+		if (enable)
 			m_Add->Enable();
 		else
 			m_Add->Disable();
@@ -369,11 +371,12 @@ void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 	AudioItemData* data = GetObject(selection);
 	if (data && data->type == AudioItemData::AUDIO_NODE)
 	{
-		std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG> devs = m_Sound.GetAudioDevices();
-		std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>::iterator it = devs.find(data->name);
+		std::vector<GOrgueSoundDevInfo> devs = m_Sound.GetAudioDevices();
 		unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
-		if (it != devs.end() && channels != it->second.channels)
-			AddChannelNode(selection, channels);
+		for(unsigned i = 0; i < devs.size(); i++)
+			if (devs[i].name == data->name)
+				if (channels < devs[i].channels)
+					AddChannelNode(selection, channels);
 	}
 	else if (data && data->type == AudioItemData::CHANNEL_NODE)
 	{
@@ -441,10 +444,14 @@ void SettingsAudioOutput::OnOutputChange(wxCommandEvent& event)
 		index = wxGetSingleChoiceIndex(_("Change audio device"), _("Change audio device"), devs, this);
 		if (index == -1 || index == 0)
 			return;
-		std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG> audiodevs = m_Sound.GetAudioDevices();
-		std::map<wxString, GOrgueSound::GO_SOUND_DEV_CONFIG>::iterator it = audiodevs.find(devs[index]);
+		std::vector<GOrgueSoundDevInfo> audiodevs = m_Sound.GetAudioDevices();
 		unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
-		if (it != audiodevs.end() && channels > it->second.channels)
+		bool error = false;
+		for(unsigned i = 0; i < devs.size(); i++)
+			if (audiodevs[i].name == devs[index])
+				if (channels > audiodevs[i].channels)
+					error = true;
+		if (error)
 		{
 			wxMessageBox(_("Too many audio channels configured for the new audio interface") , _("Error"), wxOK | wxICON_ERROR, this);
 			return;
