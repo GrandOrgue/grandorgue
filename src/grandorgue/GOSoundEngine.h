@@ -198,12 +198,7 @@ public:
 
 	int GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
 
-	int GetSamples
-		(float      *output_buffer
-		,unsigned    n_frames
-		,double      stream_time
-		,METER_INFO *meter_info
-		);
+	int GetSamples(float *output_buffer, unsigned n_frames, METER_INFO *meter_info);
 	void Process(unsigned group_id, unsigned n_frames);
 	unsigned GetGroupCount();
 	int GetNextGroup();
