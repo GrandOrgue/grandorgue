@@ -608,12 +608,7 @@ int GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsig
 // this callback will fill the buffer with bufferSize frame
 // audio is opened with 32 bit stereo, so one frame is 64bit (32bit for right 32bit for left)
 // So buffer can handle 8*bufferSize char (or 2*bufferSize float)
-int GOSoundEngine::GetSamples
-	(float      *output_buffer
-	,unsigned    n_frames
-	,double      stream_time
-	,METER_INFO *meter_info
-	)
+int GOSoundEngine::GetSamples (float *output_buffer, unsigned n_frames, METER_INFO *meter_info)
 {
 	/* initialise the output buffer */
 	float FinalBuffer[GO_SOUND_BUFFER_SIZE];

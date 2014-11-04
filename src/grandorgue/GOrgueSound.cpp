@@ -607,7 +607,6 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 		r = m_SoundEngine.GetSamples
 			(buffer
 			 ,n_frames
-			 ,stream_time
 			 ,&meter_info
 			 );
 
