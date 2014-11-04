@@ -33,6 +33,7 @@
 #include <wx/fs_zip.h>
 #include <wx/image.h>
 #include <wx/regex.h>
+#include <wx/stopwatch.h>
 
 #ifdef __WXMAC__
 #include <ApplicationServices/ApplicationServices.h>
