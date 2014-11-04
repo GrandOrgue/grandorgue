@@ -128,7 +128,9 @@ bool GOAudioSection::LoadCache(GOrgueCache& cache)
 			return false;
 		if (!cache.Read(&s.end_loop_length, sizeof(s.end_loop_length)))
 			return false;
-		if (!cache.Read(&s.end_length, sizeof(s.end_length)))
+		if (!cache.Read(&s.read_end, sizeof(s.read_end)))
+			return false;
+		if (!cache.Read(&s.end_pos, sizeof(s.end_pos)))
 			return false;
 		if (!cache.Read(&s.end_size, sizeof(s.end_size)))
 			return false;
@@ -203,7 +205,9 @@ bool GOAudioSection::SaveCache(GOrgueCacheWriter& cache) const
 			return false;
 		if (!cache.Write(&s->end_loop_length, sizeof(s->end_loop_length)))
 			return false;
-		if (!cache.Write(&s->end_length, sizeof(s->end_length)))
+		if (!cache.Write(&s->read_end, sizeof(s->read_end)))
+			return false;
+		if (!cache.Write(&s->end_pos, sizeof(s->end_pos)))
 			return false;
 		if (!cache.Write(&s->end_size, sizeof(s->end_size)))
 			return false;
@@ -496,31 +500,25 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 
 			if (stream->position_index >= stream->end_pos)
 			{
-				if (stream->next_start_segment_index < 0)
+				const audio_end_data_segment *end = stream->end_seg;
+				if (end->next_start_segment_index < 0)
 				{
 					for(unsigned i = 0; i < n_blocks * 2; i++)
 						buffer[i] = 0;
 					return 0;
 				}
 
-				stream->position_index -= stream->section_end;
-				while (stream->position_index >= stream->end_loop_length)
-					stream->position_index -= stream->end_loop_length;
+				stream->position_index -= end->end_offset + 1;
+				while (stream->position_index >= end->end_loop_length)
+					stream->position_index -= end->end_loop_length;
 
-				const unsigned next_index = stream->next_start_segment_index;
-				const audio_start_data_segment *next =
-					&stream->audio_section->m_StartSegments[next_index];
+				const unsigned next_index = end->next_start_segment_index;
+				const audio_start_data_segment *next = &stream->audio_section->m_StartSegments[next_index];
 
 				/* Find a suitable end segment */
 				const unsigned next_end_segment_index = stream->audio_section->PickEndSegment(next_index);
-				const audio_end_data_segment *next_end =
-					&stream->audio_section->m_EndSegments[next_end_segment_index];
+				const audio_end_data_segment *next_end = &stream->audio_section->m_EndSegments[next_end_segment_index];
 
-				/* Because we support linear interpolation, we can't assume that
-				 * the position after a seek-back will be within a single block. In
-				 * reality, this shouldn't ever be very much more than BLOCKS_PER_
-				 * FRAME, but including a case for 2 times the size allows for a
-				 * very large tuning. */
 				stream->position_index += next->start_offset;
 				stream->ptr = stream->audio_section->m_Data;
 				stream->cache = next->cache;
@@ -528,11 +526,9 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 				assert(next_end->end_offset >= next->start_offset);
 				stream->transition_position = next_end->transition_offset;
 				stream->end_ptr = next_end->end_ptr;
-				stream->section_end = 1 + next_end->end_offset;
-				stream->next_start_segment_index  = next_end->next_start_segment_index;
-				stream->read_end = limited_diff(stream->section_end, stream->margin);
-				stream->end_pos = limited_diff(next_end->end_length, stream->margin) + stream->transition_position;
-				stream->end_loop_length = next_end->end_loop_length;
+				stream->read_end = limited_diff(next_end->read_end, stream->margin);
+				stream->end_pos = next_end->end_pos - stream->margin;
+				stream->end_seg = next_end;
 			}
 		}
 		else
@@ -545,7 +541,6 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 			stream->decode_call(stream, buffer, len);
 			buffer += 2 * len;
 			n_blocks -= len;
-			assert(stream->position_index < stream->section_end);
 		}
 	}
 
@@ -686,6 +681,7 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 			end_seg.end_offset               = loop.end_sample;
 			end_seg.next_start_segment_index = i + 1;
 			const unsigned loop_length = 1 + end_seg.end_offset - start_seg.start_offset;
+			unsigned end_length;
 
 			if (end_seg.end_offset - start_seg.start_offset > SHORT_LOOP_LENGTH)
 			{
@@ -696,7 +692,8 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 					throw (wxString)_("Not enough samples for a crossfade");
 
 				end_seg.transition_offset = end_seg.end_offset - MAX_READAHEAD;
-				end_seg.end_length = 2 * MAX_READAHEAD + fade_len;
+				end_seg.read_end = end_seg.end_offset + 1;
+				end_length = 2 * MAX_READAHEAD + fade_len;
 			}
 			else
 			{
@@ -707,12 +704,13 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 					throw (wxString)_("Not enough samples for a crossfade");
 
 				end_seg.transition_offset = start_seg.start_offset;
-				end_seg.end_length = SHORT_LOOP_LENGTH + MAX_READAHEAD;
-				if (end_seg.end_length < MAX_READAHEAD + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len)
-					end_seg.end_length = MAX_READAHEAD + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len;
+				end_seg.read_end = end_seg.end_offset + 1;
+				end_length = SHORT_LOOP_LENGTH + MAX_READAHEAD;
+				if (end_length < MAX_READAHEAD + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len)
+					end_length = MAX_READAHEAD + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len;
 
 			}
-			end_seg.end_size = end_seg.end_length * m_BytesPerSample;
+			end_seg.end_size = end_length * m_BytesPerSample;
 			end_seg.end_data = (unsigned char*)m_Pool.Alloc(end_seg.end_size, true);
 			end_seg.end_ptr = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
@@ -723,11 +721,13 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 
 			memcpy (end_seg.end_data, ((const unsigned char*)pcm_data) + end_seg.transition_offset * m_BytesPerSample, copy_len * m_BytesPerSample);
 			loop_memcpy (((unsigned char*)end_seg.end_data) + copy_len * m_BytesPerSample, ((const unsigned char*)pcm_data) + loop.start_sample * m_BytesPerSample,
-				loop_length * m_BytesPerSample, (end_seg.end_length - copy_len) * m_BytesPerSample);
+				loop_length * m_BytesPerSample, (end_length - copy_len) * m_BytesPerSample);
 			if (fade_len > 0)
-				DoCrossfade(end_seg.end_data, MAX_READAHEAD, (const unsigned char*)pcm_data, end_seg.end_offset, pcm_data_channels, m_BitsPerSample, fade_len, loop_length, end_seg.end_length);
+				DoCrossfade(end_seg.end_data, MAX_READAHEAD, (const unsigned char*)pcm_data, end_seg.end_offset, pcm_data_channels, m_BitsPerSample, fade_len, loop_length, end_length);
 
 			end_seg.end_loop_length = loop_length;
+			end_seg.end_pos = end_length + end_seg.transition_offset;
+			assert(end_length >= MAX_READAHEAD);
 
 			m_StartSegments.push_back(start_seg);
 			m_EndSegments.push_back(end_seg);
@@ -742,12 +742,13 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 		/* Create a default end segment */
 		audio_end_data_segment end_seg;
 		end_seg.end_offset               = pcm_data_nb_samples - 1;
+		end_seg.read_end = end_seg.end_offset + 1;
 		end_seg.next_start_segment_index = -1;
-		end_seg.end_length = 2 * MAX_READAHEAD;
-		end_seg.end_size = end_seg.end_length * m_BytesPerSample;
+		unsigned end_length = 2 * MAX_READAHEAD;
+		end_seg.end_size = end_length * m_BytesPerSample;
 		end_seg.end_data = (unsigned char*)m_Pool.Alloc(end_seg.end_size, true);
 		end_seg.transition_offset = limited_diff(end_seg.end_offset, MAX_READAHEAD);
-		end_seg.end_loop_length = end_seg.end_length * 2;
+		end_seg.end_loop_length = end_length * 2;
 		end_seg.end_ptr = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
 		const unsigned copy_len = 1 + end_seg.end_offset - end_seg.transition_offset;
@@ -756,7 +757,10 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 			throw GOrgueOutOfMemory();
 
 		memcpy (end_seg.end_data, ((const unsigned char*)pcm_data) + end_seg.transition_offset * m_BytesPerSample, copy_len * m_BytesPerSample);
-		memset (((unsigned char*)end_seg.end_data) + copy_len * m_BytesPerSample, 0, (end_seg.end_length - copy_len) * m_BytesPerSample);
+		memset (((unsigned char*)end_seg.end_data) + copy_len * m_BytesPerSample, 0, (end_length - copy_len) * m_BytesPerSample);
+
+		end_seg.end_pos = end_length + end_seg.transition_offset;
+		assert(end_length >= MAX_READAHEAD);
 
 		m_EndSegments.push_back(end_seg);
 	}
@@ -927,8 +931,7 @@ void GOAudioSection::InitStream(const struct resampler_coefs_s *resampler_coefs,
 	stream->resample_coefs           = resampler_coefs;
 	stream->ptr = stream->audio_section->m_Data;
 	stream->transition_position  = end.transition_offset;
-	stream->section_end = 1 + end.end_offset;
-	stream->next_start_segment_index = end.next_start_segment_index;
+	stream->end_seg = &end;
 	stream->end_ptr = end.end_ptr;
 	stream->increment_fraction = sample_rate_adjustment * m_SampleRate * UPSAMPLE_FACTOR;
 	stream->position_index = start.start_offset;
@@ -936,9 +939,9 @@ void GOAudioSection::InitStream(const struct resampler_coefs_s *resampler_coefs,
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->margin = GetMargin(m_Compressed, stream->resample_coefs->interpolation);
-	stream->end_loop_length = end.end_loop_length;
-	stream->read_end = limited_diff (stream->section_end, stream->margin);
-	stream->end_pos = limited_diff (end.end_length, stream->margin) + stream->transition_position;
+	assert(stream->margin <= MAX_READ_AHEAD);
+	stream->read_end = limited_diff (end.read_end, stream->margin);
+	stream->end_pos = end.end_pos - stream->margin;
 	stream->cache = start.cache;
 	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 }
@@ -953,8 +956,7 @@ void GOAudioSection::InitAlignedStream(audio_section_stream *stream, const audio
 
 	stream->ptr = stream->audio_section->m_Data;
 	stream->transition_position = end.transition_offset;
-	stream->section_end = 1 + end.end_offset;
-	stream->next_start_segment_index = end.next_start_segment_index;
+	stream->end_seg = &end;
 	stream->end_ptr = end.end_ptr;
 	/* Translate increment in case of differing sample rates */
 	stream->resample_coefs           = existing_stream->resample_coefs;
@@ -964,9 +966,9 @@ void GOAudioSection::InitAlignedStream(audio_section_stream *stream, const audio
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->margin = GetMargin(m_Compressed, stream->resample_coefs->interpolation);
-	stream->end_loop_length = end.end_loop_length;
-	stream->read_end = limited_diff (stream->section_end, stream->margin);
-	stream->end_pos = limited_diff (end.end_length, stream->margin) + stream->transition_position;
+	assert(stream->margin <= MAX_READ_AHEAD);
+	stream->read_end = limited_diff (end.read_end, stream->margin);
+	stream->end_pos = end.end_pos - stream->margin;
 	stream->cache = start.cache;
 	stream->cache.ptr = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 	if (!m_ReleaseAligner)
