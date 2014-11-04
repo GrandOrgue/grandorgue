@@ -333,6 +333,9 @@ GOrgueSetter.cpp
 GOrgueSetterButton.cpp
 GOrgueSettings.cpp
 GOrgueSound.cpp
+GOrgueSoundPort.cpp
+GOrgueSoundPortaudioPort.cpp
+GOrgueSoundRtPort.cpp
 GOrgueSoundingPipe.cpp
 GOrgueStdPath.cpp
 GOrgueStop.cpp
