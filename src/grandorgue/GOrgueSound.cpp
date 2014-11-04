@@ -598,17 +598,12 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 	}
 	GOMutexLocker locker(device->mutex);
 
-	int r;
-	r = m_SoundEngine.GetAudioOutput(output_buffer, n_frames, device->index);
+	m_SoundEngine.GetAudioOutput(output_buffer, n_frames, device->index);
 
 	if (device->index == 0)
 	{
 		float buffer[GO_SOUND_BUFFER_SIZE];
-		r = m_SoundEngine.GetSamples
-			(buffer
-			 ,n_frames
-			 ,&meter_info
-			 );
+		m_SoundEngine.GetSamples(buffer, n_frames, &meter_info);
 
 		/* Write data to file if recording is enabled*/
 		m_AudioRecorder.Write(buffer, n_frames * 2);
@@ -677,7 +672,7 @@ int GOrgueSound::AudioCallbackLocal(GO_SOUND_OUTPUT* device, float* output_buffe
 		}
 	}
 
-	return r;
+	return 0;
 }
 
 int GOrgueSound::AudioCallback(void *outputBuffer, void *inputBuffer, unsigned int nFrames, double streamTime, RtAudioStreamStatus status, void *userData)
