@@ -40,6 +40,7 @@ Group:          Development/Libraries
 URL:            http://www.wxwidgets.org/
 Source0:        wxWidgets-%{version}.tar.bz2
 Patch1:         wxWidgets-2.8.12.patch
+Patch2:         71389.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -79,6 +80,7 @@ This package contains all files needed for developing with wxWidgets for mingw%{
 %prep
 %setup -q -n wxWidgets-%{version}
 %patch1 -p2
+%patch2 -p0
 
 %build
 MINGW64_CFLAGS="-fno-keep-inline-dllexport %{_mingw64_cflags}" \
