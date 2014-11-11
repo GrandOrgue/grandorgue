@@ -691,8 +691,8 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 				if (start_seg.start_offset < fade_len)
 					throw (wxString)_("Not enough samples for a crossfade");
 
-				end_seg.transition_offset = end_seg.end_offset - MAX_READAHEAD - fade_len;
-				end_seg.read_end = end_seg.end_offset + 1 - fade_len;
+				end_seg.transition_offset = end_seg.end_offset - MAX_READAHEAD - fade_len + 1;
+				end_seg.read_end = end_seg.end_offset - fade_len;
 				end_length = 2 * MAX_READAHEAD + fade_len;
 			}
 			else
@@ -704,7 +704,7 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 					throw (wxString)_("Not enough samples for a crossfade");
 
 				end_seg.transition_offset = start_seg.start_offset;
-				end_seg.read_end = end_seg.end_offset + 1;
+				end_seg.read_end = end_seg.end_offset;
 				end_length = SHORT_LOOP_LENGTH + MAX_READAHEAD;
 				if (end_length < MAX_READAHEAD + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len)
 					end_length = MAX_READAHEAD + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len;
@@ -939,7 +939,7 @@ void GOAudioSection::InitStream(const struct resampler_coefs_s *resampler_coefs,
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->margin = GetMargin(m_Compressed, stream->resample_coefs->interpolation);
-	assert(stream->margin <= MAX_READ_AHEAD);
+	assert(stream->margin <= MAX_READAHEAD);
 	stream->read_end = limited_diff (end.read_end, stream->margin);
 	stream->end_pos = end.end_pos - stream->margin;
 	stream->cache = start.cache;
@@ -966,7 +966,7 @@ void GOAudioSection::InitAlignedStream(audio_section_stream *stream, const audio
 	stream->decode_call              = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, false);
 	stream->end_decode_call          = GetDecodeBlockFunction(m_Channels, m_BitsPerSample, m_Compressed, stream->resample_coefs->interpolation, true);
 	stream->margin = GetMargin(m_Compressed, stream->resample_coefs->interpolation);
-	assert(stream->margin <= MAX_READ_AHEAD);
+	assert(stream->margin <= MAX_READAHEAD);
 	stream->read_end = limited_diff (end.read_end, stream->margin);
 	stream->end_pos = end.end_pos - stream->margin;
 	stream->cache = start.cache;
