@@ -1,5 +1,5 @@
 /*
- * $Id: pa_jack.c 1668 2011-05-02 17:07:11Z rossb $
+ * $Id: pa_jack.c 1912 2013-11-15 12:27:07Z gineera $
  * PortAudio Portable Real-Time Audio Library
  * Latest Version at: http://www.portaudio.com
  * JACK Implementation by Joshua Haberman
@@ -233,6 +233,10 @@ typedef struct PaJackStream
     struct PaJackStream *next;
 }
 PaJackStream;
+
+/* In calls to jack_get_ports() this filter expression is used instead of ""
+ * to prevent any other types (eg Midi ports etc) being listed */
+#define JACK_PORT_TYPE_FILTER "audio"
 
 #define TRUE 1
 #define FALSE 0
@@ -494,7 +498,7 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
      * according to the client_name:port_name convention (which is
      * enforced by jackd)
      * A: If jack_get_ports returns NULL, there's nothing for us to do */
-    UNLESS( (jack_ports = jack_get_ports( jackApi->jack_client, "", "", 0 )) && jack_ports[0], paNoError );
+    UNLESS( (jack_ports = jack_get_ports( jackApi->jack_client, "", JACK_PORT_TYPE_FILTER, 0 )) && jack_ports[0], paNoError );
     /* Find number of ports */
     while( jack_ports[numPorts] )
         ++numPorts;
@@ -585,7 +589,7 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
 
         /* ... what are your output ports (that we could input from)? */
         clientPorts = jack_get_ports( jackApi->jack_client, regex_pattern,
-                                     NULL, JackPortIsOutput);
+                                     JACK_PORT_TYPE_FILTER, JackPortIsOutput);
         curDevInfo->maxInputChannels = 0;
         curDevInfo->defaultLowInputLatency = 0.;
         curDevInfo->defaultHighInputLatency = 0.;
@@ -606,7 +610,7 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
 
         /* ... what are your input ports (that we could output to)? */
         clientPorts = jack_get_ports( jackApi->jack_client, regex_pattern,
-                                     NULL, JackPortIsInput);
+                                     JACK_PORT_TYPE_FILTER, JackPortIsInput);
         curDevInfo->maxOutputChannels = 0;
         curDevInfo->defaultLowOutputLatency = 0.;
         curDevInfo->defaultHighOutputLatency = 0.;

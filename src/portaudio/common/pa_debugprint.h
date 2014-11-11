@@ -96,7 +96,14 @@ void PaUtil_DebugPrint( const char *format, ... );
 #ifdef PA_ENABLE_DEBUG_OUTPUT
 #define PA_DEBUG(x) PaUtil_DebugPrint x ;
 #else
+#ifdef _GNUC_
+static inline void PaUtil_DebugDummy(...)
+{
+}
+#define PA_DEBUG(x) PaUtil_DebugDummy x ;
+#else
 #define PA_DEBUG(x)
+#endif
 #endif
 
 
