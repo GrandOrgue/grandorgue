@@ -5197,9 +5197,12 @@ F12 key
     <sect1>
       <title>Organ section</title>
       <para>
-This section describes the whole organ including the main panel,
-therefore the section includes all display metrics
-attributes. Additionally it includes the following attributes:
+This section describes the whole organ. For the old panel format, it
+includes the main panel, therefore the section includes all display
+metrics attributes. The new panel format seperates the display metrics
+of the main panel into a section names
+<emphasis>Panel000</emphasis>. Additionally it includes the following
+attributes:
      </para>
       <variablelist>
         <varlistentry>
@@ -5411,7 +5414,8 @@ invisible objects is stored in divisionals, generals and the setter.
             <para>
 (integer 0-999, default: 0) Number of images on the panel. The section
 of the label GUI definitions are called
-<emphasis>Image999</emphasis>.
+<emphasis>Image999</emphasis>. This setting is not supported for the
+new panel format.
      </para>
           </listitem>
         </varlistentry>
@@ -5419,9 +5423,10 @@ of the label GUI definitions are called
           <term>NumberOfSetterElements</term>
           <listitem>
             <para>
-(integer 0-999, default: 0) Number of
-setter elements on the panel. The section of the GUI definitions are
-called <emphasis>SetterElement999</emphasis>.
+(integer 0-999, default: 0) Number of setter elements on the
+panel. The section of the GUI definitions are called
+<emphasis>SetterElement999</emphasis>. This setting is not supported
+for the new panel format.
      </para>
           </listitem>
         </varlistentry>
@@ -5431,7 +5436,8 @@ called <emphasis>SetterElement999</emphasis>.
             <para>
 (integer 0-999, required) Number of labels on the panel. The section
 of the label GUI definitions are called
-<emphasis>Label999</emphasis>.
+<emphasis>Label999</emphasis>. This setting is not supported for the
+new panel format.
      </para>
           </listitem>
         </varlistentry>
@@ -8634,7 +8640,7 @@ influence this windchest.
       </variablelist>
     </sect1>
     <sect1>
-      <title>Additional panels</title>
+      <title>Additional panels (old format)</title>
       <para>
 It is possible to define additional panels. The section is call
 <emphasis>Panel999</emphasis> with a number starting from 001.  All
@@ -8913,6 +8919,306 @@ of the label GUI definitions are called
 of the label GUI definitions are called
 <emphasis>Panel999Image999</emphasis>.
             </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Panels (new format)</title>
+      <para>
+The section is call
+<emphasis>Panel999</emphasis>. <emphasis>Panel000</emphasis> is the
+main panel. Additional panels start with number 001. The section
+includes the display metrics. Additionally it includes the following
+attributes:
+</para>
+      <variablelist>
+        <varlistentry>
+          <term>Name</term>
+          <listitem>
+            <para>
+(string, required for non-main panels) Name of the panel
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Group</term>
+          <listitem>
+            <para>
+(string, default: empty, only for non-main panels) If not empty, place
+it in the submenu with the specified name, else directly in the panel
+menu.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>HasPedals</term>
+          <listitem>
+            <para>
+(boolean, required) Includes a manual displayed as pedal
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfImages</term>
+          <listitem>
+            <para>
+(integer 0-999, required) Number of images on the panel. The section
+of the label GUI definitions are called
+<emphasis>Panel999Image999</emphasis>.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NumberOfGUIElements</term>
+          <listitem>
+            <para>
+(integer 0-999, required for the main panel, default 0 for any other
+panel) Number of elements on the panel. The section of the GUI
+elements are called <emphasis>Panel999Element999</emphasis>.
+     </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>GUI elements</title>
+      <para>
+The attribute <emphasis>Type</emphasis> can be one of the following
+values:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Divisional</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a divisional. Additionally
+it includes the following attributes:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>Manual</term>
+		<listitem>
+		  <para>
+(valid manual number, required) Number of the manual.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>Divisional</term>
+		<listitem>
+		  <para>
+(valid divisional number, required) Number of the divisional on the
+manual.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Coupler</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a coupler. Additionally
+it includes the following attributes:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>Manual</term>
+		<listitem>
+		  <para>
+(valid manual number, required) Number of the manual.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>Divisional</term>
+		<listitem>
+		  <para>
+(valid coupler number, required) Number of the coupler on the
+manual.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Stop</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a stop. Additionally
+it includes the following attributes:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>Manual</term>
+		<listitem>
+		  <para>
+(valid manual number, required) Number of the manual.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>Divisional</term>
+		<listitem>
+		  <para>
+(valid stop number, required) Number of the stop on the
+manual.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Enclosure</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a enclosure. Additionally
+it includes the following attributes:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>Enclosure</term>
+		<listitem>
+		  <para>
+(valid enclosure number, required) Number of the enclosure.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Tremulant</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a tremulant. Additionally
+it includes the following attributes:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>Enclosure</term>
+		<listitem>
+		  <para>
+(valid tremulant number, required) Number of the tremulant.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DivisionalCoupler</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a divisional coupler. Additionally
+it includes the following attributes:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>DivisionalCoupler</term>
+		<listitem>
+		  <para>
+(valid divisional couplere number, required) Number of the divisional coupler.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>General</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a general. Additionally
+it includes the following attributes:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>General</term>
+		<listitem>
+		  <para>
+(valid general number, required) Number of the general.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ReversiblePiston</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a reversible piston. Additionally
+it includes the following attributes:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>ReversiblePiston</term>
+		<listitem>
+		  <para>
+(valid reversible pistion number, required) Number of the reversible piston.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Switch</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a switch. Additionally
+it includes the following attributes:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>Switch</term>
+		<listitem>
+		  <para>
+(valid switch number, required) Number of the switch.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Label</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a label.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Manual</term>
+          <listitem>
+            <para>
+The section contains the GUI attributes of a manual. Additionally
+it includes the following attributes:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>Manual</term>
+		<listitem>
+		  <para>
+(valid manual number, required) Number of the manual.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Any setter element type</term>
+          <listitem>
+            <para>
+See the setter element section for further description.
+	    </para>
           </listitem>
         </varlistentry>
       </variablelist>
