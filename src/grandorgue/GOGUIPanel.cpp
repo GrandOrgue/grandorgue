@@ -134,6 +134,8 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	wxString panel_prefix;
 	bool is_main_panel;
 	bool new_format = false;
+	if (cfg.ReadInteger(ODFSetting, wxT("Panel000"), wxT("NumberOfGUIElements"), 0, 999, false, -1) >= 0)
+		new_format = true;
 
 	if (group.IsEmpty())
 	{
