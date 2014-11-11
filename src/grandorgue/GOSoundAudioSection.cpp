@@ -688,11 +688,11 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 				if (fade_len > end_seg.end_offset - start_seg.start_offset)
 					throw (wxString)_("Loop too short for crossfade");
 
-				if (total_alloc_samples - end_seg.end_offset < fade_len)
+				if (start_seg.start_offset < fade_len)
 					throw (wxString)_("Not enough samples for a crossfade");
 
-				end_seg.transition_offset = end_seg.end_offset - MAX_READAHEAD;
-				end_seg.read_end = end_seg.end_offset + 1;
+				end_seg.transition_offset = end_seg.end_offset - MAX_READAHEAD - fade_len;
+				end_seg.read_end = end_seg.end_offset + 1 - fade_len;
 				end_length = 2 * MAX_READAHEAD + fade_len;
 			}
 			else
@@ -700,7 +700,7 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 				if (fade_len > end_seg.end_offset - start_seg.start_offset)
 					throw (wxString)_("Loop too short for crossfade");
 
-				if (total_alloc_samples - end_seg.end_offset < fade_len)
+				if (start_seg.start_offset < fade_len)
 					throw (wxString)_("Not enough samples for a crossfade");
 
 				end_seg.transition_offset = start_seg.start_offset;
@@ -723,7 +723,7 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 			loop_memcpy (((unsigned char*)end_seg.end_data) + copy_len * m_BytesPerSample, ((const unsigned char*)pcm_data) + loop.start_sample * m_BytesPerSample,
 				loop_length * m_BytesPerSample, (end_length - copy_len) * m_BytesPerSample);
 			if (fade_len > 0)
-				DoCrossfade(end_seg.end_data, MAX_READAHEAD, (const unsigned char*)pcm_data, end_seg.end_offset, pcm_data_channels, m_BitsPerSample, fade_len, loop_length, end_length);
+				DoCrossfade(end_seg.end_data, MAX_READAHEAD, (const unsigned char*)pcm_data, start_seg.start_offset - fade_len, pcm_data_channels, m_BitsPerSample, fade_len, loop_length, end_length);
 
 			end_seg.end_loop_length = loop_length;
 			end_seg.end_pos = end_length + end_seg.transition_offset;
