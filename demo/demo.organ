@@ -35,46 +35,16 @@ NumberOfEnclosures=2
 NumberOfTremulants=1
 NumberOfWindchestGroups=4
 NumberOfReversiblePistons=0
-NumberOfLabels=2
 NumberOfDivisionalCouplers=0
 NumberOfRanks=6
 NumberOfSwitches=29
-NumberOfSetterElements=012
 NumberOfPanels=1
-DispDrawstopCols=4
-DispDrawstopRows=7
-DispDrawstopColsOffset=Y
-DispDrawstopOuterColOffsetUp=N
-DispScreenSizeHoriz=Medium
-DispScreenSizeVert=Medium
-DispControlLabelFont=Times New Roman
-DispShortcutKeyLabelFont=Arial
-DispShortcutKeyLabelColour=Yellow
-DispGroupLabelFont=Times New Roman
-DispDrawstopBackgroundImageNum=17
-DispConsoleBackgroundImageNum=19
-DispKeyHorizBackgroundImageNum=18
-DispKeyVertBackgroundImageNum=13
-DispDrawstopInsetBackgroundImageNum=19
-DispExtraButtonRows=1
-DispPairDrawstopCols=N
 DivisionalsStoreTremulants=N
 DivisionalsStoreIntermanualCouplers=Y
 DivisionalsStoreIntramanualCouplers=Y
 GeneralsStoreDivisionalCouplers=N
-CombinationsStoreNonDisplayedDrawstops=N
+CombinationsStoreNonDisplayedDrawstops=Y
 AmplitudeLevel=100
-DispExtraDrawstopRows=4
-DispExtraDrawstopCols=3
-DispExtraDrawstopRowsAboveExtraButtonRows=Y
-DispTrimAboveExtraRows=N
-DispButtonCols=10
-DispButtonsAboveManuals=N
-DispTrimAboveManuals=N
-DispTrimBelowManuals=N
-DispExtraPedalButtonRow=N
-DispExtraPedalButtonRowOffset=Y
-DispExtraPedalButtonRowOffsetRight=Y
 
 [Manual000]
 Name=Pedal
@@ -198,8 +168,7 @@ Coupler001=005
 NumberOfTremulants=1
 Tremulant001=001
 NumberOfDivisionals=0
-DispKeyColourInverted=N
-Displayed=Y
+Displayed=N
 
 [WindchestGroup001]
 Name=Grand Orgue Unenclosed Windchest
@@ -225,12 +194,14 @@ NumberOfEnclosures=0
 NumberOfTremulants=0
 
 [Enclosure001]
-Name=R
+Name=Recit
+DispLabelText=R
 AmpMinimumLevel=20
 
 [Enclosure002]
-Name=GO
+Name=Grandorgue
 AmpMinimumLevel=30
+Displayed=N
 
 [Tremulant001]
 Function=And
@@ -3801,16 +3772,10 @@ Pipe001Attack006=.\Sounds\Trompette8.wav
 Pipe001MIDIKeyNumber=36
 
 [Switch001]
-Name=Sous- basse 16'
-TextBreakWidth=35
+Name=Sousbasse 16'
 DisplayInInvertedState=N
-Displayed=Y
+Displayed=N
 DefaultToEngaged=N
-DispDrawstopCol=1
-DispDrawstopRow=6
-DispLabelColour=Black
-DispLabelFontSize=Large
-DispImageNum=6
 
 [Switch002]
 Name=Bourdon 8'
@@ -3824,7 +3789,8 @@ DispLabelFontSize=Large
 DispImageNum=6
 
 [Switch003]
-Name=Contre- basse 16'
+Name=Contrebasse 16'
+DispLabelText=Contre- basse 16'
 TextBreakWidth=35
 DisplayInInvertedState=N
 Displayed=Y
@@ -3836,7 +3802,8 @@ DispLabelFontSize=Large
 DispImageNum=6
 
 [Switch004]
-Name=Violon- celle 8'
+Name=Violoncelle 8'
+DispLabelText=Violon- celle 8'
 TextBreakWidth=35
 DisplayInInvertedState=N
 Displayed=Y
@@ -4008,13 +3975,8 @@ DispImageNum=6
 [Switch019]
 Name=Octavin 2'
 DisplayInInvertedState=N
-Displayed=Y
+Displayed=N
 DefaultToEngaged=N
-DispDrawstopCol=4
-DispDrawstopRow=2
-DispLabelColour=Black
-DispLabelFontSize=Large
-DispImageNum=6
 
 [Switch020]
 Name=Trumpette 8'
@@ -4369,7 +4331,39 @@ DispButtonRow=100
 DispButtonCol=6
 DispKeyLabelOnLeft=Y
 
-[SetterElement001]
+[Panel000]
+HasPedals=Y
+DispExtraDrawstopRows=4
+DispExtraDrawstopCols=3
+DispExtraDrawstopRowsAboveExtraButtonRows=Y
+DispTrimAboveExtraRows=N
+DispButtonCols=10
+DispButtonsAboveManuals=N
+DispTrimAboveManuals=N
+DispTrimBelowManuals=N
+DispExtraPedalButtonRow=N
+DispExtraPedalButtonRowOffset=Y
+DispExtraPedalButtonRowOffsetRight=Y
+DispDrawstopCols=4
+DispDrawstopRows=7
+DispDrawstopColsOffset=Y
+DispDrawstopOuterColOffsetUp=N
+DispScreenSizeHoriz=Medium
+DispScreenSizeVert=Medium
+DispControlLabelFont=Times New Roman
+DispShortcutKeyLabelFont=Arial
+DispShortcutKeyLabelColour=Yellow
+DispGroupLabelFont=Times New Roman
+DispDrawstopBackgroundImageNum=17
+DispConsoleBackgroundImageNum=19
+DispKeyHorizBackgroundImageNum=18
+DispKeyVertBackgroundImageNum=13
+DispDrawstopInsetBackgroundImageNum=19
+DispExtraButtonRows=1
+DispPairDrawstopCols=N
+NumberOfGUIElements=18
+
+[Panel000Element001]
 DispLabelText=G1
 Type=General01
 DisplayAsPiston=y
@@ -4380,7 +4374,7 @@ DispButtonRow=000
 DispButtonCol=1
 DispKeyLabelOnLeft=Y
 
-[SetterElement002]
+[Panel000Element002]
 DispLabelText=G2
 Type=General02
 DisplayAsPiston=y
@@ -4391,7 +4385,7 @@ DispButtonRow=000
 DispButtonCol=2
 DispKeyLabelOnLeft=Y
 
-[SetterElement003]
+[Panel000Element003]
 DispLabelText=G3
 Type=General03
 DisplayAsPiston=y
@@ -4402,7 +4396,7 @@ DispButtonRow=000
 DispButtonCol=3
 DispKeyLabelOnLeft=Y
 
-[SetterElement004]
+[Panel000Element004]
 DispLabelText=G4
 Type=General04
 DisplayAsPiston=y
@@ -4413,7 +4407,7 @@ DispButtonRow=000
 DispButtonCol=4
 DispKeyLabelOnLeft=Y
 
-[SetterElement005]
+[Panel000Element005]
 DispLabelText=G5
 Type=General05
 DisplayAsPiston=y
@@ -4424,7 +4418,7 @@ DispButtonRow=000
 DispButtonCol=5
 DispKeyLabelOnLeft=Y
 
-[SetterElement006]
+[Panel000Element006]
 DispLabelText=G6
 Type=General06
 DisplayAsPiston=y
@@ -4435,7 +4429,7 @@ DispButtonRow=000
 DispButtonCol=6
 DispKeyLabelOnLeft=Y
 
-[SetterElement007]
+[Panel000Element007]
 DispLabelText=G7
 Type=General07
 DisplayAsPiston=y
@@ -4446,7 +4440,7 @@ DispButtonRow=000
 DispButtonCol=7
 DispKeyLabelOnLeft=Y
 
-[SetterElement008]
+[Panel000Element008]
 DispLabelText=G8
 Type=General08
 DisplayAsPiston=y
@@ -4457,7 +4451,7 @@ DispButtonRow=000
 DispButtonCol=8
 DispKeyLabelOnLeft=Y
 
-[SetterElement009]
+[Panel000Element009]
 DispLabelText=G9
 Type=General09
 DisplayAsPiston=y
@@ -4468,7 +4462,7 @@ DispButtonRow=000
 DispButtonCol=9
 DispKeyLabelOnLeft=Y
 
-[SetterElement010]
+[Panel000Element010]
 DispLabelText=G10
 Type=General10
 DisplayAsPiston=y
@@ -4479,7 +4473,7 @@ DispButtonRow=000
 DispButtonCol=10
 DispKeyLabelOnLeft=Y
 
-[SetterElement011]
+[Panel000Element011]
 DispLabelText=Set
 Type=Set
 DisplayAsPiston=N
@@ -4490,7 +4484,7 @@ PositionX=335
 PositionY=510
 DispKeyLabelOnLeft=Y
 
-[SetterElement012]
+[Panel000Element012]
 DispLabelText=General Cancel
 Type=GC
 DisplayAsPiston=N
@@ -4501,7 +4495,8 @@ PositionX=605
 PositionY=510
 DispKeyLabelOnLeft=Y
 
-[Label001]
+[Panel000Element013]
+Type=Label
 Name=Preset Generals
 PositionX=555
 PositionY=321
@@ -4509,13 +4504,45 @@ DispLabelColour=Black
 DispLabelFontSize=Large
 DispImageNum=8
 
-[Label002]
+[Panel000Element014]
+Type=Label
 Name=Programmable Generals
 PositionX=730
 PositionY=592
 DispLabelColour=Black
 DispLabelFontSize=Large
 DispImageNum=8
+
+[Panel000Element015]
+Type=Manual
+Manual=002
+DispKeyColourInverted=N
+
+[Panel000Element016]
+Type=Switch
+Switch=19
+DispDrawstopCol=4
+DispDrawstopRow=2
+DispLabelColour=Black
+DispLabelFontSize=Large
+DispImageNum=6
+
+[Panel000Element017]
+Type=Enclosure
+Enclosure=2
+DispLabelText=GO
+
+[Panel000Element018]
+Type=Switch
+Switch=1
+DispLabelText=Sous- basse 16'
+TextBreakWidth=35
+DispDrawstopCol=1
+DispDrawstopRow=6
+DispLabelColour=Black
+DispLabelFontSize=Large
+DispImageNum=6
+
 
 [Panel001]
 ; Noise control panel
@@ -4545,24 +4572,13 @@ DispExtraDrawstopRowsAboveExtraButtonRows=N
 DispTrimAboveManuals=Y
 DispTrimBelowManuals=N
 DispTrimAboveExtraRows=Y
-NumberOfManuals=0
 HasPedals=N
-NumberOfEnclosures=0
-NumberOfTremulants=0
-NumberOfStops=0
-NumberOfCouplers=0
-NumberOfGenerals=0
-NumberOfDivisionals=0
-NumberOfDivisionalCouplers=0
-NumberOfLabels=0
 NumberOfImages=0
-NumberOfReversiblePistons=0
-NumberOfSwitches=3
-Switch001=021
-Switch002=028
-Switch003=029
+NumberOfGUIElements=3
 
-[Panel001Switch028]
+[Panel001Element001]
+Type=Switch
+Switch=028
 DispLabelText=
 DispDrawstopCol=1
 DispDrawstopRow=100
@@ -4571,7 +4587,9 @@ DispLabelFontSize=Large
 ImageOn=.\Images\effectson.png
 ImageOff=.\Images\effectsoff.png
 
-[Panel001Switch021]
+[Panel001Element002]
+Type=Switch
+Switch=021
 DispLabelText=Blower Effect On/Off
 DispImageNum=6
 DispDrawstopCol=2
@@ -4579,7 +4597,9 @@ DispDrawstopRow=100
 DispLabelColour=Black
 DispLabelFontSize=Large
 
-[Panel001Switch029]
+[Panel001Element003]
+Type=Switch
+Switch=029
 DispLabelText=Stop Effects On/Off
 DispImageNum=6
 DispDrawstopCol=3
