@@ -240,9 +240,15 @@ void MidiApi :: setErrorCallback( RtMidiErrorCallback errorCallback )
 void MidiApi :: error( RtMidiError::Type type, std::string errorString )
 {
   if ( errorCallback_ ) {
+
+    if ( firstErrorOccurred_ )
+      return;
+
+    firstErrorOccurred_ = true;
     const std::string errorMessage = errorString;
 
     errorCallback_( type, errorMessage );
+    firstErrorOccurred_ = false;
     return;
   }
 
@@ -448,7 +454,7 @@ static void midiInputCallback( const MIDIPacketList *list, void *procRef, void *
       }
       continueSysex = packet->data[nBytes-1] != 0xF7;
 
-      if ( !continueSysex ) {
+      if ( !( data->ignoreFlags & 0x01 ) && !continueSysex ) {
         // If not a continuing sysex message, invoke the user callback function or queue the message.
         if ( data->usingCallback ) {
           RtMidiIn::RtMidiCallback callback = (RtMidiIn::RtMidiCallback) data->userCallback;
@@ -583,6 +589,7 @@ void MidiInCore :: openPort( unsigned int portNumber, const std::string portName
     return;
   }
 
+  CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
   unsigned int nSrc = MIDIGetNumberOfSources();
   if (nSrc < 1) {
     errorString_ = "MidiInCore::openPort: no MIDI input sources found!";
@@ -666,6 +673,7 @@ void MidiInCore :: closePort( void )
 
 unsigned int MidiInCore :: getPortCount()
 {
+  CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
   return MIDIGetNumberOfSources();
 }
 
@@ -800,6 +808,7 @@ std::string MidiInCore :: getPortName( unsigned int portNumber )
   char name[128];
 
   std::string stringName;
+  CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
   if ( portNumber >= MIDIGetNumberOfSources() ) {
     std::ostringstream ost;
     ost << "MidiInCore::getPortName: the 'portNumber' argument (" << portNumber << ") is invalid.";
@@ -810,7 +819,7 @@ std::string MidiInCore :: getPortName( unsigned int portNumber )
 
   portRef = MIDIGetSource( portNumber );
   nameRef = ConnectedEndpointName(portRef);
-  CFStringGetCString( nameRef, name, sizeof(name), 0);
+  CFStringGetCString( nameRef, name, sizeof(name), CFStringGetSystemEncoding());
   CFRelease( nameRef );
 
   return stringName = name;
@@ -858,6 +867,7 @@ void MidiOutCore :: initialize( const std::string& clientName )
 
 unsigned int MidiOutCore :: getPortCount()
 {
+  CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
   return MIDIGetNumberOfDestinations();
 }
 
@@ -868,6 +878,7 @@ std::string MidiOutCore :: getPortName( unsigned int portNumber )
   char name[128];
 
   std::string stringName;
+  CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
   if ( portNumber >= MIDIGetNumberOfDestinations() ) {
     std::ostringstream ost;
     ost << "MidiOutCore::getPortName: the 'portNumber' argument (" << portNumber << ") is invalid.";
@@ -878,7 +889,7 @@ std::string MidiOutCore :: getPortName( unsigned int portNumber )
 
   portRef = MIDIGetDestination( portNumber );
   nameRef = ConnectedEndpointName(portRef);
-  CFStringGetCString( nameRef, name, sizeof(name), 0);
+  CFStringGetCString( nameRef, name, sizeof(name), CFStringGetSystemEncoding());
   CFRelease( nameRef );
   
   return stringName = name;
@@ -892,6 +903,7 @@ void MidiOutCore :: openPort( unsigned int portNumber, const std::string portNam
     return;
   }
 
+  CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
   unsigned int nDest = MIDIGetNumberOfDestinations();
   if (nDest < 1) {
     errorString_ = "MidiOutCore::openPort: no MIDI output destinations found!";
@@ -969,14 +981,12 @@ void MidiOutCore :: openVirtualPort( std::string portName )
   data->endpoint = endpoint;
 }
 
-static char *sysexBuffer = 0;
-
-static void sysexCompletionProc( MIDISysexSendRequest * sreq )
-{
-  //std::cout << "Completed SysEx send\n";
- delete sysexBuffer;
- sysexBuffer = 0;
-}
+// Not necessary if we don't treat sysex messages any differently than
+// normal messages ... see below.
+//static void sysexCompletionProc( MIDISysexSendRequest *sreq )
+//{
+//  free( sreq );
+//}
 
 void MidiOutCore :: sendMessage( std::vector<unsigned char> *message )
 {
@@ -995,40 +1005,48 @@ void MidiOutCore :: sendMessage( std::vector<unsigned char> *message )
   CoreMidiData *data = static_cast<CoreMidiData *> (apiData_);
   OSStatus result;
 
+  /*
+    // I don't think this code is necessary.  We can send sysex
+    // messages through the normal mechanism.  In addition, this avoids
+    // the problem of virtual ports not receiving sysex messages.
+
   if ( message->at(0) == 0xF0 ) {
 
-    while ( sysexBuffer != 0 ) usleep( 1000 ); // sleep 1 ms
-
-   sysexBuffer = new char[nBytes];
-   if ( sysexBuffer == NULL ) {
-     errorString_ = "MidiOutCore::sendMessage: error allocating sysex message memory!";
-     error( RtMidiError::MEMORY_ERROR, errorString_ );
-    return;
-   }
+    // Apple's fantastic API requires us to free the allocated data in
+    // the completion callback but trashes the pointer and size before
+    // we get a chance to free it!!  This is a somewhat ugly hack
+    // submitted by ptarabbia that puts the sysex buffer data right at
+    // the end of the MIDISysexSendRequest structure.  This solution
+    // does not require that we wait for a previous sysex buffer to be
+    // sent before sending a new one, which was the old way we did it.
+    MIDISysexSendRequest *newRequest = (MIDISysexSendRequest *) malloc(sizeof(struct MIDISysexSendRequest) + nBytes);
+    char * sysexBuffer = ((char *) newRequest) + sizeof(struct MIDISysexSendRequest);
 
     // Copy data to buffer.
     for ( unsigned int i=0; i<nBytes; ++i ) sysexBuffer[i] = message->at(i);
 
-   data->sysexreq.destination = data->destinationId;
-   data->sysexreq.data = (Byte *)sysexBuffer;
-   data->sysexreq.bytesToSend = nBytes;
-   data->sysexreq.complete = 0;
-   data->sysexreq.completionProc = sysexCompletionProc;
-   data->sysexreq.completionRefCon = &(data->sysexreq);
+    newRequest->destination = data->destinationId;
+    newRequest->data = (Byte *)sysexBuffer;
+    newRequest->bytesToSend = nBytes;
+    newRequest->complete = 0;
+    newRequest->completionProc = sysexCompletionProc;
+    newRequest->completionRefCon = newRequest;
 
-   result = MIDISendSysex( &(data->sysexreq) );
-   if ( result != noErr ) {
-     errorString_ = "MidiOutCore::sendMessage: error sending MIDI to virtual destinations.";
-     error( RtMidiError::WARNING, errorString_ );
+    result = MIDISendSysex(newRequest);
+    if ( result != noErr ) {
+      free( newRequest );
+      errorString_ = "MidiOutCore::sendMessage: error sending MIDI to virtual destinations.";
+      error( RtMidiError::WARNING, errorString_ );
+      return;
+    }
     return;
-   }
-   return;
   }
   else if ( nBytes > 3 ) {
-   errorString_ = "MidiOutCore::sendMessage: message format problem ... not sysex but > 3 bytes?";
-   error( RtMidiError::WARNING, errorString_ );
-   return;
+    errorString_ = "MidiOutCore::sendMessage: message format problem ... not sysex but > 3 bytes?";
+    error( RtMidiError::WARNING, errorString_ );
+    return;
   }
+  */
 
   MIDIPacketList packetList;
   MIDIPacket *packet = MIDIPacketListInit( &packetList );
@@ -1203,7 +1221,11 @@ static void *alsaMidiHandler( void *ptr )
       if ( !( data->ignoreFlags & 0x02 ) ) doDecode = true;
       break;
 
-    case SND_SEQ_EVENT_TICK: // MIDI timing tick
+    case SND_SEQ_EVENT_TICK: // 0xF9 ... MIDI timing tick
+      if ( !( data->ignoreFlags & 0x02 ) ) doDecode = true;
+      break;
+
+    case SND_SEQ_EVENT_CLOCK: // 0xF8 ... MIDI timing (clock) tick
       if ( !( data->ignoreFlags & 0x02 ) ) doDecode = true;
       break;
 
@@ -1457,22 +1479,24 @@ void MidiInAlsa :: openPort( unsigned int portNumber, const std::string portName
     return;
   }
 
-  snd_seq_port_info_t *pinfo;
-  snd_seq_port_info_alloca( &pinfo );
-  std::ostringstream ost;
+  snd_seq_port_info_t *src_pinfo;
+  snd_seq_port_info_alloca( &src_pinfo );
   AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
-  if ( portInfo( data->seq, pinfo, SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ, (int) portNumber ) == 0 ) {
+  if ( portInfo( data->seq, src_pinfo, SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ, (int) portNumber ) == 0 ) {
+    std::ostringstream ost;
     ost << "MidiInAlsa::openPort: the 'portNumber' argument (" << portNumber << ") is invalid.";
     errorString_ = ost.str();
     error( RtMidiError::INVALID_PARAMETER, errorString_ );
     return;
   }
 
-
   snd_seq_addr_t sender, receiver;
-  sender.client = snd_seq_port_info_get_client( pinfo );
-  sender.port = snd_seq_port_info_get_port( pinfo );
+  sender.client = snd_seq_port_info_get_client( src_pinfo );
+  sender.port = snd_seq_port_info_get_port( src_pinfo );
   receiver.client = snd_seq_client_id( data->seq );
+
+  snd_seq_port_info_t *pinfo;
+  snd_seq_port_info_alloca( &pinfo );
   if ( data->vport < 0 ) {
     snd_seq_port_info_set_client( pinfo, 0 );
     snd_seq_port_info_set_port( pinfo, 0 );
@@ -1496,6 +1520,7 @@ void MidiInAlsa :: openPort( unsigned int portNumber, const std::string portName
       error( RtMidiError::DRIVER_ERROR, errorString_ );
       return;
     }
+    data->vport = snd_seq_port_info_get_port(pinfo);
   }
 
   receiver.port = data->vport;
@@ -1573,6 +1598,7 @@ void MidiInAlsa :: openVirtualPort( std::string portName )
       error( RtMidiError::DRIVER_ERROR, errorString_ );
       return;
     }
+    data->vport = snd_seq_port_info_get_port(pinfo);
   }
 
   if ( inputData_.doInput == false ) {
@@ -1905,6 +1931,7 @@ struct WinMidiData {
   DWORD lastTime;
   MidiInApi::MidiMessage message;
   LPMIDIHDR sysexBuffer[RT_SYSEX_BUFFER_COUNT];
+  CRITICAL_SECTION _mutex; // [Patrice] see https://groups.google.com/forum/#!topic/mididev/6OUjHutMpEo
 };
 
 //*********************************************************************//
@@ -1978,9 +2005,11 @@ static void CALLBACK midiInputCallback( HMIDIIN /*hmin*/,
     // buffer when an application closes and in this case, we should
     // avoid requeueing it, else the computer suddenly reboots after
     // one or two minutes.
-	if ( apiData->sysexBuffer[sysex->dwUser]->dwBytesRecorded > 0 ) {
-    //if ( sysex->dwBytesRecorded > 0 ) {
+    if ( apiData->sysexBuffer[sysex->dwUser]->dwBytesRecorded > 0 ) {
+      //if ( sysex->dwBytesRecorded > 0 ) {
+      EnterCriticalSection( &(apiData->_mutex) );
       MMRESULT result = midiInAddBuffer( apiData->inHandle, apiData->sysexBuffer[sysex->dwUser], sizeof(MIDIHDR) );
+      LeaveCriticalSection( &(apiData->_mutex) );
       if ( result != MMSYSERR_NOERROR )
         std::cerr << "\nRtMidiIn::midiInputCallback: error sending sysex to Midi device!!\n\n";
 
@@ -2019,8 +2048,10 @@ MidiInWinMM :: ~MidiInWinMM()
   // Close a connection if it exists.
   closePort();
 
-  // Cleanup.
   WinMidiData *data = static_cast<WinMidiData *> (apiData_);
+  DeleteCriticalSection( &(data->_mutex) );
+
+  // Cleanup.
   delete data;
 }
 
@@ -2039,6 +2070,11 @@ void MidiInWinMM :: initialize( const std::string& /*clientName*/ )
   apiData_ = (void *) data;
   inputData_.apiData = (void *) data;
   data->message.bytes.clear();  // needs to be empty for first input message
+
+  if ( !InitializeCriticalSectionAndSpinCount(&(data->_mutex), 0x00000400) ) {
+    errorString_ = "MidiInWinMM::initialize: InitializeCriticalSectionAndSpinCount failed.";
+    error( RtMidiError::WARNING, errorString_ );
+  }
 }
 
 void MidiInWinMM :: openPort( unsigned int portNumber, const std::string /*portName*/ )
@@ -2124,6 +2160,7 @@ void MidiInWinMM :: closePort( void )
 {
   if ( connected_ ) {
     WinMidiData *data = static_cast<WinMidiData *> (apiData_);
+    EnterCriticalSection( &(data->_mutex) );
     midiInReset( data->inHandle );
     midiInStop( data->inHandle );
 
@@ -2141,6 +2178,7 @@ void MidiInWinMM :: closePort( void )
 
     midiInClose( data->inHandle );
     connected_ = false;
+    LeaveCriticalSection( &(data->_mutex) );
   }
 }
 
@@ -2165,9 +2203,9 @@ std::string MidiInWinMM :: getPortName( unsigned int portNumber )
   midiInGetDevCaps( portNumber, &deviceCaps, sizeof(MIDIINCAPS));
 
 #if defined( UNICODE ) || defined( _UNICODE )
-  int length = WideCharToMultiByte(CP_UTF8, 0, deviceCaps.szPname, -1, NULL, 0, NULL, NULL);
+  int length = WideCharToMultiByte(CP_UTF8, 0, deviceCaps.szPname, -1, NULL, 0, NULL, NULL) - 1;
   stringName.assign( length, 0 );
-  length = WideCharToMultiByte(CP_UTF8, 0, deviceCaps.szPname, wcslen(deviceCaps.szPname), &stringName[0], length, NULL, NULL);
+  length = WideCharToMultiByte(CP_UTF8, 0, deviceCaps.szPname, static_cast<int>(wcslen(deviceCaps.szPname)), &stringName[0], length, NULL, NULL);
 #else
   stringName = std::string( deviceCaps.szPname );
 #endif
@@ -2239,9 +2277,9 @@ std::string MidiOutWinMM :: getPortName( unsigned int portNumber )
   midiOutGetDevCaps( portNumber, &deviceCaps, sizeof(MIDIOUTCAPS));
 
 #if defined( UNICODE ) || defined( _UNICODE )
-  int length = WideCharToMultiByte(CP_UTF8, 0, deviceCaps.szPname, -1, NULL, 0, NULL, NULL);
+  int length = WideCharToMultiByte(CP_UTF8, 0, deviceCaps.szPname, -1, NULL, 0, NULL, NULL) - 1;
   stringName.assign( length, 0 );
-  length = WideCharToMultiByte(CP_UTF8, 0, deviceCaps.szPname, wcslen(deviceCaps.szPname), &stringName[0], length, NULL, NULL);
+  length = WideCharToMultiByte(CP_UTF8, 0, deviceCaps.szPname, static_cast<int>(wcslen(deviceCaps.szPname)), &stringName[0], length, NULL, NULL);
 #else
   stringName = std::string( deviceCaps.szPname );
 #endif
