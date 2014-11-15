@@ -781,7 +781,7 @@ void GOrgueSettings::SetPolyphonyLimit(unsigned polyphony_limit)
 
 unsigned GOrgueSettings::GetAudioDeviceLatency(wxString device)
 {
-	return m_Config.Read(wxT("Devices/Sound/") + device, 60L);
+	return m_Config.Read(wxT("Devices/Sound/") + device, 50L);
 }
 
 void GOrgueSettings::SetAudioDeviceLatency(wxString device, unsigned latency)
