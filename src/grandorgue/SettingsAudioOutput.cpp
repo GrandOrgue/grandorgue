@@ -147,6 +147,7 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 
 	m_AudioOutput->ExpandAll();
 
+	m_DeviceList = m_Sound.GetAudioDevices();
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
 	topSizer->Fit(this);
@@ -268,11 +269,10 @@ void SettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
 std::vector<wxString> SettingsAudioOutput::GetRemainingAudioDevices()
 {
 	std::vector<wxString> result;
-	std::vector<GOrgueSoundDevInfo> devs = m_Sound.GetAudioDevices();
-	for(unsigned i = 0; i < devs.size(); i++)
+	for(unsigned i = 0; i < m_DeviceList.size(); i++)
 	{
-		if (!GetDeviceNode(devs[i].name).IsOk())
-			result.push_back(devs[i].name);
+		if (!GetDeviceNode(m_DeviceList[i].name).IsOk())
+			result.push_back(m_DeviceList[i].name);
 	}
 	return result;
 }
@@ -299,10 +299,9 @@ void SettingsAudioOutput::UpdateButtons()
 	if (data && data->type == AudioItemData::AUDIO_NODE)
 	{
 		bool enable = false;
-		std::vector<GOrgueSoundDevInfo> devs = m_Sound.GetAudioDevices();
-		for(unsigned i = 0; i < devs.size(); i++)
-			if (devs[i].name == data->name)
-				if (m_AudioOutput->GetChildrenCount(selection, false) < devs[i].channels)
+		for(unsigned i = 0; i < m_DeviceList.size(); i++)
+			if (m_DeviceList[i].name == data->name)
+				if (m_AudioOutput->GetChildrenCount(selection, false) < m_DeviceList[i].channels)
 					enable = true;
 		if (enable)
 			m_Add->Enable();
@@ -371,11 +370,10 @@ void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 	AudioItemData* data = GetObject(selection);
 	if (data && data->type == AudioItemData::AUDIO_NODE)
 	{
-		std::vector<GOrgueSoundDevInfo> devs = m_Sound.GetAudioDevices();
 		unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
-		for(unsigned i = 0; i < devs.size(); i++)
-			if (devs[i].name == data->name)
-				if (channels < devs[i].channels)
+		for(unsigned i = 0; i < m_DeviceList.size(); i++)
+			if (m_DeviceList[i].name == data->name)
+				if (channels < m_DeviceList[i].channels)
 					AddChannelNode(selection, channels);
 	}
 	else if (data && data->type == AudioItemData::CHANNEL_NODE)
@@ -444,12 +442,11 @@ void SettingsAudioOutput::OnOutputChange(wxCommandEvent& event)
 		index = wxGetSingleChoiceIndex(_("Change audio device"), _("Change audio device"), devs, this);
 		if (index == -1 || index == 0)
 			return;
-		std::vector<GOrgueSoundDevInfo> audiodevs = m_Sound.GetAudioDevices();
 		unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
 		bool error = false;
-		for(unsigned i = 0; i < devs.size(); i++)
-			if (audiodevs[i].name == devs[index])
-				if (channels > audiodevs[i].channels)
+		for(unsigned i = 0; i < m_DeviceList.size(); i++)
+			if (m_DeviceList[i].name == devs[index])
+				if (channels > m_DeviceList[i].channels)
 					error = true;
 		if (error)
 		{
