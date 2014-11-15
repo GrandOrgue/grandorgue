@@ -45,6 +45,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <climits>
+#include <algorithm>
 
 // Static variable definitions.
 const unsigned int RtApi::MAX_SAMPLE_RATES = 14;
@@ -58,6 +59,22 @@ const unsigned int RtApi::SAMPLE_RATES[] = {
   #define MUTEX_DESTROY(A)    DeleteCriticalSection(A)
   #define MUTEX_LOCK(A)       EnterCriticalSection(A)
   #define MUTEX_UNLOCK(A)     LeaveCriticalSection(A)
+
+  #include "tchar.h"
+
+  static std::string convertCharPointerToStdString(const char *text)
+  {
+    return std::string(text);
+  }
+
+  static std::string convertCharPointerToStdString(const wchar_t *text)
+  {
+    int length = WideCharToMultiByte(CP_UTF8, 0, text, -1, NULL, 0, NULL, NULL);
+    std::string s( length-1, '\0' );
+    WideCharToMultiByte(CP_UTF8, 0, text, -1, &s[0], length, NULL, NULL);
+    return s;
+  }
+
 #elif defined(__LINUX_ALSA__) || defined(__LINUX_PULSE__) || defined(__UNIX_JACK__) || defined(__LINUX_OSS__) || defined(__MACOSX_CORE__)
   // pthread API
   #define MUTEX_INITIALIZE(A) pthread_mutex_init(A, NULL)
@@ -179,7 +196,7 @@ RtAudio :: RtAudio( RtAudio::Api api )
   getCompiledApi( apis );
   for ( unsigned int i=0; i<apis.size(); i++ ) {
     openRtApi( apis[i] );
-    if ( rtapi_->getDeviceCount() ) break;
+    if ( rtapi_ && rtapi_->getDeviceCount() ) break;
   }
 
   if ( rtapi_ ) return;
@@ -761,9 +778,14 @@ RtAudio::DeviceInfo RtApiCore :: getDeviceInfo( unsigned int device )
   bool haveValueRange = false;
   info.sampleRates.clear();
   for ( UInt32 i=0; i<nRanges; i++ ) {
-    if ( rangeList[i].mMinimum == rangeList[i].mMaximum )
-      info.sampleRates.push_back( (unsigned int) rangeList[i].mMinimum );
-    else {
+    if ( rangeList[i].mMinimum == rangeList[i].mMaximum ) {
+      unsigned int tmpSr = (unsigned int) rangeList[i].mMinimum;
+      info.sampleRates.push_back( tmpSr );
+
+      if ( !info.preferredSampleRate || ( tmpSr <= 48000 && tmpSr > info.preferredSampleRate ) )
+        info.preferredSampleRate = tmpSr;
+
+    } else {
       haveValueRange = true;
       if ( rangeList[i].mMinimum > minimumRate ) minimumRate = rangeList[i].mMinimum;
       if ( rangeList[i].mMaximum < maximumRate ) maximumRate = rangeList[i].mMaximum;
@@ -772,8 +794,12 @@ RtAudio::DeviceInfo RtApiCore :: getDeviceInfo( unsigned int device )
 
   if ( haveValueRange ) {
     for ( unsigned int k=0; k<MAX_SAMPLE_RATES; k++ ) {
-      if ( SAMPLE_RATES[k] >= (unsigned int) minimumRate && SAMPLE_RATES[k] <= (unsigned int) maximumRate )
+      if ( SAMPLE_RATES[k] >= (unsigned int) minimumRate && SAMPLE_RATES[k] <= (unsigned int) maximumRate ) {
         info.sampleRates.push_back( SAMPLE_RATES[k] );
+
+        if ( !info.preferredSampleRate || ( SAMPLE_RATES[k] <= 48000 && SAMPLE_RATES[k] > info.preferredSampleRate ) )
+          info.preferredSampleRate = SAMPLE_RATES[k];
+      }
     }
   }
 
@@ -1984,7 +2010,9 @@ RtAudio::DeviceInfo RtApiJack :: getDeviceInfo( unsigned int device )
 
   // Get the current jack server sample rate.
   info.sampleRates.clear();
-  info.sampleRates.push_back( jack_get_sample_rate( client ) );
+
+  info.preferredSampleRate = jack_get_sample_rate( client );
+  info.sampleRates.push_back( info.preferredSampleRate );
 
   // Count the available ports containing the client name as device
   // channels.  Jack "input ports" equal RtAudio output channels.
@@ -2764,8 +2792,12 @@ RtAudio::DeviceInfo RtApiAsio :: getDeviceInfo( unsigned int device )
   info.sampleRates.clear();
   for ( unsigned int i=0; i<MAX_SAMPLE_RATES; i++ ) {
     result = ASIOCanSampleRate( (ASIOSampleRate) SAMPLE_RATES[i] );
-    if ( result == ASE_OK )
+    if ( result == ASE_OK ) {
       info.sampleRates.push_back( SAMPLE_RATES[i] );
+
+      if ( !info.preferredSampleRate || ( SAMPLE_RATES[i] <= 48000 && SAMPLE_RATES[i] > info.preferredSampleRate ) )
+        info.preferredSampleRate = SAMPLE_RATES[i];
+    }
   }
 
   // Determine supported data types ... just check first channel and assume rest are the same.
@@ -3654,12 +3686,12 @@ public:
       outIndex_( 0 ) {}
 
   ~WasapiBuffer() {
-    delete buffer_;
+    free( buffer_ );
   }
 
   // sets the length of the internal ring buffer
   void setBufferSize( unsigned int bufferSize, unsigned int formatBytes ) {
-    delete buffer_;
+    free( buffer_ );
 
     buffer_ = ( char* ) calloc( bufferSize, formatBytes );
 
@@ -3818,7 +3850,7 @@ void convertBufferWasapi( char* outBuffer,
   float sampleStep = 1.0f / sampleRatio;
   float inSampleFraction = 0.0f;
 
-  outSampleCount = ( unsigned int ) ( inSampleCount * sampleRatio );
+  outSampleCount = ( unsigned int ) roundf( inSampleCount * sampleRatio );
 
   // frame-by-frame, copy each relative input sample into it's corresponding output sample
   for ( unsigned int outSample = 0; outSample < outSampleCount; outSample++ )
@@ -3964,7 +3996,6 @@ RtAudio::DeviceInfo RtApiWasapi::getDeviceInfo( unsigned int device )
   RtAudio::DeviceInfo info;
   unsigned int captureDeviceCount = 0;
   unsigned int renderDeviceCount = 0;
-  std::wstring deviceName;
   std::string defaultDeviceName;
   bool isCaptureDevice = false;
 
@@ -4067,8 +4098,7 @@ RtAudio::DeviceInfo RtApiWasapi::getDeviceInfo( unsigned int device )
     goto Exit;
   }
 
-  deviceName = defaultDeviceNameProp.pwszVal;
-  defaultDeviceName = std::string( deviceName.begin(), deviceName.end() );
+  defaultDeviceName = convertCharPointerToStdString(defaultDeviceNameProp.pwszVal);
 
   // name
   hr = devicePtr->OpenPropertyStore( STGM_READ, &devicePropStore );
@@ -4085,8 +4115,7 @@ RtAudio::DeviceInfo RtApiWasapi::getDeviceInfo( unsigned int device )
     goto Exit;
   }
 
-  deviceName = deviceNameProp.pwszVal;
-  info.name = std::string( deviceName.begin(), deviceName.end() );
+  info.name =convertCharPointerToStdString(deviceNameProp.pwszVal);
 
   // is default
   if ( isCaptureDevice ) {
@@ -4129,6 +4158,7 @@ RtAudio::DeviceInfo RtApiWasapi::getDeviceInfo( unsigned int device )
   for ( unsigned int i = 0; i < MAX_SAMPLE_RATES; i++ ) {
     info.sampleRates.push_back( SAMPLE_RATES[i] );
   }
+  info.preferredSampleRate = deviceFormat->nSamplesPerSec;
 
   // native format
   info.nativeFormats = 0;
@@ -5327,8 +5357,12 @@ RtAudio::DeviceInfo RtApiDs :: getDeviceInfo( unsigned int device )
   info.sampleRates.clear();
   for ( unsigned int k=0; k<MAX_SAMPLE_RATES; k++ ) {
     if ( SAMPLE_RATES[k] >= (unsigned int) outCaps.dwMinSecondarySampleRate &&
-         SAMPLE_RATES[k] <= (unsigned int) outCaps.dwMaxSecondarySampleRate )
+         SAMPLE_RATES[k] <= (unsigned int) outCaps.dwMaxSecondarySampleRate ) {
       info.sampleRates.push_back( SAMPLE_RATES[k] );
+
+      if ( !info.preferredSampleRate || ( SAMPLE_RATES[k] <= 48000 && SAMPLE_RATES[k] > info.preferredSampleRate ) )
+        info.preferredSampleRate = SAMPLE_RATES[k];
+    }
   }
 
   // Get format information.
@@ -6613,21 +6647,6 @@ static unsigned __stdcall callbackHandler( void *ptr )
   return 0;
 }
 
-#include "tchar.h"
-
-static std::string convertTChar( LPCTSTR name )
-{
-#if defined( UNICODE ) || defined( _UNICODE )
-  int length = WideCharToMultiByte(CP_UTF8, 0, name, -1, NULL, 0, NULL, NULL);
-  std::string s( length-1, '\0' );
-  WideCharToMultiByte(CP_UTF8, 0, name, -1, &s[0], length, NULL, NULL);
-#else
-  std::string s( name );
-#endif
-
-  return s;
-}
-
 static BOOL CALLBACK deviceQueryCallback( LPGUID lpguid,
                                           LPCTSTR description,
                                           LPCTSTR /*module*/,
@@ -6669,7 +6688,7 @@ static BOOL CALLBACK deviceQueryCallback( LPGUID lpguid,
   }
 
   // If good device, then save its name and guid.
-  std::string name = convertTChar( description );
+  std::string name = convertCharPointerToStdString( description );
   //if ( name == "Primary Sound Driver" || name == "Primary Sound Capture Driver" )
   if ( lpguid == NULL )
     name = "Default Device";
@@ -7065,8 +7084,12 @@ RtAudio::DeviceInfo RtApiAlsa :: getDeviceInfo( unsigned int device )
   // Test our discrete set of sample rate values.
   info.sampleRates.clear();
   for ( unsigned int i=0; i<MAX_SAMPLE_RATES; i++ ) {
-    if ( snd_pcm_hw_params_test_rate( phandle, params, SAMPLE_RATES[i], 0 ) == 0 )
+    if ( snd_pcm_hw_params_test_rate( phandle, params, SAMPLE_RATES[i], 0 ) == 0 ) {
       info.sampleRates.push_back( SAMPLE_RATES[i] );
+
+      if ( !info.preferredSampleRate || ( SAMPLE_RATES[i] <= 48000 && SAMPLE_RATES[i] > info.preferredSampleRate ) )
+        info.preferredSampleRate = SAMPLE_RATES[i];
+    }
   }
   if ( info.sampleRates.size() == 0 ) {
     snd_pcm_close( phandle );
@@ -8099,6 +8122,7 @@ RtAudio::DeviceInfo RtApiPulse::getDeviceInfo( unsigned int /*device*/ )
   for ( const unsigned int *sr = SUPPORTED_SAMPLERATES; *sr; ++sr )
     info.sampleRates.push_back( *sr );
 
+  info.preferredSampleRate = 48000;
   info.nativeFormats = RTAUDIO_SINT16 | RTAUDIO_SINT32 | RTAUDIO_FLOAT32;
 
   return info;
@@ -8461,7 +8485,7 @@ bool RtApiPulse::probeDeviceOpen( unsigned int device, StreamMode mode,
   pah = static_cast<PulseAudioHandle *>( stream_.apiHandle );
 
   int error;
-  if ( !options->streamName.empty() ) streamName = options->streamName;
+  if ( options && !options->streamName.empty() ) streamName = options->streamName;
   switch ( mode ) {
   case INPUT:
     pa_buffer_attr buffer_attr;
@@ -8667,6 +8691,10 @@ RtAudio::DeviceInfo RtApiOss :: getDeviceInfo( unsigned int device )
       for ( unsigned int k=0; k<MAX_SAMPLE_RATES; k++ ) {
         if ( ainfo.rates[i] == SAMPLE_RATES[k] ) {
           info.sampleRates.push_back( SAMPLE_RATES[k] );
+
+          if ( !info.preferredSampleRate || ( SAMPLE_RATES[k] <= 48000 && SAMPLE_RATES[k] > info.preferredSampleRate ) )
+            info.preferredSampleRate = SAMPLE_RATES[k];
+
           break;
         }
       }
@@ -8675,8 +8703,12 @@ RtAudio::DeviceInfo RtApiOss :: getDeviceInfo( unsigned int device )
   else {
     // Check min and max rate values;
     for ( unsigned int k=0; k<MAX_SAMPLE_RATES; k++ ) {
-      if ( ainfo.min_rate <= (int) SAMPLE_RATES[k] && ainfo.max_rate >= (int) SAMPLE_RATES[k] )
+      if ( ainfo.min_rate <= (int) SAMPLE_RATES[k] && ainfo.max_rate >= (int) SAMPLE_RATES[k] ) {
         info.sampleRates.push_back( SAMPLE_RATES[k] );
+
+        if ( !info.preferredSampleRate || ( SAMPLE_RATES[k] <= 48000 && SAMPLE_RATES[k] > info.preferredSampleRate ) )
+          info.preferredSampleRate = SAMPLE_RATES[k];
+      }
     }
   }
 
