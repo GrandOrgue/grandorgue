@@ -241,7 +241,7 @@ void GOrgueSettings::Load()
 		SetSampleRate(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SampleRate"), 1000, 100000, false, 44100));
 		SetBitsPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("BitsPerSample"), 8, 24, false, 24));
 		SetVolume(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Volume"), -120, 20, false, -15));
-		SetPolyphonyLimit(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, false, 2048));
+		SetPolyphonyLimit(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, false, cpus * 725));
 		SetUserSettingPath (cfg.ReadString(CMBSetting, wxT("General"), wxT("SettingPath"), false, m_Config.Read(wxT("SettingPath"), wxEmptyString)));
 		SetUserCachePath (cfg.ReadString(CMBSetting, wxT("General"), wxT("CachePath"), false, m_Config.Read(wxT("CachePath"), wxEmptyString)));
 		SetPreset(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Preset"), 0, MAX_PRESET, false, 0));
