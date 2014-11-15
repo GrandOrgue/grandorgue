@@ -22,6 +22,7 @@
 #ifndef SETTINGSAUDIOOUTPUT_H
 #define SETTINGSAUDIOOUTPUT_H
 
+#include "GOrgueSoundDevInfo.h"
 #include "SettingsAudioGroup.h"
 #include <wx/panel.h>
 #include <vector>
@@ -53,6 +54,7 @@ private:
 	wxButton* m_Change;
 	wxButton* m_Properties;
 	wxButton* m_Default;
+	std::vector<GOrgueSoundDevInfo> m_DeviceList;
 
 	AudioItemData* GetObject(const wxTreeItemId& id);
 	wxTreeItemId GetDeviceNode(const wxString& name);
