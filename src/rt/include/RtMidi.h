@@ -43,7 +43,7 @@
 #ifndef RTMIDI_H
 #define RTMIDI_H
 
-#define RTMIDI_VERSION "2.0.1"
+#define RTMIDI_VERSION "2.1.0"
 
 #include <exception>
 #include <iostream>
@@ -460,6 +460,7 @@ protected:
   bool connected_;
   std::string errorString_;
   RtMidiErrorCallback errorCallback_;
+  bool firstErrorOccurred_;
 };
 
 class MidiInApi : public MidiApi
