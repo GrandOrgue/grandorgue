@@ -224,7 +224,7 @@ RtMidiOut :: ~RtMidiOut() throw()
 //*********************************************************************//
 
 MidiApi :: MidiApi( void )
-  : apiData_( 0 ), connected_( false ), errorCallback_(0)
+  : apiData_( 0 ), connected_( false ), errorCallback_(0), errorCallbackUserData_(0)
 {
 }
 
@@ -232,9 +232,10 @@ MidiApi :: ~MidiApi( void )
 {
 }
 
-void MidiApi :: setErrorCallback( RtMidiErrorCallback errorCallback )
+void MidiApi :: setErrorCallback( RtMidiErrorCallback errorCallback, void *userData = 0 )
 {
     errorCallback_ = errorCallback;
+    errorCallbackUserData_ = userData;
 }
 
 void MidiApi :: error( RtMidiError::Type type, std::string errorString )
@@ -247,7 +248,7 @@ void MidiApi :: error( RtMidiError::Type type, std::string errorString )
     firstErrorOccurred_ = true;
     const std::string errorMessage = errorString;
 
-    errorCallback_( type, errorMessage );
+    errorCallback_( type, errorMessage, errorCallbackUserData_);
     firstErrorOccurred_ = false;
     return;
   }
@@ -2254,9 +2255,9 @@ std::string MidiOutWinMM :: getPortName( unsigned int portNumber )
   stringName = std::string( deviceCaps.szPname );
 #endif
 
-  // GO: Next lines added to add the portNumber to the name so that 
-  // GO: the device's names are sure to be listed with individual names
-  // GO: even when they have the same brand name
+  // Next lines added to add the portNumber to the name so that 
+  // the device's names are sure to be listed with individual names
+  // even when they have the same brand name
   std::ostringstream os;
   os << " ";
   os << portNumber;
