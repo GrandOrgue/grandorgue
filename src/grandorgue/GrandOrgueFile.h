@@ -249,6 +249,9 @@ public:
 	void SendMidiMessage(GOrgueMidiEvent& e);
 	void SendMidiRecorderMessage(GOrgueMidiEvent& e);
 	void AddMidiListener(GOrgueMidiListener* listener);
+
+	/* For testing only */
+	void SetODFPath(wxString path);
 };
 
 #endif

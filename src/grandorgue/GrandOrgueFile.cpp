@@ -1373,3 +1373,8 @@ void GrandOrgueFile::MarkSectionInUse(wxString name)
 		throw wxString::Format(_("Section %s already in use"), name.c_str());
 	m_UsedSections[name] = true;
 }
+
+void GrandOrgueFile::SetODFPath(wxString path)
+{
+	m_path = path;
+}

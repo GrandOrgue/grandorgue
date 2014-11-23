@@ -74,6 +74,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 	{
 		GOrgueSettings settings(wxT("perftest"));
 		GrandOrgueFile* organfile = new GrandOrgueFile(NULL, settings);
+		organfile->SetODFPath(argv[1]);
 		organfile->AddWindchest(new GOrgueWindchest(organfile));
 		GOSoundEngine* engine = new GOSoundEngine();
 
@@ -95,7 +96,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 			ainfo.release_end = -1;
 			ainfo.loops.clear();
 			attack.push_back(ainfo);
-			w->LoadFromFile(attack, release, argv[1], bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1);
+			w->LoadFromFile(attack, release, organfile, bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1, 0);
 			pipes.push_back(w);
 		}
 		engine->SetVolume(10);
@@ -104,7 +105,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 		engine->SetHardPolyphony(10000);
 		engine->SetScaledReleases(true);
 		engine->SetInterpolationType(interpolation);
-		engine->Setup(organfile);
+		engine->Setup(organfile, samples_per_frame);
 
 		std::vector<SAMPLER_HANDLE> handles;
 		METER_INFO info;
@@ -121,7 +122,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 		unsigned blocks = seconds * engine->GetSampleRate() / samples_per_frame;
 		for(unsigned i = 0; i < blocks; i++)
 		{
-			engine->GetSamples(output_buffer, samples_per_frame, 0, &info);
+			engine->GetSamples(output_buffer, samples_per_frame, &info);
 		}
 		wxMilliClock_t end = getCPUTime();
 		wxMilliClock_t diff = end - start;
