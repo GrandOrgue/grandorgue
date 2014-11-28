@@ -126,7 +126,6 @@ static inline void AudioWriteCompressed16(unsigned char* data, unsigned& output_
 
 typedef struct {
 	unsigned position;
-	int diff[MAX_OUTPUT_CHANNELS];
 	int value[MAX_OUTPUT_CHANNELS];
 	int last[MAX_OUTPUT_CHANNELS];
 	int prev[MAX_OUTPUT_CHANNELS];
@@ -139,7 +138,6 @@ static inline void InitDecompressionCache(DecompressionCache& cache)
 	cache.ptr = NULL;
 	for(unsigned j = 0; j < MAX_OUTPUT_CHANNELS; j++)
 	{
-		cache.diff[j] = 0;
 		cache.last[j] = 0;
 		cache.value[j] = 0;
 		cache.prev[j] = 0;
@@ -155,10 +153,9 @@ static inline void DecompressionStep(DecompressionCache& cache, unsigned channel
 			val = AudioReadCompressed16(cache.ptr);
 		else
 			val = AudioReadCompressed8(cache.ptr);
+		cache.last[j] = cache.prev[j];
 		cache.prev[j] = cache.value[j];
-		cache.value[j] = cache.last[j] + val;
-		cache.diff[j] = (cache.diff[j] + val) / 2;
-		cache.last[j] = cache.value[j] + cache.diff[j];
+		cache.value[j] = cache.prev[j] + (cache.prev[j] - cache.last[j]) / 2 + val;
 	}
 	cache.position++;
 }
