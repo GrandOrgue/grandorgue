@@ -799,10 +799,6 @@ void GOAudioSection::Compress(bool format16)
 	{
 		state.position = i;
 		state.ptr = (const unsigned char*)(intptr_t)output_len;
-		state.value[0] = GetSample(i, 0);
-		if (m_Channels > 1)
-			state.value[1] = GetSample(i, 1);
-
 		for (unsigned j = 0; j < m_StartSegments.size(); j++)
 		{
 			if (m_StartSegments[j].start_offset == i)
@@ -811,15 +807,14 @@ void GOAudioSection::Compress(bool format16)
 			}
 		}
 
-		state.prev[0] = state.value[0];
-		state.prev[1] = state.value[1];
+		state.value[0] = GetSample(i, 0);
+		if (m_Channels > 1)
+			state.value[1] = GetSample(i, 1);
 
 		for (unsigned j = 0; j < m_Channels; j++)
 		{
 			int val = state.value[j];
-			int encode = val - state.last[j];
-			state.diff[j] = (state.diff[j] + val - state.last[j]) / 2;
-			state.last[j] = val + state.diff[j];
+			int encode = val - (state.prev[j] + (state.prev[j] - state.last[j]) / 2);
 
 			if (format16)
 				AudioWriteCompressed16(data, output_len, encode);
@@ -837,6 +832,10 @@ void GOAudioSection::Compress(bool format16)
 				return;
 			}
 		}
+		state.last[0] = state.prev[0];
+		state.last[1] = state.prev[1];
+		state.prev[0] = state.value[0];
+		state.prev[1] = state.value[1];
 	}
 
 #if 0
