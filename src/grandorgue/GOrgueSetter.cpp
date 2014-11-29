@@ -154,6 +154,7 @@ enum {
 	ID_SETTER_TRANSPOSE_UP,
 
 	ID_SETTER_SAVE,
+	ID_SETTER_ON,
 };
 
 const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
@@ -276,6 +277,7 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_BankDisplay(organfile),
 	m_CrescendoDisplay(organfile),
 	m_TransposeDisplay(organfile),
+	m_NameDisplay(organfile),
 	m_swell(organfile),
 	m_SetterType(SETTER_REGULAR)
 {
@@ -328,6 +330,7 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
+	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
 	m_button[ID_SETTER_PREV]->GetMidiReceiver().SetIndex(0);
@@ -437,7 +440,7 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 	panel->AddControl(button);
 
 	GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetPitchLabel());
-	PosDisplay->Init(cfg, wxT("SetterMasterPitch"), 230, 25);
+	PosDisplay->Init(cfg, wxT("SetterMasterPitch"), 230, 35);
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_TEMPERAMENT_PREV], false);
@@ -445,7 +448,7 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 	panel->AddControl(button);
 
 	PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel());
-	PosDisplay->Init(cfg, wxT("SetterMasterTemperament"), 80, 80, wxEmptyString, 2);
+	PosDisplay->Init(cfg, wxT("SetterMasterTemperament"), 80, 90, wxEmptyString, 2);
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_TEMPERAMENT_NEXT], false);
@@ -456,17 +459,25 @@ GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
 	button->Init(cfg, wxT("SetterSave"), 5, 101);
 	panel->AddControl(button);
 
+	button = new GOGUIButton(panel, m_button[ID_SETTER_ON], true);
+	button->Init(cfg, wxT("SetterOn"), 1, 100, 4);
+	panel->AddControl(button);
+
 	button = new GOGUIButton(panel, m_button[ID_SETTER_TRANSPOSE_DOWN], false);
 	button->Init(cfg, wxT("SetterMasterTransposeDown"), 1, 102);
 	panel->AddControl(button);
 
 	PosDisplay=new GOGUILabel(panel, &m_TransposeDisplay);
-	PosDisplay->Init(cfg, wxT("SetterMasterTranspose"), 80, 165);
+	PosDisplay->Init(cfg, wxT("SetterMasterTranspose"), 80, 175);
 	panel->AddControl(PosDisplay);
 
 	button = new GOGUIButton(panel, m_button[ID_SETTER_TRANSPOSE_UP], false);
 	button->Init(cfg, wxT("SetterMasterTransposeUp"), 3, 102);
 	panel->AddControl(button);
+
+	PosDisplay=new GOGUILabel(panel, &m_NameDisplay);
+	PosDisplay->Init(cfg, wxT("SetterMasterName"), 180, 230, wxEmptyString, 5);
+	panel->AddControl(PosDisplay);
 
 	return panel;
 }
@@ -955,6 +966,8 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_button[ID_SETTER_TRANSPOSE_UP]->Init(cfg, wxT("SetterTransposeUp"), _("+"));
 
 	m_button[ID_SETTER_SAVE]->Init(cfg, wxT("SetterSave"), _("Save"));
+	m_button[ID_SETTER_ON]->Init(cfg, wxT("SetterOn"), _("ON"));
+	m_button[ID_SETTER_ON]->Display(true);
 
 	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"), 0);
 
@@ -962,6 +975,7 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_BankDisplay.Init(cfg, wxT("SetterGeneralBank"));
 	m_CrescendoDisplay.Init(cfg, wxT("SetterCrescendoPosition"));
 	m_TransposeDisplay.Init(cfg, wxT("SetterTranspose"));
+	m_NameDisplay.Init(cfg, wxT("SetterName"));
 
 	for(unsigned i = 0; i < 10; i++)
 	{
@@ -1191,8 +1205,13 @@ void GOrgueSetter::SetterButtonChanged(GOrgueSetterButton* button)
 void GOrgueSetter::Abort()
 {
 	m_PosDisplay.Abort();
+	m_BankDisplay.Abort();
 	m_CrescendoDisplay.Abort();
+	m_TransposeDisplay.Abort();
+	m_NameDisplay.Abort();
 	m_swell.Abort();
+	for(unsigned i = 0; i < m_button.size(); i++)
+		m_button[i]->Abort();
 }
 
 void GOrgueSetter::PreparePlayback()
@@ -1201,6 +1220,9 @@ void GOrgueSetter::PreparePlayback()
 	buffer.Printf(wxT("%03d"), m_pos);
 	m_PosDisplay.SetName(buffer);
 	m_PosDisplay.PreparePlayback();
+
+	m_NameDisplay.SetName(m_organfile->GetChurchName());
+	m_NameDisplay.PreparePlayback();
 
 	wxCommandEvent event(wxEVT_SETVALUE, ID_METER_FRAME_SPIN);
 	event.SetInt(m_pos);
