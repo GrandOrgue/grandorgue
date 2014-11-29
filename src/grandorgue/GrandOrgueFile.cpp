@@ -752,6 +752,7 @@ bool GrandOrgueFile::Save()
 	if (!Export(m_SettingFilename))
 		return false;
 	m_doc->Modify(false);
+	m_setter->UpdateModified(false);
 	return true;
 }
 
@@ -1188,6 +1189,7 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 	for (unsigned i = 0; i < m_windchest.size(); i++)
 		m_windchest[i]->PreparePlayback();
 
+	m_setter->UpdateModified(m_doc->IsModified());
 	m_setter->PreparePlayback();
 	m_PitchLabel.PreparePlayback();
 	m_TemperamentLabel.PreparePlayback();
@@ -1345,6 +1347,7 @@ void GrandOrgueFile::AllNotesOff()
 void GrandOrgueFile::Modified()
 {
 	m_doc->Modify(true);
+	m_setter->UpdateModified(true);
 }
 
 int GrandOrgueFile::GetRecorderElementID(wxString name)

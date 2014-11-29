@@ -1401,3 +1401,8 @@ void GOrgueSetter::SetTranspose(int value)
 	m_organfile->AllNotesOff();
 	UpdateTranspose();
 }
+
+void GOrgueSetter::UpdateModified(bool modified)
+{
+	m_button[ID_SETTER_SAVE]->Display(modified);	
+}
