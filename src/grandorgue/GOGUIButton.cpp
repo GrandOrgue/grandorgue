@@ -50,7 +50,7 @@ GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_pisto
 {
 }
 
-void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos)
+void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos, unsigned image)
 {
 	GOGUIControl::Init(cfg, group);
 
@@ -68,13 +68,13 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, 
 	wxString on_file, off_file;
 	if (m_IsPiston)
 	{
-		int DispImageNum = m_Button->IsReadOnly() ? 3 : 1;
+		int DispImageNum = image ? image : m_Button->IsReadOnly() ? 3 : 1;
 		off_file = wxString::Format(wxT("GO:piston%02d_off"), DispImageNum);
 		on_file = wxString::Format(wxT("GO:piston%02d_on"), DispImageNum);
 	}
 	else
 	{
-		int DispImageNum = m_Button->IsReadOnly() ? 4 : 1;
+		int DispImageNum = image ? image : m_Button->IsReadOnly() ? 4 : 1;
 		off_file = wxString::Format(wxT("GO:drawstop%02d_off"), DispImageNum);
 		on_file = wxString::Format(wxT("GO:drawstop%02d_on"), DispImageNum);
 	}

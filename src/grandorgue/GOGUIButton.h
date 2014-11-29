@@ -54,7 +54,7 @@ protected:
 public:
 	GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston = false);
 
-	void Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos);
+	void Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos, unsigned image = 0);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Layout();
 
