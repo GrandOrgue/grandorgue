@@ -274,16 +274,6 @@ bool GOSoundEngine::ProcessSampler(float output_buffer[GO_SOUND_BUFFER_SIZE], GO
 		if (sampler->stop && sampler->stop <= m_CurrentTime)
 		{
 			CreateReleaseSampler(sampler);
-			
-			/* The above code created a new sampler to playback the release, the
-			 * following code takes the active sampler for this pipe (which will be
-			 * in either the attack or loop section) and sets the fadeout property
-			 * which will decay this portion of the pipe. The sampler will
-			 * automatically be placed back in the pool when the fade restores to
-			 * zero. */
-			unsigned cross_fade_len = sampler->pipe ? GetFaderLength(sampler->pipe->GetMidiKeyNumber()) : 46;
-			sampler->fader.StartDecay(cross_fade_len, m_SampleRate);
-			sampler->is_release = true;
 			sampler->stop = 0;
 		} 
 		else if (sampler->new_attack && sampler->new_attack <= m_CurrentTime)
@@ -705,11 +695,8 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 	GO_SAMPLER* new_sampler = m_SamplerPool.GetSampler();
 	if (new_sampler != NULL)
 	{
-		GO_SAMPLER* next = handle->next;
 		*new_sampler = *handle;
-		new_sampler->next = 0;
 		
-		handle->next = next;
 		handle->pipe = this_pipe;
 		handle->time = m_CurrentTime + 1;
 
@@ -727,7 +714,7 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 	}
 }
 
-void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
+void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 {
 	if (!handle->pipe)
 		return;
@@ -749,7 +736,6 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 		GO_SAMPLER* new_sampler = m_SamplerPool.GetSampler();
 		if (new_sampler != NULL)
 		{
-
 			new_sampler->pipe = this_pipe;
 			new_sampler->time = m_CurrentTime + 1;
 			new_sampler->velocity = handle->velocity;
@@ -822,18 +808,11 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 
 			if (m_ReleaseAlignmentEnabled && release_section->SupportsStreamAlignment())
 			{
-				release_section->InitAlignedStream
-					(&new_sampler->stream
-					,&handle->stream
-					);
+				release_section->InitAlignedStream(&new_sampler->stream, &handle->stream);
 			}
 			else
 			{
-				release_section->InitStream
-					(&m_ResamplerCoefs
-					,&new_sampler->stream
-					,this_pipe->GetTuning() / (float)m_SampleRate
-					);
+				release_section->InitStream(&m_ResamplerCoefs, &new_sampler->stream, this_pipe->GetTuning() / (float)m_SampleRate);
 			}
 			new_sampler->is_release = true;
 
@@ -863,6 +842,16 @@ void GOSoundEngine::CreateReleaseSampler(const GO_SAMPLER* handle)
 		}
 
 	}
+
+	/* The above code created a new sampler to playback the release, the
+	 * following code takes the active sampler for this pipe (which will be
+	 * in either the attack or loop section) and sets the fadeout property
+	 * which will decay this portion of the pipe. The sampler will
+	 * automatically be placed back in the pool when the fade restores to
+	 * zero. */
+	unsigned cross_fade_len = GetFaderLength(handle->pipe->GetMidiKeyNumber());
+	handle->fader.StartDecay(cross_fade_len, m_SampleRate);
+	handle->is_release = true;
 }
 
 
