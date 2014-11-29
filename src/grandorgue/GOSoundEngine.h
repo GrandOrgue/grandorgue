@@ -29,8 +29,6 @@
 #include "GOLock.h"
 #include <vector>
 
-#define GO_SOUND_BUFFER_SIZE ((MAX_FRAME_SIZE) * (MAX_OUTPUT_CHANNELS))
-
 class GOrgueWindchest;
 class GOSoundProvider;
 class GOSoundReverb;
