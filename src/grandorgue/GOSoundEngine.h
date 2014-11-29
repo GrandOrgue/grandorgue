@@ -33,6 +33,7 @@ class GOrgueWindchest;
 class GOSoundProvider;
 class GOSoundReverb;
 class GOSoundTremulantWorkItem;
+class GOSoundWindchestWorkItem;
 class GrandOrgueFile;
 class GOrgueSettings;
 
@@ -66,27 +67,23 @@ private:
 		float             buff[GO_SOUND_BUFFER_SIZE];
 		/* access lock for data buffer */
 		GOMutex           mutex;
-		GOrgueWindchest  *windchest;
 		unsigned          done;
 		unsigned          count;
 
 		GOSamplerEntry()
 		{
-			windchest = NULL;
 			done = 0;
 			count = 0;
 		}
 
 		GOSamplerEntry(const GOSamplerEntry& entry)
 		{
-			windchest = entry.windchest;
 			done = 0;
 			count = entry.count;
 		}
 
 		const GOSamplerEntry& operator=(const GOSamplerEntry& entry)
 		{
-			windchest = entry.windchest;
 			count = entry.count;
 			done = 0;
 			return *this;
@@ -139,8 +136,9 @@ private:
 	unsigned                      m_WindchestCount;
 	unsigned                      m_DetachedReleaseCount;
 	std::vector<GOSamplerEntry>   m_DetachedRelease;
-	std::vector<GOSamplerEntry>   m_Windchests;
+	std::vector<GOSamplerEntry>   m_windchests;
 	ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
+	ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
 	std::vector<GOOutputGroup>    m_OutputGroups;
 	ptr_vector<GOSoundReverb>     m_ReverbEngine;
 	std::vector<GOAudioOutput>    m_AudioOutputs;
@@ -202,6 +200,7 @@ public:
 
 	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);
 	void ReturnSampler(GO_SAMPLER* sampler);
+	float GetGain();
 };
 
 #endif /* GOSOUNDENGINE_H_ */

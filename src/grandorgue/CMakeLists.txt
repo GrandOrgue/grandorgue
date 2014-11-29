@@ -264,6 +264,7 @@ GOSoundResample.cpp
 GOSoundSamplerPool.cpp
 GOSoundThread.cpp
 GOSoundTremulantWorkItem.cpp
+GOSoundWindchestWorkItem.cpp
 GOrgueWave.cpp
 GOrgueWavPack.cpp
 GOrgueBitmap.cpp

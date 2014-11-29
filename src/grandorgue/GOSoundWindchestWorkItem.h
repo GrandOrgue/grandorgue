@@ -19,32 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOSOUNDSAMPLER_H_
-#define GOSOUNDSAMPLER_H_
+#ifndef GOSOUNDWINDCHESTWORKITEM_H
+#define GOSOUNDWINDCHESTWORKITEM_H
 
-#include "GOSoundAudioSection.h"
-#include "GOSoundDefs.h"
-#include "GOSoundFader.h"
+#include "GOSoundWorkItem.h"
+#include "GOLock.h"
+#include "ptrvector.h"
 
-class GOSoundProvider;
-class GOSoundWindchestWorkItem;
+class GOSoundEngine;
+class GOSoundTremulantWorkItem;
+class GOrgueWindchest;
 
-typedef struct GO_SAMPLER_T
+class GOSoundWindchestWorkItem : public GOSoundWorkItem
 {
-	struct GO_SAMPLER_T       *next;
-	const GOSoundProvider     *pipe;
-	int                        sampler_group_id;
-	GOSoundWindchestWorkItem*  windchest;
-	unsigned                   audio_group_id;
-	audio_section_stream       stream;
-	GOSoundFader               fader;
-	uint64_t                   time;
-	unsigned                   velocity;
-	unsigned                   delay;
-	/* current index of the current block into this sample */
-	volatile unsigned long     stop;
-	volatile unsigned long     new_attack;
-	bool                       is_release;
-} GO_SAMPLER;
+private:
+	GOSoundEngine& m_engine;
+	GOMutex m_Mutex;
+	float m_Volume;
+	bool m_Done;
+	GOrgueWindchest* m_Windchest;
+	std::vector<GOSoundTremulantWorkItem*> m_Tremulants;
 
-#endif /* GOSOUNDSAMPLER_H_ */
+public:
+	GOSoundWindchestWorkItem(GOSoundEngine& sound_engine, GOrgueWindchest* windchest);
+
+	unsigned GetCost();
+	void Run();
+
+	void Reset();
+	void Init(ptr_vector<GOSoundTremulantWorkItem>& tremulants);
+
+	float GetWindchestVolume();
+	float GetVolume()
+	{
+		if (!m_Done)
+			Run();
+		return m_Volume;
+	}
+};
+
+#endif
