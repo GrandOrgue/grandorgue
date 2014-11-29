@@ -107,6 +107,7 @@ public:
 	void ResetDisplay();
 	void SetTranspose(int value);
 	void UpdateTranspose();
+	void UpdateModified(bool modified);
 };
 
 #endif
