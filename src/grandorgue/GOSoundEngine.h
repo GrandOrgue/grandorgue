@@ -24,7 +24,6 @@
 
 #include "GOSoundDefs.h"
 #include "GOSoundResample.h"
-#include "GOSoundSamplerList.h"
 #include "GOSoundSamplerPool.h"
 #include "GOLock.h"
 #include <vector>
@@ -32,8 +31,10 @@
 class GOrgueWindchest;
 class GOSoundProvider;
 class GOSoundReverb;
+class GOSoundGroupWorkItem;
 class GOSoundTremulantWorkItem;
 class GOSoundWindchestWorkItem;
+class GOSoundWorkItem;
 class GrandOrgueFile;
 class GOrgueSettings;
 
@@ -56,64 +57,7 @@ typedef GO_SAMPLER* SAMPLER_HANDLE;
 
 class GOSoundEngine
 {
-
 private:
-
-	/* This is inteded to be struct, but needs copy constructors to make GOMutex work with std::vector */
-	class GOSamplerEntry
-	{
-	public:
-		GOSoundSamplerList samplers;
-		float             buff[GO_SOUND_BUFFER_SIZE];
-		/* access lock for data buffer */
-		GOMutex           mutex;
-		unsigned          done;
-		unsigned          count;
-
-		GOSamplerEntry()
-		{
-			done = 0;
-			count = 0;
-		}
-
-		GOSamplerEntry(const GOSamplerEntry& entry)
-		{
-			done = 0;
-			count = entry.count;
-		}
-
-		const GOSamplerEntry& operator=(const GOSamplerEntry& entry)
-		{
-			count = entry.count;
-			done = 0;
-			return *this;
-		}
-	};
-
-	class GOOutputGroup
-	{
-	public:
-		float buff[GO_SOUND_BUFFER_SIZE];
-		GOMutex mutex;
-	        bool done;
-
-		GOOutputGroup()
-		{
-			done = false;
-		}
-
-		GOOutputGroup(const GOOutputGroup& entry)
-		{
-			done = false;
-		}
-
-		const GOOutputGroup& operator=(const GOOutputGroup& entry)
-		{
-			done = false;
-			return *this;
-		}
-	};
-
 	class GOAudioOutput
 	{
 	public:
@@ -135,15 +79,14 @@ private:
 	unsigned                      m_AudioGroupCount;
 	unsigned                      m_WindchestCount;
 	unsigned                      m_DetachedReleaseCount;
-	std::vector<GOSamplerEntry>   m_DetachedRelease;
-	std::vector<GOSamplerEntry>   m_windchests;
+	unsigned                      m_TremulantCount;
 	ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
 	ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
-	std::vector<GOOutputGroup>    m_OutputGroups;
+	ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
 	ptr_vector<GOSoundReverb>     m_ReverbEngine;
 	std::vector<GOAudioOutput>    m_AudioOutputs;
 
-	std::vector<unsigned>         m_WorkItems;
+	std::vector<GOSoundWorkItem*>  m_WorkItems;
 	std::atomic_uint              m_NextItem;
 
 	struct resampler_coefs_s      m_ResamplerCoefs;
@@ -152,17 +95,14 @@ private:
 	   -1 .. -n Tremulants
 	   0 detached release
 	   1 .. n Windchests
-	   n+1 .. ? additional detached release processors
 	*/
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group);
 	void CreateReleaseSampler(GO_SAMPLER* sampler);
 	void SwitchAttackSampler(GO_SAMPLER* sampler);
-	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, bool depend = true);
 	void ResetDoneFlags();
 	unsigned GetFaderLength(unsigned MidiKeyNumber);
 	float GetRandomFactor();
-	void ProcessTremulants(unsigned n_frames);
-	void ProcessOutputGroup(unsigned audio_group, unsigned n_frames);
+	void ProcessTremulants();
 
 public:
 
@@ -194,9 +134,8 @@ public:
 	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
 
 	void GetSamples(float *output_buffer, unsigned n_frames, METER_INFO *meter_info);
-	void Process(unsigned group_id, unsigned n_frames);
 	unsigned GetGroupCount();
-	int GetNextGroup();
+	GOSoundWorkItem* GetNextGroup();
 
 	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);
 	void ReturnSampler(GO_SAMPLER* sampler);

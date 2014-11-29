@@ -74,7 +74,7 @@ void GOrgueSound::StartThreads()
 	{
 		if (i >= tasks)
 			break;
-		m_Threads.push_back(new GOSoundThread(&GetEngine(), m_SamplesPerBuffer));
+		m_Threads.push_back(new GOSoundThread(&GetEngine()));
 	}
 
 	for(unsigned i = 0; i < m_Threads.size(); i++)
