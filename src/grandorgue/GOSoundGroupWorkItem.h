@@ -19,55 +19,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOSoundThread.h"
+#ifndef GOSOUNDGROUPWORKITEM_H
+#define GOSOUNDGROUPWORKITEM_H
 
-#include "GOSoundEngine.h"
+#include "GOSoundDefs.h"
+#include "GOSoundSamplerList.h"
 #include "GOSoundWorkItem.h"
+#include "GOLock.h"
 
-GOSoundThread::GOSoundThread(GOSoundEngine* engine):
-	wxThread(wxTHREAD_JOINABLE),
-	m_Engine(engine),
-	m_Stop(false),
-	m_Condition(m_Mutex)
+class GOSoundEngine;
+
+class GOSoundGroupWorkItem : public GOSoundWorkItem
 {
-	wxLogDebug(wxT("Create Thread"));
-	Create();
-	SetPriority(WXTHREAD_MAX_PRIORITY);
-}
+private:
+	GOSoundEngine& m_engine;
+	GOSoundSamplerList m_Active;
+	GOSoundSamplerList m_Release;
+	unsigned m_SamplesPerBuffer;
+	GOMutex m_Mutex;
+	GOCondition m_Condition;
+	unsigned m_ActiveCount;
+	unsigned m_Done;
 
-void* GOSoundThread::Entry()
-{
-	while(!TestDestroy() && !m_Stop)
-	{
-		GOSoundWorkItem *next;
-		do
-		{
-			next = m_Engine->GetNextGroup();
-			if (next != NULL)
-				next->Run();
-		}
-		while (next != NULL);
+	void ProcessList(GOSoundSamplerList& list, float* output_buffer);
 
-		GOMutexLocker lock(m_Mutex);
-		if (TestDestroy() || m_Stop)
-			break;
-		m_Condition.Wait();
-	}
-	return 0;
-}
+public:
+	GOSoundGroupWorkItem(GOSoundEngine& sound_engine, unsigned samples_per_buffer);
 
+        unsigned GetCost();
+        void Run();
+        void Finish();
 
-void GOSoundThread::Wakeup()
-{
-	m_Condition.Signal();
-}
+	void Reset();
+	void Clear();
+	void Add(GO_SAMPLER* sampler);
 
-void GOSoundThread::Delete()
-{
-	{
-		GOMutexLocker lock(m_Mutex);
-		m_Stop = true;
-		m_Condition.Signal();
-	}
-	wxThread::Delete();
-}
+	float m_Buffer[GO_SOUND_BUFFER_SIZE];
+};
+
+#endif

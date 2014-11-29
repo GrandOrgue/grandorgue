@@ -31,7 +31,6 @@ class GOSoundThread : public wxThread
 {
 private:
 	GOSoundEngine* m_Engine;
-	unsigned m_FrameCount;
 	bool m_Stop;
 
 	GOMutex m_Mutex;
@@ -40,7 +39,7 @@ private:
 	void* Entry();
 
 public:
-	GOSoundThread(GOSoundEngine* engine, unsigned n_frames);
+	GOSoundThread(GOSoundEngine* engine);
 
 	void Delete();
 	void Wakeup();

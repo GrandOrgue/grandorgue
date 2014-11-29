@@ -253,6 +253,7 @@ GOGUIPanel.cpp
 GOGUIPanelWidget.cpp
 GOSoundAudioSection.cpp
 GOSoundEngine.cpp
+GOSoundGroupWorkItem.cpp
 GOSoundProvider.cpp
 GOSoundProviderSynthedTrem.cpp
 GOSoundProviderWave.cpp
