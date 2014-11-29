@@ -635,7 +635,8 @@ void GOAudioSection::DoCrossfade(unsigned char* dest, unsigned dest_offset, cons
 			{
 				float val1 = GetSampleData(pos + dest_offset, j, bits_per_sample, channels, dest);
 				float val2 = GetSampleData(pos + src_offset, j, bits_per_sample, channels, src);
-				float result = (val1 * pos + val2 * (fade_length - pos)) / fade_length;
+				float factor = (cos(M_PI * (pos + 0.5) / fade_length) + 1.0) * 0.5;
+				float result = val1 * factor + val2 * (1 - factor);
 				SetSampleData(pos + dest_offset, j, bits_per_sample, channels, result, dest);
 			}
 }
