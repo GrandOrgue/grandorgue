@@ -61,6 +61,7 @@ private:
 	GOrgueLabel m_BankDisplay;
 	GOrgueLabel m_CrescendoDisplay;
 	GOrgueLabel m_TransposeDisplay;
+	GOrgueLabel m_NameDisplay;
 	GOrgueEnclosure m_swell;
 	SetterType m_SetterType;
 
