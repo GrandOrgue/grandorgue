@@ -336,7 +336,7 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 	StopThreads();
 	if (organfile)
 	{
-		m_SoundEngine.Setup(organfile, m_Settings.GetReleaseConcurrency());
+		m_SoundEngine.Setup(organfile, m_SamplesPerBuffer, m_Settings.GetReleaseConcurrency());
 		organfile->PreparePlayback(&GetEngine(), &GetMidi());
 		StartThreads();
 	}
