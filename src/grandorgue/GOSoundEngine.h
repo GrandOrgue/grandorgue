@@ -156,7 +156,7 @@ private:
 	   n+1 .. ? additional detached release processors
 	*/
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group);
-	void CreateReleaseSampler(const GO_SAMPLER* sampler);
+	void CreateReleaseSampler(GO_SAMPLER* sampler);
 	void SwitchAttackSampler(GO_SAMPLER* sampler);
 	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);
 	void ProcessTremulant (GOSamplerEntry& state, unsigned int n_frames);
