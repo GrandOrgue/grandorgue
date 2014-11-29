@@ -263,6 +263,7 @@ GOSoundReverbPartition.cpp
 GOSoundResample.cpp
 GOSoundSamplerPool.cpp
 GOSoundThread.cpp
+GOSoundTremulantWorkItem.cpp
 GOrgueWave.cpp
 GOrgueWavPack.cpp
 GOrgueBitmap.cpp

@@ -32,6 +32,7 @@
 class GOrgueWindchest;
 class GOSoundProvider;
 class GOSoundReverb;
+class GOSoundTremulantWorkItem;
 class GrandOrgueFile;
 class GOrgueSettings;
 
@@ -139,7 +140,7 @@ private:
 	unsigned                      m_DetachedReleaseCount;
 	std::vector<GOSamplerEntry>   m_DetachedRelease;
 	std::vector<GOSamplerEntry>   m_Windchests;
-	std::vector<GOSamplerEntry>   m_Tremulants;
+	ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
 	std::vector<GOOutputGroup>    m_OutputGroups;
 	ptr_vector<GOSoundReverb>     m_ReverbEngine;
 	std::vector<GOAudioOutput>    m_AudioOutputs;
@@ -158,8 +159,6 @@ private:
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group);
 	void CreateReleaseSampler(GO_SAMPLER* sampler);
 	void SwitchAttackSampler(GO_SAMPLER* sampler);
-	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);
-	void ProcessTremulant (GOSamplerEntry& state, unsigned int n_frames);
 	void ProcessAudioSamplers (GOSamplerEntry& state, unsigned int n_frames, bool depend = true);
 	void ResetDoneFlags();
 	unsigned GetFaderLength(unsigned MidiKeyNumber);
@@ -172,7 +171,7 @@ public:
 	GOSoundEngine();
 	~GOSoundEngine();
 	void Reset();
-	void Setup(GrandOrgueFile* organ_file, unsigned release_count = 1);
+	void Setup(GrandOrgueFile* organ_file, unsigned samples_per_buffer, unsigned release_count = 1);
 	void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
 	void SetupReverb(GOrgueSettings& settings);
 	void SetVolume(int volume);
@@ -200,6 +199,9 @@ public:
 	void Process(unsigned group_id, unsigned n_frames);
 	unsigned GetGroupCount();
 	int GetNextGroup();
+
+	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);
+	void ReturnSampler(GO_SAMPLER* sampler);
 };
 
 #endif /* GOSOUNDENGINE_H_ */

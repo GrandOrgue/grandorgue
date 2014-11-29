@@ -24,6 +24,7 @@
 #include "GOSoundProvider.h"
 #include "GOSoundReverb.h"
 #include "GOSoundSampler.h"
+#include "GOSoundTremulantWorkItem.h"
 #include "GOrgueEvent.h"
 #include "GOrgueInt24.h"
 #include "GOrguePipe.h"
@@ -75,10 +76,8 @@ void GOSoundEngine::Reset()
 		m_Windchests[i].count = 0;
 	}
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
-	{
-		m_Tremulants[i].samplers.Clear();
-		m_Tremulants[i].count = 0;
-	}
+		m_Tremulants[i]->Clear();
+
 	for (unsigned i = 0; i < m_DetachedRelease.size(); i++)
 	{
 		m_DetachedRelease[i].samplers.Clear();
@@ -191,29 +190,25 @@ unsigned GOSoundEngine::GetFaderLength(unsigned MidiKeyNumber)
 
 void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group)
 {
-	GOSamplerEntry* state;
-
 	if (audio_group >= m_AudioGroupCount)
 		audio_group = 0;
-
-	if (sampler_group_id == 0)
-		state = &m_DetachedRelease[0 + audio_group * m_DetachedReleaseCount];
-	else if (sampler_group_id < 0)
-		state = &m_Tremulants[-1-sampler_group_id];
-	else if (sampler_group_id > (int) m_Windchests.size())
-		state = &m_DetachedRelease[sampler_group_id - m_Windchests.size() + audio_group * m_DetachedReleaseCount];
-	else
-		state = &m_Windchests[sampler_group_id - 1 + audio_group * m_WindchestCount];
 
 	sampler->sampler_group_id = sampler_group_id;
 	sampler->audio_group_id = audio_group;
 	sampler->stop = 0;
 	sampler->new_attack = 0;
 
-	state->samplers.Put(sampler);
+	if (sampler_group_id == 0)
+		m_DetachedRelease[0 + audio_group * m_DetachedReleaseCount].samplers.Put(sampler);
+	else if (sampler_group_id < 0)
+		m_Tremulants[-1-sampler_group_id]->Add(sampler);
+	else if (sampler_group_id > (int) m_Windchests.size())
+		m_DetachedRelease[sampler_group_id - m_Windchests.size() + audio_group * m_DetachedReleaseCount].samplers.Put(sampler);
+	else
+		m_Windchests[sampler_group_id - 1 + audio_group * m_WindchestCount].samplers.Put(sampler);
 }
 
-void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
+void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned samples_per_buffer, unsigned release_count)
 {
 	if (release_count < 1)
 		release_count = 1;
@@ -225,7 +220,9 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 	for (unsigned i = 0; i < m_WindchestCount; i++)
 		for(unsigned j = 0; j < m_AudioGroupCount; j++)
 			m_Windchests[m_WindchestCount * j + i].windchest = organ_file->GetWindchest(i);
-	m_Tremulants.resize(organ_file->GetTremulantCount());
+	m_Tremulants.clear();
+	for(unsigned i = 0; i < organ_file->GetTremulantCount(); i++)
+		m_Tremulants.push_back(new GOSoundTremulantWorkItem(*this, samples_per_buffer));
 	m_WorkItems.resize(GetGroupCount());
 	Reset();
 }
@@ -290,39 +287,9 @@ bool GOSoundEngine::ProcessSampler(float output_buffer[GO_SOUND_BUFFER_SIZE], GO
 		return true;
 }
 
-void GOSoundEngine::ProcessTremulant (GOSamplerEntry& state, unsigned int n_frames)
+void GOSoundEngine::ReturnSampler(GO_SAMPLER* sampler)
 {
-	GOMutexLocker locker(state.mutex);
-
-	if (state.done)
-		return;
-
-	state.count = state.samplers.GetCount();
-	state.samplers.Move();
-	if (state.samplers.Peek() == NULL)
-	{
-		state.done = 2;
-		return;
-	}
-
-	float volume = 1;
-
-	float* output_buffer = state.buff;
-	std::fill(output_buffer, output_buffer + n_frames * 2, 1.0f);
-	for (GO_SAMPLER* sampler = state.samplers.Get(); sampler; sampler = state.samplers.Get())
-	{
-		bool keep;
-		keep = ProcessSampler(output_buffer, sampler, n_frames, volume);
-
-		if (!keep)
-		{
-			m_SamplerPool.ReturnSampler(sampler);
-		}
-		else
-			state.samplers.Put(sampler);
-
-	}
-	state.done = 1;
+	m_SamplerPool.ReturnSampler(sampler);
 }
 
 void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_frames, bool depend)
@@ -356,11 +323,7 @@ void GOSoundEngine::ProcessAudioSamplers(GOSamplerEntry& state, unsigned int n_f
 		for (unsigned i = 0; i < current_windchest->GetTremulantCount(); i++)
 		{
 			unsigned tremulant_pos = current_windchest->GetTremulantId(i);
-
-			if (m_Tremulants[tremulant_pos].done == 1)
-			{
-				volume *= m_Tremulants[tremulant_pos].buff[n_frames - 1];
-			}
+			volume *= m_Tremulants[tremulant_pos]->GetVolume();
 		}
 	}
 
@@ -450,10 +413,7 @@ void GOSoundEngine::ResetDoneFlags()
 		m_WorkItems[i] = ids[i];
 
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
-	{
-		GOMutexLocker locker(m_Tremulants[j].mutex);
-		m_Tremulants[j].done = 0;
-	}
+		m_Tremulants[j]->Reset();
 	for (unsigned j = 0; j < m_Windchests.size(); j++)
 	{
 		GOMutexLocker locker(m_Windchests[j].mutex);
@@ -476,8 +436,7 @@ void GOSoundEngine::ResetDoneFlags()
 void GOSoundEngine::ProcessTremulants(unsigned n_frames)
 {
 	for (unsigned j = 0; j < m_Tremulants.size(); j++)
-		if (!m_Tremulants[j].done)
-			ProcessTremulant(m_Tremulants[j], n_frames);
+		m_Tremulants[j]->Run();
 }
 
 void GOSoundEngine::ProcessOutputGroup(unsigned audio_group, unsigned n_frames)
