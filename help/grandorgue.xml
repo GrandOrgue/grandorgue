@@ -450,7 +450,7 @@ free the RAM it required.
 The Audio/Midi menu contains commands for dealing with loaded organs and
 associated settings.
 </para>
-        <sect3>
+        <sect3 id="temperamentsMenu">
           <title>Temperament</title>
           <indexterm>
             <primary>Temperament</primary>
@@ -668,7 +668,7 @@ The release tail length control sets the duration the sound engine uses to play 
         <para>The <emphasis>Max</emphasis> value makes the sound engine play the complete release section as provided by the sample set creator.</para>
         <para>The other values are used by the sound engine as the fade out duration of the sample release section.</para>
       </sect2>
-      <sect2>
+      <sect2 id="transposer">
         <title>Transposer</title>
         <mediaobject>
           <imageobject>
@@ -3012,13 +3012,13 @@ shifted left 7 bits ORed (bitwise) with <emphasis>parameter# LSB</emphasis>
           </sect4>
         </sect3>
       </sect2>
-      <sect2>
+      <sect2 id="activelabel">
         <title>Label</title>
         <para>
 GrandOrgue supports "active" labels. These are labels which display variable
 contents, such as the step number in the <!-- link
 linkend="crescendoPanel"-->Crescendo panel<!--/link-->, the temperament name in
-the <!-- link linkend="masterControls"-->Master Controls panel<!--/link--> and
+the <link linkend="masterControls">Master Controls panel</link> and
 many others. Labels can be configured only for sending data to a Midi LCD
 device. GrandOrgue sends the label contents following the Hauptwerk&#8482; standards.
         </para>
@@ -4285,7 +4285,7 @@ role="bold">Group</emphasis> attribute are grouped in the same submenu.
       <para>To modify any value in the grid, double-click in the cell. Updated values are stored as soon as the <emphasis role="bold">OK</emphasis> button is depressed.</para>
       <para>Temperaments are stored in the system-wide <link linkend="settingstab">configuration file</link>.</para>
     </sect1>
-    <sect1>
+    <sect1 id="initialconfiguration">
       <title>Initial Midi Configuration tab</title>
       <indexterm>
         <primary>Initial Midi Configuration</primary>
@@ -4377,15 +4377,15 @@ MIDI settings work properly.
             <variablelist>
               <varlistentry>
                 <term>-1 Cent, +1 Cent, -100 Cent, +100 Cent</term>
-                <listitem><simpara>Although referenced under the "Sequencer" group, these controls come from the "Main controls" Panel. They drive the amount of tuning for the whole organ.</simpara></listitem>
+                <listitem><simpara>These controls drive the amount of tuning for the whole organ.</simpara></listitem>
               </varlistentry>
               <varlistentry>
                 <term>Prev Temperament, Next Temperament</term>
-                <listitem><simpara>Navigate the temperaments list. These controls also come from the "Main controls" panel.</simpara></listitem>
+                <listitem><simpara>Navigate the temperaments list.</simpara></listitem>
               </varlistentry>
               <varlistentry>
                 <term>Transpose -, Transpose +</term>
-                <listitem><simpara>Transpose down, transpose up, one semitone at a time. These controls also come from the "Main controls" panel.</simpara></listitem>
+                <listitem><simpara>Transpose down, transpose up, one semitone at a time.</simpara></listitem>
               </varlistentry>
             </variablelist>
           </listitem>
@@ -4662,6 +4662,142 @@ or closing the dialog with the <emphasis role="bold">OK</emphasis> button.
       Therefore, when elements need to be spread over a list of audio groups, these audio groups
       <emphasis role="bold">must</emphasis> be created in the order of the round-robin scheme.</simpara>
       </caution>
+    </sect1>
+  </chapter>
+  <chapter>
+    <title>Panels</title>
+    <mediaobject><imageobject><imagedata fileref="panel_menu.png" /></imageobject></mediaobject>
+    <para>This menu controls control panels. Menu items starting at <emphasis>Coupler</emphasis> down to <emphasis>Master Controls</emphasis> are standard menu items (i.e. present whatever sampleset is loaded).</para>
+    <para>
+All other menu items (above <emphasis>Coupler</emphasis>) are defined within
+the loaded sampleset and should be documented in the sampleset's specific user
+manual (if any). They usually are referred to as <emphasis>Custom Panels</emphasis>.
+    </para>
+    <para>Custom Panel menu items can be organized in submenus as shown in this screen shot taken from Piteå Music School sampleset.</para>
+    <mediaobject><imageobject><imagedata fileref="pitea_panel_menu.png" /></imageobject></mediaobject>
+    <sect1>
+      <title>Coupler</title>
+    </sect1>
+    <sect1>
+      <title>Crescendo Pedal</title>
+    </sect1>
+    <sect1>
+      <title>Divisionals</title>
+    </sect1>
+    <sect1>
+      <title>Generals</title>
+    </sect1>
+    <sect1>
+      <title>Combination Setter</title>
+    </sect1>
+    <sect1>
+      <title>Floating Manuals</title>
+    </sect1>
+    <sect1 id="masterControls">
+      <title>Master Controls</title>
+      <mediaobject><imageobject><imagedata fileref="master_controls.png" /></imageobject></mediaobject>
+      <para>
+This panel groups at the same place some controls that are used while playing.
+Each displayed element can be associated to a <link linkend="midieventeditor">MIDI event</link>
+and thus linked to a physical control on the console. This enables the user to
+ignore the computer and concentrate on his playing.
+      </para>
+      <para>
+Master controls are specific to the console hardware. As such, their  MIDI
+configuration can also be defined in the <emphasis>Midi &amp; Audio
+settings</emphasis>, <link linkend="initialconfiguration">Initial Midi
+Configuration</link> tab.
+      </para>
+      <sect2>
+        <title>Tuning</title>
+        <para>
+The upper row controls the ability to tune the whole organ. All tuning done
+from the master controls panel is mirrored in the
+<link linkend="organsettings">Organ Settings</link>, <emphasis>Settings</emphasis>
+frame, <emphasis>Tuning (Cent)</emphasis> spinner and will be saved in the
+current preset file.
+        </para>
+        <informaltable frame="none">
+          <tgroup cols="2">
+            <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+            <colspec colname="c2" colsep="0" rowsep="0" />
+            <tbody>
+              <row valign="top">
+                <entry><emphasis role="strong">-100, -10, -1 buttons</emphasis></entry>
+                <entry>Tune down by amount of 100, 10, 1 cent(s) respectively</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">+100, +10, +1 buttons</emphasis></entry>
+                <entry>Tune up by amount of 100, 10, 1 cent(s) respectively</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">Label in between</emphasis></entry>
+                <entry>This label displays the current tuning amount. It is an "active" label, and as such supports a <link linkid="activelabel">Midi send</link> configuration</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <note><title>Reminder</title><simpara>The tuning unit is 1/100th of a semitone. The allowed range is {-1200, +1200 }, i.e. {-1, +1} octave. A semitone is 100 tuning units.</simpara></note>
+      </sect2>
+      <sect2>
+        <title>Temperaments</title>
+        <para>
+The middle row controls the ability to navigate the temperaments list. The temperament selection in the master controls panels is mirrored in the
+<link linkend="temperamentsMenu">Temperaments</link> menu item of the <emphasis>Audio/Midi</emphasis> menu.
+        </para>
+        <informaltable frame="none">
+          <tgroup cols="2">
+            <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+            <colspec colname="c2" colsep="0" rowsep="0" />
+            <tbody>
+              <row valign="top">
+                <entry><emphasis role="strong">&lt; button</emphasis></entry>
+                <entry>Go to the previous temperament in the list</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">&gt; button</emphasis></entry>
+                <entry>Go to the next temperament in the list</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">Label in between</emphasis></entry>
+                <entry>This label displays the current temperament name. It is an "active" label, and as such supports a <link linkid="activelabel">Midi send</link> configuration</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect2>
+      <sect2>
+        <title>Save</title>
+        <para>
+The <emphasis>Save</emphasis> button in the middle row saves the current
+sampleset customization in the current preset file. It has the same usage as the
+<link linkend="save">Save</link> menu item in the <emphasis>File</emphasis> menu.
+        </para>
+      </sect2>
+      <sect2>
+        <title>Transposer</title>
+        <para>The bottom row controls the transposer. The transposer state is mirrored in the <link linkend="transposer">transposer</link> spinner in the toolbar.</para>
+        <informaltable frame="none">
+          <tgroup cols="2">
+            <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+            <colspec colname="c2" colsep="0" rowsep="0" />
+            <tbody>
+              <row valign="top">
+                <entry><emphasis role="strong">&lt; button</emphasis></entry>
+                <entry>Shift all keyboards down one semitone</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">&gt; button</emphasis></entry>
+                <entry>Shift all keyboards up one semitone</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">Label in between</emphasis></entry>
+                <entry>This label displays the current transposer state. It is an "active" label, and as such supports a <link linkid="activelabel">Midi send</link> configuration</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect2>
     </sect1>
   </chapter>
   <chapter>
