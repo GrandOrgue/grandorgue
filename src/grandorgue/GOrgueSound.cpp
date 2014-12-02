@@ -342,7 +342,7 @@ void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
 	}
 	else
 	{
-		m_SoundEngine.Reset();
+		m_SoundEngine.ClearSetup();
 	}
 }
 

@@ -110,6 +110,7 @@ public:
 	~GOSoundEngine();
 	void Reset();
 	void Setup(GrandOrgueFile* organ_file, unsigned samples_per_buffer, unsigned release_count = 1);
+	void ClearSetup();
 	void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
 	void SetupReverb(GOrgueSettings& settings);
 	void SetVolume(int volume);
