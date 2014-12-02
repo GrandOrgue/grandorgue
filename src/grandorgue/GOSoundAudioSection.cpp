@@ -29,6 +29,10 @@
 #include "GOrgueReleaseAlignTable.h"
 #include <wx/intl.h>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 static unsigned limited_diff(unsigned a, unsigned b)
 {
 	if (a > b)
