@@ -216,6 +216,15 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsi
 	}
 }
 
+void GOSoundEngine::ClearSetup()
+{
+	m_WindchestCount = 0;
+	m_Windchests.clear();
+	m_TremulantCount = 0;
+	m_Tremulants.clear();
+	Reset();
+}
+
 void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned samples_per_buffer, unsigned release_count)
 {
 	if (release_count < 1)
