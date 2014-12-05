@@ -22,7 +22,7 @@
 #ifndef SETTINGSOPTION_H
 #define SETTINGSOPTION_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
 class GOrgueSettings;
 class wxCheckBox;
@@ -30,7 +30,7 @@ class wxChoice;
 class wxDirPickerCtrl;
 class wxSpinCtrl;
 
-class SettingsOption : public wxPanel
+class SettingsOption : public wxScrolledWindow
 {
 	enum {
 		ID_WAVE_FORMAT = 200,
