@@ -46,9 +46,8 @@ GOSoundEngine::GOSoundEngine() :
 	m_CurrentTime(1),
 	m_SamplerPool(),
 	m_AudioGroupCount(1),
-	m_WindchestCount(0),
+	m_WorkerSlots(0),
 	m_DetachedReleaseCount(1),
-	m_TremulantCount(0),
 	m_Tremulants(),
 	m_Windchests(),
 	m_AudioGroups(),
@@ -80,7 +79,8 @@ void GOSoundEngine::Reset()
 		m_AudioGroups[i]->Clear();
 	for (unsigned i = 0; i < m_ReverbEngine.size(); i++)
 		m_ReverbEngine[i]->Reset();
-	m_WorkItems.resize(GetGroupCount());
+	m_WorkItems.resize(m_Tremulants.size() + m_Windchests.size() + m_AudioGroups.size() * m_DetachedReleaseCount);
+	m_WorkerSlots = m_WorkItems.size();
 
 	m_SamplerPool.ReturnAll();
 	m_CurrentTime = 1;
@@ -218,20 +218,18 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsi
 
 void GOSoundEngine::ClearSetup()
 {
-	m_WindchestCount = 0;
+	m_WorkerSlots = 0;
 	m_Windchests.clear();
-	m_TremulantCount = 0;
 	m_Tremulants.clear();
 	Reset();
 }
 
 void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned samples_per_buffer, unsigned release_count)
 {
+	m_WorkerSlots = 0;
 	if (release_count < 1)
 		release_count = 1;
 	m_DetachedReleaseCount = release_count;
-	m_WindchestCount = organ_file->GetWindchestGroupCount();
-	m_TremulantCount = organ_file->GetTremulantCount();
 	m_Tremulants.clear();
 	for(unsigned i = 0; i < organ_file->GetTremulantCount(); i++)
 		m_Tremulants.push_back(new GOSoundTremulantWorkItem(*this, samples_per_buffer));
@@ -310,15 +308,10 @@ void GOSoundEngine::ReturnSampler(GO_SAMPLER* sampler)
 	m_SamplerPool.ReturnSampler(sampler);
 }
 
-unsigned GOSoundEngine::GetGroupCount()
-{
-	return m_AudioGroupCount * m_DetachedReleaseCount + m_WindchestCount + m_TremulantCount;
-}
-
 GOSoundWorkItem* GOSoundEngine::GetNextGroup()
 {
 	unsigned next = m_NextItem.fetch_add(1);
-	if (next >= m_WorkItems.size())
+	if (next >= m_WorkerSlots)
 		return NULL;
 	return m_WorkItems[next];
 }
@@ -345,21 +338,24 @@ void GOSoundEngine::ResetDoneFlags()
 		counts[pos - 1] = cnt;
 		ids[pos - 1] = m_AudioGroups[i];
 	}
-	unsigned pos = 0;
-	for(unsigned i = 0; i < m_Tremulants.size(); i++)
-		m_WorkItems[pos++] = m_Tremulants[i];
-	for(unsigned i = 0; i < m_Windchests.size(); i++)
-		m_WorkItems[pos++] = m_Windchests[i];
-	for(unsigned j = 0; j < m_DetachedReleaseCount; j++)
-		for(unsigned i = 0; i < ids.size(); i++)
-			m_WorkItems[pos++] = ids[i];
+	if (m_WorkerSlots)
+	{
+		unsigned pos = 0;
+		for(unsigned i = 0; i < m_Tremulants.size(); i++)
+			m_WorkItems[pos++] = m_Tremulants[i];
+		for(unsigned i = 0; i < m_Windchests.size(); i++)
+			m_WorkItems[pos++] = m_Windchests[i];
+		for(unsigned j = 0; j < m_DetachedReleaseCount; j++)
+			for(unsigned i = 0; i < ids.size(); i++)
+				m_WorkItems[pos++] = ids[i];
 
-	for (unsigned j = 0; j < m_Tremulants.size(); j++)
-		m_Tremulants[j]->Reset();
-	for (unsigned j = 0; j < m_Windchests.size(); j++)
-		m_Windchests[j]->Reset();
-	for (unsigned j = 0; j < m_AudioGroups.size(); j++)
-		m_AudioGroups[j]->Reset();
+		for (unsigned j = 0; j < m_Tremulants.size(); j++)
+			m_Tremulants[j]->Reset();
+		for (unsigned j = 0; j < m_Windchests.size(); j++)
+			m_Windchests[j]->Reset();
+		for (unsigned j = 0; j < m_AudioGroups.size(); j++)
+			m_AudioGroups[j]->Reset();
+	}
 
 	m_NextItem.exchange(0);
 }
