@@ -33,7 +33,7 @@
 #include <wx/stattext.h>
 
 SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
-	wxPanel(parent, wxID_ANY),
+	wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL),
 	m_Settings(settings)
 {
 	wxArrayString choices;
@@ -218,8 +218,9 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
+	this->SetScrollRate(5, 5);
 	this->SetSizer(topSizer);
-	topSizer->Fit(this);
+	topSizer->FitInside(this);
 }
 
 void SettingsOption::Save()
