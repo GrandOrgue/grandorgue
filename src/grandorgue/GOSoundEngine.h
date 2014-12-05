@@ -77,9 +77,8 @@ private:
 	uint64_t                      m_CurrentTime;
 	GOSoundSamplerPool            m_SamplerPool;
 	unsigned                      m_AudioGroupCount;
-	unsigned                      m_WindchestCount;
+	unsigned                      m_WorkerSlots;
 	unsigned                      m_DetachedReleaseCount;
-	unsigned                      m_TremulantCount;
 	ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
 	ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
 	ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
@@ -135,7 +134,6 @@ public:
 	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
 
 	void GetSamples(float *output_buffer, unsigned n_frames, METER_INFO *meter_info);
-	unsigned GetGroupCount();
 	GOSoundWorkItem* GetNextGroup();
 
 	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);

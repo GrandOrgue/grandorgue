@@ -67,15 +67,10 @@ void GOrgueSound::StartThreads()
 	StopThreads();
 
 	unsigned n_cpus = m_Settings.GetConcurrency();
-	unsigned tasks = GetEngine().GetGroupCount();
 
 	GOMutexLocker thread_locker(m_thread_lock);
 	for(unsigned i = 0; i < n_cpus; i++)
-	{
-		if (i >= tasks)
-			break;
 		m_Threads.push_back(new GOSoundThread(&GetEngine()));
-	}
 
 	for(unsigned i = 0; i < m_Threads.size(); i++)
 		m_Threads[i]->Run();
