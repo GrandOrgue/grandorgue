@@ -49,6 +49,7 @@ private:
 
 	void InitSoundProvider();
 	void ChangeState(bool on);
+	void SetupCombinationState();
 
 	void Initialize();
 	void LoadData();

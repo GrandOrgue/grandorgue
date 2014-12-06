@@ -40,8 +40,12 @@ private:
 	std::vector<GOrgueDrawstop*> m_ControllingDrawstops;
 
 protected:
+	bool m_StoreDivisional;
+	bool m_StoreGeneral;
+
 	void SetState(bool on);
 	virtual void ChangeState(bool on) = 0;
+	virtual void SetupCombinationState() = 0;
 
 	void Save(GOrgueConfigWriter& cfg);
 
@@ -58,6 +62,8 @@ public:
 
 	bool IsActive() const;
 	bool GetCombinationState() const;
+	bool GetStoreDivisional() const;
+	bool GetStoreGeneral() const;
 };
 
 #endif

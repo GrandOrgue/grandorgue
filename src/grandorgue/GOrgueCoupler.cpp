@@ -168,6 +168,14 @@ void GOrgueCoupler::Load(GOrgueConfigReader& cfg, wxString group)
 		m_CouplerID = m_organfile->GetManual(m_DestinationManual)->RegisterCoupler(this);
 }
 
+void GOrgueCoupler::SetupCombinationState()
+{
+	m_StoreDivisional = ((m_organfile->DivisionalsStoreIntramanualCouplers() && !IsIntermanual()) || 
+			     (m_organfile->DivisionalsStoreIntermanualCouplers() && IsIntermanual())) && 
+		(m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed());
+	m_StoreGeneral = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+}
+
 void GOrgueCoupler::SetOut(int noteNumber, unsigned velocity)
 {
 	if (noteNumber < 0)

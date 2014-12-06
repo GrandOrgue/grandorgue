@@ -97,6 +97,12 @@ void GOrgueTremulant::Load(GOrgueConfigReader& cfg, wxString group, int sampler_
 	m_organfile->RegisterCacheObject(this);
 }
 
+void GOrgueTremulant::SetupCombinationState()
+{
+	m_StoreDivisional = m_organfile->DivisionalsStoreTremulants() && (m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed());
+	m_StoreGeneral = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+}
+
 void GOrgueTremulant::InitSoundProvider()
 {
 	if (m_TremulantType == GOSynthTrem)
