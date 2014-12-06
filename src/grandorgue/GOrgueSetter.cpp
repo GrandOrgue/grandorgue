@@ -486,7 +486,7 @@ GOGUIPanel* GOrgueSetter::CreateFloatingPanel(GOrgueConfigReader& cfg)
 {
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_FLOATING);
-	panel->Init(cfg, metrics, _("Floating manuals"), wxT("SetterFloating"), wxT(""));
+	panel->Init(cfg, metrics, _("Coupler manuals & Volume"), wxT("SetterFloating"), wxT(""));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);
 	back->Init(cfg, wxT("SetterFloating"));

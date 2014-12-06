@@ -84,7 +84,7 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
-	m_name = wxString::Format(_("Floating %d"), manualNumber - m_organfile->GetODFManualCount() + 1);
+	m_name = wxString::Format(_("Coupling manual %d"), manualNumber - m_organfile->GetODFManualCount() + 1);
 	m_nb_logical_keys = keys;
 	m_first_accessible_logical_key_nb  = 1;
 	m_first_accessible_key_midi_note_nb = first_midi;
