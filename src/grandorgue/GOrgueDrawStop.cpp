@@ -103,6 +103,8 @@ void GOrgueDrawstop::Load(GOrgueConfigReader& cfg, wxString group)
 
 	GOrgueButton::Load(cfg, group);
 	SetupCombinationState();
+	m_StoreDivisional = cfg.ReadBoolean(ODFSetting, group, wxT("StoreInDivisional"), false, m_StoreDivisional);
+	m_StoreGeneral = cfg.ReadBoolean(ODFSetting, group, wxT("StoreInGeneral"), false, m_StoreGeneral);
 }
 
 void GOrgueDrawstop::Save(GOrgueConfigWriter& cfg)

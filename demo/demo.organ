@@ -4000,6 +4000,8 @@ DispDrawstopRow=100
 DispLabelColour=Black
 DispLabelFontSize=Large
 DispImageNum=6
+StoreInDivisional=N
+StoreInGeneral=N
 
 [Switch022]
 Name=II/I
@@ -4072,12 +4074,16 @@ Name=All Sounds On/Off
 Displayed=N
 DefaultToEngaged=Y
 GCState=-1
+StoreInDivisional=N
+StoreInGeneral=N
 
 [Switch029]
 Name=Drawstop Sounds
 Displayed=N
 DefaultToEngaged=Y
 GCState=-1
+StoreInDivisional=N
+StoreInGeneral=N
 
 [General001]
 Name=1
