@@ -32,6 +32,7 @@ private:
 	std::vector<unsigned> m_manuals;
 
 	void ChangeState(bool on);
+	void SetupCombinationState();
 
 public:
 	GOrgueDivisionalCoupler(GrandOrgueFile* organfile);

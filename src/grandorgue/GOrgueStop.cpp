@@ -81,8 +81,16 @@ void GOrgueStop::Load(GOrgueConfigReader& cfg, wxString group)
 
         m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
         std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
+	m_StoreDivisional = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+	m_StoreGeneral = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 
         GOrgueDrawstop::Load(cfg, group);
+}
+
+void GOrgueStop::SetupCombinationState()
+{
+	m_StoreDivisional = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+	m_StoreGeneral = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 
 void GOrgueStop::SetRankKey(unsigned key, unsigned velocity)

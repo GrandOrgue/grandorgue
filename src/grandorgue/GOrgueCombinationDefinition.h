@@ -26,6 +26,7 @@
 #include <vector>
 
 class GOrgueCombinationElement;
+class GOrgueDrawstop;
 class GOrgueManual;
 class GrandOrgueFile;
 
@@ -45,6 +46,10 @@ public:
 private:
 	GrandOrgueFile* m_organfile;
 	std::vector<CombinationSlot> m_Content;
+
+	void AddGeneral(GOrgueDrawstop* control, CombinationType type, int manual, unsigned index);
+	void AddDivisional(GOrgueDrawstop* control, CombinationType type, int manual, unsigned index);
+	void Add(GOrgueDrawstop* control, CombinationType type, int manual, unsigned index, bool store_unconditional);
 
 public:
 	GOrgueCombinationDefinition(GrandOrgueFile* organfile);

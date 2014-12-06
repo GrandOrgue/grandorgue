@@ -50,6 +50,12 @@ void GOrgueDivisionalCoupler::Load(GOrgueConfigReader& cfg, wxString group)
 
 }
 
+void GOrgueDivisionalCoupler::SetupCombinationState()
+{
+	m_StoreDivisional = false;
+	m_StoreGeneral = m_organfile->GeneralsStoreDivisionalCouplers();
+}
+
 void GOrgueDivisionalCoupler::ChangeState(bool on)
 {
 }

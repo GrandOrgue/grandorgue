@@ -45,7 +45,9 @@ GOrgueDrawstop::GOrgueDrawstop(GrandOrgueFile* organfile) :
 	m_ActiveState(false),
 	m_CombinationState(false),
 	m_ControlledDrawstops(),
-	m_ControllingDrawstops()
+	m_ControllingDrawstops(),
+	m_StoreDivisional(false),
+	m_StoreGeneral(false)
 {
 }
 
@@ -59,6 +61,8 @@ void GOrgueDrawstop::Init(GOrgueConfigReader& cfg, wxString group, wxString name
 	m_Type = FUNCTION_INPUT;
 	m_Engaged = cfg.ReadBoolean(CMBSetting, group, wxT("DefaultToEngaged"));
 	m_GCState = 0;
+	m_StoreDivisional = true;
+	m_StoreGeneral = true;
 	GOrgueButton::Init(cfg, group, name);
 }
 
@@ -98,6 +102,7 @@ void GOrgueDrawstop::Load(GOrgueConfigReader& cfg, wxString group)
 	}
 
 	GOrgueButton::Load(cfg, group);
+	SetupCombinationState();
 }
 
 void GOrgueDrawstop::Save(GOrgueConfigWriter& cfg)
@@ -207,4 +212,14 @@ void GOrgueDrawstop::Update()
 bool GOrgueDrawstop::GetCombinationState() const
 {
 	return IsEngaged();
+}
+
+bool GOrgueDrawstop::GetStoreDivisional() const
+{
+	return m_StoreDivisional;
+}
+
+bool GOrgueDrawstop::GetStoreGeneral() const
+{
+	return m_StoreGeneral;
 }

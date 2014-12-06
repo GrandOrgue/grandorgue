@@ -48,6 +48,7 @@ private:
 
 	void SetRankKey(unsigned key, unsigned velocity);
 	void ChangeState(bool on);
+	void SetupCombinationState();
 
 public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number);

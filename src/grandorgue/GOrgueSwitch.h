@@ -28,6 +28,7 @@ class GOrgueSwitch : public GOrgueDrawstop
 {
 protected:
 	void ChangeState(bool);
+	void SetupCombinationState();
 
 public:
 	GOrgueSwitch(GrandOrgueFile* organfile);

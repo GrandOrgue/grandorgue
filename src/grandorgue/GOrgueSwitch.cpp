@@ -21,6 +21,7 @@
 
 #include "GOrgueSwitch.h"
 
+#include "GrandOrgueFile.h"
 #include <wx/intl.h>
 
 GOrgueSwitch::GOrgueSwitch(GrandOrgueFile* organfile) :
@@ -34,6 +35,12 @@ GOrgueSwitch::~GOrgueSwitch()
 
 void GOrgueSwitch::ChangeState(bool on)
 {
+}
+
+void GOrgueSwitch::SetupCombinationState()
+{
+	m_StoreDivisional = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+	m_StoreGeneral = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 
 wxString GOrgueSwitch::GetMidiType()
