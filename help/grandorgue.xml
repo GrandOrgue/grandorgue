@@ -8006,6 +8006,26 @@ FirstMIDINoteNumber.
      </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>StoreInDivisional</term>
+          <listitem>
+            <para>
+(boolean, default: dependend on various settings) Determines, if the
+button should be stored in divisionals without
+<emphasis>FULL</emphasis>.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>StoreInGeneral</term>
+          <listitem>
+            <para>
+(boolean, default: dependend on various settings) Determines, if the
+button should be stored in divisionals without
+<emphasis>FULL</emphasis>.
+     </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
