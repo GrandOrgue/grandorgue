@@ -36,7 +36,8 @@ GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
 	m_MIDIInputNumber(0),
 	m_MIDIValue(0),
 	m_Name(),
-	m_Displayed(false)
+	m_Displayed1(false),
+	m_Displayed2(false)
 {
 	m_organfile->RegisterEventHandler(this);
 	m_organfile->RegisterMidiConfigurator(this);
@@ -61,7 +62,8 @@ void GOrgueEnclosure::Load(GOrgueConfigReader& cfg, wxString group, int enclosur
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_Name = cfg.ReadStringNotEmpty(ODFSetting, m_group, wxT("Name"));
-	m_Displayed = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);
+	m_Displayed1 = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);
+	m_Displayed2 = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, false);
 	m_AmpMinimumLevel = cfg.ReadInteger(ODFSetting, m_group, wxT("AmpMinimumLevel"), 0, 100);
 	m_MIDIInputNumber = cfg.ReadInteger(ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
 	Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, false, 127));
@@ -136,9 +138,12 @@ int GOrgueEnclosure::GetValue()
 	return m_MIDIValue;
 }
 
-bool GOrgueEnclosure::IsDisplayed()
+bool GOrgueEnclosure::IsDisplayed(bool  new_format)
 {
-	return m_Displayed;
+	if (new_format)
+		return m_Displayed2;
+	else
+		return m_Displayed1;
 }
 
 

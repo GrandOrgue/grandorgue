@@ -6224,7 +6224,8 @@ enclosures.
           <term>Displayed</term>
           <listitem>
             <para>
-(boolean, default: true) If true, the enclosure is visible on the main panel.
+(boolean, default: false for the new panel format, otherwise true) If
+true, the enclosure is visible on the main panel.
      </para>
           </listitem>
         </varlistentry>

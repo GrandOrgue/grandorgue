@@ -45,7 +45,8 @@ private:
 	int m_MIDIInputNumber;
 	int m_MIDIValue;
 	wxString m_Name;
-	bool m_Displayed;
+	bool m_Displayed1;
+	bool m_Displayed2;
 
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void HandleKey(int key);
@@ -67,7 +68,7 @@ public:
 	float GetAttenuation();
 
 	void Scroll(bool scroll_up);
-	bool IsDisplayed();
+	bool IsDisplayed(bool new_format);
 	virtual void Abort();
 	virtual void PreparePlayback();
 	virtual void PrepareRecording();
