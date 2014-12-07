@@ -181,7 +181,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	if (is_main_panel)
 	{
 		for (unsigned i = 0; i < m_organfile->GetEnclosureCount(); i++)
-			if (m_organfile->GetEnclosure(i)->IsDisplayed())
+			if (m_organfile->GetEnclosure(i)->IsDisplayed(new_format))
 			{
 				LoadControl(new GOGUIEnclosure(this, m_organfile->GetEnclosure(i)), cfg, wxString::Format(wxT("Enclosure%03d"), i + 1));
 			}
