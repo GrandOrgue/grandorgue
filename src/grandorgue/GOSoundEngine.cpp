@@ -559,6 +559,16 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 	if (!handle->pipe)
 		return;
 
+	/* The beloow code creates a new sampler to playback the release, the
+	 * following code takes the active sampler for this pipe (which will be
+	 * in either the attack or loop section) and sets the fadeout property
+	 * which will decay this portion of the pipe. The sampler will
+	 * automatically be placed back in the pool when the fade restores to
+	 * zero. */
+	unsigned cross_fade_len = GetFaderLength(handle->pipe->GetMidiKeyNumber());
+	handle->fader.StartDecay(cross_fade_len, m_SampleRate);
+	handle->is_release = true;
+
 	const GOSoundProvider* this_pipe = handle->pipe;
 	float vol = (handle->sampler_group_id < 0) ? 1.0f : m_Windchests[handle->sampler_group_id]->GetWindchestVolume();
 
@@ -673,16 +683,6 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 		}
 
 	}
-
-	/* The above code created a new sampler to playback the release, the
-	 * following code takes the active sampler for this pipe (which will be
-	 * in either the attack or loop section) and sets the fadeout property
-	 * which will decay this portion of the pipe. The sampler will
-	 * automatically be placed back in the pool when the fade restores to
-	 * zero. */
-	unsigned cross_fade_len = GetFaderLength(handle->pipe->GetMidiKeyNumber());
-	handle->fader.StartDecay(cross_fade_len, m_SampleRate);
-	handle->is_release = true;
 }
 
 
