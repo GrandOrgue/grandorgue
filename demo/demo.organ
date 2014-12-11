@@ -84,8 +84,6 @@ Coupler001=001
 Coupler002=002
 NumberOfTremulants=0
 NumberOfDivisionals=0
-DispKeyColourInverted=N
-Displayed=Y
 
 [Manual001]
 Name=First Manual
@@ -126,8 +124,6 @@ Coupler001=003
 Coupler002=004
 NumberOfTremulants=0
 NumberOfDivisionals=0
-DispKeyColourInverted=N
-Displayed=Y
 
 [Manual002]
 Name=Second Manual
@@ -197,6 +193,7 @@ NumberOfTremulants=0
 Name=Recit
 DispLabelText=R
 AmpMinimumLevel=20
+Displayed=Y
 
 [Enclosure002]
 Name=Grandorgue
@@ -4367,7 +4364,7 @@ DispKeyVertBackgroundImageNum=13
 DispDrawstopInsetBackgroundImageNum=19
 DispExtraButtonRows=1
 DispPairDrawstopCols=N
-NumberOfGUIElements=18
+NumberOfGUIElements=20
 
 [Panel000Element001]
 DispLabelText=G1
@@ -4521,7 +4518,7 @@ DispImageNum=8
 
 [Panel000Element015]
 Type=Manual
-Manual=002
+Manual=000
 DispKeyColourInverted=N
 
 [Panel000Element016]
@@ -4548,6 +4545,17 @@ DispDrawstopRow=6
 DispLabelColour=Black
 DispLabelFontSize=Large
 DispImageNum=6
+
+[Panel000Element019]
+Type=Manual
+Manual=001
+DispKeyColourInverted=N
+
+[Panel000Element020]
+Type=Manual
+Manual=002
+DispKeyColourInverted=N
+
 
 
 [Panel001]
