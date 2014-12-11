@@ -258,3 +258,22 @@ const GOAudioSection* GOSoundProvider::GetRelease(const audio_section_stream* ha
 
 	return NULL;
 }
+
+bool GOSoundProvider::checkForMissingRelease()
+{
+	for (int k = -1; k < 2; k++)
+	{
+		unsigned cnt = 0;
+		bool max_release = false;
+		for(unsigned i = 0; i < m_Release.size(); i++)
+			if (m_ReleaseInfo[i].sample_group == k)
+			{
+				cnt++;
+				if (m_ReleaseInfo[i].max_playback_time == (unsigned)-1)
+					max_release = true;
+			}
+		if (cnt && !max_release)
+			return true;
+	}
+	return false;
+}
