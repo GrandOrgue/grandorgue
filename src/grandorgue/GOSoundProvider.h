@@ -86,6 +86,8 @@ public:
 	float GetMidiPitchFract() const;
 
 	float GetVelocityVolume(unsigned velocity) const;
+
+	bool checkForMissingRelease();
 };
 
 inline
