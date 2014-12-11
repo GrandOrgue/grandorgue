@@ -330,14 +330,14 @@ void GOrgueFrame::InitHelp()
         m_Help->AddBook(result);
 }
 
-bool GOrgueFrame::DoClose()
+bool GOrgueFrame::DoClose(bool force)
 {
 	if (!m_doc)
 		return true;
 	GOMutexLocker m_locker(m_mutex, true);
 	if(!m_locker.IsLocked())
 		return false;
-	if (m_doc->IsModified() && m_doc->GetOrganFile())
+	if (m_doc->IsModified() && m_doc->GetOrganFile() && !force)
 	{
 		int res = wxMessageBox(_("The organ settings have been modified. Do you want to save the changes?"), m_doc->GetOrganFile()->GetChurchName(), wxYES_NO|wxCANCEL|wxICON_QUESTION, this);
 		if (res == wxCANCEL)
@@ -350,9 +350,9 @@ bool GOrgueFrame::DoClose()
 	return true;
 }
 
-void GOrgueFrame::Open(wxString file)
+void GOrgueFrame::Open(wxString file, bool force)
 {
-	if (!DoClose())
+	if (!DoClose(force))
 		return;
 	GOMutexLocker m_locker(m_mutex, true);
 	if(!m_locker.IsLocked())
@@ -556,7 +556,7 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
-	Open(event.GetString());
+	Open(event.GetString(), event.GetInt() == 1);
 }
 
 void GOrgueFrame::OnLoadFavorite(wxCommandEvent& event)
@@ -964,7 +964,7 @@ void GOrgueFrame::OnMidiEvent(const GOrgueMidiEvent& event)
 	for(unsigned i = 0; i < organs.size(); i++)
 		if (organs[i]->Match(event))
 		{
-			SendLoadFile(organs[i]->GetODFPath());
+			SendLoadFile(organs[i]->GetODFPath(), true);
 			return;
 		}
 }
@@ -983,9 +983,10 @@ void GOrgueFrame::OnMsgBox(wxMsgBoxEvent& event)
 	wxMessageBox(event.getText(), event.getTitle(), event.getStyle(), this);
 }
 
-void GOrgueFrame::SendLoadFile(wxString filename)
+void GOrgueFrame::SendLoadFile(wxString filename, bool force)
 {
 	wxCommandEvent evt(wxEVT_LOADFILE, 0);
 	evt.SetString(filename);
+	evt.SetInt(force ? 1 : 0);
 	GetEventHandler()->AddPendingEvent(evt);
 }

@@ -129,8 +129,8 @@ private:
 	void OnSetTitle(wxCommandEvent& event);
 	void OnMsgBox(wxMsgBoxEvent& event);
 
-	bool DoClose();
-	void Open(wxString file);
+	bool DoClose(bool force = false);
+	void Open(wxString file, bool force = false);
 
 public:
 	GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
@@ -141,7 +141,7 @@ public:
 
 	void DoSplash(bool timeout = true);
 
-	void SendLoadFile(wxString filename);
+	void SendLoadFile(wxString filename, bool force = false);
 
 	DECLARE_EVENT_TABLE()
 };
