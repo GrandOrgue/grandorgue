@@ -67,7 +67,7 @@ void GOrgueButton::Load(GOrgueConfigReader& cfg, wxString group)
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 	m_Name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true);
-	m_Displayed = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), true, false);
+	m_Displayed = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), false, false);
 	m_DisplayInInvertedState = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
 	if (!m_ReadOnly)
 	{

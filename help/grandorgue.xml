@@ -5539,7 +5539,7 @@ state of divisional coupler.
           <term>CombinationsStoreNonDisplayedDrawstops</term>
           <listitem>
             <para>
-(boolean, required) determines, if the state of (on the main panel)
+(boolean, default: true) determines, if the state of (on the main panel)
 invisible objects is stored in divisionals, generals and the setter.
      </para>
           </listitem>
@@ -6805,7 +6805,7 @@ user then only has to configure the low velocity to make it work.
           <term>Displayed</term>
           <listitem>
             <para>
-(boolean, required) If true, the manual is visible on the main panel.
+(boolean, default: false) If true, the manual is visible on the main panel.
      </para>
           </listitem>
         </varlistentry>
@@ -7499,7 +7499,7 @@ locally.
           <term>Displayed</term>
           <listitem>
             <para>
-(boolean, required) If true, the sections also includes the GUI
+(boolean, default: false) If true, the sections also includes the GUI
 properties for the main panel. Otherwise it is not displayed on the
 main panel.
      </para>
@@ -7895,6 +7895,26 @@ after pressing GC. -1 means don't change, 0 off and 1 on.
      </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>StoreInDivisional</term>
+          <listitem>
+            <para>
+(boolean, default: dependend on various settings) Determines, if the
+button should be stored in divisionals without
+<emphasis>FULL</emphasis>.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>StoreInGeneral</term>
+          <listitem>
+            <para>
+(boolean, default: dependend on various settings) Determines, if the
+button should be stored in divisionals without
+<emphasis>FULL</emphasis>.
+     </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
@@ -8004,26 +8024,6 @@ Melody.
             <para>
 (integer 0-127, default: 0) number of keys to forward starting with
 FirstMIDINoteNumber.
-     </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>StoreInDivisional</term>
-          <listitem>
-            <para>
-(boolean, default: dependend on various settings) Determines, if the
-button should be stored in divisionals without
-<emphasis>FULL</emphasis>.
-     </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>StoreInGeneral</term>
-          <listitem>
-            <para>
-(boolean, default: dependend on various settings) Determines, if the
-button should be stored in divisionals without
-<emphasis>FULL</emphasis>.
      </para>
           </listitem>
         </varlistentry>
