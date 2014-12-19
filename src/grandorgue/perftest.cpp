@@ -78,61 +78,70 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 		organfile->AddWindchest(new GOrgueWindchest(organfile));
 		GOSoundEngine* engine = new GOSoundEngine();
 
-		ptr_vector<GOSoundProvider> pipes;
-		for(unsigned i = 0; i < sample_instances; i++)
+		try
 		{
-			GOSoundProviderWave* w = new GOSoundProviderWave(organfile->GetMemoryPool());
-			w->SetAmplitude(102, 0);
- 			std::vector<release_load_info> release;
- 			std::vector<attack_load_info> attack;
-			attack_load_info ainfo;
-			ainfo.filename = wxString::Format(wxT("%02d.wav"), i % 3);
-			ainfo.sample_group = -1;
-			ainfo.load_release = true;
-			ainfo.percussive = false;
-			ainfo.min_attack_velocity = 0;
-			ainfo.max_playback_time = -1;
-			ainfo.cue_point = -1;
-			ainfo.release_end = -1;
-			ainfo.loops.clear();
-			attack.push_back(ainfo);
-			w->LoadFromFile(attack, release, organfile, bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1, 0);
-			pipes.push_back(w);
+			ptr_vector<GOSoundProvider> pipes;
+			for(unsigned i = 0; i < sample_instances; i++)
+			{
+				GOSoundProviderWave* w = new GOSoundProviderWave(organfile->GetMemoryPool());
+				w->SetAmplitude(102, 0);
+				std::vector<release_load_info> release;
+				std::vector<attack_load_info> attack;
+				attack_load_info ainfo;
+				ainfo.filename = wxString::Format(wxT("%02d.wav"), i % 3);
+				ainfo.sample_group = -1;
+				ainfo.load_release = true;
+				ainfo.percussive = false;
+				ainfo.min_attack_velocity = 0;
+				ainfo.max_playback_time = -1;
+				ainfo.attack_start = 0;
+				ainfo.cue_point = -1;
+				ainfo.release_end = -1;
+				ainfo.loops.clear();
+				attack.push_back(ainfo);
+				w->LoadFromFile(attack, release, organfile, bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1, 0);
+				pipes.push_back(w);
+			}
+			engine->SetVolume(10);
+			engine->SetSampleRate(sample_rate);
+			engine->SetPolyphonyLimiting(false);
+			engine->SetHardPolyphony(10000);
+			engine->SetScaledReleases(true);
+			engine->SetInterpolationType(interpolation);
+			engine->Setup(organfile, samples_per_frame);
+
+			std::vector<SAMPLER_HANDLE> handles;
+			METER_INFO info;
+			float output_buffer[GO_SOUND_BUFFER_SIZE];
+
+			for(unsigned i = 0; i < pipes.size(); i++)
+			{
+				SAMPLER_HANDLE handle = engine->StartSample(pipes[i], 1, 0, 127, 0);
+				if (handle)
+					handles.push_back(handle);
+			}
+
+			wxMilliClock_t start = getCPUTime();
+			unsigned blocks = seconds * engine->GetSampleRate() / samples_per_frame;
+			for(unsigned i = 0; i < blocks; i++)
+				{
+					engine->GetSamples(output_buffer, samples_per_frame, &info);
+				}
+			wxMilliClock_t end = getCPUTime();
+			wxMilliClock_t diff = end - start;
+			
+			float playback_time = blocks * (double)samples_per_frame / engine->GetSampleRate();
+			wxLogError(wxT("%d sampler, %f seconds, %d bits, %d, %s, %s, %d block: %d ms cpu time, limit: %f"), pipes.size(), playback_time, 
+				   bits_per_sample, sample_rate, compress ? wxT("Y") : wxT("N"), interpolation == 0 ? wxT("Linear") : wxT("Polyphase"), 
+				   samples_per_frame, diff.ToLong(), playback_time * 1000.0 * pipes.size() / diff.ToLong());
+
+			pipes.clear();
 		}
-		engine->SetVolume(10);
-		engine->SetSampleRate(sample_rate);
-		engine->SetPolyphonyLimiting(false);
-		engine->SetHardPolyphony(10000);
-		engine->SetScaledReleases(true);
-		engine->SetInterpolationType(interpolation);
-		engine->Setup(organfile, samples_per_frame);
-
-		std::vector<SAMPLER_HANDLE> handles;
-		METER_INFO info;
-		float output_buffer[GO_SOUND_BUFFER_SIZE];
-
-		for(unsigned i = 0; i < pipes.size(); i++)
+		catch(wxString msg)
 		{
-			SAMPLER_HANDLE handle = engine->StartSample(pipes[i], 1, 0, 127, 0);
-			if (handle)
-				handles.push_back(handle);
+			wxLogError(wxT("Error: %s"), msg.c_str());
 		}
 
-		wxMilliClock_t start = getCPUTime();
-		unsigned blocks = seconds * engine->GetSampleRate() / samples_per_frame;
-		for(unsigned i = 0; i < blocks; i++)
-		{
-			engine->GetSamples(output_buffer, samples_per_frame, &info);
-		}
-		wxMilliClock_t end = getCPUTime();
-		wxMilliClock_t diff = end - start;
-
-		float playback_time = blocks * (double)samples_per_frame / engine->GetSampleRate();
-		wxLogError(wxT("%d sampler, %f seconds, %d bits, %d, %s, %s, %d block: %d ms cpu time, limit: %f"), pipes.size(), playback_time, 
-			   bits_per_sample, sample_rate, compress ? wxT("Y") : wxT("N"), interpolation == 0 ? wxT("Linear") : wxT("Polyphase"), 
-			   samples_per_frame, diff.ToLong(), playback_time * 1000.0 * pipes.size() / diff.ToLong());
-
-		pipes.clear();
 		delete engine;
 		delete organfile;
 	}
