@@ -142,7 +142,10 @@ bool GOrgueSound::OpenSound()
 	m_SoundEngine.SetAudioOutput(engine_config);
 	m_SoundEngine.SetupReverb(m_Settings);
 
-	PreparePlayback(NULL);
+	if (m_organfile)
+		m_SoundEngine.Setup(m_organfile, m_SamplesPerBuffer, m_Settings.GetReleaseConcurrency());
+	else
+		m_SoundEngine.ClearSetup();
 
 	try
 	{
@@ -163,6 +166,8 @@ bool GOrgueSound::OpenSound()
 		StartStreams();
 		opened_ok = true;
 
+		if (m_organfile)
+			m_organfile->PreparePlayback(&GetEngine(), &GetMidi());
 	}
 	catch (wxString &msg)
 	{
@@ -226,41 +231,49 @@ void GOrgueSound::CloseSound()
 		}
 	}
 
-	{
-		GOMutexLocker locker(m_lock);
-		GOMultiMutexLocker multi;
-		for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
-			multi.Add(m_AudioOutputs[i].mutex);
-
-		if (m_organfile)
-		{
-			m_midi->GetMidiRecorder().SetOrganFile(NULL);
-			m_organfile->Abort();
-			m_organfile = NULL;
-		}
-		ResetMeters();
-	}
+	if (m_organfile)
+		m_organfile->Abort();
+	ResetMeters();
 	m_AudioOutputs.clear();
 }
 
 bool GOrgueSound::ResetSound(bool force)
 {
 	wxBusyCursor busy;
-	GrandOrgueFile* organfile = m_organfile;
-
 	if (!m_AudioOutputs.size() && !force)
 		return false;
 
 	CloseSound();
 	if (!OpenSound())
-	{
-		m_organfile = organfile;
 		return false;
-	}
-	if (organfile)
-		PreparePlayback(organfile);
 
 	return true;
+}
+
+void GOrgueSound::AssignOrganFile(GrandOrgueFile* organfile)
+{
+	if (organfile == m_organfile)
+		return;
+
+	GOMutexLocker locker(m_lock);
+	GOMultiMutexLocker multi;
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+		multi.Add(m_AudioOutputs[i].mutex);
+	
+	if (m_organfile)
+	{
+		m_organfile->Abort();
+		m_SoundEngine.ClearSetup();
+	}
+
+	m_organfile = organfile;
+	m_midi->GetMidiRecorder().SetOrganFile(m_organfile);
+
+	if (m_organfile && m_AudioOutputs.size())
+	{
+		m_SoundEngine.Setup(organfile, m_SamplesPerBuffer, m_Settings.GetReleaseConcurrency());
+		m_organfile->PreparePlayback(&GetEngine(), &GetMidi());
+	}
 }
 
 GOrgueSettings& GOrgueSound::GetSettings()
@@ -317,28 +330,6 @@ void GOrgueSound::StartMidiPlaying(wxString filename)
 void GOrgueSound::StopMidiPlaying()
 {
 	m_midi->GetMidiPlayer().StopPlayer();
-}
-
-void GOrgueSound::PreparePlayback(GrandOrgueFile* organfile)
-{
-	GOMutexLocker locker(m_lock);
-	GOMultiMutexLocker multi;
-	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
-		multi.Add(m_AudioOutputs[i].mutex);
-
-	m_organfile = organfile;
-	m_midi->GetMidiRecorder().SetOrganFile(m_organfile);
-	StopThreads();
-	if (organfile)
-	{
-		m_SoundEngine.Setup(organfile, m_SamplesPerBuffer, m_Settings.GetReleaseConcurrency());
-		organfile->PreparePlayback(&GetEngine(), &GetMidi());
-		StartThreads();
-	}
-	else
-	{
-		m_SoundEngine.ClearSetup();
-	}
 }
 
 void GOrgueSound::SetLogSoundErrorMessages(bool settingsDialogVisible)

@@ -73,12 +73,6 @@ bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const wxString& odf, cons
 
 	CloseOrgan();
 	Modify(false);
-	bool open_sound = m_sound.OpenSound();
-
-	/* abort if we failed to open the sound device */
-	if (!open_sound)
-		return false;
-
 	m_organfile = new GrandOrgueFile(this, m_sound.GetSettings());
 	wxString error = m_organfile->Load(dlg, odf, cmb);
 	if (!error.IsEmpty())
@@ -92,7 +86,6 @@ bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const wxString& odf, cons
 		return false;
 	}
 	m_sound.GetSettings().AddOrgan(new GOrgueOrgan(m_organfile->GetODFFilename(), m_organfile->GetChurchName(), m_organfile->GetOrganBuilder(), m_organfile->GetRecordingDetails()));
-	m_sound.PreparePlayback(m_organfile);
 	if (m_organfile->GetVolume() != -121)
 	{
 		wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
@@ -101,9 +94,8 @@ bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const wxString& odf, cons
 
 		m_sound.GetEngine().SetVolume(m_organfile->GetVolume());
 	}
-	m_OrganFileReady = true;
-
 	m_sound.GetSettings().SetLastFile(m_organfile->GetODFFilename());
+	m_sound.GetSettings().Flush();
 
 	wxCommandEvent event(wxEVT_WINTITLE, 0);
 	event.SetString(m_organfile->GetChurchName());
@@ -114,9 +106,13 @@ bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const wxString& odf, cons
 		if (m_organfile->GetPanel(i)->InitialOpenWindow())
 			ShowPanel(i);
 
+	m_sound.AssignOrganFile(m_organfile);
+	m_OrganFileReady = true;
 	m_listener.SetCallback(this);
-	m_sound.GetSettings().Flush();
 	Modify(!cmb.IsEmpty());
+
+	if (m_sound.OpenSound())
+		return false;
 	return true;
 }
 
@@ -180,6 +176,7 @@ bool GOrgueDocument::Export(const wxString& cmb)
 void GOrgueDocument::CloseOrgan()
 {
 	m_listener.SetCallback(NULL);
+	m_sound.AssignOrganFile(NULL);
 	m_sound.CloseSound();
 	while(m_Windows.size() > 0)
 	{

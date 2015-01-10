@@ -130,7 +130,7 @@ public:
 	void StartMidiPlaying(wxString filename);
 	void StopMidiPlaying();
 
-	void PreparePlayback(GrandOrgueFile* organfile);
+	void AssignOrganFile(GrandOrgueFile* organfile);
 	GrandOrgueFile* GetOrganFile();
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
