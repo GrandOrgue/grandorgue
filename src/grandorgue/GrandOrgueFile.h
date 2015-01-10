@@ -25,6 +25,7 @@
 #include "ptrvector.h"
 #include "GOrgueBitmapCache.h"
 #include "GOrgueCombinationDefinition.h"
+#include "GOrgueEventDistributor.h"
 #include "GOrgueLabel.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrguePipeConfigTreeNode.h"
@@ -34,21 +35,17 @@
 
 class GOGUIPanel;
 class GOrgueCache;
-class GOrgueCacheObject;
 class GOrgueDivisionalCoupler;
 class GOrgueEnclosure;
-class GOrgueEventHandler;
 class GOrgueGeneral;
 class GOrgueManual;
 class GOrgueMidi;
-class GOrgueMidiConfigurator;
 class GOrgueMidiEvent;
 class GOrgueMidiListener;
 class GOrguePiston;
 class GOrgueProgressDialog;
 class GOrguePushbutton;
 class GOrgueRank;
-class GOrgueSaveableObject;
 class GOrgueSetter;
 class GOrgueSettings;
 class GOrgueSwitch;
@@ -61,7 +58,7 @@ class GOSoundProvider;
 
 typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
 
-class GrandOrgueFile : private GOrguePipeUpdateCallback
+class GrandOrgueFile : public GOrgueEventDistributor, private GOrguePipeUpdateCallback
 {
 	WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
@@ -107,10 +104,6 @@ private:
 	ptr_vector<GOrgueRank> m_ranks;
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
-	std::vector<GOrgueEventHandler*> m_handler;
-	std::vector<GOrgueCacheObject*> m_CacheObjects;
-	std::vector<GOrgueSaveableObject*> m_SaveableObjects;
-	std::vector<GOrgueMidiConfigurator*> m_MidiConfigurator;
 	GOStringBoolMap m_UsedSections;
 
 	GOSoundEngine* m_soundengine;
@@ -125,12 +118,10 @@ private:
 	GOrgueLabel m_TemperamentLabel;
 
 	void ReadOrganFile(GOrgueConfigReader& cfg);
-	void ReadCombinations(GOrgueConfigReader& cfg);
 	void GenerateCacheHash(unsigned char hash[20]);
 	wxString GenerateSettingFileName();
 	wxString GenerateCacheFileName();
 	void SetTemperament(const GOrgueTemperament& temperament);
-	void ResolveReferences();
 
 	void UpdateAmplitude();
 	void UpdateTuning();
@@ -154,16 +145,11 @@ public:
 	void Update();
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
-	void HandleKey(int key);
 	void AllNotesOff();
 	void ControlChanged(void* control);
 	void UpdateTremulant(GOrgueTremulant* tremulant);
 	void UpdateVolume();
 	void Modified();
-	void RegisterEventHandler(GOrgueEventHandler* handler);
-	void RegisterCacheObject(GOrgueCacheObject* obj);
-	void RegisterSaveableObject(GOrgueSaveableObject* obj);
-	void RegisterMidiConfigurator(GOrgueMidiConfigurator* obj);
 	GOrgueDocument* GetDocument();
 	~GrandOrgueFile(void);
 
@@ -201,9 +187,6 @@ public:
 	void SetTemperament(wxString name);
 	wxString GetTemperament();
 	void MarkSectionInUse(wxString name);
-
-	unsigned GetMidiConfiguratorCount();
-	GOrgueMidiConfigurator* GetMidiConfigurator(unsigned index);
 
 	int GetRecorderElementID(wxString name);
 	GOrgueCombinationDefinition& GetGeneralTemplate();

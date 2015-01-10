@@ -36,7 +36,6 @@
 #include "GOrgueDocument.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueEvent.h"
-#include "GOrgueEventHandler.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
 #include "GOrgueLoadThread.h"
@@ -48,7 +47,6 @@
 #include "GOrgueProgressDialog.h"
 #include "GOrguePushbutton.h"
 #include "GOrgueReleaseAlignTable.h"
-#include "GOrgueSaveableObject.h"
 #include "GOrgueSetter.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSoundingPipe.h"
@@ -102,10 +100,6 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_ranks(),
 	m_manual(),
 	m_panels(),
-	m_handler(),
-	m_CacheObjects(),
-	m_SaveableObjects(),
-	m_MidiConfigurator(),
 	m_UsedSections(),
 	m_soundengine(0),
 	m_midi(0),
@@ -124,20 +118,12 @@ bool GrandOrgueFile::IsCacheable()
 	return m_Cacheable;
 }
 
-void GrandOrgueFile::ResolveReferences()
-{
-	for(unsigned i = 0; i < m_CacheObjects.size(); i++)
-		m_CacheObjects[i]->Initialize();
-}
-
-
 void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
 {
 	SHA_CTX ctx;
 	int len;
 	SHA1_Init(&ctx);
-	for (unsigned i = 0; i < m_CacheObjects.size(); i++)
-		m_CacheObjects[i]->UpdateHash(ctx);
+	UpdateHash(ctx);
 
 	len = sizeof(GOAudioSection);
 	SHA1_Update(&ctx, &len, sizeof(len));
@@ -362,12 +348,6 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	ReadCombinations(cfg);
 }
 
-void GrandOrgueFile::ReadCombinations(GOrgueConfigReader& cfg)
-{
-	for(unsigned i = 0; i < m_SaveableObjects.size(); i++)
-		m_SaveableObjects[i]->LoadCombination(cfg);
-}
-
 wxString GrandOrgueFile::GenerateSettingFileName()
 {
 	SHA_CTX ctx;
@@ -517,7 +497,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 		ResolveReferences();
 
 		/* Figure out list of pipes to load */
-		dlg->Reset(m_CacheObjects.size());
+		dlg->Reset(GetCacheObjectCount());
 		/* Load pipes */
 		std::atomic_uint nb_loaded_obj(0);
 
@@ -550,9 +530,11 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 			{
 				try
 				{
-					while (nb_loaded_obj < m_CacheObjects.size())
+					while (true)
 					{
-						GOrgueCacheObject* obj = m_CacheObjects[nb_loaded_obj];
+						GOrgueCacheObject* obj = GetCacheObject(nb_loaded_obj);
+						if (!obj)
+							break;
 						if (!obj->LoadCache(reader))
 						{
 							cache_ok = false;
@@ -569,7 +551,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 							return wxEmptyString;
 						}
 					}
-					if (nb_loaded_obj >= m_CacheObjects.size())
+					if (nb_loaded_obj >= GetCacheObjectCount())
 						m_Cacheable = true;
 				}
 				catch (wxString msg)
@@ -591,14 +573,16 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 		{
 			ptr_vector<GOrgueLoadThread> threads;
 			for(unsigned i = 0; i < m_Settings.GetLoadConcurrency(); i++)
-				threads.push_back(new GOrgueLoadThread(m_CacheObjects, m_pool, nb_loaded_obj));
+				threads.push_back(new GOrgueLoadThread(*this, m_pool, nb_loaded_obj));
 
 			for(unsigned i = 0; i < threads.size(); i++)
 				threads[i]->Run();
 
-			for(unsigned pos = nb_loaded_obj.fetch_add(1); pos < m_CacheObjects.size(); pos = nb_loaded_obj.fetch_add(1))
+			for(unsigned pos = nb_loaded_obj.fetch_add(1); true; pos = nb_loaded_obj.fetch_add(1))
 			{
-				GOrgueCacheObject* obj = m_CacheObjects[pos];
+				GOrgueCacheObject* obj = GetCacheObject(pos);
+				if (!obj)
+					break;
 				obj->LoadData();
 				if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
 				{
@@ -612,7 +596,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 			for(unsigned i = 0; i < threads.size(); i++)
 				threads[i]->checkResult();
 
-			if (nb_loaded_obj >= m_CacheObjects.size())
+			if (nb_loaded_obj >= GetCacheObjectCount())
 				m_Cacheable = true;
 
 			if (m_Settings.GetManageCache() && m_Cacheable)
@@ -687,7 +671,7 @@ bool GrandOrgueFile::UpdateCache(GOrgueProgressDialog* dlg, bool compress)
 	/* Figure out the list of pipes to save */
 	unsigned nb_saved_objs = 0;
 
-	dlg->Setup(m_CacheObjects.size(), _("Creating sample cache"));
+	dlg->Setup(GetCacheObjectCount(), _("Creating sample cache"));
 
 	wxFileOutputStream file(m_CacheFilename);
 	GOrgueCacheWriter writer(file, compress);
@@ -700,9 +684,11 @@ bool GrandOrgueFile::UpdateCache(GOrgueProgressDialog* dlg, bool compress)
 	if (!writer.Write(hash, sizeof(hash)))
 		cache_save_ok = false;
 
-	for (unsigned i = 0; cache_save_ok && i < m_CacheObjects.size(); i++)
+	for (unsigned i = 0; cache_save_ok; i++)
 	{
-		GOrgueCacheObject* obj = m_CacheObjects[i];
+		GOrgueCacheObject* obj = GetCacheObject(i);
+		if (!obj)
+			break;
 		if (!obj->SaveCache(writer))
 		{
 			cache_save_ok = false;
@@ -778,8 +764,7 @@ bool GrandOrgueFile::Export(const wxString& cmb)
 	cfg.WriteString(wxT("Organ"), wxT("Temperament"), m_Temperament);
 	cfg.WriteBoolean(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch);
 
-	for(unsigned i = 0; i < m_SaveableObjects.size(); i++)
-		m_SaveableObjects[i]->Save(cfg);
+	GOrgueEventDistributor::Save(cfg);
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
@@ -1247,14 +1232,7 @@ void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)
 		return;
 	}
 
-	for(unsigned i = 0; i < m_handler.size(); i++)
-		m_handler[i]->ProcessMidi(event);
-}
-
-void GrandOrgueFile::HandleKey(int key)
-{
-	for(unsigned i = 0; i < m_handler.size(); i++)
-		m_handler[i]->HandleKey(key);
+	GOrgueEventDistributor::SendMidi(event);
 }
 
 void GrandOrgueFile::Reset()
@@ -1300,36 +1278,6 @@ void GrandOrgueFile::ControlChanged(void* control)
 	for(unsigned i = 0; i < m_piston.size(); i++)
 		m_piston[i]->ControlChanged(control);
 	m_setter->ControlChanged(control);
-}
-
-void GrandOrgueFile::RegisterEventHandler(GOrgueEventHandler* handler)
-{
-	m_handler.push_back(handler);
-}
-
-void GrandOrgueFile::RegisterCacheObject(GOrgueCacheObject* obj)
-{
-	m_CacheObjects.push_back(obj);
-}
-
-void GrandOrgueFile::RegisterSaveableObject(GOrgueSaveableObject* obj)
-{
-	m_SaveableObjects.push_back(obj);
-}
-
-void GrandOrgueFile::RegisterMidiConfigurator(GOrgueMidiConfigurator* obj)
-{
-	m_MidiConfigurator.push_back(obj);
-}
-
-unsigned GrandOrgueFile::GetMidiConfiguratorCount()
-{
-	return m_MidiConfigurator.size();
-}
-
-GOrgueMidiConfigurator* GrandOrgueFile::GetMidiConfigurator(unsigned index)
-{
-	return m_MidiConfigurator[index];
 }
 
 void GrandOrgueFile::UpdateTremulant(GOrgueTremulant* tremulant)
