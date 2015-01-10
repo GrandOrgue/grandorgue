@@ -22,9 +22,10 @@
 #include "GOrgueLoadThread.h"
 
 #include "GOrgueCacheObject.h"
+#include "GOrgueEventDistributor.h"
 #include "GOrgueMemoryPool.h"
 
-GOrgueLoadThread::GOrgueLoadThread(std::vector<GOrgueCacheObject*>& objs, GOrgueMemoryPool& pool, std::atomic_uint& pos) :
+GOrgueLoadThread::GOrgueLoadThread(GOrgueEventDistributor& objs, GOrgueMemoryPool& pool, std::atomic_uint& pos) :
 	wxThread(wxTHREAD_JOINABLE),
 	m_Objects(objs),
 	m_Pos(pos),
@@ -57,11 +58,11 @@ void* GOrgueLoadThread::Entry()
 		if (m_pool.IsPoolFull())
 			return NULL;
 		unsigned pos = m_Pos.fetch_add(1);
-		if (pos >= m_Objects.size())
-			return NULL;
 		try
 		{
-			GOrgueCacheObject* obj = m_Objects[pos];
+			GOrgueCacheObject* obj = m_Objects.GetCacheObject(pos);
+			if (!obj)
+				return NULL;
 			obj->LoadData();
 		}
 		catch (GOrgueOutOfMemory e)

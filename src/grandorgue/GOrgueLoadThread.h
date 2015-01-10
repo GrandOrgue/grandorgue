@@ -24,15 +24,15 @@
 
 #include "GOLock.h"
 #include <wx/thread.h>
-#include <vector>
 
 class GOrgueCacheObject;
+class GOrgueEventDistributor;
 class GOrgueMemoryPool;
 
 class GOrgueLoadThread : public wxThread
 {
 private:
-	std::vector<GOrgueCacheObject*>& m_Objects;
+	GOrgueEventDistributor& m_Objects;
 	std::atomic_uint& m_Pos;
 	GOrgueMemoryPool& m_pool;
 	wxString m_Error;
@@ -41,7 +41,7 @@ private:
 	void* Entry();
 
 public:
-	GOrgueLoadThread(std::vector<GOrgueCacheObject*>& objs, GOrgueMemoryPool& pool, std::atomic_uint& pos);
+	GOrgueLoadThread(GOrgueEventDistributor& objs, GOrgueMemoryPool& pool, std::atomic_uint& pos);
 	~GOrgueLoadThread();
 
 	void checkResult();

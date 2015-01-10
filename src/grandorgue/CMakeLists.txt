@@ -288,6 +288,7 @@ GOrgueDummyPipe.cpp
 GOrgueDrawStop.cpp
 GOrgueEnclosure.cpp
 GOrgueEvent.cpp
+GOrgueEventDistributor.cpp
 GOrgueFrameGeneral.cpp
 GOrgueFont.cpp
 GOrgueGeneral.cpp
