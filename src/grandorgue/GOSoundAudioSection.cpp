@@ -494,11 +494,11 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 
 			/* Setup ptr and position required by the end-block */
 			stream->ptr              = stream->end_ptr;
-			unsigned len = ((stream->end_pos - stream->position_index) << UPSAMPLE_BITS) / stream->increment_fraction;
+			unsigned len = ((UPSAMPLE_FACTOR / 2) + ((stream->end_pos - stream->position_index) << UPSAMPLE_BITS)) / stream->increment_fraction;
 			if (len == 0)
 				len = 1;
 			len = std::min(len, n_blocks);
-			stream->end_decode_call(stream, buffer, len);
+ 			stream->end_decode_call(stream, buffer, len);
 			buffer += 2 * len;
 			n_blocks -= len;
 
@@ -812,6 +812,11 @@ void GOAudioSection::Compress(bool format16)
 			}
 		}
 
+		state.last[0] = state.prev[0];
+		state.last[1] = state.prev[1];
+		state.prev[0] = state.value[0];
+		state.prev[1] = state.value[1];
+
 		state.value[0] = GetSample(i, 0);
 		if (m_Channels > 1)
 			state.value[1] = GetSample(i, 1);
@@ -837,10 +842,6 @@ void GOAudioSection::Compress(bool format16)
 				return;
 			}
 		}
-		state.last[0] = state.prev[0];
-		state.last[1] = state.prev[1];
-		state.prev[0] = state.value[0];
-		state.prev[1] = state.value[1];
 	}
 
 #if 0
@@ -855,6 +856,29 @@ void GOAudioSection::Compress(bool format16)
 
 	for (unsigned i = 0; i < m_SampleCount; i++)
 	{
+		for (unsigned j = 0; j < m_StartSegments.size(); j++)
+		{
+			if (m_StartSegments[j].start_offset == i && i)
+			{
+				if (tmp.position != m_StartSegments[j].cache.position)
+					wxLogError(wxT("StartSeg %d: Pos %d %d"), j, tmp.position, m_StartSegments[j].cache.position);
+				if(tmp.prev[0] != m_StartSegments[j].cache.prev[0] ||
+				   tmp.prev[1] != m_StartSegments[j].cache.prev[1])
+					wxLogError(wxT("StartSeg %d: prev %d %d - %d %d "), j, tmp.prev[0], m_StartSegments[j].cache.prev[0], 
+						   tmp.prev[1], m_StartSegments[j].cache.prev[1]);
+				if(tmp.value[0] != m_StartSegments[j].cache.value[0] ||
+				   tmp.value[1] != m_StartSegments[j].cache.value[1])
+					wxLogError(wxT("StartSeg %d: prev %d %d - %d %d "), j, tmp.value[0], m_StartSegments[j].cache.value[0], 
+						   tmp.value[1], m_StartSegments[j].cache.value[1]);
+				if(tmp.last[0] != m_StartSegments[j].cache.last[0] ||
+				   tmp.last[1] != m_StartSegments[j].cache.last[1])
+					wxLogError(wxT("StartSeg %d: last %d %d - %d %d "), j, tmp.last[0], m_StartSegments[j].cache.last[0], 
+						   tmp.last[1], m_StartSegments[j].cache.last[1]);
+				if (tmp.ptr != data + (intptr_t)m_StartSegments[j].cache.ptr)
+					wxLogError(wxT("StartSeg %d: ptr %p %p"), j, tmp.ptr, data + (intptr_t)m_StartSegments[j].cache.ptr);
+			}
+		}
+
 		for (unsigned j = 0; j < m_Channels; j++)
 		{
 			int old_value = GetSample(i, j);
