@@ -17,7 +17,6 @@ if (WIN32)
 
    if (RTMIDI_USE_MM)
       add_definitions(-D__WINDOWS_MM__)
-#      include_directories(../../../ext/rt/directx)
       target_link_libraries(RtMidi winmm comdlg32 shell32 comctl32 advapi32 ole32 oleaut32 uuid)
    endif ()
 
