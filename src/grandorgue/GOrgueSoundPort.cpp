@@ -54,10 +54,10 @@ void GOrgueSoundPort::Init(unsigned channels, unsigned sample_rate, unsigned sam
 
 void GOrgueSoundPort::SetActualLatency(double latency)
 {
-	if (latency < m_SamplesPerBuffer / m_SampleRate)
-		latency = m_SamplesPerBuffer / m_SampleRate;
-	if (latency < 2 * m_SamplesPerBuffer / m_SampleRate)
-		latency += m_SamplesPerBuffer / m_SampleRate;
+	if (latency < m_SamplesPerBuffer / (double)m_SampleRate)
+		latency = m_SamplesPerBuffer / (double)m_SampleRate;
+	if (latency < 2 * m_SamplesPerBuffer / (double)m_SampleRate)
+		latency += m_SamplesPerBuffer / (double)m_SampleRate;
 	m_Sound->GetSettings().SetAudioDeviceActualLatency(m_Name, (int)(latency * 1000));
 }
 
