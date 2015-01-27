@@ -4677,6 +4677,63 @@ manual (if any). They usually are referred to as <emphasis>Custom Panels</emphas
     <mediaobject><imageobject><imagedata fileref="pitea_panel_menu.png" /></imageobject></mediaobject>
     <sect1>
       <title>Coupler</title>
+      <mediaobject><imageobject><imagedata fileref="coupler_menu.png" /></imageobject></mediaobject>
+      <para>
+GrandOrgue provides a default set of couplers for each keyboard or pedal board
+found in the Organ Definition File, plus a coupler set for each of the default
+<link linkend="couplerManuals">coupler manuals</link>. This enables the
+user to take advantage of "modern" accessories even when the sampleset doesn't
+provide them.
+      </para>
+      <para>The menu items display the <emphasis>master</emphasis> keyboards, i.e. the keyboard that "pulls" the coupled keyboards.</para>
+      <para>The coupler panel displays a line of controls for every <emphasis>target</emphasis> keyboard or pedal board found in the Organ Definition file.</para>
+      <note><simpara>The coupling manuals are not designed to be the target of a coupler.</simpara></note>
+      <figure>
+        <title>Coupler &lt;keyboard name&gt; Layout</title>
+        <mediaobject><imageobject><imagedata scalefit="1" fileref="coupler_panel.png"/></imageobject></mediaobject>
+      </figure>
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+          <colspec colname="c2" colsep="0" rowsep="0" />
+          <tbody>
+            <row valign="top">
+              <entry><emphasis role="strong">16</emphasis></entry>
+              <entry>Sub-octave coupler. The target key/pedal board is "pulled" 1 octave lower than the note played on the "master" key/pedal board.</entry>
+            </row>
+            <row valign="top">
+              <entry><emphasis role="strong">8</emphasis></entry>
+              <entry>"Normal" coupler. The target key/pedal board is "pulled" at the same octave as the note played on the "master" key/pedal board.</entry>
+            </row>
+            <row valign="top">
+              <entry><emphasis role="strong">U.O.</emphasis></entry>
+              <entry>
+Unison Off. When engaged, this coupler mutes the pipes at the played note pitch
+on the "master" key/pedal board. There are many use cases like using the
+octave/sub-octave couplers alone, turning the keyboard into a coupling
+keyboard, etc.
+              </entry>
+            </row>
+            <row valign="top">
+              <entry><emphasis role="strong">4</emphasis></entry>
+              <entry>Octave coupler. The target key/pedal board is "pulled" 1 octave over the note played on the "master" key/pedal board.</entry>
+            </row>
+            <row valign="top">
+              <entry><emphasis role="strong">BAS</emphasis></entry>
+              <entry>"Bass" coupler. The lowest note in any chord played on the "master" keyboard is "pulled" on the target key/pedal board.</entry>
+            </row>
+            <row valign="top">
+              <entry><emphasis role="strong">MEL</emphasis></entry>
+              <entry>"Melody" coupler. The upper note in any chord played on the "master" keyboard is "pulled" on the target key/pedal board.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <note><simpara>
+In multi-part polyphony, the BASS coupler tries to enforce the rests found in
+the lowest line. This is not 100% safe, so unwanted jumps to the next upper
+line may occur. The same applies for the MEL coupler and the highest line. 
+      </simpara></note> 
     </sect1>
     <sect1>
       <title>Crescendo Pedal</title>
@@ -4690,8 +4747,8 @@ manual (if any). They usually are referred to as <emphasis>Custom Panels</emphas
     <sect1>
       <title>Combination Setter</title>
     </sect1>
-    <sect1>
-      <title>Floating Manuals</title>
+    <sect1 id="couplerManuals">
+      <title>Coupler Manuals &amp; Volume</title>
     </sect1>
     <sect1 id="masterControls">
       <title>Master Controls</title>
