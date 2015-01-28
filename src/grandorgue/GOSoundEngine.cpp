@@ -41,6 +41,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_RandomizeSpeaking(true),
 	m_Volume(-15),
 	m_ReleaseLength(0),
+	m_SamplesPerBuffer(1),
 	m_Gain(1),
 	m_SampleRate(0),
 	m_CurrentTime(1),
@@ -69,7 +70,7 @@ GOSoundEngine::~GOSoundEngine()
 void GOSoundEngine::Reset()
 {
 	while(m_AudioGroups.size() < m_AudioGroupCount)
-		m_AudioGroups.push_back(new GOSoundGroupWorkItem(*this, 1));
+		m_AudioGroups.push_back(new GOSoundGroupWorkItem(*this, m_SamplesPerBuffer));
 
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 		m_Tremulants[i]->Clear();
@@ -98,6 +99,11 @@ void GOSoundEngine::SetVolume(int volume)
 float GOSoundEngine::GetGain()
 {
 	return m_Gain;
+}
+
+void GOSoundEngine::SetSamplesPerBuffer(unsigned samples_per_buffer)
+{
+	m_SamplesPerBuffer = samples_per_buffer;
 }
 
 void GOSoundEngine::SetSampleRate(unsigned sample_rate)
@@ -224,7 +230,7 @@ void GOSoundEngine::ClearSetup()
 	Reset();
 }
 
-void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned samples_per_buffer, unsigned release_count)
+void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 {
 	m_WorkerSlots = 0;
 	if (release_count < 1)
@@ -232,14 +238,14 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned samples_per_buffe
 	m_DetachedReleaseCount = release_count;
 	m_Tremulants.clear();
 	for(unsigned i = 0; i < organ_file->GetTremulantCount(); i++)
-		m_Tremulants.push_back(new GOSoundTremulantWorkItem(*this, samples_per_buffer));
+		m_Tremulants.push_back(new GOSoundTremulantWorkItem(*this, m_SamplesPerBuffer));
 	m_Windchests.clear();
 	m_Windchests.push_back(new GOSoundWindchestWorkItem(*this, NULL));
 	for(unsigned i = 0; i < organ_file->GetWindchestGroupCount(); i++)
 		m_Windchests.push_back(new GOSoundWindchestWorkItem(*this, organ_file->GetWindchest(i)));
 	m_AudioGroups.clear();
 	for(unsigned i = 0; i < m_AudioGroupCount; i++)
-		m_AudioGroups.push_back(new GOSoundGroupWorkItem(*this, samples_per_buffer));
+		m_AudioGroups.push_back(new GOSoundGroupWorkItem(*this, m_SamplesPerBuffer));
 	Reset();
 }
 

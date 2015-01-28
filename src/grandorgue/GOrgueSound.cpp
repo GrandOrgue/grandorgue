@@ -128,6 +128,7 @@ bool GOrgueSound::OpenSound()
 		}
 	}
 	m_SamplesPerBuffer = m_Settings.GetSamplesPerBuffer();
+	m_SoundEngine.SetSamplesPerBuffer(m_SamplesPerBuffer);
 	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
 	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
 	m_SoundEngine.SetVolume(m_Settings.GetVolume());
@@ -143,7 +144,7 @@ bool GOrgueSound::OpenSound()
 	m_SoundEngine.SetupReverb(m_Settings);
 
 	if (m_organfile)
-		m_SoundEngine.Setup(m_organfile, m_SamplesPerBuffer, m_Settings.GetReleaseConcurrency());
+		m_SoundEngine.Setup(m_organfile, m_Settings.GetReleaseConcurrency());
 	else
 		m_SoundEngine.ClearSetup();
 
@@ -272,7 +273,7 @@ void GOrgueSound::AssignOrganFile(GrandOrgueFile* organfile)
 
 	if (m_organfile && m_AudioOutputs.size())
 	{
-		m_SoundEngine.Setup(organfile, m_SamplesPerBuffer, m_Settings.GetReleaseConcurrency());
+		m_SoundEngine.Setup(organfile, m_Settings.GetReleaseConcurrency());
 		m_organfile->PreparePlayback(&GetEngine(), &GetMidi());
 	}
 }
