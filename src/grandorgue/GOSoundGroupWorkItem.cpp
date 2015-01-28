@@ -25,8 +25,8 @@
 #include "GOSoundWindchestWorkItem.h"
 
 GOSoundGroupWorkItem::GOSoundGroupWorkItem(GOSoundEngine& sound_engine, unsigned samples_per_buffer) :
+	GOSoundBufferItem(samples_per_buffer, 2),
 	m_engine(sound_engine),
-	m_SamplesPerBuffer(samples_per_buffer),
 	m_Condition(m_Mutex),
 	m_ActiveCount(0),
 	m_Done(0)
