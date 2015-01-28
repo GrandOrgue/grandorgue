@@ -25,6 +25,7 @@
 #include "GOSoundReverb.h"
 #include "GOSoundSampler.h"
 #include "GOSoundGroupWorkItem.h"
+#include "GOSoundOutputWorkItem.h"
 #include "GOSoundTremulantWorkItem.h"
 #include "GOSoundWindchestWorkItem.h"
 #include "GOrgueEvent.h"
@@ -69,9 +70,6 @@ GOSoundEngine::~GOSoundEngine()
 
 void GOSoundEngine::Reset()
 {
-	while(m_AudioGroups.size() < m_AudioGroupCount)
-		m_AudioGroups.push_back(new GOSoundGroupWorkItem(*this, m_SamplesPerBuffer));
-
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 		m_Tremulants[i]->Clear();
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
@@ -80,7 +78,10 @@ void GOSoundEngine::Reset()
 		m_AudioGroups[i]->Clear();
 	for (unsigned i = 0; i < m_ReverbEngine.size(); i++)
 		m_ReverbEngine[i]->Reset();
-	m_WorkItems.resize(m_Tremulants.size() + m_Windchests.size() + m_AudioGroups.size() * m_DetachedReleaseCount);
+	for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
+		m_AudioOutputs[i]->Clear();
+	
+	m_WorkItems.resize(m_Tremulants.size() + m_Windchests.size() + m_AudioGroups.size() * m_DetachedReleaseCount + m_AudioOutputs.size());
 	m_WorkerSlots = m_WorkItems.size();
 
 	m_SamplerPool.ReturnAll();
@@ -148,6 +149,9 @@ void GOSoundEngine::SetAudioGroupCount(unsigned groups)
 	if (groups < 1)
 		groups = 1;
 	m_AudioGroupCount = groups;
+	m_AudioGroups.clear();
+	for(unsigned i = 0; i < m_AudioGroupCount; i++)
+		m_AudioGroups.push_back(new GOSoundGroupWorkItem(*this, m_SamplesPerBuffer));
 }
 
 unsigned GOSoundEngine::GetAudioGroupCount()
@@ -243,9 +247,6 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 	m_Windchests.push_back(new GOSoundWindchestWorkItem(*this, NULL));
 	for(unsigned i = 0; i < organ_file->GetWindchestGroupCount(); i++)
 		m_Windchests.push_back(new GOSoundWindchestWorkItem(*this, organ_file->GetWindchest(i)));
-	m_AudioGroups.clear();
-	for(unsigned i = 0; i < m_AudioGroupCount; i++)
-		m_AudioGroups.push_back(new GOSoundGroupWorkItem(*this, m_SamplesPerBuffer));
 	Reset();
 }
 
@@ -354,6 +355,8 @@ void GOSoundEngine::ResetDoneFlags()
 		for(unsigned j = 0; j < m_DetachedReleaseCount; j++)
 			for(unsigned i = 0; i < ids.size(); i++)
 				m_WorkItems[pos++] = ids[i];
+		for(unsigned j = 0; j < m_AudioOutputs.size(); j++)
+			m_WorkItems[pos++] = m_AudioOutputs[j];
 
 		for (unsigned j = 0; j < m_Tremulants.size(); j++)
 			m_Tremulants[j]->Reset();
@@ -361,6 +364,8 @@ void GOSoundEngine::ResetDoneFlags()
 			m_Windchests[j]->Reset();
 		for (unsigned j = 0; j < m_AudioGroups.size(); j++)
 			m_AudioGroups[j]->Reset();
+		for (unsigned j = 0; j < m_AudioOutputs.size(); j++)
+			m_AudioOutputs[j]->Reset();
 	}
 
 	m_NextItem.exchange(0);
@@ -376,12 +381,12 @@ void GOSoundEngine::SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio
 {
 	m_ReverbEngine.clear();
 	m_ReverbEngine.push_back(new GOSoundReverb(2));
-	m_AudioOutputs.resize(audio_outputs.size());
+	m_AudioOutputs.clear();
 	for(unsigned i = 0; i < audio_outputs.size(); i++)
 	{
-		m_AudioOutputs[i].channels = audio_outputs[i].channels;
-		m_AudioOutputs[i].scale_factors.resize(m_AudioGroupCount * audio_outputs[i].channels * 2);
-		std::fill(m_AudioOutputs[i].scale_factors.begin(), m_AudioOutputs[i].scale_factors.end(), 0.0f);
+		std::vector<float> scale_factors;
+		scale_factors.resize(m_AudioGroupCount * audio_outputs[i].channels * 2);
+		std::fill(scale_factors.begin(), scale_factors.end(), 0.0f);
 		for(unsigned j = 0; j < audio_outputs[i].channels; j++)
 			for(unsigned k = 0; k < audio_outputs[i].scale_factors[j].size(); k++)
 			{
@@ -392,51 +397,30 @@ void GOSoundEngine::SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio
 					factor = powf(10.0f, factor * 0.05f);
 				else
 					factor = 0;
-				m_AudioOutputs[i].scale_factors[j * m_AudioGroupCount * 2 + k] = factor;
+				scale_factors[j * m_AudioGroupCount * 2 + k] = factor;
 			}
-		m_ReverbEngine.push_back(new GOSoundReverb(m_AudioOutputs[i].channels));
+		m_AudioOutputs.push_back(new GOSoundOutputWorkItem(audio_outputs[i].channels, scale_factors, m_SamplesPerBuffer));
 	}
+	std::vector<GOSoundBufferItem*> outputs;
+	for (unsigned i = 0; i < m_AudioGroups.size(); i++)
+		outputs.push_back(m_AudioGroups[i]);
+	for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
+		m_AudioOutputs[i]->SetOutputs(outputs);
+
 }
 
 void GOSoundEngine::SetupReverb(GOrgueSettings& settings)
 {
 	for(unsigned i = 0; i < m_ReverbEngine.size(); i++)
 		m_ReverbEngine[i]->Setup(settings);
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+		m_AudioOutputs[i]->SetupReverb(settings);
 }
 
 void GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output)
 {
-	GOAudioOutput& output = m_AudioOutputs[audio_output];
-
-	/* initialise the output buffer */
-	std::fill(output_buffer, output_buffer + n_frames * output.channels, 0.0f);
-
-	for(unsigned i = 0; i < output.channels; i++)
-	{
-		for(unsigned j = 0; j < m_AudioGroupCount * 2; j++)
-		{
-			float factor = output.scale_factors[i * m_AudioGroupCount * 2 + j];
-			if (factor == 0)
-				continue;
-
-			float* this_buff = m_AudioGroups[j / 2]->m_Buffer;
-			m_AudioGroups[j / 2]->Finish();
-
-			for (unsigned k = i, l = j % 2; k < n_frames * output.channels; k += output.channels, l+= 2)
-				output_buffer[k] += factor * this_buff[l];
-		}
-	}
-
-	m_ReverbEngine[audio_output + 1]->Process(output_buffer, n_frames);
-
-	/* Clamp the output */
-	static const float CLAMP_MIN = -1.0f;
-	static const float CLAMP_MAX = 1.0f;
-	for (unsigned k = 0; k < n_frames * output.channels; k++)
-	{
-		float f = std::min(std::max(output_buffer[k], CLAMP_MIN), CLAMP_MAX);
-		output_buffer[k] = f;
-	}
+	m_AudioOutputs[audio_output]->Finish();
+	memcpy(output_buffer, m_AudioOutputs[audio_output]->m_Buffer, sizeof(float) * n_frames * m_AudioOutputs[audio_output]->GetChannels());
 }
 
 

@@ -32,6 +32,7 @@ class GOrgueWindchest;
 class GOSoundProvider;
 class GOSoundReverb;
 class GOSoundGroupWorkItem;
+class GOSoundOutputWorkItem;
 class GOSoundTremulantWorkItem;
 class GOSoundWindchestWorkItem;
 class GOSoundWorkItem;
@@ -58,12 +59,6 @@ typedef GO_SAMPLER* SAMPLER_HANDLE;
 class GOSoundEngine
 {
 private:
-	class GOAudioOutput
-	{
-	public:
-		unsigned channels;
-		std::vector<float> scale_factors;
-	};
 
 	unsigned                      m_PolyphonySoftLimit;
 	bool                          m_PolyphonyLimiting;
@@ -83,8 +78,8 @@ private:
 	ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
 	ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
 	ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
+	ptr_vector<GOSoundOutputWorkItem> m_AudioOutputs;
 	ptr_vector<GOSoundReverb>     m_ReverbEngine;
-	std::vector<GOAudioOutput>    m_AudioOutputs;
 
 	std::vector<GOSoundWorkItem*>  m_WorkItems;
 	std::atomic_uint              m_NextItem;
