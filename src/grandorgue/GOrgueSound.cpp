@@ -164,6 +164,7 @@ bool GOrgueSound::OpenSound()
 
 		OpenMidi();
 		StartStreams();
+		StartThreads();
 		opened_ok = true;
 
 		if (m_organfile)
