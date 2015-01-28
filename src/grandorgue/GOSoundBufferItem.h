@@ -19,39 +19,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOSOUNDGROUPWORKITEM_H
-#define GOSOUNDGROUPWORKITEM_H
+#ifndef GOSOUNDBUFFERITEM_H
+#define GOSOUNDBUFFERITEM_H
 
-#include "GOSoundBufferItem.h"
-#include "GOSoundSamplerList.h"
-#include "GOSoundWorkItem.h"
-#include "GOLock.h"
-
-class GOSoundEngine;
-
-class GOSoundGroupWorkItem : public GOSoundWorkItem, public GOSoundBufferItem
+class GOSoundBufferItem
 {
-private:
-	GOSoundEngine& m_engine;
-	GOSoundSamplerList m_Active;
-	GOSoundSamplerList m_Release;
-	GOMutex m_Mutex;
-	GOCondition m_Condition;
-	unsigned m_ActiveCount;
-	unsigned m_Done;
-
-	void ProcessList(GOSoundSamplerList& list, float* output_buffer);
+protected:
+	unsigned m_SamplesPerBuffer;
+	unsigned m_Channels;
 
 public:
-	GOSoundGroupWorkItem(GOSoundEngine& sound_engine, unsigned samples_per_buffer);
+	GOSoundBufferItem(unsigned samples_per_buffer, unsigned channels) :
+		m_SamplesPerBuffer(samples_per_buffer),
+		m_Channels(channels)
+	{
+		m_Buffer = new float[m_SamplesPerBuffer * m_Channels];
+	}
+	virtual ~GOSoundBufferItem()
+	{
+		delete[] m_Buffer;
+	}
 
-        unsigned GetCost();
-        void Run();
-        void Finish();
+	virtual void Finish() = 0;
 
-	void Reset();
-	void Clear();
-	void Add(GO_SAMPLER* sampler);
+	float* m_Buffer;
+
+	unsigned GetSamplesPerBuffer()
+	{
+		return m_SamplesPerBuffer;
+	}
+
+	unsigned GetChannels()
+	{
+		return m_Channels;
+	}
 };
 
 #endif
