@@ -93,6 +93,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_RandomizeSpeaking(true),
 	m_LoadLastFile(true),
 	m_ODFCheck(false),
+	m_SamplesPerBuffer(1024),
 	m_SampleRate(44100),
 	m_BitsPerSample(24),
 	m_InterpolationType(0),

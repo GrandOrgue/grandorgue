@@ -72,6 +72,7 @@ private:
 	bool                          m_RandomizeSpeaking;
 	int                           m_Volume;
 	unsigned                      m_ReleaseLength;
+	unsigned m_SamplesPerBuffer;
 	float                         m_Gain;
 	unsigned                      m_SampleRate;
 	uint64_t                      m_CurrentTime;
@@ -108,12 +109,13 @@ public:
 	GOSoundEngine();
 	~GOSoundEngine();
 	void Reset();
-	void Setup(GrandOrgueFile* organ_file, unsigned samples_per_buffer, unsigned release_count = 1);
+	void Setup(GrandOrgueFile* organ_file, unsigned release_count = 1);
 	void ClearSetup();
 	void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
 	void SetupReverb(GOrgueSettings& settings);
 	void SetVolume(int volume);
 	void SetSampleRate(unsigned sample_rate);
+	void SetSamplesPerBuffer(unsigned sample_per_buffer);
 	void SetInterpolationType(unsigned type);
 	unsigned GetSampleRate();
 	void SetAudioGroupCount(unsigned groups);

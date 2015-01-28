@@ -102,13 +102,28 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 				w->LoadFromFile(attack, release, organfile, bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1, 0);
 				pipes.push_back(w);
 			}
+			engine->SetSamplesPerBuffer(samples_per_frame);
 			engine->SetVolume(10);
 			engine->SetSampleRate(sample_rate);
 			engine->SetPolyphonyLimiting(false);
 			engine->SetHardPolyphony(10000);
 			engine->SetScaledReleases(true);
+			engine->SetAudioGroupCount(1);
 			engine->SetInterpolationType(interpolation);
-			engine->Setup(organfile, samples_per_frame);
+
+			std::vector<GOAudioOutputConfiguration> engine_config;
+			engine_config.resize(1);
+			engine_config[0].channels = 2;
+			engine_config[0].scale_factors.resize(2);
+			engine_config[0].scale_factors[0].resize(2);
+			engine_config[0].scale_factors[0][0] = 0;
+			engine_config[0].scale_factors[0][1] = -121;
+			engine_config[0].scale_factors[1].resize(2);
+			engine_config[0].scale_factors[1][0] = -121;
+			engine_config[0].scale_factors[1][1] = 0;
+			engine->SetAudioOutput(engine_config);
+
+			engine->Setup(organfile);
 
 			std::vector<SAMPLER_HANDLE> handles;
 			METER_INFO info;
