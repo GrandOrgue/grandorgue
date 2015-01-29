@@ -1025,7 +1025,7 @@ keyboard matches the same note.
                       <simpara>The main usage of this setting is to quickly convert a full compass keyboard to short octave. See appendix A.</simpara>
                     </listitem>
                   </varlistentry>
-                  <varlistentry id="9xnoteWOmap">
+                  <varlistentry id="N9xnoteWOmap">
                     <term>9x Note without map</term>
                     <listitem>
                       <simpara>
@@ -1243,7 +1243,7 @@ Value</emphasis> field.
             <listitem><simpara>This spinner sets the velocity value sent when a pipe starts playing.</simpara></listitem>
           </varlistentry>
         </variablelist>
-        <note>Rank Midi configuration can be accessed only via the <link linkend="midiobjects">Midi Objects list</link>.</note>
+        <note><simpara>Rank Midi configuration can be accessed only via the <link linkend="midiobjects">Midi Objects list</link>.</simpara></note>
       </sect2>
       <sect2>
         <title>Enclosure</title>
@@ -4737,18 +4737,23 @@ line may occur. The same applies for the MEL coupler and the highest line.
     </sect1>
     <sect1>
       <title>Crescendo Pedal</title>
+      <para></para>
     </sect1>
     <sect1>
       <title>Divisionals</title>
+      <para></para>
     </sect1>
     <sect1>
       <title>Generals</title>
+      <para></para>
     </sect1>
     <sect1>
       <title>Combination Setter</title>
+      <para></para>
     </sect1>
     <sect1 id="couplerManuals">
       <title>Coupler Manuals &amp; Volume</title>
+      <para></para>
     </sect1>
     <sect1 id="masterControls">
       <title>Master Controls</title>
@@ -4789,7 +4794,7 @@ current preset file.
               </row>
               <row valign="top">
                 <entry><emphasis role="strong">Label in between</emphasis></entry>
-                <entry>This label displays the current tuning amount. It is an "active" label, and as such supports a <link linkid="activelabel">Midi send</link> configuration</entry>
+                <entry>This label displays the current tuning amount. It is an "active" label, and as such supports a <link linkend="activelabel">Midi send</link> configuration</entry>
               </row>
             </tbody>
           </tgroup>
@@ -4817,7 +4822,7 @@ The middle row controls the ability to navigate the temperaments list. The tempe
               </row>
               <row valign="top">
                 <entry><emphasis role="strong">Label in between</emphasis></entry>
-                <entry>This label displays the current temperament name. It is an "active" label, and as such supports a <link linkid="activelabel">Midi send</link> configuration</entry>
+                <entry>This label displays the current temperament name. It is an "active" label, and as such supports a <link linkend="activelabel">Midi send</link> configuration</entry>
               </row>
             </tbody>
           </tgroup>
@@ -4849,7 +4854,7 @@ sampleset customization in the current preset file. It has the same usage as the
               </row>
               <row valign="top">
                 <entry><emphasis role="strong">Label in between</emphasis></entry>
-                <entry>This label displays the current transposer state. It is an "active" label, and as such supports a <link linkid="activelabel">Midi send</link> configuration</entry>
+                <entry>This label displays the current transposer state. It is an "active" label, and as such supports a <link linkend="activelabel">Midi send</link> configuration</entry>
               </row>
             </tbody>
           </tgroup>
@@ -9620,7 +9625,7 @@ displays a depressed low C).
 When sampling a real-world organ, missing samples in the low octave need to be
 generated to get a complete low octave. If this is not done, holes will appear
 in the low octave if the keyboard is converted to full compass using the
-<link linkend="9xnoteWOmap">9x Note without map</link> MIDI setting.
+<link linkend="N9xnoteWOmap">9x Note without map</link> MIDI setting.
             </simpara>
           </note>
         </para>
