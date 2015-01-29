@@ -49,6 +49,8 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 
 	Pa_Initialize();
 	GetAudioDevices();
+
+	m_SoundEngine.SetVolume(m_Settings.GetVolume());
 }
 
 GOrgueSound::~GOrgueSound()
@@ -131,7 +133,6 @@ bool GOrgueSound::OpenSound()
 	m_SoundEngine.SetSamplesPerBuffer(m_SamplesPerBuffer);
 	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
 	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
-	m_SoundEngine.SetVolume(m_Settings.GetVolume());
 	m_SoundEngine.SetScaledReleases(m_Settings.GetScaleRelease());
 	m_SoundEngine.SetRandomizeSpeaking(m_Settings.GetRandomizeSpeaking());
 	m_SoundEngine.SetInterpolationType(m_Settings.GetInterpolationType());
