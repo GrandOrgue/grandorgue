@@ -52,6 +52,7 @@ private:
 	float m_MinVolume;
 	float m_MaxVolume;
 	int m_SampleMidiKeyNumber;
+	bool m_RetunePipe;
 	GOSoundProviderWave m_SoundProvider;
 	GOrguePipeConfigNode m_PipeConfig;
 
@@ -77,7 +78,7 @@ private:
 	void UpdateAudioGroup();
 
 public:
-	GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume);
+	GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume, bool retune);
 
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void PreparePlayback();

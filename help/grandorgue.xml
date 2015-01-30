@@ -8223,6 +8223,16 @@ velocity applied to the whole rank. 100 means no change.
      </para>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>AcceptsRetuning</term>
+          <listitem>
+            <para>
+(boolean, default: true) Determines, if the rank will be retuned
+according to the current temperament. Retuning should be only disabled
+for sound effects.
+	    </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
       <para>
 A rank section contains the attributes of each of its pipes too.
@@ -8410,6 +8420,16 @@ fraction in the sample to 0.
 in cent for the pitch specified in the sample. This setting is used
 for retuning to other temperaments.
      </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999AcceptsRetuning</term>
+          <listitem>
+            <para>
+(boolean, default: rank setting) Determines, if the pipe will be retuned
+according to the current temperament. Retuning should be only disabled
+for sound effects.
+	    </para>
           </listitem>
         </varlistentry>
         <varlistentry>
