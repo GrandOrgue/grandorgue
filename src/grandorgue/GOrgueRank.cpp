@@ -45,6 +45,7 @@ GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_PitchCorrection(0),
 	m_MinVolume(100),
 	m_MaxVolume(100),
+	m_RetuneRank(true),
 	m_sender(organfile, MIDI_SEND_MANUAL),
 	m_PipeConfig(&organfile->GetPipeConfig(), organfile, NULL)
 {
@@ -79,6 +80,7 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 	m_PitchCorrection                      = cfg.ReadFloat(ODFSetting, group, wxT("PitchCorrection"), -1200, 1200, false, 0);
 	m_MinVolume                            = cfg.ReadFloat(ODFSetting, group, wxT("MinVelocityVolume"), 0, 1000, false, 100);
 	m_MaxVolume                            = cfg.ReadFloat(ODFSetting, group, wxT("MaxVelocityVolume"), 0, 1000, false, 100);
+	m_RetuneRank = cfg.ReadBoolean(ODFSetting, group, wxT("AcceptsRetuning"), false, true);
 
 	m_organfile->GetWindchest(m_WindchestGroup - 1)->AddRank(this);
 
@@ -98,7 +100,7 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 		}
 		else
 		{
-			m_Pipes.push_back(new GOrgueSoundingPipe (m_organfile, this, m_Percussive, m_WindchestGroup, m_FirstMidiNoteNumber + i, m_HarmonicNumber, m_PitchCorrection, m_MinVolume, m_MaxVolume));
+			m_Pipes.push_back(new GOrgueSoundingPipe (m_organfile, this, m_Percussive, m_WindchestGroup, m_FirstMidiNoteNumber + i, m_HarmonicNumber, m_PitchCorrection, m_MinVolume, m_MaxVolume, m_RetuneRank));
 		}
                m_Pipes[i]->Load(cfg, group, buffer);
 	}

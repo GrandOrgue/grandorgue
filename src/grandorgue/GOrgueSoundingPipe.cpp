@@ -30,7 +30,7 @@
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
 
-GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume) :
+GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume, bool retune) :
 	GOrguePipe(organfile, rank, midi_key_number),
 	m_Sampler(NULL),
 	m_Instances(0),
@@ -48,6 +48,7 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 	m_MinVolume(min_volume),
 	m_MaxVolume(max_volume),
 	m_SampleMidiKeyNumber(-1),
+	m_RetunePipe(retune),
 	m_SoundProvider(organfile->GetMemoryPool()),
 	m_PipeConfig(&rank->GetPipeConfig(), organfile, this)
 {
@@ -89,6 +90,7 @@ void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString 
 	m_Percussive = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("Percussive"), false, m_Percussive);
 	m_SampleMidiKeyNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MIDIKeyNumber"), -1, 127, false, -1);
 	m_CrossfadeLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("LoopCrossfadeLength"), 0, 120, false, 0);
+	m_RetunePipe = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("AcceptsRetuning"), false, m_RetunePipe);
 	UpdateAmplitude();
 	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
@@ -262,13 +264,17 @@ void GOrgueSoundingPipe::Validate()
 			     m_Rank->GetName().c_str(), GetLoadTitle().c_str());
 	}
 
-	if (m_SoundProvider.GetMidiKeyNumber() == 0 &&  m_SoundProvider.GetMidiPitchFract() == 0 && m_SampleMidiKeyNumber == -1)
+	if (m_RetunePipe && m_SoundProvider.GetMidiKeyNumber() == 0 &&  m_SoundProvider.GetMidiPitchFract() == 0 && m_SampleMidiKeyNumber == -1)
 	{
 		wxLogWarning(_("rank %s pipe %s: no pitch information provided"),
 			     m_Rank->GetName().c_str(), GetLoadTitle().c_str());
 		return;
 	}
-	double offset = m_SoundProvider.GetMidiKeyNumber() + log(8.0 / m_HarmonicNumber) * (12.0 / log(2)) - (m_SoundProvider.GetMidiPitchFract() - m_PipeConfig.GetDefaultTuning() + m_PitchCorrection) / 100.0 - m_MidiKeyNumber;
+	double offset;
+	if (!m_RetunePipe)
+		offset = 0;
+	else
+		offset= m_SoundProvider.GetMidiKeyNumber() + log(8.0 / m_HarmonicNumber) * (12.0 / log(2)) - (m_SoundProvider.GetMidiPitchFract() - m_PipeConfig.GetDefaultTuning() + m_PitchCorrection) / 100.0 - m_MidiKeyNumber;
 	if (offset < -12 || offset > 12)
 	{
 		wxLogError(_("rank %s pipe %s: temperament would retune pipe by more than 1200 cent"),
@@ -358,9 +364,11 @@ void GOrgueSoundingPipe::UpdateAudioGroup()
 
 void GOrgueSoundingPipe::SetTemperament(const GOrgueTemperament& temperament)
 {
-	
-	m_TemperamentOffset = temperament.GetOffset(m_organfile->GetIgnorePitch(), m_MidiKeyNumber, m_SoundProvider.GetMidiKeyNumber(), m_SoundProvider.GetMidiPitchFract(), m_HarmonicNumber, m_PitchCorrection,
-						    m_PipeConfig.GetDefaultTuning());
+	if (!m_RetunePipe)
+		m_TemperamentOffset = 0;
+	else
+		m_TemperamentOffset = temperament.GetOffset(m_organfile->GetIgnorePitch(), m_MidiKeyNumber, m_SoundProvider.GetMidiKeyNumber(), m_SoundProvider.GetMidiPitchFract(), m_HarmonicNumber, m_PitchCorrection,
+							    m_PipeConfig.GetDefaultTuning());
 	UpdateTuning();
 }
 

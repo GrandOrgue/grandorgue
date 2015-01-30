@@ -49,6 +49,7 @@ private:
 	float m_PitchCorrection;
 	float m_MinVolume;
 	float m_MaxVolume;
+	bool m_RetuneRank;
 	GOrgueMidiSender m_sender;
 	GOrguePipeConfigTreeNode m_PipeConfig;
 
