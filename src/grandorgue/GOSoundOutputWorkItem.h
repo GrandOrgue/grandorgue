@@ -36,6 +36,7 @@ private:
 	std::vector<float> m_ScaleFactors;
 	std::vector<GOSoundBufferItem*> m_Outputs;
 	unsigned m_OutputCount;
+	std::vector<float> m_MeterInfo;
 	GOSoundReverb* m_Reverb;
 	GOMutex m_Mutex;
 	unsigned m_Done;
@@ -54,6 +55,9 @@ public:
         void Reset();
 
 	void SetupReverb(GOrgueSettings& settings);
+
+	const std::vector<float>& GetMeterInfo();
+	void ResetMeterInfo();
 };
 
 #endif

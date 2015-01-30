@@ -48,6 +48,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_CurrentTime(1),
 	m_SamplerPool(),
 	m_AudioGroupCount(1),
+	m_UsedPolyphony(0),
 	m_WorkerSlots(0),
 	m_DetachedReleaseCount(1),
 	m_Tremulants(),
@@ -83,6 +84,7 @@ void GOSoundEngine::Reset()
 	
 	m_WorkItems.resize(m_Tremulants.size() + m_Windchests.size() + m_AudioGroups.size() * m_DetachedReleaseCount + m_AudioOutputs.size());
 	m_WorkerSlots = m_WorkItems.size();
+	m_UsedPolyphony = 0;
 
 	m_SamplerPool.ReturnAll();
 	m_CurrentTime = 1;
@@ -369,6 +371,10 @@ void GOSoundEngine::ResetDoneFlags()
 	}
 
 	m_NextItem.exchange(0);
+
+	unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
+	if (used_samplers > m_UsedPolyphony)
+			m_UsedPolyphony = used_samplers;
 }
 
 void GOSoundEngine::ProcessTremulants()
@@ -427,7 +433,7 @@ void GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsi
 // this callback will fill the buffer with bufferSize frame
 // audio is opened with 32 bit stereo, so one frame is 64bit (32bit for right 32bit for left)
 // So buffer can handle 8*bufferSize char (or 2*bufferSize float)
-void GOSoundEngine::GetSamples (float *output_buffer, unsigned n_frames, METER_INFO *meter_info)
+void GOSoundEngine::GetSamples (float *output_buffer, unsigned n_frames)
 {
 	/* initialise the output buffer */
 	float FinalBuffer[GO_SOUND_BUFFER_SIZE];
@@ -449,36 +455,14 @@ void GOSoundEngine::GetSamples (float *output_buffer, unsigned n_frames, METER_I
 	m_CurrentTime += n_frames;
 
 	/* Clamp the output */
-	static const float CLAMP_MIN = -1.0f;
-	static const float CLAMP_MAX = 1.0f;
-	if (meter_info)
+	const float CLAMP_MIN = -1.0f;
+	const float CLAMP_MAX = 1.0f;
+	for (unsigned int k = 0; k < n_frames * 2; k += 2)
 	{
-		unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
-		if (used_samplers > meter_info->current_polyphony)
-			meter_info->current_polyphony = used_samplers;
-		for (unsigned int k = 0; k < n_frames * 2; k += 2)
-		{
-			float f = std::min(std::max(FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
-			output_buffer[k + 0] = f;
-			meter_info->meter_left  = (meter_info->meter_left > f)
-			                        ? meter_info->meter_left
-			                        : f;
-			f = std::min(std::max(FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
-			output_buffer[k + 1] = f;
-			meter_info->meter_right = (meter_info->meter_right > f)
-			                        ? meter_info->meter_right
-			                        : f;
-		}
-	}
-	else
-	{
-		for (unsigned int k = 0; k < n_frames * 2; k += 2)
-		{
-			float f = std::min(std::max(FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
-			output_buffer[k + 0] = f;
-			f = std::min(std::max(FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
-			output_buffer[k + 1] = f;
-		}
+		float f = std::min(std::max(FinalBuffer[k + 0], CLAMP_MIN), CLAMP_MAX);
+		output_buffer[k + 0] = f;
+		f = std::min(std::max(FinalBuffer[k + 1], CLAMP_MIN), CLAMP_MAX);
+		output_buffer[k + 1] = f;
 	}
 
 	ResetDoneFlags();
@@ -714,4 +698,28 @@ void GOSoundEngine::UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity)
 	handle->velocity = velocity;
 	/* Concurrent update possible, as it just update a float */
 	handle->fader.SetVelocityVolume(handle->pipe->GetVelocityVolume(handle->velocity));
+}
+
+void GOSoundEngine::GetMeterInfo(METER_INFO *meter_info)
+{
+	meter_info->current_polyphony = m_UsedPolyphony;
+	m_UsedPolyphony = 0;
+	meter_info->meter_left = 0;
+	meter_info->meter_right = 0;
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+	{
+		const std::vector<float>& info = m_AudioOutputs[i]->GetMeterInfo();
+		for(unsigned j = 0; j < info.size(); j++)
+			if (j % 2)
+			{
+				if (info[j] > meter_info->meter_right)
+					meter_info->meter_right = info[j];
+			}
+			else
+			{
+				if (info[j] > meter_info->meter_left)
+					meter_info->meter_left = info[j];
+			}
+		m_AudioOutputs[i]->ResetMeterInfo();
+	}
 }
