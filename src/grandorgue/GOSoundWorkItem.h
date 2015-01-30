@@ -31,6 +31,9 @@ public:
 
 	virtual unsigned GetCost() = 0;
 	virtual void Run() = 0;
+
+	virtual void Clear() = 0;
+	virtual void Reset() = 0;
 };
 
 #endif
