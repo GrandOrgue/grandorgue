@@ -73,6 +73,7 @@ private:
 	uint64_t                      m_CurrentTime;
 	GOSoundSamplerPool            m_SamplerPool;
 	unsigned                      m_AudioGroupCount;
+	unsigned m_UsedPolyphony;
 	unsigned                      m_WorkerSlots;
 	unsigned                      m_DetachedReleaseCount;
 	ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
@@ -122,6 +123,7 @@ public:
 	void SetScaledReleases(bool enable);
 	void SetRandomizeSpeaking(bool enable);
 	void SetReleaseLength(unsigned reverb);
+	void GetMeterInfo(METER_INFO *meter_info);
 
 	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
@@ -130,7 +132,7 @@ public:
 
 	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
 
-	void GetSamples(float *output_buffer, unsigned n_frames, METER_INFO *meter_info);
+	void GetSamples(float *output_buffer, unsigned n_frames);
 	GOSoundWorkItem* GetNextGroup();
 
 	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);

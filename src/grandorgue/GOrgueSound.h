@@ -85,8 +85,7 @@ private:
 
 	unsigned m_SamplesPerBuffer;
 
-	short meter_counter;
-	METER_INFO meter_info;
+	unsigned meter_counter;
 
 	wxString m_defaultAudioDevice;
 

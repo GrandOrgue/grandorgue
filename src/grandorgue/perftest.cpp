@@ -126,7 +126,6 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 			engine->Setup(organfile);
 
 			std::vector<SAMPLER_HANDLE> handles;
-			METER_INFO info;
 			float output_buffer[GO_SOUND_BUFFER_SIZE];
 
 			for(unsigned i = 0; i < pipes.size(); i++)
@@ -140,7 +139,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 			unsigned blocks = seconds * engine->GetSampleRate() / samples_per_frame;
 			for(unsigned i = 0; i < blocks; i++)
 				{
-					engine->GetSamples(output_buffer, samples_per_frame, &info);
+					engine->GetSamples(output_buffer, samples_per_frame);
 				}
 			wxMilliClock_t end = getCPUTime();
 			wxMilliClock_t diff = end - start;

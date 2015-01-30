@@ -43,8 +43,6 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	m_organfile(0),
 	m_Settings(settings)
 {
-	memset(&meter_info, 0, sizeof(meter_info));
-
 	m_midi = new GOrgueMidi(m_Settings);
 
 	Pa_Initialize();
@@ -385,7 +383,7 @@ bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsign
 	if (dev_index == 0)
 	{
 		float buffer[GO_SOUND_BUFFER_SIZE];
-		m_SoundEngine.GetSamples(buffer, n_frames, &meter_info);
+		m_SoundEngine.GetSamples(buffer, n_frames);
 
 		/* Write data to file if recording is enabled*/
 		m_AudioRecorder.Write(buffer, n_frames * 2);
@@ -394,6 +392,8 @@ bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsign
 		meter_counter += n_frames;
 		if (meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
 		{
+			METER_INFO meter_info;
+			m_SoundEngine.GetMeterInfo(&meter_info);
 
 			// polyphony
 			int n = 0xff & ((33 * meter_info.current_polyphony) / m_SoundEngine.GetHardPolyphony());
@@ -408,9 +408,6 @@ bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsign
 			event.SetInt(n);
 			if (wxTheApp->GetTopWindow())
 				wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-
-			meter_counter = meter_info.current_polyphony = 0;
-			meter_info.meter_left = meter_info.meter_right = 0.0;
 		}
 
 		GOMutexLocker thread_locker(m_thread_lock);

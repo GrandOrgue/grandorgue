@@ -28,6 +28,7 @@ GOSoundOutputWorkItem::GOSoundOutputWorkItem(unsigned channels, std::vector<floa
 	m_ScaleFactors(scale_factors),
 	m_Outputs(),
 	m_OutputCount(0),
+	m_MeterInfo(channels),
 	m_Reverb(0),
 	m_Done(false)
 {
@@ -78,10 +79,16 @@ void GOSoundOutputWorkItem::Run()
 	/* Clamp the output */
 	const float CLAMP_MIN = -1.0f;
 	const float CLAMP_MAX = 1.0f;
-	for (unsigned k = 0; k < m_SamplesPerBuffer * m_Channels; k++)
+	for (unsigned k = 0, c = 0; k < m_SamplesPerBuffer * m_Channels; k++)
 	{
 		float f = std::min(std::max(m_Buffer[k], CLAMP_MIN), CLAMP_MAX);
 		m_Buffer[k] = f;
+		if (f > m_MeterInfo[c])
+			m_MeterInfo[c] = f;
+
+		c++;
+		if (c >= m_Channels)
+			c= 0;
 	}
 
 	m_Done = true;
@@ -96,6 +103,14 @@ void GOSoundOutputWorkItem::Finish()
 void GOSoundOutputWorkItem::Clear()
 {
 	m_Reverb->Reset();
+	ResetMeterInfo();
+}
+
+void GOSoundOutputWorkItem::ResetMeterInfo()
+{
+	GOMutexLocker locker(m_Mutex);
+	for(unsigned i = 0; i < m_MeterInfo.size(); i++)
+		m_MeterInfo[i] = 0;
 }
 
 void GOSoundOutputWorkItem::Reset()
@@ -112,4 +127,9 @@ unsigned GOSoundOutputWorkItem::GetCost()
 void GOSoundOutputWorkItem::SetupReverb(GOrgueSettings& settings)
 {
 	m_Reverb->Setup(settings);
+}
+
+const std::vector<float>& GOSoundOutputWorkItem::GetMeterInfo()
+{
+	return m_MeterInfo;
 }
