@@ -30,7 +30,6 @@
 
 class GOrgueWindchest;
 class GOSoundProvider;
-class GOSoundReverb;
 class GOSoundGroupWorkItem;
 class GOSoundOutputWorkItem;
 class GOSoundTremulantWorkItem;
@@ -80,7 +79,6 @@ private:
 	ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
 	ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
 	ptr_vector<GOSoundOutputWorkItem> m_AudioOutputs;
-	ptr_vector<GOSoundReverb>     m_ReverbEngine;
 
 	std::vector<GOSoundWorkItem*>  m_WorkItems;
 	std::atomic_uint              m_NextItem;
