@@ -46,6 +46,7 @@ public:
 	unsigned GetCost();
 	void Run();
 
+	void Clear();
 	void Reset();
 	void Init(ptr_vector<GOSoundTremulantWorkItem>& tremulants);
 

@@ -43,6 +43,11 @@ void GOSoundWindchestWorkItem::Init(ptr_vector<GOSoundTremulantWorkItem>& tremul
 		m_Tremulants.push_back(tremulants[m_Windchest->GetTremulantId(i)]);
 }
 
+void GOSoundWindchestWorkItem::Clear()
+{
+	Reset();
+}
+
 void GOSoundWindchestWorkItem::Reset()
 {
 	GOMutexLocker locker(m_Mutex);
