@@ -116,7 +116,7 @@ void GOSoundOutputWorkItem::ResetMeterInfo()
 void GOSoundOutputWorkItem::Reset()
 {
 	GOMutexLocker locker(m_Mutex);
-	m_Done = 0;
+	m_Done = false;
 }
 
 unsigned GOSoundOutputWorkItem::GetCost()

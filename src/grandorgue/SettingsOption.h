@@ -56,6 +56,7 @@ class SettingsOption : public wxScrolledWindow
 		ID_SAMPLES_PER_BUFFER,
 		ID_MEMORY_LIMIT,
 		ID_ODF_CHECK,
+		ID_RECORD_DOWNMIX,
 	};
 private:
 	GOrgueSettings& m_Settings;
@@ -71,6 +72,7 @@ private:
 	wxCheckBox* m_Scale;
 	wxCheckBox* m_Random;
 	wxCheckBox* m_ODFCheck;
+	wxCheckBox* m_RecordDownmix;
 	wxDirPickerCtrl* m_SettingsPath;
 	wxDirPickerCtrl* m_CachePath;
 	wxChoice* m_BitsPerSample;

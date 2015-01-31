@@ -22,18 +22,33 @@
 #ifndef GOSOUNDRECORDER_H
 #define GOSOUNDRECORDER_H
 
+#include "GOSoundWorkItem.h"
 #include "GOLock.h"
 #include <wx/file.h>
 #include <wx/string.h>
 
-class GOSoundRecorder {
+class GOSoundBufferItem;
+struct struct_WAVE;
+
+class GOSoundRecorder : public GOSoundWorkItem {
 private:
 	wxFile m_file;
 	GOMutex m_lock;
+	GOMutex m_Mutex;
 	unsigned m_SampleRate;
 	unsigned m_Channels;
 	unsigned m_BytesPerSample;
-	char buffer[300];
+	unsigned m_BufferSize;
+	unsigned m_BufferPos;
+	unsigned m_SamplesPerBuffer;
+	bool m_Recording;
+	bool m_Done;
+	std::vector<GOSoundBufferItem*> m_Outputs;
+	char* m_Buffer;
+
+	void SetupBuffer();
+	template<class T> void ConvertData();
+	struct_WAVE generateHeader(unsigned datasize);
 
 public:
 	GOSoundRecorder();
@@ -45,8 +60,13 @@ public:
 	void SetSampleRate(unsigned sample_rate);
 	/* 1 = 8 bit, 2 = 16 bit, 3 = 24 bit, 4 = float */
 	void SetBytesPerSample(unsigned value);
+	void SetOutputs(std::vector<GOSoundBufferItem*> outputs, unsigned samples_per_buffer);
 
-	void Write(float* data, unsigned count);
+	unsigned GetCost();
+	void Run();
+
+	void Clear();
+	void Reset();
 };
 
 #endif

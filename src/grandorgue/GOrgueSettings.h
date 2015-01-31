@@ -77,6 +77,7 @@ private:
 	unsigned m_BitsPerSample;
 	unsigned m_InterpolationType;
 	unsigned m_WaveFormat;
+	bool m_RecordDownmix;
 	unsigned m_LoopLoad;
 	unsigned m_AttackLoad;
 	unsigned m_ReleaseLoad;
@@ -187,6 +188,8 @@ public:
 	void SetWaveFormatBytesPerSample(unsigned bytes_per_sample);
 	unsigned GetBitsPerSample();
 	void SetBitsPerSample(unsigned bits_per_sample);
+	bool GetRecordDownmix();
+	void SetRecordDownmix(bool downmix);
 
 	unsigned GetLoopLoad();
 	void SetLoopLoad(unsigned loop_load);

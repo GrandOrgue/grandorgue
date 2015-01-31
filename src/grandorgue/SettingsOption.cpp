@@ -102,12 +102,14 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Recorder WAV Format:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_WaveFormat = new wxChoice(this, ID_WAVE_FORMAT, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+	item6->Add(m_RecordDownmix  = new wxCheckBox(this, ID_RECORD_DOWNMIX, _("Record stereo downmix")), 0, wxEXPAND | wxALL, 5);
 
 	m_Interpolation->Select(m_Settings.GetInterpolationType());
 	m_Concurrency->Select(m_Settings.GetConcurrency());
 	m_ReleaseConcurrency->Select(m_Settings.GetReleaseConcurrency() - 1);
 	m_LoadConcurrency->Select(m_Settings.GetLoadConcurrency());
 	m_WaveFormat->Select(m_Settings.GetWaveFormatBytesPerSample() - 1);
+	m_RecordDownmix->SetValue(m_Settings.GetRecordDownmix());
 
 	grid = new wxFlexGridSizer(4, 1, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
@@ -234,6 +236,7 @@ void SettingsOption::Save()
 	m_Settings.SetManageCache(m_ManageCache->IsChecked());
 	m_Settings.SetLoadLastFile(m_LoadLastFile->IsChecked());
 	m_Settings.SetODFCheck(m_ODFCheck->IsChecked());
+	m_Settings.SetRecordDownmix(m_RecordDownmix->IsChecked());
 	m_Settings.SetScaleRelease(m_Scale->IsChecked());
 	m_Settings.SetRandomizeSpeaking(m_Random->IsChecked());
 	m_Settings.SetConcurrency(m_Concurrency->GetSelection());
