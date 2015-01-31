@@ -94,7 +94,7 @@ void GOSoundGroupWorkItem::Run()
 		}
 		m_ActiveCount++;
 	}
-	float buffer[GO_SOUND_BUFFER_SIZE];
+	float buffer[m_SamplesPerBuffer * 2];
 	memset(buffer, 0, m_SamplesPerBuffer * 2 * sizeof(float));
 	ProcessList(m_Active, buffer);
 	ProcessList(m_Release, buffer);

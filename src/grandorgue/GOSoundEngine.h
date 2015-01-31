@@ -22,7 +22,6 @@
 #ifndef GOSOUNDENGINE_H_
 #define GOSOUNDENGINE_H_
 
-#include "GOSoundDefs.h"
 #include "GOSoundResample.h"
 #include "GOSoundSamplerPool.h"
 #include "GOLock.h"
@@ -52,8 +51,7 @@ typedef struct
 	std::vector< std::vector<float> > scale_factors;
 } GOAudioOutputConfiguration;
 
-struct GO_SAMPLER_T;
-typedef struct GO_SAMPLER_T GO_SAMPLER;
+class GO_SAMPLER;
 typedef GO_SAMPLER* SAMPLER_HANDLE;
 
 class GOSoundEngine
@@ -135,7 +133,7 @@ public:
 	void NextPeriod();
 	GOSoundWorkItem* GetNextGroup();
 
-	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);
+	bool ProcessSampler(float *buffer, GO_SAMPLER* sampler, unsigned n_frames, float volume);
 	void ReturnSampler(GO_SAMPLER* sampler);
 	float GetGain();
 };

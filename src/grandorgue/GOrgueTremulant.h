@@ -30,7 +30,8 @@ class GOSoundProvider;
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 struct IniFileEnumEntry;
-typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
+class GO_SAMPLER;
+typedef GO_SAMPLER* SAMPLER_HANDLE;
 
 typedef enum { GOSynthTrem, GOWavTrem } GOrgueTremulantType;
 

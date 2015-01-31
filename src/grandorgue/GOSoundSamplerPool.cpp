@@ -21,6 +21,7 @@
 
 #include "GOSoundSamplerPool.h"
 
+#include "GOSoundSampler.h"
 #include <assert.h>
 #include <string.h>
 

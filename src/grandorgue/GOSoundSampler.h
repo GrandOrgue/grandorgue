@@ -23,15 +23,15 @@
 #define GOSOUNDSAMPLER_H_
 
 #include "GOSoundAudioSection.h"
-#include "GOSoundDefs.h"
 #include "GOSoundFader.h"
 
 class GOSoundProvider;
 class GOSoundWindchestWorkItem;
 
-typedef struct GO_SAMPLER_T
+class GO_SAMPLER
 {
-	struct GO_SAMPLER_T       *next;
+public:
+	GO_SAMPLER *next;
 	const GOSoundProvider     *pipe;
 	int                        sampler_group_id;
 	GOSoundWindchestWorkItem*  windchest;
@@ -45,6 +45,6 @@ typedef struct GO_SAMPLER_T
 	volatile unsigned long     stop;
 	volatile unsigned long     new_attack;
 	bool                       is_release;
-} GO_SAMPLER;
+};
 
 #endif /* GOSOUNDSAMPLER_H_ */

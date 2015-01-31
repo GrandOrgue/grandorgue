@@ -45,6 +45,4 @@
  */
 #define MAX_OUTPUT_CHANNELS    (2)
 
-#define GO_SOUND_BUFFER_SIZE ((MAX_FRAME_SIZE) * (MAX_OUTPUT_CHANNELS))
-
 #endif /* GOSOUNDDEFS_H_ */
