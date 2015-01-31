@@ -55,8 +55,9 @@ class GOrgueWindchest;
 class GOrgueDocument;
 class GOSoundEngine;
 class GOSoundProvider;
+class GO_SAMPLER;
 
-typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
+typedef GO_SAMPLER* SAMPLER_HANDLE;
 
 class GrandOrgueFile : public GOrgueEventDistributor, private GOrguePipeUpdateCallback
 {

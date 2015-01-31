@@ -21,6 +21,7 @@
 
 #include "GOrgueSound.h"
 
+#include "GOSoundDefs.h"
 #include "GOSoundThread.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidi.h"

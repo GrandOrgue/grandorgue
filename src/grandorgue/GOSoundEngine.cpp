@@ -255,10 +255,10 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 	Reset();
 }
 
-bool GOSoundEngine::ProcessSampler(float output_buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume)
+bool GOSoundEngine::ProcessSampler(float *output_buffer, GO_SAMPLER* sampler, unsigned n_frames, float volume)
 {
 	const unsigned block_time = n_frames;
-	float temp[GO_SOUND_BUFFER_SIZE];
+	float temp[n_frames * 2];
 	bool changed_sampler = false;
 	const bool process_sampler = (sampler->time <= m_CurrentTime);
 

@@ -28,7 +28,8 @@
 #include "GOrguePipeConfigNode.h"
 #include "GOrguePipeWindchestCallback.h"
 
-typedef struct GO_SAMPLER_T* SAMPLER_HANDLE;
+class GO_SAMPLER;
+typedef GO_SAMPLER* SAMPLER_HANDLE;
 
 class GOrgueSoundingPipe : public GOrguePipe, private GOrgueCacheObject, private GOrguePipeUpdateCallback, 
 	private GOrguePipeWindchestCallback

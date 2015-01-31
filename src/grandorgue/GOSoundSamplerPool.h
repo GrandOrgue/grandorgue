@@ -23,8 +23,9 @@
 #define GOSOUNDSAMPLERPOOL_H_
 
 #include "ptrvector.h"
-#include "GOSoundSampler.h"
 #include "GOLock.h"
+
+class GO_SAMPLER;
 
 class GOSoundSamplerPool
 {
