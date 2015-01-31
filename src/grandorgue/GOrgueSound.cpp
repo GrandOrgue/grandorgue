@@ -141,6 +141,7 @@ bool GOrgueSound::OpenSound()
 	m_AudioRecorder.SetSampleRate(sample_rate);
 	m_SoundEngine.SetAudioOutput(engine_config);
 	m_SoundEngine.SetupReverb(m_Settings);
+	m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_Settings.GetRecordDownmix());
 
 	if (m_organfile)
 		m_SoundEngine.Setup(m_organfile, m_Settings.GetReleaseConcurrency());
@@ -382,11 +383,7 @@ bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsign
 
 	if (dev_index == 0)
 	{
-		float buffer[GO_SOUND_BUFFER_SIZE];
-		m_SoundEngine.GetSamples(buffer, n_frames);
-
-		/* Write data to file if recording is enabled*/
-		m_AudioRecorder.Write(buffer, n_frames * 2);
+		m_SoundEngine.NextPeriod();
 
 		/* Update meters */
 		meter_counter += n_frames;

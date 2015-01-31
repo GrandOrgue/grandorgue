@@ -22,6 +22,7 @@
 #include "GOSoundEngine.h"
 
 #include "GOSoundProvider.h"
+#include "GOSoundRecorder.h"
 #include "GOSoundSampler.h"
 #include "GOSoundGroupWorkItem.h"
 #include "GOSoundOutputWorkItem.h"
@@ -54,6 +55,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_Windchests(),
 	m_AudioGroups(),
 	m_AudioOutputs(),
+	m_AudioRecorder(NULL),
 	m_WorkItems(),
 	m_NextItem(0)
 {
@@ -76,9 +78,14 @@ void GOSoundEngine::Reset()
 	for (unsigned i = 0; i < m_AudioGroups.size(); i++)
 		m_AudioGroups[i]->Clear();
 	for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
-		m_AudioOutputs[i]->Clear();
+		if (m_AudioOutputs[i])
+			m_AudioOutputs[i]->Clear();
+	if (m_AudioRecorder)
+		m_AudioRecorder->Clear();
 	
-	m_WorkItems.resize(m_Tremulants.size() + m_Windchests.size() + m_AudioGroups.size() * m_DetachedReleaseCount + m_AudioOutputs.size());
+	m_WorkItems.resize(m_Tremulants.size() + m_Windchests.size() + m_AudioGroups.size() * m_DetachedReleaseCount + m_AudioOutputs.size() + 1);
+	for(unsigned i = 0; i < m_WorkItems.size(); i++)
+		m_WorkItems[i] = 0;
 	m_WorkerSlots = m_WorkItems.size();
 	m_UsedPolyphony = 0;
 
@@ -354,7 +361,9 @@ void GOSoundEngine::ResetDoneFlags()
 			for(unsigned i = 0; i < ids.size(); i++)
 				m_WorkItems[pos++] = ids[i];
 		for(unsigned j = 0; j < m_AudioOutputs.size(); j++)
-			m_WorkItems[pos++] = m_AudioOutputs[j];
+			if (m_AudioOutputs[j])
+				m_WorkItems[pos++] = m_AudioOutputs[j];
+		m_WorkItems[pos++] = m_AudioRecorder;
 
 		for (unsigned j = 0; j < m_Tremulants.size(); j++)
 			m_Tremulants[j]->Reset();
@@ -363,7 +372,10 @@ void GOSoundEngine::ResetDoneFlags()
 		for (unsigned j = 0; j < m_AudioGroups.size(); j++)
 			m_AudioGroups[j]->Reset();
 		for (unsigned j = 0; j < m_AudioOutputs.size(); j++)
-			m_AudioOutputs[j]->Reset();
+			if (m_AudioOutputs[j])
+				m_AudioOutputs[j]->Reset();
+		if (m_AudioRecorder)
+			m_AudioRecorder->Reset();
 	}
 
 	m_NextItem.exchange(0);
@@ -420,10 +432,27 @@ void GOSoundEngine::SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio
 
 }
 
+void GOSoundEngine::SetAudioRecorder(GOSoundRecorder* recorder, bool downmix)
+{
+	m_AudioRecorder = recorder;
+	std::vector<GOSoundBufferItem*> outputs;
+	if (downmix)
+		outputs.push_back(m_AudioOutputs[0]);
+	else
+	{
+		delete m_AudioOutputs[0];
+		m_AudioOutputs[0] = NULL;
+		for (unsigned i = 1; i < m_AudioOutputs.size(); i++)
+			outputs.push_back(m_AudioOutputs[i]);
+	}
+	m_AudioRecorder->SetOutputs(outputs, m_SamplesPerBuffer);
+}
+
 void GOSoundEngine::SetupReverb(GOrgueSettings& settings)
 {
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
-		m_AudioOutputs[i]->SetupReverb(settings);
+		if (m_AudioOutputs[i])
+			m_AudioOutputs[i]->SetupReverb(settings);
 }
 
 void GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output)
@@ -432,18 +461,15 @@ void GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsi
 	memcpy(output_buffer, m_AudioOutputs[audio_output + 1]->m_Buffer, sizeof(float) * n_frames * m_AudioOutputs[audio_output + 1]->GetChannels());
 }
 
-
-// this callback will fill the buffer with bufferSize frame
-// audio is opened with 32 bit stereo, so one frame is 64bit (32bit for right 32bit for left)
-// So buffer can handle 8*bufferSize char (or 2*bufferSize float)
-void GOSoundEngine::GetSamples (float *output_buffer, unsigned n_frames)
+void GOSoundEngine::NextPeriod()
 {
 	ProcessTremulants();
 
-	m_AudioOutputs[0]->Finish();
-	memcpy(output_buffer, m_AudioOutputs[0]->m_Buffer, sizeof(float) * n_frames * m_AudioOutputs[0]->GetChannels());
+	if (m_AudioOutputs[0])
+		m_AudioOutputs[0]->Finish();
+	m_AudioRecorder->Run();
 
-	m_CurrentTime += n_frames;
+	m_CurrentTime += m_SamplesPerBuffer;
 
 	ResetDoneFlags();
 }
@@ -688,6 +714,8 @@ void GOSoundEngine::GetMeterInfo(METER_INFO *meter_info)
 	meter_info->meter_right = 0;
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 	{
+		if (!m_AudioOutputs[i])
+			continue;
 		const std::vector<float>& info = m_AudioOutputs[i]->GetMeterInfo();
 		for(unsigned j = 0; j < info.size(); j++)
 			if (j % 2)

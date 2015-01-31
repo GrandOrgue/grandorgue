@@ -30,6 +30,7 @@
 
 class GOrgueWindchest;
 class GOSoundProvider;
+class GOSoundRecorder;
 class GOSoundGroupWorkItem;
 class GOSoundOutputWorkItem;
 class GOSoundTremulantWorkItem;
@@ -79,6 +80,7 @@ private:
 	ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
 	ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
 	ptr_vector<GOSoundOutputWorkItem> m_AudioOutputs;
+	GOSoundRecorder* m_AudioRecorder;
 
 	std::vector<GOSoundWorkItem*>  m_WorkItems;
 	std::atomic_uint              m_NextItem;
@@ -122,6 +124,7 @@ public:
 	void SetRandomizeSpeaking(bool enable);
 	void SetReleaseLength(unsigned reverb);
 	void GetMeterInfo(METER_INFO *meter_info);
+	void SetAudioRecorder(GOSoundRecorder* recorder, bool downmix);
 
 	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay);
 	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
@@ -129,8 +132,7 @@ public:
 	void UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity);
 
 	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
-
-	void GetSamples(float *output_buffer, unsigned n_frames);
+	void NextPeriod();
 	GOSoundWorkItem* GetNextGroup();
 
 	bool ProcessSampler(float buffer[GO_SOUND_BUFFER_SIZE], GO_SAMPLER* sampler, unsigned n_frames, float volume);

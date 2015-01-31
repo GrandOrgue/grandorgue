@@ -22,6 +22,7 @@
 #include "ptrvector.h"
 #include "GOSoundEngine.h"
 #include "GOSoundProviderWave.h"
+#include "GOSoundRecorder.h"
 #include "GOrgueSettings.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
@@ -77,6 +78,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 		organfile->SetODFPath(argv[1]);
 		organfile->AddWindchest(new GOrgueWindchest(organfile));
 		GOSoundEngine* engine = new GOSoundEngine();
+		GOSoundRecorder recorder;
 
 		try
 		{
@@ -122,11 +124,12 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 			engine_config[0].scale_factors[1][0] = -121;
 			engine_config[0].scale_factors[1][1] = 0;
 			engine->SetAudioOutput(engine_config);
+			engine->SetAudioRecorder(&recorder, false);
 
 			engine->Setup(organfile);
 
 			std::vector<SAMPLER_HANDLE> handles;
-			float output_buffer[GO_SOUND_BUFFER_SIZE];
+			float output_buffer[samples_per_frame * 2];
 
 			for(unsigned i = 0; i < pipes.size(); i++)
 			{
@@ -138,9 +141,10 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 			wxMilliClock_t start = getCPUTime();
 			unsigned blocks = seconds * engine->GetSampleRate() / samples_per_frame;
 			for(unsigned i = 0; i < blocks; i++)
-				{
-					engine->GetSamples(output_buffer, samples_per_frame);
-				}
+			{
+				engine->GetAudioOutput(output_buffer, samples_per_frame, 0);
+				engine->NextPeriod();
+			}
 			wxMilliClock_t end = getCPUTime();
 			wxMilliClock_t diff = end - start;
 			

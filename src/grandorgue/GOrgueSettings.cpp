@@ -98,6 +98,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_BitsPerSample(24),
 	m_InterpolationType(0),
 	m_WaveFormat(4),
+	m_RecordDownmix(false),
 	m_LoopLoad(0),
 	m_AttackLoad(0),
 	m_ReleaseLoad(0),
@@ -212,6 +213,7 @@ void GOrgueSettings::Load()
 
 		SetInterpolationType(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("InterpolationType"), 0, 1, false, 1));
 		SetWaveFormatBytesPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("WaveFormat"), 1, 4, false, 4));
+		SetRecordDownmix(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("RecordDownmix"), false, false));
 		SetAttackLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("AttackLoad"), 0, 1, false, 1));
 		SetLoopLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoopLoad"), 0, 2, false, 2));
 		SetReleaseLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLoad"), 0, 1, false, 1));
@@ -718,6 +720,16 @@ void GOrgueSettings::SetWaveFormatBytesPerSample(unsigned bytes_per_sample)
 	m_WaveFormat = bytes_per_sample;
 }
 
+bool GOrgueSettings::GetRecordDownmix()
+{
+	return m_RecordDownmix;
+}
+
+void GOrgueSettings::SetRecordDownmix(bool downmix)
+{
+	m_RecordDownmix = downmix;
+}
+
 unsigned GOrgueSettings::GetLoopLoad()
 {
 	return m_LoopLoad;
@@ -1075,6 +1087,7 @@ void GOrgueSettings::Flush()
 
 	cfg.WriteInteger(wxT("General"), wxT("InterpolationType"), m_InterpolationType);
 	cfg.WriteInteger(wxT("General"), wxT("WaveFormat"), m_WaveFormat);
+	cfg.WriteBoolean(wxT("General"), wxT("RecordDownmix"), m_RecordDownmix);
 	cfg.WriteInteger(wxT("General"), wxT("AttackLoad"), m_AttackLoad);
 	cfg.WriteInteger(wxT("General"), wxT("LoopLoad"), m_LoopLoad);
 	cfg.WriteInteger(wxT("General"), wxT("ReleaseLoad"), m_ReleaseLoad);

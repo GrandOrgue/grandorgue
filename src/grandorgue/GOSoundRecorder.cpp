@@ -21,6 +21,7 @@
 
 #include "GOSoundRecorder.h"
 
+#include "GOSoundBufferItem.h"
 #include "GOrgueWaveTypes.h"
 #include <wx/intl.h>
 
@@ -51,20 +52,27 @@ GOSoundRecorder::GOSoundRecorder() :
         m_lock(),
         m_SampleRate(0),
 	m_Channels(2),
-	m_BytesPerSample(4)
+	m_BytesPerSample(4),
+	m_BufferSize(0),
+	m_BufferPos(0),
+	m_Recording(false),
+	m_Buffer(0)
 {
+	SetupBuffer();
 }
 
 GOSoundRecorder::~GOSoundRecorder()
 {
 	Close();
+	if (m_Buffer)
+		delete[] m_Buffer;
 }
 
-void GOSoundRecorder::Open(wxString filename)
+struct_WAVE GOSoundRecorder::generateHeader(unsigned datasize)
 {
 	struct_WAVE WAVE = {
 		{'R','I','F','F'}, 
-		wxUINT32_SWAP_ON_BE(0), 
+		wxUINT32_SWAP_ON_BE(datasize + 36), 
 		{'W','A','V','E'}, 
 		{'f','m','t',' '}, 
 		wxUINT32_SWAP_ON_BE(16), 
@@ -75,7 +83,14 @@ void GOSoundRecorder::Open(wxString filename)
 		(wxUint16)wxUINT16_SWAP_ON_BE(m_BytesPerSample * m_Channels), 
 		(wxUint16)wxUINT16_SWAP_ON_BE(8 * m_BytesPerSample), 
 		{'d','a','t','a'}, 
-		wxUINT32_SWAP_ON_BE(0)};
+		wxUINT32_SWAP_ON_BE(datasize)};
+	return WAVE;
+}
+
+
+void GOSoundRecorder::Open(wxString filename)
+{
+	struct_WAVE WAVE = generateHeader(0);
 
 	Close();
 
@@ -88,35 +103,27 @@ void GOSoundRecorder::Open(wxString filename)
 		return;
 	}
 	m_file.Write(&WAVE, sizeof(WAVE));
+
+	GOMutexLocker lock(m_Mutex);
+	m_Recording = true;
+	m_BufferPos = 0;
 }
 
 bool GOSoundRecorder::IsOpen()
 {
-	return m_file.IsOpened();
+	return m_Recording;
 }
 
 void GOSoundRecorder::Close()
 {
 	GOMutexLocker locker(m_lock);
-	struct_WAVE WAVE = {
-		{'R','I','F','F'}, 
-		wxUINT32_SWAP_ON_BE(0), 
-		{'W','A','V','E'}, 
-		{'f','m','t',' '}, 
-		wxUINT32_SWAP_ON_BE(16), 
-		(wxUint16)wxUINT16_SWAP_ON_BE(m_BytesPerSample == 4 ? 3 : 1), 
-		(wxUint16)wxUINT16_SWAP_ON_BE(m_Channels), 
-		wxUINT32_SWAP_ON_BE(m_SampleRate), 
-		wxUINT32_SWAP_ON_BE(m_SampleRate  * m_BytesPerSample * m_Channels), 
-		(wxUint16)wxUINT16_SWAP_ON_BE(m_BytesPerSample * m_Channels), 
-		(wxUint16)wxUINT16_SWAP_ON_BE(8 * m_BytesPerSample), 
-		{'d','a','t','a'}, 
-		wxUINT32_SWAP_ON_BE(0)};
-
+	{
+		GOMutexLocker locker(m_Mutex);
+		m_Recording = false;
+	}
 	if (!m_file.IsOpened())
 		return;
-	WAVE.ChunkSize = wxUINT32_SWAP_ON_BE(m_file.Tell() - 8);
-	WAVE.Subchunk2Size = wxUINT32_SWAP_ON_BE((m_file.Tell() - 8) - 36);
+	struct_WAVE WAVE = generateHeader(m_BufferPos);
 	m_file.Seek(0);
 	m_file.Write(&WAVE, sizeof(WAVE));
 	m_file.Close();
@@ -132,9 +139,29 @@ void GOSoundRecorder::SetBytesPerSample(unsigned value)
 	if (value < 1 || value > 4)
 		value = 4;
 	m_BytesPerSample = value;
+	SetupBuffer();
 }
 
-inline int float_to_fixed(float f, unsigned fractional_bits)
+void GOSoundRecorder::SetOutputs(std::vector<GOSoundBufferItem*> outputs, unsigned samples_per_buffer)
+{
+	m_Outputs = outputs;
+	m_SamplesPerBuffer = samples_per_buffer;
+	SetupBuffer();
+}
+
+void GOSoundRecorder::SetupBuffer()
+{
+	Close();
+	if (m_Buffer)
+		delete[] m_Buffer;
+	m_Channels = 0;
+	for(unsigned i = 0; i < m_Outputs.size(); i++)
+		m_Channels += m_Outputs[i]->GetChannels();
+	m_BufferSize = m_SamplesPerBuffer * m_Channels * m_BytesPerSample;
+	m_Buffer = new char[m_BufferSize];
+}
+
+static inline int float_to_fixed(float f, unsigned fractional_bits)
 {
 	assert(fractional_bits > 0);
 	int max_val = 1 << fractional_bits;
@@ -146,59 +173,93 @@ inline int float_to_fixed(float f, unsigned fractional_bits)
 	return f_exp;
 }
 
-void GOSoundRecorder::Write(float* data, unsigned count)
+static void convertValue(float value, GO_Int24& result)
 {
-	GOMutexLocker locker(m_lock);
-	if (!m_file.IsOpened())
+	result = IntToGOInt24(float_to_fixed(value, 23));
+}
+
+static void convertValue(float value, int16_t& result)
+{
+	result = wxINT16_SWAP_ON_BE(float_to_fixed(value, 15));
+}
+
+static void convertValue(float value, int8_t& result)
+{
+	result = (unsigned char)(float_to_fixed(value, 7) + 128);
+}
+
+static void convertValue(float value, float& result)
+{
+	result = value;
+}
+
+template<class T>
+void GOSoundRecorder::ConvertData()
+{
+	unsigned start_pos = 0;
+	T* buf = (T*)m_Buffer;
+	for(unsigned i = 0; i < m_Outputs.size(); i++)
+	{
+		m_Outputs[i]->Finish();
+	
+		unsigned pos = start_pos;
+		unsigned inc = m_Channels - m_Outputs[i]->GetChannels();
+		for(unsigned l = 0, j = 0; j < m_SamplesPerBuffer; j++)
+		{
+			for(unsigned k = 0; k < m_Outputs[i]->GetChannels(); k++, l++)
+			{
+				convertValue(m_Outputs[i]->m_Buffer[l], buf[pos++]);
+			}
+			pos += inc;
+		}
+		start_pos += m_Outputs[i]->GetChannels();
+	}
+}
+
+unsigned GOSoundRecorder::GetCost()
+{
+	return 0;
+}
+
+void GOSoundRecorder::Run()
+{
+	if (!m_Recording)
 		return;
-	if (m_BytesPerSample == 4)
-		m_file.Write(data, count * sizeof(float));
-	else if (m_BytesPerSample == 1)
+	if (m_Done)
+		return;
+	GOMutexLocker locker(m_Mutex);
+	if (m_Done)
+		return;
+	if (!m_Recording)
+		return;
+
+	switch(m_BytesPerSample)
 	{
-		unsigned char* buf = (unsigned char*)buffer;
-		unsigned size = sizeof(buffer) / sizeof(unsigned char);
-		unsigned pos = 0;
-		for(unsigned i = 0; i < count; i++)
-		{
-			if (pos >= size)
-			{
-				m_file.Write(buf, pos * sizeof(unsigned char));
-				pos = 0;
-			}
-			buf[pos++] = (unsigned char)(float_to_fixed(data[i], 7) + 128);
-		}
-		m_file.Write(buf, pos * sizeof(unsigned char));
+	case 1:
+		ConvertData<int8_t>();
+		break;
+	case 2:
+		ConvertData<int16_t>();
+		break;
+	case 3:
+		ConvertData<GO_Int24>();
+		break;
+	case 4:
+		ConvertData<float>();
+		break;
 	}
-	else if (m_BytesPerSample == 2)
-	{
-		wxInt16* buf = (wxInt16*)buffer;
-		unsigned size = sizeof(buffer) / sizeof(wxInt16);
-		unsigned pos = 0;
-		for(unsigned i = 0; i < count; i++)
-		{
-			if (pos >= size)
-			{
-				m_file.Write(buf, pos * sizeof(wxInt16));
-				pos = 0;
-			}
-			buf[pos++] = wxINT16_SWAP_ON_BE(float_to_fixed(data[i], 15));
-		}
-		m_file.Write(buf, pos * sizeof(wxInt16));
-	}
-	else if (m_BytesPerSample == 3)
-	{
-		GO_Int24* buf = (GO_Int24*)buffer;
-		unsigned size = sizeof(buffer) / sizeof(GO_Int24);
-		unsigned pos = 0;
-		for(unsigned i = 0; i < count; i++)
-		{
-			if (pos >= size)
-			{
-				m_file.Write(buf, pos * sizeof(GO_Int24));
-				pos = 0;
-			}
-			buf[pos++] = IntToGOInt24(float_to_fixed(data[i], 23));
-		}
-		m_file.Write(buf, pos * sizeof(GO_Int24));
-	}
+	m_file.Write(m_Buffer, m_BufferSize);
+	m_BufferPos += m_BufferSize;
+}
+
+void GOSoundRecorder::Clear()
+{
+	Close();
+	Reset();
+}
+
+void GOSoundRecorder::Reset()
+{
+	GOMutexLocker locker(m_Mutex);
+	m_Done = false;
 }
