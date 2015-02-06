@@ -17,9 +17,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+%if "X%{?_mingw_bitsize}" == "X"
 # Set bitsize either to 32 or 64
 %define _mingw_bitsize XX
+%endif
+%if "X%{?with_asio}" == "X"
+# Enable building with ASIO
 %define with_asio 0
+%endif
 
 %if %{_mingw_bitsize} == 32
 %define __strip %{_mingw32_strip}
