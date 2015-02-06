@@ -71,7 +71,7 @@ void GOrgueSound::StartThreads()
 
 	GOMutexLocker thread_locker(m_thread_lock);
 	for(unsigned i = 0; i < n_cpus; i++)
-		m_Threads.push_back(new GOSoundThread(&GetEngine()));
+		m_Threads.push_back(new GOSoundThread(&GetEngine().GetScheduler()));
 
 	for(unsigned i = 0; i < m_Threads.size(); i++)
 		m_Threads[i]->Run();

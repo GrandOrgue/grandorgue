@@ -264,6 +264,7 @@ GOSoundReverbEngine.cpp
 GOSoundReverbPartition.cpp
 GOSoundResample.cpp
 GOSoundSamplerPool.cpp
+GOSoundScheduler.cpp
 GOSoundThread.cpp
 GOSoundTremulantWorkItem.cpp
 GOSoundWindchestWorkItem.cpp

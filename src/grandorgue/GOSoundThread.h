@@ -25,12 +25,12 @@
 #include "GOLock.h"
 #include <wx/thread.h>
 
-class GOSoundEngine;
+class GOSoundScheduler;
 
 class GOSoundThread : public wxThread
 {
 private:
-	GOSoundEngine* m_Engine;
+	GOSoundScheduler* m_Scheduler;
 	bool m_Stop;
 
 	GOMutex m_Mutex;
@@ -39,7 +39,7 @@ private:
 	void* Entry();
 
 public:
-	GOSoundThread(GOSoundEngine* engine);
+	GOSoundThread(GOSoundScheduler* scheduler);
 
 	void Delete();
 	void Wakeup();

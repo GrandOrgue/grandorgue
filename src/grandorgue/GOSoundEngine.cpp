@@ -50,14 +50,11 @@ GOSoundEngine::GOSoundEngine() :
 	m_AudioGroupCount(1),
 	m_UsedPolyphony(0),
 	m_WorkerSlots(0),
-	m_DetachedReleaseCount(1),
 	m_Tremulants(),
 	m_Windchests(),
 	m_AudioGroups(),
 	m_AudioOutputs(),
-	m_AudioRecorder(NULL),
-	m_WorkItems(),
-	m_NextItem(0)
+	m_AudioRecorder(NULL)
 {
 	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
@@ -71,27 +68,25 @@ GOSoundEngine::~GOSoundEngine()
 
 void GOSoundEngine::Reset()
 {
-	for (unsigned i = 0; i < m_Tremulants.size(); i++)
-		m_Tremulants[i]->Clear();
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
 		m_Windchests[i]->Init(m_Tremulants);
+
+	m_Scheduler.Clear();
+	for (unsigned i = 0; i < m_Tremulants.size(); i++)
+		m_Scheduler.Add(m_Tremulants[i]);
+	for (unsigned i = 0; i < m_Windchests.size(); i++)
+		m_Scheduler.Add(m_Windchests[i]);
 	for (unsigned i = 0; i < m_AudioGroups.size(); i++)
-		m_AudioGroups[i]->Clear();
+		m_Scheduler.Add(m_AudioGroups[i]);
 	for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
-		if (m_AudioOutputs[i])
-			m_AudioOutputs[i]->Clear();
-	if (m_AudioRecorder)
-		m_AudioRecorder->Clear();
+		m_Scheduler.Add(m_AudioOutputs[i]);
+	m_Scheduler.Add(m_AudioRecorder);
 	
-	m_WorkItems.resize(m_Tremulants.size() + m_Windchests.size() + m_AudioGroups.size() * m_DetachedReleaseCount + m_AudioOutputs.size() + 1);
-	for(unsigned i = 0; i < m_WorkItems.size(); i++)
-		m_WorkItems[i] = 0;
-	m_WorkerSlots = m_WorkItems.size();
 	m_UsedPolyphony = 0;
 
 	m_SamplerPool.ReturnAll();
 	m_CurrentTime = 1;
-	ResetDoneFlags();
+	m_Scheduler.Reset();
 }
 
 void GOSoundEngine::SetVolume(int volume)
@@ -233,7 +228,7 @@ void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsi
 
 void GOSoundEngine::ClearSetup()
 {
-	m_WorkerSlots = 0;
+	m_Scheduler.Clear();
 	m_Windchests.clear();
 	m_Tremulants.clear();
 	Reset();
@@ -241,10 +236,10 @@ void GOSoundEngine::ClearSetup()
 
 void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 {
-	m_WorkerSlots = 0;
+	m_Scheduler.Clear();
 	if (release_count < 1)
 		release_count = 1;
-	m_DetachedReleaseCount = release_count;
+	m_Scheduler.SetRepeatCount(release_count);
 	m_Tremulants.clear();
 	for(unsigned i = 0; i < organ_file->GetTremulantCount(); i++)
 		m_Tremulants.push_back(new GOSoundTremulantWorkItem(*this, m_SamplesPerBuffer));
@@ -320,75 +315,9 @@ void GOSoundEngine::ReturnSampler(GO_SAMPLER* sampler)
 	m_SamplerPool.ReturnSampler(sampler);
 }
 
-GOSoundWorkItem* GOSoundEngine::GetNextGroup()
+GOSoundScheduler& GOSoundEngine::GetScheduler()
 {
-	unsigned next = m_NextItem.fetch_add(1);
-	if (next >= m_WorkerSlots)
-		return NULL;
-	return m_WorkItems[next];
-}
-
-void GOSoundEngine::ResetDoneFlags()
-{
-	std::vector<unsigned> counts;
-	std::vector<GOSoundWorkItem*> ids;
-	counts.reserve(m_AudioGroups.size());
-	ids.reserve(m_AudioGroups.size());
-
-	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
-	{
-		counts.push_back(0);
-		ids.push_back(NULL);
-		unsigned pos = counts.size();
-		unsigned cnt = m_AudioGroups[i]->GetCost();
-		while(pos > 1 && counts[pos - 2] < cnt)
-		{
-			counts[pos - 1] = counts[pos - 2];
-			ids[pos - 1] = ids[pos - 2];
-			pos--;
-		}
-		counts[pos - 1] = cnt;
-		ids[pos - 1] = m_AudioGroups[i];
-	}
-	if (m_WorkerSlots)
-	{
-		unsigned pos = 0;
-		for(unsigned i = 0; i < m_Tremulants.size(); i++)
-			m_WorkItems[pos++] = m_Tremulants[i];
-		for(unsigned i = 0; i < m_Windchests.size(); i++)
-			m_WorkItems[pos++] = m_Windchests[i];
-		for(unsigned j = 0; j < m_DetachedReleaseCount; j++)
-			for(unsigned i = 0; i < ids.size(); i++)
-				m_WorkItems[pos++] = ids[i];
-		for(unsigned j = 0; j < m_AudioOutputs.size(); j++)
-			if (m_AudioOutputs[j])
-				m_WorkItems[pos++] = m_AudioOutputs[j];
-		m_WorkItems[pos++] = m_AudioRecorder;
-
-		for (unsigned j = 0; j < m_Tremulants.size(); j++)
-			m_Tremulants[j]->Reset();
-		for (unsigned j = 0; j < m_Windchests.size(); j++)
-			m_Windchests[j]->Reset();
-		for (unsigned j = 0; j < m_AudioGroups.size(); j++)
-			m_AudioGroups[j]->Reset();
-		for (unsigned j = 0; j < m_AudioOutputs.size(); j++)
-			if (m_AudioOutputs[j])
-				m_AudioOutputs[j]->Reset();
-		if (m_AudioRecorder)
-			m_AudioRecorder->Reset();
-	}
-
-	m_NextItem.exchange(0);
-
-	unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
-	if (used_samplers > m_UsedPolyphony)
-			m_UsedPolyphony = used_samplers;
-}
-
-void GOSoundEngine::ProcessTremulants()
-{
-	for (unsigned j = 0; j < m_Tremulants.size(); j++)
-		m_Tremulants[j]->Run();
+	return m_Scheduler;
 }
 
 void GOSoundEngine::SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs)
@@ -440,6 +369,7 @@ void GOSoundEngine::SetAudioRecorder(GOSoundRecorder* recorder, bool downmix)
 		outputs.push_back(m_AudioOutputs[0]);
 	else
 	{
+		m_Scheduler.Remove(m_AudioOutputs[0]);
 		delete m_AudioOutputs[0];
 		m_AudioOutputs[0] = NULL;
 		for (unsigned i = 1; i < m_AudioOutputs.size(); i++)
@@ -463,15 +393,14 @@ void GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsi
 
 void GOSoundEngine::NextPeriod()
 {
-	ProcessTremulants();
-
-	if (m_AudioOutputs[0])
-		m_AudioOutputs[0]->Finish();
-	m_AudioRecorder->Run();
+	m_Scheduler.Finish();
 
 	m_CurrentTime += m_SamplesPerBuffer;
+	unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
+	if (used_samplers > m_UsedPolyphony)
+			m_UsedPolyphony = used_samplers;
 
-	ResetDoneFlags();
+	m_Scheduler.Reset();
 }
 
 
