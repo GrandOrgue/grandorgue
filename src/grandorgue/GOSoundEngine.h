@@ -23,6 +23,7 @@
 #define GOSOUNDENGINE_H_
 
 #include "GOSoundResample.h"
+#include "GOSoundScheduler.h"
 #include "GOSoundSamplerPool.h"
 #include "GOLock.h"
 #include <vector>
@@ -73,15 +74,13 @@ private:
 	unsigned                      m_AudioGroupCount;
 	unsigned m_UsedPolyphony;
 	unsigned                      m_WorkerSlots;
-	unsigned                      m_DetachedReleaseCount;
 	ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
 	ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
 	ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
 	ptr_vector<GOSoundOutputWorkItem> m_AudioOutputs;
 	GOSoundRecorder* m_AudioRecorder;
 
-	std::vector<GOSoundWorkItem*>  m_WorkItems;
-	std::atomic_uint              m_NextItem;
+	GOSoundScheduler m_Scheduler;
 
 	struct resampler_coefs_s      m_ResamplerCoefs;
 
@@ -93,10 +92,8 @@ private:
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group);
 	void CreateReleaseSampler(GO_SAMPLER* sampler);
 	void SwitchAttackSampler(GO_SAMPLER* sampler);
-	void ResetDoneFlags();
 	unsigned GetFaderLength(unsigned MidiKeyNumber);
 	float GetRandomFactor();
-	void ProcessTremulants();
 
 public:
 
@@ -131,7 +128,7 @@ public:
 
 	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
 	void NextPeriod();
-	GOSoundWorkItem* GetNextGroup();
+	GOSoundScheduler& GetScheduler();
 
 	bool ProcessSampler(float *buffer, GO_SAMPLER* sampler, unsigned n_frames, float volume);
 	void ReturnSampler(GO_SAMPLER* sampler);

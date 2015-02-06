@@ -21,12 +21,12 @@
 
 #include "GOSoundThread.h"
 
-#include "GOSoundEngine.h"
+#include "GOSoundScheduler.h"
 #include "GOSoundWorkItem.h"
 
-GOSoundThread::GOSoundThread(GOSoundEngine* engine):
+GOSoundThread::GOSoundThread(GOSoundScheduler* scheduler):
 	wxThread(wxTHREAD_JOINABLE),
-	m_Engine(engine),
+	m_Scheduler(scheduler),
 	m_Stop(false),
 	m_Condition(m_Mutex)
 {
@@ -42,7 +42,7 @@ void* GOSoundThread::Entry()
 		GOSoundWorkItem *next;
 		do
 		{
-			next = m_Engine->GetNextGroup();
+			next = m_Scheduler->GetNextGroup();
 			if (next != NULL)
 				next->Run();
 		}
