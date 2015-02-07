@@ -82,6 +82,7 @@ private:
 	bool logSoundErrors;
 
 	std::vector<GO_SOUND_OUTPUT> m_AudioOutputs;
+	std::atomic_uint m_WaitCount;
 
 	unsigned m_SamplesPerBuffer;
 

@@ -195,14 +195,15 @@ void GOrgueSound::StartStreams()
 	if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
 		throw wxString::Format(_("Cannot use buffer size above %d samples; unacceptable quantization would occur."), MAX_FRAME_SIZE);
 
-	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
-		m_AudioOutputs[i].port->StartStream();
-
+	m_WaitCount.exchange(0);
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 	{
 		GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
-		m_AudioOutputs[i].wait = true;
+		m_AudioOutputs[i].wait = false;
 	}
+
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+		m_AudioOutputs[i].port->StartStream();
 }
 
 void GOrgueSound::CloseSound()
@@ -405,51 +406,34 @@ bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsign
 	GO_SOUND_OUTPUT* device = &m_AudioOutputs[dev_index];
 	GOMutexLocker locker(device->mutex);
 
-	m_SoundEngine.GetAudioOutput(output_buffer, n_frames, dev_index);
+	if (device->wait)
+	{
+		device->waiting = true;
+		device->condition.Wait();
+		device->waiting = false;
+	}
 
-	if (dev_index == 0)
+	m_SoundEngine.GetAudioOutput(output_buffer, n_frames, dev_index);
+	device->wait = true;
+	m_WaitCount.fetch_add(1);
+
+	if (m_WaitCount >= m_AudioOutputs.size())
 	{
 		m_SoundEngine.NextPeriod();
 		UpdateMeter();
 
-		GOMutexLocker thread_locker(m_thread_lock);
-		for(unsigned i = 0; i < m_Threads.size(); i++)
-			m_Threads[i]->Wakeup();
-
-		for(unsigned i = 1; i < m_AudioOutputs.size(); i++)
 		{
-			GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
-			if (m_AudioOutputs[i].wait)
-			{
-				if (m_AudioOutputs[i].waiting)
-				{
-					dev_lock.Unlock();
-					m_AudioOutputs[i].condition.Signal();
-				}
-				else
-				{
-					m_AudioOutputs[i].waiting = true;
-					m_AudioOutputs[i].condition.Wait();
-					m_AudioOutputs[i].waiting = false;
-				}
-			}
+			GOMutexLocker thread_locker(m_thread_lock);
+			for(unsigned i = 0; i < m_Threads.size(); i++)
+				m_Threads[i]->Wakeup();
 		}
-	}
-	else
-	{
-		if (device->wait)
+		m_WaitCount.exchange(0);
+
+		for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 		{
-			if (device->waiting)
-			{
-				locker.Unlock();
-				device->condition.Signal();
-			}
-			else
-			{
-				device->waiting = true;
-				device->condition.Wait();
-				device->waiting = false;
-			}
+			GOMutexLocker(m_AudioOutputs[i].mutex, i == dev_index);
+			m_AudioOutputs[i].wait = false;
+			m_AudioOutputs[i].condition.Signal();
 		}
 	}
 
