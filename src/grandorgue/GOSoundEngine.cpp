@@ -393,7 +393,7 @@ void GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsi
 
 void GOSoundEngine::NextPeriod()
 {
-	m_Scheduler.Finish();
+	m_Scheduler.Exec();
 
 	m_CurrentTime += m_SamplesPerBuffer;
 	unsigned used_samplers = m_SamplerPool.UsedSamplerCount();

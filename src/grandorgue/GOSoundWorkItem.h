@@ -32,6 +32,7 @@ public:
 	virtual unsigned GetGroup() = 0;
 	virtual unsigned GetCost() = 0;
 	virtual void Run() = 0;
+	virtual void Exec() = 0;
 
 	virtual void Clear() = 0;
 	virtual void Reset() = 0;

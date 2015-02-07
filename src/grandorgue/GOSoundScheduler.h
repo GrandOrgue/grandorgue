@@ -47,7 +47,7 @@ private:
 	void ResetList(std::vector<GOSoundWorkItem*>& list);
 	void AddList(GOSoundWorkItem* item, std::vector<GOSoundWorkItem*>& list);
 	void RemoveList(GOSoundWorkItem* item, std::vector<GOSoundWorkItem*>& list);
-	void FinishList(std::vector<GOSoundWorkItem*>& list);
+	void ExecList(std::vector<GOSoundWorkItem*>& list);
 
 public:
 	GOSoundScheduler();
@@ -57,7 +57,7 @@ public:
 
 	void Clear();
 	void Reset();
-	void Finish();
+	void Exec();
 	void Add(GOSoundWorkItem* item);
 	void Remove(GOSoundWorkItem* item);
 

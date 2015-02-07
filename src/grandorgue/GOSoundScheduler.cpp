@@ -160,19 +160,19 @@ void GOSoundScheduler::Reset()
 	m_NextItem.exchange(0);
 }
 
-void GOSoundScheduler::FinishList(std::vector<GOSoundWorkItem*>& list)
+void GOSoundScheduler::ExecList(std::vector<GOSoundWorkItem*>& list)
 {
 	for(unsigned i = 0; i < list.size(); i++)
 		if (list[i])
-			list[i]->Run();
+			list[i]->Exec();
 }
 
-void GOSoundScheduler::Finish()
+void GOSoundScheduler::Exec()
 {
 	GOMutexLocker lock(m_Mutex);
-	FinishList(m_Work1);
-	FinishList(m_Work2);
-	FinishList(m_Work3);
+	ExecList(m_Work1);
+	ExecList(m_Work2);
+	ExecList(m_Work3);
 }
 
 GOSoundWorkItem* GOSoundScheduler::GetNextGroup()

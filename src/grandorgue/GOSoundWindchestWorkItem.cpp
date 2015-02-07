@@ -92,3 +92,7 @@ void GOSoundWindchestWorkItem::Run()
 	m_Volume = volume;
 	m_Done = true;
 }
+
+void GOSoundWindchestWorkItem::Exec()
+{
+}

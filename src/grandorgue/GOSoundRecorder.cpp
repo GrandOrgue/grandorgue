@@ -257,6 +257,11 @@ void GOSoundRecorder::Run()
 	m_BufferPos += m_BufferSize;
 }
 
+void GOSoundRecorder::Exec()
+{
+	Run();
+}
+
 void GOSoundRecorder::Clear()
 {
 	Close();

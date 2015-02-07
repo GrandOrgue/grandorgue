@@ -124,6 +124,11 @@ void GOSoundGroupWorkItem::Run()
 	}
 }
 
+void GOSoundGroupWorkItem::Exec()
+{
+	Run();
+}
+
 void GOSoundGroupWorkItem::Finish()
 {
 	Run();
