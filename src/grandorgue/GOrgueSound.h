@@ -105,6 +105,7 @@ private:
 
 	void OpenMidi();
 	void StartStreams();
+	void UpdateMeter();
 
 public:
 
