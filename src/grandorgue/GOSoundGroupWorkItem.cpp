@@ -70,6 +70,11 @@ void GOSoundGroupWorkItem::ProcessList(GOSoundSamplerList& list, float* output_b
 	}
 }
 
+unsigned GOSoundGroupWorkItem::GetGroup()
+{
+	return AUDIOGROUP;
+}
+
 unsigned GOSoundGroupWorkItem::GetCost()
 {
 	return m_Active.GetCount() + m_Release.GetCount();

@@ -29,11 +29,20 @@ public:
 	{
 	}
 
+	virtual unsigned GetGroup() = 0;
 	virtual unsigned GetCost() = 0;
 	virtual void Run() = 0;
 
 	virtual void Clear() = 0;
 	virtual void Reset() = 0;
+
+	enum {
+		TREMULANT = 10,
+		WINDCHEST = 20,
+		AUDIOGROUP = 50,
+		AUDIOOUTPUT = 100,
+		AUDIORECORDER = 150,
+	};
 };
 
 #endif

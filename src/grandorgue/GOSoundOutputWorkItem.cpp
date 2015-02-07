@@ -119,6 +119,11 @@ void GOSoundOutputWorkItem::Reset()
 	m_Done = false;
 }
 
+unsigned GOSoundOutputWorkItem::GetGroup()
+{
+	return AUDIOOUTPUT;
+}
+
 unsigned GOSoundOutputWorkItem::GetCost()
 {
 	return 0;

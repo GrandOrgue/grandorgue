@@ -47,12 +47,13 @@ public:
 
 	void SetOutputs(std::vector<GOSoundBufferItem*> outputs);
 
-        unsigned GetCost();
-        void Run();
-        void Finish();
+	unsigned GetGroup();
+	unsigned GetCost();
+	void Run();
+	void Finish();
 
-        void Clear();
-        void Reset();
+	void Clear();
+	void Reset();
 
 	void SetupReverb(GOrgueSettings& settings);
 

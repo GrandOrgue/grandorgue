@@ -54,9 +54,14 @@ void GOSoundWindchestWorkItem::Reset()
 	m_Done = false;
 }
 
+unsigned GOSoundWindchestWorkItem::GetGroup()
+{
+	return WINDCHEST;
+}
+
 unsigned GOSoundWindchestWorkItem::GetCost()
 {
-	return (unsigned)-2;
+	return 0;
 }
 
 float GOSoundWindchestWorkItem::GetWindchestVolume()
