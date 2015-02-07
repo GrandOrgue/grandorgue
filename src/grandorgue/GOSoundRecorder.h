@@ -62,6 +62,7 @@ public:
 	void SetBytesPerSample(unsigned value);
 	void SetOutputs(std::vector<GOSoundBufferItem*> outputs, unsigned samples_per_buffer);
 
+	unsigned GetGroup();
 	unsigned GetCost();
 	void Run();
 

@@ -47,9 +47,14 @@ void GOSoundTremulantWorkItem::Add(GO_SAMPLER* sampler)
 	m_Samplers.Put(sampler);
 }
 
+unsigned GOSoundTremulantWorkItem::GetGroup()
+{
+	return TREMULANT;
+}
+
 unsigned GOSoundTremulantWorkItem::GetCost()
 {
-	return (unsigned)-1;
+	return 0;
 }
 
 void GOSoundTremulantWorkItem::Run()

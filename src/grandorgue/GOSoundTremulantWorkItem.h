@@ -41,6 +41,7 @@ private:
 public:
 	GOSoundTremulantWorkItem(GOSoundEngine& sound_engine, unsigned samples_per_buffer);
 
+	unsigned GetGroup();
 	unsigned GetCost();
 	void Run();
 

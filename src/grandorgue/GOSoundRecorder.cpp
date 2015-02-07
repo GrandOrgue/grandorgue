@@ -48,9 +48,9 @@ struct struct_WAVE
 
 
 GOSoundRecorder::GOSoundRecorder() :
-        m_file(),
-        m_lock(),
-        m_SampleRate(0),
+	m_file(),
+	m_lock(),
+	m_SampleRate(0),
 	m_Channels(2),
 	m_BytesPerSample(4),
 	m_BufferSize(0),
@@ -214,6 +214,11 @@ void GOSoundRecorder::ConvertData()
 		}
 		start_pos += m_Outputs[i]->GetChannels();
 	}
+}
+
+unsigned GOSoundRecorder::GetGroup()
+{
+	return AUDIORECORDER;
 }
 
 unsigned GOSoundRecorder::GetCost()

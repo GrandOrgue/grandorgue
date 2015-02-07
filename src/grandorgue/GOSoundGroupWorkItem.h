@@ -45,9 +45,10 @@ private:
 public:
 	GOSoundGroupWorkItem(GOSoundEngine& sound_engine, unsigned samples_per_buffer);
 
-        unsigned GetCost();
-        void Run();
-        void Finish();
+	unsigned GetGroup();
+	unsigned GetCost();
+	void Run();
+	void Finish();
 
 	void Reset();
 	void Clear();

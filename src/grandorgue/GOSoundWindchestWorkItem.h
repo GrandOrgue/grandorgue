@@ -43,6 +43,7 @@ private:
 public:
 	GOSoundWindchestWorkItem(GOSoundEngine& sound_engine, GOrgueWindchest* windchest);
 
+	unsigned GetGroup();
 	unsigned GetCost();
 	void Run();
 
