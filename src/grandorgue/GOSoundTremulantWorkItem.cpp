@@ -94,3 +94,8 @@ void GOSoundTremulantWorkItem::Run()
 	m_Volume = output_buffer[2 * m_SamplesPerBuffer - 1];
 	m_Done = true;
 }
+
+void GOSoundTremulantWorkItem::Exec()
+{
+	Run();
+}

@@ -94,6 +94,11 @@ void GOSoundOutputWorkItem::Run()
 	m_Done = true;
 }	
 
+void GOSoundOutputWorkItem::Exec()
+{
+	Run();
+}
+
 void GOSoundOutputWorkItem::Finish()
 {
 	if (!m_Done)

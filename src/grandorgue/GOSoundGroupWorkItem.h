@@ -48,6 +48,7 @@ public:
 	unsigned GetGroup();
 	unsigned GetCost();
 	void Run();
+	void Exec();
 	void Finish();
 
 	void Reset();
