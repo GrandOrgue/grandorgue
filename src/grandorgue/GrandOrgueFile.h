@@ -57,8 +57,6 @@ class GOSoundEngine;
 class GOSoundProvider;
 class GO_SAMPLER;
 
-typedef GO_SAMPLER* SAMPLER_HANDLE;
-
 class GrandOrgueFile : public GOrgueEventDistributor, private GOrguePipeUpdateCallback
 {
 	WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
@@ -225,10 +223,10 @@ public:
 	const wxString& GetRecordingDetails();
 	const wxString& GetInfoFilename();
 
-	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay);
-	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
-	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
-	void UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity);
+	GO_SAMPLER* StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay);
+	void StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
+	void SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
+	void UpdateVelocity(GO_SAMPLER* handle, unsigned velocity);
 
 	void SendMidiMessage(GOrgueMidiEvent& e);
 	void SendMidiRecorderMessage(GOrgueMidiEvent& e);

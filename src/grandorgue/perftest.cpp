@@ -128,12 +128,12 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 
 			engine->Setup(organfile);
 
-			std::vector<SAMPLER_HANDLE> handles;
+			std::vector<GO_SAMPLER*> handles;
 			float output_buffer[samples_per_frame * 2];
 
 			for(unsigned i = 0; i < pipes.size(); i++)
 			{
-				SAMPLER_HANDLE handle = engine->StartSample(pipes[i], 1, 0, 127, 0);
+				GO_SAMPLER* handle = engine->StartSample(pipes[i], 1, 0, 127, 0);
 				if (handle)
 					handles.push_back(handle);
 			}

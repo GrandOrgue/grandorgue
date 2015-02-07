@@ -404,7 +404,7 @@ void GOSoundEngine::NextPeriod()
 }
 
 
-SAMPLER_HANDLE GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay)
+GO_SAMPLER* GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay)
 {
 	const GOAudioSection* attack = pipe->GetAttack(velocity);
 	if (!attack || attack->GetChannels() == 0)
@@ -595,7 +595,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 }
 
 
-void GOSoundEngine::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle)
+void GOSoundEngine::StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)
 {
 
 	assert(handle);
@@ -611,7 +611,7 @@ void GOSoundEngine::StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handl
 	handle->stop = m_CurrentTime + handle->delay;
 }
 
-void GOSoundEngine::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle)
+void GOSoundEngine::SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)
 {
 
 	assert(handle);
@@ -627,7 +627,7 @@ void GOSoundEngine::SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE han
 	handle->new_attack = m_CurrentTime + handle->delay;
 }
 
-void GOSoundEngine::UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity)
+void GOSoundEngine::UpdateVelocity(GO_SAMPLER* handle, unsigned velocity)
 {
 	assert(handle);
 	handle->velocity = velocity;

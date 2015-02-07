@@ -31,7 +31,6 @@ class GOrgueConfigReader;
 class GOrgueConfigWriter;
 struct IniFileEnumEntry;
 class GO_SAMPLER;
-typedef GO_SAMPLER* SAMPLER_HANDLE;
 
 typedef enum { GOSynthTrem, GOWavTrem } GOrgueTremulantType;
 
@@ -45,7 +44,7 @@ private:
 	int m_StopRate;
 	int m_AmpModDepth;
 	GOSoundProvider* m_TremProvider;
-	SAMPLER_HANDLE m_PlaybackHandle;
+	GO_SAMPLER* m_PlaybackHandle;
 	int m_SamplerGroupID;
 
 	void InitSoundProvider();
