@@ -53,7 +53,6 @@ typedef struct
 } GOAudioOutputConfiguration;
 
 class GO_SAMPLER;
-typedef GO_SAMPLER* SAMPLER_HANDLE;
 
 class GOSoundEngine
 {
@@ -121,10 +120,10 @@ public:
 	void GetMeterInfo(METER_INFO *meter_info);
 	void SetAudioRecorder(GOSoundRecorder* recorder, bool downmix);
 
-	SAMPLER_HANDLE StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay);
-	void StopSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
-	void SwitchSample(const GOSoundProvider *pipe, SAMPLER_HANDLE handle);
-	void UpdateVelocity(SAMPLER_HANDLE handle, unsigned velocity);
+	GO_SAMPLER* StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay);
+	void StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
+	void SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
+	void UpdateVelocity(GO_SAMPLER* handle, unsigned velocity);
 
 	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
 	void NextPeriod();

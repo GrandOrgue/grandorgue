@@ -29,13 +29,12 @@
 #include "GOrguePipeWindchestCallback.h"
 
 class GO_SAMPLER;
-typedef GO_SAMPLER* SAMPLER_HANDLE;
 
 class GOrgueSoundingPipe : public GOrguePipe, private GOrgueCacheObject, private GOrguePipeUpdateCallback, 
 	private GOrguePipeWindchestCallback
 {
 private:
-	SAMPLER_HANDLE  m_Sampler;
+	GO_SAMPLER* m_Sampler;
 	int m_Instances;
 	bool m_Tremulant;
 	std::vector<attack_load_info> m_AttackInfo;
