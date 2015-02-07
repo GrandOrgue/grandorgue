@@ -370,6 +370,31 @@ void GOrgueSound::ResetMeters()
 		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 }
 
+void GOrgueSound::UpdateMeter()
+{
+	/* Update meters */
+	meter_counter += m_SamplesPerBuffer;
+	if (meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
+	{
+		METER_INFO meter_info;
+		m_SoundEngine.GetMeterInfo(&meter_info);
+
+		// polyphony
+		int n = 0xff & ((33 * meter_info.current_polyphony) / m_SoundEngine.GetHardPolyphony());
+		n <<= 8;
+		// right channel
+		n |= 0xff & (lrint(32.50000000000001 * meter_info.meter_right));
+		n <<= 8;
+		// left  channel
+		n |= 0xff & (lrint(32.50000000000001 * meter_info.meter_left));
+
+		wxCommandEvent event(wxEVT_METERS, 0);
+		event.SetInt(n);
+		if (wxTheApp->GetTopWindow())
+			wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+	}
+}
+
 bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsigned int n_frames)
 {
 	if (n_frames != m_SamplesPerBuffer)
@@ -385,28 +410,7 @@ bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsign
 	if (dev_index == 0)
 	{
 		m_SoundEngine.NextPeriod();
-
-		/* Update meters */
-		meter_counter += n_frames;
-		if (meter_counter >= 6144)	// update 44100 / (N / 2) = ~14 times per second
-		{
-			METER_INFO meter_info;
-			m_SoundEngine.GetMeterInfo(&meter_info);
-
-			// polyphony
-			int n = 0xff & ((33 * meter_info.current_polyphony) / m_SoundEngine.GetHardPolyphony());
-			n <<= 8;
-			// right channel
-			n |= 0xff & (lrint(32.50000000000001 * meter_info.meter_right));
-			n <<= 8;
-			// left  channel
-			n |= 0xff & (lrint(32.50000000000001 * meter_info.meter_left));
-
-			wxCommandEvent event(wxEVT_METERS, 0);
-			event.SetInt(n);
-			if (wxTheApp->GetTopWindow())
-				wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-		}
+		UpdateMeter();
 
 		GOMutexLocker thread_locker(m_thread_lock);
 		for(unsigned i = 0; i < m_Threads.size(); i++)
