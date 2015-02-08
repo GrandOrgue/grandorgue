@@ -200,6 +200,7 @@ void GOrgueSound::StartStreams()
 	{
 		GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
 		m_AudioOutputs[i].wait = false;
+		m_AudioOutputs[i].waiting = true;
 	}
 
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
@@ -215,6 +216,7 @@ void GOrgueSound::CloseSound()
 
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 	{
+		m_AudioOutputs[i].waiting = false;
 		m_AudioOutputs[i].wait = false;
 		m_AudioOutputs[i].condition.Signal();
 	}
@@ -406,12 +408,8 @@ bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsign
 	GO_SOUND_OUTPUT* device = &m_AudioOutputs[dev_index];
 	GOMutexLocker locker(device->mutex);
 
-	if (device->wait)
-	{
-		device->waiting = true;
+	if (device->wait && device->waiting)
 		device->condition.Wait();
-		device->waiting = false;
-	}
 
 	m_SoundEngine.GetAudioOutput(output_buffer, n_frames, dev_index);
 	device->wait = true;
