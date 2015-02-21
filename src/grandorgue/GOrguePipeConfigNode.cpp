@@ -48,6 +48,12 @@ void GOrguePipeConfigNode::SetName(wxString name)
 	m_Name = name;
 }
 
+void GOrguePipeConfigNode::Init(GOrgueConfigReader& cfg, wxString group, wxString prefix)
+{
+	m_organfile->RegisterSaveableObject(this);
+	m_PipeConfig.Init(cfg, group, prefix);
+}
+
 void GOrguePipeConfigNode::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	m_organfile->RegisterSaveableObject(this);

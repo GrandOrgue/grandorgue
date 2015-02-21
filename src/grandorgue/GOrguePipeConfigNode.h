@@ -39,6 +39,7 @@ public:
 	GOrguePipeConfigNode(GOrguePipeConfigNode* parent, GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback);
 	virtual ~GOrguePipeConfigNode();
 
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 
 	const wxString& GetName();

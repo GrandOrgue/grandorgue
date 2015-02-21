@@ -55,6 +55,7 @@ private:
 public:
 	GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback);
 
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void Save(GOrgueConfigWriter& cfg);
 
