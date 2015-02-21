@@ -44,6 +44,7 @@
 #include "GOrgueManual.h"
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrgueMetronome.h"
 #include "GOrguePanelCreator.h"
 #include "GOrguePath.h"
 #include "GOrguePiston.h"
@@ -314,6 +315,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_setter = new GOrgueSetter(this);
 	m_panelcreators.push_back(new GOrgueCouplerPanel(this));
 	m_panelcreators.push_back(new GOrgueFloatingPanel(this));
+	m_panelcreators.push_back(new GOrgueMetronome(this));
 	m_panelcreators.push_back(m_setter);
 
 	for(unsigned i = 0; i < m_panelcreators.size(); i++)
