@@ -35,6 +35,7 @@ GOrguePiston::GOrguePiston(GrandOrgueFile* organfile) :
 	GOrguePushbutton(organfile),
 	drawstop(NULL)
 {
+	m_organfile->RegisterControlChangedHandler(this);
 }
 
 void GOrguePiston::Load(GOrgueConfigReader& cfg, wxString group)

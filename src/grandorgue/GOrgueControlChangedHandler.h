@@ -19,30 +19,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEPISTON_H
-#define GORGUEPISTON_H
+#ifndef GORGUECONTROLCHANGEDHANDLER_H
+#define GORGUECONTROLCHANGEDHANDLER_H
 
-#include "GOrgueControlChangedHandler.h"
-#include "GOrguePushbutton.h"
-
-class GOrgueButton;
-class GOrgueConfigReader;
-class GOrgueConfigWriter;
-
-class GOrguePiston : public GOrguePushbutton, private GOrgueControlChangedHandler
+class GOrgueControlChangedHandler
 {
-private:
-	GOrgueButton* drawstop;
-
-	void ControlChanged(void* control);
-
 public:
+	virtual ~GOrgueControlChangedHandler()
+	{
+	}
 
-	GOrguePiston(GrandOrgueFile* organfile);
-	void Load(GOrgueConfigReader& cfg, wxString group);
-	void Push();
-
-	wxString GetMidiType();
+	virtual void ControlChanged(void* control) = 0;
 };
 
-#endif /* GORGUEPISTON_H */
+#endif

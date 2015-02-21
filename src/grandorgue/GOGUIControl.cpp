@@ -33,6 +33,7 @@ GOGUIControl::GOGUIControl(GOGUIPanel* panel,void* control) :
 {
 	m_metrics = panel->GetDisplayMetrics();
 	m_layout = panel->GetLayoutEngine();
+	m_panel->GetOrganFile()->RegisterControlChangedHandler(this);
 }
 
 GOGUIControl::~GOGUIControl()

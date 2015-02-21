@@ -148,7 +148,6 @@ public:
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void AllNotesOff();
-	void ControlChanged(void* control);
 	void UpdateTremulant(GOrgueTremulant* tremulant);
 	void UpdateVolume();
 	void Modified();
