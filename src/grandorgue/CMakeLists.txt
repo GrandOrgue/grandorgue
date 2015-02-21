@@ -306,6 +306,7 @@ GOrgueLog.cpp
 GOrgueLogWindow.cpp
 GOrgueManual.cpp
 GOrgueMemoryPool.cpp
+GOrgueMetronome.cpp
 GOrgueMidi.cpp
 GOrgueMidiEvent.cpp
 GOrgueMidiFileReader.cpp
