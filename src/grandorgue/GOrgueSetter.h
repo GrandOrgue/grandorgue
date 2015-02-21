@@ -27,6 +27,7 @@
 #include "GOrgueEnclosure.h"
 #include "GOrgueLabel.h"
 #include "GOrguePlaybackStateHandler.h"
+#include "GOrguePanelCreator.h"
 #include "GOrgueSetterButtonCallback.h"
 
 class GOGUIControl;
@@ -47,7 +48,8 @@ typedef enum
 	SETTER_SCOPED
 } SetterType;
 
-class GOrgueSetter : private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler, private GOrgueControlChangedHandler
+class GOrgueSetter : private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler, private GOrgueControlChangedHandler,
+	public GOrguePanelCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -82,18 +84,20 @@ private:
 	void StartPlayback();
 	void PrepareRecording();
 
-public:
-	GOrgueSetter(GrandOrgueFile* organfile);
-	virtual ~GOrgueSetter();
-
 	GOGUIPanel* CreateGeneralsPanel(GOrgueConfigReader& cfg);
 	GOGUIPanel* CreateSetterPanel(GOrgueConfigReader& cfg);
 	GOGUIPanel* CreateCrescendoPanel(GOrgueConfigReader& cfg);
 	GOGUIPanel* CreateDivisionalPanel(GOrgueConfigReader& cfg);
 	GOGUIPanel* CreateMasterPanel(GOrgueConfigReader& cfg);
-	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
+
+public:
+	GOrgueSetter(GrandOrgueFile* organfile);
+	virtual ~GOrgueSetter();
 
 	void Load(GOrgueConfigReader& cfg);
+	void CreatePanels(GOrgueConfigReader& cfg);
+	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
+
 	void Update();
 
 	bool StoreInvisibleObjects();
