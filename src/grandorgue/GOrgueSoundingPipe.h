@@ -40,6 +40,7 @@ private:
 	std::vector<attack_load_info> m_AttackInfo;
 	std::vector<release_load_info> m_ReleaseInfo;
 	wxString m_Filename;
+	bool m_UseSampleset;
 
 	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
 	int m_SamplerGroupID;
@@ -83,6 +84,7 @@ private:
 public:
 	GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume, bool retune);
 
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString prefix, wxString filename);
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
 	void SetTemperament(const GOrgueTemperament& temperament);
 };
