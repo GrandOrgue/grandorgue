@@ -283,6 +283,7 @@ GOrgueConfigWriter.cpp
 GOrgueBitmapCache.cpp
 GOrgueButton.cpp
 GOrgueCoupler.cpp
+GOrgueCouplerPanel.cpp
 GOrgueDC.cpp
 GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp

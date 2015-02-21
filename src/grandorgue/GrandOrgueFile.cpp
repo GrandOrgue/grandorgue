@@ -31,6 +31,7 @@
 #include "GOrgueConfigReaderDB.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
+#include "GOrgueCouplerPanel.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueDocument.h"
@@ -313,6 +314,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_setter = new GOrgueSetter(this);
 	m_setter->Load(cfg);
 
+	m_panelcreators.push_back(new GOrgueCouplerPanel(this));
 	m_panelcreators.push_back(new GOrgueFloatingPanel(this));
 
 	for(unsigned i = 0; i < m_panelcreators.size(); i++)
@@ -332,20 +334,15 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		m_panels[i + 1]->Load(cfg, buffer);
 	}
 
-	for (unsigned i = m_FirstManual; i <= NumberOfManuals; i++)
-		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
+	for(unsigned i = 0; i < m_panelcreators.size(); i++)
+		m_panelcreators[i]->CreatePanels(cfg);
+
 	m_panels.push_back(m_setter->CreateCrescendoPanel(cfg));
 	m_panels.push_back(m_setter->CreateDivisionalPanel(cfg));
 	m_panels.push_back(m_setter->CreateGeneralsPanel(cfg));
 	m_panels.push_back(m_setter->CreateSetterPanel(cfg));
 
 	m_panels.push_back(m_setter->CreateMasterPanel(cfg));
-
-	for (unsigned i = m_ODFManualCount; i < m_manual.size(); i++)
-		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
-
-	for(unsigned i = 0; i < m_panelcreators.size(); i++)
-		m_panelcreators[i]->CreatePanels(cfg);
 
 	for(unsigned i = 0; i < m_panels.size(); i++)
 		m_panels[i]->Layout();
