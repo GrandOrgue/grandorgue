@@ -51,10 +51,11 @@ void GOrgueEnclosure::Init(GOrgueConfigReader& cfg, wxString group, wxString Nam
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
+	m_Name = Name;
 	Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, false, def_value));
 	m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
-	m_AmpMinimumLevel = 0;
+	m_AmpMinimumLevel = 1;
 }
 
 void GOrgueEnclosure::Load(GOrgueConfigReader& cfg, wxString group, int enclosure_nb)
