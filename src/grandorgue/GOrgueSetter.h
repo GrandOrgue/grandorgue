@@ -23,6 +23,7 @@
 #define GORGUESETTER_H
 
 #include "ptrvector.h"
+#include "GOrgueControlChangedHandler.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueLabel.h"
 #include "GOrguePlaybackStateHandler.h"
@@ -46,7 +47,7 @@ typedef enum
 	SETTER_SCOPED
 } SetterType;
 
-class GOrgueSetter : private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler
+class GOrgueSetter : private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler, private GOrgueControlChangedHandler
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -74,6 +75,8 @@ private:
 
 	void SetterButtonChanged(GOrgueSetterButton* button);
 
+	void ControlChanged(void* control);
+
 	void AbortPlayback();
 	void PreparePlayback();
 	void StartPlayback();
@@ -94,7 +97,6 @@ public:
 
 	void Load(GOrgueConfigReader& cfg);
 	void Update();
-	void ControlChanged(void* control);
 
 	bool StoreInvisibleObjects();
 	bool IsSetterActive();

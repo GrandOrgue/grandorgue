@@ -28,6 +28,7 @@
 class GOrgueCacheObject;
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
+class GOrgueControlChangedHandler;
 class GOrgueEventHandler;
 class GOrgueMidiConfigurator;
 class GOrgueMidiEvent;
@@ -38,6 +39,7 @@ class GOrgueEventDistributor
 {
 private:
 	std::vector<GOrgueEventHandler*> m_handler;
+	std::vector<GOrgueControlChangedHandler*> m_ControlChangedHandler;
 	std::vector<GOrguePlaybackStateHandler*> m_PlaybackStateHandler;
 	std::vector<GOrgueSaveableObject*> m_SaveableObjects;
 	std::vector<GOrgueMidiConfigurator*> m_MidiConfigurator;
@@ -63,6 +65,7 @@ public:
 
 	void RegisterEventHandler(GOrgueEventHandler* handler);
 	void RegisterPlaybackStateHandler(GOrguePlaybackStateHandler* handler);
+	void RegisterControlChangedHandler(GOrgueControlChangedHandler* handler);
 	void RegisterCacheObject(GOrgueCacheObject* obj);
 	void RegisterSaveableObject(GOrgueSaveableObject* obj);
 	void RegisterMidiConfigurator(GOrgueMidiConfigurator* obj);
@@ -74,6 +77,8 @@ public:
 
 	unsigned GetCacheObjectCount();
 	GOrgueCacheObject* GetCacheObject(unsigned index);
+
+	void ControlChanged(void* control);
 };
 
 #endif

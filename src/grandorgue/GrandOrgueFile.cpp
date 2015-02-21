@@ -1224,17 +1224,6 @@ wxString GrandOrgueFile::GetTemperament()
 	return m_Temperament;
 }
 
-void GrandOrgueFile::ControlChanged(void* control)
-{
-	if (!control)
-		return;
-	for(unsigned i = 0; i < m_panels.size(); i++)
-		m_panels[i]->ControlChanged(control);
-	for(unsigned i = 0; i < m_piston.size(); i++)
-		m_piston[i]->ControlChanged(control);
-	m_setter->ControlChanged(control);
-}
-
 void GrandOrgueFile::UpdateTremulant(GOrgueTremulant* tremulant)
 {
 	for(unsigned i = 0; i < m_windchest.size(); i++)

@@ -22,12 +22,14 @@
 #include "GOrgueEventDistributor.h"
 
 #include "GOrgueCacheObject.h"
+#include "GOrgueControlChangedHandler.h"
 #include "GOrgueEventHandler.h"
 #include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
 
 GOrgueEventDistributor::GOrgueEventDistributor() :
 	m_handler(),
+	m_ControlChangedHandler(),
 	m_PlaybackStateHandler(),
 	m_SaveableObjects(),
 	m_MidiConfigurator(),
@@ -62,6 +64,11 @@ void GOrgueEventDistributor::RegisterMidiConfigurator(GOrgueMidiConfigurator* ob
 void GOrgueEventDistributor::RegisterPlaybackStateHandler(GOrguePlaybackStateHandler* handler)
 {
 	m_PlaybackStateHandler.push_back(handler);
+}
+
+void GOrgueEventDistributor::RegisterControlChangedHandler(GOrgueControlChangedHandler* handler)
+{
+	m_ControlChangedHandler.push_back(handler);
 }
 
 unsigned GOrgueEventDistributor::GetMidiConfiguratorCount()
@@ -147,3 +154,10 @@ void GOrgueEventDistributor::PrepareRecording()
 		m_PlaybackStateHandler[i]->PrepareRecording();
 }
 
+void GOrgueEventDistributor::ControlChanged(void* control)
+{
+	if (!control)
+		return;
+	for(unsigned i = 0; i < m_ControlChangedHandler.size(); i++)
+		m_ControlChangedHandler[i]->ControlChanged(control);
+}

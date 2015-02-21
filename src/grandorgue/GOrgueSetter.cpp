@@ -367,6 +367,7 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	SetCrescendoType(m_crescendobank);
 
 	m_organfile->RegisterPlaybackStateHandler(this);
+	m_organfile->RegisterControlChangedHandler(this);
 }
 
 GOrgueSetter::~GOrgueSetter()
