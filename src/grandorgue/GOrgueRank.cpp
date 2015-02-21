@@ -64,6 +64,31 @@ void GOrgueRank::Resize()
 		m_Velocities[i].resize(m_StopCount);
 }
 
+void GOrgueRank::Init(GOrgueConfigReader& cfg, wxString group, wxString name, int first_midi_note_number, unsigned windchest)
+{
+	m_organfile->RegisterSaveableObject(this);
+	m_group = group;
+
+	m_FirstMidiNoteNumber = first_midi_note_number;
+	m_Name = name;
+
+	m_PipeConfig.Init(cfg, group, wxEmptyString);
+	m_WindchestGroup = windchest;
+	m_Percussive = false;
+	m_HarmonicNumber = 8;
+	m_PitchCorrection = 0;
+	m_MinVolume = 100;
+	m_MaxVolume = 100;
+	m_RetuneRank = false;
+
+	m_organfile->GetWindchest(m_WindchestGroup - 1)->AddRank(this);
+
+	m_Pipes.clear();
+	m_sender.Load(cfg, group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
+	m_PipeConfig.SetName(GetName());
+	Resize();
+}
+
 void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_note_number)
 {
 	m_organfile->RegisterSaveableObject(this);
@@ -106,6 +131,12 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 	}
 	m_sender.Load(cfg, group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
 	m_PipeConfig.SetName(GetName());
+	Resize();
+}
+
+void GOrgueRank::AddPipe(GOrguePipe* pipe)
+{
+	m_Pipes.push_back(pipe);
 	Resize();
 }
 
