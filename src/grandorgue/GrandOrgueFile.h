@@ -33,6 +33,7 @@
 #include <wx/string.h>
 #include <vector>
 
+class GOGUIControl;
 class GOGUIPanel;
 class GOrgueCache;
 class GOrgueDivisionalCoupler;
@@ -42,6 +43,7 @@ class GOrgueManual;
 class GOrgueMidi;
 class GOrgueMidiEvent;
 class GOrgueMidiListener;
+class GOrguePanelCreator;
 class GOrguePiston;
 class GOrgueProgressDialog;
 class GOrguePushbutton;
@@ -103,6 +105,7 @@ private:
 	ptr_vector<GOrgueRank> m_ranks;
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
+	ptr_vector<GOrguePanelCreator> m_panelcreators;
 	GOStringBoolMap m_UsedSections;
 
 	GOSoundEngine* m_soundengine;
@@ -179,6 +182,7 @@ public:
 	unsigned AddEnclosure(GOrgueEnclosure* enclosure);
 	GOGUIPanel* GetPanel(unsigned index);
 	unsigned GetPanelCount();
+	void AddPanel(GOGUIPanel* panel);
 	GOrgueMemoryPool& GetMemoryPool();
 	GOrgueSettings& GetSettings();
 	GOrgueBitmapCache& GetBitmapCache();
@@ -204,6 +208,8 @@ public:
 
 	void SetIgnorePitch(bool ignorepitch);
 	bool GetIgnorePitch();
+
+	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
 	
 	/* TODO: can somebody figure out what this thing is */
 	bool IsCustomized();

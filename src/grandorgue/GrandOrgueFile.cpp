@@ -42,6 +42,7 @@
 #include "GOrgueManual.h"
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrguePanelCreator.h"
 #include "GOrguePath.h"
 #include "GOrguePiston.h"
 #include "GOrgueProgressDialog.h"
@@ -100,6 +101,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_ranks(),
 	m_manual(),
 	m_panels(),
+	m_panelcreators(),
 	m_UsedSections(),
 	m_soundengine(0),
 	m_midi(0),
@@ -310,6 +312,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_setter = new GOrgueSetter(this);
 	m_setter->Load(cfg);
 
+	for(unsigned i = 0; i < m_panelcreators.size(); i++)
+		m_panelcreators[i]->Load(cfg);
+
 	m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"));
 	m_TemperamentLabel.Load(cfg, wxT("SetterMasterTemperament"));
 
@@ -331,11 +336,14 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_panels.push_back(m_setter->CreateGeneralsPanel(cfg));
 	m_panels.push_back(m_setter->CreateSetterPanel(cfg));
 
+	m_panels.push_back(m_setter->CreateMasterPanel(cfg));
+
 	for (unsigned i = m_ODFManualCount; i < m_manual.size(); i++)
 		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
 	m_panels.push_back(m_setter->CreateFloatingPanel(cfg));
 
-	m_panels.push_back(m_setter->CreateMasterPanel(cfg));
+	for(unsigned i = 0; i < m_panelcreators.size(); i++)
+		m_panelcreators[i]->CreatePanels(cfg);
 
 	for(unsigned i = 0; i < m_panels.size(); i++)
 		m_panels[i]->Layout();
@@ -781,6 +789,17 @@ bool GrandOrgueFile::Export(const wxString& cmb)
 	return true;
 }
 
+GOGUIControl* GrandOrgueFile::CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel)
+{
+	for(unsigned i = 0; i < m_panelcreators.size(); i++)
+	{
+		GOGUIControl* c = m_panelcreators[i]->CreateGUIElement(cfg, group, panel);
+		if (c)
+			return c;
+	}
+	return NULL;
+}
+
 GOrgueDocument* GrandOrgueFile::GetDocument()
 {
 	return m_doc;
@@ -947,6 +966,11 @@ GOGUIPanel* GrandOrgueFile::GetPanel(unsigned index)
 unsigned GrandOrgueFile::GetPanelCount()
 {
 	return m_panels.size();
+}
+
+void GrandOrgueFile::AddPanel(GOGUIPanel* panel)
+{
+	m_panels.push_back(panel);
 }
 
 const wxString& GrandOrgueFile::GetChurchName()
