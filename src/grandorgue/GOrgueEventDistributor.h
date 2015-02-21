@@ -31,12 +31,14 @@ class GOrgueConfigWriter;
 class GOrgueEventHandler;
 class GOrgueMidiConfigurator;
 class GOrgueMidiEvent;
+class GOrguePlaybackStateHandler;
 class GOrgueSaveableObject;
 
 class GOrgueEventDistributor
 {
 private:
 	std::vector<GOrgueEventHandler*> m_handler;
+	std::vector<GOrguePlaybackStateHandler*> m_PlaybackStateHandler;
 	std::vector<GOrgueSaveableObject*> m_SaveableObjects;
 	std::vector<GOrgueMidiConfigurator*> m_MidiConfigurator;
 	std::vector<GOrgueCacheObject*> m_CacheObjects;
@@ -50,11 +52,17 @@ protected:
 	void ResolveReferences();
 	void UpdateHash(SHA_CTX& ctx);
 
+	void AbortPlayback();
+	void PreparePlayback();
+	void StartPlayback();
+	void PrepareRecording();
+
 public:
 	GOrgueEventDistributor();
 	~GOrgueEventDistributor();
 
 	void RegisterEventHandler(GOrgueEventHandler* handler);
+	void RegisterPlaybackStateHandler(GOrguePlaybackStateHandler* handler);
 	void RegisterCacheObject(GOrgueCacheObject* obj);
 	void RegisterSaveableObject(GOrgueSaveableObject* obj);
 	void RegisterMidiConfigurator(GOrgueMidiConfigurator* obj);

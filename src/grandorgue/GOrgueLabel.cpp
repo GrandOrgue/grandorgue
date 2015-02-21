@@ -32,6 +32,7 @@ GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
 	m_sender(organfile, MIDI_SEND_LABEL)
 {
 	m_organfile->RegisterMidiConfigurator(this);
+	m_organfile->RegisterPlaybackStateHandler(this);
 }
 
 GOrgueLabel::~GOrgueLabel()
@@ -69,14 +70,17 @@ void GOrgueLabel::SetName(wxString name)
 	m_organfile->ControlChanged(this);
 }
 
-void GOrgueLabel::Abort()
+void GOrgueLabel::AbortPlayback()
 {
 	m_sender.SetLabel(wxEmptyString);
 }
 
 void GOrgueLabel::PreparePlayback()
 {
-	m_sender.SetLabel(m_Name);
+}
+
+void GOrgueLabel::StartPlayback()
+{
 }
 
 void GOrgueLabel::PrepareRecording()

@@ -66,13 +66,15 @@ private:
 	void ChangeState(bool on);
 	void SetupCombinationState();
 
+	void PreparePlayback();
+	void StartPlayback();
+
 public:
 
 	GOrgueCoupler(GrandOrgueFile* organfile, unsigned sourceManual);
 	void Init(GOrgueConfigReader& cfg, wxString group, wxString name, bool unison_off, bool recursive, int keyshift, int dest_manual, GOrgueCouplerType coupler_type);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void SetKey(unsigned note, const std::vector<unsigned>& velocities, const std::vector<GOrgueCoupler*>& couplers);
-	void PreparePlayback();
 	bool IsIntermanual();
 	bool IsUnisonOff();
 

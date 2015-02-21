@@ -24,6 +24,7 @@
 
 #include "GOrgueMidiConfigurator.h"
 #include "GOrgueMidiSender.h"
+#include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 
@@ -31,7 +32,7 @@ class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GrandOrgueFile;
 
-class GOrgueLabel : private GOrgueSaveableObject, public GOrgueMidiConfigurator
+class GOrgueLabel : private GOrgueSaveableObject, private GOrguePlaybackStateHandler, public GOrgueMidiConfigurator
 {
 protected:
 	wxString m_Name;
@@ -41,6 +42,11 @@ protected:
 
 	void Save(GOrgueConfigWriter& cfg);
 
+	void AbortPlayback();
+	void PreparePlayback();
+	void StartPlayback();
+	void PrepareRecording();
+
 public:
 	GOrgueLabel(GrandOrgueFile* organfile);
 	virtual ~GOrgueLabel();
@@ -48,9 +54,6 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	const wxString& GetName();
 	void SetName(wxString name);
-	virtual void Abort();
-	virtual void PreparePlayback();
-	virtual void PrepareRecording();
 
 	wxString GetMidiType();
 	wxString GetMidiName();

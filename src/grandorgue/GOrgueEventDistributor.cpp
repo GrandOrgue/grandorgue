@@ -23,10 +23,12 @@
 
 #include "GOrgueCacheObject.h"
 #include "GOrgueEventHandler.h"
+#include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
 
 GOrgueEventDistributor::GOrgueEventDistributor() :
 	m_handler(),
+	m_PlaybackStateHandler(),
 	m_SaveableObjects(),
 	m_MidiConfigurator(),
 	m_CacheObjects()
@@ -55,6 +57,11 @@ void GOrgueEventDistributor::RegisterSaveableObject(GOrgueSaveableObject* obj)
 void GOrgueEventDistributor::RegisterMidiConfigurator(GOrgueMidiConfigurator* obj)
 {
 	m_MidiConfigurator.push_back(obj);
+}
+
+void GOrgueEventDistributor::RegisterPlaybackStateHandler(GOrguePlaybackStateHandler* handler)
+{
+	m_PlaybackStateHandler.push_back(handler);
 }
 
 unsigned GOrgueEventDistributor::GetMidiConfiguratorCount()
@@ -115,3 +122,28 @@ GOrgueCacheObject* GOrgueEventDistributor::GetCacheObject(unsigned index)
 	else
 		return NULL;
 }
+
+void GOrgueEventDistributor::AbortPlayback()
+{
+	for(unsigned i = 0; i < m_PlaybackStateHandler.size(); i++)
+		m_PlaybackStateHandler[i]->AbortPlayback();
+}
+
+void GOrgueEventDistributor::PreparePlayback()
+{
+	for(unsigned i = 0; i < m_PlaybackStateHandler.size(); i++)
+		m_PlaybackStateHandler[i]->PreparePlayback();
+}
+
+void GOrgueEventDistributor::StartPlayback()
+{
+	for(unsigned i = 0; i < m_PlaybackStateHandler.size(); i++)
+		m_PlaybackStateHandler[i]->StartPlayback();
+}
+
+void GOrgueEventDistributor::PrepareRecording()
+{
+	for(unsigned i = 0; i < m_PlaybackStateHandler.size(); i++)
+		m_PlaybackStateHandler[i]->PrepareRecording();
+}
+

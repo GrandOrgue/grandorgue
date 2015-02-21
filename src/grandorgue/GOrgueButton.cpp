@@ -41,6 +41,7 @@ GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_ty
 {
 	m_organfile->RegisterEventHandler(this);
 	m_organfile->RegisterMidiConfigurator(this);
+	m_organfile->RegisterPlaybackStateHandler(this);
 }
 
 GOrgueButton::~GOrgueButton()
@@ -121,7 +122,7 @@ void GOrgueButton::Set(bool on)
 {
 }
 
-void GOrgueButton::Abort()
+void GOrgueButton::AbortPlayback()
 {
 	m_sender.SetDisplay(false);
 }
@@ -129,7 +130,10 @@ void GOrgueButton::Abort()
 void GOrgueButton::PreparePlayback()
 {
 	m_midi.PreparePlayback();
-	m_sender.SetDisplay(m_Engaged);
+}
+
+void GOrgueButton::StartPlayback()
+{
 }
 
 void GOrgueButton::PrepareRecording()

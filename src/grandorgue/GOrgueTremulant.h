@@ -58,12 +58,13 @@ private:
 	void UpdateHash(SHA_CTX& ctx);
 	const wxString& GetLoadTitle();
 
+	void AbortPlayback();
+	void StartPlayback();
+
 public:
 	GOrgueTremulant(GrandOrgueFile* organfile);
 	~GOrgueTremulant();
 	void Load(GOrgueConfigReader& cfg, wxString group, int sampler_group_id);
-	void Abort();
-	void PreparePlayback();
 	GOrgueTremulantType GetTremulantType();
 
 	wxString GetMidiType();

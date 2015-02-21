@@ -365,6 +365,8 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 
 	SetSetterType(m_SetterType);
 	SetCrescendoType(m_crescendobank);
+
+	m_organfile->RegisterPlaybackStateHandler(this);
 }
 
 GOrgueSetter::~GOrgueSetter()
@@ -1202,16 +1204,8 @@ void GOrgueSetter::SetterButtonChanged(GOrgueSetterButton* button)
 			}
 }
 
-void GOrgueSetter::Abort()
+void GOrgueSetter::AbortPlayback()
 {
-	m_PosDisplay.Abort();
-	m_BankDisplay.Abort();
-	m_CrescendoDisplay.Abort();
-	m_TransposeDisplay.Abort();
-	m_NameDisplay.Abort();
-	m_swell.Abort();
-	for(unsigned i = 0; i < m_button.size(); i++)
-		m_button[i]->Abort();
 }
 
 void GOrgueSetter::PreparePlayback()
@@ -1219,10 +1213,8 @@ void GOrgueSetter::PreparePlayback()
 	wxString buffer;
 	buffer.Printf(wxT("%03d"), m_pos);
 	m_PosDisplay.SetName(buffer);
-	m_PosDisplay.PreparePlayback();
 
 	m_NameDisplay.SetName(m_organfile->GetChurchName());
-	m_NameDisplay.PreparePlayback();
 
 	wxCommandEvent event(wxEVT_SETVALUE, ID_METER_FRAME_SPIN);
 	event.SetInt(m_pos);
@@ -1230,31 +1222,19 @@ void GOrgueSetter::PreparePlayback()
 
 	buffer.Printf(wxT("%d"), m_crescendopos + 1);
 	m_CrescendoDisplay.SetName(buffer);
-	m_CrescendoDisplay.PreparePlayback();
 
 	buffer.Printf(wxT("%c"), m_bank + wxT('A'));
 	m_BankDisplay.SetName(buffer);
-	m_BankDisplay.PreparePlayback();
 
 	UpdateTranspose();
-	m_TransposeDisplay.PreparePlayback();
+}
 
-	m_swell.PreparePlayback();
-
-	for(unsigned i = 0; i < m_button.size(); i++)
-		m_button[i]->PreparePlayback();
+void GOrgueSetter::StartPlayback()
+{
 }
 
 void GOrgueSetter::PrepareRecording()
 {
-	m_PosDisplay.PrepareRecording();
-	m_CrescendoDisplay.PrepareRecording();
-	m_BankDisplay.PrepareRecording();
-	m_TransposeDisplay.PrepareRecording();
-	m_swell.PrepareRecording();
-
-	for(unsigned i = 0; i < m_button.size(); i++)
-		m_button[i]->PrepareRecording();
 }
 
 void GOrgueSetter::Update()

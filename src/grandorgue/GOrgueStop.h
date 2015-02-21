@@ -50,13 +50,15 @@ private:
 	void ChangeState(bool on);
 	void SetupCombinationState();
 
+	void AbortPlayback();
+	void PreparePlayback();
+	void StartPlayback();
+
 public:
 	GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number);
 	GOrgueRank* GetRank(unsigned index);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void SetKey(unsigned note, unsigned velocity);
-	void Abort();
-	void PreparePlayback();
 	~GOrgueStop(void);
 
 	unsigned IsAuto() const;

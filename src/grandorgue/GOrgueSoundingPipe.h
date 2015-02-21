@@ -77,12 +77,13 @@ private:
 	void UpdateTuning();
 	void UpdateAudioGroup();
 
+	void AbortPlayback();
+	void PreparePlayback();
+
 public:
 	GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume, bool retune);
 
 	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
-	void PreparePlayback();
-	void Abort();
 	void SetTemperament(const GOrgueTemperament& temperament);
 };
 

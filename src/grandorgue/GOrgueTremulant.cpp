@@ -135,15 +135,15 @@ void GOrgueTremulant::ChangeState(bool on)
 	}
 }
 
-void GOrgueTremulant::Abort()
+void GOrgueTremulant::AbortPlayback()
 {
 	m_PlaybackHandle = NULL;
-	GOrgueButton::Abort();
+	GOrgueButton::AbortPlayback();
 }
 
-void GOrgueTremulant::PreparePlayback()
+void GOrgueTremulant::StartPlayback()
 {
-	GOrgueDrawstop::PreparePlayback();
+	GOrgueDrawstop::StartPlayback();
 
 	if (IsActive() && m_TremulantType == GOSynthTrem)
 	{

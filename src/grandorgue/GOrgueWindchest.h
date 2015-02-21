@@ -22,6 +22,7 @@
 #ifndef GORGUEWINDCHEST_H
 #define GORGUEWINDCHEST_H
 
+#include "GOrguePlaybackStateHandler.h"
 #include <wx/string.h>
 #include <vector>
 
@@ -32,7 +33,7 @@ class GOrgueRank;
 class GOrgueTremulant;
 class GrandOrgueFile;
 
-class GOrgueWindchest
+class GOrgueWindchest : private GOrguePlaybackStateHandler
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -43,6 +44,11 @@ private:
 	std::vector<GOrgueRank*> m_ranks;
 	std::vector<GOrguePipeWindchestCallback*> m_pipes;
 
+	void AbortPlayback();
+	void StartPlayback();
+	void PreparePlayback();
+	void PrepareRecording();
+
 public:
 	GOrgueWindchest(GrandOrgueFile* organfile);
 
@@ -51,7 +57,6 @@ public:
 	void UpdateTremulant(GOrgueTremulant* tremulant);
 	void UpdateVolume();
 	float GetVolume();
-	void PreparePlayback();
 	unsigned GetTremulantCount();
 	unsigned GetTremulantId(unsigned index);
 	unsigned GetRankCount();

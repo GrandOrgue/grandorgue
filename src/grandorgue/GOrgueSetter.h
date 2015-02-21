@@ -25,6 +25,7 @@
 #include "ptrvector.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueLabel.h"
+#include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSetterButtonCallback.h"
 
 class GOGUIControl;
@@ -45,7 +46,7 @@ typedef enum
 	SETTER_SCOPED
 } SetterType;
 
-class GOrgueSetter : private GOrgueSetterButtonCallback
+class GOrgueSetter : private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -73,6 +74,11 @@ private:
 
 	void SetterButtonChanged(GOrgueSetterButton* button);
 
+	void AbortPlayback();
+	void PreparePlayback();
+	void StartPlayback();
+	void PrepareRecording();
+
 public:
 	GOrgueSetter(GrandOrgueFile* organfile);
 	virtual ~GOrgueSetter();
@@ -87,9 +93,6 @@ public:
 	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
 
 	void Load(GOrgueConfigReader& cfg);
-	void Abort();
-	void PreparePlayback();
-	void PrepareRecording();
 	void Update();
 	void ControlChanged(void* control);
 

@@ -26,6 +26,7 @@
 #include "GOrgueMidiConfigurator.h"
 #include "GOrguePipeConfigTreeNode.h"
 #include "GOrgueMidiSender.h"
+#include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
 
 class GOrguePipe;
@@ -33,7 +34,7 @@ class GOrgueStop;
 class GOrgueTemperament;
 class GrandOrgueFile;
 
-class GOrgueRank : private GOrgueSaveableObject, public GOrgueMidiConfigurator
+class GOrgueRank : private GOrgueSaveableObject, public GOrgueMidiConfigurator, private GOrguePlaybackStateHandler
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -57,6 +58,11 @@ private:
 
 	void Save(GOrgueConfigWriter& cfg);
 
+	void AbortPlayback();
+	void PreparePlayback();
+	void StartPlayback();
+	void PrepareRecording();
+
 public:
 	GOrgueRank(GrandOrgueFile* organfile);
 	~GOrgueRank();
@@ -67,8 +73,6 @@ public:
 	void SetKey(int note, unsigned velocity, unsigned stopID);
 	GOrguePipe* GetPipe(unsigned index);
 	unsigned GetPipeCount();
-	void Abort();
-	void PreparePlayback();
 	GOrguePipeConfigNode& GetPipeConfig();
 	void SetTemperament(const GOrgueTemperament& temperament);
 	const wxString& GetName();
