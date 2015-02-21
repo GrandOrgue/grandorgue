@@ -48,6 +48,32 @@ GOrguePipeConfig::GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCa
 {
 }
 
+void GOrguePipeConfig::Init(GOrgueConfigReader& cfg, wxString group, wxString prefix)
+{
+	m_Group = group;
+	m_NamePrefix = prefix;
+	m_AudioGroup = cfg.ReadString(CMBSetting, group, prefix + wxT("AudioGroup"), false);
+	m_DefaultAmplitude = 100;
+	m_Amplitude = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Amplitude"), 0, 1000, false, m_DefaultAmplitude);
+	m_DefaultGain = 0;
+	m_Gain = cfg.ReadFloat(CMBSetting, group, prefix + wxT("UserGain"), -120, 40, false, m_DefaultGain);
+	m_DefaultTuning = 0;
+	m_Tuning = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Tuning"), -1200, 1200, false, m_DefaultTuning);
+	m_DefaultDelay = 0;
+	m_Delay = cfg.ReadInteger(CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
+	m_BitsPerSample = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("BitsPerSample"), -1, 24, false, -1);
+	if (m_BitsPerSample != 8 && m_BitsPerSample != 12 && m_BitsPerSample != 16 && m_BitsPerSample != 20 && m_BitsPerSample != 24)
+		m_BitsPerSample = -1;
+	m_Compress = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
+	m_Channels = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("Channels"), -1, 2, false, -1);
+	m_LoopLoad = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("LoopLoad"), -1, 2, false, -1);
+	m_AttackLoad = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("AttackLoad"), -1, 1, false, -1);
+	m_ReleaseLoad = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
+	m_Callback->UpdateAmplitude();
+	m_Callback->UpdateTuning();
+	m_Callback->UpdateAudioGroup();
+}
+
 void GOrguePipeConfig::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	m_Group = group;
