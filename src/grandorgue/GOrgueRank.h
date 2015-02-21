@@ -60,7 +60,9 @@ private:
 public:
 	GOrgueRank(GrandOrgueFile* organfile);
 	~GOrgueRank();
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString name, int first_midi_note_number, unsigned windchest);
 	void Load(GOrgueConfigReader& cfg, wxString group, int first_midi_note_number);
+	void AddPipe(GOrguePipe* pipe);
 	unsigned RegisterStop(GOrgueStop* stop);
 	void SetKey(int note, unsigned velocity, unsigned stopID);
 	GOrguePipe* GetPipe(unsigned index);
