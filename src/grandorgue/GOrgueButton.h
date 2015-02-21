@@ -27,6 +27,7 @@
 #include "GOrgueMidiConfigurator.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
+#include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 
@@ -35,7 +36,7 @@ class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
-class GOrgueButton : private GOrgueEventHandler, protected GOrgueSaveableObject,
+class GOrgueButton : private GOrgueEventHandler, protected GOrgueSaveableObject, protected GOrguePlaybackStateHandler,
 	public GOrgueMidiConfigurator
 {
 protected:
@@ -55,6 +56,11 @@ protected:
 
 	void Save(GOrgueConfigWriter& cfg);
 
+	void AbortPlayback();
+	void StartPlayback();
+	void PreparePlayback();
+	void PrepareRecording();
+
 public:
 	GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton);
 	virtual ~GOrgueButton();
@@ -69,9 +75,6 @@ public:
 	virtual void Display(bool onoff);
 	bool IsEngaged() const;
 	bool DisplayInverted() const;
-	virtual void Abort();
-	virtual void PreparePlayback();
-	virtual void PrepareRecording();
 	void SetElementID(int id);
 	void SetShortcutKey(unsigned key);
 	void SetPreconfigIndex(unsigned index);

@@ -37,6 +37,7 @@ GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 	m_ranks(0),
 	m_pipes(0)
 {
+	m_organfile->RegisterPlaybackStateHandler(this);
 }
 
 void GOrgueWindchest::Init(GOrgueConfigReader& cfg, wxString group, wxString name)
@@ -139,7 +140,19 @@ void GOrgueWindchest::UpdateTremulant(GOrgueTremulant* tremulant)
 		}
 }
 
+void GOrgueWindchest::AbortPlayback()
+{
+}
+
+void GOrgueWindchest::StartPlayback()
+{
+}
+
 void GOrgueWindchest::PreparePlayback()
 {
 	UpdateVolume();
+}
+
+void GOrgueWindchest::PrepareRecording()
+{
 }

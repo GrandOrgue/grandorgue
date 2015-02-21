@@ -41,6 +41,7 @@ GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
 {
 	m_organfile->RegisterEventHandler(this);
 	m_organfile->RegisterMidiConfigurator(this);
+	m_organfile->RegisterPlaybackStateHandler(this);
 }
 
 GOrgueEnclosure::~GOrgueEnclosure()
@@ -138,7 +139,7 @@ bool GOrgueEnclosure::IsDisplayed(bool  new_format)
 }
 
 
-void GOrgueEnclosure::Abort()
+void GOrgueEnclosure::AbortPlayback()
 {
 	m_sender.SetValue(0);
 }
@@ -146,7 +147,10 @@ void GOrgueEnclosure::Abort()
 void GOrgueEnclosure::PreparePlayback()
 {
 	m_midi.PreparePlayback();
-	m_sender.SetValue(m_MIDIValue);
+}
+
+void GOrgueEnclosure::StartPlayback()
+{
 }
 
 void GOrgueEnclosure::PrepareRecording()

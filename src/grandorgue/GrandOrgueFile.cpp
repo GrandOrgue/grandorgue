@@ -1129,36 +1129,7 @@ void GrandOrgueFile::Abort()
 {
 	m_soundengine = NULL;
 
-	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		m_manual[i]->Abort();
-
-	for (unsigned i = 0; i < m_enclosure.size(); i++)
-		m_enclosure[i]->Abort();
-
-	for (unsigned i = 0; i < m_switches.size(); i++)
-		m_switches[i]->Abort();
-
-	for (unsigned i = 0; i < m_piston.size(); i++)
-		m_piston[i]->Abort();
-
-	for (unsigned i = 0; i < m_general.size(); i++)
-		m_general[i]->Abort();
-
-	for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
-		m_divisionalcoupler[i]->Abort();
-
-	for (unsigned i = 0; i < m_switches.size(); i++)
-		m_switches[i]->Abort();
-
-	for (unsigned i = 0; i < m_ranks.size(); i++)
-		m_ranks[i]->Abort();
-
-	for (unsigned i = 0; i < m_tremulant.size(); i++)
-		m_tremulant[i]->Abort();
-	
-	m_setter->Abort();
-	m_PitchLabel.Abort();
-	m_TemperamentLabel.Abort();
+	GOrgueEventDistributor::AbortPlayback();
 
 	m_midi = NULL;
 }
@@ -1169,60 +1140,20 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 	m_midi = midi;
 
 	m_midi->GetMidiRecorder().Clear();
-	UpdateAudioGroup();
 
-	for (unsigned i = 0; i < m_ranks.size(); i++)
-		m_ranks[i]->PreparePlayback();
-
-	for (unsigned i = 0; i < m_switches.size(); i++)
-		m_switches[i]->PreparePlayback();
-
-	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		m_manual[i]->PreparePlayback();
-
-	for (unsigned i = 0; i < m_enclosure.size(); i++)
-		m_enclosure[i]->PreparePlayback();
-
-	for (unsigned i = 0; i < m_tremulant.size(); i++)
-		m_tremulant[i]->PreparePlayback();
-
-	for (unsigned i = 0; i < m_piston.size(); i++)
-		m_piston[i]->PreparePlayback();
-
-	for (unsigned i = 0; i < m_general.size(); i++)
-		m_general[i]->PreparePlayback();
-
-	for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
-		m_divisionalcoupler[i]->PreparePlayback();
-
-	for (unsigned i = 0; i < m_windchest.size(); i++)
-		m_windchest[i]->PreparePlayback();
+	GOrgueEventDistributor::PreparePlayback();
 
 	m_setter->UpdateModified(m_doc->IsModified());
-	m_setter->PreparePlayback();
-	m_PitchLabel.PreparePlayback();
-	m_TemperamentLabel.PreparePlayback();
+
+	GOrgueEventDistributor::StartPlayback();
+	GOrgueEventDistributor::PrepareRecording();
 }
 
 void GrandOrgueFile::PrepareRecording()
 {
 	m_midi->GetMidiRecorder().Clear();
 
-	for (unsigned i = 0; i < m_switches.size(); i++)
-		m_switches[i]->PrepareRecording();
-
-	for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-		m_manual[i]->PrepareRecording();
-
-	for (unsigned i = 0; i < m_enclosure.size(); i++)
-		m_enclosure[i]->PrepareRecording();
-
-	for (unsigned i = 0; i < m_tremulant.size(); i++)
-		m_tremulant[i]->PrepareRecording();
-
-	m_setter->PrepareRecording();
-	m_PitchLabel.PrepareRecording();
-	m_TemperamentLabel.PrepareRecording();
+	GOrgueEventDistributor::PrepareRecording();
 }
 
 void GrandOrgueFile::Update()

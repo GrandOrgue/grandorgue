@@ -26,6 +26,7 @@
 #include "GOrgueMidiConfigurator.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
+#include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 
@@ -34,7 +35,7 @@ class GOrgueConfigWriter;
 class GOrgueMidiEvent;
 class GrandOrgueFile;
 
-class GOrgueEnclosure : private GOrgueEventHandler, private GOrgueSaveableObject, 
+class GOrgueEnclosure : private GOrgueEventHandler, private GOrgueSaveableObject, private GOrguePlaybackStateHandler,
 	public GOrgueMidiConfigurator
 {
 private:
@@ -53,6 +54,11 @@ private:
 
 	void Save(GOrgueConfigWriter& cfg);
 
+	void AbortPlayback();
+	void PreparePlayback();
+	void StartPlayback();
+	void PrepareRecording();
+
 public:
 
 	GOrgueEnclosure(GrandOrgueFile* organfile);
@@ -67,9 +73,6 @@ public:
 
 	void Scroll(bool scroll_up);
 	bool IsDisplayed(bool new_format);
-	virtual void Abort();
-	virtual void PreparePlayback();
-	virtual void PrepareRecording();
 	void SetElementID(int id);
 
 	wxString GetMidiType();

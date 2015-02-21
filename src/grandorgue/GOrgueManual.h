@@ -28,6 +28,7 @@
 #include "GOrgueMidiConfigurator.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
+#include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
 #include <wx/string.h>
 #include <vector>
@@ -42,7 +43,7 @@ class GOrgueSwitch;
 class GOrgueTremulant;
 class GrandOrgueFile;
 
-class GOrgueManual : private GOrgueEventHandler, private GOrgueSaveableObject,
+class GOrgueManual : private GOrgueEventHandler, private GOrgueSaveableObject, private GOrguePlaybackStateHandler,
 	public GOrgueMidiConfigurator
 {
 private:
@@ -88,6 +89,11 @@ private:
 
 	void Save(GOrgueConfigWriter& cfg);
 
+	void AbortPlayback();
+	void PreparePlayback();
+	void StartPlayback();
+	void PrepareRecording();
+
 public:
 
 	GOrgueManual(GrandOrgueFile* organfile);
@@ -97,9 +103,6 @@ public:
 	void SetKey(unsigned note, unsigned velocity, GOrgueCoupler* prev, unsigned couplerID);
 	void Set(unsigned note, unsigned velocity);
 	void SetUnisonOff(bool on);
-	void Abort();
-	void PreparePlayback();
-	void PrepareRecording();
 	void Update();
 	void Reset();
 	void SetElementID(int id);

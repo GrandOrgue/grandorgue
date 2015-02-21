@@ -378,7 +378,7 @@ void GOrgueSoundingPipe::PreparePlayback()
 	GOrguePipe::PreparePlayback();
 }
 
-void GOrgueSoundingPipe::Abort()
+void GOrgueSoundingPipe::AbortPlayback()
 {
 	m_Instances = 0;
 	m_Tremulant = false;

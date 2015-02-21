@@ -136,11 +136,11 @@ GOrgueStop::~GOrgueStop(void)
 {
 }
 
-void GOrgueStop::Abort()
+void GOrgueStop::AbortPlayback()
 {
 	if (IsAuto())
 		Set(false);
-	GOrgueButton::Abort();
+	GOrgueButton::AbortPlayback();
 }
 
 void GOrgueStop::PreparePlayback()
@@ -149,6 +149,11 @@ void GOrgueStop::PreparePlayback()
 
 	m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
 	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
+}
+
+void GOrgueStop::StartPlayback()
+{
+	GOrgueDrawstop::StartPlayback();
 
 	if (IsAuto() && IsActive())
 		SetRankKey(0, 0x7f);

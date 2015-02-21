@@ -32,6 +32,7 @@ GOrguePipe::GOrguePipe (GrandOrgueFile* organfile, GOrgueRank* rank, unsigned mi
 	m_Rank(rank),
 	m_MidiKeyNumber(midi_key_number)
 {
+	m_organfile->RegisterPlaybackStateHandler(this);
 }
 
 GOrguePipe::~GOrguePipe()
@@ -45,7 +46,7 @@ unsigned GOrguePipe::RegisterReference(GOrguePipe* pipe)
 	return id;
 }
 
-void GOrguePipe::Abort()
+void GOrguePipe::AbortPlayback()
 {
 }
 
@@ -54,6 +55,14 @@ void GOrguePipe::PreparePlayback()
 	m_Velocity = 0;
 	for(unsigned i = 0; i < m_Velocities.size(); i++)
 		m_Velocities[i] = 0;
+}
+
+void GOrguePipe::StartPlayback()
+{
+}
+
+void GOrguePipe::PrepareRecording()
+{
 }
 
 void GOrguePipe::SetTemperament(const GOrgueTemperament& temperament)

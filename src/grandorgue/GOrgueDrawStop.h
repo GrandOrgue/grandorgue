@@ -49,13 +49,14 @@ protected:
 
 	void Save(GOrgueConfigWriter& cfg);
 
+	void PreparePlayback();
+
 public:
 	GOrgueDrawstop(GrandOrgueFile* organfile);
 	void Init(GOrgueConfigReader& cfg, wxString group, wxString name);
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void RegisterControlled(GOrgueDrawstop* sw);
 	virtual void Set(bool on);
-	virtual void PreparePlayback();
 	virtual void Update();
 	void Reset();
 	void SetCombination(bool on);

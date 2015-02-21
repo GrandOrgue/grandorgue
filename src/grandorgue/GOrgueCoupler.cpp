@@ -66,14 +66,21 @@ void GOrgueCoupler::PreparePlayback()
 	m_OutVelocity.resize(dest->GetLogicalKeyCount());
 	std::fill(m_OutVelocity.begin(), m_OutVelocity.end(), 0);
 
-	if (m_UnisonOff && IsActive())
-		src->SetUnisonOff(true);
-
 	m_Keyshift = m_DestinationKeyshift + src->GetFirstLogicalKeyMIDINoteNumber() - dest->GetFirstLogicalKeyMIDINoteNumber();
 	if (m_FirstMidiNote > src->GetFirstLogicalKeyMIDINoteNumber())
 		m_FirstLogicalKey = m_FirstMidiNote - src->GetFirstLogicalKeyMIDINoteNumber();
 	else
 		m_FirstLogicalKey = 0;
+}
+
+void GOrgueCoupler::StartPlayback()
+{
+	GOrgueDrawstop::StartPlayback();
+
+	GOrgueManual* src = m_organfile->GetManual(m_SourceManual);
+
+	if (m_UnisonOff && IsActive())
+		src->SetUnisonOff(true);
 }
 
 const struct IniFileEnumEntry GOrgueCoupler::m_coupler_types[]={

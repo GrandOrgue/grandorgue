@@ -204,22 +204,26 @@ void GOrgueRank::SetTemperament(const GOrgueTemperament& temperament)
 		m_Pipes[j]->SetTemperament(temperament);
 }
 
-void GOrgueRank::Abort()
+void GOrgueRank::AbortPlayback()
 {
-	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->Abort();
 }
 
 void GOrgueRank::PreparePlayback()
 {
 	m_sender.ResetKey();
-	for(unsigned i = 0; i < m_Pipes.size(); i++)
-		m_Pipes[i]->PreparePlayback();
 	for(unsigned i = 0; i < m_Velocity.size(); i++)
 		m_Velocity[i] = 0;
 	for(unsigned i = 0; i < m_Velocities.size(); i++)
 		for(unsigned j = 0; j < m_Velocities[i].size(); j++)
 			m_Velocities[i][j] = 0;
+}
+
+void GOrgueRank::StartPlayback()
+{
+}
+
+void GOrgueRank::PrepareRecording()
+{
 }
 
 void GOrgueRank::SendKey(unsigned note, unsigned velocity)

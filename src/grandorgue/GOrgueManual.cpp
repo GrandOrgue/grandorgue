@@ -61,6 +61,7 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_InputCouplers.push_back(NULL);
 	m_organfile->RegisterEventHandler(this);
 	m_organfile->RegisterMidiConfigurator(this);
+	m_organfile->RegisterPlaybackStateHandler(this);
 }
 
 unsigned GOrgueManual::RegisterCoupler(GOrgueCoupler* coupler)
@@ -408,18 +409,9 @@ void GOrgueManual::Save(GOrgueConfigWriter& cfg)
 	m_division.Save(cfg, m_group + wxT("Division"), m_organfile->GetSettings().GetMidiMap());
 }
 
-void GOrgueManual::Abort()
+void GOrgueManual::AbortPlayback()
 {
 	AllNotesOff();
-
-	for (unsigned i = 0; i < m_stops.size(); i++)
-		m_stops[i]->Abort();
-
-	for (unsigned i = 0; i < m_couplers.size(); i++)
-		m_couplers[i]->Abort();
-
-	for (unsigned i = 0; i < m_divisionals.size(); i++)
-		m_divisionals[i]->Abort();
 }
 
 void GOrgueManual::PreparePlayback()
@@ -427,7 +419,6 @@ void GOrgueManual::PreparePlayback()
 	m_midi.PreparePlayback();
 	m_KeyVelocity.resize(m_nb_accessible_keys);
 	std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
-	m_sender.ResetKey();
 	m_division.ResetKey();
 	m_UnisonOff = 0;
 	for(unsigned i = 0; i < m_Velocity.size(); i++)
@@ -439,15 +430,10 @@ void GOrgueManual::PreparePlayback()
 	for(unsigned i = 0; i < m_Velocities.size(); i++)
 		for(unsigned j = 0; j < m_Velocities[i].size(); j++)
 			m_Velocities[i][j] = 0;
+}
 
-	for (unsigned i = 0; i < m_stops.size(); i++)
-		m_stops[i]->PreparePlayback();
-
-	for (unsigned i = 0; i < m_couplers.size(); i++)
-		m_couplers[i]->PreparePlayback();
-
-	for (unsigned i = 0; i < m_divisionals.size(); i++)
-		m_divisionals[i]->PreparePlayback();
+void GOrgueManual::StartPlayback()
+{
 }
 
 void GOrgueManual::PrepareRecording()
@@ -456,12 +442,6 @@ void GOrgueManual::PrepareRecording()
 	for(unsigned i = 0; i < m_KeyVelocity.size(); i++)
 		if (m_KeyVelocity[i] > 0)
 			m_sender.SetKey(i + m_first_accessible_key_midi_note_nb, m_KeyVelocity[i]);
-
-	for (unsigned i = 0; i < m_stops.size(); i++)
-		m_stops[i]->PrepareRecording();
-
-	for (unsigned i = 0; i < m_couplers.size(); i++)
-		m_couplers[i]->PrepareRecording();
 }
 
 void GOrgueManual::Update()
