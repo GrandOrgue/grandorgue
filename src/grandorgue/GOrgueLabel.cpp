@@ -84,11 +84,6 @@ void GOrgueLabel::PrepareRecording()
 	m_sender.SetLabel(m_Name);
 }
 
-GOrgueMidiSender& GOrgueLabel::GetMidiSender()
-{
-	return m_sender;
-}
-
 wxString GOrgueLabel::GetMidiType()
 {
 	return _("Label");

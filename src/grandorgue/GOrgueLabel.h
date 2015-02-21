@@ -48,7 +48,6 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	const wxString& GetName();
 	void SetName(wxString name);
-	GOrgueMidiSender& GetMidiSender();
 	virtual void Abort();
 	virtual void PreparePlayback();
 	virtual void PrepareRecording();

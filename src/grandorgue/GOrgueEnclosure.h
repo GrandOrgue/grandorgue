@@ -60,8 +60,6 @@ public:
 	void Init(GOrgueConfigReader& cfg, wxString group, wxString Name, unsigned def_value);
 	void Load(GOrgueConfigReader& cfg, wxString group, int enclosure_nb);
 	void Set(int n);
-	GOrgueMidiReceiver& GetMidiReceiver();
-	GOrgueMidiSender& GetMidiSender();
 	const wxString& GetName();
 	int GetValue();
 	int GetMIDIInputNumber();

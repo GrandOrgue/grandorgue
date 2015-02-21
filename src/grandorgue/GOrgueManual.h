@@ -103,8 +103,6 @@ public:
 	void Update();
 	void Reset();
 	void SetElementID(int id);
-	GOrgueMidiReceiver& GetMidiReceiver();
-	GOrgueMidiSender& GetMidiSender();
 	~GOrgueManual(void);
 
 	unsigned GetNumberOfAccessibleKeys();
