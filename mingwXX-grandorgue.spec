@@ -176,6 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mingw_datadir}/locale
 %dir %{_mingw_datadir}/GrandOrgue
 %{_mingw_datadir}/GrandOrgue/help
+%{_mingw_datadir}/GrandOrgue/sounds
 
 %files demo
 %defattr(-,root,root)
