@@ -224,7 +224,7 @@ void GOrgueMidiRecorder::StartRecording(wxString filename)
         m_file.Create(filename, true);
         if (!m_file.IsOpened())
 	{
-		wxLogError(_("Unable to open file for writing"));
+		wxLogError(_("Unable to open file %s for writing"), filename.c_str());
 		return;
 	}
 	
