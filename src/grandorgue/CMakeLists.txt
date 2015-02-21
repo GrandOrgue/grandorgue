@@ -291,6 +291,7 @@ GOrgueDrawStop.cpp
 GOrgueEnclosure.cpp
 GOrgueEvent.cpp
 GOrgueEventDistributor.cpp
+GOrgueFloatingPanel.cpp
 GOrgueFrameGeneral.cpp
 GOrgueFont.cpp
 GOrgueGeneral.cpp

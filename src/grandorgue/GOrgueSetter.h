@@ -91,7 +91,6 @@ public:
 	GOGUIPanel* CreateSetterPanel(GOrgueConfigReader& cfg);
 	GOGUIPanel* CreateCrescendoPanel(GOrgueConfigReader& cfg);
 	GOGUIPanel* CreateDivisionalPanel(GOrgueConfigReader& cfg);
-	GOGUIPanel* CreateFloatingPanel(GOrgueConfigReader& cfg);
 	GOGUIPanel* CreateMasterPanel(GOrgueConfigReader& cfg);
 	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
 
