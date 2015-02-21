@@ -38,6 +38,7 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 	m_AttackInfo(),
 	m_ReleaseInfo(),
 	m_Filename(),
+	m_UseSampleset(true),
 	m_SamplerGroupID(sampler_group_id),
 	m_AudioGroupID(0),
 	m_Percussive(percussive),
@@ -79,8 +80,36 @@ void GOrgueSoundingPipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxS
 	m_AttackInfo.push_back(ainfo);
 }
 
+void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString prefix, wxString filename)
+{
+	m_UseSampleset = false;
+	m_organfile->RegisterCacheObject(this);
+	m_Filename = filename;
+	m_PipeConfig.Init(cfg, group, prefix);
+	m_SampleMidiKeyNumber = -1;
+	m_CrossfadeLength = 0;
+	UpdateAmplitude();
+	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+
+	attack_load_info ainfo;
+	ainfo.filename = m_Filename;
+	ainfo.sample_group = -1;
+	ainfo.load_release = !m_Percussive;
+	ainfo.percussive = m_Percussive;
+	ainfo.max_playback_time = -1;
+	ainfo.cue_point = -1;
+	ainfo.min_attack_velocity = 0;
+	ainfo.attack_start = 0;
+	ainfo.release_end = -1;
+	m_AttackInfo.push_back(ainfo);
+
+	m_SoundProvider.SetVelocityParameter(m_MinVolume, m_MaxVolume);
+	m_PipeConfig.SetName(wxString::Format(_("%d: %s"), m_MidiKeyNumber, m_Filename.c_str()));
+}
+
 void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
+	m_UseSampleset = true;
 	m_organfile->RegisterCacheObject(this);
 	m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
 	m_PipeConfig.Load(cfg, group, prefix);
@@ -125,7 +154,7 @@ void GOrgueSoundingPipe::LoadData()
 {
 	try
 	{
-		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_organfile, m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
+		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_organfile, m_UseSampleset, m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
 					     m_PipeConfig.GetEffectiveCompress(), (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(), m_PipeConfig.GetEffectiveAttackLoad(), m_PipeConfig.GetEffectiveReleaseLoad(),
 					     m_SampleMidiKeyNumber, m_CrossfadeLength);
 		Validate();
