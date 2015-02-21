@@ -105,7 +105,7 @@ int GOGUILayoutEngine::GetCenterWidth()
 
 int GOGUILayoutEngine::GetCenterX()
 {
-	return (m_metrics.GetScreenWidth() - GetCenterWidth()) >> 1;
+	return ((int)m_metrics.GetScreenWidth() - GetCenterWidth()) >> 1;
 }
 
 int GOGUILayoutEngine::GetCenterY()
