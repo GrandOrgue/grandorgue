@@ -192,7 +192,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			for (unsigned i = 0; i < NumberOfSetterElements; i++)
 			{
 				wxString buffer = wxString::Format(wxT("SetterElement%03d"), i + 1);
-				GOGUIControl* control = m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this);
+				GOGUIControl* control = m_organfile->CreateGUIElement(cfg, buffer, this);
 				if (!control)
 					throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), buffer.c_str());
 				LoadControl(control, cfg, buffer);
@@ -279,7 +279,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		for (unsigned i = 0; i < NumberOfSetterElements; i++)
 		{
 			wxString buffer = wxString::Format(wxT("SetterElement%03d"), i + 1);
-			GOGUIControl* control = m_organfile->GetSetter()->CreateGUIElement(cfg, panel_prefix + buffer, this);
+			GOGUIControl* control = m_organfile->CreateGUIElement(cfg, panel_prefix + buffer, this);
 			if (!control)
 				throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), (panel_prefix + buffer).c_str());
 			LoadControl(control, cfg, panel_prefix + buffer);
@@ -460,7 +460,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		}
 		else
 		{
-			GOGUIControl* control = m_organfile->GetSetter()->CreateGUIElement(cfg, buffer, this);
+			GOGUIControl* control = m_organfile->CreateGUIElement(cfg, buffer, this);
 			if (!control)
 				throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), buffer.c_str());
 			LoadControl(control, cfg, buffer);

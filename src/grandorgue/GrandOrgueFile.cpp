@@ -312,10 +312,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	}
 
 	m_setter = new GOrgueSetter(this);
-	m_setter->Load(cfg);
-
 	m_panelcreators.push_back(new GOrgueCouplerPanel(this));
 	m_panelcreators.push_back(new GOrgueFloatingPanel(this));
+	m_panelcreators.push_back(m_setter);
 
 	for(unsigned i = 0; i < m_panelcreators.size(); i++)
 		m_panelcreators[i]->Load(cfg);
@@ -336,13 +335,6 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 	for(unsigned i = 0; i < m_panelcreators.size(); i++)
 		m_panelcreators[i]->CreatePanels(cfg);
-
-	m_panels.push_back(m_setter->CreateCrescendoPanel(cfg));
-	m_panels.push_back(m_setter->CreateDivisionalPanel(cfg));
-	m_panels.push_back(m_setter->CreateGeneralsPanel(cfg));
-	m_panels.push_back(m_setter->CreateSetterPanel(cfg));
-
-	m_panels.push_back(m_setter->CreateMasterPanel(cfg));
 
 	for(unsigned i = 0; i < m_panels.size(); i++)
 		m_panels[i]->Layout();
@@ -727,8 +719,6 @@ void GrandOrgueFile::DeleteCache()
 
 GrandOrgueFile::~GrandOrgueFile(void)
 {
-	if (m_setter)
-		delete m_setter;
 	// Just to be sure, that the sound providers are freed before the pool
 	m_manual.clear();
 	m_tremulant.clear();

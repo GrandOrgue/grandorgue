@@ -863,6 +863,15 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	m_button[ID_SETTER_GENERAL_NEXT]->Init(cfg, wxT("SetterGeneralNext"), _("Next"));
 }
 
+void GOrgueSetter::CreatePanels(GOrgueConfigReader& cfg)
+{
+	m_organfile->AddPanel(CreateCrescendoPanel(cfg));
+	m_organfile->AddPanel(CreateDivisionalPanel(cfg));
+	m_organfile->AddPanel(CreateGeneralsPanel(cfg));
+	m_organfile->AddPanel(CreateSetterPanel(cfg));
+	m_organfile->AddPanel(CreateMasterPanel(cfg));
+}
+
 void GOrgueSetter::SetterButtonChanged(GOrgueSetterButton* button)
 {
 	for(unsigned i = 0; i < m_button.size(); i++)
