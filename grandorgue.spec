@@ -100,6 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 %doc %{_docdir}/%{name}
 %{_datadir}/GrandOrgue/help
+%{_datadir}/GrandOrgue/sounds
 %dir %{_datadir}/GrandOrgue
 %{_datadir}/applications/*
 %dir %{_datadir}/appdata
