@@ -95,6 +95,7 @@ private:
 	wxString m_UserSettingPath;
 	wxString m_UserCachePath;
 	wxString m_LastFile;
+	wxString m_ResourceDir;
 	std::vector<wxString> m_AudioGroups;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 	int m_Transpose;
@@ -125,6 +126,7 @@ public:
 	wxString GetStandardOrganDirectory();
 	wxString GetStandardDataDirectory();
 	wxString GetStandardCacheDirectory();
+	const wxString GetResourceDirectory();
 
 	size_t GetMemoryLimit();
 	void SetMemoryLimit(size_t limit);
