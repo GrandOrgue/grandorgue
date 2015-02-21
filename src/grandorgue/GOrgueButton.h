@@ -63,9 +63,6 @@ public:
 	bool IsDisplayed();
 	bool IsReadOnly();
 	const wxString& GetName();
-	GOrgueMidiReceiver& GetMidiReceiver();
-	GOrgueMidiSender& GetMidiSender();
-	GOrgueKeyReceiver& GetKeyReceiver();
 
 	virtual void Push();
 	virtual void Set(bool on);
@@ -76,6 +73,8 @@ public:
 	virtual void PreparePlayback();
 	virtual void PrepareRecording();
 	void SetElementID(int id);
+	void SetShortcutKey(unsigned key);
+	void SetPreconfigIndex(unsigned index);
 
 	wxString GetMidiName();
 	void ShowConfigDialog();

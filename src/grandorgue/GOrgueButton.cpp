@@ -102,21 +102,6 @@ const wxString& GOrgueButton::GetName()
 	return m_Name;
 }
 
-GOrgueMidiReceiver& GOrgueButton::GetMidiReceiver()
-{
-	return m_midi;
-}
-
-GOrgueMidiSender& GOrgueButton::GetMidiSender()
-{
-	return m_sender;
-}
-
-GOrgueKeyReceiver& GOrgueButton::GetKeyReceiver()
-{
-	return m_shortcut;
-}
-
 void GOrgueButton::HandleKey(int key)
 {
 	if (m_ReadOnly)
@@ -205,6 +190,16 @@ void GOrgueButton::SetElementID(int id)
 		m_midi.SetElementID(id);
 		m_sender.SetElementID(id);
 	}
+}
+
+void GOrgueButton::SetShortcutKey(unsigned key)
+{
+	m_shortcut.SetShortcut(key);
+}
+
+void GOrgueButton::SetPreconfigIndex(unsigned index)
+{
+	m_midi.SetIndex(index);
 }
 
 wxString GOrgueButton::GetMidiName()

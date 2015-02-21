@@ -119,16 +119,6 @@ void GOrgueEnclosure::HandleKey(int key)
 {
 }
 
-GOrgueMidiReceiver& GOrgueEnclosure::GetMidiReceiver()
-{
-	return m_midi;
-}
-
-GOrgueMidiSender& GOrgueEnclosure::GetMidiSender()
-{
-	return m_sender;
-}
-
 const wxString& GOrgueEnclosure::GetName()
 {
 	return m_Name;
