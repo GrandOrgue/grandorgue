@@ -30,6 +30,7 @@
 #include "GOrgueLimits.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrguePath.h"
+#include "GOrgueStdPath.h"
 #include <wx/confbase.h>
 #include <wx/filename.h>
 #include <wx/log.h>
@@ -112,6 +113,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_UserSettingPath(),
 	m_UserCachePath(),
 	m_LastFile(),
+	m_ResourceDir(),
 	m_AudioGroups(),
 	m_AudioDeviceConfig(),
 	m_Transpose(0),
@@ -130,6 +132,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_ConfigFileName = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
 	for(unsigned i = 0; i < GetEventCount(); i++)
 		m_MIDIEvents.push_back(new GOrgueMidiReceiver(NULL, m_MIDISettings[i].type));
+	m_ResourceDir = GOrgueStdPath::GetResourceDir();
 }
 
 GOrgueSettings::~GOrgueSettings()
@@ -425,6 +428,11 @@ wxString GOrgueSettings::GetStandardDataDirectory()
 wxString GOrgueSettings::GetStandardCacheDirectory()
 {
 	return wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueCache") + m_InstanceName;
+}
+
+const wxString GOrgueSettings::GetResourceDirectory()
+{
+	return m_ResourceDir.c_str();
 }
 
 wxString GOrgueSettings::GetOrganPath()
