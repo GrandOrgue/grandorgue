@@ -36,6 +36,7 @@
 #include "GOrgueDocument.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueEvent.h"
+#include "GOrgueFloatingPanel.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
 #include "GOrgueLoadThread.h"
@@ -312,6 +313,8 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_setter = new GOrgueSetter(this);
 	m_setter->Load(cfg);
 
+	m_panelcreators.push_back(new GOrgueFloatingPanel(this));
+
 	for(unsigned i = 0; i < m_panelcreators.size(); i++)
 		m_panelcreators[i]->Load(cfg);
 
@@ -340,7 +343,6 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 	for (unsigned i = m_ODFManualCount; i < m_manual.size(); i++)
 		m_panels.push_back(m_setter->CreateCouplerPanel(cfg, i));
-	m_panels.push_back(m_setter->CreateFloatingPanel(cfg));
 
 	for(unsigned i = 0; i < m_panelcreators.size(); i++)
 		m_panelcreators[i]->CreatePanels(cfg);
