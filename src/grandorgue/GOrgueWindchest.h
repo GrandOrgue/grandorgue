@@ -44,8 +44,9 @@ private:
 	std::vector<GOrguePipeWindchestCallback*> m_pipes;
 
 public:
-
 	GOrgueWindchest(GrandOrgueFile* organfile);
+
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString name);
 	void Load(GOrgueConfigReader& cfg, wxString group, unsigned index);
 	void UpdateTremulant(GOrgueTremulant* tremulant);
 	void UpdateVolume();

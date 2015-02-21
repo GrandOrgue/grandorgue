@@ -39,6 +39,13 @@ GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 {
 }
 
+void GOrgueWindchest::Init(GOrgueConfigReader& cfg, wxString group, wxString name)
+{
+	m_enclosure.resize(0);
+	m_tremulant.resize(0);
+	m_Name = name;
+}
+
 
 void GOrgueWindchest::Load(GOrgueConfigReader& cfg, wxString group, unsigned index)
 {
