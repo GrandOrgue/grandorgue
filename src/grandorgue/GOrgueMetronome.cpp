@@ -20,7 +20,7 @@
  */
 
 #include "GOrgueMetronome.h"
-
+#include <wx/intl.h>
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
@@ -106,10 +106,10 @@ void GOrgueMetronome::Load(GOrgueConfigReader& cfg)
 	GOrgueSoundingPipe* pipe;
 	pipe = new GOrgueSoundingPipe(m_organfile, m_rank, true, samplegroup, 36, 8, 0, 100, 100, false);
 	m_rank->AddPipe(pipe);
-	pipe->Init(cfg, wxT("MetronomSounds"), wxT("A"), wxT("sounds\\metronome\\beat.wav"));
+	pipe->Init(cfg, wxT("MetronomSounds"), wxT("A"), wxT("sounds\\metronome\\beat.wv"));
 	pipe = new GOrgueSoundingPipe(m_organfile, m_rank, true, samplegroup, 37, 8, 0, 100, 100, false);
 	m_rank->AddPipe(pipe);
-	pipe->Init(cfg, wxT("MetronomSounds"), wxT("B"), wxT("sounds\\metronome\\first_beat.wav"));
+	pipe->Init(cfg, wxT("MetronomSounds"), wxT("B"), wxT("sounds\\metronome\\first_beat.wv"));
 }
 
 void GOrgueMetronome::Save(GOrgueConfigWriter& cfg)
