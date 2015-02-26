@@ -57,7 +57,7 @@ GOrgueMetronome::GOrgueMetronome(GrandOrgueFile *organfile) :
 	m_rank(NULL),
 	m_StopID(0)
 {
-        m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+        m_button.push_back(new GOrgueSetterButton(m_organfile, this, false));
 
         m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
         m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
