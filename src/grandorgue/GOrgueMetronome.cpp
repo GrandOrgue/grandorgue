@@ -20,12 +20,7 @@
  */
 
 #include "GOrgueMetronome.h"
-#include <wx/intl.h>
-#include "GOGUIButton.h"
-#include "GOGUIHW1Background.h"
-#include "GOGUILabel.h"
-#include "GOGUIPanel.h"
-#include "GOGUISetterDisplayMetrics.h"
+
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueRank.h"
@@ -33,6 +28,7 @@
 #include "GOrgueSoundingPipe.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 enum {
 	ID_METRONOME_ON = 0,
@@ -42,6 +38,16 @@ enum {
 	ID_METRONOME_BEAT_M1,
 	ID_METRONOME_BEAT_P10,
 	ID_METRONOME_BEAT_M10,
+};
+
+const struct ElementListEntry GOrgueMetronome::m_element_types[] = {
+	{ wxT("MetronomeOn"), ID_METRONOME_ON, false },
+	{ wxT("MetronomeMeasureP1"), ID_METRONOME_MEASURE_P1, false },
+	{ wxT("MetronomeMeasureM1"), ID_METRONOME_MEASURE_M1, false },
+	{ wxT("MetronomeBpmP1"), ID_METRONOME_BEAT_P1, false },
+	{ wxT("MetronomeBpmM1"), ID_METRONOME_BEAT_M1, false },
+	{ wxT("MetronomeBpmP10"), ID_METRONOME_BEAT_P10, false },
+	{ wxT("MetronomeBpmM10"), ID_METRONOME_BEAT_M10, false },
 };
 
 GOrgueMetronome::GOrgueMetronome(GrandOrgueFile *organfile) :
@@ -238,64 +244,34 @@ void GOrgueMetronome::PrepareRecording()
 {
 }
 
-void GOrgueMetronome::CreatePanels(GOrgueConfigReader& cfg)
+GOrgueEnclosure* GOrgueMetronome::GetEnclosure(const wxString& name, bool is_panel)
 {
-	m_organfile->AddPanel(CreateMetronomePanel(cfg));
+	return NULL;
 }
 
-GOGUIPanel* GOrgueMetronome::CreateMetronomePanel(GOrgueConfigReader& cfg)
+GOrgueLabel* GOrgueMetronome::GetLabel(const wxString& name, bool is_panel)
 {
-	GOGUIButton* button;
+	if (is_panel)
+		return NULL;
 
-	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_METRONOME);
-	panel->Init(cfg, metrics, _("Metronome"), wxT("Metronome"), wxT(""));
+	if (name == wxT("MetronomeBPM"))
+		return &m_BPMDisplay;
+	if (name == wxT("MetronomeMeasure"))
+		return &m_MeasureDisplay;
 
-	GOGUIHW1Background* back = new GOGUIHW1Background(panel);
-	back->Init(cfg, wxT("Metronome"));
-	panel->AddControl(back);
-
-	button = new GOGUIButton(panel, m_button[ID_METRONOME_ON], false);
-	button->Init(cfg, wxT("MetronomeOn"), 1, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_METRONOME_MEASURE_M1], false);
-	button->Init(cfg, wxT("MetronomeMM1"), 3, 100);
-	panel->AddControl(button);
-
-	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_MeasureDisplay);
-	PosDisplay->Init(cfg, wxT("MetronomeMeasure"), 240, 45);
-	panel->AddControl(PosDisplay);
-
-	button = new GOGUIButton(panel, m_button[ID_METRONOME_MEASURE_P1], false);
-	button->Init(cfg, wxT("MetronomeMP1"), 5, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_METRONOME_BEAT_M10], false);
-	button->Init(cfg, wxT("MetronomeBPMM10"), 1, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_METRONOME_BEAT_M1], false);
-	button->Init(cfg, wxT("MetronomeBPMM1"), 2, 101);
-	panel->AddControl(button);
-
-	PosDisplay=new GOGUILabel(panel, &m_BPMDisplay);
-	PosDisplay->Init(cfg, wxT("MetronomeBPM"), 160, 115);
-	panel->AddControl(PosDisplay);
-
-	button = new GOGUIButton(panel, m_button[ID_METRONOME_BEAT_P1], false);
-	button->Init(cfg, wxT("MetronomeBPMP1"), 4, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_METRONOME_BEAT_P10], false);
-	button->Init(cfg, wxT("MetronomeBPMP10"), 5, 101);
-	panel->AddControl(button);
-
-	return panel;
+	return NULL;
 }
 
-GOGUIControl* GOrgueMetronome::CreateGUIElement(GOrgueConfigReader& cfg, wxString type, GOGUIPanel* panel)
+GOrgueButton* GOrgueMetronome::GetButton(const wxString& name, bool is_panel)
 {
+	for(unsigned i = 0; i < sizeof(m_element_types) / sizeof(m_element_types[0]); i++)
+		if (name == m_element_types[i].name)
+		{
+			if (is_panel && !m_element_types[i].is_public)
+				return NULL;
+			return m_button[m_element_types[i].value];
+		}
+
 	return NULL;
 }
 

@@ -19,34 +19,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEELEMENTCREATOR_H
-#define GORGUEELEMENTCREATOR_H
+#ifndef GOGUIMETRONOMEPANEL_H
+#define GOGUIMETRONOMEPANEL_H
 
-#include <wx/string.h>
+#include "GOGUIPanelCreator.h"
 
-class GOrgueConfigReader;
-class GOrgueButton;
-class GOrgueEnclosure;
-class GOrgueLabel;
+class GrandOrgueFile;
 
-struct ElementListEntry {
-	wxString name;
-	int value;
-	bool is_public;
-};
-
-class GOrgueElementCreator
+class GOGUIMetronomePanel : public GOGUIPanelCreator
 {
+private:
+	GrandOrgueFile* m_organfile;
+
+	GOGUIPanel* CreateMetronomePanel(GOrgueConfigReader& cfg);
+
 public:
-	virtual ~GOrgueElementCreator()
-	{
-	}
+	GOGUIMetronomePanel(GrandOrgueFile* organfile);
+	virtual ~GOGUIMetronomePanel();
 
-	virtual void Load(GOrgueConfigReader& cfg) = 0;
-
-	virtual GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel) = 0;
-	virtual GOrgueLabel* GetLabel(const wxString& name, bool is_panel) = 0;
-	virtual GOrgueButton* GetButton(const wxString& name, bool is_panel) = 0;
+	void CreatePanels(GOrgueConfigReader& cfg);
 };
 
 #endif
