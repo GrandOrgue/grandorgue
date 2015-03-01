@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEPANELCREATOR_H
-#define GORGUEPANELCREATOR_H
+#ifndef GOGUIPANELCREATOR_H
+#define GOGUIPANELCREATOR_H
 
 #include <wx/string.h>
 
@@ -28,10 +28,10 @@ class GOrgueConfigReader;
 class GOGUIControl;
 class GOGUIPanel;
 
-class GOrguePanelCreator
+class GOGUIPanelCreator
 {
 public:
-	virtual ~GOrguePanelCreator()
+	virtual ~GOGUIPanelCreator()
 	{
 	}
 

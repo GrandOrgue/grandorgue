@@ -35,6 +35,7 @@
 
 class GOGUIControl;
 class GOGUIPanel;
+class GOGUIPanelCreator;
 class GOrgueButton;
 class GOrgueCache;
 class GOrgueDivisionalCoupler;
@@ -45,7 +46,6 @@ class GOrgueManual;
 class GOrgueMidi;
 class GOrgueMidiEvent;
 class GOrgueMidiListener;
-class GOrguePanelCreator;
 class GOrguePiston;
 class GOrgueProgressDialog;
 class GOrguePushbutton;
@@ -107,7 +107,7 @@ private:
 	ptr_vector<GOrgueRank> m_ranks;
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
-	ptr_vector<GOrguePanelCreator> m_panelcreators;
+	ptr_vector<GOGUIPanelCreator> m_panelcreators;
 	ptr_vector<GOrgueElementCreator> m_elementcreators;
 	GOStringBoolMap m_UsedSections;
 

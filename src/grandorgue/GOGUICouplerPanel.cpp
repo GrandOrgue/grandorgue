@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueCouplerPanel.h"
+#include "GOGUICouplerPanel.h"
 
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
@@ -32,31 +32,22 @@
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
 
-GOrgueCouplerPanel::GOrgueCouplerPanel(GrandOrgueFile* organfile) :
+GOGUICouplerPanel::GOGUICouplerPanel(GrandOrgueFile* organfile) :
 	m_organfile(organfile)
 {
 }
 
-GOrgueCouplerPanel::~GOrgueCouplerPanel()
+GOGUICouplerPanel::~GOGUICouplerPanel()
 {
 }
 
-void GOrgueCouplerPanel::Load(GOrgueConfigReader& cfg)
-{
-}
-
-GOGUIControl* GOrgueCouplerPanel::CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel)
-{
-	return NULL;
-}
-
-void GOrgueCouplerPanel::CreatePanels(GOrgueConfigReader& cfg)
+void GOGUICouplerPanel::CreatePanels(GOrgueConfigReader& cfg)
 {
 	for(unsigned i = m_organfile->GetFirstManualIndex(); i <= m_organfile->GetManualAndPedalCount(); i++)
 		m_organfile->AddPanel(CreateCouplerPanel(cfg, i));
 }
 
-GOGUIPanel* GOrgueCouplerPanel::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned manual_nr)
+GOGUIPanel* GOGUICouplerPanel::CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned manual_nr)
 {
 	GOrgueManual* manual = m_organfile->GetManual(manual_nr);
 

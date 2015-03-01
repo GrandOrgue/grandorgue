@@ -22,13 +22,13 @@
 #ifndef GORGUESETTER_H
 #define GORGUESETTER_H
 
-#include "ptrvector.h"
+#include "GOGUIPanelCreator.h"
 #include "GOrgueControlChangedHandler.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueLabel.h"
 #include "GOrguePlaybackStateHandler.h"
-#include "GOrguePanelCreator.h"
 #include "GOrgueSetterButtonCallback.h"
+#include "ptrvector.h"
 
 class GOGUIControl;
 class GOGUILabel;
@@ -49,7 +49,7 @@ typedef enum
 } SetterType;
 
 class GOrgueSetter : private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler, private GOrgueControlChangedHandler,
-	public GOrguePanelCreator
+	public GOGUIPanelCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
