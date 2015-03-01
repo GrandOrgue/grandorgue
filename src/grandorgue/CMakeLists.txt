@@ -251,6 +251,7 @@ GOGUIImage.cpp
 GOGUILabel.cpp
 GOGUIManual.cpp
 GOGUIManualBackground.cpp
+GOGUIMetronomePanel.cpp
 GOGUIPanel.cpp
 GOGUIPanelWidget.cpp
 GOSoundAudioSection.cpp

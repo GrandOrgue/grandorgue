@@ -22,7 +22,7 @@
 #ifndef GORGUEMETRONOME_H
 #define GORGUEMETRONOME_H
 
-#include "GOGUIPanelCreator.h"
+#include "GOrgueElementCreator.h"
 #include "GOrgueLabel.h"
 #include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
@@ -30,15 +30,14 @@
 #include "ptrvector.h"
 #include <wx/timer.h>
 
-class GOGUIPanel;
 class GOrgueMidiEvent;
 class GOrgueRank;
 class GOrgueSetterButton;
 class GrandOrgueFile;
-struct IniFileEnumEntry;
+struct ElementListEntry;
 
 class GOrgueMetronome : private wxTimer, private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler,
-	private GOrgueSaveableObject, public GOGUIPanelCreator
+	private GOrgueSaveableObject, public GOrgueElementCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -52,7 +51,7 @@ private:
 	GOrgueRank* m_rank;
 	unsigned m_StopID;
 
-	static const struct IniFileEnumEntry m_element_types[];
+	static const struct ElementListEntry m_element_types[];
 
 	void Notify();
 
@@ -65,8 +64,6 @@ private:
 
 	void Save(GOrgueConfigWriter& cfg);
 
-	GOGUIPanel* CreateMetronomePanel(GOrgueConfigReader& cfg);
-
 	void StartTimer();
 	void StopTimer();
 	void UpdateState();
@@ -78,8 +75,10 @@ public:
 	virtual ~GOrgueMetronome();
 
 	void Load(GOrgueConfigReader& cfg);
-	void CreatePanels(GOrgueConfigReader& cfg);
-	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
+
+	GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel);
+	GOrgueLabel* GetLabel(const wxString& name, bool is_panel);
+	GOrgueButton* GetButton(const wxString& name, bool is_panel);
 };
 
 #endif

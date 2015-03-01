@@ -23,6 +23,7 @@
 
 #include "GOGUICouplerPanel.h"
 #include "GOGUIFloatingPanel.h"
+#include "GOGUIMetronomePanel.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelCreator.h"
 #include "GOSoundEngine.h"
@@ -315,9 +316,10 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	}
 
 	m_setter = new GOrgueSetter(this);
+	m_elementcreators.push_back(new GOrgueMetronome(this));
 	m_panelcreators.push_back(new GOGUICouplerPanel(this));
 	m_panelcreators.push_back(new GOGUIFloatingPanel(this));
-	m_panelcreators.push_back(new GOrgueMetronome(this));
+	m_panelcreators.push_back(new GOGUIMetronomePanel(this));
 	m_panelcreators.push_back(m_setter);
 
 	for(unsigned i = 0; i < m_elementcreators.size(); i++)
