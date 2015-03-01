@@ -119,7 +119,7 @@ void GOSoundGroupWorkItem::Run()
 		if (!m_ActiveCount)
 		{
 			m_Done = 3;
-			m_Condition.Signal();
+			m_Condition.Broadcast();
 		}
 	}
 }

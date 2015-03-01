@@ -283,6 +283,11 @@ private:
 	{
 		m_condition.Signal();
 	}
+
+	void DoBroadcast()
+	{
+		m_condition.Broadcast();
+	}
 #else
 	std::atomic_int m_Waiters;
 	GOWaitQueue m_Wait;
@@ -315,6 +320,23 @@ private:
 			m_Wait.Wakeup();
 	}
 
+	void DoBroadcast()
+	{
+		int waiters;
+		do
+		{
+			waiters = m_Waiters.fetch_add(-1);
+			if (waiters <= 0)
+			{
+				m_Waiters.fetch_add(+1);
+				return;
+			}
+			else
+				m_Wait.Wakeup();
+		}
+		while(waiters > 1);
+	}
+
 #endif
 	GOMutex& m_Mutex;
 
@@ -343,6 +365,11 @@ public:
 	void Signal()
 	{
 		DoSignal();
+	}
+
+	void Broadcast()
+	{
+		DoBroadcast();
 	}
 };
 
