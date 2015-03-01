@@ -19,14 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUECOUPLERPANEL_H
-#define GORGUECOUPLERPANEL_H
+#ifndef GGUICOUPLERPANEL_H
+#define GGUICOUPLERPANEL_H
 
-#include "GOrguePanelCreator.h"
+#include "GOGUIPanelCreator.h"
 
 class GrandOrgueFile;
 
-class GOrgueCouplerPanel : public GOrguePanelCreator
+class GOGUICouplerPanel : public GOGUIPanelCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -34,12 +34,10 @@ private:
 	GOGUIPanel* CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned manual_nr);
 
 public:
-	GOrgueCouplerPanel(GrandOrgueFile* organfile);
-	~GOrgueCouplerPanel();
+	GOGUICouplerPanel(GrandOrgueFile* organfile);
+	~GOGUICouplerPanel();
 
-	void Load(GOrgueConfigReader& cfg);
 	void CreatePanels(GOrgueConfigReader& cfg);
-	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
 };
 
 #endif

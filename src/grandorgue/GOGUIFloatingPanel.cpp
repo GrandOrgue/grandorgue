@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueFloatingPanel.h"
+#include "GOGUIFloatingPanel.h"
 
 #include "GOGUIEnclosure.h"
 #include "GOGUIButton.h"
@@ -35,30 +35,21 @@
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
 
-GOrgueFloatingPanel::GOrgueFloatingPanel(GrandOrgueFile* organfile) :
+GOGUIFloatingPanel::GOGUIFloatingPanel(GrandOrgueFile* organfile) :
 	m_organfile(organfile)
 {
 }
 
-GOrgueFloatingPanel::~GOrgueFloatingPanel()
+GOGUIFloatingPanel::~GOGUIFloatingPanel()
 {
 }
 
-void GOrgueFloatingPanel::Load(GOrgueConfigReader& cfg)
-{
-}
-
-GOGUIControl* GOrgueFloatingPanel::CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel)
-{
-	return NULL;
-}
-
-void GOrgueFloatingPanel::CreatePanels(GOrgueConfigReader& cfg)
+void GOGUIFloatingPanel::CreatePanels(GOrgueConfigReader& cfg)
 {
 	m_organfile->AddPanel(CreateFloatingPanel(cfg));
 }
 
-GOGUIPanel* GOrgueFloatingPanel::CreateFloatingPanel(GOrgueConfigReader& cfg)
+GOGUIPanel* GOGUIFloatingPanel::CreateFloatingPanel(GOrgueConfigReader& cfg)
 {
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_FLOATING);

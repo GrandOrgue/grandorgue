@@ -21,7 +21,10 @@
 
 #include "GrandOrgueFile.h"
 
+#include "GOGUICouplerPanel.h"
+#include "GOGUIFloatingPanel.h"
 #include "GOGUIPanel.h"
+#include "GOGUIPanelCreator.h"
 #include "GOSoundEngine.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
@@ -31,14 +34,12 @@
 #include "GOrgueConfigReaderDB.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueCoupler.h"
-#include "GOrgueCouplerPanel.h"
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueDocument.h"
 #include "GOrgueElementCreator.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueEvent.h"
-#include "GOrgueFloatingPanel.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueLCD.h"
 #include "GOrgueLoadThread.h"
@@ -46,7 +47,6 @@
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMetronome.h"
-#include "GOrguePanelCreator.h"
 #include "GOrguePath.h"
 #include "GOrguePiston.h"
 #include "GOrgueProgressDialog.h"
@@ -315,8 +315,8 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	}
 
 	m_setter = new GOrgueSetter(this);
-	m_panelcreators.push_back(new GOrgueCouplerPanel(this));
-	m_panelcreators.push_back(new GOrgueFloatingPanel(this));
+	m_panelcreators.push_back(new GOGUICouplerPanel(this));
+	m_panelcreators.push_back(new GOGUIFloatingPanel(this));
 	m_panelcreators.push_back(new GOrgueMetronome(this));
 	m_panelcreators.push_back(m_setter);
 

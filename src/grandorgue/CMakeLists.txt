@@ -239,11 +239,13 @@ contrib/zita-convolver.cpp
 
 GOGUIButton.cpp
 GOGUIControl.cpp
+GOGUICouplerPanel.cpp
 GOGUIDisplayMetrics.cpp
 GOGUILayoutEngine.cpp
 GOGUIHW1DisplayMetrics.cpp
 GOGUISetterDisplayMetrics.cpp
 GOGUIEnclosure.cpp
+GOGUIFloatingPanel.cpp
 GOGUIHW1Background.cpp
 GOGUIImage.cpp
 GOGUILabel.cpp
@@ -283,7 +285,6 @@ GOrgueConfigWriter.cpp
 GOrgueBitmapCache.cpp
 GOrgueButton.cpp
 GOrgueCoupler.cpp
-GOrgueCouplerPanel.cpp
 GOrgueDC.cpp
 GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp
@@ -292,7 +293,6 @@ GOrgueDrawStop.cpp
 GOrgueEnclosure.cpp
 GOrgueEvent.cpp
 GOrgueEventDistributor.cpp
-GOrgueFloatingPanel.cpp
 GOrgueFrameGeneral.cpp
 GOrgueFont.cpp
 GOrgueGeneral.cpp

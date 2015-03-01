@@ -22,12 +22,12 @@
 #ifndef GORGUEMETRONOME_H
 #define GORGUEMETRONOME_H
 
-#include "ptrvector.h"
+#include "GOGUIPanelCreator.h"
 #include "GOrgueLabel.h"
 #include "GOrguePlaybackStateHandler.h"
-#include "GOrguePanelCreator.h"
 #include "GOrgueSaveableObject.h"
 #include "GOrgueSetterButtonCallback.h"
+#include "ptrvector.h"
 #include <wx/timer.h>
 
 class GOGUIPanel;
@@ -38,7 +38,7 @@ class GrandOrgueFile;
 struct IniFileEnumEntry;
 
 class GOrgueMetronome : private wxTimer, private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler,
-	private GOrgueSaveableObject, public GOrguePanelCreator
+	private GOrgueSaveableObject, public GOGUIPanelCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
