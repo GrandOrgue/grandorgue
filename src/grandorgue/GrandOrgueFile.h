@@ -35,8 +35,10 @@
 
 class GOGUIControl;
 class GOGUIPanel;
+class GOrgueButton;
 class GOrgueCache;
 class GOrgueDivisionalCoupler;
+class GOrgueElementCreator;
 class GOrgueEnclosure;
 class GOrgueGeneral;
 class GOrgueManual;
@@ -106,6 +108,7 @@ private:
 	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
 	ptr_vector<GOrguePanelCreator> m_panelcreators;
+	ptr_vector<GOrgueElementCreator> m_elementcreators;
 	GOStringBoolMap m_UsedSections;
 
 	GOSoundEngine* m_soundengine;
@@ -208,6 +211,9 @@ public:
 	void SetIgnorePitch(bool ignorepitch);
 	bool GetIgnorePitch();
 
+	GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel = false);
+	GOrgueLabel* GetLabel(const wxString& name, bool is_panel = false);
+	GOrgueButton* GetButton(const wxString& name, bool is_panel = false);
 	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
 	
 	/* TODO: can somebody figure out what this thing is */

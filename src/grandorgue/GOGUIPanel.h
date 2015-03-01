@@ -59,6 +59,8 @@ protected:
 	void LoadBackgroundControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg);
 
+	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group);
+
 public:
 	GOGUIPanel(GrandOrgueFile* organfile);
 	virtual ~GOGUIPanel();
