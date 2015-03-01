@@ -19,31 +19,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEPANELCREATOR_H
-#define GORGUEPANELCREATOR_H
+#ifndef GORGUEELEMENTCREATOR_H
+#define GORGUEELEMENTCREATOR_H
 
 #include <wx/string.h>
 
 class GOrgueConfigReader;
-class GOGUIControl;
-class GOGUIPanel;
+class GOrgueButton;
+class GOrgueEnclosure;
+class GOrgueLabel;
 
-class GOrguePanelCreator
+typedef struct ElementStateEntry {
+	wxString name;
+	int value;
+	bool is_public;
+} ElementStateEntry;
+
+class GOrgueElementCreator
 {
 public:
-	virtual ~GOrguePanelCreator()
+	virtual ~GOrgueElementCreator()
 	{
 	}
 
-	virtual void Load(GOrgueConfigReader& cfg)
-	{
-	}
+	virtual void Load(GOrgueConfigReader& cfg) = 0;
 
-	virtual void CreatePanels(GOrgueConfigReader& cfg) = 0;
-	virtual GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel)
-	{
-		return NULL;
-	}
+	virtual GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel) = 0;
+	virtual GOrgueLabel* GetLabel(const wxString& name, bool is_panel) = 0;
+	virtual GOrgueButton* GetButton(const wxString& name, bool is_panel) = 0;
 };
 
 #endif

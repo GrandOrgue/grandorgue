@@ -192,7 +192,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			for (unsigned i = 0; i < NumberOfSetterElements; i++)
 			{
 				wxString buffer = wxString::Format(wxT("SetterElement%03d"), i + 1);
-				GOGUIControl* control = m_organfile->CreateGUIElement(cfg, buffer, this);
+				GOGUIControl* control = CreateGUIElement(cfg, buffer);
 				if (!control)
 					throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), buffer.c_str());
 				LoadControl(control, cfg, buffer);
@@ -279,7 +279,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		for (unsigned i = 0; i < NumberOfSetterElements; i++)
 		{
 			wxString buffer = wxString::Format(wxT("SetterElement%03d"), i + 1);
-			GOGUIControl* control = m_organfile->CreateGUIElement(cfg, panel_prefix + buffer, this);
+			GOGUIControl* control = CreateGUIElement(cfg, panel_prefix + buffer);
 			if (!control)
 				throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), (panel_prefix + buffer).c_str());
 			LoadControl(control, cfg, panel_prefix + buffer);
@@ -460,7 +460,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		}
 		else
 		{
-			GOGUIControl* control = m_organfile->CreateGUIElement(cfg, buffer, this);
+			GOGUIControl* control = CreateGUIElement(cfg, buffer);
 			if (!control)
 				throw (wxString)wxString::Format(_("Unkown SetterElement in section %s"), buffer.c_str());
 			LoadControl(control, cfg, buffer);
@@ -475,6 +475,26 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 
 	m_InitialOpenWindow = cfg.ReadBoolean(CMBSetting, m_group, wxT("WindowDisplayed"), false, false);
 }
+
+GOGUIControl* GOGUIPanel::CreateGUIElement(GOrgueConfigReader& cfg, wxString group)
+{
+	wxString type = cfg.ReadString(ODFSetting, group, wxT("Type"), true);
+
+	GOrgueButton* button = m_organfile->GetButton(type, true);
+	if (button)
+		return new GOGUIButton(this, button, false);
+
+	GOrgueLabel* label = m_organfile->GetLabel(type, true);
+	if (label)
+		return new GOGUILabel(this, label);
+
+	GOrgueEnclosure* enclosure = m_organfile->GetEnclosure(type, true);
+	if (enclosure)
+		return new GOGUIEnclosure(this, enclosure);
+
+	return m_organfile->CreateGUIElement(cfg, group, this);
+}
+
 
 void GOGUIPanel::Layout()
 {

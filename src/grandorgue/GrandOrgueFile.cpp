@@ -35,6 +35,7 @@
 #include "GOrgueDivisional.h"
 #include "GOrgueDivisionalCoupler.h"
 #include "GOrgueDocument.h"
+#include "GOrgueElementCreator.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueEvent.h"
 #include "GOrgueFloatingPanel.h"
@@ -105,6 +106,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_manual(),
 	m_panels(),
 	m_panelcreators(),
+	m_elementcreators(),
 	m_UsedSections(),
 	m_soundengine(0),
 	m_midi(0),
@@ -317,6 +319,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_panelcreators.push_back(new GOrgueFloatingPanel(this));
 	m_panelcreators.push_back(new GOrgueMetronome(this));
 	m_panelcreators.push_back(m_setter);
+
+	for(unsigned i = 0; i < m_elementcreators.size(); i++)
+		m_elementcreators[i]->Load(cfg);
 
 	for(unsigned i = 0; i < m_panelcreators.size(); i++)
 		m_panelcreators[i]->Load(cfg);
@@ -778,6 +783,39 @@ bool GrandOrgueFile::Export(const wxString& cmb)
 	if (!GORenameFile(tmp_name, fn))
 		return false;
 	return true;
+}
+
+GOrgueEnclosure* GrandOrgueFile::GetEnclosure(const wxString& name, bool is_panel)
+{
+	for(unsigned i = 0; i < m_elementcreators.size(); i++)
+	{
+		GOrgueEnclosure* c = m_elementcreators[i]->GetEnclosure(name, is_panel);
+		if (c)
+			return c;
+	}
+	return NULL;
+}
+
+GOrgueLabel* GrandOrgueFile::GetLabel(const wxString& name, bool is_panel)
+{
+	for(unsigned i = 0; i < m_elementcreators.size(); i++)
+	{
+		GOrgueLabel* c = m_elementcreators[i]->GetLabel(name, is_panel);
+		if (c)
+			return c;
+	}
+	return NULL;
+}
+
+GOrgueButton* GrandOrgueFile::GetButton(const wxString& name, bool is_panel)
+{
+	for(unsigned i = 0; i < m_elementcreators.size(); i++)
+	{
+		GOrgueButton* c = m_elementcreators[i]->GetButton(name, is_panel);
+		if (c)
+			return c;
+	}
+	return NULL;
 }
 
 GOGUIControl* GrandOrgueFile::CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel)
