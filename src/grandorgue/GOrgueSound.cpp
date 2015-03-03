@@ -218,13 +218,13 @@ void GOrgueSound::CloseSound()
 	{
 		m_AudioOutputs[i].waiting = false;
 		m_AudioOutputs[i].wait = false;
-		m_AudioOutputs[i].condition.Signal();
+		m_AudioOutputs[i].condition.Broadcast();
 	}
 
 	for(unsigned i = 1; i < m_AudioOutputs.size(); i++)
 	{
 		GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
-		m_AudioOutputs[i].condition.Signal();
+		m_AudioOutputs[i].condition.Broadcast();
 	}
 
 	for(int i = m_AudioOutputs.size() - 1; i >= 0; i--)
@@ -413,9 +413,9 @@ bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsign
 
 	m_SoundEngine.GetAudioOutput(output_buffer, n_frames, dev_index);
 	device->wait = true;
-	m_WaitCount.fetch_add(1);
+	unsigned count = m_WaitCount.fetch_add(1);
 
-	if (m_WaitCount >= m_AudioOutputs.size())
+	if (count + 1 == m_AudioOutputs.size())
 	{
 		m_SoundEngine.NextPeriod();
 		UpdateMeter();
