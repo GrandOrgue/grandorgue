@@ -66,7 +66,8 @@ public:
 
 #include <mutex>
 
-#ifdef __WIN32__
+#if 1
+//#ifdef __WIN32__
 class GOWaitQueue
 {
 private:
