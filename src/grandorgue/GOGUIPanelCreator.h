@@ -25,8 +25,6 @@
 #include <wx/string.h>
 
 class GOrgueConfigReader;
-class GOGUIControl;
-class GOGUIPanel;
 
 class GOGUIPanelCreator
 {
@@ -35,15 +33,7 @@ public:
 	{
 	}
 
-	virtual void Load(GOrgueConfigReader& cfg)
-	{
-	}
-
 	virtual void CreatePanels(GOrgueConfigReader& cfg) = 0;
-	virtual GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel)
-	{
-		return NULL;
-	}
 };
 
 #endif
