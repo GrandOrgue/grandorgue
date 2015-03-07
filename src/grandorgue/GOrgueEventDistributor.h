@@ -46,6 +46,8 @@ private:
 	std::vector<GOrgueCacheObject*> m_CacheObjects;
 
 protected:
+	void Cleanup();
+
 	void SendMidi(const GOrgueMidiEvent& event);
 
 	void ReadCombinations(GOrgueConfigReader& cfg);
