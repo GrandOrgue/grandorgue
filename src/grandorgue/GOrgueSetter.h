@@ -22,24 +22,15 @@
 #ifndef GORGUESETTER_H
 #define GORGUESETTER_H
 
-#include "GOGUIPanelCreator.h"
 #include "GOrgueControlChangedHandler.h"
+#include "GOrgueElementCreator.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueLabel.h"
 #include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSetterButtonCallback.h"
 #include "ptrvector.h"
 
-class GOGUIControl;
-class GOGUILabel;
-class GOGUIPanel;
-class GOrgueConfigReader;
-class GOrgueConfigWriter;
 class GOrgueFrameGeneral;
-class GOrgueMidiEvent;
-class GOrgueSetterButton;
-class GrandOrgueFile;
-struct IniFileEnumEntry;
 
 typedef enum 
 {
@@ -49,7 +40,7 @@ typedef enum
 } SetterType;
 
 class GOrgueSetter : private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler, private GOrgueControlChangedHandler,
-	public GOGUIPanelCreator
+	public GOrgueElementCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
@@ -73,7 +64,7 @@ private:
 	void SetCrescendoType(unsigned no);
 	void Crescendo(int pos, bool force = false);
 
-	static const struct IniFileEnumEntry m_setter_element_types[];
+	static const struct ElementListEntry m_element_types[];
 
 	void SetterButtonChanged(GOrgueSetterButton* button);
 
@@ -84,19 +75,14 @@ private:
 	void StartPlayback();
 	void PrepareRecording();
 
-	GOGUIPanel* CreateGeneralsPanel(GOrgueConfigReader& cfg);
-	GOGUIPanel* CreateSetterPanel(GOrgueConfigReader& cfg);
-	GOGUIPanel* CreateCrescendoPanel(GOrgueConfigReader& cfg);
-	GOGUIPanel* CreateDivisionalPanel(GOrgueConfigReader& cfg);
-	GOGUIPanel* CreateMasterPanel(GOrgueConfigReader& cfg);
-
 public:
 	GOrgueSetter(GrandOrgueFile* organfile);
 	virtual ~GOrgueSetter();
 
 	void Load(GOrgueConfigReader& cfg);
-	void CreatePanels(GOrgueConfigReader& cfg);
-	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
+	GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel);
+	GOrgueLabel* GetLabel(const wxString& name, bool is_panel);
+	GOrgueButton* GetButton(const wxString& name, bool is_panel);
 
 	void Update();
 

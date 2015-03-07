@@ -21,11 +21,16 @@
 
 #include "GrandOrgueFile.h"
 
+#include "GOGUIBankedGeneralsPanel.h"
+#include "GOGUICrescendoPanel.h"
 #include "GOGUICouplerPanel.h"
+#include "GOGUIDivisionalsPanel.h"
 #include "GOGUIFloatingPanel.h"
+#include "GOGUIMasterPanel.h"
 #include "GOGUIMetronomePanel.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelCreator.h"
+#include "GOGUISequencerPanel.h"
 #include "GOSoundEngine.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
@@ -316,11 +321,16 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	}
 
 	m_setter = new GOrgueSetter(this);
+	m_elementcreators.push_back(m_setter);
 	m_elementcreators.push_back(new GOrgueMetronome(this));
 	m_panelcreators.push_back(new GOGUICouplerPanel(this));
 	m_panelcreators.push_back(new GOGUIFloatingPanel(this));
 	m_panelcreators.push_back(new GOGUIMetronomePanel(this));
-	m_panelcreators.push_back(m_setter);
+	m_panelcreators.push_back(new GOGUICrescendoPanel(this));
+	m_panelcreators.push_back(new GOGUIDivisionalsPanel(this));
+	m_panelcreators.push_back(new GOGUIBankedGeneralsPanel(this));
+	m_panelcreators.push_back(new GOGUISequencerPanel(this));
+	m_panelcreators.push_back(new GOGUIMasterPanel(this));
 
 	for(unsigned i = 0; i < m_elementcreators.size(); i++)
 		m_elementcreators[i]->Load(cfg);

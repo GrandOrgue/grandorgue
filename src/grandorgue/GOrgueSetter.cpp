@@ -21,19 +21,10 @@
 
 #include "GOrgueSetter.h"
 
-#include "GOGUIButton.h"
-#include "GOGUIEnclosure.h"
-#include "GOGUIHW1Background.h"
-#include "GOGUILabel.h"
-#include "GOGUILayoutEngine.h"
-#include "GOGUIPanel.h"
-#include "GOGUISetterDisplayMetrics.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
-#include "GOrgueDivisional.h"
 #include "GOrgueEvent.h"
 #include "GOrgueFrameGeneral.h"
-#include "GOrgueManual.h"
 #include "GOrgueSetterButton.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
@@ -153,109 +144,110 @@ enum {
 	ID_SETTER_ON,
 };
 
-const struct IniFileEnumEntry GOrgueSetter::m_setter_element_types[] = {
-	{ wxT("Prev"), ID_SETTER_PREV },
-	{ wxT("Next"), ID_SETTER_NEXT },
-	{ wxT("Set"), ID_SETTER_SET },
-	{ wxT("M1"), ID_SETTER_M1 },
-	{ wxT("M10"), ID_SETTER_M10 },
-	{ wxT("M100"), ID_SETTER_M100 },
-	{ wxT("P1"), ID_SETTER_P1 },
-	{ wxT("P10"), ID_SETTER_P10 },
-	{ wxT("P100"), ID_SETTER_P100 },
-	{ wxT("Current"), ID_SETTER_CURRENT },
-	{ wxT("Home"), ID_SETTER_HOME },
-	{ wxT("GC"), ID_SETTER_GC },
-	{ wxT("L1"), ID_SETTER_L1 },
-	{ wxT("L2"), ID_SETTER_L2 },
-	{ wxT("L3"), ID_SETTER_L3 },
-	{ wxT("L4"), ID_SETTER_L4 },
-	{ wxT("L5"), ID_SETTER_L5 },
-	{ wxT("L6"), ID_SETTER_L6 },
-	{ wxT("L7"), ID_SETTER_L7 },
-	{ wxT("L8"), ID_SETTER_L8 },
-	{ wxT("L9"), ID_SETTER_L9 },
-	{ wxT("L0"), ID_SETTER_L0 },
-	{ wxT("Regular"), ID_SETTER_REGULAR },
-	{ wxT("Scope"), ID_SETTER_SCOPE },
-	{ wxT("Scoped"), ID_SETTER_SCOPED },
-	{ wxT("Full"), ID_SETTER_FULL },
-	{ wxT("Insert"), ID_SETTER_INSERT },
-	{ wxT("Delete"), ID_SETTER_DELETE },
-	{ wxT("General01"), ID_SETTER_GENERAL00 },
-	{ wxT("General02"), ID_SETTER_GENERAL01 },
-	{ wxT("General03"), ID_SETTER_GENERAL02 },
-	{ wxT("General04"), ID_SETTER_GENERAL03 },
-	{ wxT("General05"), ID_SETTER_GENERAL04 },
-	{ wxT("General06"), ID_SETTER_GENERAL05 },
-	{ wxT("General07"), ID_SETTER_GENERAL06 },
-	{ wxT("General08"), ID_SETTER_GENERAL07 },
-	{ wxT("General09"), ID_SETTER_GENERAL08 },
-	{ wxT("General10"), ID_SETTER_GENERAL09 },
-	{ wxT("General11"), ID_SETTER_GENERAL10 },
-	{ wxT("General12"), ID_SETTER_GENERAL11 },
-	{ wxT("General13"), ID_SETTER_GENERAL12 },
-	{ wxT("General14"), ID_SETTER_GENERAL13 },
-	{ wxT("General15"), ID_SETTER_GENERAL14 },
-	{ wxT("General16"), ID_SETTER_GENERAL15 },
-	{ wxT("General17"), ID_SETTER_GENERAL16 },
-	{ wxT("General18"), ID_SETTER_GENERAL17 },
-	{ wxT("General19"), ID_SETTER_GENERAL18 },
-	{ wxT("General20"), ID_SETTER_GENERAL19 },
-	{ wxT("General21"), ID_SETTER_GENERAL20 },
-	{ wxT("General22"), ID_SETTER_GENERAL21 },
-	{ wxT("General23"), ID_SETTER_GENERAL22 },
-	{ wxT("General24"), ID_SETTER_GENERAL23 },
-	{ wxT("General25"), ID_SETTER_GENERAL24 },
-	{ wxT("General26"), ID_SETTER_GENERAL25 },
-	{ wxT("General27"), ID_SETTER_GENERAL26 },
-	{ wxT("General28"), ID_SETTER_GENERAL27 },
-	{ wxT("General29"), ID_SETTER_GENERAL28 },
-	{ wxT("General30"), ID_SETTER_GENERAL29 },
-	{ wxT("General31"), ID_SETTER_GENERAL30 },
-	{ wxT("General32"), ID_SETTER_GENERAL31 },
-	{ wxT("General33"), ID_SETTER_GENERAL32 },
-	{ wxT("General34"), ID_SETTER_GENERAL33 },
-	{ wxT("General35"), ID_SETTER_GENERAL34 },
-	{ wxT("General36"), ID_SETTER_GENERAL35 },
-	{ wxT("General37"), ID_SETTER_GENERAL36 },
-	{ wxT("General38"), ID_SETTER_GENERAL37 },
-	{ wxT("General39"), ID_SETTER_GENERAL38 },
-	{ wxT("General40"), ID_SETTER_GENERAL39 },
-	{ wxT("General41"), ID_SETTER_GENERAL40 },
-	{ wxT("General42"), ID_SETTER_GENERAL41 },
-	{ wxT("General43"), ID_SETTER_GENERAL42 },
-	{ wxT("General44"), ID_SETTER_GENERAL43 },
-	{ wxT("General45"), ID_SETTER_GENERAL44 },
-	{ wxT("General46"), ID_SETTER_GENERAL45 },
-	{ wxT("General47"), ID_SETTER_GENERAL46 },
-	{ wxT("General48"), ID_SETTER_GENERAL47 },
-	{ wxT("General49"), ID_SETTER_GENERAL48 },
-	{ wxT("General50"), ID_SETTER_GENERAL49 },
+const struct ElementListEntry GOrgueSetter::m_element_types[] = {
+	{ wxT("Prev"), ID_SETTER_PREV, true },
+	{ wxT("Next"), ID_SETTER_NEXT, true },
+	{ wxT("Set"), ID_SETTER_SET, true },
+	{ wxT("M1"), ID_SETTER_M1, true },
+	{ wxT("M10"), ID_SETTER_M10, true },
+	{ wxT("M100"), ID_SETTER_M100, true },
+	{ wxT("P1"), ID_SETTER_P1, true },
+	{ wxT("P10"), ID_SETTER_P10, true },
+	{ wxT("P100"), ID_SETTER_P100, true },
+	{ wxT("Current"), ID_SETTER_CURRENT, true },
+	{ wxT("Home"), ID_SETTER_HOME, true },
+	{ wxT("GC"), ID_SETTER_GC, true },
+	{ wxT("L1"), ID_SETTER_L1, true },
+	{ wxT("L2"), ID_SETTER_L2, true },
+	{ wxT("L3"), ID_SETTER_L3, true },
+	{ wxT("L4"), ID_SETTER_L4, true },
+	{ wxT("L5"), ID_SETTER_L5, true },
+	{ wxT("L6"), ID_SETTER_L6, true },
+	{ wxT("L7"), ID_SETTER_L7, true },
+	{ wxT("L8"), ID_SETTER_L8, true },
+	{ wxT("L9"), ID_SETTER_L9, true },
+	{ wxT("L0"), ID_SETTER_L0, true },
+	{ wxT("Regular"), ID_SETTER_REGULAR, true },
+	{ wxT("Scope"), ID_SETTER_SCOPE, true },
+	{ wxT("Scoped"), ID_SETTER_SCOPED, true },
+	{ wxT("Full"), ID_SETTER_FULL, true },
+	{ wxT("Insert"), ID_SETTER_INSERT, true },
+	{ wxT("Delete"), ID_SETTER_DELETE, true },
+	{ wxT("General01"), ID_SETTER_GENERAL00, true },
+	{ wxT("General02"), ID_SETTER_GENERAL01, true },
+	{ wxT("General03"), ID_SETTER_GENERAL02, true },
+	{ wxT("General04"), ID_SETTER_GENERAL03, true },
+	{ wxT("General05"), ID_SETTER_GENERAL04, true },
+	{ wxT("General06"), ID_SETTER_GENERAL05, true },
+	{ wxT("General07"), ID_SETTER_GENERAL06, true },
+	{ wxT("General08"), ID_SETTER_GENERAL07, true },
+	{ wxT("General09"), ID_SETTER_GENERAL08, true },
+	{ wxT("General10"), ID_SETTER_GENERAL09, true },
+	{ wxT("General11"), ID_SETTER_GENERAL10, true },
+	{ wxT("General12"), ID_SETTER_GENERAL11, true },
+	{ wxT("General13"), ID_SETTER_GENERAL12, true },
+	{ wxT("General14"), ID_SETTER_GENERAL13, true },
+	{ wxT("General15"), ID_SETTER_GENERAL14, true },
+	{ wxT("General16"), ID_SETTER_GENERAL15, true },
+	{ wxT("General17"), ID_SETTER_GENERAL16, true },
+	{ wxT("General18"), ID_SETTER_GENERAL17, true },
+	{ wxT("General19"), ID_SETTER_GENERAL18, true },
+	{ wxT("General20"), ID_SETTER_GENERAL19, true },
+	{ wxT("General21"), ID_SETTER_GENERAL20, true },
+	{ wxT("General22"), ID_SETTER_GENERAL21, true },
+	{ wxT("General23"), ID_SETTER_GENERAL22, true },
+	{ wxT("General24"), ID_SETTER_GENERAL23, true },
+	{ wxT("General25"), ID_SETTER_GENERAL24, true },
+	{ wxT("General26"), ID_SETTER_GENERAL25, true },
+	{ wxT("General27"), ID_SETTER_GENERAL26, true },
+	{ wxT("General28"), ID_SETTER_GENERAL27, true },
+	{ wxT("General29"), ID_SETTER_GENERAL28, true },
+	{ wxT("General30"), ID_SETTER_GENERAL29, true },
+	{ wxT("General31"), ID_SETTER_GENERAL30, true },
+	{ wxT("General32"), ID_SETTER_GENERAL31, true },
+	{ wxT("General33"), ID_SETTER_GENERAL32, true },
+	{ wxT("General34"), ID_SETTER_GENERAL33, true },
+	{ wxT("General35"), ID_SETTER_GENERAL34, true },
+	{ wxT("General36"), ID_SETTER_GENERAL35, true },
+	{ wxT("General37"), ID_SETTER_GENERAL36, true },
+	{ wxT("General38"), ID_SETTER_GENERAL37, true },
+	{ wxT("General39"), ID_SETTER_GENERAL38, true },
+	{ wxT("General40"), ID_SETTER_GENERAL39, true },
+	{ wxT("General41"), ID_SETTER_GENERAL40, true },
+	{ wxT("General42"), ID_SETTER_GENERAL41, true },
+	{ wxT("General43"), ID_SETTER_GENERAL42, true },
+	{ wxT("General44"), ID_SETTER_GENERAL43, true },
+	{ wxT("General45"), ID_SETTER_GENERAL44, true },
+	{ wxT("General46"), ID_SETTER_GENERAL45, true },
+	{ wxT("General47"), ID_SETTER_GENERAL46, true },
+	{ wxT("General48"), ID_SETTER_GENERAL47, true },
+	{ wxT("General49"), ID_SETTER_GENERAL48, true },
+	{ wxT("General50"), ID_SETTER_GENERAL49, true },
 
-	{ wxT("GeneralPrev"), ID_SETTER_GENERAL_PREV },
-	{ wxT("GeneralNext"), ID_SETTER_GENERAL_NEXT },
+	{ wxT("GeneralPrev"), ID_SETTER_GENERAL_PREV, true },
+	{ wxT("GeneralNext"), ID_SETTER_GENERAL_NEXT, true },
 
-	{ wxT("PitchP1"), ID_SETTER_PITCH_P1 },
-	{ wxT("PitchP10"), ID_SETTER_PITCH_P10 },
-	{ wxT("PitchP100"), ID_SETTER_PITCH_P100 },
-	{ wxT("PitchM1"), ID_SETTER_PITCH_M1 },
-	{ wxT("PitchM10"), ID_SETTER_PITCH_M10 },
-	{ wxT("PitchM100"), ID_SETTER_PITCH_M100 },
-	{ wxT("TemperamentPrev"), ID_SETTER_TEMPERAMENT_PREV },
-	{ wxT("TemperamentNext"), ID_SETTER_TEMPERAMENT_NEXT },
-	{ wxT("TransposeDown"), ID_SETTER_TRANSPOSE_DOWN },
-	{ wxT("TransposeUp"), ID_SETTER_TRANSPOSE_UP },
+	{ wxT("PitchP1"), ID_SETTER_PITCH_P1, true },
+	{ wxT("PitchP10"), ID_SETTER_PITCH_P10, true },
+	{ wxT("PitchP100"), ID_SETTER_PITCH_P100, true },
+	{ wxT("PitchM1"), ID_SETTER_PITCH_M1, true },
+	{ wxT("PitchM10"), ID_SETTER_PITCH_M10, true },
+	{ wxT("PitchM100"), ID_SETTER_PITCH_M100, true },
+	{ wxT("TemperamentPrev"), ID_SETTER_TEMPERAMENT_PREV, true },
+	{ wxT("TemperamentNext"), ID_SETTER_TEMPERAMENT_NEXT, true },
+	{ wxT("TransposeDown"), ID_SETTER_TRANSPOSE_DOWN, true },
+	{ wxT("TransposeUp"), ID_SETTER_TRANSPOSE_UP, true },
 
-	{ wxT("Save"), ID_SETTER_SAVE },
+	{ wxT("Save"), ID_SETTER_SAVE, true },
+	{ wxT("OnState"), ID_SETTER_ON, false },
 
-	{ wxT("CrescendoA"), ID_SETTER_CRESCENDO_A },
-	{ wxT("CrescendoB"), ID_SETTER_CRESCENDO_B },
-	{ wxT("CrescendoC"), ID_SETTER_CRESCENDO_C },
-	{ wxT("CrescendoD"), ID_SETTER_CRESCENDO_D },
-	{ wxT("CrescendoPrev"), ID_SETTER_CRESCENDO_PREV },
-	{ wxT("CrescendoCurrent"), ID_SETTER_CRESCENDO_CURRENT },
-	{ wxT("CrescendoNext"), ID_SETTER_CRESCENDO_NEXT },
+	{ wxT("CrescendoA"), ID_SETTER_CRESCENDO_A, true },
+	{ wxT("CrescendoB"), ID_SETTER_CRESCENDO_B, true },
+	{ wxT("CrescendoC"), ID_SETTER_CRESCENDO_C, true },
+	{ wxT("CrescendoD"), ID_SETTER_CRESCENDO_D, true },
+	{ wxT("CrescendoPrev"), ID_SETTER_CRESCENDO_PREV, true },
+	{ wxT("CrescendoCurrent"), ID_SETTER_CRESCENDO_CURRENT, true },
+	{ wxT("CrescendoNext"), ID_SETTER_CRESCENDO_NEXT, true },
 
 };
 
@@ -370,398 +362,6 @@ GOrgueSetter::~GOrgueSetter()
 {
 }
 
-
-GOGUIControl* GOrgueSetter::CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel)
-{
-	wxString type = cfg.ReadString(ODFSetting, group, wxT("Type"), true);
-	if (type == wxT("Label"))
-		return new GOGUILabel(panel, &m_PosDisplay);
-
-	if (type == wxT("CrescendoLabel"))
-		return new GOGUILabel(panel, &m_CrescendoDisplay);
-
-	if (type == wxT("GeneralLabel"))
-		return new GOGUILabel(panel, &m_BankDisplay);
-
-	if (type == wxT("PitchLabel"))
-		return new GOGUILabel(panel, m_organfile->GetPitchLabel());
-
-	if (type == wxT("TemperamentLabel"))
-		return new GOGUILabel(panel, m_organfile->GetTemperamentLabel());
-
-	if (type == wxT("TransposeLabel"))
-		return new GOGUILabel(panel, &m_TransposeDisplay);
-
-	if (type == wxT("Swell"))
-		return new GOGUIEnclosure(panel, &m_swell);
-
-	for(unsigned i = 0; i < sizeof(m_setter_element_types) / sizeof(m_setter_element_types[0]); i++)
-		if (type == m_setter_element_types[i].name)
-			return new GOGUIButton(panel, m_button[m_setter_element_types[i].value], false);
-
-	return NULL;
-}
-
-GOGUIPanel* GOrgueSetter::CreateMasterPanel(GOrgueConfigReader& cfg)
-{
-	GOGUIButton* button;
-
-	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_MASTER);
-	panel->Init(cfg, metrics, _("Master Controls"), wxT("SetterMaster"), wxT(""));
-
-	GOGUIHW1Background* back = new GOGUIHW1Background(panel);
-	back->Init(cfg, wxT("SetterMaster"));
-	panel->AddControl(back);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M100], false);
-	button->Init(cfg, wxT("SetterMasterPitchM100"), 1, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M10], false);
-	button->Init(cfg, wxT("SetterMasterPitchM10"), 2, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_M1], false);
-	button->Init(cfg, wxT("SetterMasterPitchM1"), 3, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_P1], false);
-	button->Init(cfg, wxT("SetterMasterPitchP1"), 5, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_P10], false);
-	button->Init(cfg, wxT("SetterMasterPitchP10"), 6, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PITCH_P100], false);
-	button->Init(cfg, wxT("SetterMasterPitchP10"), 7, 100);
-	panel->AddControl(button);
-
-	GOGUILabel* PosDisplay=new GOGUILabel(panel, m_organfile->GetPitchLabel());
-	PosDisplay->Init(cfg, wxT("SetterMasterPitch"), 230, 35);
-	panel->AddControl(PosDisplay);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_TEMPERAMENT_PREV], false);
-	button->Init(cfg, wxT("SetterMasterTemperamentPrev"), 1, 101);
-	panel->AddControl(button);
-
-	PosDisplay=new GOGUILabel(panel, m_organfile->GetTemperamentLabel());
-	PosDisplay->Init(cfg, wxT("SetterMasterTemperament"), 80, 90, wxEmptyString, 2);
-	panel->AddControl(PosDisplay);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_TEMPERAMENT_NEXT], false);
-	button->Init(cfg, wxT("SetterMasterTemperamentNext"), 3, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SAVE], false);
-	button->Init(cfg, wxT("SetterSave"), 5, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_ON], true);
-	button->Init(cfg, wxT("SetterOn"), 1, 100, 4);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_TRANSPOSE_DOWN], false);
-	button->Init(cfg, wxT("SetterMasterTransposeDown"), 1, 102);
-	panel->AddControl(button);
-
-	PosDisplay=new GOGUILabel(panel, &m_TransposeDisplay);
-	PosDisplay->Init(cfg, wxT("SetterMasterTranspose"), 80, 175);
-	panel->AddControl(PosDisplay);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_TRANSPOSE_UP], false);
-	button->Init(cfg, wxT("SetterMasterTransposeUp"), 3, 102);
-	panel->AddControl(button);
-
-	PosDisplay=new GOGUILabel(panel, &m_NameDisplay);
-	PosDisplay->Init(cfg, wxT("SetterMasterName"), 180, 230, wxEmptyString, 5);
-	panel->AddControl(PosDisplay);
-
-	return panel;
-}
-
-GOGUIPanel* GOrgueSetter::CreateDivisionalPanel(GOrgueConfigReader& cfg)
-{
-	GOGUIButton* button;
-
-	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_DIVISIONALS);
-	panel->Init(cfg, metrics, _("Divisionals"), wxT("SetterDivisionalPanel"));
-
-	GOGUIHW1Background* back = new GOGUIHW1Background(panel);
-	back->Init(cfg, wxT("SetterDivisionals"));
-	panel->AddControl(back);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false);
-	button->Init(cfg, wxT("SetterGeneralsSet"), 1, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_REGULAR], false);
-	button->Init(cfg, wxT("SetterGerneralsRegular"), 3, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPE], false);
-	button->Init(cfg, wxT("SetterGeneralsScope"), 4, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPED], false);
-	button->Init(cfg, wxT("SetterGeneralsScoped"), 5, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_FULL], false);
-	button->Init(cfg, wxT("SetterGeneralsFull"), 7, 100);
-	panel->AddControl(button);
-
-	panel->GetLayoutEngine()->Update();
-	for (unsigned int i = m_organfile->GetFirstManualIndex(); i < m_organfile->GetODFManualCount(); i++)
-	{
-		int x, y;
-		GOrgueManual* manual = m_organfile->GetManual(i);
-
-		panel->GetLayoutEngine()->GetPushbuttonBlitPosition(100 + i, 1, x, y);
-
-		GOGUILabel* PosDisplay=new GOGUILabel(panel, NULL);
-		PosDisplay->Init(cfg, wxString::Format(wxT("SetterDivisionalLabel%03d"), i), x, y, manual->GetName());
-		panel->AddControl(PosDisplay);
-
-		for(unsigned j = 0; j < 10; j++)
-		{
-			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile, manual->GetDivisionalTemplate(), true);
-			divisional->Init(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
-			manual->AddDivisional(divisional);
-
-			button = new GOGUIButton(panel, divisional, true);
-			button->Init(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), j + 3, 100 + i);
-			panel->AddControl(button);
-		}
-	}
-	return panel;
-}
-
-GOGUIPanel* GOrgueSetter::CreateGeneralsPanel(GOrgueConfigReader& cfg)
-{
-	GOGUIButton* button;
-
-	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_GENERALS);
-	panel->Init(cfg, metrics, _("Generals"), wxT("SetterGeneralsPanel"));
-
-	GOGUIHW1Background* back = new GOGUIHW1Background(panel);
-	back->Init(cfg, wxT("SetterGenerals"));
-	panel->AddControl(back);
-
-	GOGUILabel* BankDisplay=new GOGUILabel(panel, &m_BankDisplay);
-	BankDisplay->Init(cfg, wxT("SetterGeneralBank"), 260, 20);
-	panel->AddControl(BankDisplay);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_GENERAL_PREV], false);
-	button->Init(cfg, wxT("SetterGerneralsPrev"), 3, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_GENERAL_NEXT], false);
-	button->Init(cfg, wxT("SetterGerneralsNext"), 5, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false);
-	button->Init(cfg, wxT("SetterGeneralsSet"), 1, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_REGULAR], false);
-	button->Init(cfg, wxT("SetterGerneralsRegular"), 3, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPE], false);
-	button->Init(cfg, wxT("SetterGeneralsScope"), 4, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPED], false);
-	button->Init(cfg, wxT("SetterGeneralsScoped"), 5, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_FULL], false);
-	button->Init(cfg, wxT("SetterGeneralsFull"), 7, 101);
-	panel->AddControl(button);
-
-	for(unsigned i = 0; i < GENERALS; i++)
-	{
-		button = new GOGUIButton(panel, m_button[ID_SETTER_GENERAL00 + i], true);
-		button->Init(cfg, wxString::Format(wxT("SetterGeneral%d"), i + 1), (i % 10) + 1, 100 + i / 10);
-		panel->AddControl(button);
-	}
-
-	return panel;
-}
-
-GOGUIPanel* GOrgueSetter::CreateSetterPanel(GOrgueConfigReader& cfg)
-{
-	GOGUIButton* button;
-
-	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_SETTER);
-	panel->Init(cfg, metrics, _("Combination Setter"), wxT("SetterPanel"));
-
-	GOGUIHW1Background* back = new GOGUIHW1Background(panel);
-	back->Init(cfg, wxT("Setter"));
-	panel->AddControl(back);
-
-	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_PosDisplay);
-	PosDisplay->Init(cfg, wxT("SetterCurrentPosition"), 350, 10);
-	panel->AddControl(PosDisplay);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_CURRENT], false);
-	button->Init(cfg, wxT("SetterCurrent"), 1, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_M100], false);
-	button->Init(cfg, wxT("SetterM100"), 2, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_M10], false);
-	button->Init(cfg, wxT("SetterM10"), 3, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_M1], false);
-	button->Init(cfg, wxT("SetterM1"), 4, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_PREV], false);
-	button->Init(cfg, wxT("SetterPrev"), 5, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_NEXT], false);
-	button->Init(cfg, wxT("SetterNext"), 6, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_P1], false);
-	button->Init(cfg, wxT("SetterP1"), 7, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_P10], false);
-	button->Init(cfg, wxT("SetterP10"), 8, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_P100], false);
-	button->Init(cfg, wxT("SetterP100"), 9, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_HOME], false);
-	button->Init(cfg, wxT("SetterHome"), 10, 100);
-	panel->AddControl(button);
-
-	for(unsigned i = 0; i < 10; i++)
-	{
-		button = new GOGUIButton(panel, m_button[ID_SETTER_L0 + i], false);
-		button->Init(cfg, wxString::Format(wxT("SetterL%d"), i), i + 1, 101);
-		panel->AddControl(button);
-	}
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false);
-	button->Init(cfg, wxT("SetterSet"), 1, 102);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_REGULAR], false);
-	button->Init(cfg, wxT("SetterRegular"), 3, 102);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPE], false);
-	button->Init(cfg, wxT("SetterScope"), 4, 102);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPED], false);
-	button->Init(cfg, wxT("SetterScoped"), 5, 102);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_FULL], false);
-	button->Init(cfg, wxT("SetterFull"), 7, 102);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_GC], false);
-	button->Init(cfg, wxT("SetterGC"), 8, 102);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_INSERT], false);
-	button->Init(cfg, wxT("SetterInsert"), 9, 102);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_DELETE], false);
-	button->Init(cfg, wxT("SetterDelete"), 10, 102);
-	panel->AddControl(button);
-
-	return panel;
-}
-
-GOGUIPanel* GOrgueSetter::CreateCrescendoPanel(GOrgueConfigReader& cfg)
-{
-	GOGUIButton* button;
-
-	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_CRESCENDO);
-	panel->Init(cfg, metrics, _("Crescendo Pedal"), wxT("SetterCrescendoPanel"));
-
-	GOGUIHW1Background* back = new GOGUIHW1Background(panel);
-	back->Init(cfg, wxT("SetterCrescendo"));
-	panel->AddControl(back);
-
-	GOGUIEnclosure* enclosure = new GOGUIEnclosure(panel, &m_swell);
-	enclosure->Init(cfg, wxT("SetterSwell"));
-	panel->AddControl(enclosure);
-
-	GOGUILabel* PosDisplay=new GOGUILabel(panel, &m_CrescendoDisplay);
-	PosDisplay->Init(cfg, wxT("SetterCrescendoPosition"), 350, 10);
-	panel->AddControl(PosDisplay);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SET], false);
-	button->Init(cfg, wxT("SetterCrescendoSet"), 1, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_REGULAR], false);
-	button->Init(cfg, wxT("SetterCrescendoRegular"), 3, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPE], false);
-	button->Init(cfg, wxT("SetterCrescendoScope"), 4, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_SCOPED], false);
-	button->Init(cfg, wxT("SetterCrescendoScoped"), 5, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_FULL], false);
-	button->Init(cfg, wxT("SetterCrescendoFull"), 7, 100);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_A], false);
-	button->Init(cfg, wxT("SetterCrescendoA"), 1, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_B], false);
-	button->Init(cfg, wxT("SetterCrescendoB"), 2, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_C], false);
-	button->Init(cfg, wxT("SetterCrescendoC"), 3, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_D], false);
-	button->Init(cfg, wxT("SetterCrescendoD"), 4, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_PREV], false);
-	button->Init(cfg, wxT("SetterCrescendoPrev"), 6, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_CURRENT], false);
-	button->Init(cfg, wxT("SetterCrescendoCurrent"), 7, 101);
-	panel->AddControl(button);
-
-	button = new GOGUIButton(panel, m_button[ID_SETTER_CRESCENDO_NEXT], false);
-	button->Init(cfg, wxT("SetterCrescendoNext"), 8, 101);
-	panel->AddControl(button);
-
-	return panel;
-}
-
 void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 {
 	wxString buffer;
@@ -861,15 +461,6 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 	}
 	m_button[ID_SETTER_GENERAL_PREV]->Init(cfg, wxT("SetterGeneralPrev"), _("Prev"));
 	m_button[ID_SETTER_GENERAL_NEXT]->Init(cfg, wxT("SetterGeneralNext"), _("Next"));
-}
-
-void GOrgueSetter::CreatePanels(GOrgueConfigReader& cfg)
-{
-	m_organfile->AddPanel(CreateCrescendoPanel(cfg));
-	m_organfile->AddPanel(CreateDivisionalPanel(cfg));
-	m_organfile->AddPanel(CreateGeneralsPanel(cfg));
-	m_organfile->AddPanel(CreateSetterPanel(cfg));
-	m_organfile->AddPanel(CreateMasterPanel(cfg));
 }
 
 void GOrgueSetter::SetterButtonChanged(GOrgueSetterButton* button)
@@ -1279,4 +870,54 @@ void GOrgueSetter::SetTranspose(int value)
 void GOrgueSetter::UpdateModified(bool modified)
 {
 	m_button[ID_SETTER_SAVE]->Display(modified);	
+}
+
+GOrgueEnclosure* GOrgueSetter::GetEnclosure(const wxString& name, bool is_panel)
+{
+	if (name == wxT("Swell"))
+		return &m_swell;
+
+	return NULL;
+}
+
+GOrgueLabel* GOrgueSetter::GetLabel(const wxString& name, bool is_panel)
+{
+	if (name == wxT("Label"))
+		return &m_PosDisplay;
+
+	if (name == wxT("CrescendoLabel"))
+		return &m_CrescendoDisplay;
+
+	if (name == wxT("GeneralLabel"))
+		return &m_BankDisplay;
+
+	if (name == wxT("PitchLabel"))
+		return m_organfile->GetPitchLabel();
+
+	if (name == wxT("TemperamentLabel"))
+		return m_organfile->GetTemperamentLabel();
+
+	if (name == wxT("TransposeLabel"))
+		return &m_TransposeDisplay;
+
+	if (is_panel)
+		return NULL;
+
+	if (name == wxT("OrganNameLabel"))
+		return &m_NameDisplay;
+
+	return NULL;
+}
+
+GOrgueButton* GOrgueSetter::GetButton(const wxString& name, bool is_panel)
+{
+	for(unsigned i = 0; i < sizeof(m_element_types) / sizeof(m_element_types[0]); i++)
+		if (name == m_element_types[i].name)
+		{
+			if (is_panel && !m_element_types[i].is_public)
+				return NULL;
+			return m_button[m_element_types[i].value];
+		}
+
+	return NULL;
 }
