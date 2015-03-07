@@ -334,9 +334,6 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	for(unsigned i = 0; i < m_elementcreators.size(); i++)
 		m_elementcreators[i]->Load(cfg);
 
-	for(unsigned i = 0; i < m_panelcreators.size(); i++)
-		m_panelcreators[i]->Load(cfg);
-
 	m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"));
 	m_TemperamentLabel.Load(cfg, wxT("SetterMasterTemperament"));
 
@@ -820,17 +817,6 @@ GOrgueButton* GrandOrgueFile::GetButton(const wxString& name, bool is_panel)
 	for(unsigned i = 0; i < m_elementcreators.size(); i++)
 	{
 		GOrgueButton* c = m_elementcreators[i]->GetButton(name, is_panel);
-		if (c)
-			return c;
-	}
-	return NULL;
-}
-
-GOGUIControl* GrandOrgueFile::CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel)
-{
-	for(unsigned i = 0; i < m_panelcreators.size(); i++)
-	{
-		GOGUIControl* c = m_panelcreators[i]->CreateGUIElement(cfg, group, panel);
 		if (c)
 			return c;
 	}

@@ -33,7 +33,6 @@
 #include <wx/string.h>
 #include <vector>
 
-class GOGUIControl;
 class GOGUIPanel;
 class GOGUIPanelCreator;
 class GOrgueButton;
@@ -214,7 +213,6 @@ public:
 	GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel = false);
 	GOrgueLabel* GetLabel(const wxString& name, bool is_panel = false);
 	GOrgueButton* GetButton(const wxString& name, bool is_panel = false);
-	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group, GOGUIPanel* panel);
 	
 	/* TODO: can somebody figure out what this thing is */
 	bool IsCustomized();

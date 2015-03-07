@@ -492,7 +492,7 @@ GOGUIControl* GOGUIPanel::CreateGUIElement(GOrgueConfigReader& cfg, wxString gro
 	if (enclosure)
 		return new GOGUIEnclosure(this, enclosure);
 
-	return m_organfile->CreateGUIElement(cfg, group, this);
+	return NULL;
 }
 
 

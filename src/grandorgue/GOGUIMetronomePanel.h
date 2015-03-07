@@ -24,6 +24,7 @@
 
 #include "GOGUIPanelCreator.h"
 
+class GOGUIPanel;
 class GrandOrgueFile;
 
 class GOGUIMetronomePanel : public GOGUIPanelCreator
