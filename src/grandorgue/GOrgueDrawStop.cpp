@@ -23,7 +23,6 @@
 
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
-#include "GOrgueLCD.h"
 #include "GOrgueSwitch.h"
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
@@ -119,7 +118,6 @@ void GOrgueDrawstop::Set(bool on)
 	if (IsEngaged() == on)
 		return;
 	Display(on);
-	GOrgueLCD_WriteLineTwo(GetName(), 2000);
 	SetState(on);
 }
 
@@ -139,7 +137,6 @@ void GOrgueDrawstop::SetState(bool on)
 	if (IsReadOnly())
 	{
 		Display(on);
-		GOrgueLCD_WriteLineTwo(GetName(), 2000);
 	}
 	m_ActiveState = on;
 	ChangeState(on);

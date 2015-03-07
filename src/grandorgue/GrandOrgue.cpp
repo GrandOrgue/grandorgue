@@ -21,7 +21,6 @@
 
 #include "GrandOrgue.h"
 
-#include "GOrgueLCD.h"
 #include "GOrgueLog.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
@@ -141,8 +140,6 @@ bool GOrgueApp::OnInit()
 	m_Frame->DoSplash();
 	m_Frame->Init(m_FileName);
 
-	GOrgueLCD_Open();
-
 	return true;
 }
 
@@ -159,7 +156,6 @@ int GOrgueApp::OnRun()
 
 int GOrgueApp::OnExit()
 {
-	GOrgueLCD_Close();
 	delete m_soundSystem;
 	delete m_Settings;
 	wxLog::SetActiveTarget(NULL);
