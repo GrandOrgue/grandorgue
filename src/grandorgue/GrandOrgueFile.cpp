@@ -47,7 +47,6 @@
 #include "GOrgueEnclosure.h"
 #include "GOrgueEvent.h"
 #include "GOrgueGeneral.h"
-#include "GOrgueLCD.h"
 #include "GOrgueLoadThread.h"
 #include "GOrgueManual.h"
 #include "GOrgueMidi.h"
@@ -498,9 +497,6 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 	}
 	ini.ReportUnused();
 
-	GOrgueLCD_WriteLineOne(m_ChurchName + wxT(" ") + m_OrganBuilder);
-	GOrgueLCD_WriteLineTwo(_("Loading..."));
-
 	void* dummy = NULL;
 
 	try
@@ -637,7 +633,6 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 	FREE_AND_NULL(dummy);
 
 	m_pool.StartThread();
-	GOrgueLCD_WriteLineTwo(_("Ready!"));
 
 	return wxEmptyString;
 

@@ -306,7 +306,6 @@ GOrgueKeyConvert.cpp
 GOrgueKeyReceiver.cpp
 GOrgueKeyReceiverData.cpp
 GOrgueLabel.cpp
-GOrgueLCD.cpp
 GOrgueLoadThread.cpp
 GOrgueLog.cpp
 GOrgueLogWindow.cpp
