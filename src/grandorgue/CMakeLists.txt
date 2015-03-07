@@ -237,10 +237,13 @@ set(grandorgue_src
 contrib/sha1.cpp
 contrib/zita-convolver.cpp
 
+GOGUIBankedGeneralsPanel.cpp
 GOGUIButton.cpp
+GOGUICrescendoPanel.cpp
 GOGUIControl.cpp
 GOGUICouplerPanel.cpp
 GOGUIDisplayMetrics.cpp
+GOGUIDivisionalsPanel.cpp
 GOGUILayoutEngine.cpp
 GOGUIHW1DisplayMetrics.cpp
 GOGUISetterDisplayMetrics.cpp
@@ -251,9 +254,11 @@ GOGUIImage.cpp
 GOGUILabel.cpp
 GOGUIManual.cpp
 GOGUIManualBackground.cpp
+GOGUIMasterPanel.cpp
 GOGUIMetronomePanel.cpp
 GOGUIPanel.cpp
 GOGUIPanelWidget.cpp
+GOGUISequencerPanel.cpp
 GOSoundAudioSection.cpp
 GOSoundEngine.cpp
 GOSoundGroupWorkItem.cpp
