@@ -728,6 +728,7 @@ void GrandOrgueFile::DeleteCache()
 
 GrandOrgueFile::~GrandOrgueFile(void)
 {
+	Cleanup();
 	// Just to be sure, that the sound providers are freed before the pool
 	m_manual.clear();
 	m_tremulant.clear();

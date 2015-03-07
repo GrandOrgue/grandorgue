@@ -41,6 +41,15 @@ GOrgueEventDistributor::~GOrgueEventDistributor()
 {
 }
 
+void GOrgueEventDistributor::Cleanup()
+{
+	m_ControlChangedHandler.clear();
+	m_PlaybackStateHandler.clear();
+	m_SaveableObjects.clear();
+	m_MidiConfigurator.clear();
+	m_CacheObjects.clear();
+}
+
 void GOrgueEventDistributor::RegisterEventHandler(GOrgueEventHandler* handler)
 {
 	m_handler.push_back(handler);
