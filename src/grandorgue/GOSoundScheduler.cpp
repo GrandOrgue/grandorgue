@@ -142,8 +142,8 @@ void GOSoundScheduler::ResetList(std::vector<GOSoundWorkItem*>& list)
 		for(unsigned j = i; j > 0 && CompareItem(list[j], list[j + 1]); j--)
 		{
 			GOSoundWorkItem* tmp = list[j];
-			list[j + 1] = list[j];
-			list[j] = tmp;
+			list[j] = list[j + 1];
+			list[j + 1] = tmp;
 		}
 	}
 	for(unsigned i = 0; i < list.size(); i++)
