@@ -4752,8 +4752,81 @@ line may occur. The same applies for the MEL coupler and the highest line.
       <para></para>
     </sect1>
     <sect1 id="couplerManuals">
-      <title>Coupler Manuals &amp; Volume</title>
+      <title>Coupler Manuals and Volume</title>
       <para></para>
+    </sect1>
+    <sect1 id="metronome">
+      <title>Metronome</title>
+      <mediaobject><imageobject><imagedata fileref="metronome.png" /></imageobject></mediaobject>
+      <para>This panel controls the embedded metronome.</para>
+      <sect2>
+        <title>ON</title>
+        <para>This is the On / Off button. Starts or stops the metronome.</para>
+      </sect2>
+      <sect2>
+        <title>Bar length settings</title>
+        <para>This section manages the number of metronome beats per bar. The first beat of each bar is emphasized using a different sound. The initial value when the panel is first opened is 4.</para>
+        <para>If the number of beats per bar is set to 0, the "other beat" tick sound is used.</para>
+        <para>If the number of beats per bar is set to 1, the "first beat" tick sound is used.</para>
+        <informaltable frame="none">
+          <tgroup cols="2">
+            <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+            <colspec colname="c2" colsep="0" rowsep="0" />
+            <tbody>
+              <row valign="top">
+                <entry><emphasis role="strong">-1</emphasis></entry>
+                <entry>Decreases the number of beats per bar by 1.</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">+1</emphasis></entry>
+                <entry>Increases the number of beats per bar by 1.</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">Label in between</emphasis></entry>
+                <entry>
+                  <simpara>This label displays the current beats per bar number. It is an <emphasis>active</emphasis> label, meaning that it can be configured to send MIDI messages.</simpara>
+                  <simpara>Note that the number of beats per bar is ALWAYS reset to the initial value when another sample set is loaded or when GrandOrgue starts.</simpara>
+                </entry> 
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect2>
+      <sect2>
+        <title>Beat per minute settings</title>
+        <para>This section manages the numbrt of metronome beats per minute. The initial value when the panel is first opened is 80.</para>
+        <informaltable frame="none">
+          <tgroup cols="2">
+            <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+            <colspec colname="c2" colsep="0" rowsep="0" />
+            <tbody>
+              <row valign="top">
+                <entry><emphasis role="strong">-10</emphasis></entry>
+                <entry>Decreases the number of beats per minute by 10.</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">-1</emphasis></entry>
+                <entry>Decreases the number of beats per minute by 1.</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">+1</emphasis></entry>
+                <entry>Increases the number of beats per minute by 1.</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">+10</emphasis></entry>
+                <entry>Increases the number of beats per minute by 10.</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">Label in between</emphasis></entry>
+                <entry>
+                  <simpara>This label displays the current beats per minute number. It is an <emphasis>active</emphasis> label, meaning that it can be configured to send MIDI messages.</simpara>
+                  <simpara>Note that the number of beats per minute is ALWAYS reset to the initial value when another sample set is loaded or when GrandOrgue starts.</simpara>
+                </entry> 
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect2>
     </sect1>
     <sect1 id="masterControls">
       <title>Master Controls</title>
