@@ -255,6 +255,7 @@ void GOSoundRecorder::Run()
 	}
 	m_file.Write(m_Buffer, m_BufferSize);
 	m_BufferPos += m_BufferSize;
+	m_Done = true;
 }
 
 void GOSoundRecorder::Exec()
