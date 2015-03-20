@@ -4783,10 +4783,7 @@ line may occur. The same applies for the MEL coupler and the highest line.
               </row>
               <row valign="top">
                 <entry><emphasis role="strong">Label in between</emphasis></entry>
-                <entry>
-                  <simpara>This label displays the current beats per bar number. It is an <emphasis>active</emphasis> label, meaning that it can be configured to send MIDI messages.</simpara>
-                  <simpara>Note that the number of beats per bar is ALWAYS reset to the initial value when another sample set is loaded or when GrandOrgue starts.</simpara>
-                </entry> 
+                <entry>This label displays the current beats per bar number. It is an <emphasis>active</emphasis> label, meaning that it can be configured to send MIDI messages.</entry> 
               </row>
             </tbody>
           </tgroup>
@@ -4794,7 +4791,7 @@ line may occur. The same applies for the MEL coupler and the highest line.
       </sect2>
       <sect2>
         <title>Beat per minute settings</title>
-        <para>This section manages the numbrt of metronome beats per minute. The initial value when the panel is first opened is 80.</para>
+        <para>This section manages the number of metronome beats per minute. The initial value when the panel is first opened is 80.</para>
         <informaltable frame="none">
           <tgroup cols="2">
             <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
@@ -4818,14 +4815,19 @@ line may occur. The same applies for the MEL coupler and the highest line.
               </row>
               <row valign="top">
                 <entry><emphasis role="strong">Label in between</emphasis></entry>
-                <entry>
-                  <simpara>This label displays the current beats per minute number. It is an <emphasis>active</emphasis> label, meaning that it can be configured to send MIDI messages.</simpara>
-                  <simpara>Note that the number of beats per minute is ALWAYS reset to the initial value when another sample set is loaded or when GrandOrgue starts.</simpara>
-                </entry> 
+                <entry>This label displays the current beats per minute number. It is an <emphasis>active</emphasis> label, meaning that it can be configured to send MIDI messages.</entry> 
               </row>
             </tbody>
           </tgroup>
         </informaltable>
+        <note>
+          <simpara>
+The metronome settings can be saved in the current settings file and remembered
+the next time the sampleset is loaded. Use the <link linkend="save">File &gt;
+  Save</link> menu item, as there is no warning to save when the sampleset is
+closed with changed metronome settings.
+          </simpara>
+        </note>
       </sect2>
     </sect1>
     <sect1 id="masterControls">
