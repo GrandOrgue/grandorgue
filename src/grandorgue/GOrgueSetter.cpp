@@ -656,7 +656,7 @@ void GOrgueSetter::SetterButtonChanged(GOrgueSetterButton* button)
 			case ID_SETTER_TRANSPOSE_DOWN:
 			case ID_SETTER_TRANSPOSE_UP:
 				{
-					int value = m_organfile->GetSettings().GetTranspose();
+					int value = m_organfile->GetSettings().Transpose();
 					if (i == ID_SETTER_TRANSPOSE_UP)
 						value++;
 					else
@@ -847,22 +847,18 @@ void GOrgueSetter::ControlChanged(void* control)
 
 void GOrgueSetter::UpdateTranspose()
 {
-	m_TransposeDisplay.SetName(wxString::Format(wxT("%d"), m_organfile->GetSettings().GetTranspose()));
+	m_TransposeDisplay.SetName(wxString::Format(wxT("%d"), m_organfile->GetSettings().Transpose()));
 }
 
 void GOrgueSetter::SetTranspose(int value)
 {
-	if (value <= -11)
-		value = -11;
-	if (value >= 11)
-		value = 11;
-	if (m_organfile->GetSettings().GetTranspose() != value)
+	if (m_organfile->GetSettings().Transpose() != value)
 	{
 		wxCommandEvent event(wxEVT_SETVALUE, ID_METER_TRANSPOSE_SPIN);
 		event.SetInt(value);
 		wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 	}
-	m_organfile->GetSettings().SetTranspose(value);
+	m_organfile->GetSettings().Transpose(value);
 	m_organfile->AllNotesOff();
 	UpdateTranspose();
 }

@@ -83,7 +83,7 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMid
 {
 	m_events.resize(0);
 
-	if (m_organfile && !m_organfile->GetSettings().GetODFCheck())
+	if (m_organfile && !m_organfile->GetSettings().ODFCheck())
 	{
 		/* Skip old style entries */
 		if (m_type == MIDI_RECV_DRAWSTOP)
@@ -456,7 +456,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 			{
 				if (e.GetMidiType() == MIDI_NOTE && e.GetChannel() == m_Internal[i].channel)
 				{
-					key = e.GetKey() + m_organfile->GetSettings().GetTranspose();
+					key = e.GetKey() + m_organfile->GetSettings().Transpose();
 					value = e.GetValue();
 					if (key < 0)
 						return MIDI_MATCH_NONE;
@@ -514,7 +514,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 					if (no == 4 || no == 6 || no == 8)
 						key -= 4;
 				}
-				key = key + m_organfile->GetSettings().GetTranspose() + m_events[i].key;
+				key = key + m_organfile->GetSettings().Transpose() + m_events[i].key;
 				if (key < 0)
 					continue;
 				if (key > 127)

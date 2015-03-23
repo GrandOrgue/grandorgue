@@ -82,31 +82,6 @@ const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
 GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_Config(*wxConfigBase::Get()),
 	m_InstanceName(instance),
-	m_MemoryLimit(0),
-	m_Channels(2),
-	m_Concurrency(0),
-	m_ReleaseConcurrency(1),
-	m_LoadConcurrency(0),
-	m_LosslessCompression(true),
-	m_ManagePolyphony(true),
-	m_ManageCache(true),
-	m_CompressCache(false),
-	m_ScaleRelease(true),
-	m_RandomizeSpeaking(true),
-	m_LoadLastFile(true),
-	m_ODFCheck(false),
-	m_SamplesPerBuffer(1024),
-	m_SampleRate(44100),
-	m_BitsPerSample(24),
-	m_InterpolationType(0),
-	m_WaveFormat(4),
-	m_RecordDownmix(false),
-	m_LoopLoad(0),
-	m_AttackLoad(0),
-	m_ReleaseLoad(0),
-	m_Volume(-15),
-	m_PolyphonyLimit(2048),
-	m_Preset(0),
 	m_OrganList(),
 	m_WAVPath(),
 	m_OrganPath(),
@@ -117,17 +92,42 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_ResourceDir(),
 	m_AudioGroups(),
 	m_AudioDeviceConfig(),
-	m_Transpose(0),
-	m_ReleaseLength(0),
-	m_ReverbEnabled(false),
-	m_ReverbDirect(true),
-	m_ReverbChannel(1),
-	m_ReverbStartOffset(0),
-	m_ReverbLen(0),
-	m_ReverbDelay(0),
-	m_ReverbGain(1),
 	m_ReverbFile(),
-	m_MIDIEvents()
+	m_MIDIEvents(),
+	Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
+	ReleaseConcurrency(this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
+	LoadConcurrency(this, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, 1),
+	InterpolationType(this, wxT("General"), wxT("InterpolationType"), 0, 1, 1),
+	WaveFormatBytesPerSample(this, wxT("General"), wxT("WaveFormat"), 1, 4, 4),
+	RecordDownmix(this, wxT("General"), wxT("RecordDownmix"), false),
+	AttackLoad(this, wxT("General"), wxT("AttackLoad"), 0, 1, 1),
+	LoopLoad(this, wxT("General"), wxT("LoopLoad"), 0, 2, 2),
+	ReleaseLoad(this, wxT("General"), wxT("ReleaseLoad"), 0, 1, 1),
+	ManageCache(this, wxT("General"), wxT("ManageCache"), true),
+	CompressCache(this, wxT("General"), wxT("CompressCache"), false),
+	LoadLastFile(this, wxT("General"), wxT("LoadLastFile"), true),
+	ODFCheck(this, wxT("General"), wxT("StrictODFCheck"), false),
+	LoadChannels(this, wxT("General"), wxT("Channels"), 0, 2, 2),
+	LosslessCompression(this, wxT("General"), wxT("LosslessCompression"), false),
+	ManagePolyphony(this, wxT("General"), wxT("ManagePolyphony"), true),
+	ScaleRelease(this, wxT("General"), wxT("ScaleRelease"), true),
+	RandomizeSpeaking(this, wxT("General"), wxT("RandomizeSpeaking"), true),
+	ReverbEnabled(this, wxT("Reverb"), wxT("ReverbEnabled"), false),
+	ReverbDirect(this, wxT("Reverb"), wxT("ReverbDirect"), true),
+	ReverbChannel(this, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, 1),
+	ReverbStartOffset(this, wxT("Reverb"), wxT("ReverbStartOffset"), 0, MAX_SAMPLE_LENGTH, 0),
+	ReverbLen(this, wxT("Reverb"), wxT("ReverbLen"), 0, MAX_SAMPLE_LENGTH, 0),
+	ReverbDelay(this, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, 0),
+	ReverbGain(this, wxT("Reverb"), wxT("ReverbGain"), 0, 50, 1),
+	MemoryLimit(this, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, GOrgueMemoryPool::GetSystemMemoryLimit()),
+	SamplesPerBuffer(this, wxT("General"), wxT("SamplesPerBuffer"), 1, MAX_FRAME_SIZE, 1024),
+	SampleRate(this, wxT("General"), wxT("SampleRate"), 1000, 100000, 44100),
+	Volume(this, wxT("General"), wxT("Volume"), -120, 20, -15),
+	PolyphonyLimit(this, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
+	Preset(this, wxT("General"), wxT("Preset"), 0, MAX_PRESET, 0),
+	ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
+	BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),
+	Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0)
 {
 	GetConfig().SetRecordDefaults();
 	m_ConfigFileName = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
@@ -211,50 +211,19 @@ void GOrgueSettings::Load()
 			cpus = MAX_CPU;
 		if (cpus == 0)
 			cpus = 1;
+
+		Concurrency.setDefaultValue(cpus);
+		ReleaseConcurrency.setDefaultValue(cpus);
+		LoadConcurrency.setDefaultValue(cpus);
+		PolyphonyLimit.setDefaultValue(cpus * 725),
+
 		GOrgueSettingStore::Load(cfg);
-		SetConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, false, cpus));
-		SetReleaseConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, false, cpus));
-		SetLoadConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, false, cpus));
 
-		SetInterpolationType(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("InterpolationType"), 0, 1, false, 1));
-		SetWaveFormatBytesPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("WaveFormat"), 1, 4, false, 4));
-		SetRecordDownmix(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("RecordDownmix"), false, false));
-		SetAttackLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("AttackLoad"), 0, 1, false, 1));
-		SetLoopLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoopLoad"), 0, 2, false, 2));
-		SetReleaseLoad(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLoad"), 0, 1, false, 1));
-
-		SetManageCache(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManageCache"), false, true));
-		SetCompressCache(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("CompressCache"), false, false));
-		SetLoadLastFile(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LoadLastFile"), false, true));
 		SetLastFile(cfg.ReadString(CMBSetting, wxT("General"), wxT("LastFile"), false, wxEmptyString));
-		SetODFCheck(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("StrictODFCheck"), false, false));
-
-		SetLoadChannels(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Channels"), 0, 2, false, 2));
-		SetLosslessCompression(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("LosslessCompression"), false, false));
-		SetManagePolyphony(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ManagePolyphony"), false, true));
-		SetScaleRelease(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("ScaleRelease"), false, true));
-		SetRandomizeSpeaking(cfg.ReadBoolean(CMBSetting, wxT("General"), wxT("RandomizeSpeaking"), false, true));
-		SetMemoryLimit(cfg.ReadFloat(CMBSetting, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, false, GOrgueMemoryPool::GetSystemMemoryLimit()) * (1024.0 * 1024.0));
-
-		SetReverbEnabled(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbEnabled"), false, false));
-		SetReverbDirect(cfg.ReadBoolean(CMBSetting, wxT("Reverb"), wxT("ReverbDirect"), false, true));
-		SetReverbChannel(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, false, 1));
-		SetReverbStartOffset(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbStartOffset"), 0, MAX_SAMPLE_LENGTH, false, 0));
-		SetReverbLen(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbLen"), 0, MAX_SAMPLE_LENGTH, false, 0));
-		SetReverbDelay(cfg.ReadInteger(CMBSetting, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, false, 0));
-		SetReverbGain(cfg.ReadFloat(CMBSetting, wxT("Reverb"), wxT("ReverbGain"), 0, 50, false, 1));
 		SetReverbFile(cfg.ReadString(CMBSetting, wxT("Reverb"), wxT("ReverbFile"), false, wxEmptyString));
 
-		SetSamplesPerBuffer(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SamplesPerBuffer"), 1, MAX_FRAME_SIZE, false, 1024));
-		SetSampleRate(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("SampleRate"), 1000, 100000, false, 44100));
-		SetBitsPerSample(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("BitsPerSample"), 8, 24, false, 24));
-		SetVolume(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Volume"), -120, 20, false, -15));
-		SetPolyphonyLimit(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, false, cpus * 725));
 		SetUserSettingPath (cfg.ReadString(CMBSetting, wxT("General"), wxT("SettingPath"), false, m_Config.Read(wxT("SettingPath"), wxEmptyString)));
 		SetUserCachePath (cfg.ReadString(CMBSetting, wxT("General"), wxT("CachePath"), false, m_Config.Read(wxT("CachePath"), wxEmptyString)));
-		SetPreset(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Preset"), 0, MAX_PRESET, false, 0));
-
-		SetReleaseLength(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseLength"), 0, 3000, false, 0));
 		SetMidiRecorderOutputDevice(cfg.ReadString(CMBSetting, wxT("MIDIOut"), wxT("MIDIRecorderDevice"), false, wxEmptyString));
 		
 		count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
@@ -402,16 +371,6 @@ GOrgueMidiReceiver* GOrgueSettings::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsig
 	return NULL;
 }
 
-size_t GOrgueSettings::GetMemoryLimit()
-{
-	return m_MemoryLimit;
-}
-
-void GOrgueSettings::SetMemoryLimit(size_t limit)
-{
-	m_MemoryLimit = limit;
-}
-
 wxString GOrgueSettings::GetStandardDocumentDirectory()
 {
 	return wxStandardPaths::Get().GetDocumentsDir();
@@ -519,287 +478,6 @@ void GOrgueSettings::SetLastFile(wxString path)
 	file.MakeAbsolute();
 	path = file.GetFullPath();
 	m_LastFile = path;
-}
-
-unsigned  GOrgueSettings::GetPreset()
-{
-	return m_Preset;
-}
-
-void  GOrgueSettings::SetPreset(unsigned value)
-{
-	if (value > MAX_PRESET)
-		value = MAX_PRESET;
-	m_Preset = value;
-}
-
-unsigned GOrgueSettings::GetLoadChannels()
-{
-	return m_Channels;
-}
-
-void GOrgueSettings::SetLoadChannels(unsigned channels)
-{
-	if (channels > 2)
-		channels = 2;
-	m_Channels = channels;
-}
-
-unsigned GOrgueSettings::GetSamplesPerBuffer()
-{
-	return m_SamplesPerBuffer;
-}
-
-void GOrgueSettings::SetSamplesPerBuffer(unsigned sampler_per_buffer)
-{
-	m_SamplesPerBuffer = sampler_per_buffer;
-	if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
-		m_SamplesPerBuffer = MAX_FRAME_SIZE;
-	if (m_SamplesPerBuffer < 1)
-		m_SamplesPerBuffer = 1;
-}
-
-unsigned GOrgueSettings::GetConcurrency()
-{
-	return m_Concurrency;
-}
-
-void GOrgueSettings::SetConcurrency(unsigned concurrency)
-{
-	if (concurrency > MAX_CPU)
-		concurrency = MAX_CPU;
-	m_Concurrency = concurrency;
-}
-
-unsigned GOrgueSettings::GetReleaseConcurrency()
-{
-	return m_ReleaseConcurrency;
-}
-
-void GOrgueSettings::SetReleaseConcurrency(unsigned concurrency)
-{
-	if (concurrency > MAX_CPU)
-		concurrency = MAX_CPU;
-	if (concurrency < 1)
-		concurrency = 1;
-	m_ReleaseConcurrency = concurrency;
-}
-
-unsigned GOrgueSettings::GetLoadConcurrency()
-{
-	return m_LoadConcurrency;
-}
-
-void GOrgueSettings::SetLoadConcurrency(unsigned concurrency)
-{
-	if (concurrency > MAX_CPU)
-		concurrency = MAX_CPU;
-	m_LoadConcurrency = concurrency;
-}
-
-bool GOrgueSettings::GetLosslessCompression()
-{
-	return m_LosslessCompression;
-}
-
-void GOrgueSettings::SetLosslessCompression(bool lossless_compression)
-{
-	m_LosslessCompression = lossless_compression;
-}
-
-bool GOrgueSettings::GetManagePolyphony()
-{
-	return m_ManagePolyphony;
-}
-
-void GOrgueSettings::SetManagePolyphony(bool manage_polyphony)
-{
-	m_ManagePolyphony = manage_polyphony;
-}
-
-bool GOrgueSettings::GetManageCache()
-{
-	return m_ManageCache;
-}
-
-void GOrgueSettings::SetManageCache(bool manage)
-{
-	m_ManageCache = manage;
-}
-
-bool GOrgueSettings::GetCompressCache()
-{
-	return m_CompressCache;
-}
-
-void GOrgueSettings::SetCompressCache(bool compress)
-{
-	m_CompressCache = compress;
-}
-
-bool GOrgueSettings::GetODFCheck()
-{
-	return m_ODFCheck;
-}
-
-void GOrgueSettings::SetODFCheck(bool strict)
-{
-	m_ODFCheck = strict;
-}
-
-bool GOrgueSettings::GetScaleRelease()
-{
-	return m_ScaleRelease;
-}
-
-void GOrgueSettings::SetScaleRelease(bool scale_release)
-{
-	m_ScaleRelease = scale_release;
-}
-
-bool GOrgueSettings::GetLoadLastFile()
-{
-	return m_LoadLastFile;
-}
-
-void GOrgueSettings::SetLoadLastFile(bool last_file)
-{
-	m_LoadLastFile = last_file;
-}
-
-unsigned GOrgueSettings::GetInterpolationType()
-{
-	return m_InterpolationType;
-}
-
-void GOrgueSettings::SetInterpolationType(unsigned type)
-{
-	if (type > 1)
-		type = 0;
-	m_InterpolationType = type;
-}
-
-bool GOrgueSettings::GetRandomizeSpeaking()
-{
-	return m_RandomizeSpeaking;
-}
-
-void GOrgueSettings::SetRandomizeSpeaking(bool randomize)
-{
-	m_RandomizeSpeaking = randomize;
-}
-
-unsigned GOrgueSettings::GetSampleRate()
-{
-	return m_SampleRate;
-}
-
-void GOrgueSettings::SetSampleRate(unsigned sample_rate)
-{
-	if (sample_rate < 1000)
-		sample_rate = 44100;
-	if (sample_rate > 100000)
-		sample_rate = 100000;
-	m_SampleRate = sample_rate;
-}
-
-unsigned GOrgueSettings::GetBitsPerSample()
-{
-	return m_BitsPerSample;
-}
-
-void GOrgueSettings::SetBitsPerSample(unsigned bits_per_sample)
-{
-	if (bits_per_sample != 8 && bits_per_sample != 12 && bits_per_sample != 16 && bits_per_sample != 20 && bits_per_sample != 24)
-		bits_per_sample = 24;
-	m_BitsPerSample = bits_per_sample;
-}
-
-
-unsigned GOrgueSettings::GetWaveFormatBytesPerSample()
-{
-	return m_WaveFormat;
-}
-
-void GOrgueSettings::SetWaveFormatBytesPerSample(unsigned bytes_per_sample)
-{
-	if (bytes_per_sample < 1)
-		bytes_per_sample = 1;
-	if (bytes_per_sample > 4)
-		bytes_per_sample = 4;
-	m_WaveFormat = bytes_per_sample;
-}
-
-bool GOrgueSettings::GetRecordDownmix()
-{
-	return m_RecordDownmix;
-}
-
-void GOrgueSettings::SetRecordDownmix(bool downmix)
-{
-	m_RecordDownmix = downmix;
-}
-
-unsigned GOrgueSettings::GetLoopLoad()
-{
-	return m_LoopLoad;
-}
-
-void GOrgueSettings::SetLoopLoad(unsigned loop_load)
-{
-	if (loop_load > 2)
-		loop_load = 2;
-	m_LoopLoad = loop_load;
-}
-
-unsigned GOrgueSettings::GetAttackLoad()
-{
-	return m_AttackLoad;
-}
-
-void GOrgueSettings::SetAttackLoad(unsigned attack_load)
-{
-	if (attack_load > 1)
-		attack_load = 1;
-	m_AttackLoad = attack_load;
-}
-
-unsigned GOrgueSettings::GetReleaseLoad()
-{
-	return m_ReleaseLoad;
-}
-
-void GOrgueSettings::SetReleaseLoad(unsigned release_load)
-{
-	if (release_load > 1)
-		release_load = 1;
-	m_ReleaseLoad = release_load;
-}
-
-int GOrgueSettings::GetVolume()
-{
-	return m_Volume;
-}
-
-void GOrgueSettings::SetVolume(int volume)
-{
-	if (volume < -120)
-		volume = -120;
-	if (volume > 20)
-		volume = -15;
-	m_Volume = volume;
-}
-
-unsigned GOrgueSettings::GetPolyphonyLimit()
-{
-	return m_PolyphonyLimit;
-}
-
-void GOrgueSettings::SetPolyphonyLimit(unsigned polyphony_limit)
-{
-	if (polyphony_limit > MAX_POLYPHONY)
-		polyphony_limit = MAX_POLYPHONY;
-	m_PolyphonyLimit = polyphony_limit;
 }
 
 unsigned GOrgueSettings::GetAudioDeviceLatency(wxString device)
@@ -965,48 +643,6 @@ void GOrgueSettings::SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>
 	m_AudioDeviceConfig = config;
 }
 
-int GOrgueSettings::GetTranspose()
-{
-	return m_Transpose;
-}
-
-void GOrgueSettings::SetTranspose(int transpose)
-{
-	m_Transpose = transpose;
-}
-
-unsigned GOrgueSettings::GetReleaseLength()
-{
-	return m_ReleaseLength;
-}
-
-void GOrgueSettings::SetReleaseLength(unsigned reverb)
-{
-	if (reverb > 3000)
-		reverb = 3000;
-	m_ReleaseLength = reverb;
-}
-
-bool GOrgueSettings::GetReverbEnabled()
-{
-	return m_ReverbEnabled;
-}
-
-void GOrgueSettings::SetReverbEnabled(bool on)
-{
-	m_ReverbEnabled = on;
-}
-
-bool GOrgueSettings::GetReverbDirect()
-{
-	return m_ReverbDirect;
-}
-
-void GOrgueSettings::SetReverbDirect(bool on)
-{
-	m_ReverbDirect = on;
-}
-
 wxString GOrgueSettings::GetReverbFile()
 {
 	return m_ReverbFile;
@@ -1015,68 +651,6 @@ wxString GOrgueSettings::GetReverbFile()
 void GOrgueSettings::SetReverbFile(wxString file)
 {
 	m_ReverbFile = file;
-}
-
-unsigned GOrgueSettings::GetReverbStartOffset()
-{
-	return m_ReverbStartOffset;
-}
-
-void GOrgueSettings::SetReverbStartOffset(unsigned offset)
-{
-	if (offset > MAX_SAMPLE_LENGTH)
-		offset = MAX_SAMPLE_LENGTH;
-	m_ReverbStartOffset = offset;
-}
-
-unsigned GOrgueSettings::GetReverbLen()
-{
-	return m_ReverbLen;
-}
-
-void GOrgueSettings::SetReverbLen(unsigned length)
-{
-	if (length > MAX_SAMPLE_LENGTH)
-		length = MAX_SAMPLE_LENGTH;
-	m_ReverbLen = length;
-}
-
-float GOrgueSettings::GetReverbGain()
-{
-	return m_ReverbGain;
-}
-
-void GOrgueSettings::SetReverbGain(float gain)
-{
-	if (gain <= 0)
-		gain = 1;
-	if (gain > 50)
-		gain = 50;
-	m_ReverbGain = gain;
-}
-
-int GOrgueSettings::GetReverbChannel()
-{
-	return m_ReverbChannel;
-}
-
-void GOrgueSettings::SetReverbChannel(int channel)
-{
-	if (channel < 1 || channel > 4)
-		channel = 1;
-	m_ReverbChannel = channel;
-}
-
-unsigned GOrgueSettings::GetReverbDelay()
-{
-	return m_ReverbDelay;
-}
-
-void GOrgueSettings::SetReverbDelay(unsigned delay)
-{
-	if (delay > 10000)
-		delay = 10000;
-	m_ReverbDelay = delay;
 }
 
 GOrgueMidiMap& GOrgueSettings::GetMidiMap()
@@ -1096,40 +670,9 @@ void GOrgueSettings::Flush()
 	GOrgueConfigWriter cfg(cfg_file, false);
 
 	GOrgueSettingStore::Save(cfg);
-	cfg.WriteInteger(wxT("General"), wxT("InterpolationType"), m_InterpolationType);
-	cfg.WriteInteger(wxT("General"), wxT("WaveFormat"), m_WaveFormat);
-	cfg.WriteBoolean(wxT("General"), wxT("RecordDownmix"), m_RecordDownmix);
-	cfg.WriteInteger(wxT("General"), wxT("AttackLoad"), m_AttackLoad);
-	cfg.WriteInteger(wxT("General"), wxT("LoopLoad"), m_LoopLoad);
-	cfg.WriteInteger(wxT("General"), wxT("ReleaseLoad"), m_ReleaseLoad);
-
-	cfg.WriteInteger(wxT("General"), wxT("Concurrency"), m_Concurrency);
-	cfg.WriteInteger(wxT("General"), wxT("ReleaseConcurrency"), m_ReleaseConcurrency);
-	cfg.WriteInteger(wxT("General"), wxT("LoadConcurrency"), m_LoadConcurrency);
-
-	cfg.WriteBoolean(wxT("General"), wxT("ManageCache"), m_ManageCache);
-	cfg.WriteBoolean(wxT("General"), wxT("CompressCache"), m_CompressCache);
-	cfg.WriteBoolean(wxT("General"), wxT("LoadLastFile"), m_LoadLastFile);
 	cfg.WriteString(wxT("General"), wxT("LastFile"), m_LastFile);
-	cfg.WriteBoolean(wxT("General"), wxT("StrictODFCheck"), m_ODFCheck);
-
-	cfg.WriteInteger(wxT("General"), wxT("Channels"), m_Channels);
-	cfg.WriteBoolean(wxT("General"), wxT("LosslessCompression"), m_LosslessCompression);
-	cfg.WriteBoolean(wxT("General"), wxT("ManagePolyphony"), m_ManagePolyphony);
-	cfg.WriteBoolean(wxT("General"), wxT("ScaleRelease"), m_ScaleRelease);
-	cfg.WriteBoolean(wxT("General"), wxT("RandomizeSpeaking"), m_RandomizeSpeaking);
-	cfg.WriteFloat(wxT("General"), wxT("MemoryLimit"), (double)m_MemoryLimit / (1024.0 * 1024.0));
-
-	cfg.WriteInteger(wxT("General"), wxT("SamplesPerBuffer"), m_SamplesPerBuffer);
-	cfg.WriteInteger(wxT("General"), wxT("SampleRate"), m_SampleRate);
-	cfg.WriteInteger(wxT("General"), wxT("BitsPerSample"), m_BitsPerSample);
-	cfg.WriteInteger(wxT("General"), wxT("Volume"), m_Volume);
-	cfg.WriteInteger(wxT("General"), wxT("PolyphonyLimit"), m_PolyphonyLimit);
 	cfg.WriteString(wxT("General"), wxT("SettingPath"), m_UserSettingPath);
 	cfg.WriteString(wxT("General"), wxT("CachePath"), m_UserCachePath);
-	cfg.WriteInteger(wxT("General"), wxT("Preset"), m_Preset);
-
-	cfg.WriteInteger(wxT("General"), wxT("ReleaseLength"), m_ReleaseLength);
 
 	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
@@ -1163,13 +706,6 @@ void GOrgueSettings::Flush()
 	}
 	cfg.WriteInteger(wxT("AudioDevices"), wxT("Count"), m_AudioDeviceConfig.size());
 
-	cfg.WriteBoolean(wxT("Reverb"), wxT("ReverbEnabled"), m_ReverbEnabled);
-	cfg.WriteBoolean(wxT("Reverb"), wxT("ReverbDirect"), m_ReverbDirect);
-	cfg.WriteInteger(wxT("Reverb"), wxT("ReverbChannel"), m_ReverbChannel);
-	cfg.WriteInteger(wxT("Reverb"), wxT("ReverbStartOffset"), m_ReverbStartOffset);
-	cfg.WriteInteger(wxT("Reverb"), wxT("ReverbLen"), m_ReverbLen);
-	cfg.WriteInteger(wxT("Reverb"), wxT("ReverbDelay"), m_ReverbDelay);
-	cfg.WriteFloat(wxT("Reverb"), wxT("ReverbGain"), m_ReverbGain);
 	cfg.WriteString(wxT("Reverb"), wxT("ReverbFile"), m_ReverbFile);
 
 	unsigned count = 0;

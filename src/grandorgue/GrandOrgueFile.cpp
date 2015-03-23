@@ -122,7 +122,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_PitchLabel(this),
 	m_TemperamentLabel(this)
 {
-	m_pool.SetMemoryLimit(m_Settings.GetMemoryLimit());
+	m_pool.SetMemoryLimit(m_Settings.MemoryLimit() * 1024 * 1024);
 }
 
 bool GrandOrgueFile::IsCacheable()
@@ -193,7 +193,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		else
 		{
 			m_InfoFilename = wxEmptyString;
-			if (m_Settings.GetODFCheck())
+			if (m_Settings.ODFCheck())
 				wxLogWarning(_("InfoFilename does not point to a html file"));
 		}
 	}
@@ -379,7 +379,7 @@ wxString GrandOrgueFile::GenerateSettingFileName()
 		filename += wxDecToHex(hash[i]);
 
 	filename = m_Settings.GetUserSettingPath()  + wxFileName::GetPathSeparator() + 
-		filename + wxString::Format(wxT("-%d.cmb"), m_Settings.GetPreset());
+		filename + wxString::Format(wxT("-%d.cmb"), m_Settings.Preset());
 
 	return filename;
 }
@@ -401,7 +401,7 @@ wxString GrandOrgueFile::GenerateCacheFileName()
 		filename += wxDecToHex(hash[i]);
 
 	filename = m_Settings.GetUserCachePath()  + wxFileName::GetPathSeparator() + 
-		filename + wxString::Format(wxT("-%d.cache"), m_Settings.GetPreset());
+		filename + wxString::Format(wxT("-%d.cache"), m_Settings.Preset());
 
 	return filename;
 }
@@ -427,7 +427,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 	m_ODFHash = odf_ini_file.GetHash();
 	wxString error = wxT("!");
 	m_b_customized = false;
-	GOrgueConfigReaderDB ini(m_Settings.GetODFCheck());
+	GOrgueConfigReaderDB ini(m_Settings.ODFCheck());
 	ini.ReadData(odf_ini_file, ODFSetting, false);
 
 	wxString setting_file = file2;
@@ -480,7 +480,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 
 	try
 	{
-		GOrgueConfigReader cfg(ini, m_Settings.GetODFCheck());
+		GOrgueConfigReader cfg(ini, m_Settings.ODFCheck());
 		/* skip informational items */
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"), false);
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);
@@ -572,7 +572,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 				}
 			}
 
-			if (!cache_ok && !m_Settings.GetManageCache())
+			if (!cache_ok && !m_Settings.ManageCache())
 			{
 				GOMessageBox(_("The cache for this organ is outdated. Please update or delete it."), _("Warning"), wxOK | wxICON_WARNING, NULL);
 			}
@@ -583,7 +583,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 		if (!cache_ok)
 		{
 			ptr_vector<GOrgueLoadThread> threads;
-			for(unsigned i = 0; i < m_Settings.GetLoadConcurrency(); i++)
+			for(unsigned i = 0; i < m_Settings.LoadConcurrency(); i++)
 				threads.push_back(new GOrgueLoadThread(*this, m_pool, nb_loaded_obj));
 
 			for(unsigned i = 0; i < threads.size(); i++)
@@ -610,8 +610,8 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 			if (nb_loaded_obj >= GetCacheObjectCount())
 				m_Cacheable = true;
 
-			if (m_Settings.GetManageCache() && m_Cacheable)
-				UpdateCache(dlg, m_Settings.GetCompressCache());
+			if (m_Settings.ManageCache() && m_Cacheable)
+				UpdateCache(dlg, m_Settings.CompressCache());
 		}
 		SetTemperament(m_Temperament);
 	}

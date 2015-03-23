@@ -63,31 +63,6 @@ private:
 	wxConfigBase& m_Config;
 	wxString m_InstanceName;
 	wxString m_ConfigFileName;
-	size_t m_MemoryLimit;
-	unsigned m_Channels;
-	unsigned m_Concurrency;
-	unsigned m_ReleaseConcurrency;
-	unsigned m_LoadConcurrency;
-	bool m_LosslessCompression;
-	bool m_ManagePolyphony;
-	bool m_ManageCache;
-	bool m_CompressCache;
-	bool m_ScaleRelease;
-	bool m_RandomizeSpeaking;
-	bool m_LoadLastFile;
-	bool m_ODFCheck;
-	unsigned m_SamplesPerBuffer;
-	unsigned m_SampleRate;
-	unsigned m_BitsPerSample;
-	unsigned m_InterpolationType;
-	unsigned m_WaveFormat;
-	bool m_RecordDownmix;
-	unsigned m_LoopLoad;
-	unsigned m_AttackLoad;
-	unsigned m_ReleaseLoad;
-	int m_Volume;
-	unsigned m_PolyphonyLimit;
-	unsigned m_Preset;
 	ptr_vector<GOrgueOrgan> m_OrganList;
 	std::map<wxString, bool> m_MidiIn;
 	std::map<wxString, unsigned> m_MidiInShift;
@@ -102,15 +77,6 @@ private:
 	wxString m_ResourceDir;
 	std::vector<wxString> m_AudioGroups;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
-	int m_Transpose;
-	unsigned m_ReleaseLength;
-	bool m_ReverbEnabled;
-	bool m_ReverbDirect;
-	int m_ReverbChannel;
-	unsigned m_ReverbStartOffset;
-	unsigned m_ReverbLen;
-	unsigned m_ReverbDelay;
-	float m_ReverbGain;
 	wxString m_ReverbFile;
 	ptr_vector<GOrgueMidiReceiver> m_MIDIEvents;
 	GOrgueMidiMap m_MidiMap;
@@ -124,6 +90,64 @@ public:
 	GOrgueSettings(wxString instance);
 	~GOrgueSettings();
 
+	GOrgueSettingUnsigned Concurrency;
+	GOrgueSettingUnsigned ReleaseConcurrency;
+	GOrgueSettingUnsigned LoadConcurrency;
+
+	GOrgueSettingUnsigned InterpolationType;
+	GOrgueSettingUnsigned WaveFormatBytesPerSample;
+	GOrgueSettingBool RecordDownmix;
+
+	GOrgueSettingUnsigned AttackLoad;
+	GOrgueSettingUnsigned LoopLoad;
+	GOrgueSettingUnsigned ReleaseLoad;
+
+	GOrgueSettingBool ManageCache;
+	GOrgueSettingBool CompressCache;
+	GOrgueSettingBool LoadLastFile;
+	GOrgueSettingBool ODFCheck;
+
+	GOrgueSettingUnsigned LoadChannels;
+	GOrgueSettingBool LosslessCompression;
+	GOrgueSettingBool ManagePolyphony;
+	GOrgueSettingBool ScaleRelease;
+	GOrgueSettingBool RandomizeSpeaking;
+	GOrgueSettingBool ReverbEnabled;
+	GOrgueSettingBool ReverbDirect;
+	GOrgueSettingUnsigned ReverbChannel;
+	GOrgueSettingUnsigned ReverbStartOffset;
+	GOrgueSettingUnsigned ReverbLen;
+	GOrgueSettingUnsigned ReverbDelay;
+	GOrgueSettingFloat ReverbGain;
+
+	GOrgueSettingFloat MemoryLimit;
+	GOrgueSettingUnsigned SamplesPerBuffer;
+	GOrgueSettingUnsigned SampleRate;
+	GOrgueSettingInteger Volume;
+	GOrgueSettingUnsigned PolyphonyLimit;
+	GOrgueSettingUnsigned Preset;
+	GOrgueSettingUnsigned ReleaseLength;
+	class GOrgueSettingUnsignedBit : public GOrgueSettingUnsigned
+	{
+	public:
+		GOrgueSettingUnsignedBit(GOrgueSettingStore* store, wxString group, wxString name, unsigned min_value, unsigned max_value, unsigned default_value) :
+			GOrgueSettingUnsigned(store, group, name, min_value, max_value, default_value)
+		{
+		}
+
+		unsigned operator() () const
+		{
+			return GOrgueSettingUnsigned::operator()();
+		}
+
+		void operator()(unsigned value)
+		{
+			GOrgueSettingUnsigned::operator()(value - value % 4);
+		}
+	} BitsPerSample;
+	GOrgueSettingInteger Transpose;
+
+
 	void Load();
 	wxConfigBase& GetConfig();
 	wxString GetStandardDocumentDirectory();
@@ -131,9 +155,6 @@ public:
 	wxString GetStandardDataDirectory();
 	wxString GetStandardCacheDirectory();
 	const wxString GetResourceDirectory();
-
-	size_t GetMemoryLimit();
-	void SetMemoryLimit(size_t limit);
 
 	unsigned GetEventCount();
 	wxString GetEventGroup(unsigned index);
@@ -154,60 +175,6 @@ public:
 	void SetUserCachePath(wxString path);
 	wxString GetLastFile();
 	void SetLastFile(wxString path);
-	unsigned GetPreset();
-	void SetPreset(unsigned value);
-	bool GetODFCheck();
-	void SetODFCheck(bool strict);
-
-	unsigned GetLoadChannels();
-	void SetLoadChannels(unsigned channels);
-
-	unsigned GetConcurrency();
-	void SetConcurrency(unsigned concurrency);
-	unsigned GetReleaseConcurrency();
-	void SetReleaseConcurrency(unsigned concurrency);
-	unsigned GetLoadConcurrency();
-	void SetLoadConcurrency(unsigned concurrency);
-
-	unsigned GetSamplesPerBuffer();
-	void SetSamplesPerBuffer(unsigned sampler_per_buffer);
-
-	bool GetLosslessCompression();
-	void SetLosslessCompression(bool lossless_compression);
-	bool GetManagePolyphony();
-	void SetManagePolyphony(bool manage_polyphony);
-	bool GetManageCache();
-	void SetManageCache(bool manage);
-	bool GetCompressCache();
-	void SetCompressCache(bool compress);
-	bool GetScaleRelease();
-	void SetScaleRelease(bool scale_release);
-	bool GetRandomizeSpeaking();
-	void SetRandomizeSpeaking(bool randomize);
-	bool GetLoadLastFile();
-	void SetLoadLastFile(bool last_file);
-	unsigned GetInterpolationType();
-	void SetInterpolationType(unsigned type);
-	unsigned GetSampleRate();
-	void SetSampleRate(unsigned sample_rate);
-	unsigned GetWaveFormatBytesPerSample();
-	void SetWaveFormatBytesPerSample(unsigned bytes_per_sample);
-	unsigned GetBitsPerSample();
-	void SetBitsPerSample(unsigned bits_per_sample);
-	bool GetRecordDownmix();
-	void SetRecordDownmix(bool downmix);
-
-	unsigned GetLoopLoad();
-	void SetLoopLoad(unsigned loop_load);
-	unsigned GetAttackLoad();
-	void SetAttackLoad(unsigned attack_load);
-	unsigned GetReleaseLoad();
-	void SetReleaseLoad(unsigned release_load);
-
-	int GetVolume();
-	void SetVolume(int volume);
-	unsigned GetPolyphonyLimit();
-	void SetPolyphonyLimit(unsigned polyphony_limit);
 
 	unsigned GetAudioDeviceLatency(wxString device);
 	void SetAudioDeviceLatency(wxString device, unsigned latency);
@@ -235,27 +202,8 @@ public:
 	const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();
 	void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
 
-	int GetTranspose();
-	void SetTranspose(int transpose);
-	unsigned GetReleaseLength();
-	void SetReleaseLength(unsigned reverb);
-
-	bool GetReverbEnabled();
-	void SetReverbEnabled(bool on);
-	bool GetReverbDirect();
-	void SetReverbDirect(bool on);
 	wxString GetReverbFile();
 	void SetReverbFile(wxString file);
-	unsigned GetReverbStartOffset();
-	void SetReverbStartOffset(unsigned offset);
-	unsigned GetReverbLen();
-	void SetReverbLen(unsigned length);
-	float GetReverbGain();
-	void SetReverbGain(float gain);
-	int GetReverbChannel();
-	void SetReverbChannel(int channel);
-	unsigned GetReverbDelay();
-	void SetReverbDelay(unsigned delay);
 
 	void AddOrgan(GOrgueOrgan* organ);
 	ptr_vector<GOrgueOrgan>& GetOrganList();

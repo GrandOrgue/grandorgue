@@ -132,7 +132,7 @@ unsigned GOrguePipeConfigNode::GetEffectiveBitsPerSample()
 	if (m_parent)
 		return m_parent->GetEffectiveBitsPerSample();
 	else
-		return m_organfile->GetSettings().GetBitsPerSample();
+		return m_organfile->GetSettings().BitsPerSample();
 }
 
 bool GOrguePipeConfigNode::GetEffectiveCompress()
@@ -142,7 +142,7 @@ bool GOrguePipeConfigNode::GetEffectiveCompress()
 	if (m_parent)
 		return m_parent->GetEffectiveCompress();
 	else
-		return m_organfile->GetSettings().GetLosslessCompression();
+		return m_organfile->GetSettings().LosslessCompression();
 }
 
 unsigned GOrguePipeConfigNode::GetEffectiveLoopLoad()
@@ -152,7 +152,7 @@ unsigned GOrguePipeConfigNode::GetEffectiveLoopLoad()
 	if (m_parent)
 		return m_parent->GetEffectiveLoopLoad();
 	else
-		return m_organfile->GetSettings().GetLoopLoad();
+		return m_organfile->GetSettings().LoopLoad();
 }
 
 unsigned GOrguePipeConfigNode::GetEffectiveAttackLoad()
@@ -162,7 +162,7 @@ unsigned GOrguePipeConfigNode::GetEffectiveAttackLoad()
 	if (m_parent)
 		return m_parent->GetEffectiveAttackLoad();
 	else
-		return m_organfile->GetSettings().GetAttackLoad();
+		return m_organfile->GetSettings().AttackLoad();
 }
 
 unsigned GOrguePipeConfigNode::GetEffectiveReleaseLoad()
@@ -172,7 +172,7 @@ unsigned GOrguePipeConfigNode::GetEffectiveReleaseLoad()
 	if (m_parent)
 		return m_parent->GetEffectiveReleaseLoad();
 	else
-		return m_organfile->GetSettings().GetReleaseLoad();
+		return m_organfile->GetSettings().ReleaseLoad();
 }
 
 unsigned GOrguePipeConfigNode::GetEffectiveChannels()
@@ -182,7 +182,7 @@ unsigned GOrguePipeConfigNode::GetEffectiveChannels()
 	if (m_parent)
 		return m_parent->GetEffectiveChannels();
 	else
-		return m_organfile->GetSettings().GetLoadChannels();
+		return m_organfile->GetSettings().LoadChannels();
 }
 
 unsigned GOrguePipeConfigNode::GetChildCount()

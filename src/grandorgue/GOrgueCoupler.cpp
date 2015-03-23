@@ -127,7 +127,7 @@ void GOrgueCoupler::Load(GOrgueConfigReader& cfg, wxString group)
 		m_CouplerType = COUPLER_NORMAL;
 		m_FirstMidiNote = 0; 
 		m_NumberOfKeys = 127;
-		if (!m_organfile->GetSettings().GetODFCheck())
+		if (!m_organfile->GetSettings().ODFCheck())
 		{
 			cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUnisonIntermanualCouplers"), false, false);
 			cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUpwardIntermanualCouplers"), false, false);
@@ -148,7 +148,7 @@ void GOrgueCoupler::Load(GOrgueConfigReader& cfg, wxString group)
 			m_CoupleToSubsequentDownwardIntermanualCouplers = false;
 			m_CoupleToSubsequentUpwardIntramanualCouplers = false;
 			m_CoupleToSubsequentDownwardIntramanualCouplers = false;
-			if (!m_organfile->GetSettings().GetODFCheck())
+			if (!m_organfile->GetSettings().ODFCheck())
 			{
 				cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUnisonIntermanualCouplers"), false, false);
 				cfg.ReadBoolean(ODFSetting, group, wxT("CoupleToSubsequentUpwardIntermanualCouplers"), false, false);
