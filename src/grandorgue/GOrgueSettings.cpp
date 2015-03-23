@@ -30,6 +30,7 @@
 #include "GOrgueLimits.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrguePath.h"
+#include "GOrgueSettingNumber.cpp"
 #include "GOrgueStdPath.h"
 #include <wx/confbase.h>
 #include <wx/filename.h>
@@ -210,6 +211,7 @@ void GOrgueSettings::Load()
 			cpus = MAX_CPU;
 		if (cpus == 0)
 			cpus = 1;
+		GOrgueSettingStore::Load(cfg);
 		SetConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, false, cpus));
 		SetReleaseConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, false, cpus));
 		SetLoadConcurrency(cfg.ReadInteger(CMBSetting, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, false, cpus));
@@ -1093,6 +1095,7 @@ void GOrgueSettings::Flush()
 	GOrgueConfigFileWriter cfg_file;
 	GOrgueConfigWriter cfg(cfg_file, false);
 
+	GOrgueSettingStore::Save(cfg);
 	cfg.WriteInteger(wxT("General"), wxT("InterpolationType"), m_InterpolationType);
 	cfg.WriteInteger(wxT("General"), wxT("WaveFormat"), m_WaveFormat);
 	cfg.WriteBoolean(wxT("General"), wxT("RecordDownmix"), m_RecordDownmix);

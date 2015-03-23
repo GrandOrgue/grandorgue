@@ -345,6 +345,10 @@ GOrgueReleaseAlignTable.cpp
 GOrgueRtHelpers.cpp
 GOrgueSetter.cpp
 GOrgueSetterButton.cpp
+GOrgueSetting.cpp
+GOrgueSettingBool.cpp
+GOrgueSettingFloat.cpp
+GOrgueSettingStore.cpp
 GOrgueSettings.cpp
 GOrgueSound.cpp
 GOrgueSoundPort.cpp
