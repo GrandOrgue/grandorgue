@@ -49,7 +49,7 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	Pa_Initialize();
 	GetAudioDevices();
 
-	m_SoundEngine.SetVolume(m_Settings.GetVolume());
+	m_SoundEngine.SetVolume(m_Settings.Volume());
 }
 
 GOrgueSound::~GOrgueSound()
@@ -67,7 +67,7 @@ void GOrgueSound::StartThreads()
 {
 	StopThreads();
 
-	unsigned n_cpus = m_Settings.GetConcurrency();
+	unsigned n_cpus = m_Settings.Concurrency();
 
 	GOMutexLocker thread_locker(m_thread_lock);
 	for(unsigned i = 0; i < n_cpus; i++)
@@ -128,24 +128,24 @@ bool GOrgueSound::OpenSound()
 			}
 		}
 	}
-	m_SamplesPerBuffer = m_Settings.GetSamplesPerBuffer();
+	m_SamplesPerBuffer = m_Settings.SamplesPerBuffer();
 	m_SoundEngine.SetSamplesPerBuffer(m_SamplesPerBuffer);
-	m_SoundEngine.SetPolyphonyLimiting(m_Settings.GetManagePolyphony());
-	m_SoundEngine.SetHardPolyphony(m_Settings.GetPolyphonyLimit());
-	m_SoundEngine.SetScaledReleases(m_Settings.GetScaleRelease());
-	m_SoundEngine.SetRandomizeSpeaking(m_Settings.GetRandomizeSpeaking());
-	m_SoundEngine.SetInterpolationType(m_Settings.GetInterpolationType());
+	m_SoundEngine.SetPolyphonyLimiting(m_Settings.ManagePolyphony());
+	m_SoundEngine.SetHardPolyphony(m_Settings.PolyphonyLimit());
+	m_SoundEngine.SetScaledReleases(m_Settings.ScaleRelease());
+	m_SoundEngine.SetRandomizeSpeaking(m_Settings.RandomizeSpeaking());
+	m_SoundEngine.SetInterpolationType(m_Settings.InterpolationType());
 	m_SoundEngine.SetAudioGroupCount(audio_group_count);
-	unsigned sample_rate = m_Settings.GetSampleRate();
-	m_AudioRecorder.SetBytesPerSample(m_Settings.GetWaveFormatBytesPerSample());
+	unsigned sample_rate = m_Settings.SampleRate();
+	m_AudioRecorder.SetBytesPerSample(m_Settings.WaveFormatBytesPerSample());
 	GetEngine().SetSampleRate(sample_rate);
 	m_AudioRecorder.SetSampleRate(sample_rate);
 	m_SoundEngine.SetAudioOutput(engine_config);
 	m_SoundEngine.SetupReverb(m_Settings);
-	m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_Settings.GetRecordDownmix());
+	m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_Settings.RecordDownmix());
 
 	if (m_organfile)
-		m_SoundEngine.Setup(m_organfile, m_Settings.GetReleaseConcurrency());
+		m_SoundEngine.Setup(m_organfile, m_Settings.ReleaseConcurrency());
 	else
 		m_SoundEngine.ClearSetup();
 
@@ -277,7 +277,7 @@ void GOrgueSound::AssignOrganFile(GrandOrgueFile* organfile)
 
 	if (m_organfile && m_AudioOutputs.size())
 	{
-		m_SoundEngine.Setup(organfile, m_Settings.GetReleaseConcurrency());
+		m_SoundEngine.Setup(organfile, m_Settings.ReleaseConcurrency());
 		m_organfile->PreparePlayback(&GetEngine(), &GetMidi());
 	}
 }

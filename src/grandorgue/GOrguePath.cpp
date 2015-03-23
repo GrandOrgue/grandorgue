@@ -31,7 +31,7 @@ wxString GOCreateFilename(GrandOrgueFile* organfile, const wxString& file, bool 
 {
 	/* Translate directory seperator from ODF(\) to native format */
 	wxString temp = file;
-	if (organfile->GetSettings().GetODFCheck() && temp.Find(wxT('/')) != wxNOT_FOUND)
+	if (organfile->GetSettings().ODFCheck() && temp.Find(wxT('/')) != wxNOT_FOUND)
 	{
 		wxLogWarning(_("Filename '%s' contains non-portable directory seperator /"), file.c_str());
 	}

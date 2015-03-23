@@ -38,12 +38,12 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 {
 	wxArrayString choices;
 
-	m_OldChannels = m_Settings.GetLoadChannels();
-	m_OldLosslessCompression = m_Settings.GetLosslessCompression();
-	m_OldBitsPerSample = m_Settings.GetBitsPerSample();
-	m_OldLoopLoad = m_Settings.GetLoopLoad();
-	m_OldAttackLoad = m_Settings.GetAttackLoad();
-	m_OldReleaseLoad = m_Settings.GetReleaseLoad();
+	m_OldChannels = m_Settings.LoadChannels();
+	m_OldLosslessCompression = m_Settings.LosslessCompression();
+	m_OldBitsPerSample = m_Settings.BitsPerSample();
+	m_OldLoopLoad = m_Settings.LoopLoad();
+	m_OldAttackLoad = m_Settings.AttackLoad();
+	m_OldReleaseLoad = m_Settings.ReleaseLoad();
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* item0 = new wxBoxSizer(wxHORIZONTAL);
@@ -57,14 +57,10 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item6->Add(m_Scale = new wxCheckBox(this, ID_SCALE_RELEASE, _("Release sample scaling")), 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_Random = new wxCheckBox(this, ID_RANDOMIZE, _("Randomize pipe speaking")), 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_LoadLastFile  = new wxCheckBox(this, ID_LOAD_LAST_FILE, _("Load last file at startup")), 0, wxEXPAND | wxALL, 5);
-	if (m_Settings.GetManagePolyphony())
-		m_Limit->SetValue(true);
-	if (m_Settings.GetLoadLastFile())
-		m_LoadLastFile->SetValue(true);
-	if (m_Settings.GetScaleRelease())
-		m_Scale->SetValue(true);
-	if (m_Settings.GetRandomizeSpeaking())
-		m_Random->SetValue(true);
+	m_Limit->SetValue(m_Settings.ManagePolyphony());
+	m_LoadLastFile->SetValue(m_Settings.LoadLastFile());
+	m_Scale->SetValue(m_Settings.ScaleRelease());
+	m_Random->SetValue(m_Settings.RandomizeSpeaking());
 
 	wxFlexGridSizer* grid = new wxFlexGridSizer(5, 2, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound Engine"));
@@ -104,12 +100,12 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_RecordDownmix  = new wxCheckBox(this, ID_RECORD_DOWNMIX, _("Record stereo downmix")), 0, wxEXPAND | wxALL, 5);
 
-	m_Interpolation->Select(m_Settings.GetInterpolationType());
-	m_Concurrency->Select(m_Settings.GetConcurrency());
-	m_ReleaseConcurrency->Select(m_Settings.GetReleaseConcurrency() - 1);
-	m_LoadConcurrency->Select(m_Settings.GetLoadConcurrency());
-	m_WaveFormat->Select(m_Settings.GetWaveFormatBytesPerSample() - 1);
-	m_RecordDownmix->SetValue(m_Settings.GetRecordDownmix());
+	m_Interpolation->Select(m_Settings.InterpolationType());
+	m_Concurrency->Select(m_Settings.Concurrency());
+	m_ReleaseConcurrency->Select(m_Settings.ReleaseConcurrency() - 1);
+	m_LoadConcurrency->Select(m_Settings.LoadConcurrency());
+	m_WaveFormat->Select(m_Settings.WaveFormatBytesPerSample() - 1);
+	m_RecordDownmix->SetValue(m_Settings.RecordDownmix());
 
 	grid = new wxFlexGridSizer(4, 1, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
@@ -134,8 +130,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
 	item6->Add(m_LosslessCompression = new wxCheckBox(this, ID_LOSSLESS_COMPRESSION, _("Lossless compression")), 0, wxEXPAND | wxALL, 5);
-	if (m_Settings.GetLosslessCompression())
-		m_LosslessCompression->SetValue(true);
+	m_LosslessCompression->SetValue(m_Settings.LosslessCompression());
 
 	grid = new wxFlexGridSizer(6, 2, 5, 5);
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
@@ -176,12 +171,12 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(m_MemoryLimit = new wxSpinCtrl(this, ID_MEMORY_LIMIT, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
 	m_MemoryLimit->SetRange(0, 1024 * 1024);
 
-	m_Channels->Select(m_Settings.GetLoadChannels());
-	m_BitsPerSample->Select((m_Settings.GetBitsPerSample() - 8) / 4);
-	m_LoopLoad->Select(m_Settings.GetLoopLoad());
-	m_AttackLoad->Select(m_Settings.GetAttackLoad());
-	m_ReleaseLoad->Select(m_Settings.GetReleaseLoad());
-	m_MemoryLimit->SetValue(m_Settings.GetMemoryLimit() / (1024.0 * 1024.0));
+	m_Channels->Select(m_Settings.LoadChannels());
+	m_BitsPerSample->Select((m_Settings.BitsPerSample() - 8) / 4);
+	m_LoopLoad->Select(m_Settings.LoopLoad());
+	m_AttackLoad->Select(m_Settings.AttackLoad());
+	m_ReleaseLoad->Select(m_Settings.ReleaseLoad());
+	m_MemoryLimit->SetValue(m_Settings.MemoryLimit());
 
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
@@ -198,25 +193,22 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Samples per buffer:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_SamplesPerBuffer = new wxSpinCtrl(this, ID_SAMPLES_PER_BUFFER, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
 	m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
-	m_SamplesPerBuffer->SetValue(m_Settings.GetSamplesPerBuffer());
+	m_SamplesPerBuffer->SetValue(m_Settings.SamplesPerBuffer());
 
 	m_SampleRate->Select(0);
 	for(unsigned i = 0; i < m_SampleRate->GetCount(); i++)
-		if (wxString::Format(wxT("%d"), m_Settings.GetSampleRate()) == m_SampleRate->GetString(i))
+		if (wxString::Format(wxT("%d"), m_Settings.SampleRate()) == m_SampleRate->GetString(i))
 			m_SampleRate->Select(i);
 
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Cache"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_CompressCache  = new wxCheckBox(this, ID_COMPRESS_CACHE, _("Compress cache")), 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_ManageCache  = new wxCheckBox(this, ID_MANAGE_CACHE, _("Automatically manage cache")), 0, wxEXPAND | wxALL, 5);
-	if (m_Settings.GetCompressCache())
-		m_CompressCache->SetValue(true);
-	if (m_Settings.GetManageCache())
-		m_ManageCache->SetValue(true);
+	m_CompressCache->SetValue(m_Settings.CompressCache());
+	m_ManageCache->SetValue(m_Settings.ManageCache());
 
 	item9->Add(m_ODFCheck  = new wxCheckBox(this, ID_ODF_CHECK, _("Perform strict ODF")), 0, wxEXPAND | wxALL, 5);
-	if (m_Settings.GetODFCheck())
-		m_ODFCheck->SetValue(true);
+	m_ODFCheck->SetValue(m_Settings.ODFCheck());
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 	topSizer->AddSpacer(5);
@@ -230,42 +222,42 @@ void SettingsOption::Save()
 	if (m_Interpolation->GetSelection() == 1 && m_LosslessCompression->IsChecked())
 		wxMessageBox(_("Polyphase is not supported with lossless compression - falling back to linear.") , _("Warning"), wxOK | wxICON_WARNING, this);
 
-	m_Settings.SetLosslessCompression(m_LosslessCompression->IsChecked());
-	m_Settings.SetManagePolyphony(m_Limit->IsChecked());
-	m_Settings.SetCompressCache(m_CompressCache->IsChecked());
-	m_Settings.SetManageCache(m_ManageCache->IsChecked());
-	m_Settings.SetLoadLastFile(m_LoadLastFile->IsChecked());
-	m_Settings.SetODFCheck(m_ODFCheck->IsChecked());
-	m_Settings.SetRecordDownmix(m_RecordDownmix->IsChecked());
-	m_Settings.SetScaleRelease(m_Scale->IsChecked());
-	m_Settings.SetRandomizeSpeaking(m_Random->IsChecked());
-	m_Settings.SetConcurrency(m_Concurrency->GetSelection());
-	m_Settings.SetReleaseConcurrency(m_ReleaseConcurrency->GetSelection() + 1);
-	m_Settings.SetLoadConcurrency(m_LoadConcurrency->GetSelection());
-	m_Settings.SetWaveFormatBytesPerSample(m_WaveFormat->GetSelection() + 1);
+	m_Settings.LosslessCompression(m_LosslessCompression->IsChecked());
+	m_Settings.ManagePolyphony(m_Limit->IsChecked());
+	m_Settings.CompressCache(m_CompressCache->IsChecked());
+	m_Settings.ManageCache(m_ManageCache->IsChecked());
+	m_Settings.LoadLastFile(m_LoadLastFile->IsChecked());
+	m_Settings.ODFCheck(m_ODFCheck->IsChecked());
+	m_Settings.RecordDownmix(m_RecordDownmix->IsChecked());
+	m_Settings.ScaleRelease(m_Scale->IsChecked());
+	m_Settings.RandomizeSpeaking(m_Random->IsChecked());
+	m_Settings.Concurrency(m_Concurrency->GetSelection());
+	m_Settings.ReleaseConcurrency(m_ReleaseConcurrency->GetSelection() + 1);
+	m_Settings.LoadConcurrency(m_LoadConcurrency->GetSelection());
+	m_Settings.WaveFormatBytesPerSample(m_WaveFormat->GetSelection() + 1);
 	m_Settings.SetUserSettingPath(m_SettingsPath->GetPath());
 	m_Settings.SetUserCachePath(m_CachePath->GetPath());
-	m_Settings.SetBitsPerSample(m_BitsPerSample->GetSelection() * 4 + 8);
-	m_Settings.SetLoopLoad(m_LoopLoad->GetSelection());
-	m_Settings.SetAttackLoad(m_AttackLoad->GetSelection());
-	m_Settings.SetReleaseLoad(m_ReleaseLoad->GetSelection());
-	m_Settings.SetLoadChannels(m_Channels->GetSelection());
-	m_Settings.SetInterpolationType(m_Interpolation->GetSelection());
+	m_Settings.BitsPerSample(m_BitsPerSample->GetSelection() * 4 + 8);
+	m_Settings.LoopLoad(m_LoopLoad->GetSelection());
+	m_Settings.AttackLoad(m_AttackLoad->GetSelection());
+	m_Settings.ReleaseLoad(m_ReleaseLoad->GetSelection());
+	m_Settings.LoadChannels(m_Channels->GetSelection());
+	m_Settings.InterpolationType(m_Interpolation->GetSelection());
 	unsigned long sample_rate;
 	if (m_SampleRate->GetStringSelection().ToULong(&sample_rate))
-		m_Settings.SetSampleRate(sample_rate);
+		m_Settings.SampleRate(sample_rate);
 	else
 		wxLogError(_("Invalid sample rate"));
-	m_Settings.SetSamplesPerBuffer(m_SamplesPerBuffer->GetValue());
-	m_Settings.SetMemoryLimit(m_MemoryLimit->GetValue() * 1024.0 * 1024.0);
+	m_Settings.SamplesPerBuffer(m_SamplesPerBuffer->GetValue());
+	m_Settings.MemoryLimit(m_MemoryLimit->GetValue());
 }
 
 bool SettingsOption::NeedReload()
 {
-	return m_OldLosslessCompression != m_Settings.GetLosslessCompression() ||
-		m_OldBitsPerSample != m_Settings.GetBitsPerSample() ||
-		m_OldLoopLoad != m_Settings.GetLoopLoad() || 
-		m_OldAttackLoad != m_Settings.GetAttackLoad() ||
-		m_OldReleaseLoad != m_Settings.GetReleaseLoad() ||
-		m_OldChannels != m_Settings.GetLoadChannels();
+	return m_OldLosslessCompression != m_Settings.LosslessCompression() ||
+		m_OldBitsPerSample != m_Settings.BitsPerSample() ||
+		m_OldLoopLoad != m_Settings.LoopLoad() || 
+		m_OldAttackLoad != m_Settings.AttackLoad() ||
+		m_OldReleaseLoad != m_Settings.ReleaseLoad() ||
+		m_OldChannels != m_Settings.LoadChannels();
 }

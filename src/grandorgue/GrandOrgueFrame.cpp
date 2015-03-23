@@ -226,7 +226,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 		
 		tb->AddControl(control);
 	}
-	m_Volume->SetValue(m_Settings.GetVolume());
+	m_Volume->SetValue(m_Settings.Volume());
 	
 	tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
 	choices.clear();
@@ -235,7 +235,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 		choices.push_back(wxString::Format(_("%d ms"), i * 50));
 	m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
 	tb->AddControl(m_ReleaseLength);
-	unsigned n = m_Settings.GetReleaseLength();
+	unsigned n = m_Settings.ReleaseLength();
 	m_ReleaseLength->SetSelection(n / 50);
 	m_Sound.GetEngine().SetReleaseLength(n);
 	
@@ -250,7 +250,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	
 	m_SamplerUsage = new wxGaugeAudio(tb, wxID_ANY, wxDefaultPosition);
 	tb->AddControl(m_SamplerUsage);
-	m_Polyphony->SetValue(m_Settings.GetPolyphonyLimit());
+	m_Polyphony->SetValue(m_Settings.PolyphonyLimit());
 	
 	tb->AddTool(ID_AUDIO_PANIC, _("&Panic\tEscape"), GetImage_panic(), _("Panic"), wxITEM_NORMAL);
 	
@@ -294,9 +294,9 @@ void GOrgueFrame::Init(wxString filename)
 	}
 	if (!filename.IsEmpty())
 		SendLoadFile(filename);
-	else if (m_Settings.GetLoadLastFile() && m_Settings.GetLastFile() != wxEmptyString)
+	else if (m_Settings.LoadLastFile() && m_Settings.GetLastFile() != wxEmptyString)
 		SendLoadFile(m_Settings.GetLastFile());
-	else if (m_Settings.GetLoadLastFile())
+	else if (m_Settings.LoadLastFile())
 	{
 		wxString name = GOrgueStdPath::GetResourceDir() + wxFILE_SEP_PATH + wxT("demo") + wxFILE_SEP_PATH + wxT("demo.organ");
 		if (wxFileExists(name))
@@ -511,7 +511,7 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 
 	if (ID_PRESET_0 <= event.GetId() && event.GetId() <= ID_PRESET_LAST)
 	{
-		event.Check(m_Settings.GetPreset() == (unsigned)(event.GetId() - ID_PRESET_0));
+		event.Check(m_Settings.Preset() == (unsigned)(event.GetId() - ID_PRESET_0));
 		return;
 	}
 
@@ -539,9 +539,9 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 void GOrgueFrame::OnPreset(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_PRESET_0;
-	if (id == m_Settings.GetPreset())
+	if (id == m_Settings.Preset())
 		return;
-	m_Settings.SetPreset(id);
+	m_Settings.Preset(id);
 	if (GetDocument())
 		ProcessCommand(ID_FILE_RELOAD);
 }
@@ -672,7 +672,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 		return;
 	GOrgueProgressDialog dlg;
 	if (doc && doc->GetOrganFile())
-		res = doc->GetOrganFile()->UpdateCache(&dlg, m_Settings.GetCompressCache());
+		res = doc->GetOrganFile()->UpdateCache(&dlg, m_Settings.CompressCache());
 	if (!res)
 	{
 		wxLogError(_("Creating the cache failed"));
@@ -851,7 +851,7 @@ void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)
 {
 	long n = m_Volume->GetValue();
 
-	m_Settings.SetVolume(n);
+	m_Settings.Volume(n);
 	m_Sound.GetEngine().SetVolume(n);
 	m_VolumeLeft->ResetClip();
 	m_VolumeRight->ResetClip();
@@ -861,7 +861,7 @@ void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
 {
 	long n = m_Polyphony->GetValue();
 
-	m_Settings.SetPolyphonyLimit(n);
+	m_Settings.PolyphonyLimit(n);
 	m_Sound.GetEngine().SetHardPolyphony(n);
 	m_SamplerUsage->ResetClip();
 }
@@ -888,7 +888,7 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 {
 	long n = m_Transpose->GetValue();
 
-	m_Settings.SetTranspose(n);
+	m_Settings.Transpose(n);
 	GOrgueDocument* doc = GetDocument();
 	if (doc && doc->GetOrganFile())
 		doc->GetOrganFile()->GetSetter()->SetTranspose(n);
@@ -896,8 +896,8 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 
 void GOrgueFrame::OnSettingsReleaseLength(wxCommandEvent& event)
 {
-	m_Settings.SetReleaseLength(m_ReleaseLength->GetSelection() * 50);
-	m_Sound.GetEngine().SetReleaseLength(m_Settings.GetReleaseLength());
+	m_Settings.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
+	m_Sound.GetEngine().SetReleaseLength(m_Settings.ReleaseLength());
 }
 
 void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)
@@ -937,7 +937,7 @@ void GOrgueFrame::OnChangeSetter(wxCommandEvent& event)
 
 void GOrgueFrame::OnChangeVolume(wxCommandEvent& event)
 {
-	m_Settings.SetVolume(event.GetInt());
+	m_Settings.Volume(event.GetInt());
 	m_Volume->SetValue(event.GetInt());
 }
 

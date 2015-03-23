@@ -53,13 +53,13 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 {
 	Cleanup();
 
-	if (!settings.GetReverbEnabled())
+	if (!settings.ReverbEnabled())
 		return;
 
 	m_engine.clear();
 	for(unsigned i = 0; i < m_channels; i++)
 		m_engine.push_back(new Convproc());
-	unsigned val = settings.GetSamplesPerBuffer();
+	unsigned val = settings.SamplesPerBuffer();
 	if (val < Convproc::MINPART)
 		val = Convproc::MINPART;
 	if (val > Convproc::MAXPART)
@@ -69,13 +69,13 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 	try
 	{
 		for(unsigned i = 0; i < m_engine.size(); i++)
-			if (m_engine[i]->configure(1, 1, 1000000, settings.GetSamplesPerBuffer(), val, Convproc::MAXPART))
+			if (m_engine[i]->configure(1, 1, 1000000, settings.SamplesPerBuffer(), val, Convproc::MAXPART))
 				throw (wxString)_("Invalid reverb configuration (samples per buffer)");
 
 		GOrgueWave wav;
 		unsigned block = 0x4000;
-		unsigned offset = settings.GetReverbStartOffset();
-		float gain = settings.GetReverbGain();
+		unsigned offset = settings.ReverbStartOffset();
+		float gain = settings.ReverbGain();
 
 		wav.Open(settings.GetReverbFile());
 		if (offset > wav.GetLength())
@@ -84,27 +84,27 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 		data = (float*)malloc(sizeof(float)*len);
 		if (!data)
 			throw (wxString)_("Out of memory");
-		wav.ReadSamples(data, GOrgueWave::SF_IEEE_FLOAT, wav.GetSampleRate(), -settings.GetReverbChannel());
+		wav.ReadSamples(data, GOrgueWave::SF_IEEE_FLOAT, wav.GetSampleRate(), -settings.ReverbChannel());
 		for(unsigned i = 0; i < len; i++)
 			data[i] *= gain;
-		if (len >= offset + settings.GetReverbLen() && settings.GetReverbLen())
-			len = offset + settings.GetReverbLen();
-		if (wav.GetSampleRate() != settings.GetSampleRate())
+		if (len >= offset + settings.ReverbLen() && settings.ReverbLen())
+			len = offset + settings.ReverbLen();
+		if (wav.GetSampleRate() != settings.SampleRate())
 		{
-			float* new_data = resample_block(data, len, wav.GetSampleRate(), settings.GetSampleRate());
+			float* new_data = resample_block(data, len, wav.GetSampleRate(), settings.SampleRate());
 			if (!new_data)
 				throw (wxString)_("Resampling failed");
 			free(data);
 			data = new_data;
-			offset = (offset * settings.GetSampleRate()) / (float)wav.GetSampleRate();
+			offset = (offset * settings.SampleRate()) / (float)wav.GetSampleRate();
 		}
-		unsigned delay = (settings.GetSampleRate() * settings.GetReverbDelay()) / 1000;
+		unsigned delay = (settings.SampleRate() * settings.ReverbDelay()) / 1000;
 		for(unsigned i = 0; i < m_channels; i++)
 		{
 			float* d = data + offset;
 			unsigned l = len - offset;
 			float g = 1;
-			if  (settings.GetReverbDirect())
+			if  (settings.ReverbDirect())
 				m_engine[i]->impdata_create(0, 0, 0, &g, 0, 1);
 			for(unsigned j = 0; j < l; j+= block)
 			{

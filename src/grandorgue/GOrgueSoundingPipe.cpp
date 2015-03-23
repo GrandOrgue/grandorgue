@@ -284,7 +284,7 @@ const wxString& GOrgueSoundingPipe::GetLoadTitle()
 
 void GOrgueSoundingPipe::Validate()
 {
-	if (!m_organfile->GetSettings().GetODFCheck())
+	if (!m_organfile->GetSettings().ODFCheck())
 		return;
 
 	if (m_SoundProvider.checkForMissingRelease())
