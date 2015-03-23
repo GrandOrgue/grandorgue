@@ -25,6 +25,10 @@
 #include "GOrgueMidiMap.h"
 #include "GOrgueOrgan.h"
 #include "GOrgueTemperamentList.h"
+#include "GOrgueSettingBool.h"
+#include "GOrgueSettingFloat.h"
+#include "GOrgueSettingNumber.h"
+#include "GOrgueSettingStore.h"
 #include "ptrvector.h"
 #include <wx/string.h>
 #include <map>
@@ -54,7 +58,7 @@ typedef struct
 	const wxString name;
 } GOMidiSetting;
 
-class GOrgueSettings {
+class GOrgueSettings : public GOrgueSettingStore {
 private:
 	wxConfigBase& m_Config;
 	wxString m_InstanceName;
