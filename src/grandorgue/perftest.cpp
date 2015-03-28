@@ -101,7 +101,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 				ainfo.release_end = -1;
 				ainfo.loops.clear();
 				attack.push_back(ainfo);
-				w->LoadFromFile(attack, release, organfile, bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1, 0);
+				w->LoadFromFile(attack, release, organfile, true, bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1, 0);
 				pipes.push_back(w);
 			}
 			engine->SetSamplesPerBuffer(samples_per_frame);
