@@ -77,7 +77,7 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 		unsigned offset = settings.ReverbStartOffset();
 		float gain = settings.ReverbGain();
 
-		wav.Open(settings.GetReverbFile());
+		wav.Open(settings.ReverbFile());
 		if (offset > wav.GetLength())
 			throw (wxString)_("Invalid reverb start offset");
 		len = wav.GetLength();

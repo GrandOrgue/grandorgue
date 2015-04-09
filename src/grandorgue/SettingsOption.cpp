@@ -120,8 +120,8 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
-	m_SettingsPath->SetPath(m_Settings.GetUserSettingPath());
-	m_CachePath->SetPath(m_Settings.GetUserCachePath());
+	m_SettingsPath->SetPath(m_Settings.UserSettingPath());
+	m_CachePath->SetPath(m_Settings.UserCachePath());
 
 	item9 = new wxBoxSizer(wxVERTICAL);
 	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
@@ -235,8 +235,8 @@ void SettingsOption::Save()
 	m_Settings.ReleaseConcurrency(m_ReleaseConcurrency->GetSelection() + 1);
 	m_Settings.LoadConcurrency(m_LoadConcurrency->GetSelection());
 	m_Settings.WaveFormatBytesPerSample(m_WaveFormat->GetSelection() + 1);
-	m_Settings.SetUserSettingPath(m_SettingsPath->GetPath());
-	m_Settings.SetUserCachePath(m_CachePath->GetPath());
+	m_Settings.UserSettingPath(m_SettingsPath->GetPath());
+	m_Settings.UserCachePath(m_CachePath->GetPath());
 	m_Settings.BitsPerSample(m_BitsPerSample->GetSelection() * 4 + 8);
 	m_Settings.LoopLoad(m_LoopLoad->GetSelection());
 	m_Settings.AttackLoad(m_AttackLoad->GetSelection());

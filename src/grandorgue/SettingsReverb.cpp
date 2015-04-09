@@ -97,7 +97,7 @@ SettingsReverb::SettingsReverb(GOrgueSettings& settings, wxWindow* parent) :
 	m_StartOffset->SetRange(0, m_Settings.ReverbStartOffset());
 	m_Length->SetRange(0, m_Settings.ReverbLen());
 
-	m_File->SetPath(m_Settings.GetReverbFile());
+	m_File->SetPath(m_Settings.ReverbFile());
 	m_FileName->SetLabel(m_File->GetPath());
 	UpdateLimits();
 
@@ -207,7 +207,7 @@ void SettingsReverb::Save()
 {
 	m_Settings.ReverbEnabled(m_Enabled->IsChecked());
 	m_Settings.ReverbDirect(m_Direct->IsChecked());
-	m_Settings.SetReverbFile(m_File->GetPath());
+	m_Settings.ReverbFile(m_File->GetPath());
 	m_Settings.ReverbLen(m_Length->GetValue());
 	m_Settings.ReverbDelay(m_Delay->GetValue());
 	m_Settings.ReverbStartOffset(m_StartOffset->GetValue());

@@ -94,7 +94,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	for (unsigned i = 0; i < list.size(); i++)
 	{
 		m_RecorderDevice->Append(list[i]);
-		if (m_Sound.GetSettings().GetMidiRecorderOutputDevice() == list[i])
+		if (m_Sound.GetSettings().MidiRecorderOutputDevice() == list[i])
 			m_RecorderDevice->SetSelection(m_RecorderDevice->GetCount() - 1);
 	}
 
@@ -134,7 +134,7 @@ void SettingsMidiDevices::Save()
 		m_Sound.GetSettings().SetMidiOutState(m_OutDevices->GetString(i), m_OutDevices->IsChecked(i));
 	}
 	if (m_RecorderDevice->GetSelection() == 0)
-		m_Sound.GetSettings().SetMidiRecorderOutputDevice(wxEmptyString);
+		m_Sound.GetSettings().MidiRecorderOutputDevice(wxEmptyString);
 	else
-		m_Sound.GetSettings().SetMidiRecorderOutputDevice(m_RecorderDevice->GetString(m_RecorderDevice->GetSelection()));
+		m_Sound.GetSettings().MidiRecorderOutputDevice(m_RecorderDevice->GetString(m_RecorderDevice->GetSelection()));
 }

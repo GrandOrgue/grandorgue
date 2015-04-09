@@ -86,14 +86,13 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_WAVPath(),
 	m_OrganPath(),
 	m_SettingPath(),
-	m_UserSettingPath(),
-	m_UserCachePath(),
-	m_LastFile(),
 	m_ResourceDir(),
 	m_AudioGroups(),
 	m_AudioDeviceConfig(),
-	m_ReverbFile(),
 	m_MIDIEvents(),
+	UserSettingPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
+	UserCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
+	LastFile(this, wxT("General"), wxT("LastFile"), wxEmptyString),
 	Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
 	ReleaseConcurrency(this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
 	LoadConcurrency(this, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, 1),
@@ -119,6 +118,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	ReverbLen(this, wxT("Reverb"), wxT("ReverbLen"), 0, MAX_SAMPLE_LENGTH, 0),
 	ReverbDelay(this, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, 0),
 	ReverbGain(this, wxT("Reverb"), wxT("ReverbGain"), 0, 50, 1),
+	ReverbFile(this, wxT("Reverb"), wxT("ReverbFile"), wxEmptyString),
 	MemoryLimit(this, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, GOrgueMemoryPool::GetSystemMemoryLimit()),
 	SamplesPerBuffer(this, wxT("General"), wxT("SamplesPerBuffer"), 1, MAX_FRAME_SIZE, 1024),
 	SampleRate(this, wxT("General"), wxT("SampleRate"), 1000, 100000, 44100),
@@ -127,13 +127,18 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	Preset(this, wxT("General"), wxT("Preset"), 0, MAX_PRESET, 0),
 	ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
 	BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),
-	Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0)
+	Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0),
+	MidiRecorderOutputDevice(this, wxT("MIDIOut"), wxT("MIDIRecorderDevice"), wxEmptyString)
 {
 	GetConfig().SetRecordDefaults();
 	m_ConfigFileName = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
 	for(unsigned i = 0; i < GetEventCount(); i++)
 		m_MIDIEvents.push_back(new GOrgueMidiReceiver(NULL, m_MIDISettings[i].type));
 	m_ResourceDir = GOrgueStdPath::GetResourceDir();
+
+	UserSettingPath.setDefaultValue(wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData") + m_InstanceName);
+	UserCachePath.setDefaultValue(wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueCache") + m_InstanceName);
+	LastFile.setDefaultValue(m_ResourceDir + wxFileName::GetPathSeparator() + wxT("demo") + wxFileName::GetPathSeparator() + wxT("demo.organ"));
 }
 
 GOrgueSettings::~GOrgueSettings()
@@ -219,13 +224,6 @@ void GOrgueSettings::Load()
 
 		GOrgueSettingStore::Load(cfg);
 
-		SetLastFile(cfg.ReadString(CMBSetting, wxT("General"), wxT("LastFile"), false, wxEmptyString));
-		SetReverbFile(cfg.ReadString(CMBSetting, wxT("Reverb"), wxT("ReverbFile"), false, wxEmptyString));
-
-		SetUserSettingPath (cfg.ReadString(CMBSetting, wxT("General"), wxT("SettingPath"), false, m_Config.Read(wxT("SettingPath"), wxEmptyString)));
-		SetUserCachePath (cfg.ReadString(CMBSetting, wxT("General"), wxT("CachePath"), false, m_Config.Read(wxT("CachePath"), wxEmptyString)));
-		SetMidiRecorderOutputDevice(cfg.ReadString(CMBSetting, wxT("MIDIOut"), wxT("MIDIRecorderDevice"), false, wxEmptyString));
-		
 		count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
 		for(unsigned i = 0; i < count; i++)
 		{
@@ -381,16 +379,6 @@ wxString GOrgueSettings::GetStandardOrganDirectory()
 	return GetStandardDocumentDirectory() + wxFileName::GetPathSeparator() + _("My Organs");
 }
 
-wxString GOrgueSettings::GetStandardDataDirectory()
-{
-	return wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData") + m_InstanceName;
-}
-
-wxString GOrgueSettings::GetStandardCacheDirectory()
-{
-	return wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueCache") + m_InstanceName;
-}
-
 const wxString GOrgueSettings::GetResourceDirectory()
 {
 	return m_ResourceDir.c_str();
@@ -427,57 +415,6 @@ void GOrgueSettings::SetWAVPath(wxString path)
 {
 	m_WAVPath = path;
 	m_Config.Write(wxT("wavPath"), m_WAVPath);
-}
-
-wxString GOrgueSettings::GetUserSettingPath()
-{
-	return m_UserSettingPath;
-}
-
-void GOrgueSettings::SetUserSettingPath(wxString path)
-{
-	if (path == wxEmptyString)
-		path = GetStandardDataDirectory();
-	if (!wxFileName::DirExists(path))
-		path = GetStandardDataDirectory();
-	wxFileName file(path);
-	file.MakeAbsolute();
-	path = file.GetFullPath();
-	GOCreateDirectory(path);
-	m_UserSettingPath = path;
-}
-
-wxString GOrgueSettings::GetUserCachePath()
-{
-	return m_UserCachePath;
-}
-
-void GOrgueSettings::SetUserCachePath(wxString path)
-{
-	if (path == wxEmptyString)
-		path = GetStandardCacheDirectory();
-	if (!wxFileName::DirExists(path))
-		path = GetStandardCacheDirectory();
-	wxFileName file(path);
-	file.MakeAbsolute();
-	path = file.GetFullPath();
-	GOCreateDirectory(path);
-	m_UserCachePath = path;
-}
-
-wxString GOrgueSettings::GetLastFile()
-{
-	return m_LastFile;
-}
-
-void GOrgueSettings::SetLastFile(wxString path)
-{
-	if (path == wxEmptyString)
-		return;
-	wxFileName file(path);
-	file.MakeAbsolute();
-	path = file.GetFullPath();
-	m_LastFile = path;
 }
 
 unsigned GOrgueSettings::GetAudioDeviceLatency(wxString device)
@@ -593,16 +530,6 @@ std::vector<wxString> GOrgueSettings::GetMidiOutDeviceList()
 	return list;
 }
 
-wxString GOrgueSettings::GetMidiRecorderOutputDevice()
-{
-	return m_MidiRecorderOutputDevice;
-}
-
-void GOrgueSettings::SetMidiRecorderOutputDevice(wxString device)
-{
-	m_MidiRecorderOutputDevice = device;
-}
-
 const std::vector<wxString>& GOrgueSettings::GetAudioGroups()
 {
 	return m_AudioGroups;
@@ -643,16 +570,6 @@ void GOrgueSettings::SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>
 	m_AudioDeviceConfig = config;
 }
 
-wxString GOrgueSettings::GetReverbFile()
-{
-	return m_ReverbFile;
-}
-
-void GOrgueSettings::SetReverbFile(wxString file)
-{
-	m_ReverbFile = file;
-}
-
 GOrgueMidiMap& GOrgueSettings::GetMidiMap()
 {
 	return m_MidiMap;
@@ -670,9 +587,6 @@ void GOrgueSettings::Flush()
 	GOrgueConfigWriter cfg(cfg_file, false);
 
 	GOrgueSettingStore::Save(cfg);
-	cfg.WriteString(wxT("General"), wxT("LastFile"), m_LastFile);
-	cfg.WriteString(wxT("General"), wxT("SettingPath"), m_UserSettingPath);
-	cfg.WriteString(wxT("General"), wxT("CachePath"), m_UserCachePath);
 
 	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
@@ -706,8 +620,6 @@ void GOrgueSettings::Flush()
 	}
 	cfg.WriteInteger(wxT("AudioDevices"), wxT("Count"), m_AudioDeviceConfig.size());
 
-	cfg.WriteString(wxT("Reverb"), wxT("ReverbFile"), m_ReverbFile);
-
 	unsigned count = 0;
 	for (std::map<wxString, bool>::iterator it = m_MidiIn.begin(); it != m_MidiIn.end(); it++)
 	{
@@ -730,7 +642,6 @@ void GOrgueSettings::Flush()
 	if (count > MAX_MIDI_DEVICES)
 		count = MAX_MIDI_DEVICES;
 	cfg.WriteInteger(wxT("MIDIOut"), wxT("Count"), count);
-	cfg.WriteString(wxT("MIDIOut"), wxT("MIDIRecorderDevice"), m_MidiRecorderOutputDevice);
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{

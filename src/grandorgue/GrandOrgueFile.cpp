@@ -378,7 +378,7 @@ wxString GrandOrgueFile::GenerateSettingFileName()
 	for(unsigned i = 0; i < 20; i++)
 		filename += wxDecToHex(hash[i]);
 
-	filename = m_Settings.GetUserSettingPath()  + wxFileName::GetPathSeparator() + 
+	filename = m_Settings.UserSettingPath()  + wxFileName::GetPathSeparator() + 
 		filename + wxString::Format(wxT("-%d.cmb"), m_Settings.Preset());
 
 	return filename;
@@ -400,7 +400,7 @@ wxString GrandOrgueFile::GenerateCacheFileName()
 	for(unsigned i = 0; i < 20; i++)
 		filename += wxDecToHex(hash[i]);
 
-	filename = m_Settings.GetUserCachePath()  + wxFileName::GetPathSeparator() + 
+	filename = m_Settings.UserCachePath()  + wxFileName::GetPathSeparator() + 
 		filename + wxString::Format(wxT("-%d.cache"), m_Settings.Preset());
 
 	return filename;
