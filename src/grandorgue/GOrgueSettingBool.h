@@ -33,6 +33,9 @@ private:
 	void Load(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
 
+protected:
+	virtual bool validate(bool value);
+
 public:
 	GOrgueSettingBool(GOrgueSettingStore* store, wxString group, wxString name, bool default_value);
 

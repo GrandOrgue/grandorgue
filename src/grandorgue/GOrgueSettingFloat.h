@@ -35,6 +35,9 @@ private:
 	void Load(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
 
+protected:
+	virtual float validate(float value);
+
 public:
 	GOrgueSettingFloat(GOrgueSettingStore* store, wxString group, wxString name, float min_value, float max_value, float default_value);
 
