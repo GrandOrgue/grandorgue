@@ -294,11 +294,9 @@ void GOrgueFrame::Init(wxString filename)
 	}
 	if (!filename.IsEmpty())
 		SendLoadFile(filename);
-	else if (m_Settings.LoadLastFile() && m_Settings.GetLastFile() != wxEmptyString)
-		SendLoadFile(m_Settings.GetLastFile());
 	else if (m_Settings.LoadLastFile())
 	{
-		wxString name = GOrgueStdPath::GetResourceDir() + wxFILE_SEP_PATH + wxT("demo") + wxFILE_SEP_PATH + wxT("demo.organ");
+		wxString name = m_Settings.LastFile();
 		if (wxFileExists(name))
 			SendLoadFile(name);
 	}

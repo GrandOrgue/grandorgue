@@ -26,9 +26,13 @@
 #include "GOrgueOrgan.h"
 #include "GOrgueTemperamentList.h"
 #include "GOrgueSettingBool.h"
+#include "GOrgueSettingDirectory.h"
+#include "GOrgueSettingFile.h"
 #include "GOrgueSettingFloat.h"
 #include "GOrgueSettingNumber.h"
+#include "GOrgueSettingString.h"
 #include "GOrgueSettingStore.h"
+#include "GOrgueSettingString.h"
 #include "ptrvector.h"
 #include <wx/string.h>
 #include <map>
@@ -67,17 +71,12 @@ private:
 	std::map<wxString, bool> m_MidiIn;
 	std::map<wxString, unsigned> m_MidiInShift;
 	std::map<wxString, bool> m_MidiOut;
-	wxString m_MidiRecorderOutputDevice;
 	wxString m_WAVPath;
 	wxString m_OrganPath;
 	wxString m_SettingPath;
-	wxString m_UserSettingPath;
-	wxString m_UserCachePath;
-	wxString m_LastFile;
 	wxString m_ResourceDir;
 	std::vector<wxString> m_AudioGroups;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
-	wxString m_ReverbFile;
 	ptr_vector<GOrgueMidiReceiver> m_MIDIEvents;
 	GOrgueMidiMap m_MidiMap;
 	GOrgueTemperamentList m_Temperaments;
@@ -89,6 +88,10 @@ private:
 public:
 	GOrgueSettings(wxString instance);
 	~GOrgueSettings();
+
+	GOrgueSettingDirectory UserSettingPath;
+	GOrgueSettingDirectory UserCachePath;
+	GOrgueSettingFile LastFile;
 
 	GOrgueSettingUnsigned Concurrency;
 	GOrgueSettingUnsigned ReleaseConcurrency;
@@ -119,6 +122,7 @@ public:
 	GOrgueSettingUnsigned ReverbLen;
 	GOrgueSettingUnsigned ReverbDelay;
 	GOrgueSettingFloat ReverbGain;
+	GOrgueSettingFile ReverbFile;
 
 	GOrgueSettingFloat MemoryLimit;
 	GOrgueSettingUnsigned SamplesPerBuffer;
@@ -144,13 +148,13 @@ public:
 	} BitsPerSample;
 	GOrgueSettingInteger Transpose;
 
+	GOrgueSettingString MidiRecorderOutputDevice;
+
 
 	void Load();
 	wxConfigBase& GetConfig();
 	wxString GetStandardDocumentDirectory();
 	wxString GetStandardOrganDirectory();
-	wxString GetStandardDataDirectory();
-	wxString GetStandardCacheDirectory();
 	const wxString GetResourceDirectory();
 
 	unsigned GetEventCount();
@@ -165,13 +169,6 @@ public:
 	void SetSettingPath(wxString path);
 	wxString GetWAVPath();
 	void SetWAVPath(wxString path);
-
-	wxString GetUserSettingPath();
-	void SetUserSettingPath(wxString path);
-	wxString GetUserCachePath();
-	void SetUserCachePath(wxString path);
-	wxString GetLastFile();
-	void SetLastFile(wxString path);
 
 	unsigned GetAudioDeviceLatency(wxString device);
 	void SetAudioDeviceLatency(wxString device, unsigned latency);
@@ -188,9 +185,6 @@ public:
 	void SetMidiOutState(wxString device, bool enabled);
 	std::vector<wxString> GetMidiOutDeviceList();
 
-	wxString GetMidiRecorderOutputDevice();
-	void SetMidiRecorderOutputDevice(wxString device);
-
 	const std::vector<wxString>& GetAudioGroups();
 	void SetAudioGroups(const std::vector<wxString>& audio_groups);
 	unsigned GetAudioGroupId(const wxString& str);
@@ -198,9 +192,6 @@ public:
 
 	const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();
 	void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
-
-	wxString GetReverbFile();
-	void SetReverbFile(wxString file);
 
 	void AddOrgan(GOrgueOrgan* organ);
 	ptr_vector<GOrgueOrgan>& GetOrganList();

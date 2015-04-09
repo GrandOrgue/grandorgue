@@ -76,7 +76,7 @@ void GOrgueMidi::Open()
 			m_midi_out_devices[i]->Close();
 	}
 
-	m_MidiRecorder.SetOutputDevice(GetMidiMap().GetDeviceByString(m_Settings.GetMidiRecorderOutputDevice()));
+	m_MidiRecorder.SetOutputDevice(GetMidiMap().GetDeviceByString(m_Settings.MidiRecorderOutputDevice()));
 }
 
 std::vector<wxString> GOrgueMidi::GetInDevices()
