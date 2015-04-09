@@ -347,6 +347,8 @@ GOrgueSetter.cpp
 GOrgueSetterButton.cpp
 GOrgueSetting.cpp
 GOrgueSettingBool.cpp
+GOrgueSettingDirectory.cpp
+GOrgueSettingFile.cpp
 GOrgueSettingFloat.cpp
 GOrgueSettingStore.cpp
 GOrgueSettingString.cpp
