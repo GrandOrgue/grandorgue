@@ -53,5 +53,10 @@ bool GOrgueSettingBool::operator() () const
 
 void GOrgueSettingBool::operator()(bool value)
 {
-	m_Value = value;
+	m_Value = validate(value);
+}
+
+bool GOrgueSettingBool::validate(bool value)
+{
+	return value;
 }

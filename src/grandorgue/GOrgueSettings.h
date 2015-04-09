@@ -129,21 +129,18 @@ public:
 	GOrgueSettingUnsigned ReleaseLength;
 	class GOrgueSettingUnsignedBit : public GOrgueSettingUnsigned
 	{
+	protected:
+		unsigned validate(unsigned value)
+		{
+			return GOrgueSettingUnsigned::validate(value - value % 4);
+		}
+
 	public:
 		GOrgueSettingUnsignedBit(GOrgueSettingStore* store, wxString group, wxString name, unsigned min_value, unsigned max_value, unsigned default_value) :
 			GOrgueSettingUnsigned(store, group, name, min_value, max_value, default_value)
 		{
 		}
 
-		unsigned operator() () const
-		{
-			return GOrgueSettingUnsigned::operator()();
-		}
-
-		void operator()(unsigned value)
-		{
-			GOrgueSettingUnsigned::operator()(value - value % 4);
-		}
 	} BitsPerSample;
 	GOrgueSettingInteger Transpose;
 

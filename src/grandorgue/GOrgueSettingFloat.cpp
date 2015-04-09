@@ -55,9 +55,14 @@ float GOrgueSettingFloat::operator() () const
 
 void GOrgueSettingFloat::operator()(float value)
 {
+	m_Value = validate(value);
+}
+
+float GOrgueSettingFloat::validate(float value)
+{
 	if (value <= m_MinValue)
 		value = m_MinValue;
 	if (value >= m_MaxValue)
 		value = m_MaxValue;
-	m_Value = value;
+	return value;
 }

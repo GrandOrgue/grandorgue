@@ -36,6 +36,16 @@ private:
 	void Load(GOrgueConfigReader& cfg);
 	void Save(GOrgueConfigWriter& cfg);
 
+protected:
+	virtual T validate(T value)
+	{
+		if (value <= m_MinValue)
+			value = m_MinValue;
+		if (value >= m_MaxValue)
+			value = m_MaxValue;
+		return value;
+	}
+
 public:
 	GOrgueSettingNumber(GOrgueSettingStore* store, wxString group, wxString name, T min_value, T max_value, T default_value);
 
@@ -48,11 +58,7 @@ public:
 
 	void operator()(T value)
 	{
-		if (value <= m_MinValue)
-			value = m_MinValue;
-		if (value >= m_MaxValue)
-			value = m_MaxValue;
-		m_Value = value;
+		m_Value = validate(value);
 	}
 };
 
