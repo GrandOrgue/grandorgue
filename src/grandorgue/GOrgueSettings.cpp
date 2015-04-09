@@ -130,7 +130,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0),
 	MidiRecorderOutputDevice(this, wxT("MIDIOut"), wxT("MIDIRecorderDevice"), wxEmptyString)
 {
-	GetConfig().SetRecordDefaults();
+	m_Config.SetRecordDefaults();
 	m_ConfigFileName = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
 	for(unsigned i = 0; i < GetEventCount(); i++)
 		m_MIDIEvents.push_back(new GOrgueMidiReceiver(NULL, m_MIDISettings[i].type));
@@ -144,11 +144,6 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 GOrgueSettings::~GOrgueSettings()
 {
 	Flush();
-}
-
-wxConfigBase& GOrgueSettings::GetConfig()
-{
-	return m_Config;
 }
 
 void GOrgueSettings::Load()
