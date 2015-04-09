@@ -4,5 +4,6 @@ usr/share/GrandOrgue/sounds
 usr/share/applications/*
 usr/share/appdata/*
 usr/share/pixmaps/*
+usr/share/locale/*/LC_MESSAGES/*
 usr/share/mime/packages/*
 usr/share/man/man1/*
