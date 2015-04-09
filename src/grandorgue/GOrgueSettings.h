@@ -152,7 +152,6 @@ public:
 
 
 	void Load();
-	wxConfigBase& GetConfig();
 	wxString GetStandardDocumentDirectory();
 	wxString GetStandardOrganDirectory();
 	const wxString GetResourceDirectory();
