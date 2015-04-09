@@ -349,6 +349,7 @@ GOrgueSetting.cpp
 GOrgueSettingBool.cpp
 GOrgueSettingFloat.cpp
 GOrgueSettingStore.cpp
+GOrgueSettingString.cpp
 GOrgueSettings.cpp
 GOrgueSound.cpp
 GOrgueSoundPort.cpp
