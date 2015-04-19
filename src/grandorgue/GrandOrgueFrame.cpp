@@ -753,12 +753,10 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 		wxFileDialog dlg(this, _("Save as"), m_Settings.AudioRecorderPath(), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 		if (dlg.ShowModal() == wxID_OK)
 		{
-			wxString filepath = dlg.GetPath();
-			if (filepath.Find(wxT(".wav")) == wxNOT_FOUND)
-			{
-				filepath.append(wxT(".wav"));
-			}
-			m_Sound.StartAudioRecording(filepath);
+			wxFileName filepath = dlg.GetPath();
+			if (filepath.GetExt() == wxEmptyString)
+				filepath.SetExt(wxT("wav"));
+			m_Sound.StartAudioRecording(filepath.GetFullPath());
 		}
 	}
 }
@@ -772,12 +770,10 @@ void GOrgueFrame::OnMidiRecord(wxCommandEvent& WXUNUSED(event))
 		wxFileDialog dlg(this, _("Save as"), m_Settings.MidiRecorderPath(), wxEmptyString, _("MID files (*.mid)|*.mid"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 		if (dlg.ShowModal() == wxID_OK)
 		{
-			wxString filepath = dlg.GetPath();
-			if (filepath.Find(wxT(".mid")) == wxNOT_FOUND)
-			{
-				filepath.append(wxT(".mid"));
-			}
-			m_Sound.StartMidiRecording(filepath);
+			wxFileName filepath = dlg.GetPath();
+			if (filepath.GetExt() == wxEmptyString)
+				filepath.SetExt(wxT("mid"));
+			m_Sound.StartMidiRecording(filepath.GetFullPath());
 		}
 	}
 }
