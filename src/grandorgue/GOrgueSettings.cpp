@@ -83,9 +83,6 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_Config(*wxConfigBase::Get()),
 	m_InstanceName(instance),
 	m_OrganList(),
-	m_WAVPath(),
-	m_OrganPath(),
-	m_SettingPath(),
 	m_ResourceDir(),
 	m_AudioGroups(),
 	m_AudioDeviceConfig(),
@@ -128,7 +125,12 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
 	BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),
 	Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0),
-	MidiRecorderOutputDevice(this, wxT("MIDIOut"), wxT("MIDIRecorderDevice"), wxEmptyString)
+	MidiRecorderOutputDevice(this, wxT("MIDIOut"), wxT("MIDIRecorderDevice"), wxEmptyString),
+	OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
+	SettingPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
+	AudioRecorderPath(this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
+	MidiRecorderPath(this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
+	MidiPlayerPath(this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString)
 {
 	m_Config.SetRecordDefaults();
 	m_ConfigFileName = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
@@ -139,6 +141,13 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	UserSettingPath.setDefaultValue(wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData") + m_InstanceName);
 	UserCachePath.setDefaultValue(wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueCache") + m_InstanceName);
 	LastFile.setDefaultValue(m_ResourceDir + wxFileName::GetPathSeparator() + wxT("demo") + wxFileName::GetPathSeparator() + wxT("demo.organ"));
+
+	wxString docdir = wxStandardPaths::Get().GetDocumentsDir() + wxFileName::GetPathSeparator() + _("GrandOrgue") + wxFileName::GetPathSeparator();
+	OrganPath.setDefaultValue(docdir + _("Organs"));
+	SettingPath.setDefaultValue(docdir + _("Settings"));
+	AudioRecorderPath.setDefaultValue(docdir + _("Audio recordings"));
+	MidiRecorderPath.setDefaultValue(docdir + _("MIDI recordings"));
+	MidiPlayerPath.setDefaultValue(docdir + _("MIDI recordings"));
 }
 
 GOrgueSettings::~GOrgueSettings()
@@ -242,10 +251,6 @@ void GOrgueSettings::Load()
 		wxLogError(wxT("%s\n"),error.c_str());
 	}
 
-	m_WAVPath = m_Config.Read(wxT("wavPath"), GetStandardDocumentDirectory());
-	m_OrganPath = m_Config.Read(wxT("organPath"), GetStandardOrganDirectory());
-	m_SettingPath = m_Config.Read(wxT("cmbPath"), GetStandardOrganDirectory());
-
 	if (!m_AudioDeviceConfig.size())
 	{
 		GOAudioDeviceConfig conf;
@@ -320,52 +325,9 @@ GOrgueMidiReceiver* GOrgueSettings::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsig
 	return NULL;
 }
 
-wxString GOrgueSettings::GetStandardDocumentDirectory()
-{
-	return wxStandardPaths::Get().GetDocumentsDir();
-}
-
-wxString GOrgueSettings::GetStandardOrganDirectory()
-{
-	return GetStandardDocumentDirectory() + wxFileName::GetPathSeparator() + _("My Organs");
-}
-
 const wxString GOrgueSettings::GetResourceDirectory()
 {
 	return m_ResourceDir.c_str();
-}
-
-wxString GOrgueSettings::GetOrganPath()
-{
-	return m_OrganPath;
-}
-
-void GOrgueSettings::SetOrganPath(wxString path)
-{
-	m_OrganPath = path;
-	m_Config.Write(wxT("organPath"), m_OrganPath);
-}
-
-wxString GOrgueSettings::GetSettingPath()
-{
-	return m_SettingPath;
-}
-
-void GOrgueSettings::SetSettingPath(wxString path)
-{
-	m_SettingPath = path;
-	m_Config.Write(wxT("cmbPath"), m_SettingPath);
-}
-
-wxString GOrgueSettings::GetWAVPath()
-{
-	return m_WAVPath;
-}
-
-void GOrgueSettings::SetWAVPath(wxString path)
-{
-	m_WAVPath = path;
-	m_Config.Write(wxT("wavPath"), m_WAVPath);
 }
 
 unsigned GOrgueSettings::GetAudioDeviceLatency(wxString device)

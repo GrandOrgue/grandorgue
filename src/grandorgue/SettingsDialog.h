@@ -31,6 +31,7 @@ class SettingsAudioOutput;
 class SettingsMidiDevices;
 class SettingsMidiMessage;
 class SettingsOption;
+class SettingsDefaults;
 class SettingsOrgan;
 class SettingsReverb;
 class SettingsTemperaments;
@@ -46,6 +47,7 @@ private:
 	SettingsAudioGroup* m_GroupPage;
 	SettingsAudioOutput* m_OutputPage;
 	SettingsReverb* m_ReverbPage;
+	SettingsDefaults* m_DefaultsPage;
 	SettingsTemperaments* m_TemperamentsPage;
 
 	bool DoApply();

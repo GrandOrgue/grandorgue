@@ -581,10 +581,9 @@ void GOrgueFrame::OnLoad(wxCommandEvent& event)
 
 void GOrgueFrame::OnOpen(wxCommandEvent& event)
 {
-	wxFileDialog dlg(this, _("Open organ"), m_Settings.GetOrganPath(), wxEmptyString, _("Sample set definition files (*.organ)|*.organ"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	wxFileDialog dlg(this, _("Open organ"), m_Settings.OrganPath(), wxEmptyString, _("Sample set definition files (*.organ)|*.organ"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		m_Settings.SetOrganPath(dlg.GetDirectory());
 		Open(dlg.GetPath());
 	}
 }
@@ -595,11 +594,10 @@ void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 	if (!doc || !doc->GetOrganFile())
 		return;
 
-	wxFileDialog dlg(this, _("Import Settings"), m_Settings.GetSettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	wxFileDialog dlg(this, _("Import Settings"), m_Settings.SettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		GOrgueProgressDialog pdlg;
-		m_Settings.SetSettingPath(dlg.GetDirectory());
 		wxString file = doc->GetOrganFile()->GetODFFilename();
 		GOMutexLocker m_locker(m_mutex, true);
 		if(!m_locker.IsLocked())
@@ -614,10 +612,9 @@ void GOrgueFrame::OnImportCombinations(wxCommandEvent& event)
 	if (!doc || !doc->GetOrganFile())
 		return;
 
-	wxFileDialog dlg(this, _("Import Combinations"), m_Settings.GetSettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	wxFileDialog dlg(this, _("Import Combinations"), m_Settings.SettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		m_Settings.SetSettingPath(dlg.GetDirectory());
 		doc->ImportCombination(dlg.GetPath());
 	}
 }
@@ -628,10 +625,9 @@ void GOrgueFrame::OnExport(wxCommandEvent& event)
 	if (!doc || !doc->GetOrganFile())
 		return;
 
-	wxFileDialog dlg(this, _("Export Settings"), m_Settings.GetSettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+	wxFileDialog dlg(this, _("Export Settings"), m_Settings.SettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		m_Settings.SetSettingPath(dlg.GetDirectory());
 		if (!doc->Export(dlg.GetPath()))
 			wxMessageBox(wxString::Format(_("Failed to export settings to '%s'"), dlg.GetPath().c_str()), _("Error"), wxOK | wxICON_ERROR, this);
 	}
@@ -754,17 +750,16 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 		m_Sound.StopAudioRecording();
 	else
 	{
-		wxFileDialog dlg(this, _("Save as"), m_Settings.GetWAVPath(), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+		wxFileDialog dlg(this, _("Save as"), m_Settings.AudioRecorderPath(), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 		if (dlg.ShowModal() == wxID_OK)
+		{
+			wxString filepath = dlg.GetPath();
+			if (filepath.Find(wxT(".wav")) == wxNOT_FOUND)
 			{
-				m_Settings.SetWAVPath(dlg.GetDirectory());
-				wxString filepath = dlg.GetPath();
-				if (filepath.Find(wxT(".wav")) == wxNOT_FOUND)
-				{
-					filepath.append(wxT(".wav"));
-				}
-				m_Sound.StartAudioRecording(filepath);
+				filepath.append(wxT(".wav"));
 			}
+			m_Sound.StartAudioRecording(filepath);
+		}
 	}
 }
 
@@ -774,10 +769,9 @@ void GOrgueFrame::OnMidiRecord(wxCommandEvent& WXUNUSED(event))
 		m_Sound.StopMidiRecording();
 	else
 	{
-		wxFileDialog dlg(this, _("Save as"), m_Settings.GetWAVPath(), wxEmptyString, _("MID files (*.mid)|*.mid"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+		wxFileDialog dlg(this, _("Save as"), m_Settings.MidiRecorderPath(), wxEmptyString, _("MID files (*.mid)|*.mid"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 		if (dlg.ShowModal() == wxID_OK)
 		{
-			m_Settings.SetWAVPath(dlg.GetDirectory());
 			wxString filepath = dlg.GetPath();
 			if (filepath.Find(wxT(".mid")) == wxNOT_FOUND)
 			{
@@ -794,10 +788,9 @@ void GOrgueFrame::OnMidiPlay(wxCommandEvent& WXUNUSED(event))
 		m_Sound.StopMidiPlaying();
 	else
 	{
-		wxFileDialog dlg(this, _("Load MIDI"), m_Settings.GetWAVPath(), wxEmptyString, _("MID files (*.mid)|*.mid"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+		wxFileDialog dlg(this, _("Load MIDI"), m_Settings.MidiPlayerPath(), wxEmptyString, _("MID files (*.mid)|*.mid"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 		if (dlg.ShowModal() == wxID_OK)
 		{
-			m_Settings.SetWAVPath(dlg.GetDirectory());
 			wxString filepath = dlg.GetPath();
 			m_Sound.StartMidiPlaying(filepath);
 		}
