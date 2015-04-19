@@ -246,50 +246,6 @@ void GOrgueSettings::Load()
 	m_OrganPath = m_Config.Read(wxT("organPath"), GetStandardOrganDirectory());
 	m_SettingPath = m_Config.Read(wxT("cmbPath"), GetStandardOrganDirectory());
 
-	if (m_AudioGroups.size() == 0)
-	{
-		unsigned count = m_Config.Read(wxT("AudioGroup/Count"), 0L);
-		for(unsigned i = 0; i < count; i++)
-			m_AudioGroups.push_back(m_Config.Read(wxString::Format(wxT("AudioGroup/Name%d"), i + 1), wxString::Format(_("Audio group %d"), i + 1)));
-		if (!m_AudioGroups.size())
-			m_AudioGroups.push_back(_("Default audio group"));
-	}
-
-	if (!m_AudioDeviceConfig.size())
-	{
-		unsigned count = m_Config.Read(wxT("AudioDevices/Count"), 0L);
-		for(unsigned i = 0; i < count; i++)
-		{
-			GOAudioDeviceConfig conf;
-			conf.name = m_Config.Read(wxString::Format(wxT("AudioDevice/Device%d/Name"), i + 1), wxEmptyString);
-			conf.channels = m_Config.Read(wxString::Format(wxT("AudioDevice/Device%d/Channels"), i + 1), 2L);
-			conf.scale_factors.resize(conf.channels);
-			for(unsigned j = 0; j < conf.channels; j++)
-			{
-				wxString prefix = wxString::Format(wxT("AudioDevice/Device%d/Channel%d/"), i + 1, j + 1);
-				unsigned group_count = m_Config.Read(prefix + wxT("GroupCount"), 0L);
-				for(unsigned k = 0; k < group_count; k++)
-				{
-					GOAudioGroupOutputConfig group;
-					wxString p = prefix + wxString::Format(wxT("Group%d/"), k + 1);
-
-					group.name = m_Config.Read(p + wxT("Name"), wxEmptyString);
-					double tmp;
-					m_Config.Read(p + wxT("Left"), &tmp, -121.0f);
-					if (tmp > 40.0 || tmp < -121.0)
-						tmp = 0;
-					group.left = tmp;
-					m_Config.Read(p + wxT("Right"), &tmp, -121.0f);
-					if (tmp > 40.0 || tmp < -121.0)
-						tmp = 0;
-					group.right = tmp;
-
-					conf.scale_factors[j].push_back(group);
-				}
-			}
-			m_AudioDeviceConfig.push_back(conf);
-		}
-	}
 	if (!m_AudioDeviceConfig.size())
 	{
 		GOAudioDeviceConfig conf;
