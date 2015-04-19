@@ -382,6 +382,7 @@ GOrguePanelView.cpp
 GOrgueView.cpp
 SettingsAudioGroup.cpp
 SettingsAudioOutput.cpp
+SettingsDefaults.cpp
 SettingsDialog.cpp
 SettingsMidiDevices.cpp
 SettingsMidiMessage.cpp

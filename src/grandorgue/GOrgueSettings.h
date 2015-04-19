@@ -71,9 +71,6 @@ private:
 	std::map<wxString, bool> m_MidiIn;
 	std::map<wxString, unsigned> m_MidiInShift;
 	std::map<wxString, bool> m_MidiOut;
-	wxString m_WAVPath;
-	wxString m_OrganPath;
-	wxString m_SettingPath;
 	wxString m_ResourceDir;
 	std::vector<wxString> m_AudioGroups;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
@@ -150,10 +147,13 @@ public:
 
 	GOrgueSettingString MidiRecorderOutputDevice;
 
+	GOrgueSettingDirectory OrganPath;
+	GOrgueSettingDirectory SettingPath;
+	GOrgueSettingDirectory AudioRecorderPath;
+	GOrgueSettingDirectory MidiRecorderPath;
+	GOrgueSettingDirectory MidiPlayerPath;
 
 	void Load();
-	wxString GetStandardDocumentDirectory();
-	wxString GetStandardOrganDirectory();
 	const wxString GetResourceDirectory();
 
 	unsigned GetEventCount();
@@ -162,13 +162,6 @@ public:
 	GOrgueMidiReceiver* GetMidiEvent(unsigned index);
 	GOrgueMidiReceiver* FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
 	
-	wxString GetOrganPath();
-	void SetOrganPath(wxString path);
-	wxString GetSettingPath();
-	void SetSettingPath(wxString path);
-	wxString GetWAVPath();
-	void SetWAVPath(wxString path);
-
 	unsigned GetAudioDeviceLatency(wxString device);
 	void SetAudioDeviceLatency(wxString device, unsigned latency);
 	int GetAudioDeviceActualLatency(wxString device);
