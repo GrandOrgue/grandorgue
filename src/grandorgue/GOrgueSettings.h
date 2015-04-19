@@ -145,6 +145,9 @@ public:
 	} BitsPerSample;
 	GOrgueSettingInteger Transpose;
 
+	GOrgueSettingUnsigned MetronomeMeasure;
+	GOrgueSettingUnsigned MetronomeBPM;
+
 	GOrgueSettingString MidiRecorderOutputDevice;
 
 	GOrgueSettingDirectory OrganPath;

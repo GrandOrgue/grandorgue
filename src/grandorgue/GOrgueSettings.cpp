@@ -125,6 +125,8 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
 	BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),
 	Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0),
+	MetronomeMeasure(this, wxT("Metronome"), wxT("Measure"), 0, 32, 4),
+	MetronomeBPM(this, wxT("Metronome"), wxT("BPM"), 1, 500, 80),
 	MidiRecorderOutputDevice(this, wxT("MIDIOut"), wxT("MIDIRecorderDevice"), wxEmptyString),
 	OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
 	SettingPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
