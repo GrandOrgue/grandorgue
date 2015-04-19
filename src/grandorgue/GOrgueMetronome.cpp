@@ -25,6 +25,7 @@
 #include "GOrgueConfigWriter.h"
 #include "GOrgueRank.h"
 #include "GOrgueSetterButton.h"
+#include "GOrgueSettings.h"
 #include "GOrgueSoundingPipe.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
@@ -84,8 +85,8 @@ GOrgueMetronome::~GOrgueMetronome()
 void GOrgueMetronome::Load(GOrgueConfigReader& cfg)
 {
 	m_group = wxT("Metronome");
-	m_BPM = cfg.ReadInteger(CMBSetting, m_group, wxT("BPM"), 1, 500, false, 80);
-	m_MeasureLength = cfg.ReadInteger(CMBSetting, m_group, wxT("MeasureLength"), 0, 32, false, 4);
+	m_BPM = cfg.ReadInteger(CMBSetting, m_group, wxT("BPM"), 1, 500, false, m_organfile->GetSettings().MetronomeBPM());
+	m_MeasureLength = cfg.ReadInteger(CMBSetting, m_group, wxT("MeasureLength"), 0, 32, false, m_organfile->GetSettings().MetronomeMeasure());
 
 	m_button[ID_METRONOME_ON]->Init(cfg, wxT("MetronomeOn"), _("ON"));
 	m_button[ID_METRONOME_MEASURE_P1]->Init(cfg, wxT("MetronomeMP1"), _("+1"));

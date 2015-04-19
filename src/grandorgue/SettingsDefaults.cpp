@@ -23,6 +23,7 @@
 
 #include "GOrgueSettings.h"
 #include <wx/filepicker.h>
+#include <wx/spinctrl.h>
 #include <wx/stattext.h>
 
 SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
@@ -34,9 +35,30 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 
 	wxBoxSizer* item9 = new wxBoxSizer(wxVERTICAL);
 	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
+	wxFlexGridSizer* grid;
+	wxBoxSizer* item6;
 
-	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 1, 5, 5);
-	wxBoxSizer* item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
+	grid = new wxFlexGridSizer(4, 2, 5, 5);
+	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Metronome"));
+	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+
+	grid->Add(new wxStaticText(this, wxID_ANY, _("BPM:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_MetronomeBPM = new wxSpinCtrl(this, ID_METRONOME_BPM, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
+	m_MetronomeBPM->SetRange(1, 500);
+
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Ticks per Measure:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_MetronomeMeasure = new wxSpinCtrl(this, ID_METRONOME_MEASURE, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
+	m_MetronomeMeasure->SetRange(0, 32);
+
+	m_MetronomeBPM->SetValue(m_Settings.MetronomeBPM());
+	m_MetronomeMeasure->SetValue(m_Settings.MetronomeMeasure());
+	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+
+	item9 = new wxBoxSizer(wxVERTICAL);
+	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
+
+	grid = new wxFlexGridSizer(4, 1, 5, 5);
+	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Sampleset directory:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
@@ -80,4 +102,6 @@ void SettingsDefaults::Save()
 	m_Settings.AudioRecorderPath(m_AudioRecorderPath->GetPath());
 	m_Settings.MidiRecorderPath(m_MidiRecorderPath->GetPath());
 	m_Settings.MidiPlayerPath(m_MidiPlayerPath->GetPath());
+	m_Settings.MetronomeBPM(m_MetronomeBPM->GetValue());
+	m_Settings.MetronomeMeasure(m_MetronomeMeasure->GetValue());
 }

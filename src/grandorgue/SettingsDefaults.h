@@ -26,6 +26,7 @@
 
 class GOrgueSettings;
 class wxDirPickerCtrl;
+class wxSpinCtrl;
 
 class SettingsDefaults : public wxPanel
 {
@@ -34,7 +35,9 @@ class SettingsDefaults : public wxPanel
 		ID_SETTING_PATH,
 		ID_AUDIO_RECORDER_PATH,
 		ID_MIDI_RECORDER_PATH,
-		ID_MIDI_PLAYER_PATH
+		ID_MIDI_PLAYER_PATH,
+		ID_METRONOME_MEASURE,
+		ID_METRONOME_BPM,
 	};
 private:
 	GOrgueSettings& m_Settings;
@@ -43,6 +46,8 @@ private:
 	wxDirPickerCtrl* m_AudioRecorderPath;
 	wxDirPickerCtrl* m_MidiRecorderPath;
 	wxDirPickerCtrl* m_MidiPlayerPath;
+	wxSpinCtrl* m_MetronomeMeasure;
+	wxSpinCtrl* m_MetronomeBPM;
 
 public:
 	SettingsDefaults(GOrgueSettings& settings, wxWindow* parent);
