@@ -74,6 +74,12 @@ GOrgueMetronome::GOrgueMetronome(GrandOrgueFile *organfile) :
         m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
         m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
 
+	m_button[ID_METRONOME_ON]->SetPreconfigIndex(25);
+	m_button[ID_METRONOME_MEASURE_P1]->SetPreconfigIndex(28);
+	m_button[ID_METRONOME_MEASURE_M1]->SetPreconfigIndex(29);
+	m_button[ID_METRONOME_BEAT_P1]->SetPreconfigIndex(26);
+	m_button[ID_METRONOME_BEAT_M1]->SetPreconfigIndex(27);
+
 	m_organfile->RegisterPlaybackStateHandler(this);
 }
 

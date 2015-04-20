@@ -77,6 +77,11 @@ const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
 	{ MIDI_RECV_SETTER, 22, wxTRANSLATE("Master Controls"), wxTRANSLATE("Next temperament") },
 	{ MIDI_RECV_SETTER, 23, wxTRANSLATE("Master Controls"), wxTRANSLATE("Transpose -") },
 	{ MIDI_RECV_SETTER, 24, wxTRANSLATE("Master Controls"), wxTRANSLATE("Transpose +") },
+	{ MIDI_RECV_SETTER, 25, wxTRANSLATE("Metronome"), wxTRANSLATE("On") },
+	{ MIDI_RECV_SETTER, 26, wxTRANSLATE("Metronome"), wxTRANSLATE("BPM +") },
+	{ MIDI_RECV_SETTER, 27, wxTRANSLATE("Metronome"), wxTRANSLATE("BPM -") },
+	{ MIDI_RECV_SETTER, 28, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure -") },
+	{ MIDI_RECV_SETTER, 29, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure +") },
 };
 
 GOrgueSettings::GOrgueSettings(wxString instance) :
