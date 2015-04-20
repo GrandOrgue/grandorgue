@@ -38,6 +38,7 @@ class SettingsDefaults : public wxPanel
 		ID_MIDI_PLAYER_PATH,
 		ID_METRONOME_MEASURE,
 		ID_METRONOME_BPM,
+		ID_VOLUME,
 	};
 private:
 	GOrgueSettings& m_Settings;
@@ -48,6 +49,7 @@ private:
 	wxDirPickerCtrl* m_MidiPlayerPath;
 	wxSpinCtrl* m_MetronomeMeasure;
 	wxSpinCtrl* m_MetronomeBPM;
+	wxSpinCtrl* m_Volume;
 
 public:
 	SettingsDefaults(GOrgueSettings& settings, wxWindow* parent);

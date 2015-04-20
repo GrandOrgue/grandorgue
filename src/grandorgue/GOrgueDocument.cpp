@@ -86,7 +86,6 @@ bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const wxString& odf, cons
 		return false;
 	}
 	m_sound.GetSettings().AddOrgan(new GOrgueOrgan(m_organfile->GetODFFilename(), m_organfile->GetChurchName(), m_organfile->GetOrganBuilder(), m_organfile->GetRecordingDetails()));
-	if (m_organfile->GetVolume() != -121)
 	{
 		wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
 		event.SetInt(m_organfile->GetVolume());

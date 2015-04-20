@@ -91,8 +91,6 @@ void GOSoundEngine::Reset()
 
 void GOSoundEngine::SetVolume(int volume)
 {
-	if (volume > 20)
-		volume = -15;
 	m_Volume = volume;
 	m_Gain = powf(10.0f, m_Volume * 0.05f);
 }

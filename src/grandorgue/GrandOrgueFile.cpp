@@ -216,9 +216,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_DivisionalsStoreTremulants = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreTremulants"));
 	m_GeneralsStoreDivisionalCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("GeneralsStoreDivisionalCouplers"));
 	m_CombinationsStoreNonDisplayedDrawstops = cfg.ReadBoolean(ODFSetting, group, wxT("CombinationsStoreNonDisplayedDrawstops"), false, true);
-	m_volume = cfg.ReadInteger(CMBSetting, group, wxT("Volume"), -121, 100, false, -121);
+	m_volume = cfg.ReadInteger(CMBSetting, group, wxT("Volume"), -120, 100, false, m_Settings.Volume());
 	if (m_volume > 20)
-		m_volume = -121;
+		m_volume = 0;
 	m_Temperament = cfg.ReadString(CMBSetting, group, wxT("Temperament"), false);
 	m_IgnorePitch = cfg.ReadBoolean(CMBSetting, group, wxT("IgnorePitch"), false, false);
 
@@ -767,8 +767,7 @@ bool GrandOrgueFile::Export(const wxString& cmb)
 	cfg.WriteString(wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
 	cfg.WriteString(wxT("Organ"), wxT("ODFPath"), GetODFFilename());
 
-	if (m_volume >= -120)
-		cfg.WriteInteger(wxT("Organ"), wxT("Volume"), m_volume);
+	cfg.WriteInteger(wxT("Organ"), wxT("Volume"), m_volume);
 
 	cfg.WriteString(wxT("Organ"), wxT("Temperament"), m_Temperament);
 	cfg.WriteBoolean(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch);

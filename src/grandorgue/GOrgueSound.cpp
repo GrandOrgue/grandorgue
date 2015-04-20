@@ -48,8 +48,6 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 
 	Pa_Initialize();
 	GetAudioDevices();
-
-	m_SoundEngine.SetVolume(m_Settings.Volume());
 }
 
 GOrgueSound::~GOrgueSound()
