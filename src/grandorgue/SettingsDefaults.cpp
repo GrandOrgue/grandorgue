@@ -39,6 +39,17 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 	wxBoxSizer* item6;
 
 	grid = new wxFlexGridSizer(4, 2, 5, 5);
+	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Volume"));
+	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Volume:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_Volume = new wxSpinCtrl(this, ID_VOLUME, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
+	m_Volume->SetRange(-120, 20);
+
+	m_Volume->SetValue(m_Settings.Volume());
+	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+
+	grid = new wxFlexGridSizer(4, 2, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Metronome"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
@@ -104,4 +115,5 @@ void SettingsDefaults::Save()
 	m_Settings.MidiPlayerPath(m_MidiPlayerPath->GetPath());
 	m_Settings.MetronomeBPM(m_MetronomeBPM->GetValue());
 	m_Settings.MetronomeMeasure(m_MetronomeMeasure->GetValue());
+	m_Settings.Volume(m_Volume->GetValue());
 }

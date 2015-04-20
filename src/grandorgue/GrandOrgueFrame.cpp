@@ -838,7 +838,6 @@ void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)
 {
 	long n = m_Volume->GetValue();
 
-	m_Settings.Volume(n);
 	m_Sound.GetEngine().SetVolume(n);
 	m_VolumeLeft->ResetClip();
 	m_VolumeRight->ResetClip();
@@ -924,7 +923,6 @@ void GOrgueFrame::OnChangeSetter(wxCommandEvent& event)
 
 void GOrgueFrame::OnChangeVolume(wxCommandEvent& event)
 {
-	m_Settings.Volume(event.GetInt());
 	m_Volume->SetValue(event.GetInt());
 }
 
