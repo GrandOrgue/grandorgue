@@ -4649,6 +4649,13 @@ or closing the dialog with the <emphasis role="bold">OK</emphasis> button.
       <para>When checked, this box instructs GrandOrgue to ignore any pitch information found is sample files while retuning the organ to another temperament than the original. This way the retuned sample set behaves as expected. In this case, GrandOrgue assumes that the samples are tuned to equal temperament.</para>
     </sect1>
     <sect1>
+      <title>Collapse tree button</title>
+      <para>When the dialog opens, the tree is displayed unfolded to the pipe level. This button is a shortcut for displaying only the root node:</para>
+      <mediaobject><imageobject><imagedata fileref="organ_settings_collapsed.png" /></imageobject></mediaobject>
+      <para>Double-click the organ name to unfold the tree to the windchest level:</para>
+      <mediaobject><imageobject><imagedata fileref="organ_settings_unfold.png" /></imageobject></mediaobject>
+    </sect1>
+    <sect1>
       <title>Distribute audio groups button</title>
       <para>This button allows to spread the selected elements over selected audio groups. The elements are spread over audio groups using a round-robin scheme.</para>
       <para>Select the elements to spread, click the button. A dialog opens where the desired audio groups can be selected by checking their box.
