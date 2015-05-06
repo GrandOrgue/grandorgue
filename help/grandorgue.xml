@@ -3441,6 +3441,32 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
             </varlistentry>
           </variablelist>
         </sect3>
+        <sect3>
+          <title>Record stereo downmix</title>
+          <indexterm><primary>Record stereo downmix</primary></indexterm>
+          <para>This textbox enables GrandOrgue to record multi-channel audio in simple stereo. This option is disabled by default, as it increases CPU usage even if the audio recorder is off.</para>
+          <para>When stereo downmis is disabled, all audio channels are recorded in the WAV file.</para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <simpara>No impact</simpara>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <simpara>No impact</simpara>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <simpara>No impact</simpara>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
       </sect2>
       <sect2>
         <title>Paths frame</title>
