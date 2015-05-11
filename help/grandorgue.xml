@@ -4708,7 +4708,7 @@ manual (if any). They usually are referred to as <emphasis>Custom Panels</emphas
     </para>
     <para>Custom Panel menu items can be organized in submenus as shown in this screen shot taken from Piteå Music School sampleset.</para>
     <mediaobject><imageobject><imagedata fileref="pitea_panel_menu.png" /></imageobject></mediaobject>
-    <sect1>
+    <sect1 id="couplers">
       <title>Coupler</title>
       <mediaobject><imageobject><imagedata fileref="coupler_menu.png" /></imageobject></mediaobject>
       <para>
@@ -4786,7 +4786,35 @@ line may occur. The same applies for the MEL coupler and the highest line.
     </sect1>
     <sect1 id="couplerManuals">
       <title>Coupler Manuals and Volume</title>
-      <para></para>
+      <mediaobject><imageobject><imagedata fileref="coupler_manuals.png" /></imageobject></mediaobject>
+      <para>This panel displays a III/P fictional console with swell shoes. The keyboards are coupler manuals. This fictional console is independent of the actual layout of the sample set.</para>
+      <sect2>
+        <title>Coupler manuals</title>
+        <para>A coupler manual is mute, as it is not connected to a division. By design, any keyboard (including pedal) can be coupled to a coupler manual (see <link linkend="couplers">Couplers></link>).</para>
+        <para>
+A set of 4 coupler manuals is added to each loaded sample set, whatever the
+actual number of manuals and/or pedal boards. The coupler manuals are numbered
+bottom to top. The coupler manual number 0 is displayed as pedal.
+        </para>
+        <para>
+The displayed compass is derived from the lowest and highest MIDI key number
+found in the organ definition file.  Each coupler manual is fit with 10
+divisional pistons.
+        </para>
+      </sect2>
+      <sect2>
+        <title>Expression shoes</title>
+        <para>
+An enclosure expression shoe is added to each windchest found in the Organ
+Definition File, plus another designed to control the whole virtual organ
+volume.
+          <note><simpara>
+The embedded metronome is managed using its own separate windchest.
+          </simpara></note>
+        </para>
+        <para>These enclosure settings are NOT replicated anywhere in the user interface.</para>
+        <para>These enclosure settings are saved in the current settings file only when the <link linkend="save">File &gt; Save</link> menu item is used.</para>
+      </sect2>
     </sect1>
     <sect1 id="metronome">
       <title>Metronome</title>
