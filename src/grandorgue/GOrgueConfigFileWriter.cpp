@@ -38,9 +38,13 @@ void GOrgueConfigFileWriter::AddEntry(wxString group, wxString name, wxString va
 bool GOrgueConfigFileWriter::Save(wxString filename)
 {
 	wxFile out;
-	wxCSConv conv(wxT("ISO-8859-1"));
+	wxMBConv& conv = wxConvUTF8;
+	uint8_t bom[] = { 0xEF, 0xBB, 0xBF };
 
 	if (!out.Create(filename, true))
+		return false;
+
+	if (!out.Write(bom, sizeof(bom)))
 		return false;
 
 	for(std::map<wxString, std::map<wxString, wxString> >::const_iterator i = m_Entries.begin(); i != m_Entries.end(); i++)

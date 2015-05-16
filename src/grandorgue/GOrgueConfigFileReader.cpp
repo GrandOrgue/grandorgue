@@ -85,7 +85,7 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 		return false;
 	}
 	wxFileOffset length = file.Length();
-	char* data = (char*)malloc(length);
+	uint8_t* data = (uint8_t*)malloc(length);
 	if (!data)
 	{
 		wxLogError(_("Failed to load file '%s' into the memory"), filename.c_str());
@@ -103,9 +103,25 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 	m_Hash = wxEmptyString;
 	for(unsigned i = 0; i < 20; i++)
 		m_Hash += wxDecToHex(hash[i]);
-	
-	wxString input(data, wxCSConv(wxT("ISO-8859-1")), length);
+
+	wxMBConv* conv;
+	wxCSConv isoConv(wxT("ISO-8859-1"));
+	uint8_t* dataPtr = data;
+	if (length >= 3 && data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF)
+	{
+		conv = &wxConvUTF8;
+		dataPtr = data + 3;
+		length -= 3;
+	}
+	else
+		conv = &isoConv;
+	wxString input(dataPtr, *conv, length);
 	free(data);
+	if (length && input.Len() == 0)
+	{
+		wxLogError(_("Failed to decode file '%s'"), filename.c_str());
+		return false;
+	}
 	
 	unsigned pos = 0;
 	wxString group;
