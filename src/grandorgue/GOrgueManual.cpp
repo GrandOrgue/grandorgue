@@ -93,6 +93,8 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_MIDIInputNumber = 0;
 	m_displayed = false;
 	m_manual_number = manualNumber;
+	for(unsigned i = 0; i < 128; i++)
+		m_MidiMap[i] = i;
 
 	m_stops.resize(0);
 	m_couplers.resize(0);
