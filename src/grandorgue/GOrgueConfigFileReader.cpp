@@ -115,7 +115,7 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 	}
 	else
 		conv = &isoConv;
-	wxString input(dataPtr, *conv, length);
+	wxString input((const char*)dataPtr, *conv, length);
 	free(data);
 	if (length && input.Len() == 0)
 	{
