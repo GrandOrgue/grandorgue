@@ -23,7 +23,7 @@
 
 #include <wx/intl.h>
 
-const wxChar* GOrgueRtHelpers::GetApiName(const RtAudio::Api api)
+const wxString GOrgueRtHelpers::GetApiName(const RtAudio::Api api)
 {
 	switch (api)
 	{
@@ -49,8 +49,7 @@ const wxChar* GOrgueRtHelpers::GetApiName(const RtAudio::Api api)
 	}
 }
 
-const wxChar* 
-GOrgueRtHelpers::GetMidiApiPrefix(const RtMidi::Api api)
+const wxString GOrgueRtHelpers::GetMidiApiPrefix(const RtMidi::Api api)
 {
 	switch (api)
 	{
