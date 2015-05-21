@@ -389,7 +389,7 @@ you wish to discard your modifications. Note that the file containing saved sett
 currently in use is <emphasis>deleted</emphasis>.
 </para>
         </sect3>
-        <sect3>
+        <sect3 id="import_settings">
           <title>Import Settings</title>
           <indexterm>
             <primary>Import Settings</primary>
@@ -404,7 +404,7 @@ A settings file matches a sample set when the <emphasis>ChurchName</emphasis> pr
 matches the <emphasis>ChurchName</emphasis> property of the definition file.
 </para>
         </sect3>
-        <sect3>
+        <sect3 id="import_comb">
           <title>Import Combinations</title>
           <indexterm>
             <primary>Import Combinations</primary>
@@ -417,7 +417,7 @@ location where the combinations were imported from will be remembered for the ne
           <para>A settings file matches a sample set when the <emphasis>ChurchName</emphasis> property of the settings file
 matches the <emphasis>ChurchName</emphasis> property of the definition file.</para>
         </sect3>
-        <sect3>
+        <sect3 id="export_settings">
           <title>Export Settings/Combinations</title>
           <indexterm>
             <primary>Export Settings</primary>
@@ -641,7 +641,7 @@ the current settings would be saved to this same next program.
         <para>More options are available on the <emphasis>Combination Setter</emphasis> panel.
 </para>
       </sect2>
-      <sect2>
+      <sect2 id="volumecontrol">
         <title>Volume Control</title>
         <indexterm>
           <primary>Volume Control</primary>
@@ -3800,6 +3800,174 @@ user experience.
           </simpara>
           <simpara>Likewise, GrandOrgue users are <emphasis role="strong">strongly</emphasis> encouraged to report new warnings to the sampleset designer.</simpara>
         </note>
+      </sect2>
+    </sect1>
+    <sect1>
+      <title>Defaults and Initial Settings tab</title>
+      <indexterm><primary>Defaults Settings</primary></indexterm>
+      <indexterm><primary>Initial Settings</primary></indexterm>
+      <figure>
+        <title>Defaults and Initial Settings tab</title>
+        <mediaobject><imageobject><imagedata scalefit="1" width="100%" fileref="default_and_initial_settings.png" /></imageobject></mediaobject>
+      </figure>
+      <para>This dialog manages default and initial values for settings which are controlled in various panels or dialogs. The values defined in this tab are stored in the global configuration file.</para>
+      <sect2>
+        <title>Volume</title>
+        <para>
+This spinner provides the default <link linkend="volumecontrol">volume</link>
+value. Initialized to -15 on the very first run of a GrandOrgue instance. This
+value is <link linkend="save">saved</link> to settings files.
+        </para>
+      </sect2>
+      <sect2>
+        <title>Metronome</title>
+        <para>
+These spinners provide default values for the number of beats per minute (BPM)
+and the number of beats per bar in the <link
+  linkend="metronome">metronome</link> panel. Initialized to 80 beats per
+minute and 4 beats per bar on the very first run of a GrandOrgue instance. They
+are <link linkend="save">saved</link> to settings files.
+        </para>
+      </sect2>
+      <sect2>
+        <title>Paths</title>
+        <para>
+These text boxes provide default paths for various storage areas. They are
+initialized to paths relative to the user's home folder, and their names are
+localized. The <emphasis>Browse</emphasis> button located besides each text box
+allows to change the value.
+        </para>
+        <sect3>
+          <title>Windows Paths</title>
+          <informaltable frame="none">
+            <tgroup cols="2">
+              <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
+              <colspec colname="c2" colsep="0" rowsep="0"/>
+              <tbody>
+                <row>
+                  <entry><emphasis role="strong">Sampleset directory</emphasis></entry>
+                  <entry>%HOMEDRIVE%\%HOMEDIR%\Documents\GrandOrgue\Organs</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Setting&#160;inport/export&#160;directory</emphasis></entry>
+                  <entry>%HOMEDRIVE%\%HOMEDIR%\Documents\GrandOrgue\Settings</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Audio recording directory</emphasis></entry>
+                  <entry>%HOMEDRIVE%\%HOMEDIR%\Documents\GrandOrgue\Audio recordings</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">MIDI recording directory</emphasis></entry>
+                  <entry>%HOMEDRIVE%\%HOMEDIR%\Documents\GrandOrgue\MIDI recordings</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">MIDI player directory</emphasis></entry>
+                  <entry>%HOMEDRIVE%\%HOMEDIR%\Documents\GrandOrgue\MIDI recordings</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+        </sect3>
+        <sect3>
+          <title>Linux Paths</title>
+          <informaltable frame="none">
+            <tgroup cols="2">
+              <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
+              <colspec colname="c2" colsep="0" rowsep="0"/>
+              <tbody>
+                <row>
+                  <entry><emphasis role="strong">Sampleset directory</emphasis></entry>
+                  <entry>$HOME/GrandOrgue/Organs</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Setting&#160;inport/export&#160;directory</emphasis></entry>
+                  <entry>$HOME/GrandOrgue/Settings</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Audio recording directory</emphasis></entry>
+                  <entry>$HOME/GrandOrgue/Audio recordings</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">MIDI recording directory</emphasis></entry>
+                  <entry>$HOME/GrandOrgue/MIDI recordings</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">MIDI player directory</emphasis></entry>
+                  <entry>$HOME/GrandOrgue/MIDI recordings</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+        </sect3>
+        <sect3>
+          <title>Mac Paths</title>
+          <informaltable frame="none">
+            <tgroup cols="2">
+              <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
+              <colspec colname="c2" colsep="0" rowsep="0"/>
+              <tbody>
+                <row>
+                  <entry><emphasis role="strong">Sampleset directory</emphasis></entry>
+                  <entry>$HOME/Library/Preferences/GrandOrgue</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Setting&#160;inport/export&#160;directory</emphasis></entry>
+                  <entry>$HOME/Library/Preferences/GrandOrgue/Settings</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Audio recording directory</emphasis></entry>
+                  <entry>$HOME/Library/Preferences/GrandOrgue/Audio recordings</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">MIDI recording directory</emphasis></entry>
+                  <entry>$HOME/Library/Preferences/GrandOrgue/MIDI recordings</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">MIDI player directory</emphasis></entry>
+                  <entry>$HOME/Library/Preferences/GrandOrgue/MIDI recordings</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+        </sect3>
+        <sect3>
+          <title>Path usage</title>
+          <informaltable frame="none">
+            <tgroup cols="2">
+              <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
+              <colspec colname="c2" colsep="0" rowsep="0"/>
+              <tbody>
+                <row>
+                  <entry><emphasis role="strong">Sampleset directory</emphasis></entry>
+                  <entry>This is the folder where GrandOrgue looks for samplesets. It is opened when the <link linkend="file_open">File &gt; Open</link> menu item is selected.</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Setting&#160;inport/export&#160;directory</emphasis></entry>
+                  <entry>
+This is the folder where GrandOrgue stores or looks for settings files. It is
+opened when one of the <link linkend="import_settings">File &gt; Import
+  Settings</link>, <link linkend="import_comb">File &gt; Import Combinations</link>,
+<link linkend="export_settings">File &gt; Export Settings/Combinations</link> menu
+items is selected. This folder is usually different from the folder where
+GrandOrgue <link linkend="settingsstore">stores</link> preset files.
+                  </entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Audio recording directory</emphasis></entry>
+                  <entry>This is the folder where GrandOrgue stores audio recording files. It is opened when the <link linkend="record">Audio/Midi &gt; Record</link> menu item is selected.</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">MIDI recording directory</emphasis></entry>
+                  <entry>This is the folder where GrandOrgue stores MIDI recording files. It is opened when the <link linkend="record">Audio/Midi &gt; Record MIDI</link> menu item is selected.</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">MIDI player directory</emphasis></entry>
+                  <entry>This is the folder where GrandOrgue looks for MIDI recording files. It is opened when the <link linkend="record">Audio/Midi &gt; Play MIDI</link> menu item is selected.</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+        </sect3>
       </sect2>
     </sect1>
     <sect1>
