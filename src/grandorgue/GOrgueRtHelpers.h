@@ -30,8 +30,8 @@ class GOrgueRtHelpers
 {
 public:
 
-	static const wxChar* GetApiName(const RtAudio::Api api);
-	static const wxChar* GetMidiApiPrefix(const RtMidi::Api api);
+	static const wxString GetApiName(const RtAudio::Api api);
+	static const wxString GetMidiApiPrefix(const RtMidi::Api api);
 };
 
 #endif /* GORGUERTHELPERS_H_ */
