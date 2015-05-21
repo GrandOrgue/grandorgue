@@ -62,7 +62,8 @@ BuildRequires:  mingw%{_mingw_bitsize}-cross-gcc
 BuildRequires:  mingw%{_mingw_bitsize}-cross-gcc-c++
 BuildRequires:  mingw%{_mingw_bitsize}-cross-binutils
 BuildRequires:  mingw32-cross-nsis
-BuildRequires:  mingw%{_mingw_bitsize}-wxwidgets-devel
+BuildRequires:  mingw%{_mingw_bitsize}-wxwidgets-3_0-lang
+BuildRequires:  mingw%{_mingw_bitsize}-wxwidgets-3_0-devel
 BuildRequires:  mingw%{_mingw_bitsize}-jack
 BuildRequires:  mingw%{_mingw_bitsize}-jack-devel
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx0
