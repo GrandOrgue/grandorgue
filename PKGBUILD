@@ -39,7 +39,7 @@ build()
 	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_SKIP_RPATH=1 \
-	-DVERSION_REVISION="`echo "$pkgver"|cut -d. -f4`"
+	-DVERSION_REVISION="`echo "$pkgver"|cut -d. -f4`" \
       ..
     make  VERBOSE=1
 }
