@@ -5187,54 +5187,54 @@ It is an text file in ISO-8859-1 encoding. The standard extension is
 Comment lines are started with <emphasis>;</emphasis> in the first column. Empty lines are ignored.
       </para>
       <para>
-Various settings are grouped in block. Each block is started with a
+Various settings are grouped in blocks. Each block is started with a
 line starting with <emphasis>[</emphasis>, followed by the section name and ended with <emphasis>]</emphasis>.
-Each block consists of list of name-values pairs seperated by <emphasis>=</emphasis>.
-Each setting may only occure once. The content is case sensitive.
+Each block consists of list of name-values pairs separated by <emphasis>=</emphasis>.
+Each setting may only occur once. The content is case sensitive.
 No other elements are allowed in the file.
       </para>
       <para>
 File paths in this format are relative to the location of the organ
-file.  The directory seperator in this paths must be <emphasis>\</emphasis>. The paths
-should not contain <emphasis>/</emphasis>. The paths should be considered case sensitiv,
-even if it is not enforced on all plattforms.
+file.  The directory separator in these paths must be <emphasis>\</emphasis>. The paths
+should not contain <emphasis>/</emphasis>. The paths should be considered case sensitive,
+even if this is not enforced on all platforms.
       </para>
       <para>
-Boolean values are represented as <emphasis>Y</emphasis> for true and
-<emphasis>N</emphasis> for false.
+Boolean values are represented as <emphasis>Y</emphasis> for "true" and
+<emphasis>N</emphasis> for "false".
       </para>
       <para>
 A color can be one of the following colors (not case sensitive):
 BLACK, BLUE, DARK BLUE, GREEN, DARK GREEN, CYAN, DARK CYAN, RED, DARK
 RED, MAGENTA, DARK MAGENTA, YELLOW, DARK YELLOW, LIGHT GREY, DARK
-GREY, WHITE, BROWN
-Additionally, it supported the HTML syntax #RRGGBB
+GREY, WHITE, BROWN.
+Additionally, the HTML syntax #RRGGBB is supported.
       </para>
       <para>
 A font size can be one of the following values: SMALL, NORMAL, LARGE
-or a integer number between 1 and 50..
+or an integer number between 1 and 50.
       </para>
       <para>
 A panel size can be one of the following values: SMALL, MEDIUM, MEDIUM LARGE, LARGE
-or a integer number between 100 and 4000.
+or an integer number between 100 and 4000.
       </para>
       <para>
 The following image formats are supported: bmp, gif, jpg, ico, png
       </para>
       <para>
-A bitmap number is a value between 1 to 64. It referes to a predefined
-(wood) background. An odd mumber and the following even number
+A bitmap number is a value between 1 and 64. It refers to a predefined
+(wood) background. An odd number and the following even number
 represent the same type of wood. The odd number has vertical grain,
 while the odd has horizontal grain.
       </para>
       <para>
-Floating point number use the following format:
+Floating point numbers use the following format:
 <emphasis>-?[0-9]+(.[0-9]*)?</emphasis> That means: a optional minus
-sign, followd by at least one digit. The decimal seperator is a
+sign, followed by at least one digit. The decimal separator is a
 period.
       </para>
       <para>
-The unit "samples" count the number of samples from the start of the
+The unit "samples" counts the number of samples from the start of the
 WAV file.  On sample includes the values of all channels, eg: for a
 stereo WAV file at 44.1 kHz, 1 second is equivalent to 441000 samples.
       </para>
@@ -5255,14 +5255,14 @@ stereo WAV file at 44.1 kHz, 1 second is equivalent to 441000 samples.
         </mediaobject>
       </figure>
       <para>
-Objects in GrandOrgue are eg. manuals, stops, generals, ... . Each
-object can consist of backend part representing the object an its
+Objects in GrandOrgue are e.g. Manuals, Stops, Generals, ... . Each
+object can consist of a backend part representing the object, and its
 configuration (eg. list of sample file names) and multiple GUI
 representations.
       </para>
       <para>
 The main section is called <emphasis>Organ</emphasis>. It defines the
-main panel too. Objects like stops only displayed on a non-main panel
+main panel. Objects like stops only displayed on a non-main panel
 need an invisible definition for the backend part on the main panel
 too.
       </para>
@@ -5272,14 +5272,14 @@ too.
       <para>
 The samples are stored as WAV files according to the WAV file
 specification. The supported formats are: 8 bit, 16 bit and 24 bit PCM
-or 32 bit IEEE float, either mono or stereo. The prefered sample rates
+or 32 bit IEEE float, either mono or stereo. The preferred sample rates
 are 44100 or 48000 Hz - GO supports any sample rate between 22000 and
 96000 Hz. GO only supports a single data chunk. To play looped
 samples, they must include cue points (cue chunk) and loops (smpl
 chunk). If there are multiple loops, each loop should overlap another
 loop. Attack samples include the attack phase and the loops - they may
 contain a release too. If release samples include a cue point, the
-release is loaded starting with this position, else the whole file
+release is loaded starting with this position, else the whole file is
 loaded. dwMIDIUnityNote and dwMIDIPitchFraction of the smpl chunk are
 used for retuning an organ to other temperaments.
       </para>
@@ -5291,7 +5291,7 @@ only allows adjustments at pipe level.
       <para>
 The samples in the format above may also be packed with wavpack
 http://www.wavpack.com/.  GO only supports the wavpack V4 format
-without hybrid compression and it must include all meta data. A good
+without hybrid compression and it must include all metadata. A good
 starting point for the wavpack compression options is
 <emphasis>-x6</emphasis>
       </para>
@@ -5701,8 +5701,8 @@ F12 key
       <para>
 This section describes the whole organ. For the old panel format, it
 includes the main panel, therefore the section includes all display
-metrics attributes. The new panel format seperates the display metrics
-of the main panel into a section names
+metrics attributes. The new panel format separates the display metrics
+of the main panel into a section named
 <emphasis>Panel000</emphasis>. Additionally it includes the following
 attributes:
      </para>
@@ -5713,7 +5713,8 @@ attributes:
             <para>
 (string, required) Name of the organ/church. This string should be
 unique, as setting files for organs with the same
-<emphasis>ChurchName</emphasis> are considered compatible.
+<emphasis>ChurchName</emphasis> are considered compatible. Grand Orgue will
+not load a settings file if the ChurchName does not match.
      </para>
           </listitem>
         </varlistentry>
@@ -5770,8 +5771,10 @@ about the organ.
           <term>NumberOfManuals</term>
           <listitem>
             <para>
-(integer 1-16, required) number of manuals. The manual information is
-available in sections called <emphasis>Manual999</emphasis>.
+(integer 1-16, required) number of manuals. It does not include the pedal keyboard.
+The manual information for each manual is available in sections called 
+<emphasis>Manual999</emphasis>. 999 is a number defining each manual, starting with 001.
+
      </para>
           </listitem>
         </varlistentry>
@@ -5779,8 +5782,8 @@ available in sections called <emphasis>Manual999</emphasis>.
           <term>HasPedals</term>
           <listitem>
             <para>
-(boolean, required) Determines, if the pedal
-(<emphasis>Manual000</emphasis>) is present.
+(boolean, required) Determines if the pedal, which is defined as section
+<emphasis>Manual000</emphasis>, is present.
      </para>
           </listitem>
         </varlistentry>
@@ -5788,8 +5791,7 @@ available in sections called <emphasis>Manual999</emphasis>.
           <term>NumberOfEnclosures</term>
           <listitem>
             <para>
-(integer 0-50, required) number of enclosures. The details are in a section called
-<emphasis>Enclosure999</emphasis>.
+(integer 0-50, required) number of enclosures. The details of each enclosure are contained in a section called <emphasis>Enclosure999</emphasis>
      </para>
           </listitem>
         </varlistentry>
@@ -5797,8 +5799,7 @@ available in sections called <emphasis>Manual999</emphasis>.
           <term>NumberOfTremulants</term>
           <listitem>
             <para>
-(integer 0-10, required) number of tremulants. The details are in a section called
-<emphasis>Tremualant999</emphasis>.
+(integer 0-10, required) number of tremulants. The details of each tremulant are contained in a section called <emphasis>Tremulant999</emphasis>
      </para>
           </listitem>
         </varlistentry>
@@ -5806,8 +5807,7 @@ available in sections called <emphasis>Manual999</emphasis>.
           <term>NumberOfWindchestGroups</term>
           <listitem>
             <para>
-(integer 1-50, required) number of windchests. The details are in a section called
-<emphasis>WindchestGroup999</emphasis>.
+(integer 1-50, required) number of windchests. The details of each windchest are in a section called <emphasis>WindchestGroup999</emphasis>.
      </para>
           </listitem>
         </varlistentry>
@@ -5815,8 +5815,7 @@ available in sections called <emphasis>Manual999</emphasis>.
           <term>NumberOfReversiblePistons</term>
           <listitem>
             <para>
-(integer 0-32, required) number of pistons. The details are in a section called
-<emphasis>ReversiblePiston999</emphasis>.
+(integer 0-32, required) number of reversible pistons. The details of each reversible piston are in a section called <emphasis>ReversiblePiston999</emphasis>.
      </para>
           </listitem>
         </varlistentry>
@@ -5869,8 +5868,8 @@ in a section called <emphasis>Rank999</emphasis>.
           <term>DivisionalsStoreIntermanualCouplers</term>
           <listitem>
             <para>
-(boolean, required) determines, if divisionals store/change the
-state of associated intramanual coupler.
+(boolean, required) determines if divisionals store/change the
+state of associated intermanual couplers.
      </para>
           </listitem>
         </varlistentry>
@@ -5878,8 +5877,8 @@ state of associated intramanual coupler.
           <term>DivisionalsStoreIntramanualCouplers</term>
           <listitem>
             <para>
-(boolean, required) determines, if divisionals store/change the
-state of associated intermanual coupler.
+(boolean, required) determines if divisionals store/change the
+state of associated intramanual couplers.
      </para>
           </listitem>
         </varlistentry>
@@ -5887,7 +5886,7 @@ state of associated intermanual coupler.
           <term>DivisionalsStoreTremulants</term>
           <listitem>
             <para>
-(boolean, required) determines, if divisionals store/change the
+(boolean, required) determines if divisionals store/change the
 state of associated tremulants.
      </para>
           </listitem>
@@ -5896,8 +5895,8 @@ state of associated tremulants.
           <term>GeneralsStoreDivisionalCouplers</term>
           <listitem>
             <para>
-(boolean, required) determines, if divisionals store/change the
-state of divisional coupler.
+(boolean, required) determines if divisionals store/change the
+state of divisional couplers.
      </para>
           </listitem>
         </varlistentry>
@@ -5905,8 +5904,9 @@ state of divisional coupler.
           <term>CombinationsStoreNonDisplayedDrawstops</term>
           <listitem>
             <para>
-(boolean, default: true) determines, if the state of (on the main panel)
-invisible objects is stored in divisionals, generals and the setter.
+(boolean, default: true) determines, if the state of 
+invisible objects (on the main panel) is stored in divisionals,
+generals and the setter.
      </para>
           </listitem>
         </varlistentry>
@@ -5937,7 +5937,7 @@ for the new panel format.
           <listitem>
             <para>
 (integer 0-999, required) Number of labels on the panel. The section
-of the label GUI definitions are called
+for each label GUI definition is called
 <emphasis>Label999</emphasis>. This setting is not supported for the
 new panel format.
      </para>
@@ -5985,7 +5985,7 @@ the whole organ.
       <title>Setter elements</title>
       <para>
 It is possible to display various setter elements on the panels.  The
-<emphasis>Type</emphasis> attribute describe the function - the other
+<emphasis>Type</emphasis> attribute describes the function - the other
 attributes depend on the function:
      </para>
       <variablelist>
@@ -5994,7 +5994,7 @@ attributes depend on the function:
           <listitem>
             <para>
 Represents the crescendo swell. The section must contain the GUI
-attributes of an enclosure.
+attributes of an enclosure, eg the images for each position of the swell pedal, etc. 
      </para>
           </listitem>
         </varlistentry>
@@ -6002,7 +6002,8 @@ attributes of an enclosure.
           <term>CrescendoLabel</term>
           <listitem>
             <para>
-Represents a label with crescendo state. The section must contain the GUI
+Represents a label with crescendo state (ie the current step
+that the crescendo pedal is at, from 1 to 32.) The section must contain the GUI
 attributes of a label.
      </para>
           </listitem>
@@ -6212,11 +6213,11 @@ Save button.
       <para>
 The layout of any panel is described by a layout model. The available
 space is split vertically into three columns:
-The left and the right column contain a drawstops layouted via a mesh.
+The left and the right column contain drawstops laid out via a mesh.
 The middle row is vertically divided:
       </para>
       <para>
-At the bottom, the pedal and its button are placed (if
+At the bottom, the pedal and its buttons are placed (if
 present). Above, an extra row of buttons may follow. The next row
 contains the enclosures. Then all manuals with their associated
 buttons follow. The two rows are a block of buttons and pistons. The
@@ -6231,14 +6232,14 @@ exact order can be specified via an attribute.
         </mediaobject>
       </figure>
       <para>
-It has the following attributes:
+Has the following attributes:
       </para>
       <variablelist>
         <varlistentry>
           <term>DispScreenSizeHoriz</term>
           <listitem>
             <para>
-(panel size, required) Height of the panel
+(panel size, required) Height of the panel.
      </para>
           </listitem>
         </varlistentry>
@@ -6327,6 +6328,7 @@ It has the following attributes:
           <listitem>
             <para>
 (integer 2-12, required) number of drawstop columns. Must be even.
+NOTE: If you want more than 12 drawstop columns, you must use absolute positioning.
      </para>
           </listitem>
         </varlistentry>
@@ -6334,7 +6336,8 @@ It has the following attributes:
           <term>DispDrawstopRows</term>
           <listitem>
             <para>
-(integer 1-20, required) Number of drawstop rows.
+(integer 1-20, required) Number of drawstop rows. 
+NOTE: If you want more than 20 drawstop rows you must use absolute positioning.
      </para>
           </listitem>
         </varlistentry>
@@ -6342,8 +6345,8 @@ It has the following attributes:
           <term>DispDrawstopColsOffset</term>
           <listitem>
             <para>
-(boolean, required) If true, each second row drawstops on the
-left/right is displayed shifted.
+(boolean, required) If true, each second row of drawstops on the
+left/right is displayed vertically shifted.
      </para>
           </listitem>
         </varlistentry>
@@ -6352,6 +6355,7 @@ left/right is displayed shifted.
           <listitem>
             <para>
 (boolean, required if DispDrawstopColsOffset is true)
+Determines if second row is shifted up or down.
      </para>
           </listitem>
         </varlistentry>
@@ -6360,7 +6364,7 @@ left/right is displayed shifted.
           <listitem>
             <para>
 (boolean, required) group two drawstop rows together. Number of
-drawstop rows must be divideable by 4.
+drawstop rows must be divisible by 4.
      </para>
           </listitem>
         </varlistentry>
@@ -6369,7 +6373,7 @@ drawstop rows must be divideable by 4.
           <listitem>
             <para>
 (integer 0-99, required) number of drawstop rows in the center block.
-The row number start with 100.
+The row numbers start with 100.
      </para>
           </listitem>
         </varlistentry>
@@ -6385,7 +6389,7 @@ The row number start with 100.
           <term>DispButtonCols</term>
           <listitem>
             <para>
-(integer 1-32, required) Number of colums for displaying pistons in the center block
+(integer 1-32, required) Number of columns for displaying pistons in the center block
      </para>
           </listitem>
         </varlistentry>
@@ -6393,8 +6397,9 @@ The row number start with 100.
           <term>DispExtraButtonRows</term>
           <listitem>
             <para>
-(integer 0-99, required) number of rows for displaying pistons in the center block.
-The row number start with 100.
+(integer 0-99, required) number of rows for displaying extra 
+pistons in the center block.
+The row numbers start with 100.
      </para>
           </listitem>
         </varlistentry>
@@ -6411,7 +6416,7 @@ The row number start with 100.
           <listitem>
             <para>
 (boolean, required if DispExtraPedalButtonRow is true) move extra
-pistons row a little bit to the left.
+pistons row slightly to the left.
      </para>
           </listitem>
         </varlistentry>
@@ -6420,6 +6425,7 @@ pistons row a little bit to the left.
           <listitem>
             <para>
 (string, required if DispExtraPedalButtonRow is true)
+move extra pistons row slightly to the right.
      </para>
           </listitem>
         </varlistentry>
@@ -6428,7 +6434,7 @@ pistons row a little bit to the left.
           <listitem>
             <para>
 (boolean, required) Display the pistons associated with the manual
-above (true) or below the manual (false).
+above (true) or below (false) the manual.
      </para>
           </listitem>
         </varlistentry>
@@ -6551,7 +6557,7 @@ extra piston block.
       <title>Enclosure objects</title>
       <para>
 An enclosure represents a swell pedal. It consists of non-gui
-attributes describing its function.  It it is displayed, it contains
+attributes describing its function. If it is displayed, it contains
 additional gui attributes. Best practise is to specify enclosures in
 natural layout order (leftmost first) and give them incremental values
 of MIDIInputNumber to make initial configurations easy for the user.
