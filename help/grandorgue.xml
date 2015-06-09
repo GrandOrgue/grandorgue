@@ -6585,9 +6585,9 @@ of MIDIInputNumber to make initial configurations easy for the user.
             <para>
 (integer 0 - 200, default: 0) This number is used while building the
 initial MIDI configuration to map the enclosure object to one MIDI 
-device the user can specify for respective enclosure. A value of 0 
+device the user can specify for the respective enclosure. A value of 0 
 means no association, 1 means enclosure 1, 2 is enclosure 2 etc. 
-Please note, the the GUI only allows the association of the first few 
+Please note, that the GUI only allows the association of the first few 
 enclosures.
      </para>
           </listitem>
@@ -6637,7 +6637,7 @@ default font.
           <listitem>
             <para>
 (string, default: Name of the button) Content of the text label. You
-should set it, if you need to display a shorter string.
+should edit it if you need to display a shorter string.
      </para>
           </listitem>
         </varlistentry>
@@ -6645,7 +6645,7 @@ should set it, if you need to display a shorter string.
           <term>EnclosureStyle</term>
           <listitem>
             <para>
-(integer 1 - 4, default: implementation dependend) Select a builtin
+(integer 1 - 4, default: implementation dependent) Select a built-in
 enclosure style.
      </para>
           </listitem>
@@ -6654,7 +6654,7 @@ enclosure style.
           <term>BitmapCount</term>
           <listitem>
             <para>
-(integer 1 - 127, default: implementation dependend) Number of
+(integer 1 - 127, default: implementation dependent) Number of
 bitmaps/steps.
      </para>
           </listitem>
@@ -6663,7 +6663,7 @@ bitmaps/steps.
           <term>Bitmap999</term>
           <listitem>
             <para>
-(string, default: use internal bitmap) Specifiy the file name of an
+(string, default: use internal bitmap) Specify the file name of an
 image to use as on bitmap for position 999.  If the bitmap contains a
 mask for transparency, it will be used. All bitmaps must have the same
 size.
@@ -6746,7 +6746,7 @@ rectangle
           <term>MouseRectTop</term>
           <listitem>
             <para>
-(integer 0 - Height, default: implemtation dependend) relative Y of
+(integer 0 - Height, default: implementation dependent) relative Y of
 top border of the mouse rectangle
      </para>
           </listitem>
@@ -6763,7 +6763,7 @@ top border of the mouse rectangle
           <term>MouseRectHeight</term>
           <listitem>
             <para>
-(integer 0 - Height, default: implementation dependend) height of the
+(integer 0 - Height, default: implementation dependent) height of the
 mouse rectangle
      </para>
           </listitem>
@@ -6772,7 +6772,7 @@ mouse rectangle
           <term>MouseAxisStart</term>
           <listitem>
             <para>
-(integer 0 - MouseRectHeight, default: implementation dependend) top Y
+(integer 0 - MouseRectHeight, default: implementation dependent) top Y
 coordinate of the axis
      </para>
           </listitem>
@@ -6782,7 +6782,7 @@ coordinate of the axis
           <listitem>
             <para>
 (integer MouseAxisStart - MouseRectHeight, default: implementation
-dependend) bottom Y coordinate of the axis
+dependent) bottom Y coordinate of the axis
      </para>
           </listitem>
         </varlistentry>
@@ -6799,7 +6799,7 @@ rectangle
           <term>TextRectTop</term>
           <listitem>
             <para>
-(integer 0 - Height, default: implementation dependend) relative Y of
+(integer 0 - Height, default: implementation dependent) relative Y of
 top border of the text rectangle
      </para>
           </listitem>
@@ -6816,7 +6816,7 @@ top border of the text rectangle
           <term>TextRectHeight</term>
           <listitem>
             <para>
-(integer 0 - Height, default: implementation dependend) height of the
+(integer 0 - Height, default: implementation dependent) height of the
 text rectangle
      </para>
           </listitem>
@@ -6826,7 +6826,7 @@ text rectangle
           <listitem>
             <para>
 (integer 0 - text rectangle width, default: TextWidth) If 0, no text
-is displayed. Otherwise the value specified the maximum line length
+is displayed. Otherwise the value specifies the maximum line length
 used for text breaking.
      </para>
           </listitem>
@@ -6843,7 +6843,7 @@ This object is used to store one combination It has the following attributes:
           <term>Protected</term>
           <listitem>
             <para>
-(boolean, default: false) If true, the stored combination can not be
+(boolean, default: false) If true, the stored combination cannot be
 changed.
      </para>
           </listitem>
@@ -6852,7 +6852,7 @@ changed.
           <term>NumberOfStops</term>
           <listitem>
             <para>
-(integer 0 - 999, required) Number of stop state stored in this
+(integer 0 - 999, required) Number of stop states stored in this
 combination. The entries are called <emphasis>StopNumber999</emphasis>
 and <emphasis>StopManual999</emphasis>.
      </para>
@@ -6862,7 +6862,7 @@ and <emphasis>StopManual999</emphasis>.
           <term>NumberOfCouplers</term>
           <listitem>
             <para>
-(integer 0 - 999, required) Number of coupler state stored in this
+(integer 0 - 999, required) Number of coupler states stored in this
 combination. The entries are called
 <emphasis>CouplerNumber999</emphasis> and
 <emphasis>CouplerManual999</emphasis>.
@@ -6873,7 +6873,7 @@ combination. The entries are called
           <term>NumberOfTremulants</term>
           <listitem>
             <para>
-(integer 0 - 999, required) Number of tremulant state stored in this
+(integer 0 - 999, required) Number of tremulant states stored in this
 combination. The entries are called <emphasis>TremulantNumber999</emphasis>.
      </para>
           </listitem>
@@ -6882,7 +6882,7 @@ combination. The entries are called <emphasis>TremulantNumber999</emphasis>.
           <term>NumberOfSwitches</term>
           <listitem>
             <para>
-(integer 0 - 999, default: 0) Number of switch state stored in this
+(integer 0 - 999, default: 0) Number of switch states stored in this
 combination. The entries are called <emphasis>SwitchNumber999</emphasis>.
      </para>
           </listitem>
@@ -6911,7 +6911,7 @@ the stop on the manual. If the value is negative, it is turned off, else turned 
           <term>StopManual999</term>
           <listitem>
             <para>
-(integer manual number, required) Number of the manual, which contain the stop.
+(integer manual number, required) Number of the manual, which contains the stop.
      </para>
           </listitem>
         </varlistentry>
@@ -6920,7 +6920,7 @@ the stop on the manual. If the value is negative, it is turned off, else turned 
           <listitem>
             <para>
 (integer -999 - 999, required) Number of the coupler on the manual. If the value is
-negative, it is turned off, else turned on.
+negative, it is turned off, else it is turned on.
      </para>
           </listitem>
         </varlistentry>
@@ -6928,7 +6928,7 @@ negative, it is turned off, else turned on.
           <term>CouplerManual999</term>
           <listitem>
             <para>
-(integer manual number, required) Number of the manual, which contain the coupler.
+(integer manual number, required) Number of the manual, which contains the coupler.
      </para>
           </listitem>
         </varlistentry>
@@ -6948,7 +6948,7 @@ else turned on.
             <para>
 (integer -switch count - switch count, required)
 Number of the switch. If the value is negative, it is turned off,
-else turned on.
+else it is turned on.
      </para>
           </listitem>
         </varlistentry>
@@ -6956,9 +6956,8 @@ else turned on.
           <term>DivisionalCouplerNumber999</term>
           <listitem>
             <para>
-(integer -divisional coupler count - divisional coupler count,
-required) Number of the divisional coupler. If the value is negative,
-it is turned off, else turned on.
+(integer -divisional coupler count -divisional coupler count, required) Number of the divisional coupler. If the value is negative,
+it is turned off, else it is turned on.
      </para>
           </listitem>
         </varlistentry>
@@ -6974,8 +6973,8 @@ store.
     <sect1>
       <title>Divisional coupler objects</title>
       <para>
-A divisional coupler is a drawstop object. If enabled, it activing a
-divisional on one controlled manual will acctivate the corresponding
+A divisional coupler is a drawstop object. If enabled, activating a
+divisional on one controlled manual will activate the corresponding
 divisional on all other manuals. Additionally, it has the following
 attributes:
       </para>
@@ -6985,7 +6984,7 @@ attributes:
           <listitem>
             <para>
 (boolean, required) If false, the coupler only couples upward in the
-manual list of the coupler, else up and downward.
+manual list of the coupler, else upward and downward.
      </para>
           </listitem>
         </varlistentry>
@@ -7020,7 +7019,7 @@ following attributes:
           <term>Protected</term>
           <listitem>
             <para>
-(boolean, default: false) If true, the stored combination can not be
+(boolean, default: false) If true, the stored combination cannot be
 changed.
      </para>
           </listitem>
@@ -7029,7 +7028,7 @@ changed.
           <term>NumberOfStops</term>
           <listitem>
             <para>
-(integer 0 - stop count of the manual, required) Number of stop state
+(integer 0 - stop count of the manual, required) Number of stop states
 stored in this combination. The entries are called
 <emphasis>Stop999</emphasis>.
      </para>
@@ -7040,7 +7039,7 @@ stored in this combination. The entries are called
           <listitem>
             <para>
 (integer 0 - coupler count of the manual, required) Number of coupler
-state stored in this combination. The entries are called
+states stored in this combination. The entries are called
 <emphasis>Coupler999</emphasis>.
      </para>
           </listitem>
@@ -7050,7 +7049,7 @@ state stored in this combination. The entries are called
           <listitem>
             <para>
 (integer 0 - tremulant count of the manual, required) Number of
-tremulant state stored in this combination. The entries are called
+tremulant states stored in this combination. The entries are called
 <emphasis>Tremulant999</emphasis>.
      </para>
           </listitem>
@@ -7060,7 +7059,7 @@ tremulant state stored in this combination. The entries are called
           <listitem>
             <para>
 (integer 0 - switch count of the manual, default) Number of
-switch state stored in this combination. The entries are called
+switch states stored in this combination. The entries are called
 <emphasis>Switch999</emphasis>.
      </para>
           </listitem>
@@ -7089,7 +7088,7 @@ negative, it is turned off, else turned on.
             <para>
 (integer -manual tremulant count - manual tremulant count, required)
 Number of the tremulant. If the value is negative, it is turned off,
-else turned on.
+else it is turned on.
      </para>
           </listitem>
         </varlistentry>
@@ -7099,7 +7098,7 @@ else turned on.
             <para>
 (integer -manual switch count - manual switch count, required)
 Number of the switch. If the value is negative, it is turned off,
-else turned on.
+else it isturned on.
      </para>
           </listitem>
         </varlistentry>
@@ -7129,8 +7128,8 @@ non-gui attributes:
           <term>NumberOfLogicalKeys</term>
           <listitem>
             <para>
-(integer 1-192, required) Number of keys on this manuals (including
-non playable ones).
+(integer 1-192, required) Number of keys on this manual (including
+non-playable ones).
      </para>
           </listitem>
         </varlistentry>
@@ -7139,7 +7138,7 @@ non playable ones).
           <listitem>
             <para>
 (integer 1 - NumberOfLogicalKeys, required) number of the first
-useable key
+usable key
      </para>
           </listitem>
         </varlistentry>
@@ -7155,7 +7154,7 @@ useable key
           <term>NumberOfAccessibleKeys</term>
           <listitem>
             <para>
-(intger 0 - 85, required) number of MIDI accessible keys.
+(integer 0 - 85, required) number of MIDI accessible keys.
      </para>
           </listitem>
         </varlistentry>
@@ -7196,7 +7195,7 @@ manual. Starting with 1, for each stop, there is a
           <listitem>
             <para>
 (integer, required) Number of the <emphasis>Stop999</emphasis> section
-containg the stop details.
+containing the stop details.
      </para>
           </listitem>
         </varlistentry>
@@ -7215,7 +7214,7 @@ manual. Starting with 1, for each coupler, there is a
           <listitem>
             <para>
 (integer, required) Number of the <emphasis>Coupler999</emphasis>
-section containg the coupler details.
+section containing the coupler details.
      </para>
           </listitem>
         </varlistentry>
@@ -7282,7 +7281,7 @@ section containg the switch details.
             <para>
 (integer 0-127, default: same MIDI key number) Allows to map the MIDI
 note in <emphasis>MIDIKey999</emphasis> to a different number. This
-mapping is used by the default manual MIDI matching type - other may
+mapping is used by the default manual MIDI matching type - others may
 or may not use this mapping table.
      </para>
           </listitem>
@@ -7322,7 +7321,7 @@ to override Y position for manual.
           <term>ImageOn_<emphasis>KEYTYPE</emphasis></term>
           <listitem>
             <para>
-(string, default: implementation dependend bitmap) Bitmap for the
+(string, default: implementation dependent bitmap) Bitmap for the
 specified key type, if the key is pressed. The bitmap may contain a
 mask.
      </para>
@@ -7332,7 +7331,7 @@ mask.
           <term>ImageOff_<emphasis>KEYTYPE</emphasis></term>
           <listitem>
             <para>
-(string, default: implementation dependend bitmap) Bitmap for the
+(string, default: implementation dependent bitmap) Bitmap for the
 specified key type, if the key is not pressed. The bitmap may contain
 a mask.
      </para>
@@ -7360,7 +7359,7 @@ Off bitmap. If empty, no external mask is loaded.
           <term>Width_<emphasis>KEYTYPE</emphasis></term>
           <listitem>
             <para>
-(integer 0 - 500, default: implementation dependend) This value is
+(integer 0 - 500, default: implementation dependent) This value is
 added to the x position of the current key to determine the position
 of the next key.
      </para>
@@ -7438,8 +7437,7 @@ key.
 (integer -500 - 500, default: corresponding
 Offset_<emphasis>KEYTYPE</emphasis>) This value is
 can be used to adjust the display of the 999 key, eg. to place a
-sharp key overlapped with the previous key.
-999 key.
+sharp key overlapped with the previous 999 key.
      </para>
           </listitem>
         </varlistentry>
@@ -7449,7 +7447,7 @@ sharp key overlapped with the previous key.
             <para>
 (integer 0 - 500, default: corresponding
 YOffset_<emphasis>KEYTYPE</emphasis>) This value is can be used to
-adjust the Y coordinate of the 999 key.  999 key.
+adjust the Y coordinate of the 999 key.
      </para>
           </listitem>
         </varlistentry>
@@ -7494,7 +7492,7 @@ mouse rectangle
             <para>
 (boolean, required) True means, the <emphasis>black</emphasis> keys
 are drawn in a light color while the <emphasis>white</emphasis> keys
-are draw dark color.
+are drawn in a dark color.
      </para>
           </listitem>
         </varlistentry>
@@ -7521,7 +7519,7 @@ the first key as the following note.
           <listitem>
             <para>
 (integer 1 - NumberOfAccessibleKeys, default: NumberOfAccessibleKeys) number of keys
-to displays.
+to display.
      </para>
           </listitem>
         </varlistentry>
@@ -7533,7 +7531,7 @@ to displays.
 <emphasis>999</emphasis>) The number in the key
 (<emphasis>999</emphasis>) is between 1 and
 <emphasis>DisplayKeys</emphasis>. It contains the midi number of the
-backend key, that it connected to this GUI key.
+backend key, that is connected to this GUI key.
      </para>
           </listitem>
         </varlistentry>
@@ -7542,7 +7540,7 @@ backend key, that it connected to this GUI key.
     <sect1>
       <title>Label objects</title>
       <para>
-Lable object allow to display a text label. The background is an
+Label object allows to display a text label. The background is an
 image. It is tiled, if the image is smaller than the label area. A
 label has the following attributes:
       </para>
@@ -7551,7 +7549,7 @@ label has the following attributes:
           <term>FreeXPlacement</term>
           <listitem>
             <para>
-(boolean, default: true) True means, that the X position is determined
+(boolean, default: true) True means that the X position is determined
 by DispXpos, else by DispDrawstopCol and DispSpanDrawstopColToRight.
      </para>
           </listitem>
@@ -7560,7 +7558,7 @@ by DispXpos, else by DispDrawstopCol and DispSpanDrawstopColToRight.
           <term>FreeYPlacement</term>
           <listitem>
             <para>
-(boolean, default: true) True means, that the Y position is determined
+(boolean, default: true) True means that the Y position is determined
 by DispYpos, else by DispAtTopOfDrawstopCol.
      </para>
           </listitem>
@@ -7585,8 +7583,8 @@ by DispYpos, else by DispAtTopOfDrawstopCol.
           <term>DispAtTopOfDrawstopCol</term>
           <listitem>
             <para>
-(boolean, required if FreeYPlacement is true) If true, the lable is
-display above the drawstop, else below.
+(boolean, required if FreeYPlacement is true) If true, the label is
+displayed above the drawstop, else below.
      </para>
           </listitem>
         </varlistentry>
@@ -7603,8 +7601,7 @@ false) Position label at the specified drawstop column.
           <term>DispSpanDrawstopColToRight</term>
           <listitem>
             <para>
-(boolean, required if FreeXPlacement is false) If true, move label half of the drawstop
-with right.
+(boolean, required if FreeXPlacement is false) If true, move label half of the drawstop to the right.
      </para>
           </listitem>
         </varlistentry>
@@ -7654,7 +7651,7 @@ group label font of the panel.
           <listitem>
             <para>
 (string, default: use internal bitmap according to DispImageNum)
-Specifiy the file name of an image to use as bitmap.  If the bitmap
+Specify the file name of an image to use as bitmap.  If the bitmap
 contains a mask for transparency, it will be used.
      </para>
           </listitem>
@@ -7761,7 +7758,7 @@ rectangle
           <listitem>
             <para>
 (integer 0 - text rectangle width, default: Width) If 0, no text is
-displayed. Otherwise the value specified the maximum line length used
+displayed. Otherwise the value specifies the maximum line length used
 for text breaking.
      </para>
           </listitem>
@@ -7771,7 +7768,7 @@ for text breaking.
     <sect1>
       <title>Image objects</title>
       <para>
-Images objects allow to display an image on a panel. They tile the images,
+Image objects allow to display an image on a panel. They tile the images,
 if it is bigger then image size. It has the following attributes:
       </para>
       <variablelist>
@@ -7779,7 +7776,7 @@ if it is bigger then image size. It has the following attributes:
           <term>Image</term>
           <listitem>
             <para>
-(string, required) Specifiy the file name of an image to use as on
+(string, required) Specifies the file name of an image to use as a
 bitmap. If the bitmap contains a mask for transparency, it will be
 used.
      </para>
@@ -7871,7 +7868,7 @@ locally.
           <term>Displayed</term>
           <listitem>
             <para>
-(boolean, default: false) If true, the sections also includes the GUI
+(boolean, default: false) If true, the section also includes the GUI
 properties for the main panel. Otherwise it is not displayed on the
 main panel.
      </para>
@@ -7974,7 +7971,7 @@ is false, move it a little bit left.  Otherwise ignored.
           <term>DispImageNum</term>
           <listitem>
             <para>
-(integer 1- type dependend, default: see below) Builtin bitmap set to
+(integer 1- type dependent, default: see below) Builtin bitmap set to
 use. GrandOrgue has 6 for drawstops and 5 for pistons. The default is
 3 (piston) or 4 (drawstops) for read-only buttons, otherwise the
 default is 1.
@@ -8263,7 +8260,7 @@ settings depends on the function.
           <listitem>
             <para>
 (integer -1 - 1, default: implementation defined) State of the button
-after pressing GC. -1 means don't change, 0 off and 1 on.
+after pressing GC. -1 means no change, 0 off and 1 on.
      </para>
           </listitem>
         </varlistentry>
@@ -8271,7 +8268,7 @@ after pressing GC. -1 means don't change, 0 off and 1 on.
           <term>StoreInDivisional</term>
           <listitem>
             <para>
-(boolean, default: dependend on various settings) Determines, if the
+(boolean, default: dependent on various settings) Determines, if the
 button should be stored in divisionals without
 <emphasis>FULL</emphasis>.
      </para>
@@ -8281,7 +8278,7 @@ button should be stored in divisionals without
           <term>StoreInGeneral</term>
           <listitem>
             <para>
-(boolean, default: dependend on various settings) Determines, if the
+(boolean, default: dependent on various settings) Determines, if the
 button should be stored in divisionals without
 <emphasis>FULL</emphasis>.
      </para>
@@ -8292,8 +8289,8 @@ button should be stored in divisionals without
     <sect1>
       <title>Coupler objects</title>
       <para>
-Coupler are drawstop objects. The forward key pressed from one manual
-to other manuals/keys. They have the following additions attributes:
+Couplers are drawstop objects. They forward key presses from one manual
+to other manuals/keys. They have the following additional attributes:
       </para>
       <variablelist>
         <varlistentry>
@@ -8309,8 +8306,7 @@ the stops (turn it into a floating manual).
           <term>DestinationManual</term>
           <listitem>
             <para>
-(integer manual number, required it not a unison off coupler) manual
-to forwared key presses too.
+(integer manual number, required if not a unison off coupler) manual to forward key presses to.
      </para>
           </listitem>
         </varlistentry>
@@ -8319,7 +8315,7 @@ to forwared key presses too.
           <listitem>
             <para>
 (integer -24 - 24, required if not a unsion off coupler) specifies the
-keyboard shift between source and destionan manual in term of absolute
+keyboard shift between source and destination manual in terms of absolute
 MIDI note numbers
      </para>
           </listitem>
@@ -8328,8 +8324,7 @@ MIDI note numbers
           <term>CoupleToSubsequentUnisonIntermanualCouplers</term>
           <listitem>
             <para>
-(boolean, required if not a unison off/melody/bass coupler) Triggers
-further inter-manual coupler with a destination key shif of zero.
+(boolean, required if not a unison off/melody/bass coupler) Triggers further inter-manual coupler with a destination key shift of zero.
      </para>
           </listitem>
         </varlistentry>
@@ -8405,7 +8400,7 @@ FirstMIDINoteNumber.
       <title>Switch objects</title>
       <para>
 A switch object is a drawstop objects without any additional
-attributes.
+attributes. It can be used, for example, to trigger stop action noises and key action noises. See the Demo organ and the Kalvtrask organ for examples of its use.
       </para>
     </sect1>
     <sect1>
@@ -8419,7 +8414,7 @@ section or appear in its own section.
           <term>Name</term>
           <listitem>
             <para>
-(string, required) Name of the rank. The name may be presented the
+(string, required) Name of the rank. The name may be presented to the
 user in lists too, therefore it should be descriptive.
      </para>
           </listitem>
@@ -8483,7 +8478,7 @@ that rank.
           <listitem>
             <para>
 (float 1-1024, default: 8) Harmonic number (= 64 / rank size), eg. 2
-2/3 =&gt; 64 / (2 2/3) = 24.
+2/3 =&gt; 64 / (2 2/3) = 24. The harmonic number is used  determining alternative tunings.
      </para>
           </listitem>
         </varlistentry>
@@ -8501,7 +8496,7 @@ temperaments.
           <term>WindchestGroup</term>
           <listitem>
             <para>
-(integer 1 - number of windchests, required) specify the windchest,
+(integer 1 - number of windchests, required) specify the windchest
 on which the pipes of the are placed.
      </para>
           </listitem>
@@ -8537,7 +8532,7 @@ velocity applied to the whole rank. 100 means no change.
           <term>AcceptsRetuning</term>
           <listitem>
             <para>
-(boolean, default: true) Determines, if the rank will be retuned
+(boolean, default: true) Determines if the rank will be retuned
 according to the current temperament. Retuning should be only disabled
 for sound effects.
 	    </para>
@@ -8546,7 +8541,7 @@ for sound effects.
       </variablelist>
       <para>
 A rank section contains the attributes of each of its pipes too.
-The attribute of each pipe are prefixed with
+The attributes of each pipe are prefixed with
 <emphasis>Pipe999</emphasis> (number starting with 1). The supported
 attributes are:
       </para>
@@ -8601,9 +8596,9 @@ that pipe.
           <listitem>
             <para>
 (string, required) Relative path to the sample WAV file of the first
-attack. It contain may be REF:aa:bb:cc too. In that case, it means
-that this pipe is borrowed from manual aa, first rank of stop bb the pipe cc.
-It may contain DUMMY, which defines a not sounding placeholder.
+attack. It may be listed as REF:aa:bb:cc too. In that case, it means
+that this pipe is borrowed from manual aa, first rank of stop bb, the pipe cc.
+It may contain DUMMY, which defines a non-sounding placeholder.
      </para>
           </listitem>
         </varlistentry>
@@ -8611,7 +8606,7 @@ It may contain DUMMY, which defines a not sounding placeholder.
           <term>Pipe999LoadRelease</term>
           <listitem>
             <para>
-(boolean, default: revers of percussive setting) If true, the release
+(boolean, default: reverse of percussive setting) If true, the release
 part is loaded from the first attack sample.
      </para>
           </listitem>
@@ -8620,7 +8615,7 @@ part is loaded from the first attack sample.
           <term>Pipe999AttackVelocity</term>
           <listitem>
             <para>
-(int 0 - 127, default: 0) minium velocity to use this attack sample.
+(int 0 - 127, default: 0) minimum velocity to use this attack sample.
      </para>
           </listitem>
         </varlistentry>
@@ -8640,7 +8635,7 @@ by a wave based tremulant.
           <listitem>
             <para>
 (int -1 - 100000, default: -1) Up to this time value in ms, the
-release sample is choosen. -1 means infinite.
+release sample is chosen. -1 means infinite.
      </para>
           </listitem>
         </varlistentry>
@@ -8649,7 +8644,7 @@ release sample is choosen. -1 means infinite.
           <listitem>
             <para>
 (int 0 - 158760000, default: 0) Allows to override the start of the
-stample. This option is specified in samples.
+sample. This option is specified in samples.
      </para>
           </listitem>
         </varlistentry>
@@ -8736,7 +8731,7 @@ for retuning to other temperaments.
           <term>Pipe999AcceptsRetuning</term>
           <listitem>
             <para>
-(boolean, default: rank setting) Determines, if the pipe will be retuned
+(boolean, default: rank setting) Determines if the pipe will be retuned
 according to the current temperament. Retuning should be only disabled
 for sound effects.
 	    </para>
@@ -8790,7 +8785,7 @@ change.
           <term>Pipe999Attack999LoadRelease</term>
           <listitem>
             <para>
-(boolean, default: revers of percussive setting) If true, the release
+(boolean, default: reverse of percussive setting) If true, the release
 part is loaded.
      </para>
           </listitem>
@@ -8799,7 +8794,7 @@ part is loaded.
           <term>Pipe999Attack999AttackVelocity</term>
           <listitem>
             <para>
-(int 0 - 127, default: 0) minium velocity to use this attack sample.
+(int 0 - 127, default: 0) minimum velocity to use this attack sample.
      </para>
           </listitem>
         </varlistentry>
@@ -8828,7 +8823,7 @@ release sample is choosen. -1 means infinite.
           <listitem>
             <para>
 (int 0 - 158760000, default: 0) Allows to override the start of the
-stample. This option is specified in samples.
+sample. This option is specified in samples.
      </para>
           </listitem>
         </varlistentry>
@@ -8949,7 +8944,7 @@ end. A cross fade requires enough samples before the start of the loop.
     <sect1>
       <title>Stop objects</title>
       <para>
-Stop are drawstop objects. A stop consists of a number of ranks. If
+Stop objects are drawstop objects. A stop consists of a number of ranks. If
 the number of ranks is set to zero, the stop contains one rank, which
 is defined in the stop section - else it references a list of ranks.
 Only the accessible pipes can be triggered from the manual. A stop has
@@ -9037,13 +9032,13 @@ referenced by Rank999FirstPipeNumber.
     <sect1>
       <title>Pushbutton objects</title>
       <para>
-Pushbuttons are buttons without any state. It is displayed as piston.
+Pushbuttons are buttons without any state. It is displayed as a piston.
       </para>
     </sect1>
     <sect1>
       <title>Piston objects</title>
       <para>
-A piston is a pushbutton which trigger other elements. It contains the
+A piston is a pushbutton which triggers other elements. It contains the
 following additional attributes:
       </para>
       <variablelist>
@@ -9080,7 +9075,7 @@ referenced manual or a valid global tremulant number.
     <sect1>
       <title>Tremulant objects</title>
       <para>
-Trelmulants are drawstop objects with the following additions attributes:
+Tremulants are drawstop objects with the following additional attributes:
       </para>
       <variablelist>
         <varlistentry>
@@ -9135,7 +9130,7 @@ Synthesised tremulants have the following attributes:
     <sect1>
       <title>Windchest objects</title>
       <para>
-Windchest objects represent a windchest, on which pipes of ranks are placed.
+Windchest objects represent a windchest on which pipes of ranks are placed.
 It has the following attributes:
       </para>
       <variablelist>
@@ -9143,7 +9138,7 @@ It has the following attributes:
           <term>Name</term>
           <listitem>
             <para>
-(string, default: implementation dependend) Display name of this
+(string, default: implementation dependent) Display name of this
 windchest
      </para>
           </listitem>
@@ -9153,7 +9148,7 @@ windchest
           <listitem>
             <para>
 (integer 0 - enclosure count, required) Number of enclosures, which
-influnce this windchest. The list is specifed by the
+influence this windchest. The list is specified by the
 <emphasis>Enclosure999</emphasis> entries in the windchest section.
      </para>
           </listitem>
@@ -9173,7 +9168,7 @@ influence this windchest. The list is specifed by the
           <listitem>
             <para>
 (integer 1 - enclosure count, required) Number of an enclosure, which
-influence this windchest.
+influences this windchest.
      </para>
           </listitem>
         </varlistentry>
@@ -9181,8 +9176,8 @@ influence this windchest.
           <term>Tremulant999</term>
           <listitem>
             <para>
-(integer 1 - tremulant count, required) Number of an tremulant, which
-influence this windchest.
+(integer 1 - tremulant count, required) Number of a tremulant, which
+influences this windchest.
      </para>
           </listitem>
         </varlistentry>
@@ -9191,7 +9186,7 @@ influence this windchest.
     <sect1>
       <title>Additional panels (old format)</title>
       <para>
-It is possible to define additional panels. The section is call
+It is possible to define additional panels. The section is called
 <emphasis>Panel999</emphasis> with a number starting from 001.  All
 panels use the same layout engine as the main panel, therefore the
 section includes all display metrics attributes. Additionally it
@@ -9475,7 +9470,7 @@ of the label GUI definitions are called
     <sect1>
       <title>Panels (new format)</title>
       <para>
-The section is call
+The section is called
 <emphasis>Panel999</emphasis>. <emphasis>Panel000</emphasis> is the
 main panel. Additional panels start with number 001. The section
 includes the display metrics. Additionally it includes the following
@@ -9625,7 +9620,7 @@ manual.
           <term>Enclosure</term>
           <listitem>
             <para>
-The section contains the GUI attributes of a enclosure. Additionally
+The section contains the GUI attributes of an enclosure. Additionally
 it includes the following attributes:
 	    </para>
 	    <variablelist>
@@ -9671,7 +9666,7 @@ it includes the following attributes:
 		<term>DivisionalCoupler</term>
 		<listitem>
 		  <para>
-(valid divisional couplere number, required) Number of the divisional coupler.
+(valid divisional coupler number, required) Number of the divisional coupler.
 		  </para>
 		</listitem>
 	      </varlistentry>
@@ -9709,7 +9704,7 @@ it includes the following attributes:
 		<term>ReversiblePiston</term>
 		<listitem>
 		  <para>
-(valid reversible pistion number, required) Number of the reversible piston.
+(valid reversible piston number, required) Number of the reversible piston.
 		  </para>
 		</listitem>
 	      </varlistentry>
@@ -9804,7 +9799,7 @@ very similar name that that has been discontinued.
         <itemizedlist>
           <listitem><simpara>The keyboard defines e.g. 45 keys (full compass: 49)</simpara></listitem>
           <listitem><simpara>The first accessible key on the physical keyboard is low E</simpara></listitem>
-          <listitem><simpara>The fist sample (Pipe001) refers to low C (read: press low E, hear low C)</simpara></listitem>
+          <listitem><simpara>The first sample (Pipe001) refers to low C (read: press low E, hear low C)</simpara></listitem>
           <listitem><simpara>The second sample (Pipe002) refers to low F (read: press low F, hear low F)</simpara></listitem>
           <listitem><simpara>The third sample (Pipe003) refers to low D (read: press low F#, hear low D)</simpara></listitem>
           <listitem><simpara>The fourth sample (Pipe004) refers to low G (read: press low G, hear low G)</simpara></listitem>
@@ -9841,7 +9836,7 @@ displays a depressed low C).
         <simpara><emphasis>MIDI mapping on full compass</emphasis></simpara>
         <para>This is the build scheme:
           <itemizedlist>
-            <listitem><simpara>The keybaord defines e.g. 49 keys, full compass</simpara></listitem>
+            <listitem><simpara>The keyboard defines e.g. 49 keys, full compass</simpara></listitem>
             <listitem><simpara>The first accessible key on the physical keyboard is low C</simpara></listitem>
             <listitem><simpara><emphasis>Pipe999</emphasis> entries refer to all pipes starting a low C, as usual</simpara><simpara/></listitem>
             <listitem><simpara>Configure the GUI:</simpara>
