@@ -26,12 +26,12 @@ BuildRequires:  gcc-c++
 BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  cmake
 %if 0%{?suse_version} >= 1110 
-BuildRequires:  wxWidgets-devel
+BuildRequires:  wxWidgets-3_0-devel
 BuildRequires:  gettext-tools
 BuildRequires:  docbook-xsl-stylesheets 
 BuildRequires:  update-desktop-files
 %else
-BuildRequires:  wxGTK-devel
+BuildRequires:  wxGTK3-devel
 BuildRequires:  gettext
 BuildRequires:  docbook-style-xsl
 %endif
@@ -73,7 +73,7 @@ This package contains the demo sampleset for GrandOrgue
 %setup -q
 
 %build
-cmake -DUNICODE=1 \
+PATH=%{_libexecdir}/wxGTK3:$PATH cmake -DUNICODE=1 \
       -DCMAKE_INSTALL_PREFIX=%{_prefix} \
       -DDOC_INSTALL_DIR=%{_docdir} \
       -DLIB=%{_lib} \
