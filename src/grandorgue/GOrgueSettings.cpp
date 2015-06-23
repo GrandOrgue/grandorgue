@@ -189,6 +189,8 @@ void GOrgueSettings::Load()
 		unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), wxT("Count"), 0, 200, false, 0);
 		for(unsigned i = 0; i < count; i++)
 			m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), false, wxString::Format(_("Audio group %d"), i + 1)));
+		if (!m_AudioGroups.size())
+			m_AudioGroups.push_back(_("Default audio group"));
 		
 		m_AudioDeviceConfig.clear();
 		count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxT("Count"), 0, 200, false, 0);
