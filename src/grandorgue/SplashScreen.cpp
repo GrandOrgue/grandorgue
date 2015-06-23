@@ -69,6 +69,7 @@ GOrgueSplash::GOrgueSplash(int has_timeout, wxWindow *parent, wxWindowID id) :
 	wxDialog(parent, id, wxEmptyString, wxPoint(0, 0), wxSize(100, 100), wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP),
 	m_Timer(this, GORGUE_SPLASH_TIMER_ID)
 {
+	SetExtraStyle(GetExtraStyle() | wxWS_EX_TRANSIENT);
 	wxBitmap bitmap = GetImage_Splash();
 	DrawText(bitmap);
 	m_Image = new GOrgueSplashBitmap(this, wxID_ANY, bitmap);
