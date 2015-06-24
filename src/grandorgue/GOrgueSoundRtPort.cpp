@@ -75,7 +75,7 @@ void GOrgueSoundRtPort::Open()
 
 		RtAudio::StreamOptions aOptions;
 		aOptions.flags = RTAUDIO_MINIMIZE_LATENCY;
-		aOptions.numberOfBuffers = 0;
+		aOptions.numberOfBuffers = (m_Latency * m_SampleRate) / (m_SamplesPerBuffer * 1000);
 		aOptions.streamName = "GrandOrgue";
 
 		unsigned samples_per_buffer = m_SamplesPerBuffer;
