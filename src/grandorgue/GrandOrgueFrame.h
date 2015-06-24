@@ -95,6 +95,7 @@ private:
 	void OnAudioPanic(wxCommandEvent& event);
 	void OnAudioRecord(wxCommandEvent& event);
 	void OnAudioMemset(wxCommandEvent& event);
+	void OnAudioState(wxCommandEvent& event);
 	void OnAudioSettings(wxCommandEvent& event);
 	void OnMidiRecord(wxCommandEvent& event);
 	void OnMidiPlay(wxCommandEvent& event);

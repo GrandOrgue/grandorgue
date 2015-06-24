@@ -39,6 +39,7 @@ protected:
 	unsigned m_SamplesPerBuffer;
 	unsigned m_SampleRate;
 	unsigned m_Latency;
+	int m_ActualLatency;
 
 	void SetActualLatency(double latency);
 	bool AudioCallback(float* outputBuffer, unsigned int nFrames);
@@ -56,6 +57,8 @@ public:
 
 	static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
 	static std::vector<GOrgueSoundDevInfo> getDeviceList();
+
+	wxString getPortState();
 };
 
 #endif

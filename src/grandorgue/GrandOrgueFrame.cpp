@@ -80,6 +80,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU(ID_AUDIO_PANIC, GOrgueFrame::OnAudioPanic)
 	EVT_MENU(ID_AUDIO_RECORD, GOrgueFrame::OnAudioRecord)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
+	EVT_MENU(ID_AUDIO_STATE, GOrgueFrame::OnAudioState)
 	EVT_MENU(ID_AUDIO_SETTINGS, GOrgueFrame::OnAudioSettings)
 	EVT_MENU(ID_MIDI_RECORD, GOrgueFrame::OnMidiRecord)
 	EVT_MENU(ID_MIDI_PLAY, GOrgueFrame::OnMidiPlay)
@@ -188,13 +189,14 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_audio_menu->Append(ID_MIDI_LIST, _("M&idi Objects"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->AppendSeparator();
 	m_audio_menu->Append(ID_AUDIO_SETTINGS, _("Audio/Midi &Settings"), wxEmptyString, wxITEM_NORMAL);
+	m_audio_menu->Append(ID_AUDIO_STATE, _("&Sound Output State"), wxEmptyString, wxITEM_NORMAL);
 	m_audio_menu->AppendSeparator();
 	m_audio_menu->Append(ID_AUDIO_RECORD, _("&Record\tCtrl+R"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
 	m_audio_menu->Append(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->AppendSeparator();
-	m_audio_menu->Append(ID_MIDI_RECORD, _("&Record MIDI\tCtrl+M"), wxEmptyString, wxITEM_CHECK);
-	m_audio_menu->Append(ID_MIDI_PLAY, _("&Play MIDI\tCtrl+P"), wxEmptyString, wxITEM_CHECK);
+	m_audio_menu->Append(ID_MIDI_RECORD, _("R&ecord MIDI\tCtrl+M"), wxEmptyString, wxITEM_CHECK);
+	m_audio_menu->Append(ID_MIDI_PLAY, _("Play &MIDI\tCtrl+P"), wxEmptyString, wxITEM_CHECK);
 	
 	
 	wxMenu *help_menu = new wxMenu;
@@ -806,6 +808,11 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 	SettingsDialog dialog(this, m_Sound);
 	wxLogDebug(_("success"));
 	dialog.ShowModal();
+}
+
+void GOrgueFrame::OnAudioState(wxCommandEvent& WXUNUSED(event))
+{
+	wxMessageBox(m_Sound.getState(), _("Sound output"), wxOK, this);
 }
 
 void GOrgueFrame::OnEditOrgan(wxCommandEvent& event)

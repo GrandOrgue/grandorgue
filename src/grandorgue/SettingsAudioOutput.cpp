@@ -261,12 +261,7 @@ wxTreeItemId SettingsAudioOutput::AddGroupNode(const wxTreeItemId& channel, cons
 void SettingsAudioOutput::UpdateDevice(const wxTreeItemId& dev)
 {
 	AudioItemData* data = GetObject(dev);
-	wxString text;
-	int latency = m_Sound.GetSettings().GetAudioDeviceActualLatency(data->name);
-	if (latency > 0)
-		text = wxString::Format(_("Device: %s [%d ms requested](%d ms)"), data->name.c_str(), data->latency, latency);
-	else
-		text = wxString::Format(_("Device: %s [%d ms requested]"), data->name.c_str(), data->latency);
+	wxString text = wxString::Format(_("Device: %s [%d ms requested]"), data->name.c_str(), data->latency);
 	m_AudioOutput->SetItemText(dev, text);
 }
 

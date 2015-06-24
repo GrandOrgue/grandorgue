@@ -23,8 +23,8 @@
 
 #include "GOrgueSoundRtPort.h"
 #include "GOrgueSoundPortaudioPort.h"
-#include "GOrgueSettings.h"
 #include "GOrgueSound.h"
+#include <wx/intl.h>
 
 GOrgueSoundPort::GOrgueSoundPort(GOrgueSound* sound, wxString name) :
 	m_Sound(sound),
@@ -34,8 +34,8 @@ GOrgueSoundPort::GOrgueSoundPort(GOrgueSound* sound, wxString name) :
 	m_Channels(0),
 	m_SamplesPerBuffer(0),
 	m_SampleRate(0),
-	m_Latency(0)
-
+	m_Latency(0),
+	m_ActualLatency(-1)
 {
 }
 
@@ -58,7 +58,7 @@ void GOrgueSoundPort::SetActualLatency(double latency)
 		latency = m_SamplesPerBuffer / (double)m_SampleRate;
 	if (latency < 2 * m_SamplesPerBuffer / (double)m_SampleRate)
 		latency += m_SamplesPerBuffer / (double)m_SampleRate;
-	m_Sound->GetSettings().SetAudioDeviceActualLatency(m_Name, (int)(latency * 1000));
+	m_ActualLatency = latency * 1000;
 }
 
 bool GOrgueSoundPort::AudioCallback(float* outputBuffer, unsigned int nFrames)
@@ -87,4 +87,12 @@ std::vector<GOrgueSoundDevInfo> GOrgueSoundPort::getDeviceList()
 	GOrgueSoundPortaudioPort::addDevices(result);
 	GOrgueSoundRtPort::addDevices(result);
 	return result;
+}
+
+wxString GOrgueSoundPort::getPortState()
+{
+	if (m_ActualLatency < 0)
+		return wxString::Format(_("%s: unknown"), GetName().c_str());
+	else
+		return wxString::Format(_("%s: %d ms"), GetName().c_str(), m_ActualLatency);
 }
