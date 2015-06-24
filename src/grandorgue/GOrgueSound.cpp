@@ -159,7 +159,7 @@ bool GOrgueSound::OpenSound()
 			if (!m_AudioOutputs[i].port)
 				throw wxString::Format(_("Output device %s not found - no sound output will occure"), name.c_str());
 
-			m_AudioOutputs[i].port->Init(audio_config[i].channels, GetEngine().GetSampleRate(), m_SamplesPerBuffer, i);
+			m_AudioOutputs[i].port->Init(audio_config[i].channels, GetEngine().GetSampleRate(), m_SamplesPerBuffer, audio_config[i].desired_latency, i);
 		}
 
 		OpenMidi();

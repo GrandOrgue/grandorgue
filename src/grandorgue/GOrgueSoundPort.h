@@ -47,7 +47,7 @@ public:
 	GOrgueSoundPort(GOrgueSound* sound, wxString name);
 	virtual ~GOrgueSoundPort();
 
-	void Init(unsigned channels, unsigned sample_rate, unsigned samples_per_buffer, unsigned index);
+	void Init(unsigned channels, unsigned sample_rate, unsigned samples_per_buffer, unsigned latency, unsigned index);
 	virtual void Open() = 0;
 	virtual void StartStream() = 0;
 	virtual void Close() = 0;

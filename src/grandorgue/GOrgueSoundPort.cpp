@@ -43,13 +43,13 @@ GOrgueSoundPort::~GOrgueSoundPort()
 {
 }
 
-void GOrgueSoundPort::Init(unsigned channels, unsigned sample_rate, unsigned samples_per_buffer, unsigned index)
+void GOrgueSoundPort::Init(unsigned channels, unsigned sample_rate, unsigned samples_per_buffer, unsigned latency, unsigned index)
 {
 	m_Index = index;
 	m_Channels = channels;
 	m_SampleRate = sample_rate;
 	m_SamplesPerBuffer = samples_per_buffer;
-	m_Latency = m_Sound->GetSettings().GetAudioDeviceLatency(m_Name);;
+	m_Latency = latency;
 }
 
 void GOrgueSoundPort::SetActualLatency(double latency)
