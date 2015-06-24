@@ -199,7 +199,7 @@ void GOrgueSettings::Load()
 			GOAudioDeviceConfig conf;
 			conf.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dName"), i + 1));
 			conf.channels = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dChannelCount"), i + 1), 0, 200);
-			conf.desired_latency = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dLatency"), i + 1), 1, 999, false, 50);
+			conf.desired_latency = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dLatency"), i + 1), 0, 999, false, 50);
 			conf.scale_factors.resize(conf.channels);
 			for(unsigned j = 0; j < conf.channels; j++)
 			{
