@@ -500,7 +500,7 @@ void SettingsAudioOutput::OnOutputProperties(wxCommandEvent& event)
 	if (data && data->type == AudioItemData::AUDIO_NODE)
 	{
 		int latency = data->latency;
-		latency = wxGetNumberFromUser(_("Desired output latency"), _("Desired latency:"), _("Audio device settings"), latency, 1, 999, this);
+		latency = wxGetNumberFromUser(_("Desired output latency"), _("Desired latency:"), _("Audio device settings"), latency, 0, 999, this);
 		if (latency == -1)
 			return;
 		data->latency = latency;
