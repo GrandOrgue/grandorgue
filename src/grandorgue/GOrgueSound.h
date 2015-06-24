@@ -117,6 +117,8 @@ public:
 	void CloseSound();
 	bool ResetSound(bool force = false);
 
+	wxString getState();
+
 	GOrgueSettings& GetSettings();
 
 	bool IsAudioRecording();

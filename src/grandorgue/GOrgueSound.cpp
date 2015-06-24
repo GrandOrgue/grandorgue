@@ -440,3 +440,13 @@ GOSoundEngine& GOrgueSound::GetEngine()
 {
 	return m_SoundEngine;
 }
+
+wxString GOrgueSound::getState()
+{
+	if (!m_AudioOutputs.size())
+		return _("No sound output occurring");
+	wxString result = wxString::Format(_("%d samples per buffer, %d Hz\n"), m_SamplesPerBuffer, m_SoundEngine.GetSampleRate());
+	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+		result = result + _("\n") + m_AudioOutputs[i].port->getPortState();
+	return result;
+}

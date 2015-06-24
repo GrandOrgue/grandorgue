@@ -32,7 +32,6 @@
 #include "GOrguePath.h"
 #include "GOrgueSettingNumber.cpp"
 #include "GOrgueStdPath.h"
-#include <wx/confbase.h>
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/stdpaths.h>
@@ -85,7 +84,6 @@ const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
 };
 
 GOrgueSettings::GOrgueSettings(wxString instance) :
-	m_Config(*wxConfigBase::Get()),
 	m_InstanceName(instance),
 	m_OrganList(),
 	m_ResourceDir(),
@@ -139,7 +137,6 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	MidiRecorderPath(this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
 	MidiPlayerPath(this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString)
 {
-	m_Config.SetRecordDefaults();
 	m_ConfigFileName = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
 	for(unsigned i = 0; i < GetEventCount(); i++)
 		m_MIDIEvents.push_back(new GOrgueMidiReceiver(NULL, m_MIDISettings[i].type));
@@ -338,16 +335,6 @@ GOrgueMidiReceiver* GOrgueSettings::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsig
 const wxString GOrgueSettings::GetResourceDirectory()
 {
 	return m_ResourceDir.c_str();
-}
-
-int GOrgueSettings::GetAudioDeviceActualLatency(wxString device)
-{
-	return m_Config.Read(wxT("Devices/Sound/ActualLatency/") + device, -1L);
-}
-
-void GOrgueSettings::SetAudioDeviceActualLatency(wxString device, unsigned latency)
-{
-	m_Config.Write(wxT("Devices/Sound/ActualLatency/") + device, (long) latency);
 }
 
 ptr_vector<GOrgueOrgan>& GOrgueSettings::GetOrganList()
@@ -569,6 +556,4 @@ void GOrgueSettings::Flush()
 	}
 	if (!GORenameFile(tmp_name, m_ConfigFileName))
 		return;
-
-	m_Config.Flush();
 }

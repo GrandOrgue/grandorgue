@@ -27,7 +27,6 @@
 #include "GOrgueStdPath.h"
 #include "GrandOrgueDef.h"
 #include "GrandOrgueFrame.h"
-#include <wx/config.h>
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
 #include <wx/image.h>
@@ -124,8 +123,6 @@ bool GOrgueApp::OnInit()
 
 	if (!wxApp::OnInit())
 		return false;
-
-	wxConfigBase::Set(new wxConfig(GetAppName() + m_InstanceName));
 
 	m_Settings = new GOrgueSettings(m_InstanceName);
 	m_Settings->Load();

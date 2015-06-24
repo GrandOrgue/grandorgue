@@ -38,8 +38,6 @@
 #include <map>
 #include <vector>
 
-class wxConfigBase;
-
 typedef struct
 {
 	wxString name;
@@ -65,7 +63,6 @@ typedef struct
 
 class GOrgueSettings : public GOrgueSettingStore {
 private:
-	wxConfigBase& m_Config;
 	wxString m_InstanceName;
 	wxString m_ConfigFileName;
 	ptr_vector<GOrgueOrgan> m_OrganList;
@@ -166,9 +163,6 @@ public:
 	GOrgueMidiReceiver* GetMidiEvent(unsigned index);
 	GOrgueMidiReceiver* FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
 	
-	int GetAudioDeviceActualLatency(wxString device);
-	void SetAudioDeviceActualLatency(wxString device, unsigned latency);
-
 	bool GetMidiInState(wxString device);
 	void SetMidiInState(wxString device, bool enabled);
 	unsigned GetMidiInDeviceChannelShift(wxString device);
