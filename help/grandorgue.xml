@@ -864,7 +864,7 @@ listens for that event coming from any selected input device (in the <link
         </varlistentry>
         <varlistentry>
           <term>New</term>
-          <listitem><simpara>This buttow allows to add a new event to the list of received events. A blank form is displayed with an incremented event number.</simpara></listitem>
+          <listitem><simpara>This button allows to add a new event to the list of received events. A blank form is displayed with an incremented event number.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Delete</term>
@@ -5180,7 +5180,7 @@ This section will be populated once questions become frequently asked.
     <sect1>
       <title>General information</title>
       <para>
-It is an text file in ISO-8859-1 encoding. The standard extension is
+It is a text file in ISO-8859-1 encoding. The standard extension is
 <emphasis>.organ</emphasis>.
       </para>
       <para>
@@ -7108,11 +7108,11 @@ else it isturned on.
       <title>Manual objects</title>
       <para>
 A manual is associated with a number of stops, tremulants, divisionals 
-and coupler. The accessible range can be played via MIDI, the rest of 
-the logical keys can only be triggered by (octave) coupler. Best practise 
-is to specify the visible manuals in the order of appearance, lowest go 
+and couplers. The accessible range can be played via MIDI, the rest of
+the logical keys can only be triggered by (octave) couplers. Best practise
+is to specify the visible manuals in the order of appearance, lowest
 first. Invisible manuals and those used for special effects should be 
-specified after the visible ones. Manual objects contains the following 
+specified after the visible ones. Manual objects contain the following
 non-gui attributes:
       </para>
       <variablelist>
@@ -7164,9 +7164,9 @@ usable key
             <para>
 (integer 0 - 200, default: 0) This number is used while building the
 initial MIDI configuration to map the manual object to what MIDI
-device the the user has set for respective pedal/manual. 0 means no 
+device the the user has set for the respective pedal/manual. 0 means no
 association. 1 maps to pedal, 2 to first manual, 3 to second manual etc. 
-Please note, that the GUI only allows the association of the first few manuals.
+NOTE: the GUI only allows the association of the first few manuals.
 Second touch manuals can be set to the same number as the main manual as the
 user then only has to configure the low velocity to make it work.
      </para>
@@ -7369,7 +7369,7 @@ of the next key.
           <term>Offset_<emphasis>KEYTYPE</emphasis></term>
           <listitem>
             <para>
-(integer -500 - 500, default: implementation dependend) This value is
+(integer -500 - 500, default: implementation dependent) This value
 can be used to adjust the display of the current key, eg. to place a
 sharp key overlapped with the previous key.
      </para>
@@ -7857,9 +7857,9 @@ is based on their function. They share the following common properties:
           <term>Name</term>
           <listitem>
             <para>
-(string, required) Name of the object. The name may be presented the
+(string, required) Name of the object. The name may be presented to the
 user in lists too, therefore it should be descriptive.  If a GUI
-representations requires a shorter name, please override this value
+representation requires a shorter name, please override this value
 locally.
      </para>
           </listitem>
@@ -7954,7 +7954,7 @@ control label font of the panel.
           <listitem>
             <para>
 (string, default: Name of the button) Content of the text label. You
-should set it, if you need to display a shorter string on the label.
+should edit it, if you need to display a shorter string on the label.
      </para>
           </listitem>
         </varlistentry>
@@ -8191,8 +8191,8 @@ rectangle
           <term>TextBreakWidth</term>
           <listitem>
             <para>
-(integer 0 - text rectangle width, default: a little bit smaller than
-Width) If 0, no text is displayed. Otherwise the value specified the
+(integer 0 - text rectangle width, default: slightly smaller than
+Width) If 0, no text is displayed. Otherwise the value specifies the
 maximum line length used for text breaking.
      </para>
           </listitem>
@@ -8424,7 +8424,7 @@ user in lists too, therefore it should be descriptive.
           <listitem>
             <para>
 (integer 0-256, if the rank is part of a stop section, the default
-value is derived from the associated manuals else required) Midi note
+value is derived from the associated manuals. Otherwise required) Midi note
 number of the first pipe
      </para>
           </listitem>
@@ -8623,10 +8623,10 @@ part is loaded from the first attack sample.
           <term>Pipe999IsTremulant</term>
           <listitem>
             <para>
-(int -1 - 1, default: -1) 1 means, that is used, if the associated
-wave based tremulant is on.  0 means, that it is played, if the
-associated wave based tremulant is off. -1 means, that it not affected
-by a wave based tremulant.
+(int -1 - 1, default: -1) 1 means, that it is played, if the associated
+wave-based tremulant is on.  0 means, that it is played, if the
+associated wave-based tremulant is off. -1 means, that it is not affected
+by a wave-based tremulant.
      </para>
           </listitem>
         </varlistentry>
@@ -8802,10 +8802,10 @@ part is loaded.
           <term>Pipe999Attack999IsTremulant</term>
           <listitem>
             <para>
-(int -1 - 1, default: -1) 1 means, that is used, if the associated
-wave based tremulant is on.  0 means, that it is played, if the
-associated wave based tremulant is off. -1 means, that it not affected
-by a wave based tremulant.
+(int -1 - 1, default: -1) 1 means, that it is played, if the associated
+wave-based tremulant is on.  0 means, that it is played, if the
+associated wave-based tremulant is off. -1 means, that it not affected
+by a wave-based tremulant.
      </para>
           </listitem>
         </varlistentry>
@@ -8895,10 +8895,10 @@ file. This option is specified in samples.
           <term>Pipe999Release999IsTremulant</term>
           <listitem>
             <para>
-(int -1 - 1, default: -1) 1 means, that is used, if the associated
-wave based tremulant is on.  0 means, that it is played, if the
-associated wave based tremulant is off. -1 means, that it not affected
-by a wave based tremulant.
+(int -1 - 1, default: -1) 1 means, that it is played, if the associated
+wave-based tremulant is on.  0 means, that it is played, if the
+associated wave-based tremulant is off. -1 means, that it not affected
+by a wave-based tremulant.
      </para>
           </listitem>
         </varlistentry>
@@ -9826,7 +9826,7 @@ linkend="midikeyentry">MIDIKey999</link>) and below.
         <simpara>
 Use this setting to simulate a short octave keyboard when the Organ Definition
 File only provides a full compass keyboard. GrandOrgue renders sound as if the
-keyboard were fit with a short octave, but the visual feedback is that of a
+keyboard were fitted with a short octave, but the visual feedback is that of a
 full compass keyboard (e.g. press low E and the keyboard image in the GUI
 displays a depressed low C).
         </simpara>
