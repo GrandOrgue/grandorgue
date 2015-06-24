@@ -51,6 +51,7 @@ typedef struct
 {
 	wxString name;
 	unsigned channels;
+	unsigned desired_latency;
 	std::vector< std::vector<GOAudioGroupOutputConfig> > scale_factors;
 } GOAudioDeviceConfig;
 
@@ -165,8 +166,6 @@ public:
 	GOrgueMidiReceiver* GetMidiEvent(unsigned index);
 	GOrgueMidiReceiver* FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
 	
-	unsigned GetAudioDeviceLatency(wxString device);
-	void SetAudioDeviceLatency(wxString device, unsigned latency);
 	int GetAudioDeviceActualLatency(wxString device);
 	void SetAudioDeviceActualLatency(wxString device, unsigned latency);
 

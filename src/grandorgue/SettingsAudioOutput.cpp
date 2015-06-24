@@ -41,15 +41,17 @@ public:
 		type = ROOT_NODE;
 		name = wxEmptyString;
 		channel = 0;
+		latency = 0;
 		left = false;
 		volume = -121;
 	}
 
-	AudioItemData(const wxString& device_name)
+	AudioItemData(const wxString& device_name, unsigned desired_latency)
 	{
 		type = AUDIO_NODE;
 		name = device_name;
 		channel = 0;
+		latency = desired_latency;
 		left = false;
 		volume = -121;
 	}
@@ -59,6 +61,7 @@ public:
 		type = CHANNEL_NODE;
 		name = wxEmptyString;
 		channel = ch;
+		latency = 0;
 		left = false;
 		volume = -121;
 	}
@@ -68,6 +71,7 @@ public:
 		type = GROUP_NODE;
 		name = group_name;
 		channel = 0;
+		latency = 0;
 		left = left_channel;
 		volume = vol;
 	}
@@ -75,6 +79,7 @@ public:
 	node_type type;
 	wxString name;
 	unsigned channel;
+	unsigned latency;
 	bool left;
 	float volume;
 };
@@ -121,7 +126,7 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	std::vector<GOAudioDeviceConfig> audio_config = m_Sound.GetSettings().GetAudioDeviceConfig();
 	for(unsigned i = 0; i < audio_config.size(); i++)
 	{
-		wxTreeItemId audio = AddDeviceNode(audio_config[i].name);
+		wxTreeItemId audio = AddDeviceNode(audio_config[i].name, audio_config[i].desired_latency);
 		for(unsigned j = 0; j < audio_config[i].channels; j++)
 		{
 			wxTreeItemId channel = AddChannelNode(audio, j);
@@ -211,19 +216,19 @@ wxTreeItemId SettingsAudioOutput::GetGroupNode(const wxTreeItemId& channel, cons
 
 wxTreeItemId SettingsAudioOutput::AddDeviceNode(wxString name)
 {
+	return AddDeviceNode(name, 50);
+}
+
+wxTreeItemId SettingsAudioOutput::AddDeviceNode(wxString name, unsigned desired_latency)
+{
 	wxTreeItemId current;
 	if (name == wxEmptyString)
 		name = m_Sound.GetDefaultAudioDevice();
 	current = GetDeviceNode(name);
 	if (current.IsOk())
 		return current;
-	wxString text;
-	int latency = m_Sound.GetSettings().GetAudioDeviceActualLatency(name);
-	if (latency > 0)
-		text = wxString::Format(_("Device: %s (%d ms)"), name.c_str(), latency);
-	else
-		text = wxString::Format(_("Device: %s"), name.c_str());
-	current = m_AudioOutput->AppendItem(m_AudioOutput->GetRootItem(), text, -1, -1, new AudioItemData(name));
+	current = m_AudioOutput->AppendItem(m_AudioOutput->GetRootItem(), wxEmptyString, -1, -1, new AudioItemData(name, desired_latency));
+	UpdateDevice(current);
 	m_AudioOutput->Expand(current);
 	return current;
 }
@@ -251,6 +256,18 @@ wxTreeItemId SettingsAudioOutput::AddGroupNode(const wxTreeItemId& channel, cons
 	m_AudioOutput->Expand(channel);
 	UpdateVolume(current, -121);
 	return current;
+}
+
+void SettingsAudioOutput::UpdateDevice(const wxTreeItemId& dev)
+{
+	AudioItemData* data = GetObject(dev);
+	wxString text;
+	int latency = m_Sound.GetSettings().GetAudioDeviceActualLatency(data->name);
+	if (latency > 0)
+		text = wxString::Format(_("Device: %s [%d ms requested](%d ms)"), data->name.c_str(), data->latency, latency);
+	else
+		text = wxString::Format(_("Device: %s [%d ms requested]"), data->name.c_str(), data->latency);
+	m_AudioOutput->SetItemText(dev, text);
 }
 
 void SettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
@@ -455,13 +472,7 @@ void SettingsAudioOutput::OnOutputChange(wxCommandEvent& event)
 		}
 		data->name = devs[index];
 
-		wxString text;
-		int latency = m_Sound.GetSettings().GetAudioDeviceActualLatency(data->name);
-		if (latency > 0)
-			text = wxString::Format(_("Device: %s (%d ms)"), data->name.c_str(), latency);
-		else
-			text = wxString::Format(_("Device: %s"), data->name.c_str());
-		m_AudioOutput->SetItemText(selection, text);
+		UpdateDevice(selection);
 	}
 	else if (data && data->type == AudioItemData::GROUP_NODE)
 	{
@@ -488,11 +499,12 @@ void SettingsAudioOutput::OnOutputProperties(wxCommandEvent& event)
 	AudioItemData* data = GetObject(selection);
 	if (data && data->type == AudioItemData::AUDIO_NODE)
 	{
-		int latency = m_Sound.GetSettings().GetAudioDeviceLatency(data->name);
+		int latency = data->latency;
 		latency = wxGetNumberFromUser(_("Desired output latency"), _("Desired latency:"), _("Audio device settings"), latency, 1, 999, this);
 		if (latency == -1)
 			return;
-		m_Sound.GetSettings().SetAudioDeviceLatency(data->name, latency);
+		data->latency = latency;
+		UpdateDevice(selection);
 	}
 	else if (data && data->type == AudioItemData::GROUP_NODE)
 	{
@@ -563,6 +575,7 @@ void SettingsAudioOutput::Save()
 	{
 		GOAudioDeviceConfig conf;
 		conf.name = ((AudioItemData*)m_AudioOutput->GetItemData(audio))->name;
+		conf.desired_latency = ((AudioItemData*)m_AudioOutput->GetItemData(audio))->latency;
 		conf.channels = m_AudioOutput->GetChildrenCount(audio, false);
 		conf.scale_factors.resize(conf.channels);
 

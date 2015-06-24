@@ -199,6 +199,7 @@ void GOrgueSettings::Load()
 			GOAudioDeviceConfig conf;
 			conf.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dName"), i + 1));
 			conf.channels = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dChannelCount"), i + 1), 0, 200);
+			conf.desired_latency = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dLatency"), i + 1), 1, 999, false, 50);
 			conf.scale_factors.resize(conf.channels);
 			for(unsigned j = 0; j < conf.channels; j++)
 			{
@@ -337,16 +338,6 @@ GOrgueMidiReceiver* GOrgueSettings::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsig
 const wxString GOrgueSettings::GetResourceDirectory()
 {
 	return m_ResourceDir.c_str();
-}
-
-unsigned GOrgueSettings::GetAudioDeviceLatency(wxString device)
-{
-	return m_Config.Read(wxT("Devices/Sound/") + device, 50L);
-}
-
-void GOrgueSettings::SetAudioDeviceLatency(wxString device, unsigned latency)
-{
-	m_Config.Write(wxT("Devices/Sound/") + device, (long) latency);
 }
 
 int GOrgueSettings::GetAudioDeviceActualLatency(wxString device)
@@ -527,6 +518,7 @@ void GOrgueSettings::Flush()
 	{
 		cfg.WriteString(wxT("AudioDevices"), wxString::Format(wxT("Device%03dName"), i + 1), m_AudioDeviceConfig[i].name);
 		cfg.WriteInteger(wxT("AudioDevices"), wxString::Format(wxT("Device%03dChannelCount"), i + 1), m_AudioDeviceConfig[i].channels);
+		cfg.WriteInteger(wxT("AudioDevices"), wxString::Format(wxT("Device%03dLatency"), i + 1), m_AudioDeviceConfig[i].desired_latency);
 		for(unsigned j = 0; j < m_AudioDeviceConfig[i].channels; j++)
 		{
 			wxString prefix = wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);

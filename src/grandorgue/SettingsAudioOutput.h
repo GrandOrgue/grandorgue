@@ -62,8 +62,10 @@ private:
 	wxTreeItemId GetGroupNode(const wxTreeItemId& channel, const wxString& name, bool left);
 
 	wxTreeItemId AddDeviceNode(wxString name);
+	wxTreeItemId AddDeviceNode(wxString name, unsigned latency);
 	wxTreeItemId AddChannelNode(const wxTreeItemId& audio, unsigned channel);
 	wxTreeItemId AddGroupNode(const wxTreeItemId& channel, const wxString& name, bool left);
+	void UpdateDevice(const wxTreeItemId& dev);
 	void UpdateVolume(const wxTreeItemId& group, float volume);
 	void UpdateButtons();
 
