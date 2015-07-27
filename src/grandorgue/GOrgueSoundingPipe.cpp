@@ -22,6 +22,7 @@
 #include "GOrgueSoundingPipe.h"
 
 #include "GOrgueConfigReader.h"
+#include "GOrgueHash.h"
 #include "GOrgueLimits.h"
 #include "GOrgueRank.h"
 #include "GOrgueSettings.h"
@@ -203,74 +204,46 @@ bool GOrgueSoundingPipe::SaveCache(GOrgueCacheWriter& cache)
 	return m_SoundProvider.SaveCache(cache);
 }
 
-void GOrgueSoundingPipe::UpdateHash(SHA_CTX& ctx)
+void GOrgueSoundingPipe::UpdateHash(GOrgueHash& hash)
 {
-	unsigned value;
-	wxString filename = m_Filename;
-	SHA1_Update(&ctx, (const wxChar*)filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
-	value = m_PipeConfig.GetEffectiveBitsPerSample();
-	SHA1_Update(&ctx, &value, sizeof(value));
-	value = m_PipeConfig.GetEffectiveCompress();
-	SHA1_Update(&ctx, &value, sizeof(value));
-	value = m_PipeConfig.GetEffectiveChannels();
-	SHA1_Update(&ctx, &value, sizeof(value));
-	value = m_PipeConfig.GetEffectiveLoopLoad();
-	SHA1_Update(&ctx, &value, sizeof(value));
-	value = m_PipeConfig.GetEffectiveAttackLoad();
-	SHA1_Update(&ctx, &value, sizeof(value));
-	value = m_PipeConfig.GetEffectiveReleaseLoad();
-	SHA1_Update(&ctx, &value, sizeof(value));
-	value = m_SampleMidiKeyNumber;
-	SHA1_Update(&ctx, &value, sizeof(value));
-	value = m_CrossfadeLength;
-	SHA1_Update(&ctx, &value, sizeof(value));
+	hash.Update(m_Filename);
+	hash.Update(m_PipeConfig.GetEffectiveBitsPerSample());
+	hash.Update(m_PipeConfig.GetEffectiveCompress());
+	hash.Update(m_PipeConfig.GetEffectiveChannels());
+	hash.Update(m_PipeConfig.GetEffectiveLoopLoad());
+	hash.Update(m_PipeConfig.GetEffectiveAttackLoad());
+	hash.Update(m_PipeConfig.GetEffectiveReleaseLoad());
+	hash.Update(m_SampleMidiKeyNumber);
+	hash.Update(m_CrossfadeLength);
 
-	value = m_AttackInfo.size();
-	SHA1_Update(&ctx, &value, sizeof(value));
+	hash.Update(m_AttackInfo.size());
 	for(unsigned i = 0; i < m_AttackInfo.size(); i++)
 	{
-		filename = m_AttackInfo[i].filename;
-		SHA1_Update(&ctx, (const wxChar*)filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
-		value = m_AttackInfo[i].sample_group;
-		SHA1_Update(&ctx, &value, sizeof(value));
-		value = m_AttackInfo[i].max_playback_time;
-		SHA1_Update(&ctx, &value, sizeof(value));
-		value = m_AttackInfo[i].load_release;
-		SHA1_Update(&ctx, &value, sizeof(value));
-		value = m_AttackInfo[i].percussive;
-		SHA1_Update(&ctx, &value, sizeof(value));
-		value = m_AttackInfo[i].cue_point;
-		SHA1_Update(&ctx, &value, sizeof(value));
-		value = m_AttackInfo[i].loops.size();
-		SHA1_Update(&ctx, &value, sizeof(value));
-		value = m_AttackInfo[i].attack_start;
-		SHA1_Update(&ctx, &value, sizeof(value));
-		value = m_AttackInfo[i].release_end;
-		SHA1_Update(&ctx, &value, sizeof(value));
+		hash.Update(m_AttackInfo[i].filename);
+		hash.Update(m_AttackInfo[i].sample_group);
+		hash.Update(m_AttackInfo[i].max_playback_time);
+		hash.Update(m_AttackInfo[i].load_release);
+		hash.Update(m_AttackInfo[i].percussive);
+		hash.Update(m_AttackInfo[i].cue_point);
+		hash.Update(m_AttackInfo[i].loops.size());
+		hash.Update(m_AttackInfo[i].attack_start);
+		hash.Update(m_AttackInfo[i].release_end);
 		for(unsigned j = 0; j < m_AttackInfo[i].loops.size(); j++)
 		{
-			value = m_AttackInfo[i].loops[j].loop_start;
-			SHA1_Update(&ctx, &value, sizeof(value));
-			value = m_AttackInfo[i].loops[j].loop_end;
-			SHA1_Update(&ctx, &value, sizeof(value));
+			hash.Update(m_AttackInfo[i].loops[j].loop_start);
+			hash.Update(m_AttackInfo[i].loops[j].loop_end);
 		}
 	}
 
-	value = m_ReleaseInfo.size();
-	SHA1_Update(&ctx, &value, sizeof(value));
+	hash.Update(m_ReleaseInfo.size());
 	for(unsigned i = 0; i < m_ReleaseInfo.size(); i++)
 	{
-		filename = m_ReleaseInfo[i].filename;
-		SHA1_Update(&ctx, (const wxChar*)filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
-		value = m_ReleaseInfo[i].sample_group;
-		SHA1_Update(&ctx, &value, sizeof(value));
-		value = m_ReleaseInfo[i].max_playback_time;
-		SHA1_Update(&ctx, &value, sizeof(value));
-		value = m_ReleaseInfo[i].cue_point;
-		SHA1_Update(&ctx, &value, sizeof(value));
-		value = m_ReleaseInfo[i].release_end;
-		SHA1_Update(&ctx, &value, sizeof(value));
-	}
+		hash.Update(m_ReleaseInfo[i].filename);
+		hash.Update(m_ReleaseInfo[i].sample_group);
+		hash.Update(m_ReleaseInfo[i].max_playback_time);
+		hash.Update(m_ReleaseInfo[i].cue_point);
+		hash.Update(m_ReleaseInfo[i].release_end);
+		}
 }
 
 void GOrgueSoundingPipe::Initialize()

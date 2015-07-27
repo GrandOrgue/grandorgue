@@ -23,10 +23,10 @@
 #define GORGUECACHEOBJECT_H
 
 #include <wx/string.h>
-#include "contrib/sha1.h"
 
 class GOrgueCache;
 class GOrgueCacheWriter;
+class GOrgueHash;
 
 class GOrgueCacheObject
 {
@@ -39,7 +39,7 @@ public:
 	virtual void LoadData() = 0;
 	virtual bool LoadCache(GOrgueCache& cache) = 0;
 	virtual bool SaveCache(GOrgueCacheWriter& cache) = 0;
-	virtual void UpdateHash(SHA_CTX& ctx) = 0;
+	virtual void UpdateHash(GOrgueHash& hash) = 0;
 	virtual const wxString& GetLoadTitle() = 0;
 };
 

@@ -302,6 +302,7 @@ GOrgueEventDistributor.cpp
 GOrgueFrameGeneral.cpp
 GOrgueFont.cpp
 GOrgueGeneral.cpp
+GOrgueHash.cpp
 GOrgueKeyConvert.cpp
 GOrgueKeyReceiver.cpp
 GOrgueKeyReceiverData.cpp

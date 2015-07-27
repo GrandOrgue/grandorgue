@@ -120,10 +120,10 @@ void GOrgueEventDistributor::ResolveReferences()
 		m_CacheObjects[i]->Initialize();
 }
 
-void GOrgueEventDistributor::UpdateHash(SHA_CTX& ctx)
+void GOrgueEventDistributor::UpdateHash(GOrgueHash& hash)
 {
 	for (unsigned i = 0; i < m_CacheObjects.size(); i++)
-		m_CacheObjects[i]->UpdateHash(ctx);
+		m_CacheObjects[i]->UpdateHash(hash);
 }
 
 unsigned GOrgueEventDistributor::GetCacheObjectCount()

@@ -19,32 +19,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEREFERENCEPIPE_H
-#define GORGUEREFERENCEPIPE_H
+#ifndef GORGUEHASH_H
+#define GORGUEHASH_H
 
-#include "GOrgueCacheObject.h"
-#include "GOrguePipe.h"
+#include "contrib/sha1.h"
+#include <wx/string.h>
 
-class GOrgueReferencePipe : public GOrguePipe, private GOrgueCacheObject
+typedef struct
+{
+	uint8_t hash[20];
+} GOrgueHashType;
+
+class GOrgueHash
 {
 private:
-	GOrguePipe* m_Reference;
-	unsigned m_ReferenceID;
-	wxString m_Filename;
-
-	void Initialize();
-	void LoadData();
-	bool LoadCache(GOrgueCache& cache);
-	bool SaveCache(GOrgueCacheWriter& cache);
-	void UpdateHash(GOrgueHash& hash);
-	const wxString& GetLoadTitle();
-
-	void Change(unsigned velocity, unsigned old_velocity);
+	SHA_CTX m_ctx;
+	GOrgueHashType m_Hash;
+	bool m_Done;
 
 public:
-	GOrgueReferencePipe(GrandOrgueFile* organfile, GOrgueRank* rank, unsigned midi_key_number);
+	GOrgueHash();
+	~GOrgueHash();
 
-	void Load(GOrgueConfigReader& cfg, wxString group, wxString prefix);
+	const GOrgueHashType& getHash();
+	wxString getStringHash();
+
+	void Update(const void* data, unsigned len);
+	void Update(const wxString& str);
+	void Update(unsigned value);
+	void Update(int value);
+	void Update(size_t value);
 };
 
 #endif

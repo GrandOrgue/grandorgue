@@ -21,11 +21,10 @@
 
 #include "GOrgueConfigFileReader.h"
 
-#include "contrib/sha1.h"
+#include "GOrgueHash.h"
 #include <wx/file.h>
 #include <wx/intl.h>
 #include <wx/log.h>
-#include <wx/utils.h>
 
 GOrgueConfigFileReader::GOrgueConfigFileReader() :
 	m_Entries(),
@@ -74,8 +73,6 @@ wxString GOrgueConfigFileReader::getEntry(wxString group, wxString name)
 
 bool GOrgueConfigFileReader::Read(wxString filename)
 {
-	SHA_CTX ctx;
-	unsigned char hash[20];
 	wxFile file;
 	m_Entries.clear();
 	
@@ -97,12 +94,9 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 		wxLogError(_("Failed to read file '%s'"), filename.c_str());
 		return false;
 	}
-	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, data, length);
-	SHA1_Final(hash, &ctx);
-	m_Hash = wxEmptyString;
-	for(unsigned i = 0; i < 20; i++)
-		m_Hash += wxDecToHex(hash[i]);
+	GOrgueHash hash;
+	hash.Update(data, length);
+	m_Hash = hash.getStringHash();
 
 	wxMBConv* conv;
 	wxCSConv isoConv(wxT("ISO-8859-1"));

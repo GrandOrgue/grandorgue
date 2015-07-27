@@ -22,7 +22,6 @@
 #ifndef GORGUEEVENTDISTRIBUTOR_H
 #define GORGUEEVENTDISTRIBUTOR_H
 
-#include "contrib/sha1.h"
 #include <vector>
 
 class GOrgueCacheObject;
@@ -30,6 +29,7 @@ class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueControlChangedHandler;
 class GOrgueEventHandler;
+class GOrgueHash;
 class GOrgueMidiConfigurator;
 class GOrgueMidiEvent;
 class GOrguePlaybackStateHandler;
@@ -54,7 +54,7 @@ protected:
 	void Save(GOrgueConfigWriter& cfg);
 
 	void ResolveReferences();
-	void UpdateHash(SHA_CTX& ctx);
+	void UpdateHash(GOrgueHash& hash);
 
 	void AbortPlayback();
 	void PreparePlayback();
