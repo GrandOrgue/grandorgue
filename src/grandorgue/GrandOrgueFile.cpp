@@ -47,6 +47,7 @@
 #include "GOrgueEnclosure.h"
 #include "GOrgueEvent.h"
 #include "GOrgueGeneral.h"
+#include "GOrgueHash.h"
 #include "GOrgueLoadThread.h"
 #include "GOrgueManual.h"
 #include "GOrgueMidi.h"
@@ -130,35 +131,23 @@ bool GrandOrgueFile::IsCacheable()
 	return m_Cacheable;
 }
 
-void GrandOrgueFile::GenerateCacheHash(unsigned char hash[20])
+void GrandOrgueFile::GenerateCacheHash(unsigned char hash_value[20])
 {
-	SHA_CTX ctx;
-	int len;
-	SHA1_Init(&ctx);
-	UpdateHash(ctx);
+	GOrgueHash hash;
+	UpdateHash(hash);
+	hash.Update(sizeof(GOAudioSection));
+	hash.Update(sizeof(GOrgueSoundingPipe));
+	hash.Update(sizeof(GOrgueReleaseAlignTable));
+	hash.Update(BLOCK_HISTORY);
+	hash.Update(MAX_READAHEAD);
+	hash.Update(SHORT_LOOP_LENGTH);
+	hash.Update(sizeof(attack_section_info));
+	hash.Update(sizeof(release_section_info));
+	hash.Update(sizeof(audio_start_data_segment));
+	hash.Update(sizeof(audio_end_data_segment));
 
-	len = sizeof(GOAudioSection);
-	SHA1_Update(&ctx, &len, sizeof(len));
-	len = sizeof(GOrgueSoundingPipe);
-	SHA1_Update(&ctx, &len, sizeof(len));
-	len = sizeof(GOrgueReleaseAlignTable);
-	SHA1_Update(&ctx, &len, sizeof(len));
-	len = BLOCK_HISTORY;
-	SHA1_Update(&ctx, &len, sizeof(len));
-	len = MAX_READAHEAD;
-	SHA1_Update(&ctx, &len, sizeof(len));
-	len = SHORT_LOOP_LENGTH;
-	SHA1_Update(&ctx, &len, sizeof(len));
-	len = sizeof(attack_section_info);
-	SHA1_Update(&ctx, &len, sizeof(len));
-	len = sizeof(release_section_info);
-	SHA1_Update(&ctx, &len, sizeof(len));
-	len = sizeof(audio_start_data_segment);
-	SHA1_Update(&ctx, &len, sizeof(len));
-	len = sizeof(audio_end_data_segment);
-	SHA1_Update(&ctx, &len, sizeof(len));
-
-	SHA1_Final(hash, &ctx);
+	GOrgueHashType result = hash.getHash();
+	memcpy(hash_value, result.hash, 20);
 }
 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
@@ -364,19 +353,13 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 wxString GrandOrgueFile::GenerateSettingFileName()
 {
-	SHA_CTX ctx;
-	unsigned char hash[20];
 	wxFileName odf(m_odf);
 	odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
 	wxString filename = odf.GetFullPath();
 
-	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, (const wxChar*)filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
-	SHA1_Final(hash, &ctx);
-       
-	filename = wxEmptyString;
-	for(unsigned i = 0; i < 20; i++)
-		filename += wxDecToHex(hash[i]);
+	GOrgueHash hash;
+	hash.Update(filename);
+	filename = hash.getStringHash();
 
 	filename = m_Settings.UserSettingPath()  + wxFileName::GetPathSeparator() + 
 		filename + wxString::Format(wxT("-%d.cmb"), m_Settings.Preset());
@@ -386,19 +369,13 @@ wxString GrandOrgueFile::GenerateSettingFileName()
 
 wxString GrandOrgueFile::GenerateCacheFileName()
 {
-	SHA_CTX ctx;
-	unsigned char hash[20];
 	wxFileName odf(m_odf);
 	odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
 	wxString filename = odf.GetFullPath();
 
-	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, (const wxChar*)filename.c_str(), (filename.Length() + 1) * sizeof(wxChar));
-	SHA1_Final(hash, &ctx);
-
-	filename = wxEmptyString;
-	for(unsigned i = 0; i < 20; i++)
-		filename += wxDecToHex(hash[i]);
+	GOrgueHash hash;
+	hash.Update(filename);
+	filename = hash.getStringHash();
 
 	filename = m_Settings.UserCachePath()  + wxFileName::GetPathSeparator() + 
 		filename + wxString::Format(wxT("-%d.cache"), m_Settings.Preset());

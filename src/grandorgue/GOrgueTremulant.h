@@ -55,7 +55,7 @@ private:
 	void LoadData();
 	bool LoadCache(GOrgueCache& cache);
 	bool SaveCache(GOrgueCacheWriter& cache);
-	void UpdateHash(SHA_CTX& ctx);
+	void UpdateHash(GOrgueHash& hash);
 	const wxString& GetLoadTitle();
 
 	void AbortPlayback();

@@ -75,7 +75,7 @@ bool GOrgueReferencePipe::SaveCache(GOrgueCacheWriter& cache)
 	return true;
 }
 
-void GOrgueReferencePipe::UpdateHash(SHA_CTX& ctx)
+void GOrgueReferencePipe::UpdateHash(GOrgueHash& hash)
 {
 }
 

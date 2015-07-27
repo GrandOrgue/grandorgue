@@ -71,7 +71,7 @@ bool GOrgueTremulant::SaveCache(GOrgueCacheWriter& cache)
 	return true;
 }
 
-void GOrgueTremulant::UpdateHash(SHA_CTX& ctx)
+void GOrgueTremulant::UpdateHash(GOrgueHash& ctx)
 {
 }
 
