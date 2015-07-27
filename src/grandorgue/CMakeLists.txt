@@ -303,6 +303,7 @@ GOrgueFrameGeneral.cpp
 GOrgueFont.cpp
 GOrgueGeneral.cpp
 GOrgueHash.cpp
+GOrgueInvalidFile.cpp
 GOrgueKeyConvert.cpp
 GOrgueKeyReceiver.cpp
 GOrgueKeyReceiverData.cpp
@@ -344,6 +345,7 @@ GOrgueRank.cpp
 GOrgueReferencePipe.cpp
 GOrgueReleaseAlignTable.cpp
 GOrgueRtHelpers.cpp
+GOrgueStandardFile.cpp
 GOrgueSetter.cpp
 GOrgueSetterButton.cpp
 GOrgueSetting.cpp
