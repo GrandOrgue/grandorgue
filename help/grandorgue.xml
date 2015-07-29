@@ -4937,6 +4937,69 @@ line may occur. The same applies for the MEL coupler and the highest line.
       </simpara></note> 
     </sect1>
     <sect1>
+      <title>Regular, Scope and Scoped, Full</title>
+        <mediaobject><imageobject><imagedata scalefit="1" fileref="regular_scope_scoped_full.png"/></imageobject></mediaobject>
+      <para>
+These features are shared by the <emphasis>Crescendo</emphasis>,
+<emphasis>Divisionals</emphasis>, <emphasis>Generals</emphasis> and
+<emphasis>Combination Setter</emphasis> panels and are documented once here.
+      </para>
+      <sect2>
+        <title>Regular</title>
+        <para>
+<emphasis>Regular</emphasis> enables to control all stops and pistons as
+allowed by the Organ Definition file (see <emphasis>Full</emphasis> below).
+When <emphasis>Regular</emphasis> is on while <link
+  linkend="memoryset">setting</link>, the current state of all stops and
+couplers is stored. The scope is set to "all elements". This is the default behaviour.
+        </para>
+      </sect2>
+      <sect2>
+        <title>Scope</title>
+        <para>
+When <emphasis>Scope</emphasis> is on  while <link
+  linkend="memoryset">setting</link>, the combination data store is configured
+for its storing only the currently turned on elements. Never forget to push all
+buttons intended to drive that scope.
+        </para>
+      </sect2>
+      <sect2>
+        <title>Scoped</title>
+        <para>
+When <emphasis>Scoped</emphasis> is on  while <link
+  linkend="memoryset">setting</link>, the current state of the elements stored
+with scope is saved.
+        </para>
+        <note><orderedlist><title>Typical working sequence of operations:</title>
+          <listitem><simpara>Turn on some stops and couplers</simpara></listitem>
+          <listitem><simpara>Turn on <emphasis role="strong">Scope</emphasis></simpara></listitem>
+          <listitem><simpara>Turn on <emphasis role="strong">Set</emphasis></simpara></listitem>
+          <listitem><simpara>Push all buttons intended to use that scope</simpara></listitem>
+          <listitem><simpara>Turn on <emphasis role="strong">Scoped</emphasis></simpara></listitem>
+          <listitem><simpara>Turn on the stops and couplers wished for the fist button</simpara></listitem>
+          <listitem><simpara>Push the button (make sure that <emphasis role="strong">Set</emphasis> is turned on)</simpara></listitem>
+          <listitem><simpara>Repeat 6-7 for all buttons</simpara></listitem>
+          </orderedlist>
+          <simpara>Once the scope is defined and assigned to a piston, there is no need to redefine it (steps 1-4) if the saved state of the elements in scope is changed (steps 5-6-7).</simpara>
+        </note>
+      </sect2>
+      <sect2>
+        <title>Full</title>
+        <para>
+<emphasis>Full</emphasis> allows to store all stops and couplers in a
+combination, regardless of restrictions that may have been defined in the Organ
+Definition File. See <link linkend="storeInDivisional">StoreInDivisional</link>,
+<link linkend="storeInGeneral">StoreInGeneral</link>,
+<link linkend="divisionalsStoreIntermanualCouplers">DivisionalsStoreIntermanualCouplers</link>,
+<link linkend="divisionalsStoreIntramanualCouplers">DivisionalsStoreIntramanualCouplers</link>,
+<link linkend="divisionalsStoreTremulants">DivisionalsStoreTremulants</link>,
+<link linkend="generalsStoreDivisionalCouplers">GeneralsStoreDivisionalCouplers</link> and
+<link linkend="combinationsStoreNonDisplayedDrawstops">CombinationsStoreNonDisplayedDrawstops</link>
+for more information.
+        </para>
+      </sect2>
+    </sect1>
+    <sect1>
       <title>Crescendo Pedal</title>
       <para></para>
     </sect1>
@@ -5864,7 +5927,7 @@ in a section called <emphasis>Rank999</emphasis>.
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry>
+        <varlistentry id="divisionalsStoreIntermanualCouplers">
           <term>DivisionalsStoreIntermanualCouplers</term>
           <listitem>
             <para>
@@ -5873,7 +5936,7 @@ state of associated intermanual couplers.
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry>
+        <varlistentry id="divisionalsStoreIntramanualCouplers">
           <term>DivisionalsStoreIntramanualCouplers</term>
           <listitem>
             <para>
@@ -5882,7 +5945,7 @@ state of associated intramanual couplers.
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry>
+        <varlistentry id="divisionalsStoreTremulants">
           <term>DivisionalsStoreTremulants</term>
           <listitem>
             <para>
@@ -5891,7 +5954,7 @@ state of associated tremulants.
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry>
+        <varlistentry id="generalsStoreDivisionalCouplers">
           <term>GeneralsStoreDivisionalCouplers</term>
           <listitem>
             <para>
@@ -5900,7 +5963,7 @@ state of divisional couplers.
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry>
+        <varlistentry id="combinationsStoreNonDisplayedDrawstops">
           <term>CombinationsStoreNonDisplayedDrawstops</term>
           <listitem>
             <para>
@@ -8264,7 +8327,7 @@ after pressing GC. -1 means no change, 0 off and 1 on.
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry>
+        <varlistentry id="storeInDivisional">
           <term>StoreInDivisional</term>
           <listitem>
             <para>
@@ -8274,12 +8337,12 @@ button should be stored in divisionals without
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry>
+        <varlistentry id="storeInGeneral">
           <term>StoreInGeneral</term>
           <listitem>
             <para>
 (boolean, default: dependent on various settings) Determines, if the
-button should be stored in divisionals without
+button should be stored in generals without
 <emphasis>FULL</emphasis>.
      </para>
           </listitem>
