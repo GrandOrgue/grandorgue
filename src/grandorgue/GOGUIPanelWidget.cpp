@@ -122,6 +122,21 @@ void GOGUIPanelWidget::OnGOControl(wxCommandEvent& event)
 	event.Skip();
 }
 
+bool GOGUIPanelWidget::ForwardMouseEvent(wxMouseEvent& event)
+{
+	if (GetClientRect().Contains(event.GetPosition()))
+		return false;
+	wxPoint pos = ClientToScreen(event.GetPosition());
+	wxWindow* window = wxFindWindowAtPoint(pos);
+	if (window)
+	{
+		wxMouseEvent e = event;
+		e.SetPosition(window->ScreenToClient(pos));
+		window->HandleWindowEvent(e);
+	}
+	return true;
+}
+
 void GOGUIPanelWidget::OnMouseMove(wxMouseEvent& event)
 {
 	if (!event.LeftIsDown())
@@ -130,12 +145,17 @@ void GOGUIPanelWidget::OnMouseMove(wxMouseEvent& event)
 		return;
 	}
 
+	if (ForwardMouseEvent(event))
+		return;
 	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, false);
 	event.Skip();
 }
 
 void GOGUIPanelWidget::OnMouseLeftDown(wxMouseEvent& event)
 {
+	if (ForwardMouseEvent(event))
+		return;
+
 	m_panel->HandleMouseRelease(false);
 
 	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, false);
