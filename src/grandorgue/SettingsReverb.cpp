@@ -21,6 +21,7 @@
 
 #include "SettingsReverb.h"
 
+#include "GOrgueStandardFile.h"
 #include "GOrgueSettings.h"
 #include "GOrgueWave.h"
 #include <wx/button.h>
@@ -125,7 +126,8 @@ void SettingsReverb::UpdateLimits()
 	m_FileName->SetLabel(m_File->GetPath());
 	try
 	{
-		wav.Open(m_File->GetPath());
+		GOrgueStandardFile file(m_File->GetPath());
+		wav.Open(&file);
 		m_StartOffset->Enable();
 		m_Length->Enable();
 		m_Channel->Enable();

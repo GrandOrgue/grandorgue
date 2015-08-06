@@ -25,6 +25,8 @@
 #include <wx/string.h>
 #include <vector>
 
+class GOrgueFile;
+
 typedef struct
 {
 	unsigned start_sample;
@@ -68,7 +70,7 @@ public:
 	GOrgueWave();
 	~GOrgueWave();
 
-	void Open(const wxString& filename);
+	void Open(GOrgueFile* file);
 	void Close();
 
 	/* GetChannels()

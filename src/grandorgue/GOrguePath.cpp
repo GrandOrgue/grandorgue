@@ -21,13 +21,15 @@
 
 #include "GOrguePath.h"
 
+#include "GOrgueStandardFile.h"
+#include "GOrgueInvalidFile.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 #include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/log.h>
 
-wxString GOCreateFilename(GrandOrgueFile* organfile, const wxString& file, bool use_sampleset)
+std::unique_ptr<GOrgueFile> GOCreateFilename(GrandOrgueFile* organfile, const wxString& file, bool use_sampleset)
 {
 	/* Translate directory seperator from ODF(\) to native format */
 	wxString temp = file;
@@ -48,7 +50,10 @@ wxString GOCreateFilename(GrandOrgueFile* organfile, const wxString& file, bool 
 		wxLogWarning(_("Filename '%s' not compatible with case sensitive systems"), file.c_str());
 	}
 
-	return temp;
+	if (wxFileExists(temp))
+		return (std::unique_ptr<GOrgueFile>)new GOrgueStandardFile(temp, file);
+	else
+		return (std::unique_ptr<GOrgueFile>)new GOrgueInvalidFile(file);
 }
 
 void GOCreateDirectory(const wxString& path)

@@ -36,6 +36,8 @@ private:
 	std::vector<wxString> m_Filenames;
 	std::vector<wxString> m_Masknames;
 
+	bool loadFile(wxImage& img, wxString filename);
+
 public:
 	GOrgueBitmapCache(GrandOrgueFile* organfile);
 	virtual ~GOrgueBitmapCache();

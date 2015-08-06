@@ -176,8 +176,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	}
 	else
 	{
-		fn = GOCreateFilename(this, info_filename);
-		if (fn.FileExists() && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm")))
+		std::unique_ptr<GOrgueFile> file = GOCreateFilename(this, info_filename);
+		fn = file->GetPath();
+		if (file->isValid() && fn.FileExists() && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm")))
 			m_InfoFilename = fn.GetFullPath();
 		else
 		{

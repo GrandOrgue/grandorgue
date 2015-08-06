@@ -155,7 +155,7 @@ void GOSoundProviderWave::LoadPitch(const wxString& filename, GrandOrgueFile* or
 	wxLogDebug(_("Loading file %s"), filename.c_str());
 
 	GOrgueWave wave;
-	wave.Open(GOCreateFilename(organfile, filename, use_sampleset));
+	wave.Open(GOCreateFilename(organfile, filename, use_sampleset).get());
 
 	m_MidiKeyNumber = wave.GetMidiNote();
 	m_MidiPitchFract = wave.GetPitchFract();
@@ -169,7 +169,7 @@ void GOSoundProviderWave::ProcessFile(const wxString& filename, GrandOrgueFile *
 	wxLogDebug(_("Loading file %s"), filename.c_str());
 
 	GOrgueWave wave;
-	wave.Open(GOCreateFilename(organfile, filename, use_sampleset));
+	wave.Open(GOCreateFilename(organfile, filename, use_sampleset).get());
 
 	/* allocate data to work with */
 	unsigned totalDataSize = wave.GetLength() * GetBytesPerSample(bits_per_sample) * wave.GetChannels();
