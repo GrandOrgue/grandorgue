@@ -25,6 +25,8 @@
 #include <wx/string.h>
 #include <map>
 
+class GOrgueFile;
+
 class GOrgueConfigFileReader
 {
 private:
@@ -36,6 +38,7 @@ public:
 	GOrgueConfigFileReader();
 	~GOrgueConfigFileReader();
 	
+	bool Read(GOrgueFile* file);
 	bool Read(wxString filename);
 	wxString GetHash();
 

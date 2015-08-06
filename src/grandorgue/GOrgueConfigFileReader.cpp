@@ -22,6 +22,7 @@
 #include "GOrgueConfigFileReader.h"
 
 #include "GOrgueHash.h"
+#include "GOrgueStandardFile.h"
 #include <wx/file.h>
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -73,27 +74,35 @@ wxString GOrgueConfigFileReader::getEntry(wxString group, wxString name)
 
 bool GOrgueConfigFileReader::Read(wxString filename)
 {
-	wxFile file;
+	GOrgueStandardFile file(filename);
+	return Read(&file);
+}
+
+bool GOrgueConfigFileReader::Read(GOrgueFile* file)
+{
 	m_Entries.clear();
 	
-	if (!file.Open(filename, wxFile::read))
+	if (!file->Open())
 	{
-		wxLogError(_("Failed to open file '%s'"), filename.c_str());
+		wxLogError(_("Failed to open file '%s'"), file->GetName().c_str());
 		return false;
 	}
-	wxFileOffset length = file.Length();
+	size_t length = file->GetSize();
 	uint8_t* data = (uint8_t*)malloc(length);
 	if (!data)
 	{
-		wxLogError(_("Failed to load file '%s' into the memory"), filename.c_str());
+		wxLogError(_("Failed to load file '%s' into the memory"), file->GetName().c_str());
+		file->Close();
 		return false;
 	}
-	if (file.Read(data, length) != length)
+	if (file->Read(data, length) != length)
 	{
 		free(data);
-		wxLogError(_("Failed to read file '%s'"), filename.c_str());
+		file->Close();
+		wxLogError(_("Failed to read file '%s'"), file->GetName().c_str());
 		return false;
 	}
+	file->Close();
 	GOrgueHash hash;
 	hash.Update(data, length);
 	m_Hash = hash.getStringHash();
@@ -113,7 +122,7 @@ bool GOrgueConfigFileReader::Read(wxString filename)
 	free(data);
 	if (length && input.Len() == 0)
 	{
-		wxLogError(_("Failed to decode file '%s'"), filename.c_str());
+		wxLogError(_("Failed to decode file '%s'"), file->GetName().c_str());
 		return false;
 	}
 	
