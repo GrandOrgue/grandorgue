@@ -26,7 +26,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  cmake
 %if 0%{?suse_version} >= 1110 
-BuildRequires:  wxWidgets-3_0-devel
+BuildRequires:  wxGTK3-devel
 BuildRequires:  gettext-tools
 BuildRequires:  docbook-xsl-stylesheets 
 BuildRequires:  update-desktop-files
