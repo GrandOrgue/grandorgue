@@ -118,13 +118,13 @@ bool GOrgueMidiFileReader::Open(wxString filename)
 	{
 		unsigned frames = 1 + ((-ppq >> 8) & 0x7F);
 		unsigned res = ppq & 0xFF;
-		m_Speed = 1000.0 / frames / res;
+		m_Speed = 1000.0 / frames / (res ? res : 1);
 		m_PPQ = 0;
 	}
 	else
 	{
 		m_PPQ = ppq;
-		m_Speed = m_Tempo / 1000.0 / m_PPQ;
+		m_Speed = m_Tempo / 1000.0 / (m_PPQ ? m_PPQ : 1);
 	}
 	
 	return true;
@@ -326,7 +326,7 @@ bool GOrgueMidiFileReader::ReadEvent(GOrgueMidiEvent& e)
 		if (msg[0] == 0xFF && msg[1] == 0x51 && msg[2] == 0x03)
 		{
 			m_Tempo = (msg[3] << 16) | (msg[4] << 8) | (msg[5]);
-			m_Speed = m_Tempo / 1000.0 / m_PPQ;
+			m_Speed = m_Tempo / 1000.0 / (m_PPQ ? m_PPQ : 1);
 			continue;
 		}
 		
