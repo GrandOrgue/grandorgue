@@ -23,12 +23,14 @@
 #define GOGUIMOUSESTATE_H
 
 class GOGUIMouseState {
+	void * m_sequence;
 	void * m_control;
 	unsigned m_index;
 
 public:
 	GOGUIMouseState()
 	{
+		m_sequence = 0;
 		clear();
 	}
 
@@ -36,6 +38,11 @@ public:
 	{
 		m_control = 0;
 		m_index = 0;
+	}
+
+	void* GetSequence()
+	{
+		return m_sequence;
 	}
 
 	void* GetControl()
@@ -46,6 +53,11 @@ public:
 	unsigned GetIndex()
 	{
 		return m_index;
+	}
+
+	void SetSequence(void* sequence)
+	{
+		m_sequence = sequence;
 	}
 
 	void SetControl(void* control)
