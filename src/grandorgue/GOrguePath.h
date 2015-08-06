@@ -22,11 +22,13 @@
 #ifndef GORGUEPATH_H
 #define GORGUEPATH_H
 
+#include "GOrgueFile.h"
 #include <wx/string.h>
+#include <memory>
 
 class GrandOrgueFile;
 
-wxString GOCreateFilename(GrandOrgueFile* organfile, const wxString& file, bool use_sampleset = true);
+std::unique_ptr<GOrgueFile> GOCreateFilename(GrandOrgueFile* organfile, const wxString& file, bool use_sampleset = true);
 void GOCreateDirectory(const wxString& path);
 wxString GONormalizePath(const wxString& path);
 wxString GOGetPath(const wxString& path);

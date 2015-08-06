@@ -21,6 +21,7 @@
 
 #include "GOrgueWave.h"
 
+#include "GOrgueFile.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrgueInt24.h"
 #include "GOrgueWaveTypes.h"
@@ -142,19 +143,18 @@ void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
 	m_PitchFract = wxUINT32_SWAP_ON_BE(sampler->dwMIDIPitchFraction) / (double)UINT_MAX * 100.0;
 }
 
-void GOrgueWave::Open(const wxString& filename)
+void GOrgueWave::Open(GOrgueFile* file)
 {
 	/* Close any currently open wave data */
 	Close();
 
-	wxFile file;
-	if (!file.Open(filename, wxFile::read))
+	if (!file->Open())
 	{
 		wxString message;
-		message.Printf(_("Failed to open file '%s'"), filename.c_str());
+		message.Printf(_("Failed to open file '%s'"), file->GetName().c_str());
 		throw message;
 	}
-	unsigned length = file.Length();
+	unsigned length = file->GetSize();
 	
 	// Allocate memory for wave and read it.
 	m_Content = (char*)malloc(length);
@@ -170,13 +170,13 @@ void GOrgueWave::Open(const wxString& filename)
 		if (length < 12)
 			throw (wxString)_("< Not a RIFF file");
 
-		if (file.Read(ptr, length) != (ssize_t)length)
+		if (file->Read(ptr, length) != length)
 		{
 			wxString message;
-			message.Printf(_("Failed to read file '%s'\n"), filename.c_str());
+			message.Printf(_("Failed to read file '%s'\n"), file->GetName().c_str());
 			throw message;
 		}
-		file.Close();
+		file->Close();
 
 		GOrgueWavPack pack(m_Content, length);
 		if (pack.IsWavPack())
@@ -283,7 +283,7 @@ void GOrgueWave::Open(const wxString& filename)
 			    (m_Loops[i].end_sample >= GetLength()) ||
 				(m_Loops[i].end_sample == 0))
 			{
-				wxLogError(wxT("Invalid loop in %s"), filename.c_str());
+				wxLogError(wxT("Invalid loop in %s"), file->GetName().c_str());
 				m_Loops.erase(m_Loops.begin() + i);
 			}
 		}

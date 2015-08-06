@@ -26,6 +26,7 @@
 #include "Images.h"
 #include <wx/intl.h>
 #include <wx/image.h>
+#include <wx/mstream.h>
 
 #define BITMAP_LIST \
 	WOOD(01, 02) \
@@ -158,6 +159,30 @@ void GOrgueBitmapCache::RegisterBitmap(wxImage* bitmap, wxString filename, wxStr
 	m_Masknames.push_back(maskname);
 }
 
+bool GOrgueBitmapCache::loadFile(wxImage& img, wxString filename)
+{
+	std::unique_ptr<GOrgueFile> file = GOCreateFilename(m_organfile, filename);
+	if (!file->Open())
+		return false;
+	unsigned length = file->GetSize();
+
+	char* data = (char*)malloc(length);
+	if (!data)
+		throw GOrgueOutOfMemory();
+	if (file->Read(data, length) != length)
+	{
+		delete data;
+		return false;
+	}
+	file->Close();
+
+	wxMemoryInputStream is(data, length);
+	bool result = img.LoadFile(is, wxBITMAP_TYPE_ANY, -1);
+	delete data;
+	
+	return result;
+}
+
 GOrgueBitmap GOrgueBitmapCache::GetBitmap(wxString filename, wxString maskName)
 {
 	for(unsigned i = 0; i < m_Filenames.size(); i++)
@@ -166,12 +191,12 @@ GOrgueBitmap GOrgueBitmapCache::GetBitmap(wxString filename, wxString maskName)
 
 	wxImage image, maskimage;
 	
-	if (!image.LoadFile(GOCreateFilename(m_organfile, filename), wxBITMAP_TYPE_ANY, -1))
+	if (!loadFile(image, filename))
 		throw wxString::Format(_("Failed to open the graphic '%s'"), filename.c_str());
 
 	if (maskName != wxEmptyString)
 	{
-		if (!maskimage.LoadFile(GOCreateFilename(m_organfile, maskName), wxBITMAP_TYPE_ANY, -1))
+		if (!loadFile(maskimage, maskName))
 			throw wxString::Format(_("Failed to open the graphic '%s'"), maskName.c_str());
 
 		if (image.GetWidth() != maskimage.GetWidth() ||

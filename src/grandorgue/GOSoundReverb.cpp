@@ -22,6 +22,7 @@
 #include "GOSoundReverb.h"
 
 #include "GOSoundResample.h"
+#include "GOrgueStandardFile.h"
 #include "GOrgueSettings.h"
 #include "GOrgueWave.h"
 #include "contrib/zita-convolver.h"
@@ -77,7 +78,8 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 		unsigned offset = settings.ReverbStartOffset();
 		float gain = settings.ReverbGain();
 
-		wav.Open(settings.ReverbFile());
+		GOrgueStandardFile reverb_file(settings.ReverbFile());
+		wav.Open(&reverb_file);
 		if (offset > wav.GetLength())
 			throw (wxString)_("Invalid reverb start offset");
 		len = wav.GetLength();
