@@ -126,27 +126,25 @@ void GOGUIPanelWidget::OnMouseMove(wxMouseEvent& event)
 {
 	if (!event.LeftIsDown())
 	{
-		m_leftstate.clear();
+		m_panel->HandleMouseRelease(false);
 		return;
 	}
 
-	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, false, m_leftstate);
+	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, false);
 	event.Skip();
 }
 
 void GOGUIPanelWidget::OnMouseLeftDown(wxMouseEvent& event)
 {
-	m_leftstate.clear();
+	m_panel->HandleMouseRelease(false);
 
-	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, false, m_leftstate);
+	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, false);
 	event.Skip();
 }
 
 void GOGUIPanelWidget::OnMouseRightDown(wxMouseEvent& event)
 {
-	GOGUIMouseState state;
-
-	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, true, state);
+	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, true);
 	event.Skip();
 }
 

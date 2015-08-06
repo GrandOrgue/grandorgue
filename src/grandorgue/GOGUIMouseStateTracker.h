@@ -19,44 +19,50 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOGUIPANELWIDGET_H
-#define GOGUIPANELWIDGET_H
+#ifndef GOGUIMOUSESTATETRACKER_H
+#define GOGUIMOUSESTATETRACKER_H
 
-#include <wx/bitmap.h>
-#include <wx/panel.h>
+#include "GOGUIMouseState.h"
+#include <vector>
 
-class GOGUIPanel;
-
-DECLARE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL, -1)
-
-class GOGUIPanelWidget : public wxPanel
+class GOGUIMouseStateTracker
 {
 private:
-	GOGUIPanel* m_panel;
-	wxBitmap m_ClientBitmap;
-	double m_Scale;
-
-	void CopyToScreen(wxDC* mdc, const wxRect& rect);
-
-	void OnDraw(wxDC* dc);
-	void OnErase(wxEraseEvent& event);
-	void OnPaint(wxPaintEvent& event);
-	void OnGOControl(wxCommandEvent& event);
-	void OnMouseMove(wxMouseEvent& event);
-	void OnMouseLeftDown(wxMouseEvent& event);
-	void OnMouseRightDown(wxMouseEvent& event);
-	void OnMouseScroll(wxMouseEvent& event);
-	void OnKeyCommand(wxKeyEvent& event);
-	void OnKeyUp(wxKeyEvent& event);
+	std::vector<GOGUIMouseState> m_states;
 
 public:
-	GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindowID id = wxID_ANY);
-	~GOGUIPanelWidget();
 
-	void OnUpdate();
-	wxSize UpdateSize(wxSize size);
+	GOGUIMouseState& GetMouseState()
+	{
+		return GetState(this);
+	}
 
-	DECLARE_EVENT_TABLE();
+	GOGUIMouseState& GetState(void * id)
+	{
+		for(unsigned i = 0; i < m_states.size(); i++)
+			if (m_states[i].GetSequence() == id)
+				return m_states[i];
+
+		GOGUIMouseState tmp;
+		tmp.SetSequence(id);
+		m_states.push_back(tmp);
+		return m_states[m_states.size() - 1];
+	}
+
+	void ReleaseMouseState()
+	{
+		ReleaseState(this);
+	}
+
+	void ReleaseState(void * id)
+	{
+		for(unsigned i = 0; i < m_states.size(); i++)
+			if (m_states[i].GetSequence() == id)
+			{
+				m_states[i].clear();
+				return;
+			}
+	}
 };
 
 #endif

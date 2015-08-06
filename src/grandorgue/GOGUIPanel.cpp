@@ -53,6 +53,7 @@
 
 GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
+	m_MouseState(organfile->GetMouseStateTracker()),
 	m_controls(0),
 	m_WoodImages(0),
 	m_BackgroundControls(0),
@@ -606,11 +607,24 @@ void GOGUIPanel::HandleKey(int key)
 	m_organfile->HandleKey(key);
 }
 
-void GOGUIPanel::HandleMousePress(int x, int y, bool right, GOGUIMouseState& state)
+void GOGUIPanel::SendMousePress(int x, int y, bool right, GOGUIMouseState& state)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		if (m_controls[i]->HandleMousePress(x, y, right, state))
 			return;
+}
+
+void GOGUIPanel::HandleMousePress(int x, int y, bool right)
+{
+	GOGUIMouseState tmp;
+	GOGUIMouseState& state = right ? tmp : m_MouseState.GetMouseState();
+	SendMousePress(x, y, right, state);
+}
+
+void GOGUIPanel::HandleMouseRelease(bool right)
+{
+	if (!right)
+		m_MouseState.ReleaseMouseState();
 }
 
 void GOGUIPanel::HandleMouseScroll(int x, int y, int amount)

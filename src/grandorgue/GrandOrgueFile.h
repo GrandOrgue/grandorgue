@@ -23,6 +23,7 @@
 #define GRANDORGUEFILE_H
 
 #include "ptrvector.h"
+#include "GOGUIMouseStateTracker.h"
 #include "GOrgueBitmapCache.h"
 #include "GOrgueCombinationDefinition.h"
 #include "GOrgueEventDistributor.h"
@@ -112,6 +113,7 @@ private:
 
 	GOSoundEngine* m_soundengine;
 	GOrgueMidi* m_midi;
+	GOGUIMouseStateTracker m_MouseState;
 
 	GOrgueMemoryPool m_pool;
 	GOrgueBitmapCache m_bitmaps;
@@ -240,6 +242,8 @@ public:
 	void SendMidiMessage(GOrgueMidiEvent& e);
 	void SendMidiRecorderMessage(GOrgueMidiEvent& e);
 	void AddMidiListener(GOrgueMidiListener* listener);
+
+	GOGUIMouseStateTracker& GetMouseStateTracker();
 
 	/* For testing only */
 	void SetODFPath(wxString path);
