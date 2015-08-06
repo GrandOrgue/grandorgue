@@ -32,6 +32,7 @@ class GOGUIControl;
 class GOGUIDisplayMetrics;
 class GOGUILayoutEngine;
 class GOGUIMouseState;
+class GOGUIMouseStateTracker;
 class GOGUIPanelWidget;
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
@@ -44,6 +45,7 @@ class GOGUIPanel : private GOrgueSaveableObject
 {
 protected:
 	GrandOrgueFile* m_organfile;
+	GOGUIMouseStateTracker& m_MouseState;
 	ptr_vector<GOGUIControl> m_controls;
 	std::vector<GOrgueBitmap> m_WoodImages;
 	unsigned m_BackgroundControls;
@@ -60,6 +62,8 @@ protected:
 	void Save(GOrgueConfigWriter& cfg);
 
 	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group);
+
+	void SendMousePress(int x, int y, bool right, GOGUIMouseState& state);
 
 public:
 	GOGUIPanel(GrandOrgueFile* organfile);
@@ -81,7 +85,8 @@ public:
 	void TileWood(GOrgueDC& dc, unsigned which, int sx, int sy, int cx, int cy);
 	GOrgueBitmap LoadBitmap(wxString filename, wxString maskname);
 	void HandleKey(int key);
-	void HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
+	void HandleMousePress(int x, int y, bool right);
+	void HandleMouseRelease(bool right);
 	void HandleMouseScroll(int x, int y, int amount);
 	void Modified();
 	

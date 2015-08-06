@@ -1076,6 +1076,11 @@ GOrgueSettings& GrandOrgueFile::GetSettings()
 	return m_Settings;
 }
 
+GOGUIMouseStateTracker& GrandOrgueFile::GetMouseStateTracker()
+{
+	return m_MouseState;
+}
+
 GOrgueBitmapCache& GrandOrgueFile::GetBitmapCache()
 {
 	return m_bitmaps;
