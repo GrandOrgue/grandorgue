@@ -46,6 +46,7 @@ private:
 	void OnMouseLeftDown(wxMouseEvent& event);
 	void OnMouseRightDown(wxMouseEvent& event);
 	void OnMouseScroll(wxMouseEvent& event);
+	bool ForwardMouseEvent(wxMouseEvent& event);
 	void OnKeyCommand(wxKeyEvent& event);
 	void OnKeyUp(wxKeyEvent& event);
 
