@@ -63,17 +63,22 @@ void GOrgueHash::Update(const wxString& str)
 	Update((const wxChar*)str.c_str(), (str.Length() + 1) * sizeof(wxChar));
 }
 
-void GOrgueHash::Update(unsigned value)
+void GOrgueHash::Update(uint32_t value)
 {
 	Update(&value, sizeof(value));
 }
 
-void GOrgueHash::Update(int value)
+void GOrgueHash::Update(int32_t value)
 {
 	Update(&value, sizeof(value));
 }
 
-void GOrgueHash::Update(size_t value)
+void GOrgueHash::Update(uint64_t value)
+{
+	Update(&value, sizeof(value));
+}
+
+void GOrgueHash::Update(int64_t value)
 {
 	Update(&value, sizeof(value));
 }
