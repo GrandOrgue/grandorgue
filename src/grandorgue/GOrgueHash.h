@@ -46,9 +46,10 @@ public:
 
 	void Update(const void* data, unsigned len);
 	void Update(const wxString& str);
-	void Update(unsigned value);
-	void Update(int value);
-	void Update(size_t value);
+	void Update(uint32_t value);
+	void Update(int32_t value);
+	void Update(int64_t value);
+	void Update(uint64_t value);
 };
 
 #endif
