@@ -48,7 +48,7 @@ macro(InstallWxTranslations)
 endmacro(InstallWxTranslations)
 
 macro(CopyWxTranslations)
-  set(searchdirs)
+  set(searchdirs "")
   if(DEFINED wxWidgets_ROOT_DIR)
     get_filename_component(_dir ${wxWidgets_ROOT_DIR} REALPATH)
     if(IS_DIRECTORY ${_dir})
@@ -78,7 +78,7 @@ endmacro(CopyWxTranslations)
 
 
 macro(CopyDependencies target)
-  set(searchdirs)
+  set(searchdirs "")
   set(_libdirs)
   foreach(_file ${wxWidgets_LIBRARIES})
     string(REGEX REPLACE "^-L(.*)$" "\\1/dummy" _file ${_file})
