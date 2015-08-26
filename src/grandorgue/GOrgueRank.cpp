@@ -94,7 +94,7 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
 
-	m_FirstMidiNoteNumber = cfg.ReadInteger(ODFSetting, group, wxT("FirstMidiNoteNumber"), 0, 256, false, first_midi_note_number);
+	m_FirstMidiNoteNumber = cfg.ReadInteger(ODFSetting, group, wxT("FirstMidiNoteNumber"), 0, 256, first_midi_note_number < 0, first_midi_note_number);
 	m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), true);
 
 	unsigned number_of_logical_pipes       = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalPipes"), 1, 192);
