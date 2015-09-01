@@ -216,7 +216,7 @@ wxTreeItemId SettingsAudioOutput::GetGroupNode(const wxTreeItemId& channel, cons
 
 wxTreeItemId SettingsAudioOutput::AddDeviceNode(wxString name)
 {
-	return AddDeviceNode(name, 50);
+	return AddDeviceNode(name, m_Sound.GetSettings().GetDefaultLatency());
 }
 
 wxTreeItemId SettingsAudioOutput::AddDeviceNode(wxString name, unsigned desired_latency)
