@@ -196,7 +196,7 @@ void GOrgueSettings::Load()
 			GOAudioDeviceConfig conf;
 			conf.name = cfg.ReadString(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dName"), i + 1));
 			conf.channels = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dChannelCount"), i + 1), 0, 200);
-			conf.desired_latency = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dLatency"), i + 1), 0, 999, false, 50);
+			conf.desired_latency = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxString::Format(wxT("Device%03dLatency"), i + 1), 0, 999, false, GetDefaultLatency());
 			conf.scale_factors.resize(conf.channels);
 			for(unsigned j = 0; j < conf.channels; j++)
 			{
@@ -264,6 +264,7 @@ void GOrgueSettings::Load()
 		conf.name = wxEmptyString;
 		conf.channels = 2;
 		conf.scale_factors.resize(conf.channels);
+		conf.desired_latency = GetDefaultLatency();
 		for(unsigned k = 0; k < m_AudioGroups.size(); k++)
 		{
 			GOAudioGroupOutputConfig group;
@@ -468,6 +469,11 @@ void GOrgueSettings::SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>
 	if (!config.size())
 		return;
 	m_AudioDeviceConfig = config;
+}
+
+unsigned GOrgueSettings::GetDefaultLatency()
+{
+	return 50;
 }
 
 GOrgueMidiMap& GOrgueSettings::GetMidiMap()

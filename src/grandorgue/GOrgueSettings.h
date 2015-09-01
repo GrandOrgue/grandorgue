@@ -180,6 +180,7 @@ public:
 
 	const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();
 	void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
+	unsigned GetDefaultLatency();
 
 	void AddOrgan(GOrgueOrgan* organ);
 	ptr_vector<GOrgueOrgan>& GetOrganList();
