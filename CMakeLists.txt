@@ -77,6 +77,14 @@ if(UNIX AND NOT APPLE)
   install(FILES GrandOrgue.appdata.xml DESTINATION share/appdata)
 endif()
 
+IF (APPLE)
+  SET(RESOURCEDIR "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources")
+  SET(RESOURCEINSTDIR "${PROJECT_NAME}.app/Contents/Resources")
+ELSE()
+  SET(RESOURCEDIR "${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}")
+  SET(RESOURCEINSTDIR "share/${PROJECT_NAME}")
+ENDIF()
+
 # setup compiler flags for debug vs release compiles
 add_option(ffast-math)
 add_option(Wall)
