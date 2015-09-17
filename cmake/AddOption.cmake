@@ -1,0 +1,7 @@
+function(add_option _option)
+  set(_name "OPTION_${_option}")
+  CHECK_CXX_COMPILER_FLAG("-${_option}" ${_name})
+  if(${_name})
+   add_definitions("-${_option}")
+  endif()
+endfunction(add_option option)
