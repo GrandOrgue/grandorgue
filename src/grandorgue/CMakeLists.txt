@@ -467,4 +467,4 @@ endif()
 add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)
 target_link_libraries(perftest golib ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
 
-add_custom_target(test COMMAND perftest ${CMAKE_SOURCE_DIR}/tests DEPENDS perftest)
+add_custom_target(runperftest COMMAND perftest ${CMAKE_SOURCE_DIR}/tests DEPENDS perftest)
