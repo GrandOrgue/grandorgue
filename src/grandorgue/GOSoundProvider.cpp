@@ -277,3 +277,31 @@ bool GOSoundProvider::checkForMissingRelease()
 	}
 	return false;
 }
+
+bool GOSoundProvider::checkMissingRelease()
+{
+	if (IsOneshot())
+		return false;
+	for (int k = -1; k < 2; k++)
+	{
+		bool found = false;
+		for (unsigned i = 0; i < m_Attack.size() && !found; i++)
+			if (m_AttackInfo[i].sample_group == k)
+				found = true;
+		if (!found)
+			continue;
+		found = false;
+		for (unsigned i = 0; i < m_Release.size() && !found; i++)
+			if (m_ReleaseInfo[i].sample_group == k)
+				found = true;
+		if (!found)
+			return true;
+	}
+	return false;
+}
+bool GOSoundProvider::checkNotNecessaryRelease()
+{
+	if (IsOneshot() && m_Release.size())
+		return true;
+	return false;
+}

@@ -266,6 +266,18 @@ void GOrgueSoundingPipe::Validate()
 			     m_Rank->GetName().c_str(), GetLoadTitle().c_str());
 	}
 
+	if (m_SoundProvider.checkMissingRelease())
+	{
+		wxLogWarning(_("rank %s pipe %s: no release defined"),
+			     m_Rank->GetName().c_str(), GetLoadTitle().c_str());
+	}
+
+	if (m_SoundProvider.checkNotNecessaryRelease())
+	{
+		wxLogWarning(_("rank %s pipe %s: percussive sample with a release"),
+			     m_Rank->GetName().c_str(), GetLoadTitle().c_str());
+	}
+
 	if (m_RetunePipe && m_SoundProvider.GetMidiKeyNumber() == 0 &&  m_SoundProvider.GetMidiPitchFract() == 0 && m_SampleMidiKeyNumber == -1)
 	{
 		wxLogWarning(_("rank %s pipe %s: no pitch information provided"),

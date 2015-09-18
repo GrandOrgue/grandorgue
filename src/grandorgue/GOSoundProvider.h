@@ -88,6 +88,8 @@ public:
 	float GetVelocityVolume(unsigned velocity) const;
 
 	bool checkForMissingRelease();
+	bool checkMissingRelease();
+	bool checkNotNecessaryRelease();
 };
 
 inline
