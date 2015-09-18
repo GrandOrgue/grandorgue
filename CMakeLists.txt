@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 project(GrandOrgue CXX C)
 
 # Build configuration options
-option(UNICODE                "Build a Unicode configuration" OFF)
+option(UNICODE                "Build a Unicode configuration" ON)
 option(RTAUDIO_USE_CORE       "Enable RtAudio support for Core Audio (Rt and PortAudio - OS X only)" ON)
 option(RTAUDIO_USE_JACK       "Enable RtAudio support for Jack (Rt and PortAudio)" ON)
 option(RTAUDIO_USE_OSS        "Enable RtAudio support for OSS (Rt and PortAudio - Linux only)" OFF)
