@@ -223,7 +223,7 @@ The use of the cache increases the necessary disk space.
       <title>GrandOrgue User Interface</title>
       <mediaobject>
         <imageobject>
-          <imagedata scalefit="1" width="100%" fileref="GO_Main_Frame.png"/>
+          <imagedata scalefit="1" width="100%" fileref="images/GO_Main_Frame.png"/>
         </imageobject>
       </mediaobject>
     </figure>
@@ -265,7 +265,7 @@ saving of sample sets.
             <title>Known organs list</title>
             <mediaobject>
               <imageobject>
-                <imagedata scalefit="1" width="100%" fileref="known_organs_list.png"/>
+                <imagedata scalefit="1" width="100%" fileref="images/known_organs_list.png"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -462,7 +462,7 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
             <title>Temperaments</title>
             <mediaobject>
               <imageobject>
-                <imagedata scalefit="1" width="100%" fileref="temperaments_menus.png" security=""/>
+                <imagedata scalefit="1" width="100%" fileref="images/temperaments_menus.png" security=""/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -470,7 +470,7 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
           <para>The samples are retuned on the fly when playing. No additional disk storage is required.</para>
           <para>User temperaments that are added in the <link linkend="temperamentTab">Temperaments tab</link> are dynamically displayed at the end of this menu</para>
           <para/>
-          <mediaobject><imageobject><imagedata fileref="custom_temperaments.png" /></imageobject></mediaobject>
+          <mediaobject><imageobject><imagedata fileref="images/custom_temperaments.png" /></imageobject></mediaobject>
         </sect3>
         <sect3>
           <title>Organ Settings</title>
@@ -486,7 +486,7 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
             <title>Midi Objects</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="Midi_Objects.png" />
+                <imagedata fileref="images/Midi_Objects.png" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -609,7 +609,7 @@ program will jump directly to the appropriate topic.
         </indexterm>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="memory_set.png"/>
+            <imagedata fileref="images/memory_set.png"/>
           </imageobject>
         </mediaobject>
         <para>
@@ -623,7 +623,7 @@ This "button" is a shortcut to <link linkend="memoryset">Memory Set</link> in th
         </indexterm>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="sequencer_control.png" arch=""/>
+            <imagedata fileref="images/sequencer_control.png" arch=""/>
           </imageobject>
         </mediaobject>
         <para>
@@ -648,7 +648,7 @@ the current settings would be saved to this same next program.
         </indexterm>
         <mediaobject>
             <imageobject>
-              <imagedata fileref="volume_control.png"/>
+              <imagedata fileref="images/volume_control.png"/>
             </imageobject>
         </mediaobject>
         <para>
@@ -660,7 +660,7 @@ clipping occurs, and will stay red until the volume is adjusted.</para>
         <title>Release Tail Length</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="release_control.png"/>
+            <imagedata fileref="images/release_control.png"/>
           </imageobject>
         </mediaobject>
         <para>
@@ -672,7 +672,7 @@ The release tail length control sets the duration the sound engine uses to play 
         <title>Transposer</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="transposer_control.png"/>
+            <imagedata fileref="images/transposer_control.png"/>
           </imageobject>
         </mediaobject>
         <para>The transposer control shifts the notes up or down by semitone steps. The allowed range is {-11, +11} semitones.</para>
@@ -685,7 +685,7 @@ The release tail length control sets the duration the sound engine uses to play 
         </indexterm>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="polyphony_control.png"/>
+            <imagedata fileref="images/polyphony_control.png"/>
           </imageobject>
         </mediaobject>
         <para>The polyphony control sets the maximum polyphony before GrandOrgue
@@ -711,7 +711,7 @@ and will stay red until the polyphony is adjusted.
         </indexterm>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="panic_button.png"/>
+            <imagedata fileref="images/panic_button.png"/>
           </imageobject>
         </mediaobject>
         <para>The effect of the panic button is to reset the sound, stopping all
@@ -808,11 +808,11 @@ GrandOrgue provides additional panels. These panels work as console extensions a
     </sect1>
     <sect1>
       <title>Message log</title>
-      <figure><title>Message Log</title><mediaobject><imageobject><imagedata fileref="message_log.png" security=""/></imageobject></mediaobject></figure>
+      <figure><title>Message Log</title><mediaobject><imageobject><imagedata fileref="images/message_log.png" security=""/></imageobject></mediaobject></figure>
       <para>Whenever GrandOrgue needs to display a message, it opens a pop-up window. Messages are displayed in reverse chronological order : newest on top of the window.</para>
       <para>Messages are displayed with a rating icon.</para>
-      <para><inlinemediaobject><imageobject><imagedata fileref="warning_message_icon.png" /></imageobject></inlinemediaobject> Warning message</para>
-      <para><inlinemediaobject><imageobject><imagedata fileref="serious_message_icon.png" /></imageobject></inlinemediaobject> Serious message</para>
+      <para><inlinemediaobject><imageobject><imagedata fileref="images/warning_message_icon.png" /></imageobject></inlinemediaobject> Warning message</para>
+      <para><inlinemediaobject><imageobject><imagedata fileref="images/serious_message_icon.png" /></imageobject></inlinemediaobject> Serious message</para>
       <para>
 Right-clicking anywhere in this window displays a small menu which copies the
 window's content to the clipboard. When pasted to a file, the messages are
@@ -830,7 +830,7 @@ Midi Event Editor is invoked by right-clicking on the element.
     </para> 
     <sect1>
       <title>Receive</title>
-      <figure><title>Midi received event</title><mediaobject><imageobject><imagedata fileref="midi_event_editor_receive.png" /></imageobject></mediaobject></figure>
+      <figure><title>Midi received event</title><mediaobject><imageobject><imagedata fileref="images/midi_event_editor_receive.png" /></imageobject></mediaobject></figure>
       <para>This tab configures which MIDI events will drive the console element.</para>
       <para>
 The overall layout is the same for all elements. Depending on the element being
@@ -903,7 +903,7 @@ instructions are displayed in the space above the OK / Cancel buttons.
     </sect1>
     <sect1>
       <title>Send</title>
-      <figure><title>Midi sent event</title><mediaobject><imageobject><imagedata fileref="midi_event_editor_send.png" /></imageobject></mediaobject></figure>
+      <figure><title>Midi sent event</title><mediaobject><imageobject><imagedata fileref="images/midi_event_editor_send.png" /></imageobject></mediaobject></figure>
       <para>This tab configures which MIDI events are sent from the console element.</para>
       <para>
 The overall layout is the same for all elements. Depending on the element being
@@ -960,7 +960,7 @@ effectively deleted when the OK button is pressed.
     </sect1>
     <sect1>
       <title>Keyboard shortcut</title>
-      <figure><title>Keyboard shortcut</title><mediaobject><imageobject><imagedata fileref="midi_event_editor_shortcut.png" /></imageobject></mediaobject></figure>
+      <figure><title>Keyboard shortcut</title><mediaobject><imageobject><imagedata fileref="images/midi_event_editor_shortcut.png" /></imageobject></mediaobject></figure>
       <para>This tab is displayed only for drawstops and buttons.</para>
       <variablelist>
         <varlistentry>
@@ -982,7 +982,7 @@ This dropdown lists all usable key values.
         <title>Keyboard</title>
         <sect3>
           <title>Receive</title>
-          <mediaobject><imageobject><imagedata fileref="midi_event_editor_manual_receive.png" /></imageobject></mediaobject>
+          <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_manual_receive.png" /></imageobject></mediaobject>
           <variablelist>
             <varlistentry>
               <term>Event</term>
@@ -1089,7 +1089,7 @@ Event is set to
         <sect3>
           <title>Send</title>
           <simpara>This tab controls how the input state of the manual keys is mirrored to an external MIDI device</simpara>
-          <mediaobject><imageobject><imagedata fileref="midi_event_editor_manual_send.png" /></imageobject></mediaobject>
+          <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_manual_send.png" /></imageobject></mediaobject>
           <variablelist>
             <varlistentry>
               <term>Event</term>
@@ -1132,7 +1132,7 @@ Value</emphasis> field.
         <sect3>
           <title>Send Division Output</title>
           <simpara>This tab controls how the state <emphasis role="bold">after coupler processing</emphasis> of the division is sent to an external MIDI device.</simpara>
-          <mediaobject><imageobject><imagedata fileref="midi_event_editor_division_send.png" /></imageobject></mediaobject>
+          <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_division_send.png" /></imageobject></mediaobject>
           <variablelist>
             <varlistentry>
               <term>Event</term>
@@ -1175,7 +1175,7 @@ Value</emphasis> field.
       </sect2>
       <sect2>
         <title>Rank</title>
-        <mediaobject><imageobject><imagedata fileref="midi_event_editor_rank_send.png" /></imageobject></mediaobject>
+        <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_rank_send.png" /></imageobject></mediaobject>
         <para>
 This setting allows to send NoteOn / NoteOff data only when a rank has been
 activated by pulling the stop it belongs to. This setting is loosely related to
@@ -1249,7 +1249,7 @@ Value</emphasis> field.
         <title>Enclosure</title>
         <sect3>
           <title>Receive</title>
-          <mediaobject><imageobject><imagedata fileref="midi_event_editor_enclosure_receive.png" /></imageobject></mediaobject>
+          <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_enclosure_receive.png" /></imageobject></mediaobject>
           <variablelist>
             <varlistentry>
               <term>Event</term>
@@ -1351,7 +1351,7 @@ controller type and number and the limits of the usable range.
         </sect3>
         <sect3>
           <title>Send</title>
-          <mediaobject><imageobject><imagedata fileref="midi_event_editor_enclosure_send.png" /></imageobject></mediaobject>
+          <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_enclosure_send.png" /></imageobject></mediaobject>
           <variablelist>
             <varlistentry>
               <term>Event</term>
@@ -1431,7 +1431,7 @@ The label of this field changes according to the event type:
           <title>Receive</title>
           <sect4>
             <title>9x Note</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_Note.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_Note.png" /></imageobject></mediaobject>
               <simpara>Receive NoteOn / NoteOff.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -1473,7 +1473,7 @@ The label of this field changes according to the event type:
             </sect4>
             <sect4>
               <title>9x Note On Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_NoteOnToggle.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_NoteOnToggle.png" /></imageobject></mediaobject>
               <simpara>
 Receive NoteOn messages only. Two successive NoteOn messages on the same
 key number will toggle the state of the button/drawstop.
@@ -1513,7 +1513,7 @@ key number will toggle the state of the button/drawstop.
             </sect4>
             <sect4>
               <title>9x Note Off Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_NoteOffToggle.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_NoteOffToggle.png" /></imageobject></mediaobject>
                 <simpara>
 Receive NoteOff messages only. Two successive NoteOff messages on the same
 key number will toggle the state of the button/drawstop.
@@ -1553,7 +1553,7 @@ key number will toggle the state of the button/drawstop.
             </sect4>
             <sect4>
               <title>Bx Controller</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxController.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_BxController.png" /></imageobject></mediaobject>
               <simpara>Receive Control Change messages. GrandOrgue expects this message sequence: Bn controller# MSB; controller value.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -1636,7 +1636,7 @@ key number will toggle the state of the button/drawstop.
             </sect4>
             <sect4>
               <title>Bx Controller On Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxControllerOnToggle.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_BxControllerOnToggle.png" /></imageobject></mediaobject>
               <simpara>Receive Control Change messages. GrandOrgue expects this message sequence: Bn controller# MSB; controller value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
@@ -1676,7 +1676,7 @@ key number will toggle the state of the button/drawstop.
             </sect4>
             <sect4>
               <title>Bx Controller Off Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxControllerOffToggle.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_BxControllerOffToggle.png" /></imageobject></mediaobject>
               <simpara>Receive Control Change messages. GrandOrgue expects this message sequence: Bn controller# MSB; controller value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
@@ -1716,7 +1716,7 @@ key number will toggle the state of the button/drawstop.
             </sect4>
             <sect4>
               <title>Cx Program Change</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_CxProgramChange.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_CxProgramChange.png" /></imageobject></mediaobject>
               <simpara>Receive Program Change messages. GrandOrgue expects this message sequence: [Bn 0x00 bank# MSB;][Bn 0x20 bank# LSB;] Cn prog#.</simpara>
               <simpara>The optional bank select controllers enable GrandOrgue to manage more than 128 drawstops or buttons on a single channel with Program Change messages.</simpara>
               <simpara>This control is a toggle: two successive messages changing the same program will toggle the state of the drawstop/button.</simpara>
@@ -1765,7 +1765,7 @@ with <emphasis>prog#</emphasis> + 1 [ math: ((data1 &lt;&lt; 14) | (data2 &lt;&l
             </sect4>
             <sect4>
               <title>RPN</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_RPN.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_RPN.png" /></imageobject></mediaobject>
               <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -1807,7 +1807,7 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
             </sect4>
             <sect4>
               <title>NRPN</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_RPN.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_RPN.png" /></imageobject></mediaobject>
               <simpara>Receive NRPN (Non Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -1848,7 +1848,7 @@ Parameter number. If the MIDI device sends Bn 0x63 &lt;data1&gt;; Bn 0x62 &lt;da
             </sect4>
             <sect4>
               <title>Cx Program Change Range</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_CxProgramChangeRange.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_CxProgramChangeRange.png" /></imageobject></mediaobject>
               <simpara>Receive Program Change messages. GrandOrgue expects this message sequence: [Bn 0x00 bank# MSB;][Bn 0x20 bank# LSB;] Cn prog#.</simpara>
               <simpara>This control uses 2 <emphasis role="bold">different</emphasis> program numbers: one to pull and the other to push the drawstop or button.</simpara>
               <simpara>The optional bank select controllers enable GrandOrgue to manage more than 64 drawstops or buttons on a single channel with Program Change messages.</simpara>
@@ -1907,7 +1907,7 @@ with <emphasis>prog#</emphasis> + 1 [ math: ((data1 &lt;&lt; 14) | (data2 &lt;&l
             </sect4>
             <sect4>
               <title>RPN On Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_RPNOnToggle.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_RPNOnToggle.png" /></imageobject></mediaobject>
               <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
@@ -1949,7 +1949,7 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
             </sect4>
             <sect4>
               <title>RPN Off Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_RPNOffToggle.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_RPNOffToggle.png" /></imageobject></mediaobject>
               <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
@@ -1991,7 +1991,7 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
             </sect4>
             <sect4>
               <title>NRPN On Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_NRPNOnToggle.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_NRPNOnToggle.png" /></imageobject></mediaobject>
               <simpara>Receive NRPN (Non Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
@@ -2033,7 +2033,7 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
             </sect4>
             <sect4>
               <title>NRPN Off Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_NRPNOffToggle.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_NRPNOffToggle.png" /></imageobject></mediaobject>
               <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <simpara>The button or drawstop toggles its state whenever two successive "identical" messages are received.</simpara>
               <informaltable frame="none">
@@ -2075,7 +2075,7 @@ Parameter number. If the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64 &lt;da
             </sect4>
             <sect4>
               <title>RPN Range</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_RPNRange.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_RPNRange.png" /></imageobject></mediaobject>
               <simpara>Receive RPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x65 parameter# MSB; [Bn 0x64 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <simpara>
 This control uses 2 <emphasis role="bold">different</emphasis> parameter
@@ -2136,7 +2136,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
             </sect4>
             <sect4>
               <title>NRPN Range</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_NRPNRange.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_NRPNRange.png" /></imageobject></mediaobject>
               <simpara>Receive NRPN (Registered Parameter Number) messages. GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 parameter value.</simpara>
               <simpara>
 This control uses 2 <emphasis role="bold">different</emphasis> parameter
@@ -2197,7 +2197,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
             </sect4>
             <sect4>
               <title>Ctrl Change Bitfield</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_CtrlChangeBitField.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_CtrlChangeBitField.png" /></imageobject></mediaobject>
               <simpara>This setting is used by some Content&#8482; digital organs. Up to 7 stops are packed in a single controller value where each bit controls a single stop.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -2234,7 +2234,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
             </sect4>
             <sect4>
               <title>Bx Ctrl Change Fixed Value</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxCtrlChangeFixedValue.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_BxCtrlChangeFixedValue.png" /></imageobject></mediaobject>
               <simpara>This setting is used by some Alhborn&#8482; digital organs. GrandOrgue detects bit patterns like Stop on = 01xx xxxx ; Stop Off = 00xx xxxx.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -2271,7 +2271,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
             </sect4>
             <sect4>
               <title>Bx Ctrl Change Fixed On Value Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxCtrlChangeFixedValueOnToggle.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_BxCtrlChangeFixedValueOnToggle.png" /></imageobject></mediaobject>
               <simpara>This setting is used by some Alhborn&#8482; digital organs. GrandOrgue toggles the drawstop or button state when detecting bit patterns like 01xx xxxx.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -2308,7 +2308,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
             </sect4>
             <sect4>
               <title>Bx Ctrl Change Fixed Off Value Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_receive_BxCtrlChangeFixedValueOffToggle.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_receive_BxCtrlChangeFixedValueOffToggle.png" /></imageobject></mediaobject>
               <simpara>This setting is used by some Alhborn&#8482; digital organs. GrandOrgue toggles the drawstop or button state when detecting bit patterns like 00xx xxxx.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -2345,7 +2345,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
             </sect4>
             <sect4>
               <title>Sys Ex Johannus</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_SysexJohannus.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_SysexJohannus.png" /></imageobject></mediaobject>
               <simpara>This setting is used by Johannus&#8482; digital organs. The button or drawstop toggles its state whenever two successive identical messages are received.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -2382,7 +2382,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
             </sect4>
             <sect4>
               <title>Sys Ex Viscount</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_SysexViscount.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_SysexViscount.png" /></imageobject></mediaobject>
               <simpara>This setting is used by Viscount&#8482; digital organs.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -2419,7 +2419,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
             </sect4>
             <sect4>
               <title>Sys Ex Viscount Toggle</title>
-              <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_SysexViscount.png" /></imageobject></mediaobject>
+              <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_SysexViscount.png" /></imageobject></mediaobject>
               <simpara>This setting is used by Viscount&#8482; digital organs. The button or drawstop toggles its state whenever two successive identical messages are received.</simpara>
               <informaltable frame="none">
                 <tgroup cols="2">
@@ -2470,7 +2470,7 @@ MIDI event and all associated settings.
           <title>Send</title>
           <sect4>
             <title>9x Note</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_Note.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_Note.png" /></imageobject></mediaobject>
             <simpara>Send NoteOn when the drawstop/button toggles to <emphasis>On</emphasis> state. Send "NoteOff" when the drawstop/button toggles to <emphasis>Off</emphasis> state.</simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2498,7 +2498,7 @@ MIDI event and all associated settings.
           </sect4>
           <sect4>
             <title>9x Note On</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_NoteOn.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_NoteOn.png" /></imageobject></mediaobject>
             <simpara>Send NoteOn only when the drawstop/button goes to <emphasis>On</emphasis> state.</simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2523,7 +2523,7 @@ MIDI event and all associated settings.
           </sect4>
           <sect4>
             <title>9x Note Off</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_NoteOff.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_NoteOff.png" /></imageobject></mediaobject>
             <simpara>Send "NoteOff" only when the drawstop/button goes to <emphasis>Off</emphasis> state.</simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2551,7 +2551,7 @@ MIDI event and all associated settings.
           </sect4>
           <sect4>
             <title>Bx Controller</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_BxController.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_BxController.png" /></imageobject></mediaobject>
             <simpara>Send controller values when the drawstop/button changes state. The message sequence is Bn Controller# &lt;value&gt;</simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2578,7 +2578,7 @@ MIDI event and all associated settings.
           </sect4>
           <sect4>
             <title>Bx Controller On</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_BxControllerOn.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_BxControllerOn.png" /></imageobject></mediaobject>
             <simpara>Send controller value only when the drawstop/button goes to <emphasis>On</emphasis> state.</simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2603,7 +2603,7 @@ MIDI event and all associated settings.
           </sect4>
           <sect4>
             <title>Bx Controller Off</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_BxControllerOff.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_BxControllerOff.png" /></imageobject></mediaobject>
             <simpara>Send controller value only when the drawstop/button goes to <emphasis>Off</emphasis> state.</simpara>
             <informaltable frame="none">
               <tgroup cols="2">
@@ -2628,7 +2628,7 @@ MIDI event and all associated settings.
           </sect4>
           <sect4>
             <title>Cx Program Change On</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_CxProgramChangeOn.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_CxProgramChangeOn.png" /></imageobject></mediaobject>
             <simpara>
 Send Bank Select and Program Change only when the drawstop/button goes to
 <emphasis>On</emphasis> state. The message sequence is: Bn 0x00 bank# MSB ;
@@ -2666,7 +2666,7 @@ bits ORed (bitwise) with <emphasis>data2</emphasis> shifted left 7 bits ORed
           </sect4>
           <sect4>
             <title>Cx Program Change Off</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_CxProgramChangeOff.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_CxProgramChangeOff.png" /></imageobject></mediaobject>
             <simpara>
 Send Bank Select and Program Change only when the drawstop/button goes to
 <emphasis>Off</emphasis> state. The message sequence is: Bn 0x00 bank# MSB ;
@@ -2704,7 +2704,7 @@ bits ORed (bitwise) with <emphasis>data2</emphasis> shifted left 7 bits ORed
           </sect4>
           <sect4>
             <title>RPN</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_RPN.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_RPN.png" /></imageobject></mediaobject>
             <simpara>
               Send RPN values when the drawstop/button changes state.
               The message sequence is Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 parameter value.
@@ -2741,7 +2741,7 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
           </sect4>
           <sect4>
             <title>NRPN</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_NRPN.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_NRPN.png" /></imageobject></mediaobject>
             <simpara>
               Send NRPN values when the drawstop/button changes state.
               The message sequence is Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 parameter value.
@@ -2778,7 +2778,7 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
           </sect4>
           <sect4>
             <title>Cx Program Change Range</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_CxProgramChangeRange.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_CxProgramChangeRange.png" /></imageobject></mediaobject>
             <simpara>Send Bank Select and Program Change when the drawstop/button changes state.</simpara>
             <simpara>
 GrandOrgue always sends Bn 0x00 &lt;data1&gt;; Bn 0x20 &lt;data2&gt;; Cn prog#.
@@ -2810,7 +2810,7 @@ bits ORed (bitwise) with <emphasis>data2</emphasis> shifted left 7 bits ORed
           </sect4>
           <sect4>
             <title>RPN On</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_RPNOn.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_RPNOn.png" /></imageobject></mediaobject>
             <simpara>
               Send RPN value only when the drawstop/button changes to <emphasis>On</emphasis> state.
               The message sequence is Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 parameter value.
@@ -2845,7 +2845,7 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
           </sect4>
           <sect4>
             <title>RPN Off</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_RPNOff.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_RPNOff.png" /></imageobject></mediaobject>
             <simpara>
               Send RPN value only when the drawstop/button changes to <emphasis>Off</emphasis> state.
               The message sequence is Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 parameter value.
@@ -2880,7 +2880,7 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
           </sect4>
           <sect4>
             <title>NRPN On</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_RPNOn.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_RPNOn.png" /></imageobject></mediaobject>
             <simpara>
               Send NRPN value only when the drawstop/button changes to <emphasis>On</emphasis> state.
               The message sequence is Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 parameter value.
@@ -2915,7 +2915,7 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
           </sect4>
           <sect4>
             <title>NRPN Off</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_NRPNOff.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_NRPNOff.png" /></imageobject></mediaobject>
             <simpara>
               Send NRPN value only when the drawstop/button changes to <emphasis>Off</emphasis> state.
               The message sequence is Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 parameter value.
@@ -2950,7 +2950,7 @@ math: (parameter# MSB &lt;&lt; 7) | parameter# LSB ].
           </sect4>
           <sect4>
             <title>RPN Range</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_RPNRange.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_RPNRange.png" /></imageobject></mediaobject>
             <simpara>Send RPN when the drawstop/button changes state.</simpara>
             <simpara>
 GrandOrgue always sends Bn 0x65 parameter# MSB; Bn 0x64 parameter# LSB; Bn 0x06 parameter value.
@@ -2981,7 +2981,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>parameter# LSB</emphasis>
           </sect4>
           <sect4>
             <title>NRPN Range</title>
-            <mediaobject><imageobject><imagedata fileref="midi_event_editor_button_send_NRPNRange.png" /></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_button_send_NRPNRange.png" /></imageobject></mediaobject>
             <simpara>Send NRPN when the drawstop/button changes state.</simpara>
             <simpara>
 GrandOrgue always sends Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 parameter value.
@@ -3024,7 +3024,7 @@ device. GrandOrgue sends the label contents following the Hauptwerk&#8482; stand
         </para>
         <sect3>
           <title>Hauptwerk SYSEX 32 byte LCD</title>
-          <mediaobject><imageobject><imagedata fileref="midi_event_editor_label_send_HW32.png" /></imageobject></mediaobject>
+          <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_label_send_HW32.png" /></imageobject></mediaobject>
           <para>This setting drives a Hauptwerk&#8482; compatible LCD display, including the RGB LED color. Up to 32 characters are sent to the LCD display.</para>
           <variablelist>
             <varlistentry>
@@ -3043,7 +3043,7 @@ device. GrandOrgue sends the label contents following the Hauptwerk&#8482; stand
         </sect3>
         <sect3>
           <title>Hauptwerk SYSEX 16 byte string</title>
-          <mediaobject><imageobject><imagedata fileref="midi_event_editor_label_send_HW16.png" /></imageobject></mediaobject>
+          <mediaobject><imageobject><imagedata fileref="images/midi_event_editor_label_send_HW16.png" /></imageobject></mediaobject>
           <para>This setting sends character strings to a Hauptwerk&#8482; compatible LCD display. The RGB LED (if any) color is ignored. Up to 16 characters are sent to the LCD display.</para>
           <variablelist>
             <varlistentry>
@@ -3071,7 +3071,7 @@ device. GrandOrgue sends the label contents following the Hauptwerk&#8482; stand
     <title>Audio &amp; Organ settings overview</title>
     <mediaobject>
     <imageobject>
-    <imagedata scalefit="1" width="100%" fileref="audio_big_picture.png"/>
+    <imagedata scalefit="1" width="100%" fileref="images/audio_big_picture.png"/>
     </imageobject>
     </mediaobject>
     </figure>
@@ -3183,7 +3183,7 @@ the name <emphasis>GrandOrgueConfig</emphasis> becomes <emphasis><emphasis role=
         <title>Midi &amp; Audio Settings / Options</title>
         <mediaobject>
           <imageobject>
-            <imagedata scalefit="1" width="100%" fileref="options_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="images/options_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -3808,7 +3808,7 @@ user experience.
       <indexterm><primary>Initial Settings</primary></indexterm>
       <figure>
         <title>Defaults and Initial Settings tab</title>
-        <mediaobject><imageobject><imagedata scalefit="1" width="100%" fileref="default_and_initial_settings.png" /></imageobject></mediaobject>
+        <mediaobject><imageobject><imagedata scalefit="1" width="100%" fileref="images/default_and_initial_settings.png" /></imageobject></mediaobject>
       </figure>
       <para>This dialog manages default and initial values for settings which are controlled in various panels or dialogs. The values defined in this tab are stored in the global configuration file.</para>
       <sect2>
@@ -3979,7 +3979,7 @@ GrandOrgue <link linkend="settingsstore">stores</link> preset files.
         <title>Audio Output tab</title>
         <mediaobject>
           <imageobject>
-            <imagedata scalefit="1" width="100%" fileref="audio_output_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="images/audio_output_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -4017,7 +4017,7 @@ GrandOrgue <link linkend="settingsstore">stores</link> preset files.
           <para>The <emphasis>Add</emphasis> button opens a pick list with all audio devices found in the system.</para>
           <mediaobject id="audiodevicepicklist">
             <imageobject>
-              <imagedata fileref="audio_devices_picklist.png"/>
+              <imagedata fileref="images/audio_devices_picklist.png"/>
             </imageobject>
           </mediaobject>
           <para>Each audio device is prefixed by its type (ASIO, DirectSound, ALSA, JACK, etc.)</para>
@@ -4025,7 +4025,7 @@ GrandOrgue <link linkend="settingsstore">stores</link> preset files.
           <para>Select the desired audio device. The devices list is updated with the new device which is initialized with a single channel.</para>
           <mediaobject>
             <imageobject>
-              <imagedata scalefit="1" width="100%" fileref="audio_devices_updated.png"/>
+              <imagedata scalefit="1" width="100%" fileref="images/audio_devices_updated.png"/>
             </imageobject>
           </mediaobject>
           <para>The new device needs further configuration to be usable. See <link linkend="audiochannels">Managing Channels</link> for more information.</para>
@@ -4057,7 +4057,7 @@ GrandOrgue <link linkend="settingsstore">stores</link> preset files.
           <para>The <emphasis>Properties</emphasis> button becomes active  when an audio device is selected in the tree. It opens a dialog which allows  to set a <emphasis>requested</emphasis> latency.</para>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="audio_device_latency_dialog.png"/>
+              <imagedata fileref="images/audio_device_latency_dialog.png"/>
             </imageobject>
           </mediaobject>
           <note>
@@ -4145,7 +4145,7 @@ GrandOrgue <link linkend="settingsstore">stores</link> preset files.
           <para>This feature is available when a <emphasis role="bold">Channel n</emphasis> node is selected in the tree. The <emphasis>Add</emphasis> button opens a pick list which allows to choose one or more audio group channels.</para>
           <mediaobject>
             <imageobject>
-              <imagedata scalefit="1" width="100%" fileref="audiogroup_picklist.png"/>
+              <imagedata scalefit="1" width="100%" fileref="images/audiogroup_picklist.png"/>
             </imageobject>
           </mediaobject>
           <para>The <emphasis>Add</emphasis> button becomes unavailable when all audio group channels are used and the pick list is empty.</para>
@@ -4171,7 +4171,7 @@ GrandOrgue <link linkend="settingsstore">stores</link> preset files.
           <para>This feature is available when an <emphasis role="bold">audio group</emphasis> node is selected in the tree. The <emphasis>Properties</emphasis> button opens the property dialog which allows to set a gain value (in db). 0 means "original volume". A positive value makes the audio group louder than original, a negative value makes the audio group softer.</para>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="audiogroup_volume.png"/>
+              <imagedata fileref="images/audiogroup_volume.png"/>
             </imageobject>
           </mediaobject>
         </sect3>
@@ -4186,7 +4186,7 @@ GrandOrgue <link linkend="settingsstore">stores</link> preset files.
         <title>Reverberation options</title>
         <mediaobject>
           <imageobject>
-            <imagedata scalefit="1" width="100%" fileref="reverb_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="images/reverb_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -4206,7 +4206,7 @@ convolution engine to produce the reverberated wave.
           <term>Enable Convolution Reverb</term>
           <listitem>
             <simpara>This checkbox enables the feature. A pop-up is displayed which can be safely ignored.</simpara>
-            <mediaobject><imageobject><imagedata fileref="reverb_warning.png"/></imageobject></mediaobject>
+            <mediaobject><imageobject><imagedata fileref="images/reverb_warning.png"/></imageobject></mediaobject>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -4273,7 +4273,7 @@ recorded release tail of wet samples.
         <title>Audio Groups tab</title>
         <mediaobject>
           <imageobject>
-            <imagedata scalefit="1" width="100%" fileref="audio_groups_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="images/audio_groups_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -4288,7 +4288,7 @@ recorded release tail of wet samples.
         <para>The <emphasis>Add</emphasis> button opens a dialog where one can type the new audio group name.</para>
         <mediaobject>
           <imageobject>
-            <imagedata scalefit="1" width="100%" fileref="new_audio_group.png"/>
+            <imagedata scalefit="1" width="100%" fileref="images/new_audio_group.png"/>
           </imageobject>
         </mediaobject>
         <caution><simpara>If an audiogroup is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</simpara></caution>
@@ -4326,7 +4326,7 @@ recorded release tail of wet samples.
         <title>Organs tab</title>
         <mediaobject id="manage_known_organs">
           <imageobject>
-            <imagedata scalefit="1" width="100%" fileref="organs_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="images/organs_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -4381,7 +4381,7 @@ messages to easily switch between samplesets.
         <title>MIDI devices options</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="midi_devices_tab.png"/>
+            <imagedata fileref="images/midi_devices_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -4406,7 +4406,7 @@ channel.
             <title>MIDI input channel advanced properties</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="midi_input_device_advanced_properties.png"/>
+                <imagedata fileref="images/midi_input_device_advanced_properties.png"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -4452,7 +4452,7 @@ Recorder-generated output. The selected device must be activeted in the
       <indexterm><primary>User-defined Temperament</primary></indexterm>
       <figure>
         <title>User-defined Temperaments</title>
-        <mediaobject><imageobject><imagedata fileref="temperaments_tab.png" /></imageobject></mediaobject>
+        <mediaobject><imageobject><imagedata fileref="images/temperaments_tab.png" /></imageobject></mediaobject>
       </figure>
       <para>This tab enables the user to add his own custom temperaments. User-defined temperaments are displayed in dynamic submenus in the <emphasis>Audio/Midi &gt; Temperaments</emphasis> menu.</para>
       <para>The <emphasis role="bold">Add</emphasis> button adds a new "empty" line.</para>
@@ -4488,7 +4488,7 @@ role="bold">Group</emphasis> attribute are grouped in the same submenu.
         <title>Initial Midi Configuration options</title>
         <mediaobject>
           <imageobject>
-            <imagedata scalefit="1" width="100%" fileref="initial_midi_tab.png"/>
+            <imagedata scalefit="1" width="100%" fileref="images/initial_midi_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -4597,7 +4597,7 @@ MIDI settings work properly.
       <title>Organ Settings dialog</title>
       <mediaobject>
         <imageobject>
-          <imagedata scalefit="1" width="100%" fileref="organ_settings.png"/>
+          <imagedata scalefit="1" width="100%" fileref="images/organ_settings.png"/>
         </imageobject>
       </mediaobject>
     </figure>
@@ -4845,15 +4845,15 @@ or closing the dialog with the <emphasis role="bold">OK</emphasis> button.
     <sect1>
       <title>Collapse tree button</title>
       <para>When the dialog opens, the tree is displayed unfolded to the pipe level. This button is a shortcut for displaying only the root node:</para>
-      <mediaobject><imageobject><imagedata fileref="organ_settings_collapsed.png" /></imageobject></mediaobject>
+      <mediaobject><imageobject><imagedata fileref="images/organ_settings_collapsed.png" /></imageobject></mediaobject>
       <para>Double-click the organ name to unfold the tree to the windchest level:</para>
-      <mediaobject><imageobject><imagedata fileref="organ_settings_unfold.png" /></imageobject></mediaobject>
+      <mediaobject><imageobject><imagedata fileref="images/organ_settings_unfold.png" /></imageobject></mediaobject>
     </sect1>
     <sect1>
       <title>Distribute audio groups button</title>
       <para>This button allows to spread the selected elements over selected audio groups. The elements are spread over audio groups using a round-robin scheme.</para>
       <para>Select the elements to spread, click the button. A dialog opens where the desired audio groups can be selected by checking their box.
-      <mediaobject><imageobject><imagedata scalefit="1" width="100%" fileref="distribute_audio_groups.png"/></imageobject></mediaobject>
+      <mediaobject><imageobject><imagedata scalefit="1" width="100%" fileref="images/distribute_audio_groups.png"/></imageobject></mediaobject>
       Push the <emphasis role="bold">OK</emphasis> button. The modification is applied.
       </para>
       <caution>
@@ -4867,7 +4867,7 @@ or closing the dialog with the <emphasis role="bold">OK</emphasis> button.
   </chapter>
   <chapter>
     <title>Panels</title>
-    <mediaobject><imageobject><imagedata fileref="panel_menu.png" /></imageobject></mediaobject>
+    <mediaobject><imageobject><imagedata fileref="images/panel_menu.png" /></imageobject></mediaobject>
     <para>This menu controls control panels. Menu items starting at <emphasis>Coupler</emphasis> down to <emphasis>Master Controls</emphasis> are standard menu items (i.e. present whatever sampleset is loaded).</para>
     <para>
 All other menu items (above <emphasis>Coupler</emphasis>) are defined within
@@ -4875,10 +4875,10 @@ the loaded sampleset and should be documented in the sampleset's specific user
 manual (if any). They usually are referred to as <emphasis>Custom Panels</emphasis>.
     </para>
     <para>Custom Panel menu items can be organized in submenus as shown in this screen shot taken from Piteå Music School sampleset.</para>
-    <mediaobject><imageobject><imagedata fileref="pitea_panel_menu.png" /></imageobject></mediaobject>
+    <mediaobject><imageobject><imagedata fileref="images/pitea_panel_menu.png" /></imageobject></mediaobject>
     <sect1 id="couplers">
       <title>Coupler</title>
-      <mediaobject><imageobject><imagedata fileref="coupler_menu.png" /></imageobject></mediaobject>
+      <mediaobject><imageobject><imagedata fileref="images/coupler_menu.png" /></imageobject></mediaobject>
       <para>
 GrandOrgue provides a default set of couplers for each keyboard or pedal board
 found in the Organ Definition File, plus a coupler set for each of the default
@@ -4891,7 +4891,7 @@ provide them.
       <note><simpara>The coupling manuals are not designed to be the target of a coupler.</simpara></note>
       <figure>
         <title>Coupler &lt;keyboard name&gt; Layout</title>
-        <mediaobject><imageobject><imagedata scalefit="1" fileref="coupler_panel.png"/></imageobject></mediaobject>
+        <mediaobject><imageobject><imagedata scalefit="1" fileref="images/coupler_panel.png"/></imageobject></mediaobject>
       </figure>
       <informaltable frame="none">
         <tgroup cols="2">
@@ -4938,7 +4938,7 @@ line may occur. The same applies for the MEL coupler and the highest line.
     </sect1>
     <sect1 id="scope">
       <title>Regular, Scope and Scoped, Full</title>
-        <mediaobject><imageobject><imagedata scalefit="1" fileref="regular_scope_scoped_full.png"/></imageobject></mediaobject>
+        <mediaobject><imageobject><imagedata scalefit="1" fileref="images/regular_scope_scoped_full.png"/></imageobject></mediaobject>
       <para>
 These features are shared by the <emphasis>Crescendo</emphasis>,
 <emphasis>Divisionals</emphasis>, <emphasis>Generals</emphasis> and
@@ -5005,7 +5005,7 @@ for more information.
     </sect1>
     <sect1>
       <title>Divisionals</title>
-      <mediaobject><imageobject><imagedata fileref="panel_divisionals.png" /></imageobject></mediaobject>
+      <mediaobject><imageobject><imagedata fileref="images/panel_divisionals.png" /></imageobject></mediaobject>
       <para>
 GrandOrgue automatically adds a set of 10 divisional combination stores to each
 keyboard or pedal board found in the Organ Definition file. This enables the
@@ -5034,7 +5034,7 @@ provide them.
     </sect1>
     <sect1>
       <title>Generals</title>
-      <mediaobject><imageobject><imagedata fileref="panel_generals.png" /></imageobject></mediaobject>
+      <mediaobject><imageobject><imagedata fileref="images/panel_generals.png" /></imageobject></mediaobject>
       <para>
 GrandOrgue automatically adds 4 banks of 50 general combination stores to any
 loaded sampleset. This enables the user to take advantage of "modern"
@@ -5078,7 +5078,7 @@ accessories even when the sampleset doesn't provide them.
     </sect1>
     <sect1 id="couplerManuals">
       <title>Coupler Manuals and Volume</title>
-      <mediaobject><imageobject><imagedata fileref="coupler_manuals.png" /></imageobject></mediaobject>
+      <mediaobject><imageobject><imagedata fileref="images/coupler_manuals.png" /></imageobject></mediaobject>
       <para>This panel displays a III/P fictional console with swell shoes. The keyboards are coupler manuals. This fictional console is independent of the actual layout of the sample set.</para>
       <sect2>
         <title>Coupler manuals</title>
@@ -5110,7 +5110,7 @@ The embedded metronome is managed using its own separate windchest.
     </sect1>
     <sect1 id="metronome">
       <title>Metronome</title>
-      <mediaobject><imageobject><imagedata fileref="metronome.png" /></imageobject></mediaobject>
+      <mediaobject><imageobject><imagedata fileref="images/metronome.png" /></imageobject></mediaobject>
       <para>This panel controls the embedded metronome.</para>
       <sect2>
         <title>ON</title>
@@ -5185,7 +5185,7 @@ closed with changed metronome settings.
     </sect1>
     <sect1 id="masterControls">
       <title>Master Controls</title>
-      <mediaobject><imageobject><imagedata fileref="master_controls.png" /></imageobject></mediaobject>
+      <mediaobject><imageobject><imagedata fileref="images/master_controls.png" /></imageobject></mediaobject>
       <para>
 This panel groups at the same place some controls that are used while playing.
 Each displayed element can be associated to a <link linkend="midieventeditor">MIDI event</link>
@@ -5366,7 +5366,7 @@ stereo WAV file at 44.1 kHz, 1 second is equivalent to 441000 samples.
         <title>background bitmaps 1 to 30</title>
         <mediaobject>
           <imageobject>
-            <imagedata width="100%" scalefit="1" fileref="background1to30.jpg"/>
+            <imagedata width="100%" scalefit="1" fileref="images/background1to30.jpg"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -5374,7 +5374,7 @@ stereo WAV file at 44.1 kHz, 1 second is equivalent to 441000 samples.
         <title>background bitmaps 31 to 64</title>
         <mediaobject>
           <imageobject>
-            <imagedata width="100%" scalefit="1" fileref="background31to64.jpg"/>
+            <imagedata width="100%" scalefit="1" fileref="images/background31to64.jpg"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -6351,7 +6351,7 @@ exact order can be specified via an attribute.
         <title>background regions</title>
         <mediaobject>
           <imageobject>
-            <imagedata width="100%" scalefit="1" fileref="background-usage.jpg"/>
+            <imagedata width="100%" scalefit="1" fileref="images/background-usage.jpg"/>
           </imageobject>
         </mediaobject>
       </figure>
