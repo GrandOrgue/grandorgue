@@ -1,8 +1,20 @@
-include(CMakeHtmlHelp.txt)
+include(${CMAKE_SOURCE_DIR}/cmake/BuildHelp.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/GetText.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/TranslateHelp.cmake)
 
 file(GLOB PO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.po)
 
-BUILD_HELPFILE(help-main ${BUILD_HELP} ${CMAKE_CURRENT_SOURCE_DIR}/grandorgue.xml "")
+if(XSLTPROC AND DOCBOOK_PATH AND ZIP)
+  BUILD_HELPFILE(${CMAKE_CURRENT_SOURCE_DIR}/grandorgue.xml "")
+
+  if(PO4A_GETTEXT AND PO4A_TRANSLATE)
+    PO4A_BUILD_HELP(${CMAKE_CURRENT_SOURCE_DIR}/grandorgue.xml ${PO_FILES})
+  else()
+    MESSAGE(STATUS "Not building translations - some programs are missing")
+  endif()
+else()
+   MESSAGE(STATUS "Not build help - some programs are missing")
+endif()
+
 PO4A_UPDATE_POT(help-update-pot grandorgue.pot grandorgue.xml)
-GETTEXT_MERGE_PO(help-merge-po grandorgue.pot ${PO_FILES})
-PO4A_BUILD_HELP(help-translate ${CMAKE_CURRENT_SOURCE_DIR}/grandorgue.xml ${PO_FILES})
+GETTEXT_MERGE_PO(help-merge-pot grandorgue.pot ${PO_FILES})
