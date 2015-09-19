@@ -1,4 +1,4 @@
-include(FindGettext)
+include(${CMAKE_SOURCE_DIR}/cmake/GetText.cmake)
 include(CMakeGetText.txt)
 
 file(GLOB_RECURSE SRC_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp ${CMAKE_SOURCE_DIR}/src/*.h)
