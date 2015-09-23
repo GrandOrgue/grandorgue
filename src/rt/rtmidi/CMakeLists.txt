@@ -63,7 +63,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
    if (RTMIDI_USE_JACK)
       add_definitions(-D__UNIX_JACK__)
-      target_link_libraries(RtMidi jackmp)
+      target_link_libraries(RtMidi jack)
    endif ()
 
    if (RTMIDI_USE_CORE)

@@ -155,7 +155,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    if (RTAUDIO_USE_JACK)
       add_definitions(-DPA_USE_JACK)
       set(PortAudio_Sources ${PortAudio_Sources} hostapi/jack/pa_jack.c)
-      set(PA_Libs ${PA_Libs} jackmp)
+      set(PA_Libs ${PA_Libs} jack)
    endif ()
 
    if (RTAUDIO_USE_CORE)
