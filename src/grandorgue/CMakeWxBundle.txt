@@ -1,5 +1,5 @@
 include(${CMAKE_SOURCE_DIR}/GetPrerequisites.cmake)
-include(${CMAKE_SOURCE_DIR}/po/CMakeGetText.txt)
+include(${CMAKE_SOURCE_DIR}/cmake/GetText.cmake)
 
 macro(InstallWxTranslations)
   set(moFiles)
