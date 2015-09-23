@@ -88,7 +88,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
    if (RTAUDIO_USE_JACK)
       add_definitions(-D__UNIX_JACK__)
-      target_link_libraries(RtAudio jackmp)
+      target_link_libraries(RtAudio jack)
    endif ()
 
    if (RTAUDIO_USE_CORE)
