@@ -8,6 +8,7 @@ endif()
 
 include(CMakeWxWidgetsInclude.txt)
 include(CMakeWxBundle.txt)
+include(${CMAKE_SOURCE_DIR}/cmake/AddLinkerOption.cmake)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgueDef.h.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h/GrandOrgueDef.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib)
@@ -179,20 +180,6 @@ wxGaugeAudio.cpp)
 
 add_library(golib STATIC ${grandorgue_src})
 target_link_libraries(golib goimg ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
-
-macro(add_linker_option _target _option)
-  set(_name "OPTION_LINK_${_option}")
-  SET(CMAKE_REQUIRED_FLAGS "-Wl,--${_option}")
-  CHECK_CXX_COMPILER_FLAG("" ${_name})
-  if(${_name})
-    set(new_flags "-Wl,--${_option}")
-    get_target_property(existing_flags ${_target} LINK_FLAGS)
-    if(existing_flags)
-      set(new_flags "${existing_flags} ${new_flags}")
-    endif()
-    set_target_properties(${_target} PROPERTIES LINK_FLAGS ${new_flags})
-  endif()
-endmacro()
 
 if (WIN32)
 
