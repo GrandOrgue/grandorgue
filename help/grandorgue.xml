@@ -740,7 +740,7 @@ can be engaged by clicking the mouse. Right clicking on a manual will
 open its corresponding <link linkend="midieventeditor">MIDI Event Editor</link>.
 </para>
       </sect2>
-      <sect2>
+      <sect2 id="expressionshoe">
         <title>Expression Shoes</title>
         <indexterm>
           <primary>Expression Shoes</primary>
@@ -825,7 +825,7 @@ displayed in chronological order: oldest on the first line.
     <indexterm><primary>Midi Event Editor</primary></indexterm>
     <para>
 Every console element, including those defined on <link
-linkend="panels">panels</link>, is configurable with this editor. The
+linkend="panel">panels</link>, is configurable with this editor. The
 Midi Event Editor is invoked by right-clicking on the element.
     </para> 
     <sect1>
@@ -3016,11 +3016,11 @@ shifted left 7 bits ORed (bitwise) with <emphasis>parameter# LSB</emphasis>
         <title>Label</title>
         <para>
 GrandOrgue supports "active" labels. These are labels which display variable
-contents, such as the step number in the <!-- link
-linkend="crescendoPanel"-->Crescendo panel<!--/link-->, the temperament name in
-the <link linkend="masterControls">Master Controls panel</link> and
-many others. Labels can be configured only for sending data to a Midi LCD
-device. GrandOrgue sends the label contents following the Hauptwerk&#8482; standards.
+contents, such as the step number in the <link
+  linkend="crescendoPanel">Crescendo panel</link>, the temperament name in the
+<link linkend="masterControls">Master Controls panel</link> and many others.
+Labels can be configured only for sending data to a Midi LCD device. GrandOrgue
+sends the label contents following the Hauptwerk&#8482; standards.
         </para>
         <sect3>
           <title>Hauptwerk SYSEX 32 byte LCD</title>
@@ -4999,9 +4999,60 @@ for more information.
         </para>
       </sect2>
     </sect1>
-    <sect1>
+    <sect1 id="crescendoPanel">
       <title>Crescendo Pedal</title>
-      <para></para>
+      <mediaobject><imageobject><imagedata fileref="images/panel_crescendo.png" /></imageobject></mediaobject>
+      <para>GrandOrgue automatically adds 4 crescendo banks of 32 steps each. This enables the user to take advantage of "modern" accessories even when the sampleset doesn't provide them.</para>
+      <variablelist>
+        <varlistentry>
+          <term>Label on top</term>
+          <listitem><simpara>Displays the current step. It is an "active" label, and as such supports a <link linkend="activelabel">Midi send</link> configuration</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Set</term>
+          <listitem><simpara>Shortcut to <link linkend="memoryset">Memory Set</link></simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+        	<term>Regular</term>
+        	<term>Scope</term>
+        	<term>Scoped</term>
+        	<term>Full</term>
+        	<listitem><simpara>See <link linkend="scope">Regular, Scope and Scoped, Full</link></simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+        	<term>A</term>
+        	<term>B</term>
+        	<term>C</term>
+        	<term>D</term>
+        	<listitem><simpara>Select the crescendo bank to use. The current bank is highlighted</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+        	<term>&lt;</term>
+          <listitem><simpara>
+              Move to the previous step. While <link linkend="memoryset">setting</link>, store the state of drawstops and couplers (according to regular or scope/scoped) into the previous step.</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+        	<term>Current</term>
+          <listitem><simpara>
+While <link linkend="memoryset">setting</link>, store the state of drawstops and
+couplers (according to regular or scope/scoped) into the current crescendo
+step, otherwise recall the current step's state.
+          </simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+        	<term>&gt;</term>
+        	<listitem><simpara>Move to the next step. While <link linkend="memoryset">setting</link>, store the state of drawstops and couplers (according to regular or scope/scoped) into the next step.</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+        	<term>Crescendo shoe</term>
+          <listitem><simpara>
+This shoe controls the crescendo. It behaves like an <link
+  linkend="expressionshoe">expression shoe</link>. If the physical console has
+a dedicated MIDI controller, the 32 steps are evenly spread across the range of
+values set in the <link linkend="midieventeditor">MIDI event editor</link>
+          </simpara></listitem>
+        </varlistentry>
+      </variablelist>
     </sect1>
     <sect1>
       <title>Divisionals</title>
