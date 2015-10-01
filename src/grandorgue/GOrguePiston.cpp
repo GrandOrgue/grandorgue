@@ -69,6 +69,9 @@ void GOrguePiston::Load(GOrgueConfigReader& cfg, wxString group)
 	else
 	  throw wxString::Format(_("Invalid object type for reversible piston"));
 
+	if (drawstop->IsReadOnly())
+		wxLogError(_("Reversible piston connect to a read-only object: %s"), group.c_str());
+
 	GOrguePushbutton::Load(cfg, group);
 	ControlChanged(drawstop);
 }
