@@ -5356,7 +5356,8 @@ This section will be populated once questions become frequently asked.
       <title>General information</title>
       <para>
 It is a text file in ISO-8859-1 encoding. The standard extension is
-<emphasis>.organ</emphasis>.
+<emphasis>.organ</emphasis>. As an alternative, the file might be encoded in
+UTF-8, if it starts with an approriate byte order marker.
       </para>
       <para>
 Comment lines are started with <emphasis>;</emphasis> in the first column. Empty lines are ignored.
