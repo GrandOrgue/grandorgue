@@ -113,6 +113,7 @@ if (WIN32)
    endif ()
 
    set(PortAudio_Sources ${PortAudio_Sources} ${PortAudio_Win})
+   set(PA_Libs ${PA_Libs} winmm)
    include_directories(os/win)
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
