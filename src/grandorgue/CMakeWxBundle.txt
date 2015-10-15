@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/GetPrerequisites.cmake)
+include(GetPrerequisites)
 include(${CMAKE_SOURCE_DIR}/cmake/GetText.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/InstallTranslations.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyWxTranslations.cmake)
