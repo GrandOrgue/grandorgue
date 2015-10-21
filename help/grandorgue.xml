@@ -5125,7 +5125,107 @@ accessories even when the sampleset doesn't provide them.
     </sect1>
     <sect1>
       <title>Combination Setter</title>
-      <para></para>
+      <mediaobject><imageobject><imagedata fileref="images/panel_setter.png" /></imageobject></mediaobject>
+      <para>
+GrandOrgue automatically adds a 1000-slot combination setter to any loaded
+sampleset. This enables the user to take advantage of "modern" accessories even
+when the sampleset doesn't provide them.
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Label on top</term>
+          <listitem><simpara>Displays the current slot. It is an "active" label, and as such supports a <link linkend="activelabel">Midi send</link> configuration</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Current</term>
+          <listitem><simpara>
+While <link linkend="memoryset">setting</link>, store the state of drawstops
+and couplers (according to regular or scope/scoped) into the current slot,
+otherwise recall the current slot's state.
+          </simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>-100</term>
+          <term>+100</term>
+          <listitem><simpara>Navigate 100 slots backwards or forward without recalling the combination (prepare it)</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>-10</term>
+          <term>+10</term>
+          <listitem><simpara>Navigate 10 slots backwards or forward without recalling the combination (prepare it)</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>-1</term>
+          <term>+1</term>
+          <listitem><simpara>Navigate 1 slot backwards or forward without recalling the combination (prepare it)</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Next</term>
+          <listitem><simpara>
+While <link linkend="memoryset">setting</link>, store the state of drawstops
+and couplers (according to regular or scope/scoped) into the next slot,
+otherwise recall the next slot's state.
+          </simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Previous</term>
+          <listitem><simpara>
+While <link linkend="memoryset">setting</link>, store the state of drawstops
+and couplers (according to regular or scope/scoped) into the previous slot,
+otherwise recall the previous slot's state.
+          </simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>__0 .. __9</term>
+          <listitem><simpara>
+While <link linkend="memoryset">setting</link>, navigate to slot xx0 to xx9 and
+store the state of drawstops and couplers (according to regular or
+scope/scoped), otherwise navigate to slot xx0 to xx9 and recall the
+combination. The first two digits were previously set by the +/-100 and +/-10
+controls.
+          </simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Set</term>
+          <listitem><simpara>Shortcut to <link linkend="memoryset">Memory Set</link></simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Regular</term>
+          <term>Scope</term>
+          <term>Scoped</term>
+          <term>Full</term>
+          <listitem><simpara>See <link linkend="scope">Regular, Scope and Scoped, Full</link></simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>G.C.</term>
+          <listitem><simpara>General cancel. Resets the state to "all pushed"</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Insert</term>
+          <listitem>
+            <simpara>Shifts right all slots following the current slot. The behavior changes depending on the state of the <link linkend="memoryset">Set</link> button.
+              <variablelist>
+                <varlistentry>
+                  <term>Set ON</term>
+                  <listitem><simpara>the state of drawstops and couplers (according to regular or scope/scoped) is stored in the current slot</simpara></listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>Set OFF</term>
+                  <listitem><simpara>the state of the current slot (including scope) is kept unmodified</simpara></listitem>
+                </varlistentry>
+              </variablelist>
+              <note><simpara>The combination stored in the last slot (#999) is <emphasis role="strong">lost</emphasis></simpara></note></simpara>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>Delete</term>
+            <listitem>
+              <simpara>Shifts left all slots following the current slot. The state of the <link linkend="memoryset">Set</link> button does not change the behavior.
+                <note><simpara>The combination stored in the current slot is lost. The combination stored in slot #999 is reset to "empty".</simpara></note>
+              </simpara>
+            </listitem>
+          </varlistentry>
+       </variablelist>
     </sect1>
     <sect1 id="couplerManuals">
       <title>Coupler Manuals and Volume</title>
