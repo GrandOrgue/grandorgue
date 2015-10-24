@@ -17,10 +17,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+include(CheckCCompilerFlag)
+
 function(add_option _option)
-  set(_name "OPTION_${_option}")
-  CHECK_CXX_COMPILER_FLAG("-${_option}" ${_name})
+  set(_name "OPTION_C_${_option}")
+  string(REGEX REPLACE "=" "-EQ" _name ${_name})
+  string(REGEX REPLACE "\\+" "-P" _name ${_name})
+  CHECK_C_COMPILER_FLAG("${_option}" ${_name})
   if(${_name})
-   add_definitions("-${_option}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_option}" PARENT_SCOPE)
+  endif()
+  CHECK_CXX_COMPILER_FLAG("${_option}" ${_name})
+  if(${_name})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_option}" PARENT_SCOPE)
   endif()
 endfunction(add_option option)

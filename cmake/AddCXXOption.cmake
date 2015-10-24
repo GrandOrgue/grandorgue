@@ -17,8 +17,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+include(CheckCXXCompilerFlag)
+
 function(add_cxx_option _option)
-  set(_name "OPTION_LINK_${_option}")
+  set(_name "OPTION_CXX_${_option}")
   string(REGEX REPLACE "=" "-EQ" _name ${_name})
   string(REGEX REPLACE "\\+" "-P" _name ${_name})
   SET(CMAKE_REQUIRED_FLAGS "${_option}")
