@@ -12,7 +12,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/CopyWxTranslations.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyDependencies.cmake)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgueDef.h.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h/GrandOrgueDef.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource)
 
 add_subdirectory(images)
 
@@ -183,21 +183,6 @@ add_library(golib STATIC ${grandorgue_src})
 target_link_libraries(golib goimg ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
 
 if (WIN32)
-
-   if (MINGW)
-
-      set(CMAKE_RC_COMPILER_INIT windres)
-      enable_language(RC)
-
-      if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-         set(rc_debug_flag "")
-      else ()
-         set(rc_debug_flag "-DNDEBUG")
-      endif ()
-
-      set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> ${CMAKE_RC_FLAGS} ${rc_debug_flag} -O coff -D_WIN32 -I${CMAKE_CURRENT_SOURCE_DIR}/resource -i <SOURCE> -o <OBJECT>")
-
-   endif ()
 
    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.rc/GrandOrgue.rc)
    add_executable(${PROJECT_NAME} WIN32 GrandOrgue.cpp ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.rc/GrandOrgue.rc)
