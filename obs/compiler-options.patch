@@ -27,5 +27,5 @@ index 1182183..b748882 100644
 +#   add_option(-msse2)
 +#   add_option(-msse3)
     add_option(-funroll-loops)
-    add_option(-DNDEBUG)
+    add_defintions(-DNDEBUG)
  endif ()
