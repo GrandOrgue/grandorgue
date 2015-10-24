@@ -44,7 +44,7 @@ public:
 	TestApp();
 	bool OnInit();
 	int OnRun();
-	void RunTest(unsigned bits_per_sample, bool compress, unsigned sample_instances, unsigned sample_rate, unsigned interpolation, unsigned seconds, unsigned samples_per_frame);
+	void RunTest(unsigned bits_per_sample, bool compress, unsigned sample_instances, unsigned sample_rate, unsigned interpolation, unsigned samples_per_frame);
 };
 
 DECLARE_APP(TestApp)
@@ -69,7 +69,7 @@ wxMilliClock_t TestApp::getCPUTime()
 	return wxGetLocalTimeMillis();
 }
 
-void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_instances, unsigned sample_rate, unsigned interpolation, unsigned seconds, unsigned samples_per_frame)
+void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_instances, unsigned sample_rate, unsigned interpolation, unsigned samples_per_frame)
 {
 	try
 	{
@@ -139,14 +139,22 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 			}
 
 			wxMilliClock_t start = getCPUTime();
-			unsigned blocks = seconds * engine->GetSampleRate() / samples_per_frame;
-			for(unsigned i = 0; i < blocks; i++)
+			wxMilliClock_t end;
+			wxMilliClock_t diff;
+			unsigned batch_size = 1 * engine->GetSampleRate() / samples_per_frame;
+			unsigned blocks = 0;
+			do
 			{
-				engine->GetAudioOutput(output_buffer, samples_per_frame, 0);
-				engine->NextPeriod();
+				for(unsigned i = 0; i < batch_size; i++)
+				{
+					engine->GetAudioOutput(output_buffer, samples_per_frame, 0);
+					engine->NextPeriod();
+					blocks++;
+				}
+				end = getCPUTime();
+				diff = end - start;
 			}
-			wxMilliClock_t end = getCPUTime();
-			wxMilliClock_t diff = end - start;
+			while(diff < 30000);
 			
 			float playback_time = blocks * (double)samples_per_frame / engine->GetSampleRate();
 			wxLogError(wxT("%d sampler, %f seconds, %d bits, %d, %s, %s, %d block: %d ms cpu time, limit: %f"), pipes.size(), playback_time, 
@@ -189,23 +197,24 @@ bool TestApp::OnInit()
 
 int TestApp::OnRun()
 {
-	RunTest(8, true, 300, 44100, 0, 10, 128);
-	RunTest(8, false, 300, 44100, 0, 10, 128);
-	RunTest(16, true, 300, 44100, 0, 10, 128);
-	RunTest(16, false, 300, 44100, 0, 10, 128);
-	RunTest(24, true, 300, 44100, 0, 10, 128);
-	RunTest(24, false, 300, 44100, 0, 10, 128);
-	RunTest(8, true, 300, 48000, 1, 10, 1024);
-	RunTest(8, false, 300, 48000, 1, 10, 1024);
-	RunTest(16, true, 300, 48000, 1, 10, 1024);
-	RunTest(16, false, 300, 48000, 1, 10, 1024);
-	RunTest(24, true, 300, 48000, 1, 10, 1024);
-	RunTest(24, false, 300, 48000, 1, 10, 1024);
-	RunTest(8, true, 300, 48000, 0, 10, 1024);
-	RunTest(8, false, 300, 48000, 0, 10, 1024);
-	RunTest(16, true, 300, 48000, 0, 10, 1024);
-	RunTest(16, false, 300, 48000, 0, 10, 1024);
-	RunTest(24, true, 300, 48000, 0, 10, 1024);
-	RunTest(24, false, 300, 48000, 0, 10, 1024);
+	const int samplers = 300;
+	RunTest(8, true, samplers, 44100, 0, 128);
+	RunTest(8, false, samplers, 44100, 0, 128);
+	RunTest(16, true, samplers, 44100, 0, 128);
+	RunTest(16, false, samplers, 44100, 0, 128);
+	RunTest(24, true, samplers, 44100, 0, 128);
+	RunTest(24, false, samplers, 44100, 0, 128);
+	RunTest(8, true, samplers, 48000, 1, 1024);
+	RunTest(8, false, samplers, 48000, 1, 1024);
+	RunTest(16, true, samplers, 48000, 1, 1024);
+	RunTest(16, false, samplers, 48000, 1, 1024);
+	RunTest(24, true, samplers, 48000, 1, 1024);
+	RunTest(24, false, samplers, 48000, 1, 1024);
+	RunTest(8, true, samplers, 48000, 0, 1024);
+	RunTest(8, false, samplers, 48000, 0, 1024);
+	RunTest(16, true, samplers, 48000, 0, 1024);
+	RunTest(16, false, samplers, 48000, 0, 1024);
+	RunTest(24, true, samplers, 48000, 0, 1024);
+	RunTest(24, false, samplers, 48000, 0, 1024);
 	return 0;
 }
