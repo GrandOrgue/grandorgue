@@ -184,8 +184,7 @@ target_link_libraries(golib goimg ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAU
 
 if (WIN32)
 
-   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.rc/GrandOrgue.rc)
-   add_executable(${PROJECT_NAME} WIN32 GrandOrgue.cpp ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.rc/GrandOrgue.rc)
+   add_executable(${PROJECT_NAME} WIN32 GrandOrgue.cpp ${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc)
    add_linker_option(${PROJECT_NAME} large-address-aware)
 
 elseif (APPLE)
