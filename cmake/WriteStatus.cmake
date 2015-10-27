@@ -22,7 +22,8 @@ function(WriteStatus statusfile)
 
   set(_list "")
   foreach(_var ${_varlist})
-    set (_list "${_list}set(${_var} \"${${_var}}\")\n")
+    string (REGEX REPLACE "([\\\\\"])" "\\\\\\1" _val "${${_var}}")
+    set (_list "${_list}set(${_var} \"${_val}\")\n")
   endforeach()
 
   file(WRITE "${statusfile}" "${_list}")
