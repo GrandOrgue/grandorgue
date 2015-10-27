@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>@BUNDLE_CFBundleDisplayName@</string>
+	<string>GrandOrgue v@VERSION@</string>
 	<key>CFBundleExecutable</key>
-	<string>@PROJECT_NAME@</string>
+	<string>GrandOrgue</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>@BUNDLE_CFBundleShortVersionString@</string>
+	<string>@NUM_VERSION@</string>
 	<key>CFBundleVersion</key>
-	<string>@BUNDLE_CFBundleVersion@</string>
+	<string>@NUM_VERSION@</string>
 	<key>CFBundleIconFile</key>
-	<string>@PROJECT_NAME@.icns</string>
+	<string>GrandOrgue.icns</string>
 	<key>CFBundleName</key>
-	<string>@PROJECT_NAME@</string>
+	<string>GrandOrgue</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.@PROJECT_NAME@.@PROJECT_NAME@</string>
+	<string>com.our-organ.GrandOrgue</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -36,17 +36,17 @@
 				<string>organ</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>@PROJECT_NAME@.icns</string>
+			<string>GrandOrgue.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>text/plain</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>@PROJECT_NAME@ Organ Definition File</string>
+			<string>GrandOrgue organ definition</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>NSDocumentClass</key>
-			<string>@PROJECT_NAME@ Organ Definition File</string>
+			<string>GrandOrgue organ definition</string>
 		</dict>
 	</array>
 </dict>
