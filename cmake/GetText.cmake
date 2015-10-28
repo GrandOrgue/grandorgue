@@ -19,8 +19,8 @@
 
 function(GET_MO_DIR resultdir resultinstdir lang)
   IF (APPLE)
-    SET(${resultdir} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/${lang}.lproj PARENT_SCOPE)
-    SET(${resultinstdir} ${PROJECT_NAME}.app/Contents/Resources/${lang}.lproj PARENT_SCOPE)
+    SET(${resultdir} ${RESOURCEDIR}/${lang}.lproj PARENT_SCOPE)
+    SET(${resultinstdir} ${RESOURCEINSTDIR}/${lang}.lproj PARENT_SCOPE)
   ELSE()
     SET(${resultdir} ${CMAKE_BINARY_DIR}/share/locale/${lang}/LC_MESSAGES PARENT_SCOPE)
     SET(${resultinstdir} share/locale/${lang}/LC_MESSAGES PARENT_SCOPE)
