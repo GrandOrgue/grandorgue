@@ -152,8 +152,6 @@ make %{?_smp_mflags} VERBOSE=1
 cd ..
 mkdir build-installer
 cd build-installer
-%{__mkdir} bin
-%{__cp} ../build-mingw/bin/*.exe bin
 %{_mingw_cmake} .. -DINSTALL_DEPEND=ON  %{gooptions}
 %{__rm} bin/*.exe
 make %{?_smp_mflags} VERBOSE=1 package
