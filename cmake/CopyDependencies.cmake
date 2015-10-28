@@ -31,7 +31,7 @@ function(CopyDependencies instpath)
 
   add_custom_command(OUTPUT "${stampfile}"
     COMMAND ${CMAKE_COMMAND} -Dstatusfile="${statusfile}" -Dstampfile="${stampfile}" -Dtarget="${targetfile}" -Dsearchdirs="${searchdirs}" -P "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake"
-    DEPENDS ${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake" "${statusfile}")
+    DEPENDS ${targetfile} "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake" "${statusfile}")
   add_custom_target(copy_dlls_dependencies ALL DEPENDS "${stampfile}")
 
   install(CODE "set(searchdirs \"${searchdirs}\")")
