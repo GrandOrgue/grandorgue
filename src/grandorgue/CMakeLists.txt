@@ -1,3 +1,21 @@
+# GrandOrgue - free pipe organ simulator
+# 
+# Copyright 2006 Milan Digital Audio LLC
+# Copyright 2009-2015 GrandOrgue contributors (see AUTHORS)
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 # include wxWidgets
 if (STATIC)
@@ -182,43 +200,32 @@ wxGaugeAudio.cpp)
 add_library(golib STATIC ${grandorgue_src})
 target_link_libraries(golib goimg ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
 
-if (WIN32)
+if(APPLE)
+  set(BINDIR "${PROJECT_NAME}.app/Contents/MacOS")
+else()
+  set(BINDIR "bin")
+endif()
 
+if (WIN32)
    add_executable(${PROJECT_NAME} WIN32 GrandOrgue.cpp ${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc)
    add_linker_option(${PROJECT_NAME} large-address-aware)
-
-elseif (APPLE)
-
-   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resource/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/temp.plist)
-   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.icns ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/${PROJECT_NAME}.icns COPYONLY)
-   add_executable(${PROJECT_NAME} MACOSX_BUNDLE GrandOrgue.cpp)
-   set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-   set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/temp.plist)
-
 else ()
-
    add_executable(${PROJECT_NAME} GrandOrgue.cpp)
-
 endif ()
 
 target_link_libraries(${PROJECT_NAME} golib)
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${BINDIR})
 
-if (APPLE)
-   install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
-else (APPLE)
-   install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-endif ()
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "${BINDIR}")
 
 if (INSTALL_DEPEND STREQUAL "ON")
   CopyWxTranslations()
   if(WIN32)
-    set(instpath "bin/GrandOrgue.exe")
-  elseif(APPLE)
-    set(instpath "GrandOrgue.app/Contents/MacOS/GrandOrgue")
+    set(instpath "GrandOrgue.exe")
   else()
-    set(instpath "bin/GrandOrgue")
+    set(instpath "GrandOrgue")
   endif()
-  CopyDependencies(${instpath} ${wxWidgets_LIBRARIES})
+  CopyDependencies("${BINDIR}/${instpath}" ${wxWidgets_LIBRARIES})
 endif()
 
 add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)
