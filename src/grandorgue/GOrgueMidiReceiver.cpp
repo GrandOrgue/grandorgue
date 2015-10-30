@@ -534,10 +534,20 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 					value = 0;
 				if (value > 127)
 					value = 127;
-				if (e.GetValue() < m_events[i].low_value)
-					return MIDI_MATCH_OFF;
-				if (e.GetValue() <= m_events[i].high_value)
-					return MIDI_MATCH_ON;
+				if (m_events[i].low_value <= m_events[i].high_value)
+				{
+					if (e.GetValue() < m_events[i].low_value)
+						return MIDI_MATCH_OFF;
+					if (e.GetValue() <= m_events[i].high_value)
+						return MIDI_MATCH_ON;
+				}
+				else
+				{
+					if (e.GetValue() >= m_events[i].low_value)
+						return MIDI_MATCH_OFF;
+					if (e.GetValue() >= m_events[i].high_value)
+						return MIDI_MATCH_ON;
+				}
 				continue;
 			}
 			if (e.GetMidiType() == MIDI_CTRL_CHANGE && 
@@ -602,10 +612,20 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 		}
 		if (e.GetMidiType() == MIDI_NOTE && m_events[i].type == MIDI_M_NOTE && m_events[i].key == e.GetKey())
 		{
-			if (e.GetValue() <= m_events[i].low_value)
-				return MIDI_MATCH_OFF;
-			if (e.GetValue() >= m_events[i].high_value)
-				return MIDI_MATCH_ON;
+			if (m_events[i].low_value <= m_events[i].high_value)
+			{
+				if (e.GetValue() <= m_events[i].low_value)
+					return MIDI_MATCH_OFF;
+				if (e.GetValue() >= m_events[i].high_value)
+					return MIDI_MATCH_ON;
+			}
+			else
+			{
+				if (e.GetValue() >= m_events[i].low_value)
+					return MIDI_MATCH_OFF;
+				if (e.GetValue() <= m_events[i].high_value)
+					return MIDI_MATCH_ON;
+			}
 			continue;
 		}
 		if (e.GetMidiType() == MIDI_NOTE && m_events[i].type == MIDI_M_NOTE_ON && m_events[i].key == e.GetKey() && e.GetValue() >= m_events[i].high_value)
@@ -615,10 +635,20 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 
 		if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].type == MIDI_M_CTRL_CHANGE && m_events[i].key == e.GetKey())
 		{
-			if (e.GetValue() <= m_events[i].low_value)
-				return MIDI_MATCH_OFF;
-			if (e.GetValue() >= m_events[i].high_value)
-				return MIDI_MATCH_ON;
+			if (m_events[i].low_value <= m_events[i].high_value)
+			{
+				if (e.GetValue() <= m_events[i].low_value)
+					return MIDI_MATCH_OFF;
+				if (e.GetValue() >= m_events[i].high_value)
+					return MIDI_MATCH_ON;
+			}
+			else
+			{
+				if (e.GetValue() >= m_events[i].low_value)
+					return MIDI_MATCH_OFF;
+				if (e.GetValue() <= m_events[i].high_value)
+					return MIDI_MATCH_ON;
+			}
 			continue;
 		}
 		if (e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].type == MIDI_M_CTRL_CHANGE_ON && m_events[i].key == e.GetKey() && e.GetValue() >= m_events[i].high_value)
@@ -648,10 +678,20 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 
 		if (e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN && m_events[i].key == e.GetKey())
 		{
-			if (e.GetValue() <= m_events[i].low_value)
-				return MIDI_MATCH_OFF;
-			if (e.GetValue() >= m_events[i].high_value)
-				return MIDI_MATCH_ON;
+			if (m_events[i].low_value <= m_events[i].high_value)
+			{
+				if (e.GetValue() <= m_events[i].low_value)
+					return MIDI_MATCH_OFF;
+				if (e.GetValue() >= m_events[i].high_value)
+					return MIDI_MATCH_ON;
+			}
+			else
+			{
+				if (e.GetValue() >= m_events[i].low_value)
+					return MIDI_MATCH_OFF;
+				if (e.GetValue() <= m_events[i].high_value)
+					return MIDI_MATCH_ON;
+			}
 			continue;
 		}
 		if (e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_ON && m_events[i].key == e.GetKey() && e.GetValue() >= m_events[i].high_value)
@@ -661,10 +701,20 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 
 		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN && m_events[i].key == e.GetKey())
 		{
-			if (e.GetValue() <= m_events[i].low_value)
-				return MIDI_MATCH_OFF;
-			if (e.GetValue() >= m_events[i].high_value)
-				return MIDI_MATCH_ON;
+			if (m_events[i].low_value <= m_events[i].high_value)
+			{
+				if (e.GetValue() <= m_events[i].low_value)
+					return MIDI_MATCH_OFF;
+				if (e.GetValue() >= m_events[i].high_value)
+					return MIDI_MATCH_ON;
+			}
+			else
+			{
+				if (e.GetValue() >= m_events[i].low_value)
+					return MIDI_MATCH_OFF;
+				if (e.GetValue() <= m_events[i].high_value)
+					return MIDI_MATCH_ON;
+			}
 			continue;
 		}
 		if (e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_ON && m_events[i].key == e.GetKey() && e.GetValue() >= m_events[i].high_value)
