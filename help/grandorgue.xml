@@ -4062,6 +4062,10 @@ GrandOrgue <link linkend="settingsstore">stores</link> preset files.
           </mediaobject>
           <note>
             <simpara>This feature is closely related to the <link linkend="samplesperbuffer">samples per buffer</link> setting in the <emphasis>Options</emphasis> tab. Its behavior differs according to the chosen backend.</simpara>
+          </note>
+	  <sect4>
+	    <title>Audio driver selection</title>
+	    <para>GrandOrgue feature two audio backends:</para>
             <informaltable frame="none">
               <tgroup cols="2">
                 <colspec colname="c1" colwidth="80px" colsep="0" rowsep="0"/>
@@ -4071,18 +4075,146 @@ GrandOrgue <link linkend="settingsstore">stores</link> preset files.
                     <entry>
                       <emphasis>RtAudio</emphasis>
                     </entry>
-                    <entry>ignores the desired latency setting, because it uses the provided "samples per buffer" setting, <emphasis role="bold">and that value must be supported by the soundcard/driver</emphasis>, otherwise sound rendering will break.</entry>
+                    <entry>selects the number of buffers based on the desired latency setting. The "samples per buffer" and sample rate setting <emphasis role="bold"> must be supported by the soundcard/driver</emphasis>, otherwise sound rendering will break.</entry>
                   </row>
                   <row  valign="top">
                     <entry>
                       <emphasis>PortAudio</emphasis>
                     </entry>
-                    <entry>uses the desired latency setting, the "samples per buffer" setting and the capabilities of the soundcard/driver to determine the operational settings it will use. It then displays the <emphasis>closest feasible</emphasis> latency. Note that the estimate can be based on numbers provided by the hardware and may vary.</entry>
+                    <entry>uses the desired latency setting, the "samples per buffer" setting and the capabilities of the soundcard/driver to determine the operational buffering it will use. Such drivers are marked with <emphasis>(PA)</emphasis> in its name.</entry>
                   </row>
                 </tbody>
               </tgroup>
             </informaltable>
-          </note>
+	    <simpara>
+	      <emphasis>Audio/Sound Output State</emphasis> tries to
+	      displays <emphasis>actual</emphasis> latency. Note that
+	      the estimate can be based on numbers provided by the
+	      hardware and the drivers and may vary. RtAudio is more
+	      likely to display to low numbers.
+	    </simpara>
+	    <sect5>
+	      <title>Windows</title>
+	      <variablelist>
+		<varlistentry>
+		  <term>WDM/KS</term>
+		  <listitem>
+		    <para>
+		      This driver allows direct access to the Windows
+		      kernel driver<footnote><simpara>ASIO4ALL also
+		      uses that interface</simpara></footnote>. This
+		      is the recommended driver if there is no other
+		      software which blocks access to the kernel
+		      audio streams. It is supported only via PortAudio.
+		    </para>
+		  </listitem>
+		</varlistentry>
+		<varlistentry>
+		  <term>WASAPI</term>
+		  <listitem>
+		    <para>
+		      WASAPI support started with Window Vista. Use it if WDM/KS does not work for you. It is supported only via PortAudio.
+		    </para>
+		    <note><simpara>The samplerate of GrandOrgue must match the samplerate of the audio subsystem. So if WASAPI does not work, try a different samplerate in GrandOrgue.</simpara></note>
+		  </listitem>
+		</varlistentry>
+		<varlistentry>
+		  <term>DirectSound</term>
+		  <listitem>
+		    <para>
+		      Use it if WDM/KS and WASAPI does not work for you. It is supported via PortAudio and RtAudio.
+		    </para>
+		  </listitem>
+		</varlistentry>
+		<varlistentry>
+		  <term>WMME</term>
+		  <listitem>
+		    <para>
+		      This a classic, not low-latency audio API. Use it as last fallback. It is supported only via PortAudio.
+		    </para>
+		  </listitem>
+		</varlistentry>
+		<varlistentry>
+		  <term>ASIO</term>
+		  <listitem>
+		    <para>
+		      GrandOrgue can be compiled with ASIO support. It is supported via PortAudio and RtAudio.
+		    </para>
+		    <para>
+		      ASIO loads third party code into the GO process, so a bad ASIO driver can cause GO hangs.
+		    </para>
+		    <note><simpara>There is no reason to use ASIO4ALL,
+		    because it acts as a pass-through to the native kernel
+		    streaming APIs (e.g. WDM/KS) that GrandOrgue can use
+		    directly.</simpara></note>
+		  </listitem>
+		</varlistentry>
+		<varlistentry>
+		  <term>Jack</term>
+		  <listitem>
+		    <para>
+		      GrandOrgue can also be compiled with Jack Support on Windows. See the Linux Jack usage notes.
+		    </para>
+		  </listitem>
+		</varlistentry>
+	      </variablelist>
+	    </sect5>
+	    <sect5>
+	      <title>OS X</title>
+	      <variablelist>
+		<varlistentry>
+		  <term>CoreAudio</term>
+		  <listitem>
+		    <para>
+		      You can use the OS X native audio API CoreAudio via RtAudio as well as PulseAudio.
+		    </para>
+		  </listitem>
+		</varlistentry>
+		<varlistentry>
+		  <term>Jack</term>
+		  <listitem>
+		    <para>
+		      GrandOrgue can also be compiled with Jack Support on OS X. See the Linux Jack usage notes.
+		    </para>
+		  </listitem>
+		</varlistentry>
+	      </variablelist>
+	    </sect5>
+	    <sect5>
+	      <title>Linux</title>
+	      <variablelist>
+		<varlistentry>
+		  <term>ALSA</term>
+		  <listitem>
+		    <para>
+		      You can use the Linux native sound output either via RtAudio as well as via PortAudio. To allow direct hardware access, your Linux user account needs access to the sound card<footnote><simpara>that means being member of the <emphasis>audio</emphasis> group on many Linux distributions</simpara></footnote>.
+		    </para>
+		    <para>
+		      ALSA also provides "virtual" sound card entries. "default" routes the audio to the current default sound card and allows shared access.
+		      If the active samplerate on the hardware does not match the GrandOrgue samplerate, ALSA will start resampling, which will increase the CPU usage.
+		    </para>
+		    <note>
+		      <simpara>
+			Distributions often route the default audio via the pulseaudio daemon. If you don't want to use pulseaudio, you can start GrandOrgue via via pasuspender(1).
+		      </simpara>
+		    </note>
+		  </listitem>
+		</varlistentry>
+		<varlistentry>
+		  <term>Jack</term>
+		  <listitem>
+		    <para>
+		      You can connect to a Jack audio server either via RtAudio as well as PulseAudio. GrandOrgue also includes jack MIDI support, so will likely
+		      see MIDI devices twice (via jack as well as via the native OS APIs).
+		    </para>
+		    <para>
+		      GrandOrgue has support for the native audio APIs and jack adds complexity to the sound output stack. Therefore avoid running jack, unless you want to use GrandOrgue together with other jack applications. 
+		    </para>
+		  </listitem>
+		</varlistentry>
+	      </variablelist>
+	    </sect5>
+	  </sect4>
         </sect3>
         <sect3>
           <title>Revert to default</title>
