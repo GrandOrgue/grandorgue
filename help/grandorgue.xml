@@ -4418,6 +4418,11 @@ channel 1 to appear as channel 9, channel 2 to appear as channel 10, and so on.
 This may be useful if you have multiple keyboards that are configured to use
 the same channel.
           </para>
+	  <note><simpara>GrandOrgue is capable of matching the MIDI
+	  interface and this is configured by the MIDI detection by
+	  default. Therefore it is possible to use the same MIDI
+	  channel on multiple interfaces without configuring any
+	  channel offset.</simpara></note>
         </listitem>
       </varlistentry>
       <varlistentry>
@@ -4445,6 +4450,14 @@ Recorder-generated output. The selected device must be activeted in the
       </varlistentry>
     </variablelist>
     <note><simpara>The devices list is refreshed whenever the <emphasis>Audio &amp; Midi Settings</emphasis> dialog is displayed.</simpara></note>
+    <note><simpara>GrandOrgue requires a MIDI input/output port to
+    connect to. MIDI (sequencer) software, that just tries to connect
+    to existing MIDI ports, is not compatible with GrandOrgue. If
+    you want to use such software, create a virtual MIDI
+    port<footnote><simpara>For linux, use <emphasis>sudo modprobe
+    snd-seq-dummy ports=9</emphasis></simpara></footnote> and let
+    GrandOrgue as well as the other MIDI software connect to
+    it.</simpara></note>
     </sect1>
     <sect1 id="temperamentTab">
       <title>Temperaments</title>
