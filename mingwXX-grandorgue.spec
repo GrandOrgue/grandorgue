@@ -51,7 +51,7 @@
 Summary:        Virtual Pipe Organ Software
 Name:           mingw%{_mingw_bitsize}-grandorgue
 BuildRequires:  gcc-c++
-BuildRequires:  cmake
+BuildRequires:  cmake >= 3.2.0
 BuildRequires:  gettext-tools
 BuildRequires:  docbook-xsl-stylesheets 
 BuildRequires:  po4a
@@ -147,13 +147,10 @@ cd ..
 %define goinstall GrandOrgue-%{version}-%{release}-win%{_mingw_bitsize}.exe
 %{__mkdir} build-mingw
 cd build-mingw
+%{_mingw_cmake} .. -DINSTALL_DEPEND=ON %{gooptions}
+make %{?_smp_mflags} VERBOSE=1 package
 %{_mingw_cmake} .. -DINSTALL_DEPEND=OFF %{gooptions}
 make %{?_smp_mflags} VERBOSE=1
-cd ..
-mkdir build-installer
-cd build-installer
-%{_mingw_cmake} .. -DINSTALL_DEPEND=ON  %{gooptions}
-make %{?_smp_mflags} VERBOSE=1 package
 cd ..
 
 %install
@@ -162,7 +159,7 @@ cd build-mingw
 make install DESTDIR=%{buildroot}
 cd ..
 mkdir -p %{buildroot}
-%{__cp} build-installer/GrandOrgue-%{version}-win32.exe %{buildroot}/%{_mingw_bindir}/%{goinstall}
+%{__cp} build-mingw/GrandOrgue-%{version}-win%{_mingw_bitsize}.exe %{buildroot}/%{_mingw_bindir}/%{goinstall}
 if [ -d %{_topdir}/OTHER ]; then %{__cp} %{buildroot}/%{_mingw_bindir}/%{goinstall} %{_topdir}/OTHER ; fi
 
 %clean
