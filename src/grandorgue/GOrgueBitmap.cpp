@@ -39,7 +39,7 @@ const wxBitmap& GOrgueBitmap::GetData(double scale)
 {
 	if (scale != m_Scale)
 	{
-		m_bmp = m_img->Scale(GetWidth() * scale, GetHeight() * scale, wxIMAGE_QUALITY_HIGH);
+		m_bmp = m_img->Scale(GetWidth() * scale, GetHeight() * scale, wxIMAGE_QUALITY_BICUBIC);
 		m_Scale = scale;
 	}
 	return m_bmp;
