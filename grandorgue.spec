@@ -73,7 +73,7 @@ This package contains the demo sampleset for GrandOrgue
 %setup -q
 
 %build
-PATH=%{_libexecdir}/wxGTK3:$PATH cmake -DUNICODE=1 \
+PATH=%{_libexecdir}/wxGTK3:$PATH cmake \
       -DCMAKE_INSTALL_PREFIX=%{_prefix} \
       -DDOC_INSTALL_DIR=%{_docdir} \
       -DLIB=%{_lib} \

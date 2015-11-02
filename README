@@ -33,7 +33,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org)and NSIS (htt
 			create a build directory (e.g. c:\go\build32)
 			ASIO support: Either add -DRTAUDIO_USE_ASIO=OFF to the cmake parameters below (no ASIO support), or copy the sources from ASIO SDK at http://www.steinberg.net/en/company/developer.html into C:\go\ext\rt\asio\include (the SDK is free but you will need to set up a developer account with Steinberg).
 			you need to replace %1 by GO revision number at the end of the following line, or copy this line in a bat file and use the revision number as the parameter when executing the bat file.
-			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx32\wxWidgets-3.0.X -DCMAKE_EXE_LINKER_FLAGS="-m32 -static-libgcc" -DCMAKE_CXX_FLAGS="-m32" -DCMAKE_C_FLAGS="-m32" -DCMAKE_RC_FLAGS="-F pe-i386 -U WIN64" -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1  -DRTAUDIO_USE_WASAPI=ON -DRTAUDIO_USE_JACK=OFF -DRTMIDI_USE_JACK=OFF -DINSTALL_DEMO=ON -DVERSION_REVISION=%1
+			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx32\wxWidgets-3.0.X -DCMAKE_EXE_LINKER_FLAGS="-m32 -static-libgcc" -DCMAKE_CXX_FLAGS="-m32" -DCMAKE_C_FLAGS="-m32" -DCMAKE_RC_FLAGS="-F pe-i386 -U WIN64" -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1  -DRTAUDIO_USE_WASAPI=ON -DRTAUDIO_USE_JACK=OFF -DRTMIDI_USE_JACK=OFF -DINSTALL_DEMO=ON -DVERSION_REVISION=%1
 			mingw32-make 
 			at this point the binary is generated.
 			to create the installation package, you need to execute:
@@ -50,7 +50,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org)and NSIS (htt
 			ASIO support: Either add -DRTAUDIO_USE_ASIO=OFF to the cmake parameters below (no ASIO support), or copy the sources from ASIO SDK at http://www.steinberg.net/en/company/developer.html into C:\go\ext\rt\asio\include (the SDK is free but you will need to set up a developer account with Steinberg).
 			you need to have build the 32 bit version first since the executables are required to compile the 64 bit version
 			you need to replace %1 by GO revision number at the end of the following line, or copy this line in a bat file and use the revision number as the parameter when executing the bat file.
-			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx64\wxWidgets-3.0.X -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc" -DIMPORT_EXECUTABLES=c:\go\build32\ImportExecutables.cmake -DCMAKE_SYSTEM_NAME=Windows -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1 -DRTAUDIO_USE_WASAPI=ON -DINSTALL_DEMO=ON -DRTAUDIO_USE_JACK=OFF -DRTMIDI_USE_JACK=OFF -DVERSION_REVISION=%1 
+			cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DSTATIC=1 -DwxWidgets_ROOT_DIR=C:\TDM\wx64\wxWidgets-3.0.X -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc" -DIMPORT_EXECUTABLES=c:\go\build32\ImportExecutables.cmake -DCMAKE_SYSTEM_NAME=Windows -DDOCBOOK_DIR=C:\TDM\docbook-xsl-1.76.1 -DRTAUDIO_USE_WASAPI=ON -DINSTALL_DEMO=ON -DRTAUDIO_USE_JACK=OFF -DRTMIDI_USE_JACK=OFF -DVERSION_REVISION=%1 
 			mingw32-make 
 			at this point the binary is generated.
 			to create the installation package, you need to execute:
@@ -96,11 +96,11 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org)and NSIS (htt
 		GO:
 			Create enough of the "native linux" build to get the image converter and its import files created.
 				cd /cygdrive/C/cyg/buildlinux32
-				cmake -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -G "Unix Makefiles" /cygdrive/c/gosrc -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DCMAKE_LEGACY_CYGWIN_WIN32=1 -DCMAKE_CXX_FLAGS=-I/usr/include/w32api -DRTAUDIO_USE_WASAPI=OFF -DRTAUDIO_USE_WDMKS=OFF -DRTAUDIO_USE_ASIO=OFF -DRTAUDIO_USE_DSOUND=OFF -DRTAUDIO_USE_WMME=OFF
+				cmake -DCMAKE_BUILD_TYPE=Release -DSTATIC=1 -G "Unix Makefiles" /cygdrive/c/gosrc -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DCMAKE_LEGACY_CYGWIN_WIN32=1 -DCMAKE_CXX_FLAGS=-I/usr/include/w32api -DRTAUDIO_USE_WASAPI=OFF -DRTAUDIO_USE_WDMKS=OFF -DRTAUDIO_USE_ASIO=OFF -DRTAUDIO_USE_DSOUND=OFF -DRTAUDIO_USE_WMME=OFF
 				make
 			Create the 32 bit version of GO
 				cd /cygdrive/C/cyg/buildwin32
-				cmake -DCMAKE_TOOLCHAIN_FILE=/cygdrive/c/cyg/inst32/toolchain.def /cygdrive/c/gosrc -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DIMPORT_EXECUTABLES=/cygdrive/c/cyg/buildlinux32/ImportExecutables.cmake -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DRTAUDIO_USE_WASAPI=OFF 
+				cmake -DCMAKE_TOOLCHAIN_FILE=/cygdrive/c/cyg/inst32/toolchain.def /cygdrive/c/gosrc -DCMAKE_BUILD_TYPE=Release -DSTATIC=1 -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DIMPORT_EXECUTABLES=/cygdrive/c/cyg/buildlinux32/ImportExecutables.cmake -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DRTAUDIO_USE_WASAPI=OFF 
 				make
 
 	Buiding in 64 bits
@@ -136,7 +136,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org)and NSIS (htt
 		GO:
 			Create enough of the "native linux" build to get the image converter and its import files created (unless already done in 32 bit build)
 				cd /cygdrive/C/cyg/buildlinux32
-				cmake -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -G "Unix Makefiles" /cygdrive/c/goscr -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DCMAKE_LEGACY_CYGWIN_WIN32=1 -DCMAKE_CXX_FLAGS=-I/usr/include/w32api -DRTAUDIO_USE_WASAPI=OFF -DRTAUDIO_USE_WDMKS=OFF -DRTAUDIO_USE_ASIO=OFF -DRTAUDIO_USE_DSOUND=OFF -DRTAUDIO_USE_WMME=OFF
+				cmake -DCMAKE_BUILD_TYPE=Release -DSTATIC=1 -G "Unix Makefiles" /cygdrive/c/goscr -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst32 -DCMAKE_LEGACY_CYGWIN_WIN32=1 -DCMAKE_CXX_FLAGS=-I/usr/include/w32api -DRTAUDIO_USE_WASAPI=OFF -DRTAUDIO_USE_WDMKS=OFF -DRTAUDIO_USE_ASIO=OFF -DRTAUDIO_USE_DSOUND=OFF -DRTAUDIO_USE_WMME=OFF
 				make	
 		        or create only the build tools:
 				cd /cygdrive/C/cyg/buildlinux32
@@ -144,7 +144,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org)and NSIS (htt
 				make	
 			Create the 64 bit version of GO			
 				cd ./cygdrive/c/cyg/buildwin64
-				cmake -DCMAKE_TOOLCHAIN_FILE=/cygdrive/c/cyg/inst64/toolchain.def /cygdrive/c/gosrc -DCMAKE_BUILD_TYPE=Release -DUNICODE=1 -DSTATIC=1 -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst64 -DIMPORT_EXECUTABLES=/cygdrive/c/cyg/buildlinux32/ImportExecutables.cmake -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DRTAUDIO_USE_WASAPI=OFF 
+				cmake -DCMAKE_TOOLCHAIN_FILE=/cygdrive/c/cyg/inst64/toolchain.def /cygdrive/c/gosrc -DCMAKE_BUILD_TYPE=Release -DSTATIC=1 -DCMAKE_INSTALL_PREFIX=/cygdrive/c/cyg/inst64 -DIMPORT_EXECUTABLES=/cygdrive/c/cyg/buildlinux32/ImportExecutables.cmake -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" -DRTAUDIO_USE_WASAPI=OFF 
 				make
 
 
@@ -170,7 +170,7 @@ xxx is:
   0 - ansi build
 
 eg:
-  cmake -DUNICODE=1 -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
+  cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
 
 Hint: For debugging a release build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
 
@@ -239,7 +239,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 6) Build GO for windows
 cd /buildwin
-cmake -DCMAKE_TOOLCHAIN_FILE=/inst/toolchain.def /gosrc -DUNICODE=1 -DCMAKE_INSTALL_PREFIX=/inst -DSTATIC=1 -DIMPORT_EXECUTABLES=/buildlinux/ImportExecutables.cmake -DRTAUDIO_USE_ASIO=OFF
+cmake -DCMAKE_TOOLCHAIN_FILE=/inst/toolchain.def /gosrc -DCMAKE_INSTALL_PREFIX=/inst -DSTATIC=1 -DIMPORT_EXECUTABLES=/buildlinux/ImportExecutables.cmake -DRTAUDIO_USE_ASIO=OFF
 make
 
 -DRTAUDIO_USE_ASIO=OFF turns building ASIO off - else you need to put the ASIO SDK into the sources
