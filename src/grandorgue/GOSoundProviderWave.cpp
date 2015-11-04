@@ -21,8 +21,8 @@
 
 #include "GOSoundProviderWave.h"
 
+#include "GOrgueFile.h"
 #include "GOrgueMemoryPool.h"
-#include "GOrguePath.h"
 #include "GOrgueWave.h"
 #include <wx/intl.h>
 
@@ -150,26 +150,26 @@ void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
-void GOSoundProviderWave::LoadPitch(const wxString& filename, GrandOrgueFile* organfile, bool use_sampleset)
+void GOSoundProviderWave::LoadPitch(const GOrgueFilename& filename)
 {
-	wxLogDebug(_("Loading file %s"), filename.c_str());
+	wxLogDebug(_("Loading file %s"), filename.GetTitle().c_str());
 
 	GOrgueWave wave;
-	wave.Open(GOCreateFilename(organfile, filename, use_sampleset).get());
+	wave.Open(filename.Open().get());
 
 	m_MidiKeyNumber = wave.GetMidiNote();
 	m_MidiPitchFract = wave.GetPitchFract();
 }
 
 
-void GOSoundProviderWave::ProcessFile(const wxString& filename, GrandOrgueFile * organfile, bool use_sampleset, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, 
+void GOSoundProviderWave::ProcessFile(const GOrgueFilename& filename, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, 
 				      unsigned max_playback_time, int attack_start, int cue_point, int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, 
 				      bool percussive, unsigned min_attack_velocity, bool use_pitch, unsigned crossfade_length)
 {
-	wxLogDebug(_("Loading file %s"), filename.c_str());
+	wxLogDebug(_("Loading file %s"), filename.GetTitle().c_str());
 
 	GOrgueWave wave;
-	wave.Open(GOCreateFilename(organfile, filename, use_sampleset).get());
+	wave.Open(filename.Open().get());
 
 	/* allocate data to work with */
 	unsigned totalDataSize = wave.GetLength() * GetBytesPerSample(bits_per_sample) * wave.GetChannels();
@@ -215,7 +215,7 @@ void GOSoundProviderWave::ProcessFile(const wxString& filename, GrandOrgueFile *
 	}
 }
 
-void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, GrandOrgueFile* organfile, bool use_sampleset, unsigned bits_per_sample, int load_channels, bool compress, 
+void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, unsigned bits_per_sample, int load_channels, bool compress, 
 				       loop_load_type loop_mode, unsigned attack_load, unsigned release_load, int midi_key_number, unsigned crossfade_length)
 {
 
@@ -292,7 +292,7 @@ void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, st
 					continue;
 				if (load_first_attack && i == 0)
 				{
-					LoadPitch(attacks[i].filename, organfile, use_sampleset);
+					LoadPitch(attacks[i].filename);
 					load_first_attack = false;
 				}
 				for(unsigned j = i + 1; j < attacks.size(); j++)
@@ -316,7 +316,7 @@ void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, st
 				loop.end_sample = attacks[i].loops[j].loop_end;
 				loops.push_back(loop);
 			}
-			ProcessFile(attacks[i].filename, organfile, use_sampleset, loops, true, attacks[i].load_release, attacks[i].sample_group, attacks[i].max_playback_time, attacks[i].attack_start, attacks[i].cue_point,
+			ProcessFile(attacks[i].filename, loops, true, attacks[i].load_release, attacks[i].sample_group, attacks[i].max_playback_time, attacks[i].attack_start, attacks[i].cue_point,
 				    attacks[i].release_end, bits_per_sample, load_channels, compress, loop_mode, attacks[i].percussive, attacks[i].min_attack_velocity, load_first_attack, crossfade_length);
 			load_first_attack = false;
 		}
@@ -324,7 +324,7 @@ void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, st
 		for(unsigned i = 0; i < releases.size(); i++)
 		{
 			std::vector<GO_WAVE_LOOP> loops;
-			ProcessFile(releases[i].filename, organfile, use_sampleset, loops, false, true, releases[i].sample_group, releases[i].max_playback_time, 0, releases[i].cue_point, releases[i].release_end, 
+			ProcessFile(releases[i].filename, loops, false, true, releases[i].sample_group, releases[i].max_playback_time, 0, releases[i].cue_point, releases[i].release_end, 
 				    bits_per_sample, load_channels, compress, loop_mode, true, 0, false, crossfade_length);
 		}
 

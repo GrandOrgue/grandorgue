@@ -24,6 +24,7 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueHash.h"
 #include "GOrgueLimits.h"
+#include "GOrguePath.h"
 #include "GOrgueRank.h"
 #include "GOrgueSettings.h"
 #include "GOrgueTemperament.h"
@@ -39,7 +40,6 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 	m_AttackInfo(),
 	m_ReleaseInfo(),
 	m_Filename(),
-	m_UseSampleset(true),
 	m_SamplerGroupID(sampler_group_id),
 	m_AudioGroupID(0),
 	m_Percussive(percussive),
@@ -59,7 +59,7 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 void GOrgueSoundingPipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	attack_load_info ainfo;
-	ainfo.filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
+	ainfo.filename.Assign(cfg.ReadStringTrim(ODFSetting, group, prefix), m_organfile);
 	ainfo.sample_group = cfg.ReadInteger(ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
 	ainfo.load_release = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("LoadRelease"), false, !m_Percussive);;
 	ainfo.percussive = m_Percussive;
@@ -83,7 +83,6 @@ void GOrgueSoundingPipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxS
 
 void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString prefix, wxString filename)
 {
-	m_UseSampleset = false;
 	m_organfile->RegisterCacheObject(this);
 	m_Filename = filename;
 	m_PipeConfig.Init(cfg, group, prefix);
@@ -93,7 +92,7 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
 	attack_load_info ainfo;
-	ainfo.filename = m_Filename;
+	ainfo.filename.AssignResource(m_Filename, m_organfile);
 	ainfo.sample_group = -1;
 	ainfo.load_release = !m_Percussive;
 	ainfo.percussive = m_Percussive;
@@ -110,7 +109,6 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 
 void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
-	m_UseSampleset = true;
 	m_organfile->RegisterCacheObject(this);
 	m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
 	m_PipeConfig.Load(cfg, group, prefix);
@@ -136,7 +134,7 @@ void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString 
 		release_load_info rinfo;
 		wxString p = prefix + wxString::Format(wxT("Release%03d"), i + 1);
 
-		rinfo.filename = cfg.ReadStringTrim(ODFSetting, group, p);
+		rinfo.filename.Assign(cfg.ReadStringTrim(ODFSetting, group, p), m_organfile);
 		rinfo.sample_group = cfg.ReadInteger(ODFSetting, group, p + wxT("IsTremulant"), -1, 1, false, -1);
 		rinfo.max_playback_time = cfg.ReadInteger(ODFSetting, group, p + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
 		rinfo.cue_point = cfg.ReadInteger(ODFSetting, group, p + wxT("CuePoint"), -1, MAX_SAMPLE_LENGTH, false, -1);
@@ -155,7 +153,7 @@ void GOrgueSoundingPipe::LoadData()
 {
 	try
 	{
-		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_organfile, m_UseSampleset, m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
+		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
 					     m_PipeConfig.GetEffectiveCompress(), (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(), m_PipeConfig.GetEffectiveAttackLoad(), m_PipeConfig.GetEffectiveReleaseLoad(),
 					     m_SampleMidiKeyNumber, m_CrossfadeLength);
 		Validate();
@@ -219,7 +217,7 @@ void GOrgueSoundingPipe::UpdateHash(GOrgueHash& hash)
 	hash.Update(m_AttackInfo.size());
 	for(unsigned i = 0; i < m_AttackInfo.size(); i++)
 	{
-		hash.Update(m_AttackInfo[i].filename);
+		m_AttackInfo[i].filename.Hash(hash);
 		hash.Update(m_AttackInfo[i].sample_group);
 		hash.Update(m_AttackInfo[i].max_playback_time);
 		hash.Update(m_AttackInfo[i].load_release);
@@ -238,7 +236,7 @@ void GOrgueSoundingPipe::UpdateHash(GOrgueHash& hash)
 	hash.Update(m_ReleaseInfo.size());
 	for(unsigned i = 0; i < m_ReleaseInfo.size(); i++)
 	{
-		hash.Update(m_ReleaseInfo[i].filename);
+		m_ReleaseInfo[i].filename.Hash(hash);
 		hash.Update(m_ReleaseInfo[i].sample_group);
 		hash.Update(m_ReleaseInfo[i].max_playback_time);
 		hash.Update(m_ReleaseInfo[i].cue_point);

@@ -46,6 +46,8 @@
 #include "GOrgueElementCreator.h"
 #include "GOrgueEnclosure.h"
 #include "GOrgueEvent.h"
+#include "GOrgueFile.h"
+#include "GOrgueFilename.h"
 #include "GOrgueGeneral.h"
 #include "GOrgueHash.h"
 #include "GOrgueLoadThread.h"
@@ -176,7 +178,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	}
 	else
 	{
-		std::unique_ptr<GOrgueFile> file = GOCreateFilename(this, info_filename);
+		GOrgueFilename fname;
+		fname.Assign(info_filename, this);
+		std::unique_ptr<GOrgueFile> file = fname.Open();
 		fn = file->GetPath();
 		if (file->isValid() && fn.FileExists() && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm")))
 			m_InfoFilename = fn.GetFullPath();
