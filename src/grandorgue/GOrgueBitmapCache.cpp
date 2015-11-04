@@ -21,7 +21,8 @@
 
 #include "GOrgueBitmapCache.h"
 
-#include "GOrguePath.h"
+#include "GOrgueFile.h"
+#include "GOrgueFilename.h"
 #include "GrandOrgueFile.h"
 #include "Images.h"
 #include <wx/intl.h>
@@ -161,7 +162,9 @@ void GOrgueBitmapCache::RegisterBitmap(wxImage* bitmap, wxString filename, wxStr
 
 bool GOrgueBitmapCache::loadFile(wxImage& img, wxString filename)
 {
-	std::unique_ptr<GOrgueFile> file = GOCreateFilename(m_organfile, filename);
+	GOrgueFilename name;
+	name.Assign(filename, m_organfile);
+	std::unique_ptr<GOrgueFile> file = name.Open();
 	if (!file->Open())
 		return false;
 	unsigned length = file->GetSize();

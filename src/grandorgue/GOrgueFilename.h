@@ -19,16 +19,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEPATH_H
-#define GORGUEPATH_H
+#ifndef GORGUEFILENAME_H
+#define GORGUEFILENAME_H
 
 #include <wx/string.h>
+#include <memory>
 
-void GOCreateDirectory(const wxString& path);
-wxString GONormalizePath(const wxString& path);
-wxString GOGetPath(const wxString& path);
+class GOrgueFile;
+class GOrgueHash;
+class GrandOrgueFile;
 
-void GOSyncDirectory(const wxString& path);
-bool GORenameFile(const wxString& from, const wxString& to);
+class GOrgueFilename
+{
+private:
+	wxString m_Name;
+	wxString m_Path;
+	bool m_Hash;
+
+	void SetPath(const wxString& base, const wxString& path);
+	
+public:
+	GOrgueFilename();
+
+	void Assign(const wxString& name, GrandOrgueFile* organfile);
+	void AssignResource(const wxString& name, GrandOrgueFile* organfile);
+
+	const wxString& GetTitle() const;
+	void Hash(GOrgueHash& hash) const;
+
+	std::unique_ptr<GOrgueFile> Open() const;
+};
 
 #endif

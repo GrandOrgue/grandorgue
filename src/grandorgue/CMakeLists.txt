@@ -100,6 +100,7 @@ GOrgueDrawStop.cpp
 GOrgueEnclosure.cpp
 GOrgueEvent.cpp
 GOrgueEventDistributor.cpp
+GOrgueFilename.cpp
 GOrgueFrameGeneral.cpp
 GOrgueFont.cpp
 GOrgueGeneral.cpp

@@ -21,40 +21,9 @@
 
 #include "GOrguePath.h"
 
-#include "GOrgueStandardFile.h"
-#include "GOrgueInvalidFile.h"
-#include "GOrgueSettings.h"
-#include "GrandOrgueFile.h"
 #include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/log.h>
-
-std::unique_ptr<GOrgueFile> GOCreateFilename(GrandOrgueFile* organfile, const wxString& file, bool use_sampleset)
-{
-	/* Translate directory seperator from ODF(\) to native format */
-	wxString temp = file;
-	if (organfile->GetSettings().ODFCheck() && temp.Find(wxT('/')) != wxNOT_FOUND)
-	{
-		wxLogWarning(_("Filename '%s' contains non-portable directory seperator /"), file.c_str());
-	}
-	temp.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
-	if (use_sampleset)
-		temp = organfile->GetODFPath() + wxFileName::GetPathSeparator() + temp;
-	else
-		temp = organfile->GetSettings().GetResourceDirectory() + wxFileName::GetPathSeparator() + temp;
-
-	wxFileName path_name(temp);
-	path_name.Normalize(wxPATH_NORM_DOTS);
-	if (path_name.GetLongPath() != path_name.GetFullPath())
-	{
-		wxLogWarning(_("Filename '%s' not compatible with case sensitive systems"), file.c_str());
-	}
-
-	if (wxFileExists(temp))
-		return (std::unique_ptr<GOrgueFile>)new GOrgueStandardFile(temp, file);
-	else
-		return (std::unique_ptr<GOrgueFile>)new GOrgueInvalidFile(file);
-}
 
 void GOCreateDirectory(const wxString& path)
 {

@@ -40,7 +40,6 @@ private:
 	std::vector<attack_load_info> m_AttackInfo;
 	std::vector<release_load_info> m_ReleaseInfo;
 	wxString m_Filename;
-	bool m_UseSampleset;
 
 	/* states which windchest this pipe belongs to, see GOSoundEngine::StartSampler */
 	int m_SamplerGroupID;
