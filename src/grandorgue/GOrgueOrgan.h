@@ -28,6 +28,7 @@
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueMidiMap;
+class GOrgueSettings;
 
 class GOrgueOrgan
 {
@@ -56,6 +57,8 @@ public:
 	const wxString GetUITitle();
 	GOrgueMidiReceiver& GetMIDIReceiver();
 	bool Match(const GOrgueMidiEvent& e);
+
+	bool IsUsable(GOrgueSettings& settings);
 };
 
 #endif

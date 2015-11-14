@@ -353,7 +353,8 @@ std::vector<GOrgueOrgan*> GOrgueSettings::GetLRUOrganList()
 {
 	std::vector<GOrgueOrgan*> lru;
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
-		lru.push_back(m_OrganList[i]);
+		if (m_OrganList[i]->IsUsable(*this))
+			lru.push_back(m_OrganList[i]);
 	std::sort(lru.begin(), lru.end(), LRUCompare);
 	return lru;
 }

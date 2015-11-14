@@ -45,14 +45,17 @@ OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSet
 	m_Organs->InsertColumn(3, _("ODF Path"));
 	topSizer->Add(m_Organs, 1, wxEXPAND | wxALL, 5);
 
-	for(unsigned i = 0; i < m_Settings.GetOrganList().size(); i++)
+	for(unsigned i = 0, j = 0; j < m_Settings.GetOrganList().size(); j++)
 	{
-		GOrgueOrgan* o = m_Settings.GetOrganList()[i];
+		GOrgueOrgan* o = m_Settings.GetOrganList()[j];
+		if (!o->IsUsable(m_Settings))
+			continue;
 		m_Organs->InsertItem(i, o->GetChurchName());
 		m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
 		m_Organs->SetItem(i, 1, o->GetOrganBuilder());
 		m_Organs->SetItem(i, 2, o->GetRecordingDetail());
 		m_Organs->SetItem(i, 3, o->GetODFPath());
+		i++;
 	}
 
 	m_Organs->SetColumnWidth(0, 150);

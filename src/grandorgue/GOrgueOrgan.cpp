@@ -23,6 +23,7 @@
 
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
+#include <wx/filefn.h>
 #include <wx/intl.h>
 #include <wx/stopwatch.h>
 
@@ -115,4 +116,9 @@ bool GOrgueOrgan::Match(const GOrgueMidiEvent& e)
 	default:
 		return false;
 	}
+}
+
+bool GOrgueOrgan::IsUsable(GOrgueSettings& settings)
+{
+	return wxFileExists(m_ODF);
 }
