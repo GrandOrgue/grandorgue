@@ -43,6 +43,7 @@ public:
 
 	void Assign(const wxString& name, GrandOrgueFile* organfile);
 	void AssignResource(const wxString& name, GrandOrgueFile* organfile);
+	void AssignAbsolute(const wxString& path);
 
 	const wxString& GetTitle() const;
 	void Hash(GOrgueHash& hash) const;

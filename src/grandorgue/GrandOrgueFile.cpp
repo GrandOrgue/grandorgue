@@ -385,19 +385,24 @@ wxString GrandOrgueFile::GenerateCacheFileName()
 
 wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, const wxString& file2)
 {
+	GOrgueFilename odf_name;
+
+	{
+		m_odf = GONormalizePath(file);
+		m_path = GOGetPath(m_odf);
+		odf_name.AssignAbsolute(m_odf);
+	}
 	dlg->Setup(1, _("Loading sample set") ,_("Parsing sample set definition file"));
-	m_odf = GONormalizePath(file);
-	m_path = GOGetPath(m_odf);
 	m_SettingFilename = GenerateSettingFileName();
 	m_CacheFilename = GenerateCacheFileName();
 	m_Cacheable = false;
 
 	GOrgueConfigFileReader odf_ini_file;
 
-	if (!odf_ini_file.Read(file))
+	if (!odf_ini_file.Read(odf_name.Open().get()))
 	{
 		wxString error;
-		error.Printf(_("Unable to read '%s'"), file.c_str());
+		error.Printf(_("Unable to read '%s'"), odf_name.GetTitle().c_str());
 		return error;
 	}
 
