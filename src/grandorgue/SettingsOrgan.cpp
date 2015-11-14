@@ -21,6 +21,7 @@
 
 #include "SettingsOrgan.h"
 
+#include "GOrgueOrgan.h"
 #include "GOrgueSettings.h"
 #include "MIDIEventDialog.h"
 #include <wx/button.h>

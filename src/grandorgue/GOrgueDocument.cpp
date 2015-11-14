@@ -24,6 +24,7 @@
 #include "GOGUIPanel.h"
 #include "GOrgueEvent.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrgueOrgan.h"
 #include "GOrguePanelView.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
@@ -85,7 +86,7 @@ bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const wxString& odf, cons
 		CloseOrgan();
 		return false;
 	}
-	m_sound.GetSettings().AddOrgan(new GOrgueOrgan(m_organfile->GetODFFilename(), m_organfile->GetChurchName(), m_organfile->GetOrganBuilder(), m_organfile->GetRecordingDetails()));
+	m_sound.GetSettings().AddOrgan(m_organfile->GetOrganInfo());
 	{
 		wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
 		event.SetInt(m_organfile->GetVolume());

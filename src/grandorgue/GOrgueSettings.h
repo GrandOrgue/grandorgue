@@ -23,7 +23,7 @@
 #define GORGUESETTINGS_H
 
 #include "GOrgueMidiMap.h"
-#include "GOrgueOrgan.h"
+#include "GOrgueMidiReceiver.h"
 #include "GOrgueTemperamentList.h"
 #include "GOrgueSettingBool.h"
 #include "GOrgueSettingDirectory.h"
@@ -37,6 +37,8 @@
 #include <wx/string.h>
 #include <map>
 #include <vector>
+
+class GOrgueOrgan;
 
 typedef struct
 {
@@ -182,7 +184,7 @@ public:
 	void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
 	unsigned GetDefaultLatency();
 
-	void AddOrgan(GOrgueOrgan* organ);
+	void AddOrgan(const GOrgueOrgan& organ);
 	ptr_vector<GOrgueOrgan>& GetOrganList();
 	std::vector<GOrgueOrgan*> GetLRUOrganList();
 

@@ -29,6 +29,7 @@
 #include "GOrgueConfigWriter.h"
 #include "GOrgueLimits.h"
 #include "GOrgueMemoryPool.h"
+#include "GOrgueOrgan.h"
 #include "GOrguePath.h"
 #include "GOrgueSettingNumber.cpp"
 #include "GOrgueStdPath.h"
@@ -357,16 +358,15 @@ std::vector<GOrgueOrgan*> GOrgueSettings::GetLRUOrganList()
 	return lru;
 }
 
-void GOrgueSettings::AddOrgan(GOrgueOrgan* organ)
+void GOrgueSettings::AddOrgan(const GOrgueOrgan& organ)
 {
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
-		if (organ->GetODFPath() == m_OrganList[i]->GetODFPath())
+		if (organ.GetODFPath() == m_OrganList[i]->GetODFPath())
 		{
 			m_OrganList[i]->Update(organ);
-			delete organ;
 			return;
 		}
-	m_OrganList.push_back(organ);
+	m_OrganList.push_back(new GOrgueOrgan(organ));
 }
 
 bool GOrgueSettings::GetMidiInState(wxString device)
