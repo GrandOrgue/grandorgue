@@ -355,36 +355,31 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	ReadCombinations(cfg);
 }
 
+wxString GrandOrgueFile::GetOrganHash()
+{
+	GOrgueHash hash;
+
+	{
+		wxFileName odf(m_odf);
+		odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
+		wxString filename = odf.GetFullPath();
+
+		hash.Update(filename);
+	}
+
+	return hash.getStringHash();
+}
+
 wxString GrandOrgueFile::GenerateSettingFileName()
 {
-	wxFileName odf(m_odf);
-	odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
-	wxString filename = odf.GetFullPath();
-
-	GOrgueHash hash;
-	hash.Update(filename);
-	filename = hash.getStringHash();
-
-	filename = m_Settings.UserSettingPath()  + wxFileName::GetPathSeparator() + 
-		filename + wxString::Format(wxT("-%d.cmb"), m_Settings.Preset());
-
-	return filename;
+	return m_Settings.UserSettingPath()  + wxFileName::GetPathSeparator() + 
+		GetOrganHash() + wxString::Format(wxT("-%d.cmb"), m_Settings.Preset());
 }
 
 wxString GrandOrgueFile::GenerateCacheFileName()
 {
-	wxFileName odf(m_odf);
-	odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
-	wxString filename = odf.GetFullPath();
-
-	GOrgueHash hash;
-	hash.Update(filename);
-	filename = hash.getStringHash();
-
-	filename = m_Settings.UserCachePath()  + wxFileName::GetPathSeparator() + 
-		filename + wxString::Format(wxT("-%d.cache"), m_Settings.Preset());
-
-	return filename;
+	return m_Settings.UserCachePath()  + wxFileName::GetPathSeparator() + 
+		GetOrganHash() + wxString::Format(wxT("-%d.cache"), m_Settings.Preset());
 }
 
 wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, const wxString& file2)
