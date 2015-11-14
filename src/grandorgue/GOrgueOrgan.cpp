@@ -51,30 +51,30 @@ GOrgueOrgan::~GOrgueOrgan()
 {
 }
 
-void GOrgueOrgan::Update(GOrgueOrgan* organ)
+void GOrgueOrgan::Update(const GOrgueOrgan& organ)
 {
-	m_ChurchName = organ->m_ChurchName;
-	m_OrganBuilder = organ->m_OrganBuilder;
-	m_RecordingDetail = organ->m_RecordingDetail;
+	m_ChurchName = organ.m_ChurchName;
+	m_OrganBuilder = organ.m_OrganBuilder;
+	m_RecordingDetail = organ.m_RecordingDetail;
 	m_LastUse = wxGetUTCTime();
 }
 
-const wxString& GOrgueOrgan::GetODFPath()
+const wxString& GOrgueOrgan::GetODFPath() const
 {
 	return m_ODF;
 }
 
-const wxString& GOrgueOrgan::GetChurchName()
+const wxString& GOrgueOrgan::GetChurchName() const
 {
 	return m_ChurchName;
 }
 
-const wxString& GOrgueOrgan::GetOrganBuilder()
+const wxString& GOrgueOrgan::GetOrganBuilder() const
 {
 	return m_OrganBuilder;
 }
 
-const wxString& GOrgueOrgan::GetRecordingDetail()
+const wxString& GOrgueOrgan::GetRecordingDetail() const
 {
 	return m_RecordingDetail;
 }

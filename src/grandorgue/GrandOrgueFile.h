@@ -46,6 +46,7 @@ class GOrgueManual;
 class GOrgueMidi;
 class GOrgueMidiEvent;
 class GOrgueMidiListener;
+class GOrgueOrgan;
 class GOrguePiston;
 class GOrgueProgressDialog;
 class GOrguePushbutton;
@@ -225,6 +226,7 @@ public:
 	/* Filename of the organ definition used to load */
 	const wxString GetODFFilename();
 	const wxString GetODFPath();
+	GOrgueOrgan GetOrganInfo();
 	const wxString GetSettingFilename();
 	const wxString GetCacheFilename();
 

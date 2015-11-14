@@ -44,14 +44,14 @@ public:
 	GOrgueOrgan(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map);
 	virtual ~GOrgueOrgan();
 
-	void Update(GOrgueOrgan* organ);
+	void Update(const GOrgueOrgan& organ);
 
 	void Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiMap& map);
 
-	const wxString& GetODFPath();
-	const wxString& GetChurchName();
-	const wxString& GetOrganBuilder();
-	const wxString& GetRecordingDetail();
+	const wxString& GetODFPath() const;
+	const wxString& GetChurchName() const;
+	const wxString& GetOrganBuilder() const;
+	const wxString& GetRecordingDetail() const;
 	long GetLastUse();
 	const wxString GetUITitle();
 	GOrgueMidiReceiver& GetMIDIReceiver();

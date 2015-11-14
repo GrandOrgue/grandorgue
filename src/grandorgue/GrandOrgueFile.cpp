@@ -55,6 +55,7 @@
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMetronome.h"
+#include "GOrgueOrgan.h"
 #include "GOrguePath.h"
 #include "GOrguePiston.h"
 #include "GOrgueProgressDialog.h"
@@ -1052,6 +1053,11 @@ const wxString GrandOrgueFile::GetODFFilename()
 const wxString GrandOrgueFile::GetODFPath()
 {
 	return m_path.c_str();
+}
+
+GOrgueOrgan GrandOrgueFile::GetOrganInfo()
+{
+	return GOrgueOrgan(GetODFFilename(), GetChurchName(), GetOrganBuilder(), GetRecordingDetails());
 }
 
 const wxString GrandOrgueFile::GetSettingFilename()

@@ -21,6 +21,7 @@
 
 #include "OrganSelectDialog.h"
 
+#include "GOrgueOrgan.h"
 #include "GOrgueSettings.h"
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>

@@ -26,6 +26,7 @@
 #include "GOrgueEvent.h"
 #include "GOrgueLimits.h"
 #include "GOrgueMidi.h"
+#include "GOrgueOrgan.h"
 #include "GOrgueProgressDialog.h"
 #include "GOrgueProperties.h"
 #include "GOrgueStdPath.h"
