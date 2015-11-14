@@ -1055,6 +1055,11 @@ const wxString GrandOrgueFile::GetODFPath()
 	return m_path.c_str();
 }
 
+const wxString GrandOrgueFile::GetOrganPathInfo()
+{
+	return GetODFFilename();
+}
+
 GOrgueOrgan GrandOrgueFile::GetOrganInfo()
 {
 	return GOrgueOrgan(GetODFFilename(), GetChurchName(), GetOrganBuilder(), GetRecordingDetails());
