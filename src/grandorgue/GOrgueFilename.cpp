@@ -98,3 +98,9 @@ void GOrgueFilename::AssignResource(const wxString& name, GrandOrgueFile* organf
 	SetPath(organfile->GetSettings().GetResourceDirectory(), name);
 }
 
+void GOrgueFilename::AssignAbsolute(const wxString& path)
+{
+	m_Name = path;
+	m_Path = path;
+	m_Hash = false;
+}
