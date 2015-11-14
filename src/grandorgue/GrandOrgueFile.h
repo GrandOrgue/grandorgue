@@ -140,7 +140,7 @@ private:
 public:
 
 	GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings);
-	wxString Load(GOrgueProgressDialog* dlg, const wxString& odf, const wxString& cmb = wxEmptyString);
+	wxString Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& organ, const wxString& cmb = wxEmptyString);
 	void LoadCombination(const wxString& cmb);
 	bool Save();
 	bool Export(const wxString& cmb);

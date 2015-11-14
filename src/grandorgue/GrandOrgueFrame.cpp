@@ -351,7 +351,7 @@ bool GOrgueFrame::DoClose(bool force)
 	return true;
 }
 
-void GOrgueFrame::Open(wxString file, bool force)
+void GOrgueFrame::Open(const GOrgueOrgan& organ, bool force)
 {
 	if (!DoClose(force))
 		return;
@@ -360,7 +360,7 @@ void GOrgueFrame::Open(wxString file, bool force)
 		return;
 	GOrgueProgressDialog dlg;
 	m_doc = new GOrgueDocument(&m_Sound);
-	m_doc->Load(&dlg, file);
+	m_doc->Load(&dlg, organ);
 }
 
 GOrgueDocument* GOrgueFrame::GetDocument()
@@ -557,21 +557,23 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
-	Open(event.GetString(), event.GetInt() == 1);
+	GOrgueOrgan* organ = (GOrgueOrgan*)event.GetClientData();
+	Open(*organ, event.GetInt() == 1);
+	delete organ;
 }
 
 void GOrgueFrame::OnLoadFavorite(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_LOAD_FAV_FIRST;
-	GOrgueOrgan* organ = m_Settings.GetOrganList()[id];
-	Open(organ->GetODFPath());
+	GOrgueOrgan& organ = *m_Settings.GetOrganList()[id];
+	Open(organ);
 }
 
 void GOrgueFrame::OnLoadRecent(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_LOAD_LRU_FIRST;
-	GOrgueOrgan* organ = m_Settings.GetLRUOrganList()[id];
-	Open(organ->GetODFPath());
+	GOrgueOrgan& organ = *m_Settings.GetLRUOrganList()[id];
+	Open(organ);
 }
 
 void GOrgueFrame::OnLoad(wxCommandEvent& event)
@@ -579,7 +581,7 @@ void GOrgueFrame::OnLoad(wxCommandEvent& event)
 	OrganSelectDialog dlg(this, _("Select organ to load"), m_Settings);
 	if (dlg.ShowModal() != wxID_OK)
 		return;
-	Open(dlg.GetSelection()->GetODFPath());
+	Open(*dlg.GetSelection());
 }
 
 void GOrgueFrame::OnOpen(wxCommandEvent& event)
@@ -587,7 +589,7 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 	wxFileDialog dlg(this, _("Open organ"), m_Settings.OrganPath(), wxEmptyString, _("Sample set definition files (*.organ)|*.organ"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		Open(dlg.GetPath());
+		Open(GOrgueOrgan(dlg.GetPath()));
 	}
 }
 
@@ -601,11 +603,11 @@ void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		GOrgueProgressDialog pdlg;
-		wxString file = doc->GetOrganFile()->GetODFFilename();
+		GOrgueOrgan organ = doc->GetOrganFile()->GetOrganInfo();
 		GOMutexLocker m_locker(m_mutex, true);
 		if(!m_locker.IsLocked())
 			return;
-		doc->Import(&pdlg, file, dlg.GetPath());
+		doc->Import(&pdlg, organ, dlg.GetPath());
 	}
 }
 
@@ -689,10 +691,10 @@ void GOrgueFrame::OnReload(wxCommandEvent& event)
 	GOrgueDocument* doc = GetDocument();
 	if (!doc || !doc->GetOrganFile())
 		return;
-	wxString filename = doc->GetOrganFile()->GetODFFilename();
+	GOrgueOrgan organ = doc->GetOrganFile()->GetOrganInfo();
 	if (!DoClose())
 		return;
-	Open(filename);
+	Open(organ);
 }
 
 void GOrgueFrame::OnClose(wxCommandEvent& event)
@@ -957,7 +959,7 @@ void GOrgueFrame::OnMidiEvent(const GOrgueMidiEvent& event)
 	for(unsigned i = 0; i < organs.size(); i++)
 		if (organs[i]->Match(event) && organs[i]->IsUsable(m_Settings))
 		{
-			SendLoadFile(organs[i]->GetODFPath(), true);
+			SendLoadOrgan(*organs[i], true);
 			return;
 		}
 }
@@ -978,8 +980,13 @@ void GOrgueFrame::OnMsgBox(wxMsgBoxEvent& event)
 
 void GOrgueFrame::SendLoadFile(wxString filename, bool force)
 {
+	SendLoadOrgan(GOrgueOrgan(filename), force);
+}
+
+void GOrgueFrame::SendLoadOrgan(const GOrgueOrgan& organ, bool force)
+{
 	wxCommandEvent evt(wxEVT_LOADFILE, 0);
-	evt.SetString(filename);
+	evt.SetClientData(new GOrgueOrgan(organ));
 	evt.SetInt(force ? 1 : 0);
 	GetEventHandler()->AddPendingEvent(evt);
 }

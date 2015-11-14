@@ -383,11 +383,12 @@ wxString GrandOrgueFile::GenerateCacheFileName()
 		GetOrganHash() + wxString::Format(wxT("-%d.cache"), m_Settings.Preset());
 }
 
-wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, const wxString& file2)
+wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& organ, const wxString& file2)
 {
 	GOrgueFilename odf_name;
 
 	{
+		wxString file = organ.GetODFPath();
 		m_odf = GONormalizePath(file);
 		m_path = GOGetPath(m_odf);
 		odf_name.AssignAbsolute(m_odf);

@@ -42,6 +42,7 @@ private:
 
 public:
 	GOrgueOrgan(wxString odf, wxString church_name, wxString organ_builder, wxString recording_detail);
+	explicit GOrgueOrgan(wxString odf);
 	GOrgueOrgan(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map);
 	virtual ~GOrgueOrgan();
 
