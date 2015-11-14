@@ -133,7 +133,9 @@ private:
 	void UpdateAmplitude();
 	void UpdateTuning();
 	void UpdateAudioGroup();
-	
+
+	wxString GetOrganHash();
+
 public:
 
 	GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings);
