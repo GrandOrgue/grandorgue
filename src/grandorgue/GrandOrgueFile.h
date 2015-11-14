@@ -226,6 +226,7 @@ public:
 	/* Filename of the organ definition used to load */
 	const wxString GetODFFilename();
 	const wxString GetODFPath();
+	const wxString GetOrganPathInfo();
 	GOrgueOrgan GetOrganInfo();
 	const wxString GetSettingFilename();
 	const wxString GetCacheFilename();
