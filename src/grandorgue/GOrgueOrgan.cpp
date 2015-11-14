@@ -37,6 +37,16 @@ GOrgueOrgan::GOrgueOrgan(wxString odf, wxString church_name, wxString organ_buil
 	m_LastUse = wxGetUTCTime();
 }
 
+GOrgueOrgan::GOrgueOrgan(wxString odf) :
+	m_ODF(odf),
+	m_ChurchName(),
+	m_OrganBuilder(),
+	m_RecordingDetail(),
+	m_midi(NULL, MIDI_RECV_ORGAN)
+{
+	m_LastUse = wxGetUTCTime();
+}
+
 GOrgueOrgan::GOrgueOrgan(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map) :
 	m_midi(NULL, MIDI_RECV_ORGAN)
 {

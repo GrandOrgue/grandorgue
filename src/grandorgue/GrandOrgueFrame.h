@@ -30,6 +30,7 @@
 
 class GOrgueDocument;
 class GOrgueMidiEvent;
+class GOrgueOrgan;
 class GOrgueSettings;
 class GOrgueSound;
 class wxChoice;
@@ -131,7 +132,9 @@ private:
 	void OnMsgBox(wxMsgBoxEvent& event);
 
 	bool DoClose(bool force = false);
-	void Open(wxString file, bool force = false);
+	void Open(const GOrgueOrgan& organ, bool force = false);
+
+	void SendLoadOrgan(const GOrgueOrgan& organ, bool force = false);
 
 public:
 	GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);

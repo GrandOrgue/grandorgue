@@ -63,19 +63,19 @@ void GOrgueDocument::Modify(bool modified)
 	m_modified = modified;
 }
 
-bool GOrgueDocument::Load(GOrgueProgressDialog* dlg, const wxString& odf)
+bool GOrgueDocument::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& organ)
 {
-	return Import(dlg, odf, wxEmptyString);
+	return Import(dlg, organ, wxEmptyString);
 }
 
-bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const wxString& odf, const wxString& cmb)
+bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const GOrgueOrgan& organ, const wxString& cmb)
 {
 	wxBusyCursor busy;
 
 	CloseOrgan();
 	Modify(false);
 	m_organfile = new GrandOrgueFile(this, m_sound.GetSettings());
-	wxString error = m_organfile->Load(dlg, odf, cmb);
+	wxString error = m_organfile->Load(dlg, organ, cmb);
 	if (!error.IsEmpty())
 	{
 		if (error != wxT("!"))
@@ -158,7 +158,7 @@ bool GOrgueDocument::Revert(GOrgueProgressDialog* dlg)
 	if (m_organfile)
 		m_organfile->DeleteSettings();
 	Modify(false);
-	return Load(dlg, m_organfile->GetODFFilename());
+	return Load(dlg, m_organfile->GetOrganInfo());
 }
 
 bool GOrgueDocument::Save()
