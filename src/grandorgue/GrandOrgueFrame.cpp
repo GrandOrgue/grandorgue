@@ -955,7 +955,7 @@ void GOrgueFrame::OnMidiEvent(const GOrgueMidiEvent& event)
 {
 	ptr_vector<GOrgueOrgan>& organs = m_Settings.GetOrganList();
 	for(unsigned i = 0; i < organs.size(); i++)
-		if (organs[i]->Match(event))
+		if (organs[i]->Match(event) && organs[i]->IsUsable(m_Settings))
 		{
 			SendLoadFile(organs[i]->GetODFPath(), true);
 			return;

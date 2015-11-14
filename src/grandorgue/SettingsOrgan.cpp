@@ -70,7 +70,10 @@ SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindo
 	for(unsigned i = 0; i < m_Settings.GetOrganList().size(); i++)
 	{
 		GOrgueOrgan* o = m_Settings.GetOrganList()[i];
-		m_Organs->InsertItem(i, o->GetChurchName());
+		wxString title = o->GetChurchName();
+		if (!o->IsUsable(m_Settings))
+			title = _("MISSING - ") + title;
+		m_Organs->InsertItem(i, title);
 		m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
 		m_Organs->SetItem(i, 1, o->GetOrganBuilder());
 		m_Organs->SetItem(i, 2, o->GetRecordingDetail());
