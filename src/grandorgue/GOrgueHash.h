@@ -25,7 +25,7 @@
 #include "contrib/sha1.h"
 #include <wx/string.h>
 
-typedef struct
+typedef struct _GOrgueHashType
 {
 	uint8_t hash[20];
 } GOrgueHashType;

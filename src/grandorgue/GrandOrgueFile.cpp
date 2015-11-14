@@ -133,7 +133,7 @@ bool GrandOrgueFile::IsCacheable()
 	return m_Cacheable;
 }
 
-void GrandOrgueFile::GenerateCacheHash(unsigned char hash_value[20])
+GOrgueHashType GrandOrgueFile::GenerateCacheHash()
 {
 	GOrgueHash hash;
 	UpdateHash(hash);
@@ -148,8 +148,7 @@ void GrandOrgueFile::GenerateCacheHash(unsigned char hash_value[20])
 	hash.Update(sizeof(audio_start_data_segment));
 	hash.Update(sizeof(audio_end_data_segment));
 
-	GOrgueHashType result = hash.getHash();
-	memcpy(hash_value, result.hash, 20);
+	return hash.getHash();
 }
 
 #define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
@@ -503,15 +502,15 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const wxString& file, c
 
 			if (cache_ok)
 			{
-				unsigned char hash1[20], hash2[20];
+				GOrgueHashType hash1, hash2;
 				if (!reader.ReadHeader())
 				{
 					cache_ok = false;
 					wxLogWarning (_("Cache file had bad magic bypassing cache."));
 				}
-				GenerateCacheHash(hash1);
-				if (!reader.Read(hash2, sizeof(hash2)) || 
-				    memcmp(hash1, hash2, sizeof(hash1)))
+				hash1 = GenerateCacheHash();
+				if (!reader.Read(&hash2, sizeof(hash2)) || 
+				    memcmp(&hash1, &hash2, sizeof(hash1)))
 				{
 					cache_ok = false;
 					reader.FreeCacheFile();
@@ -671,9 +670,8 @@ bool GrandOrgueFile::UpdateCache(GOrgueProgressDialog* dlg, bool compress)
 	/* Save pipes to cache */
 	bool cache_save_ok = writer.WriteHeader();
 	
-	unsigned char hash[20];
-	GenerateCacheHash(hash);
-	if (!writer.Write(hash, sizeof(hash)))
+	GOrgueHashType hash = GenerateCacheHash();
+	if (!writer.Write(&hash, sizeof(hash)))
 		cache_save_ok = false;
 
 	for (unsigned i = 0; cache_save_ok; i++)

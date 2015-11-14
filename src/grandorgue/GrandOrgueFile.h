@@ -60,6 +60,7 @@ class GOrgueDocument;
 class GOSoundEngine;
 class GOSoundProvider;
 class GO_SAMPLER;
+typedef struct _GOrgueHashType GOrgueHashType;
 
 class GrandOrgueFile : public GOrgueEventDistributor, private GOrguePipeUpdateCallback
 {
@@ -124,7 +125,7 @@ private:
 	GOrgueLabel m_TemperamentLabel;
 
 	void ReadOrganFile(GOrgueConfigReader& cfg);
-	void GenerateCacheHash(unsigned char hash[20]);
+	GOrgueHashType GenerateCacheHash();
 	wxString GenerateSettingFileName();
 	wxString GenerateCacheFileName();
 	void SetTemperament(const GOrgueTemperament& temperament);
