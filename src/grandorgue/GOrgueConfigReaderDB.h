@@ -44,7 +44,7 @@ private:
 	void AddEntry(GOStringHashMap& hash, wxString key, wxString value);
 
 public:
-	GOrgueConfigReaderDB(bool case_sensitive = false);
+	GOrgueConfigReaderDB(bool case_sensitive = true);
 	~GOrgueConfigReaderDB();
 	void ReportUnused();
 	void ClearCMB();
