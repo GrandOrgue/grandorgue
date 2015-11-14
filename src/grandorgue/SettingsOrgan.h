@@ -23,8 +23,10 @@
 #define SETTINGSORGAN_H
 
 #include <wx/panel.h>
+#include <vector>
 
 class GOrgueMidi;
+class GOrgueOrgan;
 class GOrgueSettings;
 class wxButton;
 class wxListEvent;
@@ -61,6 +63,8 @@ private:
 
 public:
 	SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent);
+
+	std::vector<GOrgueOrgan*> GetOrgans();
 
 	void Save();
 	

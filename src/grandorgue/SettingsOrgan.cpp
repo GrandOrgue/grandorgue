@@ -180,6 +180,14 @@ void SettingsOrgan::OnProperties(wxCommandEvent& event)
 	m_Organs->SetItem(m_Organs->GetFirstSelected(), 3, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No") );
 }
 
+std::vector<GOrgueOrgan*> SettingsOrgan::GetOrgans()
+{
+	std::vector<GOrgueOrgan*> list;
+	for(long j = 0; j < m_Organs->GetItemCount(); j++)
+		list.push_back((GOrgueOrgan*)m_Organs->GetItemData(j));
+	return list;
+}
+
 void SettingsOrgan::Save()
 {
 	ptr_vector<GOrgueOrgan>& list = m_Settings.GetOrganList();
