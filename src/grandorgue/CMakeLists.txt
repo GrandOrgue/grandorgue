@@ -79,6 +79,7 @@ GOSoundTremulantWorkItem.cpp
 GOSoundWindchestWorkItem.cpp
 GOrgueWave.cpp
 GOrgueWavPack.cpp
+GOrgueArchiveFile.cpp
 GOrgueBitmap.cpp
 GOrgueCache.cpp
 GOrgueCacheWriter.cpp
