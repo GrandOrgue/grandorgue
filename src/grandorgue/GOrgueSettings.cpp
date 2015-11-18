@@ -22,6 +22,7 @@
 #include "GOrgueSettings.h"
 
 #include "GOSoundDefs.h"
+#include "GOrgueArchiveFile.h"
 #include "GOrgueConfigFileWriter.h"
 #include "GOrgueConfigFileReader.h"
 #include "GOrgueConfigReader.h"
@@ -87,6 +88,7 @@ const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
 GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_InstanceName(instance),
 	m_OrganList(),
+	m_ArchiveList(),
 	m_ResourceDir(),
 	m_AudioGroups(),
 	m_AudioDeviceConfig(),
@@ -179,6 +181,11 @@ void GOrgueSettings::Load()
 		unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
 		for(unsigned i = 0; i < organ_count; i++)
 			m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap));
+
+		m_ArchiveList.clear();
+		unsigned archive_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ArchiveCount"), 0, 99999, false, 0);
+		for(unsigned i = 0; i < archive_count; i++)
+			m_ArchiveList.push_back(new GOrgueArchiveFile(cfg, wxString::Format(wxT("Archive%03d"), i + 1)));
 
 		m_Temperaments.InitTemperaments();
 		m_Temperaments.Load(cfg);
@@ -362,12 +369,44 @@ std::vector<GOrgueOrgan*> GOrgueSettings::GetLRUOrganList()
 void GOrgueSettings::AddOrgan(const GOrgueOrgan& organ)
 {
 	for(unsigned i = 0; i < m_OrganList.size(); i++)
-		if (organ.GetODFPath() == m_OrganList[i]->GetODFPath())
+		if (organ.GetODFPath() == m_OrganList[i]->GetODFPath() &&
+		    organ.GetArchiveID() == m_OrganList[i]->GetArchiveID())
 		{
 			m_OrganList[i]->Update(organ);
 			return;
 		}
 	m_OrganList.push_back(new GOrgueOrgan(organ));
+}
+
+ptr_vector<GOrgueArchiveFile>& GOrgueSettings::GetArchiveList()
+{
+	return m_ArchiveList;
+}
+
+GOrgueArchiveFile* GOrgueSettings::GetArchiveByID(const wxString& id, bool useable)
+{
+	for(unsigned i = 0; i < m_ArchiveList.size(); i++)
+		if (m_ArchiveList[i]->GetID() == id)
+			if (!useable || m_ArchiveList[i]->IsUsable(*this))
+				return m_ArchiveList[i];
+	return NULL;
+}
+
+GOrgueArchiveFile* GOrgueSettings::GetArchiveByPath(const wxString& path)
+{
+	for(unsigned i = 0; i < m_ArchiveList.size(); i++)
+		if (m_ArchiveList[i]->GetPath() == path)
+			return m_ArchiveList[i];
+	return NULL;
+}
+
+void GOrgueSettings::AddArchive(const GOrgueArchiveFile& archive)
+{
+	GOrgueArchiveFile* a = GetArchiveByPath(archive.GetPath());
+	if (a)
+		a->Update(archive);
+	else
+		m_ArchiveList.push_back(new GOrgueArchiveFile(archive));
 }
 
 bool GOrgueSettings::GetMidiInState(wxString device)
@@ -494,6 +533,10 @@ void GOrgueSettings::Flush()
 	GOrgueConfigWriter cfg(cfg_file, false);
 
 	GOrgueSettingStore::Save(cfg);
+
+	cfg.WriteInteger(wxT("General"), wxT("ArchiveCount"), m_ArchiveList.size());
+	for(unsigned i = 0; i < m_ArchiveList.size(); i++)
+		m_ArchiveList[i]->Save(cfg, wxString::Format(wxT("Archive%03d"), i + 1));
 
 	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
 	for(unsigned i = 0; i < m_OrganList.size(); i++)

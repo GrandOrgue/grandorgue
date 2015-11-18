@@ -37,11 +37,12 @@ private:
 	wxString m_ChurchName;
 	wxString m_OrganBuilder;
 	wxString m_RecordingDetail;
+	wxString m_ArchiveID;
 	long m_LastUse;
 	GOrgueMidiReceiver m_midi;
 
 public:
-	GOrgueOrgan(wxString odf, wxString church_name, wxString organ_builder, wxString recording_detail);
+	GOrgueOrgan(wxString odf, wxString archive, wxString church_name, wxString organ_builder, wxString recording_detail);
 	explicit GOrgueOrgan(wxString odf);
 	GOrgueOrgan(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map);
 	virtual ~GOrgueOrgan();
@@ -54,6 +55,7 @@ public:
 	const wxString& GetChurchName() const;
 	const wxString& GetOrganBuilder() const;
 	const wxString& GetRecordingDetail() const;
+	const wxString& GetArchiveID() const;
 	long GetLastUse();
 	const wxString GetUITitle();
 	GOrgueMidiReceiver& GetMIDIReceiver();

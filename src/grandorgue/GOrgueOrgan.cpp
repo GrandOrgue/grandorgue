@@ -21,17 +21,20 @@
 
 #include "GOrgueOrgan.h"
 
+#include "GOrgueArchiveFile.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
+#include "GOrgueSettings.h"
 #include <wx/filefn.h>
 #include <wx/intl.h>
 #include <wx/stopwatch.h>
 
-GOrgueOrgan::GOrgueOrgan(wxString odf, wxString church_name, wxString organ_builder, wxString recording_detail) :
+GOrgueOrgan::GOrgueOrgan(wxString odf, wxString archive, wxString church_name, wxString organ_builder, wxString recording_detail) :
 	m_ODF(odf),
 	m_ChurchName(church_name),
 	m_OrganBuilder(organ_builder),
 	m_RecordingDetail(recording_detail),
+	m_ArchiveID(archive),
 	m_midi(NULL, MIDI_RECV_ORGAN)
 {
 	m_LastUse = wxGetUTCTime();
@@ -42,6 +45,7 @@ GOrgueOrgan::GOrgueOrgan(wxString odf) :
 	m_ChurchName(),
 	m_OrganBuilder(),
 	m_RecordingDetail(),
+	m_ArchiveID(),
 	m_midi(NULL, MIDI_RECV_ORGAN)
 {
 	m_LastUse = wxGetUTCTime();
@@ -54,6 +58,7 @@ GOrgueOrgan::GOrgueOrgan(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap&
 	m_ChurchName = cfg.ReadString(CMBSetting, group, wxT("ChurchName"));
 	m_OrganBuilder = cfg.ReadString(CMBSetting, group, wxT("OrganBuilder"));
 	m_RecordingDetail = cfg.ReadString(CMBSetting, group, wxT("RecordingDetail"));
+	m_ArchiveID = cfg.ReadString(CMBSetting, group, wxT("Archiv"), false);
 	m_LastUse = cfg.ReadInteger(CMBSetting, group, wxT("LastUse"), 0, INT_MAX, false, wxGetUTCTime());
 	m_midi.Load(cfg, group, map);
 }
@@ -90,6 +95,11 @@ const wxString& GOrgueOrgan::GetRecordingDetail() const
 	return m_RecordingDetail;
 }
 
+const wxString& GOrgueOrgan::GetArchiveID() const
+{
+	return m_ArchiveID;
+}
+
 GOrgueMidiReceiver& GOrgueOrgan::GetMIDIReceiver()
 {
 	return m_midi;
@@ -111,6 +121,8 @@ void GOrgueOrgan::Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiMap& m
 	cfg.WriteString(group, wxT("ChurchName"), m_ChurchName);
 	cfg.WriteString(group, wxT("OrganBuilder"), m_OrganBuilder);
 	cfg.WriteString(group, wxT("RecordingDetail"), m_RecordingDetail);
+	if (m_ArchiveID != wxEmptyString)
+		cfg.WriteString(group, wxT("Archiv"), m_ArchiveID);
 	cfg.WriteInteger(group, wxT("LastUse"), m_LastUse);
 	m_midi.Save(cfg, group, map);
 }
@@ -130,5 +142,13 @@ bool GOrgueOrgan::Match(const GOrgueMidiEvent& e)
 
 bool GOrgueOrgan::IsUsable(GOrgueSettings& settings)
 {
-	return wxFileExists(m_ODF);
+	if (m_ArchiveID != wxEmptyString)
+	{
+		GOrgueArchiveFile* archive = settings.GetArchiveByID(m_ArchiveID, true);
+		if (!archive)
+			return false;
+		return archive->IsComplete(settings);
+	}
+	else
+		return wxFileExists(m_ODF);
 }
