@@ -38,6 +38,7 @@
 #include <map>
 #include <vector>
 
+class GOrgueArchiveFile;
 class GOrgueOrgan;
 
 typedef struct
@@ -68,6 +69,7 @@ private:
 	wxString m_InstanceName;
 	wxString m_ConfigFileName;
 	ptr_vector<GOrgueOrgan> m_OrganList;
+	ptr_vector<GOrgueArchiveFile> m_ArchiveList;
 	std::map<wxString, bool> m_MidiIn;
 	std::map<wxString, unsigned> m_MidiInShift;
 	std::map<wxString, bool> m_MidiOut;
@@ -187,6 +189,11 @@ public:
 	void AddOrgan(const GOrgueOrgan& organ);
 	ptr_vector<GOrgueOrgan>& GetOrganList();
 	std::vector<GOrgueOrgan*> GetLRUOrganList();
+
+	void AddArchive(const GOrgueArchiveFile& archive);
+	ptr_vector<GOrgueArchiveFile>& GetArchiveList();
+	GOrgueArchiveFile* GetArchiveByID(const wxString& id, bool useable = false);
+	GOrgueArchiveFile* GetArchiveByPath(const wxString& path);
 
 	GOrgueMidiMap& GetMidiMap();
 

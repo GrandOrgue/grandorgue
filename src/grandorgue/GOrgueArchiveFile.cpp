@@ -23,6 +23,7 @@
 
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
+#include "GOrgueSettings.h"
 #include <wx/filefn.h>
 
 GOrgueArchiveFile::GOrgueArchiveFile(wxString id, wxString path, wxString name, const std::vector<wxString>& dependencies, const std::vector<wxString>& dependency_titles) :
@@ -105,5 +106,13 @@ bool GOrgueArchiveFile::IsComplete(GOrgueSettings& settings)
 {
 	if (!IsUsable(settings))
 		return false;
+	for(unsigned i = 0; i < m_Dependencies.size(); i++)
+	{
+		GOrgueArchiveFile* archive = settings.GetArchiveByID(m_Dependencies[i], true);
+		if (!archive)
+			return false;
+		if (!archive->IsUsable(settings))
+			return false;
+	}
 	return true;
 }
