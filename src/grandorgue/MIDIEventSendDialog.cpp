@@ -221,6 +221,12 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 		m_HighValueLabel->SetLabel(_("&On value:"));
 	switch(type)
 	{
+	case MIDI_S_NOTE_ON:
+	case MIDI_S_NOTE_OFF:
+	case MIDI_S_NOTE:
+		m_KeyLabel->SetLabel(_("&MIDI-note:"));
+		break;
+
 	case MIDI_S_CTRL_ON:
 	case MIDI_S_CTRL_OFF:
 	case MIDI_S_CTRL:
