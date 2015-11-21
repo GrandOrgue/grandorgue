@@ -21,6 +21,7 @@
 
 #include "GOrgueArchive.h"
 
+#include "GOrgueArchiveEntryFile.h"
 #include "GOrgueArchiveIndex.h"
 #include "GOrgueArchiveReader.h"
 #include "GOrgueInvalidFile.h"
@@ -83,6 +84,11 @@ bool GOrgueArchive::containsFile(const wxString& name)
 
 GOrgueFile* GOrgueArchive::OpenFile(const wxString& name)
 {
+	for(unsigned i = 0; i < m_Entries.size(); i++)
+		if (m_Entries[i].name == name)
+		{
+			return new GOrgueArchiveEntryFile(this, m_Entries[i].name, m_Entries[i].offset, m_Entries[i].len);
+		}
 	return new GOrgueInvalidFile(name);
 }
 

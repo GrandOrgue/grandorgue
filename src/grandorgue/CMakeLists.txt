@@ -80,6 +80,7 @@ GOSoundWindchestWorkItem.cpp
 GOrgueWave.cpp
 GOrgueWavPack.cpp
 GOrgueArchive.cpp
+GOrgueArchiveEntryFile.cpp
 GOrgueArchiveFile.cpp
 GOrgueArchiveIndex.cpp
 GOrgueArchiveReader.cpp
