@@ -32,6 +32,7 @@
 #include "GOGUIPanelCreator.h"
 #include "GOGUISequencerPanel.h"
 #include "GOSoundEngine.h"
+#include "GOrgueArchive.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
 #include "GOrgueConfigFileReader.h"
@@ -116,6 +117,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_panels(),
 	m_panelcreators(),
 	m_elementcreators(),
+	m_archives(),
 	m_UsedSections(),
 	m_soundengine(0),
 	m_midi(0),
@@ -542,6 +544,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 							SetTemperament(m_Temperament);
 							GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
 							m_pool.StartThread();
+							CloseArchives();
 							return wxEmptyString;
 						}
 					}
@@ -583,6 +586,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 					FREE_AND_NULL(dummy);
 					SetTemperament(m_Temperament);
 					GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
+					CloseArchives();
 					return wxEmptyString;
 				}
 			}
@@ -603,6 +607,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 		FREE_AND_NULL(dummy);
 		GOMessageBox(_("Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
 		m_pool.StartThread();
+		CloseArchives();
 		return wxEmptyString;
 	}
 	catch (wxString error_)
@@ -613,6 +618,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 	FREE_AND_NULL(dummy);
 
 	m_pool.StartThread();
+	CloseArchives();
 
 	return wxEmptyString;
 
@@ -712,11 +718,18 @@ void GrandOrgueFile::DeleteCache()
 
 GrandOrgueFile::~GrandOrgueFile(void)
 {
+	CloseArchives();
 	Cleanup();
 	// Just to be sure, that the sound providers are freed before the pool
 	m_manual.clear();
 	m_tremulant.clear();
 	m_ranks.clear();
+}
+
+void GrandOrgueFile::CloseArchives()
+{
+	for(unsigned i = 0; i < m_archives.size(); i++)
+		m_archives[i]->Close();
 }
 
 void GrandOrgueFile::DeleteSettings()
@@ -1010,6 +1023,21 @@ const wxString& GrandOrgueFile::GetRecordingDetails()
 const wxString& GrandOrgueFile::GetInfoFilename()
 {
 	return m_InfoFilename;
+}
+
+bool GrandOrgueFile::useArchives()
+{
+	return m_archives.size() > 0;
+}
+
+GOrgueArchive* GrandOrgueFile::findArchive(const wxString& name)
+{
+	for(unsigned i = 0; i < m_archives.size(); i++)
+	{
+		if (m_archives[i]->containsFile(name))
+			return m_archives[i];
+	}
+	return NULL;
 }
 
 GOrgueEnclosure* GrandOrgueFile::GetEnclosure(unsigned index)

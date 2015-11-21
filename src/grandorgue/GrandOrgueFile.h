@@ -36,6 +36,7 @@
 
 class GOGUIPanel;
 class GOGUIPanelCreator;
+class GOrgueArchive;
 class GOrgueButton;
 class GOrgueCache;
 class GOrgueDivisionalCoupler;
@@ -111,6 +112,7 @@ private:
 	ptr_vector<GOGUIPanel> m_panels;
 	ptr_vector<GOGUIPanelCreator> m_panelcreators;
 	ptr_vector<GOrgueElementCreator> m_elementcreators;
+	ptr_vector<GOrgueArchive> m_archives;
 	GOStringBoolMap m_UsedSections;
 
 	GOSoundEngine* m_soundengine;
@@ -136,6 +138,8 @@ private:
 	void UpdateAudioGroup();
 
 	wxString GetOrganHash();
+
+	void CloseArchives();
 
 public:
 
@@ -197,6 +201,9 @@ public:
 	void SetTemperament(wxString name);
 	wxString GetTemperament();
 	void MarkSectionInUse(wxString name);
+
+	bool useArchives();
+	GOrgueArchive* findArchive(const wxString& name);
 
 	int GetRecorderElementID(wxString name);
 	GOrgueCombinationDefinition& GetGeneralTemplate();
