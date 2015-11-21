@@ -81,6 +81,7 @@ GOrgueWave.cpp
 GOrgueWavPack.cpp
 GOrgueArchiveFile.cpp
 GOrgueArchiveIndex.cpp
+GOrgueArchiveReader.cpp
 GOrgueBitmap.cpp
 GOrgueCache.cpp
 GOrgueCacheWriter.cpp
