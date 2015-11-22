@@ -71,6 +71,7 @@ class GrandOrgueFile : public GOrgueEventDistributor, private GOrguePipeUpdateCa
 private:
 	GOrgueDocument* m_doc;
 	wxString m_odf;
+	wxString m_ArchiveID;
 	wxString m_path;
 	wxString m_CacheFilename;
 	wxString m_SettingFilename;
@@ -139,6 +140,7 @@ private:
 
 	wxString GetOrganHash();
 
+	bool LoadArchive(wxString ID, wxString& name, const wxString& parentID = wxEmptyString);
 	void CloseArchives();
 
 public:

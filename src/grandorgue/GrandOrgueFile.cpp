@@ -33,6 +33,8 @@
 #include "GOGUISequencerPanel.h"
 #include "GOSoundEngine.h"
 #include "GOrgueArchive.h"
+#include "GOrgueArchiveFile.h"
+#include "GOrgueArchiveManager.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
 #include "GOrgueConfigFileReader.h"
@@ -81,6 +83,7 @@
 GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_doc(doc),
 	m_odf(),
+	m_ArchiveID(),
 	m_path(),
 	m_CacheFilename(),
 	m_SettingFilename(),
@@ -362,6 +365,12 @@ wxString GrandOrgueFile::GetOrganHash()
 {
 	GOrgueHash hash;
 
+	if (m_ArchiveID != wxEmptyString)
+	{
+		hash.Update(m_ArchiveID);
+		hash.Update(m_odf);
+	}
+	else
 	{
 		wxFileName odf(m_odf);
 		odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
@@ -385,10 +394,54 @@ wxString GrandOrgueFile::GenerateCacheFileName()
 		GetOrganHash() + wxString::Format(wxT("-%d.cache"), m_Settings.Preset());
 }
 
+bool GrandOrgueFile::LoadArchive(wxString ID, wxString& name, const wxString& parentID)
+{
+	GOrgueArchiveManager manager(m_Settings);
+	GOrgueArchive* archive = manager.LoadArchive(ID);
+	if (archive)
+	{
+		m_archives.push_back(archive);
+		return true;
+	}
+	name = wxEmptyString;
+	GOrgueArchiveFile* a = m_Settings.GetArchiveByID(ID);
+	if (a)
+		name = a->GetName();
+	else if (parentID != wxEmptyString)
+	{
+		a = m_Settings.GetArchiveByID(parentID);
+		for(unsigned i = 0; i < a->GetDependencies().size(); i++)
+			if (a->GetDependencies()[i] == ID)
+				name = a->GetDependencyTitles()[i];
+	}
+	return false;
+}
+
 wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& organ, const wxString& file2)
 {
 	GOrgueFilename odf_name;
 
+	if (organ.GetArchiveID() != wxEmptyString)
+	{
+		dlg->Setup(1, _("Loading sample set") ,_("Parsing organ packages"));
+		wxString name;
+		m_archives.clear();
+
+		if (!LoadArchive(organ.GetArchiveID(), name))
+			return wxString::Format(_("Failed to open organ package '%s' (%s)"), name.c_str(), organ.GetArchiveID().c_str());
+		GOrgueArchive* main = m_archives[0];
+		m_ArchiveID = main->GetArchiveID();
+
+		for(unsigned i = 0; i < main->GetDependencies().size(); i++)
+		{
+			if (!LoadArchive(main->GetDependencies()[i], name))
+				return wxString::Format(_("Failed to open organ package '%s' (%s)"), name.c_str(), organ.GetArchiveID().c_str());
+		}
+		m_odf = organ.GetODFPath();
+		m_path = "";
+		odf_name.Assign(m_odf, this);
+	}
+	else
 	{
 		wxString file = organ.GetODFPath();
 		m_odf = GONormalizePath(file);
@@ -471,6 +524,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), false);
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFHash"), false);
+		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ArchiveID"), false);
 		ReadOrganFile(cfg);
 	}
 	catch (wxString error_)
@@ -761,6 +815,8 @@ bool GrandOrgueFile::Export(const wxString& cmb)
 	cfg.WriteString(wxT("Organ"), wxT("ChurchName"), m_ChurchName);
 	cfg.WriteString(wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
 	cfg.WriteString(wxT("Organ"), wxT("ODFPath"), GetODFFilename());
+	if (m_ArchiveID != wxEmptyString)
+		cfg.WriteString(wxT("Organ"), wxT("ArchiveID"), m_ArchiveID);
 
 	cfg.WriteInteger(wxT("Organ"), wxT("Volume"), m_volume);
 
@@ -1091,12 +1147,20 @@ const wxString GrandOrgueFile::GetODFPath()
 
 const wxString GrandOrgueFile::GetOrganPathInfo()
 {
-	return GetODFFilename();
+	if (m_ArchiveID == wxEmptyString)
+		return GetODFFilename();
+	GOrgueArchiveFile *archive = m_Settings.GetArchiveByID(m_ArchiveID);
+	wxString name = GetODFFilename();
+	if (archive)
+		name += wxString::Format(_(" from '%s' (%s)"), archive->GetName().c_str(), m_ArchiveID.c_str());
+	else
+		name += wxString::Format(_(" from %s"), m_ArchiveID.c_str());
+	return name;
 }
 
 GOrgueOrgan GrandOrgueFile::GetOrganInfo()
 {
-	return GOrgueOrgan(GetODFFilename(), wxEmptyString, GetChurchName(), GetOrganBuilder(), GetRecordingDetails());
+	return GOrgueOrgan(GetODFFilename(), m_ArchiveID, GetChurchName(), GetOrganBuilder(), GetRecordingDetails());
 }
 
 const wxString GrandOrgueFile::GetSettingFilename()
