@@ -299,9 +299,15 @@ void GOrgueFrame::Init(wxString filename)
 		SendLoadFile(filename);
 	else if (m_Settings.LoadLastFile())
 	{
-		wxString name = m_Settings.LastFile();
-		if (wxFileExists(name))
-			SendLoadFile(name);
+		std::vector<GOrgueOrgan*> list = m_Settings.GetLRUOrganList();
+		if (list.size() > 0)
+			SendLoadOrgan(*list[0]);
+		else
+		{
+			wxString name = m_Settings.LastFile();
+			if (wxFileExists(name))
+				SendLoadFile(name);
+		}
 	}
 
 	m_listener.SetCallback(this);
