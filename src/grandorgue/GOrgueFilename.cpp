@@ -21,6 +21,7 @@
 
 #include "GOrgueFilename.h"
 
+#include "GOrgueArchive.h"
 #include "GOrgueHash.h"
 #include "GOrgueInvalidFile.h"
 #include "GOrgueSettings.h"
@@ -32,6 +33,7 @@
 GOrgueFilename::GOrgueFilename() :
 	m_Name(),
 	m_Path(),
+	m_Archiv(NULL),
 	m_Hash(true)
 {
 }
@@ -43,6 +45,12 @@ const wxString& GOrgueFilename::GetTitle() const
 
 void GOrgueFilename::Hash(GOrgueHash& hash) const
 {
+	if (m_Archiv)
+	{
+		hash.Update(m_Archiv->GetArchiveID());
+		hash.Update(m_Name);
+		return;
+	}
 	hash.Update(m_Path);
 	wxFileName path_name(m_Path);
 	if (!m_Hash)
@@ -55,7 +63,10 @@ void GOrgueFilename::Hash(GOrgueHash& hash) const
 
 std::unique_ptr<GOrgueFile> GOrgueFilename::Open() const
 {
-	if (wxFileExists(m_Path))
+	if (m_Archiv)
+		return (std::unique_ptr<GOrgueFile>)m_Archiv->OpenFile(m_Name);
+
+	if (m_Path != wxEmptyString && wxFileExists(m_Path))
 		return (std::unique_ptr<GOrgueFile>)new GOrgueStandardFile(m_Path, m_Name);
 	else
 		return (std::unique_ptr<GOrgueFile>)new GOrgueInvalidFile(m_Name);
@@ -87,6 +98,16 @@ void GOrgueFilename::Assign(const wxString& name, GrandOrgueFile* organfile)
 	if (organfile->GetSettings().ODFCheck() && name.Find(wxT('/')) != wxNOT_FOUND)
 	{
 		wxLogWarning(_("Filename '%s' contains non-portable directory seperator /"), name.c_str());
+	}
+	if (organfile->useArchives())
+	{
+		m_Path = wxEmptyString;
+		m_Archiv = organfile->findArchive(name);
+		if (!m_Archiv)
+		{
+			wxLogError(_("File '%s' does not exists"), name.c_str());
+		}
+		return;
 	}
 	SetPath(organfile->GetODFPath(), name);
 }

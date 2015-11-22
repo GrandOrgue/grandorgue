@@ -25,6 +25,7 @@
 #include <wx/string.h>
 #include <memory>
 
+class GOrgueArchive;
 class GOrgueFile;
 class GOrgueHash;
 class GrandOrgueFile;
@@ -34,6 +35,7 @@ class GOrgueFilename
 private:
 	wxString m_Name;
 	wxString m_Path;
+	GOrgueArchive* m_Archiv;
 	bool m_Hash;
 
 	void SetPath(const wxString& base, const wxString& path);
