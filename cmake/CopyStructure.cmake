@@ -23,7 +23,7 @@ function(COPY_STRUCTURE TARGET DIRNAME)
 
   SET(SRCDIR ${CMAKE_CURRENT_SOURCE_DIR})
   file(MAKE_DIRECTORY ${DIR})  
-  file(GLOB_RECURSE SRCFILES RELATIVE ${SRCDIR} ${SRCDIR}/*.organ ${SRCDIR}/*.wav ${SRCDIR}/*.gif ${SRCDIR}/*.jpg ${SRCDIR}/*.png ${SRCDIR}/*.wv)
+  file(GLOB_RECURSE SRCFILES RELATIVE ${SRCDIR} ${SRCDIR}/*.organ ${SRCDIR}/*.wav ${SRCDIR}/*.gif ${SRCDIR}/*.jpg ${SRCDIR}/*.png ${SRCDIR}/*.wv ${SRCDIR}/*.orgue)
   SET(_FILELIST)
   FOREACH(_realFile ${SRCFILES})
     STRING(REPLACE "#" "s" _currentFile "${_realFile}" )
