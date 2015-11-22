@@ -185,6 +185,7 @@ add_subdirectory(sounds)
 if (INSTALL_DEMO)
   add_subdirectory(demo)
 endif()
+add_subdirectory(packages)
 
 set(CPACK_PACKAGE_NAME "GrandOrgue")
 set(CPACK_PACKAGE_VENDOR "Our Organ")
