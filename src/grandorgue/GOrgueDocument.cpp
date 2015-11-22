@@ -94,7 +94,6 @@ bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const GOrgueOrgan& organ,
 
 		m_sound.GetEngine().SetVolume(m_organfile->GetVolume());
 	}
-	m_sound.GetSettings().LastFile(m_organfile->GetODFFilename());
 	m_sound.GetSettings().Flush();
 
 	wxCommandEvent event(wxEVT_WINTITLE, 0);
