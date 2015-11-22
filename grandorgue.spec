@@ -101,6 +101,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_docdir}/%{name}
 %{_datadir}/GrandOrgue/help
 %{_datadir}/GrandOrgue/sounds
+%dir %{_datadir}/GrandOrgue/packages
 %dir %{_datadir}/GrandOrgue
 %{_datadir}/applications/*
 %dir %{_datadir}/appdata
@@ -112,6 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %files demo
 %defattr(-,root,root)
 %{_datadir}/GrandOrgue/demo
+%{_datadir}/GrandOrgue/packages/*.orgue
 
 %post
 %if 0%{?suse_version} >= 1140 

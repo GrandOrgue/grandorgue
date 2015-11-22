@@ -172,10 +172,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_mingw_datadir}/GrandOrgue
 %{_mingw_datadir}/GrandOrgue/help
 %{_mingw_datadir}/GrandOrgue/sounds
+%dir %{_mingw_datadir}/GrandOrgue/packages
 
 %files demo
 %defattr(-,root,root)
 %{_mingw_datadir}/GrandOrgue/demo
+%{_mingw_datadir}/GrandOrgue/packages/*.orgue
 
 %files installer
 %defattr(-,root,root)
