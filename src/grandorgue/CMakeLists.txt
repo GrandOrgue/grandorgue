@@ -83,6 +83,7 @@ GOrgueArchive.cpp
 GOrgueArchiveEntryFile.cpp
 GOrgueArchiveFile.cpp
 GOrgueArchiveIndex.cpp
+GOrgueArchiveManager.cpp
 GOrgueArchiveReader.cpp
 GOrgueBitmap.cpp
 GOrgueCache.cpp
