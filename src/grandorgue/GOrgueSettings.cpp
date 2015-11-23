@@ -135,6 +135,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	MetronomeBPM(this, wxT("Metronome"), wxT("BPM"), 1, 500, 80),
 	MidiRecorderOutputDevice(this, wxT("MIDIOut"), wxT("MIDIRecorderDevice"), wxEmptyString),
 	OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
+	OrganPackagePath(this, wxT("General"), wxT("OrganPackagePath"), wxEmptyString),
 	SettingPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
 	AudioRecorderPath(this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
 	MidiRecorderPath(this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
@@ -151,6 +152,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 
 	wxString docdir = wxStandardPaths::Get().GetDocumentsDir() + wxFileName::GetPathSeparator() + _("GrandOrgue") + wxFileName::GetPathSeparator();
 	OrganPath.setDefaultValue(docdir + _("Organs"));
+	OrganPackagePath.setDefaultValue(docdir + _("Organ packages"));
 	SettingPath.setDefaultValue(docdir + _("Settings"));
 	AudioRecorderPath.setDefaultValue(docdir + _("Audio recordings"));
 	MidiRecorderPath.setDefaultValue(docdir + _("MIDI recordings"));
@@ -344,6 +346,11 @@ GOrgueMidiReceiver* GOrgueSettings::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsig
 const wxString GOrgueSettings::GetResourceDirectory()
 {
 	return m_ResourceDir.c_str();
+}
+
+const wxString GOrgueSettings::GetPackageDirectory()
+{
+	return m_ResourceDir + wxFileName::GetPathSeparator() + wxT("packages");
 }
 
 ptr_vector<GOrgueOrgan>& GOrgueSettings::GetOrganList()

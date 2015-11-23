@@ -153,6 +153,7 @@ public:
 	GOrgueSettingString MidiRecorderOutputDevice;
 
 	GOrgueSettingDirectory OrganPath;
+	GOrgueSettingDirectory OrganPackagePath;
 	GOrgueSettingDirectory SettingPath;
 	GOrgueSettingDirectory AudioRecorderPath;
 	GOrgueSettingDirectory MidiRecorderPath;
@@ -160,6 +161,7 @@ public:
 
 	void Load();
 	const wxString GetResourceDirectory();
+	const wxString GetPackageDirectory();
 
 	unsigned GetEventCount();
 	wxString GetEventGroup(unsigned index);
