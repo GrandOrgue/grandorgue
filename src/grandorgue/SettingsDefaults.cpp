@@ -76,6 +76,10 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(m_OrganPath = new wxDirPickerCtrl(this, ID_ORGAN_PATH, wxEmptyString, _("Select directory for your samplesets"), wxDefaultPosition, wxDefaultSize, 
 						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
 
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Organ package directory:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_OrganPackagePath = new wxDirPickerCtrl(this, ID_ORGANPACKAGE_PATH, wxEmptyString, _("Select directory for your organ packages"), wxDefaultPosition, wxDefaultSize, 
+						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
+
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Setting import/export directory:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_SettingPath = new wxDirPickerCtrl(this, ID_SETTING_PATH, wxEmptyString, _("Select directory for setting import/export"), wxDefaultPosition, wxDefaultSize, 
 						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
@@ -95,6 +99,7 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	m_OrganPath->SetPath(m_Settings.OrganPath());
+	m_OrganPackagePath->SetPath(m_Settings.OrganPackagePath());
 	m_SettingPath->SetPath(m_Settings.SettingPath());
 	m_AudioRecorderPath->SetPath(m_Settings.AudioRecorderPath());
 	m_MidiRecorderPath->SetPath(m_Settings.MidiRecorderPath());
@@ -109,6 +114,7 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 void SettingsDefaults::Save()
 {
 	m_Settings.OrganPath(m_OrganPath->GetPath());
+	m_Settings.OrganPackagePath(m_OrganPackagePath->GetPath());
 	m_Settings.SettingPath(m_SettingPath->GetPath());
 	m_Settings.AudioRecorderPath(m_AudioRecorderPath->GetPath());
 	m_Settings.MidiRecorderPath(m_MidiRecorderPath->GetPath());
