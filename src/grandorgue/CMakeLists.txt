@@ -192,6 +192,7 @@ OrganSelectDialog.cpp
 GOrgueDocument.cpp
 GOrguePanelView.cpp
 GOrgueView.cpp
+SettingsArchives.cpp
 SettingsAudioGroup.cpp
 SettingsAudioOutput.cpp
 SettingsDefaults.cpp
