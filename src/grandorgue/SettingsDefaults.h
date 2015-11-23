@@ -32,6 +32,7 @@ class SettingsDefaults : public wxPanel
 {
 	enum {
 		ID_ORGAN_PATH = 200,
+		ID_ORGANPACKAGE_PATH,
 		ID_SETTING_PATH,
 		ID_AUDIO_RECORDER_PATH,
 		ID_MIDI_RECORDER_PATH,
@@ -43,6 +44,7 @@ class SettingsDefaults : public wxPanel
 private:
 	GOrgueSettings& m_Settings;
 	wxDirPickerCtrl* m_OrganPath;
+	wxDirPickerCtrl* m_OrganPackagePath;
 	wxDirPickerCtrl* m_SettingPath;
 	wxDirPickerCtrl* m_AudioRecorderPath;
 	wxDirPickerCtrl* m_MidiRecorderPath;
