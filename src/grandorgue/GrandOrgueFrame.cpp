@@ -22,6 +22,7 @@
 #include "GrandOrgueFrame.h"
 
 #include "GOGUIPanel.h"
+#include "GOrgueArchiveManager.h"
 #include "GOrgueDocument.h"
 #include "GOrgueEvent.h"
 #include "GOrgueLimits.h"
@@ -63,6 +64,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU_OPEN(GOrgueFrame::OnMenuOpen)
 	EVT_MENU(ID_FILE_OPEN, GOrgueFrame::OnOpen)
 	EVT_MENU(ID_FILE_LOAD, GOrgueFrame::OnLoad)
+	EVT_MENU(ID_FILE_INSTALL, GOrgueFrame::OnInstall)
 	EVT_MENU_RANGE(ID_LOAD_FAV_FIRST, ID_LOAD_FAV_LAST, GOrgueFrame::OnLoadFavorite)
 	EVT_MENU_RANGE(ID_LOAD_LRU_FIRST, ID_LOAD_LRU_LAST, GOrgueFrame::OnLoadRecent)
 	EVT_MENU(ID_FILE_SAVE, GOrgueFrame::OnSave)
@@ -596,6 +598,23 @@ void GOrgueFrame::OnOpen(wxCommandEvent& event)
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		Open(GOrgueOrgan(dlg.GetPath()));
+	}
+}
+
+void GOrgueFrame::OnInstall(wxCommandEvent& event)
+{
+	wxFileDialog dlg(this, _("Install organ package"), m_Settings.OrganPath(), wxEmptyString, _("Organ package (*.orgue)|*.orgue"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	if (dlg.ShowModal() == wxID_OK)
+	{
+		GOrgueArchiveManager manager(m_Settings);
+		wxString result = manager.InstallPackage(dlg.GetPath());
+		if (result != wxEmptyString)
+			wxMessageBox(result, _("Error"), wxOK | wxICON_ERROR, this);
+		else
+		{
+			wxMessageBox(_("The organ package has been registered"), _("Install organ package"), wxOK , this);
+			m_Settings.Flush();
+		}
 	}
 }
 

@@ -77,6 +77,7 @@ private:
 	void OnLoad(wxCommandEvent& event);
 	void OnLoadFavorite(wxCommandEvent& event);
 	void OnLoadRecent(wxCommandEvent& event);
+	void OnInstall(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
 	void OnSave(wxCommandEvent& event);
 	void OnClose(wxCommandEvent& event);
