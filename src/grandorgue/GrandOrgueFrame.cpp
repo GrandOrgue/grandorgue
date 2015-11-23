@@ -813,10 +813,12 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 {
-	wxLogDebug(_("settingsdialog.."));
 	SettingsDialog dialog(this, m_Sound);
-	wxLogDebug(_("success"));
-	dialog.ShowModal();
+	if (dialog.ShowModal() == wxID_OK)
+	{
+		m_Sound.ResetSound(true);
+		m_Settings.Flush();
+	}
 }
 
 void GOrgueFrame::OnAudioState(wxCommandEvent& WXUNUSED(event))

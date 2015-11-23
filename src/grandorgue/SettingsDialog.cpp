@@ -22,7 +22,6 @@
 #include "SettingsDialog.h"
 
 #include "GOrgueEvent.h"
-#include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
 #include "SettingsAudioGroup.h"
@@ -117,9 +116,6 @@ bool SettingsDialog::DoApply()
 	m_ReverbPage->Save();
 	m_TemperamentsPage->Save();
 	m_DefaultsPage->Save();
-
-	m_Sound.ResetSound(true);
-	m_Sound.GetSettings().Flush();
 
 	return true;
 }
