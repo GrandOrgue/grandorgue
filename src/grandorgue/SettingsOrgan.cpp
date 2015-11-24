@@ -21,6 +21,7 @@
 
 #include "SettingsOrgan.h"
 
+#include "GOrgueArchiveFile.h"
 #include "GOrgueOrgan.h"
 #include "GOrgueSettings.h"
 #include "MIDIEventDialog.h"
@@ -51,7 +52,8 @@ SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindo
 	m_Organs->InsertColumn(1, _("Builder"));
 	m_Organs->InsertColumn(2, _("Recording"));
 	m_Organs->InsertColumn(3, _("MIDI"));
-	m_Organs->InsertColumn(4, _("ODF Path"));
+	m_Organs->InsertColumn(4, _("Organ package"));
+	m_Organs->InsertColumn(5, _("ODF Path"));
 	topSizer->Add(m_Organs, 1, wxEXPAND | wxALL, 5);
 
 	wxBoxSizer* buttonSizer =  new wxBoxSizer(wxHORIZONTAL);
@@ -78,7 +80,12 @@ SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindo
 		m_Organs->SetItem(i, 1, o->GetOrganBuilder());
 		m_Organs->SetItem(i, 2, o->GetRecordingDetail());
 		m_Organs->SetItem(i, 3, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No") );
-		m_Organs->SetItem(i, 4, o->GetODFPath());
+		m_Organs->SetItem(i, 5, o->GetODFPath());
+		if (o->GetArchiveID() != wxEmptyString)
+		{
+			GOrgueArchiveFile* a = m_Settings.GetArchiveByID(o->GetArchiveID());
+			m_Organs->SetItem(i, 4, a ? a->GetName() : o->GetArchiveID());
+		}
 	}
 	if (m_Organs->GetItemCount())
 	{
@@ -87,6 +94,7 @@ SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindo
 		m_Organs->SetColumnWidth(2, 250);
 		m_Organs->SetColumnWidth(3, wxLIST_AUTOSIZE_USEHEADER);
 		m_Organs->SetColumnWidth(4, wxLIST_AUTOSIZE);
+		m_Organs->SetColumnWidth(5, wxLIST_AUTOSIZE);
 	}
 	m_Up->Disable();
 	m_Down->Disable();
@@ -130,7 +138,7 @@ void SettingsOrgan::MoveOrgan(long from, long to)
 	m_Organs->InsertItem(item);
 	if (to < from)
 		from++;
-	for(unsigned i = 0; i < 5; i++)
+	for(unsigned i = 0; i < 6; i++)
 	{
 		item.SetId(from);
 		item.SetColumn(i);
