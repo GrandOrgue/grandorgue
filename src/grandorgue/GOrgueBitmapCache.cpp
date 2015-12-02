@@ -174,14 +174,14 @@ bool GOrgueBitmapCache::loadFile(wxImage& img, wxString filename)
 		throw GOrgueOutOfMemory();
 	if (file->Read(data, length) != length)
 	{
-		delete data;
+		free(data);
 		return false;
 	}
 	file->Close();
 
 	wxMemoryInputStream is(data, length);
 	bool result = img.LoadFile(is, wxBITMAP_TYPE_ANY, -1);
-	delete data;
+	free(data);
 	
 	return result;
 }
