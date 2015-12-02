@@ -35,6 +35,10 @@ void GOGUIHW1Background::Init(GOrgueConfigReader& cfg, wxString group)
 	GOGUIControl::Init(cfg, group);
 }
 
+void GOGUIHW1Background::PrepareDraw(double scale, GOrgueBitmap* background)
+{
+}
+
 void GOGUIHW1Background::Draw(GOrgueDC& dc)
 {
 	m_panel->TileWood(dc, m_metrics->GetDrawstopBackgroundImageNum(), 0, 0, m_layout->GetCenterX(), m_metrics->GetScreenHeight());
@@ -59,5 +63,6 @@ void GOGUIHW1Background::Draw(GOrgueDC& dc)
 	if (m_layout->GetJambTopHeight() + m_layout->GetPistonTopHeight())
 		m_panel->TileWood(dc, m_metrics->GetKeyHorizBackgroundImageNum(), m_layout->GetCenterX(), m_layout->GetJambTopY(), 
 			 m_layout->GetCenterWidth(), m_layout->GetJambTopHeight() + m_layout->GetPistonTopHeight());
+
 	GOGUIControl::Draw(dc);
 }

@@ -31,6 +31,7 @@ public:
 
 	void Init(GOrgueConfigReader& cfg, wxString group);
 
+	void PrepareDraw(double scale, GOrgueBitmap* background);
 	void Draw(GOrgueDC& dc);
 };
 

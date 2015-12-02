@@ -339,6 +339,10 @@ void GOGUIManual::Layout()
 	}
 }
 
+void GOGUIManual::PrepareDraw(double scale, GOrgueBitmap* background)
+{
+}
+
 void GOGUIManual::Draw(GOrgueDC& dc)
 {
 	for (unsigned i = 0; i < m_Keys.size(); i++)

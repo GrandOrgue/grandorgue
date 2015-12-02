@@ -564,6 +564,12 @@ GOGUILayoutEngine* GOGUIPanel::GetLayoutEngine()
 	return m_layout;
 }
 
+void GOGUIPanel::PrepareDraw(double scale, GOrgueBitmap* background)
+{
+	for(unsigned i = 0; i < m_controls.size(); i++)
+		m_controls[i]->PrepareDraw(scale, background);
+}
+
 void GOGUIPanel::Draw(GOrgueDC& dc)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)

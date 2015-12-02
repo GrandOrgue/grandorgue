@@ -49,6 +49,10 @@ void GOGUIManualBackground::Layout()
 	m_BoundingRect = wxRect(mri.x, mri.y, mri.width, mri.height);
 }
 
+void GOGUIManualBackground::PrepareDraw(double scale, GOrgueBitmap* background)
+{
+}
+
 void GOGUIManualBackground::Draw(GOrgueDC& dc)
 {
 	const GOGUILayoutEngine::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);

@@ -70,6 +70,10 @@ void GOGUIControl::ControlChanged(void* control)
 		}
 }
 
+void GOGUIControl::PrepareDraw(double scale, GOrgueBitmap* background)
+{
+}
+
 void GOGUIControl::Draw(GOrgueDC& dc)
 {
 	m_DrawPending = false;

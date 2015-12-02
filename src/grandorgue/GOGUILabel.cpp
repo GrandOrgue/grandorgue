@@ -179,6 +179,10 @@ void GOGUILabel::Layout()
 	m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
 }
 
+void GOGUILabel::PrepareDraw(double scale, GOrgueBitmap* background)
+{
+}
+
 void GOGUILabel::Draw(GOrgueDC& dc)
 {
 	if (m_Label)

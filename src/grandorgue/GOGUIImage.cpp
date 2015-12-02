@@ -55,6 +55,10 @@ void GOGUIImage::Load(GOrgueConfigReader& cfg, wxString group)
 	m_TileOffsetY = cfg.ReadInteger(ODFSetting, group, wxT("TileOffsetY"), 0, m_Bitmap.GetHeight() - 1, false, 0);
 }
 
+void GOGUIImage::PrepareDraw(double scale, GOrgueBitmap* background)
+{
+}
+
 void GOGUIImage::Draw(GOrgueDC& dc)
 {
 	dc.TileBitmap(m_Bitmap, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);

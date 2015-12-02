@@ -51,6 +51,7 @@ GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindow
 {
 	SetLabel(m_panel->GetName());
 	m_ClientBitmap.Create(m_panel->GetWidth() * m_Scale, m_panel->GetHeight() * m_Scale);
+	m_panel->PrepareDraw(m_Scale, NULL);
 	OnUpdate();
 	SetFocus();
 }
@@ -69,6 +70,7 @@ wxSize GOGUIPanelWidget::UpdateSize(wxSize size)
 		m_Scale = scaleY;
 	if (m_Scale > 2)
 		m_Scale = 2;
+	m_panel->PrepareDraw(m_Scale, NULL);
 	OnUpdate();
 	Refresh();
 	return GetSize();
