@@ -25,6 +25,7 @@
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 #include "GOrgueConfigReader.h"
+#include "GOrgueDC.h"
 #include "GOrgueManual.h"
 
 GOGUIManualBackground::GOGUIManualBackground(GOGUIPanel* panel, unsigned manual_number):
@@ -47,6 +48,11 @@ void GOGUIManualBackground::Layout()
 {
 	const GOGUILayoutEngine::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
 	m_BoundingRect = wxRect(mri.x, mri.y, mri.width, mri.height);
+	m_VRect = wxRect(m_layout->GetCenterX(), mri.y, m_layout->GetCenterWidth(), mri.height);
+	m_VBackground = m_panel->GetWood(m_metrics->GetKeyVertBackgroundImageNum());
+	m_HRect = wxRect(m_layout->GetCenterX(), mri.piston_y, m_layout->GetCenterWidth(), 
+			 (!m_ManualNumber && m_metrics->HasExtraPedalButtonRow()) ? 2 * m_metrics->GetButtonHeight() : m_metrics->GetButtonHeight());
+	m_HBackground = m_panel->GetWood(m_metrics->GetKeyHorizBackgroundImageNum());
 }
 
 void GOGUIManualBackground::PrepareDraw(double scale, GOrgueBitmap* background)
@@ -55,14 +61,8 @@ void GOGUIManualBackground::PrepareDraw(double scale, GOrgueBitmap* background)
 
 void GOGUIManualBackground::Draw(GOrgueDC& dc)
 {
-	const GOGUILayoutEngine::MANUAL_RENDER_INFO &mri = m_layout->GetManualRenderInfo(m_ManualNumber);
-
-	m_panel->TileWood(dc, m_metrics->GetKeyVertBackgroundImageNum(), m_layout->GetCenterX(), mri.y,
-			  m_layout->GetCenterWidth(), mri.height);
-
-	m_panel->TileWood(dc, m_metrics->GetKeyHorizBackgroundImageNum(), m_layout->GetCenterX(),
-			  mri.piston_y, m_layout->GetCenterWidth(), 
-			  (!m_ManualNumber && m_metrics->HasExtraPedalButtonRow()) ? 2 * m_metrics->GetButtonHeight() : m_metrics->GetButtonHeight());
+	dc.TileBitmap(m_VBackground, m_VRect, 0, 0);
+	dc.TileBitmap(m_HBackground, m_HRect, 0, 0);
 	GOGUIControl::Draw(dc);
 }
 
