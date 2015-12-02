@@ -47,12 +47,17 @@ END_EVENT_TABLE()
 GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindowID id) :
 	wxPanel(parent, id),
 	m_panel(panel),
+	m_BGInit(false),
+	m_Background(&m_BGImage),
 	m_Scale(1)
 {
 	SetLabel(m_panel->GetName());
 	m_ClientBitmap.Create(m_panel->GetWidth() * m_Scale, m_panel->GetHeight() * m_Scale);
 	m_panel->PrepareDraw(m_Scale, NULL);
 	OnUpdate();
+	m_BGImage = m_ClientBitmap.ConvertToImage();
+	m_Background.PrepareBitmap(m_Scale, wxRect(0, 0, 0, 0), NULL);
+	m_BGInit = true;
 	SetFocus();
 }
 
@@ -70,7 +75,7 @@ wxSize GOGUIPanelWidget::UpdateSize(wxSize size)
 		m_Scale = scaleY;
 	if (m_Scale > 2)
 		m_Scale = 2;
-	m_panel->PrepareDraw(m_Scale, NULL);
+	m_panel->PrepareDraw(m_Scale, m_BGInit ? &m_Background : NULL);
 	OnUpdate();
 	Refresh();
 	return GetSize();
@@ -95,7 +100,10 @@ void GOGUIPanelWidget::OnPaint(wxPaintEvent& event)
 
 void GOGUIPanelWidget::OnUpdate()
 {
-	m_ClientBitmap = wxBitmap(m_panel->GetWidth() * m_Scale + 0.5, m_panel->GetHeight() * m_Scale + 0.5);
+	if (m_BGInit)
+		m_ClientBitmap = m_BGImage.Scale(m_panel->GetWidth() * m_Scale + 0.5, m_panel->GetHeight() * m_Scale + 0.5, wxIMAGE_QUALITY_BICUBIC);
+	else
+		m_ClientBitmap = wxBitmap(m_panel->GetWidth() * m_Scale + 0.5, m_panel->GetHeight() * m_Scale + 0.5);
 	wxMemoryDC dc;
 	dc.SelectObject(m_ClientBitmap);
 	GOrgueDC DC(&dc, m_Scale);
