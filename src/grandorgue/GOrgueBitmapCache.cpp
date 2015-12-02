@@ -210,6 +210,8 @@ GOrgueBitmap GOrgueBitmapCache::GetBitmap(wxString filename, wxString maskName)
 	}
 	
 	wxImage* bitmap = new wxImage(image);
+	if (bitmap->HasMask())
+		bitmap->InitAlpha();
 	RegisterBitmap(bitmap, filename, maskName);
 	return GOrgueBitmap(bitmap);
 }
