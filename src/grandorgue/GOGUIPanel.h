@@ -84,7 +84,6 @@ public:
 	void PrepareDraw(double scale, GOrgueBitmap* background);
 	void Draw(GOrgueDC& dc);
 	const GOrgueBitmap& GetWood(unsigned which);
-	void TileWood(GOrgueDC& dc, unsigned which, int sx, int sy, int cx, int cy);
 	GOrgueBitmap LoadBitmap(wxString filename, wxString maskname);
 	void HandleKey(int key);
 	void HandleMousePress(int x, int y, bool right);
