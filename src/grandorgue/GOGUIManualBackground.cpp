@@ -57,12 +57,14 @@ void GOGUIManualBackground::Layout()
 
 void GOGUIManualBackground::PrepareDraw(double scale, GOrgueBitmap* background)
 {
+	m_VBackground.PrepareTileBitmap(scale, m_VRect, 0, 0, background);
+	m_HBackground.PrepareTileBitmap(scale, m_HRect, 0, 0, background);
 }
 
 void GOGUIManualBackground::Draw(GOrgueDC& dc)
 {
-	dc.TileBitmap(m_VBackground, m_VRect, 0, 0);
-	dc.TileBitmap(m_HBackground, m_HRect, 0, 0);
+	dc.DrawBitmap(m_VBackground, m_VRect);
+	dc.DrawBitmap(m_HBackground, m_HRect);
 	GOGUIControl::Draw(dc);
 }
 

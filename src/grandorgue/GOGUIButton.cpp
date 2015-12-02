@@ -244,12 +244,14 @@ bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 
 void GOGUIButton::PrepareDraw(double scale, GOrgueBitmap* background)
 {
+	m_OnBitmap.PrepareTileBitmap(scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
+	m_OffBitmap.PrepareTileBitmap(scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 }
 
 void GOGUIButton::Draw(GOrgueDC& dc)
 {
 	GOrgueBitmap& bmp = m_Button->DisplayInverted() ^ m_Button->IsEngaged() ? m_OnBitmap : m_OffBitmap;
-	dc.TileBitmap(bmp, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
+	dc.DrawBitmap(bmp, m_BoundingRect);
 	if (m_TextWidth)
 		dc.DrawText(m_Text, m_TextRect, m_TextColor, m_Font, m_TextWidth);
 

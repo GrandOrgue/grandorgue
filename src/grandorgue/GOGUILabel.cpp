@@ -181,6 +181,7 @@ void GOGUILabel::Layout()
 
 void GOGUILabel::PrepareDraw(double scale, GOrgueBitmap* background)
 {
+	m_Bitmap.PrepareTileBitmap(scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 }
 
 void GOGUILabel::Draw(GOrgueDC& dc)
@@ -188,7 +189,7 @@ void GOGUILabel::Draw(GOrgueDC& dc)
 	if (m_Label)
 		m_Text = m_Label->GetName();
 
-	dc.TileBitmap(m_Bitmap, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
+	dc.DrawBitmap(m_Bitmap, m_BoundingRect);
 	if (m_TextWidth)
 		dc.DrawText(m_Text, m_TextRect, m_TextColor, m_Font, m_TextWidth);
 

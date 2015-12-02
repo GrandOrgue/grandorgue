@@ -341,6 +341,11 @@ void GOGUIManual::Layout()
 
 void GOGUIManual::PrepareDraw(double scale, GOrgueBitmap* background)
 {
+	for (unsigned i = 0; i < m_Keys.size(); i++)
+	{
+		m_Keys[i].OnBitmap.PrepareBitmap(scale, m_Keys[i].Rect, background);
+		m_Keys[i].OffBitmap.PrepareBitmap(scale, m_Keys[i].Rect, background);
+	}
 }
 
 void GOGUIManual::Draw(GOrgueDC& dc)
@@ -348,7 +353,7 @@ void GOGUIManual::Draw(GOrgueDC& dc)
 	for (unsigned i = 0; i < m_Keys.size(); i++)
 	{
 		GOrgueBitmap& bitmap = m_manual->IsKeyDown(m_Keys[i].MidiNumber) ? m_Keys[i].OnBitmap : m_Keys[i].OffBitmap;
-		dc.DrawBitmap(bitmap, m_Keys[i].Rect.GetX(), m_Keys[i].Rect.GetY());
+		dc.DrawBitmap(bitmap, m_Keys[i].Rect);
 	}
 	GOGUIControl::Draw(dc);
 }

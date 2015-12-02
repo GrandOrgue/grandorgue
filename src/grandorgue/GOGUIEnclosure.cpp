@@ -169,12 +169,14 @@ void GOGUIEnclosure::Layout()
 
 void GOGUIEnclosure::PrepareDraw(double scale, GOrgueBitmap* background)
 {
+	for(unsigned i = 0; i < m_Bitmaps.size(); i++)
+		m_Bitmaps[i].PrepareTileBitmap(scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 }
 
 void GOGUIEnclosure::Draw(GOrgueDC& dc)
 {
 	GOrgueBitmap& bmp = m_Bitmaps[((m_Bitmaps.size() - 1) * m_enclosure->GetValue()) / 127];
-	dc.TileBitmap(bmp, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
+	dc.DrawBitmap(bmp, m_BoundingRect);
 
 	if (m_TextWidth)
 		dc.DrawText(m_Text, m_TextRect, m_TextColor, m_Font, m_TextWidth, true);

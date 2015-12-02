@@ -57,10 +57,11 @@ void GOGUIImage::Load(GOrgueConfigReader& cfg, wxString group)
 
 void GOGUIImage::PrepareDraw(double scale, GOrgueBitmap* background)
 {
+	m_Bitmap.PrepareTileBitmap(scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 }
 
 void GOGUIImage::Draw(GOrgueDC& dc)
 {
-	dc.TileBitmap(m_Bitmap, m_BoundingRect, m_TileOffsetX, m_TileOffsetY);
+	dc.DrawBitmap(m_Bitmap, m_BoundingRect);
 	GOGUIControl::Draw(dc);
 }
