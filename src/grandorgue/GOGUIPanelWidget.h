@@ -22,6 +22,7 @@
 #ifndef GOGUIPANELWIDGET_H
 #define GOGUIPANELWIDGET_H
 
+#include "GOrgueBitmap.h"
 #include <wx/bitmap.h>
 #include <wx/panel.h>
 
@@ -33,6 +34,9 @@ class GOGUIPanelWidget : public wxPanel
 {
 private:
 	GOGUIPanel* m_panel;
+	wxImage m_BGImage;
+	bool m_BGInit;
+	GOrgueBitmap m_Background;
 	wxBitmap m_ClientBitmap;
 	double m_Scale;
 

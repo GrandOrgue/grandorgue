@@ -22,6 +22,7 @@
 #include "GOrgueBitmap.h"
 
 #include <wx/bitmap.h>
+#include <wx/dcmemory.h>
 #include <wx/image.h>
 
 GOrgueBitmap::GOrgueBitmap() :
@@ -46,7 +47,24 @@ GOrgueBitmap::GOrgueBitmap(wxImage* img) :
 
 void GOrgueBitmap::ScaleBMP(wxImage& img, double scale, const wxRect& rect, GOrgueBitmap* background)
 {
-	m_bmp = img.Scale(img.GetWidth() * scale, img.GetHeight() * scale, wxIMAGE_QUALITY_BICUBIC);
+	if (background && img.HasAlpha())
+	{
+		wxBitmap bmp(img.GetWidth(), img.GetHeight());
+		wxBitmap orig(img);
+		wxMemoryDC dc;
+
+		dc.SelectObject(bmp);
+		dc.DrawBitmap(background->GetBitmap(), -rect.GetX(), -rect.GetY(), false);
+		dc.DrawBitmap(orig, 0, 0, true);
+		bmp.SetMask(orig.GetMask());
+		wxImage img_result = bmp.ConvertToImage();
+		img_result.InitAlpha();
+		memcpy(img_result.GetAlpha(), img.GetAlpha(), img.GetWidth() * img.GetHeight());
+
+		m_bmp = img_result.Scale(img.GetWidth() * scale, img.GetHeight() * scale, wxIMAGE_QUALITY_BICUBIC);
+	}
+	else
+		m_bmp = img.Scale(img.GetWidth() * scale, img.GetHeight() * scale, wxIMAGE_QUALITY_BICUBIC);
 	m_Scale = scale;
 }
 
