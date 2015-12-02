@@ -640,6 +640,11 @@ void GOGUIPanel::HandleMouseScroll(int x, int y, int amount)
 			return;
 }
 
+const GOrgueBitmap& GOGUIPanel::GetWood(unsigned index)
+{
+	return m_WoodImages[index - 1];
+}
+
 void GOGUIPanel::TileWood(GOrgueDC& dc, unsigned index, int sx, int sy, int cx, int cy)
 {
 	dc.TileBitmap(m_WoodImages[index - 1], wxRect(sx, sy, cx, cy), 0, 0);
