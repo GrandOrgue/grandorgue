@@ -41,8 +41,7 @@ private:
 public:
 	GOrgueDC(wxDC* dc, double m_Scale);
 
-	void DrawBitmap(GOrgueBitmap& bitmap, int x, int y);
-	void TileBitmap(GOrgueBitmap& bitmap, const wxRect& target, int xo, int yo);
+	void DrawBitmap(GOrgueBitmap& bitmap, const wxRect& target);
 	void DrawText(const wxString& text, const wxRect& rect, const wxColour& color, GOrgueFont& font, unsigned text_width, bool top = false);
 
 	wxRect ScaleRect(const wxRect& rect);

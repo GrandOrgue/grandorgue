@@ -36,20 +36,11 @@ wxRect GOrgueDC::ScaleRect(const wxRect& rect)
 	return wxRect(rect.GetX() * m_Scale + 0.5, rect.GetY() * m_Scale + 0.5, rect.GetWidth() * m_Scale + 0.5, rect.GetHeight() * m_Scale + 0.5);
 }
 
-void GOrgueDC::DrawBitmap(GOrgueBitmap& bitmap, int x, int y)
+void GOrgueDC::DrawBitmap(GOrgueBitmap& bitmap, const wxRect& target)
 {
-	m_DC->DrawBitmap(bitmap.GetData(m_Scale), x * m_Scale + 0.5, y * m_Scale + 0.5, true);
-}
-
-void GOrgueDC::TileBitmap(GOrgueBitmap& bitmap, const wxRect& tgt, int xo, int yo)
-{
-	wxRect target = ScaleRect(tgt);
-	m_DC->SetClippingRegion(target);
-	const wxBitmap& bmp = bitmap.GetData(m_Scale);
-	for (int y = target.GetY() - yo * m_Scale; y < target.GetBottom(); y += bmp.GetHeight())
-		for (int x = target.GetX() - xo * m_Scale; x < target.GetRight(); x += bmp.GetWidth())
-			m_DC->DrawBitmap(bmp, x, y, true);
-	m_DC->DestroyClippingRegion();
+	unsigned xpos = target.GetX() * m_Scale + 0.5;
+	unsigned ypos = target.GetY() * m_Scale + 0.5;
+	m_DC->DrawBitmap(bitmap.GetBitmap(), xpos, ypos, true);
 }
 
 wxString GOrgueDC::WrapText(const wxString& string, unsigned width)

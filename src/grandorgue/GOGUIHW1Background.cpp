@@ -78,11 +78,13 @@ void GOGUIHW1Background::Layout()
 
 void GOGUIHW1Background::PrepareDraw(double scale, GOrgueBitmap* background)
 {
+	for(unsigned i = 0; i < m_Images.size(); i++)
+		m_Images[i].bmp.PrepareTileBitmap(scale, m_Images[i].rect, 0, 0, background);
 }
 
 void GOGUIHW1Background::Draw(GOrgueDC& dc)
 {
 	for(unsigned i = 0; i < m_Images.size(); i++)
-		dc.TileBitmap(m_Images[i].bmp, m_Images[i].rect, 0, 0);
+		dc.DrawBitmap(m_Images[i].bmp, m_Images[i].rect);
 	GOGUIControl::Draw(dc);
 }
