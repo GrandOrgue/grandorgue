@@ -24,10 +24,16 @@
 
 #include "GOGUIControl.h"
 
+#include "GOrgueBitmap.h"
+
 class GOGUIManualBackground : public GOGUIControl
 {
 private:
 	unsigned m_ManualNumber;
+	wxRect m_VRect;
+	GOrgueBitmap m_VBackground;
+	wxRect m_HRect;
+	GOrgueBitmap m_HBackground;
 
 public:
 	GOGUIManualBackground(GOGUIPanel* panel, unsigned manual_number);
