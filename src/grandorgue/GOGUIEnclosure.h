@@ -55,6 +55,7 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Layout();
 
+	void PrepareDraw(double scale, GOrgueBitmap* background);
 	void Draw(GOrgueDC& dc);
 	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	bool HandleMouseScroll(int x, int y, int amount);

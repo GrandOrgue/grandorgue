@@ -81,6 +81,7 @@ public:
 	void AddControl(GOGUIControl* control);
 	GOGUIDisplayMetrics* GetDisplayMetrics();
 	GOGUILayoutEngine* GetLayoutEngine();
+	void PrepareDraw(double scale, GOrgueBitmap* background);
 	void Draw(GOrgueDC& dc);
 	void TileWood(GOrgueDC& dc, unsigned which, int sx, int sy, int cx, int cy);
 	GOrgueBitmap LoadBitmap(wxString filename, wxString maskname);

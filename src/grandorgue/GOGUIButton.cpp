@@ -242,6 +242,10 @@ bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	}
 }
 
+void GOGUIButton::PrepareDraw(double scale, GOrgueBitmap* background)
+{
+}
+
 void GOGUIButton::Draw(GOrgueDC& dc)
 {
 	GOrgueBitmap& bmp = m_Button->DisplayInverted() ^ m_Button->IsEngaged() ? m_OnBitmap : m_OffBitmap;

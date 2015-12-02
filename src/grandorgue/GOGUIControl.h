@@ -31,6 +31,7 @@ class GOGUIDisplayMetrics;
 class GOGUILayoutEngine;
 class GOGUIMouseState;
 class GOGUIPanel;
+class GOrgueBitmap;
 class GOrgueConfigReader;
 class GOrgueDC;
 
@@ -55,6 +56,7 @@ public:
 	virtual void Load(GOrgueConfigReader& cfg, wxString group);
 	virtual void Layout();
 
+	virtual void PrepareDraw(double scale, GOrgueBitmap* background);
 	virtual void Draw(GOrgueDC& dc);
 	virtual const wxRect& GetBoundingRect();
 	virtual bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);

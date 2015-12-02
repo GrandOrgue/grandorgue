@@ -167,6 +167,10 @@ void GOGUIEnclosure::Layout()
 	m_MouseRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
 }
 
+void GOGUIEnclosure::PrepareDraw(double scale, GOrgueBitmap* background)
+{
+}
+
 void GOGUIEnclosure::Draw(GOrgueDC& dc)
 {
 	GOrgueBitmap& bmp = m_Bitmaps[((m_Bitmaps.size() - 1) * m_enclosure->GetValue()) / 127];

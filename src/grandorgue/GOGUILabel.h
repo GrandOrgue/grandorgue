@@ -53,6 +53,7 @@ public:
 	void Layout();
 
 	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
+	void PrepareDraw(double scale, GOrgueBitmap* background);
 	void Draw(GOrgueDC& dc);
 };
 
