@@ -21,6 +21,7 @@
 
 #include "OrganSelectDialog.h"
 
+#include "GOrgueArchiveFile.h"
 #include "GOrgueOrgan.h"
 #include "GOrgueSettings.h"
 #include <wx/msgdlg.h>
@@ -42,7 +43,8 @@ OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSet
 	m_Organs->InsertColumn(0, _("Church"));
 	m_Organs->InsertColumn(1, _("Builder"));
 	m_Organs->InsertColumn(2, _("Recording"));
-	m_Organs->InsertColumn(3, _("ODF Path"));
+	m_Organs->InsertColumn(3, _("Organ package"));
+	m_Organs->InsertColumn(4, _("ODF Path"));
 	topSizer->Add(m_Organs, 1, wxEXPAND | wxALL, 5);
 
 	for(unsigned i = 0, j = 0; j < m_Settings.GetOrganList().size(); j++)
@@ -54,7 +56,12 @@ OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSet
 		m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
 		m_Organs->SetItem(i, 1, o->GetOrganBuilder());
 		m_Organs->SetItem(i, 2, o->GetRecordingDetail());
-		m_Organs->SetItem(i, 3, o->GetODFPath());
+		m_Organs->SetItem(i, 4, o->GetODFPath());
+		if (o->GetArchiveID() != wxEmptyString)
+		{
+			GOrgueArchiveFile* a = m_Settings.GetArchiveByID(o->GetArchiveID());
+			m_Organs->SetItem(i, 3, a ? a->GetName() : o->GetArchiveID());
+		}
 		i++;
 	}
 
@@ -62,6 +69,7 @@ OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSet
 	m_Organs->SetColumnWidth(1, 150);
 	m_Organs->SetColumnWidth(2, 250);
 	m_Organs->SetColumnWidth(3, wxLIST_AUTOSIZE);
+	m_Organs->SetColumnWidth(4, wxLIST_AUTOSIZE);
 
 
 	topSizer->AddSpacer(5);
