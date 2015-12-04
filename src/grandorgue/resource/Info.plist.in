@@ -48,6 +48,24 @@
 			<key>NSDocumentClass</key>
 			<string>GrandOrgue organ definition</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>orgue</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>GrandOrgue.icns</string>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>text/plain</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>GrandOrgue organ package</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>NSDocumentClass</key>
+			<string>GrandOrgue organ package</string>
+		</dict>
 	</array>
 </dict>
 </plist>

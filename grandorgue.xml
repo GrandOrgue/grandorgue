@@ -26,6 +26,12 @@
     <glob pattern="*.organ"/>
     <icon name="GrandOrgue.png"/>
   </mime-type>
+  <mime-type type="application/x-grandorgue-package">
+    <sub-class-of type="text/plain"/>
+    <comment>GrandOrgue organ package</comment>
+    <glob pattern="*.orgue"/>
+    <icon name="GrandOrgue.png"/>
+  </mime-type>
   <mime-type type="application/x-grandorgue-cmb">
     <sub-class-of type="text/plain"/>
     <comment>GrandOrgue setting file</comment>
