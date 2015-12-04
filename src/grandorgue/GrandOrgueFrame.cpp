@@ -301,9 +301,8 @@ void GOrgueFrame::Init(wxString filename)
 		SendLoadFile(filename);
 	else if (m_Settings.LoadLastFile())
 	{
-		std::vector<GOrgueOrgan*> list = m_Settings.GetLRUOrganList();
-		if (list.size() > 0)
-			SendLoadOrgan(*list[0]);
+		if (m_Settings.GetLRUOrganList().size() > 0)
+			LoadLastOrgan();
 		else
 		{
 			wxString name = m_Settings.LastFile();
@@ -605,17 +604,12 @@ void GOrgueFrame::OnInstall(wxCommandEvent& event)
 {
 	wxFileDialog dlg(this, _("Install organ package"), m_Settings.OrganPath(), wxEmptyString, _("Organ package (*.orgue)|*.orgue"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (dlg.ShowModal() == wxID_OK)
-	{
-		GOrgueArchiveManager manager(m_Settings);
-		wxString result = manager.InstallPackage(dlg.GetPath());
-		if (result != wxEmptyString)
-			wxMessageBox(result, _("Error"), wxOK | wxICON_ERROR, this);
-		else
+		if (InstallOrganPackage(dlg.GetPath()))
 		{
-			wxMessageBox(_("The organ package has been registered"), _("Install organ package"), wxOK , this);
+			GOMessageBox(_("The organ package has been registered"), _("Install organ package"), wxOK , this);
 			m_Settings.Flush();
 		}
-	}
+
 }
 
 void GOrgueFrame::OnImportSettings(wxCommandEvent& event)
@@ -1003,6 +997,26 @@ void GOrgueFrame::OnSetTitle(wxCommandEvent& event)
 void GOrgueFrame::OnMsgBox(wxMsgBoxEvent& event)
 {
 	wxMessageBox(event.getText(), event.getTitle(), event.getStyle(), this);
+}
+
+bool GOrgueFrame::InstallOrganPackage(wxString name)
+{
+	GOrgueArchiveManager manager(m_Settings);
+	wxString result = manager.InstallPackage(name);
+	if (result != wxEmptyString)
+	{
+		GOMessageBox(result, _("Error"), wxOK | wxICON_ERROR, this);
+		return false;
+	}
+	else
+		return true;
+}
+
+void GOrgueFrame::LoadLastOrgan()
+{
+	std::vector<GOrgueOrgan*> list = m_Settings.GetLRUOrganList();
+	if (list.size() > 0)
+		SendLoadOrgan(*list[0]);
 }
 
 void GOrgueFrame::SendLoadFile(wxString filename, bool force)

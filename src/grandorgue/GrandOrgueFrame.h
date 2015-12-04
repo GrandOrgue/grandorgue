@@ -135,6 +135,8 @@ private:
 	bool DoClose(bool force = false);
 	void Open(const GOrgueOrgan& organ, bool force = false);
 
+	bool InstallOrganPackage(wxString name);
+	void LoadLastOrgan();
 	void SendLoadOrgan(const GOrgueOrgan& organ, bool force = false);
 
 public:
