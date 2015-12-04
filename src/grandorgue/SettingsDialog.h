@@ -26,6 +26,7 @@
 #include <vector>
 
 class GOrgueSound;
+class SettingsArchives;
 class SettingsAudioGroup;
 class SettingsAudioOutput;
 class SettingsMidiDevices;
@@ -43,6 +44,7 @@ private:
 	SettingsMidiDevices* m_MidiDevicePage;
 	SettingsOption* m_OptionsPage;
 	SettingsOrgan* m_OrganPage;
+	SettingsArchives* m_ArchivePage;
 	SettingsMidiMessage* m_MidiMessagePage;
 	SettingsAudioGroup* m_GroupPage;
 	SettingsAudioOutput* m_OutputPage;
