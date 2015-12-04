@@ -347,6 +347,12 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 			wxLogError(_("Non-empty directory '%s'"), name.c_str());
 		return true;
 	}
+	for(unsigned i = 0; i < entries.size(); i++)
+		if (entries[i].name == name)
+		{
+			wxLogError(_("Duplicate file '%s'"), name.c_str());
+			return false;
+		}
 
 	GOArchiveEntry e;
 	e.name = name;
