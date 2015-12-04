@@ -24,6 +24,7 @@
 #include "GOrgueEvent.h"
 #include "GOrgueSound.h"
 #include "GrandOrgueID.h"
+#include "SettingsArchives.h"
 #include "SettingsAudioGroup.h"
 #include "SettingsAudioOutput.h"
 #include "SettingsDefaults.h"
@@ -54,6 +55,7 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	m_MidiDevicePage = new SettingsMidiDevices(m_Sound, notebook);
 	m_OptionsPage = new SettingsOption(m_Sound.GetSettings(), notebook);
 	m_OrganPage = new SettingsOrgan(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
+	m_ArchivePage = new SettingsArchives(m_Sound.GetSettings(), *m_OrganPage, notebook);
 	m_MidiMessagePage = new SettingsMidiMessage(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
 	m_GroupPage = new SettingsAudioGroup(m_Sound.GetSettings(), notebook);
 	m_OutputPage = new SettingsAudioOutput(m_Sound, *m_GroupPage, notebook);
@@ -70,6 +72,7 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	notebook->AddPage(m_MidiDevicePage,  _("MIDI Devices"));
 	notebook->AddPage(m_TemperamentsPage, _("Temperaments"));
 	notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Configuration"));
+	notebook->AddPage(m_ArchivePage, _("Organ Packages"));
 
 }
 
@@ -111,6 +114,7 @@ bool SettingsDialog::DoApply()
 	m_MidiDevicePage->Save();
 	m_OptionsPage->Save();
 	m_OrganPage->Save();
+	m_ArchivePage->Save();
 	m_GroupPage->Save();
 	m_OutputPage->Save();
 	m_ReverbPage->Save();
