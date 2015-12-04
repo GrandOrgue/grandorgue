@@ -101,7 +101,7 @@ void GOGUIPanelWidget::OnPaint(wxPaintEvent& event)
 void GOGUIPanelWidget::OnUpdate()
 {
 	if (m_BGInit)
-		m_ClientBitmap = m_BGImage.Scale(m_panel->GetWidth() * m_Scale + 0.5, m_panel->GetHeight() * m_Scale + 0.5, wxIMAGE_QUALITY_BICUBIC);
+		m_ClientBitmap = (wxBitmap)m_BGImage.Scale(m_panel->GetWidth() * m_Scale + 0.5, m_panel->GetHeight() * m_Scale + 0.5, wxIMAGE_QUALITY_BICUBIC);
 	else
 		m_ClientBitmap = wxBitmap(m_panel->GetWidth() * m_Scale + 0.5, m_panel->GetHeight() * m_Scale + 0.5);
 	wxMemoryDC dc;
