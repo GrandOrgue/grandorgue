@@ -200,7 +200,11 @@ SSE3 capable processor
           <listitem>
             <simpara>
 Sufficient RAM to fully load the largest sample set you wish to use. A
-64 bit OS is recommended to support larger sample set sizes.
+64 bit OS is recommended to support larger sample set
+sizes.<footnote><simpara> A 32 bit GrandOrgue is limited to less than
+3 GB of loaded sample data and depending on your operation system,
+loading more than 1.5 to 2 GB will inhibt some
+features.</simpara></footnote>
             </simpara>
           </listitem>
           <listitem>
