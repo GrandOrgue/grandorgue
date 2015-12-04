@@ -202,17 +202,26 @@ set(CPACK_STRIP_FILES true)
 set(CPACK_PACKAGE_EXECUTABLES "GrandOrgue" "GrandOrgue")
 SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
   WriteRegStr HKCR \\\".organ\\\" \\\"\\\" \\\"GrandOrgue.odf\\\"
+  WriteRegStr HKCR \\\".orgue\\\" \\\"\\\" \\\"GrandOrgue.package\\\"
   WriteRegStr HKCR \\\"GrandOrgue.odf\\\" \\\"\\\" \\\"GrandOrgue organ definition file\\\"
   WriteRegStr HKCR \\\"GrandOrgue.odf\\\\DefaultIcon\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\GrandOrgue.exe,0\\\"
   WriteRegStr HKCR \\\"GrandOrgue.odf\\\\shell\\\" \\\"\\\" \\\"open\\\"
   WriteRegStr HKCR \\\"GrandOrgue.odf\\\\shell\\\\open\\\\command\\\" \\\"\\\" '$INSTDIR\\\\bin\\\\GrandOrgue.exe \\\"%1\\\"'
+  WriteRegStr HKCR \\\"GrandOrgue.package\\\" \\\"\\\" \\\"GrandOrgue organ package\\\"
+  WriteRegStr HKCR \\\"GrandOrgue.package\\\\DefaultIcon\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\GrandOrgue.exe,0\\\"
+  WriteRegStr HKCR \\\"GrandOrgue.package\\\\shell\\\" \\\"\\\" \\\"open\\\"
+  WriteRegStr HKCR \\\"GrandOrgue.package\\\\shell\\\\open\\\\command\\\" \\\"\\\" '$INSTDIR\\\\bin\\\\GrandOrgue.exe \\\"%1\\\"'
 ")
 SET(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
   ReadRegStr $R0 HKCR \\\".organ\\\" \\\"\\\"
   StrCmp $R0 \\\"GrandOrgue.odf\\\" 0 +2
     DeleteRegKey HKCR \\\".organ\\\"
+  ReadRegStr $R0 HKCR \\\".orgue\\\" \\\"\\\"
+  StrCmp $R0 \\\"GrandOrgue.package\\\" 0 +2
+    DeleteRegKey HKCR \\\".orgue\\\"
 
   DeleteRegKey HKCR \\\"GrandOrgue.odf\\\"
+  DeleteRegKey HKCR \\\"GrandOrgue.package\\\"
 ")
 include(CPack)
 
