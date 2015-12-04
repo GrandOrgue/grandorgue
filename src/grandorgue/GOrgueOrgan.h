@@ -38,6 +38,7 @@ private:
 	wxString m_OrganBuilder;
 	wxString m_RecordingDetail;
 	wxString m_ArchiveID;
+	bool m_NamesInitialized;
 	long m_LastUse;
 	GOrgueMidiReceiver m_midi;
 

@@ -27,6 +27,7 @@
 #include "GOrgueSettings.h"
 #include <wx/filefn.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/stopwatch.h>
 
 GOrgueOrgan::GOrgueOrgan(wxString odf, wxString archive, wxString church_name, wxString organ_builder, wxString recording_detail) :
@@ -35,6 +36,7 @@ GOrgueOrgan::GOrgueOrgan(wxString odf, wxString archive, wxString church_name, w
 	m_OrganBuilder(organ_builder),
 	m_RecordingDetail(recording_detail),
 	m_ArchiveID(archive),
+	m_NamesInitialized(true),
 	m_midi(NULL, MIDI_RECV_ORGAN)
 {
 	m_LastUse = wxGetUTCTime();
@@ -46,6 +48,7 @@ GOrgueOrgan::GOrgueOrgan(wxString odf) :
 	m_OrganBuilder(),
 	m_RecordingDetail(),
 	m_ArchiveID(),
+	m_NamesInitialized(false),
 	m_midi(NULL, MIDI_RECV_ORGAN)
 {
 	m_LastUse = wxGetUTCTime();
@@ -60,6 +63,7 @@ GOrgueOrgan::GOrgueOrgan(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap&
 	m_RecordingDetail = cfg.ReadString(CMBSetting, group, wxT("RecordingDetail"));
 	m_ArchiveID = cfg.ReadString(CMBSetting, group, wxT("Archiv"), false);
 	m_LastUse = cfg.ReadInteger(CMBSetting, group, wxT("LastUse"), 0, INT_MAX, false, wxGetUTCTime());
+	m_NamesInitialized = true;
 	m_midi.Load(cfg, group, map);
 }
 
@@ -69,6 +73,16 @@ GOrgueOrgan::~GOrgueOrgan()
 
 void GOrgueOrgan::Update(const GOrgueOrgan& organ)
 {
+	if (m_NamesInitialized)
+	{
+		if (m_ChurchName != organ.m_ChurchName)
+			wxLogError(_("Organ %s changed its name"), m_ChurchName.c_str());
+		if (m_OrganBuilder != organ.m_OrganBuilder)
+			wxLogError(_("Organ %s changed its organ builder"), m_ChurchName.c_str());
+		if (m_RecordingDetail != organ.m_RecordingDetail)
+			wxLogError(_("Organ %s changed its recording details"), m_ChurchName.c_str());
+	}
+	m_NamesInitialized = true;
 	m_ChurchName = organ.m_ChurchName;
 	m_OrganBuilder = organ.m_OrganBuilder;
 	m_RecordingDetail = organ.m_RecordingDetail;

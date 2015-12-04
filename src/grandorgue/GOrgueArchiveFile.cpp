@@ -25,6 +25,8 @@
 #include "GOrgueConfigWriter.h"
 #include "GOrgueSettings.h"
 #include <wx/filefn.h>
+#include <wx/intl.h>
+#include <wx/log.h>
 
 GOrgueArchiveFile::GOrgueArchiveFile(wxString id, wxString path, wxString name, const std::vector<wxString>& dependencies, const std::vector<wxString>& dependency_titles) :
 	m_ID(id),
@@ -68,6 +70,8 @@ void GOrgueArchiveFile::Save(GOrgueConfigWriter& cfg, wxString group)
 void GOrgueArchiveFile::Update(const GOrgueArchiveFile& archive)
 {
 	m_ID = archive.m_ID;
+	if (m_Name != archive.m_Name)
+		wxLogError(_("Organ package %s changed its title"), m_ID.c_str());
 	m_Name = archive.m_Name;
 	m_Dependencies = archive.m_Dependencies;
 }
