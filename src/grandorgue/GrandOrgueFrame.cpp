@@ -165,6 +165,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_file_menu->Append(wxID_ANY, _("&Favorites"), m_favorites_menu);
 	m_file_menu->Append(ID_FILE_OPEN, _("&Open\tCtrl+O"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->Append(wxID_ANY, _("Open &Recent"), m_recent_menu);
+	m_file_menu->Append(ID_FILE_INSTALL, _("&Install organ package\tCtrl+I"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->AppendSeparator();
 	m_file_menu->Append(ID_FILE_PROPERTIES, _("Organ &Properties"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->AppendSeparator();
@@ -297,6 +298,9 @@ void GOrgueFrame::Init(wxString filename)
 		wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_AUDIO_SETTINGS);
 		GetEventHandler()->AddPendingEvent(event);
 	}
+	GOrgueArchiveManager manager(m_Settings);
+	manager.RegisterPackageDirectory(m_Settings.GetPackageDirectory());
+	manager.RegisterPackageDirectory(m_Settings.OrganPackagePath());
 	if (!filename.IsEmpty())
 		SendLoadFile(filename);
 	else if (m_Settings.LoadLastFile())
@@ -829,6 +833,9 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 	SettingsDialog dialog(this, m_Sound);
 	if (dialog.ShowModal() == wxID_OK)
 	{
+		GOrgueArchiveManager manager(m_Settings);
+		manager.RegisterPackageDirectory(m_Settings.OrganPackagePath());
+
 		m_Sound.ResetSound(true);
 		m_Settings.Flush();
 	}
@@ -1021,7 +1028,14 @@ void GOrgueFrame::LoadLastOrgan()
 
 void GOrgueFrame::SendLoadFile(wxString filename, bool force)
 {
-	SendLoadOrgan(GOrgueOrgan(filename), force);
+	wxFileName name = filename;
+	if (name.GetExt() == wxT("orgue"))
+	{
+		if (InstallOrganPackage(filename))
+			LoadLastOrgan();
+	}
+	else
+		SendLoadOrgan(GOrgueOrgan(filename), force);
 }
 
 void GOrgueFrame::SendLoadOrgan(const GOrgueOrgan& organ, bool force)

@@ -56,7 +56,7 @@ GOrgueArchive* GOrgueArchiveManager::OpenArchive(const wxString& path)
 
 bool GOrgueArchiveManager::ReadIndex(GOrgueArchive* archive, bool InstallOrgans)
 {
-	GOrgueFile* indexFile = NULL;
+	GOrgueFile* indexFile = archive->OpenFile(wxT("organindex.ini"));
 	if (!indexFile)
 		return false;
 	GOrgueConfigFileReader ini_file;
