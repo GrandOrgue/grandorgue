@@ -23,8 +23,10 @@
 
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
+#include "GOrgueHash.h"
 #include "GOrgueSettings.h"
 #include <wx/filefn.h>
+#include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/log.h>
 
@@ -35,6 +37,7 @@ GOrgueArchiveFile::GOrgueArchiveFile(wxString id, wxString path, wxString name, 
 	m_Dependencies(dependencies),
 	m_DependencyTitles(dependency_titles)
 {
+	m_FileID = GetCurrentFileID();
 }
 
 GOrgueArchiveFile::GOrgueArchiveFile(GOrgueConfigReader& cfg, wxString group)
@@ -43,6 +46,7 @@ GOrgueArchiveFile::GOrgueArchiveFile(GOrgueConfigReader& cfg, wxString group)
 	m_Path = cfg.ReadString(CMBSetting, group, wxT("Path"));
 	m_Name = cfg.ReadString(CMBSetting, group, wxT("Name"));
 	m_Dependencies.resize(cfg.ReadInteger(CMBSetting, group, wxT("DependenciesCount"), 0, 999));
+	m_FileID = cfg.ReadString(CMBSetting, group, wxT("FileID"));
 	for(unsigned i = 0; i < m_Dependencies.size(); i++)
 	{
 		m_Dependencies[i] = cfg.ReadString(CMBSetting, group, wxString::Format("Dependency%03d", i + 1));
@@ -59,6 +63,7 @@ void GOrgueArchiveFile::Save(GOrgueConfigWriter& cfg, wxString group)
 	cfg.WriteString(group, wxT("ID"), m_ID);
 	cfg.WriteString(group, wxT("Path"), m_Path);
 	cfg.WriteString(group, wxT("Name"), m_Name);
+	cfg.WriteString(group, wxT("FileID"), m_FileID);
 	cfg.WriteInteger(group, wxT("DependenciesCount"), m_Dependencies.size());
 	for(unsigned i = 0; i < m_Dependencies.size(); i++)
 	{
@@ -73,7 +78,21 @@ void GOrgueArchiveFile::Update(const GOrgueArchiveFile& archive)
 	if (m_Name != archive.m_Name)
 		wxLogError(_("Organ package %s changed its title"), m_ID.c_str());
 	m_Name = archive.m_Name;
+	m_FileID = archive.m_FileID;
 	m_Dependencies = archive.m_Dependencies;
+}
+
+wxString GOrgueArchiveFile::GetCurrentFileID()
+{
+	GOrgueHash hash;
+	wxFileName path_name(m_Path);
+
+	uint64_t size = path_name.GetSize().GetValue();
+	uint64_t time = path_name.GetModificationTime().GetTicks();
+	hash.Update(time);
+	hash.Update(size);
+
+	return hash.getStringHash();
 }
 
 const wxString& GOrgueArchiveFile::GetID() const
@@ -89,6 +108,11 @@ const wxString& GOrgueArchiveFile::GetPath() const
 const wxString& GOrgueArchiveFile::GetName() const
 {
 	return m_Name;
+}
+
+const wxString& GOrgueArchiveFile::GetFileID() const
+{
+	return m_FileID;
 }
 
 const std::vector<wxString>& GOrgueArchiveFile::GetDependencies() const

@@ -143,25 +143,37 @@ GOrgueArchive* GOrgueArchiveManager::LoadArchive(const wxString& id)
 	return NULL;
 }
 
-wxString GOrgueArchiveManager::InstallPackage(const wxString& path)
+wxString GOrgueArchiveManager::InstallPackage(const wxString& path, const wxString& last_id)
 {
 	wxString p = GONormalizePath(path);
 	GOrgueArchive* archive = OpenArchive(p);
 	if (!archive)
 		return wxString::Format(_("Failed to open the organ package '%s'"), path.c_str());
-	bool result = ReadIndex(archive, true);
+	bool result = ReadIndex(archive, last_id != archive->GetArchiveID());
 	delete archive;
 	if (!result)
 		return wxString::Format(_("Failed to parse the organ package index of '%s'"), path.c_str());
 	return wxEmptyString;
 }
 
+wxString GOrgueArchiveManager::InstallPackage(const wxString& path)
+{
+	return InstallPackage(path, wxEmptyString);
+}
+
 void GOrgueArchiveManager::RegisterPackage(const wxString& path)
 {
 	wxString p = GONormalizePath(path);
-	if (m_Settings.GetArchiveByPath(p) != NULL)
-		return;
-	wxString result = InstallPackage(p);
+	GOrgueArchiveFile* archive = m_Settings.GetArchiveByPath(p);
+	if (archive != NULL)
+	{
+		if (archive->GetFileID() == archive->GetCurrentFileID())
+			return;
+	}
+	wxString id;
+	if (archive)
+		id = archive->GetID();
+	wxString result = InstallPackage(p, id);
 	if (result != wxEmptyString)
 		wxLogError(_("%s"), result.c_str());
 }
