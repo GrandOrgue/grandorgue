@@ -304,16 +304,7 @@ void GOrgueFrame::Init(wxString filename)
 	if (!filename.IsEmpty())
 		SendLoadFile(filename);
 	else if (m_Settings.LoadLastFile())
-	{
-		if (m_Settings.GetLRUOrganList().size() > 0)
-			LoadLastOrgan();
-		else
-		{
-			wxString name = m_Settings.LastFile();
-			if (wxFileExists(name))
-				SendLoadFile(name);
-		}
-	}
+		LoadLastOrgan();
 
 	m_listener.SetCallback(this);
 }

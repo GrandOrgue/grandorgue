@@ -95,7 +95,6 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_MIDIEvents(),
 	UserSettingPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
 	UserCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
-	LastFile(this, wxT("General"), wxT("LastFile"), wxEmptyString),
 	Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
 	ReleaseConcurrency(this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
 	LoadConcurrency(this, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, 1),
@@ -148,7 +147,6 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 
 	UserSettingPath.setDefaultValue(wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData") + m_InstanceName);
 	UserCachePath.setDefaultValue(wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueCache") + m_InstanceName);
-	LastFile.setDefaultValue(m_ResourceDir + wxFileName::GetPathSeparator() + wxT("demo") + wxFileName::GetPathSeparator() + wxT("demo.organ"));
 
 	wxString docdir = wxStandardPaths::Get().GetDocumentsDir() + wxFileName::GetPathSeparator() + _("GrandOrgue") + wxFileName::GetPathSeparator();
 	OrganPath.setDefaultValue(docdir + _("Organs"));

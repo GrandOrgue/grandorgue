@@ -90,7 +90,6 @@ public:
 
 	GOrgueSettingDirectory UserSettingPath;
 	GOrgueSettingDirectory UserCachePath;
-	GOrgueSettingFile LastFile;
 
 	GOrgueSettingUnsigned Concurrency;
 	GOrgueSettingUnsigned ReleaseConcurrency;
