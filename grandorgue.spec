@@ -112,7 +112,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files demo
 %defattr(-,root,root)
-%{_datadir}/GrandOrgue/demo
 %{_datadir}/GrandOrgue/packages/*.orgue
 
 %post
