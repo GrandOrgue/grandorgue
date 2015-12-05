@@ -10194,6 +10194,144 @@ See the setter element section for further description.
     </sect1>
   </chapter>
   <chapter>
+    <title>The GrandOrgue organ package format</title>
+    <sect1>
+      <title>General information</title>
+      <para>
+An organ package is a ZIP file using only the
+<emphasis>STORED</emphasis> compression [= compression level 0] with
+the extension <emphasis>orgue</emphasis>. It may use the ZIP64
+extensions - no other extensions are allowed. It is possible to store
+file names containing directories.
+      </para>
+      <para>
+The ID of an organ package is its SHA1 sum with all letter converted
+to upper case.
+      </para>
+      <para>
+Each organ package must contain an index file named
+<emphasis>organindex.ini</emphasis>. This file lists all contained
+organs as well as any other organ package they might depend on.
+      </para>
+      <para>
+Referenced files are only loaded from the organ package - not from the
+file system. If a file is missing in the main organ package, it will
+search <emphasis>Dependency001</emphasis>, then
+<emphasis>Dependency002</emphasis> and so on.
+      </para>
+      <para>
+Use wavpack to compress samples. Use PNG for lossless compression of
+images.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Index file specification</title>
+      <para>
+It has the same syntax rules as an organ definition file. The
+<emphasis>General</emphasis> section has the following elements:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Title</term>
+          <listitem>
+            <para>
+(string, required) Name of the organ package
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>OrganCount</term>
+          <listitem>
+            <para>
+(integer 0-100, required) Number of organs installed by this
+package. The organs are defined in a section named
+<emphasis>Organ999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>DepenencyCount</term>
+          <listitem>
+            <para>
+(integer 0-100, default: 0) Number of organs packages required by this
+organ package. The dependencies are defined in a section named
+<emphasis>Dependency999</emphasis>.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Dependency section</title>
+      <para>
+The section has the following elements:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>PackageID</term>
+          <listitem>
+            <para>
+(string, required) ID of the package file, that should be searched for
+missing files.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Title</term>
+          <listitem>
+            <para>
+(string, required) Name of the package file.
+	    </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Organ section</title>
+      <para>
+This section has the following elements:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>Filename</term>
+          <listitem>
+            <para>
+(string, required) Filename of organ definition file in the organ
+package.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>ChurchName</term>
+          <listitem>
+            <para>
+(string, required) Name of the organ/church. This setting must match
+the organ definition file.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>OrganBuilder</term>
+          <listitem>
+            <para>
+(string, required) informational text displayed in the property
+dialog. This setting must match the organ definition file.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>RecordingDetails</term>
+          <listitem>
+            <para>
+(string, required) informational text displayed in the property
+dialog. This setting must match the organ definition file.
+     </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+  </chapter>
+  <chapter>
     <title>Technical Support</title>
     <indexterm>
       <primary>Technical Support</primary>
