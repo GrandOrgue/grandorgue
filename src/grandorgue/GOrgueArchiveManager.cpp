@@ -128,7 +128,7 @@ GOrgueArchive* GOrgueArchiveManager::LoadArchive(const wxString& id)
 		GOrgueArchive* archive = OpenArchive(file->GetPath());
 		if (!archive)
 			continue;
-		if (!ReadIndex(archive, false))
+		if (!ReadIndex(archive, archive->GetArchiveID() != id))
 		{
 			delete archive;
 			continue;
