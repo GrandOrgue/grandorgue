@@ -34,6 +34,7 @@ private:
 
 	GOrgueArchive* OpenArchive(const wxString& path);
 	bool ReadIndex(GOrgueArchive* archive, bool InstallOrgans = false);
+	wxString InstallPackage(const wxString& path, const wxString& last_id);
 
 public:
 	GOrgueArchiveManager(GOrgueSettings& settings);
