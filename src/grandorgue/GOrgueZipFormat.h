@@ -33,7 +33,7 @@
 #define ZIP_END64_RECORD             0x06064b50
 #define ZIP_END64_LOCATOR            0x07064b50
 
-typedef struct
+typedef struct GOZipLocalHeader
 {
 	uint32_t signature;
 	uint16_t version_extract;
@@ -49,7 +49,7 @@ typedef struct
 	void Swap();
 } GOZipLocalHeader;
 
-typedef struct
+typedef struct GOZipCentralHeader
 {
 	uint32_t signature;
 	uint16_t version_creator;
@@ -71,14 +71,14 @@ typedef struct
 	void Swap();
 } GOZipCentralHeader;
 
-typedef struct
+typedef struct GOZipHeaderExtraRecord
 {
 	uint16_t type;
 	uint16_t size;
 	void Swap();
 } GOZipHeaderExtraRecord;
 
-typedef struct
+typedef struct GOZipEnd64Record
 {
 	uint32_t signature;
 	uint64_t size;
@@ -93,7 +93,7 @@ typedef struct
 	void Swap();
 } GOZipEnd64Record;
 
-typedef struct
+typedef struct GOZipEnd64Locator
 {
 	uint32_t signature;
 	uint32_t end_record_disk;
@@ -102,14 +102,14 @@ typedef struct
 	void Swap();
 } GOZipEnd64Locator;
 
-typedef struct
+typedef struct GOZipEnd64BlockHeader
 {
 	uint16_t header_id;
 	uint32_t size;
 	void Swap();
 } GOZipEnd64BlockHeader;
 
-typedef struct
+typedef struct GOZipEndRecord
 {
 	uint32_t signature;
 	uint16_t current_disk;
