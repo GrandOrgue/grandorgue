@@ -90,7 +90,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 				std::vector<release_load_info> release;
 				std::vector<attack_load_info> attack;
 				attack_load_info ainfo;
-				ainfo.filename = wxString::Format(wxT("%02d.wav"), i % 3);
+				ainfo.filename.Assign(wxString::Format(wxT("%02d.wav"), i % 3), organfile);
 				ainfo.sample_group = -1;
 				ainfo.load_release = true;
 				ainfo.percussive = false;
@@ -101,7 +101,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 				ainfo.release_end = -1;
 				ainfo.loops.clear();
 				attack.push_back(ainfo);
-				w->LoadFromFile(attack, release, organfile, true, bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1, 0);
+				w->LoadFromFile(attack, release, bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1, 0);
 				pipes.push_back(w);
 			}
 			engine->SetSamplesPerBuffer(samples_per_frame);
