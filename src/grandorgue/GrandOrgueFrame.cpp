@@ -27,6 +27,7 @@
 #include "GOrgueEvent.h"
 #include "GOrgueLimits.h"
 #include "GOrgueMidi.h"
+#include "GOrgueMidiEvent.h"
 #include "GOrgueOrgan.h"
 #include "GOrgueProgressDialog.h"
 #include "GOrgueProperties.h"
@@ -80,6 +81,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU(ID_FILE_CACHE_DELETE, GOrgueFrame::OnCacheDelete)
 	EVT_MENU(ID_ORGAN_EDIT, GOrgueFrame::OnEditOrgan)
 	EVT_MENU(ID_MIDI_LIST, GOrgueFrame::OnMidiList)
+	EVT_MENU(ID_MIDI_MONITOR, GOrgueFrame::OnMidiMonitor)
 	EVT_MENU(ID_AUDIO_PANIC, GOrgueFrame::OnAudioPanic)
 	EVT_MENU(ID_AUDIO_RECORD, GOrgueFrame::OnAudioRecord)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
@@ -201,6 +203,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_audio_menu->AppendSeparator();
 	m_audio_menu->Append(ID_MIDI_RECORD, _("R&ecord MIDI\tCtrl+M"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->Append(ID_MIDI_PLAY, _("Play &MIDI\tCtrl+P"), wxEmptyString, wxITEM_CHECK);
+	m_audio_menu->Append(ID_MIDI_MONITOR, _("&Log MIDI events"), wxEmptyString, wxITEM_CHECK);
 	
 	
 	wxMenu *help_menu = new wxMenu;
@@ -530,11 +533,15 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		event.Check(doc && doc->WindowExists(GOrgueDocument::ORGAN_DIALOG, NULL));
 	else if (event.GetId() == ID_MIDI_LIST)
 		event.Check(doc && doc->WindowExists(GOrgueDocument::MIDI_LIST, NULL));
+	else if (event.GetId() == ID_MIDI_LIST)
+		event.Check(m_MidiMonitor);
 
 	if (event.GetId() == ID_FILE_CACHE_DELETE)
 		event.Enable(organfile && organfile->CachePresent());
 	else if (event.GetId() == ID_FILE_CACHE)
 		event.Enable(organfile && organfile->IsCacheable());
+	else if (event.GetId() == ID_MIDI_MONITOR)
+		event.Enable(true);
 	else
 		event.Enable(organfile && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
 }
@@ -780,6 +787,11 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 	}
 }
 
+void GOrgueFrame::OnMidiMonitor(wxCommandEvent& WXUNUSED(event))
+{
+	m_MidiMonitor = !m_MidiMonitor;
+}
+
 void GOrgueFrame::OnMidiRecord(wxCommandEvent& WXUNUSED(event))
 {
 	if (m_Sound.IsMidiRecording())
@@ -974,6 +986,11 @@ void GOrgueFrame::OnKeyCommand(wxKeyEvent& event)
 
 void GOrgueFrame::OnMidiEvent(const GOrgueMidiEvent& event)
 {
+	if (m_MidiMonitor)
+	{
+		wxLogWarning(_("MIDI event: ") + event.ToString(m_Sound.GetMidi().GetMidiMap()));
+	}
+
 	ptr_vector<GOrgueOrgan>& organs = m_Settings.GetOrganList();
 	for(unsigned i = 0; i < organs.size(); i++)
 		if (organs[i]->Match(event) && organs[i]->IsUsable(m_Settings))

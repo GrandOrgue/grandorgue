@@ -22,6 +22,7 @@
 #include "GOrgueMidiEvent.h"
 
 #include "GOrgueMidiMap.h"
+#include <wx/intl.h>
 
 GOrgueMidiEvent::GOrgueMidiEvent() :
 	m_miditype(MIDI_NONE),
@@ -325,4 +326,55 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgu
 	case MIDI_RESET:
 		return;
 	}	
+}
+
+wxString GOrgueMidiEvent::ToString(GOrgueMidiMap& map) const
+{
+	switch(GetMidiType())
+	{
+	case MIDI_NONE:
+		return _("Not supported event");
+
+	case MIDI_RESET:
+		return _("reset");
+
+	case MIDI_NOTE:
+		return wxString::Format(_("note channel: %d key: %d value: %d"), GetChannel(), GetKey(), GetValue());
+
+	case MIDI_AFTERTOUCH:
+		return wxString::Format(_("aftertouch channel: %d key: %d value: %d"), GetChannel(), GetKey(), GetValue());
+
+	case MIDI_CTRL_CHANGE:
+		return wxString::Format(_("control change channel: %d key: %d value: %d"), GetChannel(), GetKey(), GetValue());
+
+	case MIDI_PGM_CHANGE:
+		return wxString::Format(_("program change channel: %d key: %d "), GetChannel(), GetKey());
+
+	case MIDI_RPN:
+		return wxString::Format(_("RPN channel: %d key: %d value: %d"), GetChannel(), GetKey(), GetValue());
+
+	case MIDI_NRPN:
+		return wxString::Format(_("NRPN change channel: %d key: %d value: %d"), GetChannel(), GetKey(), GetValue());
+
+	case MIDI_SYSEX_JOHANNUS:
+		return wxString::Format(_("sysex Johannus value: %d"), GetKey());
+
+	case MIDI_SYSEX_VISCOUNT:
+		return wxString::Format(_("sysex Viscount value: %d"), GetValue());
+
+	case MIDI_SYSEX_GO_CLEAR:
+		return _("sysex GrandOrgue clear");
+
+	case MIDI_SYSEX_GO_SETUP:
+		return wxString::Format(_("sysex GrandOrgue setup channel: %d NRPN: %d: name: %s"), GetChannel(), GetValue(), map.GetElementByID(GetKey()).c_str());
+
+	case MIDI_SYSEX_HW_STRING:
+		return wxString::Format(_("sysex Hauptwerk LCD string variable: %d - %s"), GetKey(), map.GetElementByID(GetValue()).c_str());
+
+	case MIDI_SYSEX_HW_LCD:
+		return wxString::Format(_("sysex Hauptwerk LCD display: %d color: %d - %s"), GetKey(), GetChannel(), map.GetElementByID(GetValue()).c_str());
+
+	default:
+		return wxEmptyString;
+	}
 }

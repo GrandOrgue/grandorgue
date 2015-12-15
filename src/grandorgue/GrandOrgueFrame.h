@@ -62,6 +62,7 @@ private:
 	GOrgueMidiListener m_listener;
 	wxString m_Title;
 	wxString m_Label;
+	bool m_MidiMonitor;
 
 	void InitHelp();
 	void UpdatePanelMenu();
@@ -101,6 +102,7 @@ private:
 	void OnAudioSettings(wxCommandEvent& event);
 	void OnMidiRecord(wxCommandEvent& event);
 	void OnMidiPlay(wxCommandEvent& event);
+	void OnMidiMonitor(wxCommandEvent& event);
 
 	void OnPreset(wxCommandEvent& event);
 	void OnTemperament(wxCommandEvent& event);
