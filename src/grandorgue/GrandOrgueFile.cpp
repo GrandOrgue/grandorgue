@@ -767,7 +767,8 @@ bool GrandOrgueFile::UpdateCache(GOrgueProgressDialog* dlg, bool compress)
 
 void GrandOrgueFile::DeleteCache()
 {
-	wxRemoveFile(m_CacheFilename);
+	if (CachePresent())
+		wxRemoveFile(m_CacheFilename);
 }
 
 GrandOrgueFile::~GrandOrgueFile(void)
