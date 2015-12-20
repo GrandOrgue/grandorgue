@@ -250,7 +250,46 @@ to create an installer
 
 If you want to build a 64bit version, replace everywhere in this instruction i686-w64-mingw32 with x86_64-w64-mingw32.
 
+Easier building of Windows packages
+-----------------------------------
 
+Install OpenSuSE 42.1 (http://software.opensuse.org/421/en) (possibly in a Virtual Machine, eg Virtual Box. I would recommend >= 1 GB RAM and >= 20 G of harddisc space).
+Run in a terminal:
+
+sudo zypper addrepo http://download.opensuse.org/repositories/windows:mingw:win32/openSUSE_42.1/windows:mingw:win32.repo
+sudo zypper addrepo http://download.opensuse.org/repositories/windows:mingw:win32/openSUSE_42.1/windows:mingw:win64.repo
+sudo zypper addrepo http://download.opensuse.org/repositories/home:e9925248:mingw/openSUSE_Leap_42.1/home:e9925248:mingw.repo
+sudo zypper modifyrepo -p 10 home_e992524_mingw 
+sudo zypper refresh
+sudo zypper install rpm-build gcc-c++ cmake gettext-tools docbook-xsl-stylesheets po4a libxslt-tools zip
+
+Download the src.rpm from:
+http://software.opensuse.org/download.html?project=home%3Ae9925248%3Amingw&package=mingw32-grandorgue
+http://software.opensuse.org/download.html?project=home%3Ae9925248%3Amingw&package=mingw64-grandorgue
+
+Install it with
+
+rpm -i mingw??-grandorgue????.src.rpm
+
+If you want to build with asio, change in your home directory in the folder rpmbuild/SPECS in the file mingw??-grandorgue.spec
+
+%define with_asio 0
+
+to
+
+%define with_asio 1
+
+Extract the individual ASIO SDK files to rpmbuild/SOURCES.
+
+Run
+
+rpmbuild -ba rpmbuild/SPECS/mingw??-grandorgue.spec
+
+The first build will complain, that a package is missing. To install them, just run
+
+sudo zypper install <package-name>
+
+Then rerun rpmbuild.
 
 C) Building the help and translations on Windows:
 -------------------------------------------------
