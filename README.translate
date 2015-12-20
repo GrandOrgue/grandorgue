@@ -2,6 +2,7 @@ Works on Linux (and Windows too).
 
 gettext utitlities must be installed to create/compile translations.
 Binary .mo files from Linux should be usable on Windows too.
+You need to build GrandOrgue first (see README). Then you can run in the build directrory.
 
 How to update the translations:
 1) make update-pot
@@ -44,10 +45,15 @@ KDE includes lokalize (http://userbase.kde.org/Lokalize), a
 end-user friendly editor.
 4) Commit the changed po files.
 
+The build system supports localized images in the help. Just pust the localized images
+with the same name in help/images-<variant> [so help/images/start.gif => help/images-sv/start.gif].
+The next cmake run will notice the localized image.
+
 How to add a new language:
 1) make help-update-pot
 2) Add a new po file, eg. for de:
-cd po
+cd help
 msginit -i grandorgue.pot -l de -o de.po
 3) Rerun cmake, so that it recognize the new po file
 4) Edit & commit the help/$LANG.po
+
