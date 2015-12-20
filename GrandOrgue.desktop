@@ -7,5 +7,5 @@ Exec=GrandOrgue %f
 Icon=GrandOrgue
 Terminal=false
 Type=Application
-Categories=Audio;AudioVideo;Music;Education;
+Categories=Audio;AudioVideo;Music;
 MimeType=application/x-grandorgue-odf;
