@@ -507,6 +507,16 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
 Displays a tabbed dialog containing the various settings.
  See <link linkend="settingstab">Audio &amp; Midi Settings</link> for detailed information on this topic.</para>
         </sect3>
+        <sect3>
+          <title>Sound Output State</title>
+          <mediaobject><imageobject><imagedata fileref="images/sound_output_state.png"/></imageobject></mediaobject>
+          <para>
+This popup tries to display <emphasis>actual</emphasis> latency. Note that the
+estimate can be based on numbers provided by the audio hardware and drivers and
+that it may vary. The RtAudio backend is more likely to display to low numbers.
+          </para>
+
+        </sect3>
         <sect3 id="record">
           <title>Record</title>
           <indexterm>
@@ -5501,7 +5511,7 @@ Configuration</link> tab.
       <sect2>
         <title>Tuning</title>
         <para>
-The upper row controls the ability to tune the whole organ. All tuning done
+The first row controls the ability to tune the whole organ. All tuning done
 from the master controls panel is mirrored in the
 <link linkend="organsettings">Organ Settings</link>, <emphasis>Settings</emphasis>
 frame, <emphasis>Tuning (Cent)</emphasis> spinner and will be saved in the
@@ -5532,7 +5542,7 @@ current preset file.
       <sect2>
         <title>Temperaments</title>
         <para>
-The middle row controls the ability to navigate the temperaments list. The temperament selection in the master controls panels is mirrored in the
+The second row controls the ability to navigate the temperaments list. The temperament selection in the master controls panels is mirrored in the
 <link linkend="temperamentsMenu">Temperaments</link> menu item of the <emphasis>Audio/Midi</emphasis> menu.
         </para>
         <informaltable frame="none">
@@ -5566,7 +5576,7 @@ sampleset customization in the current preset file. It has the same usage as the
       </sect2>
       <sect2>
         <title>Transposer</title>
-        <para>The bottom row controls the transposer. The transposer state is mirrored in the <link linkend="transposer">transposer</link> spinner in the toolbar.</para>
+        <para>The third row controls the transposer. The transposer state is mirrored in the <link linkend="transposer">transposer</link> spinner in the toolbar.</para>
         <informaltable frame="none">
           <tgroup cols="2">
             <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
@@ -5583,6 +5593,26 @@ sampleset customization in the current preset file. It has the same usage as the
               <row valign="top">
                 <entry><emphasis role="strong">Label in between</emphasis></entry>
                 <entry>This label displays the current transposer state. It is an "active" label, and as such supports a <link linkend="activelabel">Midi send</link> configuration</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect2>
+      <sect2>
+        <title>Readiness indicators</title>
+        <para>The fourth row displays readiness indicators which change state when the sample set finishes loading</para>
+        <informaltable frame="none">
+          <tgroup cols="2">
+            <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+            <colspec colname="c2" colsep="0" rowsep="0" />
+            <tbody>
+              <row valign="top">
+                <entry><emphasis role="strong">ON "LED"</emphasis></entry>
+                <entry>This "LED" is rendered as a lighted button and as such supports a <link linkend="activelabel">Midi send</link> configuration</entry>
+              </row>
+              <row valign="top">
+                <entry><emphasis role="strong">Label</emphasis></entry>
+                <entry>This label displays the organ name. It is an "active" label, and as such supports a <link linkend="activelabel">Midi send</link> configuration</entry>
               </row>
             </tbody>
           </tgroup>
