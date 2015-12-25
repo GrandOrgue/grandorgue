@@ -513,7 +513,7 @@ Displays a tabbed dialog containing the various settings.
           <para>
 This popup tries to display <emphasis>actual</emphasis> latency. Note that the
 estimate can be based on numbers provided by the audio hardware and drivers and
-that it may vary. The RtAudio backend is more likely to display to low numbers.
+that it may vary. The RtAudio backend is more likely to display too low numbers.
           </para>
 
         </sect3>
