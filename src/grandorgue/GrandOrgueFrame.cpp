@@ -140,7 +140,8 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_Settings(sound.GetSettings()),
 	m_listener(),
 	m_Title(title),
-	m_Label()
+	m_Label(),
+	m_MidiMonitor(false)
 {
 	wxIcon icon;
 	icon.CopyFromBitmap(GetImage_GOIcon());
