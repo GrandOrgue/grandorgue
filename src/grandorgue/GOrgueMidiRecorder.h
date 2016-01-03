@@ -59,6 +59,7 @@ private:
 	void Write(const void* data, unsigned len);
 	void WriteEvent(GOrgueMidiEvent& e);
 	void SendEvent(GOrgueMidiEvent& e);
+	bool SetupMapping(unsigned element, bool isNRPN);
 
 public:
 	GOrgueMidiRecorder(GOrgueMidi& midi);
