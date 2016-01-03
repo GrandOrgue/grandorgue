@@ -118,6 +118,8 @@ private:
 
 	GOSoundEngine* m_soundengine;
 	GOrgueMidi* m_midi;
+	std::vector<bool> m_MidiSamplesetMatch;
+	int m_SampleSetId1, m_SampleSetId2;
 	GOGUIMouseStateTracker m_MouseState;
 
 	GOrgueMemoryPool m_pool;
