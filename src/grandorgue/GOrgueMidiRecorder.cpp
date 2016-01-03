@@ -80,42 +80,50 @@ void GOrgueMidiRecorder::Clear()
 	SendEvent(e);
 }
 
-void GOrgueMidiRecorder::SendMidiRecorderMessage(GOrgueMidiEvent& e)
+bool GOrgueMidiRecorder::SetupMapping(unsigned element, bool isNRPN)
 {
-	if (!m_OutputDevice && !IsRecording())
-		return;
-	if (e.GetDevice() >= m_Mappings.size())
-		m_Mappings.resize(e.GetDevice() + 1);
-	e.SetTime(wxGetLocalTimeMillis());
+	if (element >= m_Mappings.size())
+		m_Mappings.resize(element + 1);
 
-	if (e.GetDevice() != m_Mappings[e.GetDevice()].elementID)
+	if (element != m_Mappings[element].elementID)
 	{
-		if (e.GetMidiType() == MIDI_NRPN)
+		if (isNRPN)
 		{
 			if (m_NextNRPN >= 1 << 18)
-				return;
-			m_Mappings[e.GetDevice()].elementID = e.GetDevice();
-			m_Mappings[e.GetDevice()].channel = 1 + m_NextNRPN / (1 << 14);
-			m_Mappings[e.GetDevice()].key = m_NextNRPN % (1 << 14);
+				return false;
+			m_Mappings[element].elementID = element;
+			m_Mappings[element].channel = 1 + m_NextNRPN / (1 << 14);
+			m_Mappings[element].key = m_NextNRPN % (1 << 14);
 			m_NextNRPN++;
 		}
 		else
 		{
 			if (m_NextChannel > 16)
-				return;
-			m_Mappings[e.GetDevice()].elementID = e.GetDevice();
-			m_Mappings[e.GetDevice()].channel = m_NextChannel;
-			m_Mappings[e.GetDevice()].key = 0;
+				return false;
+			m_Mappings[element].elementID = element;
+			m_Mappings[element].channel = m_NextChannel;
+			m_Mappings[element].key = 0;
 			m_NextChannel++;
 		}
 		GOrgueMidiEvent e1;
-		e1.SetTime(e.GetTime());
+		e1.SetTime(wxGetLocalTimeMillis());
 		e1.SetMidiType(MIDI_SYSEX_GO_SETUP);
-		e1.SetKey(m_Mappings[e.GetDevice()].elementID);
-		e1.SetChannel(m_Mappings[e.GetDevice()].channel);
-		e1.SetValue(m_Mappings[e.GetDevice()].key);
+		e1.SetKey(m_Mappings[element].elementID);
+		e1.SetChannel(m_Mappings[element].channel);
+		e1.SetValue(m_Mappings[element].key);
 		SendEvent(e1);
 	}
+	return true;
+}
+
+void GOrgueMidiRecorder::SendMidiRecorderMessage(GOrgueMidiEvent& e)
+{
+	if (!m_OutputDevice && !IsRecording())
+		return;
+	if (!SetupMapping(e.GetDevice(), e.GetMidiType() == MIDI_NRPN))
+		return;
+
+	e.SetTime(wxGetLocalTimeMillis());
 	e.SetChannel(m_Mappings[e.GetDevice()].channel);
 	if (e.GetMidiType() == MIDI_NRPN)
 		e.SetKey(m_Mappings[e.GetDevice()].key);
