@@ -439,7 +439,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 			return MIDI_MATCH_NONE;
 
 		unsigned pos = 0;
-		while(pos < m_Internal.size() && m_Internal[pos].device == e.GetDevice())
+		while(pos < m_Internal.size() && m_Internal[pos].device != e.GetDevice())
 			pos++;
 		if (pos >= m_Internal.size())
 			m_Internal.resize(m_Internal.size() + 1);
