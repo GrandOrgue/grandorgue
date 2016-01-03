@@ -59,6 +59,15 @@ void GOrgueMidiRecorder::SetOutputDevice(unsigned device_id)
 	m_OutputDevice = device_id;
 }
 
+void GOrgueMidiRecorder::SendEvent(GOrgueMidiEvent& e)
+{
+	e.SetDevice(m_OutputDevice);
+	if (m_OutputDevice)
+		m_midi.Send(e);
+	if (IsRecording())
+		WriteEvent(e);
+}
+
 void GOrgueMidiRecorder::Clear()
 {
 	m_Mappings.clear();
@@ -67,12 +76,8 @@ void GOrgueMidiRecorder::Clear()
 
 	GOrgueMidiEvent e;
 	e.SetMidiType(MIDI_SYSEX_GO_CLEAR);
-	e.SetDevice(m_OutputDevice);
 	e.SetTime(wxGetLocalTimeMillis());
-	if (m_OutputDevice)
-		m_midi.Send(e);
-	if (IsRecording())
-		WriteEvent(e);
+	SendEvent(e);
 }
 
 void GOrgueMidiRecorder::SendMidiRecorderMessage(GOrgueMidiEvent& e)
@@ -106,22 +111,16 @@ void GOrgueMidiRecorder::SendMidiRecorderMessage(GOrgueMidiEvent& e)
 		GOrgueMidiEvent e1;
 		e1.SetTime(e.GetTime());
 		e1.SetMidiType(MIDI_SYSEX_GO_SETUP);
-		e1.SetDevice(m_OutputDevice);
 		e1.SetKey(m_Mappings[e.GetDevice()].elementID);
 		e1.SetChannel(m_Mappings[e.GetDevice()].channel);
 		e1.SetValue(m_Mappings[e.GetDevice()].key);
-		if (m_OutputDevice)
-			m_midi.Send(e1);
-		WriteEvent(e1);
+		SendEvent(e1);
 	}
 	e.SetChannel(m_Mappings[e.GetDevice()].channel);
 	if (e.GetMidiType() == MIDI_NRPN)
 		e.SetKey(m_Mappings[e.GetDevice()].key);
 
-	e.SetDevice(m_OutputDevice);
-	if (m_OutputDevice)
-		m_midi.Send(e);
-	WriteEvent(e);
+	SendEvent(e);
 }
 
 void GOrgueMidiRecorder::Flush()
