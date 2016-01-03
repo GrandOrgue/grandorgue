@@ -124,6 +124,9 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_UsedSections(),
 	m_soundengine(0),
 	m_midi(0),
+	m_MidiSamplesetMatch(),
+	m_SampleSetId1(0),
+	m_SampleSetId2(0),
 	m_bitmaps(this),
 	m_PipeConfig(NULL, this, this),
 	m_Settings(settings),
@@ -359,6 +362,12 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 	m_PipeConfig.SetName(GetChurchName());
 	ReadCombinations(cfg);
+
+	GOrgueHash hash;
+	hash.Update(m_ChurchName.utf8_str(), strlen(m_ChurchName.utf8_str()));
+	GOrgueHashType result = hash.getHash();
+	m_SampleSetId1 = ((result.hash[0] & 0x7F) << 24) | ((result.hash[1] & 0x7F) << 16) | ((result.hash[2] & 0x7F) << 8) | (result.hash[3] & 0x7F);
+	m_SampleSetId2 = ((result.hash[4] & 0x7F) << 24) | ((result.hash[5] & 0x7F) << 16) | ((result.hash[6] & 0x7F) << 8) | (result.hash[7] & 0x7F);
 }
 
 wxString GrandOrgueFile::GetOrganHash()
@@ -1253,6 +1262,7 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 
 	m_midi->GetMidiRecorder().Clear();
 
+	m_MidiSamplesetMatch.clear();
 	GOrgueEventDistributor::PreparePlayback();
 
 	m_setter->UpdateModified(m_doc->IsModified());
@@ -1297,6 +1307,28 @@ void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)
 	{
 		Reset();
 		return;
+	}
+	while(m_MidiSamplesetMatch.size() < event.GetDevice())
+		m_MidiSamplesetMatch.push_back(true);
+
+	if (event.GetMidiType() == MIDI_SYSEX_GO_CLEAR)
+		m_MidiSamplesetMatch[event.GetDevice()] = true;
+	else if (event.GetMidiType() == MIDI_SYSEX_GO_SAMPLESET)
+	{
+		if (event.GetKey() == m_SampleSetId1 && event.GetValue() == m_SampleSetId2)
+		{
+			m_MidiSamplesetMatch[event.GetDevice()] = true;
+		}
+		else
+		{
+			m_MidiSamplesetMatch[event.GetDevice()] = false;
+			return;
+		}
+	}
+	else if (event.GetMidiType() == MIDI_SYSEX_GO_SETUP)
+	{
+		if (!m_MidiSamplesetMatch[event.GetDevice()])
+			return;
 	}
 
 	GOrgueEventDistributor::SendMidi(event);

@@ -420,7 +420,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 {
 	value = 0;
 
-	if (e.GetMidiType() == MIDI_SYSEX_GO_CLEAR)
+	if (e.GetMidiType() == MIDI_SYSEX_GO_CLEAR || e.GetMidiType() == MIDI_SYSEX_GO_SAMPLESET)
 	{
 		for(unsigned i = 0; i < m_Internal.size(); i++)
 			if (m_Internal[i].device == e.GetDevice())

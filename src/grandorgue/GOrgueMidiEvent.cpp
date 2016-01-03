@@ -116,6 +116,13 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg, GOrgueMidi
 				SetMidiType(MIDI_SYSEX_GO_CLEAR);
 				break;
 			}
+			if (msg[4] == 0x01 && msg.size() == 14)
+			{
+				SetMidiType(MIDI_SYSEX_GO_SAMPLESET);
+				SetKey(((msg[5] & 0x7F) << 24) | ((msg[6] & 0x7F) << 16) | ((msg[7] & 0x7F) << 8) | (msg[8] & 0x7F));
+				SetValue(((msg[9] & 0x7F) << 24) | ((msg[10] & 0x7F) << 16) | ((msg[11] & 0x7F) << 8) | (msg[12] & 0x7F));
+				break;
+			}
 			if ((msg[4] & 0xF0) == 0x10)
 			{
 				wxCharBuffer b(msg.size() - 7);
@@ -254,6 +261,25 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgu
 		msg.push_back(m);
 		return;
 
+	case MIDI_SYSEX_GO_SAMPLESET:
+		m.resize(14);
+		m[0] = 0xF0;
+		m[1] = 0x7D;
+		m[2] = 0x47;
+		m[3] = 0x4F;
+		m[4] = 0x01;
+		m[5] = (GetKey() >> 24) & 0x7F;
+		m[6] = (GetKey() >> 16) & 0x7F;
+		m[7] = (GetKey() >> 8) & 0x7F;
+		m[8] = (GetKey()) & 0x7F;
+		m[9] = (GetValue() >> 24) & 0x7F;
+		m[10] = (GetValue() >> 16) & 0x7F;
+		m[11] = (GetValue() >> 8) & 0x7F;
+		m[12] = (GetValue()) & 0x7F;
+		m[13] = 0xF7;
+		msg.push_back(m);
+		return;
+
 	case MIDI_SYSEX_GO_SETUP:
 		{
 			const wxString& s = map.GetElementByID(GetKey());
@@ -364,6 +390,9 @@ wxString GOrgueMidiEvent::ToString(GOrgueMidiMap& map) const
 
 	case MIDI_SYSEX_GO_CLEAR:
 		return _("sysex GrandOrgue clear");
+
+	case MIDI_SYSEX_GO_SAMPLESET:
+		return wxString::Format(_("sysex GrandOrgue sampleset %08x%08x"), GetKey(), GetValue());
 
 	case MIDI_SYSEX_GO_SETUP:
 		return wxString::Format(_("sysex GrandOrgue setup channel: %d NRPN: %d: name: %s"), GetChannel(), GetValue(), map.GetElementByID(GetKey()).c_str());
