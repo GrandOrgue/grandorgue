@@ -58,6 +58,7 @@ private:
 	void EncodeLength(unsigned len);
 	void Write(const void* data, unsigned len);
 	void WriteEvent(GOrgueMidiEvent& e);
+	void SendEvent(GOrgueMidiEvent& e);
 
 public:
 	GOrgueMidiRecorder(GOrgueMidi& midi);
