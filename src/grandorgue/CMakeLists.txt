@@ -103,6 +103,7 @@ GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp
 GOrgueDummyPipe.cpp
 GOrgueDrawStop.cpp
+GOrgueElementCreator.cpp
 GOrgueEnclosure.cpp
 GOrgueEvent.cpp
 GOrgueEventDistributor.cpp

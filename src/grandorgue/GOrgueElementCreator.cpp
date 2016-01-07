@@ -19,40 +19,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEELEMENTCREATOR_H
-#define GORGUEELEMENTCREATOR_H
+#include "GOrgueElementCreator.h"
 
-#include "ptrvector.h"
-#include <wx/string.h>
+#include "GOrgueSetterButton.h"
 
-class GOrgueConfigReader;
-class GOrgueButton;
-class GOrgueEnclosure;
-class GOrgueLabel;
-class GOrgueSetterButton;
-
-struct ElementListEntry {
-	wxString name;
-	int value;
-	bool is_public;
-};
-
-class GOrgueElementCreator
+GOrgueElementCreator::GOrgueElementCreator() :
+	m_button()
 {
-protected:
-	ptr_vector<GOrgueSetterButton> m_button;
+}
 
-	virtual const struct ElementListEntry* GetButtonList() = 0;
+GOrgueElementCreator::~GOrgueElementCreator()
+{
+}
 
-public:
-	GOrgueElementCreator();
-	virtual ~GOrgueElementCreator();
+GOrgueButton* GOrgueElementCreator::GetButton(const wxString& name, bool is_panel)
+{
+	const struct ElementListEntry* entries = GetButtonList();
+	for(unsigned i = 0; entries[i].name != wxEmptyString; i++)
+		if (name == entries[i].name)
+		{
+			if (is_panel && !entries[i].is_public)
+				return NULL;
+			return m_button[entries[i].value];
+		}
 
-	virtual void Load(GOrgueConfigReader& cfg) = 0;
+	return NULL;
+}
 
-	virtual GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel) = 0;
-	virtual GOrgueLabel* GetLabel(const wxString& name, bool is_panel) = 0;
-	virtual GOrgueButton* GetButton(const wxString& name, bool is_panel);
-};
-
-#endif

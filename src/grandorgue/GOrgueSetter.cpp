@@ -248,8 +248,13 @@ const struct ElementListEntry GOrgueSetter::m_element_types[] = {
 	{ wxT("CrescendoPrev"), ID_SETTER_CRESCENDO_PREV, true },
 	{ wxT("CrescendoCurrent"), ID_SETTER_CRESCENDO_CURRENT, true },
 	{ wxT("CrescendoNext"), ID_SETTER_CRESCENDO_NEXT, true },
-
+	{ wxT(""), -1, false },
 };
+
+const struct ElementListEntry* GOrgueSetter::GetButtonList()
+{
+	return m_element_types;
+}
 
 GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
@@ -260,7 +265,6 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_framegeneral(0),
 	m_general(0),
 	m_crescendo(0),
-	m_button(0),
 	m_PosDisplay(organfile),
 	m_BankDisplay(organfile),
 	m_CrescendoDisplay(organfile),
@@ -901,19 +905,6 @@ GOrgueLabel* GOrgueSetter::GetLabel(const wxString& name, bool is_panel)
 
 	if (name == wxT("OrganNameLabel"))
 		return &m_NameDisplay;
-
-	return NULL;
-}
-
-GOrgueButton* GOrgueSetter::GetButton(const wxString& name, bool is_panel)
-{
-	for(unsigned i = 0; i < sizeof(m_element_types) / sizeof(m_element_types[0]); i++)
-		if (name == m_element_types[i].name)
-		{
-			if (is_panel && !m_element_types[i].is_public)
-				return NULL;
-			return m_button[m_element_types[i].value];
-		}
 
 	return NULL;
 }
