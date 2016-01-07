@@ -135,6 +135,7 @@ private:
 	wxString GenerateSettingFileName();
 	wxString GenerateCacheFileName();
 	void SetTemperament(const GOrgueTemperament& temperament);
+	void PreconfigRecorder();
 
 	void UpdateAmplitude();
 	void UpdateTuning();
