@@ -133,6 +133,7 @@ private:
 	void OnUpdateLoaded(wxUpdateUIEvent& event);
 	void OnSetTitle(wxCommandEvent& event);
 	void OnMsgBox(wxMsgBoxEvent& event);
+	void OnRenameFile(wxRenameFileEvent& event);
 
 	bool DoClose(bool force = false);
 	void Open(const GOrgueOrgan& organ, bool force = false);
