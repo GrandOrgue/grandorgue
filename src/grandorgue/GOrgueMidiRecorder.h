@@ -46,6 +46,7 @@ private:
 	unsigned m_NextChannel;
 	unsigned m_NextNRPN;
 	std::vector<midi_map> m_Mappings;
+	std::vector<midi_map> m_Preconfig;
 	unsigned m_OutputDevice;
 	wxFile m_file;
 	char m_Buffer[2000];
@@ -67,6 +68,9 @@ public:
 
 	void SetOrganFile(GrandOrgueFile* file);
 	void SetOutputDevice(unsigned device_id);
+	void PreconfigureMapping(const wxString& element, bool isNRPN);
+	void PreconfigureMapping(const wxString& element, bool isNRPN, const wxString& reference);
+	void SetSamplesetId(unsigned id1, unsigned id2);
 
 	void SendMidiRecorderMessage(GOrgueMidiEvent& e);
 

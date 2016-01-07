@@ -1255,12 +1255,24 @@ void GrandOrgueFile::Abort()
 	m_midi = NULL;
 }
 
+void GrandOrgueFile::PreconfigRecorder()
+{
+	for(unsigned i = GetFirstManualIndex(); i <= GetManualAndPedalCount(); i++)
+	{
+		wxString id = wxString::Format(wxT("M%d"), i);
+		m_midi->GetMidiRecorder().PreconfigureMapping(id, false);
+	}
+}
+
 void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 {
 	m_soundengine = engine;
 	m_midi = midi;
 
 	m_midi->GetMidiRecorder().Clear();
+	PreconfigRecorder();
+	m_midi->GetMidiRecorder().SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
+	PreconfigRecorder();
 
 	m_MidiSamplesetMatch.clear();
 	GOrgueEventDistributor::PreparePlayback();
@@ -1274,6 +1286,9 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 void GrandOrgueFile::PrepareRecording()
 {
 	m_midi->GetMidiRecorder().Clear();
+	PreconfigRecorder();
+	m_midi->GetMidiRecorder().SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
+	PreconfigRecorder();
 
 	GOrgueEventDistributor::PrepareRecording();
 }

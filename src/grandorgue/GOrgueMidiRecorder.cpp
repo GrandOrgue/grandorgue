@@ -35,6 +35,7 @@ GOrgueMidiRecorder::GOrgueMidiRecorder(GOrgueMidi& midi) :
 	m_NextChannel(0),
 	m_NextNRPN(0),
 	m_Mappings(),
+	m_Preconfig(),
 	m_OutputDevice(0),
 	m_file(),
 	m_BufferPos(0),
@@ -71,6 +72,7 @@ void GOrgueMidiRecorder::SendEvent(GOrgueMidiEvent& e)
 void GOrgueMidiRecorder::Clear()
 {
 	m_Mappings.clear();
+	m_Preconfig.clear();
 	m_NextChannel = 1;
 	m_NextNRPN = 0;
 
@@ -79,6 +81,81 @@ void GOrgueMidiRecorder::Clear()
 	e.SetTime(wxGetLocalTimeMillis());
 	SendEvent(e);
 }
+
+void GOrgueMidiRecorder::PreconfigureMapping(const wxString& element, bool isNRPN)
+{
+	PreconfigureMapping(element, isNRPN, element);
+}
+
+void GOrgueMidiRecorder::PreconfigureMapping(const wxString& element, bool isNRPN, const wxString& reference)
+{
+	unsigned id = m_midi.GetMidiMap().GetElementByString(element);
+	unsigned ref = m_midi.GetMidiMap().GetElementByString(reference);
+	for(unsigned i = 0; i < m_Preconfig.size(); i++)
+		if (m_Preconfig[i].elementID == ref)
+		{
+			GOrgueMidiEvent e1;
+			e1.SetTime(wxGetLocalTimeMillis());
+			e1.SetMidiType(MIDI_SYSEX_GO_SETUP);
+			e1.SetKey(id);
+			e1.SetChannel(m_Preconfig[i].channel);
+			e1.SetValue(m_Preconfig[i].key);
+			SendEvent(e1);
+
+			midi_map m = m_Preconfig[i];
+			m.elementID = ref;
+			if (ref >= m_Mappings.size())
+				m_Mappings.resize(ref + 1);
+			m_Mappings[ref] = m;
+			return;
+		}
+
+	midi_map m;
+	if (isNRPN)
+	{
+		if (m_NextNRPN >= 1 << 18)
+			return;
+		m.elementID = ref;
+		m.channel = 1 + m_NextNRPN / (1 << 14);
+		m.key = m_NextNRPN % (1 << 14);
+		m_NextNRPN++;
+	}
+	else
+	{
+		if (m_NextChannel > 16)
+			return;
+		m.elementID = ref;
+		m.channel = m_NextChannel;
+		m.key = 0;
+		m_NextChannel++;
+	}
+	m_Preconfig.push_back(m);
+
+	GOrgueMidiEvent e1;
+	e1.SetTime(wxGetLocalTimeMillis());
+	e1.SetMidiType(MIDI_SYSEX_GO_SETUP);
+	e1.SetKey(id);
+	e1.SetChannel(m.channel);
+	e1.SetValue(m.key);
+	SendEvent(e1);
+
+	if (ref >= m_Mappings.size())
+		m_Mappings.resize(ref + 1);
+	m_Mappings[ref] = m;
+}
+
+void GOrgueMidiRecorder::SetSamplesetId(unsigned id1, unsigned id2)
+{
+	GOrgueMidiEvent e1;
+	e1.SetTime(wxGetLocalTimeMillis());
+	e1.SetMidiType(MIDI_SYSEX_GO_SAMPLESET);
+	e1.SetKey(id1);
+	e1.SetValue(id2);
+	SendEvent(e1);
+
+	m_Mappings.clear();
+}
+
 
 bool GOrgueMidiRecorder::SetupMapping(unsigned element, bool isNRPN)
 {
