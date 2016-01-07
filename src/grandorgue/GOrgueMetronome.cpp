@@ -49,12 +49,17 @@ const struct ElementListEntry GOrgueMetronome::m_element_types[] = {
 	{ wxT("MetronomeBpmM1"), ID_METRONOME_BEAT_M1, false },
 	{ wxT("MetronomeBpmP10"), ID_METRONOME_BEAT_P10, false },
 	{ wxT("MetronomeBpmM10"), ID_METRONOME_BEAT_M10, false },
+	{ wxT(""), -1, false },
 };
+
+const struct ElementListEntry* GOrgueMetronome::GetButtonList()
+{
+	return m_element_types;
+}
 
 GOrgueMetronome::GOrgueMetronome(GrandOrgueFile *organfile) :
 	wxTimer(),
 	m_organfile(organfile),
-	m_button(),
 	m_BPM(80),
 	m_MeasureLength(4),
 	m_Pos(0),
@@ -268,19 +273,3 @@ GOrgueLabel* GOrgueMetronome::GetLabel(const wxString& name, bool is_panel)
 
 	return NULL;
 }
-
-GOrgueButton* GOrgueMetronome::GetButton(const wxString& name, bool is_panel)
-{
-	for(unsigned i = 0; i < sizeof(m_element_types) / sizeof(m_element_types[0]); i++)
-		if (name == m_element_types[i].name)
-		{
-			if (is_panel && !m_element_types[i].is_public)
-				return NULL;
-			return m_button[m_element_types[i].value];
-		}
-
-	return NULL;
-}
-
-
-

@@ -28,7 +28,6 @@
 #include "GOrgueLabel.h"
 #include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSetterButtonCallback.h"
-#include "ptrvector.h"
 
 class GOrgueFrameGeneral;
 
@@ -51,7 +50,6 @@ private:
 	ptr_vector<GOrgueFrameGeneral> m_framegeneral;
 	ptr_vector<GOrgueFrameGeneral> m_general;
 	ptr_vector<GOrgueFrameGeneral> m_crescendo;
-	ptr_vector<GOrgueSetterButton> m_button;
 	GOrgueLabel m_PosDisplay;
 	GOrgueLabel m_BankDisplay;
 	GOrgueLabel m_CrescendoDisplay;
@@ -65,6 +63,7 @@ private:
 	void Crescendo(int pos, bool force = false);
 
 	static const struct ElementListEntry m_element_types[];
+	const struct ElementListEntry* GetButtonList();
 
 	void SetterButtonChanged(GOrgueSetterButton* button);
 
@@ -82,7 +81,6 @@ public:
 	void Load(GOrgueConfigReader& cfg);
 	GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel);
 	GOrgueLabel* GetLabel(const wxString& name, bool is_panel);
-	GOrgueButton* GetButton(const wxString& name, bool is_panel);
 
 	void Update();
 

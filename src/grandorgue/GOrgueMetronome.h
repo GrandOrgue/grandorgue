@@ -27,21 +27,17 @@
 #include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
 #include "GOrgueSetterButtonCallback.h"
-#include "ptrvector.h"
 #include <wx/timer.h>
 
 class GOrgueMidiEvent;
 class GOrgueRank;
-class GOrgueSetterButton;
 class GrandOrgueFile;
-struct ElementListEntry;
 
 class GOrgueMetronome : private wxTimer, private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler,
 	private GOrgueSaveableObject, public GOrgueElementCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
-	ptr_vector<GOrgueSetterButton> m_button;
 	unsigned m_BPM;
 	unsigned m_MeasureLength;
 	unsigned m_Pos;
@@ -52,6 +48,7 @@ private:
 	unsigned m_StopID;
 
 	static const struct ElementListEntry m_element_types[];
+	const struct ElementListEntry* GetButtonList();
 
 	void Notify();
 
@@ -78,7 +75,6 @@ public:
 
 	GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel);
 	GOrgueLabel* GetLabel(const wxString& name, bool is_panel);
-	GOrgueButton* GetButton(const wxString& name, bool is_panel);
 };
 
 #endif
