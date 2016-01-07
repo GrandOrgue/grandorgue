@@ -29,6 +29,7 @@
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueOrgan.h"
+#include "GOrguePath.h"
 #include "GOrgueProgressDialog.h"
 #include "GOrgueProperties.h"
 #include "GOrgueStdPath.h"
@@ -58,6 +59,7 @@
 
 BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MSGBOX(GOrgueFrame::OnMsgBox)
+	EVT_RENAMEFILE(GOrgueFrame::OnRenameFile)
 	EVT_CLOSE(GOrgueFrame::OnCloseWindow)
 	EVT_KEY_DOWN(GOrgueFrame::OnKeyCommand)
 	EVT_COMMAND(0, wxEVT_METERS, GOrgueFrame::OnMeters)
@@ -938,7 +940,6 @@ void GOrgueFrame::DoSplash(bool timeout)
 	new GOrgueSplash (timeout, this, wxID_ANY);
 }
 
-
 void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
 {
     DoMenuUpdates(event.GetMenu());
@@ -1013,6 +1014,22 @@ void GOrgueFrame::OnSetTitle(wxCommandEvent& event)
 void GOrgueFrame::OnMsgBox(wxMsgBoxEvent& event)
 {
 	wxMessageBox(event.getText(), event.getTitle(), event.getStyle(), this);
+}
+
+void GOrgueFrame::OnRenameFile(wxRenameFileEvent& event)
+{
+	wxFileName filepath = event.getFilename();
+
+	wxFileDialog dlg(this, _("Save as"), event.getDirectory(), event.getFilename(), event.getFilter(), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+	if (dlg.ShowModal() == wxID_OK)
+	{
+		if (filepath.GetFullPath() !=  dlg.GetPath())
+			GORenameFile(filepath.GetFullPath(), dlg.GetPath());
+	}
+	else
+		wxRemoveFile(filepath.GetFullPath());
+
+	GOSyncDirectory(filepath.GetPath());
 }
 
 bool GOrgueFrame::InstallOrganPackage(wxString name)

@@ -30,6 +30,7 @@ DECLARE_LOCAL_EVENT_TYPE(wxEVT_SHOWHELP, -1)
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_SETVALUE, -1)
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_WINTITLE, -1)
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_SHOWMSG, -1)
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_RENAMEFILE, -1)
 
 class wxMsgBoxEvent : public wxEvent {
 private:
@@ -49,13 +50,39 @@ public:
 	DECLARE_DYNAMIC_CLASS(wxMsgBoxEvent)
 };
 
+class wxRenameFileEvent : public wxEvent {
+private:
+	wxString m_Filename;
+	wxString m_Directory;
+	wxString m_Filter;
+
+public:
+	wxRenameFileEvent(const wxString& filename = wxEmptyString, const wxString& directory = wxEmptyString, const wxString& filter = wxEmptyString);
+	wxRenameFileEvent(const wxRenameFileEvent& e);
+
+	const wxString& getFilename();
+	const wxString& getDirectory();
+	const wxString& getFilter();
+
+	wxEvent* Clone() const;
+	DECLARE_DYNAMIC_CLASS(wxRenameFileEvent)
+};
+
 typedef void (wxEvtHandler::*wxMsgBoxFunction)(wxMsgBoxEvent&);
+
+typedef void (wxEvtHandler::*wxRenameFileFunction)(wxRenameFileEvent&);
 
 #define EVT_MSGBOX(fn) \
     DECLARE_EVENT_TABLE_ENTRY( wxEVT_SHOWMSG, wxID_ANY, wxID_ANY, \
     (wxObjectEventFunction) (wxEventFunction) \
     wxStaticCastEvent( wxMsgBoxFunction, & fn ), (wxObject *) NULL ),
 
+#define EVT_RENAMEFILE(fn) \
+    DECLARE_EVENT_TABLE_ENTRY( wxEVT_RENAMEFILE, wxID_ANY, wxID_ANY, \
+    (wxObjectEventFunction) (wxEventFunction) \
+    wxStaticCastEvent( wxRenameFileFunction, & fn ), (wxObject *) NULL ),
+
 void GOMessageBox(const wxString& text, const wxString title, long style, wxWindow* parent = NULL);
+void GOAskRenameFile(const wxString& file, const wxString directory, const wxString& filter);
 
 #endif
