@@ -46,3 +46,9 @@ GOrgueButton* GOrgueElementCreator::GetButton(const wxString& name, bool is_pane
 	return NULL;
 }
 
+void GOrgueElementCreator::SetterButtonChanged(GOrgueSetterButton* button)
+{
+	for(unsigned i = 0; i < m_button.size(); i++)
+		if (m_button[i] == button)
+			ButtonChanged(i);
+}

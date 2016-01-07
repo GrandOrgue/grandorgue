@@ -26,14 +26,13 @@
 #include "GOrgueLabel.h"
 #include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
-#include "GOrgueSetterButtonCallback.h"
 #include <wx/timer.h>
 
 class GOrgueMidiEvent;
 class GOrgueRank;
 class GrandOrgueFile;
 
-class GOrgueMetronome : private wxTimer, private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler,
+class GOrgueMetronome : private wxTimer, private GOrguePlaybackStateHandler,
 	private GOrgueSaveableObject, public GOrgueElementCreator
 {
 private:
@@ -52,7 +51,7 @@ private:
 
 	void Notify();
 
-	void SetterButtonChanged(GOrgueSetterButton* button);
+	void ButtonChanged(int id);
 
 	void AbortPlayback();
 	void PreparePlayback();
