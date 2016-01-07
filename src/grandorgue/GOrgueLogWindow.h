@@ -36,6 +36,7 @@ private:
 
 	void OnLog(wxCommandEvent& event);
 	void OnCopy(wxCommandEvent& event);
+	void OnClear(wxCommandEvent& event);
 	void OnPopup(wxContextMenuEvent& event);
 	void OnCloseWindow(wxCloseEvent& event);
 
