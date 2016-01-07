@@ -22,6 +22,7 @@
 #ifndef GORGUEELEMENTCREATOR_H
 #define GORGUEELEMENTCREATOR_H
 
+#include "GOrgueSetterButtonCallback.h"
 #include "ptrvector.h"
 #include <wx/string.h>
 
@@ -37,12 +38,16 @@ struct ElementListEntry {
 	bool is_public;
 };
 
-class GOrgueElementCreator
+class GOrgueElementCreator : protected GOrgueSetterButtonCallback
 {
+private:
+	void SetterButtonChanged(GOrgueSetterButton* button);
+
 protected:
 	ptr_vector<GOrgueSetterButton> m_button;
 
 	virtual const struct ElementListEntry* GetButtonList() = 0;
+	virtual void ButtonChanged(int id) = 0;
 
 public:
 	GOrgueElementCreator();

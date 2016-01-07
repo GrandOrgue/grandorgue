@@ -27,7 +27,6 @@
 #include "GOrgueEnclosure.h"
 #include "GOrgueLabel.h"
 #include "GOrguePlaybackStateHandler.h"
-#include "GOrgueSetterButtonCallback.h"
 
 class GOrgueFrameGeneral;
 
@@ -38,7 +37,7 @@ typedef enum
 	SETTER_SCOPED
 } SetterType;
 
-class GOrgueSetter : private GOrgueSetterButtonCallback, private GOrguePlaybackStateHandler, private GOrgueControlChangedHandler,
+class GOrgueSetter : private GOrguePlaybackStateHandler, private GOrgueControlChangedHandler, 
 	public GOrgueElementCreator
 {
 private:
@@ -65,7 +64,7 @@ private:
 	static const struct ElementListEntry m_element_types[];
 	const struct ElementListEntry* GetButtonList();
 
-	void SetterButtonChanged(GOrgueSetterButton* button);
+	void ButtonChanged(int id);
 
 	void ControlChanged(void* control);
 

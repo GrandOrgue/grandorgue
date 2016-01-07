@@ -136,43 +136,41 @@ void GOrgueMetronome::Save(GOrgueConfigWriter& cfg)
 	cfg.WriteInteger(m_group, wxT("MeasureLength"), m_MeasureLength);
 }
 
-void GOrgueMetronome::SetterButtonChanged(GOrgueSetterButton* button)
+void GOrgueMetronome::ButtonChanged(int id)
 {
-	for(unsigned i = 0; i < m_button.size(); i++)
-		if (m_button[i] == button)
-			switch(i)
-			{
-			case ID_METRONOME_ON:
-				if (m_Running)
-					StopTimer();
-				else
-					StartTimer();
-				break;
+	switch(id)
+	{
+	case ID_METRONOME_ON:
+		if (m_Running)
+			StopTimer();
+		else
+			StartTimer();
+		break;
 
-			case ID_METRONOME_MEASURE_P1:
-				UpdateMeasure(1);
-				break;
+	case ID_METRONOME_MEASURE_P1:
+		UpdateMeasure(1);
+		break;
 
-			case ID_METRONOME_MEASURE_M1:
-				UpdateMeasure(-1);
-				break;
+	case ID_METRONOME_MEASURE_M1:
+		UpdateMeasure(-1);
+		break;
 
-			case ID_METRONOME_BEAT_P1:
-				UpdateBPM(1);
-				break;
+	case ID_METRONOME_BEAT_P1:
+		UpdateBPM(1);
+		break;
 
-			case ID_METRONOME_BEAT_M1:
-				UpdateBPM(-1);
-				break;
+	case ID_METRONOME_BEAT_M1:
+		UpdateBPM(-1);
+		break;
 
-			case ID_METRONOME_BEAT_P10:
-				UpdateBPM(10);
-				break;
+	case ID_METRONOME_BEAT_P10:
+		UpdateBPM(10);
+		break;
 
-			case ID_METRONOME_BEAT_M10:
-				UpdateBPM(-10);
-				break;
-			}
+	case ID_METRONOME_BEAT_M10:
+		UpdateBPM(-10);
+		break;
+	}
 }
 
 void GOrgueMetronome::UpdateBPM(int val)
