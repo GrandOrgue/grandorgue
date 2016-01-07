@@ -145,110 +145,110 @@ enum {
 };
 
 const struct ElementListEntry GOrgueSetter::m_element_types[] = {
-	{ wxT("Prev"), ID_SETTER_PREV, true },
-	{ wxT("Next"), ID_SETTER_NEXT, true },
-	{ wxT("Set"), ID_SETTER_SET, true },
-	{ wxT("M1"), ID_SETTER_M1, true },
-	{ wxT("M10"), ID_SETTER_M10, true },
-	{ wxT("M100"), ID_SETTER_M100, true },
-	{ wxT("P1"), ID_SETTER_P1, true },
-	{ wxT("P10"), ID_SETTER_P10, true },
-	{ wxT("P100"), ID_SETTER_P100, true },
-	{ wxT("Current"), ID_SETTER_CURRENT, true },
-	{ wxT("Home"), ID_SETTER_HOME, true },
-	{ wxT("GC"), ID_SETTER_GC, true },
-	{ wxT("L1"), ID_SETTER_L1, true },
-	{ wxT("L2"), ID_SETTER_L2, true },
-	{ wxT("L3"), ID_SETTER_L3, true },
-	{ wxT("L4"), ID_SETTER_L4, true },
-	{ wxT("L5"), ID_SETTER_L5, true },
-	{ wxT("L6"), ID_SETTER_L6, true },
-	{ wxT("L7"), ID_SETTER_L7, true },
-	{ wxT("L8"), ID_SETTER_L8, true },
-	{ wxT("L9"), ID_SETTER_L9, true },
-	{ wxT("L0"), ID_SETTER_L0, true },
-	{ wxT("Regular"), ID_SETTER_REGULAR, true },
-	{ wxT("Scope"), ID_SETTER_SCOPE, true },
-	{ wxT("Scoped"), ID_SETTER_SCOPED, true },
-	{ wxT("Full"), ID_SETTER_FULL, true },
-	{ wxT("Insert"), ID_SETTER_INSERT, true },
-	{ wxT("Delete"), ID_SETTER_DELETE, true },
-	{ wxT("General01"), ID_SETTER_GENERAL00, true },
-	{ wxT("General02"), ID_SETTER_GENERAL01, true },
-	{ wxT("General03"), ID_SETTER_GENERAL02, true },
-	{ wxT("General04"), ID_SETTER_GENERAL03, true },
-	{ wxT("General05"), ID_SETTER_GENERAL04, true },
-	{ wxT("General06"), ID_SETTER_GENERAL05, true },
-	{ wxT("General07"), ID_SETTER_GENERAL06, true },
-	{ wxT("General08"), ID_SETTER_GENERAL07, true },
-	{ wxT("General09"), ID_SETTER_GENERAL08, true },
-	{ wxT("General10"), ID_SETTER_GENERAL09, true },
-	{ wxT("General11"), ID_SETTER_GENERAL10, true },
-	{ wxT("General12"), ID_SETTER_GENERAL11, true },
-	{ wxT("General13"), ID_SETTER_GENERAL12, true },
-	{ wxT("General14"), ID_SETTER_GENERAL13, true },
-	{ wxT("General15"), ID_SETTER_GENERAL14, true },
-	{ wxT("General16"), ID_SETTER_GENERAL15, true },
-	{ wxT("General17"), ID_SETTER_GENERAL16, true },
-	{ wxT("General18"), ID_SETTER_GENERAL17, true },
-	{ wxT("General19"), ID_SETTER_GENERAL18, true },
-	{ wxT("General20"), ID_SETTER_GENERAL19, true },
-	{ wxT("General21"), ID_SETTER_GENERAL20, true },
-	{ wxT("General22"), ID_SETTER_GENERAL21, true },
-	{ wxT("General23"), ID_SETTER_GENERAL22, true },
-	{ wxT("General24"), ID_SETTER_GENERAL23, true },
-	{ wxT("General25"), ID_SETTER_GENERAL24, true },
-	{ wxT("General26"), ID_SETTER_GENERAL25, true },
-	{ wxT("General27"), ID_SETTER_GENERAL26, true },
-	{ wxT("General28"), ID_SETTER_GENERAL27, true },
-	{ wxT("General29"), ID_SETTER_GENERAL28, true },
-	{ wxT("General30"), ID_SETTER_GENERAL29, true },
-	{ wxT("General31"), ID_SETTER_GENERAL30, true },
-	{ wxT("General32"), ID_SETTER_GENERAL31, true },
-	{ wxT("General33"), ID_SETTER_GENERAL32, true },
-	{ wxT("General34"), ID_SETTER_GENERAL33, true },
-	{ wxT("General35"), ID_SETTER_GENERAL34, true },
-	{ wxT("General36"), ID_SETTER_GENERAL35, true },
-	{ wxT("General37"), ID_SETTER_GENERAL36, true },
-	{ wxT("General38"), ID_SETTER_GENERAL37, true },
-	{ wxT("General39"), ID_SETTER_GENERAL38, true },
-	{ wxT("General40"), ID_SETTER_GENERAL39, true },
-	{ wxT("General41"), ID_SETTER_GENERAL40, true },
-	{ wxT("General42"), ID_SETTER_GENERAL41, true },
-	{ wxT("General43"), ID_SETTER_GENERAL42, true },
-	{ wxT("General44"), ID_SETTER_GENERAL43, true },
-	{ wxT("General45"), ID_SETTER_GENERAL44, true },
-	{ wxT("General46"), ID_SETTER_GENERAL45, true },
-	{ wxT("General47"), ID_SETTER_GENERAL46, true },
-	{ wxT("General48"), ID_SETTER_GENERAL47, true },
-	{ wxT("General49"), ID_SETTER_GENERAL48, true },
-	{ wxT("General50"), ID_SETTER_GENERAL49, true },
+	{ wxT("Prev"), ID_SETTER_PREV, true, true },
+	{ wxT("Next"), ID_SETTER_NEXT, true, true },
+	{ wxT("Set"), ID_SETTER_SET, true, false },
+	{ wxT("M1"), ID_SETTER_M1, true, true },
+	{ wxT("M10"), ID_SETTER_M10, true, true },
+	{ wxT("M100"), ID_SETTER_M100, true, true },
+	{ wxT("P1"), ID_SETTER_P1, true, true },
+	{ wxT("P10"), ID_SETTER_P10, true, true },
+	{ wxT("P100"), ID_SETTER_P100, true, true },
+	{ wxT("Current"), ID_SETTER_CURRENT, true, true },
+	{ wxT("Home"), ID_SETTER_HOME, true, true },
+	{ wxT("GC"), ID_SETTER_GC, true, true },
+	{ wxT("L1"), ID_SETTER_L1, true, true },
+	{ wxT("L2"), ID_SETTER_L2, true, true },
+	{ wxT("L3"), ID_SETTER_L3, true, true },
+	{ wxT("L4"), ID_SETTER_L4, true, true },
+	{ wxT("L5"), ID_SETTER_L5, true, true },
+	{ wxT("L6"), ID_SETTER_L6, true, true },
+	{ wxT("L7"), ID_SETTER_L7, true, true },
+	{ wxT("L8"), ID_SETTER_L8, true, true },
+	{ wxT("L9"), ID_SETTER_L9, true, true },
+	{ wxT("L0"), ID_SETTER_L0, true, true },
+	{ wxT("Regular"), ID_SETTER_REGULAR, true, true },
+	{ wxT("Scope"), ID_SETTER_SCOPE, true, true },
+	{ wxT("Scoped"), ID_SETTER_SCOPED, true, true },
+	{ wxT("Full"), ID_SETTER_FULL, true, false },
+	{ wxT("Insert"), ID_SETTER_INSERT, true, true },
+	{ wxT("Delete"), ID_SETTER_DELETE, true, true },
+	{ wxT("General01"), ID_SETTER_GENERAL00, true, true },
+	{ wxT("General02"), ID_SETTER_GENERAL01, true, true },
+	{ wxT("General03"), ID_SETTER_GENERAL02, true, true },
+	{ wxT("General04"), ID_SETTER_GENERAL03, true, true },
+	{ wxT("General05"), ID_SETTER_GENERAL04, true, true },
+	{ wxT("General06"), ID_SETTER_GENERAL05, true, true },
+	{ wxT("General07"), ID_SETTER_GENERAL06, true, true },
+	{ wxT("General08"), ID_SETTER_GENERAL07, true, true },
+	{ wxT("General09"), ID_SETTER_GENERAL08, true, true },
+	{ wxT("General10"), ID_SETTER_GENERAL09, true, true },
+	{ wxT("General11"), ID_SETTER_GENERAL10, true, true },
+	{ wxT("General12"), ID_SETTER_GENERAL11, true, true },
+	{ wxT("General13"), ID_SETTER_GENERAL12, true, true },
+	{ wxT("General14"), ID_SETTER_GENERAL13, true, true },
+	{ wxT("General15"), ID_SETTER_GENERAL14, true, true },
+	{ wxT("General16"), ID_SETTER_GENERAL15, true, true },
+	{ wxT("General17"), ID_SETTER_GENERAL16, true, true },
+	{ wxT("General18"), ID_SETTER_GENERAL17, true, true },
+	{ wxT("General19"), ID_SETTER_GENERAL18, true, true },
+	{ wxT("General20"), ID_SETTER_GENERAL19, true, true },
+	{ wxT("General21"), ID_SETTER_GENERAL20, true, true },
+	{ wxT("General22"), ID_SETTER_GENERAL21, true, true },
+	{ wxT("General23"), ID_SETTER_GENERAL22, true, true },
+	{ wxT("General24"), ID_SETTER_GENERAL23, true, true },
+	{ wxT("General25"), ID_SETTER_GENERAL24, true, true },
+	{ wxT("General26"), ID_SETTER_GENERAL25, true, true },
+	{ wxT("General27"), ID_SETTER_GENERAL26, true, true },
+	{ wxT("General28"), ID_SETTER_GENERAL27, true, true },
+	{ wxT("General29"), ID_SETTER_GENERAL28, true, true },
+	{ wxT("General30"), ID_SETTER_GENERAL29, true, true },
+	{ wxT("General31"), ID_SETTER_GENERAL30, true, true },
+	{ wxT("General32"), ID_SETTER_GENERAL31, true, true },
+	{ wxT("General33"), ID_SETTER_GENERAL32, true, true },
+	{ wxT("General34"), ID_SETTER_GENERAL33, true, true },
+	{ wxT("General35"), ID_SETTER_GENERAL34, true, true },
+	{ wxT("General36"), ID_SETTER_GENERAL35, true, true },
+	{ wxT("General37"), ID_SETTER_GENERAL36, true, true },
+	{ wxT("General38"), ID_SETTER_GENERAL37, true, true },
+	{ wxT("General39"), ID_SETTER_GENERAL38, true, true },
+	{ wxT("General40"), ID_SETTER_GENERAL39, true, true },
+	{ wxT("General41"), ID_SETTER_GENERAL40, true, true },
+	{ wxT("General42"), ID_SETTER_GENERAL41, true, true },
+	{ wxT("General43"), ID_SETTER_GENERAL42, true, true },
+	{ wxT("General44"), ID_SETTER_GENERAL43, true, true },
+	{ wxT("General45"), ID_SETTER_GENERAL44, true, true },
+	{ wxT("General46"), ID_SETTER_GENERAL45, true, true },
+	{ wxT("General47"), ID_SETTER_GENERAL46, true, true },
+	{ wxT("General48"), ID_SETTER_GENERAL47, true, true },
+	{ wxT("General49"), ID_SETTER_GENERAL48, true, true },
+	{ wxT("General50"), ID_SETTER_GENERAL49, true, true },
 
-	{ wxT("GeneralPrev"), ID_SETTER_GENERAL_PREV, true },
-	{ wxT("GeneralNext"), ID_SETTER_GENERAL_NEXT, true },
+	{ wxT("GeneralPrev"), ID_SETTER_GENERAL_PREV, true, true },
+	{ wxT("GeneralNext"), ID_SETTER_GENERAL_NEXT, true, true },
 
-	{ wxT("PitchP1"), ID_SETTER_PITCH_P1, true },
-	{ wxT("PitchP10"), ID_SETTER_PITCH_P10, true },
-	{ wxT("PitchP100"), ID_SETTER_PITCH_P100, true },
-	{ wxT("PitchM1"), ID_SETTER_PITCH_M1, true },
-	{ wxT("PitchM10"), ID_SETTER_PITCH_M10, true },
-	{ wxT("PitchM100"), ID_SETTER_PITCH_M100, true },
-	{ wxT("TemperamentPrev"), ID_SETTER_TEMPERAMENT_PREV, true },
-	{ wxT("TemperamentNext"), ID_SETTER_TEMPERAMENT_NEXT, true },
-	{ wxT("TransposeDown"), ID_SETTER_TRANSPOSE_DOWN, true },
-	{ wxT("TransposeUp"), ID_SETTER_TRANSPOSE_UP, true },
+	{ wxT("PitchP1"), ID_SETTER_PITCH_P1, true, true },
+	{ wxT("PitchP10"), ID_SETTER_PITCH_P10, true, true },
+	{ wxT("PitchP100"), ID_SETTER_PITCH_P100, true, true },
+	{ wxT("PitchM1"), ID_SETTER_PITCH_M1, true, true },
+	{ wxT("PitchM10"), ID_SETTER_PITCH_M10, true, true },
+	{ wxT("PitchM100"), ID_SETTER_PITCH_M100, true, true },
+	{ wxT("TemperamentPrev"), ID_SETTER_TEMPERAMENT_PREV, true, true },
+	{ wxT("TemperamentNext"), ID_SETTER_TEMPERAMENT_NEXT, true, true },
+	{ wxT("TransposeDown"), ID_SETTER_TRANSPOSE_DOWN, true, true },
+	{ wxT("TransposeUp"), ID_SETTER_TRANSPOSE_UP, true, true },
 
-	{ wxT("Save"), ID_SETTER_SAVE, true },
-	{ wxT("OnState"), ID_SETTER_ON, false },
+	{ wxT("Save"), ID_SETTER_SAVE, true, true },
+	{ wxT("OnState"), ID_SETTER_ON, false, true },
 
-	{ wxT("CrescendoA"), ID_SETTER_CRESCENDO_A, true },
-	{ wxT("CrescendoB"), ID_SETTER_CRESCENDO_B, true },
-	{ wxT("CrescendoC"), ID_SETTER_CRESCENDO_C, true },
-	{ wxT("CrescendoD"), ID_SETTER_CRESCENDO_D, true },
-	{ wxT("CrescendoPrev"), ID_SETTER_CRESCENDO_PREV, true },
-	{ wxT("CrescendoCurrent"), ID_SETTER_CRESCENDO_CURRENT, true },
-	{ wxT("CrescendoNext"), ID_SETTER_CRESCENDO_NEXT, true },
-	{ wxT(""), -1, false },
+	{ wxT("CrescendoA"), ID_SETTER_CRESCENDO_A, true, true },
+	{ wxT("CrescendoB"), ID_SETTER_CRESCENDO_B, true, true },
+	{ wxT("CrescendoC"), ID_SETTER_CRESCENDO_C, true, true },
+	{ wxT("CrescendoD"), ID_SETTER_CRESCENDO_D, true, true },
+	{ wxT("CrescendoPrev"), ID_SETTER_CRESCENDO_PREV, true, true },
+	{ wxT("CrescendoCurrent"), ID_SETTER_CRESCENDO_CURRENT, true, true },
+	{ wxT("CrescendoNext"), ID_SETTER_CRESCENDO_NEXT, true, true },
+	{ wxT(""), -1, false, false },
 };
 
 const struct ElementListEntry* GOrgueSetter::GetButtonList()
@@ -273,57 +273,7 @@ GOrgueSetter::GOrgueSetter(GrandOrgueFile* organfile) :
 	m_swell(organfile),
 	m_SetterType(SETTER_REGULAR)
 {
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, false));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-
-	for(unsigned i = 0; i < 10; i++)
-		m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, false));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-
-	/* Generals */
-	for(unsigned i = 0; i < GENERALS; i++)
-		m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-
-	/* Crescendo */
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	/* Pitch */
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-	m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	CreateButtons(m_organfile);
 
 	m_button[ID_SETTER_PREV]->SetPreconfigIndex(0);
 	m_button[ID_SETTER_NEXT]->SetPreconfigIndex(1);

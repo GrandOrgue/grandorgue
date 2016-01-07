@@ -31,14 +31,16 @@ class GOrgueButton;
 class GOrgueEnclosure;
 class GOrgueLabel;
 class GOrgueSetterButton;
+class GrandOrgueFile;
 
 struct ElementListEntry {
 	wxString name;
 	int value;
 	bool is_public;
+	bool is_pushbutton;
 };
 
-class GOrgueElementCreator : protected GOrgueSetterButtonCallback
+class GOrgueElementCreator : private GOrgueSetterButtonCallback
 {
 private:
 	void SetterButtonChanged(GOrgueSetterButton* button);
@@ -48,6 +50,7 @@ protected:
 
 	virtual const struct ElementListEntry* GetButtonList() = 0;
 	virtual void ButtonChanged(int id) = 0;
+	void CreateButtons(GrandOrgueFile* organfile);
 
 public:
 	GOrgueElementCreator();
