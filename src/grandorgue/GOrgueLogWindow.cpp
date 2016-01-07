@@ -36,6 +36,7 @@ BEGIN_EVENT_TABLE(GOrgueLogWindow, wxFrame)
 	EVT_CLOSE(GOrgueLogWindow::OnCloseWindow)
 	EVT_CONTEXT_MENU(GOrgueLogWindow::OnPopup)
 	EVT_MENU(wxID_COPY, GOrgueLogWindow::OnCopy)
+	EVT_MENU(wxID_CLEAR, GOrgueLogWindow::OnClear)
 END_EVENT_TABLE()
 
 GOrgueLogWindow::GOrgueLogWindow(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) :
@@ -87,8 +88,15 @@ void GOrgueLogWindow::OnCopy(wxCommandEvent& event)
 void GOrgueLogWindow::OnPopup(wxContextMenuEvent& event)
 {
 	wxMenu popup;
+	popup.Append(wxID_CLEAR, _("&Clear"), wxEmptyString, wxITEM_NORMAL);
+	popup.AppendSeparator();
 	popup.Append(wxID_COPY, _("C&opy"), wxEmptyString, wxITEM_NORMAL);
 	PopupMenu(&popup);
+}
+
+void GOrgueLogWindow::OnClear(wxCommandEvent& event)
+{
+	m_List->DeleteAllItems();
 }
 
 void GOrgueLogWindow::OnLog(wxCommandEvent& event)
