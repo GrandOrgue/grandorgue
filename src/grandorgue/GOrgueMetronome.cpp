@@ -42,14 +42,14 @@ enum {
 };
 
 const struct ElementListEntry GOrgueMetronome::m_element_types[] = {
-	{ wxT("MetronomeOn"), ID_METRONOME_ON, false },
-	{ wxT("MetronomeMeasureP1"), ID_METRONOME_MEASURE_P1, false },
-	{ wxT("MetronomeMeasureM1"), ID_METRONOME_MEASURE_M1, false },
-	{ wxT("MetronomeBpmP1"), ID_METRONOME_BEAT_P1, false },
-	{ wxT("MetronomeBpmM1"), ID_METRONOME_BEAT_M1, false },
-	{ wxT("MetronomeBpmP10"), ID_METRONOME_BEAT_P10, false },
-	{ wxT("MetronomeBpmM10"), ID_METRONOME_BEAT_M10, false },
-	{ wxT(""), -1, false },
+	{ wxT("MetronomeOn"), ID_METRONOME_ON, false, false },
+	{ wxT("MetronomeMeasureP1"), ID_METRONOME_MEASURE_P1, false, true },
+	{ wxT("MetronomeMeasureM1"), ID_METRONOME_MEASURE_M1, false, true },
+	{ wxT("MetronomeBpmP1"), ID_METRONOME_BEAT_P1, false, true },
+	{ wxT("MetronomeBpmM1"), ID_METRONOME_BEAT_M1, false, true },
+	{ wxT("MetronomeBpmP10"), ID_METRONOME_BEAT_P10, false, true },
+	{ wxT("MetronomeBpmM10"), ID_METRONOME_BEAT_M10, false, true },
+	{ wxT(""), -1, false, false },
 };
 
 const struct ElementListEntry* GOrgueMetronome::GetButtonList()
@@ -69,15 +69,7 @@ GOrgueMetronome::GOrgueMetronome(GrandOrgueFile *organfile) :
 	m_rank(NULL),
 	m_StopID(0)
 {
-        m_button.push_back(new GOrgueSetterButton(m_organfile, this, false));
-
-        m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-        m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-
-        m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-        m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-        m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
-        m_button.push_back(new GOrgueSetterButton(m_organfile, this, true));
+	CreateButtons(m_organfile);
 
 	m_button[ID_METRONOME_ON]->SetPreconfigIndex(25);
 	m_button[ID_METRONOME_MEASURE_P1]->SetPreconfigIndex(28);
