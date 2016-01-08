@@ -173,7 +173,7 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 				}
 			} else if (extra.type == 0x0009 || extra.type == 0x000a || extra.type == 0x000c || extra.type == 0x000d || extra.type == 0x0065 || extra.type == 0x0065 ||
 				   extra.type == 0x2605 || extra.type == 0x2705 || extra.type == 0x2805 || extra.type == 0x6375 || extra.type == 0x7075 || extra.type == 0xa220 ||
-				   extra.type == 0x5455)
+				   extra.type == 0x5455 || extra.type == 0x7875 )
 			{
 			}
 			else
