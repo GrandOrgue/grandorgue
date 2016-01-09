@@ -181,8 +181,10 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		/* Resolve organ file path */
 		fn = GetODFFilename();
 		fn.SetExt(wxT("html"));
-		if (fn.FileExists())
+		if (fn.FileExists() && !useArchives())
 			m_InfoFilename = fn.GetFullPath();
+		else
+			m_InfoFilename = wxEmptyString;
 	}
 	else
 	{
@@ -190,8 +192,13 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		fname.Assign(info_filename, this);
 		std::unique_ptr<GOrgueFile> file = fname.Open();
 		fn = file->GetPath();
-		if (file->isValid() && fn.FileExists() && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm")))
-			m_InfoFilename = fn.GetFullPath();
+		if (file->isValid() && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm")))
+		{
+			if (fn.FileExists() && !useArchives())
+				m_InfoFilename = fn.GetFullPath();
+			else
+				m_InfoFilename = wxEmptyString;
+		}
 		else
 		{
 			m_InfoFilename = wxEmptyString;
