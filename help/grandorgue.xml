@@ -6217,8 +6217,8 @@ not load a settings file if the ChurchName does not match.
           <term>InfoFilename</term>
           <listitem>
             <para>
-(string, required) relative path to an html file with more information
-about the organ.
+(string, not required) relative path to an html file with more information
+about the organ. This setting is currently not supported for organ packages.
      </para>
           </listitem>
         </varlistentry>
