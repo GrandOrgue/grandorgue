@@ -5691,7 +5691,7 @@ period.
       <para>
 The unit "samples" counts the number of samples from the start of the
 WAV file.  On sample includes the values of all channels, eg: for a
-stereo WAV file at 44.1 kHz, 1 second is equivalent to 441000 samples.
+stereo WAV file at 44.1 kHz, 1 second is equivalent to 44100 samples.
       </para>
       <figure>
         <title>background bitmaps 1 to 30</title>
@@ -9020,7 +9020,7 @@ the pipe (in addition to the organ/rank factor). 100 means no change.
           </listitem>
         </varlistentry>
         <varlistentry>
-          <term>Pipe9999Gain</term>
+          <term>Pipe999Gain</term>
           <listitem>
             <para>
 (float -120 - 40, default: 0) Amplitude scale factor in dB applied to
@@ -9915,7 +9915,7 @@ of the label GUI definitions are called
           <listitem>
             <para>
 (integer 0-999, required) Number of images on the panel. The section
-of the label GUI definitions are called
+of the image GUI definitions are called
 <emphasis>Panel999Image999</emphasis>.
             </para>
           </listitem>
@@ -10032,7 +10032,7 @@ it includes the following attributes:
 		</listitem>
 	      </varlistentry>
 	      <varlistentry>
-		<term>Divisional</term>
+		<term>Coupler</term>
 		<listitem>
 		  <para>
 (valid coupler number, required) Number of the coupler on the
@@ -10060,7 +10060,7 @@ it includes the following attributes:
 		</listitem>
 	      </varlistentry>
 	      <varlistentry>
-		<term>Divisional</term>
+		<term>Stop</term>
 		<listitem>
 		  <para>
 (valid stop number, required) Number of the stop on the
@@ -10099,7 +10099,7 @@ it includes the following attributes:
 	    </para>
 	    <variablelist>
 	      <varlistentry>
-		<term>Enclosure</term>
+		<term>Tremulant</term>
 		<listitem>
 		  <para>
 (valid tremulant number, required) Number of the tremulant.
