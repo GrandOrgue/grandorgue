@@ -194,7 +194,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 		GOrgueFilename fname;
 		fname.Assign(info_filename, this);
 		std::unique_ptr<GOrgueFile> file = fname.Open();
-		fn = file->GetPath();
+		fn = info_filename;
 		if (file->isValid() && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm")))
 		{
 			if (fn.FileExists() && !useArchives())
