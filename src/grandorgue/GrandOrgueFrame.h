@@ -100,7 +100,6 @@ private:
 	void OnAudioMemset(wxCommandEvent& event);
 	void OnAudioState(wxCommandEvent& event);
 	void OnAudioSettings(wxCommandEvent& event);
-	void OnMidiRecord(wxCommandEvent& event);
 	void OnMidiPlay(wxCommandEvent& event);
 	void OnMidiMonitor(wxCommandEvent& event);
 

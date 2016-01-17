@@ -59,6 +59,7 @@ GOGUIMasterPanel.cpp
 GOGUIMetronomePanel.cpp
 GOGUIPanel.cpp
 GOGUIPanelWidget.cpp
+GOGUIRecorderPanel.cpp
 GOGUISequencerPanel.cpp
 GOSoundAudioSection.cpp
 GOSoundEngine.cpp

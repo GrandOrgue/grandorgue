@@ -19,20 +19,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOGUISETTERDISPLAYMETRICS_H
-#define GOGUISETTERDISPLAYMETRICS_H
+#ifndef GOGUIRECORDERPANEL_H
+#define GOGUIRECORDERPANEL_H
 
-#include "GOGUIDisplayMetrics.h"
+#include "GOGUIPanelCreator.h"
 
-typedef enum { GOGUI_SETTER_SETTER, GOGUI_SETTER_GENERALS, GOGUI_SETTER_CRESCENDO, GOGUI_SETTER_DIVISIONALS, GOGUI_SETTER_COUPLER, GOGUI_SETTER_MASTER, GOGUI_METRONOME, GOGUI_SETTER_FLOATING, GOGUI_RECORDER } GOGUISetterType;
-
-class GOrgueConfigReader;
+class GOGUIPanel;
 class GrandOrgueFile;
 
-class GOGUISetterDisplayMetrics : public GOGUIDisplayMetrics
+class GOGUIRecorderPanel : public GOGUIPanelCreator
 {
+private:
+	GrandOrgueFile* m_organfile;
+
+	GOGUIPanel* CreateRecorderPanel(GOrgueConfigReader& cfg);
+
 public:
-	GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, GOGUISetterType type);
+	GOGUIRecorderPanel(GrandOrgueFile* organfile);
+	virtual ~GOGUIRecorderPanel();
+
+	void CreatePanels(GOrgueConfigReader& cfg);
 };
 
 #endif
