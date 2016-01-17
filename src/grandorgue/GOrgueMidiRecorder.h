@@ -22,17 +22,18 @@
 #ifndef GORGUEMIDIRECORDER_H
 #define GORGUEMIDIRECORDER_H
 
+#include "GOrgueElementCreator.h"
 #include "GOrgueTime.h"
-
+#include "ptrvector.h"
 #include <wx/file.h>
 #include <wx/string.h>
 #include <vector>
 
-class GOrgueMidi;
 class GOrgueMidiEvent;
+class GOrgueMidiMap;
 class GrandOrgueFile;
 
-class GOrgueMidiRecorder
+class GOrgueMidiRecorder : public GOrgueElementCreator
 {
 	typedef struct
 	{
@@ -41,18 +42,25 @@ class GOrgueMidiRecorder
 		unsigned key;
 	} midi_map;
 private:
-	GOrgueMidi& m_midi;
 	GrandOrgueFile* m_organfile;
+	GOrgueMidiMap& m_Map;
 	unsigned m_NextChannel;
 	unsigned m_NextNRPN;
 	std::vector<midi_map> m_Mappings;
 	std::vector<midi_map> m_Preconfig;
 	unsigned m_OutputDevice;
 	wxFile m_file;
+	wxString m_Filename;
+	bool m_DoRename;
 	char m_Buffer[2000];
 	unsigned m_BufferPos;
 	unsigned m_FileLength;
 	GOTime m_Last;
+
+	static const struct ElementListEntry m_element_types[];
+	const struct ElementListEntry* GetButtonList();
+
+	void ButtonChanged(int id);
 
 	void Ensure(unsigned length);
 	void Flush();
@@ -63,11 +71,10 @@ private:
 	bool SetupMapping(unsigned element, bool isNRPN);
 
 public:
-	GOrgueMidiRecorder(GOrgueMidi& midi);
+	GOrgueMidiRecorder(GrandOrgueFile* organfile);
 	~GOrgueMidiRecorder();
 
-	void SetOrganFile(GrandOrgueFile* file);
-	void SetOutputDevice(unsigned device_id);
+	void SetOutputDevice(const wxString& device_id);
 	void PreconfigureMapping(const wxString& element, bool isNRPN);
 	void PreconfigureMapping(const wxString& element, bool isNRPN, const wxString& reference);
 	void SetSamplesetId(unsigned id1, unsigned id2);
@@ -76,9 +83,13 @@ public:
 
 	void Clear();
 
-	void StartRecording(wxString filename);
+	void StartRecording(bool rename);
 	bool IsRecording();
 	void StopRecording();
+
+	void Load(GOrgueConfigReader& cfg);
+	GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel);
+	GOrgueLabel* GetLabel(const wxString& name, bool is_panel);
 };
 
 #endif

@@ -30,6 +30,7 @@
 #include "GOGUIMetronomePanel.h"
 #include "GOGUIPanel.h"
 #include "GOGUIPanelCreator.h"
+#include "GOGUIRecorderPanel.h"
 #include "GOGUISequencerPanel.h"
 #include "GOSoundEngine.h"
 #include "GOrgueArchive.h"
@@ -57,6 +58,7 @@
 #include "GOrgueManual.h"
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrgueMidiRecorder.h"
 #include "GOrgueMetronome.h"
 #include "GOrgueOrgan.h"
 #include "GOrguePath.h"
@@ -90,6 +92,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_ODFHash(),
 	m_Cacheable(false),
 	m_setter(0),
+	m_MidiRecorder(NULL),
 	m_volume(0),
 	m_IgnorePitch(false),
 	m_b_customized(false),
@@ -330,6 +333,8 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 	m_setter = new GOrgueSetter(this);
 	m_elementcreators.push_back(m_setter);
+	m_MidiRecorder = new GOrgueMidiRecorder(this);
+	m_elementcreators.push_back(m_MidiRecorder);
 	m_elementcreators.push_back(new GOrgueMetronome(this));
 	m_panelcreators.push_back(new GOGUICouplerPanel(this));
 	m_panelcreators.push_back(new GOGUIFloatingPanel(this));
@@ -339,6 +344,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_panelcreators.push_back(new GOGUIBankedGeneralsPanel(this));
 	m_panelcreators.push_back(new GOGUISequencerPanel(this));
 	m_panelcreators.push_back(new GOGUIMasterPanel(this));
+	m_panelcreators.push_back(new GOGUIRecorderPanel(this));
 
 	for(unsigned i = 0; i < m_elementcreators.size(); i++)
 		m_elementcreators[i]->Load(cfg);
@@ -1243,8 +1249,8 @@ void GrandOrgueFile::SendMidiMessage(GOrgueMidiEvent& e)
 
 void GrandOrgueFile::SendMidiRecorderMessage(GOrgueMidiEvent& e)
 {
-	if (m_midi)
-		m_midi->GetMidiRecorder().SendMidiRecorderMessage(e);
+	if (m_MidiRecorder)
+		m_MidiRecorder->SendMidiRecorderMessage(e);
 }
 
 void GrandOrgueFile::AddMidiListener(GOrgueMidiListener* listener)
@@ -1259,6 +1265,7 @@ void GrandOrgueFile::Abort()
 
 	GOrgueEventDistributor::AbortPlayback();
 
+	m_MidiRecorder->StopRecording();
 	m_midi = NULL;
 }
 
@@ -1267,7 +1274,7 @@ void GrandOrgueFile::PreconfigRecorder()
 	for(unsigned i = GetFirstManualIndex(); i <= GetManualAndPedalCount(); i++)
 	{
 		wxString id = wxString::Format(wxT("M%d"), i);
-		m_midi->GetMidiRecorder().PreconfigureMapping(id, false);
+		m_MidiRecorder->PreconfigureMapping(id, false);
 	}
 }
 
@@ -1275,10 +1282,11 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 {
 	m_soundengine = engine;
 	m_midi = midi;
+	m_MidiRecorder->SetOutputDevice(m_Settings.MidiRecorderOutputDevice());
 
-	m_midi->GetMidiRecorder().Clear();
+	m_MidiRecorder->Clear();
 	PreconfigRecorder();
-	m_midi->GetMidiRecorder().SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
+	m_MidiRecorder->SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
 	PreconfigRecorder();
 
 	m_MidiSamplesetMatch.clear();
@@ -1292,9 +1300,9 @@ void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
 
 void GrandOrgueFile::PrepareRecording()
 {
-	m_midi->GetMidiRecorder().Clear();
+	m_MidiRecorder->Clear();
 	PreconfigRecorder();
-	m_midi->GetMidiRecorder().SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
+	m_MidiRecorder->SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
 	PreconfigRecorder();
 
 	GOrgueEventDistributor::PrepareRecording();

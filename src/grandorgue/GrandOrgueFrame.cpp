@@ -89,7 +89,6 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
 	EVT_MENU(ID_AUDIO_STATE, GOrgueFrame::OnAudioState)
 	EVT_MENU(ID_AUDIO_SETTINGS, GOrgueFrame::OnAudioSettings)
-	EVT_MENU(ID_MIDI_RECORD, GOrgueFrame::OnMidiRecord)
 	EVT_MENU(ID_MIDI_PLAY, GOrgueFrame::OnMidiPlay)
 	EVT_MENU(wxID_HELP, GOrgueFrame::OnHelp)
 	EVT_MENU(wxID_ABOUT, GOrgueFrame::OnHelpAbout)
@@ -204,7 +203,6 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
 	m_audio_menu->Append(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->AppendSeparator();
-	m_audio_menu->Append(ID_MIDI_RECORD, _("R&ecord MIDI\tCtrl+M"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->Append(ID_MIDI_PLAY, _("Play &MIDI\tCtrl+P"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->Append(ID_MIDI_MONITOR, _("&Log MIDI events"), wxEmptyString, wxITEM_CHECK);
 	
@@ -526,8 +524,6 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 
 	if (event.GetId() == ID_AUDIO_RECORD)
 		event.Check(m_Sound.IsAudioRecording());
-	else if (event.GetId() == ID_MIDI_RECORD)
-		event.Check(m_Sound.IsMidiRecording());
 	else if (event.GetId() == ID_MIDI_PLAY)
 		event.Check(m_Sound.IsMidiPlaying());
 	else if (event.GetId() == ID_AUDIO_MEMSET)
@@ -793,23 +789,6 @@ void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
 void GOrgueFrame::OnMidiMonitor(wxCommandEvent& WXUNUSED(event))
 {
 	m_MidiMonitor = !m_MidiMonitor;
-}
-
-void GOrgueFrame::OnMidiRecord(wxCommandEvent& WXUNUSED(event))
-{
-	if (m_Sound.IsMidiRecording())
-		m_Sound.StopMidiRecording();
-	else
-	{
-		wxFileDialog dlg(this, _("Save as"), m_Settings.MidiRecorderPath(), wxEmptyString, _("MID files (*.mid)|*.mid"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-		if (dlg.ShowModal() == wxID_OK)
-		{
-			wxFileName filepath = dlg.GetPath();
-			if (filepath.GetExt() == wxEmptyString)
-				filepath.SetExt(wxT("mid"));
-			m_Sound.StartMidiRecording(filepath.GetFullPath());
-		}
-	}
 }
 
 void GOrgueFrame::OnMidiPlay(wxCommandEvent& WXUNUSED(event))

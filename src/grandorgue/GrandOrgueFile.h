@@ -47,6 +47,7 @@ class GOrgueManual;
 class GOrgueMidi;
 class GOrgueMidiEvent;
 class GOrgueMidiListener;
+class GOrgueMidiRecorder;
 class GOrgueOrgan;
 class GOrguePiston;
 class GOrgueProgressDialog;
@@ -78,6 +79,7 @@ private:
 	wxString m_ODFHash;
 	bool m_Cacheable;
 	GOrgueSetter* m_setter;
+	GOrgueMidiRecorder* m_MidiRecorder;
 	int m_volume;
 	bool m_IgnorePitch;
 	wxString m_Temperament;

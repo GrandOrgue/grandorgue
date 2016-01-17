@@ -23,7 +23,6 @@
 #define GORGUEMIDI_H
 
 #include "GOrgueMidiPlayer.h"
-#include "GOrgueMidiRecorder.h"
 #include "ptrvector.h"
 #include <wx/event.h>
 
@@ -44,7 +43,6 @@ private:
 	ptr_vector<GOrgueMidiOutPort> m_midi_out_devices;
 	int m_transpose;
 	std::vector<GOrgueMidiListener*> m_Listeners;
-	GOrgueMidiRecorder m_MidiRecorder;
 	GOrgueMidiPlayer m_MidiPlayer;
 
 	void OnMidiEvent(wxMidiEvent& event);
@@ -69,7 +67,6 @@ public:
 	void Unregister(GOrgueMidiListener* listener);
 
 	GOrgueMidiMap& GetMidiMap();
-	GOrgueMidiRecorder& GetMidiRecorder();
 	GOrgueMidiPlayer& GetMidiPlayer();
 
 	DECLARE_EVENT_TABLE()

@@ -125,10 +125,6 @@ public:
 	void StartAudioRecording(wxString filename);
 	void StopAudioRecording();
 
-	bool IsMidiRecording();
-	void StartMidiRecording(wxString filename);
-	void StopMidiRecording();
-
 	bool IsMidiPlaying();
 	void StartMidiPlaying(wxString filename);
 	void StopMidiPlaying();

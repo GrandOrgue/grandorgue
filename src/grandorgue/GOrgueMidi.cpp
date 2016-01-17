@@ -37,7 +37,6 @@ GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_midi_in_devices(),
 	m_midi_out_devices(),
 	m_Listeners(),
-	m_MidiRecorder(*this),
 	m_MidiPlayer(*this)
 {
 	UpdateDevices();
@@ -75,8 +74,6 @@ void GOrgueMidi::Open()
 		else
 			m_midi_out_devices[i]->Close();
 	}
-
-	m_MidiRecorder.SetOutputDevice(GetMidiMap().GetDeviceByString(m_Settings.MidiRecorderOutputDevice()));
 }
 
 std::vector<wxString> GOrgueMidi::GetInDevices()
@@ -150,11 +147,6 @@ void GOrgueMidi::Unregister(GOrgueMidiListener* listener)
 			m_Listeners[i] = NULL;
 		}
 
-}
-
-GOrgueMidiRecorder& GOrgueMidi::GetMidiRecorder()
-{
-	return m_MidiRecorder;
 }
 
 GOrgueMidiPlayer& GOrgueMidi::GetMidiPlayer()

@@ -21,27 +21,52 @@
 
 #include "GOrgueMidiRecorder.h"
 
+#include "GOrgueEvent.h"
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMidiFile.h"
+#include "GOrguePath.h"
+#include "GOrgueSetterButton.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
+#include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/stopwatch.h>
 
-GOrgueMidiRecorder::GOrgueMidiRecorder(GOrgueMidi& midi) :
-	m_midi(midi),
-	m_organfile(0),
+enum {
+	ID_MIDI_RECORDER_RECORD = 0,
+	ID_MIDI_RECORDER_STOP,
+	ID_MIDI_RECORDER_RECORD_RENAME,
+};
+
+const struct ElementListEntry GOrgueMidiRecorder::m_element_types[] = {
+	{ wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true },
+	{ wxT("MidiRecorderStop"), ID_MIDI_RECORDER_STOP, false, true },
+	{ wxT("MidiRecorderRecordRename"), ID_MIDI_RECORDER_RECORD_RENAME, false, true },
+	{ wxT(""), -1, false, false },
+};
+
+const struct ElementListEntry* GOrgueMidiRecorder::GetButtonList()
+{
+	return m_element_types;
+}
+
+GOrgueMidiRecorder::GOrgueMidiRecorder(GrandOrgueFile* organfile) :
+	m_organfile(organfile),
+	m_Map(organfile->GetSettings().GetMidiMap()),
 	m_NextChannel(0),
 	m_NextNRPN(0),
 	m_Mappings(),
 	m_Preconfig(),
 	m_OutputDevice(0),
 	m_file(),
+	m_Filename(),
+	m_DoRename(false),
 	m_BufferPos(0),
 	m_FileLength(0),
 	m_Last(0)
 {
+	CreateButtons(m_organfile);
 	Clear();
 }
 
@@ -50,21 +75,41 @@ GOrgueMidiRecorder::~GOrgueMidiRecorder()
 	StopRecording();
 }
 
-void GOrgueMidiRecorder::SetOrganFile(GrandOrgueFile* file)
+void GOrgueMidiRecorder::Load(GOrgueConfigReader& cfg)
 {
-	m_organfile = file;
+	m_button[ID_MIDI_RECORDER_RECORD]->Init(cfg, wxT("MidiRecorderRecord"), _("REC"));
+	m_button[ID_MIDI_RECORDER_STOP]->Init(cfg, wxT("MidiRecorderStop"), _("STOP"));
+	m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Init(cfg, wxT("MidiRecorderRecordRename"), _("REC File"));
 }
 
-void GOrgueMidiRecorder::SetOutputDevice(unsigned device_id)
+void GOrgueMidiRecorder::ButtonChanged(int id)
 {
-	m_OutputDevice = device_id;
+	switch(id)
+	{
+	case ID_MIDI_RECORDER_STOP:
+		StopRecording();
+		break;
+
+	case ID_MIDI_RECORDER_RECORD:
+		StartRecording(false);
+		break;
+
+	case ID_MIDI_RECORDER_RECORD_RENAME:
+		StartRecording(true);
+		break;
+	}
+}
+
+void GOrgueMidiRecorder::SetOutputDevice(const wxString& device_id)
+{
+	m_OutputDevice = m_Map.GetDeviceByString(device_id);
 }
 
 void GOrgueMidiRecorder::SendEvent(GOrgueMidiEvent& e)
 {
 	e.SetDevice(m_OutputDevice);
 	if (m_OutputDevice)
-		m_midi.Send(e);
+		m_organfile->SendMidiMessage(e);
 	if (IsRecording())
 		WriteEvent(e);
 }
@@ -89,8 +134,8 @@ void GOrgueMidiRecorder::PreconfigureMapping(const wxString& element, bool isNRP
 
 void GOrgueMidiRecorder::PreconfigureMapping(const wxString& element, bool isNRPN, const wxString& reference)
 {
-	unsigned id = m_midi.GetMidiMap().GetElementByString(element);
-	unsigned ref = m_midi.GetMidiMap().GetElementByString(reference);
+	unsigned id = m_Map.GetElementByString(element);
+	unsigned ref = m_Map.GetElementByString(reference);
 	for(unsigned i = 0; i < m_Preconfig.size(); i++)
 		if (m_Preconfig[i].elementID == ref)
 		{
@@ -260,7 +305,7 @@ void GOrgueMidiRecorder::WriteEvent(GOrgueMidiEvent& e)
 	if (!IsRecording())
 		return;
 	std::vector<std::vector<unsigned char>> msg;
-	e.ToMidi(msg, m_midi.GetMidiMap());
+	e.ToMidi(msg, m_Map);
 	for(unsigned i = 0; i < msg.size(); i++)
 	{
 		EncodeLength((e.GetTime() - m_Last).GetValue());
@@ -283,6 +328,8 @@ bool GOrgueMidiRecorder::IsRecording()
 
 void GOrgueMidiRecorder::StopRecording()
 {
+	m_button[ID_MIDI_RECORDER_RECORD]->Display(false);
+	m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Display(false);
 	if (!IsRecording())
 		return;
 	const unsigned char end[4] = { 0x01, 0xFF, 0x2F, 0x00 };
@@ -292,10 +339,18 @@ void GOrgueMidiRecorder::StopRecording()
 	MIDIFileHeader h = { { 'M', 'T', 'r', 'k' }, (uint32_t)wxUINT32_SWAP_ON_LE(m_FileLength) };
 	m_file.Seek(sizeof(MIDIHeaderChunk));
 	m_file.Write(&h, sizeof(h));
+	m_file.Flush();
 	m_file.Close();
+	if (!m_DoRename)
+	{
+		wxFileName name = m_Filename;
+		GOSyncDirectory(name.GetPath());
+	}
+	else
+		GOAskRenameFile(m_Filename, m_organfile->GetSettings().MidiRecorderPath(),_("MIDI files (*.mid)|*.mid"));
 }
 
-void GOrgueMidiRecorder::StartRecording(wxString filename)
+void GOrgueMidiRecorder::StartRecording(bool rename)
 {
 	MIDIHeaderChunk h = { { { 'M', 'T', 'h', 'd' }, (uint32_t)wxUINT32_SWAP_ON_LE(6) }, 
 			      (uint16_t)wxUINT16_SWAP_ON_LE(0),(uint16_t)wxUINT16_SWAP_ON_LE(1), (uint16_t)wxUINT16_SWAP_ON_LE(0xE728) };
@@ -305,10 +360,13 @@ void GOrgueMidiRecorder::StartRecording(wxString filename)
 	if (!m_organfile)
 		return;
 
-        m_file.Create(filename, true);
+	m_Filename = m_organfile->GetSettings().MidiRecorderPath() + wxFileName::GetPathSeparator() + wxDateTime::UNow().Format(_("%Y-%m-%d:%H:%M:%S.%l.mid"));
+	m_DoRename = rename;
+
+        m_file.Create(m_Filename, true);
         if (!m_file.IsOpened())
 	{
-		wxLogError(_("Unable to open file %s for writing"), filename.c_str());
+		wxLogError(_("Unable to open file %s for writing"), m_Filename.c_str());
 		return;
 	}
 	
@@ -326,5 +384,22 @@ void GOrgueMidiRecorder::StartRecording(wxString filename)
 	Write(b.data(), len);
 
 	m_Last = wxGetLocalTimeMillis();
+	if (m_DoRename)
+		m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Display(true);
+	else
+		m_button[ID_MIDI_RECORDER_RECORD]->Display(true);
 	m_organfile->PrepareRecording();
+}
+
+GOrgueEnclosure* GOrgueMidiRecorder::GetEnclosure(const wxString& name, bool is_panel)
+{
+	return NULL;
+}
+
+GOrgueLabel* GOrgueMidiRecorder::GetLabel(const wxString& name, bool is_panel)
+{
+	if (is_panel)
+		return NULL;
+
+	return NULL;
 }
