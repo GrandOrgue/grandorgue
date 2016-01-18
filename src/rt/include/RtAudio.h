@@ -941,7 +941,6 @@ public:
 
   private:
 
-  std::vector<RtAudio::DeviceInfo> devices_;
   void saveDeviceInfo( void );
   bool coInitialized_;
   bool probeDeviceOpen( unsigned int device, StreamMode mode, unsigned int channels, 
