@@ -2661,7 +2661,6 @@ bool RtApiJack :: callbackEvent( unsigned long nframes )
 
 #include "asiosys.h"
 #include "asio.h"
-#include "iasiothiscallresolver.h"
 #include "asiodrivers.h"
 #include "iasiodrv.h"
 #include <cmath>
