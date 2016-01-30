@@ -25,6 +25,7 @@
 #include "GOrgueMemoryPool.h"
 #include "GOrgueWave.h"
 #include <wx/intl.h>
+#include <wx/log.h>
 
 GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool) :
 	GOSoundProvider(pool)

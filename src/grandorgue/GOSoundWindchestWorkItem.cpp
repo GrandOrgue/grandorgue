@@ -24,6 +24,7 @@
 #include "GOSoundEngine.h"
 #include "GOSoundTremulantWorkItem.h"
 #include "GOrgueWindchest.h"
+#include "mutex_locker.h"
 
 GOSoundWindchestWorkItem::GOSoundWindchestWorkItem(GOSoundEngine& sound_engine, GOrgueWindchest* windchest) :
 	m_engine(sound_engine),

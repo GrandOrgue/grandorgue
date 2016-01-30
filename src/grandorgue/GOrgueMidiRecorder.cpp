@@ -31,6 +31,7 @@
 #include "GrandOrgueFile.h"
 #include <wx/filename.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/stopwatch.h>
 
 enum {

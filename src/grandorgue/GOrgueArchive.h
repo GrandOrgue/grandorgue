@@ -22,7 +22,7 @@
 #ifndef GORGUEARCHIVE_H
 #define GORGUEARCHIVE_H
 
-#include "GOLock.h"
+#include "mutex.h"
 #include <wx/file.h>
 #include <wx/string.h>
 #include <vector>

@@ -21,8 +21,10 @@
 
 #include "GOrgueMemoryPool.h"
 
+#include "mutex_locker.h"
 #include <wx/file.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/utils.h>
 #ifdef __linux__
 #include <sys/mman.h>

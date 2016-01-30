@@ -22,6 +22,7 @@
 #include "GOSoundScheduler.h"
 
 #include "GOSoundWorkItem.h"
+#include "mutex_locker.h"
 
 GOSoundScheduler::GOSoundScheduler() :
 	m_Work1(),
@@ -109,7 +110,7 @@ void GOSoundScheduler::RemoveList(GOSoundWorkItem* item, std::vector<GOSoundWork
 {
 	for(unsigned i = 0; i < list.size(); i++)
 		if (list[i] == item)
-			list[i] = NULL;
+			list[i] = nullptr;
 }
 
 void GOSoundScheduler::Remove(GOSoundWorkItem* item)
@@ -181,7 +182,7 @@ GOSoundWorkItem* GOSoundScheduler::GetNextGroup()
 	{
 		unsigned next = m_NextItem.fetch_add(1);
 		if (next >= m_ItemCount)
-			return NULL;
+			return nullptr;
 		GOSoundWorkItem* item = *m_WorkItems[next];
 		if (item)
 			return item;

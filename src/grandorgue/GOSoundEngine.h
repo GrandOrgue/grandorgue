@@ -25,7 +25,6 @@
 #include "GOSoundResample.h"
 #include "GOSoundScheduler.h"
 #include "GOSoundSamplerPool.h"
-#include "GOLock.h"
 #include <vector>
 
 class GOrgueWindchest;

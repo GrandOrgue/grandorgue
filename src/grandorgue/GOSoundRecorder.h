@@ -23,9 +23,10 @@
 #define GOSOUNDRECORDER_H
 
 #include "GOSoundWorkItem.h"
-#include "GOLock.h"
+#include "mutex.h"
 #include <wx/file.h>
 #include <wx/string.h>
+#include <vector>
 
 class GOSoundBufferItem;
 struct struct_WAVE;

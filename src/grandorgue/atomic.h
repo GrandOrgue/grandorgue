@@ -147,5 +147,6 @@ public:
 #endif
 
 typedef atomic<unsigned> atomic_uint;
+typedef atomic<int> atomic_int;
 
 #endif

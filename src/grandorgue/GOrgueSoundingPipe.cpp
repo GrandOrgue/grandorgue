@@ -31,6 +31,7 @@
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
+#include <wx/log.h>
 
 GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume, bool retune) :
 	GOrguePipe(organfile, rank, midi_key_number),

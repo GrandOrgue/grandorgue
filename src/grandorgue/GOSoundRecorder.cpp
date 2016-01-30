@@ -23,7 +23,9 @@
 
 #include "GOSoundBufferItem.h"
 #include "GOrgueWaveTypes.h"
+#include "mutex_locker.h"
 #include <wx/intl.h>
+#include <wx/log.h>
 
 #pragma pack(push, 1)
 

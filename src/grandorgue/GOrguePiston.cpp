@@ -30,6 +30,7 @@
 #include "GOrgueTremulant.h"
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
+#include <wx/log.h>
 
 GOrguePiston::GOrguePiston(GrandOrgueFile* organfile) :
 	GOrguePushbutton(organfile),

@@ -23,6 +23,7 @@
 
 #include "GOSoundEngine.h"
 #include "GOSoundWindchestWorkItem.h"
+#include "mutex_locker.h"
 
 GOSoundGroupWorkItem::GOSoundGroupWorkItem(GOSoundEngine& sound_engine, unsigned samples_per_buffer) :
 	GOSoundBufferItem(samples_per_buffer, 2),

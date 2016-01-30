@@ -26,8 +26,8 @@
 #include "GOSoundEngine.h"
 #include "GOSoundRecorder.h"
 #include "GOrgueSoundDevInfo.h"
-#include "GOLock.h"
 #include "atomic.h"
+#include "mutex.h"
 #include <wx/string.h>
 #include <map>
 #include <vector>

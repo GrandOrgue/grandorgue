@@ -22,6 +22,7 @@
 #include "GOSoundTremulantWorkItem.h"
 
 #include "GOSoundEngine.h"
+#include "mutex_locker.h"
 
 GOSoundTremulantWorkItem::GOSoundTremulantWorkItem(GOSoundEngine& sound_engine, unsigned samples_per_buffer) :
 	m_engine(sound_engine),

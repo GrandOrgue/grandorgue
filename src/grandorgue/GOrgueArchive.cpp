@@ -25,7 +25,9 @@
 #include "GOrgueArchiveIndex.h"
 #include "GOrgueArchiveReader.h"
 #include "GOrgueInvalidFile.h"
+#include "mutex_locker.h"
 #include <wx/intl.h>
+#include <wx/log.h>
 
 GOrgueArchive::GOrgueArchive(GOrgueSettings& settings) :
 	m_Settings(settings),
