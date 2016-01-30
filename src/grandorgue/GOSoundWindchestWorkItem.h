@@ -23,7 +23,7 @@
 #define GOSOUNDWINDCHESTWORKITEM_H
 
 #include "GOSoundWorkItem.h"
-#include "GOLock.h"
+#include "mutex.h"
 #include "ptrvector.h"
 
 class GOSoundEngine;

@@ -22,7 +22,7 @@
 #ifndef GORGUEMEMORYPOOL_H_
 #define GORGUEMEMORYPOOL_H_
 
-#include "GOLock.h"
+#include "mutex.h"
 #include <set>
 #include <wx/thread.h>
 

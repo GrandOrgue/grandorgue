@@ -43,6 +43,7 @@
 #include "SettingsDialog.h"
 #include "SplashScreen.h"
 #include "Images.h"
+#include "mutex_locker.h"
 #include "wxGaugeAudio.h"
 #include <wx/fileconf.h>
 #include <wx/filedlg.h>

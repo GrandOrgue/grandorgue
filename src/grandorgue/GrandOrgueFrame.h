@@ -24,7 +24,7 @@
 
 #include "GOrgueEvent.h"
 #include "GOrgueMidiListener.h"
-#include "GOLock.h"
+#include "mutex.h"
 #include <wx/dcmemory.h>
 #include <wx/frame.h>
 

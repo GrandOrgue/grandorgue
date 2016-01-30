@@ -24,7 +24,7 @@
 
 #include "GOSoundBufferItem.h"
 #include "GOSoundWorkItem.h"
-#include "GOLock.h"
+#include "mutex.h"
 #include <vector>
 
 class GOSoundReverb;

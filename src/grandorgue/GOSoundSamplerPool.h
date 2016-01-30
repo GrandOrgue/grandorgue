@@ -22,9 +22,9 @@
 #ifndef GOSOUNDSAMPLERPOOL_H_
 #define GOSOUNDSAMPLERPOOL_H_
 
-#include "ptrvector.h"
-#include "GOLock.h"
 #include "atomic.h"
+#include "mutex.h"
+#include "ptrvector.h"
 
 class GO_SAMPLER;
 

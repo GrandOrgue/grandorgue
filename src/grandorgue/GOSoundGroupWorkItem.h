@@ -25,7 +25,7 @@
 #include "GOSoundBufferItem.h"
 #include "GOSoundSamplerList.h"
 #include "GOSoundWorkItem.h"
-#include "GOLock.h"
+#include "mutex.h"
 
 class GOSoundEngine;
 

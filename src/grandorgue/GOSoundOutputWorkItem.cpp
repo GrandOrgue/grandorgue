@@ -22,6 +22,7 @@
 #include "GOSoundOutputWorkItem.h"
 
 #include "GOSoundReverb.h"
+#include "mutex_locker.h"
 
 GOSoundOutputWorkItem::GOSoundOutputWorkItem(unsigned channels, std::vector<float> scale_factors, unsigned samples_per_buffer) :
 	GOSoundBufferItem(samples_per_buffer, channels),

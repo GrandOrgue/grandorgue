@@ -28,6 +28,7 @@
 #include "GOrgueWavPack.h"
 #include <wx/file.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 
 bool inline CompareFourCC(GO_FOURCC fcc, const char* text)
 {

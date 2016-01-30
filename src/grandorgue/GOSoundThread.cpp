@@ -23,6 +23,8 @@
 
 #include "GOSoundScheduler.h"
 #include "GOSoundWorkItem.h"
+#include "mutex_locker.h"
+#include <wx/log.h>
 
 GOSoundThread::GOSoundThread(GOSoundScheduler* scheduler):
 	wxThread(wxTHREAD_JOINABLE),

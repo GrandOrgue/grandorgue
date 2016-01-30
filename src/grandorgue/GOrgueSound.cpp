@@ -28,6 +28,7 @@
 #include "GOrgueSettings.h"
 #include "GOrgueSoundPort.h"
 #include "GrandOrgueFile.h"
+#include "mutex_locker.h"
 #include "portaudio.h"
 #include <wx/app.h>
 #include <wx/intl.h>

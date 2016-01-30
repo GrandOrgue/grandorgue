@@ -33,6 +33,7 @@
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 
 GOrgueArchiveManager::GOrgueArchiveManager(GOrgueSettings& settings) :
 	m_Settings(settings)

@@ -22,8 +22,8 @@
 #ifndef GORGUESOUNDSCHEDULER_H
 #define GORGUESOUNDSCHEDULER_H
 
-#include "GOLock.h"
 #include "atomic.h"
+#include "mutex.h"
 #include <vector>
 
 class GOSoundWorkItem;

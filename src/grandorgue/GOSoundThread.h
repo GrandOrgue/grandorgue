@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOSOUNDTHREAD_H_
-#define GOSOUNDTHREAD_H_
+#ifndef GOSOUNDTHREAD_H
+#define GOSOUNDTHREAD_H
 
-#include "GOLock.h"
+#include "mutex.h"
 #include <wx/thread.h>
 
 class GOSoundScheduler;

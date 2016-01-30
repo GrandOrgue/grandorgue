@@ -34,6 +34,7 @@
 #include "MIDIEventDialog.h"
 #include "MIDIList.h"
 #include "OrganDialog.h"
+#include "mutex_locker.h"
 #include <wx/app.h>
 
 GOrgueDocument::GOrgueDocument(GOrgueSound* sound) :

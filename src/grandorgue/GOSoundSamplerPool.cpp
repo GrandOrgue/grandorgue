@@ -22,6 +22,7 @@
 #include "GOSoundSamplerPool.h"
 
 #include "GOSoundSampler.h"
+#include "mutex_locker.h"
 #include <assert.h>
 #include <string.h>
 
