@@ -23,14 +23,14 @@
 #define GOSOUNDSAMPLERLIST_H
 
 #include "GOSoundSampler.h"
-#include "GOLock.h"
+#include "atomic.h"
 
 class GOSoundSamplerList
 {
 private:
-	std::atomic<GO_SAMPLER*> m_GetList;
-	std::atomic<GO_SAMPLER*> m_PutList;
-	std::atomic_uint m_PutCount;
+	atomic<GO_SAMPLER*> m_GetList;
+	atomic<GO_SAMPLER*> m_PutList;
+	atomic_uint m_PutCount;
 
 public:
 	GOSoundSamplerList()
@@ -58,7 +58,7 @@ public:
 			if (!sampler)
 				return NULL;
 			GO_SAMPLER* next = sampler->next;
-			if (m_GetList.compare_exchange_strong(sampler, next))
+			if (m_GetList.compare_exchange(sampler, next))
 				return sampler;
 		}
 		while(true);
@@ -70,7 +70,7 @@ public:
 		{
 			GO_SAMPLER* current = m_PutList;
 			sampler->next = current;
-			if (m_PutList.compare_exchange_strong(current, sampler))
+			if (m_PutList.compare_exchange(current, sampler))
 			{
 				m_PutCount.fetch_add(1);
 				return;
@@ -90,7 +90,7 @@ public:
 		do
 		{
 			sampler = m_PutList;
-			if (m_PutList.compare_exchange_strong(sampler, NULL))
+			if (m_PutList.compare_exchange(sampler, NULL))
 				break;
 		}
 		while(true);
@@ -115,7 +115,7 @@ public:
 					}
 				}
 			}
-			if (m_GetList.compare_exchange_strong(current, sampler))
+			if (m_GetList.compare_exchange(current, sampler))
 				return;
 			if (next)
 				next->next = NULL;

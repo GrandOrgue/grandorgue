@@ -24,6 +24,7 @@
 
 #include "ptrvector.h"
 #include "GOLock.h"
+#include "atomic.h"
 
 class GO_SAMPLER;
 
@@ -32,10 +33,10 @@ class GOSoundSamplerPool
 
 private:
 	GOMutex                 m_Lock;
-	std::atomic_uint        m_SamplerCount;
+	atomic_uint m_SamplerCount;
 	unsigned                m_UsageLimit;
-	std::atomic<GO_SAMPLER*> m_AvailableSamplers;
-	ptr_vector<GO_SAMPLER>  m_Samplers;
+	atomic<GO_SAMPLER*> m_AvailableSamplers;
+	ptr_vector<GO_SAMPLER> m_Samplers;
 
 public:
 	GOSoundSamplerPool();

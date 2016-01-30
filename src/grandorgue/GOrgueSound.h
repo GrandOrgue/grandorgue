@@ -27,6 +27,7 @@
 #include "GOSoundRecorder.h"
 #include "GOrgueSoundDevInfo.h"
 #include "GOLock.h"
+#include "atomic.h"
 #include <wx/string.h>
 #include <map>
 #include <vector>
@@ -82,7 +83,7 @@ private:
 	bool logSoundErrors;
 
 	std::vector<GO_SOUND_OUTPUT> m_AudioOutputs;
-	std::atomic_uint m_WaitCount;
+	atomic_uint m_WaitCount;
 
 	unsigned m_SamplesPerBuffer;
 

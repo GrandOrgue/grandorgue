@@ -23,6 +23,7 @@
 #define GORGUESOUNDSCHEDULER_H
 
 #include "GOLock.h"
+#include "atomic.h"
 #include <vector>
 
 class GOSoundWorkItem;
@@ -34,7 +35,7 @@ private:
 	std::vector<GOSoundWorkItem*> m_Work2;
 	std::vector<GOSoundWorkItem*> m_Work3;
 	std::vector<GOSoundWorkItem**> m_WorkItems;
-	std::atomic_uint m_NextItem;
+	atomic_uint m_NextItem;
 	unsigned m_ItemCount;
 	unsigned m_RepeatCount;
 	GOMutex m_Mutex;

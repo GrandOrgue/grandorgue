@@ -75,7 +75,7 @@ GO_SAMPLER* GOSoundSamplerPool::GetSampler()
 		sampler = m_AvailableSamplers;
 		while (sampler)
 		{
-			if (m_AvailableSamplers.compare_exchange_strong(sampler, sampler->next))
+			if (m_AvailableSamplers.compare_exchange(sampler, sampler->next))
 				break;
 		}
 		if (sampler)
@@ -94,6 +94,6 @@ void GOSoundSamplerPool::ReturnSampler(GO_SAMPLER* sampler)
 	{
 		sampler->next = m_AvailableSamplers;
 	}
-	while(!m_AvailableSamplers.compare_exchange_strong(sampler->next, sampler));
+	while(!m_AvailableSamplers.compare_exchange(sampler->next, sampler));
 }
 
