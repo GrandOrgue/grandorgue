@@ -68,8 +68,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/AddOption.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/AddCXXOption.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/FindTools.cmake)
 
-add_cxx_option(-std=c++0x)
-CHECK_INCLUDE_FILE_CXX(cstdatomic HAVE_CSTDATOMIC)
+add_cxx_option(-std=c++11)
 CHECK_INCLUDE_FILE_CXX(atomic HAVE_ATOMIC)
 CHECK_INCLUDE_FILE_CXX(mutex HAVE_MUTEX)
 

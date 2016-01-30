@@ -30,16 +30,11 @@
 #include <vector>
 
 #if 0  /* set to 1 to enable fallback code */
-#undef HAVE_CSTDATOMIC
 #undef HAVE_ATOMIC
 #endif
 
 #ifdef HAVE_ATOMIC
 #include <atomic>
-#endif
-#ifdef HAVE_CSTDATOMIC
-#include <cstdatomic>
-#define HAVE_ATOMIC
 #endif
 
 #define GO_PRINTCONTENTION 0
