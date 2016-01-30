@@ -25,7 +25,7 @@
 #include "GOrgueEventDistributor.h"
 #include "GOrgueMemoryPool.h"
 
-GOrgueLoadThread::GOrgueLoadThread(GOrgueEventDistributor& objs, GOrgueMemoryPool& pool, std::atomic_uint& pos) :
+GOrgueLoadThread::GOrgueLoadThread(GOrgueEventDistributor& objs, GOrgueMemoryPool& pool, atomic_uint& pos) :
 	wxThread(wxTHREAD_JOINABLE),
 	m_Objects(objs),
 	m_Pos(pos),

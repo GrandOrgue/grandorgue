@@ -22,7 +22,8 @@
 #ifndef GORGUELOADTHREAD_H
 #define GORGUELOADTHREAD_H
 
-#include "GOLock.h"
+#include "atomic.h"
+#include <wx/string.h>
 #include <wx/thread.h>
 
 class GOrgueCacheObject;
@@ -33,7 +34,7 @@ class GOrgueLoadThread : public wxThread
 {
 private:
 	GOrgueEventDistributor& m_Objects;
-	std::atomic_uint& m_Pos;
+	atomic_uint& m_Pos;
 	GOrgueMemoryPool& m_pool;
 	wxString m_Error;
 	bool m_OutOfMemory;
@@ -41,7 +42,7 @@ private:
 	void* Entry();
 
 public:
-	GOrgueLoadThread(GOrgueEventDistributor& objs, GOrgueMemoryPool& pool, std::atomic_uint& pos);
+	GOrgueLoadThread(GOrgueEventDistributor& objs, GOrgueMemoryPool& pool, atomic_uint& pos);
 	~GOrgueLoadThread();
 
 	void checkResult();

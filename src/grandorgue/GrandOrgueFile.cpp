@@ -571,7 +571,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 		/* Figure out list of pipes to load */
 		dlg->Reset(GetCacheObjectCount());
 		/* Load pipes */
-		std::atomic_uint nb_loaded_obj(0);
+		atomic_uint nb_loaded_obj(0);
 
 		if (wxFileExists(m_CacheFilename))
 		{
@@ -613,7 +613,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 							wxLogError(_("Cache load failure: Failed to read %s from cache."), obj->GetLoadTitle().c_str());
 							break;
 						}
-						nb_loaded_obj++;
+						nb_loaded_obj.fetch_add(1);
 						if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
 						{
 							FREE_AND_NULL(dummy);
