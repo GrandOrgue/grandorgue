@@ -24,6 +24,7 @@
 #include "GOGUIPanel.h"
 #include "GOGUIPanelWidget.h"
 #include "Images.h"
+#include <wx/display.h>
 #include <wx/frame.h>
 #include <wx/icon.h>
 #include <wx/image.h>
@@ -76,7 +77,17 @@ GOrguePanelView::GOrguePanelView(GOrgueDocument* doc, GOGUIPanel* panel, wxWindo
 	if (size.GetWidth() && size.GetHeight())
 		frame->SetSize(size);
 	else
-		frame->Center(wxBOTH);
+	{
+		int nr = wxDisplay::GetFromWindow(frame);
+		wxDisplay display(nr != wxNOT_FOUND ? nr : 0);
+		wxRect current = frame->GetRect();
+		wxRect max = display.GetClientArea();
+		if (current.GetWidth() > max.GetWidth())
+			current.SetWidth(max.GetWidth());
+		if (current.GetHeight() > max.GetHeight())
+			current.SetHeight(max.GetHeight());
+		frame->SetSize(current.CenterIn(max, wxBOTH));
+	}
 	this->SetPosition(wxPoint(0, 0));
 	m_panelwidget = panelwidget;
 	frame->Show();
