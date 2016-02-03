@@ -20,7 +20,7 @@
 pkgname=grandorgue
 pkgver=0.3.1.0
 pkgrel=0
-pkgdesc=('Virtual Pipe Organ Software')
+pkgdesc='Virtual Pipe Organ Software'
 arch=('i686' 'x86_64')
 url='http://sourceforge.net/projects/ourorgan/'
 license=('GPL2+')
