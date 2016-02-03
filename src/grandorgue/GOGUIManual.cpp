@@ -172,7 +172,7 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 		x += key_width;
 	}
 
-	m_BoundingRect = wxRect(-1, -1, width, height);
+	m_BoundingRect = wxRect(-1, -1, width + 1, height + 1);
 }
 
 void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
@@ -321,7 +321,7 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 	x = cfg.ReadInteger(ODFSetting, group, wxT("PositionX"), 0, m_metrics->GetScreenWidth(), false, -1);
 	y = cfg.ReadInteger(ODFSetting, group, wxT("PositionY"), 0, m_metrics->GetScreenHeight(), false, -1);
 
-	m_BoundingRect = wxRect(x, y, width, height);
+	m_BoundingRect = wxRect(x, y, width + 1, height + 1);
 }
 
 void GOGUIManual::Layout()
