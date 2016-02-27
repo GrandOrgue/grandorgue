@@ -58,11 +58,17 @@ GOGUIPanelWidget::GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindow
 	m_BGImage = m_ClientBitmap.ConvertToImage();
 	m_Background.PrepareBitmap(m_Scale, wxRect(0, 0, 0, 0), NULL);
 	m_BGInit = true;
-	SetFocus();
+	SetCanFocus(true);
 }
 
 GOGUIPanelWidget::~GOGUIPanelWidget()
 {
+}
+
+void GOGUIPanelWidget::Focus()
+{
+	if (!HasFocus())
+		SetFocus();
 }
 
 wxSize GOGUIPanelWidget::UpdateSize(wxSize size)
@@ -163,6 +169,8 @@ void GOGUIPanelWidget::OnMouseMove(wxMouseEvent& event)
 
 void GOGUIPanelWidget::OnMouseLeftDown(wxMouseEvent& event)
 {
+	Focus();
+
 	if (ForwardMouseEvent(event))
 		return;
 
@@ -174,6 +182,8 @@ void GOGUIPanelWidget::OnMouseLeftDown(wxMouseEvent& event)
 
 void GOGUIPanelWidget::OnMouseRightDown(wxMouseEvent& event)
 {
+	Focus();
+
 	m_panel->HandleMousePress(event.GetX() / m_Scale, event.GetY() / m_Scale, true);
 	event.Skip();
 }

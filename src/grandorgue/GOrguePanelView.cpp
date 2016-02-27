@@ -131,6 +131,12 @@ bool GOrguePanelView::Destroy()
 	return wxScrolledWindow::Destroy();
 }
 
+void GOrguePanelView::Raise()
+{
+	wxScrolledWindow::Raise();
+	m_panelwidget->CallAfter(&GOGUIPanelWidget::Focus);
+}
+
 void GOrguePanelView::OnSize(wxSizeEvent& event)
 {
 	if (m_panelwidget)
