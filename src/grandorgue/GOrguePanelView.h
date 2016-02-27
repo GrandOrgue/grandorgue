@@ -47,6 +47,7 @@ public:
 	static GOrguePanelView* createWindow(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent);
 	void SyncState();
 
+	void Raise();
 	bool Destroy();
 	void RemoveView();
 

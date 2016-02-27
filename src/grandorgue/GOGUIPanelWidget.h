@@ -42,6 +42,7 @@ private:
 
 	void CopyToScreen(wxDC* mdc, const wxRect& rect);
 
+	void OnCreate(wxWindowCreateEvent& event);
 	void OnDraw(wxDC* dc);
 	void OnErase(wxEraseEvent& event);
 	void OnPaint(wxPaintEvent& event);
@@ -58,6 +59,7 @@ public:
 	GOGUIPanelWidget(GOGUIPanel* panel, wxWindow* parent, wxWindowID id = wxID_ANY);
 	~GOGUIPanelWidget();
 
+	void Focus();
 	void OnUpdate();
 	wxSize UpdateSize(wxSize size);
 
