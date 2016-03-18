@@ -20,6 +20,7 @@
 message(STATUS "RtMidi build Configuration")
 
 include_directories(../include)
+include_directories(../../grandorgue/contrib)
 
 add_library(RtMidi STATIC RtMidi.cpp)
 
@@ -52,7 +53,12 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
    if (RTMIDI_USE_ALSA)
       add_definitions(-D__LINUX_ALSA__)
-      target_link_libraries(RtMidi asound)
+      target_link_libraries(RtMidi asound udev)
+      set(CMAKE_REQUIRED_LIBRARIES asound)
+      check_function_exists(snd_seq_client_info_get_card HAVE_GET_CLIENT_INFO_CARD)
+      if (HAVE_GET_CLIENT_INFO_CARD)
+        add_definitions(-DHAVE_GET_CLIENT_INFO_CARD)
+      endif ()
    endif ()
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

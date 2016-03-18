@@ -25,8 +25,8 @@ arch=('i686' 'x86_64')
 url='http://sourceforge.net/projects/ourorgan/'
 license=('GPL2+')
 groups=('multimedia')
-depends=('alsa-lib' 'jack' 'wxgtk')
-makedepends=('gcc' 'libxslt' 'zip' 'gettext' 'docbook-xsl' 'cmake' 'po4a')
+depends=('alsa-lib' 'jack' 'wxgtk','libsystemd')
+makedepends=('gcc' 'libxslt' 'zip' 'gettext' 'docbook-xsl' 'cmake' 'po4a' 'systemd')
 source=("grandorgue-$pkgver.tar.gz")
 md5sums=('SKIP')
 

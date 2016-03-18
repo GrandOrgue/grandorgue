@@ -64,6 +64,7 @@ endif ()
 
 # only use options supported by the compiler
 include(CheckIncludeFileCXX)
+include(CheckFunctionExists)
 include(${CMAKE_SOURCE_DIR}/cmake/AddOption.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/AddCXXOption.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/FindTools.cmake)
