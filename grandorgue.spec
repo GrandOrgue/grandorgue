@@ -35,6 +35,7 @@ BuildRequires:  wxGTK3-devel
 BuildRequires:  gettext
 BuildRequires:  docbook-style-xsl
 %endif
+BuildRequires:  libudev-devel
 BuildRequires:  libxslt
 BuildRequires:  zip
 BuildRequires:  po4a

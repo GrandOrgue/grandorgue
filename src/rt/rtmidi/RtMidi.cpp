@@ -1071,9 +1071,79 @@ void MidiOutCore :: sendMessage( std::vector<unsigned char> *message )
 
 #include <pthread.h>
 #include <sys/time.h>
+#include <libudev.h>
 
 // ALSA header file.
 #include <alsa/asoundlib.h>
+
+#include "sha1.h"
+
+static char
+hexChar (unsigned val)
+{
+  val &= 0x0F;
+  if (val <= 9)
+    return '0' + val;
+  return val + 'A' - 10;
+}
+
+static std::string mapAlsaDeviceNumber(snd_seq_client_info_t *cinfo)
+{
+  struct udev *udev = NULL;
+  struct udev_enumerate* query = NULL;
+  struct udev_list_entry* list = NULL;
+  const char* name, *end;
+  SHA_CTX sha1;
+  char cardid[30];
+  unsigned char result[20];
+  char hash[9];
+  int card = -1;
+  if (snd_seq_client_info_get_type (cinfo) != SND_SEQ_KERNEL_CLIENT)
+    goto fallback;
+  #ifdef HAVE_GET_CLIENT_INFO_CARD
+  card = snd_seq_client_info_get_card (cinfo);
+  #endif
+  if (card == -1)
+    goto fallback;
+
+  udev = udev_new ();
+  if (!udev)
+    goto free_fallback;
+  query = udev_enumerate_new (udev);
+  if (!query)
+    goto free_fallback;
+  if (udev_enumerate_add_match_subsystem (query, "sound"))
+    goto free_fallback;
+  sprintf(cardid, "card%d", card);
+  if (udev_enumerate_add_match_sysname (query, cardid))
+    goto free_fallback;
+  if (udev_enumerate_scan_devices (query))
+    goto free_fallback;
+  list = udev_enumerate_get_list_entry(query);
+  if (!list)
+    goto free_fallback;
+  name = udev_list_entry_get_name(list);
+  end = name + strlen(name);
+  while(end > name && *(end - 1) != '/')
+	  end--;
+  SHA1_Init (&sha1);
+  SHA1_Update (&sha1, name, name - end);
+  SHA1_Final (result, &sha1);
+
+  for (unsigned i = 0; i < sizeof(hash) - 1; i++)
+    hash[i] = hexChar (result[i / 2] >> ((i % 2) ? 0 : 4));
+  hash[sizeof(hash) - 1] = 0;
+
+  udev_enumerate_unref(query);
+  udev_unref(udev);
+  return hash;
+
+ free_fallback:
+  udev_enumerate_unref(query);
+  udev_unref(udev);
+fallback:
+  return std::to_string (snd_seq_client_info_get_client( cinfo ));
+}
 
 // A structure to hold variables related to the ALSA API
 // implementation.
@@ -1422,7 +1492,7 @@ std::string MidiInAlsa :: getPortName( unsigned int portNumber )
     std::ostringstream os;
     os << snd_seq_client_info_get_name( cinfo );
     os << " ";                                    // These lines added to make sure devices are listed
-    os << snd_seq_port_info_get_client( pinfo );  // with full portnames added to ensure individual device names
+    os << mapAlsaDeviceNumber( cinfo) ;  // with full portnames added to ensure individual device names
     os << ":";
     os << snd_seq_port_info_get_port( pinfo );
     stringName = os.str();
@@ -1721,7 +1791,7 @@ std::string MidiOutAlsa :: getPortName( unsigned int portNumber )
     std::ostringstream os;
     os << snd_seq_client_info_get_name(cinfo);
     os << " ";                                    // These lines added to make sure devices are listed
-    os << snd_seq_port_info_get_client( pinfo );  // with full portnames added to ensure individual device names
+    os << mapAlsaDeviceNumber(cinfo);  // with full portnames added to ensure individual device names
     os << ":";
     os << snd_seq_port_info_get_port(pinfo);
     stringName = os.str();
