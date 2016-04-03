@@ -51,7 +51,7 @@ unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample)
 }
 
 void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, int attack_start, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, unsigned channels, 
-				       bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity, unsigned crossfade_length)
+				       bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity, unsigned loop_crossfade_length)
 {
 	std::vector<GO_WAVE_LOOP> loops;
 	unsigned attack_pos = attack_start;
@@ -65,7 +65,7 @@ void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, int a
 		    loop_list[i].start_sample >= loop_list[i].end_sample ||
 		    loop_list[i].end_sample >= wave.GetLength())
 			throw (wxString)_("Invalid loop defintion");
-		if(crossfade_length && loop_list[i].start_sample + REMAINING_AFTER_CROSSFADE + crossfade_length >= loop_list[i].end_sample)
+		if(loop_crossfade_length && loop_list[i].start_sample + REMAINING_AFTER_CROSSFADE + loop_crossfade_length >= loop_list[i].end_sample)
 			throw (wxString)_("Loop too short for a cross fade");
 	}
 
@@ -120,7 +120,7 @@ void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, int a
 	GOAudioSection* section = new GOAudioSection(m_pool);
 	m_Attack.push_back(section);
 	section->Setup(data + attack_pos * GetBytesPerSample(bits_per_sample) * channels, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, 
-		       channels, wave.GetSampleRate(), wave.GetLength(), &loops, compress, crossfade_length);
+		       channels, wave.GetSampleRate(), wave.GetLength(), &loops, compress, loop_crossfade_length);
 }
 
 void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, int release_end, unsigned bits_per_sample, unsigned channels, bool compress)
@@ -165,7 +165,7 @@ void GOSoundProviderWave::LoadPitch(const GOrgueFilename& filename)
 
 void GOSoundProviderWave::ProcessFile(const GOrgueFilename& filename, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, 
 				      unsigned max_playback_time, int attack_start, int cue_point, int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, 
-				      bool percussive, unsigned min_attack_velocity, bool use_pitch, unsigned crossfade_length)
+				      bool percussive, unsigned min_attack_velocity, bool use_pitch, unsigned loop_crossfade_length)
 {
 	wxLogDebug(_("Loading file %s"), filename.GetTitle().c_str());
 
@@ -201,7 +201,7 @@ void GOSoundProviderWave::ProcessFile(const GOrgueFilename& filename, std::vecto
 		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), wave_channels);
 
 		if (is_attack)
-			CreateAttack(data, wave, attack_start, loops, sample_group, bits_per_sample, channels, compress, loop_mode, percussive, min_attack_velocity, crossfade_length);
+			CreateAttack(data, wave, attack_start, loops, sample_group, bits_per_sample, channels, compress, loop_mode, percussive, min_attack_velocity, loop_crossfade_length);
 
 		if (is_release && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
 			CreateRelease(data, wave, sample_group, max_playback_time, cue_point, release_end, bits_per_sample, channels, compress);
@@ -216,8 +216,22 @@ void GOSoundProviderWave::ProcessFile(const GOrgueFilename& filename, std::vecto
 	}
 }
 
+unsigned GOSoundProviderWave::GetFaderLength(unsigned MidiKeyNumber)
+{
+	unsigned fade_length = 46;
+	if (MidiKeyNumber > 0 && MidiKeyNumber < 133 )
+	{
+		fade_length = 184 - (int)((((float)MidiKeyNumber - 42.0f) / 44.0f) * 178.0f);
+		if (MidiKeyNumber < 42 )
+			fade_length = 184;
+		if (MidiKeyNumber > 86 )
+			fade_length = 6;
+	}
+	return fade_length;
+}
+
 void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, unsigned bits_per_sample, int load_channels, bool compress, 
-				       loop_load_type loop_mode, unsigned attack_load, unsigned release_load, int midi_key_number, unsigned crossfade_length)
+				       loop_load_type loop_mode, unsigned attack_load, unsigned release_load, int midi_key_number, unsigned loop_crossfade_length, unsigned release_crossfase_length)
 {
 
 	ClearData();
@@ -318,7 +332,7 @@ void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, st
 				loops.push_back(loop);
 			}
 			ProcessFile(attacks[i].filename, loops, true, attacks[i].load_release, attacks[i].sample_group, attacks[i].max_playback_time, attacks[i].attack_start, attacks[i].cue_point,
-				    attacks[i].release_end, bits_per_sample, load_channels, compress, loop_mode, attacks[i].percussive, attacks[i].min_attack_velocity, load_first_attack, crossfade_length);
+				    attacks[i].release_end, bits_per_sample, load_channels, compress, loop_mode, attacks[i].percussive, attacks[i].min_attack_velocity, load_first_attack, loop_crossfade_length);
 			load_first_attack = false;
 		}
 
@@ -326,7 +340,7 @@ void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, st
 		{
 			std::vector<GO_WAVE_LOOP> loops;
 			ProcessFile(releases[i].filename, loops, false, true, releases[i].sample_group, releases[i].max_playback_time, 0, releases[i].cue_point, releases[i].release_end, 
-				    bits_per_sample, load_channels, compress, loop_mode, true, 0, false, crossfade_length);
+				    bits_per_sample, load_channels, compress, loop_mode, true, 0, false, loop_crossfade_length);
 		}
 
 		ComputeReleaseAlignmentInfo();
@@ -335,6 +349,10 @@ void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, st
 			m_MidiKeyNumber = midi_key_number;
 			m_MidiPitchFract = 0;
 		}
+		if (release_crossfase_length)
+			m_ReleaseCrossfadeLength = release_crossfase_length;
+		else
+			m_ReleaseCrossfadeLength = GetFaderLength(m_MidiKeyNumber);
 	}
 	catch (wxString error)
 	{

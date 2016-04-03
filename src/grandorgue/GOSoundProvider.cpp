@@ -40,7 +40,8 @@ GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
 	m_ReleaseInfo(),
 	m_pool(pool),
 	m_VelocityVolumeBase(1),
-	m_VelocityVolumeIncrement(0)
+	m_VelocityVolumeIncrement(0),
+	m_ReleaseCrossfadeLength(184)
 {
 	m_Gain = 0.0f;
 }
@@ -62,6 +63,8 @@ bool GOSoundProvider::LoadCache(GOrgueCache& cache)
 	if (!cache.Read(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber)))
 		return false;
 	if (!cache.Read(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
+		return false;
+	if (!cache.Read(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
 		return false;
 
 	unsigned attacks;
@@ -105,6 +108,8 @@ bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
 	if (!cache.Write(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber)))
 		return false;
 	if (!cache.Write(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
+		return false;
+	if (!cache.Write(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
 		return false;
 
 	unsigned attacks = m_Attack.size();
@@ -183,6 +188,11 @@ unsigned GOSoundProvider::GetMidiKeyNumber() const
 float GOSoundProvider::GetMidiPitchFract() const
 {
 	return m_MidiPitchFract;
+}
+
+unsigned GOSoundProvider::GetReleaseCrossfadeLength() const
+{
+	return m_ReleaseCrossfadeLength;
 }
 
 void GOSoundProvider::SetVelocityParameter(float min_volume, float max_volume)
