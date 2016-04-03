@@ -46,7 +46,8 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 	m_Percussive(percussive),
 	m_TemperamentOffset(0),
 	m_HarmonicNumber(harmonic_number),
-	m_CrossfadeLength(0),
+	m_LoopCrossfadeLength(0),
+	m_ReleaseCrossfadeLength(0),
 	m_PitchCorrection(pitch_correction),
 	m_MinVolume(min_volume),
 	m_MaxVolume(max_volume),
@@ -88,7 +89,8 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 	m_Filename = filename;
 	m_PipeConfig.Init(cfg, group, prefix);
 	m_SampleMidiKeyNumber = -1;
-	m_CrossfadeLength = 0;
+	m_LoopCrossfadeLength = 0;
+	m_ReleaseCrossfadeLength = 0;
 	UpdateAmplitude();
 	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
@@ -118,7 +120,8 @@ void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString 
 	m_SamplerGroupID = cfg.ReadInteger(ODFSetting, group, prefix + wxT("WindchestGroup"), 1, m_organfile->GetWindchestGroupCount(), false, m_SamplerGroupID);
 	m_Percussive = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("Percussive"), false, m_Percussive);
 	m_SampleMidiKeyNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MIDIKeyNumber"), -1, 127, false, -1);
-	m_CrossfadeLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("LoopCrossfadeLength"), 0, 120, false, 0);
+	m_LoopCrossfadeLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("LoopCrossfadeLength"), 0, 120, false, 0);
+	m_ReleaseCrossfadeLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseCrossfadeLength"), 0, 200, false, 0);
 	m_RetunePipe = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("AcceptsRetuning"), false, m_RetunePipe);
 	UpdateAmplitude();
 	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
@@ -156,7 +159,7 @@ void GOrgueSoundingPipe::LoadData()
 	{
 		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
 					     m_PipeConfig.GetEffectiveCompress(), (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(), m_PipeConfig.GetEffectiveAttackLoad(), m_PipeConfig.GetEffectiveReleaseLoad(),
-					     m_SampleMidiKeyNumber, m_CrossfadeLength);
+					     m_SampleMidiKeyNumber, m_LoopCrossfadeLength, m_LoopCrossfadeLength);
 		Validate();
 	}
 	catch(wxString str)
@@ -213,7 +216,8 @@ void GOrgueSoundingPipe::UpdateHash(GOrgueHash& hash)
 	hash.Update(m_PipeConfig.GetEffectiveAttackLoad());
 	hash.Update(m_PipeConfig.GetEffectiveReleaseLoad());
 	hash.Update(m_SampleMidiKeyNumber);
-	hash.Update(m_CrossfadeLength);
+	hash.Update(m_LoopCrossfadeLength);
+	hash.Update(m_ReleaseCrossfadeLength);
 
 	hash.Update(m_AttackInfo.size());
 	for(unsigned i = 0; i < m_AttackInfo.size(); i++)

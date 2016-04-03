@@ -47,7 +47,8 @@ private:
 	bool m_Percussive;
 	float m_TemperamentOffset;
 	unsigned m_HarmonicNumber;
-	unsigned m_CrossfadeLength;
+	unsigned m_LoopCrossfadeLength;
+	unsigned m_ReleaseCrossfadeLength;
 	float m_PitchCorrection;
 	float m_MinVolume;
 	float m_MaxVolume;

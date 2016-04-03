@@ -90,7 +90,6 @@ private:
 	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group);
 	void CreateReleaseSampler(GO_SAMPLER* sampler);
 	void SwitchAttackSampler(GO_SAMPLER* sampler);
-	unsigned GetFaderLength(unsigned MidiKeyNumber);
 	float GetRandomFactor();
 
 public:

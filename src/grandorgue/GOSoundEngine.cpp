@@ -183,20 +183,6 @@ float GOSoundEngine::GetRandomFactor()
 	return 1;
 }
 
-unsigned GOSoundEngine::GetFaderLength(unsigned MidiKeyNumber)
-{
-	unsigned fade_length = 46;
-	if (MidiKeyNumber > 0 && MidiKeyNumber < 133 )
-	{
-		fade_length = 184 - (int)((((float)MidiKeyNumber - 42.0f) / 44.0f) * 178.0f);
-		if (MidiKeyNumber < 42 )
-			fade_length = 184;
-		if (MidiKeyNumber > 86 )
-			fade_length = 6;
-	}
-	return fade_length;
-}
-
 void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group)
 {
 	if (audio_group >= m_AudioGroupCount)
@@ -448,7 +434,7 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 		handle->time = m_CurrentTime + 1;
 
 		float gain_target = this_pipe->GetGain() * section->GetNormGain();
-		unsigned cross_fade_len = GetFaderLength(this_pipe->GetMidiKeyNumber());
+		unsigned cross_fade_len = this_pipe->GetReleaseCrossfadeLength();
 		handle->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
 
 		section->InitAlignedStream(&handle->stream, &new_sampler->stream);
@@ -472,7 +458,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 	 * which will decay this portion of the pipe. The sampler will
 	 * automatically be placed back in the pool when the fade restores to
 	 * zero. */
-	unsigned cross_fade_len = GetFaderLength(handle->pipe->GetMidiKeyNumber());
+	unsigned cross_fade_len = handle->pipe->GetReleaseCrossfadeLength();
 	handle->fader.StartDecay(cross_fade_len, m_SampleRate);
 	handle->is_release = true;
 
@@ -549,7 +535,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 					}
 				}
 			}
-			unsigned cross_fade_len = GetFaderLength(this_pipe->GetMidiKeyNumber());
+			unsigned cross_fade_len = this_pipe->GetReleaseCrossfadeLength();
 			new_sampler->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
 
 			if (m_ReleaseLength > 0)

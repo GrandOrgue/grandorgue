@@ -61,6 +61,7 @@ protected:
 	void ComputeReleaseAlignmentInfo();
 	float m_VelocityVolumeBase;
 	float m_VelocityVolumeIncrement;
+	unsigned m_ReleaseCrossfadeLength;
 
 public:
 	GOSoundProvider(GOrgueMemoryPool& pool);
@@ -84,6 +85,7 @@ public:
 
 	unsigned GetMidiKeyNumber() const;
 	float GetMidiPitchFract() const;
+	unsigned GetReleaseCrossfadeLength() const;
 
 	float GetVelocityVolume(unsigned velocity) const;
 
