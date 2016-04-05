@@ -9389,7 +9389,7 @@ specified in samples.
           <term>Pipe999LoopCrossfadeLength</term>
           <listitem>
             <para>
-(int 0 - 120, default: 0) Crossfade length between loop start and loop
+(int 0 - 120, default: 0) Crossfade length in ms between loop start and loop
 end. A cross fade requires enough samples before the start of the loop.
 	    </para>
           </listitem>
@@ -9398,7 +9398,7 @@ end. A cross fade requires enough samples before the start of the loop.
           <term>Pipe999ReleaseCrossfadeLength</term>
           <listitem>
             <para>
-(int 0 - 200, default: 0) Crossfade length between loop and the
+(int 0 - 200, default: 0) Crossfade length in ms between loop and the
 release (or other attacks). 0 means automatic selection.
 	    </para>
           </listitem>
