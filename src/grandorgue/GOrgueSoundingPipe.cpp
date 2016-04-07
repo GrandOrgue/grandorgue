@@ -159,7 +159,7 @@ void GOrgueSoundingPipe::LoadData()
 	{
 		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
 					     m_PipeConfig.GetEffectiveCompress(), (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(), m_PipeConfig.GetEffectiveAttackLoad(), m_PipeConfig.GetEffectiveReleaseLoad(),
-					     m_SampleMidiKeyNumber, m_LoopCrossfadeLength, m_LoopCrossfadeLength);
+					     m_SampleMidiKeyNumber, m_LoopCrossfadeLength, m_ReleaseCrossfadeLength);
 		Validate();
 	}
 	catch(wxString str)
