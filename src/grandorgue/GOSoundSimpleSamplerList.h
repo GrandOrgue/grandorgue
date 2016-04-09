@@ -19,46 +19,52 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOSOUNDSAMPLERPOOL_H_
-#define GOSOUNDSAMPLERPOOL_H_
+#ifndef GOSOUNDSIMPLESAMPLERLIST_H
+#define GOSOUNDSIMPLESAMPLERLIST_H
 
-#include "GOSoundSimpleSamplerList.h"
+#include "GOSoundSampler.h"
 #include "atomic.h"
-#include "mutex.h"
-#include "ptrvector.h"
 
-class GO_SAMPLER;
-
-class GOSoundSamplerPool
+class GOSoundSimpleSamplerList
 {
-
 private:
-	GOMutex                 m_Lock;
-	atomic_uint m_SamplerCount;
-	unsigned                m_UsageLimit;
-	GOSoundSimpleSamplerList m_AvailableSamplers;
-	ptr_vector<GO_SAMPLER> m_Samplers;
-
+	atomic<GO_SAMPLER*> m_List;
 public:
-	GOSoundSamplerPool();
-	GO_SAMPLER* GetSampler();
-	void ReturnSampler(GO_SAMPLER* sampler);
-	void ReturnAll();
-	unsigned GetUsageLimit() const;
-	void SetUsageLimit(unsigned count);
-	unsigned UsedSamplerCount() const;
+	GOSoundSimpleSamplerList()
+	{
+		Clear();
+	}
+
+	void Clear()
+	{
+		m_List = 0;
+	}
+
+	GO_SAMPLER* Get()
+	{
+		do
+		{
+			GO_SAMPLER* sampler = m_List;
+			if (!sampler)
+				return NULL;
+			GO_SAMPLER* next = sampler->next;
+			if (m_List.compare_exchange(sampler, next))
+				return sampler;
+		}
+		while(true);
+	}
+
+	void Put(GO_SAMPLER* sampler)
+	{
+		do
+		{
+			GO_SAMPLER* current = m_List;
+			sampler->next = current;
+			if (m_List.compare_exchange(current, sampler))
+				return;
+		}
+		while(true);
+	}
 };
 
-inline
-unsigned GOSoundSamplerPool::GetUsageLimit() const
-{
-	return m_UsageLimit;
-}
-
-inline
-unsigned GOSoundSamplerPool::UsedSamplerCount() const
-{
-	return m_SamplerCount;
-}
-
-#endif /* GOSOUNDSAMPLERPOOL_H_ */
+#endif

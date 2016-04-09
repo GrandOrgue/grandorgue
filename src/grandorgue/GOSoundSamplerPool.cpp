@@ -29,7 +29,7 @@
 GOSoundSamplerPool::GOSoundSamplerPool() :
 	m_SamplerCount(0),
 	m_UsageLimit(0),
-	m_AvailableSamplers(NULL),
+	m_AvailableSamplers(),
 	m_Samplers()
 {
 	ReturnAll();
@@ -44,13 +44,10 @@ void GOSoundSamplerPool::ReturnAll()
 	if (m_Samplers.size() > m_UsageLimit)
 		m_Samplers.resize(m_UsageLimit);
 
-	if (m_Samplers.size())
-		m_AvailableSamplers.exchange(m_Samplers[0]);
-	else
-		m_AvailableSamplers.exchange(NULL);
+	m_AvailableSamplers.Clear();
 
 	for (unsigned i = 0; i < m_Samplers.size(); i++)
-		m_Samplers[i]->next = (i + 1 < m_Samplers.size() ? m_Samplers[i + 1] : NULL);
+		m_AvailableSamplers.Put(m_Samplers[i]);
 }
 
 void GOSoundSamplerPool::SetUsageLimit(unsigned count)
@@ -73,12 +70,7 @@ GO_SAMPLER* GOSoundSamplerPool::GetSampler()
 
 	if (m_SamplerCount < m_UsageLimit)
 	{
-		sampler = m_AvailableSamplers;
-		while (sampler)
-		{
-			if (m_AvailableSamplers.compare_exchange(sampler, sampler->next))
-				break;
-		}
+		sampler = m_AvailableSamplers.Get();
 		if (sampler)
 			m_SamplerCount.fetch_add(1);
 	}
@@ -91,10 +83,6 @@ void GOSoundSamplerPool::ReturnSampler(GO_SAMPLER* sampler)
 {
 	assert(m_SamplerCount > 0);
 	m_SamplerCount.fetch_add(-1);
-	do
-	{
-		sampler->next = m_AvailableSamplers;
-	}
-	while(!m_AvailableSamplers.compare_exchange(sampler->next, sampler));
+	m_AvailableSamplers.Put(sampler);
 }
 
