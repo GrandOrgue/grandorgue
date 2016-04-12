@@ -65,6 +65,11 @@ unsigned GOSoundWindchestWorkItem::GetCost()
 	return 0;
 }
 
+bool GOSoundWindchestWorkItem::GetRepeat()
+{
+	return false;
+}
+
 float GOSoundWindchestWorkItem::GetWindchestVolume()
 {
 	if (m_Windchest != NULL)

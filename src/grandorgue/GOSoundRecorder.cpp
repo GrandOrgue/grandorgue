@@ -228,6 +228,11 @@ unsigned GOSoundRecorder::GetCost()
 	return 0;
 }
 
+bool GOSoundRecorder::GetRepeat()
+{
+	return false;
+}
+
 void GOSoundRecorder::Run()
 {
 	if (!m_Recording)

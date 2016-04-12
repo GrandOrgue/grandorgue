@@ -43,6 +43,7 @@ public:
 
 	unsigned GetGroup();
 	unsigned GetCost();
+	bool GetRepeat();
 	void Run();
 	void Exec();
 
