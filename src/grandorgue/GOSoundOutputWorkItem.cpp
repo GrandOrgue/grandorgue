@@ -135,6 +135,11 @@ unsigned GOSoundOutputWorkItem::GetCost()
 	return 0;
 }
 
+bool GOSoundOutputWorkItem::GetRepeat()
+{
+	return false;
+}
+
 void GOSoundOutputWorkItem::SetupReverb(GOrgueSettings& settings)
 {
 	m_Reverb->Setup(settings);

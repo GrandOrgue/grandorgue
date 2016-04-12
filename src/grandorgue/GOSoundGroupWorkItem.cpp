@@ -81,6 +81,11 @@ unsigned GOSoundGroupWorkItem::GetCost()
 	return m_Active.GetCount() + m_Release.GetCount();
 }
 
+bool GOSoundGroupWorkItem::GetRepeat()
+{
+	return true;
+}
+
 void GOSoundGroupWorkItem::Run()
 {
 	if (m_Done == 3)

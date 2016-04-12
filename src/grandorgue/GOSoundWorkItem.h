@@ -31,6 +31,7 @@ public:
 
 	virtual unsigned GetGroup() = 0;
 	virtual unsigned GetCost() = 0;
+	virtual bool GetRepeat() = 0;
 	virtual void Run() = 0;
 	virtual void Exec() = 0;
 

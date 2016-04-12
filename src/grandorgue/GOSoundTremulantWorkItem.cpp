@@ -58,6 +58,11 @@ unsigned GOSoundTremulantWorkItem::GetCost()
 	return 0;
 }
 
+bool GOSoundTremulantWorkItem::GetRepeat()
+{
+	return false;
+}
+
 void GOSoundTremulantWorkItem::Run()
 {
 	if (m_Done)
