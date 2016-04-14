@@ -62,11 +62,7 @@ void GOSoundGroupWorkItem::ProcessList(GOSoundSamplerList& list, float* output_b
 		bool keep;
 		keep = m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, sampler->windchest->GetVolume());
 
-		if (!keep)
-		{
-			m_engine.ReturnSampler(sampler);
-		}
-		else
+		if (keep)
 			Add(sampler);
 	}
 }

@@ -89,11 +89,7 @@ void GOSoundTremulantWorkItem::Run()
 		bool keep;
 		keep = m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, 1);
 
-		if (!keep)
-		{
-			m_engine.ReturnSampler(sampler);
-		}
-		else
+		if (keep)
 			m_Samplers.Put(sampler);
 
 	}
