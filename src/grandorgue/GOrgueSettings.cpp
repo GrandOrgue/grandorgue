@@ -243,6 +243,9 @@ void GOrgueSettings::Load()
 
 		GOrgueSettingStore::Load(cfg);
 
+		if (Concurrency() == 0)
+			Concurrency(1);
+
 		count = cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
 		for(unsigned i = 0; i < count; i++)
 		{
