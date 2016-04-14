@@ -32,6 +32,7 @@ class GOSoundProvider;
 class GOSoundRecorder;
 class GOSoundGroupWorkItem;
 class GOSoundOutputWorkItem;
+class GOSoundReleaseWorkItem;
 class GOSoundTremulantWorkItem;
 class GOSoundWindchestWorkItem;
 class GOSoundWorkItem;
@@ -77,6 +78,7 @@ private:
 	ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
 	ptr_vector<GOSoundOutputWorkItem> m_AudioOutputs;
 	GOSoundRecorder* m_AudioRecorder;
+	GOSoundReleaseWorkItem* m_ReleaseProcessor;
 
 	GOSoundScheduler m_Scheduler;
 
@@ -128,6 +130,8 @@ public:
 	GOSoundScheduler& GetScheduler();
 
 	bool ProcessSampler(float *buffer, GO_SAMPLER* sampler, unsigned n_frames, float volume);
+	void ProcessRelease(GO_SAMPLER* sampler);
+	void PassSampler(GO_SAMPLER* sampler);
 	void ReturnSampler(GO_SAMPLER* sampler);
 	float GetGain();
 };

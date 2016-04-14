@@ -44,6 +44,7 @@ public:
 		AUDIOGROUP = 50,
 		AUDIOOUTPUT = 100,
 		AUDIORECORDER = 150,
+		RELEASE = 160,
 	};
 };
 

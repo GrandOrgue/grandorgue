@@ -27,6 +27,7 @@
 #include "GOSoundGroupWorkItem.h"
 #include "GOSoundOutputWorkItem.h"
 #include "GOSoundTremulantWorkItem.h"
+#include "GOSoundReleaseWorkItem.h"
 #include "GOSoundWindchestWorkItem.h"
 #include "GOrgueEvent.h"
 #include "GOrgueInt24.h"
@@ -59,11 +60,14 @@ GOSoundEngine::GOSoundEngine() :
 	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
 	m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
+	m_ReleaseProcessor = new GOSoundReleaseWorkItem(*this);
 	Reset();
 }
 
 GOSoundEngine::~GOSoundEngine()
 {
+	if (m_ReleaseProcessor)
+		delete m_ReleaseProcessor;
 }
 
 void GOSoundEngine::Reset()
@@ -81,6 +85,7 @@ void GOSoundEngine::Reset()
 	for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
 		m_Scheduler.Add(m_AudioOutputs[i]);
 	m_Scheduler.Add(m_AudioRecorder);
+	m_Scheduler.Add(m_ReleaseProcessor);
 	
 	m_UsedPolyphony = 0;
 
@@ -183,6 +188,22 @@ float GOSoundEngine::GetRandomFactor()
 	return 1;
 }
 
+void GOSoundEngine::PassSampler(GO_SAMPLER* sampler)
+{
+	if (sampler->sampler_group_id == 0)
+	{
+		m_AudioGroups[sampler->audio_group_id]->Add(sampler);
+	}
+	else if (sampler->sampler_group_id < 0)
+	{
+		m_Tremulants[-1-sampler->sampler_group_id]->Add(sampler);
+	}
+	else
+	{
+		m_AudioGroups[sampler->audio_group_id]->Add(sampler);
+	}
+}
+
 void GOSoundEngine::StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group)
 {
 	if (audio_group >= m_AudioGroupCount)
@@ -238,7 +259,6 @@ bool GOSoundEngine::ProcessSampler(float *output_buffer, GO_SAMPLER* sampler, un
 {
 	const unsigned block_time = n_frames;
 	float temp[n_frames * 2];
-	bool changed_sampler = false;
 	const bool process_sampler = (sampler->time <= m_CurrentTime);
 
 	if (process_sampler)
@@ -275,23 +295,36 @@ bool GOSoundEngine::ProcessSampler(float *output_buffer, GO_SAMPLER* sampler, un
 		for(unsigned i = 0; i < n_frames * 2; i++)
 			output_buffer[i] += temp[i];
 
-		if (sampler->stop && sampler->stop <= m_CurrentTime)
+		if ((sampler->stop && sampler->stop <= m_CurrentTime) ||
+		    (sampler->new_attack && sampler->new_attack <= m_CurrentTime))
 		{
-			CreateReleaseSampler(sampler);
-			sampler->stop = 0;
+			m_ReleaseProcessor->Add(sampler);
+			return false;
 		} 
-		else if (sampler->new_attack && sampler->new_attack <= m_CurrentTime)
-		{
-			SwitchAttackSampler(sampler);
-			sampler->new_attack = 0;
-			changed_sampler = true;
-		}
 	}
 
-	if (!sampler->pipe || (sampler->fader.IsSilent() && process_sampler && !changed_sampler))
+	if (!sampler->pipe || (sampler->fader.IsSilent() && process_sampler))
+	{
+		ReturnSampler(sampler);
 		return false;
+	}
 	else
 		return true;
+}
+
+void GOSoundEngine::ProcessRelease(GO_SAMPLER* sampler)
+{
+	if (sampler->stop)
+	{
+		CreateReleaseSampler(sampler);
+		sampler->stop = 0;
+	} 
+	else if (sampler->new_attack)
+	{
+		SwitchAttackSampler(sampler);
+		sampler->new_attack = 0;
+	}
+	PassSampler(sampler);
 }
 
 void GOSoundEngine::ReturnSampler(GO_SAMPLER* sampler)

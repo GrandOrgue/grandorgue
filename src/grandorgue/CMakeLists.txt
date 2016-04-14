@@ -73,6 +73,7 @@ GOSoundReverb.cpp
 GOSoundReverbEngine.cpp
 GOSoundReverbPartition.cpp
 GOSoundResample.cpp
+GOSoundReleaseWorkItem.cpp
 GOSoundSamplerPool.cpp
 GOSoundScheduler.cpp
 GOSoundThread.cpp
