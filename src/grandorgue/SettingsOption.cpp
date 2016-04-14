@@ -73,7 +73,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(m_Interpolation = new wxChoice(this, ID_INTERPOLATION, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
-	for (unsigned i = 0; i < MAX_CPU; i++)
+	for (unsigned i = 1; i < MAX_CPU; i++)
 		choices.push_back(wxString::Format(wxT("%d"), i));
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Concurrency Level:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_Concurrency = new wxChoice(this, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
@@ -101,7 +101,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item6->Add(m_RecordDownmix  = new wxCheckBox(this, ID_RECORD_DOWNMIX, _("Record stereo downmix")), 0, wxEXPAND | wxALL, 5);
 
 	m_Interpolation->Select(m_Settings.InterpolationType());
-	m_Concurrency->Select(m_Settings.Concurrency());
+	m_Concurrency->Select(m_Settings.Concurrency() - 1);
 	m_ReleaseConcurrency->Select(m_Settings.ReleaseConcurrency() - 1);
 	m_LoadConcurrency->Select(m_Settings.LoadConcurrency());
 	m_WaveFormat->Select(m_Settings.WaveFormatBytesPerSample() - 1);
@@ -231,7 +231,7 @@ void SettingsOption::Save()
 	m_Settings.RecordDownmix(m_RecordDownmix->IsChecked());
 	m_Settings.ScaleRelease(m_Scale->IsChecked());
 	m_Settings.RandomizeSpeaking(m_Random->IsChecked());
-	m_Settings.Concurrency(m_Concurrency->GetSelection());
+	m_Settings.Concurrency(m_Concurrency->GetSelection() + 1);
 	m_Settings.ReleaseConcurrency(m_ReleaseConcurrency->GetSelection() + 1);
 	m_Settings.LoadConcurrency(m_LoadConcurrency->GetSelection());
 	m_Settings.WaveFormatBytesPerSample(m_WaveFormat->GetSelection() + 1);
