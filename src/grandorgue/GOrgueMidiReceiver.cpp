@@ -524,6 +524,8 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 				if (m_events[i].type == MIDI_M_NOTE_NO_VELOCITY)
 				{
 					value = e.GetValue() ? 127 : 0;
+					if (e.GetMidiType() == MIDI_AFTERTOUCH)
+						continue;
 				}
 				else
 				{
