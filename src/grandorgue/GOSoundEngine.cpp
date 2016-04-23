@@ -473,6 +473,7 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 		section->InitAlignedStream(&handle->stream, &new_sampler->stream);
 		handle->is_release = false;
 		new_sampler->is_release = true;
+		new_sampler->time = m_CurrentTime;
 		new_sampler->fader.StartDecay(cross_fade_len, m_SampleRate);
 		new_sampler->fader.SetVelocityVolume(new_sampler->pipe->GetVelocityVolume(new_sampler->velocity));
 
@@ -606,6 +607,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 			}
 			new_sampler->fader.SetVelocityVolume(new_sampler->pipe->GetVelocityVolume(new_sampler->velocity));
 			StartSampler(new_sampler, windchest_index, handle->audio_group_id);
+			handle->time = m_CurrentTime;
 		}
 
 	}
