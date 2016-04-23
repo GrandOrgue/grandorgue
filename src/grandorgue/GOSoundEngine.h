@@ -134,6 +134,10 @@ public:
 	void PassSampler(GO_SAMPLER* sampler);
 	void ReturnSampler(GO_SAMPLER* sampler);
 	float GetGain();
+	uint64_t GetTime() const
+	{
+		return m_CurrentTime;
+	}
 };
 
 #endif /* GOSOUNDENGINE_H_ */
