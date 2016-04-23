@@ -33,6 +33,8 @@ class GOSoundReleaseWorkItem : public GOSoundWorkItem
 private:
 	GOSoundEngine& m_engine;
 	GOSoundSimpleSamplerList m_List;
+	atomic_uint m_Cnt;
+	volatile bool m_Stop;
 
 public:
 	GOSoundReleaseWorkItem(GOSoundEngine& sound_engine);
