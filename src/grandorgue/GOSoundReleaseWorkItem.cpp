@@ -24,7 +24,8 @@
 #include "GOSoundEngine.h"
 
 GOSoundReleaseWorkItem::GOSoundReleaseWorkItem(GOSoundEngine& sound_engine) :
-	m_engine(sound_engine)
+	m_engine(sound_engine),
+	m_Stop(false)
 {
 }
 
@@ -50,6 +51,8 @@ void GOSoundReleaseWorkItem::Clear()
 
 void GOSoundReleaseWorkItem::Reset()
 {
+	m_Stop = false;
+	m_Cnt = 0;
 }
 
 void GOSoundReleaseWorkItem::Add(GO_SAMPLER* sampler)
@@ -62,11 +65,18 @@ void GOSoundReleaseWorkItem::Run()
 	GO_SAMPLER* sampler;
 	while((sampler = m_List.Get()))
 	{
+		m_Cnt.fetch_add(1);
 		m_engine.ProcessRelease(sampler);
+		if (m_Stop && m_Cnt > 10)
+			break;
 	}
 }
 
 void GOSoundReleaseWorkItem::Exec()
 {
+	m_Stop = true;
 	Run();
+	GO_SAMPLER* sampler;
+	while((sampler = m_List.Get()))
+		m_engine.PassSampler(sampler);
 }
