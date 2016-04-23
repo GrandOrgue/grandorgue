@@ -61,10 +61,21 @@ void GOSoundGroupWorkItem::ProcessList(GOSoundSamplerList& list, float* output_b
 {
 	for (GO_SAMPLER* sampler = list.Get(); sampler; sampler = list.Get())
 	{
-		bool keep;
-		keep = m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, sampler->windchest->GetVolume());
+		if (m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, sampler->windchest->GetVolume()))
+			Add(sampler);
+	}
+}
 
-		if (keep)
+void GOSoundGroupWorkItem::ProcessReleaseList(GOSoundSamplerList& list, float* output_buffer)
+{
+	for (GO_SAMPLER* sampler = list.Get(); sampler; sampler = list.Get())
+	{
+		if (m_Stop && sampler->time + 2000 < m_engine.GetTime())
+		{
+			m_engine.ReturnSampler(sampler);
+			continue;
+		}
+		if (m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, sampler->windchest->GetVolume()))
 			Add(sampler);
 	}
 }
@@ -106,7 +117,7 @@ void GOSoundGroupWorkItem::Run()
 	float buffer[m_SamplesPerBuffer * 2];
 	memset(buffer, 0, m_SamplesPerBuffer * 2 * sizeof(float));
 	ProcessList(m_Active, buffer);
-	ProcessList(m_Release, buffer);
+	ProcessReleaseList(m_Release, buffer);
 	{
 		GOMutexLocker locker(m_Mutex);
 		if (m_Done == 1)

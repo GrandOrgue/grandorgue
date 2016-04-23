@@ -42,6 +42,7 @@ private:
 	volatile bool m_Stop;
 
 	void ProcessList(GOSoundSamplerList& list, float* output_buffer);
+	void ProcessReleaseList(GOSoundSamplerList& list, float* output_buffer);
 
 public:
 	GOSoundGroupWorkItem(GOSoundEngine& sound_engine, unsigned samples_per_buffer);
