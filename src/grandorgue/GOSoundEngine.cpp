@@ -404,7 +404,7 @@ void GOSoundEngine::SetupReverb(GOrgueSettings& settings)
 
 void GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output, bool last)
 {
-	m_AudioOutputs[audio_output + 1]->Finish();
+	m_AudioOutputs[audio_output + 1]->Finish(last);
 	memcpy(output_buffer, m_AudioOutputs[audio_output + 1]->m_Buffer, sizeof(float) * n_frames * m_AudioOutputs[audio_output + 1]->GetChannels());
 }
 

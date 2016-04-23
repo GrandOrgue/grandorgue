@@ -202,7 +202,7 @@ void GOSoundRecorder::ConvertData()
 	T* buf = (T*)m_Buffer;
 	for(unsigned i = 0; i < m_Outputs.size(); i++)
 	{
-		m_Outputs[i]->Finish();
+		m_Outputs[i]->Finish(m_Stop);
 	
 		unsigned pos = start_pos;
 		unsigned inc = m_Channels - m_Outputs[i]->GetChannels();
@@ -267,6 +267,7 @@ void GOSoundRecorder::Run()
 
 void GOSoundRecorder::Exec()
 {
+	m_Stop = true;
 	Run();
 }
 
@@ -280,4 +281,5 @@ void GOSoundRecorder::Reset()
 {
 	GOMutexLocker locker(m_Mutex);
 	m_Done = false;
+	m_Stop = false;
 }

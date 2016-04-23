@@ -30,7 +30,8 @@ GOSoundGroupWorkItem::GOSoundGroupWorkItem(GOSoundEngine& sound_engine, unsigned
 	m_engine(sound_engine),
 	m_Condition(m_Mutex),
 	m_ActiveCount(0),
-	m_Done(0)
+	m_Done(0),
+	m_Stop(false)
 {
 }
 
@@ -39,6 +40,7 @@ void GOSoundGroupWorkItem::Reset()
 	GOMutexLocker locker(m_Mutex);
 	m_Done = 0;
 	m_ActiveCount = 0;
+	m_Stop = false;
 }
 
 void GOSoundGroupWorkItem::Clear()
@@ -128,11 +130,14 @@ void GOSoundGroupWorkItem::Run()
 
 void GOSoundGroupWorkItem::Exec()
 {
+	m_Stop = true;
 	Run();
 }
 
-void GOSoundGroupWorkItem::Finish()
+void GOSoundGroupWorkItem::Finish(bool stop)
 {
+	if (stop)
+		m_Stop = true;
 	Run();
 	if (m_Done == 3)
 		return;

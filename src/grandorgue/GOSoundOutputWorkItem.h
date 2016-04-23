@@ -40,6 +40,7 @@ private:
 	GOSoundReverb* m_Reverb;
 	GOMutex m_Mutex;
 	unsigned m_Done;
+	volatile bool m_Stop;
 
 public:
 	GOSoundOutputWorkItem(unsigned channels, std::vector<float> scale_factors, unsigned samples_per_buffer);
@@ -52,7 +53,7 @@ public:
 	bool GetRepeat();
 	void Run();
 	void Exec();
-	void Finish();
+	void Finish(bool stop);
 
 	void Clear();
 	void Reset();
