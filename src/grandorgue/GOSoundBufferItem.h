@@ -40,7 +40,7 @@ public:
 		delete[] m_Buffer;
 	}
 
-	virtual void Finish() = 0;
+	virtual void Finish(bool stop) = 0;
 
 	float* m_Buffer;
 

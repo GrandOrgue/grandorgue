@@ -68,7 +68,7 @@ void GOSoundOutputWorkItem::Run()
 				continue;
 
 			float* this_buff = m_Outputs[j / 2]->m_Buffer;
-			m_Outputs[j / 2]->Finish();
+			m_Outputs[j / 2]->Finish(m_Stop);
 
 			for (unsigned k = i, l = j % 2; k < m_SamplesPerBuffer * m_Channels; k += m_Channels, l+= 2)
 				m_Buffer[k] += factor * this_buff[l];
@@ -100,8 +100,10 @@ void GOSoundOutputWorkItem::Exec()
 	Run();
 }
 
-void GOSoundOutputWorkItem::Finish()
+void GOSoundOutputWorkItem::Finish(bool stop)
 {
+	if (stop)
+		m_Stop = true;
 	if (!m_Done)
 		Run();
 }
@@ -123,6 +125,7 @@ void GOSoundOutputWorkItem::Reset()
 {
 	GOMutexLocker locker(m_Mutex);
 	m_Done = false;
+	m_Stop = false;
 }
 
 unsigned GOSoundOutputWorkItem::GetGroup()

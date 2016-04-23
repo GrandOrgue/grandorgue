@@ -44,6 +44,7 @@ private:
 	unsigned m_SamplesPerBuffer;
 	bool m_Recording;
 	bool m_Done;
+	volatile bool m_Stop;
 	std::vector<GOSoundBufferItem*> m_Outputs;
 	char* m_Buffer;
 

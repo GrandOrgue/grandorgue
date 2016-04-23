@@ -39,6 +39,7 @@ private:
 	GOCondition m_Condition;
 	unsigned m_ActiveCount;
 	unsigned m_Done;
+	volatile bool m_Stop;
 
 	void ProcessList(GOSoundSamplerList& list, float* output_buffer);
 
@@ -50,7 +51,7 @@ public:
 	bool GetRepeat();
 	void Run();
 	void Exec();
-	void Finish();
+	void Finish(bool stop);
 
 	void Reset();
 	void Clear();
