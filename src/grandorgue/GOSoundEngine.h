@@ -125,7 +125,7 @@ public:
 	void SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
 	void UpdateVelocity(GO_SAMPLER* handle, unsigned velocity);
 
-	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output);
+	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output, bool last);
 	void NextPeriod();
 	GOSoundScheduler& GetScheduler();
 

@@ -39,6 +39,8 @@
 GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	logSoundErrors(true),
 	m_AudioOutputs(),
+	m_WaitCount(),
+	m_CalcCount(),
 	m_SamplesPerBuffer(0),
 	meter_counter(0),
 	m_defaultAudioDevice(),
@@ -195,6 +197,7 @@ void GOrgueSound::StartStreams()
 		throw wxString::Format(_("Cannot use buffer size above %d samples; unacceptable quantization would occur."), MAX_FRAME_SIZE);
 
 	m_WaitCount.exchange(0);
+	m_CalcCount.exchange(0);
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 	{
 		GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
@@ -393,7 +396,8 @@ bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsign
 	if (device->wait && device->waiting)
 		device->condition.Wait();
 
-	m_SoundEngine.GetAudioOutput(output_buffer, n_frames, dev_index);
+	unsigned cnt = m_CalcCount.fetch_add(1);
+	m_SoundEngine.GetAudioOutput(output_buffer, n_frames, dev_index, cnt + 1>= m_AudioOutputs.size());
 	device->wait = true;
 	unsigned count = m_WaitCount.fetch_add(1);
 
@@ -407,6 +411,7 @@ bool GOrgueSound::AudioCallback(unsigned dev_index, float* output_buffer, unsign
 			for(unsigned i = 0; i < m_Threads.size(); i++)
 				m_Threads[i]->Wakeup();
 		}
+		m_CalcCount.exchange(0);
 		m_WaitCount.exchange(0);
 
 		for(unsigned i = 0; i < m_AudioOutputs.size(); i++)

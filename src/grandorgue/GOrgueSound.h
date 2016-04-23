@@ -84,6 +84,7 @@ private:
 
 	std::vector<GO_SOUND_OUTPUT> m_AudioOutputs;
 	atomic_uint m_WaitCount;
+	atomic_uint m_CalcCount;
 
 	unsigned m_SamplesPerBuffer;
 
