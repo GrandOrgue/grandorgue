@@ -23,6 +23,7 @@
 #define GORGUEENCLOSURE_H_
 
 #include "GOrgueEventHandler.h"
+#include "GOrgueKeyReceiver.h"
 #include "GOrgueMidiConfigurator.h"
 #include "GOrgueMidiReceiver.h"
 #include "GOrgueMidiSender.h"
@@ -41,6 +42,7 @@ class GOrgueEnclosure : private GOrgueEventHandler, private GOrgueSaveableObject
 private:
 	GOrgueMidiReceiver m_midi;
 	GOrgueMidiSender m_sender;
+	GOrgueKeyReceiver m_shortcut;
 	GrandOrgueFile* m_organfile;
 	int m_AmpMinimumLevel;
 	int m_MIDIInputNumber;

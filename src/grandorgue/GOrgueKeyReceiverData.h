@@ -24,12 +24,20 @@
 
 typedef enum {
 	KEY_RECV_BUTTON,
+	KEY_RECV_ENCLOSURE,
 } KEY_RECEIVER_TYPE;
+
+typedef enum {
+	KEY_MATCH_NONE,
+	KEY_MATCH,
+	KEY_MATCH_MINUS,
+} KEY_MATCH_TYPE;
 
 class GOrgueKeyReceiverData {
 protected:
 	KEY_RECEIVER_TYPE m_type;
 	unsigned m_ShortcutKey;
+	unsigned m_MinusKey;
 
 public:
 	GOrgueKeyReceiverData(KEY_RECEIVER_TYPE type);
@@ -39,6 +47,8 @@ public:
 
 	unsigned GetShortcut();
 	void SetShortcut(unsigned key);
+	unsigned GetMinusKey();
+	void SetMinusKey(unsigned key);
 };
 
 #endif

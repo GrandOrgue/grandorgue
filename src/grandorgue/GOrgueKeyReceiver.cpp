@@ -33,20 +33,38 @@ GOrgueKeyReceiver::GOrgueKeyReceiver(GrandOrgueFile* organfile, KEY_RECEIVER_TYP
 
 void GOrgueKeyReceiver::Load(GOrgueConfigReader& cfg, wxString group)
 {
-	m_ShortcutKey = cfg.ReadInteger(ODFSetting, group, wxT("ShortcutKey"), 0, 255, false, m_ShortcutKey);
-	m_ShortcutKey = cfg.ReadInteger(CMBSetting, group, wxT("ShortcutKey"), 0, 255, false, m_ShortcutKey);
+	if (m_type == KEY_RECV_ENCLOSURE)
+	{
+		m_ShortcutKey = cfg.ReadInteger(CMBSetting, group, wxT("PlusKey"), 0, 255, false, 0);
+		m_MinusKey = cfg.ReadInteger(CMBSetting, group, wxT("MinusKey"), 0, 255, false, 0);
+	}
+	else
+	{
+		m_ShortcutKey = cfg.ReadInteger(ODFSetting, group, wxT("ShortcutKey"), 0, 255, false, m_ShortcutKey);
+		m_ShortcutKey = cfg.ReadInteger(CMBSetting, group, wxT("ShortcutKey"), 0, 255, false, m_ShortcutKey);
+	}
 }
 
 void GOrgueKeyReceiver::Save(GOrgueConfigWriter& cfg, wxString group)
 {
-	cfg.WriteInteger(group, wxT("ShortcutKey"), m_ShortcutKey);
+	if (m_type == KEY_RECV_ENCLOSURE)
+	{
+		cfg.WriteInteger(group, wxT("PlusKey"), m_ShortcutKey);
+		cfg.WriteInteger(group, wxT("MinusKey"), m_MinusKey);
+	}
+	else
+	{
+		cfg.WriteInteger(group, wxT("ShortcutKey"), m_ShortcutKey);
+	}
 }
 
-bool GOrgueKeyReceiver::Match(unsigned key)
+KEY_MATCH_TYPE GOrgueKeyReceiver::Match(unsigned key)
 {
 	if (m_ShortcutKey == key)
-		return true;
-	return false;
+		return KEY_MATCH;
+	if (m_MinusKey == key)
+		return KEY_MATCH_MINUS;
+	return KEY_MATCH_NONE;
 }
 
 void GOrgueKeyReceiver::Assign(const GOrgueKeyReceiverData& data)

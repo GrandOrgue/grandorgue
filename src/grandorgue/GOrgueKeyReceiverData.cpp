@@ -23,7 +23,8 @@
 
 GOrgueKeyReceiverData::GOrgueKeyReceiverData(KEY_RECEIVER_TYPE type) :
 	m_type(type),
-	m_ShortcutKey(0)
+	m_ShortcutKey(0),
+	m_MinusKey(0)
 {
 }
 
@@ -44,4 +45,14 @@ unsigned GOrgueKeyReceiverData::GetShortcut()
 void GOrgueKeyReceiverData::SetShortcut(unsigned key)
 {
 	m_ShortcutKey = key;
+}
+
+unsigned GOrgueKeyReceiverData::GetMinusKey()
+{
+	return m_MinusKey;
+}
+
+void GOrgueKeyReceiverData::SetMinusKey(unsigned key)
+{
+	m_MinusKey = key;
 }
