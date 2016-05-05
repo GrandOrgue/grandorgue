@@ -45,6 +45,7 @@ public:
 	volatile unsigned long     stop;
 	volatile unsigned long     new_attack;
 	bool                       is_release;
+	unsigned                   drop_counter;
 };
 
 #endif /* GOSOUNDSAMPLER_H_ */
