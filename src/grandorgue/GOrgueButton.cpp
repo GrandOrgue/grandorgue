@@ -31,7 +31,7 @@ GOrgueButton::GOrgueButton(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE midi_ty
 	m_organfile(organfile),
 	m_midi(organfile, midi_type),
 	m_sender(organfile, MIDI_SEND_BUTTON),
-	m_shortcut(organfile),
+	m_shortcut(organfile, KEY_RECV_BUTTON),
 	m_Pushbutton(pushbutton),
 	m_Displayed(false),
 	m_Name(),
