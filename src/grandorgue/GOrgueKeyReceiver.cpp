@@ -25,8 +25,8 @@
 #include "GOrgueConfigWriter.h"
 #include "GrandOrgueFile.h"
 
-GOrgueKeyReceiver::GOrgueKeyReceiver(GrandOrgueFile* organfile) :
-	GOrgueKeyReceiverData(),
+GOrgueKeyReceiver::GOrgueKeyReceiver(GrandOrgueFile* organfile, KEY_RECEIVER_TYPE type) :
+	GOrgueKeyReceiverData(type),
 	m_organfile(organfile)
 {
 }

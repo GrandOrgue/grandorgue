@@ -34,7 +34,7 @@ private:
 	GrandOrgueFile* m_organfile;
 
 public:
-	GOrgueKeyReceiver(GrandOrgueFile* organfile);
+	GOrgueKeyReceiver(GrandOrgueFile* organfile, KEY_RECEIVER_TYPE type);
 
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg, wxString group);

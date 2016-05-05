@@ -22,13 +22,20 @@
 #ifndef GORGUEKEYRECEIVERDATA_H
 #define GORGUEKEYRECEIVERDATA_H
 
+typedef enum {
+	KEY_RECV_BUTTON,
+} KEY_RECEIVER_TYPE;
+
 class GOrgueKeyReceiverData {
 protected:
+	KEY_RECEIVER_TYPE m_type;
 	unsigned m_ShortcutKey;
 
 public:
-	GOrgueKeyReceiverData();
+	GOrgueKeyReceiverData(KEY_RECEIVER_TYPE type);
 	virtual ~GOrgueKeyReceiverData();
+
+	KEY_RECEIVER_TYPE GetType() const;
 
 	unsigned GetShortcut();
 	void SetShortcut(unsigned key);

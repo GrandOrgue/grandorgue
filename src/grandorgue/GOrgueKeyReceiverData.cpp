@@ -21,13 +21,19 @@
 
 #include "GOrgueKeyReceiverData.h"
 
-GOrgueKeyReceiverData::GOrgueKeyReceiverData() :
+GOrgueKeyReceiverData::GOrgueKeyReceiverData(KEY_RECEIVER_TYPE type) :
+	m_type(type),
 	m_ShortcutKey(0)
 {
 }
 
 GOrgueKeyReceiverData::~GOrgueKeyReceiverData()
 {
+}
+
+KEY_RECEIVER_TYPE GOrgueKeyReceiverData::GetType() const
+{
+	return m_type;
 }
 
 unsigned GOrgueKeyReceiverData::GetShortcut()
