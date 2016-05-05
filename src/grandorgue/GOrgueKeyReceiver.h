@@ -39,7 +39,7 @@ public:
 	void Load(GOrgueConfigReader& cfg, wxString group);
 	void Save(GOrgueConfigWriter& cfg, wxString group);
 
-	bool Match(unsigned key);
+	KEY_MATCH_TYPE Match(unsigned key);
 
 	void Assign(const GOrgueKeyReceiverData& data);
 };

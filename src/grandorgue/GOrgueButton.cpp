@@ -107,8 +107,15 @@ void GOrgueButton::HandleKey(int key)
 {
 	if (m_ReadOnly)
 		return;
-	if (m_shortcut.Match(key))
+	switch (m_shortcut.Match(key))
+	{
+	case KEY_MATCH:
 		Push();
+		break;
+
+	default:
+		break;
+	}
 }
 
 void GOrgueButton::Push()

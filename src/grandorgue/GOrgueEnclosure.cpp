@@ -31,6 +31,7 @@
 GOrgueEnclosure::GOrgueEnclosure(GrandOrgueFile* organfile) :
 	m_midi(organfile, MIDI_RECV_ENCLOSURE),
 	m_sender(organfile, MIDI_SEND_ENCLOSURE),
+	m_shortcut(organfile, KEY_RECV_ENCLOSURE),
 	m_organfile(organfile),
 	m_AmpMinimumLevel(0),
 	m_MIDIInputNumber(0),
@@ -56,6 +57,7 @@ void GOrgueEnclosure::Init(GOrgueConfigReader& cfg, wxString group, wxString Nam
 	Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, false, def_value));
 	m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+	m_shortcut.Load(cfg, m_group);
 	m_AmpMinimumLevel = 1;
 }
 
@@ -72,12 +74,14 @@ void GOrgueEnclosure::Load(GOrgueConfigReader& cfg, wxString group, int enclosur
 	m_midi.SetIndex(enclosure_nb);
 	m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+	m_shortcut.Load(cfg, m_group);
 }
 
 void GOrgueEnclosure::Save(GOrgueConfigWriter& cfg)
 {
 	m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 	m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+	m_shortcut.Save(cfg, m_group);
 	cfg.WriteInteger(m_group, wxT("Value"), m_MIDIValue);
 }
 
@@ -118,6 +122,18 @@ void GOrgueEnclosure::ProcessMidi(const GOrgueMidiEvent& event)
 
 void GOrgueEnclosure::HandleKey(int key)
 {
+	switch(m_shortcut.Match(key))
+	{
+	case KEY_MATCH:
+		Set(m_MIDIValue + 8);
+		break;
+
+	case KEY_MATCH_MINUS:
+		Set(m_MIDIValue - 8);
+		break;
+	default:
+		break;
+	}
 }
 
 const wxString& GOrgueEnclosure::GetName()
@@ -178,5 +194,5 @@ void GOrgueEnclosure::ShowConfigDialog()
 {
 	wxString title = wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType().c_str(), GetMidiName().c_str());
 
-	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, &m_midi, &m_sender, NULL);
+	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, &m_midi, &m_sender, &m_shortcut);
 }

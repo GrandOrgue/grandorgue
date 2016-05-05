@@ -36,14 +36,22 @@ private:
 	GOrgueKeyReceiverData m_key;
 	wxChoice *m_keyselect;
 	wxToggleButton* m_listen;
+	wxChoice *m_keyminusselect;
+	wxToggleButton* m_minuslisten;
 
 	void OnKeyDown(wxKeyEvent& event);
 	void OnListenClick(wxCommandEvent& event);
+	void OnMinusListenClick(wxCommandEvent& event);
+
+	void Listen(bool enable);
+	void FillKeylist(wxChoice* select, unsigned shortcut);
 
 protected:
 	enum {
 		ID_KEY_SELECT = 200,
+		ID_MINUS_KEY_SELECT,
 		ID_LISTEN,
+		ID_LISTEN_MINUS,
 	};
 public:
 	MIDIEventKeyDialog (wxWindow* parent, GOrgueKeyReceiver* event);
