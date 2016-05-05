@@ -72,9 +72,13 @@ void GOSoundGroupWorkItem::ProcessReleaseList(GOSoundSamplerList& list, float* o
 	{
 		if (m_Stop && sampler->time + 2000 < m_engine.GetTime())
 		{
-			m_engine.ReturnSampler(sampler);
-			continue;
+			if (sampler->drop_counter++ > 3)
+			{
+				m_engine.ReturnSampler(sampler);
+				continue;
+			}
 		}
+		sampler->drop_counter = 0;
 		if (m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, sampler->windchest->GetVolume()))
 			Add(sampler);
 	}

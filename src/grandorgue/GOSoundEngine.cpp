@@ -264,12 +264,9 @@ bool GOSoundEngine::ProcessSampler(float *output_buffer, GO_SAMPLER* sampler, un
 	if (process_sampler)
 	{
 
-		if  (
-		     (m_PolyphonyLimiting) &&
-		     (sampler->is_release) &&
-		     (m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit) &&
-		     (m_CurrentTime - sampler->time > 172 * 16)
-		     )
+		if  (sampler->is_release &&
+		     ((m_PolyphonyLimiting && m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit && m_CurrentTime - sampler->time > 172 * 16) ||
+		      sampler->drop_counter > 1))
 			sampler->fader.StartDecay(370, m_SampleRate); /* Approx 0.37s at 44.1kHz */
 
 		if (sampler->stop && sampler->stop <= m_CurrentTime && sampler->stop - sampler->time <= block_time)
