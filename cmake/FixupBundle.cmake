@@ -27,6 +27,7 @@ set(UNIX   )
 set(CYGWIN )
 set(WIN32  )
 include("${statusfile}")
+set(BU_CHMOD_BUNDLE_ITEMS ON)
 
 fixup_bundle("${target}"  ""  "${searchdirs}")
 
