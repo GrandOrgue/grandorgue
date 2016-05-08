@@ -101,7 +101,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 				ainfo.release_end = -1;
 				ainfo.loops.clear();
 				attack.push_back(ainfo);
-				w->LoadFromFile(attack, release, bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1, 0);
+				w->LoadFromFile(attack, release, bits_per_sample, 2, compress, LOOP_LOAD_ALL, 1, 1, -1, 0, 0);
 				pipes.push_back(w);
 			}
 			engine->SetSamplesPerBuffer(samples_per_frame);
@@ -147,7 +147,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 			{
 				for(unsigned i = 0; i < batch_size; i++)
 				{
-					engine->GetAudioOutput(output_buffer, samples_per_frame, 0);
+					engine->GetAudioOutput(output_buffer, samples_per_frame, 0, false);
 					engine->NextPeriod();
 					blocks++;
 				}
