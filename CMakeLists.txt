@@ -178,7 +178,7 @@ else()
 endif()
 
 add_subdirectory(src/build)
-add_subdirectory(src/grandorgue bin)
+add_subdirectory(src/grandorgue)
 add_subdirectory(po)
 add_subdirectory(help)
 add_subdirectory(sounds)
