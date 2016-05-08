@@ -1,0 +1,25 @@
+{
+    "package": {
+        "name": "grandorgue",
+        "repo": "generic",
+        "subject": "e9925248"
+    },
+
+    "version": {
+        "name": "0.3.1.X"
+    },
+    "files":
+        [
+          {
+           "includePattern": "\./(GrandOrgue-0\.3\.1\..*\.tar\.gz)",
+           "uploadPattern": "$1",
+           "matrixParams": { "override": 1 }
+          },
+          {
+           "includePattern": "\./(GrandOrgue-0\.3\.1\..*\.dmg)",
+           "uploadPattern": "$1",
+           "matrixParams": { "override": 1 }
+          }
+        ],
+    "publish": true
+}
