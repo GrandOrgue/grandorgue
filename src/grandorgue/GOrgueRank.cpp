@@ -47,7 +47,7 @@ GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_MaxVolume(100),
 	m_RetuneRank(true),
 	m_sender(organfile, MIDI_SEND_MANUAL),
-	m_PipeConfig(&organfile->GetPipeConfig(), organfile, NULL)
+	m_PipeConfig(NULL, organfile, NULL)
 {
 	m_organfile->RegisterMidiConfigurator(this);
 }
@@ -64,7 +64,7 @@ void GOrgueRank::Resize()
 		m_Velocities[i].resize(m_StopCount);
 }
 
-void GOrgueRank::Init(GOrgueConfigReader& cfg, wxString group, wxString name, int first_midi_note_number, unsigned windchest)
+void GOrgueRank::Init(GOrgueConfigReader& cfg, wxString group, wxString name, int first_midi_note_number, unsigned windchest_nr)
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
@@ -73,7 +73,7 @@ void GOrgueRank::Init(GOrgueConfigReader& cfg, wxString group, wxString name, in
 	m_Name = name;
 
 	m_PipeConfig.Init(cfg, group, wxEmptyString);
-	m_WindchestGroup = windchest;
+	m_WindchestGroup = windchest_nr;
 	m_Percussive = false;
 	m_HarmonicNumber = 8;
 	m_PitchCorrection = 0;
@@ -81,7 +81,9 @@ void GOrgueRank::Init(GOrgueConfigReader& cfg, wxString group, wxString name, in
 	m_MaxVolume = 100;
 	m_RetuneRank = false;
 
-	m_organfile->GetWindchest(m_WindchestGroup - 1)->AddRank(this);
+	GOrgueWindchest* windchest = m_organfile->GetWindchest(m_WindchestGroup - 1);
+	windchest->AddRank(this);
+	m_PipeConfig.SetParent(&windchest->GetPipeConfig());
 
 	m_Pipes.clear();
 	m_sender.Load(cfg, group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
@@ -107,7 +109,9 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 	m_MaxVolume                            = cfg.ReadFloat(ODFSetting, group, wxT("MaxVelocityVolume"), 0, 1000, false, 100);
 	m_RetuneRank = cfg.ReadBoolean(ODFSetting, group, wxT("AcceptsRetuning"), false, true);
 
-	m_organfile->GetWindchest(m_WindchestGroup - 1)->AddRank(this);
+	GOrgueWindchest* windchest = m_organfile->GetWindchest(m_WindchestGroup - 1);
+	windchest->AddRank(this);
+	m_PipeConfig.SetParent(&windchest->GetPipeConfig());
 
 	m_Pipes.clear();
 	for (unsigned i = 0; i < number_of_logical_pipes; i++)

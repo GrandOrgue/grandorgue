@@ -35,7 +35,8 @@ GOrgueWindchest::GOrgueWindchest(GrandOrgueFile* organfile) :
 	m_enclosure(0),
 	m_tremulant(0),
 	m_ranks(0),
-	m_pipes(0)
+	m_pipes(0),
+	m_PipeConfig(&organfile->GetPipeConfig(), organfile, NULL)
 {
 	m_organfile->RegisterPlaybackStateHandler(this);
 }
@@ -45,6 +46,8 @@ void GOrgueWindchest::Init(GOrgueConfigReader& cfg, wxString group, wxString nam
 	m_enclosure.resize(0);
 	m_tremulant.resize(0);
 	m_Name = name;
+	m_PipeConfig.Init(cfg, group, wxEmptyString);
+	m_PipeConfig.SetName(GetName());
 }
 
 
@@ -70,6 +73,8 @@ void GOrgueWindchest::Load(GOrgueConfigReader& cfg, wxString group, unsigned ind
 	}
 
 	m_Name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), false, wxString::Format(_("Windchest %d"), index + 1));
+	m_PipeConfig.Init(cfg, group, wxEmptyString);
+	m_PipeConfig.SetName(GetName());
 }
 
 void GOrgueWindchest::UpdateVolume()
@@ -123,6 +128,11 @@ void GOrgueWindchest::AddEnclosure(GOrgueEnclosure* enclosure)
 const wxString& GOrgueWindchest::GetName()
 {
 	return m_Name;
+}
+
+GOrguePipeConfigNode& GOrgueWindchest::GetPipeConfig()
+{
+	return m_PipeConfig;
 }
 
 void GOrgueWindchest::UpdateTremulant(GOrgueTremulant* tremulant)

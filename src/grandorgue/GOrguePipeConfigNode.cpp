@@ -38,6 +38,13 @@ GOrguePipeConfigNode::~GOrguePipeConfigNode()
 {
 }
 
+void GOrguePipeConfigNode::SetParent(GOrguePipeConfigNode* parent)
+{
+	m_parent = parent;
+	if (m_parent)
+		m_parent->AddChild(this);
+}
+
 const wxString& GOrguePipeConfigNode::GetName()
 {
 	return m_Name;
@@ -78,9 +85,9 @@ void GOrguePipeConfigNode::ModifyTuning(float diff)
 float GOrguePipeConfigNode::GetEffectiveAmplitude()
 {
 	if (m_parent)
-		return m_PipeConfig.GetAmplitude() * m_parent->GetEffectiveAmplitude();
+		return m_PipeConfig.GetAmplitude() * m_parent->GetEffectiveAmplitude() / 100.0;
 	else
-		return m_PipeConfig.GetAmplitude();
+		return m_PipeConfig.GetAmplitude() / 100.0;
 }
 
 float GOrguePipeConfigNode::GetEffectiveGain()
