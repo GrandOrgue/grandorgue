@@ -22,6 +22,7 @@
 #ifndef GORGUEWINDCHEST_H
 #define GORGUEWINDCHEST_H
 
+#include "GOrguePipeConfigTreeNode.h"
 #include "GOrguePlaybackStateHandler.h"
 #include <wx/string.h>
 #include <vector>
@@ -43,6 +44,7 @@ private:
 	std::vector<unsigned> m_tremulant;
 	std::vector<GOrgueRank*> m_ranks;
 	std::vector<GOrguePipeWindchestCallback*> m_pipes;
+	GOrguePipeConfigTreeNode m_PipeConfig;
 
 	void AbortPlayback();
 	void StartPlayback();
@@ -65,6 +67,7 @@ public:
 	void AddPipe(GOrguePipeWindchestCallback* pipe);
 	void AddEnclosure(GOrgueEnclosure* enclosure);
 	const wxString& GetName();
+	GOrguePipeConfigNode& GetPipeConfig();
 };
 
 #endif /* GORGUEWINDCHEST_H_ */
