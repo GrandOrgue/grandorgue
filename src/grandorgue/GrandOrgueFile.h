@@ -37,6 +37,7 @@
 class GOGUIPanel;
 class GOGUIPanelCreator;
 class GOrgueArchive;
+class GOrgueAudioRecorder;
 class GOrgueButton;
 class GOrgueCache;
 class GOrgueDivisionalCoupler;
@@ -62,6 +63,7 @@ class GOrgueWindchest;
 class GOrgueDocument;
 class GOSoundEngine;
 class GOSoundProvider;
+class GOSoundRecorder;
 class GO_SAMPLER;
 typedef struct _GOrgueHashType GOrgueHashType;
 
@@ -79,6 +81,7 @@ private:
 	wxString m_ODFHash;
 	bool m_Cacheable;
 	GOrgueSetter* m_setter;
+	GOrgueAudioRecorder* m_AudioRecorder;
 	GOrgueMidiRecorder* m_MidiRecorder;
 	int m_volume;
 	bool m_IgnorePitch;
@@ -161,7 +164,7 @@ public:
 	void DeleteCache();
 	void DeleteSettings();;
 	void Abort();
-	void PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi);
+	void PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi, GOSoundRecorder* recorder);
 	void PrepareRecording();
 	void Update();
 	void Reset();

@@ -123,10 +123,6 @@ public:
 
 	GOrgueSettings& GetSettings();
 
-	bool IsAudioRecording();
-	void StartAudioRecording(wxString filename);
-	void StopAudioRecording();
-
 	bool IsMidiPlaying();
 	void StartMidiPlaying(wxString filename);
 	void StopMidiPlaying();

@@ -87,6 +87,7 @@ GOrgueArchiveFile.cpp
 GOrgueArchiveIndex.cpp
 GOrgueArchiveManager.cpp
 GOrgueArchiveReader.cpp
+GOrgueAudioRecorder.cpp
 GOrgueBitmap.cpp
 GOrgueCache.cpp
 GOrgueCacheWriter.cpp

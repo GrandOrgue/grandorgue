@@ -56,19 +56,35 @@ GOGUIPanel* GOGUIRecorderPanel::CreateRecorderPanel(GOrgueConfigReader& cfg)
 	panel->AddControl(back);
 
 	GOGUILabel* label=new GOGUILabel(panel, NULL);
-	label->Init(cfg, wxT("MidiRecorderLabel"), 1, 35, _("MIDI Recorder"));
+	label->Init(cfg, wxT("MidiRecorderLabel"), 1, 45, _("Audio Recorder"));
 	panel->AddControl(label);
 
-	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("MidiRecorderRecord")), false);
+	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("AudioRecorderRecord")), false);
 	button->Init(cfg, wxT("MidiRecorderRecord"), 2, 100);
 	panel->AddControl(button);
 
-	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("MidiRecorderStop")), false);
+	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("AudioRecorderStop")), false);
 	button->Init(cfg, wxT("MidiRecorderStop"), 3, 100);
 	panel->AddControl(button);
 
-	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("MidiRecorderRecordRename")), false);
+	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("AudioRecorderRecordRename")), false);
 	button->Init(cfg, wxT("MidiRecorderRecordRename"), 4, 100);
+	panel->AddControl(button);
+
+	label=new GOGUILabel(panel, NULL);
+	label->Init(cfg, wxT("MidiRecorderLabel"), 1, 115, _("MIDI Recorder"));
+	panel->AddControl(label);
+
+	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("MidiRecorderRecord")), false);
+	button->Init(cfg, wxT("MidiRecorderRecord"), 2, 101);
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("MidiRecorderStop")), false);
+	button->Init(cfg, wxT("MidiRecorderStop"), 3, 101);
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("MidiRecorderRecordRename")), false);
+	button->Init(cfg, wxT("MidiRecorderRecordRename"), 4, 101);
 	panel->AddControl(button);
 
 	return panel;
