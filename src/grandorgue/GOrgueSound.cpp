@@ -171,7 +171,7 @@ bool GOrgueSound::OpenSound()
 		opened_ok = true;
 
 		if (m_organfile)
-			m_organfile->PreparePlayback(&GetEngine(), &GetMidi());
+			m_organfile->PreparePlayback(&GetEngine(), &GetMidi(), &m_AudioRecorder);
 	}
 	catch (wxString &msg)
 	{
@@ -213,7 +213,6 @@ void GOrgueSound::CloseSound()
 {
 	StopMidiPlaying();
 	StopThreads();
-	StopAudioRecording();
 
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 	{
@@ -278,7 +277,7 @@ void GOrgueSound::AssignOrganFile(GrandOrgueFile* organfile)
 	if (m_organfile && m_AudioOutputs.size())
 	{
 		m_SoundEngine.Setup(organfile, m_Settings.ReleaseConcurrency());
-		m_organfile->PreparePlayback(&GetEngine(), &GetMidi());
+		m_organfile->PreparePlayback(&GetEngine(), &GetMidi(), &m_AudioRecorder);
 	}
 }
 
@@ -290,21 +289,6 @@ GOrgueSettings& GOrgueSound::GetSettings()
 GrandOrgueFile* GOrgueSound::GetOrganFile()
 {
 	return m_organfile;
-}
-
-bool GOrgueSound::IsAudioRecording()
-{
-	return m_AudioRecorder.IsOpen();
-}
-
-void GOrgueSound::StartAudioRecording(wxString filepath)
-{
-	m_AudioRecorder.Open(filepath);
-}
-
-void GOrgueSound::StopAudioRecording()
-{
-	m_AudioRecorder.Close();
 }
 
 bool GOrgueSound::IsMidiPlaying()

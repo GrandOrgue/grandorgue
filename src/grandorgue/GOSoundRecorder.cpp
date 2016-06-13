@@ -128,6 +128,7 @@ void GOSoundRecorder::Close()
 	struct_WAVE WAVE = generateHeader(m_BufferPos);
 	m_file.Seek(0);
 	m_file.Write(&WAVE, sizeof(WAVE));
+	m_file.Flush();
 	m_file.Close();
 }
 

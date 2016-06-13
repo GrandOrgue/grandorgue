@@ -36,6 +36,7 @@
 #include "GOrgueArchive.h"
 #include "GOrgueArchiveFile.h"
 #include "GOrgueArchiveManager.h"
+#include "GOrgueAudioRecorder.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
 #include "GOrgueConfigFileReader.h"
@@ -92,6 +93,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_ODFHash(),
 	m_Cacheable(false),
 	m_setter(0),
+	m_AudioRecorder(NULL),
 	m_MidiRecorder(NULL),
 	m_volume(0),
 	m_IgnorePitch(false),
@@ -333,7 +335,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 	m_setter = new GOrgueSetter(this);
 	m_elementcreators.push_back(m_setter);
+	m_AudioRecorder = new GOrgueAudioRecorder(this);
 	m_MidiRecorder = new GOrgueMidiRecorder(this);
+	m_elementcreators.push_back(m_AudioRecorder);
 	m_elementcreators.push_back(m_MidiRecorder);
 	m_elementcreators.push_back(new GOrgueMetronome(this));
 	m_panelcreators.push_back(new GOGUICouplerPanel(this));
@@ -1266,6 +1270,8 @@ void GrandOrgueFile::Abort()
 	GOrgueEventDistributor::AbortPlayback();
 
 	m_MidiRecorder->StopRecording();
+	m_AudioRecorder->StopRecording();
+	m_AudioRecorder->SetAudioRecorder(NULL);
 	m_midi = NULL;
 }
 
@@ -1278,11 +1284,12 @@ void GrandOrgueFile::PreconfigRecorder()
 	}
 }
 
-void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi)
+void GrandOrgueFile::PreparePlayback(GOSoundEngine* engine, GOrgueMidi* midi, GOSoundRecorder* recorder)
 {
 	m_soundengine = engine;
 	m_midi = midi;
 	m_MidiRecorder->SetOutputDevice(m_Settings.MidiRecorderOutputDevice());
+	m_AudioRecorder->SetAudioRecorder(recorder);
 
 	m_MidiRecorder->Clear();
 	PreconfigRecorder();

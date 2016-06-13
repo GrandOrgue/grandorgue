@@ -86,7 +86,6 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU(ID_MIDI_LIST, GOrgueFrame::OnMidiList)
 	EVT_MENU(ID_MIDI_MONITOR, GOrgueFrame::OnMidiMonitor)
 	EVT_MENU(ID_AUDIO_PANIC, GOrgueFrame::OnAudioPanic)
-	EVT_MENU(ID_AUDIO_RECORD, GOrgueFrame::OnAudioRecord)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
 	EVT_MENU(ID_AUDIO_STATE, GOrgueFrame::OnAudioState)
 	EVT_MENU(ID_AUDIO_SETTINGS, GOrgueFrame::OnAudioSettings)
@@ -200,7 +199,6 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_audio_menu->Append(ID_AUDIO_SETTINGS, _("Audio/Midi &Settings"), wxEmptyString, wxITEM_NORMAL);
 	m_audio_menu->Append(ID_AUDIO_STATE, _("&Sound Output State"), wxEmptyString, wxITEM_NORMAL);
 	m_audio_menu->AppendSeparator();
-	m_audio_menu->Append(ID_AUDIO_RECORD, _("&Record\tCtrl+R"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
 	m_audio_menu->Append(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->AppendSeparator();
@@ -523,9 +521,7 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		return;
 	}
 
-	if (event.GetId() == ID_AUDIO_RECORD)
-		event.Check(m_Sound.IsAudioRecording());
-	else if (event.GetId() == ID_MIDI_PLAY)
+	if (event.GetId() == ID_MIDI_PLAY)
 		event.Check(m_Sound.IsMidiPlaying());
 	else if (event.GetId() == ID_AUDIO_MEMSET)
 		event.Check(organfile && organfile->GetSetter() && organfile->GetSetter()->IsSetterActive());
@@ -768,23 +764,6 @@ void GOrgueFrame::OnProperties(wxCommandEvent& event)
 void GOrgueFrame::OnAudioPanic(wxCommandEvent& WXUNUSED(event))
 {
 	m_Sound.ResetSound(true);
-}
-
-void GOrgueFrame::OnAudioRecord(wxCommandEvent& WXUNUSED(event))
-{
-	if (m_Sound.IsAudioRecording())
-		m_Sound.StopAudioRecording();
-	else
-	{
-		wxFileDialog dlg(this, _("Save as"), m_Settings.AudioRecorderPath(), wxEmptyString, _("WAV files (*.wav)|*.wav"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-		if (dlg.ShowModal() == wxID_OK)
-		{
-			wxFileName filepath = dlg.GetPath();
-			if (filepath.GetExt() == wxEmptyString)
-				filepath.SetExt(wxT("wav"));
-			m_Sound.StartAudioRecording(filepath.GetFullPath());
-		}
-	}
 }
 
 void GOrgueFrame::OnMidiMonitor(wxCommandEvent& WXUNUSED(event))
