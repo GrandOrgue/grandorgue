@@ -58,7 +58,6 @@ const struct ElementListEntry* GOrgueMetronome::GetButtonList()
 }
 
 GOrgueMetronome::GOrgueMetronome(GrandOrgueFile *organfile) :
-	wxTimer(),
 	m_organfile(organfile),
 	m_BPM(80),
 	m_MeasureLength(4),
@@ -173,6 +172,8 @@ void GOrgueMetronome::UpdateBPM(int val)
 		m_BPM += val;
 	if (m_BPM > 500)
 		m_BPM = 500;
+	if (m_Running)
+		m_organfile->UpdateInterval(this, 60000 / m_BPM);
 	UpdateState();
 }
 
@@ -200,17 +201,17 @@ void GOrgueMetronome::StartTimer()
 	m_Pos = 0;
 	m_Running = true;
 	UpdateState();
-	wxTimer::Start(1, true);
+	m_organfile->SetTimer(0, this, 60000 / m_BPM);
 }
 
 void GOrgueMetronome::StopTimer()
 {
-	wxTimer::Stop();
+	m_organfile->DeleteTimer(this);
 	m_Running = false;
 	UpdateState();
 }
 
-void GOrgueMetronome::Notify()
+void GOrgueMetronome::HandleTimer()
 {
 	unsigned type = 0;
 	if (m_Pos || !m_MeasureLength)
@@ -223,8 +224,6 @@ void GOrgueMetronome::Notify()
 	m_Pos++;
 	if (m_Pos >= m_MeasureLength)
 		m_Pos = 0;
-
-	wxTimer::Start(60000 / m_BPM, true);
 }
 
 void GOrgueMetronome::AbortPlayback()

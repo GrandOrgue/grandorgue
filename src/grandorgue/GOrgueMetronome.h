@@ -26,13 +26,13 @@
 #include "GOrgueLabel.h"
 #include "GOrguePlaybackStateHandler.h"
 #include "GOrgueSaveableObject.h"
-#include <wx/timer.h>
+#include "GOrgueTimerCallback.h"
 
 class GOrgueMidiEvent;
 class GOrgueRank;
 class GrandOrgueFile;
 
-class GOrgueMetronome : private wxTimer, private GOrguePlaybackStateHandler,
+class GOrgueMetronome : private GOrgueTimerCallback, private GOrguePlaybackStateHandler,
 	private GOrgueSaveableObject, public GOrgueElementCreator
 {
 private:
@@ -49,7 +49,7 @@ private:
 	static const struct ElementListEntry m_element_types[];
 	const struct ElementListEntry* GetButtonList();
 
-	void Notify();
+	void HandleTimer();
 
 	void ButtonChanged(int id);
 
