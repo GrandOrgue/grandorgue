@@ -23,16 +23,20 @@
 #define GORGUEAUDIORECORDER_H
 
 #include "GOrgueElementCreator.h"
+#include "GOrgueLabel.h"
+#include "GOrgueTimerCallback.h"
 #include <wx/string.h>
 
 class GrandOrgueFile;
 class GOSoundRecorder;
 
-class GOrgueAudioRecorder : public GOrgueElementCreator
+class GOrgueAudioRecorder : public GOrgueElementCreator, private GOrgueTimerCallback
 {
 private:
 	GrandOrgueFile* m_organfile;
 	GOSoundRecorder* m_recorder;
+	GOrgueLabel m_RecordingTime;
+	unsigned m_RecordSeconds;
 	wxString m_Filename;
 	bool m_DoRename;
 
@@ -40,6 +44,9 @@ private:
 	const struct ElementListEntry* GetButtonList();
 
 	void ButtonChanged(int id);
+
+	void UpdateDisplay();
+	void HandleTimer();
 
 public:
 	GOrgueAudioRecorder(GrandOrgueFile* organfile);

@@ -55,6 +55,8 @@ const struct ElementListEntry* GOrgueMidiRecorder::GetButtonList()
 GOrgueMidiRecorder::GOrgueMidiRecorder(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_Map(organfile->GetSettings().GetMidiMap()),
+	m_RecordingTime(organfile),
+	m_RecordSeconds(0),
 	m_NextChannel(0),
 	m_NextNRPN(0),
 	m_Mappings(),
@@ -69,6 +71,7 @@ GOrgueMidiRecorder::GOrgueMidiRecorder(GrandOrgueFile* organfile) :
 {
 	CreateButtons(m_organfile);
 	Clear();
+	UpdateDisplay();
 }
 
 GOrgueMidiRecorder::~GOrgueMidiRecorder()
@@ -327,10 +330,19 @@ bool GOrgueMidiRecorder::IsRecording()
 	return m_file.IsOpened();
 }
 
+void GOrgueMidiRecorder::UpdateDisplay()
+{
+	if (!IsRecording())
+		m_RecordingTime.SetName(_("-:--:--"));
+	else
+		m_RecordingTime.SetName(wxString::Format(_("%d:%02d:%02d"), m_RecordSeconds / 3600, (m_RecordSeconds / 60) % 60, m_RecordSeconds % 60));
+}
+
 void GOrgueMidiRecorder::StopRecording()
 {
 	m_button[ID_MIDI_RECORDER_RECORD]->Display(false);
 	m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Display(false);
+	m_organfile->DeleteTimer(this);
 	if (!IsRecording())
 		return;
 	const unsigned char end[4] = { 0x01, 0xFF, 0x2F, 0x00 };
@@ -349,6 +361,7 @@ void GOrgueMidiRecorder::StopRecording()
 	}
 	else
 		GOAskRenameFile(m_Filename, m_organfile->GetSettings().MidiRecorderPath(),_("MIDI files (*.mid)|*.mid"));
+	UpdateDisplay();
 }
 
 void GOrgueMidiRecorder::StartRecording(bool rename)
@@ -390,6 +403,10 @@ void GOrgueMidiRecorder::StartRecording(bool rename)
 	else
 		m_button[ID_MIDI_RECORDER_RECORD]->Display(true);
 	m_organfile->PrepareRecording();
+
+	m_RecordSeconds = 0;
+	UpdateDisplay();
+	m_organfile->SetRelativeTimer(1000, this, 1000);
 }
 
 GOrgueEnclosure* GOrgueMidiRecorder::GetEnclosure(const wxString& name, bool is_panel)
@@ -402,5 +419,13 @@ GOrgueLabel* GOrgueMidiRecorder::GetLabel(const wxString& name, bool is_panel)
 	if (is_panel)
 		return NULL;
 
+	if (name == wxT("MidiRecorderLabel"))
+		return &m_RecordingTime;
 	return NULL;
+}
+
+void GOrgueMidiRecorder::HandleTimer()
+{
+	m_RecordSeconds++;
+	UpdateDisplay();
 }

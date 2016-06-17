@@ -23,7 +23,9 @@
 #define GORGUEMIDIRECORDER_H
 
 #include "GOrgueElementCreator.h"
+#include "GOrgueLabel.h"
 #include "GOrgueTime.h"
+#include "GOrgueTimerCallback.h"
 #include "ptrvector.h"
 #include <wx/file.h>
 #include <wx/string.h>
@@ -33,7 +35,7 @@ class GOrgueMidiEvent;
 class GOrgueMidiMap;
 class GrandOrgueFile;
 
-class GOrgueMidiRecorder : public GOrgueElementCreator
+class GOrgueMidiRecorder : public GOrgueElementCreator, private GOrgueTimerCallback
 {
 	typedef struct
 	{
@@ -44,6 +46,8 @@ class GOrgueMidiRecorder : public GOrgueElementCreator
 private:
 	GrandOrgueFile* m_organfile;
 	GOrgueMidiMap& m_Map;
+	GOrgueLabel m_RecordingTime;
+	unsigned m_RecordSeconds;
 	unsigned m_NextChannel;
 	unsigned m_NextNRPN;
 	std::vector<midi_map> m_Mappings;
@@ -61,6 +65,9 @@ private:
 	const struct ElementListEntry* GetButtonList();
 
 	void ButtonChanged(int id);
+
+	void UpdateDisplay();
+	void HandleTimer();
 
 	void Ensure(unsigned length);
 	void Flush();

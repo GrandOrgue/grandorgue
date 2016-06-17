@@ -51,10 +51,13 @@ const struct ElementListEntry* GOrgueAudioRecorder::GetButtonList()
 GOrgueAudioRecorder::GOrgueAudioRecorder(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_recorder(NULL),
+	m_RecordingTime(organfile),
+	m_RecordSeconds(0),
 	m_Filename(),
 	m_DoRename(false)
 {
 	CreateButtons(m_organfile);
+	UpdateDisplay();
 }
 
 GOrgueAudioRecorder::~GOrgueAudioRecorder()
@@ -103,6 +106,8 @@ GOrgueLabel* GOrgueAudioRecorder::GetLabel(const wxString& name, bool is_panel)
 	if (is_panel)
 		return NULL;
 
+	if (name == wxT("AudioRecorderLabel"))
+		return &m_RecordingTime;
 	return NULL;
 }
 
@@ -111,10 +116,19 @@ bool GOrgueAudioRecorder::IsRecording()
 	return m_recorder && m_recorder->IsOpen();
 }
 
+void GOrgueAudioRecorder::UpdateDisplay()
+{
+	if (!IsRecording())
+		m_RecordingTime.SetName(_("-:--:--"));
+	else
+		m_RecordingTime.SetName(wxString::Format(_("%d:%02d:%02d"), m_RecordSeconds / 3600, (m_RecordSeconds / 60) % 60, m_RecordSeconds % 60));
+}
+
 void GOrgueAudioRecorder::StopRecording()
 {
 	m_button[ID_AUDIO_RECORDER_RECORD]->Display(false);
 	m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(false);
+	m_organfile->DeleteTimer(this);
 	if (!IsRecording())
 		return;
 
@@ -126,6 +140,7 @@ void GOrgueAudioRecorder::StopRecording()
 	}
 	else
 		GOAskRenameFile(m_Filename, m_organfile->GetSettings().AudioRecorderPath(),_("WAV files (*.wav)|*.wav"));
+	UpdateDisplay();
 }
 
 void GOrgueAudioRecorder::StartRecording(bool rename)
@@ -145,5 +160,14 @@ void GOrgueAudioRecorder::StartRecording(bool rename)
 		m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(true);
 	else
 		m_button[ID_AUDIO_RECORDER_RECORD]->Display(true);
+
+	m_RecordSeconds = 0;
+	UpdateDisplay();
+	m_organfile->SetRelativeTimer(1000, this, 1000);
 }
 
+void GOrgueAudioRecorder::HandleTimer()
+{
+	m_RecordSeconds++;
+	UpdateDisplay();
+}
