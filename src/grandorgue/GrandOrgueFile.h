@@ -30,6 +30,7 @@
 #include "GOrgueLabel.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrguePipeConfigTreeNode.h"
+#include "GOrgueTimer.h"
 #include <wx/hashmap.h>
 #include <wx/string.h>
 #include <vector>
@@ -67,7 +68,7 @@ class GOSoundRecorder;
 class GO_SAMPLER;
 typedef struct _GOrgueHashType GOrgueHashType;
 
-class GrandOrgueFile : public GOrgueEventDistributor, private GOrguePipeUpdateCallback
+class GrandOrgueFile : public GOrgueEventDistributor, private GOrguePipeUpdateCallback, public GOrgueTimer
 {
 	WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
