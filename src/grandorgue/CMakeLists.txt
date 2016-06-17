@@ -179,6 +179,7 @@ GOrgueTemperament.cpp
 GOrgueTemperamentCent.cpp
 GOrgueTemperamentList.cpp
 GOrgueTemperamentUser.cpp
+GOrgueTimer.cpp
 GOrgueTremulant.cpp
 GOrgueWindchest.cpp
 GOrgueSwitch.cpp
