@@ -149,7 +149,11 @@ void GOrgueAudioRecorder::StartRecording(bool rename)
 	if (!m_organfile)
 		return;
 
+#ifdef __WIN32__
+	m_Filename = m_organfile->GetSettings().AudioRecorderPath() + wxFileName::GetPathSeparator() + wxDateTime::UNow().Format(_("%Y-%m-%d-%H-%M-%S.%l.wav"));
+#else
 	m_Filename = m_organfile->GetSettings().AudioRecorderPath() + wxFileName::GetPathSeparator() + wxDateTime::UNow().Format(_("%Y-%m-%d:%H:%M:%S.%l.wav"));
+#endif
 	m_DoRename = rename;
 
 	m_recorder->Open(m_Filename);
