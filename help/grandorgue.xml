@@ -4918,7 +4918,7 @@ Within  windchests, the ranks are ordered as found in the definition file.
     </para>
     <para>When the tree is unfolded down to the pipe level, the dialog displays the MIDI number assigned to the sample file, along with the file's path.</para>
     <para>The right frames display controls which allow to fine set features at the rank or pipe level.</para>
-    <para>Settings can be modified at the organ, rank and individual pipe level. The windchest level is only used as logical grouping, and any settings modified at that level are ignored.</para>
+    <para>Settings can be modified at the organ, windchest, rank and individual pipe level.</para>
     <para>Some setting are cumulative from the organ level down to the pipe level: the effective setting value applied to the individual pipe is calculated from values at all levels.</para>
     <para>For the other (non cumulative) settings, the effective setting value is applied to the individual pipe using these precedence rules:</para>
     <itemizedlist>
@@ -4927,6 +4927,9 @@ Within  windchests, the ranks are ordered as found in the definition file.
       </listitem>
       <listitem>
         <simpara>Else if a rank-level value is defined, use it</simpara>
+      </listitem>
+      <listitem>
+        <simpara>Else if a windchest-level value is defined, use it</simpara>
       </listitem>
       <listitem>
         <simpara>Else if an organ-level value is defined, use it</simpara>
