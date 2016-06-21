@@ -541,17 +541,6 @@ that it may vary. The RtAudio backend is more likely to display too low numbers.
           </para>
 
         </sect3>
-        <sect3 id="record">
-          <title>Record</title>
-          <indexterm>
-            <primary>Record</primary>
-          </indexterm>
-          <para>Opens a dialog prompting where to save the recorded WAV file. The
-location chosen in this dialog will be remembered for the next time. Upon clicking to select a file name, recording
-commences and continues until the Record menu option is selected again.  A check mark appears next to the menu item to indicate when recording is active.
-</para>
-          <para>The <emphasis role="bold">Record</emphasis> function can also be invoked by the computer keyboard shortcut <emphasis>Ctrl-R</emphasis>.  </para>
-        </sect3>
         <sect3>
           <title>Panic</title>
           <indexterm>
@@ -582,27 +571,21 @@ next to the menu item, and the toolbar button remains pushed, to
 indicate when memory set is active.
 </para>
         </sect3>
-        <sect3>
-          <title>Record MIDI</title>
-          <para>
-Opens a dialog prompting where to save the recorded MIDI file. The location
-chosen in this dialog will be remembered for the next time. Upon clicking to
-select a file name, recording commences and continues until the
-<emphasis>Record MIDI</emphasis>menu option is selected again. A check mark
-appears next to the menu item to indicate when recording is active.
-          </para>
-          <caution>
-            <simpara>GrandOrgue stores Midi data using a specific internal format that makes the file unsuitable for usage with a regular Midi sequencer.</simpara>
-            <simpara>Playing a recorded Midi file in another sampleset than the sampleset used for recording will yield unexpected results.</simpara>
-          </caution>
-        </sect3>
-        <sect3>
+        <sect3 id="PlayMidi">
           <title>Play MIDI</title>
           <para>
 Opens a file chooser to select a recorded MIDI file. The location chosen in
 this dialog will be remembered for the next time. The player starts as soon as
-a file is selected. See above for caveats.
+a file is selected.
           </para>
+          <caution>
+            <simpara>GrandOrgue stores Midi data using a specific internal format that makes the file unsuitable for usage with a regular Midi sequencer.</simpara>
+            <simpara>
+When a recorded Midi file is played in another sampleset than the sampleset
+used for recording, all recorded stop changes are silently <emphasis
+  role="strong">ignored</emphasis>, thus preventing unexpected rendition.
+            </simpara>
+          </caution>
         </sect3>
         <sect3>
           <title>Log MIDI events</title>
@@ -706,7 +689,10 @@ clipping occurs, and will stay red until the volume is adjusted.</para>
           </imageobject>
         </mediaobject>
         <para>
-The release tail length control sets the duration the sound engine uses to play the release section of the sample. The values are: Max, 2.8 s, 1.4 s, 700 ms, 350 ms, 175 ms.</para>
+The release tail length control sets the duration the sound engine uses to play
+the release section of the sample. The values are: Max, and a range from 50 ms
+to 3000 ms by increments of 50 ms.
+        </para>
         <para>The <emphasis>Max</emphasis> value makes the sound engine play the complete release section as provided by the sample set creator.</para>
         <para>The other values are used by the sound engine as the fade out duration of the sample release section.</para>
       </sect2>
@@ -3461,7 +3447,7 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           <indexterm>
             <primary>Recorder WAV format</primary>
           </indexterm>
-          <para>This selects the format used by the recorder invoked by selecting <link linkend="record">Record</link>. The supported formats are: 8 bit, 16 bit, 24 bit PCM and 32 bit IEEE float.</para>
+          <para>This selects the format used by the <link linkend="recorder">Audio recorder</link>. The supported formats are: 8 bit, 16 bit, 24 bit PCM and 32 bit IEEE float.</para>
           <variablelist>
             <varlistentry>
               <term>Memory</term>
@@ -4019,15 +4005,23 @@ GrandOrgue <link linkend="settingsstore">stores</link> preset files.
                 </row>
                 <row>
                   <entry><emphasis role="strong">Audio recording directory</emphasis></entry>
-                  <entry>This is the folder where GrandOrgue stores audio recording files. It is opened when the <link linkend="record">Audio/Midi &gt; Record</link> menu item is selected.</entry>
+                  <entry>
+This is the folder where GrandOrgue stores audio recording files. It is opened
+when the <link linkend="recorder">Audio Recorder</link> <emphasis
+  role="strong">STOP</emphasis> buttton is depressed.
+                  </entry>
                 </row>
                 <row>
                   <entry><emphasis role="strong">MIDI recording directory</emphasis></entry>
-                  <entry>This is the folder where GrandOrgue stores MIDI recording files. It is opened when the <link linkend="record">Audio/Midi &gt; Record MIDI</link> menu item is selected.</entry>
+                  <entry>
+This is the folder where GrandOrgue stores MIDI recording files. It is opened
+when the <link linkend="recorder">MIDI Recorder</link> <emphasis
+  role="strong">STOP</emphasis> buttton is depressed.
+                  </entry>
                 </row>
                 <row>
                   <entry><emphasis role="strong">MIDI player directory</emphasis></entry>
-                  <entry>This is the folder where GrandOrgue looks for MIDI recording files. It is opened when the <link linkend="record">Audio/Midi &gt; Play MIDI</link> menu item is selected.</entry>
+                  <entry>This is the folder where GrandOrgue looks for MIDI recording files. It is opened when the <link linkend="PlayMidi">Audio/Midi &gt; Play MIDI</link> menu item is selected.</entry>
                 </row>
               </tbody>
             </tgroup>
@@ -5184,7 +5178,7 @@ or closing the dialog with the <emphasis role="bold">OK</emphasis> button.
   <chapter>
     <title>Panels</title>
     <mediaobject><imageobject><imagedata fileref="images/panel_menu.png" /></imageobject></mediaobject>
-    <para>This menu controls control panels. Menu items starting at <emphasis>Coupler</emphasis> down to <emphasis>Master Controls</emphasis> are standard menu items (i.e. present whatever sampleset is loaded).</para>
+    <para>This menu controls control panels. Menu items starting at <emphasis>Coupler</emphasis> down to <emphasis>Recorder</emphasis> are standard menu items (i.e. present whatever sampleset is loaded).</para>
     <para>
 All other menu items (above <emphasis>Coupler</emphasis>) are defined within
 the loaded sampleset and should be documented in the sampleset's specific user
@@ -5775,6 +5769,84 @@ sampleset customization in the current preset file. It has the same usage as the
           </tgroup>
         </informaltable>
       </sect2>
+    </sect1>
+    <sect1>
+      <title>Recorder</title>
+      <para id="recorder">This panel controls the MIDI recorder and the Audio recorder.</para>
+      <mediaobject><imageobject><imagedata fileref="images/panel_recorder.png" /></imageobject></mediaobject>
+      <para>Both recorders behave identically</para>
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+          <colspec colname="c2" colsep="0" rowsep="0" />
+          <tbody>
+            <row valign="top">
+              <entry><emphasis role="strong">REC</emphasis></entry>
+              <entry>
+This button starts recording a file, using a default file name that cannot be
+changed. See below for the file name syntax.The button stays highlighted until
+<emphasis role="strong">STOP</emphasis> is pressed.
+              </entry>
+            </row>
+            <row valign="top">
+              <entry><emphasis role="strong">STOP</emphasis></entry>
+              <entry>
+This button stops the current recording. If The recording was started with
+<emphasis role="strong">REC</emphasis>, the file is silently saved under the
+default file name. If the recording was started with <emphasis
+  role="strong">REC File</emphasis>, a file chooser is displayed, allowing
+the user to rename the file from its default name.
+              </entry>
+            </row>
+            <row valign="top">
+              <entry><emphasis role="strong">REC&#160;File</emphasis></entry>
+              <entry>
+This button starts recording a file while enabling the user to rename the file
+when the recording stops.
+              </entry>
+            </row>
+            <row valign="top">
+              <entry><emphasis role="strong">Right-side&#160;Label</emphasis></entry>
+              <entry>This label displays the recording duration while the recorder is active. </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>
+This paneled recorder enables the user to tie both recorders to MIDI events.
+This way, recording can be easily started and stopped on the fly from console
+buttons or computer keyboard shortcuts.
+      </para>
+      <note>
+        <simpara>The default file name is a timestamp.</simpara>
+        <simpara>
+For all systems except Windows, it is written as <emphasis
+  role="strong">YYYY-mm-dd:HH:mn:ss.ms</emphasis> with an extension of
+<emphasis role="strong">.mid</emphasis> for the MIDI files and <emphasis
+  role="strong">.wav</emphasis> for the audio files.
+        </simpara>
+        <simpara>
+For Windows, it is written as <emphasis
+  role="strong">YYYY-mm-dd-HH-mn-ss.ms</emphasis> with an extension of
+<emphasis role="strong">.mid</emphasis> for the MIDI files and <emphasis
+  role="strong">.wav</emphasis> for the audio files.
+        </simpara>
+        <simpara>YYYY stands for <emphasis>Year</emphasis> (including century),</simpara>
+        <simpara>mm stands for <emphasis>Month</emphasis> (01..12),</simpara>
+        <simpara>dd stands for <emphasis>Day</emphasis> (01..31),</simpara>
+        <simpara>HH stands for <emphasis>Hours</emphasis> (00..24),</simpara>
+        <simpara>mn stands for <emphasis>Minutes</emphasis> (00..59),</simpara>
+        <simpara>ss stands for <emphasis>Seconds</emphasis> (00..59),</simpara>
+        <simpara>ms stands for <emphasis>Milliseconds</emphasis> (000..999).</simpara>
+      </note>
+      <caution>
+        <simpara>GrandOrgue stores Midi data using a specific internal format that makes the file unsuitable for usage with a regular Midi sequencer.</simpara>
+        <simpara>
+When a recorded Midi file is played in another sampleset than the sampleset
+used for recording, all recorded stop changes are silently <emphasis
+  role="strong">ignored</emphasis>, thus preventing unexpected rendition.
+        </simpara>
+      </caution>
     </sect1>
   </chapter>
   <chapter>
