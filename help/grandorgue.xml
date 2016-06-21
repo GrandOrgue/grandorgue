@@ -105,13 +105,28 @@ manual. The format is backward compatible to Hauptwerk&#8482; version
 1 samplesets. As such, you won't be able to do anything at all with
 GrandOrgue without at least one sample set. Sample sets generally come
 packaged or with installers. By default, the software loads organs
-from "My Organs" in your documents folder, but you may store sample
+from "Organs" in your documents folder, but you may store sample
 sets wherever is convenient and space permits.
 
 Please look at https://sourceforge.net/p/ourorgan/samplesets/ for
 more information.
       </para>
       <note><simpara>Some Hauptwerk&#8482; Organ Definition File keywords are not used by GrandOrgue and are reported in a pop-up window. These warning messages can be safely ignored</simpara></note>
+    </sect1>
+    <sect1>
+      <title>Organ Packages</title>
+      <indexterm><primary>Organ Package</primary></indexterm>
+      <para>
+An organ package is a self-contained archive file that can be opened directly
+by GrandOrgue. It does not need to be formally installed on disk. It can
+contain more than one sample set.
+      </para>
+      <para>
+The software knows about a dedicated folder (by default: "Organ Packages" in
+your documents folder) where organ packages can be dropped. Packages dropped in
+that directory are automatically registered by GrandOrgue.
+      </para>
+      <para>See <link linkend="organ_package_format">The GrandOrgue organ package format</link> for a detailed description of the organ package file format.</para>
     </sect1>
     <sect1>
       <title>Features</title>
@@ -306,6 +321,15 @@ indicating estimated time remaining and other indicators.
           </indexterm>
           <para>This submenu displays the ten last used organs from the known organs list. Organs in this menu are ordered by last used date from newest down to oldest.</para>
           <para>Choosing an organ in this menu opens and loads its sampleset.</para>
+        </sect3>
+        <sect3 id="install_package">
+          <title>Install Organ Package</title>
+          <para>
+Opens a file chooser to navigate to a GrandOrgue organ package file (.orgue).
+The package path is registered, and all organ definition files found within the
+package are added to the <link linkend="knownorgans">known organs list</link>.
+          </para>
+          <para>An information popup is displayed when the operation completes.</para>
         </sect3>
         <sect3>
           <title>Organ Properties</title>
@@ -559,12 +583,12 @@ indicate when memory set is active.
 </para>
         </sect3>
         <sect3>
-          <title>Record Midi</title>
+          <title>Record MIDI</title>
           <para>
 Opens a dialog prompting where to save the recorded MIDI file. The location
 chosen in this dialog will be remembered for the next time. Upon clicking to
 select a file name, recording commences and continues until the
-<emphasis>Record Midi</emphasis>menu option is selected again. A check mark
+<emphasis>Record MIDI</emphasis>menu option is selected again. A check mark
 appears next to the menu item to indicate when recording is active.
           </para>
           <caution>
@@ -573,12 +597,16 @@ appears next to the menu item to indicate when recording is active.
           </caution>
         </sect3>
         <sect3>
-          <title>Play Midi</title>
+          <title>Play MIDI</title>
           <para>
 Opens a file chooser to select a recorded MIDI file. The location chosen in
 this dialog will be remembered for the next time. The player starts as soon as
 a file is selected. See above for caveats.
           </para>
+        </sect3>
+        <sect3>
+          <title>Log MIDI events</title>
+          <para>Enables a MIDI monitor which displays all incoming and outgoing MIDI events to the <link linkend="messagelog">message log</link>.</para>
         </sect3>
       </sect2>
       <sect2 id="panel">
@@ -820,7 +848,7 @@ settings file.
 GrandOrgue provides additional panels. These panels work as console extensions and are not displayed by default. They can be accessed via the <link linkend="panel">Panels</link> menu.</para>
       </sect2>
     </sect1>
-    <sect1>
+    <sect1 id="messagelog">
       <title>Message log</title>
       <figure><title>Message Log</title><mediaobject><imageobject><imagedata fileref="images/message_log.png" security=""/></imageobject></mediaobject></figure>
       <para>Whenever GrandOrgue needs to display a message, it opens a pop-up window. Messages are displayed in reverse chronological order : newest on top of the window.</para>
@@ -3855,7 +3883,7 @@ allows to change the value.
           <title>Windows Paths</title>
           <informaltable frame="none">
             <tgroup cols="2">
-              <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
+              <colspec colname="c1" colwidth="150px" colsep="0" rowsep="0"/>
               <colspec colname="c2" colsep="0" rowsep="0"/>
               <tbody>
                 <row>
@@ -3863,7 +3891,11 @@ allows to change the value.
                   <entry>%HOMEDRIVE%\%HOMEDIR%\Documents\GrandOrgue\Organs</entry>
                 </row>
                 <row>
-                  <entry><emphasis role="strong">Setting&#160;inport/export&#160;directory</emphasis></entry>
+                  <entry><emphasis role="strong">Organ package directory</emphasis></entry>
+                  <entry>%HOMEDRIVE%\%HOMEDIR%\Documents\GrandOrgue\Organ packages</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Setting&#160;import/export&#160;directory</emphasis></entry>
                   <entry>%HOMEDRIVE%\%HOMEDIR%\Documents\GrandOrgue\Settings</entry>
                 </row>
                 <row>
@@ -3886,7 +3918,7 @@ allows to change the value.
           <title>Linux Paths</title>
           <informaltable frame="none">
             <tgroup cols="2">
-              <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
+              <colspec colname="c1" colwidth="150px" colsep="0" rowsep="0"/>
               <colspec colname="c2" colsep="0" rowsep="0"/>
               <tbody>
                 <row>
@@ -3894,7 +3926,11 @@ allows to change the value.
                   <entry>$HOME/GrandOrgue/Organs</entry>
                 </row>
                 <row>
-                  <entry><emphasis role="strong">Setting&#160;inport/export&#160;directory</emphasis></entry>
+                  <entry><emphasis role="strong">Organ package directory</emphasis></entry>
+                  <entry>$HOME/GrandOrgue/Organ packages</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Setting&#160;import/export&#160;directory</emphasis></entry>
                   <entry>$HOME/GrandOrgue/Settings</entry>
                 </row>
                 <row>
@@ -3917,7 +3953,7 @@ allows to change the value.
           <title>Mac Paths</title>
           <informaltable frame="none">
             <tgroup cols="2">
-              <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
+              <colspec colname="c1" colwidth="150px" colsep="0" rowsep="0"/>
               <colspec colname="c2" colsep="0" rowsep="0"/>
               <tbody>
                 <row>
@@ -3925,7 +3961,11 @@ allows to change the value.
                   <entry>$HOME/Library/Preferences/GrandOrgue</entry>
                 </row>
                 <row>
-                  <entry><emphasis role="strong">Setting&#160;inport/export&#160;directory</emphasis></entry>
+                  <entry><emphasis role="strong">Organ package directory</emphasis></entry>
+                  <entry>$HOME/Library/Preferences/GrandOrgue/Organ packages</entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Setting&#160;import/export&#160;directory</emphasis></entry>
                   <entry>$HOME/Library/Preferences/GrandOrgue/Settings</entry>
                 </row>
                 <row>
@@ -3948,7 +3988,7 @@ allows to change the value.
           <title>Path usage</title>
           <informaltable frame="none">
             <tgroup cols="2">
-              <colspec colname="c1" colwidth="100px" colsep="0" rowsep="0"/>
+              <colspec colname="c1" colwidth="150px" colsep="0" rowsep="0"/>
               <colspec colname="c2" colsep="0" rowsep="0"/>
               <tbody>
                 <row>
@@ -3956,7 +3996,18 @@ allows to change the value.
                   <entry>This is the folder where GrandOrgue looks for samplesets. It is opened when the <link linkend="file_open">File &gt; Open</link> menu item is selected.</entry>
                 </row>
                 <row>
-                  <entry><emphasis role="strong">Setting&#160;inport/export&#160;directory</emphasis></entry>
+                  <entry><emphasis role="strong">Organ&#160;package&#160;directory</emphasis></entry>
+                  <entry>
+This is the folder where GrandOrgue looks for organ package files. Any organ
+package file dropped in this folder will be automatically searched for Organ
+Definition Files on next GrandOrgue run and any ODF found in the package file
+will be added to the <link linkend="knownorgans">known organs list</link>. The
+package itself will be registered in the <link linkend="known_packages_list">
+known packages list</link>.
+                  </entry>
+                </row>
+                <row>
+                  <entry><emphasis role="strong">Setting&#160;import/export&#160;directory</emphasis></entry>
                   <entry>
 This is the folder where GrandOrgue stores or looks for settings files. It is
 opened when one of the <link linkend="import_settings">File &gt; Import
@@ -4657,6 +4708,112 @@ When a sampleset is loaded for the first time <emphasis role="bold">OR</emphasis
 without customization, these default settings are used to initialize the MIDI
 Event dialogs that are accessible by right-clicking a control in the GUI (e.g.
 manual, stop, enclosure, piston, etc.).
+      </para>
+      <para>
+Customizations done by the user always supersede the matching initial setting.
+If customizations are <link linkend="save">saved</link> to a preset number, all
+subsequent loads will ignore the initial MIDI settings and all futher updates to
+the sampleset's MIDI configuration will be done by right-clicking on the elements
+in the user interface.
+      </para>
+      <para>
+When a loaded sampleset is <link linkend="resettodefaults">reset to
+default</link>, the preset file is deleted and the initial MIDI settings
+are used again to initialize the MIDI configuration.
+      </para>
+      <note>
+        <simpara>
+The sampleset creator must define proper <emphasis role="bold">
+<emphasis>MIDIInputNumber</emphasis></emphasis> values in the Organ
+Definition File to make <link linkend="odfManualEntry">manual mapping</link>
+and <link linkend="odfEnclosureEntry">enclosure mapping</link> to the initial
+MIDI settings work properly.
+        </simpara>
+      </note>
+      <para>The "Group" column shows which group the element is filed under; the "Element" column identifies the element; The "MIDI Event" column shows if the element is associated to MIDI event(s).</para>
+      <para>The <link linkend="midieventeditor">MIDI Event Editor</link> can be displayed by selecting an element and pushing the "Properties" button, or by double-clicking on the element's entry.</para>
+      <para>The available initial setting are those that are tied to the physical hardware and have no reason to change across dispositions:</para>
+      <variablelist>
+        <varlistentry>
+          <term>Manuals&#160;Group</term>
+          <listitem><simpara>Midi setting for pedal (always Manual 0) and up to 5 manuals. Manuals are ordered bottom (Manual 1) to top (Manual 5).</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Enclosures&#160;Group</term>
+          <listitem><simpara>Midi setting for up to 6 enclosures. Enclosures are ordered left (Enclosure 1) to right (Enclosure 6).</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Sequencer&#160;Group</term>
+          <listitem>
+            <simpara>Midi setting for various useful controls from the combination setter.</simpara>
+            <variablelist>
+              <varlistentry>
+                <term>Previous Memory, Next Memory</term>
+                <listitem><simpara>Navigate the memory banks.</simpara></listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Memory Set</term>
+                <listitem><simpara>Store a combination in a memory slot.</simpara></listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Current</term>
+                <listitem><simpara>Recalls the current combination.</simpara></listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>G.C.</term>
+                <listitem><simpara>General Cancel.</simpara></listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>-10, +10</term>
+                <listitem><simpara>Navigate 10 slots backwards or forward in the current memory bank without recalling the combination (prepare it).</simpara></listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>__0 .. __9</term>
+                <listitem><simpara>Navigate to slot xx0 to xx9 and recall the combination, the first two digits being set by the +/-10 controls.</simpara></listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Master&#160;Controls&#160;Group</term>
+          <listitem>
+            <simpara>Midi setting for various useful controls from the main control panel.</simpara>
+            <variablelist>
+              <varlistentry>
+                <term>-1 Cent, +1 Cent, -100 Cent, +100 Cent</term>
+                <listitem><simpara>These controls drive the amount of tuning for the whole organ.</simpara></listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Prev Temperament, Next Temperament</term>
+                <listitem><simpara>Navigate the temperaments list.</simpara></listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Transpose -, Transpose +</term>
+                <listitem><simpara>Transpose down, transpose up, one semitone at a time.</simpara></listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1 id="known_packages_list">
+      <title>Organ Packages tab</title>
+      <indexterm>
+        <primary>Organ Packages</primary>
+      </indexterm>
+      <figure>
+        <title>Organ Packages</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata scalefit="1" width="100%" fileref="images/organ_packages_tab.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>This screen displays the list of known organ packages (those which have been registered).</para>
+      <para>
+Organ packages appear in that list when a new package has been installed from
+the <link linkend="install_package">File</link> menu, or after GrandOrgue
+restart, when a package file has been dropped in the packages folder.
       </para>
       <para>
 Customizations done by the user always supersede the matching initial setting.
@@ -10232,7 +10389,7 @@ See the setter element section for further description.
       </variablelist>
     </sect1>
   </chapter>
-  <chapter>
+  <chapter id="organ_package_format">
     <title>The GrandOrgue organ package format</title>
     <sect1>
       <title>General information</title>
