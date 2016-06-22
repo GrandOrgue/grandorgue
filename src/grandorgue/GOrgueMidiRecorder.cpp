@@ -374,11 +374,7 @@ void GOrgueMidiRecorder::StartRecording(bool rename)
 	if (!m_organfile)
 		return;
 
-#ifdef __WIN32__
 	m_Filename = m_organfile->GetSettings().MidiRecorderPath() + wxFileName::GetPathSeparator() + wxDateTime::UNow().Format(_("%Y-%m-%d-%H-%M-%S.%l.mid"));
-#else
-	m_Filename = m_organfile->GetSettings().MidiRecorderPath() + wxFileName::GetPathSeparator() + wxDateTime::UNow().Format(_("%Y-%m-%d:%H:%M:%S.%l.mid"));
-#endif
 	m_DoRename = rename;
 
         m_file.Create(m_Filename, true);
