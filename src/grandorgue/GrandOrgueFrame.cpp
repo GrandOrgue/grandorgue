@@ -651,7 +651,7 @@ void GOrgueFrame::OnExport(wxCommandEvent& event)
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		if (!doc->Export(dlg.GetPath()))
-			wxMessageBox(wxString::Format(_("Failed to export settings to '%s'"), dlg.GetPath().c_str()), _("Error"), wxOK | wxICON_ERROR, this);
+			GOMessageBox(wxString::Format(_("Failed to export settings to '%s'"), dlg.GetPath().c_str()), _("Error"), wxOK | wxICON_ERROR, this);
 	}
 }
 
@@ -661,7 +661,7 @@ void GOrgueFrame::OnSave(wxCommandEvent& event)
 	if (!doc || !doc->GetOrganFile())
 		return;
 	if (!doc->Save())
-		wxMessageBox(_("Failed to save the organ setting"), _("Error"), wxOK | wxICON_ERROR, this);
+		GOMessageBox(_("Failed to save the organ setting"), _("Error"), wxOK | wxICON_ERROR, this);
 }
 
 wxString formatSize(wxLongLong& size)
@@ -692,7 +692,7 @@ void GOrgueFrame::OnCache(wxCommandEvent& event)
 	if (!res)
 	{
 		wxLogError(_("Creating the cache failed"));
-		wxMessageBox(_("Creating the cache failed"), _("Error"), wxOK | wxICON_ERROR, this);
+		GOMessageBox(_("Creating the cache failed"), _("Error"), wxOK | wxICON_ERROR, this);
 	}
 }
 
@@ -808,7 +808,7 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnAudioState(wxCommandEvent& WXUNUSED(event))
 {
-	wxMessageBox(m_Sound.getState(), _("Sound output"), wxOK, this);
+	GOMessageBox(m_Sound.getState(), _("Sound output"), wxOK, this);
 }
 
 void GOrgueFrame::OnEditOrgan(wxCommandEvent& event)
