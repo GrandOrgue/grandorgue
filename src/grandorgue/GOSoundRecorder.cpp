@@ -57,6 +57,7 @@ GOSoundRecorder::GOSoundRecorder() :
 	m_BytesPerSample(4),
 	m_BufferSize(0),
 	m_BufferPos(0),
+	m_SamplesPerBuffer(1024),
 	m_Recording(false),
 	m_Buffer(0)
 {
