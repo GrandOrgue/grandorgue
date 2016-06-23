@@ -54,7 +54,7 @@ MIDIEventKeyDialog::MIDIEventKeyDialog(wxWindow* parent, GOrgueKeyReceiver* even
 
 	if (m_key.GetType() == KEY_RECV_ENCLOSURE)
 	{
-		sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("&Minux-Shortcut:"));
+		sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("&Minus-Shortcut:"));
 		m_keyminusselect = new wxChoice(this, ID_MINUS_KEY_SELECT);
 		sizer->Add(m_keyminusselect, 1, wxEXPAND);
 
