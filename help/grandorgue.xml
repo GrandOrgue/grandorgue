@@ -989,7 +989,7 @@ effectively deleted when the OK button is pressed.
     <sect1>
       <title>Keyboard shortcut</title>
       <figure><title>Keyboard shortcut</title><mediaobject><imageobject><imagedata fileref="images/midi_event_editor_shortcut.png" /></imageobject></mediaobject></figure>
-      <para>This tab is displayed only for drawstops and buttons.</para>
+      <para>This tab is displayed only for enclosures, drawstops and buttons.</para>
       <variablelist>
         <varlistentry>
           <term>Shortcut</term>
@@ -1000,7 +1000,7 @@ This dropdown lists all usable key values.
         </varlistentry>
         <varlistentry>
           <term>Listen&#160;for&#160;Event</term>
-          <listitem><simpara>Triggers <emphasis>listening mode</emphasis>. GrandOrgue waits for a key to be depressed, then sets the dropdown to that key.</simpara></listitem>
+          <listitem><simpara>Triggers <emphasis>listening mode</emphasis>. GrandOrgue waits for a key to be depressed on the computer keyboard, then sets the dropdown to that key.</simpara></listitem>
         </varlistentry>
       </variablelist>
     </sect1>
@@ -1451,6 +1451,33 @@ The label of this field changes according to the event type:
               <listitem><simpara>Define the values for sending a fully open/closed enclosure. Values will be rescaled to the range defined by these limits.</simpara></listitem>
             </varlistentry>
           </variablelist>
+        </sect3>
+        <sect3>
+          <title>Shortcut</title>
+          <figure><title>Keyboard shortcut for Enclosure</title><mediaobject><imageobject><imagedata fileref="images/midi_event_editor_enclosure_shortcut.png" /></imageobject></mediaobject></figure>
+          <para>An enclosure needs to define 2 different shorcuts: one to "open" and another to "close" the virtual shades</para>
+          <informaltable frame="none">
+            <tgroup cols="2">
+              <colspec colname="c1" colsep="0" rowsep="0" colwidth="100px"/>
+              <colspec colname="c2" colsep="0" rowsep="0" />
+              <tbody>
+                <row valign="top">
+                  <entry><emphasis role="strong">Plus-Shortcut</emphasis></entry>
+                  <entry>Defines the key used to "open" the virtual shades</entry>
+                </row>
+                <row valign="top">
+                  <entry><emphasis role="strong">Minus-Shortcut</emphasis></entry>
+                  <entry>Defines the key used to "close" the virtual shades</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+        <para>
+On both frames, the <emphasis role="strong">Listen for Event</emphasis> button,
+when depressed, triggers <emphasis>listening mode</emphasis>. GrandOrgue waits
+for a key to be depressed on the computer keyboard, then sets the dropdown to
+that key.
+        </para>
         </sect3>
       </sect2>
       <sect2>
