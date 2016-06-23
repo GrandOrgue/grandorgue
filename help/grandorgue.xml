@@ -4837,91 +4837,19 @@ the <link linkend="install_package">File</link> menu, or after GrandOrgue
 restart, when a package file has been dropped in the packages folder.
       </para>
       <para>
-Customizations done by the user always supersede the matching initial setting.
-If customizations are <link linkend="save">saved</link> to a preset number, all
-subsequent loads will ignore the initial MIDI settings and all futher updates to
-the sampleset's MIDI configuration will be done by right-clicking on the elements
-in the user interface.
+The <emphasis role="strong">Delete</emphasis> button is grayed out until a
+package is selected in the list. When clicked, the selected package
+registration is deleted from GrandOrgue. The package file itself is
+<emphasis><emphasis role="strong">NOT deleted from disk</emphasis></emphasis>.
       </para>
-      <para>
-When a loaded sampleset is <link linkend="resettodefaults">reset to
-default</link>, the preset file is deleted and the initial MIDI settings
-are used again to initialize the MIDI configuration.
-      </para>
-      <note>
+      <note><title>Notes</title>
+        <simpara>All organs defined in the package must be deleted from the <link linkend="known_organs">Organs</link> tab prior to deleting the package.</simpara>
         <simpara>
-The sampleset creator must define proper <emphasis role="bold">
-<emphasis>MIDIInputNumber</emphasis></emphasis> values in the Organ
-Definition File to make <link linkend="odfManualEntry">manual mapping</link>
-and <link linkend="odfEnclosureEntry">enclosure mapping</link> to the initial
-MIDI settings work properly.
+A package file dropped into the packages folder must be moved to another
+folder, otherwise said package will be registered again when GrandOrgue
+restarts.
         </simpara>
       </note>
-      <para>The "Group" column shows which group the element is filed under; the "Element" column identifies the element; The "MIDI Event" column shows if the element is associated to MIDI event(s).</para>
-      <para>The <link linkend="midieventeditor">MIDI Event Editor</link> can be displayed by selecting an element and pushing the "Properties" button, or by double-clicking on the element's entry.</para>
-      <para>The available initial setting are those that are tied to the physical hardware and have no reason to change across dispositions:</para>
-      <variablelist>
-        <varlistentry>
-          <term>Manuals&#160;Group</term>
-          <listitem><simpara>Midi setting for pedal (always Manual 0) and up to 5 manuals. Manuals are ordered bottom (Manual 1) to top (Manual 5).</simpara></listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Enclosures&#160;Group</term>
-          <listitem><simpara>Midi setting for up to 6 enclosures. Enclosures are ordered left (Enclosure 1) to right (Enclosure 6).</simpara></listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Sequencer&#160;Group</term>
-          <listitem>
-            <simpara>Midi setting for various useful controls from the combination setter.</simpara>
-            <variablelist>
-              <varlistentry>
-                <term>Previous Memory, Next Memory</term>
-                <listitem><simpara>Navigate the memory banks.</simpara></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term>Memory Set</term>
-                <listitem><simpara>Store a combination in a memory slot.</simpara></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term>Current</term>
-                <listitem><simpara>Recalls the current combination.</simpara></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term>G.C.</term>
-                <listitem><simpara>General Cancel.</simpara></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term>-10, +10</term>
-                <listitem><simpara>Navigate 10 slots backwards or forward in the current memory bank without recalling the combination (prepare it).</simpara></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term>__0 .. __9</term>
-                <listitem><simpara>Navigate to slot xx0 to xx9 and recall the combination, the first two digits being set by the +/-10 controls.</simpara></listitem>
-              </varlistentry>
-            </variablelist>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Master&#160;Controls&#160;Group</term>
-          <listitem>
-            <simpara>Midi setting for various useful controls from the main control panel.</simpara>
-            <variablelist>
-              <varlistentry>
-                <term>-1 Cent, +1 Cent, -100 Cent, +100 Cent</term>
-                <listitem><simpara>These controls drive the amount of tuning for the whole organ.</simpara></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term>Prev Temperament, Next Temperament</term>
-                <listitem><simpara>Navigate the temperaments list.</simpara></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term>Transpose -, Transpose +</term>
-                <listitem><simpara>Transpose down, transpose up, one semitone at a time.</simpara></listitem>
-              </varlistentry>
-            </variablelist>
-          </listitem>
-        </varlistentry>
-      </variablelist>
     </sect1>
   </chapter>
   <chapter id="organsettings">
