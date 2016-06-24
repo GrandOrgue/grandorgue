@@ -5775,27 +5775,35 @@ This paneled recorder enables the user to tie both recorders to MIDI events.
 This way, recording can be easily started and stopped on the fly from console
 buttons or computer keyboard shortcuts.
       </para>
-      <note>
-        <simpara>The default file name is a timestamp.</simpara>
-        <simpara>
-For all systems except Windows, it is written as <emphasis
-  role="strong">YYYY-mm-dd:HH:mn:ss.ms</emphasis> with an extension of
-<emphasis role="strong">.mid</emphasis> for the MIDI files and <emphasis
-  role="strong">.wav</emphasis> for the audio files.
-        </simpara>
-        <simpara>
-For Windows, it is written as <emphasis
+      <note><title>Notes</title>
+        <itemizedlist>
+          <listitem><simpara>Pressing <emphasis role="strong">REC</emphasis> while recording will silently switch to a new file.</simpara></listitem>
+          <listitem>
+            <simpara>
+Pressing <emphasis role="strong">REC File</emphasis> while recording will
+switch to a new file. A new file chooser is displayed each time this button is
+pressed, thus "stacking" the renaming request. This way, all actual renaming is
+postponed to after the recording session is finished.
+            </simpara>
+          </listitem>
+          <listitem>
+            <simpara>
+The default file name is a timestamp. It is written as <emphasis
   role="strong">YYYY-mm-dd-HH-mn-ss.ms</emphasis> with an extension of
 <emphasis role="strong">.mid</emphasis> for the MIDI files and <emphasis
   role="strong">.wav</emphasis> for the audio files.
-        </simpara>
-        <simpara>YYYY stands for <emphasis>Year</emphasis> (including century),</simpara>
-        <simpara>mm stands for <emphasis>Month</emphasis> (01..12),</simpara>
-        <simpara>dd stands for <emphasis>Day</emphasis> (01..31),</simpara>
-        <simpara>HH stands for <emphasis>Hours</emphasis> (00..24),</simpara>
-        <simpara>mn stands for <emphasis>Minutes</emphasis> (00..59),</simpara>
-        <simpara>ss stands for <emphasis>Seconds</emphasis> (00..59),</simpara>
-        <simpara>ms stands for <emphasis>Milliseconds</emphasis> (000..999).</simpara>
+              <itemizedlist>
+                <listitem><simpara>YYYY stands for <emphasis>Year</emphasis> (including century),</simpara></listitem>
+                <listitem><simpara>mm stands for <emphasis>Month</emphasis> (01..12),</simpara></listitem>
+                <listitem><simpara>dd stands for <emphasis>Day</emphasis> (01..31),</simpara></listitem>
+                <listitem><simpara>HH stands for <emphasis>Hours</emphasis> (00..24),</simpara></listitem>
+                <listitem><simpara>mn stands for <emphasis>Minutes</emphasis> (00..59),</simpara></listitem>
+                <listitem><simpara>ss stands for <emphasis>Seconds</emphasis> (00..59),</simpara></listitem>
+                <listitem><simpara>ms stands for <emphasis>Milliseconds</emphasis> (000..999).</simpara></listitem>
+              </itemizedlist>
+            </simpara>
+          </listitem>
+        </itemizedlist>
       </note>
       <caution>
         <simpara>GrandOrgue stores Midi data using a specific internal format that makes the file unsuitable for usage with a regular Midi sequencer.</simpara>
