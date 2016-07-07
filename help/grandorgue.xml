@@ -1307,6 +1307,41 @@ Value</emphasis> field.
                       <para>GrandOrgue expects this message sequence: Bn 0x63 parameter# MSB; [Bn 0x62 parameter# LSB;] Bn 0x06 parameter value</para>
                     </listitem>
                   </varlistentry>
+                  <varlistentry>
+                    <term>Cx Program Change Range</term>
+                    <listitem>
+                      <simpara>Receive Bank Select and Program Change when the enclosure opens or closes.</simpara>
+                      <itemizedlist>
+                        <listitem>
+                          <simpara>The fields <emphasis>Lower limit</emphasis> and <emphasis>Upper limit</emphasis> are relabeled to <emphasis>Lower PGM number</emphasis> and <emphasis>Upper PGM number</emphasis>.</simpara>
+                        </listitem>
+                        <listitem>
+                          <simpara>
+GrandOrgue moves the enclosure when receiving program numbers in the range
+{<emphasis>lower PGM number</emphasis>, <emphasis>upper PGM number</emphasis>}
+evenly divided in 127 positions.
+                          </simpara>
+                        </listitem>
+                        <listitem>
+                          <simpara>
+GrandOrgue expects this message sequence: Bn 0x00 &lt;data1&gt;; Bn 0x20
+&lt;data2&gt;; Cn prog#. The bank select controllers enable GrandOrgue to use
+program numbers higher than 127. Range is [0, 2097152].
+                          </simpara>
+                        </listitem>
+                        <listitem><simpara>
+When receiving Bank Select + Program Change, if the MIDI device sends Bn 0x00
+&lt;data1&gt;; Bn 0x20 &lt;data2&gt;; Cn prog#, the program number will be
+computed as the value of <emphasis>data1</emphasis> shifted left 14 bits ORed
+(bitwise) with <emphasis>data2</emphasis> shifted left 7 bits ORed (bitwise)
+with prog# + 1 [ math: ((data1 &lt;&lt; 14) | (data2 &lt;&lt; 7) | prog#) + 1 ]. If the
+result falls in the range {<emphasis>lower PGM number</emphasis>,
+<emphasis>upper PGM number</emphasis>}, the enclosure moves to that value's
+position.
+                        </simpara></listitem>
+                      </itemizedlist>
+                    </listitem>
+                  </varlistentry>
                 </variablelist>
               </listitem>
             </varlistentry>
@@ -1407,6 +1442,28 @@ controller type and number and the limits of the usable range.
                       <para>Send NRPN (Non Registered Parameter Number) messages.</para>
                       <para>GrandOrgue supports: Parameter number MSByte, Parameter number LSByte and only Data Entry MSByte (0x06).</para>
                       <para>GrandOrgue sends this message sequence: Bn 0x63 parameter# MSB; Bn 0x62 parameter# LSB; Bn 0x06 parameter value</para>
+                    </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>Cx Program Change Range</term>
+                    <listitem>
+                      <simpara>Send Bank Select and Program Change when the enclosure opens or closes.</simpara>
+                      <itemizedlist>
+                        <listitem>
+                          <simpara>The fields <emphasis>Off Value</emphasis> and <emphasis>On Value</emphasis> are relabeled to <emphasis>Lower PGM number</emphasis> and <emphasis>Upper PGM number</emphasis>.</simpara>
+                        </listitem>
+                        <listitem><simpara>GrandOrgue sends program numbers in the range {<emphasis>lower PGM number</emphasis>, <emphasis>upper PGM number</emphasis>} evenly spread in 127 chunks.</simpara></listitem>
+                        <listitem>
+                          <simpara>
+GrandOrgue always sends Bn 0x00 &lt;data1&gt;; Bn 0x20 &lt;data2&gt;; Cn prog#.
+The bank select controllers enable GrandOrgue to use program numbers higher
+than 127. Range is [0, 2097152].
+                          </simpara>
+                        </listitem>
+                        <listitem><simpara>&lt;<emphasis>data1</emphasis>&gt; is the value of the 7 leftmost bits of the program number (math: ((value -1) >> 14) &amp; 0x7F).</simpara></listitem>
+                        <listitem><simpara>&lt;<emphasis>data2</emphasis>&gt; is the value of the 7 middle bits of the program number (math: ((value -1) >> 7) &amp; 0x7F).</simpara></listitem>
+                        <listitem><simpara><emphasis>prog#</emphasis> is the value of the 7 rightmost bits of the program number (math: ((value -1) >> 0) &amp; 0x7F).</simpara></listitem>
+                      </itemizedlist>
                     </listitem>
                   </varlistentry>
                 </variablelist>
