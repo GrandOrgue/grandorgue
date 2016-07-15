@@ -628,6 +628,7 @@ void Convlevel::cleanup (void)
     Outnode       *Y, *Y1;
     Macnode       *M, *M1;
 
+    Delete ();
     X = _inp_list;
     while (X)
     {
