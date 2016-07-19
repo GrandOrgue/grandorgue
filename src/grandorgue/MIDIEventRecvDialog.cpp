@@ -171,7 +171,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	{
 		m_eventtype->Append(_("RPN On Toggle"), (void*)MIDI_M_RPN_ON);
 		m_eventtype->Append(_("RPN Off Toggle"), (void*)MIDI_M_RPN_OFF);
-		m_eventtype->Append(_("RPN On/off Toggle"), (void*)MIDI_M_RPN_ON_OFF);
+		m_eventtype->Append(_("RPN On/Off Toggle"), (void*)MIDI_M_RPN_ON_OFF);
 		m_eventtype->Append(_("NRPN On Toggle"), (void*)MIDI_M_NRPN_ON);
 		m_eventtype->Append(_("NRPN Off Toggle"), (void*)MIDI_M_NRPN_OFF);
 		m_eventtype->Append(_("NRPN On/Off Toggle"), (void*)MIDI_M_NRPN_ON_OFF);
@@ -317,9 +317,11 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 		case MIDI_M_CTRL_BIT:
 		case MIDI_M_CTRL_CHANGE_ON:
 		case MIDI_M_CTRL_CHANGE_OFF:
+		case MIDI_M_CTRL_CHANGE_ON_OFF:
 		case MIDI_M_CTRL_CHANGE_FIXED:
 		case MIDI_M_CTRL_CHANGE_FIXED_ON:
 		case MIDI_M_CTRL_CHANGE_FIXED_OFF:
+		case MIDI_M_CTRL_CHANGE_FIXED_ON_OFF:
 			m_DataLabel->SetLabel(_("&Controller-No:"));
 			break;
 
@@ -327,8 +329,10 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 		case MIDI_M_NRPN:
 		case MIDI_M_RPN_ON:
 		case MIDI_M_RPN_OFF:
+		case MIDI_M_RPN_ON_OFF:
 		case MIDI_M_NRPN_ON:
 		case MIDI_M_NRPN_OFF:
+		case MIDI_M_NRPN_ON_OFF:
 			m_DataLabel->SetLabel(_("&Parameter-No:"));
 			break;
 
