@@ -1046,7 +1046,7 @@ The lowest octave is that of the lowest C on a full compass keyboard.
 MIDI key number.
                       </simpara>
                       <note><simpara>
-The hardcoded processing matches E key to C note, F key to F note, # key to D
+The hardcoded processing matches E key to C note, F key to F note, F# key to D
 note, G key to G note, G# key to E note, and from A upwards, the key on the
 keyboard matches the same note.
                       </simpara></note>
@@ -1353,7 +1353,7 @@ position.
 When receiving RPN, if the MIDI device sends Bn 0x65 &lt;data1&gt;; Bn 0x64
 &lt;data2&gt;, the parameter number will be displayed as the value of
 <emphasis>data1</emphasis> shifted left 7 bits ORed (bitwise) with
-<emphasis>data2</emphasis>.
+<emphasis>data2. Range is [0, 16383].</emphasis>.
                 </para>
                 <para>E.g.: Bn 0x65 1; Bn 0x64 2 will display 130.</para>
                 <para>The behavior is identical for NRPN.</para>
@@ -1840,7 +1840,7 @@ key number will toggle the state of the button/drawstop.
                     <row valign="top">
                       <entry><emphasis role="strong">Data</emphasis></entry>
                       <entry valign="top">
-                        <simpara>Program number. Range is [0, 127] when bank select messages are not used.</simpara>
+                        <simpara>Program number. Range is [0, 127] when bank select messages are not used, [0, 2097152] otherwise.</simpara>
                         <simpara>
 When receiving Bank Select + Program Change, if the MIDI device sends Bn 0x00
 &lt;data1&gt;; Bn 0x20 &lt;data2&gt;; Cn prog#, the program number will be
@@ -1972,7 +1972,7 @@ Parameter number. If the MIDI device sends Bn 0x63 &lt;data1&gt;; Bn 0x62 &lt;da
                     <row valign="top">
                       <entry><emphasis role="strong">Lower&#160;PGM&#160;number</emphasis></entry>
                       <entry valign="top">
-                        <simpara>Program number to push the drawstop or button. Range is [1, 128] when bank select messages are not used.</simpara>
+                        <simpara>Program number to push the drawstop or button. Range is [1, 128] when bank select messages are not used, [0, 2097152] otherwise.</simpara>
                         <simpara>
 When receiving Bank Select + Program Change, if the MIDI device sends Bn 0x00
 &lt;data1&gt;; Bn 0x20 &lt;data2&gt;; Cn prog#, the program number will be
@@ -1986,7 +1986,7 @@ with <emphasis>prog#</emphasis> + 1 [ math: ((data1 &lt;&lt; 14) | (data2 &lt;&l
                     <row valign="top">
                       <entry><emphasis role="strong">Upper&#160;PGM&#160;number</emphasis></entry>
                       <entry valign="top">
-                        <simpara>Program number to pull the drawstop or button. Range is [1, 128] when bank select messages are not used.</simpara>
+                        <simpara>Program number to pull the drawstop or button. Range is [1, 128] when bank select messages are not used, [0, 2097152] otherwise.</simpara>
                         <simpara>
 When receiving Bank Select + Program Change, if the MIDI device sends Bn 0x00
 &lt;data1&gt;; Bn 0x20 &lt;data2&gt;; Cn prog#, the program number will be
@@ -2503,11 +2503,11 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
                   <tbody>
                     <row valign="top">
                       <entry><emphasis role="strong">Off value</emphasis></entry>
-                      <entry>Data value that toggles the button or drawstop state off. Range is [0, 2097151].</entry>
+                      <entry>Data value that toggles the button or drawstop state off. Range is [0, 2097152].</entry>
                     </row>
                     <row valign="top">
                       <entry><emphasis role="strong">On value</emphasis></entry>
-                      <entry>Data value that toggles the button or drawstop state on. Range is [0, 2097151].</entry>
+                      <entry>Data value that toggles the button or drawstop state on. Range is [0, 2097152].</entry>
                     </row>
                     <row valign="top">
                       <entry><emphasis role="strong">Data</emphasis></entry>
@@ -2540,7 +2540,7 @@ shifted left 7 bits ORed (bitwise) with <emphasis>data2</emphasis> [ math:
                   <tbody>
                     <row valign="top">
                       <entry><emphasis role="strong">Value</emphasis></entry>
-                      <entry>Data value that toggles the button or drawstop state. Range is [0, 2097151].</entry>
+                      <entry>Data value that toggles the button or drawstop state. Range is [0, 2097152].</entry>
                     </row>
                     <row valign="top">
                       <entry><emphasis role="strong">Debounce time</emphasis></entry>
