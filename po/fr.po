@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2015-12-09 08:34+0100\n"
+"POT-Creation-Date: 2016-07-20 18:27+0200\n"
 "PO-Revision-Date: 2015-11-27 09:03+0100\n"
 "Last-Translator: astazou <astazou@sourceforge.net>\n"
 "Language-Team: French <jeanluc@derouineau.com>\n"
@@ -76,6 +76,15 @@ msgstr "Métronome"
 #, c-format
 msgid "Unkown SetterElement in section %s"
 msgstr "SetterElement inconnu dans la section %s"
+
+msgid "Recorder"
+msgstr "Enregistreur"
+
+msgid "Audio Recorder"
+msgstr "Enregistreur Audio"
+
+msgid "MIDI Recorder"
+msgstr "Enregistreur MIDI"
 
 msgid "Combination Setter"
 msgstr "Combinateur"
@@ -224,6 +233,25 @@ msgstr "Enregistrement de fin zip64 malformé"
 
 msgid "Only non-splitted ZIP archives are supported"
 msgstr "Les archives ZIP découpées ne sont pas supportées"
+
+msgid "REC"
+msgstr ""
+
+msgid "STOP"
+msgstr ""
+
+msgid "REC File"
+msgstr "REC Fich."
+
+msgid "-:--:--"
+msgstr ""
+
+#, c-format
+msgid "%d:%02d:%02d"
+msgstr ""
+
+msgid "%Y-%m-%d-%H-%M-%S.%l.wav"
+msgstr ""
 
 #, c-format
 msgid "Failed to open the graphic '%s'"
@@ -758,6 +786,9 @@ msgstr "Messages"
 msgid "%s: %s\n"
 msgstr ""
 
+msgid "&Clear"
+msgstr "&Effacer"
+
 msgid "C&opy"
 msgstr "C&opier"
 
@@ -813,6 +844,63 @@ msgstr "%d Pulsations/mn"
 #, c-format
 msgid "%d"
 msgstr ""
+
+msgid "Not supported event"
+msgstr "Evénement non supporté"
+
+msgid "reset"
+msgstr "RAZ"
+
+#, c-format
+msgid "note channel: %d key: %d value: %d"
+msgstr "note canal: %d note: %d valeur: %d"
+
+#, c-format
+msgid "aftertouch channel: %d key: %d value: %d"
+msgstr "aftertouch canal: %d note: %d valeur: %d"
+
+#, c-format
+msgid "control change channel: %d key: %d value: %d"
+msgstr "control change canal: %d contrôleur: %d valeur: %d"
+
+#, c-format
+msgid "program change channel: %d key: %d "
+msgstr "program change canal: %d programme: %d "
+
+#, c-format
+msgid "RPN channel: %d key: %d value: %d"
+msgstr "RPN canal: %d paramètre: %d valeur: %d"
+
+#, c-format
+msgid "NRPN change channel: %d key: %d value: %d"
+msgstr "NRPN canal: %d paramètre: %d valeur: %d"
+
+#, c-format
+msgid "sysex Johannus value: %d"
+msgstr "SYSEX Johannus valeur: %d"
+
+#, c-format
+msgid "sysex Viscount value: %d"
+msgstr "SYSEX Viscount valeur: %d"
+
+msgid "sysex GrandOrgue clear"
+msgstr "SYSEX GrandOrgue RAZ"
+
+#, c-format
+msgid "sysex GrandOrgue sampleset %08x%08x"
+msgstr "SYSEX GrandOrgue banque de sons %08x%08x"
+
+#, c-format
+msgid "sysex GrandOrgue setup channel: %d NRPN: %d: name: %s"
+msgstr "SYSEX GrandOrgue configuration canal: %d NRPN: %d: nom: %s"
+
+#, c-format
+msgid "sysex Hauptwerk LCD string variable: %d - %s"
+msgstr "SYSEX Hauptwerk afficheur LCD chaîne variable: %d - %s"
+
+#, c-format
+msgid "sysex Hauptwerk LCD display: %d color: %d - %s"
+msgstr "SYSEX Hauptwerk afficheur LCD numéro: %d couleur: %d - %s"
 
 #, c-format
 msgid "Failed to open %s"
@@ -914,6 +1002,12 @@ msgstr "Impossible de lire le fichier MIDI '%s'"
 msgid "GrandOrgue MIDI Player"
 msgstr "Séquenceur MIDI"
 
+msgid "MIDI files (*.mid)|*.mid"
+msgstr "Fichiers MIDI (*.mid)|*.mid"
+
+msgid "%Y-%m-%d-%H-%M-%S.%l.mid"
+msgstr ""
+
 #, c-format
 msgid "Unable to open file %s for writing"
 msgstr "Impossible d'ouvrir le fichier %s en écriture"
@@ -1006,7 +1100,7 @@ msgid "Memory pool size"
 msgstr "Taille du pool de mémoire"
 
 msgid "ODF Path"
-msgstr "Chemin di fichier ODF"
+msgstr "Chemin du fichier ODF"
 
 msgid "Rank"
 msgstr "Rang"
@@ -2062,20 +2156,17 @@ msgstr "Paramètre&s Audio/Midi"
 msgid "&Sound Output State"
 msgstr "Etat de la &sortie audio"
 
-msgid "&Record\tCtrl+R"
-msgstr "En&registrer\tCtrl+R"
-
 msgid "&Panic\tEscape"
 msgstr "&Panique\tEscape"
 
 msgid "&Memory Set\tShift"
 msgstr "&Enregister configuration combinateur\tShift"
 
-msgid "R&ecord MIDI\tCtrl+M"
-msgstr "&Enregistrer\tCtrl+R"
-
 msgid "Play &MIDI\tCtrl+P"
 msgstr "Jouer un fichier &MIDI"
+
+msgid "&Log MIDI events"
+msgstr "&Afficher événements MIDI"
 
 msgid "&Help\tF1"
 msgstr "&Aide\tF1"
@@ -2228,6 +2319,9 @@ msgstr "Interface de sortie"
 msgid "User Interface"
 msgstr "Interface Utilisateur"
 
+msgid "MIDI event: "
+msgstr "Evénement MIDI:"
+
 msgid " - "
 msgstr ""
 
@@ -2243,11 +2337,17 @@ msgstr "Raccourci"
 msgid "Send Division Output"
 msgstr "Envoi sortie division"
 
+msgid "&Plus-Shortcut:"
+msgstr "Raccourci-&Plus:"
+
 msgid "&Shortcut:"
 msgstr "&Racourci:"
 
 msgid "&Listen for Event"
 msgstr "&Attendre évènement MIDI"
+
+msgid "&Minus-Shortcut:"
+msgstr "Raccourci-&Moins:"
 
 msgid "None"
 msgstr "Aucun"
@@ -2297,6 +2397,9 @@ msgstr "Bascule 9x Note On"
 msgid "9x Note Off Toggle"
 msgstr "Bascule 9x Note Off"
 
+msgid "9x Note On/Off Toggle"
+msgstr "Bascule 9x Note On/Off"
+
 msgid "Bx Controller"
 msgstr "Contrôleur Bx"
 
@@ -2305,6 +2408,9 @@ msgstr "Bascule contrôleur Bx On"
 
 msgid "Bx Controller Off Toggle"
 msgstr "Bascule contrôleur Bx Off"
+
+msgid "Bx Controller On/Off Toggle"
+msgstr "Bascule contrôleur Bx On/Off"
 
 msgid "Cx Program Change"
 msgstr "Controleur Cx"
@@ -2333,11 +2439,17 @@ msgstr "Bascule RPN On"
 msgid "RPN Off Toggle"
 msgstr "Bascule RPN Off"
 
+msgid "RPN On/Off Toggle"
+msgstr "Bascule RPN On/Off"
+
 msgid "NRPN On Toggle"
 msgstr "Bascule NRPN On"
 
 msgid "NRPN Off Toggle"
 msgstr "Bascule NRPN Off"
+
+msgid "NRPN On/Off Toggle"
+msgstr "Bascule NRPN On/Off"
 
 msgid "RPN Range"
 msgstr "Plage RPN"
@@ -2356,6 +2468,9 @@ msgstr "Bascule contrôleur Bx Valeur fixe On"
 
 msgid "Bx Ctrl Change Fixed Off Value Toggle"
 msgstr "Bascule contrôleur Bx Valeur fixe Off"
+
+msgid "Bx Ctrl Change Fixed On/Off Value Toggle"
+msgstr "Bascule contrôleur Bx Valeur fixe On/Off"
 
 msgid "Sys Ex Johannus"
 msgstr ""
@@ -2771,7 +2886,7 @@ msgid "Change audio group"
 msgstr "Modifier le groupe audio"
 
 msgid "Desired output latency"
-msgstr "Retard de &sortie désiré"
+msgstr "Retard de sortie désiré"
 
 msgid "Desired latency:"
 msgstr "Retard désiré:"
@@ -3031,7 +3146,7 @@ msgid "Sample Rate:"
 msgstr "Taux d'échantillonage:"
 
 msgid "Samples per buffer:"
-msgstr "Echantillions par buffer:"
+msgstr "Echantillons par buffer:"
 
 msgid "&Cache"
 msgstr ""
@@ -3076,10 +3191,10 @@ msgid "MIDI settings for organ %s"
 msgstr "Configuration MIDI pour l'orgue %s"
 
 msgid "Enable Convolution Reverb"
-msgstr "Activer la Reverbération"
+msgstr "Activer la Réverbération"
 
 msgid "&Convolution reverb"
-msgstr "&Reverbération par Convolution"
+msgstr "&Réverbération par Convolution"
 
 msgid "Select an impulse file"
 msgstr "Sélectioner un fichier d'impulsion"
