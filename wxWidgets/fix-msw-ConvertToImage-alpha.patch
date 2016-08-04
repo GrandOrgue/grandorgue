@@ -1,0 +1,13 @@
+--- ./src/msw/bitmap.cpp.orig	2016-07-27 23:11:00.723181078 +0000
++++ ./src/msw/bitmap.cpp	2016-07-27 23:11:13.155713064 +0000
+@@ -1029,6 +1029,10 @@
+     {
+         return wxNullImage;
+     }
++    if (!HasAlpha() && image.HasAlpha())
++    {
++	image.ClearAlpha();
++    }
+ 
+     // now do the same for the mask, if we have any
+     HBITMAP hbmpMask = GetMask() ? (HBITMAP) GetMask()->GetMaskBitmap() : NULL;
