@@ -18,6 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 include(BundleUtilities)
+include(CMakeParseArguments)
+include(${CMAKE_CURRENT_LIST_DIR}/BundleUtilities.cmake)
 
 function(verify_app)
 endfunction()
