@@ -400,3 +400,22 @@ There should not be any  of these complaints in the output:
 
 Build GrandOrgue by running mingw32-make in the build directory.
 See README.translate for further details about adding or updating translations
+
+C) Building on OS X
+===================
+
+1. Prequisites:
+ - OS X >= 10.11
+ - Xcode >= 7.3
+ - homebrew
+
+2. Install via homebrew:
+  - brew update
+  - brew install gettext jack docbook-xsl wxmac cmake
+  - brew link gettext --force
+
+3. extract the GO source into a directory
+
+4. run the following commands:
+  cmake -G "Unix Makefiles" -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl
+  make -k package VERBOSE=1
