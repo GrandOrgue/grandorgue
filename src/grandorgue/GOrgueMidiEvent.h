@@ -61,6 +61,7 @@ private:
 	int m_channel, m_key, m_value;
 	unsigned m_device;
 	GOTime m_time;
+	wxString m_string;
 
 public:
 	GOrgueMidiEvent();
@@ -119,6 +120,15 @@ public:
 	void SetTime(GOTime t)
 	{
 		m_time = t;
+	}
+
+	const wxString& GetString() const
+	{
+		return m_string;
+	}
+	void SetString(const wxString& str)
+	{
+		m_string = str;
 	}
 
 	void FromMidi(const std::vector<unsigned char>& msg, GOrgueMidiMap& map);

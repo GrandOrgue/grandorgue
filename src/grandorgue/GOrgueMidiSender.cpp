@@ -25,7 +25,6 @@
 #include "GOrgueConfigWriter.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMidiMap.h"
-#include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 
 GOrgueMidiSender::GOrgueMidiSender(GrandOrgueFile* organfile, MIDI_SENDER_TYPE type) :
@@ -572,7 +571,7 @@ void GOrgueMidiSender::SetLabel(wxString text)
 			e.SetMidiType(MIDI_SYSEX_HW_LCD);
 			e.SetChannel(m_events[i].low_value);
 			e.SetKey(m_events[i].key);
-			e.SetValue(m_organfile->GetSettings().GetMidiMap().GetElementByString(text));
+			e.SetString(text);
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_HW_STRING)
@@ -581,7 +580,7 @@ void GOrgueMidiSender::SetLabel(wxString text)
 			e.SetDevice(m_events[i].device);
 			e.SetMidiType(MIDI_SYSEX_HW_STRING);
 			e.SetKey(m_events[i].key);
-			e.SetValue(m_organfile->GetSettings().GetMidiMap().GetElementByString(text));
+			e.SetString(text);
 			m_organfile->SendMidiMessage(e);
 		}
 	}

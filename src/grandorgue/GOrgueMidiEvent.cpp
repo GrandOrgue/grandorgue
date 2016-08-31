@@ -29,7 +29,8 @@ GOrgueMidiEvent::GOrgueMidiEvent() :
 	m_channel(-1),
 	m_key(-1),
 	m_value(-1),
-	m_time(0)
+	m_time(0),
+	m_string()
 {
 }
 
@@ -39,7 +40,8 @@ GOrgueMidiEvent::GOrgueMidiEvent(const GOrgueMidiEvent& e) :
 	m_key(e.m_key),
 	m_value(e.m_value),
 	m_device(e.m_device),
-	m_time(e.m_time)
+	m_time(e.m_time),
+	m_string(e.m_string.Clone())
 {
 }
 
@@ -303,7 +305,7 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgu
 
 	case MIDI_SYSEX_HW_STRING:
 		{
-			const wxString& s = map.GetElementByID(GetValue());
+			const wxString& s = GetString();
 			wxCharBuffer b = s.ToAscii();
 			unsigned len = s.length();
 			if (len > 16)
@@ -324,7 +326,7 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgu
 
 	case MIDI_SYSEX_HW_LCD:
 		{
-			const wxString& s = map.GetElementByID(GetValue());
+			const wxString& s = GetString();
 			wxCharBuffer b = s.ToAscii();
 			unsigned len = s.length();
 			if (len > 32)
@@ -398,10 +400,10 @@ wxString GOrgueMidiEvent::ToString(GOrgueMidiMap& map) const
 		return wxString::Format(_("sysex GrandOrgue setup channel: %d NRPN: %d: name: %s"), GetChannel(), GetValue(), map.GetElementByID(GetKey()).c_str());
 
 	case MIDI_SYSEX_HW_STRING:
-		return wxString::Format(_("sysex Hauptwerk LCD string variable: %d - %s"), GetKey(), map.GetElementByID(GetValue()).c_str());
+		return wxString::Format(_("sysex Hauptwerk LCD string variable: %d - %s"), GetKey(), GetString().c_str());
 
 	case MIDI_SYSEX_HW_LCD:
-		return wxString::Format(_("sysex Hauptwerk LCD display: %d color: %d - %s"), GetKey(), GetChannel(), map.GetElementByID(GetValue()).c_str());
+		return wxString::Format(_("sysex Hauptwerk LCD display: %d color: %d - %s"), GetKey(), GetChannel(), GetString().c_str());
 
 	default:
 		return wxEmptyString;
