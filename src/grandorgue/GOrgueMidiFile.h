@@ -22,20 +22,20 @@
 #ifndef GORGUEMIDIFILE_H
 #define GORGUEMIDIFILE_H
 
-#include <stdint.h>
+#include "GOrgueInt.h"
 
 #pragma pack(push, 1)
 
 typedef struct {
 	char type[4];
-	uint32_t len;
+	GOUInt32BE len;
 } MIDIFileHeader;
 
 typedef struct {
 	MIDIFileHeader header;
-	uint16_t type;
-	uint16_t tracks;
-	uint16_t ppq;
+	GOUInt16BE type;
+	GOUInt16BE tracks;
+	GOUInt16BE ppq;
 } MIDIHeaderChunk;
 
 #pragma pack(pop)

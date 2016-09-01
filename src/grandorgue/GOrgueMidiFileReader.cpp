@@ -80,13 +80,13 @@ bool GOrgueMidiFileReader::Open(wxString filename)
 	m_Pos = sizeof(MIDIHeaderChunk);
 	m_TrackEnd = 0;
 	MIDIHeaderChunk* h = (MIDIHeaderChunk*)m_Data;
-	if (memcmp(h->header.type, "MThd", sizeof(h->header.type)) || wxUINT32_SWAP_ON_LE(h->header.len) != 6)
+	if (memcmp(h->header.type, "MThd", sizeof(h->header.type)) || h->header.len != 6)
 	{
 		wxLogError(_("Malformed MIDI header"));
 		return false;
 	}
-	m_Tracks = wxUINT16_SWAP_ON_LE(h->tracks);
-	switch (wxUINT16_SWAP_ON_LE(h->type))
+	m_Tracks = h->tracks;
+	switch (h->type)
 	{
 	case 0:
 		if (m_Tracks != 1)
@@ -109,11 +109,11 @@ bool GOrgueMidiFileReader::Open(wxString filename)
 		return false;
 
 	default:
-		wxLogError(_("Unkown MIDI file type %d"), wxUINT16_SWAP_ON_LE(h->type));
+		wxLogError(_("Unkown MIDI file type %d"), (int)h->type);
 		return false;
 	}
 	m_Tempo = 0x7A120; // 120 BPM
-	unsigned ppq = wxUINT16_SWAP_ON_LE(h->ppq);
+	unsigned ppq = h->ppq;
 	if (ppq & 0x8000)
 	{
 		unsigned frames = 1 + ((-ppq >> 8) & 0x7F);
@@ -147,7 +147,7 @@ bool GOrgueMidiFileReader::StartTrack()
 		if (memcmp(h->type, "MTrk", sizeof(h->type)))
 		{
 			wxLogError(_("Not recognized MIDI chunk at offset %d"), m_Pos);
-			m_Pos += sizeof(MIDIFileHeader) + wxUINT32_SWAP_ON_LE(h->len);
+			m_Pos += sizeof(MIDIFileHeader) + h->len;
 			if (m_Pos >= m_DataLen)
 			{
 				wxLogError(_("Incomplete chunk"));
@@ -156,7 +156,7 @@ bool GOrgueMidiFileReader::StartTrack()
 		}
 		else
 		{
-			m_TrackEnd = m_Pos + sizeof(MIDIFileHeader) + wxUINT32_SWAP_ON_LE(h->len);
+			m_TrackEnd = m_Pos + sizeof(MIDIFileHeader) + h->len;
 			if (m_Pos >= m_DataLen)
 			{
 				wxLogError(_("Incomplete chunk"));
