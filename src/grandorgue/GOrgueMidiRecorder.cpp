@@ -349,7 +349,7 @@ void GOrgueMidiRecorder::StopRecording()
 	Write(end, sizeof(end));
 	Flush();
 	m_FileLength -= sizeof(MIDIHeaderChunk) + sizeof(MIDIFileHeader);
-	MIDIFileHeader h = { { 'M', 'T', 'r', 'k' }, (uint32_t)wxUINT32_SWAP_ON_LE(m_FileLength) };
+	MIDIFileHeader h = { { 'M', 'T', 'r', 'k' }, m_FileLength };
 	m_file.Seek(sizeof(MIDIHeaderChunk));
 	m_file.Write(&h, sizeof(h));
 	m_file.Flush();
@@ -366,8 +366,7 @@ void GOrgueMidiRecorder::StopRecording()
 
 void GOrgueMidiRecorder::StartRecording(bool rename)
 {
-	MIDIHeaderChunk h = { { { 'M', 'T', 'h', 'd' }, (uint32_t)wxUINT32_SWAP_ON_LE(6) }, 
-			      (uint16_t)wxUINT16_SWAP_ON_LE(0),(uint16_t)wxUINT16_SWAP_ON_LE(1), (uint16_t)wxUINT16_SWAP_ON_LE(0xE728) };
+	MIDIHeaderChunk h = { { { 'M', 'T', 'h', 'd' }, 6 }, 0, 1, 0xE728 };
 	MIDIFileHeader t = { { 'M', 'T', 'r', 'k' }, 0 };
 
 	StopRecording();
