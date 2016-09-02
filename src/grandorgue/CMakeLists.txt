@@ -183,7 +183,6 @@ GOrgueTimer.cpp
 GOrgueTremulant.cpp
 GOrgueWindchest.cpp
 GOrgueSwitch.cpp
-GOrgueZipFormat.cpp
 GrandOrgueFile.cpp
 GrandOrgueFrame.cpp
 GOrgueUtil.cpp

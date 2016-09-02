@@ -80,14 +80,14 @@ bool GOrgueArchiveReader::GenerateFileHash(wxString& id)
 
 size_t GOrgueArchiveReader::ExtractU64(void* ptr)
 {
-	uint64_t* p = (uint64_t*) ptr;
-	return wxUINT64_SWAP_ON_BE( *p );
+	GOUInt64LE* p = (GOUInt64LE*) ptr;
+	return *p;
 }
 
 size_t GOrgueArchiveReader::ExtractU32(void* ptr)
 {
-	uint32_t* p = (uint32_t*) ptr;
-	return wxUINT32_SWAP_ON_BE( *p );
+	GOUInt32LE* p = (GOUInt32LE*) ptr;
+	return *p;
 }
 
 bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHeader& central, std::vector<GOArchiveEntry>& entries)
@@ -112,7 +112,6 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 				wxLogError(_("Incomplete central directory extra record"));
 				return false;
 			}
-			extra.Swap();
 			if (len < sizeof(extra) + extra.size)
 			{
 				wxLogError(_("Incomplete central directory extra record"));
@@ -178,7 +177,7 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 			}
 			else
 			{
-				wxLogError(_("Unknown extendend information %04x"), extra.type);
+				wxLogError(_("Unknown extendend information %04x"), (unsigned)extra.type);
 			}
 			len -= sizeof(extra) + extra.size;
 			extra_ptr += sizeof(extra) + extra.size;
@@ -199,7 +198,6 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 		return false;
 	if (!Read(&local, sizeof(local)))
 		return false;
-	local.Swap();
 	if (local.signature != ZIP_LOCAL_HEADER)
 	{
 		wxLogError(_("Missing local header"));
@@ -226,7 +224,6 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 				wxLogError(_("Incomplete central directory extra record"));
 				return false;
 			}
-			extra.Swap();
 			if (len < sizeof(extra) + extra.size)
 			{
 				wxLogError(_("Incomplete central directory extra record"));
@@ -270,7 +267,7 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 			}
 			else
 			{
-				wxLogError(_("Unknown extendend information %04x"), extra.type);
+				wxLogError(_("Unknown extendend information %04x"), (unsigned)extra.type);
 			}
 			len -= sizeof(extra) + extra.size;
 			extra_ptr += sizeof(extra) + extra.size;
@@ -377,7 +374,6 @@ bool GOrgueArchiveReader::ReadCentralDirectory(size_t offset, size_t entry_count
 			return false;
 		if (!Read(&record, sizeof(record)))
 			return false;
-		record.Swap();
 		size_t len = sizeof(record);
 		len += record.name_length + record.extra_length + record.comment_length;
 		if (record.signature != ZIP_CENTRAL_DIRECTORY_HEADER)
@@ -420,7 +416,6 @@ bool GOrgueArchiveReader::ReadEnd64Record(size_t offset, GOZipEnd64Record& recor
 			return false;
 		if (!Read(&header, sizeof(header)))
 			return false;
-		header.Swap();
 		if (size < sizeof(header) + header.size)
 			return false;
 		size -= sizeof(header) + header.size;
@@ -447,7 +442,6 @@ bool GOrgueArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry>& entries)
 			return false;
 		if (!Read(&record, sizeof(record)))
 			return false;
-		record.Swap();
 		if (record.signature != ZIP_END_RECORD)
 			continue;
 		if (record.comment_len != i)
@@ -460,7 +454,6 @@ bool GOrgueArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry>& entries)
 				return false;
 			if (!Read(&locator, sizeof(locator)))
 			    return false;
-			locator.Swap();
 			if (locator.signature == ZIP_END64_LOCATOR)
 			{
 				zip64 = true;
@@ -478,7 +471,6 @@ bool GOrgueArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry>& entries)
 					return false;
 				if (!Read(&record64, sizeof(record64)))
 					return false;
-				record64.Swap();
 				if (record64.signature != ZIP_END64_RECORD)
 				{
 					wxLogError(_("Zip64 end record not found"));

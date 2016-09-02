@@ -22,7 +22,7 @@
 #ifndef GORGUEZIPFORMAT_H
 #define GORGUEZIPFORMAT_H
 
-#include <stdint.h>
+#include "GOrgueInt.h"
 
 #pragma pack(push, 1)
 
@@ -35,91 +35,84 @@
 
 typedef struct GOZipLocalHeader
 {
-	uint32_t signature;
-	uint16_t version_extract;
-	uint16_t flags;
-	uint16_t compression;
-	uint16_t modification_time;
-	uint16_t modification_date;
-	uint32_t crc;
-	uint32_t compressed_size;
-	uint32_t uncompressed_size;
-	uint16_t name_length;
-	uint16_t extra_length;
-	void Swap();
+	GOUInt32LE signature;
+	GOUInt16LE version_extract;
+	GOUInt16LE flags;
+	GOUInt16LE compression;
+	GOUInt16LE modification_time;
+	GOUInt16LE modification_date;
+	GOUInt32LE crc;
+	GOUInt32LE compressed_size;
+	GOUInt32LE uncompressed_size;
+	GOUInt16LE name_length;
+	GOUInt16LE extra_length;
 } GOZipLocalHeader;
 
 typedef struct GOZipCentralHeader
 {
-	uint32_t signature;
-	uint16_t version_creator;
-	uint16_t version_extract;
-	uint16_t flags;
-	uint16_t compression;
-	uint16_t modification_time;
-	uint16_t modification_date;
-	uint32_t crc;
-	uint32_t compressed_size;
-	uint32_t uncompressed_size;
-	uint16_t name_length;
-	uint16_t extra_length;
-	uint16_t comment_length;
-	uint16_t disk_number;
-	uint16_t internal_attributes;
-	uint32_t external_attributes;
-	uint32_t offset;
-	void Swap();
+	GOUInt32LE signature;
+	GOUInt16LE version_creator;
+	GOUInt16LE version_extract;
+	GOUInt16LE flags;
+	GOUInt16LE compression;
+	GOUInt16LE modification_time;
+	GOUInt16LE modification_date;
+	GOUInt32LE crc;
+	GOUInt32LE compressed_size;
+	GOUInt32LE uncompressed_size;
+	GOUInt16LE name_length;
+	GOUInt16LE extra_length;
+	GOUInt16LE comment_length;
+	GOUInt16LE disk_number;
+	GOUInt16LE internal_attributes;
+	GOUInt32LE external_attributes;
+	GOUInt32LE offset;
 } GOZipCentralHeader;
 
 typedef struct GOZipHeaderExtraRecord
 {
-	uint16_t type;
-	uint16_t size;
-	void Swap();
+	GOUInt16LE type;
+	GOUInt16LE size;
 } GOZipHeaderExtraRecord;
 
 typedef struct GOZipEnd64Record
 {
-	uint32_t signature;
-	uint64_t size;
-	uint16_t version_creator;
-	uint16_t version_extract;
-	uint32_t current_disk;
-	uint32_t directory_disk;
-	uint64_t entry_count_disk;
-	uint64_t entry_count;
-	uint64_t directory_size;
-	uint64_t directory_offset;
-	void Swap();
+	GOUInt32LE signature;
+	GOUInt64LE size;
+	GOUInt16LE version_creator;
+	GOUInt16LE version_extract;
+	GOUInt32LE current_disk;
+	GOUInt32LE directory_disk;
+	GOUInt64LE entry_count_disk;
+	GOUInt64LE entry_count;
+	GOUInt64LE directory_size;
+	GOUInt64LE directory_offset;
 } GOZipEnd64Record;
 
 typedef struct GOZipEnd64Locator
 {
-	uint32_t signature;
-	uint32_t end_record_disk;
-	uint64_t end_record_offset;
-	uint32_t disk_count;
-	void Swap();
+	GOUInt32LE signature;
+	GOUInt32LE end_record_disk;
+	GOUInt64LE end_record_offset;
+	GOUInt32LE disk_count;
 } GOZipEnd64Locator;
 
 typedef struct GOZipEnd64BlockHeader
 {
-	uint16_t header_id;
-	uint32_t size;
-	void Swap();
+	GOUInt16LE header_id;
+	GOUInt32LE size;
 } GOZipEnd64BlockHeader;
 
 typedef struct GOZipEndRecord
 {
-	uint32_t signature;
-	uint16_t current_disk;
-	uint16_t directory_disk;
-	uint16_t entry_count_disk;
-	uint16_t entry_count;
-	uint32_t directory_size;
-	uint32_t directory_offset;
-	uint16_t comment_len;
-	void Swap();
+	GOUInt32LE signature;
+	GOUInt16LE current_disk;
+	GOUInt16LE directory_disk;
+	GOUInt16LE entry_count_disk;
+	GOUInt16LE entry_count;
+	GOUInt32LE directory_size;
+	GOUInt32LE directory_offset;
+	GOUInt16LE comment_len;
 } GOZipEndRecord;
 
 #pragma pack(pop)
