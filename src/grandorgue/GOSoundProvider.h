@@ -23,10 +23,11 @@
 #define GOSOUNDPROVIDER_H_
 
 #include "ptrvector.h"
-#include "GOSoundAudioSection.h"
 #include "GOrgueStatisticCallback.h"
+#include "GOrgueWave.h"
 #include <vector>
 
+class GOAudioSection;
 class GOrgueCache;
 class GOrgueCacheWriter;
 class GOrgueMemoryPool;

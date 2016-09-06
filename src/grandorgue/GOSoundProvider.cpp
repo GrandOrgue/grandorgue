@@ -21,6 +21,7 @@
 
 #include "GOSoundProvider.h"
 
+#include "GOSoundAudioSection.h"
 #include "GOrgueCache.h"
 #include "GOrgueCacheWriter.h"
 #include "GOrgueMemoryPool.h"
