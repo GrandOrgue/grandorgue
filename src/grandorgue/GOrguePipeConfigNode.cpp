@@ -21,13 +21,16 @@
 
 #include "GOrguePipeConfigNode.h"
 
+#include "GOrgueSampleStatistic.h"
+#include "GOrgueStatisticCallback.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 
-GOrguePipeConfigNode::GOrguePipeConfigNode(GOrguePipeConfigNode* parent, GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback) :
+GOrguePipeConfigNode::GOrguePipeConfigNode(GOrguePipeConfigNode* parent, GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback, GOrgueStatisticCallback* statistic) :
 	m_organfile(organfile),
 	m_parent(parent),
 	m_PipeConfig(organfile, callback),
+	m_StatisticCallback(statistic),
 	m_Name()
 {
 	if (m_parent)
@@ -190,6 +193,13 @@ unsigned GOrguePipeConfigNode::GetEffectiveChannels()
 		return m_parent->GetEffectiveChannels();
 	else
 		return m_organfile->GetSettings().LoadChannels();
+}
+
+GOrgueSampleStatistic GOrguePipeConfigNode::GetStatistic()
+{
+	if (m_StatisticCallback)
+		return m_StatisticCallback->GetStatistic();
+	return GOrgueSampleStatistic();
 }
 
 unsigned GOrguePipeConfigNode::GetChildCount()

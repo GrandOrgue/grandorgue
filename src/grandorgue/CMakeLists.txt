@@ -157,6 +157,7 @@ GOrgueRank.cpp
 GOrgueReferencePipe.cpp
 GOrgueReleaseAlignTable.cpp
 GOrgueRtHelpers.cpp
+GOrgueSampleStatistic.cpp
 GOrgueStandardFile.cpp
 GOrgueSetter.cpp
 GOrgueSetterButton.cpp

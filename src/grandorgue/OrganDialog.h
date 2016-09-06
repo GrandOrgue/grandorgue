@@ -35,6 +35,7 @@ class wxChoice;
 class wxComboBox;
 class wxSpinButton;
 class wxSpinEvent;
+class wxStaticText;
 class wxTextCtrl;
 class wxTreeCtrl;
 class wxTreeEvent;
@@ -67,6 +68,7 @@ private:
 	int m_LastAttackLoad;
 	wxChoice* m_ReleaseLoad;
 	int m_LastReleaseLoad;
+	wxStaticText* m_MemoryDisplay;
 	wxButton* m_Apply;
 	wxButton* m_Reset;
 	wxButton* m_Default;

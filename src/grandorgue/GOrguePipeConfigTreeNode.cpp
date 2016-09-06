@@ -21,9 +21,10 @@
 
 #include "GOrguePipeConfigTreeNode.h"
 
+#include "GOrgueSampleStatistic.h"
 
 GOrguePipeConfigTreeNode::GOrguePipeConfigTreeNode(GOrguePipeConfigNode* parent, GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback) :
-	GOrguePipeConfigNode(parent, organfile, this),
+	GOrguePipeConfigNode(parent, organfile, this, NULL),
 	m_Childs(),
 	m_Callback(callback)
 {
@@ -67,3 +68,12 @@ void GOrguePipeConfigTreeNode::UpdateAudioGroup()
 	if (m_Callback)
 		m_Callback->UpdateAudioGroup();
 }
+
+GOrgueSampleStatistic GOrguePipeConfigTreeNode::GetStatistic()
+{
+	GOrgueSampleStatistic stat = GOrguePipeConfigNode::GetStatistic();
+	for(unsigned i = 0; i < m_Childs.size(); i++)
+		stat.Cumulate(m_Childs[i]->GetStatistic());
+	return stat;
+}
+

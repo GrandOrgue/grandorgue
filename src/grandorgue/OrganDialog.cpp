@@ -23,6 +23,7 @@
 
 #include "GOrgueEvent.h"
 #include "GOrgueRank.h"
+#include "GOrgueSampleStatistic.h"
 #include "GOrgueSettings.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
@@ -41,11 +42,13 @@
 class OrganTreeItemData : public wxTreeItemData
 {
 public:
-	OrganTreeItemData(GOrguePipeConfig& c)
+	OrganTreeItemData(GOrguePipeConfigNode& c)
 	{
-		config = &c;
+		node = &c;
+		config = &node->GetPipeConfig();
 	}
 
+	GOrguePipeConfigNode* node;
 	GOrguePipeConfig* config;
 };
 
@@ -243,6 +246,15 @@ OrganDialog::OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile*
 	buttons->Add(m_Apply);
 	settingSizer->Add(buttons);
 
+	box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sample informations"));
+	grid = new wxFlexGridSizer(6, 2, 5, 5);
+	box1->Add(grid, 0, wxEXPAND | wxALL, 5);
+	settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
+
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Memory usage:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	m_MemoryDisplay= new wxStaticText(this, wxID_ANY, wxEmptyString);
+	grid->Add(m_MemoryDisplay);
+
 	wxBoxSizer* box3 = new wxStaticBoxSizer(wxVERTICAL, this, _("Tuning and Voicing"));
 	box3->Add(m_IgnorePitch = new wxCheckBox (this, ID_EVENT_IGNORE_PITCH, _("Ignore pitch info in organ samples wav files"       )), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	if (m_organfile->GetIgnorePitch())
@@ -325,6 +337,21 @@ void OrganDialog::Load()
 			entries.RemoveAt(i, 1);
 			i--;
 		}
+	}
+
+	GOrgueSampleStatistic stat;
+	for(unsigned i = 0; i < entries.size(); i++)
+		if (m_Tree->GetItemData(entries[i]))
+			stat.Cumulate(((OrganTreeItemData*)m_Tree->GetItemData(entries[i]))->node->GetStatistic());
+
+	if (!stat.IsValid())
+	{
+		m_MemoryDisplay->SetLabel(_("--- MB (--- MB end)"));
+	}
+	else
+	{
+		m_MemoryDisplay->SetLabel(wxString::Format(_("%.3f MB  (%.3f MB end)"), stat.GetMemorySize() / (1024.0 * 1024.0),
+							   stat.GetEndSegmentSize() / (1024.0 * 1024.0)));
 	}
 
 	if (entries.size() == 0)
@@ -414,7 +441,6 @@ void OrganDialog::Load()
 	m_Last = 0;
 	for(unsigned i = 0; i < entries.size() && !m_Last; i++)
 		m_Last = (OrganTreeItemData*)m_Tree->GetItemData(entries[i]);
-
 
 	m_Amplitude->Enable();
 	m_AmplitudeSpin->Enable();
@@ -625,7 +651,7 @@ void OrganDialog::Modified()
 
 void OrganDialog::FillTree(wxTreeItemId parent, GOrguePipeConfigNode& config)
 {
-	wxTreeItemData* data = new OrganTreeItemData(config.GetPipeConfig());
+	wxTreeItemData* data = new OrganTreeItemData(config);
 	wxTreeItemId e;
 	if (!parent.IsOk())
 		e = m_Tree->AddRoot(config.GetName(), -1, -1, data);

@@ -54,7 +54,7 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 	m_SampleMidiKeyNumber(-1),
 	m_RetunePipe(retune),
 	m_SoundProvider(organfile->GetMemoryPool()),
-	m_PipeConfig(&rank->GetPipeConfig(), organfile, this)
+	m_PipeConfig(&rank->GetPipeConfig(), organfile, this, &m_SoundProvider)
 {
 }
 

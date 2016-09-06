@@ -27,6 +27,7 @@
 #include "GOrgueCacheWriter.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrgueReleaseAlignTable.h"
+#include "GOrgueSampleStatistic.h"
 #include <wx/intl.h>
 
 #ifndef M_PI
@@ -1040,4 +1041,17 @@ void GOAudioSection::GetHistory(const audio_section_stream *stream, int history[
 			}
 		}
 	}
+}
+
+GOrgueSampleStatistic GOAudioSection::GetStatistic()
+{
+	GOrgueSampleStatistic stat;
+
+	size_t size = 0;
+	for (unsigned i = 0; i < m_EndSegments.size(); i++)
+		size += m_EndSegments[i].end_size;
+	stat.SetEndSegmentSize(size);
+	stat.SetMemorySize(size + m_AllocSize);
+
+	return stat;
 }
