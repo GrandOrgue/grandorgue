@@ -21,6 +21,7 @@
 
 #include "GOSoundProviderSynthedTrem.h"
 
+#include "GOSoundAudioSection.h"
 #include "GOrgueMemoryPool.h"
 
 GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOrgueMemoryPool& pool) :

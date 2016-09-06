@@ -22,10 +22,10 @@
 #ifndef GORGUERELEASEALIGNTABLE_H_
 #define GORGUERELEASEALIGNTABLE_H_
 
-#include "GOSoundAudioSection.h"
-
+class GOAudioSection;
 class GOrgueCache;
 class GOrgueCacheWriter;
+typedef struct audio_section_stream_s audio_section_stream;
 
 #define PHASE_ALIGN_DERIVATIVES    2
 #define PHASE_ALIGN_AMPLITUDES     32

@@ -21,6 +21,7 @@
 
 #include "GOSoundProviderWave.h"
 
+#include "GOSoundAudioSection.h"
 #include "GOrgueFile.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrgueWave.h"
