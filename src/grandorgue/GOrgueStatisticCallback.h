@@ -19,29 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEPIPECONFIGTREENODE_H
-#define GORGUEPIPECONFIGTREENODE_H
+#ifndef GORGUESTATISTICCALLBACK_H
+#define GORGUESTATISTICCALLBACK_H
 
-#include "GOrguePipeConfigNode.h"
-#include <vector>
+class GOrgueSampleStatistic;
 
-class GOrguePipeConfigTreeNode : public GOrguePipeConfigNode, private GOrguePipeUpdateCallback
+class GOrgueStatisticCallback
 {
-private:
-	std::vector<GOrguePipeConfigNode*> m_Childs;
-	GOrguePipeUpdateCallback* m_Callback;
-
-	void UpdateAmplitude();
-	void UpdateTuning();
-	void UpdateAudioGroup();
-
 public:
-	GOrguePipeConfigTreeNode(GOrguePipeConfigNode* parent, GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback);
+	virtual ~GOrgueStatisticCallback()
+	{
+	}
 
-	void AddChild(GOrguePipeConfigNode* node);
-	unsigned GetChildCount();
-	GOrguePipeConfigNode* GetChild(unsigned index);
-	GOrgueSampleStatistic GetStatistic();
+	virtual GOrgueSampleStatistic GetStatistic() = 0;
 };
 
 #endif

@@ -25,18 +25,22 @@
 #include "GOrguePipeConfig.h"
 #include "GOrgueSaveableObject.h"
 
+class GOrgueSampleStatistic;
+class GOrgueStatisticCallback;
+
 class GOrguePipeConfigNode : private GOrgueSaveableObject
 {
 private:
 	GrandOrgueFile* m_organfile;
 	GOrguePipeConfigNode* m_parent;
 	GOrguePipeConfig m_PipeConfig;
+	GOrgueStatisticCallback* m_StatisticCallback;
 	wxString m_Name;
 
 	void Save(GOrgueConfigWriter& cfg);
 
 public:
-	GOrguePipeConfigNode(GOrguePipeConfigNode* parent, GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback);
+	GOrguePipeConfigNode(GOrguePipeConfigNode* parent, GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback, GOrgueStatisticCallback* statistic);
 	virtual ~GOrguePipeConfigNode();
 
 	void SetParent(GOrguePipeConfigNode* parent);
@@ -68,6 +72,7 @@ public:
 	virtual void AddChild(GOrguePipeConfigNode* node);
 	virtual unsigned GetChildCount();
 	virtual GOrguePipeConfigNode* GetChild(unsigned index);
+	virtual GOrgueSampleStatistic GetStatistic();
 };
 
 #endif

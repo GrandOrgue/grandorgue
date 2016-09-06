@@ -24,6 +24,7 @@
 
 #include "ptrvector.h"
 #include "GOSoundAudioSection.h"
+#include "GOrgueStatisticCallback.h"
 #include <vector>
 
 class GOrgueCache;
@@ -44,7 +45,7 @@ typedef struct
 	unsigned max_playback_time;
 } release_section_info;
 
-class GOSoundProvider
+class GOSoundProvider : public GOrgueStatisticCallback
 {
 
 protected:
@@ -92,6 +93,8 @@ public:
 	bool checkForMissingRelease();
 	bool checkMissingRelease();
 	bool checkNotNecessaryRelease();
+
+	GOrgueSampleStatistic GetStatistic();
 };
 
 inline

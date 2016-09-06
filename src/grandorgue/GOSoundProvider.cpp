@@ -25,6 +25,7 @@
 #include "GOrgueCacheWriter.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrgueReleaseAlignTable.h"
+#include "GOrgueSampleStatistic.h"
 #include <wx/intl.h>
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
@@ -314,4 +315,14 @@ bool GOSoundProvider::checkNotNecessaryRelease()
 	if (IsOneshot() && m_Release.size())
 		return true;
 	return false;
+}
+
+GOrgueSampleStatistic GOSoundProvider::GetStatistic()
+{
+	GOrgueSampleStatistic stat;
+	for(unsigned i = 0; i < m_Attack.size(); i++)
+		stat.Cumulate(m_Attack[i]->GetStatistic());
+	for(unsigned i = 0; i < m_Release.size(); i++)
+		stat.Cumulate(m_Release[i]->GetStatistic());
+	return stat;
 }

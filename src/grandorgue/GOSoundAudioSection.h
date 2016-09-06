@@ -35,6 +35,7 @@ class GOrgueCache;
 class GOrgueCacheWriter;
 class GOrgueMemoryPool;
 class GOrgueReleaseAlignTable;
+class GOrgueSampleStatistic;
 
 struct audio_section_stream_s;
 
@@ -200,6 +201,7 @@ public:
 	bool SupportsStreamAlignment() const;
 	void SetupStreamAlignment(const std::vector<const GOAudioSection*> &joinables, unsigned start_index);
 
+	GOrgueSampleStatistic GetStatistic();
 };
 
 inline

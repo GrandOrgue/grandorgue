@@ -19,29 +19,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEPIPECONFIGTREENODE_H
-#define GORGUEPIPECONFIGTREENODE_H
+#ifndef GORGUESAMPLESTATISTIC_H
+#define GORGUESAMPLESTATISTIC_H
 
-#include "GOrguePipeConfigNode.h"
-#include <vector>
+#include <stddef.h>
 
-class GOrguePipeConfigTreeNode : public GOrguePipeConfigNode, private GOrguePipeUpdateCallback
+class GOrgueSampleStatistic
 {
 private:
-	std::vector<GOrguePipeConfigNode*> m_Childs;
-	GOrguePipeUpdateCallback* m_Callback;
+	bool m_Valid;
+	size_t m_MemorySize;
+	size_t m_EndSegmentSize;
 
-	void UpdateAmplitude();
-	void UpdateTuning();
-	void UpdateAudioGroup();
+	void Prepare();
 
 public:
-	GOrguePipeConfigTreeNode(GOrguePipeConfigNode* parent, GrandOrgueFile* organfile, GOrguePipeUpdateCallback* callback);
+	GOrgueSampleStatistic();
+	~GOrgueSampleStatistic();
 
-	void AddChild(GOrguePipeConfigNode* node);
-	unsigned GetChildCount();
-	GOrguePipeConfigNode* GetChild(unsigned index);
-	GOrgueSampleStatistic GetStatistic();
+	void Init();
+	void Cumulate(const GOrgueSampleStatistic& stat);
+
+	void SetMemorySize(size_t size);
+	void SetEndSegmentSize(size_t size);
+
+	bool IsValid() const;
+	size_t GetMemorySize() const;
+	size_t GetEndSegmentSize() const;
 };
 
 #endif
+
