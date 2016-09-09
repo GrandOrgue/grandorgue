@@ -30,7 +30,6 @@
 #include "GOSoundReleaseWorkItem.h"
 #include "GOSoundWindchestWorkItem.h"
 #include "GOrgueEvent.h"
-#include "GOrgueInt24.h"
 #include "GOrguePipe.h"
 #include "GOrgueReleaseAlignTable.h"
 #include "GOrgueWindchest.h"

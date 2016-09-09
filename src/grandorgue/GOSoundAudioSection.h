@@ -25,7 +25,7 @@
 #include "GOSoundCompress.h"
 #include "GOSoundDefs.h"
 #include "GOSoundResample.h"
-#include "GOrgueInt24.h"
+#include "GOrgueInt.h"
 #include "GOrgueWave.h"
 #include <assert.h>
 #include <math.h>
@@ -233,17 +233,17 @@ int GOAudioSection::GetSampleData(unsigned position, unsigned channel, unsigned 
 {
 	if (bits_per_sample <= 8)
 	{
-		wxInt8* data = (wxInt8*)sample_data;
+		GOInt8* data = (GOInt8*)sample_data;
 		return data[position * channels + channel];
 	}
 	if (bits_per_sample <= 16)
 	{
-		wxInt16* data = (wxInt16*)sample_data;
+		GOInt16* data = (GOInt16*)sample_data;
 		return data[position * channels + channel];
 	}
 	if (bits_per_sample <= 24)
 	{
-		Int24* data = (Int24*)sample_data;
+		GOInt24* data = (GOInt24*)sample_data;
 		return data[position * channels + channel];
 	}
 	assert(0 && "broken sampler type");
@@ -283,19 +283,19 @@ void GOAudioSection::SetSampleData(unsigned position, unsigned channel, unsigned
 {
 	if (bits_per_sample <= 8)
 	{
-		wxInt8* data = (wxInt8*)sample_data;
+		GOInt8* data = (GOInt8*)sample_data;
 		data[position * channels + channel] = value;
 		return;
 	}
 	if (bits_per_sample <= 16)
 	{
-		wxInt16* data = (wxInt16*)sample_data;
+		GOInt16* data = (GOInt16*)sample_data;
 		data[position * channels + channel] = value;
 		return;
 	}
 	if (bits_per_sample <= 24)
 	{
-		Int24* data = (Int24*)sample_data;
+		GOInt24* data = (GOInt24*)sample_data;
 		data[position * channels + channel] = value;
 		return;
 	}
