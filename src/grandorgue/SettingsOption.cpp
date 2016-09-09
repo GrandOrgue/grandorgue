@@ -75,19 +75,19 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	choices.clear();
 	for (unsigned i = 1; i < MAX_CPU; i++)
 		choices.push_back(wxString::Format(wxT("%d"), i));
-	grid->Add(new wxStaticText(this, wxID_ANY, _("Concurrency Level:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Number of CPU cores:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_Concurrency = new wxChoice(this, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
 	for (unsigned i = 1; i < MAX_CPU; i++)
 		choices.push_back(wxString::Format(wxT("%d"), i));
-	grid->Add(new wxStaticText(this, wxID_ANY, _("Release Concurrency Level:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Workload distribution:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_ReleaseConcurrency = new wxChoice(this, ID_RELEASE_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
 	for (unsigned i = 0; i < MAX_CPU; i++)
 		choices.push_back(wxString::Format(wxT("%d"), i));
-	grid->Add(new wxStaticText(this, wxID_ANY, _("Load Concurrency Level:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Cores used at loadtime:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_LoadConcurrency = new wxChoice(this, ID_LOAD_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
 
 	choices.clear();
