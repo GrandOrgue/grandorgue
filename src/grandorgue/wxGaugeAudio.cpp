@@ -26,14 +26,15 @@
 #include <wx/image.h>
 
 BEGIN_EVENT_TABLE(wxGaugeAudio, wxControl)
-	EVT_ERASE_BACKGROUND(wxGaugeAudio::OnErase)
+	EVT_PAINT(wxGaugeAudio::OnPaint)
 END_EVENT_TABLE()
 
-wxGaugeAudio::wxGaugeAudio(wxWindow* parent, wxWindowID id, const wxPoint& pos) : wxControl(parent, id, pos, wxSize(73, 11), wxNO_BORDER)
+wxGaugeAudio::wxGaugeAudio(wxWindow* parent, wxWindowID id, const wxPoint& pos) :
+	wxControl(parent, id, pos, wxSize(73, 11), wxNO_BORDER),
+	m_Value(0),
+	m_Clip(false),
+	m_Update(false)
 {
-	m_value = 0;
-	m_clip = false;
-
         m_gauge = wxBitmap(GetImage_gauge());
 	m_gaugedc.SelectObject(m_gauge);
 }
@@ -42,14 +43,15 @@ wxGaugeAudio::~wxGaugeAudio(void)
 {
 }
 
-void wxGaugeAudio::OnErase(wxEraseEvent& event)
+void wxGaugeAudio::OnPaint(wxPaintEvent& event)
 {
-	wxDC* dc = event.GetDC();
-	int split = (m_value + 1) << 1;
-	dc->Blit(0, 0, split, 11, &m_gaugedc, 0, 11);
+	wxPaintDC dc(this);
+	m_Update = false;
+	int split = (m_Value + 1) << 1;
+	dc.Blit(0, 0, split, 11, &m_gaugedc, 0, 11);
 	if (66 - split)
-		dc->Blit(split, 0, 66 - split, 11, &m_gaugedc, split, 0);
-	dc->Blit(66, 0, 7, 11, &m_gaugedc, 66, m_clip ? 11 : 0);
+		dc.Blit(split, 0, 66 - split, 11, &m_gaugedc, split, 0);
+	dc.Blit(66, 0, 7, 11, &m_gaugedc, 66, m_Clip ? 11 : 0);
 }
 
 void wxGaugeAudio::SetValue(int what)
@@ -60,34 +62,30 @@ void wxGaugeAudio::SetValue(int what)
 	if (what > 32)
 	{
 		what = 32;
-		if (!m_clip)
-		{
-			m_clip = true;
-			dc.Blit(66, 0, 7, 11, &m_gaugedc, 66, 11);
-		}
+		if (!m_Clip)
+			m_Clip = true;
 	}
-
-        int split;
-        if (what > m_value)
-        {
-            split = (m_value + 1) << 1;
-            dc.Blit(split, 0, (what - m_value) << 1, 11, &m_gaugedc, split, 11);
-        }
-        else if (what < m_value)
-        {
-            split = (what + 1) << 1;
-            dc.Blit(split, 0, (m_value - what) << 1, 11, &m_gaugedc, split, 0);
-        }
-
-	m_value = what;
+        if (what != m_Value)
+	{
+		m_Value = what;
+		Update();
+	}
 }
 
 void wxGaugeAudio::ResetClip()
 {
 	wxClientDC dc(this);
-	if (m_clip)
+	if (m_Clip)
 	{
-		m_clip = false;
-		dc.Blit(66, 0, 7, 11, &m_gaugedc, 66, 0);
+		m_Clip = false;
+		Update();
 	}
+}
+
+void wxGaugeAudio::Update()
+{
+	if (m_Update)
+		return;
+	m_Update = true;
+	Refresh(false);
 }
