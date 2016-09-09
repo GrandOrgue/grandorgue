@@ -31,19 +31,11 @@
 
 struct struct_WAVE
 {
-	char ChunkID[4];
-	wxUint32 ChunkSize;
-	char Format[4];
-	char Subchunk1ID[4];
-	wxUint32 Subchunk1Size;
-	wxUint16 AudioFormat;
-	wxUint16 NumChannels;
-	wxUint32 SampleRate;
-	wxUint32 ByteRate;
-	wxUint16 BlockAlign;
-	wxUint16 BitsPerSample;
-	char Subchunk2ID[4];
-	wxUint32 Subchunk2Size;
+	GO_WAVECHUNKHEADER riffHeader;
+	GO_FOURCC riffIdent;
+	GO_WAVECHUNKHEADER formatHeader;
+	GO_WAVEFORMATPCM formatBlock;
+	GO_WAVECHUNKHEADER dataHeader;
 };
 
 #pragma pack(pop)
@@ -74,19 +66,13 @@ GOSoundRecorder::~GOSoundRecorder()
 struct_WAVE GOSoundRecorder::generateHeader(unsigned datasize)
 {
 	struct_WAVE WAVE = {
-		{'R','I','F','F'}, 
-		wxUINT32_SWAP_ON_BE(datasize + 36), 
-		{'W','A','V','E'}, 
-		{'f','m','t',' '}, 
-		wxUINT32_SWAP_ON_BE(16), 
-		(wxUint16)wxUINT16_SWAP_ON_BE(m_BytesPerSample == 4 ? 3 : 1), 
-		(wxUint16)wxUINT16_SWAP_ON_BE(m_Channels), 
-		wxUINT32_SWAP_ON_BE(m_SampleRate), 
-		wxUINT32_SWAP_ON_BE(m_SampleRate * m_BytesPerSample * m_Channels), 
-		(wxUint16)wxUINT16_SWAP_ON_BE(m_BytesPerSample * m_Channels), 
-		(wxUint16)wxUINT16_SWAP_ON_BE(8 * m_BytesPerSample), 
-		{'d','a','t','a'}, 
-		wxUINT32_SWAP_ON_BE(datasize)};
+		{ {'R','I','F','F'}, datasize + 36},
+		{'W','A','V','E'},
+		{ {'f','m','t',' '}, 16},
+		{ m_BytesPerSample == 4 ? 3 : 1, m_Channels, m_SampleRate,
+		  m_SampleRate * m_BytesPerSample * m_Channels,
+		  m_BytesPerSample * m_Channels, 8 * m_BytesPerSample},
+		{ {'d','a','t','a'}, datasize}};
 	return WAVE;
 }
 
@@ -177,17 +163,17 @@ static inline int float_to_fixed(float f, unsigned fractional_bits)
 	return f_exp;
 }
 
-static void convertValue(float value, GO_Int24& result)
+static void convertValue(float value, GOInt24LE& result)
 {
-	result = IntToGOInt24(float_to_fixed(value, 23));
+	result = float_to_fixed(value, 23);
 }
 
-static void convertValue(float value, int16_t& result)
+static void convertValue(float value, GOInt16LE& result)
 {
-	result = wxINT16_SWAP_ON_BE(float_to_fixed(value, 15));
+	result = float_to_fixed(value, 15);
 }
 
-static void convertValue(float value, int8_t& result)
+static void convertValue(float value, GOInt8& result)
 {
 	result = (unsigned char)(float_to_fixed(value, 7) + 128);
 }
@@ -250,13 +236,13 @@ void GOSoundRecorder::Run()
 	switch(m_BytesPerSample)
 	{
 	case 1:
-		ConvertData<int8_t>();
+		ConvertData<GOInt8>();
 		break;
 	case 2:
-		ConvertData<int16_t>();
+		ConvertData<GOInt16LE>();
 		break;
 	case 3:
-		ConvertData<GO_Int24>();
+		ConvertData<GOInt24LE>();
 		break;
 	case 4:
 		ConvertData<float>();
