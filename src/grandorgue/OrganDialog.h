@@ -69,6 +69,7 @@ private:
 	wxChoice* m_ReleaseLoad;
 	int m_LastReleaseLoad;
 	wxStaticText* m_MemoryDisplay;
+	wxStaticText* m_BitDisplay;
 	wxButton* m_Apply;
 	wxButton* m_Reset;
 	wxButton* m_Default;

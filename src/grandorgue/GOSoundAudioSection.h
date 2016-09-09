@@ -162,6 +162,7 @@ private:
 	GOrgueMemoryPool          &m_Pool;
 	unsigned                   m_AllocSize;
 
+	unsigned                   m_MaxAmplitude;
 	int                        m_MaxAbsAmplitude;
 	int                        m_MaxAbsDerivative;
 
