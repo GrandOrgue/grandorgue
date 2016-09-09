@@ -3705,9 +3705,9 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           </variablelist>
         </sect3>
         <sect3 id="concurrencylevel">
-          <title>Concurrency Level</title>
+          <title>Number of CPU cores</title>
           <indexterm>
-            <primary>Concurrency level</primary>
+            <primary>Number of CPU cores</primary>
           </indexterm>
           <para>This number states how many threads GrandOrgue creates to spread the load. Cores number is the recommended choice for computers without Hyperthreading. Less doesn't use the whole computer. More wastes resources while managing overhead.</para>
           <para>With Hyperthreading enabled, the CPU load seems more evenly spread among virtual cores.</para>
@@ -3733,11 +3733,11 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           </variablelist>
         </sect3>
         <sect3>
-          <title>Release Concurrency Level</title>
+          <title>Workload distribution</title>
           <indexterm>
-            <primary>Release concurrency level</primary>
+            <primary>Workload distribution</primary>
           </indexterm>
-          <para>This setting has the same role as <link linkend="concurrencylevel">Concurrency Level</link>, and is dedicated to release processing. It  works around some limitations in the current code, and may be removed in a future release. The same value as concurrency is recommended.</para>
+          <para>This setting has the same role as <link linkend="concurrencylevel">Number of CPU cores</link>, and is dedicated to spliting the workload. The same value as the number of CPU cores is recommended.</para>
           <variablelist>
             <varlistentry>
               <term>Memory</term>
@@ -3760,8 +3760,8 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           </variablelist>
         </sect3>
         <sect3>
-          <title>Load Concurrency Level</title>
-          <indexterm><primary>Load Concurrency Level</primary></indexterm>
+          <title>Cores used at loadtime</title>
+          <indexterm><primary>Cores used at loadtime</primary></indexterm>
           <para>This number states how many threads GrandOrgue creates to load samples in memory. It has <emphasis role="bold">NO</emphasis> effect when loadind samples from cache.</para>
           <para>Higher speed-up loading while reducing the available memory for samples. A zero (0) value means classic load.</para>
         </sect3>
