@@ -103,6 +103,8 @@ bool GOAudioSection::LoadCache(GOrgueCache& cache)
 		return false;
 	if (!cache.Read(&m_SampleFracBits, sizeof(m_SampleFracBits)))
 		return false;
+	if (!cache.Read(&m_MaxAmplitude, sizeof(m_MaxAmplitude)))
+		return false;
 	if (!cache.Read(&m_ReleaseStartSegment, sizeof(m_ReleaseStartSegment)))
 		return false;
 	m_Data = (unsigned char*)cache.ReadBlock(m_AllocSize);
@@ -178,6 +180,8 @@ bool GOAudioSection::SaveCache(GOrgueCacheWriter& cache) const
 	if (!cache.Write(&m_Channels, sizeof(m_Channels)))
 		return false;
 	if (!cache.Write(&m_SampleFracBits, sizeof(m_SampleFracBits)))
+		return false;
+	if (!cache.Write(&m_MaxAmplitude, sizeof(m_MaxAmplitude)))
 		return false;
 	if (!cache.Write(&m_ReleaseStartSegment, sizeof(m_ReleaseStartSegment)))
 		return false;
@@ -607,6 +611,7 @@ void GOAudioSection::GetMaxAmplitudeAndDerivative()
 	DecompressionCache cache;
 
 	InitDecompressionCache(cache);
+	m_MaxAmplitude = 0;
 	m_MaxAbsAmplitude = 0;
 	m_MaxAbsDerivative = 0;
 
@@ -616,7 +621,12 @@ void GOAudioSection::GetMaxAmplitudeAndDerivative()
 		/* Get sum of amplitudes in channels */
 		int f = 0;
 		for (unsigned int j = 0; j < m_Channels; j++)
-			f += GetSample(i, j, &cache);
+		{
+			unsigned val = GetSample(i, j, &cache);
+			f += val;
+			if (abs(val) > m_MaxAmplitude)
+				m_MaxAmplitude = abs(val);
+		}
 
 		if (abs(f) > m_MaxAbsAmplitude)
 			m_MaxAbsAmplitude = abs(f);
@@ -1052,6 +1062,7 @@ GOrgueSampleStatistic GOAudioSection::GetStatistic()
 		size += m_EndSegments[i].end_size;
 	stat.SetEndSegmentSize(size);
 	stat.SetMemorySize(size + m_AllocSize);
+	stat.SetBitsPerSample(m_BitsPerSample, m_SampleCount, m_MaxAmplitude);
 
 	return stat;
 }

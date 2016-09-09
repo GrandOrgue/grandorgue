@@ -26,7 +26,7 @@
 #define APP_WIN_VERSION @NUM_WIN_VERSION@
 
 /* Value which is used to identify a valid cached organ data file. */
-#define GRANDORGUE_CACHE_MAGIC 0x12341234
+#define GRANDORGUE_CACHE_MAGIC 0x12341235
 
 #cmakedefine HAVE_ATOMIC
 #cmakedefine HAVE_MUTEX

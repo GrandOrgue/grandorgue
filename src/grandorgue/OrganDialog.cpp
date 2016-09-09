@@ -255,6 +255,10 @@ OrganDialog::OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile*
 	m_MemoryDisplay= new wxStaticText(this, wxID_ANY, wxEmptyString);
 	grid->Add(m_MemoryDisplay);
 
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Bits per sample:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+	m_BitDisplay= new wxStaticText(this, wxID_ANY, wxEmptyString);
+	grid->Add(m_BitDisplay);
+
 	wxBoxSizer* box3 = new wxStaticBoxSizer(wxVERTICAL, this, _("Tuning and Voicing"));
 	box3->Add(m_IgnorePitch = new wxCheckBox (this, ID_EVENT_IGNORE_PITCH, _("Ignore pitch info in organ samples wav files"       )), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	if (m_organfile->GetIgnorePitch())
@@ -347,11 +351,18 @@ void OrganDialog::Load()
 	if (!stat.IsValid())
 	{
 		m_MemoryDisplay->SetLabel(_("--- MB (--- MB end)"));
+		m_BitDisplay->SetLabel(_("-- bits (- used)"));
 	}
 	else
 	{
 		m_MemoryDisplay->SetLabel(wxString::Format(_("%.3f MB  (%.3f MB end)"), stat.GetMemorySize() / (1024.0 * 1024.0),
 							   stat.GetEndSegmentSize() / (1024.0 * 1024.0)));
+		wxString buf;
+		if (stat.GetMinBitPerSample() == stat.GetMaxBitPerSample())
+			buf = wxString::Format(_("%d bits"), stat.GetMinBitPerSample());
+		else
+			buf = wxString::Format(_("%d - %d bits"), stat.GetMinBitPerSample(), stat.GetMaxBitPerSample());
+		m_BitDisplay->SetLabel(buf + wxString::Format(_(" (%.3f used)"), stat.GetUsedBits()));
 	}
 
 	if (entries.size() == 0)
