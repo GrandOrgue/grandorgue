@@ -28,12 +28,14 @@
 class wxGaugeAudio : public wxControl
 {
 private:
-	int m_value;
-	bool m_clip;
+	int m_Value;
+	bool m_Clip;
+	bool m_Update;
 	wxMemoryDC m_gaugedc;
 	wxBitmap m_gauge;
 
-	void OnErase(wxEraseEvent& event);
+	void OnPaint(wxPaintEvent& event);
+	void Update();
 
 public:
 	wxGaugeAudio(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition);
