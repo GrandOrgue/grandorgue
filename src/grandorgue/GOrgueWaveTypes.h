@@ -22,7 +22,7 @@
 #ifndef GORGUEWAVETYPES_H
 #define GORGUEWAVETYPES_H
 
-#include <stdint.h>
+#include "GOrgueInt.h"
 
 #pragma pack(push, 1)
 
@@ -31,86 +31,67 @@ typedef char GO_FOURCC[4];
 typedef struct
 {
 	GO_FOURCC fccChunk;
-	uint32_t dwSize;
+	GOUInt32LE dwSize;
 } GO_WAVECHUNKHEADER;
 
 typedef struct
 {
-	uint16_t wFormatTag;
-	uint16_t nChannels;
-	uint32_t nSamplesPerSec;
-	uint32_t nAvgBytesPerSec;
-	uint16_t nBlockAlign;
+	GOUInt16LE wFormatTag;
+	GOUInt16LE nChannels;
+	GOUInt32LE nSamplesPerSec;
+	GOUInt32LE nAvgBytesPerSec;
+	GOUInt16LE nBlockAlign;
 } GO_WAVEFORMAT;
 
 typedef struct
 {
 	GO_WAVEFORMAT wf;
-	uint16_t wBitsPerSample;
+	GOUInt16LE wBitsPerSample;
 } GO_WAVEFORMATPCM;
 
 typedef struct
 {
 	GO_WAVEFORMATPCM wf;
-	uint16_t cbSize;
+	GOUInt16LE cbSize;
 } GO_WAVEFORMATPCMEX;
 
 typedef struct
 {
-	uint32_t dwName;
-	uint32_t dwPosition;
+	GOUInt32LE dwName;
+	GOUInt32LE dwPosition;
 	GO_FOURCC fccChunk;
-	uint32_t dwChunkStart;
-	uint32_t dwBlockStart;
-	uint32_t dwSampleOffset;
+	GOUInt32LE dwChunkStart;
+	GOUInt32LE dwBlockStart;
+	GOUInt32LE dwSampleOffset;
 } GO_WAVECUEPOINT;
 
 typedef struct
 {
-	uint32_t dwCuePoints;
+	GOUInt32LE dwCuePoints;
 } GO_WAVECUECHUNK;
 
 typedef struct
 {
-	uint32_t dwIdentifier;
-	uint32_t dwType;
-	uint32_t dwStart;
-	uint32_t dwEnd;
-	uint32_t dwFraction;
-	uint32_t dwPlayCount;
+	GOUInt32LE dwIdentifier;
+	GOUInt32LE dwType;
+	GOUInt32LE dwStart;
+	GOUInt32LE dwEnd;
+	GOUInt32LE dwFraction;
+	GOUInt32LE dwPlayCount;
 } GO_WAVESAMPLERLOOP;
 
 typedef struct
 {
-	uint32_t dwManufacturer;
-	uint32_t dwProduct;
-	uint32_t dwSamplePeriod;
-	uint32_t dwMIDIUnityNote;
-	uint32_t dwMIDIPitchFraction;
-	uint32_t dwSMPTEFormat;
-	uint32_t dwSMPTEOffset;
-	uint32_t cSampleLoops;
-	uint32_t cbSamplerData;
+	GOUInt32LE dwManufacturer;
+	GOUInt32LE dwProduct;
+	GOUInt32LE dwSamplePeriod;
+	GOUInt32LE dwMIDIUnityNote;
+	GOUInt32LE dwMIDIPitchFraction;
+	GOUInt32LE dwSMPTEFormat;
+	GOUInt32LE dwSMPTEOffset;
+	GOUInt32LE cSampleLoops;
+	GOUInt32LE cbSamplerData;
 } GO_WAVESAMPLERCHUNK;
-
-typedef struct {
-	unsigned char lo, mi;
-	signed char hi;
-} GO_Int24;
-
-inline GO_Int24 IntToGOInt24(int value)
-{
-	GO_Int24 val;
-	val.lo = (value >> 0) & 0xff;
-	val.mi = (value >> 8) & 0xff;
-	val.hi = (value >> 16) & 0xff;
-	return val;
-}
-
-inline int GOInt24ToInt(GO_Int24 value)
-{
-	return ((value.hi << 16) | (value.mi << 8) | value.lo);
-}
 
 #pragma pack(pop)
 

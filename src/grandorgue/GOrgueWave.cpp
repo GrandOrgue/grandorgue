@@ -23,7 +23,6 @@
 
 #include "GOrgueFile.h"
 #include "GOrgueMemoryPool.h"
-#include "GOrgueInt24.h"
 #include "GOrgueWaveTypes.h"
 #include "GOrgueWavPack.h"
 #include <wx/file.h>
@@ -79,14 +78,14 @@ void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
 		throw (wxString)_("< Invalid WAVE format chunk");
 
 	GO_WAVEFORMATPCMEX* format = (GO_WAVEFORMATPCMEX*)ptr;
-	unsigned formatCode = wxUINT16_SWAP_ON_BE(format->wf.wf.wFormatTag);
+	unsigned formatCode = format->wf.wf.wFormatTag;
 	if (formatCode != 1 && formatCode != 3)
 		throw (wxString)_("< Unsupported PCM format");
 
-	m_Channels = wxUINT16_SWAP_ON_BE(format->wf.wf.nChannels);
-	m_SampleRate = wxUINT32_SWAP_ON_BE(format->wf.wf.nSamplesPerSec);
+	m_Channels = format->wf.wf.nChannels;
+	m_SampleRate = format->wf.wf.nSamplesPerSec;
 
-	unsigned bitsPerSample = wxUINT16_SWAP_ON_BE(format->wf.wBitsPerSample);
+	unsigned bitsPerSample = format->wf.wBitsPerSample;
 	if (bitsPerSample % 8)
 		throw (wxString)_("< Bits per sample must be a multiple of 8 in this implementation");
 	m_BytesPerSample = bitsPerSample / 8;
@@ -103,7 +102,7 @@ void GOrgueWave::LoadCueChunk(char* ptr, unsigned long length)
 		throw (wxString)_("< Invalid CUE chunk in");
 
 	GO_WAVECUECHUNK* cue = (GO_WAVECUECHUNK*)ptr;
-	unsigned nbPoints = wxUINT32_SWAP_ON_BE(cue->dwCuePoints);
+	unsigned nbPoints = cue->dwCuePoints;
 	if (length < sizeof(GO_WAVECUECHUNK) + sizeof(GO_WAVECUEPOINT) * nbPoints)
 		throw (wxString)_("< Invalid CUE chunk in");
 
@@ -114,7 +113,7 @@ void GOrgueWave::LoadCueChunk(char* ptr, unsigned long length)
 	for (unsigned k = 0; k < nbPoints; k++)
 	{
 		assert(m_Channels != 0);
-		unsigned position = wxUINT32_SWAP_ON_BE(points[k].dwSampleOffset);
+		unsigned position = points[k].dwSampleOffset;
 		if (position > m_CuePoint)
 			m_CuePoint = position;
 	}
@@ -126,7 +125,7 @@ void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
 		throw (wxString)_("< Invalid SMPL chunk in");
 
 	GO_WAVESAMPLERCHUNK* sampler = (GO_WAVESAMPLERCHUNK*)ptr;
-	unsigned numberOfLoops = wxUINT32_SWAP_ON_BE(sampler->cSampleLoops);
+	unsigned numberOfLoops = sampler->cSampleLoops;
 	if (length < sizeof(GO_WAVESAMPLERCHUNK) + sizeof(GO_WAVESAMPLERLOOP) * numberOfLoops)
 		throw (wxString)_("<Invalid SMPL chunk in");
 
@@ -135,13 +134,13 @@ void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
 	for (unsigned k = 0; k < numberOfLoops; k++)
 	{
 		GO_WAVE_LOOP l;
-		l.start_sample = wxUINT32_SWAP_ON_BE(loops[k].dwStart);
-		l.end_sample = wxUINT32_SWAP_ON_BE(loops[k].dwEnd);
+		l.start_sample = loops[k].dwStart;
+		l.end_sample = loops[k].dwEnd;
 		m_Loops.push_back(l);
 	}
 
-	m_MidiNote = wxUINT32_SWAP_ON_BE(sampler->dwMIDIUnityNote);
-	m_PitchFract = wxUINT32_SWAP_ON_BE(sampler->dwMIDIPitchFraction) / (double)UINT_MAX * 100.0;
+	m_MidiNote = sampler->dwMIDIUnityNote;
+	m_PitchFract = sampler->dwMIDIPitchFraction / (double)UINT_MAX * 100.0;
 }
 
 void GOrgueWave::Open(GOrgueFile* file)
@@ -197,7 +196,7 @@ void GOrgueWave::Open(GOrgueFile* file)
 
 		/* Read the header, get it's size and make sure that it makes sense. */
 		GO_WAVECHUNKHEADER* riffHeader = (GO_WAVECHUNKHEADER*)(ptr + offset);
-		unsigned long riffChunkSize = wxUINT32_SWAP_ON_BE(riffHeader->dwSize);
+		unsigned long riffChunkSize = riffHeader->dwSize;
 
 		/*
 		if (!CompareFourCC(riffHeader->fccChunk, "RIFF") || (riffChunkSize > length - 8))
@@ -240,7 +239,7 @@ void GOrgueWave::Open(GOrgueFile* file)
 
 			/* Read chunk header */
 			GO_WAVECHUNKHEADER* header = (GO_WAVECHUNKHEADER*)(ptr + offset);
-			unsigned long size = wxUINT32_SWAP_ON_BE(header->dwSize);
+			unsigned long size = header->dwSize;
 			offset += sizeof(GO_WAVECHUNKHEADER);
 
 			if (CompareFourCC(header->fccChunk, "data"))
@@ -431,15 +430,15 @@ void GOrgueWave::ReadSamples
 				switch(m_BytesPerSample)
 				{
 				case 1:
-					val = (*((unsigned char*)input) - 0x80);
+					val = (*((GOInt8*)input) - 0x80);
 					val <<= 16;
 					break;
 				case 2:
-					val = wxINT16_SWAP_ON_BE(*((wxInt16*)input));
+					val = *(GOInt16LE*)input;
 					val <<= 8;
 					break;
 				case 3:
-					val = GOInt24ToInt(*((GO_Int24*)input));
+					val = *(GOInt24LE*)input;
 					break;
 				case 4:
 					val = (*(float*)input) * (float)(1 << 23);
@@ -460,24 +459,24 @@ void GOrgueWave::ReadSamples
 		switch (read_format)
 		{
 		case SF_SIGNEDBYTE_8:
-			*(wxInt8*)output = value >> 16;
-			output += sizeof(wxInt8);
+			*(GOInt8*)output = value >> 16;
+			output += sizeof(GOInt8);
 			break;
 		case SF_SIGNEDSHORT_12:
-			*(wxInt16*)output = value >> 12;
-			output += sizeof(wxInt16);
+			*(GOInt16*)output = value >> 12;
+			output += sizeof(GOInt16);
 			break;
 		case SF_SIGNEDSHORT_16:
-			*(wxInt16*)output = value >> 8;
-			output += sizeof(wxInt16);
+			*(GOInt16*)output = value >> 8;
+			output += sizeof(GOInt16);
 			break;
 		case SF_SIGNEDINT24_20:
-			*(Int24*)output = value >> 4;
-			output += sizeof(Int24);
+			*(GOInt24*)output = value >> 4;
+			output += sizeof(GOInt24);
 			break;
 		case SF_SIGNEDINT24_24:
-			*(Int24*)output = value;
-			output += sizeof(Int24);
+			*(GOInt24*)output = value;
+			output += sizeof(GOInt24);
 			break;
 		case SF_IEEE_FLOAT:
 			*(float*)output = value / (float)(1 << 23);
