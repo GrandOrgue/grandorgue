@@ -59,7 +59,7 @@ GOSoundEngine::GOSoundEngine() :
 	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
 	m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
-	m_ReleaseProcessor = new GOSoundReleaseWorkItem(*this);
+	m_ReleaseProcessor = new GOSoundReleaseWorkItem(*this, m_AudioGroups);
 	Reset();
 }
 
