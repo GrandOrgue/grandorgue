@@ -74,6 +74,7 @@ This package contains the demo sampleset for GrandOrgue
 %package resources
 Summary:        GrandOrgue resource files
 Group:          Productivity/Multimedia/Sound/Midi
+BuildArch:      noarch
 
 %description resources
 This package contains the various resource files for GrandOrgue.
