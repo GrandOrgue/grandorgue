@@ -68,6 +68,8 @@ BuildRequires:  mingw%{_mingw_bitsize}-jack
 BuildRequires:  mingw%{_mingw_bitsize}-jack-devel
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx0
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx-devel
+Requires:       mingw%{_mingw_bitsize}-grandorgue
+Recommends:     mingw%{_mingw_bitsize}-grandorgue-demo
 URL:            http://sourceforge.net/projects/ourorgan/
 License:        GPL-2.0+
 Group:          Productivity/Multimedia/Sound/Midi
@@ -107,6 +109,13 @@ Group:          Productivity/Multimedia/Sound/Midi
 
 %description demo
 This package contains the demo sampleset for GrandOrgue
+
+%package resources
+Summary:        GrandOrgue resource files
+Group:          Productivity/Multimedia/Sound/Midi
+
+%description resources
+This package contains the various resource files for GrandOrgue.
 
 %package installer
 Summary:        GrandOrgue installer
@@ -173,6 +182,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_mingw_bindir}/*[A-Za-z].exe
+
+%files resources
+%defattr(-,root,root)
 %{_mingw_datadir}/locale
 %dir %{_mingw_datadir}/GrandOrgue
 %{_mingw_datadir}/GrandOrgue/help
