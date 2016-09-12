@@ -48,10 +48,11 @@ Release:        1
 Epoch:          0
 Source:         grandorgue-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+Requires:       grandorgue-resources
 %if 0%?suse_version >= 1010
 Recommends:     grandorgue-demo
 %else
-Requires:        grandorgue-demo
+Requires:       grandorgue-demo
 %endif
 
 Requires(post):    shared-mime-info desktop-file-utils
@@ -69,6 +70,13 @@ BuildArch:      noarch
 
 %description demo
 This package contains the demo sampleset for GrandOrgue
+
+%package resources
+Summary:        GrandOrgue resource files
+Group:          Productivity/Multimedia/Sound/Midi
+
+%description resources
+This package contains the various resource files for GrandOrgue.
 
 %prep
 %setup -q
@@ -96,14 +104,10 @@ install -m 644 README* %{buildroot}%{_docdir}/%{name}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files -f GrandOrgue.lang
+%files
 %defattr(-,root,root)
 %{_bindir}/*
 %doc %{_docdir}/%{name}
-%{_datadir}/GrandOrgue/help
-%{_datadir}/GrandOrgue/sounds
-%dir %{_datadir}/GrandOrgue/packages
-%dir %{_datadir}/GrandOrgue
 %{_datadir}/applications/*
 %dir %{_datadir}/appdata
 %{_datadir}/appdata/*
@@ -114,6 +118,13 @@ rm -rf $RPM_BUILD_ROOT
 %files demo
 %defattr(-,root,root)
 %{_datadir}/GrandOrgue/packages/*.orgue
+
+%files resources -f GrandOrgue.lang
+%defattr(-,root,root)
+%{_datadir}/GrandOrgue/help
+%{_datadir}/GrandOrgue/sounds
+%dir %{_datadir}/GrandOrgue/packages
+%dir %{_datadir}/GrandOrgue
 
 %post
 %if 0%{?suse_version} >= 1140 
