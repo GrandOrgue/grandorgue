@@ -131,6 +131,9 @@ if (APPLE)
 
    set(CPACK_BINARY_DRAGNDROP ON CACHE BOOL INTERNAL)
 endif ()
+if (WIN32)
+   set(CPACK_BINARY_TGZ ON CACHE BOOL INTERNAL)
+endif ()
 
 # include RtAudio
 add_subdirectory(src/rt lib/rt)
