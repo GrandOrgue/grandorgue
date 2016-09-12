@@ -166,7 +166,7 @@ void GOrgueMetronome::ButtonChanged(int id)
 
 void GOrgueMetronome::UpdateBPM(int val)
 {
-	if (m_BPM + val < 1)
+	if ((int)m_BPM + val < 1)
 		m_BPM = 1;
 	else
 		m_BPM += val;
@@ -179,7 +179,7 @@ void GOrgueMetronome::UpdateBPM(int val)
 
 void GOrgueMetronome::UpdateMeasure(int val)
 {
-	if (m_MeasureLength + val < 0)
+	if ((int)m_MeasureLength + val < 0)
 		m_MeasureLength = 0;
 	else
 		m_MeasureLength += val;
