@@ -144,7 +144,9 @@ cmake ../src/build
 make
 cd ..
 %define gooptions -DRTAUDIO_USE_ASIO=%ASIO  -DIMPORT_EXECUTABLES=../build-tools/ImportExecutables.cmake -DVERSION_REVISION="`echo %{version}|cut -d. -f4`" -DMSYS=1 -DSTATIC=1
-%define goinstall GrandOrgue-%{version}-%{release}-win%{_mingw_bitsize}.exe
+%define gobuildname GrandOrgue-%{version}-win%{_mingw_bitsize}
+%define goinstallname GrandOrgue-%{version}-%{release}-win%{_mingw_bitsize}
+%define goinstall %{goinstallname}.exe
 %{__mkdir} build-mingw
 cd build-mingw
 %{_mingw_cmake} .. -DINSTALL_DEPEND=ON %{gooptions}
@@ -159,8 +161,11 @@ cd build-mingw
 make install DESTDIR=%{buildroot}
 cd ..
 mkdir -p %{buildroot}
-%{__cp} build-mingw/GrandOrgue-%{version}-win%{_mingw_bitsize}.exe %{buildroot}/%{_mingw_bindir}/%{goinstall}
-if [ -d %{_topdir}/OTHER ]; then %{__cp} %{buildroot}/%{_mingw_bindir}/%{goinstall} %{_topdir}/OTHER ; fi
+%{__cp} build-mingw/%{gobuildname}.exe %{buildroot}/%{_mingw_bindir}/%{goinstall}
+if [ -d %{_topdir}/OTHER ]; then
+    %{__cp} %{buildroot}/%{_mingw_bindir}/%{goinstall} %{_topdir}/OTHER
+    %{__cp} build-mingw/%{gobuildname}.tar.gz %{_topdir}/OTHER/%{goinstallname}.tar.gz
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
