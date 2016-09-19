@@ -3,9 +3,99 @@ GrandOrgue is a sample based pipe organ simulator.
 It currently supports Windows and Linux. Porting to other OS supported by RtMidi, 
 RtAudio and wxWidgets should be possible with some build system adjustments.
 
+A) Building on Linux:
+--------------------
 
+1) Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3) and alsa (libasound) from your distribution
+2) Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
+3) Extract the GO sources somewhere, eg: /home/user/gosources
+4) Create an empty build directory, eg: mkdir /home/user/gobuild
+5) Run cmake:
+  cd /home/user/gobuild
+  cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
+  make
 
-A) Building on Windows:
+  cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
+
+Hint: For debugging a build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
+
+Building Linux packages:
+-----------------------
+To build a deb package (Debian/Ubuntu), do
+sudo apt-get install build-essential fakeroot
+dpkg-buildpackage -rfakeroot
+
+If dpkg-buildpackage reports, that a package is missing, please install them too (sudo apt-get install <packagename).
+
+GrandOrgue ships a spec file for building RPMs (tested with OpenSuSE and Fedora).
+To build, copy the grandorgue tarball to the rpm SOURCE directory and run:
+rpmbuild -ba grandorgue.spec
+
+B) Building on OS X
+===================
+
+1. Prequisites:
+ - OS X >= 10.11
+ - Xcode >= 7.3
+ - homebrew
+
+2. Install via homebrew:
+  - brew update
+  - brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw
+  - brew link gettext --force
+
+3. extract the GO source into a directory
+
+4. run the following commands:
+  cmake -G "Unix Makefiles" -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl
+  make -k package VERBOSE=1
+
+C) Building for Windows
+----------------------
+
+The easiest way to build a Windows version is to cross-compile using a openSuSE 42.1 system (or virtual machine).
+
+a) Cross compiling the existing source rpms
+
+Install OpenSuSE 42.1 (http://software.opensuse.org/421/en) (possibly in a Virtual Machine, eg Virtual Box. I would recommend >= 1 GB RAM and >= 20 G of harddisc space).
+Run in a terminal:
+
+sudo zypper addrepo http://download.opensuse.org/repositories/windows:mingw:win32/openSUSE_42.1/windows:mingw:win32.repo
+sudo zypper addrepo http://download.opensuse.org/repositories/windows:mingw:win32/openSUSE_42.1/windows:mingw:win64.repo
+sudo zypper addrepo http://download.opensuse.org/repositories/home:e9925248:mingw/openSUSE_Leap_42.1/home:e9925248:mingw.repo
+sudo zypper modifyrepo -p 10 home_e992524_mingw 
+sudo zypper refresh
+sudo zypper install rpm-build gcc-c++ cmake gettext-tools docbook-xsl-stylesheets po4a libxslt-tools zip
+
+Download the src.rpm from:
+http://software.opensuse.org/download.html?project=home%3Ae9925248%3Amingw&package=mingw32-grandorgue
+http://software.opensuse.org/download.html?project=home%3Ae9925248%3Amingw&package=mingw64-grandorgue
+
+Install it with
+
+rpm -i mingw??-grandorgue????.src.rpm
+
+If you want to build with asio, change in your home directory in the folder rpmbuild/SPECS in the file mingw??-grandorgue.spec
+
+%define with_asio 0
+
+to
+
+%define with_asio 1
+
+Extract the individual ASIO SDK files to rpmbuild/SOURCES.
+
+Run
+
+rpmbuild -ba rpmbuild/SPECS/mingw??-grandorgue.spec
+
+The first build will complain, that a package is missing. To install them, just run
+
+sudo zypper install <package-name>
+
+Then rerun rpmbuild.
+
+D) Building on Windows
 ----------------------
 
 The following build procedures works on a 32 or 64 bit windows build system. On a real 64 bit system, it is possible to build the 64 bit version directly without reusing parts from the 32 bit build. In that case -DIMPORT_EXECUTABLES and -DCMAKE_SYSTEM_NAME shall be removed.
@@ -149,43 +239,6 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org) and NSIS (ht
 
 
 
-B) Building on Linux:
---------------------
-
-1) Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3) and alsa (libasound) from your distribution
-2) Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
-3) Extract the GO sources somewhere, eg: /home/user/gosources
-4) Create an empty build directory, eg: mkdir /home/user/gobuild
-5) Run cmake:
-  cd /home/user/gobuild
-  cmake -DUNICODE=xxx -DCMAKE_BUILD_TYPE=bbb -G "Unix Makefiles" <path to go-sources>
-  make
-
-Where bbb is:
-  Release - release build
-  Debug - debug build
-
-xxx is:
-  1 - unicode build (most linux distributions will likely ship a unicode build)
-  0 - ansi build
-
-eg:
-  cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
-
-Hint: For debugging a release build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
-
-Building Linux packages:
------------------------
-To build a deb package (Debian/Ubuntu), do
-sudo apt-get install build-essential fakeroot
-dpkg-buildpackage -rfakeroot
-
-If dpkg-buildpackage reports, that a package is missing, please install them too (sudo apt-get install <packagename).
-
-GrandOrgue ships a spec file for building RPMs (tested with OpenSuSE).
-To build, copy the grandorgue tarball to the rpm SOURCE directory and run:
-rpmbuild -ba grandorgue.spec
-
 Cross-compiling for Windows:
 ----------------------------
 
@@ -250,47 +303,6 @@ make package
 to create an installer
 
 If you want to build a 64bit version, replace everywhere in this instruction i686-w64-mingw32 with x86_64-w64-mingw32.
-
-Easier building of Windows packages
------------------------------------
-
-Install OpenSuSE 42.1 (http://software.opensuse.org/421/en) (possibly in a Virtual Machine, eg Virtual Box. I would recommend >= 1 GB RAM and >= 20 G of harddisc space).
-Run in a terminal:
-
-sudo zypper addrepo http://download.opensuse.org/repositories/windows:mingw:win32/openSUSE_42.1/windows:mingw:win32.repo
-sudo zypper addrepo http://download.opensuse.org/repositories/windows:mingw:win32/openSUSE_42.1/windows:mingw:win64.repo
-sudo zypper addrepo http://download.opensuse.org/repositories/home:e9925248:mingw/openSUSE_Leap_42.1/home:e9925248:mingw.repo
-sudo zypper modifyrepo -p 10 home_e992524_mingw 
-sudo zypper refresh
-sudo zypper install rpm-build gcc-c++ cmake gettext-tools docbook-xsl-stylesheets po4a libxslt-tools zip
-
-Download the src.rpm from:
-http://software.opensuse.org/download.html?project=home%3Ae9925248%3Amingw&package=mingw32-grandorgue
-http://software.opensuse.org/download.html?project=home%3Ae9925248%3Amingw&package=mingw64-grandorgue
-
-Install it with
-
-rpm -i mingw??-grandorgue????.src.rpm
-
-If you want to build with asio, change in your home directory in the folder rpmbuild/SPECS in the file mingw??-grandorgue.spec
-
-%define with_asio 0
-
-to
-
-%define with_asio 1
-
-Extract the individual ASIO SDK files to rpmbuild/SOURCES.
-
-Run
-
-rpmbuild -ba rpmbuild/SPECS/mingw??-grandorgue.spec
-
-The first build will complain, that a package is missing. To install them, just run
-
-sudo zypper install <package-name>
-
-Then rerun rpmbuild.
 
 C) Building the help and translations on Windows:
 -------------------------------------------------
@@ -402,21 +414,3 @@ There should not be any  of these complaints in the output:
 Build GrandOrgue by running mingw32-make in the build directory.
 See README.translate for further details about adding or updating translations
 
-C) Building on OS X
-===================
-
-1. Prequisites:
- - OS X >= 10.11
- - Xcode >= 7.3
- - homebrew
-
-2. Install via homebrew:
-  - brew update
-  - brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw
-  - brew link gettext --force
-
-3. extract the GO source into a directory
-
-4. run the following commands:
-  cmake -G "Unix Makefiles" -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl
-  make -k package VERBOSE=1
