@@ -61,6 +61,7 @@ BuildRequires:  mingw%{_mingw_bitsize}-filesystem >= 23
 BuildRequires:  mingw%{_mingw_bitsize}-cross-gcc
 BuildRequires:  mingw%{_mingw_bitsize}-cross-gcc-c++
 BuildRequires:  mingw%{_mingw_bitsize}-cross-binutils
+BuildRequires:  mingw%{_mingw_bitsize}-cross-pkg-config
 BuildRequires:  mingw32-cross-nsis
 BuildRequires:  mingw%{_mingw_bitsize}-wxWidgets-3_0-lang
 BuildRequires:  mingw%{_mingw_bitsize}-wxWidgets-3_0-devel
@@ -68,6 +69,8 @@ BuildRequires:  mingw%{_mingw_bitsize}-jack
 BuildRequires:  mingw%{_mingw_bitsize}-jack-devel
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx0
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx-devel
+BuildRequires:  mingw%{_mingw_bitsize}-fftw3
+BuildRequires:  mingw%{_mingw_bitsize}-fftw3-devel
 Requires:       mingw%{_mingw_bitsize}-grandorgue-resources
 Recommends:     mingw%{_mingw_bitsize}-grandorgue-demo
 URL:            http://sourceforge.net/projects/ourorgan/
