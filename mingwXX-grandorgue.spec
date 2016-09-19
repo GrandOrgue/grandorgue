@@ -68,7 +68,7 @@ BuildRequires:  mingw%{_mingw_bitsize}-jack
 BuildRequires:  mingw%{_mingw_bitsize}-jack-devel
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx0
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx-devel
-Requires:       mingw%{_mingw_bitsize}-grandorgue
+Requires:       mingw%{_mingw_bitsize}-grandorgue-resources
 Recommends:     mingw%{_mingw_bitsize}-grandorgue-demo
 URL:            http://sourceforge.net/projects/ourorgan/
 License:        GPL-2.0+
