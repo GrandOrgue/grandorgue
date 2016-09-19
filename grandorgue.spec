@@ -21,7 +21,7 @@
 
 Summary:        Virtual Pipe Organ Software
 Name:           grandorgue
-BuildRequires:  alsa-lib-devel
+BuildRequires:  pkgconfig(alsa)
 BuildRequires:  gcc-c++
 BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  cmake
@@ -35,7 +35,8 @@ BuildRequires:  wxGTK3-devel
 BuildRequires:  gettext
 BuildRequires:  docbook-style-xsl
 %endif
-BuildRequires:  libudev-devel
+BuildRequires:  pkgconfig(fftw3f)
+BuildRequires:  pkgconfig(libudev)
 BuildRequires:  libxslt
 BuildRequires:  zip
 BuildRequires:  po4a
