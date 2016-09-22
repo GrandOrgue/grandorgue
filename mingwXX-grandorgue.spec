@@ -71,6 +71,8 @@ BuildRequires:  mingw%{_mingw_bitsize}-libgnurx0
 BuildRequires:  mingw%{_mingw_bitsize}-libgnurx-devel
 BuildRequires:  mingw%{_mingw_bitsize}-fftw3
 BuildRequires:  mingw%{_mingw_bitsize}-fftw3-devel
+BuildRequires:  mingw%{_mingw_bitsize}-wavpack
+BuildRequires:  mingw%{_mingw_bitsize}-wavpack-devel
 Requires:       mingw%{_mingw_bitsize}-grandorgue-resources
 Recommends:     mingw%{_mingw_bitsize}-grandorgue-demo
 URL:            http://sourceforge.net/projects/ourorgan/

@@ -37,6 +37,7 @@ BuildRequires:  docbook-style-xsl
 %endif
 BuildRequires:  pkgconfig(fftw3f)
 BuildRequires:  pkgconfig(libudev)
+BuildRequires:  pkgconfig(wavpack)
 BuildRequires:  libxslt
 BuildRequires:  zip
 BuildRequires:  po4a

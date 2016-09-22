@@ -6,7 +6,7 @@ RtAudio and wxWidgets should be possible with some build system adjustments.
 A) Building on Linux:
 --------------------
 
-1) Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3) and alsa (libasound) from your distribution
+1) Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
 2) Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
 3) Extract the GO sources somewhere, eg: /home/user/gosources
 4) Create an empty build directory, eg: mkdir /home/user/gobuild
@@ -41,7 +41,7 @@ B) Building on OS X
 
 2. Install via homebrew:
   - brew update
-  - brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw
+  - brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw wavpack
   - brew link gettext --force
 
 3. extract the GO source into a directory
