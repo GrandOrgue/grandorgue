@@ -22,7 +22,7 @@
 #ifndef GORGUEWAVPACK_H
 #define GORGUEWAVPACK_H
 
-#include "wavpack.h"
+#include <wavpack/wavpack.h>
 
 class GOrgueWavPack
 {
