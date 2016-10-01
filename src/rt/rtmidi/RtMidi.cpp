@@ -1127,7 +1127,7 @@ static std::string mapAlsaDeviceNumber(snd_seq_client_info_t *cinfo)
   while(end > name && *(end - 1) != '/')
 	  end--;
   SHA1_Init (&sha1);
-  SHA1_Update (&sha1, name, name - end);
+  SHA1_Update (&sha1, name, end - name);
   SHA1_Final (result, &sha1);
 
   for (unsigned i = 0; i < sizeof(hash) - 1; i++)
