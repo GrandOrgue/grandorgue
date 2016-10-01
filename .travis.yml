@@ -5,7 +5,9 @@ osx_image: xcode7.3
 
 before_install:
   - brew update
+  - brew unlink pkg-config || true
   - brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw wavpack
+  - brew link pkg-config
   - brew link gettext --force
 
 script:
