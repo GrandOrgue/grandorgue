@@ -85,33 +85,33 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 
 	m_DataLabel = new wxStaticText(this, wxID_ANY, wxT(""));
 	box->Add(m_DataLabel, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
-	m_data = new wxSpinCtrl(this, ID_CHANNEL, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 127);
+	m_data = new wxSpinCtrl(this, ID_CHANNEL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -11, 127);
 	box->Add(m_data, 0);
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Lowest key:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 	box = new wxBoxSizer(wxHORIZONTAL);
 	sizer->Add(box);
-	m_LowKey = new wxSpinCtrl(this, ID_LOW_KEY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
+	m_LowKey = new wxSpinCtrl(this, ID_LOW_KEY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 127);
 	box->Add(m_LowKey, 0);
 	box->Add(new wxStaticText(this, wxID_ANY, _("&Highest key:")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
-	m_HighKey = new wxSpinCtrl(this, ID_HIGH_KEY, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
+	m_HighKey = new wxSpinCtrl(this, ID_HIGH_KEY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 127);
 	box->Add(m_HighKey, 0);
 
 	m_LowValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
 	sizer->Add(m_LowValueLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 	box = new wxBoxSizer(wxHORIZONTAL);
 	sizer->Add(box);
-	m_LowValue = new wxSpinCtrl(this, ID_LOW_VALUE, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
+	m_LowValue = new wxSpinCtrl(this, ID_LOW_VALUE, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 127);
 	box->Add(m_LowValue, 0);
 	m_HighValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
 	box->Add(m_HighValueLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-	m_HighValue = new wxSpinCtrl(this, ID_HIGH_VALUE, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 127);
+	m_HighValue = new wxSpinCtrl(this, ID_HIGH_VALUE, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 127);
 	box->Add(m_HighValue, 0);
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Debounce time(ms):")), 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
 	box = new wxBoxSizer(wxHORIZONTAL);
 	sizer->Add(box);
-	m_Debounce = new wxSpinCtrl(this, ID_DEBOUNCE, wxEmptyString, wxDefaultPosition, wxSize(68, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 3000);
+	m_Debounce = new wxSpinCtrl(this, ID_DEBOUNCE, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 3000);
 	box->Add(m_Debounce, 0);
 
 	m_ListenSimple = new wxToggleButton(this, ID_LISTEN_SIMPLE, _("&Listen for Event"));
