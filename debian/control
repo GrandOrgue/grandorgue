@@ -16,6 +16,8 @@ Description: Virtual Pipe Organ Software
 Package: grandorgue-resources
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Breaks: grandorgue (<< 0.3.1.2162)
+Replaces: grandorgue (<< 0.3.1.2162)
 Description: GrandOrgue resource files
  This package contains the various resource files for GrandOrgue.
 
