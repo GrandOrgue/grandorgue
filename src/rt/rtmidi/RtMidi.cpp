@@ -1078,8 +1078,7 @@ void MidiOutCore :: sendMessage( std::vector<unsigned char> *message )
 
 #include "sha1.h"
 
-static char
-hexChar (unsigned val)
+static char hexChar (unsigned val)
 {
   val &= 0x0F;
   if (val <= 9)
@@ -1087,16 +1086,44 @@ hexChar (unsigned val)
   return val + 'A' - 10;
 }
 
+static std::string hashName (std::string name)
+{
+  SHA_CTX sha1;
+  unsigned char result[20];
+  char hash[9];
+
+  SHA1_Init (&sha1);
+  SHA1_Update (&sha1, name.c_str(), name.length());
+  SHA1_Final (result, &sha1);
+
+  for (unsigned i = 0; i < sizeof(hash) - 1; i++)
+    hash[i] = hexChar (result[i / 2] >> ((i % 2) ? 0 : 4));
+  hash[sizeof(hash) - 1] = 0;
+  return hash;
+}
+
+static unsigned get_device_usb_index(struct udev *udev, std::string path, size_t start, std::string part)
+{
+  unsigned num = atoi (part.substr (3).c_str ());
+  unsigned no = 0;
+  std::string base = path.substr (0, start);
+  for(unsigned i = 0; i < num; i++) {
+    std::string sysfs_path = base + "usb" + std::to_string (i);
+    struct udev_device *dev = udev_device_new_from_syspath (udev, sysfs_path.c_str ());
+    if (dev) {
+     no++;
+     udev_device_unref(dev);
+    }
+  }
+    return no;
+}
+
 static std::string mapAlsaDeviceNumber(snd_seq_client_info_t *cinfo)
 {
   struct udev *udev = NULL;
   struct udev_enumerate* query = NULL;
   struct udev_list_entry* list = NULL;
-  const char* name, *end;
-  SHA_CTX sha1;
   char cardid[30];
-  unsigned char result[20];
-  char hash[9];
   int card = -1;
   if (snd_seq_client_info_get_type (cinfo) != SND_SEQ_KERNEL_CLIENT)
     goto fallback;
@@ -1114,29 +1141,52 @@ static std::string mapAlsaDeviceNumber(snd_seq_client_info_t *cinfo)
     goto free_fallback;
   if (udev_enumerate_add_match_subsystem (query, "sound"))
     goto free_fallback;
-  sprintf(cardid, "card%d", card);
+  snprintf(cardid, sizeof(cardid), "card%d", card);
   if (udev_enumerate_add_match_sysname (query, cardid))
     goto free_fallback;
   if (udev_enumerate_scan_devices (query))
     goto free_fallback;
-  list = udev_enumerate_get_list_entry(query);
+  list = udev_enumerate_get_list_entry (query);
   if (!list)
     goto free_fallback;
-  name = udev_list_entry_get_name(list);
-  end = name + strlen(name);
-  while(end > name && *(end - 1) != '/')
-	  end--;
-  SHA1_Init (&sha1);
-  SHA1_Update (&sha1, name, end - name);
-  SHA1_Final (result, &sha1);
+  {
+    std::string name = udev_list_entry_get_name (list);
+    std::string res = "";
+    bool in_usb = false;
+    size_t start = 0, pos;
 
-  for (unsigned i = 0; i < sizeof(hash) - 1; i++)
-    hash[i] = hexChar (result[i / 2] >> ((i % 2) ? 0 : 4));
-  hash[sizeof(hash) - 1] = 0;
+    pos = name.find_first_of ("/", start);
+    while(pos != std::string::npos) {
+      std::string part = name.substr (start, pos - start);
+      if (in_usb) {
+	unsigned p = 0;
+	while (p < part.length () && isdigit (part[p]))
+	  p++;
+	if (p > 0)
+	  part = part.substr(p);
+	else
+	  in_usb = false;
+      } else {
+	if (part.substr(0, 3) == "usb") {
+	  unsigned p = 3;
+	  while (p < part.length () && isdigit (part[p]))
+	    p++;
+	  if (p == part.length() && p > 3) {
+	    in_usb = true;
+	    part = "usbno-" + std::to_string (get_device_usb_index (udev, name, start, part));
+	  }
+	}
+      }
+      res = res + part + "/";
+      start = pos + 1;
+      pos = name.find_first_of ("/", start);
+    }
 
-  udev_enumerate_unref(query);
-  udev_unref(udev);
-  return hash;
+    std::string result = hashName (res);
+    udev_enumerate_unref(query);
+    udev_unref(udev);
+    return result;
+  }
 
  free_fallback:
   udev_enumerate_unref(query);
