@@ -131,13 +131,13 @@ if (WIN32)
 endif ()
 
 # include RtAudio
-add_subdirectory(src/rt lib/rt)
+add_subdirectory(src/rt)
 set(RT_LIBRARIES RtAudio RtMidi)
 set(RT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/rt/include)
 
 # include portaudio
 if (USE_INTERNAL_PORTAUDIO)
-  add_subdirectory(src/portaudio lib/portaudio)
+  add_subdirectory(src/portaudio)
   set(PORTAUDIO_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/portaudio/include)
   set(PORTAUDIO_LIBRARIES PortAudio)
 else()
@@ -146,7 +146,7 @@ endif()
 
 # include FFTW
 if (USE_INTERNAL_FFTW)
-  add_subdirectory(src/fftw lib/fftw)
+  add_subdirectory(src/fftw)
   set(FFTW_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/lib/fftw)
   set(FFTW_LIBRARIES fftw)
 else()
@@ -155,7 +155,7 @@ endif()
 
 # include WAVPACK
 if (USE_INTERNAL_WAVPACK)
-  add_subdirectory(src/wavpack lib/wavpack)
+  add_subdirectory(src/wavpack)
   set(WAVPACK_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/wavpack/include)
   set(WAVPACK_LIBRARIES WavPack)
 else()
