@@ -56,11 +56,6 @@ set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISIO
 set(NUM_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION})
 string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
 
-if (CMAKE_BUILD_TYPE STREQUAL "")
-   message(STATUS "No build configuration specified. Defaulting to 'Release' build.")
-   set(CMAKE_BUILD_TYPE "Release")
-endif ()
-
 # only use options supported by the compiler
 include(CheckIncludeFileCXX)
 include(CheckFunctionExists)
@@ -90,24 +85,7 @@ ELSE()
 ENDIF()
 
 # setup compiler flags for debug vs release compiles
-add_option(-ffast-math)
 add_option(-Wall)
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-   add_option(-g)
-   add_option(-O0)
-   add_option(-funit-at-a-time)
-elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
-   add_option(-fomit-frame-pointer)
-   add_option(-O3)
-   add_option(-funroll-loops)
-   add_definitions(-DNDEBUG)
-endif ()
-add_option(-mmmx)
-add_option(-msse)
-add_option(-msse2)
-add_option(-msse3)
-
-add_option(-mstackrealign)
 
 if (APPLE)
    # see the following URL for information about these variables
