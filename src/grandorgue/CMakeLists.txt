@@ -210,7 +210,10 @@ SplashScreen.cpp
 wxGaugeAudio.cpp)
 
 add_library(golib STATIC ${grandorgue_src})
-target_link_libraries(golib goimg ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
+set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
+set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR} ${WAVPACK_LIBDIR})
+target_link_libraries(golib goimg ${go_libs})
+link_directories(${go_libdir})
 
 if(APPLE)
   set(BINDIR "${PROJECT_NAME}.app/Contents/MacOS")
@@ -243,7 +246,7 @@ install(PROGRAMS "${RUNTIME_DIR}/${NAME}${CMAKE_EXECUTABLE_SUFFIX}" DESTINATION 
 
 if (INSTALL_DEPEND STREQUAL "ON")
   CopyWxTranslations()
-  CopyDependencies("${BINDIR}/${instpath}" ${wxWidgets_LIBRARIES})
+  CopyDependencies("${BINDIR}/${instpath}" ${go_libs} ${go_libdir})
 endif()
 
 add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)
