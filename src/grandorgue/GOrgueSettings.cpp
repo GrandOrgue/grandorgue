@@ -98,7 +98,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
 	ReleaseConcurrency(this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
 	LoadConcurrency(this, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, 1),
-	InterpolationType(this, wxT("General"), wxT("InterpolationType"), 0, 1, 1),
+	InterpolationType(this, wxT("General"), wxT("InterpolationType"), 0, 1, 0),
 	WaveFormatBytesPerSample(this, wxT("General"), wxT("WaveFormat"), 1, 4, 4),
 	RecordDownmix(this, wxT("General"), wxT("RecordDownmix"), false),
 	AttackLoad(this, wxT("General"), wxT("AttackLoad"), 0, 1, 1),
