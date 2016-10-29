@@ -134,7 +134,6 @@ bool GOrgueApp::OnInit()
 	SetTopWindow(m_Frame);
 	m_Log = new GOrgueLog(m_Frame);
 	wxLog::SetActiveTarget(m_Log);
-	m_Frame->DoSplash();
 	m_Frame->Init(m_FileName);
 
 	return true;
