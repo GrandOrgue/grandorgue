@@ -133,40 +133,34 @@ endif ()
 
 # include RtAudio
 add_subdirectory(src/rt lib/rt)
-include_directories(src/rt/include)
+set(RT_LIBRARIES RtAudio RtMidi)
+set(RT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/rt/include)
 
 # include portaudio
 if (USE_INTERNAL_PORTAUDIO)
   add_subdirectory(src/portaudio lib/portaudio)
-  include_directories(src/portaudio/include)
+  set(PORTAUDIO_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/portaudio/include)
   set(PORTAUDIO_LIBRARIES PortAudio)
 else()
-  if(DEFINED PORTAUDIO_INCLUDE_DIRS)
-    include_directories(${PORTAUDIO_INCLUDE_DIRS})
-  endif()
-  if(NOT DEFINED PORTAUDIO_LIBRARIES)
-    set(PORTAUDIO_LIBRARIES portaudio)
-  endif()
+  pkg_check_modules(PORTAUDIO REQUIRED portaudio-2.0)
 endif()
 
 # include FFTW
 if (USE_INTERNAL_FFTW)
   add_subdirectory(src/fftw lib/fftw)
-  include_directories(${CMAKE_BINARY_DIR}/lib/fftw/)
+  set(FFTW_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/lib/fftw)
   set(FFTW_LIBRARIES fftw)
 else()
   pkg_check_modules(FFTW REQUIRED fftw3f)
-  include_directories(${FFTW_INCLUDE_DIRS})
 endif()
 
 # include WAVPACK
 if (USE_INTERNAL_WAVPACK)
   add_subdirectory(src/wavpack lib/wavpack)
-  include_directories(src/wavpack/include)
+  set(WAVPACK_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/wavpack/include)
   set(WAVPACK_LIBRARIES WavPack)
 else()
   pkg_check_modules(WAVPACK REQUIRED wavpack)
-  include_directories(${WAVPACK_INCLUDE_DIRS})
 endif()
 
 add_subdirectory(src/build)

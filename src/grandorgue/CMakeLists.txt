@@ -29,10 +29,14 @@ include(${CMAKE_SOURCE_DIR}/cmake/AddLinkerOption.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyWxTranslations.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyDependencies.cmake)
 
+add_subdirectory(images)
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgueDef.h.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h/GrandOrgueDef.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource)
-
-add_subdirectory(images)
+include_directories(${RT_INCLUDE_DIRS})
+include_directories(${PORTAUDIO_INCLUDE_DIRS})
+include_directories(${FFTW_INCLUDE_DIRS})
+include_directories(${WAVPACK_INCLUDE_DIRS})
 
 set(grandorgue_src
 contrib/sha1.cpp
@@ -212,7 +216,7 @@ SplashScreen.cpp
 wxGaugeAudio.cpp)
 
 add_library(golib STATIC ${grandorgue_src})
-target_link_libraries(golib goimg ${wxWidgets_LIBRARIES} RtAudio RtMidi ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
+target_link_libraries(golib goimg ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
 
 if(APPLE)
   set(BINDIR "${PROJECT_NAME}.app/Contents/MacOS")
