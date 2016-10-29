@@ -208,4 +208,4 @@ CONVERTIMAGE(IMAGE_LIST EnclosureD13.png)
 CONVERTIMAGE(IMAGE_LIST EnclosureD14.png)
 CONVERTIMAGE(IMAGE_LIST EnclosureD15.png)
 
-add_library(goimg STATIC ${IMAGE_LIST})
+add_library(GrandOrgueImages STATIC ${IMAGE_LIST})
