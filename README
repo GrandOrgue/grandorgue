@@ -262,7 +262,7 @@ make install
 4) Build GO for linux
 a)
 cd /buildlinux
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release /gosrc  -DUNICODE=1
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release /gosrc
 make
 b) or instead of 4 just build the build tools:
 cd /buildlinux
@@ -395,7 +395,7 @@ Check that the Perl bin folder is in the system PATH, since it should have been 
 If not, add the Perl bin folder to the system PATH.
 
 Run cmake to configure the build:
-cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release|Debug -DUNICODE=0|1 -DSTATIC=0|1 -DwxWidgets_ROOT_DIR=drive:\path\to\wxWidgets -DDOCBOOK_DIR=drive:\path\to\docbook-xsl-1.76.1
+cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release|Debug -DwxWidgets_ROOT_DIR=drive:\path\to\wxWidgets -DDOCBOOK_DIR=drive:\path\to\docbook-xsl-1.76.1
 See the README file for further details on the Windows build
 
 There should not be any  of these complaints in the output:

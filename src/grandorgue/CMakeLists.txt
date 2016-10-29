@@ -17,14 +17,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# include wxWidgets
-if (STATIC)
-  set(wxWidgets_USE_STATIC ON)
-else()
-  set(wxWidgets_USE_STATIC OFF)
-endif()
-
-include(CMakeWxWidgetsInclude.txt)
 include(${CMAKE_SOURCE_DIR}/cmake/AddLinkerOption.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyWxTranslations.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyDependencies.cmake)
@@ -37,6 +29,8 @@ include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
 include_directories(${FFTW_INCLUDE_DIRS})
 include_directories(${WAVPACK_INCLUDE_DIRS})
+include_directories(${wxWidgets_INCLUDE_DIRS})
+include(UsewxWidgets)
 
 set(grandorgue_src
 contrib/sha1.cpp
