@@ -22,7 +22,6 @@ cmake_minimum_required(VERSION 2.8)
 project(GrandOrgue CXX C)
 
 # Build configuration options
-option(UNICODE                "Build a Unicode configuration" ON)
 option(RTAUDIO_USE_CORE       "Enable RtAudio support for Core Audio (Rt and PortAudio - OS X only)" ON)
 option(RTAUDIO_USE_JACK       "Enable RtAudio support for Jack (Rt and PortAudio)" ON)
 option(RTAUDIO_USE_OSS        "Enable RtAudio support for OSS (Rt and PortAudio - Linux only)" OFF)
@@ -162,6 +161,15 @@ if (USE_INTERNAL_WAVPACK)
 else()
   pkg_check_modules(WAVPACK REQUIRED wavpack)
 endif()
+
+find_package(wxWidgets REQUIRED html net adv core base)
+message(STATUS "  wxWidgets Unicode?          : ${wxWidgets_USE_UNICODE}")
+message(STATUS "  wxWidgets Debug?            : ${wxWidgets_USE_DEBUG}")
+message(STATUS "  wxWidgets Static linking    : ${wxWidgets_USE_STATIC}")
+message(STATUS "  wxWidgets version           : ${wxWidgets_VERSION}")
+message(STATUS "  wxWidgets config binary     : ${wxWidgets_CONFIG_EXECUTABLE}")
+message(STATUS "  wxWidgets configuration     : ${wxWidgets_CONFIGURATION}")
+message(STATUS "============================================================================")
 
 add_subdirectory(src/build)
 add_subdirectory(src/grandorgue)

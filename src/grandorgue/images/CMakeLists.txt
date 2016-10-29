@@ -18,6 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 include(${CMAKE_SOURCE_DIR}/cmake/ConvertImages.cmake)
+include_directories(${wxWidgets_INCLUDE_DIRS})
+include(UsewxWidgets)
 
 set(IMAGE_LIST)
 CONVERTIMAGE(IMAGE_LIST gauge.gif)
