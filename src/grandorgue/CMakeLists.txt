@@ -21,8 +21,6 @@ include(${CMAKE_SOURCE_DIR}/cmake/AddLinkerOption.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyWxTranslations.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyDependencies.cmake)
 
-add_subdirectory(images)
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgueDef.h.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h/GrandOrgueDef.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource)
 include_directories(${RT_INCLUDE_DIRS})
@@ -212,7 +210,7 @@ wxGaugeAudio.cpp)
 add_library(golib STATIC ${grandorgue_src})
 set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
 set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR} ${WAVPACK_LIBDIR})
-target_link_libraries(golib goimg ${go_libs})
+target_link_libraries(golib GrandOrgueImages ${go_libs})
 link_directories(${go_libdir})
 
 if(APPLE)

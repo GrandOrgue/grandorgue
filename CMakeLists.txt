@@ -172,6 +172,7 @@ message(STATUS "  wxWidgets configuration     : ${wxWidgets_CONFIGURATION}")
 message(STATUS "============================================================================")
 
 add_subdirectory(src/build)
+add_subdirectory(src/images)
 add_subdirectory(src/grandorgue)
 add_subdirectory(po)
 add_subdirectory(help)

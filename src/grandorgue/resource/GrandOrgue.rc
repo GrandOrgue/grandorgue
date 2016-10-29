@@ -8,7 +8,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-101                     ICON                    "../images/GOIcon.ico"
+101                     ICON                    "../../images/GOIcon.ico"
 
 1                       RT_MANIFEST             "GrandOrgue.manifest"
 
