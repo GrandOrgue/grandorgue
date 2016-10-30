@@ -1,10 +1,10 @@
 diff --git a/src/grandorgue/CMakeLists.txt b/src/grandorgue/CMakeLists.txt
 --- a/src/grandorgue/CMakeLists.txt
 +++ b/src/grandorgue/CMakeLists.txt
-@@ -28,10 +28,10 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_option(-funroll-loops)
-    add_definitions(-DNDEBUG)
- endif ()
+@@ -21,10 +21,10 @@ include(${CMAKE_SOURCE_DIR}/cmake/AddLinkerOption.cmake)
+ include(${CMAKE_SOURCE_DIR}/cmake/CopyWxTranslations.cmake)
+ include(${CMAKE_SOURCE_DIR}/cmake/CopyDependencies.cmake)
+ 
 -add_option(-mmmx)
 -add_option(-msse)
 -add_option(-msse2)

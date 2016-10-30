@@ -86,6 +86,14 @@ ENDIF()
 
 # setup compiler flags for debug vs release compiles
 add_option(-Wall)
+if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+   add_option(-O3)
+   add_option(-g)
+   add_definitions(-DNDEBUG)
+   add_option(-fomit-frame-pointer)
+   add_option(-funroll-loops)
+   add_option(-ffast-math)
+endif ()
 
 if (APPLE)
    # see the following URL for information about these variables
