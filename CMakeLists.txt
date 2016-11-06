@@ -77,12 +77,14 @@ if(UNIX AND NOT APPLE)
 endif()
 
 IF (APPLE)
-  SET(RESOURCEDIR "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources")
+  set(BININSTDIR "${PROJECT_NAME}.app/Contents/MacOS")
   SET(RESOURCEINSTDIR "${PROJECT_NAME}.app/Contents/Resources")
 ELSE()
-  SET(RESOURCEDIR "${CMAKE_BINARY_DIR}/share/${PROJECT_NAME}")
+  set(BININSTDIR "bin")
   SET(RESOURCEINSTDIR "share/${PROJECT_NAME}")
 ENDIF()
+SET(BINDIR "${CMAKE_BINARY_DIR}/${BININSTDIR}")
+SET(RESOURCEDIR "${CMAKE_BINARY_DIR}/${RESOURCEINSTDIR}")
 
 # setup compiler flags for debug vs release compiles
 add_option(-Wall)

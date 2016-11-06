@@ -220,41 +220,39 @@ set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_
 target_link_libraries(golib GrandOrgueImages ${go_libs})
 link_directories(${go_libdir})
 
-if(APPLE)
-  set(BINDIR "${PROJECT_NAME}.app/Contents/MacOS")
-else()
-  set(BINDIR "bin")
-endif()
-
 set(instpath "GrandOrgue${CMAKE_EXECUTABLE_SUFFIX}")
 
 if (APPLE AND INSTALL_DEPEND STREQUAL "ON")
   set(NAME grandorgue)
-  ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_BINARY_DIR}/${BINDIR}/${instpath}" COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${NAME}${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_BINARY_DIR}/${BINDIR}/${instpath}"  DEPENDS ${NAME})
-  set(RUNTIME_DIR ${CMAKE_CURRENT_BINARY_DIR})
+  ADD_CUSTOM_COMMAND(OUTPUT "${BINDIR}/${instpath}" COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${NAME}${CMAKE_EXECUTABLE_SUFFIX}" "${BINDIR}/${instpath}"  DEPENDS ${NAME})
+  set(RUNTIME_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 else()
   set(NAME GrandOrgue)
-  set(RUNTIME_DIR ${CMAKE_BINARY_DIR}/${BINDIR})
+  set(RUNTIME_DIR "${BINDIR}")
 endif()
 
 if (WIN32)
-   add_executable(${NAME} WIN32 GrandOrgue.cpp ${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc)
+   add_executable(${NAME} WIN32 GrandOrgue.cpp "${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc")
    add_linker_option(${NAME} large-address-aware)
 else ()
    add_executable(${NAME} GrandOrgue.cpp)
 endif ()
 
 target_link_libraries(${NAME} golib)
-set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUNTIME_DIR})
+set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${RUNTIME_DIR}")
 
-install(PROGRAMS "${RUNTIME_DIR}/${NAME}${CMAKE_EXECUTABLE_SUFFIX}" DESTINATION "${BINDIR}" RENAME "${instpath}")
+if (APPLE AND INSTALL_DEPEND STREQUAL "ON")
+  install(PROGRAMS "${RUNTIME_DIR}/${NAME}${CMAKE_EXECUTABLE_SUFFIX}" DESTINATION "${BININSTDIR}" RENAME "${instpath}")
+else ()
+  install(TARGETS ${NAME} RUNTIME DESTINATION "${BININSTDIR}")
+endif ()
 
 if (INSTALL_DEPEND STREQUAL "ON")
   CopyWxTranslations()
-  CopyDependencies("${BINDIR}/${instpath}" ${go_libs} ${go_libdir})
+  CopyDependencies("${BININSTDIR}/${instpath}" ${go_libs} ${go_libdir})
 endif()
 
 add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)
 target_link_libraries(perftest golib)
 
-add_custom_target(runperftest COMMAND perftest ${CMAKE_SOURCE_DIR}/tests DEPENDS perftest)
+add_custom_target(runperftest COMMAND perftest "${CMAKE_SOURCE_DIR}/tests" DEPENDS perftest)
