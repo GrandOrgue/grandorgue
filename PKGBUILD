@@ -37,8 +37,7 @@ build()
     cd build
     cmake \
 	-DCMAKE_INSTALL_PREFIX=/usr \
-	-DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_SKIP_RPATH=1 \
+	-DCMAKE_SKIP_RPATH=ON \
 	-DVERSION_REVISION="`echo "$pkgver"|cut -d. -f4`" \
       ..
     make  VERBOSE=1

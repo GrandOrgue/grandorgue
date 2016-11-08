@@ -6,4 +6,4 @@ include /usr/share/cdbs/1/rules/utils.mk
 
 VERSION=$(shell head -1 debian/changelog  |cut -d'(' -f2  |cut -d')' -f1 |cut -d. -f4 | cut -d- -f1)
 
-DEB_CMAKE_EXTRA_FLAGS := -DVERSION_REVISION=$(VERSION)
+DEB_CMAKE_EXTRA_FLAGS := -DLIBINSTDIR="lib/$(DEB_HOST_MULTIARCH)" -DVERSION_REVISION="$(VERSION)"

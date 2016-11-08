@@ -1,4 +1,5 @@
 usr/bin/*
+usr/lib/*/libGrandOrgue*
 usr/share/applications/*
 usr/share/appdata/*
 usr/share/pixmaps/*
