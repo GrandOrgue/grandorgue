@@ -88,9 +88,8 @@ This package contains the various resource files for GrandOrgue.
 PATH=%{_libexecdir}/wxGTK3:$PATH cmake \
       -DCMAKE_INSTALL_PREFIX=%{_prefix} \
       -DDOC_INSTALL_DIR=%{_docdir} \
-      -DLIB=%{_lib} \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_SKIP_RPATH=1 \
+      -DLIBINSTDIR=%{_lib} \
+      -DCMAKE_SKIP_RPATH=ON \
       -DVERSION_REVISION="`echo %{version}|cut -d. -f4`"
 make %{?_smp_mflags} VERBOSE=1
 
@@ -110,6 +109,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_bindir}/*
+%{_libdir}/libGrandOrgue*
 %doc %{_docdir}/%{name}
 %{_datadir}/applications/*
 %dir %{_datadir}/appdata

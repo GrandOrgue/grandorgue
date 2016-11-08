@@ -208,4 +208,11 @@ CONVERTIMAGE(IMAGE_LIST EnclosureD13.png)
 CONVERTIMAGE(IMAGE_LIST EnclosureD14.png)
 CONVERTIMAGE(IMAGE_LIST EnclosureD15.png)
 
-add_library(GrandOrgueImages STATIC ${IMAGE_LIST})
+add_library(GrandOrgueImages SHARED ${IMAGE_LIST})
+target_link_libraries(GrandOrgueImages ${wxWidgets_LIBRARIES})
+link_directories(${wxWidgets_LIBRARY_DIRS})
+set_target_properties(GrandOrgueImages PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${LIBDIR})
+set_target_properties(GrandOrgueImages PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${LIBDIR})
+set_target_properties(GrandOrgueImages PROPERTIES VERSION ${NUM_VERSION})
+install(TARGETS GrandOrgueImages RUNTIME DESTINATION ${LIBINSTDIR} LIBRARY DESTINATION ${LIBINSTDIR} NAMELINK_SKIP)
+

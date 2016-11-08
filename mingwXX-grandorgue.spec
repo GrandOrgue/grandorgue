@@ -187,6 +187,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_mingw_bindir}/*[A-Za-z].exe
+%{_mingw_bindir}/libGrandOrgue*.dll
 
 %files resources
 %defattr(-,root,root)
