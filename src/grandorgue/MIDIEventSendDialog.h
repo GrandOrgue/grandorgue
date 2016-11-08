@@ -30,12 +30,14 @@ class wxButton;
 class wxChoice;
 class wxSpinCtrl;
 class wxStaticText;
+class MIDIEventRecvDialog;
 
 class MIDIEventSendDialog : public wxPanel
 {
 private:
 	GOrgueSettings& m_Settings;
 	GOrgueMidiSender* m_original;
+	MIDIEventRecvDialog* m_recv;
 	GOrgueMidiSenderData m_midi;
 	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
 	wxStaticText* m_KeyLabel;
@@ -44,16 +46,18 @@ private:
 	wxSpinCtrl *m_LowValue;
 	wxStaticText* m_HighValueLabel;
 	wxSpinCtrl *m_HighValue;
-	wxButton* m_new, *m_delete;
+	wxButton* m_new, *m_delete, *m_copy;
 	int m_current;
 
 	void StoreEvent();
 	void LoadEvent();
+	MIDI_SEND_EVENT CopyEvent();
 
 	void OnNewClick(wxCommandEvent& event);
 	void OnDeleteClick(wxCommandEvent& event);
 	void OnEventChange(wxCommandEvent& event);
 	void OnTypeChange(wxCommandEvent& event);
+	void OnCopyClick(wxCommandEvent& event);
 
 protected:
 	enum {
@@ -65,11 +69,12 @@ protected:
 		ID_CHANNEL,
 		ID_KEY,
 		ID_LOW_VALUE,
-		ID_HIGH_VALUE
+		ID_HIGH_VALUE,
+		ID_COPY
 	};
 
 public:
-	MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event, GOrgueSettings& settings);
+	MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event, MIDIEventRecvDialog* recv, GOrgueSettings& settings);
 	~MIDIEventSendDialog();
 
 	void DoApply();

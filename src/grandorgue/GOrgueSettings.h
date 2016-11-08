@@ -72,6 +72,7 @@ private:
 	ptr_vector<GOrgueArchiveFile> m_ArchiveList;
 	std::map<wxString, bool> m_MidiIn;
 	std::map<wxString, unsigned> m_MidiInShift;
+	std::map<wxString, wxString> m_MidiInOutDeviceMap;
 	std::map<wxString, bool> m_MidiOut;
 	wxString m_ResourceDir;
 	std::vector<wxString> m_AudioGroups;
@@ -172,6 +173,8 @@ public:
 	void SetMidiInState(wxString device, bool enabled);
 	unsigned GetMidiInDeviceChannelShift(wxString device);
 	void SetMidiInDeviceChannelShift(wxString device, unsigned shift);
+	wxString GetMidiInOutDevice(wxString device);
+	void SetMidiInOutDevice(wxString device, wxString out_device);
 	std::vector<wxString> GetMidiInDeviceList();
 
 	bool GetMidiOutState(wxString device);

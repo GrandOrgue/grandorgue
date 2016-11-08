@@ -22,6 +22,7 @@
 #include "MIDIEventSendDialog.h"
 
 #include "GOrgueSettings.h"
+#include "MIDIEventRecvDialog.h"
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/sizer.h>
@@ -31,14 +32,16 @@
 BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
 	EVT_BUTTON(ID_EVENT_NEW, MIDIEventSendDialog::OnNewClick)
 	EVT_BUTTON(ID_EVENT_DELETE, MIDIEventSendDialog::OnDeleteClick)
+	EVT_BUTTON(ID_COPY, MIDIEventSendDialog::OnCopyClick)
 	EVT_CHOICE(ID_EVENT_NO, MIDIEventSendDialog::OnEventChange)
 	EVT_CHOICE(ID_EVENT, MIDIEventSendDialog::OnTypeChange)
 END_EVENT_TABLE()
 
-MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event, GOrgueSettings& settings):
+MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event, MIDIEventRecvDialog* recv, GOrgueSettings& settings):
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_original(event),
+	m_recv(recv),
 	m_midi(*event)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -86,6 +89,13 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 	box->Add(m_HighValueLabel, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
 	m_HighValue = new wxSpinCtrl(this, ID_HIGH_VALUE, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 127);
 	box->Add(m_HighValue, 0);
+
+	m_copy = new wxButton(this, ID_COPY, _("&Copy current receive event"));
+	if (!m_recv)
+		m_copy->Disable();
+	sizer->Add(new wxBoxSizer(wxVERTICAL), 0, wxTOP, 5);
+	sizer->Add(m_copy, 0, wxTOP, 5);
+
 	SetSizer(topSizer);
 
 	m_device->Append(_("Any device"));
@@ -333,4 +343,87 @@ void MIDIEventSendDialog::OnEventChange(wxCommandEvent& event)
 	StoreEvent();
 	m_current = m_eventno->GetSelection();
 	LoadEvent();
+}
+
+void MIDIEventSendDialog::OnCopyClick(wxCommandEvent& event)
+{
+	m_midi.GetEvent(m_current) = CopyEvent();
+	LoadEvent();
+}
+
+MIDI_SEND_EVENT MIDIEventSendDialog::CopyEvent()
+{
+	MIDI_MATCH_EVENT recv = m_recv->GetCurrentEvent();
+
+	MIDI_SEND_EVENT e;
+	e.device = 0;
+	e.type = MIDI_S_NONE;
+	e.channel = 1;
+	e.key = 1;
+	e.low_value = 0;
+	e.high_value = 127;
+
+	wxString out_device = m_Settings.GetMidiInOutDevice(m_Settings.GetMidiMap().GetDeviceByID(recv.device));
+	if (out_device == wxEmptyString)
+		return e;
+	e.device = m_Settings.GetMidiMap().GetDeviceByString(out_device);
+	if (m_midi.GetType() == MIDI_SEND_MANUAL)
+	{
+		if (recv.type == MIDI_M_NOTE || recv.type == MIDI_M_NOTE_NO_VELOCITY ||
+		    recv.type == MIDI_M_NOTE_SHORT_OCTAVE || recv.type == MIDI_M_NOTE_NORMAL)
+		{
+			e.type = recv.type == MIDI_M_NOTE_NO_VELOCITY ? MIDI_S_NOTE_NO_VELOCITY : MIDI_S_NOTE;
+			e.channel = recv.channel;
+			e.low_value = recv.low_value ? recv.low_value - 1 : 0;
+			e.high_value = recv.high_value;
+		}
+		return e;
+	}
+	if (m_midi.GetType() == MIDI_SEND_ENCLOSURE)
+	{
+		e.channel = recv.channel;
+		e.key = recv.key;
+		e.low_value = recv.low_value;
+		e.high_value = recv.high_value;
+
+		if (recv.type == MIDI_M_CTRL_CHANGE)
+			e.type = MIDI_S_CTRL;
+		else if (recv.type == MIDI_M_NRPN)
+			e.type = MIDI_S_NRPN;
+		else if (recv.type == MIDI_M_RPN)
+			e.type = MIDI_S_RPN;
+
+		return e;
+	}
+
+	e.channel = recv.channel;
+	e.key = recv.key;
+	e.low_value = recv.low_value;
+	e.high_value = 127;
+
+	if (recv.type == MIDI_M_NOTE)
+		e.type = MIDI_S_NOTE;
+	else if (recv.type == MIDI_M_CTRL_CHANGE)
+		e.type = MIDI_S_CTRL;
+	else if (recv.type == MIDI_M_NRPN)
+		e.type = MIDI_S_NRPN;
+	else if (recv.type == MIDI_M_RPN)
+		e.type = MIDI_S_RPN;
+	else if (recv.type == MIDI_M_RPN_RANGE)
+	{
+		e.type = MIDI_S_RPN_RANGE;
+		e.high_value = recv.high_value;
+	}
+	else if (recv.type == MIDI_M_NRPN_RANGE)
+	{
+		e.type = MIDI_S_NRPN_RANGE;
+		e.high_value = recv.high_value;
+	}
+	else if (recv.type == MIDI_M_PGM_RANGE)
+	{
+		e.type = MIDI_S_PGM_RANGE;
+		e.high_value = recv.high_value;
+	}
+
+	return e;
 }
