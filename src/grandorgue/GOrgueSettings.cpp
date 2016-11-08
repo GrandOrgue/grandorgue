@@ -251,7 +251,8 @@ void GOrgueSettings::Load()
 		{
 			wxString name = cfg.ReadString(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03d"), i + 1));
 			SetMidiInState(name, cfg.ReadBoolean(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dEnabled"), i + 1)));
-			SetMidiInDeviceChannelShift(name, cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dShift"), i + 1), 0, 15));;
+			SetMidiInDeviceChannelShift(name, cfg.ReadInteger(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dShift"), i + 1), 0, 15));
+			SetMidiInOutDevice(name, cfg.ReadString(CMBSetting, wxT("MIDIIn"), wxString::Format(wxT("Device%03dOutputDevice"), i + 1), false));
 		}
 
 		count = cfg.ReadInteger(CMBSetting, wxT("MIDIOut"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
@@ -449,6 +450,20 @@ void GOrgueSettings::SetMidiInDeviceChannelShift(wxString device, unsigned shift
 	m_MidiInShift[device] = shift;
 }
 
+wxString GOrgueSettings::GetMidiInOutDevice(wxString device)
+{
+	std::map<wxString, wxString>::iterator it = m_MidiInOutDeviceMap.find(device);
+	if (it == m_MidiInOutDeviceMap.end())
+		return wxEmptyString;
+	else
+		return it->second;
+}
+
+void GOrgueSettings::SetMidiInOutDevice(wxString device, wxString out_device)
+{
+	m_MidiInOutDeviceMap[device] = out_device;
+}
+
 std::vector<wxString> GOrgueSettings::GetMidiInDeviceList()
 {
 	std::vector<wxString> list;
@@ -586,6 +601,7 @@ void GOrgueSettings::Flush()
 		cfg.WriteString(wxT("MIDIIn"), wxString::Format(wxT("Device%03d"), count), it->first);
 		cfg.WriteBoolean(wxT("MIDIIn"), wxString::Format(wxT("Device%03dEnabled"), count), it->second);
 		cfg.WriteInteger(wxT("MIDIIn"), wxString::Format(wxT("Device%03dShift"), count), GetMidiInDeviceChannelShift(it->first));
+		cfg.WriteString(wxT("MIDIIn"), wxString::Format(wxT("Device%03dOutputDevice"), count), GetMidiInOutDevice(it->first));
 	}
 	if (count > MAX_MIDI_DEVICES)
 		count = MAX_MIDI_DEVICES;

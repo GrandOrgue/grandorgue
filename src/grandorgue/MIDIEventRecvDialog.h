@@ -104,6 +104,7 @@ public:
 	void RegisterMIDIListener(GOrgueMidi* midi);
 
 	void DoApply();
+	MIDI_MATCH_EVENT GetCurrentEvent();
 
 	DECLARE_EVENT_TABLE()
 };

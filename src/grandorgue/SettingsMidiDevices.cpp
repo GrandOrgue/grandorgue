@@ -27,14 +27,16 @@
 #include <wx/button.h>
 #include <wx/checklst.h>
 #include <wx/choice.h>
+#include <wx/choicdlg.h> 
 #include <wx/numdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
 BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_LISTBOX(ID_INDEVICES, SettingsMidiDevices::OnInDevicesClick)
-	EVT_LISTBOX_DCLICK(ID_INDEVICES, SettingsMidiDevices::OnInDevicesDoubleClick)
-	EVT_BUTTON(ID_INPROPERTIES, SettingsMidiDevices::OnInDevicesDoubleClick)
+	EVT_LISTBOX_DCLICK(ID_INDEVICES, SettingsMidiDevices::OnInOutDeviceClick)
+	EVT_BUTTON(ID_INCHANNELSHIFT, SettingsMidiDevices::OnInChannelShiftClick)
+	EVT_BUTTON(ID_INOUTDEVICE, SettingsMidiDevices::OnInOutDeviceClick)
 END_EVENT_TABLE()
 
 SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
@@ -50,6 +52,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	{
 		choices.push_back(list[i]);
 		m_InDeviceData.push_back(m_Sound.GetSettings().GetMidiInDeviceChannelShift(list[i]));
+		m_InOutDeviceData.push_back(m_Sound.GetSettings().GetMidiInOutDevice(list[i]));
 		state.push_back(m_Sound.GetSettings().GetMidiInState(list[i]));
 	}
 
@@ -62,9 +65,15 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 			m_InDevices->Check(i);
 	}
 	item3->Add(m_InDevices, 1, wxEXPAND | wxALL, 5);
-	m_InProperties = new wxButton(this, ID_INPROPERTIES, _("A&dvanced..."));
+
+	wxBoxSizer* item4 = new wxBoxSizer(wxHORIZONTAL);
+	m_InProperties = new wxButton(this, ID_INCHANNELSHIFT, _("A&dvanced..."));
 	m_InProperties->Disable();
-	item3->Add(m_InProperties, 0, wxALIGN_RIGHT | wxALL, 5);
+	item4->Add(m_InProperties, 0, wxALL, 5);
+	m_InOutDevice = new wxButton(this, ID_INOUTDEVICE, _("&MIDI-Output-Device..."));
+	m_InOutDevice->Disable();
+	item4->Add(m_InOutDevice, 0, wxALL, 5);
+	item3->Add(item4, 0, wxALIGN_RIGHT | wxALL, 5);
 	topSizer->Add(item3, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 
 	choices.clear();
@@ -108,11 +117,31 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 void SettingsMidiDevices::OnInDevicesClick(wxCommandEvent& event)
 {
 	m_InProperties->Enable();
+	m_InOutDevice->Enable();
 }
 
-void SettingsMidiDevices::OnInDevicesDoubleClick(wxCommandEvent& event)
+void SettingsMidiDevices::OnInOutDeviceClick(wxCommandEvent& event)
+{
+	int index = m_InDevices->GetSelection();
+	wxArrayString choices = m_RecorderDevice->GetStrings();
+	choices[0] = _("No device");
+	int selection = 0;
+	for(unsigned i = 1; i < choices.GetCount(); i++)
+		if (choices[i] == m_InOutDeviceData[index])
+			selection = i;
+	int result = wxGetSingleChoiceIndex(_("Select the corresponding MIDI output device for converting input events into output events"), _("MIDI output device"), choices, selection, this);
+	if (result == -1)
+		return;
+	if (result)
+		m_InOutDeviceData[index] = choices[result];
+	else
+		m_InOutDeviceData[index] = wxEmptyString;
+}
+
+void SettingsMidiDevices::OnInChannelShiftClick(wxCommandEvent& event)
 {
 	m_InProperties->Enable();
+	m_InOutDevice->Enable();
 	int index = m_InDevices->GetSelection();
 	int result = ::wxGetNumberFromUser(_("A channel offset allows the use of two MIDI\ninterfaces with conflicting MIDI channels. For\nexample, applying a channel offset of 8 to\none of the MIDI interfaces would cause that\ninterface's channel 1 to appear as channel 9,\nchannel 2 to appear as channel 10, and so on."), _("Channel offset:"), 
 					   m_InDevices->GetString(index), m_InDeviceData[index], 0, 15, this);
@@ -127,6 +156,7 @@ void SettingsMidiDevices::Save()
 	{
 		m_Sound.GetSettings().SetMidiInState(m_InDevices->GetString(i), m_InDevices->IsChecked(i));
 		m_Sound.GetSettings().SetMidiInDeviceChannelShift(m_InDevices->GetString(i), m_InDeviceData[i]);
+		m_Sound.GetSettings().SetMidiInOutDevice(m_InDevices->GetString(i), m_InOutDeviceData[i]);
 	}
 
 	for (unsigned i = 0; i < m_OutDevices->GetCount(); i++)

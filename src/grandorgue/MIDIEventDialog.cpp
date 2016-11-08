@@ -51,7 +51,7 @@ MIDIEventDialog::MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxStrin
 	}
 	if (sender)
 	{
-		m_sendPage = new MIDIEventSendDialog(notebook, sender, settings);
+		m_sendPage = new MIDIEventSendDialog(notebook, sender, m_recvPage, settings);
 		notebook->AddPage(m_sendPage,  _("Send"));
 	}
 	if (key)
@@ -61,7 +61,7 @@ MIDIEventDialog::MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxStrin
 	}
 	if (division)
 	{
-		m_sendDivisionPage = new MIDIEventSendDialog(notebook, division, settings);
+		m_sendDivisionPage = new MIDIEventSendDialog(notebook, division, m_recvPage, settings);
 		notebook->AddPage(m_sendDivisionPage,  _("Send Division Output"));
 	}
 

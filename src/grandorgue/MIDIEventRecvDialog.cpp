@@ -397,9 +397,9 @@ void MIDIEventRecvDialog::LoadEvent()
 	m_Debounce->SetValue(e.debounce_time);
 }
 
-void MIDIEventRecvDialog::StoreEvent()
+MIDI_MATCH_EVENT MIDIEventRecvDialog::GetCurrentEvent()
 {
-	MIDI_MATCH_EVENT& e=m_midi.GetEvent(m_current);
+	MIDI_MATCH_EVENT e;
 	if (m_device->GetSelection() == 0)
 		e.device = 0;
 	else
@@ -417,6 +417,12 @@ void MIDIEventRecvDialog::StoreEvent()
 	e.low_value = m_LowValue->GetValue();
 	e.high_value = m_HighValue->GetValue();
 	e.debounce_time = m_Debounce->GetValue();
+	return e;
+}
+
+void MIDIEventRecvDialog::StoreEvent()
+{
+	m_midi.GetEvent(m_current) = GetCurrentEvent();
 }
 
 void MIDIEventRecvDialog::OnNewClick(wxCommandEvent& event)

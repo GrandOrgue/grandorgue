@@ -34,7 +34,8 @@ class SettingsMidiDevices : public wxPanel
 {
 	enum {
 		ID_INDEVICES = 200,
-		ID_INPROPERTIES,
+		ID_INCHANNELSHIFT,
+		ID_INOUTDEVICE,
 		ID_OUTDEVICES,
 		ID_RECORDERDEVICE,
 	};
@@ -43,11 +44,14 @@ private:
 	wxCheckListBox* m_InDevices;
 	wxCheckListBox* m_OutDevices;
 	std::vector<int> m_InDeviceData;
+	std::vector<wxString> m_InOutDeviceData;
 	wxButton* m_InProperties;
+	wxButton* m_InOutDevice;
 	wxChoice* m_RecorderDevice;
 
 	void OnInDevicesClick(wxCommandEvent& event);
-	void OnInDevicesDoubleClick(wxCommandEvent& event);
+	void OnInOutDeviceClick(wxCommandEvent& event);
+	void OnInChannelShiftClick(wxCommandEvent& event);
 
 public:
 	SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent);
