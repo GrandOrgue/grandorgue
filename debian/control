@@ -3,7 +3,7 @@ Section: sound
 Priority: optional
 Maintainer: Martin Koegler <martin.koegler@chello.at>
 Build-Depends: debhelper (>= 7), cdbs, cmake, gettext, po4a, libjack-jackd2-dev, libasound2-dev, libwxgtk3.0-dev, docbook-xsl, xsltproc, zip, devscripts, libudev-dev, libfftw3-dev, pkg-config, libwavpack-dev
-Standards-Version: 3.9.4
+Standards-Version: 3.9.8
 
 Package: grandorgue
 Architecture: any
