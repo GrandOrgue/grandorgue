@@ -232,7 +232,7 @@ target_link_libraries(GrandOrgue golib)
 
 if (INSTALL_DEPEND STREQUAL "ON")
   CopyWxTranslations()
-  CopyDependencies("${BININSTDIR}/GrandOrgue${CMAKE_EXECUTABLE_SUFFIX}" ${go_libs} ${go_libdir})
+  CopyDependencies(GrandOrgue "${BININSTDIR}/GrandOrgue${CMAKE_EXECUTABLE_SUFFIX}" ${go_libs} ${go_libdir})
 endif()
 
 add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)

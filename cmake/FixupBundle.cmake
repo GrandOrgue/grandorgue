@@ -32,7 +32,3 @@ include("${statusfile}")
 set(BU_CHMOD_BUNDLE_ITEMS ON)
 
 fixup_bundle("${target}"  ""  "${searchdirs}")
-
-if (DEFINED stampfile)
-  file(WRITE "${stampfile}" "OK")
-endif()
