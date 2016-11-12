@@ -6,7 +6,7 @@
     },
 
     "version": {
-        "name": "0.3.1.X"
+        "name": "0.3.1.X",
         "desc": "GrandOrgue",
         "gpgsign": false
     },
