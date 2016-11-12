@@ -220,36 +220,19 @@ set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_
 target_link_libraries(golib GrandOrgueImages ${go_libs})
 link_directories(${go_libdir})
 
-set(instpath "GrandOrgue${CMAKE_EXECUTABLE_SUFFIX}")
-
-if (APPLE AND INSTALL_DEPEND STREQUAL "ON")
-  set(NAME grandorgue)
-  ADD_CUSTOM_COMMAND(OUTPUT "${BINDIR}/${instpath}" COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${NAME}${CMAKE_EXECUTABLE_SUFFIX}" "${BINDIR}/${instpath}"  DEPENDS ${NAME})
-  set(RUNTIME_DIR "${CMAKE_CURRENT_BINARY_DIR}")
-else()
-  set(NAME GrandOrgue)
-  set(RUNTIME_DIR "${BINDIR}")
-endif()
-
 if (WIN32)
-   add_executable(${NAME} WIN32 GrandOrgue.cpp "${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc")
-   add_linker_option(${NAME} large-address-aware)
+   add_executable(GrandOrgue WIN32 GrandOrgue.cpp "${CMAKE_CURRENT_SOURCE_DIR}/resource/GrandOrgue.rc")
+   add_linker_option(GrandOrgue large-address-aware)
 else ()
-   add_executable(${NAME} GrandOrgue.cpp)
+   add_executable(GrandOrgue GrandOrgue.cpp)
 endif ()
 
-target_link_libraries(${NAME} golib)
-set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${RUNTIME_DIR}")
-
-if (APPLE AND INSTALL_DEPEND STREQUAL "ON")
-  install(PROGRAMS "${RUNTIME_DIR}/${NAME}${CMAKE_EXECUTABLE_SUFFIX}" DESTINATION "${BININSTDIR}" RENAME "${instpath}")
-else ()
-  install(TARGETS ${NAME} RUNTIME DESTINATION "${BININSTDIR}")
-endif ()
+BUILD_EXECUTABLE(GrandOrgue)
+target_link_libraries(GrandOrgue golib)
 
 if (INSTALL_DEPEND STREQUAL "ON")
   CopyWxTranslations()
-  CopyDependencies("${BININSTDIR}/${instpath}" ${go_libs} ${go_libdir})
+  CopyDependencies("${BININSTDIR}/GrandOrgue${CMAKE_EXECUTABLE_SUFFIX}" ${go_libs} ${go_libdir})
 endif()
 
 add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)
