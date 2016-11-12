@@ -93,7 +93,7 @@ SettingsTemperaments::SettingsTemperaments(GOrgueSettings& settings, wxWindow* p
 		m_List->SetCellValue(row, 1, t->GetTitle());
 		m_List->SetCellEditor(row, 1, new wxGridCellTextEditor());
 		for(unsigned i = 0; i < 12; i++)
-			m_List->SetCellValue(row, 2 + i, wxString::Format(wxT("%.03f"), t->GetOffset(i)));
+			m_List->SetCellValue(row, 2 + i, wxString::Format(wxT("%.03f"), t->GetNoteOffset(i)));
 	}
 
 	m_List->EnableEditing(true);
@@ -171,7 +171,7 @@ void SettingsTemperaments::Save()
 		m_Ptrs[i]->SetTitle(m_List->GetCellValue(i, 1));
 		m_Ptrs[i]->SetGroup(m_List->GetCellValue(i, 0));
 		for(unsigned j = 0; j < 12; j++)
-			m_Ptrs[i]->SetOffset(j, wxAtof(m_List->GetCellValue(i, 2 + j)));
+			m_Ptrs[i]->SetNoteOffset(j, wxAtof(m_List->GetCellValue(i, 2 + j)));
 
 		list.push_back(m_Ptrs[i]);
 	}
