@@ -20,20 +20,18 @@
 include(${CMAKE_SOURCE_DIR}/cmake/ExtractLibraryDirs.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/WriteStatus.cmake)
 
-function(CopyDependencies instpath)
+function(CopyDependencies app instpath)
   set(statusfile "${CMAKE_BINARY_DIR}/cmake.status")
   WriteStatus("${statusfile}")
 
   ExtractLibraryDirs(searchdirs ${ARGN})
 
   set(targetfile "${CMAKE_BINARY_DIR}/${instpath}")
-  set(stampfile "${CMAKE_CURRENT_BINARY_DIR}/copy_dlls.stamp")
   string(REPLACE ";" "$<SEMICOLON>" cmd_searchdirs "${searchdirs}")
 
-  add_custom_command(OUTPUT "${stampfile}"
-    COMMAND ${CMAKE_COMMAND} -Dstatusfile="${statusfile}" -Dstampfile="${stampfile}" -Dtarget="${targetfile}" -Dsearchdirs="${cmd_searchdirs}" -P "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake"
+  add_custom_command(TARGET ${app} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -Dstatusfile="${statusfile}" -Dtarget="${targetfile}" -Dsearchdirs="${cmd_searchdirs}" -P "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake"
     DEPENDS ${targetfile} "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake" "${statusfile}")
-  add_custom_target(copy_dlls_dependencies ALL DEPENDS "${stampfile}")
 
   install(CODE "execute_process(COMMAND \"${CMAKE_COMMAND}\" \"-Dstatusfile=${statusfile}\" \"-Dtarget=\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${instpath}\" \"-Dsearchdirs=${searchdirs}\" -P \"${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake\")")
 endfunction()

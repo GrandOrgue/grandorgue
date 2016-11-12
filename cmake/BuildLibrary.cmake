@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 function(BUILD_LIBRARY TARGET)
+  file(MAKE_DIRECTORY ${LIBDIR})
   add_library(${TARGET} SHARED ${ARGN})
   set_target_properties(${TARGET} PROPERTIES VERSION ${NUM_VERSION})
 
