@@ -35,8 +35,8 @@ public:
 
 	void Save(GOrgueConfigWriter& cfg, wxString group);
 
-	float GetOffset(unsigned note);
-	void SetOffset(unsigned note, float offset);
+	float GetNoteOffset(unsigned note);
+	void SetNoteOffset(unsigned note, float offset);
 
 	void SetTitle(wxString title);
 	void SetGroup(wxString group);

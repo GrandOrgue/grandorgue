@@ -140,7 +140,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_stops.resize(0);
 	for (unsigned i = 0; i < nb_stops; i++)
 	{
-		m_stops.push_back(new GOrgueStop(m_organfile, m_manual_number, GetFirstLogicalKeyMIDINoteNumber()));
+		m_stops.push_back(new GOrgueStop(m_organfile, GetFirstLogicalKeyMIDINoteNumber()));
 		buffer.Printf(wxT("Stop%03d"), i + 1);
 		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 448));
 		m_organfile->MarkSectionInUse(buffer);

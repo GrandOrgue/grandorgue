@@ -407,7 +407,7 @@ DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(unsigned channels, un
 	{
 		/* TODO: Add support for polyphase compressed decoders. Fallback to
 		 * linear interpolation for now. */
-		if ((channels == 1))
+		if (channels == 1)
 		{
 			if (bits_per_sample >= 20)
 				return MonoCompressedLinear<true>;
@@ -415,7 +415,7 @@ DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(unsigned channels, un
 			assert(bits_per_sample >= 12);
 			return MonoCompressedLinear<false>;
 		}
-		else if ((channels == 2))
+		else if (channels == 2)
 		{
 			if (bits_per_sample >= 20)
 				return StereoCompressedLinear<true>;
@@ -622,7 +622,7 @@ void GOAudioSection::GetMaxAmplitudeAndDerivative()
 		int f = 0;
 		for (unsigned int j = 0; j < m_Channels; j++)
 		{
-			unsigned val = GetSample(i, j, &cache);
+			int val = GetSample(i, j, &cache);
 			f += val;
 			if (abs(val) > m_MaxAmplitude)
 				m_MaxAmplitude = abs(val);

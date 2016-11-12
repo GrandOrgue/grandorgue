@@ -49,12 +49,12 @@ void GOrgueTemperamentUser::Save(GOrgueConfigWriter& cfg, wxString group)
 		cfg.WriteFloat(group, wxString::Format(wxT("Offset%d"), i), m_Tuning[i]);
 }
 
-float GOrgueTemperamentUser::GetOffset(unsigned note)
+float GOrgueTemperamentUser::GetNoteOffset(unsigned note)
 {
 	return m_Tuning[note];
 }
 
-void GOrgueTemperamentUser::SetOffset(unsigned note, float offset)
+void GOrgueTemperamentUser::SetNoteOffset(unsigned note, float offset)
 {
 	if (offset > 1200)
 		offset = 1200;

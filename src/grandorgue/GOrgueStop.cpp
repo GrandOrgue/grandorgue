@@ -26,11 +26,10 @@
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
 
-GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned manual_number, unsigned first_midi_note_number) :
+GOrgueStop::GOrgueStop(GrandOrgueFile* organfile, unsigned first_midi_note_number) :
 	GOrgueDrawstop(organfile),
 	m_RankInfo(0),
 	m_KeyVelocity(0),
-	m_ManualNumber(manual_number),
 	m_FirstMidiNoteNumber(first_midi_note_number),
 	m_FirstAccessiblePipeLogicalKeyNumber(0),
 	m_NumberOfAccessiblePipes(0)
