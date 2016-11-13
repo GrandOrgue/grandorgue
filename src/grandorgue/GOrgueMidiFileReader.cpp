@@ -140,7 +140,7 @@ bool GOrgueMidiFileReader::StartTrack()
 		if (m_Pos + sizeof(MIDIFileHeader) > m_DataLen)
 		{
 			wxLogError(_("Incomplete chunk at offset %d"), m_Pos);
-			m_Pos =+ sizeof(MIDIFileHeader);
+			m_Pos += sizeof(MIDIFileHeader);
 			return false;
 		}
 		MIDIFileHeader* h = (MIDIFileHeader*)&m_Data[m_Pos];
