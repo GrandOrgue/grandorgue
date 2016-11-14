@@ -182,9 +182,9 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	if (is_main_panel)
 	{
 		for (unsigned i = 0; i < m_organfile->GetEnclosureCount(); i++)
-			if (m_organfile->GetEnclosure(i)->IsDisplayed(new_format))
+			if (m_organfile->GetEnclosureElement(i)->IsDisplayed(new_format))
 			{
-				LoadControl(new GOGUIEnclosure(this, m_organfile->GetEnclosure(i)), cfg, wxString::Format(wxT("Enclosure%03d"), i + 1));
+				LoadControl(new GOGUIEnclosure(this, m_organfile->GetEnclosureElement(i)), cfg, wxString::Format(wxT("Enclosure%03d"), i + 1));
 			}
 
 		if (!new_format)
@@ -272,7 +272,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			wxString buffer = wxString::Format(wxT("Enclosure%03d"), i + 1);
 			unsigned enclosure_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetEnclosureCount());
 			buffer = wxString::Format(wxT("Enclosure%03d"), enclosure_nb);
-			LoadControl(new GOGUIEnclosure(this, m_organfile->GetEnclosure(enclosure_nb - 1)), cfg, panel_prefix + buffer);
+			LoadControl(new GOGUIEnclosure(this, m_organfile->GetEnclosureElement(enclosure_nb - 1)), cfg, panel_prefix + buffer);
 			m_organfile->MarkSectionInUse(panel_prefix + buffer);
 		}
 
@@ -410,7 +410,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		else if (type == wxT("Enclosure"))
 		{
 			unsigned enclosure_nb  = cfg.ReadInteger(ODFSetting, buffer, wxT("Enclosure"), 1, m_organfile->GetEnclosureCount());
-			LoadControl(new GOGUIEnclosure(this, m_organfile->GetEnclosure(enclosure_nb - 1)), cfg, buffer);
+			LoadControl(new GOGUIEnclosure(this, m_organfile->GetEnclosureElement(enclosure_nb - 1)), cfg, buffer);
 		}
 		else if (type == wxT("Tremulant"))
 		{

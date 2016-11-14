@@ -61,7 +61,7 @@ void GOrgueWindchest::Load(GOrgueConfigReader& cfg, wxString group, unsigned ind
 	{
 		wxString buffer;
 		buffer.Printf(wxT("Enclosure%03d"), i + 1);
-		m_enclosure.push_back(m_organfile->GetEnclosure(cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetEnclosureCount()) - 1));
+		m_enclosure.push_back(m_organfile->GetEnclosureElement(cfg.ReadInteger(ODFSetting, group, buffer, 1, m_organfile->GetEnclosureCount()) - 1));
 	}
 
 	m_tremulant.resize(0);

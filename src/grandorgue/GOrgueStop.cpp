@@ -46,7 +46,7 @@ unsigned GOrgueStop::IsAuto() const
 
 void GOrgueStop::Load(GOrgueConfigReader& cfg, wxString group)
 {
-	unsigned number_of_ranks = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, m_organfile->GetRankCount(), false, 0);
+	unsigned number_of_ranks = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, 999, false, 0);
 
 	m_FirstAccessiblePipeLogicalKeyNumber  = cfg.ReadInteger(ODFSetting, group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1,  128);
 	m_NumberOfAccessiblePipes              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfAccessiblePipes"), 1, 192);
@@ -56,7 +56,7 @@ void GOrgueStop::Load(GOrgueConfigReader& cfg, wxString group)
 		for(unsigned i = 0; i < number_of_ranks; i++)
 		{
 			RankInfo info;
-			unsigned no = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Rank%03d"), i + 1), 1, m_organfile->GetRankCount());
+			unsigned no = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Rank%03d"), i + 1), 1, m_organfile->GetODFRankCount());
 			info.Rank = m_organfile->GetRank(no - 1); 
 			info.FirstPipeNumber = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Rank%03dFirstPipeNumber"), i + 1), 1, info.Rank->GetPipeCount(), false, 1);
 			info.PipeCount = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("Rank%03dPipeCount"), i + 1), 1, info.Rank->GetPipeCount() - info.FirstPipeNumber + 1, false, info.Rank->GetPipeCount() - info.FirstPipeNumber + 1);

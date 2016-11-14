@@ -146,6 +146,7 @@ GOrgueMidiRecorder.cpp
 GOrgueMidiRtInPort.cpp
 GOrgueMidiRtOutPort.cpp
 GOrgueMidiWXEvent.cpp
+GOrgueModel.cpp
 GOrgueOrgan.cpp
 GOrguePath.cpp
 GOrguePipe.cpp

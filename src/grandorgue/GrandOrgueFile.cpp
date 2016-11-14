@@ -63,7 +63,6 @@
 #include "GOrgueMetronome.h"
 #include "GOrgueOrgan.h"
 #include "GOrguePath.h"
-#include "GOrguePiston.h"
 #include "GOrgueProgressDialog.h"
 #include "GOrguePushbutton.h"
 #include "GOrgueReleaseAlignTable.h"
@@ -103,7 +102,6 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_DivisionalsStoreTremulants(false),
 	m_GeneralsStoreDivisionalCouplers(false),
 	m_CombinationsStoreNonDisplayedDrawstops(false),
-	m_FirstManual(0),
 	m_ChurchName(),
 	m_ChurchAddress(),
 	m_OrganBuilder(),
@@ -111,17 +109,6 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_OrganComments(),
 	m_RecordingDetails(),
 	m_InfoFilename(),
-	m_RankCount(0),
-	m_ODFManualCount(0),
-	m_enclosure(),
-	m_tremulant(),
-	m_windchest(),
-	m_piston(),
-	m_general(),
-	m_divisionalcoupler(),
-	m_switches(),
-	m_ranks(),
-	m_manual(),
 	m_panels(),
 	m_panelcreators(),
 	m_elementcreators(),
@@ -213,17 +200,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	}
 
 	/* load basic organ information */
-	unsigned NumberOfManuals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 1, 16);
-	m_FirstManual = cfg.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
-	unsigned NumberOfEnclosures = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 50);
-	unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, 10);
-	unsigned NumberOfWindchestGroups = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 50);
-	unsigned NumberOfReversiblePistons = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfReversiblePistons"), 0, 32);
-	unsigned NumberOfGenerals = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfGenerals"), 0, 99);
-	unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionalCouplers"), 0, 8);
 	unsigned NumberOfPanels = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfPanels"), 0, 100, false);
-	unsigned NumberOfSwitches = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSwitches"), 0, 999, 0);
-	m_RankCount = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, 400, false);
 	m_PipeConfig.Load(cfg, group, wxEmptyString);
 	m_DivisionalsStoreIntermanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntermanualCouplers"));
 	m_DivisionalsStoreIntramanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntramanualCouplers"));
@@ -236,102 +213,17 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_Temperament = cfg.ReadString(CMBSetting, group, wxT("Temperament"), false);
 	m_IgnorePitch = cfg.ReadBoolean(CMBSetting, group, wxT("IgnorePitch"), false, false);
 
+	GOrgueModel::Load(cfg, this);
 	wxString buffer;
 
-	m_windchest.resize(0);
-	for (unsigned i = 0; i < NumberOfWindchestGroups; i++)
-		m_windchest.push_back(new GOrgueWindchest(this));
-
-	m_manual.resize(0);
-	m_manual.resize(m_FirstManual); // Add empty slot for pedal, if necessary
-	for (unsigned int i = m_FirstManual; i <= NumberOfManuals; i++)
-		m_manual.push_back(new GOrgueManual(this));
-	m_ODFManualCount = NumberOfManuals + 1;
-	for(unsigned int i = 0; i < 4; i++)
-		m_manual.push_back(new GOrgueManual(this));
-
-	m_enclosure.resize(0);
-	for (unsigned i = 0; i < NumberOfEnclosures; i++)
-	{
-		m_enclosure.push_back(new GOrgueEnclosure(this));
-		buffer.Printf(wxT("Enclosure%03u"), i + 1);
-		m_enclosure[i]->Load(cfg, buffer, i);
+	for (unsigned i = 0; i < m_enclosure.size(); i++)
 		m_enclosure[i]->SetElementID(GetRecorderElementID(wxString::Format(wxT("E%d"), i)));
-	}
 
-	m_switches.resize(0);
-	for (unsigned i = 0; i < NumberOfSwitches; i++)
-	{
-		m_switches.push_back(new GOrgueSwitch(this));
-		buffer.Printf(wxT("Switch%03d"), i + 1);
-		m_switches[i]->Load(cfg, buffer);
+	for (unsigned i = 0; i < m_switches.size(); i++)
 		m_switches[i]->SetElementID(GetRecorderElementID(wxString::Format(wxT("S%d"), i)));
-	}
 
-	m_tremulant.resize(0);
-	for (unsigned i = 0; i < NumberOfTremulants; i++)
-	{
-		m_tremulant.push_back(new GOrgueTremulant(this));
-		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		m_tremulant[i]->Load(cfg, buffer, -((int)(i + 1)));
+	for (unsigned i = 0; i < m_tremulant.size(); i++)
 		m_tremulant[i]->SetElementID(GetRecorderElementID(wxString::Format(wxT("T%d"), i)));
-	}
-
-	for (unsigned  i = 0; i < NumberOfWindchestGroups; i++)
-	{
-		buffer.Printf(wxT("WindchestGroup%03d"), i + 1);
-		m_windchest[i]->Load(cfg, buffer, i);
-	}
-
-	for (unsigned  i = 0; i < m_RankCount; i++)
-	{
-		m_ranks.push_back(new GOrgueRank(this));
-		buffer.Printf(wxT("Rank%03d"), i + 1);
-		m_ranks[i]->Load(cfg, buffer, -1);
-	}
-
-	for (unsigned int i = m_FirstManual; i <= NumberOfManuals; i++)
-	{
-		buffer.Printf(wxT("Manual%03d"), i);
-		m_manual[i]->Load(cfg, buffer, i);
-	}
-
-	unsigned min_key = 0xff, max_key = 0;
-	for(unsigned i = GetFirstManualIndex(); i < GetODFManualCount(); i++)
-	{
-		GOrgueManual* manual = GetManual(i);
-		if ((unsigned)manual->GetFirstLogicalKeyMIDINoteNumber() < min_key)
-			min_key = manual->GetFirstLogicalKeyMIDINoteNumber();
-		if (manual->GetFirstLogicalKeyMIDINoteNumber() + manual->GetLogicalKeyCount() > max_key)
-			max_key = manual->GetFirstLogicalKeyMIDINoteNumber() + manual->GetLogicalKeyCount();
-	}
-	for (unsigned i = GetODFManualCount(); i <= GetManualAndPedalCount(); i++)
-		GetManual(i)->Init(cfg, wxString::Format(wxT("SetterFloating%03d"), i - GetODFManualCount() + 1), i, min_key, max_key - min_key);
-
-	m_piston.resize(0);
-	for (unsigned i = 0; i < NumberOfReversiblePistons; i++)
-	{
-		m_piston.push_back(new GOrguePiston(this));
-		buffer.Printf(wxT("ReversiblePiston%03d"), i + 1);
-		m_piston[i]->Load(cfg, buffer);
-	}
-
-	m_divisionalcoupler.resize(0);
-	for (unsigned i = 0; i < NumberOfDivisionalCouplers; i++)
-	{
-		m_divisionalcoupler.push_back(new GOrgueDivisionalCoupler(this));
-		buffer.Printf(wxT("DivisionalCoupler%03d"), i + 1);
-		m_divisionalcoupler[i]->Load(cfg, buffer);
-	}
-
-	m_general.resize(0);
-	m_GeneralTemplate.InitGeneral();
-	for (unsigned i = 0; i < NumberOfGenerals; i++)
-	{
-		m_general.push_back(new GOrgueGeneral(this->GetGeneralTemplate(), this, false));
-		buffer.Printf(wxT("General%03d"), i + 1);
-		m_general[i]->Load(cfg, buffer);
-	}
 
 	m_setter = new GOrgueSetter(this);
 	m_elementcreators.push_back(m_setter);
@@ -925,63 +817,6 @@ bool GrandOrgueFile::GetIgnorePitch()
 	return m_IgnorePitch;
 }
 
-unsigned GrandOrgueFile::GetFirstManualIndex()
-{
-	return m_FirstManual;
-}
-
-unsigned GrandOrgueFile::GetODFManualCount()
-{
-	return m_ODFManualCount;
-}
-
-unsigned GrandOrgueFile::GetManualAndPedalCount()
-{
-	if (!m_manual.size())
-		return 0;
-	return m_manual.size() - 1;
-}
-
-GOrgueManual* GrandOrgueFile::GetManual(unsigned index)
-{
-	return m_manual[index];
-}
-
-unsigned GrandOrgueFile::GetTremulantCount()
-{
-	return m_tremulant.size();
-}
-
-GOrgueTremulant* GrandOrgueFile::GetTremulant(unsigned index)
-{
-	return m_tremulant[index];
-}
-
-unsigned GrandOrgueFile::GetSwitchCount()
-{
-	return m_switches.size();
-}
-
-GOrgueSwitch* GrandOrgueFile::GetSwitch(unsigned index)
-{
-	return m_switches[index];
-}
-
-GOrgueRank* GrandOrgueFile::GetRank(unsigned index)
-{
-	return m_ranks[index];
-}
-
-unsigned GrandOrgueFile::GetRankCount()
-{
-	return m_RankCount;
-}
-
-void GrandOrgueFile::AddRank(GOrgueRank* rank)
-{
-	m_ranks.push_back(rank);
-}
-
 bool GrandOrgueFile::DivisionalsStoreIntermanualCouplers()
 {
 	return m_DivisionalsStoreIntermanualCouplers;
@@ -997,29 +832,9 @@ bool GrandOrgueFile::DivisionalsStoreTremulants()
 	return m_DivisionalsStoreTremulants;
 }
 
-unsigned GrandOrgueFile::GetDivisionalCouplerCount()
-{
-	return m_divisionalcoupler.size();
-}
-
-GOrgueDivisionalCoupler* GrandOrgueFile::GetDivisionalCoupler(unsigned index)
-{
-	return m_divisionalcoupler[index];
-}
-
 bool GrandOrgueFile::CombinationsStoreNonDisplayedDrawstops()
 {
 	return m_CombinationsStoreNonDisplayedDrawstops;
-}
-
-unsigned GrandOrgueFile::GetNumberOfReversiblePistons()
-{
-	return m_piston.size();
-}
-
-GOrguePiston* GrandOrgueFile::GetPiston(unsigned index)
-{
-	return m_piston[index];
 }
 
 bool GrandOrgueFile::GeneralsStoreDivisionalCouplers()
@@ -1027,35 +842,9 @@ bool GrandOrgueFile::GeneralsStoreDivisionalCouplers()
 	return m_GeneralsStoreDivisionalCouplers;
 }
 
-unsigned GrandOrgueFile::GetGeneralCount()
-{
-	return m_general.size();
-}
-
-GOrgueGeneral* GrandOrgueFile::GetGeneral(unsigned index)
-{
-	return m_general[index];
-}
-
 GOrgueSetter* GrandOrgueFile::GetSetter()
 {
 	return m_setter;
-}
-
-GOrgueWindchest* GrandOrgueFile::GetWindchest(unsigned index)
-{
-	return m_windchest[index];
-}
-
-unsigned GrandOrgueFile::GetWindchestGroupCount()
-{
-	return m_windchest.size();
-}
-
-unsigned GrandOrgueFile::AddWindchest(GOrgueWindchest* windchest)
-{
-	m_windchest.push_back(windchest);
-	return m_windchest.size();
 }
 
 GOGUIPanel* GrandOrgueFile::GetPanel(unsigned index)
@@ -1121,22 +910,6 @@ GOrgueArchive* GrandOrgueFile::findArchive(const wxString& name)
 			return m_archives[i];
 	}
 	return NULL;
-}
-
-GOrgueEnclosure* GrandOrgueFile::GetEnclosure(unsigned index)
-{
-	return m_enclosure[index];
-}
-
-unsigned GrandOrgueFile::GetEnclosureCount()
-{
-	return m_enclosure.size();
-}
-
-unsigned GrandOrgueFile::AddEnclosure(GOrgueEnclosure* enclosure)
-{
-	m_enclosure.push_back(enclosure);
-	return m_enclosure.size() - 1;
 }
 
 GOrguePipeConfigNode& GrandOrgueFile::GetPipeConfig()
@@ -1332,12 +1105,6 @@ void GrandOrgueFile::Update()
 	m_setter->Update();
 }
 
-void GrandOrgueFile::UpdateVolume()
-{
-	for (unsigned i = 0; i < m_windchest.size(); i++)
-		m_windchest[i]->UpdateVolume();
-}
-
 void GrandOrgueFile::ProcessMidi(const GOrgueMidiEvent& event)
 {
 	if (event.GetMidiType() == MIDI_RESET)
@@ -1403,12 +1170,6 @@ void GrandOrgueFile::SetTemperament(wxString name)
 wxString GrandOrgueFile::GetTemperament()
 {
 	return m_Temperament;
-}
-
-void GrandOrgueFile::UpdateTremulant(GOrgueTremulant* tremulant)
-{
-	for(unsigned i = 0; i < m_windchest.size(); i++)
-		m_windchest[i]->UpdateTremulant(tremulant);
 }
 
 void GrandOrgueFile::AllNotesOff()
