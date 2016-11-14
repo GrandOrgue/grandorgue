@@ -29,6 +29,7 @@
 #include "GOrgueEventDistributor.h"
 #include "GOrgueLabel.h"
 #include "GOrgueMemoryPool.h"
+#include "GOrgueModel.h"
 #include "GOrguePipeConfigTreeNode.h"
 #include "GOrgueTimer.h"
 #include <wx/hashmap.h>
@@ -41,26 +42,16 @@ class GOrgueArchive;
 class GOrgueAudioRecorder;
 class GOrgueButton;
 class GOrgueCache;
-class GOrgueDivisionalCoupler;
 class GOrgueElementCreator;
-class GOrgueEnclosure;
-class GOrgueGeneral;
-class GOrgueManual;
 class GOrgueMidi;
 class GOrgueMidiEvent;
 class GOrgueMidiListener;
 class GOrgueMidiRecorder;
 class GOrgueOrgan;
-class GOrguePiston;
 class GOrgueProgressDialog;
-class GOrguePushbutton;
-class GOrgueRank;
 class GOrgueSetter;
 class GOrgueSettings;
-class GOrgueSwitch;
 class GOrgueTemperament;
-class GOrgueTremulant;
-class GOrgueWindchest;
 class GOrgueDocument;
 class GOSoundEngine;
 class GOSoundProvider;
@@ -68,7 +59,7 @@ class GOSoundRecorder;
 class GO_SAMPLER;
 typedef struct _GOrgueHashType GOrgueHashType;
 
-class GrandOrgueFile : public GOrgueEventDistributor, private GOrguePipeUpdateCallback, public GOrgueTimer
+class GrandOrgueFile : public GOrgueEventDistributor, private GOrguePipeUpdateCallback, public GOrgueTimer, public GOrgueModel
 {
 	WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
@@ -95,8 +86,6 @@ private:
 	bool m_GeneralsStoreDivisionalCouplers;
 	bool m_CombinationsStoreNonDisplayedDrawstops;
 
-	unsigned m_FirstManual;
-
 	wxString m_ChurchName;
 	wxString m_ChurchAddress;
 	wxString m_OrganBuilder;
@@ -104,18 +93,7 @@ private:
 	wxString m_OrganComments;
 	wxString m_RecordingDetails;
 	wxString m_InfoFilename;
-	unsigned m_RankCount;
-	unsigned m_ODFManualCount;
 
-	ptr_vector<GOrgueEnclosure> m_enclosure;
-	ptr_vector<GOrgueTremulant> m_tremulant;
-	ptr_vector<GOrgueWindchest> m_windchest;
-	ptr_vector<GOrguePiston> m_piston;
-	ptr_vector<GOrgueGeneral> m_general;
-	ptr_vector<GOrgueDivisionalCoupler> m_divisionalcoupler;
-	ptr_vector<GOrgueSwitch> m_switches;
-	ptr_vector<GOrgueRank> m_ranks;
-	ptr_vector<GOrgueManual> m_manual;
 	ptr_vector<GOGUIPanel> m_panels;
 	ptr_vector<GOGUIPanelCreator> m_panelcreators;
 	ptr_vector<GOrgueElementCreator> m_elementcreators;
@@ -171,37 +149,12 @@ public:
 	void Reset();
 	void ProcessMidi(const GOrgueMidiEvent& event);
 	void AllNotesOff();
-	void UpdateTremulant(GOrgueTremulant* tremulant);
-	void UpdateVolume();
 	void Modified();
 	GOrgueDocument* GetDocument();
 	~GrandOrgueFile(void);
 
 	/* Access to internal ODF objects */
-	unsigned GetManualAndPedalCount();
-	unsigned GetODFManualCount();
-	unsigned GetFirstManualIndex();
-	GOrgueManual* GetManual(unsigned index);
-	unsigned GetTremulantCount();
-	GOrgueRank* GetRank(unsigned index);
-	unsigned GetRankCount();
-	void AddRank(GOrgueRank* rank);
-	GOrgueTremulant* GetTremulant(unsigned index);
-	unsigned GetDivisionalCouplerCount();
-	GOrgueDivisionalCoupler* GetDivisionalCoupler(unsigned index);
-	unsigned GetGeneralCount();
-	GOrgueGeneral* GetGeneral(unsigned index);
-	unsigned GetSwitchCount();
-	GOrgueSwitch* GetSwitch(unsigned index);
-	unsigned GetNumberOfReversiblePistons();
-	GOrguePiston* GetPiston(unsigned index);
 	GOrgueSetter* GetSetter();
-	unsigned AddWindchest(GOrgueWindchest* windchest);
-	GOrgueWindchest* GetWindchest(unsigned index);
-	unsigned GetWindchestGroupCount();
-	GOrgueEnclosure* GetEnclosure(unsigned index);
-	unsigned GetEnclosureCount();
-	unsigned AddEnclosure(GOrgueEnclosure* enclosure);
 	GOGUIPanel* GetPanel(unsigned index);
 	unsigned GetPanelCount();
 	void AddPanel(GOGUIPanel* panel);

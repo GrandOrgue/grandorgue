@@ -9910,7 +9910,7 @@ the following additions attributes:
           <term>NumberOfRanks</term>
           <listitem>
             <para>
-(integer 0 - rank count specified in the organ section, default: 0)
+(integer 0 - 999, default: 0)
 Number of referenced ranks.  If zero, one rank definition is included
 in the stop section. The lists of references is specified via the
 <emphasis>Rank999...</emphasis> settings.

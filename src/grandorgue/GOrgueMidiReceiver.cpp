@@ -160,7 +160,7 @@ void GOrgueMidiReceiver::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMid
 			if (m_Index  == -1)
 				return;
 
-			index = m_organfile->GetEnclosure(m_Index)->GetMIDIInputNumber();
+			index = m_organfile->GetEnclosureElement(m_Index)->GetMIDIInputNumber();
 		}
 		GOrgueMidiReceiver* recv = m_organfile->GetSettings().FindMidiEvent(m_type, index);
 		if (!recv)
