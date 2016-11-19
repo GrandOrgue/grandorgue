@@ -398,6 +398,7 @@ Convlevel::Convlevel (void) :
     _prep_data (0),
     _freq_data (0)
 {
+	Create();
 }
 
 
@@ -606,7 +607,6 @@ void Convlevel::reset (unsigned int  inpsize,
 
 void Convlevel::start (int abspri, int policy)
 {
-	Create();
 	Run();
 }
 
