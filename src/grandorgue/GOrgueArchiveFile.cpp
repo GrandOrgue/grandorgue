@@ -144,3 +144,10 @@ bool GOrgueArchiveFile::IsComplete(GOrgueSettings& settings)
 	}
 	return true;
 }
+
+const wxString GOrgueArchiveFile::GetArchiveHash() const
+{
+	GOrgueHash hash;
+	hash.Update(m_Path);
+	return hash.getStringHash();
+}

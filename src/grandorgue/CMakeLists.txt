@@ -93,6 +93,7 @@ GOrgueArchiveReader.cpp
 GOrgueAudioRecorder.cpp
 GOrgueBitmap.cpp
 GOrgueCache.cpp
+GOrgueCacheCleaner.cpp
 GOrgueCacheWriter.cpp
 GOrgueCombinationDefinition.cpp
 GOrgueCombination.cpp
