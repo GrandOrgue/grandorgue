@@ -67,6 +67,7 @@ private:
 	GOrgueDocument* m_doc;
 	wxString m_odf;
 	wxString m_ArchiveID;
+	wxString m_hash;
 	wxString m_path;
 	wxString m_CacheFilename;
 	wxString m_SettingFilename;

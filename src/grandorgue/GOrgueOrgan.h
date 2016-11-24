@@ -57,6 +57,7 @@ public:
 	const wxString& GetOrganBuilder() const;
 	const wxString& GetRecordingDetail() const;
 	const wxString& GetArchiveID() const;
+	const wxString GetOrganHash() const;
 	long GetLastUse();
 	const wxString GetUITitle();
 	GOrgueMidiReceiver& GetMIDIReceiver();

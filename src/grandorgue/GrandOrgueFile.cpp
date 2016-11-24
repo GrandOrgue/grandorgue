@@ -86,6 +86,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_doc(doc),
 	m_odf(),
 	m_ArchiveID(),
+	m_hash(),
 	m_path(),
 	m_CacheFilename(),
 	m_SettingFilename(),
@@ -281,23 +282,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 wxString GrandOrgueFile::GetOrganHash()
 {
-	GOrgueHash hash;
-
-	if (m_ArchiveID != wxEmptyString)
-	{
-		hash.Update(m_ArchiveID);
-		hash.Update(m_odf);
-	}
-	else
-	{
-		wxFileName odf(m_odf);
-		odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
-		wxString filename = odf.GetFullPath();
-
-		hash.Update(filename);
-	}
-
-	return hash.getStringHash();
+	return m_hash;
 }
 
 wxString GrandOrgueFile::GenerateSettingFileName()
@@ -366,6 +351,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 		m_path = GOGetPath(m_odf);
 		odf_name.AssignAbsolute(m_odf);
 	}
+	m_hash = organ.GetOrganHash();
 	dlg->Setup(1, _("Loading sample set") ,_("Parsing sample set definition file"));
 	m_SettingFilename = GenerateSettingFileName();
 	m_CacheFilename = GenerateCacheFileName();
