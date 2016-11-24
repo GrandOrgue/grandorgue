@@ -53,6 +53,7 @@ public:
 	const wxString& GetPath() const;
 	const wxString& GetName() const;
 	const wxString& GetFileID() const;
+	const wxString GetArchiveHash() const;
 	const std::vector<wxString>& GetDependencies() const;
 	const std::vector<wxString>& GetDependencyTitles() const;
 

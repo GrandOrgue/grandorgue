@@ -23,6 +23,7 @@
 
 #include "GOGUIPanel.h"
 #include "GOrgueArchiveManager.h"
+#include "GOrgueCacheCleaner.h"
 #include "GOrgueDocument.h"
 #include "GOrgueEvent.h"
 #include "GOrgueLimits.h"
@@ -310,6 +311,8 @@ void GOrgueFrame::Init(wxString filename)
 		LoadLastOrgan();
 
 	m_listener.SetCallback(this);
+	GOrgueCacheCleaner clean(m_Settings);
+	clean.Cleanup();
 }
 
 void GOrgueFrame::InitHelp()
