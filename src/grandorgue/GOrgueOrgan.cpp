@@ -24,8 +24,10 @@
 #include "GOrgueArchiveFile.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
+#include "GOrgueHash.h"
 #include "GOrgueSettings.h"
 #include <wx/filefn.h>
+#include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/stopwatch.h>
@@ -165,4 +167,25 @@ bool GOrgueOrgan::IsUsable(GOrgueSettings& settings)
 	}
 	else
 		return wxFileExists(m_ODF);
+}
+
+const wxString GOrgueOrgan::GetOrganHash() const
+{
+	GOrgueHash hash;
+
+	if (m_ArchiveID != wxEmptyString)
+	{
+		hash.Update(m_ArchiveID);
+		hash.Update(m_ODF);
+	}
+	else
+	{
+		wxFileName odf(m_ODF);
+		odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
+		wxString filename = odf.GetFullPath();
+
+		hash.Update(filename);
+	}
+
+	return hash.getStringHash();
 }
