@@ -139,6 +139,7 @@ GOrgueMidiMerger.cpp
 GOrgueMidiInPort.cpp
 GOrgueMidiOutPort.cpp
 GOrgueMidiPlayer.cpp
+GOrgueMidiPlayerContent.cpp
 GOrgueMidiSender.cpp
 GOrgueMidiSenderData.cpp
 GOrgueMidiReceiver.cpp
