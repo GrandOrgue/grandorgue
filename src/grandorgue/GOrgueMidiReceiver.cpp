@@ -438,6 +438,29 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::debounce(const GOrgueMidiEvent& e, MIDI_MATC
 	return event;
 }
 
+void GOrgueMidiReceiver::deleteInternal(unsigned device)
+{
+	for(unsigned i = 0; i < m_Internal.size(); i++)
+		if (m_Internal[i].device == device)
+		{
+			m_Internal[i] = m_Internal[m_Internal.size() - 1];
+			m_Internal.resize(m_Internal.size() - 1);
+			break;
+		}
+}
+unsigned GOrgueMidiReceiver::createInternal(unsigned device)
+{
+	unsigned pos = 0;
+	while(pos < m_Internal.size() && m_Internal[pos].device != device)
+		pos++;
+	if (pos >= m_Internal.size())
+	{
+		m_Internal.resize(m_Internal.size() + 1);
+		m_Internal[pos].device = device;
+	}
+	return pos;
+}
+
 MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e)
 {
 	int tmp;
@@ -456,13 +479,13 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 
 	if (e.GetMidiType() == MIDI_SYSEX_GO_CLEAR || e.GetMidiType() == MIDI_SYSEX_GO_SAMPLESET)
 	{
-		for(unsigned i = 0; i < m_Internal.size(); i++)
-			if (m_Internal[i].device == e.GetDevice())
-			{
-				m_Internal[i] = m_Internal[m_Internal.size() - 1];
-				m_Internal.resize(m_Internal.size() - 1);
-				break;
-			}
+		if (e.GetMidiType() == MIDI_SYSEX_GO_CLEAR && e.GetChannel() == 0)
+			deleteInternal(e.GetDevice());
+		else
+		{
+			unsigned pos = createInternal(e.GetDevice());
+			m_Internal[pos].channel = -1;
+		}
 		return MIDI_MATCH_NONE;
 	}
 	if (e.GetMidiType() == MIDI_SYSEX_GO_SETUP)
@@ -472,12 +495,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 		if (m_ElementID != e.GetKey())
 			return MIDI_MATCH_NONE;
 
-		unsigned pos = 0;
-		while(pos < m_Internal.size() && m_Internal[pos].device != e.GetDevice())
-			pos++;
-		if (pos >= m_Internal.size())
-			m_Internal.resize(m_Internal.size() + 1);
-		m_Internal[pos].device = e.GetDevice();
+		unsigned pos = createInternal(e.GetDevice());
 		m_Internal[pos].channel = e.GetChannel();
 		m_Internal[pos].key = e.GetValue();
 		return MIDI_MATCH_NONE;
@@ -520,7 +538,7 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 						return MIDI_MATCH_ON;
 				}
 			}
-			break;
+			return MIDI_MATCH_NONE;
 		}
 
 

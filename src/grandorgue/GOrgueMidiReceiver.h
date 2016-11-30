@@ -48,6 +48,8 @@ private:
 	std::vector<midi_internal_match> m_Internal;
 
 	MIDI_MATCH_TYPE debounce(const GOrgueMidiEvent& e, MIDI_MATCH_TYPE event, unsigned index);
+	void deleteInternal(unsigned device);
+	unsigned createInternal(unsigned device);
 
 public:
 	GOrgueMidiReceiver(GrandOrgueFile* organfile, MIDI_RECEIVER_TYPE type);

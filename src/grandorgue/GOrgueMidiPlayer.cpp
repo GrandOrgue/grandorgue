@@ -113,6 +113,7 @@ void GOrgueMidiPlayer::Load(wxString filename, unsigned manuals, bool pedal)
 		GOrgueMidiEvent e;
 		e.SetTime(0);
 		e.SetMidiType(MIDI_SYSEX_GO_CLEAR);
+		e.SetChannel(0);
 		m_Events.push_back(e);
 
 		for(unsigned i = 1; i <= manuals; i++)
