@@ -20,7 +20,7 @@
 message(STATUS "RtMidi build Configuration")
 
 include_directories(../include)
-include_directories(../../grandorgue/contrib)
+include_directories(../../core/contrib)
 
 add_library(RtMidi STATIC RtMidi.cpp)
 

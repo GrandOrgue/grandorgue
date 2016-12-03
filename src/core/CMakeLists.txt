@@ -20,9 +20,54 @@
 include(UsewxWidgets)
 
 set(src
+contrib/sha1.cpp
+GOrgueBitmap.cpp
+GOrgueConfigFileReader.cpp
+GOrgueConfigFileWriter.cpp
+GOrgueConfigReader.cpp
+GOrgueConfigReaderDB.cpp
+GOrgueConfigWriter.cpp
+GOrgueDC.cpp
+GOrgueEvent.cpp
+GOrgueEventDistributor.cpp
+GOrgueFont.cpp
+GOrgueHash.cpp
+GOrgueInvalidFile.cpp
+GOrgueKeyConvert.cpp
+GOrgueKeyReceiverData.cpp
+GOrgueLoadThread.cpp
+GOrgueLog.cpp
+GOrgueLogWindow.cpp
+GOrgueMemoryPool.cpp
+GOrgueMidiEvent.cpp
+GOrgueMidiFileReader.cpp
+GOrgueMidiMap.cpp
+GOrgueMidiMerger.cpp
+GOrgueMidiPlayerContent.cpp
+GOrgueMidiSenderData.cpp
+GOrgueMidiReceiverData.cpp
+GOrgueMidiWXEvent.cpp
 GOrguePath.cpp
+GOrgueSampleStatistic.cpp
+GOrgueSetting.cpp
+GOrgueSettingBool.cpp
+GOrgueSettingDirectory.cpp
+GOrgueSettingFile.cpp
+GOrgueSettingFloat.cpp
+GOrgueSettingStore.cpp
+GOrgueSettingString.cpp
+GOrgueStandardFile.cpp
+GOrgueStdPath.cpp
+GOrgueTemperament.cpp
+GOrgueTemperamentCent.cpp
+GOrgueTemperamentList.cpp
+GOrgueTemperamentUser.cpp
+GOrgueTimer.cpp
+GOrgueUtil.cpp
+GOrgueWave.cpp
+GOrgueWavPack.cpp
 )
 
 BUILD_LIBRARY(GrandOrgueCore ${src})
-target_link_libraries(GrandOrgueCore ${wxWidgets_LIBRARIES})
-link_directories(${wxWidgets_LIBRARY_DIRS})
+target_link_libraries(GrandOrgueCore ${wxWidgets_LIBRARIES} ${WAVPACK_LIBRARIES})
+link_directories(${wxWidgets_LIBRARY_DIRS} ${WAVPACK_LIBDIR})
