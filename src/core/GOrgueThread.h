@@ -19,35 +19,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUELOADTHREAD_H
-#define GORGUELOADTHREAD_H
+#ifndef GORGUETHREAD_H
+#define GORGUETHREAD_H
 
-#include "GOrgueThread.h"
-#include "atomic.h"
-#include <wx/string.h>
-#include <wx/thread.h>
+#include <thread>
 
-class GOrgueCacheObject;
-class GOrgueEventDistributor;
-class GOrgueMemoryPool;
-
-class GOrgueLoadThread : private GOrgueThread
+class GOrgueThread
 {
 private:
-	GOrgueEventDistributor& m_Objects;
-	atomic_uint& m_Pos;
-	GOrgueMemoryPool& m_pool;
-	wxString m_Error;
-	bool m_OutOfMemory;
+	std::thread m_Thread;
+	bool m_Stop;
 
-	void Entry();
+	static void EntryPoint(GOrgueThread* thread);
+	
+protected:
+	virtual void Entry() = 0;
 
 public:
-	GOrgueLoadThread(GOrgueEventDistributor& objs, GOrgueMemoryPool& pool, atomic_uint& pos);
-	~GOrgueLoadThread();
+	GOrgueThread();
+	virtual ~GOrgueThread();
 
-	void Run();
-	void checkResult();
+	void Start();
+	void Wait();
+	void Stop();
+	
+	bool ShouldStop();
 };
 
 #endif

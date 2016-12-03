@@ -22,12 +22,12 @@
 #ifndef GOSOUNDTHREAD_H
 #define GOSOUNDTHREAD_H
 
+#include "GOrgueThread.h"
 #include "mutex.h"
-#include <wx/thread.h>
 
 class GOSoundScheduler;
 
-class GOSoundThread : public wxThread
+class GOSoundThread : private GOrgueThread
 {
 private:
 	GOSoundScheduler* m_Scheduler;
@@ -36,11 +36,12 @@ private:
 	GOMutex m_Mutex;
 	GOCondition m_Condition;
 
-	void* Entry();
+	void Entry();
 
 public:
 	GOSoundThread(GOSoundScheduler* scheduler);
 
+	void Run();
 	void Delete();
 	void Wakeup();
 };

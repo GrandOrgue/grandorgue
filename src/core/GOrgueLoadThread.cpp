@@ -26,20 +26,18 @@
 #include "GOrgueMemoryPool.h"
 
 GOrgueLoadThread::GOrgueLoadThread(GOrgueEventDistributor& objs, GOrgueMemoryPool& pool, atomic_uint& pos) :
-	wxThread(wxTHREAD_JOINABLE),
+	GOrgueThread(),
 	m_Objects(objs),
 	m_Pos(pos),
 	m_pool(pool),
 	m_Error(),
 	m_OutOfMemory(false)
 {
-	Create();
 }
 
 GOrgueLoadThread::~GOrgueLoadThread()
 {
-	if (IsAlive())
-		Delete();
+	Stop();
 }
 
 void GOrgueLoadThread::checkResult()
@@ -51,30 +49,35 @@ void GOrgueLoadThread::checkResult()
 		throw GOrgueOutOfMemory();
 }
 
-void* GOrgueLoadThread::Entry()
+void GOrgueLoadThread::Run()
 {
-	while (!TestDestroy())
+	Start();
+}
+
+void GOrgueLoadThread::Entry()
+{
+	while (!ShouldStop())
 	{
 		if (m_pool.IsPoolFull())
-			return NULL;
+			return;
 		unsigned pos = m_Pos.fetch_add(1);
 		try
 		{
 			GOrgueCacheObject* obj = m_Objects.GetCacheObject(pos);
 			if (!obj)
-				return NULL;
+				return;
 			obj->LoadData();
 		}
 		catch (GOrgueOutOfMemory e)
 		{
 			m_OutOfMemory = true;
-			return NULL;
+			return;
 		}
 		catch (wxString error)
 		{
 			m_Error = error;
-			return NULL;
+			return;
 		}
 	}
-	return NULL;
+	return;
 }

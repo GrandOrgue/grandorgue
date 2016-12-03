@@ -22,16 +22,16 @@
 #ifndef GORGUEMEMORYPOOL_H_
 #define GORGUEMEMORYPOOL_H_
 
+#include "GOrgueThread.h"
 #include "mutex.h"
 #include <set>
-#include <wx/thread.h>
 
 class wxFile;
 
 class GOrgueOutOfMemory {
 };
 
-class GOrgueMemoryPool : private wxThread {
+class GOrgueMemoryPool : private GOrgueThread {
 	GOMutex m_mutex;
 	std::set<void*> m_PoolAllocs;
 	char* m_PoolStart;
@@ -59,7 +59,7 @@ class GOrgueMemoryPool : private wxThread {
 	bool AllocatePool();
 	bool InMemoryPool(void* ptr);
 
-	void* Entry();
+	void Entry();
 
 public:
 	GOrgueMemoryPool();

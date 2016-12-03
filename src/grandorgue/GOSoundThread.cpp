@@ -27,19 +27,17 @@
 #include <wx/log.h>
 
 GOSoundThread::GOSoundThread(GOSoundScheduler* scheduler):
-	wxThread(wxTHREAD_JOINABLE),
+	GOrgueThread(),
 	m_Scheduler(scheduler),
 	m_Stop(false),
 	m_Condition(m_Mutex)
 {
 	wxLogDebug(wxT("Create Thread"));
-	Create();
-	SetPriority(WXTHREAD_MAX_PRIORITY);
 }
 
-void* GOSoundThread::Entry()
+void GOSoundThread::Entry()
 {
-	while(!TestDestroy() && !m_Stop)
+	while(!ShouldStop() && !m_Stop)
 	{
 		GOSoundWorkItem *next;
 		do
@@ -51,13 +49,17 @@ void* GOSoundThread::Entry()
 		while (next != NULL);
 
 		GOMutexLocker lock(m_Mutex);
-		if (TestDestroy() || m_Stop)
+		if (ShouldStop() || m_Stop)
 			break;
 		m_Condition.Wait();
 	}
-	return 0;
+	return;
 }
 
+void GOSoundThread::Run()
+{
+	Start();
+}
 
 void GOSoundThread::Wakeup()
 {
@@ -71,5 +73,5 @@ void GOSoundThread::Delete()
 		m_Stop = true;
 		m_Condition.Signal();
 	}
-	wxThread::Delete();
+	Stop();
 }
