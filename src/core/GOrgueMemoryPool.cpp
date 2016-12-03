@@ -46,7 +46,7 @@ static inline void touchMemory(const char* pos)
 }
 
 GOrgueMemoryPool::GOrgueMemoryPool() :
-	wxThread(wxTHREAD_JOINABLE),
+	GOrgueThread(),
 	m_PoolStart(0),
 	m_PoolPtr(0),
 	m_PoolEnd(0),
@@ -59,14 +59,12 @@ GOrgueMemoryPool::GOrgueMemoryPool() :
 	m_MemoryLimit(0),
 	m_AllocError(0)
 {
-	Create();
 	InitPool();
 }
 
 GOrgueMemoryPool::~GOrgueMemoryPool()
 {
-	if (IsAlive())
-		Delete();
+	Stop();
 	FreePool();
 }
 
@@ -479,20 +477,20 @@ void GOrgueMemoryPool::GrowPool(size_t length)
 
 void GOrgueMemoryPool::StartThread()
 {
-	Run();
+	Start();
 }
 
-void* GOrgueMemoryPool::Entry()
+void GOrgueMemoryPool::Entry()
 {
-	while (!TestDestroy())
+	while (!ShouldStop())
 	{
 		for(size_t pos = 0, i = 0; pos < m_CacheSize; pos+= m_PageSize, i++)
 		{
 			touchMemory(m_CacheStart + pos);
 			if ((i % 256) == 0)
 			{
-				if (TestDestroy())
-					return NULL;
+				if (ShouldStop())
+					return;
 				wxMilliSleep(50);
 			}
 		}
@@ -501,11 +499,11 @@ void* GOrgueMemoryPool::Entry()
 			touchMemory(m_PoolStart + pos);
 			if ((i % 256) == 0)
 			{
-				if (TestDestroy())
-					return NULL;
+				if (ShouldStop())
+					return;
 				wxMilliSleep(50);
 			}
 		}
 	}
-	return NULL;
+	return;
 }

@@ -19,35 +19,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUELOADTHREAD_H
-#define GORGUELOADTHREAD_H
-
 #include "GOrgueThread.h"
-#include "atomic.h"
-#include <wx/string.h>
-#include <wx/thread.h>
 
-class GOrgueCacheObject;
-class GOrgueEventDistributor;
-class GOrgueMemoryPool;
-
-class GOrgueLoadThread : private GOrgueThread
+GOrgueThread::GOrgueThread() :
+	m_Thread(),
+	m_Stop(false)
 {
-private:
-	GOrgueEventDistributor& m_Objects;
-	atomic_uint& m_Pos;
-	GOrgueMemoryPool& m_pool;
-	wxString m_Error;
-	bool m_OutOfMemory;
+}
 
-	void Entry();
+GOrgueThread::~GOrgueThread()
+{
+	Stop();
+}
 
-public:
-	GOrgueLoadThread(GOrgueEventDistributor& objs, GOrgueMemoryPool& pool, atomic_uint& pos);
-	~GOrgueLoadThread();
+void GOrgueThread::Start()
+{
+	m_Stop = false;
+	if (m_Thread.joinable())
+		return;
+	m_Thread = std::thread(GOrgueThread::EntryPoint, this);
+}
 
-	void Run();
-	void checkResult();
-};
+void GOrgueThread::Wait()
+{
+	if (m_Thread.joinable())
+		m_Thread.join();
+}
 
-#endif
+void GOrgueThread::Stop()
+{
+	m_Stop = true;
+	Wait();
+}
+
+bool GOrgueThread::ShouldStop()
+{
+	return m_Stop;
+}
+
+void GOrgueThread::EntryPoint(GOrgueThread* thread)
+{
+	thread->Entry();
+}

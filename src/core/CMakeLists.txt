@@ -62,6 +62,7 @@ GOrgueTemperament.cpp
 GOrgueTemperamentCent.cpp
 GOrgueTemperamentList.cpp
 GOrgueTemperamentUser.cpp
+GOrgueThread.cpp
 GOrgueTimer.cpp
 GOrgueUtil.cpp
 GOrgueWave.cpp
