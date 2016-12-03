@@ -29,7 +29,7 @@ add_option(-msse3)
 add_option(-mstackrealign)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgueDef.h.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h/GrandOrgueDef.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource ${CMAKE_SOURCE_DIR}/src/core)
 include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
 include_directories(${FFTW_INCLUDE_DIRS})
@@ -150,7 +150,6 @@ GOrgueMidiRtOutPort.cpp
 GOrgueMidiWXEvent.cpp
 GOrgueModel.cpp
 GOrgueOrgan.cpp
-GOrguePath.cpp
 GOrguePipe.cpp
 GOrguePipeConfig.cpp
 GOrguePipeConfigNode.cpp
@@ -220,7 +219,7 @@ wxGaugeAudio.cpp)
 add_library(golib STATIC ${grandorgue_src})
 set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
 set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR} ${WAVPACK_LIBDIR})
-target_link_libraries(golib GrandOrgueImages ${go_libs})
+target_link_libraries(golib GrandOrgueImages GrandOrgueCore ${go_libs})
 link_directories(${go_libdir})
 
 if (WIN32)
