@@ -38,7 +38,6 @@ include_directories(${wxWidgets_INCLUDE_DIRS})
 include(UsewxWidgets)
 
 set(grandorgue_src
-contrib/sha1.cpp
 contrib/zita-convolver.cpp
 
 GOGUIBankedGeneralsPanel.cpp
@@ -82,8 +81,6 @@ GOSoundScheduler.cpp
 GOSoundThread.cpp
 GOSoundTremulantWorkItem.cpp
 GOSoundWindchestWorkItem.cpp
-GOrgueWave.cpp
-GOrgueWavPack.cpp
 GOrgueArchive.cpp
 GOrgueArchiveEntryFile.cpp
 GOrgueArchiveFile.cpp
@@ -91,63 +88,37 @@ GOrgueArchiveIndex.cpp
 GOrgueArchiveManager.cpp
 GOrgueArchiveReader.cpp
 GOrgueAudioRecorder.cpp
-GOrgueBitmap.cpp
 GOrgueCache.cpp
 GOrgueCacheCleaner.cpp
 GOrgueCacheWriter.cpp
 GOrgueCombinationDefinition.cpp
 GOrgueCombination.cpp
-GOrgueConfigFileReader.cpp
-GOrgueConfigFileWriter.cpp
-GOrgueConfigReader.cpp
-GOrgueConfigReaderDB.cpp
-GOrgueConfigWriter.cpp
 GOrgueBitmapCache.cpp
 GOrgueButton.cpp
 GOrgueCoupler.cpp
-GOrgueDC.cpp
 GOrgueDivisional.cpp
 GOrgueDivisionalCoupler.cpp
 GOrgueDummyPipe.cpp
 GOrgueDrawStop.cpp
 GOrgueElementCreator.cpp
 GOrgueEnclosure.cpp
-GOrgueEvent.cpp
-GOrgueEventDistributor.cpp
 GOrgueFilename.cpp
 GOrgueFrameGeneral.cpp
-GOrgueFont.cpp
 GOrgueGeneral.cpp
-GOrgueHash.cpp
-GOrgueInvalidFile.cpp
-GOrgueKeyConvert.cpp
 GOrgueKeyReceiver.cpp
-GOrgueKeyReceiverData.cpp
 GOrgueLabel.cpp
-GOrgueLoadThread.cpp
-GOrgueLog.cpp
-GOrgueLogWindow.cpp
 GOrgueManual.cpp
-GOrgueMemoryPool.cpp
 GOrgueMetronome.cpp
 GOrgueMidi.cpp
-GOrgueMidiEvent.cpp
-GOrgueMidiFileReader.cpp
 GOrgueMidiListener.cpp
-GOrgueMidiMap.cpp
-GOrgueMidiMerger.cpp
 GOrgueMidiInPort.cpp
 GOrgueMidiOutPort.cpp
 GOrgueMidiPlayer.cpp
-GOrgueMidiPlayerContent.cpp
 GOrgueMidiSender.cpp
-GOrgueMidiSenderData.cpp
 GOrgueMidiReceiver.cpp
-GOrgueMidiReceiverData.cpp
 GOrgueMidiRecorder.cpp
 GOrgueMidiRtInPort.cpp
 GOrgueMidiRtOutPort.cpp
-GOrgueMidiWXEvent.cpp
 GOrgueModel.cpp
 GOrgueOrgan.cpp
 GOrguePipe.cpp
@@ -162,36 +133,20 @@ GOrgueRank.cpp
 GOrgueReferencePipe.cpp
 GOrgueReleaseAlignTable.cpp
 GOrgueRtHelpers.cpp
-GOrgueSampleStatistic.cpp
-GOrgueStandardFile.cpp
 GOrgueSetter.cpp
 GOrgueSetterButton.cpp
-GOrgueSetting.cpp
-GOrgueSettingBool.cpp
-GOrgueSettingDirectory.cpp
-GOrgueSettingFile.cpp
-GOrgueSettingFloat.cpp
-GOrgueSettingStore.cpp
-GOrgueSettingString.cpp
 GOrgueSettings.cpp
 GOrgueSound.cpp
 GOrgueSoundPort.cpp
 GOrgueSoundPortaudioPort.cpp
 GOrgueSoundRtPort.cpp
 GOrgueSoundingPipe.cpp
-GOrgueStdPath.cpp
 GOrgueStop.cpp
-GOrgueTemperament.cpp
-GOrgueTemperamentCent.cpp
-GOrgueTemperamentList.cpp
-GOrgueTemperamentUser.cpp
-GOrgueTimer.cpp
 GOrgueTremulant.cpp
 GOrgueWindchest.cpp
 GOrgueSwitch.cpp
 GrandOrgueFile.cpp
 GrandOrgueFrame.cpp
-GOrgueUtil.cpp
 MIDIEventDialog.cpp
 MIDIEventRecvDialog.cpp
 MIDIEventSendDialog.cpp
@@ -217,7 +172,7 @@ SplashScreen.cpp
 wxGaugeAudio.cpp)
 
 add_library(golib STATIC ${grandorgue_src})
-set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${WAVPACK_LIBRARIES})
+set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES})
 set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR} ${WAVPACK_LIBDIR})
 target_link_libraries(golib GrandOrgueImages GrandOrgueCore ${go_libs})
 link_directories(${go_libdir})
