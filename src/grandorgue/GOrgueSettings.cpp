@@ -36,7 +36,6 @@
 #include "GOrgueStdPath.h"
 #include <wx/filename.h>
 #include <wx/log.h>
-#include <wx/stdpaths.h>
 #include <wx/thread.h>
 #include <algorithm>
 
@@ -140,15 +139,15 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	MidiRecorderPath(this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
 	MidiPlayerPath(this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString)
 {
-	m_ConfigFileName = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
+	m_ConfigFileName = GOrgueStdPath::GetConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
 	for(unsigned i = 0; i < GetEventCount(); i++)
 		m_MIDIEvents.push_back(new GOrgueMidiReceiver(NULL, m_MIDISettings[i].type));
 	m_ResourceDir = GOrgueStdPath::GetResourceDir();
 
-	UserSettingPath.setDefaultValue(wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData") + m_InstanceName);
-	UserCachePath.setDefaultValue(wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueCache") + m_InstanceName);
+	UserSettingPath.setDefaultValue(GOrgueStdPath::GetConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData") + m_InstanceName);
+	UserCachePath.setDefaultValue(GOrgueStdPath::GetCacheDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueCache") + m_InstanceName);
 
-	wxString docdir = wxStandardPaths::Get().GetDocumentsDir() + wxFileName::GetPathSeparator() + _("GrandOrgue") + wxFileName::GetPathSeparator();
+	wxString docdir = GOrgueStdPath::GetDocumentDir() + wxFileName::GetPathSeparator() + _("GrandOrgue") + wxFileName::GetPathSeparator();
 	OrganPath.setDefaultValue(docdir + _("Organs"));
 	OrganPackagePath.setDefaultValue(docdir + _("Organ packages"));
 	SettingPath.setDefaultValue(docdir + _("Settings"));
