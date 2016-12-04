@@ -30,6 +30,9 @@ public:
 	static void InitLocaleDir();
 	static wxString GetBaseDir();
 	static wxString GetResourceDir();
+	static wxString GetConfigDir();
+	static wxString GetDocumentDir();
+	static wxString GetCacheDir();
 };
 
 #endif

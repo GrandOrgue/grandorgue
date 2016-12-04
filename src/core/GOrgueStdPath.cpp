@@ -46,3 +46,18 @@ wxString GOrgueStdPath::GetResourceDir()
 	return GetBaseDir() + wxFILE_SEP_PATH +  wxT("share") + wxFILE_SEP_PATH + wxT("GrandOrgue");
 #endif
 }
+
+wxString GOrgueStdPath::GetConfigDir()
+{
+	return wxStandardPaths::Get().GetUserConfigDir();
+}
+
+wxString GOrgueStdPath::GetDocumentDir()
+{
+	return wxStandardPaths::Get().GetDocumentsDir();
+}
+
+wxString GOrgueStdPath::GetCacheDir()
+{
+	return wxStandardPaths::Get().GetUserConfigDir();
+}
