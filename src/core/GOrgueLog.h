@@ -32,7 +32,6 @@ private:
 	GOrgueLogWindow* m_LogWindow;
 
 protected:
-	void DoLog(wxLogLevel level, const wxChar *msg, time_t timestamp);
 	void DoLogTextAtLevel (wxLogLevel level, const wxString &msg);
 
 public:
