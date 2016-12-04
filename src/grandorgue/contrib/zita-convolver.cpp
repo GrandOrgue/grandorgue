@@ -385,7 +385,6 @@ typedef float FV4 __attribute__ ((vector_size(16)));
 
 
 Convlevel::Convlevel (void) :
-	wxThread(wxTHREAD_JOINABLE),
     _stat (ST_IDLE),
     _npar (0),
     _parsize (0),
@@ -398,7 +397,6 @@ Convlevel::Convlevel (void) :
     _prep_data (0),
     _freq_data (0)
 {
-	Create();
 }
 
 
@@ -607,7 +605,7 @@ void Convlevel::reset (unsigned int  inpsize,
 
 void Convlevel::start (int abspri, int policy)
 {
-	Run();
+	Start();
 }
 
 
@@ -628,7 +626,8 @@ void Convlevel::cleanup (void)
     Outnode       *Y, *Y1;
     Macnode       *M, *M1;
 
-    Delete ();
+    stop ();
+    Stop ();
     X = _inp_list;
     while (X)
     {
@@ -678,10 +677,9 @@ void Convlevel::cleanup (void)
 }
 
 
-void *Convlevel::Entry()
+void Convlevel::Entry()
 {
     main ();
-    return 0;
 }
 
 
