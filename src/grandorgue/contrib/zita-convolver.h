@@ -24,6 +24,7 @@
 
 
 #include <wx/wx.h>
+#include "GOrgueThread.h"
 #include "fftw3.h"
 
 class ZCsema
@@ -107,7 +108,7 @@ private:
 };
 
 
-class Convlevel : private wxThread
+class Convlevel : private GOrgueThread
 {
 private:
 
@@ -175,7 +176,7 @@ private:
 
     void print (FILE *F);
 
-    void* Entry();
+    void Entry();
 
     void main (void);
 
