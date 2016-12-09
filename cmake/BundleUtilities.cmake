@@ -247,12 +247,13 @@ function(gp_resolve_item_override context item exepath dirs resolved_item_var re
       set(resolved 1)
       set(resolved_item "${ri}")
       set(ri "ri-NOTFOUND")
+
+      set(${resolved_item_var} "${resolved_item}" PARENT_SCOPE)
+      set(${resolved_var} "${resolved}" PARENT_SCOPE)
     endif()
   endif()
   endif()
 
-  set(${resolved_item_var} "${resolved_item}" PARENT_SCOPE)
-  set(${resolved_var} "${resolved}" PARENT_SCOPE)
 endfunction()
 
 function(get_bundle_main_executable bundle result_var)
