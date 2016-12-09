@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 include(UsewxWidgets)
+include_directories(${WAVPACK_INCLUDE_DIRS})
 
 set(src
 contrib/sha1.cpp

@@ -33,7 +33,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h ${CMAKE_CURRENT_
 include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
 include_directories(${FFTW_INCLUDE_DIRS})
-include_directories(${WAVPACK_INCLUDE_DIRS})
 include_directories(${wxWidgets_INCLUDE_DIRS})
 include(UsewxWidgets)
 
