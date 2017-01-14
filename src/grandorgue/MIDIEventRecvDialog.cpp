@@ -186,7 +186,8 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 		m_eventtype->Append(_("Bx Ctrl Change Fixed On Value Toggle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_ON);
 		m_eventtype->Append(_("Bx Ctrl Change Fixed Off Value Toggle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_OFF);
 		m_eventtype->Append(_("Bx Ctrl Change Fixed On/Off Value Toggle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_ON_OFF);
-		m_eventtype->Append(_("Sys Ex Johannus"), (void*)MIDI_M_SYSEX_JOHANNUS);
+		m_eventtype->Append(_("Sys Ex Johannus 9 bytes"), (void*)MIDI_M_SYSEX_JOHANNUS_9);
+		m_eventtype->Append(_("Sys Ex Johannus 11 bytes"), (void*)MIDI_M_SYSEX_JOHANNUS_11);
 		m_eventtype->Append(_("Sys Ex Viscount"), (void*)MIDI_M_SYSEX_VISCOUNT);
 		m_eventtype->Append(_("Sys Ex Viscount Toggle"), (void*)MIDI_M_SYSEX_VISCOUNT_TOGGLE);
 	}
@@ -297,6 +298,8 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 			m_LowValueLabel->SetLabel(_("&Off NRPN number:"));
 		else if (type == MIDI_M_SYSEX_VISCOUNT_TOGGLE)
 			m_LowValueLabel->SetLabel(_("&Value:"));
+		else if (type == MIDI_M_SYSEX_JOHANNUS_11)
+			m_LowValueLabel->SetLabel(_("L&ower bank:"));
 		else
 			m_LowValueLabel->SetLabel(_("L&ower limit:"));
 
@@ -308,6 +311,8 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 			m_HighValueLabel->SetLabel(_("&On RPN number:"));
 		else if (type == MIDI_M_NRPN_RANGE)
 			m_HighValueLabel->SetLabel(_("&On NRPN number:"));
+		else if (type == MIDI_M_SYSEX_JOHANNUS_11)
+			m_HighValueLabel->SetLabel(_("&Upper bank:"));
 		else
 			m_HighValueLabel->SetLabel(_("&Upper limit:"));
 
@@ -497,7 +502,8 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 	case MIDI_PGM_CHANGE:
 	case MIDI_RPN:
 	case MIDI_NRPN:
-	case MIDI_SYSEX_JOHANNUS:
+	case MIDI_SYSEX_JOHANNUS_9:
+	case MIDI_SYSEX_JOHANNUS_11:
 	case MIDI_SYSEX_VISCOUNT:
 		break;
 
@@ -771,8 +777,12 @@ void MIDIEventRecvDialog::DetectEvent()
 					if (on.GetValue() == off.GetValue())
 						e.type = on.GetValue() > 0 ? MIDI_M_NRPN_ON : MIDI_M_NRPN_OFF;
 					break;
-				case MIDI_SYSEX_JOHANNUS:
-					e.type = MIDI_M_SYSEX_JOHANNUS;
+				case MIDI_SYSEX_JOHANNUS_9:
+					e.type = MIDI_M_SYSEX_JOHANNUS_9;
+					break;
+				case MIDI_SYSEX_JOHANNUS_11:
+					e.type = MIDI_M_SYSEX_JOHANNUS_11;
+					high = 0x7f;
 					break;
 				case MIDI_SYSEX_VISCOUNT:
 					if (on.GetValue() == off.GetValue())
@@ -826,8 +836,11 @@ void MIDIEventRecvDialog::DetectEvent()
 	case MIDI_NRPN:
 		e.type = MIDI_M_NRPN;
 		break;
-	case MIDI_SYSEX_JOHANNUS:
-		e.type = MIDI_M_SYSEX_JOHANNUS;
+	case MIDI_SYSEX_JOHANNUS_9:
+		e.type = MIDI_M_SYSEX_JOHANNUS_9;
+		break;
+	case MIDI_SYSEX_JOHANNUS_11:
+		e.type = MIDI_M_SYSEX_JOHANNUS_11;
 		break;
 	case MIDI_SYSEX_VISCOUNT:
 		e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;

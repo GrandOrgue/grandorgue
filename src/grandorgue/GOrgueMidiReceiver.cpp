@@ -55,7 +55,8 @@ const struct IniFileEnumEntry GOrgueMidiReceiver::m_MidiTypes[] = {
 	{ wxT("Note"), MIDI_M_NOTE },
 	{ wxT("ProgramChange"), MIDI_M_PGM_CHANGE },
 	{ wxT("ProgramRange"), MIDI_M_PGM_RANGE },
-	{ wxT("SysExJohannus"), MIDI_M_SYSEX_JOHANNUS },
+	{ wxT("SysExJohannus"), MIDI_M_SYSEX_JOHANNUS_9 },
+	{ wxT("SysExJohannus11"), MIDI_M_SYSEX_JOHANNUS_11 },
 	{ wxT("SysExViscount"), MIDI_M_SYSEX_VISCOUNT },
 	{ wxT("SysExViscountToggle"), MIDI_M_SYSEX_VISCOUNT_TOGGLE },
 	{ wxT("RPN"), MIDI_M_RPN },
@@ -240,7 +241,8 @@ bool GOrgueMidiReceiver::HasKey(midi_match_message_type type)
 	   type == MIDI_M_PGM_CHANGE ||
 	   type == MIDI_M_RPN_RANGE ||
 	   type == MIDI_M_NRPN_RANGE ||
-	   type == MIDI_M_SYSEX_JOHANNUS ||
+	   type == MIDI_M_SYSEX_JOHANNUS_9 ||
+	   type == MIDI_M_SYSEX_JOHANNUS_11 ||
 	   type == MIDI_M_CTRL_BIT ||
 	   type == MIDI_M_CTRL_CHANGE_FIXED ||
 	   type == MIDI_M_RPN ||
@@ -314,7 +316,8 @@ bool GOrgueMidiReceiver::HasDebounce(midi_match_message_type type)
 	    type == MIDI_M_NRPN_OFF ||
 	    type == MIDI_M_NRPN_ON_OFF ||
 	    type == MIDI_M_SYSEX_VISCOUNT_TOGGLE ||
-	    type == MIDI_M_SYSEX_JOHANNUS)
+	    type == MIDI_M_SYSEX_JOHANNUS_9 ||
+	    type == MIDI_M_SYSEX_JOHANNUS_11)
 		return true;
 	return false;
 }
@@ -344,6 +347,7 @@ bool GOrgueMidiReceiver::HasLowerLimit(midi_match_message_type type)
 	    type == MIDI_M_NOTE_NORMAL ||
 	    type == MIDI_M_SYSEX_VISCOUNT ||
 	    type == MIDI_M_SYSEX_VISCOUNT_TOGGLE ||
+	    type == MIDI_M_SYSEX_JOHANNUS_11 ||
 	    type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
 	return false;
@@ -372,6 +376,7 @@ bool GOrgueMidiReceiver::HasUpperLimit(midi_match_message_type type)
 	    type == MIDI_M_NOTE_NO_VELOCITY ||
 	    type == MIDI_M_NOTE_NORMAL ||
 	    type == MIDI_M_SYSEX_VISCOUNT ||
+	    type == MIDI_M_SYSEX_JOHANNUS_11 ||
 	    type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
 	return false;
@@ -390,7 +395,6 @@ unsigned GOrgueMidiReceiver::KeyLimit(midi_match_message_type type)
 	    type == MIDI_M_NRPN_OFF ||
 	    type == MIDI_M_NRPN_ON_OFF)
 		return 0x3fff;
-
 	return 0x7f;
 }
 
@@ -804,7 +808,11 @@ MIDI_MATCH_TYPE GOrgueMidiReceiver::Match(const GOrgueMidiEvent& e, const unsign
 				return MIDI_MATCH_OFF;
 		if (e.GetMidiType() == MIDI_PGM_CHANGE && m_events[i].type == MIDI_M_PGM_RANGE && m_events[i].high_value == e.GetKey())
 				return MIDI_MATCH_ON;
-		if (e.GetMidiType() == MIDI_SYSEX_JOHANNUS && m_events[i].type == MIDI_M_SYSEX_JOHANNUS && m_events[i].key == e.GetKey())
+		if (e.GetMidiType() == MIDI_SYSEX_JOHANNUS_9 && m_events[i].type == MIDI_M_SYSEX_JOHANNUS_9 && m_events[i].key == e.GetKey())
+		{
+			return debounce(e, MIDI_MATCH_CHANGE, i);
+		}
+		if (e.GetMidiType() == MIDI_SYSEX_JOHANNUS_11 && m_events[i].type == MIDI_M_SYSEX_JOHANNUS_11 && m_events[i].key == e.GetKey() && m_events[i].low_value <= e.GetValue() && m_events[i].high_value >= e.GetValue())
 		{
 			return debounce(e, MIDI_MATCH_CHANGE, i);
 		}
