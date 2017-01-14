@@ -104,12 +104,21 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg, GOrgueMidi
 		if (msg.size() == 9 && msg[0] == 0xF0 && msg[1] == 0x00 && msg[2] == 0x4A && msg[3] == 0x4F && msg[4] == 0x48 && msg[5] == 0x41 && msg[6] == 0x53 && msg[8] == 0xF7)
 		{
 			SetKey(msg[7]);
-			SetMidiType(MIDI_SYSEX_JOHANNUS);
+			SetMidiType(MIDI_SYSEX_JOHANNUS_9);
+			break;
+		}
+		if (msg.size() == 11 && msg[0] == 0xF0 && msg[1] == 0x00 && msg[2] == 0x4A && msg[3] == 0x4F && msg[4] == 0x48 && msg[5] == 0x41 && msg[6] == 0x53 && msg[8] == 0x10 && msg[10] == 0xF7)
+		{
+			SetKey(msg[9]);
+			SetValue(msg[7]);
+			SetMidiType(MIDI_SYSEX_JOHANNUS_11);
+			break;
 		}
 		if (msg.size() == 6 && msg[0] == 0xF0 && msg[1] == 0x31 && msg[5] == 0xF7)
 		{
 			SetValue(((msg[2] & 0x7F) << 14) | ((msg[3] & 0x7F) << 7) | (msg[4] & 0x7F));
 			SetMidiType(MIDI_SYSEX_VISCOUNT);
+			break;
 		}
 		if (msg.size() >= 6 && msg[0] == 0xF0 && msg[1] == 0x7D && msg[2] == 0x47 && msg[3] == 0x4F && msg[msg.size() - 1] == 0xF7)
 		{
@@ -347,7 +356,8 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgu
 		}
 		return;
 
-	case MIDI_SYSEX_JOHANNUS:
+	case MIDI_SYSEX_JOHANNUS_9:
+	case MIDI_SYSEX_JOHANNUS_11:
 	case MIDI_SYSEX_VISCOUNT:
 	case MIDI_AFTERTOUCH:
 	case MIDI_NONE:
@@ -384,8 +394,11 @@ wxString GOrgueMidiEvent::ToString(GOrgueMidiMap& map) const
 	case MIDI_NRPN:
 		return wxString::Format(_("NRPN change channel: %d key: %d value: %d"), GetChannel(), GetKey(), GetValue());
 
-	case MIDI_SYSEX_JOHANNUS:
-		return wxString::Format(_("sysex Johannus value: %d"), GetKey());
+	case MIDI_SYSEX_JOHANNUS_9:
+		return wxString::Format(_("sysex Johannus 9 bytes value: %d"), GetKey());
+
+	case MIDI_SYSEX_JOHANNUS_11:
+		return wxString::Format(_("sysex Johannus 11 bytes value: %d/%d"), GetValue(), GetKey());
 
 	case MIDI_SYSEX_VISCOUNT:
 		return wxString::Format(_("sysex Viscount value: %d"), GetValue());
