@@ -21,16 +21,19 @@
 
 #include "MIDIList.h"
 
+#include "GOrgueEvent.h"
 #include "GrandOrgueFile.h"
 #include <wx/button.h>
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
 
 BEGIN_EVENT_TABLE(MIDIList, wxDialog)
-	EVT_LIST_ITEM_SELECTED(ID_LIST, MIDIList::OnObjectClick)
+        EVT_LIST_ITEM_SELECTED(ID_LIST, MIDIList::OnObjectClick)
         EVT_LIST_ITEM_ACTIVATED(ID_LIST, MIDIList::OnObjectDoubleClick)
+        EVT_BUTTON(ID_STATUS, MIDIList::OnStatus)
         EVT_BUTTON(ID_EDIT, MIDIList::OnEdit)
         EVT_BUTTON(wxID_OK, MIDIList::OnOK)
+        EVT_COMMAND_RANGE(ID_BUTTON, ID_BUTTON_LAST, wxEVT_BUTTON, MIDIList::OnButton)
 END_EVENT_TABLE()
 
 MIDIList::MIDIList (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile* organfile) :
@@ -45,13 +48,26 @@ MIDIList::MIDIList (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile* organ
 	m_Objects->InsertColumn(1, _("Element"));
 	topSizer->Add(m_Objects, 1, wxEXPAND | wxALL, 5);
 
+	wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+	for(unsigned id = ID_BUTTON; id <= ID_BUTTON_LAST; id++)
+	{
+		wxButton* button = new wxButton(this, id, wxEmptyString);
+		sizer->Add(button, 0, id == ID_BUTTON ? wxRESERVE_SPACE_EVEN_IF_HIDDEN : 0);
+		button->Hide();
+		m_Buttons.push_back(button);
+	}
+	topSizer->Add(sizer, 0, wxALIGN_LEFT | wxALL, 1);
+
 	wxBoxSizer* buttons = new wxBoxSizer(wxHORIZONTAL);
 	m_Edit = new wxButton(this, ID_EDIT, _("C&onfigure..."));
 	m_Edit->Disable();
 	buttons->Add(m_Edit);
+	m_Status = new wxButton(this, ID_STATUS, _("&Status"));
+	m_Status->Disable();
+	buttons->Add(m_Status);
 	wxButton* close = new wxButton(this, wxID_OK, _("&Close"));
 	buttons->Add(close);
-	topSizer->Add(buttons, 0, wxALIGN_RIGHT | wxALL, 5);
+	topSizer->Add(buttons, 0, wxALIGN_RIGHT | wxALL, 1);
 
 	for(unsigned i = 0; i < organfile->GetMidiConfiguratorCount(); i++)
 	{
@@ -73,6 +89,19 @@ MIDIList::~MIDIList()
 {
 }
 
+void MIDIList::OnButton(wxCommandEvent& event)
+{
+	GOrgueMidiConfigurator* obj = (GOrgueMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
+	obj->TriggerElementActions(event.GetId() - ID_BUTTON);
+}
+
+void MIDIList::OnStatus(wxCommandEvent& event)
+{
+	GOrgueMidiConfigurator* obj = (GOrgueMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
+	wxString status = obj->GetElementStatus();
+	GOMessageBox(wxString::Format(_("Status: %s"), status), obj->GetMidiType() + _(" ") + obj->GetMidiName(), wxOK);
+}
+
 void MIDIList::OnOK(wxCommandEvent& event)
 {
 	Destroy();
@@ -81,6 +110,18 @@ void MIDIList::OnOK(wxCommandEvent& event)
 void MIDIList::OnObjectClick(wxListEvent& event)
 {
 	m_Edit->Enable();
+	m_Status->Enable();
+	GOrgueMidiConfigurator* obj = (GOrgueMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
+	std::vector<wxString> actions = obj->GetElementActions();
+	for(unsigned i = 0; i < m_Buttons.size(); i++)
+		if (i < actions.size())
+		{
+			m_Buttons[i]->SetLabel(actions[i]);
+			m_Buttons[i]->Show();
+		}
+		else
+			m_Buttons[i]->Hide();
+	Layout();
 }
 
 void MIDIList::OnObjectDoubleClick(wxListEvent& event)
