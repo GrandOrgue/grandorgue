@@ -61,9 +61,9 @@ Install OpenSuSE 42.1 (http://software.opensuse.org/421/en) (possibly in a Virtu
 Run in a terminal:
 
 sudo zypper addrepo http://download.opensuse.org/repositories/windows:mingw:win32/openSUSE_42.1/windows:mingw:win32.repo
-sudo zypper addrepo http://download.opensuse.org/repositories/windows:mingw:win32/openSUSE_42.1/windows:mingw:win64.repo
+sudo zypper addrepo http://download.opensuse.org/repositories/windows:mingw:win64/openSUSE_42.1/windows:mingw:win64.repo
 sudo zypper addrepo http://download.opensuse.org/repositories/home:e9925248:mingw/openSUSE_Leap_42.1/home:e9925248:mingw.repo
-sudo zypper modifyrepo -p 10 home_e992524_mingw 
+sudo zypper modifyrepo -p 10 home_e9925248_mingw 
 sudo zypper refresh
 sudo zypper install rpm-build gcc-c++ cmake gettext-tools docbook-xsl-stylesheets po4a libxslt-tools zip
 
