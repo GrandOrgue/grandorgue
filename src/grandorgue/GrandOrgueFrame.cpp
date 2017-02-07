@@ -90,7 +90,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
 	EVT_MENU(ID_AUDIO_STATE, GOrgueFrame::OnAudioState)
 	EVT_MENU(ID_AUDIO_SETTINGS, GOrgueFrame::OnAudioSettings)
-	EVT_MENU(ID_MIDI_PLAY, GOrgueFrame::OnMidiPlay)
+	EVT_MENU(ID_MIDI_LOAD, GOrgueFrame::OnMidiLoad)
 	EVT_MENU(wxID_HELP, GOrgueFrame::OnHelp)
 	EVT_MENU(wxID_ABOUT, GOrgueFrame::OnHelpAbout)
 	EVT_COMMAND(0, wxEVT_SHOWHELP, GOrgueFrame::OnShowHelp)
@@ -203,7 +203,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
 	m_audio_menu->Append(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->AppendSeparator();
-	m_audio_menu->Append(ID_MIDI_PLAY, _("Play &MIDI\tCtrl+P"), wxEmptyString, wxITEM_CHECK);
+	m_audio_menu->Append(ID_MIDI_LOAD, _("Load &MIDI\tCtrl+P"), wxEmptyString, wxITEM_NORMAL);
 	m_audio_menu->Append(ID_MIDI_MONITOR, _("&Log MIDI events"), wxEmptyString, wxITEM_CHECK);
 	
 	
@@ -524,9 +524,7 @@ void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
 		return;
 	}
 
-	if (event.GetId() == ID_MIDI_PLAY)
-		event.Check(m_Sound.IsMidiPlaying());
-	else if (event.GetId() == ID_AUDIO_MEMSET)
+	if (event.GetId() == ID_AUDIO_MEMSET)
 		event.Check(organfile && organfile->GetSetter() && organfile->GetSetter()->IsSetterActive());
 	else if (event.GetId() == ID_ORGAN_EDIT)
 		event.Check(doc && doc->WindowExists(GOrgueDocument::ORGAN_DIALOG, NULL));
@@ -774,17 +772,16 @@ void GOrgueFrame::OnMidiMonitor(wxCommandEvent& WXUNUSED(event))
 	m_MidiMonitor = !m_MidiMonitor;
 }
 
-void GOrgueFrame::OnMidiPlay(wxCommandEvent& WXUNUSED(event))
+void GOrgueFrame::OnMidiLoad(wxCommandEvent& WXUNUSED(event))
 {
-	if (m_Sound.IsMidiPlaying())
-		m_Sound.StopMidiPlaying();
-	else
+	wxFileDialog dlg(this, _("Load MIDI file"), m_Settings.MidiPlayerPath(), wxEmptyString, _("MID files (*.mid)|*.mid"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	if (dlg.ShowModal() == wxID_OK)
 	{
-		wxFileDialog dlg(this, _("Load MIDI"), m_Settings.MidiPlayerPath(), wxEmptyString, _("MID files (*.mid)|*.mid"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-		if (dlg.ShowModal() == wxID_OK)
+		GOrgueDocument* doc = GetDocument();
+		if (doc && doc->GetOrganFile())
 		{
 			wxString filepath = dlg.GetPath();
-			m_Sound.StartMidiPlaying(filepath);
+			doc->GetOrganFile()->LoadMIDIFile(filepath);
 		}
 	}
 }

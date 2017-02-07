@@ -46,6 +46,7 @@ class GOrgueElementCreator;
 class GOrgueMidi;
 class GOrgueMidiEvent;
 class GOrgueMidiListener;
+class GOrgueMidiPlayer;
 class GOrgueMidiRecorder;
 class GOrgueOrgan;
 class GOrgueProgressDialog;
@@ -75,6 +76,7 @@ private:
 	bool m_Cacheable;
 	GOrgueSetter* m_setter;
 	GOrgueAudioRecorder* m_AudioRecorder;
+	GOrgueMidiPlayer* m_MidiPlayer;
 	GOrgueMidiRecorder* m_MidiRecorder;
 	int m_volume;
 	bool m_IgnorePitch;
@@ -174,6 +176,8 @@ public:
 	GOrgueCombinationDefinition& GetGeneralTemplate();
 	GOrgueLabel* GetPitchLabel();
 	GOrgueLabel* GetTemperamentLabel();
+
+	void LoadMIDIFile(const wxString& filename);
 
 	/* ODF general properties */
 	bool DivisionalsStoreIntermanualCouplers();
