@@ -136,6 +136,10 @@ public:
 	wxString GetMidiType();
 	wxString GetMidiName();
 	void ShowConfigDialog();
+
+	wxString GetElementStatus();
+	std::vector<wxString> GetElementActions();
+	void TriggerElementActions(unsigned no);
 };
 
 #endif

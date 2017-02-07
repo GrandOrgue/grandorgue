@@ -196,3 +196,24 @@ void GOrgueEnclosure::ShowConfigDialog()
 
 	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, &m_midi, &m_sender, &m_shortcut);
 }
+
+wxString GOrgueEnclosure::GetElementStatus()
+{
+	return wxString::Format(_("%.3f %%"), (m_MIDIValue * 100.0 / 127));
+}
+
+std::vector<wxString> GOrgueEnclosure::GetElementActions()
+{
+	std::vector<wxString> actions;
+	actions.push_back(_("-"));
+	actions.push_back(_("+"));
+	return actions;
+}
+
+void GOrgueEnclosure::TriggerElementActions(unsigned no)
+{
+	if (no == 0)
+		Scroll(false);
+	if (no == 1)
+		Scroll(true);
+}

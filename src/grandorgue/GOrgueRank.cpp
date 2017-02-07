@@ -252,3 +252,19 @@ void GOrgueRank::ShowConfigDialog()
 	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, NULL, &m_sender, NULL, NULL);
 }
 
+wxString GOrgueRank::GetElementStatus()
+{
+	return _("-");
+}
+
+std::vector<wxString> GOrgueRank::GetElementActions()
+{
+	std::vector<wxString> actions;
+	return actions;
+}
+
+void GOrgueRank::TriggerElementActions(unsigned no)
+{
+	//Never called
+}
+

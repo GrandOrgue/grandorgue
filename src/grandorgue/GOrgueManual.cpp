@@ -520,3 +520,19 @@ void GOrgueManual::ShowConfigDialog()
 
 	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, &m_midi, &m_sender, NULL, &m_division);
 }
+
+wxString GOrgueManual::GetElementStatus()
+{
+	return _("-");
+}
+
+std::vector<wxString> GOrgueManual::GetElementActions()
+{
+	std::vector<wxString> actions;
+	return actions;
+}
+
+void GOrgueManual::TriggerElementActions(unsigned no)
+{
+	//Never called
+}
