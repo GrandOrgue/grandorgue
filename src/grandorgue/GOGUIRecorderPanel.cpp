@@ -49,14 +49,14 @@ GOGUIPanel* GOGUIRecorderPanel::CreateRecorderPanel(GOrgueConfigReader& cfg)
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_RECORDER);
-	panel->Init(cfg, metrics, _("Recorder"), wxT("Recorder"), wxT(""));
+	panel->Init(cfg, metrics, _("Recorder / Player"), wxT("Recorder"), wxT(""));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);
 	back->Init(cfg, wxT("Recorder"));
 	panel->AddControl(back);
 
 	GOGUILabel* label=new GOGUILabel(panel, NULL);
-	label->Init(cfg, wxT("MidiRecorderLabel"), 1, 45, _("Audio Recorder"));
+	label->Init(cfg, wxT("MidiRecorderNameLabel"), 1, 45, _("Audio Recorder"));
 	panel->AddControl(label);
 
 	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("AudioRecorderRecord")), false);
@@ -76,7 +76,7 @@ GOGUIPanel* GOGUIRecorderPanel::CreateRecorderPanel(GOrgueConfigReader& cfg)
 	panel->AddControl(label);
 
 	label=new GOGUILabel(panel, NULL);
-	label->Init(cfg, wxT("MidiRecorderLabel"), 1, 115, _("MIDI Recorder"));
+	label->Init(cfg, wxT("MidiRecorderNameLabel"), 1, 115, _("MIDI Recorder"));
 	panel->AddControl(label);
 
 	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("MidiRecorderRecord")), false);
@@ -93,6 +93,26 @@ GOGUIPanel* GOGUIRecorderPanel::CreateRecorderPanel(GOrgueConfigReader& cfg)
 
 	label=new GOGUILabel(panel, m_organfile->GetLabel(wxT("MidiRecorderLabel")));
 	label->Init(cfg, wxT("MidiRecorderLabel"), 310, 115, wxT(""));
+	panel->AddControl(label);
+
+	label=new GOGUILabel(panel, NULL);
+	label->Init(cfg, wxT("MidiRecorderNameLabel"), 1, 185, _("MIDI Player"));
+	panel->AddControl(label);
+
+	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("MidiPlayerPlay")), false);
+	button->Init(cfg, wxT("MidiPlayerPlay"), 2, 102);
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("MidiPlayerStop")), false);
+	button->Init(cfg, wxT("MidiPlayerStop"), 3, 102);
+	panel->AddControl(button);
+
+	button = new GOGUIButton(panel, m_organfile->GetButton(wxT("MidiPlayerPause")), false);
+	button->Init(cfg, wxT("MidiPlayerPause"), 4, 102);
+	panel->AddControl(button);
+
+	label=new GOGUILabel(panel, m_organfile->GetLabel(wxT("MidiPlayerLabel")));
+	label->Init(cfg, wxT("MidiPlayerLabel"), 310, 185, wxT(""));
 	panel->AddControl(label);
 
 	return panel;

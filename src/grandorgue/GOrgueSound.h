@@ -123,10 +123,6 @@ public:
 
 	GOrgueSettings& GetSettings();
 
-	bool IsMidiPlaying();
-	void StartMidiPlaying(wxString filename);
-	void StopMidiPlaying();
-
 	void AssignOrganFile(GrandOrgueFile* organfile);
 	GrandOrgueFile* GetOrganFile();
 

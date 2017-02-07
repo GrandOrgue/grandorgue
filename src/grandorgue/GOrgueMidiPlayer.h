@@ -22,41 +22,56 @@
 #ifndef GORGUEMIDIPLAYER_H
 #define GORGUEMIDIPLAYER_H
 
+#include "GOrgueLabel.h"
+#include "GOrgueElementCreator.h"
+#include "GOrgueMidiPlayerContent.h"
 #include "GOrgueTime.h"
+#include "GOrgueTimerCallback.h"
 #include <wx/string.h>
 #include <wx/timer.h>
 #include <vector>
 
-class GOrgueMidi;
 class GOrgueMidiEvent;
 class GOrgueMidiFileReader;
+class GrandOrgueFile;
 
-class GOrgueMidiPlayer : private wxTimer
+class GOrgueMidiPlayer : public GOrgueElementCreator, private GOrgueTimerCallback
 {
 private:
-	GOrgueMidi& m_midi;
-	std::vector<GOrgueMidiEvent> m_Events;
-	unsigned m_Pos;
+	GrandOrgueFile* m_organfile;
+	GOrgueMidiPlayerContent m_content;
+	GOrgueLabel m_PlayingTime;
 	GOTime m_Start;
+	unsigned m_PlayingSeconds;
 	float m_Speed;
 	bool m_IsPlaying;
+	bool m_Pause;
 	unsigned m_DeviceID;
 
-	void ReadFileContent(GOrgueMidiFileReader& reader, std::vector<GOrgueMidiEvent>& events);
-	void SetupManual(unsigned channel, wxString ID);
-	void Notify();
+	static const struct ElementListEntry m_element_types[];
+	const struct ElementListEntry* GetButtonList();
+
+	void ButtonChanged(int id);
+
+	void UpdateDisplay();
+	void HandleTimer();
 
 public:
-	GOrgueMidiPlayer(GOrgueMidi& midi);
+	GOrgueMidiPlayer(GrandOrgueFile* organfile);
 	~GOrgueMidiPlayer();
 
 	void Clear();
-	void Load(wxString filename, unsigned manuals, bool pedal);
+	void LoadFile(const wxString& filename, unsigned manuals, bool pedal);
 	bool IsLoaded();
 
 	void Play();
-	void StopPlayer();
+	void Pause();
+	void StopPlaying();
 	bool IsPlaying();
+
+	void Load(GOrgueConfigReader& cfg);
+	GOrgueEnclosure* GetEnclosure(const wxString& name, bool is_panel);
+	GOrgueLabel* GetLabel(const wxString& name, bool is_panel);
 };
 
 #endif

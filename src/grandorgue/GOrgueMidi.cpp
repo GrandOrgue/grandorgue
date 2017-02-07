@@ -36,8 +36,7 @@ GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_Settings(settings),
 	m_midi_in_devices(),
 	m_midi_out_devices(),
-	m_Listeners(),
-	m_MidiPlayer(*this)
+	m_Listeners()
 {
 	UpdateDevices();
 }
@@ -147,11 +146,6 @@ void GOrgueMidi::Unregister(GOrgueMidiListener* listener)
 			m_Listeners[i] = NULL;
 		}
 
-}
-
-GOrgueMidiPlayer& GOrgueMidi::GetMidiPlayer()
-{
-	return m_MidiPlayer;
 }
 
 GOrgueMidiMap& GOrgueMidi::GetMidiMap()

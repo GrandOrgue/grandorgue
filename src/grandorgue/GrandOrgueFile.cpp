@@ -59,6 +59,7 @@
 #include "GOrgueManual.h"
 #include "GOrgueMidi.h"
 #include "GOrgueMidiEvent.h"
+#include "GOrgueMidiPlayer.h"
 #include "GOrgueMidiRecorder.h"
 #include "GOrgueMetronome.h"
 #include "GOrgueOrgan.h"
@@ -94,6 +95,7 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_Cacheable(false),
 	m_setter(0),
 	m_AudioRecorder(NULL),
+	m_MidiPlayer(NULL),
 	m_MidiRecorder(NULL),
 	m_volume(0),
 	m_IgnorePitch(false),
@@ -230,7 +232,9 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_elementcreators.push_back(m_setter);
 	m_AudioRecorder = new GOrgueAudioRecorder(this);
 	m_MidiRecorder = new GOrgueMidiRecorder(this);
+	m_MidiPlayer = new GOrgueMidiPlayer(this);
 	m_elementcreators.push_back(m_AudioRecorder);
+	m_elementcreators.push_back(m_MidiPlayer);
 	m_elementcreators.push_back(m_MidiRecorder);
 	m_elementcreators.push_back(new GOrgueMetronome(this));
 	m_panelcreators.push_back(new GOGUICouplerPanel(this));
@@ -1022,12 +1026,18 @@ void GrandOrgueFile::AddMidiListener(GOrgueMidiListener* listener)
 		listener->Register(m_midi);
 }
 
+void GrandOrgueFile::LoadMIDIFile(wxString const& filename)
+{
+	m_MidiPlayer->LoadFile(filename, GetODFManualCount() - 1, GetFirstManualIndex() == 0);
+}
+
 void GrandOrgueFile::Abort()
 {
 	m_soundengine = NULL;
 
 	GOrgueEventDistributor::AbortPlayback();
 
+	m_MidiPlayer->StopPlaying();
 	m_MidiRecorder->StopRecording();
 	m_AudioRecorder->StopRecording();
 	m_AudioRecorder->SetAudioRecorder(NULL);
