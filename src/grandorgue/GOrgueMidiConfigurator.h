@@ -23,6 +23,7 @@
 #define GORGUEMIDICONFIGURATOR_H
 
 #include <wx/string.h>
+#include <vector>
 
 class GOrgueMidiConfigurator
 {
@@ -35,6 +36,10 @@ public:
 	virtual wxString GetMidiName() = 0;
 
 	virtual void ShowConfigDialog() = 0;
+
+	virtual wxString GetElementStatus() = 0;
+	virtual std::vector<wxString> GetElementActions() = 0;
+	virtual void TriggerElementActions(unsigned no) = 0;
 };
 
 #endif

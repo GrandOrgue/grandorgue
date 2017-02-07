@@ -232,3 +232,21 @@ void GOrgueButton::ShowConfigDialog()
 
 	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, midi, &m_sender, key);
 }
+
+wxString GOrgueButton::GetElementStatus()
+{
+	return m_Engaged ? _("ON") : _("OFF");
+}
+
+std::vector<wxString> GOrgueButton::GetElementActions()
+{
+	std::vector<wxString> actions;
+	actions.push_back(_("trigger"));
+	return actions;
+}
+
+void GOrgueButton::TriggerElementActions(unsigned no)
+{
+	if (no == 0)
+		Push();
+}

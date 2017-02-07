@@ -104,3 +104,19 @@ void GOrgueLabel::ShowConfigDialog()
 
 	m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, NULL, &m_sender, NULL);
 }
+
+wxString GOrgueLabel::GetElementStatus()
+{
+	return m_Name;
+}
+
+std::vector<wxString> GOrgueLabel::GetElementActions()
+{
+	std::vector<wxString> actions;
+	return actions;
+}
+
+void GOrgueLabel::TriggerElementActions(unsigned no)
+{
+	// Never called
+}
