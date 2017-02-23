@@ -819,6 +819,7 @@ void MIDIEventRecvDialog::DetectEvent()
 	MIDI_MATCH_EVENT& e = m_midi.GetEvent(m_current);
 	GOrgueMidiEvent& event = m_OnList[0];
 	unsigned low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
+	unsigned high_value = (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE) ? 127 : 1;
 	switch(event.GetMidiType())
 	{
 	case MIDI_NOTE:
@@ -841,6 +842,7 @@ void MIDIEventRecvDialog::DetectEvent()
 		break;
 	case MIDI_SYSEX_JOHANNUS_11:
 		e.type = MIDI_M_SYSEX_JOHANNUS_11;
+		high_value = 127;
 		break;
 	case MIDI_SYSEX_VISCOUNT:
 		e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
@@ -857,7 +859,7 @@ void MIDIEventRecvDialog::DetectEvent()
 	e.low_key = 0;
 	e.high_key = 127;
 	e.low_value = low_value;
-	e.high_value = (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE) ? 127 : 1;
+	e.high_value = high_value;
 	e.debounce_time = 0;
 	
 	LoadEvent();
