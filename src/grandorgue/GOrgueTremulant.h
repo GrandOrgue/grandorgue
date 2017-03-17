@@ -45,6 +45,7 @@ private:
 	int m_AmpModDepth;
 	GOSoundProvider* m_TremProvider;
 	GO_SAMPLER* m_PlaybackHandle;
+	uint64_t m_LastStop;
 	int m_SamplerGroupID;
 
 	void InitSoundProvider();

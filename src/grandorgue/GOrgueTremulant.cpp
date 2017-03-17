@@ -42,6 +42,7 @@ GOrgueTremulant::GOrgueTremulant(GrandOrgueFile* organfile) :
 	m_AmpModDepth(0),
 	m_TremProvider(NULL),
 	m_PlaybackHandle(0),
+	m_LastStop(0),
 	m_SamplerGroupID(0)
 {
 }
@@ -119,13 +120,13 @@ void GOrgueTremulant::ChangeState(bool on)
 		if (on)
 		{
 			assert(m_SamplerGroupID < 0);
-			m_PlaybackHandle = m_organfile->StartSample(m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0);
+			m_PlaybackHandle = m_organfile->StartSample(m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0, m_LastStop);
 			on = (m_PlaybackHandle != NULL);
 		}
 		else
 		{
 			assert(m_PlaybackHandle);
-			m_organfile->StopSample(m_TremProvider, m_PlaybackHandle);
+			m_LastStop = m_organfile->StopSample(m_TremProvider, m_PlaybackHandle);
 			m_PlaybackHandle = NULL;
 		}
 	}
@@ -138,6 +139,7 @@ void GOrgueTremulant::ChangeState(bool on)
 void GOrgueTremulant::AbortPlayback()
 {
 	m_PlaybackHandle = NULL;
+	m_LastStop = 0;
 	GOrgueButton::AbortPlayback();
 }
 
@@ -148,7 +150,7 @@ void GOrgueTremulant::StartPlayback()
 	if (IsActive() && m_TremulantType == GOSynthTrem)
 	{
 		assert(m_SamplerGroupID < 0);
-		m_PlaybackHandle = m_organfile->StartSample(m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0);
+		m_PlaybackHandle = m_organfile->StartSample(m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0, 0);
 	}
 	if (m_TremulantType == GOWavTrem)
 	{

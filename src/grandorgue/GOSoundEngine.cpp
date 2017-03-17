@@ -417,9 +417,15 @@ void GOSoundEngine::NextPeriod()
 }
 
 
-GO_SAMPLER* GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay)
+GO_SAMPLER* GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay, uint64_t last_stop)
 {
-	const GOAudioSection* attack = pipe->GetAttack(velocity);
+	unsigned delay_samples = (delay * m_SampleRate) / (1000);
+	uint64_t start_time = m_CurrentTime + delay_samples;
+	uint64_t released_time = ((start_time - last_stop) * 1000) / m_SampleRate;
+	if (released_time > (unsigned)-1)
+		released_time = (unsigned)-1;
+
+	const GOAudioSection* attack = pipe->GetAttack(velocity, released_time);
 	if (!attack || attack->GetChannels() == 0)
 		return NULL;
 	GO_SAMPLER* sampler = m_SamplerPool.GetSampler();
@@ -434,8 +440,8 @@ GO_SAMPLER* GOSoundEngine::StartSample(const GOSoundProvider* pipe, int sampler_
 			);
 		const float playback_gain = pipe->GetGain() * attack->GetNormGain();
 		sampler->fader.NewConstant(playback_gain);
-		sampler->delay = (delay * m_SampleRate) / (1000);
-		sampler->time = m_CurrentTime + sampler->delay;
+		sampler->delay = delay_samples;
+		sampler->time = start_time;
 		sampler->fader.SetVelocityVolume(sampler->pipe->GetVelocityVolume(sampler->velocity));
 		StartSampler(sampler, sampler_group_id, audio_group);
 	}
@@ -447,8 +453,10 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 	if (!handle->pipe)
 		return;
 
+	unsigned time = 1000;
+
 	const GOSoundProvider* this_pipe = handle->pipe;
-	const GOAudioSection* section = this_pipe->GetAttack(handle->velocity);
+	const GOAudioSection* section = this_pipe->GetAttack(handle->velocity, time);
 	if (!section)
 		return;
 	if (handle->is_release)
@@ -610,7 +618,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 }
 
 
-void GOSoundEngine::StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)
+uint64_t GOSoundEngine::StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)
 {
 
 	assert(handle);
@@ -621,9 +629,10 @@ void GOSoundEngine::StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)
 	// then the user releases a key. If the sampler had already been reused
 	// with another pipe, that sample would erroneously be told to decay.
 	if (pipe != handle->pipe)
-		return;
+		return 0;
 
 	handle->stop = m_CurrentTime + handle->delay;
+	return handle->stop;
 }
 
 void GOSoundEngine::SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)
