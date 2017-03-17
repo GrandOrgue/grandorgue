@@ -35,6 +35,7 @@ class GOrgueSoundingPipe : public GOrguePipe, private GOrgueCacheObject, private
 {
 private:
 	GO_SAMPLER* m_Sampler;
+	uint64_t m_LastStop;
 	int m_Instances;
 	bool m_Tremulant;
 	std::vector<attack_load_info> m_AttackInfo;

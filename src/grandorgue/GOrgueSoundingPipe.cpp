@@ -36,6 +36,7 @@
 GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* rank, bool percussive, int sampler_group_id, unsigned midi_key_number, unsigned harmonic_number, float pitch_correction, float min_volume, float max_volume, bool retune) :
 	GOrguePipe(organfile, rank, midi_key_number),
 	m_Sampler(NULL),
+	m_LastStop(0),
 	m_Instances(0),
 	m_Tremulant(false),
 	m_AttackInfo(),
@@ -68,6 +69,7 @@ void GOrgueSoundingPipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxS
 	ainfo.max_playback_time = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
 	ainfo.cue_point = cfg.ReadInteger(ODFSetting, group, prefix + wxT("CuePoint"), -1, MAX_SAMPLE_LENGTH, false, -1);
 	ainfo.min_attack_velocity = cfg.ReadInteger(ODFSetting, group, prefix + wxT("AttackVelocity"), 0, 127, false, 0);
+	ainfo.max_released_time = -1;
 	ainfo.attack_start = cfg.ReadInteger(ODFSetting, group, prefix + wxT("AttackStart"), 0, MAX_SAMPLE_LENGTH, false, 0);
 	ainfo.release_end = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseEnd"), -1, MAX_SAMPLE_LENGTH, false, -1);
 
@@ -102,6 +104,7 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 	ainfo.max_playback_time = -1;
 	ainfo.cue_point = -1;
 	ainfo.min_attack_velocity = 0;
+	ainfo.max_released_time = -1;
 	ainfo.attack_start = 0;
 	ainfo.release_end = -1;
 	m_AttackInfo.push_back(ainfo);
@@ -263,6 +266,12 @@ void GOrgueSoundingPipe::Validate()
 	if (!m_organfile->GetSettings().ODFCheck())
 		return;
 
+	if (m_SoundProvider.checkForMissingAttack())
+	{
+		wxLogWarning(_("rank %s pipe %s: attack with MaxTimeSinceLastRelease=-1 missing"),
+			     m_Rank->GetName().c_str(), GetLoadTitle().c_str());
+	}
+
 	if (m_SoundProvider.checkForMissingRelease())
 	{
 		wxLogWarning(_("rank %s pipe %s: default release is missing"),
@@ -337,7 +346,7 @@ GOSoundProvider* GOrgueSoundingPipe::GetSoundProvider()
 
 void GOrgueSoundingPipe::SetOn(unsigned velocity)
 {
-	m_Sampler = m_organfile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, velocity, m_PipeConfig.GetEffectiveDelay());
+	m_Sampler = m_organfile->StartSample(GetSoundProvider(), m_SamplerGroupID, m_AudioGroupID, velocity, m_PipeConfig.GetEffectiveDelay(), m_LastStop);
 	if (m_Sampler)
 		m_Instances++;
 	if (GetSoundProvider()->IsOneshot())
@@ -349,7 +358,7 @@ void GOrgueSoundingPipe::SetOff()
 	m_Instances--;
 	if (m_Sampler)
 	{
-		m_organfile->StopSample(GetSoundProvider(), m_Sampler);
+		m_LastStop = m_organfile->StopSample(GetSoundProvider(), m_Sampler);
 		m_Sampler = 0;
 	}
 }
@@ -400,5 +409,6 @@ void GOrgueSoundingPipe::AbortPlayback()
 	m_Instances = 0;
 	m_Tremulant = false;
 	m_Sampler = 0;
+	m_LastStop = 0;
 	m_SoundProvider.UseSampleGroup(0);
 }

@@ -124,6 +124,7 @@ void GOSoundProviderSynthedTrem::Create
 	attack_section_info attack_info;
 	attack_info.sample_group = -1;
 	attack_info.min_attack_velocity = 0;
+	attack_info.max_released_time = -1;
 	m_AttackInfo.push_back(attack_info);
 	m_Attack.push_back(new GOAudioSection(m_pool));
 	m_Attack[0]->Setup(data, GOrgueWave::SF_SIGNEDSHORT_16, 1, sample_freq, trem_loop.end_sample, &trem_loops, false, 0);

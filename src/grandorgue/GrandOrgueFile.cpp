@@ -983,17 +983,18 @@ GOrgueBitmapCache& GrandOrgueFile::GetBitmapCache()
 	return m_bitmaps;
 }
 
-GO_SAMPLER* GrandOrgueFile::StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay)
+GO_SAMPLER* GrandOrgueFile::StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay, uint64_t last_stop)
 {
 	if (!m_soundengine)
 		return NULL;
-	return m_soundengine->StartSample(pipe, sampler_group_id, audio_group, velocity, delay);
+	return m_soundengine->StartSample(pipe, sampler_group_id, audio_group, velocity, delay, last_stop);
 }
 
-void GrandOrgueFile::StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)
+uint64_t GrandOrgueFile::StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)
 {
 	if (m_soundengine)
-		m_soundengine->StopSample(pipe, handle);
+		return m_soundengine->StopSample(pipe, handle);
+	return 0;
 }
 
 void GrandOrgueFile::SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)

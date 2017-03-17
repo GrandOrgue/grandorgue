@@ -60,6 +60,7 @@ typedef struct
 	bool load_release;
 	bool percussive;
 	unsigned min_attack_velocity;
+	unsigned max_released_time;
 	int max_playback_time;
 	int attack_start;
 	int cue_point;
@@ -81,11 +82,11 @@ class GOSoundProviderWave : public GOSoundProvider
 	unsigned GetBytesPerSample(unsigned bits_per_sample);
        
 	void CreateAttack(const char* data, GOrgueWave& wave, int attack_start, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, 
-			  unsigned channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity, unsigned loop_crossfade_length);
+			  unsigned channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity, unsigned loop_crossfade_length, unsigned max_released_time);
 	void CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, int release_end, unsigned bits_per_sample, unsigned channels, bool compress);
 	void ProcessFile(const GOrgueFilename& filename, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, unsigned max_playback_time, 
 			 int attack_start, int cue_point, int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity, 
-			 bool use_pitch, unsigned loop_crossfade_length);
+			 bool use_pitch, unsigned loop_crossfade_length, unsigned max_released_time);
 	void LoadPitch(const GOrgueFilename& filename);
 	unsigned GetFaderLength(unsigned MidiKeyNumber);
 

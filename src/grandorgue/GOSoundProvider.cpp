@@ -217,7 +217,7 @@ float GOSoundProvider::GetVelocityVolume(unsigned velocity) const
 	return m_VelocityVolumeBase + (velocity * m_VelocityVolumeIncrement);
 }
 
-const GOAudioSection* GOSoundProvider::GetAttack(unsigned velocity) const
+const GOAudioSection* GOSoundProvider::GetAttack(unsigned velocity, unsigned released_time) const
 {
 	const unsigned x = abs(rand());
 	int best_match = -1;
@@ -229,9 +229,12 @@ const GOAudioSection* GOSoundProvider::GetAttack(unsigned velocity) const
 			continue;
 		if (m_AttackInfo[idx].min_attack_velocity > velocity)
 			continue;
+		if (m_AttackInfo[idx].max_released_time < released_time)
+			continue;
 		if (best_match == -1)
 			best_match = idx;
-		else if (m_AttackInfo[best_match].min_attack_velocity < m_AttackInfo[idx].min_attack_velocity)
+		else if (m_AttackInfo[best_match].min_attack_velocity < m_AttackInfo[idx].min_attack_velocity &&
+			 m_AttackInfo[best_match].max_released_time > m_AttackInfo[idx].max_released_time)
 			best_match = idx;
 	}
 
@@ -282,6 +285,25 @@ bool GOSoundProvider::checkForMissingRelease()
 			{
 				cnt++;
 				if (m_ReleaseInfo[i].max_playback_time == (unsigned)-1)
+					max_release = true;
+			}
+		if (cnt && !max_release)
+			return true;
+	}
+	return false;
+}
+
+bool GOSoundProvider::checkForMissingAttack()
+{
+	for (int k = -1; k < 2; k++)
+	{
+		unsigned cnt = 0;
+		bool max_release = false;
+		for(unsigned i = 0; i < m_Attack.size(); i++)
+			if (m_AttackInfo[i].sample_group == k)
+			{
+				cnt++;
+				if (m_AttackInfo[i].max_released_time == (unsigned)-1)
 					max_release = true;
 			}
 		if (cnt && !max_release)

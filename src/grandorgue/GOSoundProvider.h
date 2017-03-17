@@ -38,6 +38,7 @@ typedef struct
 {
 	int sample_group;
 	unsigned min_attack_velocity;
+	unsigned max_released_time;
 } attack_section_info;
 
 typedef struct
@@ -78,7 +79,7 @@ public:
 	void SetVelocityParameter(float min_volume, float max_volume);
 
 	const GOAudioSection* GetRelease(const audio_section_stream* handle, double playback_time) const;
-	const GOAudioSection* GetAttack(unsigned velocity) const;
+	const GOAudioSection* GetAttack(unsigned velocity, unsigned released_time) const;
 	float GetGain() const;
 	int IsOneshot() const;
 
@@ -91,6 +92,7 @@ public:
 
 	float GetVelocityVolume(unsigned velocity) const;
 
+	bool checkForMissingAttack();
 	bool checkForMissingRelease();
 	bool checkMissingRelease();
 	bool checkNotNecessaryRelease();
