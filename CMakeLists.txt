@@ -71,7 +71,6 @@ CHECK_INCLUDE_FILE_CXX(atomic HAVE_ATOMIC)
 CHECK_INCLUDE_FILE_CXX(mutex HAVE_MUTEX)
 
 if(UNIX AND NOT APPLE)
-  install(FILES GrandOrgue.desktop DESTINATION share/applications)
   install(FILES GrandOrgue.1 DESTINATION share/man/man1)
   install(FILES GrandOrgue.appdata.xml DESTINATION share/appdata)
 endif()
