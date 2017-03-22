@@ -42,7 +42,9 @@ elseif(UNIX)
   else()
     MESSAGE(STATUS "Not build manpage - some programs are missing")
   endif()
-  
+
+  install(FILES GrandOrgue.appdata.xml DESTINATION share/appdata)
+
 endif()
 
 ADD_CUSTOM_TARGET(resources ALL DEPENDS ${DEPLIST})

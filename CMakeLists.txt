@@ -70,10 +70,6 @@ add_cxx_option(-std=c++11)
 CHECK_INCLUDE_FILE_CXX(atomic HAVE_ATOMIC)
 CHECK_INCLUDE_FILE_CXX(mutex HAVE_MUTEX)
 
-if(UNIX AND NOT APPLE)
-  install(FILES GrandOrgue.appdata.xml DESTINATION share/appdata)
-endif()
-
 IF (APPLE)
   set(BININSTDIR "${PROJECT_NAME}.app/Contents/MacOS")
   SET(LIBINSTDIR "${PROJECT_NAME}.app/Contents/MacOS")

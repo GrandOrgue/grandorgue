@@ -25,7 +25,8 @@
 -->
 <application>
  <id type="desktop">GrandOrgue.desktop</id>
- <licence>CC BY-SA</licence>
+ <metadata_license>CC BY-SA</metadata_license>
+ <project_license>GPL-2.0+</project_license>
  <name>GrandOrgue</name>
  <summary>Pipe organ simulator</summary>
  <description>
