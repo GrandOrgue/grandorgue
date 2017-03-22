@@ -34,6 +34,15 @@ elseif(UNIX)
   endif()
   LIST(APPEND DEPLIST "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.desktop")
   install(FILES GrandOrgue.desktop DESTINATION share/applications)
+
+  if(XSLTPROC AND DOCBOOK_PATH)
+    ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.1" COMMAND ${XSLTPROC} -o "${CMAKE_CURRENT_BINARY_DIR}/" ${DOCBOOK_PATH}/manpages/docbook.xsl "${CMAKE_CURRENT_SOURCE_DIR}/man.xml" DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/man.xml)
+    LIST(APPEND DEPLIST "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.1")
+    install(FILES GrandOrgue.1 DESTINATION share/man/man1)
+  else()
+    MESSAGE(STATUS "Not build manpage - some programs are missing")
+  endif()
+  
 endif()
 
 ADD_CUSTOM_TARGET(resources ALL DEPENDS ${DEPLIST})
