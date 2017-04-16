@@ -69,7 +69,7 @@ void GOrgueSoundingPipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxS
 	ainfo.max_playback_time = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
 	ainfo.cue_point = cfg.ReadInteger(ODFSetting, group, prefix + wxT("CuePoint"), -1, MAX_SAMPLE_LENGTH, false, -1);
 	ainfo.min_attack_velocity = cfg.ReadInteger(ODFSetting, group, prefix + wxT("AttackVelocity"), 0, 127, false, 0);
-	ainfo.max_released_time = -1;
+	ainfo.max_released_time = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MaxTimeSinceLastRelease"), -1, 100000, false, -1);
 	ainfo.attack_start = cfg.ReadInteger(ODFSetting, group, prefix + wxT("AttackStart"), 0, MAX_SAMPLE_LENGTH, false, 0);
 	ainfo.release_end = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseEnd"), -1, MAX_SAMPLE_LENGTH, false, -1);
 
