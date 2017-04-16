@@ -9566,6 +9566,15 @@ part is loaded from the first attack sample.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Pipe999MaxTimeSinceLastRelease</term>
+          <listitem>
+            <para>
+(int -1 - 100000, default: -1) maximum time since the last release of
+the key to be able to use that attack. -1 means infinite.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Pipe999IsTremulant</term>
           <listitem>
             <para>
@@ -9741,6 +9750,15 @@ part is loaded.
           <listitem>
             <para>
 (int 0 - 127, default: 0) minimum velocity to use this attack sample.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999Attack999MaxTimeSinceLastRelease</term>
+          <listitem>
+            <para>
+(int -1 - 100000, default: -1) maximum time since the last release of
+the key to be able to use that attack. -1 means infinite.
      </para>
           </listitem>
         </varlistentry>
