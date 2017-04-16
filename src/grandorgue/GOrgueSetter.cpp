@@ -34,7 +34,7 @@
 #include <wx/window.h>
 
 #define FRAME_GENERALS 1000
-#define GENERAL_BANKS 10
+#define GENERAL_BANKS 20
 #define GENERALS 50
 #define CRESCENDO_STEPS 32
 
