@@ -50,6 +50,7 @@ GOrgueRank::GOrgueRank(GrandOrgueFile* organfile) :
 	m_PipeConfig(NULL, organfile, NULL)
 {
 	m_organfile->RegisterMidiConfigurator(this);
+	m_organfile->RegisterPlaybackStateHandler(this);
 }
 
 GOrgueRank::~GOrgueRank()
