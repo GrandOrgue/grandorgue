@@ -21,6 +21,7 @@
 
 #include "GOrgueMidiFileReader.h"
 
+#include "GOrgueAlloc.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMidiFile.h"
 
@@ -30,7 +31,7 @@
 
 GOrgueMidiFileReader::GOrgueMidiFileReader(GOrgueMidiMap& map) :
 	m_Map(map),
-	m_Data(0),
+	m_Data(),
 	m_DataLen(0),
 	m_Tracks(0),
 	m_Speed(0),
@@ -44,15 +45,12 @@ GOrgueMidiFileReader::GOrgueMidiFileReader(GOrgueMidiMap& map) :
 
 GOrgueMidiFileReader::~GOrgueMidiFileReader()
 {
-	if (m_Data)
-		free(m_Data);
+	m_Data = nullptr;
 }
 
 bool GOrgueMidiFileReader::Open(wxString filename)
 {
-	if (m_Data)
-		free(m_Data);
-	m_Data = NULL;
+	m_Data = nullptr;
 
 	wxFile file;
 	if (!file.Open(filename, wxFile::read))
@@ -61,13 +59,16 @@ bool GOrgueMidiFileReader::Open(wxString filename)
 		return false;
 	}
 	m_DataLen = file.Length();
-	m_Data = (uint8_t*)malloc(m_DataLen);
-	if (!m_Data)
+	try
+	{
+		m_Data = GOrgueAllocArray<uint8_t>(m_DataLen);
+	}
+	catch (GOrgueOutOfMemory e)
 	{
 		wxLogError(_("Out of memory"));
 		return false;
 	}
-	if (file.Read(m_Data, m_DataLen) != (ssize_t)m_DataLen)
+	if (file.Read(m_Data.get(), m_DataLen) != (ssize_t)m_DataLen)
 	{
 		wxLogError(_("Failed to read content of %s"), filename.c_str());
 		return false;
@@ -79,7 +80,7 @@ bool GOrgueMidiFileReader::Open(wxString filename)
 	}
 	m_Pos = sizeof(MIDIHeaderChunk);
 	m_TrackEnd = 0;
-	MIDIHeaderChunk* h = (MIDIHeaderChunk*)m_Data;
+	MIDIHeaderChunk* h = (MIDIHeaderChunk*)m_Data.get();
 	if (memcmp(h->header.type, "MThd", sizeof(h->header.type)) || h->header.len != 6)
 	{
 		wxLogError(_("Malformed MIDI header"));
