@@ -21,6 +21,7 @@
 
 #include "GOrgueBitmapCache.h"
 
+#include "GOrgueAlloc.h"
 #include "GOrgueFile.h"
 #include "GOrgueFilename.h"
 #include "GrandOrgueFile.h"
@@ -169,19 +170,15 @@ bool GOrgueBitmapCache::loadFile(wxImage& img, wxString filename)
 		return false;
 	unsigned length = file->GetSize();
 
-	char* data = (char*)malloc(length);
-	if (!data)
-		throw GOrgueOutOfMemory();
-	if (file->Read(data, length) != length)
+	std::unique_ptr<char[]> data = GOrgueAllocArray<char>(length);
+	if (file->Read(data.get(), length) != length)
 	{
-		free(data);
 		return false;
 	}
 	file->Close();
 
-	wxMemoryInputStream is(data, length);
+	wxMemoryInputStream is(data.get(), length);
 	bool result = img.LoadFile(is, wxBITMAP_TYPE_ANY, -1);
-	free(data);
 	
 	return result;
 }
