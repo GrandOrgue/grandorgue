@@ -19,42 +19,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEMIDIFILEREADER_H
-#define GORGUEMIDIFILEREADER_H
+#ifndef GORGUEALLOC_H
+#define GORGUEALLOC_H
 
-#include <wx/string.h>
 #include <memory>
-#include <stdint.h>
 
-class GOrgueMidiEvent;
-class GOrgueMidiMap;
-
-class GOrgueMidiFileReader
-{
-private:
-	GOrgueMidiMap& m_Map;
-	std::unique_ptr<uint8_t[]> m_Data;
-	unsigned m_DataLen;
-	unsigned m_Tracks;
-	float m_Speed;
-	unsigned m_Pos;
-	unsigned m_TrackEnd;
-	unsigned m_LastStatus;
-	unsigned m_CurrentSpeed;
-	float m_LastTime;
-	unsigned m_PPQ;
-	unsigned m_Tempo;
-
-	bool StartTrack();
-	unsigned DecodeTime();
-
-public:
-	GOrgueMidiFileReader(GOrgueMidiMap& map);
-	~GOrgueMidiFileReader();
-
-	bool Open(wxString filename);
-	bool ReadEvent(GOrgueMidiEvent& e);
-	bool Close();
+class GOrgueOutOfMemory {
 };
 
+template<class T, class ... Args>
+std::unique_ptr<T> GOrgueAlloc(Args... args)
+{
+	try
+	{
+		return std::unique_ptr<T>(new T(args...));
+	}
+	catch(std::bad_alloc& ba)
+	{
+		throw GOrgueOutOfMemory();
+	}
+}
+
+template<class T>
+std::unique_ptr<T[]> GOrgueAllocArray(size_t count)
+{
+	try
+	{
+		return std::unique_ptr<T[]>(new T[count]);
+	}
+	catch(std::bad_alloc& ba)
+	{
+		throw GOrgueOutOfMemory();
+	}
+}
+
 #endif
+
