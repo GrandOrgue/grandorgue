@@ -22,6 +22,7 @@
 #include "GOSoundProviderSynthedTrem.h"
 
 #include "GOSoundAudioSection.h"
+#include "GOrgueAlloc.h"
 #include "GOrgueMemoryPool.h"
 
 GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOrgueMemoryPool& pool) :
@@ -70,11 +71,9 @@ void GOSoundProviderSynthedTrem::Create
 	const double trem_param        = 2 * pi  / loop_samples;
 	double trem_angle              = 0.0;
 
-	wxInt16 *data = (wxInt16*)malloc(total_samples * sizeof(wxInt16));
-	if (!data)
-		throw GOrgueOutOfMemory();
+	std::unique_ptr<wxInt16[]> data = GOrgueAllocArray<wxInt16>(total_samples);
 
-	wxInt16 *write_iterator = data;
+	wxInt16 *write_iterator = data.get();
 
 	/* Synthesize attack */
 	double trem_fade = 0.0;
@@ -127,7 +126,7 @@ void GOSoundProviderSynthedTrem::Create
 	attack_info.max_released_time = -1;
 	m_AttackInfo.push_back(attack_info);
 	m_Attack.push_back(new GOAudioSection(m_pool));
-	m_Attack[0]->Setup(data, GOrgueWave::SF_SIGNEDSHORT_16, 1, sample_freq, trem_loop.end_sample, &trem_loops, false, 0);
+	m_Attack[0]->Setup(data.get(), GOrgueWave::SF_SIGNEDSHORT_16, 1, sample_freq, trem_loop.end_sample, &trem_loops, false, 0);
 
 	/* Release section */
 	release_section_info release_info;
@@ -135,9 +134,7 @@ void GOSoundProviderSynthedTrem::Create
 	release_info.max_playback_time = -1;
 	m_ReleaseInfo.push_back(release_info);
 	m_Release.push_back(new GOAudioSection(m_pool));
-	m_Release[0]->Setup(&data[attack_samples + loop_samples], GOrgueWave::SF_SIGNEDSHORT_16, 1, sample_freq, release_samples, NULL, false, 0);
-
-	free(data);
+	m_Release[0]->Setup(data.get() + attack_samples + loop_samples, GOrgueWave::SF_SIGNEDSHORT_16, 1, sample_freq, release_samples, NULL, false, 0);
 
 	ComputeReleaseAlignmentInfo();
 

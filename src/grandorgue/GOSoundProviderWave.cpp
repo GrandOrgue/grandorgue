@@ -22,6 +22,7 @@
 #include "GOSoundProviderWave.h"
 
 #include "GOSoundAudioSection.h"
+#include "GOrgueAlloc.h"
 #include "GOrgueFile.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrgueWave.h"
@@ -150,9 +151,6 @@ void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int 
 	section->Setup(data + release_offset * GetBytesPerSample(bits_per_sample) * channels, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, channels, wave.GetSampleRate(), release_samples, NULL, compress, 0);
 }
 
-#define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
-#define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
-
 void GOSoundProviderWave::LoadPitch(const GOrgueFilename& filename)
 {
 	wxLogDebug(_("Loading file %s"), filename.GetTitle().c_str());
@@ -176,9 +174,7 @@ void GOSoundProviderWave::ProcessFile(const GOrgueFilename& filename, std::vecto
 
 	/* allocate data to work with */
 	unsigned totalDataSize = wave.GetLength() * GetBytesPerSample(bits_per_sample) * wave.GetChannels();
-	char* data = (char*)malloc(totalDataSize);
-	if (data == NULL)
-		throw GOrgueOutOfMemory();
+	std::unique_ptr<char[]> data = GOrgueAllocArray<char>(totalDataSize);
 
 	if (use_pitch)
 	{
@@ -198,24 +194,13 @@ void GOSoundProviderWave::ProcessFile(const GOrgueFilename& filename, std::vecto
 	if (bits_per_sample > wave.GetBitsPerSample())
 		bits_per_sample = wave.GetBitsPerSample();
 
-	try
-	{
-		wave.ReadSamples(data, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), wave_channels);
+	wave.ReadSamples(data.get(), (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), wave_channels);
 
-		if (is_attack)
-			CreateAttack(data, wave, attack_start, loops, sample_group, bits_per_sample, channels, compress, loop_mode, percussive, min_attack_velocity, loop_crossfade_length, max_released_time);
+	if (is_attack)
+		CreateAttack(data.get(), wave, attack_start, loops, sample_group, bits_per_sample, channels, compress, loop_mode, percussive, min_attack_velocity, loop_crossfade_length, max_released_time);
 
-		if (is_release && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
-			CreateRelease(data, wave, sample_group, max_playback_time, cue_point, release_end, bits_per_sample, channels, compress);
-
-		/* data is no longer needed */
-		FREE_AND_NULL(data);
-	}
-	catch (...)
-	{
-		FREE_AND_NULL(data);
-		throw;
-	}
+	if (is_release && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
+		CreateRelease(data.get(), wave, sample_group, max_playback_time, cue_point, release_end, bits_per_sample, channels, compress);
 }
 
 unsigned GOSoundProviderWave::GetFaderLength(unsigned MidiKeyNumber)
