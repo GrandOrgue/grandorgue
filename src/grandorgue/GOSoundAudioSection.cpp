@@ -21,6 +21,7 @@
 
 #include "GOSoundAudioSection.h"
 
+#include "GOrgueAlloc.h"
 #include "GOSoundCompress.h"
 #include "GOSoundResample.h"
 #include "GOrgueCache.h"

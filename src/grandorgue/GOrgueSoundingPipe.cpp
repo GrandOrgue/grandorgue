@@ -21,6 +21,7 @@
 
 #include "GOrgueSoundingPipe.h"
 
+#include "GOrgueAlloc.h"
 #include "GOrgueConfigReader.h"
 #include "GOrgueHash.h"
 #include "GOrgueLimits.h"

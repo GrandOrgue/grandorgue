@@ -33,6 +33,7 @@
 #include "GOGUIRecorderPanel.h"
 #include "GOGUISequencerPanel.h"
 #include "GOSoundEngine.h"
+#include "GOrgueAlloc.h"
 #include "GOrgueArchive.h"
 #include "GOrgueArchiveFile.h"
 #include "GOrgueArchiveManager.h"
@@ -154,8 +155,6 @@ GOrgueHashType GrandOrgueFile::GenerateCacheHash()
 
 	return hash.getHash();
 }
-
-#define FREE_AND_NULL(x) do { if (x) { free(x); x = NULL; } } while (0)
 
 void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 {
@@ -441,13 +440,11 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 	}
 	ini.ReportUnused();
 
-	void* dummy = NULL;
+	std::unique_ptr<char[]> dummy;
 
 	try
 	{
-		dummy = malloc(1024 * 1024 * 50);
-		if (!dummy)
-			throw GOrgueOutOfMemory();
+		dummy = GOrgueAllocArray<char>(1024 * 1024 * 50);
 
 		wxString load_error;
 		bool cache_ok = false;
@@ -502,7 +499,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 						nb_loaded_obj.fetch_add(1);
 						if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
 						{
-							FREE_AND_NULL(dummy);
+							dummy = nullptr;
 							SetTemperament(m_Temperament);
 							GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
 							m_pool.StartThread();
@@ -545,7 +542,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 				obj->LoadData();
 				if (!dlg->Update (nb_loaded_obj, obj->GetLoadTitle()))
 				{
-					FREE_AND_NULL(dummy);
+					dummy = nullptr;
 					SetTemperament(m_Temperament);
 					GOMessageBox(_("Load aborted by the user - only parts of the organ are loaded.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
 					CloseArchives();
@@ -566,7 +563,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 	}
 	catch (GOrgueOutOfMemory e)
 	{
-		FREE_AND_NULL(dummy);
+		dummy = nullptr;
 		GOMessageBox(_("Out of memory - only parts of the organ are loaded. Please reduce memory footprint via the sample loading settings.") , _("Load error"), wxOK | wxICON_ERROR, NULL);
 		m_pool.StartThread();
 		CloseArchives();
@@ -574,10 +571,10 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 	}
 	catch (wxString error_)
 	{
-		FREE_AND_NULL(dummy);
+		dummy = nullptr;
 		return error_;
 	}
-	FREE_AND_NULL(dummy);
+	dummy = nullptr;
 
 	m_pool.StartThread();
 	CloseArchives();
