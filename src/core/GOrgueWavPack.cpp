@@ -21,7 +21,7 @@
 
 #include "GOrgueWavPack.h"
 
-#include "GOrgueMemoryPool.h"
+#include "GOrgueAlloc.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,9 +29,9 @@
 GOrgueWavPack::GOrgueWavPack(const char* data, unsigned length) :
 	m_data(data),
 	m_length(length),
-	m_Samples(0),
+	m_Samples(),
 	m_SamplesLen(0),
-	m_Wrapper(0),
+	m_Wrapper(),
 	m_WrapperLen(0),
 	m_pos(0),
 	m_OrigDataLen(0),
@@ -41,10 +41,8 @@ GOrgueWavPack::GOrgueWavPack(const char* data, unsigned length) :
 
 GOrgueWavPack::~GOrgueWavPack()
 {
-	if (m_Samples)
-		free(m_Samples);
-	if (m_Wrapper)
-		free(m_Wrapper);
+	m_Samples = nullptr;
+	m_Wrapper = nullptr;
 	if (m_context)
 		WavpackCloseFile(m_context);
 }
@@ -54,16 +52,15 @@ bool GOrgueWavPack::IsWavPack()
 	return m_length > 10 && !memcmp(m_data, "wvpk", 4);
 }
 
-void GOrgueWavPack::GetSamples(char*& data, unsigned& len)
+std::unique_ptr<char[]> GOrgueWavPack::GetSamples(unsigned& len)
 {
-	data = m_Samples;
 	len = m_SamplesLen;
-	m_Samples = NULL;
+	return std::move(m_Samples);
 }
 
 void GOrgueWavPack::GetWrapper(char*& data, unsigned& len)
 {
-	data = m_Wrapper;
+	data = m_Wrapper.get();
 	len = m_WrapperLen;
 }
 
@@ -85,10 +82,8 @@ bool GOrgueWavPack::Unpack()
 	unsigned channels = WavpackGetNumChannels (m_context);
 	unsigned samples = WavpackGetNumSamples (m_context);
 	m_SamplesLen = channels * samples * 4;
-	m_Samples = (char*)malloc(m_SamplesLen);
-	if  (!m_Samples)
-		throw GOrgueOutOfMemory();
-	unsigned res = WavpackUnpackSamples(m_context, (int32_t*)m_Samples, samples);
+	m_Samples = GOrgueAllocArray<char>(m_SamplesLen);
+	unsigned res = WavpackUnpackSamples(m_context, (int32_t*)m_Samples.get(), samples);
 	if (res != samples)
 		return false;
 
@@ -98,10 +93,8 @@ bool GOrgueWavPack::Unpack()
 	unsigned trailer = WavpackGetWrapperBytes(m_context) - header;
 	
 	m_WrapperLen = header + trailer;
-	m_Wrapper = (char*)malloc(m_WrapperLen);
-	if (!m_Wrapper)
-		throw GOrgueOutOfMemory();
-	memcpy(m_Wrapper, WavpackGetWrapperData (m_context), m_WrapperLen);
+	m_Wrapper = GOrgueAllocArray<char>(m_WrapperLen);
+	memcpy(m_Wrapper.get(), WavpackGetWrapperData (m_context), m_WrapperLen);
 	WavpackFreeWrapper (m_context);
 
 	WavpackCloseFile(m_context);

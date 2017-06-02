@@ -28,9 +28,6 @@
 
 class wxFile;
 
-class GOrgueOutOfMemory {
-};
-
 class GOrgueMemoryPool : private GOrgueThread {
 	GOMutex m_mutex;
 	std::set<void*> m_PoolAllocs;
