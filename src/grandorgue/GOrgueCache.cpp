@@ -21,6 +21,7 @@
 
 #include "GOrgueCache.h"
 
+#include "GOrgueAlloc.h"
 #include "GOrgueMemoryPool.h"
 #include "GrandOrgueDef.h"
 #include <wx/wfstream.h>

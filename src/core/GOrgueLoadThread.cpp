@@ -21,6 +21,7 @@
 
 #include "GOrgueLoadThread.h"
 
+#include "GOrgueAlloc.h"
 #include "GOrgueCacheObject.h"
 #include "GOrgueEventDistributor.h"
 #include "GOrgueMemoryPool.h"
