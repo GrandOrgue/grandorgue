@@ -22,7 +22,7 @@
 #include "GOrgueWave.h"
 
 #include "GOrgueFile.h"
-#include "GOrgueMemoryPool.h"
+#include "GOrgueAlloc.h"
 #include "GOrgueWaveTypes.h"
 #include "GOrgueWavPack.h"
 #include <wx/file.h>
@@ -41,7 +41,7 @@ bool inline CompareFourCC(GO_FOURCC fcc, const char* text)
 
 void GOrgueWave::SetInvalid()
 {
-	m_Content = NULL;
+	m_Content = nullptr;
 	m_SampleData = NULL;
 	m_SampleDataSize = 0;
 	m_Channels = 0;
@@ -157,16 +157,13 @@ void GOrgueWave::Open(GOrgueFile* file)
 	unsigned length = file->GetSize();
 	
 	// Allocate memory for wave and read it.
-	m_Content = (char*)malloc(length);
-	char* ptr = m_Content;
+	m_Content = GOrgueAllocArray<char>(length);
+	char* ptr = m_Content.get();
 
 	unsigned offset = 0;
 	unsigned start = 0;
 	try
 	{
-		if (!ptr)
-			throw GOrgueOutOfMemory();
-
 		if (length < 12)
 			throw (wxString)_("< Not a RIFF file");
 
@@ -178,16 +175,15 @@ void GOrgueWave::Open(GOrgueFile* file)
 		}
 		file->Close();
 
-		GOrgueWavPack pack(m_Content, length);
+		GOrgueWavPack pack(m_Content.get(), length);
 		if (pack.IsWavPack())
 		{
 			if (!pack.Unpack())
 				throw (wxString)_("Failed to decode WavePack data");
-			free(m_Content);
-			m_Content = NULL;
+			m_Content = nullptr;
 
-			pack.GetSamples(m_SampleData, m_SampleDataSize);
-			m_Content = m_SampleData;
+			m_Content = pack.GetSamples(m_SampleDataSize);
+			m_SampleData = m_Content.get();
 
 			pack.GetWrapper(ptr, length);
 			offset = 0;
@@ -311,11 +307,7 @@ void GOrgueWave::Open(GOrgueFile* file)
 void GOrgueWave::Close()
 {
 	/* Free the wave data if it has been alloc'ed */
-	if (m_Content != NULL)
-	{
-		free(m_Content);
-		m_Content = NULL;
-	}
+	m_Content = nullptr;
 
 	/* Set the wave to the invalid state.  */
 	SetInvalid();

@@ -23,15 +23,16 @@
 #define GORGUEWAVPACK_H
 
 #include <wavpack/wavpack.h>
+#include <memory>
 
 class GOrgueWavPack
 {
 private:
 	const char* m_data;
 	unsigned m_length;
-	char* m_Samples;
+	std::unique_ptr<char[]> m_Samples;
 	unsigned m_SamplesLen;
-	char* m_Wrapper;
+	std::unique_ptr<char[]> m_Wrapper;
 	unsigned m_WrapperLen;
 	unsigned m_pos;
 	unsigned m_OrigDataLen;
@@ -62,7 +63,7 @@ public:
 	bool IsWavPack();
 	bool Unpack();
 
-	void GetSamples(char*& data, unsigned& len);
+	std::unique_ptr<char[]> GetSamples(unsigned& len);
 	void GetWrapper(char*& data, unsigned& len);
 	unsigned GetOrigDataLen();
 };

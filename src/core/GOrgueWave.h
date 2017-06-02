@@ -23,6 +23,7 @@
 #define GORGUEWAVE_H
 
 #include <wx/string.h>
+#include <memory>
 #include <vector>
 
 class GOrgueFile;
@@ -37,7 +38,7 @@ class GOrgueWave
 {
 
 private:
-	char* m_Content;
+	std::unique_ptr<char[]> m_Content;
 	char* m_SampleData;
 	unsigned m_SampleDataSize;
 	unsigned m_BytesPerSample;
