@@ -133,11 +133,16 @@ void GOrgueMidiPlayer::Play()
 	m_content.Reset();
 	m_Start = wxGetLocalTimeMillis();
 	m_PlayingSeconds = 0;
-	m_IsPlaying = true;
+	m_IsPlaying = IsLoaded();
 	m_Pause = false;
-	m_button[ID_MIDI_PLAYER_PLAY]->Display(true);
-	UpdateDisplay();
-	HandleTimer();
+	if (m_IsPlaying)
+	{
+		m_button[ID_MIDI_PLAYER_PLAY]->Display(true);
+		UpdateDisplay();
+		HandleTimer();
+	}
+	else
+		StopPlaying();
 }
 
 void GOrgueMidiPlayer::Pause()
