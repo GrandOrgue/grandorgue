@@ -118,13 +118,6 @@ void GOGUIPanelWidget::OnUpdate()
 	SetSize(m_ClientBitmap.GetWidth(), m_ClientBitmap.GetHeight());
 }
 
-void GOGUIPanelWidget::CopyToScreen(wxDC* mdc, const wxRect& rect)
-{
-	wxClientDC dc(this);
-	
-	dc.Blit(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight(), mdc, rect.GetX(), rect.GetY());
-}
-
 void GOGUIPanelWidget::OnGOControl(wxCommandEvent& event)
 {
 	GOGUIControl* control = static_cast<GOGUIControl*>(event.GetClientData());
@@ -134,7 +127,7 @@ void GOGUIPanelWidget::OnGOControl(wxCommandEvent& event)
 	GOrgueDC DC(&mdc, m_Scale);
 
 	control->Draw(DC);
-	CopyToScreen(&mdc, DC.ScaleRect(control->GetBoundingRect()));
+	RefreshRect(DC.ScaleRect(control->GetBoundingRect()), false);
 	event.Skip();
 }
 

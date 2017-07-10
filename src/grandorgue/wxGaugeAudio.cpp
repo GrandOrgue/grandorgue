@@ -56,7 +56,6 @@ void wxGaugeAudio::OnPaint(wxPaintEvent& event)
 
 void wxGaugeAudio::SetValue(int what)
 {
-	wxClientDC dc(this);
 	if (what < 0)
 		what = 0;
 	if (what > 32)
@@ -74,7 +73,6 @@ void wxGaugeAudio::SetValue(int what)
 
 void wxGaugeAudio::ResetClip()
 {
-	wxClientDC dc(this);
 	if (m_Clip)
 	{
 		m_Clip = false;
