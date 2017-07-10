@@ -40,8 +40,6 @@ private:
 	wxBitmap m_ClientBitmap;
 	double m_Scale;
 
-	void CopyToScreen(wxDC* mdc, const wxRect& rect);
-
 	void OnCreate(wxWindowCreateEvent& event);
 	void OnDraw(wxDC* dc);
 	void OnErase(wxEraseEvent& event);
