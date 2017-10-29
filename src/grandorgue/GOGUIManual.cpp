@@ -69,7 +69,11 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 		unsigned key_nb = i + first_midi_note;
 		m_Keys[i].MidiNumber = key_nb;
 		m_Keys[i].IsSharp = (((key_nb % 12) < 5 && !(key_nb & 1)) || ((key_nb % 12) >= 5 && (key_nb & 1))) ? false : true;
+	}
 
+	for(unsigned i = 0; i < m_Keys.size(); i++)
+	{
+		unsigned key_nb = i + first_midi_note;
 		wxString off_mask_file, on_mask_file;
 		wxString on_file, off_file;
 		wxString bmp_type;
@@ -80,6 +84,8 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 			base = wxT("First") + base;
 		else if (i + 1 == m_Keys.size())
 			base = wxT("Last") + base;
+		bool prev_is_sharp = i > 0 ? m_Keys[i - 1].IsSharp : false;
+		bool next_is_sharp = i + 1 < m_Keys.size() ? m_Keys[i + 1].IsSharp : false;
 
 		if (!m_ManualNumber)
 		{
@@ -89,46 +95,14 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 		{
 			if (m_Keys[i].IsSharp)
 				bmp_type = wxT("Sharp");
-			else if (i == 0)
-			{
-				switch(key_nb %12)
-				{
-				case 4:
-				case 11:
-					bmp_type = wxT("Natural");
-					break;
-				default:
-					bmp_type = wxT("C");
-				}
-			}
-			else if (i + 1 == m_Keys.size())
-			{
-				switch(key_nb %12)
-				{
-				case 0:
-				case 5:
-					bmp_type = wxT("Natural");
-					break;
-				default:
-					bmp_type = wxT("E");
-				}
-			}
-			else 
-			{
-				switch(key_nb %12)
-				{
-				case 0:
-				case 5:
-					bmp_type = wxT("C");
-					break;
-				case 4:
-				case 11:
-					bmp_type = wxT("E");
-					break;
-				default:
-					bmp_type = wxT("D");
-				}
-			}
+			else if (!prev_is_sharp && next_is_sharp)
+				bmp_type = wxT("C");
+			else if (prev_is_sharp && next_is_sharp)
+				bmp_type = wxT("D");
+			else if (prev_is_sharp && !next_is_sharp)
+				bmp_type = wxT("E");
+			else
+				bmp_type = wxT("Natural");
 		}
 		off_file = wxT("GO:") + type + wxT("Off_") + bmp_type;
 		on_file = wxT("GO:") + type + wxT("On_") + bmp_type;
@@ -150,7 +124,7 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 		{
 			key_width = 0;
 			key_offset = - ((int)m_Keys[i].OnBitmap.GetWidth()) / 2;
-		} else if (!m_ManualNumber && ((key_nb % 12) == 4 || (key_nb % 12) == 11))
+		} else if (!m_ManualNumber && !next_is_sharp && !m_Keys[i].IsSharp)
 		{
 			key_width *= 2;
 		}
@@ -200,7 +174,11 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		unsigned key_nb = i + first_midi_note;
 		m_Keys[i].MidiNumber = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("DisplayKey%03d"), i + 1), 0, 127, false, key_nb);
 		m_Keys[i].IsSharp = (((key_nb % 12) < 5 && !(key_nb & 1)) || ((key_nb % 12) >= 5 && (key_nb & 1))) ? false : true;
+	}
 
+	for(unsigned i = 0; i < m_Keys.size(); i++)
+	{
+		unsigned key_nb = i + first_midi_note;
 		wxString off_mask_file, on_mask_file;
 		wxString on_file, off_file;
 		wxString bmp_type;
@@ -211,6 +189,8 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 			base = wxT("First") + base;
 		else if (i + 1 == m_Keys.size())
 			base = wxT("Last") + base;
+		bool prev_is_sharp = i > 0 ? m_Keys[i - 1].IsSharp : false;
+		bool next_is_sharp = i + 1 < m_Keys.size() ? m_Keys[i + 1].IsSharp : false;
 
 		if (!m_ManualNumber)
 		{
@@ -220,46 +200,14 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		{
 			if (m_Keys[i].IsSharp)
 				bmp_type = wxT("Sharp");
-			else if (i == 0)
-			{
-				switch(key_nb %12)
-				{
-				case 4:
-				case 11:
-					bmp_type = wxT("Natural");
-					break;
-				default:
-					bmp_type = wxT("C");
-				}
-			}
-			else if (i + 1 == m_Keys.size())
-			{
-				switch(key_nb %12)
-				{
-				case 0:
-				case 5:
-					bmp_type = wxT("Natural");
-					break;
-				default:
-					bmp_type = wxT("E");
-				}
-			}
-			else 
-			{
-				switch(key_nb %12)
-				{
-				case 0:
-				case 5:
-					bmp_type = wxT("C");
-					break;
-				case 4:
-				case 11:
-					bmp_type = wxT("E");
-					break;
-				default:
-					bmp_type = wxT("D");
-				}
-			}
+			else if (!prev_is_sharp && next_is_sharp)
+				bmp_type = wxT("C");
+			else if (prev_is_sharp && next_is_sharp)
+				bmp_type = wxT("D");
+			else if (prev_is_sharp && !next_is_sharp)
+				bmp_type = wxT("E");
+			else
+				bmp_type = wxT("Natural");
 		}
 		off_file = wxT("GO:") + type + wxT("Off_") + bmp_type;
 		on_file = wxT("GO:") + type + wxT("On_") + bmp_type;
@@ -288,7 +236,7 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 		{
 			key_width = 0;
 			key_offset = - ((int)m_Keys[i].OnBitmap.GetWidth()) / 2;
-		} else if (!m_ManualNumber && ((key_nb % 12) == 4 || (key_nb % 12) == 11))
+		} else if (!m_ManualNumber && !next_is_sharp && !m_Keys[i].IsSharp)
 		{
 			key_width *= 2;
 		}
