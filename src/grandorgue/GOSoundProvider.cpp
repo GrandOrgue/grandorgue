@@ -260,12 +260,12 @@ const GOAudioSection* GOSoundProvider::GetRelease(const audio_section_stream* ha
 		const unsigned idx = (i + x) % m_Release.size();
 		if (m_ReleaseInfo[idx].sample_group != m_AttackInfo[attack_idx].sample_group)
 			continue;
-		if (m_ReleaseInfo[i].max_playback_time < time)
+		if (m_ReleaseInfo[idx].max_playback_time < time)
 			continue;
 		if (best_match == -1)
-			best_match = i;
-		else if (m_ReleaseInfo[best_match].max_playback_time > m_ReleaseInfo[i].max_playback_time)
-			best_match = i;
+			best_match = idx;
+		else if (m_ReleaseInfo[best_match].max_playback_time > m_ReleaseInfo[idx].max_playback_time)
+			best_match = idx;
 	}
 
 	if (best_match != -1)
