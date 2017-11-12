@@ -28,6 +28,7 @@
 #include "GOrgueCombinationDefinition.h"
 #include "GOrgueEventDistributor.h"
 #include "GOrgueLabel.h"
+#include "GOrgueMainWindowData.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrgueModel.h"
 #include "GOrguePipeConfigTreeNode.h"
@@ -116,6 +117,7 @@ private:
 	GOrgueCombinationDefinition m_GeneralTemplate;
 	GOrgueLabel m_PitchLabel;
 	GOrgueLabel m_TemperamentLabel;
+	GOrgueMainWindowData m_MainWindowData;
 
 	void ReadOrganFile(GOrgueConfigReader& cfg);
 	GOrgueHashType GenerateCacheHash();
@@ -176,6 +178,7 @@ public:
 	GOrgueCombinationDefinition& GetGeneralTemplate();
 	GOrgueLabel* GetPitchLabel();
 	GOrgueLabel* GetTemperamentLabel();
+	GOrgueMainWindowData* GetMainWindowData();
 
 	void LoadMIDIFile(const wxString& filename);
 

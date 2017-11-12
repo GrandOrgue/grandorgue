@@ -46,6 +46,7 @@
 #include "Images.h"
 #include "mutex_locker.h"
 #include "wxGaugeAudio.h"
+#include <wx/display.h>
 #include <wx/fileconf.h>
 #include <wx/filedlg.h>
 #include <wx/html/helpctrl.h>
@@ -275,8 +276,11 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	SetMenuBar(menu_bar);
 	tb->Realize();
 	
-	SetClientSize(880, 495);	// default minimal size
-	Center(wxBOTH);
+	SetClientSize(tb->GetBestSize().GetWidth() + 10, 0);
+	SetMaxSize(GetSize());
+	int nr = wxDisplay::GetFromWindow(this);
+	wxDisplay display(nr != wxNOT_FOUND ? nr : 0);
+	Move(display.GetClientArea().GetPosition().x + 1, display.GetClientArea().GetPosition().y + 1);
 	SetAutoLayout(true);
 	m_listener.Register(&m_Sound.GetMidi());
 }
@@ -379,7 +383,7 @@ GOrgueDocument* GOrgueFrame::GetDocument()
 void GOrgueFrame::OnPanel(wxCommandEvent& event)
 {
 	GOrgueDocument* doc = GetDocument();
-	unsigned no = event.GetId() - ID_PANEL_FIRST + 1;
+	unsigned no = event.GetId() - ID_PANEL_FIRST;
 	if (doc && doc->GetOrganFile() && no < doc->GetOrganFile()->GetPanelCount())
 		doc->ShowPanel(no);
 }
@@ -388,7 +392,7 @@ void GOrgueFrame::UpdatePanelMenu()
 {
 	GOrgueDocument* doc = GetDocument();
 	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
-	unsigned panelcount = (organfile && organfile->GetPanelCount()) ? organfile->GetPanelCount() - 1 : 0;
+	unsigned panelcount = (organfile && organfile->GetPanelCount()) ? organfile->GetPanelCount() : 0;
 	panelcount = std::min (panelcount, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
 
 	while (m_panel_menu->GetMenuItemCount() > 0)
@@ -396,7 +400,7 @@ void GOrgueFrame::UpdatePanelMenu()
 
 	for(unsigned i = 0; i < panelcount; i++)
 	{
-		GOGUIPanel* panel = organfile->GetPanel(i + 1);
+		GOGUIPanel* panel = organfile->GetPanel(i);
 		wxMenu* menu = NULL;
 		if (panel->GetGroupName() == wxEmptyString)
 			menu = m_panel_menu;

@@ -101,10 +101,11 @@ bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const GOrgueOrgan& organ,
 	event.SetString(m_organfile->GetChurchName());
 	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 
-	ShowPanel(0);
-	for (unsigned i = 1; i < m_organfile->GetPanelCount(); i++)
+	for (unsigned i = 0; i < m_organfile->GetPanelCount(); i++)
 		if (m_organfile->GetPanel(i)->InitialOpenWindow())
 			ShowPanel(i);
+	if (!m_organfile->GetMainWindowData()->GetWindowSize().IsEmpty())
+		wxTheApp->GetTopWindow()->SetSize(m_organfile->GetMainWindowData()->GetWindowSize());
 
 	m_sound.AssignOrganFile(m_organfile);
 	m_OrganFileReady = true;
@@ -139,13 +140,14 @@ void GOrgueDocument::ShowPanel(unsigned id)
 	if (!showWindow(GOrgueDocument::PANEL, panel))
 	{
 		registerWindow(GOrgueDocument::PANEL, panel,
-			       GOrguePanelView::createWindow(this, panel, id == 0 ? wxTheApp->GetTopWindow() : NULL));
+			       GOrguePanelView::createWindow(this, panel, NULL));
 	}
 }
 
 void GOrgueDocument::SyncState()
 {
 	m_organfile->SetVolume(m_sound.GetEngine().GetVolume());
+	m_organfile->GetMainWindowData()->SetWindowSize(wxTheApp->GetTopWindow()->GetRect());
 	for (unsigned i = 0; i < m_organfile->GetPanelCount(); i++)
 		m_organfile->GetPanel(i)->SetInitialOpenWindow(false);
 	for(unsigned i = 0; i < m_Windows.size(); i++)
