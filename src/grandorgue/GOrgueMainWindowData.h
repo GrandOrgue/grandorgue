@@ -19,39 +19,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEPANELVIEW_H
-#define GORGUEPANELVIEW_H
+#ifndef GORGUEMAINWINDOWDATA_H
+#define GORGUEMAINWINDOWDATA_H
 
-#include "GOrgueView.h"
-#include <wx/scrolwin.h>
+#include "GOrgueSaveableObject.h"
+#include <wx/gdicmn.h>
 
-class GOGUIControl;
-class GOGUIPanel;
-class GOGUIPanelWidget;
+class GrandOrgueFile;
 
-class GOrguePanelView : public wxScrolledWindow, public GOrgueView
+class GOrgueMainWindowData : private GOrgueSaveableObject
 {
-private:
-	GOGUIPanelWidget* m_panelwidget;
-	GOGUIPanel* m_panel;
-	wxSize m_Scroll;
+protected:
+	GrandOrgueFile* m_organfile;
+	wxRect m_size;
 
-	void OnSize(wxSizeEvent& event);
+	void Save(GOrgueConfigWriter& cfg);
 
 public:
-	GOrguePanelView(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent);
-	~GOrguePanelView();
+	GOrgueMainWindowData(GrandOrgueFile* m_organfile);
+	virtual ~GOrgueMainWindowData();
+	void Load(GOrgueConfigReader& cfg, wxString group);
 
-	void AddEvent(GOGUIControl* control);
-
-	static GOrguePanelView* createWindow(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent);
-	void SyncState();
-
-	void Raise();
-	bool Destroy();
-	void RemoveView();
-
-	DECLARE_EVENT_TABLE()
+	wxRect GetWindowSize();
+	void SetWindowSize(wxRect rect);
 };
 
 #endif

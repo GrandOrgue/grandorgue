@@ -108,6 +108,7 @@ GOrgueKeyReceiver.cpp
 GOrgueLabel.cpp
 GOrgueManual.cpp
 GOrgueMetronome.cpp
+GOrgueMainWindowData.cpp
 GOrgueMidi.cpp
 GOrgueMidiListener.cpp
 GOrgueMidiInPort.cpp

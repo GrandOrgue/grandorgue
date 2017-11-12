@@ -128,7 +128,8 @@ GrandOrgueFile::GrandOrgueFile(GOrgueDocument* doc, GOrgueSettings& settings) :
 	m_Settings(settings),
 	m_GeneralTemplate(this),
 	m_PitchLabel(this),
-	m_TemperamentLabel(this)
+	m_TemperamentLabel(this),
+	m_MainWindowData(this)
 {
 	m_pool.SetMemoryLimit(m_Settings.MemoryLimit() * 1024 * 1024);
 }
@@ -251,6 +252,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 	m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"));
 	m_TemperamentLabel.Load(cfg, wxT("SetterMasterTemperament"));
+	m_MainWindowData.Load(cfg, wxT("MainWindow"));
 
 	m_panels.resize(0);
 	m_panels.push_back(new GOGUIPanel(this));
@@ -1196,6 +1198,11 @@ GOrgueLabel* GrandOrgueFile::GetPitchLabel()
 GOrgueLabel* GrandOrgueFile::GetTemperamentLabel()
 {
 	return &m_TemperamentLabel;
+}
+
+GOrgueMainWindowData* GrandOrgueFile::GetMainWindowData()
+{
+	return &m_MainWindowData;
 }
 
 void GrandOrgueFile::MarkSectionInUse(wxString name)

@@ -147,6 +147,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		{
 			panel_group = wxT("Panel000");
 			panel_prefix = panel_group;
+			m_Name = cfg.ReadString(ODFSetting, panel_group, wxT("Name"), false, m_Name);
 		}
 		else
 		{
@@ -474,7 +475,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	int h = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowHeight"), 0, 10000, false, 0);
 	m_size = wxRect(x, y, w, h);
 
-	m_InitialOpenWindow = cfg.ReadBoolean(CMBSetting, m_group, wxT("WindowDisplayed"), false, false);
+	m_InitialOpenWindow = cfg.ReadBoolean(CMBSetting, m_group, wxT("WindowDisplayed"), false, is_main_panel);
 }
 
 GOGUIControl* GOGUIPanel::CreateGUIElement(GOrgueConfigReader& cfg, wxString group)
