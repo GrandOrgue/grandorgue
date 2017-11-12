@@ -8481,6 +8481,18 @@ backend key, that is connected to this GUI key.
      </para>
           </listitem>
         </varlistentry>
+        <varlistentry id="displaykeyentry">
+          <term>DisplayKey999Note</term>
+          <listitem>
+            <para>
+(integer 0 - 127, default: FirstAccessibleKeyMIDINoteNumber +
+<emphasis>999</emphasis>) The number in the key
+(<emphasis>999</emphasis>) is between 1 and
+<emphasis>DisplayKeys</emphasis>. It contains the midi number of the
+displayed frontend GUI key.
+     </para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
