@@ -173,12 +173,14 @@ void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
 	{
 		unsigned key_nb = i + first_midi_note;
 		m_Keys[i].MidiNumber = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("DisplayKey%03d"), i + 1), 0, 127, false, key_nb);
+		key_nb = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("DisplayKey%03dNote"), i + 1), 0, 127, false, key_nb);
 		m_Keys[i].IsSharp = (((key_nb % 12) < 5 && !(key_nb & 1)) || ((key_nb % 12) >= 5 && (key_nb & 1))) ? false : true;
 	}
 
 	for(unsigned i = 0; i < m_Keys.size(); i++)
 	{
 		unsigned key_nb = i + first_midi_note;
+		key_nb = cfg.ReadInteger(ODFSetting, group, wxString::Format(wxT("DisplayKey%03dNote"), i + 1), 0, 127, false, key_nb);
 		wxString off_mask_file, on_mask_file;
 		wxString on_file, off_file;
 		wxString bmp_type;
