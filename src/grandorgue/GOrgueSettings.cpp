@@ -36,6 +36,7 @@
 #include "GOrgueStdPath.h"
 #include <wx/filename.h>
 #include <wx/log.h>
+#include <wx/stdpaths.h>
 #include <wx/thread.h>
 #include <algorithm>
 
@@ -168,6 +169,11 @@ void GOrgueSettings::Load()
 	{
 		if (!cfg_file.Read(m_ConfigFileName))
 			wxLogError(_("Unable to read '%s'"), m_ConfigFileName.c_str());
+	} else {
+		wxString fileName = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
+		if (wxFileExists(fileName))
+			if (!cfg_file.Read(fileName))
+				wxLogError(_("Unable to read '%s'"), fileName.c_str());
 	}
 
 	try
