@@ -191,7 +191,7 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "GrandOrgue")
 set(CPACK_RPM_PACKAGE_LICENSE "GPL v2+")
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/license.txt)
 set(CPACK_PACKAGE_CONTACT "ourorgan-developers@lists.sourceforge.net")
-set(CPACK_STRIP_FILES true)
+set(CPACK_STRIP_FILES false)
 set(CPACK_PACKAGE_EXECUTABLES "GrandOrgue" "GrandOrgue")
 SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
   WriteRegStr HKCR \\\".organ\\\" \\\"\\\" \\\"GrandOrgue.odf\\\"
