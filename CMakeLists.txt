@@ -37,7 +37,6 @@ option(RTMIDI_USE_ALSA        "Enable RtMidi support for ALSA (Linux only)" ON)
 option(RTMIDI_USE_MM          "Enable RtMidi support for MM (Windows only)" ON)
 option(INSTALL_DEMO           "Install demo sampleset" ON)
 option(USE_INTERNAL_PORTAUDIO "Use builtin PortAudio sources" ON)
-option(USE_INTERNAL_FFTW      "Use builtin fftw3 sources (deprecated)" OFF)
 option(USE_INTERNAL_WAVPACK   "Use builtin WavPack sources (deprecated)" OFF)
 if (WIN32 OR APPLE)
    option(INSTALL_DEPEND      "Copy dependencies (wxWidgets libraries and Translations) on installation" ON)
@@ -144,13 +143,7 @@ else()
 endif()
 
 # include FFTW
-if (USE_INTERNAL_FFTW)
-  add_subdirectory(src/fftw)
-  set(FFTW_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/lib/fftw)
-  set(FFTW_LIBRARIES fftw)
-else()
-  pkg_check_modules(FFTW REQUIRED fftw3f)
-endif()
+pkg_check_modules(FFTW REQUIRED fftw3f)
 
 # include WAVPACK
 if (USE_INTERNAL_WAVPACK)
