@@ -37,8 +37,8 @@ void GOrgueStdPath::InitLocaleDir()
 	wxLocale::AddCatalogLookupPathPrefix(GetBaseDir() + wxFILE_SEP_PATH +  wxT("share") + wxFILE_SEP_PATH + wxT("locale"));
 #endif
 #if wxCHECK_VERSION(3, 1, 1)
-	wxStandardPaths::Get().UseAppInfo(AppInfo_AppName);
-	wxStandardPaths::Get().SetFileLayout(FileLayout_XDG);
+	wxStandardPaths::Get().UseAppInfo(wxStandardPaths::AppInfo_AppName);
+	wxStandardPaths::Get().SetFileLayout(wxStandardPaths::FileLayout_XDG);
 #endif
 }
 
@@ -64,7 +64,7 @@ wxString GOrgueStdPath::GetDocumentDir()
 wxString GOrgueStdPath::GetCacheDir()
 {
 #if wxCHECK_VERSION(3, 1, 1)
-	return wxStandardPaths::Get().GetUserDir(Dir_Cache);
+	return wxStandardPaths::Get().GetUserDir(wxStandardPaths::Dir_Cache);
 #else
 	return wxStandardPaths::Get().GetUserConfigDir();
 #endif
