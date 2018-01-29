@@ -22,8 +22,6 @@
 #ifndef GOGUIPANELCREATOR_H
 #define GOGUIPANELCREATOR_H
 
-#include <wx/string.h>
-
 class GOrgueConfigReader;
 
 class GOGUIPanelCreator

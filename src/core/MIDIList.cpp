@@ -22,7 +22,8 @@
 #include "MIDIList.h"
 
 #include "GOrgueEvent.h"
-#include "GrandOrgueFile.h"
+#include "GOrgueEventDistributor.h"
+#include "GOrgueMidiConfigurator.h"
 #include <wx/button.h>
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
@@ -36,7 +37,7 @@ BEGIN_EVENT_TABLE(MIDIList, wxDialog)
         EVT_COMMAND_RANGE(ID_BUTTON, ID_BUTTON_LAST, wxEVT_BUTTON, MIDIList::OnButton)
 END_EVENT_TABLE()
 
-MIDIList::MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueFile* organfile) :
+MIDIList::MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GOrgueEventDistributor* midi_elements) :
 	wxDialog(parent, wxID_ANY, _("MIDI Objects"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE),
 	GOrgueView(doc, this)
 {
@@ -69,9 +70,9 @@ MIDIList::MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueFile* o
 	buttons->Add(close);
 	topSizer->Add(buttons, 0, wxALIGN_RIGHT | wxALL, 1);
 
-	for(unsigned i = 0; i < organfile->GetMidiConfiguratorCount(); i++)
+	for(unsigned i = 0; i < midi_elements->GetMidiConfiguratorCount(); i++)
 	{
-		GOrgueMidiConfigurator* obj = organfile->GetMidiConfigurator(i);
+		GOrgueMidiConfigurator* obj = midi_elements->GetMidiConfigurator(i);
 		m_Objects->InsertItem(i, obj->GetMidiType());
 		m_Objects->SetItemPtrData(i, (wxUIntPtr)obj);
 		m_Objects->SetItem(i, 1, obj->GetMidiName());

@@ -26,7 +26,7 @@
 #include <wx/dialog.h>
 #include <vector>
 
-class GrandOrgueFile;
+class GOrgueEventDistributor;
 class wxButton;
 class wxListEvent;
 class wxListView;
@@ -55,7 +55,7 @@ private:
 	void OnButton(wxCommandEvent& event);
 
 public:
-	MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueFile* organfile);
+	MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GOrgueEventDistributor* midi_elements);
 	~MIDIList();
 
 	DECLARE_EVENT_TABLE()
