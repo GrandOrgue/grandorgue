@@ -20,10 +20,15 @@
 include(UsewxWidgets)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgueDef.h.in ${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h/GrandOrgueDef.h)
 include_directories(${WAVPACK_INCLUDE_DIRS})
+include_directories(${ZLIB_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h)
 
 set(src
 contrib/sha1.cpp
+GOrgueArchive.cpp
+GOrgueArchiveIndex.cpp
+GOrgueArchiveEntryFile.cpp
+GOrgueArchiveReader.cpp
 GOrgueBitmap.cpp
 GOrgueCompress.cpp
 GOrgueConfigFileReader.cpp
@@ -79,5 +84,5 @@ wxGaugeAudio.cpp
 )
 
 BUILD_LIBRARY(GrandOrgueCore ${src})
-target_link_libraries(GrandOrgueCore GrandOrgueImages ${wxWidgets_LIBRARIES} ${WAVPACK_LIBRARIES})
-link_directories(${wxWidgets_LIBRARY_DIRS} ${WAVPACK_LIBDIR})
+target_link_libraries(GrandOrgueCore GrandOrgueImages ${wxWidgets_LIBRARIES} ${WAVPACK_LIBRARIES} ${ZLIB_LIBRARIES})
+link_directories(${wxWidgets_LIBRARY_DIRS} ${WAVPACK_LIBDIR} ${ZLIB_LIBDIR})

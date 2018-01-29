@@ -29,8 +29,8 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-GOrgueArchive::GOrgueArchive(GOrgueSettings& settings) :
-	m_Settings(settings),
+GOrgueArchive::GOrgueArchive(const GOrgueSettingDirectory& cachePath) :
+	m_CachePath(cachePath),
 	m_ID(),
 	m_Dependencies(),
 	m_Entries(),
@@ -53,7 +53,7 @@ bool GOrgueArchive::OpenArchive(const wxString& path)
 		return false;
 	}
 	{
-		GOrgueArchiveIndex index(m_Settings, m_Path);
+		GOrgueArchiveIndex index(m_CachePath, m_Path);
 		if (index.ReadIndex(m_ID, m_Entries))
 			return true;
 	}
@@ -65,7 +65,7 @@ bool GOrgueArchive::OpenArchive(const wxString& path)
 		return false;
 	}
 
-	GOrgueArchiveIndex index(m_Settings, m_Path);
+	GOrgueArchiveIndex index(m_CachePath, m_Path);
 	index.WriteIndex(m_ID, m_Entries);
 	return true;
 }

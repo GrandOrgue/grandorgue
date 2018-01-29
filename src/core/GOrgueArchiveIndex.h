@@ -26,7 +26,7 @@
 #include <wx/string.h>
 #include <vector>
 
-class GOrgueSettings;
+class GOrgueSettingDirectory;
 typedef struct _GOrgueHashType GOrgueHashType;
 
 typedef struct _GOArchiveEntry
@@ -39,7 +39,7 @@ typedef struct _GOArchiveEntry
 class GOrgueArchiveIndex
 {
 private:
-	GOrgueSettings& m_Settings;
+	const GOrgueSettingDirectory& m_CachePath;
 	wxString m_Path;
 	wxFile m_File;
 
@@ -59,7 +59,7 @@ private:
 	bool WriteContent(const wxString& id, const std::vector<GOArchiveEntry>& entries);
 
 public:
-	GOrgueArchiveIndex(GOrgueSettings& settings, const wxString& path);
+	GOrgueArchiveIndex(const GOrgueSettingDirectory& cachePath, const wxString& path);
 	~GOrgueArchiveIndex();
 
 	bool ReadIndex(wxString& id, std::vector<GOArchiveEntry>& entries);
