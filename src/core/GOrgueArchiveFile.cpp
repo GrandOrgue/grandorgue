@@ -24,7 +24,7 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueHash.h"
-#include "GOrgueSettings.h"
+#include "GOrgueOrganList.h"
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
@@ -82,7 +82,7 @@ void GOrgueArchiveFile::Update(const GOrgueArchiveFile& archive)
 	m_Dependencies = archive.m_Dependencies;
 }
 
-wxString GOrgueArchiveFile::GetCurrentFileID()
+wxString GOrgueArchiveFile::GetCurrentFileID() const
 {
 	GOrgueHash hash;
 	wxFileName path_name(m_Path);
@@ -125,21 +125,21 @@ const std::vector<wxString>& GOrgueArchiveFile::GetDependencyTitles() const
 	return m_DependencyTitles;
 }
 
-bool GOrgueArchiveFile::IsUsable(GOrgueSettings& settings)
+bool GOrgueArchiveFile::IsUsable(const GOrgueOrganList& organs) const
 {
 	return wxFileExists(m_Path);
 }
 
-bool GOrgueArchiveFile::IsComplete(GOrgueSettings& settings)
+bool GOrgueArchiveFile::IsComplete(const GOrgueOrganList& organs) const
 {
-	if (!IsUsable(settings))
+	if (!IsUsable(organs))
 		return false;
 	for(unsigned i = 0; i < m_Dependencies.size(); i++)
 	{
-		GOrgueArchiveFile* archive = settings.GetArchiveByID(m_Dependencies[i], true);
+		const GOrgueArchiveFile* archive = organs.GetArchiveByID(m_Dependencies[i], true);
 		if (!archive)
 			return false;
-		if (!archive->IsUsable(settings))
+		if (!archive->IsUsable(organs))
 			return false;
 	}
 	return true;

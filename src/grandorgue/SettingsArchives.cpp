@@ -97,11 +97,11 @@ void SettingsArchives::OnArchiveSelected(wxListEvent& event)
 
 void SettingsArchives::OnDel(wxCommandEvent& event)
 {
-	GOrgueArchiveFile* a = (GOrgueArchiveFile*)m_Archives->GetItemData(m_Archives->GetFirstSelected());
+	const GOrgueArchiveFile* a = (const GOrgueArchiveFile*)m_Archives->GetItemData(m_Archives->GetFirstSelected());
 
 	for(long i = 0; i < m_Archives->GetItemCount(); i++)
 	{
-		GOrgueArchiveFile* a1 = (GOrgueArchiveFile*)m_Archives->GetItemData(i);
+		const GOrgueArchiveFile* a1 = (const GOrgueArchiveFile*)m_Archives->GetItemData(i);
 		if (a == a1)
 			continue;
 		if (!a1->IsUsable(m_Settings))
@@ -114,7 +114,7 @@ void SettingsArchives::OnDel(wxCommandEvent& event)
 		}
 	}
 
-	std::vector<GOrgueOrgan*> organ_list = m_Organs.GetOrgans();
+	std::vector<const GOrgueOrgan*> organ_list = m_Organs.GetOrgans();
 	for(unsigned i = 0; i < organ_list.size(); i++)
 		if (organ_list[i]->GetArchiveID() == a->GetID())
 		{
@@ -123,7 +123,7 @@ void SettingsArchives::OnDel(wxCommandEvent& event)
 		}
 	for(long i = 0; i < m_Archives->GetItemCount(); i++)
 	{
-		GOrgueArchiveFile* a1 = (GOrgueArchiveFile*)m_Archives->GetItemData(i);
+		const GOrgueArchiveFile* a1 = (const GOrgueArchiveFile*)m_Archives->GetItemData(i);
 		if (a == a1)
 			continue;
 		for(unsigned j = 0; j < a1->GetDependencies().size(); j++)

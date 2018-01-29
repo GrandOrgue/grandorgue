@@ -83,7 +83,7 @@ SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindo
 		m_Organs->SetItem(i, 5, o->GetODFPath());
 		if (o->GetArchiveID() != wxEmptyString)
 		{
-			GOrgueArchiveFile* a = m_Settings.GetArchiveByID(o->GetArchiveID());
+			const GOrgueArchiveFile* a = m_Settings.GetArchiveByID(o->GetArchiveID());
 			m_Organs->SetItem(i, 4, a ? a->GetName() : o->GetArchiveID());
 		}
 	}
@@ -188,11 +188,11 @@ void SettingsOrgan::OnProperties(wxCommandEvent& event)
 	m_Organs->SetItem(m_Organs->GetFirstSelected(), 3, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No") );
 }
 
-std::vector<GOrgueOrgan*> SettingsOrgan::GetOrgans()
+std::vector<const GOrgueOrgan*> SettingsOrgan::GetOrgans()
 {
-	std::vector<GOrgueOrgan*> list;
+	std::vector<const GOrgueOrgan*> list;
 	for(long j = 0; j < m_Organs->GetItemCount(); j++)
-		list.push_back((GOrgueOrgan*)m_Organs->GetItemData(j));
+		list.push_back((const GOrgueOrgan*)m_Organs->GetItemData(j));
 	return list;
 }
 

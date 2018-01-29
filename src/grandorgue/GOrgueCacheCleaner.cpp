@@ -43,7 +43,7 @@ GOrgueCacheCleaner::~GOrgueCacheCleaner()
 wxArrayString GOrgueCacheCleaner::GetOrganIDList()
 {
 	wxArrayString list;
-	ptr_vector<GOrgueOrgan>& organs = m_settings.GetOrganList();
+	const ptr_vector<GOrgueOrgan>& organs = m_settings.GetOrganList();
 	for(unsigned i = 0; i < organs.size(); i++)
 		list.Add(organs[i]->GetOrganHash());
 	return list;
@@ -52,7 +52,7 @@ wxArrayString GOrgueCacheCleaner::GetOrganIDList()
 wxArrayString GOrgueCacheCleaner::GetArchiveIDList()
 {
 	wxArrayString list;
-	ptr_vector<GOrgueArchiveFile>& archives = m_settings.GetArchiveList();
+	const ptr_vector<GOrgueArchiveFile>& archives = m_settings.GetArchiveList();
 	for(unsigned i = 0; i < archives.size(); i++)
 		list.Add(archives[i]->GetArchiveHash());
 	return list;

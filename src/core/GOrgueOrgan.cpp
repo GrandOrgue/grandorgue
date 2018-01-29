@@ -25,7 +25,7 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueConfigWriter.h"
 #include "GOrgueHash.h"
-#include "GOrgueSettings.h"
+#include "GOrgueOrganList.h"
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
@@ -39,7 +39,7 @@ GOrgueOrgan::GOrgueOrgan(wxString odf, wxString archive, wxString church_name, w
 	m_RecordingDetail(recording_detail),
 	m_ArchiveID(archive),
 	m_NamesInitialized(true),
-	m_midi(NULL, MIDI_RECV_ORGAN)
+	m_midi(MIDI_RECV_ORGAN)
 {
 	m_LastUse = wxGetUTCTime();
 }
@@ -51,13 +51,13 @@ GOrgueOrgan::GOrgueOrgan(wxString odf) :
 	m_RecordingDetail(),
 	m_ArchiveID(),
 	m_NamesInitialized(false),
-	m_midi(NULL, MIDI_RECV_ORGAN)
+	m_midi(MIDI_RECV_ORGAN)
 {
 	m_LastUse = wxGetUTCTime();
 }
 
 GOrgueOrgan::GOrgueOrgan(GOrgueConfigReader& cfg, wxString group, GOrgueMidiMap& map) :
-	m_midi(NULL, MIDI_RECV_ORGAN)
+	m_midi(MIDI_RECV_ORGAN)
 {
 	m_ODF = cfg.ReadString(CMBSetting, group, wxT("ODFPath"));
 	m_ChurchName = cfg.ReadString(CMBSetting, group, wxT("ChurchName"));
@@ -116,17 +116,17 @@ const wxString& GOrgueOrgan::GetArchiveID() const
 	return m_ArchiveID;
 }
 
-GOrgueMidiReceiver& GOrgueOrgan::GetMIDIReceiver()
+GOrgueMidiReceiverBase& GOrgueOrgan::GetMIDIReceiver()
 {
 	return m_midi;
 }
 
-const wxString GOrgueOrgan::GetUITitle()
+const wxString GOrgueOrgan::GetUITitle() const
 {
 	return wxString::Format(_("%s, %s"), m_ChurchName.c_str(), m_OrganBuilder.c_str());
 }
 
-long GOrgueOrgan::GetLastUse()
+long GOrgueOrgan::GetLastUse() const
 {
 	return m_LastUse;
 }
@@ -156,14 +156,14 @@ bool GOrgueOrgan::Match(const GOrgueMidiEvent& e)
 	}
 }
 
-bool GOrgueOrgan::IsUsable(GOrgueSettings& settings)
+bool GOrgueOrgan::IsUsable(const GOrgueOrganList& organs) const
 {
 	if (m_ArchiveID != wxEmptyString)
 	{
-		GOrgueArchiveFile* archive = settings.GetArchiveByID(m_ArchiveID, true);
+		const GOrgueArchiveFile* archive = organs.GetArchiveByID(m_ArchiveID, true);
 		if (!archive)
 			return false;
-		return archive->IsComplete(settings);
+		return archive->IsComplete(organs);
 	}
 	else
 		return wxFileExists(m_ODF);

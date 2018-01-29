@@ -42,7 +42,7 @@ BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
 END_EVENT_TABLE()
 
 
-MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* event, GOrgueSettings& settings):
+MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiverBase* event, GOrgueSettings& settings):
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_original(event),
@@ -199,8 +199,6 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiver* 
 	LoadEvent();
 
 	topSizer->Fit(this);
-	if (m_original->GetOrganfile())
-		m_original->GetOrganfile()->AddMidiListener(&m_listener);
 }
 
 MIDIEventRecvDialog::~MIDIEventRecvDialog()

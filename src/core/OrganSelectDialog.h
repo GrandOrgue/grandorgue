@@ -26,12 +26,12 @@
 #include <wx/listctrl.h>
 
 class GOrgueOrgan;
-class GOrgueSettings;
+class GOrgueOrganList;
 
 class OrganSelectDialog : public wxDialog
 {
 private:
-	GOrgueSettings& m_Settings;
+	const GOrgueOrganList& m_OrganList;
 	wxListView* m_Organs;
 
 	enum {
@@ -42,9 +42,9 @@ private:
 	void OnDoubleClick(wxListEvent& event);
 
 public:
-	OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSettings& settings);
+	OrganSelectDialog(wxWindow* parent, wxString title, const GOrgueOrganList& organList);
 
-	GOrgueOrgan* GetSelection();
+	const GOrgueOrgan* GetSelection();
 
 	DECLARE_EVENT_TABLE()
 };

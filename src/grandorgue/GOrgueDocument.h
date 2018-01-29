@@ -30,7 +30,7 @@
 
 class GOrgueKeyReceiver;
 class GOrgueMidiEvent;
-class GOrgueMidiReceiver;
+class GOrgueMidiReceiverBase;
 class GOrgueMidiSender;
 class GOrgueOrgan;
 class GOrgueProgressDialog;
@@ -61,7 +61,7 @@ public:
 
 	void ShowPanel(unsigned id);
 	void ShowOrganDialog();
-	void ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division = NULL);
+	void ShowMIDIEventDialog(void* element, wxString title, GOrgueMidiReceiverBase* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division = NULL);
 	void ShowMidiList();
 
 	bool Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& organ);

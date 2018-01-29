@@ -27,7 +27,7 @@
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
-class GOrgueSettings;
+class GOrgueOrganList;
 
 class GOrgueArchiveFile
 {
@@ -45,7 +45,7 @@ public:
 	virtual ~GOrgueArchiveFile();
 
 	void Update(const GOrgueArchiveFile& archive);
-	wxString GetCurrentFileID();
+	wxString GetCurrentFileID() const;
 
 	void Save(GOrgueConfigWriter& cfg, wxString group);
 
@@ -57,8 +57,8 @@ public:
 	const std::vector<wxString>& GetDependencies() const;
 	const std::vector<wxString>& GetDependencyTitles() const;
 
-	bool IsUsable(GOrgueSettings& settings);
-	bool IsComplete(GOrgueSettings& settings);
+	bool IsUsable(const GOrgueOrganList& organs) const;
+	bool IsComplete(const GOrgueOrganList& organs) const;
 };
 
 #endif

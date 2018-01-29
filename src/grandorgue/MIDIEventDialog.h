@@ -27,7 +27,8 @@
 
 class GOrgueKeyReceiver;
 class GOrgueMidi;
-class GOrgueMidiReceiver;
+class GOrgueMidiListener;
+class GOrgueMidiReceiverBase;
 class GOrgueMidiSender;
 class GOrgueSettings;
 class MIDIEventKeyDialog;
@@ -49,7 +50,7 @@ private:
 	void OnCancel(wxCommandEvent& event);
 
 public:
-	MIDIEventDialog (GOrgueDocumentBase* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division = NULL);
+	MIDIEventDialog (GOrgueDocumentBase* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiverBase* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division = NULL);
 	~MIDIEventDialog();
 
 	void RegisterMIDIListener(GOrgueMidi* midi);

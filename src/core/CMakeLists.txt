@@ -26,6 +26,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h)
 set(src
 contrib/sha1.cpp
 GOrgueArchive.cpp
+GOrgueArchiveFile.cpp
 GOrgueArchiveIndex.cpp
 GOrgueArchiveEntryFile.cpp
 GOrgueArchiveReader.cpp
@@ -55,8 +56,11 @@ GOrgueMidiMap.cpp
 GOrgueMidiMerger.cpp
 GOrgueMidiPlayerContent.cpp
 GOrgueMidiSenderData.cpp
+GOrgueMidiReceiverBase.cpp
 GOrgueMidiReceiverData.cpp
 GOrgueMidiWXEvent.cpp
+GOrgueOrgan.cpp
+GOrgueOrganList.cpp
 GOrguePath.cpp
 GOrgueSampleStatistic.cpp
 GOrgueSetting.cpp
@@ -79,6 +83,7 @@ GOrgueView.cpp
 GOrgueWave.cpp
 GOrgueWavPack.cpp
 MIDIList.cpp
+OrganSelectDialog.cpp
 SplashScreen.cpp
 wxGaugeAudio.cpp
 )
