@@ -24,6 +24,9 @@
 
 #include <wx/string.h>
 
+template<class T>
+class GOrgueBuffer;
+
 class GOrgueFile
 {
 public:
@@ -38,6 +41,28 @@ public:
 	virtual bool Open() = 0;
 	virtual void Close() = 0;
 	virtual size_t Read(void * buffer, size_t len) = 0;
+
+	template<class T>
+	bool Read(GOrgueBuffer<T>& buf)
+	{
+		return Read(buf.get(), buf.GetSize()) == buf.GetSize();
+	}
+
+	template<class T>
+	bool ReadContent(GOrgueBuffer<T>& buf)
+	{
+		if (!Open())
+			return false;
+		if (GetSize() % sizeof(T))
+		{
+			Close();
+			return false;
+		}
+		buf.resize(GetSize() / sizeof(T));
+		bool ret = Read(buf);
+		Close();
+		return ret;
+	}
 
 	virtual bool isValid()
 	{
