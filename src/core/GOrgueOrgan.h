@@ -22,13 +22,13 @@
 #ifndef GORGUEORGAN_H
 #define GORGUEORGAN_H
 
-#include "GOrgueMidiReceiver.h"
+#include "GOrgueMidiReceiverBase.h"
 #include <wx/string.h>
 
 class GOrgueConfigReader;
 class GOrgueConfigWriter;
 class GOrgueMidiMap;
-class GOrgueSettings;
+class GOrgueOrganList;
 
 class GOrgueOrgan
 {
@@ -40,7 +40,7 @@ private:
 	wxString m_ArchiveID;
 	bool m_NamesInitialized;
 	long m_LastUse;
-	GOrgueMidiReceiver m_midi;
+	GOrgueMidiReceiverBase m_midi;
 
 public:
 	GOrgueOrgan(wxString odf, wxString archive, wxString church_name, wxString organ_builder, wxString recording_detail);
@@ -58,12 +58,13 @@ public:
 	const wxString& GetRecordingDetail() const;
 	const wxString& GetArchiveID() const;
 	const wxString GetOrganHash() const;
-	long GetLastUse();
-	const wxString GetUITitle();
-	GOrgueMidiReceiver& GetMIDIReceiver();
+	long GetLastUse() const;
+	const wxString GetUITitle() const;
+	GOrgueMidiReceiverBase& GetMIDIReceiver();
+	const GOrgueMidiReceiverBase& GetMIDIReceiver() const;
 	bool Match(const GOrgueMidiEvent& e);
 
-	bool IsUsable(GOrgueSettings& settings);
+	bool IsUsable(const GOrgueOrganList& organs) const;
 };
 
 #endif

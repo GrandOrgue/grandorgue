@@ -23,7 +23,8 @@
 #define GORGUESETTINGS_H
 
 #include "GOrgueMidiMap.h"
-#include "GOrgueMidiReceiver.h"
+#include "GOrgueMidiReceiverBase.h"
+#include "GOrgueOrganList.h"
 #include "GOrgueTemperamentList.h"
 #include "GOrgueSettingBool.h"
 #include "GOrgueSettingDirectory.h"
@@ -37,9 +38,6 @@
 #include <wx/string.h>
 #include <map>
 #include <vector>
-
-class GOrgueArchiveFile;
-class GOrgueOrgan;
 
 typedef struct
 {
@@ -64,12 +62,10 @@ typedef struct
 	const wxString name;
 } GOMidiSetting;
 
-class GOrgueSettings : public GOrgueSettingStore {
+class GOrgueSettings : public GOrgueSettingStore, public GOrgueOrganList {
 private:
 	wxString m_InstanceName;
 	wxString m_ConfigFileName;
-	ptr_vector<GOrgueOrgan> m_OrganList;
-	ptr_vector<GOrgueArchiveFile> m_ArchiveList;
 	std::map<wxString, bool> m_MidiIn;
 	std::map<wxString, unsigned> m_MidiInShift;
 	std::map<wxString, wxString> m_MidiInOutDeviceMap;
@@ -77,7 +73,7 @@ private:
 	wxString m_ResourceDir;
 	std::vector<wxString> m_AudioGroups;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
-	ptr_vector<GOrgueMidiReceiver> m_MIDIEvents;
+	ptr_vector<GOrgueMidiReceiverBase> m_MIDIEvents;
 	GOrgueMidiMap m_MidiMap;
 	GOrgueTemperamentList m_Temperaments;
 
@@ -166,8 +162,8 @@ public:
 	unsigned GetEventCount();
 	wxString GetEventGroup(unsigned index);
 	wxString GetEventTitle(unsigned index);
-	GOrgueMidiReceiver* GetMidiEvent(unsigned index);
-	GOrgueMidiReceiver* FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
+	GOrgueMidiReceiverBase* GetMidiEvent(unsigned index);
+	GOrgueMidiReceiverBase* FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
 	
 	bool GetMidiInState(wxString device);
 	void SetMidiInState(wxString device, bool enabled);
@@ -189,15 +185,6 @@ public:
 	const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();
 	void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
 	unsigned GetDefaultLatency();
-
-	void AddOrgan(const GOrgueOrgan& organ);
-	ptr_vector<GOrgueOrgan>& GetOrganList();
-	std::vector<GOrgueOrgan*> GetLRUOrganList();
-
-	void AddArchive(const GOrgueArchiveFile& archive);
-	ptr_vector<GOrgueArchiveFile>& GetArchiveList();
-	GOrgueArchiveFile* GetArchiveByID(const wxString& id, bool useable = false);
-	GOrgueArchiveFile* GetArchiveByPath(const wxString& path);
 
 	GOrgueMidiMap& GetMidiMap();
 

@@ -46,7 +46,6 @@ class GOrgueCache;
 class GOrgueElementCreator;
 class GOrgueMidi;
 class GOrgueMidiEvent;
-class GOrgueMidiListener;
 class GOrgueMidiPlayer;
 class GOrgueMidiRecorder;
 class GOrgueOrgan;
@@ -226,7 +225,7 @@ public:
 
 	void SendMidiMessage(GOrgueMidiEvent& e);
 	void SendMidiRecorderMessage(GOrgueMidiEvent& e);
-	void AddMidiListener(GOrgueMidiListener* listener);
+	GOrgueMidi* GetMidi();
 
 	GOGUIMouseStateTracker& GetMouseStateTracker();
 

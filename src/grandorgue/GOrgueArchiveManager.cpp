@@ -123,7 +123,7 @@ GOrgueArchive* GOrgueArchiveManager::LoadArchive(const wxString& id)
 {
 	for(unsigned i = 0; i < m_Settings.GetArchiveList().size(); i++)
 	{
-		GOrgueArchiveFile* file = m_Settings.GetArchiveList()[i];
+		const GOrgueArchiveFile* file = m_Settings.GetArchiveList()[i];
 		if (file->GetID() != id)
 			continue;
 		GOrgueArchive* archive = OpenArchive(file->GetPath());
@@ -165,7 +165,7 @@ wxString GOrgueArchiveManager::InstallPackage(const wxString& path)
 void GOrgueArchiveManager::RegisterPackage(const wxString& path)
 {
 	wxString p = GONormalizePath(path);
-	GOrgueArchiveFile* archive = m_Settings.GetArchiveByPath(p);
+	const GOrgueArchiveFile* archive = m_Settings.GetArchiveByPath(p);
 	if (archive != NULL)
 	{
 		if (archive->GetFileID() == archive->GetCurrentFileID())

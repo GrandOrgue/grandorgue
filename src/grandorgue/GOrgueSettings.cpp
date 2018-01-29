@@ -38,7 +38,6 @@
 #include <wx/log.h>
 #include <wx/stdpaths.h>
 #include <wx/thread.h>
-#include <algorithm>
 
 const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
 	{ MIDI_RECV_MANUAL, 1, wxTRANSLATE("Manuals"), wxTRANSLATE("Pedal") },
@@ -87,8 +86,6 @@ const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
 
 GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_InstanceName(instance),
-	m_OrganList(),
-	m_ArchiveList(),
 	m_ResourceDir(),
 	m_AudioGroups(),
 	m_AudioDeviceConfig(),
@@ -142,7 +139,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 {
 	m_ConfigFileName = GOrgueStdPath::GetConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
 	for(unsigned i = 0; i < GetEventCount(); i++)
-		m_MIDIEvents.push_back(new GOrgueMidiReceiver(NULL, m_MIDISettings[i].type));
+		m_MIDIEvents.push_back(new GOrgueMidiReceiverBase(m_MIDISettings[i].type));
 	m_ResourceDir = GOrgueStdPath::GetResourceDir();
 
 	UserSettingPath.setDefaultValue(GOrgueStdPath::GetConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueData") + m_InstanceName);
@@ -182,15 +179,7 @@ void GOrgueSettings::Load()
 		cfg_db.ReadData(cfg_file, CMBSetting, false);
 		GOrgueConfigReader cfg(cfg_db);
 
-		m_OrganList.clear();
-		unsigned organ_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
-		for(unsigned i = 0; i < organ_count; i++)
-			m_OrganList.push_back(new GOrgueOrgan(cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap));
-
-		m_ArchiveList.clear();
-		unsigned archive_count = cfg.ReadInteger(CMBSetting, wxT("General"), wxT("ArchiveCount"), 0, 99999, false, 0);
-		for(unsigned i = 0; i < archive_count; i++)
-			m_ArchiveList.push_back(new GOrgueArchiveFile(cfg, wxString::Format(wxT("Archive%03d"), i + 1)));
+		GOrgueOrganList::Load(cfg, m_MidiMap);
 
 		m_Temperaments.InitTemperaments();
 		m_Temperaments.Load(cfg);
@@ -336,13 +325,13 @@ wxString GOrgueSettings::GetEventTitle(unsigned index)
 	return wxGetTranslation(m_MIDISettings[index].name);
 }
 
-GOrgueMidiReceiver* GOrgueSettings::GetMidiEvent(unsigned index)
+GOrgueMidiReceiverBase* GOrgueSettings::GetMidiEvent(unsigned index)
 {
 	assert(index < GetEventCount());
 	return m_MIDIEvents[index];
 }
 
-GOrgueMidiReceiver* GOrgueSettings::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index)
+GOrgueMidiReceiverBase* GOrgueSettings::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index)
 {
 	for(unsigned i = 0; i < GetEventCount(); i++)
 		if (m_MIDISettings[i].type == type && m_MIDISettings[i].index == index)
@@ -358,69 +347,6 @@ const wxString GOrgueSettings::GetResourceDirectory()
 const wxString GOrgueSettings::GetPackageDirectory()
 {
 	return m_ResourceDir + wxFileName::GetPathSeparator() + wxT("packages");
-}
-
-ptr_vector<GOrgueOrgan>& GOrgueSettings::GetOrganList()
-{
-	return m_OrganList;
-}
-
-static bool LRUCompare(GOrgueOrgan* a, GOrgueOrgan* b)
-{
-	return a->GetLastUse() > b->GetLastUse();
-}
-
-std::vector<GOrgueOrgan*> GOrgueSettings::GetLRUOrganList()
-{
-	std::vector<GOrgueOrgan*> lru;
-	for(unsigned i = 0; i < m_OrganList.size(); i++)
-		if (m_OrganList[i]->IsUsable(*this))
-			lru.push_back(m_OrganList[i]);
-	std::sort(lru.begin(), lru.end(), LRUCompare);
-	return lru;
-}
-
-void GOrgueSettings::AddOrgan(const GOrgueOrgan& organ)
-{
-	for(unsigned i = 0; i < m_OrganList.size(); i++)
-		if (organ.GetODFPath() == m_OrganList[i]->GetODFPath() &&
-		    organ.GetArchiveID() == m_OrganList[i]->GetArchiveID())
-		{
-			m_OrganList[i]->Update(organ);
-			return;
-		}
-	m_OrganList.push_back(new GOrgueOrgan(organ));
-}
-
-ptr_vector<GOrgueArchiveFile>& GOrgueSettings::GetArchiveList()
-{
-	return m_ArchiveList;
-}
-
-GOrgueArchiveFile* GOrgueSettings::GetArchiveByID(const wxString& id, bool useable)
-{
-	for(unsigned i = 0; i < m_ArchiveList.size(); i++)
-		if (m_ArchiveList[i]->GetID() == id)
-			if (!useable || m_ArchiveList[i]->IsUsable(*this))
-				return m_ArchiveList[i];
-	return NULL;
-}
-
-GOrgueArchiveFile* GOrgueSettings::GetArchiveByPath(const wxString& path)
-{
-	for(unsigned i = 0; i < m_ArchiveList.size(); i++)
-		if (m_ArchiveList[i]->GetPath() == path)
-			return m_ArchiveList[i];
-	return NULL;
-}
-
-void GOrgueSettings::AddArchive(const GOrgueArchiveFile& archive)
-{
-	GOrgueArchiveFile* a = GetArchiveByPath(archive.GetPath());
-	if (a)
-		a->Update(archive);
-	else
-		m_ArchiveList.push_back(new GOrgueArchiveFile(archive));
 }
 
 bool GOrgueSettings::GetMidiInState(wxString device)
@@ -561,14 +487,7 @@ void GOrgueSettings::Flush()
 	GOrgueConfigWriter cfg(cfg_file, false);
 
 	GOrgueSettingStore::Save(cfg);
-
-	cfg.WriteInteger(wxT("General"), wxT("ArchiveCount"), m_ArchiveList.size());
-	for(unsigned i = 0; i < m_ArchiveList.size(); i++)
-		m_ArchiveList[i]->Save(cfg, wxString::Format(wxT("Archive%03d"), i + 1));
-
-	cfg.WriteInteger(wxT("General"), wxT("OrganCount"), m_OrganList.size());
-	for(unsigned i = 0; i < m_OrganList.size(); i++)
-		m_OrganList[i]->Save(cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap);
+	GOrgueOrganList::Save(cfg, m_MidiMap);
 
 	m_Temperaments.Save(cfg);
 

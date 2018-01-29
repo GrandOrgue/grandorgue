@@ -429,7 +429,7 @@ void GOrgueFrame::UpdateFavoritesMenu()
 	while (m_favorites_menu->GetMenuItemCount() > 0)
 		m_favorites_menu->Destroy(m_favorites_menu->FindItemByPosition(m_favorites_menu->GetMenuItemCount() - 1));
 
-	ptr_vector<GOrgueOrgan>& organs = m_Settings.GetOrganList();
+	const ptr_vector<GOrgueOrgan>& organs = m_Settings.GetOrganList();
 	for(unsigned i = 0; i < organs.size() && i <= ID_LOAD_FAV_LAST - ID_LOAD_FAV_FIRST; i++)
 	{
 		m_favorites_menu->AppendCheckItem(ID_LOAD_FAV_FIRST + i, wxString::Format(_("&%d: %s"), (i + 1) % 10, organs[i]->GetUITitle().c_str()));
@@ -441,7 +441,7 @@ void GOrgueFrame::UpdateRecentMenu()
 	while (m_recent_menu->GetMenuItemCount() > 0)
 		m_recent_menu->Destroy(m_recent_menu->FindItemByPosition(m_recent_menu->GetMenuItemCount() - 1));
 
-	std::vector<GOrgueOrgan*> organs = m_Settings.GetLRUOrganList();
+	std::vector<const GOrgueOrgan*> organs = m_Settings.GetLRUOrganList();
 	for(unsigned i = 0; i < organs.size() && i <= ID_LOAD_LRU_LAST - ID_LOAD_LRU_FIRST; i++)
 	{
 		m_recent_menu->AppendCheckItem(ID_LOAD_LRU_FIRST + i, wxString::Format(_("&%d: %s"), (i + 1) % 10, organs[i]->GetUITitle().c_str()));
@@ -575,14 +575,14 @@ void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 void GOrgueFrame::OnLoadFavorite(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_LOAD_FAV_FIRST;
-	GOrgueOrgan& organ = *m_Settings.GetOrganList()[id];
+	const GOrgueOrgan& organ = *m_Settings.GetOrganList()[id];
 	Open(organ);
 }
 
 void GOrgueFrame::OnLoadRecent(wxCommandEvent& event)
 {
 	unsigned id = event.GetId() - ID_LOAD_LRU_FIRST;
-	GOrgueOrgan& organ = *m_Settings.GetLRUOrganList()[id];
+	const GOrgueOrgan& organ = *m_Settings.GetLRUOrganList()[id];
 	Open(organ);
 }
 
@@ -1010,7 +1010,7 @@ bool GOrgueFrame::InstallOrganPackage(wxString name)
 
 void GOrgueFrame::LoadLastOrgan()
 {
-	std::vector<GOrgueOrgan*> list = m_Settings.GetLRUOrganList();
+	std::vector<const GOrgueOrgan*> list = m_Settings.GetLRUOrganList();
 	if (list.size() > 0)
 		SendLoadOrgan(*list[0]);
 }

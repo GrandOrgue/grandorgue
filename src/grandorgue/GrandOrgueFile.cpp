@@ -312,7 +312,7 @@ bool GrandOrgueFile::LoadArchive(wxString ID, wxString& name, const wxString& pa
 		return true;
 	}
 	name = wxEmptyString;
-	GOrgueArchiveFile* a = m_Settings.GetArchiveByID(ID);
+	const GOrgueArchiveFile* a = m_Settings.GetArchiveByID(ID);
 	if (a)
 		name = a->GetName();
 	else if (parentID != wxEmptyString)
@@ -938,7 +938,7 @@ const wxString GrandOrgueFile::GetOrganPathInfo()
 {
 	if (m_ArchiveID == wxEmptyString)
 		return GetODFFilename();
-	GOrgueArchiveFile *archive = m_Settings.GetArchiveByID(m_ArchiveID);
+	const GOrgueArchiveFile *archive = m_Settings.GetArchiveByID(m_ArchiveID);
 	wxString name = GetODFFilename();
 	if (archive)
 		name += wxString::Format(_(" from '%s' (%s)"), archive->GetName().c_str(), m_ArchiveID.c_str());
@@ -1020,10 +1020,9 @@ void GrandOrgueFile::SendMidiRecorderMessage(GOrgueMidiEvent& e)
 		m_MidiRecorder->SendMidiRecorderMessage(e);
 }
 
-void GrandOrgueFile::AddMidiListener(GOrgueMidiListener* listener)
+GOrgueMidi* GrandOrgueFile::GetMidi()
 {
-	if (m_midi)
-		listener->Register(m_midi);
+	return m_midi;
 }
 
 void GrandOrgueFile::LoadMIDIFile(wxString const& filename)

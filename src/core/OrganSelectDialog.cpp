@@ -23,7 +23,7 @@
 
 #include "GOrgueArchiveFile.h"
 #include "GOrgueOrgan.h"
-#include "GOrgueSettings.h"
+#include "GOrgueOrganList.h"
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
@@ -32,9 +32,9 @@ BEGIN_EVENT_TABLE(OrganSelectDialog, wxDialog)
 	EVT_LIST_ITEM_ACTIVATED(ID_ORGANS, OrganSelectDialog::OnDoubleClick)
 END_EVENT_TABLE()
 
-OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSettings& settings) :
+OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, const GOrgueOrganList& organList) :
 	wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(700, 500)),
-	m_Settings(settings)
+	m_OrganList(organList)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
@@ -47,10 +47,10 @@ OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSet
 	m_Organs->InsertColumn(4, _("ODF Path"));
 	topSizer->Add(m_Organs, 1, wxEXPAND | wxALL, 5);
 
-	for(unsigned i = 0, j = 0; j < m_Settings.GetOrganList().size(); j++)
+	for(unsigned i = 0, j = 0; j < m_OrganList.GetOrganList().size(); j++)
 	{
-		GOrgueOrgan* o = m_Settings.GetOrganList()[j];
-		if (!o->IsUsable(m_Settings))
+		const GOrgueOrgan* o = m_OrganList.GetOrganList()[j];
+		if (!o->IsUsable(m_OrganList))
 			continue;
 		m_Organs->InsertItem(i, o->GetChurchName());
 		m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
@@ -59,7 +59,7 @@ OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, GOrgueSet
 		m_Organs->SetItem(i, 4, o->GetODFPath());
 		if (o->GetArchiveID() != wxEmptyString)
 		{
-			GOrgueArchiveFile* a = m_Settings.GetArchiveByID(o->GetArchiveID());
+			const GOrgueArchiveFile* a = m_OrganList.GetArchiveByID(o->GetArchiveID());
 			m_Organs->SetItem(i, 3, a ? a->GetName() : o->GetArchiveID());
 		}
 		i++;
@@ -88,9 +88,9 @@ void OrganSelectDialog::OnOK(wxCommandEvent& event)
 	EndModal(wxID_OK);
 }
 
-GOrgueOrgan* OrganSelectDialog::GetSelection()
+const GOrgueOrgan* OrganSelectDialog::GetSelection()
 {
-	return (GOrgueOrgan*)m_Organs->GetItemData(m_Organs->GetFirstSelected());
+	return (const GOrgueOrgan*)m_Organs->GetItemData(m_Organs->GetFirstSelected());
 }
 
 void OrganSelectDialog::OnDoubleClick(wxListEvent& event)

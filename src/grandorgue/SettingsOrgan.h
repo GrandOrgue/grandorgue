@@ -64,7 +64,7 @@ private:
 public:
 	SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent);
 
-	std::vector<GOrgueOrgan*> GetOrgans();
+	std::vector<const GOrgueOrgan*> GetOrgans();
 
 	void Save();
 	
