@@ -72,6 +72,7 @@ GOrgueUtil.cpp
 GOrgueView.cpp
 GOrgueWave.cpp
 GOrgueWavPack.cpp
+MIDIList.cpp
 SplashScreen.cpp
 wxGaugeAudio.cpp
 )
