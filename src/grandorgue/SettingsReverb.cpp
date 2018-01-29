@@ -141,7 +141,7 @@ void SettingsReverb::UpdateLimits()
 	}
 	catch(wxString error)
 	{
-		wxMessageBox(error , _("Error"), wxOK | wxICON_ERROR, this);
+		wxMessageBox(error + _("\n\nPlease select a valid impulse response file") , _("Reverb error"), wxOK | wxICON_ERROR, this);
 	}
 }
 
@@ -203,6 +203,19 @@ void SettingsReverb::OnGainChanged(wxCommandEvent &e)
 	double gain;
 	if (m_Gain->GetValue().ToDouble(&gain))
 		m_GainSpin->SetValue(gain * 20);
+}
+
+bool SettingsReverb::Validate()
+{
+	if (m_Enabled->GetValue())
+	{
+		if (!wxFileExists(m_File->GetPath()))
+		{
+			wxMessageBox(wxString::Format(_("Impulse response file '%s' not found"), m_File->GetPath().c_str()) , _("Warning"), wxOK | wxICON_WARNING, this);
+			return false;
+		}
+	}
+	return wxPanel::Validate();
 }
 
 void SettingsReverb::Save()

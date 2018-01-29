@@ -70,6 +70,8 @@ private:
 	void UpdateLimits();
 	void UpdateEnabled();
 
+	bool Validate();
+
 public:
 	SettingsReverb(GOrgueSettings& settings, wxWindow* parent);
 
