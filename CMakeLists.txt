@@ -145,6 +145,8 @@ endif()
 # include FFTW
 pkg_check_modules(FFTW REQUIRED fftw3f)
 
+pkg_check_modules(ZLIB REQUIRED zlib)
+
 # include WAVPACK
 if (USE_INTERNAL_WAVPACK)
   add_subdirectory(src/wavpack)

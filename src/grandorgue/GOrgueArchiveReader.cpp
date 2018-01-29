@@ -28,6 +28,7 @@
 #include <wx/font.h>
 #include <wx/intl.h>
 #include <wx/log.h>
+#include <zlib.h>
 
 GOrgueArchiveReader::GOrgueArchiveReader(wxFile& file) :
 	m_File(file)
@@ -76,6 +77,31 @@ bool GOrgueArchiveReader::GenerateFileHash(wxString& id)
 	}
 	id = hash.getStringHash();
 	return true;
+}
+
+uint32_t GOrgueArchiveReader::CalculateCrc(size_t offset, size_t length)
+{
+	uint8_t buf[4096];
+	if (!Seek(offset))
+	{
+		wxLogError(_("Reading data for CRC failed"));
+		return 0;
+	}
+	uint32_t crc = crc32(0, Z_NULL, 0);
+	while(length > 0)
+	{
+		size_t len = length;
+		if (len > sizeof(buf))
+			len = sizeof(buf);
+		if (!Read(buf, len))
+		{
+			wxLogError(_("Reading data for CRC failed"));
+			return 0;
+		}
+		crc = crc32(crc, buf, len);
+		length -= len;
+	}
+	return crc;
 }
 
 size_t GOrgueArchiveReader::ExtractU64(void* ptr)
@@ -350,13 +376,14 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 			wxLogError(_("Duplicate file '%s'"), name.c_str());
 			return false;
 		}
-
 	GOArchiveEntry e;
 	e.name = name;
 	e.name.Replace(wxT("/"), wxT("\\"));
 	e.offset = local_offset + local.name_length + local.extra_length + sizeof(local);
 	e.len = central_uncompressed_size;
 	entries.push_back(e);
+	if (CalculateCrc(e.offset, e.len) != central.crc)
+		wxLogError(_("CRC mismatch in organ package - file corrupted?"));
 	return true;
 }
 

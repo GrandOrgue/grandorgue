@@ -32,6 +32,7 @@ include_directories(${CMAKE_BINARY_DIR}/src/core/GrandOrgueDef.h ${CMAKE_CURRENT
 include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
 include_directories(${FFTW_INCLUDE_DIRS})
+include_directories(${ZLIB_INCLUDE_DIRS})
 include_directories(${wxWidgets_INCLUDE_DIRS})
 include(UsewxWidgets)
 
@@ -170,8 +171,8 @@ SettingsTemperaments.cpp
 )
 
 add_library(golib STATIC ${grandorgue_src})
-set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES})
-set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR} ${WAVPACK_LIBDIR})
+set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${ZLIB_LIBRARIES})
+set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR} ${WAVPACK_LIBDIR} ${ZLIB_LIBDIR})
 target_link_libraries(golib GrandOrgueImages GrandOrgueCore ${go_libs})
 link_directories(${go_libdir})
 
