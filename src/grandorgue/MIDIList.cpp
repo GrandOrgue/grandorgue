@@ -36,7 +36,7 @@ BEGIN_EVENT_TABLE(MIDIList, wxDialog)
         EVT_COMMAND_RANGE(ID_BUTTON, ID_BUTTON_LAST, wxEVT_BUTTON, MIDIList::OnButton)
 END_EVENT_TABLE()
 
-MIDIList::MIDIList (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile* organfile) :
+MIDIList::MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueFile* organfile) :
 	wxDialog(parent, wxID_ANY, _("MIDI Objects"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE),
 	GOrgueView(doc, this)
 {

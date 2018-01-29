@@ -24,20 +24,22 @@
 
 #include <wx/window.h>
 
-class GOrgueDocument;
+class GOrgueDocumentBase;
 
 class GOrgueView
 {
 private:
-	GOrgueDocument* m_doc;
+	GOrgueDocumentBase* m_doc;
 	wxWindow* m_wnd;
 
 public:
-	GOrgueView(GOrgueDocument* doc, wxWindow* wnd);
+	GOrgueView(GOrgueDocumentBase* doc, wxWindow* wnd);
 	virtual ~GOrgueView();
 
 	virtual void RemoveView();
 	void ShowView();
+
+	virtual void SyncState();
 };
 
 #endif

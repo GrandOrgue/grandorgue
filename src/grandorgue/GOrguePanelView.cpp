@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(GOrguePanelView, wxScrolledWindow)
 	EVT_SIZE(GOrguePanelView::OnSize)
 END_EVENT_TABLE()
 
-GOrguePanelView* GOrguePanelView::createWindow(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent)
+GOrguePanelView* GOrguePanelView::createWindow(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxWindow* parent)
 {
 	wxFrame* frame = new wxFrame(NULL, -1, panel->GetName(), wxDefaultPosition, wxDefaultSize, 
 				     wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE);
@@ -45,7 +45,7 @@ GOrguePanelView* GOrguePanelView::createWindow(GOrgueDocument* doc, GOGUIPanel* 
 }
 
 
-GOrguePanelView::GOrguePanelView(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent) :
+GOrguePanelView::GOrguePanelView(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxWindow* parent) :
 	wxScrolledWindow(parent),
 	GOrgueView(doc, parent),
 	m_panelwidget(NULL),

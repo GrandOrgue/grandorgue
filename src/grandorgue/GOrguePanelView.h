@@ -39,12 +39,12 @@ private:
 	void OnSize(wxSizeEvent& event);
 
 public:
-	GOrguePanelView(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent);
+	GOrguePanelView(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxWindow* parent);
 	~GOrguePanelView();
 
 	void AddEvent(GOGUIControl* control);
 
-	static GOrguePanelView* createWindow(GOrgueDocument* doc, GOGUIPanel* panel, wxWindow* parent);
+	static GOrguePanelView* createWindow(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxWindow* parent);
 	void SyncState();
 
 	void Raise();

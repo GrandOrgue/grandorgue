@@ -49,7 +49,7 @@ private:
 	void OnCancel(wxCommandEvent& event);
 
 public:
-	MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division = NULL);
+	MIDIEventDialog (GOrgueDocumentBase* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division = NULL);
 	~MIDIEventDialog();
 
 	void RegisterMIDIListener(GOrgueMidi* midi);

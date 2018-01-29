@@ -32,7 +32,7 @@ BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
 	EVT_BUTTON(wxID_CANCEL, MIDIEventDialog::OnCancel)
 END_EVENT_TABLE()
 
-MIDIEventDialog::MIDIEventDialog (GOrgueDocument* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division):
+MIDIEventDialog::MIDIEventDialog (GOrgueDocumentBase* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiver* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division):
 	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize),
 	GOrgueView(doc, this),
 	m_recvPage(NULL),

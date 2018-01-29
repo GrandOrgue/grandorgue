@@ -31,6 +31,7 @@ GOrgueConfigReader.cpp
 GOrgueConfigReaderDB.cpp
 GOrgueConfigWriter.cpp
 GOrgueDC.cpp
+GOrgueDocumentBase.cpp
 GOrgueEvent.cpp
 GOrgueEventDistributor.cpp
 GOrgueFont.cpp
@@ -68,6 +69,7 @@ GOrgueTemperamentUser.cpp
 GOrgueThread.cpp
 GOrgueTimer.cpp
 GOrgueUtil.cpp
+GOrgueView.cpp
 GOrgueWave.cpp
 GOrgueWavPack.cpp
 SplashScreen.cpp
