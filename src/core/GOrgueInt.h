@@ -86,7 +86,7 @@ template<typename A, bool enable_swap, A swap_func(A)> class GOInt
 private:
 	A m_Value;
 
-	A swap(A val)
+	A swap(A val) const
 	{
 		if (enable_swap)
 			return swap_func(val);
@@ -105,7 +105,7 @@ public:
 		assign(val);
 	}
 
-	operator A()
+	operator A() const
 	{
 		return swap(m_Value);
 	}
