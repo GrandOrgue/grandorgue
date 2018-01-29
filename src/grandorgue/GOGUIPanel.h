@@ -41,6 +41,8 @@ class GOrgueDC;
 class GOrguePanelView;
 class GrandOrgueFile;
 
+#define GOBitmapPrefix "../GO:"
+
 class GOGUIPanel : private GOrgueSaveableObject
 {
 protected:
