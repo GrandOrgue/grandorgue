@@ -39,6 +39,7 @@ private:
 	bool GenerateFileHash(wxString& id);
 	size_t ExtractU64(void* ptr);
 	size_t ExtractU32(void* ptr);
+	uint32_t CalculateCrc(size_t offset, size_t length);
 
 	bool ReadFileRecord(size_t central_offset, GOZipCentralHeader& central, std::vector<GOArchiveEntry>& entries);
 	bool ReadCentralDirectory(size_t offset, size_t entry_count, size_t length, std::vector<GOArchiveEntry>& entries);
