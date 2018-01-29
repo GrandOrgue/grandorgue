@@ -28,14 +28,14 @@
 #include <vector>
 
 class GOrgueFile;
-class GOrgueSettings;
+class GOrgueSettingDirectory;
 typedef struct _GOArchiveEntry GOArchiveEntry;
 
 class GOrgueArchive
 {
 private:
 	GOMutex m_Mutex;
-	GOrgueSettings& m_Settings;
+	const GOrgueSettingDirectory& m_CachePath;
 	wxString m_ID;
 	std::vector<wxString> m_Dependencies;
 	std::vector<GOArchiveEntry> m_Entries;
@@ -43,7 +43,7 @@ private:
 	wxString m_Path;
 
 public:
-	GOrgueArchive(GOrgueSettings& settings);
+	GOrgueArchive(const GOrgueSettingDirectory& cachePath);
 	~GOrgueArchive();
 
 	bool OpenArchive(const wxString& path);

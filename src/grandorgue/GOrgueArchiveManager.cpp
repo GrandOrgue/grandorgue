@@ -46,7 +46,7 @@ GOrgueArchiveManager::~GOrgueArchiveManager()
 
 GOrgueArchive* GOrgueArchiveManager::OpenArchive(const wxString& path)
 {
-	GOrgueArchive* archive = new GOrgueArchive(m_Settings);
+	GOrgueArchive* archive = new GOrgueArchive(m_Settings.UserCachePath);
 	if (!archive->OpenArchive(path))
 	{
 		delete archive;

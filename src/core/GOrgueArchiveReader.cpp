@@ -22,9 +22,9 @@
 #include "GOrgueArchiveReader.h"
 
 #include "GOrgueArchiveIndex.h"
+#include "GOrgueBuffer.h"
 #include "GOrgueHash.h"
 #include "GOrgueZipFormat.h"
-#include <wx/buffer.h>
 #include <wx/font.h>
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -118,17 +118,17 @@ size_t GOrgueArchiveReader::ExtractU32(void* ptr)
 
 bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHeader& central, std::vector<GOArchiveEntry>& entries)
 {
-	wxCharBuffer central_buf(central.name_length + central.extra_length + central.comment_length);
+	GOrgueBuffer<uint8_t> central_buf(central.name_length + central.extra_length + central.comment_length);
 	if (!Seek(central_offset + sizeof(central)))
 		return false;
-	if (!Read(central_buf.data(), central_buf.length()))
+	if (!Read(central_buf.get(), central_buf.GetSize()))
 		return false;
 	size_t central_uncompressed_size = central.uncompressed_size;
 	size_t central_compressed_size = central.compressed_size;
 	size_t local_offset = central.offset;
 	size_t central_disk_number = central.disk_number;
 	{
-		char * extra_ptr = central_buf.data() + central.name_length;
+		uint8_t * extra_ptr = central_buf.get() + central.name_length;
 		size_t len = central.extra_length;
 		while (len > 0)
 		{
@@ -145,7 +145,7 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 			}
 			if (extra.type == 0x0001)
 			{
-				char* zip64_central = extra_ptr + sizeof(extra);
+				uint8_t* zip64_central = extra_ptr + sizeof(extra);
 				size_t zip64_central_size = extra.size;
 				if (central_uncompressed_size == 0xffffffff)
 				{
@@ -234,13 +234,13 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 		wxLogError(_("Incomplete local record"));
 		return false;
 	}
-	wxCharBuffer local_buf(local.name_length + local.extra_length);
-	if (!Read(local_buf.data(), local_buf.length()))
+	GOrgueBuffer<uint8_t> local_buf(local.name_length + local.extra_length);
+	if (!Read(local_buf.get(), local_buf.GetSize()))
 		return false;
 	size_t local_uncompressed_size = local.uncompressed_size;
 	size_t local_compressed_size = local.compressed_size;
 	{
-		char * extra_ptr = local_buf.data() + local.name_length;
+		uint8_t * extra_ptr = local_buf.get() + local.name_length;
 		size_t len = local.extra_length;
 		while (len > 0)
 		{
@@ -257,7 +257,7 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 			}
 			if (extra.type == 0x0001)
 			{
-				char* zip64_local = extra_ptr + sizeof(extra);
+				uint8_t* zip64_local = extra_ptr + sizeof(extra);
 				size_t zip64_local_size = extra.size;
 				if (local_uncompressed_size == 0xffffffff)
 				{
@@ -308,7 +308,7 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 	    local_uncompressed_size != central.uncompressed_size ||
 	    local_compressed_size != central.compressed_size ||
 	    local.name_length != central.name_length ||
-	    memcmp(local_buf.data(), central_buf.data(), local.name_length))
+	    memcmp(local_buf.get(), central_buf.get(), local.name_length))
 	{
 		wxLogError(_("Mismatch of local and central header"));
 	}
@@ -339,7 +339,7 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 		conv = &wxConvUTF8;
 	else
 		conv = &localConv;
-	wxString name = wxString(local_buf.data(), *conv, local.name_length);
+	wxString name = wxString(local_buf.get(), *conv, local.name_length);
 	if (local.name_length && name.length() == 0)
 	{
 		wxLogError(_("Filename contains invalid characters"));

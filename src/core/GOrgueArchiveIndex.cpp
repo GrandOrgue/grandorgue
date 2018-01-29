@@ -22,15 +22,15 @@
 #include "GOrgueArchiveIndex.h"
 
 #include "GOrgueHash.h"
-#include "GOrgueSettings.h"
+#include "GOrgueSettingDirectory.h"
 #include <wx/filename.h>
 #include <wx/log.h>
 
 /* Value which is used to identify a valid cache index file. */
 #define GRANDORGUE_INDEX_MAGIC 0x43214321
 
-GOrgueArchiveIndex::GOrgueArchiveIndex(GOrgueSettings& settings, const wxString& path) :
-	m_Settings(settings),
+GOrgueArchiveIndex::GOrgueArchiveIndex(const GOrgueSettingDirectory& cachePath, const wxString& path) :
+	m_CachePath(cachePath),
 	m_Path(path),
 	m_File()
 {
@@ -46,7 +46,7 @@ wxString GOrgueArchiveIndex::GenerateIndexFilename()
 	GOrgueHash hash;
 	hash.Update(m_Path);
 
-	return m_Settings.UserCachePath()  + wxFileName::GetPathSeparator() + 
+	return m_CachePath()  + wxFileName::GetPathSeparator() + 
 		hash.getStringHash() + wxT(".idx");
 }
 
