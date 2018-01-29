@@ -22,6 +22,7 @@
 #ifndef GORGUEDOCUMENT_H
 #define GORGUEDOCUMENT_H
 
+#include "GOrgueMidiCallback.h"
 #include "GOrgueMidiListener.h"
 #include "mutex.h"
 #include <wx/string.h>

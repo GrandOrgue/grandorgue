@@ -70,8 +70,10 @@ GOrgueTimer.cpp
 GOrgueUtil.cpp
 GOrgueWave.cpp
 GOrgueWavPack.cpp
+SplashScreen.cpp
+wxGaugeAudio.cpp
 )
 
 BUILD_LIBRARY(GrandOrgueCore ${src})
-target_link_libraries(GrandOrgueCore ${wxWidgets_LIBRARIES} ${WAVPACK_LIBRARIES})
+target_link_libraries(GrandOrgueCore GrandOrgueImages ${wxWidgets_LIBRARIES} ${WAVPACK_LIBRARIES})
 link_directories(${wxWidgets_LIBRARY_DIRS} ${WAVPACK_LIBDIR})

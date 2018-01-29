@@ -167,8 +167,7 @@ SettingsOption.cpp
 SettingsOrgan.cpp
 SettingsReverb.cpp
 SettingsTemperaments.cpp
-SplashScreen.cpp
-wxGaugeAudio.cpp)
+)
 
 add_library(golib STATIC ${grandorgue_src})
 set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES})

@@ -23,6 +23,7 @@
 #define GRANDORGUEFRAME_H
 
 #include "GOrgueEvent.h"
+#include "GOrgueMidiCallback.h"
 #include "GOrgueMidiListener.h"
 #include "mutex.h"
 #include <wx/dcmemory.h>
