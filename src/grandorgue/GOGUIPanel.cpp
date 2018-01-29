@@ -66,7 +66,7 @@ GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_InitialOpenWindow(false)
 {
 	for (unsigned i = 0; i < 64; i++)
-		m_WoodImages.push_back(LoadBitmap(wxString::Format(wxT("GO:wood%02d"), i + 1), wxEmptyString));
+		m_WoodImages.push_back(LoadBitmap(wxString::Format(wxT(GOBitmapPrefix "wood%02d"), i + 1), wxEmptyString));
 }
 
 GOGUIPanel::~GOGUIPanel()

@@ -56,7 +56,7 @@ void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, u
 	m_FontName = wxT("");
 	m_Text = name;
 
-	wxString image_file = wxString::Format(wxT("GO:label%02d"), DispImageNum);
+	wxString image_file = wxString::Format(wxT(GOBitmapPrefix "label%02d"), DispImageNum);
 	wxString image_mask_file = wxEmptyString;
 
 	m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);
@@ -132,7 +132,7 @@ void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
 
 	unsigned DispImageNum = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 12, false, 1);
 
-	wxString image_file = cfg.ReadStringTrim(ODFSetting, group, wxT("Image"), false, wxString::Format(wxT("GO:label%02d"), DispImageNum));
+	wxString image_file = cfg.ReadStringTrim(ODFSetting, group, wxT("Image"), false, wxString::Format(wxT(GOBitmapPrefix "label%02d"), DispImageNum));
 	wxString image_mask_file = cfg.ReadStringTrim(ODFSetting, group, wxT("Mask"), false, wxEmptyString);
 
 	m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);

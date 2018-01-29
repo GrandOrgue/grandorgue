@@ -99,34 +99,34 @@
 #define ENCLOSURE(A) ENC(A, 00) ENC(A, 01) ENC(A, 02) ENC(A, 03) ENC(A, 04) ENC(A, 05) ENC(A, 06) ENC(A, 07) \
 	ENC(A, 08) ENC(A, 09) ENC(A, 10) ENC(A, 11) ENC(A, 12) ENC(A, 13) ENC(A, 14) ENC(A, 15)
 #define WOOD(A, B) \
-	DECLARE_IMAGE(Wood ## A, "GO:wood" #A); \
-	DECLARE_IMAGE_ROT(Wood ## A, "GO:wood" #B);
+	DECLARE_IMAGE(Wood ## A, "wood" #A); \
+	DECLARE_IMAGE_ROT(Wood ## A, "wood" #B);
 #define STOP(A) \
-	DECLARE_IMAGE(drawstop ## A ## off, "GO:drawstop" #A "_off"); \
-	DECLARE_IMAGE(drawstop ## A ## on, "GO:drawstop" #A "_on");
+	DECLARE_IMAGE(drawstop ## A ## off, "drawstop" #A "_off"); \
+	DECLARE_IMAGE(drawstop ## A ## on, "drawstop" #A "_on");
 #define PISTON(A) \
-	DECLARE_IMAGE(piston ## A ## off, "GO:piston" #A "_off"); \
-	DECLARE_IMAGE(piston ## A ## on, "GO:piston" #A "_on");
+	DECLARE_IMAGE(piston ## A ## off, "piston" #A "_off"); \
+	DECLARE_IMAGE(piston ## A ## on, "piston" #A "_on");
 #define LABEL(A) \
-	DECLARE_IMAGE(label ## A, "GO:label" #A);
+	DECLARE_IMAGE(label ## A, "label" #A);
 #define ENC(A, B) \
-	DECLARE_IMAGE(Enclosure ## A ## B, "GO:enclosure" #A #B);
+	DECLARE_IMAGE(Enclosure ## A ## B, "enclosure" #A #B);
 #define PEDAL(A, B, C) \
-	DECLARE_IMAGE(PedalNatural ## B ## Up, "GO:Pedal" #A "Off_Natural"); \
-	DECLARE_IMAGE(PedalNatural ## B ## Down, "GO:Pedal" #A "On_Natural"); \
-	DECLARE_IMAGE(PedalSharp ## C ## Up, "GO:Pedal" #A "Off_Sharp"); \
-	DECLARE_IMAGE(PedalSharp ## C ## Down, "GO:Pedal" #A "On_Sharp");
+	DECLARE_IMAGE(PedalNatural ## B ## Up, "Pedal" #A "Off_Natural"); \
+	DECLARE_IMAGE(PedalNatural ## B ## Down, "Pedal" #A "On_Natural"); \
+	DECLARE_IMAGE(PedalSharp ## C ## Up, "Pedal" #A "Off_Sharp"); \
+	DECLARE_IMAGE(PedalSharp ## C ## Down, "Pedal" #A "On_Sharp");
 #define MANUAL(A, B, C) \
-	DECLARE_IMAGE(ManualC ## B ## Up, "GO:Manual" #A "Off_C"); \
-	DECLARE_IMAGE(ManualC ## B ## Down, "GO:Manual" #A "On_C"); \
-	DECLARE_IMAGE(ManualD ## B ## Up, "GO:Manual" #A "Off_D"); \
-	DECLARE_IMAGE(ManualD ## B ## Down, "GO:Manual" #A "On_D"); \
-	DECLARE_IMAGE(ManualE ## B ## Up, "GO:Manual" #A "Off_E"); \
-	DECLARE_IMAGE(ManualE ## B ## Down, "GO:Manual" #A "On_E"); \
-	DECLARE_IMAGE(ManualNatural ## B ## Up, "GO:Manual" #A "Off_Natural"); \
-	DECLARE_IMAGE(ManualNatural ## B ## Down, "GO:Manual" #A "On_Natural"); \
-	DECLARE_IMAGE(ManualSharp ## C ## Up, "GO:Manual" #A "Off_Sharp"); \
-	DECLARE_IMAGE(ManualSharp ## C ## Down, "GO:Manual" #A "On_Sharp");
+	DECLARE_IMAGE(ManualC ## B ## Up, "Manual" #A "Off_C"); \
+	DECLARE_IMAGE(ManualC ## B ## Down, "Manual" #A "On_C"); \
+	DECLARE_IMAGE(ManualD ## B ## Up, "Manual" #A "Off_D"); \
+	DECLARE_IMAGE(ManualD ## B ## Down, "Manual" #A "On_D"); \
+	DECLARE_IMAGE(ManualE ## B ## Up, "Manual" #A "Off_E"); \
+	DECLARE_IMAGE(ManualE ## B ## Down, "Manual" #A "On_E"); \
+	DECLARE_IMAGE(ManualNatural ## B ## Up, "Manual" #A "Off_Natural"); \
+	DECLARE_IMAGE(ManualNatural ## B ## Down, "Manual" #A "On_Natural"); \
+	DECLARE_IMAGE(ManualSharp ## C ## Up, "Manual" #A "Off_Sharp"); \
+	DECLARE_IMAGE(ManualSharp ## C ## Down, "Manual" #A "On_Sharp");
 
 #define DECLARE_IMAGE(A, B) wxImage GetImage_ ## A ();
 #define DECLARE_IMAGE_ROT(A, B)
@@ -136,10 +136,12 @@ BITMAP_LIST
 #undef DECLARE_IMAGE
 #undef DECLARE_IMAGE_ROT
 
-#define DECLARE_IMAGE(A, B) RegisterBitmap(new wxImage(GetImage_ ## A()), wxT(B));
+#define GOBitmapPrefix "../GO:"
+
+#define DECLARE_IMAGE(A, B) RegisterBitmap(new wxImage(GetImage_ ## A()), wxT(GOBitmapPrefix B));
 #define DECLARE_IMAGE_ROT(A, B) \
 	static wxImage A ## _r(GetImage_ ## A().Rotate90()); \
-	RegisterBitmap(new wxImage(A ## _r), wxT(B)); 
+	RegisterBitmap(new wxImage(A ## _r), wxT(GOBitmapPrefix B)); 
 
 GOrgueBitmapCache::GOrgueBitmapCache(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
