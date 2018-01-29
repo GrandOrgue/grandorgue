@@ -119,7 +119,7 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 	}
 	catch(wxString error)
 	{
-		wxLogError(_("Load error: %s"), error.c_str());
+		wxLogError(_("Reverb load error: %s"), error.c_str());
 		m_engine.clear();
 	}
 	if (data)
