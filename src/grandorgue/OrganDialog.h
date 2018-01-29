@@ -147,7 +147,7 @@ protected:
 	};
 
 public:
-	OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile* organfile);
+	OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueFile* organfile);
 	~OrganDialog();
 
 	bool Destroy();

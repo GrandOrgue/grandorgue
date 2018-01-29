@@ -19,46 +19,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MIDILIST_H
-#define MIDILIST_H
-
 #include "GOrgueView.h"
-#include <wx/dialog.h>
-#include <vector>
 
-class GrandOrgueFile;
-class wxButton;
-class wxListEvent;
-class wxListView;
+#include "GOrgueDocumentBase.h"
 
-class MIDIList : public wxDialog, public GOrgueView
+GOrgueView::GOrgueView(GOrgueDocumentBase* doc, wxWindow* wnd) :
+	m_doc(doc),
+	m_wnd(wnd)
 {
-private:
-	wxListView* m_Objects;
-	wxButton* m_Edit;
-	wxButton* m_Status;
-	std::vector<wxButton*> m_Buttons;
+}
 
-	enum {
-		ID_LIST = 200,
-		ID_EDIT,
-		ID_STATUS,
-		ID_BUTTON,
-		ID_BUTTON_LAST = ID_BUTTON + 2,
-	};
+GOrgueView::~GOrgueView()
+{
+	if (m_doc)
+		m_doc->unregisterWindow(this);
+	m_doc = NULL;
+}
 
-	void OnObjectClick(wxListEvent& event);
-	void OnObjectDoubleClick(wxListEvent& event);
-	void OnEdit(wxCommandEvent& event);
-	void OnOK(wxCommandEvent& event);
-	void OnStatus(wxCommandEvent& event);
-	void OnButton(wxCommandEvent& event);
+void GOrgueView::RemoveView()
+{
+	m_doc = NULL;
+	m_wnd->Hide();
+	m_wnd->Destroy();
+}
 
-public:
-	MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueFile* organfile);
-	~MIDIList();
+void GOrgueView::ShowView()
+{
+	m_wnd->Show();
+	m_wnd->Raise();
+}
 
-	DECLARE_EVENT_TABLE()
-};
-
-#endif
+void GOrgueView::SyncState()
+{
+}

@@ -82,7 +82,7 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_BUTTON(ID_EVENT_COLLAPSE, OrganDialog::OnCollapse)
 END_EVENT_TABLE()
 
-OrganDialog::OrganDialog (GOrgueDocument* doc, wxWindow* parent, GrandOrgueFile* organfile) :
+OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueFile* organfile) :
 	wxDialog(parent, wxID_ANY, _("Organ settings"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE),
 	GOrgueView(doc, this),
 	m_organfile(organfile),

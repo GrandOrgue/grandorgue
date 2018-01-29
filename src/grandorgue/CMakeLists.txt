@@ -156,7 +156,6 @@ OrganDialog.cpp
 OrganSelectDialog.cpp
 GOrgueDocument.cpp
 GOrguePanelView.cpp
-GOrgueView.cpp
 SettingsArchives.cpp
 SettingsAudioGroup.cpp
 SettingsAudioOutput.cpp

@@ -19,33 +19,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueView.h"
+#ifndef GORGUEDOCUMENTBASE_H
+#define GORGUEDOCUMENTBASE_H
 
-#include "GOrgueDocument.h"
+#include <vector>
 
-GOrgueView::GOrgueView(GOrgueDocument* doc, wxWindow* wnd) :
-	m_doc(doc),
-	m_wnd(wnd)
+class GOrgueView;
+
+class GOrgueDocumentBase
 {
-}
+public:
+	typedef enum { ORGAN_DIALOG, MIDI_EVENT, MIDI_LIST, PANEL } WindowType;
+private:
+	typedef struct {
+		WindowType type;
+		void* data;
+		GOrgueView* window;
+	} WindowInfo;
 
-GOrgueView::~GOrgueView()
-{
-	if (m_doc)
-		m_doc->unregisterWindow(this);
-	m_doc = NULL;
-}
+	std::vector<WindowInfo> m_Windows;
 
-void GOrgueView::RemoveView()
-{
-	m_doc = NULL;
-	m_wnd->Hide();
-	m_wnd->Destroy();
-}
+protected:
+	void SyncState();
+	void CloseWindows();
 
-void GOrgueView::ShowView()
-{
-	m_wnd->Show();
-	m_wnd->Raise();
-}
+public:
+	GOrgueDocumentBase();
+	~GOrgueDocumentBase();
 
+	bool WindowExists(WindowType type, void* data);
+	bool showWindow(WindowType type, void* data);
+	void registerWindow(WindowType type, void* data, GOrgueView *window);
+	void unregisterWindow(GOrgueView* window);
+};
+
+#endif

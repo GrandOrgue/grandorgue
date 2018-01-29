@@ -22,11 +22,11 @@
 #ifndef GORGUEDOCUMENT_H
 #define GORGUEDOCUMENT_H
 
+#include "GOrgueDocumentBase.h"
 #include "GOrgueMidiCallback.h"
 #include "GOrgueMidiListener.h"
 #include "mutex.h"
 #include <wx/string.h>
-#include <vector>
 
 class GOrgueKeyReceiver;
 class GOrgueMidiEvent;
@@ -35,26 +35,16 @@ class GOrgueMidiSender;
 class GOrgueOrgan;
 class GOrgueProgressDialog;
 class GOrgueSound;
-class GOrgueView;
 class GrandOrgueFile;
 
-class GOrgueDocument : protected GOrgueMidiCallback
+class GOrgueDocument : public GOrgueDocumentBase, protected GOrgueMidiCallback
 {
-public:
-	typedef enum { ORGAN_DIALOG, MIDI_EVENT, MIDI_LIST, PANEL } WindowType;
 private:
-	typedef struct {
-		WindowType type;
-		void* data;
-		GOrgueView* window;
-	} WindowInfo;
-
 	GOMutex m_lock;
 	bool m_OrganFileReady;
 	GrandOrgueFile* m_organfile;
 	GOrgueSound& m_sound;
 	GOrgueMidiListener m_listener;
-	std::vector<WindowInfo> m_Windows;
 	bool m_modified;
 
 	void OnMidiEvent(const GOrgueMidiEvent& event);
@@ -81,11 +71,6 @@ public:
 	bool ImportCombination(const wxString& cmb);
 	bool Revert(GOrgueProgressDialog* dlg);
 	bool UpdateCache(GOrgueProgressDialog* dlg, bool compress);
-
-	bool WindowExists(WindowType type, void* data);
-	bool showWindow(WindowType type, void* data);
-	void registerWindow(WindowType type, void* data, GOrgueView *window);
-	void unregisterWindow(GOrgueView* window);
 
 	GrandOrgueFile* GetOrganFile();
 };
