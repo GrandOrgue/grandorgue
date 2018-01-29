@@ -109,7 +109,7 @@ void GOrgueSplash::DrawText(wxBitmap& bitmap)
 	font.SetPointSize(10);
 	font.SetWeight(wxFONTWEIGHT_NORMAL);
 	dc.SetFont(font);
-	dc.DrawLabel(_("licensed under the GNU GPLv2 (or later)"), wxRect(60, 42, 370, 20), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+	dc.DrawLabel(_("licensed under the GNU GPLv2"), wxRect(60, 42, 370, 20), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
 
 	font = *wxNORMAL_FONT;
 	font.SetWeight(wxFONTWEIGHT_NORMAL);

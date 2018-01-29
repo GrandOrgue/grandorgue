@@ -19,48 +19,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueMidiListener.h"
+#ifndef GORGUEMIDICALLBACK_H
+#define GORGUEMIDICALLBACK_H
 
-#include "GOrgueMidi.h"
-#include "GOrgueMidiCallback.h"
-#include "GOrgueMidiEvent.h"
+class GOrgueMidiEvent;
 
-GOrgueMidiListener::GOrgueMidiListener() :
-	m_Callback(NULL),
-	m_midi(NULL)
+class GOrgueMidiCallback
 {
-}
-
-GOrgueMidiListener::~GOrgueMidiListener()
-{
-	Unregister();
-}
-
-void GOrgueMidiListener::SetCallback(GOrgueMidiCallback* callback)
-{
-	m_Callback = callback;
-}
-
-void GOrgueMidiListener::Register(GOrgueMidi* midi)
-{
-	Unregister();
-	if (midi)
+public:
+	virtual ~GOrgueMidiCallback()
 	{
-		m_midi = midi;
-		m_midi->Register(this);
 	}
-}
 
-void GOrgueMidiListener::Unregister()
-{
-	if (m_midi)
-		m_midi->Unregister(this);
-	m_midi = NULL;
-}
+	
+	virtual void OnMidiEvent(const GOrgueMidiEvent& event) = 0;
+};
 
-void GOrgueMidiListener::Send(const GOrgueMidiEvent& event)
-{
-	if (m_Callback)
-		m_Callback->OnMidiEvent(event);
-}
-
+#endif

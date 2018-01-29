@@ -22,6 +22,7 @@
 #ifndef MIDIEVENTRECVDIALOG_H_
 #define MIDIEVENTRECVDIALOG_H_
 
+#include "GOrgueMidiCallback.h"
 #include "GOrgueMidiListener.h"
 #include "GOrgueMidiReceiver.h"
 #include <wx/panel.h>

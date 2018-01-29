@@ -23,18 +23,8 @@
 #define GORGUEMIDILISTENER_H
 
 class GOrgueMidi;
+class GOrgueMidiCallback;
 class GOrgueMidiEvent;
-
-class GOrgueMidiCallback
-{
-public:
-	virtual ~GOrgueMidiCallback()
-	{
-	}
-
-	
-	virtual void OnMidiEvent(const GOrgueMidiEvent& event) = 0;
-};
 
 class GOrgueMidiListener
 {
