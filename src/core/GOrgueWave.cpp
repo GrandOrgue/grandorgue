@@ -68,7 +68,7 @@ GOrgueWave::~GOrgueWave()
 	Close();
 }
 
-void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
+void GOrgueWave::LoadFormatChunk(const char* ptr, unsigned long length)
 {
 	/* FIXME: This could be done much more elequently */
 	/* Ensure format chunk size is 16 (basic wave
@@ -96,7 +96,7 @@ void GOrgueWave::LoadFormatChunk(char* ptr, unsigned long length)
 		throw (wxString)_("< Unsupport PCM bit size");
 }
 
-void GOrgueWave::LoadCueChunk(char* ptr, unsigned long length)
+void GOrgueWave::LoadCueChunk(const char* ptr, unsigned long length)
 {
 	if (length < sizeof(GO_WAVECUECHUNK))
 		throw (wxString)_("< Invalid CUE chunk in");
@@ -119,7 +119,7 @@ void GOrgueWave::LoadCueChunk(char* ptr, unsigned long length)
 	}
 }
 
-void GOrgueWave::LoadSamplerChunk(char* ptr, unsigned long length)
+void GOrgueWave::LoadSamplerChunk(const char* ptr, unsigned long length)
 {
 	if (length < sizeof(GO_WAVESAMPLERCHUNK))
 		throw (wxString)_("< Invalid SMPL chunk in");
@@ -393,7 +393,7 @@ void GOrgueWave::ReadSamples
 	if (select_channel != 0)
 		merge_count = m_Channels;
 
-	char* input  = m_SampleData;
+	const char* input  = m_SampleData;
 	char* output = (char*)dest_buffer;
 
 	unsigned len = m_Channels * GetLength() / merge_count;

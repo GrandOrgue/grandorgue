@@ -39,7 +39,7 @@ class GOrgueWave
 
 private:
 	std::unique_ptr<char[]> m_Content;
-	char* m_SampleData;
+	const char* m_SampleData;
 	unsigned m_SampleDataSize;
 	unsigned m_BytesPerSample;
 	unsigned m_SampleRate;
@@ -52,9 +52,9 @@ private:
 	std::vector<GO_WAVE_LOOP> m_Loops;
 
 	void SetInvalid();
-	void LoadFormatChunk(char* ptr, unsigned long length);
-	void LoadCueChunk(char* ptr, unsigned long length);
-	void LoadSamplerChunk(char* ptr, unsigned long length);
+	void LoadFormatChunk(const char* ptr, unsigned long length);
+	void LoadCueChunk(const char* ptr, unsigned long length);
+	void LoadSamplerChunk(const char* ptr, unsigned long length);
 
 public:
 
