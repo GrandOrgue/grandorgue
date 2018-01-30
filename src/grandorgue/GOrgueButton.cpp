@@ -132,11 +132,13 @@ void GOrgueButton::Set(bool on)
 void GOrgueButton::AbortPlayback()
 {
 	m_sender.SetDisplay(false);
+	m_sender.SetName(wxEmptyString);
 }
 
 void GOrgueButton::PreparePlayback()
 {
 	m_midi.PreparePlayback();
+	m_sender.SetName(m_Name);
 }
 
 void GOrgueButton::StartPlayback()

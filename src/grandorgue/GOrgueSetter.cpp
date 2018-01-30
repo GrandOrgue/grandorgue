@@ -390,11 +390,11 @@ void GOrgueSetter::Load(GOrgueConfigReader& cfg)
 
 	m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"), 0);
 
-	m_PosDisplay.Init(cfg, wxT("SetterCurrentPosition"));
-	m_BankDisplay.Init(cfg, wxT("SetterGeneralBank"));
-	m_CrescendoDisplay.Init(cfg, wxT("SetterCrescendoPosition"));
-	m_TransposeDisplay.Init(cfg, wxT("SetterTranspose"));
-	m_NameDisplay.Init(cfg, wxT("SetterName"));
+	m_PosDisplay.Init(cfg, wxT("SetterCurrentPosition"), _("sequencer position"));
+	m_BankDisplay.Init(cfg, wxT("SetterGeneralBank"), _("general bank"));
+	m_CrescendoDisplay.Init(cfg, wxT("SetterCrescendoPosition"), _("crescendo position"));
+	m_TransposeDisplay.Init(cfg, wxT("SetterTranspose"), _("transpose"));
+	m_NameDisplay.Init(cfg, wxT("SetterName"), _("organ name"));
 
 	for(unsigned i = 0; i < 10; i++)
 	{
@@ -540,7 +540,7 @@ void GOrgueSetter::ButtonChanged(int id)
 		if (id == ID_SETTER_GENERAL_NEXT && m_bank < GENERAL_BANKS - 1)
 			m_bank++;
 
-		m_BankDisplay.SetName(wxString::Format(wxT("%c"), m_bank + wxT('A')));
+		m_BankDisplay.SetContent(wxString::Format(wxT("%c"), m_bank + wxT('A')));
 		break;
 
 	case ID_SETTER_REGULAR:
@@ -627,19 +627,19 @@ void GOrgueSetter::PreparePlayback()
 {
 	wxString buffer;
 	buffer.Printf(wxT("%03d"), m_pos);
-	m_PosDisplay.SetName(buffer);
+	m_PosDisplay.SetContent(buffer);
 
-	m_NameDisplay.SetName(m_organfile->GetChurchName());
+	m_NameDisplay.SetContent(m_organfile->GetChurchName());
 
 	wxCommandEvent event(wxEVT_SETVALUE, ID_METER_FRAME_SPIN);
 	event.SetInt(m_pos);
 	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 
 	buffer.Printf(wxT("%d"), m_crescendopos + 1);
-	m_CrescendoDisplay.SetName(buffer);
+	m_CrescendoDisplay.SetContent(buffer);
 
 	buffer.Printf(wxT("%c"), m_bank + wxT('A'));
-	m_BankDisplay.SetName(buffer);
+	m_BankDisplay.SetContent(buffer);
 
 	UpdateTranspose();
 }
@@ -754,7 +754,7 @@ void GOrgueSetter::SetPosition(int pos, bool push)
 	}
 
 	buffer.Printf(wxT("%03d"), m_pos);
-	m_PosDisplay.SetName(buffer);
+	m_PosDisplay.SetContent(buffer);
 	if (pos != old_pos)
 	{
 		wxCommandEvent event(wxEVT_SETVALUE, ID_METER_FRAME_SPIN);
@@ -788,7 +788,7 @@ void GOrgueSetter::Crescendo(int newpos, bool force)
 
 	wxString buffer;
 	buffer.Printf(wxT("%d"), m_crescendopos + 1);
-	m_CrescendoDisplay.SetName(buffer);
+	m_CrescendoDisplay.SetContent(buffer);
 }
 
 void GOrgueSetter::ControlChanged(void* control)
@@ -799,7 +799,7 @@ void GOrgueSetter::ControlChanged(void* control)
 
 void GOrgueSetter::UpdateTranspose()
 {
-	m_TransposeDisplay.SetName(wxString::Format(wxT("%d"), m_organfile->GetSettings().Transpose()));
+	m_TransposeDisplay.SetContent(wxString::Format(wxT("%d"), m_organfile->GetSettings().Transpose()));
 }
 
 void GOrgueSetter::SetTranspose(int value)

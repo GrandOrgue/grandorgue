@@ -52,7 +52,8 @@ public:
 	void SetKey(unsigned key, unsigned velocity);
 	void ResetKey();
 	void SetValue(unsigned value);
-	void SetLabel(wxString text);
+	void SetLabel(const wxString& text);
+	void SetName(const wxString& text);
 
 	bool HasChannel(midi_send_message_type type);
 	bool HasKey(midi_send_message_type type);

@@ -414,6 +414,7 @@ void GOrgueManual::Save(GOrgueConfigWriter& cfg)
 void GOrgueManual::AbortPlayback()
 {
 	AllNotesOff();
+	m_sender.SetName(wxEmptyString);
 }
 
 void GOrgueManual::PreparePlayback()
@@ -432,6 +433,7 @@ void GOrgueManual::PreparePlayback()
 	for(unsigned i = 0; i < m_Velocities.size(); i++)
 		for(unsigned j = 0; j < m_Velocities[i].size(); j++)
 			m_Velocities[i][j] = 0;
+	m_sender.SetName(m_name);
 }
 
 void GOrgueManual::StartPlayback()

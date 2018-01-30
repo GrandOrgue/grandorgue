@@ -187,7 +187,7 @@ void GOGUILabel::PrepareDraw(double scale, GOrgueBitmap* background)
 void GOGUILabel::Draw(GOrgueDC& dc)
 {
 	if (m_Label)
-		m_Text = m_Label->GetName();
+		m_Text = m_Label->GetContent();
 
 	dc.DrawBitmap(m_Bitmap, m_BoundingRect);
 	if (m_TextWidth)

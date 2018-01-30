@@ -146,9 +146,11 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 	}
 	if (m_midi.GetType() == MIDI_SEND_LABEL)
 	{
-		m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD"), (void*)MIDI_S_HW_LCD);
-		m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String"), (void*)MIDI_S_HW_STRING);
+		m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD Value"), (void*)MIDI_S_HW_LCD);
+		m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String Value"), (void*)MIDI_S_HW_STRING);
 	}
+	m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD Name"), (void*)MIDI_S_HW_NAME_LCD);
+	m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String Name"), (void*)MIDI_S_HW_NAME_STRING);
 
 	m_current = 0;
 	if (!m_midi.GetEventCount())
@@ -211,7 +213,7 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 	}
 	else
 		m_HighValue->Disable();
-	if (type == MIDI_S_HW_LCD)
+	if (type == MIDI_S_HW_LCD || type == MIDI_S_HW_NAME_LCD)
 		m_LowValueLabel->SetLabel(_("&Color:"));
 	else if (type == MIDI_S_PGM_RANGE)
 		m_LowValueLabel->SetLabel(_("&Lower PGM number:"));
@@ -252,6 +254,8 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 		m_KeyLabel->SetLabel(_("&Parameter-No:"));
 		break;
 
+	case MIDI_S_HW_NAME_STRING:
+	case MIDI_S_HW_NAME_LCD:
 	case MIDI_S_HW_STRING:
 	case MIDI_S_HW_LCD:
 		m_KeyLabel->SetLabel(_("&ID:"));

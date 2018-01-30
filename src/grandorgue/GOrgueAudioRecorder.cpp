@@ -76,6 +76,7 @@ void GOrgueAudioRecorder::Load(GOrgueConfigReader& cfg)
 	m_button[ID_AUDIO_RECORDER_RECORD]->Init(cfg, wxT("AudioRecorderRecord"), _("REC"));
 	m_button[ID_AUDIO_RECORDER_STOP]->Init(cfg, wxT("AudioRecorderStop"), _("STOP"));
 	m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Init(cfg, wxT("AudioRecorderRecordRename"), _("REC File"));
+	m_RecordingTime.Init(cfg, wxT("AudioRecordTime"), _("Audio recording time"));
 }
 
 void GOrgueAudioRecorder::ButtonChanged(int id)
@@ -119,9 +120,9 @@ bool GOrgueAudioRecorder::IsRecording()
 void GOrgueAudioRecorder::UpdateDisplay()
 {
 	if (!IsRecording())
-		m_RecordingTime.SetName(_("-:--:--"));
+		m_RecordingTime.SetContent(_("-:--:--"));
 	else
-		m_RecordingTime.SetName(wxString::Format(_("%d:%02d:%02d"), m_RecordSeconds / 3600, (m_RecordSeconds / 60) % 60, m_RecordSeconds % 60));
+		m_RecordingTime.SetContent(wxString::Format(_("%d:%02d:%02d"), m_RecordSeconds / 3600, (m_RecordSeconds / 60) % 60, m_RecordSeconds % 60));
 }
 
 void GOrgueAudioRecorder::StopRecording()

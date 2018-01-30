@@ -74,6 +74,7 @@ void GOrgueMidiPlayer::Load(GOrgueConfigReader& cfg)
 	m_button[ID_MIDI_PLAYER_PLAY]->Init(cfg, wxT("MidiPlayerPlay"), _("PLAY"));
 	m_button[ID_MIDI_PLAYER_STOP]->Init(cfg, wxT("MidiPlayerStop"), _("STOP"));
 	m_button[ID_MIDI_PLAYER_PAUSE]->Init(cfg, wxT("MidiPlayerPause"), _("PAUSE"));
+	m_PlayingTime.Init(cfg, wxT("MidiPlayerTime"), _("MIDI playing time"));
 }
 
 void GOrgueMidiPlayer::ButtonChanged(int id)
@@ -197,11 +198,11 @@ bool GOrgueMidiPlayer::IsPlaying()
 void GOrgueMidiPlayer::UpdateDisplay()
 {
 	if (!IsLoaded())
-		m_PlayingTime.SetName(_("<no file loaded>"));
+		m_PlayingTime.SetContent(_("<no file loaded>"));
 	else if (!IsPlaying())
-		m_PlayingTime.SetName(_("-:--:--"));
+		m_PlayingTime.SetContent(_("-:--:--"));
 	else
-		m_PlayingTime.SetName(wxString::Format(_("%d:%02d:%02d"), m_PlayingSeconds / 3600, (m_PlayingSeconds / 60) % 60, m_PlayingSeconds % 60));
+		m_PlayingTime.SetContent(wxString::Format(_("%d:%02d:%02d"), m_PlayingSeconds / 3600, (m_PlayingSeconds / 60) % 60, m_PlayingSeconds % 60));
 }
 
 void GOrgueMidiPlayer::HandleTimer()
