@@ -27,7 +27,8 @@ GOrgueSetting::GOrgueSetting(GOrgueSettingStore* store, wxString group, wxString
 	m_Group(group),
 	m_Name(name)
 {
-	store->AddSetting(this);
+	if (store)
+		store->AddSetting(this);
 }
 
 GOrgueSetting::~GOrgueSetting()
