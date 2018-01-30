@@ -29,6 +29,7 @@ GOrgueArchive.cpp
 GOrgueArchiveFile.cpp
 GOrgueArchiveIndex.cpp
 GOrgueArchiveEntryFile.cpp
+GOrgueArchiveManager.cpp
 GOrgueArchiveReader.cpp
 GOrgueBitmap.cpp
 GOrgueCompress.cpp
@@ -55,9 +56,9 @@ GOrgueMidiFileReader.cpp
 GOrgueMidiMap.cpp
 GOrgueMidiMerger.cpp
 GOrgueMidiPlayerContent.cpp
-GOrgueMidiSenderData.cpp
 GOrgueMidiReceiverBase.cpp
 GOrgueMidiReceiverData.cpp
+GOrgueMidiSenderData.cpp
 GOrgueMidiWXEvent.cpp
 GOrgueOrgan.cpp
 GOrgueOrganList.cpp
