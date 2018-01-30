@@ -50,6 +50,7 @@ GOSoundEngine::GOSoundEngine() :
 	m_AudioGroupCount(1),
 	m_UsedPolyphony(0),
 	m_WorkerSlots(0),
+	m_MeterInfo(1),
 	m_Tremulants(),
 	m_Windchests(),
 	m_AudioGroups(),
@@ -347,6 +348,7 @@ void GOSoundEngine::SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio
 		}
 		m_AudioOutputs.push_back(new GOSoundOutputWorkItem(2, scale_factors, m_SamplesPerBuffer));
 	}
+	unsigned channels = 0;
 	for(unsigned i = 0; i < audio_outputs.size(); i++)
 	{
 		std::vector<float> scale_factors;
@@ -365,13 +367,14 @@ void GOSoundEngine::SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio
 				scale_factors[j * m_AudioGroupCount * 2 + k] = factor;
 			}
 		m_AudioOutputs.push_back(new GOSoundOutputWorkItem(audio_outputs[i].channels, scale_factors, m_SamplesPerBuffer));
+		channels += audio_outputs[i].channels;
 	}
 	std::vector<GOSoundBufferItem*> outputs;
 	for (unsigned i = 0; i < m_AudioGroups.size(); i++)
 		outputs.push_back(m_AudioGroups[i]);
 	for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
 		m_AudioOutputs[i]->SetOutputs(outputs);
-
+	m_MeterInfo.resize(channels + 1);
 }
 
 void GOSoundEngine::SetAudioRecorder(GOSoundRecorder* recorder, bool downmix)
@@ -659,28 +662,21 @@ void GOSoundEngine::UpdateVelocity(GO_SAMPLER* handle, unsigned velocity)
 	handle->fader.SetVelocityVolume(handle->pipe->GetVelocityVolume(handle->velocity));
 }
 
-void GOSoundEngine::GetMeterInfo(METER_INFO *meter_info)
+const std::vector<double>& GOSoundEngine::GetMeterInfo()
 {
-	meter_info->current_polyphony = m_UsedPolyphony;
+	m_MeterInfo[0] = m_UsedPolyphony / (double)GetHardPolyphony();
 	m_UsedPolyphony = 0;
-	meter_info->meter_left = 0;
-	meter_info->meter_right = 0;
-	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
+
+	for(unsigned i = 1; i < m_MeterInfo.size(); i++)
+		m_MeterInfo[i] = 0;
+	for(unsigned i = 0, nr = 1; i < m_AudioOutputs.size(); i++)
 	{
 		if (!m_AudioOutputs[i])
 			continue;
 		const std::vector<float>& info = m_AudioOutputs[i]->GetMeterInfo();
 		for(unsigned j = 0; j < info.size(); j++)
-			if (j % 2)
-			{
-				if (info[j] > meter_info->meter_right)
-					meter_info->meter_right = info[j];
-			}
-			else
-			{
-				if (info[j] > meter_info->meter_left)
-					meter_info->meter_left = info[j];
-			}
+			m_MeterInfo[nr++] = info[j];
 		m_AudioOutputs[i]->ResetMeterInfo();
 	}
+	return m_MeterInfo;
 }
