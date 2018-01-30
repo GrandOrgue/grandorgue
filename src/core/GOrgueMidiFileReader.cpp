@@ -21,7 +21,6 @@
 
 #include "GOrgueMidiFileReader.h"
 
-#include "GOrgueAlloc.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMidiFile.h"
 
@@ -32,7 +31,6 @@
 GOrgueMidiFileReader::GOrgueMidiFileReader(GOrgueMidiMap& map) :
 	m_Map(map),
 	m_Data(),
-	m_DataLen(0),
 	m_Tracks(0),
 	m_Speed(0),
 	m_Pos(0),
@@ -45,12 +43,12 @@ GOrgueMidiFileReader::GOrgueMidiFileReader(GOrgueMidiMap& map) :
 
 GOrgueMidiFileReader::~GOrgueMidiFileReader()
 {
-	m_Data = nullptr;
+	m_Data.free();
 }
 
 bool GOrgueMidiFileReader::Open(wxString filename)
 {
-	m_Data = nullptr;
+	m_Data.free();
 
 	wxFile file;
 	if (!file.Open(filename, wxFile::read))
@@ -58,22 +56,21 @@ bool GOrgueMidiFileReader::Open(wxString filename)
 		wxLogError(_("Failed to open %s"), filename.c_str());
 		return false;
 	}
-	m_DataLen = file.Length();
 	try
 	{
-		m_Data = GOrgueAllocArray<uint8_t>(m_DataLen);
+		m_Data.resize(file.Length());
 	}
 	catch (GOrgueOutOfMemory e)
 	{
 		wxLogError(_("Out of memory"));
 		return false;
 	}
-	if (file.Read(m_Data.get(), m_DataLen) != (ssize_t)m_DataLen)
+	if (file.Read(m_Data.get(), m_Data.GetCount()) != (ssize_t)m_Data.GetCount())
 	{
 		wxLogError(_("Failed to read content of %s"), filename.c_str());
 		return false;
 	}
-	if (m_DataLen < sizeof(MIDIHeaderChunk))
+	if (m_Data.GetCount() < sizeof(MIDIHeaderChunk))
 	{
 		wxLogError(_("MIDI header missing"));
 		return false;
@@ -136,9 +133,9 @@ bool GOrgueMidiFileReader::StartTrack()
 {
 	do
 	{
-		if (m_Pos >= m_DataLen)
+		if (m_Pos >= m_Data.GetCount())
 			return false;
-		if (m_Pos + sizeof(MIDIFileHeader) > m_DataLen)
+		if (m_Pos + sizeof(MIDIFileHeader) > m_Data.GetCount())
 		{
 			wxLogError(_("Incomplete chunk at offset %d"), m_Pos);
 			m_Pos += sizeof(MIDIFileHeader);
@@ -149,7 +146,7 @@ bool GOrgueMidiFileReader::StartTrack()
 		{
 			wxLogError(_("Not recognized MIDI chunk at offset %d"), m_Pos);
 			m_Pos += sizeof(MIDIFileHeader) + h->len;
-			if (m_Pos >= m_DataLen)
+			if (m_Pos >= m_Data.GetCount())
 			{
 				wxLogError(_("Incomplete chunk"));
 				return false;
@@ -158,7 +155,7 @@ bool GOrgueMidiFileReader::StartTrack()
 		else
 		{
 			m_TrackEnd = m_Pos + sizeof(MIDIFileHeader) + h->len;
-			if (m_Pos >= m_DataLen)
+			if (m_Pos >= m_Data.GetCount())
 			{
 				wxLogError(_("Incomplete chunk"));
 				return false;
@@ -206,7 +203,7 @@ bool GOrgueMidiFileReader::ReadEvent(GOrgueMidiEvent& e)
 	do
 	{
 		std::vector<unsigned char> msg;
-		if (m_Pos >= m_DataLen)
+		if (m_Pos >= m_Data.GetCount())
 			return false;
 		if (m_TrackEnd && m_Pos >= m_TrackEnd)
 		{
@@ -350,7 +347,7 @@ bool GOrgueMidiFileReader::Close()
 		wxLogError(_("Error decoding a track"));
 		return false;
 	}
-	if (m_Pos < m_DataLen)
+	if (m_Pos < m_Data.GetCount())
 	{
 		wxLogError(_("Garbage detected in the MIDI file"));
 		return false;
