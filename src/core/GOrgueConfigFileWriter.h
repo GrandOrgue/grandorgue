@@ -25,6 +25,9 @@
 #include <wx/string.h>
 #include <map>
 
+template<class T>
+class GOrgueBuffer;
+
 class GOrgueConfigFileWriter
 {
 private:
@@ -34,6 +37,7 @@ public:
 	GOrgueConfigFileWriter();
 	
 	void AddEntry(wxString group, wxString name, wxString value);
+	bool GetFileContent(GOrgueBuffer<uint8_t>& buffer);
 	bool Save(wxString filename);
 };
 

@@ -21,7 +21,10 @@
 
 #include "GOrgueConfigFileWriter.h"
 
+#include "GOrgueBuffer.h"
 #include <wx/file.h>
+#include <wx/intl.h>
+#include <wx/log.h>
 
 GOrgueConfigFileWriter::GOrgueConfigFileWriter() :
 	m_Entries()
@@ -35,34 +38,45 @@ void GOrgueConfigFileWriter::AddEntry(wxString group, wxString name, wxString va
 	g[name] = value;
 }
 
-bool GOrgueConfigFileWriter::Save(wxString filename)
+bool GOrgueConfigFileWriter::GetFileContent(GOrgueBuffer<uint8_t>& buf)
 {
-	wxFile out;
-	wxMBConv& conv = wxConvUTF8;
 	uint8_t bom[] = { 0xEF, 0xBB, 0xBF };
-
-	if (!out.Create(filename, true))
-		return false;
-
-	if (!out.Write(bom, sizeof(bom)))
-		return false;
+	wxString content = wxEmptyString;
 
 	for(std::map<wxString, std::map<wxString, wxString> >::const_iterator i = m_Entries.begin(); i != m_Entries.end(); i++)
 	{
 		const std::map<wxString, wxString>& g = i->second;
 		const wxString group = i->first;
+		wxString groupContent = wxT("[") + group + wxT("]\n");
 		
-		if (!out.Write(wxT("[") + group + wxT("]\n"), conv))
-			return false;
-
 		for(std::map<wxString, wxString>::const_iterator j = g.begin(); j != g.end(); j++)
 		{
 			const wxString& name = j->first;
 			const wxString& value = j->second;
-			if (!out.Write(name + wxT("=") + value + wxT("\n"), conv))
-				return false;
+			groupContent += name + wxT("=") + value + wxT("\n");
 		}
+		content += groupContent;
 	}
+	wxCharBuffer b = content.utf8_str();
+	buf.free();
+	buf.Append(bom, sizeof(bom));
+	buf.Append((const uint8_t*)b.data(), b.length());
+
+	return true;
+}
+
+bool GOrgueConfigFileWriter::Save(wxString filename)
+{
+	wxFile out;
+	GOrgueBuffer<uint8_t> buf;
+	if (!GetFileContent(buf))
+		return false;
+
+	if (!out.Create(filename, true))
+		return false;
+
+	if (!out.Write(buf.get(), buf.GetSize()))
+		return false;
 	out.Flush();
 	out.Close();
 	return true;
