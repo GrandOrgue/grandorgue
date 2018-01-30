@@ -304,7 +304,7 @@ wxString GrandOrgueFile::GenerateCacheFileName()
 
 bool GrandOrgueFile::LoadArchive(wxString ID, wxString& name, const wxString& parentID)
 {
-	GOrgueArchiveManager manager(m_Settings);
+	GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
 	GOrgueArchive* archive = manager.LoadArchive(ID);
 	if (archive)
 	{

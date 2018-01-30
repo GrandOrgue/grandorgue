@@ -318,7 +318,7 @@ void GOrgueFrame::Init(wxString filename)
 		wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_AUDIO_SETTINGS);
 		GetEventHandler()->AddPendingEvent(event);
 	}
-	GOrgueArchiveManager manager(m_Settings);
+	GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
 	manager.RegisterPackageDirectory(m_Settings.GetPackageDirectory());
 	manager.RegisterPackageDirectory(m_Settings.OrganPackagePath());
 	if (!filename.IsEmpty())
@@ -816,7 +816,7 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 	SettingsDialog dialog(this, m_Sound);
 	if (dialog.ShowModal() == wxID_OK)
 	{
-		GOrgueArchiveManager manager(m_Settings);
+		GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
 		manager.RegisterPackageDirectory(m_Settings.OrganPackagePath());
 
 		m_Sound.ResetSound(true);
@@ -1011,7 +1011,7 @@ void GOrgueFrame::OnRenameFile(wxRenameFileEvent& event)
 
 bool GOrgueFrame::InstallOrganPackage(wxString name)
 {
-	GOrgueArchiveManager manager(m_Settings);
+	GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
 	wxString result = manager.InstallPackage(name);
 	if (result != wxEmptyString)
 	{

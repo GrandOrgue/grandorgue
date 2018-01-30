@@ -28,15 +28,16 @@
 #include "GOrgueConfigReaderDB.h"
 #include "GOrgueFile.h"
 #include "GOrgueOrgan.h"
+#include "GOrgueOrganList.h"
 #include "GOrguePath.h"
-#include "GOrgueSettings.h"
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/log.h>
 
-GOrgueArchiveManager::GOrgueArchiveManager(GOrgueSettings& settings) :
-	m_Settings(settings)
+GOrgueArchiveManager::GOrgueArchiveManager(GOrgueOrganList& OrganList, const GOrgueSettingDirectory& CacheDir) :
+	m_OrganList(OrganList),
+	m_CacheDir(CacheDir)
 {
 }
 
@@ -46,7 +47,7 @@ GOrgueArchiveManager::~GOrgueArchiveManager()
 
 GOrgueArchive* GOrgueArchiveManager::OpenArchive(const wxString& path)
 {
-	GOrgueArchive* archive = new GOrgueArchive(m_Settings.UserCachePath);
+	GOrgueArchive* archive = new GOrgueArchive(m_CacheDir);
 	if (!archive->OpenArchive(path))
 	{
 		delete archive;
@@ -105,10 +106,10 @@ bool GOrgueArchiveManager::ReadIndex(GOrgueArchive* archive, bool InstallOrgans)
 		}
 
 		GOrgueArchiveFile a(id, archive->GetPath(), package_name, depend, depend_titles);
-		m_Settings.AddArchive(a);
+		m_OrganList.AddArchive(a);
 
 		for(unsigned i = 0; i < organs.size(); i++)
-			m_Settings.AddOrgan(organs[i]);
+			m_OrganList.AddOrgan(organs[i]);
 	}
 	catch(wxString error)
 	{
@@ -121,9 +122,9 @@ bool GOrgueArchiveManager::ReadIndex(GOrgueArchive* archive, bool InstallOrgans)
 
 GOrgueArchive* GOrgueArchiveManager::LoadArchive(const wxString& id)
 {
-	for(unsigned i = 0; i < m_Settings.GetArchiveList().size(); i++)
+	for(unsigned i = 0; i < m_OrganList.GetArchiveList().size(); i++)
 	{
-		const GOrgueArchiveFile* file = m_Settings.GetArchiveList()[i];
+		const GOrgueArchiveFile* file = m_OrganList.GetArchiveList()[i];
 		if (file->GetID() != id)
 			continue;
 		GOrgueArchive* archive = OpenArchive(file->GetPath());
@@ -162,21 +163,25 @@ wxString GOrgueArchiveManager::InstallPackage(const wxString& path)
 	return InstallPackage(path, wxEmptyString);
 }
 
-void GOrgueArchiveManager::RegisterPackage(const wxString& path)
+bool GOrgueArchiveManager::RegisterPackage(const wxString& path)
 {
 	wxString p = GONormalizePath(path);
-	const GOrgueArchiveFile* archive = m_Settings.GetArchiveByPath(p);
+	const GOrgueArchiveFile* archive = m_OrganList.GetArchiveByPath(p);
 	if (archive != NULL)
 	{
 		if (archive->GetFileID() == archive->GetCurrentFileID())
-			return;
+			return true;
 	}
 	wxString id;
 	if (archive)
 		id = archive->GetID();
 	wxString result = InstallPackage(p, id);
 	if (result != wxEmptyString)
+	{
 		wxLogError(_("%s"), result.c_str());
+		return false;
+	}
+	return true;
 }
 
 void GOrgueArchiveManager::RegisterPackageDirectory(const wxString& path)

@@ -23,26 +23,29 @@
 #define GORGUEARCHIVEMANAGER_H
 
 class GOrgueArchive;
+class GOrgueOrganList;
 class GOrgueSettings;
+class GOrgueSettingDirectory;
 
 #include <wx/string.h>
 
 class GOrgueArchiveManager
 {
 private:
-	GOrgueSettings& m_Settings;
+	GOrgueOrganList& m_OrganList;
+	const GOrgueSettingDirectory& m_CacheDir;
 
 	GOrgueArchive* OpenArchive(const wxString& path);
 	bool ReadIndex(GOrgueArchive* archive, bool InstallOrgans = false);
 	wxString InstallPackage(const wxString& path, const wxString& last_id);
 
 public:
-	GOrgueArchiveManager(GOrgueSettings& settings);
+	GOrgueArchiveManager(GOrgueOrganList& OrganList, const GOrgueSettingDirectory& CacheDir);
 	~GOrgueArchiveManager();
 
 	GOrgueArchive* LoadArchive(const wxString& id);
 	wxString InstallPackage(const wxString& path);
-	void RegisterPackage(const wxString& path);
+	bool RegisterPackage(const wxString& path);
 	void RegisterPackageDirectory(const wxString& path);
 };
 
