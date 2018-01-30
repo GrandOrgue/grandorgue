@@ -41,13 +41,6 @@ class GOrgueSettings;
 
 typedef struct
 {
-	unsigned current_polyphony;
-	double meter_left;
-	double meter_right;
-} METER_INFO;
-
-typedef struct
-{
 	unsigned channels;
 	std::vector< std::vector<float> > scale_factors;
 } GOAudioOutputConfiguration;
@@ -73,6 +66,7 @@ private:
 	unsigned                      m_AudioGroupCount;
 	unsigned m_UsedPolyphony;
 	unsigned                      m_WorkerSlots;
+	std::vector<double> m_MeterInfo;
 	ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
 	ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
 	ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
@@ -117,7 +111,7 @@ public:
 	void SetScaledReleases(bool enable);
 	void SetRandomizeSpeaking(bool enable);
 	void SetReleaseLength(unsigned reverb);
-	void GetMeterInfo(METER_INFO *meter_info);
+	const std::vector<double>& GetMeterInfo();
 	void SetAudioRecorder(GOSoundRecorder* recorder, bool downmix);
 
 	GO_SAMPLER* StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay, uint64_t last_stop);

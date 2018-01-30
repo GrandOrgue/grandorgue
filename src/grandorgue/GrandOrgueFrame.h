@@ -26,6 +26,7 @@
 #include "GOrgueMidiCallback.h"
 #include "GOrgueMidiListener.h"
 #include "mutex.h"
+#include <vector>
 #include <wx/dcmemory.h>
 #include <wx/frame.h>
 
@@ -52,7 +53,8 @@ private:
 	GOrgueDocument* m_doc;
 	wxHtmlHelpController* m_Help;
 	wxGaugeAudio *m_SamplerUsage;
-	wxGaugeAudio *m_VolumeLeft, *m_VolumeRight;
+	wxControl* m_VolumeControl;
+	std::vector<wxGaugeAudio*> m_VolumeGauge;
 	wxSpinCtrl* m_Transpose;
 	wxChoice* m_ReleaseLength;
 	wxSpinCtrl* m_Polyphony;
@@ -70,6 +72,7 @@ private:
 	void UpdateFavoritesMenu();
 	void UpdateRecentMenu();
 	void UpdateTemperamentMenu();
+	void UpdateVolumeControl(unsigned count);
 
 	GOrgueDocument* GetDocument();
 

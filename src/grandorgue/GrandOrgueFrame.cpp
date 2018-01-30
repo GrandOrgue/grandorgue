@@ -132,8 +132,8 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_doc(NULL),
 	m_Help(NULL),
 	m_SamplerUsage(NULL),
-	m_VolumeLeft(NULL),
-	m_VolumeRight(NULL),
+	m_VolumeControl(NULL),
+	m_VolumeGauge(),
 	m_Transpose(NULL),
 	m_ReleaseLength(NULL),
 	m_Polyphony(NULL),
@@ -221,22 +221,10 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	tb->AddTool(ID_VOLUME, _("&Volume"), GetImage_volume(), _("Volume"), wxITEM_NORMAL);
 	m_Volume = new wxSpinCtrl(tb, ID_METER_AUDIO_SPIN, wxEmptyString, wxDefaultPosition, wxSize(50, wxDefaultCoord), wxSP_ARROW_KEYS, -120, 20);
 	tb->AddControl(m_Volume);
-	
-	{
-		wxControl* control = new wxControl(tb, wxID_ANY);
-		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-		
-		m_VolumeLeft = new wxGaugeAudio(control, wxID_ANY, wxDefaultPosition);
-		sizer->Add(m_VolumeLeft, 0, wxFIXED_MINSIZE);
-		m_VolumeRight = new wxGaugeAudio(control, wxID_ANY, wxDefaultPosition);
-		sizer->Add(m_VolumeRight, 0, wxFIXED_MINSIZE);
-		
-		control->SetSizer(sizer);
-		sizer->Fit(control);
-		control->Layout();
-		
-		tb->AddControl(control);
-	}
+
+	m_VolumeControl = new wxControl(tb, wxID_ANY);
+	UpdateVolumeControl(2);
+	tb->AddControl(m_VolumeControl);
 	m_Volume->SetValue(m_Settings.Volume());
 	
 	tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
@@ -292,6 +280,30 @@ GOrgueFrame::~GOrgueFrame()
 	m_listener.SetCallback(NULL);
 	if (m_Help)
 		delete m_Help;
+}
+
+void GOrgueFrame::UpdateVolumeControl(unsigned count)
+{
+	m_VolumeGauge.clear();
+	m_VolumeControl->DestroyChildren();
+	wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer* vsizer = NULL;
+
+	for(unsigned i = 0; i < count; i++)
+	{
+		if ((i % 2) == 0)
+		{
+			vsizer = new wxBoxSizer(wxVERTICAL);
+			sizer->Add(vsizer);
+		}
+		wxGaugeAudio* gauge = new wxGaugeAudio(m_VolumeControl, wxID_ANY, wxDefaultPosition);
+		m_VolumeGauge.push_back(gauge);
+		vsizer->Add(gauge, 0, wxFIXED_MINSIZE);
+	}
+
+	m_VolumeControl->SetSizer(sizer);
+	sizer->Fit(m_VolumeControl);
+	GetToolBar()->Realize();
 }
 
 void GOrgueFrame::Init(wxString filename)
@@ -505,14 +517,16 @@ void GOrgueFrame::OnSize(wxSizeEvent& event)
 
 void GOrgueFrame::OnMeters(wxCommandEvent& event)
 {
-	int n = event.GetInt();
-	m_VolumeLeft->SetValue (n & 0xFF);
-	m_VolumeRight->SetValue((n >> 8) & 0xFF);
-	m_SamplerUsage->SetValue((n >> 16) & 0xFF);
-	if (((n >> 24) & 0xff) == 0xF0)
+	const std::vector<double> vals = m_Sound.GetEngine().GetMeterInfo();
+	if (vals.size() != m_VolumeGauge.size() + 1)
+		UpdateVolumeControl(vals.size() - 1);
+	m_SamplerUsage->SetValue(33 * vals[0]);
+	for(unsigned i = 1; i < vals.size(); i++)
+		m_VolumeGauge[i - 1]->SetValue(lrint(32.50000000000001 * vals[i]));
+	if (event.GetInt())
 	{
-		m_VolumeLeft->ResetClip();
-		m_VolumeRight->ResetClip();
+		for(unsigned i = 0; i < m_VolumeGauge.size(); i++)
+			m_VolumeGauge[i]->ResetClip();
 		m_SamplerUsage->ResetClip();
 	}
 }
@@ -846,8 +860,8 @@ void GOrgueFrame::OnSettingsVolume(wxCommandEvent& event)
 	long n = m_Volume->GetValue();
 
 	m_Sound.GetEngine().SetVolume(n);
-	m_VolumeLeft->ResetClip();
-	m_VolumeRight->ResetClip();
+	for(unsigned i = 0; i < m_VolumeGauge.size(); i++)
+		m_VolumeGauge[i]->ResetClip();
 }
 
 void GOrgueFrame::OnSettingsPolyphony(wxCommandEvent& event)
