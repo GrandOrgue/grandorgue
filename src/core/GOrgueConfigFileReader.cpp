@@ -21,7 +21,7 @@
 
 #include "GOrgueConfigFileReader.h"
 
-#include "GOrgueAlloc.h"
+#include "GOrgueBuffer.h"
 #include "GOrgueHash.h"
 #include "GOrgueStandardFile.h"
 #include <wx/file.h>
@@ -88,11 +88,10 @@ bool GOrgueConfigFileReader::Read(GOrgueFile* file)
 		wxLogError(_("Failed to open file '%s'"), file->GetName().c_str());
 		return false;
 	}
-	size_t length = file->GetSize();
-	std::unique_ptr<uint8_t[]> data;
+	GOrgueBuffer<uint8_t> data;
 	try
 	{
-		data = GOrgueAllocArray<uint8_t>(length);
+		data.resize(file->GetSize());
 	}
 	catch (GOrgueOutOfMemory e)
 	{
@@ -100,7 +99,7 @@ bool GOrgueConfigFileReader::Read(GOrgueFile* file)
 		file->Close();
 		return false;
 	}
-	if (file->Read(data.get(), length) != length)
+	if (!file->Read(data))
 	{
 		file->Close();
 		wxLogError(_("Failed to read file '%s'"), file->GetName().c_str());
@@ -108,12 +107,13 @@ bool GOrgueConfigFileReader::Read(GOrgueFile* file)
 	}
 	file->Close();
 	GOrgueHash hash;
-	hash.Update(data.get(), length);
+	hash.Update(data.get(), data.GetSize());
 	m_Hash = hash.getStringHash();
 
 	wxMBConv* conv;
 	wxCSConv isoConv(wxT("ISO-8859-1"));
 	uint8_t* dataPtr = data.get();
+	size_t length = data.GetCount();
 	if (length >= 3 && data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF)
 	{
 		conv = &wxConvUTF8;
@@ -123,7 +123,7 @@ bool GOrgueConfigFileReader::Read(GOrgueFile* file)
 	else
 		conv = &isoConv;
 	wxString input((const char*)dataPtr, *conv, length);
-	data = nullptr;
+	data.free();
 	if (length && input.Len() == 0)
 	{
 		wxLogError(_("Failed to decode file '%s'"), file->GetName().c_str());
