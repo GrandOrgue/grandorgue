@@ -22,8 +22,8 @@
 #ifndef GORGUEMIDIFILEREADER_H
 #define GORGUEMIDIFILEREADER_H
 
+#include "GOrgueBuffer.h"
 #include <wx/string.h>
-#include <memory>
 #include <stdint.h>
 
 class GOrgueMidiEvent;
@@ -33,8 +33,7 @@ class GOrgueMidiFileReader
 {
 private:
 	GOrgueMidiMap& m_Map;
-	std::unique_ptr<uint8_t[]> m_Data;
-	unsigned m_DataLen;
+	GOrgueBuffer<uint8_t> m_Data;
 	unsigned m_Tracks;
 	float m_Speed;
 	unsigned m_Pos;
