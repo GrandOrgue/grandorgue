@@ -22,7 +22,7 @@
 #include "GOSoundProviderWave.h"
 
 #include "GOSoundAudioSection.h"
-#include "GOrgueAlloc.h"
+#include "GOrgueBuffer.h"
 #include "GOrgueFile.h"
 #include "GOrgueMemoryPool.h"
 #include "GOrgueWave.h"
@@ -174,7 +174,7 @@ void GOSoundProviderWave::ProcessFile(const GOrgueFilename& filename, std::vecto
 
 	/* allocate data to work with */
 	unsigned totalDataSize = wave.GetLength() * GetBytesPerSample(bits_per_sample) * wave.GetChannels();
-	std::unique_ptr<char[]> data = GOrgueAllocArray<char>(totalDataSize);
+	GOrgueBuffer<char> data(totalDataSize);
 
 	if (use_pitch)
 	{

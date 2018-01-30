@@ -22,7 +22,7 @@
 #include "GOSoundProviderSynthedTrem.h"
 
 #include "GOSoundAudioSection.h"
-#include "GOrgueAlloc.h"
+#include "GOrgueBuffer.h"
 #include "GOrgueMemoryPool.h"
 
 GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOrgueMemoryPool& pool) :
@@ -71,9 +71,9 @@ void GOSoundProviderSynthedTrem::Create
 	const double trem_param        = 2 * pi  / loop_samples;
 	double trem_angle              = 0.0;
 
-	std::unique_ptr<wxInt16[]> data = GOrgueAllocArray<wxInt16>(total_samples);
+	GOrgueBuffer<int16_t> data(total_samples);
 
-	wxInt16 *write_iterator = data.get();
+	int16_t *write_iterator = data.get();
 
 	/* Synthesize attack */
 	double trem_fade = 0.0;
