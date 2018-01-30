@@ -57,6 +57,8 @@ const struct IniFileEnumEntry GOrgueMidiSender::m_MidiTypes[] = {
 	{ wxT("RPNOff"), MIDI_S_RPN_OFF },
 	{ wxT("NRPNOn"), MIDI_S_NRPN_ON },
 	{ wxT("NRPNOff"), MIDI_S_NRPN_OFF },
+	{ wxT("HWNameLCD"), MIDI_S_HW_NAME_LCD },
+	{ wxT("HWNameString"), MIDI_S_HW_NAME_STRING },
 	{ wxT("HWLCD"), MIDI_S_HW_LCD },
 	{ wxT("HWString"), MIDI_S_HW_STRING },
 };
@@ -157,6 +159,8 @@ bool GOrgueMidiSender::HasKey(midi_send_message_type type)
 	    type == MIDI_S_RPN_OFF ||
 	    type == MIDI_S_NRPN_ON ||
 	    type == MIDI_S_NRPN_OFF ||
+	    type == MIDI_S_HW_NAME_STRING ||
+	    type == MIDI_S_HW_NAME_LCD ||
 	    type == MIDI_S_HW_STRING ||
 	    type == MIDI_S_HW_LCD)
 		return true;
@@ -178,6 +182,7 @@ bool GOrgueMidiSender::HasLowValue(midi_send_message_type type)
 	    type == MIDI_S_RPN ||
 	    type == MIDI_S_NRPN ||
 	    type == MIDI_S_CTRL ||
+	    type == MIDI_S_HW_NAME_LCD ||
 	    type == MIDI_S_HW_LCD)
 		return true;
 	return false;
@@ -560,7 +565,7 @@ void GOrgueMidiSender::SetValue(unsigned value)
 	}
 }
 
-void GOrgueMidiSender::SetLabel(wxString text)
+void GOrgueMidiSender::SetLabel(const wxString& text)
 {
 	for(unsigned i = 0; i < m_events.size(); i++)
 	{
@@ -575,6 +580,32 @@ void GOrgueMidiSender::SetLabel(wxString text)
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_HW_STRING)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_SYSEX_HW_STRING);
+			e.SetKey(m_events[i].key);
+			e.SetString(text);
+			m_organfile->SendMidiMessage(e);
+		}
+	}
+}
+
+void GOrgueMidiSender::SetName(const wxString& text)
+{
+	for(unsigned i = 0; i < m_events.size(); i++)
+	{
+		if (m_events[i].type == MIDI_S_HW_NAME_LCD)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_SYSEX_HW_LCD);
+			e.SetChannel(m_events[i].low_value);
+			e.SetKey(m_events[i].key);
+			e.SetString(text);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_HW_NAME_STRING)
 		{
 			GOrgueMidiEvent e;
 			e.SetDevice(m_events[i].device);

@@ -36,6 +36,7 @@ class GOrgueLabel : private GOrgueSaveableObject, private GOrguePlaybackStateHan
 {
 protected:
 	wxString m_Name;
+	wxString m_Content;
 	wxString m_group;
 	GrandOrgueFile* m_organfile;
 	GOrgueMidiSender m_sender;
@@ -50,10 +51,11 @@ protected:
 public:
 	GOrgueLabel(GrandOrgueFile* organfile);
 	virtual ~GOrgueLabel();
-	void Init(GOrgueConfigReader& cfg, wxString group);
-	void Load(GOrgueConfigReader& cfg, wxString group);
+	void Init(GOrgueConfigReader& cfg, wxString group, wxString name);
+	void Load(GOrgueConfigReader& cfg, wxString group, wxString name);
 	const wxString& GetName();
-	void SetName(wxString name);
+	const wxString& GetContent();
+	void SetContent(wxString name);
 
 	wxString GetMidiType();
 	wxString GetMidiName();

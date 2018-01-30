@@ -158,11 +158,13 @@ bool GOrgueEnclosure::IsDisplayed(bool  new_format)
 void GOrgueEnclosure::AbortPlayback()
 {
 	m_sender.SetValue(0);
+	m_sender.SetName(wxEmptyString);
 }
 
 void GOrgueEnclosure::PreparePlayback()
 {
 	m_midi.PreparePlayback();
+	m_sender.SetName(m_Name);
 }
 
 void GOrgueEnclosure::StartPlayback()

@@ -98,8 +98,8 @@ void GOrgueMetronome::Load(GOrgueConfigReader& cfg)
 	m_button[ID_METRONOME_BEAT_P10]->Init(cfg, wxT("MetronomeBPMP10"), _("+10"));
 	m_button[ID_METRONOME_BEAT_M10]->Init(cfg, wxT("MetronomeBPMM10"), _("-10"));
 
-	m_BPMDisplay.Init(cfg, wxT("MetronomeBPM"));
-	m_MeasureDisplay.Init(cfg, wxT("MetronomeMeasure"));
+	m_BPMDisplay.Init(cfg, wxT("MetronomeBPM"), _("Metronome BPM"));
+	m_MeasureDisplay.Init(cfg, wxT("MetronomeMeasure"), _("Metronom measure"));
 
 	m_organfile->RegisterSaveableObject(this);
 
@@ -190,8 +190,8 @@ void GOrgueMetronome::UpdateMeasure(int val)
 
 void GOrgueMetronome::UpdateState()
 {
-	m_BPMDisplay.SetName(wxString::Format(_("%d BPM"), m_BPM));
-	m_MeasureDisplay.SetName(wxString::Format(_("%d"), m_MeasureLength));
+	m_BPMDisplay.SetContent(wxString::Format(_("%d BPM"), m_BPM));
+	m_MeasureDisplay.SetContent(wxString::Format(_("%d"), m_MeasureLength));
 	m_button[ID_METRONOME_ON]->Display(m_Running);
 }
 

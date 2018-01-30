@@ -28,6 +28,7 @@
 
 GOrgueLabel::GOrgueLabel(GrandOrgueFile* organfile) :
 	m_Name(),
+	m_Content(),
 	m_organfile(organfile),
 	m_sender(organfile, MIDI_SEND_LABEL)
 {
@@ -39,17 +40,19 @@ GOrgueLabel::~GOrgueLabel()
 {
 }
 
-void GOrgueLabel::Init(GOrgueConfigReader& cfg, wxString group)
+void GOrgueLabel::Init(GOrgueConfigReader& cfg, wxString group, wxString name)
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
+	m_Name = name;
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
-void GOrgueLabel::Load(GOrgueConfigReader& cfg, wxString group)
+void GOrgueLabel::Load(GOrgueConfigReader& cfg, wxString group, wxString name)
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
+	m_Name = name;
 	m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
@@ -63,20 +66,27 @@ const wxString& GOrgueLabel::GetName()
 	return m_Name;
 }
 
-void GOrgueLabel::SetName(wxString name)
+const wxString& GOrgueLabel::GetContent()
 {
-	m_Name = name;
-	m_sender.SetLabel(m_Name);
+	return m_Content;
+}
+
+void GOrgueLabel::SetContent(wxString name)
+{
+	m_Content = name;
+	m_sender.SetLabel(m_Content);
 	m_organfile->ControlChanged(this);
 }
 
 void GOrgueLabel::AbortPlayback()
 {
 	m_sender.SetLabel(wxEmptyString);
+	m_sender.SetName(wxEmptyString);
 }
 
 void GOrgueLabel::PreparePlayback()
 {
+	m_sender.SetName(m_Name);
 }
 
 void GOrgueLabel::StartPlayback()
@@ -107,7 +117,7 @@ void GOrgueLabel::ShowConfigDialog()
 
 wxString GOrgueLabel::GetElementStatus()
 {
-	return m_Name;
+	return m_Content;
 }
 
 std::vector<wxString> GOrgueLabel::GetElementActions()

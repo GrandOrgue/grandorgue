@@ -250,8 +250,8 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	for(unsigned i = 0; i < m_elementcreators.size(); i++)
 		m_elementcreators[i]->Load(cfg);
 
-	m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"));
-	m_TemperamentLabel.Load(cfg, wxT("SetterMasterTemperament"));
+	m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"), _("organ pitch"));
+	m_TemperamentLabel.Load(cfg, wxT("SetterMasterTemperament"), _("temperament"));
 	m_MainWindowData.Load(cfg, wxT("MainWindow"));
 
 	m_panels.resize(0);
@@ -912,7 +912,7 @@ void GrandOrgueFile::UpdateAmplitude()
 
 void GrandOrgueFile::UpdateTuning()
 {
-	m_PitchLabel.SetName(wxString::Format(_("%f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));
+	m_PitchLabel.SetContent(wxString::Format(_("%f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));
 }
 
 void GrandOrgueFile::UpdateAudioGroup()
@@ -1150,7 +1150,7 @@ void GrandOrgueFile::Reset()
 
 void GrandOrgueFile::SetTemperament(const GOrgueTemperament& temperament)
 {
-	m_TemperamentLabel.SetName(wxGetTranslation(temperament.GetName()));
+	m_TemperamentLabel.SetContent(wxGetTranslation(temperament.GetName()));
         for (unsigned k = 0; k < m_ranks.size(); k++)
 		m_ranks[k]->SetTemperament(temperament);
 }

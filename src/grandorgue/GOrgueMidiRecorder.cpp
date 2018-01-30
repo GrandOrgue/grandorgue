@@ -84,6 +84,7 @@ void GOrgueMidiRecorder::Load(GOrgueConfigReader& cfg)
 	m_button[ID_MIDI_RECORDER_RECORD]->Init(cfg, wxT("MidiRecorderRecord"), _("REC"));
 	m_button[ID_MIDI_RECORDER_STOP]->Init(cfg, wxT("MidiRecorderStop"), _("STOP"));
 	m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Init(cfg, wxT("MidiRecorderRecordRename"), _("REC File"));
+	m_RecordingTime.Init(cfg, wxT("MidiRecordTime"), _("MIDI recording time"));
 }
 
 void GOrgueMidiRecorder::ButtonChanged(int id)
@@ -333,9 +334,9 @@ bool GOrgueMidiRecorder::IsRecording()
 void GOrgueMidiRecorder::UpdateDisplay()
 {
 	if (!IsRecording())
-		m_RecordingTime.SetName(_("-:--:--"));
+		m_RecordingTime.SetContent(_("-:--:--"));
 	else
-		m_RecordingTime.SetName(wxString::Format(_("%d:%02d:%02d"), m_RecordSeconds / 3600, (m_RecordSeconds / 60) % 60, m_RecordSeconds % 60));
+		m_RecordingTime.SetContent(wxString::Format(_("%d:%02d:%02d"), m_RecordSeconds / 3600, (m_RecordSeconds / 60) % 60, m_RecordSeconds % 60));
 }
 
 void GOrgueMidiRecorder::StopRecording()

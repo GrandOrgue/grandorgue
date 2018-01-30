@@ -211,6 +211,7 @@ void GOrgueRank::SetTemperament(const GOrgueTemperament& temperament)
 
 void GOrgueRank::AbortPlayback()
 {
+	m_sender.SetName(wxEmptyString);
 }
 
 void GOrgueRank::PreparePlayback()
@@ -221,6 +222,7 @@ void GOrgueRank::PreparePlayback()
 	for(unsigned i = 0; i < m_Velocities.size(); i++)
 		for(unsigned j = 0; j < m_Velocities[i].size(); j++)
 			m_Velocities[i][j] = 0;
+	m_sender.SetName(m_Name);
 }
 
 void GOrgueRank::StartPlayback()
