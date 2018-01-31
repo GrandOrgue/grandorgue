@@ -52,9 +52,13 @@ private:
 	std::vector<GO_WAVE_LOOP> m_Loops;
 
 	void SetInvalid();
-	void LoadFormatChunk(const char* ptr, unsigned long length);
-	void LoadCueChunk(const char* ptr, unsigned long length);
-	void LoadSamplerChunk(const char* ptr, unsigned long length);
+	void LoadFormatChunk(const uint8_t* ptr, unsigned long length);
+	void LoadCueChunk(const uint8_t* ptr, unsigned long length);
+	void LoadSamplerChunk(const uint8_t* ptr, unsigned long length);
+	template<class T>
+	static void writeNext(uint8_t*& output, const T& value);
+	template<class T>
+	static T readNext(const uint8_t*& input);
 
 public:
 

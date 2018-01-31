@@ -58,7 +58,7 @@ GOrgueWave::~GOrgueWave()
 	Close();
 }
 
-void GOrgueWave::LoadFormatChunk(const char* ptr, unsigned long length)
+void GOrgueWave::LoadFormatChunk(const uint8_t* ptr, unsigned long length)
 {
 	/* FIXME: This could be done much more elequently */
 	/* Ensure format chunk size is 16 (basic wave
@@ -86,7 +86,7 @@ void GOrgueWave::LoadFormatChunk(const char* ptr, unsigned long length)
 		throw (wxString)_("< Unsupport PCM bit size");
 }
 
-void GOrgueWave::LoadCueChunk(const char* ptr, unsigned long length)
+void GOrgueWave::LoadCueChunk(const uint8_t* ptr, unsigned long length)
 {
 	if (length < sizeof(GO_WAVECUECHUNK))
 		throw (wxString)_("< Invalid CUE chunk in");
@@ -109,7 +109,7 @@ void GOrgueWave::LoadCueChunk(const char* ptr, unsigned long length)
 	}
 }
 
-void GOrgueWave::LoadSamplerChunk(const char* ptr, unsigned long length)
+void GOrgueWave::LoadSamplerChunk(const uint8_t* ptr, unsigned long length)
 {
 	if (length < sizeof(GO_WAVESAMPLERCHUNK))
 		throw (wxString)_("< Invalid SMPL chunk in");
@@ -147,8 +147,8 @@ void GOrgueWave::Open(GOrgueFile* file)
 	unsigned length = file->GetSize();
 	
 	// Allocate memory for wave and read it.
-	m_Content = GOrgueAllocArray<char>(length);
-	char* ptr = m_Content.get();
+	m_Content = GOrgueAllocArray<uint8_t>(length);
+	uint8_t* ptr = m_Content.get();
 
 	unsigned offset = 0;
 	unsigned start = 0;
@@ -348,6 +348,21 @@ unsigned GOrgueWave::GetLength() const
 	return m_SampleDataSize / (m_BytesPerSample * m_Channels);
 }
 
+template<class T>
+void GOrgueWave::writeNext(uint8_t*& output, const T& value)
+{
+	*(T*)output = value;
+	output += sizeof(T);
+}
+
+template<class T>
+T GOrgueWave::readNext(const uint8_t*& input)
+{
+	T val = *(T*)input;
+	input += sizeof(T);
+	return val;
+}
+
 void GOrgueWave::ReadSamples
 	(void* dest_buffer                        /** Pointer to received sample data */
 	,GOrgueWave::SAMPLE_FORMAT read_format    /** Format of the above buffer */
@@ -378,8 +393,8 @@ void GOrgueWave::ReadSamples
 	if (select_channel != 0)
 		merge_count = m_Channels;
 
-	const char* input  = m_SampleData;
-	char* output = (char*)dest_buffer;
+	const uint8_t* input  = (const uint8_t*)m_SampleData;
+	uint8_t* output = (uint8_t*)dest_buffer;
 
 	unsigned len = m_Channels * GetLength() / merge_count;
 	for(unsigned i = 0; i < len; i++)
@@ -390,7 +405,7 @@ void GOrgueWave::ReadSamples
 			int val; /* Value will be stored with 24 fractional bits of precision */
 			if (m_isPacked && m_BytesPerSample != 4)
 			{
-				val = (*((int32_t*)input));
+				val = readNext<int32_t>(input);
 				switch(m_BytesPerSample)
 				{
 				case 1:
@@ -400,30 +415,28 @@ void GOrgueWave::ReadSamples
 					val <<= 8;
 					break;
 				}
-				input += 4;
 			}
 			else
 			{
 				switch(m_BytesPerSample)
 				{
 				case 1:
-					val = (*((GOInt8*)input) - 0x80);
+					val = readNext<GOInt8>(input) - 0x80;
 					val <<= 16;
 					break;
 				case 2:
-					val = *(GOInt16LE*)input;
+					val = readNext<GOInt16LE>(input);
 					val <<= 8;
 					break;
 				case 3:
-					val = *(GOInt24LE*)input;
+					val = readNext<GOInt24LE>(input);
 					break;
 				case 4:
-					val = (*(float*)input) * (float)(1 << 23);
+					val = readNext<float>(input) * (float)(1 << 23);
 					break;
 				default:
 					throw (wxString)_("bad format!");
 				}
-				input += m_BytesPerSample;
 			}
 
 			if (select_channel && select_channel != j + 1)
@@ -436,28 +449,22 @@ void GOrgueWave::ReadSamples
 		switch (read_format)
 		{
 		case SF_SIGNEDBYTE_8:
-			*(GOInt8*)output = value >> 16;
-			output += sizeof(GOInt8);
+			writeNext<GOInt8>(output, value >> 16);
 			break;
 		case SF_SIGNEDSHORT_12:
-			*(GOInt16*)output = value >> 12;
-			output += sizeof(GOInt16);
+			writeNext<GOInt16>(output, value >> 12);
 			break;
 		case SF_SIGNEDSHORT_16:
-			*(GOInt16*)output = value >> 8;
-			output += sizeof(GOInt16);
+			writeNext<GOInt16>(output, value >> 8);
 			break;
 		case SF_SIGNEDINT24_20:
-			*(GOInt24*)output = value >> 4;
-			output += sizeof(GOInt24);
+			writeNext<GOInt24>(output, value >> 4);
 			break;
 		case SF_SIGNEDINT24_24:
-			*(GOInt24*)output = value;
-			output += sizeof(GOInt24);
+			writeNext<GOInt24>(output, value);
 			break;
 		case SF_IEEE_FLOAT:
-			*(float*)output = value / (float)(1 << 23);
-			output += sizeof(float);
+			writeNext<float>(output, value / (float)(1 << 23));
 			break;
 		default:
 			throw (wxString)_("bad return format!");
