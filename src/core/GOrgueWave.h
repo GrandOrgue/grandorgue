@@ -22,13 +22,13 @@
 #ifndef GORGUEWAVE_H
 #define GORGUEWAVE_H
 
+#include "GOrgueBuffer.h"
 #include <wx/string.h>
-#include <memory>
 #include <vector>
 
 class GOrgueFile;
 
-typedef struct
+typedef struct GO_WAVE_LOOP
 {
 	unsigned start_sample;
 	unsigned end_sample;
@@ -38,9 +38,7 @@ class GOrgueWave
 {
 
 private:
-	std::unique_ptr<char[]> m_Content;
-	const char* m_SampleData;
-	unsigned m_SampleDataSize;
+	GOrgueBuffer <uint8_t> m_SampleData;
 	unsigned m_BytesPerSample;
 	unsigned m_SampleRate;
 	unsigned m_CuePoint;
@@ -76,6 +74,8 @@ public:
 	~GOrgueWave();
 
 	void Open(GOrgueFile* file);
+	void Open(const GOrgueBuffer <uint8_t>& content);
+	bool Save(GOrgueBuffer<uint8_t>& buf);
 	void Close();
 
 	/* GetChannels()
@@ -112,7 +112,8 @@ public:
 	unsigned GetMidiNote() const;
 	float GetPitchFract() const;
 
-
+	static bool IsWave(const GOrgueBuffer<uint8_t>& data);
+	static bool IsWaveFile(const GOrgueBuffer<uint8_t>& data);
 };
 
 #endif /* GORGUEWAVE_H */

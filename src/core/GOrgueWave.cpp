@@ -22,7 +22,6 @@
 #include "GOrgueWave.h"
 
 #include "GOrgueFile.h"
-#include "GOrgueAlloc.h"
 #include "GOrgueWaveTypes.h"
 #include "GOrgueWavPack.h"
 #include <wx/file.h>
@@ -31,9 +30,7 @@
 
 void GOrgueWave::SetInvalid()
 {
-	m_Content = nullptr;
-	m_SampleData = NULL;
-	m_SampleDataSize = 0;
+	m_SampleData.free();
 	m_Channels = 0;
 	m_BytesPerSample = 0;
 	m_SampleRate = 0;
@@ -135,49 +132,56 @@ void GOrgueWave::LoadSamplerChunk(const uint8_t* ptr, unsigned long length)
 
 void GOrgueWave::Open(GOrgueFile* file)
 {
-	/* Close any currently open wave data */
-	Close();
-
 	if (!file->Open())
 	{
 		wxString message;
 		message.Printf(_("Failed to open file '%s'"), file->GetName().c_str());
 		throw message;
 	}
-	unsigned length = file->GetSize();
-	
 	// Allocate memory for wave and read it.
-	m_Content = GOrgueAllocArray<uint8_t>(length);
-	uint8_t* ptr = m_Content.get();
+	GOrgueBuffer<uint8_t> content(file->GetSize());
+	if (!file->Read(content))
+	{
+		wxString message;
+		message.Printf(_("Failed to read file '%s'\n"), file->GetName().c_str());
+		throw message;
+	}
 
-	unsigned offset = 0;
-	unsigned start = 0;
+	file->Close();
+	Open(content);
+}
+
+void GOrgueWave::Open(const GOrgueBuffer <uint8_t>& content)
+{
+	/* Close any currently open wave data */
+	Close();
+
+	GOrgueBuffer<uint8_t> buf;
+	size_t offset = 0;
+	size_t start = 0;
+	size_t origDataLen = 0;
 	try
 	{
-		if (length < 12)
+		if (content.GetSize() < 12)
 			throw (wxString)_("< Not a RIFF file");
 
-		if (file->Read(ptr, length) != length)
-		{
-			wxString message;
-			message.Printf(_("Failed to read file '%s'\n"), file->GetName().c_str());
-			throw message;
-		}
-		file->Close();
+		const uint8_t* ptr = content.get();
+		unsigned length = content.GetSize();
 
-		GOrgueWavPack pack(m_Content.get(), length);
-		if (pack.IsWavPack())
+		if (GOrgueWavPack::IsWavPack(content))
 		{
+			GOrgueWavPack pack(content);
 			if (!pack.Unpack())
 				throw (wxString)_("Failed to decode WavePack data");
-			m_Content = nullptr;
 
-			m_Content = pack.GetSamples(m_SampleDataSize);
-			m_SampleData = m_Content.get();
+			m_SampleData = pack.GetSamples();
 
-			pack.GetWrapper(ptr, length);
+			buf = pack.GetWrapper();
+			ptr = buf.get();
+			length = buf.GetSize();
 			offset = 0;
 			m_isPacked = true;
+			origDataLen = pack.GetOrigDataLen();
 		}
 
 		/* Read the header, get it's size and make sure that it makes sense. */
@@ -199,9 +203,9 @@ void GOrgueWave::Open(GOrgueFile* file)
 
 		if (m_isPacked)
 		{
-			if (riffChunkSize < pack.GetOrigDataLen())
+			if (riffChunkSize < origDataLen)
 				throw (wxString)_("Inconsitant WavPack file");
-			riffChunkSize -= pack.GetOrigDataLen();
+			riffChunkSize -= origDataLen;
 		}
 
 		/* This is a bit more leaniant than the original code... it will
@@ -232,8 +236,8 @@ void GOrgueWave::Open(GOrgueFile* file)
 					size = 0;
 				else
 				{
-					m_SampleData = ptr + offset;
-					m_SampleDataSize = size;
+					m_SampleData.free();
+					m_SampleData.Append(ptr + offset, size);
 				}
 			}
 			if (header->fccChunk == WAVE_TYPE_FMT)
@@ -253,7 +257,7 @@ void GOrgueWave::Open(GOrgueFile* file)
 
 		if (offset != length)
 			throw (wxString)_("<Invalid WAV file");
-		if (!m_SampleData || !m_SampleDataSize)
+		if (!m_SampleData.get() || !m_SampleData.GetSize())
 			throw (wxString)_("No samples found");
 
 		// learning lesson: never ever trust the range values of outside sources to be correct!
@@ -264,7 +268,7 @@ void GOrgueWave::Open(GOrgueFile* file)
 			    (m_Loops[i].end_sample >= GetLength()) ||
 				(m_Loops[i].end_sample == 0))
 			{
-				wxLogError(wxT("Invalid loop in %s"), file->GetName().c_str());
+				wxLogError(wxT("Invalid loop"));
 				m_Loops.erase(m_Loops.begin() + i);
 			}
 		}
@@ -292,7 +296,7 @@ void GOrgueWave::Open(GOrgueFile* file)
 void GOrgueWave::Close()
 {
 	/* Free the wave data if it has been alloc'ed */
-	m_Content = nullptr;
+	m_SampleData.free();
 
 	/* Set the wave to the invalid state.  */
 	SetInvalid();
@@ -342,10 +346,10 @@ const GO_WAVE_LOOP& GOrgueWave::GetLongestLoop() const
 unsigned GOrgueWave::GetLength() const
 {
 	if (m_isPacked)
-		return m_SampleDataSize / (4 * m_Channels);
+		return m_SampleData.GetSize() / (4 * m_Channels);
 	/* return number of samples in the stream */
-	assert((m_SampleDataSize % (m_BytesPerSample * m_Channels)) == 0);
-	return m_SampleDataSize / (m_BytesPerSample * m_Channels);
+	assert((m_SampleData.GetSize() % (m_BytesPerSample * m_Channels)) == 0);
+	return m_SampleData.GetSize() / (m_BytesPerSample * m_Channels);
 }
 
 template<class T>
@@ -393,7 +397,7 @@ void GOrgueWave::ReadSamples
 	if (select_channel != 0)
 		merge_count = m_Channels;
 
-	const uint8_t* input  = (const uint8_t*)m_SampleData;
+	const uint8_t* input  = m_SampleData.get();
 	uint8_t* output = (uint8_t*)dest_buffer;
 
 	unsigned len = m_Channels * GetLength() / merge_count;
@@ -496,4 +500,20 @@ unsigned GOrgueWave::GetMidiNote() const
 float GOrgueWave::GetPitchFract() const
 {
 	return m_PitchFract;
+}
+
+bool GOrgueWave::IsWave(const GOrgueBuffer<uint8_t>& data)
+{
+	if (data.GetSize() < 12)
+		return false;
+	GO_WAVECHUNKHEADER* riffHeader = (GO_WAVECHUNKHEADER*)data.get();
+	if (riffHeader->fccChunk != WAVE_TYPE_RIFF)
+		return false;
+	GO_WAVETYPEFIELD* riffIdent = (GO_WAVETYPEFIELD*)(data.get() + sizeof(GO_WAVECHUNKHEADER));
+	return *riffIdent == WAVE_TYPE_WAVE;
+}
+
+bool GOrgueWave::IsWaveFile(const GOrgueBuffer<uint8_t>& data)
+{
+	return IsWave(data) || GOrgueWavPack::IsWavPack(data);
 }
