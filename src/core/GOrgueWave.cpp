@@ -29,16 +29,6 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-bool inline CompareFourCC(GO_FOURCC fcc, const char* text)
-{
-	assert(text != NULL);
-	assert(strlen(text) == 4);
-	return ((fcc[0] == text[0]) &&
-			(fcc[1] == text[1]) &&
-			(fcc[2] == text[2]) &&
-			(fcc[3] == text[3]));
-}
-
 void GOrgueWave::SetInvalid()
 {
 	m_Content = nullptr;
@@ -194,23 +184,18 @@ void GOrgueWave::Open(GOrgueFile* file)
 		GO_WAVECHUNKHEADER* riffHeader = (GO_WAVECHUNKHEADER*)(ptr + offset);
 		unsigned long riffChunkSize = riffHeader->dwSize;
 
-		/*
-		if (!CompareFourCC(riffHeader->fccChunk, "RIFF") || (riffChunkSize > length - 8))
-			throw (wxString)_("< Invalid RIFF file");
-		*/
-
 		/* Pribac compatibility */
-		if (!CompareFourCC(riffHeader->fccChunk, "RIFF"))
+		if (riffHeader->fccChunk != WAVE_TYPE_RIFF)
 		{
 			throw (wxString)_("< Invalid RIFF file");
 		}
 		offset += sizeof(GO_WAVECHUNKHEADER);
 
 		/* Make sure this is a RIFF/WAVE file */
-		GO_FOURCC* riffIdent = (GO_FOURCC*)(ptr + offset);
-		if (!CompareFourCC(*riffIdent, "WAVE"))
+		GO_WAVETYPEFIELD* riffIdent = (GO_WAVETYPEFIELD*)(ptr + offset);
+		if (*riffIdent != WAVE_TYPE_WAVE)
 			throw (wxString)_("< Invalid RIFF/WAVE file");
-		offset += sizeof(GO_FOURCC);
+		offset += sizeof(GO_WAVETYPEFIELD);
 
 		if (m_isPacked)
 		{
@@ -238,7 +223,7 @@ void GOrgueWave::Open(GOrgueFile* file)
 			unsigned long size = header->dwSize;
 			offset += sizeof(GO_WAVECHUNKHEADER);
 
-			if (CompareFourCC(header->fccChunk, "data"))
+			if (header->fccChunk == WAVE_TYPE_DATA)
 			{
 				if (!hasFormat)
 					throw (wxString)_("< Malformed wave file. Format chunk must preceed data chunk.");
@@ -251,14 +236,14 @@ void GOrgueWave::Open(GOrgueFile* file)
 					m_SampleDataSize = size;
 				}
 			}
-			if (CompareFourCC(header->fccChunk, "fmt "))
+			if (header->fccChunk == WAVE_TYPE_FMT)
 			{
 				hasFormat = true;
 				LoadFormatChunk(ptr + offset, size);
 			}
-			if (CompareFourCC(header->fccChunk, "cue ")) /* This used to only work if !load m_pipe_percussive[i] */
+			if (header->fccChunk == WAVE_TYPE_CUE) /* This used to only work if !load m_pipe_percussive[i] */
 				LoadCueChunk(ptr + offset, size);
-			if (CompareFourCC(header->fccChunk, "smpl")) /* This used to only work if !load m_pipe_percussive[i] */
+			if (header->fccChunk == WAVE_TYPE_SAMPLE) /* This used to only work if !load m_pipe_percussive[i] */
 				LoadSamplerChunk(ptr + offset, size);
 
 			/* Move to next chunk respecting word alignment */
