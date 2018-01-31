@@ -26,11 +26,22 @@
 
 #pragma pack(push, 1)
 
-typedef char GO_FOURCC[4];
+static constexpr uint32_t WAVEChunk(const char name[4])
+{
+	return (name[0] << 24) | (name[1] << 16) | (name[2] << 8) | (name[3] << 0);
+}
+static constexpr uint32_t WAVE_TYPE_RIFF = WAVEChunk("RIFF");
+static constexpr uint32_t WAVE_TYPE_WAVE = WAVEChunk("WAVE");
+static constexpr uint32_t WAVE_TYPE_DATA = WAVEChunk("data");
+static constexpr uint32_t WAVE_TYPE_FMT = WAVEChunk("fmt ");
+static constexpr uint32_t WAVE_TYPE_CUE = WAVEChunk("cue ");
+static constexpr uint32_t WAVE_TYPE_SAMPLE = WAVEChunk("smpl");
+
+typedef GOUInt32BE GO_WAVETYPEFIELD;
 
 typedef struct
 {
-	GO_FOURCC fccChunk;
+	GO_WAVETYPEFIELD fccChunk;
 	GOUInt32LE dwSize;
 } GO_WAVECHUNKHEADER;
 
@@ -59,7 +70,7 @@ typedef struct
 {
 	GOUInt32LE dwName;
 	GOUInt32LE dwPosition;
-	GO_FOURCC fccChunk;
+	GO_WAVETYPEFIELD fccChunk;
 	GOUInt32LE dwChunkStart;
 	GOUInt32LE dwBlockStart;
 	GOUInt32LE dwSampleOffset;

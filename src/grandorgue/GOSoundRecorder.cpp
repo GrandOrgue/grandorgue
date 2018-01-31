@@ -32,7 +32,7 @@
 struct struct_WAVE
 {
 	GO_WAVECHUNKHEADER riffHeader;
-	GO_FOURCC riffIdent;
+	GO_WAVETYPEFIELD riffIdent;
 	GO_WAVECHUNKHEADER formatHeader;
 	GO_WAVEFORMATPCM formatBlock;
 	GO_WAVECHUNKHEADER dataHeader;
@@ -66,13 +66,13 @@ GOSoundRecorder::~GOSoundRecorder()
 struct_WAVE GOSoundRecorder::generateHeader(unsigned datasize)
 {
 	struct_WAVE WAVE = {
-		{ {'R','I','F','F'}, datasize + 36},
-		{'W','A','V','E'},
-		{ {'f','m','t',' '}, 16},
+		{ WAVE_TYPE_RIFF, datasize + 36},
+		WAVE_TYPE_WAVE,
+		{ WAVE_TYPE_FMT, 16},
 		{ m_BytesPerSample == 4 ? 3 : 1, m_Channels, m_SampleRate,
 		  m_SampleRate * m_BytesPerSample * m_Channels,
 		  m_BytesPerSample * m_Channels, 8 * m_BytesPerSample},
-		{ {'d','a','t','a'}, datasize}};
+		{ WAVE_TYPE_DATA, datasize}};
 	return WAVE;
 }
 
