@@ -22,18 +22,15 @@
 #ifndef GORGUEWAVPACK_H
 #define GORGUEWAVPACK_H
 
+#include "GOrgueBuffer.h"
 #include <wavpack/wavpack.h>
-#include <memory>
 
 class GOrgueWavPack
 {
 private:
-	const char* m_data;
-	unsigned m_length;
-	std::unique_ptr<char[]> m_Samples;
-	unsigned m_SamplesLen;
-	std::unique_ptr<char[]> m_Wrapper;
-	unsigned m_WrapperLen;
+	const GOrgueBuffer<uint8_t>& m_data;
+	GOrgueBuffer<uint8_t> m_Samples;
+	GOrgueBuffer<uint8_t> m_Wrapper;
 	unsigned m_pos;
 	unsigned m_OrigDataLen;
 	WavpackContext* m_context;
@@ -57,14 +54,14 @@ private:
 	int SetPosRel(int32_t delta, int mode);
 
 public:
-	GOrgueWavPack(const char* data, unsigned length);
+	GOrgueWavPack(const GOrgueBuffer<uint8_t>& file);
 	~GOrgueWavPack();
 
-	bool IsWavPack();
+	static bool IsWavPack(const GOrgueBuffer<uint8_t>& data);
 	bool Unpack();
 
-	std::unique_ptr<char[]> GetSamples(unsigned& len);
-	void GetWrapper(char*& data, unsigned& len);
+	GOrgueBuffer<uint8_t> GetSamples();
+	GOrgueBuffer<uint8_t> GetWrapper();
 	unsigned GetOrigDataLen();
 };
 

@@ -26,13 +26,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-GOrgueWavPack::GOrgueWavPack(const char* data, unsigned length) :
-	m_data(data),
-	m_length(length),
+GOrgueWavPack::GOrgueWavPack(const GOrgueBuffer<uint8_t>& file) :
+	m_data(file),
 	m_Samples(),
-	m_SamplesLen(0),
 	m_Wrapper(),
-	m_WrapperLen(0),
 	m_pos(0),
 	m_OrigDataLen(0),
 	m_context(0)
@@ -41,27 +38,25 @@ GOrgueWavPack::GOrgueWavPack(const char* data, unsigned length) :
 
 GOrgueWavPack::~GOrgueWavPack()
 {
-	m_Samples = nullptr;
-	m_Wrapper = nullptr;
+	m_Samples.free();
+	m_Wrapper.free();
 	if (m_context)
 		WavpackCloseFile(m_context);
 }
 
-bool GOrgueWavPack::IsWavPack()
+bool GOrgueWavPack::IsWavPack(const GOrgueBuffer<uint8_t>& data)
 {
-	return m_length > 10 && !memcmp(m_data, "wvpk", 4);
+	return data.GetSize() > 10 && !memcmp(data.get(), "wvpk", 4);
 }
 
-std::unique_ptr<char[]> GOrgueWavPack::GetSamples(unsigned& len)
+GOrgueBuffer<uint8_t> GOrgueWavPack::GetSamples()
 {
-	len = m_SamplesLen;
 	return std::move(m_Samples);
 }
 
-void GOrgueWavPack::GetWrapper(char*& data, unsigned& len)
+GOrgueBuffer<uint8_t> GOrgueWavPack::GetWrapper()
 {
-	data = m_Wrapper.get();
-	len = m_WrapperLen;
+	return std::move(m_Wrapper);
 }
 
 unsigned GOrgueWavPack::GetOrigDataLen()
@@ -81,8 +76,7 @@ bool GOrgueWavPack::Unpack()
 
 	unsigned channels = WavpackGetNumChannels (m_context);
 	unsigned samples = WavpackGetNumSamples (m_context);
-	m_SamplesLen = channels * samples * 4;
-	m_Samples = GOrgueAllocArray<char>(m_SamplesLen);
+	m_Samples.resize(channels * samples * 4);
 	unsigned res = WavpackUnpackSamples(m_context, (int32_t*)m_Samples.get(), samples);
 	if (res != samples)
 		return false;
@@ -92,9 +86,8 @@ bool GOrgueWavPack::Unpack()
 	WavpackSeekTrailingWrapper(m_context);
 	unsigned trailer = WavpackGetWrapperBytes(m_context) - header;
 	
-	m_WrapperLen = header + trailer;
-	m_Wrapper = GOrgueAllocArray<char>(m_WrapperLen);
-	memcpy(m_Wrapper.get(), WavpackGetWrapperData (m_context), m_WrapperLen);
+	m_Wrapper.free();
+	m_Wrapper.Append(WavpackGetWrapperData (m_context), header + trailer);
 	WavpackFreeWrapper (m_context);
 
 	WavpackCloseFile(m_context);
@@ -140,21 +133,21 @@ int GOrgueWavPack::SetPosRel(void *id, int32_t delta, int mode)
 
 uint32_t GOrgueWavPack::GetLength()
 {
-	return m_length;
+	return m_data.GetSize();
 }
 
 int32_t GOrgueWavPack::ReadBytes (void *data, int32_t bcount)
 {
-	if (m_pos + bcount > m_length)
-		bcount = m_length - m_pos;
-	memcpy(data, m_data + m_pos, bcount);
+	if (m_pos + bcount > m_data.GetSize())
+		bcount = m_data.GetSize() - m_pos;
+	memcpy(data, m_data.get() + m_pos, bcount);
 	m_pos += bcount;
 	return bcount;
 }
 
 int GOrgueWavPack::PushBackByte (int c)
 {
-	if (m_pos > 0 && m_data[m_pos - 1] == c)
+	if (m_pos > 0 && m_pos < m_data.GetSize() && m_data[m_pos - 1] == c)
 	{
 		m_pos--;
 		return c;
@@ -174,7 +167,7 @@ int GOrgueWavPack::CanSeek()
 
 int GOrgueWavPack::SetPosAbs(uint32_t pos)
 {
-	if (pos < m_length)
+	if (pos < m_data.GetCount())
 	{
 		m_pos = pos;
 		return 0;
@@ -191,7 +184,7 @@ int GOrgueWavPack::SetPosRel(int32_t delta, int mode)
 	case SEEK_CUR:
 		return SetPosAbs(m_pos + delta);
 	case SEEK_END:
-		return SetPosAbs(m_length + delta);
+		return SetPosAbs(m_data.GetCount() + delta);
 	default:
 		return -1;
 	}
