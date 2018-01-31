@@ -32,6 +32,7 @@
 #define ZIP_END_RECORD               0x06054b50
 #define ZIP_END64_RECORD             0x06064b50
 #define ZIP_END64_LOCATOR            0x07064b50
+#define ZIP_ZIP64_VERSION            45
 
 typedef struct GOZipLocalHeader
 {
@@ -74,6 +75,21 @@ typedef struct GOZipHeaderExtraRecord
 	GOUInt16LE type;
 	GOUInt16LE size;
 } GOZipHeaderExtraRecord;
+
+typedef struct GOZipLocal64ExtendHeader
+{
+	GOZipHeaderExtraRecord header;
+	GOUInt64LE uncompressed_size;
+	GOUInt64LE compressed_size;
+} GOZipLocal64ExtendHeader;
+
+typedef struct GOZipCentral64ExtendHeader
+{
+	GOZipHeaderExtraRecord header;
+	GOUInt64LE uncompressed_size;
+	GOUInt64LE compressed_size;
+	GOUInt64LE offset;
+} GOZipCentral64ExtendHeader;
 
 typedef struct GOZipEnd64Record
 {
