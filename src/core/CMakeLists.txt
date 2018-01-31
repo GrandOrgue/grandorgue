@@ -31,6 +31,7 @@ GOrgueArchiveIndex.cpp
 GOrgueArchiveEntryFile.cpp
 GOrgueArchiveManager.cpp
 GOrgueArchiveReader.cpp
+GOrgueArchiveWriter.cpp
 GOrgueBitmap.cpp
 GOrgueCompress.cpp
 GOrgueConfigFileReader.cpp
