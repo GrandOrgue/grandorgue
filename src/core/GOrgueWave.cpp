@@ -455,14 +455,50 @@ void GOrgueWave::ReadSamples
 		case SF_SIGNEDBYTE_8:
 			writeNext<GOInt8>(output, value >> 16);
 			break;
+		case SF_SIGNEDSHORT_9:
+			writeNext<GOInt16>(output, value >> 15);
+			break;
+		case SF_SIGNEDSHORT_10:
+			writeNext<GOInt16>(output, value >> 14);
+			break;
+		case SF_SIGNEDSHORT_11:
+			writeNext<GOInt16>(output, value >> 13);
+			break;
 		case SF_SIGNEDSHORT_12:
 			writeNext<GOInt16>(output, value >> 12);
+			break;
+		case SF_SIGNEDSHORT_13:
+			writeNext<GOInt16>(output, value >> 11);
+			break;
+		case SF_SIGNEDSHORT_14:
+			writeNext<GOInt16>(output, value >> 10);
+			break;
+		case SF_SIGNEDSHORT_15:
+			writeNext<GOInt16>(output, value >> 9);
 			break;
 		case SF_SIGNEDSHORT_16:
 			writeNext<GOInt16>(output, value >> 8);
 			break;
+		case SF_SIGNEDINT24_17:
+			writeNext<GOInt24>(output, value >> 7);
+			break;
+		case SF_SIGNEDINT24_18:
+			writeNext<GOInt24>(output, value >> 6);
+			break;
+		case SF_SIGNEDINT24_19:
+			writeNext<GOInt24>(output, value >> 5);
+			break;
 		case SF_SIGNEDINT24_20:
 			writeNext<GOInt24>(output, value >> 4);
+			break;
+		case SF_SIGNEDINT24_21:
+			writeNext<GOInt24>(output, value >> 3);
+			break;
+		case SF_SIGNEDINT24_22:
+			writeNext<GOInt24>(output, value >> 2);
+			break;
+		case SF_SIGNEDINT24_23:
+			writeNext<GOInt24>(output, value >> 1);
 			break;
 		case SF_SIGNEDINT24_24:
 			writeNext<GOInt24>(output, value);
