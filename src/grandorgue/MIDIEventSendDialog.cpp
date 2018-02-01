@@ -144,7 +144,7 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 		m_eventtype->Append(_("RPN Range"), (void*)MIDI_S_RPN_RANGE);
 		m_eventtype->Append(_("NRPN Range"), (void*)MIDI_S_NRPN_RANGE);
 	}
-	if (m_midi.GetType() == MIDI_SEND_LABEL)
+	if (m_midi.GetType() == MIDI_SEND_LABEL || m_midi.GetType() == MIDI_SEND_BUTTON || m_midi.GetType() == MIDI_SEND_ENCLOSURE)
 	{
 		m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD Value"), (void*)MIDI_S_HW_LCD);
 		m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String Value"), (void*)MIDI_S_HW_STRING);
