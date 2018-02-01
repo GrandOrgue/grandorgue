@@ -22,6 +22,7 @@
 #include "GOrgueConfigFileReader.h"
 
 #include "GOrgueBuffer.h"
+#include "GOrgueCompress.h"
 #include "GOrgueHash.h"
 #include "GOrgueStandardFile.h"
 #include <wx/file.h>
@@ -109,6 +110,15 @@ bool GOrgueConfigFileReader::Read(GOrgueFile* file)
 	GOrgueHash hash;
 	hash.Update(data.get(), data.GetSize());
 	m_Hash = hash.getStringHash();
+
+	if (isBufferCompressed(data))
+	{
+		if (!uncompressBuffer(data))
+		{
+			wxLogError(_("Failed to decompress file '%s'"), file->GetName().c_str());
+			return false;
+		}
+	}
 
 	wxMBConv* conv;
 	wxCSConv isoConv(wxT("ISO-8859-1"));
