@@ -26,6 +26,7 @@
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMidiMap.h"
 #include "GrandOrgueFile.h"
+#include <wx/intl.h>
 
 GOrgueMidiSender::GOrgueMidiSender(GrandOrgueFile* organfile, MIDI_SENDER_TYPE type) :
 	GOrgueMidiSenderData(type),
@@ -423,6 +424,25 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			e.SetValue(m_events[i].low_value);
 			m_organfile->SendMidiMessage(e);
 		}
+		if (m_events[i].type == MIDI_S_HW_LCD)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_SYSEX_HW_LCD);
+			e.SetChannel(m_events[i].low_value);
+			e.SetKey(m_events[i].key);
+			e.SetString(state ? _("ON") : _("OFF"));
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_HW_STRING)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_SYSEX_HW_STRING);
+			e.SetKey(m_events[i].key);
+			e.SetString(state ? _("ON") : _("OFF"));
+			m_organfile->SendMidiMessage(e);
+		}
 	}
 }
 
@@ -560,6 +580,25 @@ void GOrgueMidiSender::SetValue(unsigned value)
 			if (val > 0x7f)
 				val = 0x7f;
 			e.SetKey(val);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_HW_LCD)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_SYSEX_HW_LCD);
+			e.SetChannel(m_events[i].low_value);
+			e.SetKey(m_events[i].key);
+			e.SetString(wxString::Format(_("%d %%"), value * 100 / 127));
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_HW_STRING)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_SYSEX_HW_STRING);
+			e.SetKey(m_events[i].key);
+			e.SetString(wxString::Format(_("%d %%"), value * 100 / 127));
 			m_organfile->SendMidiMessage(e);
 		}
 	}
