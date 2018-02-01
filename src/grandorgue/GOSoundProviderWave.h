@@ -28,6 +28,7 @@
 #include <vector>
 
 class GOrgueWave;
+typedef struct GO_WAVE_LOOP GO_WAVE_LOOP;
 
 typedef enum
 {
