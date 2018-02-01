@@ -24,7 +24,6 @@
 
 #include "ptrvector.h"
 #include "GOrgueStatisticCallback.h"
-#include "GOrgueWave.h"
 #include <vector>
 
 class GOAudioSection;
