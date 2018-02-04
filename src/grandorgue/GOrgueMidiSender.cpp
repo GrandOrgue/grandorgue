@@ -90,6 +90,11 @@ void GOrgueMidiSender::Load(GOrgueConfigReader& cfg, wxString group, GOrgueMidiM
 
 		if (HasHighValue(m_events[i].type))
 			m_events[i].high_value = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDISendHighValue%03d"), i + 1), 0, 0x3fff, false, 0x7f);
+
+		if (HasStart(m_events[i].type))
+			m_events[i].start = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDISendStart%03d"), i + 1), 0, 0x1f, false, 0);
+		if (HasLength(m_events[i].type))
+			m_events[i].length = cfg.ReadInteger(CMBSetting, group, wxString::Format(wxT("MIDISendLength%03d"), i + 1), 0, 0x1f, false, LengthLimit(m_events[i].type));
 	}
 }
 
@@ -110,6 +115,11 @@ void GOrgueMidiSender::Save(GOrgueConfigWriter& cfg, wxString group, GOrgueMidiM
 
 		if (HasHighValue(m_events[i].type))
 			cfg.WriteInteger(group, wxString::Format(wxT("MIDISendHighValue%03d"), i + 1), m_events[i].high_value);
+
+		if (HasStart(m_events[i].type))
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDISendStart%03d"), i + 1), m_events[i].start);
+		if (HasLength(m_events[i].type))
+			cfg.WriteInteger(group, wxString::Format(wxT("MIDISendLength%03d"), i + 1), m_events[i].length);
 	}
 }
 
@@ -207,6 +217,26 @@ bool GOrgueMidiSender::HasHighValue(midi_send_message_type type)
 	return false;
 }
 
+bool GOrgueMidiSender::HasStart(midi_send_message_type type)
+{
+	if (type == MIDI_S_HW_NAME_STRING ||
+	    type == MIDI_S_HW_NAME_LCD ||
+	    type == MIDI_S_HW_STRING ||
+	    type == MIDI_S_HW_LCD)
+		return true;
+	return false;
+}
+
+bool GOrgueMidiSender::HasLength(midi_send_message_type type)
+{
+	if (type == MIDI_S_HW_NAME_STRING ||
+	    type == MIDI_S_HW_NAME_LCD ||
+	    type == MIDI_S_HW_STRING ||
+	    type == MIDI_S_HW_LCD)
+		return true;
+	return false;
+}
+
 unsigned GOrgueMidiSender::KeyLimit(midi_send_message_type type)
 {
 	if (type == MIDI_S_PGM_ON ||
@@ -242,6 +272,28 @@ unsigned GOrgueMidiSender::HighValueLimit(midi_send_message_type type)
 	   type == MIDI_S_NRPN_RANGE)
 		return 0x3fff;
 	return 0x7f;
+}
+
+unsigned GOrgueMidiSender::StartLimit(midi_send_message_type type)
+{
+	if (type == MIDI_S_HW_NAME_STRING ||
+	    type == MIDI_S_HW_STRING)
+		return 15;
+	if (type == MIDI_S_HW_NAME_LCD ||
+	    type == MIDI_S_HW_LCD)
+		return 31;
+	return 0x00;
+}
+
+unsigned GOrgueMidiSender::LengthLimit(midi_send_message_type type)
+{
+	if (type == MIDI_S_HW_NAME_STRING ||
+	    type == MIDI_S_HW_STRING)
+		return 15;
+	if (type == MIDI_S_HW_NAME_LCD ||
+	    type == MIDI_S_HW_LCD)
+		return 31;
+	return 0x00;
 }
 
 void GOrgueMidiSender::SetDisplay(bool state)
@@ -431,7 +483,8 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			e.SetMidiType(MIDI_SYSEX_HW_LCD);
 			e.SetChannel(m_events[i].low_value);
 			e.SetKey(m_events[i].key);
-			e.SetString(state ? _("ON") : _("OFF"));
+			e.SetValue(m_events[i].start);
+			e.SetString(state ? _("ON") : _("OFF"), m_events[i].length);
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_HW_STRING)
@@ -440,7 +493,8 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			e.SetDevice(m_events[i].device);
 			e.SetMidiType(MIDI_SYSEX_HW_STRING);
 			e.SetKey(m_events[i].key);
-			e.SetString(state ? _("ON") : _("OFF"));
+			e.SetValue(m_events[i].start);
+			e.SetString(state ? _("ON") : _("OFF"), m_events[i].length);
 			m_organfile->SendMidiMessage(e);
 		}
 	}
@@ -589,7 +643,8 @@ void GOrgueMidiSender::SetValue(unsigned value)
 			e.SetMidiType(MIDI_SYSEX_HW_LCD);
 			e.SetChannel(m_events[i].low_value);
 			e.SetKey(m_events[i].key);
-			e.SetString(wxString::Format(_("%d %%"), value * 100 / 127));
+			e.SetValue(m_events[i].start);
+			e.SetString(wxString::Format(_("%d %%"), value * 100 / 127), m_events[i].length);
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_HW_STRING)
@@ -598,7 +653,8 @@ void GOrgueMidiSender::SetValue(unsigned value)
 			e.SetDevice(m_events[i].device);
 			e.SetMidiType(MIDI_SYSEX_HW_STRING);
 			e.SetKey(m_events[i].key);
-			e.SetString(wxString::Format(_("%d %%"), value * 100 / 127));
+			e.SetValue(m_events[i].start);
+			e.SetString(wxString::Format(_("%d %%"), value * 100 / 127), m_events[i].length);
 			m_organfile->SendMidiMessage(e);
 		}
 	}
@@ -615,7 +671,8 @@ void GOrgueMidiSender::SetLabel(const wxString& text)
 			e.SetMidiType(MIDI_SYSEX_HW_LCD);
 			e.SetChannel(m_events[i].low_value);
 			e.SetKey(m_events[i].key);
-			e.SetString(text);
+			e.SetValue(m_events[i].start);
+			e.SetString(text, m_events[i].length);
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_HW_STRING)
@@ -624,7 +681,8 @@ void GOrgueMidiSender::SetLabel(const wxString& text)
 			e.SetDevice(m_events[i].device);
 			e.SetMidiType(MIDI_SYSEX_HW_STRING);
 			e.SetKey(m_events[i].key);
-			e.SetString(text);
+			e.SetValue(m_events[i].start);
+			e.SetString(text, m_events[i].length);
 			m_organfile->SendMidiMessage(e);
 		}
 	}
@@ -641,7 +699,8 @@ void GOrgueMidiSender::SetName(const wxString& text)
 			e.SetMidiType(MIDI_SYSEX_HW_LCD);
 			e.SetChannel(m_events[i].low_value);
 			e.SetKey(m_events[i].key);
-			e.SetString(text);
+			e.SetValue(m_events[i].start);
+			e.SetString(text, m_events[i].length);
 			m_organfile->SendMidiMessage(e);
 		}
 		if (m_events[i].type == MIDI_S_HW_NAME_STRING)
@@ -650,7 +709,8 @@ void GOrgueMidiSender::SetName(const wxString& text)
 			e.SetDevice(m_events[i].device);
 			e.SetMidiType(MIDI_SYSEX_HW_STRING);
 			e.SetKey(m_events[i].key);
-			e.SetString(text);
+			e.SetValue(m_events[i].start);
+			e.SetString(text, m_events[i].length);
 			m_organfile->SendMidiMessage(e);
 		}
 	}

@@ -22,6 +22,7 @@
 #ifndef GORGUEMIDIOUTPORT_H
 #define GORGUEMIDIOUTPORT_H
 
+#include "GOrgueMidiOutputMerger.h"
 #include <wx/string.h>
 #include "ptrvector.h"
 
@@ -32,6 +33,7 @@ class GOrgueMidiOutPort
 {
 protected:
 	GOrgueMidi* m_midi;
+	GOrgueMidiOutputMerger m_merger;
 	bool m_IsActive;
 	wxString m_Name;
 	wxString m_Prefix;

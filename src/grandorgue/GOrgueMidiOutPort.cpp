@@ -28,6 +28,7 @@
 
 GOrgueMidiOutPort::GOrgueMidiOutPort(GOrgueMidi* midi, wxString prefix, wxString name) :
 	m_midi(midi),
+	m_merger(),
 	m_IsActive(false),
 	m_Name(name),
 	m_Prefix(prefix)
@@ -56,6 +57,7 @@ bool GOrgueMidiOutPort::IsActive()
 
 bool GOrgueMidiOutPort::Open()
 {
+	m_merger.Clear();
 	return m_IsActive;
 }
 
@@ -65,8 +67,11 @@ void GOrgueMidiOutPort::Send(const GOrgueMidiEvent& e)
 		return;
 	if (GetID() == e.GetDevice() || e.GetDevice() == 0)
 	{
+		GOrgueMidiEvent e1 = e;
+		if (!m_merger.Process(e1))
+			return;
 		std::vector<std::vector<unsigned char>> msg;
-		e.ToMidi(msg, m_midi->GetMidiMap());
+		e1.ToMidi(msg, m_midi->GetMidiMap());
 		for(unsigned i = 0; i < msg.size(); i++)
 			SendData(msg[i]);
 	}
