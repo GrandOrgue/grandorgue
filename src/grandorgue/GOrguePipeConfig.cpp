@@ -62,7 +62,7 @@ void GOrguePipeConfig::Init(GOrgueConfigReader& cfg, wxString group, wxString pr
 	m_DefaultDelay = 0;
 	m_Delay = cfg.ReadInteger(CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
 	m_BitsPerSample = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("BitsPerSample"), -1, 24, false, -1);
-	if (m_BitsPerSample != 8 && m_BitsPerSample != 12 && m_BitsPerSample != 16 && m_BitsPerSample != 20 && m_BitsPerSample != 24)
+	if (m_BitsPerSample < 8 || m_BitsPerSample > 24)
 		m_BitsPerSample = -1;
 	m_Compress = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
 	m_Channels = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("Channels"), -1, 2, false, -1);
@@ -88,7 +88,7 @@ void GOrguePipeConfig::Load(GOrgueConfigReader& cfg, wxString group, wxString pr
 	m_DefaultDelay = cfg.ReadInteger(ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
 	m_Delay = cfg.ReadInteger(CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
 	m_BitsPerSample = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("BitsPerSample"), -1, 24, false, -1);
-	if (m_BitsPerSample != 8 && m_BitsPerSample != 12 && m_BitsPerSample != 16 && m_BitsPerSample != 20 && m_BitsPerSample != 24)
+	if (m_BitsPerSample < 8 || m_BitsPerSample > 24)
 		m_BitsPerSample = -1;
 	m_Compress = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
 	m_Channels = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("Channels"), -1, 2, false, -1);

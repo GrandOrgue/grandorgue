@@ -173,11 +173,8 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 
 	choices.clear();
 	choices.push_back(_("Parent default"));
-	choices.push_back(_("8 bits"));
-	choices.push_back(_("12 bits"));
-	choices.push_back(_("16 bits"));
-	choices.push_back(_("20 bits"));
-	choices.push_back(_("24 bits"));
+	for(unsigned i = 8; i <= 24; i++)
+		choices.push_back(wxString::Format(_("%d bits"), i));
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Sample Size:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	m_BitsPerSample = new wxChoice(this, ID_EVENT_BITS_PER_SAMPLE, wxDefaultPosition, wxDefaultSize, choices);
 	grid->Add(m_BitsPerSample);
@@ -496,7 +493,7 @@ void OrganDialog::Load()
 		if (bits_per_sample == -1)
 			bits_per_sample = 0;
 		else
-			bits_per_sample = (bits_per_sample - 4) / 4;
+			bits_per_sample = bits_per_sample - 7;
 
 		RemoveEmpty(m_BitsPerSample);
 		RemoveEmpty(m_Compress);
@@ -735,7 +732,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		if (m_AudioGroup->GetValue() != m_LastAudioGroup)
 			e->config->SetAudioGroup(m_AudioGroup->GetValue().Trim());
 		if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
-			e->config->SetBitsPerSample(m_BitsPerSample->GetSelection() == 0 ? -1 : m_BitsPerSample->GetSelection() * 4 + 4);
+			e->config->SetBitsPerSample(m_BitsPerSample->GetSelection() == 0 ? -1 : m_BitsPerSample->GetSelection() + 7);
 		if (m_Compress->GetSelection() != m_LastCompress)
 			e->config->SetCompress(m_Compress->GetSelection() - 1);
 		if (m_Channels->GetSelection() != m_LastChannels)
