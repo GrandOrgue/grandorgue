@@ -64,6 +64,8 @@ typedef struct {
 	unsigned key;
 	unsigned low_value;
 	unsigned high_value;
+	unsigned start;
+	unsigned length;
 } MIDI_SEND_EVENT;
 
 class GOrgueMidiSenderData

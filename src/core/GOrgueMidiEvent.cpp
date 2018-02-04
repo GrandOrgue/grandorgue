@@ -45,6 +45,20 @@ GOrgueMidiEvent::GOrgueMidiEvent(const GOrgueMidiEvent& e) :
 {
 }
 
+void GOrgueMidiEvent::SetString(const wxString& str, unsigned length)
+{
+	unsigned len = str.length();
+	if (len < length)
+	{
+		m_string = str;
+		m_string.Pad(length - len, wxT(' '), true);
+	}
+	else if (len == length)
+		m_string = str;
+	else
+		m_string = str.Mid(0, length);
+}
+
 void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg, GOrgueMidiMap& map)
 {
 	SetMidiType(MIDI_NONE);

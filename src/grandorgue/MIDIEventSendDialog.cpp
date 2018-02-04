@@ -90,6 +90,17 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 	m_HighValue = new wxSpinCtrl(this, ID_HIGH_VALUE, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 127);
 	box->Add(m_HighValue, 0);
 
+	m_StartLabel = new wxStaticText(this, wxID_ANY, wxT(""));
+	sizer->Add(m_StartLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+	box = new wxBoxSizer(wxHORIZONTAL);
+	sizer->Add(box);
+	m_StartValue = new wxSpinCtrl(this, ID_START, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 127);
+	box->Add(m_StartValue, 0);
+	m_LengthLabel = new wxStaticText(this, wxID_ANY, wxT(""));
+	box->Add(m_LengthLabel, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+	m_LengthValue = new wxSpinCtrl(this, ID_LENGTH, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 127);
+	box->Add(m_LengthValue, 0);
+
 	m_copy = new wxButton(this, ID_COPY, _("&Copy current receive event"));
 	if (!m_recv)
 		m_copy->Disable();
@@ -213,6 +224,20 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 	}
 	else
 		m_HighValue->Disable();
+	if (m_original->HasStart(type))
+	{
+		m_StartValue->Enable();
+		m_StartValue->SetRange(0, m_original->StartLimit(type));
+	}
+	else
+		m_StartValue->Disable();
+	if (m_original->HasLength(type))
+	{
+		m_LengthValue->Enable();
+		m_LengthValue->SetRange(0, m_original->LengthLimit(type));
+	}
+	else
+		m_LengthValue->Disable();
 	if (type == MIDI_S_HW_LCD || type == MIDI_S_HW_NAME_LCD)
 		m_LowValueLabel->SetLabel(_("&Color:"));
 	else if (type == MIDI_S_PGM_RANGE)
@@ -269,6 +294,8 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 	default:
 		m_KeyLabel->SetLabel(_("&CTRL/PGM:"));
 	}
+	m_StartLabel->SetLabel(_("&Start-Position:"));
+	m_LengthLabel->SetLabel(_("&Length:"));
 	Layout();
 }
 
@@ -311,6 +338,8 @@ void MIDIEventSendDialog::LoadEvent()
 	m_key->SetValue(e.key);
 	m_LowValue->SetValue(e.low_value);
 	m_HighValue->SetValue(e.high_value);
+	m_StartValue->SetValue(e.start);
+	m_LengthValue->SetValue(e.length);
 }
 
 void MIDIEventSendDialog::StoreEvent()
@@ -326,6 +355,8 @@ void MIDIEventSendDialog::StoreEvent()
 	e.key = m_key->GetValue();
 	e.low_value = m_LowValue->GetValue();
 	e.high_value = m_HighValue->GetValue();
+	e.start = m_StartValue->GetValue();
+	e.length = m_LengthValue->GetValue();
 }
 
 void MIDIEventSendDialog::OnNewClick(wxCommandEvent& event)

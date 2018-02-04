@@ -131,6 +131,7 @@ public:
 	{
 		m_string = str;
 	}
+	void SetString(const wxString& str, unsigned length);
 
 	void FromMidi(const std::vector<unsigned char>& msg, GOrgueMidiMap& map);
 	void ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgueMidiMap& map) const;

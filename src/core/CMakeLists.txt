@@ -56,6 +56,7 @@ GOrgueMidiEvent.cpp
 GOrgueMidiFileReader.cpp
 GOrgueMidiMap.cpp
 GOrgueMidiMerger.cpp
+GOrgueMidiOutputMerger.cpp
 GOrgueMidiPlayerContent.cpp
 GOrgueMidiReceiverBase.cpp
 GOrgueMidiReceiverData.cpp

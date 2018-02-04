@@ -46,6 +46,10 @@ private:
 	wxSpinCtrl *m_LowValue;
 	wxStaticText* m_HighValueLabel;
 	wxSpinCtrl *m_HighValue;
+	wxStaticText* m_StartLabel;
+	wxSpinCtrl *m_StartValue;
+	wxStaticText* m_LengthLabel;
+	wxSpinCtrl *m_LengthValue;
 	wxButton* m_new, *m_delete, *m_copy;
 	int m_current;
 
@@ -70,6 +74,8 @@ protected:
 		ID_KEY,
 		ID_LOW_VALUE,
 		ID_HIGH_VALUE,
+		ID_START,
+		ID_LENGTH,
 		ID_COPY
 	};
 
