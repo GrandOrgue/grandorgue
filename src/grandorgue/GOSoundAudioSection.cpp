@@ -664,7 +664,7 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 		throw (wxString)_("< More than 2 channels in");
 
 	m_BitsPerSample  = wave_bits_per_sample(pcm_data_format);
-	compress = (compress) && (m_BitsPerSample >= 12);
+	compress = (compress) && (m_BitsPerSample > 8);
 	crossfade_length = crossfade_length * pcm_data_sample_rate / 1000;
 
 	assert(pcm_data_nb_samples > 0);
@@ -798,7 +798,7 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 	GetMaxAmplitudeAndDerivative();
 
 	if (compress)
-		Compress(m_BitsPerSample >= 20);
+		Compress(m_BitsPerSample > 16);
 
 }
 
