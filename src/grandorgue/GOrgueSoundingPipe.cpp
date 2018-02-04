@@ -267,6 +267,9 @@ void GOrgueSoundingPipe::Validate()
 	if (!m_organfile->GetSettings().ODFCheck())
 		return;
 
+	if (!m_PipeConfig.GetEffectiveChannels())
+		return;
+
 	if (m_SoundProvider.checkForMissingAttack())
 	{
 		wxLogWarning(_("rank %s pipe %s: attack with MaxTimeSinceLastRelease=-1 missing"),
