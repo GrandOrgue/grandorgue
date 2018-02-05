@@ -24,6 +24,7 @@
 
 #include "GOrgueAlloc.h"
 #include <string.h>
+#include <algorithm>
 #include <memory>
 
 template<class T>
