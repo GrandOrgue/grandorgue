@@ -133,7 +133,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 
 			for(unsigned i = 0; i < pipes.size(); i++)
 			{
-				GO_SAMPLER* handle = engine->StartSample(pipes[i], 1, 0, 127, 0);
+				GO_SAMPLER* handle = engine->StartSample(pipes[i], 1, 0, 127, 0, 0);
 				if (handle)
 					handles.push_back(handle);
 			}
