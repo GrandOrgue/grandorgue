@@ -38,7 +38,7 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 	wxFlexGridSizer* grid;
 	wxBoxSizer* item6;
 
-	grid = new wxFlexGridSizer(4, 2, 5, 5);
+	grid = new wxFlexGridSizer(2, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Volume"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
@@ -49,7 +49,7 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 	m_Volume->SetValue(m_Settings.Volume());
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
-	grid = new wxFlexGridSizer(4, 2, 5, 5);
+	grid = new wxFlexGridSizer(2, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Metronome"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
@@ -68,7 +68,7 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 	item9 = new wxBoxSizer(wxVERTICAL);
 	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
 
-	grid = new wxFlexGridSizer(12, 1, 5, 5);
+	grid = new wxFlexGridSizer(1, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 

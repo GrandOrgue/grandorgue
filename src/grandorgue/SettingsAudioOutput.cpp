@@ -102,8 +102,8 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
 
-	m_AudioOutput = new wxTreeCtrl(this, ID_OUTPUT_LIST, wxDefaultPosition, wxSize(640, 300), wxTR_HAS_BUTTONS | wxTR_SINGLE);
-	topSizer->Add(m_AudioOutput, wxALIGN_LEFT | wxEXPAND);
+	m_AudioOutput = new wxTreeCtrl(this, ID_OUTPUT_LIST, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS | wxTR_SINGLE);
+	topSizer->Add(m_AudioOutput, 1, wxALIGN_LEFT | wxEXPAND);
 	topSizer->AddSpacer(5);
 
 	wxBoxSizer* buttonSizer =  new wxBoxSizer(wxHORIZONTAL);

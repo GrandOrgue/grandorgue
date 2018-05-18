@@ -62,7 +62,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_Scale->SetValue(m_Settings.ScaleRelease());
 	m_Random->SetValue(m_Settings.RandomizeSpeaking());
 
-	wxFlexGridSizer* grid = new wxFlexGridSizer(5, 2, 5, 5);
+	wxFlexGridSizer* grid = new wxFlexGridSizer(2, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound Engine"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
@@ -107,7 +107,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_WaveFormat->Select(m_Settings.WaveFormatBytesPerSample() - 1);
 	m_RecordDownmix->SetValue(m_Settings.RecordDownmix());
 
-	grid = new wxFlexGridSizer(4, 1, 5, 5);
+	grid = new wxFlexGridSizer(1, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
@@ -132,7 +132,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item6->Add(m_LosslessCompression = new wxCheckBox(this, ID_LOSSLESS_COMPRESSION, _("Lossless compression")), 0, wxEXPAND | wxALL, 5);
 	m_LosslessCompression->SetValue(m_Settings.LosslessCompression());
 
-	grid = new wxFlexGridSizer(6, 2, 5, 5);
+	grid = new wxFlexGridSizer(2, 5, 5);
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	choices.clear();
@@ -180,7 +180,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
-	grid = new wxFlexGridSizer(4, 2, 5, 5);
+	grid = new wxFlexGridSizer(2, 5, 5);
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	choices.clear();

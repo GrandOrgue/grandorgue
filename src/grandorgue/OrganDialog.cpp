@@ -83,7 +83,7 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 END_EVENT_TABLE()
 
 OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueFile* organfile) :
-	wxDialog(parent, wxID_ANY, _("Organ settings"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE),
+	wxDialog(parent, wxID_ANY, _("Organ settings"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
 	GOrgueView(doc, this),
 	m_organfile(organfile),
 	m_Apply(NULL),
@@ -99,23 +99,23 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	topSizer->Add(mainSizer, 0, wxALL, 6);
+	topSizer->Add(mainSizer, 1, wxALL | wxEXPAND, 6);
 
-	m_Tree = new wxTreeCtrl(this, ID_EVENT_TREE, wxDefaultPosition, wxSize(300, 400), wxTR_HAS_BUTTONS | wxTR_MULTIPLE);
+	m_Tree = new wxTreeCtrl(this, ID_EVENT_TREE, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS | wxTR_MULTIPLE);
 	wxBoxSizer* Sizer1 = new wxBoxSizer(wxVERTICAL);
-	Sizer1->Add(m_Tree, wxALIGN_TOP | wxEXPAND);
+	Sizer1->Add(m_Tree, 1, wxALIGN_TOP | wxEXPAND);
 
 	m_Collapse = new wxButton(this, ID_EVENT_COLLAPSE, _("Collapse tree"));
 	Sizer1->Add(m_Collapse);
 	m_AudioGroupAssistant = new wxButton(this, ID_EVENT_AUDIO_GROUP_ASSISTANT, _("Distribute audio groups"));
 	Sizer1->Add(m_AudioGroupAssistant);
 
-	mainSizer->Add(Sizer1, wxALIGN_LEFT | wxEXPAND);
+	mainSizer->Add(Sizer1, 1, wxALIGN_LEFT | wxEXPAND);
 	mainSizer->AddSpacer(5);
 
 	wxBoxSizer* settingSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Settings"));
-	wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 5, 5);
+	wxFlexGridSizer* grid = new wxFlexGridSizer(2, 5, 5);
 	box1->Add(grid, 0, wxEXPAND | wxALL, 5);
 	settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
 
@@ -167,7 +167,7 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 	m_LastAudioGroup = m_AudioGroup->GetValue();
 
 	box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sample Loading"));
-	grid = new wxFlexGridSizer(6, 2, 5, 5);
+	grid = new wxFlexGridSizer(2, 5, 5);
 	box1->Add(grid, 0, wxEXPAND | wxALL, 5);
 	settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
 
@@ -244,7 +244,7 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 	settingSizer->Add(buttons);
 
 	box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sample informations"));
-	grid = new wxFlexGridSizer(6, 2, 5, 5);
+	grid = new wxFlexGridSizer(2, 5, 5);
 	box1->Add(grid, 0, wxEXPAND | wxALL, 5);
 	settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
 
@@ -262,7 +262,7 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 		m_IgnorePitch->SetValue(true);
 		
 	settingSizer->Add(box3, 0, wxEXPAND | wxALL, 4);
-	mainSizer->Add(settingSizer, wxALIGN_RIGHT | wxEXPAND);	
+	mainSizer->Add(settingSizer, 0, wxALIGN_RIGHT | wxEXPAND);	
 	
 	topSizer->Add(new wxStaticLine(this), 0, wxEXPAND | wxALL, 5);
 	topSizer->Add(CreateButtonSizer(wxOK | wxCANCEL), 0, wxALIGN_RIGHT | wxALL, 5);
