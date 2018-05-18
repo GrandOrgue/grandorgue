@@ -38,7 +38,7 @@ BEGIN_EVENT_TABLE(MIDIList, wxDialog)
 END_EVENT_TABLE()
 
 MIDIList::MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GOrgueEventDistributor* midi_elements) :
-	wxDialog(parent, wxID_ANY, _("MIDI Objects"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE),
+	wxDialog(parent, wxID_ANY, _("MIDI Objects"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
 	GOrgueView(doc, this)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);

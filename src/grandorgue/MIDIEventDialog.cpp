@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
 END_EVENT_TABLE()
 
 MIDIEventDialog::MIDIEventDialog (GOrgueDocumentBase* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiverBase* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division):
-	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize),
+	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
 	GOrgueView(doc, this),
 	m_recvPage(NULL),
 	m_sendPage(NULL),
