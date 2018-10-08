@@ -22,6 +22,7 @@
 #ifndef MIDIEVENTSENDDIALOG_H_
 #define MIDIEVENTSENDDIALOG_H_
 
+#include "GOrgueChoice.h"
 #include "GOrgueMidiSender.h"
 #include <wx/panel.h>
 
@@ -39,7 +40,8 @@ private:
 	GOrgueMidiSender* m_original;
 	MIDIEventRecvDialog* m_recv;
 	GOrgueMidiSenderData m_midi;
-	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
+	GOrgueChoice<midi_send_message_type>* m_eventtype;
+	wxChoice *m_eventno, *m_channel, *m_device;
 	wxStaticText* m_KeyLabel;
 	wxSpinCtrl *m_key;
 	wxStaticText* m_LowValueLabel;
