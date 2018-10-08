@@ -22,6 +22,7 @@
 #ifndef MIDIEVENTRECVDIALOG_H_
 #define MIDIEVENTRECVDIALOG_H_
 
+#include "GOrgueChoice.h"
 #include "GOrgueMidiCallback.h"
 #include "GOrgueMidiListener.h"
 #include "GOrgueMidiReceiverBase.h"
@@ -43,7 +44,8 @@ private:
 	GOrgueMidiReceiverBase* m_original;
 	GOrgueMidiReceiverData m_midi;
 	GOrgueMidiListener m_listener;
-	wxChoice *m_eventno, *m_eventtype, *m_channel, *m_device;
+	GOrgueChoice<midi_match_message_type>* m_eventtype;
+	wxChoice *m_eventno, *m_channel, *m_device;
 	wxStaticText* m_DataLabel;
 	wxSpinCtrl *m_data;
 	wxSpinCtrl *m_LowKey;

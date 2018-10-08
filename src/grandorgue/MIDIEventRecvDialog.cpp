@@ -74,7 +74,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiverBa
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Event:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-	m_eventtype = new wxChoice(this, ID_EVENT);
+	m_eventtype = new GOrgueChoice<midi_match_message_type>(this, ID_EVENT);
 	sizer->Add(m_eventtype, 1, wxEXPAND);
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Channel:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -135,61 +135,61 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiverBa
 	for(unsigned int i = 1 ; i <= 16; i++)
 		m_channel->Append(wxString::Format(wxT("%d"), i));;
 
-	m_eventtype->Append(_("(none)"), (void*)MIDI_M_NONE);
+	m_eventtype->Append(_("(none)"), MIDI_M_NONE);
 	if (m_midi.GetType() != MIDI_RECV_ENCLOSURE)
-		m_eventtype->Append(_("9x Note"), (void*)MIDI_M_NOTE);
+		m_eventtype->Append(_("9x Note"), MIDI_M_NOTE);
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 	{
-		m_eventtype->Append(_("9x Note On Toggle"), (void*)MIDI_M_NOTE_ON);
-		m_eventtype->Append(_("9x Note Off Toggle"), (void*)MIDI_M_NOTE_OFF);
-		m_eventtype->Append(_("9x Note On/Off Toggle"), (void*)MIDI_M_NOTE_ON_OFF);
+		m_eventtype->Append(_("9x Note On Toggle"), MIDI_M_NOTE_ON);
+		m_eventtype->Append(_("9x Note Off Toggle"), MIDI_M_NOTE_OFF);
+		m_eventtype->Append(_("9x Note On/Off Toggle"), MIDI_M_NOTE_ON_OFF);
 	}
 	if (m_midi.GetType() != MIDI_RECV_MANUAL)
-		m_eventtype->Append(_("Bx Controller"), (void*)MIDI_M_CTRL_CHANGE);
+		m_eventtype->Append(_("Bx Controller"), MIDI_M_CTRL_CHANGE);
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 	{
-		m_eventtype->Append(_("Bx Controller On Toggle"), (void*)MIDI_M_CTRL_CHANGE_ON);
-		m_eventtype->Append(_("Bx Controller Off Toggle"), (void*)MIDI_M_CTRL_CHANGE_OFF);
-		m_eventtype->Append(_("Bx Controller On/Off Toggle"), (void*)MIDI_M_CTRL_CHANGE_ON_OFF);
+		m_eventtype->Append(_("Bx Controller On Toggle"), MIDI_M_CTRL_CHANGE_ON);
+		m_eventtype->Append(_("Bx Controller Off Toggle"), MIDI_M_CTRL_CHANGE_OFF);
+		m_eventtype->Append(_("Bx Controller On/Off Toggle"), MIDI_M_CTRL_CHANGE_ON_OFF);
 	}
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
-		m_eventtype->Append(_("Cx Program Change"), (void*)MIDI_M_PGM_CHANGE);
+		m_eventtype->Append(_("Cx Program Change"), MIDI_M_PGM_CHANGE);
 	if (m_midi.GetType() == MIDI_RECV_MANUAL)
 	{
-		m_eventtype->Append(_("9x Note without Velocity"), (void*)MIDI_M_NOTE_NO_VELOCITY);
-		m_eventtype->Append(_("9x Note short octave at low key"), (void*)MIDI_M_NOTE_SHORT_OCTAVE);
-		m_eventtype->Append(_("9x Note without map"), (void*)MIDI_M_NOTE_NORMAL);
+		m_eventtype->Append(_("9x Note without Velocity"), MIDI_M_NOTE_NO_VELOCITY);
+		m_eventtype->Append(_("9x Note short octave at low key"), MIDI_M_NOTE_SHORT_OCTAVE);
+		m_eventtype->Append(_("9x Note without map"), MIDI_M_NOTE_NORMAL);
 	}
 
 	if (m_midi.GetType() != MIDI_RECV_MANUAL)
 	{
-		m_eventtype->Append(_("RPN"), (void*)MIDI_M_RPN);
-		m_eventtype->Append(_("NRPN"), (void*)MIDI_M_NRPN);
-		m_eventtype->Append(_("Cx Program Change Range"), (void*)MIDI_M_PGM_RANGE);
+		m_eventtype->Append(_("RPN"), MIDI_M_RPN);
+		m_eventtype->Append(_("NRPN"), MIDI_M_NRPN);
+		m_eventtype->Append(_("Cx Program Change Range"), MIDI_M_PGM_RANGE);
 	}
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 	{
-		m_eventtype->Append(_("RPN On Toggle"), (void*)MIDI_M_RPN_ON);
-		m_eventtype->Append(_("RPN Off Toggle"), (void*)MIDI_M_RPN_OFF);
-		m_eventtype->Append(_("RPN On/Off Toggle"), (void*)MIDI_M_RPN_ON_OFF);
-		m_eventtype->Append(_("NRPN On Toggle"), (void*)MIDI_M_NRPN_ON);
-		m_eventtype->Append(_("NRPN Off Toggle"), (void*)MIDI_M_NRPN_OFF);
-		m_eventtype->Append(_("NRPN On/Off Toggle"), (void*)MIDI_M_NRPN_ON_OFF);
-		m_eventtype->Append(_("RPN Range"), (void*)MIDI_M_RPN_RANGE);
-		m_eventtype->Append(_("NRPN Range"), (void*)MIDI_M_NRPN_RANGE);
+		m_eventtype->Append(_("RPN On Toggle"), MIDI_M_RPN_ON);
+		m_eventtype->Append(_("RPN Off Toggle"), MIDI_M_RPN_OFF);
+		m_eventtype->Append(_("RPN On/Off Toggle"), MIDI_M_RPN_ON_OFF);
+		m_eventtype->Append(_("NRPN On Toggle"), MIDI_M_NRPN_ON);
+		m_eventtype->Append(_("NRPN Off Toggle"), MIDI_M_NRPN_OFF);
+		m_eventtype->Append(_("NRPN On/Off Toggle"), MIDI_M_NRPN_ON_OFF);
+		m_eventtype->Append(_("RPN Range"), MIDI_M_RPN_RANGE);
+		m_eventtype->Append(_("NRPN Range"), MIDI_M_NRPN_RANGE);
 	}
 
 	if (m_midi.GetType() != MIDI_RECV_MANUAL && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
 	{
-		m_eventtype->Append(_("Ctrl Change Bitfield"), (void*)MIDI_M_CTRL_BIT);
-		m_eventtype->Append(_("Bx Ctrl Change Fixed Value"), (void*)MIDI_M_CTRL_CHANGE_FIXED);
-		m_eventtype->Append(_("Bx Ctrl Change Fixed On Value Toggle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_ON);
-		m_eventtype->Append(_("Bx Ctrl Change Fixed Off Value Toggle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_OFF);
-		m_eventtype->Append(_("Bx Ctrl Change Fixed On/Off Value Toggle"), (void*)MIDI_M_CTRL_CHANGE_FIXED_ON_OFF);
-		m_eventtype->Append(_("Sys Ex Johannus 9 bytes"), (void*)MIDI_M_SYSEX_JOHANNUS_9);
-		m_eventtype->Append(_("Sys Ex Johannus 11 bytes"), (void*)MIDI_M_SYSEX_JOHANNUS_11);
-		m_eventtype->Append(_("Sys Ex Viscount"), (void*)MIDI_M_SYSEX_VISCOUNT);
-		m_eventtype->Append(_("Sys Ex Viscount Toggle"), (void*)MIDI_M_SYSEX_VISCOUNT_TOGGLE);
+		m_eventtype->Append(_("Ctrl Change Bitfield"), MIDI_M_CTRL_BIT);
+		m_eventtype->Append(_("Bx Ctrl Change Fixed Value"), MIDI_M_CTRL_CHANGE_FIXED);
+		m_eventtype->Append(_("Bx Ctrl Change Fixed On Value Toggle"), MIDI_M_CTRL_CHANGE_FIXED_ON);
+		m_eventtype->Append(_("Bx Ctrl Change Fixed Off Value Toggle"), MIDI_M_CTRL_CHANGE_FIXED_OFF);
+		m_eventtype->Append(_("Bx Ctrl Change Fixed On/Off Value Toggle"), MIDI_M_CTRL_CHANGE_FIXED_ON_OFF);
+		m_eventtype->Append(_("Sys Ex Johannus 9 bytes"), MIDI_M_SYSEX_JOHANNUS_9);
+		m_eventtype->Append(_("Sys Ex Johannus 11 bytes"), MIDI_M_SYSEX_JOHANNUS_11);
+		m_eventtype->Append(_("Sys Ex Viscount"), MIDI_M_SYSEX_VISCOUNT);
+		m_eventtype->Append(_("Sys Ex Viscount Toggle"), MIDI_M_SYSEX_VISCOUNT_TOGGLE);
 	}
 
 	m_current = 0;
@@ -234,7 +234,7 @@ void MIDIEventRecvDialog::DoApply()
 
 void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 {
-	midi_match_message_type type = (midi_match_message_type)(intptr_t)m_eventtype->GetClientData(m_eventtype->GetSelection());
+	midi_match_message_type type = m_eventtype->GetCurrentSelection();
 	if (m_original->HasChannel(type))
 		m_channel->Enable();
 	else
@@ -373,10 +373,7 @@ void MIDIEventRecvDialog::LoadEvent()
 
 	MIDI_MATCH_EVENT& e=m_midi.GetEvent(m_current);
 
-	m_eventtype->SetSelection(0);
-	for(unsigned i = 0; i < m_eventtype->GetCount(); i++)
-		if ((void*)e.type == m_eventtype->GetClientData(i))
-			m_eventtype->SetSelection(i);
+	m_eventtype->SetCurrentSelection(e.type);
 
 	wxCommandEvent event;
 	OnTypeChange(event);
@@ -408,7 +405,7 @@ MIDI_MATCH_EVENT MIDIEventRecvDialog::GetCurrentEvent()
 	else
 		e.device = m_Settings.GetMidiMap().GetDeviceByString(m_device->GetStringSelection());
 
-	e.type = (midi_match_message_type)(intptr_t) m_eventtype->GetClientData(m_eventtype->GetSelection());
+	e.type = m_eventtype->GetCurrentSelection();
 	if (m_channel->GetSelection() == 0)
 		e.channel = -1;
 	else

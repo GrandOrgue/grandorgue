@@ -66,7 +66,7 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Event:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-	m_eventtype = new wxChoice(this, ID_EVENT);
+	m_eventtype = new GOrgueChoice<midi_send_message_type>(this, ID_EVENT);
 	sizer->Add(m_eventtype, 1, wxEXPAND);
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Channel:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -118,50 +118,50 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 	for(unsigned int i = 1 ; i <= 16; i++)
 		m_channel->Append(wxString::Format(wxT("%d"), i));;
 
-	m_eventtype->Append(_("(none)"), (void*)MIDI_S_NONE);
+	m_eventtype->Append(_("(none)"), MIDI_S_NONE);
 	if (m_midi.GetType() == MIDI_SEND_MANUAL || m_midi.GetType() == MIDI_SEND_BUTTON)
-		m_eventtype->Append(_("9x Note"), (void*)MIDI_S_NOTE);
+		m_eventtype->Append(_("9x Note"), MIDI_S_NOTE);
 	if (m_midi.GetType() == MIDI_SEND_MANUAL)
-		m_eventtype->Append(_("9x Note without Velocity"), (void*)MIDI_S_NOTE_NO_VELOCITY);
+		m_eventtype->Append(_("9x Note without Velocity"), MIDI_S_NOTE_NO_VELOCITY);
 	if (m_midi.GetType() == MIDI_SEND_BUTTON)
 	{
-		m_eventtype->Append(_("9x Note On"), (void*)MIDI_S_NOTE_ON);
-		m_eventtype->Append(_("9x Note Off"), (void*)MIDI_S_NOTE_OFF);
+		m_eventtype->Append(_("9x Note On"), MIDI_S_NOTE_ON);
+		m_eventtype->Append(_("9x Note Off"), MIDI_S_NOTE_OFF);
 	}
 	if (m_midi.GetType() == MIDI_SEND_ENCLOSURE || m_midi.GetType() == MIDI_SEND_BUTTON)
-		m_eventtype->Append(_("Bx Controller"), (void*)MIDI_S_CTRL);
+		m_eventtype->Append(_("Bx Controller"), MIDI_S_CTRL);
 	if (m_midi.GetType() == MIDI_SEND_BUTTON)
 	{
-		m_eventtype->Append(_("Bx Controller On"), (void*)MIDI_S_CTRL_ON);
-		m_eventtype->Append(_("Bx Controller Off"), (void*)MIDI_S_CTRL_OFF);
+		m_eventtype->Append(_("Bx Controller On"), MIDI_S_CTRL_ON);
+		m_eventtype->Append(_("Bx Controller Off"), MIDI_S_CTRL_OFF);
 	}
 	if (m_midi.GetType() == MIDI_SEND_BUTTON)
 	{
-		m_eventtype->Append(_("Cx Program Change On"), (void*)MIDI_S_PGM_ON);
-		m_eventtype->Append(_("Cx Program Change Off"), (void*)MIDI_S_PGM_OFF);
+		m_eventtype->Append(_("Cx Program Change On"), MIDI_S_PGM_ON);
+		m_eventtype->Append(_("Cx Program Change Off"), MIDI_S_PGM_OFF);
 	}
 	if (m_midi.GetType() == MIDI_SEND_ENCLOSURE || m_midi.GetType() == MIDI_SEND_BUTTON)
 	{
-		m_eventtype->Append(_("RPN"), (void*)MIDI_S_RPN);
-		m_eventtype->Append(_("NRPN"), (void*)MIDI_S_NRPN);
-		m_eventtype->Append(_("Cx Program Change Range"), (void*)MIDI_S_PGM_RANGE);
+		m_eventtype->Append(_("RPN"), MIDI_S_RPN);
+		m_eventtype->Append(_("NRPN"), MIDI_S_NRPN);
+		m_eventtype->Append(_("Cx Program Change Range"), MIDI_S_PGM_RANGE);
 	}
 	if (m_midi.GetType() == MIDI_SEND_BUTTON)
 	{
-		m_eventtype->Append(_("RPN On"), (void*)MIDI_S_RPN_ON);
-		m_eventtype->Append(_("RPN Off"), (void*)MIDI_S_RPN_OFF);
-		m_eventtype->Append(_("NRPN On"), (void*)MIDI_S_NRPN_ON);
-		m_eventtype->Append(_("NRPN Off"), (void*)MIDI_S_NRPN_OFF);
-		m_eventtype->Append(_("RPN Range"), (void*)MIDI_S_RPN_RANGE);
-		m_eventtype->Append(_("NRPN Range"), (void*)MIDI_S_NRPN_RANGE);
+		m_eventtype->Append(_("RPN On"), MIDI_S_RPN_ON);
+		m_eventtype->Append(_("RPN Off"), MIDI_S_RPN_OFF);
+		m_eventtype->Append(_("NRPN On"), MIDI_S_NRPN_ON);
+		m_eventtype->Append(_("NRPN Off"), MIDI_S_NRPN_OFF);
+		m_eventtype->Append(_("RPN Range"), MIDI_S_RPN_RANGE);
+		m_eventtype->Append(_("NRPN Range"), MIDI_S_NRPN_RANGE);
 	}
 	if (m_midi.GetType() == MIDI_SEND_LABEL || m_midi.GetType() == MIDI_SEND_BUTTON || m_midi.GetType() == MIDI_SEND_ENCLOSURE)
 	{
-		m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD Value"), (void*)MIDI_S_HW_LCD);
-		m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String Value"), (void*)MIDI_S_HW_STRING);
+		m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD Value"), MIDI_S_HW_LCD);
+		m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String Value"), MIDI_S_HW_STRING);
 	}
-	m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD Name"), (void*)MIDI_S_HW_NAME_LCD);
-	m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String Name"), (void*)MIDI_S_HW_NAME_STRING);
+	m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD Name"), MIDI_S_HW_NAME_LCD);
+	m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String Name"), MIDI_S_HW_NAME_STRING);
 
 	m_current = 0;
 	if (!m_midi.GetEventCount())
@@ -198,7 +198,7 @@ void MIDIEventSendDialog::DoApply()
 
 void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 {
-	midi_send_message_type type = (midi_send_message_type)(intptr_t)m_eventtype->GetClientData(m_eventtype->GetSelection());
+	midi_send_message_type type = m_eventtype->GetCurrentSelection();
 	if (m_original->HasChannel(type))
 		m_channel->Enable();
 	else
@@ -321,10 +321,7 @@ void MIDIEventSendDialog::LoadEvent()
 
 	MIDI_SEND_EVENT& e=m_midi.GetEvent(m_current);
 
-	m_eventtype->SetSelection(0);
-	for(unsigned i = 0; i < m_eventtype->GetCount(); i++)
-		if ((void*)e.type == m_eventtype->GetClientData(i))
-			m_eventtype->SetSelection(i);
+	m_eventtype->SetCurrentSelection(e.type);
 
 	wxCommandEvent event;
 	OnTypeChange(event);
@@ -350,7 +347,7 @@ void MIDIEventSendDialog::StoreEvent()
 	else
 		e.device = m_Settings.GetMidiMap().GetDeviceByString(m_device->GetStringSelection());
 
-	e.type = (midi_send_message_type)(intptr_t) m_eventtype->GetClientData(m_eventtype->GetSelection());
+	e.type = m_eventtype->GetCurrentSelection();
 	e.channel = m_channel->GetSelection() + 1;
 	e.key = m_key->GetValue();
 	e.low_value = m_LowValue->GetValue();
