@@ -22,6 +22,7 @@
 #include "SettingsOption.h"
 
 #include "GOSoundDefs.h"
+#include "GOrgueChoice.h"
 #include "GOrgueLimits.h"
 #include "GOrgueSettings.h"
 #include <wx/checkbox.h>
@@ -56,9 +57,12 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item6->Add(m_Limit = new wxCheckBox(this, ID_MANAGE_POLYPHONY, _("Active polyphony management")), 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_Scale = new wxCheckBox(this, ID_SCALE_RELEASE, _("Release sample scaling")), 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_Random = new wxCheckBox(this, ID_RANDOMIZE, _("Randomize pipe speaking")), 0, wxEXPAND | wxALL, 5);
-	item6->Add(m_LoadLastFile  = new wxCheckBox(this, ID_LOAD_LAST_FILE, _("Load last file at startup")), 0, wxEXPAND | wxALL, 5);
+	item6->Add(m_LoadLastFile  = new GOrgueChoice<GOInitialLoadType>(this, ID_LOAD_LAST_FILE), 0, wxEXPAND | wxALL, 5);
+	m_LoadLastFile->Append(_("Load last used organ at startup"), GOInitialLoadType::LOAD_LAST_USED);
+	m_LoadLastFile->Append(_("Load first favorit organ at startup"), GOInitialLoadType::LOAD_FIRST);
+	m_LoadLastFile->Append(_("Start without any organ"), GOInitialLoadType::LOAD_NONE);
 	m_Limit->SetValue(m_Settings.ManagePolyphony());
-	m_LoadLastFile->SetValue(m_Settings.LoadLastFile());
+	m_LoadLastFile->SetCurrentSelection(m_Settings.LoadLastFile());
 	m_Scale->SetValue(m_Settings.ScaleRelease());
 	m_Random->SetValue(m_Settings.RandomizeSpeaking());
 
@@ -226,7 +230,7 @@ void SettingsOption::Save()
 	m_Settings.ManagePolyphony(m_Limit->IsChecked());
 	m_Settings.CompressCache(m_CompressCache->IsChecked());
 	m_Settings.ManageCache(m_ManageCache->IsChecked());
-	m_Settings.LoadLastFile(m_LoadLastFile->IsChecked());
+	m_Settings.LoadLastFile(m_LoadLastFile->GetCurrentSelection());
 	m_Settings.ODFCheck(m_ODFCheck->IsChecked());
 	m_Settings.RecordDownmix(m_RecordDownmix->IsChecked());
 	m_Settings.ScaleRelease(m_Scale->IsChecked());

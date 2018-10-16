@@ -323,8 +323,19 @@ void GOrgueFrame::Init(wxString filename)
 	manager.RegisterPackageDirectory(m_Settings.OrganPackagePath());
 	if (!filename.IsEmpty())
 		SendLoadFile(filename);
-	else if (m_Settings.LoadLastFile())
-		LoadLastOrgan();
+	else switch(m_Settings.LoadLastFile())
+	     {
+	     case GOInitialLoadType::LOAD_LAST_USED:
+		     LoadLastOrgan();
+		     break;
+
+	     case GOInitialLoadType::LOAD_FIRST:
+		     LoadFirstOrgan();
+		     break;
+
+	     case GOInitialLoadType::LOAD_NONE:
+		     break;
+	     }
 
 	m_listener.SetCallback(this);
 	GOrgueCacheCleaner clean(m_Settings);
@@ -1025,6 +1036,13 @@ bool GOrgueFrame::InstallOrganPackage(wxString name)
 void GOrgueFrame::LoadLastOrgan()
 {
 	std::vector<const GOrgueOrgan*> list = m_Settings.GetLRUOrganList();
+	if (list.size() > 0)
+		SendLoadOrgan(*list[0]);
+}
+
+void GOrgueFrame::LoadFirstOrgan()
+{
+	ptr_vector<GOrgueOrgan>& list = m_Settings.GetOrganList();
 	if (list.size() > 0)
 		SendLoadOrgan(*list[0]);
 }

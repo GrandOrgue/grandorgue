@@ -69,6 +69,7 @@ GOrgueSampleStatistic.cpp
 GOrgueSetting.cpp
 GOrgueSettingBool.cpp
 GOrgueSettingDirectory.cpp
+GOrgueSettingEnum.cpp
 GOrgueSettingFile.cpp
 GOrgueSettingFloat.cpp
 GOrgueSettingStore.cpp
