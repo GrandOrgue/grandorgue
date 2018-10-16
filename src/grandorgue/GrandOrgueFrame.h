@@ -142,6 +142,7 @@ private:
 
 	bool InstallOrganPackage(wxString name);
 	void LoadLastOrgan();
+	void LoadFirstOrgan();
 	void SendLoadOrgan(const GOrgueOrgan& organ, bool force = false);
 
 public:

@@ -32,6 +32,7 @@
 #include "GOrgueMemoryPool.h"
 #include "GOrgueOrgan.h"
 #include "GOrguePath.h"
+#include "GOrgueSettingEnum.cpp"
 #include "GOrgueSettingNumber.cpp"
 #include "GOrgueStdPath.h"
 #include <wx/filename.h>
@@ -84,6 +85,12 @@ const GOMidiSetting GOrgueSettings:: m_MIDISettings[] = {
 	{ MIDI_RECV_SETTER, 29, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure +") },
 };
 
+const struct IniFileEnumEntry GOrgueSettings::m_InitialLoadTypes[] = {
+	{ wxT("N"), (int)GOInitialLoadType::LOAD_NONE },
+        { wxT("Y"), (int)GOInitialLoadType::LOAD_LAST_USED },
+        { wxT("First"), (int)GOInitialLoadType::LOAD_FIRST },
+};
+
 GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_InstanceName(instance),
 	m_ResourceDir(),
@@ -103,7 +110,7 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	ReleaseLoad(this, wxT("General"), wxT("ReleaseLoad"), 0, 1, 1),
 	ManageCache(this, wxT("General"), wxT("ManageCache"), true),
 	CompressCache(this, wxT("General"), wxT("CompressCache"), false),
-	LoadLastFile(this, wxT("General"), wxT("LoadLastFile"), true),
+	LoadLastFile(this, wxT("General"), wxT("LoadLastFile"), m_InitialLoadTypes, sizeof(m_InitialLoadTypes) / sizeof(m_InitialLoadTypes[0]), GOInitialLoadType::LOAD_LAST_USED),
 	ODFCheck(this, wxT("General"), wxT("StrictODFCheck"), false),
 	LoadChannels(this, wxT("General"), wxT("Channels"), 0, 2, 2),
 	LosslessCompression(this, wxT("General"), wxT("LosslessCompression"), false),

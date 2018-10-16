@@ -24,6 +24,8 @@
 
 #include <wx/scrolwin.h>
 
+enum class GOInitialLoadType;
+template<class T> class GOrgueChoice;
 class GOrgueSettings;
 class wxCheckBox;
 class wxChoice;
@@ -68,7 +70,7 @@ private:
 	wxCheckBox* m_Limit;
 	wxCheckBox* m_CompressCache;
 	wxCheckBox* m_ManageCache;
-	wxCheckBox* m_LoadLastFile;
+	GOrgueChoice<GOInitialLoadType>* m_LoadLastFile;
 	wxCheckBox* m_Scale;
 	wxCheckBox* m_Random;
 	wxCheckBox* m_ODFCheck;

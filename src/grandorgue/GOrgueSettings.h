@@ -28,6 +28,7 @@
 #include "GOrgueTemperamentList.h"
 #include "GOrgueSettingBool.h"
 #include "GOrgueSettingDirectory.h"
+#include "GOrgueSettingEnum.h"
 #include "GOrgueSettingFile.h"
 #include "GOrgueSettingFloat.h"
 #include "GOrgueSettingNumber.h"
@@ -62,6 +63,12 @@ typedef struct
 	const wxString name;
 } GOMidiSetting;
 
+enum class GOInitialLoadType {
+	LOAD_NONE,
+	LOAD_LAST_USED,
+	LOAD_FIRST
+};
+
 class GOrgueSettings : public GOrgueSettingStore, public GOrgueOrganList {
 private:
 	wxString m_InstanceName;
@@ -78,6 +85,7 @@ private:
 	GOrgueTemperamentList m_Temperaments;
 
 	static const GOMidiSetting m_MIDISettings[];
+	static const struct IniFileEnumEntry m_InitialLoadTypes[];
 
 	wxString GetEventSection(unsigned index);
 
@@ -102,7 +110,7 @@ public:
 
 	GOrgueSettingBool ManageCache;
 	GOrgueSettingBool CompressCache;
-	GOrgueSettingBool LoadLastFile;
+	GOrgueSettingEnum<GOInitialLoadType> LoadLastFile;
 	GOrgueSettingBool ODFCheck;
 
 	GOrgueSettingUnsigned LoadChannels;
