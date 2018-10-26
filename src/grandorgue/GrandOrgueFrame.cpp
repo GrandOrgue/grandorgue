@@ -366,29 +366,21 @@ void GOrgueFrame::InitHelp()
         m_Help->AddBook(result);
 }
 
-bool GOrgueFrame::DoClose(bool force)
+bool GOrgueFrame::DoClose()
 {
 	if (!m_doc)
 		return true;
 	GOMutexLocker m_locker(m_mutex, true);
 	if(!m_locker.IsLocked())
 		return false;
-	if (m_doc->IsModified() && m_doc->GetOrganFile() && !force)
-	{
-		int res = wxMessageBox(_("The organ settings have been modified. Do you want to save the changes?"), m_doc->GetOrganFile()->GetChurchName(), wxYES_NO|wxCANCEL|wxICON_QUESTION, this);
-		if (res == wxCANCEL)
-			return false;
-		if (res == wxYES)
-			m_doc->Save();
-	}
 	delete m_doc;
 	m_doc = NULL;
 	return true;
 }
 
-void GOrgueFrame::Open(const GOrgueOrgan& organ, bool force)
+void GOrgueFrame::Open(const GOrgueOrgan& organ)
 {
-	if (!DoClose(force))
+	if (!DoClose())
 		return;
 	GOMutexLocker m_locker(m_mutex, true);
 	if(!m_locker.IsLocked())
@@ -593,7 +585,7 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
 	GOrgueOrgan* organ = (GOrgueOrgan*)event.GetClientData();
-	Open(*organ, event.GetInt() == 1);
+	Open(*organ);
 	delete organ;
 }
 
@@ -757,10 +749,8 @@ void GOrgueFrame::OnExit(wxCommandEvent& event)
 	Close();
 }
 
-bool GOrgueFrame::Close(bool force)
+bool GOrgueFrame::Close()
 {
-	if (!force && !DoClose())
-		return false;
 	Destroy();
 	return true;
 }
@@ -985,7 +975,7 @@ void GOrgueFrame::OnMidiEvent(const GOrgueMidiEvent& event)
 	for(unsigned i = 0; i < organs.size(); i++)
 		if (organs[i]->Match(event) && organs[i]->IsUsable(m_Settings))
 		{
-			SendLoadOrgan(*organs[i], true);
+			SendLoadOrgan(*organs[i]);
 			return;
 		}
 }
@@ -1047,7 +1037,7 @@ void GOrgueFrame::LoadFirstOrgan()
 		SendLoadOrgan(*list[0]);
 }
 
-void GOrgueFrame::SendLoadFile(wxString filename, bool force)
+void GOrgueFrame::SendLoadFile(wxString filename)
 {
 	wxFileName name = filename;
 	if (name.GetExt() == wxT("orgue"))
@@ -1056,13 +1046,12 @@ void GOrgueFrame::SendLoadFile(wxString filename, bool force)
 			LoadLastOrgan();
 	}
 	else
-		SendLoadOrgan(GOrgueOrgan(filename), force);
+		SendLoadOrgan(GOrgueOrgan(filename));
 }
 
-void GOrgueFrame::SendLoadOrgan(const GOrgueOrgan& organ, bool force)
+void GOrgueFrame::SendLoadOrgan(const GOrgueOrgan& organ)
 {
 	wxCommandEvent evt(wxEVT_LOADFILE, 0);
 	evt.SetClientData(new GOrgueOrgan(organ));
-	evt.SetInt(force ? 1 : 0);
 	GetEventHandler()->AddPendingEvent(evt);
 }

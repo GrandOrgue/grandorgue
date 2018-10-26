@@ -137,24 +137,24 @@ private:
 	void OnMsgBox(wxMsgBoxEvent& event);
 	void OnRenameFile(wxRenameFileEvent& event);
 
-	bool DoClose(bool force = false);
-	void Open(const GOrgueOrgan& organ, bool force = false);
+	bool DoClose();
+	void Open(const GOrgueOrgan& organ);
 
 	bool InstallOrganPackage(wxString name);
 	void LoadLastOrgan();
 	void LoadFirstOrgan();
-	void SendLoadOrgan(const GOrgueOrgan& organ, bool force = false);
+	void SendLoadOrgan(const GOrgueOrgan& organ);
 
 public:
 	GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
 	~GOrgueFrame(void);
 
 	void Init(wxString filename);
-	bool Close(bool force = false);
+	bool Close();
 
 	void DoSplash(bool timeout = true);
 
-	void SendLoadFile(wxString filename, bool force = false);
+	void SendLoadFile(wxString filename);
 
 	DECLARE_EVENT_TABLE()
 };
