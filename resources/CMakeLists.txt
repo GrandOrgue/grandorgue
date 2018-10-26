@@ -43,7 +43,7 @@ elseif(UNIX)
     MESSAGE(STATUS "Not build manpage - some programs are missing")
   endif()
 
-  install(FILES GrandOrgue.appdata.xml DESTINATION share/appdata)
+  install(FILES GrandOrgue.appdata.xml DESTINATION share/metainfo)
 
 endif()
 

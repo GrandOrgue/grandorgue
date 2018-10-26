@@ -113,8 +113,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libGrandOrgue*
 %doc %{_docdir}/%{name}
 %{_datadir}/applications/*
-%dir %{_datadir}/appdata
-%{_datadir}/appdata/*
+%dir %{_datadir}/metainfo
+%{_datadir}/metainfo/*
 %{_datadir}/pixmaps/*
 %{_datadir}/mime/packages/*
 %{_mandir}/man1/*
