@@ -264,8 +264,8 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	SetMenuBar(menu_bar);
 	tb->Realize();
 	
-	SetClientSize(tb->GetBestSize().GetWidth() + 10, 0);
-	SetMaxSize(GetSize());
+	SetMaxClientSize(wxSize(tb->GetBestSize().GetWidth(), 0));
+	SetSize(GetMaxSize());
 	int nr = wxDisplay::GetFromWindow(this);
 	wxDisplay display(nr != wxNOT_FOUND ? nr : 0);
 	Move(display.GetClientArea().GetPosition().x + 1, display.GetClientArea().GetPosition().y + 1);
@@ -304,6 +304,7 @@ void GOrgueFrame::UpdateVolumeControl(unsigned count)
 	m_VolumeControl->SetSizer(sizer);
 	sizer->Fit(m_VolumeControl);
 	GetToolBar()->Realize();
+	SetMaxClientSize(wxSize(GetToolBar()->GetBestSize().GetWidth(), 0));
 }
 
 void GOrgueFrame::Init(wxString filename)
