@@ -7798,7 +7798,7 @@ changed.
           <term>NumberOfStops</term>
           <listitem>
             <para>
-(integer 0 - 999, required) Number of stop states stored in this
+(integer 0 - number of stops defined in the ODF, required) Number of stop states stored in this
 combination. The entries are called <emphasis>StopNumber999</emphasis>
 and <emphasis>StopManual999</emphasis>.
      </para>
@@ -7808,7 +7808,7 @@ and <emphasis>StopManual999</emphasis>.
           <term>NumberOfCouplers</term>
           <listitem>
             <para>
-(integer 0 - 999, required) Number of coupler states stored in this
+(integer 0 - number of coupler defined in the ODF, required) Number of coupler states stored in this
 combination. The entries are called
 <emphasis>CouplerNumber999</emphasis> and
 <emphasis>CouplerManual999</emphasis>.
@@ -7819,7 +7819,7 @@ combination. The entries are called
           <term>NumberOfTremulants</term>
           <listitem>
             <para>
-(integer 0 - 999, required) Number of tremulant states stored in this
+(integer 0 - tremulant count, required) Number of tremulant states stored in this
 combination. The entries are called <emphasis>TremulantNumber999</emphasis>.
      </para>
           </listitem>
@@ -7828,7 +7828,7 @@ combination. The entries are called <emphasis>TremulantNumber999</emphasis>.
           <term>NumberOfSwitches</term>
           <listitem>
             <para>
-(integer 0 - 999, default: 0) Number of switch states stored in this
+(integer 0 - switch copunt, default: 0) Number of switch states stored in this
 combination. The entries are called <emphasis>SwitchNumber999</emphasis>.
      </para>
           </listitem>

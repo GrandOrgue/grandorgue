@@ -54,7 +54,7 @@ void GOrguePiston::Load(GOrgueConfigReader& cfg, wxString group)
 	else if (type == wxT("COUPLER"))
 	{
 		i = cfg.ReadInteger(ODFSetting, group, wxT("ManualNumber"), m_organfile->GetFirstManualIndex(), m_organfile->GetODFManualCount() - 1);
-		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetCouplerCount()) - 1;
+		j = cfg.ReadInteger(ODFSetting, group, wxT("ObjectNumber"), 1, m_organfile->GetManual(i)->GetODFCouplerCount()) - 1;
 		drawstop = m_organfile->GetManual(i)->GetCoupler(j);
 	}
 	else if (type == wxT("TREMULANT"))

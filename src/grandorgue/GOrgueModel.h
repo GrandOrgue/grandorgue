@@ -92,6 +92,10 @@ public:
 
 	unsigned GetGeneralCount();
 	GOrgueGeneral* GetGeneral(unsigned index);
+
+	unsigned GetStopCount();
+	unsigned GetCouplerCount();
+	unsigned GetODFCouplerCount();
 };
 
 #endif

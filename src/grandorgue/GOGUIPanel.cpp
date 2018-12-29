@@ -240,7 +240,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 				LoadControl(new GOGUIManual(this, m_organfile->GetManual(i), m_layout->GetManualNumber()), cfg, manual_group);
 			}
 
-			for(unsigned j = 0; j < m_organfile->GetManual(i)->GetCouplerCount(); j++)
+			for(unsigned j = 0; j < m_organfile->GetManual(i)->GetODFCouplerCount(); j++)
 				if (m_organfile->GetManual(i)->GetCoupler(j)->IsDisplayed())
 				{
 					wxString buffer = wxString::Format(wxT("Coupler%03d"), j + 1);
@@ -354,7 +354,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			wxString buffer = wxString::Format(wxT("Coupler%03dManual"), j + 1);
 			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 			buffer = wxString::Format(wxT("Coupler%03d"), j + 1);
-			unsigned coupler_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetManual(manual_nb)->GetCouplerCount());
+			unsigned coupler_nb  = cfg.ReadInteger(ODFSetting, panel_group, buffer, 1, m_organfile->GetManual(manual_nb)->GetODFCouplerCount());
 			buffer = wxString::Format(wxT("Coupler%03d"), j + 1);
 			LoadControl(new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetCoupler(coupler_nb - 1)), cfg, panel_prefix + buffer);
 			m_organfile->MarkSectionInUse(panel_prefix + wxString::Format(wxT("Manual%03dCoupler%03d"), manual_nb, coupler_nb));
@@ -441,7 +441,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		else if (type == wxT("Coupler"))
 		{
 			unsigned manual_nb  = cfg.ReadInteger(ODFSetting, buffer, wxT("Manual"), m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
-			unsigned coupler_nb  = cfg.ReadInteger(ODFSetting, buffer, wxT("Coupler"), 1, m_organfile->GetManual(manual_nb)->GetCouplerCount());
+			unsigned coupler_nb  = cfg.ReadInteger(ODFSetting, buffer, wxT("Coupler"), 1, m_organfile->GetManual(manual_nb)->GetODFCouplerCount());
 			LoadControl(new GOGUIButton(this, m_organfile->GetManual(manual_nb)->GetCoupler(coupler_nb - 1)), cfg, buffer);
 		}
 		else if (type == wxT("Stop"))
