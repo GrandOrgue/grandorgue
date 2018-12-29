@@ -78,6 +78,7 @@ private:
 	ptr_vector<GOrgueStop> m_stops;
 	ptr_vector<GOrgueCoupler> m_couplers;
 	ptr_vector<GOrgueDivisional> m_divisionals;
+	unsigned m_ODFCouplerCount;
 	bool m_displayed;
 	GOrgueCombinationDefinition m_DivisionalTemplate;
 
@@ -119,6 +120,7 @@ public:
 	unsigned GetStopCount();
 	GOrgueStop* GetStop(unsigned index);
 	unsigned GetCouplerCount();
+	unsigned GetODFCouplerCount();
 	GOrgueCoupler* GetCoupler(unsigned index);
 	void AddCoupler(GOrgueCoupler* coupler);
 	unsigned GetDivisionalCount();

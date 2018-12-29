@@ -71,14 +71,15 @@ void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualN
 		std::vector<bool> used(m_State.size());
 		GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
 		unsigned NumberOfStops = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount(), true, 0);
-		unsigned NumberOfCouplers = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers(), 0);
+		unsigned NumberOfCouplers = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfCouplers"), 0, associatedManual->GetODFCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers(), 0);
 		unsigned NumberOfTremulants = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), m_organfile->DivisionalsStoreTremulants(), 0);
 		unsigned NumberOfSwitches = cfg.ReadInteger(ODFSetting, m_group, wxT("NumberOfSwitches"), 0, m_organfile->GetSwitchCount(), false, 0);
 		
 		for (unsigned i = 0; i < NumberOfStops; i++)
 		{
 			buffer.Printf(wxT("Stop%03d"), i + 1);
-			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -associatedManual->GetStopCount(), associatedManual->GetStopCount());
+			unsigned cnt = associatedManual->GetStopCount();
+			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
 			pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m_ManualNumber, abs(s));
 			if (pos >= 0)
 			{
@@ -97,7 +98,8 @@ void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualN
 		for (unsigned i = 0; i < NumberOfCouplers; i++)
 		{
 			buffer.Printf(wxT("Coupler%03d"), i + 1);
-			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999);
+			unsigned cnt = associatedManual->GetODFCouplerCount();
+			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
 			pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_COUPLER, m_ManualNumber, abs(s));
 			if (pos >= 0)
 			{
@@ -116,7 +118,8 @@ void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualN
 		for (unsigned i = 0; i < NumberOfTremulants; i++)
 		{
 			buffer.Printf(wxT("Tremulant%03d"), i + 1);
-			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999, false, 0);
+			unsigned cnt = associatedManual->GetTremulantCount();
+			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt, false, 0);
 			pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_TREMULANT, m_ManualNumber, abs(s));
 			if (pos >= 0)
 			{
@@ -135,7 +138,8 @@ void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualN
 		for (unsigned i = 0; i < NumberOfSwitches; i++)
 		{
 			buffer.Printf(wxT("Switch%03d"), i + 1);
-			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -999, 999, false, 0);
+			unsigned cnt = associatedManual->GetSwitchCount();
+			int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt, false, 0);
 			pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_SWITCH, m_ManualNumber, abs(s));
 			if (pos >= 0)
 			{
@@ -156,13 +160,13 @@ void GOrgueDivisional::Load(GOrgueConfigReader& cfg, wxString group, int manualN
 void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 {
 	GOSettingType type = CMBSetting;
+	GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
 	if (!m_IsSetter)
-		if (cfg.ReadInteger(CMBSetting, m_group, wxT("NumberOfStops"), -1, 999, false, -1) == -1)
+		if (cfg.ReadInteger(CMBSetting, m_group, wxT("NumberOfStops"), -1, associatedManual->GetStopCount(), false, -1) == -1)
 			type = ODFSetting;
 	wxString buffer;
-	GOrgueManual* associatedManual = m_organfile->GetManual(m_ManualNumber);
 	unsigned NumberOfStops = cfg.ReadInteger(type, m_group, wxT("NumberOfStops"), 0, associatedManual->GetStopCount(), true, 0);
-	unsigned NumberOfCouplers = cfg.ReadInteger(type, m_group, wxT("NumberOfCouplers"), 0, associatedManual->GetCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers(), 0);
+	unsigned NumberOfCouplers = cfg.ReadInteger(type, m_group, wxT("NumberOfCouplers"), 0, type == CMBSetting ? associatedManual->GetCouplerCount() : associatedManual->GetODFCouplerCount(), m_organfile->DivisionalsStoreIntermanualCouplers() || m_organfile->DivisionalsStoreIntramanualCouplers(), 0);
 	unsigned NumberOfTremulants = cfg.ReadInteger(type, m_group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), m_organfile->DivisionalsStoreTremulants(), 0);
 	unsigned NumberOfSwitches = cfg.ReadInteger(type, m_group, wxT("NumberOfSwitches"), 0, m_organfile->GetSwitchCount(), false, 0);
 
@@ -172,7 +176,8 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 	for (unsigned i = 0; i < NumberOfStops; i++)
 	{
 		buffer.Printf(wxT("Stop%03d"), i + 1);
-		int s = cfg.ReadInteger(type, m_group, buffer, -associatedManual->GetStopCount(), associatedManual->GetStopCount());
+		unsigned cnt = associatedManual->GetStopCount();
+		int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m_ManualNumber, abs(s));
 		if (pos >= 0)
 		{
@@ -191,7 +196,8 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 	for (unsigned i = 0; i < NumberOfCouplers; i++)
 	{
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
-		int s = cfg.ReadInteger(type, m_group, buffer, -999, 999);
+		unsigned cnt = type == CMBSetting ? associatedManual->GetCouplerCount() : associatedManual->GetODFCouplerCount();
+		int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_COUPLER, m_ManualNumber, abs(s));
 		if (pos >= 0)
 		{
@@ -210,7 +216,8 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 	for (unsigned i = 0; i < NumberOfTremulants; i++)
 	{
 		buffer.Printf(wxT("Tremulant%03d"), i + 1);
-		int s = cfg.ReadInteger(type, m_group, buffer, -999, 999, false, 0);
+		unsigned cnt = associatedManual->GetTremulantCount();
+		int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt, false, 0);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_TREMULANT, m_ManualNumber, abs(s));
 		if (pos >= 0)
 		{
@@ -229,7 +236,8 @@ void GOrgueDivisional::LoadCombination(GOrgueConfigReader& cfg)
 	for (unsigned i = 0; i < NumberOfSwitches; i++)
 	{
 		buffer.Printf(wxT("Switch%03d"), i + 1);
-		int s = cfg.ReadInteger(type, m_group, buffer, -999, 999, false, 0);
+		unsigned cnt = associatedManual->GetSwitchCount();
+		int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt, false, 0);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_SWITCH, m_ManualNumber, abs(s));
 		if (pos >= 0)
 		{

@@ -55,6 +55,7 @@ GOrgueManual::GOrgueManual(GrandOrgueFile* organfile) :
 	m_stops(0),
 	m_couplers(0),
 	m_divisionals(0),
+	m_ODFCouplerCount(0),
 	m_displayed(false),
 	m_DivisionalTemplate(organfile)
 {
@@ -98,6 +99,7 @@ void GOrgueManual::Init(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 
 	m_stops.resize(0);
 	m_couplers.resize(0);
+	m_ODFCouplerCount = 0;
 	m_tremulant_ids.resize(0);
 	m_switch_ids.resize(0);
 	m_divisionals.resize(0);
@@ -124,7 +126,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	m_MIDIInputNumber                   = cfg.ReadInteger(ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
 	m_displayed                         = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), false, false);
 	unsigned nb_stops                 = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfStops"), 0, 999);
-	unsigned nb_couplers              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfCouplers"), 0, 999, false);
+	m_ODFCouplerCount = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfCouplers"), 0, 999, false);
 	unsigned nb_divisionals           = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfDivisionals"), 0, 999, false);
 	unsigned nb_tremulants            = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0, m_organfile->GetTremulantCount(), false);
 	unsigned nb_switches              = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfSwitches"), 0, m_organfile->GetSwitchCount(), false);
@@ -149,7 +151,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	}
 
 	m_couplers.resize(0);
-	for (unsigned i = 0; i < nb_couplers; i++)
+	for (unsigned i = 0; i < m_ODFCouplerCount; i++)
 	{
 		m_couplers.push_back(new GOrgueCoupler(m_organfile, m_manual_number));
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
@@ -326,6 +328,11 @@ GOrgueStop* GOrgueManual::GetStop(unsigned index)
 unsigned GOrgueManual::GetCouplerCount()
 {
 	return m_couplers.size();
+}
+
+unsigned GOrgueManual::GetODFCouplerCount()
+{
+	return m_ODFCouplerCount;
 }
 
 GOrgueCoupler* GOrgueManual::GetCoupler(unsigned index)

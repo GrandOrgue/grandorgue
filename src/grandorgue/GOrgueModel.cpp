@@ -197,6 +197,30 @@ GOrgueManual* GOrgueModel::GetManual(unsigned index)
 	return m_manual[index];
 }
 
+unsigned GOrgueModel::GetStopCount()
+{
+	unsigned cnt = 0;
+	for(unsigned i = m_FirstManual; i < m_manual.size(); i++)
+		cnt += m_manual[i]->GetStopCount();
+	return cnt;
+}
+
+unsigned GOrgueModel::GetCouplerCount()
+{
+	unsigned cnt = 0;
+	for(unsigned i = m_FirstManual; i < m_manual.size(); i++)
+		cnt += m_manual[i]->GetCouplerCount();
+	return cnt;
+}
+
+unsigned GOrgueModel::GetODFCouplerCount()
+{
+	unsigned cnt = 0;
+	for(unsigned i = m_FirstManual; i < m_manual.size(); i++)
+		cnt += m_manual[i]->GetODFCouplerCount();
+	return cnt;
+}
+
 GOrgueEnclosure* GOrgueModel::GetEnclosureElement(unsigned index)
 {
 	return m_enclosure[index];
