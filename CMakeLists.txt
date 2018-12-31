@@ -37,7 +37,6 @@ option(RTMIDI_USE_ALSA        "Enable RtMidi support for ALSA (Linux only)" ON)
 option(RTMIDI_USE_MM          "Enable RtMidi support for MM (Windows only)" ON)
 option(INSTALL_DEMO           "Install demo sampleset" ON)
 option(USE_INTERNAL_PORTAUDIO "Use builtin PortAudio sources" ON)
-option(USE_INTERNAL_WAVPACK   "Use builtin WavPack sources (deprecated)" OFF)
 if (WIN32 OR APPLE)
    option(INSTALL_DEPEND      "Copy dependencies (wxWidgets libraries and Translations) on installation" ON)
 else ()
@@ -147,14 +146,7 @@ pkg_check_modules(FFTW REQUIRED fftw3f)
 
 pkg_check_modules(ZLIB REQUIRED zlib)
 
-# include WAVPACK
-if (USE_INTERNAL_WAVPACK)
-  add_subdirectory(src/wavpack)
-  set(WAVPACK_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/wavpack/include)
-  set(WAVPACK_LIBRARIES WavPack)
-else()
-  pkg_check_modules(WAVPACK REQUIRED wavpack)
-endif()
+pkg_check_modules(WAVPACK REQUIRED wavpack)
 
 find_package(wxWidgets REQUIRED html net adv core base)
 message(STATUS "  wxWidgets Unicode?          : ${wxWidgets_USE_UNICODE}")
