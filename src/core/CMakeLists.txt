@@ -86,6 +86,7 @@ GOrgueUtil.cpp
 GOrgueView.cpp
 GOrgueWave.cpp
 GOrgueWavPack.cpp
+GOrgueWavPackWriter.cpp
 MIDIList.cpp
 OrganSelectDialog.cpp
 SplashScreen.cpp
