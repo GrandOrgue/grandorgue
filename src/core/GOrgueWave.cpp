@@ -24,6 +24,7 @@
 #include "GOrgueFile.h"
 #include "GOrgueWaveTypes.h"
 #include "GOrgueWavPack.h"
+#include "GOrgueWavPackWriter.h"
 #include <wx/file.h>
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -552,4 +553,121 @@ bool GOrgueWave::IsWave(const GOrgueBuffer<uint8_t>& data)
 bool GOrgueWave::IsWaveFile(const GOrgueBuffer<uint8_t>& data)
 {
 	return IsWave(data) || GOrgueWavPack::IsWavPack(data);
+}
+
+bool GOrgueWave::Save(GOrgueBuffer<uint8_t>& buf)
+{
+	GOrgueBuffer<uint8_t> header(sizeof(GO_WAVECHUNKHEADER));
+	GO_WAVETYPEFIELD wav = WAVE_TYPE_WAVE;
+	header.Append((const uint8_t*)&wav, sizeof(wav));
+	GO_WAVECHUNKHEADER head;
+	GO_WAVEFORMATPCM fmt;
+	fmt.wf.wFormatTag = m_BytesPerSample == 4 ? 3 : 1;
+	fmt.wf.nChannels = GetChannels();
+	fmt.wf.nSamplesPerSec = GetSampleRate();
+	fmt.wf.nAvgBytesPerSec = GetSampleRate() * GetChannels() * m_BytesPerSample;
+	fmt.wf.nBlockAlign = GetChannels() * m_BytesPerSample;
+	fmt.wBitsPerSample = GetBitsPerSample();
+	head.fccChunk = WAVE_TYPE_FMT;
+	head.dwSize = sizeof(fmt);
+	header.Append((const uint8_t*)&head, sizeof(head));
+	header.Append((const uint8_t*)&fmt, sizeof(fmt));
+
+	if (m_CuePoint != (unsigned)-1)
+	{
+		GO_WAVECUECHUNK cue;
+		cue.dwCuePoints = 1;
+
+		GO_WAVECUEPOINT point;
+		point.dwName = 1;
+		point.dwPosition = 0;
+		point.fccChunk = WAVE_TYPE_DATA;
+		point.dwChunkStart = 0;
+		point.dwBlockStart = m_CuePoint * m_BytesPerSample * GetChannels();
+		point.dwSampleOffset = m_CuePoint;
+
+		head.fccChunk = WAVE_TYPE_CUE;
+		head.dwSize = sizeof(cue) + sizeof(point);
+
+		header.Append((const uint8_t*)&head, sizeof(head));
+		header.Append((const uint8_t*)&cue, sizeof(cue));
+		header.Append((const uint8_t*)&point, sizeof(point));
+	}
+	if (m_MidiNote != 0 || m_PitchFract != 0 || m_Loops.size() > 0)
+	{
+		GO_WAVESAMPLERLOOP loop;
+		GOrgueBuffer<uint8_t> loops;
+		for(unsigned i = 0; i < m_Loops.size(); i++)
+		{
+			loop.dwIdentifier = i;
+			loop.dwType = 0;
+			loop.dwStart = m_Loops[i].start_sample;
+			loop.dwEnd = m_Loops[i].end_sample;
+			loop.dwFraction = 0;
+			loop.dwPlayCount = 0;
+			loops.Append((const uint8_t*)&loop, sizeof(loop));
+		}
+		GO_WAVESAMPLERCHUNK smpl;
+		smpl.dwManufacturer = 0;
+		smpl.dwProduct = 0;
+		smpl.dwSamplePeriod = 1000000000.0 / m_SampleRate;
+		smpl.dwMIDIUnityNote = m_MidiNote;
+		smpl.dwMIDIPitchFraction = m_PitchFract / 100.0 * UINT_MAX;
+		smpl.dwSMPTEFormat = 0;
+		smpl.dwSMPTEOffset = 0;
+		smpl.cSampleLoops = m_Loops.size();
+		smpl.cbSamplerData = 0;
+		head.fccChunk = WAVE_TYPE_SAMPLE;
+		head.dwSize = sizeof(smpl) + loops.GetSize();
+		header.Append((const uint8_t*)&head, sizeof(head));
+		header.Append((const uint8_t*)&smpl, sizeof(smpl));
+		header.Append(loops);
+	}
+
+	head.fccChunk = WAVE_TYPE_DATA;
+	head.dwSize = m_BytesPerSample * GetChannels() * GetLength();
+	header.Append((const uint8_t*)&head, sizeof(head));
+
+	GO_WAVECHUNKHEADER* start = (GO_WAVECHUNKHEADER*)header.get();
+	start->fccChunk = WAVE_TYPE_RIFF;
+	start->dwSize = header.GetSize() - sizeof(GO_WAVECHUNKHEADER) + GetLength() * m_BytesPerSample * GetChannels();
+
+	GOrgueBuffer<int32_t> data(GetLength() * GetChannels());
+	if (m_isPacked)
+		memcpy(data.get(), m_SampleData.get(), data.GetSize());
+	else
+	{
+		const uint8_t* input  = m_SampleData.get();
+		for(unsigned i = 0; i < GetLength(); i++)
+		{
+			int32_t val;
+			switch(m_BytesPerSample)
+			{
+			case 1:
+				val = readNext<GOInt8>(input) - 0x80;
+				break;
+			case 2:
+				val = readNext<GOInt16LE>(input);
+				break;
+			case 3:
+				val = readNext<GOInt24LE>(input);
+				break;
+			case 4:
+				val = readNext<int32_t>(input);
+				break;
+			default:
+				throw (wxString)_("bad format!");
+			}
+			data[i] = val;
+		}
+	}
+
+	GOrgueWavPackWriter pack;
+	if (!pack.Init(GetChannels(), GetBitsPerSample(), m_BytesPerSample, GetSampleRate(), GetLength()))
+		return false;
+	if (!pack.AddWrapper(header))
+		return false;
+	if (!pack.AddSampleData(data))
+		return false;
+	return pack.GetResult(buf);
 }
