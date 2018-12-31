@@ -26,6 +26,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h)
 set(src
 contrib/sha1.cpp
 GOrgueArchive.cpp
+GOrgueArchiveCreator.cpp
 GOrgueArchiveFile.cpp
 GOrgueArchiveIndex.cpp
 GOrgueArchiveEntryFile.cpp
