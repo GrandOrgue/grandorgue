@@ -305,8 +305,8 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 	    local.modification_date != central.modification_date ||
 	    local.modification_time != central.modification_time ||
 	    local.crc != central.crc ||
-	    local_uncompressed_size != central.uncompressed_size ||
-	    local_compressed_size != central.compressed_size ||
+	    local_uncompressed_size != central_uncompressed_size ||
+	    local_compressed_size != central_compressed_size ||
 	    local.name_length != central.name_length ||
 	    memcmp(local_buf.get(), central_buf.get(), local.name_length))
 	{
@@ -327,7 +327,7 @@ bool GOrgueArchiveReader::ReadFileRecord(size_t central_offset, GOZipCentralHead
 		wxLogError(_("ZIP uses not supported compression flags"));
 		return false;
 	}
-	bool utf = local.flags & 0x0400;
+	bool utf = local.flags & 0x0800;
 	if (local_offset + central_uncompressed_size + local.name_length + local.extra_length + sizeof(local) > central_offset)
 	{
 		wxLogError(_("Incomplete file content"));

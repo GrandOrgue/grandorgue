@@ -62,7 +62,7 @@ bool GOrgueArchiveWriter::Add(wxString name, const GOrgueBuffer<uint8_t>& conten
 	GOZipLocalHeader sig;
 	sig.signature = ZIP_LOCAL_HEADER;
 	sig.version_extract = ZIP_ZIP64_VERSION;
-	sig.flags = 0x0400;
+	sig.flags = 0x0800;
 	sig.compression = 0;
 	sig.modification_time = 0;
 	sig.modification_date = 0;
