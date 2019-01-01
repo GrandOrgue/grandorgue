@@ -583,7 +583,7 @@ bool GOrgueWave::Save(GOrgueBuffer<uint8_t>& buf)
 		point.dwPosition = 0;
 		point.fccChunk = WAVE_TYPE_DATA;
 		point.dwChunkStart = 0;
-		point.dwBlockStart = m_CuePoint * m_BytesPerSample * GetChannels();
+		point.dwBlockStart = 0;
 		point.dwSampleOffset = m_CuePoint;
 
 		head.fccChunk = WAVE_TYPE_CUE;
@@ -638,7 +638,7 @@ bool GOrgueWave::Save(GOrgueBuffer<uint8_t>& buf)
 	else
 	{
 		const uint8_t* input  = m_SampleData.get();
-		for(unsigned i = 0; i < GetLength(); i++)
+		for(unsigned i = 0; i < GetLength() * GetChannels(); i++)
 		{
 			int32_t val;
 			switch(m_BytesPerSample)
