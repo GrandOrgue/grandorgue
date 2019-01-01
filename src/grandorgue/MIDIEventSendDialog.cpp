@@ -162,6 +162,10 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 	}
 	m_eventtype->Append(_("SYSEX Hauptwerk 32 Byte LCD Name"), MIDI_S_HW_NAME_LCD);
 	m_eventtype->Append(_("SYSEX Hauptwerk 16 Byte String Name"), MIDI_S_HW_NAME_STRING);
+	if (m_midi.GetType() == MIDI_SEND_BUTTON)
+	{
+		m_eventtype->Append(_("SYSEX Rogers Stop Change"), MIDI_S_RODGERS_STOP_CHANGE);
+	}
 
 	m_current = 0;
 	if (!m_midi.GetEventCount())
@@ -246,6 +250,8 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 		m_LowValueLabel->SetLabel(_("&Off RPN number:"));
 	else if (type == MIDI_S_NRPN_RANGE)
 		m_LowValueLabel->SetLabel(_("&Off NRPN number:"));
+	else if (type == MIDI_S_RODGERS_STOP_CHANGE)
+		m_LowValueLabel->SetLabel(_("&Stop number:"));
 	else
 		m_LowValueLabel->SetLabel(_("&Off Value:"));
 	if (type == MIDI_S_PGM_RANGE)
@@ -289,6 +295,10 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent& event)
 	case MIDI_S_RPN_RANGE:
 	case MIDI_S_NRPN_RANGE:
 		m_KeyLabel->SetLabel(_("&Value:"));
+		break;
+
+	case MIDI_S_RODGERS_STOP_CHANGE:
+		m_KeyLabel->SetLabel(_("&Device number:"));
 		break;
 
 	default:
@@ -441,6 +451,8 @@ MIDI_SEND_EVENT MIDIEventSendDialog::CopyEvent()
 		e.type = MIDI_S_NRPN;
 	else if (recv.type == MIDI_M_RPN)
 		e.type = MIDI_S_RPN;
+	else if (recv.type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE)
+		e.type = MIDI_S_RODGERS_STOP_CHANGE;
 	else if (recv.type == MIDI_M_RPN_RANGE)
 	{
 		e.type = MIDI_S_RPN_RANGE;

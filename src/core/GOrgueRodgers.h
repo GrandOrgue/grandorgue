@@ -19,31 +19,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GORGUEMIDIOUTPUTMERGER_H
-#define GORGUEMIDIOUTPUTMERGER_H
+#ifndef GORGUERODERS_H
+#define GORGUERODERS_H
 
-#include "GOrgueMidiEvent.h"
-#include <wx/string.h>
 #include <vector>
+#include <stdint.h>
 
-class GOrgueMidiOutputEvent;
-
-class GOrgueMidiOutputMerger
-{
-private:
-	typedef struct {
-		midi_message_type type;
-		int key;
-		wxString content;
-	} GOrgueMidiOutputMergerHWState;
-	std::vector<GOrgueMidiOutputMergerHWState> m_HWState;
-	std::vector<std::vector<uint8_t> > m_RodgersState;
-
-public:
-	GOrgueMidiOutputMerger();
-
-	void Clear();
-	bool Process(GOrgueMidiEvent& e);
+/* Bit test of the data field; returns clear, set or bit not in data */
+enum class MIDI_BIT_STATE {
+	MIDI_BIT_CLEAR,
+	MIDI_BIT_SET,
+	MIDI_BIT_NOT_PRESENT
 };
+
+
+uint8_t GORodgersChecksum(const std::vector<uint8_t>& msg, unsigned start, unsigned len);
+
+MIDI_BIT_STATE GORodgersGetBit(unsigned stop, unsigned offset, const std::vector<uint8_t> data);
+unsigned GORodgersSetBit(unsigned stop, bool state, std::vector<uint8_t>& data);
 
 #endif

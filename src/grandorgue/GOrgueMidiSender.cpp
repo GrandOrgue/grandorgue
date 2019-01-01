@@ -62,6 +62,7 @@ const struct IniFileEnumEntry GOrgueMidiSender::m_MidiTypes[] = {
 	{ wxT("HWNameString"), MIDI_S_HW_NAME_STRING },
 	{ wxT("HWLCD"), MIDI_S_HW_LCD },
 	{ wxT("HWString"), MIDI_S_HW_STRING },
+	{ wxT("RodgersStopChange"), MIDI_S_RODGERS_STOP_CHANGE },
 };
 
 void GOrgueMidiSender::SetElementID(int id)
@@ -170,6 +171,7 @@ bool GOrgueMidiSender::HasKey(midi_send_message_type type)
 	    type == MIDI_S_RPN_OFF ||
 	    type == MIDI_S_NRPN_ON ||
 	    type == MIDI_S_NRPN_OFF ||
+	    type == MIDI_S_RODGERS_STOP_CHANGE ||
 	    type == MIDI_S_HW_NAME_STRING ||
 	    type == MIDI_S_HW_NAME_LCD ||
 	    type == MIDI_S_HW_STRING ||
@@ -193,6 +195,7 @@ bool GOrgueMidiSender::HasLowValue(midi_send_message_type type)
 	    type == MIDI_S_RPN ||
 	    type == MIDI_S_NRPN ||
 	    type == MIDI_S_CTRL ||
+	    type == MIDI_S_RODGERS_STOP_CHANGE ||
 	    type == MIDI_S_HW_NAME_LCD ||
 	    type == MIDI_S_HW_LCD)
 		return true;
@@ -261,6 +264,8 @@ unsigned GOrgueMidiSender::LowValueLimit(midi_send_message_type type)
 	if(type == MIDI_S_RPN_RANGE ||
 	   type == MIDI_S_NRPN_RANGE)
 		return 0x3fff;
+	if (type == MIDI_S_RODGERS_STOP_CHANGE)
+		return 35 * 7;
 	return 0x7f;
 }
 
@@ -495,6 +500,16 @@ void GOrgueMidiSender::SetDisplay(bool state)
 			e.SetKey(m_events[i].key);
 			e.SetValue(m_events[i].start);
 			e.SetString(state ? _("ON") : _("OFF"), m_events[i].length);
+			m_organfile->SendMidiMessage(e);
+		}
+		if (m_events[i].type == MIDI_S_RODGERS_STOP_CHANGE)
+		{
+			GOrgueMidiEvent e;
+			e.SetDevice(m_events[i].device);
+			e.SetMidiType(MIDI_SYSEX_RODGERS_STOP_CHANGE);
+			e.SetChannel(m_events[i].key);
+			e.SetKey(m_events[i].low_value);
+			e.SetValue(state);
 			m_organfile->SendMidiMessage(e);
 		}
 	}
