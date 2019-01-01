@@ -217,6 +217,7 @@ bool GOrgueArchiveCreator::AddDirectory(const wxString& path)
 	}
 	wxArrayString files;
 	wxDir::GetAllFiles(dir, &files);
+	files.Sort();
 	for(unsigned i = 0; i < files.size(); i++)
 	{
 		wxFileName fname(files[i]);
