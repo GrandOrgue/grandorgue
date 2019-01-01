@@ -22,6 +22,7 @@
 #include "MIDIEventRecvDialog.h"
 
 #include "GOrgueMidiEvent.h"
+#include "GOrgueRodgers.h"
 #include "GOrgueSettings.h"
 #include "GrandOrgueFile.h"
 #include <wx/button.h>
@@ -190,6 +191,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiverBa
 		m_eventtype->Append(_("Sys Ex Johannus 11 bytes"), MIDI_M_SYSEX_JOHANNUS_11);
 		m_eventtype->Append(_("Sys Ex Viscount"), MIDI_M_SYSEX_VISCOUNT);
 		m_eventtype->Append(_("Sys Ex Viscount Toggle"), MIDI_M_SYSEX_VISCOUNT_TOGGLE);
+		m_eventtype->Append(_("Sys Ex Rogers Stop Change"), MIDI_M_SYSEX_RODGERS_STOP_CHANGE);
 	}
 
 	m_current = 0;
@@ -298,6 +300,8 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 			m_LowValueLabel->SetLabel(_("&Value:"));
 		else if (type == MIDI_M_SYSEX_JOHANNUS_11)
 			m_LowValueLabel->SetLabel(_("L&ower bank:"));
+		else if (type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE)
+			m_LowValueLabel->SetLabel(_("&Stop number:"));
 		else
 			m_LowValueLabel->SetLabel(_("L&ower limit:"));
 
@@ -342,6 +346,10 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 		case MIDI_M_RPN_RANGE:
 		case MIDI_M_NRPN_RANGE:
 			m_DataLabel->SetLabel(_("&Value:"));
+			break;
+
+		case MIDI_M_SYSEX_RODGERS_STOP_CHANGE:
+			m_DataLabel->SetLabel(_("&Device number:"));
 			break;
 
 		default:
@@ -500,6 +508,7 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 	case MIDI_SYSEX_JOHANNUS_9:
 	case MIDI_SYSEX_JOHANNUS_11:
 	case MIDI_SYSEX_VISCOUNT:
+	case MIDI_SYSEX_RODGERS_STOP_CHANGE:
 		break;
 
 	default:
@@ -792,6 +801,18 @@ void MIDIEventRecvDialog::DetectEvent()
 						e.type = MIDI_M_SYSEX_VISCOUNT;
 					}
 					break;
+				case MIDI_SYSEX_RODGERS_STOP_CHANGE:
+					for (unsigned i = 0; i < m_original->LowerValueLimit(MIDI_M_SYSEX_RODGERS_STOP_CHANGE); i++)
+					{
+						if (GORodgersGetBit(i, off.GetKey(), off.GetData()) == MIDI_BIT_STATE::MIDI_BIT_CLEAR &&
+						    GORodgersGetBit(i, on.GetKey(), on.GetData()) == MIDI_BIT_STATE::MIDI_BIT_SET)
+						{
+							key = on.GetChannel();
+							low = i;
+							e.type = MIDI_M_SYSEX_RODGERS_STOP_CHANGE;
+						}
+					}
+                                       break;
 
 				default:
 					continue;

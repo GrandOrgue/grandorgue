@@ -66,6 +66,7 @@ GOrgueMidiWXEvent.cpp
 GOrgueOrgan.cpp
 GOrgueOrganList.cpp
 GOrguePath.cpp
+GOrgueRodgers.cpp
 GOrgueSampleStatistic.cpp
 GOrgueSetting.cpp
 GOrgueSettingBool.cpp

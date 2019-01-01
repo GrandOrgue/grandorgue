@@ -25,6 +25,7 @@
 #include "GOrgueConfigWriter.h"
 #include "GOrgueMidiEvent.h"
 #include "GOrgueMidiMap.h"
+#include "GOrgueRodgers.h"
 
 GOrgueMidiReceiverBase::GOrgueMidiReceiverBase(MIDI_RECEIVER_TYPE type):
 	GOrgueMidiReceiverData(type),
@@ -48,6 +49,7 @@ const struct IniFileEnumEntry GOrgueMidiReceiverBase::m_MidiTypes[] = {
 	{ wxT("SysExJohannus11"), MIDI_M_SYSEX_JOHANNUS_11 },
 	{ wxT("SysExViscount"), MIDI_M_SYSEX_VISCOUNT },
 	{ wxT("SysExViscountToggle"), MIDI_M_SYSEX_VISCOUNT_TOGGLE },
+	{ wxT("SysExRodgersStopChange"), MIDI_M_SYSEX_RODGERS_STOP_CHANGE },
 	{ wxT("RPN"), MIDI_M_RPN },
 	{ wxT("NRPN"), MIDI_M_NRPN },
 	{ wxT("RPNRange"), MIDI_M_RPN_RANGE },
@@ -206,6 +208,7 @@ bool GOrgueMidiReceiverBase::HasKey(midi_match_message_type type)
 	   type == MIDI_M_NRPN_RANGE ||
 	   type == MIDI_M_SYSEX_JOHANNUS_9 ||
 	   type == MIDI_M_SYSEX_JOHANNUS_11 ||
+	   type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE ||
 	   type == MIDI_M_CTRL_BIT ||
 	   type == MIDI_M_CTRL_CHANGE_FIXED ||
 	   type == MIDI_M_RPN ||
@@ -311,6 +314,7 @@ bool GOrgueMidiReceiverBase::HasLowerLimit(midi_match_message_type type)
 	    type == MIDI_M_SYSEX_VISCOUNT ||
 	    type == MIDI_M_SYSEX_VISCOUNT_TOGGLE ||
 	    type == MIDI_M_SYSEX_JOHANNUS_11 ||
+	    type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE ||
 	    type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
 	return false;
@@ -376,6 +380,9 @@ unsigned GOrgueMidiReceiverBase::LowerValueLimit(midi_match_message_type type)
 
 	if (type == MIDI_M_CTRL_BIT)
 		return 7;
+
+	if (type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE)
+		return 35 * 7;
 
 	return 0x7f;
 }
@@ -795,6 +802,20 @@ MIDI_MATCH_TYPE GOrgueMidiReceiverBase::Match(const GOrgueMidiEvent& e, const un
 		if (e.GetMidiType() == MIDI_SYSEX_VISCOUNT && m_events[i].type == MIDI_M_SYSEX_VISCOUNT_TOGGLE && m_events[i].low_value == e.GetValue())
 		{
 			return debounce(e, MIDI_MATCH_CHANGE, i);
+		}
+		if (e.GetMidiType() == MIDI_SYSEX_RODGERS_STOP_CHANGE && m_events[i].type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE && m_events[i].key == e.GetChannel())
+		{
+			switch(GORodgersGetBit(m_events[i].low_value, e.GetKey(), e.GetData()))
+			{
+			case MIDI_BIT_STATE::MIDI_BIT_CLEAR:
+				return MIDI_MATCH_OFF;
+
+			case MIDI_BIT_STATE::MIDI_BIT_SET:
+				return MIDI_MATCH_ON;
+
+			case MIDI_BIT_STATE::MIDI_BIT_NOT_PRESENT:
+				;
+			}
 		}
 	}
 	return MIDI_MATCH_NONE;

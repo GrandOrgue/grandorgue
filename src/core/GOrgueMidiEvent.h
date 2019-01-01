@@ -44,6 +44,7 @@ typedef enum {
 	MIDI_SYSEX_GO_SAMPLESET,
 	MIDI_SYSEX_HW_STRING,
 	MIDI_SYSEX_HW_LCD,
+	MIDI_SYSEX_RODGERS_STOP_CHANGE,
 } midi_message_type;
 
 #define MIDI_CTRL_BANK_SELECT_MSB 0
@@ -63,6 +64,7 @@ private:
 	unsigned m_device;
 	GOTime m_time;
 	wxString m_string;
+	std::vector<uint8_t> m_data;
 
 public:
 	GOrgueMidiEvent();
@@ -132,6 +134,15 @@ public:
 		m_string = str;
 	}
 	void SetString(const wxString& str, unsigned length);
+
+	const std::vector<uint8_t>& GetData() const
+	{
+		return m_data;
+	}
+	void SetData(const std::vector<uint8_t>& data)
+	{
+		m_data = data;
+	}
 
 	void FromMidi(const std::vector<unsigned char>& msg, GOrgueMidiMap& map);
 	void ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgueMidiMap& map) const;

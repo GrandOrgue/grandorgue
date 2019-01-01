@@ -22,6 +22,7 @@
 #include "GOrgueMidiEvent.h"
 
 #include "GOrgueMidiMap.h"
+#include "GOrgueRodgers.h"
 #include <wx/intl.h>
 
 GOrgueMidiEvent::GOrgueMidiEvent() :
@@ -30,7 +31,8 @@ GOrgueMidiEvent::GOrgueMidiEvent() :
 	m_key(-1),
 	m_value(-1),
 	m_time(0),
-	m_string()
+	m_string(),
+	m_data()
 {
 }
 
@@ -41,7 +43,8 @@ GOrgueMidiEvent::GOrgueMidiEvent(const GOrgueMidiEvent& e) :
 	m_value(e.m_value),
 	m_device(e.m_device),
 	m_time(e.m_time),
-	m_string(e.m_string.Clone())
+	m_string(e.m_string.Clone()),
+	m_data(e.m_data)
 {
 }
 
@@ -163,6 +166,19 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg, GOrgueMidi
 				break;
 			}
 		}
+		/* Rodgers 'data set' 'stop change' message. */
+		if (msg.size() >= 8 && msg[0] == 0xf0 && msg[1] == 0x41 && msg[3] == 0x30 && msg[4] == 0x12 && msg[5] == 0x01 &&
+		    msg[msg.size()-2] == GORodgersChecksum(msg, 5, msg.size() - 7) && msg[msg.size()-1] == 0xf7)
+		{
+			SetChannel(msg[2]); /* device*/
+			SetKey(msg[6]);
+			m_data.resize(msg.size() - 9);
+			for(unsigned i = 0; i < m_data.size(); i++)
+				m_data[i] = msg[7 + i];
+			SetMidiType(MIDI_SYSEX_RODGERS_STOP_CHANGE);
+			break;
+		}
+
 		return;
 	default:
 		return;
@@ -370,6 +386,24 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgu
 		}
 		return;
 
+	case MIDI_SYSEX_RODGERS_STOP_CHANGE:
+	{
+		m.resize(7 + m_data.size() + 2);
+		m[0] = 0xf0;
+		m[1] = 0x41;
+		m[2] = GetChannel() & 0x7f; /* device */
+		m[3] = 0x30;
+		m[4] = 0x12;
+		m[5] = 0x01;
+		m[6] = GetKey() & 0x7f;
+		for (unsigned i = 0; i < m_data.size(); i++)
+			m[7 + i] = m_data[i];
+		m[7 + m_data.size() + 0] = GORodgersChecksum(m, 5, m_data.size() + 2);
+		m[7 + m_data.size() + 1] = 0xf7;
+		msg.push_back(m);
+		return;
+	}
+
 	case MIDI_SYSEX_JOHANNUS_9:
 	case MIDI_SYSEX_JOHANNUS_11:
 	case MIDI_SYSEX_VISCOUNT:
@@ -431,6 +465,16 @@ wxString GOrgueMidiEvent::ToString(GOrgueMidiMap& map) const
 
 	case MIDI_SYSEX_HW_LCD:
 		return wxString::Format(_("sysex Hauptwerk LCD display: %d color: %d - %s"), GetKey(), GetChannel(), GetString().c_str());
+
+	case MIDI_SYSEX_RODGERS_STOP_CHANGE:
+	{
+          wxString data_string;
+
+          for (unsigned i = 0; i < m_data.size(); i++)
+                  data_string += wxString::Format(wxT(" %02x"), m_data[i]);
+          return wxString::Format(_("sysex Rogers stop change device: %d offset: %d data %s"),
+                                  GetChannel(), GetKey(), data_string.c_str());
+	}
 
 	default:
 		return wxEmptyString;

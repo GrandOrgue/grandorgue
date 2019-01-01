@@ -55,6 +55,7 @@ typedef enum {
 	MIDI_S_HW_NAME_LCD,
 	MIDI_S_HW_STRING,
 	MIDI_S_HW_LCD,
+	MIDI_S_RODGERS_STOP_CHANGE,
 } midi_send_message_type;
 
 typedef struct {
