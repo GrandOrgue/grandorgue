@@ -2,7 +2,7 @@ Source: grandorgue
 Section: sound
 Priority: optional
 Maintainer: Martin Koegler <martin.koegler@chello.at>
-Build-Depends: debhelper (>= 7), cdbs, cmake, gettext, po4a, libjack-jackd2-dev, libasound2-dev, libwxgtk3.0-dev, docbook-xsl, xsltproc, zip, devscripts, libudev-dev, libfftw3-dev, pkg-config, libwavpack-dev, libz-dev
+Build-Depends: debhelper (>= 7), cdbs, cmake, gettext, po4a, libjack-jackd2-dev, libasound2-dev, libwxgtk3.2-gtk3-dev | libwxgtk3.0-gtk3-dev | libwxgtk3.0-dev, docbook-xsl, xsltproc, zip, devscripts, libudev-dev, libfftw3-dev, pkg-config, libwavpack-dev, libz-dev
 Standards-Version: 3.9.8
 Homepage: https://sourceforge.net/p/ourorgan/wiki/Home/
 Vcs-Browser: https://sourceforge.net/p/ourorgan/svn/
