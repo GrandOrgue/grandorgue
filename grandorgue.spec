@@ -91,7 +91,7 @@ PATH=%{_libexecdir}/wxGTK3:$PATH cmake \
       -DDOC_INSTALL_DIR=%{_docdir} \
       -DLIBINSTDIR=%{_lib} \
       -DCMAKE_SKIP_RPATH=ON \
-      -DVERSION_REVISION="`echo %{version}|cut -d. -f4`"
+      -DVERSION_REVISION="`echo %{version}|cut -d. -f4`" .
 make %{?_smp_mflags} VERBOSE=1
 
 %install
