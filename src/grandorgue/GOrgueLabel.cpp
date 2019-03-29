@@ -95,7 +95,7 @@ void GOrgueLabel::StartPlayback()
 
 void GOrgueLabel::PrepareRecording()
 {
-	m_sender.SetLabel(m_Name);
+	m_sender.SetLabel(m_Content);
 }
 
 wxString GOrgueLabel::GetMidiType()
