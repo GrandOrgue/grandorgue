@@ -251,7 +251,9 @@ unsigned GOrgueMidiSender::KeyLimit(midi_send_message_type type)
 	    type == MIDI_S_RPN_ON ||
 	    type == MIDI_S_RPN_OFF ||
 	    type == MIDI_S_NRPN_ON ||
-	    type == MIDI_S_NRPN_OFF)
+	    type == MIDI_S_NRPN_OFF ||
+	    type == MIDI_S_HW_NAME_LCD ||
+	    type == MIDI_S_HW_LCD)
 		return 0x3fff;
 
 	return 0x7f;
