@@ -178,6 +178,12 @@ void GOrgueMidiEvent::FromMidi(const std::vector<unsigned char>& msg, GOrgueMidi
 			SetMidiType(MIDI_SYSEX_RODGERS_STOP_CHANGE);
 			break;
 		}
+		if (msg.size() == 5 && msg[0] == 0xF0 && msg[1] == 0x35 && msg[4] == 0xF7)
+		{
+			SetValue(((msg[2] & 0x7F) << 7) | (msg[3] & 0x7F));
+			SetMidiType(MIDI_SYSEX_AHLBORN_GALANTI);
+			break;
+		}
 
 		return;
 	default:
@@ -407,6 +413,7 @@ void GOrgueMidiEvent::ToMidi(std::vector<std::vector<unsigned char>>& msg, GOrgu
 	case MIDI_SYSEX_JOHANNUS_9:
 	case MIDI_SYSEX_JOHANNUS_11:
 	case MIDI_SYSEX_VISCOUNT:
+	case MIDI_SYSEX_AHLBORN_GALANTI:
 	case MIDI_AFTERTOUCH:
 	case MIDI_NONE:
 	case MIDI_RESET:
@@ -450,6 +457,9 @@ wxString GOrgueMidiEvent::ToString(GOrgueMidiMap& map) const
 
 	case MIDI_SYSEX_VISCOUNT:
 		return wxString::Format(_("sysex Viscount value: %d"), GetValue());
+
+	case MIDI_SYSEX_AHLBORN_GALANTI:
+		return wxString::Format(_("sysex Ahlborn-Galanti value: %d"), GetValue());
 
 	case MIDI_SYSEX_GO_CLEAR:
 		return _("sysex GrandOrgue clear");
