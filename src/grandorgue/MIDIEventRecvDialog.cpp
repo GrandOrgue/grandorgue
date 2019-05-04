@@ -192,6 +192,8 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiverBa
 		m_eventtype->Append(_("Sys Ex Viscount"), MIDI_M_SYSEX_VISCOUNT);
 		m_eventtype->Append(_("Sys Ex Viscount Toggle"), MIDI_M_SYSEX_VISCOUNT_TOGGLE);
 		m_eventtype->Append(_("Sys Ex Rogers Stop Change"), MIDI_M_SYSEX_RODGERS_STOP_CHANGE);
+		m_eventtype->Append(_("Sys Ex Ahlborn-Galanti"), MIDI_M_SYSEX_AHLBORN_GALANTI);
+		m_eventtype->Append(_("Sys Ex Ahlborn-Galanti Toggle"), MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE);
 	}
 
 	m_current = 0;
@@ -288,7 +290,8 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 	{
 		if (type == MIDI_M_CTRL_BIT)
 			m_LowValueLabel->SetLabel(_("&Bit number:"));
-		else if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_OFF || type == MIDI_M_SYSEX_VISCOUNT)
+		else if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_OFF || type == MIDI_M_SYSEX_VISCOUNT
+		    || type == MIDI_M_SYSEX_AHLBORN_GALANTI || type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE)
 			m_LowValueLabel->SetLabel(_("&Off value:"));
 		else if (type == MIDI_M_PGM_RANGE)
 			m_LowValueLabel->SetLabel(_("&Lower PGM number:"));
@@ -305,7 +308,8 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent& event)
 		else
 			m_LowValueLabel->SetLabel(_("L&ower limit:"));
 
-		if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_ON || type == MIDI_M_SYSEX_VISCOUNT)
+		if (type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_CHANGE_FIXED_ON || type == MIDI_M_SYSEX_VISCOUNT
+		    || type == MIDI_M_SYSEX_AHLBORN_GALANTI || type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE)
 			m_HighValueLabel->SetLabel(_("&On value:"));
 		else if (type == MIDI_M_PGM_RANGE)
 			m_HighValueLabel->SetLabel(_("&Upper PGM number:"));
@@ -509,6 +513,7 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
 	case MIDI_SYSEX_JOHANNUS_11:
 	case MIDI_SYSEX_VISCOUNT:
 	case MIDI_SYSEX_RODGERS_STOP_CHANGE:
+	case MIDI_SYSEX_AHLBORN_GALANTI:
 		break;
 
 	default:
@@ -598,6 +603,8 @@ bool MIDIEventRecvDialog::SimilarEvent(const GOrgueMidiEvent& e1, const GOrgueMi
 	if (e1.GetMidiType() == MIDI_PGM_CHANGE)
 		return true;
 	if (e1.GetMidiType() == MIDI_SYSEX_VISCOUNT)
+		return true;
+	if (e1.GetMidiType() == MIDI_SYSEX_AHLBORN_GALANTI)
 		return true;
 	if (e1.GetKey() == e2.GetKey())
 	{
@@ -813,6 +820,11 @@ void MIDIEventRecvDialog::DetectEvent()
 						}
 					}
                                        break;
+				case MIDI_SYSEX_AHLBORN_GALANTI:
+					low = off.GetValue();
+					high = on.GetValue();
+					e.type = MIDI_M_SYSEX_AHLBORN_GALANTI;
+					break;
 
 				default:
 					continue;
@@ -863,6 +875,19 @@ void MIDIEventRecvDialog::DetectEvent()
 	case MIDI_SYSEX_VISCOUNT:
 		e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
 		low_value = event.GetValue();
+		break;
+	case MIDI_SYSEX_AHLBORN_GALANTI:
+		e.type = MIDI_M_SYSEX_AHLBORN_GALANTI;
+		if (((event.GetValue() >> 7) & 0x0f) < 8)
+		{
+			high_value = event.GetValue();
+			low_value = high_value + (6 << 7);
+		}
+		else
+		{
+			low_value = event.GetValue();
+			high_value = low_value - (6 << 7);
+		}
 		break;
 
 	default:

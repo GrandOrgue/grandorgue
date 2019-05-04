@@ -50,6 +50,8 @@ const struct IniFileEnumEntry GOrgueMidiReceiverBase::m_MidiTypes[] = {
 	{ wxT("SysExViscount"), MIDI_M_SYSEX_VISCOUNT },
 	{ wxT("SysExViscountToggle"), MIDI_M_SYSEX_VISCOUNT_TOGGLE },
 	{ wxT("SysExRodgersStopChange"), MIDI_M_SYSEX_RODGERS_STOP_CHANGE },
+	{ wxT("SysExAhlbornGalanti"), MIDI_M_SYSEX_AHLBORN_GALANTI },
+	{ wxT("SysExAhlbornGalantiToggle"), MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE },
 	{ wxT("RPN"), MIDI_M_RPN },
 	{ wxT("NRPN"), MIDI_M_NRPN },
 	{ wxT("RPNRange"), MIDI_M_RPN_RANGE },
@@ -313,6 +315,8 @@ bool GOrgueMidiReceiverBase::HasLowerLimit(midi_match_message_type type)
 	    type == MIDI_M_NOTE_NORMAL ||
 	    type == MIDI_M_SYSEX_VISCOUNT ||
 	    type == MIDI_M_SYSEX_VISCOUNT_TOGGLE ||
+	    type == MIDI_M_SYSEX_AHLBORN_GALANTI ||
+	    type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE ||
 	    type == MIDI_M_SYSEX_JOHANNUS_11 ||
 	    type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE ||
 	    type == MIDI_M_NOTE_SHORT_OCTAVE)
@@ -343,6 +347,8 @@ bool GOrgueMidiReceiverBase::HasUpperLimit(midi_match_message_type type)
 	    type == MIDI_M_NOTE_NO_VELOCITY ||
 	    type == MIDI_M_NOTE_NORMAL ||
 	    type == MIDI_M_SYSEX_VISCOUNT ||
+	    type == MIDI_M_SYSEX_AHLBORN_GALANTI ||
+	    type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE ||
 	    type == MIDI_M_SYSEX_JOHANNUS_11 ||
 	    type == MIDI_M_NOTE_SHORT_OCTAVE)
 		return true;
@@ -368,7 +374,9 @@ unsigned GOrgueMidiReceiverBase::KeyLimit(midi_match_message_type type)
 unsigned GOrgueMidiReceiverBase::LowerValueLimit(midi_match_message_type type)
 {
 	if (type == MIDI_M_RPN_RANGE ||
-	    type == MIDI_M_NRPN_RANGE)
+	    type == MIDI_M_NRPN_RANGE ||
+	    type == MIDI_M_SYSEX_AHLBORN_GALANTI ||
+	    type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE)
 		return 0x3fff;
 
 	if (type == MIDI_M_SYSEX_VISCOUNT ||
@@ -390,7 +398,9 @@ unsigned GOrgueMidiReceiverBase::LowerValueLimit(midi_match_message_type type)
 unsigned GOrgueMidiReceiverBase::UpperValueLimit(midi_match_message_type type)
 {
 	if (type == MIDI_M_RPN_RANGE ||
-	    type == MIDI_M_NRPN_RANGE)
+	    type == MIDI_M_NRPN_RANGE ||
+	    type == MIDI_M_SYSEX_AHLBORN_GALANTI ||
+	    type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE)
 		return 0x3fff;
 
 	if (type == MIDI_M_SYSEX_VISCOUNT)
@@ -817,6 +827,14 @@ MIDI_MATCH_TYPE GOrgueMidiReceiverBase::Match(const GOrgueMidiEvent& e, const un
 				;
 			}
 		}
+		if (e.GetMidiType() == MIDI_SYSEX_AHLBORN_GALANTI && m_events[i].type == MIDI_M_SYSEX_AHLBORN_GALANTI && m_events[i].low_value == e.GetValue())
+			return MIDI_MATCH_OFF;
+		if (e.GetMidiType() == MIDI_SYSEX_AHLBORN_GALANTI && m_events[i].type == MIDI_M_SYSEX_AHLBORN_GALANTI && m_events[i].high_value == e.GetValue())
+			return MIDI_MATCH_ON;
+		if (e.GetMidiType() == MIDI_SYSEX_AHLBORN_GALANTI && m_events[i].type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE && m_events[i].low_value == e.GetValue())
+			return debounce(e, MIDI_MATCH_CHANGE, i);
+		if (e.GetMidiType() == MIDI_SYSEX_AHLBORN_GALANTI && m_events[i].type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE && m_events[i].high_value == e.GetValue())
+			return debounce(e, MIDI_MATCH_CHANGE, i);
 	}
 	return MIDI_MATCH_NONE;
 }
