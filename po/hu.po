@@ -1,0 +1,3816 @@
+# Hungariam translations for GrandOrgue package.
+# This file is put in the public domain.
+# Kerkovits Krisztián <kerkovitskrisztian@gmail.com>, 2019
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GrandOrgue\n"
+"Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
+"POT-Creation-Date: 2019-06-03 23:26+0200\n"
+"PO-Revision-Date: 2019-06-04 17:22+0200\n"
+"Last-Translator: Kerkovits Krisztián\n"
+"Language-Team: Hungarian <kerkovitskrisztian@gmail.com>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Basepath: trunk\n"
+"X-Poedit-KeywordsList: _\n"
+"X-Poedit-SearchPath-0: src\n"
+"X-Poedit-SearchPath-1: resources/GrandOrgue.desktop.in\n"
+
+msgid "\n"
+msgstr "\n"
+
+msgid ""
+"\n"
+"\n"
+"Please select a valid impulse response file"
+msgstr ""
+"\n"
+"\n"
+"Válasszon érvényes impulzus visszhang fájlt"
+
+msgid " "
+msgstr " "
+
+#, c-format
+msgid " (%.3f used)"
+msgstr " (%.3f használatban)"
+
+msgid " (PA): "
+msgstr " (PA): "
+
+msgid " - "
+msgstr " – "
+
+#, c-format
+msgid " from %s"
+msgstr " %s-ből"
+
+#, c-format
+msgid " from '%s' (%s)"
+msgstr " '%s'-ből (%s)"
+
+msgid "\""
+msgstr "\""
+
+msgid "#"
+msgstr "#"
+
+#, c-format
+msgid "%.3f %%"
+msgstr "%.3f %%"
+
+#, c-format
+msgid "%.3f MB"
+msgstr "%.3f MB"
+
+#, c-format
+msgid "%.3f MB  (%.3f MB end)"
+msgstr "%.3f MB  (%.3f MB-ból)"
+
+#, c-format
+msgid "%.3f MB (not limited)"
+msgstr "%.3f MB (korlátlan)"
+
+#, c-format
+msgid "%.3f MB of %.3f MB"
+msgstr "%.3f MB a %.3f MB-ból"
+
+msgid "%Y-%m-%d-%H-%M-%S.%l.mid"
+msgstr "%Y-%m-%d-%H-%M-%S.%l.wav"
+
+msgid "%Y-%m-%d-%H-%M-%S.%l.wav"
+msgstr "%Y-%m-%d-%H-%M-%S.%l.wav"
+
+#, c-format
+msgid "%d"
+msgstr "%d"
+
+#, c-format
+msgid "%d %%"
+msgstr "%d %%"
+
+#, c-format
+msgid "%d (%s)"
+msgstr "%d (%s)"
+
+#, c-format
+msgid "%d - %d bits"
+msgstr "%d - %d bit"
+
+#, c-format
+msgid "%d BPM"
+msgstr "%d negyed/perc"
+
+#, c-format
+msgid "%d bits"
+msgstr "%d bit"
+
+#, c-format
+msgid "%d ms"
+msgstr "%d ms"
+
+#, c-format
+msgid "%d samples per buffer, %d Hz\n"
+msgstr "pufferenként %d minta, %d Hz\n"
+
+#, c-format
+msgid "%d: %s"
+msgstr "%d: %s"
+
+#, c-format
+msgid "%d:%02d:%02d"
+msgstr "%d:%02d:%02d"
+
+#, c-format
+msgid "%f cent"
+msgstr "%f cent"
+
+#, c-format
+msgid "%s"
+msgstr "%s"
+
+#, c-format
+msgid "%s - left"
+msgstr "%s - bal"
+
+#, c-format
+msgid "%s - right"
+msgstr "%s - jobb"
+
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
+#, c-format
+msgid "%s: %d ms"
+msgstr "%s: %d ms"
+
+#, c-format
+msgid "%s: %f dB"
+msgstr "%s: %f dB"
+
+#, c-format
+msgid "%s: %s\n"
+msgstr "%s: %s\n"
+
+#, c-format
+msgid "%s: extension with uppercase letters"
+msgstr "%s: a kiterjesztés nagybetűs"
+
+#, c-format
+msgid "%s: mute"
+msgstr "%s: némít"
+
+#, c-format
+msgid "%s: unknown"
+msgstr "%s: ismeretlen"
+
+#, c-format
+msgid "&%d: %s"
+msgstr "&%d: %s"
+
+msgid "&About"
+msgstr "&Névjegy"
+
+msgid "&Add"
+msgstr "&Hozzáad"
+
+msgid "&Audio/Midi"
+msgstr "&Hang/Midi"
+
+msgid "&Bit number:"
+msgstr "&Bitszám:"
+
+msgid "&CTRL/PGM:"
+msgstr "&CTRL/PGM:"
+
+msgid "&Cache"
+msgstr "&Gyorsítótár"
+
+msgid "&Channel:"
+msgstr "&Csatorna:"
+
+msgid "&Clear"
+msgstr "&Kiürít"
+
+msgid "&Close"
+msgstr "&Bezár"
+
+msgid "&Color:"
+msgstr "&Szín:"
+
+msgid "&Controller-No:"
+msgstr "&Vezérlő száma:"
+
+msgid "&Convolution reverb"
+msgstr "&Konvolúciós visszhang"
+
+msgid "&Copy current receive event"
+msgstr "&Fogadott esemény másolása"
+
+msgid "&Data:"
+msgstr "&Adat:"
+
+msgid "&Debounce time(ms):"
+msgstr "&Visszaverődés ideje(ms):"
+
+msgid "&Delete"
+msgstr "&Töröl"
+
+msgid "&Detect complex MIDI setup"
+msgstr "&Bonyolult MIDI-beállítás felismerése"
+
+msgid "&Device number:"
+msgstr "&Eszközszám:"
+
+msgid "&Device:"
+msgstr "&Eszköz:"
+
+msgid "&Down"
+msgstr "&Le"
+
+msgid "&Enhancements"
+msgstr "&Bővítések"
+
+msgid "&Event:"
+msgstr "&Esemény:"
+
+msgid "&Export Settings/Combinations"
+msgstr "Beállítások és kombinációk &exportálása"
+
+msgid "&Favorites"
+msgstr "&Kedvencek"
+
+msgid "&File"
+msgstr "&Fájl"
+
+msgid "&Help"
+msgstr "&Súgó"
+
+msgid "&Help\tF1"
+msgstr "&Súgó\tF1"
+
+msgid "&Highest key:"
+msgstr "&Legmagasabb billentyű:"
+
+msgid "&ID:"
+msgstr "&Azonosító:"
+
+msgid "&Import Settings"
+msgstr "&Beállítások importálása"
+
+msgid "&Install organ package\tCtrl+I"
+msgstr "&Orgonacsomag telepítése\tCtrl+I"
+
+msgid "&Length:"
+msgstr "&Hossz:"
+
+msgid "&Listen for Event"
+msgstr "&Eseményre vár"
+
+msgid "&Load\tCtrl+L"
+msgstr "&Betöltés\tCtrl+L"
+
+msgid "&Log MIDI events"
+msgstr "MIDI-események &naplózása"
+
+msgid "&Lower PGM number:"
+msgstr "&Alsó PGM szám:"
+
+msgid "&Lowest key:"
+msgstr "&Legalsó billentyű:"
+
+msgid "&MIDI-Output-Device..."
+msgstr "&MIDI kimeneti eszköz..."
+
+msgid "&MIDI-note:"
+msgstr "&MIDI-hang:"
+
+msgid "&Memory Level"
+msgstr "&Memória szint"
+
+msgid "&Memory Set\tShift"
+msgstr "&Memória beállítás\tShift"
+
+msgid "&Metronome"
+msgstr "&Metronóm"
+
+msgid "&Minus-Shortcut:"
+msgstr "&Mínusz billentyűparancs:"
+
+msgid "&Off NRPN number:"
+msgstr "&Ki NRPN-száma:"
+
+msgid "&Off RPN number:"
+msgstr "&Ki RPN-száma:"
+
+msgid "&Off Value:"
+msgstr "&Ki érték:"
+
+msgid "&Off value:"
+msgstr "&Ki érték:"
+
+msgid "&On NRPN number:"
+msgstr "&Be NRPN-száma:"
+
+msgid "&On RPN number:"
+msgstr "&Be RPN-száma:"
+
+msgid "&On value:"
+msgstr "&Be érték:"
+
+msgid "&Open\tCtrl+O"
+msgstr "&Megnyitás\tCtrl+O"
+
+msgid "&Organ settings"
+msgstr "&Orgonabeállítások"
+
+msgid "&Panel"
+msgstr "&Képernyő"
+
+msgid "&Panic\tEscape"
+msgstr "&Pánik\tEscape"
+
+msgid "&Parameter-No:"
+msgstr "&Paraméterszám:"
+
+msgid "&Paths"
+msgstr "&Elérési utak"
+
+msgid "&Plus-Shortcut:"
+msgstr "&Plusz billentyűparancs:"
+
+msgid "&Polyphony"
+msgstr "&Polifónia"
+
+msgid "&Release tail length"
+msgstr "&Fölengedés hossza"
+
+msgid "&Sample loading"
+msgstr "&Minta betöltése"
+
+msgid "&Save\tCtrl+S"
+msgstr "&Mentés\tCtrl+S"
+
+msgid "&Shortcut:"
+msgstr "&Billentyűparancs:"
+
+msgid "&Sound Engine"
+msgstr "&Hangvezérlő"
+
+msgid "&Sound Output State"
+msgstr "&Hangkimenet állapota"
+
+msgid "&Sound output"
+msgstr "&Hangkimenet"
+
+msgid "&Start-Position:"
+msgstr "&Kiindulási hely:"
+
+msgid "&Status"
+msgstr "&Állapot"
+
+msgid "&Stop number:"
+msgstr "&Regiszter szám:"
+
+msgid "&Temperament"
+msgstr "&Hangolás"
+
+msgid "&Top"
+msgstr "F&önt"
+
+msgid "&Transpose"
+msgstr "&Transzponál"
+
+msgid "&Transpose:"
+msgstr "&Transzponál:"
+
+msgid "&Up"
+msgstr "&Föl"
+
+msgid "&Update Cache..."
+msgstr "Gyorsítótár &frissítése..."
+
+msgid "&Upper PGM number:"
+msgstr "&Fölső PGM szám:"
+
+msgid "&Upper bank:"
+msgstr "&Fölső bank:"
+
+msgid "&Upper limit:"
+msgstr "&Fölső határ:"
+
+msgid "&Value:"
+msgstr "&Érték:"
+
+msgid "&Volume"
+msgstr "&Hangerő"
+
+#, c-format
+msgid "'%s' is still used by the organ '%s'"
+msgstr "'%s'-t még mindig használja a(z) '%s' orgona"
+
+#, c-format
+msgid "'%s' is still used by the package '%s'"
+msgstr "'%s'-t még mindig használja a(z) '%s' csomag"
+
+msgid "(none)"
+msgstr "(nincs)"
+
+msgid "*.wav"
+msgstr "*.wav"
+
+msgid "+"
+msgstr "+"
+
+msgid "+1"
+msgstr "+1"
+
+msgid "+1 Cent"
+msgstr "+1 cent"
+
+msgid "+10"
+msgstr "+10"
+
+msgid "+100"
+msgstr "+100"
+
+msgid "+100 Cent"
+msgstr "+100 cent"
+
+msgid ","
+msgstr ","
+
+msgid "-"
+msgstr "-"
+
+msgid "-- bits (- used)"
+msgstr "-- bit (- használatban)"
+
+msgid "--- MB (--- MB end)"
+msgstr "--- MB (--- MB-ból)"
+
+msgid "-1"
+msgstr "–1"
+
+msgid "-1 Cent"
+msgstr "–1 cent"
+
+msgid "-10"
+msgstr "–10"
+
+msgid "-100"
+msgstr "–100"
+
+msgid "-100 Cent"
+msgstr "–100 cent"
+
+msgid "-:--:--"
+msgstr "-:--:--"
+
+msgid "."
+msgstr ","
+
+msgid "0"
+msgstr "0"
+
+msgid "000"
+msgstr "000"
+
+msgid "1"
+msgstr "1"
+
+msgid "1/4 comma meantone (Aaron 1523)"
+msgstr "1/4 komma középhangolású (Aaron 1523)"
+
+msgid "1/4 comma variants"
+msgstr "1/4 komma változatok"
+
+msgid "1/4-comma equal beating fifths"
+msgstr "1/4 komma egyenlő kvintek"
+
+msgid "1/4-comma meantone approximation"
+msgstr "1/4 komma középhangolású közelítés"
+
+msgid "1/5 comma"
+msgstr "1/5 komma"
+
+msgid "1/5-comma meantone (Verheijen)"
+msgstr "1/5 komma középhangolású (Verheijen)"
+
+msgid "1/6 comma"
+msgstr "1/6 komma"
+
+msgid "1/6-comma (bemols)"
+msgstr "1/6 komma (bemols)"
+
+msgid "1/6-comma (dieses)"
+msgstr "1/6 komma (dieses)"
+
+msgid "1/6-comma equal beating fifths"
+msgstr "1/6 komma egyenlő kvintek"
+
+msgid "1/6-comma meantone"
+msgstr "1/6 komma középhangolású"
+
+msgid "1/6-comma, wolf over 4 fifths"
+msgstr "1/6 komma, farkashangköz 4 kvinten"
+
+msgid "16"
+msgstr "16"
+
+msgid "16 Bit PCM"
+msgstr "16 Bit PCM"
+
+msgid "2"
+msgstr "2"
+
+msgid "24 Bit PCM"
+msgstr "24 Bit PCM"
+
+msgid "3"
+msgstr "3"
+
+msgid "3/14-comma meantone (Giordano Riccati, 1762)"
+msgstr "3/14-komma középhangolású (Giordano Riccati, 1762)"
+
+msgid "4"
+msgstr "4"
+
+msgid "5"
+msgstr "5"
+
+msgid "6"
+msgstr "6"
+
+msgid "7"
+msgstr "7"
+
+msgid "8"
+msgstr "8"
+
+msgid "8 Bit PCM"
+msgstr "8 Bit PCM"
+
+msgid "9"
+msgstr "9"
+
+msgid "9x Note"
+msgstr "9x Hang"
+
+msgid "9x Note Off"
+msgstr "9x Hang ki"
+
+msgid "9x Note Off Toggle"
+msgstr "9x Hang kikapcsoló"
+
+msgid "9x Note On"
+msgstr "9x Hang be"
+
+msgid "9x Note On Toggle"
+msgstr "9x Hang bekapcsoló"
+
+msgid "9x Note On/Off Toggle"
+msgstr "9x Hang be/kikapcsoló"
+
+msgid "9x Note short octave at low key"
+msgstr "9x Hang hiányos oktáv az alsó billentyűnél"
+
+msgid "9x Note without Velocity"
+msgstr "9x Hang billentés nélkül"
+
+msgid "9x Note without map"
+msgstr "9x Hang leképezés nélkül"
+
+msgid ":"
+msgstr ":"
+
+msgid "<"
+msgstr "<"
+
+msgid "< Bits per sample must be a multiple of 8 in this implementation"
+msgstr "< A minta ebben az implementációban csak 8 bit többszöröse lehet"
+
+msgid "< Invalid CUE chunk in"
+msgstr "< CUE blokk érvénytelen"
+
+msgid "< Invalid RIFF file"
+msgstr "< Érvénytelen RIFF-fájl"
+
+msgid "< Invalid RIFF/WAVE file"
+msgstr "< Érvénytelen RIFF/WAVE-fájl"
+
+msgid "< Invalid SMPL chunk in"
+msgstr "< SMPL blokk érvénytelen"
+
+msgid "< Invalid WAVE format chunk"
+msgstr "< Érvénytelen WAVE blokk"
+
+msgid "< Malformed wave file. Format chunk must preceed data chunk."
+msgstr "< Hibás fájl. A formátumnak az adat előtt kellene lennie."
+
+msgid "< More than 2 channels in"
+msgstr "< Több mint két csatorna"
+
+msgid "< Not a RIFF file"
+msgstr "< Nem RIFF-fájl"
+
+msgid "< Only 32bit IEEE float samples supported"
+msgstr "< Csak a 32 bites IEEE lebegőpontos minták támogatottak"
+
+msgid "< Unsupport PCM bit size"
+msgstr "< Nem támogatott PCM bitméret"
+
+msgid "< Unsupported PCM format"
+msgstr "< Nem támogatott PCM-formátum"
+
+msgid "<Invalid SMPL chunk in"
+msgstr "<SMPL blokk érvénytelen"
+
+msgid "<Invalid WAV file"
+msgstr "<Érvénytelen WAV-fájl"
+
+msgid "<no file loaded>"
+msgstr "<nincs fájl betöltve>"
+
+#, c-format
+msgid "<unknown> %d"
+msgstr "<ismeretlen> %d"
+
+msgid ">"
+msgstr ">"
+
+msgid "?"
+msgstr "?"
+
+msgid "A"
+msgstr "A"
+
+msgid ""
+"A channel offset allows the use of two MIDI\n"
+"interfaces with conflicting MIDI channels. For\n"
+"example, applying a channel offset of 8 to\n"
+"one of the MIDI interfaces would cause that\n"
+"interface's channel 1 to appear as channel 9,\n"
+"channel 2 to appear as channel 10, and so on."
+msgstr ""
+"A csatorna eltolás lehetővé teszi két MIDI-\n"
+"interfész használatát közös MIDI-csatornákkal.\n"
+"Például, 8-as eltolást alkalmazva a MIDI-\n"
+"eszközök egyikére, ennek az interfésznek\n"
+"az 1-es csatornája 9-esnek; a 2-es csatornája\n"
+"10-esnek fog tűnni; és így tovább."
+
+msgid "A&dvanced..."
+msgstr "&Haladó..."
+
+msgid "ALSA"
+msgstr "ALSA"
+
+msgid "ASIO"
+msgstr "ASIO"
+
+msgid "Active polyphony management"
+msgstr "Aktív polifóniakezelés"
+
+msgid "Add dirac pulse"
+msgstr "Dirac-impulzus hozzáadása"
+
+msgid "Add new audio device"
+msgstr "Új hangeszköz hozzáadása"
+
+msgid "Add new audio group"
+msgstr "Új audió csoport hozzáadása"
+
+msgid "Address"
+msgstr "Hely"
+
+msgid "Agricola's Monochord, Rudimenta musices (1539)"
+msgstr "Agricola's Monochord, Rudimenta musices (1539)"
+
+msgid "Alexander Metcalf Fisher"
+msgstr "Alexander Metcalf Fisher"
+
+msgid "All"
+msgstr "Összes"
+
+msgid "All loops"
+msgstr "Minden ciklus"
+
+msgid "Allocated sample memory"
+msgstr "Foglalt mintamemória"
+
+msgid "Alsa"
+msgstr "Alsa"
+
+msgid "Amplitude is invalid"
+msgstr "Érvénytelen hangerő"
+
+msgid "Amplitude:"
+msgstr "Hangerő:"
+
+msgid "Any channel"
+msgstr "Bármilyen csatorna"
+
+msgid ""
+"Any customizations you have saved to this\n"
+"organ definition file will be lost!\n"
+"\n"
+"Reset to defaults and reload?"
+msgstr ""
+"Minden testreszabás, amelyet elmentett\n"
+"ehhez az orgonához, elveszik!\n"
+"\n"
+"Visszaáll az alapértelmezettre és újratölt?"
+
+msgid "Any device"
+msgstr "Bármilyen eszköz"
+
+msgid "Apply"
+msgstr "Alkalmaz"
+
+msgid "Attack loading:"
+msgstr "Billentés betöltése:"
+
+msgid ""
+"Attention:\n"
+"These initial midi settings only affect the first load of a organ.\n"
+"Right-click on manuals, stops, ... to do further changes."
+msgstr ""
+"Figyelem!\n"
+"Ezek a kezdeti MIDI-beállítások csak az orgona első betöltését "
+"befolyásolják.\n"
+"Jobb kattintás a manuálokra, regiszterekre stb. tovább változtatnak."
+
+msgid "Audio Groups"
+msgstr "Audió csoportok"
+
+msgid "Audio Output"
+msgstr "Hangkimenet"
+
+msgid "Audio Recorder"
+msgstr "Hangfelvétel"
+
+#, c-format
+msgid "Audio device %s not initialised"
+msgstr "%s hangeszköz nincs elindítva"
+
+#, c-format
+msgid "Audio device %s not open"
+msgstr "%s hangeszköz nincs nyitva"
+
+msgid "Audio device settings"
+msgstr "Hangeszköz beállítások"
+
+#, c-format
+msgid "Audio group %d"
+msgstr "Audió csoport %d"
+
+msgid "Audio group name"
+msgstr "Audió csoport neve"
+
+msgid "Audio group:"
+msgstr "Audió csoport:"
+
+msgid "Audio groups"
+msgstr "Audió csoportok"
+
+msgid "Audio recording directory:"
+msgstr "Hangfelvétel könyvtára:"
+
+msgid "Audio recording time"
+msgstr "Hangfelvétel hossza"
+
+msgid "Audio recordings"
+msgstr "Hangfelvételek"
+
+msgid "Audio/Midi &Settings"
+msgstr "Hang/Midi &beállítások"
+
+msgid "Automatically manage cache"
+msgstr "Gyorsítótár önműködő kezelése"
+
+msgid "B"
+msgstr "B"
+
+msgid "BAS"
+msgstr "BAS"
+
+msgid "BPM +"
+msgstr "Gyorsít"
+
+msgid "BPM -"
+msgstr "Lassít"
+
+msgid "BPM:"
+msgstr "Negyed/perc:"
+
+msgid "Bach (Bradley Lehman)"
+msgstr "Bach (Bradley Lehman)"
+
+msgid "Bad buffer pointer"
+msgstr "Érvénytelen pufferkurzor"
+
+msgid "Barca 1786"
+msgstr "Barca 1786"
+
+msgid "Bermudo (1555) "
+msgstr "Bermudo (1555) "
+
+msgid "Bethisy temperament ordinaire (1764)"
+msgstr "Bethisy temperament ordinaire (1764)"
+
+msgid "Bits per sample:"
+msgstr "Bitek mintánként"
+
+msgid "Boulliau (1373)/Mersenne 1636. "
+msgstr "Boulliau (1373)/Mersenne 1636. "
+
+msgid "Buffer too big"
+msgstr "Puffer túl nagy"
+
+msgid "Buffer too small"
+msgstr "Puffer túl kicsi"
+
+msgid "Build Date"
+msgstr "Építés ideje"
+
+msgid "Builder"
+msgstr "Építő"
+
+msgid "Button"
+msgstr "Gomb"
+
+msgid "Bx Controller"
+msgstr "Bx vezérlő"
+
+msgid "Bx Controller Off"
+msgstr "Bx vezérlő ki"
+
+msgid "Bx Controller Off Toggle"
+msgstr "Bx vezérlő kikapcsoló"
+
+msgid "Bx Controller On"
+msgstr "Bx vezérlő be"
+
+msgid "Bx Controller On Toggle"
+msgstr "Bx vezérlő bekapcsoló"
+
+msgid "Bx Controller On/Off Toggle"
+msgstr "Bx vezérlő be/kikapcsoló"
+
+msgid "Bx Ctrl Change Fixed Off Value Toggle"
+msgstr "Bx vezérlő váltás rögzített ki érték"
+
+msgid "Bx Ctrl Change Fixed On Value Toggle"
+msgstr "Bx vezérlő váltás rögzített be érték"
+
+msgid "Bx Ctrl Change Fixed On/Off Value Toggle"
+msgstr "Bx vezérlő váltás rögzített be/ki érték"
+
+msgid "Bx Ctrl Change Fixed Value"
+msgstr "Bx vezérlő váltás rögzített érték"
+
+msgid "C"
+msgstr "C"
+
+msgid "C&onfigure..."
+msgstr "B&eállítás..."
+
+msgid "C&opy"
+msgstr "&Másol"
+
+msgid "CRC mismatch in organ package - file corrupted?"
+msgstr "CRC eltérés az orgonacsomagban – sérült állomány?"
+
+msgid "Cache file had bad magic bypassing cache."
+msgstr "Gyorsítótár varázsszáma hibás – gyorsítótár kihagyva."
+
+msgid "Cache file had diffent hash bypassing cache."
+msgstr "Gyorsítótár hasítóértéke eltérő – gyorsítótár kihagyva."
+
+#, c-format
+msgid "Cache load failure: %s"
+msgstr "Gyorsítótár betöltési hiba: %s"
+
+#, c-format
+msgid "Cache load failure: Failed to read %s from cache."
+msgstr "A gyorsítótárból %s kiolvasása meghiúsult."
+
+msgid "Cache store:"
+msgstr "Gyorsítótár:"
+
+msgid "Can't read from a callback stream"
+msgstr "Nem lehet olvasni a visszaérkező folyamot"
+
+msgid "Can't read from an output only stream"
+msgstr "Nem lehet olvasni egy csak kimeneti folyamból"
+
+msgid "Can't write to a callback stream"
+msgstr "Nem lehet írni a visszaérkező folyamot"
+
+msgid "Can't write to an input only stream"
+msgstr "Nem lehet írni egy csak bemeneti folyamba"
+
+#, c-format
+msgid ""
+"Cannot use buffer size above %d samples; unacceptable quantization would "
+"occur."
+msgstr ""
+"Nem lehet %d mintánál nagyobb a puffer; elfogadhatatlan lenne a mintavétel."
+
+msgid "Change"
+msgstr "Módosít"
+
+msgid "Change audio device"
+msgstr "Hangeszköz váltás"
+
+msgid "Change audio group"
+msgstr "Audió csoport váltás"
+
+#, c-format
+msgid "Channel %d"
+msgstr "%d. csatorna"
+
+msgid "Channel offset:"
+msgstr "Csatorna eltolás:"
+
+msgid "Channel:"
+msgstr "Csatorna:"
+
+msgid "Chaumont"
+msgstr "Chaumont"
+
+# The word "Church" is used in the program as "place" where is the original pipe organ, in organ Load dialog. So I translate it as "Lugar" ("place")
+msgid "Church"
+msgstr "Templom"
+
+#, c-format
+msgid "ChurchName missing in organ definition %s"
+msgstr "Templom neve hiányzik a(z) %s orgonaleírásból"
+
+msgid "Collapse tree"
+msgstr "Összecsuk"
+
+msgid "Combination Setter"
+msgstr "Kombinációk beállítása"
+
+msgid "Compress cache"
+msgstr "Gyorsítótár tömörítése"
+
+#, c-format
+msgid "Config entry without any group at line %d"
+msgstr "%d sorban csoport nélküli beállítás"
+
+msgid ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2019 GrandOrgue contributors\n"
+"\n"
+"This software comes with no warranty.\n"
+"\n"
+"ASIO Interface Technology by Steinberg Media Technologies GmbH,\n"
+"by use of the Steinberg ASIO SDK, Version 2.2.\n"
+"ASIO is a trademark and software of Steinberg Media Technologies GmbH."
+msgstr ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2019 GrandOrgue contributors\n"
+"\n"
+"A program készítői semmilyen felelősséget nem vállalnak.\n"
+"\n"
+"ASIO Interface Technology by Steinberg Media Technologies GmbH,\n"
+"by use of the Steinberg ASIO SDK, Version 2.2.\n"
+"ASIO is a trademark and software of Steinberg Media Technologies GmbH."
+
+msgid "Core"
+msgstr "Core"
+
+msgid "Core Audio"
+msgstr "Core Audio"
+
+msgid "Cores used at loadtime:"
+msgstr "Betöltéskor használt magok:"
+
+msgid "Corrette (1753)"
+msgstr "Corrette (1753)"
+
+#, c-format
+msgid "Could not remove '%s'"
+msgstr "'%s' törlése sikertelen"
+
+#, c-format
+msgid "Could not write to '%s'"
+msgstr "'%s' írása sikertelen"
+
+msgid "Couperin"
+msgstr "Couperin"
+
+msgid "Coupler"
+msgstr "Kopula"
+
+#, c-format
+msgid "Coupler %s"
+msgstr "%s. kopula"
+
+msgid "Coupler manuals and volume"
+msgstr "Kopulabillentyűzetek és hangerő"
+
+#, c-format
+msgid "Coupling manual %d"
+msgstr "%d. kopulázó billentyűzet"
+
+msgid "Creating sample cache"
+msgstr "Gyorsítótár készítése"
+
+msgid "Creating the cache failed"
+msgstr "Gyorsítótár létrehozása meghiúsult"
+
+msgid "Crescendo"
+msgstr "Henger"
+
+msgid "Crescendo Pedal"
+msgstr "Henger"
+
+msgid "Ctrl Change Bitfield"
+msgstr "Vezérlő váltás bit"
+
+msgid "Current"
+msgstr "Aktuális"
+
+msgid "Cx Program Change"
+msgstr "Cx Program váltás"
+
+msgid "Cx Program Change Off"
+msgstr "Cx Program váltás ki"
+
+msgid "Cx Program Change On"
+msgstr "Cx Program váltás be"
+
+msgid "Cx Program Change Range"
+msgstr "Cx Program váltás tartomány"
+
+msgid "D"
+msgstr "D"
+
+msgid "De Caus (1615)"
+msgstr "De Caus (1615)"
+
+msgid "Default"
+msgstr "Alapértelmezett"
+
+msgid "Default audio group"
+msgstr "Alapértelmezett audió csoport"
+
+msgid "Defaults and Initial Settings"
+msgstr "Alapértelmezett és kezdeti beállítások"
+
+msgid "Delay (ms):"
+msgstr "Késleltetés (ms):"
+
+msgid "Delete"
+msgstr "Töröl"
+
+msgid "Delete &Cache..."
+msgstr "&Gyorsítótár törlése..."
+
+msgid "Delete package"
+msgstr "Csomag törlése"
+
+msgid "Desired latency:"
+msgstr "Kívánt késés:"
+
+msgid "Desired output latency"
+msgstr "Kívánt kimeneti késés"
+
+#, c-format
+msgid ""
+"Device %s wants a different samples per buffer settings: %d.\n"
+"Please adjust the GrandOrgue audio settings."
+msgstr ""
+"%s eszköz %d mintát óhajt pufferenként.\n"
+"Állítsa át a GrandOrgue hangbeállításait!"
+
+msgid "Device unavailable"
+msgstr "Eszköz elérhetetlen"
+
+#, c-format
+msgid "Device: %s [%d ms requested]"
+msgstr "Eszköz: %s [%d ms igényelve]"
+
+msgid "Direct Sound:"
+msgstr "Közvetlen hang:"
+
+msgid "DirectSound"
+msgstr "DirectSound"
+
+msgid "Disabled"
+msgstr "Letiltva"
+
+msgid "Distribute audio groups"
+msgstr "Audió csoport terjesztése"
+
+msgid "Divisional"
+msgstr "Kombináció"
+
+msgid "Divisional 1"
+msgstr "1. Kombináció"
+
+msgid "Divisional Coupler"
+msgstr "Kopula"
+
+msgid "Divisionals"
+msgstr "Kombinációk"
+
+#, c-format
+msgid "Do you want to remove %s?"
+msgstr "%s-t törölhetem?"
+
+msgid "Don't load"
+msgstr "Ne töltse be"
+
+msgid "Drawstop"
+msgstr "Regiszterkapcsoló"
+
+#, c-format
+msgid "Drawstop %s can't reference to itself"
+msgstr "%s regiszterkapcsoló nem hivatkozhat magára"
+
+#, c-format
+msgid "Duplicate combination entry %s in %s"
+msgstr "%s érték ismétlődik %s-ben"
+
+#, c-format
+msgid "Duplicate entry in section %s at line %d: %s"
+msgstr "%s szakaszban, %d sorban a(z) %s csoport ismétlődik"
+
+#, c-format
+msgid "Duplicate entry: %s"
+msgstr "Ismétlődő érték: %s"
+
+#, c-format
+msgid "Duplicate file '%s'"
+msgstr "'%s' fájl ismétlődik"
+
+#, c-format
+msgid "Duplicate group at line %d: %s"
+msgstr "%d sorban a(z) %s csoport ismétlődik"
+
+msgid "E"
+msgstr "E"
+
+msgid "E&xit"
+msgstr "&Kilép"
+
+msgid "Element"
+msgstr "Elem"
+
+msgid "Element already in the pool"
+msgstr "Az elem már a készletben van"
+
+#, c-format
+msgid "Empty at section '%s' entry '%s'"
+msgstr "'%s' szakaszban, a '%s' érték üres"
+
+msgid "Enable Convolution Reverb"
+msgstr "Konvolúciós visszhang engedélyezve"
+
+msgid "Enabled"
+msgstr "Engedélyezve"
+
+msgid "Enclosure"
+msgstr "Redőny"
+
+msgid "Enclosure 1"
+msgstr "1. Redőny"
+
+msgid "Enclosure 2"
+msgstr "2. Redőny"
+
+msgid "Enclosure 3"
+msgstr "3. Redőny"
+
+msgid "Enclosure 4"
+msgstr "4. Redőny"
+
+msgid "Enclosure 5"
+msgstr "5. Redőny"
+
+msgid "Enclosure 6"
+msgstr "6. Redőny"
+
+msgid "Enclosures"
+msgstr "Redőnyök"
+
+#, c-format
+msgid "End of track marker missing at offset %d"
+msgstr "%d helyen hiányzik a sáv vége jel"
+
+msgid "Equal beating Victorian piano temperament"
+msgstr "Egyenlő közű viktoriánus zongorahangolás"
+
+msgid "Equal temperament"
+msgstr "Temperált"
+
+msgid "Error"
+msgstr "Hiba"
+
+msgid "Error decoding a track"
+msgstr "Hiba a sáv dekódolásakor"
+
+#, c-format
+msgid "Error while loading samples for rank %s pipe %s: %s"
+msgstr "%s regiszter %s síp mintáinak betöltésekor hiba keletkezett: %s"
+
+msgid "Event-&No"
+msgstr "Esemény&szám"
+
+#, c-format
+msgid "Events after end of track marker at %d"
+msgstr "Esemény a sáv vége jel után %d-nél"
+
+msgid "Excess data in the central directory"
+msgstr "Túl sok adat a gyökérben"
+
+msgid "Excess information in zip64 extendend information record"
+msgstr "Túlzott érték a zip64 kiterjesztett információhoz"
+
+msgid "Export Settings"
+msgstr "Beállítások exportálása"
+
+msgid "F"
+msgstr "F"
+
+msgid "F1"
+msgstr "F1"
+
+msgid "F10"
+msgstr "F10"
+
+msgid "F11"
+msgstr "F11"
+
+msgid "F12"
+msgstr "F12"
+
+msgid "F13"
+msgstr "F13"
+
+msgid "F14"
+msgstr "F14"
+
+msgid "F15"
+msgstr "F15"
+
+msgid "F16"
+msgstr "F16"
+
+msgid "F17"
+msgstr "F17"
+
+msgid "F18"
+msgstr "F18"
+
+msgid "F19"
+msgstr "F19"
+
+msgid "F2"
+msgstr "F2"
+
+msgid "F20"
+msgstr "F20"
+
+msgid "F21"
+msgstr "F21"
+
+msgid "F22"
+msgstr "F22"
+
+msgid "F23"
+msgstr "F23"
+
+msgid "F24"
+msgstr "F24"
+
+msgid "F3"
+msgstr "F3"
+
+msgid "F4"
+msgstr "F4"
+
+msgid "F5"
+msgstr "F5"
+
+msgid "F6"
+msgstr "F6"
+
+msgid "F7"
+msgstr "F7"
+
+msgid "F8"
+msgstr "F8"
+
+msgid "F9"
+msgstr "F9"
+
+#, c-format
+msgid "Failed creating organ package file %s"
+msgstr "%s orgonacsomag készítése meghiúsult"
+
+#, c-format
+msgid "Failed to create directory '%s'"
+msgstr "'%s' könyvtár létrehozása meghiúsult"
+
+#, c-format
+msgid "Failed to decode %s"
+msgstr "%s dekódolása meghiúsult"
+
+msgid "Failed to decode WavePack data"
+msgstr "WavePack dekódolása meghiúsult"
+
+#, c-format
+msgid "Failed to decode file '%s'"
+msgstr "'%s' dekódolása meghiúsult"
+
+#, c-format
+msgid "Failed to decompress file '%s'"
+msgstr "'%s' kicsomagolása meghiúsult"
+
+#, c-format
+msgid "Failed to export settings to '%s'"
+msgstr "Beállítások exportálása '%s'-be meghiúsult"
+
+#, c-format
+msgid "Failed to find organ package %s"
+msgstr "%s orgonacsomag megtalálása meghiúsult"
+
+#, c-format
+msgid "Failed to index organ package %s"
+msgstr "%s orgonacsomag indexelése meghiúsult"
+
+#, c-format
+msgid "Failed to load %s"
+msgstr "%s betöltése meghiúsult"
+
+#, c-format
+msgid "Failed to load file '%s' into the memory"
+msgstr "'%s' betöltése a memóriába meghiúsult"
+
+#, c-format
+msgid "Failed to load organ package %s"
+msgstr "%s orgonacsomag betöltése meghiúsult"
+
+#, c-format
+msgid "Failed to open %s"
+msgstr "%s megnyitása meghiúsult"
+
+#, c-format
+msgid "Failed to open '%s'"
+msgstr "'%s' megnyitása meghiúsult"
+
+#, c-format
+msgid "Failed to open archive %s"
+msgstr "%s archívum megnyitása meghiúsult"
+
+#, c-format
+msgid "Failed to open file '%s'"
+msgstr "'%s' megnyitása meghiúsult"
+
+#, c-format
+msgid "Failed to open organ package '%s' (%s)"
+msgstr "'%s' orgonacsomag megnyitása meghiúsult (%s)"
+
+#, c-format
+msgid "Failed to open the graphic '%s'"
+msgstr "'%s' ábra megnyitása meghiúsult"
+
+#, c-format
+msgid "Failed to open the organ package '%s'"
+msgstr "'%s' orgonacsomag megnyitása meghiúsult"
+
+#, c-format
+msgid "Failed to parse '%s'"
+msgstr "'%s' értelmezése meghiúsult"
+
+#, c-format
+msgid "Failed to parse organ definition %s"
+msgstr "%s orgonaleírás értelmezése meghiúsult"
+
+#, c-format
+msgid "Failed to parse the organ package index of '%s'"
+msgstr "'%s' orgonacsomag indexének értelmezése meghiúsult"
+
+#, c-format
+msgid "Failed to read %s from the organ package"
+msgstr "Az orgonacsomagból %s olvasása meghiúsult"
+
+#, c-format
+msgid "Failed to read '%s'"
+msgstr "'%s' beolvasása meghiúsult"
+
+msgid "Failed to read cache directory"
+msgstr "Gyorsítótár könyvtár olvasása meghiúsult"
+
+#, c-format
+msgid "Failed to read content of %s"
+msgstr "%s tartalmának beolvasása meghiúsult"
+
+#, c-format
+msgid "Failed to read directory '%s'"
+msgstr "'%s' könyvtár olvasása meghiúsult"
+
+#, c-format
+msgid "Failed to read file %s"
+msgstr "%s beolvasása meghiúsult"
+
+#, c-format
+msgid "Failed to read file '%s'"
+msgstr "'%s' beolvasása meghiúsult"
+
+#, c-format
+msgid "Failed to read file '%s'\n"
+msgstr "%s beolvasása meghiúsult\n"
+
+#, c-format
+msgid "Failed to read wav file %s: %s"
+msgstr "%s wav-állomány beolvasása meghiúsult: %s"
+
+msgid "Failed to save the organ setting"
+msgstr "Orgonabeállítás mentése meghiúsult"
+
+#, c-format
+msgid "Failed to write %s to the organ package"
+msgstr "Az orgonacsomagba %s írása meghiúsult"
+
+#, c-format
+msgid "Failed to write content to '%s'"
+msgstr "Tartalom írása '%s'-be meghiúsult"
+
+#, c-format
+msgid "Failed to write to '%s'"
+msgstr "'%s' írása meghiúsult"
+
+msgid "Failed writing the package directory"
+msgstr "A csomag könyvtárba írás meghiúsult"
+
+msgid "Failed writing the package index file"
+msgstr "Csomag indexfájljának írása meghiúsult"
+
+msgid "Ferdinand Bossard (1743/44) Klosterkirche Muri"
+msgstr "Ferdinand Bossard (1743/44) Klosterkirche Muri"
+
+#, c-format
+msgid "File '%s' does not exists"
+msgstr "'%s' állomány nem létezik"
+
+#, c-format
+msgid "File belongs to a different organ: %s"
+msgstr "%s állomány másik orgonához tartozik"
+
+#, c-format
+msgid "File name '%s' contains invalid path seperators"
+msgstr "'%s' fájlnév elérési útjában érvénytelen az elválasztó"
+
+#, c-format
+msgid "Filename '%s' contains non-portable directory seperator /"
+msgstr "'%s' fájlnév a / portolhatatlan elválasztót tartalmazza"
+
+#, c-format
+msgid "Filename '%s' not compatible with case sensitive systems"
+msgstr "'%s' fájlnév nem kompatibilis kis/nagybetűérzékeny rendszerekkel"
+
+msgid "Filename contains invalid characters"
+msgstr "Fájlnév érvénytelen karaktert tartalmaz"
+
+msgid "First loop"
+msgstr "Első ciklus"
+
+msgid "Fisk-Vogel: Memorial Church at Stanford"
+msgstr "Fisk-Vogel: Stanfordi Templom"
+
+msgid "Freres Jullien Organ, France (1690)"
+msgstr "Freres Jullien orgona, Franciaország (1690)"
+
+msgid "Freytag Organ Bellingwolde 1798/2002"
+msgstr "Freytag Organ Bellingwolde 1798/2002"
+
+msgid "Full"
+msgstr "Teljes"
+
+msgid "G"
+msgstr "G"
+
+msgid "G. Silbermann nr 2"
+msgstr "G. Silbermann nr 2"
+
+msgid "G.C."
+msgstr "G.T."
+
+msgid "GB"
+msgstr "GB"
+
+msgid "Gain (dB):"
+msgstr "Erősítés (dB):"
+
+msgid "Gain is invalid"
+msgstr "Érvénytelen erősítés"
+
+msgid "Gain:"
+msgstr "Erősítés:"
+
+msgid "Ganassi (Sylvestro) - 1543"
+msgstr "Ganassi (Sylvestro) - 1543"
+
+msgid "Garbage detected in the MIDI file"
+msgstr "Hiba van a MIDI-állományban"
+
+msgid "General"
+msgstr "Generálkombináció"
+
+msgid "General 1"
+msgstr "1. Generálkombináció"
+
+msgid "Generals"
+msgstr "Generálkombinációk"
+
+msgid "Gottfried Silbermann nr 1"
+msgstr "Gottfried Silbermann nr 1"
+
+msgid "Grammateus (1518)"
+msgstr "Grammateus (1518)"
+
+msgid "GrandOrgue"
+msgstr "GrandOrgue"
+
+#, c-format
+msgid "GrandOrgue %s"
+msgstr "GrandOrgue %s"
+
+#, c-format
+msgid "GrandOrgue %s - Virtual Pipe Organ Software"
+msgstr "GrandOrgue %s – virtuális sípos orgona"
+
+msgid "GrandOrgue - virtual pipe organ sample player"
+msgstr "GrandOrgue – virtuális sípos orgona lejátszó"
+
+msgid "GrandOrgue Input"
+msgstr "GrandOrgue bemenet"
+
+msgid "GrandOrgue MIDI Player"
+msgstr "GrandOrgue MIDI-lejátszó"
+
+msgid "GrandOrgue Output"
+msgstr "GrandOrgue kimenet"
+
+#, c-format
+msgid "GrandOrgueTool %s"
+msgstr "GrandOrgueTool %s"
+
+msgid "Group"
+msgstr "Csoport"
+
+msgid "H"
+msgstr "H"
+
+msgid "H&ighest velocity:"
+msgstr "Legnagyobb sebesség:"
+
+msgid "Harpsichord/Piano/Monochord"
+msgstr "Csembaló/Zongora/Monochord"
+
+msgid "Henri Arnaut De Zwolle. (1436)."
+msgstr "Henri Arnaut De Zwolle. (1436)."
+
+msgid "Heun (Jan) 1805"
+msgstr "Heun (Jan) 1805"
+
+msgid "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
+msgstr "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
+
+msgid "Holden (John) 1770"
+msgstr "Holden (John) 1770"
+
+msgid "Host API not found"
+msgstr "Szerver API hiányzik"
+
+msgid "Hummel's quasi-equal temperament (1829)"
+msgstr "Hummel-féle kvázi-temperált (1829)"
+
+msgid "I"
+msgstr "I"
+
+msgid "ID"
+msgstr "Azonosító"
+
+msgid "IEEE Float"
+msgstr "IEEE lebegőpontos"
+
+msgid "INCOMPLETE - "
+msgstr "HIÁNYOS - "
+
+msgid "Ignore pitch info in organ samples wav files"
+msgstr "A hangmintákból nem olvassa ki a hangolási adatokat"
+
+msgid "Illegal combination of I/O devices"
+msgstr "Be/Ki eszközök kombinációja érvénytelen"
+
+msgid "Import"
+msgstr "Importálás"
+
+msgid "Import &Combinations"
+msgstr "&Kombinációk importálása"
+
+msgid "Import Combinations"
+msgstr "Kombinációk importálása"
+
+msgid "Import Settings"
+msgstr "Beállítások importálása"
+
+#, c-format
+msgid "Impulse response file '%s' not found"
+msgstr "'%s' impulzus visszhang fájl hiányzik"
+
+msgid "Impulse response:"
+msgstr "Impulzus visszhangja:"
+
+msgid "Incompatible host API specific stream info"
+msgstr "Szerver API-ra jellemző folyam nem kompatibilis"
+
+msgid "Incompatible stream host API"
+msgstr "Szerver API nem kompatibilis"
+
+#, c-format
+msgid "Incomplete MIDI message at %d"
+msgstr "%d helyen hiányos MIDI-üzenet"
+
+msgid "Incomplete central directory entry"
+msgstr "Hiányos érték a gyökérhez"
+
+msgid "Incomplete central directory extra record"
+msgstr "Hiányos extra érték a gyökérhez"
+
+msgid "Incomplete chunk"
+msgstr "Hiányos csomag"
+
+#, c-format
+msgid "Incomplete chunk at offset %d"
+msgstr "%d helyen hiányos csomag"
+
+msgid "Incomplete file content"
+msgstr "Hiányos fájltartalom"
+
+msgid "Incomplete local record"
+msgstr "Hiányos helyi rekord"
+
+#, c-format
+msgid "Incomplete timestamp at offset %d"
+msgstr "%d helyen hiányos csomag"
+
+msgid "Incomplete zip64 extendend information record"
+msgstr "Hiányos érték a zip64 kiterjesztett információhoz"
+
+msgid "Inconsitant WavPack file"
+msgstr "Hibás WawPack-fájl"
+
+#, c-format
+msgid "Incorrect case for section '%s' entry '%s'"
+msgstr "'%s' szakaszban, a '%s'"
+
+msgid "Incorrect track count"
+msgstr "Helytelen csatornamennyiség"
+
+#, c-format
+msgid "Index '%s' has bad magic - bypassing index"
+msgstr "'%s' kulcs varázsszáma hibás – kulcs kihagyva"
+
+msgid "Info"
+msgstr "Tudnivalók"
+
+msgid "InfoFilename does not point to a html file"
+msgstr "InfoFilename nem HTML-re mutat"
+
+msgid "Initial MIDI Configuration"
+msgstr "Kezdeti MIDI-beállítások"
+
+#, c-format
+msgid "Initial MIDI settings for %s"
+msgstr "%s kezdeti MIDI-beállításai"
+
+#, c-format
+msgid "Input directory %s not found"
+msgstr "%s bemeneti könyvtár hiányzik"
+
+msgid "Input overflowed"
+msgstr "Bemenet túlcsordult"
+
+msgid "Insert"
+msgstr "Beszúr"
+
+msgid "Install organ package"
+msgstr "Orgonacsomag telepítése"
+
+msgid "Insufficient memory"
+msgstr "Kevés a memória"
+
+msgid "Internal PortAudio error"
+msgstr "PortAudio hiba"
+
+msgid "Interpolation:"
+msgstr "Interpoláció:"
+
+#, c-format
+msgid "Invalid Config entry at line %d: %s"
+msgstr "%d sorban a(z) %s beállítás érvénytelen"
+
+#, c-format
+msgid "Invalid boolean value at section '%s' entry '%s': %s"
+msgstr "Érvénytelen logikai a '%s' szakaszban, a '%s' értékben: %s"
+
+#, c-format
+msgid "Invalid color at section '%s' entry '%s': %s"
+msgstr "Érvénytelen szín a '%s' szakaszban, a '%s' értékben: %s"
+
+#, c-format
+msgid "Invalid combination entry %s in %s"
+msgstr "%s érték érvénytelen %s-ben"
+
+msgid "Invalid device"
+msgstr "Érvénytelen eszköz"
+
+msgid "Invalid enum default value"
+msgstr "Érvénytelen alapértelmezett érték"
+
+#, c-format
+msgid "Invalid enum value at section '%s' entry '%s': %s"
+msgstr "Érvénytelen érték a '%s' szakaszban, a '%s' értékben: %s"
+
+#, c-format
+msgid "Invalid enum value for /%s/%s: %d"
+msgstr "Érvénytelen érték /%s/%s számára: %d"
+
+msgid "Invalid error code"
+msgstr "Érvénytelen hibakód"
+
+msgid "Invalid error code (value greater than zero)"
+msgstr "Érvénytelen hibakód (nagyobb, mint nulla)"
+
+msgid "Invalid flag"
+msgstr "Érvénytelen jel"
+
+#, c-format
+msgid "Invalid float value at section '%s' entry '%s': %s"
+msgstr "Érvénytelen lebegőpontos a '%s' szakaszban, a '%s' értékben: %s"
+
+#, c-format
+msgid "Invalid font size at section '%s' entry '%s': %s"
+msgstr "Érvénytelen betűméret a '%s' szakaszban, a '%s' értékben: %s"
+
+#, c-format
+msgid "Invalid free of %p"
+msgstr "%p fölszabadítása érvénytelen"
+
+msgid "Invalid host API"
+msgstr "Szerver API érvénytelen"
+
+msgid "Invalid instance name"
+msgstr "Érvénytelen név"
+
+#, c-format
+msgid "Invalid integer value at section '%s' entry '%s': %s"
+msgstr "Érvénytelen egész a '%s' szakaszban, a '%s' értékben: %s"
+
+#, c-format
+msgid "Invalid item selected: %s"
+msgstr "Érvénytelen tétel kiválasztva: %s"
+
+msgid "Invalid local header offset"
+msgstr "Érvénytelen fejléc hely"
+
+msgid "Invalid loop defintion"
+msgstr "Érvénytelen ciklusdefiníció"
+
+msgid "Invalid number of channels"
+msgstr "Érvénytelen csatornaszám"
+
+msgid "Invalid object type for reversible piston"
+msgstr "Érvénytelen típus a visszahúzható gombhoz"
+
+msgid "Invalid offset in Zip64 end locator"
+msgstr "Érvénytelen helyre mutat a ZIP64 záró rekord"
+
+msgid "Invalid reference "
+msgstr "Érvénytelen hivatkozás "
+
+msgid "Invalid release end position"
+msgstr "Fölengedés végének helye érvénytelen"
+
+msgid "Invalid release position"
+msgstr "Fölengedés helye érvénytelen"
+
+msgid "Invalid reverb start offset"
+msgstr "Visszhang kezdetének eltolása érvénytelen"
+
+msgid "Invalid sample rate"
+msgstr "Érvénytelen mintavételi sűrűség"
+
+#, c-format
+msgid "Invalid section start at line %d: %s"
+msgstr "%d sorban a(z) %s szakasz érnénytelen"
+
+#, c-format
+msgid "Invalid size at section '%s' entry '%s': %s"
+msgstr "Érvénytelen méret a '%s' szakaszban, a '%s' értékben: %s"
+
+msgid "Invalid stream pointer"
+msgstr "Érvénytelen kurzor"
+
+msgid "J"
+msgstr "J"
+
+msgid "JACK Audio Connection Kit"
+msgstr "JACK Audio Connection Kit"
+
+msgid "Jack"
+msgstr "Jack"
+
+msgid "Jack: "
+msgstr "Jack: "
+
+msgid "K"
+msgstr "K"
+
+msgid "KB"
+msgstr "KB"
+
+msgid "Keller (Gottfried) 1707"
+msgstr "Keller (Gottfried) 1707"
+
+msgid "Kellner's Bach tuning"
+msgstr "Kellner Bach-hangolása"
+
+msgid "Kepler's choice system (1619)"
+msgstr "Kepler-féle rendszer (1619)"
+
+msgid "Kirnberger III"
+msgstr "Kirnberger III"
+
+msgid "Koenig, Balthasar Organ Nederehe 1714"
+msgstr "Koenig, Balthasar orgona Nederehe 1714"
+
+msgid "L"
+msgstr "L"
+
+msgid "L&ower bank:"
+msgstr "&Alsó bank:"
+
+msgid "L&ower limit:"
+msgstr "&Alsó határ:"
+
+msgid "L&owest velocity:"
+msgstr "Legkisebb sebesség:"
+
+msgid "Label"
+msgstr "Címke"
+
+msgid "Lambert (1774) 1/7 comma"
+msgstr "Lambert (1774) 1/7-komma"
+
+msgid "Last track is missing the end marker"
+msgstr "Utolsó sávból hiányzik a vége jel"
+
+msgid "Length:"
+msgstr "Hossz:"
+
+msgid "Linear"
+msgstr "Lineáris"
+
+msgid "Load &MIDI\tCtrl+P"
+msgstr "&MIDI betöltés\tCtrl+P"
+
+msgid "Load &stereo samples in:"
+msgstr "&Sztereó minták betöltése:"
+
+msgid "Load MIDI file"
+msgstr "MIDI betöltés"
+
+msgid "Load aborted by the user - only parts of the organ are loaded."
+msgstr ""
+"Felhasználó megszakította a betöltést – az orgona csak részben lett betöltve."
+
+msgid "Load error"
+msgstr "Betöltési hiba"
+
+msgid "Load first favorit organ at startup"
+msgstr "Kedvenc orgona betöltése induláskor"
+
+msgid "Load last used organ at startup"
+msgstr "Utolsó orgona betöltése induláskor"
+
+#, c-format
+msgid "Loading file %s"
+msgstr "%s állomány betöltése"
+
+msgid "Loading sample set"
+msgstr "Minta betöltése"
+
+msgid "Log messages"
+msgstr "Naplóbejegyzések"
+
+msgid "Longest loop"
+msgstr "Leghosszabb ciklus"
+
+msgid "Loop loading:"
+msgstr "Ciklusok betöltése:"
+
+msgid "Loop too short for a cross fade"
+msgstr "A ciklus túl rövid a keveréshez"
+
+msgid "Loop too short for crossfade"
+msgstr "A ciklus túl rövid a keveréshez"
+
+msgid "Lossless compression"
+msgstr "Veszetségmentes tömörítés"
+
+msgid "Lossless compression:"
+msgstr "Veszetségmentes tömörítés:"
+
+msgid "M"
+msgstr "M"
+
+msgid "M&idi Objects"
+msgstr "M&IDI-objektumok"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "MEL"
+msgstr "DAL"
+
+msgid "MID files (*.mid)|*.mid"
+msgstr "MID-hang (*.mid)|*.mid"
+
+msgid "MIDI"
+msgstr "MIDI"
+
+msgid "MIDI &input devices"
+msgstr "MIDI &bemeneti eszközök"
+
+msgid "MIDI &output devices"
+msgstr "MIDI &kimeneti eszközök"
+
+msgid "MIDI Devices"
+msgstr "MIDI-eszközök"
+
+msgid "MIDI Event"
+msgstr "MIDI-esemény"
+
+msgid "MIDI Objects"
+msgstr "MIDI-objektumok"
+
+msgid "MIDI Player"
+msgstr "MIDI-lejátszó"
+
+msgid "MIDI Recorder"
+msgstr "MIDI-felvétel"
+
+msgid "MIDI event: "
+msgstr "&MIDI-esemény "
+
+msgid "MIDI file type 0 only supports one track"
+msgstr "MIDI 0 csak egy sávot támogat"
+
+msgid "MIDI file type 1 has not tracks"
+msgstr "MIDI 1-nek nincsenek sávjai"
+
+msgid "MIDI file type 2 is not supported"
+msgstr "MIDI 2 nem támogatott"
+
+msgid "MIDI files (*.mid)|*.mid"
+msgstr "MIDI-hang (*.mid)|*.mid"
+
+msgid "MIDI header missing"
+msgstr "MIDI-fejléc hiányzik"
+
+msgid "MIDI output device"
+msgstr "MIDI kimeneti eszköz"
+
+msgid "MIDI playing time"
+msgstr "MIDI lejátszás ideje"
+
+msgid "MIDI recording directory:"
+msgstr "MIDI-felvétel könyvtára:"
+
+msgid "MIDI recording time"
+msgstr "MIDI-felvétel hossza"
+
+msgid "MIDI recordings"
+msgstr "MIDI-felvételek"
+
+#, c-format
+msgid "MIDI settings for organ %s"
+msgstr "%s orgona MIDI-beállításai"
+
+msgid "MISSING - "
+msgstr "HIÁNYZIK - "
+
+msgid "MME"
+msgstr "MME"
+
+msgid "Malerbi's well-temperament nr 1 (1794)"
+msgstr "Malerbi's well-temperament nr 1 (1794)"
+
+msgid "Malformed MIDI header"
+msgstr "Rossz MIDI-fejléc"
+
+msgid "Malformed zip64 end record"
+msgstr "Hibás ZIP64 záró rekord"
+
+msgid "Manual"
+msgstr "Manuál"
+
+#, c-format
+msgid "Manual %d: Switch%03d already in use"
+msgstr "Manuál %d: Kapcsoló%03d már használatban"
+
+#, c-format
+msgid "Manual %d: Tremulant%03d already in use"
+msgstr "Manuál %d: Tremoló%03d már használatban"
+
+msgid "Manual 1"
+msgstr "1. Manuál"
+
+msgid "Manual 2"
+msgstr "2. Manuál"
+
+msgid "Manual 3"
+msgstr "3. Manuál"
+
+msgid "Manual 4"
+msgstr "4. Manuál"
+
+msgid "Manual 5"
+msgstr "5. Manuál"
+
+#, c-format
+msgid "Manual key %d outside of the bounding box"
+msgstr "%d billentyű kilóg a képernyőről"
+
+msgid "Manuals"
+msgstr "Manuálok"
+
+msgid "Mapped memory of the cache"
+msgstr "Gyorsítótár memóriaigénye"
+
+msgid "Mark Lindley, Grosvenor Chapel, London"
+msgstr "Mark Lindley, Grosvenor Chapel, London"
+
+msgid "Marpurg nr 1"
+msgstr "Marpurg nr 1"
+
+msgid "Marpurg nr 11"
+msgstr "Marpurg nr 11"
+
+msgid "Marpurg nr 12"
+msgstr "Marpurg nr 12"
+
+msgid "Marpurg nr 2"
+msgstr "Marpurg nr 2"
+
+msgid "Marpurg nr 3"
+msgstr "Marpurg nr 3"
+
+msgid "Marpurg nr 4"
+msgstr "Marpurg nr 4"
+
+msgid "Marpurg nr 5"
+msgstr "Marpurg nr 5"
+
+msgid "Marpurg nr 7"
+msgstr "Marpurg nr 7"
+
+msgid "Marpurg nr 8"
+msgstr "Marpurg nr 8"
+
+msgid "Marpurg nr 9"
+msgstr "Marpurg nr 9"
+
+msgid "Master"
+msgstr "Fő"
+
+msgid "Master Controls"
+msgstr "Központi szabályozók"
+
+msgid "Max"
+msgstr "Legtöbb"
+
+msgid "Measure +"
+msgstr "Ütem +"
+
+msgid "Measure -"
+msgstr "Ütem -"
+
+msgid "Memory Level"
+msgstr "Memória szint"
+
+msgid "Memory Limit (MB):"
+msgstr "Memória korlát (MB):"
+
+msgid "Memory Set"
+msgstr "Memória beállítás"
+
+#, c-format
+msgid "Memory mapping of the cache file failed with error code %d"
+msgstr "Meghiúsult a gyorsítótár leképezése a memóriába. Hibakód: %d"
+
+#, c-format
+msgid "Memory pool is full: %llu of %llu used"
+msgstr "Memóriakészlet betelt: %llu használatban a %llu-ból"
+
+msgid "Memory pool size"
+msgstr "Memória mérete"
+
+msgid "Memory usage:"
+msgstr "Memória használat:"
+
+msgid "Mercadier's well-temperament"
+msgstr "Mercadier jól temperament"
+
+msgid "Mersenne spinet 1"
+msgstr "Mersenne spinet 1"
+
+msgid "Mersenne spinet 2"
+msgstr "Mersenne spinet 2"
+
+msgid "Mersenne's Improved Meantone 1"
+msgstr "Mersenne fejlesztett középhangolású 1"
+
+msgid "Metronom measure"
+msgstr "Metronóm ütem"
+
+msgid "Metronome"
+msgstr "Metronóm"
+
+msgid "Metronome BPM"
+msgstr "Metronóm negyed/perc"
+
+msgid "Midi & Audio Settings"
+msgstr "Midi & hang beállítások"
+
+msgid "Midi player directory:"
+msgstr "MIDI-lejátszó könyvtára:"
+
+#, c-format
+msgid "Midi-Settings for %s - %s"
+msgstr "MIDI beállítások %s-nek – %s"
+
+msgid "Mismatch of local and central header"
+msgstr "Helyi és központi fejléc különbözik"
+
+msgid "Missing local header"
+msgstr "Helyi fejléc hiányzik"
+
+#, c-format
+msgid "Missing required value section '%s' entry '%s'"
+msgstr "A '%s' szakasz '%s' kötelező értéke hiányzik"
+
+msgid "Mixing of percussive and non-percussive samples in one pipe not allowed"
+msgstr "Tilos ugyanazon síphoz ütős és nem ütős mintákat keverni"
+
+msgid "Mod. Silbermann nr 2"
+msgstr "Mód. Silbermann nr 2"
+
+msgid "Mono"
+msgstr "Mono"
+
+msgid "More Information"
+msgstr "További tudnivalók"
+
+msgid "N"
+msgstr "N"
+
+msgid "NRPN"
+msgstr "NRPN"
+
+msgid "NRPN Off"
+msgstr "NRPN ki"
+
+msgid "NRPN Off Toggle"
+msgstr "NRPN kikapcsoló"
+
+msgid "NRPN On"
+msgstr "NRPN be"
+
+msgid "NRPN On Toggle"
+msgstr "NRPN bekapcsoló"
+
+msgid "NRPN On/Off Toggle"
+msgstr "NRPN be/kikapcsoló"
+
+msgid "NRPN Range"
+msgstr "NRPN tartomány"
+
+#, c-format
+msgid "NRPN change channel: %d key: %d value: %d"
+msgstr "NRPN csatorna: %d billentyű: %d érték: %d"
+
+msgid "Name"
+msgstr "Név"
+
+msgid "Neidhardt I (1724)"
+msgstr "Neidhardt I (1724)"
+
+msgid "Neidhardt II (1724)"
+msgstr "Neidhardt II (1724)"
+
+msgid "Neidhardt III (1724)"
+msgstr "Neidhardt III (1724)"
+
+msgid "New"
+msgstr "Új"
+
+msgid "New audio device"
+msgstr "Új hangeszköz"
+
+msgid "New audio group"
+msgstr "Új audió csoport"
+
+msgid "New audio group name"
+msgstr "Új audió csoport neve"
+
+msgid "Next"
+msgstr "Következő"
+
+msgid "Next Memory"
+msgstr "Következő tárolt"
+
+msgid "Next temperament"
+msgstr "Következő hangolás"
+
+msgid "No"
+msgstr "Nem"
+
+msgid "No audio group selected"
+msgstr "Nincs audió csoport kiválasztva"
+
+msgid "No callback routine specified"
+msgstr "Nincs visszajelzési eljárás megadva"
+
+msgid "No device"
+msgstr "Nincs eszköz:"
+
+msgid "No end record found"
+msgstr "Záró rekord hiányzik"
+
+msgid "No function selected"
+msgstr "Nincs üzemmód kiválasztva"
+
+msgid "No input directory specified"
+msgstr "Nincs bemeneti könyvtár megadva"
+
+msgid "No loop found"
+msgstr "Ciklus hiányzik"
+
+#, c-format
+msgid "No organ section in organ definition %s"
+msgstr "Nincs orgona a(z) %s orgonaleírásban"
+
+msgid "No output-file specified"
+msgstr "Nincs kimenet megadva"
+
+msgid "No samples found"
+msgstr "Nincsenek minták"
+
+msgid "No sound output occurring"
+msgstr "Nincs hangkimenet"
+
+#, c-format
+msgid ""
+"No sound output will happen. Samples per buffer has been changed by the "
+"sound driver to %d"
+msgstr ""
+"Nem lesz hangkimenet. A puffer mintaszámát %d-re állította az illesztőprogram"
+
+msgid "No title specified"
+msgstr "Nincs cím megadva"
+
+#, c-format
+msgid "Non-empty directory '%s'"
+msgstr "'%s' könyvtár nem üres"
+
+msgid "None"
+msgstr "Nincs"
+
+msgid "Norden"
+msgstr "Norden"
+
+msgid "Not enough samples for a crossfade"
+msgstr "Nincs elég minta a keveréshez"
+
+#, c-format
+msgid "Not recognized MIDI chunk at offset %d"
+msgstr "%d helyen ismeretlen MIDI-csomag"
+
+msgid "Not supported entry in the central directory"
+msgstr "Nem támogatott érték a gyökérhez"
+
+msgid "Not supported event"
+msgstr "Nem támogatott esemény"
+
+#, c-format
+msgid "Number %s contains locale dependent floating point"
+msgstr "%s szám helyi beállítású tizedesvesszőt használ"
+
+msgid "Number of CPU cores:"
+msgstr "Processzor magok száma:"
+
+msgid "O"
+msgstr "O"
+
+msgid "ODF Path"
+msgstr "ODF elérési út"
+
+msgid "OFF"
+msgstr "KI"
+
+msgid "ON"
+msgstr "BE"
+
+msgid "OSS"
+msgstr "OSS"
+
+msgid "Old GO 0.2 styled setting in ODF"
+msgstr "Régi GO 0.2 stílusú beállítás az ODF-ben"
+
+msgid "On"
+msgstr "Be"
+
+msgid "Only non-splitted ZIP archives are supported"
+msgstr "Csak az egységes ZIP-archívumok támogatottak"
+
+msgid "Only non-splitted ZIP64 archives are supported"
+msgstr "Csak az egységes ZIP64-archívumok támogatottak"
+
+msgid "Only non-splitted archive is supported"
+msgstr "Csak az egységes archívumok támogatottak"
+
+msgid "Only stored compression supported"
+msgstr "Csak a stored tömörítés támogatott"
+
+msgid "Open &Recent"
+msgstr "&Legutóbbiak"
+
+#, c-format
+msgid "Open of the audio stream for %s failed: %s"
+msgstr "%s számára a(z) %s hangfolyam megnyitása meghiúsult"
+
+msgid "Open organ"
+msgstr "Orgona megnyitása"
+
+msgid "Options"
+msgstr "Beállítások"
+
+#, c-format
+msgid "Organ %s changed its name"
+msgstr "%s orgona megváltoztatta a nevét"
+
+#, c-format
+msgid "Organ %s changed its organ builder"
+msgstr "%s orgona megváltoztatta az építőjét"
+
+#, c-format
+msgid "Organ %s changed its recording details"
+msgstr "%s orgona megváltoztatta a felvétel részleteit"
+
+msgid "Organ &Properties"
+msgstr "Orgona&tulajdonságok"
+
+msgid "Organ Packages"
+msgstr "Orgonacsomagok"
+
+msgid "Organ Properties"
+msgstr "Orgonatulajdonságok"
+
+msgid "Organ dialog"
+msgstr "Orgona ablak"
+
+msgid "Organ package"
+msgstr "Orgonacsomag"
+
+#, c-format
+msgid "Organ package %s changed its title"
+msgstr "%s orgonacsomag megváltoztatta a címét"
+
+msgid "Organ package (*.orgue)|*.orgue"
+msgstr "Orgonacsomag (*.orgue)|*.orgue"
+
+msgid "Organ package directory:"
+msgstr "Orgonacsomag könyvtára:"
+
+msgid "Organ packages"
+msgstr "Orgonacsomagok"
+
+msgid "Organ settings"
+msgstr "Orgonabeállítások"
+
+msgid "Organs"
+msgstr "Orgonák"
+
+msgid "Original temperament"
+msgstr "Eredeti hangolás"
+
+msgid "Other Comments"
+msgstr "Egyéb megjegyzések"
+
+msgid "Other just"
+msgstr "Egyéb természetes"
+
+msgid "Out of memory"
+msgstr "Memória betelt"
+
+msgid ""
+"Out of memory - only parts of the organ are loaded. Please reduce memory "
+"footprint via the sample loading settings."
+msgstr ""
+"Elfogyott a memória – az orgona csak részben lett betöltve. Csökkentse a "
+"memóriaigényt a minta betöltési beállításokkal!"
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %d"
+msgstr "Tartományon kívüli érték a '%s' szakaszban, a '%s' értékben: %d"
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %f"
+msgstr "Tartományon kívüli érték a '%s' szakaszban, a '%s' értékben: %f"
+
+#, c-format
+msgid "Output device %s not found - no sound output will occure"
+msgstr "%s kimeneti eszköz hiányzik – nem lesz hangkimenet"
+
+msgid "Output underflowed"
+msgstr "Kimenet alulcsordult"
+
+msgid "P"
+msgstr "P"
+
+msgid "P&roperties..."
+msgstr "T&ulajdonságok..."
+
+msgid "PAUSE"
+msgstr "SZÜN"
+
+msgid "PLAY"
+msgstr "LEJÁTSZ"
+
+#, c-format
+msgid "PackageID %s added more than once"
+msgstr "%s csomagazonosító többszörösen szerepel"
+
+msgid "Panic"
+msgstr "Pánik"
+
+msgid "Parent default"
+msgstr "Öröklött"
+
+msgid "Parsing organ packages"
+msgstr "Orgonacsomagok értelmezése"
+
+msgid "Parsing sample set definition file"
+msgstr "Mintadefiníció értelmezése"
+
+msgid "Path"
+msgstr "Elérési út"
+
+msgid "Pedal"
+msgstr "Pedál"
+
+msgid "Perform strict ODF"
+msgstr "Szigorú ODF"
+
+msgid "Pipe organ simulator"
+msgstr "Sípos orgona szimulátor"
+
+msgid "Piston"
+msgstr "Gomb"
+
+msgid "Please apply changes first"
+msgstr "Előbb alkalmazza a módosításokat"
+
+msgid "Please enter a volume between -120 and 40 dB"
+msgstr "Üssön be egy hangerőt –120 és 40 dB között"
+
+msgid "Please enter new volume in dB:"
+msgstr "Üsse be az új hangerőt dB-ben:"
+
+msgid "Please fully close the enclosure"
+msgstr "Zárja be teljesen a redőnyt"
+
+msgid "Please fully open the enclosure"
+msgstr "Nyissa ki teljesen a redőnyt"
+
+msgid "Please press the MIDI element"
+msgstr "Nyomja meg a MIDI-elemet"
+
+msgid "Please press the highest key with minimal velocity"
+msgstr "Nyomja meg a legmagasabb billentyűt a legkisebb sebességgel"
+
+msgid "Please press the lowest key with minimal velocity"
+msgstr "Nyomja meg a legmélyebb billentyűt a legkisebb sebességgel"
+
+msgid "Please select an organ"
+msgstr "Válasszon orgonát"
+
+msgid "Please toggle it (to on state, if possible)"
+msgstr "Kapcsolja át (ha lehet, akkor be)"
+
+msgid "Please toggle it again (to off state, if possible)"
+msgstr "Kapcsolja ismét (ha lehet, akkor ki)"
+
+msgid "Polyphase"
+msgstr "Többfázisú"
+
+msgid ""
+"Polyphase is not supported with lossless compression - falling back to "
+"linear."
+msgstr ""
+"Többfázisú keverés veszteségmentes tömörítéssel nem támogatott – lineáris "
+"lesz."
+
+msgid "Polyphony"
+msgstr "Polifónia"
+
+msgid "PortAudio not initialized"
+msgstr "PortAudio nincs inicializálva"
+
+msgid "Pr&eset"
+msgstr "&Előbeállítás"
+
+msgid "Prelleur (Peter) 1731"
+msgstr "Prelleur (Peter) 1731"
+
+#, c-format
+msgid "Preset %d"
+msgstr "%d. előbeállítás"
+
+msgid "Prev"
+msgstr "Előző"
+
+msgid "Prev temperament"
+msgstr "Előző hangolás"
+
+msgid "Previous"
+msgstr "Előző"
+
+msgid "Previous Memory"
+msgstr "Előző tárolt"
+
+msgid "Principal 8'"
+msgstr "Principál 8'"
+
+msgid "Properties"
+msgstr "Tulajdonságok"
+
+msgid "PulseAudio"
+msgstr "PulseAudio"
+
+msgid "Pure Major"
+msgstr "Tiszta dúr hármas"
+
+msgid "Pure Minor"
+msgstr "Tiszta moll hármas"
+
+msgid "Pythagorean"
+msgstr "Pitagóraszi"
+
+msgid "Q"
+msgstr "Q"
+
+msgid "R"
+msgstr "R"
+
+msgid "REC"
+msgstr "FELV"
+
+msgid "REC File"
+msgstr "Fájl FELV"
+
+msgid "RPN"
+msgstr "RPN"
+
+msgid "RPN Off"
+msgstr "RPN ki"
+
+msgid "RPN Off Toggle"
+msgstr "RPN kikapcsoló"
+
+msgid "RPN On"
+msgstr "RPN be"
+
+msgid "RPN On Toggle"
+msgstr "RPN bekapcsoló"
+
+msgid "RPN On/Off Toggle"
+msgstr "RPN be/kikapcsoló"
+
+msgid "RPN Range"
+msgstr "RPN tartomány"
+
+#, c-format
+msgid "RPN channel: %d key: %d value: %d"
+msgstr "RPN csatorna: %d billentyű: %d érték: %d"
+
+msgid "Rameau Nouveau Systeme (1726)"
+msgstr "Rameau Nouveau Systeme (1726)"
+
+msgid "Rameau bemols"
+msgstr "Rameau bemols"
+
+msgid "Rameau dieses"
+msgstr "Rameau dieses"
+
+msgid "Rameau's modified meantone temperament (1725)"
+msgstr "Rameau's módosított középhangolású (1725)"
+
+msgid "Ramos de Pareja 1482 - Monochord"
+msgstr "Ramos de Pareja 1482 - Monochord"
+
+msgid "Randomize pipe speaking"
+msgstr "Síphang véletlenszerűsítése"
+
+msgid "Rank"
+msgstr "Regiszter"
+
+msgid "Re&load"
+msgstr "&Újratölt"
+
+#, c-format
+msgid "Read from the archive failed (%d bytes)"
+msgstr "Kiolvasás az archívumból meghiúsult (%d bájt)"
+
+msgid "Reading data for CRC failed"
+msgstr "CRC-adat kiolvasása meghiúsult"
+
+msgid "Receive"
+msgstr "Fogad"
+
+msgid "Record stereo downmix"
+msgstr "Sztereó keverés felvétele"
+
+msgid "Recorder / Player"
+msgstr "Felvétel / lejátszás"
+
+msgid "Recorder WAV Format:"
+msgstr "Felvevő WAV-formátum:"
+
+msgid "Recording"
+msgstr "Felvétel"
+
+msgid "Recording Details"
+msgstr "Felvétel részletei"
+
+msgid "ReferencePipe without Reference"
+msgstr "Hivatkozó síp hivatkozás nélkül"
+
+#, c-format
+msgid "Register = %d"
+msgstr "Regiszter = %d"
+
+msgid "Regular"
+msgstr "Általános"
+
+msgid "Release loading:"
+msgstr "Fölengedés betöltése:"
+
+msgid "Release sample scaling"
+msgstr "Fölengedés minta méretezése"
+
+msgid "Release tail length"
+msgstr "Fölengedés hossza"
+
+msgid "Rename"
+msgstr "Átnevez"
+
+msgid "Resampling failed"
+msgstr "Újramintavételezés meghiúsult"
+
+msgid "Reset"
+msgstr "Visszaállít"
+
+msgid "Reset to &Defaults"
+msgstr "&Alapértelmezett visszaállítása"
+
+msgid "Reverb"
+msgstr "Visszhang"
+
+msgid "Reverb error"
+msgstr "Visszhang hiba"
+
+#, c-format
+msgid "Reverb load error: %s"
+msgstr "Visszhang betöltési hiba: %s"
+
+#, c-format
+msgid "Reversible piston connect to a read-only object: %s"
+msgstr "Visszahúzható gomb a(z) %s csak olvasható objektumhoz kapcsolódik"
+
+msgid "Revert"
+msgstr "Visszaállít"
+
+msgid "Revert to Default"
+msgstr "Alapértelmezettre vissza"
+
+msgid "Rousseau's temperament (1768)"
+msgstr "Rousseau's temperament (1768)"
+
+#, c-format
+msgid "RtAudio error: %s"
+msgstr "RtAudio hiba: %s"
+
+#, c-format
+msgid "RtMidi error: %s"
+msgstr "RtMidi hiba: %s"
+
+msgid "S"
+msgstr "S"
+
+msgid "STOP"
+msgstr "ÁLLJ"
+
+msgid "SYSEX Hauptwerk 16 Byte String Name"
+msgstr "SYSEX Hauptwerk 16 Byte String Name"
+
+msgid "SYSEX Hauptwerk 16 Byte String Value"
+msgstr "SYSEX Hauptwerk 16 Byte String Value"
+
+msgid "SYSEX Hauptwerk 32 Byte LCD Name"
+msgstr "SYSEX Hauptwerk 32 Byte LCD Name"
+
+msgid "SYSEX Hauptwerk 32 Byte LCD Value"
+msgstr "SYSEX Hauptwerk 32 Byte LCD Value"
+
+msgid "SYSEX Rogers Stop Change"
+msgstr "SYSEX Rogers Stop Change"
+
+msgid "Sample Loading"
+msgstr "Minta betöltése"
+
+msgid "Sample Rate:"
+msgstr "Mintavételi sűrűség:"
+
+msgid "Sample Size:"
+msgstr "Minta mérete:"
+
+msgid "Sample channels:"
+msgstr "Minta sávok:"
+
+msgid "Sample format not supported"
+msgstr "Minta formátuma nem támogatott"
+
+msgid "Sample informations"
+msgstr "Minta információ"
+
+#, c-format
+msgid "Sample rate of device %s changed"
+msgstr "%s eszköz mintavételi sűrűsége megváltozott"
+
+msgid "Sample set definition files (*.organ)|*.organ"
+msgstr "Hangminta definíció (*.organ)|*.organ"
+
+msgid "Sample size:"
+msgstr "Minta mérete:"
+
+msgid "Samples per buffer:"
+msgstr "Minták pufferenként:"
+
+msgid "Sampleset directory:"
+msgstr "Hangminta könyvtár:"
+
+msgid "Sauveur (Memoires 1701)"
+msgstr "Sauveur (Memoires 1701)"
+
+msgid "Sauveur 1702"
+msgstr "Sauveur 1702"
+
+msgid "Sauveur harpsichord 1697"
+msgstr "Sauveur csembaló 1697"
+
+msgid "Save"
+msgstr "Mentés"
+
+msgid "Save as"
+msgstr "Mentés másként"
+
+#, c-format
+msgid "Save of %s to the cache failed"
+msgstr "%s mentése a gyorsítótárba meghiúsult"
+
+msgid "Scheffer (1748) modified, Sweden"
+msgstr "Scheffer (1748) módosított, Svédország"
+
+msgid "Schlick (Arnolt), 1511"
+msgstr "Schlick (Arnolt), 1511"
+
+msgid "Schlick's (1991)"
+msgstr "Schlick (1991)"
+
+msgid "Schlick: 1555"
+msgstr "Schlick: 1555"
+
+msgid "Schnitger organ St. Jakobi, Hamburg "
+msgstr "Schnitger orgona St. Jakobi, Hamburg "
+
+msgid "Scope"
+msgstr "Preparáció"
+
+msgid "Scoped"
+msgstr "Preparálva"
+
+#, c-format
+msgid "Section %s already in use"
+msgstr "%s szakasz már használatban"
+
+#, c-format
+msgid "Seek to offset %d in archive failed"
+msgstr "Az archívum %d helyére ugrás meghiúsult"
+
+msgid "Select an impulse file"
+msgstr "Válasszon impulzust"
+
+msgid "Select audio groups to distribute:"
+msgstr "Válasszon audió csoportot a terjesztéshez:"
+
+msgid "Select directory for cache store"
+msgstr "Válasszon könyvtárat a gyorsítótárnak"
+
+msgid "Select directory for setting import/export"
+msgstr "Válasszon könyvtárat az import/export beállításoknak"
+
+msgid "Select directory for settings store"
+msgstr "Válasszon könyvtárat a beállítások tárolására"
+
+msgid "Select directory for the MIDI player"
+msgstr "Válasszon könyvtárat a MIDI-lejátszónak"
+
+msgid "Select directory for your MIDI recording"
+msgstr "Válasszon könyvtárat a MIDI-felvételeinek"
+
+msgid "Select directory for your audio recordings"
+msgstr "Válasszon könyvtárat a hangfelvételeinek"
+
+msgid "Select directory for your organ packages"
+msgstr "Válasszon könyvtárat az orgonacsomagnak"
+
+msgid "Select directory for your samplesets"
+msgstr "Válasszon könyvtárat a hangmintáknak"
+
+msgid "Select organ to load"
+msgstr "Válasszon orgonát"
+
+msgid ""
+"Select the corresponding MIDI output device for converting input events into "
+"output events"
+msgstr ""
+"Válassza ki a megfelelő MIDI kimeneti eszközt a bemeneti események "
+"kimenetiekké alakításához"
+
+msgid "Self referencing organ package"
+msgstr "Orgonacsomag magára hivatkozik"
+
+msgid "Send"
+msgstr "Küld"
+
+msgid "Send Division Output"
+msgstr "Mű kimenetének küldése"
+
+msgid "Send MIDI Recorder Output Stream to "
+msgstr "MIDI-felvevő kimeneti folyamát küldje ide: "
+
+msgid "Sequencer"
+msgstr "Szekvencer"
+
+msgid "Set"
+msgstr "Beállít"
+
+msgid "Setting import/export directory:"
+msgstr "Import/export beállítás könyvtára:"
+
+msgid "Settings"
+msgstr "Beállítások"
+
+msgid "Settings files (*.cmb)|*.cmb"
+msgstr "Beállítások (*.cmb)|*.cmb"
+
+msgid "Settings store:"
+msgstr "Beállítások tárolása:"
+
+msgid "Shortcut"
+msgstr "Billentyűparancs"
+
+msgid ""
+"Should the audio config be reverted to the default stereo configuration?"
+msgstr ""
+"A hangbeállítások vissza legyenek állítva az alapérzelmezett sztereó "
+"beállításokra?"
+
+msgid "Single attack"
+msgstr "Egyetlen billentés"
+
+msgid "Single release"
+msgstr "Egyetlen fölengedés"
+
+msgid "Smith's (Robert) Equal Harmony 1749"
+msgstr "Smith's (Robert) Equal Harmony 1749"
+
+msgid ""
+"Some changed settings effect unless the sample set is reloaded.\n"
+"\n"
+"Would you like to reload the sample set now?"
+msgstr ""
+"Néhány megváltozott beállítás csak újratöltés után érvényes.\n"
+"\n"
+"Most akarja újratölteni a hangmintát?"
+
+msgid "Some tracks are missing"
+msgstr "Néhány sáv hiányzik"
+
+msgid "Sorge Monochord (1756)"
+msgstr "Sorge Monochord (1756)"
+
+msgid "Sorge, 1744 (A)"
+msgstr "Sorge, 1744 (A)"
+
+msgid "Sorge, 1744 (B)"
+msgstr "Sorge, 1744 (B)"
+
+msgid "Sorge, 1758"
+msgstr "Sorge, 1758"
+
+msgid "Sound output"
+msgstr "Hangkimenet"
+
+msgid "Stade St. Cosmae"
+msgstr "Stade St. Cosmae"
+
+#, c-format
+msgid "Start of audio stream of %s failed: %s"
+msgstr "%s hangfolyam indítása meghiúsult: %s"
+
+msgid "Start offset:"
+msgstr "Kezdet eltolva:"
+
+msgid "Start without any organ"
+msgstr "Indítás orgona nélkül"
+
+#, c-format
+msgid "Status byte missing at offset %d"
+msgstr "%d helyen hiányzik az állapot bájt"
+
+#, c-format
+msgid "Status: %s"
+msgstr "Állapot: %s"
+
+msgid "Stereo"
+msgstr "Sztereó"
+
+msgid "Stevin (Simon), monochord 1585"
+msgstr "Stevin (Simon), monochord 1585"
+
+msgid "Stop"
+msgstr "Regiszter"
+
+#, c-format
+msgid "Strange boolean value for section '%s' entry '%s': %s"
+msgstr "Furcsa logikai érték a '%s' szakaszban, a '%s' értékben: %s"
+
+msgid "Stream is not stopped"
+msgstr "Folyam nincs leállítva"
+
+msgid "Stream is stopped"
+msgstr "Folyam leállítva"
+
+msgid "Subbass 16'"
+msgstr "Szubbasszus 16'"
+
+msgid "Success"
+msgstr "Siker"
+
+#, c-format
+msgid "Switch %d already assigned to %s"
+msgstr "%d kapcsoló már hozzá lett rendelve %s-hez"
+
+msgid "Sys Ex Ahlborn-Galanti"
+msgstr "Sys Ex Ahlborn-Galanti"
+
+msgid "Sys Ex Ahlborn-Galanti Toggle"
+msgstr "Sys Ex Ahlborn-Galanti kapcsoló"
+
+msgid "Sys Ex Johannus 11 bytes"
+msgstr "Sys Ex Johannus 11 bájt"
+
+msgid "Sys Ex Johannus 9 bytes"
+msgstr "Sys Ex Johannus 9 bájt"
+
+msgid "Sys Ex Rogers Stop Change"
+msgstr "Sys Ex Rogers Stop Change"
+
+msgid "Sys Ex Viscount"
+msgstr "Sys Ex Viscount"
+
+msgid "Sys Ex Viscount Toggle"
+msgstr "Sys Ex Viscount kapcsoló"
+
+msgid "T"
+msgstr "T"
+
+msgid "TB"
+msgstr "TB"
+
+msgid "Temperaments"
+msgstr "Hangolások"
+
+msgid ""
+"The ODF contains GrandOrgue 0.2 styled saved settings. Should they be "
+"imported?"
+msgstr ""
+"Az ODF GrandOrgue 0.2 típusú mentett beállításokat tartalmaz. Biztosan "
+"importálja?"
+
+msgid "The ODF does not match the combination file."
+msgstr "Az ODF nem illik a kombinációkhoz."
+
+msgid ""
+"The ODF does not match the combination file. Importing it can cause various "
+"problems. Should they really be imported?"
+msgstr ""
+"Az ODF nem illik a kombinációkhoz. Az importálás különböző gondokat okozhat. "
+"Biztosan importálja?"
+
+msgid "The cache for this organ is outdated. Please update or delete it."
+msgstr "Ennek az orgonának a gyorsítótára elavult. Frissítse vagy törölje!"
+
+msgid "The organ package has been registered"
+msgstr "Orgonacsomag regisztrálva"
+
+#, c-format
+msgid ""
+"This combination file is only compatible with:\n"
+"%s"
+msgstr ""
+"Ez a kombináció csak ezzel kompatibilis:\n"
+"%s"
+
+msgid "This feature is currently not supported."
+msgstr "Ez a lehetőség még nem támogatott."
+
+msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
+msgstr "Thomas/Philpott 1829/1881 orgona, St. Jansklooster"
+
+msgid "Ticks per Measure:"
+msgstr "Negyed/ütem:"
+
+msgid "Title"
+msgstr "Cím"
+
+msgid "Too many audio channels configured for the new audio interface"
+msgstr "Túl sok csatorna lett beállítva az új audió interfészhez"
+
+#, c-format
+msgid "TouchEvent %d %d %d %d"
+msgstr "Billentyű esemény %d %d %d %d"
+
+msgid "Tracker (ms):"
+msgstr "Traktúra (ms):"
+
+msgid "Tracker delay is invalid"
+msgstr "Érvénytelen traktúra késleltetés"
+
+#, c-format
+msgid "Trailing whitespace at section '%s' entry '%s': %s"
+msgstr "A '%s' szakasz '%s' értéke szóközzel zárul: %s"
+
+msgid "Transpose"
+msgstr "Transzponál"
+
+msgid "Transpose +"
+msgstr "Transzponál +"
+
+msgid "Transpose -"
+msgstr "Transzponál -"
+
+msgid "Tremulant"
+msgstr "Tremoló"
+
+msgid "Tuning (Cent):"
+msgstr "Hangolás (cent):"
+
+msgid "Tuning and Voicing"
+msgstr "Hangolás és hangzás"
+
+msgid "Tuning is invalid"
+msgstr "Érvénytelen hangolás"
+
+msgid "Type"
+msgstr "Típus"
+
+msgid "U"
+msgstr "U"
+
+msgid "U.O."
+msgstr "8 EL"
+
+#, c-format
+msgid "Unable to open file %s for writing"
+msgstr "%s megnyitása írásra lehetetlen"
+
+#, c-format
+msgid "Unable to read '%s'"
+msgstr "'%s' olvasása lehetetlen"
+
+msgid "Unanticipated host error"
+msgstr "Váratlan szerverhiba"
+
+#, c-format
+msgid "Unexpected file in the cache directory: %s"
+msgstr "%s állomány váratlan a gyorítótárban"
+
+msgid "Unknown"
+msgstr "Ismeretlen"
+
+#, c-format
+msgid "Unknown MIDI message %02X at %d"
+msgstr "%02X MIDI-üzenet ismeretlen %d-nél"
+
+msgid "Unknown attributes"
+msgstr "Ismeretlen tulajdonságok"
+
+#, c-format
+msgid "Unknown extendend information %04x"
+msgstr "%04x kiterjesztett információ ismeretlen"
+
+#, c-format
+msgid "Unknown filetype %s"
+msgstr "%s fájltípus ismeretlen"
+
+msgid "Unknown: "
+msgstr "Ismeretlen: "
+
+#, c-format
+msgid "Unkown MIDI file type %d"
+msgstr "%d MIDI-típus ismeretlen"
+
+#, c-format
+msgid "Unkown SetterElement in section %s"
+msgstr "%s szakaszban ismeretlen beállító"
+
+msgid "Unsupported channel count"
+msgstr "Nem támogatott csatornamennyiség"
+
+msgid "Unsupported channel number"
+msgstr "Nem támogatott csatornaszám"
+
+msgid "Unsupported format"
+msgstr "Nem támogatott formátum"
+
+#, c-format
+msgid "Unused CMB entry '%s'"
+msgstr "'%s' CMB-érték fölösleges"
+
+#, c-format
+msgid "Unused ODF entry '%s'"
+msgstr "'%s' ODF-érték fölösleges"
+
+msgid "User"
+msgstr "Felhasználói"
+
+msgid "User Interface"
+msgstr "Felhasználói felület"
+
+msgid "User Temperament"
+msgstr "Felhasználói hangolás"
+
+#, c-format
+msgid "Using helpfile %s (search path: %s)"
+msgstr "%s súgófájl használatban (keresés helye: %s)"
+
+msgid "Using more than one audio interface is currently not supported."
+msgstr "Több, mint egy audió interfész használata még nem támogatott."
+
+msgid "V"
+msgstr "V"
+
+msgid "Valotti"
+msgstr "Valotti"
+
+msgid "Variable meantone 1"
+msgstr "1. változó középhangolású"
+
+msgid "Variable meantone 2"
+msgstr "2. változó középhangolású"
+
+msgid "Variable meantone 3"
+msgstr "3. változó középhangolású"
+
+msgid "Variable meantone 4"
+msgstr "4. változó középhangolású"
+
+msgid "Various comma"
+msgstr "Vegyes kommák"
+
+msgid "Victorian temperament 1885"
+msgstr "Viktoriánus hangolás 1885"
+
+msgid "Volume"
+msgstr "Hangerő"
+
+msgid "Volume:"
+msgstr "Hangerő:"
+
+msgid "W"
+msgstr "W"
+
+msgid "WASAPI"
+msgstr "WASAPI"
+
+msgid "WAV files (*.wav)|*.wav"
+msgstr "WAV-hang (*.wav)|*.wav"
+
+#, c-format
+msgid "WMTouch %d"
+msgstr "WMTouch %d"
+
+msgid "WMTouchINfoError"
+msgstr "WMTouch hiba"
+
+msgid "Wait timed out"
+msgstr "Időtúllépés"
+
+msgid "Warning"
+msgstr "Figyelmeztetés"
+
+msgid "Wegscheider 20 note"
+msgstr "Wegscheider 20 hang"
+
+msgid "Well tempered"
+msgstr "Jól temperált"
+
+msgid "Werckmeister 4 (1691)"
+msgstr "Werckmeister 4 (1691)"
+
+msgid "Werckmeister 5 (1691)"
+msgstr "Werckmeister 5 (1691)"
+
+msgid "Werckmeister 6"
+msgstr "Werckmeister 6"
+
+msgid "Werckmeister III"
+msgstr "Werckmeister III"
+
+msgid "William Holder equal beating (1694)"
+msgstr "William Holder egyenlő hangközű (1694)"
+
+#, c-format
+msgid "Windchest %d"
+msgstr "%d. szélláda"
+
+msgid "Windows DirectSound"
+msgstr "Windows DirectSound"
+
+msgid "Windows WASAPI"
+msgstr "Windows WASAPI"
+
+msgid "Windows WDM-KS"
+msgstr "Windows WDM-KS"
+
+msgid "Windows left"
+msgstr "Windows bal"
+
+msgid "Windows menu"
+msgstr "Windows menü"
+
+msgid "Windows right"
+msgstr "Windows jobb"
+
+msgid "Workload distribution:"
+msgstr "Terhelés elosztás:"
+
+msgid "X"
+msgstr "X"
+
+msgid "Y"
+msgstr "Y"
+
+msgid "Yes"
+msgstr "Igen"
+
+msgid "Z"
+msgstr "Z"
+
+msgid "ZIP uses not supported compression flags"
+msgstr "ZIP nem támogatott tömörítést használ"
+
+msgid "ZIP uses not supported features"
+msgstr "ZIP nem támogatott lehetőségeket használ"
+
+msgid "ZIP64 uses not supported features"
+msgstr "ZIP64 nem támogatott lehetőségeket használ"
+
+msgid "Zarlino (1558) 2/7-comma meantone"
+msgstr "Zarlino (1558) 2/7-komma középhangolású"
+
+msgid "Zip64 end record not found"
+msgstr "ZIP64 záró rekord hiányzik"
+
+msgid "_"
+msgstr "_"
+
+#, c-format
+msgid "__%d"
+msgstr "__%d"
+
+msgid "__0"
+msgstr "__0"
+
+msgid "__1"
+msgstr "__1"
+
+msgid "__2"
+msgstr "__2"
+
+msgid "__3"
+msgstr "__3"
+
+msgid "__4"
+msgstr "__4"
+
+msgid "__5"
+msgstr "__5"
+
+msgid "__6"
+msgstr "__6"
+
+msgid "__7"
+msgstr "__7"
+
+msgid "__8"
+msgstr "__8"
+
+msgid "__9"
+msgstr "__9"
+
+msgid "`"
+msgstr "`"
+
+msgid "a"
+msgstr "a"
+
+msgid "a#"
+msgstr "b"
+
+msgid "add"
+msgstr "hozzáad"
+
+#, c-format
+msgid "aftertouch channel: %d key: %d value: %d"
+msgstr "nyomás csatorna: %d billentyű: %d érték: %d"
+
+msgid "alt"
+msgstr "alt"
+
+msgid "b"
+msgstr "h"
+
+msgid "back"
+msgstr "vissza"
+
+msgid "bad format!"
+msgstr "rossz formátum!"
+
+msgid "bad return format!"
+msgstr "rossz visszatérési formátum!"
+
+#, c-format
+msgid "bitmap size does not match for '%s'"
+msgstr "raszterméret nem jó '%s' számára"
+
+#, c-format
+msgid "bitmap size of '%s' does not match mask '%s'"
+msgstr "'%s' rasztermérete nem illik '%s' maszkhoz"
+
+msgid "c"
+msgstr "c"
+
+msgid "c#"
+msgstr "c#"
+
+msgid "capital"
+msgstr "nagybetű"
+
+#, c-format
+msgid "caught exception: %s\n"
+msgstr "kezelt kivétel: %s\n"
+
+msgid "control"
+msgstr "control"
+
+#, c-format
+msgid "control change channel: %d key: %d value: %d"
+msgstr "eszközváltás csatorna: %d billentyű: %d érték: %d"
+
+msgid "create"
+msgstr "készít"
+
+msgid "create an organ package"
+msgstr "orgonacsomag készítése"
+
+msgid "crescendo position"
+msgstr "henger állás"
+
+msgid "d"
+msgstr "d"
+
+msgid "d#"
+msgstr "d#"
+
+msgid "d'Alembert modified meantone (1726)"
+msgstr "d'Alembert módosított középhangolású (1726)"
+
+msgid "d'Alembert's: John Sankey's Scarlatti"
+msgstr "d'Alembert's: John Sankey's Scarlatti"
+
+msgid "decimal"
+msgstr "tört"
+
+msgid "delete"
+msgstr "töröl"
+
+msgid "depend on organ package"
+msgstr "orgonacsomagtól függ"
+
+msgid "displays help on the command line parameters"
+msgstr "súgó a parancssori kapcsolókról"
+
+msgid "divide"
+msgstr "oszt"
+
+msgid "down"
+msgstr "le"
+
+msgid "e"
+msgstr "e"
+
+msgid "enclosure not found"
+msgstr "redőny hiánzik"
+
+msgid "end"
+msgstr "vége"
+
+msgid "escape"
+msgstr "escape"
+
+msgid "execute"
+msgstr "futtat"
+
+msgid "f"
+msgstr "f"
+
+msgid "f#"
+msgstr "f#"
+
+#, c-format
+msgid "failed to compress data %s"
+msgstr "%s tömörítése meghiúsult"
+
+msgid "failed to create relative path"
+msgstr "relatív elérési út készítése meghiúsult"
+
+msgid "g"
+msgstr "g"
+
+msgid "g#"
+msgstr "g#"
+
+msgid "general bank"
+msgstr "generálkombinációk"
+
+msgid "h"
+msgstr "h"
+
+msgid "help"
+msgstr "súgó"
+
+msgid "home"
+msgstr "kezdőlap"
+
+msgid "i"
+msgstr "i"
+
+msgid "input-directory"
+msgstr "bemeneti könyvtár"
+
+msgid "insert"
+msgstr "beszúr"
+
+msgid "instance"
+msgstr "példány"
+
+msgid "left"
+msgstr "bal"
+
+msgid "licensed under the GNU GPLv2"
+msgstr "GNU GPLv2 licenc alatt"
+
+msgid "menu"
+msgstr "menü"
+
+msgid "multiply"
+msgstr "szoroz"
+
+#, c-format
+msgid "note channel: %d key: %d value: %d"
+msgstr "hang csatorna: %d billentyű: %d érték: %d"
+
+msgid "numlock"
+msgstr "numlock"
+
+msgid "numpad 0"
+msgstr "numerikus 0"
+
+msgid "numpad 1"
+msgstr "numerikus 1"
+
+msgid "numpad 2"
+msgstr "numerikus 2"
+
+msgid "numpad 3"
+msgstr "numerikus 2"
+
+msgid "numpad 4"
+msgstr "numerikus 4"
+
+msgid "numpad 5"
+msgstr "numerikus 5"
+
+msgid "numpad 6"
+msgstr "numerikus 6"
+
+msgid "numpad 7"
+msgstr "numerikus 7"
+
+msgid "numpad 8"
+msgstr "numerikus 8"
+
+msgid "numpad 9"
+msgstr "numerikus 9"
+
+msgid "numpad equal"
+msgstr "numerikus egyenló"
+
+msgid "o"
+msgstr "o"
+
+msgid "o1"
+msgstr "o1"
+
+msgid "o10"
+msgstr "o10"
+
+msgid "o2"
+msgstr "o2"
+
+msgid "o3"
+msgstr "o3"
+
+msgid "o4"
+msgstr "o4"
+
+msgid "o5"
+msgstr "o5"
+
+msgid "o6"
+msgstr "o6"
+
+msgid "o7"
+msgstr "o7"
+
+msgid "o8"
+msgstr "o8"
+
+msgid "o9"
+msgstr "o9"
+
+#, c-format
+msgid "organ definition %s not found in organ package"
+msgstr "%s orgona leírása hiányzik a csomagból"
+
+msgid "organ file"
+msgstr "orgonafájl"
+
+msgid "organ name"
+msgstr "orgona neve"
+
+#, c-format
+msgid "organ package %s created"
+msgstr "%s orgonacsomag elkészült"
+
+msgid "organ package creation failed"
+msgstr "orgonacsomag készítésemeghiúsult"
+
+msgid "organ package title"
+msgstr "orgonacsomag címe"
+
+msgid "organ pitch"
+msgstr "orgona hangmagasság"
+
+msgid "organ-package"
+msgstr "orgonacsomag"
+
+msgid "p1"
+msgstr "p1"
+
+msgid "p2"
+msgstr "p2"
+
+msgid "p3"
+msgstr "p3"
+
+msgid "p4"
+msgstr "p4"
+
+msgid "p5"
+msgstr "p5"
+
+msgid "pagedown"
+msgstr "pagedown"
+
+msgid "pageup"
+msgstr "pageup"
+
+msgid "pause"
+msgstr "szünet"
+
+msgid "print"
+msgstr "nyomtat"
+
+#, c-format
+msgid "program change channel: %d key: %d "
+msgstr "programváltás csatorna: %d billentyű: %d "
+
+msgid "provide odf-file-name"
+msgstr "adja meg az odf fájlnevét"
+
+#, c-format
+msgid "rank %s pipe %s: attack with MaxTimeSinceLastRelease=-1 missing"
+msgstr "%s regiszter %s síp: nincs MaxTimeSinceLastRelease=-1 billentés"
+
+#, c-format
+msgid "rank %s pipe %s: default release is missing"
+msgstr "%s regiszter %s síp: nincs alapértelmezett fölengedés"
+
+#, c-format
+msgid "rank %s pipe %s: no pitch information provided"
+msgstr "%s regiszter %s síp: nincs hangmagasság megadva"
+
+#, c-format
+msgid "rank %s pipe %s: no release defined"
+msgstr "%s regiszter %s síp: nincs fölengedés"
+
+#, c-format
+msgid "rank %s pipe %s: percussive sample with a release"
+msgstr "%s regiszter %s síp: ütős minta fölengedéssel"
+
+#, c-format
+msgid "rank %s pipe %s: temperament would retune pipe by more than 1200 cent"
+msgstr ""
+"%s regiszter %s síp: a hangolás több, mint 1200 centtel hangolná el a sípot"
+
+#, c-format
+msgid "rank %s pipe %s: temperament would retune pipe by more than 600 cent"
+msgstr ""
+"%s regiszter %s síp: a hangolás több, mint 600 centtel hangolná el a sípot"
+
+#, c-format
+msgid "requires '%s' "
+msgstr "'%s' szükséges "
+
+msgid "reset"
+msgstr "visszaállít"
+
+msgid "return"
+msgstr "enter"
+
+msgid "right"
+msgstr "jobb"
+
+msgid "scroll"
+msgstr "görget"
+
+msgid "select"
+msgstr "kiválaszt"
+
+msgid "seperator"
+msgstr "elválasztó"
+
+msgid "sequencer position"
+msgstr "szekvencer állás"
+
+msgid "snapshot"
+msgstr "pillanatkép"
+
+msgid "space"
+msgstr "szóköz"
+
+msgid "specifiy GrandOrgue instance name"
+msgstr "adja meg a GrandOrguepéldány nevét"
+
+msgid "specifiy generated organ package filename"
+msgstr "adja meg a készítendő orgonacsomag fájlnevét"
+
+msgid "specifiy input directory"
+msgstr "adja meg a bemeneti könyvtárat"
+
+msgid "subtract"
+msgstr "kivon"
+
+#, c-format
+msgid "sysex Ahlborn-Galanti value: %d"
+msgstr "sysex Ahlborn-Galanti 9 bájt érték: %d"
+
+msgid "sysex GrandOrgue clear"
+msgstr "sysex GrandOrgue töröl"
+
+#, c-format
+msgid "sysex GrandOrgue sampleset %08x%08x"
+msgstr "sysex GrandOrgue hangminta %08x%08x"
+
+#, c-format
+msgid "sysex GrandOrgue setup channel: %d NRPN: %d: name: %s"
+msgstr "sysex GrandOrgue beállítás csatorna: %d NRPN: %d: név: %s"
+
+#, c-format
+msgid "sysex Hauptwerk LCD display: %d color: %d - %s"
+msgstr "sysex Hauptwerk LCD-kijelző: %d szín: %d - %s"
+
+#, c-format
+msgid "sysex Hauptwerk LCD string variable: %d - %s"
+msgstr "sysex Hauptwerk LCD string változó: %d - %s"
+
+#, c-format
+msgid "sysex Johannus 11 bytes value: %d/%d"
+msgstr "sysex Johannus 11 bájt érték: %d/%d"
+
+#, c-format
+msgid "sysex Johannus 9 bytes value: %d"
+msgstr "sysex Johannus 9 bájt érték: %d"
+
+#, c-format
+msgid "sysex Rogers stop change device: %d offset: %d data %s"
+msgstr "sysex Rogers stop change eszköz: %d hely: %d adat %s"
+
+#, c-format
+msgid "sysex Viscount value: %d"
+msgstr "sysex Viscount 9 bájt érték: %d"
+
+msgid "t"
+msgstr "t"
+
+msgid "tab"
+msgstr "tabulátor"
+
+msgid "temperament"
+msgstr "hangolás"
+
+msgid "title"
+msgstr "cím"
+
+msgid "transpose"
+msgstr "transzponál"
+
+msgid "trigger"
+msgstr "indító"
+
+#, c-format
+msgid "unhandled exception: %s\n"
+msgstr "kezeletlen kivétel: %s\n"
+
+msgid "up"
+msgstr "föl"
+
+msgid "virtual pipe organ simulator"
+msgstr "virtuális sípos orgona szimulátor"
+
+msgid "wave does not contain loops"
+msgstr "a hangban nincsenek ciklusok"
+
+msgid "{"
+msgstr "{"
+
+msgid "|"
+msgstr "|"
+
+msgid "}"
+msgstr "}"
+
+msgid "Invalid reverb configuration (samples per buffer)"
+msgstr "Érvénytelen visszhangbeállítás (minták pufferenként)"
