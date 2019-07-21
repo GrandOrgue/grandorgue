@@ -25,7 +25,7 @@ arch=('i686' 'x86_64')
 url='http://sourceforge.net/projects/ourorgan/'
 license=('GPL2+')
 groups=('multimedia')
-depends=('alsa-lib' 'jack' 'wxgtk' 'libsystemd' 'fftw' 'wavpack' 'zlib')
+depends=('alsa-lib' 'jack' 'wxgtk3' 'libsystemd' 'fftw' 'wavpack' 'zlib')
 makedepends=('gcc' 'libxslt' 'zip' 'gettext' 'docbook-xsl' 'cmake' 'po4a' 'systemd' 'pkg-config')
 source=("grandorgue-$pkgver.tar.gz")
 md5sums=('SKIP')
@@ -39,6 +39,7 @@ build()
 	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DCMAKE_SKIP_RPATH=ON \
 	-DVERSION_REVISION="`echo "$pkgver"|cut -d. -f4`" \
+	-DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
       ..
     make  VERBOSE=1
 }
