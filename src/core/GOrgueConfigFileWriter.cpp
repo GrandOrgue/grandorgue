@@ -22,6 +22,7 @@
 #include "GOrgueConfigFileWriter.h"
 
 #include "GOrgueBuffer.h"
+#include "GOrgueCompress.h"
 #include <wx/file.h>
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -61,6 +62,9 @@ bool GOrgueConfigFileWriter::GetFileContent(GOrgueBuffer<uint8_t>& buf)
 	buf.free();
 	buf.Append(bom, sizeof(bom));
 	buf.Append((const uint8_t*)b.data(), b.length());
+
+	if (!compressBuffer(buf))
+		return false;
 
 	return true;
 }
