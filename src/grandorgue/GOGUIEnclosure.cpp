@@ -200,9 +200,9 @@ bool GOGUIEnclosure::HandleMousePress(int x, int y, bool right, GOGUIMouseState&
 		if (!m_MouseRect.Contains(x, y))
 			return false;
 		y -= m_MouseRect.GetY();
-		if (y <= m_MouseAxisStart)
+		if (y <= m_MouseAxisStart && m_MouseAxisStart != 0)
 			value = (127 * y / m_MouseAxisStart);
-		else if (y >= m_MouseAxisEnd)
+		else if (y >= m_MouseAxisEnd && m_MouseRect.GetHeight() - m_MouseAxisEnd != 0)
 			value = (m_MouseRect.GetHeight() - y) * 127 / (m_MouseRect.GetHeight() - m_MouseAxisEnd);
 		else
 			value = 127;
