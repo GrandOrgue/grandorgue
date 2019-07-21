@@ -12,7 +12,7 @@ Vcs-Git: https://github.com/e9925248/grandorgue.git
 Package: grandorgue
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, grandorgue-resources
-Recommends: grandorgue-demo
+Recommends: grandorgue-demo, wx3.0-i18n
 Description: Virtual Pipe Organ Software
  GrandOrgue is a virtual pipe organ sample player application supporting
  a HW1 compatible file format.
