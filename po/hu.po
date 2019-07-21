@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-06-03 23:26+0200\n"
-"PO-Revision-Date: 2019-06-04 17:22+0200\n"
+"PO-Revision-Date: 2019-06-06 14:30+0200\n"
 "Last-Translator: Kerkovits Krisztián\n"
 "Language-Team: Hungarian <kerkovitskrisztian@gmail.com>\n"
 "Language: hu\n"
@@ -826,7 +826,7 @@ msgid "Bethisy temperament ordinaire (1764)"
 msgstr "Bethisy temperament ordinaire (1764)"
 
 msgid "Bits per sample:"
-msgstr "Bitek mintánként"
+msgstr "Bitek mintánként:"
 
 msgid "Boulliau (1373)/Mersenne 1636. "
 msgstr "Boulliau (1373)/Mersenne 1636. "
@@ -1977,7 +1977,7 @@ msgid "MIDI Recorder"
 msgstr "MIDI-felvétel"
 
 msgid "MIDI event: "
-msgstr "&MIDI-esemény "
+msgstr "MIDI-esemény: "
 
 msgid "MIDI file type 0 only supports one track"
 msgstr "MIDI 0 csak egy sávot támogat"
@@ -2020,7 +2020,7 @@ msgid "MME"
 msgstr "MME"
 
 msgid "Malerbi's well-temperament nr 1 (1794)"
-msgstr "Malerbi's well-temperament nr 1 (1794)"
+msgstr "Malerbi jól temperált nr 1 (1794)"
 
 msgid "Malformed MIDI header"
 msgstr "Rossz MIDI-fejléc"
@@ -2164,7 +2164,7 @@ msgstr "MIDI-lejátszó könyvtára:"
 
 #, c-format
 msgid "Midi-Settings for %s - %s"
-msgstr "MIDI beállítások %s-nek – %s"
+msgstr "MIDI-beállítások: %s – %s"
 
 msgid "Mismatch of local and central header"
 msgstr "Helyi és központi fejléc különbözik"
@@ -2259,7 +2259,7 @@ msgid "No callback routine specified"
 msgstr "Nincs visszajelzési eljárás megadva"
 
 msgid "No device"
-msgstr "Nincs eszköz:"
+msgstr "Nincs eszköz"
 
 msgid "No end record found"
 msgstr "Záró rekord hiányzik"
@@ -3544,7 +3544,7 @@ msgid "numpad 2"
 msgstr "numerikus 2"
 
 msgid "numpad 3"
-msgstr "numerikus 2"
+msgstr "numerikus 3"
 
 msgid "numpad 4"
 msgstr "numerikus 4"
