@@ -51,6 +51,8 @@
 #include "Images.h"
 #include <wx/image.h>
 
+constexpr static int windowLimit = 10000;
+
 GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
 	m_organfile(organfile),
 	m_MouseState(organfile->GetMouseStateTracker()),
@@ -117,10 +119,10 @@ void GOGUIPanel::Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxS
 	m_GroupName = group_name;
 	m_controls.resize(0);
 
-	int x = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowX"), -20, 10000, false, 0);
-	int y = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowY"), -20, 10000, false, 0);
-	int w = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowWidth"), 0, 10000, false, 0);
-	int h = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowHeight"), 0, 10000, false, 0);
+	int x = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowX"), -windowLimit, windowLimit, false, 0);
+	int y = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowY"), -windowLimit, windowLimit, false, 0);
+	int w = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowWidth"), 0, windowLimit, false, 0);
+	int h = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowHeight"), 0, windowLimit, false, 0);
 	m_size = wxRect(x, y, w, h);
 
 	m_InitialOpenWindow = cfg.ReadBoolean(CMBSetting, m_group, wxT("WindowDisplayed"), false, false);
@@ -469,10 +471,10 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 		}
 	}
 
-	int x = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowX"), -20, 10000, false, 0);
-	int y = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowY"), -20, 10000, false, 0);
-	int w = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowWidth"), 0, 10000, false, 0);
-	int h = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowHeight"), 0, 10000, false, 0);
+	int x = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowX"), -windowLimit, windowLimit, false, 0);
+	int y = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowY"), -windowLimit, windowLimit, false, 0);
+	int w = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowWidth"), 0, windowLimit, false, 0);
+	int h = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowHeight"), 0, windowLimit, false, 0);
 	m_size = wxRect(x, y, w, h);
 
 	m_InitialOpenWindow = cfg.ReadBoolean(CMBSetting, m_group, wxT("WindowDisplayed"), false, is_main_panel);
@@ -581,16 +583,10 @@ void GOGUIPanel::Save(GOrgueConfigWriter& cfg)
 {
 	cfg.WriteBoolean(m_group, wxT("WindowDisplayed"), m_InitialOpenWindow);
 	wxRect size = m_size;
-	int x = size.GetLeft();
-	int y = size.GetTop();
-	if (x < -20)
-		x = -20;
-	if (y < -20)
-		y = -20;
-	cfg.WriteInteger(m_group, wxT("WindowX"), x);
-	cfg.WriteInteger(m_group, wxT("WindowY"), y);
-	cfg.WriteInteger(m_group, wxT("WindowWidth"), size.GetWidth());
-	cfg.WriteInteger(m_group, wxT("WindowHeight"), size.GetHeight());
+	cfg.WriteInteger(m_group, wxT("WindowX"), std::min(windowLimit, std::max(-windowLimit, size.GetLeft())));
+	cfg.WriteInteger(m_group, wxT("WindowY"), std::min(windowLimit, std::max(-windowLimit, size.GetTop())));
+	cfg.WriteInteger(m_group, wxT("WindowWidth"), std::min(windowLimit, size.GetWidth()));
+	cfg.WriteInteger(m_group, wxT("WindowHeight"), std::min(windowLimit, size.GetHeight()));
 }
 
 void GOGUIPanel::Modified()
