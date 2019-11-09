@@ -19,47 +19,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueThread.h"
+#ifndef GOSOUNDTOUCHWORKITEM_H
+#define GOSOUNDTOUCHWORKITEM_H
 
-#include "atomic.h"
+#include "GOSoundWorkItem.h"
+#include "mutex.h"
 
-GOrgueThread::GOrgueThread() :
-	m_Thread(),
-	m_Stop(false)
+class GOrgueMemoryPool;
+
+class GOSoundTouchWorkItem : public GOSoundWorkItem
 {
-}
+private:
+	GOrgueMemoryPool& m_Pool;
+	GOMutex m_Mutex;
+	bool m_Stop;
 
-GOrgueThread::~GOrgueThread()
-{
-	Stop();
-}
+public:
+	GOSoundTouchWorkItem(GOrgueMemoryPool& pool);
 
-void GOrgueThread::Start()
-{
-	m_Stop = false;
-	if (m_Thread.joinable())
-		return;
-	m_Thread = std::thread(GOrgueThread::EntryPoint, this);
-}
+	unsigned GetGroup();
+	unsigned GetCost();
+	bool GetRepeat();
+	void Run();
+	void Exec();
 
-void GOrgueThread::Wait()
-{
-	if (m_Thread.joinable())
-		m_Thread.join();
-}
+	void Clear();
+	void Reset();
+};
 
-void GOrgueThread::Stop()
-{
-	m_Stop = true;
-	Wait();
-}
-
-bool GOrgueThread::ShouldStop()
-{
-	return load_once(m_Stop);
-}
-
-void GOrgueThread::EntryPoint(GOrgueThread* thread)
-{
-	thread->Entry();
-}
+#endif

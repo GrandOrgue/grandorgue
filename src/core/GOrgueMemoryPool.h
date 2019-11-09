@@ -22,13 +22,12 @@
 #ifndef GORGUEMEMORYPOOL_H_
 #define GORGUEMEMORYPOOL_H_
 
-#include "GOrgueThread.h"
 #include "mutex.h"
 #include <set>
 
 class wxFile;
 
-class GOrgueMemoryPool : private GOrgueThread {
+class GOrgueMemoryPool {
 	GOMutex m_mutex;
 	std::set<void*> m_PoolAllocs;
 	char* m_PoolStart;
@@ -43,6 +42,8 @@ class GOrgueMemoryPool : private GOrgueThread {
 	size_t m_MallocSize;
 	size_t m_MemoryLimit;
 	unsigned m_AllocError;
+	size_t m_TouchPos;
+	bool m_TouchCache;
 
 	void InitPool();
 	void GrowPool(size_t size);
@@ -56,13 +57,11 @@ class GOrgueMemoryPool : private GOrgueThread {
 	bool AllocatePool();
 	bool InMemoryPool(void* ptr);
 
-	void Entry();
-
 public:
 	GOrgueMemoryPool();
 	~GOrgueMemoryPool();
 	void SetMemoryLimit(size_t limit);
-	void StartThread();
+	void TouchMemory(bool& stop);
 
 	void *Alloc(size_t length, bool final);
 	void *MoveToPool(void* data, size_t length);

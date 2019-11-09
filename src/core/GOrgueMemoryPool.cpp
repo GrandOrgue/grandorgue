@@ -42,11 +42,10 @@
 
 static inline void touchMemory(const char* pos)
 {
-	*(const volatile char*)pos;
+	load_once(*pos);
 }
 
 GOrgueMemoryPool::GOrgueMemoryPool() :
-	GOrgueThread(),
 	m_PoolStart(0),
 	m_PoolPtr(0),
 	m_PoolEnd(0),
@@ -57,14 +56,15 @@ GOrgueMemoryPool::GOrgueMemoryPool() :
 	m_CacheSize(0),
 	m_MallocSize(0),
 	m_MemoryLimit(0),
-	m_AllocError(0)
+	m_AllocError(0),
+	m_TouchPos(0),
+	m_TouchCache(false)
 {
 	InitPool();
 }
 
 GOrgueMemoryPool::~GOrgueMemoryPool()
 {
-	Stop();
 	FreePool();
 }
 
@@ -475,35 +475,25 @@ void GOrgueMemoryPool::GrowPool(size_t length)
 	m_PoolEnd = m_PoolStart + m_PoolSize;
 }
 
-void GOrgueMemoryPool::StartThread()
+void GOrgueMemoryPool::TouchMemory(bool& stop)
 {
-	Start();
-}
-
-void GOrgueMemoryPool::Entry()
-{
-	while (!ShouldStop())
+	if (m_TouchCache)
 	{
-		for(size_t pos = 0, i = 0; pos < m_CacheSize; pos+= m_PageSize, i++)
+		for(int i = 0; m_TouchPos < m_CacheSize; m_TouchPos += m_PageSize, i++)
 		{
-			touchMemory(m_CacheStart + pos);
-			if ((i % 256) == 0)
-			{
-				if (ShouldStop())
-					return;
-				wxMilliSleep(50);
-			}
-		}
-		for(size_t pos = 0, i = 0; pos < m_PoolSize; pos+= m_PageSize, i++)
-		{
-			touchMemory(m_PoolStart + pos);
-			if ((i % 256) == 0)
-			{
-				if (ShouldStop())
-					return;
-				wxMilliSleep(50);
-			}
+			touchMemory(m_CacheStart + m_TouchPos);
+			if (load_once(stop) || i > 1000)
+				return;
 		}
 	}
-	return;
+	else
+	{
+		for(int i = 0; m_TouchPos < m_PoolSize; m_TouchPos += m_PageSize, i++)
+		{
+			touchMemory(m_PoolStart + m_TouchPos);
+			if (load_once(stop) || i > 1000)
+				return;
+		}
+	}
+	m_TouchCache = !m_TouchCache;
 }
