@@ -26,6 +26,7 @@
 #include "GOSoundSampler.h"
 #include "GOSoundGroupWorkItem.h"
 #include "GOSoundOutputWorkItem.h"
+#include "GOSoundTouchWorkItem.h"
 #include "GOSoundTremulantWorkItem.h"
 #include "GOSoundReleaseWorkItem.h"
 #include "GOSoundWindchestWorkItem.h"
@@ -55,7 +56,8 @@ GOSoundEngine::GOSoundEngine() :
 	m_Windchests(),
 	m_AudioGroups(),
 	m_AudioOutputs(),
-	m_AudioRecorder(NULL)
+	m_AudioRecorder(NULL),
+	m_TouchProcessor()
 {
 	memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
 	m_SamplerPool.SetUsageLimit(2048);
@@ -86,6 +88,8 @@ void GOSoundEngine::Reset()
 		m_Scheduler.Add(m_AudioOutputs[i]);
 	m_Scheduler.Add(m_AudioRecorder);
 	m_Scheduler.Add(m_ReleaseProcessor);
+	if (m_TouchProcessor)
+		m_Scheduler.Add(m_TouchProcessor.get());
 	
 	m_UsedPolyphony = 0;
 
@@ -236,6 +240,7 @@ void GOSoundEngine::ClearSetup()
 	m_Scheduler.Clear();
 	m_Windchests.clear();
 	m_Tremulants.clear();
+	m_TouchProcessor = NULL;
 	Reset();
 }
 
@@ -252,6 +257,7 @@ void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
 	m_Windchests.push_back(new GOSoundWindchestWorkItem(*this, NULL));
 	for(unsigned i = 0; i < organ_file->GetWindchestGroupCount(); i++)
 		m_Windchests.push_back(new GOSoundWindchestWorkItem(*this, organ_file->GetWindchest(i)));
+	m_TouchProcessor = std::unique_ptr<GOSoundTouchWorkItem>(new GOSoundTouchWorkItem(organ_file->GetMemoryPool()));
 	Reset();
 }
 

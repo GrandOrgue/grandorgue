@@ -33,6 +33,7 @@ class GOSoundRecorder;
 class GOSoundGroupWorkItem;
 class GOSoundOutputWorkItem;
 class GOSoundReleaseWorkItem;
+class GOSoundTouchWorkItem;
 class GOSoundTremulantWorkItem;
 class GOSoundWindchestWorkItem;
 class GOSoundWorkItem;
@@ -73,6 +74,7 @@ private:
 	ptr_vector<GOSoundOutputWorkItem> m_AudioOutputs;
 	GOSoundRecorder* m_AudioRecorder;
 	GOSoundReleaseWorkItem* m_ReleaseProcessor;
+	std::unique_ptr<GOSoundTouchWorkItem> m_TouchProcessor;
 
 	GOSoundScheduler m_Scheduler;
 

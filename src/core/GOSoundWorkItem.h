@@ -45,6 +45,7 @@ public:
 		AUDIOOUTPUT = 100,
 		AUDIORECORDER = 150,
 		RELEASE = 160,
+		TOUCH = 700,
 	};
 };
 

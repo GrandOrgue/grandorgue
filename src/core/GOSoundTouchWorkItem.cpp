@@ -19,47 +19,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueThread.h"
+#include "GOSoundTouchWorkItem.h"
 
-#include "atomic.h"
+#include "GOrgueMemoryPool.h"
+#include "mutex_locker.h"
 
-GOrgueThread::GOrgueThread() :
-	m_Thread(),
+GOSoundTouchWorkItem::GOSoundTouchWorkItem(GOrgueMemoryPool& pool) :
+	m_Pool(pool),
 	m_Stop(false)
 {
 }
 
-GOrgueThread::~GOrgueThread()
+unsigned GOSoundTouchWorkItem::GetGroup()
 {
-	Stop();
+	return TOUCH;
 }
 
-void GOrgueThread::Start()
+unsigned GOSoundTouchWorkItem::GetCost()
 {
-	m_Stop = false;
-	if (m_Thread.joinable())
-		return;
-	m_Thread = std::thread(GOrgueThread::EntryPoint, this);
+	return 0;
 }
 
-void GOrgueThread::Wait()
+bool GOSoundTouchWorkItem::GetRepeat()
 {
-	if (m_Thread.joinable())
-		m_Thread.join();
+	return false;
 }
 
-void GOrgueThread::Stop()
+void GOSoundTouchWorkItem::Run()
+{
+	GOMutexLocker locker(m_Mutex);
+	m_Pool.TouchMemory(m_Stop);
+}
+
+void GOSoundTouchWorkItem::Exec()
 {
 	m_Stop = true;
-	Wait();
+	GOMutexLocker locker(m_Mutex);
 }
 
-bool GOrgueThread::ShouldStop()
+void GOSoundTouchWorkItem::Clear()
 {
-	return load_once(m_Stop);
+	Reset();
 }
 
-void GOrgueThread::EntryPoint(GOrgueThread* thread)
+void GOSoundTouchWorkItem::Reset()
 {
-	thread->Entry();
+	GOMutexLocker locker(m_Mutex);
+	m_Stop = false;
 }
