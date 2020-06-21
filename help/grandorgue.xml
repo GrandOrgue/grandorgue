@@ -6959,6 +6959,15 @@ attributes of a label.
           <listitem>
             <para>
 Represents the current number of the setter. The section must contain the GUI
+attributes of a label - only available for old format panels.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>SequencerLabel</term>
+          <listitem>
+            <para>
+Represents the current number of the setter. The section must contain the GUI
 attributes of a label.
      </para>
           </listitem>
