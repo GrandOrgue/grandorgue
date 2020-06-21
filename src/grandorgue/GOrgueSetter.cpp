@@ -830,7 +830,7 @@ GOrgueEnclosure* GOrgueSetter::GetEnclosure(const wxString& name, bool is_panel)
 
 GOrgueLabel* GOrgueSetter::GetLabel(const wxString& name, bool is_panel)
 {
-	if (name == wxT("Label"))
+	if (name == wxT("Label") || name == wxT("SequencerLabel"))
 		return &m_PosDisplay;
 
 	if (name == wxT("CrescendoLabel"))
