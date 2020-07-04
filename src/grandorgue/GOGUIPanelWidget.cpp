@@ -75,12 +75,14 @@ wxSize GOGUIPanelWidget::UpdateSize(wxSize size)
 {
 	double scaleX = size.GetWidth() / (double)m_panel->GetWidth();
 	double scaleY = size.GetHeight() / (double)m_panel->GetHeight();
-	if (scaleX > scaleY)
+	if (scaleX < scaleY)  // To fit all, we need to use the SMALLEST of the two
 		m_Scale = scaleX;
 	else
 		m_Scale = scaleY;
-	if (m_Scale > 2)
+	if (m_Scale > 2)	// Actually useless, because max frame size is set to initial size
 		m_Scale = 2;
+	if (m_Scale < 0.25)	// Let's not make the window content TOO small. There will be scrollbars if the user sizes to smaller than this. Without this limit, sizing too a too small value causes a crash!
+		m_Scale = 0.25;
 	m_panel->PrepareDraw(m_Scale, m_BGInit ? &m_Background : NULL);
 	OnUpdate();
 	Refresh();
