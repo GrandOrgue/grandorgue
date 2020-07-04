@@ -105,7 +105,7 @@ void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 
-	unsigned bitmap_count = cfg.ReadInteger(ODFSetting, group, wxT("BitmapCount"), 1, 127, false, 16);
+	unsigned bitmap_count = cfg.ReadInteger(ODFSetting, group, wxT("BitmapCount"), 1, 128, false, 16); // Allowed number of bitmaps is 1 to 128 (not 127... Midi pedals can give a value from 0 to 127, making 128 levels) 
 	wxChar style = wxT('A') + cfg.ReadInteger(ODFSetting, group, wxT("EnclosureStyle"), 1, 4, false, 1) - 1;
 
 	for(unsigned i = 1; i <= bitmap_count; i++)
