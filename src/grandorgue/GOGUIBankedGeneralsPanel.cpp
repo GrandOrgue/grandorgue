@@ -27,10 +27,12 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GrandOrgueFile.h"
+#include "GOrgueSettings.h"
 #include <wx/intl.h>
 
-GOGUIBankedGeneralsPanel::GOGUIBankedGeneralsPanel(GrandOrgueFile* organfile) :
-	m_organfile(organfile)
+GOGUIBankedGeneralsPanel::GOGUIBankedGeneralsPanel(GrandOrgueFile* organfile, GOrgueSettings& settings) :
+	m_organfile(organfile),
+	m_Settings(settings)
 {
 }
 
@@ -48,7 +50,7 @@ GOGUIPanel* GOGUIBankedGeneralsPanel::CreateBankedGeneralsPanel(GOrgueConfigRead
 	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_GENERALS);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_GENERALS, m_Settings);
 	panel->Init(cfg, metrics, _("Generals"), wxT("SetterGeneralsPanel"));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);

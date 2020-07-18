@@ -52,8 +52,12 @@ void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, u
 	GOGUIControl::Init(cfg, group);
 
 	m_TextColor = wxColour(0x00, 0x00, 0x00);
+
+/*  The font size and name are defined in the metrics, not here
 	m_FontSize = 7;
 	m_FontName = wxT("");
+*/
+
 	m_Text = name;
 
 	wxString image_file = wxString::Format(wxT(GOBitmapPrefix "label%02d"), DispImageNum);
@@ -79,8 +83,10 @@ void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, u
 	m_TextWidth = m_TextRect.GetWidth();
 
 	m_Font = m_metrics->GetGroupLabelFont();
+/* Both name and size are set in the metrics, not here
 	m_Font.SetName(m_FontName);
 	m_Font.SetPoints(m_FontSize);
+*/
 }
 
 void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)

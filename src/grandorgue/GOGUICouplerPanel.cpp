@@ -30,10 +30,12 @@
 #include "GOrgueCoupler.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
+#include "GOrgueSettings.h"
 #include <wx/intl.h>
 
-GOGUICouplerPanel::GOGUICouplerPanel(GrandOrgueFile* organfile) :
-	m_organfile(organfile)
+GOGUICouplerPanel::GOGUICouplerPanel(GrandOrgueFile* organfile, GOrgueSettings& settings) :
+	m_organfile(organfile),
+	m_Settings(settings)
 {
 }
 
@@ -52,7 +54,7 @@ GOGUIPanel* GOGUICouplerPanel::CreateCouplerPanel(GOrgueConfigReader& cfg, unsig
 	GOrgueManual* manual = m_organfile->GetManual(manual_nr);
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_COUPLER);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_COUPLER, m_Settings);
 	panel->Init(cfg, metrics, wxString::Format(_("Coupler %s"), manual->GetName().c_str()), wxString::Format(wxT("SetterCouplers%03d"), manual_nr), _("Coupler"));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);

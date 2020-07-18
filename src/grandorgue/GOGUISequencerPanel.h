@@ -26,16 +26,18 @@
 
 class GOGUIPanel;
 class GrandOrgueFile;
+class GOrgueSettings;
 
 class GOGUISequencerPanel : public GOGUIPanelCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
+	GOrgueSettings& m_Settings;
 
 	GOGUIPanel* CreateSequencerPanel(GOrgueConfigReader& cfg);
 
 public:
-	GOGUISequencerPanel(GrandOrgueFile* organfile);
+	GOGUISequencerPanel(GrandOrgueFile* organfile, GOrgueSettings& settings);
 	virtual ~GOGUISequencerPanel();
 
 	void CreatePanels(GOrgueConfigReader& cfg);

@@ -33,9 +33,11 @@ GOGUIDisplayMetrics::GOGUIDisplayMetrics() :
 	m_DispKeyVertBackgroundImageNum(0),
 	m_DispDrawstopInsetBackgroundImageNum(0),
 	m_DispControlLabelFont(),
+	m_DispControlLabelFontSize(10),
 	m_DispShortcutKeyLabelFont(),
 	m_DispShortcutKeyLabelColour(),
 	m_DispGroupLabelFont(),
+	m_DispGroupLabelFontSize(10),
 	m_DispDrawstopCols(0),
 	m_DispDrawstopRows(0),
 	m_DispDrawstopColsOffset(false),
@@ -73,7 +75,9 @@ GOGUIDisplayMetrics::~GOGUIDisplayMetrics()
 void GOGUIDisplayMetrics::Init()
 {
 	m_ControlLabelFont.SetName(m_DispControlLabelFont);
+	m_ControlLabelFont.SetPoints(m_DispControlLabelFontSize);
 	m_GroupLabelFont.SetName(m_DispGroupLabelFont);
+	m_GroupLabelFont.SetPoints(m_DispGroupLabelFontSize);
 }
 
 unsigned GOGUIDisplayMetrics::GetDrawstopWidth()

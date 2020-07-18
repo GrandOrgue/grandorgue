@@ -33,10 +33,12 @@
 #include "GOrgueManual.h"
 #include "GOrgueWindchest.h"
 #include "GrandOrgueFile.h"
+#include "GOrgueSettings.h"
 #include <wx/intl.h>
 
-GOGUIFloatingPanel::GOGUIFloatingPanel(GrandOrgueFile* organfile) :
-	m_organfile(organfile)
+GOGUIFloatingPanel::GOGUIFloatingPanel(GrandOrgueFile* organfile, GOrgueSettings& settings) :
+	m_organfile(organfile),
+	m_Settings(settings)
 {
 }
 
@@ -52,7 +54,7 @@ void GOGUIFloatingPanel::CreatePanels(GOrgueConfigReader& cfg)
 GOGUIPanel* GOGUIFloatingPanel::CreateFloatingPanel(GOrgueConfigReader& cfg)
 {
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_FLOATING);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_FLOATING, m_Settings);
 	panel->Init(cfg, metrics, _("Coupler manuals and volume"), wxT("SetterFloating"), wxT(""));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);
