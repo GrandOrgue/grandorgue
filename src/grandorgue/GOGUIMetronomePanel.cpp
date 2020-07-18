@@ -27,10 +27,12 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GrandOrgueFile.h"
+#include "GOrgueSettings.h"
 #include <wx/intl.h>
 
-GOGUIMetronomePanel::GOGUIMetronomePanel(GrandOrgueFile* organfile) : 
-	m_organfile(organfile)
+GOGUIMetronomePanel::GOGUIMetronomePanel(GrandOrgueFile* organfile, GOrgueSettings& settings) : 
+	m_organfile(organfile),
+	m_Settings(settings)
 {
 }
 
@@ -48,7 +50,7 @@ GOGUIPanel* GOGUIMetronomePanel::CreateMetronomePanel(GOrgueConfigReader& cfg)
 	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_METRONOME);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_METRONOME, m_Settings);
 	panel->Init(cfg, metrics, _("Metronome"), wxT("Metronome"), wxT(""));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);

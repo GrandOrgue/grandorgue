@@ -204,6 +204,7 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 
 	/* load basic organ information */
 	unsigned NumberOfPanels = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfPanels"), 0, 100, false);
+	m_ODFNumberOfPanels = NumberOfPanels;
 	m_PipeConfig.Load(cfg, group, wxEmptyString);
 	m_DivisionalsStoreIntermanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntermanualCouplers"));
 	m_DivisionalsStoreIntramanualCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreIntramanualCouplers"));
@@ -237,15 +238,15 @@ void GrandOrgueFile::ReadOrganFile(GOrgueConfigReader& cfg)
 	m_elementcreators.push_back(m_MidiPlayer);
 	m_elementcreators.push_back(m_MidiRecorder);
 	m_elementcreators.push_back(new GOrgueMetronome(this));
-	m_panelcreators.push_back(new GOGUICouplerPanel(this));
-	m_panelcreators.push_back(new GOGUIFloatingPanel(this));
-	m_panelcreators.push_back(new GOGUIMetronomePanel(this));
-	m_panelcreators.push_back(new GOGUICrescendoPanel(this));
-	m_panelcreators.push_back(new GOGUIDivisionalsPanel(this));
-	m_panelcreators.push_back(new GOGUIBankedGeneralsPanel(this));
-	m_panelcreators.push_back(new GOGUISequencerPanel(this));
-	m_panelcreators.push_back(new GOGUIMasterPanel(this));
-	m_panelcreators.push_back(new GOGUIRecorderPanel(this));
+	m_panelcreators.push_back(new GOGUICouplerPanel(this, m_Settings));
+	m_panelcreators.push_back(new GOGUIFloatingPanel(this, m_Settings));
+	m_panelcreators.push_back(new GOGUIMetronomePanel(this, m_Settings));
+	m_panelcreators.push_back(new GOGUICrescendoPanel(this, m_Settings));
+	m_panelcreators.push_back(new GOGUIDivisionalsPanel(this, m_Settings));
+	m_panelcreators.push_back(new GOGUIBankedGeneralsPanel(this, m_Settings));
+	m_panelcreators.push_back(new GOGUISequencerPanel(this, m_Settings));
+	m_panelcreators.push_back(new GOGUIMasterPanel(this, m_Settings));
+	m_panelcreators.push_back(new GOGUIRecorderPanel(this, m_Settings));
 
 	for(unsigned i = 0; i < m_elementcreators.size(); i++)
 		m_elementcreators[i]->Load(cfg);
@@ -843,6 +844,11 @@ unsigned GrandOrgueFile::GetPanelCount()
 	return m_panels.size();
 }
 
+unsigned GrandOrgueFile::GetODFPanelCount()
+{
+	return m_ODFNumberOfPanels;
+}
+
 void GrandOrgueFile::AddPanel(GOGUIPanel* panel)
 {
 	m_panels.push_back(panel);
@@ -909,7 +915,7 @@ void GrandOrgueFile::UpdateAmplitude()
 
 void GrandOrgueFile::UpdateTuning()
 {
-	m_PitchLabel.SetContent(wxString::Format(_("%f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));
+	m_PitchLabel.SetContent(wxString::Format(_("%.0f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));
 }
 
 void GrandOrgueFile::UpdateAudioGroup()

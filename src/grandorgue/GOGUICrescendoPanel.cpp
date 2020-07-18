@@ -28,10 +28,12 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GrandOrgueFile.h"
+#include "GOrgueSettings.h"
 #include <wx/intl.h>
 
-GOGUICrescendoPanel::GOGUICrescendoPanel(GrandOrgueFile* organfile) :
-	m_organfile(organfile)
+GOGUICrescendoPanel::GOGUICrescendoPanel(GrandOrgueFile* organfile, GOrgueSettings& settings) :
+	m_organfile(organfile),
+	m_Settings(settings)
 {
 }
 
@@ -49,7 +51,7 @@ GOGUIPanel* GOGUICrescendoPanel::CreateCrescendoPanel(GOrgueConfigReader& cfg)
 	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_CRESCENDO);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_CRESCENDO, m_Settings);
 	panel->Init(cfg, metrics, _("Crescendo Pedal"), wxT("SetterCrescendoPanel"));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);

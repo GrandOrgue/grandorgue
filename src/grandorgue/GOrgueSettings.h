@@ -113,6 +113,9 @@ public:
 	GOrgueSettingEnum<GOInitialLoadType> LoadLastFile;
 	GOrgueSettingBool ODFCheck;
 
+	GOrgueSettingUnsigned ControlLabelFontSize;
+	GOrgueSettingUnsigned GroupLabelFontSize;
+
 	GOrgueSettingUnsigned LoadChannels;
 	GOrgueSettingBool LosslessCompression;
 	GOrgueSettingBool ManagePolyphony;

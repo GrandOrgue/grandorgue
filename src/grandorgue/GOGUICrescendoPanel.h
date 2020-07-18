@@ -26,16 +26,18 @@
 
 class GOGUIPanel;
 class GrandOrgueFile;
+class GOrgueSettings;
 
 class GOGUICrescendoPanel : public GOGUIPanelCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
+	GOrgueSettings& m_Settings;
 
 	GOGUIPanel* CreateCrescendoPanel(GOrgueConfigReader& cfg);
 
 public:
-	GOGUICrescendoPanel(GrandOrgueFile* organfile);
+	GOGUICrescendoPanel(GrandOrgueFile* organfile, GOrgueSettings& settings);
 	virtual ~GOGUICrescendoPanel();
 
 	void CreatePanels(GOrgueConfigReader& cfg);

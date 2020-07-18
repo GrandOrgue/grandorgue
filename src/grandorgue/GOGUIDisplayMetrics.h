@@ -29,7 +29,7 @@
 class GOGUIDisplayMetrics
 {
 protected:
-	/* Values loaded from ODF */
+	/* Values loaded from ODF or settings */
 	unsigned m_DispScreenSizeHoriz;
 	unsigned m_DispScreenSizeVert;
 	unsigned m_DispDrawstopBackgroundImageNum;
@@ -38,9 +38,11 @@ protected:
 	unsigned m_DispKeyVertBackgroundImageNum;
 	unsigned m_DispDrawstopInsetBackgroundImageNum;
 	wxString m_DispControlLabelFont;
+	int m_DispControlLabelFontSize;
 	wxString m_DispShortcutKeyLabelFont;
 	wxColour m_DispShortcutKeyLabelColour;
 	wxString m_DispGroupLabelFont;
+	int m_DispGroupLabelFontSize;
 	unsigned m_DispDrawstopCols;
 	unsigned m_DispDrawstopRows;
 	bool m_DispDrawstopColsOffset;

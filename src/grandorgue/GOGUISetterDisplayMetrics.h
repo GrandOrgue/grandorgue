@@ -28,11 +28,15 @@ typedef enum { GOGUI_SETTER_SETTER, GOGUI_SETTER_GENERALS, GOGUI_SETTER_CRESCEND
 
 class GOrgueConfigReader;
 class GrandOrgueFile;
+class GOrgueSettings;
 
 class GOGUISetterDisplayMetrics : public GOGUIDisplayMetrics
 {
+private:
+	GOrgueSettings& m_Settings;
+
 public:
-	GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, GOGUISetterType type);
+	GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, GOGUISetterType type, GOrgueSettings& settings);
 };
 
 #endif

@@ -29,8 +29,9 @@
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
 
-GOGUIRecorderPanel::GOGUIRecorderPanel(GrandOrgueFile* organfile) : 
-	m_organfile(organfile)
+GOGUIRecorderPanel::GOGUIRecorderPanel(GrandOrgueFile* organfile, GOrgueSettings& settings) : 
+	m_organfile(organfile),
+	m_Settings(settings)
 {
 }
 
@@ -48,7 +49,7 @@ GOGUIPanel* GOGUIRecorderPanel::CreateRecorderPanel(GOrgueConfigReader& cfg)
 	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_RECORDER);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_RECORDER, m_Settings);
 	panel->Init(cfg, metrics, _("Recorder / Player"), wxT("Recorder"), wxT(""));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);
