@@ -129,6 +129,7 @@ GOrgueSetter.cpp
 GOrgueSetterButton.cpp
 GOrgueSettings.cpp
 GOrgueSound.cpp
+GOrgueSoundJackPort.cpp
 GOrgueSoundPort.cpp
 GOrgueSoundPortaudioPort.cpp
 GOrgueSoundRtPort.cpp
@@ -189,3 +190,8 @@ add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)
 target_link_libraries(perftest golib)
 
 add_custom_target(runperftest COMMAND perftest "${CMAKE_SOURCE_DIR}/tests" DEPENDS perftest)
+
+if (GO_USE_JACK STREQUAL "ON")
+   add_definitions(-DGO_USE_JACK)
+   target_link_libraries(GrandOrgue jack)
+endif ()

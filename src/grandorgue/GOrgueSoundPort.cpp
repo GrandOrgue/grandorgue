@@ -23,6 +23,7 @@
 
 #include "GOrgueSoundRtPort.h"
 #include "GOrgueSoundPortaudioPort.h"
+#include "GOrgueSoundJackPort.h"
 #include "GOrgueSound.h"
 #include <wx/intl.h>
 
@@ -78,6 +79,8 @@ GOrgueSoundPort* GOrgueSoundPort::create(GOrgueSound* sound, wxString name)
 		port = GOrgueSoundPortaudioPort::create(sound, name);
 	if (port == NULL)
 		port = GOrgueSoundRtPort::create(sound, name);
+	if (port == NULL)
+		port = GOrgueSoundJackPort::create(sound, name);
 	return port;
 }
 
@@ -86,6 +89,7 @@ std::vector<GOrgueSoundDevInfo> GOrgueSoundPort::getDeviceList()
 	std::vector<GOrgueSoundDevInfo> result;
 	GOrgueSoundPortaudioPort::addDevices(result);
 	GOrgueSoundRtPort::addDevices(result);
+	GOrgueSoundJackPort::addDevices(result);
 	return result;
 }
 
