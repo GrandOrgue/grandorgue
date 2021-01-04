@@ -246,7 +246,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 				if (m_organfile->GetManual(i)->GetCoupler(j)->IsDisplayed())
 				{
 					wxString buffer = wxString::Format(wxT("Coupler%03d"), j + 1);
-					buffer = wxString::Format(wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 64));
+					buffer = wxString::Format(wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 999));
 					LoadControl(new GOGUIButton(this, m_organfile->GetManual(i)->GetCoupler(j)), cfg, buffer);
 				}
 
@@ -254,7 +254,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 				if (m_organfile->GetManual(i)->GetStop(j)->IsDisplayed())
 				{
 					wxString buffer = wxString::Format(wxT("Stop%03d"), j + 1);
-					buffer = wxString::Format(wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 448));
+					buffer = wxString::Format(wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 999));
 					LoadControl(new GOGUIButton(this, m_organfile->GetManual(i)->GetStop(j)), cfg, buffer);
 				}
 				
@@ -262,7 +262,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 				if (m_organfile->GetManual(i)->GetDivisional(j)->IsDisplayed())
 				{
 					wxString buffer = wxString::Format(wxT("Divisional%03d"), j + 1);
-					buffer = wxString::Format(wxT("Divisional%03d"), cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 224));
+					buffer = wxString::Format(wxT("Divisional%03d"), cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 999));
 					LoadControl(new GOGUIButton(this, m_organfile->GetManual(i)->GetDivisional(j), true), cfg, buffer);
 				}
 		}

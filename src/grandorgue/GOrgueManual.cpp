@@ -144,7 +144,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	{
 		m_stops.push_back(new GOrgueStop(m_organfile, GetFirstLogicalKeyMIDINoteNumber()));
 		buffer.Printf(wxT("Stop%03d"), i + 1);
-		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 448));
+		buffer.Printf(wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
 		m_organfile->MarkSectionInUse(buffer);
 		m_stops[i]->Load(cfg, buffer);
 		m_stops[i]->SetElementID(m_organfile->GetRecorderElementID(wxString::Format(wxT("M%dS%d"), m_manual_number, i)));
@@ -155,7 +155,7 @@ void GOrgueManual::Load(GOrgueConfigReader& cfg, wxString group, int manualNumbe
 	{
 		m_couplers.push_back(new GOrgueCoupler(m_organfile, m_manual_number));
 		buffer.Printf(wxT("Coupler%03d"), i + 1);
-		buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 64));
+		buffer.Printf(wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
 		m_organfile->MarkSectionInUse(buffer);
 		m_couplers[i]->Load(cfg, buffer);
 		m_couplers[i]->SetElementID(m_organfile->GetRecorderElementID(wxString::Format(wxT("M%dC%d"), m_manual_number, i)));
