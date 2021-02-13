@@ -17,6 +17,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install Dependencies
+      shell: bash
+      run: sudo apt update && sudo apt install -y libfftw3-dev zlib1g-dev libwavpack-dev libwxgtk3.0-gtk3-dev libudev-dev libjack-dev libasound2-dev
+
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
@@ -36,4 +40,4 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: make -k package VERBOSE=1
+      run: make -k package VERBOSE=1 -j4
