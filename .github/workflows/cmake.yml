@@ -34,10 +34,16 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -G "Unix Makefiles" -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl -DVERSION_REVISION=2338
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -G "Unix Makefiles" -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl -DGO_USE_JACK=ON -DVERSION_REVISION=2338
 
     - name: Build
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: make -k package VERBOSE=1 -j4
+
+    - name: Upload the Result
+      uses: actions/upload-artifact@v2
+      with:
+        name: GrandOrgue-Linux-Binary
+        path: ${{github.workspace}}/build/GrandOrgue-0.3.1.*-Linux.tar.gz
