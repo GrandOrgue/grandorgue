@@ -5,7 +5,7 @@ on: [push]
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  VERSION_REVISION: 2338
+  version_revision: 2338
 
 jobs:
   build-linux:
@@ -35,7 +35,7 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -G "Unix Makefiles" -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl -DGO_USE_JACK=ON -DVERSION_REVISION=${{VERSION_REVISION}}
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -G "Unix Makefiles" -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl -DGO_USE_JACK=ON -DVERSION_REVISION=${{env.version_revision}}
 
     - name: Build
       working-directory: ${{github.workspace}}/build
@@ -46,5 +46,5 @@ jobs:
     - name: Upload the Result
       uses: actions/upload-artifact@v2
       with:
-        name: GrandOrgue-0.3.1.${{VERSION_REVISION}}-Linux.tar.gz
-        path: ${{github.workspace}}/build/GrandOrgue-0.3.1.${{VERSION_REVISION}}-Linux.tar.gz
+        name: GrandOrgue-0.3.1.${{env.version_revision}}-Linux.tar.gz
+        path: ${{github.workspace}}/build/GrandOrgue-0.3.1.${{env.version_revision}}-Linux.tar.gz
