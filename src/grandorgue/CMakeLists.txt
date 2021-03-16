@@ -33,6 +33,7 @@ include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
 include_directories(${FFTW_INCLUDE_DIRS})
 include_directories(${wxWidgets_INCLUDE_DIRS})
+include_directories(${JACK_INCLUDE_DIRS})
 include(UsewxWidgets)
 
 set(grandorgue_src
