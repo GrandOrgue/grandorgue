@@ -25,6 +25,8 @@ INCLUDE (CheckCXXSourceCompiles)
 include_directories(include)
 include_directories(common)
 
+include_directories(${JACK_INCLUDE_DIRS})
+
 CHECK_INCLUDE_FILE (sys/soundcard.h HAVE_SYS_SOUNDCARD_H)
 if (HAVE_SYS_SOUNDCARD_H)
   add_definitions(-DHAVE_SYS_SOUNDCARD_H)
