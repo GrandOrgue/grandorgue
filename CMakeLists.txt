@@ -128,6 +128,10 @@ if (WIN32)
    set(CPACK_BINARY_TGZ ON CACHE BOOL INTERNAL)
 endif ()
 
+if (RTAUDIO_USE_JACK OR RTMIDI_USE_JACK OR GO_USE_JACK)
+  pkg_check_modules(JACK REQUIRED jack)
+endif()
+
 # include RtAudio
 add_subdirectory(src/rt)
 set(RT_LIBRARIES RtAudio RtMidi)
@@ -148,10 +152,6 @@ pkg_check_modules(FFTW REQUIRED fftw3f)
 pkg_check_modules(ZLIB REQUIRED zlib)
 
 pkg_check_modules(WAVPACK REQUIRED wavpack)
-
-if (RTAUDIO_USE_JACK OR RTMIDI_USE_JACK OR GO_USE_JACK)
-  pkg_check_modules(JACK REQUIRED jack)
-endif()
 
 find_package(wxWidgets REQUIRED html net adv core base)
 message(STATUS "  wxWidgets Unicode?          : ${wxWidgets_USE_UNICODE}")
