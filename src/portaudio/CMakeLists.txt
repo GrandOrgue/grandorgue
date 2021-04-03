@@ -25,8 +25,6 @@ INCLUDE (CheckCXXSourceCompiles)
 include_directories(include)
 include_directories(common)
 
-include_directories(${JACK_INCLUDE_DIRS})
-
 CHECK_INCLUDE_FILE (sys/soundcard.h HAVE_SYS_SOUNDCARD_H)
 if (HAVE_SYS_SOUNDCARD_H)
   add_definitions(-DHAVE_SYS_SOUNDCARD_H)
@@ -172,6 +170,8 @@ else ()
    message(FATAL_ERROR "  Unknown/unsupported build configuration")
 
 endif ()
+
+include_directories(${JACK_INCLUDE_DIRS})
 
 add_library(PortAudio STATIC ${PortAudio_Sources})
 target_link_libraries(PortAudio ${PA_Libs})

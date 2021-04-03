@@ -23,6 +23,12 @@
 #define GORGUESOUNDJACKPORT_H
 
 #if defined(GO_USE_JACK)
+#if defined(_WIN32) && !defined(WIN32)
+  // workaround of the bug in the old jack that was fixed in 
+  // https://github.com/jackaudio/jack2/commit/49f06118a105f480634d9728ffdd4bfe2310860a
+  // otherwise it couldnt compiled with mingw 
+  #define WIN32 1
+#endif
 #include <jack/jack.h>
 #endif
 
