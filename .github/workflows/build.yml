@@ -75,7 +75,14 @@ jobs:
 
     - name: Build
       working-directory: ${{github.workspace}}/build
+      continue-on-error: true
       run: ${{github.workspace}}/build-scripts/for-win64/build-on-linux.sh ${{env.version_revision}}
+
+    - name: Upload the Nsis log
+      uses: actions/upload-artifact@v2
+      with:
+        name: NSISOutput.log
+        path: ${{github.workspace}}/build/build-mingw64/_CPack_Packages/win64/NSIS/NSISOutput.log
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
