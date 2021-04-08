@@ -31,6 +31,8 @@ rm -rf build-mingw64/*
 
 pushd build-mingw64
 
+export LANG=C
+
 # do not add more directories to PKG_CONFIG_PATH because a bug in cmake that replaces ":" with ";"
 PKG_CONFIG_PATH=/usr/x86_64-w64-mingw32/sys-root/mingw/lib/pkgconfig; export PKG_CONFIG_PATH; 
 WX_CONFIG=/usr/x86_64-w64-mingw32/sys-root/mingw/bin/wx-config; export WX_CONFIG
