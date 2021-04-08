@@ -77,6 +77,7 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: ${{github.workspace}}build-scripts/for-win64/build-on-linux.sh ${{env.version_revision}}
 
+    - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
         name: GrandOrgue-0.3.1.${{env.version_revision}}-win64.exe
