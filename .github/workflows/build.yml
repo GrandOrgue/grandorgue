@@ -68,14 +68,14 @@ jobs:
     - uses: actions/checkout@v2
     
     - name: Install Dependencies (1)
-      run: ${{github.workspace}}build-scripts/for-win64/prepare-ubuntu-20.sh
+      run: ${{github.workspace}}/build-scripts/for-win64/prepare-ubuntu-20.sh
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{github.workspace}}/build
 
     - name: Build
       working-directory: ${{github.workspace}}/build
-      run: ${{github.workspace}}build-scripts/for-win64/build-on-linux.sh ${{env.version_revision}}
+      run: ${{github.workspace}}/build-scripts/for-win64/build-on-linux.sh ${{env.version_revision}}
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
