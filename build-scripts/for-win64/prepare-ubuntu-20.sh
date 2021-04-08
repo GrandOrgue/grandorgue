@@ -43,7 +43,7 @@ sudo zypper -vv --installroot /zypper install -y mingw64-libgnurx0 mingw64-libgn
 sudo zypper -vv --installroot /zypper install -y mingw64-fftw3 mingw64-fftw3-devel
 sudo zypper -vv --installroot /zypper install -y mingw64-jack mingw64-jack-devel
 sudo zypper -vv --installroot /zypper install -y mingw64-wavpack mingw64-wavpack-devel 
-sudo zypper -vv --installroot /zypper install -y mingw64-wxWidgets-3_0-lang mingw64-wxWidgets-3_0-devel
+sudo zypper -vv --installroot /zypper install -y mingw64-wxWidgets-3_0-lang mingw64-wxWidgets-3_0-devel || true
 
 sudo ln -s /zypper/usr/x86_64-w64-mingw32/sys-root /usr/x86_64-w64-mingw32/
 sudo mv /usr/x86_64-w64-mingw32/sys-root/mingw/lib/libmingw32.a /usr/x86_64-w64-mingw32/sys-root/mingw/lib/libmingw32.save.a
