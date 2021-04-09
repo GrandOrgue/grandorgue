@@ -271,6 +271,7 @@ bool GOrgueMidiReceiverBase::HasDebounce(midi_match_message_type type)
 	    type == MIDI_M_NOTE_ON ||
 	    type == MIDI_M_NOTE_OFF ||
 	    type == MIDI_M_NOTE_ON_OFF ||
+	    type == MIDI_M_CTRL_CHANGE ||
 	    type == MIDI_M_CTRL_CHANGE_ON ||
 	    type == MIDI_M_CTRL_CHANGE_OFF ||
 	    type == MIDI_M_CTRL_CHANGE_ON_OFF ||

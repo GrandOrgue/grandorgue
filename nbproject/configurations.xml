@@ -1,0 +1,3325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="/home/oleg/my-projects/grandorgue/GrandOrgue" name="0">
+      <df name="src">
+        <df name="build">
+          <in>imageconverter.cpp</in>
+        </df>
+        <df name="core">
+          <df name="contrib">
+            <in>sha1.cpp</in>
+          </df>
+          <in>GOSoundTouchWorkItem.cpp</in>
+          <in>GOrgueArchive.cpp</in>
+          <in>GOrgueArchiveCreator.cpp</in>
+          <in>GOrgueArchiveEntryFile.cpp</in>
+          <in>GOrgueArchiveFile.cpp</in>
+          <in>GOrgueArchiveIndex.cpp</in>
+          <in>GOrgueArchiveManager.cpp</in>
+          <in>GOrgueArchiveReader.cpp</in>
+          <in>GOrgueArchiveWriter.cpp</in>
+          <in>GOrgueBitmap.cpp</in>
+          <in>GOrgueCompress.cpp</in>
+          <in>GOrgueConfigFileReader.cpp</in>
+          <in>GOrgueConfigFileWriter.cpp</in>
+          <in>GOrgueConfigReader.cpp</in>
+          <in>GOrgueConfigReaderDB.cpp</in>
+          <in>GOrgueConfigWriter.cpp</in>
+          <in>GOrgueDC.cpp</in>
+          <in>GOrgueDocumentBase.cpp</in>
+          <in>GOrgueEvent.cpp</in>
+          <in>GOrgueEventDistributor.cpp</in>
+          <in>GOrgueFont.cpp</in>
+          <in>GOrgueHash.cpp</in>
+          <in>GOrgueInvalidFile.cpp</in>
+          <in>GOrgueKeyConvert.cpp</in>
+          <in>GOrgueKeyReceiverData.cpp</in>
+          <in>GOrgueLoadThread.cpp</in>
+          <in>GOrgueLog.cpp</in>
+          <in>GOrgueLogWindow.cpp</in>
+          <in>GOrgueMemoryPool.cpp</in>
+          <in>GOrgueMidiEvent.cpp</in>
+          <in>GOrgueMidiFileReader.cpp</in>
+          <in>GOrgueMidiMap.cpp</in>
+          <in>GOrgueMidiMerger.cpp</in>
+          <in>GOrgueMidiOutputMerger.cpp</in>
+          <in>GOrgueMidiPlayerContent.cpp</in>
+          <in>GOrgueMidiReceiverBase.cpp</in>
+          <in>GOrgueMidiReceiverData.cpp</in>
+          <in>GOrgueMidiSenderData.cpp</in>
+          <in>GOrgueMidiWXEvent.cpp</in>
+          <in>GOrgueOrgan.cpp</in>
+          <in>GOrgueOrganList.cpp</in>
+          <in>GOrguePath.cpp</in>
+          <in>GOrgueRodgers.cpp</in>
+          <in>GOrgueSampleStatistic.cpp</in>
+          <in>GOrgueSetting.cpp</in>
+          <in>GOrgueSettingBool.cpp</in>
+          <in>GOrgueSettingDirectory.cpp</in>
+          <in>GOrgueSettingEnum.cpp</in>
+          <in>GOrgueSettingFile.cpp</in>
+          <in>GOrgueSettingFloat.cpp</in>
+          <in>GOrgueSettingStore.cpp</in>
+          <in>GOrgueSettingString.cpp</in>
+          <in>GOrgueStandardFile.cpp</in>
+          <in>GOrgueStdPath.cpp</in>
+          <in>GOrgueTemperament.cpp</in>
+          <in>GOrgueTemperamentCent.cpp</in>
+          <in>GOrgueTemperamentList.cpp</in>
+          <in>GOrgueTemperamentUser.cpp</in>
+          <in>GOrgueThread.cpp</in>
+          <in>GOrgueTimer.cpp</in>
+          <in>GOrgueUtil.cpp</in>
+          <in>GOrgueView.cpp</in>
+          <in>GOrgueWavPack.cpp</in>
+          <in>GOrgueWavPackWriter.cpp</in>
+          <in>GOrgueWave.cpp</in>
+          <in>MIDIList.cpp</in>
+          <in>OrganSelectDialog.cpp</in>
+          <in>SplashScreen.cpp</in>
+          <in>wxGaugeAudio.cpp</in>
+        </df>
+        <df name="grandorgue">
+          <df name="contrib">
+            <in>zita-convolver.cpp</in>
+          </df>
+          <in>GOGUIBankedGeneralsPanel.cpp</in>
+          <in>GOGUIButton.cpp</in>
+          <in>GOGUIControl.cpp</in>
+          <in>GOGUICouplerPanel.cpp</in>
+          <in>GOGUICrescendoPanel.cpp</in>
+          <in>GOGUIDisplayMetrics.cpp</in>
+          <in>GOGUIDivisionalsPanel.cpp</in>
+          <in>GOGUIEnclosure.cpp</in>
+          <in>GOGUIFloatingPanel.cpp</in>
+          <in>GOGUIHW1Background.cpp</in>
+          <in>GOGUIHW1DisplayMetrics.cpp</in>
+          <in>GOGUIImage.cpp</in>
+          <in>GOGUILabel.cpp</in>
+          <in>GOGUILayoutEngine.cpp</in>
+          <in>GOGUIManual.cpp</in>
+          <in>GOGUIManualBackground.cpp</in>
+          <in>GOGUIMasterPanel.cpp</in>
+          <in>GOGUIMetronomePanel.cpp</in>
+          <in>GOGUIPanel.cpp</in>
+          <in>GOGUIPanelWidget.cpp</in>
+          <in>GOGUIRecorderPanel.cpp</in>
+          <in>GOGUISequencerPanel.cpp</in>
+          <in>GOGUISetterDisplayMetrics.cpp</in>
+          <in>GOSoundAudioSection.cpp</in>
+          <in>GOSoundEngine.cpp</in>
+          <in>GOSoundGroupWorkItem.cpp</in>
+          <in>GOSoundOutputWorkItem.cpp</in>
+          <in>GOSoundProvider.cpp</in>
+          <in>GOSoundProviderSynthedTrem.cpp</in>
+          <in>GOSoundProviderWave.cpp</in>
+          <in>GOSoundRecorder.cpp</in>
+          <in>GOSoundReleaseWorkItem.cpp</in>
+          <in>GOSoundResample.cpp</in>
+          <in>GOSoundReverb.cpp</in>
+          <in>GOSoundReverbEngine.cpp</in>
+          <in>GOSoundReverbPartition.cpp</in>
+          <in>GOSoundSamplerPool.cpp</in>
+          <in>GOSoundScheduler.cpp</in>
+          <in>GOSoundThread.cpp</in>
+          <in>GOSoundTremulantWorkItem.cpp</in>
+          <in>GOSoundWindchestWorkItem.cpp</in>
+          <in>GOrgueAudioRecorder.cpp</in>
+          <in>GOrgueBitmapCache.cpp</in>
+          <in>GOrgueButton.cpp</in>
+          <in>GOrgueCache.cpp</in>
+          <in>GOrgueCacheCleaner.cpp</in>
+          <in>GOrgueCacheWriter.cpp</in>
+          <in>GOrgueCombination.cpp</in>
+          <in>GOrgueCombinationDefinition.cpp</in>
+          <in>GOrgueCoupler.cpp</in>
+          <in>GOrgueDivisional.cpp</in>
+          <in>GOrgueDivisionalCoupler.cpp</in>
+          <in>GOrgueDocument.cpp</in>
+          <in>GOrgueDrawStop.cpp</in>
+          <in>GOrgueDummyPipe.cpp</in>
+          <in>GOrgueElementCreator.cpp</in>
+          <in>GOrgueEnclosure.cpp</in>
+          <in>GOrgueFilename.cpp</in>
+          <in>GOrgueFrameGeneral.cpp</in>
+          <in>GOrgueGeneral.cpp</in>
+          <in>GOrgueKeyReceiver.cpp</in>
+          <in>GOrgueLabel.cpp</in>
+          <in>GOrgueMainWindowData.cpp</in>
+          <in>GOrgueManual.cpp</in>
+          <in>GOrgueMetronome.cpp</in>
+          <in>GOrgueMidi.cpp</in>
+          <in>GOrgueMidiInPort.cpp</in>
+          <in>GOrgueMidiListener.cpp</in>
+          <in>GOrgueMidiOutPort.cpp</in>
+          <in>GOrgueMidiPlayer.cpp</in>
+          <in>GOrgueMidiReceiver.cpp</in>
+          <in>GOrgueMidiRecorder.cpp</in>
+          <in>GOrgueMidiRtInPort.cpp</in>
+          <in>GOrgueMidiRtOutPort.cpp</in>
+          <in>GOrgueMidiSender.cpp</in>
+          <in>GOrgueModel.cpp</in>
+          <in>GOrguePanelView.cpp</in>
+          <in>GOrguePipe.cpp</in>
+          <in>GOrguePipeConfig.cpp</in>
+          <in>GOrguePipeConfigNode.cpp</in>
+          <in>GOrguePipeConfigTreeNode.cpp</in>
+          <in>GOrguePiston.cpp</in>
+          <in>GOrgueProgressDialog.cpp</in>
+          <in>GOrgueProperties.cpp</in>
+          <in>GOrguePushbutton.cpp</in>
+          <in>GOrgueRank.cpp</in>
+          <in>GOrgueReferencePipe.cpp</in>
+          <in>GOrgueReleaseAlignTable.cpp</in>
+          <in>GOrgueRtHelpers.cpp</in>
+          <in>GOrgueSetter.cpp</in>
+          <in>GOrgueSetterButton.cpp</in>
+          <in>GOrgueSettings.cpp</in>
+          <in>GOrgueSound.cpp</in>
+          <in>GOrgueSoundJackPort.cpp</in>
+          <in>GOrgueSoundPort.cpp</in>
+          <in>GOrgueSoundPortaudioPort.cpp</in>
+          <in>GOrgueSoundRtPort.cpp</in>
+          <in>GOrgueSoundingPipe.cpp</in>
+          <in>GOrgueStop.cpp</in>
+          <in>GOrgueSwitch.cpp</in>
+          <in>GOrgueTremulant.cpp</in>
+          <in>GOrgueWindchest.cpp</in>
+          <in>GrandOrgue.cpp</in>
+          <in>GrandOrgueFile.cpp</in>
+          <in>GrandOrgueFrame.cpp</in>
+          <in>GrandOrgueTool.cpp</in>
+          <in>MIDIEventDialog.cpp</in>
+          <in>MIDIEventKeyDialog.cpp</in>
+          <in>MIDIEventRecvDialog.cpp</in>
+          <in>MIDIEventSendDialog.cpp</in>
+          <in>OrganDialog.cpp</in>
+          <in>SettingsArchives.cpp</in>
+          <in>SettingsAudioGroup.cpp</in>
+          <in>SettingsAudioOutput.cpp</in>
+          <in>SettingsDefaults.cpp</in>
+          <in>SettingsDialog.cpp</in>
+          <in>SettingsMidiDevices.cpp</in>
+          <in>SettingsMidiMessage.cpp</in>
+          <in>SettingsOption.cpp</in>
+          <in>SettingsOrgan.cpp</in>
+          <in>SettingsReverb.cpp</in>
+          <in>SettingsTemperaments.cpp</in>
+          <in>perftest.cpp</in>
+        </df>
+        <df name="images">
+          <in>EnclosureA00.cpp</in>
+          <in>EnclosureA01.cpp</in>
+          <in>EnclosureA02.cpp</in>
+          <in>EnclosureA03.cpp</in>
+          <in>EnclosureA04.cpp</in>
+          <in>EnclosureA05.cpp</in>
+          <in>EnclosureA06.cpp</in>
+          <in>EnclosureA07.cpp</in>
+          <in>EnclosureA08.cpp</in>
+          <in>EnclosureA09.cpp</in>
+          <in>EnclosureA10.cpp</in>
+          <in>EnclosureA11.cpp</in>
+          <in>EnclosureA12.cpp</in>
+          <in>EnclosureA13.cpp</in>
+          <in>EnclosureA14.cpp</in>
+          <in>EnclosureA15.cpp</in>
+          <in>EnclosureB00.cpp</in>
+          <in>EnclosureB01.cpp</in>
+          <in>EnclosureB02.cpp</in>
+          <in>EnclosureB03.cpp</in>
+          <in>EnclosureB04.cpp</in>
+          <in>EnclosureB05.cpp</in>
+          <in>EnclosureB06.cpp</in>
+          <in>EnclosureB07.cpp</in>
+          <in>EnclosureB08.cpp</in>
+          <in>EnclosureB09.cpp</in>
+          <in>EnclosureB10.cpp</in>
+          <in>EnclosureB11.cpp</in>
+          <in>EnclosureB12.cpp</in>
+          <in>EnclosureB13.cpp</in>
+          <in>EnclosureB14.cpp</in>
+          <in>EnclosureB15.cpp</in>
+          <in>EnclosureC00.cpp</in>
+          <in>EnclosureC01.cpp</in>
+          <in>EnclosureC02.cpp</in>
+          <in>EnclosureC03.cpp</in>
+          <in>EnclosureC04.cpp</in>
+          <in>EnclosureC05.cpp</in>
+          <in>EnclosureC06.cpp</in>
+          <in>EnclosureC07.cpp</in>
+          <in>EnclosureC08.cpp</in>
+          <in>EnclosureC09.cpp</in>
+          <in>EnclosureC10.cpp</in>
+          <in>EnclosureC11.cpp</in>
+          <in>EnclosureC12.cpp</in>
+          <in>EnclosureC13.cpp</in>
+          <in>EnclosureC14.cpp</in>
+          <in>EnclosureC15.cpp</in>
+          <in>EnclosureD00.cpp</in>
+          <in>EnclosureD01.cpp</in>
+          <in>EnclosureD02.cpp</in>
+          <in>EnclosureD03.cpp</in>
+          <in>EnclosureD04.cpp</in>
+          <in>EnclosureD05.cpp</in>
+          <in>EnclosureD06.cpp</in>
+          <in>EnclosureD07.cpp</in>
+          <in>EnclosureD08.cpp</in>
+          <in>EnclosureD09.cpp</in>
+          <in>EnclosureD10.cpp</in>
+          <in>EnclosureD11.cpp</in>
+          <in>EnclosureD12.cpp</in>
+          <in>EnclosureD13.cpp</in>
+          <in>EnclosureD14.cpp</in>
+          <in>EnclosureD15.cpp</in>
+          <in>GOIcon.cpp</in>
+          <in>ManualCBlackDown.cpp</in>
+          <in>ManualCBlackUp.cpp</in>
+          <in>ManualCWhiteDown.cpp</in>
+          <in>ManualCWhiteUp.cpp</in>
+          <in>ManualCWoodDown.cpp</in>
+          <in>ManualCWoodUp.cpp</in>
+          <in>ManualDBlackDown.cpp</in>
+          <in>ManualDBlackUp.cpp</in>
+          <in>ManualDWhiteDown.cpp</in>
+          <in>ManualDWhiteUp.cpp</in>
+          <in>ManualDWoodDown.cpp</in>
+          <in>ManualDWoodUp.cpp</in>
+          <in>ManualEBlackDown.cpp</in>
+          <in>ManualEBlackUp.cpp</in>
+          <in>ManualEWhiteDown.cpp</in>
+          <in>ManualEWhiteUp.cpp</in>
+          <in>ManualEWoodDown.cpp</in>
+          <in>ManualEWoodUp.cpp</in>
+          <in>ManualNaturalBlackDown.cpp</in>
+          <in>ManualNaturalBlackUp.cpp</in>
+          <in>ManualNaturalWhiteDown.cpp</in>
+          <in>ManualNaturalWhiteUp.cpp</in>
+          <in>ManualNaturalWoodDown.cpp</in>
+          <in>ManualNaturalWoodUp.cpp</in>
+          <in>ManualSharpBlackDown.cpp</in>
+          <in>ManualSharpBlackUp.cpp</in>
+          <in>ManualSharpWhiteDown.cpp</in>
+          <in>ManualSharpWhiteUp.cpp</in>
+          <in>ManualSharpWoodDown.cpp</in>
+          <in>ManualSharpWoodUp.cpp</in>
+          <in>PedalNaturalBlackDown.cpp</in>
+          <in>PedalNaturalBlackUp.cpp</in>
+          <in>PedalNaturalWoodDown.cpp</in>
+          <in>PedalNaturalWoodUp.cpp</in>
+          <in>PedalSharpBlackDown.cpp</in>
+          <in>PedalSharpBlackUp.cpp</in>
+          <in>PedalSharpWoodDown.cpp</in>
+          <in>PedalSharpWoodUp.cpp</in>
+          <in>Splash.cpp</in>
+          <in>Wood01.cpp</in>
+          <in>Wood03.cpp</in>
+          <in>Wood05.cpp</in>
+          <in>Wood07.cpp</in>
+          <in>Wood09.cpp</in>
+          <in>Wood11.cpp</in>
+          <in>Wood13.cpp</in>
+          <in>Wood15.cpp</in>
+          <in>Wood17.cpp</in>
+          <in>Wood19.cpp</in>
+          <in>Wood21.cpp</in>
+          <in>Wood23.cpp</in>
+          <in>Wood25.cpp</in>
+          <in>Wood27.cpp</in>
+          <in>Wood29.cpp</in>
+          <in>Wood31.cpp</in>
+          <in>Wood33.cpp</in>
+          <in>Wood35.cpp</in>
+          <in>Wood37.cpp</in>
+          <in>Wood39.cpp</in>
+          <in>Wood41.cpp</in>
+          <in>Wood43.cpp</in>
+          <in>Wood45.cpp</in>
+          <in>Wood47.cpp</in>
+          <in>Wood49.cpp</in>
+          <in>Wood51.cpp</in>
+          <in>Wood53.cpp</in>
+          <in>Wood55.cpp</in>
+          <in>Wood57.cpp</in>
+          <in>Wood59.cpp</in>
+          <in>Wood61.cpp</in>
+          <in>Wood63.cpp</in>
+          <in>drawstop01off.cpp</in>
+          <in>drawstop01on.cpp</in>
+          <in>drawstop02off.cpp</in>
+          <in>drawstop02on.cpp</in>
+          <in>drawstop03off.cpp</in>
+          <in>drawstop03on.cpp</in>
+          <in>drawstop04off.cpp</in>
+          <in>drawstop04on.cpp</in>
+          <in>drawstop05off.cpp</in>
+          <in>drawstop05on.cpp</in>
+          <in>drawstop06off.cpp</in>
+          <in>drawstop06on.cpp</in>
+          <in>gauge.cpp</in>
+          <in>help.cpp</in>
+          <in>label01.cpp</in>
+          <in>label02.cpp</in>
+          <in>label03.cpp</in>
+          <in>label04.cpp</in>
+          <in>label05.cpp</in>
+          <in>label06.cpp</in>
+          <in>label07.cpp</in>
+          <in>label08.cpp</in>
+          <in>label09.cpp</in>
+          <in>label10.cpp</in>
+          <in>label11.cpp</in>
+          <in>label12.cpp</in>
+          <in>memory.cpp</in>
+          <in>open.cpp</in>
+          <in>panic.cpp</in>
+          <in>piston01off.cpp</in>
+          <in>piston01on.cpp</in>
+          <in>piston02off.cpp</in>
+          <in>piston02on.cpp</in>
+          <in>piston03off.cpp</in>
+          <in>piston03on.cpp</in>
+          <in>piston04off.cpp</in>
+          <in>piston04on.cpp</in>
+          <in>piston05off.cpp</in>
+          <in>piston05on.cpp</in>
+          <in>polyphony.cpp</in>
+          <in>properties.cpp</in>
+          <in>record.cpp</in>
+          <in>reload.cpp</in>
+          <in>reverb.cpp</in>
+          <in>save.cpp</in>
+          <in>set.cpp</in>
+          <in>settings.cpp</in>
+          <in>transpose.cpp</in>
+          <in>volume.cpp</in>
+        </df>
+        <df name="portaudio">
+          <df name="common">
+            <in>pa_allocation.c</in>
+            <in>pa_converters.c</in>
+            <in>pa_cpuload.c</in>
+            <in>pa_debugprint.c</in>
+            <in>pa_dither.c</in>
+            <in>pa_front.c</in>
+            <in>pa_process.c</in>
+            <in>pa_ringbuffer.c</in>
+            <in>pa_stream.c</in>
+            <in>pa_trace.c</in>
+          </df>
+          <df name="hostapi">
+            <df name="alsa">
+              <in>pa_linux_alsa.c</in>
+            </df>
+            <df name="jack">
+              <in>pa_jack.c</in>
+            </df>
+          </df>
+          <df name="os">
+            <df name="unix">
+              <in>pa_unix_hostapis.c</in>
+              <in>pa_unix_util.c</in>
+            </df>
+          </df>
+        </df>
+        <df name="rt">
+          <df name="rtaudio">
+            <in>RtAudio.cpp</in>
+          </df>
+          <df name="rtmidi">
+            <in>RtMidi.cpp</in>
+          </df>
+        </df>
+      </df>
+    </df>
+    <logicalFolder name="workflows"
+                   displayName="workflows"
+                   projectFiles="true"
+                   root=".github/workflows">
+      <itemPath>.github/workflows/build.yml</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Важные файлы"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>/home/oleg/my-projects/grandorgue/GrandOrgue/CMakeLists.txt</itemPath>
+      <itemPath>/home/oleg/my-projects/grandorgue/GrandOrgue/Makefile</itemPath>
+      <itemPath>/home/oleg/my-projects/grandorgue/GrandOrgue/nbproject/private/launcher.properties</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>/home/oleg/my-projects/grandorgue/GrandOrgue</Elem>
+  </sourceRootList>
+  <projectmakefile>/home/oleg/my-projects/grandorgue/GrandOrgue/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-std=c++11"/>
+        <element flagsID="1" commonFlags="-std=c++11 -fPIC"/>
+        <element flagsID="2" commonFlags="-std=c++11 -msse3"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>/home/oleg/my-projects/grandorgue/GrandOrgue</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile -j 16</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath>/home/oleg/my-projects/grandorgue/GrandOrgue/bin/GrandOrgue</executablePath>
+          <cTool>
+            <incDir>
+              <pElem>src/portaudio/include</pElem>
+              <pElem>src/portaudio/common</pElem>
+              <pElem>src/portaudio/os/unix</pElem>
+              <pElem>src/portaudio</pElem>
+            </incDir>
+            <preprocessorList>
+              <Elem>HAVE_SYS_SOUNDCARD_H</Elem>
+              <Elem>PA_USE_ALSA</Elem>
+              <Elem>PA_USE_JACK</Elem>
+            </preprocessorList>
+          </cTool>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>/home/oleg/my-projects/grandorgue/GrandOrgue</preBuildCommandWorkingDir>
+          <preBuildCommand>${CMAKE} -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=${IDE_CC} -DCMAKE_CXX_COMPILER=${IDE_CXX} -DCMAKE_C_FLAGS_DEBUG="-g3 -gdwarf-2" -DCMAKE_CXX_FLAGS_DEBUG="-g3 -gdwarf-2" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .</preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/build/imageconverter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOSoundTouchWorkItem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchive.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveCreator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveEntryFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveIndex.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveWriter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueBitmap.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueCompress.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueConfigFileReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueConfigFileWriter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueConfigReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueConfigReaderDB.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueConfigWriter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueDC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueDocumentBase.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueEventDistributor.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueFont.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueHash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueInvalidFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueKeyConvert.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueKeyReceiverData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueLoadThread.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueLog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueLogWindow.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMemoryPool.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiFileReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiMap.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiMerger.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiOutputMerger.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiPlayerContent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiReceiverBase.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiReceiverData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiSenderData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiWXEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueOrgan.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueOrganList.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrguePath.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueRodgers.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSampleStatistic.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSetting.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingBool.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingEnum.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingFloat.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingStore.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingString.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueStandardFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueStdPath.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueTemperament.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueTemperamentCent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueTemperamentList.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueTemperamentUser.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueThread.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueTimer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueUtil.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueView.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueWavPack.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueWavPackWriter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueWave.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/MIDIList.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/OrganSelectDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/SplashScreen.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/contrib/sha1.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/wxGaugeAudio.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIBankedGeneralsPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIButton.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIControl.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUICouplerPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUICrescendoPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIDisplayMetrics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIDivisionalsPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIEnclosure.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIFloatingPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIHW1Background.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIHW1DisplayMetrics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIImage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUILabel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUILayoutEngine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIManual.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIManualBackground.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIMasterPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIMetronomePanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIPanelWidget.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIRecorderPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUISequencerPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUISetterDisplayMetrics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundAudioSection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundEngine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundGroupWorkItem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundOutputWorkItem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundProvider.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundProviderSynthedTrem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundProviderWave.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundRecorder.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundReleaseWorkItem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundResample.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundReverb.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundReverbEngine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundReverbPartition.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundSamplerPool.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundScheduler.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundThread.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundTremulantWorkItem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOSoundWindchestWorkItem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueAudioRecorder.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueBitmapCache.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueButton.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueCache.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueCacheCleaner.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueCacheWriter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueCombination.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueCombinationDefinition.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueCoupler.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueDivisional.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueDivisionalCoupler.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueDocument.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueDrawStop.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueDummyPipe.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueElementCreator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueEnclosure.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueFilename.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueFrameGeneral.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueGeneral.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueKeyReceiver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueLabel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMainWindowData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueManual.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMetronome.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMidi.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMidiInPort.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMidiListener.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMidiOutPort.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMidiPlayer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMidiReceiver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMidiRecorder.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMidiRtInPort.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMidiRtOutPort.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueMidiSender.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueModel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrguePanelView.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrguePipe.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrguePipeConfig.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrguePipeConfigNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrguePipeConfigTreeNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrguePiston.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueProgressDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueProperties.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrguePushbutton.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueRank.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueReferencePipe.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueReleaseAlignTable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueRtHelpers.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueSetter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueSetterButton.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueSound.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueSoundJackPort.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueSoundPort.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueSoundPortaudioPort.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueSoundRtPort.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueSoundingPipe.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueStop.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueSwitch.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueTremulant.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOrgueWindchest.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GrandOrgue.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GrandOrgueFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GrandOrgueFrame.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GrandOrgueTool.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/MIDIEventDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/MIDIEventKeyDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/MIDIEventRecvDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/MIDIEventSendDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/OrganDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsArchives.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsAudioGroup.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsAudioOutput.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsDefaults.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsMidiDevices.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsMidiMessage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsOption.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsOrgan.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsReverb.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/SettingsTemperaments.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/contrib/zita-convolver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/perftest.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA00.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA01.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA02.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA03.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA04.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA05.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA06.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA07.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA08.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA09.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA10.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA11.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA12.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA13.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA14.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureA15.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB00.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB01.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB02.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB03.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB04.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB05.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB06.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB07.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB08.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB09.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB10.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB11.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB12.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB13.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB14.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureB15.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC00.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC01.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC02.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC03.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC04.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC05.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC06.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC07.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC08.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC09.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC10.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC11.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC12.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC13.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC14.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureC15.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD00.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD01.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD02.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD03.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD04.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD05.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD06.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD07.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD08.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD09.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD10.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD11.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD12.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD13.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD14.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/EnclosureD15.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/GOIcon.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualCBlackDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualCBlackUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualCWhiteDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualCWhiteUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualCWoodDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualCWoodUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualDBlackDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualDBlackUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualDWhiteDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualDWhiteUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualDWoodDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualDWoodUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualEBlackDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualEBlackUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualEWhiteDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualEWhiteUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualEWoodDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualEWoodUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualNaturalBlackDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualNaturalBlackUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualNaturalWhiteDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualNaturalWhiteUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualNaturalWoodDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualNaturalWoodUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualSharpBlackDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualSharpBlackUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualSharpWhiteDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualSharpWhiteUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualSharpWoodDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/ManualSharpWoodUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/PedalNaturalBlackDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/PedalNaturalBlackUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/PedalNaturalWoodDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/PedalNaturalWoodUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/PedalSharpBlackDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/PedalSharpBlackUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/PedalSharpWoodDown.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/PedalSharpWoodUp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Splash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood01.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood03.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood05.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood07.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood09.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood11.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood13.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood15.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood17.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood19.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood21.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood23.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood25.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood27.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood29.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood31.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood33.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood35.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood37.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood39.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood41.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood43.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood45.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood47.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood49.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood51.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood53.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood55.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood57.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood59.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood61.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/Wood63.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop01off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop01on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop02off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop02on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop03off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop03on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop04off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop04on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop05off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop05on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop06off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/drawstop06on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/gauge.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/help.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label01.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label02.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label03.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label04.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label05.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label06.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label07.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label08.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label09.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label10.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label11.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/label12.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/memory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/open.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/panic.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/piston01off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/piston01on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/piston02off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/piston02on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/piston03off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/piston03on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/piston04off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/piston04on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/piston05off.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/piston05on.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/polyphony.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/properties.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/record.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/reload.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/reverb.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/save.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/set.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/settings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/transpose.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/images/volume.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/common/pa_allocation.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/common/pa_converters.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/common/pa_cpuload.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/common/pa_debugprint.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/common/pa_dither.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/common/pa_front.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/common/pa_process.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/common/pa_ringbuffer.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/common/pa_stream.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/common/pa_trace.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/hostapi/alsa/pa_linux_alsa.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/hostapi/jack/pa_jack.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/os/unix/pa_unix_hostapis.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/portaudio/os/unix/pa_unix_util.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/rt/rtaudio/RtAudio.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/rt/rtmidi/RtMidi.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <folder path="0/src/core">
+        <ccTool>
+          <incDir>
+            <pElem>src/core/GrandOrgueDef.h</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/core/contrib">
+        <ccTool>
+          <incDir>
+            <pElem>src/core</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue">
+        <ccTool>
+          <incDir>
+            <pElem>src/core/GrandOrgueDef.h</pElem>
+            <pElem>src/grandorgue/contrib</pElem>
+            <pElem>src/grandorgue/resource</pElem>
+            <pElem>src/core</pElem>
+            <pElem>src/rt/include</pElem>
+            <pElem>src/portaudio/include</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/contrib">
+        <ccTool>
+          <incDir>
+            <pElem>src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/src/images">
+        <ccTool>
+          <incDir>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GrandOrgueImages_EXPORTS</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/rt">
+        <ccTool>
+          <incDir>
+            <pElem>src/rt/include</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>__LINUX_ALSA__</Elem>
+            <Elem>__UNIX_JACK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/rt/rtmidi">
+        <ccTool>
+          <incDir>
+            <pElem>src/core/contrib</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>HAVE_GET_CLIENT_INFO_CARD</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+    </conf>
+  </confs>
+</configurationDescriptor>

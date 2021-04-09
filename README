@@ -95,6 +95,7 @@ sudo zypper install <package-name>
 
 Then rerun rpmbuild.
 
+
 D) Building on Windows
 ----------------------
 
@@ -303,6 +304,24 @@ make package
 to create an installer
 
 If you want to build a 64bit version, replace everywhere in this instruction i686-w64-mingw32 with x86_64-w64-mingw32.
+
+
+Simplified cross-compiling for Windows on Linux:
+------------------------------------------------
+
+There are some ready-to use bash scripts that allow to build windows executables on linux.
+Assume you have the GrandOrgue source extracted to GrandOrgue directory
+
+I) Prepare a build system
+or 1) Install necessary software running a prepare-script by root or a sudoer-user
+a) If you have OpenSuse, run GrandOrgue/build-scripts//for-win64/prepare-opensuse.sh
+b) If you have Ubuntu 20.04+, run GrandOrgue/build-scripts/for-win64/prepare-ubuntu-20.sh
+or 2) Use prebuilt docker containers with all necessary software installed
+or a) with ubuntu - osamarin68/grandorgue:ub-go-win
+or b) with opensuse osamarin68/grandorgue:os-go-win
+
+II) run GrandOrgue/build-scripts/for-win64/build-on-linux.sh
+  Windows executables will appear in the build-mingw64 subdirectory of the current directory
 
 C) Building the help and translations on Windows:
 -------------------------------------------------

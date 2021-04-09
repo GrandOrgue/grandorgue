@@ -37,6 +37,7 @@ option(RTMIDI_USE_ALSA        "Enable RtMidi support for ALSA (Linux only)" ON)
 option(RTMIDI_USE_MM          "Enable RtMidi support for MM (Windows only)" ON)
 option(INSTALL_DEMO           "Install demo sampleset" ON)
 option(USE_INTERNAL_PORTAUDIO "Use builtin PortAudio sources" ON)
+option(GO_USE_JACK	      "Use native Jack output" ON)
 if (WIN32 OR APPLE)
    option(INSTALL_DEPEND      "Copy dependencies (wxWidgets libraries and Translations) on installation" ON)
 else ()
@@ -126,6 +127,10 @@ endif ()
 if (WIN32)
    set(CPACK_BINARY_TGZ ON CACHE BOOL INTERNAL)
 endif ()
+
+if (RTAUDIO_USE_JACK OR RTMIDI_USE_JACK OR GO_USE_JACK)
+  pkg_check_modules(JACK REQUIRED jack)
+endif()
 
 # include RtAudio
 add_subdirectory(src/rt)

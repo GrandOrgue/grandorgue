@@ -65,7 +65,7 @@ GOrguePanelView::GOrguePanelView(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxW
 	// Set an initial client size to what it would be with scaling 100%
 	frame->SetMaxSize(wxSize(wxDefaultCoord, wxDefaultCoord)); 
 	frame->SetClientSize(panelwidget->GetSize());
-	frame->SetMaxSize(frame->GetSize());
+	//frame->SetMaxSize(frame->GetSize());
 
 	// Set a minimum size for the window, just some small value
 	wxSize minsize(100,100);

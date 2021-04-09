@@ -22,7 +22,6 @@ message(STATUS "RtAudio build Configuration")
 INCLUDE (CheckIncludeFileCXX)
 
 include_directories(../include)
-
 set(RtAudio_Sources RtAudio.cpp)
 
 if (WIN32)

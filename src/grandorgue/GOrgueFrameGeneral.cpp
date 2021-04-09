@@ -187,8 +187,11 @@ void GOrgueFrameGeneral::LoadCombination(GOrgueConfigReader& cfg)
 		buffer.Printf(wxT("StopManual%03d"), i + 1);
 		unsigned m = cfg.ReadInteger(type, m_group, buffer, m_organfile->GetFirstManualIndex(), m_organfile->GetManualAndPedalCount());
 		buffer.Printf(wxT("StopNumber%03d"), i + 1);
+		/*
 		unsigned cnt = m_organfile->GetManual(m)->GetStopCount();
 		int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
+		 */
+		int s = cfg.ReadInteger(type, m_group, buffer, -999, 999);
 		pos = m_Template.findEntry(GOrgueCombinationDefinition::COMBINATION_STOP, m, abs(s));
 		if (pos >= 0)
 		{

@@ -171,6 +171,8 @@ else ()
 
 endif ()
 
+include_directories(${JACK_INCLUDE_DIRS})
+
 add_library(PortAudio STATIC ${PortAudio_Sources})
 target_link_libraries(PortAudio ${PA_Libs})
 

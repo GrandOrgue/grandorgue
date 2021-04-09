@@ -1,0 +1,91 @@
+name: Build
+
+on: [push]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+  version_revision: 2338
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Dependencies
+      shell: bash
+      run: sudo apt update && sudo apt install -y libfftw3-dev zlib1g-dev libwavpack-dev libwxgtk3.0-gtk3-dev libudev-dev libjack-dev libasound2-dev
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{github.workspace}}/build
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/build
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -G "Unix Makefiles" -DVERSION_REVISION=${{env.version_revision}}
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: make -k package -j4
+    - name: Upload the Result
+      uses: actions/upload-artifact@v2
+      with:
+        name: GrandOrgue-0.3.1.${{env.version_revision}}-Linux.tar.gz
+        path: ${{github.workspace}}/build/GrandOrgue-0.3.1.${{env.version_revision}}-Linux.tar.gz
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Dependencies (1)
+      shell: bash
+      run: brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw wavpack
+    - name: Install Dependencies (2)
+      shell: bash
+      run: brew link gettext --force
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{github.workspace}}/build
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/build
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -G "Unix Makefiles" -DVERSION_REVISION=${{env.version_revision}}
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: make -k package -j4
+    - name: Upload .tar.gz
+      uses: actions/upload-artifact@v2
+      with:
+        name: GrandOrgue-0.3.1.${{env.version_revision}}-Darwin.tar.gz
+        path: ${{github.workspace}}/build/GrandOrgue-0.3.1.${{env.version_revision}}-Darwin.tar.gz
+    - name: Upload .dmg
+      uses: actions/upload-artifact@v2
+      with:
+        name: GrandOrgue-0.3.1.${{env.version_revision}}-Darwin.dmg
+        path: ${{github.workspace}}/build/GrandOrgue-0.3.1.${{env.version_revision}}-Darwin.dmg
+        
+  build-windows:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Dependencies (1)
+      run: ${{github.workspace}}/build-scripts/for-win64/prepare-ubuntu-20.sh
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{github.workspace}}/build
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      continue-on-error: true
+      run: ${{github.workspace}}/build-scripts/for-win64/build-on-linux.sh ${{env.version_revision}}
+
+    - name: Upload the Nsis log
+      uses: actions/upload-artifact@v2
+      with:
+        name: NSISOutput.log
+        path: ${{github.workspace}}/build/build-mingw64/_CPack_Packages/win64/NSIS/NSISOutput.log
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: GrandOrgue-0.3.1.${{env.version_revision}}-win64.exe
+        path: ${{github.workspace}}/build/build-mingw64/GrandOrgue-0.3.1.${{env.version_revision}}-win64.exe
