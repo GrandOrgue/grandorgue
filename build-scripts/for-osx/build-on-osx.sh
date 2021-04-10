@@ -25,8 +25,9 @@ pushd build-osx
 rm -rf *
 export LANG=C
 
+OS_PRMS="-DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl"
 GO_PRMS="-DCMAKE_BUILD_TYPE=Release $REVISION_PRM"
-cmake -G "Unix Makefiles" $GO_PRMS $SRC_DIR
+cmake -G "Unix Makefiles" $OS_PRMS $GO_PRMS $SRC_DIR
 make -k $PARALLEL_PRMS VERBOSE=1 package
 
 popd
