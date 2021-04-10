@@ -26,11 +26,10 @@ cmake $SRC_DIR/src/build
 make
 popd
 
-mkdir -p build-mingw64
-rm -rf build-mingw64/*
+mkdir -p build-win64
+pushd build-win64
 
-pushd build-mingw64
-
+rm -rf *
 export LANG=C
 
 # do not add more directories to PKG_CONFIG_PATH because a bug in cmake that replaces ":" with ";"
@@ -55,7 +54,6 @@ GO_PRMS="-DRTAUDIO_USE_ASIO=OFF -DGO_USE_JACK=OFF $REVISION_PRM"
 
 cmake -DINSTALL_DEPEND=ON $MINGW_PRMS $GO_WIN_PRMS $GO_PRMS . $SRC_DIR
 make $PARALLEL_PRMS VERBOSE=1 package
-cmake -DINSTALL_DEPEND=OFF $MINGW_PRMS $GO_WIN_PRMS $GO_PRMS . $SRC_DIR
-make $PARALLEL_PRMS VERBOSE=1
+
 popd
 
