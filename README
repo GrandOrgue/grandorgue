@@ -3,21 +3,59 @@ GrandOrgue is a sample based pipe organ simulator.
 It currently supports Windows and Linux. Porting to other OS supported by RtMidi, 
 RtAudio and wxWidgets should be possible with some build system adjustments.
 
-A) Building on Linux:
+Installation
+------------
+
+A) Installing on Linux
+
+I) Download GrandOrgue-0.3.1.*-Linux.tar.gz and unpack to some directory <GrandOrgue>
+II) Install required libraries
+  - On fedora
+    sudo dnf install -y 'libjack.so.0()(64bit)' wxGTK3 wavpack fftw
+  - On debian
+    sudo apt update && sudo apt install -y libjack0 libwxgtk3.0-gtk3 libasound2 libfftw3-single3 libwavpack1
+  - On ubuntu
+    sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y libjack0 libwxgtk3.0-gtk3-0v5 libfftw3-single3
+  - On opensuse
+    sudo zypper install -y libjack0 wxGTK3-devel libwavpack1
+
+B) Installing on MacOS
+
+C) Installing on Windows
+
+
+Building from sources
 --------------------
 
-1) Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
-2) Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
-3) Extract the GO sources somewhere, eg: /home/user/gosources
-4) Create an empty build directory, eg: mkdir /home/user/gobuild
-5) Run cmake:
-  cd /home/user/gobuild
-  cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
-  make
+A) Building on Linux:
+--------------------
+I) Extract the GO sources somewhere, eg: /home/user/gosources
+II) Install requires software
+  - Manually
+    1) Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
+    2) Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
+  - Or run prepared scripts for certain linux distributions by a sudoer user:
+    - on Fedora run <path to go-sources>/build-scripts/for-linux/prepare-fedora.sh
+    - on OpenSuse run <path to go-sources>/build-scripts/for-linux/prepare-opensuse.sh
+    - on Debian or on Ubuntu run <path to go-sources>/build-scripts/for-linux/prepare-debian-ubuntu.sh
+III) Build
+  - Manually
+    1) Create an empty build directory, eg: mkdir /home/user/gobuild
+    2) Run cmake:
+      cd /home/user/gobuild
+      cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
 
-  cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
+      Hint: For debugging a build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
+    3) Run make
+      make
+    4) For making tar.gz package, run
+      make -k package
 
-Hint: For debugging a build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
+  - Or run the prepared build script
+    <path to go-sources>/build-scripts/for-linux/build-on-linux.sh
+
+    The built package will appear in the build-linux subdirectory of current directory, 
+    the executables - in build-linux/bin
 
 Building Linux packages:
 -----------------------
@@ -34,21 +72,40 @@ rpmbuild -ba grandorgue.spec
 B) Building on OS X
 ===================
 
-1. Prequisites:
+I. Prequisites:
  - OS X >= 10.11
  - Xcode >= 7.3
  - homebrew
 
-2. Install via homebrew:
-  - brew update
-  - brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw wavpack
-  - brew link gettext --force
+II) Extract the GO sources somewhere, eg: /home/user/gosources
 
-3. extract the GO source into a directory
+III) Install requires software
+  - Manually
 
-4. run the following commands:
-  cmake -G "Unix Makefiles" -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl
-  make -k package VERBOSE=1
+    brew update
+    brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw wavpack
+    brew link gettext --force
+
+  - Or run prepared scripts by a sudoer user:
+    <path to go-sources>/build-scripts/for-osx/prepare-osx.sh
+
+III) Build
+  - Manually
+    1) Create an empty build directory, eg: mkdir /home/user/gobuild
+    2) Run cmake:
+      cd /home/user/gobuild
+      cmake -G "Unix Makefiles" -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl <path to go-sources>
+
+      Hint: For debugging a build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
+    3) Run make
+      make
+    4) For making tar.gz package, run
+      make -k package VERBOSE=1
+
+  - Or run the prepared build script
+    <path to go-sources>/build-scripts/for-osx/build-on-osx.sh
+
+    The built package will appear in the build-osx subdirectory of current directory, 
 
 C) Building for Windows
 ----------------------
@@ -314,7 +371,7 @@ Assume you have the GrandOrgue source extracted to GrandOrgue directory
 
 I) Prepare a build system
 or 1) Install necessary software running a prepare-script by root or a sudoer-user
-a) If you have OpenSuse, run GrandOrgue/build-scripts//for-win64/prepare-opensuse.sh
+a) If you have OpenSuse, run GrandOrgue/build-scripts/for-win64/prepare-opensuse.sh
 b) If you have Ubuntu 20.04+, run GrandOrgue/build-scripts/for-win64/prepare-ubuntu-20.sh
 or 2) Use prebuilt docker containers with all necessary software installed
 or a) with ubuntu - osamarin68/grandorgue:ub-go-win
