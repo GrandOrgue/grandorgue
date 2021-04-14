@@ -17,9 +17,28 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.12)
 
-project(GrandOrgue CXX C)
+# Project version numbers
+if (NOT VERSION)
+  if (NOT VERSION_REVISION)
+    set(VERSION_REVISION 0)
+  endif()
+  set(VERSION 0.3.1.${VERSION_REVISION})
+endif()
+
+if (NOT VERSION_BUILD)
+  set(VERSION_BUILD 0)
+endif()
+
+project(
+  GrandOrgue
+  VERSION ${VERSION}
+  DESCRIPTION "GrandOrgue - free pipe organ simulator"
+  LANGUAGES CXX C
+)
+set(NUM_VERSION ${PROJECT_VERSION})
+string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
 
 # Build configuration options
 option(RTAUDIO_USE_CORE       "Enable RtAudio support for Core Audio (Rt and PortAudio - OS X only)" ON)
@@ -43,17 +62,6 @@ if (WIN32 OR APPLE)
 else ()
    option(INSTALL_DEPEND      "Copy dependencies (wxWidgets libraries and Translations) on installation" OFF)
 endif ()
-
-# Project version numbers
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 3)
-set(VERSION_STAGE 1)
-if (NOT VERSION_REVISION)
-  set(VERSION_REVISION 0)
-endif()
-set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION})
-set(NUM_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION})
-string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
 
 # only use options supported by the compiler
 include(CheckIncludeFileCXX)
