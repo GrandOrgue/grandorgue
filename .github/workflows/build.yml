@@ -2,14 +2,52 @@ name: Build
 
 on: [push]
 
-env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
-  version_revision: 2338
-
 jobs:
+  calc_ver:
+    # calculate versions from git tags
+    runs-on: ubuntu-latest
+    outputs:
+      project_ver: ${{steps.vers.outputs.project_ver}}
+      release_flag: ${{steps.vers.outputs.release_flag}}
+      build_ver: ${{steps.vers.outputs.build_ver}}
+      full_ver: ${{steps.vers.outputs.full_ver}}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+         fetch-depth: 0
+
+    - name: Calculate versions
+      id: vers
+      shell: bash
+      run: |
+        GIT_VERSION=`git describe --tags`
+        PROJECT_VERSION=`echo $GIT_VERSION | cut -d- -f1`
+        BUILD_VERSION=`echo $GIT_VERSION | cut -d- -f2-3 | sed 's/-/./g'`
+        if git describe --tags --exact-match && [[ ! "$BUILD_VERSION" < "1" ]]; then
+          # rem Release
+          RELEASE_FLAG=ON
+        else
+          # Intermediate build
+          RELEASE_FLAG=OFF
+        fi
+        BUILD_VERSION="os.$BUILD_VERSION"
+        echo "::set-output name=project_ver::$PROJECT_VERSION"
+        echo "::set-output name=release_flag::$RELEASE_FLAG"
+        echo "::set-output name=build_ver::$BUILD_VERSION"
+        echo "::set-output name=full_ver::${PROJECT_VERSION}-${BUILD_VERSION}"
+
+    - name: Display versions
+      run: |
+        echo "project_ver=${{steps.vers.outputs.project_ver}}"
+        echo "release_flag=${{steps.vers.outputs.release_flag}}"
+        echo "build_ver=${{steps.vers.outputs.build_ver}}"
+        echo "full_ver=${{steps.vers.outputs.full_ver}}"
+  
   build-linux:
     runs-on: ubuntu-16.04
+    needs: [calc_ver]
     steps:
     - uses: actions/checkout@v2
     
@@ -18,16 +56,17 @@ jobs:
       
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-linux/build-on-linux.sh ${{env.version_revision}}
+      run: ${{github.workspace}}/build-scripts/for-linux/build-on-linux.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
 
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
         name: GrandOrgue-0.3.1.${{env.version_revision}}-Linux.tar.gz
-        path: ${{github.workspace}}/build-linux/GrandOrgue-0.3.1.${{env.version_revision}}-Linux.tar.gz
+        path: ${{github.workspace}}/build-linux/GrandOrgue-${{needs.calc_ver.outputs.project_ver}}-Linux.tar.gz
 
   build-osx:
     runs-on: macos-10.15
+    needs: [calc_ver]
     steps:
     - uses: actions/checkout@v2
     
@@ -37,16 +76,17 @@ jobs:
       
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-osx/build-on-osx.sh ${{env.version_revision}}
+      run: ${{github.workspace}}/build-scripts/for-osx/build-on-osx.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
 
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
         name: GrandOrgue-0.3.1.${{env.version_revision}}-Darwin.dmg
-        path: ${{github.workspace}}/build-osx/GrandOrgue-0.3.1.${{env.version_revision}}-Darwin.dmg
+        path: ${{github.workspace}}/build-osx/GrandOrgue-${{needs.calc_ver.outputs.project_ver}}-Darwin.dmg
         
   build-win64:
     runs-on: ubuntu-latest
+    needs: [calc_ver]
     steps:
     - uses: actions/checkout@v2
     
@@ -55,10 +95,10 @@ jobs:
 
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-win64/build-on-linux.sh ${{env.version_revision}}
+      run: ${{github.workspace}}/build-scripts/for-win64/build-on-linux.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
 
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
         name: GrandOrgue-0.3.1.${{env.version_revision}}-win64.exe
-        path: ${{github.workspace}}/build-win64/GrandOrgue-0.3.1.${{env.version_revision}}-win64.exe
+        path: ${{github.workspace}}/build-win64/GrandOrgue-${{needs.calc_ver.outputs.project_ver}}-win64.exe
