@@ -8,8 +8,8 @@ set -e
 
 source $(dirname $0)/../set-ver-prms.sh "$1" "$2"
 
-if [[ -n "$2" ]]; then
-	SRC_DIR=$2
+if [[ -n "$3" ]]; then
+	SRC_DIR=$3
 else
 	SRC_DIR=$(readlink -f $(dirname $0)/../..)
 fi

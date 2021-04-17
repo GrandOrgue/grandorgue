@@ -8,9 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       project_ver: ${{steps.vers.outputs.project_ver}}
-      release_flag: ${{steps.vers.outputs.release_flag}}
       build_ver: ${{steps.vers.outputs.build_ver}}
       full_ver: ${{steps.vers.outputs.full_ver}}
+      release_flag: ${{steps.vers.outputs.release_flag}}
+      release_id: ${{ steps.create_release.outputs.id }}
+      release_upload_url: ${{ steps.create_release.outputs.upload_url }}
 
     steps:
     - name: Checkout
@@ -39,9 +41,21 @@ jobs:
     - name: Display versions
       run: |
         echo "project_ver=${{steps.vers.outputs.project_ver}}"
-        echo "release_flag=${{steps.vers.outputs.release_flag}}"
         echo "build_ver=${{steps.vers.outputs.build_ver}}"
         echo "full_ver=${{steps.vers.outputs.full_ver}}"
+        echo "release_flag=${{steps.vers.outputs.release_flag}}"
+
+    - name: Create Draft Release
+      if: ${{ steps.vers.outputs.release_flag == ON }}
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: "${{ steps.vers.outputs.full_ver }}"
+        release_name:  "v${{ steps.vers.outputs.full_ver }}"
+        draft: true
+        prerelease: false
   
   build-linux:
     runs-on: ubuntu-16.04
