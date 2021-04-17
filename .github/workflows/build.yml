@@ -2,14 +2,64 @@ name: Build
 
 on: [push]
 
-env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
-  version_revision: 2338
-
 jobs:
+  calc_ver:
+    # calculate versions from git tags
+    runs-on: ubuntu-latest
+    outputs:
+      project_ver: ${{steps.vers.outputs.project_ver}}
+      build_ver: ${{steps.vers.outputs.build_ver}}
+      full_ver: ${{steps.vers.outputs.full_ver}}
+      release_flag: ${{steps.vers.outputs.release_flag}}
+      release_id: ${{ steps.create_release.outputs.id }}
+      release_upload_url: ${{ steps.create_release.outputs.upload_url }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Calculate versions
+      id: vers
+      shell: bash
+      run: |
+        git fetch --prune --unshallow --tags
+        GIT_VERSION=`git describe --tags`
+        PROJECT_VERSION=`echo $GIT_VERSION | cut -d- -f1`
+        BUILD_VERSION=`echo $GIT_VERSION | cut -d- -f2-3 --output-delimiter=.`
+        GIT_CHANGE_NUM=`echo $GIT_VERSION | cut -d- -f3`
+        if [[ -n "$GIT_CHANGE_NUM" ]] || [[ "$BUILD_VERSION" < "1" ]]; then
+          RELEASE_FLAG=OFF
+        else
+          RELEASE_FLAG=ON
+        fi
+
+        echo "::set-output name=project_ver::$PROJECT_VERSION"
+        echo "::set-output name=build_ver::$BUILD_VERSION"
+        echo "::set-output name=full_ver::$PROJECT_VERSION-$BUILD_VERSION"
+        echo "::set-output name=release_flag::$RELEASE_FLAG"
+
+    - name: Display versions
+      run: |
+        echo "project_ver=${{steps.vers.outputs.project_ver}}"
+        echo "build_ver=${{steps.vers.outputs.build_ver}}"
+        echo "full_ver=${{steps.vers.outputs.full_ver}}"
+        echo "release_flag=${{steps.vers.outputs.release_flag}}"
+
+    - name: Create Draft Release
+      if: ${{ steps.vers.outputs.release_flag == 'ON' }}
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: "${{ steps.vers.outputs.full_ver }}"
+        release_name:  "v${{ steps.vers.outputs.full_ver }}"
+        draft: true
+        prerelease: false
+  
   build-linux:
     runs-on: ubuntu-16.04
+    needs: [calc_ver]
     steps:
     - uses: actions/checkout@v2
     
@@ -18,16 +68,17 @@ jobs:
       
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-linux/build-on-linux.sh ${{env.version_revision}}
+      run: ${{github.workspace}}/build-scripts/for-linux/build-on-linux.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
 
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
         name: GrandOrgue-0.3.1.${{env.version_revision}}-Linux.tar.gz
-        path: ${{github.workspace}}/build-linux/GrandOrgue-0.3.1.${{env.version_revision}}-Linux.tar.gz
+        path: ${{github.workspace}}/build-linux/GrandOrgue-${{needs.calc_ver.outputs.project_ver}}-Linux.tar.gz
 
   build-osx:
     runs-on: macos-10.15
+    needs: [calc_ver]
     steps:
     - uses: actions/checkout@v2
     
@@ -37,16 +88,17 @@ jobs:
       
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-osx/build-on-osx.sh ${{env.version_revision}}
+      run: ${{github.workspace}}/build-scripts/for-osx/build-on-osx.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
 
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
         name: GrandOrgue-0.3.1.${{env.version_revision}}-Darwin.dmg
-        path: ${{github.workspace}}/build-osx/GrandOrgue-0.3.1.${{env.version_revision}}-Darwin.dmg
+        path: ${{github.workspace}}/build-osx/GrandOrgue-${{needs.calc_ver.outputs.project_ver}}-Darwin.dmg
         
   build-win64:
     runs-on: ubuntu-latest
+    needs: [calc_ver]
     steps:
     - uses: actions/checkout@v2
     
@@ -55,10 +107,10 @@ jobs:
 
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-win64/build-on-linux.sh ${{env.version_revision}}
+      run: ${{github.workspace}}/build-scripts/for-win64/build-on-linux.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
 
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
         name: GrandOrgue-0.3.1.${{env.version_revision}}-win64.exe
-        path: ${{github.workspace}}/build-win64/GrandOrgue-0.3.1.${{env.version_revision}}-win64.exe
+        path: ${{github.workspace}}/build-win64/GrandOrgue-${{needs.calc_ver.outputs.project_ver}}-win64.exe

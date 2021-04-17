@@ -1,18 +1,15 @@
 #!/bin/bash
 
-# $1 - Revision
-# $2 - Go source Dir. If not set then relative to the script dir
+# $1 - Version
+# $2 - Build version
+# $3 - Go source Dir. If not set then relative to the script dir
 
 set -e
 
-if [[ -n "$1" ]]; then
-	REVISION_PRM=-DVERSION_REVISION=$1
-else
-	REVISION_PRM=
-fi
+source $(dirname $0)/../set-ver-prms.sh "$1" "$2"
 
-if [[ -n "$2" ]]; then
-	SRC_DIR=$2
+if [[ -n "$3" ]]; then
+	SRC_DIR=$3
 else
 	SRC_DIR=$(readlink -f $(dirname $0)/../..)
 fi
@@ -50,7 +47,7 @@ GO_WIN_PRMS="-DCMAKE_SYSTEM_NAME=Windows \
   -DMSYS=1 -DSTATIC=1 \
   -DCMAKE_VERBOSE_MAKEFILE=ON \
   -DIMPORT_EXECUTABLES=../build-tools/ImportExecutables.cmake"
-GO_PRMS="-DRTAUDIO_USE_ASIO=OFF -DGO_USE_JACK=OFF $REVISION_PRM"
+GO_PRMS="-DRTAUDIO_USE_ASIO=OFF -DGO_USE_JACK=OFF $CMAKE_VERSION_PRMS"
 
 cmake -DINSTALL_DEPEND=ON $MINGW_PRMS $GO_WIN_PRMS $GO_PRMS . $SRC_DIR
 make $PARALLEL_PRMS VERBOSE=1 package
