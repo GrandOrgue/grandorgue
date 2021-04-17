@@ -73,8 +73,19 @@ jobs:
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
-        name: GrandOrgue-0.3.1.${{env.version_revision}}-Linux.tar.gz
-        path: ${{github.workspace}}/build-linux/GrandOrgue-${{needs.calc_ver.outputs.project_ver}}-Linux.tar.gz
+        name: GrandOrgue-0.3.1.${{env.version_revision}}-linux.tar.gz
+        path: ${{github.workspace}}/build-linux/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-linux.tar.gz
+        
+    - name: Upload package to release
+      if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
+        asset_path: ${{github.workspace}}/build-linux/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-linux.tar.gz
+        asset_name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-linux.tar.gz
+        asset_content_type: text/plain
 
   build-osx:
     runs-on: macos-10.15
@@ -93,8 +104,19 @@ jobs:
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
-        name: GrandOrgue-0.3.1.${{env.version_revision}}-Darwin.dmg
-        path: ${{github.workspace}}/build-osx/GrandOrgue-${{needs.calc_ver.outputs.project_ver}}-Darwin.dmg
+        name: GrandOrgue-0.3.1.${{env.version_revision}}-osx.dmg
+        path: ${{github.workspace}}/build-osx/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-osx.dmg
+
+    - name: Upload package to release
+      if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
+        asset_path: ${{github.workspace}}/build-osx/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-osx.dmg
+        asset_name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-osx.dmg
+        asset_content_type: text/plain
         
   build-win64:
     runs-on: ubuntu-latest
@@ -113,4 +135,27 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: GrandOrgue-0.3.1.${{env.version_revision}}-win64.exe
-        path: ${{github.workspace}}/build-win64/GrandOrgue-${{needs.calc_ver.outputs.project_ver}}-win64.exe
+        path: ${{github.workspace}}/build-win64/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-win64.exe
+
+    - name: Upload package to release
+      if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
+        asset_path: ${{github.workspace}}/build-win64/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-win64.exe
+        asset_name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-win64.exe
+        asset_content_type: text/plain
+
+  release:
+    needs: [calc_ver, build_linux, build_osx, build_win64]
+    if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
+    runs-on: ubuntu-latest
+    steps:
+      
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ needs.calc_ver.outputs.release_id }}

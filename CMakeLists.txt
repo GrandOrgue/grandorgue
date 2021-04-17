@@ -40,6 +40,12 @@ project(
 set(NUM_VERSION ${PROJECT_VERSION})
 string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
 
+if (BUILD_VERSION)
+  set(FULL_VERSION "${PROJECT_VERSION}-${BUILD_VERSION}")
+else ()
+  set(FULL_VERSION "${PROJECT_VERSION}")
+endif ()
+
 # Build configuration options
 option(RTAUDIO_USE_CORE       "Enable RtAudio support for Core Audio (Rt and PortAudio - OS X only)" ON)
 option(RTAUDIO_USE_JACK       "Enable RtAudio support for Jack (Rt and PortAudio)" ON)
@@ -119,23 +125,6 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
    add_option(-ffast-math)
 endif ()
 
-if (APPLE)
-   # see the following URL for information about these variables
-   # https://developer.apple.com/library/mac/#documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-   set(BUNDLE_CFBundleShortVersionString ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
-   set(BUNDLE_CFBundleVersion ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION})
-
-   set(CPACK_PACKAGE_ICON "${RESOURCEDIR}/GrandOrgue.icns")
-
-   configure_file(${CMAKE_SOURCE_DIR}/src/grandorgue/resource/Info.plist.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist)
-   INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist DESTINATION "${PROJECT_NAME}.app/Contents/")
-
-   set(CPACK_BINARY_DRAGNDROP ON CACHE BOOL INTERNAL)
-endif ()
-if (WIN32)
-   set(CPACK_BINARY_TGZ ON CACHE BOOL INTERNAL)
-endif ()
-
 if (RTAUDIO_USE_JACK OR RTMIDI_USE_JACK OR GO_USE_JACK)
   pkg_check_modules(JACK REQUIRED jack)
 endif()
@@ -180,10 +169,30 @@ add_subdirectory(sounds)
 add_subdirectory(packages)
 add_subdirectory(resources)
 
+if (APPLE)
+   # see the following URL for information about these variables
+   # https://developer.apple.com/library/mac/#documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+   set(BUNDLE_CFBundleShortVersionString ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
+   set(BUNDLE_CFBundleVersion ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION})
+
+   set(CPACK_PACKAGE_ICON "${RESOURCEDIR}/GrandOrgue.icns")
+
+   configure_file(${CMAKE_SOURCE_DIR}/src/grandorgue/resource/Info.plist.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist)
+   INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist DESTINATION "${PROJECT_NAME}.app/Contents/")
+
+  set (CPACK_BINARY_DRAGNDROP ON CACHE BOOL INTERNAL)
+  set (CPACK_SYSTEM_NAME "osx")
+elseif (WIN32)
+  set (CPACK_BINARY_TGZ OFF CACHE BOOL INTERNAL)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  set (CPACK_SYSTEM_NAME "linux")
+endif ()
+
 set(CPACK_PACKAGE_NAME "GrandOrgue")
 set(CPACK_PACKAGE_VENDOR "Our Organ")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GrandOrgue - OpenSource Virtual Pipe Organ Software")
-set(CPACK_PACKAGE_VERSION ${VERSION})
+set(CPACK_PACKAGE_VERSION ${FULL_VERSION})
+#set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_STAGE}.${VERSION_REVISION})
