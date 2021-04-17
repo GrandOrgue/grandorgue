@@ -73,7 +73,7 @@ jobs:
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
-        name: GrandOrgue-0.3.1.${{env.version_revision}}-linux.tar.gz
+        name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-linux.tar.gz
         path: ${{github.workspace}}/build-linux/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-linux.tar.gz
         
     - name: Upload package to release
@@ -104,7 +104,7 @@ jobs:
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
-        name: GrandOrgue-0.3.1.${{env.version_revision}}-osx.dmg
+        name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-osx.dmg
         path: ${{github.workspace}}/build-osx/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-osx.dmg
 
     - name: Upload package to release
@@ -134,7 +134,7 @@ jobs:
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
-        name: GrandOrgue-0.3.1.${{env.version_revision}}-win64.exe
+        name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-win64.exe
         path: ${{github.workspace}}/build-win64/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-win64.exe
 
     - name: Upload package to release
