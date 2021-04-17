@@ -46,7 +46,7 @@ jobs:
         echo "release_flag=${{steps.vers.outputs.release_flag}}"
 
     - name: Create Draft Release
-      if: ${{ steps.vers.outputs.release_flag == ON }}
+      if: ${{ steps.vers.outputs.release_flag == "ON" }}
       id: create_release
       uses: actions/create-release@v1
       env:
