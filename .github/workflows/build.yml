@@ -95,11 +95,11 @@ jobs:
     
     - name: Install Dependencies
       shell: bash
-      run: ${{github.workspace}}/build-scripts/for-osx/prepare.osx.sh
+      run: ${{github.workspace}}/build-scripts/for-osx/prepare-osx.sh
       
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-osx/build-on.osx.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
+      run: ${{github.workspace}}/build-scripts/for-osx/build-on-osx.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
 
     - name: Upload package
       uses: actions/upload-artifact@v2
