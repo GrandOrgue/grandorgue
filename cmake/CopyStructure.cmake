@@ -17,7 +17,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-function(COPY_STRUCTURE TARGET DIRNAME)
+function(COPY_STRUCTURE TARGET DIRNAME COMPONENT)
   SET(DIR "${RESOURCEDIR}/${DIRNAME}")
   SET(INSTDIR "${RESOURCEINSTDIR}/${DIRNAME}")
 
@@ -34,7 +34,7 @@ function(COPY_STRUCTURE TARGET DIRNAME)
       ADD_CUSTOM_COMMAND(OUTPUT "${DIR}/${_currentFile}" COMMAND ${CMAKE_COMMAND} -E copy "${SRCDIR}/${_realFile}" "${DIR}/${_currentFile}" DEPENDS "${SRCDIR}/${_escapedRealFile}")
     endif()
     get_filename_component(_dir ${_currentFile} PATH)
-    INSTALL(FILES ${DIR}/${_currentFile} DESTINATION ${INSTDIR}/${_dir})
+    INSTALL(FILES ${DIR}/${_currentFile} DESTINATION ${INSTDIR}/${_dir} COMPONENT ${COMPONENT})
     SET(_FILELIST ${_FILELIST} ${DIR}/${_currentFile})
   ENDFOREACH()
   ADD_CUSTOM_TARGET(${TARGET} ALL DEPENDS ${_FILELIST})

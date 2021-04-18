@@ -169,6 +169,10 @@ add_subdirectory(sounds)
 add_subdirectory(packages)
 add_subdirectory(resources)
 
+set(CPACK_COMPONENTS_IGNORE_GROUPS 1)
+set (CPACK_ARCHIVE_COMPONENT_INSTALL OFF)
+
+set(CPACK_BINARY_TZ "OFF")
 if (APPLE)
    # see the following URL for information about these variables
    # https://developer.apple.com/library/mac/#documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
@@ -181,12 +185,17 @@ if (APPLE)
    INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist DESTINATION "${PROJECT_NAME}.app/Contents/")
 
   set (CPACK_BINARY_DRAGNDROP ON CACHE BOOL INTERNAL)
+  set (CPACK_DRAGNDROP_COMPONENT_INSTALL OFF)
   set (CPACK_SYSTEM_NAME "osx")
 elseif (WIN32)
   set (CPACK_BINARY_TGZ OFF CACHE BOOL INTERNAL)
+  set (CPACK_DRAGNDROP_COMPONENT_INSTALL OFF)
+  set (CPACK_NSIS_COMPONENT_INSTALL OFF)
   set (CPACK_SYSTEM_NAME "windows")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set (CPACK_SYSTEM_NAME "linux")
+  set (CPACK_BINARY_RPM "ON")
+  set (CPACK_RPM_COMPONENT_INSTALL ON)
 endif ()
 
 set(CPACK_PACKAGE_NAME "grandorgue")
