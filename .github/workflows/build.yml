@@ -73,8 +73,8 @@ jobs:
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
-        name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-linux.tar.gz
-        path: ${{github.workspace}}/build-linux/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-linux.tar.gz
+        name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
+        path: ${{github.workspace}}/build-linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
         
     - name: Upload package to release
       if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
@@ -83,8 +83,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-linux/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-linux.tar.gz
-        asset_name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-linux.tar.gz
+        asset_path: ${{github.workspace}}/build-linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
+        asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
         asset_content_type: text/plain
 
   build_osx:
@@ -95,17 +95,17 @@ jobs:
     
     - name: Install Dependencies
       shell: bash
-      run: ${{github.workspace}}/build-scripts/for-osx/prepare-osx.sh
+      run: ${{github.workspace}}/build-scripts/for-osx/prepare.osx.sh
       
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-osx/build-on-osx.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
+      run: ${{github.workspace}}/build-scripts/for-osx/build-on.osx.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
 
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
-        name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-osx.dmg
-        path: ${{github.workspace}}/build-osx/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-osx.dmg
+        name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
+        path: ${{github.workspace}}/build-osx/grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
 
     - name: Upload package to release
       if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
@@ -114,8 +114,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-osx/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-osx.dmg
-        asset_name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-osx.dmg
+        asset_path: ${{github.workspace}}/build-osx/grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
+        asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
         asset_content_type: text/plain
         
   build_win64:
@@ -134,8 +134,8 @@ jobs:
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
-        name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-win64.exe
-        path: ${{github.workspace}}/build-win64/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-win64.exe
+        name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
+        path: ${{github.workspace}}/build-win64/grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
 
     - name: Upload package to release
       if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
@@ -144,8 +144,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-win64/GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-win64.exe
-        asset_name: GrandOrgue-${{needs.calc_ver.outputs.full_ver}}-win64.exe
+        asset_path: ${{github.workspace}}/build-win64/grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
+        asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
         asset_content_type: text/plain
 
   release:
