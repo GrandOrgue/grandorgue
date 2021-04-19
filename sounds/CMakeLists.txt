@@ -18,4 +18,4 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 include(${CMAKE_SOURCE_DIR}/cmake/CopyStructure.cmake)
-COPY_STRUCTURE(sounds "sounds")
+COPY_STRUCTURE(sounds "sounds" resources)
