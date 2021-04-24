@@ -107,8 +107,8 @@ jobs:
     - name: Upload resources rpm
       uses: actions/upload-artifact@v2
       with:
-        path: ${{github.workspace}}/build-linux/grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
-        name: grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
+        path: ${{github.workspace}}/build-linux/grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
+        name: grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         
     - name: Upload resources rpm release
       if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
@@ -117,15 +117,15 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-linux/grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
-        asset_name: grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
+        asset_path: ${{github.workspace}}/build-linux/grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
+        asset_name: grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         asset_content_type: text/plain
 
     - name: Upload demo rpm
       uses: actions/upload-artifact@v2
       with:
-        path: ${{github.workspace}}/build-linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
-        name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
+        path: ${{github.workspace}}/build-linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
+        name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         
     - name: Upload demo rpm release
       if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
@@ -134,8 +134,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
-        asset_name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
+        asset_path: ${{github.workspace}}/build-linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
+        asset_name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         asset_content_type: text/plain
 
   build_osx:
