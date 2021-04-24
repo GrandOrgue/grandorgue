@@ -23,8 +23,8 @@ cmake $SRC_DIR/src/build
 make
 popd
 
-mkdir -p build-win64
-pushd build-win64
+mkdir -p build-for/win64
+pushd build-for/win64
 
 rm -rf *
 export LANG=C

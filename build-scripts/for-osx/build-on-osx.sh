@@ -17,8 +17,8 @@ fi
 
 PARALLEL_PRMS="-j4"
 
-mkdir -p build-osx
-pushd build-osx
+mkdir -p build-for/osx
+pushd build-for/osx
 
 rm -rf *
 export LANG=C

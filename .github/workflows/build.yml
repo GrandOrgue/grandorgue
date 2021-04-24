@@ -74,7 +74,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
-        path: ${{github.workspace}}/build-linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
+        path: ${{github.workspace}}/build-for/linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
         
     - name: Upload package to release
       if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
@@ -83,14 +83,14 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
+        asset_path: ${{github.workspace}}/build-for/linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
         asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
         asset_content_type: text/plain
 
     - name: Upload main rpm
       uses: actions/upload-artifact@v2
       with:
-        path: ${{github.workspace}}/build-linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
+        path: ${{github.workspace}}/build-for/linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
         name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
         
     - name: Upload main rpm release
@@ -100,14 +100,14 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
+        asset_path: ${{github.workspace}}/build-for/linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
         asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
         asset_content_type: text/plain
 
     - name: Upload resources rpm
       uses: actions/upload-artifact@v2
       with:
-        path: ${{github.workspace}}/build-linux/grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
+        path: ${{github.workspace}}/build-for/linux/grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         name: grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         
     - name: Upload resources rpm release
@@ -117,14 +117,14 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-linux/grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
+        asset_path: ${{github.workspace}}/build-for/linux/grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         asset_name: grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         asset_content_type: text/plain
 
     - name: Upload demo rpm
       uses: actions/upload-artifact@v2
       with:
-        path: ${{github.workspace}}/build-linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
+        path: ${{github.workspace}}/build-for/linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         
     - name: Upload demo rpm release
@@ -134,8 +134,25 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
+        asset_path: ${{github.workspace}}/build-for/linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         asset_name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
+        asset_content_type: text/plain
+
+    - name: Upload source rpm
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{github.workspace}}/build-for/linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.src.rpm
+        name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.src.rpm
+        
+    - name: Upload demo rpm release
+      if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
+        asset_path: ${{github.workspace}}/build-for/linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.src.rpm
+        asset_name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.src.rpm
         asset_content_type: text/plain
 
   build_osx:
@@ -156,7 +173,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
-        path: ${{github.workspace}}/build-osx/grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
+        path: ${{github.workspace}}/build-for/osx/grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
 
     - name: Upload package to release
       if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
@@ -165,7 +182,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-osx/grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
+        asset_path: ${{github.workspace}}/build-for/osx/grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
         asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
         asset_content_type: text/plain
         
@@ -186,7 +203,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
-        path: ${{github.workspace}}/build-win64/grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
+        path: ${{github.workspace}}/build-for/win64/grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
 
     - name: Upload package to release
       if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
@@ -195,7 +212,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-win64/grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
+        asset_path: ${{github.workspace}}/build-for/win64/grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
         asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
         asset_content_type: text/plain
 
