@@ -665,7 +665,7 @@
       </codeAssistance>
       <makefileType>
         <makeTool>
-          <buildCommandWorkingDir>build</buildCommandWorkingDir>
+          <buildCommandWorkingDir>build-for/current</buildCommandWorkingDir>
           <buildCommand>${MAKE} -f Makefile -j 16</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath>build/bin/GrandOrgue</executablePath>
@@ -673,8 +673,8 @@
           </ccTool>
         </makeTool>
         <preBuild>
-          <preBuildCommandWorkingDir>build</preBuildCommandWorkingDir>
-          <preBuildCommand>${CMAKE} -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=${IDE_CC} -DCMAKE_CXX_COMPILER=${IDE_CXX} -DCMAKE_C_FLAGS_DEBUG="-g3 -gdwarf-2" -DCMAKE_CXX_FLAGS_DEBUG="-g3 -gdwarf-2" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DVERSION=0.3.1.2338 -DBUILD_VERSION=1.os.1 ..</preBuildCommand>
+          <preBuildCommandWorkingDir>build-for/current</preBuildCommandWorkingDir>
+          <preBuildCommand>${CMAKE} -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=${IDE_CC} -DCMAKE_CXX_COMPILER=${IDE_CXX} -DCMAKE_C_FLAGS_DEBUG="-g3 -gdwarf-2" -DCMAKE_CXX_FLAGS_DEBUG="-g3 -gdwarf-2" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DVERSION=0.3.1.2338 -DBUILD_VERSION=1.os.1 ../..</preBuildCommand>
         </preBuild>
       </makefileType>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/build/src/images/EnclosureA00.cpp"

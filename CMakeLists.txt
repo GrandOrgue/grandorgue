@@ -27,17 +27,13 @@ if (NOT VERSION)
   set(VERSION 0.3.1.${VERSION_REVISION})
 endif()
 
-if (NOT VERSION_BUILD)
-  set(VERSION_BUILD 0)
-endif()
-
 project(
   GrandOrgue
-  VERSION ${VERSION}
+  VERSION "${VERSION}"
   DESCRIPTION "GrandOrgue - free pipe organ simulator"
   LANGUAGES CXX C
 )
-set(NUM_VERSION ${PROJECT_VERSION})
+set(NUM_VERSION "${PROJECT_VERSION}")
 string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
 
 if (BUILD_VERSION)
@@ -189,6 +185,8 @@ set(CPACK_PACKAGE_EXECUTABLES "GrandOrgue" "GrandOrgue")
 
 set(CPACK_STRIP_FILES ON)
 
+set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/" "/build-for/")
+
 # components
 set(CPACK_COMPONENTS_ALL Unspecified resources demo)
 set(CPACK_COMPONENT_UNSPECIFIED_DISPLAY_NAME "GrandOrgue")
@@ -263,6 +261,8 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_RPM_MAIN_COMPONENT Unspecified)
   set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
 
+  set(CPACK_RPM_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
+
   set(CPACK_RPM_UNSPECIFIED_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
   set(CPACK_RPM_UNSPECIFIED_PACKAGE_REQUIRES_POST "shared-mime-info, desktop-file-utils")
   set(CPACK_RPM_UNSPECIFIED_PACKAGE_REQUIRES_POSTUN "shared-mime-info, desktop-file-utils")
@@ -277,6 +277,9 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_RPM_DEMO_PACKAGE_ARCHITECTURE noarch)
   set(CPACK_RPM_DEMO_FILE_NAME RPM-DEFAULT)
 
+  # for source rpms
+  set(CPACK_RPM_BUILDREQUIRES "pkgconfig(alsa), gcc-c++, jack-audio-connection-kit-devel, cmake, wxGTK3-devel, pkgconfig(fftw3f), pkgconfig(libudev), pkgconfig(wavpack), pkgconfig(zlib), libxslt, zip, po4a")
+  set(CPACK_RPM_SOURCE_PKG_BUILD_PARAMS "-DVERSION=%{version} -DBUILD_VERSION=%{release}")
 endif()
 
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CPACK_SYSTEM_NAME}.${CMAKE_SYSTEM_PROCESSOR}")
