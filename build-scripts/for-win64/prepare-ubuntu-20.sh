@@ -2,7 +2,7 @@
 
 set -e
 sudo apt update
-sudo DEBIAN_FRONTEND=noninteractive apt install -y zypper cmake g++ pkg-config g++-mingw-w64-x86-64 nsis
+sudo DEBIAN_FRONTEND=noninteractive apt install -y zypper cmake g++ pkg-config g++-mingw-w64-x86-64 nsis docbook-xsl xsltproc gettext po4a
 
 cat >/tmp/repo-oss.repo <<EOF
 [repo-oss]

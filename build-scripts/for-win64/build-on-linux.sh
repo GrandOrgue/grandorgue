@@ -16,9 +16,9 @@ fi
 
 PARALLEL_PRMS="-j$(nproc)"
 
-mkdir -p build-tools
-rm -rf build-tools/*
-pushd build-tools
+mkdir -p build-for/build-tools
+pushd build-for/build-tools
+rm -rf *
 cmake $SRC_DIR/src/build
 make
 popd
