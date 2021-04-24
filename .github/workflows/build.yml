@@ -141,8 +141,8 @@ jobs:
     - name: Upload source rpm
       uses: actions/upload-artifact@v2
       with:
-        path: ${{github.workspace}}/build-for/linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.src.rpm
-        name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.src.rpm
+        path: ${{github.workspace}}/build-for/linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.src.rpm
+        name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.src.rpm
         
     - name: Upload demo rpm release
       if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
@@ -151,8 +151,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
-        asset_path: ${{github.workspace}}/build-for/linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.src.rpm
-        asset_name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.src.rpm
+        asset_path: ${{github.workspace}}/build-for/linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.src.rpm
+        asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.src.rpm
         asset_content_type: text/plain
 
   build_osx:
