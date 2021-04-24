@@ -1,7 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
+
 sudo apt update
-sudo DEBIAN_FRONTEND=noninteractive apt install -y cmake g++ pkg-config \
-  libjack-dev libfftw3-dev zlib1g-dev libasound2-dev libwavpack-dev libwxgtk3.0-dev libudev-dev \
-  docbook-xsl xsltproc gettext po4a  
+
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y cmake g++ pkg-config rpm \
+  libjack-dev libfftw3-dev zlib1g-dev libasound2-dev libwavpack-dev libudev-dev \
+  libwxgtk3.0-gtk3-dev docbook-xsl xsltproc gettext po4a  
