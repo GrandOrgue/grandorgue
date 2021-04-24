@@ -16,8 +16,8 @@ fi
 
 PARALLEL_PRMS="-j$(nproc)"
 
-mkdir -p build-linux
-pushd build-linux
+mkdir -p build-for/linux
+pushd build-for/linux
 
 rm -rf *
 export LANG=C
@@ -26,6 +26,9 @@ GO_PRMS="-DCMAKE_BUILD_TYPE=Release $CMAKE_VERSION_PRMS"
 echo "cmake -G \"Unix Makefiles\" $GO_PRMS . $SRC_DIR"
 cmake -G "Unix Makefiles" $GO_PRMS . $SRC_DIR
 make -k $PARALLEL_PRMS VERBOSE=1 package
+
+# generate source rpm
+cpack -G RPM --config ./CPackSourceConfig.cmake
 
 popd
 

@@ -23,4 +23,4 @@ cmake_install.cmake
 Makefile
 /_CPack_Packages/
 
-/build/
+/build-for/
