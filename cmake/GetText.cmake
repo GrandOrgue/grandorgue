@@ -57,7 +57,7 @@ function(GETTEXT_INSTALL_PO basename)
 
     ADD_CUSTOM_COMMAND(OUTPUT ${_moFile} COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${_moFile} ${_currentPoFile} DEPENDS ${_currentPoFile})
     IF (GETTEXT_FOUND)
-      INSTALL(FILES ${_moFile} DESTINATION ${_moInstDir})
+      INSTALL(FILES ${_moFile} DESTINATION ${_moInstDir} COMPONENT resources)
     ENDIF()
   ENDFOREACH (_currentPoFile )
 

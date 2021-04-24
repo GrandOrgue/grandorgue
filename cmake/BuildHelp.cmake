@@ -48,7 +48,7 @@ function(BUILD_HELPFILE xmlfile VARIANT)
     ARGS -r --filesync ${HELPDIR}/GrandOrgue${VARIANT}.htb * WORKING_DIRECTORY ${BUILDDIR}
     DEPENDS ${_ImgList} ${BUILDDIR}/GrandOrgue.hhp)
 
-  INSTALL(FILES ${HELPDIR}/GrandOrgue${VARIANT}.htb DESTINATION ${HELPINSTDIR})
+  INSTALL(FILES ${HELPDIR}/GrandOrgue${VARIANT}.htb DESTINATION ${HELPINSTDIR} COMPONENT resources)
   ADD_CUSTOM_TARGET(build-helpfile${VARIANT} DEPENDS ${HELPDIR}/GrandOrgue${VARIANT}.htb)
 
   IF (NOT TARGET build-help)

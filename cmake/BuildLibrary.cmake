@@ -29,5 +29,14 @@ function(BUILD_LIBRARY TARGET)
     set_target_properties(${TARGET} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${LIBDIR})
   endif()
 
-  install(TARGETS ${TARGET} RUNTIME DESTINATION ${LIBINSTDIR} LIBRARY DESTINATION ${LIBINSTDIR} NAMELINK_SKIP)
+  install(
+    TARGETS ${TARGET} 
+    RUNTIME DESTINATION ${LIBINSTDIR} LIBRARY DESTINATION ${LIBINSTDIR} 
+    NAMELINK_SKIP
+    # these permissions required for building rmp on debian/ubuntu
+    # otherwise Autoprov doesn't work
+    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+      GROUP_EXECUTE GROUP_READ
+      WORLD_EXECUTE WORLD_READ
+  )
 endfunction()
