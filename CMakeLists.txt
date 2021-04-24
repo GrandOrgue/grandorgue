@@ -175,6 +175,10 @@ add_subdirectory(resources)
 set(CPACK_PACKAGE_NAME "grandorgue")
 set(CPACK_PACKAGE_VENDOR "Our Organ")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GrandOrgue - OpenSource Virtual Pipe Organ Software")
+set(
+  CPACK_PACKAGE_DESCRIPTION
+  "GrandOrgue is a virtual pipe organ sample player application supporting a HW1 compatible file format"
+)
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_RELEASE ${BUILD_VERSION})
 
@@ -188,21 +192,20 @@ set(CPACK_STRIP_FILES ON)
 # components
 set(CPACK_COMPONENTS_ALL Unspecified resources demo)
 set(CPACK_COMPONENT_UNSPECIFIED_DISPLAY_NAME "GrandOrgue")
+
+set(CPACK_COMPONENT_RESOURCES_DISPLAY_NAME "GrandOrgue Resource Files")
 set(
-  CPACK_COMPONENT_UNSPECIFIED__DESCRIPTION 
-  "GrandOrgue is a virtual pipe organ sample player application supporting a HW1 compatible file format"
-)
-set(CPACK_COMPONENT_DEMO_DISPLAY_NAME "GrandOrgue demo sampleset")
-set(
-  CPACK_COMPONENT_UNSPECIFIED_DESCRIPTION 
-  "This package contains the demo sampleset for GrandOrgue"
-)
-set(CPACK_COMPONENT_RESOURCES_DISPLAY_NAME " GrandOrgue resource files")
-set(
-  CPACK_COMPONENT_RESOURCES_DESCRIPTION 
+  CPACK_COMPONENT_RESOURCES_DESCRIPTION
   "This package contains the various resource files for GrandOrgue"
 )
 
+set(CPACK_COMPONENT_DEMO_DISPLAY_NAME "GrandOrgue Demo Sampleset")
+set(
+  CPACK_COMPONENT_DEMO_DESCRIPTION 
+  "This package contains the demo sampleset for GrandOrgue"
+)
+
+set(CPACK_COMPONENT_UNSPECIFIED_HIDDEN OFF)
 set(CPACK_COMPONENT_UNSPECIFIED_DEPENDS resources)
 set(CPACK_COMPONENT_DEMO_DEPENDS Unspecified)
 
@@ -258,14 +261,20 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_RPM_PACKAGE_RELEASE "${CPACK_PACKAGE_RELEASE}")
   set(CPACK_RPM_PACKAGE_GROUP "Productivity/Multimedia/Sound/Midi")
   set(CPACK_RPM_MAIN_COMPONENT Unspecified)
-  set(CPACK_RPM_PACKAGE_REQUIRES_POST "shared-mime-info, desktop-file-utils")
-  set(CPACK_RPM_PACKAGE_REQUIRES_POSTUN "shared-mime-info, desktop-file-utils")
-  set(CPACK_RPM_PACKAGE_REQUIRES "grandorgue-resources")
-  set(CPACK_RPM_PACKAGE_SUGGESTS "grandorgue-demo")
-  set(CPACK_RPM_RESOURCES_PACKAGE_ARCHITECTURE noarch)
-  set(CPACK_RPM_DEMO_PACKAGE_ARCHITECTURE noarch)
   set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
+
+  set(CPACK_RPM_UNSPECIFIED_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
+  set(CPACK_RPM_UNSPECIFIED_PACKAGE_REQUIRES_POST "shared-mime-info, desktop-file-utils")
+  set(CPACK_RPM_UNSPECIFIED_PACKAGE_REQUIRES_POSTUN "shared-mime-info, desktop-file-utils")
+  set(CPACK_RPM_UNSPECIFIED_PACKAGE_REQUIRES "grandorgue-resources")
+  set(CPACK_RPM_UNSPECIFIED_PACKAGE_SUGGESTS "grandorgue-demo")
+
+  set(CPACK_RPM_RESOURCES_PACKAGE_SUMMARY "${CPACK_COMPONENT_RESOURCES_DISPLAY_NAME}")
+  set(CPACK_RPM_RESOURCES_PACKAGE_ARCHITECTURE noarch)
   set(CPACK_RPM_RESOURCES_FILE_NAME RPM-DEFAULT)
+
+  set(CPACK_RPM_DEMO_PACKAGE_SUMMARY "${CPACK_COMPONENT_DEMO_DISPLAY_NAME}")
+  set(CPACK_RPM_DEMO_PACKAGE_ARCHITECTURE noarch)
   set(CPACK_RPM_DEMO_FILE_NAME RPM-DEFAULT)
 
 endif()
@@ -277,6 +286,6 @@ include(CPack)
 message(STATUS "  Project                     : ${PROJECT_NAME}")
 message(STATUS "  Description                 : ${CPACK_PACKAGE_RELEASE}")
 message(STATUS "  Version                     : ${VERSION}")
-message(STATUS "  Build                       : ${VERSION}")
+message(STATUS "  Build                       : ${CPACK_PACKAGE_RELEASE}")
 message(STATUS "============================================================================")
 message(STATUS " ")
