@@ -8,27 +8,46 @@ Installation
 
 A) Installing on Linux
 
-I) Download GrandOrgue-0.3.1.*-Linux.tar.gz and unpack to some directory <GrandOrgue>
-II) Install required libraries
-  - On fedora
-    sudo dnf install -y 'libjack.so.0()(64bit)' wxGTK3 wavpack fftw
-  - On debian
-    sudo apt update && sudo apt install -y libjack0 libwxgtk3.0-gtk3 libasound2 libfftw3-single3 libwavpack1
-  - On ubuntu
-    sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y libjack0 libwxgtk3.0-gtk3-0v5 libfftw3-single3
-  - On opensuse
-    sudo zypper install -y libjack0 wxGTK3-devel libwavpack1
+  - Manually
+    I) Download GrandOrgue-0.3.1.*-Linux.tar.gz and unpack to some directory <GrandOrgue>
+    II) Install required libraries
+      - On fedora
+	sudo dnf install -y 'libjack.so.0()(64bit)' wxGTK3 wavpack fftw
+      - On debian
+	sudo apt update && sudo apt install -y libjack0 libwxgtk3.0-gtk3 libasound2 libfftw3-single3 libwavpack1
+      - On ubuntu
+	sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y libjack0 libwxgtk3.0-gtk3-0v5 libfftw3-single3
+      - On opensuse
+	sudo zypper install -y libjack0 wxGTK3-devel libwavpack1
+  - Or with prepared plinux pachkages
+    I) Download binary packages to spme direcortory
+      - On fedora, redhat, oracle linux, centos, opensuse - GrandOrgue-0.3.1.*.rpm
+      - On debian, ubuntu, mint - GrandOrgue-0.3.1.*.deb
+    II) Install binary packages
+      - On fedora, redhat, oracle linux, centos
+        sudo dnf install grandorgue-*.{x86_64,noarch}.rpm
+	or (on the old versions)
+        sudo yum install grandorgue-*.{x86_64,noarch}.rpm
+      - On opensuse:
+        sudo zypper install grandorgue-*.{x86_64,noarch}.rpm
+      - On ubuntu, debian, mint
+        sudo apt-get install grandorgue-*.deb
 
 B) Installing on MacOS
+   I) Download GrandOrgue-0.3.1.*.dmg
+   II) Open it
+   III) Click on the keyboard icon for running
 
 C) Installing on Windows
-
+   I) Download GrandOrgue-0.3.1.*.exe
+   II) Run it
+   III) Follow the installator's prompts
 
 Building from sources
 --------------------
 
-A) Building on Linux:
---------------------
+A) Building on Linux for Linux:
+-------------------------------
 I) Extract the GO sources somewhere, eg: /home/user/gosources
 II) Install requires software
   - Manually
@@ -48,28 +67,18 @@ III) Build
       Hint: For debugging a build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
     3) Run make
       make
-    4) For making tar.gz package, run
+    4) For making tar.gz, rpm and deb packages, run
       make -k package
+    5) For making rpm source package, run
+      cpack -G RPM --config ./CPackSourceConfig.cmake
 
   - Or run the prepared build script
     <path to go-sources>/build-scripts/for-linux/build-on-linux.sh
 
-    The built package will appear in the build-linux subdirectory of current directory, 
-    the executables - in build-linux/bin
+    The built packages will appear in the build-for/linux subdirectory of current directory, 
+    the executables - in build-for/linux/bin
 
-Building Linux packages:
------------------------
-To build a deb package (Debian/Ubuntu), do
-sudo apt-get install build-essential fakeroot
-dpkg-buildpackage -rfakeroot
-
-If dpkg-buildpackage reports, that a package is missing, please install them too (sudo apt-get install <packagename).
-
-GrandOrgue ships a spec file for building RPMs (tested with OpenSuSE and Fedora).
-To build, copy the grandorgue tarball to the rpm SOURCE directory and run:
-rpmbuild -ba grandorgue.spec
-
-B) Building on OS X
+B) Building for OS on OS X
 ===================
 
 I. Prequisites:
@@ -105,7 +114,7 @@ III) Build
   - Or run the prepared build script
     <path to go-sources>/build-scripts/for-osx/build-on-osx.sh
 
-    The built package will appear in the build-osx subdirectory of current directory, 
+    The built package will appear in the build-for/osx subdirectory of current directory, 
 
 C) Building for Windows
 ----------------------
