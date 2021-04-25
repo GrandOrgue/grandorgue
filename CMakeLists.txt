@@ -277,6 +277,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_RPM_BUILDREQUIRES "pkgconfig(alsa), gcc-c++, jack-audio-connection-kit-devel, cmake, wxGTK3-devel, pkgconfig(fftw3f), pkgconfig(libudev), pkgconfig(wavpack), pkgconfig(zlib), libxslt, zip, po4a")
   set(CPACK_RPM_SOURCE_PKG_BUILD_PARAMS "-DVERSION=%{version} -DBUILD_VERSION=%{release}")
 
+  # for deb
   set(CPACK_DEB_COMPONENT_INSTALL ON)
   set(CPACK_DEBIAN_UNSPECIFIED_PACKAGE_NAME "grandorgue")
   set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
