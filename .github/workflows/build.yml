@@ -85,7 +85,7 @@ jobs:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
         asset_path: ${{github.workspace}}/build-for/linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
         asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.linux.x86_64.tar.gz
-        asset_content_type: text/plain
+        asset_content_type: application/octet-stream
 
     - name: Upload main rpm
       uses: actions/upload-artifact@v2
@@ -102,7 +102,7 @@ jobs:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
         asset_path: ${{github.workspace}}/build-for/linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
         asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.x86_64.rpm
-        asset_content_type: text/plain
+        asset_content_type: application/octet-stream
 
     - name: Upload resources rpm
       uses: actions/upload-artifact@v2
@@ -119,7 +119,7 @@ jobs:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
         asset_path: ${{github.workspace}}/build-for/linux/grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         asset_name: grandorgue-resources-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
-        asset_content_type: text/plain
+        asset_content_type: application/octet-stream
 
     - name: Upload demo rpm
       uses: actions/upload-artifact@v2
@@ -136,7 +136,7 @@ jobs:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
         asset_path: ${{github.workspace}}/build-for/linux/grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
         asset_name: grandorgue-demo-${{needs.calc_ver.outputs.full_ver}}.noarch.rpm
-        asset_content_type: text/plain
+        asset_content_type: application/octet-stream
 
     - name: Upload source rpm
       uses: actions/upload-artifact@v2
@@ -153,7 +153,58 @@ jobs:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
         asset_path: ${{github.workspace}}/build-for/linux/grandorgue-${{needs.calc_ver.outputs.full_ver}}.src.rpm
         asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.src.rpm
-        asset_content_type: text/plain
+        asset_content_type: application/octet-stream
+
+    - name: Upload main deb
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{github.workspace}}/build-for/linux/grandorgue_${{needs.calc_ver.outputs.full_ver}}_amd64.deb
+        name: grandorgue_${{needs.calc_ver.outputs.full_ver}}_amd64.deb
+        
+    - name: Upload main deb release
+      if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
+        asset_path: ${{github.workspace}}/build-for/linux/grandorgue_${{needs.calc_ver.outputs.full_ver}}_amd64.deb
+        asset_name: grandorgue_${{needs.calc_ver.outputs.full_ver}}_amd64.deb
+        asset_content_type: application/octet-stream
+
+    - name: Upload resources deb
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{github.workspace}}/build-for/linux/grandorgue-resources_${{needs.calc_ver.outputs.full_ver}}_all.deb
+        name: grandorgue-resources_${{needs.calc_ver.outputs.full_ver}}_all.deb
+        
+    - name: Upload resources deb release
+      if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
+        asset_path: ${{github.workspace}}/build-for/linux/grandorgue-resources_${{needs.calc_ver.outputs.full_ver}}_all.deb
+        asset_name: grandorgue-resources_${{needs.calc_ver.outputs.full_ver}}_all.deb
+        asset_content_type: application/octet-stream
+
+    - name: Upload demo deb
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{github.workspace}}/build-for/linux/grandorgue-demo_${{needs.calc_ver.outputs.full_ver}}_all.deb
+        name: grandorgue-demo_${{needs.calc_ver.outputs.full_ver}}_all.deb
+        
+    - name: Upload demo deb release
+      if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
+        asset_path: ${{github.workspace}}/build-for/linux/grandorgue-demo_${{needs.calc_ver.outputs.full_ver}}_all.deb
+        asset_name: grandorgue-demo_${{needs.calc_ver.outputs.full_ver}}_all.deb
+        asset_content_type: application/octet-stream
 
   build_osx:
     runs-on: macos-10.15
@@ -184,7 +235,7 @@ jobs:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
         asset_path: ${{github.workspace}}/build-for/osx/grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
         asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.osx.x86_64.dmg
-        asset_content_type: text/plain
+        asset_content_type: application/octet-stream
         
   build_win64:
     runs-on: ubuntu-latest
@@ -214,7 +265,7 @@ jobs:
         upload_url: ${{ needs.calc_ver.outputs.release_upload_url }}
         asset_path: ${{github.workspace}}/build-for/win64/grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
         asset_name: grandorgue-${{needs.calc_ver.outputs.full_ver}}.windows.x86_64.exe
-        asset_content_type: text/plain
+        asset_content_type: application/octet-stream
 
   release:
     needs: [calc_ver, build_linux, build_osx, build_win64]
