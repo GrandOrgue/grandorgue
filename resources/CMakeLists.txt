@@ -24,7 +24,7 @@ if (APPLE)
    INSTALL(FILES "${RESOURCEDIR}/GrandOrgue.icns" DESTINATION "${RESOURCEINSTDIR}")
    LIST(APPEND DEPLIST "${RESOURCEDIR}/GrandOrgue.icns")
 elseif(UNIX)
-  install(FILES GrandOrgue.png DESTINATION share/pixmaps)
+  install(FILES GrandOrgue.png DESTINATION share/icons/hicolor/32x32/apps)
   install(FILES grandorgue.xml DESTINATION share/mime/packages)
 
   if (GETTEXT_FOUND)
