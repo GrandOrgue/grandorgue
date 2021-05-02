@@ -24,7 +24,7 @@ rm -rf *
 export LANG=C
 
 OS_PRMS="-DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl"
-GO_PRMS="-DCMAKE_BUILD_TYPE=Release $CMAKE_VERSION_PRMS"
+GO_PRMS="-DCMAKE_BUILD_TYPE=Debug $CMAKE_VERSION_PRMS"
 cmake -G "Unix Makefiles" $OS_PRMS $GO_PRMS . $SRC_DIR
 make -k $PARALLEL_PRMS VERBOSE=1 package
 
