@@ -114,7 +114,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 add_option(-Wall)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_option(-g3)
-else
+else()
   add_option(-O3)
   add_option(-g)
   add_definitions(-DNDEBUG)
@@ -185,11 +185,11 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/license.txt)
 set(CPACK_PACKAGE_CONTACT "osamarin68@gmail.com")
 set(CPACK_PACKAGE_EXECUTABLES "GrandOrgue" "GrandOrgue")
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(CPACK_STRIP_FILES OFF)
-else
+else()
   set(CPACK_STRIP_FILES ON)
-endif ()
+endif()
 
 set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/" "/build-for/")
 
