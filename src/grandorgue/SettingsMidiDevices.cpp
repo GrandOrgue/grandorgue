@@ -74,7 +74,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	m_InOutDevice->Disable();
 	item4->Add(m_InOutDevice, 0, wxALL, 5);
 	item3->Add(item4, 0, wxALIGN_RIGHT | wxALL, 5);
-	topSizer->Add(item3, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
+	topSizer->Add(item3, 1, wxEXPAND | wxALL, 5);
 
 	choices.clear();
 	std::vector<bool> out_state;
@@ -94,7 +94,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	item3->Add(m_OutDevices, 1, wxEXPAND | wxALL, 5);
 	wxBoxSizer* box = new wxBoxSizer(wxHORIZONTAL);
 	item3->Add(box);
-	box->Add(new wxStaticText(this, wxID_ANY, _("Send MIDI Recorder Output Stream to ")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+	box->Add(new wxStaticText(this, wxID_ANY, _("Send MIDI Recorder Output Stream to ")), 0, wxALIGN_CENTER_VERTICAL);
 	m_RecorderDevice = new wxChoice(this, ID_RECORDERDEVICE);
 	box->Add(m_RecorderDevice, 0);
 	m_RecorderDevice->Append(_("No device"));
@@ -107,7 +107,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 			m_RecorderDevice->SetSelection(m_RecorderDevice->GetCount() - 1);
 	}
 
-	topSizer->Add(item3, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
+	topSizer->Add(item3, 1, wxEXPAND | wxALL, 5);
 
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
