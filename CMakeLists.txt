@@ -185,12 +185,6 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/license.txt)
 set(CPACK_PACKAGE_CONTACT "osamarin68@gmail.com")
 set(CPACK_PACKAGE_EXECUTABLES "GrandOrgue" "GrandOrgue")
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  set(CPACK_STRIP_FILES OFF)
-else()
-  set(CPACK_STRIP_FILES ON)
-endif()
-
 set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/" "/build-for/")
 
 # components
@@ -256,6 +250,12 @@ elseif (WIN32)
   ")
 
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CPACK_STRIP_FILES OFF)
+  else()
+    set(CPACK_STRIP_FILES ON)
+  endif()
 
   set(CPACK_SYSTEM_NAME "linux")
   set(CPACK_GENERATOR TGZ RPM DEB)
