@@ -79,6 +79,8 @@ private:
 	GOSoundScheduler m_Scheduler;
 
 	struct resampler_coefs_s      m_ResamplerCoefs;
+	
+	bool			      m_HasBeenSetup;
 
 	/* samplerGroupID:
 	   -1 .. -n Tremulants
