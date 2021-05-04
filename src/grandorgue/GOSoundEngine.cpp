@@ -76,11 +76,15 @@ GOSoundEngine::~GOSoundEngine()
 void GOSoundEngine::Reset()
 {
   if (m_HasBeenSetup)
+  {
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
 		m_Windchests[i]->Init(m_Tremulants);
+  }
 
-	m_Scheduler.Clear();
-if (m_HasBeenSetup) {
+  m_Scheduler.Clear();
+  
+  if (m_HasBeenSetup) 
+  {
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 		m_Scheduler.Add(m_Tremulants[i]);
 	for (unsigned i = 0; i < m_Windchests.size(); i++)
@@ -93,7 +97,7 @@ if (m_HasBeenSetup) {
 	m_Scheduler.Add(m_ReleaseProcessor);
 	if (m_TouchProcessor)
 		m_Scheduler.Add(m_TouchProcessor.get());
-}
+  }
 	m_UsedPolyphony = 0;
 
 	m_SamplerPool.ReturnAll();
