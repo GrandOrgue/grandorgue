@@ -275,11 +275,15 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 
 GOrgueFrame::~GOrgueFrame()
 {
-	if (m_doc)
-		delete m_doc;
+	if (m_doc) {
+	  delete m_doc;
+	  m_doc = NULL;
+	}
 	m_listener.SetCallback(NULL);
-	if (m_Help)
-		delete m_Help;
+	if (m_Help) {
+	  delete m_Help;
+	  m_Help = NULL;
+	}
 }
 
 void GOrgueFrame::UpdateVolumeControl(unsigned count)
