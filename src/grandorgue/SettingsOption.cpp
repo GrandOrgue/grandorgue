@@ -231,7 +231,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item9->Add(m_ODFCheck  = new wxCheckBox(this, ID_ODF_CHECK, _("Perform strict ODF")), 0, wxEXPAND | wxALL, 5);
 	m_ODFCheck->SetValue(m_Settings.ODFCheck());
 
-	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
+	topSizer->Add(item0, 1, wxEXPAND | wxALL, 5);
 	topSizer->AddSpacer(5);
 	this->SetScrollRate(5, 5);
 	this->SetSizer(topSizer);

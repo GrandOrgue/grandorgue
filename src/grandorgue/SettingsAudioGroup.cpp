@@ -53,9 +53,9 @@ SettingsAudioGroup::SettingsAudioGroup(GOrgueSettings& settings, wxWindow* paren
 	m_Del = new wxButton(this, ID_AUDIOGROUP_DEL, _("&Delete"));
 	m_Del->Disable();
 
-	buttonSizer->Add(m_Add, 0, wxALIGN_LEFT | wxALL, 5);
-	buttonSizer->Add(m_Del, 0, wxALIGN_LEFT | wxALL, 5);
-	buttonSizer->Add(m_Change, 0, wxALIGN_RIGHT | wxALL, 5);
+	buttonSizer->Add(m_Add, 0, wxALL, 5);
+	buttonSizer->Add(m_Del, 0, wxALL, 5);
+	buttonSizer->Add(m_Change, 0, wxALL, 5);
 	topSizer->Add(buttonSizer, 0, wxALL, 5);
 
 	std::vector<wxString> audio_groups = m_Settings.GetAudioGroups();

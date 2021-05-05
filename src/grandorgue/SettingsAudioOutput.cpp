@@ -114,11 +114,11 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	m_Properties = new wxButton(this, ID_OUTPUT_PROPERTIES, _("Properties"));
 	m_Default = new wxButton(this, ID_OUTPUT_DEFAULT, _("Revert to Default"));
 
-	buttonSizer->Add(m_Add, 0, wxALIGN_LEFT | wxALL, 5);
-	buttonSizer->Add(m_Del, 0, wxALIGN_LEFT | wxALL, 5);
-	buttonSizer->Add(m_Change, 0, wxALIGN_RIGHT | wxALL, 5);
-	buttonSizer->Add(m_Properties, 0, wxALIGN_RIGHT | wxALL, 5);
-	buttonSizer->Add(m_Default, 0, wxALIGN_RIGHT | wxALL, 5);
+	buttonSizer->Add(m_Add, 0, wxALL, 5);
+	buttonSizer->Add(m_Del, 0, wxALL, 5);
+	buttonSizer->Add(m_Change, wxALL, 5);
+	buttonSizer->Add(m_Properties, 0, wxALL, 5);
+	buttonSizer->Add(m_Default, 0, wxALL, 5);
 	topSizer->Add(buttonSizer, 0, wxALL, 5);
 
 	m_AudioOutput->AddRoot(_("Audio Output"), -1, -1, new AudioItemData());

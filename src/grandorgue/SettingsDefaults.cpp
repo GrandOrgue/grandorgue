@@ -105,7 +105,7 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 	m_MidiRecorderPath->SetPath(m_Settings.MidiRecorderPath());
 	m_MidiPlayerPath->SetPath(m_Settings.MidiPlayerPath());
 
-	topSizer->Add(item0, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
+	topSizer->Add(item0, 1, wxEXPAND | wxALL, 5);
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
 	topSizer->FitInside(this);

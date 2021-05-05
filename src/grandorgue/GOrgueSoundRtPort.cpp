@@ -47,8 +47,12 @@ GOrgueSoundRtPort::~GOrgueSoundRtPort()
 	Close();
 	try
 	{
-		if (m_port)
-			delete m_port;
+		if (m_port) {
+		  const RtAudio* port = m_port;
+		  
+		  m_port = NULL;
+		  delete port;
+		}
 	}
 	catch (RtAudioError &e)
 	{

@@ -58,7 +58,8 @@ void GOrgueBitmap::ScaleBMP(wxImage& img, double scale, const wxRect& rect, GOrg
 		dc.DrawBitmap(orig, 0, 0, true);
 		bmp.SetMask(orig.GetMask());
 		wxImage img_result = bmp.ConvertToImage();
-		img_result.InitAlpha();
+		if (! img_result.HasAlpha())
+		  img_result.InitAlpha();
 		memcpy(img_result.GetAlpha(), img.GetAlpha(), img.GetWidth() * img.GetHeight());
 
 		m_bmp = (wxBitmap)img_result.Scale(img.GetWidth() * scale, img.GetHeight() * scale, wxIMAGE_QUALITY_BICUBIC);

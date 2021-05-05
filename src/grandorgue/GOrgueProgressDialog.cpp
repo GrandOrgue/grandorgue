@@ -24,6 +24,8 @@
 #include <wx/progdlg.h>
 #include <wx/stopwatch.h>
 
+#define DLG_MAX_VALUE 0x10000
+
 GOrgueProgressDialog::GOrgueProgressDialog() :
 	m_dlg(NULL),
 	m_last(0),
@@ -43,7 +45,7 @@ void GOrgueProgressDialog::Setup(long max, const wxString& title, const wxString
 {
 	if (m_dlg)
 		m_dlg->Destroy();
-	m_dlg = new wxProgressDialog(title, msg, 0x10000, NULL, wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
+	m_dlg = new wxProgressDialog(title, msg, DLG_MAX_VALUE, NULL, wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME);
 	m_last = 0;
 	m_const = 0;
 	m_value = 0;
@@ -70,7 +72,10 @@ bool GOrgueProgressDialog::Update(unsigned value, const wxString& msg)
 	if (m_last == wxGetUTCTime())
 		return true;
 	m_last = wxGetUTCTime();
-	if (!m_dlg->Update(0xffff * (m_value + m_const) / m_max, msg))
+	
+	int newValue = (DLG_MAX_VALUE - 1) * (m_value + m_const) / m_max;
+	
+	if (newValue <= DLG_MAX_VALUE && !m_dlg->Update(newValue, msg))
 		return false;
 	return true;
 }
