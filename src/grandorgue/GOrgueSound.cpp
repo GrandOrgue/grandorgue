@@ -230,7 +230,7 @@ void GOrgueSound::CloseSound()
 	{
 		if (m_AudioOutputs[i].port)
 		{
-		  const GOrgueSoundPort* port = m_AudioOutputs[i].port;
+		  GOrgueSoundPort* const port = m_AudioOutputs[i].port;
 		  
 		  m_AudioOutputs[i].port = NULL;
 		  port->Close();
