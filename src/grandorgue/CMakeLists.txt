@@ -194,5 +194,5 @@ add_custom_target(runperftest COMMAND perftest "${CMAKE_SOURCE_DIR}/tests" DEPEN
 
 if (GO_USE_JACK STREQUAL "ON")
    add_definitions(-DGO_USE_JACK)
-   target_link_libraries(GrandOrgue jack)
+   target_link_libraries(GrandOrgue PkgConfig::JACK)
 endif ()

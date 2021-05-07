@@ -32,7 +32,7 @@ if (WIN32)
 
    if (RTMIDI_USE_JACK)
       add_definitions(-D__UNIX_JACK__)
-      target_link_libraries(RtMidi jack)
+      target_link_libraries(RtMidi PkgConfig::JACK)
    endif ()
 
    if (RTMIDI_USE_MM)
@@ -48,7 +48,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
    if (RTMIDI_USE_JACK)
       add_definitions(-D__UNIX_JACK__)
-      target_link_libraries(RtMidi jack)
+      target_link_libraries(RtMidi PkgConfig::JACK)
    endif ()
 
    if (RTMIDI_USE_ALSA)
@@ -69,7 +69,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
    if (RTMIDI_USE_JACK)
       add_definitions(-D__UNIX_JACK__)
-      target_link_libraries(RtMidi jack)
+      target_link_libraries(RtMidi PkgConfig::JACK)
    endif ()
 
    if (RTMIDI_USE_CORE)
