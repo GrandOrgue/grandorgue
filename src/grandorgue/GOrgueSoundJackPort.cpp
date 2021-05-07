@@ -40,7 +40,7 @@ GOrgueSoundJackPort::~GOrgueSoundJackPort()
 
 static const wxString DEVICE_NAME = "Jack Output";
 static const jack_options_t JACK_OPTIONS = JackNullOption;
-static const char * CLIENT_NAME = "GrandOrgue";
+static const char * CLIENT_NAME = "GrandOrgueOut";
 
 void GOrgueSoundJackPort::JackLatencyCallback (jack_latency_callback_mode_t mode, void *data) {
 	if (mode == JackPlaybackLatency) {
