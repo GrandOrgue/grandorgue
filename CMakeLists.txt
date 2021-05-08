@@ -124,7 +124,7 @@ else()
 endif ()
 
 if (RTAUDIO_USE_JACK OR RTMIDI_USE_JACK OR GO_USE_JACK)
-  pkg_check_modules(JACK REQUIRED jack)
+  pkg_check_modules(JACK REQUIRED IMPORTED_TARGET jack)
 endif()
 
 # include RtAudio

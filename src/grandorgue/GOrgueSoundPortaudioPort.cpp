@@ -94,7 +94,7 @@ wxString GOrgueSoundPortaudioPort::getName(unsigned index)
 {
 	const PaDeviceInfo* info = Pa_GetDeviceInfo(index);
 	const PaHostApiInfo *api = Pa_GetHostApiInfo(info->hostApi);
-	return wxGetTranslation(wxString::FromAscii(api->name)) + wxString(_(" (PA): ")) + wxString::FromAscii(info->name);
+	return wxGetTranslation(wxString::FromAscii(api->name)) + wxString(_(" (PA): ")) + wxString(info->name);
 }
 
 GOrgueSoundPort* GOrgueSoundPortaudioPort::create(GOrgueSound* sound, wxString name)

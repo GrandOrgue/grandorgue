@@ -64,7 +64,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
    if (RTAUDIO_USE_JACK)
       add_definitions(-D__UNIX_JACK__)
-      target_link_libraries(RtAudio jack)
+      target_link_libraries(RtAudio PkgConfig::JACK)
    endif ()
 
    if (RTAUDIO_USE_ALSA)
@@ -87,7 +87,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
    if (RTAUDIO_USE_JACK)
       add_definitions(-D__UNIX_JACK__)
-      target_link_libraries(RtAudio jack)
+      target_link_libraries(RtAudio PkgConfig::JACK)
    endif ()
 
    if (RTAUDIO_USE_CORE)

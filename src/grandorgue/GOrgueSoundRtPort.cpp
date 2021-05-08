@@ -169,7 +169,7 @@ wxString GOrgueSoundRtPort::getName(RtAudio::Api api, RtAudio* rt_api, unsigned 
 	try
 	{
 		RtAudio::DeviceInfo info = rt_api->getDeviceInfo(index);
-		return  prefix + wxString::FromAscii(info.name.c_str());
+		return  prefix + wxString(info.name);
 	}
 	catch (RtAudioError &e)
 	{
