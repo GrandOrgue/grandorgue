@@ -1,7 +1,8 @@
 - Added CHANGELOG.md #23
+# 0.3.1.2338-5.os (2021-05-08)
 - Fixed issues various pipewire-related issues #5
 - Fixed compiling on Fedora34 (switched from `jack-devel` to `pipewire-jack-devel`)
-# 0.3.1.2338-3.os (2021-05-06)
+# 0.3.1.2338-4.os (2021-05-06)
 - Fixed crash on osx 11.x #22
 - Disabled striping some debuginfo from osx executables
 - Simplified build on Github
