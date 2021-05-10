@@ -16,10 +16,10 @@
 - Capability of passing `-DVERSION` and `-DBERSION_BUILD` to cmake #4
 - Simplified build from source with prepared shell scripts
 - Automatic build linux `tar.gz`, osx `dmg` and windows `exe` packages on GitHub
-- Allowed importing combination after moving a stop to another manual or deleting a stop in ODF
-- Capability of scaling out GrandOrgue pannels over their initial size
-- Added capability of specifying debounce time for BxController midi events
-- Added support of Jack Native sound output
+- Allowed importing combination after moving a stop to another manual or deleting a stop in ODF https://sourceforge.net/p/ourorgan/feature-requests/90/
+- Capability of scaling out GrandOrgue pannels over their initial size https://sourceforge.net/p/ourorgan/feature-requests/89/
+- Added capability of specifying debounce time for BxController midi events https://sourceforge.net/p/ourorgan/bugs/72/
+- Added support of Jack Native sound output https://sourceforge.net/p/ourorgan/feature-requests/52/
 
     Use ``Jack Output`` device in ``Audio/Midi Settings``-> ``Audio Output``
 
