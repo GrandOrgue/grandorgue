@@ -1,3 +1,4 @@
+# 0.3.1.2338-6.os (2021-05-10)
 - Added CHANGELOG.md #23
 # 0.3.1.2338-5.os (2021-05-08)
 - Fixed issues various pipewire-related issues #5
