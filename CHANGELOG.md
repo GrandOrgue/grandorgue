@@ -1,17 +1,17 @@
 # 0.3.1.2338-6.os (2021-05-10)
-- Added CHANGELOG.md #23
+- Added CHANGELOG.md https://github.com/oleg68/GrandOrgue/issues/23
 # 0.3.1.2338-5.os (2021-05-08)
-- Fixed issues various pipewire-related issues #5
+- Fixed issues various pipewire-related issues https://github.com/oleg68/GrandOrgue/issues/28
 - Fixed compiling on Fedora34 (switched from `jack-devel` to `pipewire-jack-devel`)
 # 0.3.1.2338-4.os (2021-05-06)
-- Fixed crash on osx 11.x #22
+- Fixed crash on osx 11.x https://github.com/oleg68/GrandOrgue/issues/22
 - Disabled striping some debuginfo from osx executables
 - Simplified build on Github
 # 0.3.1.2338-3.os (2021-04-26)
-- Added compatibility with FlatPack #18
+- Added compatibility with FlatPack https://github.com/oleg68/GrandOrgue/pull/18
 # 0.3.1.2338-2.os (2021-04-25)
 - Updated README for installation doc
-- Added generating `rpm`, `src.rpm` and `deb` packages for linux on GitHub #6
+- Added generating `rpm`, `src.rpm` and `deb` packages for linux on GitHub https://github.com/oleg68/GrandOrgue/issues/6
 # 0.3.1.2338-1.os (2021-04-17)
 - Capability of passing `-DVERSION` and `-DBERSION_BUILD` to cmake #4
 - Simplified build from source with prepared shell scripts
