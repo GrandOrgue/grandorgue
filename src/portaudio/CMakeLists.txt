@@ -58,7 +58,6 @@ set(PortAudio_Mac
   hostapi/coreaudio/pa_mac_core_blocking.c
   hostapi/coreaudio/pa_mac_core_utilities.c)
 
-set(PA_LIBDIRS)
 set(PA_Libs)
 
 if (WIN32)
@@ -110,8 +109,6 @@ if (WIN32)
    if (RTAUDIO_USE_JACK)
       add_definitions(-DPA_USE_JACK)
       set(PortAudio_Sources ${PortAudio_Sources} hostapi/jack/pa_jack.c)
-      set(PA_LIBDIRS ${PA_LIBDIRS} ${JACK_LIBRARY_DIRS})
-      set(PA_Libs ${PA_Libs} ${JACK_LIBRARIES})
    endif ()
 
    set(PortAudio_Sources ${PortAudio_Sources} ${PortAudio_Win})
@@ -128,8 +125,6 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    if (RTAUDIO_USE_JACK)
       add_definitions(-DPA_USE_JACK)
       set(PortAudio_Sources ${PortAudio_Sources} hostapi/jack/pa_jack.c)
-      set(PA_LIBDIRS ${PA_LIBDIRS} ${JACK_LIBRARY_DIRS})
-      set(PA_Libs ${PA_Libs} ${JACK_LIBRARIES})
    endif ()
 
    if (RTAUDIO_USE_ALSA)
@@ -159,8 +154,6 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    if (RTAUDIO_USE_JACK)
       add_definitions(-DPA_USE_JACK)
       set(PortAudio_Sources ${PortAudio_Sources} hostapi/jack/pa_jack.c)
-      set(PA_LIBDIRS ${PA_LIBDIRS} ${JACK_LIBRARY_DIRS})
-      set(PA_Libs ${PA_Libs} ${JACK_LIBRARIES})
    endif ()
 
    if (RTAUDIO_USE_CORE)
@@ -175,10 +168,10 @@ else ()
 
 endif ()
 
-include_directories(${JACK_INCLUDE_DIRS})
-
 add_library(PortAudio STATIC ${PortAudio_Sources})
-target_link_directories(PortAudio PUBLIC ${PA_LIBDIRS})
-target_link_libraries(PortAudio ${PA_Libs})
+if (RTAUDIO_USE_JACK)
+  include_directories(${JACK_INCLUDE_DIRS})
+  target_link_libraries(PortAudio PkgConfig::JACK)
+endif ()
 
 message(STATUS "============================================================================")
