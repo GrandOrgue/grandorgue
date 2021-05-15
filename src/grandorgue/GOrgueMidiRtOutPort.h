@@ -28,18 +28,21 @@
 class GOrgueMidiRtOutPort : public GOrgueMidiOutPort
 {
 protected:
-	RtMidiOut* m_port;
+  RtMidi::Api m_api;
+  RtMidiOut* m_port;
 
-	void SendData(std::vector<unsigned char>& msg);
+  void Close(bool isToFreePort);
+
+  void SendData(std::vector<unsigned char>& msg);
 
 public:
-	GOrgueMidiRtOutPort(GOrgueMidi* midi, wxString prefix, wxString name, RtMidi::Api api);
-	~GOrgueMidiRtOutPort();
+  GOrgueMidiRtOutPort(GOrgueMidi* midi, wxString prefix, wxString name, RtMidi::Api api);
+  ~GOrgueMidiRtOutPort();
 
-	bool Open();
-	void Close();
+  bool Open();
+  void Close() { Close(true); }
 
-	static void addMissingDevices(GOrgueMidi* midi, ptr_vector<GOrgueMidiOutPort>& ports);
+  static void addMissingDevices(GOrgueMidi* midi, ptr_vector<GOrgueMidiOutPort>& ports);
 };
 
 #endif

@@ -1,3 +1,4 @@
+- Closing unnecessary jack clients https://github.com/oleg68/GrandOrgue/issues/30
 # 0.3.1.2338-6.os (2021-05-10)
 - Added CHANGELOG.md https://github.com/oleg68/GrandOrgue/issues/23
 # 0.3.1.2338-5.os (2021-05-08)
