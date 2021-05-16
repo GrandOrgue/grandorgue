@@ -24,12 +24,10 @@
 #include "GOrgueConfigReader.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
-#include "GOrgueSettings.h"
 #include <algorithm>
 
-GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, GOGUISetterType type, GOrgueSettings& settings) :
-	GOGUIDisplayMetrics(),
-	m_Settings(settings)
+GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, GOGUISetterType type) :
+	GOGUIDisplayMetrics()
 {
 	unsigned x_size, y_size;
 	int drawstop_rows, drawstop_cols;
@@ -130,13 +128,10 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, Gr
 	m_DispKeyHorizBackgroundImageNum = type == GOGUI_SETTER_FLOATING ? horiz_img : background_img;
 	m_DispKeyVertBackgroundImageNum = type == GOGUI_SETTER_FLOATING ? vert_img : background_img;
 	m_DispDrawstopInsetBackgroundImageNum = background_img;
-	m_DispControlLabelFont = wxT("Arial"); // Changed from Times New Roman for improved readability
-//	m_DispControlLabelFontSize = 14; // new addition here, was previously hard-coded to 7 in GOGUIButton.cpp
-	m_DispControlLabelFontSize = m_Settings.ControlLabelFontSize(); // Allow user to set desired font size
+	m_DispControlLabelFont = wxT("Times New Roman");
 	m_DispShortcutKeyLabelFont = wxT("Times New Roman");
 	m_DispShortcutKeyLabelColour = wxColour(0xFF, 0xFF, 0x00);
-	m_DispGroupLabelFont = wxT("Arial"); // Changed from Times New Roman for improved readability
-	m_DispGroupLabelFontSize = m_Settings.GroupLabelFontSize(); // Allow user to set desired font size
+	m_DispGroupLabelFont = wxT("Times New Roman");
 	m_DispDrawstopCols = 0;
 	m_DispDrawstopRows = 0;
 	m_DispDrawstopColsOffset = false;

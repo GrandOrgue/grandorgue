@@ -26,18 +26,16 @@
 
 class GOGUIPanel;
 class GrandOrgueFile;
-class GOrgueSettings;
 
 class GOGUIFloatingPanel : public GOGUIPanelCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
-	GOrgueSettings& m_Settings;
 
 	GOGUIPanel* CreateFloatingPanel(GOrgueConfigReader& cfg);
 
 public:
-	GOGUIFloatingPanel(GrandOrgueFile* organfile, GOrgueSettings& settings);
+	GOGUIFloatingPanel(GrandOrgueFile* organfile);
 	~GOGUIFloatingPanel();
 
 	void CreatePanels(GOrgueConfigReader& cfg);

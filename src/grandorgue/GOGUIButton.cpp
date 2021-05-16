@@ -57,13 +57,9 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, 
 	m_DispCol = x_pos;
 	m_DispRow = y_pos;
 
-	m_TextColor = wxColour(0x40, 0x00, 0x00); // Dark red (0x40 instead of original -x80 for improved contrast)
-
-/*  The font size and name are defined in the metrics, not here
+	m_TextColor = wxColour(0x80, 0x00, 0x00);
 	m_FontSize = 7;
 	m_FontName = wxT("");
-*/
-
 	m_Text = m_Button->GetName();
 
 	int x, y, w, h;
@@ -117,10 +113,8 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, 
 	m_TextWidth = m_TextRect.GetWidth() - (m_TextRect.GetWidth() < 50 ? 4 : 14);
 
 	m_Font = m_metrics->GetControlLabelFont();
-/* Both name and size are set in the metrics, not here
 	m_Font.SetName(m_FontName);
 	m_Font.SetPoints(m_FontSize);
-*/
 }
 
 void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)

@@ -409,7 +409,6 @@ void GOrgueFrame::UpdatePanelMenu()
 	GOrgueDocument* doc = GetDocument();
 	GrandOrgueFile* organfile = doc ? doc->GetOrganFile() : NULL;
 	unsigned panelcount = (organfile && organfile->GetPanelCount()) ? organfile->GetPanelCount() : 0;
-	unsigned odfpanelcount = (organfile && organfile->GetODFPanelCount()) ? organfile->GetODFPanelCount() : 0;
 	panelcount = std::min (panelcount, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
 
 	while (m_panel_menu->GetMenuItemCount() > 0)
@@ -417,9 +416,6 @@ void GOrgueFrame::UpdatePanelMenu()
 
 	for(unsigned i = 0; i < panelcount; i++)
 	{
-		if ((odfpanelcount>0) && (i == odfpanelcount+1)) // Add separator between ODF-defined panels and built-in panels
-			m_panel_menu->AppendSeparator();
-
 		GOGUIPanel* panel = organfile->GetPanel(i);
 		wxMenu* menu = NULL;
 		if (panel->GetGroupName() == wxEmptyString)

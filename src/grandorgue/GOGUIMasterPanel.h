@@ -26,18 +26,16 @@
 
 class GOGUIPanel;
 class GrandOrgueFile;
-class GOrgueSettings;
 
 class GOGUIMasterPanel : public GOGUIPanelCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
-	GOrgueSettings& m_Settings;
 
 	GOGUIPanel* CreateMasterPanel(GOrgueConfigReader& cfg);
 
 public:
-	GOGUIMasterPanel(GrandOrgueFile* organfile, GOrgueSettings& settings);
+	GOGUIMasterPanel(GrandOrgueFile* organfile);
 	virtual ~GOGUIMasterPanel();
 
 	void CreatePanels(GOrgueConfigReader& cfg);
