@@ -1,4 +1,4 @@
-
+- Ensure fixed font sizes (0.3.1.2340)
 - Revert layout destroying resizing (0.3.1.2339)
 # 0.3.1.2338-8.os (2021-05-18)
 - Closing unnecessary jack clients https://github.com/oleg68/GrandOrgue/issues/30
