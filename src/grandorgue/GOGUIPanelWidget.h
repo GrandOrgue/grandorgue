@@ -39,7 +39,9 @@ private:
 	GOrgueBitmap m_Background;
 	wxBitmap m_ClientBitmap;
 	double m_Scale;
+	double m_FontScale;
 
+	void initFont();
 	void OnCreate(wxWindowCreateEvent& event);
 	void OnDraw(wxDC* dc);
 	void OnErase(wxEraseEvent& event);

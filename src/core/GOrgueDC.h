@@ -35,11 +35,12 @@ class GOrgueDC
 private:
 	wxDC* m_DC;
 	double m_Scale;
+	double m_FontScale;
 
 	wxString WrapText(const wxString& string, unsigned width);
 
 public:
-	GOrgueDC(wxDC* dc, double m_Scale);
+	GOrgueDC(wxDC* dc, double scale, double fontScale);
 
 	void DrawBitmap(GOrgueBitmap& bitmap, const wxRect& target);
 	void DrawText(const wxString& text, const wxRect& rect, const wxColour& color, GOrgueFont& font, unsigned text_width, bool top = false);
