@@ -169,6 +169,7 @@ else ()
 endif ()
 
 add_library(PortAudio STATIC ${PortAudio_Sources})
+target_link_libraries(PortAudio ${PA_Libs})
 if (RTAUDIO_USE_JACK)
   include_directories(${JACK_INCLUDE_DIRS})
   target_link_libraries(PortAudio PkgConfig::JACK)
