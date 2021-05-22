@@ -120,7 +120,7 @@ void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString 
 	m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
 	m_PipeConfig.Load(cfg, group, prefix);
 	m_HarmonicNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("HarmonicNumber"), 1, 1024, false, m_HarmonicNumber);
-	m_PitchCorrection = cfg.ReadFloat(ODFSetting, group, prefix + wxT("PitchCorrection"), -1200, 1200, false, m_PitchCorrection);
+	m_PitchCorrection = cfg.ReadFloat(ODFSetting, group, prefix + wxT("PitchCorrection"), -1800, 1800, false, m_PitchCorrection);
 	m_SamplerGroupID = cfg.ReadInteger(ODFSetting, group, prefix + wxT("WindchestGroup"), 1, m_organfile->GetWindchestGroupCount(), false, m_SamplerGroupID);
 	m_Percussive = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("Percussive"), false, m_Percussive);
 	m_SampleMidiKeyNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MIDIKeyNumber"), -1, 127, false, -1);
@@ -305,9 +305,9 @@ void GOrgueSoundingPipe::Validate()
 		offset = 0;
 	else
 		offset= m_SoundProvider.GetMidiKeyNumber() + log(8.0 / m_HarmonicNumber) * (12.0 / log(2)) - (m_SoundProvider.GetMidiPitchFract() - m_PipeConfig.GetDefaultTuning() + m_PitchCorrection) / 100.0 - m_MidiKeyNumber;
-	if (offset < -12 || offset > 12)
+	if (offset < -18 || offset > 18)
 	{
-		wxLogError(_("rank %s pipe %s: temperament would retune pipe by more than 1200 cent"),
+		wxLogError(_("rank %s pipe %s: temperament would retune pipe by more than 1800 cent"),
 			   m_Rank->GetName().c_str(), GetLoadTitle().c_str());
 		return;
 	}

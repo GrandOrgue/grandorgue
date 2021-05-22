@@ -144,7 +144,7 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 	box2->Add(m_Tuning);
 	box2->Add(m_TuningSpin);
 	grid->Add(box2);
-	m_TuningSpin->SetRange(-1200, 1200);
+	m_TuningSpin->SetRange(-1800, 1800);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Tracker (ms):")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
 	box2 = new wxBoxSizer(wxHORIZONTAL);
@@ -702,7 +702,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 
 	if (!m_Tuning->GetValue().ToDouble(&tuning) &&
 	    (m_Tuning->IsModified() &&
-	     (tuning < - 1200 || tuning > 1200)))
+	     (tuning < - 1800 || tuning > 1800)))
 	{
 		GOMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
 		return;

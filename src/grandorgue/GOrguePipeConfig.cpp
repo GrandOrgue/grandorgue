@@ -58,7 +58,7 @@ void GOrguePipeConfig::Init(GOrgueConfigReader& cfg, wxString group, wxString pr
 	m_DefaultGain = 0;
 	m_Gain = cfg.ReadFloat(CMBSetting, group, prefix + wxT("UserGain"), -120, 40, false, m_DefaultGain);
 	m_DefaultTuning = 0;
-	m_Tuning = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Tuning"), -1200, 1200, false, m_DefaultTuning);
+	m_Tuning = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Tuning"), -1800, 1800, false, m_DefaultTuning);
 	m_DefaultDelay = 0;
 	m_Delay = cfg.ReadInteger(CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
 	m_BitsPerSample = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("BitsPerSample"), -1, 24, false, -1);
@@ -83,8 +83,8 @@ void GOrguePipeConfig::Load(GOrgueConfigReader& cfg, wxString group, wxString pr
 	m_Amplitude = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Amplitude"), 0, 1000, false, m_DefaultAmplitude);
 	m_DefaultGain = cfg.ReadFloat(ODFSetting, group, prefix + wxT("Gain"), -120, 40, false, 0);
 	m_Gain = cfg.ReadFloat(CMBSetting, group, prefix + wxT("UserGain"), -120, 40, false, m_DefaultGain);
-	m_DefaultTuning = cfg.ReadFloat(ODFSetting, group, prefix + wxT("PitchTuning"), -1200, 1200, false, 0);
-	m_Tuning = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Tuning"), -1200, 1200, false, m_DefaultTuning);
+	m_DefaultTuning = cfg.ReadFloat(ODFSetting, group, prefix + wxT("PitchTuning"), -1800, 1800, false, 0);
+	m_Tuning = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Tuning"), -1800, 1800, false, m_DefaultTuning);
 	m_DefaultDelay = cfg.ReadInteger(ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
 	m_Delay = cfg.ReadInteger(CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
 	m_BitsPerSample = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("BitsPerSample"), -1, 24, false, -1);
@@ -178,10 +178,10 @@ float GOrguePipeConfig::GetDefaultTuning()
 
 void GOrguePipeConfig::SetTuning(float cent)
 {
-	if (cent < -1200)
-		cent = -1200;
-	if (cent > 1200)
-		cent = 1200;
+	if (cent < -1800)
+		cent = -1800;
+	if (cent > 1800)
+		cent = 1800;
 	m_Tuning = cent;
 	m_OrganFile->Modified();
 	m_Callback->UpdateTuning();
