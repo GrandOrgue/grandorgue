@@ -56,8 +56,6 @@ class SettingsOption : public wxScrolledWindow
 		ID_INTERPOLATION,
 		ID_SAMPLE_RATE,
 		ID_SAMPLES_PER_BUFFER,
-		ID_CONTROL_LABEL_FONT_SIZE,
-		ID_GROUP_LABEL_FONT_SIZE,
 		ID_MEMORY_LIMIT,
 		ID_ODF_CHECK,
 		ID_RECORD_DOWNMIX,
@@ -88,16 +86,12 @@ private:
 	wxChoice* m_SampleRate;
 	wxSpinCtrl* m_SamplesPerBuffer;
 	wxSpinCtrl* m_MemoryLimit;
-	wxSpinCtrl* m_DispControlLabelFontSize;
-	wxSpinCtrl* m_DispGroupLabelFontSize;
 	unsigned m_OldChannels;
 	bool m_OldLosslessCompression;
 	unsigned m_OldBitsPerSample;
 	unsigned m_OldLoopLoad;
 	unsigned m_OldAttackLoad;
 	unsigned m_OldReleaseLoad;
-	unsigned m_OldDispControlLabelFontSize;
-	unsigned m_OldDispGroupLabelFontSize;
 
 public:
 	SettingsOption(GOrgueSettings& settings, wxWindow* parent);

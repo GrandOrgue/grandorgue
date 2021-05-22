@@ -26,18 +26,16 @@
 
 class GOGUIPanel;
 class GrandOrgueFile;
-class GOrgueSettings;
 
 class GOGUICouplerPanel : public GOGUIPanelCreator
 {
 private:
 	GrandOrgueFile* m_organfile;
-	GOrgueSettings& m_Settings;
 
 	GOGUIPanel* CreateCouplerPanel(GOrgueConfigReader& cfg, unsigned manual_nr);
 
 public:
-	GOGUICouplerPanel(GrandOrgueFile* organfile, GOrgueSettings& settings);
+	GOGUICouplerPanel(GrandOrgueFile* organfile);
 	~GOGUICouplerPanel();
 
 	void CreatePanels(GOrgueConfigReader& cfg);
