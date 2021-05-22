@@ -58,7 +58,7 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, 
 	m_DispRow = y_pos;
 
 	m_TextColor = wxColour(0x80, 0x00, 0x00);
-	m_FontSize = 7;
+	m_FontSize = 9;
 	m_FontName = wxT("");
 	m_Text = m_Button->GetName();
 
