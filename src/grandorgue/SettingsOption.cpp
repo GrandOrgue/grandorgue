@@ -45,8 +45,6 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_OldLoopLoad = m_Settings.LoopLoad();
 	m_OldAttackLoad = m_Settings.AttackLoad();
 	m_OldReleaseLoad = m_Settings.ReleaseLoad();
-	m_OldDispControlLabelFontSize = m_Settings.ControlLabelFontSize();
-	m_OldDispGroupLabelFontSize = m_Settings.GroupLabelFontSize();
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* item0 = new wxBoxSizer(wxHORIZONTAL);
@@ -213,21 +211,6 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_CompressCache->SetValue(m_Settings.CompressCache());
 	m_ManageCache->SetValue(m_Settings.ManageCache());
 
-	// Setting for the font sizes used in the buttons and labels of the GO built-in panels
-	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Built-in panels"));
-	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
-	grid = new wxFlexGridSizer(2, 5, 5);
-	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
-	grid->Add(new wxStaticText(this, wxID_ANY, _("Font size in buttons:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
-	grid->Add(m_DispControlLabelFontSize = new wxSpinCtrl(this, ID_CONTROL_LABEL_FONT_SIZE, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
-	m_DispControlLabelFontSize->SetRange(6, 72);
-	m_DispControlLabelFontSize->SetValue(m_Settings.ControlLabelFontSize());
-	grid->Add(new wxStaticText(this, wxID_ANY, _("Font size in labels:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
-	grid->Add(m_DispGroupLabelFontSize = new wxSpinCtrl(this, ID_GROUP_LABEL_FONT_SIZE, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
-	m_DispGroupLabelFontSize->SetRange(6, 72);
-	m_DispGroupLabelFontSize->SetValue(m_Settings.GroupLabelFontSize());
-
-
 	item9->Add(m_ODFCheck  = new wxCheckBox(this, ID_ODF_CHECK, _("Perform strict ODF")), 0, wxEXPAND | wxALL, 5);
 	m_ODFCheck->SetValue(m_Settings.ODFCheck());
 
@@ -249,8 +232,6 @@ void SettingsOption::Save()
 	m_Settings.ManageCache(m_ManageCache->IsChecked());
 	m_Settings.LoadLastFile(m_LoadLastFile->GetCurrentSelection());
 	m_Settings.ODFCheck(m_ODFCheck->IsChecked());
-	m_Settings.ControlLabelFontSize(m_DispControlLabelFontSize->GetValue());
-	m_Settings.GroupLabelFontSize(m_DispGroupLabelFontSize->GetValue());
 	m_Settings.RecordDownmix(m_RecordDownmix->IsChecked());
 	m_Settings.ScaleRelease(m_Scale->IsChecked());
 	m_Settings.RandomizeSpeaking(m_Random->IsChecked());
@@ -282,7 +263,5 @@ bool SettingsOption::NeedReload()
 		m_OldLoopLoad != m_Settings.LoopLoad() || 
 		m_OldAttackLoad != m_Settings.AttackLoad() ||
 		m_OldReleaseLoad != m_Settings.ReleaseLoad() ||
-		m_OldChannels != m_Settings.LoadChannels() ||
-		m_OldDispControlLabelFontSize != m_Settings.ControlLabelFontSize() ||
-		m_OldDispGroupLabelFontSize != m_Settings.GroupLabelFontSize();
+		m_OldChannels != m_Settings.LoadChannels();
 }

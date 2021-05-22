@@ -29,9 +29,8 @@
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
 
-GOGUISequencerPanel::GOGUISequencerPanel(GrandOrgueFile* organfile, GOrgueSettings& settings) :
-	m_organfile(organfile),
-	m_Settings(settings)
+GOGUISequencerPanel::GOGUISequencerPanel(GrandOrgueFile* organfile) :
+	m_organfile(organfile)
 {
 }
 
@@ -49,7 +48,7 @@ GOGUIPanel* GOGUISequencerPanel::CreateSequencerPanel(GOrgueConfigReader& cfg)
 	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_SETTER, m_Settings);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_SETTER);
 	panel->Init(cfg, metrics, _("Combination Setter"), wxT("SetterPanel"));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);

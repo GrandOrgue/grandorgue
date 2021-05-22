@@ -112,8 +112,6 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	CompressCache(this, wxT("General"), wxT("CompressCache"), false),
 	LoadLastFile(this, wxT("General"), wxT("LoadLastFile"), m_InitialLoadTypes, sizeof(m_InitialLoadTypes) / sizeof(m_InitialLoadTypes[0]), GOInitialLoadType::LOAD_LAST_USED),
 	ODFCheck(this, wxT("General"), wxT("StrictODFCheck"), false),
-	ControlLabelFontSize(this, wxT("General"), wxT("ControlLabelFontSize"), 6, 72, 10),
-	GroupLabelFontSize(this, wxT("General"), wxT("GroupLabelFontSize"), 6, 72, 10),
 	LoadChannels(this, wxT("General"), wxT("Channels"), 0, 2, 2),
 	LosslessCompression(this, wxT("General"), wxT("LosslessCompression"), false),
 	ManagePolyphony(this, wxT("General"), wxT("ManagePolyphony"), true),
