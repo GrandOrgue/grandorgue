@@ -1,3 +1,4 @@
+# 0.3.1.2341-1.os (2021-05-22)
 - Increased the limit of PitchTuning and PitchCorrection up from 1200 to 1800 cents https://github.com/oleg68/GrandOrgue/issues/33
 - Increase builtin button font size (0.3.1.2341)
 - Ensure fixed font sizes (0.3.1.2340)
