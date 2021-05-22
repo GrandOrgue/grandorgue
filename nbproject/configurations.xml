@@ -858,7 +858,7 @@
           <buildCommandWorkingDir>build-for/current</buildCommandWorkingDir>
           <buildCommand>${MAKE} -f Makefile -j 16</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
-          <executablePath>build/bin/GrandOrgue</executablePath>
+          <executablePath>build-for/current/bin/GrandOrgue</executablePath>
           <cTool>
             <incDir>
               <pElem>src/portaudio/include</pElem>
@@ -878,7 +878,7 @@
         </makeTool>
         <preBuild>
           <preBuildCommandWorkingDir>build-for/current</preBuildCommandWorkingDir>
-          <preBuildCommand>${CMAKE} -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=${IDE_CC} -DCMAKE_CXX_COMPILER=${IDE_CXX} -DCMAKE_C_FLAGS_DEBUG="-g3 -gdwarf-2" -DCMAKE_CXX_FLAGS_DEBUG="-g3 -gdwarf-2" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DVERSION=0.3.1.2338 -DBUILD_VERSION=1.os.1 ../..</preBuildCommand>
+          <preBuildCommand>${CMAKE} -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=${IDE_CC} -DCMAKE_CXX_COMPILER=${IDE_CXX} -DCMAKE_C_FLAGS_DEBUG="-g3 -gdwarf-2" -DCMAKE_CXX_FLAGS_DEBUG="-g3 -gdwarf-2" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DVERSION=0.3.1.2339 -DBUILD_VERSION=0.os.1 ../..</preBuildCommand>
         </preBuild>
       </makefileType>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/build-for/current/src/images/EnclosureA00.cpp"

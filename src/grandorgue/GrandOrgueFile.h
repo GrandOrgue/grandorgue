@@ -81,7 +81,6 @@ private:
 	int m_volume;
 	bool m_IgnorePitch;
 	wxString m_Temperament;
-	unsigned m_ODFNumberOfPanels;
 
 	bool m_b_customized;
 	bool m_DivisionalsStoreIntermanualCouplers;
@@ -162,7 +161,6 @@ public:
 	GOrgueSetter* GetSetter();
 	GOGUIPanel* GetPanel(unsigned index);
 	unsigned GetPanelCount();
-	unsigned GetODFPanelCount();
 	void AddPanel(GOGUIPanel* panel);
 	GOrgueMemoryPool& GetMemoryPool();
 	GOrgueSettings& GetSettings();

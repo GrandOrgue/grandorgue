@@ -30,12 +30,10 @@
 #include "GOrgueDivisional.h"
 #include "GOrgueManual.h"
 #include "GrandOrgueFile.h"
-#include "GOrgueSettings.h"
 #include <wx/intl.h>
 
-GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GrandOrgueFile* organfile, GOrgueSettings& settings) :
-	m_organfile(organfile),
-	m_Settings(settings)
+GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GrandOrgueFile* organfile) :
+	m_organfile(organfile)
 {
 }
 
@@ -53,7 +51,7 @@ GOGUIPanel* GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOrgueConfigReader& cf
 	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_DIVISIONALS, m_Settings);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_DIVISIONALS);
 	panel->Init(cfg, metrics, _("Divisionals"), wxT("SetterDivisionalPanel"));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);

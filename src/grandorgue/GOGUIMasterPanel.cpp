@@ -29,9 +29,8 @@
 #include "GrandOrgueFile.h"
 #include <wx/intl.h>
 
-GOGUIMasterPanel::GOGUIMasterPanel(GrandOrgueFile* organfile, GOrgueSettings& settings) :
-	m_organfile(organfile),
-	m_Settings(settings)
+GOGUIMasterPanel::GOGUIMasterPanel(GrandOrgueFile* organfile) :
+	m_organfile(organfile)
 {
 }
 
@@ -49,7 +48,7 @@ GOGUIPanel* GOGUIMasterPanel::CreateMasterPanel(GOrgueConfigReader& cfg)
 	GOGUIButton* button;
 
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
-	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_MASTER, m_Settings);
+	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_MASTER);
 	panel->Init(cfg, metrics, _("Master Controls"), wxT("SetterMaster"), wxT(""));
 
 	GOGUIHW1Background* back = new GOGUIHW1Background(panel);

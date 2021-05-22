@@ -25,9 +25,10 @@
 #include "GOrgueFont.h"
 #include <wx/dc.h>
 
-GOrgueDC::GOrgueDC(wxDC* dc, double scale) :
+GOrgueDC::GOrgueDC(wxDC* dc,double scale, double fontScale) :
 	m_DC(dc),
-	m_Scale(scale)
+	m_Scale(scale),
+	m_FontScale(fontScale)
 {
 }
 
@@ -101,7 +102,7 @@ wxString GOrgueDC::WrapText(const wxString& string, unsigned width)
 void GOrgueDC::DrawText(const wxString& text, const wxRect& rect, const wxColour& color, GOrgueFont& font, unsigned text_width, bool align_top)
 {
 	m_DC->SetTextForeground(color);
-	m_DC->SetFont(font.GetFont(m_Scale));
+	m_DC->SetFont(font.GetFont(m_Scale * m_FontScale));
 	m_DC->DrawLabel(WrapText(text, m_Scale * text_width), ScaleRect(rect), (align_top ? 0 : wxALIGN_CENTER_VERTICAL) | wxALIGN_CENTER_HORIZONTAL);
 }
 
