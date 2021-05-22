@@ -105,7 +105,7 @@ void GOrgueRank::Load(GOrgueConfigReader& cfg, wxString group, int first_midi_no
 	m_WindchestGroup                       = cfg.ReadInteger(ODFSetting, group, wxT("WindchestGroup"), 1, m_organfile->GetWindchestGroupCount());
 	m_Percussive                           = cfg.ReadBoolean(ODFSetting, group, wxT("Percussive"));
 	m_HarmonicNumber                       = cfg.ReadInteger(ODFSetting, group, wxT("HarmonicNumber"), 1, 1024, false, 8);
-	m_PitchCorrection                      = cfg.ReadFloat(ODFSetting, group, wxT("PitchCorrection"), -1200, 1200, false, 0);
+	m_PitchCorrection                      = cfg.ReadFloat(ODFSetting, group, wxT("PitchCorrection"), -1800, 1800, false, 0);
 	m_MinVolume                            = cfg.ReadFloat(ODFSetting, group, wxT("MinVelocityVolume"), 0, 1000, false, 100);
 	m_MaxVolume                            = cfg.ReadFloat(ODFSetting, group, wxT("MaxVelocityVolume"), 0, 1000, false, 100);
 	m_RetuneRank = cfg.ReadBoolean(ODFSetting, group, wxT("AcceptsRetuning"), false, true);
