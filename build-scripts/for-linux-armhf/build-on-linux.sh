@@ -46,4 +46,3 @@ make -k $PARALLEL_PRMS VERBOSE=1 package
 rm -f *_all.deb *.noarch.rpm
 
 popd
-
