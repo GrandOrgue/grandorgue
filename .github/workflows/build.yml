@@ -67,7 +67,17 @@ jobs:
             for: linux
             prepare: "debian-ubuntu"
             build_on: linux
+
+          - run_on: ubuntu-18.04
+            for: linux-armhf
+            prepare: "ubuntu-18"
+            build_on: linux
     
+          - run_on: ubuntu-18.04
+            for: linux-aarch64
+            prepare: "ubuntu-18"
+            build_on: linux
+
           - run_on: macos-10.15
             for: osx
             prepare: osx
