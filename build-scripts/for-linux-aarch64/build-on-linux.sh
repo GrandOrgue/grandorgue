@@ -46,7 +46,7 @@ make -k $PARALLEL_PRMS VERBOSE=1 package
 rm -f *_all.deb *.noarch.rpm
 
 # Replace libgcc-s1 dependency with libgcc1 
-DEB_PACKAGE_NAME=$(find . -name "*_aarch64.deb" -print)
+DEB_PACKAGE_NAME=$(find . -maxdepth 1 -name "*_aarch64.deb" -print)
 rm -rf deb-extracted 
 mkdir deb-extracted
 pushd deb-extracted
