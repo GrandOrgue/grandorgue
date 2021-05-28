@@ -68,12 +68,12 @@ jobs:
             prepare: "debian-ubuntu"
             build_on: linux
 
-          - run_on: ubuntu-16.04
+          - run_on: ubuntu-18.04
             for: linux-armhf
             prepare: "debian-ubuntu"
             build_on: linux
     
-          - run_on: ubuntu-16.04
+          - run_on: ubuntu-18.04
             for: linux-aarch64
             prepare: "debian-ubuntu"
             build_on: linux
