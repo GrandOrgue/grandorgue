@@ -13,7 +13,7 @@ deb [arch=arm64,armhf] http://ports.ubuntu.com/ubuntu-ports/ bionic-updates main
 deb [arch=arm64,armhf] http://ports.ubuntu.com/ubuntu-ports/ bionic-backports main restricted universe multiverse
 deb [arch=arm64,armhf] http://ports.ubuntu.com/ubuntu-ports/ bionic-security main restricted universe multiverse
 EOF
-sudo cp /tmp/sources.lst /etc/apt/sources.list
+sudo cp /tmp/sources.lst /etc/apt/sources.list.d/
 sudo apt update
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y cmake g++ pkg-config rpm file \
