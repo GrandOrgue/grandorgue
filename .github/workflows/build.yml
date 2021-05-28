@@ -70,12 +70,12 @@ jobs:
 
           - run_on: ubuntu-18.04
             for: linux-armhf
-            prepare: "debian-ubuntu"
+            prepare: "ubuntu-18"
             build_on: linux
     
           - run_on: ubuntu-18.04
             for: linux-aarch64
-            prepare: "debian-ubuntu"
+            prepare: "ubuntu-18"
             build_on: linux
 
           - run_on: macos-10.15
