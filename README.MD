@@ -1,13 +1,12 @@
+# GrandOrgue
+
 GrandOrgue is a sample based pipe organ simulator.
 
-It currently supports Windows and Linux. Porting to other OS supported by RtMidi, 
+It currently supports Windows, Linux and OS X. Porting to other OS supported by RtMidi, 
 RtAudio and wxWidgets should be possible with some build system adjustments.
 
-Installation
-------------
-
+## Installation
 A) Installing on Linux
-
   - Manually
     I) Download GrandOrgue-0.3.1.*-Linux.tar.gz and unpack to some directory <GrandOrgue>
     II) Install required libraries
@@ -43,11 +42,9 @@ C) Installing on Windows
    II) Run it
    III) Follow the installator's prompts
 
-Building from sources
---------------------
+## Building from sources
 
-A) Building on Linux for Linux:
--------------------------------
+### Building on Linux for Linux:
 I) Extract the GO sources somewhere, eg: /home/user/gosources
 II) Install requires software
   - Manually
@@ -77,9 +74,8 @@ III) Build
 
     The built packages will appear in the build-for/linux subdirectory of current directory, 
     the executables - in build-for/linux/bin
-
-B) Building for OS on OS X
-===================
+	    
+### Building for OS X on OS X
 
 I. Prequisites:
  - OS X >= 10.11
@@ -116,8 +112,7 @@ III) Build
 
     The built package will appear in the build-for/osx subdirectory of current directory, 
 
-C) Building for Windows
-----------------------
+### Building for Windows
 
 The easiest way to build a Windows version is to cross-compile using a openSuSE 42.1 system (or virtual machine).
 
@@ -162,8 +157,7 @@ sudo zypper install <package-name>
 Then rerun rpmbuild.
 
 
-D) Building on Windows
-----------------------
+### Building on Windows
 
 The following build procedures works on a 32 or 64 bit windows build system. On a real 64 bit system, it is possible to build the 64 bit version directly without reusing parts from the 32 bit build. In that case -DIMPORT_EXECUTABLES and -DCMAKE_SYSTEM_NAME shall be removed.
 
@@ -222,7 +216,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org) and NSIS (ht
 	
 	Building in 32 bits
 		Create toolchain.def in inst32 with following content
-			------------------------------------------------------
+		------------------------------------------------------
 			# the name of the target operating system
 			SET(CMAKE_SYSTEM_NAME Windows)
 			SET(MSYS 1)
@@ -241,7 +235,8 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org) and NSIS (ht
 			set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 			set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 			set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-			-------------------------------------------------------
+   		------------------------------------------------------
+
 		
 		Wxwidgets:
 			cd /cygdrive/c/cyg/wxsrc32
@@ -262,7 +257,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org) and NSIS (ht
 
 	Buiding in 64 bits
 		Create toolchain.def in inst64 with following content
-			------------------------------------------------------
+		------------------------------------------------------
 			# the name of the target operating system
 			SET(CMAKE_SYSTEM_NAME Windows)
 			SET(MSYS 1)
@@ -281,7 +276,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org) and NSIS (ht
 			set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 			set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 			set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)	
-			------------------------------------------------------
+		------------------------------------------------------
 
 		Wxwidgets:
 			cd /cygdrive/c/cyg/wxsrc64
@@ -306,8 +301,7 @@ As a prerequisite, you need to install CMAKE (http://www.cmake.org) and NSIS (ht
 
 
 
-Cross-compiling for Windows:
-----------------------------
+### Cross-compiling for Windows
 
 1) Install mingw-w64 (On Debian/Ubuntu, install the package mingw-w64) and
    all packages needed to build GO under Linux.
@@ -336,7 +330,7 @@ cd /buildlinux
 cmake -G "Unix Makefiles" /gosrc/src/build
 make
 5) Create toolchain definition for windows, file /inst/toolchain.def:
----------------------------------------------------------------------
+```
 # the name of the target operating system
 SET(CMAKE_SYSTEM_NAME Windows)
 SET(MSYS 1)
@@ -356,7 +350,7 @@ SET(CMAKE_FIND_ROOT_PATH  /usr/i686-w64-mingw32 /inst)
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
----------------------------------------------------------------------
+```
 
 6) Build GO for windows
 cd /buildwin
@@ -371,9 +365,7 @@ to create an installer
 
 If you want to build a 64bit version, replace everywhere in this instruction i686-w64-mingw32 with x86_64-w64-mingw32.
 
-
-Simplified cross-compiling for Windows on Linux:
-------------------------------------------------
+### Simplified cross-compiling for Windows on Linux
 
 There are some ready-to use bash scripts that allow to build windows executables on linux.
 Assume you have the GrandOrgue source extracted to GrandOrgue directory
@@ -389,8 +381,7 @@ or b) with opensuse osamarin68/grandorgue:os-go-win
 II) run GrandOrgue/build-scripts/for-win64/build-on-linux.sh
   Windows executables will appear in the build-mingw64 subdirectory of the current directory
 
-C) Building the help and translations on Windows:
--------------------------------------------------
+### Building the help and translations on Windows:
 
 This is how one can build GrandOrgue help and translations on Windows.
 
