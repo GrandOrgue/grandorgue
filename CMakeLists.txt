@@ -127,6 +127,10 @@ if (WIN32)
    set(CPACK_BINARY_TGZ ON CACHE BOOL INTERNAL)
 endif ()
 
+if(RTAUDIO_USE_ASIO AND NOT ASIO_SDK_DIR)
+  set(ASIO_SDK_DIR "${CMAKE_SOURCE_DIR}/ext/rt/asio")
+endif()
+
 # include RtAudio
 add_subdirectory(src/rt)
 set(RT_LIBRARIES RtAudio RtMidi)
