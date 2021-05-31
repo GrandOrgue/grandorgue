@@ -1,3 +1,6 @@
+[![Build status](https://github.com/oleg68/GrandOrgue/actions/workflows/build.yml/badge.svg)](https://github.com/oleg68/GrandOrgue/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/oleg68/GrandOrgue)](https://github.com/oleg68/GrandOrgue/releases)
+
 # GrandOrgue
 
 GrandOrgue is a sample based pipe organ simulator.
