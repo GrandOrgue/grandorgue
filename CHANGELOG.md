@@ -1,3 +1,5 @@
+- Added ASIO support to the build for windows on github. https://github.com/oleg68/GrandOrgue/issues/8
+- Beautified README and renamed to README.md
 # 0.3.1.2341-2.os (2021-05-29)
 - Added build for linux armhf (arm 32) and aarch64 (arm64), including raspberry Pi
 # 0.3.1.2341-1.os (2021-05-22)
