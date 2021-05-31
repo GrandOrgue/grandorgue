@@ -127,6 +127,10 @@ if (RTAUDIO_USE_JACK OR RTMIDI_USE_JACK OR GO_USE_JACK)
   pkg_check_modules(JACK REQUIRED IMPORTED_TARGET jack)
 endif()
 
+if(RTAUDIO_USE_ASIO AND NOT ASIO_SDK_DIR)
+  set(ASIO_SDK_DIR "${CMAKE_SOURCE_DIR}/ext/rt/asio")
+endif()
+
 # include RtAudio
 add_subdirectory(src/rt)
 set(RT_LIBRARIES RtAudio RtMidi)
