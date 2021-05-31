@@ -9,74 +9,99 @@ It currently supports Windows, Linux and OS X. Porting to other OS supported by 
 RtAudio and wxWidgets should be possible with some build system adjustments.
 
 ## Installation
-A) Installing on Linux
-  - Manually
-    I) Download GrandOrgue-0.3.1.*-Linux.tar.gz and unpack to some directory <GrandOrgue>
-    II) Install required libraries
-      - On fedora
-	sudo dnf install -y 'libjack.so.0()(64bit)' wxGTK3 wavpack fftw
-      - On debian
-	sudo apt update && sudo apt install -y libjack0 libwxgtk3.0-gtk3 libasound2 libfftw3-single3 libwavpack1
-      - On ubuntu
-	sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y libjack0 libwxgtk3.0-gtk3-0v5 libfftw3-single3
-      - On opensuse
-	sudo zypper install -y libjack0 wxGTK3-devel libwavpack1
-  - Or with prepared plinux pachkages
-    I) Download binary packages to spme direcortory
-      - On fedora, redhat, oracle linux, centos, opensuse - GrandOrgue-0.3.1.*.rpm
-      - On debian, ubuntu, mint - GrandOrgue-0.3.1.*.deb
-    II) Install binary packages
-      - On fedora, redhat, oracle linux, centos
-        sudo dnf install grandorgue-*.{x86_64,noarch}.rpm
-	or (on the old versions)
-        sudo yum install grandorgue-*.{x86_64,noarch}.rpm
-      - On opensuse:
-        sudo zypper install grandorgue-*.{x86_64,noarch}.rpm
-      - On ubuntu, debian, mint
-        sudo apt-get install grandorgue-*.deb
+### Installing on Linux
+1. Manually
+    1. Download GrandOrgue-0.3.1.*-Linux.tar.gz and unpack to some directory <GrandOrgue>
+    2. Install required libraries
+        1. On fedora
+	   ```
+	   sudo dnf install -y 'libjack.so.0()(64bit)' wxGTK3 wavpack fftw
+	   ```
+        2. On debian
+	   ```
+	   sudo apt update && sudo apt install -y libjack0 libwxgtk3.0-gtk3 libasound2 libfftw3-single3 libwavpack1
+	   ```
+        3. On ubuntu
+ 	   ```
+ 	   sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y libjack0 libwxgtk3.0-gtk3-0v5 libfftw3-single3
+	   ```
+        4. On opensuse
+	   ```
+	   sudo zypper install -y libjack0 wxGTK3-devel libwavpack1
+	   ```
+2. Or with prepared linux packages
+    1. Download binary packages to spme direcortory
+        1.On fedora, redhat, oracle linux, centos, opensuse - GrandOrgue-0.3.1.*.rpm
+        2. On debian, ubuntu, mint - GrandOrgue-0.3.1.*.deb
+    2. Install binary packages
+        1. On fedora, redhat, oracle linux, centos
+	    - for latest versions
+	       ```
+               sudo dnf install grandorgue-*.{x86_64,noarch}.rpm
+	       ```
+	    - for old versions
+	       ```
+               sudo yum install grandorgue-*.{x86_64,noarch}.rpm
+	       ```
+        2. On opensuse:
+	   ```
+           sudo zypper install grandorgue-*.{x86_64,noarch}.rpm
+	   ```
+        3. On ubuntu, debian, mint
+	   ```
+           sudo apt-get install grandorgue-*.deb
+	   ```
 
-B) Installing on MacOS
-   I) Download GrandOrgue-0.3.1.*.dmg
-   II) Open it
-   III) Click on the keyboard icon for running
+### Installing on MacOS
+1. Download GrandOrgue-0.3.1.*.dmg
+2. Open it
+3. Click on the keyboard icon for running
 
-C) Installing on Windows
-   I) Download GrandOrgue-0.3.1.*.exe
-   II) Run it
-   III) Follow the installator's prompts
+### Installing on Windows
+1. Download GrandOrgue-0.3.1.*.exe
+2. Run it
+3. Follow the installator's prompts
 
 ## Building from sources
 
-### Building on Linux for Linux:
-I) Extract the GO sources somewhere, eg: /home/user/gosources
-II) Install requires software
-  - Manually
-    1) Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
-    2) Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
-  - Or run prepared scripts for certain linux distributions by a sudoer user:
-    - on Fedora run <path to go-sources>/build-scripts/for-linux/prepare-fedora.sh
-    - on OpenSuse run <path to go-sources>/build-scripts/for-linux/prepare-opensuse.sh
-    - on Debian or on Ubuntu run <path to go-sources>/build-scripts/for-linux/prepare-debian-ubuntu.sh
-III) Build
-  - Manually
-    1) Create an empty build directory, eg: mkdir /home/user/gobuild
-    2) Run cmake:
-      cd /home/user/gobuild
-      cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
+### Building on Linux for Linux
+1. Extract the GO sources somewhere, eg: /home/user/gosources
+2. Install requires software
+    1. Manually
+        1. Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
+        2. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
+    2. Or run prepared scripts for certain linux distributions by a sudoer user:
+        1. on Fedora run <path to go-sources>/build-scripts/for-linux/prepare-fedora.sh
+        2. on OpenSuse run <path to go-sources>/build-scripts/for-linux/prepare-opensuse.sh
+        3. on Debian or on Ubuntu run <path to go-sources>/build-scripts/for-linux/prepare-debian-ubuntu.sh
+3. Build
+    1. Manually
+        1. Create an empty build directory, eg: mkdir /home/user/gobuild
+        2. Run cmake:
+           ```
+	   cd /home/user/gobuild
+           cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <path to go-sources>
+           ```
+           Hint: For debugging a build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
+        3. Run make
+	   ```
+           make
+	   ```
+        4. For making tar.gz, rpm and deb packages, run
+           ```
+           make -k package
+	   ```
+        5. For making rpm source package, run
+	   ```
+           cpack -G RPM --config ./CPackSourceConfig.cmake
+	   ```
 
-      Hint: For debugging a build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
-    3) Run make
-      make
-    4) For making tar.gz, rpm and deb packages, run
-      make -k package
-    5) For making rpm source package, run
-      cpack -G RPM --config ./CPackSourceConfig.cmake
-
-  - Or run the prepared build script
-    <path to go-sources>/build-scripts/for-linux/build-on-linux.sh
-
-    The built packages will appear in the build-for/linux subdirectory of current directory, 
-    the executables - in build-for/linux/bin
+    2. Or run the prepared build script
+       ```
+       <path to go-sources>/build-scripts/for-linux/build-on-linux.sh
+       ```
+       The built packages will appear in the build-for/linux subdirectory of current directory, 
+       the executables - in build-for/linux/bin
 	    
 ### Building for OS X on OS X
 
