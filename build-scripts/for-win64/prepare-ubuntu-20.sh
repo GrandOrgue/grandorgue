@@ -2,7 +2,9 @@
 
 set -e
 sudo apt update
-sudo DEBIAN_FRONTEND=noninteractive apt install -y zypper cmake g++ pkg-config g++-mingw-w64-x86-64 nsis docbook-xsl xsltproc gettext po4a
+sudo DEBIAN_FRONTEND=noninteractive apt install -y \
+  zypper wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
+  docbook-xsl xsltproc gettext po4a
 
 cat >/tmp/repo-oss.repo <<EOF
 [repo-oss]
@@ -47,3 +49,13 @@ sudo zypper -vv --installroot /zypper install -y mingw64-wxWidgets-3_0-lang ming
 
 sudo ln -s /zypper/usr/x86_64-w64-mingw32/sys-root /usr/x86_64-w64-mingw32/
 sudo mv /usr/x86_64-w64-mingw32/sys-root/mingw/lib/libmingw32.a /usr/x86_64-w64-mingw32/sys-root/mingw/lib/libmingw32.save.a
+
+# download and install ASIO sdk
+if [ ! -d /usr/local/asio-sdk ]; then
+	DL_DIR=`mktemp -d -t asio.XXX`
+	wget -O $DL_DIR/asiosdk.zip https://www.steinberg.net/asiosdk
+	sudo unzip -o $DL_DIR/asiosdk.zip -d /usr/local/
+	rm -rf $DL_DIR
+	SDK_DIR=`ls -1d /usr/local/asiosdk* | tail -1`
+	sudo ln -sf `basename $SDK_DIR` /usr/local/asio-sdk
+fi

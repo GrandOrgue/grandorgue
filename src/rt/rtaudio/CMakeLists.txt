@@ -21,17 +21,18 @@ message(STATUS "RtAudio build Configuration")
 
 INCLUDE (CheckIncludeFileCXX)
 
-include_directories(../include)
-set(RtAudio_Sources RtAudio.cpp)
+include_directories("${RTAUDIO_SRC_DIR}/include")
+set(RtAudio_Sources "${RTAUDIO_SRC_DIR}/RtAudio.cpp")
 
 if (WIN32)
-   if (RTAUDIO_USE_ASIO)
-      set(RtAudio_Sources ${RtAudio_Sources}
-         ../../../ext/rt/asio/include/asiodrivers.cpp
-         ../../../ext/rt/asio/include/asiolist.cpp
-         ../../../ext/rt/asio/include/asio.cpp
-         asiohelpers/include/iasiothiscallresolver.cpp)
-   endif ()
+  if (RTAUDIO_USE_ASIO)
+    set(RtAudio_Sources ${RtAudio_Sources}
+      "${ASIO_SDK_DIR}/host/asiodrivers.cpp"
+      "${ASIO_SDK_DIR}/host/pc/asiolist.cpp"
+      "${ASIO_SDK_DIR}/common/asio.cpp"
+      "${RTAUDIO_SRC_DIR}/include/iasiothiscallresolver.cpp"
+    )
+  endif ()
 endif ()
 
 add_library(RtAudio STATIC ${RtAudio_Sources})
@@ -49,8 +50,11 @@ if (WIN32)
 
    if (RTAUDIO_USE_ASIO)
       add_definitions(-D__WINDOWS_ASIO__ -D_WIN32_WINNT=0x0501 -DWINVER=0x0501)
-      include_directories(../../../ext/rt/asio)
-      include_directories(../../../ext/rt/asio/include)
+      include_directories(
+	"${ASIO_SDK_DIR}/common"
+        "${ASIO_SDK_DIR}/host"
+	"${ASIO_SDK_DIR}/host/pc"
+      )
       include_directories(asiohelpers)
       include_directories(asiohelpers/include)
    endif ()

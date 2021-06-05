@@ -1,4 +1,9 @@
+- Switched RTAudio from the local copy to the git submodule https://github.com/thestk/rtaudio
+- Added ASIO support to the build for windows on github. https://github.com/oleg68/GrandOrgue/issues/8
 - Beautified README and renamed to README.md
+# 0.3.1.2341-2.os (2021-05-29)
+- Added build for linux armhf (arm 32) and aarch64 (arm64), including raspberry Pi
+# 0.3.1.2341-1.os (2021-05-22)
 - Increased the limit of PitchTuning and PitchCorrection up from 1200 to 1800 cents https://github.com/oleg68/GrandOrgue/issues/33
 - Increase builtin button font size (0.3.1.2341)
 - Ensure fixed font sizes (0.3.1.2340)
