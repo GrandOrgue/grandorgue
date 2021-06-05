@@ -1,3 +1,4 @@
+- Changed the application icons. Now they are generated from a single svg file during the build https://github.com/oleg68/GrandOrgue/issues/20
 # 0.3.1.2341-5.os (2021-06-18)
 - Added support of jack native output in Github windows build
 - Fixed compiling for windows with GO_USES_JACK=ON https://github.com/oleg68/GrandOrgue/issues/7
