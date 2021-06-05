@@ -51,8 +51,6 @@ sudo ln -s /zypper/usr/x86_64-w64-mingw32/sys-root /usr/x86_64-w64-mingw32/
 sudo mv /usr/x86_64-w64-mingw32/sys-root/mingw/lib/libmingw32.a /usr/x86_64-w64-mingw32/sys-root/mingw/lib/libmingw32.save.a
 
 # download and install ASIO sdk
-ASIO_SDK_DIR=/usr/local/asio-sdk
-
 if [ ! -d /usr/local/asio-sdk ]; then
 	DL_DIR=`mktemp -d -t asio.XXX`
 	wget -O $DL_DIR/asiosdk.zip https://www.steinberg.net/asiosdk
