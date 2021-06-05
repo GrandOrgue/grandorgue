@@ -21,8 +21,8 @@ message(STATUS "RtAudio build Configuration")
 
 INCLUDE (CheckIncludeFileCXX)
 
-include_directories(../include)
-set(RtAudio_Sources RtAudio.cpp)
+include_directories("${RTAUDIO_SRC_DIR}/include")
+set(RtAudio_Sources "${RTAUDIO_SRC_DIR}/RtAudio.cpp")
 
 if (WIN32)
   if (RTAUDIO_USE_ASIO)
@@ -30,7 +30,7 @@ if (WIN32)
       "${ASIO_SDK_DIR}/host/asiodrivers.cpp"
       "${ASIO_SDK_DIR}/host/pc/asiolist.cpp"
       "${ASIO_SDK_DIR}/common/asio.cpp"
-      asiohelpers/include/iasiothiscallresolver.cpp
+      "${RTAUDIO_SRC_DIR}/include/iasiothiscallresolver.cpp"
     )
   endif ()
 endif ()

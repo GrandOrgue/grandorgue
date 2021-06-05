@@ -91,6 +91,8 @@ jobs:
     runs-on: ${{ matrix.run_on }}
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     
     - name: Install Dependencies
       run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh

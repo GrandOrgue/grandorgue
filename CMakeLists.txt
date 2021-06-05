@@ -132,9 +132,20 @@ if(RTAUDIO_USE_ASIO AND NOT ASIO_SDK_DIR)
 endif()
 
 # include RtAudio
+if(NOT RTAUDIO_SRC_DIR)
+  set(RTAUDIO_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtAudio")
+  if(NOT EXISTS "${RTAUDIO_SRC_DIR}/RtAudio.h")
+    message(
+      FATAL_ERROR 
+      "${RTAUDIO_SRC_DIR}/RtAudio.h file does not exist."
+      "Possible the RtAudio submodule has not been updated."
+      "Try to execute 'git submodule update --init --recursive' in the source directory"
+    )
+  endif()
+endif()
 add_subdirectory(src/rt)
 set(RT_LIBRARIES RtAudio RtMidi)
-set(RT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/rt/include)
+set(RT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/rt/include ${RTAUDIO_SRC_DIR})
 
 # include portaudio
 if (USE_INTERNAL_PORTAUDIO)
