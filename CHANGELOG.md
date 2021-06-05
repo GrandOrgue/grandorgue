@@ -1,3 +1,4 @@
+# 0.3.1.2341-3.os (2021-06-05)
 - Switched RTAudio from the local copy to the git submodule https://github.com/thestk/rtaudio
 - Added ASIO support to the build for windows on github. https://github.com/oleg68/GrandOrgue/issues/8
 - Beautified README and renamed to README.md
