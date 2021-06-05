@@ -1,3 +1,4 @@
+- Replaced RtAsio with the last one from https://github.com/thestk/rtaudio
 - Added ASIO support to the build for windows on github. https://github.com/oleg68/GrandOrgue/issues/8
 - Beautified README and renamed to README.md
 # 0.3.1.2341-2.os (2021-05-29)

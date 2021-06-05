@@ -1,4 +1,8 @@
 // ****************************************************************************
+//
+// Changed:         I have modified this file slightly (includes) to work  with
+//                  RtAudio. RtAudio.cpp must include this file after asio.h.                                                    
+//
 // File:			IASIOThiscallResolver.h
 // Description:     The IASIOThiscallResolver class implements the IASIO
 //					interface and acts as a proxy to the real IASIO interface by
@@ -111,6 +115,7 @@
 // We only need IASIOThiscallResolver at all if we are on Win32. For other
 // platforms we simply bypass the IASIOThiscallResolver definition to allow us
 // to be safely #include'd whatever the platform to keep client code portable
+//#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) && !defined(_WIN64)
 
 
@@ -130,7 +135,7 @@
 #endif
 
 #include <windows.h>
-#include "asiodrvr.h" /* From ASIO SDK */
+#include "iasiodrv.h" /* From ASIO SDK */
 
 
 class IASIOThiscallResolver : public IASIO {
