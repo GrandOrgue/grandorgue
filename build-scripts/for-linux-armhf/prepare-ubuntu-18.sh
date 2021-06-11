@@ -20,3 +20,6 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y cmake g++ pkg-config rpm 
   g++-arm-linux-gnueabihf gcc-arm-linux-gnueabihf \
   libjack-dev:armhf libfftw3-dev:armhf zlib1g-dev:armhf libasound2-dev:armhf libwavpack-dev:armhf libudev-dev:armhf \
   libwxgtk3.0-gtk3-dev:armhf docbook-xsl xsltproc gettext po4a 
+
+DIR=`dirname $0`
+$DIR/../for-linux/hide-libgcc-s1-on-ubuntu.sh armhf
