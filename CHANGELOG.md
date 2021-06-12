@@ -1,3 +1,4 @@
+# 0.3.1.2341-4.os (2021-06-12)
 - Hiding dependency on libgcc-s1 for all cpu architectures
 - Could not install on ubuntu 18.04 and debian 9 caused by unsatisfied dependency on libgcc-s1
 # 0.3.1.2341-3.os (2021-06-05)
