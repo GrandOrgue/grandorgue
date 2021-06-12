@@ -45,20 +45,4 @@ make -k $PARALLEL_PRMS VERBOSE=1 package
 
 rm -f *_all.deb *.noarch.rpm
 
-# Replace libgcc-s1 dependency with libgcc1 
-DEB_PACKAGE_NAME=$(find . -maxdepth 1 -name "*_armhf.deb" -print)
-rm -rf deb-extracted 
-mkdir deb-extracted
-pushd deb-extracted
-ar x "../$DEB_PACKAGE_NAME"
-mkdir control-extracted
-pushd control-extracted
-tar xf "../control.tar.gz"
-sed -Ei 's/libgcc-s1 \(>= [^)]+\)/libgcc1 (>= 1:8)/' control
-tar cf ../control.tar.gz .
-popd
-rm -f "../$DEB_PACKAGE_NAME"
-ar rcs "../$DEB_PACKAGE_NAME" debian-binary control.tar.gz data.tar.gz
-popd
-
 popd

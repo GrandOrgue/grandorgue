@@ -31,4 +31,3 @@ make -k $PARALLEL_PRMS VERBOSE=1 package
 cpack -G RPM --config ./CPackSourceConfig.cmake
 
 popd
-
