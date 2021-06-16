@@ -1,0 +1,237 @@
+# Building GrandOrgue from sources
+## Obtaining the source code
+### With git
+The simplest way of getting source codes is to use `git`.
+
+1. Go to some directory where the GrandOgue source subdirectory will be created
+2. Clone the main GrandOrgue repository
+
+    ```
+git clone --recurse-submodules https://github.com/oleg68/GrandOrgue.git
+    ```
+
+The source code will be fetched in the GrandOrgue subdirectory of the current directory
+
+### Manually
+You can download the source code archive from GitHub
+
+1. Download archive
+    - For getting the last sources from `master` branch go to the [Download  ZIP](https://github.com/oleg68/GrandOrgue/archive/refs/heads/master.zip) on GitHub
+    - For getting sourcecode of a certain GrandOrgue release go to the [Releases page](https://github.com/oleg68/GrandOrgue/releases), select the particular release, scroll down to `Assets` and download the ``Source code (zip)`` or ``Source code (tar.gz)``
+
+2. Unpack this archive to some directory
+
+3. Download external submodules
+    1. `RtAudio`: Download [the source archive](https://github.com/thestk/rtaudio/archive/refs/heads/master.zip) end extract it's contents to the ``submodules/RtAudio`` subdirectory of GrandOrgue source tree.
+
+## Building for Linux on Linux
+1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``
+2. Install requires software
+    - Manually
+        1. Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
+        2. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
+    - Or run the prepared scripts for certain linux distributions by a sudoer user:
+        - on Fedora run ``<GO source tree>/build-scripts/for-linux/prepare-fedora.sh``
+        - on OpenSuse run ``<GO source tree>/build-scripts/for-linux/prepare-opensuse.sh``
+        - on Debian 9+ or on Ubuntu 18+ run ``<GO source tree>/build-scripts/for-linux/prepare-debian-ubuntu.sh``
+3. Build
+    1. Manually
+        1. Create an empty build directory, eg:
+
+            ```
+            mkdir $HOME/gobuild
+            ```
+
+        2. Run cmake
+
+
+            ```
+            cd /home/user/gobuild
+            cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <GO source tree>
+            ```
+
+            Hint: For debugging a build, add the -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g option to cmake.
+
+
+        3. Run make
+
+
+            ```
+            make
+            ```
+
+        4. For making tar.gz, rpm and deb packages, run
+
+
+            ```
+            make package
+            ```
+
+        5. For making rpm source package, run
+
+            ```
+            cpack -G RPM --config ./CPackSourceConfig.cmake
+            ```
+
+    - Or run the prepared build script
+
+
+        ```
+        <GO source tree>/build-scripts/for-linux/build-on-linux.sh
+        ```
+
+        The built packages will appear in the build-for/linux subdirectory of current directory, the executables - in build-for/linux/bin
+
+## Building for OS X on OS X
+1. Prequisites:
+    1. OS X >= 10.11
+    2. Xcode >= 7.3
+    3. homebrew
+2. Extract the GO sources somewhere, eg: /home/user/gosources
+3. Install the required software
+    - Manually
+
+        ```
+brew update
+brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw wavpack
+brew link gettext --force
+        ```
+
+    - Or run the prepared scripts by a sudoer user:
+
+        ```
+<GO source tree>/build-scripts/for-osx/prepare-osx.sh
+	    ```
+
+4. Build
+    - Manually
+        1. Create an empty build directory, eg: mkdir /home/user/gobuild
+        2. Run cmake:
+
+
+		    ```
+cd /home/user/gobuild
+cmake -G "Unix Makefiles" -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl <GO source tree>
+	        ```
+
+            Hint: For debugging a build, add the ``-DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g`` option to cmake.
+
+        3. Run make
+
+
+		    ```
+make
+		    ```
+
+
+        4. For making tar.gz package, run
+
+
+		    ```
+make -k package VERBOSE=1
+		    ```
+
+    - Or run the prepared build script
+
+	    ```
+<GO source tree>/build-scripts/for-osx/build-on-osx.sh
+	    ```
+
+        The built package will appear in the build-for/osx subdirectory of current directory, 
+
+## Cross-building for Windows-64 bit on Linux
+
+1. Install mingw-w64 (On Debian/Ubuntu, install the package mingw-w64) and all packages needed to build GO under Linux.
+2. Prepare 5 directores:
+    1. extracted wxWidgets sources [use the lastest release] to a directory (/wxsrc)
+    2. extract GO trunk sources to a directory (/gosrc)
+    3. create empty install directory (/inst)
+    4. create empty win build directory (/buildwin)
+    5. create empty linux build directory (/buildlinux)
+
+
+    In the following, I use the short path from above - normally you would put them somewhere under $HOME and use something like /home/user/GO/wxsrc.
+
+3. Build wxWidgets
+
+    ```
+cd /wxsrc
+./configure --host=i686-w64-mingw32 --prefix=/inst --enable-unicode
+git apply /gosrc/wxWidgets/wxWidgets-fix-build-3.0.2.patch
+(cd locale && make allmo)
+make
+make install
+    ```
+
+4. Build the tools for linux
+
+    ```
+cd /buildlinux
+cmake -G "Unix Makefiles" /gosrc/src/build
+make
+    ```
+
+5. Create toolchain definition for windows, file /inst/toolchain.def:
+
+     # the name of the target operating system
+    SET(CMAKE_SYSTEM_NAME Windows)
+    SET(MSYS 1)
+
+     # which compilers to use for C and C++
+    SET(CMAKE_C_COMPILER i686-w64-mingw32-gcc)
+    SET(CMAKE_CXX_COMPILER i686-w64-mingw32-g++)
+    SET(CMAKE_RC_COMPILER i686-w64-mingw32-windres)
+    SET(PKG_CONFIG_EXECUTABLE i686-w64-mingw32-pkg-config)
+
+     # here is the target environment located
+    SET(CMAKE_FIND_ROOT_PATH  /usr/i686-w64-mingw32 /inst)
+
+     # adjust the default behaviour of the FIND_XXX() commands:
+     # search headers and libraries in the target environment, search 
+     # programs in the host environment
+    set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+    set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+    set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+6. Build GO for windows
+
+    ```
+cd /buildwin
+cmake -DCMAKE_TOOLCHAIN_FILE=/inst/toolchain.def /gosrc -DCMAKE_INSTALL_PREFIX=/inst -DSTATIC=1 -DIMPORT_EXECUTABLES=/buildlinux/ImportExecutables.cmake -DRTAUDIO_USE_ASIO=OFF
+make
+    ```
+
+    -DRTAUDIO_USE_ASIO=OFF turns building ASIO off - else you need to put the ASIO SDK into the sources
+
+7. If you have installed NSIS too, run
+
+    ```
+make package
+    ```
+
+    to create an installer
+
+- If you want to build a 64bit version, replace everywhere in this instruction i686-w64-mingw32 with x86_64-w64-mingw32.
+
+### Simplified cross-compiling for Windows on Linux
+
+There are some ready-to use bash scripts that allow to build windows executables on linux.
+Assume you have the GrandOrgue source extracted to GrandOrgue directory
+
+1. Install the necessary software running a prepare-script by root or a sudoer-user
+    - If you have OpenSuse, run
+
+
+        ```
+        GrandOrgue/build-scripts/for-win64/prepare-opensuse.sh
+        ```
+
+	- If you have Ubuntu 20.04+, run `GrandOrgue/build-scripts/for-win64/prepare-ubuntu-20.sh`
+
+2. run build:
+
+    ```
+GrandOrgue/build-scripts/for-win64/build-on-linux.sh
+    ```
+
+    Windows executables will appear in the build-for/win64 subdirectory of the current directory
