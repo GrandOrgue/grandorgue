@@ -19,9 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "GOrgueSoundJackPort.h"
 
+// wx should be included before windows.h (from jack.h), otherwise it can not be compiled with mingw
 #include <wx/log.h>
+
+#include "GOrgueSoundJackPort.h"
 
 GOrgueSoundJackPort::GOrgueSoundJackPort(GOrgueSound* sound, wxString name) :
 	GOrgueSoundPort(sound, name)
