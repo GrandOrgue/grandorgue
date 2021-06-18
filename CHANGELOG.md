@@ -1,3 +1,6 @@
+# 0.3.1.2341-5.os (2021-06-18)
+- Added support of jack native output in Github windows build
+- Fixed compiling for windows with GO_USES_JACK=ON https://github.com/oleg68/GrandOrgue/issues/7
 - README.md has been splitted to three separates files: README.md, INSTALL.md and BUILD.md
 # 0.3.1.2341-4.os (2021-06-12)
 - Hiding dependency on libgcc-s1 for all cpu architectures
