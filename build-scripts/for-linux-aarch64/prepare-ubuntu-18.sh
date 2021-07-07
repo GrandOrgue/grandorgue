@@ -19,7 +19,7 @@ sudo apt update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y cmake g++ pkg-config rpm file \
   g++-aarch64-linux-gnu gcc-aarch64-linux-gnu \
   libjack-dev:arm64 libfftw3-dev:arm64 zlib1g-dev:arm64 libasound2-dev:arm64 libwavpack-dev:arm64 libudev-dev:arm64 \
-  libwxgtk3.0-gtk3-dev:arm64 docbook-xsl xsltproc gettext po4a 
+  libwxgtk3.0-gtk3-dev:arm64 docbook-xsl xsltproc gettext po4a imagemagick
 
 DIR=`dirname $0`
 $DIR/../for-linux/hide-libgcc-s1-on-ubuntu.sh arm64
