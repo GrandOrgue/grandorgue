@@ -38,7 +38,7 @@ CONVERTIMAGE(IMAGE_LIST save.png)
 CONVERTIMAGE(IMAGE_LIST settings.png)
 CONVERTIMAGE(IMAGE_LIST volume.png)
 CONVERTIMAGE(IMAGE_LIST Splash.jpg)
-CONVERTIMAGE(IMAGE_LIST GOIcon.ico)
+CONVERTIMAGE(IMAGE_LIST "${RESOURCEDIR}/GOIcon.ico")
 CONVERTIMAGE(IMAGE_LIST ManualCBlackDown.png)
 CONVERTIMAGE(IMAGE_LIST ManualCBlackUp.png)
 CONVERTIMAGE(IMAGE_LIST ManualCWhiteDown.png)
@@ -209,6 +209,7 @@ CONVERTIMAGE(IMAGE_LIST EnclosureD14.png)
 CONVERTIMAGE(IMAGE_LIST EnclosureD15.png)
 
 BUILD_LIBRARY(GrandOrgueImages ${IMAGE_LIST})
+add_dependencies(GrandOrgueImages resources) # Build GOIcon.ico before generating .cpp from images
 target_link_libraries(GrandOrgueImages ${wxWidgets_LIBRARIES})
 link_directories(${wxWidgets_LIBRARY_DIRS})
 
