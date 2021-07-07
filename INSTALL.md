@@ -25,19 +25,19 @@ These two steps will be described later in the text.
     - on opensuse
 
         ```
-zypper install <path>/grandorgue-<version>.<arch>.rpm <path>/grandorgue-resources-<version>.noarch.rpm <path>/grandorgue-demo-<version>.noarch.rpm
+        zypper install <path>/grandorgue-<version>.<arch>.rpm <path>/grandorgue-resources-<version>.noarch.rpm <path>/grandorgue-demo-<version>.noarch.rpm
         ```
 
     - on other systems
 
         ```
-dnf install <path>/grandorgue-<version>.<arch>.rpm <path>/grandorgue-resources-<version>.noarch.rpm <path>/grandorgue-demo-<version>.noarch.rpm
+        dnf install <path>/grandorgue-<version>.<arch>.rpm <path>/grandorgue-resources-<version>.noarch.rpm <path>/grandorgue-demo-<version>.noarch.rpm
         ```
 
     - on old systems
 
         ```
-yum install <path>/grandorgue-<version>.<arch>.rpm <path>/grandorgue-resources-<version>.noarch.rpm <path>/grandorgue-demo-<version>.noarch.rpm
+        yum install <path>/grandorgue-<version>.<arch>.rpm <path>/grandorgue-resources-<version>.noarch.rpm <path>/grandorgue-demo-<version>.noarch.rpm
         ```
 
 4. After installation, run GrandOrgue from the Aplication menu or from the overview screen.
@@ -56,15 +56,15 @@ yum install <path>/grandorgue-<version>.<arch>.rpm <path>/grandorgue-resources-<
 2. (Debian 9 only): install wx-gtk3
 
     ```
-echo "deb http://ftp.debian.org/debian stretch-backports main" | sudo tee /etc/apt/sources.list.d/backports.list
-sudo apt-get update
-apt-get install -y -t stretch-backports libwxbase3.0-0v5
+    echo "deb http://ftp.debian.org/debian stretch-backports main" | sudo tee /etc/apt/sources.list.d/backports.list
+    sudo apt-get update
+    apt-get install -y -t stretch-backports libwxbase3.0-0v5
     ```
 
 3. Install GrandOrgue with all dependencies. Execute the install command as a root:
 
     ```
-apt-get install <path>/grandorgue_<version>_<arch>.deb <path>/grandorgue-resources_<version>_all.deb <path>/grandorgue-demo_<version>_all.deb
+    apt-get install <path>/grandorgue_<version>_<arch>.deb <path>/grandorgue-resources_<version>_all.deb <path>/grandorgue-demo_<version>_all.deb
     ```
 
 4. After installation, run GrandOrgue from the Aplication menu or from the overview screen.

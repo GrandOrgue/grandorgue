@@ -7,7 +7,7 @@ The simplest way of getting source codes is to use `git`.
 2. Clone the main GrandOrgue repository
 
     ```
-git clone --recurse-submodules https://github.com/oleg68/GrandOrgue.git
+    git clone --recurse-submodules https://github.com/oleg68/GrandOrgue.git
     ```
 
 The source code will be fetched in the GrandOrgue subdirectory of the current directory
@@ -35,7 +35,7 @@ You can download the source code archive from GitHub
         - on OpenSuse run ``<GO source tree>/build-scripts/for-linux/prepare-opensuse.sh``
         - on Debian 9+ or on Ubuntu 18+ run ``<GO source tree>/build-scripts/for-linux/prepare-debian-ubuntu.sh``
 3. Build
-    1. Manually
+    - Manually
         1. Create an empty build directory, eg:
 
             ```
@@ -92,15 +92,15 @@ You can download the source code archive from GitHub
     - Manually
 
         ```
-brew update
-brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw wavpack
-brew link gettext --force
+        brew update
+        brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw wavpack
+        brew link gettext --force
         ```
 
     - Or run the prepared scripts by a sudoer user:
 
         ```
-<GO source tree>/build-scripts/for-osx/prepare-osx.sh
+        <GO source tree>/build-scripts/for-osx/prepare-osx.sh
 	    ```
 
 4. Build
@@ -110,9 +110,9 @@ brew link gettext --force
 
 
 		    ```
-cd /home/user/gobuild
-cmake -G "Unix Makefiles" -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl <GO source tree>
-	        ```
+            cd /home/user/gobuild
+            cmake -G "Unix Makefiles" -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl <GO source tree>
+        	```
 
             Hint: For debugging a build, add the ``-DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g`` option to cmake.
 
@@ -128,13 +128,13 @@ make
 
 
 		    ```
-make -k package VERBOSE=1
+            make -k package VERBOSE=1
 		    ```
 
     - Or run the prepared build script
 
 	    ```
-<GO source tree>/build-scripts/for-osx/build-on-osx.sh
+        <GO source tree>/build-scripts/for-osx/build-on-osx.sh
 	    ```
 
         The built package will appear in the build-for/osx subdirectory of current directory, 
@@ -155,20 +155,20 @@ make -k package VERBOSE=1
 3. Build wxWidgets
 
     ```
-cd /wxsrc
-./configure --host=i686-w64-mingw32 --prefix=/inst --enable-unicode
-git apply /gosrc/wxWidgets/wxWidgets-fix-build-3.0.2.patch
-(cd locale && make allmo)
-make
-make install
+    cd /wxsrc
+    ./configure --host=i686-w64-mingw32 --prefix=/inst --enable-unicode
+    git apply /gosrc/wxWidgets/wxWidgets-fix-build-3.0.2.patch
+    (cd locale && make allmo)
+    make
+    make install
     ```
 
 4. Build the tools for linux
 
     ```
-cd /buildlinux
-cmake -G "Unix Makefiles" /gosrc/src/build
-make
+    cd /buildlinux
+    cmake -G "Unix Makefiles" /gosrc/src/build
+    make
     ```
 
 5. Create toolchain definition for windows, file /inst/toolchain.def:
@@ -196,9 +196,9 @@ make
 6. Build GO for windows
 
     ```
-cd /buildwin
-cmake -DCMAKE_TOOLCHAIN_FILE=/inst/toolchain.def /gosrc -DCMAKE_INSTALL_PREFIX=/inst -DSTATIC=1 -DIMPORT_EXECUTABLES=/buildlinux/ImportExecutables.cmake -DRTAUDIO_USE_ASIO=OFF
-make
+    cd /buildwin
+    cmake -DCMAKE_TOOLCHAIN_FILE=/inst/toolchain.def /gosrc -DCMAKE_INSTALL_PREFIX=/inst -DSTATIC=1 -DIMPORT_EXECUTABLES=/buildlinux/ImportExecutables.cmake -DRTAUDIO_USE_ASIO=OFF
+    make
     ```
 
     -DRTAUDIO_USE_ASIO=OFF turns building ASIO off - else you need to put the ASIO SDK into the sources
@@ -206,7 +206,7 @@ make
 7. If you have installed NSIS too, run
 
     ```
-make package
+    make package
     ```
 
     to create an installer
@@ -231,7 +231,7 @@ Assume you have the GrandOrgue source extracted to GrandOrgue directory
 2. run build:
 
     ```
-GrandOrgue/build-scripts/for-win64/build-on-linux.sh
+    GrandOrgue/build-scripts/for-win64/build-on-linux.sh
     ```
 
     Windows executables will appear in the build-for/win64 subdirectory of the current directory
