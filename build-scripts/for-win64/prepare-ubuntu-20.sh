@@ -4,7 +4,7 @@ set -e
 sudo apt update
 sudo DEBIAN_FRONTEND=noninteractive apt install -y \
   zypper wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
-  docbook-xsl xsltproc gettext po4a
+  docbook-xsl xsltproc gettext po4a imagemagick
 
 cat >/tmp/repo-oss.repo <<EOF
 [repo-oss]
