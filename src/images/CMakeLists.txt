@@ -209,6 +209,7 @@ CONVERTIMAGE(IMAGE_LIST EnclosureD14.png)
 CONVERTIMAGE(IMAGE_LIST EnclosureD15.png)
 
 BUILD_LIBRARY(GrandOrgueImages ${IMAGE_LIST})
+add_dependencies(GrandOrgueImages resources) # Build GOIcon.ico before generating .cpp from images
 target_link_libraries(GrandOrgueImages ${wxWidgets_LIBRARIES})
 link_directories(${wxWidgets_LIBRARY_DIRS})
 

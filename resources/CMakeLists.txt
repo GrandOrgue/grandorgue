@@ -24,18 +24,24 @@ set(DEPLIST)
 # ========================
 
 # Find ImageMagick
-find_package(ImageMagick COMPONENTS convert)
+find_program(ImageMagick_convert_EXECUTABLE convert)
 
-# Setup command to generate ${CMAKE_SOURCE_DIR}/src/images/GOIcon.ico
+# Setup command to generate GOIcon.ico.
 # That icon is used for two purposes:
 # 1. Windows application icon (included from GrandOrgue.rc that is copied below and included from ${CMAKE_SOURCE_DIR}/src/grandorgue/CMakeLists.txt)
 # 2. Conversion into .cpp and usage in GO code (in ${CMAKE_SOURCE_DIR}/src/images/CMakeLists.txt)
-ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GOIcon.ico" 
+ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GOIcon.ico"
                      COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize 32x32 "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${RESOURCEDIR}/GOIcon.ico" 
                      DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg)
-ADD_CUSTOM_COMMAND(OUTPUT "{RESOURCEDIR}/GrandOrgue.rc"
-                   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc" "{RESOURCEDIR}/GrandOrgue.rc"
+# Following files reference GOIcon.ico by a relative path, because of that they need to be placed near GOIcon.ico
+ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.rc"
+                   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc" "${RESOURCEDIR}/GrandOrgue.rc"
                    DEPENDS "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc")
+ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.manifest"
+                   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.manifest" "${RESOURCEDIR}/GrandOrgue.manifest"
+                   DEPENDS "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.manifest")
+# Without that instuctions on building files above doesn't being added to Makefile
+LIST(APPEND DEPLIST "${RESOURCEDIR}/GOIcon.ico" "${RESOURCEDIR}/GrandOrgue.rc" "${RESOURCEDIR}/GrandOrgue.manifest" ${GENERATED_ICONS})
 
 # Configure generation of icons & create directory for generated .png icons
 # Directory is named GrandOrgue.iconset because iconutil (for MacOS) requires such name
