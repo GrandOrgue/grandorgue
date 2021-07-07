@@ -120,7 +120,7 @@ You can download the source code archive from GitHub
 
 
 		    ```
-make
+            make
 		    ```
 
 
@@ -173,7 +173,8 @@ make
 
 5. Create toolchain definition for windows, file /inst/toolchain.def:
 
-     # the name of the target operating system
+    ```
+    # the name of the target operating system
     SET(CMAKE_SYSTEM_NAME Windows)
     SET(MSYS 1)
 
@@ -192,6 +193,7 @@ make
     set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
     set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
     set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+    ```
 
 6. Build GO for windows
 
