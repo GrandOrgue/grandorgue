@@ -27,8 +27,9 @@ set(DEPLIST)
 find_package(ImageMagick COMPONENTS convert)
 
 # Configure generation of icons & create directory for generated icons
+# Directory is named GrandOrgue.iconset because iconutil (for MacOS) requires such name
 set(ICON_SIZES 16 32 64 128 256 512 1024)
-set(GENERATED_ICONS_DIR "${RESOURCEDIR}/generated" )
+set(GENERATED_ICONS_DIR "${RESOURCEDIR}/GrandOrgue.iconset" )
 ADD_CUSTOM_COMMAND(OUTPUT ${GENERATED_ICONS_DIR} COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_ICONS_DIR})
 
 # Setup commands to generate icons
