@@ -19,12 +19,42 @@
 
 set(DEPLIST)
 
+# ========================
+# Generate icons from svg
+# ========================
+
+# Find ImageMagick
+find_package(ImageMagick COMPONENTS convert)
+
+# Configure generation of icons & create directory for generated icons
+set(ICON_SIZES 16 32 64 128 256 512 1024)
+set(GENERATED_ICONS_DIR "${RESOURCEDIR}/generated" )
+ADD_CUSTOM_COMMAND(OUTPUT ${GENERATED_ICONS_DIR} COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_ICONS_DIR})
+
+# Setup commands to generate icons
+# GENERATED_ICONS contains paths to generated icons
+set(GENERATED_ICONS)
+foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
+  LIST(APPEND GENERATED_ICONS "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png" )
+  ADD_CUSTOM_COMMAND(OUTPUT "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png" 
+                     COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize ${ICON_SIZE}x${ICON_SIZE} "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
+                     DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg ${GENERATED_ICONS_DIR})
+endforeach()
+
+# ========================
+# Install resources
+# ========================
 if (APPLE)
    ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.icns" COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.icns "${RESOURCEDIR}/GrandOrgue.icns" DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.icns)
    INSTALL(FILES "${RESOURCEDIR}/GrandOrgue.icns" DESTINATION "${RESOURCEINSTDIR}")
-   LIST(APPEND DEPLIST "${RESOURCEDIR}/GrandOrgue.icns")
+   LIST(APPEND DEPLIST "${RESOURCEDIR}/GrandOrgue.icns" ${GENERATED_ICONS})
 elseif(UNIX)
-  install(FILES GrandOrgue.png DESTINATION share/icons/hicolor/32x32/apps)
+  # Install generated icons for linux 
+  LIST(APPEND DEPLIST ${GENERATED_ICONS})
+  foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
+    install(FILES "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png" RENAME GrandOrgue.png DESTINATION share/icons/hicolor/${ICON_SIZE}x${ICON_SIZE}/apps)
+  endforeach()
+
   install(FILES grandorgue.xml DESTINATION share/mime/packages)
 
   if (GETTEXT_FOUND)
