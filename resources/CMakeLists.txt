@@ -26,13 +26,25 @@ set(DEPLIST)
 # Find ImageMagick
 find_package(ImageMagick COMPONENTS convert)
 
-# Configure generation of icons & create directory for generated icons
+# Setup command to generate ${CMAKE_SOURCE_DIR}/src/images/GOIcon.ico
+# That icon is used for two purposes:
+# 1. Windows application icon (included from GrandOrgue.rc that is copied below and included from ${CMAKE_SOURCE_DIR}/src/grandorgue/CMakeLists.txt)
+# 2. Conversion into .cpp and usage in GO code (in ${CMAKE_SOURCE_DIR}/src/images/CMakeLists.txt)
+ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GOIcon.ico" 
+                     COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize 32x32 "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${RESOURCEDIR}/GOIcon.ico" 
+                     DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg)
+ADD_CUSTOM_COMMAND(OUTPUT "{RESOURCEDIR}/GrandOrgue.rc"
+                   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc" "{RESOURCEDIR}/GrandOrgue.rc"
+                   DEPENDS "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc")
+
+# Configure generation of icons & create directory for generated .png icons
 # Directory is named GrandOrgue.iconset because iconutil (for MacOS) requires such name
+# Icons from this directory will be included into linux package (with renaming) and into MacOS icons (assembled into archive via iconutil)
 set(ICON_SIZES 16 32 64 128 256 512 1024)
 set(GENERATED_ICONS_DIR "${RESOURCEDIR}/GrandOrgue.iconset" )
 ADD_CUSTOM_COMMAND(OUTPUT ${GENERATED_ICONS_DIR} COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_ICONS_DIR})
 
-# Setup commands to generate icons
+# Setup commands to generate .png icons of different sizes
 # GENERATED_ICONS contains paths to generated icons
 set(GENERATED_ICONS)
 foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
