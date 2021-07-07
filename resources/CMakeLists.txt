@@ -45,7 +45,7 @@ endforeach()
 # Install resources
 # ========================
 if (APPLE)
-   ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.icns" COMMAND iconutul -c icns ${GENERATED_ICONS_DIR} DEPENDS ${GENERATED_ICONS})
+   ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.icns" COMMAND iconutil -c icns ${GENERATED_ICONS_DIR} DEPENDS ${GENERATED_ICONS})
    INSTALL(FILES "${RESOURCEDIR}/GrandOrgue.icns" DESTINATION "${RESOURCEINSTDIR}")
    LIST(APPEND DEPLIST "${RESOURCEDIR}/GrandOrgue.icns" ${GENERATED_ICONS})
 elseif(UNIX)
