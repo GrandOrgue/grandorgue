@@ -37,7 +37,7 @@ set(GENERATED_ICONS)
 foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
   LIST(APPEND GENERATED_ICONS "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png" )
   ADD_CUSTOM_COMMAND(OUTPUT "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png" 
-                     COMMAND ${ImageMagick_CONVERT_EXECUTABLE} -background none -resize ${ICON_SIZE}x${ICON_SIZE} "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
+                     COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize ${ICON_SIZE}x${ICON_SIZE} "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
                      DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg ${GENERATED_ICONS_DIR})
 endforeach()
 
