@@ -548,8 +548,8 @@ msgstr "Audio-Gruppe %d"
 msgid "Audio group name"
 msgstr "Neuer Audio-Gruppenname"
 
-msgid "Program Settings"
-msgstr "Programmeinstellungen"
+msgid "&Settings..."
+msgstr "&Einstellungen..."
 
 msgid "B"
 msgstr "B"
@@ -1365,6 +1365,9 @@ msgstr "Mersenne Spinett 2"
 
 msgid "Mersenne's Improved Meantone 1"
 msgstr "Mersenne's getestet mitteltönig 1"
+
+msgid "Program Settings"
+msgstr "Programmeinstellungen"
 
 msgid "Midi-Settings for Button - "
 msgstr "MIDI Einstellung für Knopf - "
