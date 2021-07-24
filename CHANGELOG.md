@@ -1,7 +1,9 @@
-- "Audio/Midi &Settings" menu item has been renamed to "Settings..." and has been moved to the File menu
+# 0.3.1.2341-7.os (2021-07-24)
+- ``Audio/Midi &Settings`` menu item has been renamed to ``Settings...`` and has been moved to the File menu
 - Added capability of setting the UI language https://github.com/oleg68/GrandOrgue/issues/45
 - Fixed formatting of .md files
 # 0.3.1.2341-6.os (2021-07-07)
+- Fixed dialog colours in the Dark mode on OSx.
 - Changed the application icons. Now they are generated from a single svg file during the build https://github.com/oleg68/GrandOrgue/issues/20
 # 0.3.1.2341-5.os (2021-06-18)
 - Added support of jack native output in Github windows build
