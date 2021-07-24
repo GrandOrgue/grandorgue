@@ -697,8 +697,8 @@ msgstr "Katalog för ljudinspelningar:"
 msgid "Audio recordings"
 msgstr "Ljudinspelningar"
 
-msgid "Audio/Midi &Settings"
-msgstr "Ljud-/Midi&inställningar"
+msgid "&Settings..."
+msgstr "Inställningar..."
 
 msgid "Automatically manage cache"
 msgstr "Hantera cachen automatiskt"
@@ -1947,8 +1947,8 @@ msgstr "Mersennes förbättrade medelton 1"
 msgid "Metronome"
 msgstr "Metronom"
 
-msgid "Midi & Audio Settings"
-msgstr "Midi- & Ljudinställningar"
+msgid "Program Settings"
+msgstr "Programinställningar"
 
 msgid "Midi player directory:"
 msgstr "Katalog för MIDI spelaren:"
@@ -3302,9 +3302,6 @@ msgstr "}"
 
 #~ msgid "&Reverb"
 #~ msgstr "&Reverb"
-
-#~ msgid "&Settings..."
-#~ msgstr "&Inställningar..."
 
 #~ msgid "*.organ"
 #~ msgstr "*.organ"

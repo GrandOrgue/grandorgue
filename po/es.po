@@ -698,8 +698,8 @@ msgstr "Directorio de grabaciones de audio:"
 msgid "Audio recordings"
 msgstr "Grabaciones de audio"
 
-msgid "Audio/Midi &Settings"
-msgstr "Configuración Audio/Midi"
+msgid "&Settings..."
+msgstr "Conf&iguración..."
 
 msgid "Automatically manage cache"
 msgstr "Gestionar caché automáticamente"
@@ -1953,8 +1953,8 @@ msgstr "Mesotónico de Mersenne mejorado 1"
 msgid "Metronome"
 msgstr "Metrónomo"
 
-msgid "Midi & Audio Settings"
-msgstr "Configuraciones Midi & Audio"
+msgid "Program Settings"
+msgstr "Configuración del programa"
 
 msgid "Midi player directory:"
 msgstr "Directorio del reproductor MIDI:"

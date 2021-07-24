@@ -1309,8 +1309,8 @@ msgstr "&Temperamento"
 msgid "&Organ settings"
 msgstr "&Impostazioni dell'organo"
 
-msgid "Audio/Midi &Settings"
-msgstr "Audio/Midi &Impostazioni"
+msgid "&Settings..."
+msgstr "&Impostazioni..."
 
 msgid "&Record\tCtrl+R"
 msgstr "&Registrare\tCtrl+R"
@@ -1577,8 +1577,8 @@ msgstr "&Data:"
 msgid "MIDI Messages"
 msgstr "Messaggi MIDI"
 
-msgid "Midi & Audio Settings"
-msgstr "Impostazioni MIDI e audio"
+msgid "Program Settings"
+msgstr "Impostazioni del programma"
 
 msgid "Options"
 msgstr "Opzioni"

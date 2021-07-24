@@ -2150,8 +2150,8 @@ msgstr "Paramètres &orgue en cours d'utilisation"
 msgid "M&idi Objects"
 msgstr "Objets M&idi"
 
-msgid "Audio/Midi &Settings"
-msgstr "Paramètre&s Audio/Midi"
+msgid "&Settings..."
+msgstr "Paramètre&s..."
 
 msgid "&Sound Output State"
 msgstr "Etat de la &sortie audio"
@@ -2958,8 +2958,8 @@ msgstr "Dossier du séquenceur MIDI:"
 msgid "Select directory for the MIDI player"
 msgstr "Choisir le dossier pour le séquenceur MIDI"
 
-msgid "Midi & Audio Settings"
-msgstr "Paramètres Midi & Audio"
+msgid "Program Settings"
+msgstr "Paramètres du programme"
 
 msgid "Options"
 msgstr ""

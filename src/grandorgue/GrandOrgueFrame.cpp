@@ -90,7 +90,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU(ID_AUDIO_PANIC, GOrgueFrame::OnAudioPanic)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
 	EVT_MENU(ID_AUDIO_STATE, GOrgueFrame::OnAudioState)
-	EVT_MENU(ID_AUDIO_SETTINGS, GOrgueFrame::OnAudioSettings)
+	EVT_MENU(ID_SETTINGS, GOrgueFrame::OnAudioSettings)
 	EVT_MENU(ID_MIDI_LOAD, GOrgueFrame::OnMidiLoad)
 	EVT_MENU(wxID_HELP, GOrgueFrame::OnHelp)
 	EVT_MENU(wxID_ABOUT, GOrgueFrame::OnHelpAbout)
@@ -189,6 +189,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_file_menu->Append(ID_FILE_EXPORT, _("&Export Settings/Combinations"), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->AppendSeparator();
 	m_file_menu->Append(ID_FILE_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
+	m_file_menu->Append(ID_SETTINGS, _("&Settings..."), wxEmptyString, wxITEM_NORMAL);
 	m_file_menu->Append(ID_FILE_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
 	
 	m_temperament_menu = new wxMenu;
@@ -198,7 +199,6 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_audio_menu->Append(ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->Append(ID_MIDI_LIST, _("M&idi Objects"), wxEmptyString, wxITEM_CHECK);
 	m_audio_menu->AppendSeparator();
-	m_audio_menu->Append(ID_AUDIO_SETTINGS, _("Audio/Midi &Settings"), wxEmptyString, wxITEM_NORMAL);
 	m_audio_menu->Append(ID_AUDIO_STATE, _("&Sound Output State"), wxEmptyString, wxITEM_NORMAL);
 	m_audio_menu->AppendSeparator();
 	m_audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
@@ -320,7 +320,7 @@ void GOrgueFrame::Init(wxString filename)
 	m_Sound.SetLogSoundErrorMessages(true);
 	if (!open_sound || !m_Sound.GetMidi().HasActiveDevice())
 	{
-		wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_AUDIO_SETTINGS);
+		wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_SETTINGS);
 		GetEventHandler()->AddPendingEvent(event);
 	}
 	GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);

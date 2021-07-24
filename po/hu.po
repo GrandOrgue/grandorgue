@@ -789,8 +789,8 @@ msgstr "Hangfelvétel hossza"
 msgid "Audio recordings"
 msgstr "Hangfelvételek"
 
-msgid "Audio/Midi &Settings"
-msgstr "Hang/Midi &beállítások"
+msgid "&Settings..."
+msgstr "&Beállítások"
 
 msgid "Automatically manage cache"
 msgstr "Gyorsítótár önműködő kezelése"
@@ -2156,8 +2156,8 @@ msgstr "Metronóm"
 msgid "Metronome BPM"
 msgstr "Metronóm negyed/perc"
 
-msgid "Midi & Audio Settings"
-msgstr "Midi & hang beállítások"
+msgid "Program Settings"
+msgstr "Programbeállítások"
 
 msgid "Midi player directory:"
 msgstr "MIDI-lejátszó könyvtára:"

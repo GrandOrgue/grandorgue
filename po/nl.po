@@ -618,8 +618,8 @@ msgstr "Audiogroep:"
 msgid "Audio groups"
 msgstr "Audiogroepen"
 
-msgid "Audio/Midi &Settings"
-msgstr "Au&dio/Midi-instellingen"
+msgid "&Settings..."
+msgstr "&Instellingen..."
 
 msgid "Automatically manage cache"
 msgstr "Cache automatisch beheren"
@@ -1617,8 +1617,8 @@ msgstr "Mersenne spinet 2"
 msgid "Mersenne's Improved Meantone 1"
 msgstr "Mersennes verbeterde middentoonstemming 1"
 
-msgid "Midi & Audio Settings"
-msgstr "Midi- & audio-instellingen"
+msgid "Program Settings"
+msgstr "Programma-instellingen"
 
 msgid "Midi-Settings for Button - "
 msgstr "Midi-instellingen voor knop - "
