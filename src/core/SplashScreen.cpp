@@ -61,13 +61,14 @@ void GOrgueSplashBitmap::OnKey(wxKeyEvent& event)
 #define GORGUE_SPLASH_TIMEOUT_LENGTH (3000)
 
 BEGIN_EVENT_TABLE(GOrgueSplash, wxDialog)
+	EVT_SHOW(GOrgueSplash::OnShowWindow)
 	EVT_TIMER(GORGUE_SPLASH_TIMER_ID, GOrgueSplash::OnNotify)
 	EVT_CLOSE(GOrgueSplash::OnCloseWindow)
 END_EVENT_TABLE()
 
-GOrgueSplash::GOrgueSplash(int has_timeout, wxWindow *parent, wxWindowID id) :
+GOrgueSplash::GOrgueSplash(bool has_timeout, wxWindow *parent, wxWindowID id) :
 	wxDialog(parent, id, wxEmptyString, wxPoint(0, 0), wxSize(100, 100), wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP),
-	m_Timer(this, GORGUE_SPLASH_TIMER_ID)
+	m_Timer(this, GORGUE_SPLASH_TIMER_ID), m_hasTimeout(has_timeout)
 {
 	SetExtraStyle(GetExtraStyle() | wxWS_EX_TRANSIENT);
 	wxBitmap bitmap = GetImage_Splash();
@@ -75,17 +76,6 @@ GOrgueSplash::GOrgueSplash(int has_timeout, wxWindow *parent, wxWindowID id) :
 	m_Image = new GOrgueSplashBitmap(this, wxID_ANY, bitmap);
 	SetClientSize(bitmap.GetWidth(), bitmap.GetHeight());
 	CentreOnScreen();
-	if (has_timeout)
-	{
-		m_Timer.Start(GORGUE_SPLASH_TIMEOUT_LENGTH, true);
-		Show(true);
-	}
-	m_Image->SetFocus();
-	Update();
-	if (!has_timeout)
-	{
-		ShowModal();
-	}
 }
 
 void GOrgueSplash::DrawText(wxBitmap& bitmap)
@@ -124,14 +114,36 @@ GOrgueSplash::~GOrgueSplash()
 	m_Timer.Stop();
 }
 
+void GOrgueSplash::OnShowWindow(wxShowEvent &event)
+{
+  if (m_hasTimeout)
+    m_Timer.Start(GORGUE_SPLASH_TIMEOUT_LENGTH, true);
+  m_Image->SetFocus();
+  Update();
+}
+
 void GOrgueSplash::OnNotify(wxTimerEvent& WXUNUSED(event))
 {
-	Close(true);
+  Close(true);
 }
 
 void GOrgueSplash::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
 {
-	m_Timer.Stop();
-	this->Destroy();
+  m_Timer.Stop();
+  if (m_hasTimeout)
+    Destroy();
+  else
+    EndModal(wxID_OK);
 }
 
+void GOrgueSplash::DoSplash(bool hasTimeout, wxWindow *parent) {
+  GOrgueSplash* const splash = new GOrgueSplash(hasTimeout, parent, wxID_ANY);
+  
+  if (hasTimeout)
+    splash->Show();
+  else
+  {
+    splash->ShowModal();
+    splash->Destroy();
+  }
+}

@@ -47,20 +47,24 @@ class GOrgueSplash : private wxDialog
 private:
 	GOrgueSplashBitmap* m_Image;
 	wxTimer  m_Timer;
+	bool m_hasTimeout;
 
+	GOrgueSplash
+		(bool               has_timeout
+		,wxWindow          *parent
+		,wxWindowID         id
+		);
+	~GOrgueSplash();
+	
+	void OnShowWindow(wxShowEvent &event);
 	void OnCloseWindow(wxCloseEvent& event);
 	void OnNotify(wxTimerEvent& event);
 
 	void DrawText(wxBitmap& bitmap);
 
 public:
-	GOrgueSplash
-		(int                has_timeout
-		,wxWindow          *parent
-		,wxWindowID         id
-		);
-	~GOrgueSplash();
-
+	static void DoSplash(bool hasTimeout, wxWindow *parent);
+	
 	DECLARE_EVENT_TABLE()
 };
 

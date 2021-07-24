@@ -920,7 +920,7 @@ void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)
 
 void GOrgueFrame::DoSplash(bool timeout)
 {
-	new GOrgueSplash (timeout, this, wxID_ANY);
+	GOrgueSplash::DoSplash (timeout, this);
 }
 
 void GOrgueFrame::OnMenuOpen(wxMenuEvent& event)
