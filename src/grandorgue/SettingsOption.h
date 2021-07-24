@@ -59,6 +59,7 @@ class SettingsOption : public wxScrolledWindow
 		ID_MEMORY_LIMIT,
 		ID_ODF_CHECK,
 		ID_RECORD_DOWNMIX,
+		ID_LANGUAGE
 	};
 private:
 	GOrgueSettings& m_Settings;
@@ -86,6 +87,7 @@ private:
 	wxChoice* m_SampleRate;
 	wxSpinCtrl* m_SamplesPerBuffer;
 	wxSpinCtrl* m_MemoryLimit;
+	wxChoice* m_Language;
 	unsigned m_OldChannels;
 	bool m_OldLosslessCompression;
 	unsigned m_OldBitsPerSample;

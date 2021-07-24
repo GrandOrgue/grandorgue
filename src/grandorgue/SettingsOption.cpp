@@ -33,6 +33,7 @@
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 
+
 SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL),
 	m_Settings(settings)
@@ -214,6 +215,29 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item9->Add(m_ODFCheck  = new wxCheckBox(this, ID_ODF_CHECK, _("Perform strict ODF")), 0, wxEXPAND | wxALL, 5);
 	m_ODFCheck->SetValue(m_Settings.ODFCheck());
 
+	// Language
+	item6 = new wxStaticBoxSizer(wxVERTICAL, this, wxT("&Language (need to restart)"));
+	item6->Add(m_Language = new wxChoice(this, ID_LANGUAGE), 0, wxEXPAND | wxALL, 5);
+	m_Language->Append("Default (" + wxLocale::GetLanguageName(wxLocale::GetSystemLanguage()) + ")", new wxStringClientData(wxEmptyString));
+	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_ENGLISH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_ENGLISH)));
+	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_DUTCH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_DUTCH)));
+	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_FRENCH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_FRENCH)));
+	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_GERMAN), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_GERMAN)));
+	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_ITALIAN), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_ITALIAN)));
+	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_SPANISH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_SPANISH)));
+	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_SWEDISH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_SWEDISH)));
+	
+	const wxString langCode = m_Settings.LanguageCode();
+	m_Language->SetSelection(0);
+	for (unsigned i = 0; i < m_Language->GetCount(); i++)
+	{
+	  const wxStringClientData* const clientStr = (wxStringClientData*) m_Language->GetClientObject(i);
+	  
+	  if (clientStr->GetData() == langCode)
+	    m_Language->SetSelection(i);
+	}
+	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+
 	topSizer->Add(item0, 1, wxEXPAND | wxALL, 5);
 	topSizer->AddSpacer(5);
 	this->SetScrollRate(5, 5);
@@ -254,6 +278,10 @@ void SettingsOption::Save()
 		wxLogError(_("Invalid sample rate"));
 	m_Settings.SamplesPerBuffer(m_SamplesPerBuffer->GetValue());
 	m_Settings.MemoryLimit(m_MemoryLimit->GetValue());
+	
+	// Language
+	const wxStringClientData * const langData = (wxStringClientData *) m_Language->GetClientObject(m_Language->GetSelection());
+	m_Settings.LanguageCode(langData->GetData());
 }
 
 bool SettingsOption::NeedReload()

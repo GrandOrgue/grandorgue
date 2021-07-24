@@ -83,7 +83,6 @@ private:
 	ptr_vector<GOrgueMidiReceiverBase> m_MIDIEvents;
 	GOrgueMidiMap m_MidiMap;
 	GOrgueTemperamentList m_Temperaments;
-
 	static const GOMidiSetting m_MIDISettings[];
 	static const struct IniFileEnumEntry m_InitialLoadTypes[];
 
@@ -134,6 +133,8 @@ public:
 	GOrgueSettingUnsigned PolyphonyLimit;
 	GOrgueSettingUnsigned Preset;
 	GOrgueSettingUnsigned ReleaseLength;
+	GOrgueSettingString LanguageCode;
+
 	class GOrgueSettingUnsignedBit : public GOrgueSettingUnsigned
 	{
 	protected:
@@ -164,6 +165,10 @@ public:
 	GOrgueSettingDirectory MidiPlayerPath;
 
 	void Load();
+
+	int GetLanguageId() const;
+	void SetLanguageId(int langId);
+	
 	const wxString GetResourceDirectory();
 	const wxString GetPackageDirectory();
 

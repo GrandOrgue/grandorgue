@@ -90,10 +90,6 @@ bool GOrgueApp::OnInit()
 	/* wxMessageOutputStderr break wxLogStderr (fwide), therefore use MessageBox everywhere */
 	wxMessageOutput::Set(new wxMessageOutputMessageBox());
 
-	GOrgueStdPath::InitLocaleDir();
-	m_locale.Init(wxLANGUAGE_DEFAULT);
-	m_locale.AddCatalog(wxT("GrandOrgue"));
-
 #ifdef __WXMAC__
 	/* This ensures that the executable (when it is not in the form of an OS X
 	 * bundle, is brought into the foreground). GetCurrentProcess() should not
@@ -126,6 +122,10 @@ bool GOrgueApp::OnInit()
 
 	m_Settings = new GOrgueSettings(m_InstanceName);
 	m_Settings->Load();
+
+	GOrgueStdPath::InitLocaleDir();
+	m_locale.Init(m_Settings->GetLanguageId());
+	m_locale.AddCatalog(wxT("GrandOrgue"));
 
 	m_soundSystem = new GOrgueSound(*m_Settings);
 
