@@ -3842,6 +3842,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchive.cpp"
@@ -3869,6 +3896,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveCreator.cpp"
@@ -3896,6 +3950,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveEntryFile.cpp"
@@ -3923,6 +4004,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveFile.cpp"
@@ -3951,6 +4059,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveIndex.cpp"
@@ -3979,6 +4114,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveManager.cpp"
@@ -4006,6 +4168,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveReader.cpp"
@@ -4034,6 +4223,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueArchiveWriter.cpp"
@@ -4060,6 +4276,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueBitmap.cpp"
@@ -4087,6 +4330,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueCompress.cpp"
@@ -4113,6 +4383,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueConfigFileReader.cpp"
@@ -4141,6 +4438,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueConfigFileWriter.cpp"
@@ -4168,6 +4492,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueConfigReader.cpp"
@@ -4195,6 +4546,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueConfigReaderDB.cpp"
@@ -4222,6 +4600,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueConfigWriter.cpp"
@@ -4249,6 +4654,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueDC.cpp"
@@ -4276,6 +4708,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueDocumentBase.cpp"
@@ -4303,6 +4762,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueEvent.cpp"
@@ -4330,6 +4816,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueEventDistributor.cpp"
@@ -4355,6 +4868,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueFont.cpp"
@@ -4381,6 +4921,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueHash.cpp"
@@ -4408,6 +4975,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueInvalidFile.cpp"
@@ -4433,6 +5027,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueKeyConvert.cpp"
@@ -4458,6 +5079,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueKeyReceiverData.cpp"
@@ -4469,6 +5117,33 @@
             <pElem>src/core</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueLoadThread.cpp"
@@ -4495,6 +5170,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueLog.cpp"
@@ -4522,6 +5224,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueLogWindow.cpp"
@@ -4549,6 +5278,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMemoryPool.cpp"
@@ -4576,6 +5332,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiEvent.cpp"
@@ -4601,6 +5384,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiFileReader.cpp"
@@ -4628,6 +5438,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiMap.cpp"
@@ -4653,6 +5490,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiMerger.cpp"
@@ -4678,6 +5542,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiOutputMerger.cpp"
@@ -4703,6 +5594,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiPlayerContent.cpp"
@@ -4728,6 +5646,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiReceiverBase.cpp"
@@ -4754,6 +5699,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiReceiverData.cpp"
@@ -4779,6 +5751,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiSenderData.cpp"
@@ -4796,6 +5795,33 @@
             <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueMidiWXEvent.cpp"
@@ -4822,6 +5848,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueOrgan.cpp"
@@ -4850,6 +5903,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueOrganList.cpp"
@@ -4876,6 +5956,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrguePath.cpp"
@@ -4903,6 +6010,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueRodgers.cpp"
@@ -4921,6 +6055,33 @@
             <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSampleStatistic.cpp"
@@ -4938,6 +6099,33 @@
             <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSetting.cpp"
@@ -4963,6 +6151,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingBool.cpp"
@@ -4989,6 +6204,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingDirectory.cpp"
@@ -5015,6 +6257,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingEnum.cpp"
@@ -5041,6 +6310,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingFile.cpp"
@@ -5067,6 +6363,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingFloat.cpp"
@@ -5093,6 +6416,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingStore.cpp"
@@ -5118,6 +6468,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueSettingString.cpp"
@@ -5144,6 +6521,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueStandardFile.cpp"
@@ -5170,6 +6574,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueStdPath.cpp"
@@ -5196,6 +6627,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueTemperament.cpp"
@@ -5221,6 +6679,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueTemperamentCent.cpp"
@@ -5246,6 +6731,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueTemperamentList.cpp"
@@ -5272,6 +6784,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueTemperamentUser.cpp"
@@ -5298,6 +6837,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueThread.cpp"
@@ -5317,6 +6883,33 @@
             <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueTimer.cpp"
@@ -5344,6 +6937,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueUtil.cpp"
@@ -5370,6 +6990,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueView.cpp"
@@ -5397,6 +7044,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueWavPack.cpp"
@@ -5417,6 +7091,33 @@
             <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueWavPackWriter.cpp"
@@ -5437,6 +7138,33 @@
             <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/GOrgueWave.cpp"
@@ -5465,6 +7193,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/MIDIList.cpp"
@@ -5492,6 +7247,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/OrganSelectDialog.cpp"
@@ -5519,34 +7301,51 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/SplashScreen.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="2">
+        <ccTool flags="4">
           <incDir>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>src/core</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
             <pElem>build-for/current/src/core/GrandOrgueDef.h</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/core/contrib/sha1.cpp"
@@ -5581,6 +7380,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>build-for/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_MINOR__=1</Elem>
+            <Elem>__GNUC_RH_RELEASE__=1</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/GOGUIBankedGeneralsPanel.cpp"
@@ -9556,6 +11382,17 @@
             <Elem>GrandOrgueCore_EXPORTS=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>__WXGTK__=1</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/core/contrib">
+        <ccTool>
+          <incDir>
+            <pElem>src/core/contrib</pElem>
+            <pElem>build-for/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
             <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
@@ -9578,19 +11415,10 @@
             <Elem>__STRICT_ANSI__=1</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
             <Elem>__VERSION__="11.1.1 20210428 (Red Hat 11.1.1-1)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
             <Elem>__cplusplus=201103L</Elem>
             <Elem>__cpp_constexpr=200704L</Elem>
             <Elem>__pic__=2</Elem>
           </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/core/contrib">
-        <ccTool>
-          <incDir>
-            <pElem>src/core/contrib</pElem>
-            <pElem>build-for/current/src/core</pElem>
-          </incDir>
         </ccTool>
       </folder>
       <folder path="0/src/grandorgue">

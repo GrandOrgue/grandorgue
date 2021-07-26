@@ -1,3 +1,4 @@
+- Moved Language selection on top of the first setting page
 - Fixed hang after opening the About window on OsX https://github.com/oleg68/GrandOrgue/issues/25
 # 0.3.1.2341-7.os (2021-07-24)
 - ``Audio/Midi &Settings`` menu item has been renamed to ``Settings...`` and has been moved to the File menu
