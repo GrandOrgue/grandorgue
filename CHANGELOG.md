@@ -1,3 +1,4 @@
+- Changed the sound device name format to ``Subsys: Api: Device`` https://github.com/oleg68/GrandOrgue/issues/48
 # 0.3.1.2341-8.os (2021-07-26)
 - Moved Language selection on top of the first setting page
 - Fixed hang after opening the About window on OsX https://github.com/oleg68/GrandOrgue/issues/25

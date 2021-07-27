@@ -165,6 +165,25 @@ int GOrgueSoundRtPort::Callback(void *outputBuffer, void *inputBuffer, unsigned 
 
 wxString GOrgueSoundRtPort::getName(RtAudio::Api api, RtAudio* rt_api, unsigned index)
 {
+  wxString apiName = GOrgueRtHelpers::GetApiName(api);
+  wxString devName;
+
+  try
+  {
+    RtAudio::DeviceInfo info = rt_api->getDeviceInfo(index);
+    devName = wxString(info.name);
+  }
+  catch (RtAudioError &e)
+  {
+	  wxString error = wxString::FromAscii(e.getMessage().c_str());
+	  wxLogError(_("RtAudio error: %s"), error.c_str());
+	  devName = wxString::Format(_("<unknown> %d"), index);
+  }
+  return composeDeviceName(getSubsysName(), apiName, devName);
+}
+
+wxString get_oldstyle_name(RtAudio::Api api, RtAudio* rt_api, unsigned index)
+{
 	wxString prefix = GOrgueRtHelpers::GetApiName(api) + wxString(wxT(": "));
 	try
 	{
@@ -181,38 +200,44 @@ wxString GOrgueSoundRtPort::getName(RtAudio::Api api, RtAudio* rt_api, unsigned 
 
 GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
 {
-	try
+  try
+  {
+    std::vector<RtAudio::Api> rtaudio_apis;
+    RtAudio::getCompiledApi(rtaudio_apis);
+
+    for (unsigned k = 0; k < rtaudio_apis.size(); k++)
+    {
+      RtAudio* audioApi = NULL;
+
+      try
+      {
+	audioApi = new RtAudio(rtaudio_apis[k]);
+	for (unsigned i = 0; i < audioApi->getDeviceCount(); i++)
 	{
-		std::vector<RtAudio::Api> rtaudio_apis;
-		RtAudio::getCompiledApi(rtaudio_apis);
+	  const wxString devName = getName(rtaudio_apis[k], audioApi, i);
 
-		for (unsigned k = 0; k < rtaudio_apis.size(); k++)
-		{
-			RtAudio* audioDevice = 0;
-
-			try
-			{
-				audioDevice = new RtAudio(rtaudio_apis[k]);
-				for (unsigned i = 0; i < audioDevice->getDeviceCount(); i++)
-					if (getName(rtaudio_apis[k], audioDevice, i) == name)
-						return new GOrgueSoundRtPort(sound, name, rtaudio_apis[k]);
-
-			}
-			catch (RtAudioError &e)
-			{
-				wxString error = wxString::FromAscii(e.getMessage().c_str());
-				wxLogError(_("RtAudio error: %s"), error.c_str());
-			}
-			if (audioDevice)
-				delete audioDevice;
-		}
+	  if (
+	    devName == name
+	    || get_oldstyle_name(rtaudio_apis[k], audioApi, i) == name
+	  )
+	    return new GOrgueSoundRtPort(sound, devName, rtaudio_apis[k]);
 	}
-	catch (RtAudioError &e)
-	{
-		wxString error = wxString::FromAscii(e.getMessage().c_str());
-		wxLogError(_("RtAudio error: %s"), error.c_str());
-	}
-	return NULL;
+      }
+      catch (RtAudioError &e)
+      {
+	wxString error = wxString::FromAscii(e.getMessage().c_str());
+	wxLogError(_("RtAudio error: %s"), error.c_str());
+      }
+      if (audioApi)
+	delete audioApi;
+    }
+  }
+  catch (RtAudioError &e)
+  {
+	  wxString error = wxString::FromAscii(e.getMessage().c_str());
+	  wxLogError(_("RtAudio error: %s"), error.c_str());
+  }
+  return NULL;
 }
 
 void GOrgueSoundRtPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)

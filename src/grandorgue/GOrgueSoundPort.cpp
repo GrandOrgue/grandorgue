@@ -72,6 +72,30 @@ const wxString& GOrgueSoundPort::GetName()
 	return m_Name;
 }
 
+static const wxString NAME_DELIM = wxT(": ");
+
+void append_name(wxString const &nameComp, wxString &resName)
+{
+  if (! nameComp.IsEmpty()) {
+    resName.Append(nameComp);
+    resName.Append(NAME_DELIM);
+  }
+}
+
+wxString GOrgueSoundPort::composeDeviceName(
+  wxString const &subsysName,
+  wxString const &apiName,
+  wxString const &devName
+)
+{
+  wxString resName;
+  
+  append_name(subsysName, resName);
+  append_name(apiName, resName);
+  append_name(devName, resName);
+  return resName;
+}
+
 GOrgueSoundPort* GOrgueSoundPort::create(GOrgueSound* sound, wxString name)
 {
 	GOrgueSoundPort *port = NULL;

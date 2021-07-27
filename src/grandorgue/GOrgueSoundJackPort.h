@@ -37,6 +37,8 @@
 class GOrgueSoundJackPort : public GOrgueSoundPort
 {
 public:
+	static wxString getSubsysName() { return wxT("Jack"); }
+  
 	GOrgueSoundJackPort(GOrgueSound* sound, wxString name);
 	~GOrgueSoundJackPort();
 
@@ -51,6 +53,8 @@ private:
 	static void JackLatencyCallback (jack_latency_callback_mode_t mode, void *data);
 	static int JackProcessCallback(jack_nframes_t nFrames, void *data);
 	static void JackShutdownCallback(void *data);
+	
+	static wxString getName();
 	
 public:
 	void Open();

@@ -34,6 +34,13 @@ GOrgueSoundPortaudioPort::~GOrgueSoundPortaudioPort()
 	Close();
 }
 
+wxString GOrgueSoundPortaudioPort::getName(unsigned index)
+{
+	const PaDeviceInfo* info = Pa_GetDeviceInfo(index);
+	const PaHostApiInfo *api = Pa_GetHostApiInfo(info->hostApi);
+	return composeDeviceName(getSubsysName(), wxString::FromAscii(api->name), wxString(info->name));
+}
+
 void GOrgueSoundPortaudioPort::Open()
 {
 	Close();
@@ -90,7 +97,8 @@ int GOrgueSoundPortaudioPort::Callback (const void *input, void *output, unsigne
 		return paAbort;
 }
 
-wxString GOrgueSoundPortaudioPort::getName(unsigned index)
+// for compatibility with old settings
+wxString get_oldstyle_name(unsigned index)
 {
 	const PaDeviceInfo* info = Pa_GetDeviceInfo(index);
 	const PaHostApiInfo *api = Pa_GetHostApiInfo(info->hostApi);
@@ -100,8 +108,11 @@ wxString GOrgueSoundPortaudioPort::getName(unsigned index)
 GOrgueSoundPort* GOrgueSoundPortaudioPort::create(GOrgueSound* sound, wxString name)
 {
 	for(int i = 0; i < Pa_GetDeviceCount(); i++)
-		if (getName(i) == name)
-			return new GOrgueSoundPortaudioPort(sound, name);
+	{
+	  wxString devName = getName(i);
+		if (devName == name || get_oldstyle_name(i) == name)
+			return new GOrgueSoundPortaudioPort(sound, devName);
+	}
 	return NULL;
 }
 

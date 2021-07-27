@@ -43,6 +43,12 @@ protected:
 
 	void SetActualLatency(double latency);
 	bool AudioCallback(float* outputBuffer, unsigned int nFrames);
+	
+	static wxString composeDeviceName(
+	  wxString const &subsysName,
+	  wxString const &apiName,
+	  wxString const &devName
+	);
 
 public:
 	GOrgueSoundPort(GOrgueSound* sound, wxString name);

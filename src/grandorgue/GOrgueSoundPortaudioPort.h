@@ -32,9 +32,11 @@ private:
 
 	static int Callback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData);
 
-public:
 	static wxString getName(unsigned index);
 
+public:
+	static wxString getSubsysName() { return wxT("PA"); }
+  
 	GOrgueSoundPortaudioPort(GOrgueSound* sound, wxString name);
 	virtual ~GOrgueSoundPortaudioPort();
 
