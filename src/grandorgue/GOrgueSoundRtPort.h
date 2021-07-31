@@ -37,7 +37,7 @@ private:
 	static wxString getName(RtAudio::Api api, RtAudio* rt_api, unsigned index);
 
 public:
-	static wxString getSubsysName() { return wxT("RTA"); }
+	static wxString getSubsysName() { return wxT("RT"); }
   
 	GOrgueSoundRtPort(GOrgueSound* sound, wxString name, RtAudio::Api api);
 	~GOrgueSoundRtPort();

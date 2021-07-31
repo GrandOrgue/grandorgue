@@ -31,40 +31,59 @@ class GOrgueSound;
 class GOrgueSoundPort
 {
 protected:
-	GOrgueSound* m_Sound;
-	unsigned m_Index;
-	bool m_IsOpen;
-	wxString m_Name;
-	unsigned m_Channels;
-	unsigned m_SamplesPerBuffer;
-	unsigned m_SampleRate;
-	unsigned m_Latency;
-	int m_ActualLatency;
+  GOrgueSound* m_Sound;
+  unsigned m_Index;
+  bool m_IsOpen;
+  wxString m_Name;
+  unsigned m_Channels;
+  unsigned m_SamplesPerBuffer;
+  unsigned m_SampleRate;
+  unsigned m_Latency;
+  int m_ActualLatency;
 
-	void SetActualLatency(double latency);
-	bool AudioCallback(float* outputBuffer, unsigned int nFrames);
-	
-	static wxString composeDeviceName(
-	  wxString const &subsysName,
-	  wxString const &apiName,
-	  wxString const &devName
-	);
+  void SetActualLatency(double latency);
+  bool AudioCallback(float* outputBuffer, unsigned int nFrames);
+
+  static wxString composeDeviceName(
+    wxString const &subsysName,
+    wxString const &apiName,
+    wxString const &devName
+  );
 
 public:
-	GOrgueSoundPort(GOrgueSound* sound, wxString name);
-	virtual ~GOrgueSoundPort();
+  class NameParser
+  {
+  private:
+    const wxString &m_Name;
+    size_t m_Pos;
 
-	void Init(unsigned channels, unsigned sample_rate, unsigned samples_per_buffer, unsigned latency, unsigned index);
-	virtual void Open() = 0;
-	virtual void StartStream() = 0;
-	virtual void Close() = 0;
+  public:
+    NameParser(const wxString &name): m_Name(name), m_Pos(name.IsEmpty() ? wxString::npos : 0) { }
+    NameParser(const NameParser &src): m_Name(src.m_Name), m_Pos(src.m_Pos) { }
 
-	const wxString& GetName();
+    const wxString &GetOrigName() const { return m_Name; }
+    bool hasMore() const { return m_Pos != wxString::npos; }
 
-	static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
-	static std::vector<GOrgueSoundDevInfo> getDeviceList();
+    const wxString GetRestName() const 
+    { return hasMore() ? m_Name.substr(m_Pos) : wxT(""); }
 
-	wxString getPortState();
+    wxString nextComp();
+  };
+  
+  GOrgueSoundPort(GOrgueSound* sound, wxString name);
+  virtual ~GOrgueSoundPort();
+
+  void Init(unsigned channels, unsigned sample_rate, unsigned samples_per_buffer, unsigned latency, unsigned index);
+  virtual void Open() = 0;
+  virtual void StartStream() = 0;
+  virtual void Close() = 0;
+
+  const wxString& GetName();
+
+  static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
+  static std::vector<GOrgueSoundDevInfo> getDeviceList();
+
+  wxString getPortState();
 };
 
 #endif

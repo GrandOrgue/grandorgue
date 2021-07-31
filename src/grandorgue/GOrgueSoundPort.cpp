@@ -27,6 +27,29 @@
 #include "GOrgueSound.h"
 #include <wx/intl.h>
 
+static const wxString NAME_DELIM = wxT(": ");
+static const size_t NEME_DELIM_LEN = NAME_DELIM.length();
+
+wxString GOrgueSoundPort::NameParser::nextComp()
+{
+  wxString res("");
+
+  if (hasMore()) {
+    size_t newPos = m_Name.find(NAME_DELIM, m_Pos);
+    size_t compEnd;
+    
+    if (newPos != wxString::npos) {
+      compEnd = newPos;
+      newPos += NEME_DELIM_LEN;
+    } else {
+      compEnd = m_Name.length();
+    }
+    res = m_Name.substr(m_Pos, compEnd - m_Pos);
+    m_Pos = newPos;
+  }
+  return res;
+}
+
 GOrgueSoundPort::GOrgueSoundPort(GOrgueSound* sound, wxString name) :
 	m_Sound(sound),
 	m_Index(0),
@@ -72,8 +95,6 @@ const wxString& GOrgueSoundPort::GetName()
 	return m_Name;
 }
 
-static const wxString NAME_DELIM = wxT(": ");
-
 void append_name(wxString const &nameComp, wxString &resName)
 {
   if (! nameComp.IsEmpty()) {
@@ -96,16 +117,35 @@ wxString GOrgueSoundPort::composeDeviceName(
   return resName;
 }
 
+enum {
+  SUBSYS_PA_BIT = 1,
+  SUBSYS_RT_BIT = 2,
+  SUBSYS_JACK_BIT = 4
+};
+
 GOrgueSoundPort* GOrgueSoundPort::create(GOrgueSound* sound, wxString name)
 {
-	GOrgueSoundPort *port = NULL;
-	if (port == NULL)
-		port = GOrgueSoundPortaudioPort::create(sound, name);
-	if (port == NULL)
-		port = GOrgueSoundRtPort::create(sound, name);
-	if (port == NULL)
-		port = GOrgueSoundJackPort::create(sound, name);
-	return port;
+  GOrgueSoundPort *port = NULL;
+  NameParser parser(name);
+  wxString subsysName = parser.nextComp();
+  unsigned short subsysMask; // possible subsystems matching with the name
+  
+  if (subsysName == GOrgueSoundPortaudioPort::getSubsysName())
+    subsysMask = SUBSYS_PA_BIT;
+  else if (subsysName == GOrgueSoundRtPort::getSubsysName())
+    subsysMask = SUBSYS_RT_BIT;
+  else if (subsysName == GOrgueSoundJackPort::getSubsysName())
+    subsysMask = SUBSYS_JACK_BIT;
+  else // old-style name
+    subsysMask = SUBSYS_PA_BIT | SUBSYS_RT_BIT | SUBSYS_JACK_BIT;
+  
+  if (port == NULL && (subsysMask & SUBSYS_PA_BIT))
+    port = GOrgueSoundPortaudioPort::create(sound, name);
+  if (port == NULL && (subsysMask & SUBSYS_RT_BIT))
+    port = GOrgueSoundRtPort::create(sound, name);
+  if (port == NULL && (subsysMask & SUBSYS_JACK_BIT))
+    port = GOrgueSoundJackPort::create(sound, name);
+  return port;
 }
 
 std::vector<GOrgueSoundDevInfo> GOrgueSoundPort::getDeviceList()
