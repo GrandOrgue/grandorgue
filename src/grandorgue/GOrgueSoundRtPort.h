@@ -28,18 +28,18 @@
 class GOrgueSoundRtPort : public GOrgueSoundPort
 {
 private:
-	RtAudio::Api m_api;
-	RtAudio* m_port;
+	RtAudio* m_rtApi;
 	unsigned m_nBuffers;
 
 	static int Callback(void *outputBuffer, void *inputBuffer, unsigned int nFrames, double streamTime, RtAudioStreamStatus status, void *userData);
 
-	static wxString getName(RtAudio* rt_api, unsigned index);
+	static wxString getName(RtAudio* rtApi, unsigned index);
 
 public:
 	static wxString getSubsysName() { return wxT("Rt"); }
   
-	GOrgueSoundRtPort(GOrgueSound* sound, wxString name, RtAudio::Api api);
+	// rtApi to be deleted in the destructor
+	GOrgueSoundRtPort(GOrgueSound* sound, RtAudio* rtApi, wxString name);
 	~GOrgueSoundRtPort();
 
 	void Open();

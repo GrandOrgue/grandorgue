@@ -24,21 +24,11 @@
 #include <wx/log.h>
 #include <wx/intl.h>
 
-GOrgueSoundRtPort::GOrgueSoundRtPort(GOrgueSound* sound, wxString name, RtAudio::Api api) :
-	GOrgueSoundPort(sound, name),
-	m_api(api),
-	m_port(NULL),
-	m_nBuffers(0)
+GOrgueSoundRtPort::GOrgueSoundRtPort(GOrgueSound* sound, RtAudio* rtApi, wxString name)
+  : GOrgueSoundPort(sound, name),
+    m_rtApi(rtApi),
+    m_nBuffers(0)
 {
-	try
-	{
-		m_port = new RtAudio(api);
-	}
-	catch (RtAudioError &e)
-	{
-		wxString error = wxString::FromAscii(e.getMessage().c_str());
-		wxLogError(_("RtAudio error: %s"), error.c_str());
-	}
 }
 
 GOrgueSoundRtPort::~GOrgueSoundRtPort()
@@ -46,11 +36,11 @@ GOrgueSoundRtPort::~GOrgueSoundRtPort()
 	Close();
 	try
 	{
-		if (m_port) {
-		  const RtAudio* port = m_port;
+		if (m_rtApi) {
+		  const RtAudio* rtApi = m_rtApi;
 		  
-		  m_port = NULL;
-		  delete port;
+		  m_rtApi = NULL;
+		  delete rtApi;
 		}
 	}
 	catch (RtAudioError &e)
@@ -63,7 +53,7 @@ GOrgueSoundRtPort::~GOrgueSoundRtPort()
 void GOrgueSoundRtPort::Open()
 {
 	Close();
-	if (!m_port)
+	if (!m_rtApi)
 		throw wxString::Format(_("Audio device %s not initialised"), m_Name.c_str());
 
 	try
@@ -72,8 +62,8 @@ void GOrgueSoundRtPort::Open()
 		aOutputParam.deviceId = -1;
 		aOutputParam.nChannels = m_Channels;
 
-		for (unsigned i = 0; i < m_port->getDeviceCount(); i++)
-			if (getName(m_port, i) == m_Name)
+		for (unsigned i = 0; i < m_rtApi->getDeviceCount(); i++)
+			if (getName(m_rtApi, i) == m_Name)
 				aOutputParam.deviceId = i;
 
 		RtAudio::StreamOptions aOptions;
@@ -84,7 +74,7 @@ void GOrgueSoundRtPort::Open()
 		unsigned samples_per_buffer = m_SamplesPerBuffer;
 	
 
-		m_port->openStream(&aOutputParam, NULL, RTAUDIO_FLOAT32, m_SampleRate, &samples_per_buffer, &Callback, this, &aOptions);
+		m_rtApi->openStream(&aOutputParam, NULL, RTAUDIO_FLOAT32, m_SampleRate, &samples_per_buffer, &Callback, this, &aOptions);
 		m_nBuffers = aOptions.numberOfBuffers;
 		if (samples_per_buffer != m_SamplesPerBuffer)
 		{
@@ -102,13 +92,13 @@ void GOrgueSoundRtPort::Open()
 
 void GOrgueSoundRtPort::StartStream()
 {
-	if (!m_port || !m_IsOpen)
+	if (!m_rtApi || !m_IsOpen)
 		throw wxString::Format(_("Audio device %s not open"), m_Name.c_str());
 
 	try
 	{
-		m_port->startStream();
-		double actual_latency = m_port->getStreamLatency();
+		m_rtApi->startStream();
+		double actual_latency = m_rtApi->getStreamLatency();
 
 		/* getStreamLatency returns zero if not supported by the API, in which
 		 * case we will make a best guess.
@@ -124,17 +114,17 @@ void GOrgueSoundRtPort::StartStream()
 		throw wxString::Format(_("RtAudio error: %s"), error.c_str());
 	}
 
-	if (m_port->getStreamSampleRate() != m_SampleRate)
+	if (m_rtApi->getStreamSampleRate() != m_SampleRate)
 		throw wxString::Format(_("Sample rate of device %s changed"), m_Name.c_str());
 }
 
 void GOrgueSoundRtPort::Close()
 {
-	if (!m_port || !m_IsOpen)
+	if (!m_rtApi || !m_IsOpen)
 		return;
 	try
 	{
-		m_port->abortStream();
+		m_rtApi->abortStream();
 	}
 	catch (RtAudioError &e)
 	{
@@ -143,7 +133,7 @@ void GOrgueSoundRtPort::Close()
 	}
 	try
 	{
-		m_port->closeStream();
+		m_rtApi->closeStream();
 	}
 	catch (RtAudioError &e)
 	{
@@ -234,6 +224,8 @@ wxString get_oldstyle_name(RtAudio::Api api, RtAudio* rt_api, unsigned index)
 
 GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
 {
+  GOrgueSoundRtPort* port = NULL;
+  
   try
   {
     NameParser parser(name);
@@ -263,7 +255,10 @@ GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
 	      devName == name
 	      || (apiName.IsEmpty() && get_oldstyle_name(apiIndex, audioApi, i) == name)
 	    )
-	      return new GOrgueSoundRtPort(sound, devName, apiIndex);
+	    {
+	      port = new GOrgueSoundRtPort(sound, audioApi, devName);
+	      break;
+	    }
 	  }
 	}
 	catch (RtAudioError &e)
@@ -271,6 +266,9 @@ GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
 	  wxString error = wxString::FromAscii(e.getMessage().c_str());
 	  wxLogError(_("RtAudio error: %s"), error.c_str());
 	}
+	if (port)
+	  break;
+	// here audioApi is not used by port
 	if (audioApi)
 	  delete audioApi;
       }
@@ -281,7 +279,7 @@ GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
 	  wxString error = wxString::FromAscii(e.getMessage().c_str());
 	  wxLogError(_("RtAudio error: %s"), error.c_str());
   }
-  return NULL;
+  return port;
 }
 
 void GOrgueSoundRtPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)
