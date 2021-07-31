@@ -111,8 +111,12 @@ bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const GOrgueOrgan& organ,
 	m_listener.SetCallback(this);
 	Modify(!cmb.IsEmpty());
 
+	/* The sound was open on GOrgueFrame::Init. 
+	 * m_sound.AssignOrganFile made all necessary for the new organfile.
+	 * So the new opening is not necessary
 	if (m_sound.OpenSound())
 		return false;
+	 */
 	return true;
 }
 
