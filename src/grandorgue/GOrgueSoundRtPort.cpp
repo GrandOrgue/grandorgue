@@ -21,7 +21,6 @@
 
 #include "GOrgueSoundRtPort.h"
 
-#include "GOrgueRtHelpers.h"
 #include <wx/log.h>
 #include <wx/intl.h>
 
@@ -74,7 +73,7 @@ void GOrgueSoundRtPort::Open()
 		aOutputParam.nChannels = m_Channels;
 
 		for (unsigned i = 0; i < m_port->getDeviceCount(); i++)
-			if (getName(m_api, m_port, i) == m_Name)
+			if (getName(m_port, i) == m_Name)
 				aOutputParam.deviceId = i;
 
 		RtAudio::StreamOptions aOptions;
@@ -163,9 +162,9 @@ int GOrgueSoundRtPort::Callback(void *outputBuffer, void *inputBuffer, unsigned 
 		return 1;
 }
 
-wxString GOrgueSoundRtPort::getName(RtAudio::Api api, RtAudio* rt_api, unsigned index)
+wxString GOrgueSoundRtPort::getName(RtAudio* rt_api, unsigned index)
 {
-  wxString apiName = GOrgueRtHelpers::GetApiName(api);
+  wxString apiName = RtAudio::getApiName(rt_api->getCurrentApi());
   wxString devName;
 
   try
@@ -175,27 +174,62 @@ wxString GOrgueSoundRtPort::getName(RtAudio::Api api, RtAudio* rt_api, unsigned 
   }
   catch (RtAudioError &e)
   {
-	  wxString error = wxString::FromAscii(e.getMessage().c_str());
-	  wxLogError(_("RtAudio error: %s"), error.c_str());
-	  devName = wxString::Format(_("<unknown> %d"), index);
-  }
+    wxString error = wxString::FromAscii(e.getMessage().c_str());
+    wxLogError(_("RtAudio error: %s"), error.c_str());
+    devName = wxString::Format(_("<unknown> %d"), index);
+}
   return composeDeviceName(getSubsysName(), apiName, devName);
 }
 
 wxString get_oldstyle_name(RtAudio::Api api, RtAudio* rt_api, unsigned index)
 {
-	wxString prefix = GOrgueRtHelpers::GetApiName(api) + wxString(wxT(": "));
-	try
-	{
-		RtAudio::DeviceInfo info = rt_api->getDeviceInfo(index);
-		return  prefix + wxString(info.name);
-	}
-	catch (RtAudioError &e)
-	{
-		wxString error = wxString::FromAscii(e.getMessage().c_str());
-		wxLogError(_("RtAudio error: %s"), error.c_str());
-		return prefix + wxString::Format(_("<unknown> %d"), index);
-	}
+  wxString apiName;
+
+  switch (api)
+  {
+  case RtAudio::LINUX_ALSA:
+	  apiName = wxT("Alsa");
+	  break;
+  case RtAudio::LINUX_OSS:
+	  apiName = wxT("OSS");
+	  break;
+  case RtAudio::LINUX_PULSE:
+	  apiName = wxT("PulseAudio");
+	  break;
+  case RtAudio::MACOSX_CORE:
+	  apiName = wxT("Core");
+	  break;
+  case RtAudio::UNIX_JACK:
+	  apiName = wxT("Jack");
+	  break;
+  case RtAudio::WINDOWS_ASIO:
+	  apiName = wxT("ASIO");
+	  break;
+  case RtAudio::WINDOWS_DS:
+	  apiName = wxT("DirectSound");
+	  break;
+  case RtAudio::WINDOWS_WASAPI:
+	  apiName = wxT("WASAPI");
+	  break;
+  case RtAudio::UNSPECIFIED:
+  default:
+	  apiName = wxT("Unknown");
+  }
+
+  wxString prefix = apiName + wxT(": ");
+  wxString devName;
+  try
+  {
+	  RtAudio::DeviceInfo info = rt_api->getDeviceInfo(index);
+	  devName = wxString(info.name);
+  }
+  catch (RtAudioError &e)
+  {
+	  wxString error = wxString::FromAscii(e.getMessage().c_str());
+	  wxLogError(_("RtAudio error: %s"), error.c_str());
+	  devName = wxString::Format(_("<unknown> %d"), index);
+  }
+  return apiName + wxT(": ") + devName;
 }
 
 GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
@@ -213,7 +247,7 @@ GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
     {
       const RtAudio::Api apiIndex = rtaudio_apis[k];
       
-      if (apiName == GOrgueRtHelpers::GetApiName(apiIndex) || apiName.IsEmpty()) {
+      if (apiName == RtAudio::getApiName(apiIndex) || apiName.IsEmpty()) {
 	RtAudio* audioApi = NULL;
 
 	try
@@ -223,7 +257,7 @@ GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
 	  
 	  for (unsigned i = 0; i < deviceCount; i++)
 	  {
-	    const wxString devName = getName(rtaudio_apis[k], audioApi, i);
+	    const wxString devName = getName(audioApi, i);
 
 	    if (
 	      devName == name
@@ -274,7 +308,7 @@ void GOrgueSoundRtPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)
 					GOrgueSoundDevInfo info;
 					info.channels = dev_info.outputChannels;
 					info.isDefault = dev_info.isDefaultOutput;
-					info.name = getName(rtaudio_apis[k], audioDevice, i);
+					info.name = getName(audioDevice, i);
 					result.push_back(info);
 				}
 			}

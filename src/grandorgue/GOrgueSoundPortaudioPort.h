@@ -35,7 +35,7 @@ private:
 	static wxString getName(unsigned index);
 
 public:
-	static wxString getSubsysName() { return wxT("PA"); }
+	static wxString getSubsysName() { return wxT("Pa"); }
   
 	GOrgueSoundPortaudioPort(GOrgueSound* sound, wxString name);
 	virtual ~GOrgueSoundPortaudioPort();

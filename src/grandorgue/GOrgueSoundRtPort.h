@@ -34,10 +34,10 @@ private:
 
 	static int Callback(void *outputBuffer, void *inputBuffer, unsigned int nFrames, double streamTime, RtAudioStreamStatus status, void *userData);
 
-	static wxString getName(RtAudio::Api api, RtAudio* rt_api, unsigned index);
+	static wxString getName(RtAudio* rt_api, unsigned index);
 
 public:
-	static wxString getSubsysName() { return wxT("RT"); }
+	static wxString getSubsysName() { return wxT("Rt"); }
   
 	GOrgueSoundRtPort(GOrgueSound* sound, wxString name, RtAudio::Api api);
 	~GOrgueSoundRtPort();

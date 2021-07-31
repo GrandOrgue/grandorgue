@@ -23,32 +23,6 @@
 
 #include <wx/intl.h>
 
-const wxString GOrgueRtHelpers::GetApiName(const RtAudio::Api api)
-{
-	switch (api)
-	{
-	case RtAudio::LINUX_ALSA:
-		return wxT("Alsa");
-	case RtAudio::LINUX_OSS:
-		return wxT("OSS");
-	case RtAudio::LINUX_PULSE:
-		return wxT("PulseAudio");
-	case RtAudio::MACOSX_CORE:
-		return wxT("Core");
-	case RtAudio::UNIX_JACK:
-		return wxT("Jack");
-	case RtAudio::WINDOWS_ASIO:
-		return wxT("ASIO");
-	case RtAudio::WINDOWS_DS:
-		return wxT("DirectSound");
-	case RtAudio::WINDOWS_WASAPI:
-		return wxT("WASAPI");
-	case RtAudio::UNSPECIFIED:
-	default:
-		return wxT("Unknown");
-	}
-}
-
 const wxString GOrgueRtHelpers::GetMidiApiPrefix(const RtMidi::Api api)
 {
 	switch (api)

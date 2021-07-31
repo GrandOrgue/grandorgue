@@ -22,15 +22,12 @@
 #ifndef GORGUERTHELPERS_H_
 #define GORGUERTHELPERS_H_
 
-#include "RtAudio.h"
 #include "RtMidi.h"
 #include <wx/string.h>
 
 class GOrgueRtHelpers
 {
 public:
-
-	static const wxString GetApiName(const RtAudio::Api api);
 	static const wxString GetMidiApiPrefix(const RtMidi::Api api);
 };
 
