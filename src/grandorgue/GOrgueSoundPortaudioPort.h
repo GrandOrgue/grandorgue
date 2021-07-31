@@ -46,6 +46,7 @@ public:
 
 	static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
 	static void addDevices(std::vector<GOrgueSoundDevInfo>& list);
+	static void terminate();
 };
 
 #endif

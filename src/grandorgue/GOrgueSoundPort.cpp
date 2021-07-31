@@ -157,6 +157,11 @@ std::vector<GOrgueSoundDevInfo> GOrgueSoundPort::getDeviceList()
 	return result;
 }
 
+void GOrgueSoundPort::terminate()
+{
+  GOrgueSoundPortaudioPort::terminate();
+}
+
 wxString GOrgueSoundPort::getPortState()
 {
 	if (m_ActualLatency < 0)

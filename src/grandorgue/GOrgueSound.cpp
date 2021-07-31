@@ -29,7 +29,6 @@
 #include "GOrgueSoundPort.h"
 #include "GrandOrgueFile.h"
 #include "mutex_locker.h"
-#include "portaudio.h"
 #include <wx/app.h>
 #include <wx/intl.h>
 #include <wx/window.h>
@@ -49,7 +48,6 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 {
 	m_midi = new GOrgueMidi(m_Settings);
 
-	Pa_Initialize();
 	GetAudioDevices();
 }
 
@@ -61,7 +59,7 @@ GOrgueSound::~GOrgueSound()
 	/* dispose of midi devices */
 	DELETE_AND_NULL(m_midi);
 
-	Pa_Terminate ();
+	GOrgueSoundPort::terminate();
 }
 
 void GOrgueSound::StartThreads()

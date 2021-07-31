@@ -105,8 +105,27 @@ wxString get_oldstyle_name(unsigned index)
 	return wxGetTranslation(wxString::FromAscii(api->name)) + wxString(_(" (PA): ")) + wxString(info->name);
 }
 
+static bool has_initialised = false;
+
+void assure_initialised() {
+  if (! has_initialised) {
+    Pa_Initialize();
+    has_initialised = true;
+  }
+}
+
+void GOrgueSoundPortaudioPort::terminate()
+{
+  if (has_initialised) {
+    Pa_Terminate();
+    has_initialised = false;
+  }
+}
+
+
 GOrgueSoundPort* GOrgueSoundPortaudioPort::create(GOrgueSound* sound, wxString name)
 {
+	assure_initialised();
 	for(int i = 0; i < Pa_GetDeviceCount(); i++)
 	{
 	  wxString devName = getName(i);
@@ -118,6 +137,7 @@ GOrgueSoundPort* GOrgueSoundPortaudioPort::create(GOrgueSound* sound, wxString n
 
 void GOrgueSoundPortaudioPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)
 {
+	assure_initialised();
 	for(int i = 0; i < Pa_GetDeviceCount(); i++)
 	{
 		const PaDeviceInfo* dev_info = Pa_GetDeviceInfo(i);
@@ -131,3 +151,4 @@ void GOrgueSoundPortaudioPort::addDevices(std::vector<GOrgueSoundDevInfo>& resul
 		result.push_back(info);
 	}
 }
+
