@@ -54,6 +54,8 @@ private:
 	wxButton* m_Change;
 	wxButton* m_Properties;
 	wxButton* m_Default;
+	
+	bool m_hasDeviceListPopulated = false;
 	std::vector<GOrgueSoundDevInfo> m_DeviceList;
 
 	AudioItemData* GetObject(const wxTreeItemId& id);
@@ -69,6 +71,7 @@ private:
 	void UpdateVolume(const wxTreeItemId& group, float volume);
 	void UpdateButtons();
 
+	void AssureDeviceList();
 	std::vector<wxString> GetRemainingAudioDevices();
 	std::vector<std::pair<wxString, bool> > GetRemainingAudioGroups(const wxTreeItemId& channel);
 

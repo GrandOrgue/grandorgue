@@ -152,7 +152,6 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 
 	m_AudioOutput->ExpandAll();
 
-	m_DeviceList = m_Sound.GetAudioDevices();
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
 	topSizer->Fit(this);
@@ -278,15 +277,23 @@ void SettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
 		m_AudioOutput->SetItemText(group, wxString::Format(_("%s: mute"), name.c_str()));
 }
 
+void SettingsAudioOutput::AssureDeviceList() {
+  if (! m_hasDeviceListPopulated) {
+    m_DeviceList = m_Sound.GetAudioDevices();
+    m_hasDeviceListPopulated = true;
+  }
+}
+
 std::vector<wxString> SettingsAudioOutput::GetRemainingAudioDevices()
 {
-	std::vector<wxString> result;
-	for(unsigned i = 0; i < m_DeviceList.size(); i++)
-	{
-		if (!GetDeviceNode(m_DeviceList[i].name).IsOk())
-			result.push_back(m_DeviceList[i].name);
-	}
-	return result;
+  AssureDeviceList();
+  std::vector<wxString> result;
+  for(unsigned i = 0; i < m_DeviceList.size(); i++)
+  {
+	  if (!GetDeviceNode(m_DeviceList[i].name).IsOk())
+		  result.push_back(m_DeviceList[i].name);
+  }
+  return result;
 }
 
 std::vector<std::pair<wxString, bool> > SettingsAudioOutput::GetRemainingAudioGroups(const wxTreeItemId& channel)
@@ -310,6 +317,7 @@ void SettingsAudioOutput::UpdateButtons()
 	AudioItemData* data = GetObject(selection);
 	if (data && data->type == AudioItemData::AUDIO_NODE)
 	{
+		/*
 		bool enable = false;
 		for(unsigned i = 0; i < m_DeviceList.size(); i++)
 			if (m_DeviceList[i].name == data->name)
@@ -320,6 +328,8 @@ void SettingsAudioOutput::UpdateButtons()
 		else
 			m_Add->Disable();
 	
+		 */
+		m_Add->Enable();
 		m_Properties->Enable();
 		m_Change->Enable();
 		if (m_AudioOutput->GetChildrenCount(m_AudioOutput->GetRootItem(), false) > 1)
@@ -356,10 +366,7 @@ void SettingsAudioOutput::UpdateButtons()
 	{
 		m_Properties->Disable();
 		m_Change->Disable();
-		if (GetRemainingAudioDevices().size())
-			m_Add->Enable();
-		else
-			m_Add->Disable();
+		m_Add->Enable();
 		m_Del->Disable();
 	}
 	else
@@ -383,9 +390,10 @@ void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 	if (data && data->type == AudioItemData::AUDIO_NODE)
 	{
 		unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
+		/*
 		for(unsigned i = 0; i < m_DeviceList.size(); i++)
 			if (m_DeviceList[i].name == data->name)
-				if (channels < m_DeviceList[i].channels)
+				if (channels < m_DeviceList[i].channels) */
 					AddChannelNode(selection, channels);
 	}
 	else if (data && data->type == AudioItemData::CHANNEL_NODE)
