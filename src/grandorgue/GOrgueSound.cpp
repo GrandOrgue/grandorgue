@@ -47,8 +47,6 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	m_Settings(settings)
 {
 	m_midi = new GOrgueMidi(m_Settings);
-
-	GetAudioDevices();
 }
 
 GOrgueSound::~GOrgueSound()
@@ -154,7 +152,7 @@ bool GOrgueSound::OpenSound()
 		{
 			wxString name = audio_config[i].name;
 			if (name == wxEmptyString)
-				name = m_defaultAudioDevice;
+				name = GetDefaultAudioDevice();
 
 			m_AudioOutputs[i].port = GOrgueSoundPort::create(this, name);
 			if (!m_AudioOutputs[i].port)
@@ -309,7 +307,9 @@ std::vector<GOrgueSoundDevInfo> GOrgueSound::GetAudioDevices()
 
 const wxString GOrgueSound::GetDefaultAudioDevice()
 {
-	return m_defaultAudioDevice;
+  if (m_defaultAudioDevice.IsEmpty())
+    GetAudioDevices();
+  return m_defaultAudioDevice;
 }
 
 GOrgueMidi& GOrgueSound::GetMidi()
