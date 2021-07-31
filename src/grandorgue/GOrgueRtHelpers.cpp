@@ -28,24 +28,24 @@ const wxString GOrgueRtHelpers::GetApiName(const RtAudio::Api api)
 	switch (api)
 	{
 	case RtAudio::LINUX_ALSA:
-		return _("Alsa");
+		return wxT("Alsa");
 	case RtAudio::LINUX_OSS:
-		return _("OSS");
+		return wxT("OSS");
 	case RtAudio::LINUX_PULSE:
-		return _("PulseAudio");
+		return wxT("PulseAudio");
 	case RtAudio::MACOSX_CORE:
-		return _("Core");
+		return wxT("Core");
 	case RtAudio::UNIX_JACK:
-		return _("Jack");
+		return wxT("Jack");
 	case RtAudio::WINDOWS_ASIO:
-		return _("ASIO");
+		return wxT("ASIO");
 	case RtAudio::WINDOWS_DS:
-		return _("DirectSound");
+		return wxT("DirectSound");
 	case RtAudio::WINDOWS_WASAPI:
-		return _("WASAPI");
+		return wxT("WASAPI");
 	case RtAudio::UNSPECIFIED:
 	default:
-		return _("Unknown");
+		return wxT("Unknown");
 	}
 }
 

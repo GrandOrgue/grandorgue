@@ -202,34 +202,44 @@ GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
 {
   try
   {
+    NameParser parser(name);
+    const wxString subsysName = parser.nextComp();
+    wxString apiName = subsysName == getSubsysName() ? parser.nextComp() : wxT("");
+    
     std::vector<RtAudio::Api> rtaudio_apis;
     RtAudio::getCompiledApi(rtaudio_apis);
 
     for (unsigned k = 0; k < rtaudio_apis.size(); k++)
     {
-      RtAudio* audioApi = NULL;
+      const RtAudio::Api apiIndex = rtaudio_apis[k];
+      
+      if (apiName == GOrgueRtHelpers::GetApiName(apiIndex) || apiName.IsEmpty()) {
+	RtAudio* audioApi = NULL;
 
-      try
-      {
-	audioApi = new RtAudio(rtaudio_apis[k]);
-	for (unsigned i = 0; i < audioApi->getDeviceCount(); i++)
+	try
 	{
-	  const wxString devName = getName(rtaudio_apis[k], audioApi, i);
+	  audioApi = new RtAudio(apiIndex);
+	  unsigned int deviceCount = audioApi->getDeviceCount();
+	  
+	  for (unsigned i = 0; i < deviceCount; i++)
+	  {
+	    const wxString devName = getName(rtaudio_apis[k], audioApi, i);
 
-	  if (
-	    devName == name
-	    || get_oldstyle_name(rtaudio_apis[k], audioApi, i) == name
-	  )
-	    return new GOrgueSoundRtPort(sound, devName, rtaudio_apis[k]);
+	    if (
+	      devName == name
+	      || (apiName.IsEmpty() && get_oldstyle_name(apiIndex, audioApi, i) == name)
+	    )
+	      return new GOrgueSoundRtPort(sound, devName, apiIndex);
+	  }
 	}
+	catch (RtAudioError &e)
+	{
+	  wxString error = wxString::FromAscii(e.getMessage().c_str());
+	  wxLogError(_("RtAudio error: %s"), error.c_str());
+	}
+	if (audioApi)
+	  delete audioApi;
       }
-      catch (RtAudioError &e)
-      {
-	wxString error = wxString::FromAscii(e.getMessage().c_str());
-	wxLogError(_("RtAudio error: %s"), error.c_str());
-      }
-      if (audioApi)
-	delete audioApi;
     }
   }
   catch (RtAudioError &e)
