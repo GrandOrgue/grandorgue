@@ -170,9 +170,9 @@ const std::vector<wxString> & GOrgueSoundPort::getApis(const wxString & subsysNa
   if (subsysName == GOrgueSoundPortaudioPort::getSubsysName())
     return GOrgueSoundPortaudioPort::getApis();
   else if (subsysName == GOrgueSoundRtPort::getSubsysName())
-    return GOrgueSoundPortaudioPort::getApis();
+    return GOrgueSoundRtPort::getApis();
   else if (subsysName == GOrgueSoundJackPort::getSubsysName())
-    return GOrgueSoundPortaudioPort::getApis();
+    return GOrgueSoundJackPort::getApis();
   else // old-style name
     return c_NoApis;
 }

@@ -35,6 +35,7 @@
 #include "GOrgueSettingEnum.cpp"
 #include "GOrgueSettingNumber.cpp"
 #include "GOrgueStdPath.h"
+#include "GOrgueSoundPort.h"
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/stdpaths.h>
@@ -198,6 +199,16 @@ void GOrgueSettings::Load()
 			m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), false, wxString::Format(_("Audio group %d"), i + 1)));
 		if (!m_AudioGroups.size())
 			m_AudioGroups.push_back(_("Default audio group"));
+		
+		const wxString SOUND_PORTS = wxT("SoundPorts");
+		PortsConfig.Clear();
+		for (const wxString &portName: GOrgueSoundPort::getSubsystems())
+		{
+		  PortsConfig.SetConfigEnabled(portName, cfg.ReadBoolean(CMBSetting, SOUND_PORTS, portName, false, true));
+		  const wxString prefix = portName + ".";
+		  for (const wxString &apiName: GOrgueSoundPort::getApis(portName))
+		    PortsConfig.SetConfigEnabled(portName, cfg.ReadBoolean(CMBSetting, SOUND_PORTS, prefix + apiName, false, true));
+		}
 		
 		m_AudioDeviceConfig.clear();
 		count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxT("Count"), 0, 200, false, 0);
@@ -525,6 +536,15 @@ void GOrgueSettings::Flush()
 	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
 		cfg.WriteString(wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), m_AudioGroups[i]);
 	cfg.WriteInteger(wxT("AudioGroups"), wxT("Count"), m_AudioGroups.size());
+
+	const wxString SOUND_PORTS = wxT("SoundPorts");
+	for (const wxString &portName: GOrgueSoundPort::getSubsystems())
+	{
+	  cfg.WriteBoolean(SOUND_PORTS, portName, PortsConfig.IsConfigEnabled(portName));
+	  const wxString prefix = portName + ".";
+	  for (const wxString &apiName: GOrgueSoundPort::getApis(portName))
+	    cfg.WriteBoolean(SOUND_PORTS, prefix + apiName, PortsConfig.IsConfigEnabled(portName, apiName));
+	}
 
 	for(unsigned i = 0; i < m_AudioDeviceConfig.size(); i++)
 	{

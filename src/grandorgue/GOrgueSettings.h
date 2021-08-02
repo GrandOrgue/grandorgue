@@ -35,6 +35,7 @@
 #include "GOrgueSettingString.h"
 #include "GOrgueSettingStore.h"
 #include "GOrgueSettingString.h"
+#include "GOrgueSoundPortsConfig.h"
 #include "ptrvector.h"
 #include <wx/string.h>
 #include <map>
@@ -135,6 +136,8 @@ public:
 	GOrgueSettingUnsigned ReleaseLength;
 	GOrgueSettingString LanguageCode;
 
+	GOrgueSoundPortsConfig PortsConfig;
+	
 	class GOrgueSettingUnsignedBit : public GOrgueSettingUnsigned
 	{
 	protected:
