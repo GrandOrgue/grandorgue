@@ -282,6 +282,24 @@ GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
   return port;
 }
 
+static bool hasApiNamesPopulated = false;
+static std::vector<wxString> apiNames;
+
+const std::vector<wxString> & GOrgueSoundRtPort::getApis()
+{
+  if (! hasApiNamesPopulated)
+  {
+    std::vector<RtAudio::Api> apiIndices;
+    RtAudio::getCompiledApi(apiIndices);
+
+    for (unsigned k = 0; k < apiIndices.size(); k++) {
+      apiNames.push_back(wxString(RtAudio::getApiName(apiIndices[k])));
+    }
+    hasApiNamesPopulated = true;
+  }
+  return apiNames;
+}
+
 void GOrgueSoundRtPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)
 {
 	try

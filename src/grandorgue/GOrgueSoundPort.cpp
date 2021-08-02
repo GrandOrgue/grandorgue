@@ -27,6 +27,8 @@
 #include "GOrgueSound.h"
 #include <wx/intl.h>
 
+const std::vector<wxString> GOrgueSoundPort::c_NoApis;
+
 static const wxString NAME_DELIM = wxT(": ");
 static const size_t NEME_DELIM_LEN = NAME_DELIM.length();
 
@@ -146,6 +148,33 @@ GOrgueSoundPort* GOrgueSoundPort::create(GOrgueSound* sound, wxString name)
   if (port == NULL && (subsysMask & SUBSYS_JACK_BIT))
     port = GOrgueSoundJackPort::create(sound, name);
   return port;
+}
+
+static bool has_subsystems_populated = false;
+static std::vector<wxString> substystems;
+
+const std::vector<wxString> & GOrgueSoundPort::getSubsystems()
+{
+  if (! has_subsystems_populated)
+  {
+    substystems.push_back(GOrgueSoundPortaudioPort::getSubsysName());
+    substystems.push_back(GOrgueSoundRtPort::getSubsysName());
+    substystems.push_back(GOrgueSoundJackPort::getSubsysName());
+    has_subsystems_populated = true;
+  }
+  return substystems;
+}
+
+const std::vector<wxString> & GOrgueSoundPort::getApis(const wxString & subsysName)
+{
+  if (subsysName == GOrgueSoundPortaudioPort::getSubsysName())
+    return GOrgueSoundPortaudioPort::getApis();
+  else if (subsysName == GOrgueSoundRtPort::getSubsysName())
+    return GOrgueSoundPortaudioPort::getApis();
+  else if (subsysName == GOrgueSoundJackPort::getSubsysName())
+    return GOrgueSoundPortaudioPort::getApis();
+  else // old-style name
+    return c_NoApis;
 }
 
 std::vector<GOrgueSoundDevInfo> GOrgueSoundPort::getDeviceList()

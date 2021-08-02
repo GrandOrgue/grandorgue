@@ -31,6 +31,8 @@ class GOrgueSound;
 class GOrgueSoundPort
 {
 protected:
+  static const std::vector<wxString> c_NoApis; // empty Api list for subsystems not supporting them
+  
   GOrgueSound* m_Sound;
   unsigned m_Index;
   bool m_IsOpen;
@@ -81,6 +83,9 @@ public:
   const wxString& GetName();
 
   static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
+  static const std::vector<wxString> & getSubsystems();
+  static const std::vector<wxString> & getApis(const wxString & subsysName);
+  
   static std::vector<GOrgueSoundDevInfo> getDeviceList();
   static void terminate();
 
