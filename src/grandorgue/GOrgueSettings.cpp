@@ -202,13 +202,16 @@ void GOrgueSettings::Load()
 		
 		const wxString SOUND_PORTS = wxT("SoundPorts");
 		const wxString ENABLED = wxT(".Enabled");
-		PortsConfig.Clear();
+		m_PortsConfig.Clear();
 		for (const wxString &portName: GOrgueSoundPort::getSubsystems())
 		{
-		  PortsConfig.SetConfigEnabled(portName, cfg.ReadBoolean(CMBSetting, SOUND_PORTS, portName + ENABLED, false, true));
+		  const bool isPortEnabled = cfg.ReadBoolean(CMBSetting, SOUND_PORTS, portName + ENABLED, false, true);
 		  const wxString prefix = portName + ".";
+
+		  m_PortsConfig.SetConfigEnabled(portName, isPortEnabled);
+
 		  for (const wxString &apiName: GOrgueSoundPort::getApis(portName))
-		    PortsConfig.SetConfigEnabled(portName, cfg.ReadBoolean(CMBSetting, SOUND_PORTS, prefix + apiName + ENABLED, false, true));
+		    m_PortsConfig.SetConfigEnabled(portName, apiName, cfg.ReadBoolean(CMBSetting, SOUND_PORTS, prefix + apiName + ENABLED, false, true));
 		}
 		
 		m_AudioDeviceConfig.clear();
@@ -543,10 +546,10 @@ void GOrgueSettings::Flush()
 
 	for (const wxString &portName: GOrgueSoundPort::getSubsystems())
 	{
-	  cfg.WriteBoolean(SOUND_PORTS, portName + ENABLED, PortsConfig.IsConfigEnabled(portName));
+	  cfg.WriteBoolean(SOUND_PORTS, portName + ENABLED, m_PortsConfig.IsConfigEnabled(portName));
 	  const wxString prefix = portName + ".";
 	  for (const wxString &apiName: GOrgueSoundPort::getApis(portName))
-	    cfg.WriteBoolean(SOUND_PORTS, prefix + apiName + ENABLED, PortsConfig.IsConfigEnabled(portName, apiName));
+	    cfg.WriteBoolean(SOUND_PORTS, prefix + apiName + ENABLED, m_PortsConfig.IsConfigEnabled(portName, apiName));
 	}
 
 	for(unsigned i = 0; i < m_AudioDeviceConfig.size(); i++)

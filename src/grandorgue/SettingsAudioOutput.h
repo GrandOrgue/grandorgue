@@ -23,8 +23,10 @@
 #define SETTINGSAUDIOOUTPUT_H
 
 #include "GOrgueSoundDevInfo.h"
+#include "GOrgueSoundPortsConfig.h"
 #include "SettingsAudioGroup.h"
 #include <wx/panel.h>
+#include <wx/treelist.h>
 #include <vector>
 
 class AudioItemData;
@@ -43,11 +45,16 @@ class SettingsAudioOutput : public wxPanel
 		ID_OUTPUT_CHANGE,
 		ID_OUTPUT_PROPERTIES,
 		ID_OUTPUT_DEFAULT,
+		ID_SOND_PORTS = 210
 	};
 
 private:
 	GOrgueSound& m_Sound;
+	
+	GOrgueSoundPortsConfig m_SoundPortsConfig;
+	
 	GOAudioGroupCallback& m_GroupCallback;
+	wxTreeListCtrl* m_SoundPorts;
 	wxTreeCtrl* m_AudioOutput;
 	wxButton* m_Add;
 	wxButton* m_Del;
@@ -57,6 +64,12 @@ private:
 	
 	bool m_hasDeviceListPopulated = false;
 	std::vector<GOrgueSoundDevInfo> m_DeviceList;
+	
+	bool GetPortItemChecked(
+	  const wxString &portName, const wxString& apiName = wxEmptyString
+	) const;
+	void SetPortItemChecked(wxTreeListItem item, bool isChecked);
+	GOrgueSoundPortsConfig & RenewSoundPortsConfig();
 
 	AudioItemData* GetObject(const wxTreeItemId& id);
 	wxTreeItemId GetDeviceNode(const wxString& name);
