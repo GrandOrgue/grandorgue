@@ -24,6 +24,8 @@
 #include <wx/log.h>
 #include <wx/intl.h>
 
+const wxString GOrgueSoundRtPort::PORT_NAME = wxT("Rt");
+
 GOrgueSoundRtPort::GOrgueSoundRtPort(GOrgueSound* sound, RtAudio* rtApi, wxString name)
   : GOrgueSoundPort(sound, name),
     m_rtApi(rtApi),
@@ -168,7 +170,7 @@ wxString GOrgueSoundRtPort::getName(RtAudio* rt_api, unsigned index)
     wxLogError(_("RtAudio error: %s"), error.c_str());
     devName = wxString::Format(_("<unknown> %d"), index);
 }
-  return composeDeviceName(getSubsysName(), apiName, devName);
+  return composeDeviceName(PORT_NAME, apiName, devName);
 }
 
 wxString get_oldstyle_name(RtAudio::Api api, RtAudio* rt_api, unsigned index)
@@ -230,7 +232,7 @@ GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
   {
     NameParser parser(name);
     const wxString subsysName = parser.nextComp();
-    wxString apiName = subsysName == getSubsysName() ? parser.nextComp() : wxT("");
+    wxString apiName = subsysName == PORT_NAME ? parser.nextComp() : wxT("");
     
     std::vector<RtAudio::Api> rtaudio_apis;
     RtAudio::getCompiledApi(rtaudio_apis);

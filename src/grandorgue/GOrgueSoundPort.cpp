@@ -132,11 +132,11 @@ GOrgueSoundPort* GOrgueSoundPort::create(GOrgueSound* sound, wxString name)
   wxString subsysName = parser.nextComp();
   unsigned short subsysMask; // possible subsystems matching with the name
   
-  if (subsysName == GOrgueSoundPortaudioPort::getSubsysName())
+  if (subsysName == GOrgueSoundPortaudioPort::PORT_NAME)
     subsysMask = SUBSYS_PA_BIT;
-  else if (subsysName == GOrgueSoundRtPort::getSubsysName())
+  else if (subsysName == GOrgueSoundRtPort::PORT_NAME)
     subsysMask = SUBSYS_RT_BIT;
-  else if (subsysName == GOrgueSoundJackPort::getSubsysName())
+  else if (subsysName == GOrgueSoundJackPort::PORT_NAME)
     subsysMask = SUBSYS_JACK_BIT;
   else // old-style name
     subsysMask = SUBSYS_PA_BIT | SUBSYS_RT_BIT | SUBSYS_JACK_BIT;
@@ -153,25 +153,25 @@ GOrgueSoundPort* GOrgueSoundPort::create(GOrgueSound* sound, wxString name)
 static bool has_subsystems_populated = false;
 static std::vector<wxString> substystems;
 
-const std::vector<wxString> & GOrgueSoundPort::getSubsystems()
+const std::vector<wxString> & GOrgueSoundPort::getPortNames()
 {
   if (! has_subsystems_populated)
   {
-    substystems.push_back(GOrgueSoundPortaudioPort::getSubsysName());
-    substystems.push_back(GOrgueSoundRtPort::getSubsysName());
-    substystems.push_back(GOrgueSoundJackPort::getSubsysName());
+    substystems.push_back(GOrgueSoundPortaudioPort::PORT_NAME);
+    substystems.push_back(GOrgueSoundRtPort::PORT_NAME);
+    substystems.push_back(GOrgueSoundJackPort::PORT_NAME);
     has_subsystems_populated = true;
   }
   return substystems;
 }
 
-const std::vector<wxString> & GOrgueSoundPort::getApis(const wxString & subsysName)
+const std::vector<wxString> & GOrgueSoundPort::getApiNames(const wxString & subsysName)
 {
-  if (subsysName == GOrgueSoundPortaudioPort::getSubsysName())
+  if (subsysName == GOrgueSoundPortaudioPort::PORT_NAME)
     return GOrgueSoundPortaudioPort::getApis();
-  else if (subsysName == GOrgueSoundRtPort::getSubsysName())
+  else if (subsysName == GOrgueSoundRtPort::PORT_NAME)
     return GOrgueSoundRtPort::getApis();
-  else if (subsysName == GOrgueSoundJackPort::getSubsysName())
+  else if (subsysName == GOrgueSoundJackPort::PORT_NAME)
     return GOrgueSoundJackPort::getApis();
   else // old-style name
     return c_NoApis;

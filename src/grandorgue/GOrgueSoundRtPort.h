@@ -36,7 +36,7 @@ private:
 	static wxString getName(RtAudio* rtApi, unsigned index);
 
 public:
-	static wxString getSubsysName() { return wxT("Rt"); }
+	static const wxString PORT_NAME;
   
 	// rtApi to be deleted in the destructor
 	GOrgueSoundRtPort(GOrgueSound* sound, RtAudio* rtApi, wxString name);

@@ -25,6 +25,8 @@
 
 #include "GOrgueSoundJackPort.h"
 
+const wxString GOrgueSoundJackPort::PORT_NAME = wxT("Jack");
+
 GOrgueSoundJackPort::GOrgueSoundJackPort(GOrgueSound* sound, wxString name) :
 	GOrgueSoundPort(sound, name)
 {
@@ -189,7 +191,7 @@ void GOrgueSoundJackPort::Close()
 
 wxString GOrgueSoundJackPort::getName()
 {
-  return composeDeviceName(getSubsysName(), wxT(""), "Native Output");
+  return composeDeviceName(PORT_NAME, wxEmptyString, "Native Output");
 }
 
 static const wxString OLD_STYLE_NAME = wxT("Jack Output");

@@ -37,7 +37,7 @@
 class GOrgueSoundJackPort : public GOrgueSoundPort
 {
 public:
-	static wxString getSubsysName() { return wxT("Jack"); }
+	static const wxString PORT_NAME;
   
 	GOrgueSoundJackPort(GOrgueSound* sound, wxString name);
 	~GOrgueSoundJackPort();

@@ -146,13 +146,13 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	item2->Add(m_SoundPorts, 1, wxALIGN_LEFT | wxEXPAND);
 	topSizer->Add(item2, 1, wxEXPAND | wxALL, 5);
 	
-	for (const wxString &portName: GOrgueSoundPort::getSubsystems())
+	for (const wxString &portName: GOrgueSoundPort::getPortNames())
 	{
 	  const wxTreeListItem portItem = m_SoundPorts->AppendItem(
 	    m_SoundPorts->GetRootItem(), getPortItemName(portName)
 	  );
 	  SetPortItemChecked(portItem, m_SoundPortsConfig.IsConfigEnabled(portName));
-	  for (const wxString &apiName: GOrgueSoundPort::getApis(portName)) {
+	  for (const wxString &apiName: GOrgueSoundPort::getApiNames(portName)) {
 	    const wxTreeListItem portApiItem
 	      = m_SoundPorts->AppendItem(portItem, getPortItemName(portName, apiName));
 	    
@@ -225,10 +225,10 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 GOrgueSoundPortsConfig & SettingsAudioOutput::RenewSoundPortsConfig()
 
 {
-  for (const wxString &portName: GOrgueSoundPort::getSubsystems())
+  for (const wxString &portName: GOrgueSoundPort::getPortNames())
   {
     m_SoundPortsConfig.SetConfigEnabled(portName, GetPortItemChecked(portName));
-    for (const wxString &apiName: GOrgueSoundPort::getApis(portName)) {
+    for (const wxString &apiName: GOrgueSoundPort::getApiNames(portName)) {
       m_SoundPortsConfig.SetConfigEnabled(portName, apiName, GetPortItemChecked(portName, apiName));
     }
   }

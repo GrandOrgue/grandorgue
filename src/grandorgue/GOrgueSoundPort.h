@@ -83,8 +83,8 @@ public:
   const wxString& GetName();
 
   static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
-  static const std::vector<wxString> & getSubsystems();
-  static const std::vector<wxString> & getApis(const wxString & subsysName);
+  static const std::vector<wxString> & getPortNames();
+  static const std::vector<wxString> & getApiNames(const wxString & portName);
   
   static std::vector<GOrgueSoundDevInfo> getDeviceList();
   static void terminate();

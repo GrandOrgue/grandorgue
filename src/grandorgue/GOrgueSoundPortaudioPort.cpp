@@ -23,6 +23,8 @@
 
 #include <wx/intl.h>
 
+const wxString GOrgueSoundPortaudioPort::PORT_NAME = wxT("Pa");
+
 GOrgueSoundPortaudioPort::GOrgueSoundPortaudioPort(GOrgueSound* sound, wxString name) :
 	GOrgueSoundPort(sound, name),
 	m_stream(0)
@@ -38,7 +40,7 @@ wxString GOrgueSoundPortaudioPort::getName(unsigned index)
 {
 	const PaDeviceInfo* info = Pa_GetDeviceInfo(index);
 	const PaHostApiInfo *api = Pa_GetHostApiInfo(info->hostApi);
-	return composeDeviceName(getSubsysName(), wxString::FromAscii(api->name), wxString(info->name));
+	return composeDeviceName(PORT_NAME, wxString::FromAscii(api->name), wxString(info->name));
 }
 
 void GOrgueSoundPortaudioPort::Open()
