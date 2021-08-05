@@ -125,32 +125,38 @@ void GOrgueSoundPortaudioPort::terminate()
 }
 
 
-GOrgueSoundPort* GOrgueSoundPortaudioPort::create(GOrgueSound* sound, wxString name)
+GOrgueSoundPort* GOrgueSoundPortaudioPort::create(const GOrgueSoundPortsConfig &portsConfig, GOrgueSound* sound, wxString name)
 {
-	assure_initialised();
-	for(int i = 0; i < Pa_GetDeviceCount(); i++)
-	{
-	  wxString devName = getName(i);
-		if (devName == name || get_oldstyle_name(i) == name)
-			return new GOrgueSoundPortaudioPort(sound, devName);
-	}
-	return NULL;
+  if (portsConfig.IsEnabled(PORT_NAME))
+  {
+    assure_initialised();
+    for(int i = 0; i < Pa_GetDeviceCount(); i++)
+    {
+      wxString devName = getName(i);
+	    if (devName == name || get_oldstyle_name(i) == name)
+		    return new GOrgueSoundPortaudioPort(sound, devName);
+    }
+  }
+  return NULL;
 }
 
-void GOrgueSoundPortaudioPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)
+void GOrgueSoundPortaudioPort::addDevices(const GOrgueSoundPortsConfig &portsConfig, std::vector<GOrgueSoundDevInfo>& result)
 {
-	assure_initialised();
-	for(int i = 0; i < Pa_GetDeviceCount(); i++)
-	{
-		const PaDeviceInfo* dev_info = Pa_GetDeviceInfo(i);
-		if (dev_info->maxOutputChannels < 1)
-			continue;
+  if (portsConfig.IsEnabled(PORT_NAME))
+  {
+    assure_initialised();
+    for(int i = 0; i < Pa_GetDeviceCount(); i++)
+    {
+	    const PaDeviceInfo* dev_info = Pa_GetDeviceInfo(i);
+	    if (dev_info->maxOutputChannels < 1)
+		    continue;
 
-		GOrgueSoundDevInfo info;
-		info.channels = dev_info->maxOutputChannels;
-		info.isDefault = (Pa_GetDefaultOutputDevice() == i);
-		info.name = getName(i);
-		result.push_back(info);
-	}
+	    GOrgueSoundDevInfo info;
+	    info.channels = dev_info->maxOutputChannels;
+	    info.isDefault = (Pa_GetDefaultOutputDevice() == i);
+	    info.name = getName(i);
+	    result.push_back(info);
+    }
+  }
 }
 

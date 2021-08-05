@@ -151,10 +151,13 @@ bool GOrgueSound::OpenSound()
 		for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 		{
 			wxString name = audio_config[i].name;
+			
+			const GOrgueSoundPortsConfig &portsConfig(m_Settings.GetPortsConfig());
+			
 			if (name == wxEmptyString)
-				name = GetDefaultAudioDevice();
+				name = GetDefaultAudioDevice(portsConfig);
 
-			m_AudioOutputs[i].port = GOrgueSoundPort::create(this, name);
+			m_AudioOutputs[i].port = GOrgueSoundPort::create(portsConfig, this, name);
 			if (!m_AudioOutputs[i].port)
 				throw wxString::Format(_("Output device %s not found - no sound output will occure"), name.c_str());
 
@@ -293,22 +296,25 @@ void GOrgueSound::SetLogSoundErrorMessages(bool settingsDialogVisible)
 	logSoundErrors = settingsDialogVisible;
 }
 
-std::vector<GOrgueSoundDevInfo> GOrgueSound::GetAudioDevices()
-{
-	std::vector<GOrgueSoundDevInfo> list = GOrgueSoundPort::getDeviceList();
-	for(unsigned i = 0; i < list.size(); i++)
-		if (list[i].isDefault)
-		{
-			m_defaultAudioDevice = list[i].name;
-			break;
-		}
-	return list;
+std::vector<GOrgueSoundDevInfo> GOrgueSound::GetAudioDevices(
+  const GOrgueSoundPortsConfig &portsConfig
+) {
+  m_defaultAudioDevice = wxEmptyString;
+  std::vector<GOrgueSoundDevInfo> list = GOrgueSoundPort::getDeviceList(portsConfig);
+  for(unsigned i = 0; i < list.size(); i++)
+	  if (list[i].isDefault)
+	  {
+		  m_defaultAudioDevice = list[i].name;
+		  break;
+	  }
+  return list;
 }
 
-const wxString GOrgueSound::GetDefaultAudioDevice()
-{
+const wxString GOrgueSound::GetDefaultAudioDevice(
+  const GOrgueSoundPortsConfig &portsConfig
+) {
   if (m_defaultAudioDevice.IsEmpty())
-    GetAudioDevices();
+    GetAudioDevices(portsConfig);
   return m_defaultAudioDevice;
 }
 

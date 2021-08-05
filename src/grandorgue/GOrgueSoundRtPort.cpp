@@ -224,66 +224,6 @@ wxString get_oldstyle_name(RtAudio::Api api, RtAudio* rt_api, unsigned index)
   return apiName + wxT(": ") + devName;
 }
 
-GOrgueSoundPort* GOrgueSoundRtPort::create(GOrgueSound* sound, wxString name)
-{
-  GOrgueSoundRtPort* port = NULL;
-  
-  try
-  {
-    NameParser parser(name);
-    const wxString subsysName = parser.nextComp();
-    wxString apiName = subsysName == PORT_NAME ? parser.nextComp() : wxT("");
-    
-    std::vector<RtAudio::Api> rtaudio_apis;
-    RtAudio::getCompiledApi(rtaudio_apis);
-
-    for (unsigned k = 0; k < rtaudio_apis.size(); k++)
-    {
-      const RtAudio::Api apiIndex = rtaudio_apis[k];
-      
-      if (apiName == RtAudio::getApiName(apiIndex) || apiName.IsEmpty()) {
-	RtAudio* audioApi = NULL;
-
-	try
-	{
-	  audioApi = new RtAudio(apiIndex);
-	  unsigned int deviceCount = audioApi->getDeviceCount();
-	  
-	  for (unsigned i = 0; i < deviceCount; i++)
-	  {
-	    const wxString devName = getName(audioApi, i);
-
-	    if (
-	      devName == name
-	      || (apiName.IsEmpty() && get_oldstyle_name(apiIndex, audioApi, i) == name)
-	    )
-	    {
-	      port = new GOrgueSoundRtPort(sound, audioApi, devName);
-	      break;
-	    }
-	  }
-	}
-	catch (RtAudioError &e)
-	{
-	  wxString error = wxString::FromAscii(e.getMessage().c_str());
-	  wxLogError(_("RtAudio error: %s"), error.c_str());
-	}
-	if (port)
-	  break;
-	// here audioApi is not used by port
-	if (audioApi)
-	  delete audioApi;
-      }
-    }
-  }
-  catch (RtAudioError &e)
-  {
-	  wxString error = wxString::FromAscii(e.getMessage().c_str());
-	  wxLogError(_("RtAudio error: %s"), error.c_str());
-  }
-  return port;
-}
-
 static bool hasApiNamesPopulated = false;
 static std::vector<wxString> apiNames;
 
@@ -302,46 +242,114 @@ const std::vector<wxString> & GOrgueSoundRtPort::getApis()
   return apiNames;
 }
 
-void GOrgueSoundRtPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)
+GOrgueSoundPort* GOrgueSoundRtPort::create(const GOrgueSoundPortsConfig &portsConfig, GOrgueSound* sound, wxString name)
 {
-	try
-	{
-		std::vector<RtAudio::Api> rtaudio_apis;
-		RtAudio::getCompiledApi(rtaudio_apis);
+  GOrgueSoundRtPort* port = NULL;
+  
+  if (portsConfig.IsEnabled(PORT_NAME))
+    try
+    {
+      NameParser parser(name);
+      const wxString subsysName = parser.nextComp();
+      wxString apiName = subsysName == PORT_NAME ? parser.nextComp() : wxT("");
 
-		for (unsigned k = 0; k < rtaudio_apis.size(); k++)
-		{
-			RtAudio* audioDevice = 0;
+      std::vector<RtAudio::Api> rtaudio_apis;
+      RtAudio::getCompiledApi(rtaudio_apis);
 
-			try
-			{
-				audioDevice = new RtAudio(rtaudio_apis[k]);
-				for (unsigned i = 0; i < audioDevice->getDeviceCount(); i++)
-				{
-					RtAudio::DeviceInfo dev_info = audioDevice->getDeviceInfo(i);
-					if (!dev_info.probed)
-						continue;
-					if (dev_info.outputChannels < 1)
-						continue;
-					GOrgueSoundDevInfo info;
-					info.channels = dev_info.outputChannels;
-					info.isDefault = dev_info.isDefaultOutput;
-					info.name = getName(audioDevice, i);
-					result.push_back(info);
-				}
-			}
-			catch (RtAudioError &e)
-			{
-				wxString error = wxString::FromAscii(e.getMessage().c_str());
-				wxLogError(_("RtAudio error: %s"), error.c_str());
-			}
-			if (audioDevice)
-				delete audioDevice;
-		}
+      for (unsigned k = 0; k < rtaudio_apis.size(); k++)
+      {
+	const RtAudio::Api apiIndex = rtaudio_apis[k];
+	const wxString rtApiName = RtAudio::getApiName(apiIndex);
+
+	if (portsConfig.IsEnabled(PORT_NAME, rtApiName) && (apiName == rtApiName || apiName.IsEmpty())) {
+	  RtAudio* rtApi = NULL;
+
+	  try
+	  {
+	    rtApi = new RtAudio(apiIndex);
+	    unsigned int deviceCount = rtApi->getDeviceCount();
+
+	    for (unsigned i = 0; i < deviceCount; i++)
+	    {
+	      const wxString devName = getName(rtApi, i);
+
+	      if (
+		devName == name
+		|| (apiName.IsEmpty() && get_oldstyle_name(apiIndex, rtApi, i) == name)
+	      )
+	      {
+		port = new GOrgueSoundRtPort(sound, rtApi, devName);
+		break;
+	      }
+	    }
+	  }
+	  catch (RtAudioError &e)
+	  {
+	    wxString error = wxString::FromAscii(e.getMessage().c_str());
+	    wxLogError(_("RtAudio error: %s"), error.c_str());
+	  }
+	  if (port)
+	    break;
+	  // here audioApi is not used by port
+	  if (rtApi)
+	    delete rtApi;
 	}
-	catch (RtAudioError &e)
+      }
+    }
+    catch (RtAudioError &e)
+    {
+	    wxString error = wxString::FromAscii(e.getMessage().c_str());
+	    wxLogError(_("RtAudio error: %s"), error.c_str());
+    }
+  return port;
+}
+
+void GOrgueSoundRtPort::addDevices(const GOrgueSoundPortsConfig &portsConfig, std::vector<GOrgueSoundDevInfo>& result)
+{
+  if (portsConfig.IsEnabled(PORT_NAME))
+    try
+    {
+      std::vector<RtAudio::Api> rtaudio_apis;
+      RtAudio::getCompiledApi(rtaudio_apis);
+
+      for (unsigned k = 0; k < rtaudio_apis.size(); k++)
+      {
+	const RtAudio::Api apiIndex = rtaudio_apis[k];
+	
+	if (portsConfig.IsEnabled(PORT_NAME, RtAudio::getApiName(apiIndex)))
 	{
-		wxString error = wxString::FromAscii(e.getMessage().c_str());
-		wxLogError(_("RtAudio error: %s"), error.c_str());
+	  RtAudio* rtApi = nullptr;
+
+	  try
+	  {
+		  rtApi = new RtAudio(apiIndex);
+		  for (unsigned i = 0; i < rtApi->getDeviceCount(); i++)
+		  {
+			  RtAudio::DeviceInfo dev_info = rtApi->getDeviceInfo(i);
+			  if (!dev_info.probed)
+				  continue;
+			  if (dev_info.outputChannels < 1)
+				  continue;
+			  GOrgueSoundDevInfo info;
+			  info.channels = dev_info.outputChannels;
+			  info.isDefault = dev_info.isDefaultOutput;
+			  info.name = getName(rtApi, i);
+			  result.push_back(info);
+		  }
+	  }
+	  catch (RtAudioError &e)
+	  {
+		  wxString error = wxString::FromAscii(e.getMessage().c_str());
+		  wxLogError(_("RtAudio error: %s"), error.c_str());
+	  }
+	  if (rtApi)
+		  delete rtApi;
 	}
+      }
+    }
+    catch (RtAudioError &e)
+    {
+      wxString error = wxString::FromAscii(e.getMessage().c_str());
+      wxLogError(_("RtAudio error: %s"), error.c_str());
+    }
 }

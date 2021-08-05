@@ -298,7 +298,9 @@ wxTreeItemId SettingsAudioOutput::AddDeviceNode(wxString name, unsigned desired_
 {
 	wxTreeItemId current;
 	if (name == wxEmptyString)
-		name = m_Sound.GetDefaultAudioDevice();
+	{
+	  name = m_Sound.GetDefaultAudioDevice(RenewSoundPortsConfig());
+	}
 	current = GetDeviceNode(name);
 	if (current.IsOk())
 		return current;
@@ -354,9 +356,11 @@ void SettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
 }
 
 void SettingsAudioOutput::AssureDeviceList() {
-  if (! m_hasDeviceListPopulated) {
-    m_DeviceList = m_Sound.GetAudioDevices();
-    m_hasDeviceListPopulated = true;
+  const GOrgueSoundPortsConfig portsConfig(RenewSoundPortsConfig());
+  
+  if (m_PortsConfigPopulatedWith != portsConfig) {
+    m_DeviceList = m_Sound.GetAudioDevices(portsConfig);
+    m_PortsConfigPopulatedWith = portsConfig;
   }
 }
 

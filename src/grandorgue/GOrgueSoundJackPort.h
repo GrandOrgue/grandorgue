@@ -63,9 +63,10 @@ public:
 
 public:
 	void Close();
-	static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
+
 	static const std::vector<wxString> & getApis() { return c_NoApis; }
-	static void addDevices(std::vector<GOrgueSoundDevInfo>& list);
+	static GOrgueSoundPort* create(const GOrgueSoundPortsConfig &portsConfig, GOrgueSound* sound, wxString name);
+	static void addDevices(const GOrgueSoundPortsConfig &portsConfig, std::vector<GOrgueSoundDevInfo>& list);
 };
 
 #endif /* GORGUESOUNDJACKPORT_H */

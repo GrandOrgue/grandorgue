@@ -196,25 +196,28 @@ wxString GOrgueSoundJackPort::getName()
 
 static const wxString OLD_STYLE_NAME = wxT("Jack Output");
 
-GOrgueSoundPort* GOrgueSoundJackPort::create(GOrgueSound* sound, wxString name)
+GOrgueSoundPort* GOrgueSoundJackPort::create(const GOrgueSoundPortsConfig &portsConfig, GOrgueSound* sound, wxString name)
 {
 #if defined(GO_USE_JACK)
-	wxString devName = getName();
-	if (name == devName || name == OLD_STYLE_NAME)
-		return new GOrgueSoundJackPort(sound, devName);
+  wxString devName = getName();
+  if (portsConfig.IsEnabled(PORT_NAME) && (name == devName || name == OLD_STYLE_NAME))
+    return new GOrgueSoundJackPort(sound, devName);
 #endif
-	return NULL;
+  return NULL;
 }
 
-void GOrgueSoundJackPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)
+void GOrgueSoundJackPort::addDevices(const GOrgueSoundPortsConfig &portsConfig, std::vector<GOrgueSoundDevInfo>& result)
 {
 #if defined(GO_USE_JACK)  
-	GOrgueSoundDevInfo info;
+  if (portsConfig.IsEnabled(PORT_NAME))
+  {
+    GOrgueSoundDevInfo info;
 
-	info.channels = MAX_CHANNELS_COUNT;
-	info.isDefault = true;
-	info.name = getName();
-	result.push_back(info);
+    info.channels = MAX_CHANNELS_COUNT;
+    info.isDefault = true;
+    info.name = getName();
+    result.push_back(info);
+  }
 #endif
 }
 

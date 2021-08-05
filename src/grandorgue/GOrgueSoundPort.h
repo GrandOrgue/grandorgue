@@ -23,6 +23,8 @@
 #define GORGUESOUNDPORT_H
 
 #include "GOrgueSoundDevInfo.h"
+#include "GOrgueSoundPortsConfig.h"
+
 #include <wx/string.h>
 #include <vector>
 
@@ -82,11 +84,12 @@ public:
 
   const wxString& GetName();
 
-  static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
   static const std::vector<wxString> & getPortNames();
   static const std::vector<wxString> & getApiNames(const wxString & portName);
   
-  static std::vector<GOrgueSoundDevInfo> getDeviceList();
+  static std::vector<GOrgueSoundDevInfo> getDeviceList(const GOrgueSoundPortsConfig &portsConfig);
+  static GOrgueSoundPort* create(const GOrgueSoundPortsConfig &portsConfig, GOrgueSound* sound, wxString name);
+
   static void terminate();
 
   wxString getPortState();

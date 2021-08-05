@@ -119,37 +119,6 @@ wxString GOrgueSoundPort::composeDeviceName(
   return resName;
 }
 
-enum {
-  SUBSYS_PA_BIT = 1,
-  SUBSYS_RT_BIT = 2,
-  SUBSYS_JACK_BIT = 4
-};
-
-GOrgueSoundPort* GOrgueSoundPort::create(GOrgueSound* sound, wxString name)
-{
-  GOrgueSoundPort *port = NULL;
-  NameParser parser(name);
-  wxString subsysName = parser.nextComp();
-  unsigned short subsysMask; // possible subsystems matching with the name
-  
-  if (subsysName == GOrgueSoundPortaudioPort::PORT_NAME)
-    subsysMask = SUBSYS_PA_BIT;
-  else if (subsysName == GOrgueSoundRtPort::PORT_NAME)
-    subsysMask = SUBSYS_RT_BIT;
-  else if (subsysName == GOrgueSoundJackPort::PORT_NAME)
-    subsysMask = SUBSYS_JACK_BIT;
-  else // old-style name
-    subsysMask = SUBSYS_PA_BIT | SUBSYS_RT_BIT | SUBSYS_JACK_BIT;
-  
-  if (port == NULL && (subsysMask & SUBSYS_PA_BIT))
-    port = GOrgueSoundPortaudioPort::create(sound, name);
-  if (port == NULL && (subsysMask & SUBSYS_RT_BIT))
-    port = GOrgueSoundRtPort::create(sound, name);
-  if (port == NULL && (subsysMask & SUBSYS_JACK_BIT))
-    port = GOrgueSoundJackPort::create(sound, name);
-  return port;
-}
-
 static bool has_subsystems_populated = false;
 static std::vector<wxString> substystems;
 
@@ -165,25 +134,67 @@ const std::vector<wxString> & GOrgueSoundPort::getPortNames()
   return substystems;
 }
 
-const std::vector<wxString> & GOrgueSoundPort::getApiNames(const wxString & subsysName)
+const std::vector<wxString> & GOrgueSoundPort::getApiNames(const wxString & portName)
 {
-  if (subsysName == GOrgueSoundPortaudioPort::PORT_NAME)
+  if (portName == GOrgueSoundPortaudioPort::PORT_NAME)
     return GOrgueSoundPortaudioPort::getApis();
-  else if (subsysName == GOrgueSoundRtPort::PORT_NAME)
+  else if (portName == GOrgueSoundRtPort::PORT_NAME)
     return GOrgueSoundRtPort::getApis();
-  else if (subsysName == GOrgueSoundJackPort::PORT_NAME)
+  else if (portName == GOrgueSoundJackPort::PORT_NAME)
     return GOrgueSoundJackPort::getApis();
   else // old-style name
     return c_NoApis;
 }
 
-std::vector<GOrgueSoundDevInfo> GOrgueSoundPort::getDeviceList()
+enum {
+  SUBSYS_PA_BIT = 1,
+  SUBSYS_RT_BIT = 2,
+  SUBSYS_JACK_BIT = 4
+};
+
+GOrgueSoundPort* GOrgueSoundPort::create(const GOrgueSoundPortsConfig &portsConfig, GOrgueSound* sound, wxString name)
 {
-	std::vector<GOrgueSoundDevInfo> result;
-	GOrgueSoundPortaudioPort::addDevices(result);
-	GOrgueSoundRtPort::addDevices(result);
-	GOrgueSoundJackPort::addDevices(result);
-	return result;
+  GOrgueSoundPort *port = NULL;
+  NameParser parser(name);
+  wxString subsysName = parser.nextComp();
+  unsigned short subsysMask; // possible subsystems matching with the name
+  
+  if (subsysName == GOrgueSoundPortaudioPort::PORT_NAME)
+    subsysMask = SUBSYS_PA_BIT;
+  else if (subsysName == GOrgueSoundRtPort::PORT_NAME)
+    subsysMask = SUBSYS_RT_BIT;
+  else if (subsysName == GOrgueSoundJackPort::PORT_NAME)
+    subsysMask = SUBSYS_JACK_BIT;
+  else // old-style name
+    subsysMask = SUBSYS_PA_BIT | SUBSYS_RT_BIT | SUBSYS_JACK_BIT;
+
+  if (
+    port == NULL && (subsysMask & SUBSYS_PA_BIT)
+      && portsConfig.IsEnabled(GOrgueSoundPortaudioPort::PORT_NAME)
+  ) port = GOrgueSoundPortaudioPort::create(portsConfig, sound, name);
+  if (
+    port == NULL && (subsysMask & SUBSYS_RT_BIT)
+      && portsConfig.IsEnabled(GOrgueSoundRtPort::PORT_NAME)
+  ) port = GOrgueSoundRtPort::create(portsConfig, sound, name);
+  if (
+    port == NULL && (subsysMask & SUBSYS_JACK_BIT)
+      && portsConfig.IsEnabled(GOrgueSoundJackPort::PORT_NAME)
+  ) port = GOrgueSoundJackPort::create(portsConfig, sound, name);
+  return port;
+}
+
+std::vector<GOrgueSoundDevInfo> GOrgueSoundPort::getDeviceList(
+  const GOrgueSoundPortsConfig &portsConfig
+) {
+  std::vector<GOrgueSoundDevInfo> result;
+  
+  if (portsConfig.IsEnabled(GOrgueSoundPortaudioPort::PORT_NAME))
+    GOrgueSoundPortaudioPort::addDevices(portsConfig, result);
+  if (portsConfig.IsEnabled(GOrgueSoundRtPort::PORT_NAME))
+    GOrgueSoundRtPort::addDevices(portsConfig, result);
+  if (portsConfig.IsEnabled(GOrgueSoundJackPort::PORT_NAME))
+    GOrgueSoundJackPort::addDevices(portsConfig, result);
+  return result;
 }
 
 void GOrgueSoundPort::terminate()

@@ -13,6 +13,20 @@ private:
     
     PortApiConfig(const wxString &portName, const wxString &apiName, bool isEnabled)
       : m_PortName(portName), m_ApiName(apiName), m_IsEnabled(isEnabled) {}
+
+    bool operator==(const PortApiConfig &other) const
+    { 
+      return m_PortName == other.m_PortName
+	&& m_ApiName == other.m_ApiName
+	&& m_IsEnabled == other.m_IsEnabled;
+    }
+    
+    bool operator!=(const PortApiConfig &other) const 
+    { 
+      return m_PortName != other.m_PortName
+	|| m_ApiName != other.m_ApiName
+	|| m_IsEnabled != other.m_IsEnabled;
+    }
   };
   
   std::vector<PortApiConfig> m_PortApiConfigs;
@@ -22,6 +36,9 @@ private:
 public:
   GOrgueSoundPortsConfig() {}
   GOrgueSoundPortsConfig(const GOrgueSoundPortsConfig &src): m_PortApiConfigs(src.m_PortApiConfigs) {}
+  
+  bool operator==(const GOrgueSoundPortsConfig &other) const { return m_PortApiConfigs == other.m_PortApiConfigs; }
+  bool operator!=(const GOrgueSoundPortsConfig &other) const { return m_PortApiConfigs != other.m_PortApiConfigs; }
 
   void Clear() { m_PortApiConfigs.clear(); }
   void AssignFrom(const GOrgueSoundPortsConfig &src) { m_PortApiConfigs = src.m_PortApiConfigs; }

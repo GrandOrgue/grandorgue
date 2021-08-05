@@ -62,7 +62,7 @@ private:
 	wxButton* m_Properties;
 	wxButton* m_Default;
 	
-	bool m_hasDeviceListPopulated = false;
+	GOrgueSoundPortsConfig m_PortsConfigPopulatedWith;
 	std::vector<GOrgueSoundDevInfo> m_DeviceList;
 	
 	bool GetPortItemChecked(
