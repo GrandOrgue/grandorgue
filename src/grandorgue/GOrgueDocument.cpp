@@ -180,7 +180,7 @@ void GOrgueDocument::CloseOrgan()
 {
 	m_listener.SetCallback(NULL);
 	m_sound.AssignOrganFile(NULL);
-	m_sound.CloseSound();
+	// m_sound.CloseSound();
 	CloseWindows();
 	wxTheApp->ProcessPendingEvents();
 
