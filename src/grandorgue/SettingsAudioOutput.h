@@ -85,7 +85,7 @@ private:
 	void UpdateButtons();
 
 	void AssureDeviceList();
-	std::vector<wxString> GetRemainingAudioDevices();
+	std::vector<wxString> GetRemainingAudioDevices(const wxTreeItemId *ignoreItem);
 	std::vector<std::pair<wxString, bool> > GetRemainingAudioGroups(const wxTreeItemId& channel);
 
 	void OnOutputChanged(wxTreeEvent& event);

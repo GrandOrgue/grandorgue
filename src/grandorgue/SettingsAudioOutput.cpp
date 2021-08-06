@@ -364,14 +364,22 @@ void SettingsAudioOutput::AssureDeviceList() {
   }
 }
 
-std::vector<wxString> SettingsAudioOutput::GetRemainingAudioDevices()
+std::vector<wxString> SettingsAudioOutput::GetRemainingAudioDevices(
+  const wxTreeItemId *ignoreItem
+)
 {
   AssureDeviceList();
+  
   std::vector<wxString> result;
+  
   for(unsigned i = 0; i < m_DeviceList.size(); i++)
   {
-	  if (!GetDeviceNode(m_DeviceList[i].name).IsOk())
-		  result.push_back(m_DeviceList[i].name);
+    const wxTreeItemId item = GetDeviceNode(m_DeviceList[i].name);
+    
+
+    if (
+      ! item.IsOk() || (ignoreItem != NULL && item.GetID() == ignoreItem->GetID())
+    ) result.push_back(m_DeviceList[i].name);
   }
   return result;
 }
@@ -494,7 +502,7 @@ void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 	{
 		int index;
 		wxArrayString devs;
-		std::vector<wxString> devices = GetRemainingAudioDevices();
+		std::vector<wxString> devices = GetRemainingAudioDevices(NULL);
 		for(unsigned i = 0; i < devices.size(); i++)
 			devs.Add(devices[i]);
 		index = wxGetSingleChoiceIndex(_("Add new audio device"), _("New audio device"), devs, this);
@@ -535,12 +543,20 @@ void SettingsAudioOutput::OnOutputChange(wxCommandEvent& event)
 	{
 		int index;
 		wxArrayString devs;
-		std::vector<wxString> devices = GetRemainingAudioDevices();
+		std::vector<wxString> devices = GetRemainingAudioDevices(& selection);
+		
+		int initialSelection = 0;
+		
 		for(unsigned i = 0; i < devices.size(); i++)
-			devs.Add(devices[i]);
-		devs.Insert(data->name, 0);
-		index = wxGetSingleChoiceIndex(_("Change audio device"), _("Change audio device"), devs, this);
-		if (index == -1 || index == 0)
+		{
+		  const wxString devName = devices[i];
+		  
+		  devs.Add(devName);
+		  if (devName == data->name)
+		    initialSelection = i;
+		}
+		index = wxGetSingleChoiceIndex(_("Change audio device"), _("Change audio device"), devs, initialSelection, this);
+		if (index <= -1 || devs[index] == data->name)
 			return;
 		unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
 		bool error = false;
