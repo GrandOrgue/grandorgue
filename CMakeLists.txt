@@ -127,14 +127,42 @@ if (WIN32)
    set(CPACK_BINARY_TGZ ON CACHE BOOL INTERNAL)
 endif ()
 
+if (RTAUDIO_USE_JACK OR RTMIDI_USE_JACK OR GO_USE_JACK)
+  pkg_check_modules(JACK REQUIRED IMPORTED_TARGET jack)
+endif()
+
 if(RTAUDIO_USE_ASIO AND NOT ASIO_SDK_DIR)
   set(ASIO_SDK_DIR "${CMAKE_SOURCE_DIR}/ext/rt/asio")
+endif()
+
+if(NOT RTAUDIO_SRC_DIR)
+  set(RTAUDIO_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtAudio")
+  if(NOT EXISTS "${RTAUDIO_SRC_DIR}/RtAudio.h")
+    message(
+      FATAL_ERROR 
+      "${RTAUDIO_SRC_DIR}/RtAudio.h file does not exist."
+      "Possible the RtAudio submodule has not been updated."
+      "Try to execute 'git submodule update --init --recursive' in the source directory"
+    )
+  endif()
+endif()
+
+if(NOT RTMIDI_SRC_DIR)
+  set(RTMIDI_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtMidi")
+  if(NOT EXISTS "${RTMIDI_SRC_DIR}/RtMidi.h")
+    message(
+      FATAL_ERROR 
+      "${RTMIDI_SRC_DIR}/RtMidi.h file does not exist."
+      "Possible the RtMidi submodule has not been updated."
+      "Try to execute 'git submodule update --init --recursive' in the source directory"
+    )
+  endif()
 endif()
 
 # include RtAudio
 add_subdirectory(src/rt)
 set(RT_LIBRARIES RtAudio RtMidi)
-set(RT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/rt/include)
+set(RT_INCLUDE_DIRS ${RTMIDI_SRC_DIR} ${RTAUDIO_SRC_DIR})
 
 # include portaudio
 if (USE_INTERNAL_PORTAUDIO)
