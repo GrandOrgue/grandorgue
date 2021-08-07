@@ -1,6 +1,7 @@
+- Fixed ``A device wants different samples per buffer: 15`` on OSx  with RtAudio
 - Displaying actual error text instead of ``Internal Portaudio Error`` https://github.com/oleg68/GrandOrgue/issues/52
-- Added capability of disabling some sound ports and API's
-- Eliminated extra opening sound devices
+- Added capability of disabling some sound ports and API's https://github.com/oleg68/GrandOrgue/issues/48
+- Eliminated extra opening sound devices https://github.com/oleg68/GrandOrgue/issues/48
 - Changed the sound device name format to ``Subsys: Api: Device`` https://github.com/oleg68/GrandOrgue/issues/48
 # 0.3.1.2341-8.os (2021-07-26)
 - Moved Language selection on top of the first setting page
