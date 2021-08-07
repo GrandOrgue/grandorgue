@@ -1,3 +1,7 @@
 [submodule "submodules/RtAudio"]
 	path = submodules/RtAudio
 	url = https://github.com/thestk/rtaudio.git
+[submodule "submodules/RtMidi"]
+	path = submodules/RtMidi
+	url = https://github.com/thestk/rtmidi
+	branch = 4.0.0
