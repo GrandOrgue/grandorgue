@@ -133,6 +133,7 @@ GOrgueSound.cpp
 GOrgueSoundJackPort.cpp
 GOrgueSoundPort.cpp
 GOrgueSoundPortaudioPort.cpp
+GOrgueSoundPortsConfig.cpp
 GOrgueSoundRtPort.cpp
 GOrgueSoundingPipe.cpp
 GOrgueStop.cpp

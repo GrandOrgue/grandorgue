@@ -23,8 +23,10 @@
 #define SETTINGSAUDIOOUTPUT_H
 
 #include "GOrgueSoundDevInfo.h"
+#include "GOrgueSoundPortsConfig.h"
 #include "SettingsAudioGroup.h"
 #include <wx/panel.h>
+#include <wx/treelist.h>
 #include <vector>
 
 class AudioItemData;
@@ -43,18 +45,31 @@ class SettingsAudioOutput : public wxPanel
 		ID_OUTPUT_CHANGE,
 		ID_OUTPUT_PROPERTIES,
 		ID_OUTPUT_DEFAULT,
+		ID_SOND_PORTS = 210
 	};
 
 private:
 	GOrgueSound& m_Sound;
+	
+	GOrgueSoundPortsConfig m_SoundPortsConfig;
+	
 	GOAudioGroupCallback& m_GroupCallback;
+	wxTreeListCtrl* m_SoundPorts;
 	wxTreeCtrl* m_AudioOutput;
 	wxButton* m_Add;
 	wxButton* m_Del;
 	wxButton* m_Change;
 	wxButton* m_Properties;
 	wxButton* m_Default;
+	
+	GOrgueSoundPortsConfig m_PortsConfigPopulatedWith;
 	std::vector<GOrgueSoundDevInfo> m_DeviceList;
+	
+	bool GetPortItemChecked(
+	  const wxString &portName, const wxString& apiName = wxEmptyString
+	) const;
+	void SetPortItemChecked(wxTreeListItem item, bool isChecked);
+	GOrgueSoundPortsConfig & RenewSoundPortsConfig();
 
 	AudioItemData* GetObject(const wxTreeItemId& id);
 	wxTreeItemId GetDeviceNode(const wxString& name);
@@ -69,7 +84,8 @@ private:
 	void UpdateVolume(const wxTreeItemId& group, float volume);
 	void UpdateButtons();
 
-	std::vector<wxString> GetRemainingAudioDevices();
+	void AssureDeviceList();
+	std::vector<wxString> GetRemainingAudioDevices(const wxTreeItemId *ignoreItem);
 	std::vector<std::pair<wxString, bool> > GetRemainingAudioGroups(const wxTreeItemId& channel);
 
 	void OnOutputChanged(wxTreeEvent& event);

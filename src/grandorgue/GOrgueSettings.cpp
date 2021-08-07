@@ -35,6 +35,7 @@
 #include "GOrgueSettingEnum.cpp"
 #include "GOrgueSettingNumber.cpp"
 #include "GOrgueStdPath.h"
+#include "GOrgueSoundPort.h"
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/stdpaths.h>
@@ -198,6 +199,20 @@ void GOrgueSettings::Load()
 			m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), false, wxString::Format(_("Audio group %d"), i + 1)));
 		if (!m_AudioGroups.size())
 			m_AudioGroups.push_back(_("Default audio group"));
+		
+		const wxString SOUND_PORTS = wxT("SoundPorts");
+		const wxString ENABLED = wxT(".Enabled");
+		m_PortsConfig.Clear();
+		for (const wxString &portName: GOrgueSoundPort::getPortNames())
+		{
+		  const bool isPortEnabled = cfg.ReadBoolean(CMBSetting, SOUND_PORTS, portName + ENABLED, false, true);
+		  const wxString prefix = portName + ".";
+
+		  m_PortsConfig.SetConfigEnabled(portName, isPortEnabled);
+
+		  for (const wxString &apiName: GOrgueSoundPort::getApiNames(portName))
+		    m_PortsConfig.SetConfigEnabled(portName, apiName, cfg.ReadBoolean(CMBSetting, SOUND_PORTS, prefix + apiName + ENABLED, false, true));
+		}
 		
 		m_AudioDeviceConfig.clear();
 		count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxT("Count"), 0, 200, false, 0);
@@ -525,6 +540,17 @@ void GOrgueSettings::Flush()
 	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
 		cfg.WriteString(wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), m_AudioGroups[i]);
 	cfg.WriteInteger(wxT("AudioGroups"), wxT("Count"), m_AudioGroups.size());
+
+	const wxString SOUND_PORTS = wxT("SoundPorts");
+	const wxString ENABLED = wxT(".Enabled");
+
+	for (const wxString &portName: GOrgueSoundPort::getPortNames())
+	{
+	  cfg.WriteBoolean(SOUND_PORTS, portName + ENABLED, m_PortsConfig.IsConfigEnabled(portName));
+	  const wxString prefix = portName + ".";
+	  for (const wxString &apiName: GOrgueSoundPort::getApiNames(portName))
+	    cfg.WriteBoolean(SOUND_PORTS, prefix + apiName + ENABLED, m_PortsConfig.IsConfigEnabled(portName, apiName));
+	}
 
 	for(unsigned i = 0; i < m_AudioDeviceConfig.size(); i++)
 	{

@@ -37,6 +37,8 @@
 class GOrgueSoundJackPort : public GOrgueSoundPort
 {
 public:
+	static const wxString PORT_NAME;
+  
 	GOrgueSoundJackPort(GOrgueSound* sound, wxString name);
 	~GOrgueSoundJackPort();
 
@@ -52,6 +54,8 @@ private:
 	static int JackProcessCallback(jack_nframes_t nFrames, void *data);
 	static void JackShutdownCallback(void *data);
 	
+	static wxString getName();
+	
 public:
 	void Open();
 	void StartStream();
@@ -59,8 +63,10 @@ public:
 
 public:
 	void Close();
-	static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
-	static void addDevices(std::vector<GOrgueSoundDevInfo>& list);
+
+	static const std::vector<wxString> & getApis() { return c_NoApis; }
+	static GOrgueSoundPort* create(const GOrgueSoundPortsConfig &portsConfig, GOrgueSound* sound, wxString name);
+	static void addDevices(const GOrgueSoundPortsConfig &portsConfig, std::vector<GOrgueSoundDevInfo>& list);
 };
 
 #endif /* GORGUESOUNDJACKPORT_H */

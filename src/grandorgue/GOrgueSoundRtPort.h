@@ -28,24 +28,27 @@
 class GOrgueSoundRtPort : public GOrgueSoundPort
 {
 private:
-	RtAudio::Api m_api;
-	RtAudio* m_port;
+	RtAudio* m_rtApi;
 	unsigned m_nBuffers;
 
 	static int Callback(void *outputBuffer, void *inputBuffer, unsigned int nFrames, double streamTime, RtAudioStreamStatus status, void *userData);
 
-public:
-	static wxString getName(RtAudio::Api api, RtAudio* rt_api, unsigned index);
+	static wxString getName(RtAudio* rtApi, unsigned index);
 
-	GOrgueSoundRtPort(GOrgueSound* sound, wxString name, RtAudio::Api api);
+public:
+	static const wxString PORT_NAME;
+  
+	// rtApi to be deleted in the destructor
+	GOrgueSoundRtPort(GOrgueSound* sound, RtAudio* rtApi, wxString name);
 	~GOrgueSoundRtPort();
 
 	void Open();
 	void StartStream();
 	void Close();
 
-	static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
-	static void addDevices(std::vector<GOrgueSoundDevInfo>& list);
+	static const std::vector<wxString> & getApis();
+	static GOrgueSoundPort* create(const GOrgueSoundPortsConfig &portsConfig, GOrgueSound* sound, wxString name);
+	static void addDevices(const GOrgueSoundPortsConfig &portsConfig, std::vector<GOrgueSoundDevInfo>& list);
 };
 
 #endif

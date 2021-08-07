@@ -26,6 +26,7 @@
 #include "GOSoundEngine.h"
 #include "GOSoundRecorder.h"
 #include "GOrgueSoundDevInfo.h"
+#include "GOrgueSoundPortsConfig.h"
 #include "atomic.h"
 #include "mutex.h"
 #include <wx/string.h>
@@ -128,8 +129,8 @@ public:
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
 
-	std::vector<GOrgueSoundDevInfo> GetAudioDevices();
-	const wxString GetDefaultAudioDevice();
+	std::vector<GOrgueSoundDevInfo> GetAudioDevices(const GOrgueSoundPortsConfig &portsConfig);
+	const wxString GetDefaultAudioDevice(const GOrgueSoundPortsConfig &portsConfig);
 
 	GOrgueMidi& GetMidi();
 

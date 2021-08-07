@@ -35,6 +35,7 @@
 #include "GOrgueSettingString.h"
 #include "GOrgueSettingStore.h"
 #include "GOrgueSettingString.h"
+#include "GOrgueSoundPortsConfig.h"
 #include "ptrvector.h"
 #include <wx/string.h>
 #include <map>
@@ -79,6 +80,7 @@ private:
 	std::map<wxString, bool> m_MidiOut;
 	wxString m_ResourceDir;
 	std::vector<wxString> m_AudioGroups;
+	GOrgueSoundPortsConfig m_PortsConfig;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 	ptr_vector<GOrgueMidiReceiverBase> m_MIDIEvents;
 	GOrgueMidiMap m_MidiMap;
@@ -195,6 +197,12 @@ public:
 	unsigned GetAudioGroupId(const wxString& str);
 	int GetStrictAudioGroupId(const wxString& str);
 
+	const GOrgueSoundPortsConfig & GetPortsConfig() const
+	{ return m_PortsConfig; }
+	
+	void SetPortsConfig(const GOrgueSoundPortsConfig & portsConfig)
+	{ m_PortsConfig = portsConfig; }
+	
 	const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();
 	void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
 	unsigned GetDefaultLatency();

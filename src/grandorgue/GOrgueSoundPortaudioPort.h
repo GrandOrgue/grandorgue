@@ -32,9 +32,11 @@ private:
 
 	static int Callback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData);
 
-public:
 	static wxString getName(unsigned index);
 
+public:
+	static const wxString PORT_NAME;
+  
 	GOrgueSoundPortaudioPort(GOrgueSound* sound, wxString name);
 	virtual ~GOrgueSoundPortaudioPort();
 
@@ -42,8 +44,10 @@ public:
 	void StartStream();
 	void Close();
 
-	static GOrgueSoundPort* create(GOrgueSound* sound, wxString name);
-	static void addDevices(std::vector<GOrgueSoundDevInfo>& list);
+	static const std::vector<wxString> & getApis() { return c_NoApis; }
+	static GOrgueSoundPort* create(const GOrgueSoundPortsConfig &portsConfig, GOrgueSound* sound, wxString name);
+	static void addDevices(const GOrgueSoundPortsConfig &portsConfig, std::vector<GOrgueSoundDevInfo>& list);
+	static void terminate();
 };
 
 #endif

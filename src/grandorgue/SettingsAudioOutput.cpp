@@ -23,6 +23,7 @@
 
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
+#include "GOrgueSoundPort.h"
 #include <wx/button.h>
 #include <wx/choicdlg.h>
 #include <wx/msgdlg.h>
@@ -93,18 +94,79 @@ BEGIN_EVENT_TABLE(SettingsAudioOutput, wxPanel)
 	EVT_BUTTON(ID_OUTPUT_DEFAULT, SettingsAudioOutput::OnOutputDefault)
 END_EVENT_TABLE()
 
+wxString getPortItemName(const wxString &portName, const wxString &apiName = wxEmptyString)
+{
+  wxString itemName = portName;
+  
+  if (! apiName.IsEmpty())
+    itemName += ": " + apiName;
+  return itemName;
+}
+
+void SettingsAudioOutput::SetPortItemChecked(wxTreeListItem item, bool isChecked)
+{
+  if (isChecked)
+    m_SoundPorts->CheckItem(item);
+  else
+    m_SoundPorts->UncheckItem(item);
+}
+
+bool SettingsAudioOutput::GetPortItemChecked(
+  const wxString &portName, const wxString& apiName
+) const
+{
+  bool isChecked = true;
+  const wxString itemText = getPortItemName(portName, apiName);
+  
+  for (
+    wxTreeListItem item = m_SoundPorts->GetFirstItem();
+    item.IsOk();
+    item = m_SoundPorts->GetNextItem(item)
+  ) if (m_SoundPorts->GetItemText(item, 0) == itemText)
+  {
+    isChecked = m_SoundPorts->GetCheckedState(item);
+    break;
+  }
+  return isChecked;
+}
+
 
 SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallback& callback, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Sound(sound),
+	m_SoundPortsConfig(sound.GetSettings().GetPortsConfig()),
 	m_GroupCallback(callback)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
-	topSizer->AddSpacer(5);
+	// topSizer->AddSpacer(5);
+	
+	wxBoxSizer* item2 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sound &ports"));
+	m_SoundPorts = new wxTreeListCtrl(this, ID_SOND_PORTS, wxDefaultPosition, wxDefaultSize, wxTR_SINGLE | wxTL_CHECKBOX | wxTL_NO_HEADER);
+	m_SoundPorts->AppendColumn(wxEmptyString);
+	item2->Add(m_SoundPorts, 1, wxALIGN_LEFT | wxEXPAND);
+	topSizer->Add(item2, 1, wxEXPAND | wxALL, 5);
+	
+	for (const wxString &portName: GOrgueSoundPort::getPortNames())
+	{
+	  const wxTreeListItem portItem = m_SoundPorts->AppendItem(
+	    m_SoundPorts->GetRootItem(), getPortItemName(portName)
+	  );
+	  SetPortItemChecked(portItem, m_SoundPortsConfig.IsConfigEnabled(portName));
+	  for (const wxString &apiName: GOrgueSoundPort::getApiNames(portName)) {
+	    const wxTreeListItem portApiItem
+	      = m_SoundPorts->AppendItem(portItem, getPortItemName(portName, apiName));
+	    
+	    SetPortItemChecked(
+	      portApiItem, m_SoundPortsConfig.IsConfigEnabled(portName, apiName)
+	    );
+	  }
+	  m_SoundPorts->Expand(portItem);
+	}
 
+	item2 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Mapping output"));
 	m_AudioOutput = new wxTreeCtrl(this, ID_OUTPUT_LIST, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS | wxTR_SINGLE);
-	topSizer->Add(m_AudioOutput, 1, wxALIGN_LEFT | wxEXPAND);
-	topSizer->AddSpacer(5);
+	item2->Add(m_AudioOutput, 1, wxALIGN_LEFT | wxEXPAND);
+	item2->AddSpacer(5);
 
 	wxBoxSizer* buttonSizer =  new wxBoxSizer(wxHORIZONTAL);
 	buttonSizer->AddSpacer(5);
@@ -119,7 +181,8 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	buttonSizer->Add(m_Change, wxALL, 5);
 	buttonSizer->Add(m_Properties, 0, wxALL, 5);
 	buttonSizer->Add(m_Default, 0, wxALL, 5);
-	topSizer->Add(buttonSizer, 0, wxALL, 5);
+	item2->Add(buttonSizer, 0, wxALL, 5);
+	topSizer->Add(item2, 2, wxEXPAND | wxALL, 5);
 
 	m_AudioOutput->AddRoot(_("Audio Output"), -1, -1, new AudioItemData());
 
@@ -152,12 +215,24 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 
 	m_AudioOutput->ExpandAll();
 
-	m_DeviceList = m_Sound.GetAudioDevices();
-	topSizer->AddSpacer(5);
+	// topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
 	topSizer->Fit(this);
 
 	UpdateButtons();
+}
+
+GOrgueSoundPortsConfig & SettingsAudioOutput::RenewSoundPortsConfig()
+
+{
+  for (const wxString &portName: GOrgueSoundPort::getPortNames())
+  {
+    m_SoundPortsConfig.SetConfigEnabled(portName, GetPortItemChecked(portName));
+    for (const wxString &apiName: GOrgueSoundPort::getApiNames(portName)) {
+      m_SoundPortsConfig.SetConfigEnabled(portName, apiName, GetPortItemChecked(portName, apiName));
+    }
+  }
+  return m_SoundPortsConfig;
 }
 
 
@@ -223,7 +298,9 @@ wxTreeItemId SettingsAudioOutput::AddDeviceNode(wxString name, unsigned desired_
 {
 	wxTreeItemId current;
 	if (name == wxEmptyString)
-		name = m_Sound.GetDefaultAudioDevice();
+	{
+	  name = m_Sound.GetDefaultAudioDevice(RenewSoundPortsConfig());
+	}
 	current = GetDeviceNode(name);
 	if (current.IsOk())
 		return current;
@@ -278,15 +355,33 @@ void SettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
 		m_AudioOutput->SetItemText(group, wxString::Format(_("%s: mute"), name.c_str()));
 }
 
-std::vector<wxString> SettingsAudioOutput::GetRemainingAudioDevices()
+void SettingsAudioOutput::AssureDeviceList() {
+  const GOrgueSoundPortsConfig portsConfig(RenewSoundPortsConfig());
+  
+  if (m_PortsConfigPopulatedWith != portsConfig) {
+    m_DeviceList = m_Sound.GetAudioDevices(portsConfig);
+    m_PortsConfigPopulatedWith = portsConfig;
+  }
+}
+
+std::vector<wxString> SettingsAudioOutput::GetRemainingAudioDevices(
+  const wxTreeItemId *ignoreItem
+)
 {
-	std::vector<wxString> result;
-	for(unsigned i = 0; i < m_DeviceList.size(); i++)
-	{
-		if (!GetDeviceNode(m_DeviceList[i].name).IsOk())
-			result.push_back(m_DeviceList[i].name);
-	}
-	return result;
+  AssureDeviceList();
+  
+  std::vector<wxString> result;
+  
+  for(unsigned i = 0; i < m_DeviceList.size(); i++)
+  {
+    const wxTreeItemId item = GetDeviceNode(m_DeviceList[i].name);
+    
+
+    if (
+      ! item.IsOk() || (ignoreItem != NULL && item.GetID() == ignoreItem->GetID())
+    ) result.push_back(m_DeviceList[i].name);
+  }
+  return result;
 }
 
 std::vector<std::pair<wxString, bool> > SettingsAudioOutput::GetRemainingAudioGroups(const wxTreeItemId& channel)
@@ -310,6 +405,7 @@ void SettingsAudioOutput::UpdateButtons()
 	AudioItemData* data = GetObject(selection);
 	if (data && data->type == AudioItemData::AUDIO_NODE)
 	{
+		/*
 		bool enable = false;
 		for(unsigned i = 0; i < m_DeviceList.size(); i++)
 			if (m_DeviceList[i].name == data->name)
@@ -320,6 +416,8 @@ void SettingsAudioOutput::UpdateButtons()
 		else
 			m_Add->Disable();
 	
+		 */
+		m_Add->Enable();
 		m_Properties->Enable();
 		m_Change->Enable();
 		if (m_AudioOutput->GetChildrenCount(m_AudioOutput->GetRootItem(), false) > 1)
@@ -356,10 +454,7 @@ void SettingsAudioOutput::UpdateButtons()
 	{
 		m_Properties->Disable();
 		m_Change->Disable();
-		if (GetRemainingAudioDevices().size())
-			m_Add->Enable();
-		else
-			m_Add->Disable();
+		m_Add->Enable();
 		m_Del->Disable();
 	}
 	else
@@ -383,9 +478,10 @@ void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 	if (data && data->type == AudioItemData::AUDIO_NODE)
 	{
 		unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
+		/*
 		for(unsigned i = 0; i < m_DeviceList.size(); i++)
 			if (m_DeviceList[i].name == data->name)
-				if (channels < m_DeviceList[i].channels)
+				if (channels < m_DeviceList[i].channels) */
 					AddChannelNode(selection, channels);
 	}
 	else if (data && data->type == AudioItemData::CHANNEL_NODE)
@@ -406,7 +502,7 @@ void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 	{
 		int index;
 		wxArrayString devs;
-		std::vector<wxString> devices = GetRemainingAudioDevices();
+		std::vector<wxString> devices = GetRemainingAudioDevices(NULL);
 		for(unsigned i = 0; i < devices.size(); i++)
 			devs.Add(devices[i]);
 		index = wxGetSingleChoiceIndex(_("Add new audio device"), _("New audio device"), devs, this);
@@ -447,12 +543,20 @@ void SettingsAudioOutput::OnOutputChange(wxCommandEvent& event)
 	{
 		int index;
 		wxArrayString devs;
-		std::vector<wxString> devices = GetRemainingAudioDevices();
+		std::vector<wxString> devices = GetRemainingAudioDevices(& selection);
+		
+		int initialSelection = 0;
+		
 		for(unsigned i = 0; i < devices.size(); i++)
-			devs.Add(devices[i]);
-		devs.Insert(data->name, 0);
-		index = wxGetSingleChoiceIndex(_("Change audio device"), _("Change audio device"), devs, this);
-		if (index == -1 || index == 0)
+		{
+		  const wxString devName = devices[i];
+		  
+		  devs.Add(devName);
+		  if (devName == data->name)
+		    initialSelection = i;
+		}
+		index = wxGetSingleChoiceIndex(_("Change audio device"), _("Change audio device"), devs, initialSelection, this);
+		if (index <= -1 || devs[index] == data->name)
 			return;
 		unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
 		bool error = false;
@@ -561,62 +665,64 @@ void SettingsAudioOutput::OnOutputDefault(wxCommandEvent& event)
 
 void SettingsAudioOutput::Save()
 {
-	std::vector<GOAudioDeviceConfig> audio_config;
-	wxTreeItemId root = m_AudioOutput->GetRootItem();
-	wxTreeItemId audio, channel, group;
-	wxTreeItemIdValue i, j, k;
-	audio = m_AudioOutput->GetFirstChild(root, i);
-	while(audio.IsOk())
-	{
-		GOAudioDeviceConfig conf;
-		conf.name = ((AudioItemData*)m_AudioOutput->GetItemData(audio))->name;
-		conf.desired_latency = ((AudioItemData*)m_AudioOutput->GetItemData(audio))->latency;
-		conf.channels = m_AudioOutput->GetChildrenCount(audio, false);
-		conf.scale_factors.resize(conf.channels);
+  m_Sound.GetSettings().SetPortsConfig(RenewSoundPortsConfig());
+  
+  std::vector<GOAudioDeviceConfig> audio_config;
+  wxTreeItemId root = m_AudioOutput->GetRootItem();
+  wxTreeItemId audio, channel, group;
+  wxTreeItemIdValue i, j, k;
+  audio = m_AudioOutput->GetFirstChild(root, i);
+  while(audio.IsOk())
+  {
+	  GOAudioDeviceConfig conf;
+	  conf.name = ((AudioItemData*)m_AudioOutput->GetItemData(audio))->name;
+	  conf.desired_latency = ((AudioItemData*)m_AudioOutput->GetItemData(audio))->latency;
+	  conf.channels = m_AudioOutput->GetChildrenCount(audio, false);
+	  conf.scale_factors.resize(conf.channels);
 
-		int channel_id = 0;
-		channel = m_AudioOutput->GetFirstChild(audio, j);
-		while(channel.IsOk())
-		{
-			group = m_AudioOutput->GetFirstChild(channel, k);
-			while(group.IsOk())
-			{
-				AudioItemData* data = (AudioItemData*)m_AudioOutput->GetItemData(group);
-				bool found = false;
+	  int channel_id = 0;
+	  channel = m_AudioOutput->GetFirstChild(audio, j);
+	  while(channel.IsOk())
+	  {
+		  group = m_AudioOutput->GetFirstChild(channel, k);
+		  while(group.IsOk())
+		  {
+			  AudioItemData* data = (AudioItemData*)m_AudioOutput->GetItemData(group);
+			  bool found = false;
 
-				for(unsigned l = 0; l < conf.scale_factors[channel_id].size(); l++)
-					if (conf.scale_factors[channel_id][l].name == data->name)
-					{
-						found = true;
-						if (data->left)
-							conf.scale_factors[channel_id][l].left = data->volume;
-						else
-							conf.scale_factors[channel_id][l].right = data->volume;
-					}
-				if (!found)
-				{
-					GOAudioGroupOutputConfig gconf;
-					gconf.name = data->name;
-					gconf.left = -121;
-					gconf.right = -121;
+			  for(unsigned l = 0; l < conf.scale_factors[channel_id].size(); l++)
+				  if (conf.scale_factors[channel_id][l].name == data->name)
+				  {
+					  found = true;
+					  if (data->left)
+						  conf.scale_factors[channel_id][l].left = data->volume;
+					  else
+						  conf.scale_factors[channel_id][l].right = data->volume;
+				  }
+			  if (!found)
+			  {
+				  GOAudioGroupOutputConfig gconf;
+				  gconf.name = data->name;
+				  gconf.left = -121;
+				  gconf.right = -121;
 
-					if (data->left)
-						gconf.left = data->volume;
-					else
-						gconf.right = data->volume;
+				  if (data->left)
+					  gconf.left = data->volume;
+				  else
+					  gconf.right = data->volume;
 
-					conf.scale_factors[channel_id].push_back(gconf);
-				}
+				  conf.scale_factors[channel_id].push_back(gconf);
+			  }
 
-				group = m_AudioOutput->GetNextChild(channel, k);
-			}
+			  group = m_AudioOutput->GetNextChild(channel, k);
+		  }
 
-			channel = m_AudioOutput->GetNextChild(audio, j);
-			channel_id ++;
-		}
+		  channel = m_AudioOutput->GetNextChild(audio, j);
+		  channel_id ++;
+	  }
 
-		audio_config.push_back(conf);
-		audio = m_AudioOutput->GetNextChild(root, i);
-	}
-	m_Sound.GetSettings().SetAudioDeviceConfig(audio_config);
+	  audio_config.push_back(conf);
+	  audio = m_AudioOutput->GetNextChild(root, i);
+  }
+  m_Sound.GetSettings().SetAudioDeviceConfig(audio_config);
 }

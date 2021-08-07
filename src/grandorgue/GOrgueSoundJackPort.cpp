@@ -25,6 +25,8 @@
 
 #include "GOrgueSoundJackPort.h"
 
+const wxString GOrgueSoundJackPort::PORT_NAME = wxT("Jack");
+
 GOrgueSoundJackPort::GOrgueSoundJackPort(GOrgueSound* sound, wxString name) :
 	GOrgueSoundPort(sound, name)
 {
@@ -40,7 +42,6 @@ GOrgueSoundJackPort::~GOrgueSoundJackPort()
 
 #define MAX_CHANNELS_COUNT 64
 
-static const wxString DEVICE_NAME = "Jack Output";
 static const jack_options_t JACK_OPTIONS = JackNullOption;
 static const char * CLIENT_NAME = "GrandOrgueAudio";
 
@@ -126,9 +127,9 @@ void GOrgueSoundJackPort::Open()
 	const jack_nframes_t samples_per_buffer = jack_get_buffer_size(m_JackClient);
 	
 	if (sample_rate != m_SampleRate)
-		throw wxString::Format("Device %s wants a different sample rate: %d.\nPlease adjust the GrandOrgue audio settings.", DEVICE_NAME, sample_rate);
+		throw wxString::Format("Device %s wants a different sample rate: %d.\nPlease adjust the GrandOrgue audio settings.", m_Name, sample_rate);
 	if (samples_per_buffer != m_SamplesPerBuffer)
-		throw wxString::Format("Device %s wants a different samples per buffer settings: %d.\nPlease adjust the GrandOrgue audio settings.", DEVICE_NAME, samples_per_buffer);
+		throw wxString::Format("Device %s wants a different samples per buffer settings: %d.\nPlease adjust the GrandOrgue audio settings.", m_Name, samples_per_buffer);
 
 	char port_name[32];
 	
@@ -159,7 +160,7 @@ void GOrgueSoundJackPort::Open()
 void GOrgueSoundJackPort::StartStream()
 {
 	if (!m_JackClient || !m_IsOpen)
-		throw wxString::Format("Audio device %s not open", DEVICE_NAME);
+		throw wxString::Format("Audio device %s not open", m_Name);
 	m_IsStarted = true;
 	if (jack_activate (m_JackClient))
 		wxString::Format("Cannot activate the jack client");
@@ -188,24 +189,35 @@ void GOrgueSoundJackPort::Close()
 #endif
 }
 
-GOrgueSoundPort* GOrgueSoundJackPort::create(GOrgueSound* sound, wxString name)
+wxString GOrgueSoundJackPort::getName()
 {
-#if defined(GO_USE_JACK)
-	if (name == DEVICE_NAME)
-		return new GOrgueSoundJackPort(sound, name);
-#endif
-	return NULL;
+  return composeDeviceName(PORT_NAME, wxEmptyString, "Native Output");
 }
 
-void GOrgueSoundJackPort::addDevices(std::vector<GOrgueSoundDevInfo>& result)
+static const wxString OLD_STYLE_NAME = wxT("Jack Output");
+
+GOrgueSoundPort* GOrgueSoundJackPort::create(const GOrgueSoundPortsConfig &portsConfig, GOrgueSound* sound, wxString name)
+{
+#if defined(GO_USE_JACK)
+  wxString devName = getName();
+  if (portsConfig.IsEnabled(PORT_NAME) && (name == devName || name == OLD_STYLE_NAME))
+    return new GOrgueSoundJackPort(sound, devName);
+#endif
+  return NULL;
+}
+
+void GOrgueSoundJackPort::addDevices(const GOrgueSoundPortsConfig &portsConfig, std::vector<GOrgueSoundDevInfo>& result)
 {
 #if defined(GO_USE_JACK)  
-	GOrgueSoundDevInfo info;
+  if (portsConfig.IsEnabled(PORT_NAME))
+  {
+    GOrgueSoundDevInfo info;
 
-	info.channels = MAX_CHANNELS_COUNT;
-	info.isDefault = true;
-	info.name = DEVICE_NAME;
-	result.push_back(info);
+    info.channels = MAX_CHANNELS_COUNT;
+    info.isDefault = true;
+    info.name = getName();
+    result.push_back(info);
+  }
 #endif
 }
 
