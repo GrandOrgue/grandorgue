@@ -166,7 +166,7 @@ bool GOrgueArchiveIndex::ReadIndex(wxString& id, std::vector<GOArchiveEntry>& en
 		return false;
 	if (!m_File.Open(name, wxFile::read))
 	{
-		wxLogError(_("Failed to open '%s'"), name.c_str());
+		wxLogWarning(_("Failed to open '%s'"), name.c_str());
 		return false;
 	}
 
@@ -177,20 +177,20 @@ bool GOrgueArchiveIndex::ReadIndex(wxString& id, std::vector<GOArchiveEntry>& en
 	if (!Read(&magic, sizeof(magic)) || !Read(&hash2, sizeof(hash2)))
 	{
 		m_File.Close();
-		wxLogError(_("Failed to read '%s'"), name.c_str());
+		wxLogWarning(_("Failed to read '%s'"), name.c_str());
 		return false;
 	}
 	if (magic != GRANDORGUE_INDEX_MAGIC || memcmp(&hash1, &hash2, sizeof(hash1)))
 	{
 		m_File.Close();
-		wxLogError(_("Index '%s' has bad magic - bypassing index"), name.c_str());
+		wxLogWarning(_("Index '%s' has bad magic - bypassing index"), name.c_str());
 		return false;
 	}
 
 	if (!ReadContent(id, entries))
 	{
 		m_File.Close();
-		wxLogError(_("Failed to read '%s'"), name.c_str());
+		wxLogWarning(_("Failed to read '%s'"), name.c_str());
 		return false;
 	}
 
