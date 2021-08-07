@@ -69,7 +69,9 @@ void GOrgueSoundRtPort::Open()
 				aOutputParam.deviceId = i;
 
 		RtAudio::StreamOptions aOptions;
-		aOptions.flags = RTAUDIO_MINIMIZE_LATENCY;
+		// the next flag causes Rt/Core forces setting the buffer size to 15 
+		// and the sound distortion https://github.com/oleg68/GrandOrgue/issues/54
+		// aOptions.flags = RTAUDIO_MINIMIZE_LATENCY;
 		aOptions.numberOfBuffers = (m_Latency * m_SampleRate) / (m_SamplesPerBuffer * 1000);
 		aOptions.streamName = "GrandOrgue";
 
