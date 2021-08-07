@@ -1,3 +1,4 @@
+- Displaying actual error text instead of ``Internal Portaudio Error`` https://github.com/oleg68/GrandOrgue/issues/52
 - Added capability of disabling some sound ports and API's
 - Eliminated extra opening sound devices
 - Changed the sound device name format to ``Subsys: Api: Device`` https://github.com/oleg68/GrandOrgue/issues/48

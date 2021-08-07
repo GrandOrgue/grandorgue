@@ -25,6 +25,24 @@
 
 const wxString GOrgueSoundPortaudioPort::PORT_NAME = wxT("Pa");
 
+wxString GOrgueSoundPortaudioPort::getLastError(PaError error)
+{
+  const char* errText = NULL;
+  
+  if (
+    error == paUnanticipatedHostError
+    || error == paInternalError // workaround of https://github.com/PortAudio/portaudio/issues/620
+  ) {
+    const PaHostErrorInfo * const pErrInfo = Pa_GetLastHostErrorInfo();
+    
+    if (pErrInfo != NULL && pErrInfo->errorText != NULL && strlen(pErrInfo->errorText))
+      errText = pErrInfo->errorText;
+  }
+  if (errText == NULL)
+    errText = Pa_GetErrorText(error);
+  return wxGetTranslation(wxString::FromAscii(errText));
+}
+
 GOrgueSoundPortaudioPort::GOrgueSoundPortaudioPort(GOrgueSound* sound, wxString name) :
 	GOrgueSoundPort(sound, name),
 	m_stream(0)
@@ -61,7 +79,7 @@ void GOrgueSoundPortaudioPort::Open()
 	PaError error;
 	error = Pa_OpenStream(&m_stream, NULL, &stream_parameters, m_SampleRate, m_SamplesPerBuffer, paNoFlag, &Callback, this);
 	if (error != paNoError)
-		throw wxString::Format(_("Open of the audio stream for %s failed: %s"), m_Name.c_str(), wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error))));
+		throw wxString::Format(_("Open of the audio stream for %s failed: %s"), m_Name.c_str(), getLastError(error));
 	m_IsOpen = true;
 }
 
@@ -74,7 +92,7 @@ void GOrgueSoundPortaudioPort::StartStream()
 	error = Pa_StartStream(m_stream);
 	if (error != paNoError)
 		throw wxString::Format(_("Start of audio stream of %s failed: %s"), m_Name.c_str(),
-				       wxGetTranslation(wxString::FromAscii(Pa_GetErrorText(error))));
+				       getLastError(error));
 
 	const struct PaStreamInfo* info = Pa_GetStreamInfo(m_stream);
 	SetActualLatency(info->outputLatency);
