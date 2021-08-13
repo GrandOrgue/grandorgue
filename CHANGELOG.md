@@ -1,3 +1,4 @@
+- Displaying the full build version in the title and in the About window https://github.com/oleg68/GrandOrgue/issues/61
 - Converted ``Index has bad magic - bypassing index`` errors to warnings https://github.com/oleg68/GrandOrgue/issues/58
 # 0.3.1.2341-9.os (2021-08-07)
 - Fixed ``A device wants different samples per buffer: 15`` on OSx  with RtAudio https://github.com/oleg68/GrandOrgue/issues/54
