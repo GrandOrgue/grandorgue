@@ -22,7 +22,7 @@
 #ifndef GRANDORGUEDEF_H
 #define GRANDORGUEDEF_H
 
-#define APP_VERSION "v@VERSION@"
+#define APP_VERSION "v@FULL_VERSION@"
 #define APP_WIN_VERSION @NUM_WIN_VERSION@
 
 /* Value which is used to identify a valid cached organ data file. */
