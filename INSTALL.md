@@ -18,7 +18,7 @@ These two steps will be described later in the text.
         where `<arch>` is
         - `x86_64` for intel 64-bit OS
         - `armhf` for arm 32-bit OS
-        - `arm64` for arm 64-bit OS
+        - `aarch64` for arm 64-bit OS
     2. ``grandorgue-resources-<version>.noarch.rpm``
     3. ``grandorgue-demo-<version>.noarch.rpm``
 2. Run install command as a root
@@ -50,7 +50,7 @@ These two steps will be described later in the text.
         where `<arch>` is
         - `amd64` for intel 64-bit OS
         - `armhf` for arm 32-bit OS
-        - `aarch64` for arm 64-bit OS
+        - `arm64` for arm 64-bit OS
     2. ``grandorgue-resources_<version>_all.deb``
     3. ``grandorgue-demo_<version>_all.deb``
 2. (Debian 9 only): install wx-gtk3
