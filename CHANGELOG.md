@@ -1,4 +1,5 @@
-- Fixed name of arm64 architecture for the debian package
+- Switched to releases of RtAudio 5.1.0 and RtMidi 4.0.0
+- Fixed name of arm64 architecture for the debian package https://github.com/oleg68/GrandOrgue/issues/63
 # 0.3.1.2341-10.os (2021-08-13)
 - Displaying the full build version in the title and in the About window https://github.com/oleg68/GrandOrgue/issues/61
 - Converted ``Index has bad magic - bypassing index`` errors to warnings https://github.com/oleg68/GrandOrgue/issues/58
