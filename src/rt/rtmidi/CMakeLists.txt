@@ -19,10 +19,11 @@
 
 message(STATUS "RtMidi build Configuration")
 
-include_directories(../include)
-include_directories(../../core/contrib)
+include_directories("${RTMIDI_SRC_DIR}")
+# not more necessary for the recent RtMidi
+# include_directories(../../core/contrib)
 
-add_library(RtMidi STATIC RtMidi.cpp)
+add_library(RtMidi STATIC "${RTMIDI_SRC_DIR}/RtMidi.cpp")
 
 if (WIN32)
 

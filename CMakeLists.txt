@@ -143,9 +143,20 @@ if(NOT RTAUDIO_SRC_DIR)
     )
   endif()
 endif()
+if(NOT RTMIDI_SRC_DIR)
+  set(RTMIDI_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtMidi")
+  if(NOT EXISTS "${RTMIDI_SRC_DIR}/RtMidi.h")
+    message(
+      FATAL_ERROR 
+      "${RTMIDI_SRC_DIR}/RtMidi.h file does not exist."
+      "Possible the RtMidi submodule has not been updated."
+      "Try to execute 'git submodule update --init --recursive' in the source directory"
+    )
+  endif()
+endif()
 add_subdirectory(src/rt)
 set(RT_LIBRARIES RtAudio RtMidi)
-set(RT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/rt/include ${RTAUDIO_SRC_DIR})
+set(RT_INCLUDE_DIRS ${RTMIDI_SRC_DIR} ${RTAUDIO_SRC_DIR})
 
 # include portaudio
 if (USE_INTERNAL_PORTAUDIO)
