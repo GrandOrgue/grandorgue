@@ -25,8 +25,10 @@
 #include "ptrvector.h"
 #include "GOSoundEngine.h"
 #include "GOSoundRecorder.h"
+#include "GOrgueMidi.h"
 #include "GOrgueSoundDevInfo.h"
 #include "GOrgueSoundPortsConfig.h"
+
 #include "atomic.h"
 #include "mutex.h"
 #include <wx/string.h>
@@ -93,8 +95,6 @@ private:
 
 	wxString m_defaultAudioDevice;
 
-	GOrgueMidi* m_midi;
-	
 	GrandOrgueFile* m_organfile;
 	GOSoundRecorder m_AudioRecorder;
 
@@ -103,6 +103,8 @@ private:
 
 	GOrgueSettings& m_Settings;
 
+	GOrgueMidi m_midi;
+	
 	void StopThreads();
 	void StartThreads();
 
