@@ -33,8 +33,6 @@
 #include <wx/intl.h>
 #include <wx/window.h>
 
-#define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
-
 GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	logSoundErrors(true),
 	m_AudioOutputs(),
@@ -44,18 +42,15 @@ GOrgueSound::GOrgueSound(GOrgueSettings& settings) :
 	meter_counter(0),
 	m_defaultAudioDevice(),
 	m_organfile(0),
-	m_Settings(settings)
+	m_Settings(settings),
+	m_midi(settings)
 {
-	m_midi = new GOrgueMidi(m_Settings);
 }
 
 GOrgueSound::~GOrgueSound()
 {
 
 	CloseSound();
-
-	/* dispose of midi devices */
-	DELETE_AND_NULL(m_midi);
 
 	GOrgueSoundPort::terminate();
 }
@@ -85,7 +80,7 @@ void GOrgueSound::StopThreads()
 
 void GOrgueSound::OpenMidi()
 {
-	m_midi->Open();
+	m_midi.Open();
 }
 
 bool GOrgueSound::OpenSound()
@@ -320,7 +315,7 @@ const wxString GOrgueSound::GetDefaultAudioDevice(
 
 GOrgueMidi& GOrgueSound::GetMidi()
 {
-	return *m_midi;
+	return m_midi;
 }
 
 void GOrgueSound::ResetMeters()

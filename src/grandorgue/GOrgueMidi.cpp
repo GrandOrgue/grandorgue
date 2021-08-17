@@ -38,13 +38,12 @@ GOrgueMidi::GOrgueMidi(GOrgueSettings& settings) :
 	m_midi_out_devices(),
 	m_Listeners()
 {
-	UpdateDevices();
 }
 
 void GOrgueMidi::UpdateDevices()
 {
-	GOrgueMidiRtInPort::addMissingDevices(this, m_midi_in_devices);
-	GOrgueMidiRtOutPort::addMissingDevices(this, m_midi_out_devices);
+  m_MidiFactory.addMissingInDevices(this, m_midi_in_devices);
+  m_MidiFactory.addMissingOutDevices(this, m_midi_out_devices);
 }
 
 
