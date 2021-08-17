@@ -41,8 +41,6 @@ public:
 
   bool Open();
   void Close() { Close(true); }
-
-  static void addMissingDevices(GOrgueMidi* midi, ptr_vector<GOrgueMidiOutPort>& ports);
 };
 
 #endif

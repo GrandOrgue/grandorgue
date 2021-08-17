@@ -41,8 +41,6 @@ public:
 
   bool Open(int channel_shift = 0);
   void Close() { Close(true); }
-
-  static void addMissingDevices(GOrgueMidi* midi, ptr_vector<GOrgueMidiInPort>& ports);
 };
 
 #endif

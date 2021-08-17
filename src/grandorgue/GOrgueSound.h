@@ -94,6 +94,7 @@ private:
 	wxString m_defaultAudioDevice;
 
 	GOrgueMidi* m_midi;
+	
 	GrandOrgueFile* m_organfile;
 	GOSoundRecorder m_AudioRecorder;
 

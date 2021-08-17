@@ -111,6 +111,7 @@ GOrgueMidiPlayer.cpp
 GOrgueMidiSender.cpp
 GOrgueMidiReceiver.cpp
 GOrgueMidiRecorder.cpp
+GOrgueMidiRtFactory.cpp
 GOrgueMidiRtInPort.cpp
 GOrgueMidiRtOutPort.cpp
 GOrgueModel.cpp
