@@ -1,3 +1,4 @@
+- Fixed ``error creating OS-X MIDI client object`` error messages on OSx
 # 0.3.1.2341-11.os (2021-08-16)
 - Switched to releases of RtAudio 5.1.0 and RtMidi 4.0.0
 - Fixed name of arm64 architecture for the debian package https://github.com/oleg68/GrandOrgue/issues/63
