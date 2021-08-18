@@ -1,6 +1,0 @@
-<link  project="home:e9925248:grandorgue" package="grandorgue">
-<patches>
-  <topadd>%define _mingw_bitsize 32</topadd> 
-  <topadd>%define with_asio 0</topadd> 
-</patches>
-</link>
