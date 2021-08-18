@@ -126,7 +126,6 @@ GOrguePushbutton.cpp
 GOrgueRank.cpp
 GOrgueReferencePipe.cpp
 GOrgueReleaseAlignTable.cpp
-GOrgueRtHelpers.cpp
 GOrgueSetter.cpp
 GOrgueSetterButton.cpp
 GOrgueSettings.cpp
