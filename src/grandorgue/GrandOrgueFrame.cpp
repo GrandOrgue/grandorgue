@@ -144,7 +144,8 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_listener(),
 	m_Title(title),
 	m_Label(),
-	m_MidiMonitor(false)
+	m_MidiMonitor(false),
+	m_isMeterReady(false)
 {
 	wxIcon icon;
 	icon.CopyFromBitmap(GetImage_GOIcon());
@@ -271,10 +272,12 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	Move(display.GetClientArea().GetPosition().x + 1, display.GetClientArea().GetPosition().y + 1);
 
 	m_listener.Register(&m_Sound.GetMidi());
+	m_isMeterReady = true;
 }
 
 GOrgueFrame::~GOrgueFrame()
 {
+	m_isMeterReady = false;
 	if (m_doc) {
 	  delete m_doc;
 	  m_doc = NULL;
@@ -336,8 +339,10 @@ void GOrgueFrame::UpdateSize()
 
 void GOrgueFrame::UpdateVolumeControlWithSettings()
 {
+  m_isMeterReady = false;
   if (AdjustVolumeControlWithSettings())
     UpdateSize();
+  m_isMeterReady = true;
 }
 
 void GOrgueFrame::Init(wxString filename)
@@ -554,6 +559,7 @@ void GOrgueFrame::OnSize(wxSizeEvent& event)
 
 void GOrgueFrame::OnMeters(wxCommandEvent& event)
 {
+  if (m_isMeterReady) {
 	const std::vector<double> vals = m_Sound.GetEngine().GetMeterInfo();
 	if (vals.size() == m_VolumeGauge.size() + 1)
 	{
@@ -567,6 +573,7 @@ void GOrgueFrame::OnMeters(wxCommandEvent& event)
 		  m_SamplerUsage->ResetClip();
 	  }
 	}
+  }
 }
 
 void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)

@@ -66,6 +66,7 @@ private:
 	wxString m_Title;
 	wxString m_Label;
 	bool m_MidiMonitor;
+	bool m_isMeterReady;
 
 	void InitHelp();
 	void UpdatePanelMenu();
