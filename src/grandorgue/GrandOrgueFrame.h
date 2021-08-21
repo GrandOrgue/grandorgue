@@ -72,7 +72,9 @@ private:
 	void UpdateFavoritesMenu();
 	void UpdateRecentMenu();
 	void UpdateTemperamentMenu();
-	void UpdateVolumeControl(unsigned count);
+	bool AdjustVolumeControlWithSettings();
+	void UpdateSize();
+	void UpdateVolumeControlWithSettings();
 
 	GOrgueDocument* GetDocument();
 

@@ -204,6 +204,7 @@ public:
 	{ m_PortsConfig = portsConfig; }
 	
 	const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();
+	const unsigned GetTotalAudioChannels() const;
 	void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
 	unsigned GetDefaultLatency();
 

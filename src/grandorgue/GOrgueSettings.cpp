@@ -508,6 +508,15 @@ void GOrgueSettings::SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>
 	m_AudioDeviceConfig = config;
 }
 
+const unsigned GOrgueSettings::GetTotalAudioChannels() const
+{
+  unsigned channels = 0;
+  
+  for (const GOAudioDeviceConfig & deviceConfig: m_AudioDeviceConfig)
+    channels += deviceConfig.channels;
+  return channels;
+}
+
 unsigned GOrgueSettings::GetDefaultLatency()
 {
 	return 50;
