@@ -150,7 +150,7 @@ private:
 
 public:
 	GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound);
-	~GOrgueFrame(void);
+	virtual ~GOrgueFrame(void);
 
 	void Init(wxString filename);
 	bool Close();
@@ -159,6 +159,8 @@ public:
 
 	void SendLoadFile(wxString filename);
 
+	void ApplyRectFromSettings(wxRect rect);
+	
 	DECLARE_EVENT_TABLE()
 };
 

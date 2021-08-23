@@ -267,9 +267,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	
 	UpdateSize();
 	
-	int nr = wxDisplay::GetFromWindow(this);
-	wxDisplay display(nr != wxNOT_FOUND ? nr : 0);
-	Move(display.GetClientArea().GetPosition().x + 1, display.GetClientArea().GetPosition().y + 1);
+	ApplyRectFromSettings(m_Settings.GetMainWindowRect());
 
 	m_listener.Register(&m_Sound.GetMidi());
 	m_isMeterReady = true;
@@ -333,8 +331,27 @@ void GOrgueFrame::UpdateSize()
   
   const wxSize frameSize(GetSize());
   
-  SetMinSize(wxSize(frameSize.GetWidth() / 2, frameSize.GetHeight()));
-  SetMaxSize(wxSize(frameSize.GetWidth() * 2, frameSize.GetHeight()));
+  SetMinSize(wxSize(frameSize.GetWidth() / 4, frameSize.GetHeight()));
+  SetMaxSize(wxSize(frameSize.GetWidth() * 4, frameSize.GetHeight()));
+}
+
+void GOrgueFrame::ApplyRectFromSettings(wxRect rect)
+{
+  if (rect.width && rect.height)
+  { // settings are valid
+    wxRect minSize(GetMinSize());
+    wxRect maxSize(GetMaxSize());
+    
+    if (rect.width < minSize.width)
+      rect.width = minSize.width;
+    if (rect.width > maxSize.width)
+      rect.width = maxSize.width;
+    if (rect.height < minSize.height)
+      rect.height = minSize.height;
+    if (rect.height > maxSize.height)
+      rect.height = maxSize.height;
+    SetSize(rect);
+  }
 }
 
 void GOrgueFrame::UpdateVolumeControlWithSettings()
@@ -863,6 +880,7 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 		manager.RegisterPackageDirectory(m_Settings.OrganPackagePath());
 
 		UpdateVolumeControlWithSettings();
+		m_Settings.SetMainWindowRect(GetRect());
 		m_Sound.ResetSound(true);
 		m_Settings.Flush();
 	}

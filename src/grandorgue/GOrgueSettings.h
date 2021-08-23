@@ -37,6 +37,7 @@
 #include "GOrgueSettingString.h"
 #include "GOrgueSoundPortsConfig.h"
 #include "ptrvector.h"
+#include <wx/gdicmn.h>
 #include <wx/string.h>
 #include <map>
 #include <vector>
@@ -85,6 +86,11 @@ private:
 	ptr_vector<GOrgueMidiReceiverBase> m_MIDIEvents;
 	GOrgueMidiMap m_MidiMap;
 	GOrgueTemperamentList m_Temperaments;
+	int m_MainWindowX;
+	int m_MainWindowY;
+	unsigned m_MainWindowWidth;
+	unsigned m_MainWindowHeight;
+	
 	static const GOMidiSetting m_MIDISettings[];
 	static const struct IniFileEnumEntry m_InitialLoadTypes[];
 
@@ -165,7 +171,7 @@ public:
 	GOrgueSettingDirectory AudioRecorderPath;
 	GOrgueSettingDirectory MidiRecorderPath;
 	GOrgueSettingDirectory MidiPlayerPath;
-
+	
 	void Load();
 
 	int GetLanguageId() const;
@@ -211,6 +217,9 @@ public:
 	GOrgueMidiMap& GetMidiMap();
 
 	GOrgueTemperamentList& GetTemperaments();
+	
+	wxRect GetMainWindowRect();
+	void SetMainWindowRect(const wxRect &rect);
 
 	void Flush();
 };
