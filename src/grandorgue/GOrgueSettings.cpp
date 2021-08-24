@@ -98,6 +98,10 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	m_AudioGroups(),
 	m_AudioDeviceConfig(),
 	m_MIDIEvents(),
+	m_MainWindowX(0),
+	m_MainWindowY(0),
+	m_MainWindowWidth(0),
+	m_MainWindowHeight(0),
 	UserSettingPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
 	UserCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
 	Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
@@ -189,6 +193,11 @@ void GOrgueSettings::Load()
 		GOrgueConfigReader cfg(cfg_db);
 
 		GOrgueOrganList::Load(cfg, m_MidiMap);
+		
+		m_MainWindowX = cfg.ReadInteger(CMBSetting, wxT("UI"), wxT("MainWindowX"), -32000, 32000, false, 0);
+		m_MainWindowY = cfg.ReadInteger(CMBSetting, wxT("UI"), wxT("MainWindowY"), -32000, 32000, false, 0);
+		m_MainWindowWidth = (unsigned) cfg.ReadInteger(CMBSetting, wxT("UI"), wxT("MainWindowWidth"), 0, 32000, false, 0);
+		m_MainWindowHeight = (unsigned) cfg.ReadInteger(CMBSetting, wxT("UI"), wxT("MainWindowHeight"), 0, 32000, false, 0);
 
 		m_Temperaments.InitTemperaments();
 		m_Temperaments.Load(cfg);
@@ -508,6 +517,15 @@ void GOrgueSettings::SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>
 	m_AudioDeviceConfig = config;
 }
 
+const unsigned GOrgueSettings::GetTotalAudioChannels() const
+{
+  unsigned channels = 0;
+  
+  for (const GOAudioDeviceConfig & deviceConfig: m_AudioDeviceConfig)
+    channels += deviceConfig.channels;
+  return channels;
+}
+
 unsigned GOrgueSettings::GetDefaultLatency()
 {
 	return 50;
@@ -523,6 +541,19 @@ GOrgueTemperamentList& GOrgueSettings::GetTemperaments()
 	return m_Temperaments;
 }
 
+wxRect GOrgueSettings::GetMainWindowRect()
+{
+  return wxRect(m_MainWindowX, m_MainWindowY, m_MainWindowWidth, m_MainWindowHeight);
+}
+
+void GOrgueSettings::SetMainWindowRect(const wxRect &rect)
+{
+  m_MainWindowX = rect.x;
+  m_MainWindowY = rect.y;
+  m_MainWindowWidth = rect.width;
+  m_MainWindowHeight = rect.height;
+}
+
 void GOrgueSettings::Flush()
 {
 	wxString tmp_name = m_ConfigFileName + wxT(".new");
@@ -530,7 +561,12 @@ void GOrgueSettings::Flush()
 	GOrgueConfigWriter cfg(cfg_file, false);
 
 	GOrgueSettingStore::Save(cfg);
-	GOrgueOrganList::Save(cfg, m_MidiMap);
+	GOrgueOrganList::Save(cfg, m_MidiMap);;
+
+	cfg.WriteInteger(wxT("UI"), wxT("MainWindowX"), m_MainWindowX);
+	cfg.WriteInteger(wxT("UI"), wxT("MainWindowY"), m_MainWindowY);
+	cfg.WriteInteger(wxT("UI"), wxT("MainWindowWidth"), m_MainWindowWidth);
+	cfg.WriteInteger(wxT("UI"), wxT("MainWindowHeight"), m_MainWindowHeight);
 
 	m_Temperaments.Save(cfg);
 

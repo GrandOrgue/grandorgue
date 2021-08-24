@@ -30,6 +30,7 @@
 #include "GOrgueSound.h"
 #include "GOrgueView.h"
 #include "GrandOrgueFile.h"
+#include "GrandOrgueFrame.h"
 #include "GrandOrgueID.h"
 #include "MIDIEventDialog.h"
 #include "MIDIList.h"
@@ -104,7 +105,12 @@ bool GOrgueDocument::Import(GOrgueProgressDialog* dlg, const GOrgueOrgan& organ,
 		if (m_organfile->GetPanel(i)->InitialOpenWindow())
 			ShowPanel(i);
 	if (!m_organfile->GetMainWindowData()->GetWindowSize().IsEmpty())
-		wxTheApp->GetTopWindow()->SetSize(m_organfile->GetMainWindowData()->GetWindowSize());
+	{
+	  GOrgueFrame * const frame = dynamic_cast<GOrgueFrame *>(wxTheApp->GetTopWindow());
+	  
+	  if (frame)
+	    frame->ApplyRectFromSettings(m_organfile->GetMainWindowData()->GetWindowSize());
+	}
 
 	m_sound.AssignOrganFile(m_organfile);
 	m_OrganFileReady = true;

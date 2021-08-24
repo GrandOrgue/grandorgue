@@ -144,7 +144,8 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	m_listener(),
 	m_Title(title),
 	m_Label(),
-	m_MidiMonitor(false)
+	m_MidiMonitor(false),
+	m_isMeterReady(false)
 {
 	wxIcon icon;
 	icon.CopyFromBitmap(GetImage_GOIcon());
@@ -223,7 +224,7 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	tb->AddControl(m_Volume);
 
 	m_VolumeControl = new wxControl(tb, wxID_ANY);
-	UpdateVolumeControl(2);
+	AdjustVolumeControlWithSettings();
 	tb->AddControl(m_VolumeControl);
 	m_Volume->SetValue(m_Settings.Volume());
 	
@@ -262,19 +263,19 @@ GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, c
 	menu_bar->Append(m_panel_menu, _("&Panel"));
 	menu_bar->Append(help_menu, _("&Help"));
 	SetMenuBar(menu_bar);
-	tb->Realize();
-	
-	SetMaxClientSize(wxSize(tb->GetBestSize().GetWidth() + 10, 0));
-	SetSize(GetMaxSize());
-	int nr = wxDisplay::GetFromWindow(this);
-	wxDisplay display(nr != wxNOT_FOUND ? nr : 0);
-	Move(display.GetClientArea().GetPosition().x + 1, display.GetClientArea().GetPosition().y + 1);
 	SetAutoLayout(true);
+	
+	UpdateSize();
+	
+	ApplyRectFromSettings(m_Settings.GetMainWindowRect());
+
 	m_listener.Register(&m_Sound.GetMidi());
+	m_isMeterReady = true;
 }
 
 GOrgueFrame::~GOrgueFrame()
 {
+	m_isMeterReady = false;
 	if (m_doc) {
 	  delete m_doc;
 	  m_doc = NULL;
@@ -286,29 +287,79 @@ GOrgueFrame::~GOrgueFrame()
 	}
 }
 
-void GOrgueFrame::UpdateVolumeControl(unsigned count)
+bool GOrgueFrame::AdjustVolumeControlWithSettings()
 {
-	m_VolumeGauge.clear();
-	m_VolumeControl->DestroyChildren();
-	wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-	wxBoxSizer* vsizer = NULL;
+  const unsigned count = m_Settings.GetTotalAudioChannels();
+  bool rc = false;
+  
+  if (count != m_VolumeGauge.size())
+  {
+    m_VolumeGauge.clear();
+    m_VolumeControl->DestroyChildren();
+    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* vsizer = NULL;
 
-	for(unsigned i = 0; i < count; i++)
-	{
-		if ((i % 2) == 0)
-		{
-			vsizer = new wxBoxSizer(wxVERTICAL);
-			sizer->Add(vsizer);
-		}
-		wxGaugeAudio* gauge = new wxGaugeAudio(m_VolumeControl, wxID_ANY, wxDefaultPosition);
-		m_VolumeGauge.push_back(gauge);
-		vsizer->Add(gauge, 0, wxFIXED_MINSIZE);
-	}
+    for(unsigned i = 0; i < count; i++)
+    {
+	    if ((i % 2) == 0)
+	    {
+		    vsizer = new wxBoxSizer(wxVERTICAL);
+		    sizer->Add(vsizer);
+	    }
+	    wxGaugeAudio* gauge = new wxGaugeAudio(m_VolumeControl, wxID_ANY, wxDefaultPosition);
+	    m_VolumeGauge.push_back(gauge);
+	    vsizer->Add(gauge, 0, wxFIXED_MINSIZE);
+    }
 
-	m_VolumeControl->SetSizer(sizer);
-	sizer->Fit(m_VolumeControl);
-	GetToolBar()->Realize();
-	SetMaxClientSize(wxSize(GetToolBar()->GetBestSize().GetWidth() + 10, 0));
+    m_VolumeControl->SetSizer(sizer);
+    sizer->Fit(m_VolumeControl);
+    rc = true;
+  }
+  return rc;
+}
+
+void GOrgueFrame::UpdateSize()
+{
+  wxToolBar* tb = GetToolBar();
+  
+  tb->Realize();
+  
+  const wxSize bestTbSize(tb->GetBestSize());
+  const int bestClientWidth = bestTbSize.GetWidth() + 10;
+  
+  SetClientSize(bestClientWidth, 0);
+  
+  const wxSize frameSize(GetSize());
+  
+  SetMinSize(wxSize(frameSize.GetWidth() / 4, frameSize.GetHeight()));
+  SetMaxSize(wxSize(frameSize.GetWidth() * 4, frameSize.GetHeight()));
+}
+
+void GOrgueFrame::ApplyRectFromSettings(wxRect rect)
+{
+  if (rect.width && rect.height)
+  { // settings are valid
+    wxRect minSize(GetMinSize());
+    wxRect maxSize(GetMaxSize());
+    
+    if (rect.width < minSize.width)
+      rect.width = minSize.width;
+    if (rect.width > maxSize.width)
+      rect.width = maxSize.width;
+    if (rect.height < minSize.height)
+      rect.height = minSize.height;
+    if (rect.height > maxSize.height)
+      rect.height = maxSize.height;
+    SetSize(rect);
+  }
+}
+
+void GOrgueFrame::UpdateVolumeControlWithSettings()
+{
+  m_isMeterReady = false;
+  if (AdjustVolumeControlWithSettings())
+    UpdateSize();
+  m_isMeterReady = true;
 }
 
 void GOrgueFrame::Init(wxString filename)
@@ -525,18 +576,21 @@ void GOrgueFrame::OnSize(wxSizeEvent& event)
 
 void GOrgueFrame::OnMeters(wxCommandEvent& event)
 {
+  if (m_isMeterReady) {
 	const std::vector<double> vals = m_Sound.GetEngine().GetMeterInfo();
-	if (vals.size() != m_VolumeGauge.size() + 1)
-		UpdateVolumeControl(vals.size() - 1);
-	m_SamplerUsage->SetValue(33 * vals[0]);
-	for(unsigned i = 1; i < vals.size(); i++)
-		m_VolumeGauge[i - 1]->SetValue(lrint(32.50000000000001 * vals[i]));
-	if (event.GetInt())
+	if (vals.size() == m_VolumeGauge.size() + 1)
 	{
-		for(unsigned i = 0; i < m_VolumeGauge.size(); i++)
-			m_VolumeGauge[i]->ResetClip();
-		m_SamplerUsage->ResetClip();
+	  m_SamplerUsage->SetValue(33 * vals[0]);
+	  for(unsigned i = 1; i < vals.size(); i++)
+		  m_VolumeGauge[i - 1]->SetValue(lrint(32.50000000000001 * vals[i]));
+	  if (event.GetInt())
+	  {
+		  for(unsigned i = 0; i < m_VolumeGauge.size(); i++)
+			  m_VolumeGauge[i]->ResetClip();
+		  m_SamplerUsage->ResetClip();
+	  }
 	}
+  }
 }
 
 void GOrgueFrame::OnUpdateLoaded(wxUpdateUIEvent& event)
@@ -825,6 +879,8 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 		GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
 		manager.RegisterPackageDirectory(m_Settings.OrganPackagePath());
 
+		UpdateVolumeControlWithSettings();
+		m_Settings.SetMainWindowRect(GetRect());
 		m_Sound.ResetSound(true);
 		m_Settings.Flush();
 	}
