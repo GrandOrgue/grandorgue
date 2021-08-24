@@ -1,3 +1,6 @@
+# 0.3.1.2341-13.os (2021-08-24)
+- Enabled resizing of the main window https://github.com/oleg68/GrandOrgue/issues/71
+- Fixed sizing issue with the main window https://github.com/oleg68/GrandOrgue/issues/71
 - Fixed crash on OSx when GrandOrgue was exiting https://github.com/oleg68/GrandOrgue/issues/68
 - Removed obsolete and unused files from the source code
 # 0.3.1.2341-12.os (2021-08-17)
