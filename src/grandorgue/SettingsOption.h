@@ -54,8 +54,6 @@ class SettingsOption : public wxScrolledWindow
 		ID_RELEASE_LOAD,
 		ID_CHANNELS,
 		ID_INTERPOLATION,
-		ID_SAMPLE_RATE,
-		ID_SAMPLES_PER_BUFFER,
 		ID_MEMORY_LIMIT,
 		ID_ODF_CHECK,
 		ID_RECORD_DOWNMIX,
@@ -84,8 +82,6 @@ private:
 	wxChoice* m_ReleaseLoad;
 	wxChoice* m_Channels;
 	wxChoice* m_Interpolation;
-	wxChoice* m_SampleRate;
-	wxSpinCtrl* m_SamplesPerBuffer;
 	wxSpinCtrl* m_MemoryLimit;
 	wxChoice* m_Language;
 	unsigned m_OldChannels;

@@ -135,10 +135,9 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_WaveFormat->Select(m_Settings.WaveFormatBytesPerSample() - 1);
 	m_RecordDownmix->SetValue(m_Settings.RecordDownmix());
 
-	grid = new wxFlexGridSizer(1, 5, 5);
+	item9 = new wxBoxSizer(wxVERTICAL);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
-	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
-
+	grid = new wxFlexGridSizer(1, 5, 5);
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Settings store:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_SettingsPath = new wxDirPickerCtrl(this, ID_SETTINGS_DIR, wxEmptyString, _("Select directory for settings store"), wxDefaultPosition, wxDefaultSize, 
 						       wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
@@ -146,14 +145,12 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Cache store:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_CachePath = new wxDirPickerCtrl(this, ID_CACHE_DIR, wxEmptyString, _("Select directory for cache store"), wxDefaultPosition, wxDefaultSize, 
 						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
-	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
-
 	m_SettingsPath->SetPath(m_Settings.UserSettingPath());
 	m_CachePath->SetPath(m_Settings.UserCachePath());
 
-	item9 = new wxBoxSizer(wxVERTICAL);
-	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
-	
+	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sample loading"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
@@ -206,28 +203,6 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_ReleaseLoad->Select(m_Settings.ReleaseLoad());
 	m_MemoryLimit->SetValue(m_Settings.MemoryLimit());
 
-	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
-	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
-	grid = new wxFlexGridSizer(2, 5, 5);
-	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
-
-	choices.clear();
-	choices.push_back(wxT("44100"));
-	choices.push_back(wxT("48000"));
-	choices.push_back(wxT("96000"));
-	grid->Add(new wxStaticText(this, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
-	grid->Add(m_SampleRate = new wxChoice(this, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
-
-	grid->Add(new wxStaticText(this, wxID_ANY, _("Samples per buffer:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
-	grid->Add(m_SamplesPerBuffer = new wxSpinCtrl(this, ID_SAMPLES_PER_BUFFER, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
-	m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
-	m_SamplesPerBuffer->SetValue(m_Settings.SamplesPerBuffer());
-
-	m_SampleRate->Select(0);
-	for(unsigned i = 0; i < m_SampleRate->GetCount(); i++)
-		if (wxString::Format(wxT("%d"), m_Settings.SampleRate()) == m_SampleRate->GetString(i))
-			m_SampleRate->Select(i);
-
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Cache"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_CompressCache  = new wxCheckBox(this, ID_COMPRESS_CACHE, _("Compress cache")), 0, wxEXPAND | wxALL, 5);
@@ -238,6 +213,8 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item9->Add(m_ODFCheck  = new wxCheckBox(this, ID_ODF_CHECK, _("Perform strict ODF")), 0, wxEXPAND | wxALL, 5);
 	m_ODFCheck->SetValue(m_Settings.ODFCheck());
 
+	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
+	
 	topSizer->Add(item0, 1, wxEXPAND | wxALL, 5);
 	topSizer->AddSpacer(5);
 	this->SetScrollRate(5, 5);
@@ -271,12 +248,6 @@ void SettingsOption::Save()
 	m_Settings.ReleaseLoad(m_ReleaseLoad->GetSelection());
 	m_Settings.LoadChannels(m_Channels->GetSelection());
 	m_Settings.InterpolationType(m_Interpolation->GetSelection());
-	unsigned long sample_rate;
-	if (m_SampleRate->GetStringSelection().ToULong(&sample_rate))
-		m_Settings.SampleRate(sample_rate);
-	else
-		wxLogError(_("Invalid sample rate"));
-	m_Settings.SamplesPerBuffer(m_SamplesPerBuffer->GetValue());
 	m_Settings.MemoryLimit(m_MemoryLimit->GetValue());
 	
 	// Language
