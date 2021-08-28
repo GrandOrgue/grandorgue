@@ -22,6 +22,7 @@
 #include "SettingsOrgan.h"
 
 #include "GOrgueArchiveFile.h"
+#include "GOrgueListView.h"
 #include "GOrgueOrgan.h"
 #include "GOrgueSettings.h"
 #include "MIDIEventDialog.h"
@@ -47,7 +48,7 @@ SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindo
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
 
-	m_Organs = new wxListView(this, ID_ORGANS, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
+	m_Organs = new GOrgueListView(this, ID_ORGANS);
 	m_Organs->InsertColumn(0, _("Church"));
 	m_Organs->InsertColumn(1, _("Builder"));
 	m_Organs->InsertColumn(2, _("Recording"));
