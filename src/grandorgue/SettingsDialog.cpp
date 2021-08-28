@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <iostream>
 
 #include "SettingsDialog.h"
 
@@ -44,6 +45,13 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 	EVT_BUTTON(wxID_OK, SettingsDialog::OnOK)
 	EVT_BUTTON(wxID_HELP, SettingsDialog::OnHelp)
 END_EVENT_TABLE()
+
+void printBestSize(const wxString name, wxPanel *pPanel)
+{
+  wxSize bestSize(pPanel->GetBestSize());
+  std::cout << "SettingsDialog " << name << "->BestSize=" << bestSize.x << "," << bestSize.y << std::endl;
+}
+
 
 SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	wxPropertySheetDialog(win, wxID_ANY, _("Program Settings"), wxDefaultPosition, wxSize(740,600), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
@@ -76,6 +84,16 @@ SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
 	notebook->AddPage(m_ArchivePage, _("Organ Packages"));
 
 	LayoutDialog();
+	printBestSize("MidiDevicePage", m_MidiDevicePage);
+	printBestSize("OptionsPage", m_OptionsPage);
+	printBestSize("OrganPage", m_OrganPage);
+	printBestSize("ArchivePage", m_ArchivePage);
+	printBestSize("MidiMessagePage", m_MidiMessagePage);
+	printBestSize("GroupPage", m_GroupPage);
+	printBestSize("OutputPage", m_OutputPage);
+	printBestSize("ReverbPage", m_ReverbPage);
+	printBestSize("TemperamentsPage", m_TemperamentsPage);
+	printBestSize("DefaultsPage", m_DefaultsPage);
 }
 
 SettingsDialog::~SettingsDialog()

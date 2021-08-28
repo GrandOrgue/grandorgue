@@ -21,6 +21,7 @@
 
 #include "SettingsMidiDevices.h"
 
+#include "GOrgueCheckListBox.h"
 #include "GOrgueMidi.h"
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
@@ -58,7 +59,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &input devices"));
-	m_InDevices = new wxCheckListBox(this, ID_INDEVICES, wxDefaultPosition, wxDefaultSize, choices);
+	m_InDevices = new GOrgueCheckListBox(this, ID_INDEVICES, choices);
 	for (unsigned i = 0; i < state.size(); i++)
 	{
 		if (state[i])
@@ -86,7 +87,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	}
 
 	item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &output devices"));
-	m_OutDevices = new wxCheckListBox(this, ID_OUTDEVICES, wxDefaultPosition, wxDefaultSize, choices);
+	m_OutDevices = new GOrgueCheckListBox(this, ID_OUTDEVICES, choices);
 	for (unsigned i = 0; i < out_state.size(); i++)
 		if (out_state[i])
 			m_OutDevices->Check(i);
