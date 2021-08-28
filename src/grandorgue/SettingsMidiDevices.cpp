@@ -40,6 +40,17 @@ BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_BUTTON(ID_INOUTDEVICE, SettingsMidiDevices::OnInOutDeviceClick)
 END_EVENT_TABLE()
 
+class ChoiceMinBestWidth: public wxChoice
+{
+public:
+  ChoiceMinBestWidth(wxWindow *parent, wxWindowID id, const wxSize &size=wxDefaultSize, int n=0, const wxString choices[]=NULL, long style=0)
+    : wxChoice(parent, id, wxDefaultPosition, size, n, choices, style)
+  { }
+
+  virtual wxSize DoGetBestSize() const override
+  { return wxSize(GetMinWidth(), wxChoice::DoGetBestSize().y); }
+};
+
 SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Sound(sound)
@@ -76,7 +87,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	item4->Add(m_InOutDevice, 0, wxALL, 5);
 	item3->Add(item4, 0, wxALIGN_RIGHT | wxALL, 5);
 	topSizer->Add(item3, 1, wxEXPAND | wxALL, 5);
-
+	
 	choices.clear();
 	std::vector<bool> out_state;
 	list = m_Sound.GetMidi().GetOutDevices();
@@ -96,8 +107,8 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	wxBoxSizer* box = new wxBoxSizer(wxHORIZONTAL);
 	item3->Add(box);
 	box->Add(new wxStaticText(this, wxID_ANY, _("Send MIDI Recorder Output Stream to ")), 0, wxALIGN_CENTER_VERTICAL);
-	m_RecorderDevice = new wxChoice(this, ID_RECORDERDEVICE);
-	box->Add(m_RecorderDevice, 0);
+	m_RecorderDevice = new ChoiceMinBestWidth(this, ID_RECORDERDEVICE, wxSize(400, wxDefaultCoord));
+	box->Add(m_RecorderDevice, 1, wxEXPAND | wxALL, 5);
 	m_RecorderDevice->Append(_("No device"));
 	m_RecorderDevice->Select(0);
 	list = m_Sound.GetMidi().GetOutDevices();

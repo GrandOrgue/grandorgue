@@ -22,7 +22,7 @@
 #ifndef SETTINGSOPTION_H
 #define SETTINGSOPTION_H
 
-#include <wx/scrolwin.h>
+#include <wx/panel.h>
 
 enum class GOInitialLoadType;
 template<class T> class GOrgueChoice;
@@ -32,7 +32,7 @@ class wxChoice;
 class wxDirPickerCtrl;
 class wxSpinCtrl;
 
-class SettingsOption : public wxScrolledWindow
+class SettingsOption : public wxPanel
 {
 	enum {
 		ID_WAVE_FORMAT = 200,
@@ -97,6 +97,9 @@ public:
 	bool NeedReload();
 
 	void Save();
+
+protected:
+	virtual wxSize DoGetBestClientSize() const override;
 };
 
 #endif

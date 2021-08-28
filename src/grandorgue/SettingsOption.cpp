@@ -35,7 +35,7 @@
 
 
 SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
-	wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL),
+	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {
 	wxArrayString choices;
@@ -217,9 +217,13 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	
 	topSizer->Add(item0, 1, wxEXPAND | wxALL, 5);
 	topSizer->AddSpacer(5);
-	this->SetScrollRate(5, 5);
 	this->SetSizer(topSizer);
-	topSizer->FitInside(this);
+	topSizer->Fit(this);
+}
+
+wxSize SettingsOption::DoGetBestClientSize() const
+{
+  return GetSizer()->GetMinSize();
 }
 
 void SettingsOption::Save()
