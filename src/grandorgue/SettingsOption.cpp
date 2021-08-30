@@ -221,11 +221,6 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	topSizer->Fit(this);
 }
 
-wxSize SettingsOption::DoGetBestClientSize() const
-{
-  return GetSizer()->GetMinSize();
-}
-
 void SettingsOption::Save()
 {
 	if (m_Interpolation->GetSelection() == 1 && m_LosslessCompression->IsChecked())

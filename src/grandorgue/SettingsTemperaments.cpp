@@ -36,24 +36,6 @@ BEGIN_EVENT_TABLE(SettingsTemperaments, wxPanel)
 	EVT_BUTTON(ID_DEL, SettingsTemperaments::OnDel)
 END_EVENT_TABLE()
 
-class GridMinBestSize: public wxGrid
-{
-public:
-  GridMinBestSize(wxWindow *parent,
-            wxWindowID id,
-            const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize,
-            long style = wxWANTS_CHARS,
-            const wxString& name = wxGridNameStr
-  ) : wxGrid(parent, id, pos, size, style, name)
-    { }
-    
-  virtual wxSize DoGetBestSize() const
-  { return GetMinSize(); }
-	  
-};
-
-
 SettingsTemperaments::SettingsTemperaments(GOrgueSettings& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Temperaments(settings.GetTemperaments()),
@@ -62,7 +44,7 @@ SettingsTemperaments::SettingsTemperaments(GOrgueSettings& settings, wxWindow* p
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
 
-	m_List = new GridMinBestSize(this, ID_LIST);
+	m_List = new wxGrid(this, ID_LIST, wxDefaultPosition, wxSize(400, 200));
 	m_List->CreateGrid(0, 14);
 	topSizer->Add(m_List, 1, wxEXPAND | wxALL, 5);
 

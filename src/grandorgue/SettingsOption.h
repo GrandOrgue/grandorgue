@@ -97,9 +97,6 @@ public:
 	bool NeedReload();
 
 	void Save();
-
-protected:
-	virtual wxSize DoGetBestClientSize() const override;
 };
 
 #endif
