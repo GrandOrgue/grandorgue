@@ -21,16 +21,19 @@
 
 #include "SettingsAudioOutput.h"
 
-#include "GOrgueSettings.h"
-#include "GOrgueSound.h"
-#include "GOrgueSoundPort.h"
+#include <wx/arrstr.h>
 #include <wx/button.h>
 #include <wx/choicdlg.h>
 #include <wx/msgdlg.h>
 #include <wx/numdlg.h>
 #include <wx/sizer.h>
+#include <wx/stattext.h>
 #include <wx/textdlg.h>
-#include <wx/treectrl.h>
+
+#include "GOrgueSettings.h"
+#include "GOrgueSound.h"
+#include "GOrgueSoundPort.h"
+
 
 class AudioItemData : public wxTreeItemData
 {
@@ -134,17 +137,39 @@ bool SettingsAudioOutput::GetPortItemChecked(
 SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallback& callback, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Sound(sound),
-	m_SoundPortsConfig(sound.GetSettings().GetPortsConfig()),
-	m_GroupCallback(callback)
+	m_Settings(sound.GetSettings()),
+	m_GroupCallback(callback),
+	m_SoundPortsConfig(m_Settings.GetPortsConfig())
 {
-	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
-	// topSizer->AddSpacer(5);
+	wxBoxSizer* const item0 = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* item1 = new wxBoxSizer(wxHORIZONTAL);
+	wxArrayString choices;
+	wxBoxSizer* item2 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
+	wxFlexGridSizer* grid = new wxFlexGridSizer(2, 5, 5);
+
+	choices.clear();
+	choices.push_back(wxT("44100"));
+	choices.push_back(wxT("48000"));
+	choices.push_back(wxT("96000"));
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Sample Rate:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_SampleRate = new wxChoice(this, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices), 0, wxALL);
+	grid->Add(new wxStaticText(this, wxID_ANY, _("Samples per buffer:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
+	grid->Add(m_SamplesPerBuffer = new wxSpinCtrl(this, ID_SAMPLES_PER_BUFFER, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
+	m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
+	m_SamplesPerBuffer->SetValue(m_Settings.SamplesPerBuffer());
+
+	m_SampleRate->Select(0);
+	for(unsigned i = 0; i < m_SampleRate->GetCount(); i++)
+		if (wxString::Format(wxT("%d"), m_Settings.SampleRate()) == m_SampleRate->GetString(i))
+			m_SampleRate->Select(i);
 	
-	wxBoxSizer* item2 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sound &ports"));
+	item2->Add(grid, 0, wxEXPAND | wxALL, 5);
+	item1->Add(item2, 0, wxALL | wxALIGN_TOP, 5);
+	
+	item2 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sound &ports"));
 	m_SoundPorts = new wxTreeListCtrl(this, ID_SOND_PORTS, wxDefaultPosition, wxDefaultSize, wxTR_SINGLE | wxTL_CHECKBOX | wxTL_NO_HEADER);
 	m_SoundPorts->AppendColumn(wxEmptyString);
 	item2->Add(m_SoundPorts, 1, wxALIGN_LEFT | wxEXPAND);
-	topSizer->Add(item2, 1, wxEXPAND | wxALL, 5);
 	
 	for (const wxString &portName: GOrgueSoundPort::getPortNames())
 	{
@@ -162,6 +187,8 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	  }
 	  m_SoundPorts->Expand(portItem);
 	}
+	item1->Add(item2, 1, wxEXPAND | wxALL, 5);
+	item0->Add(item1, 1, wxEXPAND | wxALL, 5);
 
 	item2 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Mapping output"));
 	m_AudioOutput = new wxTreeCtrl(this, ID_OUTPUT_LIST, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS | wxTR_SINGLE);
@@ -182,7 +209,7 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	buttonSizer->Add(m_Properties, 0, wxALL, 5);
 	buttonSizer->Add(m_Default, 0, wxALL, 5);
 	item2->Add(buttonSizer, 0, wxALL, 5);
-	topSizer->Add(item2, 2, wxEXPAND | wxALL, 5);
+	item0->Add(item2, 2, wxEXPAND | wxALL, 5);
 
 	m_AudioOutput->AddRoot(_("Audio Output"), -1, -1, new AudioItemData());
 
@@ -216,8 +243,8 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	m_AudioOutput->ExpandAll();
 
 	// topSizer->AddSpacer(5);
-	this->SetSizer(topSizer);
-	topSizer->Fit(this);
+	this->SetSizer(item0);
+	item0->Fit(this);
 
 	UpdateButtons();
 }
@@ -665,12 +692,21 @@ void SettingsAudioOutput::OnOutputDefault(wxCommandEvent& event)
 
 void SettingsAudioOutput::Save()
 {
+  unsigned long sample_rate;
+
+  if (m_SampleRate->GetStringSelection().ToULong(&sample_rate))
+	  m_Settings.SampleRate(sample_rate);
+  else
+	  wxLogError(_("Invalid sample rate"));
+  m_Settings.SamplesPerBuffer(m_SamplesPerBuffer->GetValue());
+  
   m_Sound.GetSettings().SetPortsConfig(RenewSoundPortsConfig());
   
   std::vector<GOAudioDeviceConfig> audio_config;
   wxTreeItemId root = m_AudioOutput->GetRootItem();
   wxTreeItemId audio, channel, group;
   wxTreeItemIdValue i, j, k;
+  
   audio = m_AudioOutput->GetFirstChild(root, i);
   while(audio.IsOk())
   {

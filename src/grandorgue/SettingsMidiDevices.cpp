@@ -58,7 +58,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &input devices"));
-	m_InDevices = new wxCheckListBox(this, ID_INDEVICES, wxDefaultPosition, wxDefaultSize, choices);
+	m_InDevices = new wxCheckListBox(this, ID_INDEVICES, wxDefaultPosition, wxSize(100, 200), choices);
 	for (unsigned i = 0; i < state.size(); i++)
 	{
 		if (state[i])
@@ -86,7 +86,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	}
 
 	item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &output devices"));
-	m_OutDevices = new wxCheckListBox(this, ID_OUTDEVICES, wxDefaultPosition, wxDefaultSize, choices);
+	m_OutDevices = new wxCheckListBox(this, ID_OUTDEVICES, wxDefaultPosition, wxSize(100, 200), choices);
 	for (unsigned i = 0; i < out_state.size(); i++)
 		if (out_state[i])
 			m_OutDevices->Check(i);
@@ -94,9 +94,9 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 	item3->Add(m_OutDevices, 1, wxEXPAND | wxALL, 5);
 	wxBoxSizer* box = new wxBoxSizer(wxHORIZONTAL);
 	item3->Add(box);
-	box->Add(new wxStaticText(this, wxID_ANY, _("Send MIDI Recorder Output Stream to ")), 0, wxALIGN_CENTER_VERTICAL);
-	m_RecorderDevice = new wxChoice(this, ID_RECORDERDEVICE);
-	box->Add(m_RecorderDevice, 0);
+	box->Add(new wxStaticText(this, wxID_ANY, _("Send MIDI Recorder Output Stream to ")), 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+	m_RecorderDevice = new wxChoice(this, ID_RECORDERDEVICE, wxDefaultPosition, wxSize(400, wxDefaultCoord));
+	box->Add(m_RecorderDevice, 1, wxEXPAND | wxALL, 5);
 	m_RecorderDevice->Append(_("No device"));
 	m_RecorderDevice->Select(0);
 	list = m_Sound.GetMidi().GetOutDevices();
@@ -106,7 +106,6 @@ SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
 		if (m_Sound.GetSettings().MidiRecorderOutputDevice() == list[i])
 			m_RecorderDevice->SetSelection(m_RecorderDevice->GetCount() - 1);
 	}
-
 	topSizer->Add(item3, 1, wxEXPAND | wxALL, 5);
 
 	topSizer->AddSpacer(5);

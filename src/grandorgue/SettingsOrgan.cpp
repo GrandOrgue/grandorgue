@@ -47,7 +47,7 @@ SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindo
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
 
-	m_Organs = new wxListView(this, ID_ORGANS, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
+	m_Organs = new wxListView(this, ID_ORGANS, wxDefaultPosition, wxSize(100, 200), wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
 	m_Organs->InsertColumn(0, _("Church"));
 	m_Organs->InsertColumn(1, _("Builder"));
 	m_Organs->InsertColumn(2, _("Recording"));

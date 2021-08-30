@@ -22,19 +22,21 @@
 #ifndef SETTINGSAUDIOOUTPUT_H
 #define SETTINGSAUDIOOUTPUT_H
 
+#include <vector>
+#include <wx/button.h>
+#include <wx/choice.h>
+#include <wx/panel.h>
+#include <wx/spinctrl.h>
+#include <wx/string.h>
+#include <wx/treectrl.h>
+#include <wx/treelist.h>
+
 #include "GOrgueSoundDevInfo.h"
 #include "GOrgueSoundPortsConfig.h"
 #include "SettingsAudioGroup.h"
-#include <wx/panel.h>
-#include <wx/treelist.h>
-#include <vector>
 
 class AudioItemData;
 class GOrgueSound;
-class wxButton;
-class wxTreeCtrl;
-class wxTreeEvent;
-class wxTreeItemId;
 
 class SettingsAudioOutput : public wxPanel
 {
@@ -45,15 +47,20 @@ class SettingsAudioOutput : public wxPanel
 		ID_OUTPUT_CHANGE,
 		ID_OUTPUT_PROPERTIES,
 		ID_OUTPUT_DEFAULT,
-		ID_SOND_PORTS = 210
+		ID_SOND_PORTS,
+		ID_SAMPLE_RATE,
+		ID_SAMPLES_PER_BUFFER
 	};
 
 private:
 	GOrgueSound& m_Sound;
-	
+	GOrgueSettings& m_Settings;
+	GOAudioGroupCallback& m_GroupCallback;
 	GOrgueSoundPortsConfig m_SoundPortsConfig;
 	
-	GOAudioGroupCallback& m_GroupCallback;
+	wxChoice* m_SampleRate;
+	wxSpinCtrl* m_SamplesPerBuffer;
+	
 	wxTreeListCtrl* m_SoundPorts;
 	wxTreeCtrl* m_AudioOutput;
 	wxButton* m_Add;

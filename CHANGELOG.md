@@ -1,3 +1,5 @@
+- Fixed sizing of the setting dialog https://github.com/oleg68/GrandOrgue/issues/77
+- `Sample Rate`` and ``Sample Per Buffer`` settings have been moved to the ``Audio Output`` tab
 # 0.3.1.2341-13.os (2021-08-24)
 - Enabled resizing of the main window https://github.com/oleg68/GrandOrgue/issues/71
 - Fixed sizing issue with the main window https://github.com/oleg68/GrandOrgue/issues/71

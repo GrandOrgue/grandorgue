@@ -44,7 +44,7 @@ SettingsTemperaments::SettingsTemperaments(GOrgueSettings& settings, wxWindow* p
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
 
-	m_List = new wxGrid(this, ID_LIST);
+	m_List = new wxGrid(this, ID_LIST, wxDefaultPosition, wxSize(400, 200));
 	m_List->CreateGrid(0, 14);
 	topSizer->Add(m_List, 1, wxEXPAND | wxALL, 5);
 

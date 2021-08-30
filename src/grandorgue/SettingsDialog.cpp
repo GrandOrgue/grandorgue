@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+
 #include "SettingsDialog.h"
 
 #include "GOrgueEvent.h"
@@ -45,7 +46,7 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 END_EVENT_TABLE()
 
 SettingsDialog::SettingsDialog(wxWindow* win, GOrgueSound& sound) :
-	wxPropertySheetDialog(win, wxID_ANY, _("Program Settings"), wxDefaultPosition, wxSize(740,600), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
+	wxPropertySheetDialog(win, wxID_ANY, _("Program Settings"), wxDefaultPosition, wxSize(740,600), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
 	m_Sound(sound)
 {
 	CreateButtons(wxOK | wxCANCEL | wxHELP);
@@ -124,4 +125,3 @@ bool SettingsDialog::DoApply()
 
 	return true;
 }
-

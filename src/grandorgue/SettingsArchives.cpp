@@ -43,7 +43,7 @@ SettingsArchives::SettingsArchives(GOrgueSettings& settings, SettingsOrgan& orga
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
 
-	m_Archives = new wxListView(this, ID_ARCHIVES, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
+	m_Archives = new wxListView(this, ID_ARCHIVES, wxDefaultPosition, wxSize(100, 200), wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
 	m_Archives->InsertColumn(0, _("Name"));
 	m_Archives->InsertColumn(1, _("Path"));
 	m_Archives->InsertColumn(2, _("ID"));

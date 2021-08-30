@@ -873,7 +873,7 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 
 void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 {
-	SettingsDialog dialog(this, m_Sound);
+	SettingsDialog dialog(NULL, m_Sound);
 	if (dialog.ShowModal() == wxID_OK)
 	{
 		GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
