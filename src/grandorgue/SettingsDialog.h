@@ -22,8 +22,10 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
-#include <wx/propdlg.h>
 #include <vector>
+#include <wx/propdlg.h>
+
+#include "SettingsReason.h"
 
 class GOrgueSound;
 class SettingsArchives;
@@ -40,29 +42,50 @@ class SettingsTemperaments;
 class SettingsDialog : public wxPropertySheetDialog
 {
 private:
-	GOrgueSound& m_Sound;
-	SettingsMidiDevices* m_MidiDevicePage;
-	SettingsOption* m_OptionsPage;
-	SettingsOrgan* m_OrganPage;
-	SettingsArchives* m_ArchivePage;
-	SettingsMidiMessage* m_MidiMessagePage;
-	SettingsAudioGroup* m_GroupPage;
-	SettingsAudioOutput* m_OutputPage;
-	SettingsReverb* m_ReverbPage;
-	SettingsDefaults* m_DefaultsPage;
-	SettingsTemperaments* m_TemperamentsPage;
+  enum {
+    ID_REASONS = 100
+  };
+  
+  GOrgueSound& m_Sound;
+  SettingsReasons *m_Reasons;
+  
+  SettingsOption* m_OptionsPage;
+  SettingsDefaults* m_DefaultsPage;
+  SettingsAudioOutput* m_OutputPage;
+  SettingsReverb* m_ReverbPage;
+  SettingsAudioGroup* m_GroupPage;
+  SettingsOrgan* m_OrganPage;
+  SettingsMidiDevices* m_MidiDevicePage;
+  SettingsTemperaments* m_TemperamentsPage;
+  SettingsMidiMessage* m_MidiMessagePage;
+  SettingsArchives* m_ArchivePage;
 
-	bool DoApply();
+  bool DoApply();
 
-	void OnApply(wxCommandEvent& event);
-	void OnOK(wxCommandEvent& event);
-	void OnHelp(wxCommandEvent& event);
+  void OnApply(wxCommandEvent& event);
+  void OnOK(wxCommandEvent& event);
+  void OnHelp(wxCommandEvent& event);
+  void OnReasons(wxCommandEvent& event);
 
 public:
-	SettingsDialog(wxWindow* parent, GOrgueSound& sound);
-	~SettingsDialog();
+  // the order must be the same as the order of pages
+  typedef enum {
+    PAGE_OPTIONS = 0,
+    PAGE_DEFAULTS,
+    PAGE_AUDIO_OUTPUT,
+    PAGE_REVERB,
+    PAGE_AUDIO_GROUPS,
+    PAGE_ORGANS,
+    PAGE_MIDI_DEVICES,
+    PAGE_TEMPERAMENTS,
+    PAGE_INIT_MIDI_CONFIG,
+    PAGE_ORGAN_PACKAGES
+  } PageSelector;
+  
+  SettingsDialog(wxWindow* parent, GOrgueSound& sound, SettingsReasons *reasons);
+  ~SettingsDialog();
 
-	DECLARE_EVENT_TABLE()
+  DECLARE_EVENT_TABLE()
 };
 
 

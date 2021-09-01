@@ -85,6 +85,7 @@ void GOrgueSound::OpenMidi()
 
 bool GOrgueSound::OpenSound()
 {
+	m_LastErrorMessage = wxEmptyString;
 	assert(m_AudioOutputs.size() == 0);
 	bool opened_ok = false;
 
@@ -170,9 +171,9 @@ bool GOrgueSound::OpenSound()
 	catch (wxString &msg)
 	{
 		if (logSoundErrors)
-		{
 			GOMessageBox(msg, _("Error"), wxOK | wxICON_ERROR, NULL);
-		}
+		else
+		  m_LastErrorMessage = msg;
 	}
 
 	if (!opened_ok)
