@@ -60,6 +60,8 @@ private:
   SettingsMidiMessage* m_MidiMessagePage;
   SettingsArchives* m_ArchivePage;
 
+  void OnShow(wxShowEvent &);
+
   bool DoApply();
 
   void OnApply(wxCommandEvent& event);
@@ -83,8 +85,10 @@ public:
   } PageSelector;
   
   SettingsDialog(wxWindow* parent, GOrgueSound& sound, SettingsReasons *reasons);
-  ~SettingsDialog();
 
+  bool NeedReload();
+  bool NeedRestart();
+  
   DECLARE_EVENT_TABLE()
 };
 

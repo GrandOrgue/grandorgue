@@ -902,6 +902,14 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& event)
 		m_Settings.SetMainWindowRect(GetRect());
 		m_Sound.ResetSound(true);
 		m_Settings.Flush();
+		if (dialog.NeedRestart())
+		  wxMessageBox(_("Some settings changes do not effect until GrandOrgue restarts"), _("GrandOrgue"), wxOK | wxICON_EXCLAMATION, this);
+		if (dialog.NeedReload() &&  m_Sound.GetOrganFile() != NULL)
+			if (wxMessageBox(_("Some changed settings effect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), _("GrandOrgue"), wxYES_NO | wxICON_QUESTION, this) == wxYES)
+			{
+				wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
+				GetEventHandler()->AddPendingEvent(event);
+			}
 	}
 	if (pReasons)
 	  delete pReasons;

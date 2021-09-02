@@ -44,10 +44,11 @@
 #include "SettingsTemperaments.h"
 
 BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
-	EVT_BUTTON(wxID_APPLY, SettingsDialog::OnApply)
-	EVT_BUTTON(wxID_OK, SettingsDialog::OnOK)
-	EVT_BUTTON(wxID_HELP, SettingsDialog::OnHelp)
-	EVT_BUTTON(ID_REASONS, SettingsDialog::OnReasons)
+  EVT_SHOW(SettingsDialog::OnShow)
+  EVT_BUTTON(wxID_APPLY, SettingsDialog::OnApply)
+  EVT_BUTTON(wxID_OK, SettingsDialog::OnOK)
+  EVT_BUTTON(wxID_HELP, SettingsDialog::OnHelp)
+  EVT_BUTTON(ID_REASONS, SettingsDialog::OnReasons)
 END_EVENT_TABLE()
 
 SettingsDialog::SettingsDialog(
@@ -92,12 +93,7 @@ SettingsDialog::SettingsDialog(
   {
     wxButton * const pReasonBtn = new wxButton(this, ID_REASONS, _("Reason"));
     
-    if (hasReasons)
-    {
-      wxCommandEvent event(wxEVT_BUTTON, ID_REASONS);
-
-      GetEventHandler()->AddPendingEvent(event);
-    } else
+    if (! hasReasons)
       pReasonBtn->Disable();
       
     pButtonSizer->Insert(3, pReasonBtn, wxSizerFlags().Border(wxLEFT | wxRIGHT, 20));
@@ -108,15 +104,13 @@ SettingsDialog::SettingsDialog(
   LayoutDialog();
 }
 
-SettingsDialog::~SettingsDialog()
+void SettingsDialog::OnShow(wxShowEvent &)
 {
-  if (m_OptionsPage->NeedReload() &&  m_Sound.GetOrganFile() != NULL)
+  if (m_Reasons && m_Reasons->size())
   {
-	  if (wxMessageBox(_("Some changed settings effect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), _("GrandOrgue"), wxYES_NO | wxICON_QUESTION, this) == wxYES)
-	  {
-		  wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
-		  wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-	  }
+    wxCommandEvent event(wxEVT_BUTTON, ID_REASONS);
+
+    GetEventHandler()->AddPendingEvent(event);
   }
 }
 
@@ -181,4 +175,14 @@ void SettingsDialog::OnReasons(wxCommandEvent& event)
     if (index >= 0)
       GetBookCtrl()->SetSelection(m_Reasons->operator[](index).m_SettingsPageNum);
   }
+}
+
+bool SettingsDialog::NeedReload()
+{
+  return m_OptionsPage->NeedReload();
+}
+
+bool SettingsDialog::NeedRestart()
+{
+  return m_OptionsPage->NeedRestart();
 }
