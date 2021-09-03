@@ -44,13 +44,14 @@
 IMPLEMENT_APP(GOrgueApp)
 
 GOrgueApp::GOrgueApp() :
-   m_Frame(NULL),
-   m_locale(),
-   m_Settings(NULL),
-   m_soundSystem(NULL),
-   m_Log(NULL),
-   m_FileName(),
-   m_InstanceName()
+  m_Restart(false),
+  m_Frame(NULL),
+  m_locale(),
+  m_Settings(NULL),
+  m_soundSystem(NULL),
+  m_Log(NULL),
+  m_FileName(),
+  m_InstanceName()
 {
 }
 
@@ -129,7 +130,7 @@ bool GOrgueApp::OnInit()
 
 	m_soundSystem = new GOrgueSound(*m_Settings);
 
-	m_Frame = new GOrgueFrame(NULL, wxID_ANY, wxString::Format(_("GrandOrgue %s"), wxT(APP_VERSION)), wxDefaultPosition, wxDefaultSize, 
+	m_Frame = new GOrgueFrame(*this, NULL, wxID_ANY, wxString::Format(_("GrandOrgue %s"), wxT(APP_VERSION)), wxDefaultPosition, wxDefaultSize, 
 				  wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE, *m_soundSystem);
 	SetTopWindow(m_Frame);
 	m_Log = new GOrgueLog(m_Frame);
@@ -152,11 +153,23 @@ int GOrgueApp::OnRun()
 
 int GOrgueApp::OnExit()
 {
-	delete m_soundSystem;
-	delete m_Settings;
-	wxLog::SetActiveTarget(NULL);
-	delete m_Log;
+  delete m_soundSystem;
+  delete m_Settings;
+  wxLog::SetActiveTarget(NULL);
+  delete m_Log;
 
-	return wxApp::OnExit();
+  int rc = wxApp::OnExit();
+  
+  if (m_Restart)
+  {
+    wchar_t** cmdargs(argv);
+    
+    wxExecute(cmdargs);
+  }
+  return rc;	
 }
 
+void GOrgueApp::SetRestart()
+{
+  m_Restart = true;
+}
