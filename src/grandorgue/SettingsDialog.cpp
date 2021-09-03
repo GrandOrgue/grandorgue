@@ -56,7 +56,7 @@ SettingsDialog::SettingsDialog(
 ): wxPropertySheetDialog(
   win, wxID_ANY, _("Program Settings"), wxDefaultPosition, wxDefaultSize,
   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT
-), m_Sound(sound), m_Reasons(reasons)
+), m_Sound(sound), m_ReasonsAlreadyShown(false), m_Reasons(reasons)
 {
   wxBookCtrlBase* notebook = GetBookCtrl();
 
@@ -106,12 +106,13 @@ SettingsDialog::SettingsDialog(
 
 void SettingsDialog::OnShow(wxShowEvent &)
 {
-  if (m_Reasons && m_Reasons->size())
+  if (! m_ReasonsAlreadyShown && m_Reasons && m_Reasons->size())
   {
     wxCommandEvent event(wxEVT_BUTTON, ID_REASONS);
 
     GetEventHandler()->AddPendingEvent(event);
   }
+  m_ReasonsAlreadyShown = true;
 }
 
 void SettingsDialog::OnApply(wxCommandEvent& event)
