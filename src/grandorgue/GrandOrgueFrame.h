@@ -69,7 +69,13 @@ private:
   wxString m_Label;
   bool m_MidiMonitor;
   bool m_isMeterReady;
-
+  
+  // to avoid event processing when the settings dialog is open
+  bool m_InSettings;
+  wxEventType m_AfterSettingsEventType;
+  int m_AfterSettingsEventId;
+  GOrgueOrgan* p_AfterSettingsEventOrgan;
+  
   void InitHelp();
   void UpdatePanelMenu();
   void UpdateFavoritesMenu();
@@ -107,6 +113,11 @@ private:
   void OnAudioPanic(wxCommandEvent& event);
   void OnAudioMemset(wxCommandEvent& event);
   void OnAudioState(wxCommandEvent& event);
+
+  void SetEventAfterSettings(
+    wxEventType eventType, int eventId, GOrgueOrgan* pOrganFile=NULL
+  );
+
   void OnSettings(wxCommandEvent& event);
   void OnMidiLoad(wxCommandEvent& event);
   void OnMidiMonitor(wxCommandEvent& event);

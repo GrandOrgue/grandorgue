@@ -156,7 +156,11 @@ GOrgueFrame::GOrgueFrame(
   m_Title(title),
   m_Label(),
   m_MidiMonitor(false),
-  m_isMeterReady(false)
+  m_isMeterReady(false),
+  m_InSettings(false),
+  m_AfterSettingsEventType(wxEVT_NULL),
+  m_AfterSettingsEventId(0),
+  p_AfterSettingsEventOrgan(NULL)
 {
   wxIcon icon;
   icon.CopyFromBitmap(GetImage_GOIcon());
@@ -670,9 +674,14 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
-	GOrgueOrgan* organ = (GOrgueOrgan*)event.GetClientData();
-	Open(*organ);
-	delete organ;
+  GOrgueOrgan* pOrgan = (GOrgueOrgan*)event.GetClientData();
+  
+  if (! m_InSettings)
+  {
+    Open(* pOrgan);
+    delete pOrgan;
+  } else
+    SetEventAfterSettings(event.GetEventType(), event.GetId(), pOrgan);
 }
 
 void GOrgueFrame::OnLoadFavorite(wxCommandEvent& event)
@@ -898,11 +907,24 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 		doc->GetOrganFile()->GetSetter()->ToggleSetter();
 }
 
+void GOrgueFrame::SetEventAfterSettings(
+  wxEventType eventType, int eventId, GOrgueOrgan* pOrganFile
+)
+{
+  if (p_AfterSettingsEventOrgan)
+    delete p_AfterSettingsEventOrgan;
+  m_AfterSettingsEventType = eventType;
+  m_AfterSettingsEventId = eventId;
+  p_AfterSettingsEventOrgan = pOrganFile;
+}
+
 void GOrgueFrame::OnSettings(wxCommandEvent& event)
 {
+  m_InSettings = true;
+  
   SettingsReasons * const pReasons = (SettingsReasons *) event.GetClientData();
 
-  SettingsDialog dialog(NULL, m_Sound, pReasons);
+  SettingsDialog dialog(this, m_Sound, pReasons);
   if (dialog.ShowModal() == wxID_OK)
   {
     GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
@@ -920,8 +942,7 @@ void GOrgueFrame::OnSettings(wxCommandEvent& event)
       ) == wxYES
     ) {
       m_App.SetRestart();
-      wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_EXIT);
-      GetEventHandler()->AddPendingEvent(event);
+      SetEventAfterSettings(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_EXIT);
     } else if (
       dialog.NeedReload() && m_Sound.GetOrganFile() != NULL
       && wxMessageBox(
@@ -929,12 +950,22 @@ void GOrgueFrame::OnSettings(wxCommandEvent& event)
 	_("GrandOrgue"), wxYES_NO | wxICON_QUESTION, this
       ) == wxYES
     ) {
-      wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
-      GetEventHandler()->AddPendingEvent(event);
+      SetEventAfterSettings(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
     }
   }
   if (pReasons)
     delete pReasons;
+  if (m_AfterSettingsEventType != wxEVT_NULL)
+  {
+    wxCommandEvent event(m_AfterSettingsEventType, m_AfterSettingsEventId);
+    
+    if (p_AfterSettingsEventOrgan)
+      event.SetClientData(p_AfterSettingsEventOrgan);
+    GetEventHandler()->AddPendingEvent(event);
+    p_AfterSettingsEventOrgan = NULL;
+    m_AfterSettingsEventType = wxEVT_NULL;
+  }
+  m_InSettings = false;
 }
 
 void GOrgueFrame::OnAudioState(wxCommandEvent& WXUNUSED(event))
