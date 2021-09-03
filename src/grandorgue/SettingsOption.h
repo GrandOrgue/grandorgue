@@ -84,6 +84,8 @@ private:
 	wxChoice* m_Interpolation;
 	wxSpinCtrl* m_MemoryLimit;
 	wxChoice* m_Language;
+	
+	wxString m_OldLanguageCode;
 	unsigned m_OldChannels;
 	bool m_OldLosslessCompression;
 	unsigned m_OldBitsPerSample;
@@ -95,6 +97,7 @@ public:
 	SettingsOption(GOrgueSettings& settings, wxWindow* parent);
 
 	bool NeedReload();
+	bool NeedRestart();
 
 	void Save();
 };

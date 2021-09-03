@@ -42,6 +42,7 @@
 #include "GrandOrgueID.h"
 #include "OrganSelectDialog.h"
 #include "SettingsDialog.h"
+#include "SettingsReason.h"
 #include "SplashScreen.h"
 #include "Images.h"
 #include "mutex_locker.h"
@@ -366,12 +367,28 @@ void GOrgueFrame::Init(wxString filename)
 {
 	Show(true);
 
+	SettingsReasons settingsReasons;
+	
 	m_Sound.SetLogSoundErrorMessages(false);
+
 	bool open_sound = m_Sound.OpenSound();
+
+	if (! open_sound)
+	  settingsReasons.push_back(SettingsReason(m_Sound.getLastErrorMessage(), SettingsDialog::PAGE_AUDIO_OUTPUT));
 	m_Sound.SetLogSoundErrorMessages(true);
-	if (!open_sound || !m_Sound.GetMidi().HasActiveDevice())
+
+	bool openMidi = m_Sound.GetMidi().HasActiveDevice();
+	
+	if (open_sound && ! openMidi)
+	  settingsReasons.push_back(SettingsReason(_("No active MIDI input devices"), SettingsDialog::PAGE_MIDI_DEVICES));
+	
+	if (!open_sound || !openMidi)
 	{
 		wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_SETTINGS);
+		
+		SettingsReasons * const pReasons = new SettingsReasons(settingsReasons);
+		
+		event.SetClientData(pReasons);
 		GetEventHandler()->AddPendingEvent(event);
 	}
 	GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
@@ -871,9 +888,11 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 		doc->GetOrganFile()->GetSetter()->ToggleSetter();
 }
 
-void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
+void GOrgueFrame::OnAudioSettings(wxCommandEvent& event)
 {
-	SettingsDialog dialog(NULL, m_Sound);
+	SettingsReasons * const pReasons = (SettingsReasons *) event.GetClientData();
+	
+	SettingsDialog dialog(NULL, m_Sound, pReasons);
 	if (dialog.ShowModal() == wxID_OK)
 	{
 		GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
@@ -883,7 +902,17 @@ void GOrgueFrame::OnAudioSettings(wxCommandEvent& WXUNUSED(event))
 		m_Settings.SetMainWindowRect(GetRect());
 		m_Sound.ResetSound(true);
 		m_Settings.Flush();
+		if (dialog.NeedRestart())
+		  wxMessageBox(_("Some settings changes do not effect until GrandOrgue restarts"), _("GrandOrgue"), wxOK | wxICON_EXCLAMATION, this);
+		if (dialog.NeedReload() &&  m_Sound.GetOrganFile() != NULL)
+			if (wxMessageBox(_("Some changed settings effect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), _("GrandOrgue"), wxYES_NO | wxICON_QUESTION, this) == wxYES)
+			{
+				wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
+				GetEventHandler()->AddPendingEvent(event);
+			}
 	}
+	if (pReasons)
+	  delete pReasons;
 }
 
 void GOrgueFrame::OnAudioState(wxCommandEvent& WXUNUSED(event))

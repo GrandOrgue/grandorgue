@@ -105,6 +105,8 @@ private:
 
 	GOrgueMidi m_midi;
 	
+	wxString m_LastErrorMessage;
+	
 	void StopThreads();
 	void StartThreads();
 
@@ -123,6 +125,7 @@ public:
 	void CloseSound();
 	bool ResetSound(bool force = false);
 
+	wxString getLastErrorMessage() const { return m_LastErrorMessage; }
 	wxString getState();
 
 	GOrgueSettings& GetSettings();

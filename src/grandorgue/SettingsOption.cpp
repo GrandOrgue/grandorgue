@@ -65,15 +65,20 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_SPANISH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_SPANISH)));
 	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_SWEDISH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_SWEDISH)));
 	
-	const wxString langCode = m_Settings.LanguageCode();
-	m_Language->SetSelection(0);
+	m_OldLanguageCode = m_Settings.LanguageCode();
+	
+	unsigned langIndex = 0;
 	for (unsigned i = 0; i < m_Language->GetCount(); i++)
 	{
 	  const wxStringClientData* const clientStr = (wxStringClientData*) m_Language->GetClientObject(i);
 	  
-	  if (clientStr->GetData() == langCode)
-	    m_Language->SetSelection(i);
+	  if (clientStr->GetData() == m_OldLanguageCode)
+	  {
+	    langIndex = i;
+	    break;
+	  }
 	}
+	m_Language->SetSelection(langIndex);
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Enhancements"));
@@ -262,4 +267,9 @@ bool SettingsOption::NeedReload()
 		m_OldAttackLoad != m_Settings.AttackLoad() ||
 		m_OldReleaseLoad != m_Settings.ReleaseLoad() ||
 		m_OldChannels != m_Settings.LoadChannels();
+}
+
+bool SettingsOption::NeedRestart()
+{
+  return m_OldLanguageCode != m_Settings.LanguageCode();
 }
