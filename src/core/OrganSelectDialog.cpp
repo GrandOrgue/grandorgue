@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(OrganSelectDialog, wxDialog)
 END_EVENT_TABLE()
 
 OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, const GOrgueOrganList& organList) :
-	wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
+	wxDialog(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(600, 480), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
 	m_OrganList(organList)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -76,6 +76,7 @@ OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, const GOr
 	topSizer->Add(CreateButtonSizer(wxOK | wxCANCEL), 0, wxALIGN_RIGHT | wxALL, 5);
 
 	SetSizer(topSizer);
+	Layout();
 }
 
 void OrganSelectDialog::OnOK(wxCommandEvent& event)
