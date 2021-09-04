@@ -630,7 +630,7 @@ bool OrganDialog::Changed()
 	if (m_Tuning->IsModified())
 		changed = true;
 	if (m_Delay->IsModified())
-		changed = true;
+	  changed = true;
 	if (m_AudioGroup->GetValue() != m_LastAudioGroup)
 		changed = true;
 	if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
@@ -748,13 +748,25 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 	m_Reset->Disable();
 	m_Apply->Disable();
 	if (m_Amplitude->IsModified())
+	{
 		m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amp));
+		m_Amplitude->DiscardEdits(); // workaround of osx implementation bug https://github.com/oleg68/GrandOrgue/issues/87
+	}
 	if (m_Gain->IsModified())
+	{
 		m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
+		m_Gain->DiscardEdits(); // workaround of osx implementation bug https://github.com/oleg68/GrandOrgue/issues/87
+	}
 	if (m_Tuning->IsModified())
+	{
 		m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
+		m_Tuning->DiscardEdits(); // workaround of osx implementation bug https://github.com/oleg68/GrandOrgue/issues/87
+	}
 	if (m_Delay->IsModified())
-		m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
+	{
+		m_Delay->ChangeValue(wxString::Format(wxT("%lu"), delay));
+		m_Delay->DiscardEdits(); // workaround of osx implementation bug https://github.com/oleg68/GrandOrgue/issues/87
+	}
 	m_LastAudioGroup = m_AudioGroup->GetValue();
 	m_LastBitsPerSample = m_BitsPerSample->GetSelection();
 	m_LastCompress = m_Compress->GetSelection();
