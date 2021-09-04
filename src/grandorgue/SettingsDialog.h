@@ -47,8 +47,8 @@ private:
   };
   
   GOrgueSound& m_Sound;
+  bool m_ReasonsAlreadyShown;
   SettingsReasons *m_Reasons;
-  
   SettingsOption* m_OptionsPage;
   SettingsDefaults* m_DefaultsPage;
   SettingsAudioOutput* m_OutputPage;

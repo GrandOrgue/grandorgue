@@ -38,6 +38,7 @@
 #include "GOrgueSettings.h"
 #include "GOrgueSound.h"
 #include "GOrgueTemperament.h"
+#include "GrandOrgue.h"
 #include "GrandOrgueFile.h"
 #include "GrandOrgueID.h"
 #include "OrganSelectDialog.h"
@@ -91,7 +92,7 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_MENU(ID_AUDIO_PANIC, GOrgueFrame::OnAudioPanic)
 	EVT_MENU(ID_AUDIO_MEMSET, GOrgueFrame::OnAudioMemset)
 	EVT_MENU(ID_AUDIO_STATE, GOrgueFrame::OnAudioState)
-	EVT_MENU(ID_SETTINGS, GOrgueFrame::OnAudioSettings)
+	EVT_MENU(ID_SETTINGS, GOrgueFrame::OnSettings)
 	EVT_MENU(ID_MIDI_LOAD, GOrgueFrame::OnMidiLoad)
 	EVT_MENU(wxID_HELP, GOrgueFrame::OnHelp)
 	EVT_MENU(wxID_ABOUT, GOrgueFrame::OnHelpAbout)
@@ -124,154 +125,167 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 	EVT_UPDATE_UI_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOrgueFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
 
-GOrgueFrame::GOrgueFrame(wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOrgueSound& sound) :
-	wxFrame(frame, id, title, pos, size, type),
-	m_file_menu(NULL),
-	m_panel_menu(NULL),
-	m_favorites_menu(NULL),
-	m_recent_menu(NULL),
-	m_doc(NULL),
-	m_Help(NULL),
-	m_SamplerUsage(NULL),
-	m_VolumeControl(NULL),
-	m_VolumeGauge(),
-	m_Transpose(NULL),
-	m_ReleaseLength(NULL),
-	m_Polyphony(NULL),
-	m_SetterPosition(NULL),
-	m_Volume(NULL),
-	m_Sound(sound),
-	m_Settings(sound.GetSettings()),
-	m_listener(),
-	m_Title(title),
-	m_Label(),
-	m_MidiMonitor(false),
-	m_isMeterReady(false)
+GOrgueFrame::GOrgueFrame(
+  GOrgueApp &app, 
+  wxFrame *frame,
+  wxWindowID id, 
+  const wxString& title,
+  const wxPoint& pos,
+  const wxSize& size,
+  const long type, 
+  GOrgueSound& sound
+): wxFrame(frame, id, title, pos, size, type),
+  m_App(app),
+  m_file_menu(NULL),
+  m_panel_menu(NULL),
+  m_favorites_menu(NULL),
+  m_recent_menu(NULL),
+  m_doc(NULL),
+  m_Help(NULL),
+  m_SamplerUsage(NULL),
+  m_VolumeControl(NULL),
+  m_VolumeGauge(),
+  m_Transpose(NULL),
+  m_ReleaseLength(NULL),
+  m_Polyphony(NULL),
+  m_SetterPosition(NULL),
+  m_Volume(NULL),
+  m_Sound(sound),
+  m_Settings(sound.GetSettings()),
+  m_listener(),
+  m_Title(title),
+  m_Label(),
+  m_MidiMonitor(false),
+  m_isMeterReady(false),
+  m_InSettings(false),
+  m_AfterSettingsEventType(wxEVT_NULL),
+  m_AfterSettingsEventId(0),
+  p_AfterSettingsEventOrgan(NULL)
 {
-	wxIcon icon;
-	icon.CopyFromBitmap(GetImage_GOIcon());
-	SetIcon(icon);
-	
-	InitHelp();
-	
-	wxArrayString choices;
-	
-	m_file_menu = new wxMenu;
-	m_file_menu->Append(ID_SETTINGS, wxT("&Settings..."), wxEmptyString, wxITEM_NORMAL);
-       
-	m_favorites_menu = new wxMenu;
-	
-	m_recent_menu = new wxMenu;
-	
-	wxToolBar* tb = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
-	tb->SetToolBitmapSize(wxSize(16, 16));
-	
-	wxMenu *preset_menu = new wxMenu;
-	for(unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
-		preset_menu->Append(i,  wxString::Format(_("Preset %d"), i - ID_PRESET_0), wxEmptyString, wxITEM_CHECK);
-	
-	m_file_menu->Append(ID_FILE_LOAD, _("&Load\tCtrl+L"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->Append(wxID_ANY, _("&Favorites"), m_favorites_menu);
-	m_file_menu->Append(ID_FILE_OPEN, _("&Open\tCtrl+O"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->Append(wxID_ANY, _("Open &Recent"), m_recent_menu);
-	m_file_menu->Append(ID_FILE_INSTALL, _("&Install organ package\tCtrl+I"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->AppendSeparator();
-	m_file_menu->Append(ID_FILE_PROPERTIES, _("Organ &Properties"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->AppendSeparator();
-	m_file_menu->AppendSubMenu(preset_menu, _("Pr&eset"));
-	m_file_menu->AppendSeparator();
-	m_file_menu->Append(ID_FILE_SAVE, _("&Save\tCtrl+S"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->Append(ID_FILE_CACHE, _("&Update Cache..."), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->Append(ID_FILE_CACHE_DELETE, _("Delete &Cache..."), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->AppendSeparator();
-	m_file_menu->Append(ID_FILE_RELOAD, _("Re&load"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->Append(ID_FILE_REVERT, _("Reset to &Defaults"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->AppendSeparator();
-	m_file_menu->Append(ID_FILE_IMPORT_SETTINGS, _("&Import Settings"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->Append(ID_FILE_IMPORT_COMBINATIONS, _("Import &Combinations"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->Append(ID_FILE_EXPORT, _("&Export Settings/Combinations"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->AppendSeparator();
-	m_file_menu->Append(ID_FILE_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
-	m_file_menu->Append(ID_FILE_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
-	
-	m_temperament_menu = new wxMenu;
-	
-	m_audio_menu = new wxMenu;
-	m_audio_menu->AppendSubMenu(m_temperament_menu, _("&Temperament"));
-	m_audio_menu->Append(ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_CHECK);
-	m_audio_menu->Append(ID_MIDI_LIST, _("M&idi Objects"), wxEmptyString, wxITEM_CHECK);
-	m_audio_menu->AppendSeparator();
-	m_audio_menu->Append(ID_AUDIO_STATE, _("&Sound Output State"), wxEmptyString, wxITEM_NORMAL);
-	m_audio_menu->AppendSeparator();
-	m_audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
-	m_audio_menu->Append(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), wxEmptyString, wxITEM_CHECK);
-	m_audio_menu->AppendSeparator();
-	m_audio_menu->Append(ID_MIDI_LOAD, _("Load &MIDI\tCtrl+P"), wxEmptyString, wxITEM_NORMAL);
-	m_audio_menu->Append(ID_MIDI_MONITOR, _("&Log MIDI events"), wxEmptyString, wxITEM_CHECK);
-	
-	
-	wxMenu *help_menu = new wxMenu;
-	help_menu->Append(wxID_HELP, _("&Help\tF1"), wxEmptyString, wxITEM_NORMAL);
-	help_menu->Append(wxID_ABOUT, _("&About"), wxEmptyString, wxITEM_NORMAL);
-	
-	tb->AddTool(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), GetImage_set(), _("Memory Set"), wxITEM_CHECK);
-	tb->AddTool(ID_MEMORY, _("&Memory Level"), GetImage_memory(), _("Memory Level"), wxITEM_NORMAL);
-	m_SetterPosition = new wxSpinCtrl(tb, ID_METER_FRAME_SPIN, wxEmptyString, wxDefaultPosition, wxSize(50, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 999);
-	tb->AddControl(m_SetterPosition);
-	m_SetterPosition->SetValue(0);	
-	
-	tb->AddTool(ID_VOLUME, _("&Volume"), GetImage_volume(), _("Volume"), wxITEM_NORMAL);
-	m_Volume = new wxSpinCtrl(tb, ID_METER_AUDIO_SPIN, wxEmptyString, wxDefaultPosition, wxSize(50, wxDefaultCoord), wxSP_ARROW_KEYS, -120, 20);
-	tb->AddControl(m_Volume);
+  wxIcon icon;
+  icon.CopyFromBitmap(GetImage_GOIcon());
+  SetIcon(icon);
 
-	m_VolumeControl = new wxControl(tb, wxID_ANY);
-	AdjustVolumeControlWithSettings();
-	tb->AddControl(m_VolumeControl);
-	m_Volume->SetValue(m_Settings.Volume());
-	
-	tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
-	choices.clear();
-	choices.push_back(_("Max"));
-	for(unsigned i = 1; i <= 60; i++)
-		choices.push_back(wxString::Format(_("%d ms"), i * 50));
-	m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
-	tb->AddControl(m_ReleaseLength);
-	unsigned n = m_Settings.ReleaseLength();
-	m_ReleaseLength->SetSelection(n / 50);
-	m_Sound.GetEngine().SetReleaseLength(n);
-	
-	tb->AddTool(ID_TRANSPOSE, _("&Transpose"), GetImage_transpose(), _("Transpose"), wxITEM_NORMAL);
-	m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
-	tb->AddControl(m_Transpose);
-	m_Transpose->SetValue(m_Settings.Transpose());
-	
-	tb->AddTool(ID_POLYPHONY, _("&Polyphony"), GetImage_polyphony(), _("Polyphony"), wxITEM_NORMAL);
-	m_Polyphony = new wxSpinCtrl(tb, ID_METER_POLY_SPIN, wxEmptyString, wxDefaultPosition, wxSize(62, wxDefaultCoord), wxSP_ARROW_KEYS, 1, MAX_POLYPHONY);
-	tb->AddControl(m_Polyphony);
-	
-	m_SamplerUsage = new wxGaugeAudio(tb, wxID_ANY, wxDefaultPosition);
-	tb->AddControl(m_SamplerUsage);
-	m_Polyphony->SetValue(m_Settings.PolyphonyLimit());
-	
-	tb->AddTool(ID_AUDIO_PANIC, _("&Panic\tEscape"), GetImage_panic(), _("Panic"), wxITEM_NORMAL);
-	
-	
-	m_panel_menu = new wxMenu();
-	
-	wxMenuBar *menu_bar = new wxMenuBar;
-	menu_bar->Append(m_file_menu, _("&File"));
-	menu_bar->Append(m_audio_menu, _("&Audio/Midi"));
-	menu_bar->Append(m_panel_menu, _("&Panel"));
-	menu_bar->Append(help_menu, _("&Help"));
-	SetMenuBar(menu_bar);
-	SetAutoLayout(true);
-	
-	UpdateSize();
-	
-	ApplyRectFromSettings(m_Settings.GetMainWindowRect());
+  InitHelp();
 
-	m_listener.Register(&m_Sound.GetMidi());
-	m_isMeterReady = true;
+  wxArrayString choices;
+
+  m_file_menu = new wxMenu;
+  m_file_menu->Append(ID_SETTINGS, wxT("&Settings..."), wxEmptyString, wxITEM_NORMAL);
+
+  m_favorites_menu = new wxMenu;
+
+  m_recent_menu = new wxMenu;
+
+  wxToolBar* tb = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
+  tb->SetToolBitmapSize(wxSize(16, 16));
+
+  wxMenu *preset_menu = new wxMenu;
+  for(unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
+	  preset_menu->Append(i,  wxString::Format(_("Preset %d"), i - ID_PRESET_0), wxEmptyString, wxITEM_CHECK);
+
+  m_file_menu->Append(ID_FILE_LOAD, _("&Load\tCtrl+L"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->Append(wxID_ANY, _("&Favorites"), m_favorites_menu);
+  m_file_menu->Append(ID_FILE_OPEN, _("&Open\tCtrl+O"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->Append(wxID_ANY, _("Open &Recent"), m_recent_menu);
+  m_file_menu->Append(ID_FILE_INSTALL, _("&Install organ package\tCtrl+I"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->AppendSeparator();
+  m_file_menu->Append(ID_FILE_PROPERTIES, _("Organ &Properties"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->AppendSeparator();
+  m_file_menu->AppendSubMenu(preset_menu, _("Pr&eset"));
+  m_file_menu->AppendSeparator();
+  m_file_menu->Append(ID_FILE_SAVE, _("&Save\tCtrl+S"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->Append(ID_FILE_CACHE, _("&Update Cache..."), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->Append(ID_FILE_CACHE_DELETE, _("Delete &Cache..."), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->AppendSeparator();
+  m_file_menu->Append(ID_FILE_RELOAD, _("Re&load"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->Append(ID_FILE_REVERT, _("Reset to &Defaults"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->AppendSeparator();
+  m_file_menu->Append(ID_FILE_IMPORT_SETTINGS, _("&Import Settings"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->Append(ID_FILE_IMPORT_COMBINATIONS, _("Import &Combinations"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->Append(ID_FILE_EXPORT, _("&Export Settings/Combinations"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->AppendSeparator();
+  m_file_menu->Append(ID_FILE_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->Append(ID_FILE_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
+
+  m_temperament_menu = new wxMenu;
+
+  m_audio_menu = new wxMenu;
+  m_audio_menu->AppendSubMenu(m_temperament_menu, _("&Temperament"));
+  m_audio_menu->Append(ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_CHECK);
+  m_audio_menu->Append(ID_MIDI_LIST, _("M&idi Objects"), wxEmptyString, wxITEM_CHECK);
+  m_audio_menu->AppendSeparator();
+  m_audio_menu->Append(ID_AUDIO_STATE, _("&Sound Output State"), wxEmptyString, wxITEM_NORMAL);
+  m_audio_menu->AppendSeparator();
+  m_audio_menu->Append(ID_AUDIO_PANIC, _("&Panic\tEscape"), wxEmptyString, wxITEM_NORMAL);
+  m_audio_menu->Append(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), wxEmptyString, wxITEM_CHECK);
+  m_audio_menu->AppendSeparator();
+  m_audio_menu->Append(ID_MIDI_LOAD, _("Load &MIDI\tCtrl+P"), wxEmptyString, wxITEM_NORMAL);
+  m_audio_menu->Append(ID_MIDI_MONITOR, _("&Log MIDI events"), wxEmptyString, wxITEM_CHECK);
+
+
+  wxMenu *help_menu = new wxMenu;
+  help_menu->Append(wxID_HELP, _("&Help\tF1"), wxEmptyString, wxITEM_NORMAL);
+  help_menu->Append(wxID_ABOUT, _("&About"), wxEmptyString, wxITEM_NORMAL);
+
+  tb->AddTool(ID_AUDIO_MEMSET, _("&Memory Set\tShift"), GetImage_set(), _("Memory Set"), wxITEM_CHECK);
+  tb->AddTool(ID_MEMORY, _("&Memory Level"), GetImage_memory(), _("Memory Level"), wxITEM_NORMAL);
+  m_SetterPosition = new wxSpinCtrl(tb, ID_METER_FRAME_SPIN, wxEmptyString, wxDefaultPosition, wxSize(50, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 999);
+  tb->AddControl(m_SetterPosition);
+  m_SetterPosition->SetValue(0);	
+
+  tb->AddTool(ID_VOLUME, _("&Volume"), GetImage_volume(), _("Volume"), wxITEM_NORMAL);
+  m_Volume = new wxSpinCtrl(tb, ID_METER_AUDIO_SPIN, wxEmptyString, wxDefaultPosition, wxSize(50, wxDefaultCoord), wxSP_ARROW_KEYS, -120, 20);
+  tb->AddControl(m_Volume);
+
+  m_VolumeControl = new wxControl(tb, wxID_ANY);
+  AdjustVolumeControlWithSettings();
+  tb->AddControl(m_VolumeControl);
+  m_Volume->SetValue(m_Settings.Volume());
+
+  tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
+  choices.clear();
+  choices.push_back(_("Max"));
+  for(unsigned i = 1; i <= 60; i++)
+	  choices.push_back(wxString::Format(_("%d ms"), i * 50));
+  m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
+  tb->AddControl(m_ReleaseLength);
+  unsigned n = m_Settings.ReleaseLength();
+  m_ReleaseLength->SetSelection(n / 50);
+  m_Sound.GetEngine().SetReleaseLength(n);
+
+  tb->AddTool(ID_TRANSPOSE, _("&Transpose"), GetImage_transpose(), _("Transpose"), wxITEM_NORMAL);
+  m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
+  tb->AddControl(m_Transpose);
+  m_Transpose->SetValue(m_Settings.Transpose());
+
+  tb->AddTool(ID_POLYPHONY, _("&Polyphony"), GetImage_polyphony(), _("Polyphony"), wxITEM_NORMAL);
+  m_Polyphony = new wxSpinCtrl(tb, ID_METER_POLY_SPIN, wxEmptyString, wxDefaultPosition, wxSize(62, wxDefaultCoord), wxSP_ARROW_KEYS, 1, MAX_POLYPHONY);
+  tb->AddControl(m_Polyphony);
+
+  m_SamplerUsage = new wxGaugeAudio(tb, wxID_ANY, wxDefaultPosition);
+  tb->AddControl(m_SamplerUsage);
+  m_Polyphony->SetValue(m_Settings.PolyphonyLimit());
+
+  tb->AddTool(ID_AUDIO_PANIC, _("&Panic\tEscape"), GetImage_panic(), _("Panic"), wxITEM_NORMAL);
+
+
+  m_panel_menu = new wxMenu();
+
+  wxMenuBar *menu_bar = new wxMenuBar;
+  menu_bar->Append(m_file_menu, _("&File"));
+  menu_bar->Append(m_audio_menu, _("&Audio/Midi"));
+  menu_bar->Append(m_panel_menu, _("&Panel"));
+  menu_bar->Append(help_menu, _("&Help"));
+  SetMenuBar(menu_bar);
+  SetAutoLayout(true);
+
+  UpdateSize();
+
+  ApplyRectFromSettings(m_Settings.GetMainWindowRect());
+
+  m_listener.Register(&m_Sound.GetMidi());
+  m_isMeterReady = true;
 }
 
 GOrgueFrame::~GOrgueFrame()
@@ -660,9 +674,14 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
-	GOrgueOrgan* organ = (GOrgueOrgan*)event.GetClientData();
-	Open(*organ);
-	delete organ;
+  GOrgueOrgan* pOrgan = (GOrgueOrgan*)event.GetClientData();
+  
+  if (! m_InSettings)
+  {
+    Open(* pOrgan);
+    delete pOrgan;
+  } else
+    SetEventAfterSettings(event.GetEventType(), event.GetId(), pOrgan);
 }
 
 void GOrgueFrame::OnLoadFavorite(wxCommandEvent& event)
@@ -888,31 +907,65 @@ void GOrgueFrame::OnAudioMemset(wxCommandEvent& WXUNUSED(event))
 		doc->GetOrganFile()->GetSetter()->ToggleSetter();
 }
 
-void GOrgueFrame::OnAudioSettings(wxCommandEvent& event)
+void GOrgueFrame::SetEventAfterSettings(
+  wxEventType eventType, int eventId, GOrgueOrgan* pOrganFile
+)
 {
-	SettingsReasons * const pReasons = (SettingsReasons *) event.GetClientData();
-	
-	SettingsDialog dialog(NULL, m_Sound, pReasons);
-	if (dialog.ShowModal() == wxID_OK)
-	{
-		GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
-		manager.RegisterPackageDirectory(m_Settings.OrganPackagePath());
+  if (p_AfterSettingsEventOrgan)
+    delete p_AfterSettingsEventOrgan;
+  m_AfterSettingsEventType = eventType;
+  m_AfterSettingsEventId = eventId;
+  p_AfterSettingsEventOrgan = pOrganFile;
+}
 
-		UpdateVolumeControlWithSettings();
-		m_Settings.SetMainWindowRect(GetRect());
-		m_Sound.ResetSound(true);
-		m_Settings.Flush();
-		if (dialog.NeedRestart())
-		  wxMessageBox(_("Some settings changes do not effect until GrandOrgue restarts"), _("GrandOrgue"), wxOK | wxICON_EXCLAMATION, this);
-		if (dialog.NeedReload() &&  m_Sound.GetOrganFile() != NULL)
-			if (wxMessageBox(_("Some changed settings effect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"), _("GrandOrgue"), wxYES_NO | wxICON_QUESTION, this) == wxYES)
-			{
-				wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
-				GetEventHandler()->AddPendingEvent(event);
-			}
-	}
-	if (pReasons)
-	  delete pReasons;
+void GOrgueFrame::OnSettings(wxCommandEvent& event)
+{
+  m_InSettings = true;
+  
+  SettingsReasons * const pReasons = (SettingsReasons *) event.GetClientData();
+
+  SettingsDialog dialog(this, m_Sound, pReasons);
+  if (dialog.ShowModal() == wxID_OK)
+  {
+    GOrgueArchiveManager manager(m_Settings, m_Settings.UserCachePath);
+    manager.RegisterPackageDirectory(m_Settings.OrganPackagePath());
+
+    UpdateVolumeControlWithSettings();
+    m_Settings.SetMainWindowRect(GetRect());
+    m_Sound.ResetSound(true);
+    m_Settings.Flush();
+    if (
+      dialog.NeedRestart()
+      && wxMessageBox(
+	"Some settings changes effect after GrandOrgue restarts.\n\nWould you like to restart now?",
+	"GrandOrgue", wxYES_NO | wxICON_QUESTION, this
+      ) == wxYES
+    ) {
+      m_App.SetRestart();
+      SetEventAfterSettings(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_EXIT);
+    } else if (
+      dialog.NeedReload() && m_Sound.GetOrganFile() != NULL
+      && wxMessageBox(
+	_("Some changed settings effect unless the sample set is reloaded.\n\nWould you like to reload the sample set now?"),
+	_("GrandOrgue"), wxYES_NO | wxICON_QUESTION, this
+      ) == wxYES
+    ) {
+      SetEventAfterSettings(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_RELOAD);
+    }
+  }
+  if (pReasons)
+    delete pReasons;
+  if (m_AfterSettingsEventType != wxEVT_NULL)
+  {
+    wxCommandEvent event(m_AfterSettingsEventType, m_AfterSettingsEventId);
+    
+    if (p_AfterSettingsEventOrgan)
+      event.SetClientData(p_AfterSettingsEventOrgan);
+    GetEventHandler()->AddPendingEvent(event);
+    p_AfterSettingsEventOrgan = NULL;
+    m_AfterSettingsEventType = wxEVT_NULL;
+  }
+  m_InSettings = false;
 }
 
 void GOrgueFrame::OnAudioState(wxCommandEvent& WXUNUSED(event))

@@ -34,26 +34,29 @@ class wxSplashScreenWindow;
 class GOrgueApp : public wxApp
 {
 private:
-	virtual void MacOpenFile(const wxString &fileName);
-	bool OnInit();
-	int OnRun();
-	int OnExit();
-	void OnInitCmdLine(wxCmdLineParser& parser);
-	bool OnCmdLineParsed(wxCmdLineParser& parser);
+  bool m_Restart;
+  
+  virtual void MacOpenFile(const wxString &fileName);
+  bool OnInit();
+  int OnRun();
+  int OnExit();
+  void OnInitCmdLine(wxCmdLineParser& parser);
+  bool OnCmdLineParsed(wxCmdLineParser& parser);
 
 protected:
-	GOrgueFrame* m_Frame;
-	wxLocale m_locale;
-	GOrgueSettings* m_Settings;
-	GOrgueSound* m_soundSystem;
-	GOrgueLog* m_Log;
-	wxString m_FileName;
-	wxString m_InstanceName;
+  GOrgueFrame* m_Frame;
+  wxLocale m_locale;
+  GOrgueSettings* m_Settings;
+  GOrgueSound* m_soundSystem;
+  GOrgueLog* m_Log;
+  wxString m_FileName;
+  wxString m_InstanceName;
 
-	static const wxCmdLineEntryDesc m_cmdLineDesc [];
+  static const wxCmdLineEntryDesc m_cmdLineDesc [];
 
 public:
-	GOrgueApp();
+  GOrgueApp();
+  void SetRestart();
 };
 
 

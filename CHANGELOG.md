@@ -1,3 +1,4 @@
+- Added asking for restart after changing language (does not work on Windows yet)
 - Added displaying a reason of entering to the settings on GO startup https://github.com/oleg68/GrandOrgue/issues/66
 # 0.3.1.2341-14.os (2021-08-31)
 - Fixed sizing of the setting dialog https://github.com/oleg68/GrandOrgue/issues/77
