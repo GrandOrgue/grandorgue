@@ -1,3 +1,4 @@
+# 0.3.1.2341-15.os (2021-09-04)
 - Fixed incorrect ``Apply changes first`` in the Organ Settings dialog on OSX https://github.com/oleg68/GrandOrgue/issues/87
 - Fixed size of the Organ Selection dialog https://github.com/oleg68/GrandOrgue/issues/85
 - Added asking for restart after changing language (does not work on Windows yet)
