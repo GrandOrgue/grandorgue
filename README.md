@@ -1,3 +1,5 @@
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+
 GrandOrgue is a sample based pipe organ simulator.
 
 It currently supports Windows and Linux. Porting to other OS supported by RtMidi, 
