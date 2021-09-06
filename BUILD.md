@@ -7,7 +7,7 @@ The simplest way of getting source codes is to use `git`.
 2. Clone the main GrandOrgue repository
 
     ```
-    git clone --recurse-submodules https://github.com/oleg68/GrandOrgue.git
+    git clone --recurse-submodules https://github.com/GrandOrgue/grandorgue.git
     ```
 
 The source code will be fetched in the GrandOrgue subdirectory of the current directory
@@ -16,13 +16,14 @@ The source code will be fetched in the GrandOrgue subdirectory of the current di
 You can download the source code archive from GitHub
 
 1. Download archive
-    - For getting the last sources from `master` branch go to the [Download  ZIP](https://github.com/oleg68/GrandOrgue/archive/refs/heads/master.zip) on GitHub
-    - For getting sourcecode of a certain GrandOrgue release go to the [Releases page](https://github.com/oleg68/GrandOrgue/releases), select the particular release, scroll down to `Assets` and download the ``Source code (zip)`` or ``Source code (tar.gz)``
+    - For getting the last sources from `master` branch go to the [Download  ZIP](https://github.com/GrandOrgue/grandorgue/archive/refs/heads/master.zip) on GitHub
+    - For getting sourcecode of a certain GrandOrgue release go to the [Releases page](https://github.com/GrandOrgue/grandorgue/releases), select the particular release, scroll down to `Assets` and download the ``Source code (zip)`` or ``Source code (tar.gz)``
 
 2. Unpack this archive to some directory
 
 3. Download external submodules
     1. `RtAudio`: Download [the source archive](https://github.com/thestk/rtaudio/archive/refs/heads/master.zip) end extract it's contents to the ``submodules/RtAudio`` subdirectory of GrandOrgue source tree.
+    2. `RtMidi`: Download [the source archive](https://github.com/thestk/rtmidi/archive/refs/heads/master.zip) and extract it's contents to the ``submodules/RtMidi`` subdirectory of GrandOrgue source tree.
 
 ## Building for Linux on Linux
 1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``
