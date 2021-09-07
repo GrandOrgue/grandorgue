@@ -18,7 +18,7 @@ The discussion forum is available at [https://github.com/GrandOrgue/grandorgue/d
 
 For bug reports and feature requests post issues at [https://github.com/GrandOrgue/grandorgue/issues](https://github.com/GrandOrgue/grandorgue/issues).
 
-Contributers are welcome on Github. You may create pull requests at [https://github.com/GrandOrgue/grandorgue/pulls](https://github.com/GrandOrgue/grandorgue/pulls). But before to create a coplex pull request it's better to create an issue for discussing it.
+Contributors are welcome on Github. You may create pull requests at [https://github.com/GrandOrgue/grandorgue/pulls](https://github.com/GrandOrgue/grandorgue/pulls). But before to create a coplex pull request it's better to create an issue for discussing it.
 
 ## Installation
 See [INSTALL.md](INSTALL.md) for the downloading and installation prebuilt GrandOrgue packages.
