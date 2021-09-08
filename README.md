@@ -1,5 +1,6 @@
-[![Build status](https://github.com/oleg68/GrandOrgue/actions/workflows/build.yml/badge.svg)](https://github.com/oleg68/GrandOrgue/actions/workflows/build.yml)
-[![Release](https://img.shields.io/github/v/release/oleg68/GrandOrgue)](https://github.com/oleg68/GrandOrgue/releases)
+[![Build status](https://github.com/GrandOrgue/grandorgue/actions/workflows/build.yml/badge.svg)](https://github.com/GrandOrgue/grandorgue/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/GrandOrgue/grandorgue)](https://github.com/GrandOrgue/grandorgue/releases)
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
 # GrandOrgue
 
@@ -8,27 +9,20 @@ GrandOrgue is a sample based pipe organ simulator.
 It currently supports Linux, Windows and OS X. Porting to other OS supported by RtMidi, RtAudio and wxWidgets should be possible with some build system adjustments.
 
 ## Home page and resources
-This fork of GrandOrgue is hosted on Github. The project pages is [https://github.com/oleg68/GrandOrgue](https://github.com/oleg68/GrandOrgue).
+GrandOrgue is hosted on Github. The repository can be found at [https://github.com/GrandOrgue/grandorgue](https://github.com/GrandOrgue/grandorgue).
 
-The original GrandOrgue source code is hosted on SourceForge [https://sourceforge.net/projects/ourorgan](https://sourceforge.net/projects/ourorgan).
+GrandOrgue was earlier hosted on SourceForge [https://sourceforge.net/projects/ourorgan](https://sourceforge.net/projects/ourorgan) and a copy of the old source code before migration can be found in the svn branch [https://github.com/GrandOrgue/grandorgue/tree/svn](https://github.com/GrandOrgue/grandorgue/tree/svn).
 
-This fork contains all changes from SourceForge plus some enchancements. The key enchancenments are:
+Development of GrandOrgue is continuous, see [CHANGELOG.md] for full history of changes.
 
-- Better support of ``Jack Audio Connection Kit`` and `Pipewire`
-- Better scaling capabilities of main GrandOrgue windows
-- Build scripts for simplified building from sources. They are used by GitHub authomatc build system
-- Enchanced structure of the main readme files
+The discussion forum is available at [https://github.com/GrandOrgue/grandorgue/discussions](https://github.com/GrandOrgue/grandorgue/discussions).
 
-See [CHANGELOG.md] for full history of changes.
+For bug reports and feature requests post issues at [https://github.com/GrandOrgue/grandorgue/issues](https://github.com/GrandOrgue/grandorgue/issues).
 
-The discussion forum is available at [https://sourceforge.net/p/ourorgan/discussion](https://sourceforge.net/p/ourorgan/discussion)
-
-For bug reports and feature requests post issues at [https://github.com/oleg68/GrandOrgue/issues](https://github.com/oleg68/GrandOrgue/issues).
-
-Contributers are welcome on Github. You may create pull requests at [https://github.com/oleg68/GrandOrgue/pulls](https://github.com/oleg68/GrandOrgue/pulls). But before to create a coplex pull request it's better to create an issue for discussing it.
+Contributors are welcome on Github. You may create pull requests at [https://github.com/GrandOrgue/grandorgue/pulls](https://github.com/GrandOrgue/grandorgue/pulls). But before creating a complex pull request it's usually better to first create an issue for discussing it.
 
 ## Installation
 See [INSTALL.md](INSTALL.md) for the downloading and installation prebuilt GrandOrgue packages.
 
 ## Building from sources
-See [BUILD.md](BUILD.md) for the building GrandOrgue packages from the source code.
+See [BUILD.md](BUILD.md) for instructions on how to build GrandOrgue from the source code.
