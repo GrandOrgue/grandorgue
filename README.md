@@ -1,5 +1,6 @@
 [![Build status](https://github.com/GrandOrgue/grandorgue/actions/workflows/build.yml/badge.svg)](https://github.com/GrandOrgue/grandorgue/actions/workflows/build.yml)
 [![Release](https://img.shields.io/github/v/release/GrandOrgue/grandorgue)](https://github.com/GrandOrgue/grandorgue/releases)
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
 # GrandOrgue
 
