@@ -171,7 +171,6 @@ GOrgueFrame::GOrgueFrame(
   wxArrayString choices;
 
   m_file_menu = new wxMenu;
-  m_file_menu->Append(ID_SETTINGS, wxT("&Settings..."), wxEmptyString, wxITEM_NORMAL);
 
   m_favorites_menu = new wxMenu;
 
@@ -204,6 +203,8 @@ GOrgueFrame::GOrgueFrame(
   m_file_menu->Append(ID_FILE_IMPORT_SETTINGS, _("&Import Settings"), wxEmptyString, wxITEM_NORMAL);
   m_file_menu->Append(ID_FILE_IMPORT_COMBINATIONS, _("Import &Combinations"), wxEmptyString, wxITEM_NORMAL);
   m_file_menu->Append(ID_FILE_EXPORT, _("&Export Settings/Combinations"), wxEmptyString, wxITEM_NORMAL);
+  m_file_menu->AppendSeparator();
+  m_file_menu->Append(ID_SETTINGS, wxT("&Settings..."), wxEmptyString, wxITEM_NORMAL);
   m_file_menu->AppendSeparator();
   m_file_menu->Append(ID_FILE_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
   m_file_menu->Append(ID_FILE_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
