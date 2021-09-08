@@ -13,7 +13,7 @@ GrandOrgue is hosted on Github. The repository can be found at [https://github.c
 
 GrandOrgue was earlier hosted on SourceForge [https://sourceforge.net/projects/ourorgan](https://sourceforge.net/projects/ourorgan) and a copy of the old source code before migration can be found in the svn branch [https://github.com/GrandOrgue/grandorgue/tree/svn](https://github.com/GrandOrgue/grandorgue/tree/svn).
 
-Development of GrandOrgue is continuous, see [CHANGELOG.md] for full history of changes.
+Development of GrandOrgue is continuous, see [CHANGELOG.md](CHANGELOG.md) for full history of changes.
 
 The discussion forum is available at [https://github.com/GrandOrgue/grandorgue/discussions](https://github.com/GrandOrgue/grandorgue/discussions).
 
