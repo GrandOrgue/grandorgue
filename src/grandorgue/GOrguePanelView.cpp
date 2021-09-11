@@ -195,10 +195,12 @@ void GOrguePanelView::OnSize(wxSizeEvent& event)
 
 		int x, xu, y, yu;
 		GetScrollPixelsPerUnit(&xu, &yu);
+		
 		GetViewStart(&x, &y);
-		if (x * xu + max.GetWidth() > event.GetSize().GetWidth())
+		
+		if (xu && x * xu + max.GetWidth() > event.GetSize().GetWidth())
 			x = (event.GetSize().GetWidth() - max.GetWidth()) / xu;
-		if (y * yu + max.GetHeight() > event.GetSize().GetHeight())
+		if (yu && y * yu + max.GetHeight() > event.GetSize().GetHeight())
 			y = (event.GetSize().GetHeight() - max.GetHeight()) / yu;
 		this->Scroll(x, y);
 
