@@ -29,7 +29,7 @@
       <holder>Milan Digital Audio LLC</holder>
     </copyright>
     <copyright>
-      <year>2009-2019</year>
+      <year>2009-2021</year>
       <holder>GrandOrgue contributors (see AUTHORS)</holder>
     </copyright>
     <legalnotice>
@@ -457,6 +457,15 @@ volume spinner value; temperament setting; fine tuning data.
           <para><emphasis>Export Settings/Combinations</emphasis> allows the user to choose a specific file name and folder. The latest location where settings were exported to will be remembered for the next time.      </para>
         </sect3>
         <sect3>
+          <title id="audiomidisettings">Settings...</title>
+          <indexterm>
+            <primary>Audio/Midi Settings</primary>
+          </indexterm>
+          <para>
+Displays a tabbed dialog containing the various settings.
+ See <link linkend="settingstab">Program Settings</link> for detailed information on this topic.</para>
+        </sect3>
+        <sect3>
           <title>Close</title>
           <indexterm>
             <primary>Close</primary>
@@ -466,6 +475,15 @@ Close the currently loaded sample set. If you have made any settings
 changes, you will be asked if you would like to save them before the
 sample set closes. Note that this will also unload the sample set and
 free the RAM it required.
+</para>
+        </sect3>
+        <sect3>
+          <title>Exit</title>
+          <indexterm>
+            <primary>Exit</primary>
+          </indexterm>
+          <para>
+Closes and exits the GrandOrgue app.
 </para>
         </sect3>
       </sect2>
@@ -523,15 +541,6 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
           <para>Double-clicking on the element in the list opens the midi event editor as well.</para>
         </sect3>
         <sect3>
-          <title id="audiomidisettings">Audio/Midi Settings</title>
-          <indexterm>
-            <primary>Audio/Midi Settings</primary>
-          </indexterm>
-          <para>
-Displays a tabbed dialog containing the various settings.
- See <link linkend="settingstab">Audio &amp; Midi Settings</link> for detailed information on this topic.</para>
-        </sect3>
-        <sect3>
           <title>Sound Output State</title>
           <mediaobject><imageobject><imagedata fileref="images/sound_output_state.png"/></imageobject></mediaobject>
           <para>
@@ -539,7 +548,6 @@ This popup tries to display <emphasis>actual</emphasis> latency. Note that the
 estimate can be based on numbers provided by the audio hardware and drivers and
 that it may vary. The RtAudio backend is more likely to display too low numbers.
           </para>
-
         </sect3>
         <sect3>
           <title>Panic</title>
@@ -3439,7 +3447,7 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
     <listitem><simpara>The computer's audio device is 4.0 surround (front left and right speakers, rear left and right speakers)</simpara></listitem>
     </itemizedlist>
     <para>
-    Settings in the <link linkend="settingstab">Midi &amp; Audio Settings</link> tab describe the physical environment, while settings in the <link linkend="organsettings">Organ settings</link> dialog describe how the different parts of the virtual organ map to the real-world audio outputs.
+    Settings in the <link linkend="settingstab">Settings...</link> tab describe the physical environment, while settings in the <link linkend="organsettings">Organ settings</link> dialog describe how the different parts of the virtual organ map to the real-world audio outputs.
     </para>
     <informaltable frame="none">
       <tgroup cols="2">
@@ -3487,14 +3495,14 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
         </simpara>
       </listitem>
     </itemizedlist>
-    <para>This is done by linking audio groups to channels in the <link linkend="settingstab">Midi &amp; Audio Settings</link> dialog and spreading pipes over the audio groups in the <link linkend="organsettings">Organ Settings</link> dialog.</para>
+    <para>This is done by linking audio groups to channels in the <link linkend="settingstab">Settings...</link> dialog and spreading pipes over the audio groups in the <link linkend="organsettings">Organ Settings</link> dialog.</para>
   </chapter>
   <chapter id="settingstab">
-    <title>Midi &amp; Audio settings</title>
+    <title>Program Settings</title>
     <indexterm>
-      <primary>Midi &amp; Audio Settings</primary>
+      <primary>Program Settings</primary>
     </indexterm>
-    <para>This tabbed dialog is displayed when the <emphasis>Audio/Midi Settings</emphasis> menu item is chosen in the <emphasis>Audio/Midi</emphasis> menu.</para>
+    <para>This tabbed dialog is displayed when the <emphasis>Settings...</emphasis> menu item is chosen in the <emphasis>File</emphasis> menu.</para>
     <para>It manages "system-wide" GrandOrgue options. In other terms, these options apply to any loaded sampleset.</para>
     <para>These options are located at different places according to the platform.</para>
     <informaltable frame="none">
@@ -3531,13 +3539,23 @@ the name <emphasis>GrandOrgueConfig</emphasis> becomes <emphasis><emphasis role=
         <primary>Options</primary>
       </indexterm>
       <figure id="optionstab">
-        <title>Midi &amp; Audio Settings / Options</title>
+        <title>Options</title>
         <mediaobject>
           <imageobject>
             <imagedata scalefit="1" width="100%" fileref="images/options_tab.png"/>
           </imageobject>
         </mediaobject>
       </figure>
+      <sect2>
+        <title>Language frame</title>
+        <indexterm>
+          <primary>Language</primary>
+        </indexterm>
+        <para>
+Select the language to use. A change requires a restart of the app.
+Also note that some dialogs might use the language set systemwide.
+</para>
+      </sect2>
       <sect2>
         <title>Enhancements frame</title>
         <sect3>
@@ -4067,25 +4085,6 @@ This setting can be set to don't load, if you want GrandOrgue to avoid loading a
         </sect3>
       </sect2>
       <sect2>
-        <title>Sound output frame</title>
-        <sect3>
-          <title>Sample rate</title>
-          <indexterm>
-            <primary>Sample rate</primary>
-          </indexterm>
-          <para>Selects the output sample rate. Allowed values are 44100, 48000 and 96000 Hz.</para>
-          <para>The samplerate should match both the configured samplerate in the audio interface and the samplerate of the recorded samples  to avoid  resampling. If not, resampling can occur in all layers of the audio stack, and audio quality can suffer.</para>
-        </sect3>
-        <sect3 id="samplesperbuffer">
-          <title>Samples per buffer</title>
-          <indexterm>
-            <primary>Samples per buffer</primary>
-          </indexterm>
-          <para>Allowed values range from 16 to 1024 by increment of 16.</para>
-          <para>This parameter sets the output buffer size. Larger values usually reduce sound artifacts at the expense of latency.</para>
-        </sect3>
-      </sect2>
-      <sect2>
         <title>Cache frame</title>
         <sect3>
           <title>Compress cache</title>
@@ -4365,7 +4364,7 @@ when the <link linkend="recorder">MIDI Recorder</link> <emphasis
           </imageobject>
         </mediaobject>
       </figure>
-      <para>This dialog selects the audio output device and defines which channels and <link linkend="audiogroupstab">audio groups</link> the audio output is dispatched to.</para>
+      <para>This dialog selects the audio output device and defines which channels and <link linkend="audiogroupstab">audio groups</link> the audio output is dispatched to, as well as audio stream parameters in the Sound output frame and the selection of shown devices/drivers in the Sound port frame.</para>
       <informaltable frame="none">
         <tgroup cols="2">
           <colspec colname="c1" colsep="0" rowsep="0" colwidth="90px"/>
@@ -4382,6 +4381,35 @@ when the <link linkend="recorder">MIDI Recorder</link> <emphasis
           </tbody>
         </tgroup>
       </informaltable>
+      <sect2>
+        <title>Sound output frame</title>
+        <sect3>
+          <title>Sample rate</title>
+          <indexterm>
+            <primary>Sample rate</primary>
+          </indexterm>
+          <para>Selects the output sample rate. Allowed values are 44100, 48000 and 96000 Hz.</para>
+          <para>The samplerate should match both the configured samplerate in the audio interface and the samplerate of the recorded samples  to avoid  resampling. If not, resampling can occur in all layers of the audio stack, and audio quality can suffer.</para>
+        </sect3>
+        <sect3 id="samplesperbuffer">
+          <title>Samples per buffer</title>
+          <indexterm>
+            <primary>Samples per buffer</primary>
+          </indexterm>
+          <para>Allowed values range from 16 to 1024 by increment of 16.</para>
+          <para>This parameter sets the output buffer size. Larger values usually reduce sound artifacts at the expense of latency.</para>
+        </sect3>
+      </sect2>
+      <sect2>
+        <title>Sound ports frame</title>
+        <sect3>
+          <title>Sound ports</title>
+          <indexterm>
+            <primary>Sound ports</primary>
+          </indexterm>
+          <para>By checking or unchecking the devices/drivers it's possible to filter the list of devices shown in the device picking dialog.</para>
+        </sect3>
+      </sect2>
       <sect2>
         <title>Managing devices</title>
         <indexterm>
@@ -8490,7 +8518,7 @@ backend key, that is connected to this GUI key.
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry id="displaykeyentry">
+        <varlistentry id="displaykeyentryNote">
           <term>DisplayKey999Note</term>
           <listitem>
             <para>
