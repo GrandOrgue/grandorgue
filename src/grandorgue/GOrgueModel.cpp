@@ -98,7 +98,7 @@ void GOrgueModel::Load(GOrgueConfigReader& cfg, GrandOrgueFile* organfile)
 	for (unsigned  i = 0; i < NumberOfWindchestGroups; i++)
 		m_windchest[i]->Load(cfg, wxString::Format(wxT("WindchestGroup%03d"), i + 1), i);
 
-	m_ODFRankCount = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, 400, false);
+	m_ODFRankCount = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, 999, false);
 	for (unsigned  i = 0; i < m_ODFRankCount; i++)
 	{
 		m_ranks.push_back(new GOrgueRank(organfile));

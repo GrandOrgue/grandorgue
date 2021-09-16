@@ -1,3 +1,4 @@
+- Increasing the limit of number of ranks from 400 to 999 https://github.com/GrandOrgue/grandorgue/discussions/680
 # 0.3.1.2342 (2021-09-16)
 - Fixed build for windows on github https://github.com/GrandOrgue/grandorgue/issues/29
 - Fixed crash on OSx when opening some pannels https://github.com/oleg68/GrandOrgue/issues/94
