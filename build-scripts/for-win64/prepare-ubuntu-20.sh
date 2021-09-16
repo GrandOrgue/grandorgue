@@ -39,7 +39,7 @@ sudo zypper --gpg-auto-import-keys refresh
 
 sudo mkdir /zypper
 
-sudo zypper -vv --installroot /zypper install -y mingw64-filesystem 
+sudo zypper -vv --installroot /zypper install -y mingw64-filesystem || [ $? -eq 107 ] 
 sudo zypper -vv --installroot /zypper install -y mingw64-zlib1 mingw64-zlib-devel
 sudo zypper -vv --installroot /zypper install -y mingw64-libgnurx0 mingw64-libgnurx-devel 
 sudo zypper -vv --installroot /zypper install -y mingw64-fftw3 mingw64-fftw3-devel

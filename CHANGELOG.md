@@ -1,4 +1,5 @@
-# 0.3.1.2342 (2021-09-14)
+# 0.3.1.2342 (2021-09-16)
+- Fixed build for windows on github https://github.com/GrandOrgue/grandorgue/issues/29
 - Fixed crash on OSx when opening some pannels https://github.com/oleg68/GrandOrgue/issues/94
 - Updated help with changes in menus and Settings... dialog https://github.com/GrandOrgue/grandorgue/issues/17
 - The project has been moved to the new official GrandOrgue repository https://github.com/GrandOrgue/grandorgue
