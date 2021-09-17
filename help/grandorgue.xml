@@ -6833,7 +6833,7 @@ in a section called <emphasis>Panel999</emphasis>.
           <term>NumberOfRanks</term>
           <listitem>
             <para>
-(integer 0-400, default: 0) number of additional ranks. The details are
+(integer 0-999, default: 0) number of additional ranks. The details are
 in a section called <emphasis>Rank999</emphasis>.
      </para>
           </listitem>
