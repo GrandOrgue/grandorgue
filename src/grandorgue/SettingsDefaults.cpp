@@ -69,6 +69,7 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 	item0->Add(item9, 1, wxEXPAND | wxALL, 0);
 
 	grid = new wxFlexGridSizer(1, 5, 5);
+	grid->AddGrowableCol(0, 0);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
 	item9->Add(item6, 1, wxEXPAND | wxALL, 5);
 
