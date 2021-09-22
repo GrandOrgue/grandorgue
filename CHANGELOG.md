@@ -1,3 +1,4 @@
+- Fixed hyperlinks to the GO distribution in INSTALL.md
 - Made paths fieldset and dropdowns of default settings dialog adjust size https://github.com/GrandOrgue/grandorgue/issues/713
 - Increasing the limit of number of ranks from 400 to 999 https://github.com/GrandOrgue/grandorgue/discussions/680
 # 0.3.1.2342 (2021-09-16)
