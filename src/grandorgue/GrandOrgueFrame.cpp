@@ -463,6 +463,7 @@ bool GOrgueFrame::DoClose()
 		return false;
 	delete m_doc;
 	m_doc = NULL;
+	UpdatePanelMenu();
 	return true;
 }
 
