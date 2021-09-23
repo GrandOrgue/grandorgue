@@ -66,37 +66,38 @@ SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	item9 = new wxBoxSizer(wxVERTICAL);
-	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
+	item0->Add(item9, 1, wxEXPAND | wxALL, 0);
 
 	grid = new wxFlexGridSizer(1, 5, 5);
+	grid->AddGrowableCol(0, 0);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
-	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+	item9->Add(item6, 1, wxEXPAND | wxALL, 5);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Sampleset directory:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_OrganPath = new wxDirPickerCtrl(this, ID_ORGAN_PATH, wxEmptyString, _("Select directory for your samplesets"), wxDefaultPosition, wxDefaultSize, 
-						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
+						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 1, wxEXPAND | wxALL);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Organ package directory:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_OrganPackagePath = new wxDirPickerCtrl(this, ID_ORGANPACKAGE_PATH, wxEmptyString, _("Select directory for your organ packages"), wxDefaultPosition, wxDefaultSize, 
-						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
+						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 1, wxEXPAND | wxALL);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Setting import/export directory:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_SettingPath = new wxDirPickerCtrl(this, ID_SETTING_PATH, wxEmptyString, _("Select directory for setting import/export"), wxDefaultPosition, wxDefaultSize, 
-						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
+						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 1, wxEXPAND | wxALL);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Audio recording directory:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_AudioRecorderPath = new wxDirPickerCtrl(this, ID_AUDIO_RECORDER_PATH, wxEmptyString, _("Select directory for your audio recordings"), wxDefaultPosition, wxDefaultSize, 
-						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
+						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 1, wxEXPAND | wxALL);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("MIDI recording directory:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_MidiRecorderPath = new wxDirPickerCtrl(this, ID_MIDI_RECORDER_PATH, wxEmptyString, _("Select directory for your MIDI recording"), wxDefaultPosition, wxDefaultSize, 
-						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
+						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 1, wxEXPAND | wxALL);
 
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Midi player directory:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_MidiPlayerPath = new wxDirPickerCtrl(this, ID_MIDI_PLAYER_PATH, wxEmptyString, _("Select directory for the MIDI player"), wxDefaultPosition, wxDefaultSize, 
-						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
+						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 1, wxEXPAND | wxALL);
 
-	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+	item6->Add(grid, 1, wxEXPAND | wxALL, 5);
 
 	m_OrganPath->SetPath(m_Settings.OrganPath());
 	m_OrganPackagePath->SetPath(m_Settings.OrganPackagePath());
