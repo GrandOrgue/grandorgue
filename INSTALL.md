@@ -4,8 +4,8 @@ This document describes installing GrandOrgue from already built installation fi
 In geneneral for installing GrandOrgue you have to do two steps:
 
 1. Download installation files from Github.
-    * For a release version go to `https://github.com/GrandOrgue/grandorgue/releases` and select a release number.
-    * For an intermediate build go to `https://github.com/GrandOrgue/grandorgue/actions`, select a build and scroll down to `Artifacts`
+    * For a release version go to [https://github.com/GrandOrgue/grandorgue/releases](https://github.com/GrandOrgue/grandorgue/releases) and select a release number.
+    * For an intermediate build go to [https://github.com/GrandOrgue/grandorgue/actions](https://github.com/GrandOrgue/grandorgue/actions), select a build and scroll down to `Artifacts`
     The necessary file names to download depend on the target operation system.
 2. Install the downloaded files. This step is operation system dependent.
 
