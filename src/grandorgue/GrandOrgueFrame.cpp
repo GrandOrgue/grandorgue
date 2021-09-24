@@ -463,6 +463,7 @@ bool GOrgueFrame::DoClose()
 		return false;
 	delete m_doc;
 	m_doc = NULL;
+	UpdatePanelMenu();
 	return true;
 }
 
@@ -476,6 +477,7 @@ void GOrgueFrame::Open(const GOrgueOrgan& organ)
 	GOrgueProgressDialog dlg;
 	m_doc = new GOrgueDocument(&m_Sound);
 	m_doc->Load(&dlg, organ);
+	UpdatePanelMenu();
 }
 
 GOrgueDocument* GOrgueFrame::GetDocument()
