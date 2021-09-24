@@ -1,3 +1,4 @@
+- Renewed a default GO version during cmake build https://github.com/GrandOrgue/grandorgue/issues/14
 - Fixed initial sizing of Panel menu when organ is loaded https://github.com/GrandOrgue/grandorgue/issues/712
 - Fixed hyperlinks to the GO distribution in INSTALL.md
 - Made paths fieldset and dropdowns of default settings dialog adjust size https://github.com/GrandOrgue/grandorgue/issues/713
