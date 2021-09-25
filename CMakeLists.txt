@@ -20,11 +20,11 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project version numbers
-if (NOT VERSION)
-  if (NOT VERSION_REVISION)
-    set(VERSION_REVISION 0)
+if(NOT VERSION)
+  file(STRINGS "version.txt" VERSION)
+  if(NOT VERSION)
+    message(FATAL_ERROR "Unable to get version from version.txt")
   endif()
-  set(VERSION 0.3.1.${VERSION_REVISION})
 endif()
 
 project(
@@ -36,11 +36,11 @@ project(
 set(NUM_VERSION "${PROJECT_VERSION}")
 string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
 
-if (BUILD_VERSION)
-  set(FULL_VERSION "${PROJECT_VERSION}-${BUILD_VERSION}")
-else ()
-  set(FULL_VERSION "${PROJECT_VERSION}")
-endif ()
+if(NOT BUILD_VERSION)
+  set(BUILD_VERSION "0.local")
+endif()
+
+set(FULL_VERSION "${PROJECT_VERSION}-${BUILD_VERSION}")
 
 # Build configuration options
 option(RTAUDIO_USE_CORE       "Enable RtAudio support for Core Audio (Rt and PortAudio - OS X only)" ON)
@@ -237,7 +237,7 @@ if (APPLE)
    # see the following URL for information about these variables
    # https://developer.apple.com/library/mac/#documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
    set(BUNDLE_CFBundleShortVersionString ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
-   set(BUNDLE_CFBundleVersion ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE}.${VERSION_REVISION})
+   set(BUNDLE_CFBundleVersion ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
 
    set(CPACK_PACKAGE_ICON "${RESOURCEDIR}/GrandOrgue.icns")
 
@@ -331,7 +331,7 @@ set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CP
 include(CPack)
 
 message(STATUS "  Project                     : ${PROJECT_NAME}")
-message(STATUS "  Description                 : ${CPACK_PACKAGE_RELEASE}")
+message(STATUS "  Description                 : ${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 message(STATUS "  Version                     : ${VERSION}")
 message(STATUS "  Build                       : ${CPACK_PACKAGE_RELEASE}")
 message(STATUS "============================================================================")
