@@ -38,7 +38,7 @@
     </p>
   </description>
 
-  <launchable type="desktop-id">net.sourceforge.GrandOrgue.desktop</launchable>
+  <launchable type="desktop-id">GrandOrgue.desktop</launchable>
 
   <screenshots>
     <screenshot type="default">
@@ -63,7 +63,8 @@
   </provides>
 
   <releases>
-    <release version="0.3.1.2338" date="2021-01-04"></release>
+    <release version="3.2.0-1" date="2021-09-27"></release>
+    <release version="0.3.1.2342-1" date="2021-09-14"></release>
   </releases>
 
   <content_rating type="oars-1.1" />
