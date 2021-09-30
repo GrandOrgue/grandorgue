@@ -23,6 +23,7 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/treectrl.h>
+#include <wx/scrolwin.h>
 
 class OrganTreeItemData : public wxTreeItemData
 {
@@ -98,7 +99,7 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 	mainSizer->Add(Sizer1, 1, wxALIGN_LEFT | wxEXPAND);
 	mainSizer->AddSpacer(5);
 
-	wxScrolledWindow* scroll = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
+	wxScrolledWindow* scroll = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL, wxT("scrolledWindow"));
 	wxBoxSizer* settingSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* box1 = new wxStaticBoxSizer(wxVERTICAL, scroll, _("Settings"));
 	wxFlexGridSizer* grid = new wxFlexGridSizer(2, 5, 5);
