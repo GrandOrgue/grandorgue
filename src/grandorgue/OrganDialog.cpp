@@ -251,8 +251,8 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 	settingSizer->Add(box3, 0, wxEXPAND | wxALL, 4);
 	scroll->SetSizer(settingSizer);
 	scroll->SetScrollbars(0, 5, 0, 15);
-	mainSizer->Add(scroll, 1, wxALIGN_RIGHT | wxEXPAND);	
-	
+	mainSizer->Add(scroll, 1, wxALIGN_RIGHT | wxEXPAND);
+
 	topSizer->Add(new wxStaticLine(this), 0, wxEXPAND | wxALL, 5);
 	topSizer->Add(CreateButtonSizer(wxOK | wxCANCEL), 0, wxALIGN_RIGHT | wxALL, 5);
 	topSizer->AddSpacer(5);
@@ -260,9 +260,8 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 
 	FillTree();
 	Load();
-	
+
 	topSizer->Fit(this);
-	topSizer->SetSizeHints(this);
 }
 
 OrganDialog::~OrganDialog()
