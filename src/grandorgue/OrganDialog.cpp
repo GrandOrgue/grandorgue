@@ -262,6 +262,7 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 	Load();
 	
 	topSizer->Fit(this);
+	topSizer->SetSizeHints(this);
 }
 
 OrganDialog::~OrganDialog()
