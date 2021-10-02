@@ -1,19 +1,19 @@
 # Installation of GrandOgue
 This document describes installing GrandOrgue from already built installation files. If you want to build these files from sources see [BUILD.md](BUILD.md).
 
-In geneneral for installing GrandOrgue or upgdaring from a previous version you have to do two steps:
+Generally, for installing GrandOrgue or upgrading from a previous version you have to do two steps:
 
 1. Download an installation file from Github.
     * For a release version go to [https://github.com/GrandOrgue/grandorgue/releases](https://github.com/GrandOrgue/grandorgue/releases) and select a release number.
     * For an intermediate build go to [https://github.com/GrandOrgue/grandorgue/actions](https://github.com/GrandOrgue/grandorgue/actions), select a build and scroll down to `Artifacts`
     The necessary file names to download depend on the target operation system.
-2. Install the downloaded files or upgrade existing installation with this file. This step is operation system dependent.
+2. Install the downloaded file or upgrade existing installation with this file. This step is operation system dependent.
 
 These two steps will be described later in the text.
 
-## Attention
+## Warning
 
-Installation of program creates neither the configuration file nor directories used by GrandOrgue to store data and cache. These directories are reside in the user home directory and are created when GrandOrgue is launched the first time.
+Installation of program creates neither the configuration file nor directories used by GrandOrgue to store data and cache. These directories reside in the user home directory and are created when GrandOrgue is launched the first time.
 
 ## Installation or upgdading on Linux
 
@@ -86,7 +86,7 @@ Installation of program creates neither the configuration file nor directories u
 4. After installation or upgrading, run GrandOrgue from the Aplication menu or from the overview screen.
 
 ### Running GrandOrgue on Linux without installation
-This method requires that all dependencies have already been installed. Usually this way is used for trying a new GrandOrgue version when an old one has alreade been installed.
+This method requires that all dependencies have already been installed. Usually this way is used for trying a new GrandOrgue version when an old one has already been installed.
 
 1. Download the file ``grandorgue-<version>.linux.<arch>.tar.gz`` where `<arch>` is
     - `amd64` for intel 64-bit OS
@@ -147,7 +147,7 @@ Run the following command by root:
 2. Select ``GrandOrgue``.
 3. Follow the prompts.
 
-## Attention
+## Warning
 
 Deinstallation of GrandOrgue removes neither the configuration file nor the directories with GrandOrgue data from user directories.
 
