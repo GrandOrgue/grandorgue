@@ -1,4 +1,5 @@
 - Polish language support added
+- Added upgrade and uninstall guide to INSTALL.md https://github.com/GrandOrgue/grandorgue/issues/720
 - Fixed scrolling of Organsettings dialog https://github.com/GrandOrgue/grandorgue/issues/735
 - Got rid of separate linux packages grandorgue-resources and grandorgue-demo https://github.com/GrandOrgue/grandorgue/issues/741
 # 3.2.0-1 (2021-09-27)
