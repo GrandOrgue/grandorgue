@@ -1,32 +1,47 @@
 # Installation of GrandOgue
 This document describes installing GrandOrgue from already built installation files. If you want to build these files from sources see [BUILD.md](BUILD.md).
 
-In geneneral for installing GrandOrgue you have to do two steps:
+Generally, for installing GrandOrgue or upgrading from a previous version you have to do two steps:
 
-1. Download installation files from Github.
+1. Download an installation file from Github.
     * For a release version go to [https://github.com/GrandOrgue/grandorgue/releases](https://github.com/GrandOrgue/grandorgue/releases) and select a release number.
     * For an intermediate build go to [https://github.com/GrandOrgue/grandorgue/actions](https://github.com/GrandOrgue/grandorgue/actions), select a build and scroll down to `Artifacts`
     The necessary file names to download depend on the target operation system.
-2. Install the downloaded files. This step is operation system dependent.
+2. Install the downloaded file or upgrade existing installation with this file. This step is operation system dependent.
 
 These two steps will be described later in the text.
 
-## Installation on Linux
-### Installation on rpm-based systems (centos, fedora, redhat, oracle linux, opensuse)
-1. Download the linux package ``grandorgue-<version>.<arch>.rpm`` where `<arch>` is
+## Warning
+
+Installation of program creates neither the configuration file nor directories used by GrandOrgue to store data and cache. These directories reside in the user home directory and are created when GrandOrgue is launched the first time.
+
+## Installation or upgdading on Linux
+
+### Installation or upgdading on rpm-based systems (centos, fedora, redhat, oracle linux, opensuse)
+
+1. Download the linux package file ``grandorgue-<version>.<arch>.rpm`` where `<arch>` is
 
     - `x86_64` for intel 64-bit OS
     - `armhf` for arm 32-bit OS
     - `aarch64` for arm 64-bit OS
 
-2. Run install command as a root
+2. Run install/upgrade command as a root
+
     - on opensuse
 
-        ```
-        zypper install <path>/grandorgue-<version>.<arch>.rpm
-        ```
+        - for installation
 
-    - on other systems
+            ```
+            zypper install <path>/grandorgue-<version>.<arch>.rpm
+            ```
+
+        - for upgrading
+
+            ```
+            zypper update <path>/grandorgue-<version>.<arch>.rpm
+            ```
+
+    - on other systems (the same command for installation and upgrading)
 
         ```
         dnf install <path>/grandorgue-<version>.<arch>.rpm
@@ -34,22 +49,26 @@ These two steps will be described later in the text.
 
     - on old systems
 
-        ```
-        yum install <path>/grandorgue-<version>.<arch>.rpm
-        ```
+        - for installation
 
-4. After installation, run GrandOrgue from the Aplication menu or from the overview screen.
+            ```
+            yum install <path>/grandorgue-<version>.<arch>.rpm
+            ```
 
+        - for upgrading
 
-### Installation on debian-based systems (debian 9+, ubuntu 18+, mint, raspbian)
+            ```
+            yum update <path>/grandorgue-<version>.<arch>.rpm
+            ```
 
-1. Download the linux package ``grandorgue_<version>_<arch>.deb``
-    where `<arch>` is
+3. After installation, run GrandOrgue from the Aplication menu or from the overview screen.
 
+### Installation or upgrading on debian-based systems (debian 9+, ubuntu 18+, mint, raspbian)
+
+1. Download the linux package ``grandorgue_<version>_<arch>.deb`` where `<arch>` is
     - `amd64` for intel 64-bit OS
     - `armhf` for arm 32-bit OS
     - `arm64` for arm 64-bit OS
-
 2. (Debian 9 only): install wx-gtk3
 
     ```
@@ -58,30 +77,29 @@ These two steps will be described later in the text.
     apt-get install -y -t stretch-backports libwxbase3.0-0v5
     ```
 
-3. Install GrandOrgue with all dependencies. Execute the install command as a root:
+3. Install or upgrade GrandOrgue with all dependencies. Execute the install command as a root:
 
     ```
     apt-get install <path>/grandorgue_<version>_<arch>.deb
     ```
 
-4. After installation, run GrandOrgue from the Aplication menu or from the overview screen.
+4. After installation or upgrading, run GrandOrgue from the Aplication menu or from the overview screen.
 
 ### Running GrandOrgue on Linux without installation
-This method requires that all dependencies have already been installed. Usually this way is used for trying a new GrandOrgue version when an old one has been installed.
+This method requires that all dependencies have already been installed. Usually this way is used for trying a new GrandOrgue version when an old one has already been installed.
 
-1. Download the file ``grandorgue-<version>.linux.<arch>.tar.gz
-    where `<arch>` is
+1. Download the file ``grandorgue-<version>.linux.<arch>.tar.gz`` where `<arch>` is
     - `amd64` for intel 64-bit OS
     - `armhf` for arm 32-bit OS
     - `aarch64` for arm 64-bit OS
 2. Unpack this archive to some directory
-3. Run ``bin/GrandOrgue``
+3. Run ``bin/GrandOrgue`` from this directory
 
-## Installation on Windows 64-bit
+## Installation or upgrading on Windows 64-bit
 1. Download the file ``grandorgue-<version>.windows.x86_64.exe``
 2. Run this exe file. The installer will be launched.
 3. Follow the prompts.
-4. After installation, run GrandOrgue from the `Start` menu.
+4. After installation/upgrading, run GrandOrgue from the `Start` menu.
 
 ### Running Grandorgue on Windows without installation
 1. Download the file ``grandorgue-<version>.windows.x86_64.zip``
@@ -92,3 +110,44 @@ This method requires that all dependencies have already been installed. Usually 
 1. Download the file grandorgue-<version>.os.osx.x86_64.dmg
 2. Open it
 3. Click on the keyboard icon for running
+
+# Deinstallation
+
+## Deinstallation on Linux
+
+Run the following command by root:
+
+- On opensuse:
+
+    ```
+    zypper remove grandorgue
+    ```
+
+- On new rpm-based systems (centos, fedora, redhat, oracle linux)
+
+    ```
+    dnf remove grandorgue
+    ```
+
+- On old rpm-based systems
+
+    ```
+    yum erase grandorgue
+    ```
+
+- On debian-based systems (debian, ubuntu, mint, raspbian)
+
+    ```
+    apt-get remove grandorgue
+    ```
+
+## Deinstallation on Windows
+
+1. Run ``Control Pannel`` -> `Programs` -> ``Uninstall a progam``.
+2. Select ``GrandOrgue``.
+3. Follow the prompts.
+
+## Warning
+
+Deinstallation of GrandOrgue removes neither the configuration file nor the directories with GrandOrgue data from user directories.
+
