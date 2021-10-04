@@ -676,7 +676,7 @@ msgstr "Poziom konkurencji:"
 
 #, c-format
 msgid "Config entry without any group at line %d"
-msgstr "Wpis konfiguracji bez powiązanej grupy w wierszu %d""
+msgstr "Wpis konfiguracji bez powiązanej grupy w wierszu %d"
 
 msgid ""
 "Copyright 2006 Milan Digital Audio LLC\n"
@@ -821,7 +821,7 @@ msgid "E&xit"
 msgstr "W&yjście"
 
 msgid "Enable Convolution Reverb"
-msgstr "Włącz Aktywuj pogłos
+msgstr "Włącz Aktywuj pogłos"
 
 msgid "Enabled"
 msgstr "Wlącz"
@@ -1057,7 +1057,7 @@ msgid "IEEE Float"
 msgstr "IEEE Float"
 
 msgid "Ignore pitch info in organ samples wav files"
-msgstr "Ignoruj ​​informacje dotyczące strojenia w plikach wav próbek organów""
+msgstr "Ignoruj ​​informacje dotyczące strojenia w plikach wav próbek organów"
 
 msgid "Illegal combination of I/O devices"
 msgstr "Nieprawidłowa kombinacja urządzeń I / O"
@@ -1389,7 +1389,7 @@ msgstr "Brak wymaganej wartości w sekcji '%s' dla wpisu '%s'"
 
 #, c-format
 msgid "Mnaual %d: Tremulant%03d already in use"
-msgstr "Manuał %d: Tremulant%03d jest już w użyciu""
+msgstr "Manuał %d: Tremulant%03d jest już w użyciu"
 
 msgid "Mod. Silbermann nr 2"
 msgstr "Mod. Silbermann Nr 2"
@@ -1541,12 +1541,8 @@ msgstr "Proszę wprowadzić głośność od -120 do 40 dB."
 msgid "Please enter new volume in dB:"
 msgstr "Proszę wprowadzić nową głośność w dB:"
 
-msgid ""
-"Polyphase is not supported with lossless compression - falling back to "
-"linear."
-msgstr ""
-"Wielofazowe nie są obsługiwane z kompresją bezstratną —”
-"powrót do liniowego."
+msgid "Polyphase is not supported with lossless compression - falling back to linear."
+msgstr "Wielofazowe nie są obsługiwane z kompresją bezstratną - powrót do liniowego."
 
 msgid "Polyphony"
 msgstr "Polifonia"
@@ -1821,7 +1817,7 @@ msgid ""
 "This combination file is only compatible with:\n"
 "%s"
 msgstr ""
-"Ten plik kombinacji jest zgodny tylko z: \ n"
+"Ten plik kombinacji jest zgodny tylko z:\n"
 "%s"
 
 msgid "This feature is currently not supported."
