@@ -1,3 +1,4 @@
+# 3.3.0 (2021-10-06)
 - Added polish language support
 - Added upgrade and uninstall guide to INSTALL.md https://github.com/GrandOrgue/grandorgue/issues/720
 - Fixed scrolling of Organsettings dialog https://github.com/GrandOrgue/grandorgue/issues/735
