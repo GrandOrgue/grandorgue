@@ -1,3 +1,5 @@
+# 3.3.1 (2021-10-06)
+- Added autotag
 # 3.3.0 (2021-10-06)
 - Added polish language support
 - Added upgrade and uninstall guide to INSTALL.md https://github.com/GrandOrgue/grandorgue/issues/720
