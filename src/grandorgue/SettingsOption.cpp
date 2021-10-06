@@ -47,6 +47,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_FRENCH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_FRENCH)));
 	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_GERMAN), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_GERMAN)));
 	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_ITALIAN), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_ITALIAN)));
+	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_POLISH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_POLISH)));
 	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_SPANISH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_SPANISH)));
 	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_SWEDISH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_SWEDISH)));
 	
