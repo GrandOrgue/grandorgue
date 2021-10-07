@@ -1,8 +1,14 @@
-- Added polish language support
+# 3.2.1-6.os (2021-10-07)
+- Test autotag
+# 3.2.1-4.os (2021-10-07)
+- Fixed workflow
+# 3.2.1-1.os (2021-10-07)
+- Added automated release tagging on GitHub https://github.com/GrandOrgue/grandorgue/issues/711
+- Added polish language support https://github.com/GrandOrgue/grandorgue/discussions/743
 - Added upgrade and uninstall guide to INSTALL.md https://github.com/GrandOrgue/grandorgue/issues/720
 - Fixed scrolling of Organsettings dialog https://github.com/GrandOrgue/grandorgue/issues/735
 - Got rid of separate linux packages grandorgue-resources and grandorgue-demo https://github.com/GrandOrgue/grandorgue/issues/741
-# 3.2.0-1 (2021-09-27)
+# 3.2.0 (2021-09-27)
 - Renewed a default GO version during cmake build https://github.com/GrandOrgue/grandorgue/issues/14
 - Fixed initial sizing of Panel menu when organ is loaded https://github.com/GrandOrgue/grandorgue/issues/712
 - Fixed hyperlinks to the GO distribution in INSTALL.md
