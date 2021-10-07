@@ -20,7 +20,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project version numbers
-if(NOT VERSION)
+if(NOT DEFINED VERSION)
   file(STRINGS "version.txt" VERSION)
   if(NOT VERSION)
     message(FATAL_ERROR "Unable to get version from version.txt")
@@ -36,7 +36,7 @@ project(
 set(NUM_VERSION "${PROJECT_VERSION}")
 string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
 
-if(NOT BUILD_VERSION)
+if(NOT DEFINED BUILD_VERSION)
   set(BUILD_VERSION "0.local")
 endif()
 
@@ -205,7 +205,11 @@ set(
   "GrandOrgue is a virtual pipe organ sample player application supporting a HW1 compatible file format"
 )
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_RELEASE ${BUILD_VERSION})
+if(BUILD_VERSION)
+  set(CPACK_PACKAGE_RELEASE ${BUILD_VERSION})
+else()
+  set(CPACK_PACKAGE_RELEASE "0.0")
+endif()
 
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "GrandOrgue")
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
