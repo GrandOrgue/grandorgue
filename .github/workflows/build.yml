@@ -23,6 +23,13 @@ jobs:
       run: ${{github.workspace}}/build-scripts/for-github/autotag.sh
       if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release-') }}
 
+    - name: Calculate relnotes file
+      id: relnotes
+      shell: bash
+      run: |
+        [[ -e RELNOTES.md ]] && RELNOTES_FILE=RELNOTES.md
+        echo "::set-output name=file::$RELNOTES_FILE"
+
     - name: Calculate versions
       id: vers
       shell: bash
@@ -61,7 +68,7 @@ jobs:
         release_name:  "v${{ steps.vers.outputs.full_ver }}"
         draft: true
         prerelease: false
-        body_path: ${{github.workspace}}/RELNOTES.md
+        body_path: "${{ steps.relnotes.outputs.file }}"
         
   build:
     needs: [calc_ver]
