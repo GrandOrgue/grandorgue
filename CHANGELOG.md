@@ -1,3 +1,5 @@
+# 3.2.1-4.os (2021-10-07)
+- Fixed workflow
 # 3.2.1-1.os (2021-10-07)
 - Added automated release tagging on GitHub https://github.com/GrandOrgue/grandorgue/issues/711
 - Added polish language support https://github.com/GrandOrgue/grandorgue/discussions/743
