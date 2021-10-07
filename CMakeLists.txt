@@ -38,6 +38,8 @@ string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
 
 if(NOT DEFINED BUILD_VERSION)
   set(BUILD_VERSION "0.local")
+elseif(NOT BUILD_VERSION)
+  set(BUILD_VERSION "0.0")
 endif()
 
 set(FULL_VERSION "${PROJECT_VERSION}-${BUILD_VERSION}")
@@ -205,11 +207,7 @@ set(
   "GrandOrgue is a virtual pipe organ sample player application supporting a HW1 compatible file format"
 )
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-if(BUILD_VERSION)
-  set(CPACK_PACKAGE_RELEASE ${BUILD_VERSION})
-else()
-  set(CPACK_PACKAGE_RELEASE "0.0")
-endif()
+set(CPACK_PACKAGE_RELEASE ${BUILD_VERSION})
 
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "GrandOrgue")
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
