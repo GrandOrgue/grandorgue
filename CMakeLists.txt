@@ -20,7 +20,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project version numbers
-if(NOT VERSION)
+if(NOT DEFINED VERSION)
   file(STRINGS "version.txt" VERSION)
   if(NOT VERSION)
     message(FATAL_ERROR "Unable to get version from version.txt")
@@ -36,8 +36,10 @@ project(
 set(NUM_VERSION "${PROJECT_VERSION}")
 string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
 
-if(NOT BUILD_VERSION)
+if(NOT DEFINED BUILD_VERSION)
   set(BUILD_VERSION "0.local")
+elseif(NOT BUILD_VERSION)
+  set(BUILD_VERSION "0.0")
 endif()
 
 set(FULL_VERSION "${PROJECT_VERSION}-${BUILD_VERSION}")
