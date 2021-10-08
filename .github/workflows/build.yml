@@ -18,11 +18,23 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Set git tags and compose RELNOTES.md
+      shell: bash
+      run: ${{github.workspace}}/build-scripts/for-github/autotag.sh
+      if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release-') }}
+
+    - name: Calculate relnotes file
+      id: relnotes
+      shell: bash
+      run: |
+        [[ -e RELNOTES.md ]] && RELNOTES_FILE=RELNOTES.md
+        echo "::set-output name=file::$RELNOTES_FILE"
+
     - name: Calculate versions
       id: vers
       shell: bash
       run: |
-        git fetch --prune --unshallow --tags
+        git fetch --prune --unshallow --tags || true
         GIT_VERSION=`git describe --tags`
         PROJECT_VERSION=`echo $GIT_VERSION | cut -d- -f1`
         BUILD_VERSION=`echo $GIT_VERSION | cut -d- -f2-3 --output-delimiter=.`
@@ -56,6 +68,7 @@ jobs:
         release_name:  "v${{ steps.vers.outputs.full_ver }}"
         draft: true
         prerelease: false
+        body_path: "${{ steps.relnotes.outputs.file }}"
         
   build:
     needs: [calc_ver]
