@@ -12,6 +12,7 @@ set(src
 contrib/sha1.cpp
 threading/GOCondition.cpp
 threading/GOMutex.cpp
+threading/GOWaitQueue.cpp
 threading/GOrgueThread.cpp
 GOSoundTouchWorkItem.cpp
 GOrgueArchive.cpp

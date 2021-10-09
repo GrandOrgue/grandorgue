@@ -9,61 +9,35 @@
 
 #if 1
 //#ifdef __WIN32__
+  #define GOWAITQUEUE_USE_WX
+  #undef GOWAITQUEUE_USE_STD_MUTEX
 
-#include <wx/thread.h>
+  #include <wx/thread.h>
 
-class GOWaitQueue
-{
-private:
-	wxSemaphore m_Wait;
-public:
-	GOWaitQueue()
-	{
-	}
-
-	~GOWaitQueue()
-	{
-	}
-
-	void Wait()
-	{
-		m_Wait.Wait();
-	}
-
-	void Wakeup()
-	{
-		m_Wait.Post();
-	}
-};
 #else
 
-#include <mutex>
+  #include <mutex>
+
+  #undef GOWAITQUEUE_USE_WX
+  #define GOWAITQUEUE_USE_STD_MUTEX
+#endif
 
 class GOWaitQueue
 {
 private:
-	std::mutex m_Wait;
-public:
-	GOWaitQueue()
-	{
-		m_Wait.lock();
-	}
-
-	~GOWaitQueue()
-	{
-		m_Wait.unlock();
-	}
-
-	void Wait()
-	{
-		m_Wait.lock();
-	}
-
-	void Wakeup()
-	{
-		m_Wait.unlock();
-	}
-};
+  
+#ifdef GOWAITQUEUE_USE_WX
+  wxSemaphore m_Wait;
+#elif defined(GOWAITQUEUE_USE_STD_MUTEX)
+  std::mutex m_Wait;
 #endif
+  
+public:
+  GOWaitQueue();
+  ~GOWaitQueue();
+
+  void Wait();
+  void Wakeup();
+};
 
 #endif
