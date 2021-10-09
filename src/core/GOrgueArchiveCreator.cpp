@@ -34,6 +34,7 @@
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 
 GOrgueArchiveCreator::GOrgueArchiveCreator(const GOrgueSettingDirectory& cacheDir) :
 	m_OrganList(),

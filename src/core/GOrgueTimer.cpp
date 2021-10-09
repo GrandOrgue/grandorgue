@@ -7,7 +7,7 @@
 #include "GOrgueTimer.h"
 
 #include "GOrgueTimerCallback.h"
-#include "mutex_locker.h"
+#include "threading/GOMutexLocker.h"
 
 GOrgueTimer::GOrgueTimer() :
 	wxTimer(),

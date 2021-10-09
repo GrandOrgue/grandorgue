@@ -31,7 +31,7 @@
 #include "SettingsReason.h"
 #include "SplashScreen.h"
 #include "Images.h"
-#include "mutex_locker.h"
+#include "threading/GOMutexLocker.h"
 #include "wxGaugeAudio.h"
 #include <wx/display.h>
 #include <wx/fileconf.h>

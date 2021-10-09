@@ -24,7 +24,7 @@
 
 
 #include <wx/wx.h>
-#include "GOrgueThread.h"
+#include "threading/GOrgueThread.h"
 #include "fftw3.h"
 
 class ZCsema

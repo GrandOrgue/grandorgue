@@ -7,7 +7,7 @@
 #include "GOSoundScheduler.h"
 
 #include "GOSoundWorkItem.h"
-#include "mutex_locker.h"
+#include "threading/GOMutexLocker.h"
 
 GOSoundScheduler::GOSoundScheduler() :
 	m_Work(),

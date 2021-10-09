@@ -10,7 +10,7 @@
 #include "GOrgueDocumentBase.h"
 #include "GOrgueMidiCallback.h"
 #include "GOrgueMidiListener.h"
-#include "mutex.h"
+#include "threading/GOMutex.h"
 #include <wx/string.h>
 
 class GOrgueKeyReceiver;

@@ -9,6 +9,7 @@
 #include <wx/arrstr.h>
 #include <wx/button.h>
 #include <wx/choicdlg.h>
+#include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/numdlg.h>
 #include <wx/sizer.h>

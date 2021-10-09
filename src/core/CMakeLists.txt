@@ -10,6 +10,9 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/GrandOrgueDef.h)
 
 set(src
 contrib/sha1.cpp
+threading/GOCondition.cpp
+threading/GOMutex.cpp
+threading/GOrgueThread.cpp
 GOSoundTouchWorkItem.cpp
 GOrgueArchive.cpp
 GOrgueArchiveCreator.cpp
@@ -68,7 +71,6 @@ GOrgueTemperament.cpp
 GOrgueTemperamentCent.cpp
 GOrgueTemperamentList.cpp
 GOrgueTemperamentUser.cpp
-GOrgueThread.cpp
 GOrgueTimer.cpp
 GOrgueUtil.cpp
 GOrgueView.cpp

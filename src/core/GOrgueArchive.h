@@ -7,7 +7,7 @@
 #ifndef GORGUEARCHIVE_H
 #define GORGUEARCHIVE_H
 
-#include "mutex.h"
+#include "threading/GOMutex.h"
 #include <wx/file.h>
 #include <wx/string.h>
 #include <vector>

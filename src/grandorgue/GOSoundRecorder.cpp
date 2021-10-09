@@ -8,7 +8,7 @@
 
 #include "GOSoundBufferItem.h"
 #include "GOrgueWaveTypes.h"
-#include "mutex_locker.h"
+#include "threading/GOMutexLocker.h"
 #include <wx/intl.h>
 #include <wx/log.h>
 

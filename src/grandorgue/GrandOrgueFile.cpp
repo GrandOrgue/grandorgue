@@ -63,6 +63,7 @@
 #include "GOrgueWindchest.h"
 #include "contrib/sha1.h"
 #include <wx/filename.h>
+#include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/stream.h>
 #include <wx/wfstream.h>

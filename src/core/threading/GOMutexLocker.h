@@ -4,11 +4,10 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef GORGUEMUTEXLOCKER_H
-#define GORGUEMUTEXLOCKER_H
+#ifndef GOUTEXLOCKER_H
+#define GOMUTEXLOCKER_H
 
-#include "mutex.h"
-#include <vector>
+#include "GOMutex.h"
 
 class GOMutexLocker
 {
@@ -56,36 +55,6 @@ public:
 
 	GOMutexLocker(const GOMutexLocker&) = delete;
 	GOMutexLocker& operator=(const GOMutexLocker&) = delete;
-};
-
-class GOMultiMutexLocker
-{
-private:
-	std::vector<GOMutex*> m_Mutex;
-
-public:
-	GOMultiMutexLocker() :
-		m_Mutex(0)
-	{
-	}
-
-	~GOMultiMutexLocker()
-	{
-		while(m_Mutex.size())
-		{
-			m_Mutex.back()->Unlock();
-			m_Mutex.pop_back();
-		}
-	}
-
-	void Add(GOMutex& mutex)
-	{
-		mutex.Lock();
-		m_Mutex.push_back(&mutex);
-	}
-
-	GOMultiMutexLocker(const GOMutexLocker&) = delete;
-	GOMultiMutexLocker& operator=(const GOMutexLocker&) = delete;
 };
 
 #endif

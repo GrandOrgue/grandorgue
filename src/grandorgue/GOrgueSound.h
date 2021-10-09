@@ -14,8 +14,9 @@
 #include "GOrgueSoundDevInfo.h"
 #include "GOrgueSoundPortsConfig.h"
 
-#include "atomic.h"
-#include "mutex.h"
+#include "threading/atomic.h"
+#include "threading/GOMutex.h"
+#include "threading/GOCondition.h"
 #include <wx/string.h>
 #include <map>
 #include <vector>

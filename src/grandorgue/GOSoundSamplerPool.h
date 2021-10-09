@@ -8,8 +8,8 @@
 #define GOSOUNDSAMPLERPOOL_H_
 
 #include "GOSoundSimpleSamplerList.h"
-#include "atomic.h"
-#include "mutex.h"
+#include "threading/atomic.h"
+#include "threading/GOMutex.h"
 #include "ptrvector.h"
 
 class GO_SAMPLER;

@@ -7,7 +7,7 @@
 #ifndef GORGUEMEMORYPOOL_H_
 #define GORGUEMEMORYPOOL_H_
 
-#include "mutex.h"
+#include "threading/GOMutex.h"
 #include <set>
 
 class wxFile;

@@ -10,7 +10,7 @@
 #include "GOrgueArchiveIndex.h"
 #include "GOrgueArchiveReader.h"
 #include "GOrgueInvalidFile.h"
-#include "mutex_locker.h"
+#include "threading/GOMutexLocker.h"
 #include <wx/intl.h>
 #include <wx/log.h>
 

@@ -10,7 +10,8 @@
 #include "GOSoundBufferItem.h"
 #include "GOSoundSamplerList.h"
 #include "GOSoundWorkItem.h"
-#include "mutex.h"
+#include "threading/GOCondition.h"
+#include "threading/GOMutex.h"
 
 class GOSoundEngine;
 

@@ -8,7 +8,7 @@
 #define GOSOUNDTOUCHWORKITEM_H
 
 #include "GOSoundWorkItem.h"
-#include "mutex.h"
+#include "threading/GOMutex.h"
 
 class GOrgueMemoryPool;
 

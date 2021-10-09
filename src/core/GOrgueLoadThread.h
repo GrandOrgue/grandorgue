@@ -7,8 +7,8 @@
 #ifndef GORGUELOADTHREAD_H
 #define GORGUELOADTHREAD_H
 
-#include "GOrgueThread.h"
-#include "atomic.h"
+#include "threading/atomic.h"
+#include "threading/GOrgueThread.h"
 #include <wx/string.h>
 #include <wx/thread.h>
 

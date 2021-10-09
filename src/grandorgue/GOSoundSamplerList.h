@@ -8,7 +8,7 @@
 #define GOSOUNDSAMPLERLIST_H
 
 #include "GOSoundSampler.h"
-#include "atomic.h"
+#include "threading/atomic.h"
 
 class GOSoundSamplerList
 {
