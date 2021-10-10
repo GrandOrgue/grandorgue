@@ -28,16 +28,11 @@ cmake -G "Unix Makefiles" $GO_PRMS . $SRC_DIR
 make -k $PARALLEL_PRMS
 make install DESTDIR=AppDir
 
-# Build AppImage using linuxdeploy and appimagetool that must be downloaded
-wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
-
-# make them executable
-chmod +x linuxdeploy*.AppImage
-chmod +x appimagetool*.AppImage
+# manually bundle the libjack
+cp /usr/lib/*/libjack.so.0.* AppDir/usr/lib/libjack.so.0
 
 # initialize AppDir and build AppImage
-./linuxdeploy-x86_64.AppImage --appdir AppDir
-./appimagetool-x86_64.AppImage --no-appstream AppDir grandorgue-$1-$2-x86_64.AppImage
+linuxdeploy-x86_64.AppImage --appdir AppDir --plugin gtk
+appimagetool-x86_64.AppImage --no-appstream AppDir grandorgue-$1-$2.x86_64.AppImage
 
 popd
