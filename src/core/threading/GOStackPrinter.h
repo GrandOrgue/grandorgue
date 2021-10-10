@@ -4,13 +4,11 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef GOLOCK_H
-#define GOLOCK_H
+#ifndef GOSTACKPRINTER_H
+#define GOSTACKPRINTER_H
 
 #include <wx/log.h>
 #include <wx/stackwalk.h>
-
-#define GO_PRINTCONTENTION 0
 
 #if wxUSE_STACKWALKER
 class GOStackPrinter : public wxStackWalker
@@ -44,64 +42,5 @@ public:
 };
 #endif
 
-#if 1
-//#ifdef __WIN32__
+#endif /* GOSTACKPRINTER_H */
 
-#include <wx/thread.h>
-
-class GOWaitQueue
-{
-private:
-	wxSemaphore m_Wait;
-public:
-	GOWaitQueue()
-	{
-	}
-
-	~GOWaitQueue()
-	{
-	}
-
-	void Wait()
-	{
-		m_Wait.Wait();
-	}
-
-	void Wakeup()
-	{
-		m_Wait.Post();
-	}
-};
-#else
-
-#include <atomic>
-#include <mutex>
-
-class GOWaitQueue
-{
-private:
-	std::mutex m_Wait;
-public:
-	GOWaitQueue()
-	{
-		m_Wait.lock();
-	}
-
-	~GOWaitQueue()
-	{
-		m_Wait.unlock();
-	}
-
-	void Wait()
-	{
-		m_Wait.lock();
-	}
-
-	void Wakeup()
-	{
-		m_Wait.unlock();
-	}
-};
-#endif
-
-#endif

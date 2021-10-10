@@ -8,7 +8,7 @@
 #define GOSOUNDWINDCHESTWORKITEM_H
 
 #include "GOSoundWorkItem.h"
-#include "mutex.h"
+#include "threading/GOMutex.h"
 #include "ptrvector.h"
 
 class GOSoundEngine;

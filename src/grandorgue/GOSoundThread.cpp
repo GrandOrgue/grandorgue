@@ -8,7 +8,7 @@
 
 #include "GOSoundScheduler.h"
 #include "GOSoundWorkItem.h"
-#include "mutex_locker.h"
+#include "threading/GOMutexLocker.h"
 #include <wx/log.h>
 
 GOSoundThread::GOSoundThread(GOSoundScheduler* scheduler):

@@ -8,7 +8,7 @@
 #define GOSOUNDRECORDER_H
 
 #include "GOSoundWorkItem.h"
-#include "mutex.h"
+#include "threading/GOMutex.h"
 #include <wx/file.h>
 #include <wx/string.h>
 #include <vector>

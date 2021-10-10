@@ -7,8 +7,9 @@
 #ifndef GOSOUNDTHREAD_H
 #define GOSOUNDTHREAD_H
 
-#include "GOrgueThread.h"
-#include "mutex.h"
+#include "threading/GOCondition.h"
+#include "threading/GOMutex.h"
+#include "threading/GOrgueThread.h"
 
 class GOSoundScheduler;
 

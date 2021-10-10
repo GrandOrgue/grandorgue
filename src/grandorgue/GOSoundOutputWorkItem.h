@@ -9,7 +9,7 @@
 
 #include "GOSoundBufferItem.h"
 #include "GOSoundWorkItem.h"
-#include "mutex.h"
+#include "threading/GOMutex.h"
 #include <vector>
 
 class GOSoundReverb;

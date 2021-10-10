@@ -8,7 +8,7 @@
 #define GORGUETIMER_H
 
 #include "GOrgueTime.h"
-#include "mutex.h"
+#include "threading/GOMutex.h"
 #include <wx/timer.h>
 #include <vector>
 

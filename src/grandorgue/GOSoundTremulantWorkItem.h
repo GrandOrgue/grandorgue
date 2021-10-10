@@ -9,7 +9,7 @@
 
 #include "GOSoundSamplerList.h"
 #include "GOSoundWorkItem.h"
-#include "mutex.h"
+#include "threading/GOMutex.h"
 
 class GOSoundEngine;
 
