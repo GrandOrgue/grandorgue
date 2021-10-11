@@ -115,7 +115,9 @@ const std::vector<wxString> & GOrgueSoundPort::getPortNames()
   {
     substystems.push_back(GOrgueSoundPortaudioPort::PORT_NAME);
     substystems.push_back(GOrgueSoundRtPort::PORT_NAME);
+    #if defined(GO_USE_JACK)
     substystems.push_back(GOrgueSoundJackPort::PORT_NAME);
+    #endif
     has_subsystems_populated = true;
   }
   return substystems;
