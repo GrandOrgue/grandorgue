@@ -16,8 +16,8 @@ fi
 
 PARALLEL_PRMS="-j$(nproc)"
 
-mkdir -p build-for/appimage
-pushd build-for/appimage
+mkdir -p build-for/appimage-x86_64
+pushd build-for/appimage-x86_64
 
 rm -rf *
 export LANG=C
