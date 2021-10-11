@@ -150,6 +150,11 @@ void GOrgueSoundJackPort::StartStream()
 	if (jack_activate (m_JackClient))
 		wxString::Format("Cannot activate the jack client");
 }
+
+wxString GOrgueSoundJackPort::getName()
+{
+  return composeDeviceName(PORT_NAME, wxEmptyString, "Native Output");
+}
 #endif /* GO_USE_JACK */
 
 void GOrgueSoundJackPort::Close()
@@ -172,11 +177,6 @@ void GOrgueSoundJackPort::Close()
 	  m_GoBuffer = NULL;
 	}
 #endif
-}
-
-wxString GOrgueSoundJackPort::getName()
-{
-  return composeDeviceName(PORT_NAME, wxEmptyString, "Native Output");
 }
 
 static const wxString OLD_STYLE_NAME = wxT("Jack Output");
