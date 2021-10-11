@@ -95,6 +95,14 @@ This method requires that all dependencies have already been installed. Usually 
 2. Unpack this archive to some directory
 3. Run ``bin/GrandOrgue`` from this directory
 
+### Run GrandOrgue on Linux directly from AppImage
+The GrandOrgue appimage is built for x86_64 architecture without jack support to maximize compatibility. This method does not require any installation of dependencies.
+
+1. Download the file ``grandorgue-<version>.x86_64.AppImage``
+2. Unzip the file (afterwards the zipped file can be deleted)
+3. Make the appimage file executable (Right click file, select properties, on Permissions tab make sure that Allow executing file as program is ticked. Or open terminal where the file is and run: chmod +x grandorgue*.AppImage)
+4. The file is now runnable and can be started by clicking on it
+
 ## Installation or upgrading on Windows 64-bit
 1. Download the file ``grandorgue-<version>.windows.x86_64.exe``
 2. Run this exe file. The installer will be launched.

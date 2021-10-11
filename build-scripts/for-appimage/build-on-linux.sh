@@ -22,14 +22,11 @@ pushd build-for/appimage
 rm -rf *
 export LANG=C
 
-GO_PRMS="-DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release $CMAKE_VERSION_PRMS"
+GO_PRMS="-DCMAKE_INSTALL_PREFIX=/usr -DRTAUDIO_USE_JACK=OFF -DRTMIDI_USE_JACK=OFF -DGO_USE_JACK=OFF -DCMAKE_BUILD_TYPE=Release $CMAKE_VERSION_PRMS"
 echo "cmake -G \"Unix Makefiles\" $GO_PRMS . $SRC_DIR"
 cmake -G "Unix Makefiles" $GO_PRMS . $SRC_DIR
 make -k $PARALLEL_PRMS
 make install DESTDIR=AppDir
-
-# manually bundle the libjack
-cp /usr/lib/*/libjack.so.0.* AppDir/usr/lib/libjack.so.0
 
 # initialize AppDir and build AppImage
 linuxdeploy-x86_64.AppImage --appdir AppDir --plugin gtk
