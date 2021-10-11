@@ -1,4 +1,4 @@
-- Fix bug preventing building with -DGO_USE_JACK=OFF
+- Fixed bug preventing building with -DGO_USE_JACK=OFF
 # 3.3.0 (2021-10-08)
 - Added automated release tagging on GitHub https://github.com/GrandOrgue/grandorgue/issues/711
 - Added polish language support https://github.com/GrandOrgue/grandorgue/discussions/743
