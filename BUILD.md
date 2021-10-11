@@ -1,7 +1,7 @@
 # Building GrandOrgue from sources
 ## Obtaining the source code
 ### With git
-The simplest way of getting source codes is to use `git`.
+The simplest way of getting the source code is to use `git`.
 
 1. Go to some directory where the GrandOgue source subdirectory will be created
 2. Clone the main GrandOrgue repository
@@ -27,7 +27,7 @@ You can download the source code archive from GitHub
 
 ## Building for Linux on Linux
 1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``
-2. Install requires software
+2. Install required software
     - Manually
         1. Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
         2. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
@@ -82,6 +82,77 @@ You can download the source code archive from GitHub
         ```
 
         The built packages will appear in the build-for/linux subdirectory of current directory, the executables - in build-for/linux/bin
+
+## Building AppImage for Linux on Linux (x86_64, without jack support)
+1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``
+2. Install required software
+    - Manually
+        1. Install gcc C++ compiler, make, cmake, imagemagic and the development packages of wxWigets, pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
+        2. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
+        3. Install patchelf, libgtk-3-dev and librsvg2-dev from your distribution (if you want to use linuxdeploy-plugin-gtk, otherwise you don't need them and can ignore all the plugin related commands below)
+        4. Install linuxdeploy, linuxdeploy-plugin-gtk and appimagetool somewhere in path like /usr/local/bin
+           (or $HOME/bin in which case the use of sudo below should be ommitted and the patch changed accordingly)
+           ```
+           sudo wget -P /usr/local/bin https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/linuxdeploy-plugin-gtk.sh
+           sudo wget -P /usr/local/bin https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+           sudo wget -P /usr/local/bin https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+
+           sudo chmod +x /usr/local/bin/linuxdeploy-plugin-gtk.sh
+           sudo chmod +x /usr/local/bin/linuxdeploy-x86_64.AppImage
+           sudo chmod +x /usr/local/bin/appimagetool-x86_64.AppImage
+           ```
+    - Or run the prepared script by a sudoer user:
+        - on Debian 9+ or on Ubuntu 18+ run ``<GO source tree>/build-scripts/for-appimage-x86_64/prepare-debian-ubuntu.sh``
+3. Build
+    - Manually
+        1. Create an empty build directory, eg:
+
+            ```
+            mkdir $HOME/gobuild
+            ```
+
+        2. Run cmake
+
+            ```
+            cd /home/user/gobuild
+            cmake -DCMAKE_INSTALL_PREFIX=/usr -DRTAUDIO_USE_JACK=OFF -DRTMIDI_USE_JACK=OFF -DGO_USE_JACK=OFF -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" <GO source tree>
+            ```
+
+        3. Run make
+
+            ```
+            make
+            ```
+
+        4. For installing into AppDir
+
+            ```
+            make install DESTDIR=AppDir
+            ```
+
+        5. For initializing AppDir and building AppImage
+
+            ```
+            linuxdeploy-x86_64.AppImage --appdir AppDir --plugin gtk
+            appimagetool-x86_64.AppImage --no-appstream AppDir grandorgue-<version_number>-<build_number>.x86_64.AppImage
+            ```
+
+            Note: On a local AppImage build you might get better results by ommitting the linuxdeploy-plugin-gtk completely, and you can ommit specifying the appimage output name like so
+
+            ```
+            linuxdeploy-x86_64.AppImage --appdir AppDir
+            appimagetool-x86_64.AppImage --no-appstream AppDir
+            ```
+            
+            The appimage will in any way appear in the build directory.
+
+    - Or run the prepared build script
+
+        ```
+        <GO source tree>/build-scripts/for-appimage-x86_64/build-on-linux.sh
+        ```
+
+        The built appimage will appear in the build-for/appimage-x86_64 subdirectory of current directory
 
 ## Building for OS X on OS X
 1. Prequisites:
