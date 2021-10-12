@@ -24,3 +24,5 @@ Makefile
 /_CPack_Packages/
 
 /build-for/
+src/.DS_Store
+.DS_Store

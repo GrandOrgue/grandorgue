@@ -229,6 +229,14 @@ GOrgueFrame::GOrgueFrame(
   tb->AddControl(m_VolumeControl);
   m_Volume->SetValue(m_Settings.Volume());
 
+	// Mechnaism for Organ-Wide Release Truncation, Located in the GrandOrgue Toolbar
+	tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
+	choices.clear();
+	choices.push_back(_("Max"));
+	for(unsigned i = 1; i <= 60; i++)
+		choices.push_back(wxString::Format(_("%d ms"), i * 50));
+	m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
+
   tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
   choices.clear();
   choices.push_back(_("Max"));
@@ -1032,6 +1040,16 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 	if (doc && doc->GetOrganFile())
 		doc->GetOrganFile()->GetSetter()->SetTranspose(n);
 }
+
+/*  m_ReleaseLength - SetReleaseLength
+ *  Release Truncation Mechinism for ALL Samples
+ *  Link to GOSoundEngine.cpp, CODE SECTION:
+ *  void GOSoundEngine::SetReleaseLength(unsigned reverb)
+ *  { m_ReleaseLength = reverb; } */
+void GOrgueFrame::OnSettingsReleaseLength(wxCommandEvent& event)
+{
+	m_Settings.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
+	m_Sound.GetEngine().SetReleaseLength(m_Settings.ReleaseLength());
 
 void GOrgueFrame::OnSettingsReleaseLength(wxCommandEvent& event)
 {

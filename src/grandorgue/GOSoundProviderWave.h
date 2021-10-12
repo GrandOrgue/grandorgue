@@ -80,8 +80,9 @@ public:
 	GOSoundProviderWave(GOrgueMemoryPool& pool);
 
 	void LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, unsigned bits_per_sample, int channels, bool compress, loop_load_type loop_mode,
-			  unsigned attack_load, unsigned release_load, int midi_key_number, unsigned loop_crossfade_length, unsigned release_crossfase_length);
+			  unsigned attack_load, unsigned release_load, int midi_key_number, unsigned loop_crossfade_length, unsigned release_crossfase_length, unsigned release_truncation_length);
 	void SetAmplitude(float fixed_amplitude, float gain);
+	void SetReleaseTruncationLength(unsigned truncation);
 };
 
 #endif /* GOSOUNDPROVIDERWAVE_H_ */

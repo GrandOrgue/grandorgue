@@ -18,6 +18,7 @@ private:
 
 	void UpdateAmplitude();
 	void UpdateTuning();
+	void UpdateReleaseTruncationLength();
 	void UpdateAudioGroup();
 
 public:

@@ -27,6 +27,12 @@ void GOSoundProviderWave::SetAmplitude(float fixed_amplitude, float gain)
 	m_Gain = fixed_amplitude * powf(10.0f, gain * 0.05f);
 }
 
+// Links to GOrgueSoundingPipe.cpp -- Added 12-9-20
+void GOSoundProviderWave::SetReleaseTruncationLength(unsigned truncation)
+{
+    m_ReleaseTruncationLength = truncation;
+} // END Added 12-9-20
+
 unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample)
 {
 	if (bits_per_sample <= 8)
@@ -202,8 +208,8 @@ unsigned GOSoundProviderWave::GetFaderLength(unsigned MidiKeyNumber)
 	return fade_length;
 }
 
-void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, unsigned bits_per_sample, int load_channels, bool compress, 
-				       loop_load_type loop_mode, unsigned attack_load, unsigned release_load, int midi_key_number, unsigned loop_crossfade_length, unsigned release_crossfase_length)
+void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, std::vector<release_load_info> releases, unsigned bits_per_sample, int load_channels, bool compress,
+				       loop_load_type loop_mode, unsigned attack_load, unsigned release_load, int midi_key_number, unsigned loop_crossfade_length, unsigned release_crossfase_length, unsigned release_truncation_length)
 {
 
 	ClearData();
@@ -328,10 +334,19 @@ void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, st
 			m_MidiKeyNumber = midi_key_number;
 			m_MidiPitchFract = 0;
 		}
+		// Release Crossfade Parameter Link from ODF File
+        // Typo Correction of crossFASE to crossfade.
+        // If CROSSFADE values appear in the organ definition file, use those values to set the crossfade.
 		if (release_crossfase_length)
 			m_ReleaseCrossfadeLength = release_crossfase_length;
 		else
 			m_ReleaseCrossfadeLength = GetFaderLength(m_MidiKeyNumber);
+
+		// Release Truncation Parameter Link from ODF File
+        if (release_truncation_length)
+        {
+            m_ReleaseTruncationLength = release_truncation_length;
+        }	
 	}
 	catch (wxString error)
 	{

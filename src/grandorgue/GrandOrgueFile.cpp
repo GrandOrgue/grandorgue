@@ -893,6 +893,11 @@ void GrandOrgueFile::UpdateAmplitude()
 {
 }
 
+// Update Release Truncation Length Added 12-9-20
+void GrandOrgueFile::UpdateReleaseTruncationLength()
+{
+}
+
 void GrandOrgueFile::UpdateTuning()
 {
 	m_PitchLabel.SetContent(wxString::Format(_("%f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));

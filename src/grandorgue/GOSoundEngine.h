@@ -44,6 +44,9 @@ private:
 	bool                          m_RandomizeSpeaking;
 	int                           m_Volume;
 	unsigned                      m_ReleaseLength;
+	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+    unsigned                      m_ReleaseTruncationLength;
+    // END TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
 	unsigned m_SamplesPerBuffer;
 	float                         m_Gain;
 	unsigned                      m_SampleRate;
@@ -100,13 +103,17 @@ public:
 	void SetScaledReleases(bool enable);
 	void SetRandomizeSpeaking(bool enable);
 	void SetReleaseLength(unsigned reverb);
+	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+    int GetReleaseTruncationLength();
+    void SetReleaseTruncationLength(unsigned truncation);
+    // END TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
 	const std::vector<double>& GetMeterInfo();
 	void SetAudioRecorder(GOSoundRecorder* recorder, bool downmix);
 
 	GO_SAMPLER* StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay, uint64_t last_stop);
-	uint64_t StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
-	void SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
-	void UpdateVelocity(GO_SAMPLER* handle, unsigned velocity);
+	uint64_t StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle); // Stop Sample
+	void SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle); // Switch Sample
+	void UpdateVelocity(GO_SAMPLER* handle, unsigned velocity); // Update Velocity
 
 	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output, bool last);
 	void NextPeriod();

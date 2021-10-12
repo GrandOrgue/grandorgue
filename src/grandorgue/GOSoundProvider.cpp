@@ -28,7 +28,8 @@ GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
 	m_pool(pool),
 	m_VelocityVolumeBase(1),
 	m_VelocityVolumeIncrement(0),
-	m_ReleaseCrossfadeLength(184)
+	m_ReleaseCrossfadeLength(184), // Member - Release Crossfade Length
+    m_ReleaseTruncationLength(0) // 11-20-20 - New Pipe Release Truncation Mechanism
 {
 	m_Gain = 0.0f;
 }
@@ -180,6 +181,12 @@ float GOSoundProvider::GetMidiPitchFract() const
 unsigned GOSoundProvider::GetReleaseCrossfadeLength() const
 {
 	return m_ReleaseCrossfadeLength;
+}
+
+// 11-20-20 - New Pipe Release Truncation Mechanism
+unsigned GOSoundProvider::GetReleaseTruncationLength() const
+{
+    return m_ReleaseTruncationLength;
 }
 
 void GOSoundProvider::SetVelocityParameter(float min_volume, float max_volume)

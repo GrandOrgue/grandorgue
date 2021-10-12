@@ -125,7 +125,7 @@ public:
 	GOrgueSettingInteger Volume;
 	GOrgueSettingUnsigned PolyphonyLimit;
 	GOrgueSettingUnsigned Preset;
-	GOrgueSettingUnsigned ReleaseLength;
+	GOrgueSettingUnsigned ReleaseLength; // Setting for Release Length / Truncation
 	GOrgueSettingString LanguageCode;
 
 	class GOrgueSettingUnsignedBit : public GOrgueSettingUnsigned

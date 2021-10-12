@@ -39,6 +39,10 @@ private:
 	wxSpinButton* m_TuningSpin;
 	wxTextCtrl* m_Delay;
 	wxSpinButton* m_DelaySpin;
+	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+    wxTextCtrl* m_ReleaseTruncationLength;
+    wxSpinButton* m_ReleaseTruncationLengthSpin;
+    // END TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
 	wxComboBox* m_AudioGroup;
 	wxString m_LastAudioGroup;
 	wxChoice* m_BitsPerSample;
@@ -89,6 +93,10 @@ private:
 	void OnTuningChanged(wxCommandEvent &e);
 	void OnDelaySpinChanged(wxSpinEvent& e);
 	void OnDelayChanged(wxCommandEvent &e);
+	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+    void OnReleaseTruncationLengthSpinChanged(wxSpinEvent& e);
+    void OnReleaseTruncationLengthChanged(wxCommandEvent &e);
+    // END TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
 	void OnAudioGroupChanged(wxCommandEvent &e);
 	void OnBitsPerSampleChanged(wxCommandEvent &e);
 	void OnCompressChanged(wxCommandEvent &e);
@@ -121,6 +129,10 @@ protected:
 		ID_EVENT_TUNING_SPIN,
 		ID_EVENT_DELAY,
 		ID_EVENT_DELAY_SPIN,
+		// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+        ID_EVENT_RELEASE_TRUNCATION_LENGTH,
+        ID_EVENT_RELEASE_TRUNCATION_LENGTH_SPIN,
+        // TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
 		ID_EVENT_AUDIO_GROUP,
 		ID_EVENT_IGNORE_PITCH,
 		ID_EVENT_LOOP_LOAD,

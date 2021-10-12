@@ -37,6 +37,7 @@ public:
 
 	GOrguePipeConfig& GetPipeConfig();
 
+    // Modify Tuning / Change Tuning
 	void ModifyTuning(float diff);
 
 	float GetEffectiveAmplitude();
@@ -45,6 +46,9 @@ public:
 	float GetDefaultTuning();
 
 	unsigned GetEffectiveDelay();
+    // TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+    unsigned GetEffectiveReleaseTruncationLength();
+    // END TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
 	wxString GetEffectiveAudioGroup();
 
 	unsigned GetEffectiveBitsPerSample();

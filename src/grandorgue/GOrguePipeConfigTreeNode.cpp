@@ -46,6 +46,16 @@ void GOrguePipeConfigTreeNode::UpdateTuning()
 		m_Callback->UpdateTuning();
 }
 
+// Update call items must be listed in GOrguePipeUpdateCallback.h in the "core" folder.
+// Update Release Truncation Length
+void GOrguePipeConfigTreeNode::UpdateReleaseTruncationLength()
+{
+    for(unsigned i = 0; i < m_Childs.size(); i++)
+        m_Childs[i]->GetPipeConfig().GetCallback()->UpdateReleaseTruncationLength();
+    if (m_Callback)
+        m_Callback->UpdateReleaseTruncationLength();
+}
+
 void GOrguePipeConfigTreeNode::UpdateAudioGroup()
 {
 	for(unsigned i = 0; i < m_Childs.size(); i++)
