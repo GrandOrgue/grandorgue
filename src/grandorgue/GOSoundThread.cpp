@@ -29,7 +29,7 @@ void GOSoundThread::Entry()
 		{
 			next = m_Scheduler->GetNextGroup();
 			if (next != NULL)
-				next->Run();
+				next->Run(this);
 		}
 		while (next != NULL);
 

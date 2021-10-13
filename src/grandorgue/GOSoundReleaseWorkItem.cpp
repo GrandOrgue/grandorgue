@@ -4,6 +4,7 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
+
 #include "GOSoundReleaseWorkItem.h"
 
 #include "GOSoundEngine.h"
@@ -48,7 +49,7 @@ void GOSoundReleaseWorkItem::Add(GO_SAMPLER* sampler)
 	m_List.Put(sampler);
 }
 
-void GOSoundReleaseWorkItem::Run()
+void GOSoundReleaseWorkItem::Run(GOSoundThread *pThread)
 {
 	GO_SAMPLER* sampler;
 	do

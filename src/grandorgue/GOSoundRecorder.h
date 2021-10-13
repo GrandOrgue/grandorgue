@@ -52,7 +52,7 @@ public:
 	unsigned GetGroup();
 	unsigned GetCost();
 	bool GetRepeat();
-	void Run();
+	void Run(GOSoundThread *thread = nullptr);
 	void Exec();
 
 	void Clear();

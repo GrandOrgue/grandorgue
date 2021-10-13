@@ -63,7 +63,7 @@ float GOSoundWindchestWorkItem::GetWindchestVolume()
 		return 1;
 }
 
-void GOSoundWindchestWorkItem::Run()
+void GOSoundWindchestWorkItem::Run(GOSoundThread *thread)
 {
 	if (m_Done)
 		return;

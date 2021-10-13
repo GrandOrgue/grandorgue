@@ -7,6 +7,8 @@
 #ifndef GOSOUNDWORKITEM_H
 #define GOSOUNDWORKITEM_H
 
+class GOSoundThread;
+
 class GOSoundWorkItem
 {
 public:
@@ -17,7 +19,7 @@ public:
 	virtual unsigned GetGroup() = 0;
 	virtual unsigned GetCost() = 0;
 	virtual bool GetRepeat() = 0;
-	virtual void Run() = 0;
+	virtual void Run(GOSoundThread *thread = nullptr) = 0;
 	virtual void Exec() = 0;
 
 	virtual void Clear() = 0;
