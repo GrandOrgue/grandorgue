@@ -10,7 +10,7 @@
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>/home/oleg/my-projects/grandorgue/GrandOrgue</sourceRootElem>
+                <sourceRootElem>../..</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
