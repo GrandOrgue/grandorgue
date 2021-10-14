@@ -27,6 +27,11 @@ void GOrgueThread::Start()
 	m_Thread = std::thread(GOrgueThread::EntryPoint, this);
 }
 
+void GOrgueThread::MarkForStop()
+{
+	m_Stop = true;
+}
+
 void GOrgueThread::Wait()
 {
 	if (m_Thread.joinable())
@@ -35,7 +40,7 @@ void GOrgueThread::Wait()
 
 void GOrgueThread::Stop()
 {
-	m_Stop = true;
+	MarkForStop();
 	Wait();
 }
 
