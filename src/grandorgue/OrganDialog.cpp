@@ -147,10 +147,10 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 	m_DelaySpin->SetRange(0, 10000);
 
 	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
-    grid->Add(new wxStaticText(this, wxID_ANY, _("Rel. Truncation (ms):")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
+    grid->Add(new wxStaticText(scroll, wxID_ANY, _("Rel. Truncation (ms):")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
     box2 = new wxBoxSizer(wxHORIZONTAL);
-    m_ReleaseTruncationLength = new wxTextCtrl(this, ID_EVENT_RELEASE_TRUNCATION_LENGTH, wxEmptyString);
-    m_ReleaseTruncationLengthSpin = new wxSpinButton(this, ID_EVENT_RELEASE_TRUNCATION_LENGTH_SPIN);
+	m_ReleaseTruncationLength = new wxTextCtrl(scroll, ID_EVENT_RELEASE_TRUNCATION_LENGTH, wxEmptyString);
+    m_ReleaseTruncationLengthSpin = new wxSpinButton(scroll, ID_EVENT_RELEASE_TRUNCATION_LENGTH_SPIN);
     box2->Add(m_ReleaseTruncationLength);
     box2->Add(m_ReleaseTruncationLengthSpin);
     grid->Add(box2);

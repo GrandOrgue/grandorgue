@@ -236,18 +236,18 @@ GOrgueFrame::GOrgueFrame(
 	for(unsigned i = 1; i <= 60; i++)
 		choices.push_back(wxString::Format(_("%d ms"), i * 50));
 	m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
+    
+    /*  m_ReleaseLength - SetReleaseLength
+     *  Link to GOSoundEngine.cpp, CODE SECTION:
+     *  void GOSoundEngine::SetReleaseLength(unsigned reverb)
+     *  { m_ReleaseLength = reverb; } */
+     tb->AddControl(m_ReleaseLength);
+	unsigned n = m_Settings.ReleaseLength();
+	m_ReleaseLength->SetSelection(n / 50);
+    // m_Sound.GetEngine Links to GoSoundEngine.cpp and GOrgueSound.cpp, GOSoundEngine& GOrgueSound::GetEngine
+	m_Sound.GetEngine().SetReleaseLength(n);
 
-  tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
-  choices.clear();
-  choices.push_back(_("Max"));
-  for(unsigned i = 1; i <= 60; i++)
-	  choices.push_back(wxString::Format(_("%d ms"), i * 50));
-  m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
-  tb->AddControl(m_ReleaseLength);
-  unsigned n = m_Settings.ReleaseLength();
-  m_ReleaseLength->SetSelection(n / 50);
-  m_Sound.GetEngine().SetReleaseLength(n);
-
+  // Transpose, Transposer
   tb->AddTool(ID_TRANSPOSE, _("&Transpose"), GetImage_transpose(), _("Transpose"), wxITEM_NORMAL);
   m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
   tb->AddControl(m_Transpose);
@@ -1050,13 +1050,7 @@ void GOrgueFrame::OnSettingsReleaseLength(wxCommandEvent& event)
 {
 	m_Settings.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
 	m_Sound.GetEngine().SetReleaseLength(m_Settings.ReleaseLength());
-
-void GOrgueFrame::OnSettingsReleaseLength(wxCommandEvent& event)
-{
-	m_Settings.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
-	m_Sound.GetEngine().SetReleaseLength(m_Settings.ReleaseLength());
 }
-
 void GOrgueFrame::OnHelpAbout(wxCommandEvent& event)
 {
 	DoSplash(false);
