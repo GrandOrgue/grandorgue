@@ -3437,10 +3437,10 @@ sends the label contents following the Hauptwerk&#8482; standards.
     <para>
 This schema describes the close relations that exist between the real-world audio hardware capablities
 and the sample set disposition as provided by the sample set designer.
-For illustration, the free sampleset of Bure? Church is customized to build a totally different spatial disposition. Here are the assumptions:
+For illustration, the free sampleset of Bureå Church is customized to build a totally different spatial disposition. Here are the assumptions:
     </para>
     <itemizedlist mark="bullet">
-    <listitem><simpara>The organ has a main case and a separate choir (R?ckPositiv) case in the organist's back</simpara></listitem>
+    <listitem><simpara>The organ has a main case and a separate choir (RückPositiv) case in the organist's back</simpara></listitem>
     <listitem><simpara>The console is embedded facing the main case, therefore the main case sounds "front" and the choir case sounds "rear"</simpara></listitem>
     <listitem><simpara>The organ has 2 pedal turrets on the far left and right sides of the main case</simpara></listitem>
     <listitem><simpara>The organ has an echo keyboard in the basement of the main case</simpara></listitem>
@@ -3471,7 +3471,7 @@ For illustration, the free sampleset of Bure? Church is customized to build a to
     <itemizedlist>
       <listitem>
         <simpara>
-          sound the Choir (Sv?llverk) through the rear speakers, full volume
+          sound the Choir (Svällverk) through the rear speakers, full volume
         </simpara>
       </listitem>
       <listitem>
@@ -3481,7 +3481,7 @@ For illustration, the free sampleset of Bure? Church is customized to build a to
       </listitem>
       <listitem>
         <simpara>
-          sound the Echo (Br?stverk) through the front speakers, softened volume
+          sound the Echo (Bröstverk) through the front speakers, softened volume
         </simpara>
       </listitem>
       <listitem>
@@ -5244,11 +5244,6 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective tuning.</para>
       </sect2>
       <sect2>
-        <title>Tracker</title>
-        <para>This spinner allows to define a delay in ms. This delay simulates the time spent by the tracker system to open the valve after a key is depressed.</para>
-        <para>Tracker delay is cumulative from organ level down to pipe level.</para>
-      </sect2>
-       <sect2>
         <title>Release Truncation</title>
         <para>This spinner allows to define the length of a release in ms.</para>
         <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective release length.</para>
@@ -5471,7 +5466,7 @@ All other menu items (above <emphasis>Coupler</emphasis>) are defined within
 the loaded sampleset and should be documented in the sampleset's specific user
 manual (if any). They usually are referred to as <emphasis>Custom Panels</emphasis>.
     </para>
-    <para>Custom Panel menu items can be organized in submenus as shown in this screen shot taken from Pite? Music School sampleset.</para>
+    <para>Custom Panel menu items can be organized in submenus as shown in this screen shot taken from Piteå Music School sampleset.</para>
     <mediaobject><imageobject><imagedata fileref="images/pitea_panel_menu.png" /></imageobject></mediaobject>
     <sect1 id="couplers">
       <title>Coupler</title>
