@@ -566,14 +566,13 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 					* for an organ with a release length of 1 second or less, time_to_full_reverb is around 100 ms 
 					* time_to_full_reverb is linear in between */
 
-                    /* Release Sample Truncation Settings - 11-23-20 
+                    /* Release Sample Truncation Settings
                     TRANSFER "ReleaseTruncationLength" Values for Each Pipe, to "truncation_fade_len". */
                     unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
 
                     /* Value For Maximum Release Length. */ 
                     int time_to_full_reverb = 0;
 
-                    /* Release Sample Truncation Settings - 11-23-20 
 					 * If (Pipe999ReleaseTruncationLength) release truncation length values exist in organ settings or ODF... */
                     if (truncation_fade_len > 0) 
                     {	/* Maximum Release Length = Release Truncation Length */
@@ -601,7 +600,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 
             /*  Algorithm to Choose Which Release Truncation or Scaling Method to activate. */
 			unsigned cross_fade_len = this_pipe->GetReleaseCrossfadeLength();
-			unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength(); // Added 11-23-20 for Per-Pipe Release Truncation
+			unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
 			new_sampler->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
 			
 			/* If Release Length Set in GO GUI toolbar is larger than 0 */
