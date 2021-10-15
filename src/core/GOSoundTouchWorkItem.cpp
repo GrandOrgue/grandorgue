@@ -30,7 +30,7 @@ bool GOSoundTouchWorkItem::GetRepeat()
 	return false;
 }
 
-void GOSoundTouchWorkItem::Run()
+void GOSoundTouchWorkItem::Run(GOSoundThread *thread)
 {
 	GOMutexLocker locker(m_Mutex);
 	m_Pool.TouchMemory(m_Stop);

@@ -84,7 +84,7 @@ bool GOSoundGroupWorkItem::GetRepeat()
 	return true;
 }
 
-void GOSoundGroupWorkItem::Run()
+void GOSoundGroupWorkItem::Run(GOSoundThread *thread)
 {
 	if (m_Done == 3)
 		return;

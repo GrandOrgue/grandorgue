@@ -14,7 +14,6 @@
 GOSoundThread::GOSoundThread(GOSoundScheduler* scheduler):
 	GOrgueThread(),
 	m_Scheduler(scheduler),
-	m_Stop(false),
 	m_Condition(m_Mutex)
 {
 	wxLogDebug(wxT("Create Thread"));
@@ -22,20 +21,26 @@ GOSoundThread::GOSoundThread(GOSoundScheduler* scheduler):
 
 void GOSoundThread::Entry()
 {
-	while(!ShouldStop() && !m_Stop)
+	while (! ShouldStop())
 	{
-		GOSoundWorkItem *next;
+		bool shouldStop = false;
+
 		do
 		{
-			next = m_Scheduler->GetNextGroup();
-			if (next != NULL)
-				next->Run();
+			GOSoundWorkItem *next = m_Scheduler->GetNextGroup();
+
+			if (next == NULL)
+			  break;
+			next->Run(this);
+			shouldStop = ShouldStop();
 		}
-		while (next != NULL);
+		while (! shouldStop);
+
+		if (shouldStop)
+			break;
 
 		GOMutexLocker lock(m_Mutex);
-		if (ShouldStop() || m_Stop)
-			break;
+
 		m_Condition.Wait();
 	}
 	return;
@@ -53,10 +58,7 @@ void GOSoundThread::Wakeup()
 
 void GOSoundThread::Delete()
 {
-	{
-		GOMutexLocker lock(m_Mutex);
-		m_Stop = true;
-		m_Condition.Signal();
-	}
-	Stop();
+	MarkForStop();
+	Wakeup();
+	Wait();
 }

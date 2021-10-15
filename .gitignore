@@ -7,7 +7,6 @@
 /help/help/
 /help/help_de/
 /lib/
-/nbproject/private/
 /po/GrandOrgue.pot.src_lst
 /resources/GrandOrgue.desktop
 /resources/GrandOrgue.1
@@ -16,6 +15,9 @@
 /src/core/GrandOrgueDef.h/
 /src/images/*.cpp
 
+/build-for/
+/ide-projects/NetBeans12/nbproject/private/
+
 *.a
 CMakeCache.txt
 CMakeFiles/
@@ -23,6 +25,4 @@ cmake_install.cmake
 Makefile
 /_CPack_Packages/
 
-/build-for/
-src/.DS_Store
-.DS_Store
+
