@@ -244,10 +244,10 @@ GOrgueFrame::GOrgueFrame(
      tb->AddControl(m_ReleaseLength);
 	unsigned n = m_Settings.ReleaseLength();
 	m_ReleaseLength->SetSelection(n / 50);
-    // m_Sound.GetEngine Links to GoSoundEngine.cpp and GOrgueSound.cpp, GOSoundEngine& GOrgueSound::GetEngine
+    // m_Sound.GetEngine - Links to GoSoundEngine.cpp and GOrgueSound.cpp, GOSoundEngine& GOrgueSound::GetEngine
 	m_Sound.GetEngine().SetReleaseLength(n);
 
-  // Transpose, Transposer
+  // Transposer
   tb->AddTool(ID_TRANSPOSE, _("&Transpose"), GetImage_transpose(), _("Transpose"), wxITEM_NORMAL);
   m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
   tb->AddControl(m_Transpose);

@@ -13,11 +13,10 @@
 
 class GOSoundScheduler;
 
-class GOSoundThread : private GOrgueThread
+class GOSoundThread : public GOrgueThread
 {
 private:
 	GOSoundScheduler* m_Scheduler;
-	bool m_Stop;
 
 	GOMutex m_Mutex;
 	GOCondition m_Condition;

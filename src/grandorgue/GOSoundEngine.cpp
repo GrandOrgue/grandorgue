@@ -566,29 +566,25 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 					* for an organ with a release length of 1 second or less, time_to_full_reverb is around 100 ms 
 					* time_to_full_reverb is linear in between */
 
-                    // TRUNCATION SETTINGS � 11-23-20 - Release Sample Truncation Settings
-                    // TRANSFER "ReleaseTruncationLength" Values for Each Pipe, to Variable "truncation_fade_len".
+                    /* Release Sample Truncation Settings - 11-23-20 
+                    TRANSFER "ReleaseTruncationLength" Values for Each Pipe, to "truncation_fade_len". */
                     unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
 
-                    // VARIABLE DECLARATION For Maximum Release Length.
+                    /* Value For Maximum Release Length. */ 
                     int time_to_full_reverb = 0;
 
-                    // BEGIN TRUNCATION SETTINGS - 11-23-20 - Release Sample Truncation Settings
-                     /* ***************************************** *\
-                         *              IF STATEMENT:                *
-                         * IF: release truncation values exist from  *
-                         * (Pipe999ReleaseTruncationLength)...       *
-                        \* ***************************************** */
-                    if (truncation_fade_len > 0) // If (Pipe999ReleaseTruncationLength) release truncation length values exist in organ settings or ODF...
-                    {
-                        /*Maximum Release Length*/time_to_full_reverb = truncation_fade_len/*Release Truncation Length*/;
+                    /* Release Sample Truncation Settings - 11-23-20 
+					 * If (Pipe999ReleaseTruncationLength) release truncation length values exist in organ settings or ODF... */
+                    if (truncation_fade_len > 0) 
+                    {	/* Maximum Release Length = Release Truncation Length */
+                        time_to_full_reverb = truncation_fade_len;
                     }
 
-                    else // If release truncation length values are absent from organ settings or ODF...
-                    {
-                        /*Maximum Release Length*/time_to_full_reverb = /*Calculated Length of WAV Release Samples*/((60 * release_section->GetLength()) / release_section->GetSampleRate()) + 40;
+                    else /* If release truncation length values are absent from organ settings or ODF...
+						/* Maximum Release Length = /* Calculated Length of WAV Release Samples* */
+                    {	
+                        time_to_full_reverb = ((60 * release_section->GetLength()) / release_section->GetSampleRate()) + 40;
                     }
-                    // END TRUNCATION SETTINGS - 11-23-20 - Release Sample Truncation Settings
                     
 					if (time_to_full_reverb > 350 ) time_to_full_reverb = 350;
 					if (time_to_full_reverb < 100 ) time_to_full_reverb = 100;
@@ -599,8 +595,8 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 						* 700 ms and 6 s for release with large reverberation e.g. long release */ 
 						gain_decay_length = time_to_full_reverb + 6000 * time / time_to_full_reverb;
 					}
-				}/* *************** END: if (m_ScaledReleases) *************** */
-			}/* *************** END: if (not_a_tremulant) *************** */
+				}
+			}
 
 
             /*  ************************************************  *\
@@ -612,43 +608,35 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 			unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength(); // Added 11-23-20 for Per-Pipe Release Truncation
 			new_sampler->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
 			
-			// gain_decay_length is Activated by RELEASE SAMPLE SCALING
-            // RELEASE LENGTH parameter, linked to GOrgueSettings.cpp
-            // If Release Length Set in GO GUI is larger than 0, Set Release Decay (gain_decay_length) to equal GUI value.
-
-
-            if (m_ReleaseLength/*Toolbar value for organ-wide truncation*/ > 0) // IF organ-wide release length truncation is set in toolbar...
+			/* gain_decay_length is Activated by RELEASE SAMPLE SCALING	*
+             * RELEASE LENGTH parameter, linked to GOrgueSettings.cpp	*
+             * If Release Length Set in GO GUI toolbar is larger than 0 */
+            if (m_ReleaseLength > 0)
             {
-                // If Gain Decay Length is greater than toolbar value, or equal to 0, gain_decay_length = toolbar value.
+                /* If Gain Decay Length is greater than toolbar value, or equal to 0, gain_decay_length = toolbar value. */
                 if ( m_ReleaseLength/*Toolbar Value*/ < gain_decay_length/* scaling value, OR...*/ || gain_decay_length/*Scaling value*/ == 0 )
                     gain_decay_length/* Release Scaling value*/ = m_ReleaseLength/*Toolbar truncation value.*/;
             }
 
-            // If truncation values exist and release scaling has not been enabled, gain_decay_length = truncation value.
+            /* If truncation values exist and release scaling has not been enabled, gain_decay_length = truncation value. */
             else if (truncation_fade_len > 0 && gain_decay_length == 0)
-            {  /*  FADER - Link to GOSoundFader.h, CODE SECTION:
-                  *   public: void StartDecay(unsigned ms, unsigned sample_rate); */
+            {  /*  FADER - Link to GOSoundFader.h */
                 gain_decay_length = truncation_fade_len;
             }
 
             if (gain_decay_length > 0)
-            /*  FADER - Link to StartDecay Method in GOSoundFader.h, CODE SECTION:
-               *  public: void StartDecay(unsigned ms, unsigned sample_rate); */
+            /*  FADER - Link to StartDecay in GOSoundFader.h */
                 new_sampler->fader.StartDecay(gain_decay_length, m_SampleRate);
-
-
 
             if (m_ReleaseAlignmentEnabled && release_section->SupportsStreamAlignment())
             {
                 release_section->InitAlignedStream(&new_sampler->stream, &handle->stream);
             }
             else
-            {   // m_ResamplerCoefs to control pitch and tuning
+            {   /* m_ResamplerCoefs to control pitch and tuning */
                 release_section->InitStream(&m_ResamplerCoefs, &new_sampler->stream, this_pipe->GetTuning() / (float)m_SampleRate);
             }
             new_sampler->is_release = true;
-            // END Parameters for Release Length Scaling Set in GrandOrgueFrame.cpp
-
 
 			int windchest_index;
 			if (not_a_tremulant)
@@ -667,9 +655,9 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 			new_sampler->fader.SetVelocityVolume(new_sampler->pipe->GetVelocityVolume(new_sampler->velocity));
 			StartSampler(new_sampler, windchest_index, handle->audio_group_id);
 			handle->time = m_CurrentTime;
-		}/*  END IF: new_sampler != NULL */
-	}/*  END IF: WINDCHEST VOLUME WRAPPER */
-}/*  END RELEASE SAMPLER */
+		}
+	}
+}
 
 
 uint64_t GOSoundEngine::StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)

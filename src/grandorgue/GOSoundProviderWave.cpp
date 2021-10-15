@@ -27,12 +27,11 @@ void GOSoundProviderWave::SetAmplitude(float fixed_amplitude, float gain)
 	m_Gain = fixed_amplitude * powf(10.0f, gain * 0.05f);
 }
 
-// Links to GOrgueSoundingPipe.cpp -- Added 12-9-20
+/*  Links to GOrgueSoundingPipe.cpp -- Added 12-9-20 */ 
 void GOSoundProviderWave::SetReleaseTruncationLength(unsigned truncation)
 {
     m_ReleaseTruncationLength = truncation;
-} // END Added 12-9-20
-
+}
 unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample)
 {
 	if (bits_per_sample <= 8)
@@ -334,15 +333,15 @@ void GOSoundProviderWave::LoadFromFile(std::vector<attack_load_info> attacks, st
 			m_MidiKeyNumber = midi_key_number;
 			m_MidiPitchFract = 0;
 		}
-		// Release Crossfade Parameter Link from ODF File
-        // Typo Correction of crossFASE to crossfade.
-        // If CROSSFADE values appear in the organ definition file, use those values to set the crossfade.
+		/*  Release Crossfade Parameter Link from ODF File
+         *  Typo Correction of crossFASE to crossfade.
+         *  If CROSSFADE values appear in the organ definition file, use those values to set the crossfade. */ 
 		if (release_crossfase_length)
 			m_ReleaseCrossfadeLength = release_crossfase_length;
 		else
 			m_ReleaseCrossfadeLength = GetFaderLength(m_MidiKeyNumber);
 
-		// Release Truncation Parameter Link from ODF File
+		/* Release Truncation Parameter Link from ODF File */
         if (release_truncation_length)
         {
             m_ReleaseTruncationLength = release_truncation_length;

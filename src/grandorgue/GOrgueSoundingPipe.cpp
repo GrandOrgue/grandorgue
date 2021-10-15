@@ -80,7 +80,7 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 	m_SampleMidiKeyNumber = -1;
 	m_LoopCrossfadeLength = 0;
 	m_ReleaseCrossfadeLength = 0;
-	m_ReleaseTruncationLength = 0; // 11-20-20 � New Pipe Release Truncation Mechanism
+	m_ReleaseTruncationLength = 0; // 11-20-20 - New Pipe Release Truncation Mechanism
 
 	UpdateAmplitude();
 	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
@@ -202,17 +202,17 @@ bool GOrgueSoundingPipe::SaveCache(GOrgueCacheWriter& cache)
 
 void GOrgueSoundingPipe::UpdateHash(GOrgueHash& hash)
 {
-	hash.Update(m_Filename); // Update Hash Filename
+	hash.Update(m_Filename);
 	hash.Update(m_PipeConfig.GetEffectiveBitsPerSample());
 	hash.Update(m_PipeConfig.GetEffectiveCompress());
 	hash.Update(m_PipeConfig.GetEffectiveChannels());
 	hash.Update(m_PipeConfig.GetEffectiveLoopLoad());
 	hash.Update(m_PipeConfig.GetEffectiveAttackLoad());
 	hash.Update(m_PipeConfig.GetEffectiveReleaseLoad());
-	hash.Update(m_SampleMidiKeyNumber); // Update Hash Sample MIDI Key Number
-	hash.Update(m_LoopCrossfadeLength); // Update Hash Loop Crossfade Length
-	hash.Update(m_ReleaseCrossfadeLength); // Update Hash Release Crossfade Length
-	hash.Update(m_ReleaseTruncationLength); // Update Hash Release Truncation Length
+	hash.Update(m_SampleMidiKeyNumber);
+	hash.Update(m_LoopCrossfadeLength);
+	hash.Update(m_ReleaseCrossfadeLength);
+	hash.Update(m_ReleaseTruncationLength);
 
 	hash.Update(m_AttackInfo.size());
 	for(unsigned i = 0; i < m_AttackInfo.size(); i++)
@@ -373,8 +373,8 @@ void GOrgueSoundingPipe::UpdateAmplitude()
 	m_SoundProvider.SetAmplitude(m_PipeConfig.GetEffectiveAmplitude(), m_PipeConfig.GetEffectiveGain());
 }
 
-// UPDATE RELEASE TRUNCATION LENGTH FROM ORGAN SETTINGS PANNEL -- ADDED 12-9-20
-// Links to GOSoundProviderWave.cpp
+/* UPDATE RELEASE TRUNCATION LENGTH FROM ORGAN SETTINGS PANNEL -- ADDED 12-9-20
+ * Links to GOSoundProviderWave.cpp */
 void GOrgueSoundingPipe::UpdateReleaseTruncationLength()
 {
     m_SoundProvider.SetReleaseTruncationLength(m_PipeConfig.GetEffectiveReleaseTruncationLength());

@@ -112,7 +112,7 @@ private:
 
 	void UpdateAmplitude();
 	void UpdateTuning();
-	void UpdateReleaseTruncationLength(); // Update Release Truncation Length, Added 12-9-20
+	void UpdateReleaseTruncationLength(); /* Update Release Truncation Length, Added 12-9-20 */
 	void UpdateAudioGroup();
 
 	wxString GetOrganHash();
