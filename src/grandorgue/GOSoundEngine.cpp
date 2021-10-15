@@ -599,33 +599,26 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 			}
 
 
-            /*  ************************************************  *\
-               *  Algorithm to Chooses Which Release Truncation     *
-               *  or Scaling Method to activate.                    *
-              \*  ************************************************  */
-
+            /*  Algorithm to Choose Which Release Truncation or Scaling Method to activate. */
 			unsigned cross_fade_len = this_pipe->GetReleaseCrossfadeLength();
 			unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength(); // Added 11-23-20 for Per-Pipe Release Truncation
 			new_sampler->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
 			
-			/* gain_decay_length is Activated by RELEASE SAMPLE SCALING	*
-             * RELEASE LENGTH parameter, linked to GOrgueSettings.cpp	*
-             * If Release Length Set in GO GUI toolbar is larger than 0 */
+			/* If Release Length Set in GO GUI toolbar is larger than 0 */
             if (m_ReleaseLength > 0)
             {
-                /* If Gain Decay Length is greater than toolbar value, or equal to 0, gain_decay_length = toolbar value. */
-                if ( m_ReleaseLength/*Toolbar Value*/ < gain_decay_length/* scaling value, OR...*/ || gain_decay_length/*Scaling value*/ == 0 )
-                    gain_decay_length/* Release Scaling value*/ = m_ReleaseLength/*Toolbar truncation value.*/;
+                /* If Gain Decay Length (gain_decay_length) is greater than toolbar value (m_ReleaseLength), or equal to 0, gain_decay_length = toolbar value. */
+                if ( m_ReleaseLength < gain_decay_length || gain_decay_length == 0 )
+                    gain_decay_length = m_ReleaseLength;
             }
 
             /* If truncation values exist and release scaling has not been enabled, gain_decay_length = truncation value. */
             else if (truncation_fade_len > 0 && gain_decay_length == 0)
-            {  /*  FADER - Link to GOSoundFader.h */
+            { 
                 gain_decay_length = truncation_fade_len;
             }
 
             if (gain_decay_length > 0)
-            /*  FADER - Link to StartDecay in GOSoundFader.h */
                 new_sampler->fader.StartDecay(gain_decay_length, m_SampleRate);
 
             if (m_ReleaseAlignmentEnabled && release_section->SupportsStreamAlignment())
@@ -633,7 +626,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
                 release_section->InitAlignedStream(&new_sampler->stream, &handle->stream);
             }
             else
-            {   /* m_ResamplerCoefs to control pitch and tuning */
+            {   
                 release_section->InitStream(&m_ResamplerCoefs, &new_sampler->stream, this_pipe->GetTuning() / (float)m_SampleRate);
             }
             new_sampler->is_release = true;

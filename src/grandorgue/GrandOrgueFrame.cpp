@@ -238,13 +238,11 @@ GOrgueFrame::GOrgueFrame(
 	m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
     
     /*  m_ReleaseLength - SetReleaseLength
-     *  Link to GOSoundEngine.cpp, CODE SECTION:
-     *  void GOSoundEngine::SetReleaseLength(unsigned reverb)
-     *  { m_ReleaseLength = reverb; } */
+     *  Links to GOSoundEngine.cpp */
      tb->AddControl(m_ReleaseLength);
 	unsigned n = m_Settings.ReleaseLength();
 	m_ReleaseLength->SetSelection(n / 50);
-    // m_Sound.GetEngine - Links to GoSoundEngine.cpp and GOrgueSound.cpp, GOSoundEngine& GOrgueSound::GetEngine
+    // m_Sound.GetEngine - Links to GoSoundEngine.cpp and GOrgueSound.cpp
 	m_Sound.GetEngine().SetReleaseLength(n);
 
   // Transposer
@@ -1043,9 +1041,7 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 
 /*  m_ReleaseLength - SetReleaseLength
  *  Release Truncation Mechinism for ALL Samples
- *  Link to GOSoundEngine.cpp, CODE SECTION:
- *  void GOSoundEngine::SetReleaseLength(unsigned reverb)
- *  { m_ReleaseLength = reverb; } */
+ *  Link to GOSoundEngine.cpp */
 void GOrgueFrame::OnSettingsReleaseLength(wxCommandEvent& event)
 {
 	m_Settings.ReleaseLength(m_ReleaseLength->GetSelection() * 50);

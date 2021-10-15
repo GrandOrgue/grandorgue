@@ -110,7 +110,7 @@ unsigned GOrguePipeConfigNode::GetEffectiveDelay()
 		return m_PipeConfig.GetDelay();
 }
 
-// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+// Release Sample Truncation Settings
 unsigned GOrguePipeConfigNode::GetEffectiveReleaseTruncationLength()
 {
     if (m_parent)
@@ -118,7 +118,6 @@ unsigned GOrguePipeConfigNode::GetEffectiveReleaseTruncationLength()
     else
         return m_PipeConfig.GetReleaseTruncationLength();
 }
-// END TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
 
 wxString GOrguePipeConfigNode::GetEffectiveAudioGroup()
 {

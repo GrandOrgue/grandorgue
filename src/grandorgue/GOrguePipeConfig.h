@@ -30,10 +30,8 @@ private:
 	float m_DefaultTuning;
 	unsigned m_Delay;
 	unsigned m_DefaultDelay;
-	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
     int m_ReleaseTruncationLength;
     int m_DefaultReleaseTruncationLength;
-    // TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
 	int m_BitsPerSample;
 	int m_Compress;
 	int m_Channels;
@@ -66,11 +64,9 @@ public:
 	unsigned GetDefaultDelay();
 	void SetDelay(unsigned delay);
 	
-    // TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
     unsigned GetReleaseTruncationLength();
     unsigned GetDefaultReleaseTruncationLength();
     void SetReleaseTruncationLength(unsigned truncation);
-    // END TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
 
 	const wxString& GetAudioGroup();
 	void SetAudioGroup(const wxString& str);

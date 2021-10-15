@@ -34,8 +34,8 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 	m_TemperamentOffset(0),
 	m_HarmonicNumber(harmonic_number),
 	m_LoopCrossfadeLength(0),
-	m_ReleaseCrossfadeLength(0), // Fetches Release Crossfade Length Value from ODF
-	m_ReleaseTruncationLength(0), // 11-20-20 - New Pipe Release Truncation Mechanism
+	m_ReleaseCrossfadeLength(0),
+	m_ReleaseTruncationLength(0),
 	m_PitchCorrection(pitch_correction),
 	m_MinVolume(min_volume),
 	m_MaxVolume(max_volume),
@@ -80,7 +80,7 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 	m_SampleMidiKeyNumber = -1;
 	m_LoopCrossfadeLength = 0;
 	m_ReleaseCrossfadeLength = 0;
-	m_ReleaseTruncationLength = 0; // 11-20-20 - New Pipe Release Truncation Mechanism
+	m_ReleaseTruncationLength = 0;
 
 	UpdateAmplitude();
 	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
@@ -114,7 +114,7 @@ void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString 
 	m_SampleMidiKeyNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MIDIKeyNumber"), -1, 127, false, -1);
 	m_LoopCrossfadeLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("LoopCrossfadeLength"), 0, 120, false, 0);
 	m_ReleaseCrossfadeLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseCrossfadeLength"), 0, 200, false, 0);
-	// 11-20-20 � New Pipe Release Truncation Mechanism
+	// Pipe Release Truncation Mechanism
     m_ReleaseTruncationLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 10000, false, 0);
 	m_RetunePipe = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("AcceptsRetuning"), false, m_RetunePipe);
 	UpdateAmplitude();
@@ -373,7 +373,7 @@ void GOrgueSoundingPipe::UpdateAmplitude()
 	m_SoundProvider.SetAmplitude(m_PipeConfig.GetEffectiveAmplitude(), m_PipeConfig.GetEffectiveGain());
 }
 
-/* UPDATE RELEASE TRUNCATION LENGTH FROM ORGAN SETTINGS PANNEL -- ADDED 12-9-20
+/* UPDATE RELEASE TRUNCATION LENGTH FROM ORGAN SETTINGS PANNEL
  * Links to GOSoundProviderWave.cpp */
 void GOrgueSoundingPipe::UpdateReleaseTruncationLength()
 {

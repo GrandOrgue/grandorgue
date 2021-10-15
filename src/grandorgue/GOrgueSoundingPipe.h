@@ -32,15 +32,15 @@ private:
 	unsigned m_AudioGroupID;
 	bool m_Percussive;
 	float m_TemperamentOffset;
-	unsigned m_HarmonicNumber; /* Harmonic Number */
-	unsigned m_LoopCrossfadeLength; /* Loop Crossfade Length */
-	unsigned m_ReleaseCrossfadeLength; /* Release Crossfade Length */
-    unsigned m_ReleaseTruncationLength; /* 11-20-20 — New Pipe Release Truncation Mechanism */
+	unsigned m_HarmonicNumber;
+	unsigned m_LoopCrossfadeLength;
+	unsigned m_ReleaseCrossfadeLength;
+    unsigned m_ReleaseTruncationLength;
 	float m_PitchCorrection;
 	float m_MinVolume;
 	float m_MaxVolume;
 	int m_SampleMidiKeyNumber;
-	bool m_RetunePipe; /* Pipe Tuning / Retuning Parameter */
+	bool m_RetunePipe;
 	GOSoundProviderWave m_SoundProvider;
 	GOrguePipeConfigNode m_PipeConfig;
 
@@ -62,7 +62,7 @@ private:
 	void SetTremulant(bool on);
 
 	void UpdateAmplitude();
-	void UpdateReleaseTruncationLength(); /* Release Truncation Parameter added on 12-9-20 */ 
+	void UpdateReleaseTruncationLength();
 	void UpdateTuning();
 	void UpdateAudioGroup();
 

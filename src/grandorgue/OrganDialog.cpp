@@ -56,7 +56,6 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_TEXT(ID_EVENT_TUNING, OrganDialog::OnTuningChanged)
 	EVT_SPIN(ID_EVENT_TUNING_SPIN, OrganDialog::OnTuningSpinChanged)
 	EVT_TEXT(ID_EVENT_DELAY, OrganDialog::OnDelayChanged)
-	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
     EVT_TEXT(ID_EVENT_RELEASE_TRUNCATION_LENGTH, OrganDialog::OnReleaseTruncationLengthChanged)
     EVT_SPIN(ID_EVENT_RELEASE_TRUNCATION_LENGTH_SPIN, OrganDialog::OnReleaseTruncationLengthSpinChanged)
 	EVT_SPIN(ID_EVENT_DELAY_SPIN, OrganDialog::OnDelaySpinChanged)
@@ -145,7 +144,7 @@ OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueF
 	grid->Add(box2);
 	m_DelaySpin->SetRange(0, 10000);
 
-	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+	// Release Sample Truncation Settings
     grid->Add(new wxStaticText(scroll, wxID_ANY, _("Rel. Truncation (ms):")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
     box2 = new wxBoxSizer(wxHORIZONTAL);
 	m_ReleaseTruncationLength = new wxTextCtrl(scroll, ID_EVENT_RELEASE_TRUNCATION_LENGTH, wxEmptyString);
@@ -379,7 +378,7 @@ void OrganDialog::Load()
 		m_Delay->ChangeValue(wxEmptyString);
 		m_Delay->Disable();
 		m_DelaySpin->Disable();
-		// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+		// Release Sample Truncation Settings
         m_ReleaseTruncationLength->ChangeValue(wxEmptyString);
         m_ReleaseTruncationLength->Disable();
         m_ReleaseTruncationLengthSpin->Disable();
@@ -409,7 +408,7 @@ void OrganDialog::Load()
 			m_Tuning->ChangeValue(wxEmptyString);
 		if (!m_Delay->IsModified())
 			m_Delay->ChangeValue(wxEmptyString);
-		// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+		// Release Sample Truncation Settings
         if (!m_ReleaseTruncationLength->IsModified())
             m_ReleaseTruncationLength->ChangeValue(wxEmptyString);
 
@@ -468,7 +467,7 @@ void OrganDialog::Load()
 	m_TuningSpin->Enable();
 	m_Delay->Enable();
 	m_DelaySpin->Enable();
-	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+	// Release Sample Truncation Settings
     m_ReleaseTruncationLength->Enable();
     m_ReleaseTruncationLengthSpin->Enable();
 	m_AudioGroup->Enable();
@@ -485,9 +484,8 @@ void OrganDialog::Load()
 	float gain = m_Last->config->GetGain();
 	float tuning = m_Last->config->GetTuning();
 	unsigned delay = m_Last->config->GetDelay();
-	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
-    /*  LINKS TO GOrguePipeConfig.cpp, CODE:
-     *   unsigned GOrguePipeConfig::GetTruncation() */
+	//  Release Sample Truncation Settings
+    /*  LINKS TO GOrguePipeConfig.cpp */
     unsigned truncation = m_Last->config->GetReleaseTruncationLength();
 
 	if (entries.size() == 1)
@@ -502,7 +500,7 @@ void OrganDialog::Load()
 	if (entries.size() == 1)
 		m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
 	m_DelaySpin->SetValue(delay);
-	// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+	// Release Sample Truncation Settings
     if (entries.size() == 1)
         m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%u"), truncation));
     m_ReleaseTruncationLengthSpin->SetValue(truncation);
@@ -600,7 +598,7 @@ void OrganDialog::OnDelayChanged(wxCommandEvent &e)
 	Modified();
 }
 
-// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+// Release Sample Truncation Settings
 void OrganDialog::OnReleaseTruncationLengthSpinChanged(wxSpinEvent& e)
 {
     m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%u"), (unsigned)m_ReleaseTruncationLengthSpin->GetValue()));
@@ -668,8 +666,8 @@ bool OrganDialog::Changed()
 		changed = true;
 	if (m_Delay->IsModified())
 	  changed = true;
-    // TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
-    if (m_ReleaseTruncationLength->IsModified())
+    if (m_ReleaseTruncationLength->IsModified()) // Release Sample Truncation Settings
+
         changed = true;
 	if (m_AudioGroup->GetValue() != m_LastAudioGroup)
 		changed = true;
@@ -719,7 +717,7 @@ void OrganDialog::FillTree()
 void OrganDialog::OnEventApply(wxCommandEvent &e)
 {
 	double amp, gain, tuning;
-	long delay, truncation; // TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+	long delay, truncation; // Release Sample Truncation Settings
 
 	wxArrayTreeItemIds entries;
 	m_Tree->GetSelections(entries);
@@ -756,7 +754,7 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 		return;
 	}
 
-	    // TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
+	    // TRUNCATION SETTINGS — Release Sample Truncation Settings
     if (!m_ReleaseTruncationLength->GetValue().ToLong(&truncation) &&
         (m_ReleaseTruncationLength->IsModified() &&
          (truncation < 0 || truncation > 10000)))
@@ -778,9 +776,8 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 			e->config->SetTuning(tuning);
 		if (m_Delay->IsModified())
 			e->config->SetDelay(delay);
-		// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
-        /*  LINKS TO GOrguePipeConfig.cpp, CODE:
-         *   void GOrguePipeConfig::SetTruncation(unsigned truncation) */
+		/* 	Release Sample Truncation Settings
+         *	LINKS TO GOrguePipeConfig.cpp */
         if (m_ReleaseTruncationLength->IsModified())
             e->config->SetReleaseTruncationLength(truncation);
 		if (m_AudioGroup->GetValue() != m_LastAudioGroup)
@@ -855,8 +852,8 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 		e->config->SetGain(e->config->GetDefaultGain());
 		e->config->SetTuning(e->config->GetDefaultTuning());
 		e->config->SetDelay(e->config->GetDefaultDelay());
-		// TRUNCATION SETTINGS — 11-22-20 - Release Sample Truncation Settings
-        // LINKS TO GOrguePipeConfig.cpp, GOrguePipeConfig::GetDefaultTruncation
+		/* Release Sample Truncation Settings
+         * LINKS TO GOrguePipeConfig.cpp */
         e->config->SetReleaseTruncationLength(e->config->GetDefaultReleaseTruncationLength());
 		e->config->SetAudioGroup(wxEmptyString);
 		e->config->SetBitsPerSample(-1);
