@@ -237,10 +237,10 @@ void GOrgueSoundingPipe::UpdateHash(GOrgueHash& hash)
 	for(unsigned i = 0; i < m_ReleaseInfo.size(); i++)
 	{
 		m_ReleaseInfo[i].filename.Hash(hash);
-		hash.Update(m_ReleaseInfo[i].sample_group); // Update Hash Release Sample Group
-		hash.Update(m_ReleaseInfo[i].max_playback_time); // Update Hash Release Maximum Playback Time
-		hash.Update(m_ReleaseInfo[i].cue_point); // Update Hash Release Cue Point
-		hash.Update(m_ReleaseInfo[i].release_end); // Update Hash Release End
+		hash.Update(m_ReleaseInfo[i].sample_group);
+		hash.Update(m_ReleaseInfo[i].max_playback_time);
+		hash.Update(m_ReleaseInfo[i].cue_point);
+		hash.Update(m_ReleaseInfo[i].release_end);
 		}
 }
 

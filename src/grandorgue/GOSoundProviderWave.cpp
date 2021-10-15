@@ -27,7 +27,7 @@ void GOSoundProviderWave::SetAmplitude(float fixed_amplitude, float gain)
 	m_Gain = fixed_amplitude * powf(10.0f, gain * 0.05f);
 }
 
-/*  Links to GOrgueSoundingPipe.cpp -- Added 12-9-20 */ 
+/*  Links to GOrgueSoundingPipe.cpp */
 void GOSoundProviderWave::SetReleaseTruncationLength(unsigned truncation)
 {
     m_ReleaseTruncationLength = truncation;
