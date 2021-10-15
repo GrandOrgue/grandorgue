@@ -25,6 +25,7 @@ public:
 	virtual ~GOrgueThread();
 
 	void Start();
+	void MarkForStop();
 	void Wait();
 	void Stop();
 	
