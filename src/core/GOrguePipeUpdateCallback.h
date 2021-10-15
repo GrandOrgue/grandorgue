@@ -16,7 +16,7 @@ public:
 
 	virtual void UpdateAmplitude() = 0;
 	virtual void UpdateTuning() = 0;
-	virtual void UpdateReleaseTruncationLength() = 0; // Added for Per-Pipe Release Truncation Mechanism
+	virtual void UpdateReleaseTruncationLength() = 0;
 	virtual void UpdateAudioGroup() = 0;
 };
 

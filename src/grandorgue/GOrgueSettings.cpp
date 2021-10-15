@@ -117,14 +117,12 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	ReverbFile(this, wxT("Reverb"), wxT("ReverbFile"), wxEmptyString),
 	MemoryLimit(this, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, GOrgueMemoryPool::GetSystemMemoryLimit()),
 	SamplesPerBuffer(this, wxT("General"), wxT("SamplesPerBuffer"), 1, MAX_FRAME_SIZE, 1024),
-    /*
-     *  SAMPLE RATE — Enabled 192000 on 11-20-20, by Changing 100000 to 200000.
-     *  Default Sample Rate = 44100.
-    */
+    /*  SAMPLE RATE — Enabled 192000 by changing 100000 to 200000.
+     *  Default Sample Rate = 44100. */
 	SampleRate(this, wxT("General"), wxT("SampleRate"), 1000, 200000, 44100),	Volume(this, wxT("General"), wxT("Volume"), -120, 20, -15),
 	PolyphonyLimit(this, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
 	Preset(this, wxT("General"), wxT("Preset"), 0, MAX_PRESET, 0),
-  	// Setting for Release Length / Truncation in GUI
+  	// Setting for Release Length / Truncation in Toolbar GUI
 	ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
 	LanguageCode(this, wxT("General"), wxT("Language"), wxEmptyString),
 	BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),

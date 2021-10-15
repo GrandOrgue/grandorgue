@@ -48,8 +48,8 @@ protected:
 	void ComputeReleaseAlignmentInfo();
 	float m_VelocityVolumeBase;
 	float m_VelocityVolumeIncrement;
-	unsigned m_ReleaseCrossfadeLength; // Release Crossfade Length Member
-    unsigned m_ReleaseTruncationLength; // 11-20-20 — New Pipe Release Truncation Mechanism
+	unsigned m_ReleaseCrossfadeLength;
+    unsigned m_ReleaseTruncationLength;
 
 public:
 	GOSoundProvider(GOrgueMemoryPool& pool);
@@ -73,10 +73,8 @@ public:
 
 	unsigned GetMidiKeyNumber() const;
 	float GetMidiPitchFract() const;
-   // Parameter for Release Crossfade From File
 	unsigned GetReleaseCrossfadeLength() const;
-    // 11-20-20 — New Pipe Release Truncation Mechanism
-    unsigned GetReleaseTruncationLength() const; // Function must be marked constant, because type GOSoundProvider is marked constant.
+    unsigned GetReleaseTruncationLength() const;
 
 	float GetVelocityVolume(unsigned velocity) const;
 
