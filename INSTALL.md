@@ -17,6 +17,13 @@ Installation of program creates neither the configuration file nor directories u
 
 ## Installation or upgdading on Linux
 
+### Run GrandOrgue on Linux directly from AppImage
+The GrandOrgue appimage is built for x86_64 architecture without jack support to maximize compatibility. This method does not require any installation of dependencies or GrandOrgue itself.
+
+1. Download the file ``grandorgue-<version>.x86_64.AppImage``
+2. Make the appimage file executable (Right click file, select properties, on Permissions tab make sure that Allow executing file as program is ticked. Or open terminal where the file is and run: chmod +x grandorgue*.AppImage)
+3. The file is now runnable and can be started by clicking on it
+
 ### Installation or upgdading on rpm-based systems (centos, fedora, redhat, oracle linux, opensuse)
 
 1. Download the linux package file ``grandorgue-<version>.<arch>.rpm`` where `<arch>` is
