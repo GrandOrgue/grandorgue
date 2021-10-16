@@ -33,7 +33,7 @@ void GOSoundOutputWorkItem::SetOutputs(std::vector<GOSoundBufferItem*> outputs)
 	m_OutputCount = m_Outputs.size() * 2;
 }
 
-void GOSoundOutputWorkItem::Run(GOSoundThread *thread)
+void GOSoundOutputWorkItem::Run(GOSoundThread *pThread)
 {
 	if (m_Done)
 		return;
