@@ -14,28 +14,36 @@
 #include "GOWaitQueue.h"
 #endif
 
+#include "GOrgueThread.h"
+
 class GOMutex
 {
 private:
 #ifdef WX_MUTEX
-  friend class GOCondition;
-
   wxMutex m_Mutex;
 #else
   GOWaitQueue m_Wait;
   atomic_int m_Lock;
 #endif
+  
+  const char* volatile m_LockerInfo;
 
   GOMutex(const GOMutex&) = delete;
   const GOMutex& operator=(const GOMutex&) = delete;
+  
+  bool DoLock(bool isWithTimeout);
+  bool DoTryLock();
+  void DoUnlock();
 
 public:
   GOMutex();
   ~GOMutex();
 
-  void Lock();
+  bool LockOrStop(const char* lockerInfo = NULL, GOrgueThread *pThread = NULL);
+  void Lock(const char* lockerInfo = NULL) { LockOrStop(lockerInfo, NULL); }
   void Unlock();
-  bool TryLock();
+  bool TryLock(const char* lockerInfo = NULL);
+  const char* GetLockerInfo() const { return m_LockerInfo; }
 };
 
 #endif /* GOMUTEX_H */
