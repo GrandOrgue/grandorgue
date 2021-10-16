@@ -12,6 +12,7 @@
 #include "GOSoundWorkItem.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
+#include "GOSoundThread.h"
 
 class GOSoundEngine;
 
