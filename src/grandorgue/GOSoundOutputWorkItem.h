@@ -38,7 +38,7 @@ public:
 	bool GetRepeat();
 	void Run(GOSoundThread *thread = nullptr);
 	void Exec();
-	void Finish(bool stop);
+	void Finish(bool stop, GOSoundThread *thread = nullptr);
 
 	void Clear();
 	void Reset();

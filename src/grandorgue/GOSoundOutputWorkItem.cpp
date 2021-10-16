@@ -85,12 +85,12 @@ void GOSoundOutputWorkItem::Exec()
 	Run();
 }
 
-void GOSoundOutputWorkItem::Finish(bool stop)
+void GOSoundOutputWorkItem::Finish(bool stop, GOSoundThread *pThread)
 {
 	if (stop)
 		m_Stop = true;
 	if (!m_Done)
-		Run();
+		Run(pThread);
 }
 
 void GOSoundOutputWorkItem::Clear()

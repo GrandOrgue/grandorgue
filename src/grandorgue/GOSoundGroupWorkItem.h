@@ -37,9 +37,9 @@ public:
 	unsigned GetGroup();
 	unsigned GetCost();
 	bool GetRepeat();
-	void Run(GOSoundThread *thread = nullptr);
+	void Run(GOSoundThread *pThread = nullptr);
 	void Exec();
-	void Finish(bool stop);
+	void Finish(bool stop, GOSoundThread *pThread = nullptr);
 
 	void Reset();
 	void Clear();
