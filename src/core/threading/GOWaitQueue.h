@@ -32,7 +32,7 @@ private:
   std::timed_mutex m_Wait;
 #endif
 
-  void WaitInfinitelly();
+  void WaitInfinitely();
   bool WaitWithTimeout();
 
 public:

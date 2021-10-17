@@ -25,7 +25,7 @@ GOWaitQueue::~GOWaitQueue()
 #endif
 }
 
-void GOWaitQueue::WaitInfinitelly()
+void GOWaitQueue::WaitInfinitely()
 {
 #ifdef GOWAITQUEUE_USE_WX
   m_Wait.Wait();
@@ -51,7 +51,7 @@ bool GOWaitQueue::Wait(bool isWithTimeout)
     rc = WaitWithTimeout();
   else
   {
-    WaitInfinitelly();
+    WaitInfinitely();
     rc = true;
   }
   return rc;

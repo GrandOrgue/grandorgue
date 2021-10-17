@@ -7,6 +7,13 @@
 #include "threading_impl.h"
 #include "GOCondition.h"
 
+/**
+ * Composes the result of the wait for condition.
+ * @param isSignalReceived
+ * @param isMutexLocked
+ * @return the bitwise composit result from GOCondition::SIGNAL_RECEIVED and GOCondition::MUTEX_LOCKED
+ */
+
 unsigned compose_result(bool isSignalReceived, bool isMutexLocked)
 {
   return (isSignalReceived ? GOCondition::SIGNAL_RECEIVED : 0) | (isMutexLocked ? GOCondition::MUTEX_LOCKED : 0);
@@ -78,6 +85,7 @@ unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueT
     isMutexLocked = m_Mutex.LockOrStop(waiterInfo, pThread);
     if (isMutexLocked)
       break;
+
     // a timeout occured
     if (isFirstTime && waiterInfo)
     {
