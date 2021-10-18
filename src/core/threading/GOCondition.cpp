@@ -139,7 +139,7 @@ unsigned GOCondition::WaitOrStop(const char* waiterInfo, GOrgueThread* pThread)
     // timeout occured
     if (isFirstTime && waiterInfo)
     {
-      wxLogWarning("GOCondition::WaitOrStop: timeout while %s waited for a condition");
+      wxLogWarning("GOCondition::WaitOrStop: timeout while %s waited for condition %p", this);
       isFirstTime = false;
     }
   }
