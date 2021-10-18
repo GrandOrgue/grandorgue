@@ -112,7 +112,7 @@ bool GOMutex::LockOrStop(const char* lockerInfo, GOrgueThread *pThread)
       {
 	const char* currentLockerInfo = m_LockerInfo;
 
-	wxLogWarning("GOMutex: timeout when locking a mutex; currentLocker=%s newLocker=%s", wxString(currentLockerInfo), wxString(lockerInfo));
+	wxLogWarning("GOMutex: timeout when locking mutex %p; currentLocker=%s newLocker=%s", this, wxString(currentLockerInfo), wxString(lockerInfo));
 	isFirstTime = false;
       }
     }

@@ -89,7 +89,7 @@ unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueT
     // a timeout occured
     if (isFirstTime && waiterInfo)
     {
-      wxLogWarning("GOCondition::Wait: unable to restore mutex lock for %s", wxString(waiterInfo));
+      wxLogWarning("GOCondition::Wait: unable to restore lock on the condition mutex %p:%p for %s", this, &m_Mutex, wxString(waiterInfo));
       isFirstTime = false;
     }
   } while (pThread == NULL || !pThread->ShouldStop());
