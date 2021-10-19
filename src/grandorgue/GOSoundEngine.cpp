@@ -610,7 +610,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
       		if (m_ReleaseLength > 0)
 			{
 				// If Gain Decay Length is greater than toolbar value, or equal to 0, gain_decay_length = toolbar value.
-				if (m_ReleaseLength < gain_decay_length || gain_decay_length == 0)
+			if (m_ReleaseLength < gain_decay_length || gain_decay_length == 0)
 					gain_decay_length = m_ReleaseLength;
 			}
 			// If truncation values exist and release scaling has not been enabled, gain_decay_length = truncation value.
