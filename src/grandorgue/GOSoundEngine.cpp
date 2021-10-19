@@ -566,7 +566,8 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 					* for an organ with a release length of 1 second or less, time_to_full_reverb is around 100 ms
 					* time_to_full_reverb is linear in between */
 
-          				// Initialize 
+          				/* Release Sample Truncation Settings */
+
       					unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
 
 					// Initialize Value For Maximum Release Length.
@@ -604,16 +605,15 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 
 			/*
 			 * Algorithm Determines Which Release Truncation or Scaling Method to activate. */
-			// If release length set in GO GUI toolbar is larger than 0 (Max)...
+
+			// If release length set in GO GUI toolbar is larger than 0...
       			if (m_ReleaseLength > 0)
 			{
-				/* If truncation length is greater than toolbar value (m_ReleaseLength)
-				AND/OR equal to 0, gain_decay_length = the shorter toolbar value. */
-				if (gain_decay_length > m_ReleaseLength || gain_decay_length == 0)
-				gain_decay_length = m_ReleaseLength;
+				// If Gain Decay Length is greater than toolbar value, or equal to 0, gain_decay_length = toolbar value.
+				if (m_ReleaseLength < gain_decay_length || gain_decay_length == 0)
+					gain_decay_length = m_ReleaseLength;
 			}
-			/* Else if truncation values exist and release scaling has not been enabled...
-			gain_decay_length = truncation value. */
+			// If truncation values exist and release scaling has not been enabled, gain_decay_length = truncation value.
 			else if (truncation_fade_len > 0 && gain_decay_length == 0)
 			{
 				gain_decay_length = truncation_fade_len;

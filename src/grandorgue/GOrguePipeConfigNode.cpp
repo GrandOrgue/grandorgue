@@ -70,7 +70,7 @@ void GOrguePipeConfigNode::ModifyTuning(float diff)
 	m_PipeConfig.SetTuning(m_PipeConfig.GetTuning() + diff);
 }
 
-// Calculate the final AMPLITUDE value of a pipe, by summing child and rank values.
+// Calculate the final AMPLITUDE value of a pipe, by summing child and rank values
 float GOrguePipeConfigNode::GetEffectiveAmplitude()
 {
 	if (m_parent)
@@ -79,7 +79,7 @@ float GOrguePipeConfigNode::GetEffectiveAmplitude()
 		return m_PipeConfig.GetAmplitude() / 100.0;
 }
 
-// Calculate the final GAIN value of a pipe, by summing child and rank values.
+// Calculate the final GAIN value of a pipe, by summing child and rank values
 float GOrguePipeConfigNode::GetEffectiveGain()
 {
 	if (m_parent)
@@ -88,7 +88,7 @@ float GOrguePipeConfigNode::GetEffectiveGain()
 		return m_PipeConfig.GetGain();
 }
 
-// Calculate the final TUNING value of a pipe, by summing child and rank values.
+// Calculate the final TUNING value of a pipe, by summing child and rank values
 float GOrguePipeConfigNode::GetEffectiveTuning()
 {
 	if (m_parent)
@@ -105,7 +105,7 @@ float GOrguePipeConfigNode::GetDefaultTuning()
 		return m_PipeConfig.GetDefaultTuning();
 }
 
-// Calculate the DELAY value of a child item (pipe), by summing child and rank DELAY values.
+// Calculate the final DELAY value of a pipe, by summing child and rank values
 unsigned GOrguePipeConfigNode::GetEffectiveDelay()
 {
 	if (m_parent)
@@ -114,13 +114,13 @@ unsigned GOrguePipeConfigNode::GetEffectiveDelay()
 		return m_PipeConfig.GetDelay();
 }
 
-/// Calculate the final RELEASE TRUNCATION value for a pipe.
+// Calculate the final amplitude value of a pipe, by summing child and rank values
 unsigned GOrguePipeConfigNode::GetEffectiveReleaseTruncationLength()
 {
-	if (m_parent)
-		return m_PipeConfig.GetReleaseTruncationLength() + m_parent->GetEffectiveReleaseTruncationLength();
-	else
-		return m_PipeConfig.GetReleaseTruncationLength();
+  if (m_parent)
+    return m_PipeConfig.GetReleaseTruncationLength() + m_parent->GetEffectiveReleaseTruncationLength();
+  else
+    return m_PipeConfig.GetReleaseTruncationLength();
 }
 
 wxString GOrguePipeConfigNode::GetEffectiveAudioGroup()

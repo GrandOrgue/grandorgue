@@ -377,9 +377,9 @@ void OrganDialog::Load()
 		m_Delay->ChangeValue(wxEmptyString);
 		m_Delay->Disable();
 		m_DelaySpin->Disable();
-    		m_ReleaseTruncationLength->ChangeValue(wxEmptyString);
-    		m_ReleaseTruncationLength->Disable();
-    		m_ReleaseTruncationLengthSpin->Disable();
+		m_ReleaseTruncationLength->ChangeValue(wxEmptyString);
+		m_ReleaseTruncationLength->Disable();
+		m_ReleaseTruncationLengthSpin->Disable();
 		m_AudioGroup->Disable();
 		m_BitsPerSample->Disable();
 		m_Compress->Disable();
@@ -406,8 +406,8 @@ void OrganDialog::Load()
 			m_Tuning->ChangeValue(wxEmptyString);
 		if (!m_Delay->IsModified())
 			m_Delay->ChangeValue(wxEmptyString);
-    		if (!m_ReleaseTruncationLength->IsModified())
-      			m_ReleaseTruncationLength->ChangeValue(wxEmptyString);
+		if (!m_ReleaseTruncationLength->IsModified())
+  			m_ReleaseTruncationLength->ChangeValue(wxEmptyString);
 
 		if (m_AudioGroup->GetValue() == m_LastAudioGroup)
 		{
@@ -496,7 +496,7 @@ void OrganDialog::Load()
 		m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
 	m_DelaySpin->SetValue(delay);
   	if (entries.size() == 1)
-    		m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%u"), truncation));
+		m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%u"), truncation));
  		m_ReleaseTruncationLengthSpin->SetValue(truncation);
 	if (entries.size() == 1)
 	{
@@ -594,17 +594,17 @@ void OrganDialog::OnDelayChanged(wxCommandEvent &e)
 
 void OrganDialog::OnReleaseTruncationLengthSpinChanged(wxSpinEvent& e)
 {
-    	m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%u"), (unsigned)m_ReleaseTruncationLengthSpin->GetValue()));
-    	m_ReleaseTruncationLength->MarkDirty();
-    	Modified();
+	m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%u"), (unsigned)m_ReleaseTruncationLengthSpin->GetValue()));
+	m_ReleaseTruncationLength->MarkDirty();
+	Modified();
 }
 
 void OrganDialog::OnReleaseTruncationLengthChanged(wxCommandEvent &e)
 {
-    	long truncation;
-    	if (m_ReleaseTruncationLength->GetValue().ToLong(&truncation))
-       		m_ReleaseTruncationLengthSpin->SetValue(truncation);
-    	Modified();
+	long truncation;
+	if (m_ReleaseTruncationLength->GetValue().ToLong(&truncation))
+   		m_ReleaseTruncationLengthSpin->SetValue(truncation);
+	Modified();
 }
 
 void OrganDialog::OnAudioGroupChanged(wxCommandEvent &e)
@@ -660,7 +660,7 @@ bool OrganDialog::Changed()
 	if (m_Delay->IsModified())
 	  	changed = true;
  	if (m_ReleaseTruncationLength->IsModified())
-    		changed = true;
+		changed = true;
 	if (m_AudioGroup->GetValue() != m_LastAudioGroup)
 		changed = true;
 	if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
@@ -768,8 +768,8 @@ void OrganDialog::OnEventApply(wxCommandEvent &e)
 			e->config->SetTuning(tuning);
 		if (m_Delay->IsModified())
 			e->config->SetDelay(delay);
-    		if (m_ReleaseTruncationLength->IsModified())
-      			e->config->SetReleaseTruncationLength(truncation);
+		if (m_ReleaseTruncationLength->IsModified())
+  			e->config->SetReleaseTruncationLength(truncation);
 		if (m_AudioGroup->GetValue() != m_LastAudioGroup)
 			e->config->SetAudioGroup(m_AudioGroup->GetValue().Trim());
 		if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
@@ -843,7 +843,7 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e)
 		e->config->SetGain(e->config->GetDefaultGain());
 		e->config->SetTuning(e->config->GetDefaultTuning());
 		e->config->SetDelay(e->config->GetDefaultDelay());
-    		e->config->SetReleaseTruncationLength(e->config->GetDefaultReleaseTruncationLength());
+		e->config->SetReleaseTruncationLength(e->config->GetDefaultReleaseTruncationLength());
 		e->config->SetAudioGroup(wxEmptyString);
 		e->config->SetBitsPerSample(-1);
 		e->config->SetCompress(-1);
