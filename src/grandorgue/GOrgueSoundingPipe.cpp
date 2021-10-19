@@ -46,7 +46,7 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 {
 }
 /* This Section defines pipe999attack999 parameters in ODFs.
- * In this section, wxT("Value") sets pipe999attack999Value ODF call names. */
+ * In this section, wxT("Value") defines pipe999attack999Value paremeters in ODFs. */
 void GOrgueSoundingPipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	attack_load_info ainfo;
@@ -108,7 +108,7 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {	
 	/* This Section defines pipe999release999 parameters in ODFs.
-	 * In this section, wxT("Value") sets pipe999Value ODF call names. */
+	 * In this section, wxT("Value") defines pipe999Value paremeters in ODFs. */
 	m_organfile->RegisterCacheObject(this);
 	m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
 	m_PipeConfig.Load(cfg, group, prefix);
@@ -131,7 +131,7 @@ void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString 
 		LoadAttack(cfg, group, prefix + wxString::Format(wxT("Attack%03d"), i + 1));
 
 	/* This Section defines pipe999release999 parameters in ODFs.
-	 * In this section, wxT("Value") sets the pipe999release999Value ODF call names. */
+	 * In this section, wxT("Value") defines pipe999release999Value paremeters in ODFs. */
 	unsigned release_count = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseCount"), 0, 100, false, 0);
 	for(unsigned i = 0; i < release_count; i++)
 	{
