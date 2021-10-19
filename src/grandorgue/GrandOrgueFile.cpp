@@ -893,7 +893,6 @@ void GrandOrgueFile::UpdateAmplitude()
 {
 }
 
-// Update Release Truncation Length Added 12-9-20
 void GrandOrgueFile::UpdateReleaseTruncationLength()
 {
 }

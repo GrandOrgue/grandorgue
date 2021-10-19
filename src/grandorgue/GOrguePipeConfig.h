@@ -18,7 +18,8 @@ class GOrguePipeConfig
 {
 private:
 	GrandOrgueFile* m_OrganFile;
-	GOrguePipeUpdateCallback* m_Callback; // Call items must be listed in GOrguePipeUpdateGallback.h in the "core" folder.
+	// Note: Call items must be listed in GOrguePipeUpdateGallback.h in the "core" folder.
+	GOrguePipeUpdateCallback* m_Callback;
 	wxString m_Group;
 	wxString m_NamePrefix;
 	wxString m_AudioGroup;
@@ -30,8 +31,8 @@ private:
 	float m_DefaultTuning;
 	unsigned m_Delay;
 	unsigned m_DefaultDelay;
-    int m_ReleaseTruncationLength;
-    int m_DefaultReleaseTruncationLength;
+	int m_ReleaseTruncationLength;
+	int m_DefaultReleaseTruncationLength;
 	int m_BitsPerSample;
 	int m_Compress;
 	int m_Channels;
@@ -63,10 +64,10 @@ public:
 	unsigned GetDelay();
 	unsigned GetDefaultDelay();
 	void SetDelay(unsigned delay);
-	
-    unsigned GetReleaseTruncationLength();
-    unsigned GetDefaultReleaseTruncationLength();
-    void SetReleaseTruncationLength(unsigned truncation);
+
+	unsigned GetReleaseTruncationLength();
+	unsigned GetDefaultReleaseTruncationLength();
+	void SetReleaseTruncationLength(unsigned truncation);
 
 	const wxString& GetAudioGroup();
 	void SetAudioGroup(const wxString& str);

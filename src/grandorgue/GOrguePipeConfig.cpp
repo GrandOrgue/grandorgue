@@ -24,8 +24,8 @@ GOrguePipeConfig::GOrguePipeConfig(GrandOrgueFile* organfile, GOrguePipeUpdateCa
 	m_DefaultTuning(0),
 	m_Delay(0),
 	m_DefaultDelay(0),
-    m_ReleaseTruncationLength(0),
-    m_DefaultReleaseTruncationLength(0),
+	m_ReleaseTruncationLength(0),
+	m_DefaultReleaseTruncationLength(0),
 	m_BitsPerSample(-1),
 	m_Compress(-1),
 	m_Channels(-1),
@@ -48,8 +48,8 @@ void GOrguePipeConfig::Init(GOrgueConfigReader& cfg, wxString group, wxString pr
 	m_Tuning = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Tuning"), -1800, 1800, false, m_DefaultTuning);
 	m_DefaultDelay = 0;
 	m_Delay = cfg.ReadInteger(CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
-    m_DefaultReleaseTruncationLength = 0;
-    m_ReleaseTruncationLength = cfg.ReadInteger(CMBSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 10000, false, m_DefaultReleaseTruncationLength);
+    	m_DefaultReleaseTruncationLength = 0;
+    	m_ReleaseTruncationLength = cfg.ReadInteger(CMBSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 100000, false, m_DefaultReleaseTruncationLength);
 	m_BitsPerSample = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("BitsPerSample"), -1, 24, false, -1);
 	if (m_BitsPerSample < 8 || m_BitsPerSample > 24)
 		m_BitsPerSample = -1;
@@ -61,7 +61,7 @@ void GOrguePipeConfig::Init(GOrgueConfigReader& cfg, wxString group, wxString pr
 	// Call items must be listed in GOrguePipeUpdateCallback.h in the "core" folder.
 	m_Callback->UpdateAmplitude();
 	m_Callback->UpdateTuning();
-	m_Callback->UpdateReleaseTruncationLength(); // Update Release Truncation Length Member Value
+	m_Callback->UpdateReleaseTruncationLength();
 	m_Callback->UpdateAudioGroup();
 }
 
@@ -79,10 +79,10 @@ void GOrguePipeConfig::Load(GOrgueConfigReader& cfg, wxString group, wxString pr
 	m_DefaultDelay = cfg.ReadInteger(ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
 	m_Delay = cfg.ReadInteger(CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
 	/* Release Sample Truncation Settings
-     * Default Settings Pulled from ODF. Numeric Range = 0-10000. If no value exists in ODF, default value = 0.  */
-    m_DefaultReleaseTruncationLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseTruncation"), 0, 10000, false, 0);
-    /* Pulls Settings Set by User in GUI Organ Settings Panel. */
-    m_ReleaseTruncationLength = cfg.ReadInteger(CMBSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 10000, false, m_DefaultReleaseTruncationLength);
+	 * Default Settings Pulled from ODF. Numeric Range = 0-100000. If no value exists in ODF, default value = 0.  */
+	m_DefaultReleaseTruncationLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseTruncation"), 0, 100000, false, 0);
+	/* Pulls Settings Set by User in GUI Organ Settings Panel. */
+	m_ReleaseTruncationLength = cfg.ReadInteger(CMBSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 100000, false, m_DefaultReleaseTruncationLength);
 	m_BitsPerSample = cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("BitsPerSample"), -1, 24, false, -1);
 	if (m_BitsPerSample < 8 || m_BitsPerSample > 24)
 		m_BitsPerSample = -1;
@@ -94,7 +94,7 @@ void GOrguePipeConfig::Load(GOrgueConfigReader& cfg, wxString group, wxString pr
 	// Call items must be listed in GOrguePipeUpdateCallback.h in the "core" folder.
 	m_Callback->UpdateAmplitude();
 	m_Callback->UpdateTuning();
-	m_Callback->UpdateReleaseTruncationLength(); // Update Release Truncation Length Member Value
+	m_Callback->UpdateReleaseTruncationLength();
 	m_Callback->UpdateAudioGroup();
 }
 
@@ -105,7 +105,7 @@ void GOrguePipeConfig::Save(GOrgueConfigWriter& cfg)
 	cfg.WriteFloat(m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
 	cfg.WriteFloat(m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
 	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Delay"), m_Delay);
-    cfg.WriteInteger(m_Group, m_NamePrefix + wxT("ReleaseTruncationLength"), m_ReleaseTruncationLength);
+	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("ReleaseTruncationLength"), m_ReleaseTruncationLength);
 	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
 	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
 	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Channels"), m_Channels);
@@ -114,6 +114,7 @@ void GOrguePipeConfig::Save(GOrgueConfigWriter& cfg)
 	cfg.WriteInteger(m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
 }
 
+/* The following items link to OrganDialog.cpp */
 GOrguePipeUpdateCallback* GOrguePipeConfig::GetCallback()
 {
 	return m_Callback;
@@ -202,24 +203,22 @@ void GOrguePipeConfig::SetDelay(unsigned delay)
 	m_OrganFile->Modified();
 }
 
-/*  Release Sample Truncation Settings
- *  Links to OrganDialog.cpp */
 unsigned GOrguePipeConfig::GetReleaseTruncationLength()
 {
-    return m_ReleaseTruncationLength;
+	return m_ReleaseTruncationLength;
 }
 
 unsigned GOrguePipeConfig::GetDefaultReleaseTruncationLength()
 {
-    return m_DefaultReleaseTruncationLength;
+	return m_DefaultReleaseTruncationLength;
 }
 
 void GOrguePipeConfig::SetReleaseTruncationLength(unsigned truncation)
 {
-    m_ReleaseTruncationLength = truncation;
-    m_OrganFile->Modified();
-    // Call items must be listed in GOrguePipeUpdateCallback.h in the "core" folder.
-    m_Callback->UpdateReleaseTruncationLength();
+	m_ReleaseTruncationLength = truncation;
+	m_OrganFile->Modified();
+	// Call items must be listed in GOrguePipeUpdateCallback.h in the "core" folder.
+	m_Callback->UpdateReleaseTruncationLength();
 }
 
 int  GOrguePipeConfig::GetBitsPerSample()

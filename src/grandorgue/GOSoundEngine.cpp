@@ -67,8 +67,8 @@ void GOSoundEngine::Reset()
   }
 
   m_Scheduler.Clear();
-  
-  if (m_HasBeenSetup) 
+
+  if (m_HasBeenSetup)
   {
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
 		m_Scheduler.Add(m_Tremulants[i]);
@@ -284,7 +284,7 @@ bool GOSoundEngine::ProcessSampler(float *output_buffer, GO_SAMPLER* sampler, un
 			sampler->pipe = NULL;
 
 		sampler->fader.Process(n_frames, temp, volume);
-		
+
 		/* Add these samples to the current output buffer shifting
 		 * right by the necessary amount to bring the sample gain back
 		 * to unity (this value is computed in GOrguePipe.cpp)
@@ -297,7 +297,7 @@ bool GOSoundEngine::ProcessSampler(float *output_buffer, GO_SAMPLER* sampler, un
 		{
 			m_ReleaseProcessor->Add(sampler);
 			return false;
-		} 
+		}
 	}
 
 	if (!sampler->pipe || (sampler->fader.IsSilent() && process_sampler))
@@ -315,7 +315,7 @@ void GOSoundEngine::ProcessRelease(GO_SAMPLER* sampler)
 	{
 		CreateReleaseSampler(sampler);
 		sampler->stop = 0;
-	} 
+	}
 	else if (sampler->new_attack)
 	{
 		SwitchAttackSampler(sampler);
@@ -469,7 +469,7 @@ void GOSoundEngine::SwitchAttackSampler(GO_SAMPLER* handle)
 	if (new_sampler != NULL)
 	{
 		*new_sampler = *handle;
-		
+
 		handle->pipe = this_pipe;
 		handle->time = m_CurrentTime + 1;
 
@@ -532,7 +532,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 				 * to the gain target for this fader - otherwise the playback
 				 * volume on the detached chest will not match the volume on
 				 * the existing chest. */
-				
+
 				gain_target *= vol;
 				if (m_ScaledReleases)
 				{
@@ -544,8 +544,8 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 					/* if MidiKeyNumber is not within an organ 64 feet to 1 foot pipes, we assume average pipe (MIDI = 60)*/
 					if (midikey_frequency >133 || midikey_frequency == 0 )
 						midikey_frequency = 60;
-					/* attack duration is assumed 50 ms above MIDI 96, 800 ms below MIDI 24 and linear in between */	
-					float attack_duration = 50.0f; 
+					/* attack duration is assumed 50 ms above MIDI 96, 800 ms below MIDI 24 and linear in between */
+					float attack_duration = 50.0f;
 					if (midikey_frequency < 96 )
 					{
 						if (midikey_frequency < 24)
@@ -553,7 +553,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 						else
 							attack_duration = 500.0f + ( ( 24.0f - (float)midikey_frequency ) * 6.25f );
 					}
-					/* calculate gain (gain_target) to apply to tail amplitude in function of when the note is released during the attack */ 
+					/* calculate gain (gain_target) to apply to tail amplitude in function of when the note is released during the attack */
 					if (time < (int)attack_duration)
 					{
 						float attack_index = (float)time / attack_duration;
@@ -562,73 +562,75 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 					}
 					/* calculate the volume decay to be applied to the release to take into account the fact reverb is not completely formed during staccato
 					* time to full reverb is estimated in function of release length
-					* for an organ with a release length of 5 seconds or more, time_to_full_reverb is around 350 ms 
-					* for an organ with a release length of 1 second or less, time_to_full_reverb is around 100 ms 
+					* for an organ with a release length of 5 seconds or more, time_to_full_reverb is around 350 ms
+					* for an organ with a release length of 1 second or less, time_to_full_reverb is around 100 ms
 					* time_to_full_reverb is linear in between */
 
-                    /* Release Sample Truncation Settings
-                    TRANSFER "ReleaseTruncationLength" Values for Each Pipe, to "truncation_fade_len". */
-                    unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
+          				// Initialize 
+      					unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
 
-                    /* Value For Maximum Release Length. */ 
-                    int time_to_full_reverb = 0;
+					// Initialize Value For Maximum Release Length.
+					int time_to_full_reverb = 0;
 
-					 * If (Pipe999ReleaseTruncationLength) release truncation length values exist in organ settings or ODF... */
-                    if (truncation_fade_len > 0) 
-                    {	/* Maximum Release Length = Release Truncation Length */
-                        time_to_full_reverb = truncation_fade_len;
-                    }
+					/* If (Pipe999ReleaseTruncationLength) release truncation length values exist in organ settings or ODF...
+					Maximum Release Length = Release Truncation Length */
+					if (truncation_fade_len > 0)
+					{
+						time_to_full_reverb = truncation_fade_len;
+					}
 
-                    else /* If release truncation length values are absent from organ settings or ODF...
-						/* Maximum Release Length = /* Calculated Length of WAV Release Samples* */
-                    {	
-                        time_to_full_reverb = ((60 * release_section->GetLength()) / release_section->GetSampleRate()) + 40;
-                    }
-                    
+					/* Else if release truncation length values are absent from organ settings or ODF...
+					* Maximum Release Length = /* Calculated Length of WAV Release Samples* */
+          				else
+          				{
+              					time_to_full_reverb = ((60 * release_section->GetLength()) / release_section->GetSampleRate()) + 40;
+          				}
+
 					if (time_to_full_reverb > 350 ) time_to_full_reverb = 350;
 					if (time_to_full_reverb < 100 ) time_to_full_reverb = 100;
 					if (time < time_to_full_reverb)
 					{
-						/* in function of note duration, fading happens between: 
-						* 200 ms and 6 s for release with little reverberation e.g. short release 
-						* 700 ms and 6 s for release with large reverberation e.g. long release */ 
+						/* in function of note duration, fading happens between:
+						* 200 ms and 6 s for release with little reverberation e.g. short release
+						* 700 ms and 6 s for release with large reverberation e.g. long release */
 						gain_decay_length = time_to_full_reverb + 6000 * time / time_to_full_reverb;
 					}
 				}
 			}
 
-
-            /*  Algorithm to Choose Which Release Truncation or Scaling Method to activate. */
 			unsigned cross_fade_len = this_pipe->GetReleaseCrossfadeLength();
 			unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
 			new_sampler->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
-			
-			/* If Release Length Set in GO GUI toolbar is larger than 0 */
-            if (m_ReleaseLength > 0)
-            {
-                /* If Gain Decay Length (gain_decay_length) is greater than toolbar value (m_ReleaseLength), or equal to 0, gain_decay_length = toolbar value. */
-                if ( m_ReleaseLength < gain_decay_length || gain_decay_length == 0 )
-                    gain_decay_length = m_ReleaseLength;
-            }
 
-            /* If truncation values exist and release scaling has not been enabled, gain_decay_length = truncation value. */
-            else if (truncation_fade_len > 0 && gain_decay_length == 0)
-            { 
-                gain_decay_length = truncation_fade_len;
-            }
+			/*
+			 * Algorithm Determines Which Release Truncation or Scaling Method to activate. */
+			// If release length set in GO GUI toolbar is larger than 0 (Max)...
+      			if (m_ReleaseLength > 0)
+			{
+				/* If truncation length is greater than toolbar value (m_ReleaseLength)
+				AND/OR equal to 0, gain_decay_length = the shorter toolbar value. */
+				if (gain_decay_length > m_ReleaseLength || gain_decay_length == 0)
+				gain_decay_length = m_ReleaseLength;
+			}
+			/* Else if truncation values exist and release scaling has not been enabled...
+			gain_decay_length = truncation value. */
+			else if (truncation_fade_len > 0 && gain_decay_length == 0)
+			{
+				gain_decay_length = truncation_fade_len;
+			}
 
-            if (gain_decay_length > 0)
-                new_sampler->fader.StartDecay(gain_decay_length, m_SampleRate);
+			if (gain_decay_length > 0)
+				new_sampler->fader.StartDecay(gain_decay_length, m_SampleRate);
 
-            if (m_ReleaseAlignmentEnabled && release_section->SupportsStreamAlignment())
-            {
-                release_section->InitAlignedStream(&new_sampler->stream, &handle->stream);
-            }
-            else
-            {   
-                release_section->InitStream(&m_ResamplerCoefs, &new_sampler->stream, this_pipe->GetTuning() / (float)m_SampleRate);
-            }
-            new_sampler->is_release = true;
+			if (m_ReleaseAlignmentEnabled && release_section->SupportsStreamAlignment())
+			{
+				release_section->InitAlignedStream(&new_sampler->stream, &handle->stream);
+			}
+			else
+			{
+				release_section->InitStream(&m_ResamplerCoefs, &new_sampler->stream, this_pipe->GetTuning() / (float)m_SampleRate);
+			}
+			new_sampler->is_release = true;
 
 			int windchest_index;
 			if (not_a_tremulant)
@@ -648,6 +650,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 			StartSampler(new_sampler, windchest_index, handle->audio_group_id);
 			handle->time = m_CurrentTime;
 		}
+
 	}
 }
 

@@ -86,7 +86,8 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
 	attack_load_info ainfo;
-	ainfo.filename.AssignResource(m_Filename, m_organfile); // Assign Attack File Name
+	// Assign Attack File Name
+	ainfo.filename.AssignResource(m_Filename, m_organfile);
 	ainfo.sample_group = -1;
 	ainfo.load_release = !m_Percussive;
 	ainfo.percussive = m_Percussive;
@@ -103,7 +104,8 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 }
 
 void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
-{
+{	
+	// wxT("Value") sets the pipe999Value call name in ODF.
 	m_organfile->RegisterCacheObject(this);
 	m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
 	m_PipeConfig.Load(cfg, group, prefix);
@@ -114,8 +116,7 @@ void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString 
 	m_SampleMidiKeyNumber = cfg.ReadInteger(ODFSetting, group, prefix + wxT("MIDIKeyNumber"), -1, 127, false, -1);
 	m_LoopCrossfadeLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("LoopCrossfadeLength"), 0, 120, false, 0);
 	m_ReleaseCrossfadeLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseCrossfadeLength"), 0, 200, false, 0);
-	// Pipe Release Truncation Mechanism
-    m_ReleaseTruncationLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 10000, false, 0);
+	m_ReleaseTruncationLength = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 10000, false, 0);
 	m_RetunePipe = cfg.ReadBoolean(ODFSetting, group, prefix + wxT("AcceptsRetuning"), false, m_RetunePipe);
 	UpdateAmplitude();
 	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
@@ -137,7 +138,7 @@ void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString 
 		rinfo.max_playback_time = cfg.ReadInteger(ODFSetting, group, p + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
 		rinfo.cue_point = cfg.ReadInteger(ODFSetting, group, p + wxT("CuePoint"), -1, MAX_SAMPLE_LENGTH, false, -1);
 		rinfo.release_end = cfg.ReadInteger(ODFSetting, group, p + wxT("ReleaseEnd"), -1, MAX_SAMPLE_LENGTH, false, -1);
-		
+
 		m_ReleaseInfo.push_back(rinfo);
 	}
 
@@ -151,9 +152,9 @@ void GOrgueSoundingPipe::LoadData()
 {
 	try
 	{
-		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(), 
-					     m_PipeConfig.GetEffectiveCompress(), (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(), m_PipeConfig.GetEffectiveAttackLoad(), m_PipeConfig.GetEffectiveReleaseLoad(),
-					     m_SampleMidiKeyNumber, m_LoopCrossfadeLength, m_ReleaseCrossfadeLength, m_ReleaseTruncationLength);
+		m_SoundProvider.LoadFromFile(m_AttackInfo, m_ReleaseInfo, m_PipeConfig.GetEffectiveBitsPerSample(), m_PipeConfig.GetEffectiveChannels(),
+				       m_PipeConfig.GetEffectiveCompress(), (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(), m_PipeConfig.GetEffectiveAttackLoad(), m_PipeConfig.GetEffectiveReleaseLoad(),
+				       m_SampleMidiKeyNumber, m_LoopCrossfadeLength, m_ReleaseCrossfadeLength, m_ReleaseTruncationLength);
 		Validate();
 	}
 	catch(wxString str)
@@ -377,7 +378,7 @@ void GOrgueSoundingPipe::UpdateAmplitude()
  * Links to GOSoundProviderWave.cpp */
 void GOrgueSoundingPipe::UpdateReleaseTruncationLength()
 {
-    m_SoundProvider.SetReleaseTruncationLength(m_PipeConfig.GetEffectiveReleaseTruncationLength());
+	m_SoundProvider.SetReleaseTruncationLength(m_PipeConfig.GetEffectiveReleaseTruncationLength());
 }
 
 void GOrgueSoundingPipe::UpdateTuning()

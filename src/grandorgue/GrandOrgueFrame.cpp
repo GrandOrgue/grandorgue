@@ -111,13 +111,13 @@ BEGIN_EVENT_TABLE(GOrgueFrame, wxFrame)
 END_EVENT_TABLE()
 
 GOrgueFrame::GOrgueFrame(
-  GOrgueApp &app, 
+  GOrgueApp &app,
   wxFrame *frame,
-  wxWindowID id, 
+  wxWindowID id,
   const wxString& title,
   const wxPoint& pos,
   const wxSize& size,
-  const long type, 
+  const long type,
   GOrgueSound& sound
 ): wxFrame(frame, id, title, pos, size, type),
   m_App(app),
@@ -218,7 +218,7 @@ GOrgueFrame::GOrgueFrame(
   tb->AddTool(ID_MEMORY, _("&Memory Level"), GetImage_memory(), _("Memory Level"), wxITEM_NORMAL);
   m_SetterPosition = new wxSpinCtrl(tb, ID_METER_FRAME_SPIN, wxEmptyString, wxDefaultPosition, wxSize(50, wxDefaultCoord), wxSP_ARROW_KEYS, 0, 999);
   tb->AddControl(m_SetterPosition);
-  m_SetterPosition->SetValue(0);	
+  m_SetterPosition->SetValue(0);
 
   tb->AddTool(ID_VOLUME, _("&Volume"), GetImage_volume(), _("Volume"), wxITEM_NORMAL);
   m_Volume = new wxSpinCtrl(tb, ID_METER_AUDIO_SPIN, wxEmptyString, wxDefaultPosition, wxSize(50, wxDefaultCoord), wxSP_ARROW_KEYS, -120, 20);
@@ -229,23 +229,22 @@ GOrgueFrame::GOrgueFrame(
   tb->AddControl(m_VolumeControl);
   m_Volume->SetValue(m_Settings.Volume());
 
-	// Mechnaism for Organ-Wide Release Truncation, Located in the GrandOrgue Toolbar
-	tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
-	choices.clear();
-	choices.push_back(_("Max"));
-	for(unsigned i = 1; i <= 60; i++)
-		choices.push_back(wxString::Format(_("%d ms"), i * 50));
-	m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
-    
-    /*  m_ReleaseLength - SetReleaseLength
-     *  Links to GOSoundEngine.cpp */
-     tb->AddControl(m_ReleaseLength);
-	unsigned n = m_Settings.ReleaseLength();
-	m_ReleaseLength->SetSelection(n / 50);
-    // m_Sound.GetEngine - Links to GoSoundEngine.cpp and GOrgueSound.cpp
-	m_Sound.GetEngine().SetReleaseLength(n);
+  /* Mechnaism for Organ-Wide Release Truncation,
+   * Located in the GrandOrgue Toolbar */
+  tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
+  choices.clear();
+  choices.push_back(_("Max"));
+  for(unsigned i = 1; i <= 60; i++)
+  choices.push_back(wxString::Format(_("%d ms"), i * 50));
+  m_ReleaseLength = new wxChoice(tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
 
-  // Transposer
+  /* SetReleaseLength Links to GOSoundEngine.cpp */
+  tb->AddControl(m_ReleaseLength);
+  unsigned n = m_Settings.ReleaseLength();
+  m_ReleaseLength->SetSelection(n / 50);
+  // m_Sound.GetEngine links to GoSoundEngine.cpp and GOrgueSound.cpp
+  m_Sound.GetEngine().SetReleaseLength(n);
+
   tb->AddTool(ID_TRANSPOSE, _("&Transpose"), GetImage_transpose(), _("Transpose"), wxITEM_NORMAL);
   m_Transpose = new wxSpinCtrl(tb, ID_METER_TRANSPOSE_SPIN, wxEmptyString, wxDefaultPosition, wxSize(46, wxDefaultCoord), wxSP_ARROW_KEYS, -11, 11);
   tb->AddControl(m_Transpose);
@@ -298,7 +297,7 @@ bool GOrgueFrame::AdjustVolumeControlWithSettings()
 {
   const unsigned count = m_Settings.GetTotalAudioChannels();
   bool rc = false;
-  
+
   if (count != m_VolumeGauge.size())
   {
     m_VolumeGauge.clear();
@@ -328,16 +327,16 @@ bool GOrgueFrame::AdjustVolumeControlWithSettings()
 void GOrgueFrame::UpdateSize()
 {
   wxToolBar* tb = GetToolBar();
-  
+
   tb->Realize();
-  
+
   const wxSize bestTbSize(tb->GetBestSize());
   const int bestClientWidth = bestTbSize.GetWidth() + 10;
-  
+
   SetClientSize(bestClientWidth, 0);
-  
+
   const wxSize frameSize(GetSize());
-  
+
   SetMinSize(wxSize(frameSize.GetWidth() / 4, frameSize.GetHeight()));
   SetMaxSize(wxSize(frameSize.GetWidth() * 4, frameSize.GetHeight()));
 }
@@ -348,7 +347,7 @@ void GOrgueFrame::ApplyRectFromSettings(wxRect rect)
   { // settings are valid
     wxRect minSize(GetMinSize());
     wxRect maxSize(GetMaxSize());
-    
+
     if (rect.width < minSize.width)
       rect.width = minSize.width;
     if (rect.width > maxSize.width)
@@ -374,7 +373,7 @@ void GOrgueFrame::Init(wxString filename)
 	Show(true);
 
 	SettingsReasons settingsReasons;
-	
+
 	m_Sound.SetLogSoundErrorMessages(false);
 
 	bool open_sound = m_Sound.OpenSound();
@@ -384,16 +383,16 @@ void GOrgueFrame::Init(wxString filename)
 	m_Sound.SetLogSoundErrorMessages(true);
 
 	bool openMidi = m_Sound.GetMidi().HasActiveDevice();
-	
+
 	if (open_sound && ! openMidi)
 	  settingsReasons.push_back(SettingsReason(_("No active MIDI input devices"), SettingsDialog::PAGE_MIDI_DEVICES));
-	
+
 	if (!open_sound || !openMidi)
 	{
 		wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_SETTINGS);
-		
+
 		SettingsReasons * const pReasons = new SettingsReasons(settingsReasons);
-		
+
 		event.SetClientData(pReasons);
 		GetEventHandler()->AddPendingEvent(event);
 	}
@@ -669,7 +668,7 @@ void GOrgueFrame::OnTemperament(wxCommandEvent& event)
 void GOrgueFrame::OnLoadFile(wxCommandEvent& event)
 {
   GOrgueOrgan* pOrgan = (GOrgueOrgan*)event.GetClientData();
-  
+
   if (! m_InSettings)
   {
     Open(* pOrgan);
@@ -915,7 +914,7 @@ void GOrgueFrame::SetEventAfterSettings(
 void GOrgueFrame::OnSettings(wxCommandEvent& event)
 {
   m_InSettings = true;
-  
+
   SettingsReasons * const pReasons = (SettingsReasons *) event.GetClientData();
 
   SettingsDialog dialog(this, m_Sound, pReasons);
@@ -952,7 +951,7 @@ void GOrgueFrame::OnSettings(wxCommandEvent& event)
   if (m_AfterSettingsEventType != wxEVT_NULL)
   {
     wxCommandEvent event(m_AfterSettingsEventType, m_AfterSettingsEventId);
-    
+
     if (p_AfterSettingsEventOrgan)
       event.SetClientData(p_AfterSettingsEventOrgan);
     GetEventHandler()->AddPendingEvent(event);

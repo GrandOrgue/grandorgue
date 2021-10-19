@@ -75,7 +75,7 @@ private:
 	int m_MainWindowY;
 	unsigned m_MainWindowWidth;
 	unsigned m_MainWindowHeight;
-	
+
 	static const GOMidiSetting m_MIDISettings[];
 	static const struct IniFileEnumEntry m_InitialLoadTypes[];
 
@@ -125,7 +125,7 @@ public:
 	GOrgueSettingInteger Volume;
 	GOrgueSettingUnsigned PolyphonyLimit;
 	GOrgueSettingUnsigned Preset;
-	GOrgueSettingUnsigned ReleaseLength; // Setting for Release Length / Truncation
+	GOrgueSettingUnsigned ReleaseLength;
 	GOrgueSettingString LanguageCode;
 
 	class GOrgueSettingUnsignedBit : public GOrgueSettingUnsigned
@@ -156,12 +156,12 @@ public:
 	GOrgueSettingDirectory AudioRecorderPath;
 	GOrgueSettingDirectory MidiRecorderPath;
 	GOrgueSettingDirectory MidiPlayerPath;
-	
+
 	void Load();
 
 	int GetLanguageId() const;
 	void SetLanguageId(int langId);
-	
+
 	const wxString GetResourceDirectory();
 	const wxString GetPackageDirectory();
 
@@ -170,7 +170,7 @@ public:
 	wxString GetEventTitle(unsigned index);
 	GOrgueMidiReceiverBase* GetMidiEvent(unsigned index);
 	GOrgueMidiReceiverBase* FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
-	
+
 	bool GetMidiInState(wxString device);
 	void SetMidiInState(wxString device, bool enabled);
 	unsigned GetMidiInDeviceChannelShift(wxString device);
@@ -190,10 +190,10 @@ public:
 
 	const GOrgueSoundPortsConfig & GetPortsConfig() const
 	{ return m_PortsConfig; }
-	
+
 	void SetPortsConfig(const GOrgueSoundPortsConfig & portsConfig)
 	{ m_PortsConfig = portsConfig; }
-	
+
 	const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();
 	const unsigned GetTotalAudioChannels() const;
 	void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
@@ -202,7 +202,7 @@ public:
 	GOrgueMidiMap& GetMidiMap();
 
 	GOrgueTemperamentList& GetTemperaments();
-	
+
 	wxRect GetMainWindowRect();
 	void SetMainWindowRect(const wxRect &rect);
 

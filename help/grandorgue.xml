@@ -9958,11 +9958,10 @@ end. A cross fade requires enough samples before the start of the loop.
             <para>
 (int 0 - 200, default: 0) Crossfade length in ms between loop and the
 release (or other attacks). 0 means automatic selection.
-	    </para>
+     </para>
           </listitem>
         </varlistentry>
-      </variablelist>
-      <varlistentry>
+      	<varlistentry>
           <term>Pipe999ReleaseTruncationLength</term>
           <listitem>
             <para>

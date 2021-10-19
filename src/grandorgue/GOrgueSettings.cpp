@@ -117,10 +117,11 @@ GOrgueSettings::GOrgueSettings(wxString instance) :
 	ReverbFile(this, wxT("Reverb"), wxT("ReverbFile"), wxEmptyString),
 	MemoryLimit(this, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024, GOrgueMemoryPool::GetSystemMemoryLimit()),
 	SamplesPerBuffer(this, wxT("General"), wxT("SamplesPerBuffer"), 1, MAX_FRAME_SIZE, 1024),
-	SampleRate(this, wxT("General"), wxT("SampleRate"), 1000, 100000, 44100),	Volume(this, wxT("General"), wxT("Volume"), -120, 20, -15),
+	SampleRate(this, wxT("General"), wxT("SampleRate"), 1000, 100000, 44100),
+	Volume(this, wxT("General"), wxT("Volume"), -120, 20, -15),
 	PolyphonyLimit(this, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
 	Preset(this, wxT("General"), wxT("Preset"), 0, MAX_PRESET, 0),
-  	// Setting for Release Length / Truncation in Toolbar GUI
+ 	// Setting for Release Length / Truncation in Toolbar GUI
 	ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
 	LanguageCode(this, wxT("General"), wxT("Language"), wxEmptyString),
 	BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),
@@ -178,7 +179,7 @@ void GOrgueSettings::Load()
 		GOrgueConfigReader cfg(cfg_db);
 
 		GOrgueOrganList::Load(cfg, m_MidiMap);
-		
+
 		m_MainWindowX = cfg.ReadInteger(CMBSetting, wxT("UI"), wxT("MainWindowX"), -32000, 32000, false, 0);
 		m_MainWindowY = cfg.ReadInteger(CMBSetting, wxT("UI"), wxT("MainWindowY"), -32000, 32000, false, 0);
 		m_MainWindowWidth = (unsigned) cfg.ReadInteger(CMBSetting, wxT("UI"), wxT("MainWindowWidth"), 0, 32000, false, 0);
@@ -193,7 +194,7 @@ void GOrgueSettings::Load()
 			m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), false, wxString::Format(_("Audio group %d"), i + 1)));
 		if (!m_AudioGroups.size())
 			m_AudioGroups.push_back(_("Default audio group"));
-		
+
 		const wxString SOUND_PORTS = wxT("SoundPorts");
 		const wxString ENABLED = wxT(".Enabled");
 		m_PortsConfig.Clear();
@@ -207,7 +208,7 @@ void GOrgueSettings::Load()
 		  for (const wxString &apiName: GOrgueSoundPort::getApiNames(portName))
 		    m_PortsConfig.SetConfigEnabled(portName, apiName, cfg.ReadBoolean(CMBSetting, SOUND_PORTS, prefix + apiName + ENABLED, false, true));
 		}
-		
+
 		m_AudioDeviceConfig.clear();
 		count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxT("Count"), 0, 200, false, 0);
 		for(unsigned i = 0; i < count; i++)
@@ -343,7 +344,7 @@ wxString GOrgueSettings::GetEventSection(unsigned index)
 
 	case MIDI_RECV_SETTER:
 		return wxString::Format(wxT("Setter%03d"), m_MIDISettings[index].index);
-		
+
 	default:
 	assert(false);
 	return wxEmptyString;
@@ -505,7 +506,7 @@ void GOrgueSettings::SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>
 const unsigned GOrgueSettings::GetTotalAudioChannels() const
 {
   unsigned channels = 0;
-  
+
   for (const GOAudioDeviceConfig & deviceConfig: m_AudioDeviceConfig)
     channels += deviceConfig.channels;
   return channels;

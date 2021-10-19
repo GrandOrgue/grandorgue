@@ -44,7 +44,7 @@ private:
 	bool                          m_RandomizeSpeaking;
 	int                           m_Volume;
 	unsigned                      m_ReleaseLength;
-    unsigned                      m_ReleaseTruncationLength;
+	unsigned                      m_ReleaseTruncationLength;
 	unsigned m_SamplesPerBuffer;
 	float                         m_Gain;
 	unsigned                      m_SampleRate;
@@ -65,7 +65,7 @@ private:
 	GOSoundScheduler m_Scheduler;
 
 	struct resampler_coefs_s      m_ResamplerCoefs;
-	
+
 	bool			      m_HasBeenSetup;
 
 	/* samplerGroupID:
@@ -101,8 +101,8 @@ public:
 	void SetScaledReleases(bool enable);
 	void SetRandomizeSpeaking(bool enable);
 	void SetReleaseLength(unsigned reverb);
-    int GetReleaseTruncationLength();
-    void SetReleaseTruncationLength(unsigned truncation);
+	int GetReleaseTruncationLength();
+	void SetReleaseTruncationLength(unsigned truncation);
 	const std::vector<double>& GetMeterInfo();
 	void SetAudioRecorder(GOSoundRecorder* recorder, bool downmix);
 

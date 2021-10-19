@@ -37,7 +37,7 @@ public:
 
 	GOrguePipeConfig& GetPipeConfig();
 
-    // Modify Tuning / Change Tuning
+    	// Modify Tuning or Change Tuning
 	void ModifyTuning(float diff);
 
 	float GetEffectiveAmplitude();
@@ -46,7 +46,7 @@ public:
 	float GetDefaultTuning();
 
 	unsigned GetEffectiveDelay();
-    unsigned GetEffectiveReleaseTruncationLength();
+	unsigned GetEffectiveReleaseTruncationLength();
 	wxString GetEffectiveAudioGroup();
 
 	unsigned GetEffectiveBitsPerSample();
