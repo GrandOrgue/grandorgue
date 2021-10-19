@@ -9,6 +9,10 @@
 
 #define GO_PRINTCONTENTION 0
 
+static const char* const UNKNOWN_LOCKER_INFO = "UnknownLocker";
+
+#define LOCKER_INFO(lockerInfo) (lockerInfo ? lockerInfo : UNKNOWN_LOCKER_INFO)
+
 GOMutex::GOMutex():
 #ifndef WX_MUTEX
   m_Lock(0),
@@ -112,7 +116,10 @@ bool GOMutex::LockOrStop(const char* lockerInfo, GOrgueThread *pThread)
       {
 	const char* currentLockerInfo = m_LockerInfo;
 
-	wxLogWarning("GOMutex: timeout when locking mutex %p; currentLocker=%s newLocker=%s", this, wxString(currentLockerInfo), wxString(lockerInfo));
+	wxLogWarning(
+	  "GOMutex: timeout when locking mutex %p; currentLocker=%s newLocker=%s",
+	  this, wxString(currentLockerInfo), wxString(LOCKER_INFO(lockerInfo))
+	);
 	isFirstTime = false;
       }
     }
@@ -120,7 +127,7 @@ bool GOMutex::LockOrStop(const char* lockerInfo, GOrgueThread *pThread)
     isLocked = DoLock(false);
 
   if (isLocked)
-    m_LockerInfo = lockerInfo;
+    m_LockerInfo = LOCKER_INFO(lockerInfo);
   return isLocked;
 }
 
@@ -135,6 +142,6 @@ bool GOMutex::TryLock(const char* lockerInfo)
   bool isLocked = DoTryLock();
   
   if (isLocked)
-    m_LockerInfo = lockerInfo;
+    m_LockerInfo = LOCKER_INFO(lockerInfo);
   return isLocked;
 }

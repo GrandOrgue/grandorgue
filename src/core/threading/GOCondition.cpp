@@ -7,6 +7,10 @@
 #include "threading_impl.h"
 #include "GOCondition.h"
 
+const char* const UNKNOWN_WAITER_INFO = "UnknownWaiter";
+
+#define WAITER_INFO(waiterInfo) (waiterInfo ? waiterInfo : UNKNOWN_WAITER_INFO)
+
 /**
  * Composes the result of the wait for condition.
  * @param isSignalReceived
@@ -89,7 +93,10 @@ unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueT
     // a timeout occured
     if (isFirstTime && waiterInfo)
     {
-      wxLogWarning("GOCondition::Wait: unable to restore lock on the condition mutex %p:%p for %s", this, &m_Mutex, wxString(waiterInfo));
+      wxLogWarning(
+	"GOCondition::Wait: unable to restore lock on the condition mutex %p:%p for %s",
+	this, &m_Mutex, wxString(WAITER_INFO(waiterInfo))
+      );
       isFirstTime = false;
     }
   } while (pThread == NULL || !pThread->ShouldStop());
@@ -139,7 +146,11 @@ unsigned GOCondition::WaitOrStop(const char* waiterInfo, GOrgueThread* pThread)
     // timeout occured
     if (isFirstTime && waiterInfo)
     {
-      wxLogWarning("GOCondition::WaitOrStop: timeout while %s waited for condition %p", this);
+      wxLogWarning(
+	"GOCondition::WaitOrStop: timeout while %s waited for condition %p",
+	wxString(WAITER_INFO(waiterInfo)),
+	this
+      );
       isFirstTime = false;
     }
   }
