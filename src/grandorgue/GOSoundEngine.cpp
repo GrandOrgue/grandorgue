@@ -614,7 +614,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 					gain_decay_length = m_ReleaseLength;
 			}
 			// If truncation values exist and release scaling has not been enabled, gain_decay_length = truncation value.
-			else if (truncation_fade_len > 0 && gain_decay_length == 0)
+			if (truncation_fade_len > 0 && (gain_decay_length == 0 || truncation_fade_len < gain_decay_length))
 			{
 				gain_decay_length = truncation_fade_len;
 			}
