@@ -45,7 +45,8 @@ GOrgueSoundingPipe::GOrgueSoundingPipe(GrandOrgueFile* organfile, GOrgueRank* ra
 	m_PipeConfig(&rank->GetPipeConfig(), organfile, this, &m_SoundProvider)
 {
 }
-
+/* This Section defines pipe999attack999 parameters in ODFs.
+ * In this section, wxT("Value") sets pipe999attack999Value ODF call names. */
 void GOrgueSoundingPipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {
 	attack_load_info ainfo;
@@ -74,6 +75,7 @@ void GOrgueSoundingPipe::LoadAttack(GOrgueConfigReader& cfg, wxString group, wxS
 
 void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString prefix, wxString filename)
 {
+	// Initialize PIPE object values from ODF.
 	m_organfile->RegisterCacheObject(this);
 	m_Filename = filename;
 	m_PipeConfig.Init(cfg, group, prefix);
@@ -85,8 +87,8 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 	UpdateAmplitude();
 	m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
+	// Initialize ATTACK object from ODF.
 	attack_load_info ainfo;
-	// Assign Attack File Name
 	ainfo.filename.AssignResource(m_Filename, m_organfile);
 	ainfo.sample_group = -1;
 	ainfo.load_release = !m_Percussive;
@@ -105,7 +107,8 @@ void GOrgueSoundingPipe::Init(GOrgueConfigReader& cfg, wxString group, wxString 
 
 void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString prefix)
 {	
-	// wxT("Value") sets the pipe999Value call name in ODF.
+	/* This Section defines pipe999release999 parameters in ODFs.
+	 * In this section, wxT("Value") sets pipe999Value ODF call names. */
 	m_organfile->RegisterCacheObject(this);
 	m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
 	m_PipeConfig.Load(cfg, group, prefix);
@@ -127,6 +130,8 @@ void GOrgueSoundingPipe::Load(GOrgueConfigReader& cfg, wxString group, wxString 
 	for(unsigned i = 0; i < attack_count; i++)
 		LoadAttack(cfg, group, prefix + wxString::Format(wxT("Attack%03d"), i + 1));
 
+	/* This Section defines pipe999release999 parameters in ODFs.
+	 * In this section, wxT("Value") sets the pipe999release999Value ODF call names. */
 	unsigned release_count = cfg.ReadInteger(ODFSetting, group, prefix + wxT("ReleaseCount"), 0, 100, false, 0);
 	for(unsigned i = 0; i < release_count; i++)
 	{
