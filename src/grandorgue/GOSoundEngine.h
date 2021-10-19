@@ -43,7 +43,9 @@ private:
 	bool                          m_ReleaseAlignmentEnabled;
 	bool                          m_RandomizeSpeaking;
 	int                           m_Volume;
+	/* Release Length Truncation Mechanism for Toolbar */
 	unsigned                      m_ReleaseLength;
+	/* Release Length Truncation Mechanism for ODF/Organ Settings Panel */
 	unsigned                      m_ReleaseTruncationLength;
 	unsigned m_SamplesPerBuffer;
 	float                         m_Gain;
@@ -100,8 +102,11 @@ public:
 	int GetVolume() const;
 	void SetScaledReleases(bool enable);
 	void SetRandomizeSpeaking(bool enable);
+	/* Set Release Length Truncation for Toolbar */
 	void SetReleaseLength(unsigned reverb);
+	/* Get Release Length Truncation Mechanism Value for ODF/Organ Settings Panel */
 	int GetReleaseTruncationLength();
+	/* Set Release Length Truncation Mechanism Value for ODF/Organ Settings Panel */
 	void SetReleaseTruncationLength(unsigned truncation);
 	const std::vector<double>& GetMeterInfo();
 	void SetAudioRecorder(GOSoundRecorder* recorder, bool downmix);

@@ -131,6 +131,7 @@ GOrgueFrame::GOrgueFrame(
   m_VolumeControl(NULL),
   m_VolumeGauge(),
   m_Transpose(NULL),
+  // Identifer for the release truncation length value set in toolbar
   m_ReleaseLength(NULL),
   m_Polyphony(NULL),
   m_SetterPosition(NULL),
@@ -229,8 +230,7 @@ GOrgueFrame::GOrgueFrame(
   tb->AddControl(m_VolumeControl);
   m_Volume->SetValue(m_Settings.Volume());
 
-  /* Mechnaism for Organ-Wide Release Truncation,
-   * Located in the GrandOrgue Toolbar */
+  /* Toolbar Release Length Truncation Mechanism */
   tb->AddTool(ID_RELEASELENGTH, _("&Release tail length"), GetImage_reverb(), _("Release tail length"), wxITEM_NORMAL);
   choices.clear();
   choices.push_back(_("Max"));
@@ -1038,9 +1038,8 @@ void GOrgueFrame::OnSettingsTranspose(wxCommandEvent& event)
 		doc->GetOrganFile()->GetSetter()->SetTranspose(n);
 }
 
-/*  m_ReleaseLength - SetReleaseLength
- *  Release Truncation Mechinism for ALL Samples
- *  Link to GOSoundEngine.cpp */
+/*  Toolbar Release Length Truncation Mechanism
+ *  m_ReleaseLength Links to GOSoundEngine.cpp */
 void GOrgueFrame::OnSettingsReleaseLength(wxCommandEvent& event)
 {
 	m_Settings.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
