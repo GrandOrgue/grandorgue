@@ -5167,7 +5167,7 @@ registration is deleted from GrandOrgue. The package file itself is
 <emphasis><emphasis role="strong">NOT deleted from disk</emphasis></emphasis>.
       </para>
       <note><title>Notes</title>
-        <simpara>All organs defined in the package must be deleted from the <link linkend="known_organs">Organs</link> tab prior to deleting the package.</simpara>
+        <simpara>All organs defined in the package must be deleted from the <link linkend="knownorgans">Organs</link> tab prior to deleting the package.</simpara>
         <simpara>
 A package file dropped into the packages folder must be moved to another
 folder, otherwise said package will be registered again when GrandOrgue
