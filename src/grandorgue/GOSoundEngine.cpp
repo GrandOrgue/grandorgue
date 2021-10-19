@@ -568,7 +568,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 
           				/* Release Sample Truncation Settings */
 
-      					unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
+      				unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
 
 					// Initialize Value For Maximum Release Length.
 					int time_to_full_reverb = 0;
