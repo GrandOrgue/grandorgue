@@ -127,21 +127,21 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	m_RecordDownmix->SetValue(m_Settings.RecordDownmix());
 
 	item9 = new wxBoxSizer(wxVERTICAL);
-	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
+	item6 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("&Paths"));
 	grid = new wxFlexGridSizer(1, 5, 5);
+	grid->AddGrowableCol(0, 1);
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Settings store:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_SettingsPath = new wxDirPickerCtrl(this, ID_SETTINGS_DIR, wxEmptyString, _("Select directory for settings store"), wxDefaultPosition, wxDefaultSize, 
-						       wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
-
+						       wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 1, wxEXPAND | wxALL);
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Cache store:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_CachePath = new wxDirPickerCtrl(this, ID_CACHE_DIR, wxEmptyString, _("Select directory for cache store"), wxDefaultPosition, wxDefaultSize, 
-						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 0, wxALL);
+						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 1, wxEXPAND | wxALL);
 	m_SettingsPath->SetPath(m_Settings.UserSettingPath());
 	m_CachePath->SetPath(m_Settings.UserCachePath());
 
-	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+	item6->Add(grid, 1, wxEXPAND | wxALL, 5);
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
-
+	
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sample loading"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
@@ -204,9 +204,9 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item9->Add(m_ODFCheck  = new wxCheckBox(this, ID_ODF_CHECK, _("Perform strict ODF")), 0, wxEXPAND | wxALL, 5);
 	m_ODFCheck->SetValue(m_Settings.ODFCheck());
 
-	item0->Add(item9, 0, wxEXPAND | wxALL, 0);
+	item0->Add(item9, 1, wxEXPAND | wxALL, 0);
 	
-	topSizer->Add(item0, 1, wxEXPAND | wxALL, 5);
+	topSizer->Add(item0, 0, wxEXPAND | wxALL, 5);
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
 	topSizer->Fit(this);

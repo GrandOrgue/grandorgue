@@ -101,6 +101,11 @@ jobs:
             prepare: ubuntu-20
             build_on: linux
 
+          - run_on: ubuntu-18.04
+            for: appimage-x86_64
+            prepare: "debian-ubuntu"
+            build_on: linux
+
     runs-on: ${{ matrix.run_on }}
     steps:
     - uses: actions/checkout@v2
