@@ -607,7 +607,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 			 * Algorithm Determines Which Release Truncation or Scaling Method to activate. */
 
 			// If release length set in GO GUI toolbar is larger than 0...
-      			if (m_ReleaseLength > 0)
+      		if (m_ReleaseLength > 0)
 			{
 				// If Gain Decay Length is greater than toolbar value, or equal to 0, gain_decay_length = toolbar value.
 				if (m_ReleaseLength < gain_decay_length || gain_decay_length == 0)
