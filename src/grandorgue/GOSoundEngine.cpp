@@ -576,12 +576,6 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 					/* If (Pipe999ReleaseTruncationLength) release truncation length values exist in organ settings or ODF... */
 					if (truncation_fade_len > 0 && truncation_fade_len < time_to_full_reverb)
 						time_to_full_reverb = truncation_fade_len;
-					/* Else if release truncation length values are absent from organ settings or ODF...
-					* Maximum Release Length = /* Calculated Length of WAV Release Samples* */
-          				else
-          				{
-              					time_to_full_reverb = ((60 * release_section->GetLength()) / release_section->GetSampleRate()) + 40;
-          				}
 
 					if (time_to_full_reverb > 350 ) time_to_full_reverb = 350;
 					if (time_to_full_reverb < 100 ) time_to_full_reverb = 100;
@@ -603,7 +597,7 @@ void GOSoundEngine::CreateReleaseSampler(GO_SAMPLER* handle)
 			 * Algorithm Determines Which Release Truncation or Scaling Method to activate. */
 
 			// If release length set in GO GUI toolbar is larger than 0...
-      		if (m_ReleaseLength > 0)
+      			if (m_ReleaseLength > 0)
 			{
 				// If Gain Decay Length is greater than toolbar value, or equal to 0, gain_decay_length = toolbar value.
 			if (m_ReleaseLength < gain_decay_length || gain_decay_length == 0)
