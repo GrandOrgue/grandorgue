@@ -15,25 +15,41 @@
 #endif
 
 #include "GOMutex.h"
+#include "GOrgueThread.h"
 
 class GOCondition
 {
+public:
+  enum {
+    SIGNAL_RECEIVED = 0x1,
+    MUTEX_LOCKED = 0x2
+  };
+
 private:
 #ifdef WX_MUTEX
   wxCondition m_condition;
 #else
   atomic_int m_Waiters;
   GOWaitQueue m_Wait;
-#endif
   GOMutex& m_Mutex;
+#endif
 
   GOCondition(const GOCondition&) = delete;
   const GOCondition& operator=(const GOCondition&) = delete;
+
+  unsigned DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueThread *pThread);
 public:
   GOCondition(GOMutex& mutex);
   ~GOCondition();
 
-  void Wait();
+  /**
+   * waits for a signal or for pThread->ShouldStop()
+   * Requires that the mutex be acquired before the call
+   * After return tries to reaqquire mutex lock
+   * @return the bit combination of SIGNAL_RECEIVED and MUTEX_RELOCKED
+   */
+  unsigned WaitOrStop(const char* waiterInfo = NULL, GOrgueThread* pThread = NULL);
+  void Wait() { WaitOrStop(NULL, NULL); }
   void Signal();
   void Broadcast();
 };

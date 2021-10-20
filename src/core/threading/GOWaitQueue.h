@@ -9,18 +9,18 @@
 
 #if 1
 //#ifdef __WIN32__
-  #define GOWAITQUEUE_USE_WX
-  #undef GOWAITQUEUE_USE_STD_MUTEX
-
   #include <wx/thread.h>
 
+  #define GOWAITQUEUE_USE_WX
+  #undef GOWAITQUEUE_USE_STD_MUTEX
 #else
-
   #include <mutex>
 
   #undef GOWAITQUEUE_USE_WX
   #define GOWAITQUEUE_USE_STD_MUTEX
 #endif
+
+#include "GOrgueThread.h"
 
 class GOWaitQueue
 {
@@ -29,14 +29,24 @@ private:
 #ifdef GOWAITQUEUE_USE_WX
   wxSemaphore m_Wait;
 #elif defined(GOWAITQUEUE_USE_STD_MUTEX)
-  std::mutex m_Wait;
+  std::timed_mutex m_Wait;
 #endif
-  
+
+  void WaitInfinitely();
+  bool WaitWithTimeout();
+
 public:
   GOWaitQueue();
   ~GOWaitQueue();
 
-  void Wait();
+  /**
+   * Wait until a signal is received or a timeout is occured.
+   * The timeout value is defined in threading_impl.h.
+   * @param isWithTimeout - if true then to wait with timeout. If false else to wait infinitely
+   * @return true if a signal received and false if the timeout occured
+   */
+  bool Wait(bool isWithTimeout);
+
   void Wakeup();
 };
 

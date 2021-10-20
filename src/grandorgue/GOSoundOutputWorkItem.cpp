@@ -8,6 +8,7 @@
 
 #include "GOSoundReverb.h"
 #include "threading/GOMutexLocker.h"
+#include "GOSoundThread.h"
 
 GOSoundOutputWorkItem::GOSoundOutputWorkItem(unsigned channels, std::vector<float> scale_factors, unsigned samples_per_buffer) :
 	GOSoundBufferItem(samples_per_buffer, channels),
@@ -33,12 +34,13 @@ void GOSoundOutputWorkItem::SetOutputs(std::vector<GOSoundBufferItem*> outputs)
 	m_OutputCount = m_Outputs.size() * 2;
 }
 
-void GOSoundOutputWorkItem::Run(GOSoundThread *thread)
+void GOSoundOutputWorkItem::Run(GOSoundThread *pThread)
 {
 	if (m_Done)
 		return;
-	GOMutexLocker locker(m_Mutex);
-	if (m_Done)
+	GOMutexLocker locker(m_Mutex, false, "GOSoundOutputWorkItem::Run", pThread);
+
+	if (m_Done || ! locker.IsLocked())
 		return;
 
 	/* initialise the output buffer */
@@ -53,7 +55,9 @@ void GOSoundOutputWorkItem::Run(GOSoundThread *thread)
 				continue;
 
 			float* this_buff = m_Outputs[j / 2]->m_Buffer;
-			m_Outputs[j / 2]->Finish(m_Stop);
+			m_Outputs[j / 2]->Finish(m_Stop, pThread);
+			if (pThread && pThread->ShouldStop())
+			  return;
 
 			for (unsigned k = i, l = j % 2; k < m_SamplesPerBuffer * m_Channels; k += m_Channels, l+= 2)
 				m_Buffer[k] += factor * this_buff[l];
@@ -85,12 +89,12 @@ void GOSoundOutputWorkItem::Exec()
 	Run();
 }
 
-void GOSoundOutputWorkItem::Finish(bool stop)
+void GOSoundOutputWorkItem::Finish(bool stop, GOSoundThread *pThread)
 {
 	if (stop)
 		m_Stop = true;
 	if (!m_Done)
-		Run();
+		Run(pThread);
 }
 
 void GOSoundOutputWorkItem::Clear()

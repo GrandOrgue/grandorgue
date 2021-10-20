@@ -4,27 +4,49 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
+#include "threading_impl.h"
 #include "GOCondition.h"
 
-GOCondition::GOCondition(GOMutex& mutex) :
-#ifdef WX_MUTEX
-	m_condition(mutex.m_Mutex),
-#else
-	m_Waiters(0),
-#endif
-	m_Mutex(mutex)
+const char* const UNKNOWN_WAITER_INFO = "UnknownWaiter";
+
+#define WAITER_INFO(waiterInfo) (waiterInfo ? waiterInfo : UNKNOWN_WAITER_INFO)
+
+/**
+ * Composes the result of the wait for condition.
+ * @param isSignalReceived
+ * @param isMutexLocked
+ * @return the bitwise composit result from GOCondition::SIGNAL_RECEIVED and GOCondition::MUTEX_LOCKED
+ */
+
+unsigned compose_result(bool isSignalReceived, bool isMutexLocked)
 {
+  return (isSignalReceived ? GOCondition::SIGNAL_RECEIVED : 0) | (isMutexLocked ? GOCondition::MUTEX_LOCKED : 0);
 }
 
+
 #ifdef WX_MUTEX
+
+GOCondition::GOCondition(GOMutex& mutex) :
+	m_condition(mutex.m_Mutex)
+{
+}
 
 GOCondition::~GOCondition()
 {
 }
 
-void GOCondition::Wait()
+unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueThread *)
 {
-	m_condition.Wait();
+  bool isSignalReceived;
+  
+  if (isWithTimeout)
+    isSignalReceived = m_condition.WaitTimeout(WAIT_TIMEOUT_MS) != wxCOND_TIMEOUT;
+  else
+  {
+    m_condition.Wait();
+    rc = true;
+  }
+  return compose_result(isSignalReceived, true);
 }
 
 void GOCondition::Signal()
@@ -39,18 +61,46 @@ void GOCondition::Broadcast()
 
 #else
 
+GOCondition::GOCondition(GOMutex& mutex) :
+	m_Waiters(0),
+	m_Mutex(mutex)
+{
+}
+
 GOCondition::~GOCondition()
 {
   while(m_Waiters > 0)
 	  Signal();
 }
 
-void GOCondition::Wait()
+unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueThread *pThread)
 {
-	m_Waiters.fetch_add(1);
-	m_Mutex.Unlock();
-	m_Wait.Wait();
-	m_Mutex.Lock();
+  m_Waiters.fetch_add(1);
+  m_Mutex.Unlock();
+
+  bool isSignalReceived = m_Wait.Wait(isWithTimeout);
+
+  // now try to lock the mutex again
+  bool isMutexLocked = false;
+  bool isFirstTime = true;
+
+  do
+  {
+    isMutexLocked = m_Mutex.LockOrStop(waiterInfo, pThread);
+    if (isMutexLocked)
+      break;
+
+    // a timeout occured
+    if (isFirstTime && waiterInfo)
+    {
+      wxLogWarning(
+	"GOCondition::Wait: unable to restore lock on the condition mutex %p:%p for %s",
+	this, &m_Mutex, wxString(WAITER_INFO(waiterInfo))
+      );
+      isFirstTime = false;
+    }
+  } while (pThread == NULL || !pThread->ShouldStop());
+  return compose_result(isSignalReceived, isMutexLocked);
 }
 
 void GOCondition::Signal()
@@ -80,3 +130,29 @@ void GOCondition::Broadcast()
 }
 
 #endif
+
+unsigned GOCondition::WaitOrStop(const char* waiterInfo, GOrgueThread* pThread)
+{
+  unsigned rc = 0;
+  bool isFirstTime = true;
+
+  while (pThread == NULL || !pThread->ShouldStop())
+  {
+    rc = DoWait(pThread != NULL, waiterInfo, pThread);
+    
+    if (rc & SIGNAL_RECEIVED)
+      break;
+    
+    // timeout occured
+    if (isFirstTime && waiterInfo)
+    {
+      wxLogWarning(
+	"GOCondition::WaitOrStop: timeout while %s waited for condition %p",
+	wxString(WAITER_INFO(waiterInfo)),
+	this
+      );
+      isFirstTime = false;
+    }
+  }
+  return rc;
+}

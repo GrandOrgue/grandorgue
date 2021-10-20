@@ -4,6 +4,11 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
+#ifdef GOWAITQUEUE_USE_STD_MUTEX
+#include <chrono>
+#endif
+
+#include "threading_impl.h"
 #include "GOWaitQueue.h"
 
 GOWaitQueue::GOWaitQueue()
@@ -20,7 +25,7 @@ GOWaitQueue::~GOWaitQueue()
 #endif
 }
 
-void GOWaitQueue::Wait()
+void GOWaitQueue::WaitInfinitely()
 {
 #ifdef GOWAITQUEUE_USE_WX
   m_Wait.Wait();
@@ -28,6 +33,30 @@ void GOWaitQueue::Wait()
   m_Wait.lock();
 #endif
 }
+
+bool GOWaitQueue::WaitWithTimeout()
+{
+#ifdef GOWAITQUEUE_USE_WX
+  return m_Wait.WaitTimeout(WAIT_TIMEOUT_MS) != wxSEMA_TIMEOUT;
+#elif defined(GOWAITQUEUE_USE_STD_MUTEX)
+  return m_Wait.try_lock_for(timeOutMs);
+#endif
+}
+
+bool GOWaitQueue::Wait(bool isWithTimeout)
+{
+  bool rc;
+
+  if (isWithTimeout)
+    rc = WaitWithTimeout();
+  else
+  {
+    WaitInfinitely();
+    rc = true;
+  }
+  return rc;
+}
+
 
 void GOWaitQueue::Wakeup()
 {

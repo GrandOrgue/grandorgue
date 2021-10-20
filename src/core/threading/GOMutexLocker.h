@@ -15,15 +15,29 @@ private:
 	GOMutex& m_Mutex;
 	bool m_Locked;
 public:
-	GOMutexLocker(GOMutex& mutex, bool try_lock = false) :
+	/**
+	 * Lock the mutex
+	 * When try_lock = true or pThread is not null then the mutex may be not locked
+	 * after invoking and the caller must check with IsLocked().
+	 * Otherwise the mutex is locked after return and the caller may not worry about it
+	 *
+	 * @param mutex: mutex to lock
+	 * @param try_lock: if true and the mutex is ocuppied then returns immediate
+	 * @param lockerInfo an information who locks the mutex. Useful for diagnostic deadlocks
+	 * @param pThread. If != NULL then the constructor may return wihout locking when pThread->ShouldStop()
+	 */
+
+	GOMutexLocker(GOMutex& mutex, bool try_lock = false, const char* lockerInfo = NULL, GOrgueThread* pThread = NULL) :
 		m_Mutex(mutex),
 		m_Locked(false)
 	{
 		if (try_lock)
-			m_Locked = m_Mutex.TryLock();
+			m_Locked = m_Mutex.TryLock(lockerInfo);
+		else if (pThread != NULL)
+			m_Locked = m_Mutex.LockOrStop(lockerInfo, pThread);
 		else
 		{
-			m_Mutex.Lock();
+			m_Mutex.Lock(lockerInfo);
 			m_Locked = true;
 		}
 	}
@@ -34,10 +48,10 @@ public:
 			m_Mutex.Unlock();
 	}
 
-	bool TryLock()
+	bool TryLock(const char* lockerInfo = NULL)
 	{
 		if (!m_Locked)
-			m_Locked = m_Mutex.TryLock();
+			m_Locked = m_Mutex.TryLock(lockerInfo);
 		return m_Locked;
 	}
 

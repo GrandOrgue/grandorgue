@@ -39,9 +39,12 @@ void GOSoundThread::Entry()
 		if (shouldStop)
 			break;
 
-		GOMutexLocker lock(m_Mutex);
+		GOMutexLocker lock(m_Mutex, false, "GOSoundThread::Entry", this);
 
-		m_Condition.Wait();
+		if (! lock.IsLocked() || ShouldStop())
+		  break;
+		if (! m_Condition.WaitOrStop("GOSoundThread::Entry"))
+		  break;
 	}
 	return;
 }
