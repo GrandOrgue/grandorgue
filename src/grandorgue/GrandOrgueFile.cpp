@@ -372,6 +372,15 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 			setting_file = m_SettingFilename;
 			m_b_customized = true;
 		}
+		else
+		{
+			wxString bundledSettingsFile = m_odf.BeforeLast('.');
+			if (wxFileExists(bundledSettingsFile))
+			{
+				setting_file = bundledSettingsFile;
+				m_b_customized = true;
+			}
+		}
 	}
 
 	if (!setting_file.IsEmpty())
