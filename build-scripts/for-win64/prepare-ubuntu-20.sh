@@ -1,55 +1,30 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 sudo apt update
 sudo DEBIAN_FRONTEND=noninteractive apt install -y \
-  zypper wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
-  docbook-xsl xsltproc gettext po4a imagemagick
+  wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
+  docbook-xsl xsltproc gettext po4a imagemagick \
+  libz-mingw-w64-dev
 
-cat >/tmp/repo-oss.repo <<EOF
-[repo-oss]
-name=openSUSE-Tumbleweed-Oss
-enabled=1
-autorefresh=1
-baseurl=http://download.opensuse.org/tumbleweed/repo/oss/  
-EOF
+mkdir -p deb
+pushd deb
 
-cat >/tmp/repo-non-oss.repo  <<EOF
-[repo-non-oss]
-name=openSUSE-Tumbleweed-Non-Oss
-enabled=1
-autorefresh=1
-baseurl=http://download.opensuse.org/tumbleweed/repo/non-oss/
-EOF
+wget \
+  https://github.com/GrandOrgue/Mingw64LibGnuRx/releases/download/2.6.1-1.os/libgnurx-mingw-w64_2.6.1-1.os_all.deb \
+  https://launchpad.net/~tobydox/+archive/ubuntu/mingw-w64/+files/fftw-mingw-w64_3.3.6-3_all.deb \
+  https://github.com/GrandOrgue/JackCross/releases/download/1.9.19-1.os/jack-mingw-w64_1.9.19-1.os_all.deb \
+  https://github.com/GrandOrgue/WavPackCross/releases/download/5.4.0-1.go/wavpack-mingw-w64_5.4.0-1.go_all.deb \
+  https://github.com/GrandOrgue/WxWidgetsCross/releases/download/3.0.2-2.go/wxwidgets3.0-mingw-w64_3.0.2-2.go_all.deb
 
-cat >/tmp/repo-update.repo <<EOF
-[repo-update]
-name=openSUSE-Tumbleweed-Update
-enabled=1
-autorefresh=1
-baseurl=http://download.opensuse.org/update/tumbleweed/
-EOF
+sudo apt-get install -y \
+  ./libgnurx-mingw-w64_2.6.1-1.os_all.deb \
+  ./fftw-mingw-w64_3.3.6-3_all.deb \
+  ./jack-mingw-w64_1.9.19-1.os_all.deb \
+  ./wavpack-mingw-w64_5.4.0-1.go_all.deb \
+  ./wxwidgets3.0-mingw-w64_3.0.2-2.go_all.deb
 
-sudo mv /tmp/repo*.repo /etc/zypp/repos.d/
-
-sudo zypper addrepo http://download.opensuse.org/repositories/windows:mingw:win64/openSUSE_Tumbleweed/windows:mingw:win64.repo
-sudo zypper addrepo http://download.opensuse.org/repositories/home:e9925248:mingw/openSUSE_Tumbleweed/home:e9925248:mingw.repo
-sudo zypper modifyrepo -p 10 home_e9925248_mingw
-sudo zypper --gpg-auto-import-keys refresh
-
-sudo mkdir /zypper
-
-sudo zypper -vv --installroot /zypper install -y mingw64-filesystem || [ $? -eq 107 ] 
-sudo zypper -vv --installroot /zypper install -y mingw64-zlib1 mingw64-zlib-devel
-sudo zypper -vv --installroot /zypper install -y mingw64-libgnurx0 mingw64-libgnurx-devel 
-sudo zypper -vv --installroot /zypper install -y mingw64-fftw3 mingw64-fftw3-devel
-sudo zypper -vv --installroot /zypper install -y mingw64-jack mingw64-jack-devel
-sudo zypper -vv --installroot /zypper install -y mingw64-wavpack mingw64-wavpack-devel 
-sudo zypper -vv --installroot /zypper install -y mingw64-wxWidgets-3_0-lang
-sudo zypper -vv --installroot /zypper install -y mingw64-wxWidgets-3_0-devel
-
-sudo ln -s /zypper/usr/x86_64-w64-mingw32/sys-root /usr/x86_64-w64-mingw32/
-sudo mv /usr/x86_64-w64-mingw32/sys-root/mingw/lib/libmingw32.a /usr/x86_64-w64-mingw32/sys-root/mingw/lib/libmingw32.save.a
+popd
 
 # download and install ASIO sdk
 if [ ! -d /usr/local/asio-sdk ]; then
