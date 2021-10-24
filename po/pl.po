@@ -124,7 +124,7 @@ msgid "&Listen for Event"
 msgstr "Czekaj na zdarzenie"
 
 msgid "&Load\tCtrl+L"
-msgstr "Załaduj"
+msgstr "Wczytaj\tCtrl+L"
 
 msgid "&Lowest key:"
 msgstr "&Najniższy klawisz:"
