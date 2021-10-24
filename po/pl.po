@@ -99,6 +99,9 @@ msgstr "&Zdarzenie:"
 msgid "&Export Settings/Combinations"
 msgstr "&Eksport Ustaiwń/Kombinacji"
 
+msgid "&Favorites"
+msgstr "&Ulubione"
+
 msgid "&File"
 msgstr "&Plik"
 
@@ -114,8 +117,14 @@ msgstr "&Najwyższy klawisz:"
 msgid "&Import Settings"
 msgstr "&Import ustawień"
 
+msgid "&Install organ package\tCtrl+I"
+msgstr "Za&instaluj pakiet organów\tCtrl+I"
+
 msgid "&Listen for Event"
 msgstr "Czekaj na zdarzenie"
+
+msgid "&Load\tCtrl+L"
+msgstr "Załaduj"
 
 msgid "&Lowest key:"
 msgstr "&Najniższy klawisz:"
@@ -130,7 +139,7 @@ msgid "&On value:"
 msgstr "&Wartość początkowa"
 
 msgid "&Open\tCtrl+O"
-msgstr "Otwóż\tStrg+O"
+msgstr "Otwórz\tCtrl+O"
 
 msgid "&Organ settings"
 msgstr "&Ustawienia organów"
