@@ -1,3 +1,4 @@
+- Eliminated using opensuse repositories when building for windows on github https://github.com/GrandOrgue/grandorgue/issues/28
 - Fixed hang on Panic button after the sound had been suddenly stopped https://github.com/GrandOrgue/grandorgue/issues/762
 - Make the Paths settings in the Options tab expandable
 - Added build for linux appimage https://github.com/GrandOrgue/grandorgue/issues/698

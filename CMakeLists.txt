@@ -252,6 +252,12 @@ if (APPLE)
 
 elseif (WIN32)
 
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CPACK_STRIP_FILES OFF)
+  else()
+    set(CPACK_STRIP_FILES ON)
+  endif()
+
   set (CPACK_SYSTEM_NAME "windows")
   set (CPACK_GENERATOR ZIP NSIS)
   SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
