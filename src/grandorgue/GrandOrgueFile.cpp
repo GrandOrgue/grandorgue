@@ -375,7 +375,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 		else
 		{
 			wxString bundledSettingsFile = m_odf.BeforeLast('.');
-			if (wxFileExists(bundledSettingsFile))
+			if (wxFileExists(bundledSettingsFile) || findArchive(m_odf)->containsFile(bundledSettingsFile))
 			{
 				setting_file = bundledSettingsFile;
 				m_b_customized = true;
@@ -386,10 +386,21 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 	if (!setting_file.IsEmpty())
 	{
 		GOrgueConfigFileReader extra_odf_config;
-		if (!extra_odf_config.Read(setting_file))
+		if (!useArchives())
 		{
-			error.Printf(_("Unable to read '%s'"), setting_file.c_str());
-			return error;
+			if (!extra_odf_config.Read(setting_file))
+			{
+				error.Printf(_("Unable to read '%s'"), setting_file.c_str());
+				return error;
+			}
+		}
+		else
+		{
+			if (!extra_odf_config.Read(findArchive(m_odf)->OpenFile(setting_file)))
+			{
+				error.Printf(_("Unable to read '%s'"), setting_file.c_str());
+				return error;
+			}
 		}
 
 		if (odf_ini_file.getEntry(wxT("Organ"), wxT("ChurchName")).Trim() == extra_odf_config.getEntry(wxT("Organ"), wxT("ChurchName")).Trim())
